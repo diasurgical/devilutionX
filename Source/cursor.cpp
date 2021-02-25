@@ -352,6 +352,8 @@ void CheckCursMove()
 		return;
 	}
 	if ((chrflag || questlog || stash) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
+		if (stash)
+			pcursstashitem = CheckStashHLight();
 		return;
 	}
 

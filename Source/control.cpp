@@ -1113,6 +1113,7 @@ void CheckPanelInfo()
 	}
 	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
 		pcursinvitem = CheckInvHLight();
+	pcursstashitem = CheckStashHLight();
 }
 
 /**
@@ -1293,7 +1294,7 @@ void DrawInfoBox()
 	int nGold;
 
 	DrawPanelBox(177, 62, 288, 60, PANEL_X + 177, PANEL_Y + 46);
-	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
+	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == -1 && !spselflag) {
 		infostr[0] = '\0';
 		infoclr = COL_WHITE;
 		ClearPanel();

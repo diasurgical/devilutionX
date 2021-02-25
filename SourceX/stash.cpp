@@ -3,6 +3,7 @@
 
 namespace dvl {
 
+char pcursstashitem = -1;
 bool stash = false;
 const InvXY stashGridStart = { 17, 76 }, stashGridOffsets = { INV_SLOT_SIZE_PX + 1, INV_SLOT_SIZE_PX + 1 };
 const int stashRows = 10, stashCols = 10;
@@ -12,7 +13,17 @@ ItemStruct StashList[NUM_STASH_GRID_ELEM];
 int _pNumStash;
 char StashGrid[NUM_STASH_GRID_ELEM];
 
-bool loaded = false;
+void InitStash()
+{
+	stash = false;
+	if (!LoadStash()) {
+		memset(StashGrid, 0, sizeof(StashGrid));
+		for (int i = NUM_STASH_GRID_ELEM; i != 0; i--) {
+			StashList[i]._itype = ITYPE_NONE;
+		}
+		_pNumStash = 0;
+	}
+}
 
 InvXY getStashGridXY(int i)
 {
@@ -24,6 +35,69 @@ InvXY getStashGridXY(int i)
 std::string GetStashPath()
 {
 	return GetPrefPath() + "stash.lol";
+}
+
+int GetStashSlotFromMouse(int mx, int my)
+{
+	for (int r = 0; (DWORD)r < NUM_STASH_GRID_ELEM; r++) {
+		// check which inventory rectangle the mouse is in, if any
+		InvXY invrect = getStashGridXY(r);
+		if (mx >= invrect.X && mx < invrect.X + (INV_SLOT_SIZE_PX + 1) && my >= invrect.Y - (INV_SLOT_SIZE_PX + 1) && my < invrect.Y) {
+			return r;
+		}
+	}
+	return -1;
+}
+
+char CheckStashHLight()
+{
+	if (!stash)
+		return -1;
+	int r, ii, nGold;
+	ItemStruct *pi;
+	PlayerStruct *p;
+	char rv;
+
+	r = GetStashSlotFromMouse(MouseX, MouseY);
+
+	if (r == -1)
+		return -1;
+
+	rv = -1;
+	infoclr = COL_WHITE;
+	pi = NULL;
+	p = &plr[myplr];
+	ClearPanel();
+	r = abs(StashGrid[r]);
+	if (r == 0)
+		return -1;
+	ii = r - 1;
+	rv = ii;
+	pi = &StashList[ii];
+
+	if (pi->_itype == ITYPE_NONE)
+		return -1;
+
+	if (pi->_itype == ITYPE_GOLD) {
+		nGold = pi->_ivalue;
+		sprintf(infostr, "%i gold %s", nGold, get_pieces_str(nGold));
+	} else {
+		if (pi->_iMagical == ITEM_QUALITY_MAGIC) {
+			infoclr = COL_BLUE;
+		} else if (pi->_iMagical == ITEM_QUALITY_UNIQUE) {
+			infoclr = COL_GOLD;
+		}
+		strcpy(infostr, pi->_iName);
+		if (pi->_iIdentified) {
+			strcpy(infostr, pi->_iIName);
+			PrintItemDetails(pi);
+		} else {
+			PrintItemDur(pi);
+		}
+	}
+
+	SDL_Log("STASH HLIGHT RETURNS %d", rv);
+	return rv;
 }
 
 bool SaveStash()
@@ -92,24 +166,15 @@ bool LoadStash()
 	return true;
 }
 
-int GetStashSlotFromMouse(int mx, int my)
-{
-	for (int r = 0; (DWORD)r < NUM_STASH_GRID_ELEM; r++) {
-		// check which inventory rectangle the mouse is in, if any
-		InvXY invrect = getStashGridXY(r);
-		if (mx >= invrect.X && mx < invrect.X + (INV_SLOT_SIZE_PX + 1) && my >= invrect.Y - (INV_SLOT_SIZE_PX + 1) && my < invrect.Y) {
-			return r;
-		}
-	}
-	return -1;
-}
-
 void CheckStashPaste(int pnum, int mx, int my)
 {
 	int r, sx, sy;
 	int i, j, xx, yy, ii;
 	BOOL done;
 	int il, cn, it, iv, ig, gt;
+
+	mx += INV_SLOT_SIZE_PX / 2;
+	my += INV_SLOT_SIZE_PX / 2;
 
 	SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 	i = mx + (icursW >> 1);
@@ -323,7 +388,6 @@ void CheckStashCut(int pnum, int mx, int my)
 
 void CheckStash()
 {
-	SDL_Log("CHECKSTASH %d %d", MouseX, MouseY);
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckStashPaste(myplr, MouseX, MouseY);
 	} else {
@@ -333,18 +397,6 @@ void CheckStash()
 
 void DrawStash()
 {
-	if (!loaded) {
-		loaded = true;
-		if (!LoadStash()) {
-		memset(StashGrid, 0, sizeof(StashGrid));
-
-		for (int i = NUM_STASH_GRID_ELEM; i != 0; i--) {
-			StashList[i]._itype = ITYPE_NONE;
-		}
-
-		_pNumStash = 0;
-		}
-	}
 	Uint8 *pStart, *pEnd;
 	pStart = gpBufStart;
 	pEnd = gpBufEnd;
@@ -379,7 +431,7 @@ void DrawStash()
 			BYTE *icons = (frame <= 179 ? pCursCels : pCursCels2);
 			frame = (frame <= 179 ? frame : frame - 179);
 			int r = GetStashSlotFromMouse(MouseX, MouseY);
-			if (r > 0 && (StashGrid[r] == StashGrid[j] || StashGrid[r] == -StashGrid[j])) {
+			if (pcurs < CURSOR_FIRSTITEM && r> 0 && (StashGrid[r] == StashGrid[j] || StashGrid[r] == -StashGrid[j])) {
 				BYTE color = ICOL_WHITE;
 				if (StashList[ii]._iMagical != ITEM_QUALITY_NORMAL)
 					color = ICOL_BLUE;

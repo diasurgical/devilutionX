@@ -1627,6 +1627,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		InitInv();
 		InitItemGFX();
 		InitQuestText();
+		InitStash();
 
 		int players = gbIsMultiplayer ? MAX_PLRS : 1;
 		for (i = 0; i < players; i++)
