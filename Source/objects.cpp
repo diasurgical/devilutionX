@@ -674,10 +674,7 @@ void AddChestTraps()
 					if (leveltype == DTYPE_CATACOMBS) {
 						object[oi]._oVar4 = random_(0, 2);
 					} else {
-						if (gbIsHellfire)
-							object[oi]._oVar4 = random_(0, 6);
-						else
-							object[oi]._oVar4 = random_(0, 3);
+						object[oi]._oVar4 = random_(0, gbIsHellfire ? 6 : 3);
 					}
 				}
 			}
@@ -1375,16 +1372,11 @@ void AddShrine(int i)
 	int shrines = gbIsHellfire ? NUM_SHRINETYPE : 26;
 
 	for (j = 0; j < shrines; j++) {
-		if (currlevel < shrinemin[j] || currlevel > shrinemax[j]) {
-			slist[j] = 0;
-		} else {
-			slist[j] = 1;
-		}
+		slist[j] = currlevel >= shrinemin[j] && currlevel <= shrinemax[j];
 		if (gbIsMultiplayer && shrineavail[j] == 1) {
-			slist[j] = 0;
-		}
-		if (!gbIsMultiplayer && shrineavail[j] == 2) {
-			slist[j] = 0;
+			slist[j] = false;
+		} else if (!gbIsMultiplayer && shrineavail[j] == 2) {
+			slist[j] = false;
 		}
 	}
 	do {

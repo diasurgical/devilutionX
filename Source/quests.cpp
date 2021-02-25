@@ -115,8 +115,6 @@ void InitQuests()
 	initiatedQuests = 0;
 
 	for (z = 0; z < MAXQUESTS; z++) {
-		if (!gbIsHellfire && z > 15)
-			break;
 		if (gbIsMultiplayer && !(questlist[z]._qflags & QUEST_ANY))
 			continue;
 		quests[z]._qtype = questlist[z]._qdtype;

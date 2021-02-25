@@ -6,6 +6,8 @@
 #ifndef __MISDAT_H__
 #define __MISDAT_H__
 
+#include "missiles.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus

@@ -114,6 +114,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 	pPack->pDifficulty = SwapLE32(pPlayer->pDifficulty);
 	pPack->pDamAcFlags = SwapLE32(pPlayer->pDamAcFlags);
 	pPack->pDiabloKillLevel = SwapLE32(pPlayer->pDiabloKillLevel);
+	pPack->bIsHellfire = gbIsHellfire;
 
 	if (!gbIsMultiplayer || manashield)
 		pPack->pManaShield = SwapLE32(pPlayer->pManaShield);
@@ -190,7 +191,6 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	PkItemStruct *pki;
 
 	pPlayer = &plr[pnum];
-	ClearPlrRVars(pPlayer);
 	pPlayer->_px = pPack->px;
 	pPlayer->_py = pPack->py;
 	pPlayer->_pfutx = pPack->px;

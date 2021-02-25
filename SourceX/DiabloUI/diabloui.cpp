@@ -505,53 +505,6 @@ BOOL UiValidPlayerName(const char *name)
 	return true;
 }
 
-void UiProfileCallback()
-{
-	UNIMPLEMENTED();
-}
-
-void UiProfileDraw()
-{
-	UNIMPLEMENTED();
-}
-
-BOOL UiCategoryCallback(int a1, int a2, int a3, int a4, int a5, DWORD *a6, DWORD *a7)
-{
-	UNIMPLEMENTED();
-}
-
-BOOL UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5)
-{
-	UNIMPLEMENTED();
-}
-
-BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, char *lpBuffer, int cchBufferMax)
-{
-	UNIMPLEMENTED();
-}
-
-BOOL UiSoundCallback(int a1, int type, int a3)
-{
-	UNIMPLEMENTED();
-}
-
-BOOL UiDrawDescCallback(int game_type, DWORD color, const char *lpString, char *a4, int a5, UINT align, time_t a7,
-    HDC *a8)
-{
-	UNIMPLEMENTED();
-}
-
-BOOL UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6)
-{
-	UNIMPLEMENTED();
-}
-
-BOOL UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer,
-    DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp)
-{
-	UNIMPLEMENTED();
-}
-
 BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char (*desc)[128])
 {
 	char format[32] = "";

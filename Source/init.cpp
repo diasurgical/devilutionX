@@ -142,9 +142,6 @@ void init_archives()
 	memset(&fileinfo, 0, sizeof(fileinfo));
 	fileinfo.size = sizeof(fileinfo);
 	fileinfo.versionstring = gszVersionNumber;
-	fileinfo.executablefile = "";
-	fileinfo.originalarchivefile = "";
-	fileinfo.patcharchivefile = "";
 	init_get_file_info();
 
 	diabdat_mpq = init_test_access("diabdat.mpq", "DiabloCD", 1000, FS_CD);

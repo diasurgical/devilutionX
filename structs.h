@@ -217,7 +217,7 @@ typedef struct PlayerStruct {
 	char _pSplLvl[64];
 	uint64_t _pMemSpells;  // Bitmask of learned spells
 	uint64_t _pAblSpells;  // Bitmask of abilities
-	uint64_t _pScrlSpells; // Bitmask of spells avalible via scrolls
+	uint64_t _pScrlSpells; // Bitmask of spells available via scrolls
 	UCHAR _pSpellFlags;
 	int _pSplHotKey[4];
 	char _pSplTHotKey[4];
@@ -334,13 +334,10 @@ typedef struct PlayerStruct {
 	BOOLEAN pManaShield;
 	unsigned char pDungMsgs2;
 	BOOLEAN pOriginalCathedral;
-	char bReserved[2];
 	WORD wReflections;
-	short wReserved[7];
 	DWORD pDiabloKillLevel;
 	int pDifficulty;
 	int pDamAcFlags;
-	int dwReserved[5];
 	unsigned char *_pNData;
 	unsigned char *_pWData;
 	unsigned char *_pAData;
@@ -350,7 +347,6 @@ typedef struct PlayerStruct {
 	unsigned char *_pHData;
 	unsigned char *_pDData;
 	unsigned char *_pBData;
-	void *pReserved;
 } PlayerStruct;
 
 //////////////////////////////////////////////////
@@ -363,90 +359,6 @@ typedef struct TextDataStruct {
 	int txtspd; /* calculated dynamically, 01/23/21 */
 	int sfxnr;
 } TextDataStruct;
-
-//////////////////////////////////////////////////
-// missiles
-//////////////////////////////////////////////////
-
-// TPDEF PTR FCN VOID MIADDPRC
-// TPDEF PTR FCN VOID MIPROC
-
-typedef struct MissileData {
-	unsigned char mName;
-	void (*mAddProc)(int, int, int, int, int, int, char, int, int);
-	void (*mProc)(int);
-	BOOL mDraw;
-	unsigned char mType;
-	unsigned char mResist;
-	unsigned char mFileNum;
-	int mlSFX;
-	int miSFX;
-} MissileData;
-
-typedef struct MisFileData {
-	unsigned char mAnimName;
-	unsigned char mAnimFAmt;
-	const char *mName;
-	int mFlags;
-	unsigned char *mAnimData[16];
-	unsigned char mAnimDelay[16];
-	unsigned char mAnimLen[16];
-	int mAnimWidth[16];
-	int mAnimWidth2[16];
-} MisFileData;
-
-typedef struct ChainStruct {
-	int idx;
-	int _mitype;
-	int _mirange;
-} ChainStruct;
-
-typedef struct MissileStruct {
-	int _mitype;  // Type of projectile (missile_id)
-	int _mix;     // Tile X-position of the missile
-	int _miy;     // Tile Y-position of the missile
-	int _mixoff;  // Sprite pixel X-offset for the missile
-	int _miyoff;  // Sprite pixel Y-offset for the missile
-	int _mixvel;  // Missile tile X-velocity while walking. This gets added onto _mitxoff each game tick
-	int _miyvel;  // Missile tile Y-velocity while walking. This gets added onto _mitxoff each game tick
-	int _misx;    // Initial tile X-position for missile
-	int _misy;    // Initial tile Y-position for missile
-	int _mitxoff; // How far the missile has travelled in its lifespan along the X-axis. mix/miy/mxoff/myoff get updated every game tick based on this
-	int _mityoff; // How far the missile has travelled in its lifespan along the Y-axis. mix/miy/mxoff/myoff get updated every game tick based on this
-	int _mimfnum; // The direction of the missile (direction enum)
-	int _mispllvl;
-	BOOL _miDelFlag; // Indicate weather the missile should be deleted
-	BYTE _miAnimType;
-	int _miAnimFlags;
-	unsigned char *_miAnimData;
-	int _miAnimDelay; // Tick length of each frame in the current animation
-	int _miAnimLen;   // Number of frames in current animation
-	int _miAnimWidth;
-	int _miAnimWidth2;
-	int _miAnimCnt; // Increases by one each game tick, counting how close we are to _pAnimDelay
-	int _miAnimAdd;
-	int _miAnimFrame; // Current frame of animation.
-	BOOL _miDrawFlag;
-	BOOL _miLightFlag;
-	BOOL _miPreFlag;
-	int _miUniqTrans;
-	int _mirange; // Time to live for the missile in game ticks, oncs 0 the missile will be marked for deletion via _miDelFlag
-	int _misource;
-	int _micaster;
-	int _midam;
-	BOOL _miHitFlag;
-	int _midist; // Used for arrows to measure distance travelled (increases by 1 each game tick). Higher value is a penalty for accuracy calculation when hitting enemy
-	int _mlid;
-	int _mirnd;
-	int _miVar1;
-	int _miVar2;
-	int _miVar3;
-	int _miVar4;
-	int _miVar5;
-	int _miVar6;
-	int _miVar7;
-	int _miVar8;
-} MissileStruct;
 
 //////////////////////////////////////////////////
 // effects/sound
@@ -696,293 +608,6 @@ typedef struct PortalStruct {
 } PortalStruct;
 
 //////////////////////////////////////////////////
-// msg
-//////////////////////////////////////////////////
-
-#pragma pack(push, 1)
-typedef struct TCmd {
-	BYTE bCmd;
-} TCmd;
-
-typedef struct TCmdLoc {
-	BYTE bCmd;
-	BYTE x;
-	BYTE y;
-} TCmdLoc;
-
-typedef struct TCmdLocParam1 {
-	BYTE bCmd;
-	BYTE x;
-	BYTE y;
-	WORD wParam1;
-} TCmdLocParam1;
-
-typedef struct TCmdLocParam2 {
-	BYTE bCmd;
-	BYTE x;
-	BYTE y;
-	WORD wParam1;
-	WORD wParam2;
-} TCmdLocParam2;
-
-typedef struct TCmdLocParam3 {
-	BYTE bCmd;
-	BYTE x;
-	BYTE y;
-	WORD wParam1;
-	WORD wParam2;
-	WORD wParam3;
-} TCmdLocParam3;
-
-typedef struct TCmdParam1 {
-	BYTE bCmd;
-	WORD wParam1;
-} TCmdParam1;
-
-typedef struct TCmdParam2 {
-	BYTE bCmd;
-	WORD wParam1;
-	WORD wParam2;
-} TCmdParam2;
-
-typedef struct TCmdParam3 {
-	BYTE bCmd;
-	WORD wParam1;
-	WORD wParam2;
-	WORD wParam3;
-} TCmdParam3;
-
-typedef struct TCmdGolem {
-	BYTE bCmd;
-	BYTE _mx;
-	BYTE _my;
-	BYTE _mdir;
-	char _menemy;
-	int _mhitpoints;
-	BYTE _currlevel;
-} TCmdGolem;
-
-typedef struct TCmdQuest {
-	BYTE bCmd;
-	BYTE q;
-	BYTE qstate;
-	BYTE qlog;
-	BYTE qvar1;
-} TCmdQuest;
-
-typedef struct TCmdGItem {
-	BYTE bCmd;
-	BYTE bMaster;
-	BYTE bPnum;
-	BYTE bCursitem;
-	BYTE bLevel;
-	BYTE x;
-	BYTE y;
-	WORD wIndx;
-	WORD wCI;
-	int dwSeed;
-	BYTE bId;
-	BYTE bDur;
-	BYTE bMDur;
-	BYTE bCh;
-	BYTE bMCh;
-	WORD wValue;
-	DWORD dwBuff;
-	int dwTime;
-	WORD wToHit;
-	WORD wMaxDam;
-	BYTE bMinStr;
-	BYTE bMinMag;
-	BYTE bMinDex;
-	BYTE bAC;
-} TCmdGItem;
-
-typedef struct TCmdPItem {
-	BYTE bCmd;
-	BYTE x;
-	BYTE y;
-	WORD wIndx;
-	WORD wCI;
-	int dwSeed;
-	BYTE bId;
-	BYTE bDur;
-	BYTE bMDur;
-	BYTE bCh;
-	BYTE bMCh;
-	WORD wValue;
-	DWORD dwBuff;
-	WORD wToHit;
-	WORD wMaxDam;
-	BYTE bMinStr;
-	BYTE bMinMag;
-	BYTE bMinDex;
-	BYTE bAC;
-} TCmdPItem;
-
-typedef struct TCmdChItem {
-	BYTE bCmd;
-	BYTE bLoc;
-	WORD wIndx;
-	WORD wCI;
-	int dwSeed;
-	Uint8 bId;
-} TCmdChItem;
-
-typedef struct TCmdDelItem {
-	BYTE bCmd;
-	BYTE bLoc;
-} TCmdDelItem;
-
-typedef struct TCmdDamage {
-	BYTE bCmd;
-	BYTE bPlr;
-	DWORD dwDam;
-} TCmdDamage;
-
-typedef struct TCmdMonDamage {
-	BYTE bCmd;
-	WORD wMon;
-	DWORD dwDam;
-} TCmdMonDamage;
-
-typedef struct TCmdPlrInfoHdr {
-	BYTE bCmd;
-	WORD wOffset;
-	WORD wBytes;
-} TCmdPlrInfoHdr;
-
-typedef struct TCmdString {
-	BYTE bCmd;
-	char str[MAX_SEND_STR_LEN];
-} TCmdString;
-
-typedef struct TFakeCmdPlr {
-	BYTE bCmd;
-	BYTE bPlr;
-} TFakeCmdPlr;
-
-typedef struct TFakeDropPlr {
-	BYTE bCmd;
-	BYTE bPlr;
-	DWORD dwReason;
-} TFakeDropPlr;
-
-typedef struct TSyncHeader {
-	BYTE bCmd;
-	BYTE bLevel;
-	WORD wLen;
-	BYTE bObjId;
-	BYTE bObjCmd;
-	BYTE bItemI;
-	BYTE bItemX;
-	BYTE bItemY;
-	WORD wItemIndx;
-	WORD wItemCI;
-	DWORD dwItemSeed;
-	BYTE bItemId;
-	BYTE bItemDur;
-	BYTE bItemMDur;
-	BYTE bItemCh;
-	BYTE bItemMCh;
-	WORD wItemVal;
-	DWORD dwItemBuff;
-	BYTE bPInvLoc;
-	WORD wPInvIndx;
-	WORD wPInvCI;
-	DWORD dwPInvSeed;
-	BYTE bPInvId;
-	WORD wToHit;
-	WORD wMaxDam;
-	BYTE bMinStr;
-	BYTE bMinMag;
-	BYTE bMinDex;
-	BYTE bAC;
-} TSyncHeader;
-
-typedef struct TSyncMonster {
-	BYTE _mndx;
-	BYTE _mx;
-	BYTE _my;
-	BYTE _menemy;
-	BYTE _mdelta;
-} TSyncMonster;
-
-typedef struct TPktHdr {
-	BYTE px;
-	BYTE py;
-	BYTE targx;
-	BYTE targy;
-	int php;
-	int pmhp;
-	BYTE bstr;
-	BYTE bmag;
-	BYTE bdex;
-	WORD wCheck;
-	WORD wLen;
-} TPktHdr;
-
-typedef struct TPkt {
-	TPktHdr hdr;
-	BYTE body[493];
-} TPkt;
-
-typedef struct DMonsterStr {
-	BYTE _mx;
-	BYTE _my;
-	BYTE _mdir;
-	BYTE _menemy;
-	BYTE _mactive;
-	int _mhitpoints;
-} DMonsterStr;
-
-typedef struct DObjectStr {
-	BYTE bCmd;
-} DObjectStr;
-
-typedef struct DLevel {
-	TCmdPItem item[MAXITEMS];
-	DObjectStr object[MAXOBJECTS];
-	DMonsterStr monster[MAXMONSTERS];
-} DLevel;
-
-typedef struct LocalLevel {
-	BYTE automapsv[DMAXX][DMAXY];
-} LocalLevel;
-
-typedef struct DPortal {
-	BYTE x;
-	BYTE y;
-	BYTE level;
-	BYTE ltype;
-	BYTE setlvl;
-} DPortal;
-
-typedef struct MultiQuests {
-	BYTE qstate;
-	BYTE qlog;
-	BYTE qvar1;
-} MultiQuests;
-
-typedef struct DJunk {
-	DPortal portal[MAXPORTAL];
-	MultiQuests quests[MAXMULTIQUESTS];
-} DJunk;
-#pragma pack(pop)
-
-#pragma pack(push, 1)
-typedef struct TMegaPkt {
-	struct TMegaPkt *pNext;
-	DWORD dwSpaceLeft;
-	BYTE data[32000];
-} TMegaPkt;
-#pragma pack(pop)
-
-typedef struct TBuffer {
-	DWORD dwNextWriteOffset;
-	BYTE bData[4096];
-} TBuffer;
-
-//////////////////////////////////////////////////
 // gamemenu/gmenu
 //////////////////////////////////////////////////
 
@@ -1158,7 +783,6 @@ typedef struct _SNETPLAYERDATA {
 	int size;
 	char *playername;
 	char *playerdescription;
-	int reserved;
 } _SNETPLAYERDATA;
 
 typedef struct _SNETPROGRAMDATA {
@@ -1167,11 +791,9 @@ typedef struct _SNETPROGRAMDATA {
 	const char *programdescription;
 	int programid;
 	int versionid;
-	int reserved1;
 	int maxplayers;
 	_gamedata *initdata;
 	int initdatabytes;
-	void *reserved2;
 	int optcategorybits;
 	char *cdkey;
 	char *registereduser;
@@ -1182,28 +804,15 @@ typedef struct _SNETPROGRAMDATA {
 typedef struct _SNETVERSIONDATA {
 	int size;
 	const char *versionstring;
-	const char *executablefile;
-	const char *originalarchivefile;
-	const char *patcharchivefile;
 } _SNETVERSIONDATA;
 
 typedef struct _SNETUIDATA {
 	int size;
-	int uiflags;
-	void (*artcallback)();
-	void (*authcallback)();
-	void (*createcallback)();
-	void (*drawdesccallback)();
 	void (*selectedcallback)();
-	void (*soundcallback)();
 	void (*statuscallback)();
-	void (*getdatacallback)();
-	void (*categorycallback)();
 	void (*categorylistcallback)();
 	void (*newaccountcallback)();
-	void (*profilecallback)();
 	const char **profilefields;
-	void (*profilebitmapcallback)();
 	int (*selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,
 	    const struct _SNETPLAYERDATA *,
@@ -1219,27 +828,6 @@ typedef struct _SNETUIDATA {
 
 // TPDEF PTR FCN UCHAR SNETSPIBIND
 // TPDEF PTR FCN UCHAR SNETSPIQUERY
-
-//////////////////////////////////////////////////
-// tmsg
-//////////////////////////////////////////////////
-
-#pragma pack(push, 1)
-typedef struct TMsg TMsg;
-
-typedef struct TMsgHdr {
-	TMsg *pNext;
-	int dwTime;
-	BYTE bLen;
-} TMsgHdr;
-
-typedef struct TMsg {
-	TMsgHdr hdr;
-	// this is actually alignment padding, but the message body is appended to the struct
-	// so it's convenient to use byte-alignment and name it "body"
-	unsigned char body[3];
-} TMsg;
-#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // capture

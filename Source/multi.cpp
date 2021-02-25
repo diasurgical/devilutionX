@@ -756,17 +756,8 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		plrdata.size = sizeof(plrdata);
 		memset(&UiData, 0, sizeof(UiData));
 		UiData.size = sizeof(UiData);
-		UiData.artcallback = (void (*)())UiArtCallback;
-		UiData.createcallback = (void (*)())UiCreateGameCallback;
-		UiData.drawdesccallback = (void (*)())UiDrawDescCallback;
-		UiData.soundcallback = (void (*)())UiSoundCallback;
-		UiData.authcallback = (void (*)())UiAuthCallback;
-		UiData.getdatacallback = (void (*)())UiGetDataCallback;
-		UiData.categorycallback = (void (*)())UiCategoryCallback;
 		UiData.selectnamecallback = mainmenu_select_hero_dialog;
 		UiData.changenamecallback = (void (*)())mainmenu_change_name;
-		UiData.profilebitmapcallback = (void (*)())UiProfileDraw;
-		UiData.profilecallback = (void (*)())UiProfileCallback;
 		UiData.profilefields = UiProfileGetString();
 		memset(sgbPlayerTurnBitTbl, 0, sizeof(sgbPlayerTurnBitTbl));
 		gbGameDestroyed = FALSE;
@@ -813,8 +804,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	tick_delay = 1000 / ticks_per_sec;
 	SetRndSeed(sgGameInitInfo.dwSeed);
 
-	int numberOfLevels = gbIsHellfire ? NUMLEVELS : 17;
-	for (i = 0; i < numberOfLevels; i++) {
+	for (i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}

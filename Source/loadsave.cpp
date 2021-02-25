@@ -396,14 +396,14 @@ static void LoadPlayer(int i)
 		tbuff += 1;
 		pPlayer->pOriginalCathedral = true;
 	}
-	CopyBytes(tbuff, 2, &pPlayer->bReserved);
+	tbuff += 2; // Available bytes
 	CopyShort(tbuff, &pPlayer->wReflections);
-	CopyShorts(tbuff, 7, &pPlayer->wReserved);
+	tbuff += 14; // Available bytes
 
 	CopyInt(tbuff, &pPlayer->pDiabloKillLevel);
 	CopyInt(tbuff, &pPlayer->pDifficulty);
 	CopyInt(tbuff, &pPlayer->pDamAcFlags);
-	CopyInts(tbuff, 5, &pPlayer->dwReserved);
+	tbuff += 20; // Available bytes
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -797,7 +797,7 @@ void LoadGame(BOOL firstflag)
 
 	for (i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = ILoad();
-		gnLevelTypeTbl[i] = WLoad();
+		tbuff += 4; // Skip loading gnLevelTypeTbl
 	}
 
 	LoadPlayer(myplr);
@@ -1263,14 +1263,14 @@ static void SavePlayer(int i)
 		CopyChar(&pPlayer->pBattleNet, tbuff);
 	CopyChar(&pPlayer->pManaShield, tbuff);
 	CopyChar(&pPlayer->pOriginalCathedral, tbuff);
-	CopyBytes(&pPlayer->bReserved, 2, tbuff);
+	tbuff += 2; // Available bytes
 	CopyShort(&pPlayer->wReflections, tbuff);
-	CopyShorts(&pPlayer->wReserved, 7, tbuff);
+	tbuff += 14; // Available bytes
 
 	CopyInt(&pPlayer->pDiabloKillLevel, tbuff);
 	CopyInt(&pPlayer->pDifficulty, tbuff);
 	CopyInt(&pPlayer->pDamAcFlags, tbuff);
-	CopyInts(&pPlayer->dwReserved, 5, tbuff);
+	tbuff += 20; // Available bytes
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
