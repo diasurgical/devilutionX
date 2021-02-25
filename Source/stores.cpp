@@ -1492,6 +1492,7 @@ void StartStore(char s)
 		invflag = FALSE;
 		chrflag = FALSE;
 		questlog = FALSE;
+		stash = false;
 		dropGoldFlag = FALSE;
 		ClearSText(0, STORE_LINES);
 		ReleaseStoreBtn();

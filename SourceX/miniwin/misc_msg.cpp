@@ -33,6 +33,7 @@ int mouseWarpingY;
 
 void SetCursorPos(int X, int Y)
 {
+	SDL_Log("SET CURSOR POS %d %d", X, Y);
 	mouseWarpingX = X;
 	mouseWarpingY = Y;
 	mouseWarping = true;
@@ -390,6 +391,7 @@ bool PeekMessage(LPMSG lpMsg)
 					spselflag = false;
 				chrflag = false;
 				questlog = false;
+				stash = false;
 				sbookflag = false;
 				StoreSpellCoords();
 			}
@@ -398,6 +400,7 @@ bool PeekMessage(LPMSG lpMsg)
 			chrflag = !chrflag;
 			if (chrflag) {
 				questlog = false;
+				stash = false;
 				spselflag = false;
 				if (pcurs == CURSOR_DISARM)
 					SetCursor_(CURSOR_HAND);
@@ -409,6 +412,7 @@ bool PeekMessage(LPMSG lpMsg)
 				StartQuestlog();
 				chrflag = false;
 				spselflag = false;
+				stash = false;
 			} else {
 				questlog = false;
 			}

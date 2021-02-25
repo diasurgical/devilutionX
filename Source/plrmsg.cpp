@@ -92,7 +92,7 @@ void DrawPlrMsg()
 	DWORD width = SCREEN_WIDTH - 20;
 	_plrmsg *pMsg;
 
-	if (chrflag || questlog) {
+	if (chrflag || questlog || stash) {
 		x += SPANEL_WIDTH;
 		width -= SPANEL_WIDTH;
 	}

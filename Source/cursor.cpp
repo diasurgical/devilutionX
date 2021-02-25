@@ -222,7 +222,7 @@ void CheckCursMove()
 	sy = MouseY;
 
 	if (PANELS_COVER) {
-		if (chrflag || questlog) {
+		if (chrflag || questlog || stash) {
 			if (sx >= SCREEN_WIDTH / 2) { /// BUGFIX: (sx >= SCREEN_WIDTH / 2) (fixed)
 				sx -= SCREEN_WIDTH / 4;
 			} else {
@@ -351,7 +351,7 @@ void CheckCursMove()
 	if (sbookflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
 		return;
 	}
-	if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
+	if ((chrflag || questlog || stash) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
 		return;
 	}
 

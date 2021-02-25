@@ -1149,10 +1149,12 @@ void CheckBtnUp()
 		switch (i) {
 		case PANBTN_CHARINFO:
 			questlog = FALSE;
+			stash = false;
 			chrflag = !chrflag;
 			break;
 		case PANBTN_QLOG:
 			chrflag = FALSE;
+			stash = false;
 			if (!questlog)
 				StartQuestlog();
 			else
@@ -1767,7 +1769,7 @@ void DrawDurIcon()
 	bool hasRoomUnderPanels = SCREEN_HEIGHT >= SPANEL_HEIGHT + PANEL_HEIGHT + 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
-		if ((chrflag || questlog) && (invflag || sbookflag))
+		if ((chrflag || questlog || stash) && (invflag || sbookflag))
 			return;
 	}
 

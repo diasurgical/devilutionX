@@ -3789,7 +3789,7 @@ void CheckPlrSpell()
 			return;
 
 		if (
-		    ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT)    // inside left panel
+		    ((chrflag || questlog || stash) && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT)    // inside left panel
 		    || ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) // inside right panel
 		) {
 			if (rspell != SPL_HEAL

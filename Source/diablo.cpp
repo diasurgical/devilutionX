@@ -693,6 +693,8 @@ static BOOL LeftMouseDown(int wParam)
 				stream_stop();
 			} else if (chrflag && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT) {
 				CheckChrBtns();
+			} else if (stash && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT) {
+				CheckStash();
 			} else if (invflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 				if (!dropGoldFlag)
 					CheckInvItem();
@@ -927,6 +929,7 @@ static void PressKey(int vkey)
 				stream_stop();
 			}
 			questlog = FALSE;
+			stash = false;
 			automapflag = FALSE;
 			msgdelay = 0;
 			gamemenu_off();
@@ -1049,6 +1052,7 @@ static void PressKey(int vkey)
 			stream_stop();
 		}
 		questlog = FALSE;
+		stash = false;
 		automapflag = FALSE;
 		msgdelay = 0;
 		gamemenu_off();
@@ -1109,6 +1113,7 @@ static void PressChar(WPARAM vkey)
 	case 'c':
 		if (stextflag == STORE_NONE) {
 			questlog = FALSE;
+			stash = false;
 			chrflag = !chrflag;
 			if (!chrflag || invflag) {
 				if (MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
@@ -1125,11 +1130,20 @@ static void PressChar(WPARAM vkey)
 	case 'q':
 		if (stextflag == STORE_NONE) {
 			chrflag = FALSE;
+			stash = false;
 			if (!questlog) {
 				StartQuestlog();
 			} else {
 				questlog = FALSE;
 			}
+		}
+		return;
+	case 'X':
+	case 'x':
+		if (stextflag == STORE_NONE) {
+			chrflag = FALSE;
+			questlog = FALSE;
+			stash = !stash;
 		}
 		return;
 	case 'Z':

@@ -951,7 +951,7 @@ static void Zoom()
 	int nDstOff = SCREENXY(SCREEN_WIDTH - 1, VIEWPORT_HEIGHT - 1);
 
 	if (PANELS_COVER) {
-		if (chrflag || questlog) {
+		if (chrflag || questlog || stash) {
 			wdt >>= 1;
 			nSrcOff -= wdt;
 		} else if (invflag || sbookflag) {
@@ -1142,7 +1142,7 @@ static void DrawGame(int x, int y)
 	// Skip rendering parts covered by the panels
 	if (PANELS_COVER) {
 		if (zoomflag) {
-			if (chrflag || questlog) {
+			if (chrflag || questlog || stash) {
 				ShiftGrid(&x, &y, 2, 0);
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
@@ -1153,7 +1153,7 @@ static void DrawGame(int x, int y)
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
-			if (chrflag || questlog) {
+			if (chrflag || questlog || stash) {
 				ShiftGrid(&x, &y, 1, 0);
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
@@ -1248,8 +1248,10 @@ void DrawView(int StartX, int StartY)
 		DrawChr();
 	} else if (questlog) {
 		DrawQuestLog();
+	} else if (stash) {
+		DrawStash();
 	}
-	if (!chrflag && plr[myplr]._pStatPts != 0 && !spselflag
+	if (!chrflag && !stash && plr[myplr]._pStatPts != 0 && !spselflag
 	    && (!questlog || SCREEN_HEIGHT >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || SCREEN_WIDTH >= 4 * SPANEL_WIDTH)) {
 		DrawLevelUpIcon();
 	}

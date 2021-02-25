@@ -284,6 +284,7 @@ set(devilutionx_SRCS
   SourceX/controls/plrctrls.cpp
   SourceX/controls/touch.cpp
   SourceX/display.cpp
+  SourceX/stash.cpp
   SourceX/miniwin/misc_msg.cpp
   SourceX/thread.cpp
   SourceX/sound.cpp
