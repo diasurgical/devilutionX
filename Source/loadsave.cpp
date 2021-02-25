@@ -530,7 +530,7 @@ static void LoadMissile(int i)
 	CopyInt(tbuff, &pMissile->_mityoff);
 	CopyInt(tbuff, &pMissile->_mimfnum);
 	CopyInt(tbuff, &pMissile->_mispllvl);
-	CopyInt(tbuff, &pMissile->_miDelFlag);
+	pMissile->_miDelFlag = LoadBool32();
 	CopyChar(tbuff, &pMissile->_miAnimType);
 	tbuff += 3; // Alignment
 	CopyInt(tbuff, &pMissile->_miAnimFlags);
@@ -542,15 +542,15 @@ static void LoadMissile(int i)
 	CopyInt(tbuff, &pMissile->_miAnimCnt);
 	CopyInt(tbuff, &pMissile->_miAnimAdd);
 	CopyInt(tbuff, &pMissile->_miAnimFrame);
-	CopyInt(tbuff, &pMissile->_miDrawFlag);
-	CopyInt(tbuff, &pMissile->_miLightFlag);
-	CopyInt(tbuff, &pMissile->_miPreFlag);
+	pMissile->_miDrawFlag = LoadBool32();
+	pMissile->_miLightFlag = LoadBool32();
+	pMissile->_miPreFlag = LoadBool32();
 	CopyInt(tbuff, &pMissile->_miUniqTrans);
 	CopyInt(tbuff, &pMissile->_mirange);
 	CopyInt(tbuff, &pMissile->_misource);
 	CopyInt(tbuff, &pMissile->_micaster);
 	CopyInt(tbuff, &pMissile->_midam);
-	CopyInt(tbuff, &pMissile->_miHitFlag);
+	pMissile->_miHitFlag = LoadBool32();
 	CopyInt(tbuff, &pMissile->_midist);
 	CopyInt(tbuff, &pMissile->_mlid);
 	CopyInt(tbuff, &pMissile->_mirnd);
@@ -1398,7 +1398,7 @@ static void SaveMissile(int i)
 	CopyInt(&pMissile->_mityoff, tbuff);
 	CopyInt(&pMissile->_mimfnum, tbuff);
 	CopyInt(&pMissile->_mispllvl, tbuff);
-	CopyInt(&pMissile->_miDelFlag, tbuff);
+	SaveBool32(pMissile->_miDelFlag);
 	CopyChar(&pMissile->_miAnimType, tbuff);
 	tbuff += 3; // Alignment
 	CopyInt(&pMissile->_miAnimFlags, tbuff);
@@ -1410,15 +1410,15 @@ static void SaveMissile(int i)
 	CopyInt(&pMissile->_miAnimCnt, tbuff);
 	CopyInt(&pMissile->_miAnimAdd, tbuff);
 	CopyInt(&pMissile->_miAnimFrame, tbuff);
-	CopyInt(&pMissile->_miDrawFlag, tbuff);
-	CopyInt(&pMissile->_miLightFlag, tbuff);
-	CopyInt(&pMissile->_miPreFlag, tbuff);
+	SaveBool32(pMissile->_miDrawFlag);
+	SaveBool32(pMissile->_miLightFlag);
+	SaveBool32(pMissile->_miPreFlag);
 	CopyInt(&pMissile->_miUniqTrans, tbuff);
 	CopyInt(&pMissile->_mirange, tbuff);
 	CopyInt(&pMissile->_misource, tbuff);
 	CopyInt(&pMissile->_micaster, tbuff);
 	CopyInt(&pMissile->_midam, tbuff);
-	CopyInt(&pMissile->_miHitFlag, tbuff);
+	SaveBool32(pMissile->_miHitFlag);
 	CopyInt(&pMissile->_midist, tbuff);
 	CopyInt(&pMissile->_mlid, tbuff);
 	CopyInt(&pMissile->_mirnd, tbuff);
