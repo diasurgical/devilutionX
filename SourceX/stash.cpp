@@ -171,7 +171,7 @@ void CheckStashPaste(int pnum, int mx, int my)
 	int il, cn, it, iv, ig, gt;
 
 	mx += INV_SLOT_SIZE_PX / 2;
-	my += INV_SLOT_SIZE_PX / 2;
+	my += INV_SLOT_SIZE_PX * 3 / 2;
 
 	SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 	i = mx + (icursW >> 1);
