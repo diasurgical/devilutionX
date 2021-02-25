@@ -96,7 +96,6 @@ char CheckStashHLight()
 		}
 	}
 
-	SDL_Log("STASH HLIGHT RETURNS %d", rv);
 	return rv;
 }
 
