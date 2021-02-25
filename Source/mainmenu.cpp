@@ -51,10 +51,7 @@ static BOOL mainmenu_init_menu(int type)
 
 static BOOL mainmenu_single_player()
 {
-	if (!SRegLoadValue("Hellfire", jogging_title, 0, &jogging_opt)) {
-		jogging_opt = TRUE;
-	}
-	if (!gbIsHellfire) {
+	if (!SRegLoadValue("qol", jogging_title, 0, &jogging_opt)) {
 		jogging_opt = FALSE;
 	}
 
