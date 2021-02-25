@@ -3101,6 +3101,7 @@ void items_427ABA(int x, int y)
 			dItem[x][y] = ii + 1;
 			itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 			itemactive[numitems] = ii;
+			gbIsHellfireSaveGame = gbIsHellfire;
 			UnPackItem(&PkSItem, &item[ii]);
 			item[ii]._ix = x;
 			item[ii]._iy = y;
