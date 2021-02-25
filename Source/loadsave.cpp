@@ -47,7 +47,7 @@ static bool LoadBool32()
 	return buf != 0;
 }
 
-static void CopyBytes(const void *src, const int n, void *dst)
+void CopyBytes(const void *src, const int n, void *dst)
 {
 	memcpy(dst, src, n);
 	tbuff += n;
@@ -79,7 +79,7 @@ static void CopyShorts(const void *src, const int n, void *dst)
 	}
 }
 
-static void CopyInt(const void *src, void *dst)
+void CopyInt(const void *src, void *dst)
 {
 	unsigned int buf;
 	memcpy(&buf, src, 4);
@@ -193,7 +193,7 @@ static void LoadItemData(ItemStruct *pItem)
 		pItem->_iDamAcFlags = 0;
 }
 
-static void LoadItems(const int n, ItemStruct *pItem)
+void LoadItems(const int n, ItemStruct *pItem)
 {
 	for (int i = 0; i < n; i++) {
 		LoadItemData(&pItem[i]);
@@ -1071,7 +1071,7 @@ static void SaveItem(ItemStruct *pItem)
 		CopyInt(&pItem->_iDamAcFlags, tbuff);
 }
 
-static void SaveItems(ItemStruct *pItem, const int n)
+void SaveItems(ItemStruct *pItem, const int n)
 {
 	for (int i = 0; i < n; i++) {
 		SaveItem(&pItem[i]);

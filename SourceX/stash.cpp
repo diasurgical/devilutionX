@@ -12,13 +12,84 @@ ItemStruct StashList[NUM_STASH_GRID_ELEM];
 int _pNumStash;
 char StashGrid[NUM_STASH_GRID_ELEM];
 
-bool cleared = false;
+bool loaded = false;
 
 InvXY getStashGridXY(int i)
 {
 	return {
 		stashGridStart.X + (i % stashCols) * stashGridOffsets.X, stashGridStart.Y + (i / stashRows) * stashGridOffsets.Y
 	};
+}
+
+std::string GetStashPath()
+{
+	return GetPrefPath() + "stash.lol";
+}
+
+bool SaveStash()
+{
+	FILE *pFile = fopen(GetStashPath().c_str(), "wb");
+
+	if (pFile == NULL)
+		return false;
+
+	BYTE *tbuffold = tbuff;
+	DWORD dwLen = (sizeof(ItemStruct) * NUM_STASH_GRID_ELEM) + sizeof(char) * NUM_STASH_GRID_ELEM + sizeof(int);
+	BYTE *tmp = (BYTE *) malloc(dwLen);
+	memset(tmp, 0, dwLen);
+	tbuff = tmp;
+	CopyInt(&_pNumStash, tbuff);
+	SaveItems(StashList, NUM_STASH_GRID_ELEM);
+	CopyBytes(StashGrid, NUM_STASH_GRID_ELEM, tbuff);
+	fwrite(tmp, sizeof(char), dwLen, pFile);
+	fclose(pFile);
+	free(tmp);
+	tbuff = tbuffold;
+	return true;
+}
+
+bool LoadStash()
+{
+	FILE *pFile;
+	unsigned long lSize;
+	size_t result;
+
+	pFile = fopen(GetStashPath().c_str(), "rb");
+	if (pFile == NULL)
+		return false;
+
+	// obtain file size:
+	fseek(pFile, 0, SEEK_END);
+	lSize = ftell(pFile);
+	rewind(pFile);
+
+	// allocate memory to contain the whole file:
+	BYTE *tbuffold = tbuff;
+	BYTE *tmp = (BYTE *)malloc(lSize);
+	if (tmp == NULL) {
+		fclose(pFile);
+		return false;
+	}
+	memset(tmp, 0, lSize);
+
+	// copy the file into the buffer:
+	result = fread(tmp, 1, lSize, pFile);
+	if (result != lSize) {
+		free(tmp);
+		fclose(pFile);
+		return false;
+	}
+	/* the whole file is now loaded in the memory buffer. */
+	// terminate
+	fclose(pFile);
+
+	tbuff = tmp;
+	CopyInt(tbuff, &_pNumStash);
+	LoadItems(NUM_STASH_GRID_ELEM, StashList);
+	CopyBytes(tbuff, NUM_STASH_GRID_ELEM, StashGrid);
+	free(tmp);
+	tbuff = tbuffold;
+	return true;
 }
 
 int GetStashSlotFromMouse(int mx, int my)
@@ -178,6 +249,7 @@ void CheckStashPaste(int pnum, int mx, int my)
 			SetCursorPos(MouseX + (cursW >> 1), MouseY + (cursH >> 1));
 		SetCursor_(cn);
 	}
+	SaveStash();
 }
 
 void CheckStashCut(int pnum, int mx, int my)
@@ -246,20 +318,11 @@ void CheckStashCut(int pnum, int mx, int my)
 			SetCursorPos(mx - (cursW >> 1), MouseY - (cursH >> 1));
 		}
 	}
+	SaveStash();
 }
 
 void CheckStash()
 {
-	if (!cleared) {
-		cleared = true;
-		memset(StashGrid, 0, sizeof(StashGrid));
-
-		for (int i = NUM_STASH_GRID_ELEM; i != 0; i--) {
-			StashList[i]._itype = ITYPE_NONE;
-		}
-
-		_pNumStash = 0;
-	}
 	SDL_Log("CHECKSTASH %d %d", MouseX, MouseY);
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckStashPaste(myplr, MouseX, MouseY);
@@ -270,6 +333,18 @@ void CheckStash()
 
 void DrawStash()
 {
+	if (!loaded) {
+		loaded = true;
+		if (!LoadStash()) {
+		memset(StashGrid, 0, sizeof(StashGrid));
+
+		for (int i = NUM_STASH_GRID_ELEM; i != 0; i--) {
+			StashList[i]._itype = ITYPE_NONE;
+		}
+
+		_pNumStash = 0;
+		}
+	}
 	Uint8 *pStart, *pEnd;
 	pStart = gpBufStart;
 	pEnd = gpBufEnd;
