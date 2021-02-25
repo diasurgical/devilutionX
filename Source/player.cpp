@@ -368,7 +368,7 @@ static DWORD GetPlrGFXSize(const char *szCel)
 	dwMaxSize = 0;
 
 	for (c = 0; c < NUM_CLASSES; c++) {
-		if (gbIsSpawn && (c == PC_ROGUE || c == PC_SORCERER)
+		if (gbIsSpawn && (c == PC_ROGUE || c == PC_SORCERER))
 			continue;
 		if (!gbIsHellfire && c == PC_MONK)
 			continue;
