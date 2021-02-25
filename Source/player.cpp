@@ -367,11 +367,14 @@ static DWORD GetPlrGFXSize(const char *szCel)
 
 	dwMaxSize = 0;
 
-	int classesToLoad = gbIsHellfire ? NUM_CLASSES : 3;
-
-	for (c = 0; c < classesToLoad; c++) {
-		if (gbIsSpawn && c != 0)
+	for (c = 0; c < NUM_CLASSES; c++) {
+		if (gbIsSpawn && (c == PC_ROGUE || c == PC_SORCERER))
 			continue;
+		if (!gbIsHellfire && c == PC_MONK)
+			continue;
+		if ((c == PC_BARD && hfbard_mpq == NULL) || (c == PC_BARBARIAN && hfbarb_mpq == NULL))
+			continue;
+
 		for (a = &ArmourChar[0]; *a; a++) {
 			if (gbIsSpawn && a != &ArmourChar[0])
 				break;
@@ -651,7 +654,6 @@ void SetPlrAnims(int pnum)
 		}
 	}
 }
-
 
 /**
  * @param c plr_classes value
@@ -1301,7 +1303,7 @@ void PM_ChangeOffset(int pnum)
 	plr[pnum]._pVar6 += plr[pnum]._pxvel;
 	plr[pnum]._pVar7 += plr[pnum]._pyvel;
 
-	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
+	if (currlevel == 0 && jogging_opt) {
 		plr[pnum]._pVar6 += plr[pnum]._pxvel;
 		plr[pnum]._pVar7 += plr[pnum]._pyvel;
 	}
@@ -2164,7 +2166,7 @@ bool PM_DoWalk(int pnum, int variant)
 	}
 
 	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
-	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
+	if (currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;
@@ -3447,8 +3449,7 @@ void ValidatePlayer()
 		plr[myplr]._pBaseVit = MaxStats[pc][ATTRIB_VIT];
 	}
 
-	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-	for (b = 1; b < maxSpells; b++) {
+	for (b = 1; b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel(b) != -1) {
 			msk |= SPELLBIT(b);
 			if (plr[myplr]._pSplLvl[b] > MAX_SPELL_LEVEL)

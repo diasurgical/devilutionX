@@ -320,8 +320,8 @@ void InitMonsterGFX(int monst)
 
 	for (anim = 0; anim < 6; anim++) {
 		int frames = monsterdata[mtype].Frames[anim];
-		if (!gbIsHellfire && mtype == MT_DIABLO && anim == 3)
-			frames = 6;
+		if (gbIsHellfire && mtype == MT_DIABLO && anim == 3)
+			frames = 2;
 
 		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && frames > 0) {
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);

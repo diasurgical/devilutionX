@@ -804,8 +804,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	tick_delay = 1000 / ticks_per_sec;
 	SetRndSeed(sgGameInitInfo.dwSeed);
 
-	int numberOfLevels = gbIsHellfire ? NUMLEVELS : 17;
-	for (i = 0; i < numberOfLevels; i++) {
+	for (i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}

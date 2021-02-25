@@ -2442,7 +2442,7 @@ void GetItemBonus(int i, int idata, int minlvl, int maxlvl, BOOL onlygood, BOOLE
 			GetItemPower(i, minlvl, maxlvl, PLT_ARMO, onlygood);
 			break;
 		case ITYPE_STAFF:
-			if (!gbIsHellfire || allowspells)
+			if (allowspells)
 				GetStaffSpell(i, maxlvl, onlygood);
 			else
 				GetItemPower(i, minlvl, maxlvl, PLT_STAFF, onlygood);
@@ -4709,7 +4709,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		SetRndSeed(item[0]._iSeed);
 		itype = RndPremiumItem(plvl >> 2, plvl) - 1;
 		GetItemAttrs(0, itype, plvl);
-		GetItemBonus(0, itype, plvl >> 1, plvl, TRUE, FALSE);
+		GetItemBonus(0, itype, plvl >> 1, plvl, TRUE, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
 			if (item[0]._iIvalue > 140000)
@@ -5263,7 +5263,7 @@ void RecreatePremiumItem(int ii, int idx, int plvl, int iseed)
 	SetRndSeed(iseed);
 	itype = RndPremiumItem(plvl >> 2, plvl) - 1;
 	GetItemAttrs(ii, itype, plvl);
-	GetItemBonus(ii, itype, plvl >> 1, plvl, TRUE, FALSE);
+	GetItemBonus(ii, itype, plvl >> 1, plvl, TRUE, !gbIsHellfire);
 
 	item[ii]._iSeed = iseed;
 	item[ii]._iCreateInfo = plvl | CF_SMITHPREMIUM;
