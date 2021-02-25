@@ -2040,7 +2040,7 @@ int InvPutItem(int pnum, int x, int y)
 		}
 	}
 
-	if (gbIsHellfire && currlevel == 0) {
+	if (currlevel == 0) {
 		yp = cursmy;
 		xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {

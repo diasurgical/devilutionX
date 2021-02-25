@@ -338,8 +338,6 @@ void DrawSpellList()
 	y = PANEL_Y - 17;
 	ClearPanel();
 
-	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-
 	for (i = 0; i < 4; i++) {
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
@@ -362,7 +360,7 @@ void DrawSpellList()
 			c = SPLICONLAST + 2;
 			break;
 		}
-		for (spl = 1, j = 1; j < maxSpells; spl <<= 1, j++) {
+		for (spl = 1, j = 1; j < MAX_SPELLS; spl <<= 1, j++) {
 			if (!(mask & spl))
 				continue;
 			if (i == RSPLTYPE_SPELL) {
@@ -912,8 +910,6 @@ void DoSpeedBook()
 	X = xo - (BORDER_LEFT - SPLICONLENGTH / 2);
 	Y = yo - (BORDER_TOP + SPLICONLENGTH / 2);
 
-	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (i = 0; i < 4; i++) {
 			switch (i) {
@@ -931,7 +927,7 @@ void DoSpeedBook()
 				break;
 			}
 			spell = (__int64)1;
-			for (j = 1; j < maxSpells; j++) {
+			for (j = 1; j < MAX_SPELLS; j++) {
 				if (spell & spells) {
 					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
 						X = xo - (BORDER_LEFT - SPLICONLENGTH / 2);
@@ -1883,19 +1879,16 @@ void DrawSpellBook()
 	unsigned __int64 spl;
 
 	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel, 1, SPANEL_WIDTH);
-	if (gbIsHellfire && sbooktab < 5)
+	if (gbIsHellfire && sbooktab < 5) {
 		CelDraw(RIGHT_PANEL_X + 61 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 61);
-	else if (gbIsHellfire && sbooktab < 4)
-		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel.
-		// The fix would look as follows:
-		//
-		//    int sx = RIGHT_PANEL_X + 76 * sbooktab + 7;
-		//    if (sbooktab == 2 || sbooktab == 3) {
-		//       sx++;
-		//    }
-		//    CelDraw(sx, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
-		CelDraw(RIGHT_PANEL_X + 76 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
-
+	} else {
+		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
+		int sx = RIGHT_PANEL_X + 76 * sbooktab + 7;
+		if (sbooktab == 2 || sbooktab == 3) {
+			sx++;
+		}
+		CelDraw(sx, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
+	}
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
 	yp = 55 + SCREEN_Y;
