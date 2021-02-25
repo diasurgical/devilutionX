@@ -18,7 +18,7 @@ void InitStash()
 	stash = false;
 	if (!LoadStash()) {
 		memset(StashGrid, 0, sizeof(StashGrid));
-		for (int i = NUM_STASH_GRID_ELEM; i != 0; i--) {
+		for (int i = 0; i < NUM_STASH_GRID_ELEM; i++) {
 			StashList[i]._itype = ITYPE_NONE;
 		}
 		_pNumStash = 0;
@@ -55,7 +55,6 @@ char CheckStashHLight()
 		return -1;
 	int r, ii, nGold;
 	ItemStruct *pi;
-	PlayerStruct *p;
 	char rv;
 
 	r = GetStashSlotFromMouse(MouseX, MouseY);
@@ -66,7 +65,6 @@ char CheckStashHLight()
 	rv = -1;
 	infoclr = COL_WHITE;
 	pi = NULL;
-	p = &plr[myplr];
 	ClearPanel();
 	r = abs(StashGrid[r]);
 	if (r == 0)
