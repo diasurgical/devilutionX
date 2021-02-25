@@ -217,7 +217,7 @@ typedef struct PlayerStruct {
 	char _pSplLvl[64];
 	uint64_t _pMemSpells;  // Bitmask of learned spells
 	uint64_t _pAblSpells;  // Bitmask of abilities
-	uint64_t _pScrlSpells; // Bitmask of spells avalible via scrolls
+	uint64_t _pScrlSpells; // Bitmask of spells available via scrolls
 	UCHAR _pSpellFlags;
 	int _pSplHotKey[4];
 	char _pSplTHotKey[4];

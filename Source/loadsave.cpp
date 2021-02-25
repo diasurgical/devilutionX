@@ -396,14 +396,14 @@ static void LoadPlayer(int i)
 		tbuff += 1;
 		pPlayer->pOriginalCathedral = true;
 	}
-	tbuff += 2; // Avalible bytes
+	tbuff += 2; // Available bytes
 	CopyShort(tbuff, &pPlayer->wReflections);
-	tbuff += 14; // Avalible bytes
+	tbuff += 14; // Available bytes
 
 	CopyInt(tbuff, &pPlayer->pDiabloKillLevel);
 	CopyInt(tbuff, &pPlayer->pDifficulty);
 	CopyInt(tbuff, &pPlayer->pDamAcFlags);
-	tbuff += 20; // Avalible bytes
+	tbuff += 20; // Available bytes
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -1263,14 +1263,14 @@ static void SavePlayer(int i)
 		CopyChar(&pPlayer->pBattleNet, tbuff);
 	CopyChar(&pPlayer->pManaShield, tbuff);
 	CopyChar(&pPlayer->pOriginalCathedral, tbuff);
-	tbuff += 2; // Avalible bytes
+	tbuff += 2; // Available bytes
 	CopyShort(&pPlayer->wReflections, tbuff);
-	tbuff += 14; // Avalible bytes
+	tbuff += 14; // Available bytes
 
 	CopyInt(&pPlayer->pDiabloKillLevel, tbuff);
 	CopyInt(&pPlayer->pDifficulty, tbuff);
 	CopyInt(&pPlayer->pDamAcFlags, tbuff);
-	tbuff += 20; // Avalible bytes
+	tbuff += 20; // Available bytes
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
