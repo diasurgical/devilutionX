@@ -1205,23 +1205,15 @@ static void HealPlayer()
 
 void S_StartHealer()
 {
-	if (gbIsHellfire) {
-		HealPlayer();
-	}
+	HealPlayer();
 	stextsize = FALSE;
 	stextscrl = FALSE;
 	AddSText(0, 1, TRUE, "Welcome to the", COL_GOLD, FALSE);
 	AddSText(0, 3, TRUE, "Healer's home", COL_GOLD, FALSE);
 	AddSText(0, 9, TRUE, "Would you like to:", COL_GOLD, FALSE);
 	AddSText(0, 12, TRUE, "Talk to Pepin", COL_BLUE, TRUE);
-	if (gbIsHellfire) {
-		AddSText(0, 14, TRUE, "Buy items", COL_WHITE, TRUE);
-		AddSText(0, 16, TRUE, "Leave Healer's home", COL_WHITE, TRUE);
-	} else {
-		AddSText(0, 14, TRUE, "Receive healing", COL_WHITE, TRUE);
-		AddSText(0, 16, TRUE, "Buy items", COL_WHITE, TRUE);
-		AddSText(0, 18, TRUE, "Leave Healer's home", COL_WHITE, TRUE);
-	}
+	AddSText(0, 14, TRUE, "Buy items", COL_WHITE, TRUE);
+	AddSText(0, 16, TRUE, "Leave Healer's home", COL_WHITE, TRUE);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -2549,16 +2541,7 @@ void S_HealerEnter()
 		StartStore(STORE_GOSSIP);
 		break;
 	case 14:
-		if (gbIsHellfire)
-			StartStore(STORE_HBUY);
-		else
-			HealPlayer();
-		break;
-	case 16:
-		if (gbIsHellfire)
-			stextflag = STORE_NONE;
-		else
-			StartStore(STORE_HBUY);
+		StartStore(STORE_HBUY);
 		break;
 	case 18:
 		stextflag = STORE_NONE;
