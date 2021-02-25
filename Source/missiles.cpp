@@ -58,6 +58,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		*maxd = -1;
 		break;
 	case SPL_LIGHTNING:
+	case SPL_RUNELIGHT:
 		*mind = 2;
 		*maxd = plr[myplr]._pLevel + 2;
 		break;
@@ -96,10 +97,13 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		*maxd = -1;
 		break;
 	case SPL_FIREWALL:
+	case SPL_LTWALL:
+	case SPL_RINGOFFIRE:
 		*mind = (4 * plr[myplr]._pLevel + 8) >> 1;
 		*maxd = (4 * plr[myplr]._pLevel + 80) >> 1;
 		break;
 	case SPL_FIREBALL:
+	case SPL_RUNEFIRE:
 		*mind = 2 * plr[myplr]._pLevel + 4;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
@@ -128,6 +132,9 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		*maxd = 6 * (plr[myplr]._pLevel + 10);
 		break;
 	case SPL_NOVA:
+	case SPL_IMMOLAT:
+	case SPL_RUNEIMMOLAT:
+	case SPL_RUNENOVA:
 		*mind = (plr[myplr]._pLevel + 5) >> 1;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
