@@ -93,7 +93,7 @@ void DrawDlg(const char *pszFmt, ...)
  */
 void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 {
-	app_fatal("assertion failed (%d:%s)\n%s", nLineNo, pszFile, pszFail);
+	app_fatal("assertion failed (%s:%d)\n%s", pszFile, nLineNo, pszFail);
 }
 #endif
 

@@ -302,7 +302,9 @@ int premiumLvlAddHellfire[] = {
 bool IsItemAvailable(int i)
 {
 	if (!gbIsHellfire) {
-		return (i < 35 || i > 47)   // Hellfire exclusive items
+		return i != 22              // Cathedral Map
+		    && i != 32              // Bovine Plate
+		    && (i < 35 || i > 47)   // Hellfire exclusive items
 		    && (i < 83 || i > 86)   // Oils
 		    && i != 92              // Scroll of Search
 		    && (i < 161 || i > 165) // Runes
