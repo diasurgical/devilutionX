@@ -675,7 +675,7 @@ void DeltaSaveLevel()
 
 void DeltaLoadLevel()
 {
-	int ii, ot;
+	int ot;
 	int i, j, k, l;
 	int x, y, xx, yy;
 	BOOL done;
@@ -731,7 +731,7 @@ void DeltaLoadLevel()
 	for (i = 0; i < MAXITEMS; i++) {
 		if (sgLevels[currlevel].item[i].bCmd != 0xFF) {
 			if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
-				ii = FindGetItem(
+				int ii = FindGetItem(
 				    sgLevels[currlevel].item[i].wIndx,
 				    sgLevels[currlevel].item[i].wCI,
 				    sgLevels[currlevel].item[i].dwSeed);
@@ -742,9 +742,8 @@ void DeltaLoadLevel()
 				}
 			}
 			if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {
-				ii = itemavail[0];
-				itemavail[0] = itemavail[MAXITEMS - numitems - 1];
-				itemactive[numitems] = ii;
+				int ii = AllocateItem();
+
 				if (sgLevels[currlevel].item[i].wIndx == IDI_EAR) {
 					RecreateEar(
 					    ii,
@@ -799,7 +798,6 @@ void DeltaLoadLevel()
 				item[ii]._iy = y;
 				dItem[item[ii]._ix][item[ii]._iy] = ii + 1;
 				RespawnItem(ii, FALSE);
-				numitems++;
 			}
 		}
 	}
