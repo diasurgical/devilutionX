@@ -580,6 +580,21 @@ void DrawInvBelt()
 	}
 }
 
+/**
+ * @brief Gets the size, in inventory cells, of the given item.
+ * @param item The item whose size is to be determined.
+ * @return The size, in inventory cells, of the item.
+ */
+InvXY GetInventorySize(const ItemStruct &item)
+{
+	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
+
+	return {
+		InvItemWidth[itemSizeIndex] / INV_SLOT_SIZE_PX,
+		InvItemHeight[itemSizeIndex] / INV_SLOT_SIZE_PX,
+	};
+}
+
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 {
 	int i, j, xx, yy;
@@ -635,7 +650,7 @@ BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 	return done;
 }
 
-BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy)
+BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
 {
 	int i, j, xx, yy;
 	BOOL done;
@@ -645,7 +660,9 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy)
 	if (yy < 0) {
 		yy = 0;
 	}
-	for (j = 0; j < sy && done; j++) {
+
+	InvXY itemSize = GetInventorySize(item); 
+	for (j = 0; j < itemSize.Y && done; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
 			done = FALSE;
 		}
@@ -653,7 +670,7 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy)
 		if (xx < 0) {
 			xx = 0;
 		}
-		for (i = 0; i < sx && done; i++) {
+		for (i = 0; i < itemSize.X && done; i++) {
 			if (xx >= 10) {
 				done = FALSE;
 			} else {
@@ -664,7 +681,7 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy)
 		yy += 10;
 	}
 	if (!done) {
-		if (sx > 1 || sy > 1) {
+		if (itemSize.X > 1 || itemSize.Y > 1) {
 			done = FALSE;
 		} else {
 			for (i = 0; i < MAXBELTITEMS; i++) {
