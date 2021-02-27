@@ -423,6 +423,8 @@ static void LoadPlayer(int i)
 	// Omit pointer pReserved
 }
 
+bool gbSkipSync = false;
+
 static void LoadMonster(int i)
 {
 	MonsterStruct *pMonster = &monster[i];
@@ -515,6 +517,9 @@ static void LoadMonster(int i)
 	// Omit pointer mName;
 	// Omit pointer MType;
 	// Omit pointer MData;
+
+	if (gbSkipSync)
+		return;
 
 	SyncMonsterAnim(i);
 }
@@ -758,6 +763,54 @@ bool IsHeaderValid(int magicNumber)
 	return false;
 }
 
+void ConvertLevels()
+{
+	// Backup current level state
+	bool _setlevel = setlevel;
+	int _setlvlnum = setlvlnum;
+	int _currlevel = currlevel;
+	int _leveltype = leveltype;
+	BYTE *_tbuff = tbuff;
+
+	gbSkipSync = true;
+
+	setlevel = false; // Convert regular levels
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		currlevel = i;
+		if (!LevelFileExists())
+			continue;
+
+		leveltype = gnLevelTypeTbl[i];
+
+		LoadLevel();
+		SaveLevel();
+	}
+
+	setlevel = true; // Convert quest levels
+	for (int i = 0; i < MAXQUESTS; i++) {
+		leveltype = questlist[i]._qlvlt;
+		if (leveltype == DTYPE_NONE) {
+			continue;
+		}
+
+		setlvlnum = questlist[i]._qslvl;
+		if (!LevelFileExists())
+			continue;
+
+		LoadLevel();
+		SaveLevel();
+	}
+
+	gbSkipSync = false;
+
+	// Restor current level state
+	setlevel = _setlevel;
+	setlvlnum = _setlvlnum;
+	currlevel = _currlevel;
+	leveltype = _leveltype;
+	tbuff = _tbuff;
+}
+
 /**
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
@@ -792,6 +845,8 @@ void LoadGame(BOOL firstflag)
 	setlvlnum = WLoad();
 	currlevel = WLoad();
 	leveltype = WLoad();
+	if (!setlevel)
+		leveltype = gnLevelTypeTbl[currlevel];
 	_ViewX = WLoad();
 	_ViewY = WLoad();
 	invflag = LoadBool8();
@@ -800,6 +855,9 @@ void LoadGame(BOOL firstflag)
 	_numitems = WLoad();
 	_nummissiles = WLoad();
 	_nobjects = WLoad();
+
+	if (!gbIsHellfire && currlevel > 17)
+		app_fatal("Player is on a Hellfire only level");
 
 	for (i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = ILoad();
@@ -816,6 +874,9 @@ void LoadGame(BOOL firstflag)
 		LoadQuest(i);
 	for (i = 0; i < MAXPORTAL; i++)
 		LoadPortal(i);
+
+	if (gbIsHellfireSaveGame != gbIsHellfire)
+		ConvertLevels();
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);
 	SyncInitPlr(myplr);
@@ -945,6 +1006,9 @@ void LoadGame(BOOL firstflag)
 	ResetPal();
 	SetCursor_(CURSOR_HAND);
 	gbProcessPlayers = TRUE;
+
+	if (gbIsHellfireSaveGame != gbIsHellfire)
+		SaveGame();
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
@@ -1855,8 +1919,10 @@ void LoadLevel()
 			objectavail[i] = BLoad();
 		for (i = 0; i < nobjects; i++)
 			LoadObject(objectactive[i]);
-		for (i = 0; i < nobjects; i++)
-			SyncObjectAnim(objectactive[i]);
+		if (!gbSkipSync) {
+			for (i = 0; i < nobjects; i++)
+				SyncObjectAnim(objectactive[i]);
+		}
 	}
 
 	for (i = 0; i < MAXITEMS; i++)
@@ -1902,10 +1968,12 @@ void LoadLevel()
 		}
 	}
 
-	AutomapZoomReset();
-	ResyncQuests();
-	SyncPortals();
-	dolighting = TRUE;
+	if (!gbSkipSync) {
+		AutomapZoomReset();
+		ResyncQuests();
+		SyncPortals();
+		dolighting = TRUE;
+	}
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)

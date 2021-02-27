@@ -26,6 +26,7 @@ BOOL pfile_ui_save_create(_uiheroinfo *heroinfo);
 BOOL pfile_get_file_name(DWORD lvl, char *dst);
 BOOL pfile_delete_save(_uiheroinfo *hero_info);
 void pfile_read_player_from_save();
+bool LevelFileExists();
 void GetTempLevelNames(char *szTemp);
 void GetPermLevelNames(char *szPerm);
 void pfile_remove_temp_files();
