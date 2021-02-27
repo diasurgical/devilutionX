@@ -2544,7 +2544,7 @@ void S_HealerEnter()
 	case 14:
 		StartStore(STORE_HBUY);
 		break;
-	case 18:
+	case 16:
 		stextflag = STORE_NONE;
 		break;
 	}
