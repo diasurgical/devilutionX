@@ -16,7 +16,7 @@
 // must be unsigned to generate unsigned comparisons with pnum
 #define MAX_PLRS				4
 
-#define MAX_CHARACTERS			10
+#define MAX_CHARACTERS			99
 #define MAX_LVLS				24
 #define MAX_LVLMTYPES			24
 #define MAX_SPELLS				52
