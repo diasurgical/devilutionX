@@ -3742,7 +3742,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	switch (plidx) {
 	case IPL_TOHIT:
 	case IPL_TOHIT_CURSE:
-		sprintf(tempstr, "chance to hit : %+i%%", x->_iPLToHit);
+		sprintf(tempstr, "chance to hit: %+i%%", x->_iPLToHit);
 		break;
 	case IPL_DAMP:
 	case IPL_DAMP_CURSE:
@@ -3765,30 +3765,30 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	case IPL_FIRERES:
 	case IPL_FIRERES_CURSE:
 		if (x->_iPLFR < 75)
-			sprintf(tempstr, "Resist Fire : %+i%%", x->_iPLFR);
+			sprintf(tempstr, "Resist Fire: %+i%%", x->_iPLFR);
 		else
-			sprintf(tempstr, "Resist Fire : 75%% MAX");
+			sprintf(tempstr, "Resist Fire: 75%% MAX");
 		break;
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
 		if (x->_iPLLR < 75)
-			sprintf(tempstr, "Resist Lightning : %+i%%", x->_iPLLR);
+			sprintf(tempstr, "Resist Lightning: %+i%%", x->_iPLLR);
 		else
-			sprintf(tempstr, "Resist Lightning : 75%% MAX");
+			sprintf(tempstr, "Resist Lightning: 75%% MAX");
 		break;
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
 		if (x->_iPLMR < 75)
-			sprintf(tempstr, "Resist Magic : %+i%%", x->_iPLMR);
+			sprintf(tempstr, "Resist Magic: %+i%%", x->_iPLMR);
 		else
-			sprintf(tempstr, "Resist Magic : 75%% MAX");
+			sprintf(tempstr, "Resist Magic: 75%% MAX");
 		break;
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
 		if (x->_iPLFR < 75)
-			sprintf(tempstr, "Resist All : %+i%%", x->_iPLFR);
+			sprintf(tempstr, "Resist All: %+i%%", x->_iPLFR);
 		if (x->_iPLFR >= 75)
-			sprintf(tempstr, "Resist All : 75%% MAX");
+			sprintf(tempstr, "Resist All: 75%% MAX");
 		break;
 	case IPL_SPLLVLADD:
 		if (x->_iSplLvlAdd == 1)
@@ -3846,11 +3846,11 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_LIFE:
 	case IPL_LIFE_CURSE:
-		sprintf(tempstr, "Hit Points : %+i", x->_iPLHP >> 6);
+		sprintf(tempstr, "Hit Points: %+i", x->_iPLHP >> 6);
 		break;
 	case IPL_MANA:
 	case IPL_MANA_CURSE:
-		sprintf(tempstr, "Mana : %+i", x->_iPLMana >> 6);
+		sprintf(tempstr, "Mana: %+i", x->_iPLMana >> 6);
 		break;
 	case IPL_DUR:
 		strcpy(tempstr, "high durability");
@@ -3994,7 +3994,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		if (x->_iPLFR <= 0)
 			sprintf(tempstr, " ");
 		else if (x->_iPLFR >= 1)
-			sprintf(tempstr, "Resist Fire : %+i%%", x->_iPLFR);
+			sprintf(tempstr, "Resist Fire: %+i%%", x->_iPLFR);
 		break;
 	case IPL_DEVASTATION:
 		strcpy(tempstr, "occasional triple damage");
@@ -4155,7 +4155,7 @@ void PrintItemMisc(ItemStruct *x)
 		AddPanelString(tempstr, TRUE);
 	}
 	if (x->_iMiscId == IMISC_EAR) {
-		sprintf(tempstr, "Level : %i", x->_ivalue);
+		sprintf(tempstr, "Level: %i", x->_ivalue);
 		AddPanelString(tempstr, TRUE);
 	}
 	if (x->_iMiscId == IMISC_AURIC) {
