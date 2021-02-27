@@ -44,6 +44,8 @@ ItemStruct smithitem[SMITH_ITEMS];
 int stextdown;
 char stextscrlubtn;
 char stextflag;
+ItemStruct SmithBuyBackItems[SMITH_ITEMS];
+ItemStruct WitchBuyBackItems[WITCH_ITEMS];
 
 /** Maps from towner IDs to NPC names. */
 const char *const talkname[9] = {
@@ -74,6 +76,12 @@ void InitStores()
 
 	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
 		premiumitem[i]._itype = ITYPE_NONE;
+
+	for (i = 0; i < SMITH_ITEMS; i++)
+		SmithBuyBackItems[i]._itype = ITYPE_NONE;
+
+	for (i = 0; i < WITCH_ITEMS; i++)
+		WitchBuyBackItems[i]._itype = ITYPE_NONE;
 
 	boyitem._itype = ITYPE_NONE;
 	boylevel = 0;
@@ -437,9 +445,9 @@ void S_StartSmith()
 	AddSText(0, 12, TRUE, "Buy basic items", COL_WHITE, TRUE);
 	AddSText(0, 14, TRUE, "Buy premium items", COL_WHITE, TRUE);
 	AddSText(0, 16, TRUE, "Sell items", COL_WHITE, TRUE);
-	AddSText(0, 17, TRUE, "Buy back items", COL_WHITE, TRUE);
-	AddSText(0, 18, TRUE, "Repair items", COL_WHITE, TRUE);
-    AddSText(0, 20, TRUE, "Leave the shop", COL_WHITE, TRUE);
+	AddSText(0, 18, TRUE, "Buy back items", COL_WHITE, TRUE);
+	AddSText(0, 20, TRUE, "Repair items", COL_WHITE, TRUE);
+    AddSText(0, 22, TRUE, "Leave the shop", COL_WHITE, TRUE);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -1139,6 +1147,9 @@ void S_StartConfirm()
 	case STORE_SREPAIR:
 		strcpy(tempstr, "Are you sure you want to repair this item?");
 		break;
+	case STORE_SBUYBACK:
+		strcpy(tempstr, "Are you sure you want to buy back this item?");
+		break;
 	}
 	AddSText(0, 15, TRUE, tempstr, COL_WHITE, FALSE);
 	AddSText(0, 18, TRUE, "Yes", COL_WHITE, TRUE);
@@ -1570,6 +1581,9 @@ void StartStore(char s)
 		case STORE_BARMAID:
 			S_StartBarMaid();
 			break;
+        case STORE_SBUYBACK:
+            S_StartSBuyBack();
+            break;
 		}
 
 		for (i = 0; i < STORE_LINES; i++) {
@@ -1614,6 +1628,9 @@ void DrawSText()
 		case STORE_SPBUY:
 			S_ScrollSPBuy(stextsval);
 			break;
+        case STORE_SBUYBACK:
+            S_ScrollSBuyBack(stextsval);
+            break;
 		}
 	}
 
@@ -1664,6 +1681,10 @@ void STextESC()
 			stextsel = 16;
 			break;
 		case STORE_SREPAIR:
+			StartStore(STORE_SMITH);
+			stextsel = 20;
+			break;
+		case STORE_SBUYBACK:
 			StartStore(STORE_SMITH);
 			stextsel = 18;
 			break;
@@ -1826,10 +1847,13 @@ void S_SmithEnter()
 	case 16:
 		StartStore(STORE_SSELL);
 		break;
-	case 18:
-		StartStore(STORE_SREPAIR);
+    case 18:
+		StartStore(STORE_SBUYBACK);
 		break;
 	case 20:
+		StartStore(STORE_SREPAIR);
+		break;
+	case 22:
 		stextflag = STORE_NONE;
 		break;
 	}
@@ -1916,7 +1940,7 @@ void TakePlrsMoney(int cost)
  */
 void SmithBuyItem()
 {
-	int idx;
+ 	int idx;
 
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
 	if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_NORMAL)
@@ -2095,9 +2119,25 @@ void PlaceStoreGold(int v)
  */
 void StoreSellItem()
 {
-	int i, idx, cost;
+	int i, idx, cost, ii;
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
+
+	ii = storehidx[idx] >= 0 ? storehidx[idx] : -(storehidx[idx] + 1);
+    switch(stextshold)
+    {
+        case STORE_SSELL:
+            for (int i = SMITH_ITEMS-2; i>0; i--)
+                SmithBuyBackItems[i]=SmithBuyBackItems[i-1];
+            SmithBuyBackItems[0] = plr[myplr].InvList[ii];
+            break;
+        case STORE_WSELL:
+            for (int i = WITCH_ITEMS-2; i>0; i--)
+                WitchBuyBackItems[i]=WitchBuyBackItems[i-1];
+            WitchBuyBackItems[0] = plr[myplr].InvList[ii];
+            break;
+    }
+
 	if (storehidx[idx] >= 0)
 		RemoveInvItem(myplr, storehidx[idx]);
 	else
@@ -2522,6 +2562,9 @@ void S_ConfirmEnter()
 		case STORE_SPBUY:
 			SmithBuyPItem();
 			break;
+		case STORE_SBUYBACK:
+			SmithBuyBackItem();
+			break;
 		}
 	}
 
@@ -2811,6 +2854,9 @@ void STextEnter()
 		case STORE_BARMAID:
 			S_BarmaidEnter();
 			break;
+        case STORE_SBUYBACK:
+			S_SBuyBackEnter();
+			break;
 		}
 	}
 }
@@ -2873,4 +2919,118 @@ void ReleaseStoreBtn()
 	stextscrldbtn = -1;
 }
 
+void S_StartSBuyBack()
+{
+	int i;
+
+	stextsize = TRUE;
+	stextscrl = TRUE;
+	stextsval = 0;
+	sprintf(tempstr, "I have these items for sale :           Your gold : %i", plr[myplr]._pGold);
+	AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
+	AddSLine(3);
+	AddSLine(21);
+	S_ScrollSBuyBack(stextsval);
+	AddSText(0, 22, TRUE, "Back", COL_WHITE, FALSE);
+	OffsetSTextY(22, 6);
+	storenumh = 0;
+	for (i = 0; SmithBuyBackItems[i]._itype != ITYPE_NONE; i++) {
+		storenumh++;
+	}
+
+	stextsmax = storenumh - 4;
+	if (stextsmax < 0)
+		stextsmax = 0;
+
+    return;
+}
+
+void S_ScrollSBuyBack(int idx)
+{
+	int l, ls;
+	char iclr;
+
+	ls = idx;
+	ClearSText(5, 21);
+	stextup = 5;
+
+	for (l = 5; l < 20; l += 4) {
+		if (SmithBuyBackItems[ls]._itype != ITYPE_NONE) {
+			iclr = COL_WHITE;
+			if (SmithBuyBackItems[ls]._iMagical) {
+				iclr = COL_BLUE;
+			}
+
+			if (!SmithBuyBackItems[ls]._iStatFlag) {
+				iclr = COL_RED;
+			}
+
+			if (SmithBuyBackItems[ls]._iMagical) {
+				AddSText(20, l, FALSE, SmithBuyBackItems[ls]._iIName, iclr, TRUE);
+			} else {
+				AddSText(20, l, FALSE, SmithBuyBackItems[ls]._iName, iclr, TRUE);
+			}
+
+			AddSTextVal(l, SmithBuyBackItems[ls]._iIvalue);
+			PrintStoreItem(&SmithBuyBackItems[ls], l + 1, iclr);
+			stextdown = l;
+			ls++;
+		}
+	}
+
+	if (!stext[stextsel]._ssel && stextsel != 22)
+		stextsel = stextdown;
+}
+
+void S_SBuyBackEnter()
+{
+	int idx, i;
+	BOOL done;
+
+	if (stextsel == 22) {
+		StartStore(STORE_SMITH);
+		stextsel = 12;
+	} else {
+		stextlhold = stextsel;
+		stextvhold = stextsval;
+		stextshold = STORE_SBUYBACK;
+		idx = stextsval + ((stextsel - stextup) >> 2);
+		if (plr[myplr]._pGold < SmithBuyBackItems[idx]._iIvalue) {
+			StartStore(STORE_NOMONEY);
+		} else {
+			plr[myplr].HoldItem = SmithBuyBackItems[idx];
+			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
+			done = FALSE;
+
+			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
+				done = AutoPlace(myplr, i, cursW / 28, cursH / 28, FALSE);
+			}
+			if (done)
+				StartStore(STORE_CONFIRM);
+			else
+				StartStore(STORE_NOROOM);
+			SetCursor_(CURSOR_HAND);
+		}
+	}
+}
+
+void SmithBuyBackItem()
+{
+ 	int idx;
+
+	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
+	if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_NORMAL)
+		plr[myplr].HoldItem._iIdentified = FALSE;
+	StoreAutoPlace();
+	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	if (idx == SMITH_ITEMS - 1) {
+		SmithBuyBackItems[SMITH_ITEMS - 1]._itype = ITYPE_NONE;
+	} else {
+		for (; SmithBuyBackItems[idx + 1]._itype != ITYPE_NONE; idx++) {
+			SmithBuyBackItems[idx] = SmithBuyBackItems[idx + 1];
+		}
+		SmithBuyBackItems[idx]._itype = ITYPE_NONE;
+	}
+	CalcPlrInv(myplr, TRUE);
+}
 DEVILUTION_END_NAMESPACE

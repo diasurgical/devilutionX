@@ -59,6 +59,14 @@ void STextEnter();
 void CheckStoreBtn();
 void ReleaseStoreBtn();
 
+void S_StartSBuyBack();
+void S_ScrollSBuyBack(int idx);
+void S_SBuyBackEnter();
+void SmithBuyBackItem();
+void S_StartWBuyBack();
+void S_ScrollWBuyBack(int idx);
+void S_WBuyBackEnter();
+void WitchBuyBackItem();
 /* rdata */
 
 #ifdef __cplusplus
