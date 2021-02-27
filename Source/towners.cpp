@@ -805,7 +805,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_LTBANNER]._qactive = QUEST_DONE;
 					quests[Q_LTBANNER]._qvar1 = 3;
 					RemoveInvItem(p, i);
-					CreateItem(UITEM_HARCREST, towner[t]._tx, towner[t]._ty + 1);
+					SpawnUnique(UITEM_HARCREST, towner[t]._tx, towner[t]._ty + 1);
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;
 					InitQTextMsg(TEXT_BANNER3);
@@ -875,7 +875,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_ROCK]._qvar2 = 2;
 					quests[Q_ROCK]._qvar1 = 2;
 					RemoveInvItem(p, i);
-					CreateItem(UITEM_INFRARING, towner[t]._tx, towner[t]._ty + 1);
+					SpawnUnique(UITEM_INFRARING, towner[t]._tx, towner[t]._ty + 1);
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;
 					InitQTextMsg(TEXT_INFRA7);
@@ -903,7 +903,7 @@ void TalkToTowner(int p, int t)
 						quests[Q_ANVIL]._qvar2 = 2;
 						quests[Q_ANVIL]._qvar1 = 2;
 						RemoveInvItem(p, i);
-						CreateItem(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
+						SpawnUnique(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
 						towner[t]._tbtcnt = 150;
 						towner[t]._tVar1 = p;
 						InitQTextMsg(TEXT_ANVIL7);
@@ -1010,7 +1010,7 @@ void TalkToTowner(int p, int t)
 						towner[t]._tbtcnt = 150;
 						towner[t]._tVar1 = p;
 						InitQTextMsg(TEXT_POISON5);
-						CreateItem(UITEM_TRING, towner[t]._tx, towner[t]._ty + 1);
+						SpawnUnique(UITEM_TRING, towner[t]._tx, towner[t]._ty + 1);
 						towner[t]._tMsgSaid = TRUE;
 					}
 				}
@@ -1182,7 +1182,7 @@ void TalkToTowner(int p, int t)
 				qt = TEXT_JERSEY7;
 				RemoveInvItem(p, i);
 			} else if (PlrHasItem(p, IDI_BROWNSUIT, &i)) {
-				CreateItem(UITEM_BOVINE, towner[t]._tx + 1, towner[t]._ty);
+				SpawnUnique(UITEM_BOVINE, towner[t]._tx + 1, towner[t]._ty);
 				RemoveInvItem(p, i);
 				qt = TEXT_JERSEY8;
 				quests[Q_JERSEY]._qactive = 3;

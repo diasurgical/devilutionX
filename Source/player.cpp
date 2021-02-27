@@ -1657,21 +1657,18 @@ void StartPlrHit(int pnum, int dam, BOOL forcehit)
 
 void RespawnDeadItem(ItemStruct *itm, int x, int y)
 {
-	int ii;
-
-	if (numitems >= MAXITEMS) {
+	if (numitems >= MAXITEMS)
 		return;
-	}
 
-	ii = itemavail[0];
+	int ii = AllocateItem();
+
 	dItem[x][y] = ii + 1;
-	itemavail[0] = itemavail[MAXITEMS - numitems - 1];
-	itemactive[numitems] = ii;
+
 	item[ii] = *itm;
 	item[ii]._ix = x;
 	item[ii]._iy = y;
 	RespawnItem(ii, TRUE);
-	numitems++;
+
 	itm->_itype = ITYPE_NONE;
 }
 
