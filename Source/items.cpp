@@ -585,7 +585,7 @@ void AddInitItems()
 			GetItemAttrs(i, IDI_HEAL, curlv);
 		else
 			GetItemAttrs(i, IDI_MANA, curlv);
-		item[i]._iCreateInfo = curlv - CF_PREGEN;
+		item[i]._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(i);
 		item[i]._iAnimFrame = item[i]._iAnimLen;
 		item[i]._iAnimFlag = FALSE;
@@ -1818,6 +1818,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 	int itemlevel;
 
 	item[i]._itype = AllItemsList[idata].itype;
+	item[i]._iCreateInfo = 0;
 	item[i]._iCurs = AllItemsList[idata].iCurs;
 	strcpy(item[i]._iName, AllItemsList[idata].iName);
 	strcpy(item[i]._iIName, AllItemsList[idata].iName);
@@ -2731,7 +2732,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, BOOL onlygood,
 	item[ii]._iCreateInfo = lvl;
 
 	if (pregen)
-		item[ii]._iCreateInfo = lvl | CF_PREGEN;
+		item[ii]._iCreateInfo |= CF_PREGEN;
 	if (onlygood)
 		item[ii]._iCreateInfo |= CF_ONLYGOOD;
 
@@ -2771,11 +2772,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, BOOL onlygood,
 			ItemRndDur(ii);
 	} else {
 		if (item[ii]._iLoc != ILOC_UNEQUIPABLE) {
-			//uid = CheckUnique(ii, iblvl, uper, recreate);
-			//if (uid != UITYPE_INVALID) {
-			//	GetUniqueItem(ii, uid);
-			//}
-			GetUniqueItem(ii, iseed); // BUG: the second argument to GetUniqueItem should be uid.
+			GetUniqueItem(ii, iseed); // uid is stored in iseed for uniques
 		}
 	}
 	SetupItem(ii);
@@ -2919,7 +2916,7 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	}
 
 	GetItemAttrs(ii, idx, lvl);
-	item[ii]._iCreateInfo = lvl + CF_USEFUL;
+	item[ii]._iCreateInfo = lvl | CF_USEFUL;
 	SetupItem(ii);
 }
 
@@ -2969,43 +2966,46 @@ void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL send
 
 void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
 {
-	int uper;
-	BOOL onlygood, recreate, pregen;
-
-	if (!idx) {
+	if (idx == 0) {
 		SetPlrHandItem(&item[ii], IDI_GOLD);
 		item[ii]._iSeed = iseed;
 		item[ii]._iCreateInfo = icreateinfo;
 		item[ii]._ivalue = ivalue;
 		SetPlrHandGoldCurs(&item[ii]);
-	} else {
-		if (!icreateinfo) {
-			SetPlrHandItem(&item[ii], idx);
-			SetPlrHandSeed(&item[ii], iseed);
-		} else {
-			if (icreateinfo & CF_TOWN) {
-				RecreateTownItem(ii, idx, icreateinfo, iseed, ivalue);
-			} else if ((icreateinfo & CF_USEFUL) == CF_USEFUL) {
-				SetupAllUseful(ii, iseed, icreateinfo & CF_LEVEL);
-			} else {
-				uper = 0;
-				onlygood = FALSE;
-				recreate = FALSE;
-				pregen = FALSE;
-				if (icreateinfo & CF_UPER1)
-					uper = 1;
-				if (icreateinfo & CF_UPER15)
-					uper = 15;
-				if (icreateinfo & CF_ONLYGOOD)
-					onlygood = TRUE;
-				if (icreateinfo & CF_UNIQUE)
-					recreate = TRUE;
-				if (icreateinfo & CF_PREGEN)
-					pregen = TRUE;
-				SetupAllItems(ii, idx, iseed, icreateinfo & CF_LEVEL, uper, onlygood, recreate, pregen);
-			}
+		return;
+	}
+
+	if (!icreateinfo) {
+		SetPlrHandItem(&item[ii], idx);
+		SetPlrHandSeed(&item[ii], iseed);
+		return;
+	}
+
+	if ((icreateinfo & CF_UNIQUE) == 0) {
+		if (icreateinfo & CF_TOWN) {
+			RecreateTownItem(ii, idx, icreateinfo, iseed, ivalue);
+			return;
+		}
+
+		if ((icreateinfo & CF_USEFUL) == CF_USEFUL) {
+			SetupAllUseful(ii, iseed, icreateinfo & CF_LEVEL);
+			return;
 		}
 	}
+
+	int level = icreateinfo & CF_LEVEL;
+
+	int uper = 0;
+	if (icreateinfo & CF_UPER1)
+		uper = 1;
+	if (icreateinfo & CF_UPER15)
+		uper = 15;
+
+	bool onlygood = icreateinfo & CF_ONLYGOOD != 0;
+	bool recreate = icreateinfo & CF_UNIQUE != 0;
+	bool pregen = icreateinfo & CF_PREGEN != 0;
+
+	SetupAllItems(ii, idx, iseed, level, uper, onlygood, recreate, pregen);
 }
 
 void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
