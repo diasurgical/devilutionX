@@ -287,19 +287,6 @@ BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
 	return TRUE;
 }
 
-bool pfile_archive_contains_file(const char *pszName)
-{
-	DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
-	HANDLE archive = pfile_open_save_archive(save_num);
-
-	DWORD dwLen;
-	BYTE *gameData = pfile_read_archive(archive, pszName, &dwLen);
-	if (gameData == NULL)
-		return false;
-
-	true;
-}
-
 BOOL pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
 {
 	if (gbIsMultiplayer)
