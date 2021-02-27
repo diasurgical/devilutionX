@@ -437,8 +437,9 @@ void S_StartSmith()
 	AddSText(0, 12, TRUE, "Buy basic items", COL_WHITE, TRUE);
 	AddSText(0, 14, TRUE, "Buy premium items", COL_WHITE, TRUE);
 	AddSText(0, 16, TRUE, "Sell items", COL_WHITE, TRUE);
+	AddSText(0, 17, TRUE, "Buy back items", COL_WHITE, TRUE);
 	AddSText(0, 18, TRUE, "Repair items", COL_WHITE, TRUE);
-	AddSText(0, 20, TRUE, "Leave the shop", COL_WHITE, TRUE);
+    AddSText(0, 20, TRUE, "Leave the shop", COL_WHITE, TRUE);
 	AddSLine(5);
 	storenumh = 20;
 }

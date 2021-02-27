@@ -3100,6 +3100,8 @@ typedef enum talk_id {
 	STORE_TAVERN    = 0x15,
 	STORE_DRUNK     = 0x16,
 	STORE_BARMAID   = 0x17,
+	STORE_SBUYBACK  = 0x18,
+	STORE_WBUYBACK  = 0x19,
 } talk_id;
 
 typedef enum _unique_items {
