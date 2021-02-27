@@ -299,16 +299,17 @@ int premiumLvlAddHellfire[] = {
 	// clang-format on
 };
 
-bool ShouldSkipItem(int i)
+bool IsItemAvailable(int i)
 {
 	if (!gbIsHellfire) {
-		return (i >= 35 && i <= 47)    // Hellfire exclusive items
-		    || (i >= 83 && i <= 86)    // Oils
-		    || i == 92                 // Scroll of Search
-		    || (i >= 161 && i <= 165); // Runes
+		return (i < 35 || i > 47)   // Hellfire exclusive items
+		    && (i < 83 || i > 86)   // Oils
+		    && i != 92              // Scroll of Search
+		    && (i < 161 || i > 165) // Runes
+		    && i != IDI_SORCEROR;
 	}
 
-	return false;
+	return true;
 }
 
 static bool IsPrefixValidForItemType(int i, int flgs)
@@ -2497,7 +2498,7 @@ int RndItem(int m)
 
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monster[m].mLevel >= AllItemsList[i].iMinMLvl
@@ -2532,7 +2533,7 @@ int RndUItem(int m)
 	int curlv = items_get_currlevel();
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		okflag = TRUE;
@@ -2577,7 +2578,7 @@ int RndAllItems()
 	int curlv = items_get_currlevel();
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * curlv >= AllItemsList[i].iMinMLvl && ri < 512) {
@@ -2601,7 +2602,7 @@ int RndTypeItems(int itype, int imid, int lvl)
 
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		okflag = TRUE;
@@ -4536,7 +4537,7 @@ int RndSmithItem(int lvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		if (AllItemsList[i].iRnd != IDROP_NEVER && SmithItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
@@ -4655,7 +4656,7 @@ int RndPremiumItem(int minlvl, int maxlvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		if (AllItemsList[i].iRnd != IDROP_NEVER) {
@@ -4849,7 +4850,7 @@ int RndWitchItem(int lvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		if (AllItemsList[i].iRnd != IDROP_NEVER && WitchItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
@@ -4986,7 +4987,7 @@ int RndBoyItem(int lvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		if (AllItemsList[i].iRnd != IDROP_NEVER && PremiumItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
@@ -5160,7 +5161,7 @@ int RndHealerItem(int lvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (ShouldSkipItem(i))
+		if (!IsItemAvailable(i))
 			continue;
 
 		if (AllItemsList[i].iRnd != IDROP_NEVER && HealerItemOk(i) && lvl >= AllItemsList[i].iMinMLvl

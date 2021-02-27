@@ -191,6 +191,11 @@ static void LoadItemData(ItemStruct *pItem)
 		CopyInt(tbuff, &pItem->_iDamAcFlags);
 	else
 		pItem->_iDamAcFlags = 0;
+
+	if (!IsItemAvailable(pItem->IDidx)) {
+		pItem->IDidx = 0;
+		pItem->_itype = ITYPE_NONE;
+	}
 }
 
 static void LoadItems(const int n, ItemStruct *pItem)
@@ -404,6 +409,7 @@ static void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->pDifficulty);
 	CopyInt(tbuff, &pPlayer->pDamAcFlags);
 	tbuff += 20; // Available bytes
+	CalcPlrItemVals(i, FALSE);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData

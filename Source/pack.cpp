@@ -133,36 +133,42 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 void UnPackItem(PkItemStruct *is, ItemStruct *id)
 {
 	WORD idx = SwapLE16(is->idx);
-
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
-	} else {
-		if (!gbIsHellfireSaveGame) {
-			idx = RemapItemIdxFromDiablo(idx);
-		}
-		if (idx == IDI_EAR) {
-			RecreateEar(
-			    MAXITEMS,
-			    SwapLE16(is->iCreateInfo),
-			    SwapLE32(is->iSeed),
-			    is->bId,
-			    is->bDur,
-			    is->bMDur,
-			    is->bCh,
-			    is->bMCh,
-			    SwapLE16(is->wValue),
-			    SwapLE32(is->dwBuff));
-		} else {
-			RecreateItem(MAXITEMS, idx, SwapLE16(is->iCreateInfo), SwapLE32(is->iSeed), SwapLE16(is->wValue));
-			item[MAXITEMS]._iMagical = is->bId >> 1;
-			item[MAXITEMS]._iIdentified = is->bId & 1;
-			item[MAXITEMS]._iDurability = is->bDur;
-			item[MAXITEMS]._iMaxDur = is->bMDur;
-			item[MAXITEMS]._iCharges = is->bCh;
-			item[MAXITEMS]._iMaxCharges = is->bMCh;
-		}
-		*id = item[MAXITEMS];
+		return;
 	}
+
+	if (!gbIsHellfireSaveGame) {
+		idx = RemapItemIdxFromDiablo(idx);
+	}
+
+	if (!IsItemAvailable(idx)) {
+		id->_itype = ITYPE_NONE;
+		return;
+	}
+
+	if (idx == IDI_EAR) {
+		RecreateEar(
+		    MAXITEMS,
+		    SwapLE16(is->iCreateInfo),
+		    SwapLE32(is->iSeed),
+		    is->bId,
+		    is->bDur,
+		    is->bMDur,
+		    is->bCh,
+		    is->bMCh,
+		    SwapLE16(is->wValue),
+		    SwapLE32(is->dwBuff));
+	} else {
+		RecreateItem(MAXITEMS, idx, SwapLE16(is->iCreateInfo), SwapLE32(is->iSeed), SwapLE16(is->wValue));
+		item[MAXITEMS]._iMagical = is->bId >> 1;
+		item[MAXITEMS]._iIdentified = is->bId & 1;
+		item[MAXITEMS]._iDurability = is->bDur;
+		item[MAXITEMS]._iMaxDur = is->bMDur;
+		item[MAXITEMS]._iCharges = is->bCh;
+		item[MAXITEMS]._iMaxCharges = is->bMCh;
+	}
+	*id = item[MAXITEMS];
 }
 
 void VerifyGoldSeeds(PlayerStruct *pPlayer)
