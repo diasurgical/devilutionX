@@ -2929,9 +2929,9 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
 	if (icreateinfo & CF_UPER15)
 		uper = 15;
 
-	bool onlygood = icreateinfo & CF_ONLYGOOD != 0;
-	bool recreate = icreateinfo & CF_UNIQUE != 0;
-	bool pregen = icreateinfo & CF_PREGEN != 0;
+	bool onlygood = (icreateinfo & CF_ONLYGOOD) != 0;
+	bool recreate = (icreateinfo & CF_UNIQUE) != 0;
+	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
 	SetupAllItems(ii, idx, iseed, level, uper, onlygood, recreate, pregen);
 }
