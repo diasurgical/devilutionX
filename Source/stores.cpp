@@ -3142,6 +3142,8 @@ void SmithBuyBackItem()
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
 	if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_NORMAL)
 		plr[myplr].HoldItem._iIdentified = FALSE;
+    else
+        plr[myplr].HoldItem._iIdentified = TRUE;
 	StoreAutoPlace();
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 	if (idx == SMITH_ITEMS - 1) {
@@ -3162,6 +3164,8 @@ void WitchBuyBackItem()
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
 	if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_NORMAL)
 		plr[myplr].HoldItem._iIdentified = FALSE;
+    else
+        plr[myplr].HoldItem._iIdentified = FALSE;
 	StoreAutoPlace();
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 	if (idx == SMITH_ITEMS - 1) {
