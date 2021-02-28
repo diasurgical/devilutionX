@@ -335,12 +335,12 @@ static void CelBlitLightBlendedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE 
 		tbl = &pLightTbl[light_table_index * 256];
 	w = nWidth;
 
-	for (; src != &pRLEBytes[nDataSize]; dst -= BUFFER_WIDTH + w) {
+	for (; src != &pRLEBytes[nDataSize]; dst -= out.line_width + w) {
 		for (i = w; i;) {
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < gpBufEnd && dst > gpBufStart) {
+				if (dst < out.end && dst > out.begin) {
 					if (width & 1) {
 						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
 						src++;
@@ -907,7 +907,7 @@ static void Cl2BlitOutlineSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBy
 							dst[-1] = col;
 							dst[1] = col;
 							dst[-out.line_width] = col;
-							// BUGFIX: only set `if (dst+BUFFER_WIDTH < gpBufEnd)`
+							// BUGFIX: only set `if (dst+out.line_width < out.end)`
 							dst[out.line_width] = col;
 						}
 						dst++;
