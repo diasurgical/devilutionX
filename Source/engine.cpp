@@ -314,7 +314,7 @@ void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 
 /**
  * @brief Same as CelBlitLightSafe, with blended transparancy applied
- * @param pDecodeTo The output buffer
+ * @param out The output buffer
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  * @param nWidth Width of sprite
