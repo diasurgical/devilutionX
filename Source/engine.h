@@ -286,10 +286,6 @@ inline void CelBlitOutline(BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, i
  * @param col Color index from current palette
  */
 void SetPixel(CelOutputBuffer out, int sx, int sy, BYTE col);
-inline void ENG_set_pixel(int sx, int sy, BYTE col)
-{
-	return SetPixel(GlobalBackBuffer(), sx, sy, col);
-}
 
 /**
  * @brief Blit CL2 sprite, to the back buffer at the given coordianates
