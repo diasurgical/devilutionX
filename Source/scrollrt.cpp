@@ -15,10 +15,6 @@ DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
 DWORD sgdwCursY;
 /**
- * Upper bound of back buffer.
- */
-BYTE *gpBufStart;
-/**
  * Lower bound of back buffer.
  */
 BYTE *gpBufEnd;
