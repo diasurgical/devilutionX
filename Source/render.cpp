@@ -375,7 +375,7 @@ void foreach_set_bit(DWORD mask, const F &f)
 inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
 {
 #ifdef NO_OVERDRAW
-	if (*dst < gpBufStart || *dst > gpBufEnd) {
+	if (*dst < &gpBuffer[BUFFER_WIDTH * SCREEN_Y] || *dst > gpBufEnd) {
 		goto skip;
 	}
 #endif
