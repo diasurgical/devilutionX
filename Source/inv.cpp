@@ -595,6 +595,55 @@ InvXY GetInventorySize(const ItemStruct &item)
 	};
 }
 
+/**
+ * @brief Checks whether the given item can fit in a belt slot (i.e. the item's size in inventory cells is 1x1).
+ * @param item The item to be checked.
+ * @return 'True' in case the item can fit a belt slot and 'False' otherwise.
+ */
+bool FitsInBeltSlot(const ItemStruct &item)
+{
+	InvXY size = GetInventorySize(item);
+
+	return size.X == 1 && size.Y == 1;
+}
+
+/**
+ * @brief Checks whether the given item can be placed on the belt. Takes item size as well as characteristics into account. Items
+ * that cannot be placed on the belt have to be placed in the inventory instead.
+ * @param item The item to be checked.
+ * @return 'True' in case the item can be placed on the belt and 'False' otherwise.
+ */
+bool CanBePlacedOnBelt(const ItemStruct &item)
+{
+	return
+		FitsInBeltSlot(item) &&
+		item._itype != ITYPE_GOLD &&
+		item._iStatFlag &&
+		AllItemsList[item.IDidx].iUsable;
+}
+
+/**
+ * @brief Checks whether the given item can be placed on the specified player's belt. Returns 'True' when the item can be placed
+ * on belt slots and the player has at least one empty slot in his belt.
+ * @param playerNumber The player number on whose belt will be checked.
+ * @param item The item to be checked.
+ * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
+ */
+bool CanBePlacedOnBelt(int playerNumber, const ItemStruct &item)
+{
+	if (!CanBePlacedOnBelt(item)) {
+		return false;
+	}
+
+	for (int i = 0; i < MAXBELTITEMS; i++) {
+		if (plr[playerNumber].SpdList[i]._itype == ITYPE_NONE) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 {
 	int i, j, xx, yy;
@@ -681,16 +730,7 @@ BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
 		yy += 10;
 	}
 	if (!done) {
-		if (itemSize.X > 1 || itemSize.Y > 1) {
-			done = FALSE;
-		} else {
-			for (i = 0; i < MAXBELTITEMS; i++) {
-				if (plr[pnum].SpdList[i]._itype == ITYPE_NONE) {
-					done = TRUE;
-					break;
-				}
-			}
-		}
+		done = CanBePlacedOnBelt(pnum, item);
 	}
 
 	return done;
