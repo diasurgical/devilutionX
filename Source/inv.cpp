@@ -365,8 +365,8 @@ void DrawInv()
 				light_table_index = 0;
 				cel_transparency_active = TRUE;
 
-				const int dst_x = SCREEN_X + RIGHT_PANEL_X + (frame_width == INV_SLOT_SIZE_PX ? 197 : 183);
-				const int dst_y = SCREEN_Y;
+				const int dst_x = RIGHT_PANEL_X + (frame_width == INV_SLOT_SIZE_PX ? 261 : 247);
+				const int dst_y = SCREEN_Y + 160;
 				if (frame <= 179) {
 					CelClippedBlitLightTrans(dst_x, dst_y, pCursCels, frame, frame_width);
 				} else {
@@ -710,7 +710,7 @@ BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
 		yy = 0;
 	}
 
-	InvXY itemSize = GetInventorySize(item); 
+	InvXY itemSize = GetInventorySize(item);
 	for (j = 0; j < itemSize.Y && done; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
 			done = FALSE;
