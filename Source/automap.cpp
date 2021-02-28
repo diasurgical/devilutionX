@@ -206,22 +206,23 @@ static void DrawAutomapTile(int sx, int sy, WORD automap_type)
 	BYTE flags = automap_type >> 8;
 
 	if (flags & MAPFLAG_DIRT) {
-		ENG_set_pixel(sx, sy, COLOR_DIM);
-		ENG_set_pixel(sx - AmLine8, sy - AmLine4, COLOR_DIM);
-		ENG_set_pixel(sx - AmLine8, sy + AmLine4, COLOR_DIM);
-		ENG_set_pixel(sx + AmLine8, sy - AmLine4, COLOR_DIM);
-		ENG_set_pixel(sx + AmLine8, sy + AmLine4, COLOR_DIM);
-		ENG_set_pixel(sx - AmLine16, sy, COLOR_DIM);
-		ENG_set_pixel(sx + AmLine16, sy, COLOR_DIM);
-		ENG_set_pixel(sx, sy - AmLine8, COLOR_DIM);
-		ENG_set_pixel(sx, sy + AmLine8, COLOR_DIM);
-		ENG_set_pixel(sx + AmLine8 - AmLine32, sy + AmLine4, COLOR_DIM);
-		ENG_set_pixel(sx - AmLine8 + AmLine32, sy + AmLine4, COLOR_DIM);
-		ENG_set_pixel(sx - AmLine16, sy + AmLine8, COLOR_DIM);
-		ENG_set_pixel(sx + AmLine16, sy + AmLine8, COLOR_DIM);
-		ENG_set_pixel(sx - AmLine8, sy + AmLine16 - AmLine4, COLOR_DIM);
-		ENG_set_pixel(sx + AmLine8, sy + AmLine16 - AmLine4, COLOR_DIM);
-		ENG_set_pixel(sx, sy + AmLine16, COLOR_DIM);
+		CelOutputBuffer out = GlobalBackBuffer();
+		SetPixel(out, sx, sy, COLOR_DIM);
+		SetPixel(out, sx - AmLine8, sy - AmLine4, COLOR_DIM);
+		SetPixel(out, sx - AmLine8, sy + AmLine4, COLOR_DIM);
+		SetPixel(out, sx + AmLine8, sy - AmLine4, COLOR_DIM);
+		SetPixel(out, sx + AmLine8, sy + AmLine4, COLOR_DIM);
+		SetPixel(out, sx - AmLine16, sy, COLOR_DIM);
+		SetPixel(out, sx + AmLine16, sy, COLOR_DIM);
+		SetPixel(out, sx, sy - AmLine8, COLOR_DIM);
+		SetPixel(out, sx, sy + AmLine8, COLOR_DIM);
+		SetPixel(out, sx + AmLine8 - AmLine32, sy + AmLine4, COLOR_DIM);
+		SetPixel(out, sx - AmLine8 + AmLine32, sy + AmLine4, COLOR_DIM);
+		SetPixel(out, sx - AmLine16, sy + AmLine8, COLOR_DIM);
+		SetPixel(out, sx + AmLine16, sy + AmLine8, COLOR_DIM);
+		SetPixel(out, sx - AmLine8, sy + AmLine16 - AmLine4, COLOR_DIM);
+		SetPixel(out, sx + AmLine8, sy + AmLine16 - AmLine4, COLOR_DIM);
+		SetPixel(out, sx, sy + AmLine16, COLOR_DIM);
 	}
 
 	if (flags & MAPFLAG_STAIRS) {

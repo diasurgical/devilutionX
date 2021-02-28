@@ -550,8 +550,9 @@ void DrawLine(int x0, int y0, int x1, int y1, BYTE col)
 	sx = x0;
 	sy = y0;
 
+	CelOutputBuffer out = GlobalBackBuffer();
 	for (i = 0; i <= steps; i++, sx += ix, sy += iy) {
-		ENG_set_pixel(sx, sy, col);
+		SetPixel(out, sx, sy, col);
 	}
 }
 
