@@ -115,7 +115,7 @@ void FindItemOrObject()
 			if (dItem[mx + xx][my + yy] <= 0)
 				continue;
 			int i = dItem[mx + xx][my + yy] - 1;
-			if (item[i]._itype == ITYPE_NONE
+			if (item[i].isEmpty()
 			    || item[i]._iSelFlag == 0)
 				continue;
 			int newRotations = GetRotaryDistance(mx + xx, my + yy);

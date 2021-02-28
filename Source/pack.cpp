@@ -10,7 +10,7 @@ DEVILUTION_BEGIN_NAMESPACE
 void PackItem(PkItemStruct *id, const ItemStruct *is)
 {
 	memset(id, 0, sizeof(*id));
-	if (is->_itype == ITYPE_NONE) {
+	if (is->isEmpty()) {
 		id->idx = 0xFFFF;
 	} else {
 		int idx = is->IDidx;

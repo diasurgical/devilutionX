@@ -713,7 +713,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	for (i = 0; i < NUM_INVLOC; i++) {
 		ItemStruct *itm = &plr[p].InvBody[i];
-		if (itm->_itype != ITYPE_NONE && itm->_iStatFlag) {
+		if (!itm->isEmpty() && itm->_iStatFlag) {
 
 			mind += itm->_iMinDam;
 			maxd += itm->_iMaxDam;
@@ -835,7 +835,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 		plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
 	} else if (plr[p]._pClass == PC_MONK) {
 		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_STAFF) {
-			if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE)) {
+			if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && (!plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty() || !plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty())) {
 				plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 300;
 			} else {
 				plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 150;
@@ -975,24 +975,24 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 			plr[p]._pBlockFlag = TRUE;
 			plr[p]._pIFlags |= ISPL_FASTBLOCK;
 		}
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE && plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE)
+		if (plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty())
 			plr[p]._pBlockFlag = TRUE;
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[p].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND && plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE)
+		if (plr[p].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[p].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND && plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty())
 			plr[p]._pBlockFlag = TRUE;
-		if (plr[p].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[p].InvBody[INVLOC_HAND_RIGHT]._iLoc != ILOC_TWOHAND && plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE)
+		if (plr[p].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[p].InvBody[INVLOC_HAND_RIGHT]._iLoc != ILOC_TWOHAND && plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty())
 			plr[p]._pBlockFlag = TRUE;
 	}
 	plr[p]._pwtype = WT_MELEE;
 
 	g = 0;
 
-	if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE
+	if (!plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty()
 	    && plr[p].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON
 	    && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 		g = plr[p].InvBody[INVLOC_HAND_LEFT]._itype;
 	}
 
-	if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE
+	if (!plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty()
 	    && plr[p].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON
 	    && plr[p].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 		g = plr[p].InvBody[INVLOC_HAND_RIGHT]._itype;
@@ -1071,7 +1071,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 			break;
 		}
 	}
-	if (plr[p].InvBody[INVLOC_AMULET]._itype == ITYPE_NONE || plr[p].InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
+	if (plr[p].InvBody[INVLOC_AMULET].isEmpty() || plr[p].InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
 		int half = MaxGold;
 		MaxGold = auricGold / 2;
 
@@ -1091,14 +1091,14 @@ void CalcPlrScrolls(int p)
 
 	plr[p]._pScrlSpells = 0;
 	for (i = 0; i < plr[p]._pNumInv; i++) {
-		if (plr[p].InvList[i]._itype != ITYPE_NONE && (plr[p].InvList[i]._iMiscId == IMISC_SCROLL || plr[p].InvList[i]._iMiscId == IMISC_SCROLLT)) {
+		if (!plr[p].InvList[i].isEmpty() && (plr[p].InvList[i]._iMiscId == IMISC_SCROLL || plr[p].InvList[i]._iMiscId == IMISC_SCROLLT)) {
 			if (plr[p].InvList[i]._iStatFlag)
 				plr[p]._pScrlSpells |= SPELLBIT(plr[p].InvList[i]._iSpell);
 		}
 	}
 
 	for (j = 0; j < MAXBELTITEMS; j++) {
-		if (plr[p].SpdList[j]._itype != ITYPE_NONE && (plr[p].SpdList[j]._iMiscId == IMISC_SCROLL || plr[p].SpdList[j]._iMiscId == IMISC_SCROLLT)) {
+		if (!plr[p].SpdList[j].isEmpty() && (plr[p].SpdList[j]._iMiscId == IMISC_SCROLL || plr[p].SpdList[j]._iMiscId == IMISC_SCROLLT)) {
 			if (plr[p].SpdList[j]._iStatFlag)
 				plr[p]._pScrlSpells |= SPELLBIT(plr[p].SpdList[j]._iSpell);
 		}
@@ -1109,7 +1109,7 @@ void CalcPlrScrolls(int p)
 void CalcPlrStaff(int p)
 {
 	plr[p]._pISpells = 0;
-	if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE
+	if (!plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty()
 	    && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag
 	    && plr[p].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
 		plr[p]._pISpells |= SPELLBIT(plr[p].InvBody[INVLOC_HAND_LEFT]._iSpell);
@@ -1131,7 +1131,7 @@ void CalcSelfItems(int pnum)
 	da = 0;
 	pi = p->InvBody;
 	for (i = 0; i < NUM_INVLOC; i++, pi++) {
-		if (pi->_itype != ITYPE_NONE) {
+		if (!pi->isEmpty()) {
 			pi->_iStatFlag = TRUE;
 			if (pi->_iIdentified) {
 				sa += pi->_iPLStr;
@@ -1144,7 +1144,7 @@ void CalcSelfItems(int pnum)
 		changeflag = FALSE;
 		pi = p->InvBody;
 		for (i = 0; i < NUM_INVLOC; i++, pi++) {
-			if (pi->_itype != ITYPE_NONE && pi->_iStatFlag) {
+			if (!pi->isEmpty() && pi->_iStatFlag) {
 				sf = TRUE;
 				if (sa + p->_pBaseStr < pi->_iMinStr)
 					sf = FALSE;
@@ -1197,7 +1197,7 @@ void CalcPlrItemMin(int pnum)
 
 	pi = p->SpdList;
 	for (i = MAXBELTITEMS; i != 0; i--) {
-		if (pi->_itype != ITYPE_NONE) {
+		if (!pi->isEmpty()) {
 			pi->_iStatFlag = ItemMinStats(p, pi);
 		}
 		pi++;
@@ -1209,7 +1209,7 @@ void CalcPlrBookVals(int p)
 	int i, slvl;
 
 	if (currlevel == 0) {
-		for (i = 1; witchitem[i]._itype != ITYPE_NONE; i++) {
+		for (i = 1; !witchitem[i].isEmpty(); i++) {
 			WitchBookLevel(i);
 			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
 		}
@@ -4494,7 +4494,7 @@ void SortSmith()
 	BOOL sorted;
 
 	j = 0;
-	while (smithitem[j + 1]._itype != ITYPE_NONE) {
+	while (!smithitem[j + 1].isEmpty()) {
 		j++;
 	}
 
@@ -4704,7 +4704,7 @@ void SpawnPremium(int pnum)
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (i = 0; i < maxItems; i++) {
-			if (premiumitem[i]._itype == ITYPE_NONE) {
+			if (premiumitem[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
 				SpawnOnePremium(i, plvl, pnum);
 			}
@@ -4796,7 +4796,7 @@ void SortWitch()
 	BOOL sorted;
 
 	j = 3;
-	while (witchitem[j + 1]._itype != ITYPE_NONE) {
+	while (!witchitem[j + 1].isEmpty()) {
 		j++;
 	}
 
@@ -4958,7 +4958,7 @@ void SpawnBoy(int lvl)
 	}
 	magic *= 1.2;
 
-	if (boylevel < (lvl >> 1) || boyitem._itype == ITYPE_NONE) {
+	if (boylevel < (lvl >> 1) || boyitem.isEmpty()) {
 		do {
 			memset(&item[0], 0, sizeof(*item));
 			item[0]._iSeed = AdvanceRndSeed();
@@ -5112,7 +5112,7 @@ void SortHealer()
 	BOOL sorted;
 
 	j = 2;
-	while (healitem[j + 1]._itype != ITYPE_NONE) {
+	while (!healitem[j + 1].isEmpty()) {
 		j++;
 	}
 
@@ -5279,22 +5279,22 @@ void RecalcStoreStats()
 	int i;
 
 	for (i = 0; i < SMITH_ITEMS; i++) {
-		if (smithitem[i]._itype != ITYPE_NONE) {
+		if (!smithitem[i].isEmpty()) {
 			smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
 		}
 	}
 	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
-		if (premiumitem[i]._itype != ITYPE_NONE) {
+		if (!premiumitem[i].isEmpty()) {
 			premiumitem[i]._iStatFlag = StoreStatOk(&premiumitem[i]);
 		}
 	}
 	for (i = 0; i < 20; i++) {
-		if (witchitem[i]._itype != ITYPE_NONE) {
+		if (!witchitem[i].isEmpty()) {
 			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
 		}
 	}
 	for (i = 0; i < 20; i++) {
-		if (healitem[i]._itype != ITYPE_NONE) {
+		if (!healitem[i].isEmpty()) {
 			healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
 		}
 	}

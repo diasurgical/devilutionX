@@ -86,6 +86,15 @@ typedef struct ItemStruct {
 	int IDidx;
 	int offs016C; // _oldlight or _iInvalid
 	int _iDamAcFlags;
+
+	/**
+	 * @brief Checks whether this item is empty or not.
+	 * @return 'True' in case the item is empty and 'False' otherwise.
+	 */
+	bool isEmpty() const {
+		return this->_itype == ITYPE_NONE;
+	}
+
 } ItemStruct;
 
 typedef struct CornerStoneStruct {

@@ -175,7 +175,7 @@ void DrawInv()
 
 	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels, 1, SPANEL_WIDTH);
 
-	if (plr[myplr].InvBody[INVLOC_HEAD]._itype != ITYPE_NONE) {
+	if (!plr[myplr].InvBody[INVLOC_HEAD].isEmpty()) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HEAD]._iCurs + CURSOR_FIRSTITEM;
@@ -211,7 +211,7 @@ void DrawInv()
 		}
 	}
 
-	if (plr[myplr].InvBody[INVLOC_RING_LEFT]._itype != ITYPE_NONE) {
+	if (!plr[myplr].InvBody[INVLOC_RING_LEFT].isEmpty()) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_RING_LEFT]._iCurs + CURSOR_FIRSTITEM;
@@ -247,7 +247,7 @@ void DrawInv()
 		}
 	}
 
-	if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._itype != ITYPE_NONE) {
+	if (!plr[myplr].InvBody[INVLOC_RING_RIGHT].isEmpty()) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_RING_RIGHT]._iCurs + CURSOR_FIRSTITEM;
@@ -283,7 +283,7 @@ void DrawInv()
 		}
 	}
 
-	if (plr[myplr].InvBody[INVLOC_AMULET]._itype != ITYPE_NONE) {
+	if (!plr[myplr].InvBody[INVLOC_AMULET].isEmpty()) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_AMULET]._iCurs + CURSOR_FIRSTITEM;
@@ -319,7 +319,7 @@ void DrawInv()
 		}
 	}
 
-	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE) {
+	if (!plr[myplr].InvBody[INVLOC_HAND_LEFT].isEmpty()) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 17, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCurs + CURSOR_FIRSTITEM;
@@ -377,7 +377,7 @@ void DrawInv()
 			}
 		}
 	}
-	if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE) {
+	if (!plr[myplr].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 248, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iCurs + CURSOR_FIRSTITEM;
@@ -416,7 +416,7 @@ void DrawInv()
 		}
 	}
 
-	if (plr[myplr].InvBody[INVLOC_CHEST]._itype != ITYPE_NONE) {
+	if (!plr[myplr].InvBody[INVLOC_CHEST].isEmpty()) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_CHEST]._iCurs + CURSOR_FIRSTITEM;
@@ -536,7 +536,7 @@ void DrawInvBelt(CelOutputBuffer out)
 	DrawPanelBox(out, 205, 21, 232, 28, PANEL_X + 205, PANEL_Y + 5);
 
 	for (i = 0; i < MAXBELTITEMS; i++) {
-		if (plr[myplr].SpdList[i]._itype == ITYPE_NONE) {
+		if (plr[myplr].SpdList[i].isEmpty()) {
 			continue;
 		}
 
@@ -635,7 +635,7 @@ bool CanBePlacedOnBelt(int playerNumber, const ItemStruct &item)
 	}
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if (plr[playerNumber].SpdList[i]._itype == ITYPE_NONE) {
+		if (plr[playerNumber].SpdList[i].isEmpty()) {
 			return true;
 		}
 	}
@@ -795,23 +795,23 @@ BOOL WeaponAutoPlace(int pnum)
 	if (plr[pnum].HoldItem._iLoc != ILOC_TWOHAND
 	    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))) {
 		if (plr[pnum]._pClass != PC_BARD) {
-			if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON)
+			if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON)
 				return FALSE;
-			if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON)
+			if (!plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON)
 				return FALSE;
 		}
 
-		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE) {
+		if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty()) {
 			NetSendCmdChItem(TRUE, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
 			return TRUE;
 		}
-		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND) {
+		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND) {
 			NetSendCmdChItem(TRUE, INVLOC_HAND_RIGHT);
 			plr[pnum].InvBody[INVLOC_HAND_RIGHT] = plr[pnum].HoldItem;
 			return TRUE;
 		}
-	} else if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE) {
+	} else if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 		NetSendCmdChItem(TRUE, INVLOC_HAND_LEFT);
 		plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
 		return TRUE;
@@ -984,7 +984,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	switch (il) {
 	case ILOC_HELM:
 		NetSendCmdChItem(FALSE, INVLOC_HEAD);
-		if (plr[pnum].InvBody[INVLOC_HEAD]._itype == ITYPE_NONE)
+		if (plr[pnum].InvBody[INVLOC_HEAD].isEmpty())
 			plr[pnum].InvBody[INVLOC_HEAD] = plr[pnum].HoldItem;
 		else
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HEAD], &plr[pnum].HoldItem);
@@ -992,13 +992,13 @@ void CheckInvPaste(int pnum, int mx, int my)
 	case ILOC_RING:
 		if (r == SLOTXY_RING_LEFT) {
 			NetSendCmdChItem(FALSE, INVLOC_RING_LEFT);
-			if (plr[pnum].InvBody[INVLOC_RING_LEFT]._itype == ITYPE_NONE)
+			if (plr[pnum].InvBody[INVLOC_RING_LEFT].isEmpty())
 				plr[pnum].InvBody[INVLOC_RING_LEFT] = plr[pnum].HoldItem;
 			else
 				cn = SwapItem(&plr[pnum].InvBody[INVLOC_RING_LEFT], &plr[pnum].HoldItem);
 		} else {
 			NetSendCmdChItem(FALSE, INVLOC_RING_RIGHT);
-			if (plr[pnum].InvBody[INVLOC_RING_RIGHT]._itype == ITYPE_NONE)
+			if (plr[pnum].InvBody[INVLOC_RING_RIGHT].isEmpty())
 				plr[pnum].InvBody[INVLOC_RING_RIGHT] = plr[pnum].HoldItem;
 			else
 				cn = SwapItem(&plr[pnum].InvBody[INVLOC_RING_RIGHT], &plr[pnum].HoldItem);
@@ -1006,15 +1006,15 @@ void CheckInvPaste(int pnum, int mx, int my)
 		break;
 	case ILOC_AMULET:
 		NetSendCmdChItem(FALSE, INVLOC_AMULET);
-		if (plr[pnum].InvBody[INVLOC_AMULET]._itype == ITYPE_NONE)
+		if (plr[pnum].InvBody[INVLOC_AMULET].isEmpty())
 			plr[pnum].InvBody[INVLOC_AMULET] = plr[pnum].HoldItem;
 		else
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_AMULET], &plr[pnum].HoldItem);
 		break;
 	case ILOC_ONEHAND:
 		if (r <= SLOTXY_HAND_LEFT_LAST) {
-			if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE) {
-				if ((plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass)
+			if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty()) {
+				if ((plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass)
 				    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
 					NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
 					plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
@@ -1024,7 +1024,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 				}
 				break;
 			}
-			if ((plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass)
+			if ((plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass)
 			    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
 				NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
 				cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
@@ -1035,10 +1035,10 @@ void CheckInvPaste(int pnum, int mx, int my)
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].HoldItem);
 			break;
 		}
-		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE) {
-			if ((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND)
+		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
+			if ((plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND)
 			    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
-				if ((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass != plr[pnum].HoldItem._iClass)
+				if ((plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass != plr[pnum].HoldItem._iClass)
 				    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
 					NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
 					plr[pnum].InvBody[INVLOC_HAND_RIGHT] = plr[pnum].HoldItem;
@@ -1055,7 +1055,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 			break;
 		}
 
-		if ((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == plr[pnum].HoldItem._iClass)
+		if ((!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == plr[pnum].HoldItem._iClass)
 		    && !(plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
 			NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
@@ -1066,7 +1066,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 		break;
 	case ILOC_TWOHAND:
 		NetSendCmdDelItem(FALSE, INVLOC_HAND_RIGHT);
-		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE) {
+		if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && !plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			tempitem = plr[pnum].HoldItem;
 			if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
 				plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HAND_RIGHT];
@@ -1093,9 +1093,9 @@ void CheckInvPaste(int pnum, int mx, int my)
 				plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
 		}
 
-		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE) {
+		if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() || !plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
-			if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE)
+			if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty())
 				SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].InvBody[INVLOC_HAND_RIGHT]);
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
 		} else {
@@ -1110,7 +1110,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 		break;
 	case ILOC_ARMOR:
 		NetSendCmdChItem(FALSE, INVLOC_CHEST);
-		if (plr[pnum].InvBody[INVLOC_CHEST]._itype == ITYPE_NONE)
+		if (plr[pnum].InvBody[INVLOC_CHEST].isEmpty())
 			plr[pnum].InvBody[INVLOC_CHEST] = plr[pnum].HoldItem;
 		else
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_CHEST], &plr[pnum].HoldItem);
@@ -1188,7 +1188,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	case ILOC_BELT:
 		ii = r - SLOTXY_BELT_FIRST;
 		if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
-			if (plr[pnum].SpdList[ii]._itype != ITYPE_NONE) {
+			if (!plr[pnum].SpdList[ii].isEmpty()) {
 				if (plr[pnum].SpdList[ii]._itype == ITYPE_GOLD) {
 					i = plr[pnum].HoldItem._ivalue + plr[pnum].SpdList[ii]._ivalue;
 					if (i <= GOLD_MAX_LIMIT) {
@@ -1214,7 +1214,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 				plr[pnum].SpdList[ii] = plr[pnum].HoldItem;
 				plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
 			}
-		} else if (plr[pnum].SpdList[ii]._itype == ITYPE_NONE) {
+		} else if (plr[pnum].SpdList[ii].isEmpty()) {
 			plr[pnum].SpdList[ii] = plr[pnum].HoldItem;
 		} else {
 			cn = SwapItem(&plr[pnum].SpdList[ii], &plr[pnum].HoldItem);
@@ -1305,7 +1305,7 @@ void CheckInvCut(int pnum, int mx, int my)
 	if (
 	    r >= SLOTXY_HEAD_FIRST
 	    && r <= SLOTXY_HEAD_LAST
-	    && plr[pnum].InvBody[INVLOC_HEAD]._itype != ITYPE_NONE) {
+	    && !plr[pnum].InvBody[INVLOC_HEAD].isEmpty()) {
 		NetSendCmdDelItem(FALSE, INVLOC_HEAD);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HEAD];
 		plr[pnum].InvBody[INVLOC_HEAD]._itype = ITYPE_NONE;
@@ -1313,7 +1313,7 @@ void CheckInvCut(int pnum, int mx, int my)
 
 	if (
 	    r == SLOTXY_RING_LEFT
-	    && plr[pnum].InvBody[INVLOC_RING_LEFT]._itype != ITYPE_NONE) {
+	    && !plr[pnum].InvBody[INVLOC_RING_LEFT].isEmpty()) {
 		NetSendCmdDelItem(FALSE, INVLOC_RING_LEFT);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_RING_LEFT];
 		plr[pnum].InvBody[INVLOC_RING_LEFT]._itype = ITYPE_NONE;
@@ -1321,7 +1321,7 @@ void CheckInvCut(int pnum, int mx, int my)
 
 	if (
 	    r == SLOTXY_RING_RIGHT
-	    && plr[pnum].InvBody[INVLOC_RING_RIGHT]._itype != ITYPE_NONE) {
+	    && !plr[pnum].InvBody[INVLOC_RING_RIGHT].isEmpty()) {
 		NetSendCmdDelItem(FALSE, INVLOC_RING_RIGHT);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_RING_RIGHT];
 		plr[pnum].InvBody[INVLOC_RING_RIGHT]._itype = ITYPE_NONE;
@@ -1329,7 +1329,7 @@ void CheckInvCut(int pnum, int mx, int my)
 
 	if (
 	    r == SLOTXY_AMULET
-	    && plr[pnum].InvBody[INVLOC_AMULET]._itype != ITYPE_NONE) {
+	    && !plr[pnum].InvBody[INVLOC_AMULET].isEmpty()) {
 		NetSendCmdDelItem(FALSE, INVLOC_AMULET);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_AMULET];
 		plr[pnum].InvBody[INVLOC_AMULET]._itype = ITYPE_NONE;
@@ -1338,7 +1338,7 @@ void CheckInvCut(int pnum, int mx, int my)
 	if (
 	    r >= SLOTXY_HAND_LEFT_FIRST
 	    && r <= SLOTXY_HAND_LEFT_LAST
-	    && plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE) {
+	    && !plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty()) {
 		NetSendCmdDelItem(FALSE, INVLOC_HAND_LEFT);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HAND_LEFT];
 		plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
@@ -1347,7 +1347,7 @@ void CheckInvCut(int pnum, int mx, int my)
 	if (
 	    r >= SLOTXY_HAND_RIGHT_FIRST
 	    && r <= SLOTXY_HAND_RIGHT_LAST
-	    && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE) {
+	    && !plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 		NetSendCmdDelItem(FALSE, INVLOC_HAND_RIGHT);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HAND_RIGHT];
 		plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
@@ -1356,7 +1356,7 @@ void CheckInvCut(int pnum, int mx, int my)
 	if (
 	    r >= SLOTXY_CHEST_FIRST
 	    && r <= SLOTXY_CHEST_LAST
-	    && plr[pnum].InvBody[INVLOC_CHEST]._itype != ITYPE_NONE) {
+	    && !plr[pnum].InvBody[INVLOC_CHEST].isEmpty()) {
 		NetSendCmdDelItem(FALSE, INVLOC_CHEST);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_CHEST];
 		plr[pnum].InvBody[INVLOC_CHEST]._itype = ITYPE_NONE;
@@ -1399,14 +1399,14 @@ void CheckInvCut(int pnum, int mx, int my)
 
 	if (r >= SLOTXY_BELT_FIRST) {
 		offs = r - SLOTXY_BELT_FIRST;
-		if (plr[pnum].SpdList[offs]._itype != ITYPE_NONE) {
+		if (!plr[pnum].SpdList[offs].isEmpty()) {
 			plr[pnum].HoldItem = plr[pnum].SpdList[offs];
 			plr[pnum].SpdList[offs]._itype = ITYPE_NONE;
 			drawsbarflag = TRUE;
 		}
 	}
 
-	if (plr[pnum].HoldItem._itype != ITYPE_NONE) {
+	if (!plr[pnum].HoldItem.isEmpty()) {
 		if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 			plr[pnum]._pGold = CalculateGold(pnum);
 		}
@@ -1807,7 +1807,7 @@ void AutoGetItem(int pnum, int ii)
 				idx = plr[pnum].HoldItem.IDidx;
 				if (plr[pnum].HoldItem._iStatFlag && AllItemsList[idx].iUsable) {
 					for (i = 0; i < MAXBELTITEMS && !done; i++) {
-						if (plr[pnum].SpdList[i]._itype == ITYPE_NONE) {
+						if (plr[pnum].SpdList[i].isEmpty()) {
 							plr[pnum].SpdList[i] = plr[pnum].HoldItem;
 							CalcPlrScrolls(pnum);
 							drawsbarflag = TRUE;
@@ -2235,7 +2235,7 @@ char CheckInvHLight()
 		pi = &p->InvBody[rv];
 	} else if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST) {
 		pi = &p->InvBody[INVLOC_HAND_LEFT];
-		if (pi->_itype == ITYPE_NONE || pi->_iLoc != ILOC_TWOHAND
+		if (pi->isEmpty() || pi->_iLoc != ILOC_TWOHAND
 		    || (p->_pClass == PC_BARBARIAN && (p->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || p->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
 			rv = INVLOC_HAND_RIGHT;
 			pi = &p->InvBody[rv];
@@ -2256,12 +2256,12 @@ char CheckInvHLight()
 		r -= SLOTXY_BELT_FIRST;
 		drawsbarflag = TRUE;
 		pi = &p->SpdList[r];
-		if (pi->_itype == ITYPE_NONE)
+		if (pi->isEmpty())
 			return -1;
 		rv = r + INVITEM_BELT_FIRST;
 	}
 
-	if (pi->_itype == ITYPE_NONE)
+	if (pi->isEmpty())
 		return -1;
 
 	if (pi->_itype == ITYPE_GOLD) {
@@ -2290,7 +2290,7 @@ void RemoveScroll(int pnum)
 	int i;
 
 	for (i = 0; i < plr[pnum]._pNumInv; i++) {
-		if (plr[pnum].InvList[i]._itype != ITYPE_NONE
+		if (!plr[pnum].InvList[i].isEmpty()
 		    && (plr[pnum].InvList[i]._iMiscId == IMISC_SCROLL || plr[pnum].InvList[i]._iMiscId == IMISC_SCROLLT)
 		    && plr[pnum].InvList[i]._iSpell == plr[pnum]._pRSpell) {
 			RemoveInvItem(pnum, i);
@@ -2299,7 +2299,7 @@ void RemoveScroll(int pnum)
 		}
 	}
 	for (i = 0; i < MAXBELTITEMS; i++) {
-		if (plr[pnum].SpdList[i]._itype != ITYPE_NONE
+		if (!plr[pnum].SpdList[i].isEmpty()
 		    && (plr[pnum].SpdList[i]._iMiscId == IMISC_SCROLL || plr[pnum].SpdList[i]._iMiscId == IMISC_SCROLLT)
 		    && plr[pnum].SpdList[i]._iSpell == plr[pnum]._pSpell) {
 			RemoveSpdBarItem(pnum, i);
@@ -2319,14 +2319,14 @@ BOOL UseScroll()
 		return FALSE;
 
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
-		if (plr[myplr].InvList[i]._itype != ITYPE_NONE
+		if (!plr[myplr].InvList[i].isEmpty()
 		    && (plr[myplr].InvList[i]._iMiscId == IMISC_SCROLL || plr[myplr].InvList[i]._iMiscId == IMISC_SCROLLT)
 		    && plr[myplr].InvList[i]._iSpell == plr[myplr]._pRSpell) {
 			return TRUE;
 		}
 	}
 	for (i = 0; i < MAXBELTITEMS; i++) {
-		if (plr[myplr].SpdList[i]._itype != ITYPE_NONE
+		if (!plr[myplr].SpdList[i].isEmpty()
 		    && (plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLL || plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLLT)
 		    && plr[myplr].SpdList[i]._iSpell == plr[myplr]._pRSpell) {
 			return TRUE;
@@ -2338,7 +2338,7 @@ BOOL UseScroll()
 
 void UseStaffCharge(int pnum)
 {
-	if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE
+	if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty()
 	    && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF
 	        || plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_UNIQUE // BUGFIX: myplr->pnum
 	        )
@@ -2352,7 +2352,7 @@ void UseStaffCharge(int pnum)
 BOOL UseStaff()
 {
 	if (pcurs == CURSOR_HAND) {
-		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE
+		if (!plr[myplr].InvBody[INVLOC_HAND_LEFT].isEmpty()
 		    && (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF || plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_UNIQUE)
 		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iSpell == plr[myplr]._pRSpell
 		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
