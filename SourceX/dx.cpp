@@ -44,6 +44,7 @@ static void dx_create_back_buffer()
 	}
 
 	gpBuffer = (BYTE *)pal_surface->pixels;
+	gpBufEnd = gpBuffer;
 
 #ifndef USE_SDL1
 	// In SDL2, `pal_surface` points to the global `palette`.
@@ -93,7 +94,7 @@ static void lock_buf_priv()
 	}
 
 	gpBuffer = (BYTE *)pal_surface->pixels;
-	gpBufEnd += (uintptr_t)(BYTE *)pal_surface->pixels;
+	gpBufEnd = (BYTE *)pal_surface->pixels + pal_surface->pitch * pal_surface->h;
 	sgdwLockCount++;
 }
 
@@ -114,7 +115,7 @@ static void unlock_buf_priv()
 
 	sgdwLockCount--;
 	if (sgdwLockCount == 0) {
-		gpBufEnd -= (uintptr_t)gpBuffer;
+		gpBufEnd = gpBuffer;
 	}
 	sgMemCrit.Leave();
 }
