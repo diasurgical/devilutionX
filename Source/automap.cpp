@@ -618,18 +618,12 @@ static void DrawAutomapText(CelOutputBuffer out)
 	}
 }
 
-/**
- * @brief Renders the automap on screen.
- */
-void DrawAutomap()
+void DrawAutomap(CelOutputBuffer out)
 {
 	int cells;
 	int sx, sy;
 	int i, j, d;
 	int mapx, mapy;
-
-	CelOutputBuffer out = GlobalBackBuffer();
-	out = out.subregion(0, 0, out.line_width, SCREEN_Y + VIEWPORT_HEIGHT);
 
 	if (leveltype == DTYPE_TOWN) {
 		DrawAutomapText(out);

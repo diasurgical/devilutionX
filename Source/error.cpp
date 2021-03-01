@@ -126,7 +126,7 @@ void DrawDiabloMsg()
 
 	assert(gpBuffer);
 
-	trans_rect(PANEL_LEFT + 104, DIALOG_TOP - 8, 432, 54);
+	DrawHalfTransparentRectTo(GlobalBackBuffer(), PANEL_LEFT + 104, DIALOG_TOP - 8, 432, 54);
 
 	strcpy(tempstr, MsgStrings[msgflag]);
 	sx = PANEL_X + 101;

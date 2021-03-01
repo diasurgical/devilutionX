@@ -468,14 +468,14 @@ static void DrawHelpLine(int x, int y, char *text, char color)
 	}
 }
 
-void DrawHelp()
+void DrawHelp(CelOutputBuffer out)
 {
 	int i, c, w;
 	char col;
 	const char *s;
 
 	DrawSTextHelp();
-	DrawQTextBack();
+	DrawQTextBack(out);
 	if (gbIsHellfire)
 		PrintSString(0, 2, TRUE, "Hellfire Help", COL_GOLD, 0);
 	else

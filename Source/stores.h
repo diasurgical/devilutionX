@@ -46,7 +46,7 @@ void DrawSLine(int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
 void StartStore(char s);
-void DrawSText();
+void DrawSText(CelOutputBuffer out);
 void STextESC();
 void STextUp();
 void STextDown();

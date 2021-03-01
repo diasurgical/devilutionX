@@ -3954,10 +3954,10 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	}
 }
 
-void DrawUTextBack()
+static void DrawUTextBack(CelOutputBuffer out)
 {
-	CelDraw(RIGHT_PANEL_X - SPANEL_WIDTH + 24, SCREEN_Y + 327, pSTextBoxCels, 1, 271);
-	trans_rect(RIGHT_PANEL - SPANEL_WIDTH + 27, 28, 265, 297);
+	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, SCREEN_Y + 327, pSTextBoxCels, 1, 271);
+	DrawHalfTransparentRectTo(out, RIGHT_PANEL - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
 void PrintUString(int x, int y, BOOL cjustflag, const char *str, int col)
@@ -4008,7 +4008,7 @@ void DrawUniqueInfo()
 
 	if ((!chrflag && !questlog) || SCREEN_WIDTH >= SPANEL_WIDTH * 3) {
 		uid = curruitem._iUid;
-		DrawUTextBack();
+		DrawUTextBack(GlobalBackBuffer());
 		PrintUString(0 + RIGHT_PANEL - SPANEL_WIDTH, 2, TRUE, UniqueItemList[uid].UIName, 3);
 		DrawULine(5);
 		PrintItemPower(UniqueItemList[uid].UIPower1, &curruitem);

@@ -15,7 +15,7 @@ extern "C" {
 extern BOOL helpflag;
 
 void InitHelp();
-void DrawHelp();
+void DrawHelp(CelOutputBuffer out);
 void DisplayHelp();
 void HelpScrollUp();
 void HelpScrollDown();

@@ -6,6 +6,8 @@
 #ifndef __AUTOMAP_H__
 #define __AUTOMAP_H__
 
+#include "engine.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
@@ -32,7 +34,12 @@ void AutomapLeft();
 void AutomapRight();
 void AutomapZoomIn();
 void AutomapZoomOut();
-void DrawAutomap();
+
+/**
+ * @brief Renders the automap to the given buffer.
+ */
+void DrawAutomap(CelOutputBuffer out);
+
 void SetAutomapView(int x, int y);
 void AutomapZoomReset();
 

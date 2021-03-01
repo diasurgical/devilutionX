@@ -601,39 +601,4 @@ void world_draw_black_tile(int sx, int sy)
 	}
 }
 
-/**
- * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
- * even pixels on even lines.
- * @brief Render a transparent black rectangle
- * @param sx Screen coordinate
- * @param sy Screen coordinate
- * @param width Rectangle width
- * @param height Rectangle height
- */
-void trans_rect(int sx, int sy, int width, int height)
-{
-	int row, col;
-	BYTE *pix = &gpBuffer[SCREENXY(sx, sy)];
-
-	if (sgOptions.bBlendedTransparancy) { // Blended
-		for (row = 0; row < height; row++) {
-			for (col = 0; col < width; col++) {
-				*pix = paletteTransparencyLookup[0][*pix];
-				pix++;
-			}
-			pix += BUFFER_WIDTH - width;
-		}
-		return;
-	}
-
-	for (row = 0; row < height; row++) {
-		for (col = 0; col < width; col++) {
-			if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1))) // Stippled
-				*pix = 0;
-			pix++;
-		}
-		pix += BUFFER_WIDTH - width;
-	}
-}
-
 DEVILUTION_END_NAMESPACE
