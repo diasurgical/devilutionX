@@ -555,6 +555,43 @@ void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_
 	}
 }
 
+static void DrawHalfTransparentBlendedRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+{
+	BYTE *pix = out.at(sx, sy);
+	for (int row = 0; row < height; row++) {
+		for (int col = 0; col < width; col++) {
+			*pix = paletteTransparencyLookup[0][*pix];
+			pix++;
+		}
+		pix += out.line_width - width;
+	}
+}
+
+static void DrawHalfTransparentStippledRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+{
+	BYTE *pix = out.at(sx, sy);
+	for (int row = 0; row < height; row++) {
+		for (int col = 0; col < width; col++) {
+			if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1)))
+				*pix = 0;
+			pix++;
+		}
+		pix += out.line_width - width;
+	}
+}
+
+void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+{
+	int row, col;
+	BYTE *pix = out.at(sx, sy);
+
+	if (sgOptions.bBlendedTransparancy) {
+		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
+	} else {
+		DrawHalfTransparentStippledRectTo(out, sx, sy, width, height);
+	}
+}
+
 int GetDirection(int x1, int y1, int x2, int y2)
 {
 	int mx, my;

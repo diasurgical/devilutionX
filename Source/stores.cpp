@@ -118,10 +118,10 @@ void FreeStoreMem()
 	MemFreeDbg(pSTextSlidCels);
 }
 
-void DrawSTextBack()
+static void DrawSTextBack(CelOutputBuffer out)
 {
-	CelDraw(PANEL_X + 344, 327 + SCREEN_Y + UI_OFFSET_Y, pSTextBoxCels, 1, 271);
-	trans_rect(PANEL_LEFT + 347, UI_OFFSET_Y + 28, 265, 297);
+	CelDrawTo(out, PANEL_X + 344, 327 + SCREEN_Y + UI_OFFSET_Y, pSTextBoxCels, 1, 271);
+	DrawHalfTransparentRectTo(out, PANEL_LEFT + 347, UI_OFFSET_Y + 28, 265, 297);
 }
 
 void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int val)
@@ -1575,14 +1575,14 @@ void StartStore(char s)
 	}
 }
 
-void DrawSText()
+void DrawSText(CelOutputBuffer out)
 {
 	int i;
 
 	if (!stextsize)
-		DrawSTextBack();
+		DrawSTextBack(out);
 	else
-		DrawQTextBack();
+		DrawQTextBack(out);
 
 	if (stextscrl) {
 		switch (stextflag) {

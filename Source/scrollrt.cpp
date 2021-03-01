@@ -1226,12 +1226,14 @@ extern void DrawControllerModifierHints();
  */
 void DrawView(int StartX, int StartY)
 {
+	CelOutputBuffer out = GlobalBackBuffer();
+
 	DrawGame(StartX, StartY);
 	if (automapflag) {
-		DrawAutomap();
+		DrawAutomap(out.subregion(0, 0, out.line_width, SCREEN_Y + VIEWPORT_HEIGHT));
 	}
 	if (stextflag && !qtextflag)
-		DrawSText();
+		DrawSText(out);
 	if (invflag) {
 		DrawInv();
 	} else if (sbookflag) {
@@ -1253,7 +1255,7 @@ void DrawView(int StartX, int StartY)
 		DrawUniqueInfo();
 	}
 	if (qtextflag) {
-		DrawQText();
+		DrawQText(out);
 	}
 	if (spselflag) {
 		DrawSpellList();
@@ -1262,7 +1264,7 @@ void DrawView(int StartX, int StartY)
 		DrawGoldSplit(dropGoldValue);
 	}
 	if (helpflag) {
-		DrawHelp();
+		DrawHelp(out);
 	}
 	if (msgflag) {
 		DrawDiabloMsg();

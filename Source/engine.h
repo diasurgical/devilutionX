@@ -340,6 +340,23 @@ void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
  */
 void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_index);
 
+
+/**
+ * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
+ * even pixels on even lines.
+ *
+ * If blended transparency is enabled, uses `paletteTransparencyLookup` table instead
+ * of blacking pixels out.
+ *
+ * @brief Render a transparent black rectangle
+ * @param out Target buffer
+ * @param sx Screen coordinate
+ * @param sy Screen coordinate
+ * @param width Rectangle width
+ * @param height Rectangle height
+ */
+void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height);
+
 /**
  * @brief Calculate the best fit direction between two points
  * @param x1 Tile coordinate
