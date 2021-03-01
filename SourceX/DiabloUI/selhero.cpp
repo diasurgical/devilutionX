@@ -539,7 +539,7 @@ void UiSelHeroSingDialog(
 {
 	selhero_isMultiPlayer = false;
 	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
-	*difficulty = gbDifficulty;
+	*difficulty = nDifficulty;
 }
 
 void UiSelHeroMultDialog(

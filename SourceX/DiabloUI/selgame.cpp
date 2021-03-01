@@ -18,8 +18,8 @@ bool selgame_enteringGame;
 int selgame_selectedGame;
 bool selgame_endMenu;
 int *gdwPlayerId;
-int gbDifficulty;
-int gbTickRate;
+int nDifficulty;
+int nTickRate;
 int heroLevel;
 
 static _SNETPROGRAMDATA *m_client_info;
@@ -243,7 +243,7 @@ void selgame_Diff_Select(int value)
 		return;
 	}
 
-	gbDifficulty = value;
+	nDifficulty = value;
 
 	if (!selhero_isMultiPlayer) {
 		selhero_endMenu = true;
@@ -338,7 +338,7 @@ void selgame_Speed_Esc()
 
 void selgame_Speed_Select(int value)
 {
-	gbTickRate = vecSelGameDlgItems[value]->m_value;
+	nTickRate = vecSelGameDlgItems[value]->m_value;
 
 	if (provider == SELCONN_LOOPBACK) {
 		selgame_Password_Select(0);
@@ -428,8 +428,8 @@ void selgame_Password_Select(int value)
 	}
 
 	GameData *data = m_client_info->initdata;
-	data->nDifficulty = gbDifficulty;
-	data->nTickRate = sgOptions.nTickRate;
+	data->nDifficulty = nDifficulty;
+	data->nTickRate = nTickRate;
 	data->bJogInTown = sgOptions.bJogInTown;
 	data->bTheoQuest = sgOptions.bTheoQuest;
 	data->bCowQuest = sgOptions.bCowQuest;
