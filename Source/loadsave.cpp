@@ -748,14 +748,14 @@ int RemapItemIdxToDiablo(int i)
 bool IsHeaderValid(int magicNumber)
 {
 	gbIsHellfireSaveGame = false;
-	if (magicNumber == 'SHAR') {
+	if (magicNumber == LOAD_BE32("SHAR")) {
 		return true;
-	} else if (magicNumber == 'SHLF') {
+	} else if (magicNumber == LOAD_BE32("SHLF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
-	} else if (!gbIsSpawn && magicNumber == 'RETL') {
+	} else if (!gbIsSpawn && magicNumber == LOAD_BE32("RETL")) {
 		return true;
-	} else if (!gbIsSpawn && magicNumber == 'HELF') {
+	} else if (!gbIsSpawn && magicNumber == LOAD_BE32("HELF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
 	}
@@ -1642,13 +1642,13 @@ void SaveGame()
 	tbuff = SaveBuff;
 
 	if (gbIsSpawn && !gbIsHellfire)
-		ISave('SHAR');
+		ISave(LOAD_BE32("SHAR"));
 	else if (gbIsSpawn && gbIsHellfire)
-		ISave('SHLF');
+		ISave(LOAD_BE32("SHLF"));
 	else if (!gbIsSpawn && gbIsHellfire)
-		ISave('HELF');
+		ISave(LOAD_BE32("HELF"));
 	else if (!gbIsSpawn && !gbIsHellfire)
-		ISave('RETL');
+		ISave(LOAD_BE32("RETL"));
 	else
 		app_fatal("Invalid game state");
 
