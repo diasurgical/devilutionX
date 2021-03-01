@@ -264,7 +264,6 @@ int ItemInvSnds[] = {
 	IS_ILARM,
 	IS_ILARM,
 };
-const char *off_4A5AC4 = "SItem";
 /** Specifies the current Y-coordinate used for validation of items on ground. */
 int idoppely = 16;
 /** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
@@ -651,9 +650,9 @@ void InitItems()
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))
 			SpawnQuestItem(IDI_ANVIL, 2 * setpc_x + 27, 2 * setpc_y + 27, 0, 1);
-		if (UseCowFarmer && currlevel == 20)
+		if (gbCowQuest && currlevel == 20)
 			SpawnQuestItem(IDI_BROWNSUIT, 25, 25, 3, 1);
-		if (UseCowFarmer && currlevel == 19)
+		if (gbCowQuest && currlevel == 19)
 			SpawnQuestItem(IDI_GREYSUIT, 25, 25, 3, 1);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
@@ -2977,9 +2976,9 @@ void items_427A72()
 				sprintf(&hexId[i * 2], "%02X", buffer[i]);
 			}
 
-			setIniValue("Hellfire", off_4A5AC4, hexId, sizeof(hexId));
+			setIniValue("Hellfire", "SItem", hexId, sizeof(hexId));
 		} else {
-			setIniValue("Hellfire", off_4A5AC4, "", 1);
+			setIniValue("Hellfire", "SItem", "", 1);
 		}
 	}
 }
@@ -3023,11 +3022,10 @@ void items_427ABA(int x, int y)
 		dItem[x][y] = 0;
 	}
 
-	int dwSize = 0;
-	if (!getIniValue("Hellfire", off_4A5AC4, hexPkSItem, sizeof(hexPkSItem), &dwSize))
+	if (!getIniValue("Hellfire", "SItem", hexPkSItem, sizeof(hexPkSItem)))
 		return;
 
-	if (dwSize < sizeof(PkItemStruct) * 2)
+	if (strlen(hexPkSItem) < sizeof(PkItemStruct) * 2)
 		return;
 
 	hex2bin(hexPkSItem, sizeof(PkItemStruct), (char *)&PkSItem);

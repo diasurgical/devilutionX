@@ -1723,7 +1723,7 @@ void SpawnLoot(int i, BOOL sendmsg)
 		quests[Q_DEFILER]._qlog = 0;
 		SpawnMapOfDoom(Monst->_mx, Monst->_my);
 	} else if (Monst->mName == UniqMonst[UMT_HORKDMN].mName) {
-		if (UseTheoQuest) {
+		if (gbTheoQuest) {
 			SpawnTheodore(Monst->_mx, Monst->_my);
 		} else {
 			CreateAmulet(Monst->_mx, Monst->_my, 13, FALSE, TRUE);
@@ -1731,7 +1731,7 @@ void SpawnLoot(int i, BOOL sendmsg)
 	} else if (Monst->MType->mtype == MT_HORKSPWN) {
 	} else if (Monst->MType->mtype == MT_NAKRUL) {
 		nSFX = IsUberRoomOpened ? USFX_NAKRUL4 : USFX_NAKRUL5;
-		if (UseCowFarmer)
+		if (gbCowQuest)
 			nSFX = USFX_NAKRUL6;
 		if (effect_is_playing(nSFX))
 			stream_stop();
@@ -4680,7 +4680,7 @@ void ProcessMonsters()
 				PlaySFX(USFX_CLEAVER);
 			}
 			if (Monst->MType->mtype == MT_NAKRUL) {
-				if (UseCowFarmer) {
+				if (gbCowQuest) {
 					PlaySFX(USFX_NAKRUL6);
 				} else {
 					if (IsUberRoomOpened)

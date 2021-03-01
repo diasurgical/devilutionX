@@ -51,20 +51,18 @@ static BOOL mainmenu_init_menu(int type)
 
 static BOOL mainmenu_single_player()
 {
-	if (!SRegLoadValue("qol", jogging_title, 0, &jogging_opt)) {
-		jogging_opt = FALSE;
-	}
-
 	gbIsMultiplayer = false;
 
-	ticks_per_sec = sgOptions.ticksPerSecound;
+	gbJogInTown = sgOptions.bJogInTown;
+	gnTickRate = sgOptions.nTickRate;
+	gbTheoQuest = sgOptions.bTheoQuest;
+	gbCowQuest = sgOptions.bCowQuest;
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
 static BOOL mainmenu_multi_player()
 {
-	jogging_opt = FALSE;
 	gbIsMultiplayer = true;
 	return mainmenu_init_menu(SELHERO_CONNECT);
 }
@@ -97,31 +95,29 @@ BOOL mainmenu_select_hero_dialog(
 	BOOL hero_is_created = TRUE;
 	int dlgresult = 0;
 	if (!gbIsMultiplayer) {
-		if (!UiSelHeroSingDialog(
-		        pfile_ui_set_hero_infos,
-		        pfile_ui_save_create,
-		        pfile_delete_save,
-		        pfile_ui_set_class_stats,
-		        &dlgresult,
-		        &gszHero,
-		        &gnDifficulty))
-			app_fatal("Unable to display SelHeroSing");
-		client_info->initdata->bDiff = gnDifficulty;
+		UiSelHeroSingDialog(
+		    pfile_ui_set_hero_infos,
+		    pfile_ui_save_create,
+		    pfile_delete_save,
+		    pfile_ui_set_class_stats,
+		    &dlgresult,
+		    &gszHero,
+		    &gnDifficulty);
+		client_info->initdata->nDifficulty = gnDifficulty;
 
 		if (dlgresult == SELHERO_CONTINUE)
 			gbLoadGame = TRUE;
 		else
 			gbLoadGame = FALSE;
-
-	} else if (!UiSelHeroMultDialog(
-	               pfile_ui_set_hero_infos,
-	               pfile_ui_save_create,
-	               pfile_delete_save,
-	               pfile_ui_set_class_stats,
-	               &dlgresult,
-	               &hero_is_created,
-	               &gszHero)) {
-		app_fatal("Can't load multiplayer dialog");
+	} else {
+		UiSelHeroMultDialog(
+		    pfile_ui_set_hero_infos,
+		    pfile_ui_save_create,
+		    pfile_delete_save,
+		    pfile_ui_set_class_stats,
+		    &dlgresult,
+		    &hero_is_created,
+		    &gszHero);
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);

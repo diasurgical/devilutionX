@@ -274,10 +274,10 @@ void selhero_List_Select(int value)
 		if (gbIsHellfire) {
 			vecSelHeroDlgItems.push_back(new UiListItem("Monk", PC_MONK));
 		}
-		if (UseBardTest) {
+		if (gbBard) {
 			vecSelHeroDlgItems.push_back(new UiListItem("Bard", PC_BARD));
 		}
-		if (UseBarbarianTest) {
+		if (gbBarbarian) {
 			vecSelHeroDlgItems.push_back(new UiListItem("Barbarian", PC_BARBARIAN));
 		}
 		if (vecSelHeroDlgItems.size() > 4)
@@ -469,7 +469,7 @@ BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
 	return true;
 }
 
-static BOOL UiSelHeroDialog(
+static void UiSelHeroDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
@@ -526,10 +526,9 @@ static BOOL UiSelHeroDialog(
 	snprintf(*name, sizeof(*name), selhero_heroInfo.name);
 
 	UnloadScrollBar();
-	return true;
 }
 
-BOOL UiSelHeroSingDialog(
+void UiSelHeroSingDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     BOOL (*fnremove)(_uiheroinfo *),
@@ -539,12 +538,11 @@ BOOL UiSelHeroSingDialog(
     int *difficulty)
 {
 	selhero_isMultiPlayer = false;
-	BOOL success = UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
+	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
 	*difficulty = gbDifficulty;
-	return success;
 }
 
-BOOL UiSelHeroMultDialog(
+void UiSelHeroMultDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     BOOL (*fnremove)(_uiheroinfo *),
@@ -554,7 +552,7 @@ BOOL UiSelHeroMultDialog(
     char (*name)[16])
 {
 	selhero_isMultiPlayer = true;
-	return UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
+	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
 }
 
 const char *selhero_GenerateName(uint8_t hero_class)

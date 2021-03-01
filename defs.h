@@ -93,7 +93,6 @@
 #define PMSG_COUNT				8
 
 #define GAME_ID					(gbIsHellfire ? (gbIsSpawn ? 'HSHR' : 'HRTL') : (gbIsSpawn ? 'DSHR' : 'DRTL'))
-#define GAME_VERSION			50
 
 // Diablo uses a 256 color palette
 // Entry 0-127 (0x00-0x7F) are level specific

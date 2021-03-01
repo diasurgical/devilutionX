@@ -106,20 +106,18 @@ int SNetInitializeProvider(unsigned long provider, struct _SNETPROGRAMDATA *clie
  * @brief Called by engine for single, called by ui for multi
  */
 BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString,
-	DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
+    DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
     const char *creatorName, const char *a11, int *playerID)
 {
-	if (GameTemplateSize != sizeof(_gamedata))
+	if (GameTemplateSize != sizeof(GameData))
 		ABORT();
 	net::buffer_t game_init_info(GameTemplateData, GameTemplateData + GameTemplateSize);
 	dvlnet_inst->setup_gameinfo(std::move(game_init_info));
 
-	char addrstr[129] = "0.0.0.0";
-	getIniValue("dvlnet", "bindaddr", addrstr, 128);
-	strncpy(gpszGameName, addrstr, sizeof(gpszGameName) - 1);
+	strncpy(gpszGameName, sgOptions.szBindAddress, sizeof(gpszGameName) - 1);
 	if (pszGamePassword)
 		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
-	*playerID = dvlnet_inst->create(addrstr, pszGamePassword);
+	*playerID = dvlnet_inst->create(sgOptions.szBindAddress, pszGamePassword);
 	return *playerID != -1;
 }
 
@@ -162,4 +160,4 @@ BOOL SNetPerformUpgrade(DWORD *upgradestatus)
 	UNIMPLEMENTED();
 }
 
-}
+} // namespace dvl

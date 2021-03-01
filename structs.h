@@ -438,7 +438,7 @@ typedef struct CMonster {
 	unsigned char mAFNum;
 	char mdeadval;
 	const MonsterData *MData;
-	// A TRN file contains a sequence of colour transitions, represented
+	// A TRN file contains a sequence of color transitions, represented
 	// as indexes into a palette. (a 256 byte array of palette indices)
 	BYTE *trans_file;
 } CMonster;
@@ -701,12 +701,6 @@ typedef struct InvXY {
 
 // TPDEF PTR FCN VOID PLAYSND
 
-typedef struct _gamedata {
-	int dwSeed;
-	BYTE bDiff;
-	BYTE bRate;
-} _gamedata;
-
 typedef struct _uidefaultstats {
 	WORD strength;
 	WORD magic;
@@ -784,22 +778,6 @@ typedef struct _SNETPLAYERDATA {
 	char *playername;
 	char *playerdescription;
 } _SNETPLAYERDATA;
-
-typedef struct _SNETPROGRAMDATA {
-	int size;
-	const char *programname;
-	const char *programdescription;
-	int programid;
-	int versionid;
-	int maxplayers;
-	_gamedata *initdata;
-	int initdatabytes;
-	int optcategorybits;
-	char *cdkey;
-	char *registereduser;
-	int spawned;
-	int lcid;
-} _SNETPROGRAMDATA;
 
 typedef struct _SNETVERSIONDATA {
 	int size;

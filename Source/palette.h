@@ -34,8 +34,6 @@ void palette_update_caves();
 void palette_update_crypt();
 void palette_update_hive();
 void palette_update_quest_palette(int n);
-BOOL palette_get_color_cycling();
-BOOL palette_set_color_cycling(BOOL enabled);
 
 #ifdef __cplusplus
 }

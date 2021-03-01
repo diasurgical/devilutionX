@@ -381,12 +381,37 @@ void selgame_Password_Init(int value)
 	UiInitList(0, NULL, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
 }
 
+static bool IsGameCompatible(GameData *data)
+{
+	if (data->versionMajor == PROJECT_VERSION_MAJOR
+	    && data->versionMinor == PROJECT_VERSION_MINOR
+	    && data->versionPatch == PROJECT_VERSION_PATCH
+	    && data->programid == GAME_ID) {
+		return IsDifficultyAllowed(data->nDifficulty);
+	}
+
+	selgame_Free();
+
+	if (data->programid != GAME_ID) {
+		UiSelOkDialog(title, "The host is running a different game then you.", false);
+	} else {
+		char msg[64];
+		sprintf(msg, "Your version %s does not match the host %d.%d.%d.", PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH);
+
+		UiSelOkDialog(title, msg, false);
+	}
+
+	LoadBackgroundArt("ui_art\\selgame.pcx");
+
+	return false;
+}
+
 void selgame_Password_Select(int value)
 {
 	if (selgame_selectedGame) {
 		setIniValue("Phone Book", "Entry1", selgame_Ip);
 		if (SNetJoinGame(selgame_selectedGame, selgame_Ip, selgame_Password, NULL, NULL, gdwPlayerId)) {
-			if (!IsDifficultyAllowed(m_client_info->initdata->bDiff)) {
+			if (!IsGameCompatible(m_client_info->initdata)) {
 				selgame_GameSelection_Select(1);
 				return;
 			}
@@ -402,11 +427,14 @@ void selgame_Password_Select(int value)
 		return;
 	}
 
-	_gamedata *info = m_client_info->initdata;
-	info->bDiff = gbDifficulty;
-	info->bRate = gbTickRate;
+	GameData *data = m_client_info->initdata;
+	data->nDifficulty = gbDifficulty;
+	data->nTickRate = sgOptions.nTickRate;
+	data->bJogInTown = sgOptions.bJogInTown;
+	data->bTheoQuest = sgOptions.bTheoQuest;
+	data->bCowQuest = sgOptions.bCowQuest;
 
-	if (SNetCreateGame(NULL, selgame_Password, NULL, 0, (char *)info, sizeof(_gamedata), MAX_PLRS, NULL, NULL, gdwPlayerId)) {
+	if (SNetCreateGame(NULL, selgame_Password, NULL, 0, (char *)data, sizeof(GameData), MAX_PLRS, NULL, NULL, gdwPlayerId)) {
 		UiInitList_clear();
 		selgame_endMenu = true;
 	} else {

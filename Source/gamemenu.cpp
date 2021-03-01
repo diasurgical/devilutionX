@@ -9,7 +9,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-BOOL jogging_opt = TRUE;
+bool gbJogInTown = false;
 
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
@@ -61,8 +61,7 @@ const char *jogging_toggle_names[] = {
 	"Jog",
 	"Walk",
 };
-const char *jogging_title = "Fast Walk";
-/** Specifies the menu names for colour cycling disabled and enabled. */
+/** Specifies the menu names for color cycling disabled and enabled. */
 const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
 static void gamemenu_update_single(TMenuItem *pMenuItems)
@@ -221,8 +220,8 @@ static void gamemenu_get_sound()
 static void gamemenu_jogging()
 {
 	gmenu_slider_steps(&sgOptionsMenu[3], 2);
-	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, jogging_opt);
-	sgOptionsMenu[3].pszStr = jogging_toggle_names[!jogging_opt ? 1 : 0];
+	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, sgOptions.bJogInTown);
+	sgOptionsMenu[3].pszStr = jogging_toggle_names[!sgOptions.bJogInTown ? 1 : 0];
 }
 
 static void gamemenu_get_gamma()
@@ -235,13 +234,13 @@ static void gamemenu_get_speed()
 {
 	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
-		if (ticks_per_sec >= 50)
+		if (gnTickRate >= 50)
 			sgOptionsMenu[3].pszStr = "Speed: Fastest";
-		else if (ticks_per_sec >= 40)
+		else if (gnTickRate >= 40)
 			sgOptionsMenu[3].pszStr = "Speed: Faster";
-		else if (ticks_per_sec >= 30)
+		else if (gnTickRate >= 30)
 			sgOptionsMenu[3].pszStr = "Speed: Fast";
-		else if (ticks_per_sec == 20)
+		else if (gnTickRate == 20)
 			sgOptionsMenu[3].pszStr = "Speed: Normal";
 		return;
 	}
@@ -250,12 +249,12 @@ static void gamemenu_get_speed()
 
 	sgOptionsMenu[3].pszStr = "Speed";
 	gmenu_slider_steps(&sgOptionsMenu[3], 46);
-	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, ticks_per_sec);
+	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, gnTickRate);
 }
 
 static void gamemenu_get_color_cycling()
 {
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[palette_get_color_cycling() & 1];
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.bColorCycling ? 1 : 0];
 }
 
 static int gamemenu_slider_gamma()
@@ -351,8 +350,8 @@ void gamemenu_sound_volume(BOOL bActivate)
 void gamemenu_loadjog(BOOL bActivate)
 {
 	if (!gbIsMultiplayer) {
-		jogging_opt = !jogging_opt;
-		SRegSaveValue("Hellfire", jogging_title, FALSE, jogging_opt);
+		sgOptions.bJogInTown = !sgOptions.bJogInTown;
+		gbJogInTown = sgOptions.bJogInTown;
 		PlaySFX(IS_TITLEMOV);
 		gamemenu_jogging();
 	}
@@ -378,25 +377,23 @@ void gamemenu_gamma(BOOL bActivate)
 void gamemenu_speed(BOOL bActivate)
 {
 	if (bActivate) {
-		if (ticks_per_sec != 20)
-			ticks_per_sec = 20;
+		if (gnTickRate != 20)
+			gnTickRate = 20;
 		else
-			ticks_per_sec = 50;
-		gmenu_slider_set(&sgOptionsMenu[3], 20, 50, ticks_per_sec);
+			gnTickRate = 50;
+		gmenu_slider_set(&sgOptionsMenu[3], 20, 50, gnTickRate);
 	} else {
-		ticks_per_sec = gmenu_slider_get(&sgOptionsMenu[3], 20, 50);
+		gnTickRate = gmenu_slider_get(&sgOptionsMenu[3], 20, 50);
 	}
 
-	SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
-	tick_delay = 1000 / ticks_per_sec;
+	sgOptions.nTickRate = gnTickRate;
+	gnTickDelay = 1000 / gnTickRate;
 }
 
 void gamemenu_color_cycling(BOOL bActivate)
 {
-	BOOL color_cycling;
-
-	color_cycling = palette_set_color_cycling(palette_get_color_cycling() == 0);
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[color_cycling & 1];
+	sgOptions.bColorCycling = !sgOptions.bColorCycling;
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.bColorCycling ? 1 : 0];
 }
 
 DEVILUTION_END_NAMESPACE

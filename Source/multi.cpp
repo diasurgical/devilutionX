@@ -22,7 +22,7 @@ BOOL gbShouldValidatePackage;
 BYTE gbActivePlayers;
 BOOLEAN gbGameDestroyed;
 BOOLEAN sgbSendDeltaTbl[MAX_PLRS];
-_gamedata sgGameInitInfo;
+GameData sgGameInitInfo;
 BOOLEAN gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
@@ -659,16 +659,17 @@ static BOOL multi_upgrade(BOOL *pfExitProgram)
 static void multi_handle_events(_SNETEVENT *pEvt)
 {
 	DWORD LeftReason;
-	_gamedata *gameData;
+	GameData *gameData;
 
 	switch (pEvt->eventid) {
-	case EVENT_TYPE_PLAYER_CREATE_GAME:
-		gameData = (_gamedata *)pEvt->data;
-		sgGameInitInfo.dwSeed = gameData->dwSeed;
-		sgGameInitInfo.bDiff = gameData->bDiff;
-		sgGameInitInfo.bRate = gameData->bRate;
+	case EVENT_TYPE_PLAYER_CREATE_GAME: {
+		GameData *gameData = (GameData *)pEvt->data;
+		if (gameData->size != sizeof(GameData))
+			app_fatal("Invalid size of game data: %d", gameData->size);
+		sgGameInitInfo = *gameData;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = TRUE;
 		break;
+	}
 	case EVENT_TYPE_PLAYER_LEAVE_GAME:
 		sgbPlayerLeftGameTbl[pEvt->playerid] = TRUE;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = FALSE;
@@ -728,7 +729,6 @@ void NetClose()
 
 BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 {
-	int i;
 	_SNETPROGRAMDATA ProgramData;
 	_SNETUIDATA UiData;
 	_SNETPLAYERDATA plrdata;
@@ -736,22 +736,21 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	while (1) {
 		*pfExitProgram = FALSE;
 		SetRndSeed(0);
+		sgGameInitInfo.size = sizeof(sgGameInitInfo);
 		sgGameInitInfo.dwSeed = time(NULL);
-		sgGameInitInfo.bDiff = gnDifficulty;
-		sgGameInitInfo.bRate = ticks_per_sec;
+		sgGameInitInfo.programid = GAME_ID;
+		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
+		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
+		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
+		sgGameInitInfo.nDifficulty = gnDifficulty;
+		sgGameInitInfo.nTickRate = sgOptions.nTickRate;
+		sgGameInitInfo.bJogInTown = sgOptions.bJogInTown;
+		sgGameInitInfo.bTheoQuest = sgOptions.bTheoQuest;
+		sgGameInitInfo.bCowQuest = sgOptions.bCowQuest;
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
-
-		ProgramData.programname = PROJECT_NAME;
-
-		ProgramData.programdescription = gszVersionNumber;
-		ProgramData.programid = GAME_ID;
-		ProgramData.versionid = GAME_VERSION;
 		ProgramData.maxplayers = MAX_PLRS;
 		ProgramData.initdata = &sgGameInitInfo;
-		ProgramData.initdatabytes = sizeof(sgGameInitInfo);
-		ProgramData.optcategorybits = 15;
-		ProgramData.lcid = 1033; /* LANG_ENGLISH */
 		memset(&plrdata, 0, sizeof(plrdata));
 		plrdata.size = sizeof(plrdata);
 		memset(&UiData, 0, sizeof(UiData));
@@ -799,12 +798,15 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		NetClose();
 		gbSelectProvider = FALSE;
 	}
-	gnDifficulty = sgGameInitInfo.bDiff;
-	ticks_per_sec = sgGameInitInfo.bRate;
-	tick_delay = 1000 / ticks_per_sec;
 	SetRndSeed(sgGameInitInfo.dwSeed);
+	gnDifficulty = sgGameInitInfo.nDifficulty;
+	gnTickRate = sgGameInitInfo.nTickRate;
+	gnTickDelay = 1000 / gnTickRate;
+	gbJogInTown = sgGameInitInfo.bJogInTown;
+	gbTheoQuest = sgGameInitInfo.bTheoQuest;
+	gbCowQuest = sgGameInitInfo.bCowQuest;
 
-	for (i = 0; i < NUMLEVELS; i++) {
+	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}

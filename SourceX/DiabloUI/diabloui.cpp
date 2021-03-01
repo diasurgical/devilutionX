@@ -884,24 +884,4 @@ void DrawMouse()
 
 	DrawArt(MouseX, MouseY, &ArtCursor);
 }
-
-/**
- * @brief Get int from ini, if not found the provided value will be added to the ini instead
- */
-void DvlIntSetting(const char *valuename, int *value)
-{
-	if (!SRegLoadValue("devilutionx", valuename, 0, value)) {
-		SRegSaveValue("devilutionx", valuename, 0, *value);
-	}
-}
-
-/**
- * @brief Get string from ini, if not found the provided value will be added to the ini instead
- */
-void DvlStringSetting(const char *valuename, char *string, int len)
-{
-	if (!getIniValue("devilutionx", valuename, string, len)) {
-		setIniValue("devilutionx", valuename, string);
-	}
-}
 } // namespace dvl

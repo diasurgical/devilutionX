@@ -1303,7 +1303,7 @@ void PM_ChangeOffset(int pnum)
 	plr[pnum]._pVar6 += plr[pnum]._pxvel;
 	plr[pnum]._pVar7 += plr[pnum]._pyvel;
 
-	if (currlevel == 0 && jogging_opt) {
+	if (currlevel == 0 && gbJogInTown) {
 		plr[pnum]._pVar6 += plr[pnum]._pxvel;
 		plr[pnum]._pVar7 += plr[pnum]._pyvel;
 	}
@@ -2154,7 +2154,7 @@ bool PM_DoWalk(int pnum, int variant)
 	}
 
 	//Play walking sound effect on certain animation frames
-	if (!gbIsHellfire) {
+	if (sgOptions.bWalkingSound) {
 		if (plr[pnum]._pAnimFrame == 3
 		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
 		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
@@ -2163,7 +2163,7 @@ bool PM_DoWalk(int pnum, int variant)
 	}
 
 	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
-	if (currlevel == 0 && jogging_opt) {
+	if (currlevel == 0 && gbJogInTown) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;

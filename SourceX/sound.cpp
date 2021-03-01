@@ -12,8 +12,6 @@
 namespace dvl {
 
 BOOLEAN gbSndInited;
-int sglMusicVolume;
-int sglSoundVolume;
 /** Specifies whether background music is enabled. */
 HANDLE sghMusic;
 
@@ -51,25 +49,14 @@ const char *const sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\Dintro.wav",
 };
 
-static void snd_get_volume(const char *value_name, int *value)
+static int CapVolume(int volume)
 {
-	int v = *value;
-	if (!SRegLoadValue("Diablo", value_name, 0, &v)) {
-		v = VOLUME_MAX;
+	if (volume < VOLUME_MIN) {
+		volume = VOLUME_MIN;
+	} else if (volume > VOLUME_MAX) {
+		volume = VOLUME_MAX;
 	}
-	*value = v;
-
-	if (*value < VOLUME_MIN) {
-		*value = VOLUME_MIN;
-	} else if (*value > VOLUME_MAX) {
-		*value = VOLUME_MAX;
-	}
-	*value -= *value % 100;
-}
-
-static void snd_set_volume(const char *key, int value)
-{
-	SRegSaveValue("Diablo", key, 0, value);
+	return volume - volume % 100;
 }
 
 BOOL snd_playing(TSnd *pSnd)
@@ -99,12 +86,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 		return;
 	}
 
-	lVolume += sglSoundVolume;
-	if (lVolume < VOLUME_MIN) {
-		lVolume = VOLUME_MIN;
-	} else if (lVolume > VOLUME_MAX) {
-		lVolume = VOLUME_MAX;
-	}
+	lVolume = CapVolume(lVolume + sgOptions.nSoundVolume);
 	DSB->Play(lVolume, lPan);
 	pSnd->start_tc = tc;
 }
@@ -154,12 +136,12 @@ void sound_file_cleanup(TSnd *sound_file)
 
 void snd_init()
 {
-	snd_get_volume("Sound Volume", &sglSoundVolume);
-	gbSoundOn = sglSoundVolume > VOLUME_MIN;
+	sgOptions.nSoundVolume = CapVolume(sgOptions.nSoundVolume);
+	gbSoundOn = sgOptions.nSoundVolume > VOLUME_MIN;
 	sgbSaveSoundOn = gbSoundOn;
 
-	snd_get_volume("Music Volume", &sglMusicVolume);
-	gbMusicOn = sglMusicVolume > VOLUME_MIN;
+	sgOptions.nMusicVolume = CapVolume(sgOptions.nMusicVolume);
+	gbMusicOn = sgOptions.nMusicVolume > VOLUME_MIN;
 
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
 	if (result < 0) {
@@ -169,15 +151,6 @@ void snd_init()
 	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
 
 	gbSndInited = true;
-}
-
-void sound_cleanup()
-{
-	if (gbSndInited) {
-		gbSndInited = false;
-		snd_set_volume("Sound Volume", sglSoundVolume);
-		snd_set_volume("Music Volume", sglMusicVolume);
-	}
 }
 
 void music_stop()
@@ -219,7 +192,7 @@ void music_start(int nTrack)
 				ErrSdl();
 			}
 			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, 1);
-			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
+			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sgOptions.nMusicVolume / VOLUME_MIN);
 			Mix_PlayMusic(music, -1);
 
 			sgnMusicTrack = nTrack;
@@ -239,24 +212,24 @@ void sound_disable_music(BOOL disable)
 int sound_get_or_set_music_volume(int volume)
 {
 	if (volume == 1)
-		return sglMusicVolume;
+		return sgOptions.nMusicVolume;
 
-	sglMusicVolume = volume;
+	sgOptions.nMusicVolume = volume;
 
 	if (sghMusic)
 		SFileDdaSetVolume(sghMusic, volume, 0);
 
-	return sglMusicVolume;
+	return sgOptions.nMusicVolume;
 }
 
 int sound_get_or_set_sound_volume(int volume)
 {
 	if (volume == 1)
-		return sglSoundVolume;
+		return sgOptions.nSoundVolume;
 
-	sglSoundVolume = volume;
+	sgOptions.nSoundVolume = volume;
 
-	return sglSoundVolume;
+	return sgOptions.nSoundVolume;
 }
 
 } // namespace dvl

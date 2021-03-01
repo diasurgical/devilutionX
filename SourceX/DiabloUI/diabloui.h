@@ -53,8 +53,5 @@ void UiPollAndRender();
 void UiRenderItems(std::vector<UiItemBase *> items);
 void UiInitList_clear();
 
-void DvlIntSetting(const char *valuename, int *value);
-void DvlStringSetting(const char *valuename, char *string, int len);
-
 void mainmenu_restart_repintro();
 } // namespace dvl

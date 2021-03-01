@@ -163,7 +163,11 @@ void init_archives()
 		gbIsHellfire = true;
 	hfmonk_mpq = init_test_access("hfmonk.mpq", "DiabloInstall", 8100, FS_PC);
 	hfbard_mpq = init_test_access("hfbard.mpq", "DiabloInstall", 8110, FS_PC);
+	if (hfbard_mpq != NULL)
+		gbBard = true;
 	hfbarb_mpq = init_test_access("hfbarb.mpq", "DiabloInstall", 8120, FS_PC);
+	if (hfbarb_mpq != NULL)
+		gbBarbarian = true;
 	hfmusic_mpq = init_test_access("hfmusic.mpq", "DiabloInstall", 8200, FS_PC);
 	hfvoice_mpq = init_test_access("hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
 	hfopt1_mpq = init_test_access("hfopt1.mpq", "DiabloInstall", 8600, FS_PC);

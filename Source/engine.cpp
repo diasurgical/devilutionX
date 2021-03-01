@@ -385,7 +385,7 @@ void CelClippedBlitLightTransTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelB
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
 	if (cel_transparency_active) {
-		if (sgOptions.blendedTransparancy)
+		if (sgOptions.bBlendedTransparancy)
 			CelBlitLightBlendedSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth, NULL);
 		else
 			CelBlitLightTransSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
@@ -655,7 +655,7 @@ BYTE *DiabloAllocPtr(DWORD dwBytes)
 
 	if (buf == NULL) {
 		const char *text = "System memory exhausted.\n"
-		             "Make sure you have at least 64MB of free system memory before running the game";
+		                   "Make sure you have at least 64MB of free system memory before running the game";
 		ERR_DLG("Out of Memory Error", text);
 	}
 

@@ -152,20 +152,23 @@ void dx_cleanup()
 void dx_reinit()
 {
 #ifdef USE_SDL1
-	ghMainWnd = SDL_SetVideoMode(0, 0, 0, ghMainWnd->flags ^ SDL_FULLSCREEN);
+	Uint32 flags = ghMainWnd->flags ^ SDL_FULLSCREEN;
+	if (!IsFullScreen()) {
+		flags |= SDL_FULLSCREEN;
+	}
+	ghMainWnd = SDL_SetVideoMode(0, 0, 0, flags);
 	if (ghMainWnd == NULL) {
 		ErrSdl();
 	}
 #else
 	Uint32 flags = 0;
-	if (!fullscreen) {
+	if (!IsFullScreen()) {
 		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
 	}
 	if (SDL_SetWindowFullscreen(ghMainWnd, flags)) {
 		ErrSdl();
 	}
 #endif
-	fullscreen = !fullscreen;
 	force_redraw = 255;
 }
 
@@ -187,8 +190,8 @@ void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
 	SDL_Surface *dst = GetOutputSurface();
 #ifndef USE_SDL1
 	if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
-			ErrSdl();
-		return;
+		ErrSdl();
+	return;
 #else
 	if (!OutputRequiresScaling()) {
 		if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)

@@ -398,7 +398,7 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		assert(n != 0 && n <= sizeof(DWORD) * CHAR_BIT);
 		mask &= DWORD(-1) << ((sizeof(DWORD) * CHAR_BIT) - n);
 
-		if (sgOptions.blendedTransparancy) {     // Blended transparancy
+		if (sgOptions.bBlendedTransparancy) {    // Blended transparancy
 			if (light_table_index == lightmax) { // Complete darkness
 				for (int i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
@@ -464,7 +464,7 @@ RenderTile(BYTE *pBuff)
 
 	if (cel_transparency_active) {
 		if (arch_draw_type == 0) {
-			if (sgOptions.blendedTransparancy) // Use a fully transparent mask
+			if (sgOptions.bBlendedTransparancy) // Use a fully transparent mask
 				mask = &WallMask_FullyTrasparent[TILE_HEIGHT - 1];
 			else
 				mask = &WallMask[TILE_HEIGHT - 1];
@@ -472,7 +472,7 @@ RenderTile(BYTE *pBuff)
 		if (arch_draw_type == 1 && tile != RT_LTRIANGLE) {
 			c = block_lvid[level_piece_id];
 			if (c == 1 || c == 3) {
-				if (sgOptions.blendedTransparancy) // Use a fully transparent mask
+				if (sgOptions.bBlendedTransparancy) // Use a fully transparent mask
 					mask = &LeftMask_Transparent[TILE_HEIGHT - 1];
 				else
 					mask = &LeftMask[TILE_HEIGHT - 1];
@@ -481,7 +481,7 @@ RenderTile(BYTE *pBuff)
 		if (arch_draw_type == 2 && tile != RT_RTRIANGLE) {
 			c = block_lvid[level_piece_id];
 			if (c == 2 || c == 3) {
-				if (sgOptions.blendedTransparancy) // Use a fully transparent mask
+				if (sgOptions.bBlendedTransparancy) // Use a fully transparent mask
 					mask = &RightMask_Transparent[TILE_HEIGHT - 1];
 				else
 					mask = &RightMask[TILE_HEIGHT - 1];
@@ -615,7 +615,7 @@ void trans_rect(int sx, int sy, int width, int height)
 	int row, col;
 	BYTE *pix = &gpBuffer[SCREENXY(sx, sy)];
 
-	if (sgOptions.blendedTransparancy) { // Blended
+	if (sgOptions.bBlendedTransparancy) { // Blended
 		for (row = 0; row < height; row++) {
 			for (col = 0; col < width; col++) {
 				*pix = paletteTransparencyLookup[0][*pix];

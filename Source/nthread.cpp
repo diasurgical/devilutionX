@@ -78,7 +78,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	*pfSendAsync = FALSE;
 	sgbPacketCountdown--;
 	if (sgbPacketCountdown) {
-		last_tick += tick_delay;
+		last_tick += gnTickDelay;
 		return TRUE;
 	}
 	sgbSyncCountdown--;
@@ -86,7 +86,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	if (sgbSyncCountdown != 0) {
 
 		*pfSendAsync = TRUE;
-		last_tick += tick_delay;
+		last_tick += gnTickDelay;
 		return TRUE;
 	}
 #ifdef __3DS__
@@ -107,7 +107,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		sgbSyncCountdown = 4;
 		multi_msg_countdown();
 		*pfSendAsync = TRUE;
-		last_tick += tick_delay;
+		last_tick += gnTickDelay;
 		return TRUE;
 	}
 #endif
@@ -127,7 +127,7 @@ static unsigned int nthread_handler(void *data)
 			if (nthread_recv_turns(&received))
 				delta = last_tick - SDL_GetTicks();
 			else
-				delta = tick_delay;
+				delta = gnTickDelay;
 			sgMemCrit.Leave();
 			if (delta > 0)
 				SDL_Delay(delta);
@@ -235,7 +235,7 @@ BOOL nthread_has_500ms_passed()
 
 	currentTickCount = SDL_GetTicks();
 	ticksElapsed = currentTickCount - last_tick;
-	if (!gbIsMultiplayer && ticksElapsed > tick_delay * 10) {
+	if (!gbIsMultiplayer && ticksElapsed > gnTickDelay * 10) {
 		last_tick = currentTickCount;
 		ticksElapsed = 0;
 	}

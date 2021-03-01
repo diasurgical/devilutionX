@@ -12,9 +12,37 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+#ifndef DEFAULT_WIDTH
+#define DEFAULT_WIDTH 640
+#endif
+#ifndef DEFAULT_HEIGHT
+#define DEFAULT_HEIGHT 480
+#endif
+
 typedef struct Options {
-	bool blendedTransparancy; // Use blended transparency rather than stippled
-	int ticksPerSecound;      // Game play ticks per secound
+	Sint32 nSoundVolume; // Movie and SFX volume
+	Sint32 nMusicVolume; // Music volume
+	bool bWalkingSound;  // Player emits sound when walking
+
+	Sint32 nWidth;             // Render width
+	Sint32 nHeight;            // Render height
+	bool bFullscreen;          // Run in fullscreen or windowed mode
+	bool bUpscale;             // Scale the image after rendering
+	bool bFitToScreen;         // Expand the aspect ratio to match the screen
+	char szScaleQuality[2];    // See SDL_HINT_RENDER_SCALE_QUALITY
+	bool bIntegerScaling;      // Only scale by values divisible by the width and height
+	bool bVSync;               // Enable vsync on the output
+	bool bBlendedTransparancy; // Use blended transparency rather than stippled
+	Sint32 nGammaCorrection;   // Gamma correction level
+	bool bColorCycling;        // Enable color cycling animations
+
+	Sint32 nTickRate; // Game play ticks per secound
+	bool bJogInTown;  // Enable double walk speed when in town
+	bool bGrabInput;  // Do not let the mouse leave the application window
+	bool bTheoQuest;  // Enable the Theo quest
+	bool bCowQuest;   // Enable the cow quest
+
+	char szBindAddress[129]; // Optionally bind to a specific network interface
 } Options;
 
 extern SDL_Window *ghMainWnd;
@@ -34,15 +62,14 @@ extern BOOL was_fonts_init;
 extern void FontsCleanup();
 extern BOOL light4flag;
 extern int PauseMode;
-extern BOOLEAN UseTheoQuest;
-extern BOOLEAN UseCowFarmer;
-extern BOOLEAN UseNestArt;
-extern BOOLEAN UseBardTest;
-extern BOOLEAN UseBarbarianTest;
-extern BOOLEAN UseMultiTest;
+extern bool gbTheoQuest;
+extern bool gbCowQuest;
+extern bool gbNestArt;
+extern bool gbBard;
+extern bool gbBarbarian;
 extern char sgbMouseDown;
-extern int ticks_per_sec;
-extern WORD tick_delay;
+extern int gnTickRate;
+extern WORD gnTickDelay;
 extern Options sgOptions;
 
 void FreeGameMem();
@@ -60,7 +87,7 @@ void diablo_color_cyc_logic();
 
 /* rdata */
 
-extern BOOL fullscreen;
+extern bool gbForceWindowed;
 extern BOOL leveldebug;
 #ifdef _DEBUG
 extern BOOL monstdebug;

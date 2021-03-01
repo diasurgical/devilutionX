@@ -274,8 +274,10 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 	return strtol(string, NULL, 10) != 0;
 }
 
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize)
+bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
 {
+	strncpy(string, defaultString, stringSize);
+
 	radon::Section *section = getIni().getSection(sectionName);
 	if (!section)
 		return false;
@@ -285,8 +287,6 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 		return false;
 
 	std::string value = key->getStringValue();
-	if (dataSize)
-		*dataSize = value.length();
 
 	if (string != NULL)
 		strncpy(string, value.c_str(), stringSize);
@@ -316,24 +316,21 @@ void setIniValue(const char *sectionName, const char *keyName, const char *value
 	ini.saveToFile();
 }
 
-BOOL SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value)
+int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 {
 	char string[10];
-	if (getIniValue(keyname, valuename, string, 10)) {
-		*value = strtol(string, NULL, 10);
-		return true;
+	if (!getIniValue(keyname, valuename, string, sizeof(string))) {
+		return defaultValue;
 	}
 
-	return false;
+	return strtol(string, NULL, sizeof(string));
 }
 
-BOOL SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD result)
+void setIniInt(const char *keyname, const char *valuename, int value)
 {
 	char str[10];
-	sprintf(str, "%d", result);
+	sprintf(str, "%d", value);
 	setIniValue(keyname, valuename, str);
-
-	return true;
 }
 
 double SVidFrameEnd;

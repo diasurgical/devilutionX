@@ -483,12 +483,12 @@ void InitTowners()
 	InitBoy();
 	InitCows();
 	if (gbIsHellfire) {
-		if (UseCowFarmer) {
+		if (gbCowQuest) {
 			InitCowFarmer();
 		} else if (quests[Q_FARMER]._qactive != 10) {
 			InitFarmer();
 		}
-		if (UseTheoQuest && plr->_pLvlVisited[17]) {
+		if (gbTheoQuest && plr->_pLvlVisited[17]) {
 			InitGirl();
 		}
 	}
