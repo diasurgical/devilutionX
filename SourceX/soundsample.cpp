@@ -104,9 +104,9 @@ int SoundSample::GetLength()
 		bytePerSample = 1;
 	}
 
-	//alen * 1000 can overflow a 32bit int so using a 64bit one - after division it should still fit inside 32 bits.
-	Uint64 tmp = chunk->alen * 1000 / (frequency * channels * bytePerSample);
-	return (Uint32)tmp;
+	Uint64 ms = 1000; // milliseconds, 64bit to avoid overflow when multiplied by alen
+	Uint32 bps = frequency * channels * bytePerSample; // bytes per second
+	return (Uint32)(chunk->alen * ms / bps);
 };
 
 } // namespace dvl
