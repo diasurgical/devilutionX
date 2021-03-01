@@ -330,14 +330,15 @@ void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 
 /**
- * @brief Draw a line on the back buffer
+ * @brief Draw a line in the target buffer
+ * @param out Target buffer
  * @param x0 Back buffer coordinate
  * @param y0 Back buffer coordinate
  * @param x1 Back buffer coordinate
  * @param y1 Back buffer coordinate
- * @param col Color index from current palette
+ * @param color_index Color index from current palette
  */
-void DrawLine(int x0, int y0, int x1, int y1, BYTE col);
+void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_index);
 
 /**
  * @brief Calculate the best fit direction between two points

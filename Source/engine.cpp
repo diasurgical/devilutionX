@@ -537,7 +537,7 @@ void SetPixel(CelOutputBuffer out, int sx, int sy, BYTE col)
 	*out.at(sx, sy) = col;
 }
 
-void DrawLine(int x0, int y0, int x1, int y1, BYTE col)
+void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_index)
 {
 	int i, dx, dy, steps;
 	float ix, iy, sx, sy;
@@ -550,9 +550,8 @@ void DrawLine(int x0, int y0, int x1, int y1, BYTE col)
 	sx = x0;
 	sy = y0;
 
-	CelOutputBuffer out = GlobalBackBuffer();
 	for (i = 0; i <= steps; i++, sx += ix, sy += iy) {
-		SetPixel(out, sx, sy, col);
+		SetPixel(out, sx, sy, color_index);
 	}
 }
 
