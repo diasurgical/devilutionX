@@ -262,7 +262,7 @@ private:
 		_FILEHEADER fhdr;
 
 		memset(&fhdr, 0, sizeof(fhdr));
-		fhdr.signature = SDL_SwapLE32('\x1AQPM');
+		fhdr.signature = LOAD_LE32("MPQ\x1A");
 		fhdr.headersize = SDL_SwapLE32(32);
 		fhdr.filesize = SDL_SwapLE32(static_cast<uint32_t>(size));
 		fhdr.version = SDL_SwapLE16(0);
@@ -312,7 +312,7 @@ void ByteSwapHdr(_FILEHEADER *hdr)
 void InitDefaultMpqHeader(Archive *archive, _FILEHEADER *hdr)
 {
 	std::memset(hdr, 0, sizeof(*hdr));
-	hdr->signature = '\x1AQPM';
+	hdr->signature = LOAD_LE32("MPQ\x1A");
 	hdr->headersize = 32;
 	hdr->sectorsizeid = 3;
 	hdr->version = 0;
@@ -322,7 +322,7 @@ void InitDefaultMpqHeader(Archive *archive, _FILEHEADER *hdr)
 
 bool IsValidMPQHeader(const Archive &archive, _FILEHEADER *hdr)
 {
-	return hdr->signature == '\x1AQPM'
+	return hdr->signature == LOAD_LE32("MPQ\x1A")
 	    && hdr->headersize == 32
 	    && hdr->version <= 0
 	    && hdr->sectorsizeid == 3

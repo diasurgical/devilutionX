@@ -15,7 +15,7 @@ extern "C" {
 typedef struct GameData {
 	Sint32 size;
 	Sint32 dwSeed;
-	Sint32 programid;
+	Uint32 programid;
 	Uint8 versionMajor;
 	Uint8 versionMinor;
 	Uint8 versionPatch;

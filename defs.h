@@ -92,7 +92,7 @@
 
 #define PMSG_COUNT				8
 
-#define GAME_ID					(gbIsHellfire ? (gbIsSpawn ? 'HSHR' : 'HRTL') : (gbIsSpawn ? 'DSHR' : 'DRTL'))
+#define GAME_ID					(gbIsHellfire ? (gbIsSpawn ? LOAD_BE32("HSHR") : LOAD_BE32("HRTL")) : (gbIsSpawn ? LOAD_BE32("DSHR") : LOAD_BE32("DRTL")))
 
 // Diablo uses a 256 color palette
 // Entry 0-127 (0x00-0x7F) are level specific
