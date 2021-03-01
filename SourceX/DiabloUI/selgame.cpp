@@ -393,7 +393,7 @@ static bool IsGameCompatible(GameData *data)
 	selgame_Free();
 
 	if (data->programid != GAME_ID) {
-		UiSelOkDialog(title, "The host is running a different game then you.", false);
+		UiSelOkDialog(title, "The host is running a different game than you.", false);
 	} else {
 		char msg[64];
 		sprintf(msg, "Your version %s does not match the host %d.%d.%d.", PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH);
