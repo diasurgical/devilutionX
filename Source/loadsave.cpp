@@ -788,12 +788,16 @@ void ConvertLevels()
 
 	setlevel = true; // Convert quest levels
 	for (int i = 0; i < MAXQUESTS; i++) {
-		leveltype = questlist[i]._qlvlt;
+		if (quests[i]._qactive == QUEST_NOTAVAIL) {
+			continue;
+		}
+
+		leveltype = quests[i]._qlvltype;
 		if (leveltype == DTYPE_NONE) {
 			continue;
 		}
 
-		setlvlnum = questlist[i]._qslvl;
+		setlvlnum = quests[i]._qslvl;
 		if (!LevelFileExists())
 			continue;
 
