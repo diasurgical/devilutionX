@@ -45,7 +45,7 @@ int stextdown;
 char stextscrlubtn;
 char stextflag;
 ItemStruct smithbuybackitems[SMITH_ITEMS];
-ItemStruct witchbuybackitems[SMITH_ITEMS];
+ItemStruct witchbuybackitems[WITCH_ITEMS];
 ItemStruct *itemlist;
 
 /** Maps from towner IDs to NPC names. */
@@ -2127,19 +2127,21 @@ void PlaceStoreGold(int v)
  */
 void StoreSellItem()
 {
-	int i, idx, cost;
+	int i, idx, cost, s;
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 
 	switch (stextshold) {
 	case STORE_SSELL:
 		itemlist = smithbuybackitems;
+        s = sizeof(smithbuybackitems) / sizeof(*smithbuybackitems);
 		break;
 	case STORE_WSELL:
 		itemlist = witchbuybackitems;
+		s = sizeof(witchbuybackitems) / sizeof(*witchbuybackitems);
 	}
 
-	for (int i = SMITH_ITEMS - 2; i > 0; i--)
+	for (int i = s - 2; i > 0; i--)
 		itemlist[i] = itemlist[i - 1];
 
 	if (storehidx[idx] >= 0) {
