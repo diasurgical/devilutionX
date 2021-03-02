@@ -46,7 +46,7 @@ dvl::PkItemStruct diabloItems[] = {
 	// clang-format on
 };
 
-char *diabloItemNames[] = {
+const char *diabloItemNames[] = {
 	"Amber Helm of harmony",
 	"Cobalt Amulet of giants",
 	"Brutal Sword of gore",
@@ -95,7 +95,7 @@ TEST(pack, UnPackItem_diablo)
 	dvl::gbIsHellfire = false;
 	dvl::gbIsHellfireSaveGame = false;
 
-	for (int i = 0; i < sizeof(diabloItems) / sizeof(*diabloItems); i++) {
+	for (size_t i = 0; i < sizeof(diabloItems) / sizeof(*diabloItems); i++) {
 		dvl::UnPackItem(&diabloItems[i], &id);
 
 		ASSERT_STREQ(id._iIName, diabloItemNames[i]);
@@ -142,7 +142,7 @@ dvl::PkItemStruct hellfireItems[] = {
 	// clang-format on
 };
 
-char *hellfireItemNames[] = {
+const char *hellfireItemNames[] = {
 	"Ring of stability",
 	"Ring of precision",
 	"Obsidian Ring of wizardry",
@@ -187,7 +187,7 @@ TEST(pack, UnPackItem_hellfire)
 	dvl::gbIsHellfire = true;
 	dvl::gbIsHellfireSaveGame = true;
 
-	for (int i = 0; i < sizeof(hellfireItems) / sizeof(*hellfireItems); i++) {
+	for (size_t i = 0; i < sizeof(hellfireItems) / sizeof(*hellfireItems); i++) {
 		dvl::UnPackItem(&hellfireItems[i], &id);
 
 		ASSERT_STREQ(id._iIName, hellfireItemNames[i]);
@@ -204,4 +204,43 @@ TEST(pack, UnPackItem_empty)
 	dvl::UnPackItem(&is, &id);
 
 	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
+}
+
+TEST(pack, UnPackItem_gold_small)
+{
+	dvl::PkItemStruct is;
+	dvl::ItemStruct id;
+
+	is.idx = 0;
+	is.wValue = 1000;
+
+	dvl::UnPackItem(&is, &id);
+
+	ASSERT_EQ(id._iCurs, dvl::ICURS_GOLD_SMALL);
+}
+
+TEST(pack, UnPackItem_gold_medium)
+{
+	dvl::PkItemStruct is;
+	dvl::ItemStruct id;
+
+	is.idx = 0;
+	is.wValue = 1001;
+
+	dvl::UnPackItem(&is, &id);
+
+	ASSERT_EQ(id._iCurs, dvl::ICURS_GOLD_MEDIUM);
+}
+
+TEST(pack, UnPackItem_gold_large)
+{
+	dvl::PkItemStruct is;
+	dvl::ItemStruct id;
+
+	is.idx = 0;
+	is.wValue = 2500;
+
+	dvl::UnPackItem(&is, &id);
+
+	ASSERT_EQ(id._iCurs, dvl::ICURS_GOLD_LARGE);
 }
