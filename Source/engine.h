@@ -348,9 +348,6 @@ void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_
  * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
  * even pixels on even lines.
  *
- * If blended transparency is enabled, uses `paletteTransparencyLookup` table instead
- * of blacking pixels out.
- *
  * @brief Render a transparent black rectangle
  * @param out Target buffer
  * @param sx Screen coordinate

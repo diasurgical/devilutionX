@@ -582,9 +582,6 @@ static void DrawHalfTransparentStippledRectTo(CelOutputBuffer out, int sx, int s
 
 void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
 {
-	int row, col;
-	BYTE *pix = out.at(sx, sy);
-
 	if (sgOptions.bBlendedTransparancy) {
 		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
 	} else {
