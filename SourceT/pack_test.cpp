@@ -387,6 +387,20 @@ TEST(pack, UnPackItem_hellfire)
 	}
 }
 
+TEST(pack, UnPackItem_diablo_strip_hellfire_items)
+{
+	dvl::PkItemStruct is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
+	dvl::ItemStruct id;
+
+	dvl::gbIsHellfire = false;
+	dvl::gbIsHellfireSaveGame = true;
+	dvl::gbIsMultiplayer = false;
+
+	dvl::UnPackItem(&is, &id);
+
+	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
+}
+
 TEST(pack, UnPackItem_empty)
 {
 	dvl::PkItemStruct is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
@@ -395,6 +409,19 @@ TEST(pack, UnPackItem_empty)
 	dvl::UnPackItem(&is, &id);
 
 	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
+}
+
+
+TEST(pack, PackItem_empty)
+{
+	dvl::PkItemStruct is;
+	dvl::ItemStruct id;
+
+    id._itype = dvl::ITYPE_NONE;
+
+	dvl::PackItem(&is, &id);
+
+	ASSERT_EQ(is.idx, 0xFFFF);
 }
 
 static void compareGold(const dvl::PkItemStruct *is, int iCurs)
