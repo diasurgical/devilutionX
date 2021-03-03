@@ -94,11 +94,38 @@ TEST(pack, UnPackItem_diablo)
 
 	dvl::gbIsHellfire = false;
 	dvl::gbIsHellfireSaveGame = false;
+	dvl::gbIsMultiplayer = false;
 
 	for (size_t i = 0; i < sizeof(diabloItems) / sizeof(*diabloItems); i++) {
 		dvl::UnPackItem(&diabloItems[i], &id);
 
 		ASSERT_STREQ(id._iIName, diabloItemNames[i]);
+	}
+}
+
+dvl::PkItemStruct diabloItemsMP[] = {
+	// clang-format off
+	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
+    {  309674341,         193, 109,   0,    0,     0,   0,    0,      0,      0 }, // Book of Firebolt
+	// clang-format on
+};
+
+const char *diabloItemNamesMP[] = {
+	"Book of Firebolt",
+};
+
+TEST(pack, UnPackItem_diablo_multiplayer)
+{
+	dvl::ItemStruct id;
+
+	dvl::gbIsHellfire = false;
+	dvl::gbIsHellfireSaveGame = false;
+	dvl::gbIsMultiplayer = true;
+
+	for (size_t i = 0; i < sizeof(diabloItemsMP) / sizeof(*diabloItemsMP); i++) {
+		dvl::UnPackItem(&diabloItemsMP[i], &id);
+
+		ASSERT_STREQ(id._iIName, diabloItemNamesMP[i]);
 	}
 }
 
@@ -186,6 +213,7 @@ TEST(pack, UnPackItem_hellfire)
 
 	dvl::gbIsHellfire = true;
 	dvl::gbIsHellfireSaveGame = true;
+	dvl::gbIsMultiplayer = false;
 
 	for (size_t i = 0; i < sizeof(hellfireItems) / sizeof(*hellfireItems); i++) {
 		dvl::UnPackItem(&hellfireItems[i], &id);
@@ -196,10 +224,8 @@ TEST(pack, UnPackItem_hellfire)
 
 TEST(pack, UnPackItem_empty)
 {
-	dvl::PkItemStruct is;
+	dvl::PkItemStruct is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
 	dvl::ItemStruct id;
-
-	is.idx = 0xFFFF;
 
 	dvl::UnPackItem(&is, &id);
 
@@ -208,11 +234,8 @@ TEST(pack, UnPackItem_empty)
 
 TEST(pack, UnPackItem_gold_small)
 {
-	dvl::PkItemStruct is;
+	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
 	dvl::ItemStruct id;
-
-	is.idx = 0;
-	is.wValue = 1000;
 
 	dvl::UnPackItem(&is, &id);
 
@@ -221,11 +244,8 @@ TEST(pack, UnPackItem_gold_small)
 
 TEST(pack, UnPackItem_gold_medium)
 {
-	dvl::PkItemStruct is;
+	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
 	dvl::ItemStruct id;
-
-	is.idx = 0;
-	is.wValue = 1001;
 
 	dvl::UnPackItem(&is, &id);
 
@@ -234,13 +254,21 @@ TEST(pack, UnPackItem_gold_medium)
 
 TEST(pack, UnPackItem_gold_large)
 {
-	dvl::PkItemStruct is;
+	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
 	dvl::ItemStruct id;
-
-	is.idx = 0;
-	is.wValue = 2500;
 
 	dvl::UnPackItem(&is, &id);
 
 	ASSERT_EQ(id._iCurs, dvl::ICURS_GOLD_LARGE);
+}
+
+TEST(pack, UnPackItem_ear)
+{
+	dvl::PkItemStruct is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
+	dvl::ItemStruct id;
+
+	dvl::UnPackItem(&is, &id);
+
+	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
+	ASSERT_EQ(id._ivalue, 3);
 }
