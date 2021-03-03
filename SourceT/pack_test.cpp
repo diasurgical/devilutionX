@@ -215,11 +215,9 @@ TEST(pack, UnPackItem_diablo)
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
 		dvl::UnPackItem(&PackedDiabloItems[i], &id);
-
 		CompareItems(&id, &DiabloItems[i]);
 
 		dvl::PackItem(&is, &id);
-
 		ComparePackedItems(&is, &PackedDiabloItems[i]);
 	}
 }
@@ -227,17 +225,15 @@ TEST(pack, UnPackItem_diablo)
 
 TEST(pack, UnPackItem_diablo_unique_bug)
 {
-	dvl::ItemStruct id;
 	dvl::PkItemStruct pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
 	dvl::PkItemStruct pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - fixed
-	dvl::PkItemStruct is;
 
 	dvl::gbIsHellfire = false;
 	dvl::gbIsHellfireSaveGame = false;
 	dvl::gbIsMultiplayer = false;
 
+	dvl::ItemStruct id;
     dvl::UnPackItem(&pkItemBug, &id);
-
     ASSERT_STREQ(id._iIName, "Veil of Steel");
     ASSERT_EQ(id._itype, dvl::ITYPE_HELM);
     ASSERT_EQ(id._iClass, dvl::ICLASS_ARMOR);
@@ -256,8 +252,8 @@ TEST(pack, UnPackItem_diablo_unique_bug)
     ASSERT_EQ(id._iUid, 6);
     ASSERT_EQ(id.IDidx, dvl::IDI_STEELVEIL);
 
+	dvl::PkItemStruct is;
     dvl::PackItem(&is, &id);
-
     ComparePackedItems(&is, &pkItem);
 }
 
@@ -286,11 +282,9 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
 		dvl::UnPackItem(&PackedDiabloMPItems[i], &id);
-
 		CompareItems(&id, &DiabloMPItems[i]);
 
 		dvl::PackItem(&is, &id);
-
 		ComparePackedItems(&is, &PackedDiabloMPItems[i]);
 	}
 }
@@ -386,11 +380,9 @@ TEST(pack, UnPackItem_hellfire)
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
 		dvl::UnPackItem(&PackedHellfireItems[i], &id);
-
 		CompareItems(&id, &HellfireItems[i]);
 
 		dvl::PackItem(&is, &id);
-
 		ComparePackedItems(&is, &PackedHellfireItems[i]);
 	}
 }
@@ -408,9 +400,7 @@ TEST(pack, UnPackItem_empty)
 static void compareGold(const dvl::PkItemStruct *is, int iCurs)
 {
 	dvl::ItemStruct id;
-
 	dvl::UnPackItem(is, &id);
-
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, dvl::IDI_GOLD);
 	ASSERT_EQ(id._ivalue, is->wValue);
@@ -419,7 +409,6 @@ static void compareGold(const dvl::PkItemStruct *is, int iCurs)
 
 	dvl::PkItemStruct is2;
 	dvl::PackItem(&is2, &id);
-
 	ComparePackedItems(is, &is2);
 }
 
@@ -447,7 +436,10 @@ TEST(pack, UnPackItem_ear)
 	dvl::ItemStruct id;
 
 	dvl::UnPackItem(&is, &id);
-
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
 	ASSERT_EQ(id._ivalue, 3);
+
+	dvl::PkItemStruct is2;
+	dvl::PackItem(&is2, &id);
+	ComparePackedItems(&is, &is2);
 }
