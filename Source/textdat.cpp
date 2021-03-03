@@ -664,6 +664,38 @@ const TextDataStruct alltext[] = {
 	{ "Hey, lemme see that. *blows nose* Thanks!", 1, 5, TSFX_DRUNK18 },
 	{ "Hey you there, come here, listen up. You know about the island where angels watch? Pick the right rocks, but you better shield your eyes; shield everything! I know, 'cause I been there and... Mmmm, ale.", 1, 5, TSFX_DRUNK22 },
 	{ "I haven't ever see a priest around here. If I did I'd kick him right in the *BBBBUUURRRPPP* Can't even keep a church free of those Hell spawn - bastards. What good are they, those holy men? Liars! Liars!", 1, 5, TSFX_DRUNK33 },
+	{ "Wait, before you say anything, my grandmother had a dream with giant, slithering creatures in it. She also saw Pepin running from a house in the town. Do you think this means anything?",
+	    1, 5, TSFX_BMAID5 },
+	{ "This is something that is far beyond anything I have ever learned. I can only think of one person in all of Tristram who could help you. Cain, of course.",
+	    1, 5, TSFX_BMAID7 },
+	{ "How could you even think of going back to that place? What could be so important?",
+	    1, 5, TSFX_BMAID9 },
+	{ "Those are the words of a drunkard. I don't see how they could be true.",
+	    1, 5, TSFX_BMAID14 },
+	{ "I heard that the priest Tremain was going to perform an exorcism, but I didn't go. I don't see why we all have to spend every moment captive to what is lurking underneath our town. I know that many have died at the hands of these monsters, but we need to try to go on. I know that you have come here to free Tristram from the clutches of darkness, and I hope that one day we can live in peace again.",
+	    1, 5, TSFX_BMAID15 },
+	{ "A treasure map? Do you have it with you? Let me see. Hmm, it looks like this is pretty old, and some of the buildings in the town are not on this map. Oh, I wish I could go and look for the treasure with you, but I have to start work soon."
+	    1, 5, TSFX_BMAID17 },
+	{ "Beg pardon, but have you heard what has been happening? Some of the men have vanished from the village. Dica's sons, Inaius and Roof, claim to have seen strange lights(= blood stars) glowing deep within the woods a few days ago, but no one has heard from them since. I, too, have seen a crimson shimmering from beyond the ash groves, but I've been too afraid to approach it. I fear that Ogden or our healer Pepin may be next. Won't you please find out what has happened?"
+	    1, 5, TSFX_BMAID21 },
+	{ "Have you looked into what has caused the strange lights yet? There are more men missing since last we spoke, and I'm beginning to fear that soon we may all vanish."
+	    1, 5, TSFX_BMAID22 },
+	{ "Demons that assume the form of beautiful women, you say? That's horrible! Thank the light that you solved this mystery before any more of our men were lured to their deaths. Thank you for keeping us safe from the powers of darkness once again."
+	    1, 5, TSFX_BMAID23 },
+	{ "Pray your pardon, but I've something to tell you that you may find interesting. It was the strangest thing. While drinking at the tavern, Farnham was rambling about something called Azurewrath. He also said something about a fallen angel. It was hard to understand him because he was very drunk and disoriented, but I seem to remember something about a key in a barrel. He also kept covering his face and repeating the word 'Izual' over and over again."
+	    1, 5, TSFX_BMAID24 },
+	{ "You know, now that I think about it, maybe it wasn't the key a in a barrel, but the barrel that was the key. Does that make any more sense?"
+	    1, 5, TSFX_BMAID25 },
+	{ "Azurewrath and Izual. I don't know why I didn't remember that story earlier. I've heard it often enough from my grandmother and Cain the storyteller. Well, I hope that my information was still more of a help than a hindrance. May light guide you, my friend."
+	    1, 5, TSFX_BMAID26 },
+	{ "I know that my grandmother’s story seems strange but the graveyard does have many mysteries surrounding it. It couldn’t hurt you to put something there see what happens, could it? Maybe you will find out something that will help us all."
+	    1, 5, TSFX_BMAID28 },
+	{ "My grandmother had a dream about you last night, she said that in her dream you used your bare hands to defeat one of those fallen monsters that lurk under the church. When it died it exploded into a fabulous treasure! Although she was a bit frightened by her dream, she was able to describe the beast quite clearly to me."
+	    1, 5, TSFX_BMAID29 },
+	{ "My grandmother had that exact same dream again. She said you are quite brave and seemed very pleased with your prize."
+	    1, 5, TSFX_BMAID30 },
+	{ "I really don't know much about the priest Tremain. He never visits the tavern, preferring to keep to the company of Pepin and Cain. Perhaps it is because they, too, have more scholarly pursuits."
+	    1, 5, TSFX_BMAID38 },
 */
 };
 
