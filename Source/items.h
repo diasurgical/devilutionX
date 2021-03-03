@@ -49,7 +49,7 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood);
 void SetupItem(int i);
 int RndItem(int m);
-int SpawnUnique(int uid, int x, int y);
+void SpawnUnique(int uid, int x, int y);
 void SpawnItem(int m, int x, int y, BOOL sendmsg);
 void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, BOOL delta);
 void CreateRndUseful(int pnum, int x, int y, BOOL sendmsg);

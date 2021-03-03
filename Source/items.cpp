@@ -2667,10 +2667,10 @@ void GetUniqueItem(int i, int uid)
 	item[i]._iCreateInfo |= CF_UNIQUE;
 }
 
-int SpawnUnique(int uid, int x, int y)
+void SpawnUnique(int uid, int x, int y)
 {
 	if (numitems >= MAXITEMS)
-		return -1;
+		return;
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(x, y, ii);
@@ -2684,7 +2684,7 @@ int SpawnUnique(int uid, int x, int y)
 	GetUniqueItem(ii, uid);
 	SetupItem(ii);
 
-	return ii;
+	return;
 }
 
 void ItemRndDur(int ii)
