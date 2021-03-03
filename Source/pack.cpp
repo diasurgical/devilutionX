@@ -20,14 +20,14 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 		id->idx = SwapLE16(idx);
 		if (is->IDidx == IDI_EAR) {
 			id->iCreateInfo = is->_iName[8] | (is->_iName[7] << 8);
-			id->iSeed = SwapLE32(is->_iName[12] | ((is->_iName[11] | ((is->_iName[10] | (is->_iName[9] << 8)) << 8)) << 8));
+			id->iSeed = LOAD_BE32(&is->_iName[9]);
 			id->bId = is->_iName[13];
 			id->bDur = is->_iName[14];
 			id->bMDur = is->_iName[15];
 			id->bCh = is->_iName[16];
 			id->bMCh = is->_iName[17];
 			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCEROR) << 6));
-			id->dwBuff = SwapLE32(is->_iName[22] | ((is->_iName[21] | ((is->_iName[20] | (is->_iName[19] << 8)) << 8)) << 8));
+			id->dwBuff = LOAD_BE32(&is->_iName[19]);
 		} else {
 			id->iSeed = SwapLE32(is->_iSeed);
 			id->iCreateInfo = SwapLE16(is->_iCreateInfo);
