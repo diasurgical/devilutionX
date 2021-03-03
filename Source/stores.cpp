@@ -121,7 +121,7 @@ void FreeStoreMem()
 static void DrawSTextBack(CelOutputBuffer out)
 {
 	CelDrawTo(out, PANEL_X + 344, 327 + SCREEN_Y + UI_OFFSET_Y, pSTextBoxCels, 1, 271);
-	DrawHalfTransparentRectTo(out, PANEL_LEFT + 347, UI_OFFSET_Y + 28, 265, 297);
+	DrawHalfTransparentRectTo(out, PANEL_X + 347, SCREEN_Y + UI_OFFSET_Y + 28, 265, 297);
 }
 
 void PrintSString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, char col, int val)

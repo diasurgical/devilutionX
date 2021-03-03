@@ -3957,7 +3957,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 static void DrawUTextBack(CelOutputBuffer out)
 {
 	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, SCREEN_Y + 327, pSTextBoxCels, 1, 271);
-	DrawHalfTransparentRectTo(out, RIGHT_PANEL - SPANEL_WIDTH + 27, 28, 265, 297);
+	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, SCREEN_Y + 28, 265, 297);
 }
 
 void PrintUString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, int col)
