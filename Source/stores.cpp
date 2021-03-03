@@ -78,10 +78,11 @@ void InitStores()
 	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
 		premiumitem[i]._itype = ITYPE_NONE;
 
-	for (i = 0; i < SMITH_ITEMS; i++) {
+	for (i = 0; i < SMITH_ITEMS; i++)
 		smithbuybackitems[i]._itype = ITYPE_NONE;
+
+	for (i = 0; i < WITCH_ITEMS; i++)
 		witchbuybackitems[i]._itype = ITYPE_NONE;
-	}
 
 	boyitem._itype = ITYPE_NONE;
 	boylevel = 0;
