@@ -9,9 +9,10 @@ License:	Unlicensed
 URL:		https://github.com/Vitexus/devilutionX
 Source0:	https://github.com/Vitexus/devilutionX/archive/%{version}.tar.gz
 Source1:	devilutionx.desktop
+Source2:	deviltutionx-hellfire.desktop
 
 BuildRequires:	cmake gcc gcc-c++ libstdc++-static glibc desktop-file-utils
-BuildRequires:  glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel libsodium-devel libasan
+BuildRequires:	glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel libsodium-devel libasan
 Requires:	SDL2_ttf SDL2_mixer libsodium
 
 %description
@@ -37,15 +38,20 @@ mkdir -p %{buildroot}%{_bindir}
 
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/
 install -p -D -m644 Packaging/resources/icon.png %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/%{name}.png
+install -p -D -m644 Packaging/resources/hellfire.png %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/%{name}-hellfire.png
 
 install -m 755 build/devilutionx %{buildroot}%{_bindir}/%{name}
 desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applications %{SOURCE1}
+desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applications %{SOURCE2}
 
 %files
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
+%{_datadir}/applications/%{name}-hellfire.desktop
+
 %{_datadir}/fonts/truetype/CharisSILB.ttf
 %{_datadir}/icons/hicolor/512x512/apps/%{name}.png
+%{_datadir}/icons/hicolor/512x512/apps/%{name}-hellfire.png
 
 %post
 # print info
@@ -70,6 +76,10 @@ BANNER
 
 
 %changelog
+* Wed Mar 03 2021 Gianluca Boiano - 0.3.1-3
+- Updated packaging files
+- added icon to desktop file for Hellfire
+
 * Tue Apr 16 2019 Michael Seevogel <michael (at) michaelseevogel.de> - 0.3.1-2
 - Updated packaging files
 - added icon to desktop file
