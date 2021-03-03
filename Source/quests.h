@@ -6,6 +6,8 @@
 #ifndef __QUESTS_H__
 #define __QUESTS_H__
 
+#include "engine.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
@@ -59,7 +61,7 @@ void GetReturnLvlPos();
 void LoadPWaterPalette();
 void ResyncMPQuests();
 void ResyncQuests();
-void DrawQuestLog();
+void DrawQuestLog(CelOutputBuffer out);
 void StartQuestlog();
 void QuestlogUp();
 void QuestlogDown();

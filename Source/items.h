@@ -75,7 +75,7 @@ void DoRepair(int pnum, int cii);
 void DoRecharge(int pnum, int cii);
 void DoOil(int pnum, int cii);
 void PrintItemPower(char plidx, ItemStruct *x);
-void DrawUniqueInfo();
+void DrawUniqueInfo(CelOutputBuffer out);
 void PrintItemDetails(ItemStruct *x);
 void PrintItemDur(ItemStruct *x);
 void UseItem(int p, int Mid, int spl);

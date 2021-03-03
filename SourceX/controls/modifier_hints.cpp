@@ -92,51 +92,51 @@ text_color CircleMenuHintTextColor(bool active)
 	return active ? COL_BLUE : COL_GOLD;
 }
 
-void DrawCircleMenuHint(const CircleMenuHint &hint, int x, int y)
+void DrawCircleMenuHint(CelOutputBuffer out, const CircleMenuHint &hint, int x, int y)
 {
 	const int kLineHeight = 25;
-	PrintGameStr(x + hint.x_mid - hint.top_w / 2, y, hint.top, CircleMenuHintTextColor(IsTopActive(hint)));
+	PrintGameStr(out, x + hint.x_mid - hint.top_w / 2, y, hint.top, CircleMenuHintTextColor(IsTopActive(hint)));
 	y += kLineHeight;
 
-	PrintGameStr(x, y, hint.left, CircleMenuHintTextColor(IsLeftActive(hint)));
-	PrintGameStr(x + hint.left_w + 5 * SpaceWidth(), y, hint.right, CircleMenuHintTextColor(IsRightActive(hint)));
+	PrintGameStr(out, x, y, hint.left, CircleMenuHintTextColor(IsLeftActive(hint)));
+	PrintGameStr(out, x + hint.left_w + 5 * SpaceWidth(), y, hint.right, CircleMenuHintTextColor(IsRightActive(hint)));
 	y += kLineHeight;
 
-	PrintGameStr(x + hint.x_mid - hint.bottom_w / 2, y, hint.bottom, CircleMenuHintTextColor(IsBottomActive(hint)));
+	PrintGameStr(out, x + hint.x_mid - hint.bottom_w / 2, y, hint.bottom, CircleMenuHintTextColor(IsBottomActive(hint)));
 }
 
 const int kCircleMarginX = 16;
 const int kCirclesTop = 76;
 
-void DrawStartModifierMenu()
+void DrawStartModifierMenu(CelOutputBuffer out)
 {
 	if (!start_modifier_active)
 		return;
 	static const CircleMenuHint kDpad(/*is_dpad=*/true, /*top=*/"Menu", /*right=*/"Inv", /*bottom=*/"Map", /*left=*/"Char");
 	static const CircleMenuHint kButtons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/"Spells", /*left=*/"Quests");
-	DrawCircleMenuHint(kDpad, PANEL_LEFT + kCircleMarginX, PANEL_TOP - kCirclesTop);
-	DrawCircleMenuHint(kButtons, PANEL_LEFT + PANEL_WIDTH - kButtons.width() - kCircleMarginX, PANEL_TOP - kCirclesTop);
+	DrawCircleMenuHint(out, kDpad, PANEL_LEFT + kCircleMarginX, PANEL_TOP - kCirclesTop);
+	DrawCircleMenuHint(out, kButtons, PANEL_LEFT + PANEL_WIDTH - kButtons.width() - kCircleMarginX, PANEL_TOP - kCirclesTop);
 }
 
-void DrawSelectModifierMenu()
+void DrawSelectModifierMenu(CelOutputBuffer out)
 {
 	if (!select_modifier_active)
 		return;
 	if (dpad_hotkeys)
 	{
 		static const CircleMenuHint kDpad(/*is_dpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
-		DrawCircleMenuHint(kDpad, PANEL_LEFT + kCircleMarginX, PANEL_TOP - kCirclesTop);
+		DrawCircleMenuHint(out, kDpad, PANEL_LEFT + kCircleMarginX, PANEL_TOP - kCirclesTop);
 	}
 	static const CircleMenuHint kSpells(/*is_dpad=*/false, "F6", "F8", "F7", "F5");
-	DrawCircleMenuHint(kSpells, PANEL_LEFT + PANEL_WIDTH - kSpells.width() - kCircleMarginX, PANEL_TOP - kCirclesTop);
+	DrawCircleMenuHint(out, kSpells, PANEL_LEFT + PANEL_WIDTH - kSpells.width() - kCircleMarginX, PANEL_TOP - kCirclesTop);
 }
 
 } // namespace
 
-void DrawControllerModifierHints()
+void DrawControllerModifierHints(CelOutputBuffer out)
 {
-	DrawStartModifierMenu();
-	DrawSelectModifierMenu();
+	DrawStartModifierMenu(out);
+	DrawSelectModifierMenu(out);
 }
 
 } // namespace dvl

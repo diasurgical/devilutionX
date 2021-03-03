@@ -1217,7 +1217,7 @@ static void DrawGame(int x, int y)
 }
 
 // DevilutionX extension.
-extern void DrawControllerModifierHints();
+extern void DrawControllerModifierHints(CelOutputBuffer out);
 
 /**
  * @brief Start rendering of screen, town variation
@@ -1237,22 +1237,22 @@ void DrawView(int StartX, int StartY)
 	if (invflag) {
 		DrawInv();
 	} else if (sbookflag) {
-		DrawSpellBook();
+		DrawSpellBook(out);
 	}
 
 	DrawDurIcon();
 
 	if (chrflag) {
-		DrawChr();
+		DrawChr(out);
 	} else if (questlog) {
-		DrawQuestLog();
+		DrawQuestLog(out);
 	}
 	if (!chrflag && plr[myplr]._pStatPts != 0 && !spselflag
 	    && (!questlog || SCREEN_HEIGHT >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || SCREEN_WIDTH >= 4 * SPANEL_WIDTH)) {
-		DrawLevelUpIcon();
+		DrawLevelUpIcon(out);
 	}
 	if (uitemflag) {
-		DrawUniqueInfo();
+		DrawUniqueInfo(out);
 	}
 	if (qtextflag) {
 		DrawQText(out);
@@ -1261,13 +1261,13 @@ void DrawView(int StartX, int StartY)
 		DrawSpellList();
 	}
 	if (dropGoldFlag) {
-		DrawGoldSplit(dropGoldValue);
+		DrawGoldSplit(out, dropGoldValue);
 	}
 	if (helpflag) {
 		DrawHelp(out);
 	}
 	if (msgflag) {
-		DrawDiabloMsg();
+		DrawDiabloMsg(out);
 	}
 	if (deathflag) {
 		RedBack();
@@ -1275,11 +1275,11 @@ void DrawView(int StartX, int StartY)
 		gmenu_draw_pause();
 	}
 
-	DrawControllerModifierHints();
-	DrawPlrMsg();
+	DrawControllerModifierHints(out);
+	DrawPlrMsg(out);
 	gmenu_draw();
 	doom_draw();
-	DrawInfoBox();
+	DrawInfoBox(out);
 	DrawLifeFlask();
 	DrawManaFlask();
 }
@@ -1401,7 +1401,7 @@ void EnableFrameCount()
 /**
  * @brief Display the current average FPS over 1 sec
  */
-static void DrawFPS()
+static void DrawFPS(CelOutputBuffer out)
 {
 	DWORD tc, frames;
 	char String[12];
@@ -1416,7 +1416,7 @@ static void DrawFPS()
 			frameend = 0;
 		}
 		snprintf(String, 12, "%d FPS", framerate);
-		PrintGameStr(8, 65, String, COL_RED);
+		PrintGameStr(out, 8, 65, String, COL_RED);
 	}
 }
 
@@ -1560,29 +1560,31 @@ void DrawAndBlit()
 	force_redraw = 0;
 
 	lock_buf(0);
+	CelOutputBuffer out = GlobalBackBuffer();
+
 	DrawView(ViewX, ViewY);
 	if (ctrlPan) {
-		DrawCtrlPan();
+		DrawCtrlPan(out);
 	}
 	if (drawhpflag) {
-		UpdateLifeFlask();
+		UpdateLifeFlask(out);
 	}
 	if (drawmanaflag) {
-		UpdateManaFlask();
+		UpdateManaFlask(out);
 	}
 	if (drawbtnflag) {
-		DrawCtrlBtns();
+		DrawCtrlBtns(out);
 	}
 	if (drawsbarflag) {
-		DrawInvBelt();
+		DrawInvBelt(out);
 	}
 	if (talkflag) {
-		DrawTalkPan();
+		DrawTalkPan(out);
 		hgt = SCREEN_HEIGHT;
 	}
 	scrollrt_draw_cursor_item();
 
-	DrawFPS();
+	DrawFPS(out);
 
 	unlock_buf(0);
 

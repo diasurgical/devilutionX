@@ -512,16 +512,9 @@ void ToggleSpell(int slot)
 	}
 }
 
-/**
- * @brief Print letter to the back buffer
- * @param sx Backbuffer offset
- * @param sy Backbuffer offset
- * @param nCel Number of letter in Windows-1252
- * @param col text_color color value
- */
-void PrintChar(int sx, int sy, int nCel, char col)
+void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, char col)
 {
-	assert(gpBuffer);
+	assert(out.begin);
 
 	int i;
 	BYTE pix;
@@ -529,7 +522,7 @@ void PrintChar(int sx, int sy, int nCel, char col)
 
 	switch (col) {
 	case COL_WHITE:
-		CelDraw(sx, sy, pPanelText, nCel, 13);
+		CelDrawTo(out, sx, sy, pPanelText, nCel, 13);
 		return;
 	case COL_BLUE:
 		for (i = 0; i < 256; i++) {
@@ -562,7 +555,7 @@ void PrintChar(int sx, int sy, int nCel, char col)
 		}
 		break;
 	}
-	CelDrawLight(sx, sy, pPanelText, nCel, 13, tbl);
+	CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, tbl);
 }
 
 void AddPanelString(const char *str, BOOL just)
@@ -580,22 +573,22 @@ void ClearPanel()
 	pinfoflag = FALSE;
 }
 
-void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
+void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int sy)
 {
 	int nSrcOff, nDstOff;
 
-	assert(gpBuffer);
+	assert(out.begin);
 
 	nSrcOff = x + PANEL_WIDTH * y;
-	nDstOff = sx + BUFFER_WIDTH * sy;
+	nDstOff = sx + out.line_width * sy;
 
 	int hgt;
 	BYTE *src, *dst;
 
 	src = &pBtmBuff[nSrcOff];
-	dst = &gpBuffer[nDstOff];
+	dst = out.begin + nDstOff;
 
-	for (hgt = h; hgt; hgt--, src += PANEL_WIDTH, dst += BUFFER_WIDTH) {
+	for (hgt = h; hgt; hgt--, src += PANEL_WIDTH, dst += out.line_width) {
 		memcpy(dst, src, w);
 	}
 }
@@ -687,12 +680,7 @@ void DrawLifeFlask()
 		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13 + filled), 13 - filled);
 }
 
-/**
- * Controls the drawing of the area of the life flask within the control panel.
- * First sets the fill amount then draws the empty flask cel portion then the filled
- * flask portion.
- */
-void UpdateLifeFlask()
+void UpdateLifeFlask(CelOutputBuffer out)
 {
 	double p;
 	int filled;
@@ -711,7 +699,7 @@ void UpdateLifeFlask()
 	if (filled != 69)
 		SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
 	if (filled != 0)
-		DrawPanelBox(96, 85 - filled, 88, filled, 96 + PANEL_X, PANEL_Y + 69 - filled);
+		DrawPanelBox(out, 96, 85 - filled, 88, filled, 96 + PANEL_X, PANEL_Y + 69 - filled);
 }
 
 void DrawManaFlask()
@@ -746,11 +734,7 @@ void control_update_life_mana()
 	plr[myplr]._pHPPer = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
 }
 
-/**
- * Controls the drawing of the area of the life flask within the control panel.
- * Also for some reason draws the current right mouse button spell.
- */
-void UpdateManaFlask()
+void UpdateManaFlask(CelOutputBuffer out)
 {
 	int filled;
 	int maxMana = plr[myplr]._pMaxMana;
@@ -772,7 +756,7 @@ void UpdateManaFlask()
 	if (filled != 69)
 		SetFlaskHeight(pManaBuff, 16, 85 - filled, PANEL_X + 464, PANEL_Y);
 	if (filled != 0)
-		DrawPanelBox(464, 85 - filled, 88, filled, PANEL_X + 464, PANEL_Y + 69 - filled);
+		DrawPanelBox(out, 464, 85 - filled, 88, filled, PANEL_X + 464, PANEL_Y + 69 - filled);
 
 	DrawSpell();
 }
@@ -866,32 +850,28 @@ void InitControlPan()
 	initialDropGoldIndex = 0;
 }
 
-void DrawCtrlPan()
+void DrawCtrlPan(CelOutputBuffer out)
 {
-	DrawPanelBox(0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT, PANEL_X, PANEL_Y);
-	DrawInfoBox();
+	DrawPanelBox(out, 0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT, PANEL_X, PANEL_Y);
+	DrawInfoBox(out);
 }
 
-/**
- * Draws the control panel buttons in their current state. If the button is in the default
- * state draw it from the panel cel(extract its sub-rect). Else draw it from the buttons cel.
- */
-void DrawCtrlBtns()
+void DrawCtrlBtns(CelOutputBuffer out)
 {
 	int i;
 
 	for (i = 0; i < 6; i++) {
 		if (!panbtn[i])
-			DrawPanelBox(PanBtnPos[i][0], PanBtnPos[i][1] + 16, 71, 20, PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + PANEL_Y);
+			DrawPanelBox(out, PanBtnPos[i][0], PanBtnPos[i][1] + 16, 71, 20, PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + PANEL_Y);
 		else
-			CelDraw(PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + PANEL_Y + 18, pPanelButtons, i + 1, 71);
+			CelDrawTo(out, PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + PANEL_Y + 18, pPanelButtons, i + 1, 71);
 	}
 	if (numpanbtns == 8) {
-		CelDraw(87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[6] + 1, 33);
+		CelDrawTo(out, 87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[6] + 1, 33);
 		if (FriendlyMode)
-			CelDraw(527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 3, 33);
+			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 3, 33);
 		else
-			CelDraw(527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 5, 33);
+			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 5, 33);
 	}
 }
 
@@ -1231,7 +1211,7 @@ BOOL control_WriteStringToBuffer(BYTE *str)
 	return TRUE;
 }
 
-static void CPrintString(int y, const char *str, BOOL center, int lines)
+static void CPrintString(CelOutputBuffer out, int y, const char *str, BOOL center, int lines)
 {
 	BYTE c;
 	const char *tmp;
@@ -1257,14 +1237,14 @@ static void CPrintString(int y, const char *str, BOOL center, int lines)
 		lineOffset += fontkern[c] + 2;
 		if (c) {
 			if (lineOffset < 288) {
-				PrintChar(sx, sy, c, infoclr);
+				PrintChar(out, sx, sy, c, infoclr);
 			}
 		}
 		sx += fontkern[c] + 2;
 	}
 }
 
-static void PrintInfo()
+static void PrintInfo(CelOutputBuffer out)
 {
 	int yo, lo, i;
 
@@ -1272,25 +1252,22 @@ static void PrintInfo()
 		yo = 0;
 		lo = 1;
 		if (infostr[0] != '\0') {
-			CPrintString(0, infostr, TRUE, pnumlines);
+			CPrintString(out, 0, infostr, TRUE, pnumlines);
 			yo = 1;
 			lo = 0;
 		}
 
 		for (i = 0; i < pnumlines; i++) {
-			CPrintString(i + yo, panelstr[i], pstrjust[i], pnumlines - lo);
+			CPrintString(out, i + yo, panelstr[i], pstrjust[i], pnumlines - lo);
 		}
 	}
 }
 
-/**
- * Sets a string to be drawn in the info box and then draws it.
- */
-void DrawInfoBox()
+void DrawInfoBox(CelOutputBuffer out)
 {
 	int nGold;
 
-	DrawPanelBox(177, 62, 288, 60, PANEL_X + 177, PANEL_Y + 46);
+	DrawPanelBox(out, 177, 62, 288, 60, PANEL_X + 177, PANEL_Y + 46);
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
 		infostr[0] = '\0';
 		infoclr = COL_WHITE;
@@ -1347,12 +1324,12 @@ void DrawInfoBox()
 		}
 	}
 	if (infostr[0] != '\0' || pnumlines != 0)
-		PrintInfo();
+		PrintInfo(out);
 }
 
-#define ADD_PlrStringXY(x, y, width, pszStr, col) MY_PlrStringXY(x, y, width, pszStr, col, 1)
+#define ADD_PlrStringXY(out, x, y, width, pszStr, col) MY_PlrStringXY(out, x, y, width, pszStr, col, 1)
 
-void PrintGameStr(int x, int y, const char *str, int color)
+void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, int color)
 {
 	BYTE c;
 	int sx, sy;
@@ -1362,13 +1339,14 @@ void PrintGameStr(int x, int y, const char *str, int color)
 		c = gbFontTransTbl[(BYTE)*str++];
 		c = fontframe[c];
 		if (c)
-			PrintChar(sx, sy, c, color);
+			PrintChar(out, sx, sy, c, color);
 		sx += fontkern[c] + 1;
 	}
 }
 
 /**
- * @brief Render text string to back buffer
+ * @brief Render text string to the given buffer
+ * @param out Buffer to render to
  * @param x Screen coordinate
  * @param y Screen coordinate
  * @param endX End of line in screen coordinate
@@ -1376,7 +1354,7 @@ void PrintGameStr(int x, int y, const char *str, int color)
  * @param col text_color color value
  * @param base Letter spacing
  */
-static void MY_PlrStringXY(int x, int y, int endX, const char *pszStr, char col, int base)
+static void MY_PlrStringXY(CelOutputBuffer out, int x, int y, int endX, const char *pszStr, char col, int base)
 {
 	BYTE c;
 	const char *tmp;
@@ -1401,28 +1379,28 @@ static void MY_PlrStringXY(int x, int y, int endX, const char *pszStr, char col,
 		line += fontkern[c] + base;
 		if (c) {
 			if (line < widthOffset)
-				PrintChar(sx, sy, c, col);
+				PrintChar(out, sx, sy, c, col);
 		}
 		sx += fontkern[c] + base;
 	}
 }
 
-void DrawChr()
+void DrawChr(CelOutputBuffer out)
 {
 	char col;
 	char chrstr[64];
 	int pc, mindam, maxdam;
 
 	CelDraw(SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
-	ADD_PlrStringXY(20, 32, 151, plr[myplr]._pName, COL_WHITE);
+	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
-	ADD_PlrStringXY(168, 32, 299, ClassStrTblOld[plr[myplr]._pClass], COL_WHITE);
+	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTblOld[plr[myplr]._pClass], COL_WHITE);
 
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
-	ADD_PlrStringXY(66, 69, 109, chrstr, COL_WHITE);
+	ADD_PlrStringXY(out, 66, 69, 109, chrstr, COL_WHITE);
 
 	sprintf(chrstr, "%i", plr[myplr]._pExperience);
-	ADD_PlrStringXY(216, 69, 300, chrstr, COL_WHITE);
+	ADD_PlrStringXY(out, 216, 69, 300, chrstr, COL_WHITE);
 
 	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
 		strcpy(chrstr, "None");
@@ -1431,10 +1409,10 @@ void DrawChr()
 		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
 		col = COL_WHITE;
 	}
-	ADD_PlrStringXY(216, 97, 300, chrstr, col);
+	ADD_PlrStringXY(out, 216, 97, 300, chrstr, col);
 
 	sprintf(chrstr, "%i", plr[myplr]._pGold);
-	ADD_PlrStringXY(216, 146, 300, chrstr, COL_WHITE);
+	ADD_PlrStringXY(out, 216, 146, 300, chrstr, COL_WHITE);
 
 	col = COL_WHITE;
 	if (plr[myplr]._pIBonusAC > 0)
@@ -1442,7 +1420,7 @@ void DrawChr()
 	if (plr[myplr]._pIBonusAC < 0)
 		col = COL_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pIBonusAC + plr[myplr]._pIAC + plr[myplr]._pDexterity / 5);
-	ADD_PlrStringXY(258, 183, 301, chrstr, col);
+	ADD_PlrStringXY(out, 258, 183, 301, chrstr, col);
 
 	col = COL_WHITE;
 	if (plr[myplr]._pIBonusToHit > 0)
@@ -1450,7 +1428,7 @@ void DrawChr()
 	if (plr[myplr]._pIBonusToHit < 0)
 		col = COL_RED;
 	sprintf(chrstr, "%i%%", (plr[myplr]._pDexterity >> 1) + plr[myplr]._pIBonusToHit + 50);
-	ADD_PlrStringXY(258, 211, 301, chrstr, col);
+	ADD_PlrStringXY(out, 258, 211, 301, chrstr, col);
 
 	col = COL_WHITE;
 	if (plr[myplr]._pIBonusDam > 0)
@@ -1481,9 +1459,9 @@ void DrawChr()
 	}
 	sprintf(chrstr, "%i-%i", mindam, maxdam);
 	if (mindam >= 100 || maxdam >= 100)
-		MY_PlrStringXY(254, 239, 305, chrstr, col, -1);
+		MY_PlrStringXY(out, 254, 239, 305, chrstr, col, -1);
 	else
-		MY_PlrStringXY(258, 239, 301, chrstr, col, 0);
+		MY_PlrStringXY(out, 258, 239, 301, chrstr, col, 0);
 
 	if (plr[myplr]._pMagResist == 0)
 		col = COL_WHITE;
@@ -1495,7 +1473,7 @@ void DrawChr()
 		col = COL_GOLD;
 		sprintf(chrstr, "MAX");
 	}
-	ADD_PlrStringXY(257, 276, 300, chrstr, col);
+	ADD_PlrStringXY(out, 257, 276, 300, chrstr, col);
 
 	if (plr[myplr]._pFireResist == 0)
 		col = COL_WHITE;
@@ -1507,7 +1485,7 @@ void DrawChr()
 		col = COL_GOLD;
 		sprintf(chrstr, "MAX");
 	}
-	ADD_PlrStringXY(257, 304, 300, chrstr, col);
+	ADD_PlrStringXY(out, 257, 304, 300, chrstr, col);
 
 	if (plr[myplr]._pLghtResist == 0)
 		col = COL_WHITE;
@@ -1519,31 +1497,31 @@ void DrawChr()
 		col = COL_GOLD;
 		sprintf(chrstr, "MAX");
 	}
-	ADD_PlrStringXY(257, 332, 300, chrstr, col);
+	ADD_PlrStringXY(out, 257, 332, 300, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseStr);
 	if (MaxStats[plr[myplr]._pClass][ATTRIB_STR] == plr[myplr]._pBaseStr)
 		col = COL_GOLD;
-	ADD_PlrStringXY(95, 155, 126, chrstr, col);
+	ADD_PlrStringXY(out, 95, 155, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseMag);
 	if (MaxStats[plr[myplr]._pClass][ATTRIB_MAG] == plr[myplr]._pBaseMag)
 		col = COL_GOLD;
-	ADD_PlrStringXY(95, 183, 126, chrstr, col);
+	ADD_PlrStringXY(out, 95, 183, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseDex);
 	if (MaxStats[plr[myplr]._pClass][ATTRIB_DEX] == plr[myplr]._pBaseDex)
 		col = COL_GOLD;
-	ADD_PlrStringXY(95, 211, 126, chrstr, col);
+	ADD_PlrStringXY(out, 95, 211, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseVit);
 	if (MaxStats[plr[myplr]._pClass][ATTRIB_VIT] == plr[myplr]._pBaseVit)
 		col = COL_GOLD;
-	ADD_PlrStringXY(95, 239, 126, chrstr, col);
+	ADD_PlrStringXY(out, 95, 239, 126, chrstr, col);
 
 	col = COL_WHITE;
 	if (plr[myplr]._pStrength > plr[myplr]._pBaseStr)
@@ -1551,7 +1529,7 @@ void DrawChr()
 	if (plr[myplr]._pStrength < plr[myplr]._pBaseStr)
 		col = COL_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pStrength);
-	ADD_PlrStringXY(143, 155, 173, chrstr, col);
+	ADD_PlrStringXY(out, 143, 155, 173, chrstr, col);
 
 	col = COL_WHITE;
 	if (plr[myplr]._pMagic > plr[myplr]._pBaseMag)
@@ -1559,7 +1537,7 @@ void DrawChr()
 	if (plr[myplr]._pMagic < plr[myplr]._pBaseMag)
 		col = COL_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pMagic);
-	ADD_PlrStringXY(143, 183, 173, chrstr, col);
+	ADD_PlrStringXY(out, 143, 183, 173, chrstr, col);
 
 	col = COL_WHITE;
 	if (plr[myplr]._pDexterity > plr[myplr]._pBaseDex)
@@ -1567,7 +1545,7 @@ void DrawChr()
 	if (plr[myplr]._pDexterity < plr[myplr]._pBaseDex)
 		col = COL_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pDexterity);
-	ADD_PlrStringXY(143, 211, 173, chrstr, col);
+	ADD_PlrStringXY(out, 143, 211, 173, chrstr, col);
 
 	col = COL_WHITE;
 	if (plr[myplr]._pVitality > plr[myplr]._pBaseVit)
@@ -1575,7 +1553,7 @@ void DrawChr()
 	if (plr[myplr]._pVitality < plr[myplr]._pBaseVit)
 		col = COL_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pVitality);
-	ADD_PlrStringXY(143, 239, 173, chrstr, col);
+	ADD_PlrStringXY(out, 143, 239, 173, chrstr, col);
 
 	if (plr[myplr]._pStatPts > 0) {
 		if (CalcStatDiff(myplr) < plr[myplr]._pStatPts) {
@@ -1584,7 +1562,7 @@ void DrawChr()
 	}
 	if (plr[myplr]._pStatPts > 0) {
 		sprintf(chrstr, "%i", plr[myplr]._pStatPts);
-		ADD_PlrStringXY(95, 266, 126, chrstr, COL_RED);
+		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
 		pc = plr[myplr]._pClass;
 		if (plr[myplr]._pBaseStr < MaxStats[pc][ATTRIB_STR])
 			CelDraw(137 + SCREEN_X, 159 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
@@ -1601,22 +1579,22 @@ void DrawChr()
 	else
 		col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pMaxHP >> 6);
-	ADD_PlrStringXY(95, 304, 126, chrstr, col);
+	ADD_PlrStringXY(out, 95, 304, 126, chrstr, col);
 	if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP)
 		col = COL_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pHitPoints >> 6);
-	ADD_PlrStringXY(143, 304, 174, chrstr, col);
+	ADD_PlrStringXY(out, 143, 304, 174, chrstr, col);
 
 	if (plr[myplr]._pMaxMana > plr[myplr]._pMaxManaBase)
 		col = COL_BLUE;
 	else
 		col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pMaxMana >> 6);
-	ADD_PlrStringXY(95, 332, 126, chrstr, col);
+	ADD_PlrStringXY(out, 95, 332, 126, chrstr, col);
 	if (plr[myplr]._pMana != plr[myplr]._pMaxMana)
 		col = COL_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pMana >> 6);
-	ADD_PlrStringXY(143, 332, 174, chrstr, col);
+	ADD_PlrStringXY(out, 143, 332, 174, chrstr, col);
 }
 
 void CheckLvlBtn()
@@ -1632,13 +1610,13 @@ void ReleaseLvlBtn()
 	lvlbtndown = FALSE;
 }
 
-void DrawLevelUpIcon()
+void DrawLevelUpIcon(CelOutputBuffer out)
 {
 	int nCel;
 
 	if (stextflag == STORE_NONE) {
 		nCel = lvlbtndown ? 3 : 2;
-		ADD_PlrStringXY(PANEL_LEFT + 0, PANEL_TOP - 49, PANEL_LEFT + 120, "Level Up", COL_WHITE);
+		ADD_PlrStringXY(out, PANEL_LEFT + 0, PANEL_TOP - 49, PANEL_LEFT + 120, "Level Up", COL_WHITE);
 		CelDraw(40 + PANEL_X, -17 + PANEL_Y, pChrButtons, nCel, 41);
 	}
 }
@@ -1813,7 +1791,7 @@ void RedBack()
 	}
 }
 
-static void PrintSBookStr(int x, int y, BOOL cjustflag, const char *pszStr, char col)
+static void PrintSBookStr(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *pszStr, char col)
 {
 	BYTE c;
 	const char *tmp;
@@ -1838,7 +1816,7 @@ static void PrintSBookStr(int x, int y, BOOL cjustflag, const char *pszStr, char
 		line += fontkern[c] + 1;
 		if (c) {
 			if (line <= 222)
-				PrintChar(sx, y, c, col);
+				PrintChar(out, sx, y, c, col);
 		}
 		sx += fontkern[c] + 1;
 	}
@@ -1872,7 +1850,7 @@ char GetSBookTrans(int ii, BOOL townok)
 	return st;
 }
 
-void DrawSpellBook()
+void DrawSpellBook(CelOutputBuffer out)
 {
 	int i, sn, mana, lvl, yp, min, max;
 	char st;
@@ -1902,7 +1880,7 @@ void DrawSpellBook()
 				SetSpellTrans(RSPLTYPE_SKILL);
 				DrawSpellCel(RIGHT_PANEL_X + 11, yp, pSBkIconCels, SPLICONLAST, 37);
 			}
-			PrintSBookStr(10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
+			PrintSBookStr(out, 10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
 			switch (GetSBookTrans(sn, FALSE)) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, "Skill");
@@ -1921,7 +1899,7 @@ void DrawSpellBook()
 				if (sn == SPL_BONESPIRIT) {
 					sprintf(tempstr, "Mana: %i  Dam: 1/3 tgt hp", mana);
 				}
-				PrintSBookStr(10, yp - 1, FALSE, tempstr, COL_WHITE);
+				PrintSBookStr(out, 10, yp - 1, FALSE, tempstr, COL_WHITE);
 				lvl = plr[myplr]._pSplLvl[sn] + plr[myplr]._pISplLvlAdd;
 				if (lvl < 0) {
 					lvl = 0;
@@ -1933,7 +1911,7 @@ void DrawSpellBook()
 				}
 				break;
 			}
-			PrintSBookStr(10, yp - 12, FALSE, tempstr, COL_WHITE);
+			PrintSBookStr(out, 10, yp - 12, FALSE, tempstr, COL_WHITE);
 		}
 		yp += 43;
 	}
@@ -1976,20 +1954,20 @@ const char *get_pieces_str(int nGold)
 	return result;
 }
 
-void DrawGoldSplit(int amount)
+void DrawGoldSplit(CelOutputBuffer out, int amount)
 {
 	int screen_x, i;
 
 	screen_x = 0;
 	CelDraw(351 + SCREEN_X, 178 + SCREEN_Y, pGBoxBuff, 1, 261);
 	sprintf(tempstr, "You have %u gold", initialDropGoldValue);
-	ADD_PlrStringXY(366, 87, 600, tempstr, COL_GOLD);
+	ADD_PlrStringXY(out, 366, 87, 600, tempstr, COL_GOLD);
 	sprintf(tempstr, "%s.  How many do", get_pieces_str(initialDropGoldValue));
-	ADD_PlrStringXY(366, 103, 600, tempstr, COL_GOLD);
-	ADD_PlrStringXY(366, 121, 600, "you want to remove?", COL_GOLD);
+	ADD_PlrStringXY(out, 366, 103, 600, tempstr, COL_GOLD);
+	ADD_PlrStringXY(out, 366, 121, 600, "you want to remove?", COL_GOLD);
 	if (amount > 0) {
 		sprintf(tempstr, "%u", amount);
-		PrintGameStr(388, 140, tempstr, COL_WHITE);
+		PrintGameStr(out, 388, 140, tempstr, COL_WHITE);
 	}
 	if (amount > 0) {
 		for (i = 0; i < tempstr[i]; i++) {
@@ -2000,7 +1978,7 @@ void DrawGoldSplit(int amount)
 	} else {
 		screen_x = 450;
 	}
-	CelDraw(screen_x, 140 + SCREEN_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+	CelDrawTo(out, screen_x, 140 + SCREEN_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
 }
 
 void control_drop_gold(char vkey)
@@ -2073,7 +2051,7 @@ void control_set_gold_curs(int pnum)
 	NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-static char *control_print_talk_msg(char *msg, int *x, int y, int color)
+static char *control_print_talk_msg(CelOutputBuffer out, char *msg, int *x, int y, int color)
 {
 	BYTE c;
 	int width;
@@ -2090,14 +2068,14 @@ static char *control_print_talk_msg(char *msg, int *x, int y, int color)
 			return msg;
 		msg++;
 		if (c != 0) {
-			PrintChar(*x, y, c, color);
+			PrintChar(out, *x, y, c, color);
 		}
 		*x += fontkern[c] + 1;
 	}
 	return NULL;
 }
 
-void DrawTalkPan()
+void DrawTalkPan(CelOutputBuffer out)
 {
 	int i, off, talk_btn, color, nCel, x;
 	char *msg;
@@ -2105,21 +2083,21 @@ void DrawTalkPan()
 	if (!talkflag)
 		return;
 
-	DrawPanelBox(175, sgbPlrTalkTbl + 20, 294, 5, PANEL_X + 175, PANEL_Y + 4);
+	DrawPanelBox(out, 175, sgbPlrTalkTbl + 20, 294, 5, PANEL_X + 175, PANEL_Y + 4);
 	off = 0;
 	for (i = 293; i > 283; off++, i--) {
-		DrawPanelBox((off >> 1) + 175, sgbPlrTalkTbl + off + 25, i, 1, (off >> 1) + PANEL_X + 175, off + PANEL_Y + 9);
+		DrawPanelBox(out, (off >> 1) + 175, sgbPlrTalkTbl + off + 25, i, 1, (off >> 1) + PANEL_X + 175, off + PANEL_Y + 9);
 	}
-	DrawPanelBox(185, sgbPlrTalkTbl + 35, 274, 30, PANEL_X + 185, PANEL_Y + 19);
-	DrawPanelBox(180, sgbPlrTalkTbl + 65, 284, 5, PANEL_X + 180, PANEL_Y + 49);
+	DrawPanelBox(out, 185, sgbPlrTalkTbl + 35, 274, 30, PANEL_X + 185, PANEL_Y + 19);
+	DrawPanelBox(out, 180, sgbPlrTalkTbl + 65, 284, 5, PANEL_X + 180, PANEL_Y + 49);
 	for (i = 0; i < 10; i++) {
-		DrawPanelBox(180, sgbPlrTalkTbl + i + 70, i + 284, 1, PANEL_X + 180, i + PANEL_Y + 54);
+		DrawPanelBox(out, 180, sgbPlrTalkTbl + i + 70, i + 284, 1, PANEL_X + 180, i + PANEL_Y + 54);
 	}
-	DrawPanelBox(170, sgbPlrTalkTbl + 80, 310, 55, PANEL_X + 170, PANEL_Y + 64);
+	DrawPanelBox(out, 170, sgbPlrTalkTbl + 80, 310, 55, PANEL_X + 170, PANEL_Y + 64);
 	msg = sgszTalkMsg;
 	for (i = 0; i < 39; i += 13) {
 		x = 0 + PANEL_LEFT;
-		msg = control_print_talk_msg(msg, &x, i, 0);
+		msg = control_print_talk_msg(out, msg, &x, i, 0);
 		if (!msg)
 			break;
 	}
@@ -2151,7 +2129,7 @@ void DrawTalkPan()
 		}
 		if (plr[i].plractive) {
 			x = 46 + PANEL_LEFT;
-			control_print_talk_msg(plr[i]._pName, &x, 60 + talk_btn * 18, color);
+			control_print_talk_msg(out, plr[i]._pName, &x, 60 + talk_btn * 18, color);
 		}
 
 		talk_btn++;

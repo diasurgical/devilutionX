@@ -13,6 +13,8 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+#include "../types.h"
+
 #ifdef __cplusplus
 #include <algorithm>
 #endif

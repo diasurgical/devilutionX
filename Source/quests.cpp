@@ -802,7 +802,7 @@ void ResyncQuests()
 	}
 }
 
-void PrintQLString(int x, int y, BOOL cjustflag, const char *str, int col)
+static void PrintQLString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, int col)
 {
 	int len, width, i, k, sx, sy;
 	BYTE c;
@@ -820,33 +820,33 @@ void PrintQLString(int x, int y, BOOL cjustflag, const char *str, int col)
 		sx += k;
 	}
 	if (qline == y) {
-		CelDraw(cjustflag ? x + k + 12 + SCREEN_X : x + 12 + SCREEN_X, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? x + k + 12 + SCREEN_X : x + 12 + SCREEN_X, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c && k <= 257) {
-			PrintChar(sx, sy, c, col);
+			PrintChar(out, sx, sy, c, col);
 		}
 		sx += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		CelDraw(cjustflag ? x + k + 36 + SCREEN_X : 276 + SCREEN_X - x, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? x + k + 36 + SCREEN_X : 276 + SCREEN_X - x, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	}
 }
 
-void DrawQuestLog()
+void DrawQuestLog(CelOutputBuffer out)
 {
 	int y, i;
 
-	PrintQLString(0, 2, TRUE, "Quest Log", 3);
-	CelDraw(SCREEN_X, SCREEN_Y + 351, pQLogCel, 1, SPANEL_WIDTH);
+	PrintQLString(out, 0, 2, TRUE, "Quest Log", 3);
+	CelDrawTo(out, SCREEN_X, SCREEN_Y + 351, pQLogCel, 1, SPANEL_WIDTH);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
-		PrintQLString(0, y, TRUE, questlist[qlist[i]]._qlstr, 0);
+		PrintQLString(out, 0, y, TRUE, questlist[qlist[i]]._qlstr, 0);
 		y += 2;
 	}
-	PrintQLString(0, 22, TRUE, "Close Quest Log", 0);
+	PrintQLString(out, 0, 22, TRUE, "Close Quest Log", 0);
 }
 
 void StartQuestlog()
