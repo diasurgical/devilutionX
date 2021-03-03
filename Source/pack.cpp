@@ -160,6 +160,7 @@ void UnPackItem(PkItemStruct *is, ItemStruct *id)
 		    SwapLE16(is->wValue),
 		    SwapLE32(is->dwBuff));
 	} else {
+		memset(&item[MAXITEMS], 0, sizeof(*item));
 		RecreateItem(MAXITEMS, idx, SwapLE16(is->iCreateInfo), SwapLE32(is->iSeed), SwapLE16(is->wValue));
 		item[MAXITEMS]._iMagical = is->bId >> 1;
 		item[MAXITEMS]._iIdentified = is->bId & 1;

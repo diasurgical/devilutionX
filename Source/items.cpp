@@ -624,6 +624,7 @@ void InitItems()
 {
 	int i;
 
+	memset(&item[0], 0, sizeof(*item));
 	GetItemAttrs(0, IDI_GOLD, 1);
 	golditem = item[0];
 	golditem._iStatFlag = TRUE;
@@ -1579,7 +1580,7 @@ int AllocateItem()
 	return inum;
 }
 
-static void GetSuperItemSpace(int x, int y, int inum)
+static void GetSuperItemSpace(int x, int y, char inum)
 {
 	if (!GetItemSpace(x, y, inum)) {
 		for (int k = 2; k < 50; k++) {
@@ -4529,6 +4530,7 @@ void SpawnSmith(int lvl)
 	iCnt = random_(50, maxItems - 10) + 10;
 	for (i = 0; i < iCnt; i++) {
 		do {
+			memset(&item[0], 0, sizeof(*item));
 			item[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(item[0]._iSeed);
 			idata = RndSmithItem(lvl) - 1;
@@ -4630,6 +4632,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		plvl = 1;
 
 	do {
+		memset(&item[0], 0, sizeof(*item));
 		item[0]._iSeed = AdvanceRndSeed();
 		SetRndSeed(item[0]._iSeed);
 		itype = RndPremiumItem(plvl >> 2, plvl) - 1;
@@ -4835,14 +4838,17 @@ void SpawnWitch(int lvl)
 
 	j = 3;
 
+	memset(&item[0], 0, sizeof(*item));
 	GetItemAttrs(0, IDI_MANA, 1);
 	witchitem[0] = item[0];
 	witchitem[0]._iCreateInfo = lvl;
 	witchitem[0]._iStatFlag = TRUE;
+	memset(&item[0], 0, sizeof(*item));
 	GetItemAttrs(0, IDI_FULLMANA, 1);
 	witchitem[1] = item[0];
 	witchitem[1]._iCreateInfo = lvl;
 	witchitem[1]._iStatFlag = TRUE;
+	memset(&item[0], 0, sizeof(*item));
 	GetItemAttrs(0, IDI_PORTAL, 1);
 	witchitem[2] = item[0];
 	witchitem[2]._iCreateInfo = lvl;
@@ -4857,6 +4863,7 @@ void SpawnWitch(int lvl)
 		for (i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
 			if (WitchItemOk(i)
 			    && lvl >= AllItemsList[i].iMinMLvl) {
+				memset(&item[0], 0, sizeof(*item));
 				item[0]._iSeed = AdvanceRndSeed();
 				SetRndSeed(item[0]._iSeed);
 				random_(0, 1);
@@ -4878,6 +4885,7 @@ void SpawnWitch(int lvl)
 
 	for (i = j; i < iCnt; i++) {
 		do {
+			memset(&item[0], 0, sizeof(*item));
 			item[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(item[0]._iSeed);
 			idata = RndWitchItem(lvl) - 1;
@@ -4952,6 +4960,7 @@ void SpawnBoy(int lvl)
 
 	if (boylevel < (lvl >> 1) || boyitem._itype == ITYPE_NONE) {
 		do {
+			memset(&item[0], 0, sizeof(*item));
 			item[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(item[0]._iSeed);
 			itype = RndBoyItem(lvl) - 1;
@@ -5124,17 +5133,20 @@ void SpawnHealer(int lvl)
 {
 	int i, nsi, srnd, itype;
 
+	memset(&item[0], 0, sizeof(*item));
 	GetItemAttrs(0, IDI_HEAL, 1);
 	healitem[0] = item[0];
 	healitem[0]._iCreateInfo = lvl;
 	healitem[0]._iStatFlag = TRUE;
 
+	memset(&item[0], 0, sizeof(*item));
 	GetItemAttrs(0, IDI_FULLHEAL, 1);
 	healitem[1] = item[0];
 	healitem[1]._iCreateInfo = lvl;
 	healitem[1]._iStatFlag = TRUE;
 
 	if (gbIsMultiplayer) {
+		memset(&item[0], 0, sizeof(*item));
 		GetItemAttrs(0, IDI_RESURRECT, 1);
 		healitem[2] = item[0];
 		healitem[2]._iCreateInfo = lvl;
@@ -5146,6 +5158,7 @@ void SpawnHealer(int lvl)
 	}
 	nsi = random_(50, gbIsHellfire ? 10 : 8) + 10;
 	for (i = srnd; i < nsi; i++) {
+		memset(&item[0], 0, sizeof(*item));
 		item[0]._iSeed = AdvanceRndSeed();
 		SetRndSeed(item[0]._iSeed);
 		itype = RndHealerItem(lvl) - 1;
@@ -5163,6 +5176,7 @@ void SpawnHealer(int lvl)
 
 void SpawnStoreGold()
 {
+	memset(&item[0], 0, sizeof(*item));
 	GetItemAttrs(0, IDI_GOLD, 1);
 	golditem = item[0];
 	golditem._iStatFlag = TRUE;

@@ -615,11 +615,10 @@ bool FitsInBeltSlot(const ItemStruct &item)
  */
 bool CanBePlacedOnBelt(const ItemStruct &item)
 {
-	return
-		FitsInBeltSlot(item) &&
-		item._itype != ITYPE_GOLD &&
-		item._iStatFlag &&
-		AllItemsList[item.IDidx].iUsable;
+	return FitsInBeltSlot(item)
+	    && item._itype != ITYPE_GOLD
+	    && item._iStatFlag
+	    && AllItemsList[item.IDidx].iUsable;
 }
 
 /**
@@ -1237,6 +1236,7 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId)
 {
 	PlayerStruct *p;
 
+	memset(&item[MAXITEMS], 0, sizeof(*item));
 	RecreateItem(MAXITEMS, idx, wCI, seed, 0);
 
 	p = &plr[pnum];
@@ -1691,6 +1691,7 @@ void CheckQuestItem(int pnum)
 			}
 			item_num = itemactive[0];
 			tmp = item[item_num];
+			memset(&item[item_num], 0, sizeof(*item));
 			GetItemAttrs(item_num, IDI_FULLNOTE, 16);
 			SetupItem(item_num);
 			plr[pnum].HoldItem = item[item_num];
