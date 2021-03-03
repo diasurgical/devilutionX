@@ -100,7 +100,7 @@ int BlockData[][4] = {
 
 TEST(Player, PM_DoGotHit)
 {
-    for (int i = 0; i < sizeof(BlockData) / sizeof(*BlockData); i++) {
+    for (size_t i = 0; i < sizeof(BlockData) / sizeof(*BlockData); i++) {
         EXPECT_EQ(BlockData[i][0], RunBlockTest(BlockData[i][1], BlockData[i][2], BlockData[i][3]));
     }
 }

@@ -7,8 +7,9 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-void PackItem(PkItemStruct *id, ItemStruct *is)
+void PackItem(PkItemStruct *id, const ItemStruct *is)
 {
+	memset(id, 0, sizeof(*id));
 	if (is->_itype == ITYPE_NONE) {
 		id->idx = 0xFFFF;
 	} else {
@@ -130,7 +131,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
  * @param is The source packed item
  * @param id The distination item
  */
-void UnPackItem(PkItemStruct *is, ItemStruct *id)
+void UnPackItem(const PkItemStruct *is, ItemStruct *id)
 {
 	WORD idx = SwapLE16(is->idx);
 	if (idx == 0xFFFF) {

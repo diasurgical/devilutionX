@@ -79,8 +79,8 @@ typedef struct PkPlayerStruct {
 
 void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield);
 void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok);
-void PackItem(PkItemStruct *id, ItemStruct *is);
-void UnPackItem(PkItemStruct *is, ItemStruct *id);
+void PackItem(PkItemStruct *id, const ItemStruct *is);
+void UnPackItem(const PkItemStruct *is, ItemStruct *id);
 
 /* rdata */
 #ifdef __cplusplus

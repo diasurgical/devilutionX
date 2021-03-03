@@ -1263,7 +1263,7 @@ void delta_close_portal(int pnum)
 static void check_update_plr(int pnum)
 {
 	if (gbIsMultiplayer && pnum == myplr)
-		pfile_update(TRUE);
+		pfile_update(true);
 }
 
 static void msg_errorf(const char *pszFmt, ...)

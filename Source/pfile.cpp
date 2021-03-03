@@ -474,13 +474,14 @@ static BOOL GetTempSaveNames(DWORD dwIndex, char *szTemp)
 
 void pfile_remove_temp_files()
 {
-	if (!gbIsMultiplayer) {
-		DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
-		if (!pfile_open_archive(save_num))
-			app_fatal("Unable to write to save file archive");
-		mpqapi_remove_hash_entries(GetTempSaveNames);
-		pfile_flush(TRUE, save_num);
-	}
+	if (gbIsMultiplayer)
+		return;
+
+	DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
+	if (!pfile_open_archive(save_num))
+		app_fatal("Unable to write to save file archive");
+	mpqapi_remove_hash_entries(GetTempSaveNames);
+	pfile_flush(TRUE, save_num);
 }
 
 void pfile_rename_temp_to_perm()
@@ -555,18 +556,19 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 	return buf;
 }
 
-void pfile_update(BOOL force_save)
+void pfile_update(bool force_save)
 {
-	// BUGFIX: these tick values should be treated as unsigned to handle overflows correctly (fixed)
-	static DWORD save_prev_tc;
+	static Uint32 save_prev_tc;
 
-	if (gbIsMultiplayer) {
-		DWORD tick = SDL_GetTicks();
-		if (force_save || tick - save_prev_tc > 60000) {
-			save_prev_tc = tick;
-			pfile_write_hero();
-		}
-	}
+	if (!gbIsMultiplayer)
+		return;
+
+	Uint32 tick = SDL_GetTicks();
+	if (!force_save && tick - save_prev_tc <= 60000)
+		return;
+
+	save_prev_tc = tick;
+	pfile_write_hero();
 }
 
 DEVILUTION_END_NAMESPACE

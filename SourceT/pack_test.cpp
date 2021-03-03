@@ -1,7 +1,112 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-dvl::PkItemStruct diabloItems[] = {
+static void ComparePackedItems(const dvl::PkItemStruct *item1, const dvl::PkItemStruct *item2)
+{
+	ASSERT_EQ(item1->iSeed, item2->iSeed);
+	ASSERT_EQ(item1->iCreateInfo, item2->iCreateInfo);
+	ASSERT_EQ(item1->idx, item2->idx);
+	ASSERT_EQ(item1->bId, item2->bId);
+	ASSERT_EQ(item1->bDur, item2->bDur);
+	ASSERT_EQ(item1->bMDur, item2->bMDur);
+	ASSERT_EQ(item1->bCh, item2->bCh);
+	ASSERT_EQ(item1->bMCh, item2->bMCh);
+	ASSERT_EQ(item1->wValue, item2->wValue);
+	ASSERT_EQ(item1->dwBuff, item2->dwBuff);
+}
+typedef struct TestItemStruct {
+	char _iIName[64];
+	Sint32 _itype;
+	Sint32 _iClass;
+	Sint32 _iCurs;
+	Sint32 _iIvalue;
+	Sint32 _iMinDam;
+	Sint32 _iMaxDam;
+	Sint32 _iAC;
+	Sint32 _iFlags;
+	Sint32 _iMiscId;
+	Sint32 _iSpell;
+	Sint32 _iCharges;
+	Sint32 _iMaxCharges;
+	Sint32 _iDurability;
+	Sint32 _iMaxDur;
+	Sint32 _iPLDam;
+	Sint32 _iPLToHit;
+	Sint32 _iPLAC;
+	Sint32 _iPLStr;
+	Sint32 _iPLMag;
+	Sint32 _iPLDex;
+	Sint32 _iPLVit;
+	Sint32 _iPLFR;
+	Sint32 _iPLLR;
+	Sint32 _iPLMR;
+	Sint32 _iPLMana;
+	Sint32 _iPLHP;
+	Sint32 _iPLDamMod;
+	Sint32 _iPLGetHit;
+	Sint32 _iPLLight;
+	Sint8 _iSplLvlAdd;
+	Sint32 _iUid;
+	Sint32 _iFMinDam;
+	Sint32 _iFMaxDam;
+	Sint32 _iLMinDam;
+	Sint32 _iLMaxDam;
+	Sint8 _iPrePower;
+	Sint8 _iSufPower;
+	Sint8 _iMinStr;
+	Uint8 _iMinMag;
+	Sint8 _iMinDex;
+	Sint32 IDidx;
+} TestItemStruct;
+
+static void CompareItems(const dvl::ItemStruct *item1, const TestItemStruct *item2)
+{
+    ASSERT_STREQ(item1->_iIName, item2->_iIName);
+    ASSERT_EQ(item1->_itype, item2->_itype);
+    ASSERT_EQ(item1->_iClass, item2->_iClass);
+    ASSERT_EQ(item1->_iCurs, item2->_iCurs);
+    ASSERT_EQ(item1->_iIvalue, item2->_iIvalue);
+    ASSERT_EQ(item1->_iMinDam, item2->_iMinDam);
+    ASSERT_EQ(item1->_iMaxDam, item2->_iMaxDam);
+    ASSERT_EQ(item1->_iAC, item2->_iAC);
+    ASSERT_EQ(item1->_iFlags, item2->_iFlags);
+    ASSERT_EQ(item1->_iMiscId, item2->_iMiscId);
+    ASSERT_EQ(item1->_iSpell, item2->_iSpell);
+    ASSERT_EQ(item1->_iCharges, item2->_iCharges);
+    ASSERT_EQ(item1->_iMaxCharges, item2->_iMaxCharges);
+    ASSERT_EQ(item1->_iDurability, item2->_iDurability);
+    ASSERT_EQ(item1->_iMaxDur, item2->_iMaxDur);
+    ASSERT_EQ(item1->_iPLDam, item2->_iPLDam);
+    ASSERT_EQ(item1->_iPLToHit, item2->_iPLToHit);
+    ASSERT_EQ(item1->_iPLAC, item2->_iPLAC);
+    ASSERT_EQ(item1->_iPLStr, item2->_iPLStr);
+    ASSERT_EQ(item1->_iPLMag, item2->_iPLMag);
+    ASSERT_EQ(item1->_iPLDex, item2->_iPLDex);
+    ASSERT_EQ(item1->_iPLVit, item2->_iPLVit);
+    ASSERT_EQ(item1->_iPLFR, item2->_iPLFR);
+    ASSERT_EQ(item1->_iPLLR, item2->_iPLLR);
+    ASSERT_EQ(item1->_iPLMR, item2->_iPLMR);
+    ASSERT_EQ(item1->_iPLMana, item2->_iPLMana);
+    ASSERT_EQ(item1->_iPLHP, item2->_iPLHP);
+    ASSERT_EQ(item1->_iPLDamMod, item2->_iPLDamMod);
+    ASSERT_EQ(item1->_iPLGetHit, item2->_iPLGetHit);
+    ASSERT_EQ(item1->_iPLLight, item2->_iPLLight);
+    ASSERT_EQ(item1->_iSplLvlAdd, item2->_iSplLvlAdd);
+    ASSERT_EQ(item1->_iUid, item2->_iUid);
+    ASSERT_EQ(item1->_iFMinDam, item2->_iFMinDam);
+    ASSERT_EQ(item1->_iFMaxDam, item2->_iFMaxDam);
+    ASSERT_EQ(item1->_iLMinDam, item2->_iLMinDam);
+    ASSERT_EQ(item1->_iLMaxDam, item2->_iLMaxDam);
+    ASSERT_EQ(item1->_iPrePower, item2->_iPrePower);
+    ASSERT_EQ(item1->_iSufPower, item2->_iSufPower);
+    ASSERT_EQ(item1->_iMinStr, item2->_iMinStr);
+    ASSERT_EQ(item1->_iMinMag, item2->_iMinMag);
+    ASSERT_EQ(item1->_iMinDex, item2->_iMinDex);
+    ASSERT_EQ(item1->IDidx, item2->IDidx);
+}
+
+
+const dvl::PkItemStruct PackedDiabloItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
 	{ 2082213289,       0x119,  53,   3,   60,    60,   0,    0,      0,      0 }, // Amber Helm of harmony
@@ -19,7 +124,6 @@ dvl::PkItemStruct diabloItems[] = {
 	{  554676945,          16,  30,   0,    0,     0,   0,    0,      0,      0 }, // Full mana
 	{  355389938,           0,  24,   0,    0,     0,   0,    0,      0,      0 }, // Healing
 	{  868435486,          16,  29,   0,    0,     0,   0,    0,      0,      0 }, // Full healing
-	{  797389356,           0,   0,   0,    0,     0,   0,    0,    100,      0 }, // Gold
 	{ 1372832903,           0,   4,   0,   30,    30,   0,    0,      0,      0 }, // IDI_ROGUE
 	{  896239556,        2068,  53,   3,   56,    60,   0,    0,      0,      0 }, // Jade Helm of the wolf
 	{ 1286225254,         269, 151,   3,    0,     0,   0,    0,      0,      0 }, // Steel Ring of accuracy
@@ -30,106 +134,168 @@ dvl::PkItemStruct diabloItems[] = {
 	{ 1031508271,        1036,  72,   0,   14,    24,   0,    0,      0,      0 }, // Small Shield
 	{ 1384620228,         338,  65,   3,   44,    80,   0,    0,      0,      0 }, // Plate of giant
 	{  681296530,         266,  87,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Healing
+	{  109984285,       16390,  81,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Rejuvenation - made by Pepin
 	{ 1857753366,         260,  81,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Rejuvenation
 	{  965103261,         273,  82,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Full Rejuvenation
 	{  430621075,         217, 141,   3,   45,    45,   0,    0,      0,      0 }, // Savage Bow of perfection
 	{ 1272669062,         258, 115,   0,   10,    20,   0,    0,      0,      0 }, // Falchion
 	{ 1133884051,         278, 120,   2,   18,    40,   0,    0,      0,      0 }, // Sword of vim
+	{ 1743897351,         259, 146,   2,   10,    25,  60,   60,      0,      0 }, // Frog's Staff of Holy Bolt
+	{  429107209,           0,   5,   0,   25,    25,   9,   40,      0,      0 }, // IDI_SORCEROR
+	{  466015738,         257, 146,   0,   18,    25,  50,   50,      0,      0 }, // Staff of Charged Bolt
+	{  686949358,         193,  48,   3,   12,    15,   0,    0,      0,      0 }, // Cap of the mind armor
+	{  888855755,         195,  58,   3,   30,    30,   0,    0,      0,      0 }, // Armor of protection
 	{          2,         776,   8,   5,    0,     0,   0,    0,      0,      0 }, // Empyrean Band,
-	{          3,          776, 10,   5,    0,     0,   0,    0,      0,      0 }, // Optic Amulet
+	{          3,         776,  10,   5,    0,     0,   0,    0,      0,      0 }, // Optic Amulet
 	{          4,         772,  11,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Truth
 	{          5,         776,  13,   5,   15,    15,   0,    0,      0,      0 }, // Harlequin Crest
 	{          6,         527,  14,   5,   60,    60,   0,    0,      0,      0 }, // Veil of Steel
 	{          7,         781,  28,   5,   39,    40,   0,    0,      0,      0 }, // Arkaine's Valor
 	{          8,         787,  31,   5,   42,    44,   0,    0,      0,      0 }, // Griswold's Edge
-	{          6,         911,  14,   5,   60,    60,   0,    0,      0,      0 }, // Veil of Steel - with morph bug
 	// clang-format on
 };
 
-const char *diabloItemNames[] = {
-	"Amber Helm of harmony",
-	"Cobalt Amulet of giants",
-	"Brutal Sword of gore",
-	"Demonspike Coat",
-	"Steel Ring of the jaguar",
-	"Ring of the heavens",
-	"Ring of sorcery",
-	"Shield of the ages",
-	"Sapphire Shield",
-	"Scroll of Town Portal",
-	"Potion of Mana",
-	"Potion of Mana",
-	"Potion of Full Mana",
-	"Potion of Healing",
-	"Potion of Full Healing",
-	"Gold",
-	"Short Bow",
-	"Jade Helm of the wolf",
-	"Steel Ring of accuracy",
-	"Blood Stone",
-	"Ring of power",
-	"Gold Amulet of accuracy",
-	"Sword of the bat",
-	"Small Shield",
-	"Plate of giants",
-	"Scroll of Healing",
-	"Potion of Rejuvenation",
-	"Potion of Full Rejuvenation",
-	"Savage Bow of perfection",
-	"Falchion",
-	"Sword of vim",
-	"Empyrean Band",
-	"Optic Amulet",
-	"Ring of Truth",
-	"Harlequin Crest",
-	"Veil of Steel",
-	"Arkaine's Valor",
-	"Griswold's Edge",
-	"Veil of Steel",
+const TestItemStruct DiabloItems[] = {
+	// clang-format off
+	//_iIName,                       _itype, _iClass, _iCurs, _iIvalue, _iMinDam, _iMaxDam, _iAC,   _iFlags, _iMiscId, _iSpell, _iCharges, _iMaxCharges, _iDurability, _iMaxDur, _iPLDam, _iPLToHit, _iPLAC, _iPLStr, _iPLMag, _iPLDex, _iPLVit, _iPLFR, _iPLLR, _iPLMR, _iPLMana, _iPLHP, _iPLDamMod, _iPLGetHit, _iPLLight, _iSplLvlAdd, _iUid, _iFMinDam, _iFMaxDam, _iLMinDam, _iLMaxDam, _iPrePower, _iSufPower, _iMinStr, _iMinMag, _iMinDex, IDidx );
+	{ "Amber Helm of harmony",            7,       2,     98,    21100,        0,        0,   11,   8388608,        0,       0,         0,            0,           60,       60,       0,         0,      0,       0,       0,       0,       0,     18,     18,     18,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         11,         59,       50,        0,        0,    53 },
+	{ "Cobalt Amulet of giants",         13,       3,     45,    26840,        0,        0,    0,         0,       26,       0,         0,            0,            0,        0,       0,         0,      0,      19,       0,       0,       0,      0,     46,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          9,         19,        0,        0,        0,   159 },
+	{ "Brutal Sword of gore",             1,       1,     60,    13119,        2,       10,    0,         0,        0,       0,         0,            0,           38,       40,      91,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,         12,          0,         0,           0,     0,         0,         0,         0,         0,          2,         61,       30,        0,       30,   125 },
+	{ "Demonspike Coat",                  9,       2,    151,   251175,        0,        0,  100,         0,        0,       0,         0,            0,          255,      255,       0,         0,      0,      10,       0,       0,       0,     50,      0,      0,        0,      0,          0,         -6,         0,           0,    78,         0,         0,         0,         0,         -1,         -1,       90,        0,        0,    70 },
+	{ "Steel Ring of the jaguar",        12,       3,     12,    10600,        0,        0,    0,         0,       25,       0,         0,            0,            0,        0,       0,        15,      0,       0,       0,       0,       0,      0,      0,      0,        0,   1024,          0,          0,         0,           0,     0,         0,         0,         0,         0,          0,         31,        0,        0,        0,   156 },
+	{ "Ring of the heavens",             12,       3,     12,    37552,        0,        0,    0,         0,       25,       0,         0,            0,            0,        0,       0,         0,      0,      14,      14,      14,      14,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         27,        0,        0,        0,   156 },
+	{ "Ring of sorcery",                 12,       3,     12,    10200,        0,        0,    0,         0,       25,       0,         0,            0,            0,        0,       0,         0,      0,       0,      16,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         21,        0,        0,        0,   158 },
+	{ "Shield of the ages",               5,       2,    132,     4850,        0,        0,   18,         0,        0,       0,         0,            0,          255,      255,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         37,       60,        0,        0,    75 },
+	{ "Sapphire Shield",                  5,       2,    147,    21000,        0,        0,    7,         0,        0,       0,         0,            0,           12,       32,       0,         0,      0,       0,       0,       0,       0,      0,     60,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          9,         -1,       40,        0,        0,    73 },
+	{ "Scroll of Town Portal",            0,       3,      1,      200,        0,        0,    0,         0,       21,       7,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    27 },
+	{ "Potion of Mana",                   0,       3,     39,       50,        0,        0,    0,         0,        6,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    25 },
+	{ "Potion of Mana",                   0,       3,     39,       50,        0,        0,    0,         0,        6,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    79 },
+	{ "Potion of Full Mana",              0,       3,      0,      150,        0,        0,    0,         0,        7,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    30 },
+	{ "Potion of Healing",                0,       3,     32,       50,        0,        0,    0,         0,        3,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    24 },
+	{ "Potion of Full Healing",           0,       3,     35,      150,        0,        0,    0,         0,        2,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    29 },
+	{ "Short Bow",                        3,       1,    118,      100,        1,        4,    0,         0,        0,       0,         0,            0,           30,       30,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,     4 },
+	{ "Jade Helm of the wolf",            7,       2,     98,    22310,        0,        0,   14,         0,        0,       0,         0,            0,           56,       60,       0,         0,      0,       0,       0,       0,       0,     27,     27,     27,        0,   2112,          0,          0,         0,           0,     0,         0,         0,         0,         0,         11,         31,       50,        0,        0,    53 },
+	{ "Steel Ring of accuracy",          12,       3,     12,    13400,        0,        0,    0,         0,       25,       0,         0,            0,            0,        0,       0,        14,      0,       0,       0,      15,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          0,         23,        0,        0,        0,   156 },
+	{ "Blood Stone",                      0,       5,     25,        0,        0,        0,    0,         0,        0,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    21 },
+	{ "Ring of power",                   12,       3,     12,     6400,        0,        0,    0,         0,       25,       0,         0,            0,            0,        0,       0,         0,      0,      12,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         19,        0,        0,        0,   156 },
+	{ "Gold Amulet of accuracy",         13,       3,     45,    20896,        0,        0,    0,         0,       26,       0,         0,            0,            0,        0,       0,        25,      0,       0,       0,      14,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          0,         23,        0,        0,        0,   159 },
+	{ "Sword of the bat",                 1,       1,     57,    10500,        6,       15,    0,      8192,        0,       0,         0,            0,           25,       60,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         55,       50,        0,        0,   127 },
+	{ "Small Shield",                     5,       2,    105,       90,        0,        0,    3,         0,        0,       0,         0,            0,           14,       24,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,       25,        0,        0,    72 },
+	{ "Plate of giants",                  9,       2,    153,    23250,        0,        0,   20,         0,        0,       0,         0,            0,           44,       80,       0,         0,      0,      17,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         19,       40,        0,        0,    65 },
+	{ "Scroll of Healing",                0,       3,      1,       50,        0,        0,    0,         0,       21,       2,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    91 },
+	{ "Potion of Rejuvenation",           0,       3,     37,      120,        0,        0,    0,         0,       18,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    81 },
+	{ "Potion of Rejuvenation",           0,       3,     37,      120,        0,        0,    0,         0,       18,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    81 },
+	{ "Potion of Full Rejuvenation",      0,       3,     33,      600,        0,        0,    0,         0,       19,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    82 },
+	{ "Savage Bow of perfection",         3,       1,    133,    23438,        3,        6,    0,         0,        0,       0,         0,            0,           45,       45,     117,         0,      0,       0,       0,      22,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          2,         23,       25,        0,       40,   146 },
+	{ "Falchion",                         1,       1,     62,      250,        4,        8,    0,         0,        0,       0,         0,            0,           10,       20,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,       30,        0,        0,   120 },
+	{ "Sword of vim",                     1,       1,     60,     4400,        2,       10,    0,         0,        0,       0,         0,            0,           18,       40,       0,         0,      0,       0,       0,       0,      15,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         25,       30,        0,       30,   125 },
+	{ "Frog's Staff of Holy Bolt",       10,       1,    109,        1,        2,        4,    0,         0,       23,      31,        60,           60,           10,       25,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,     -384,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         34,         -1,        0,       20,        0,   151 },
+	{ "Short Staff of Charged Bolt",     10,       1,    109,      520,        2,        4,    0,         0,       23,      30,         9,           40,           25,       25,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       20,        0,   166 },
+	{ "Staff of Charged Bolt",           10,       1,    109,        1,        2,        4,    0,         0,       23,      30,        50,           50,           18,       25,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       25,        0,   151 },
+	{ "Cap of the mind",                  7,       2,     91,     1845,        0,        0,    2,         0,        0,       0,         0,            0,           12,       15,       0,         0,      0,       0,       9,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         21,        0,        0,        0,    48 },
+	{ "Armor of protection",              6,       2,    129,     1200,        0,        0,    7,         0,        0,       0,         0,            0,           30,       30,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,         -2,         0,           0,     0,         0,         0,         0,         0,         -1,         30,        0,        0,        0,    58 },
+	{ "Empyrean Band",                   12,       3,     18,     8000,        0,        0,    0, 270532608,       27,       0,         0,            0,            0,        0,       0,         0,      0,       2,       2,       2,       2,      0,      0,      0,        0,      0,          0,          0,         2,           0,     2,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,     8 },
+	{ "Optic Amulet",                    13,       3,     44,     9750,        0,        0,    0,         0,       27,       0,         0,            0,            0,        0,       0,         0,      0,       0,       5,       0,       0,      0,     20,      0,        0,      0,          0,         -1,         2,           0,     3,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    10 },
+	{ "Ring of Truth",                   12,       3,     10,     9100,        0,        0,    0,         0,       27,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,     10,     10,     10,        0,    640,          0,         -1,         0,           0,     4,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    11 },
+	{ "Harlequin Crest",                  7,       2,     81,     4000,        0,        0,   -3,         0,       27,       0,         0,            0,           15,       15,       0,         0,      0,       2,       2,       2,       2,      0,      0,      0,      448,    448,          0,         -1,         0,           0,     5,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    13 },
+	{ "Veil of Steel",                    7,       2,     85,    63800,        0,        0,   18,         0,       27,       0,         0,            0,           60,       60,       0,         0,     60,      15,       0,       0,      15,     50,     50,     50,    -1920,      0,          0,          0,        -2,           0,     6,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    14 },
+	{ "Arkaine's Valor",                  8,       2,    157,    42000,        0,        0,   25,   8388608,       27,       0,         0,            0,           39,       40,       0,         0,      0,       0,       0,       0,      10,      0,      0,      0,        0,      0,          0,         -3,         0,           0,     7,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    28 },
+	{ "Griswold's Edge",                  1,       1,     61,    42000,        4,       12,    0,    264208,       27,       0,         0,            0,           42,       44,       0,        25,      0,       0,       0,       0,       0,      0,      0,      0,     1280,  -1280,          0,          0,         0,           0,     8,         1,        10,         0,         0,         -1,         -1,       40,        0,        0,    31 },
+	// clang-format on
 };
 
 TEST(pack, UnPackItem_diablo)
 {
 	dvl::ItemStruct id;
+	dvl::PkItemStruct is;
 
 	dvl::gbIsHellfire = false;
 	dvl::gbIsHellfireSaveGame = false;
 	dvl::gbIsMultiplayer = false;
 
-	for (size_t i = 0; i < sizeof(diabloItems) / sizeof(*diabloItems); i++) {
-		dvl::UnPackItem(&diabloItems[i], &id);
+	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
+		dvl::UnPackItem(&PackedDiabloItems[i], &id);
 
-		ASSERT_STREQ(id._iIName, diabloItemNames[i]);
+		CompareItems(&id, &DiabloItems[i]);
+
+		dvl::PackItem(&is, &id);
+
+		ComparePackedItems(&is, &PackedDiabloItems[i]);
 	}
 }
 
-dvl::PkItemStruct diabloItemsMP[] = {
+
+TEST(pack, UnPackItem_diablo_unique_bug)
+{
+	dvl::ItemStruct id;
+	dvl::PkItemStruct pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
+	dvl::PkItemStruct pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - fixed
+	dvl::PkItemStruct is;
+
+	dvl::gbIsHellfire = false;
+	dvl::gbIsHellfireSaveGame = false;
+	dvl::gbIsMultiplayer = false;
+
+    dvl::UnPackItem(&pkItemBug, &id);
+
+    ASSERT_STREQ(id._iIName, "Veil of Steel");
+    ASSERT_EQ(id._itype, dvl::ITYPE_HELM);
+    ASSERT_EQ(id._iClass, dvl::ICLASS_ARMOR);
+    ASSERT_EQ(id._iCurs, 85);
+    ASSERT_EQ(id._iIvalue, 63800);
+    ASSERT_EQ(id._iAC, 18);
+    ASSERT_EQ(id._iMiscId, dvl::IMISC_UNIQUE);
+    ASSERT_EQ(id._iPLAC, 60);
+    ASSERT_EQ(id._iPLStr, 15);
+    ASSERT_EQ(id._iPLVit, 15);
+    ASSERT_EQ(id._iPLFR, 50);
+    ASSERT_EQ(id._iPLLR, 50);
+    ASSERT_EQ(id._iPLMR, 50);
+    ASSERT_EQ(id._iPLMana, -1920);
+    ASSERT_EQ(id._iPLLight, -2);
+    ASSERT_EQ(id._iUid, 6);
+    ASSERT_EQ(id.IDidx, dvl::IDI_STEELVEIL);
+
+    dvl::PackItem(&is, &id);
+
+    ComparePackedItems(&is, &pkItem);
+}
+
+const dvl::PkItemStruct PackedDiabloMPItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
     {  309674341,         193, 109,   0,    0,     0,   0,    0,      0,      0 }, // Book of Firebolt
 	// clang-format on
 };
 
-const char *diabloItemNamesMP[] = {
-	"Book of Firebolt",
+const TestItemStruct DiabloMPItems[] = {
+	// clang-format off
+	//_iIName,            _itype, _iClass, _iCurs, _iIvalue, _iMinDam, _iMaxDam, _iAC,   _iFlags, _iMiscId, _iSpell, _iCharges, _iMaxCharges, _iDurability, _iMaxDur, _iPLDam, _iPLToHit, _iPLAC, _iPLStr, _iPLMag, _iPLDex, _iPLVit, _iPLFR, _iPLLR, _iPLMR, _iPLMana, _iPLHP, _iPLDamMod, _iPLGetHit, _iPLLight, _iSplLvlAdd, _iUid, _iFMinDam, _iFMaxDam, _iLMinDam, _iLMaxDam, _iPrePower, _iSufPower, _iMinStr, _iMinMag, _iMinDex, IDidx );
+	{ "Book of Firebolt",      0,       3,     87,     1000,        0,        0,    0,         0,       24,       1,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       15,        0,   114 },
+	// clang-format on
 };
 
 TEST(pack, UnPackItem_diablo_multiplayer)
 {
 	dvl::ItemStruct id;
+	dvl::PkItemStruct is;
 
 	dvl::gbIsHellfire = false;
 	dvl::gbIsHellfireSaveGame = false;
 	dvl::gbIsMultiplayer = true;
 
-	for (size_t i = 0; i < sizeof(diabloItemsMP) / sizeof(*diabloItemsMP); i++) {
-		dvl::UnPackItem(&diabloItemsMP[i], &id);
+	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
+		dvl::UnPackItem(&PackedDiabloMPItems[i], &id);
 
-		ASSERT_STREQ(id._iIName, diabloItemNamesMP[i]);
+		CompareItems(&id, &DiabloMPItems[i]);
+
+		dvl::PackItem(&is, &id);
+
+		ComparePackedItems(&is, &PackedDiabloMPItems[i]);
 	}
 }
 
-dvl::PkItemStruct hellfireItems[] = {
+const dvl::PkItemStruct PackedHellfireItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
 	{ 1717442367,         266, 156,   3,    0,     0,   0,    0,      0,      0 }, // Ring of stability
@@ -169,56 +335,63 @@ dvl::PkItemStruct hellfireItems[] = {
 	// clang-format on
 };
 
-const char *hellfireItemNames[] = {
-	"Ring of stability",
-	"Ring of precision",
-	"Obsidian Ring of wizardry",
-	"Ring of precision",
-	"Amulet of titans",
-	"Gold Amulet",
-	"Messerschmidt's Reaver",
-	"Vicious Maul of structure",
-	"Short Sword",
-	"Bow of shock",
-	"Bow of magic",
-	"Red Staff of Healing",
-	"Buckler",
-	"Skull Cap",
-	"Rags",
-	"Quilted Armor",
-	"Armor of light",
-	"Saintly Plate of the stars",
-	"Plate of the stars",
-	"Potion of Healing",
-	"Potion of Full Healing",
-	"Potion of Mana",
-	"Scroll of Golem",
-	"Scroll of Search",
-	"Scroll of Identify",
-	"Scroll of Town Portal",
-	"Scroll of Healing",
-	"Rune of Fire",
-	"Gold",
-	"The Undead Crown",
-	"Empyrean Band",
-	"Ring of Truth",
-	"Griswold's Edge",
-	"Bovine Plate",
-
+const TestItemStruct HellfireItems[] = {
+	// clang-format off
+	//_iIName,                       _itype, _iClass, _iCurs, _iIvalue, _iMinDam, _iMaxDam, _iAC,   _iFlags, _iMiscId, _iSpell, _iCharges, _iMaxCharges, _iDurability, _iMaxDur, _iPLDam, _iPLToHit, _iPLAC, _iPLStr, _iPLMag, _iPLDex, _iPLVit, _iPLFR, _iPLLR, _iPLMR, _iPLMana, _iPLHP, _iPLDamMod, _iPLGetHit, _iPLLight, _iSplLvlAdd, _iUid, _iFMinDam, _iFMaxDam, _iLMinDam, _iLMaxDam, _iPrePower, _iSufPower, _iMinStr, _iMinMag, _iMinDex, IDidx );
+	{ "Ring of stability",               12,       3,     12,     8000,        0,        0,    0,   4194304,       25,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         59,        0,        0,        0,   156 },
+	{ "Ring of precision",               12,       3,     12,    10200,        0,        0,    0,         0,       25,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,      16,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         23,        0,        0,        0,   157 },
+	{ "Obsidian Ring of wizardry",       12,       3,     12,    56928,        0,        0,    0,         0,       25,       0,         0,            0,            0,        0,       0,         0,      0,       0,      27,       0,       0,     37,     37,     37,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         11,         21,        0,        0,        0,   157 },
+	{ "Ring of precision",               12,       3,     12,    10200,        0,        0,    0,         0,       25,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,      16,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         23,        0,        0,        0,   158 },
+	{ "Amulet of titans",                13,       3,     45,    20896,        0,        0,    0,         0,       26,       0,         0,            0,            0,        0,       0,         0,      0,      28,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         19,        0,        0,        0,   160 },
+	{ "Gold Amulet",                     13,       3,     45,    13692,        0,        0,    0,         0,       26,       0,         0,            0,            0,        0,       0,        29,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          0,         -1,        0,        0,        0,   160 },
+	{ "Messerschmidt's Reaver",           2,       1,    163,    58000,       12,       30,    0,        16,        0,       0,         0,            0,           75,       75,     200,         0,      0,       5,       5,       5,       5,      0,      0,      0,        0,  -3200,         15,          0,         0,           0,    44,         2,        12,         0,         0,         -1,         -1,       80,        0,        0,   135 },
+	{ "Vicious Maul of structure",        4,       1,    122,    10489,        6,       20,    0,         0,        0,       0,         0,            0,          127,      128,      72,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          2,         35,       55,        0,        0,   142 },
+	{ "Short Sword",                      1,       1,     64,      120,        2,        6,    0,         0,        0,       0,         0,            0,           15,       24,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,       18,        0,        0,   119 },
+	{ "Bow of shock",                     3,       1,    119,     8000,        1,       10,    0,  33554432,        0,       0,         0,            0,           18,       50,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         1,         6,         -1,         43,       30,        0,       60,   148 },
+	{ "Bow of magic",                     3,       1,    118,      400,        1,        4,    0,         0,        0,       0,         0,            0,           30,       30,       0,         0,      0,       0,       1,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         21,        0,        0,        0,   143 },
+	{ "Red Staff of Healing",            10,       1,    123,     1360,        4,        8,    0,         0,       23,       2,        22,           33,           35,       35,       0,         0,      0,       0,       0,       0,       0,     10,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          8,         -1,        0,       17,        0,   152 },
+	{ "Buckler",                          5,       2,     83,       30,        0,        0,    5,         0,        0,       0,         0,            0,            6,       16,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    71 },
+	{ "Skull Cap",                        7,       2,     90,       25,        0,        0,    3,         0,        0,       0,         0,            0,           15,       20,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    49 },
+	{ "Rags",                             6,       2,    128,        5,        0,        0,    4,         0,        0,       0,         0,            0,            6,        6,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    55 },
+	{ "Quilted Armor",                    6,       2,    129,      200,        0,        0,    7,         0,        0,       0,         0,            0,           30,       30,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    58 },
+	{ "Armor of light",                   6,       2,    129,     1150,        0,        0,   10,         0,        0,       0,         0,            0,           12,       30,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         2,           0,     0,         0,         0,         0,         0,         -1,         38,        0,        0,        0,    58 },
+	{ "Saintly Plate of the stars",       9,       2,    103,   140729,        0,        0,   46,         0,        0,       0,         0,            0,           75,       75,       0,         0,    121,      10,      10,      10,      10,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          6,         27,       60,        0,        0,    67 },
+	{ "Plate of the stars",               9,       2,    103,    77800,        0,        0,   49,         0,        0,       0,         0,            0,           63,       75,       0,         0,      0,       8,       8,       8,       8,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         27,       60,        0,        0,    67 },
+	{ "Potion of Healing",                0,       3,     32,       50,        0,        0,    0,         0,        3,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    24 },
+	{ "Potion of Full Healing",           0,       3,     35,      150,        0,        0,    0,         0,        2,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    29 },
+	{ "Potion of Mana",                   0,       3,     39,       50,        0,        0,    0,         0,        6,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    25 },
+	{ "Scroll of Golem",                  0,       3,      1,     1100,        0,        0,    0,         0,       22,      21,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       51,        0,   110 },
+	{ "Scroll of Search",                 0,       3,      1,       50,        0,        0,    0,         0,       21,      46,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    92 },
+	{ "Scroll of Identify",               0,       3,      1,      100,        0,        0,    0,         0,       21,       5,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    94 },
+	{ "Scroll of Town Portal",            0,       3,      1,      200,        0,        0,    0,         0,       21,       7,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    98 },
+	{ "Scroll of Healing",                0,       3,      1,       50,        0,        0,    0,         0,       21,       2,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    91 },
+	{ "Rune of Fire",                     0,       3,    193,      100,        0,        0,    0,         0,       47,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,   161 },
+	{ "Gold",                            11,       4,      5,        0,        0,        0,    0,         0,        0,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,     0 },
+	{ "The Undead Crown",                 7,       2,     77,    16650,        0,        0,    8,         2,       27,       0,         0,            0,           45,       50,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     1,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,     7 },
+	{ "Empyrean Band",                   12,       3,     18,     8000,        0,        0,    0, 270532608,       27,       0,         0,            0,            0,        0,       0,         0,      0,       2,       2,       2,       2,      0,      0,      0,        0,      0,          0,          0,         2,           0,     2,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,     8 },
+	{ "Ring of Truth",                   12,       3,     10,     9100,        0,        0,    0,         0,       27,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,     10,     10,     10,        0,    640,          0,         -1,         0,           0,     4,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    11 },
+	{ "Griswold's Edge",                  1,       1,     61,    42000,        4,       12,    0,    264208,       27,       0,         0,            0,           50,       50,       0,        25,      0,       0,       0,       0,       0,      0,      0,      0,     1280,  -1280,          0,          0,         0,           0,     8,         1,        10,         0,         0,         -1,         -1,       40,        0,        0,    31 },
+	{ "Bovine Plate",                     9,       2,    226,      400,        0,        0,  150,         0,       27,       0,         0,            0,          255,      255,       0,         0,      0,       0,       0,       0,       0,     30,     30,     30,    -3200,      0,          0,          0,         5,          -2,     9,         0,         0,         0,         0,         -1,         -1,       50,        0,        0,    32 },
+	// clang-format on
 };
 
 TEST(pack, UnPackItem_hellfire)
 {
 	dvl::ItemStruct id;
+	dvl::PkItemStruct is;
 
 	dvl::gbIsHellfire = true;
 	dvl::gbIsHellfireSaveGame = true;
 	dvl::gbIsMultiplayer = false;
 
-	for (size_t i = 0; i < sizeof(hellfireItems) / sizeof(*hellfireItems); i++) {
-		dvl::UnPackItem(&hellfireItems[i], &id);
+	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
+		dvl::UnPackItem(&PackedHellfireItems[i], &id);
 
-		ASSERT_STREQ(id._iIName, hellfireItemNames[i]);
+		CompareItems(&id, &HellfireItems[i]);
+
+		dvl::PackItem(&is, &id);
+
+		ComparePackedItems(&is, &PackedHellfireItems[i]);
 	}
 }
 
@@ -232,34 +405,40 @@ TEST(pack, UnPackItem_empty)
 	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
 }
 
+static void compareGold(const dvl::PkItemStruct *is, int iCurs)
+{
+	dvl::ItemStruct id;
+
+	dvl::UnPackItem(is, &id);
+
+	ASSERT_EQ(id._iCurs, iCurs);
+	ASSERT_EQ(id.IDidx, dvl::IDI_GOLD);
+	ASSERT_EQ(id._ivalue, is->wValue);
+	ASSERT_EQ(id._itype, dvl::ITYPE_GOLD);
+	ASSERT_EQ(id._iClass, dvl::ICLASS_GOLD);
+
+	dvl::PkItemStruct is2;
+	dvl::PackItem(&is2, &id);
+
+	ComparePackedItems(is, &is2);
+}
+
 TEST(pack, UnPackItem_gold_small)
 {
 	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
-	dvl::ItemStruct id;
-
-	dvl::UnPackItem(&is, &id);
-
-	ASSERT_EQ(id._iCurs, dvl::ICURS_GOLD_SMALL);
+	compareGold(&is, dvl::ICURS_GOLD_SMALL);
 }
 
 TEST(pack, UnPackItem_gold_medium)
 {
 	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
-	dvl::ItemStruct id;
-
-	dvl::UnPackItem(&is, &id);
-
-	ASSERT_EQ(id._iCurs, dvl::ICURS_GOLD_MEDIUM);
+	compareGold(&is, dvl::ICURS_GOLD_MEDIUM);
 }
 
 TEST(pack, UnPackItem_gold_large)
 {
 	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
-	dvl::ItemStruct id;
-
-	dvl::UnPackItem(&is, &id);
-
-	ASSERT_EQ(id._iCurs, dvl::ICURS_GOLD_LARGE);
+	compareGold(&is, dvl::ICURS_GOLD_LARGE);
 }
 
 TEST(pack, UnPackItem_ear)

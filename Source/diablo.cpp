@@ -1911,7 +1911,7 @@ static void game_logic()
 	CheckTriggers();
 	CheckQuests();
 	force_redraw |= 1;
-	pfile_update(FALSE);
+	pfile_update(false);
 
 	plrctrls_after_game_logic();
 }
