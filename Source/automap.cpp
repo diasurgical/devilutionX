@@ -595,16 +595,16 @@ static void DrawAutomapText(CelOutputBuffer out)
 
 	if (gbIsMultiplayer) {
 		strcat(strcpy(desc, "game: "), szPlayerName);
-		PrintGameStr(8, 20, desc, COL_GOLD);
+		PrintGameStr(out, 8, 20, desc, COL_GOLD);
 		nextline = 35;
 		if (szPlayerDescript[0]) {
 			strcat(strcpy(desc, "password: "), szPlayerDescript);
-			PrintGameStr(8, 35, desc, COL_GOLD);
+			PrintGameStr(out, 8, 35, desc, COL_GOLD);
 			nextline = 50;
 		}
 	}
 	if (setlevel) {
-		PrintGameStr(8, nextline, quest_level_names[(BYTE)setlvlnum], COL_GOLD);
+		PrintGameStr(out, 8, nextline, quest_level_names[(BYTE)setlvlnum], COL_GOLD);
 	} else if (currlevel != 0) {
 		if (currlevel < 17 || currlevel > 20) {
 			if (currlevel < 21 || currlevel > 24)
@@ -614,7 +614,7 @@ static void DrawAutomapText(CelOutputBuffer out)
 		} else {
 			sprintf(desc, "Level: Nest %i", currlevel - 16);
 		}
-		PrintGameStr(8, nextline, desc, COL_GOLD);
+		PrintGameStr(out, 8, nextline, desc, COL_GOLD);
 	}
 }
 

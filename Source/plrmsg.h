@@ -6,6 +6,8 @@
 #ifndef __PLRMSG_H__
 #define __PLRMSG_H__
 
+#include "engine.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
@@ -24,8 +26,8 @@ size_t EventPlrMsg(const char *pszFmt, ...);
 void SendPlrMsg(int pnum, const char *pszStr);
 void ClearPlrMsg();
 void InitPlrMsg();
-void DrawPlrMsg();
-void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col);
+void DrawPlrMsg(CelOutputBuffer out);
+void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, const char *str, BYTE col);
 
 #ifdef __cplusplus
 }

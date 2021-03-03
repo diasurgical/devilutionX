@@ -84,7 +84,7 @@ void InitPlrMsg()
 	plr_msg_slot = 0;
 }
 
-void DrawPlrMsg()
+void DrawPlrMsg(CelOutputBuffer out)
 {
 	int i;
 	DWORD x = 10 + SCREEN_X;
@@ -105,13 +105,14 @@ void DrawPlrMsg()
 	pMsg = plr_msgs;
 	for (i = 0; i < PMSG_COUNT; i++) {
 		if (pMsg->str[0])
-			PrintPlrMsg(x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
+			PrintPlrMsg(out, x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
 		pMsg++;
 		y += 35;
 	}
 }
 
-void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
+// TODO: Can be made static
+void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
 {
 	int line = 0;
 
@@ -141,7 +142,7 @@ void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
 			c = gbFontTransTbl[(BYTE)*str++];
 			c = fontframe[c];
 			if (c)
-				PrintChar(sx, y, c, col);
+				PrintChar(out, sx, y, c, col);
 			sx += fontkern[c] + 1;
 		}
 

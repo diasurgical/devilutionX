@@ -447,7 +447,7 @@ void InitHelp()
 	helpflag = FALSE;
 }
 
-static void DrawHelpLine(int x, int y, char *text, char color)
+static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, char color)
 {
 	int sx, sy, width;
 	BYTE c;
@@ -462,7 +462,7 @@ static void DrawHelpLine(int x, int y, char *text, char color)
 		width += fontkern[c] + 1;
 		if (c) {
 			if (width <= 577)
-				PrintChar(sx, sy, c, color);
+				PrintChar(out, sx, sy, c, color);
 		}
 		sx += fontkern[c] + 1;
 	}
@@ -477,9 +477,9 @@ void DrawHelp(CelOutputBuffer out)
 	DrawSTextHelp();
 	DrawQTextBack(out);
 	if (gbIsHellfire)
-		PrintSString(0, 2, TRUE, "Hellfire Help", COL_GOLD, 0);
+		PrintSString(out, 0, 2, TRUE, "Hellfire Help", COL_GOLD, 0);
 	else
-		PrintSString(0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
+		PrintSString(out, 0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
 	DrawSLine(5);
 
 	s = &gszHelpText[0];
@@ -553,14 +553,14 @@ void DrawHelp(CelOutputBuffer out)
 		}
 		if (c != 0) {
 			tempstr[c] = '\0';
-			DrawHelpLine(0, i, tempstr, col);
+			DrawHelpLine(out, 0, i, tempstr, col);
 		}
 		if (*s == '|') {
 			s++;
 		}
 	}
 
-	PrintSString(0, 23, TRUE, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
+	PrintSString(out, 0, 23, TRUE, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
 }
 
 void DisplayHelp()

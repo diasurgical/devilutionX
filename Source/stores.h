@@ -6,6 +6,8 @@
 #ifndef __STORES_H__
 #define __STORES_H__
 
+#include "engine.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
@@ -41,7 +43,7 @@ void InitStores();
 int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
-void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int val);
+void PrintSString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, char col, int val);
 void DrawSLine(int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);

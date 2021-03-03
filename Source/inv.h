@@ -19,7 +19,7 @@ extern const InvXY InvRect[73];
 void FreeInvGFX();
 void InitInv();
 void DrawInv();
-void DrawInvBelt();
+void DrawInvBelt(CelOutputBuffer out);
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag);
 BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item);
 BOOL GoldAutoPlace(int pnum);

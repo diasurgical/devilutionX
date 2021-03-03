@@ -124,7 +124,7 @@ static void DrawSTextBack(CelOutputBuffer out)
 	DrawHalfTransparentRectTo(out, PANEL_LEFT + 347, UI_OFFSET_Y + 28, 265, 297);
 }
 
-void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int val)
+void PrintSString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, char col, int val)
 {
 	int len, width, sx, sy, i, k, s;
 	int xx, yy;
@@ -159,7 +159,7 @@ void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int v
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c != 0 && k <= yy) {
-			PrintChar(sx, sy, c, col);
+			PrintChar(out, sx, sy, c, col);
 		}
 		sx += fontkern[c] + 1;
 	}
@@ -171,7 +171,7 @@ void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int v
 			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
 			sx -= fontkern[c] + 1;
 			if (c != 0) {
-				PrintChar(sx, sy, c, col);
+				PrintChar(out, sx, sy, c, col);
 			}
 		}
 	}
@@ -209,23 +209,23 @@ void DrawSLine(int y)
 		memcpy(dst, src, BUFFER_WIDTH - line);
 }
 
-void DrawSSlider(int y1, int y2)
+static void DrawSSlider(CelOutputBuffer out, int y1, int y2)
 {
 	int yd1, yd2, yd3;
 
 	yd1 = y1 * 12 + 44 + SCREEN_Y + UI_OFFSET_Y;
 	yd2 = y2 * 12 + 44 + SCREEN_Y + UI_OFFSET_Y;
 	if (stextscrlubtn != -1)
-		CelDraw(PANEL_X + 601, yd1, pSTextSlidCels, 12, 12);
+		CelDrawTo(out, PANEL_X + 601, yd1, pSTextSlidCels, 12, 12);
 	else
-		CelDraw(PANEL_X + 601, yd1, pSTextSlidCels, 10, 12);
+		CelDrawTo(out, PANEL_X + 601, yd1, pSTextSlidCels, 10, 12);
 	if (stextscrldbtn != -1)
-		CelDraw(PANEL_X + 601, yd2, pSTextSlidCels, 11, 12);
+		CelDrawTo(out, PANEL_X + 601, yd2, pSTextSlidCels, 11, 12);
 	else
-		CelDraw(PANEL_X + 601, yd2, pSTextSlidCels, 9, 12);
+		CelDrawTo(out, PANEL_X + 601, yd2, pSTextSlidCels, 9, 12);
 	yd1 += 12;
 	for (yd3 = yd1; yd3 < yd2; yd3 += 12) {
-		CelDraw(PANEL_X + 601, yd3, pSTextSlidCels, 14, 12);
+		CelDrawTo(out, PANEL_X + 601, yd3, pSTextSlidCels, 14, 12);
 	}
 	if (stextsel == 22)
 		yd3 = stextlhold;
@@ -235,7 +235,7 @@ void DrawSSlider(int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDraw(PANEL_X + 601, (y1 + 1) * 12 + 44 + SCREEN_Y + UI_OFFSET_Y + yd3, pSTextSlidCels, 13, 12);
+	CelDrawTo(out, PANEL_X + 601, (y1 + 1) * 12 + 44 + SCREEN_Y + UI_OFFSET_Y + yd3, pSTextSlidCels, 13, 12);
 }
 
 void DrawSTextHelp()
@@ -1612,11 +1612,11 @@ void DrawSText(CelOutputBuffer out)
 		if (stext[i]._sline)
 			DrawSLine(i);
 		if (stext[i]._sstr[0])
-			PrintSString(stext[i]._sx, i, stext[i]._sjust, stext[i]._sstr, stext[i]._sclr, stext[i]._sval);
+			PrintSString(out, stext[i]._sx, i, stext[i]._sjust, stext[i]._sstr, stext[i]._sclr, stext[i]._sval);
 	}
 
 	if (stextscrl)
-		DrawSSlider(4, 20);
+		DrawSSlider(out, 4, 20);
 }
 
 void STextESC()

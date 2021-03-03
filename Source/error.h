@@ -6,6 +6,8 @@
 #ifndef __ERROR_H__
 #define __ERROR_H__
 
+#include "engine.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
@@ -17,7 +19,7 @@ extern char msgflag;
 
 void InitDiabloMsg(char e);
 void ClrDiabloMsg();
-void DrawDiabloMsg();
+void DrawDiabloMsg(CelOutputBuffer out);
 
 #ifdef __cplusplus
 }
