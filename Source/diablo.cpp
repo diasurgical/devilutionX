@@ -406,7 +406,7 @@ static void SaveOptions()
 	setIniInt("Audio", "Music Volume", sgOptions.nMusicVolume);
 	setIniInt("Audio", "Walking Sound", sgOptions.bWalkingSound);
 
-#ifdef __vita__
+#ifndef __vita__
 	setIniInt("Graphics", "Width", sgOptions.nWidth);
 	setIniInt("Graphics", "Height", sgOptions.nHeight);
 #endif
