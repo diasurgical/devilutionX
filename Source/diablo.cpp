@@ -1074,10 +1074,10 @@ static void PressKey(int vkey)
 	} else if (vkey == DVL_VK_TAB) {
 		DoAutoMap();
 	} else if (vkey == DVL_VK_SPACE) {
-		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
+		if (!chrflag && !questlog && (invflag || sbookflag) && MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
 			SetCursorPos(MouseX + 160, MouseY);
 		}
-		if (!invflag && chrflag && MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
+		if (!invflag && !sbookflag && (chrflag || questlog) && MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
 			SetCursorPos(MouseX - 160, MouseY);
 		}
 		helpflag = FALSE;
@@ -1133,44 +1133,59 @@ static void PressChar(WPARAM vkey)
 	case 'I':
 	case 'i':
 		if (stextflag == STORE_NONE) {
-			sbookflag = FALSE;
 			invflag = !invflag;
-			if (!invflag || chrflag) {
-				if (MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
-					SetCursorPos(MouseX + 160, MouseY);
-				}
-			} else {
-				if (MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
-					SetCursorPos(MouseX - 160, MouseY);
+			if (!chrflag && !questlog && PANELS_COVER) {
+				if (!invflag) { // We closed the invetory
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+					}
+				} else if (!sbookflag) { // We opened the invetory
+					if (MouseX > 160 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX - 160, MouseY);
+					}
 				}
 			}
+			sbookflag = FALSE;
 		}
 		return;
 	case 'C':
 	case 'c':
 		if (stextflag == STORE_NONE) {
-			questlog = FALSE;
 			chrflag = !chrflag;
-			if (!chrflag || invflag) {
-				if (MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
-					SetCursorPos(MouseX - 160, MouseY);
-				}
-			} else {
-				if (MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
-					SetCursorPos(MouseX + 160, MouseY);
+			if (!invflag && !sbookflag && PANELS_COVER) {
+				if (!chrflag) { // We closed the character sheet
+					if (MouseX > 160 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX - 160, MouseY);
+					}
+				} else if (!questlog) { // We opened the character sheet
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+					}
 				}
 			}
+			questlog = FALSE;
 		}
 		return;
 	case 'Q':
 	case 'q':
 		if (stextflag == STORE_NONE) {
-			chrflag = FALSE;
 			if (!questlog) {
 				StartQuestlog();
 			} else {
 				questlog = FALSE;
 			}
+			if (!invflag && !sbookflag && PANELS_COVER) {
+				if (!questlog) { // We closed the quest log
+					if (MouseX > 160 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX - 160, MouseY);
+					}
+				} else if (!chrflag) { // We opened the character quest log
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+					}
+				}
+			}
+			chrflag = FALSE;
 		}
 		return;
 	case 'Z':
@@ -1181,7 +1196,10 @@ static void PressChar(WPARAM vkey)
 	case 'S':
 	case 's':
 		if (stextflag == STORE_NONE) {
+			chrflag = FALSE;
+			questlog = FALSE;
 			invflag = FALSE;
+			sbookflag = FALSE;
 			if (!spselflag) {
 				DoSpeedBook();
 			} else {
@@ -1193,8 +1211,19 @@ static void PressChar(WPARAM vkey)
 	case 'B':
 	case 'b':
 		if (stextflag == STORE_NONE) {
-			invflag = FALSE;
 			sbookflag = !sbookflag;
+			if (!chrflag && !questlog && PANELS_COVER) {
+				if (!sbookflag) { // We closed the invetory
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+					}
+				} else if (!invflag) { // We opened the invetory
+					if (MouseX > 160 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX - 160, MouseY);
+					}
+				}
+			}
+			invflag = FALSE;
 		}
 		return;
 	case '+':
