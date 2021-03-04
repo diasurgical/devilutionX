@@ -80,7 +80,7 @@ void diablo_quit(int exitStatus);
 int DiabloMain(int argc, char **argv);
 BOOL TryIconCurs();
 void diablo_pause_game();
-BOOL PressEscKey();
+bool PressEscKey();
 void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void LoadGameLevel(BOOL firstflag, int lvldir);
