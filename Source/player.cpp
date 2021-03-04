@@ -287,25 +287,16 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			pAnim = (BYTE *)p->_pHAnim;
 			break;
 		case PFILE_LIGHTNING:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
 			szCel = "LM";
 			pData = p->_pLData;
 			pAnim = (BYTE *)p->_pLAnim;
 			break;
 		case PFILE_FIRE:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
 			szCel = "FM";
 			pData = p->_pFData;
 			pAnim = (BYTE *)p->_pFAnim;
 			break;
 		case PFILE_MAGIC:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
 			szCel = "QM";
 			pData = p->_pTData;
 			pAnim = (BYTE *)p->_pTAnim;
@@ -1522,27 +1513,25 @@ void StartSpell(int pnum, int d, int cx, int cy)
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN) {
-		switch (spelldata[plr[pnum]._pSpell].sType) {
-		case STYPE_FIRE:
-			if (!(plr[pnum]._pGFXLoad & PFILE_FIRE)) {
-				LoadPlrGFX(pnum, PFILE_FIRE);
-			}
-			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
-			break;
-		case STYPE_LIGHTNING:
-			if (!(plr[pnum]._pGFXLoad & PFILE_LIGHTNING)) {
-				LoadPlrGFX(pnum, PFILE_LIGHTNING);
-			}
-			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
-			break;
-		case STYPE_MAGIC:
-			if (!(plr[pnum]._pGFXLoad & PFILE_MAGIC)) {
-				LoadPlrGFX(pnum, PFILE_MAGIC);
-			}
-			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
-			break;
+	switch (spelldata[plr[pnum]._pSpell].sType) {
+	case STYPE_FIRE:
+		if (!(plr[pnum]._pGFXLoad & PFILE_FIRE)) {
+			LoadPlrGFX(pnum, PFILE_FIRE);
 		}
+		NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
+		break;
+	case STYPE_LIGHTNING:
+		if (!(plr[pnum]._pGFXLoad & PFILE_LIGHTNING)) {
+			LoadPlrGFX(pnum, PFILE_LIGHTNING);
+		}
+		NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
+		break;
+	case STYPE_MAGIC:
+		if (!(plr[pnum]._pGFXLoad & PFILE_MAGIC)) {
+			LoadPlrGFX(pnum, PFILE_MAGIC);
+		}
+		NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
+		break;
 	}
 
 	PlaySfxLoc(spelldata[plr[pnum]._pSpell].sSFX, plr[pnum]._px, plr[pnum]._py);
@@ -2980,13 +2969,7 @@ BOOL PM_DoSpell(int pnum)
 
 	plr[pnum]._pVar8++;
 
-	if (leveltype == DTYPE_TOWN) {
-		if (plr[pnum]._pVar8 > plr[pnum]._pSFrames) {
-			StartWalkStand(pnum);
-			ClearPlrPVars(pnum);
-			return TRUE;
-		}
-	} else if (plr[pnum]._pAnimFrame == plr[pnum]._pSFrames) {
+	if (plr[pnum]._pAnimFrame == plr[pnum]._pSFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return TRUE;
