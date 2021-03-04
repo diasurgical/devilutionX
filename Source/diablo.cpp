@@ -845,43 +845,69 @@ static void ReleaseKey(int vkey)
 		CaptureScreen();
 }
 
-BOOL PressEscKey()
+static void ClosePanels()
 {
-	BOOL rv = FALSE;
+    if (PANELS_COVER) {
+        if (!chrflag && !questlog && (invflag || sbookflag) && MouseX < 480 && MouseY < PANEL_TOP) {
+            SetCursorPos(MouseX + 160, MouseY);
+        } else if (!invflag && !sbookflag && (chrflag || questlog) && MouseX > 160 && MouseY < PANEL_TOP) {
+            SetCursorPos(MouseX - 160, MouseY);
+        }
+    }
+    invflag = FALSE;
+    chrflag = FALSE;
+    sbookflag = FALSE;
+    questlog = FALSE;
+}
+
+bool PressEscKey()
+{
+	bool rv = false;
 
 	if (doomflag) {
 		doom_close();
-		rv = TRUE;
+		rv = true;
 	}
+
 	if (helpflag) {
 		helpflag = FALSE;
-		rv = TRUE;
+		rv = true;
 	}
 
 	if (qtextflag) {
 		qtextflag = FALSE;
 		stream_stop();
-		rv = TRUE;
-	} else if (stextflag) {
+		rv = true;
+	}
+
+	if (stextflag) {
 		STextESC();
-		rv = TRUE;
+		rv = true;
 	}
 
 	if (msgflag) {
 		msgdelay = 0;
-		rv = TRUE;
+		rv = true;
 	}
+
 	if (talkflag) {
 		control_reset_talk();
-		rv = TRUE;
+		rv = true;
 	}
+
 	if (dropGoldFlag) {
 		control_drop_gold(DVL_VK_ESCAPE);
-		rv = TRUE;
+		rv = true;
 	}
+
 	if (spselflag) {
 		spselflag = FALSE;
-		rv = TRUE;
+		rv = true;
+	}
+
+	if (invflag || chrflag || sbookflag || questlog) {
+		ClosePanels();
+		rv = true;
 	}
 
 	return rv;
@@ -1074,22 +1100,13 @@ static void PressKey(int vkey)
 	} else if (vkey == DVL_VK_TAB) {
 		DoAutoMap();
 	} else if (vkey == DVL_VK_SPACE) {
-		if (!chrflag && !questlog && (invflag || sbookflag) && MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
-			SetCursorPos(MouseX + 160, MouseY);
-		}
-		if (!invflag && !sbookflag && (chrflag || questlog) && MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
-			SetCursorPos(MouseX - 160, MouseY);
-		}
+		ClosePanels();
 		helpflag = FALSE;
-		invflag = FALSE;
-		chrflag = FALSE;
-		sbookflag = FALSE;
 		spselflag = FALSE;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
 			qtextflag = FALSE;
 			stream_stop();
 		}
-		questlog = FALSE;
 		automapflag = FALSE;
 		msgdelay = 0;
 		gamemenu_off();
