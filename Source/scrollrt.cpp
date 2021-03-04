@@ -1456,20 +1456,16 @@ static void DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt)
  */
 static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw_sbar, BOOL draw_btn)
 {
-	int ysize;
-
-	ysize = dwHgt;
-
 	if (!gbActive) {
 		return;
 	}
 
-	assert(ysize >= 0 && ysize <= SCREEN_HEIGHT);
+	assert(dwHgt >= 0 && dwHgt <= SCREEN_HEIGHT);
 
-	if (ysize > 0) {
-		DoBlitScreen(0, 0, SCREEN_WIDTH, ysize);
+	if (dwHgt > 0) {
+		DoBlitScreen(0, 0, SCREEN_WIDTH, dwHgt);
 	}
-	if (ysize < SCREEN_HEIGHT) {
+	if (dwHgt < SCREEN_HEIGHT) {
 		if (draw_sbar) {
 			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
 		}
@@ -1506,13 +1502,11 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
  */
 void scrollrt_draw_game_screen(BOOL draw_cursor)
 {
-	int hgt;
+	int hgt = 0;
 
 	if (force_redraw == 255) {
 		force_redraw = 0;
 		hgt = SCREEN_HEIGHT;
-	} else {
-		hgt = 0;
 	}
 
 	if (draw_cursor) {
@@ -1536,24 +1530,25 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
  */
 void DrawAndBlit()
 {
-	int hgt;
-	BOOL ddsdesc, ctrlPan;
-
 	if (!gbRunGame) {
 		return;
 	}
+
+	int hgt = 0;
+	bool ddsdesc = false;
+	bool ctrlPan = false;
 
 	if (SCREEN_WIDTH > PANEL_WIDTH || force_redraw == 255) {
 		drawhpflag = TRUE;
 		drawmanaflag = TRUE;
 		drawbtnflag = TRUE;
 		drawsbarflag = TRUE;
-		ddsdesc = FALSE;
-		ctrlPan = TRUE;
+		ddsdesc = false;
+		ctrlPan = true;
 		hgt = SCREEN_HEIGHT;
 	} else if (force_redraw == 1) {
-		ddsdesc = TRUE;
-		ctrlPan = FALSE;
+		ddsdesc = true;
+		ctrlPan = false;
 		hgt = VIEWPORT_HEIGHT;
 	}
 
