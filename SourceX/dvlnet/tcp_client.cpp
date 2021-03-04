@@ -117,7 +117,6 @@ bool tcp_client::SNetLeaveGame(int type)
 {
 	auto ret = base::SNetLeaveGame(type);
 	poll();
-	local_server.reset();
 	return ret;
 }
 
