@@ -952,6 +952,12 @@ void DoPanBtn()
 		}
 	}
 	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
+		if (SDL_GetModState() & KMOD_SHIFT) {
+			plr[myplr]._pRSpell = SPL_INVALID;
+			plr[myplr]._pRSplType = RSPLTYPE_INVALID;
+			force_redraw = 255;
+			return;
+		}
 		DoSpeedBook();
 		gamemenu_off();
 	}
