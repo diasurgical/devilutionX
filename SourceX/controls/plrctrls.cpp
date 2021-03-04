@@ -318,7 +318,7 @@ void CheckPlayerNearby()
 		return;
 
 	int spl = plr[myplr]._pRSpell;
-	if (FriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
+	if (gbFriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
@@ -441,7 +441,7 @@ void Interact()
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
-	} else if (leveltype != DTYPE_TOWN && pcursplr != -1 && !FriendlyMode) {
+	} else if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
 		NetSendCmdParam1(true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 	}
 }

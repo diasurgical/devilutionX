@@ -71,7 +71,9 @@ int dbgmon;
 int arrowdebug;
 #endif
 /** Specifies whether players are in non-PvP mode. */
-BOOL FriendlyMode = TRUE;
+bool gbFriendlyMode = true;
+/** Specifies players will still damage other players in non-PvP mode. */
+bool gbFriendlyFire;
 /** Default quick messages */
 const char *const spszMsgTbl[4] = {
 	"I need help! Come Here!",
@@ -421,6 +423,7 @@ static void SaveOptions()
 	setIniInt("Game", "Grab Input", sgOptions.bGrabInput);
 	setIniInt("Game", "Theo Quest", sgOptions.bTheoQuest);
 	setIniInt("Game", "Cow Quest", sgOptions.bCowQuest);
+	setIniInt("Game", "Friendly Fire", sgOptions.bFriendlyFire);
 	setIniInt("Game", "Test Bard", sgOptions.bTestBard);
 	setIniInt("Game", "Test Barbarian", sgOptions.bTestBarbarian);
 
@@ -462,6 +465,7 @@ static void LoadOptions()
 	sgOptions.bGrabInput = getIniBool("Game", "Grab Input", false);
 	sgOptions.bTheoQuest = getIniBool("Game", "Theo Quest", false);
 	sgOptions.bCowQuest = getIniBool("Game", "Cow Quest", false);
+	sgOptions.bFriendlyFire = getIniBool("Game", "Friendly Fire", true);
 	sgOptions.bTestBard = getIniBool("Game", "Test Bard", false);
 	sgOptions.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
 
@@ -596,7 +600,7 @@ static BOOL LeftMouseCmd(BOOL bShift)
 				} else {
 					NetSendCmdParam1(TRUE, CMD_RATTACKID, pcursmonst);
 				}
-			} else if (pcursplr != -1 && !FriendlyMode) {
+			} else if (pcursplr != -1 && !gbFriendlyMode) {
 				NetSendCmdParam1(TRUE, CMD_RATTACKPID, pcursplr);
 			}
 		} else {
@@ -612,7 +616,7 @@ static BOOL LeftMouseCmd(BOOL bShift)
 				}
 			} else if (pcursmonst != -1) {
 				NetSendCmdParam1(TRUE, CMD_ATTACKID, pcursmonst);
-			} else if (pcursplr != -1 && !FriendlyMode) {
+			} else if (pcursplr != -1 && !gbFriendlyMode) {
 				NetSendCmdParam1(TRUE, CMD_ATTACKPID, pcursplr);
 			}
 		}

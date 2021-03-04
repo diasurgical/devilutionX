@@ -24,6 +24,7 @@ typedef struct GameData {
 	Uint8 bJogInTown;
 	Uint8 bTheoQuest;
 	Uint8 bCowQuest;
+	Uint8 bFriendlyFire;
 } GameData;
 
 typedef struct _SNETPROGRAMDATA {

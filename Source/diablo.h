@@ -43,6 +43,7 @@ typedef struct Options {
 	bool bCowQuest;      // Enable the cow quest
 	bool bTestBard;      // Enable the bard hero class
 	bool bTestBarbarian; // Enable the babarian hero class
+	bool bFriendlyFire;  // Will players still damage other players in non-PvP mode
 
 	char szBindAddress[129]; // Optionally bind to a specific network interface
 } Options;
@@ -106,7 +107,8 @@ extern int dbgplr;
 extern int dbgqst;
 extern int dbgmon;
 #endif
-extern BOOL FriendlyMode;
+extern bool gbFriendlyMode;
+extern bool gbFriendlyFire;
 
 #ifdef __cplusplus
 }

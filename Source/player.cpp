@@ -2741,7 +2741,7 @@ BOOL PM_DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			didhit = PlrHitMonst(pnum, m);
-		} else if (dPlayer[dx][dy] != 0 && !FriendlyMode) {
+		} else if (dPlayer[dx][dy] != 0 && (!gbFriendlyMode || gbFriendlyFire)) {
 			BYTE p = dPlayer[dx][dy];
 			if (dPlayer[dx][dy] > 0) {
 				p = dPlayer[dx][dy] - 1;
