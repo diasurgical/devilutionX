@@ -101,8 +101,6 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
 	printf("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
-	printf("    %-20s %-30s\n", "--bardtest", "Enable the Bard class");
-	printf("    %-20s %-30s\n", "--barbariantest", "Enable the Barbarian class");
 	printf("\nHellfire options:\n");
 	printf("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
 	printf("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
@@ -153,10 +151,6 @@ static void diablo_parse_flags(int argc, char **argv)
 			forceDiablo = TRUE;
 		} else if (strcasecmp("--nestart", argv[i]) == 0) {
 			gbNestArt = true;
-		} else if (strcasecmp("--bardtest", argv[i]) == 0) {
-			gbBard = true;
-		} else if (strcasecmp("--barbariantest", argv[i]) == 0) {
-			gbBarbarian = true;
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = TRUE;
@@ -427,6 +421,8 @@ static void SaveOptions()
 	setIniInt("Game", "Grab Input", sgOptions.bGrabInput);
 	setIniInt("Game", "Theo Quest", sgOptions.bTheoQuest);
 	setIniInt("Game", "Cow Quest", sgOptions.bCowQuest);
+	setIniInt("Game", "Test Bard", sgOptions.bTestBard);
+	setIniInt("Game", "Test Barbarian", sgOptions.bTestBarbarian);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
 }
@@ -466,6 +462,8 @@ static void LoadOptions()
 	sgOptions.bGrabInput = getIniBool("Game", "Grab Input", false);
 	sgOptions.bTheoQuest = getIniBool("Game", "Theo Quest", false);
 	sgOptions.bCowQuest = getIniBool("Game", "Cow Quest", false);
+	sgOptions.bTestBard = getIniBool("Game", "Test Bard", false);
+	sgOptions.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
 }

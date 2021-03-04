@@ -36,11 +36,13 @@ typedef struct Options {
 	Sint32 nGammaCorrection;   // Gamma correction level
 	bool bColorCycling;        // Enable color cycling animations
 
-	Sint32 nTickRate; // Game play ticks per secound
-	bool bJogInTown;  // Enable double walk speed when in town
-	bool bGrabInput;  // Do not let the mouse leave the application window
-	bool bTheoQuest;  // Enable the Theo quest
-	bool bCowQuest;   // Enable the cow quest
+	Sint32 nTickRate;    // Game play ticks per secound
+	bool bJogInTown;     // Enable double walk speed when in town
+	bool bGrabInput;     // Do not let the mouse leave the application window
+	bool bTheoQuest;     // Enable the Theo quest
+	bool bCowQuest;      // Enable the cow quest
+	bool bTestBard;      // Enable the bard hero class
+	bool bTestBarbarian; // Enable the babarian hero class
 
 	char szBindAddress[129]; // Optionally bind to a specific network interface
 } Options;
