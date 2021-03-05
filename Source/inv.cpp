@@ -364,9 +364,9 @@ void DrawInv(CelOutputBuffer out)
 				const int dst_x = RIGHT_PANEL_X + (frame_width == INV_SLOT_SIZE_PX ? 261 : 247);
 				const int dst_y = SCREEN_Y + 160;
 				if (frame <= 179) {
-					CelClippedBlitLightTrans(dst_x, dst_y, pCursCels, frame, frame_width);
+					CelClippedBlitLightTransTo(out, dst_x, dst_y, pCursCels, frame, frame_width);
 				} else {
-					CelClippedBlitLightTrans(dst_x, dst_y, pCursCels2, frame - 179, frame_width);
+					CelClippedBlitLightTransTo(out, dst_x, dst_y, pCursCels2, frame - 179, frame_width);
 				}
 
 				cel_transparency_active = FALSE;

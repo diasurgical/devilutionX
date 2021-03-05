@@ -155,10 +155,6 @@ void CelClippedDrawLightTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, 
  * @param nWidth Width of sprite
  */
 void CelClippedBlitLightTransTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
-inline void CelClippedBlitLightTrans(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
-{
-	return CelClippedBlitLightTransTo(GlobalBackBuffer(), sx, sy, pCelBuff, nCel, nWidth);
-}
 
 /**
  * @brief Blit CEL sprite, and apply lighting, to the back buffer at the given coordinates, translated to a red hue
