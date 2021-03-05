@@ -47,7 +47,7 @@ extern int initialDropGoldValue;
 extern BOOL panbtndown;
 extern BOOL spselflag;
 
-void DrawSpellList();
+void DrawSpellList(CelOutputBuffer out);
 void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);

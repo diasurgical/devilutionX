@@ -230,16 +230,17 @@ int SpellPages[6][7] = {
 #define SPLICONLAST (gbIsHellfire ? 52 : 43)
 
 /**
- * Draw spell cell onto the back buffer.
- * @param xp Back buffer coordinate
- * @param yp Back buffer coordinate
+ * Draw spell cell onto the given buffer.
+ * @param out Output buffer
+ * @param xp Buffer coordinate
+ * @param yp Buffer coordinate
  * @param Trans Pointer to the cel buffer.
  * @param nCel Index of the cel frame to draw. 0 based.
  * @param w Width of the frame.
  */
-void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w)
+static void DrawSpellCel(CelOutputBuffer out, int xp, int yp, BYTE *Trans, int nCel, int w)
 {
-	CelDrawLight(xp, yp, Trans, nCel, w, SplTransTbl);
+	CelDrawLightTo(out, xp, yp, Trans, nCel, w, SplTransTbl);
 }
 
 void SetSpellTrans(char t)
@@ -302,7 +303,7 @@ void SetSpellTrans(char t)
 /**
  * Sets the spell frame to draw and its position then draws it.
  */
-void DrawSpell()
+static void DrawSpell(CelOutputBuffer out)
 {
 	char st;
 	int spl, tlvl;
@@ -324,12 +325,12 @@ void DrawSpell()
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
 	if (spl != SPL_INVALID)
-		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], SPLICONLENGTH);
+		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], SPLICONLENGTH);
 	else
-		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, SPLICONLENGTH);
+		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, SPLICONLENGTH);
 }
 
-void DrawSpellList()
+void DrawSpellList(CelOutputBuffer out)
 {
 	int i, j, x, y, c, s, t, v, lx, ly, trans;
 	unsigned __int64 mask, spl;
@@ -377,7 +378,7 @@ void DrawSpellList()
 			}
 			if (currlevel == 0 && !spelldata[j].sTownSpell)
 				SetSpellTrans(RSPLTYPE_INVALID);
-			DrawSpellCel(x, y, pSpellCels, SpellITbl[j], SPLICONLENGTH);
+			DrawSpellCel(out, x, y, pSpellCels, SpellITbl[j], SPLICONLENGTH);
 			lx = x - BORDER_LEFT;
 			ly = y - BORDER_TOP - SPLICONLENGTH;
 			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
@@ -385,7 +386,7 @@ void DrawSpellList()
 				pSplType = i;
 				if (plr[myplr]._pClass == PC_MONK && j == SPL_SEARCH)
 					pSplType = RSPLTYPE_SKILL;
-				DrawSpellCel(x, y, pSpellCels, c, SPLICONLENGTH);
+				DrawSpellCel(out, x, y, pSpellCels, c, SPLICONLENGTH);
 				switch (pSplType) {
 				case RSPLTYPE_SKILL:
 					sprintf(infostr, "%s Skill", spelldata[pSpell].sSkillText);
@@ -436,7 +437,7 @@ void DrawSpellList()
 				}
 				for (t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
-						DrawSpellCel(x, y, pSpellCels, t + SPLICONLAST + 5, SPLICONLENGTH);
+						DrawSpellCel(out, x, y, pSpellCels, t + SPLICONLAST + 5, SPLICONLENGTH);
 						sprintf(tempstr, "Spell Hotkey #F%i", t + 5);
 						AddPanelString(tempstr, TRUE);
 					}
@@ -758,7 +759,7 @@ void UpdateManaFlask(CelOutputBuffer out)
 	if (filled != 0)
 		DrawPanelBox(out, 464, 85 - filled, 88, filled, PANEL_X + 464, PANEL_Y + 69 - filled);
 
-	DrawSpell();
+	DrawSpell(out);
 }
 
 static CelOutputBuffer AllocCelOutputBuffer(BYTE **raw, size_t width, size_t height)
@@ -1882,10 +1883,10 @@ void DrawSpellBook(CelOutputBuffer out)
 		if (sn != -1 && spl & SPELLBIT(sn)) {
 			st = GetSBookTrans(sn, TRUE);
 			SetSpellTrans(st);
-			DrawSpellCel(RIGHT_PANEL_X + 11, yp, pSBkIconCels, SpellITbl[sn], 37);
+			DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, pSBkIconCels, SpellITbl[sn], 37);
 			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(RIGHT_PANEL_X + 11, yp, pSBkIconCels, SPLICONLAST, 37);
+				DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, pSBkIconCels, SPLICONLAST, 37);
 			}
 			PrintSBookStr(out, 10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
 			switch (GetSBookTrans(sn, FALSE)) {

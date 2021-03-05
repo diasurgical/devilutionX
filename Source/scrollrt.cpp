@@ -1257,7 +1257,7 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 		DrawQText(out);
 	}
 	if (spselflag) {
-		DrawSpellList();
+		DrawSpellList(out);
 	}
 	if (dropGoldFlag) {
 		DrawGoldSplit(out, dropGoldValue);
