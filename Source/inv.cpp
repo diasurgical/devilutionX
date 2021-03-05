@@ -194,9 +194,9 @@ void DrawInv(CelOutputBuffer out)
 
 		if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
 			if (frame <= 179) {
-				CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		} else {
 			if (frame <= 179) {
@@ -230,9 +230,9 @@ void DrawInv(CelOutputBuffer out)
 
 		if (plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
 			if (frame <= 179) {
-				CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		} else {
 			if (frame <= 179) {
@@ -266,9 +266,9 @@ void DrawInv(CelOutputBuffer out)
 
 		if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
 			if (frame <= 179) {
-				CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		} else {
 			if (frame <= 179) {
@@ -302,9 +302,9 @@ void DrawInv(CelOutputBuffer out)
 
 		if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
 			if (frame <= 179) {
-				CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		} else {
 			if (frame <= 179) {
@@ -341,9 +341,9 @@ void DrawInv(CelOutputBuffer out)
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 			if (frame <= 179) {
-				CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+				CelClippedDrawTo(out, screen_x, screen_y, pCursCels, frame, frame_width);
 			} else {
-				CelClippedDraw(screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+				CelClippedDrawTo(out, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
 			}
 		} else {
 			if (frame <= 179) {
@@ -399,9 +399,9 @@ void DrawInv(CelOutputBuffer out)
 
 		if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 			if (frame <= 179) {
-				CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+				CelClippedDrawTo(out, screen_x, screen_y, pCursCels, frame, frame_width);
 			} else {
-				CelClippedDraw(screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+				CelClippedDrawTo(out, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
 			}
 		} else {
 			if (frame <= 179) {
@@ -435,9 +435,9 @@ void DrawInv(CelOutputBuffer out)
 
 		if (plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
 			if (frame <= 179) {
-				CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		} else {
 			if (frame <= 179) {
@@ -493,12 +493,14 @@ void DrawInv(CelOutputBuffer out)
 
 			if (plr[myplr].InvList[ii]._iStatFlag) {
 				if (frame <= 179) {
-					CelClippedDraw(
+					CelClippedDrawTo(
+					    out,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels, frame, frame_width);
 				} else {
-					CelClippedDraw(
+					CelClippedDrawTo(
+					    out,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels2, frame - 179, frame_width);
