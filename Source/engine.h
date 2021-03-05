@@ -254,18 +254,19 @@ void SetPixel(CelOutputBuffer out, int sx, int sy, BYTE col);
 void Cl2Draw(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 
 /**
- * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the back buffer at the given coordianates
+ * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the given buffer at the given coordianates
  * @param col Color index from current palette
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param out Output buffer
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  * @param pCelBuff CL2 buffer
  * @param nCel CL2 frame number
  * @param nWidth Width of sprite
  */
-void Cl2DrawOutline(BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void Cl2DrawOutline(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 
 /**
- * @brief Blit CL2 sprite, and apply a given lighting, to the back buffer at the given coordianates
+ * @brief Blit CL2 sprite, and apply a given lighting, to the given buffer at the given coordianates
  * @param out Output buffer
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
@@ -277,7 +278,7 @@ void Cl2DrawOutline(BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 void Cl2DrawLightTbl(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
 
 /**
- * @brief Blit CL2 sprite, and apply lighting, to the back buffer at the given coordinates
+ * @brief Blit CL2 sprite, and apply lighting, to the given buffer at the given coordinates
  * @param out Output buffer
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate

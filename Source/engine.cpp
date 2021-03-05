@@ -1070,27 +1070,18 @@ void Cl2Draw(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int 
 
 	Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
-/**
- * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the back buffer at the given coordianates
- * @param col Color index from current palette
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- * @param nWidth Width of sprite
- */
-void Cl2DrawOutline(BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+
+void Cl2DrawOutline(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	assert(gpBuffer != NULL);
+	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 	assert(nCel > 0);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
-	CelOutputBuffer out = GlobalBackBuffer();
 	out.end -= out.line_width;
 	Cl2BlitOutlineSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, col);
 }
