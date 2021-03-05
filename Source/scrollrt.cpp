@@ -215,14 +215,14 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 			} else {
-				CelDrawLightRedSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW, 1);
+				CelDrawLightRedSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW, 1);
 			}
 		} else {
 			CelBlitOutlineTo(out, col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW);
 			} else {
-				CelDrawLightRedSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW, 0);
+				CelDrawLightRedSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW, 0);
 			}
 		}
 	} else {

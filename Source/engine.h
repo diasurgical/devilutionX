@@ -174,10 +174,6 @@ void CelDrawLightRedTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int 
  * @param nWidth Width of sprite
  */
 void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth);
-inline void CelBlitSafe(int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
-{
-	return CelBlitSafeTo(GlobalBackBuffer(), sx, sy, pRLEBytes, nDataSize, nWidth);
-}
 
 /**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
@@ -201,10 +197,6 @@ void CelClippedDrawSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, i
  * @param tbl Palette translation table
  */
 void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl);
-inline void CelBlitLightSafe(int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
-{
-	return CelBlitLightSafeTo(GlobalBackBuffer(), sx, sy, pRLEBytes, nDataSize, nWidth, tbl);
-}
 
 /**
  * @brief Same as CelBlitLightSafeTo but with stippled transparancy applied
@@ -216,10 +208,6 @@ inline void CelBlitLightSafe(int sx, int sy, BYTE *pRLEBytes, int nDataSize, int
  * @param nWidth Width of sprite
  */
 void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth);
-inline void CelBlitLightTransSafe(int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
-{
-	return CelBlitLightTransSafeTo(GlobalBackBuffer(), sx, sy, pRLEBytes, nDataSize, nWidth);
-}
 
 /**
  * @brief Same as CelDrawLightRedTo but checks for drawing outside the buffer
@@ -232,10 +220,6 @@ inline void CelBlitLightTransSafe(int sx, int sy, BYTE *pRLEBytes, int nDataSize
  * @param light Light shade to use
  */
 void CelDrawLightRedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
-inline void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
-{
-	return CelDrawLightRedSafeTo(GlobalBackBuffer(), sx, sy, pCelBuff, nCel, nWidth, light);
-}
 
 /**
  * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the target buffer at the given coordianates
