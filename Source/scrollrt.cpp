@@ -232,12 +232,13 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 
 /**
  * @brief Render a missile sprite
+ * @param out Output buffer
  * @param m Pointer to MissileStruct struct
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
+void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, BOOL pre)
 {
 	int mx, my, nCel, frames;
 	BYTE *pCelBuff;
@@ -263,18 +264,19 @@ void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
 	else if (m->_miLightFlag)
 		Cl2DrawLight(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
 	else
-		Cl2Draw(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
+		Cl2Draw(out, mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
 }
 
 /**
  * @brief Render a missile sprites for a given tile
+ * @param out Output buffer
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
+void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
 {
 	int i;
 	MissileStruct *m;
@@ -284,7 +286,7 @@ void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
 
 	if (dMissile[x][y] != -1) {
 		m = &missile[dMissile[x][y] - 1];
-		DrawMissilePrivate(m, sx, sy, pre);
+		DrawMissilePrivate(out, m, sx, sy, pre);
 		return;
 	}
 
@@ -293,7 +295,7 @@ void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
 		m = &missile[missileactive[i]];
 		if (m->_mix != x || m->_miy != y)
 			continue;
-		DrawMissilePrivate(m, sx, sy, pre);
+		DrawMissilePrivate(out, m, sx, sy, pre);
 	}
 }
 
@@ -357,12 +359,13 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 
 /**
  * @brief Helper for rendering player a Mana Shield
+ * @param out Output buffer
  * @param pnum Player id
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  * @param lighting Should lighting be applied
  */
-static void DrawManaShield(int pnum, int x, int y, bool lighting)
+static void DrawManaShield(CelOutputBuffer out, int pnum, int x, int y, bool lighting)
 {
 	if (!plr[pnum].pManaShield)
 		return;
@@ -373,7 +376,7 @@ static void DrawManaShield(int pnum, int x, int y, bool lighting)
 	BYTE *pCelBuff = misfiledata[MFILE_MANASHLD].mAnimData[0];
 
 	if (pnum == myplr) {
-		Cl2Draw(x, y, pCelBuff, 1, width);
+		Cl2Draw(out, x, y, pCelBuff, 1, width);
 		return;
 	}
 
@@ -387,16 +390,17 @@ static void DrawManaShield(int pnum, int x, int y, bool lighting)
 
 /**
  * @brief Render a player sprite
+ * @param out Output buffer
  * @param pnum Player id
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param px Back buffer coordinate
- * @param py Back buffer coordinate
+ * @param px Output buffer coordinate
+ * @param py Output buffer coordinate
  * @param pCelBuff sprite buffer
  * @param nCel frame
  * @param nWidth width
  */
-static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
+static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int l;
 
@@ -429,14 +433,14 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 		Cl2DrawOutline(165, px, py, pCelBuff, nCel, nWidth);
 
 	if (pnum == myplr) {
-		Cl2Draw(px, py, pCelBuff, nCel, nWidth);
-		DrawManaShield(pnum, px, py, true);
+		Cl2Draw(out, px, py, pCelBuff, nCel, nWidth);
+		DrawManaShield(out, pnum, px, py, true);
 		return;
 	}
 
 	if (!(dFlags[x][y] & BFLAG_LIT) || plr[myplr]._pInfraFlag && light_table_index > 8) {
 		Cl2DrawLightTbl(px, py, pCelBuff, nCel, nWidth, 1);
-		DrawManaShield(pnum, px, py, true);
+		DrawManaShield(out, pnum, px, py, true);
 		return;
 	}
 
@@ -447,19 +451,20 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 		light_table_index -= 5;
 
 	Cl2DrawLight(px, py, pCelBuff, nCel, nWidth);
-	DrawManaShield(pnum, px, py, false);
+	DrawManaShield(out, pnum, px, py, false);
 
 	light_table_index = l;
 }
 
 /**
  * @brief Render a player sprite
+ * @param out Output buffer
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  */
-void DrawDeadPlayer(int x, int y, int sx, int sy)
+void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
 {
 	int i, px, py;
 	PlayerStruct *p;
@@ -472,7 +477,7 @@ void DrawDeadPlayer(int x, int y, int sx, int sy)
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
 			px = sx + p->_pxoff - p->_pAnimWidth2;
 			py = sy + p->_pyoff;
-			DrawPlayer(i, x, y, px, py, p->_pAnimData, p->_pAnimFrame, p->_pAnimWidth);
+			DrawPlayer(out, i, x, y, px, py, p->_pAnimData, p->_pAnimFrame, p->_pAnimWidth);
 		}
 	}
 }
@@ -696,12 +701,13 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 
 /**
  * @brief Check if and how a player should be rendered
+ * @param out Output buffer
  * @param y dPiece coordinate
  * @param x dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  */
-static void DrawPlayerHelper(int x, int y, int sx, int sy)
+static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
 {
 	int p = dPlayer[x][y];
 	p = p > 0 ? p - 1 : -(p + 1);
@@ -715,7 +721,7 @@ static void DrawPlayerHelper(int x, int y, int sx, int sy)
 	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
 	int py = sy + pPlayer->_pyoff;
 
-	DrawPlayer(p, x, y, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	DrawPlayer(out, p, x, y, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
 }
 
 /**
@@ -760,7 +766,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 #endif
 
 	if (MissilePreFlag) {
-		DrawMissile(sx, sy, dx, dy, TRUE);
+		DrawMissile(out, sx, sy, dx, dy, TRUE);
 	}
 
 	if (light_table_index < lightmax && bDead != 0) {
@@ -789,21 +795,21 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	DrawItem(out, sx, sy, dx, dy, 1);
 	if (bFlag & BFLAG_PLAYERLR) {
 		assert((DWORD)(sy - 1) < MAXDUNY);
-		DrawPlayerHelper(sx, sy - 1, dx, dy);
+		DrawPlayerHelper(out, sx, sy - 1, dx, dy);
 	}
 	if (bFlag & BFLAG_MONSTLR && negMon < 0) {
 		DrawMonsterHelper(out, sx, sy, -1, dx, dy);
 	}
 	if (bFlag & BFLAG_DEAD_PLAYER) {
-		DrawDeadPlayer(sx, sy, dx, dy);
+		DrawDeadPlayer(out, sx, sy, dx, dy);
 	}
 	if (dPlayer[sx][sy] > 0) {
-		DrawPlayerHelper(sx, sy, dx, dy);
+		DrawPlayerHelper(out, sx, sy, dx, dy);
 	}
 	if (dMonster[sx][sy] > 0) {
 		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
 	}
-	DrawMissile(sx, sy, dx, dy, FALSE);
+	DrawMissile(out, sx, sy, dx, dy, FALSE);
 	DrawObject(out, sx, sy, dx, dy, 0);
 	DrawItem(out, sx, sy, dx, dy, 0);
 
