@@ -200,9 +200,9 @@ void DrawInv(CelOutputBuffer out)
 			}
 		} else {
 			if (frame <= 179) {
-				CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 			} else {
-				CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
 		}
 	}
@@ -236,9 +236,9 @@ void DrawInv(CelOutputBuffer out)
 			}
 		} else {
 			if (frame <= 179) {
-				CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 			} else {
-				CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
 		}
 	}
@@ -272,9 +272,9 @@ void DrawInv(CelOutputBuffer out)
 			}
 		} else {
 			if (frame <= 179) {
-				CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 			} else {
-				CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
 		}
 	}
@@ -308,9 +308,9 @@ void DrawInv(CelOutputBuffer out)
 			}
 		} else {
 			if (frame <= 179) {
-				CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 			} else {
-				CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
 		}
 	}
@@ -347,9 +347,9 @@ void DrawInv(CelOutputBuffer out)
 			}
 		} else {
 			if (frame <= 179) {
-				CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRedTo(out, screen_x, screen_y, pCursCels, frame, frame_width, 1);
 			} else {
-				CelDrawLightRed(screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
+				CelDrawLightRedTo(out, screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
 			}
 		}
 
@@ -405,9 +405,9 @@ void DrawInv(CelOutputBuffer out)
 			}
 		} else {
 			if (frame <= 179) {
-				CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRedTo(out, screen_x, screen_y, pCursCels, frame, frame_width, 1);
 			} else {
-				CelDrawLightRed(screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
+				CelDrawLightRedTo(out, screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
 			}
 		}
 	}
@@ -441,9 +441,9 @@ void DrawInv(CelOutputBuffer out)
 			}
 		} else {
 			if (frame <= 179) {
-				CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 			} else {
-				CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
 		}
 	}
@@ -505,12 +505,14 @@ void DrawInv(CelOutputBuffer out)
 				}
 			} else {
 				if (frame <= 179) {
-					CelDrawLightRed(
+					CelDrawLightRedTo(
+					    out,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels, frame, frame_width, 1);
 				} else {
-					CelDrawLightRed(
+					CelDrawLightRedTo(
+					    out,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels2, frame - 179, frame_width, 1);
