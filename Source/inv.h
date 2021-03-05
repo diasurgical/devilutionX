@@ -20,7 +20,12 @@ extern const InvXY InvRect[73];
 
 void FreeInvGFX();
 void InitInv();
-void DrawInv();
+
+/**
+ * @brief Render the inventory panel to the given buffer.
+ */
+void DrawInv(CelOutputBuffer out);
+
 void DrawInvBelt(CelOutputBuffer out);
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag);
 BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item);

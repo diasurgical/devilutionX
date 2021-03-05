@@ -153,7 +153,7 @@ void PrintSString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char 
 		sx += k;
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? xx + x + k - 20 : xx + x - 20, s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -176,7 +176,7 @@ void PrintSString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char 
 		}
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	}
 }
 

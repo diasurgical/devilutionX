@@ -533,7 +533,7 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 	}
 }
 
-static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy);
+static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, int dy);
 
 /**
  * @brief Render a cell
@@ -716,12 +716,13 @@ static void DrawPlayerHelper(int x, int y, int sx, int sy)
 
 /**
  * @brief Render object sprites
+ * @param out Buffer to render to
  * @param sx dPiece coordinate
  * @param sy dPiece coordinate
- * @param dx Back buffer coordinate
- * @param dy Back buffer coordinate
+ * @param dx Buffer coordinate
+ * @param dy Buffer coordinate
  */
-static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
+static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, int dy)
 {
 	int mi, px, py, nCel, nMon, negMon, frames;
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
@@ -825,7 +826,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT + SCREEN_Y) {
 			bArch = dSpecial[sx - 1][sy - 1];
 			if (bArch != 0) {
-				CelDraw(dx, dy - TILE_HEIGHT, pSpecialCels, bArch, 64);
+				CelDrawTo(out, dx, dy - TILE_HEIGHT, pSpecialCels, bArch, 64);
 			}
 		}
 	}
@@ -883,14 +884,15 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int rows, int colum
 
 /**
  * @brief Render a row of tile
+ * @param out Output buffer
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Buffer coordinate
+ * @param sy Buffer coordinate
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
+static void scrollrt_draw(CelOutputBuffer out, int x, int y, int sx, int sy, int rows, int columns)
 {
 	assert(gpBuffer);
 
@@ -908,12 +910,12 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
 					// sprite screen position rather than tile position.
 					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
 						if (IsWalkable(x + 1, y - 1) && IsWalkable(x, y - 1)) {              // Has walkable area behind it
-							scrollrt_draw_dungeon(x + 1, y - 1, sx + TILE_WIDTH, sy);
+							scrollrt_draw_dungeon(out, x + 1, y - 1, sx + TILE_WIDTH, sy);
 						}
 					}
 				}
 				if (dPiece[x][y] != 0) {
-					scrollrt_draw_dungeon(x, y, sx, sy);
+					scrollrt_draw_dungeon(out, x, y, sx, sy);
 				}
 			}
 			ShiftGrid(&x, &y, 1, 0);
@@ -1112,10 +1114,11 @@ void CalcViewportGeometry()
 
 /**
  * @brief Configure render and process screen rows
+ * @param out Buffer to render to
  * @param x Center of view in dPiece coordinate
  * @param y Center of view in dPiece coordinate
  */
-static void DrawGame(int x, int y)
+static void DrawGame(CelOutputBuffer out, int x, int y)
 {
 	int sx, sy, columns, rows;
 
@@ -1124,6 +1127,7 @@ static void DrawGame(int x, int y)
 		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnViewportHeight + SCREEN_Y)];
 	else
 		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnViewportHeight / 2 + SCREEN_Y)];
+	out.end = gpBufEnd;
 
 	// Adjust by player offset and tile grid alignment
 	sx = ScrollInfo._sxoff + tileOffsetX + SCREEN_X;
@@ -1206,7 +1210,7 @@ static void DrawGame(int x, int y)
 	}
 
 	scrollrt_drawFloor(x, y, sx, sy, rows, columns);
-	scrollrt_draw(x, y, sx, sy, rows, columns);
+	scrollrt_draw(out, x, y, sx, sy, rows, columns);
 
 	// Allow rendering to the whole screen
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnScreenHeight + SCREEN_Y)];
@@ -1219,16 +1223,9 @@ static void DrawGame(int x, int y)
 // DevilutionX extension.
 extern void DrawControllerModifierHints(CelOutputBuffer out);
 
-/**
- * @brief Start rendering of screen, town variation
- * @param StartX Center of view in dPiece coordinate
- * @param StartY Center of view in dPiece coordinate
- */
-void DrawView(int StartX, int StartY)
+void DrawView(CelOutputBuffer out, int StartX, int StartY)
 {
-	CelOutputBuffer out = GlobalBackBuffer();
-
-	DrawGame(StartX, StartY);
+	DrawGame(out, StartX, StartY);
 	if (automapflag) {
 		DrawAutomap(out.subregion(0, 0, out.line_width, SCREEN_Y + gnViewportHeight));
 	}
@@ -1237,12 +1234,12 @@ void DrawView(int StartX, int StartY)
 	if (stextflag && !qtextflag)
 		DrawSText(out);
 	if (invflag) {
-		DrawInv();
+		DrawInv(out);
 	} else if (sbookflag) {
 		DrawSpellBook(out);
 	}
 
-	DrawDurIcon();
+	DrawDurIcon(out);
 
 	if (chrflag) {
 		DrawChr(out);
@@ -1274,13 +1271,13 @@ void DrawView(int StartX, int StartY)
 	if (deathflag) {
 		RedBack();
 	} else if (PauseMode != 0) {
-		gmenu_draw_pause();
+		gmenu_draw_pause(out);
 	}
 
 	DrawControllerModifierHints(out);
 	DrawPlrMsg(out);
-	gmenu_draw();
-	doom_draw();
+	gmenu_draw(out);
+	doom_draw(out);
 	DrawInfoBox(out);
 	DrawLifeFlask();
 	DrawManaFlask();
@@ -1552,7 +1549,7 @@ void DrawAndBlit()
 	lock_buf(0);
 	CelOutputBuffer out = GlobalBackBuffer();
 
-	DrawView(ViewX, ViewY);
+	DrawView(out, ViewX, ViewY);
 	if (ctrlPan) {
 		DrawCtrlPan(out);
 	}

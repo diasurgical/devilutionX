@@ -96,10 +96,6 @@ inline CelOutputBuffer GlobalBackBuffer()
  * @param nWidth Width of sprite
  */
 void CelDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
-inline void CelDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
-{
-	CelDrawTo(GlobalBackBuffer(), sx, sy, pCelBuff, nCel, nWidth);
-}
 
 /**
  * @briefBlit CEL sprite to the given buffer, does not perform bounds-checking.
@@ -342,7 +338,6 @@ void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
  * @param color_index Color index from current palette
  */
 void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_index);
-
 
 /**
  * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,

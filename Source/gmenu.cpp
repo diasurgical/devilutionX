@@ -48,7 +48,7 @@ const BYTE lfontkern[] = {
 	11, 10, 12, 11, 21, 23
 };
 
-static void gmenu_print_text(int x, int y, const char *pszStr)
+static void gmenu_print_text(CelOutputBuffer out, int x, int y, const char *pszStr)
 {
 	BYTE c;
 
@@ -56,18 +56,18 @@ static void gmenu_print_text(int x, int y, const char *pszStr)
 		c = gbFontTransTbl[(BYTE)*pszStr++];
 		c = lfontframe[c];
 		if (c != 0)
-			CelDrawLight(x, y, BigTGold_cel, c, 46, NULL);
+			CelDrawLightTo(out, x, y, BigTGold_cel, c, 46, NULL);
 		x += lfontkern[c] + 2;
 	}
 }
 
-void gmenu_draw_pause()
+void gmenu_draw_pause(CelOutputBuffer out)
 {
 	if (currlevel != 0)
 		RedBack();
 	if (!sgpCurrentMenu) {
 		light_table_index = 0;
-		gmenu_print_text(316 + PANEL_LEFT, 336, "Pause");
+		gmenu_print_text(out, 316 + PANEL_LEFT, 336, "Pause");
 	}
 }
 
@@ -184,31 +184,31 @@ static int gmenu_get_lfont(TMenuItem *pItem)
 	return i - 2;
 }
 
-static void gmenu_draw_menu_item(TMenuItem *pItem, int y)
+static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
 {
 	DWORD w, x, nSteps, step, pos;
 	w = gmenu_get_lfont(pItem);
 	if (pItem->dwFlags & GMENU_SLIDER) {
 		x = 16 + w / 2 + SCREEN_X;
-		CelDraw(x + PANEL_LEFT, y - 10, optbar_cel, 1, 287);
+		CelDrawTo(out, x + PANEL_LEFT, y - 10, optbar_cel, 1, 287);
 		step = pItem->dwFlags & 0xFFF;
 		nSteps = (pItem->dwFlags & 0xFFF000) >> 12;
 		if (nSteps < 2)
 			nSteps = 2;
 		pos = step * 256 / nSteps;
 		gmenu_clear_buffer(x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
-		CelDraw(x + 2 + pos + PANEL_LEFT, y - 12, option_cel, 1, 27);
+		CelDrawTo(out, x + 2 + pos + PANEL_LEFT, y - 12, option_cel, 1, 27);
 	}
 	x = gnScreenWidth / 2 - w / 2 + SCREEN_X;
 	light_table_index = (pItem->dwFlags & GMENU_ENABLED) ? 0 : 15;
-	gmenu_print_text(x, y, pItem->pszStr);
+	gmenu_print_text(out, x, y, pItem->pszStr);
 	if (pItem == sgpCurrItem) {
-		CelDraw(x - 54, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
-		CelDraw(x + 4 + w, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
+		CelDrawTo(out, x - 54, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
+		CelDrawTo(out, x + 4 + w, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
 	}
 }
 
-void gmenu_draw()
+void gmenu_draw(CelOutputBuffer out)
 {
 	int y;
 	TMenuItem *i;
@@ -225,15 +225,15 @@ void gmenu_draw()
 					LogoAnim_frame = 1;
 				LogoAnim_tick = ticks;
 			}
-			CelDraw((gnScreenWidth - 430) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
+			CelDrawTo(out, (gnScreenWidth - 430) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
 		} else {
-			CelDraw((gnScreenWidth - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
+			CelDrawTo(out, (gnScreenWidth - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
 		}
 		y = 160 + SCREEN_Y + UI_OFFSET_Y;
 		i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu) {
 			while (i->fnMenu) {
-				gmenu_draw_menu_item(i, y);
+				gmenu_draw_menu_item(out, i, y);
 				i++;
 				y += 45;
 			}

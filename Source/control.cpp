@@ -1398,7 +1398,7 @@ void DrawChr(CelOutputBuffer out)
 	char chrstr[64];
 	int pc, mindam, maxdam;
 
-	CelDraw(SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
 	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
 	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTblOld[plr[myplr]._pClass], COL_WHITE);
@@ -1572,13 +1572,13 @@ void DrawChr(CelOutputBuffer out)
 		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
 		pc = plr[myplr]._pClass;
 		if (plr[myplr]._pBaseStr < MaxStats[pc][ATTRIB_STR])
-			CelDraw(137 + SCREEN_X, 159 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
+			CelDrawTo(out, 137 + SCREEN_X, 159 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
 		if (plr[myplr]._pBaseMag < MaxStats[pc][ATTRIB_MAG])
-			CelDraw(137 + SCREEN_X, 187 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_MAG] + 4, 41);
+			CelDrawTo(out, 137 + SCREEN_X, 187 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_MAG] + 4, 41);
 		if (plr[myplr]._pBaseDex < MaxStats[pc][ATTRIB_DEX])
-			CelDraw(137 + SCREEN_X, 216 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_DEX] + 6, 41);
+			CelDrawTo(out, 137 + SCREEN_X, 216 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_DEX] + 6, 41);
 		if (plr[myplr]._pBaseVit < MaxStats[pc][ATTRIB_VIT])
-			CelDraw(137 + SCREEN_X, 244 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_VIT] + 8, 41);
+			CelDrawTo(out, 137 + SCREEN_X, 244 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_VIT] + 8, 41);
 	}
 
 	if (plr[myplr]._pMaxHP > plr[myplr]._pMaxHPBase)
@@ -1624,7 +1624,7 @@ void DrawLevelUpIcon(CelOutputBuffer out)
 	if (stextflag == STORE_NONE) {
 		nCel = lvlbtndown ? 3 : 2;
 		ADD_PlrStringXY(out, PANEL_LEFT + 0, PANEL_TOP - 49, PANEL_LEFT + 120, "Level Up", COL_WHITE);
-		CelDraw(40 + PANEL_X, -17 + PANEL_Y, pChrButtons, nCel, 41);
+		CelDrawTo(out, 40 + PANEL_X, -17 + PANEL_Y, pChrButtons, nCel, 41);
 	}
 }
 
@@ -1704,7 +1704,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 	}
 }
 
-static int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
+static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct *pItem, int x, int c)
 {
 	if (pItem->isEmpty())
 		return x;
@@ -1735,11 +1735,11 @@ static int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
 	}
 	if (pItem->_iDurability > 2)
 		c += 8;
-	CelDraw(x, -17 + PANEL_Y, pDurIcons, c, 32);
+	CelDrawTo(out, x, -17 + PANEL_Y, pDurIcons, c, 32);
 	return x - 32 - 8;
 }
 
-void DrawDurIcon()
+void DrawDurIcon(CelOutputBuffer out)
 {
 	PlayerStruct *p;
 	int x;
@@ -1759,10 +1759,10 @@ void DrawDurIcon()
 	}
 
 	p = &plr[myplr];
-	x = DrawDurIcon4Item(&p->InvBody[INVLOC_HEAD], x, 4);
-	x = DrawDurIcon4Item(&p->InvBody[INVLOC_CHEST], x, 3);
-	x = DrawDurIcon4Item(&p->InvBody[INVLOC_HAND_LEFT], x, 0);
-	DrawDurIcon4Item(&p->InvBody[INVLOC_HAND_RIGHT], x, 0);
+	x = DrawDurIcon4Item(out, &p->InvBody[INVLOC_HEAD], x, 4);
+	x = DrawDurIcon4Item(out, &p->InvBody[INVLOC_CHEST], x, 3);
+	x = DrawDurIcon4Item(out, &p->InvBody[INVLOC_HAND_LEFT], x, 0);
+	DrawDurIcon4Item(out, &p->InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
 void RedBack()
@@ -1863,16 +1863,16 @@ void DrawSpellBook(CelOutputBuffer out)
 	char st;
 	unsigned __int64 spl;
 
-	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel, 1, SPANEL_WIDTH);
 	if (gbIsHellfire && sbooktab < 5) {
-		CelDraw(RIGHT_PANEL_X + 61 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 61);
+		CelDrawTo(out, RIGHT_PANEL_X + 61 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 61);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
 		int sx = RIGHT_PANEL_X + 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		CelDraw(sx, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
+		CelDrawTo(out, sx, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
 	}
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
@@ -1966,7 +1966,7 @@ void DrawGoldSplit(CelOutputBuffer out, int amount)
 	int screen_x, i;
 
 	screen_x = 0;
-	CelDraw(351 + SCREEN_X, 178 + SCREEN_Y, pGBoxBuff, 1, 261);
+	CelDrawTo(out, 351 + SCREEN_X, 178 + SCREEN_Y, pGBoxBuff, 1, 261);
 	sprintf(tempstr, "You have %u gold", initialDropGoldValue);
 	ADD_PlrStringXY(out, 366, 87, 600, tempstr, COL_GOLD);
 	sprintf(tempstr, "%s.  How many do", get_pieces_str(initialDropGoldValue));
@@ -2110,7 +2110,7 @@ void DrawTalkPan(CelOutputBuffer out)
 	}
 	if (msg)
 		*msg = '\0';
-	CelDraw(x, i + 22 + PANEL_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+	CelDrawTo(out, x, i + 22 + PANEL_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	talk_btn = 0;
 	for (i = 0; i < 4; i++) {
 		if (i == myplr)
@@ -2122,7 +2122,7 @@ void DrawTalkPan(CelOutputBuffer out)
 					nCel = 4;
 				else
 					nCel = 3;
-				CelDraw(172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
+				CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
 			}
 		} else {
 			color = COL_RED;
@@ -2132,7 +2132,7 @@ void DrawTalkPan(CelOutputBuffer out)
 				nCel = 1;
 			if (talkbtndown[talk_btn])
 				nCel += 4;
-			CelDraw(172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
+			CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
 		}
 		if (plr[i].plractive) {
 			x = 46 + PANEL_LEFT;

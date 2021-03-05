@@ -247,7 +247,7 @@ static void DrawCutscene()
 	DWORD i;
 
 	lock_buf(1);
-	CelDraw(PANEL_X, 480 + SCREEN_Y - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
+	CelDrawTo(GlobalBackBuffer(), PANEL_X, 480 + SCREEN_Y - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
 
 	for (i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
