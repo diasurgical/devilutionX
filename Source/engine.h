@@ -167,10 +167,6 @@ void CelClippedBlitLightTransTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelB
  * @param light Light shade to use
  */
 void CelDrawLightRedTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
-inline void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
-{
-	return CelDrawLightRedTo(GlobalBackBuffer(), sx, sy, pCelBuff, nCel, nWidth, light);
-}
 
 /**
  * @brief Blit CEL sprite to the given buffer, checks for drawing outside the buffer.
