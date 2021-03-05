@@ -133,10 +133,6 @@ inline void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
  * @param nWidth Width of sprite
  */
 void CelDrawLightTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tbl);
-inline void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tbl)
-{
-	CelDrawLightTo(GlobalBackBuffer(), sx, sy, pCelBuff, nCel, nWidth, tbl);
-}
 
 /**
  * @brief Same as CelDrawLightTo but with the option to skip parts of the top and bottom of the sprite
@@ -148,10 +144,6 @@ inline void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, B
  * @param nWidth Width of sprite
  */
 void CelClippedDrawLightTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
-inline void CelClippedDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
-{
-	return CelClippedDrawLightTo(GlobalBackBuffer(), sx, sy, pCelBuff, nCel, nWidth);
-}
 
 /**
  * @brief Same as CelBlitLightTransSafeTo
