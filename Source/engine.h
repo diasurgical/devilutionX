@@ -277,13 +277,14 @@ void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 
 /**
  * @brief Blit CL2 sprite, and apply lighting, to the back buffer at the given coordinates
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param out Output buffer
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  * @param pCelBuff CL2 buffer
  * @param nCel CL2 frame number
  * @param nWidth Width of sprite
  */
-void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void Cl2DrawLight(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 
 /**
  * @brief Draw a line in the target buffer

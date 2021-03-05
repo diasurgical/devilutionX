@@ -262,7 +262,7 @@ void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, B
 	if (m->_miUniqTrans)
 		Cl2DrawLightTbl(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, m->_miUniqTrans + 3);
 	else if (m->_miLightFlag)
-		Cl2DrawLight(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
+		Cl2DrawLight(out, mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
 	else
 		Cl2Draw(out, mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
 }
@@ -301,13 +301,14 @@ void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
 
 /**
  * @brief Render a monster sprite
+ * @param out Output buffer
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param mx Back buffer coordinate
- * @param my Back buffer coordinate
+ * @param mx Output buffer coordinate
+ * @param my Output buffer coordinate
  * @param m Id of monster
  */
-static void DrawMonster(int x, int y, int mx, int my, int m)
+static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m)
 {
 	int nCel, frames;
 	char trans;
@@ -353,7 +354,7 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 		if (trans)
 			Cl2DrawLightTbl(mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, trans);
 		else
-			Cl2DrawLight(mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width);
+			Cl2DrawLight(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width);
 	}
 }
 
@@ -385,7 +386,7 @@ static void DrawManaShield(CelOutputBuffer out, int pnum, int x, int y, bool lig
 		return;
 	}
 
-	Cl2DrawLight(x, y, pCelBuff, 1, width);
+	Cl2DrawLight(out, x, y, pCelBuff, 1, width);
 }
 
 /**
@@ -450,7 +451,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 	else
 		light_table_index -= 5;
 
-	Cl2DrawLight(px, py, pCelBuff, nCel, nWidth);
+	Cl2DrawLight(out, px, py, pCelBuff, nCel, nWidth);
 	DrawManaShield(out, pnum, px, py, false);
 
 	light_table_index = l;
@@ -696,7 +697,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 	if (mi == pcursmonst) {
 		Cl2DrawOutline(233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
 	}
-	DrawMonster(x, y, px, py, mi);
+	DrawMonster(out, x, y, px, py, mi);
 }
 
 /**
@@ -787,7 +788,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 			if (pDeadGuy->_deadtrans != 0) {
 				Cl2DrawLightTbl(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, pDeadGuy->_deadtrans);
 			} else {
-				Cl2DrawLight(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth);
+				Cl2DrawLight(out, px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth);
 			}
 		} while (0);
 	}
