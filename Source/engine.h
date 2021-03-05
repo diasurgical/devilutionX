@@ -189,10 +189,6 @@ inline void CelBlitSafe(int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWid
  * @param nWidth Width of sprite
  */
 void CelClippedDrawSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
-inline void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
-{
-	return CelClippedDrawSafeTo(GlobalBackBuffer(), sx, sy, pCelBuff, nCel, nWidth);
-}
 
 /**
  * @brief Blit CEL sprite, and apply lighting, to the given buffer, checks for drawing outside the buffer
