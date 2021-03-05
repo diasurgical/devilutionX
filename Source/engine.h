@@ -252,10 +252,6 @@ inline void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nW
  * @param nWidth Width of sprite
  */
 void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
-inline void CelBlitOutline(BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
-{
-	return CelBlitOutlineTo(GlobalBackBuffer(), col, sx, sy, pCelBuff, nCel, nWidth);
-}
 
 /**
  * @brief Set the value of a single pixel in the back buffer, checks bounds
