@@ -814,7 +814,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 				cel_transparency_active = 0; // Turn transparency off here for debugging
 			}
 #endif
-			CelClippedBlitLightTrans(dx, dy, pSpecialCels, bArch, 64);
+			CelClippedBlitLightTransTo(out, dx, dy, pSpecialCels, bArch, 64);
 #ifdef _DEBUG
 			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
 				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
