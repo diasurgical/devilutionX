@@ -1115,21 +1115,21 @@ void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 	Cl2BlitLightSafe(GlobalBackBuffer(), sx, sy, pRLEBytes, nDataSize, nWidth, &pLightTbl[idx]);
 }
 
-void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void Cl2DrawLight(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	assert(gpBuffer != NULL);
+	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 	assert(nCel > 0);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
 	if (light_table_index)
-		Cl2BlitLightSafe(GlobalBackBuffer(), sx, sy, pRLEBytes, nDataSize, nWidth, &pLightTbl[light_table_index * 256]);
+		Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, &pLightTbl[light_table_index * 256]);
 	else
-		Cl2BlitSafe(GlobalBackBuffer(), sx, sy, pRLEBytes, nDataSize, nWidth);
+		Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
 /**
