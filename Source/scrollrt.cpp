@@ -431,7 +431,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 	}
 
 	if (pnum == pcursplr)
-		Cl2DrawOutline(165, px, py, pCelBuff, nCel, nWidth);
+		Cl2DrawOutline(out, 165, px, py, pCelBuff, nCel, nWidth);
 
 	if (pnum == myplr) {
 		Cl2Draw(out, px, py, pCelBuff, nCel, nWidth);
@@ -695,7 +695,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 	px = sx + pMonster->_mxoff - pMonster->MType->width2;
 	py = sy + pMonster->_myoff;
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
+		Cl2DrawOutline(out, 233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
 	}
 	DrawMonster(out, x, y, px, py, mi);
 }
