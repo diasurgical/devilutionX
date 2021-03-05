@@ -478,13 +478,14 @@ void DrawDeadPlayer(int x, int y, int sx, int sy)
 
 /**
  * @brief Render an object sprite
+ * @param out Output buffer
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param ox Back buffer coordinate
- * @param oy Back buffer coordinate
+ * @param ox Output buffer coordinate
+ * @param oy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
+static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, BOOL pre)
 {
 	int sx, sy, xx, yy, nCel, frames;
 	char bv;
@@ -525,11 +526,11 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 	}
 
 	if (bv == pcursobj)
-		CelBlitOutline(194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		CelBlitOutlineTo(out, 194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
 	if (object[bv]._oLight) {
-		CelClippedDrawLight(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		CelClippedDrawLightTo(out, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
 	} else {
-		CelClippedDraw(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		CelClippedDrawTo(out, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
 	}
 }
 
@@ -595,13 +596,14 @@ static void drawFloor(int x, int y, int sx, int sy)
 
 /**
  * @brief Draw item for a given tile
+ * @param out Output buffer
  * @param y dPiece coordinate
  * @param x dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
+static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
 {
 	int nCel;
 	char bItem = dItem[x][y];
@@ -633,9 +635,9 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 
 	int px = sx - pItem->_iAnimWidth2;
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
-		CelBlitOutline(181, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
+		CelBlitOutlineTo(out, 181, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
 	}
-	CelClippedDrawLight(px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
+	CelClippedDrawLightTo(out, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
 }
 
 /**
@@ -781,8 +783,8 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 			}
 		} while (0);
 	}
-	DrawObject(sx, sy, dx, dy, 1);
-	DrawItem(sx, sy, dx, dy, 1);
+	DrawObject(out, sx, sy, dx, dy, 1);
+	DrawItem(out, sx, sy, dx, dy, 1);
 	if (bFlag & BFLAG_PLAYERLR) {
 		assert((DWORD)(sy - 1) < MAXDUNY);
 		DrawPlayerHelper(sx, sy - 1, dx, dy);
@@ -800,8 +802,8 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 		DrawMonsterHelper(sx, sy, 0, dx, dy);
 	}
 	DrawMissile(sx, sy, dx, dy, FALSE);
-	DrawObject(sx, sy, dx, dy, 0);
-	DrawItem(sx, sy, dx, dy, 0);
+	DrawObject(out, sx, sy, dx, dy, 0);
+	DrawItem(out, sx, sy, dx, dy, 0);
 
 	if (leveltype != DTYPE_TOWN) {
 		bArch = dSpecial[sx][sy];
