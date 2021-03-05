@@ -139,9 +139,9 @@ static void scrollrt_draw_cursor_back_buffer()
 }
 
 /**
- * @brief Draw the cursor on the back buffer
+ * @brief Draw the cursor on the given buffer
  */
-static void scrollrt_draw_cursor_item()
+static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 {
 	int i, mx, my;
 	BYTE *src, *dst;
@@ -200,6 +200,7 @@ static void scrollrt_draw_cursor_item()
 	mx++;
 	my++;
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnScreenHeight + SCREEN_Y) - cursW - 2];
+	out.end = gpBufEnd;
 
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
@@ -210,14 +211,14 @@ static void scrollrt_draw_cursor_item()
 			col = PAL16_RED + 5;
 		}
 		if (pcurs <= 179) {
-			CelBlitOutline(col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+			CelBlitOutlineTo(out, col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 			} else {
 				CelDrawLightRedSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW, 1);
 			}
 		} else {
-			CelBlitOutline(col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW);
+			CelBlitOutlineTo(out, col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW);
 			} else {
@@ -660,7 +661,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 	if (leveltype == DTYPE_TOWN) {
 		px = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			CelBlitOutlineTo(out, 166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
 		assert(towner[mi]._tAnimData);
 		CelClippedDrawTo(out, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
@@ -1506,7 +1507,7 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 
 	if (draw_cursor) {
 		lock_buf(0);
-		scrollrt_draw_cursor_item();
+		scrollrt_draw_cursor_item(GlobalBackBuffer());
 		unlock_buf(0);
 	}
 
@@ -1573,7 +1574,7 @@ void DrawAndBlit()
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar();
-	scrollrt_draw_cursor_item();
+	scrollrt_draw_cursor_item(out);
 
 	DrawFPS(out);
 

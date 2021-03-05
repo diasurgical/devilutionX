@@ -186,9 +186,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		}
 
@@ -222,9 +222,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		}
 
@@ -258,9 +258,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		}
 
@@ -294,9 +294,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		}
 
@@ -333,9 +333,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width);
 			} else {
-				CelBlitOutline(color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
 			}
 		}
 
@@ -391,9 +391,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width);
 			} else {
-				CelBlitOutline(color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
 			}
 		}
 
@@ -427,9 +427,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
 			} else {
-				CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
 		}
 
@@ -477,13 +477,15 @@ void DrawInv(CelOutputBuffer out)
 					color = ICOL_RED;
 				}
 				if (frame <= 179) {
-					CelBlitOutline(
+					CelBlitOutlineTo(
+					    out,
 					    color,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels, frame, frame_width);
 				} else {
-					CelBlitOutline(
+					CelBlitOutlineTo(
+					    out,
 					    color,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
