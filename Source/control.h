@@ -113,7 +113,7 @@ void ReleaseLvlBtn();
 void DrawLevelUpIcon(CelOutputBuffer out);
 void CheckChrBtns();
 void ReleaseChrBtns(bool addAllStatPoints);
-void DrawDurIcon();
+void DrawDurIcon(CelOutputBuffer out);
 void RedBack();
 void DrawSpellBook(CelOutputBuffer out);
 void CheckSBook();

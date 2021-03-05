@@ -164,16 +164,12 @@ void InvDrawSlotBack(int X, int Y, int W, int H)
 	}
 }
 
-/**
- * @brief Render the inventory panel to the back buffer
- */
-void DrawInv()
+void DrawInv(CelOutputBuffer out)
 {
 	BOOL invtest[NUM_INV_GRID_ELEM];
 	int frame, frame_width, color, screen_x, screen_y, i, j, ii;
-	BYTE *pBuff;
 
-	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels, 1, SPANEL_WIDTH);
+	CelDrawTo(out, RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels, 1, SPANEL_WIDTH);
 
 	if (!plr[myplr].InvBody[INVLOC_HEAD].isEmpty()) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
