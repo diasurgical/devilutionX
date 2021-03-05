@@ -118,10 +118,6 @@ void CelDrawUnsafeTo(CelOutputBuffer out, int x, int y, BYTE *pCelBuff, int nCel
  * @param nWidth Width of sprite
  */
 void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
-inline void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
-{
-	CelClippedDrawTo(GlobalBackBuffer(), sx, sy, pCelBuff, nCel, nWidth);
-}
 
 /**
  * @brief Blit CEL sprite, and apply lighting, to the back buffer at the given coordinates

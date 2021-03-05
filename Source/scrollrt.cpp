@@ -642,13 +642,14 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre
 
 /**
  * @brief Check if and how a monster should be rendered
+ * @param out Output buffer
  * @param y dPiece coordinate
  * @param x dPiece coordinate
  * @param oy dPiece Y offset
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
  */
-static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
+static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx, int sy)
 {
 	int mi, px, py;
 	MonsterStruct *pMonster;
@@ -662,7 +663,7 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
 		assert(towner[mi]._tAnimData);
-		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+		CelClippedDrawTo(out, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		return;
 	}
 
@@ -753,7 +754,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 
 #ifdef _DEBUG
 	if (visiondebug && bFlag & BFLAG_LIT) {
-		CelClippedDraw(dx, dy, pSquareCel, 1, 64);
+		CelClippedDrawTo(out, dx, dy, pSquareCel, 1, 64);
 	}
 #endif
 
@@ -790,7 +791,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 		DrawPlayerHelper(sx, sy - 1, dx, dy);
 	}
 	if (bFlag & BFLAG_MONSTLR && negMon < 0) {
-		DrawMonsterHelper(sx, sy, -1, dx, dy);
+		DrawMonsterHelper(out, sx, sy, -1, dx, dy);
 	}
 	if (bFlag & BFLAG_DEAD_PLAYER) {
 		DrawDeadPlayer(sx, sy, dx, dy);
@@ -799,7 +800,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 		DrawPlayerHelper(sx, sy, dx, dy);
 	}
 	if (dMonster[sx][sy] > 0) {
-		DrawMonsterHelper(sx, sy, 0, dx, dy);
+		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
 	}
 	DrawMissile(sx, sy, dx, dy, FALSE);
 	DrawObject(out, sx, sy, dx, dy, 0);
