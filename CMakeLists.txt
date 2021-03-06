@@ -691,8 +691,8 @@ if(VITA)
   set(VITA_APP_NAME "devilutionX")
   set(VITA_TITLEID  "DVLX00001")
   set(VITA_VERSION  "01.00")
-  set(VITA_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
-  set(VITA_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
+  set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
+  set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
   vita_create_self(devilutionx.self devilutionx UNSAFE)
   vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
     VERSION ${VITA_VERSION}
