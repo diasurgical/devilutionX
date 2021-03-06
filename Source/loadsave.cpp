@@ -31,6 +31,15 @@ static int ILoad()
 	return rv;
 }
 
+static Uint32 LoadUint32LE()
+{
+	Uint32 buf;
+	memcpy(&buf, tbuff, 4);
+	tbuff += 4;
+
+	return SwapLE32(buf);
+}
+
 static bool LoadBool8()
 {
 	if (*tbuff++ == TRUE)
@@ -113,25 +122,25 @@ static void LoadItemData(ItemStruct *pItem)
 	CopyInt(tbuff, &pItem->_iSeed);
 	CopyShort(tbuff, &pItem->_iCreateInfo);
 	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pItem->_itype);
+	pItem->_itype = (item_type)LoadUint32LE();
 	CopyInt(tbuff, &pItem->_ix);
 	CopyInt(tbuff, &pItem->_iy);
-	CopyInt(tbuff, &pItem->_iAnimFlag);
+	pItem->_iAnimFlag = LoadBool32();
 	tbuff += 4; // Skip pointer _iAnimData
 	CopyInt(tbuff, &pItem->_iAnimLen);
 	CopyInt(tbuff, &pItem->_iAnimFrame);
 	CopyInt(tbuff, &pItem->_iAnimWidth);
 	CopyInt(tbuff, &pItem->_iAnimWidth2);
-	CopyInt(tbuff, &pItem->_iDelFlag);
+	tbuff += 4; // Unused since 1.02
 	CopyChar(tbuff, &pItem->_iSelFlag);
 	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pItem->_iPostDraw);
-	CopyInt(tbuff, &pItem->_iIdentified);
+	pItem->_iPostDraw = LoadBool32();
+	pItem->_iIdentified = LoadBool32();
 	CopyChar(tbuff, &pItem->_iMagical);
 	CopyBytes(tbuff, 64, &pItem->_iName);
 	CopyBytes(tbuff, 64, &pItem->_iIName);
-	CopyChar(tbuff, &pItem->_iLoc);
-	CopyChar(tbuff, &pItem->_iClass);
+	pItem->_iLoc = (item_equip_type)BLoad();
+	pItem->_iClass = (item_class)BLoad();
 	tbuff += 1; // Alignment
 	CopyInt(tbuff, &pItem->_iCurs);
 	CopyInt(tbuff, &pItem->_ivalue);
@@ -140,8 +149,8 @@ static void LoadItemData(ItemStruct *pItem)
 	CopyInt(tbuff, &pItem->_iMaxDam);
 	CopyInt(tbuff, &pItem->_iAC);
 	CopyInt(tbuff, &pItem->_iFlags);
-	CopyInt(tbuff, &pItem->_iMiscId);
-	CopyInt(tbuff, &pItem->_iSpell);
+	pItem->_iMiscId = (item_misc_id)LoadUint32LE();
+	pItem->_iSpell = (spell_id)LoadUint32LE();
 	CopyInt(tbuff, &pItem->_iCharges);
 	CopyInt(tbuff, &pItem->_iMaxCharges);
 	CopyInt(tbuff, &pItem->_iDurability);
@@ -170,8 +179,8 @@ static void LoadItemData(ItemStruct *pItem)
 	CopyInt(tbuff, &pItem->_iLMinDam);
 	CopyInt(tbuff, &pItem->_iLMaxDam);
 	CopyInt(tbuff, &pItem->_iPLEnAc);
-	CopyChar(tbuff, &pItem->_iPrePower);
-	CopyChar(tbuff, &pItem->_iSufPower);
+	pItem->_iPrePower = (item_effect_type)BLoad();
+	pItem->_iSufPower = (item_effect_type)BLoad();
 	tbuff += 2; // Alignment
 	CopyInt(tbuff, &pItem->_iVAdd1);
 	CopyInt(tbuff, &pItem->_iVMult1);
@@ -181,7 +190,7 @@ static void LoadItemData(ItemStruct *pItem)
 	CopyChar(tbuff, &pItem->_iMinMag);
 	CopyChar(tbuff, &pItem->_iMinDex);
 	tbuff += 1; // Alignment
-	CopyInt(tbuff, &pItem->_iStatFlag);
+	pItem->_iStatFlag = LoadBool32();
 	CopyInt(tbuff, &pItem->IDidx);
 	if (!gbIsHellfireSaveGame) {
 		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
@@ -1038,6 +1047,13 @@ static void ISave(int v)
 	*tbuff++ = v;
 }
 
+static void SaveUint32LE(Uint32 v)
+{
+	Uint32 buf = SwapLE32(v);
+	memcpy(tbuff, &buf, 4);
+	tbuff += 4;
+}
+
 static void SaveBool8(bool v)
 {
 	if (v != false)
@@ -1068,27 +1084,25 @@ static void SaveItem(ItemStruct *pItem)
 	CopyInt(&pItem->_iSeed, tbuff);
 	CopyShort(&pItem->_iCreateInfo, tbuff);
 	tbuff += 2; // Alignment
-
 	CopyInt(&iType, tbuff);
-
 	CopyInt(&pItem->_ix, tbuff);
 	CopyInt(&pItem->_iy, tbuff);
-	CopyInt(&pItem->_iAnimFlag, tbuff);
+	SaveBool32(pItem->_iAnimFlag);
 	tbuff += 4; // Skip pointer _iAnimData
 	CopyInt(&pItem->_iAnimLen, tbuff);
 	CopyInt(&pItem->_iAnimFrame, tbuff);
 	CopyInt(&pItem->_iAnimWidth, tbuff);
 	CopyInt(&pItem->_iAnimWidth2, tbuff);
-	CopyInt(&pItem->_iDelFlag, tbuff);
+	tbuff += 4; // Unused since 1.02
 	CopyChar(&pItem->_iSelFlag, tbuff);
 	tbuff += 3; // Alignment
-	CopyInt(&pItem->_iPostDraw, tbuff);
-	CopyInt(&pItem->_iIdentified, tbuff);
+	SaveBool32(pItem->_iPostDraw);
+	SaveBool32(pItem->_iIdentified);
 	CopyChar(&pItem->_iMagical, tbuff);
 	CopyBytes(&pItem->_iName, 64, tbuff);
 	CopyBytes(&pItem->_iIName, 64, tbuff);
-	CopyChar(&pItem->_iLoc, tbuff);
-	CopyChar(&pItem->_iClass, tbuff);
+	BSave(pItem->_iLoc);
+	BSave(pItem->_iClass);
 	tbuff += 1; // Alignment
 	CopyInt(&pItem->_iCurs, tbuff);
 	CopyInt(&pItem->_ivalue, tbuff);
@@ -1097,8 +1111,8 @@ static void SaveItem(ItemStruct *pItem)
 	CopyInt(&pItem->_iMaxDam, tbuff);
 	CopyInt(&pItem->_iAC, tbuff);
 	CopyInt(&pItem->_iFlags, tbuff);
-	CopyInt(&pItem->_iMiscId, tbuff);
-	CopyInt(&pItem->_iSpell, tbuff);
+	SaveUint32LE(pItem->_iMiscId);
+	SaveUint32LE(pItem->_iSpell);
 	CopyInt(&pItem->_iCharges, tbuff);
 	CopyInt(&pItem->_iMaxCharges, tbuff);
 	CopyInt(&pItem->_iDurability, tbuff);
@@ -1127,8 +1141,8 @@ static void SaveItem(ItemStruct *pItem)
 	CopyInt(&pItem->_iLMinDam, tbuff);
 	CopyInt(&pItem->_iLMaxDam, tbuff);
 	CopyInt(&pItem->_iPLEnAc, tbuff);
-	CopyChar(&pItem->_iPrePower, tbuff);
-	CopyChar(&pItem->_iSufPower, tbuff);
+	BSave(pItem->_iPrePower);
+	BSave(pItem->_iSufPower);
 	tbuff += 2; // Alignment
 	CopyInt(&pItem->_iVAdd1, tbuff);
 	CopyInt(&pItem->_iVMult1, tbuff);
@@ -1138,7 +1152,7 @@ static void SaveItem(ItemStruct *pItem)
 	CopyChar(&pItem->_iMinMag, tbuff);
 	CopyChar(&pItem->_iMinDex, tbuff);
 	tbuff += 1; // Alignment
-	CopyInt(&pItem->_iStatFlag, tbuff);
+	SaveBool32(pItem->_iStatFlag);
 	CopyInt(&idx, tbuff);
 	tbuff += 4; // Unused
 	if (gbIsHellfire)
@@ -1361,7 +1375,6 @@ static void SavePlayer(int i)
 static void SaveMonster(int i)
 {
 	MonsterStruct *pMonster = &monster[i];
-	char tempChar;
 
 	CopyInt(&pMonster->_mMTidx, tbuff);
 	CopyInt(&pMonster->_mmode, tbuff);
@@ -1430,13 +1443,13 @@ static void SaveMonster(int i)
 	CopyShort(&pMonster->mExp, tbuff);
 
 	// Write mHit for backwards compatibility
-	tempChar = pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX;
-	CopyChar(&tempChar, tbuff);
+	Sint8 mHit = pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX;
+	CopyChar(&mHit, tbuff);
 	CopyChar(&pMonster->mMinDamage, tbuff);
 	CopyChar(&pMonster->mMaxDamage, tbuff);
 	// Write mHit2 for backwards compatibility
-	tempChar = pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX;
-	CopyChar(&tempChar, tbuff);
+	Sint8 mHit2 = pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX;
+	CopyChar(&mHit2, tbuff);
 	CopyChar(&pMonster->mMinDamage2, tbuff);
 	CopyChar(&pMonster->mMaxDamage2, tbuff);
 	CopyChar(&pMonster->mArmorClass, tbuff);

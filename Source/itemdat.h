@@ -344,7 +344,7 @@ typedef enum item_misc_id {
 	IMISC_MAPOFDOOM,
 	IMISC_EAR,
 	IMISC_SPECELIX,
-	IMISC_0xD,
+	IMISC_0x2D, // Unknown
 	IMISC_RUNEFIRST,
 	IMISC_RUNEF,
 	IMISC_RUNEL,
@@ -402,7 +402,7 @@ typedef enum item_effect_type {
 	IPL_CHARGES,
 	IPL_FIREDAM,
 	IPL_LIGHTDAM,
-	IPL_0x12,
+	IPL_0x12, // Unknown
 	IPL_STR,
 	IPL_STR_CURSE,
 	IPL_MAG,
@@ -424,7 +424,7 @@ typedef enum item_effect_type {
 	IPL_INDESTRUCTIBLE,
 	IPL_LIGHT,
 	IPL_LIGHT_CURSE,
-	IPL_0x28,
+	IPL_0x28,        // Unknown
 	IPL_MULT_ARROWS, /* only used in hellfire */
 	IPL_FIRE_ARROWS,
 	IPL_LIGHT_ARROWS,
@@ -432,10 +432,10 @@ typedef enum item_effect_type {
 	IPL_THORNS,
 	IPL_NOMANA,
 	IPL_NOHEALPLR,
-	IPL_0x30,
-	IPL_0x31,
+	IPL_0x30,     // Unknown
+	IPL_0x31,     // Unknown
 	IPL_FIREBALL, /* only used in hellfire */
-	IPL_0x33,
+	IPL_0x33,     // Unknown
 	IPL_ABSHALFTRAP,
 	IPL_KNOCKBACK,
 	IPL_NOHEALMON,
@@ -455,7 +455,7 @@ typedef enum item_effect_type {
 	IPL_ONEHAND,
 	IPL_3XDAMVDEM,
 	IPL_ALLRESZERO,
-	IPL_0x47,
+	IPL_0x47, // Unknown
 	IPL_DRAINLIFE,
 	IPL_RNDSTEALLIFE,
 	IPL_INFRAVISION,
