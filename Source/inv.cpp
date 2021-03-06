@@ -1929,10 +1929,8 @@ void AutoGetItem(int pnum, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (ii != MAXITEMS) {
-		if (dItem[item[ii]._ix][item[ii]._iy] == 0)
-			return;
-	}
+	if (dItem[item[ii]._ix][item[ii]._iy] == 0)
+		return;
 
 	item[ii]._iCreateInfo &= ~CF_PREGEN;
 	plr[pnum].HoldItem = item[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug

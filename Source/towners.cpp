@@ -750,7 +750,7 @@ void TalkToTowner(int p, int t)
 
 	towner[t]._tMsgSaid = FALSE;
 
-	if (pcurs >= CURSOR_FIRSTITEM && !DropItemBeforeTrig()) {
+	if (pcurs >= CURSOR_FIRSTITEM) {
 		return;
 	}
 
