@@ -90,7 +90,7 @@ static void init_touch(void)
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
 	visible_height = current.h;
-	visible_width = (current.h * gnScreenWidth) / gnScreenHeight;
+	visible_width = (current.h * dvl::gnScreenWidth) / dvl::gnScreenHeight;
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
 #ifdef __vita__
