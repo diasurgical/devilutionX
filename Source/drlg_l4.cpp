@@ -15,6 +15,9 @@ int diabquad3x;
 int diabquad3y;
 int diabquad4x;
 int diabquad4y;
+
+namespace {
+
 BOOL hallok[20];
 int l4holdx;
 int l4holdy;
@@ -140,6 +143,8 @@ const BYTE L4BTYPES[140] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
+
+} // namespace
 
 static void DRLG_L4Shadows()
 {
