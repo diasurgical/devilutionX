@@ -22,10 +22,10 @@ namespace dvl {
 
 extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 
-int screenWidth;
-int screenHeight;
-int viewportHeight;
-int borderRight;
+Sint16 screenWidth;
+Sint16 screenHeight;
+Sint16 viewportHeight;
+Sint16 borderRight;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
