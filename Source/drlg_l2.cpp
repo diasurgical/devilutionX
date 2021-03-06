@@ -10,12 +10,15 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+BYTE predungeon[DMAXX][DMAXY];
+
+namespace {
+
 int nSx1;
 int nSy1;
 int nSx2;
 int nSy2;
 int nRoomCnt;
-BYTE predungeon[DMAXX][DMAXY];
 ROOMNODE RoomList[81];
 HALLNODE *pHallList;
 
@@ -1597,6 +1600,8 @@ int Patterns[100][10] = {
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 2, 8 },
 	{ 0, 0, 0, 0, 255, 0, 0, 0, 0, 0 },
 };
+
+} // namespace
 
 static BOOL DRLG_L2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int ldir)
 {

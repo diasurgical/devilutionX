@@ -7,6 +7,16 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+int UberRow;
+int UberCol;
+bool IsUberRoomOpened;
+int UberLeverRow;
+int UberLeverCol;
+bool IsUberLeverActivated;
+int UberDiabloMonsterIndex;
+
+namespace {
+
 /** Represents a tile ID map of twice the size, repeating each tile of the original map in blocks of 4. */
 BYTE L5dungeon[80][80];
 BYTE L5dflags[DMAXX][DMAXY];
@@ -18,13 +28,7 @@ int HR1;
 int HR2;
 /** Specifies whether to generate a horizontal room at position 3 in the Cathedral. */
 int HR3;
-int UberRow;
-int UberCol;
-bool IsUberRoomOpened;
-int UberLeverRow;
-int UberLeverCol;
-bool IsUberLeverActivated;
-int UberDiabloMonsterIndex;
+
 /** Specifies whether to generate a vertical room at position 1 in the Cathedral. */
 BOOL VR1;
 /** Specifies whether to generate a vertical room at position 2 in the Cathedral. */
@@ -471,6 +475,8 @@ BYTE CornerstoneRoomPattern[32] = { 5, 5, 4, 2, 2, 2, 6, 1, 111, 172, 0, 1, 1, 1
  * where each cell either contains a SW wall or it doesn't.
  */
 BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
+
+} // namespace
 
 void DRLG_InitL5Vals()
 {

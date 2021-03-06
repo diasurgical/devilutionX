@@ -10,6 +10,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+namespace {
+
 /** This will be true if a lava pool has been generated for the level */
 BOOLEAN lavapool;
 int lockoutcnt;
@@ -831,6 +833,8 @@ const BYTE byte_48A9C8[] = {
 	7,   7,   7, 7,
 	// clang-format on
 };
+
+} // namespace
 
 static void InitL3Dungeon()
 {
