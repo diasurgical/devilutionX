@@ -136,7 +136,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 
 	assert(sgnSyncPInv > -1 && sgnSyncPInv < NUM_INVLOC);
 	pItem = &plr[myplr].InvBody[sgnSyncPInv];
-	if (pItem->_itype != ITYPE_NONE) {
+	if (!pItem->isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
 		pHdr->wPInvIndx = pItem->IDidx;
 		pHdr->wPInvCI = pItem->_iCreateInfo;

@@ -7,6 +7,8 @@
 #define __ALL_H__
 
 #include <SDL.h>
+#include <map>
+#include <vector>
 
 #ifdef USE_SDL1
 #include "sdl2_to_1_2_backports.h"
@@ -17,6 +19,8 @@
 #include "sdl_compat.h"
 
 #include "../types.h"
+
+#include "../SourceX/qol.h"
 
 #include "appfat.h"
 #include "automap.h"

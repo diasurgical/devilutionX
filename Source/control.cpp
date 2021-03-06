@@ -406,14 +406,14 @@ void DrawSpellList()
 					sprintf(infostr, "Scroll of %s", spelldata[pSpell].sNameText);
 					v = 0;
 					for (t = 0; t < plr[myplr]._pNumInv; t++) {
-						if (plr[myplr].InvList[t]._itype != ITYPE_NONE
+						if (!plr[myplr].InvList[t].isEmpty()
 						    && (plr[myplr].InvList[t]._iMiscId == IMISC_SCROLL || plr[myplr].InvList[t]._iMiscId == IMISC_SCROLLT)
 						    && plr[myplr].InvList[t]._iSpell == pSpell) {
 							v++;
 						}
 					}
 					for (t = 0; t < MAXBELTITEMS; t++) {
-						if (plr[myplr].SpdList[t]._itype != ITYPE_NONE
+						if (!plr[myplr].SpdList[t].isEmpty()
 						    && (plr[myplr].SpdList[t]._iMiscId == IMISC_SCROLL || plr[myplr].SpdList[t]._iMiscId == IMISC_SCROLLT)
 						    && plr[myplr].SpdList[t]._iSpell == pSpell) {
 							v++;
@@ -952,6 +952,12 @@ void DoPanBtn()
 		}
 	}
 	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
+		if (SDL_GetModState() & KMOD_SHIFT) {
+			plr[myplr]._pRSpell = SPL_INVALID;
+			plr[myplr]._pRSplType = RSPLTYPE_INVALID;
+			force_redraw = 255;
+			return;
+		}
 		DoSpeedBook();
 		gamemenu_off();
 	}
@@ -1060,14 +1066,14 @@ void CheckPanelInfo()
 				AddPanelString(tempstr, TRUE);
 				s = 0;
 				for (i = 0; i < plr[myplr]._pNumInv; i++) {
-					if (plr[myplr].InvList[i]._itype != ITYPE_NONE
+					if (!plr[myplr].InvList[i].isEmpty()
 					    && (plr[myplr].InvList[i]._iMiscId == IMISC_SCROLL || plr[myplr].InvList[i]._iMiscId == IMISC_SCROLLT)
 					    && plr[myplr].InvList[i]._iSpell == v) {
 						s++;
 					}
 				}
 				for (i = 0; i < MAXBELTITEMS; i++) {
-					if (plr[myplr].SpdList[i]._itype != ITYPE_NONE
+					if (!plr[myplr].SpdList[i].isEmpty()
 					    && (plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLL || plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLLT)
 					    && plr[myplr].SpdList[i]._iSpell == v) {
 						s++;
@@ -1699,7 +1705,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 
 static int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
 {
-	if (pItem->_itype == ITYPE_NONE)
+	if (pItem->isEmpty())
 		return x;
 	if (pItem->_iDurability > 5)
 		return x;

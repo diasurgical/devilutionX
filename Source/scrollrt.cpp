@@ -1232,6 +1232,8 @@ void DrawView(int StartX, int StartY)
 	if (automapflag) {
 		DrawAutomap(out.subregion(0, 0, out.line_width, SCREEN_Y + VIEWPORT_HEIGHT));
 	}
+	DrawMonsterHealthBar();
+
 	if (stextflag && !qtextflag)
 		DrawSText(out);
 	if (invflag) {
@@ -1577,6 +1579,7 @@ void DrawAndBlit()
 		DrawTalkPan(out);
 		hgt = SCREEN_HEIGHT;
 	}
+	DrawXPBar();
 	scrollrt_draw_cursor_item();
 
 	DrawFPS(out);

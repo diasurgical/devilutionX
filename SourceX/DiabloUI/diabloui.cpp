@@ -85,6 +85,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	gfnListYesNo = fnYesNo;
 	gUiItems = items;
 	UiItemsWraps = itemsWraps;
+	ListOffset = NULL;
 	if (fnFocus)
 		fnFocus(0);
 
@@ -662,7 +663,7 @@ void Render(const UiList *ui_list)
 	for (std::size_t i = 0; i < ui_list->m_vecItems.size(); ++i) {
 		SDL_Rect rect = ui_list->itemRect(i);
 		const UiListItem *item = ui_list->GetItem(i);
-		if (i == SelectedItem)
+		if (i + (ListOffset == NULL ? 0 : *ListOffset) == SelectedItem)
 			DrawSelector(rect);
 		DrawArtStr(item->m_text, rect, ui_list->m_iFlags);
 	}

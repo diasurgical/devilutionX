@@ -272,6 +272,7 @@ add_library(devilution STATIC
   Source/trigs.cpp)
 
 set(devilutionx_SRCS
+  SourceX/qol.cpp
   SourceX/dx.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp

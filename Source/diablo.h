@@ -36,14 +36,16 @@ typedef struct Options {
 	Sint32 nGammaCorrection;   // Gamma correction level
 	bool bColorCycling;        // Enable color cycling animations
 
-	Sint32 nTickRate;    // Game play ticks per secound
-	bool bJogInTown;     // Enable double walk speed when in town
-	bool bGrabInput;     // Do not let the mouse leave the application window
-	bool bTheoQuest;     // Enable the Theo quest
-	bool bCowQuest;      // Enable the cow quest
-	bool bTestBard;      // Enable the bard hero class
-	bool bTestBarbarian; // Enable the babarian hero class
-	bool bFriendlyFire;  // Will players still damage other players in non-PvP mode
+	Sint32 nTickRate;     // Game play ticks per secound
+	bool bJogInTown;      // Enable double walk speed when in town
+	bool bGrabInput;      // Do not let the mouse leave the application window
+	bool bTheoQuest;      // Enable the Theo quest
+	bool bCowQuest;       // Enable the cow quest
+	bool bTestBard;       // Enable the bard hero class
+	bool bTestBarbarian;  // Enable the babarian hero class
+	bool bExperienceBar;  // Show the current level progress
+	bool bEnemyHealthBar; // Show enemy health at the top of the screen
+	bool bFriendlyFire;   // Will players still damage other players in non-PvP mode
 
 	char szBindAddress[129]; // Optionally bind to a specific network interface
 } Options;
@@ -81,7 +83,7 @@ void diablo_quit(int exitStatus);
 int DiabloMain(int argc, char **argv);
 BOOL TryIconCurs();
 void diablo_pause_game();
-BOOL PressEscKey();
+bool PressEscKey();
 void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void LoadGameLevel(BOOL firstflag, int lvldir);

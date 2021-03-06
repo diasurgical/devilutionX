@@ -6,6 +6,8 @@
 #ifndef __PFILE_H__
 #define __PFILE_H__
 
+#include "player.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus

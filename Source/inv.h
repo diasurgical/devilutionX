@@ -6,6 +6,8 @@
 #ifndef __INV_H__
 #define __INV_H__
 
+#include "items.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus

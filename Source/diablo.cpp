@@ -426,6 +426,8 @@ static void SaveOptions()
 	setIniInt("Game", "Friendly Fire", sgOptions.bFriendlyFire);
 	setIniInt("Game", "Test Bard", sgOptions.bTestBard);
 	setIniInt("Game", "Test Barbarian", sgOptions.bTestBarbarian);
+	setIniInt("Game", "Experience Bar", sgOptions.bExperienceBar);
+	setIniInt("Game", "Enemy Health Bar", sgOptions.bEnemyHealthBar);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
 }
@@ -468,6 +470,8 @@ static void LoadOptions()
 	sgOptions.bFriendlyFire = getIniBool("Game", "Friendly Fire", true);
 	sgOptions.bTestBard = getIniBool("Game", "Test Bard", false);
 	sgOptions.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
+	sgOptions.bExperienceBar = getIniBool("Game", "Experience Bar", false);
+	sgOptions.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
 }
@@ -849,43 +853,69 @@ static void ReleaseKey(int vkey)
 		CaptureScreen();
 }
 
-BOOL PressEscKey()
+static void ClosePanels()
 {
-	BOOL rv = FALSE;
+	if (PANELS_COVER) {
+		if (!chrflag && !questlog && (invflag || sbookflag) && MouseX < 480 && MouseY < PANEL_TOP) {
+			SetCursorPos(MouseX + 160, MouseY);
+		} else if (!invflag && !sbookflag && (chrflag || questlog) && MouseX > 160 && MouseY < PANEL_TOP) {
+			SetCursorPos(MouseX - 160, MouseY);
+		}
+	}
+	invflag = FALSE;
+	chrflag = FALSE;
+	sbookflag = FALSE;
+	questlog = FALSE;
+}
+
+bool PressEscKey()
+{
+	bool rv = false;
 
 	if (doomflag) {
 		doom_close();
-		rv = TRUE;
+		rv = true;
 	}
+
 	if (helpflag) {
 		helpflag = FALSE;
-		rv = TRUE;
+		rv = true;
 	}
 
 	if (qtextflag) {
 		qtextflag = FALSE;
 		stream_stop();
-		rv = TRUE;
-	} else if (stextflag) {
+		rv = true;
+	}
+
+	if (stextflag) {
 		STextESC();
-		rv = TRUE;
+		rv = true;
 	}
 
 	if (msgflag) {
 		msgdelay = 0;
-		rv = TRUE;
+		rv = true;
 	}
+
 	if (talkflag) {
 		control_reset_talk();
-		rv = TRUE;
+		rv = true;
 	}
+
 	if (dropGoldFlag) {
 		control_drop_gold(DVL_VK_ESCAPE);
-		rv = TRUE;
+		rv = true;
 	}
+
 	if (spselflag) {
 		spselflag = FALSE;
-		rv = TRUE;
+		rv = true;
+	}
+
+	if (invflag || chrflag || sbookflag || questlog) {
+		ClosePanels();
+		rv = true;
 	}
 
 	return rv;
@@ -1078,22 +1108,13 @@ static void PressKey(int vkey)
 	} else if (vkey == DVL_VK_TAB) {
 		DoAutoMap();
 	} else if (vkey == DVL_VK_SPACE) {
-		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
-			SetCursorPos(MouseX + 160, MouseY);
-		}
-		if (!invflag && chrflag && MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
-			SetCursorPos(MouseX - 160, MouseY);
-		}
+		ClosePanels();
 		helpflag = FALSE;
-		invflag = FALSE;
-		chrflag = FALSE;
-		sbookflag = FALSE;
 		spselflag = FALSE;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
 			qtextflag = FALSE;
 			stream_stop();
 		}
-		questlog = FALSE;
 		automapflag = FALSE;
 		msgdelay = 0;
 		gamemenu_off();
@@ -1137,44 +1158,59 @@ static void PressChar(WPARAM vkey)
 	case 'I':
 	case 'i':
 		if (stextflag == STORE_NONE) {
-			sbookflag = FALSE;
 			invflag = !invflag;
-			if (!invflag || chrflag) {
-				if (MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
-					SetCursorPos(MouseX + 160, MouseY);
-				}
-			} else {
-				if (MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
-					SetCursorPos(MouseX - 160, MouseY);
+			if (!chrflag && !questlog && PANELS_COVER) {
+				if (!invflag) { // We closed the invetory
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+					}
+				} else if (!sbookflag) { // We opened the invetory
+					if (MouseX > 160 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX - 160, MouseY);
+					}
 				}
 			}
+			sbookflag = FALSE;
 		}
 		return;
 	case 'C':
 	case 'c':
 		if (stextflag == STORE_NONE) {
-			questlog = FALSE;
 			chrflag = !chrflag;
-			if (!chrflag || invflag) {
-				if (MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
-					SetCursorPos(MouseX - 160, MouseY);
-				}
-			} else {
-				if (MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
-					SetCursorPos(MouseX + 160, MouseY);
+			if (!invflag && !sbookflag && PANELS_COVER) {
+				if (!chrflag) { // We closed the character sheet
+					if (MouseX > 160 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX - 160, MouseY);
+					}
+				} else if (!questlog) { // We opened the character sheet
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+					}
 				}
 			}
+			questlog = FALSE;
 		}
 		return;
 	case 'Q':
 	case 'q':
 		if (stextflag == STORE_NONE) {
-			chrflag = FALSE;
 			if (!questlog) {
 				StartQuestlog();
 			} else {
 				questlog = FALSE;
 			}
+			if (!invflag && !sbookflag && PANELS_COVER) {
+				if (!questlog) { // We closed the quest log
+					if (MouseX > 160 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX - 160, MouseY);
+					}
+				} else if (!chrflag) { // We opened the character quest log
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+					}
+				}
+			}
+			chrflag = FALSE;
 		}
 		return;
 	case 'Z':
@@ -1185,7 +1221,10 @@ static void PressChar(WPARAM vkey)
 	case 'S':
 	case 's':
 		if (stextflag == STORE_NONE) {
+			chrflag = FALSE;
+			questlog = FALSE;
 			invflag = FALSE;
+			sbookflag = FALSE;
 			if (!spselflag) {
 				DoSpeedBook();
 			} else {
@@ -1197,8 +1236,19 @@ static void PressChar(WPARAM vkey)
 	case 'B':
 	case 'b':
 		if (stextflag == STORE_NONE) {
-			invflag = FALSE;
 			sbookflag = !sbookflag;
+			if (!chrflag && !questlog && PANELS_COVER) {
+				if (!sbookflag) { // We closed the invetory
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+					}
+				} else if (!invflag) { // We opened the invetory
+					if (MouseX > 160 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX - 160, MouseY);
+					}
+				}
+			}
+			invflag = FALSE;
 		}
 		return;
 	case '+':
@@ -1229,43 +1279,43 @@ static void PressChar(WPARAM vkey)
 		return;
 	case '!':
 	case '1':
-		if (plr[myplr].SpdList[0]._itype != ITYPE_NONE && plr[myplr].SpdList[0]._itype != ITYPE_GOLD) {
+		if (!plr[myplr].SpdList[0].isEmpty() && plr[myplr].SpdList[0]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST);
 		}
 		return;
 	case '@':
 	case '2':
-		if (plr[myplr].SpdList[1]._itype != ITYPE_NONE && plr[myplr].SpdList[1]._itype != ITYPE_GOLD) {
+		if (!plr[myplr].SpdList[1].isEmpty() && plr[myplr].SpdList[1]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 1);
 		}
 		return;
 	case '#':
 	case '3':
-		if (plr[myplr].SpdList[2]._itype != ITYPE_NONE && plr[myplr].SpdList[2]._itype != ITYPE_GOLD) {
+		if (!plr[myplr].SpdList[2].isEmpty() && plr[myplr].SpdList[2]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 2);
 		}
 		return;
 	case '$':
 	case '4':
-		if (plr[myplr].SpdList[3]._itype != ITYPE_NONE && plr[myplr].SpdList[3]._itype != ITYPE_GOLD) {
+		if (!plr[myplr].SpdList[3].isEmpty() && plr[myplr].SpdList[3]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 3);
 		}
 		return;
 	case '%':
 	case '5':
-		if (plr[myplr].SpdList[4]._itype != ITYPE_NONE && plr[myplr].SpdList[4]._itype != ITYPE_GOLD) {
+		if (!plr[myplr].SpdList[4].isEmpty() && plr[myplr].SpdList[4]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 4);
 		}
 		return;
 	case '^':
 	case '6':
-		if (plr[myplr].SpdList[5]._itype != ITYPE_NONE && plr[myplr].SpdList[5]._itype != ITYPE_GOLD) {
+		if (!plr[myplr].SpdList[5].isEmpty() && plr[myplr].SpdList[5]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 5);
 		}
 		return;
 	case '&':
 	case '7':
-		if (plr[myplr].SpdList[6]._itype != ITYPE_NONE && plr[myplr].SpdList[6]._itype != ITYPE_GOLD) {
+		if (!plr[myplr].SpdList[6].isEmpty() && plr[myplr].SpdList[6]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 6);
 		}
 		return;
@@ -1277,7 +1327,7 @@ static void PressChar(WPARAM vkey)
 			return;
 		}
 #endif
-		if (plr[myplr].SpdList[7]._itype != ITYPE_NONE && plr[myplr].SpdList[7]._itype != ITYPE_GOLD) {
+		if (!plr[myplr].SpdList[7].isEmpty() && plr[myplr].SpdList[7]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 7);
 		}
 		return;

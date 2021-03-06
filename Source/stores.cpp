@@ -367,7 +367,7 @@ void StoreAutoPlace()
 		idx = plr[myplr].HoldItem.IDidx;
 		if (plr[myplr].HoldItem._iStatFlag && AllItemsList[idx].iUsable) {
 			for (i = 0; i < MAXBELTITEMS && !done; i++) {
-				if (plr[myplr].SpdList[i]._itype == ITYPE_NONE) {
+				if (plr[myplr].SpdList[i].isEmpty()) {
 					plr[myplr].SpdList[i] = plr[myplr].HoldItem;
 					done = TRUE;
 				}
@@ -453,7 +453,7 @@ void S_ScrollSBuy(int idx)
 	stextup = 5;
 
 	for (l = 5; l < 20; l += 4) {
-		if (smithitem[ls]._itype != ITYPE_NONE) {
+		if (!smithitem[ls].isEmpty()) {
 			iclr = COL_WHITE;
 			if (smithitem[ls]._iMagical) {
 				iclr = COL_BLUE;
@@ -495,7 +495,7 @@ void S_StartSBuy()
 	AddSText(0, 22, TRUE, "Back", COL_WHITE, FALSE);
 	OffsetSTextY(22, 6);
 	storenumh = 0;
-	for (i = 0; smithitem[i]._itype != ITYPE_NONE; i++) {
+	for (i = 0; !smithitem[i].isEmpty(); i++) {
 		storenumh++;
 	}
 
@@ -514,12 +514,12 @@ void S_ScrollSPBuy(int idx)
 
 	stextup = 5;
 	for (idx = 0; boughtitems; idx++) {
-		if (premiumitem[idx]._itype != ITYPE_NONE)
+		if (!premiumitem[idx].isEmpty())
 			boughtitems--;
 	}
 
 	for (l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
-		if (premiumitem[idx]._itype != ITYPE_NONE) {
+		if (!premiumitem[idx].isEmpty()) {
 			iclr = COL_WHITE;
 			if (premiumitem[idx]._iMagical)
 				iclr = COL_BLUE;
@@ -544,7 +544,7 @@ BOOL S_StartSPBuy()
 
 	storenumh = 0;
 	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
-		if (premiumitem[i]._itype != ITYPE_NONE)
+		if (!premiumitem[i].isEmpty())
 			storenumh++;
 	}
 	if (!storenumh) {
@@ -583,7 +583,7 @@ BOOL SmithSellOk(int i)
 		pI = &plr[myplr].SpdList[-(i + 1)];
 	}
 
-	if (pI->_itype == ITYPE_NONE)
+	if (pI->isEmpty())
 		return FALSE;
 
 	if (pI->_iMiscId > IMISC_OILFIRST && pI->_iMiscId < IMISC_OILLAST)
@@ -616,7 +616,7 @@ void S_ScrollSSell(int idx)
 	for (l = 5; l < 20; l += 4) {
 		if (idx >= storenumh)
 			break;
-		if (storehold[idx]._itype != ITYPE_NONE) {
+		if (!storehold[idx].isEmpty()) {
 			iclr = COL_WHITE;
 			if (storehold[idx]._iMagical) {
 				iclr = COL_BLUE;
@@ -717,7 +717,7 @@ void S_StartSSell()
 
 BOOL SmithRepairOk(int i)
 {
-	if (plr[myplr].InvList[i]._itype == ITYPE_NONE)
+	if (plr[myplr].InvList[i].isEmpty())
 		return FALSE;
 	if (plr[myplr].InvList[i]._itype == ITYPE_MISC)
 		return FALSE;
@@ -764,19 +764,19 @@ void S_StartSRepair()
 	storenumh = 0;
 	for (i = 0; i < 48; i++)
 		storehold[i]._itype = ITYPE_NONE;
-	if (plr[myplr].InvBody[INVLOC_HEAD]._itype != ITYPE_NONE && plr[myplr].InvBody[INVLOC_HEAD]._iDurability != plr[myplr].InvBody[INVLOC_HEAD]._iMaxDur) {
+	if (!plr[myplr].InvBody[INVLOC_HEAD].isEmpty() && plr[myplr].InvBody[INVLOC_HEAD]._iDurability != plr[myplr].InvBody[INVLOC_HEAD]._iMaxDur) {
 		repairok = TRUE;
 		AddStoreHoldRepair(plr[myplr].InvBody, -1);
 	}
-	if (plr[myplr].InvBody[INVLOC_CHEST]._itype != ITYPE_NONE && plr[myplr].InvBody[INVLOC_CHEST]._iDurability != plr[myplr].InvBody[INVLOC_CHEST]._iMaxDur) {
+	if (!plr[myplr].InvBody[INVLOC_CHEST].isEmpty() && plr[myplr].InvBody[INVLOC_CHEST]._iDurability != plr[myplr].InvBody[INVLOC_CHEST]._iMaxDur) {
 		repairok = TRUE;
 		AddStoreHoldRepair(&plr[myplr].InvBody[INVLOC_CHEST], -2);
 	}
-	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iDurability != plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMaxDur) {
+	if (!plr[myplr].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iDurability != plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMaxDur) {
 		repairok = TRUE;
 		AddStoreHoldRepair(&plr[myplr].InvBody[INVLOC_HAND_LEFT], -3);
 	}
-	if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE && plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iDurability != plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iMaxDur) {
+	if (!plr[myplr].InvBody[INVLOC_HAND_RIGHT].isEmpty() && plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iDurability != plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iMaxDur) {
 		repairok = TRUE;
 		AddStoreHoldRepair(&plr[myplr].InvBody[INVLOC_HAND_RIGHT], -4);
 	}
@@ -836,7 +836,7 @@ void S_ScrollWBuy(int idx)
 	stextup = 5;
 
 	for (l = 5; l < 20; l += 4) {
-		if (witchitem[ls]._itype != ITYPE_NONE) {
+		if (!witchitem[ls].isEmpty()) {
 			iclr = COL_WHITE;
 			if (witchitem[ls]._iMagical) {
 				iclr = COL_BLUE;
@@ -880,7 +880,7 @@ void S_StartWBuy()
 	OffsetSTextY(22, 6);
 
 	storenumh = 0;
-	for (i = 0; witchitem[i]._itype != ITYPE_NONE; i++) {
+	for (i = 0; !witchitem[i].isEmpty(); i++) {
 		storenumh++;
 	}
 	stextsmax = storenumh - 4;
@@ -948,7 +948,7 @@ void S_StartWSell()
 	for (i = 0; i < MAXBELTITEMS; i++) {
 		if (storenumh >= 48)
 			break;
-		if (plr[myplr].SpdList[i]._itype != ITYPE_NONE && WitchSellOk(-(i + 1))) {
+		if (!plr[myplr].SpdList[i].isEmpty() && WitchSellOk(-(i + 1))) {
 			sellok = TRUE;
 			storehold[storenumh] = plr[myplr].SpdList[i];
 
@@ -1150,7 +1150,7 @@ void S_StartBoy()
 	stextscrl = FALSE;
 	AddSText(0, 2, TRUE, "Wirt the Peg-legged boy", COL_GOLD, FALSE);
 	AddSLine(5);
-	if (boyitem._itype != ITYPE_NONE) {
+	if (!boyitem.isEmpty()) {
 		AddSText(0, 8, TRUE, "Talk to Wirt", COL_BLUE, TRUE);
 		AddSText(0, 12, TRUE, "I have something for sale,", COL_GOLD, FALSE);
 		AddSText(0, 14, TRUE, "but it will cost 50 gold", COL_GOLD, FALSE);
@@ -1226,7 +1226,7 @@ void S_ScrollHBuy(int idx)
 	ClearSText(5, 21);
 	stextup = 5;
 	for (l = 5; l < 20; l += 4) {
-		if (healitem[idx]._itype != ITYPE_NONE) {
+		if (!healitem[idx].isEmpty()) {
 			iclr = COL_WHITE;
 			if (!healitem[idx]._iStatFlag) {
 				iclr = COL_RED;
@@ -1260,7 +1260,7 @@ void S_StartHBuy()
 	OffsetSTextY(22, 6);
 
 	storenumh = 0;
-	for (i = 0; healitem[i]._itype != ITYPE_NONE; i++) {
+	for (i = 0; !healitem[i].isEmpty(); i++) {
 		storenumh++;
 	}
 	stextsmax = storenumh - 4;
@@ -1282,7 +1282,7 @@ void S_StartStory()
 
 BOOL IdItemOk(ItemStruct *i)
 {
-	if (i->_itype == ITYPE_NONE) {
+	if (i->isEmpty()) {
 		return FALSE;
 	}
 	if (i->_iMagical == ITEM_QUALITY_NORMAL) {
@@ -1917,7 +1917,7 @@ void SmithBuyItem()
 	if (idx == SMITH_ITEMS - 1) {
 		smithitem[SMITH_ITEMS - 1]._itype = ITYPE_NONE;
 	} else {
-		for (; smithitem[idx + 1]._itype != ITYPE_NONE; idx++) {
+		for (; !smithitem[idx + 1].isEmpty(); idx++) {
 			smithitem[idx] = smithitem[idx + 1];
 		}
 		smithitem[idx]._itype = ITYPE_NONE;
@@ -1972,7 +1972,7 @@ void SmithBuyPItem()
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 	xx = 0;
 	for (i = 0; idx >= 0; i++) {
-		if (premiumitem[i]._itype != ITYPE_NONE) {
+		if (!premiumitem[i].isEmpty()) {
 			idx--;
 			xx = i;
 		}
@@ -1998,7 +1998,7 @@ void S_SPBuyEnter()
 		xx = stextsval + ((stextsel - stextup) >> 2);
 		idx = 0;
 		for (i = 0; xx >= 0; i++) {
-			if (premiumitem[i]._itype != ITYPE_NONE) {
+			if (!premiumitem[i].isEmpty()) {
 				xx--;
 				idx = i;
 			}
@@ -2238,7 +2238,7 @@ void WitchBuyItem()
 		if (idx == WITCH_ITEMS - 1) {
 			witchitem[WITCH_ITEMS - 1]._itype = ITYPE_NONE;
 		} else {
-			for (; witchitem[idx + 1]._itype != ITYPE_NONE; idx++) {
+			for (; !witchitem[idx + 1].isEmpty(); idx++) {
 				witchitem[idx] = witchitem[idx + 1];
 			}
 			witchitem[idx]._itype = ITYPE_NONE;
@@ -2346,7 +2346,7 @@ void S_WRechargeEnter()
 
 void S_BoyEnter()
 {
-	if (boyitem._itype != ITYPE_NONE && stextsel == 18) {
+	if (!boyitem.isEmpty() && stextsel == 18) {
 		if (plr[myplr]._pGold < 50) {
 			stextshold = STORE_BOY;
 			stextlhold = 18;
@@ -2356,7 +2356,7 @@ void S_BoyEnter()
 			TakePlrsMoney(50);
 			StartStore(STORE_BBOY);
 		}
-	} else if (stextsel == 8 && boyitem._itype != ITYPE_NONE || stextsel == 12 && boyitem._itype == ITYPE_NONE) {
+	} else if (stextsel == 8 && !boyitem.isEmpty() || stextsel == 12 && boyitem.isEmpty()) {
 		talker = 8;
 		stextshold = STORE_BOY;
 		stextlhold = stextsel;
@@ -2409,7 +2409,7 @@ void HealerBuyItem()
 	if (idx == 19) {
 		healitem[19]._itype = ITYPE_NONE;
 	} else {
-		for (; healitem[idx + 1]._itype != ITYPE_NONE; idx++) {
+		for (; !healitem[idx + 1].isEmpty(); idx++) {
 			healitem[idx] = healitem[idx + 1];
 		}
 		healitem[idx]._itype = ITYPE_NONE;
