@@ -23,7 +23,7 @@ wget https://www.zlib.net/zlib-1.2.11.tar.gz -O zlib-1.2.11.tar.gz
 tar -xvf zlib-1.2.11.tar.gz
 mkdir -p zlib-1.2.11/build
 cd zlib-1.2.11/build
-cmake .. -DM68K_CPU="$M68K_CPU" -DM68K_FPU="$M68K_FPU" -DM68K_COMMON="${M68K_COMMON} -O3 -fno-exceptions -w -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14"
+cmake .. -DM68K_CPU="$M68K_CPU" -DM68K_FPU="$M68K_FPU" -DM68K_COMMON="${M68K_COMMON} -O3 -fno-exceptions -w -noixemul -DBIG_ENDIAN -DAMIGA -std=c++14"
 cmake --build . --config Release --target install -- -j$(getconf _NPROCESSORS_ONLN)
 cd ../..
 
