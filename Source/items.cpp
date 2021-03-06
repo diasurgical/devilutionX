@@ -28,7 +28,7 @@ int gnNumGetRecords;
 
 int OilLevels[] = { 1, 10, 1, 10, 4, 1, 5, 17, 1, 10 };
 int OilValues[] = { 500, 2500, 500, 2500, 1500, 100, 2500, 15000, 500, 2500 };
-int OilMagic[] = {
+enum item_misc_id OilMagic[] = {
 	IMISC_OILACC,
 	IMISC_OILMAST,
 	IMISC_OILSHARP,
@@ -348,11 +348,11 @@ int get_ring_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_RING && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_RING && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_RING && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_RING && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -365,11 +365,11 @@ int get_bow_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_BOW && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_BOW && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_BOW && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_BOW && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -382,11 +382,11 @@ int get_staff_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_STAFF && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_STAFF && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_STAFF && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_STAFF && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -399,11 +399,11 @@ int get_sword_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_SWORD && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_SWORD && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_SWORD && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_SWORD && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -416,11 +416,11 @@ int get_helm_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_HELM && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_HELM && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_HELM && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_HELM && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -433,11 +433,11 @@ int get_shield_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_SHIELD && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_SHIELD && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_SHIELD && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_SHIELD && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -450,13 +450,13 @@ int get_armor_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE
 		    && (plr[i].InvBody[j]._itype == ITYPE_LARMOR || plr[i].InvBody[j]._itype == ITYPE_MARMOR || plr[i].InvBody[j]._itype == ITYPE_HARMOR)
 		    && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE
 		    && (plr[i].InvList[j]._itype == ITYPE_LARMOR || plr[i].InvList[j]._itype == ITYPE_MARMOR || plr[i].InvList[j]._itype == ITYPE_HARMOR)
 		    && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
@@ -471,11 +471,11 @@ int get_mace_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_MACE && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_MACE && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_MACE && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_MACE && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -488,11 +488,11 @@ int get_amulet_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_AMULET && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_AMULET && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_AMULET && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_AMULET && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -505,11 +505,11 @@ int get_axe_max_value(int i)
 
 	res = 0;
 	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ITYPE_NONE && plr[i].InvBody[j]._itype == ITYPE_AXE && res < plr[i].InvBody[j]._iIvalue)
+		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_AXE && res < plr[i].InvBody[j]._iIvalue)
 			res = plr[i].InvBody[j]._iIvalue;
 	}
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ITYPE_NONE && plr[i].InvList[j]._itype == ITYPE_AXE && res < plr[i].InvList[j]._iIvalue)
+		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_AXE && res < plr[i].InvList[j]._iIvalue)
 			res = plr[i].InvList[j]._iIvalue;
 	}
 
@@ -1281,8 +1281,8 @@ void SetPlrHandItem(ItemStruct *h, int idata)
 	h->_iMinDex = pAllItem->iMinDex;
 	h->_ivalue = pAllItem->iValue;
 	h->_iIvalue = pAllItem->iValue;
-	h->_iPrePower = -1;
-	h->_iSufPower = -1;
+	h->_iPrePower = IPL_INVALID;
+	h->_iSufPower = IPL_INVALID;
 	h->_iMagical = ITEM_QUALITY_NORMAL;
 	h->IDidx = idata;
 }
@@ -1637,7 +1637,7 @@ void CalcItemValue(int i)
 
 void GetBookSpell(int i, int lvl)
 {
-	int rv, s, bs;
+	int rv;
 
 	if (lvl == 0)
 		lvl = 1;
@@ -1649,13 +1649,13 @@ void GetBookSpell(int i, int lvl)
 	if (gbIsSpawn && lvl > 5)
 		lvl = 5;
 
-	s = SPL_FIREBOLT;
-	bs = SPL_FIREBOLT;
+	int s = SPL_FIREBOLT;
+	enum spell_id bs = SPL_FIREBOLT;
 	while (rv > 0) {
 		int sLevel = GetSpellBookLevel(s);
 		if (sLevel != -1 && lvl >= sLevel) {
 			rv--;
-			bs = s;
+			bs = static_cast<spell_id>(s);
 		}
 		s++;
 		if (!gbIsMultiplayer) {
@@ -1744,7 +1744,7 @@ void GetStaffPower(int i, int lvl, int bs, BOOL onlygood)
 
 void GetStaffSpell(int i, int lvl, BOOL onlygood)
 {
-	int l, rv, s, minc, maxc, v, bs;
+	int l, rv, minc, maxc, v;
 	char istr[68];
 
 	if (!gbIsHellfire && random_(17, 4) == 0) {
@@ -1759,12 +1759,13 @@ void GetStaffSpell(int i, int lvl, BOOL onlygood)
 		if (gbIsSpawn && lvl > 10)
 			lvl = 10;
 
-		s = SPL_FIREBOLT;
+		int s = SPL_FIREBOLT;
+        enum spell_id bs = SPL_NULL;
 		while (rv > 0) {
 			int sLevel = GetSpellStaffLevel(s);
 			if (sLevel != -1 && l >= sLevel) {
 				rv--;
-				bs = s;
+				bs = static_cast<spell_id>(s);
 			}
 			s++;
 			if (!gbIsMultiplayer && s == SPL_RESURRECT)
@@ -1846,8 +1847,8 @@ void GetItemAttrs(int i, int idata, int lvl)
 	item[i]._iMinMag = AllItemsList[idata].iMinMag;
 	item[i]._iMinDex = AllItemsList[idata].iMinDex;
 	item[i].IDidx = idata;
-	item[i]._iPrePower = -1;
-	item[i]._iSufPower = -1;
+	item[i]._iPrePower = IPL_INVALID;
+	item[i]._iSufPower = IPL_INVALID;
 
 	if (item[i]._iMiscId == IMISC_BOOK)
 		GetBookSpell(i, lvl);
@@ -1981,7 +1982,7 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 		item[i]._iMaxCharges = item[i]._iCharges;
 		break;
 	case IPL_SPELL:
-		item[i]._iSpell = param1;
+		item[i]._iSpell = static_cast<spell_id>(param1);
 		item[i]._iCharges = param2;
 		item[i]._iMaxCharges = param2;
 		break;
@@ -2307,7 +2308,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 	int pre, post, nt, nl, j, preidx, sufidx;
 	int l[256];
 	char istr[128];
-	BYTE goe;
+	goodorevil goe;
 
 	pre = random_(23, 4);
 	post = random_(23, 3);
@@ -2362,7 +2363,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 				break;
 			if (IsSuffixValidForItemType(j, flgs)
 			    && PL_Suffix[j].PLMinLvl >= minlvl && PL_Suffix[j].PLMinLvl <= maxlvl
-			    && (goe | PL_Suffix[j].PLGOE) != (GOE_GOOD | GOE_EVIL)
+			    && !((goe == GOE_GOOD && PL_Suffix[j].PLGOE == GOE_EVIL) || (goe == GOE_EVIL && PL_Suffix[j].PLGOE == GOE_GOOD))
 			    && (!onlygood || PL_Suffix[j].PLOk)) {
 				l[nl] = j;
 				nl++;
