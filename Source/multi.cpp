@@ -747,6 +747,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.bJogInTown = sgOptions.bJogInTown;
 		sgGameInitInfo.bTheoQuest = sgOptions.bTheoQuest;
 		sgGameInitInfo.bCowQuest = sgOptions.bCowQuest;
+		sgGameInitInfo.bFriendlyFire = sgOptions.bFriendlyFire;
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
 		ProgramData.maxplayers = MAX_PLRS;
@@ -805,6 +806,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	gbJogInTown = sgGameInitInfo.bJogInTown;
 	gbTheoQuest = sgGameInitInfo.bTheoQuest;
 	gbCowQuest = sgGameInitInfo.bCowQuest;
+	gbFriendlyFire = sgGameInitInfo.bFriendlyFire;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();

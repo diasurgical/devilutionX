@@ -872,6 +872,9 @@ BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, B
 {
 	int dam, blk, blkper, hper, hit, resper;
 
+	if (!gbFriendlyFire && gbFriendlyMode)
+		return false;
+
 	*blocked = false;
 
 	if (plr[p]._pInvincible) {

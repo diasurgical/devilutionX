@@ -45,6 +45,7 @@ typedef struct Options {
 	bool bTestBarbarian;  // Enable the babarian hero class
 	bool bExperienceBar;  // Show the current level progress
 	bool bEnemyHealthBar; // Show enemy health at the top of the screen
+	bool bFriendlyFire;   // Will players still damage other players in non-PvP mode
 
 	char szBindAddress[129]; // Optionally bind to a specific network interface
 } Options;
@@ -108,7 +109,8 @@ extern int dbgplr;
 extern int dbgqst;
 extern int dbgmon;
 #endif
-extern BOOL FriendlyMode;
+extern bool gbFriendlyMode;
+extern bool gbFriendlyFire;
 
 #ifdef __cplusplus
 }

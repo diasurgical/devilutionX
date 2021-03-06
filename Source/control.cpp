@@ -868,7 +868,7 @@ void DrawCtrlBtns(CelOutputBuffer out)
 	}
 	if (numpanbtns == 8) {
 		CelDrawTo(out, 87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[6] + 1, 33);
-		if (FriendlyMode)
+		if (gbFriendlyMode)
 			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 3, 33);
 		else
 			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 5, 33);
@@ -1021,7 +1021,7 @@ void CheckPanelInfo()
 			if (i != 7) {
 				strcpy(infostr, PanBtnStr[i]);
 			} else {
-				if (FriendlyMode)
+				if (gbFriendlyMode)
 					strcpy(infostr, "Player friendly");
 				else
 					strcpy(infostr, "Player attack");
@@ -1171,7 +1171,7 @@ void CheckBtnUp()
 				control_type_message();
 			break;
 		case PANBTN_FRIENDLY:
-			FriendlyMode = !FriendlyMode;
+			gbFriendlyMode = !gbFriendlyMode;
 			break;
 		}
 	}
