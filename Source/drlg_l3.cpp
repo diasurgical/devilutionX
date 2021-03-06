@@ -2169,7 +2169,7 @@ static void DRLG_L3Wood()
 	FenceDoorFix();
 }
 
-BOOL DRLG_L3Anvil()
+static BOOL DRLG_L3Anvil()
 {
 	int sx, sy, sw, sh, xx, yy, ii, trys;
 	BOOL found;
@@ -2230,7 +2230,7 @@ BOOL DRLG_L3Anvil()
 	return FALSE;
 }
 
-void FixL3Warp()
+static void FixL3Warp()
 {
 	int i, j;
 
@@ -2250,7 +2250,7 @@ void FixL3Warp()
 	}
 }
 
-void FixL3HallofHeroes()
+static void FixL3HallofHeroes()
 {
 	int i, j;
 
@@ -2277,7 +2277,7 @@ void FixL3HallofHeroes()
 	}
 }
 
-void DRLG_L3LockRec(int x, int y)
+static void DRLG_L3LockRec(int x, int y)
 {
 	if (!lockout[x][y]) {
 		return;
