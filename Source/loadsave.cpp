@@ -186,7 +186,7 @@ static void LoadItemData(ItemStruct *pItem)
 	if (!gbIsHellfireSaveGame) {
 		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
 	}
-	CopyInt(tbuff, &pItem->offs016C);
+	tbuff += 4; // Unused
 	if (gbIsHellfireSaveGame)
 		CopyInt(tbuff, &pItem->_iDamAcFlags);
 	else
@@ -1140,7 +1140,7 @@ static void SaveItem(ItemStruct *pItem)
 	tbuff += 1; // Alignment
 	CopyInt(&pItem->_iStatFlag, tbuff);
 	CopyInt(&idx, tbuff);
-	CopyInt(&pItem->offs016C, tbuff);
+	tbuff += 4; // Unused
 	if (gbIsHellfire)
 		CopyInt(&pItem->_iDamAcFlags, tbuff);
 }

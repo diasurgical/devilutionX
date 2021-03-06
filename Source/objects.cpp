@@ -3319,11 +3319,11 @@ void TryDisarm(int pnum, int i)
 	}
 }
 
-int ItemMiscIdIdx(int imiscid)
+int ItemMiscIdIdx(item_misc_id imiscid)
 {
 	int i;
 
-	i = 0;
+	i = IDI_GOLD;
 	while (AllItemsList[i].iRnd == IDROP_NEVER || AllItemsList[i].iMiscId != imiscid) {
 		i++;
 	}
