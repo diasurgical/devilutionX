@@ -2165,29 +2165,26 @@ static void DRLG_L3Wood()
 	FenceDoorFix();
 }
 
-BOOL DRLG_L3Anvil()
+static bool DRLG_L3Anvil()
 {
-	int sx, sy, sw, sh, xx, yy, ii, trys;
-	BOOL found;
+	int sw = L3ANVIL[0];
+	int sh = L3ANVIL[1];
+	int sx = random_(0, DMAXX - sw);
+	int sy = random_(0, DMAXY - sh);
 
-	sw = L3ANVIL[0];
-	sh = L3ANVIL[1];
-	sx = random_(0, DMAXX - sw);
-	sy = random_(0, DMAXY - sh);
-
-	found = FALSE;
-	trys = 0;
+	bool found = false;
+	int trys = 0;
 	while (!found && trys < 200) {
 		trys++;
-		found = TRUE;
-		ii = 2;
-		for (yy = 0; yy < sh && found == TRUE; yy++) {
-			for (xx = 0; xx < sw && found == TRUE; xx++) {
+		found = true;
+		int ii = 2;
+		for (int yy = 0; yy < sh && found; yy++) {
+			for (int xx = 0; xx < sw && found; xx++) {
 				if (L3ANVIL[ii] != 0 && dungeon[xx + sx][yy + sy] != L3ANVIL[ii]) {
-					found = FALSE;
+					found = false;
 				}
 				if (dflags[xx + sx][yy + sy] != 0) {
-					found = FALSE;
+					found = false;
 				}
 				ii++;
 			}
@@ -2204,12 +2201,12 @@ BOOL DRLG_L3Anvil()
 		}
 	}
 	if (trys >= 200) {
-		return TRUE;
+		return true;
 	}
 
-	ii = sw * sh + 2;
-	for (yy = 0; yy < sh; yy++) {
-		for (xx = 0; xx < sw; xx++) {
+	int ii = sw * sh + 2;
+	for (int yy = 0; yy < sh; yy++) {
+		for (int xx = 0; xx < sw; xx++) {
 			if (L3ANVIL[ii] != 0) {
 				dungeon[xx + sx][yy + sy] = L3ANVIL[ii];
 			}
@@ -2223,7 +2220,7 @@ BOOL DRLG_L3Anvil()
 	setpc_w = sw;
 	setpc_h = sh;
 
-	return FALSE;
+	return false;
 }
 
 void FixL3Warp()
