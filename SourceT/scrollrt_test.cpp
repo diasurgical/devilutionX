@@ -8,7 +8,7 @@ TEST(Scrool_rt, calc_tiles_in_view_original)
 {
 	dvl::gnScreenWidth = 640;
 	dvl::gnScreenHeight = 480;
-	dvl::viewportHeight = dvl::gnScreenHeight - 128;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = true;
 	int columns = 0;
 	int rows = 0;
@@ -21,7 +21,7 @@ TEST(Scrool_rt, calc_tiles_in_view_original_zoom)
 {
 	dvl::gnScreenWidth = 640;
 	dvl::gnScreenHeight = 480;
-	dvl::viewportHeight = dvl::gnScreenHeight - 128;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = false;
 	int columns = 0;
 	int rows = 0;
@@ -34,7 +34,7 @@ TEST(Scrool_rt, calc_tiles_in_view_960_540)
 {
 	dvl::gnScreenWidth = 960;
 	dvl::gnScreenHeight = 540;
-	dvl::viewportHeight = dvl::gnScreenHeight;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = true;
 	int columns = 0;
 	int rows = 0;
@@ -47,7 +47,7 @@ TEST(Scrool_rt, calc_tiles_in_view_640_512)
 {
 	dvl::gnScreenWidth = 640;
 	dvl::gnScreenHeight = 512;
-	dvl::viewportHeight = dvl::gnScreenHeight - 128;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = true;
 	int columns = 0;
 	int rows = 0;
@@ -60,7 +60,7 @@ TEST(Scrool_rt, calc_tiles_in_view_768_480_zoom)
 {
 	dvl::gnScreenWidth = 768;
 	dvl::gnScreenHeight = 480;
-	dvl::viewportHeight = dvl::gnScreenHeight;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = false;
 	int columns = 0;
 	int rows = 0;
@@ -75,7 +75,7 @@ TEST(Scrool_rt, calc_tile_offset_original)
 {
 	dvl::gnScreenWidth = 640;
 	dvl::gnScreenHeight = 480;
-	dvl::viewportHeight = dvl::gnScreenHeight - 128;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = true;
 	int x = 0;
 	int y = 0;
@@ -88,7 +88,7 @@ TEST(Scrool_rt, calc_tile_offset_original_zoom)
 {
 	dvl::gnScreenWidth = 640;
 	dvl::gnScreenHeight = 480;
-	dvl::viewportHeight = dvl::gnScreenHeight - 128;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = false;
 	int x = 0;
 	int y = 0;
@@ -101,7 +101,7 @@ TEST(Scrool_rt, calc_tile_offset_960_540)
 {
 	dvl::gnScreenWidth = 960;
 	dvl::gnScreenHeight = 540;
-	dvl::viewportHeight = dvl::gnScreenHeight;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = true;
 	int x = 0;
 	int y = 0;
@@ -114,7 +114,7 @@ TEST(Scrool_rt, calc_tile_offset_853_480)
 {
 	dvl::gnScreenWidth = 853;
 	dvl::gnScreenHeight = 480;
-	dvl::viewportHeight = dvl::gnScreenHeight;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = true;
 	int x = 0;
 	int y = 0;
@@ -127,7 +127,7 @@ TEST(Scrool_rt, calc_tile_offset_768_480_zoom)
 {
 	dvl::gnScreenWidth = 768;
 	dvl::gnScreenHeight = 480;
-	dvl::viewportHeight = dvl::gnScreenHeight;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = false;
 	int x = 0;
 	int y = 0;
