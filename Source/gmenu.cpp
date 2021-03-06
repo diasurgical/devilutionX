@@ -199,7 +199,7 @@ static void gmenu_draw_menu_item(TMenuItem *pItem, int y)
 		gmenu_clear_buffer(x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
 		CelDraw(x + 2 + pos + PANEL_LEFT, y - 12, option_cel, 1, 27);
 	}
-	x = SCREEN_WIDTH / 2 - w / 2 + SCREEN_X;
+	x = gnScreenWidth / 2 - w / 2 + SCREEN_X;
 	light_table_index = (pItem->dwFlags & GMENU_ENABLED) ? 0 : 15;
 	gmenu_print_text(x, y, pItem->pszStr);
 	if (pItem == sgpCurrItem) {
@@ -225,9 +225,9 @@ void gmenu_draw()
 					LogoAnim_frame = 1;
 				LogoAnim_tick = ticks;
 			}
-			CelDraw((SCREEN_WIDTH - 430) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
+			CelDraw((gnScreenWidth - 430) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
 		} else {
-			CelDraw((SCREEN_WIDTH - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
+			CelDraw((gnScreenWidth - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
 		}
 		y = 160 + SCREEN_Y + UI_OFFSET_Y;
 		i = sgpCurrentMenu;
@@ -361,10 +361,10 @@ BOOL gmenu_left_mouse(BOOL isDown)
 		return TRUE;
 	}
 	w = gmenu_get_lfont(pItem);
-	if (MouseX < SCREEN_WIDTH / 2 - w / 2) {
+	if (MouseX < gnScreenWidth / 2 - w / 2) {
 		return TRUE;
 	}
-	if (MouseX > SCREEN_WIDTH / 2 + w / 2) {
+	if (MouseX > gnScreenWidth / 2 + w / 2) {
 		return TRUE;
 	}
 	sgpCurrItem = pItem;

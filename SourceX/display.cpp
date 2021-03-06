@@ -22,10 +22,10 @@ namespace dvl {
 
 extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 
-Sint16 screenWidth;
-Sint16 screenHeight;
-Sint16 viewportHeight;
-Sint16 borderRight;
+Uint16 gnScreenWidth;
+Uint16 gnScreenHeight;
+Uint16 gnViewportHeight;
+Uint16 borderRight;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
@@ -60,19 +60,19 @@ bool IsFullScreen()
 
 void AdjustToScreenGeometry(int width, int height)
 {
-	screenWidth = width;
-	screenHeight = height;
+	gnScreenWidth = width;
+	gnScreenHeight = height;
 
 	borderRight = 64;
-	if (screenWidth % 4) {
+	if (gnScreenWidth % 4) {
 		// The buffer needs to be devisable by 4 for the engine to blit correctly
-		borderRight += 4 - screenWidth % 4;
+		borderRight += 4 - gnScreenWidth % 4;
 	}
 
-	viewportHeight = screenHeight;
-	if (screenWidth <= PANEL_WIDTH) {
+	gnViewportHeight = gnScreenHeight;
+	if (gnScreenWidth <= PANEL_WIDTH) {
 		// Part of the screen is fully obscured by the UI
-		viewportHeight -= PANEL_HEIGHT;
+		gnViewportHeight -= PANEL_HEIGHT;
 	}
 }
 
@@ -257,7 +257,7 @@ SDL_Surface *GetOutputSurface()
 bool OutputRequiresScaling()
 {
 #ifdef USE_SDL1
-	return SCREEN_WIDTH != GetOutputSurface()->w || SCREEN_HEIGHT != GetOutputSurface()->h;
+	return gnScreenWidth != GetOutputSurface()->w || gnScreenHeight != GetOutputSurface()->h;
 #else // SDL2, scaling handled by renderer.
 	return false;
 #endif
@@ -268,10 +268,10 @@ void ScaleOutputRect(SDL_Rect *rect)
 	if (!OutputRequiresScaling())
 		return;
 	const SDL_Surface *surface = GetOutputSurface();
-	rect->x = rect->x * surface->w / SCREEN_WIDTH;
-	rect->y = rect->y * surface->h / SCREEN_HEIGHT;
-	rect->w = rect->w * surface->w / SCREEN_WIDTH;
-	rect->h = rect->h * surface->h / SCREEN_HEIGHT;
+	rect->x = rect->x * surface->w / gnScreenWidth;
+	rect->y = rect->y * surface->h / gnScreenHeight;
+	rect->w = rect->w * surface->w / gnScreenWidth;
+	rect->h = rect->h * surface->h / gnScreenHeight;
 }
 
 #ifdef USE_SDL1

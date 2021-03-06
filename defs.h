@@ -114,9 +114,6 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-#define SCREEN_WIDTH	dvl::screenWidth
-#define SCREEN_HEIGHT	dvl::screenHeight
-
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
 
@@ -134,31 +131,29 @@
 #define SCREEN_X		BORDER_LEFT
 #define SCREEN_Y		BORDER_TOP
 
-#define BUFFER_WIDTH	(BORDER_LEFT + SCREEN_WIDTH + BORDER_RIGHT)
-#define BUFFER_HEIGHT	(BORDER_TOP + SCREEN_HEIGHT + BORDER_BOTTOM)
+#define BUFFER_WIDTH	(BORDER_LEFT + gnScreenWidth + BORDER_RIGHT)
+#define BUFFER_HEIGHT	(BORDER_TOP + gnScreenHeight + BORDER_BOTTOM)
 
-#define UI_OFFSET_Y		((SCREEN_HEIGHT - 480) / 2)
+#define UI_OFFSET_Y		((Sint16)((gnScreenHeight - 480) / 2))
 
 #define TILE_WIDTH		64
 #define TILE_HEIGHT		32
 
 #define PANEL_WIDTH     640
 #define PANEL_HEIGHT    128
-#define PANEL_TOP		(SCREEN_HEIGHT - PANEL_HEIGHT)
-#define PANEL_LEFT		(SCREEN_WIDTH - PANEL_WIDTH) / 2
+#define PANEL_TOP		(gnScreenHeight - PANEL_HEIGHT)
+#define PANEL_LEFT		(gnScreenWidth - PANEL_WIDTH) / 2
 #define PANEL_X			(SCREEN_X + PANEL_LEFT)
 #define PANEL_Y			(SCREEN_Y + PANEL_TOP)
 
 #define SPANEL_WIDTH	 320
 #define SPANEL_HEIGHT	 352
-#define PANELS_COVER (SCREEN_WIDTH <= PANEL_WIDTH && SCREEN_HEIGHT <= SPANEL_HEIGHT + PANEL_HEIGHT)
+#define PANELS_COVER (gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT)
 
-#define RIGHT_PANEL		(SCREEN_WIDTH - SPANEL_WIDTH)
+#define RIGHT_PANEL		(gnScreenWidth - SPANEL_WIDTH)
 #define RIGHT_PANEL_X	(SCREEN_X + RIGHT_PANEL)
 
-#define VIEWPORT_HEIGHT dvl::viewportHeight
-
-#define DIALOG_TOP		((SCREEN_HEIGHT - PANEL_HEIGHT) / 2 - 18)
+#define DIALOG_TOP		((gnScreenHeight - PANEL_HEIGHT) / 2 - 18)
 #define DIALOG_Y		(SCREEN_Y + DIALOG_TOP)
 
 #define SCREENXY(x, y) ((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)

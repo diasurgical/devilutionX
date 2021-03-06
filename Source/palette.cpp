@@ -230,7 +230,7 @@ void PaletteFadeIn(int fr)
 	DWORD tc = SDL_GetTicks();
 	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 		SetFadeLevel(i);
-		SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
+		SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, gnScreenWidth, gnScreenHeight };
 		BltFast(&SrcRect, NULL);
 		RenderPresent();
 	}
@@ -247,7 +247,7 @@ void PaletteFadeOut(int fr)
 		DWORD tc = SDL_GetTicks();
 		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 			SetFadeLevel(i);
-			SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
+			SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, gnScreenWidth, gnScreenHeight };
 			BltFast(&SrcRect, NULL);
 			RenderPresent();
 		}

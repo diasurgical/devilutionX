@@ -988,8 +988,8 @@ void HandleRightStickMotion()
 		int x = MouseX;
 		int y = MouseY;
 		acc.pool(&x, &y, 2);
-		x = std::min(std::max(x, 0), SCREEN_WIDTH - 1);
-		y = std::min(std::max(y, 0), SCREEN_HEIGHT - 1);
+		x = std::min(std::max(x, 0), gnScreenWidth - 1);
+		y = std::min(std::max(y, 0), gnScreenHeight - 1);
 		SetCursorPos(x, y);
 	}
 }

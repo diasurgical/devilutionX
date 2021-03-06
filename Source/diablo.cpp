@@ -478,8 +478,8 @@ static void LoadOptions()
 
 static void diablo_init_screen()
 {
-	MouseX = SCREEN_WIDTH / 2;
-	MouseY = SCREEN_HEIGHT / 2;
+	MouseX = gnScreenWidth / 2;
+	MouseY = gnScreenHeight / 2;
 	if (!sgbControllerActive)
 		SetCursorPos(MouseX, MouseY);
 	ScrollInfo._sdx = 0;

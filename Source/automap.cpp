@@ -443,8 +443,8 @@ static void SearchAutomapItem(CelOutputBuffer out)
 				px = i - 2 * AutoMapXOfs - ViewX;
 				py = j - 2 * AutoMapYOfs - ViewY;
 
-				x = (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + SCREEN_WIDTH / 2 + SCREEN_X;
-				y = (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y;
+				x = (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + gnScreenWidth / 2 + SCREEN_X;
+				y = (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2 + SCREEN_Y;
 
 				if (PANELS_COVER) {
 					if (invflag || sbookflag)
@@ -484,14 +484,14 @@ static void DrawAutomapPlr(CelOutputBuffer out, int pnum)
 	px = x - 2 * AutoMapXOfs - ViewX;
 	py = y - 2 * AutoMapYOfs - ViewY;
 
-	x = (plr[pnum]._pxoff * AutoMapScale / 100 >> 1) + (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + SCREEN_WIDTH / 2 + SCREEN_X;
-	y = (plr[pnum]._pyoff * AutoMapScale / 100 >> 1) + (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y;
+	x = (plr[pnum]._pxoff * AutoMapScale / 100 >> 1) + (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + gnScreenWidth / 2 + SCREEN_X;
+	y = (plr[pnum]._pyoff * AutoMapScale / 100 >> 1) + (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2 + SCREEN_Y;
 
 	if (PANELS_COVER) {
 		if (invflag || sbookflag)
-			x -= SCREEN_WIDTH / 4;
+			x -= gnScreenWidth / 4;
 		if (chrflag || questlog)
-			x += SCREEN_WIDTH / 4;
+			x += gnScreenWidth / 4;
 	}
 	y -= AmLine8;
 
@@ -645,10 +645,10 @@ void DrawAutomap(CelOutputBuffer out)
 	AutoMapY += AutoMapYOfs;
 
 	d = (AutoMapScale << 6) / 100;
-	cells = 2 * (SCREEN_WIDTH / 2 / d) + 1;
-	if ((SCREEN_WIDTH / 2) % d)
+	cells = 2 * (gnScreenWidth / 2 / d) + 1;
+	if ((gnScreenWidth / 2) % d)
 		cells++;
-	if ((SCREEN_WIDTH / 2) % d >= (AutoMapScale << 5) / 100)
+	if ((gnScreenWidth / 2) % d >= (AutoMapScale << 5) / 100)
 		cells++;
 
 	if (ScrollInfo._sxoff + ScrollInfo._syoff)
@@ -657,11 +657,11 @@ void DrawAutomap(CelOutputBuffer out)
 	mapy = AutoMapY - 1;
 
 	if (cells & 1) {
-		sx = SCREEN_WIDTH / 2 + SCREEN_X - AmLine64 * ((cells - 1) >> 1);
-		sy = (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * ((cells + 1) >> 1);
+		sx = gnScreenWidth / 2 + SCREEN_X - AmLine64 * ((cells - 1) >> 1);
+		sy = (gnScreenHeight - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * ((cells + 1) >> 1);
 	} else {
-		sx = SCREEN_WIDTH / 2 + SCREEN_X - AmLine64 * (cells >> 1) + AmLine32;
-		sy = (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * (cells >> 1) - AmLine16;
+		sx = gnScreenWidth / 2 + SCREEN_X - AmLine64 * (cells >> 1) + AmLine32;
+		sy = (gnScreenHeight - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * (cells >> 1) - AmLine16;
 	}
 	if (ViewX & 1) {
 		sx -= AmLine16;
@@ -676,10 +676,10 @@ void DrawAutomap(CelOutputBuffer out)
 	sy += AutoMapScale * ScrollInfo._syoff / 100 >> 1;
 	if (PANELS_COVER) {
 		if (invflag || sbookflag) {
-			sx -= SCREEN_WIDTH / 4;
+			sx -= gnScreenWidth / 4;
 		}
 		if (chrflag || questlog) {
-			sx += SCREEN_WIDTH / 4;
+			sx += gnScreenWidth / 4;
 		}
 	}
 

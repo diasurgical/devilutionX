@@ -160,20 +160,20 @@ static void scrollrt_draw_cursor_item()
 	mx = MouseX - 1;
 	if (mx < 0 - cursW - 1) {
 		return;
-	} else if (mx > SCREEN_WIDTH - 1) {
+	} else if (mx > gnScreenWidth - 1) {
 		return;
 	}
 	my = MouseY - 1;
 	if (my < 0 - cursH - 1) {
 		return;
-	} else if (my > SCREEN_HEIGHT - 1) {
+	} else if (my > gnScreenHeight - 1) {
 		return;
 	}
 
 	sgdwCursX = mx;
 	sgdwCursWdt = sgdwCursX + cursW + 1;
-	if (sgdwCursWdt > SCREEN_WIDTH - 1) {
-		sgdwCursWdt = SCREEN_WIDTH - 1;
+	if (sgdwCursWdt > gnScreenWidth - 1) {
+		sgdwCursWdt = gnScreenWidth - 1;
 	}
 	sgdwCursX &= ~3;
 	sgdwCursWdt |= 3;
@@ -182,8 +182,8 @@ static void scrollrt_draw_cursor_item()
 
 	sgdwCursY = my;
 	sgdwCursHgt = sgdwCursY + cursH + 1;
-	if (sgdwCursHgt > SCREEN_HEIGHT - 1) {
-		sgdwCursHgt = SCREEN_HEIGHT - 1;
+	if (sgdwCursHgt > gnScreenHeight - 1) {
+		sgdwCursHgt = gnScreenHeight - 1;
 	}
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
@@ -199,7 +199,7 @@ static void scrollrt_draw_cursor_item()
 
 	mx++;
 	my++;
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y) - cursW - 2];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnScreenHeight + SCREEN_Y) - cursW - 2];
 
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
@@ -901,7 +901,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
-				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= SCREEN_X + SCREEN_WIDTH) {
+				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= SCREEN_X + gnScreenWidth) {
 					// Render objects behind walls first to prevent sprites, that are moving
 					// between tiles, from poking through the walls as they exceed the tile bounds.
 					// A proper fix for this would probably be to layout the sceen and render by
@@ -942,9 +942,9 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
  */
 static void Zoom()
 {
-	int wdt = SCREEN_WIDTH / 2;
-	int nSrcOff = SCREENXY(SCREEN_WIDTH / 2 - 1, VIEWPORT_HEIGHT / 2 - 1);
-	int nDstOff = SCREENXY(SCREEN_WIDTH - 1, VIEWPORT_HEIGHT - 1);
+	int wdt = gnScreenWidth / 2;
+	int nSrcOff = SCREENXY(gnScreenWidth / 2 - 1, gnViewportHeight / 2 - 1);
+	int nDstOff = SCREENXY(gnScreenWidth - 1, gnViewportHeight - 1);
 
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
@@ -960,7 +960,7 @@ static void Zoom()
 	BYTE *src = &gpBuffer[nSrcOff];
 	BYTE *dst = &gpBuffer[nDstOff];
 
-	for (int hgt = 0; hgt < VIEWPORT_HEIGHT / 2; hgt++) {
+	for (int hgt = 0; hgt < gnViewportHeight / 2; hgt++) {
 		for (int i = 0; i < wdt; i++) {
 			*dst-- = *src;
 			*dst-- = *src;
@@ -989,7 +989,7 @@ void ShiftGrid(int *x, int *y, int horizontal, int vertical)
  */
 int RowsCoveredByPanel()
 {
-	if (SCREEN_WIDTH <= PANEL_WIDTH) {
+	if (gnScreenWidth <= PANEL_WIDTH) {
 		return 0;
 	}
 
@@ -1011,11 +1011,11 @@ void CalcTileOffset(int *offsetX, int *offsetY)
 	int x, y;
 
 	if (zoomflag) {
-		x = SCREEN_WIDTH % TILE_WIDTH;
-		y = VIEWPORT_HEIGHT % TILE_HEIGHT;
+		x = gnScreenWidth % TILE_WIDTH;
+		y = gnViewportHeight % TILE_HEIGHT;
 	} else {
-		x = (SCREEN_WIDTH / 2) % TILE_WIDTH;
-		y = (VIEWPORT_HEIGHT / 2) % TILE_HEIGHT;
+		x = (gnScreenWidth / 2) % TILE_WIDTH;
+		y = (gnViewportHeight / 2) % TILE_HEIGHT;
 	}
 
 	if (x)
@@ -1034,12 +1034,12 @@ void CalcTileOffset(int *offsetX, int *offsetY)
  */
 void TilesInView(int *rcolumns, int *rrows)
 {
-	int columns = SCREEN_WIDTH / TILE_WIDTH;
-	if (SCREEN_WIDTH % TILE_WIDTH) {
+	int columns = gnScreenWidth / TILE_WIDTH;
+	if (gnScreenWidth % TILE_WIDTH) {
 		columns++;
 	}
-	int rows = VIEWPORT_HEIGHT / TILE_HEIGHT;
-	if (VIEWPORT_HEIGHT % TILE_HEIGHT) {
+	int rows = gnViewportHeight / TILE_HEIGHT;
+	if (gnViewportHeight % TILE_HEIGHT) {
 		rows++;
 	}
 
@@ -1121,9 +1121,9 @@ static void DrawGame(int x, int y)
 
 	// Limit rendering to the view area
 	if (zoomflag)
-		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
+		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnViewportHeight + SCREEN_Y)];
 	else
-		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT / 2 + SCREEN_Y)];
+		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnViewportHeight / 2 + SCREEN_Y)];
 
 	// Adjust by player offset and tile grid alignment
 	sx = ScrollInfo._sxoff + tileOffsetX + SCREEN_X;
@@ -1209,7 +1209,7 @@ static void DrawGame(int x, int y)
 	scrollrt_draw(x, y, sx, sy, rows, columns);
 
 	// Allow rendering to the whole screen
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnScreenHeight + SCREEN_Y)];
 
 	if (!zoomflag) {
 		Zoom();
@@ -1230,7 +1230,7 @@ void DrawView(int StartX, int StartY)
 
 	DrawGame(StartX, StartY);
 	if (automapflag) {
-		DrawAutomap(out.subregion(0, 0, out.line_width, SCREEN_Y + VIEWPORT_HEIGHT));
+		DrawAutomap(out.subregion(0, 0, out.line_width, SCREEN_Y + gnViewportHeight));
 	}
 	DrawMonsterHealthBar();
 
@@ -1250,7 +1250,7 @@ void DrawView(int StartX, int StartY)
 		DrawQuestLog(out);
 	}
 	if (!chrflag && plr[myplr]._pStatPts != 0 && !spselflag
-	    && (!questlog || SCREEN_HEIGHT >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || SCREEN_WIDTH >= 4 * SPANEL_WIDTH)) {
+	    && (!questlog || gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || gnScreenWidth >= 4 * SPANEL_WIDTH)) {
 		DrawLevelUpIcon(out);
 	}
 	if (uitemflag) {
@@ -1300,8 +1300,8 @@ void ClearScreenBuffer()
 	SDL_Rect SrcRect = {
 		SCREEN_X,
 		SCREEN_Y,
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
+		gnScreenWidth,
+		gnScreenHeight,
 	};
 	SDL_FillRect(pal_surface, &SrcRect, 0);
 
@@ -1337,7 +1337,7 @@ void ScrollView()
 			scroll = TRUE;
 		}
 	}
-	if (MouseX > SCREEN_WIDTH - 20) {
+	if (MouseX > gnScreenWidth - 20) {
 		if (dmaxx - 1 <= ViewX || dminy >= ViewY) {
 			if (dmaxx - 1 > ViewX) {
 				ViewX++;
@@ -1369,7 +1369,7 @@ void ScrollView()
 			scroll = TRUE;
 		}
 	}
-	if (MouseY > SCREEN_HEIGHT - 20) {
+	if (MouseY > gnScreenHeight - 20) {
 		if (dmaxy - 1 <= ViewY || dmaxx - 1 <= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;
@@ -1429,20 +1429,13 @@ static void DrawFPS(CelOutputBuffer out)
  * @param dwWdt Back buffer coordinate
  * @param dwHgt Back buffer coordinate
  */
-static void DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt)
+static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 {
-	SDL_Rect SrcRect = {
-		dwX + SCREEN_X,
-		dwY + SCREEN_Y,
-		dwWdt,
-		dwHgt,
-	};
-	SDL_Rect DstRect = {
-		dwX,
-		dwY,
-		dwWdt,
-		dwHgt,
-	};
+	SDL_Rect SrcRect = { dwX, dwY, dwWdt, dwHgt };
+	SrcRect.x += SCREEN_X;
+	SrcRect.y += SCREEN_Y;
+
+	SDL_Rect DstRect = { dwX, dwY, dwWdt, dwHgt };
 
 	BltFast(&SrcRect, &DstRect);
 }
@@ -1462,12 +1455,12 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 		return;
 	}
 
-	assert(dwHgt >= 0 && dwHgt <= SCREEN_HEIGHT);
+	assert(dwHgt >= 0 && dwHgt <= gnScreenHeight);
 
 	if (dwHgt > 0) {
-		DoBlitScreen(0, 0, SCREEN_WIDTH, dwHgt);
+		DoBlitScreen(0, 0, gnScreenWidth, dwHgt);
 	}
-	if (dwHgt < SCREEN_HEIGHT) {
+	if (dwHgt < gnScreenHeight) {
 		if (draw_sbar) {
 			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
 		}
@@ -1508,7 +1501,7 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 
 	if (force_redraw == 255) {
 		force_redraw = 0;
-		hgt = SCREEN_HEIGHT;
+		hgt = gnScreenHeight;
 	}
 
 	if (draw_cursor) {
@@ -1540,18 +1533,18 @@ void DrawAndBlit()
 	bool ddsdesc = false;
 	bool ctrlPan = false;
 
-	if (SCREEN_WIDTH > PANEL_WIDTH || force_redraw == 255) {
+	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255) {
 		drawhpflag = TRUE;
 		drawmanaflag = TRUE;
 		drawbtnflag = TRUE;
 		drawsbarflag = TRUE;
 		ddsdesc = false;
 		ctrlPan = true;
-		hgt = SCREEN_HEIGHT;
+		hgt = gnScreenHeight;
 	} else if (force_redraw == 1) {
 		ddsdesc = true;
 		ctrlPan = false;
-		hgt = VIEWPORT_HEIGHT;
+		hgt = gnViewportHeight;
 	}
 
 	force_redraw = 0;
@@ -1577,7 +1570,7 @@ void DrawAndBlit()
 	}
 	if (talkflag) {
 		DrawTalkPan(out);
-		hgt = SCREEN_HEIGHT;
+		hgt = gnScreenHeight;
 	}
 	DrawXPBar();
 	scrollrt_draw_cursor_item();

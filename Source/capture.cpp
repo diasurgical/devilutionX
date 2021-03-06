@@ -158,8 +158,8 @@ static void RedPalette()
 	SDL_Rect SrcRect = {
 		SCREEN_X,
 		SCREEN_Y,
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
+		gnScreenWidth,
+		gnScreenHeight,
 	};
 	BltFast(&SrcRect, NULL);
 	RenderPresent();
@@ -183,9 +183,9 @@ void CaptureScreen()
 	RedPalette();
 
 	lock_buf(2);
-	success = CaptureHdr(SCREEN_WIDTH, SCREEN_HEIGHT, out);
+	success = CaptureHdr(gnScreenWidth, gnScreenHeight, out);
 	if (success) {
-		success = CapturePix(SCREEN_WIDTH, SCREEN_HEIGHT, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)], out);
+		success = CapturePix(gnScreenWidth, gnScreenHeight, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)], out);
 	}
 	if (success) {
 		success = CapturePal(palette, out);

@@ -6,9 +6,9 @@ namespace dvl {
 extern SDL_Surface *pal_surface;
 extern unsigned int pal_surface_palette_version;
 
-void DrawArt(int screenX, int screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
+void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
-	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == NULL)
+	if (screenY >= gnScreenHeight || screenX >= gnScreenWidth || art->surface == NULL)
 		return;
 
 	SDL_Rect src_rect;

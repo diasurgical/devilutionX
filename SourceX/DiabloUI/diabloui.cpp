@@ -529,10 +529,10 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char (*desc)[128])
 	return true;
 }
 
-int GetCenterOffset(int w, int bw)
+Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 {
 	if (bw == 0) {
-		bw = SCREEN_WIDTH;
+		bw = gnScreenWidth;
 	}
 
 	return (bw - w) / 2;
@@ -568,7 +568,7 @@ void UiAddBackground(std::vector<UiItemBase *> *vecDialog)
 
 void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size, int y)
 {
-	SDL_Rect rect = { 0, UI_OFFSET_Y + y, 0, 0 };
+	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y + y), 0, 0 };
 	vecDialog->push_back(new UiImage(&ArtLogos[size], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 }
 
@@ -606,7 +606,7 @@ void DrawSelector(const SDL_Rect &rect)
 
 void UiClearScreen()
 {
-	if (SCREEN_WIDTH > 640) // Background size
+	if (gnScreenWidth > 640) // Background size
 		SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 }
 
@@ -752,7 +752,7 @@ bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton
 }
 
 #ifdef USE_SDL1
-int dbClickTimer;
+Uint32 dbClickTimer;
 #endif
 
 bool HandleMouseEventList(const SDL_Event &event, UiList *ui_list)

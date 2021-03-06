@@ -89,7 +89,7 @@ void DrawPlrMsg(CelOutputBuffer out)
 	int i;
 	DWORD x = 10 + SCREEN_X;
 	DWORD y = 70 + SCREEN_Y;
-	DWORD width = SCREEN_WIDTH - 20;
+	DWORD width = gnScreenWidth - 20;
 	_plrmsg *pMsg;
 
 	if (chrflag || questlog) {

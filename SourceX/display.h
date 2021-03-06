@@ -8,7 +8,6 @@
 
 namespace dvl {
 
-extern bool vsyncEnabled;
 extern int refreshDelay; // Screen refresh rate in nanoseconds
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
@@ -63,8 +62,8 @@ void OutputToLogical(T *x, T *y)
 	if (!OutputRequiresScaling())
 		return;
 	const SDL_Surface *surface = GetOutputSurface();
-	*x = *x * SCREEN_WIDTH / surface->w;
-	*y = *y * SCREEN_HEIGHT / surface->h;
+	*x = *x * gnScreenWidth / surface->w;
+	*y = *y * gnScreenHeight / surface->h;
 #endif
 }
 
@@ -89,8 +88,8 @@ void LogicalToOutput(T *x, T *y)
 	if (!OutputRequiresScaling())
 		return;
 	const SDL_Surface *surface = GetOutputSurface();
-	*x = *x * surface->w / SCREEN_WIDTH;
-	*y = *y * surface->h / SCREEN_HEIGHT;
+	*x = *x * surface->w / gnScreenWidth;
+	*y = *y * surface->h / gnScreenHeight;
 #endif
 }
 

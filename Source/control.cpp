@@ -761,11 +761,12 @@ void UpdateManaFlask(CelOutputBuffer out)
 	DrawSpell();
 }
 
-static CelOutputBuffer AllocCelOutputBuffer(BYTE **raw, size_t width, size_t height) {
+static CelOutputBuffer AllocCelOutputBuffer(BYTE **raw, size_t width, size_t height)
+{
 	const std::size_t size = width * height;
 	*raw = DiabloAllocPtr(size);
 	memset(*raw, 0, size);
-	return CelOutputBuffer{*raw, *raw + size, static_cast<int>(width)};
+	return CelOutputBuffer { *raw, *raw + size, static_cast<int>(width) };
 }
 
 void InitControlPan()
@@ -791,7 +792,7 @@ void InitControlPan()
 	MemFreeDbg(pStatusPanel);
 	talkflag = FALSE;
 	if (gbIsMultiplayer) {
-		BYTE * pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
+		BYTE *pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
 		CelDrawUnsafeTo(btm_buf, 0, (PANEL_HEIGHT + 16) * 2 - 1, pTalkPanel, 1, PANEL_WIDTH);
 		MemFreeDbg(pTalkPanel);
 		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", NULL);
@@ -1743,8 +1744,8 @@ void DrawDurIcon()
 	PlayerStruct *p;
 	int x;
 
-	bool hasRoomBetweenPanels = SCREEN_WIDTH >= PANEL_WIDTH + 16 + (32 + 8 + 32 + 8 + 32 + 8 + 32) + 16;
-	bool hasRoomUnderPanels = SCREEN_HEIGHT >= SPANEL_HEIGHT + PANEL_HEIGHT + 16 + 32 + 16;
+	bool hasRoomBetweenPanels = gnScreenWidth >= PANEL_WIDTH + 16 + (32 + 8 + 32 + 8 + 32 + 8 + 32) + 16;
+	bool hasRoomUnderPanels = gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
 		if ((chrflag || questlog) && (invflag || sbookflag))
@@ -1754,7 +1755,7 @@ void DrawDurIcon()
 	x = PANEL_X + PANEL_WIDTH - 32 - 16;
 	if (!hasRoomUnderPanels) {
 		if (invflag || sbookflag)
-			x -= SPANEL_WIDTH - (SCREEN_WIDTH - PANEL_WIDTH) / 2;
+			x -= SPANEL_WIDTH - (gnScreenWidth - PANEL_WIDTH) / 2;
 	}
 
 	p = &plr[myplr];
@@ -1778,8 +1779,8 @@ void RedBack()
 	if (leveltype != DTYPE_HELL) {
 		dst = &gpBuffer[SCREENXY(0, 0)];
 		tbl = &pLightTbl[idx];
-		for (h = VIEWPORT_HEIGHT; h; h--, dst += BUFFER_WIDTH - SCREEN_WIDTH) {
-			for (w = SCREEN_WIDTH; w; w--) {
+		for (h = gnViewportHeight; h; h--, dst += BUFFER_WIDTH - gnScreenWidth) {
+			for (w = gnScreenWidth; w; w--) {
 				*dst = tbl[*dst];
 				dst++;
 			}
@@ -1787,8 +1788,8 @@ void RedBack()
 	} else {
 		dst = &gpBuffer[SCREENXY(0, 0)];
 		tbl = &pLightTbl[idx];
-		for (h = VIEWPORT_HEIGHT; h; h--, dst += BUFFER_WIDTH - SCREEN_WIDTH) {
-			for (w = SCREEN_WIDTH; w; w--) {
+		for (h = gnViewportHeight; h; h--, dst += BUFFER_WIDTH - gnScreenWidth) {
+			for (w = gnScreenWidth; w; w--) {
 				if (*dst >= 32)
 					*dst = tbl[*dst];
 				dst++;

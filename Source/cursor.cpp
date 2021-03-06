@@ -223,14 +223,14 @@ void CheckCursMove()
 
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
-			if (sx >= SCREEN_WIDTH / 2) { /// BUGFIX: (sx >= SCREEN_WIDTH / 2) (fixed)
-				sx -= SCREEN_WIDTH / 4;
+			if (sx >= gnScreenWidth / 2) { /// BUGFIX: (sx >= gnScreenWidth / 2) (fixed)
+				sx -= gnScreenWidth / 4;
 			} else {
 				sx = 0;
 			}
 		} else if (invflag || sbookflag) {
-			if (sx <= SCREEN_WIDTH / 2) {
-				sx += SCREEN_WIDTH / 4;
+			if (sx <= gnScreenWidth / 2) {
+				sx += gnScreenWidth / 4;
 			} else {
 				sx = 0;
 			}

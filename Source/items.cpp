@@ -4006,7 +4006,7 @@ void DrawUniqueInfo(CelOutputBuffer out)
 {
 	int uid, y;
 
-	if ((!chrflag && !questlog) || SCREEN_WIDTH >= SPANEL_WIDTH * 3) {
+	if ((!chrflag && !questlog) || gnScreenWidth >= SPANEL_WIDTH * 3) {
 		uid = curruitem._iUid;
 		DrawUTextBack(GlobalBackBuffer());
 		PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, 2, TRUE, UniqueItemList[uid].UIName, 3);

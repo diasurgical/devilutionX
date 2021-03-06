@@ -68,8 +68,8 @@ void progress_Render(BYTE progress)
 	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 	DrawArt(0, 0, &ArtBackground);
 
-	int x = GetCenterOffset(280);
-	int y = GetCenterOffset(144, SCREEN_HEIGHT);
+	Sint16 x = GetCenterOffset(280);
+	Sint16 y = GetCenterOffset(144, gnScreenHeight);
 
 	DrawArt(x, y, &ArtPopupSm);
 	DrawArt(GetCenterOffset(227), y + 52, &ArtProgBG, 0, 227);
@@ -82,8 +82,8 @@ void progress_Render(BYTE progress)
 		SDL_Rect dsc_rect = {
 			static_cast<Sint16>(x + 50),
 			static_cast<Sint16>(y + 8),
-			msgSurface->w,
-			msgSurface->h
+			static_cast<Uint16>(msgSurface->w),
+			static_cast<Uint16>(msgSurface->h)
 		};
 		Blit(msgSurface, NULL, &dsc_rect);
 		dsc_rect.x = GetCenterOffset(textWidth) - 1;

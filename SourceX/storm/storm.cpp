@@ -677,15 +677,12 @@ BOOL SVidPlayContinue(void)
 		} else {
 			factor = wFactor;
 		}
-		const Sint16 scaledW = SVidWidth * factor;
-		const Sint16 scaledH = SVidHeight * factor;
+		const Uint16 scaledW = SVidWidth * factor;
+		const Uint16 scaledH = SVidHeight * factor;
+		const Sint16 scaledX = (output_surface->w - scaledW) / 2;
+		const Sint16 scaledY = (output_surface->h - scaledH) / 2;
 
-		SDL_Rect pal_surface_offset = {
-			(output_surface->w - scaledW) / 2,
-			(output_surface->h - scaledH) / 2,
-			scaledW,
-			scaledH
-		};
+		SDL_Rect pal_surface_offset = { scaledX, scaledY, scaledW, scaledH };
 		if (factor == 1) {
 			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &pal_surface_offset) <= -1) {
 				ErrSdl();
@@ -750,17 +747,17 @@ void SVidPlayEnd(HANDLE video)
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
 		if (texture == NULL) {
 			ErrSdl();
 		}
-		if (renderer && SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) <= -1) {
+		if (renderer && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}
 	}
 #else
 	if (IsSVidVideoMode)
-		SetVideoModeToPrimary(IsFullScreen(), screenWidth, screenHeight);
+		SetVideoModeToPrimary(IsFullScreen(), gnScreenWidth, gnScreenHeight);
 #endif
 }
 

@@ -73,7 +73,7 @@ void DrawMonsterHealthBar()
 	BYTE borderColor = borderColors[(BYTE)mon->MData->mMonstClass];
 	WORD mres = mon->mMagicRes;
 	bool drawImmu = false;
-	int xPos = (SCREEN_WIDTH - width) / 2 + x;
+	int xPos = (gnScreenWidth - width) / 2 + x;
 	int xPos2 = xPos + width / 2;
 	int yPos = y;
 	int immuOffset = GetTextWidth(immuText) - 5;
@@ -141,8 +141,8 @@ void DrawXPBar()
 
 	int barWidth = 306;
 	int barHeight = 5;
-	int yPos = SCREEN_HEIGHT - 9;                 // y position of xp bar
-	int xPos = (SCREEN_WIDTH - barWidth) / 2 + 5; // x position of xp bar
+	int yPos = gnScreenHeight - 9;                 // y position of xp bar
+	int xPos = (gnScreenWidth - barWidth) / 2 + 5; // x position of xp bar
 	int dividerHeight = 3;
 	int numDividers = 10;
 	int barColor = 198;

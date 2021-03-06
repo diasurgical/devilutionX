@@ -62,13 +62,13 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	UiAddLogo(&vecSelOkDialog);
 
 	if (title != NULL) {
-		SDL_Rect rect1 = { PANEL_LEFT + 24, (UI_OFFSET_Y + 161), 590, 35 };
+		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
 		vecSelOkDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
-		SDL_Rect rect2 = { PANEL_LEFT + 140, (UI_OFFSET_Y + 210), 560, 168 };
+		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 140), (Sint16)(UI_OFFSET_Y + 210), 560, 168 };
 		vecSelOkDialog.push_back(new UiArtText(dialogText, rect2, UIS_MED));
 	} else {
-		SDL_Rect rect1 = { PANEL_LEFT + 140, (UI_OFFSET_Y + 197), 560, 168 };
+		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 140), (Sint16)(UI_OFFSET_Y + 197), 560, 168 };
 		vecSelOkDialog.push_back(new UiArtText(dialogText, rect1, UIS_MED));
 	}
 
