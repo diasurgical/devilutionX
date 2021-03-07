@@ -1,0 +1,6 @@
+[submodule "3rdParty/mingw-std-threads"]
+	path = 3rdParty/mingw-std-threads
+	url = https://github.com/meganz/mingw-std-threads.git
+[submodule "3rdParty/libzt"]
+	path = 3rdParty/libzt
+	url = https://github.com/diasurgical/libzt.git
