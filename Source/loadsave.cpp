@@ -922,10 +922,13 @@ void LoadHotkeys()
 	if (!file.isValid())
 		return;
 
-	for (size_t i = 0; i < sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]); i++) {
+	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
+	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
+
+	for (size_t i = 0; i < nHotkeyTypes; i++) {
 		plr[myplr]._pSplHotKey[i] = file.nextLE32();
 	}
-	for (size_t i = 0; i < sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]); i++) {
+	for (size_t i = 0; i < nHotkeySpells; i++) {
 		plr[myplr]._pSplTHotKey[i] = file.nextByte();
 	}
 	plr[myplr]._pRSpell = file.nextLE32();
@@ -934,12 +937,15 @@ void LoadHotkeys()
 
 void SaveHotkeys()
 {
-	SaveHelper file("hotkeys", sizeof(plr[myplr]._pSplHotKey) + sizeof(plr[myplr]._pSplTHotKey) + 5);
+	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
+	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
 
-	for (size_t i = 0; i < sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]); i++) {
+	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
+
+	for (size_t i = 0; i < nHotkeyTypes; i++) {
 		file.writeLE32(plr[myplr]._pSplHotKey[i]);
 	}
-	for (size_t i = 0; i < sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]); i++) {
+	for (size_t i = 0; i < nHotkeySpells; i++) {
 		file.writeByte(plr[myplr]._pSplTHotKey[i]);
 	}
 	file.writeLE32(plr[myplr]._pRSpell);
