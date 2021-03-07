@@ -17,7 +17,7 @@ extern int giNumberOfLevels;
 
 int RemapItemIdxFromDiablo(int i);
 int RemapItemIdxToDiablo(int i);
-bool IsHeaderValid(int magicNumber);
+bool IsHeaderValid(Uint32 magicNumber);
 void LoadHotkeys();
 void LoadGame(BOOL firstflag);
 void SaveHotkeys();
