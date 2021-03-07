@@ -33,7 +33,6 @@ typedef struct PlayerStruct {
 	int _pxvel;   // Pixel X-velocity while walking. Indirectly applied to _pxoff via _pvar6
 	int _pyvel;   // Pixel Y-velocity while walking. Indirectly applied to _pyoff via _pvar7
 	int _pdir;    // Direction faced by player (direction enum)
-	int _nextdir; // Unused
 	int _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
 	unsigned char *_pAnimData;
 	int _pAnimDelay; // Tick length of each frame in the current animation
@@ -171,14 +170,14 @@ typedef struct PlayerStruct {
 	unsigned char pTownWarps;
 	unsigned char pDungMsgs;
 	unsigned char pLvlLoad;
-	unsigned char pBattleNet;
+	bool pBattleNet;
 	BOOLEAN pManaShield;
 	unsigned char pDungMsgs2;
 	BOOLEAN pOriginalCathedral;
 	WORD wReflections;
 	DWORD pDiabloKillLevel;
-	int pDifficulty;
-	int pDamAcFlags;
+	Uint32 pDifficulty;
+	Uint32 pDamAcFlags;
 	unsigned char *_pNData;
 	unsigned char *_pWData;
 	unsigned char *_pAData;

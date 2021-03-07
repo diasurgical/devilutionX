@@ -17,15 +17,14 @@ typedef struct LightListStruct {
 	int _ly;
 	int _lradius;
 	int _lid;
-	int _ldel;
-	int _lunflag;
-	int field_18;
+	bool _ldel;
+	bool _lunflag;
 	int _lunx;
 	int _luny;
 	int _lunr;
 	int _xoff;
 	int _yoff;
-	int _lflags;
+	bool _lflags;
 } LightListStruct;
 
 extern LightListStruct VisionList[MAXVISION];

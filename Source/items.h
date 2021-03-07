@@ -66,7 +66,7 @@ typedef struct ItemStruct {
 	Sint32 _iAnimWidth;
 	Sint32 _iAnimWidth2; // width 2?
 	bool _iDelFlag;      // set when item is flagged for deletion, deprecated in 1.02
-	Sint8 _iSelFlag;
+	Uint8 _iSelFlag;
 	bool _iPostDraw;
 	bool _iIdentified;
 	Sint8 _iMagical;

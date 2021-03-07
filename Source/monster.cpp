@@ -495,7 +495,6 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mgoalvar1 = 0;
 	monster[i]._mgoalvar2 = 0;
 	monster[i]._mgoalvar3 = 0;
-	monster[i].field_18 = 0;
 	monster[i]._pathcount = 0;
 	monster[i]._mDelFlag = FALSE;
 	monster[i]._uniqtype = 0;
