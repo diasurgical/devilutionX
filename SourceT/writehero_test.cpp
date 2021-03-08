@@ -209,21 +209,21 @@ TEST(Writehero, pfile_write_hero) {
 	SetPrefPath(".");
 	std::remove("multi_0.sv");
 
-	myplr = 0;
-
-	_uiheroinfo info{};
-	strcpy(info.name, "TestPlayer");
-	info.heroclass = PC_ROGUE;
-
 	gbVanilla = true;
 	gbIsHellfire = false;
 	gbIsMultiplayer = true;
-	pfile_ui_save_create(&info);
+	gbIsHellfireSaveGame = false;
 
+	myplr = 0;
+	_uiheroinfo info{};
+	strcpy(info.name, "TestPlayer");
+	info.heroclass = PC_ROGUE;
+	pfile_ui_save_create(&info);
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);
 	UnPackPlayer(&pks, myplr, TRUE);
 	pfile_write_hero();
+
 	std::ifstream f("multi_0.sv", std::ios::binary);
 	std::vector<unsigned char> s(picosha2::k_digest_size);
 	picosha2::hash256(f, s.begin(), s.end());
