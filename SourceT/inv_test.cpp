@@ -12,6 +12,16 @@ void set_up_scroll(dvl::ItemStruct &item, dvl::spell_id spell)
 	item._iSpell = spell;
 }
 
+/* Clear the inventory of dvl::myplr. */
+void clear_inventory()
+{
+	for (int i = 0; i < 40; i++) {
+		memset(&dvl::plr[dvl::myplr].InvList[i], 0, sizeof(dvl::ItemStruct));
+		dvl::plr[dvl::myplr].InvGrid[i] = 0;
+	}
+	dvl::plr[dvl::myplr]._pNumInv = 0;
+}
+
 // Test that the scroll is used in the inventory in correct conditions
 TEST(Inv, UseScroll_from_inventory)
 {
@@ -81,4 +91,44 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 	set_up_scroll(dvl::plr[dvl::myplr].SpdList[2], dvl::SPL_FIREBOLT);
 	dvl::plr[dvl::myplr].SpdList[2]._itype = dvl::ITYPE_NONE;
 	EXPECT_FALSE(dvl::UseScroll());
+}
+
+// Test gold calculation
+TEST(Inv, CalculateGold)
+{
+	dvl::plr[dvl::myplr]._pNumInv = 10;
+	// Set up two slots of gold both in the belt and inventory
+	dvl::plr[dvl::myplr].SpdList[1]._itype = dvl::ITYPE_GOLD;
+	dvl::plr[dvl::myplr].SpdList[5]._itype = dvl::ITYPE_GOLD;
+	dvl::plr[dvl::myplr].InvList[2]._itype = dvl::ITYPE_GOLD;
+	dvl::plr[dvl::myplr].InvList[3]._itype = dvl::ITYPE_GOLD;
+	// Set the gold amount to arbitrary values
+	dvl::plr[dvl::myplr].SpdList[1]._ivalue = 100;
+	dvl::plr[dvl::myplr].SpdList[5]._ivalue = 200;
+	dvl::plr[dvl::myplr].InvList[2]._ivalue = 3;
+	dvl::plr[dvl::myplr].InvList[3]._ivalue = 30;
+
+	EXPECT_EQ(dvl::CalculateGold(dvl::myplr), 333);
+}
+
+// Test automatic gold placing
+TEST(Inv, GoldAutoPlace)
+{
+	// Empty the inventory
+	clear_inventory();
+
+	// Put gold into the inventory:
+	// | 1000 | ... | ...
+	dvl::plr[dvl::myplr].InvList[0]._itype = dvl::ITYPE_GOLD;
+	dvl::plr[dvl::myplr].InvList[0]._ivalue = 1000;
+	dvl::plr[dvl::myplr]._pNumInv = 1;
+	// Put (max gold - 100) gold, which is 4900, into the player's hand
+	dvl::plr[dvl::myplr].HoldItem._itype = dvl::ITYPE_GOLD;
+	dvl::plr[dvl::myplr].HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
+
+	dvl::GoldAutoPlace(dvl::myplr);
+	// We expect the inventory:
+	// | 5000 | 900 | ...
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvList[0]._ivalue, GOLD_MAX_LIMIT);
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvList[1]._ivalue, 900);
 }
