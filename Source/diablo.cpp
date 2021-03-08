@@ -407,7 +407,7 @@ static void SaveOptions()
 	setIniInt("Graphics", "Height", sgOptions.nHeight);
 #endif
 	setIniInt("Graphics", "Fullscreen", sgOptions.bFullscreen);
-#ifdef __vita__
+#ifndef __vita__
 	setIniInt("Graphics", "Upscale", sgOptions.bUpscale);
 #endif
 	setIniInt("Graphics", "Fit to Screen", sgOptions.bFitToScreen);
