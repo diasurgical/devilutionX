@@ -372,7 +372,8 @@ if(RUN_TESTS)
     SourceT/pack_test.cpp
     SourceT/player_test.cpp
     SourceT/scrollrt_test.cpp
-    SourceT/stores_test.cpp)
+    SourceT/stores_test.cpp
+    SourceT/writehero_test.cpp)
 endif()
 
 if(HELLFIRE)

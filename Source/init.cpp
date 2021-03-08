@@ -36,6 +36,8 @@ HANDLE patch_rt_mpq;
 bool gbIsSpawn;
 /** Indicate if we have loaded the Hellfire expansion data */
 bool gbIsHellfire;
+/** Indicate if we want vanilla savefiles */
+bool gbVanilla;
 HANDLE hfmonk_mpq;
 HANDLE hfbard_mpq;
 HANDLE hfbarb_mpq;
