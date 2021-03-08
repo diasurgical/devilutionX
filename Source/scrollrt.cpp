@@ -634,9 +634,9 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre
 	}
 
 	nCel = pItem->_iAnimFrame;
-	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-		SDL_Log("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		SDL_Log("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, frames, pItem->_itype);
 		return;
 	}
 
@@ -779,10 +779,10 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 			assert(pCelBuff != NULL);
 			if (pCelBuff == NULL)
 				break;
-			pFrameTable = (DWORD *)pCelBuff;
+			frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 			nCel = pDeadGuy->_deadFrame;
-			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				SDL_Log("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+			if (nCel < 1 || frames > 50 || nCel > frames) {
+				SDL_Log("Unclipped dead: frame %d of %d, deadnum==%d", nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}
 			if (pDeadGuy->_deadtrans != 0) {
