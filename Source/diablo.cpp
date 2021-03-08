@@ -153,6 +153,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			forceDiablo = TRUE;
 		} else if (strcasecmp("--nestart", argv[i]) == 0) {
 			gbNestArt = true;
+		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
+                        gbVanilla = true;
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = TRUE;
@@ -1823,7 +1825,8 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 					dFlags[i][j] |= BFLAG_LIT;
 			}
 
-			LoadHotkeys();
+			if(!gbVanilla)
+				LoadHotkeys();
 			InitTowners();
 			InitItems();
 			InitMissiles();

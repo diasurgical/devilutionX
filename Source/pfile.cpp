@@ -184,7 +184,8 @@ void pfile_write_hero()
 	if (pfile_open_archive(save_num)) {
 		PackPlayer(&pkplr, myplr, !gbIsMultiplayer);
 		pfile_encode_hero(&pkplr);
-		SaveHotkeys();
+		if(!gbVanilla)
+			SaveHotkeys();
 		pfile_flush(!gbIsMultiplayer, save_num);
 	}
 }
