@@ -13,7 +13,11 @@ jobs:
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
+      - run: mv ./build/devilutionx*.7z ./build/devilutionx.7z && mv ./build/devilutionx*.deb ./build/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/devilutionx.rpm
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
+      - store_artifacts: {path: ./build/devilutionx.7z, destination: devilutionx_linux_x86_64.7z}
+      - store_artifacts: {path: ./build/devilutionx.deb, destination: devilutionx_linux_x86_64.deb}
+      - store_artifacts: {path: ./build/devilutionx.rpm, destination: devilutionx_linux_x86_64.rpm}
   linux_x86_64_test:
     docker:
       - image: debian:stable
@@ -39,7 +43,11 @@ jobs:
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
+      - run: mv ./build/devilutionx*.7z ./build/devilutionx.7z && mv ./build/devilutionx*.deb ./build/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/devilutionx.rpm
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
+      - store_artifacts: {path: ./build/devilutionx.7z, destination: devilutionx_linux_x86_64_sdl1.7z}
+      - store_artifacts: {path: ./build/devilutionx.deb, destination: devilutionx_linux_x86_64_sdl1.deb}
+      - store_artifacts: {path: ./build/devilutionx.rpm, destination: devilutionx_linux_x86_64_sdl1.rpm}
   linux_x86:
     docker:
       - image: debian:stretch-backports
@@ -54,7 +62,11 @@ jobs:
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
+      - run: mv ./build/devilutionx*.7z ./build/devilutionx.7z && mv ./build/devilutionx*.deb ./build/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/devilutionx.rpm
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
+      - store_artifacts: {path: ./build/devilutionx.7z, destination: devilutionx_linux_x86.7z}
+      - store_artifacts: {path: ./build/devilutionx.deb, destination: devilutionx_linux_x86.deb}
+      - store_artifacts: {path: ./build/devilutionx.rpm, destination: devilutionx_linux_x86.rpm}
   windows_x86:
     docker:
       - image: debian:stable
