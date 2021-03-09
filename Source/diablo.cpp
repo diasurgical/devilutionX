@@ -433,6 +433,7 @@ static void SaveOptions()
 	setIniInt("Game", "Auto Gold Pickup", sgOptions.bAutoGoldPickup);
 	setIniInt("Game", "Adria Refills Mana", sgOptions.bAdriaRefillsMana);
 	setIniInt("Game", "Auto Equip Weapons on Pickup", sgOptions.bAutoEquipWeapons);
+	setIniInt("Game", "Auto Equip Armor on Pickup", sgOptions.bAutoEquipArmor);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
 }
@@ -480,6 +481,7 @@ static void LoadOptions()
 	sgOptions.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
 	sgOptions.bAdriaRefillsMana = getIniBool("Game", "Adria Refills Mana", false);
 	sgOptions.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons on Pickup", true);
+	sgOptions.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor on Pickup", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
 }
