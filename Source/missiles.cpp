@@ -1866,14 +1866,11 @@ void AddFlashFront(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32
 
 void AddFlashBack(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	int lvl;
-
 	if (mienemy == TARGET_MONSTERS && id != -1) {
 		missile[mi]._midam = 0;
-		if (2 * (id > 0))
-			lvl = plr[id]._pLevel;
-		else
-			lvl = 1;
+		int lvl = 2;
+		if (id > 0)
+			lvl = plr[id]._pLevel * 2;
 		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 	}
 }
@@ -1932,7 +1929,7 @@ void AddRing(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 
 void AddSearch(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	int lvl, i, mx, r1, r2;
+	int i, mx, r1, r2;
 	MissileStruct *mis;
 
 	missile[mi]._miDelFlag = FALSE;
@@ -1945,10 +1942,9 @@ void AddSearch(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 	missile[mi]._miVar7 = 0;
 	missile[mi]._miVar8 = 0;
 	AutoMapShowItems = TRUE;
-	if (2 * (id > 0))
-		lvl = plr[id]._pLevel;
-	else
-		lvl = 1;
+	int lvl = 2;
+	if (id > 0)
+		lvl = plr[id]._pLevel * 2;
 	missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 	if (mienemy == TARGET_MONSTERS)
 		UseMana(id, SPL_SEARCH);
@@ -3056,8 +3052,6 @@ void AddNova(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 
 void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	int lvl;
-
 	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
 		missile[mi]._miDelFlag = TRUE;
 	} else {
@@ -3075,10 +3069,9 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 		tmp <<= 7;
 		plr[id]._pSpellFlags |= 2u;
 		missile[mi]._miVar2 = tmp;
-		if (2 * (id > 0))
-			lvl = plr[id]._pLevel;
-		else
-			lvl = 1;
+		int lvl = 2;
+		if (id > 0)
+			lvl = plr[id]._pLevel * 2;
 		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 		CalcPlrItemVals(id, TRUE);
 		force_redraw = 255;
@@ -5227,7 +5220,7 @@ void MI_Nova(Sint32 i)
 
 void MI_Blodboil(Sint32 i)
 {
-	int lvl, id, hpdif;
+	int id, hpdif;
 
 	missile[i]._mirange--;
 	if (missile[i]._mirange == 0) {
@@ -5243,10 +5236,9 @@ void MI_Blodboil(Sint32 i)
 			};
 			plr[id]._pSpellFlags &= ~0x2;
 			plr[id]._pSpellFlags |= 4;
-			if (2 * (id > 0))
-				lvl = plr[id]._pLevel;
-			else
-				lvl = 1;
+			int lvl = 2;
+			if (id > 0)
+				lvl = plr[id]._pLevel * 2;
 			missile[i]._mirange = lvl + 10 * missile[i]._mispllvl + 245;
 			hpdif = plr[id]._pMaxHP - plr[id]._pHitPoints;
 			CalcPlrItemVals(id, TRUE);
