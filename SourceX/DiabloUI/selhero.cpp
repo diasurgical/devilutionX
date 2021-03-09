@@ -557,8 +557,9 @@ void UiSelHeroMultDialog(
 
 const char *selhero_GenerateName(uint8_t hero_class)
 {
-	static const char *const kNames[3][10] = {
+	static const char *const kNames[4][10] = {
 		{
+		    // Warrior
 		    "Aidan",
 		    "Qarak",
 		    "Born",
@@ -571,6 +572,7 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		    "Rothat",
 		},
 		{
+		    // Rogue
 		    "Moreina",
 		    "Akara",
 		    "Kashya",
@@ -583,6 +585,7 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		    "Elexa",
 		},
 		{
+		    // Sorcerer
 		    "Jazreth",
 		    "Drognan",
 		    "Armin",
@@ -593,6 +596,19 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		    "Sarnakyle",
 		    "Valthek",
 		    "Horazon",
+		},
+		{
+		    // Monk
+		    "Akyev",
+		    "Dvorak",
+		    "Kekegi",
+		    "Kharazim",
+		    "Mikulov",
+		    "Shenlong",
+		    "Vedenin",
+		    "Vhalit",
+		    "Vylnas",
+		    "Zhota",
 		}
 	};
 
