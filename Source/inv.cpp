@@ -816,6 +816,10 @@ bool AutoEquipEnabled(const ItemStruct &item)
 		return sgOptions.bAutoEquipArmor;
 	}
 
+	if (item.isHelm()) {
+		return sgOptions.bAutoEquipHelms;
+	}
+
 	return true;
 }
 
