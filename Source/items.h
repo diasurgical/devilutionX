@@ -179,6 +179,27 @@ typedef struct ItemStruct {
 		}
 	}
 
+	/**
+	 * @brief Checks whether this item is an armor.
+	 * @return 'True' in case the item is an armor and 'False' otherwise.
+	 */
+	bool isArmor() const
+	{
+		if (this->isEmpty()) {
+			return false;
+		}
+
+		switch (this->_itype) {
+		case ITYPE_HARMOR:
+		case ITYPE_LARMOR:
+		case ITYPE_MARMOR:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
 } ItemStruct;
 
 typedef struct ItemGetRecordStruct {
