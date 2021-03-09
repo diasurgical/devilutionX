@@ -747,6 +747,9 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
       DESTINATION "."
     )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+      DESTINATION "."
+    )
     install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/libfreetype-6.dll"
       DESTINATION "."
     )
@@ -782,6 +785,9 @@ if(CPACK)
       DESTINATION "."
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
       DESTINATION "."
     )
     install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/libfreetype-6.dll"
@@ -824,11 +830,13 @@ if(CPACK)
       set(desktop_file "${CMAKE_BINARY_DIR}/${project_name}.desktop")
     endif()
 
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+      DESTINATION "bin"
+    )
     install(FILES "${desktop_file}"
       DESTINATION "share/applications"
     )
-    install(FILES
-        "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/icon.png"
