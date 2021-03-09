@@ -218,6 +218,26 @@ typedef struct ItemStruct {
 		return !this->isEmpty() && this->_itype == ITYPE_SHIELD;
 	}
 
+	/**
+	 * @brief Checks whether this item is a jewelry.
+	 * @return 'True' in case the item is a jewelry and 'False' otherwise.
+	 */
+	bool isJewelry() const
+	{
+		if (this->isEmpty()) {
+			return false;
+		}
+
+		switch (this->_itype) {
+		case ITYPE_AMULET:
+		case ITYPE_RING:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
 } ItemStruct;
 
 typedef struct ItemGetRecordStruct {

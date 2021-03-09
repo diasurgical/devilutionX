@@ -436,6 +436,7 @@ static void SaveOptions()
 	setIniInt("Game", "Auto Equip Armor on Pickup", sgOptions.bAutoEquipArmor);
 	setIniInt("Game", "Auto Equip Helms on Pickup", sgOptions.bAutoEquipHelms);
 	setIniInt("Game", "Auto Equip Shields on Pickup", sgOptions.bAutoEquipShields);
+	setIniInt("Game", "Auto Equip Jewelry on Pickup", sgOptions.bAutoEquipJewelry);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
 }
@@ -486,6 +487,7 @@ static void LoadOptions()
 	sgOptions.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor on Pickup", false);
 	sgOptions.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms on Pickup", false);
 	sgOptions.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields on Pickup", false);
+	sgOptions.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry on Pickup", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
 }
