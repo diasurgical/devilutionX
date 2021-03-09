@@ -107,6 +107,9 @@ typedef struct Options {
 	/** @brief Automatically attempt to equip helm-type items when picking them up. */
 	bool bAutoEquipHelms;
 
+	/** @brief Automatically attempt to equip shield-type items when picking them up. */
+	bool bAutoEquipShields;
+
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
 } Options;

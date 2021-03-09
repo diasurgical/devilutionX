@@ -209,6 +209,15 @@ typedef struct ItemStruct {
 		return !this->isEmpty() && this->_itype == ITYPE_HELM;
 	}
 
+	/**
+	 * @brief Checks whether this item is a shield.
+	 * @return 'True' in case the item is a shield and 'False' otherwise.
+	 */
+	bool isShield() const
+	{
+		return !this->isEmpty() && this->_itype == ITYPE_SHIELD;
+	}
+
 } ItemStruct;
 
 typedef struct ItemGetRecordStruct {

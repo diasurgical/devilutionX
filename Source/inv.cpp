@@ -820,6 +820,10 @@ bool AutoEquipEnabled(const ItemStruct &item)
 		return sgOptions.bAutoEquipHelms;
 	}
 
+	if (item.isShield()) {
+		return sgOptions.bAutoEquipShields;
+	}
+
 	return true;
 }
 
