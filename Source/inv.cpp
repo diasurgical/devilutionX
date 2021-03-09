@@ -824,6 +824,10 @@ bool AutoEquipEnabled(const ItemStruct &item)
 		return sgOptions.bAutoEquipShields;
 	}
 
+	if (item.isJewelry()) {
+		return sgOptions.bAutoEquipJewelry;
+	}
+
 	return true;
 }
 
