@@ -811,8 +811,21 @@ void S_StartSRepair()
 	OffsetSTextY(22, 6);
 }
 
+static void FillManaPlayer()
+{
+	if (!sgOptions.bAdriaRefillsMana)
+		return;
+	if (plr[myplr]._pMana != plr[myplr]._pMaxMana) {
+		PlaySFX(IS_CAST8);
+	}
+	plr[myplr]._pMana = plr[myplr]._pMaxMana;
+	plr[myplr]._pManaBase = plr[myplr]._pMaxManaBase;
+	drawmanaflag = TRUE;
+}
+
 void S_StartWitch()
 {
+	FillManaPlayer();
 	stextsize = FALSE;
 	stextscrl = FALSE;
 	AddSText(0, 2, TRUE, "Witch's shack", COL_GOLD, FALSE);

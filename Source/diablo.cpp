@@ -431,6 +431,7 @@ static void SaveOptions()
 	setIniInt("Game", "Experience Bar", sgOptions.bExperienceBar);
 	setIniInt("Game", "Enemy Health Bar", sgOptions.bEnemyHealthBar);
 	setIniInt("Game", "Auto Gold Pickup", sgOptions.bAutoGoldPickup);
+	setIniInt("Game", "Adria Refills Mana, sgOptions.bAdriaRefillsMana);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
 }
@@ -476,6 +477,7 @@ static void LoadOptions()
 	sgOptions.bExperienceBar = getIniBool("Game", "Experience Bar", false);
 	sgOptions.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
 	sgOptions.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
+	sgOptions.bAdriaRefillsMana = getIniBool("Game", "Adria Refills Mana", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
 }

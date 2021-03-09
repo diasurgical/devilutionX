@@ -47,6 +47,8 @@ typedef struct Options {
 	bool bExperienceBar;  // Show the current level progress
 	bool bEnemyHealthBar; // Show enemy health at the top of the screen
 	bool bAutoGoldPickup; // Automatically pick up goald when walking on to it
+	bool bAdriaRefillsMana;  // Recover mana when talking to Adria
+
 
 	char szBindAddress[129]; // Optionally bind to a specific network interface
 } Options;
