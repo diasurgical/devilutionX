@@ -441,7 +441,7 @@ typedef struct _SNETUIDATA {
 	void (*categorylistcallback)();
 	void (*newaccountcallback)();
 	const char **profilefields;
-	int (*selectnamecallback)(
+	bool (*selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,
 	    const struct _SNETPLAYERDATA *,
 	    const struct _SNETUIDATA *,
@@ -449,7 +449,7 @@ typedef struct _SNETUIDATA {
 	    DWORD provider, /* e.g. 'BNET', 'IPXN', 'MODM', 'SCBL' */
 	    char *, DWORD,  /* character name will be copied here */
 	    char *, DWORD,  /* character "description" will be copied here (used to advertise games) */
-	    BOOL *          /* new character? - unsure about this */
+	    bool *          /* new character? - unsure about this */
 	);
 	void (*changenamecallback)();
 } _SNETUIDATA;

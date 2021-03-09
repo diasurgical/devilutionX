@@ -1248,8 +1248,8 @@ void ProcessVisionList()
 				    VisionList[i]._lx,
 				    VisionList[i]._ly,
 				    VisionList[i]._lradius,
-				    VisionList[i]._lflags & 1,
-				    VisionList[i]._lflags & 1);
+				    VisionList[i]._lflags,
+				    VisionList[i]._lflags);
 			}
 		}
 		do {

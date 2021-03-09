@@ -82,7 +82,7 @@ void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, 
 		pfile_rename_hero(name_1, name_2);
 }
 
-BOOL mainmenu_select_hero_dialog(
+bool mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
     const _SNETUIDATA *ui_info,
@@ -90,7 +90,7 @@ BOOL mainmenu_select_hero_dialog(
     DWORD mode,
     char *cname, DWORD clen,
     char *cdesc, DWORD cdlen,
-    BOOL *multi)
+    bool *multi)
 {
 	BOOL hero_is_created = TRUE;
 	int dlgresult = 0;
