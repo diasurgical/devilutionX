@@ -200,6 +200,15 @@ typedef struct ItemStruct {
 		}
 	}
 
+	/**
+	 * @brief Checks whether this item is a helm.
+	 * @return 'True' in case the item is a helm and 'False' otherwise.
+	 */
+	bool isHelm() const
+	{
+		return !this->isEmpty() && this->_itype == ITYPE_HELM;
+	}
+
 } ItemStruct;
 
 typedef struct ItemGetRecordStruct {
