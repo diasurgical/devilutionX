@@ -652,6 +652,15 @@ const TextDataStruct alltext[] = {
 	{ " |", 0, 5, TSFX_COW6 },
 	{ " |", 0, 5, TSFX_COW7 },
 	{ " |", 0, 5, TSFX_COW8 },
+	{ "*retching* Listen, listen. I don't even like worms. Don't tell me about yer worms! I don't want yer worms! Nope, no thanks! *slight hiccup/gag* No worms for me.", 1, 5, TSFX_DRUNK5 },
+	{ "*SNORE*", 1, 5, TSFX_DRUNK6 },
+	{ "Sounds like a good idea to me. Ya better get started right awaaay.", 1, 5, TSFX_DRUNK8 },
+	{ "*laugh* Did you ever hear I love that King tale? I love that one.", 1, 5, TSFX_DRUNK9 },
+	{ "(Crying) No, you can't make me go back there. I won't let you take me. Too much pain, too many dead. Can't... get the blood out of my eyes... my mouth... *wails*", 1, 5, TSFX_DRUNK11 },
+	{ "You're gonna hunt down a demon? Is that what you said? I know I didn't hear that 'cuz nobody hunts down a demon, no! Nobody! ", 1, 5, TSFX_DRUNK16 },
+	{ "Hey, lemme see that. *blows nose* Thanks!", 1, 5, TSFX_DRUNK18 },
+	{ "Hey you there, come here, listen up. You know about the island where angels watch? Pick the right rocks, but you better shield your eyes; shield everything! I know, 'cause I been there and... Mmmm, ale.", 1, 5, TSFX_DRUNK22 },
+	{ "I haven't ever see a priest around here. If I did I'd kick him right in the *BBBBUUURRRPPP* Can't even keep a church free of those Hell spawn - bastards. What good are they, those holy men? Liars! Liars!", 1, 5, TSFX_DRUNK33 },
 };
 
 DEVILUTION_END_NAMESPACE
