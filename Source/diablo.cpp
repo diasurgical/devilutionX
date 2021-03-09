@@ -431,7 +431,7 @@ static void SaveOptions()
 	setIniInt("Game", "Experience Bar", sgOptions.bExperienceBar);
 	setIniInt("Game", "Enemy Health Bar", sgOptions.bEnemyHealthBar);
 	setIniInt("Game", "Auto Gold Pickup", sgOptions.bAutoGoldPickup);
-	setIniInt("Game", "Adria Refills Mana, sgOptions.bAdriaRefillsMana);
+	setIniInt("Game", "Adria Refills Mana", sgOptions.bAdriaRefillsMana);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
 }
