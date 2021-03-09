@@ -132,6 +132,30 @@ typedef struct ItemStruct {
 		return this->_itype == ITYPE_NONE;
 	}
 
+	/**
+	 * @brief Checks whether this item is an equipment.
+	 * @return 'True' in case the item is an equipment and 'False' otherwise.
+	 */
+	bool isEquipment() const
+	{
+		if (this->isEmpty()) {
+			return false;
+		}
+
+		switch (this->_iLoc) {
+		case ILOC_AMULET:
+		case ILOC_ARMOR:
+		case ILOC_HELM:
+		case ILOC_ONEHAND:
+		case ILOC_RING:
+		case ILOC_TWOHAND:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
 } ItemStruct;
 
 typedef struct ItemGetRecordStruct {
