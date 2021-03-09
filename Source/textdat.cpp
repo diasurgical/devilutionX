@@ -645,6 +645,7 @@ const TextDataStruct alltext[] = {
 	{ "In Spiritu Sanctum. |", 1, 5, PS_ROGUE54 },
 	{ "Praedictum Otium. |", 1, 5, PS_ROGUE55 },
 	{ "Efficio Obitus Ut Inimicus. |", 1, 5, PS_ROGUE56 },
+	{ "Please help....! I barely escaped from....... The Butcher...! He killed.... My wife... My children! I beg of you...... In the name of God......... Avenge them......... |", 1, 5, TSFX_DEADGUY },
 };
 
 DEVILUTION_END_NAMESPACE
