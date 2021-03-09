@@ -493,6 +493,14 @@ const TextDataStruct alltext[] = {
 	    1, 5, PS_ROGUE12 },
 	{ " |", 0, 5, TSFX_COW1 },
 	{ " |", 0, 5, TSFX_COW2 },
+/*
+	{ " |", 0, 5, TSFX_COW3 },
+	{ " |", 0, 5, TSFX_COW4 },
+	{ " |", 0, 5, TSFX_COW5 },
+	{ " |", 0, 5, TSFX_COW6 },
+	{ " |", 0, 5, TSFX_COW7 },
+	{ " |", 0, 5, TSFX_COW8 },
+*/
 	{ "Take heed and bear witness to the truths that lie herein, for they are the last legacy of the Horadrim. There is a war that rages on even now, beyond the fields that we know - between the utopian kingdoms of the High Heavens and the chaotic pits of the Burning Hells. This war is known as the Great Conflict, and it has raged and burned longer than any of the stars in the sky. Neither side ever gains sway for long as the forces of Light and Darkness constantly vie for control over all creation. |",
 	    1, 5, PS_NAR1 },
 	{ "Take heed and bear witness to the truths that lie herein, for they are the last legacy of the Horadrim. When the Eternal Conflict between the High Heavens and the Burning Hells falls upon mortal soil, it is called the Sin War. Angels and Demons walk amongst humanity in disguise, fighting in secret, away from the prying eyes of mortals. Some daring, powerful mortals have even allied themselves with either side, and helped to dictate the course of the Sin War. |",
@@ -645,13 +653,8 @@ const TextDataStruct alltext[] = {
 	{ "In Spiritu Sanctum. |", 1, 5, PS_ROGUE54 },
 	{ "Praedictum Otium. |", 1, 5, PS_ROGUE55 },
 	{ "Efficio Obitus Ut Inimicus. |", 1, 5, PS_ROGUE56 },
+/**
 	{ "Please help....! I barely escaped from....... The Butcher...! He killed.... My wife... My children! I beg of you...... In the name of God......... Avenge them......... |", 1, 5, TSFX_DEADGUY },
-	{ " |", 0, 5, TSFX_COW3 },
-	{ " |", 0, 5, TSFX_COW4 },
-	{ " |", 0, 5, TSFX_COW5 },
-	{ " |", 0, 5, TSFX_COW6 },
-	{ " |", 0, 5, TSFX_COW7 },
-	{ " |", 0, 5, TSFX_COW8 },
 	{ "*retching* Listen, listen. I don't even like worms. Don't tell me about yer worms! I don't want yer worms! Nope, no thanks! *slight hiccup/gag* No worms for me.", 1, 5, TSFX_DRUNK5 },
 	{ "*SNORE*", 1, 5, TSFX_DRUNK6 },
 	{ "Sounds like a good idea to me. Ya better get started right awaaay.", 1, 5, TSFX_DRUNK8 },
@@ -661,6 +664,7 @@ const TextDataStruct alltext[] = {
 	{ "Hey, lemme see that. *blows nose* Thanks!", 1, 5, TSFX_DRUNK18 },
 	{ "Hey you there, come here, listen up. You know about the island where angels watch? Pick the right rocks, but you better shield your eyes; shield everything! I know, 'cause I been there and... Mmmm, ale.", 1, 5, TSFX_DRUNK22 },
 	{ "I haven't ever see a priest around here. If I did I'd kick him right in the *BBBBUUURRRPPP* Can't even keep a church free of those Hell spawn - bastards. What good are they, those holy men? Liars! Liars!", 1, 5, TSFX_DRUNK33 },
+*/
 };
 
 DEVILUTION_END_NAMESPACE

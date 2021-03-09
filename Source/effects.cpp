@@ -274,6 +274,12 @@ TSFX sgSFX[] = {
 	{ sfx_STREAM,                "Sfx\\Towners\\Bsmith56.wav",  NULL },
 	{ sfx_MISC,                  "Sfx\\Towners\\Cow1.wav",      NULL },
 	{ sfx_MISC,                  "Sfx\\Towners\\Cow2.wav",      NULL },
+/*
+	{ sfx_MISC,                  "Sfx\\Towners\\Cow3.wav",      NULL },
+	{ sfx_MISC,                  "Sfx\\Towners\\Cow4.wav",      NULL },
+	{ sfx_MISC,                  "Sfx\\Towners\\Cow5.wav",      NULL },
+	{ sfx_MISC,                  "Sfx\\Towners\\Cow6.wav",      NULL },
+*/
 	{ sfx_MISC | sfx_HELLFIRE,   "Sfx\\Towners\\Cow7.wav",      NULL },
 	{ sfx_MISC | sfx_HELLFIRE,   "Sfx\\Towners\\Cow8.wav",      NULL },
 	{ sfx_STREAM,                "Sfx\\Towners\\Deadguy2.wav",  NULL },
