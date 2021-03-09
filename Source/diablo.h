@@ -98,6 +98,9 @@ typedef struct Options {
 	/** @brief Recover mana when talking to Adria. */
 	bool bAdriaRefillsMana;
 
+	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
+	bool bAutoEquipWeapons;
+
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
 } Options;

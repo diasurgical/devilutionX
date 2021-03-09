@@ -156,6 +156,29 @@ typedef struct ItemStruct {
 		}
 	}
 
+	/**
+	 * @brief Checks whether this item is a weapon.
+	 * @return 'True' in case the item is a weapon and 'False' otherwise.
+	 */
+	bool isWeapon() const
+	{
+		if (this->isEmpty()) {
+			return false;
+		}
+
+		switch (this->_itype) {
+		case ITYPE_AXE:
+		case ITYPE_BOW:
+		case ITYPE_MACE:
+		case ITYPE_STAFF:
+		case ITYPE_SWORD:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
 } ItemStruct;
 
 typedef struct ItemGetRecordStruct {

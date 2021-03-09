@@ -801,6 +801,20 @@ bool AutoEquip(int playerNumber, const ItemStruct &item)
 	return false;
 }
 
+/**
+ * @brief Checks whether or not auto-equipping behavior is enabled for the given item.
+ * @param item The item to check.
+ * @return 'True' if auto-equipping behavior is enabled for the item and 'False' otherwise.
+ */
+bool AutoEquipEnabled(const ItemStruct &item)
+{
+	if (item.isWeapon()) {
+		return sgOptions.bAutoEquipWeapons;
+	}
+
+	return true;
+}
+
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 {
 	int i, j, xx, yy;
@@ -1943,7 +1957,7 @@ void AutoGetItem(int pnum, int ii)
 			SetPlrHandGoldCurs(&item[ii]);
 		}
 	} else {
-		done = AutoEquip(pnum, plr[pnum].HoldItem);
+		done = AutoEquipEnabled(plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
 		if (!done) {
 			w = icursW28;
 			h = icursH28;
