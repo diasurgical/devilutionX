@@ -813,6 +813,8 @@ void S_StartSRepair()
 
 static void FillManaPlayer()
 {
+	if (!sgOptions.bFillManaStore)
+		return;
 	if (plr[myplr]._pMana != plr[myplr]._pMaxMana) {
 		PlaySFX(IS_CAST8);
 	}
