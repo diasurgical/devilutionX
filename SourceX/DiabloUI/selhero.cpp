@@ -612,7 +612,7 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		}
 	};
 
-	int iRand = rand() % 9;
+	int iRand = rand() % 10;
 
 	return kNames[hero_class][iRand];
 }
