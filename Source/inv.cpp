@@ -654,9 +654,7 @@ bool CanBePlacedOnBelt(int playerNumber, const ItemStruct &item)
 bool CanEquip(const ItemStruct &item)
 {
 	return
-		item._iLoc != ILOC_INVALID &&
-		item._iLoc != ILOC_NONE &&
-		item._iLoc != ILOC_UNEQUIPABLE &&
+		item.isEquipment() &&
 		item._iStatFlag;
 }
 
