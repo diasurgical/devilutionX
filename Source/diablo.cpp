@@ -403,6 +403,7 @@ static void SaveOptions()
 	setIniInt("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	setIniInt("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
 	setIniInt("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
+	setIniInt("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
 
 #ifndef __vita__
 	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
@@ -449,6 +450,7 @@ static void LoadOptions()
 	sgOptions.Audio.nSoundVolume = getIniInt("Audio", "Sound Volume", VOLUME_MAX);
 	sgOptions.Audio.nMusicVolume = getIniInt("Audio", "Music Volume", VOLUME_MAX);
 	sgOptions.Audio.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
+	sgOptions.Audio.bAutoEquipSound = getIniBool("Audio", "Auto Equip Sound", false);
 
 #ifndef __vita__
 	sgOptions.Graphics.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
