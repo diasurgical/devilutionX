@@ -132,3 +132,90 @@ TEST(Inv, GoldAutoPlace)
 	EXPECT_EQ(dvl::plr[dvl::myplr].InvList[0]._ivalue, GOLD_MAX_LIMIT);
 	EXPECT_EQ(dvl::plr[dvl::myplr].InvList[1]._ivalue, 900);
 }
+
+// Test removing an item from inventory with no other items.
+TEST(Inv, RemoveInvItem)
+{
+	clear_inventory();
+	// Put a two-slot misc item into the inventory:
+	// | (item) | (item) | ... | ...
+	dvl::plr[dvl::myplr]._pNumInv = 1;
+	dvl::plr[dvl::myplr].InvGrid[0] = 1;
+	dvl::plr[dvl::myplr].InvGrid[1] = 1;
+	dvl::plr[dvl::myplr].InvList[0]._itype = dvl::ITYPE_MISC;
+
+	dvl::RemoveInvItem(dvl::myplr, 0);
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvGrid[0], 0);
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvGrid[1], 0);
+	EXPECT_EQ(dvl::plr[dvl::myplr]._pNumInv, 0);
+}
+
+// Test removing an item from inventory with other items in it.
+TEST(Inv, RemoveInvItem_other_item)
+{
+	clear_inventory();
+	// Put a two-slot misc item and a ring into the inventory:
+	// | (item) | (item) | (ring) | ...
+	dvl::plr[dvl::myplr]._pNumInv = 2;
+	dvl::plr[dvl::myplr].InvGrid[0] = 1;
+	dvl::plr[dvl::myplr].InvGrid[1] = 1;
+	dvl::plr[dvl::myplr].InvList[0]._itype = dvl::ITYPE_MISC;
+
+	dvl::plr[dvl::myplr].InvGrid[2] = 2;
+	dvl::plr[dvl::myplr].InvList[1]._itype = dvl::ITYPE_RING;
+
+	dvl::RemoveInvItem(dvl::myplr, 0);
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvGrid[0], 0);
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvGrid[1], 0);
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvGrid[2], 1);
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvList[0]._itype, dvl::ITYPE_RING);
+	EXPECT_EQ(dvl::plr[dvl::myplr]._pNumInv, 1);
+}
+
+// Test removing an item from the belt
+TEST(Inv, RemoveSpdBarItem)
+{
+	// Clear the belt
+	for (int i = 0; i < MAXBELTITEMS; i++) {
+		dvl::plr[dvl::myplr].SpdList[i]._itype = dvl::ITYPE_NONE;
+	}
+	// Put an item in the belt: | x | x | item | x | x | x | x | x |
+	dvl::plr[dvl::myplr].SpdList[3]._itype = dvl::ITYPE_MISC;
+
+	dvl::RemoveSpdBarItem(dvl::myplr, 3);
+	EXPECT_EQ(dvl::plr[dvl::myplr].SpdList[3]._itype, dvl::ITYPE_NONE);
+}
+
+// Test removing a scroll from the inventory
+TEST(Inv, RemoveScroll_inventory)
+{
+	clear_inventory();
+
+	// Put a firebolt scroll into the inventory
+	dvl::plr[dvl::myplr]._pNumInv = 1;
+	dvl::plr[dvl::myplr]._pRSpell = static_cast<dvl::spell_id>(dvl::SPL_FIREBOLT);
+	dvl::plr[dvl::myplr].InvList[0]._itype = dvl::ITYPE_MISC;
+	dvl::plr[dvl::myplr].InvList[0]._iMiscId = dvl::IMISC_SCROLL;
+	dvl::plr[dvl::myplr].InvList[0]._iSpell = dvl::SPL_FIREBOLT;
+
+	dvl::RemoveScroll(dvl::myplr);
+	EXPECT_EQ(dvl::plr[dvl::myplr].InvGrid[0], 0);
+	EXPECT_EQ(dvl::plr[dvl::myplr]._pNumInv, 0);
+}
+
+// Test removing a scroll from the belt
+TEST(Inv, RemoveScroll_belt)
+{
+	// Clear the belt
+	for (int i = 0; i < MAXBELTITEMS; i++) {
+		dvl::plr[dvl::myplr].SpdList[i]._itype = dvl::ITYPE_NONE;
+	}
+	// Put a firebolt scroll into the belt
+	dvl::plr[dvl::myplr]._pSpell = static_cast<dvl::spell_id>(dvl::SPL_FIREBOLT);
+	dvl::plr[dvl::myplr].SpdList[3]._itype = dvl::ITYPE_MISC;
+	dvl::plr[dvl::myplr].SpdList[3]._iMiscId = dvl::IMISC_SCROLL;
+	dvl::plr[dvl::myplr].SpdList[3]._iSpell = dvl::SPL_FIREBOLT;
+
+	dvl::RemoveScroll(dvl::myplr);
+	EXPECT_EQ(dvl::plr[dvl::myplr].SpdList[3]._itype, dvl::ITYPE_NONE);
+}
