@@ -694,7 +694,7 @@ static void LoadObject(LoadHelper *file, int i)
 	pObject->_oVar4 = file->nextLE<Sint32>();
 	pObject->_oVar5 = file->nextLE<Sint32>();
 	pObject->_oVar6 = file->nextLE<Sint32>();
-	pObject->_oVar7 = file->nextLE<Sint32>();
+	pObject->_oVar7 = (_speech_id)file->nextLE<Sint32>();
 	pObject->_oVar8 = file->nextLE<Sint32>();
 }
 
@@ -723,9 +723,9 @@ static void LoadQuest(LoadHelper *file, int i)
 	pQuest->_qidx = file->nextLE<Uint8>();
 	if (gbIsHellfireSaveGame) {
 		file->skip(2); // Alignment
-		pQuest->_qmsg = file->nextLE<Uint32>();
+		pQuest->_qmsg = file->nextLE<Sint32>();
 	} else {
-		pQuest->_qmsg = file->nextLE<Uint8>();
+		pQuest->_qmsg = file->nextLE<Sint8>();
 	}
 	pQuest->_qvar1 = file->nextLE<Uint8>();
 	pQuest->_qvar2 = file->nextLE<Uint8>();
@@ -1620,9 +1620,9 @@ static void SaveQuest(SaveHelper *file, int i)
 	file->writeLE<Uint8>(pQuest->_qidx);
 	if (gbIsHellfire) {
 		file->skip(2); // Alignment
-		file->writeLE<Uint32>(pQuest->_qmsg);
+		file->writeLE<Sint32>(pQuest->_qmsg);
 	} else {
-		file->writeLE<Uint8>(pQuest->_qmsg);
+		file->writeLE<Sint8>(pQuest->_qmsg);
 	}
 	file->writeLE<Uint8>(pQuest->_qvar1);
 	file->writeLE<Uint8>(pQuest->_qvar2);

@@ -12,6 +12,23 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef enum _talker_id {
+	TOWN_SMITH,
+	TOWN_HEALER,
+	TOWN_DEADGUY,
+	TOWN_TAVERN,
+	TOWN_STORY,
+	TOWN_DRUNK,
+	TOWN_WITCH,
+	TOWN_BMAID,
+	TOWN_PEGBOY,
+	TOWN_COW,
+	TOWN_FARMER,
+	TOWN_GIRL,
+	TOWN_COWFARM,
+	NUM_TOWNER_TYPES,
+} _talker_id;
+
 typedef struct TNQ {
 	Uint8 _qsttype;
 	Uint8 _qstmsg;
@@ -54,33 +71,6 @@ typedef struct TownerStruct {
 	Uint8 *_tNData;
 } TownerStruct;
 
-typedef struct QuestTalkData {
-	int _qinfra;
-	int _qblkm;
-	int _qgarb;
-	int _qzhar;
-	int _qveil;
-	int _qmod;
-	int _qbutch;
-	int _qbol;
-	int _qblind;
-	int _qblood;
-	int _qanvil;
-	int _qwarlrd;
-	int _qking;
-	int _qpw;
-	int _qbone;
-	int _qvb;
-	int _qgrv;
-	int _qfarm;
-	int _qgirl;
-	int _qtrade;
-	int _qdefiler;
-	int _qnakrul;
-	int _qjersy;
-	int _qhf8;
-} QuestTalkData;
-
 extern TownerStruct towner[NUM_TOWNERS];
 
 void InitTowners();
@@ -89,7 +79,7 @@ void ProcessTowners();
 ItemStruct *PlrHasItem(int pnum, int item, int *i);
 void TalkToTowner(int p, int t);
 
-extern QuestTalkData Qtalklist[];
+extern _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS];
 
 #ifdef __cplusplus
 }

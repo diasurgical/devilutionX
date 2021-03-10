@@ -3503,16 +3503,16 @@ void ProcessPlayers()
 		if (sfxdelay == 0) {
 			switch (sfxdnum) {
 			case USFX_DEFILER1:
-				InitQTextMsg(286);
+				InitQTextMsg(TEXT_DEFILER1);
 				break;
 			case USFX_DEFILER2:
-				InitQTextMsg(287);
+				InitQTextMsg(TEXT_DEFILER2);
 				break;
 			case USFX_DEFILER3:
-				InitQTextMsg(288);
+				InitQTextMsg(TEXT_DEFILER3);
 				break;
 			case USFX_DEFILER4:
-				InitQTextMsg(289);
+				InitQTextMsg(TEXT_DEFILER4);
 				break;
 			default:
 				PlaySFX(sfxdnum);
@@ -4314,7 +4314,7 @@ void PlayDungMsgs()
 		sfxdnum = USFX_DEFILER1;
 		quests[Q_DEFILER]._qactive = 2;
 		quests[Q_DEFILER]._qlog = 1;
-		quests[Q_DEFILER]._qmsg = 286;
+		quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
 		plr[myplr].pDungMsgs2 |= 1;
 	} else if (currlevel == 19 && !plr[myplr]._pLvlVisited[19] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs2 & 4)) {
 		sfxdelay = 10;

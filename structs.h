@@ -240,7 +240,7 @@ typedef struct ObjectStruct {
 	int _oVar4;
 	int _oVar5;
 	int _oVar6;
-	int _oVar7;
+	_speech_id _oVar7;
 	int _oVar8;
 } ObjectStruct;
 

@@ -772,10 +772,10 @@ void ResyncQuests()
 		} else {
 			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 				if (quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN) {
-					Qtalklist[TOWN_WITCH]._qblkm = -1;
-					Qtalklist[TOWN_HEALER]._qblkm = TEXT_MUSH3;
+					Qtalklist[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
+					Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
 				} else if (quests[Q_MUSHROOM]._qvar1 >= QS_BRAINGIVEN) {
-					Qtalklist[TOWN_HEALER]._qblkm = -1;
+					Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
 				}
 			}
 		}
