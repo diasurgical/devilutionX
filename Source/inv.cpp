@@ -2272,7 +2272,7 @@ int InvPutItem(int pnum, int x, int y)
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = item[ii];
-		InitQTextMsg(296);
+		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = FALSE;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
@@ -2358,7 +2358,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = item[ii];
-		InitQTextMsg(296);
+		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = 0;
 		quests[Q_CORNSTN]._qactive = 3;
 	}
@@ -2669,7 +2669,7 @@ BOOL UseInvItem(int pnum, int cii)
 
 	if (speedlist) {
 		if (plr[pnum].SpdList[c]._iMiscId == IMISC_NOTE) {
-			InitQTextMsg(322);
+			InitQTextMsg(TEXT_BOOK9);
 			invflag = FALSE;
 			return TRUE;
 		}
@@ -2679,7 +2679,7 @@ BOOL UseInvItem(int pnum, int cii)
 		if (plr[pnum].InvList[c]._iMiscId == IMISC_MAPOFDOOM)
 			return TRUE;
 		if (plr[pnum].InvList[c]._iMiscId == IMISC_NOTE) {
-			InitQTextMsg(322);
+			InitQTextMsg(TEXT_BOOK9);
 			invflag = FALSE;
 			return TRUE;
 		}

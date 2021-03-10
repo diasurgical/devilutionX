@@ -4348,12 +4348,22 @@ void MAI_Garbud(int i)
 	_my = Monst->_my;
 	md = M_GetDir(i);
 
-	if (Monst->mtalkmsg < TEXT_GARBUD4
-	    && Monst->mtalkmsg > TEXT_DOOM10
+	if (Monst->mtalkmsg >= TEXT_GARBUD1
+	    && Monst->mtalkmsg <= TEXT_GARBUD3
 	    && !(dFlags[_mx][_my] & BFLAG_VISIBLE)
 	    && Monst->_mgoal == MGOAL_TALKING) {
 		Monst->_mgoal = MGOAL_INQUIRING;
-		Monst->mtalkmsg++;
+		switch (Monst->mtalkmsg) {
+		case TEXT_GARBUD1:
+			Monst->mtalkmsg = TEXT_GARBUD2;
+			break;
+		case TEXT_GARBUD2:
+			Monst->mtalkmsg = TEXT_GARBUD3;
+			break;
+		case TEXT_GARBUD3:
+			Monst->mtalkmsg = TEXT_GARBUD4;
+			break;
+		}
 	}
 
 	if (dFlags[_mx][_my] & BFLAG_VISIBLE) {

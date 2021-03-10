@@ -23,7 +23,7 @@ typedef struct QuestStruct {
 	Sint32 _qty;
 	Uint8 _qslvl;
 	Uint8 _qidx;
-	Uint32 _qmsg;
+	Sint32 _qmsg;
 	Uint8 _qvar1;
 	Uint8 _qvar2;
 	bool _qlog;

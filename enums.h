@@ -1830,6 +1830,7 @@ typedef enum _speech_id {
 	TEXT_BBOOKA     = 0x14F,
 	TEXT_BBOOKB     = 0x150,
 	TEXT_BBOOKC     = 0x151,
+	TEXT_NONE       = -1,
 } _speech_id;
 
 typedef enum object_graphic_id {
@@ -2357,23 +2358,6 @@ typedef enum _cmd_id {
 	FAKE_CMD_DROPID,
 	NUM_CMDS,
 } _cmd_id;
-
-typedef enum _talker_id {
-	TOWN_SMITH   = 0x0,
-	TOWN_HEALER  = 0x1,
-	TOWN_DEADGUY = 0x2,
-	TOWN_TAVERN  = 0x3,
-	TOWN_STORY   = 0x4,
-	TOWN_DRUNK   = 0x5,
-	TOWN_WITCH   = 0x6,
-	TOWN_BMAID   = 0x7,
-	TOWN_PEGBOY  = 0x8,
-	TOWN_COW     = 0x9,
-	TOWN_FARMER  = 0xA,
-	TOWN_GIRL    = 0xB,
-	TOWN_COWFARM = 0xC,
-	TOWN_PRIEST,
-} _talker_id;
 
 typedef enum _music_id {
 	TMUSIC_TOWN,

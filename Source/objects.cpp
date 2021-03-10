@@ -200,7 +200,7 @@ const char *const StoryBookName[] = {
 	"A Spellbook",
 };
 /** Specifies the speech IDs of each dungeon type narrator book, for each player class. */
-int StoryText[3][3] = {
+_speech_id StoryText[3][3] = {
 	{ TEXT_BOOK11, TEXT_BOOK12, TEXT_BOOK13 },
 	{ TEXT_BOOK21, TEXT_BOOK22, TEXT_BOOK23 },
 	{ TEXT_BOOK31, TEXT_BOOK32, TEXT_BOOK33 }
@@ -423,7 +423,7 @@ void AddCandles()
 	AddObject(OBJ_STORYCANDLE, tx + 2, ty + 2);
 }
 
-void AddBookLever(int lx1, int ly1, int lx2, int ly2, int x1, int y1, int x2, int y2, int msg)
+void AddBookLever(int lx1, int ly1, int lx2, int ly2, int x1, int y1, int x2, int y2, _speech_id msg)
 {
 	bool exit;
 	int xp, yp, ob, cnt, m, n;
@@ -965,7 +965,7 @@ void AddLazStand()
 
 void InitObjects()
 {
-	int sp_id;
+	_speech_id sp_id;
 	BYTE *mem;
 
 	ClrAllObjects();
@@ -1216,7 +1216,7 @@ void SetObjMapRange(int i, int x1, int y1, int x2, int y2, int v)
 	object[i]._oVar8 = v;
 }
 
-void SetBookMsg(int i, int msg)
+void SetBookMsg(int i, _speech_id msg)
 {
 	object[i]._oVar7 = msg;
 }
@@ -1597,47 +1597,47 @@ void objects_44DA68(int i, int a2)
 		switch (a2) {
 		case 6:
 			if (plr[myplr]._pClass == PC_WARRIOR) {
-				object[i]._oVar2 = 323;
+				object[i]._oVar2 = TEXT_BOOKA;
 			} else if (plr[myplr]._pClass == PC_ROGUE) {
-				object[i]._oVar2 = 332;
+				object[i]._oVar2 = TEXT_RBOOKA;
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
-				object[i]._oVar2 = 329;
+				object[i]._oVar2 = TEXT_MBOOKA;
 			} else if (plr[myplr]._pClass == PC_MONK) {
-				object[i]._oVar2 = 326;
+				object[i]._oVar2 = TEXT_OBOOKA;
 			} else if (plr[myplr]._pClass == PC_BARD) {
-				object[i]._oVar2 = 335;
+				object[i]._oVar2 = TEXT_BBOOKA;
 			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
-				object[i]._oVar2 = 323;
+				object[i]._oVar2 = TEXT_BOOKA;
 			}
 			break;
 		case 7:
 			if (plr[myplr]._pClass == PC_WARRIOR) {
-				object[i]._oVar2 = 324;
+				object[i]._oVar2 = TEXT_BOOKB;
 			} else if (plr[myplr]._pClass == PC_ROGUE) {
-				object[i]._oVar2 = 333;
+				object[i]._oVar2 = TEXT_RBOOKB;
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
-				object[i]._oVar2 = 330;
+				object[i]._oVar2 = TEXT_MBOOKB;
 			} else if (plr[myplr]._pClass == PC_MONK) {
-				object[i]._oVar2 = 327;
+				object[i]._oVar2 = TEXT_OBOOKB;
 			} else if (plr[myplr]._pClass == PC_BARD) {
-				object[i]._oVar2 = 336;
+				object[i]._oVar2 = TEXT_BBOOKB;
 			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
-				object[i]._oVar2 = 324;
+				object[i]._oVar2 = TEXT_BOOKB;
 			}
 			break;
 		case 8:
 			if (plr[myplr]._pClass == PC_WARRIOR) {
-				object[i]._oVar2 = 325;
+				object[i]._oVar2 = TEXT_BOOKC;
 			} else if (plr[myplr]._pClass == PC_ROGUE) {
-				object[i]._oVar2 = 334;
+				object[i]._oVar2 = TEXT_RBOOKC;
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
-				object[i]._oVar2 = 331;
+				object[i]._oVar2 = TEXT_MBOOKC;
 			} else if (plr[myplr]._pClass == PC_MONK) {
-				object[i]._oVar2 = 328;
+				object[i]._oVar2 = TEXT_OBOOKC;
 			} else if (plr[myplr]._pClass == PC_BARD) {
-				object[i]._oVar2 = 337;
+				object[i]._oVar2 = TEXT_BBOOKC;
 			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
-				object[i]._oVar2 = 325;
+				object[i]._oVar2 = TEXT_BOOKC;
 			}
 			break;
 		}
@@ -1649,7 +1649,7 @@ void objects_44DA68(int i, int a2)
 	} else {
 
 		object[i]._oVar1 = 1;
-		object[i]._oVar2 = a2 + 316;
+		object[i]._oVar2 = a2 + TEXT_SKLJRN;
 		object[i]._oVar3 = a2 + 9;
 		v9 = 2 * object[i]._oVar1;
 		object[i]._oAnimFrame = 5 - v9;

@@ -26,7 +26,7 @@ void AddL2Objs(int x1, int y1, int x2, int y2);
 void InitObjects();
 void SetMapObjects(BYTE *pMap, int startx, int starty);
 void SetObjMapRange(int i, int x1, int y1, int x2, int y2, int v);
-void SetBookMsg(int i, int msg);
+void SetBookMsg(int i, _speech_id msg);
 void GetRndObjLoc(int randarea, int *xx, int *yy);
 void AddMushPatch();
 void AddSlainHero();
