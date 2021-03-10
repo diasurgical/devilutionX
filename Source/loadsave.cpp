@@ -901,7 +901,7 @@ void SaveHotkeys()
 	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
 
 	for (size_t i = 0; i < nHotkeyTypes; i++) {
-		file.writeLE<Sint8>(plr[myplr]._pSplHotKey[i]);
+		file.writeLE<Sint32>(plr[myplr]._pSplHotKey[i]);
 	}
 	for (size_t i = 0; i < nHotkeySpells; i++) {
 		file.writeLE<Uint8>(plr[myplr]._pSplTHotKey[i]);
