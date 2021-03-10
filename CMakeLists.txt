@@ -833,9 +833,6 @@ if(CPACK)
       set(desktop_file_hellfire "${CMAKE_BINARY_DIR}/${project_name}-hellfire.desktop")
     endif()
 
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
-      DESTINATION "bin"
-    )
     install(FILES "${desktop_file}"
       DESTINATION "share/applications"
     )
