@@ -53,10 +53,10 @@ static BOOL mainmenu_single_player()
 {
 	gbIsMultiplayer = false;
 
-	gbJogInTown = sgOptions.bJogInTown;
-	gnTickRate = sgOptions.nTickRate;
-	gbTheoQuest = sgOptions.bTheoQuest;
-	gbCowQuest = sgOptions.bCowQuest;
+	gbJogInTown = sgOptions.Gameplay.bJogInTown;
+	gnTickRate = sgOptions.Gameplay.nTickRate;
+	gbTheoQuest = sgOptions.Gameplay.bTheoQuest;
+	gbCowQuest = sgOptions.Gameplay.bCowQuest;
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }

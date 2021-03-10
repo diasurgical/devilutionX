@@ -19,7 +19,7 @@ extern "C" {
 #define DEFAULT_HEIGHT 480
 #endif
 
-typedef struct Options {
+typedef struct AudioOptions {
 	/** @brief Movie and SFX volume. */
 	Sint32 nSoundVolume;
 
@@ -28,7 +28,9 @@ typedef struct Options {
 
 	/** @brief Player emits sound when walking. */
 	bool bWalkingSound;
+} AudioOptions;
 
+typedef struct GraphicsOptions {
 	/** @brief Render width. */
 	Sint32 nWidth;
 
@@ -61,7 +63,9 @@ typedef struct Options {
 
 	/** @brief Enable color cycling animations. */
 	bool bColorCycling;
+} GraphicsOptions;
 
+typedef struct GameplayOptions {
 	/** @brief Game play ticks per secound. */
 	Sint32 nTickRate;
 
@@ -112,9 +116,18 @@ typedef struct Options {
 
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
 	bool bAutoEquipJewelry;
+} GameplayOptions;
 
+typedef struct NetworkOptions {
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
+} NetworkOptions;
+
+typedef struct Options {
+	AudioOptions Audio;
+	GameplayOptions Gameplay;
+	GraphicsOptions Graphics;
+	NetworkOptions Network;
 } Options;
 
 extern SDL_Window *ghMainWnd;

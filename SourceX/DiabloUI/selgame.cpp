@@ -430,9 +430,9 @@ void selgame_Password_Select(int value)
 	GameData *data = m_client_info->initdata;
 	data->nDifficulty = nDifficulty;
 	data->nTickRate = nTickRate;
-	data->bJogInTown = sgOptions.bJogInTown;
-	data->bTheoQuest = sgOptions.bTheoQuest;
-	data->bCowQuest = sgOptions.bCowQuest;
+	data->bJogInTown = sgOptions.Gameplay.bJogInTown;
+	data->bTheoQuest = sgOptions.Gameplay.bTheoQuest;
+	data->bCowQuest = sgOptions.Gameplay.bCowQuest;
 
 	if (SNetCreateGame(NULL, selgame_Password, NULL, 0, (char *)data, sizeof(GameData), MAX_PLRS, NULL, NULL, gdwPlayerId)) {
 		UiInitList_clear();

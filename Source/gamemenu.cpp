@@ -220,8 +220,8 @@ static void gamemenu_get_sound()
 static void gamemenu_jogging()
 {
 	gmenu_slider_steps(&sgOptionsMenu[3], 2);
-	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, sgOptions.bJogInTown);
-	sgOptionsMenu[3].pszStr = jogging_toggle_names[!sgOptions.bJogInTown ? 1 : 0];
+	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, sgOptions.Gameplay.bJogInTown);
+	sgOptionsMenu[3].pszStr = jogging_toggle_names[!sgOptions.Gameplay.bJogInTown ? 1 : 0];
 }
 
 static void gamemenu_get_gamma()
@@ -254,7 +254,7 @@ static void gamemenu_get_speed()
 
 static void gamemenu_get_color_cycling()
 {
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.bColorCycling ? 1 : 0];
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
 }
 
 static int gamemenu_slider_gamma()
@@ -350,8 +350,8 @@ void gamemenu_sound_volume(BOOL bActivate)
 void gamemenu_loadjog(BOOL bActivate)
 {
 	if (!gbIsMultiplayer) {
-		sgOptions.bJogInTown = !sgOptions.bJogInTown;
-		gbJogInTown = sgOptions.bJogInTown;
+		sgOptions.Gameplay.bJogInTown = !sgOptions.Gameplay.bJogInTown;
+		gbJogInTown = sgOptions.Gameplay.bJogInTown;
 		PlaySFX(IS_TITLEMOV);
 		gamemenu_jogging();
 	}
@@ -386,14 +386,14 @@ void gamemenu_speed(BOOL bActivate)
 		gnTickRate = gmenu_slider_get(&sgOptionsMenu[3], 20, 50);
 	}
 
-	sgOptions.nTickRate = gnTickRate;
+	sgOptions.Gameplay.nTickRate = gnTickRate;
 	gnTickDelay = 1000 / gnTickRate;
 }
 
 void gamemenu_color_cycling(BOOL bActivate)
 {
-	sgOptions.bColorCycling = !sgOptions.bColorCycling;
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.bColorCycling ? 1 : 0];
+	sgOptions.Graphics.bColorCycling = !sgOptions.Graphics.bColorCycling;
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
 }
 
 DEVILUTION_END_NAMESPACE

@@ -114,10 +114,10 @@ BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
 	net::buffer_t game_init_info(GameTemplateData, GameTemplateData + GameTemplateSize);
 	dvlnet_inst->setup_gameinfo(std::move(game_init_info));
 
-	strncpy(gpszGameName, sgOptions.szBindAddress, sizeof(gpszGameName) - 1);
+	strncpy(gpszGameName, sgOptions.Network.szBindAddress, sizeof(gpszGameName) - 1);
 	if (pszGamePassword)
 		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
-	*playerID = dvlnet_inst->create(sgOptions.szBindAddress, pszGamePassword);
+	*playerID = dvlnet_inst->create(sgOptions.Network.szBindAddress, pszGamePassword);
 	return *playerID != -1;
 }
 

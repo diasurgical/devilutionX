@@ -400,45 +400,45 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
  */
 static void SaveOptions()
 {
-	setIniInt("Audio", "Sound Volume", sgOptions.nSoundVolume);
-	setIniInt("Audio", "Music Volume", sgOptions.nMusicVolume);
-	setIniInt("Audio", "Walking Sound", sgOptions.bWalkingSound);
+	setIniInt("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
+	setIniInt("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
+	setIniInt("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
 
 #ifndef __vita__
-	setIniInt("Graphics", "Width", sgOptions.nWidth);
-	setIniInt("Graphics", "Height", sgOptions.nHeight);
+	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
+	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
 #endif
-	setIniInt("Graphics", "Fullscreen", sgOptions.bFullscreen);
+	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
 #ifndef __vita__
-	setIniInt("Graphics", "Upscale", sgOptions.bUpscale);
+	setIniInt("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
 #endif
-	setIniInt("Graphics", "Fit to Screen", sgOptions.bFitToScreen);
-	setIniValue("Graphics", "Scaling Quality", sgOptions.szScaleQuality);
-	setIniInt("Graphics", "Integer Scaling", sgOptions.bIntegerScaling);
-	setIniInt("Graphics", "Vertical Sync", sgOptions.bVSync);
-	setIniInt("Graphics", "Blended Transparency", sgOptions.bBlendedTransparancy);
-	setIniInt("Graphics", "Gamma Correction", sgOptions.nGammaCorrection);
-	setIniInt("Graphics", "Color Cycling", sgOptions.bColorCycling);
+	setIniInt("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
+	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
+	setIniInt("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
+	setIniInt("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
+	setIniInt("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
+	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
+	setIniInt("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
 
-	setIniInt("Game", "Speed", sgOptions.nTickRate);
-	setIniInt("Game", "Fast Walk", sgOptions.bJogInTown);
-	setIniInt("Game", "Grab Input", sgOptions.bGrabInput);
-	setIniInt("Game", "Theo Quest", sgOptions.bTheoQuest);
-	setIniInt("Game", "Cow Quest", sgOptions.bCowQuest);
-	setIniInt("Game", "Friendly Fire", sgOptions.bFriendlyFire);
-	setIniInt("Game", "Test Bard", sgOptions.bTestBard);
-	setIniInt("Game", "Test Barbarian", sgOptions.bTestBarbarian);
-	setIniInt("Game", "Experience Bar", sgOptions.bExperienceBar);
-	setIniInt("Game", "Enemy Health Bar", sgOptions.bEnemyHealthBar);
-	setIniInt("Game", "Auto Gold Pickup", sgOptions.bAutoGoldPickup);
-	setIniInt("Game", "Adria Refills Mana", sgOptions.bAdriaRefillsMana);
-	setIniInt("Game", "Auto Equip Weapons on Pickup", sgOptions.bAutoEquipWeapons);
-	setIniInt("Game", "Auto Equip Armor on Pickup", sgOptions.bAutoEquipArmor);
-	setIniInt("Game", "Auto Equip Helms on Pickup", sgOptions.bAutoEquipHelms);
-	setIniInt("Game", "Auto Equip Shields on Pickup", sgOptions.bAutoEquipShields);
-	setIniInt("Game", "Auto Equip Jewelry on Pickup", sgOptions.bAutoEquipJewelry);
+	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
+	setIniInt("Game", "Fast Walk", sgOptions.Gameplay.bJogInTown);
+	setIniInt("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
+	setIniInt("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
+	setIniInt("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
+	setIniInt("Game", "Friendly Fire", sgOptions.Gameplay.bFriendlyFire);
+	setIniInt("Game", "Test Bard", sgOptions.Gameplay.bTestBard);
+	setIniInt("Game", "Test Barbarian", sgOptions.Gameplay.bTestBarbarian);
+	setIniInt("Game", "Experience Bar", sgOptions.Gameplay.bExperienceBar);
+	setIniInt("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
+	setIniInt("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
+	setIniInt("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
+	setIniInt("Game", "Auto Equip Weapons on Pickup", sgOptions.Gameplay.bAutoEquipWeapons);
+	setIniInt("Game", "Auto Equip Armor on Pickup", sgOptions.Gameplay.bAutoEquipArmor);
+	setIniInt("Game", "Auto Equip Helms on Pickup", sgOptions.Gameplay.bAutoEquipHelms);
+	setIniInt("Game", "Auto Equip Shields on Pickup", sgOptions.Gameplay.bAutoEquipShields);
+	setIniInt("Game", "Auto Equip Jewelry on Pickup", sgOptions.Gameplay.bAutoEquipJewelry);
 
-	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
+	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 }
 
 /**
@@ -446,50 +446,50 @@ static void SaveOptions()
  */
 static void LoadOptions()
 {
-	sgOptions.nSoundVolume = getIniInt("Audio", "Sound Volume", VOLUME_MAX);
-	sgOptions.nMusicVolume = getIniInt("Audio", "Music Volume", VOLUME_MAX);
-	sgOptions.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
+	sgOptions.Audio.nSoundVolume = getIniInt("Audio", "Sound Volume", VOLUME_MAX);
+	sgOptions.Audio.nMusicVolume = getIniInt("Audio", "Music Volume", VOLUME_MAX);
+	sgOptions.Audio.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
 
 #ifndef __vita__
-	sgOptions.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
-	sgOptions.nHeight = getIniInt("Graphics", "Height", DEFAULT_HEIGHT);
+	sgOptions.Graphics.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
+	sgOptions.Graphics.nHeight = getIniInt("Graphics", "Height", DEFAULT_HEIGHT);
 #else
-	sgOptions.nWidth = DEFAULT_WIDTH;
-	sgOptions.nHeight = DEFAULT_HEIGHT;
+	sgOptions.Graphics.nWidth = DEFAULT_WIDTH;
+	sgOptions.Graphics.nHeight = DEFAULT_HEIGHT;
 #endif
-	sgOptions.bFullscreen = getIniBool("Graphics", "Fullscreen", true);
+	sgOptions.Graphics.bFullscreen = getIniBool("Graphics", "Fullscreen", true);
 #if !defined(USE_SDL1) && !defined(__vita__)
-	sgOptions.bUpscale = getIniBool("Graphics", "Upscale", true);
+	sgOptions.Graphics.bUpscale = getIniBool("Graphics", "Upscale", true);
 #else
-	sgOptions.bUpscale = false;
+	sgOptions.Graphics.bUpscale = false;
 #endif
-	sgOptions.bFitToScreen = getIniBool("Graphics", "Fit to Screen", true);
-	getIniValue("Graphics", "Scaling Quality", sgOptions.szScaleQuality, sizeof(sgOptions.szScaleQuality), "2");
-	sgOptions.bIntegerScaling = getIniBool("Graphics", "Integer Scaling", false);
-	sgOptions.bVSync = getIniBool("Graphics", "Vertical Sync", true);
-	sgOptions.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", true);
-	sgOptions.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
-	sgOptions.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
+	sgOptions.Graphics.bFitToScreen = getIniBool("Graphics", "Fit to Screen", true);
+	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
+	sgOptions.Graphics.bIntegerScaling = getIniBool("Graphics", "Integer Scaling", false);
+	sgOptions.Graphics.bVSync = getIniBool("Graphics", "Vertical Sync", true);
+	sgOptions.Graphics.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", true);
+	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
+	sgOptions.Graphics.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
 
-	sgOptions.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.bJogInTown = getIniBool("Game", "Fast Walk", false);
-	sgOptions.bGrabInput = getIniBool("Game", "Grab Input", false);
-	sgOptions.bTheoQuest = getIniBool("Game", "Theo Quest", false);
-	sgOptions.bCowQuest = getIniBool("Game", "Cow Quest", false);
-	sgOptions.bFriendlyFire = getIniBool("Game", "Friendly Fire", true);
-	sgOptions.bTestBard = getIniBool("Game", "Test Bard", false);
-	sgOptions.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
-	sgOptions.bExperienceBar = getIniBool("Game", "Experience Bar", false);
-	sgOptions.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
-	sgOptions.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
-	sgOptions.bAdriaRefillsMana = getIniBool("Game", "Adria Refills Mana", false);
-	sgOptions.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons on Pickup", true);
-	sgOptions.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor on Pickup", false);
-	sgOptions.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms on Pickup", false);
-	sgOptions.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields on Pickup", false);
-	sgOptions.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry on Pickup", false);
+	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
+	sgOptions.Gameplay.bJogInTown = getIniBool("Game", "Fast Walk", false);
+	sgOptions.Gameplay.bGrabInput = getIniBool("Game", "Grab Input", false);
+	sgOptions.Gameplay.bTheoQuest = getIniBool("Game", "Theo Quest", false);
+	sgOptions.Gameplay.bCowQuest = getIniBool("Game", "Cow Quest", false);
+	sgOptions.Gameplay.bFriendlyFire = getIniBool("Game", "Friendly Fire", true);
+	sgOptions.Gameplay.bTestBard = getIniBool("Game", "Test Bard", false);
+	sgOptions.Gameplay.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
+	sgOptions.Gameplay.bExperienceBar = getIniBool("Game", "Experience Bar", false);
+	sgOptions.Gameplay.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
+	sgOptions.Gameplay.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
+	sgOptions.Gameplay.bAdriaRefillsMana = getIniBool("Game", "Adria Refills Mana", false);
+	sgOptions.Gameplay.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons on Pickup", true);
+	sgOptions.Gameplay.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor on Pickup", false);
+	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms on Pickup", false);
+	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields on Pickup", false);
+	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry on Pickup", false);
 
-	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
+	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 }
 
 static void diablo_init_screen()
@@ -2033,7 +2033,7 @@ void game_loop(BOOL bStartup)
 
 void diablo_color_cyc_logic()
 {
-	if (!sgOptions.bColorCycling)
+	if (!sgOptions.Graphics.bColorCycling)
 		return;
 
 	if (leveltype == DTYPE_HELL) {

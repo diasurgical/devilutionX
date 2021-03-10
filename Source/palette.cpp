@@ -33,7 +33,7 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 	int i;
 	double g;
 
-	g = sgOptions.nGammaCorrection / 100.0;
+	g = sgOptions.Graphics.nGammaCorrection / 100.0;
 
 	for (i = 0; i < n; i++) {
 		dst[i].r = pow(src[i].r / 256.0, g) * 256.0;
@@ -45,14 +45,14 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 
 static void LoadGamma()
 {
-	int gamma_value = sgOptions.nGammaCorrection;
+	int gamma_value = sgOptions.Graphics.nGammaCorrection;
 
 	if (gamma_value < 30) {
 		gamma_value = 30;
 	} else if (gamma_value > 100) {
 		gamma_value = 100;
 	}
-	sgOptions.nGammaCorrection = gamma_value - gamma_value % 5;
+	sgOptions.Graphics.nGammaCorrection = gamma_value - gamma_value % 5;
 }
 
 void palette_init()
@@ -135,7 +135,7 @@ void LoadPalette(const char *pszFileName)
 #endif
 	}
 
-	if (sgOptions.bBlendedTransparancy) {
+	if (sgOptions.Graphics.bBlendedTransparancy) {
 		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_CRYPT) {
 			GenerateBlendedLookupTable(orig_palette, 1, 31);
 		} else if (leveltype == DTYPE_NEST) {
@@ -175,10 +175,10 @@ void ResetPal()
 
 void IncreaseGamma()
 {
-	if (sgOptions.nGammaCorrection < 100) {
-		sgOptions.nGammaCorrection += 5;
-		if (sgOptions.nGammaCorrection > 100)
-			sgOptions.nGammaCorrection = 100;
+	if (sgOptions.Graphics.nGammaCorrection < 100) {
+		sgOptions.Graphics.nGammaCorrection += 5;
+		if (sgOptions.Graphics.nGammaCorrection > 100)
+			sgOptions.Graphics.nGammaCorrection = 100;
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
@@ -186,10 +186,10 @@ void IncreaseGamma()
 
 void DecreaseGamma()
 {
-	if (sgOptions.nGammaCorrection > 30) {
-		sgOptions.nGammaCorrection -= 5;
-		if (sgOptions.nGammaCorrection < 30)
-			sgOptions.nGammaCorrection = 30;
+	if (sgOptions.Graphics.nGammaCorrection > 30) {
+		sgOptions.Graphics.nGammaCorrection -= 5;
+		if (sgOptions.Graphics.nGammaCorrection < 30)
+			sgOptions.Graphics.nGammaCorrection = 30;
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
@@ -198,11 +198,11 @@ void DecreaseGamma()
 int UpdateGamma(int gamma)
 {
 	if (gamma) {
-		sgOptions.nGammaCorrection = 130 - gamma;
+		sgOptions.Graphics.nGammaCorrection = 130 - gamma;
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
-	return 130 - sgOptions.nGammaCorrection;
+	return 130 - sgOptions.Graphics.nGammaCorrection;
 }
 
 void SetFadeLevel(DWORD fadeval)
@@ -269,7 +269,7 @@ static void CycleColors(int from, int to)
 	}
 	system_palette[to] = col;
 
-	if (!sgOptions.bBlendedTransparancy)
+	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
 	for (int i = 0; i < 256; i++) {
@@ -301,7 +301,7 @@ static void CycleColorsReverse(int from, int to)
 	}
 	system_palette[from] = col;
 
-	if (!sgOptions.bBlendedTransparancy)
+	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
 	for (int i = 0; i < 256; i++) {

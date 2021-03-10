@@ -289,7 +289,7 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 
-		if (!sgOptions.bVSync) {
+		if (!sgOptions.Graphics.bVSync) {
 			LimitFrameRate();
 		}
 	} else {
