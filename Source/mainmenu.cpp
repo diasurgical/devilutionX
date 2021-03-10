@@ -53,10 +53,10 @@ static BOOL mainmenu_single_player()
 {
 	gbIsMultiplayer = false;
 
-	gbJogInTown = sgOptions.bJogInTown;
-	gnTickRate = sgOptions.nTickRate;
-	gbTheoQuest = sgOptions.bTheoQuest;
-	gbCowQuest = sgOptions.bCowQuest;
+	gbJogInTown = sgOptions.Gameplay.bJogInTown;
+	gnTickRate = sgOptions.Gameplay.nTickRate;
+	gbTheoQuest = sgOptions.Gameplay.bTheoQuest;
+	gbCowQuest = sgOptions.Gameplay.bCowQuest;
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
@@ -82,7 +82,7 @@ void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, 
 		pfile_rename_hero(name_1, name_2);
 }
 
-BOOL mainmenu_select_hero_dialog(
+bool mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
     const _SNETUIDATA *ui_info,
@@ -90,7 +90,7 @@ BOOL mainmenu_select_hero_dialog(
     DWORD mode,
     char *cname, DWORD clen,
     char *cdesc, DWORD cdlen,
-    BOOL *multi)
+    bool *multi)
 {
 	BOOL hero_is_created = TRUE;
 	int dlgresult = 0;

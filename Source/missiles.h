@@ -70,7 +70,7 @@ typedef struct MissileStruct {
 	bool _miDrawFlag;
 	bool _miLightFlag;
 	bool _miPreFlag;
-	Sint32 _miUniqTrans;
+	Uint32 _miUniqTrans;
 	Sint32 _mirange; // Time to live for the missile in game ticks, oncs 0 the missile will be marked for deletion via _miDelFlag
 	Sint32 _misource;
 	Sint32 _micaster;

@@ -743,11 +743,11 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
 		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
 		sgGameInitInfo.nDifficulty = gnDifficulty;
-		sgGameInitInfo.nTickRate = sgOptions.nTickRate;
-		sgGameInitInfo.bJogInTown = sgOptions.bJogInTown;
-		sgGameInitInfo.bTheoQuest = sgOptions.bTheoQuest;
-		sgGameInitInfo.bCowQuest = sgOptions.bCowQuest;
-		sgGameInitInfo.bFriendlyFire = sgOptions.bFriendlyFire;
+		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
+		sgGameInitInfo.bJogInTown = sgOptions.Gameplay.bJogInTown;
+		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
+		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest;
+		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
 		ProgramData.maxplayers = MAX_PLRS;

@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=DevilutionX
-Comment=Diablo 1 for RetroFW
-Exec=devilutionx --diablo
+Name=DevilutionX Hellfire
+Comment=Diablo 1: Hellfire for RetroFW
+Exec=devilutionx
 Terminal=false
 Type=Application
 StartupNotify=true
-Icon=icon_32
+Icon=hellfire_32
 Categories=games;
 X-OD-Manual=readme.retrofw.txt
 X-OD-NeedsDownscaling=true

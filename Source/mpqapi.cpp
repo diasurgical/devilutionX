@@ -262,7 +262,7 @@ private:
 		_FILEHEADER fhdr;
 
 		memset(&fhdr, 0, sizeof(fhdr));
-		fhdr.signature = LOAD_LE32("MPQ\x1A");
+		fhdr.signature = SDL_SwapLE32(LOAD_LE32("MPQ\x1A"));
 		fhdr.headersize = SDL_SwapLE32(32);
 		fhdr.filesize = SDL_SwapLE32(static_cast<uint32_t>(size));
 		fhdr.version = SDL_SwapLE16(0);

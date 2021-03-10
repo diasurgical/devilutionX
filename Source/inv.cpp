@@ -654,9 +654,7 @@ bool CanBePlacedOnBelt(int playerNumber, const ItemStruct &item)
 bool CanEquip(const ItemStruct &item)
 {
 	return
-		item._iLoc != ILOC_INVALID &&
-		item._iLoc != ILOC_NONE &&
-		item._iLoc != ILOC_UNEQUIPABLE &&
+		item.isEquipment() &&
 		item._iStatFlag;
 }
 
@@ -801,6 +799,36 @@ bool AutoEquip(int playerNumber, const ItemStruct &item)
 	}
 
 	return false;
+}
+
+/**
+ * @brief Checks whether or not auto-equipping behavior is enabled for the given item.
+ * @param item The item to check.
+ * @return 'True' if auto-equipping behavior is enabled for the item and 'False' otherwise.
+ */
+bool AutoEquipEnabled(const ItemStruct &item)
+{
+	if (item.isWeapon()) {
+		return sgOptions.Gameplay.bAutoEquipWeapons;
+	}
+
+	if (item.isArmor()) {
+		return sgOptions.Gameplay.bAutoEquipArmor;
+	}
+
+	if (item.isHelm()) {
+		return sgOptions.Gameplay.bAutoEquipHelms;
+	}
+
+	if (item.isShield()) {
+		return sgOptions.Gameplay.bAutoEquipShields;
+	}
+
+	if (item.isJewelry()) {
+		return sgOptions.Gameplay.bAutoEquipJewelry;
+	}
+
+	return true;
 }
 
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
@@ -1867,7 +1895,7 @@ void CleanupItems(int ii)
 	if (currlevel == 21 & item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
 		CornerStone.item.IDidx = -1;
 		CornerStone.item._itype = ITYPE_MISC;
-		CornerStone.item._iSelFlag = FALSE;
+		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
 		CornerStone.item._iy = 0;
 		CornerStone.item._iAnimFlag = FALSE;
@@ -1945,7 +1973,7 @@ void AutoGetItem(int pnum, int ii)
 			SetPlrHandGoldCurs(&item[ii]);
 		}
 	} else {
-		done = AutoEquip(pnum, plr[pnum].HoldItem);
+		done = AutoEquipEnabled(plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
 		if (!done) {
 			w = icursW28;
 			h = icursH28;

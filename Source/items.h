@@ -66,7 +66,7 @@ typedef struct ItemStruct {
 	Sint32 _iAnimWidth;
 	Sint32 _iAnimWidth2; // width 2?
 	bool _iDelFlag;      // set when item is flagged for deletion, deprecated in 1.02
-	Sint8 _iSelFlag;
+	Uint8 _iSelFlag;
 	bool _iPostDraw;
 	bool _iIdentified;
 	Sint8 _iMagical;
@@ -130,6 +130,112 @@ typedef struct ItemStruct {
 	bool isEmpty() const
 	{
 		return this->_itype == ITYPE_NONE;
+	}
+
+	/**
+	 * @brief Checks whether this item is an equipment.
+	 * @return 'True' in case the item is an equipment and 'False' otherwise.
+	 */
+	bool isEquipment() const
+	{
+		if (this->isEmpty()) {
+			return false;
+		}
+
+		switch (this->_iLoc) {
+		case ILOC_AMULET:
+		case ILOC_ARMOR:
+		case ILOC_HELM:
+		case ILOC_ONEHAND:
+		case ILOC_RING:
+		case ILOC_TWOHAND:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
+	/**
+	 * @brief Checks whether this item is a weapon.
+	 * @return 'True' in case the item is a weapon and 'False' otherwise.
+	 */
+	bool isWeapon() const
+	{
+		if (this->isEmpty()) {
+			return false;
+		}
+
+		switch (this->_itype) {
+		case ITYPE_AXE:
+		case ITYPE_BOW:
+		case ITYPE_MACE:
+		case ITYPE_STAFF:
+		case ITYPE_SWORD:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
+	/**
+	 * @brief Checks whether this item is an armor.
+	 * @return 'True' in case the item is an armor and 'False' otherwise.
+	 */
+	bool isArmor() const
+	{
+		if (this->isEmpty()) {
+			return false;
+		}
+
+		switch (this->_itype) {
+		case ITYPE_HARMOR:
+		case ITYPE_LARMOR:
+		case ITYPE_MARMOR:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
+	/**
+	 * @brief Checks whether this item is a helm.
+	 * @return 'True' in case the item is a helm and 'False' otherwise.
+	 */
+	bool isHelm() const
+	{
+		return !this->isEmpty() && this->_itype == ITYPE_HELM;
+	}
+
+	/**
+	 * @brief Checks whether this item is a shield.
+	 * @return 'True' in case the item is a shield and 'False' otherwise.
+	 */
+	bool isShield() const
+	{
+		return !this->isEmpty() && this->_itype == ITYPE_SHIELD;
+	}
+
+	/**
+	 * @brief Checks whether this item is a jewelry.
+	 * @return 'True' in case the item is a jewelry and 'False' otherwise.
+	 */
+	bool isJewelry() const
+	{
+		if (this->isEmpty()) {
+			return false;
+		}
+
+		switch (this->_itype) {
+		case ITYPE_AMULET:
+		case ITYPE_RING:
+			return true;
+
+		default:
+			return false;
+		}
 	}
 
 } ItemStruct;

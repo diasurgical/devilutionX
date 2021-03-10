@@ -274,10 +274,10 @@ void selhero_List_Select(int value)
 		if (gbIsHellfire) {
 			vecSelHeroDlgItems.push_back(new UiListItem("Monk", PC_MONK));
 		}
-		if (gbBard || sgOptions.bTestBard) {
+		if (gbBard || sgOptions.Gameplay.bTestBard) {
 			vecSelHeroDlgItems.push_back(new UiListItem("Bard", PC_BARD));
 		}
-		if (gbBarbarian || sgOptions.bTestBarbarian) {
+		if (gbBarbarian || sgOptions.Gameplay.bTestBarbarian) {
 			vecSelHeroDlgItems.push_back(new UiListItem("Barbarian", PC_BARBARIAN));
 		}
 		if (vecSelHeroDlgItems.size() > 4)
@@ -557,8 +557,9 @@ void UiSelHeroMultDialog(
 
 const char *selhero_GenerateName(uint8_t hero_class)
 {
-	static const char *const kNames[3][10] = {
+	static const char *const kNames[4][10] = {
 		{
+		    // Warrior
 		    "Aidan",
 		    "Qarak",
 		    "Born",
@@ -571,6 +572,7 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		    "Rothat",
 		},
 		{
+		    // Rogue
 		    "Moreina",
 		    "Akara",
 		    "Kashya",
@@ -583,6 +585,7 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		    "Elexa",
 		},
 		{
+		    // Sorcerer
 		    "Jazreth",
 		    "Drognan",
 		    "Armin",
@@ -593,10 +596,23 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		    "Sarnakyle",
 		    "Valthek",
 		    "Horazon",
+		},
+		{
+		    // Monk
+		    "Akyev",
+		    "Dvorak",
+		    "Kekegi",
+		    "Kharazim",
+		    "Mikulov",
+		    "Shenlong",
+		    "Vedenin",
+		    "Vhalit",
+		    "Vylnas",
+		    "Zhota",
 		}
 	};
 
-	int iRand = rand() % 9;
+	int iRand = rand() % 10;
 
 	return kNames[hero_class][iRand];
 }

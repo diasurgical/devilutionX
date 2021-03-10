@@ -184,7 +184,8 @@ void pfile_write_hero()
 	if (pfile_open_archive(save_num)) {
 		PackPlayer(&pkplr, myplr, !gbIsMultiplayer);
 		pfile_encode_hero(&pkplr);
-		SaveHotkeys();
+		if(!gbVanilla)
+			SaveHotkeys();
 		pfile_flush(!gbIsMultiplayer, save_num);
 	}
 }
@@ -298,7 +299,7 @@ BOOL pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
 	if (gameData == NULL)
 		return FALSE;
 
-	int hdr = (gameData[0] << 24) | (gameData[1] << 16) | (gameData[2] << 8) | gameData[3];
+	Uint32 hdr = LOAD_LE32(gameData);
 	mem_free_dbg(gameData);
 
 	return IsHeaderValid(hdr);

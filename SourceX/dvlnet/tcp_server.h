@@ -28,6 +28,7 @@ public:
 	tcp_server(asio::io_context &ioc, std::string bindaddr,
 	    unsigned short port, std::string pw);
 	std::string localhost_self();
+	void close();
 	virtual ~tcp_server();
 
 private:

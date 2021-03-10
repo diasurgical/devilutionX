@@ -240,25 +240,22 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
  */
 void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, BOOL pre)
 {
-	int mx, my, nCel, frames;
-	BYTE *pCelBuff;
-
 	if (m->_miPreFlag != pre || !m->_miDrawFlag)
 		return;
 
-	pCelBuff = m->_miAnimData;
+	BYTE *pCelBuff = m->_miAnimData;
 	if (pCelBuff == NULL) {
 		SDL_Log("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
 		return;
 	}
-	nCel = m->_miAnimFrame;
-	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	int nCel = m->_miAnimFrame;
+	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		SDL_Log("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
 		return;
 	}
-	mx = sx + m->_mixoff - m->_miAnimWidth2;
-	my = sy + m->_miyoff;
+	int mx = sx + m->_mixoff - m->_miAnimWidth2;
+	int my = sy + m->_miyoff;
 	if (m->_miUniqTrans)
 		Cl2DrawLightTbl(out, mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, m->_miUniqTrans + 3);
 	else if (m->_miLightFlag)
@@ -310,23 +307,19 @@ void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
  */
 static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m)
 {
-	int nCel, frames;
-	char trans;
-	BYTE *pCelBuff;
-
 	if (m < 0 || m >= MAXMONSTERS) {
 		SDL_Log("Draw Monster: tried to draw illegal monster %d", m);
 		return;
 	}
 
-	pCelBuff = monster[m]._mAnimData;
+	BYTE *pCelBuff = monster[m]._mAnimData;
 	if (pCelBuff == NULL) {
 		SDL_Log("Draw Monster \"%s\": NULL Cel Buffer", monster[m].mName);
 		return;
 	}
 
-	nCel = monster[m]._mAnimFrame;
-	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	int nCel = monster[m]._mAnimFrame;
+	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (monster[m]._mmode <= 17)
@@ -343,19 +336,20 @@ static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m
 
 	if (!(dFlags[x][y] & BFLAG_LIT)) {
 		Cl2DrawLightTbl(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, 1);
-	} else {
-		trans = 0;
-		if (monster[m]._uniqtype)
-			trans = monster[m]._uniqtrans + 4;
-		if (monster[m]._mmode == MM_STONE)
-			trans = 2;
-		if (plr[myplr]._pInfraFlag && light_table_index > 8)
-			trans = 1;
-		if (trans)
-			Cl2DrawLightTbl(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, trans);
-		else
-			Cl2DrawLight(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width);
+		return;
 	}
+
+	char trans = 0;
+	if (monster[m]._uniqtype)
+		trans = monster[m]._uniqtrans + 4;
+	if (monster[m]._mmode == MM_STONE)
+		trans = 2;
+	if (plr[myplr]._pInfraFlag && light_table_index > 8)
+		trans = 1;
+	if (trans)
+		Cl2DrawLightTbl(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, trans);
+	else
+		Cl2DrawLight(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width);
 }
 
 /**
@@ -403,8 +397,6 @@ static void DrawManaShield(CelOutputBuffer out, int pnum, int x, int y, bool lig
  */
 static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	int l;
-
 	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
@@ -414,7 +406,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 		return;
 	}
 
-	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (plr[pnum]._pmode <= PM_QUIT)
@@ -445,7 +437,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 		return;
 	}
 
-	l = light_table_index;
+	int l = light_table_index;
 	if (light_table_index < 5)
 		light_table_index = 0;
 	else
@@ -494,13 +486,11 @@ void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
  */
 static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, BOOL pre)
 {
-	int sx, sy, xx, yy, nCel, frames;
-	char bv;
-	BYTE *pCelBuff;
-
 	if (dObject[x][y] == 0 || light_table_index >= lightmax)
 		return;
 
+	int sx, sy;
+	char bv;
 	if (dObject[x][y] > 0) {
 		bv = dObject[x][y] - 1;
 		if (object[bv]._oPreFlag != pre)
@@ -511,22 +501,22 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, BOOL p
 		bv = -(dObject[x][y] + 1);
 		if (object[bv]._oPreFlag != pre)
 			return;
-		xx = object[bv]._ox - x;
-		yy = object[bv]._oy - y;
+		int xx = object[bv]._ox - x;
+		int yy = object[bv]._oy - y;
 		sx = (xx << 5) + ox - object[bv]._oAnimWidth2 - (yy << 5);
 		sy = oy + (yy << 4) + (xx << 4);
 	}
 
 	assert(bv >= 0 && bv < MAXOBJECTS);
 
-	pCelBuff = object[bv]._oAnimData;
+	BYTE *pCelBuff = object[bv]._oAnimData;
 	if (pCelBuff == NULL) {
 		SDL_Log("Draw Object type %d: NULL Cel Buffer", object[bv]._otype);
 		return;
 	}
 
-	nCel = object[bv]._oAnimFrame;
-	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	int nCel = object[bv]._oAnimFrame;
+	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		SDL_Log("Draw Object: frame %d of %d, object type==%d", nCel, frames, object[bv]._otype);
 		return;
@@ -612,31 +602,27 @@ static void drawFloor(int x, int y, int sx, int sy)
  */
 static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
 {
-	int nCel;
 	char bItem = dItem[x][y];
-	ItemStruct *pItem;
-	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	assert((unsigned char)bItem <= MAXITEMS);
 
 	if (bItem > MAXITEMS || bItem <= 0)
 		return;
 
-	pItem = &item[bItem - 1];
+	ItemStruct *pItem = &item[bItem - 1];
 	if (pItem->_iPostDraw == pre)
 		return;
 
-	pCelBuff = pItem->_iAnimData;
+	BYTE *pCelBuff = pItem->_iAnimData;
 	if (pCelBuff == NULL) {
 		SDL_Log("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
 		return;
 	}
 
-	nCel = pItem->_iAnimFrame;
-	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-		SDL_Log("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+	int nCel = pItem->_iAnimFrame;
+	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		SDL_Log("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, frames, pItem->_itype);
 		return;
 	}
 
@@ -735,12 +721,6 @@ static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
  */
 static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, int dy)
 {
-	int mi, px, py, nCel, nMon, negMon, frames;
-	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
-	DeadStruct *pDeadGuy;
-	BYTE *pCelBuff;
-	DWORD *pFrameTable;
-
 	assert((DWORD)sx < MAXDUNX);
 	assert((DWORD)sy < MAXDUNY);
 
@@ -752,11 +732,11 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 
 	drawCell(sx, sy, dx, dy);
 
-	bFlag = dFlags[sx][sy];
-	bDead = dDead[sx][sy];
-	bMap = dTransVal[sx][sy];
+	char bFlag = dFlags[sx][sy];
+	char bDead = dDead[sx][sy];
+	char bMap = dTransVal[sx][sy];
 
-	negMon = 0;
+	int negMon = 0;
 	if (sy > 0) // check for OOB
 		negMon = dMonster[sx][sy - 1];
 
@@ -772,17 +752,17 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 
 	if (light_table_index < lightmax && bDead != 0) {
 		do {
-			pDeadGuy = &dead[(bDead & 0x1F) - 1];
-			dd = (bDead >> 5) & 7;
-			px = dx - pDeadGuy->_deadWidth2;
-			pCelBuff = pDeadGuy->_deadData[dd];
+			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
+			char dd = (bDead >> 5) & 7;
+			int px = dx - pDeadGuy->_deadWidth2;
+			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != NULL);
 			if (pCelBuff == NULL)
 				break;
-			pFrameTable = (DWORD *)pCelBuff;
-			nCel = pDeadGuy->_deadFrame;
-			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				SDL_Log("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+			int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+			int nCel = pDeadGuy->_deadFrame;
+			if (nCel < 1 || frames > 50 || nCel > frames) {
+				SDL_Log("Unclipped dead: frame %d of %d, deadnum==%d", nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}
 			if (pDeadGuy->_deadtrans != 0) {
@@ -815,7 +795,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	DrawItem(out, sx, sy, dx, dy, 0);
 
 	if (leveltype != DTYPE_TOWN) {
-		bArch = dSpecial[sx][sy];
+		char bArch = dSpecial[sx][sy];
 		if (bArch != 0) {
 			cel_transparency_active = TransList[bMap];
 #ifdef _DEBUG
@@ -835,7 +815,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 		// So delay the rendering until after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
 		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT + SCREEN_Y) {
-			bArch = dSpecial[sx - 1][sy - 1];
+			char bArch = dSpecial[sx - 1][sy - 1];
 			if (bArch != 0) {
 				CelDrawTo(out, dx, dy - TILE_HEIGHT, pSpecialCels, bArch, 64);
 			}

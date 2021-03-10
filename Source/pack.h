@@ -61,7 +61,7 @@ typedef struct PkPlayerStruct {
 	Sint8 pTownWarps;
 	Sint8 pDungMsgs;
 	Sint8 pLvlLoad;
-	Sint8 pBattleNet;
+	Uint8 pBattleNet;
 	Uint8 pManaShield;
 	Uint8 pDungMsgs2;
 	Sint8 bIsHellfire;
@@ -71,7 +71,7 @@ typedef struct PkPlayerStruct {
 	Sint8 pSplLvl2[10]; // Hellfire spells
 	Sint16 wReserved8;  // For future use
 	Uint32 pDiabloKillLevel;
-	Sint32 pDifficulty;
+	Uint32 pDifficulty;
 	Sint32 pDamAcFlags;
 	Sint32 dwReserved[5]; // For future use
 } PkPlayerStruct;

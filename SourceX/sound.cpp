@@ -86,7 +86,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 		return;
 	}
 
-	lVolume = CapVolume(lVolume + sgOptions.nSoundVolume);
+	lVolume = CapVolume(lVolume + sgOptions.Audio.nSoundVolume);
 	DSB->Play(lVolume, lPan);
 	pSnd->start_tc = tc;
 }
@@ -136,12 +136,12 @@ void sound_file_cleanup(TSnd *sound_file)
 
 void snd_init()
 {
-	sgOptions.nSoundVolume = CapVolume(sgOptions.nSoundVolume);
-	gbSoundOn = sgOptions.nSoundVolume > VOLUME_MIN;
+	sgOptions.Audio.nSoundVolume = CapVolume(sgOptions.Audio.nSoundVolume);
+	gbSoundOn = sgOptions.Audio.nSoundVolume > VOLUME_MIN;
 	sgbSaveSoundOn = gbSoundOn;
 
-	sgOptions.nMusicVolume = CapVolume(sgOptions.nMusicVolume);
-	gbMusicOn = sgOptions.nMusicVolume > VOLUME_MIN;
+	sgOptions.Audio.nMusicVolume = CapVolume(sgOptions.Audio.nMusicVolume);
+	gbMusicOn = sgOptions.Audio.nMusicVolume > VOLUME_MIN;
 
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
 	if (result < 0) {
@@ -192,7 +192,7 @@ void music_start(int nTrack)
 				ErrSdl();
 			}
 			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, 1);
-			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sgOptions.nMusicVolume / VOLUME_MIN);
+			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sgOptions.Audio.nMusicVolume / VOLUME_MIN);
 			Mix_PlayMusic(music, -1);
 
 			sgnMusicTrack = nTrack;
@@ -212,24 +212,24 @@ void sound_disable_music(BOOL disable)
 int sound_get_or_set_music_volume(int volume)
 {
 	if (volume == 1)
-		return sgOptions.nMusicVolume;
+		return sgOptions.Audio.nMusicVolume;
 
-	sgOptions.nMusicVolume = volume;
+	sgOptions.Audio.nMusicVolume = volume;
 
 	if (sghMusic)
 		SFileDdaSetVolume(sghMusic, volume, 0);
 
-	return sgOptions.nMusicVolume;
+	return sgOptions.Audio.nMusicVolume;
 }
 
 int sound_get_or_set_sound_volume(int volume)
 {
 	if (volume == 1)
-		return sgOptions.nSoundVolume;
+		return sgOptions.Audio.nSoundVolume;
 
-	sgOptions.nSoundVolume = volume;
+	sgOptions.Audio.nSoundVolume = volume;
 
-	return sgOptions.nSoundVolume;
+	return sgOptions.Audio.nSoundVolume;
 }
 
 } // namespace dvl

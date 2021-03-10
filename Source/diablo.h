@@ -19,36 +19,115 @@ extern "C" {
 #define DEFAULT_HEIGHT 480
 #endif
 
+typedef struct AudioOptions {
+	/** @brief Movie and SFX volume. */
+	Sint32 nSoundVolume;
+
+	/** @brief Music volume. */
+	Sint32 nMusicVolume;
+
+	/** @brief Player emits sound when walking. */
+	bool bWalkingSound;
+} AudioOptions;
+
+typedef struct GraphicsOptions {
+	/** @brief Render width. */
+	Sint32 nWidth;
+
+	/** @brief Render height. */
+	Sint32 nHeight;
+
+	/** @brief Run in fullscreen or windowed mode. */
+	bool bFullscreen;
+
+	/** @brief Scale the image after rendering. */
+	bool bUpscale;
+
+	/** @brief Expand the aspect ratio to match the screen. */
+	bool bFitToScreen;
+
+	/** @brief See SDL_HINT_RENDER_SCALE_QUALITY. */
+	char szScaleQuality[2];
+
+	/** @brief Only scale by values divisible by the width and height. */
+	bool bIntegerScaling;
+
+	/** @brief Enable vsync on the output. */
+	bool bVSync;
+
+	/** @brief Use blended transparency rather than stippled. */
+	bool bBlendedTransparancy;
+
+	/** @brief Gamma correction level. */
+	Sint32 nGammaCorrection;
+
+	/** @brief Enable color cycling animations. */
+	bool bColorCycling;
+} GraphicsOptions;
+
+typedef struct GameplayOptions {
+	/** @brief Game play ticks per secound. */
+	Sint32 nTickRate;
+
+	/** @brief Enable double walk speed when in town. */
+	bool bJogInTown;
+
+	/** @brief Do not let the mouse leave the application window. */
+	bool bGrabInput;
+
+	/** @brief Enable the Theo quest. */
+	bool bTheoQuest;
+
+	/** @brief Enable the cow quest. */
+	bool bCowQuest;
+
+	/** @brief Will players still damage other players in non-PvP mode. */
+	bool bFriendlyFire;
+
+	/** @brief Enable the bard hero class. */
+	bool bTestBard;
+
+	/** @brief Enable the babarian hero class. */
+	bool bTestBarbarian;
+
+	/** @brief Show the current level progress. */
+	bool bExperienceBar;
+
+	/** @brief Show enemy health at the top of the screen. */
+	bool bEnemyHealthBar;
+
+	/** @brief Automatically pick up goald when walking on to it. */
+	bool bAutoGoldPickup;
+
+	/** @brief Recover mana when talking to Adria. */
+	bool bAdriaRefillsMana;
+
+	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
+	bool bAutoEquipWeapons;
+
+	/** @brief Automatically attempt to equip armor-type items when picking them up. */
+	bool bAutoEquipArmor;
+
+	/** @brief Automatically attempt to equip helm-type items when picking them up. */
+	bool bAutoEquipHelms;
+
+	/** @brief Automatically attempt to equip shield-type items when picking them up. */
+	bool bAutoEquipShields;
+
+	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
+	bool bAutoEquipJewelry;
+} GameplayOptions;
+
+typedef struct NetworkOptions {
+	/** @brief Optionally bind to a specific network interface. */
+	char szBindAddress[129];
+} NetworkOptions;
+
 typedef struct Options {
-	Sint32 nSoundVolume; // Movie and SFX volume
-	Sint32 nMusicVolume; // Music volume
-	bool bWalkingSound;  // Player emits sound when walking
-
-	Sint32 nWidth;             // Render width
-	Sint32 nHeight;            // Render height
-	bool bFullscreen;          // Run in fullscreen or windowed mode
-	bool bUpscale;             // Scale the image after rendering
-	bool bFitToScreen;         // Expand the aspect ratio to match the screen
-	char szScaleQuality[2];    // See SDL_HINT_RENDER_SCALE_QUALITY
-	bool bIntegerScaling;      // Only scale by values divisible by the width and height
-	bool bVSync;               // Enable vsync on the output
-	bool bBlendedTransparancy; // Use blended transparency rather than stippled
-	Sint32 nGammaCorrection;   // Gamma correction level
-	bool bColorCycling;        // Enable color cycling animations
-
-	Sint32 nTickRate;     // Game play ticks per secound
-	bool bJogInTown;      // Enable double walk speed when in town
-	bool bGrabInput;      // Do not let the mouse leave the application window
-	bool bTheoQuest;      // Enable the Theo quest
-	bool bCowQuest;       // Enable the cow quest
-	bool bFriendlyFire;   // Will players still damage other players in non-PvP mode
-	bool bTestBard;       // Enable the bard hero class
-	bool bTestBarbarian;  // Enable the babarian hero class
-	bool bExperienceBar;  // Show the current level progress
-	bool bEnemyHealthBar; // Show enemy health at the top of the screen
-	bool bAutoGoldPickup; // Automatically pick up goald when walking on to it
-
-	char szBindAddress[129]; // Optionally bind to a specific network interface
+	AudioOptions Audio;
+	GameplayOptions Gameplay;
+	GraphicsOptions Graphics;
+	NetworkOptions Network;
 } Options;
 
 extern SDL_Window *ghMainWnd;

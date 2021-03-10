@@ -372,7 +372,8 @@ if(RUN_TESTS)
     SourceT/pack_test.cpp
     SourceT/player_test.cpp
     SourceT/scrollrt_test.cpp
-    SourceT/stores_test.cpp)
+    SourceT/stores_test.cpp
+    SourceT/writehero_test.cpp)
 endif()
 
 if(HELLFIRE)
@@ -746,6 +747,9 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
       DESTINATION "."
     )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+      DESTINATION "."
+    )
     install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/libfreetype-6.dll"
       DESTINATION "."
     )
@@ -783,6 +787,9 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
       DESTINATION "."
     )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+      DESTINATION "."
+    )
     install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/libfreetype-6.dll"
       DESTINATION "."
     )
@@ -816,23 +823,35 @@ if(CPACK)
     set(CPACK_STRIP_FILES TRUE)
     install(TARGETS ${BIN_TARGET} DESTINATION bin)
     set(desktop_file "${PROJECT_SOURCE_DIR}/Packaging/nix/${project_name}.desktop")
+    set(desktop_file_hellfire "${PROJECT_SOURCE_DIR}/Packaging/nix/${project_name}-hellfire.desktop")
 
     find_program(DFI desktop-file-install)
     if(DFI)
       execute_process(COMMAND ${DFI} --dir=${CMAKE_BINARY_DIR} ${desktop_file})
       set(desktop_file "${CMAKE_BINARY_DIR}/${project_name}.desktop")
+      execute_process(COMMAND ${DFI} --dir=${CMAKE_BINARY_DIR} ${desktop_file_hellfire})
+      set(desktop_file_hellfire "${CMAKE_BINARY_DIR}/${project_name}-hellfire.desktop")
     endif()
 
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+      DESTINATION "bin"
+    )
     install(FILES "${desktop_file}"
       DESTINATION "share/applications"
     )
-    install(FILES
-        "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
+    install(FILES "${desktop_file_hellfire}"
+      DESTINATION "share/applications"
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/icon.png"
       DESTINATION "share/icons/hicolor/512x512/apps"
       RENAME "${project_name}.png"
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
+      DESTINATION "share/icons/hicolor/512x512/apps"
+      RENAME "${project_name}-hellfire.png"
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
       DESTINATION "share/fonts/truetype"

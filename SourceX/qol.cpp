@@ -45,7 +45,7 @@ inline void FillSquare(int x, int y, int size, BYTE col)
 
 void DrawMonsterHealthBar()
 {
-	if (!sgOptions.bEnemyHealthBar)
+	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;
 	if (currlevel == 0)
 		return;
@@ -136,7 +136,7 @@ void DrawMonsterHealthBar()
 
 void DrawXPBar()
 {
-	if (!sgOptions.bExperienceBar)
+	if (!sgOptions.Gameplay.bExperienceBar)
 		return;
 
 	int barWidth = 306;
@@ -176,7 +176,7 @@ void DrawXPBar()
 
 void AutoGoldPickup(int pnum)
 {
-	if (!sgOptions.bAutoGoldPickup)
+	if (!sgOptions.Gameplay.bAutoGoldPickup)
 		return;
 	if (pnum != myplr)
 		return;
