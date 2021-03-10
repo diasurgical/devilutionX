@@ -15,7 +15,7 @@ void set_up_scroll(dvl::ItemStruct &item, dvl::spell_id spell)
 /* Clear the inventory of dvl::myplr. */
 void clear_inventory()
 {
-	for (int i = 0; i < 40; i++) {
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		memset(&dvl::plr[dvl::myplr].InvList[i], 0, sizeof(dvl::ItemStruct));
 		dvl::plr[dvl::myplr].InvGrid[i] = 0;
 	}
