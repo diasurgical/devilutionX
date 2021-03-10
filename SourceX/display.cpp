@@ -88,7 +88,7 @@ void CalculatePreferdWindowSize(int &width, int &height)
 		ErrSdl();
 	}
 
-	if (!sgOptions.bIntegerScaling) {
+	if (!sgOptions.Graphics.bIntegerScaling) {
 		float wFactor = (float)mode.w / width;
 		float hFactor = (float)mode.h / height;
 
@@ -156,34 +156,34 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #endif
 
-	int width = sgOptions.nWidth;
-	int height = sgOptions.nHeight;
+	int width = sgOptions.Graphics.nWidth;
+	int height = sgOptions.Graphics.nHeight;
 
-	if (sgOptions.bUpscale && sgOptions.bFitToScreen) {
+	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
 		CalculatePreferdWindowSize(width, height);
 	}
 	AdjustToScreenGeometry(width, height);
 
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
-	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.bFullscreen, width, height);
-	if (sgOptions.bGrabInput)
+	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, width, height);
+	if (sgOptions.Gameplay.bGrabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
 	int flags = 0;
-	if (sgOptions.bUpscale) {
-		if (!gbForceWindowed && sgOptions.bFullscreen) {
+	if (sgOptions.Graphics.bUpscale) {
+		if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 		flags |= SDL_WINDOW_RESIZABLE;
 
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, sgOptions.szScaleQuality);
-	} else if (!gbForceWindowed && sgOptions.bFullscreen) {
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, sgOptions.Graphics.szScaleQuality);
+	} else if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
-	if (sgOptions.bGrabInput) {
+	if (sgOptions.Gameplay.bGrabInput) {
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
@@ -203,11 +203,11 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 	refreshDelay = 1000000 / refreshRate;
 
-	if (sgOptions.bUpscale) {
+	if (sgOptions.Graphics.bUpscale) {
 #ifndef USE_SDL1
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
-		if (sgOptions.bVSync) {
+		if (sgOptions.Graphics.bVSync) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 
@@ -221,7 +221,7 @@ bool SpawnWindow(const char *lpWindowName)
 			ErrSdl();
 		}
 
-		if (sgOptions.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
+		if (sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
 			ErrSdl();
 		}
 
