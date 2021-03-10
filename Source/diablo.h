@@ -28,6 +28,9 @@ typedef struct AudioOptions {
 
 	/** @brief Player emits sound when walking. */
 	bool bWalkingSound;
+
+	/** @brief Automatically equipping items on pickup emits the equipment sound. */
+	bool bAutoEquipSound;
 } AudioOptions;
 
 typedef struct GraphicsOptions {
