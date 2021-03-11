@@ -14,6 +14,14 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef enum item_color {
+	// clang-format off
+	ICOL_WHITE = PAL16_YELLOW + 5,
+	ICOL_BLUE  = PAL16_BLUE + 5,
+	ICOL_RED   = PAL16_RED + 5,
+	// clang-format on
+} item_color;
+
 extern BOOL invflag;
 extern BOOL drawsbarflag;
 extern const InvXY InvRect[73];
