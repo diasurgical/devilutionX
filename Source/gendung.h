@@ -18,6 +18,8 @@ typedef struct ScrollStruct {
 	int _sdx;
 	int _sdy;
 	int _sdir;
+	int pxoffDiff; // How the camera offset differs from player offset
+	int pyoffDiff;
 } ScrollStruct;
 
 typedef struct THEME_LOC {

@@ -1194,6 +1194,8 @@ void FixPlayerLocation(int pnum, int bDir)
 		ScrollInfo._sxoff = 0;
 		ScrollInfo._syoff = 0;
 		ScrollInfo._sdir = SDIR_NONE;
+		ScrollInfo.pxoffDiff = 0;
+		ScrollInfo.pyoffDiff = 0;
 		ViewX = plr[pnum]._px;
 		ViewY = plr[pnum]._py;
 	}
@@ -1314,9 +1316,9 @@ void PM_ChangeOffset(int pnum)
 	px -= plr[pnum]._pVar6 >> 8;
 	py -= plr[pnum]._pVar7 >> 8;
 
-	if (pnum == myplr && ScrollInfo._sdir) {
-		ScrollInfo._sxoff += px;
-		ScrollInfo._syoff += py;
+	if (pnum == myplr && ScrollInfo._sdir) { // Update camera offset
+		ScrollInfo._sxoff = -(plr[pnum]._pxoff - ScrollInfo.pxoffDiff);
+		ScrollInfo._syoff = -(plr[pnum]._pyoff - ScrollInfo.pyoffDiff);
 	}
 
 	PM_ChangeLightOff(pnum);
@@ -1431,6 +1433,10 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	if (pnum != myplr) {
 		return;
 	}
+
+	// Camera offset
+	ScrollInfo.pxoffDiff = xoff;
+	ScrollInfo.pyoffDiff = yoff;
 
 	if (zoomflag) {
 		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {

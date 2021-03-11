@@ -484,8 +484,8 @@ static void DrawAutomapPlr(CelOutputBuffer out, int pnum)
 	px = x - 2 * AutoMapXOfs - ViewX;
 	py = y - 2 * AutoMapYOfs - ViewY;
 
-	x = (plr[pnum]._pxoff * AutoMapScale / 100 >> 1) + (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + gnScreenWidth / 2 + SCREEN_X;
-	y = (plr[pnum]._pyoff * AutoMapScale / 100 >> 1) + (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2 + SCREEN_Y;
+	x = (ScrollInfo.pxoffDiff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + gnScreenWidth / 2 + SCREEN_X;
+	y = (ScrollInfo.pyoffDiff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2 + SCREEN_Y;
 
 	if (PANELS_COVER) {
 		if (invflag || sbookflag)
