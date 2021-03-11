@@ -166,7 +166,7 @@ void InitLevelMonsters()
 	uniquetrans = 0;
 }
 
-int AddMonsterType(int type, int placeflag)
+int AddMonsterType(_monster_id type, int placeflag)
 {
 	BOOL done = FALSE;
 	int i;
@@ -195,8 +195,8 @@ void GetLevelMTypes()
 	int i;
 
 	// this array is merged with skeltypes down below.
-	int typelist[MAXMONSTERS];
-	int skeltypes[NUM_MTYPES];
+	_monster_id typelist[MAXMONSTERS];
+	_monster_id skeltypes[NUM_MTYPES];
 
 	int minl; // min level
 	int maxl; // max level
@@ -257,7 +257,7 @@ void GetLevelMTypes()
 
 					if (currlevel >= minl && currlevel <= maxl) {
 						if (MonstAvailTbl[i] & mamask) {
-							skeltypes[nt++] = i;
+							skeltypes[nt++] = (_monster_id)i;
 						}
 					}
 				}
@@ -266,13 +266,13 @@ void GetLevelMTypes()
 		}
 
 		nt = 0;
-		for (i = 0; i < NUM_MTYPES; i++) {
+		for (i = MT_NZOMBIE; i < NUM_MTYPES; i++) {
 			minl = 15 * monsterdata[i].mMinDLvl / 30 + 1;
 			maxl = 15 * monsterdata[i].mMaxDLvl / 30 + 1;
 
 			if (currlevel >= minl && currlevel <= maxl) {
 				if (MonstAvailTbl[i] & mamask) {
-					typelist[nt++] = i;
+					typelist[nt++] = (_monster_id)i;
 				}
 			}
 		}
@@ -4719,7 +4719,7 @@ void ProcessMonsters()
 				Monst->_msquelch = UCHAR_MAX;
 				Monst->_lastx = plr[Monst->_menemy]._pfutx;
 				Monst->_lasty = plr[Monst->_menemy]._pfuty;
-			} else if (Monst->_msquelch != 0 && Monst->_mAi != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
+			} else if (Monst->_msquelch != 0 && Monst->MType->mtype != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
 				Monst->_msquelch--;
 			}
 		}

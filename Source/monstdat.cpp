@@ -155,7 +155,7 @@ const MonsterData monsterdata[] = {
 /**
  * Map between .DUN file value and monster type enum
  */
-const int MonstConvTbl[] = {
+const _monster_id MonstConvTbl[] = {
 	MT_NZOMBIE,
 	MT_BZOMBIE,
 	MT_GZOMBIE,
@@ -225,18 +225,18 @@ const int MonstConvTbl[] = {
 	MT_REDDTH,
 	MT_LTCHDMN,
 	MT_UDEDBLRG,
-	0,
-	0,
-	0,
-	0,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
 	MT_INCIN,
 	MT_FLAMLRD,
 	MT_DOOMFIRE,
 	MT_HELLBURN,
-	0,
-	0,
-	0,
-	0,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
 	MT_RSTORM,
 	MT_STORM,
 	MT_STORML,
@@ -269,19 +269,19 @@ const int MonstConvTbl[] = {
 	MT_MAGISTR,
 	MT_CABALIST,
 	MT_ADVOCATE,
-	0,
+	MT_INVALID,
 	MT_DIABLO,
-	0,
+	MT_INVALID,
 	MT_GOLEM,
-	0,
-	0,
-	0, // Monster from blood1.dun and blood2.dun
-	0,
-	0,
-	0,
-	0, // Snotspill from banner2.dun
-	0,
-	0,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID, // Monster from blood1.dun and blood2.dun
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID, // Snotspill from banner2.dun
+	MT_INVALID,
+	MT_INVALID,
 	MT_BIGFALL,
 	MT_DARKMAGE,
 	MT_HELLBOAR,
@@ -315,9 +315,6 @@ const int MonstConvTbl[] = {
 	MT_LRDSAYTR,
 };
 
-#define MAT_NEVER 0
-#define MAT_ALWAYS 1
-#define MAT_RETAIL 2
 /**
  * Define what version a monster type is available in
  */
@@ -565,7 +562,7 @@ const UniqMonstStruct UniqMonst[] = {
 	{  MT_SOLBRNR,  "Fleshdancer",              "GENERAL",    16,    999, AI_SUCC,     3,         30,         50, IMMUNE_MAGIC | RESIST_FIRE |                    IMMUNE_NULL_40,        0,        0,        0, 0              },
 	{  MT_OBLORD,   "Grimspike",                "GENERAL",    19,    534, AI_SNEAK,    1,         25,         40, IMMUNE_MAGIC | RESIST_FIRE |                    IMMUNE_NULL_40,        3,        0,        0, 0              },
 	{  MT_STORML,   "Doomlock",                 "GENERAL",    28,    534, AI_SNEAK,    1,         35,         55, IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40,        3,        0,        0, 0              },
-	{  -1,          NULL,                       NULL,          0,      0, 0,           0,          0,          0, 0                                                             ,        0,        0,        0, 0              },
+	{  MT_INVALID,  NULL,                       NULL,          0,      0, AI_INVALID,  0,          0,          0, 0                                                             ,        0,        0,        0, 0              },
 	// clang-format on
 };
 

@@ -6,6 +6,10 @@
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
 
+#ifdef _DEBUG
+#include "monstdat.h"
+#endif
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
@@ -180,7 +184,7 @@ extern BOOL leveldebug;
 #ifdef _DEBUG
 extern BOOL monstdebug;
 extern int debugmonsttypes;
-extern int DebugMonsters[10];
+extern _monster_id DebugMonsters[10];
 extern BOOL visiondebug;
 extern int questdebug;
 extern int debug_mode_key_w;

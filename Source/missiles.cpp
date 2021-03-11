@@ -4950,7 +4950,7 @@ void MI_Stone(Sint32 i)
 	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = TRUE;
 		if (monster[m]._mhitpoints > 0)
-			monster[m]._mmode = missile[i]._miVar1;
+			monster[m]._mmode = (MON_MODE)missile[i]._miVar1;
 		else
 			AddDead(monster[m]._mx, monster[m]._my, stonendx, (direction)monster[m]._mdir);
 	}

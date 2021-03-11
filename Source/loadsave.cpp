@@ -514,7 +514,7 @@ static void LoadMonster(LoadHelper *file, int i)
 	MonsterStruct *pMonster = &monster[i];
 
 	pMonster->_mMTidx = file->nextLE<Sint32>();
-	pMonster->_mmode = file->nextLE<Sint32>();
+	pMonster->_mmode = (MON_MODE)file->nextLE<Sint32>();
 	pMonster->_mgoal = file->nextLE<Uint8>();
 	file->skip(3); // Alignment
 	pMonster->_mgoalvar1 = file->nextLE<Sint32>();
@@ -557,7 +557,7 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->_mmaxhp = file->nextLE<Sint32>();
 	pMonster->_mhitpoints = file->nextLE<Sint32>();
 
-	pMonster->_mAi = file->nextLE<Uint8>();
+	pMonster->_mAi = (_mai_id)file->nextLE<Uint8>();
 	pMonster->_mint = file->nextLE<Uint8>();
 	file->skip(2); // Alignment
 	pMonster->_mFlags = file->nextLE<Uint32>();

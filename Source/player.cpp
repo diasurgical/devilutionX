@@ -2013,7 +2013,7 @@ void RemovePlrMissiles(int pnum)
 	for (i = 0; i < nummissiles; i++) {
 		am = missileactive[i];
 		if (missile[am]._mitype == MIS_STONE && missile[am]._misource == pnum) {
-			monster[missile[am]._miVar2]._mmode = missile[am]._miVar1;
+			monster[missile[am]._miVar2]._mmode = (MON_MODE)missile[am]._miVar1;
 		}
 		if (missile[am]._mitype == MIS_MANASHIELD && missile[am]._misource == pnum) {
 			ClearMissileSpot(am);

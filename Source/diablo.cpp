@@ -55,7 +55,7 @@ bool gbShowIntro = true;
 BOOL leveldebug;
 #ifdef _DEBUG
 BOOL monstdebug;
-int DebugMonsters[10];
+_monster_id DebugMonsters[10];
 int debugmonsttypes;
 BOOL visiondebug;
 int questdebug = -1;
@@ -154,7 +154,7 @@ static void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("--nestart", argv[i]) == 0) {
 			gbNestArt = true;
 		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
-                        gbVanilla = true;
+			gbVanilla = true;
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = TRUE;
@@ -180,7 +180,7 @@ static void diablo_parse_flags(int argc, char **argv)
 			plr[0].plrlevel = currlevel;
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = TRUE;
-			DebugMonsters[debugmonsttypes++] = SDL_atoi(argv[++i]);
+			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-q", argv[i]) == 0) {
 			questdebug = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-r", argv[i]) == 0) {
@@ -1839,7 +1839,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 					dFlags[i][j] |= BFLAG_LIT;
 			}
 
-			if(!gbVanilla)
+			if (!gbVanilla)
 				LoadHotkeys();
 			InitTowners();
 			InitItems();
