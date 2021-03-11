@@ -49,6 +49,8 @@ public:
 	virtual void setup_gameinfo(buffer_t info) = 0;
 	virtual ~abstract_net() = default;
 
+	virtual std::string make_default_gamename() = 0;
+
 	static std::unique_ptr<abstract_net> make_net(provider_t provider);
 };
 

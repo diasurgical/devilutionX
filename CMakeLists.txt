@@ -63,6 +63,10 @@ else()
     LANGUAGES C CXX)
 endif()
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  SET(DISABLE_LTO ON)
+endif()
+
 # Not a genexp because CMake doesn't support it
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20546
 if(NOT DISABLE_LTO)
@@ -338,7 +342,10 @@ if(NOT NONET)
   list(APPEND devilutionx_SRCS
     SourceX/dvlnet/tcp_client.cpp
     SourceX/dvlnet/tcp_server.cpp
-    SourceX/dvlnet/udp_p2p.cpp)
+    SourceX/dvlnet/protocol_zt.cpp
+    SourceX/dvlnet/base_protocol.cpp
+    SourceX/dvlnet/zerotier_native.cpp
+    SourceX/dvlnet/zerotier_lwip.cpp)
 endif()
 
 set(BIN_TARGET devilutionx)
@@ -884,4 +891,44 @@ if(CPACK)
   set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   include(CPack)
+endif()
+
+if(NOT NONET)
+  add_subdirectory(3rdParty/libzt EXCLUDE_FROM_ALL)
+  target_link_libraries(devilutionx PRIVATE zt-static)
+  target_include_directories(devilutionx PRIVATE
+	3rdParty/libzt/include
+	3rdParty/libzt/src
+	3rdParty/libzt/ext/lwip/src/include)
+  if(WIN32)
+	target_include_directories(devilutionx PRIVATE
+	  3rdParty/libzt/ext/lwip-contrib/ports/win32/include)
+  else()
+	target_include_directories(devilutionx PRIVATE
+	  3rdParty/libzt/ext/lwip-contrib/ports/unix/port/include)
+  endif()
+  # External library, ignore all warnings
+  target_compile_options(zto_obj PRIVATE -fpermissive -w)
+  target_compile_options(libnatpmp_obj PRIVATE -w)
+  target_compile_options(libzt_obj PRIVATE -fpermissive -w)
+  target_compile_options(lwip_obj PRIVATE -w)
+  target_compile_options(miniupnpc_obj PRIVATE -w)
+  target_compile_options(zt-static PRIVATE -fpermissive -w)
+  if(MINGW_CROSS)
+    cmake_policy(SET CMP0079 NEW)
+    option(MINGW_STDTHREADS_GENERATE_STDHEADERS "" ON)
+    add_subdirectory(3rdParty/mingw-std-threads)
+    target_compile_definitions(libnatpmp_obj PRIVATE -D_WIN32_WINNT=0x601 -DSTATICLIB)
+    target_compile_definitions(zto_obj PRIVATE -D_WIN32_WINNT=0x601 -DZT_SALSA20_SSE=0)
+    target_compile_definitions(libzt_obj PRIVATE -D_WIN32_WINNT=0x601)
+    target_link_libraries(libzt_obj PRIVATE mingw_stdthreads)
+    target_link_libraries(zt-static PUBLIC iphlpapi shlwapi wsock32 ws2_32 wininet mingw_stdthreads)
+    target_include_directories(devilutionx PRIVATE
+          3rdParty/libzt/include/mingw-fixes)
+  endif()
+  if(MSVC)
+    target_compile_definitions(libnatpmp_obj PRIVATE -DSTATICLIB)
+    cmake_policy(SET CMP0079 NEW)
+    target_link_libraries(zt-static PUBLIC iphlpapi shlwapi wsock32 ws2_32 wininet)
+  endif()
 endif()

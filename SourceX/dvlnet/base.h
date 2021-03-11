@@ -36,6 +36,7 @@ public:
 
 	virtual void poll() = 0;
 	virtual void send(packet &pkt) = 0;
+	virtual void disconnect_net(plr_t plr);
 
 	void setup_gameinfo(buffer_t info);
 

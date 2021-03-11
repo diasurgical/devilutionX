@@ -10,6 +10,7 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git rpm wget
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
+      - run: git submodule update --init --recursive
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
@@ -29,6 +30,7 @@ jobs:
       - checkout
       - run: apt-get update -y
       - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git cmake libsodium-dev libgtest-dev lcov curl
+      - run: git submodule update --init --recursive
       - run: cmake -S. -Bbuild -DRUN_TESTS=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target test
@@ -43,6 +45,7 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev git rpm
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
+      - run: git submodule update --init --recursive
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
@@ -61,6 +64,7 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git rpm wget
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev:i386
+      - run: git submodule update --init --recursive
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
@@ -81,6 +85,7 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 wget git sudo
       - run: Packaging/windows/mingw-prep.sh
+      - run: git submodule update --init --recursive
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
@@ -98,6 +103,7 @@ jobs:
       - checkout
       - run: apt-get update -y
       - run: DEBIAN_FRONTEND="noninteractive" TZ="America/Los_Angeles" apt-get install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wget git sudo
+      - run: git submodule update --init --recursive
       - run: Packaging/windows/mingw-prep64.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake
       - run: cmake --build build -j 2
