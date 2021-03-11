@@ -2947,7 +2947,7 @@ BOOL M_DumbWalk(int i, int md)
 	return ok;
 }
 
-BOOL M_RoundWalk(int i, int md, int *dir)
+BOOL M_RoundWalk(int i, int md, Sint32 *dir)
 {
 	int mdtemp;
 	BOOL ok;
