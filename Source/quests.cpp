@@ -110,6 +110,9 @@ void InitQuests()
 		}
 	}
 
+	Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
+	Qtalklist[TOWN_WITCH][Q_MUSHROOM] = TEXT_MUSH9;
+
 	questlog = FALSE;
 	WaterDone = 0;
 	initiatedQuests = 0;
