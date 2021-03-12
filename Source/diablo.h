@@ -94,6 +94,8 @@ typedef struct GameplayOptions {
 	bool bAutoEquipShields;
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
 	bool bAutoEquipJewelry;
+	/** @brief Enable All Quests for Single Player */
+	bool bAllQuests;
 } GameplayOptions;
 
 typedef struct NetworkOptions {

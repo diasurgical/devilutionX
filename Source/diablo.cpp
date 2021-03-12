@@ -11,7 +11,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-bool allquests;
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
@@ -121,7 +120,6 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
 	printf("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 	printf("    %-20s %-30s\n", "-t <##>", "Set current quest level");
-	printf("    %-20s %-30s\n", "--allquests", "Force all quests to generate in a singleplayer game");
 #endif
 	printf("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
 	diablo_quit(0);
@@ -195,8 +193,6 @@ static void diablo_parse_flags(int argc, char **argv)
 			visiondebug = TRUE;
 		} else if (strcasecmp("-w", argv[i]) == 0) {
 			debug_mode_key_w = TRUE;
-		} else if (strcasecmp("--allquests", argv[i]) == 0) {
-			allquests = true;
 #endif
 		} else {
 			printf("unrecognized option '%s'\n", argv[i]);
@@ -438,6 +434,7 @@ static void SaveOptions()
 	setIniInt("Game", "Auto Equip Helms", sgOptions.Gameplay.bAutoEquipHelms);
 	setIniInt("Game", "Auto Equip Shields", sgOptions.Gameplay.bAutoEquipShields);
 	setIniInt("Game", "Auto Equip Jewelry", sgOptions.Gameplay.bAutoEquipJewelry);
+	setIniInt("Game", "Enable All Quests for Single Player", sgOptions.Gameplay.bAllQuests);
 
 	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 }
@@ -490,6 +487,7 @@ static void LoadOptions()
 	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms", false);
 	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields", false);
 	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry", false);
+	sgOptions.Gameplay.bAllQuests = getIniBool("Game", "Enable All Quests for Single Player", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 }

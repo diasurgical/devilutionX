@@ -41,7 +41,6 @@ typedef struct QuestData {
 	const char *_qlstr;
 } QuestData;
 
-extern bool allquests;
 extern bool questlog;
 extern BYTE *pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
