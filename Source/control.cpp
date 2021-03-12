@@ -597,30 +597,23 @@ void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int s
 /**
  * Draws a section of the empty flask cel on top of the panel to create the illusion
  * of the flask getting empty. This function takes a cel and draws a
- * horizontal stripe of height (max-min) onto the back buffer.
+ * horizontal stripe of height (max-min) onto the given buffer.
+ * @param out Target buffer.
+ * @param sx Buffer coordinate
+ * @param sy Buffer coordinate
  * @param pCelBuff Buffer of the empty flask cel.
- * @param min Top of the flask cel section to draw.
- * @param max Bottom of the flask cel section to draw.
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param y0 Top of the flask cel section to draw.
+ * @param y1 Bottom of the flask cel section to draw.
  */
-void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int sx, int sy)
+static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int y0, int y1)
 {
-	int nSrcOff, nDstOff, w;
+	const std::size_t kSrcWidth = 88;
 
-	assert(gpBuffer);
+	const BYTE *src = &pCelBuff[kSrcWidth * y0];
+	BYTE *dst = out.at(sx, sy);
 
-	nSrcOff = 88 * min;
-	nDstOff = sx + BUFFER_WIDTH * sy;
-	w = max - min;
-
-	BYTE *src, *dst;
-
-	src = &pCelBuff[nSrcOff];
-	dst = &gpBuffer[nDstOff];
-
-	for (; w; w--, src += 88, dst += BUFFER_WIDTH)
-		memcpy(dst, src, 88);
+	for (int h = y1 - y0; h != 0; --h, src += kSrcWidth, dst += out.line_width)
+		memcpy(dst, src, kSrcWidth);
 }
 
 /**
@@ -698,7 +691,7 @@ void UpdateLifeFlask(CelOutputBuffer out)
 	else if (filled < 0)
 		filled = 0;
 	if (filled != 69)
-		SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
+		DrawFlaskTop(out, 96 + PANEL_X, PANEL_Y, pLifeBuff, 16, 85 - filled);
 	if (filled != 0)
 		DrawPanelBox(out, 96, 85 - filled, 88, filled, 96 + PANEL_X, PANEL_Y + 69 - filled);
 }
@@ -755,7 +748,7 @@ void UpdateManaFlask(CelOutputBuffer out)
 	if (filled > 69)
 		filled = 69;
 	if (filled != 69)
-		SetFlaskHeight(pManaBuff, 16, 85 - filled, PANEL_X + 464, PANEL_Y);
+		DrawFlaskTop(out, PANEL_X + 464, PANEL_Y, pManaBuff, 16, 85 - filled);
 	if (filled != 0)
 		DrawPanelBox(out, 464, 85 - filled, 88, filled, PANEL_X + 464, PANEL_Y + 69 - filled);
 
