@@ -189,9 +189,9 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	sgdwCursHgt++;
 
 	assert(sgdwCursWdt * sgdwCursHgt < sizeof sgSaveBack);
-	assert(gpBuffer);
+	assert(out.begin);
 	dst = sgSaveBack;
-	src = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
+	src = out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY);
 
 	for (i = sgdwCursHgt; i != 0; i--, dst += sgdwCursWdt, src += BUFFER_WIDTH) {
 		memcpy(dst, src, sgdwCursWdt);
@@ -199,8 +199,8 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 
 	mx++;
 	my++;
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnScreenHeight + SCREEN_Y) - cursW - 2];
-	out.end = gpBufEnd;
+	out = out.subregionY(0, SCREEN_Y + gnScreenHeight);
+	out.end -= 2;
 
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
@@ -531,22 +531,19 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, BOOL p
 	}
 }
 
-static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, int dy);
+static void scrollrt_draw_dungeon(CelOutputBuffer, int, int, int, int);
 
 /**
  * @brief Render a cell
+ * @param out Target buffer
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Target buffer coordinate
+ * @param sy Target buffer coordinate
  */
-static void drawCell(int x, int y, int sx, int sy)
+static void drawCell(CelOutputBuffer out, int x, int y, int sx, int sy)
 {
-	BYTE *dst;
-	MICROS *pMap;
-
-	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
-	pMap = &dpiece_defs_map_2[x][y];
+	MICROS *pMap = &dpiece_defs_map_2[x][y];
 	level_piece_id = dPiece[x][y];
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 	cel_foliage_active = !nSolidTable[level_piece_id];
@@ -554,40 +551,40 @@ static void drawCell(int x, int y, int sx, int sy)
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
-			RenderTile(dst);
+			RenderTile(out, sx, sy);
 		}
 		level_cel_block = pMap->mt[2 * i + 1];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 2 : 0;
-			RenderTile(dst + TILE_WIDTH / 2);
+			RenderTile(out, sx + TILE_WIDTH / 2, sy);
 		}
-		dst -= BUFFER_WIDTH * TILE_HEIGHT;
+		sy -= TILE_HEIGHT;
 	}
 	cel_foliage_active = false;
 }
 
 /**
  * @brief Render a floor tiles
+ * @param out Target buffer
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Target buffer coordinate
+ * @param sy Target buffer coordinate
  */
-static void drawFloor(int x, int y, int sx, int sy)
+static void drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy)
 {
 	cel_transparency_active = 0;
 	light_table_index = dLight[x][y];
 
-	BYTE *dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
 	arch_draw_type = 1; // Left
 	level_cel_block = dpiece_defs_map_2[x][y].mt[0];
 	if (level_cel_block != 0) {
-		RenderTile(dst);
+		RenderTile(out, sx, sy);
 	}
 	arch_draw_type = 2; // Right
 	level_cel_block = dpiece_defs_map_2[x][y].mt[1];
 	if (level_cel_block != 0) {
-		RenderTile(dst + TILE_WIDTH / 2);
+		RenderTile(out, sx + TILE_WIDTH / 2, sy);
 	}
 }
 
@@ -713,11 +710,11 @@ static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
 
 /**
  * @brief Render object sprites
- * @param out Buffer to render to
+ * @param out Target buffer
  * @param sx dPiece coordinate
  * @param sy dPiece coordinate
- * @param dx Buffer coordinate
- * @param dy Buffer coordinate
+ * @param dx Target buffer coordinate
+ * @param dy Target buffer coordinate
  */
 static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, int dy)
 {
@@ -730,7 +727,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 
 	light_table_index = dLight[sx][sy];
 
-	drawCell(sx, sy, dx, dy);
+	drawCell(out, sx, sy, dx, dy);
 
 	char bFlag = dFlags[sx][sy];
 	char bDead = dDead[sx][sy];
@@ -825,16 +822,17 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 
 /**
  * @brief Render a row of tiles
+ * @param out Buffer to render to
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
+ * @param sx Target buffer coordinate
+ * @param sy Target buffer coordinate
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-static void scrollrt_drawFloor(int x, int y, int sx, int sy, int rows, int columns)
+static void scrollrt_drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy, int rows, int columns)
 {
-	assert(gpBuffer);
+	assert(out.begin);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
@@ -842,12 +840,12 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int rows, int colum
 				level_piece_id = dPiece[x][y];
 				if (level_piece_id != 0) {
 					if (!nSolidTable[level_piece_id])
-						drawFloor(x, y, sx, sy);
+						drawFloor(out, x, y, sx, sy);
 				} else {
-					world_draw_black_tile(sx, sy);
+					world_draw_black_tile(out, sx, sy);
 				}
 			} else {
-				world_draw_black_tile(sx, sy);
+				world_draw_black_tile(out, sx, sy);
 			}
 			ShiftGrid(&x, &y, 1, 0);
 			sx += TILE_WIDTH;
@@ -885,7 +883,7 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int rows, int colum
  */
 static void scrollrt_draw(CelOutputBuffer out, int x, int y, int sx, int sy, int rows, int columns)
 {
-	assert(gpBuffer);
+	assert(out.begin);
 
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
@@ -933,25 +931,26 @@ static void scrollrt_draw(CelOutputBuffer out, int x, int y, int sx, int sy, int
 /**
  * @brief Scale up the rendered part of the back buffer to take up the full view
  */
-static void Zoom()
+static void Zoom(CelOutputBuffer out)
 {
 	int wdt = gnScreenWidth / 2;
-	int nSrcOff = SCREENXY(gnScreenWidth / 2 - 1, gnViewportHeight / 2 - 1);
-	int nDstOff = SCREENXY(gnScreenWidth - 1, gnViewportHeight - 1);
+
+	int src_x = SCREEN_X + gnScreenWidth / 2 - 1;
+	int dst_x = SCREEN_X + gnScreenWidth - 1;
 
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
 			wdt >>= 1;
-			nSrcOff -= wdt;
+			src_x -= wdt;
 		} else if (invflag || sbookflag) {
 			wdt >>= 1;
-			nSrcOff -= wdt;
-			nDstOff -= SPANEL_WIDTH;
+			src_x -= wdt;
+			dst_x -= SPANEL_WIDTH;
 		}
 	}
 
-	BYTE *src = &gpBuffer[nSrcOff];
-	BYTE *dst = &gpBuffer[nDstOff];
+	BYTE *src = out.at(src_x, SCREEN_Y + gnViewportHeight / 2 - 1);
+	BYTE *dst = out.at(dst_x, SCREEN_Y + gnViewportHeight - 1);
 
 	for (int hgt = 0; hgt < gnViewportHeight / 2; hgt++) {
 		for (int i = 0; i < wdt; i++) {
@@ -959,9 +958,9 @@ static void Zoom()
 			*dst-- = *src;
 			src--;
 		}
-		memcpy(dst - BUFFER_WIDTH, dst, wdt * 2 + 1);
-		src -= BUFFER_WIDTH - wdt;
-		dst -= 2 * (BUFFER_WIDTH - wdt);
+		memcpy(dst - out.line_width, dst, wdt * 2 + 1);
+		src -= out.line_width - wdt;
+		dst -= 2 * (out.line_width - wdt);
 	}
 }
 
@@ -1105,20 +1104,18 @@ void CalcViewportGeometry()
 
 /**
  * @brief Configure render and process screen rows
- * @param out Buffer to render to
+ * @param full_out Buffer to render to
  * @param x Center of view in dPiece coordinate
  * @param y Center of view in dPiece coordinate
  */
-static void DrawGame(CelOutputBuffer out, int x, int y)
+static void DrawGame(CelOutputBuffer full_out, int x, int y)
 {
 	int sx, sy, columns, rows;
 
 	// Limit rendering to the view area
-	if (zoomflag)
-		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnViewportHeight + SCREEN_Y)];
-	else
-		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnViewportHeight / 2 + SCREEN_Y)];
-	out.end = gpBufEnd;
+	CelOutputBuffer out = zoomflag
+	    ? full_out.subregionY(0, SCREEN_Y + gnViewportHeight)
+	    : full_out.subregionY(0, SCREEN_Y + gnViewportHeight / 2);
 
 	// Adjust by player offset and tile grid alignment
 	sx = ScrollInfo._sxoff + tileOffsetX + SCREEN_X;
@@ -1200,14 +1197,11 @@ static void DrawGame(CelOutputBuffer out, int x, int y)
 		break;
 	}
 
-	scrollrt_drawFloor(x, y, sx, sy, rows, columns);
+	scrollrt_drawFloor(out, x, y, sx, sy, rows, columns);
 	scrollrt_draw(out, x, y, sx, sy, rows, columns);
 
-	// Allow rendering to the whole screen
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (gnScreenHeight + SCREEN_Y)];
-
 	if (!zoomflag) {
-		Zoom();
+		Zoom(full_out.subregionY(0, SCREEN_Y + gnScreenHeight));
 	}
 }
 
