@@ -372,22 +372,23 @@ void foreach_set_bit(DWORD mask, const F &f)
 	}
 }
 
-inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
+inline static void RenderLine(CelOutputBuffer out, int &x, int y, BYTE **src, int n, BYTE *tbl, DWORD mask)
 {
+	BYTE *dst = out.at(x, y);
 #ifdef NO_OVERDRAW
-	if (*dst < &gpBuffer[BUFFER_WIDTH * SCREEN_Y] || *dst > gpBufEnd) {
+	if (y < SCREEN_Y || dst > out.end) {
 		goto skip;
 	}
 #endif
 
 	if (mask == 0xFFFFFFFF) {                // Opaque line
 		if (light_table_index == lightmax) { // Complete darkness
-			memset(*dst, 0, n);
+			memset(dst, 0, n);
 		} else if (light_table_index == 0) { // Fully lit
-			memcpy(*dst, *src, n);
+			memcpy(dst, *src, n);
 		} else { // Partially lit
 			for (int i = 0; i < n; i++) {
-				(*dst)[i] = tbl[(*src)[i]];
+				dst[i] = tbl[(*src)[i]];
 			}
 		}
 	} else {
@@ -402,57 +403,52 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 			if (light_table_index == lightmax) { // Complete darkness
 				for (int i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
-						(*dst)[i] = 0;
+						dst[i] = 0;
 					else
-						(*dst)[i] = paletteTransparencyLookup[0][(*dst)[i]];
+						dst[i] = paletteTransparencyLookup[0][dst[i]];
 				}
 			} else if (light_table_index == 0) { // Fully lit
 				for (int i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
-						(*dst)[i] = (*src)[i];
+						dst[i] = (*src)[i];
 					else
-						(*dst)[i] = paletteTransparencyLookup[(*dst)[i]][(*src)[i]];
+						dst[i] = paletteTransparencyLookup[dst[i]][(*src)[i]];
 				}
 			} else { // Partially lit
 				for (int i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
-						(*dst)[i] = tbl[(*src)[i]];
+						dst[i] = tbl[(*src)[i]];
 					else
-						(*dst)[i] = paletteTransparencyLookup[(*dst)[i]][tbl[(*src)[i]]];
+						dst[i] = paletteTransparencyLookup[dst[i]][tbl[(*src)[i]]];
 				}
 			}
 		} else {                                 // Stippled transparancy
 			if (light_table_index == lightmax) { // Complete darkness
-				foreach_set_bit(mask, [=](int i) { (*dst)[i] = 0; });
+				foreach_set_bit(mask, [=](int i) { dst[i] = 0; });
 			} else if (light_table_index == 0) { // Fully lit
-				foreach_set_bit(mask, [=](int i) { (*dst)[i] = (*src)[i]; });
+				foreach_set_bit(mask, [=](int i) { dst[i] = (*src)[i]; });
 			} else { // Partially lit
-				foreach_set_bit(mask, [=](int i) { (*dst)[i] = tbl[(*src)[i]]; });
+				foreach_set_bit(mask, [=](int i) { dst[i] = tbl[(*src)[i]]; });
 			}
 		}
 	}
 
 skip:
 	(*src) += n;
-	(*dst) += n;
+	x += n;
 }
 
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-/**
- * @brief Blit current world CEL to the given buffer
- * @param pBuff Output buffer
- */
-void
-RenderTile(BYTE *pBuff)
+
+void RenderTile(CelOutputBuffer out, int x, int y)
 {
 	int i, j;
 	char c, v, tile;
-	BYTE *src, *dst, *tbl;
+	BYTE *src, *tbl;
 	DWORD m, *mask, *pFrameTable;
 
-	dst = pBuff;
 	pFrameTable = (DWORD *)pDungeonCels;
 
 	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
@@ -507,80 +503,74 @@ RenderTile(BYTE *pBuff)
 
 	switch (tile) {
 	case RT_SQUARE:
-		for (i = TILE_HEIGHT; i != 0; i--, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
-			RenderLine(&dst, &src, TILE_WIDTH / 2, tbl, *mask);
+		for (i = TILE_HEIGHT; i != 0; --i, --y, x -= TILE_WIDTH / 2, mask--) {
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2, tbl, *mask);
 		}
 		break;
 	case RT_TRANSPARENT:
-		for (i = TILE_HEIGHT; i != 0; i--, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
+		for (i = TILE_HEIGHT; i != 0; --i, --y, x -= TILE_WIDTH / 2, mask--) {
 			m = *mask;
 			for (j = TILE_WIDTH / 2; j != 0; j -= v, v == TILE_WIDTH / 2 ? m = 0 : m <<= v) {
 				v = *src++;
 				if (v >= 0) {
-					RenderLine(&dst, &src, v, tbl, m);
+					RenderLine(out, x, y, &src, v, tbl, m);
 				} else {
 					v = -v;
-					dst += v;
+					x += v;
 				}
 			}
 		}
 		break;
 	case RT_LTRIANGLE:
-		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
+		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, --y, x -= TILE_WIDTH / 2, mask--) {
 			src += i & 2;
-			dst += i;
-			RenderLine(&dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
+			x += i;
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2 - i, tbl, *mask);
 		}
-		for (i = 2; i != TILE_WIDTH / 2; i += 2, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
+		for (i = 2; i != TILE_WIDTH / 2; i += 2, --y, x -= TILE_WIDTH / 2, mask--) {
 			src += i & 2;
-			dst += i;
-			RenderLine(&dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
+			x += i;
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2 - i, tbl, *mask);
 		}
 		break;
 	case RT_RTRIANGLE:
-		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
-			RenderLine(&dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
+		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, --y, x -= TILE_WIDTH / 2, mask--) {
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2 - i, tbl, *mask);
 			src += i & 2;
-			dst += i;
+			x += i;
 		}
-		for (i = 2; i != TILE_HEIGHT; i += 2, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
-			RenderLine(&dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
+		for (i = 2; i != TILE_HEIGHT; i += 2, --y, x -= TILE_WIDTH / 2, mask--) {
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2 - i, tbl, *mask);
 			src += i & 2;
-			dst += i;
+			x += i;
 		}
 		break;
 	case RT_LTRAPEZOID:
-		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
+		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, --y, x -= TILE_WIDTH / 2, mask--) {
 			src += i & 2;
-			dst += i;
-			RenderLine(&dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
+			x += i;
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2 - i, tbl, *mask);
 		}
-		for (i = TILE_HEIGHT / 2; i != 0; i--, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
-			RenderLine(&dst, &src, TILE_WIDTH / 2, tbl, *mask);
+		for (i = TILE_HEIGHT / 2; i != 0; --i, --y, x -= TILE_WIDTH / 2, mask--) {
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2, tbl, *mask);
 		}
 		break;
 	case RT_RTRAPEZOID:
-		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
-			RenderLine(&dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
+		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, --y, x -= TILE_WIDTH / 2, mask--) {
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2 - i, tbl, *mask);
 			src += i & 2;
-			dst += i;
+			x += i;
 		}
-		for (i = TILE_HEIGHT / 2; i != 0; i--, dst -= BUFFER_WIDTH + TILE_WIDTH / 2, mask--) {
-			RenderLine(&dst, &src, TILE_WIDTH / 2, tbl, *mask);
+		for (i = TILE_HEIGHT / 2; i != 0; i--, --y, x -= TILE_WIDTH / 2, mask--) {
+			RenderLine(out, x, y, &src, TILE_WIDTH / 2, tbl, *mask);
 		}
 		break;
 	}
 }
 
-/**
- * @brief Render a black tile
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
- */
-void world_draw_black_tile(int sx, int sy)
+void world_draw_black_tile(CelOutputBuffer out, int sx, int sy)
 {
 	int i, j;
-	BYTE *dst;
 
 	if (sx >= SCREEN_X + gnScreenWidth || sy >= SCREEN_Y + gnViewportHeight + TILE_WIDTH / 2)
 		return;
@@ -588,15 +578,14 @@ void world_draw_black_tile(int sx, int sy)
 	if (sx < SCREEN_X - (TILE_WIDTH - 4) || sy < SCREEN_Y)
 		return;
 
-	dst = &gpBuffer[sx + BUFFER_WIDTH * sy] + TILE_WIDTH / 2 - 2;
-
-	for (i = TILE_HEIGHT - 2, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 2) {
-		if (dst < gpBufEnd)
+	BYTE *dst = out.at(sx + TILE_WIDTH / 2 - 2, sy);
+	for (i = TILE_HEIGHT - 2, j = 1; i >= 0; i -= 2, j++, dst -= out.line_width + 2) {
+		if (dst < out.end)
 			memset(dst, 0, 4 * j);
 	}
 	dst += 4;
-	for (i = 2, j = TILE_HEIGHT / 2 - 1; i != TILE_HEIGHT; i += 2, j--, dst -= BUFFER_WIDTH - 2) {
-		if (dst < gpBufEnd)
+	for (i = 2, j = TILE_HEIGHT / 2 - 1; i != TILE_HEIGHT; i += 2, j--, dst -= out.line_width - 2) {
+		if (dst < out.end)
 			memset(dst, 0, 4 * j);
 	}
 }
