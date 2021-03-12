@@ -5,6 +5,7 @@
  */
 #include "all.h"
 #include "paths.h"
+#include "console.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
@@ -92,36 +93,36 @@ BOOL was_snd_init = false;
 
 static void print_help_and_exit()
 {
-	printf("Options:\n");
-	printf("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
-	printf("    %-20s %-30s\n", "--version", "Print the version and exit");
-	printf("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
-	printf("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
-	printf("    %-20s %-30s\n", "--config-dir", "Specify the location of diablo.ini");
-	printf("    %-20s %-30s\n", "-n", "Skip startup videos");
-	printf("    %-20s %-30s\n", "-f", "Display frames per second");
-	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
-	printf("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
-	printf("\nHellfire options:\n");
-	printf("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
-	printf("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
+	printInConsole("Options:\n");
+	printInConsole("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
+	printInConsole("    %-20s %-30s\n", "--version", "Print the version and exit");
+	printInConsole("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
+	printInConsole("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
+	printInConsole("    %-20s %-30s\n", "--config-dir", "Specify the location of diablo.ini");
+	printInConsole("    %-20s %-30s\n", "-n", "Skip startup videos");
+	printInConsole("    %-20s %-30s\n", "-f", "Display frames per second");
+	printInConsole("    %-20s %-30s\n", "-x", "Run in windowed mode");
+	printInConsole("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
+	printInConsole("\nHellfire options:\n");
+	printInConsole("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
+	printInConsole("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
 #ifdef _DEBUG
-	printf("\nDebug options:\n");
-	printf("    %-20s %-30s\n", "-d", "Increaased item drops");
-	printf("    %-20s %-30s\n", "-w", "Enable cheats");
-	printf("    %-20s %-30s\n", "-$", "Enable god mode");
-	printf("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
-	//printf("    %-20s %-30s\n", "-b", "Enable item drop log");
-	printf("    %-20s %-30s\n", "-v", "Highlight visibility");
-	printf("    %-20s %-30s\n", "-i", "Ignore network timeout");
-	//printf("    %-20s %-30s\n", "-j <##>", "Init trigger at level");
-	printf("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
-	printf("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
-	printf("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
-	printf("    %-20s %-30s\n", "-r <##########>", "Set map seed");
-	printf("    %-20s %-30s\n", "-t <##>", "Set current quest level");
+	printInConsole("\nDebug options:\n");
+	printInConsole("    %-20s %-30s\n", "-d", "Increaased item drops");
+	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
+	printInConsole("    %-20s %-30s\n", "-$", "Enable god mode");
+	printInConsole("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
+	//printInConsole("    %-20s %-30s\n", "-b", "Enable item drop log");
+	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
+	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
+	//printInConsole("    %-20s %-30s\n", "-j <##>", "Init trigger at level");
+	printInConsole("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
+	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
+	printInConsole("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
+	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
+	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
-	printf("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
+	printInConsole("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
 	diablo_quit(0);
 }
 
@@ -131,7 +132,7 @@ static void diablo_parse_flags(int argc, char **argv)
 		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
 			print_help_and_exit();
 		} else if (strcasecmp("--version", argv[i]) == 0) {
-			printf("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
+			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
 			diablo_quit(0);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
 			SetBasePath(argv[++i]);
@@ -195,7 +196,7 @@ static void diablo_parse_flags(int argc, char **argv)
 			debug_mode_key_w = TRUE;
 #endif
 		} else {
-			printf("unrecognized option '%s'\n", argv[i]);
+			printInConsole("unrecognized option '%s'\n", argv[i]);
 			print_help_and_exit();
 		}
 	}
@@ -309,14 +310,14 @@ static void run_game_loop(unsigned int uMsg)
 	nthread_ignore_mutex(FALSE);
 
 	while (gbRunGame) {
-		while (PeekMessage(&msg)) {
+		while (FetchMessage(&msg)) {
 			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = FALSE;
 				gbRunGame = FALSE;
 				break;
 			}
 			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			PushMessage(&msg);
 		}
 		if (!gbRunGame)
 			break;

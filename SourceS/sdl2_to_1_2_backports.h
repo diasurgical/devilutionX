@@ -9,6 +9,7 @@
 #include <math.h>
 #include <cstddef>
 
+#include "console.h"
 #include "../SourceX/stubs.h"
 
 #define WINDOW_ICON_NAME 0
@@ -55,11 +56,13 @@
 
 inline void SDL_Log(const char *fmt, ...)
 {
+	char message[256];
 	va_list ap;
 	va_start(ap, fmt);
-	vprintf(fmt, ap);
+	vsprintf(message, fmt, ap);
 	va_end(ap);
-	puts("");
+
+	printInConsole("INFO: %s\n", message);
 }
 
 inline void SDL_StartTextInput()
@@ -116,7 +119,7 @@ inline void SDL_GetWindowPosition(SDL_Window *window, int *x, int *y)
 {
 	*x = window->clip_rect.x;
 	*y = window->clip_rect.x;
-	printf("SDL_GetWindowPosition %d %d", *x, *y);
+	SDL_Log("SDL_GetWindowPosition %d %d", *x, *y);
 }
 
 inline void SDL_SetWindowPosition(SDL_Window *window, int x, int y)
@@ -128,7 +131,7 @@ inline void SDL_GetWindowSize(SDL_Window *window, int *w, int *h)
 {
 	*w = window->clip_rect.w;
 	*h = window->clip_rect.h;
-	printf("SDL_GetWindowSize %d %d", *w, *h);
+	SDL_Log("SDL_GetWindowSize %d %d", *w, *h);
 }
 
 inline void SDL_ShowWindow(SDL_Window *window)

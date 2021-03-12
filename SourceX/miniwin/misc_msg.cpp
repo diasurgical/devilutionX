@@ -301,7 +301,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool PeekMessage(LPMSG lpMsg)
+bool FetchMessage(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -714,7 +714,7 @@ SHORT GetAsyncKeyState(int vKey)
 	}
 }
 
-void DispatchMessage(const MSG *lpMsg)
+void PushMessage(const MSG *lpMsg)
 {
 	assert(CurrentProc);
 
