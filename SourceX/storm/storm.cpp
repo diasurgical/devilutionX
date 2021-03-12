@@ -335,6 +335,8 @@ void setIniInt(const char *keyname, const char *valuename, int value)
 
 double SVidFrameEnd;
 double SVidFrameLength;
+char SVidAudioDepth;
+double SVidVolume;
 BYTE SVidLoop;
 smk SVidSMK;
 SDL_Color SVidPreviousPalette[256];
@@ -492,7 +494,11 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 		SDL_zero(audioFormat);
 		audioFormat.freq = rate[0];
 		audioFormat.format = depth[0] == 16 ? AUDIO_S16SYS : AUDIO_U8;
+		SVidAudioDepth = depth[0];
 		audioFormat.channels = channels[0];
+
+		SVidVolume = sgOptions.Audio.nSoundVolume - VOLUME_MIN;
+		SVidVolume /= -VOLUME_MIN;
 
 		Mix_CloseAudio();
 
@@ -614,6 +620,21 @@ BOOL SVidLoadNextFrame()
 	return true;
 }
 
+unsigned char *SVidApplyVolume(const unsigned char *raw, unsigned long rawLen)
+{
+	unsigned char *scaled = (unsigned char *)malloc(rawLen);
+
+	if (SVidAudioDepth == 16) {
+		for (unsigned long i = 0; i < rawLen / 2; i++)
+			((Sint16 *)scaled)[i] = ((Sint16 *)raw)[i] * SVidVolume;
+	} else {
+		for (unsigned long i = 0; i < rawLen; i++)
+			scaled[i] = raw[i] * SVidVolume;
+	}
+
+	return (unsigned char *)scaled;
+}
+
 BOOL SVidPlayContinue(void)
 {
 	if (smk_palette_updated(SVidSMK)) {
@@ -645,14 +666,17 @@ BOOL SVidPlayContinue(void)
 	}
 
 	if (HaveAudio()) {
+		unsigned long len = smk_get_audio_size(SVidSMK, 0);
+		unsigned char *audio = SVidApplyVolume(smk_get_audio(SVidSMK, 0), len);
 #if SDL_VERSION_ATLEAST(2, 0, 4)
-		if (SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
+		if (SDL_QueueAudio(deviceId, audio, len) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
 #else
-		sVidAudioQueue->Enqueue(smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0));
+		sVidAudioQueue->Enqueue(audio, len);
 #endif
+		free(audio);
 	}
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
