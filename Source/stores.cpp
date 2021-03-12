@@ -363,7 +363,11 @@ void StoreAutoPlace()
 	w = icursW28;
 	h = icursH28;
 	done = FALSE;
-	if (w == 1 && h == 1) {
+	if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem)) {
+		done = TRUE;
+	}
+
+	if (w == 1 && h == 1 && !done) {
 		idx = plr[myplr].HoldItem.IDidx;
 		if (plr[myplr].HoldItem._iStatFlag && AllItemsList[idx].iUsable) {
 			for (i = 0; i < MAXBELTITEMS && !done; i++) {
@@ -386,7 +390,7 @@ void StoreAutoPlace()
 			done = AutoPlace(myplr, i, w, h, TRUE);
 		}
 	}
-	if (w == 1 && h == 2) {
+	if (w == 1 && h == 2 && !done) {
 		for (i = 29; i >= 20 && !done; i--) {
 			done = AutoPlace(myplr, i, w, h, TRUE);
 		}
@@ -397,12 +401,12 @@ void StoreAutoPlace()
 			done = AutoPlace(myplr, i, w, h, TRUE);
 		}
 	}
-	if (w == 1 && h == 3) {
+	if (w == 1 && h == 3 && !done) {
 		for (i = 0; i < 20 && !done; i++) {
 			done = AutoPlace(myplr, i, w, h, TRUE);
 		}
 	}
-	if (w == 2 && h == 2) {
+	if (w == 2 && h == 2 && !done) {
 		for (i = 0; i < 10 && !done; i++) {
 			done = AutoPlace(myplr, AP2x2Tbl[i], w, h, TRUE);
 		}
@@ -416,7 +420,7 @@ void StoreAutoPlace()
 			done = AutoPlace(myplr, i, w, h, TRUE);
 		}
 	}
-	if (w == 2 && h == 3) {
+	if (w == 2 && h == 3 && !done) {
 		for (i = 0; i < 9 && !done; i++) {
 			done = AutoPlace(myplr, i, w, h, TRUE);
 		}
@@ -1957,6 +1961,9 @@ void S_SBuyEnter()
 			plr[myplr].HoldItem = smithitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
+			if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+				done = TRUE;
+			}
 
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
 				done = AutoPlace(myplr, i, cursW / 28, cursH / 28, FALSE);
@@ -2022,6 +2029,10 @@ void S_SPBuyEnter()
 			plr[myplr].HoldItem = premiumitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
+			if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+				done = TRUE;
+			}
+
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
 				done = AutoPlace(myplr, i, cursW / 28, cursH / 28, FALSE);
 			}
@@ -2281,6 +2292,9 @@ void S_WBuyEnter()
 			plr[myplr].HoldItem = witchitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
+			if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+				done = TRUE;
+			}
 
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
 				done = SpecialAutoPlace(myplr, i, plr[myplr].HoldItem);
@@ -2456,6 +2470,10 @@ void S_BBuyEnter()
 	SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	bool done = false;
+	if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+		done = true;
+	}
+
 	for (int i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
 		done = AutoPlace(myplr, i, cursW / 28, cursH / 28, false);
 	}
@@ -2582,6 +2600,9 @@ void S_HBuyEnter()
 			plr[myplr].HoldItem = healitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
+			if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+				done = TRUE;
+			}
 
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
 				done = SpecialAutoPlace(myplr, i, plr[myplr].HoldItem);

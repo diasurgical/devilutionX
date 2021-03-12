@@ -433,11 +433,11 @@ static void SaveOptions()
 	setIniInt("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
 	setIniInt("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
 	setIniInt("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
-	setIniInt("Game", "Auto Equip Weapons on Pickup", sgOptions.Gameplay.bAutoEquipWeapons);
-	setIniInt("Game", "Auto Equip Armor on Pickup", sgOptions.Gameplay.bAutoEquipArmor);
-	setIniInt("Game", "Auto Equip Helms on Pickup", sgOptions.Gameplay.bAutoEquipHelms);
-	setIniInt("Game", "Auto Equip Shields on Pickup", sgOptions.Gameplay.bAutoEquipShields);
-	setIniInt("Game", "Auto Equip Jewelry on Pickup", sgOptions.Gameplay.bAutoEquipJewelry);
+	setIniInt("Game", "Auto Equip Weapons on Pickup/Purchase", sgOptions.Gameplay.bAutoEquipWeapons);
+	setIniInt("Game", "Auto Equip Armor on Pickup/Purchase", sgOptions.Gameplay.bAutoEquipArmor);
+	setIniInt("Game", "Auto Equip Helms on Pickup/Purchase", sgOptions.Gameplay.bAutoEquipHelms);
+	setIniInt("Game", "Auto Equip Shields on Pickup/Purchase", sgOptions.Gameplay.bAutoEquipShields);
+	setIniInt("Game", "Auto Equip Jewelry on Pickup/Purchase", sgOptions.Gameplay.bAutoEquipJewelry);
 
 	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 }
@@ -485,11 +485,11 @@ static void LoadOptions()
 	sgOptions.Gameplay.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
 	sgOptions.Gameplay.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
 	sgOptions.Gameplay.bAdriaRefillsMana = getIniBool("Game", "Adria Refills Mana", false);
-	sgOptions.Gameplay.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons on Pickup", true);
-	sgOptions.Gameplay.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor on Pickup", false);
-	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms on Pickup", false);
-	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields on Pickup", false);
-	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry on Pickup", false);
+	sgOptions.Gameplay.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons on Pickup/Purchase", true);
+	sgOptions.Gameplay.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor on Pickup/Purchase", false);
+	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms on Pickup/Purchase", false);
+	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields on Pickup/Purchase", false);
+	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry on Pickup/Purchase", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 }
