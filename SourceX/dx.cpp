@@ -251,7 +251,8 @@ void LimitFrameRate()
 	uint32_t v = 0;
 	if (frameDeadline > tc) {
 		v = tc % refreshDelay;
-		SDL_Delay(v / 1000 + 1); // ceil
+		if (sgOptions.Graphics.bFPSLimit)
+			SDL_Delay(v / 1000 + 1); // ceil
 	}
 	frameDeadline = tc + v + refreshDelay;
 }

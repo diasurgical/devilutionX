@@ -57,6 +57,8 @@ typedef struct GraphicsOptions {
 	Sint32 nGammaCorrection;
 	/** @brief Enable color cycling animations. */
 	bool bColorCycling;
+	/** @brief Enable FPS Limit. */
+	bool bFPSLimit;
 } GraphicsOptions;
 
 typedef struct GameplayOptions {
