@@ -191,6 +191,7 @@ void AutoGoldPickup(int pnum)
 			if (item[itemIndex]._itype == ITYPE_GOLD) {
 				NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item[itemIndex]._iRequest = TRUE;
+				PlaySFX(IS_IGRAB);
 			}
 		}
 	}
