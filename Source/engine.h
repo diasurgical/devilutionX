@@ -72,9 +72,12 @@ struct CelOutputBuffer {
 		return x >= 0 && y >= 0 && begin + x + line_width * y < end;
 	}
 
-	CelOutputBuffer subregion(int x0, int y0, int x1, int y1) const
+	/**
+	 * @brief Returns a buffer that starts at y0 and ends at y1.
+	 */
+	CelOutputBuffer subregionY(int y0, int y1) const
 	{
-		return CelOutputBuffer { at(x0, y0), std::min(at(x1, y1), end), line_width };
+		return CelOutputBuffer { at(0, y0), std::min(at(0, y1), end), line_width };
 	}
 #endif
 };

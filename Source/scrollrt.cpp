@@ -1218,7 +1218,7 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 {
 	DrawGame(out, StartX, StartY);
 	if (automapflag) {
-		DrawAutomap(out.subregion(0, 0, out.line_width, SCREEN_Y + gnViewportHeight));
+		DrawAutomap(out.subregionY(0, SCREEN_Y + gnViewportHeight));
 	}
 	DrawMonsterHealthBar();
 
