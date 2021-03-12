@@ -1836,6 +1836,7 @@ void BoyBuyItem()
 	boyitem._itype = ITYPE_NONE;
 	stextshold = STORE_BOY;
 	CalcPlrInv(myplr, TRUE);
+	stextlhold = 12;
 }
 
 /**
