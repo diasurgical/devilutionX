@@ -62,6 +62,13 @@ extern BYTE *pSTextSlidCels;
 /** Currently active store */
 extern talk_id stextflag;
 
+/** Current index into storehidx/storehold */
+extern int storenumh;
+/** Map of inventory items being presented in the store */
+extern char storehidx[48];
+/** Copies of the players items as presented in the store */
+extern ItemStruct storehold[48];
+
 /** Temporary item used to generate gold piles by various function */
 extern ItemStruct golditem;
 
@@ -85,6 +92,7 @@ extern int boylevel;
 /** Current item sold by Wirt */
 extern ItemStruct boyitem;
 
+void AddStoreHoldRepair(ItemStruct *itm, int i);
 void InitStores();
 int PentSpn2Spin();
 void SetupTownStores();

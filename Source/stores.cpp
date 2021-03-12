@@ -43,13 +43,6 @@ char stextscrldbtn;
 /** Remember current store while displaying a dialog */
 talk_id stextshold;
 
-/** Current index into storehidx/storehold */
-int storenumh;
-/** Map of inventory items being presented in the store */
-char storehidx[48];
-/** Copies of the players items as presented in the store */
-ItemStruct storehold[48];
-
 /** Start of possible gossip dialogs for current store */
 _speech_id gossipstart;
 /** End of possible gossip dialogs for current store */
@@ -576,29 +569,6 @@ BOOL SmithRepairOk(int i)
 		return FALSE;
 
 	return TRUE;
-}
-
-void AddStoreHoldRepair(ItemStruct *itm, int i)
-{
-	ItemStruct *item;
-	int v;
-
-	item = &storehold[storenumh];
-	storehold[storenumh] = *itm;
-
-	int due = item->_iMaxDur - item->_iDurability;
-	if (item->_iMagical != ITEM_QUALITY_NORMAL && item->_iIdentified) {
-		v = 30 * item->_iIvalue * due / (item->_iMaxDur * 100 * 2);
-		if (v == 0)
-			return;
-	} else {
-		v = item->_ivalue * due / (item->_iMaxDur * 2);
-		v = std::max(v, 1);
-	}
-	item->_iIvalue = v;
-	item->_ivalue = v;
-	storehidx[storenumh] = i;
-	storenumh++;
 }
 
 void S_StartSRepair()
@@ -2208,6 +2178,10 @@ Uint8 *pSTextSlidCels;
 
 talk_id stextflag;
 
+int storenumh;
+char storehidx[48];
+ItemStruct storehold[48];
+
 ItemStruct smithitem[SMITH_ITEMS];
 int numpremium;
 int premiumlevel;
@@ -2219,6 +2193,29 @@ ItemStruct witchitem[WITCH_ITEMS];
 
 int boylevel;
 ItemStruct boyitem;
+
+void AddStoreHoldRepair(ItemStruct *itm, int i)
+{
+	ItemStruct *item;
+	int v;
+
+	item = &storehold[storenumh];
+	storehold[storenumh] = *itm;
+
+	int due = item->_iMaxDur - item->_iDurability;
+	if (item->_iMagical != ITEM_QUALITY_NORMAL && item->_iIdentified) {
+		v = 30 * item->_iIvalue * due / (item->_iMaxDur * 100 * 2);
+		if (v == 0)
+			return;
+	} else {
+		v = item->_ivalue * due / (item->_iMaxDur * 2);
+		v = std::max(v, 1);
+	}
+	item->_iIvalue = v;
+	item->_ivalue = v;
+	storehidx[storenumh] = i;
+	storenumh++;
+}
 
 void InitStores()
 {

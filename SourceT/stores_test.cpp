@@ -3,11 +3,6 @@
 
 namespace dvl {
 
-extern ItemStruct storehold[48];
-extern int storenumh;
-
-void AddStoreHoldRepair(ItemStruct *itm, int i);
-
 namespace {
 
 TEST(Stores, AddStoreHoldRepair_magic)
