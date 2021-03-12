@@ -8,45 +8,55 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int stextup;
-int storenumh;
-/** Remember currently selected store item while displaying a dialog */
-int stextlhold;
-ItemStruct boyitem;
-/** Remember list scoll position while displaying a dialog */
-int stextshold;
-ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
-BYTE *pSTextBoxCels;
-int premiumlevel;
+namespace {
+
+/** The current towner being interacted with */
 _talker_id talker;
-STextStruct stext[STORE_LINES];
-char stextsize;
+
+/** Is the curren dialog full size */
+bool stextsize;
+
+/** Number of text lines in the current dialog */
 int stextsmax;
-ItemStruct storehold[48];
-int gossipstart;
-ItemStruct witchitem[WITCH_ITEMS];
-BOOL stextscrl;
-int numpremium;
-ItemStruct healitem[20];
-ItemStruct golditem;
-char storehidx[48];
-BYTE *pSTextSlidCels;
-int stextvhold;
-/** Currently selected text line */
+/** Remember currently selected text line from stext while displaying a dialog */
+int stextlhold;
+/** Currently selected text line from stext */
 int stextsel;
-char stextscrldbtn;
-int gossipend;
-BYTE *pSPentSpn2Cels;
+/** Text lines */
+STextStruct stext[STORE_LINES];
+
+/** Does the current panel have a scrollbar */
+bool stextscrl;
+/** Remember last scoll position */
+int stextvhold;
 /** Scoll position */
 int stextsval;
-int boylevel;
-ItemStruct smithitem[SMITH_ITEMS];
+/** Next scoll position */
 int stextdown;
+/** Previous scoll position */
+int stextup;
+/** Count down for the push state of the scroll up button */
 char stextscrlubtn;
-char stextflag;
+/** Count down for the push state of the scroll down button */
+char stextscrldbtn;
+
+/** Remember current store while displaying a dialog */
+talk_id stextshold;
+
+/** Current index into storehidx/storehold */
+int storenumh;
+/** Map of inventory items being presented in the store */
+char storehidx[48];
+/** Copies of the players items as presented in the store */
+ItemStruct storehold[48];
+
+/** Start of possible gossip dialogs for current store */
+_speech_id gossipstart;
+/** End of possible gossip dialogs for current store */
+_speech_id gossipend;
 
 /** Maps from towner IDs to NPC names. */
-const char *const talkname[9] = {
+const char *const talkname[] = {
 	"Griswold",
 	"Pepin",
 	"",
@@ -58,158 +68,13 @@ const char *const talkname[9] = {
 	"Wirt"
 };
 
-void InitStores()
-{
-	int i;
-
-	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", NULL);
-	pSPentSpn2Cels = LoadFileInMem("Data\\PentSpn2.CEL", NULL);
-	pSTextSlidCels = LoadFileInMem("Data\\TextSlid.CEL", NULL);
-	ClearSText(0, STORE_LINES);
-	stextflag = STORE_NONE;
-	stextsize = FALSE;
-	stextscrl = FALSE;
-	numpremium = 0;
-	premiumlevel = 1;
-
-	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
-		premiumitem[i]._itype = ITYPE_NONE;
-
-	boyitem._itype = ITYPE_NONE;
-	boylevel = 0;
-}
-
-int PentSpn2Spin()
-{
-	return (SDL_GetTicks() / 50) % 8 + 1;
-}
-
-void SetupTownStores()
-{
-	int i, l;
-
-	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
-	if (!gbIsMultiplayer) {
-		l = 0;
-		for (i = 0; i < NUMLEVELS; i++) {
-			if (plr[myplr]._pLvlVisited[i])
-				l = i;
-		}
-	} else {
-		l = plr[myplr]._pLevel >> 1;
-	}
-	l += 2;
-	if (l < 6)
-		l = 6;
-	if (l > 16)
-		l = 16;
-	SpawnStoreGold();
-	SpawnSmith(l);
-	SpawnWitch(l);
-	SpawnHealer(l);
-	SpawnBoy(plr[myplr]._pLevel);
-	SpawnPremium(myplr);
-}
-
-void FreeStoreMem()
-{
-	MemFreeDbg(pSTextBoxCels);
-	MemFreeDbg(pSPentSpn2Cels);
-	MemFreeDbg(pSTextSlidCels);
-}
-
-static void DrawSTextBack(CelOutputBuffer out)
+void DrawSTextBack(CelOutputBuffer out)
 {
 	CelDrawTo(out, PANEL_X + 344, 327 + SCREEN_Y + UI_OFFSET_Y, pSTextBoxCels, 1, 271);
 	DrawHalfTransparentRectTo(out, PANEL_X + 347, SCREEN_Y + UI_OFFSET_Y + 28, 265, 297);
 }
 
-void PrintSString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, char col, int val)
-{
-	int len, width, sx, sy, i, k, s;
-	int xx, yy;
-	BYTE c;
-	char valstr[32];
-
-	s = y * 12 + stext[y]._syoff;
-	if (stextsize != 0)
-		xx = PANEL_X + 32;
-	else
-		xx = PANEL_X + 352;
-	sx = xx + x;
-	sy = s + 44 + SCREEN_Y + UI_OFFSET_Y;
-	len = strlen(str);
-	if (stextsize != 0)
-		yy = 577;
-	else
-		yy = 257;
-	k = 0;
-	if (cjustflag) {
-		width = 0;
-		for (i = 0; i < len; i++)
-			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
-		if (width < yy)
-			k = (yy - width) >> 1;
-		sx += k;
-	}
-	if (stextsel == y) {
-		CelDrawTo(out, cjustflag ? xx + x + k - 20 : xx + x - 20, s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
-	}
-	for (i = 0; i < len; i++) {
-		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
-		k += fontkern[c] + 1;
-		if (c != 0 && k <= yy) {
-			PrintChar(out, sx, sy, c, col);
-		}
-		sx += fontkern[c] + 1;
-	}
-	if (!cjustflag && val >= 0) {
-		sprintf(valstr, "%i", val);
-		sx = PANEL_X + 592 - x;
-		len = strlen(valstr);
-		for (i = len - 1; i >= 0; i--) {
-			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
-			sx -= fontkern[c] + 1;
-			if (c != 0) {
-				PrintChar(out, sx, sy, c, col);
-			}
-		}
-	}
-	if (stextsel == y) {
-		CelDrawTo(out, cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
-	}
-}
-
-void DrawSLine(int y)
-{
-	int xy, yy, width, line, sy;
-
-	sy = y * 12;
-	if (stextsize) {
-		xy = SCREENXY(PANEL_LEFT + 26, 25 + UI_OFFSET_Y);
-		yy = BUFFER_WIDTH * (sy + 38 + SCREEN_Y + UI_OFFSET_Y) + 26 + PANEL_X;
-		width = 586 / 4;           // BUGFIX: should be 587, not 586
-		line = BUFFER_WIDTH - 586; // BUGFIX: should be 587, not 586
-	} else {
-		xy = SCREENXY(PANEL_LEFT + 346, 25 + UI_OFFSET_Y);
-		yy = BUFFER_WIDTH * (sy + 38 + SCREEN_Y + UI_OFFSET_Y) + 346 + PANEL_X;
-		width = 266 / 4;           // BUGFIX: should be 267, not 266
-		line = BUFFER_WIDTH - 266; // BUGFIX: should be 267, not 266
-	}
-
-	/// ASSERT: assert(gpBuffer);
-
-	int i;
-	BYTE *src, *dst;
-
-	src = &gpBuffer[xy];
-	dst = &gpBuffer[yy];
-
-	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
-		memcpy(dst, src, BUFFER_WIDTH - line);
-}
-
-static void DrawSSlider(CelOutputBuffer out, int y1, int y2)
+void DrawSSlider(CelOutputBuffer out, int y1, int y2)
 {
 	int yd1, yd2, yd3;
 
@@ -238,28 +103,6 @@ static void DrawSSlider(CelOutputBuffer out, int y1, int y2)
 	CelDrawTo(out, PANEL_X + 601, (y1 + 1) * 12 + 44 + SCREEN_Y + UI_OFFSET_Y + yd3, pSTextSlidCels, 13, 12);
 }
 
-void DrawSTextHelp()
-{
-	stextsel = -1;
-	stextsize = TRUE;
-}
-
-void ClearSText(int s, int e)
-{
-	int i;
-
-	for (i = s; i < e; i++) {
-		stext[i]._sx = 0;
-		stext[i]._syoff = 0;
-		stext[i]._sstr[0] = 0;
-		stext[i]._sjust = FALSE;
-		stext[i]._sclr = COL_WHITE;
-		stext[i]._sline = 0;
-		stext[i]._ssel = FALSE;
-		stext[i]._sval = -1;
-	}
-}
-
 void AddSLine(int y)
 {
 	stext[y]._sx = 0;
@@ -278,7 +121,7 @@ void OffsetSTextY(int y, int yo)
 	stext[y]._syoff = yo;
 }
 
-void AddSText(int x, int y, BOOL j, const char *str, char clr, BOOL sel)
+void AddSText(int x, int y, bool j, const char *str, char clr, BOOL sel)
 {
 	stext[y]._sx = x;
 	stext[y]._syoff = 0;
@@ -289,7 +132,7 @@ void AddSText(int x, int y, BOOL j, const char *str, char clr, BOOL sel)
 	stext[y]._ssel = sel;
 }
 
-static void PrintStoreItem(ItemStruct *x, int l, char iclr)
+void PrintStoreItem(ItemStruct *x, int l, char iclr)
 {
 	char sstr[128];
 	char str, dex;
@@ -428,8 +271,8 @@ void StoreAutoPlace()
 
 void S_StartSmith()
 {
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	AddSText(0, 1, TRUE, "Welcome to the", COL_GOLD, FALSE);
 	AddSText(0, 3, TRUE, "Blacksmith's shop", COL_GOLD, FALSE);
 	AddSText(0, 7, TRUE, "Would you like to:", COL_GOLD, FALSE);
@@ -476,7 +319,7 @@ void S_ScrollSBuy(int idx)
 		}
 	}
 
-	if (!stext[stextsel]._ssel && stextsel != 22)
+	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != 22)
 		stextsel = stextdown;
 }
 
@@ -484,8 +327,8 @@ void S_StartSBuy()
 {
 	int i;
 
-	stextsize = TRUE;
-	stextscrl = TRUE;
+	stextsize = true;
+	stextscrl = true;
 	stextsval = 0;
 	sprintf(tempstr, "I have these items for sale:             Your gold: %i", plr[myplr]._pGold);
 	AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
@@ -534,7 +377,7 @@ void S_ScrollSPBuy(int idx)
 		}
 		idx++;
 	}
-	if (!stext[stextsel]._ssel && stextsel != 22)
+	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != 22)
 		stextsel = stextdown;
 }
 
@@ -553,8 +396,8 @@ BOOL S_StartSPBuy()
 		return FALSE;
 	}
 
-	stextsize = TRUE;
-	stextscrl = TRUE;
+	stextsize = true;
+	stextscrl = true;
 	stextsval = 0;
 
 	sprintf(tempstr, "I have these premium items for sale:     Your gold: %i", plr[myplr]._pGold);
@@ -650,7 +493,7 @@ void S_StartSSell()
 	int i;
 	BOOL sellok;
 
-	stextsize = TRUE;
+	stextsize = true;
 	sellok = FALSE;
 	storenumh = 0;
 
@@ -694,7 +537,7 @@ void S_StartSSell()
 	}
 
 	if (!sellok) {
-		stextscrl = FALSE;
+		stextscrl = false;
 		sprintf(tempstr, "You have nothing I want.             Your gold: %i", plr[myplr]._pGold);
 		AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
 		AddSLine(3);
@@ -702,7 +545,7 @@ void S_StartSSell()
 		AddSText(0, 22, TRUE, "Back", COL_WHITE, TRUE);
 		OffsetSTextY(22, 6);
 	} else {
-		stextscrl = TRUE;
+		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
 		sprintf(tempstr, "Which item is for sale?             Your gold: %i", plr[myplr]._pGold);
@@ -759,7 +602,7 @@ void S_StartSRepair()
 	BOOL repairok;
 	int i;
 
-	stextsize = TRUE;
+	stextsize = true;
 	repairok = FALSE;
 	storenumh = 0;
 	for (i = 0; i < 48; i++)
@@ -789,7 +632,7 @@ void S_StartSRepair()
 		}
 	}
 	if (!repairok) {
-		stextscrl = FALSE;
+		stextscrl = false;
 		sprintf(tempstr, "You have nothing to repair.             Your gold: %i", plr[myplr]._pGold);
 		AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
 		AddSLine(3);
@@ -799,7 +642,7 @@ void S_StartSRepair()
 		return;
 	}
 
-	stextscrl = TRUE;
+	stextscrl = true;
 	stextsval = 0;
 	stextsmax = plr[myplr]._pNumInv;
 	sprintf(tempstr, "Repair which item?             Your gold: %i", plr[myplr]._pGold);
@@ -811,7 +654,7 @@ void S_StartSRepair()
 	OffsetSTextY(22, 6);
 }
 
-static void FillManaPlayer()
+void FillManaPlayer()
 {
 	if (!sgOptions.Gameplay.bAdriaRefillsMana)
 		return;
@@ -826,8 +669,8 @@ static void FillManaPlayer()
 void S_StartWitch()
 {
 	FillManaPlayer();
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	AddSText(0, 2, TRUE, "Witch's shack", COL_GOLD, FALSE);
 	AddSText(0, 9, TRUE, "Would you like to:", COL_GOLD, FALSE);
 	AddSText(0, 12, TRUE, "Talk to Adria", COL_BLUE, TRUE);
@@ -872,7 +715,7 @@ void S_ScrollWBuy(int idx)
 		}
 	}
 
-	if (!stext[stextsel]._ssel && stextsel != 22)
+	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != 22)
 		stextsel = stextdown;
 }
 
@@ -880,8 +723,8 @@ void S_StartWBuy()
 {
 	int i;
 
-	stextsize = TRUE;
-	stextscrl = TRUE;
+	stextsize = true;
+	stextscrl = true;
 	stextsval = 0;
 	stextsmax = 20;
 	sprintf(tempstr, "I have these items for sale:             Your gold: %i", plr[myplr]._pGold);
@@ -933,7 +776,7 @@ void S_StartWSell()
 	int i;
 	BOOL sellok;
 
-	stextsize = TRUE;
+	stextsize = true;
 	sellok = FALSE;
 	storenumh = 0;
 
@@ -977,7 +820,7 @@ void S_StartWSell()
 	}
 
 	if (!sellok) {
-		stextscrl = FALSE;
+		stextscrl = false;
 		sprintf(tempstr, "You have nothing I want.             Your gold: %i", plr[myplr]._pGold);
 		AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
 		AddSLine(3);
@@ -985,7 +828,7 @@ void S_StartWSell()
 		AddSText(0, 22, TRUE, "Back", COL_WHITE, TRUE);
 		OffsetSTextY(22, 6);
 	} else {
-		stextscrl = TRUE;
+		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
 		sprintf(tempstr, "Which item is for sale?             Your gold: %i", plr[myplr]._pGold);
@@ -1029,7 +872,7 @@ void S_StartWRecharge()
 	int i;
 	BOOL rechargeok;
 
-	stextsize = TRUE;
+	stextsize = true;
 	rechargeok = FALSE;
 	storenumh = 0;
 
@@ -1053,7 +896,7 @@ void S_StartWRecharge()
 	}
 
 	if (!rechargeok) {
-		stextscrl = FALSE;
+		stextscrl = false;
 		sprintf(tempstr, "You have nothing to recharge.             Your gold: %i", plr[myplr]._pGold);
 		AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
 		AddSLine(3);
@@ -1061,7 +904,7 @@ void S_StartWRecharge()
 		AddSText(0, 22, TRUE, "Back", COL_WHITE, TRUE);
 		OffsetSTextY(22, 6);
 	} else {
-		stextscrl = TRUE;
+		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
 		sprintf(tempstr, "Recharge which item?             Your gold: %i", plr[myplr]._pGold);
@@ -1077,8 +920,8 @@ void S_StartWRecharge()
 void S_StartNoMoney()
 {
 	StartStore(stextshold);
-	stextscrl = FALSE;
-	stextsize = TRUE;
+	stextscrl = false;
+	stextsize = true;
 	ClearSText(5, 23);
 	AddSText(0, 14, TRUE, "You do not have enough gold", COL_WHITE, TRUE);
 }
@@ -1086,7 +929,7 @@ void S_StartNoMoney()
 void S_StartNoRoom()
 {
 	StartStore(stextshold);
-	stextscrl = FALSE;
+	stextscrl = false;
 	ClearSText(5, 23);
 	AddSText(0, 14, TRUE, "You do not have enough room in inventory", COL_WHITE, TRUE);
 }
@@ -1097,7 +940,7 @@ void S_StartConfirm()
 	char iclr;
 
 	StartStore(stextshold);
-	stextscrl = FALSE;
+	stextscrl = false;
 	ClearSText(5, 23);
 	iclr = COL_WHITE;
 
@@ -1159,8 +1002,8 @@ void S_StartConfirm()
 
 void S_StartBoy()
 {
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	AddSText(0, 2, TRUE, "Wirt the Peg-legged boy", COL_GOLD, FALSE);
 	AddSLine(5);
 	if (!boyitem.isEmpty()) {
@@ -1180,8 +1023,8 @@ void S_StartBBoy()
 {
 	int iclr;
 
-	stextsize = TRUE;
-	stextscrl = FALSE;
+	stextsize = true;
+	stextscrl = false;
 	sprintf(tempstr, "I have this item for sale:             Your gold: %i", plr[myplr]._pGold);
 	AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
 	AddSLine(3);
@@ -1206,7 +1049,7 @@ void S_StartBBoy()
 	OffsetSTextY(22, 6);
 }
 
-static void HealPlayer()
+void HealPlayer()
 {
 	if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP) {
 		PlaySFX(IS_CAST8);
@@ -1219,8 +1062,8 @@ static void HealPlayer()
 void S_StartHealer()
 {
 	HealPlayer();
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	AddSText(0, 1, TRUE, "Welcome to the", COL_GOLD, FALSE);
 	AddSText(0, 3, TRUE, "Healer's home", COL_GOLD, FALSE);
 	AddSText(0, 9, TRUE, "Would you like to:", COL_GOLD, FALSE);
@@ -1253,7 +1096,7 @@ void S_ScrollHBuy(int idx)
 		}
 	}
 
-	if (!stext[stextsel]._ssel && stextsel != 22)
+	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != 22)
 		stextsel = stextdown;
 }
 
@@ -1261,8 +1104,8 @@ void S_StartHBuy()
 {
 	int i;
 
-	stextsize = TRUE;
-	stextscrl = TRUE;
+	stextsize = true;
+	stextscrl = true;
 	stextsval = 0;
 	sprintf(tempstr, "I have these items for sale:             Your gold: %i", plr[myplr]._pGold);
 	AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
@@ -1283,8 +1126,8 @@ void S_StartHBuy()
 
 void S_StartStory()
 {
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	AddSText(0, 2, TRUE, "The Town Elder", COL_GOLD, FALSE);
 	AddSText(0, 9, TRUE, "Would you like to:", COL_GOLD, FALSE);
 	AddSText(0, 12, TRUE, "Talk to Cain", COL_BLUE, TRUE);
@@ -1319,7 +1162,7 @@ void S_StartSIdentify()
 	int i;
 
 	idok = FALSE;
-	stextsize = TRUE;
+	stextsize = true;
 	storenumh = 0;
 
 	for (i = 0; i < 48; i++)
@@ -1364,7 +1207,7 @@ void S_StartSIdentify()
 	}
 
 	if (!idok) {
-		stextscrl = FALSE;
+		stextscrl = false;
 		sprintf(tempstr, "You have nothing to identify.             Your gold: %i", plr[myplr]._pGold);
 		AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
 		AddSLine(3);
@@ -1372,7 +1215,7 @@ void S_StartSIdentify()
 		AddSText(0, 22, TRUE, "Back", COL_WHITE, TRUE);
 		OffsetSTextY(22, 6);
 	} else {
-		stextscrl = TRUE;
+		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
 		sprintf(tempstr, "Identify which item?             Your gold: %i", plr[myplr]._pGold);
@@ -1390,7 +1233,7 @@ void S_StartIdShow()
 	char iclr;
 
 	StartStore(stextshold);
-	stextscrl = FALSE;
+	stextscrl = false;
 	ClearSText(5, 23);
 	iclr = COL_WHITE;
 
@@ -1409,8 +1252,8 @@ void S_StartTalk()
 {
 	int i, sn, sn2, la;
 
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	sprintf(tempstr, "Talk to %s", talkname[talker]);
 	AddSText(0, 2, TRUE, tempstr, COL_GOLD, FALSE);
 	AddSLine(5);
@@ -1452,8 +1295,8 @@ void S_StartTalk()
 
 void S_StartTavern()
 {
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	AddSText(0, 1, TRUE, "Welcome to the", COL_GOLD, FALSE);
 	AddSText(0, 3, TRUE, "Rising Sun", COL_GOLD, FALSE);
 	AddSText(0, 9, TRUE, "Would you like to:", COL_GOLD, FALSE);
@@ -1465,8 +1308,8 @@ void S_StartTavern()
 
 void S_StartBarMaid()
 {
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	AddSText(0, 2, TRUE, "Gillian", COL_GOLD, FALSE);
 	AddSText(0, 9, TRUE, "Would you like to:", COL_GOLD, FALSE);
 	AddSText(0, 12, TRUE, "Talk to Gillian", COL_BLUE, TRUE);
@@ -1477,337 +1320,14 @@ void S_StartBarMaid()
 
 void S_StartDrunk()
 {
-	stextsize = FALSE;
-	stextscrl = FALSE;
+	stextsize = false;
+	stextscrl = false;
 	AddSText(0, 2, TRUE, "Farnham the Drunk", COL_GOLD, FALSE);
 	AddSText(0, 9, TRUE, "Would you like to:", COL_GOLD, FALSE);
 	AddSText(0, 12, TRUE, "Talk to Farnham", COL_BLUE, TRUE);
 	AddSText(0, 18, TRUE, "Say Goodbye", COL_WHITE, TRUE);
 	AddSLine(5);
 	storenumh = 20;
-}
-
-void StartStore(char s)
-{
-	char t;
-	int i;
-
-	for (t = s;; t = STORE_SMITH) {
-		sbookflag = FALSE;
-		invflag = FALSE;
-		chrflag = FALSE;
-		questlog = FALSE;
-		dropGoldFlag = FALSE;
-		ClearSText(0, STORE_LINES);
-		ReleaseStoreBtn();
-		switch (t) {
-		case STORE_SMITH:
-			S_StartSmith();
-			break;
-		case STORE_SBUY:
-			if (storenumh > 0)
-				S_StartSBuy();
-			break;
-		case STORE_SSELL:
-			S_StartSSell();
-			break;
-		case STORE_SREPAIR:
-			S_StartSRepair();
-			break;
-		case STORE_WITCH:
-			S_StartWitch();
-			break;
-		case STORE_WBUY:
-			if (storenumh > 0)
-				S_StartWBuy();
-			break;
-		case STORE_WSELL:
-			S_StartWSell();
-			break;
-		case STORE_WRECHARGE:
-			S_StartWRecharge();
-			break;
-		case STORE_NOMONEY:
-			S_StartNoMoney();
-			break;
-		case STORE_NOROOM:
-			S_StartNoRoom();
-			break;
-		case STORE_CONFIRM:
-			S_StartConfirm();
-			break;
-		case STORE_BOY:
-			S_StartBoy();
-			break;
-		case STORE_BBOY:
-			S_StartBBoy();
-			break;
-		case STORE_HEALER:
-			S_StartHealer();
-			break;
-		case STORE_STORY:
-			S_StartStory();
-			break;
-		case STORE_HBUY:
-			if (storenumh > 0)
-				S_StartHBuy();
-			break;
-		case STORE_SIDENTIFY:
-			S_StartSIdentify();
-			break;
-		case STORE_SPBUY:
-			if (!S_StartSPBuy())
-				return;
-			break;
-		case STORE_GOSSIP:
-			S_StartTalk();
-			break;
-		case STORE_IDSHOW:
-			S_StartIdShow();
-			break;
-		case STORE_TAVERN:
-			S_StartTavern();
-			break;
-		case STORE_DRUNK:
-			S_StartDrunk();
-			break;
-		case STORE_BARMAID:
-			S_StartBarMaid();
-			break;
-		}
-
-		for (i = 0; i < STORE_LINES; i++) {
-			if (stext[i]._ssel)
-				break;
-		}
-
-		stextsel = i == STORE_LINES ? -1 : i;
-		stextflag = t;
-		if (t != STORE_SBUY || storenumh)
-			break;
-	}
-}
-
-void DrawSText(CelOutputBuffer out)
-{
-	int i;
-
-	if (!stextsize)
-		DrawSTextBack(out);
-	else
-		DrawQTextBack(out);
-
-	if (stextscrl) {
-		switch (stextflag) {
-		case STORE_SBUY:
-			S_ScrollSBuy(stextsval);
-			break;
-		case STORE_SSELL:
-		case STORE_SREPAIR:
-		case STORE_WSELL:
-		case STORE_WRECHARGE:
-		case STORE_SIDENTIFY:
-			S_ScrollSSell(stextsval);
-			break;
-		case STORE_WBUY:
-			S_ScrollWBuy(stextsval);
-			break;
-		case STORE_HBUY:
-			S_ScrollHBuy(stextsval);
-			break;
-		case STORE_SPBUY:
-			S_ScrollSPBuy(stextsval);
-			break;
-		}
-	}
-
-	for (i = 0; i < STORE_LINES; i++) {
-		if (stext[i]._sline)
-			DrawSLine(i);
-		if (stext[i]._sstr[0])
-			PrintSString(out, stext[i]._sx, i, stext[i]._sjust, stext[i]._sstr, stext[i]._sclr, stext[i]._sval);
-	}
-
-	if (stextscrl)
-		DrawSSlider(out, 4, 20);
-}
-
-void STextESC()
-{
-	if (qtextflag) {
-		qtextflag = FALSE;
-		if (leveltype == DTYPE_TOWN)
-			stream_stop();
-	} else {
-		switch (stextflag) {
-		case STORE_SMITH:
-		case STORE_WITCH:
-		case STORE_BOY:
-		case STORE_BBOY:
-		case STORE_HEALER:
-		case STORE_STORY:
-		case STORE_TAVERN:
-		case STORE_DRUNK:
-		case STORE_BARMAID:
-			stextflag = STORE_NONE;
-			break;
-		case STORE_GOSSIP:
-			StartStore(stextshold);
-			stextsel = stextlhold;
-			break;
-		case STORE_SBUY:
-			StartStore(STORE_SMITH);
-			stextsel = 12;
-			break;
-		case STORE_SPBUY:
-			StartStore(STORE_SMITH);
-			stextsel = 14;
-			break;
-		case STORE_SSELL:
-			StartStore(STORE_SMITH);
-			stextsel = 16;
-			break;
-		case STORE_SREPAIR:
-			StartStore(STORE_SMITH);
-			stextsel = 18;
-			break;
-		case STORE_WBUY:
-			StartStore(STORE_WITCH);
-			stextsel = 14;
-			break;
-		case STORE_WSELL:
-			StartStore(STORE_WITCH);
-			stextsel = 16;
-			break;
-		case STORE_WRECHARGE:
-			StartStore(STORE_WITCH);
-			stextsel = 18;
-			break;
-		case STORE_HBUY:
-			StartStore(STORE_HEALER);
-			stextsel = 16;
-			break;
-		case STORE_SIDENTIFY:
-			StartStore(STORE_STORY);
-			stextsel = 14;
-			break;
-		case STORE_IDSHOW:
-			StartStore(STORE_SIDENTIFY);
-			break;
-		case STORE_NOMONEY:
-		case STORE_NOROOM:
-		case STORE_CONFIRM:
-			StartStore(stextshold);
-			stextsel = stextlhold;
-			stextsval = stextvhold;
-			break;
-		}
-	}
-}
-
-void STextUp()
-{
-	PlaySFX(IS_TITLEMOV);
-	if (stextsel == -1) {
-		return;
-	}
-
-	if (stextscrl) {
-		if (stextsel == stextup) {
-			if (stextsval)
-				stextsval--;
-			return;
-		}
-
-		stextsel--;
-		while (!stext[stextsel]._ssel) {
-			if (!stextsel)
-				stextsel = STORE_LINES - 1;
-			else
-				stextsel--;
-		}
-		return;
-	}
-
-	if (!stextsel)
-		stextsel = STORE_LINES - 1;
-	else
-		stextsel--;
-
-	while (!stext[stextsel]._ssel) {
-		if (!stextsel)
-			stextsel = STORE_LINES - 1;
-		else
-			stextsel--;
-	}
-}
-
-void STextDown()
-{
-	PlaySFX(IS_TITLEMOV);
-	if (stextsel == -1) {
-		return;
-	}
-
-	if (stextscrl) {
-		if (stextsel == stextdown) {
-			if (stextsval < stextsmax)
-				stextsval++;
-			return;
-		}
-
-		stextsel++;
-		while (!stext[stextsel]._ssel) {
-			if (stextsel == STORE_LINES - 1)
-				stextsel = 0;
-			else
-				stextsel++;
-		}
-		return;
-	}
-
-	if (stextsel == STORE_LINES - 1)
-		stextsel = 0;
-	else
-		stextsel++;
-
-	while (!stext[stextsel]._ssel) {
-		if (stextsel == STORE_LINES - 1)
-			stextsel = 0;
-		else
-			stextsel++;
-	}
-}
-
-void STextPrior()
-{
-	PlaySFX(IS_TITLEMOV);
-	if (stextsel != -1 && stextscrl) {
-		if (stextsel == stextup) {
-			if (stextsval)
-				stextsval -= 4;
-			stextsval = stextsval;
-			if (stextsval < 0)
-				stextsval = 0;
-		} else {
-			stextsel = stextup;
-		}
-	}
-}
-
-void STextNext()
-{
-	PlaySFX(IS_TITLEMOV);
-	if (stextsel != -1 && stextscrl) {
-		if (stextsel == stextdown) {
-			if (stextsval < stextsmax)
-				stextsval += 4;
-			if (stextsval > stextsmax)
-				stextsval = stextsmax;
-		} else {
-			stextsel = stextdown;
-		}
-	}
 }
 
 void S_SmithEnter()
@@ -1836,82 +1356,6 @@ void S_SmithEnter()
 	case 20:
 		stextflag = STORE_NONE;
 		break;
-	}
-}
-
-void SetGoldCurs(int pnum, int i)
-{
-	SetPlrHandGoldCurs(&plr[pnum].InvList[i]);
-}
-
-void SetSpdbarGoldCurs(int pnum, int i)
-{
-	SetPlrHandGoldCurs(&plr[pnum].SpdList[i]);
-}
-
-void TakePlrsMoney(int cost)
-{
-	int i;
-
-	plr[myplr]._pGold = CalculateGold(myplr) - cost;
-	for (i = 0; i < MAXBELTITEMS && cost > 0; i++) {
-		if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD && plr[myplr].SpdList[i]._ivalue != GOLD_MAX_LIMIT) {
-			if (cost < plr[myplr].SpdList[i]._ivalue) {
-				plr[myplr].SpdList[i]._ivalue -= cost;
-				SetSpdbarGoldCurs(myplr, i);
-				cost = 0;
-			} else {
-				cost -= plr[myplr].SpdList[i]._ivalue;
-				RemoveSpdBarItem(myplr, i);
-				i = -1;
-			}
-		}
-	}
-	if (cost > 0) {
-		for (i = 0; i < MAXBELTITEMS && cost > 0; i++) {
-			if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD) {
-				if (cost < plr[myplr].SpdList[i]._ivalue) {
-					plr[myplr].SpdList[i]._ivalue -= cost;
-					SetSpdbarGoldCurs(myplr, i);
-					cost = 0;
-				} else {
-					cost -= plr[myplr].SpdList[i]._ivalue;
-					RemoveSpdBarItem(myplr, i);
-					i = -1;
-				}
-			}
-		}
-	}
-	force_redraw = 255;
-	if (cost > 0) {
-		for (i = 0; i < plr[myplr]._pNumInv && cost > 0; i++) {
-			if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
-				if (cost < plr[myplr].InvList[i]._ivalue) {
-					plr[myplr].InvList[i]._ivalue -= cost;
-					SetGoldCurs(myplr, i);
-					cost = 0;
-				} else {
-					cost -= plr[myplr].InvList[i]._ivalue;
-					RemoveInvItem(myplr, i);
-					i = -1;
-				}
-			}
-		}
-		if (cost > 0) {
-			for (i = 0; i < plr[myplr]._pNumInv && cost > 0; i++) {
-				if (plr[myplr].InvList[i]._itype == ITYPE_GOLD) {
-					if (cost < plr[myplr].InvList[i]._ivalue) {
-						plr[myplr].InvList[i]._ivalue -= cost;
-						SetGoldCurs(myplr, i);
-						cost = 0;
-					} else {
-						cost -= plr[myplr].InvList[i]._ivalue;
-						RemoveInvItem(myplr, i);
-						i = -1;
-					}
-				}
-			}
-		}
 	}
 }
 
@@ -2071,6 +1515,10 @@ BOOL StoreGoldFit(int idx)
 	return numsqrs >= sz;
 }
 
+/**
+ * @brief Add gold pile to the players invetory
+ * @param v The value of the gold pile
+ */
 void PlaceStoreGold(int v)
 {
 	BOOL done;
@@ -2537,7 +1985,7 @@ void S_ConfirmEnter()
 	stextsel = stextlhold;
 	stextsval = std::min(stextvhold, stextsmax);
 
-	while (!stext[stextsel]._ssel) {
+	while (stextsel != -1 && !stext[stextsel]._ssel) {
 		stextsel--;
 	}
 }
@@ -2725,6 +2173,589 @@ void S_DrunkEnter()
 	case 18:
 		stextflag = STORE_NONE;
 		break;
+	}
+}
+
+}
+
+ItemStruct golditem;
+
+Uint8 *pSTextBoxCels;
+Uint8 *pSPentSpn2Cels;
+Uint8 *pSTextSlidCels;
+
+talk_id stextflag;
+
+ItemStruct smithitem[SMITH_ITEMS];
+int numpremium;
+int premiumlevel;
+ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
+
+ItemStruct healitem[20];
+
+ItemStruct witchitem[WITCH_ITEMS];
+
+int boylevel;
+ItemStruct boyitem;
+
+void InitStores()
+{
+	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", NULL);
+	pSPentSpn2Cels = LoadFileInMem("Data\\PentSpn2.CEL", NULL);
+	pSTextSlidCels = LoadFileInMem("Data\\TextSlid.CEL", NULL);
+	ClearSText(0, STORE_LINES);
+	stextflag = STORE_NONE;
+	stextsize = false;
+	stextscrl = false;
+	numpremium = 0;
+	premiumlevel = 1;
+
+	for (int i = 0; i < SMITH_PREMIUM_ITEMS; i++)
+		premiumitem[i]._itype = ITYPE_NONE;
+
+	boyitem._itype = ITYPE_NONE;
+	boylevel = 0;
+}
+
+int PentSpn2Spin()
+{
+	return (SDL_GetTicks() / 50) % 8 + 1;
+}
+
+void SetupTownStores()
+{
+	int i, l;
+
+	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
+	if (!gbIsMultiplayer) {
+		l = 0;
+		for (i = 0; i < NUMLEVELS; i++) {
+			if (plr[myplr]._pLvlVisited[i])
+				l = i;
+		}
+	} else {
+		l = plr[myplr]._pLevel >> 1;
+	}
+	l += 2;
+	if (l < 6)
+		l = 6;
+	if (l > 16)
+		l = 16;
+	SpawnStoreGold();
+	SpawnSmith(l);
+	SpawnWitch(l);
+	SpawnHealer(l);
+	SpawnBoy(plr[myplr]._pLevel);
+	SpawnPremium(myplr);
+}
+
+void FreeStoreMem()
+{
+	MemFreeDbg(pSTextBoxCels);
+	MemFreeDbg(pSPentSpn2Cels);
+	MemFreeDbg(pSTextSlidCels);
+}
+
+void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, char col, int val)
+{
+	int len, width, sx, sy, i, k, s;
+	int xx, yy;
+	BYTE c;
+	char valstr[32];
+
+	s = y * 12 + stext[y]._syoff;
+	if (stextsize)
+		xx = PANEL_X + 32;
+	else
+		xx = PANEL_X + 352;
+	sx = xx + x;
+	sy = s + 44 + SCREEN_Y + UI_OFFSET_Y;
+	len = strlen(str);
+	if (stextsize)
+		yy = 577;
+	else
+		yy = 257;
+	k = 0;
+	if (cjustflag) {
+		width = 0;
+		for (i = 0; i < len; i++)
+			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
+		if (width < yy)
+			k = (yy - width) >> 1;
+		sx += k;
+	}
+	if (stextsel == y) {
+		CelDrawTo(out, cjustflag ? xx + x + k - 20 : xx + x - 20, s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+	}
+	for (i = 0; i < len; i++) {
+		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
+		k += fontkern[c] + 1;
+		if (c != 0 && k <= yy) {
+			PrintChar(out, sx, sy, c, col);
+		}
+		sx += fontkern[c] + 1;
+	}
+	if (!cjustflag && val >= 0) {
+		sprintf(valstr, "%i", val);
+		sx = PANEL_X + 592 - x;
+		len = strlen(valstr);
+		for (i = len - 1; i >= 0; i--) {
+			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
+			sx -= fontkern[c] + 1;
+			if (c != 0) {
+				PrintChar(out, sx, sy, c, col);
+			}
+		}
+	}
+	if (stextsel == y) {
+		CelDrawTo(out, cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+	}
+}
+
+void DrawSLine(int y)
+{
+	int xy, yy, width, line, sy;
+
+	sy = y * 12;
+	if (stextsize) {
+		xy = SCREENXY(PANEL_LEFT + 26, 25 + UI_OFFSET_Y);
+		yy = BUFFER_WIDTH * (sy + 38 + SCREEN_Y + UI_OFFSET_Y) + 26 + PANEL_X;
+		width = 586 / 4;           // BUGFIX: should be 587, not 586
+		line = BUFFER_WIDTH - 586; // BUGFIX: should be 587, not 586
+	} else {
+		xy = SCREENXY(PANEL_LEFT + 346, 25 + UI_OFFSET_Y);
+		yy = BUFFER_WIDTH * (sy + 38 + SCREEN_Y + UI_OFFSET_Y) + 346 + PANEL_X;
+		width = 266 / 4;           // BUGFIX: should be 267, not 266
+		line = BUFFER_WIDTH - 266; // BUGFIX: should be 267, not 266
+	}
+
+	/// ASSERT: assert(gpBuffer);
+
+	int i;
+	BYTE *src, *dst;
+
+	src = &gpBuffer[xy];
+	dst = &gpBuffer[yy];
+
+	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
+		memcpy(dst, src, BUFFER_WIDTH - line);
+}
+
+void DrawSTextHelp()
+{
+	stextsel = -1;
+	stextsize = true;
+}
+
+void ClearSText(int s, int e)
+{
+	int i;
+
+	for (i = s; i < e; i++) {
+		stext[i]._sx = 0;
+		stext[i]._syoff = 0;
+		stext[i]._sstr[0] = 0;
+		stext[i]._sjust = false;
+		stext[i]._sclr = COL_WHITE;
+		stext[i]._sline = 0;
+		stext[i]._ssel = FALSE;
+		stext[i]._sval = -1;
+	}
+}
+
+void StartStore(talk_id s)
+{
+	sbookflag = FALSE;
+	invflag = FALSE;
+	chrflag = FALSE;
+	questlog = FALSE;
+	dropGoldFlag = FALSE;
+	ClearSText(0, STORE_LINES);
+	ReleaseStoreBtn();
+	switch (s) {
+	case STORE_SMITH:
+		S_StartSmith();
+		break;
+	case STORE_SBUY:
+		if (storenumh > 0)
+			S_StartSBuy();
+		else
+			S_StartSmith();
+		break;
+	case STORE_SSELL:
+		S_StartSSell();
+		break;
+	case STORE_SREPAIR:
+		S_StartSRepair();
+		break;
+	case STORE_WITCH:
+		S_StartWitch();
+		break;
+	case STORE_WBUY:
+		if (storenumh > 0)
+			S_StartWBuy();
+		break;
+	case STORE_WSELL:
+		S_StartWSell();
+		break;
+	case STORE_WRECHARGE:
+		S_StartWRecharge();
+		break;
+	case STORE_NOMONEY:
+		S_StartNoMoney();
+		break;
+	case STORE_NOROOM:
+		S_StartNoRoom();
+		break;
+	case STORE_CONFIRM:
+		S_StartConfirm();
+		break;
+	case STORE_BOY:
+		S_StartBoy();
+		break;
+	case STORE_BBOY:
+		S_StartBBoy();
+		break;
+	case STORE_HEALER:
+		S_StartHealer();
+		break;
+	case STORE_STORY:
+		S_StartStory();
+		break;
+	case STORE_HBUY:
+		if (storenumh > 0)
+			S_StartHBuy();
+		break;
+	case STORE_SIDENTIFY:
+		S_StartSIdentify();
+		break;
+	case STORE_SPBUY:
+		if (!S_StartSPBuy())
+			return;
+		break;
+	case STORE_GOSSIP:
+		S_StartTalk();
+		break;
+	case STORE_IDSHOW:
+		S_StartIdShow();
+		break;
+	case STORE_TAVERN:
+		S_StartTavern();
+		break;
+	case STORE_DRUNK:
+		S_StartDrunk();
+		break;
+	case STORE_BARMAID:
+		S_StartBarMaid();
+		break;
+	}
+
+	stextsel = -1;
+	for (int i = 0; i < STORE_LINES; i++) {
+		if (stext[i]._ssel) {
+			stextsel = i;
+			break;
+		}
+	}
+
+	stextflag = s;
+}
+
+void DrawSText(CelOutputBuffer out)
+{
+	int i;
+
+	if (!stextsize)
+		DrawSTextBack(out);
+	else
+		DrawQTextBack(out);
+
+	if (stextscrl) {
+		switch (stextflag) {
+		case STORE_SBUY:
+			S_ScrollSBuy(stextsval);
+			break;
+		case STORE_SSELL:
+		case STORE_SREPAIR:
+		case STORE_WSELL:
+		case STORE_WRECHARGE:
+		case STORE_SIDENTIFY:
+			S_ScrollSSell(stextsval);
+			break;
+		case STORE_WBUY:
+			S_ScrollWBuy(stextsval);
+			break;
+		case STORE_HBUY:
+			S_ScrollHBuy(stextsval);
+			break;
+		case STORE_SPBUY:
+			S_ScrollSPBuy(stextsval);
+			break;
+		}
+	}
+
+	for (i = 0; i < STORE_LINES; i++) {
+		if (stext[i]._sline)
+			DrawSLine(i);
+		if (stext[i]._sstr[0])
+			PrintSString(out, stext[i]._sx, i, stext[i]._sjust, stext[i]._sstr, stext[i]._sclr, stext[i]._sval);
+	}
+
+	if (stextscrl)
+		DrawSSlider(out, 4, 20);
+}
+
+void STextESC()
+{
+	if (qtextflag) {
+		qtextflag = FALSE;
+		if (leveltype == DTYPE_TOWN)
+			stream_stop();
+	} else {
+		switch (stextflag) {
+		case STORE_SMITH:
+		case STORE_WITCH:
+		case STORE_BOY:
+		case STORE_BBOY:
+		case STORE_HEALER:
+		case STORE_STORY:
+		case STORE_TAVERN:
+		case STORE_DRUNK:
+		case STORE_BARMAID:
+			stextflag = STORE_NONE;
+			break;
+		case STORE_GOSSIP:
+			StartStore(stextshold);
+			stextsel = stextlhold;
+			break;
+		case STORE_SBUY:
+			StartStore(STORE_SMITH);
+			stextsel = 12;
+			break;
+		case STORE_SPBUY:
+			StartStore(STORE_SMITH);
+			stextsel = 14;
+			break;
+		case STORE_SSELL:
+			StartStore(STORE_SMITH);
+			stextsel = 16;
+			break;
+		case STORE_SREPAIR:
+			StartStore(STORE_SMITH);
+			stextsel = 18;
+			break;
+		case STORE_WBUY:
+			StartStore(STORE_WITCH);
+			stextsel = 14;
+			break;
+		case STORE_WSELL:
+			StartStore(STORE_WITCH);
+			stextsel = 16;
+			break;
+		case STORE_WRECHARGE:
+			StartStore(STORE_WITCH);
+			stextsel = 18;
+			break;
+		case STORE_HBUY:
+			StartStore(STORE_HEALER);
+			stextsel = 16;
+			break;
+		case STORE_SIDENTIFY:
+			StartStore(STORE_STORY);
+			stextsel = 14;
+			break;
+		case STORE_IDSHOW:
+			StartStore(STORE_SIDENTIFY);
+			break;
+		case STORE_NOMONEY:
+		case STORE_NOROOM:
+		case STORE_CONFIRM:
+			StartStore(stextshold);
+			stextsel = stextlhold;
+			stextsval = stextvhold;
+			break;
+		}
+	}
+}
+
+void STextUp()
+{
+	PlaySFX(IS_TITLEMOV);
+	if (stextsel == -1) {
+		return;
+	}
+
+	if (stextscrl) {
+		if (stextsel == stextup) {
+			if (stextsval)
+				stextsval--;
+			return;
+		}
+
+		stextsel--;
+		while (!stext[stextsel]._ssel) {
+			if (!stextsel)
+				stextsel = STORE_LINES - 1;
+			else
+				stextsel--;
+		}
+		return;
+	}
+
+	if (!stextsel)
+		stextsel = STORE_LINES - 1;
+	else
+		stextsel--;
+
+	while (!stext[stextsel]._ssel) {
+		if (!stextsel)
+			stextsel = STORE_LINES - 1;
+		else
+			stextsel--;
+	}
+}
+
+void STextDown()
+{
+	PlaySFX(IS_TITLEMOV);
+	if (stextsel == -1) {
+		return;
+	}
+
+	if (stextscrl) {
+		if (stextsel == stextdown) {
+			if (stextsval < stextsmax)
+				stextsval++;
+			return;
+		}
+
+		stextsel++;
+		while (!stext[stextsel]._ssel) {
+			if (stextsel == STORE_LINES - 1)
+				stextsel = 0;
+			else
+				stextsel++;
+		}
+		return;
+	}
+
+	if (stextsel == STORE_LINES - 1)
+		stextsel = 0;
+	else
+		stextsel++;
+
+	while (!stext[stextsel]._ssel) {
+		if (stextsel == STORE_LINES - 1)
+			stextsel = 0;
+		else
+			stextsel++;
+	}
+}
+
+void STextPrior()
+{
+	PlaySFX(IS_TITLEMOV);
+	if (stextsel != -1 && stextscrl) {
+		if (stextsel == stextup) {
+			if (stextsval)
+				stextsval -= 4;
+			stextsval = stextsval;
+			if (stextsval < 0)
+				stextsval = 0;
+		} else {
+			stextsel = stextup;
+		}
+	}
+}
+
+void STextNext()
+{
+	PlaySFX(IS_TITLEMOV);
+	if (stextsel != -1 && stextscrl) {
+		if (stextsel == stextdown) {
+			if (stextsval < stextsmax)
+				stextsval += 4;
+			if (stextsval > stextsmax)
+				stextsval = stextsmax;
+		} else {
+			stextsel = stextdown;
+		}
+	}
+}
+
+void SetGoldCurs(int pnum, int i)
+{
+	SetPlrHandGoldCurs(&plr[pnum].InvList[i]);
+}
+
+void SetSpdbarGoldCurs(int pnum, int i)
+{
+	SetPlrHandGoldCurs(&plr[pnum].SpdList[i]);
+}
+
+void TakePlrsMoney(int cost)
+{
+	int i;
+
+	plr[myplr]._pGold = CalculateGold(myplr) - cost;
+	for (i = 0; i < MAXBELTITEMS && cost > 0; i++) {
+		if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD && plr[myplr].SpdList[i]._ivalue != GOLD_MAX_LIMIT) {
+			if (cost < plr[myplr].SpdList[i]._ivalue) {
+				plr[myplr].SpdList[i]._ivalue -= cost;
+				SetSpdbarGoldCurs(myplr, i);
+				cost = 0;
+			} else {
+				cost -= plr[myplr].SpdList[i]._ivalue;
+				RemoveSpdBarItem(myplr, i);
+				i = -1;
+			}
+		}
+	}
+	if (cost > 0) {
+		for (i = 0; i < MAXBELTITEMS && cost > 0; i++) {
+			if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD) {
+				if (cost < plr[myplr].SpdList[i]._ivalue) {
+					plr[myplr].SpdList[i]._ivalue -= cost;
+					SetSpdbarGoldCurs(myplr, i);
+					cost = 0;
+				} else {
+					cost -= plr[myplr].SpdList[i]._ivalue;
+					RemoveSpdBarItem(myplr, i);
+					i = -1;
+				}
+			}
+		}
+	}
+	force_redraw = 255;
+	if (cost > 0) {
+		for (i = 0; i < plr[myplr]._pNumInv && cost > 0; i++) {
+			if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
+				if (cost < plr[myplr].InvList[i]._ivalue) {
+					plr[myplr].InvList[i]._ivalue -= cost;
+					SetGoldCurs(myplr, i);
+					cost = 0;
+				} else {
+					cost -= plr[myplr].InvList[i]._ivalue;
+					RemoveInvItem(myplr, i);
+					i = -1;
+				}
+			}
+		}
+		if (cost > 0) {
+			for (i = 0; i < plr[myplr]._pNumInv && cost > 0; i++) {
+				if (plr[myplr].InvList[i]._itype == ITYPE_GOLD) {
+					if (cost < plr[myplr].InvList[i]._ivalue) {
+						plr[myplr].InvList[i]._ivalue -= cost;
+						SetGoldCurs(myplr, i);
+						cost = 0;
+					} else {
+						cost -= plr[myplr].InvList[i]._ivalue;
+						RemoveInvItem(myplr, i);
+						i = -1;
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -2393,33 +2393,6 @@ typedef enum quest_mush_state {
 	QS_BRAINGIVEN   = 7,
 } quest_mush_state;
 
-typedef enum talk_id {
-	STORE_NONE      = 0x0,
-	STORE_SMITH     = 0x1,
-	STORE_SBUY      = 0x2,
-	STORE_SSELL     = 0x3,
-	STORE_SREPAIR   = 0x4,
-	STORE_WITCH     = 0x5,
-	STORE_WBUY      = 0x6,
-	STORE_WSELL     = 0x7,
-	STORE_WRECHARGE = 0x8,
-	STORE_NOMONEY   = 0x9,
-	STORE_NOROOM    = 0xA,
-	STORE_CONFIRM   = 0xB,
-	STORE_BOY       = 0xC,
-	STORE_BBOY      = 0xD,
-	STORE_HEALER    = 0xE,
-	STORE_STORY     = 0xF,
-	STORE_HBUY      = 0x10,
-	STORE_SIDENTIFY = 0x11,
-	STORE_SPBUY     = 0x12,
-	STORE_GOSSIP    = 0x13,
-	STORE_IDSHOW    = 0x14,
-	STORE_TAVERN    = 0x15,
-	STORE_DRUNK     = 0x16,
-	STORE_BARMAID   = 0x17,
-} talk_id;
-
 typedef enum _unique_items {
 	UITEM_CLEAVER      = 0x0,
 	UITEM_SKCROWN      = 0x1,

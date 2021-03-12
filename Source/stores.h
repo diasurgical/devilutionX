@@ -14,6 +14,33 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef enum talk_id {
+	STORE_NONE,
+	STORE_SMITH,
+	STORE_SBUY,
+	STORE_SSELL,
+	STORE_SREPAIR,
+	STORE_WITCH,
+	STORE_WBUY,
+	STORE_WSELL,
+	STORE_WRECHARGE,
+	STORE_NOMONEY,
+	STORE_NOROOM,
+	STORE_CONFIRM,
+	STORE_BOY,
+	STORE_BBOY,
+	STORE_HEALER,
+	STORE_STORY,
+	STORE_HBUY,
+	STORE_SIDENTIFY,
+	STORE_SPBUY,
+	STORE_GOSSIP,
+	STORE_IDSHOW,
+	STORE_TAVERN,
+	STORE_DRUNK,
+	STORE_BARMAID,
+} talk_id;
+
 typedef struct STextStruct {
 	int _sx;
 	int _syoff;
@@ -25,29 +52,48 @@ typedef struct STextStruct {
 	int _sval;
 } STextStruct;
 
-extern ItemStruct boyitem;
-extern ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
+/** Shop frame graphics */
 extern BYTE *pSTextBoxCels;
-extern int premiumlevel;
-extern ItemStruct witchitem[WITCH_ITEMS];
-extern int numpremium;
-extern ItemStruct healitem[20];
-extern ItemStruct golditem;
-extern BYTE *pSTextSlidCels;
+/** Small text selection cursor */
 extern BYTE *pSPentSpn2Cels;
-extern int boylevel;
+/** Scrollbar graphics */
+extern BYTE *pSTextSlidCels;
+
+/** Currently active store */
+extern talk_id stextflag;
+
+/** Temporary item used to generate gold piles by various function */
+extern ItemStruct golditem;
+
+/** Items sold by Griswold */
 extern ItemStruct smithitem[SMITH_ITEMS];
-extern char stextflag;
+/** Number of premium items for sale by Griswold */
+extern int numpremium;
+/** Base level of current premium items sold by Griswold */
+extern int premiumlevel;
+/** Premium items sold by Griswold */
+extern ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
+
+/** Items sold by Pepin */
+extern ItemStruct healitem[20];
+
+/** Items sold by Adria */
+extern ItemStruct witchitem[WITCH_ITEMS];
+
+/** Current level of the item sold by Wirt */
+extern int boylevel;
+/** Current item sold by Wirt */
+extern ItemStruct boyitem;
 
 void InitStores();
 int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
-void PrintSString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, char col, int val);
+void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, char col, int val);
 void DrawSLine(int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
-void StartStore(char s);
+void StartStore(talk_id s);
 void DrawSText(CelOutputBuffer out);
 void STextESC();
 void STextUp();

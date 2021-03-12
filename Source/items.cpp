@@ -1292,6 +1292,11 @@ void GetPlrHandSeed(ItemStruct *h)
 	h->_iSeed = AdvanceRndSeed();
 }
 
+/**
+ * @brief Set a new unique seed value on the given item
+ * @param pnum Player id
+ * @param h Item to update
+ */
 void GetGoldSeed(int pnum, ItemStruct *h)
 {
 	int i, ii, s;
