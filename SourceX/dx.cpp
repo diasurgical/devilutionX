@@ -246,13 +246,14 @@ void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
  */
 void LimitFrameRate()
 {
+	if (!sgOptions.Graphics.bFPSLimit)
+		return;
 	static uint32_t frameDeadline;
 	uint32_t tc = SDL_GetTicks() * 1000;
 	uint32_t v = 0;
 	if (frameDeadline > tc) {
 		v = tc % refreshDelay;
-		if (sgOptions.Graphics.bFPSLimit)
-			SDL_Delay(v / 1000 + 1); // ceil
+		SDL_Delay(v / 1000 + 1); // ceil
 	}
 	frameDeadline = tc + v + refreshDelay;
 }
