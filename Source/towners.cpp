@@ -212,28 +212,24 @@ void InitTownerInfo(int i, int w, int sel, int t, int x, int y, int ao, int tp)
 	towner[i]._tSeed = AdvanceRndSeed();
 }
 
-void InitQstSnds(int i)
+void InitQstSnds(int id, _talker_id type)
 {
-	for (int j = 0; j < MAXQUESTS; j++) {
-		towner[i].qsts[j]._qsttype = quests[j]._qtype;
-		towner[i].qsts[j]._qstmsg = Qtalklist[i][j];
-		if (Qtalklist[i][j] != TEXT_NONE)
-			towner[i].qsts[j]._qstmsgact = TRUE;
-		else
-			towner[i].qsts[j]._qstmsgact = FALSE;
+	for (int i = 0; i < MAXQUESTS; i++) {
+		towner[id].qsts[i]._qsttype = quests[i]._qtype;
+		towner[id].qsts[i]._qstmsg = Qtalklist[type][i];
+		towner[id].qsts[i]._qstmsgact = Qtalklist[type][i] != TEXT_NONE;
 	}
 }
 
 /**
  * @brief Load Griswold into the game
-
  */
 void InitSmith()
 {
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_SMITH, 62, 63, 0, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_SMITH);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -247,7 +243,7 @@ void InitSmith()
 void InitBarOwner()
 {
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_TAVERN, 55, 62, 3, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_TAVERN);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", NULL);
 	for (int i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -263,7 +259,7 @@ void InitTownDead()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_DEADGUY, 24, 32, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_DEADGUY);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -279,7 +275,7 @@ void InitWitch()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_WITCH, 80, 20, 5, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_WITCH);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -295,7 +291,7 @@ void InitBarmaid()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_BMAID, 43, 66, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_BMAID);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -311,7 +307,7 @@ void InitBoy()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_PEGBOY, 11, 53, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_PEGBOY);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -327,7 +323,7 @@ void InitHealer()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_HEALER, 55, 79, 1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_HEALER);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -343,7 +339,7 @@ void InitTeller()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_STORY, 62, 71, 2, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_STORY);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -359,7 +355,7 @@ void InitDrunk()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_DRUNK, 71, 84, 4, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_DRUNK);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -409,7 +405,7 @@ void InitFarmer()
 	int i;
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_FARMER, 62, 16, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_FARMER);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\Farmrn2.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -425,7 +421,7 @@ void InitCowFarmer()
 	int i;
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_COWFARM, 61, 22, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_COWFARM);
 	if (quests[Q_JERSEY]._qactive != 3) {
 		towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\cfrmrn2.CEL", NULL);
 	} else {
@@ -445,7 +441,7 @@ void InitGirl()
 	int i;
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_GIRL, 77, 43, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_GIRL);
 	if (quests[Q_GIRL]._qactive != 3) {
 		towner[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girlw1.CEL", NULL);
 	} else {
