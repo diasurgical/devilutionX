@@ -18,7 +18,7 @@ int stextshold;
 ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
 BYTE *pSTextBoxCels;
 int premiumlevel;
-int talker;
+_talker_id talker;
 STextStruct stext[STORE_LINES];
 char stextsize;
 int stextsmax;
@@ -1814,7 +1814,7 @@ void S_SmithEnter()
 {
 	switch (stextsel) {
 	case 10:
-		talker = 0;
+		talker = TOWN_SMITH;
 		stextlhold = 10;
 		stextshold = STORE_SMITH;
 		gossipstart = TEXT_GRISWOLD2;
@@ -2211,7 +2211,7 @@ void S_WitchEnter()
 	switch (stextsel) {
 	case 12:
 		stextlhold = 12;
-		talker = 6;
+		talker = TOWN_WITCH;
 		stextshold = STORE_WITCH;
 		gossipstart = TEXT_ADRIA2;
 		gossipend = TEXT_ADRIA13;
@@ -2370,7 +2370,7 @@ void S_BoyEnter()
 			StartStore(STORE_BBOY);
 		}
 	} else if (stextsel == 8 && !boyitem.isEmpty() || stextsel == 12 && boyitem.isEmpty()) {
-		talker = 8;
+		talker = TOWN_PEGBOY;
 		stextshold = STORE_BOY;
 		stextlhold = stextsel;
 		gossipstart = TEXT_WIRT2;
@@ -2547,7 +2547,7 @@ void S_HealerEnter()
 	switch (stextsel) {
 	case 12:
 		stextlhold = 12;
-		talker = 1;
+		talker = TOWN_HEALER;
 		stextshold = STORE_HEALER;
 		gossipstart = TEXT_PEPIN2;
 		gossipend = TEXT_PEPIN11;
@@ -2602,7 +2602,7 @@ void S_StoryEnter()
 	switch (stextsel) {
 	case 12:
 		stextlhold = 12;
-		talker = 4;
+		talker = TOWN_STORY;
 		stextshold = STORE_STORY;
 		gossipstart = TEXT_STORY2;
 		gossipend = TEXT_STORY11;
@@ -2682,7 +2682,7 @@ void S_TavernEnter()
 	switch (stextsel) {
 	case 12:
 		stextlhold = 12;
-		talker = 3;
+		talker = TOWN_TAVERN;
 		stextshold = STORE_TAVERN;
 		gossipstart = TEXT_OGDEN2;
 		gossipend = TEXT_OGDEN10;
@@ -2699,7 +2699,7 @@ void S_BarmaidEnter()
 	switch (stextsel) {
 	case 12:
 		stextlhold = 12;
-		talker = 7;
+		talker = TOWN_BMAID;
 		stextshold = STORE_BARMAID;
 		gossipstart = TEXT_GILLIAN2;
 		gossipend = TEXT_GILLIAN10;
@@ -2716,7 +2716,7 @@ void S_DrunkEnter()
 	switch (stextsel) {
 	case 12:
 		stextlhold = 12;
-		talker = 5;
+		talker = TOWN_DRUNK;
 		stextshold = STORE_DRUNK;
 		gossipstart = TEXT_FARNHAM2;
 		gossipend = TEXT_FARNHAM13;

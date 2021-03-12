@@ -11,7 +11,6 @@ BOOL storeflag;
 int sgnCowMsg;
 int numtowners;
 DWORD sgdwCowClicks;
-BOOL boyloadflag;
 BYTE *pCowCels;
 TownerStruct towner[NUM_TOWNERS];
 
@@ -215,14 +214,10 @@ void InitTownerInfo(int i, int w, int sel, int t, int x, int y, int ao, int tp)
 
 void InitQstSnds(int i)
 {
-	int j, tl;
-	tl = i;
-	if (boyloadflag)
-		tl++;
-	for (j = 0; j < MAXQUESTS; j++) {
+	for (int j = 0; j < MAXQUESTS; j++) {
 		towner[i].qsts[j]._qsttype = quests[j]._qtype;
-		towner[i].qsts[j]._qstmsg = Qtalklist[tl][j];
-		if (Qtalklist[tl][j] != TEXT_NONE)
+		towner[i].qsts[j]._qstmsg = Qtalklist[i][j];
+		if (Qtalklist[i][j] != TEXT_NONE)
 			towner[i].qsts[j]._qstmsgact = TRUE;
 		else
 			towner[i].qsts[j]._qstmsgact = FALSE;
@@ -315,7 +310,6 @@ void InitBoy()
 {
 	int i;
 
-	boyloadflag = TRUE;
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_PEGBOY, 11, 53, -1, 10);
 	InitQstSnds(numtowners);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", NULL);
@@ -469,7 +463,6 @@ void InitGirl()
 void InitTowners()
 {
 	numtowners = 0;
-	boyloadflag = FALSE;
 	InitSmith();
 	InitHealer();
 	if (quests[Q_BUTCHER]._qactive != QUEST_NOTAVAIL && quests[Q_BUTCHER]._qactive != QUEST_DONE)
