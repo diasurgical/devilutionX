@@ -2725,7 +2725,8 @@ BOOL PM_DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			if (CanTalkToMonst(m)) {
-				plr[pnum]._pVar1 = 0;
+				StartStand(pnum, plr[pnum]._pdir);
+				ClearPlrPVars(pnum);
 				return FALSE;
 			}
 		}
