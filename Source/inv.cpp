@@ -766,9 +766,11 @@ bool CanEquip(int playerNumber, const ItemStruct &item, int bodyLocation)
  * @param playerNumber The player number whose inventory will be checked for compatibility with the item.
  * @param item The item to equip.
  * @param bodyLocation The location in the inventory where the item should be equipped. Can be one of 'inv_body_loc' members.
+ * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
+ * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation)
+bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation, bool persistItem)
 {
 	if (!CanEquip(playerNumber, item, bodyLocation)) {
 		return false;
@@ -779,14 +781,16 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation)
 	if (plr[playerNumber]._pClass == PC_MONK && (bodyLocation == INVLOC_HAND_LEFT || bodyLocation == INVLOC_HAND_RIGHT))
 		return false;
 
-	plr[playerNumber].InvBody[bodyLocation] = item;
+	if (persistItem) {
+		plr[playerNumber].InvBody[bodyLocation] = item;
 
-	if (sgOptions.Audio.bAutoEquipSound && playerNumber == myplr) {
-		PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
+		if (sgOptions.Audio.bAutoEquipSound && playerNumber == myplr) {
+			PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
+		}
+
+		NetSendCmdChItem(FALSE, bodyLocation);
+		CalcPlrInv(playerNumber, TRUE);
 	}
-
-	NetSendCmdChItem(FALSE, bodyLocation);
-	CalcPlrInv(playerNumber, TRUE);
 
 	return true;
 }
@@ -796,16 +800,18 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation)
  * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
  * @param playerNumber The player number whose inventory will be checked for compatibility with the item.
  * @param item The item to equip.
+ * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
+ * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerNumber, const ItemStruct &item)
+bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	if (!CanEquip(item)) {
 		return false;
 	}
 
 	for (int bodyLocation = INVLOC_HEAD; bodyLocation < NUM_INVLOC; bodyLocation++) {
-		if (AutoEquip(playerNumber, item, bodyLocation)) {
+		if (AutoEquip(playerNumber, item, bodyLocation, persistItem)) {
 			return true;
 		}
 	}
