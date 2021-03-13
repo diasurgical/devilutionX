@@ -200,3 +200,15 @@
 #define strcasecmp _stricmp
 #define strncasecmp _strnicmp
 #endif
+
+#ifdef __has_attribute
+#define DVL_HAVE_ATTRIBUTE(x) __has_attribute(x)
+#else
+#define DVL_HAVE_ATTRIBUTE(x) 0
+#endif
+
+#if DVL_HAVE_ATTRIBUTE(always_inline) ||  (defined(__GNUC__) && !defined(__clang__))
+#define DVL_ATTRIBUTE_ALWAYS_INLINE __attribute__((always_inline))
+#else
+#define DVL_ATTRIBUTE_ALWAYS_INLINE
+#endif
