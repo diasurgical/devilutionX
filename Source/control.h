@@ -65,7 +65,12 @@ void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, char col);
 void AddPanelString(const char *str, BOOL just);
 void ClearPanel();
 void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int sy);
-void DrawLifeFlask();
+
+/**
+ * Draws the top dome of the life flask (that part that protrudes out of the control panel).
+ * First it draws the empty flask cel and then draws the filled part on top if needed.
+ */
+void DrawLifeFlask(CelOutputBuffer out);
 
 /**
  * Controls the drawing of the area of the life flask within the control panel.
@@ -74,7 +79,7 @@ void DrawLifeFlask();
  */
 void UpdateLifeFlask(CelOutputBuffer out);
 
-void DrawManaFlask();
+void DrawManaFlask(CelOutputBuffer out);
 void control_update_life_mana();
 
 /**

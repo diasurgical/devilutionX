@@ -1264,8 +1264,8 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 	gmenu_draw(out);
 	doom_draw(out);
 	DrawInfoBox(out);
-	DrawLifeFlask();
-	DrawManaFlask();
+	DrawLifeFlask(out);
+	DrawManaFlask(out);
 }
 
 extern SDL_Surface *pal_surface;
