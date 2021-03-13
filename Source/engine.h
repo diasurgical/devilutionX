@@ -77,7 +77,7 @@ struct CelOutputBuffer {
 
 	explicit CelOutputBuffer(SDL_Surface *surface)
 	    : surface(surface)
-	    , region(SDL_Rect { 0, 0, surface->w, surface->h })
+	    , region(SDL_Rect { 0, 0, (Uint16)surface->w, (Uint16)surface->h })
 	{
 	}
 
@@ -134,7 +134,7 @@ struct CelOutputBuffer {
 	 */
 	int pitch() { return surface->pitch; }
 
-	bool in_bounds(int x, int y) const
+	bool in_bounds(Sint16 x, Sint16 y) const
 	{
 		return x >= 0 && y >= 0 && x < region.w && y < region.h;
 	}
@@ -142,7 +142,7 @@ struct CelOutputBuffer {
 	/**
 	 * @brief Returns a subregion of the given buffer.
 	 */
-	CelOutputBuffer subregion(int x, int y, int w, int h) const
+	CelOutputBuffer subregion(Sint16 x, Sint16 y, Uint16 w, Uint16 h) const
 	{
 		return CelOutputBuffer(surface, SDL_Rect { x, y, w, h });
 	}
@@ -150,7 +150,7 @@ struct CelOutputBuffer {
 	/**
 	 * @brief Returns a buffer that starts at `y` of height `h`.
 	 */
-	CelOutputBuffer subregionY(int y, int h) const
+	CelOutputBuffer subregionY(Sint16 y, Sint16 h) const
 	{
 		SDL_Rect subregion = region;
 		subregion.y = y;
