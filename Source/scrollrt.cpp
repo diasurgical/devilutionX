@@ -193,7 +193,7 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	dst = sgSaveBack;
 	src = out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY);
 
-	for (i = sgdwCursHgt; i != 0; i--, dst += sgdwCursWdt, src += BUFFER_WIDTH) {
+	for (i = sgdwCursHgt; i != 0; i--, dst += sgdwCursWdt, src += out.line_width) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 
