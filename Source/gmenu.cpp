@@ -156,14 +156,12 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 	gmenu_up_down(TRUE);
 }
 
-static void gmenu_clear_buffer(int x, int y, int width, int height)
+static void gmenu_clear_buffer(CelOutputBuffer out, int x, int y, int width, int height)
 {
-	BYTE *i;
-
-	i = gpBuffer + BUFFER_WIDTH * y + x;
+	BYTE *i = out.at(x, y);
 	while (height--) {
 		memset(i, 205, width);
-		i -= BUFFER_WIDTH;
+		i -= out.line_width;
 	}
 }
 
@@ -196,7 +194,7 @@ static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
 		if (nSteps < 2)
 			nSteps = 2;
 		pos = step * 256 / nSteps;
-		gmenu_clear_buffer(x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
+		gmenu_clear_buffer(out, x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
 		CelDrawTo(out, x + 2 + pos + PANEL_LEFT, y - 12, option_cel, 1, 27);
 	}
 	x = gnScreenWidth / 2 - w / 2 + SCREEN_X;
