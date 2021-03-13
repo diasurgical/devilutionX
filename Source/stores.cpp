@@ -170,17 +170,18 @@ void PrintStoreItem(ItemStruct *x, int l, char iclr)
 	if (x->_itype == ITYPE_MISC)
 		sstr[0] = '\0';
 	str = x->_iMinStr;
-	dex = x->_iMinDex;
 	mag = x->_iMinMag;
-	if ((str + mag + dex) == 0) {
+	dex = x->_iMinDex;
+	if (str == 0 && mag == 0 && dex == 0) {
 		strcat(sstr, "No required attributes");
 	} else {
-		if (x->_iMinStr)
-			sprintf(tempstr, "Required: %i Str", x->_iMinStr);
-		if (x->_iMinMag)
-			sprintf(tempstr, "Required: %i Mag", x->_iMinMag);
-		if (x->_iMinDex)
-			sprintf(tempstr, "Required: %i Dex", x->_iMinDex);
+		strcpy(tempstr, "Required:");
+		if (str)
+			sprintf(tempstr + strlen(tempstr), " %i Str", str);
+		if (mag)
+			sprintf(tempstr + strlen(tempstr), " %i Mag", mag);
+		if (dex)
+			sprintf(tempstr + strlen(tempstr), " %i Dex", dex);
 		strcat(sstr, tempstr);
 	}
 	AddSText(40, l++, FALSE, sstr, iclr, FALSE);

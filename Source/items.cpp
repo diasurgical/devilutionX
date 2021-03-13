@@ -4093,7 +4093,7 @@ static void PrintItemInfo(ItemStruct *x)
 	Uint8 str = x->_iMinStr;
 	Uint8 dex = x->_iMinDex;
 	Uint8 mag = x->_iMinMag;
-	if (str || mag || dex) {
+	if (str != 0 || mag != 0 || dex != 0) {
 		strcpy(tempstr, "Required:");
 		if (str)
 			sprintf(tempstr + strlen(tempstr), " %i Str", str);
