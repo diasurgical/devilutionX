@@ -1714,14 +1714,14 @@ void SpawnLoot(int i, BOOL sendmsg)
 	MonsterStruct *Monst;
 
 	Monst = &monster[i];
-	if (QuestStatus(Q_GARBUD) && Monst->mName == UniqMonst[UMT_GARBUD].mName) {
+	if (QuestStatus(Q_GARBUD) && Monst->_uniqtype - 1 == UMT_GARBUD) {
 		CreateTypeItem(Monst->_mx + 1, Monst->_my + 1, TRUE, ITYPE_MACE, IMISC_NONE, TRUE, FALSE);
-	} else if (Monst->mName == UniqMonst[UMT_DEFILER].mName) {
+	} else if (Monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
 		quests[Q_DEFILER]._qlog = 0;
 		SpawnMapOfDoom(Monst->_mx, Monst->_my);
-	} else if (Monst->mName == UniqMonst[UMT_HORKDMN].mName) {
+	} else if (Monst->_uniqtype - 1 == UMT_HORKDMN) {
 		if (gbTheoQuest) {
 			SpawnTheodore(Monst->_mx, Monst->_my);
 		} else {
@@ -2488,7 +2488,7 @@ BOOL M_DoTalk(int i)
 	if (effect_is_playing(alltext[monster[i].mtalkmsg].sfxnr))
 		return FALSE;
 	InitQTextMsg(monster[i].mtalkmsg);
-	if (monster[i].mName == UniqMonst[UMT_GARBUD].mName) {
+	if (monster[i]._uniqtype - 1 == UMT_GARBUD) {
 		if (monster[i].mtalkmsg == TEXT_GARBUD1) {
 			quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
 			quests[Q_GARBUD]._qlog = TRUE; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
@@ -2498,7 +2498,7 @@ BOOL M_DoTalk(int i)
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
-	if (monster[i].mName == UniqMonst[UMT_ZHAR].mName
+	if (monster[i]._uniqtype - 1 == UMT_ZHAR
 	    && monster[i].mtalkmsg == TEXT_ZHAR1
 	    && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
 		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
@@ -2506,7 +2506,7 @@ BOOL M_DoTalk(int i)
 		CreateTypeItem(monster[i]._mx + 1, monster[i]._my + 1, FALSE, ITYPE_MISC, IMISC_BOOK, TRUE, FALSE);
 		monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
-	if (monster[i].mName == UniqMonst[UMT_SNOTSPIL].mName) {
+	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {
 		if (monster[i].mtalkmsg == TEXT_BANNER10 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
 			ObjChangeMap(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 2, (setpc_h >> 1) + setpc_y - 2);
 			tren = TransVal;
@@ -2519,11 +2519,10 @@ BOOL M_DoTalk(int i)
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 		if (quests[Q_LTBANNER]._qvar1 < 2) {
-			sprintf(tempstr, "SS Talk = %i, Flags = %i", monster[i].mtalkmsg, monster[i]._mFlags); // CODEFIX: no need for tempstr, app_fatal supports v_args
-			app_fatal(tempstr);
+			app_fatal("SS Talk = %i, Flags = %i", monster[i].mtalkmsg, monster[i]._mFlags);
 		}
 	}
-	if (monster[i].mName == UniqMonst[UMT_LACHDAN].mName) {
+	if (monster[i]._uniqtype - 1 == UMT_LACHDAN) {
 		if (monster[i].mtalkmsg == TEXT_VEIL9) {
 			quests[Q_VEIL]._qactive = QUEST_ACTIVE;
 			quests[Q_VEIL]._qlog = TRUE;
@@ -2533,9 +2532,9 @@ BOOL M_DoTalk(int i)
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
-	if (monster[i].mName == UniqMonst[UMT_WARLORD].mName)
+	if (monster[i]._uniqtype - 1 == UMT_WARLORD)
 		quests[Q_WARLORD]._qvar1 = 2;
-	if (monster[i].mName == UniqMonst[UMT_LAZURUS].mName && gbIsMultiplayer) {
+	if (monster[i]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) {
 		quests[Q_BETRAYER]._qvar1 = 6;
 		monster[i]._mgoal = MGOAL_NORMAL;
 		monster[i]._msquelch = UCHAR_MAX;

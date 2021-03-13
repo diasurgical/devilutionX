@@ -340,7 +340,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		}
 		if (sendmsg)
 			NetSendCmdQuest(TRUE, Q_BUTCHER);
-	} else if (monster[m].mName == UniqMonst[UMT_GARBUD].mName) { //"Gharbad the Weak"
+	} else if (monster[m]._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		quests[Q_GARBUD]._qactive = QUEST_DONE;
 		sfxdelay = 30;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -356,7 +356,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR61;
 		}
-	} else if (monster[m].mName == UniqMonst[UMT_ZHAR].mName) { //"Zhar the Mad"
+	} else if (monster[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		quests[Q_ZHAR]._qactive = QUEST_DONE;
 		sfxdelay = 30;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -372,7 +372,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR62;
 		}
-	} else if (monster[m].mName == UniqMonst[UMT_LAZURUS].mName && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
+	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		quests[Q_BETRAYER]._qvar1 = 7;
 		sfxdelay = 30;
@@ -405,7 +405,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			NetSendCmdQuest(TRUE, Q_BETRAYER);
 			NetSendCmdQuest(TRUE, Q_DIABLO);
 		}
-	} else if (monster[m].mName == UniqMonst[UMT_LAZURUS].mName && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
+	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		sfxdelay = 30;
 		InitVPTriggers();
@@ -426,7 +426,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR83;
 		}
-	} else if (monster[m].mName == UniqMonst[UMT_WARLORD].mName) { //"Warlord of Blood"
+	} else if (monster[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;
 		sfxdelay = 30;
 		if (plr[myplr]._pClass == PC_WARRIOR) {

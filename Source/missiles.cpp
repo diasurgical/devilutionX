@@ -1481,7 +1481,7 @@ void AddBerserk(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mi
 					dm = dMonster[tx][ty];
 					dm = dm > 0 ? dm - 1 : -(dm + 1);
 					if (dm > 3) {
-						if (!monster[dm]._uniqtype && monster[dm]._mAi != AI_DIABLO) {
+						if (monster[dm]._uniqtype == 0 && monster[dm]._mAi != AI_DIABLO) {
 							if (monster[dm]._mmode != MM_FADEIN && monster[dm]._mmode != MM_FADEOUT) {
 								if (!(monster[dm].mMagicRes & IMMUNE_MAGIC)) {
 									if ((!(monster[dm].mMagicRes & RESIST_MAGIC) || (monster[dm].mMagicRes & RESIST_MAGIC) == 1 && !random_(99, 2)) && monster[dm]._mmode != MM_CHARGE) {
