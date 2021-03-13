@@ -105,21 +105,21 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 /**
  * @brief Write the pixel data to the PCX file
+ * @param buf Buffer
  * @param width Image width
  * @param height Image height
- * @param stride Buffer width
- * @param pixels Raw pixel buffer
  * @return True if successful, else false
  */
-static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::ofstream *out)
+static bool CapturePix(CelOutputBuffer buf, WORD width, WORD height, std::ofstream *out)
 {
 	int writeSize;
 	BYTE *pBuffer, *pBufferEnd;
 
 	pBuffer = (BYTE *)DiabloAllocPtr(2 * width);
+	BYTE *pixels = buf.begin;
 	while (height--) {
 		pBufferEnd = CaptureEnc(pixels, pBuffer, width);
-		pixels += stride;
+		pixels += buf.line_width;
 		writeSize = pBufferEnd - pBuffer;
 		out->write(reinterpret_cast<const char *>(pBuffer), writeSize);
 		if (out->fail())
@@ -175,23 +175,24 @@ void CaptureScreen()
 	std::string FileName;
 	BOOL success;
 
-	std::ofstream *out = CaptureFile(&FileName);
-	if (out == NULL)
+	std::ofstream *out_stream = CaptureFile(&FileName);
+	if (out_stream == NULL)
 		return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
 	RedPalette();
 
 	lock_buf(2);
-	success = CaptureHdr(gnScreenWidth, gnScreenHeight, out);
+	CelOutputBuffer buf = GlobalBackBuffer();
+	success = CaptureHdr(gnScreenWidth, gnScreenHeight, out_stream);
 	if (success) {
-		success = CapturePix(gnScreenWidth, gnScreenHeight, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)], out);
+		success = CapturePix(buf, gnScreenWidth, gnScreenHeight, out_stream);
 	}
 	if (success) {
-		success = CapturePal(palette, out);
+		success = CapturePal(palette, out_stream);
 	}
 	unlock_buf(2);
-	out->close();
+	out_stream->close();
 
 	if (!success) {
 		SDL_Log("Failed to save screenshot at %s", FileName.c_str());
@@ -205,7 +206,7 @@ void CaptureScreen()
 	}
 	palette_update();
 	force_redraw = 255;
-	delete out;
+	delete out_stream;
 }
 
 DEVILUTION_END_NAMESPACE
