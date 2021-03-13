@@ -1254,7 +1254,7 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 		DrawDiabloMsg(out);
 	}
 	if (deathflag) {
-		RedBack();
+		RedBack(out);
 	} else if (PauseMode != 0) {
 		gmenu_draw_pause(out);
 	}

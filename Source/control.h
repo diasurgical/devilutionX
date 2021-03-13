@@ -119,7 +119,7 @@ void DrawLevelUpIcon(CelOutputBuffer out);
 void CheckChrBtns();
 void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(CelOutputBuffer out);
-void RedBack();
+void RedBack(CelOutputBuffer out);
 void DrawSpellBook(CelOutputBuffer out);
 void CheckSBook();
 const char *get_pieces_str(int nGold);
