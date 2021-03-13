@@ -124,7 +124,7 @@ void DrawDiabloMsg(CelOutputBuffer out)
 		sy += 12;
 	}
 
-	assert(gpBuffer);
+	assert(out.begin);
 
 	DrawHalfTransparentRectTo(out, PANEL_X + 104, DIALOG_Y - 8, 432, 54);
 
