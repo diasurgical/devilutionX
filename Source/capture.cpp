@@ -116,10 +116,10 @@ static bool CapturePix(CelOutputBuffer buf, WORD width, WORD height, std::ofstre
 	BYTE *pBuffer, *pBufferEnd;
 
 	pBuffer = (BYTE *)DiabloAllocPtr(2 * width);
-	BYTE *pixels = buf.begin;
+	BYTE *pixels = buf.begin();
 	while (height--) {
 		pBufferEnd = CaptureEnc(pixels, pBuffer, width);
-		pixels += buf.line_width;
+		pixels += buf.pitch();
 		writeSize = pBufferEnd - pBuffer;
 		out->write(reinterpret_cast<const char *>(pBuffer), writeSize);
 		if (out->fail())

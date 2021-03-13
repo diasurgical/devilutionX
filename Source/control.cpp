@@ -9,6 +9,14 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+namespace {
+
+CelOutputBuffer pBtmBuff;
+CelOutputBuffer pLifeBuff;
+CelOutputBuffer pManaBuff;
+
+} // namespace
+
 BYTE sgbNextTalkSave;
 BYTE sgbTalkSavePos;
 BYTE *pDurIcons;
@@ -27,15 +35,12 @@ BOOL drawmanaflag;
 BOOL chrbtnactive;
 char sgszTalkMsg[MAX_SEND_STR_LEN];
 BYTE *pPanelText;
-BYTE *pLifeBuff;
-BYTE *pBtmBuff;
 BYTE *pTalkBtns;
 BOOL pstrjust[4];
 int pnumlines;
 BOOL pinfoflag;
 BOOL talkbtndown[3];
 int pSpell;
-BYTE *pManaBuff;
 char infoclr;
 int sgbPlrTalkTbl;
 BYTE *pGBoxBuff;
@@ -515,8 +520,6 @@ void ToggleSpell(int slot)
 
 void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, char col)
 {
-	assert(out.begin);
-
 	int i;
 	BYTE pix;
 	BYTE tbl[256];
@@ -576,20 +579,10 @@ void ClearPanel()
 
 void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int sy)
 {
-	int nSrcOff, nDstOff;
+	const BYTE *src = pBtmBuff.at(x, y);
+	BYTE *dst = out.at(sx, sy);
 
-	assert(out.begin);
-
-	nSrcOff = x + PANEL_WIDTH * y;
-	nDstOff = sx + out.line_width * sy;
-
-	int hgt;
-	BYTE *src, *dst;
-
-	src = &pBtmBuff[nSrcOff];
-	dst = out.begin + nDstOff;
-
-	for (hgt = h; hgt; hgt--, src += PANEL_WIDTH, dst += out.line_width) {
+	for (int hgt = h; hgt; hgt--, src += pBtmBuff.pitch(), dst += out.pitch()) {
 		memcpy(dst, src, w);
 	}
 }
@@ -601,19 +594,17 @@ void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int s
  * @param out Target buffer.
  * @param sx Buffer coordinate
  * @param sy Buffer coordinate
- * @param pCelBuff Buffer of the empty flask cel.
+ * @param celBuf Buffer of the empty flask cel.
  * @param y0 Top of the flask cel section to draw.
  * @param y1 Bottom of the flask cel section to draw.
  */
-static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int y0, int y1)
+static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, CelOutputBuffer celBuf, int y0, int y1)
 {
-	const std::size_t kSrcWidth = 88;
-
-	const BYTE *src = &pCelBuff[kSrcWidth * y0];
+	const BYTE *src = celBuf.at(0, y0);
 	BYTE *dst = out.at(sx, sy);
 
-	for (int h = y1 - y0; h != 0; --h, src += kSrcWidth, dst += out.line_width)
-		memcpy(dst, src, kSrcWidth);
+	for (int h = y1 - y0; h != 0; --h, src += celBuf.pitch(), dst += out.pitch())
+		memcpy(dst, src, celBuf.w());
 }
 
 /**
@@ -621,21 +612,20 @@ static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, in
  * It draws a rectangle of fixed width 59 and height 'h' from the source buffer
  * into the target buffer.
  * @param out The target buffer.
- * @param pCelBuff The flask cel buffer.
- * @param w Width of the cel.
- * @param nSrcOff Offset of the source buffer from where the bytes will start to be copied from.
- * @param pBuff Target buffer.
+ * @param celBuf Buffer of the empty flask cel.
+ * @param celX Source buffer start coordinate.
+ * @param celY Source buffer start coordinate.
  * @param sx Target buffer coordinate.
  * @param sy Target buffer coordinate.
  * @param h How many lines of the source buffer that will be copied.
  */
-static void DrawFlask(CelOutputBuffer out, BYTE *pCelBuff, int w, int nSrcOff, int x, int y, int h)
+static void DrawFlask(CelOutputBuffer out, CelOutputBuffer celBuf, int celX, int celY, int x, int y, int h)
 {
 	int wdt, hgt;
-	BYTE *src = &pCelBuff[nSrcOff];
+	const BYTE *src = celBuf.at(celX, celY);
 	BYTE *dst = out.at(x, y);
 
-	for (hgt = h; hgt; hgt--, src += w - 59, dst += out.line_width - 59) {
+	for (hgt = h; hgt; hgt--, src += celBuf.pitch() - 59, dst += out.pitch() - 59) {
 		for (wdt = 59; wdt; wdt--) {
 			if (*src)
 				*dst = *src;
@@ -665,9 +655,9 @@ void DrawLifeFlask(CelOutputBuffer out)
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(out, pLifeBuff, 88, 88 * 3 + 13, SCREEN_X + PANEL_LEFT + 109, SCREEN_Y + PANEL_TOP - 13, filled);
+	DrawFlask(out, pLifeBuff, 13, 3, SCREEN_X + PANEL_LEFT + 109, SCREEN_Y + PANEL_TOP - 13, filled);
 	if (filled != 13)
-		DrawFlask(out, pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, SCREEN_X + PANEL_LEFT + 109, SCREEN_Y + PANEL_TOP - 13 + filled, 13 - filled);
+		DrawFlask(out, pBtmBuff, 109, filled + 3, SCREEN_X + PANEL_LEFT + 109, SCREEN_Y + PANEL_TOP - 13 + filled, 13 - filled);
 }
 
 void UpdateLifeFlask(CelOutputBuffer out)
@@ -702,9 +692,9 @@ void DrawManaFlask(CelOutputBuffer out)
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(out, pManaBuff, 88, 88 * 3 + 13, SCREEN_X + PANEL_LEFT + 475, SCREEN_Y + PANEL_TOP - 13, filled);
+	DrawFlask(out, pManaBuff, 13, 3, SCREEN_X + PANEL_LEFT + 475, SCREEN_Y + PANEL_TOP - 13, filled);
 	if (filled != 13)
-		DrawFlask(out, pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 475, SCREEN_X + PANEL_LEFT + 475, SCREEN_Y + PANEL_TOP - 13 + filled, 13 - filled);
+		DrawFlask(out, pBtmBuff, 475, filled + 3, SCREEN_X + PANEL_LEFT + 475, SCREEN_Y + PANEL_TOP - 13 + filled, 13 - filled);
 }
 
 void control_update_life_mana()
@@ -751,20 +741,12 @@ void UpdateManaFlask(CelOutputBuffer out)
 	DrawSpell(out);
 }
 
-static CelOutputBuffer AllocCelOutputBuffer(BYTE **raw, size_t width, size_t height)
-{
-	const std::size_t size = width * height;
-	*raw = DiabloAllocPtr(size);
-	memset(*raw, 0, size);
-	return CelOutputBuffer { *raw, *raw + size, static_cast<int>(width) };
-}
-
 void InitControlPan()
 {
 	int i;
-	const CelOutputBuffer btm_buf = AllocCelOutputBuffer(&pBtmBuff, PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
-	const CelOutputBuffer mana_buf = AllocCelOutputBuffer(&pManaBuff, 88, 88);
-	const CelOutputBuffer life_buf = AllocCelOutputBuffer(&pLifeBuff, 88, 88);
+	pBtmBuff = CelOutputBuffer::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
+	pManaBuff = CelOutputBuffer::Alloc(88, 88);
+	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
 
 	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
 	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
@@ -774,16 +756,16 @@ void InitControlPan()
 		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", NULL);
 	SetSpellTrans(RSPLTYPE_SKILL);
 	BYTE *pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
-	CelDrawUnsafeTo(btm_buf, 0, (PANEL_HEIGHT + 16) - 1, pStatusPanel, 1, PANEL_WIDTH);
+	CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, pStatusPanel, 1, PANEL_WIDTH);
 	MemFreeDbg(pStatusPanel);
 	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
-	CelDrawUnsafeTo(life_buf, 0, 87, pStatusPanel, 1, 88);
-	CelDrawUnsafeTo(mana_buf, 0, 87, pStatusPanel, 2, 88);
+	CelDrawUnsafeTo(pLifeBuff, 0, 87, pStatusPanel, 1, 88);
+	CelDrawUnsafeTo(pManaBuff, 0, 87, pStatusPanel, 2, 88);
 	MemFreeDbg(pStatusPanel);
 	talkflag = FALSE;
 	if (gbIsMultiplayer) {
 		BYTE *pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
-		CelDrawUnsafeTo(btm_buf, 0, (PANEL_HEIGHT + 16) * 2 - 1, pTalkPanel, 1, PANEL_WIDTH);
+		CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, pTalkPanel, 1, PANEL_WIDTH);
 		MemFreeDbg(pTalkPanel);
 		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", NULL);
 		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
@@ -1173,9 +1155,9 @@ void CheckBtnUp()
 
 void FreeControlPan()
 {
-	MemFreeDbg(pBtmBuff);
-	MemFreeDbg(pManaBuff);
-	MemFreeDbg(pLifeBuff);
+	pBtmBuff.Free();
+	pManaBuff.Free();
+	pLifeBuff.Free();
 	MemFreeDbg(pPanelText);
 	MemFreeDbg(pChrPanel);
 	MemFreeDbg(pSpellCels);
@@ -1760,16 +1742,13 @@ void RedBack(CelOutputBuffer out)
 	int idx;
 
 	idx = light4flag ? 1536 : 4608;
-
-	assert(out.begin != NULL);
-
 	int w, h;
 	BYTE *dst, *tbl;
 
 	if (leveltype != DTYPE_HELL) {
 		dst = out.at(SCREEN_X, SCREEN_Y);
 		tbl = &pLightTbl[idx];
-		for (h = gnViewportHeight; h; h--, dst += out.line_width - gnScreenWidth) {
+		for (h = gnViewportHeight; h; h--, dst += out.pitch() - gnScreenWidth) {
 			for (w = gnScreenWidth; w; w--) {
 				*dst = tbl[*dst];
 				dst++;
@@ -1778,7 +1757,7 @@ void RedBack(CelOutputBuffer out)
 	} else {
 		dst = out.at(SCREEN_X, SCREEN_Y);
 		tbl = &pLightTbl[idx];
-		for (h = gnViewportHeight; h; h--, dst += out.line_width - gnScreenWidth) {
+		for (h = gnViewportHeight; h; h--, dst += out.pitch() - gnScreenWidth) {
 			for (w = gnScreenWidth; w; w--) {
 				if (*dst >= 32)
 					*dst = tbl[*dst];

@@ -17,7 +17,6 @@ DWORD sgdwCursY;
 /**
  * Lower bound of back buffer.
  */
-BYTE *gpBufEnd;
 DWORD sgdwCursHgt;
 
 /**
@@ -115,13 +114,12 @@ static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
 		return;
 	}
 
-	assert(out.begin);
 	BYTE *src = sgSaveBack;
 	BYTE *dst = out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY);
 	for (int i = sgdwCursHgt; i-- > 0; ) {
 		memcpy(dst, src, sgdwCursWdt);
 		src += sgdwCursWdt;
-		dst += out.line_width;
+		dst += out.pitch();
 	}
 
 	sgdwCursXOld = sgdwCursX;
@@ -182,19 +180,17 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	sgdwCursHgt++;
 
 	assert(sgdwCursWdt * sgdwCursHgt < sizeof sgSaveBack);
-	assert(out.begin);
 	dst = sgSaveBack;
 	src = out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY);
 
-	for (i = sgdwCursHgt; i != 0; i--, dst += sgdwCursWdt, src += out.line_width) {
+	for (i = sgdwCursHgt; i != 0; i--, dst += sgdwCursWdt, src += out.pitch()) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 
 	mx++;
 	my++;
-	out = out.subregionY(0, SCREEN_Y + gnScreenHeight);
-	out.end -= 2;
 
+	out = out.subregion(0, 0, out.w() - 2, SCREEN_Y + gnScreenHeight);
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
 		if (plr[myplr].HoldItem._iMagical != 0) {
@@ -825,8 +821,6 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
  */
 static void scrollrt_drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy, int rows, int columns)
 {
-	assert(out.begin);
-
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
@@ -876,8 +870,6 @@ static void scrollrt_drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy
  */
 static void scrollrt_draw(CelOutputBuffer out, int x, int y, int sx, int sy, int rows, int columns)
 {
-	assert(out.begin);
-
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
 	memset(dRendered, 0, sizeof(dRendered));
@@ -951,9 +943,9 @@ static void Zoom(CelOutputBuffer out)
 			*dst-- = *src;
 			src--;
 		}
-		memcpy(dst - out.line_width, dst, wdt * 2 + 1);
-		src -= out.line_width - wdt;
-		dst -= 2 * (out.line_width - wdt);
+		memcpy(dst - out.pitch(), dst, wdt * 2 + 1);
+		src -= out.pitch() - wdt;
+		dst -= 2 * (out.pitch() - wdt);
 	}
 }
 

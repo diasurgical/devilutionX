@@ -143,14 +143,12 @@ static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 {
 	BYTE *dst;
 
-	assert(out.begin);
-
 	dst = out.at(X, Y);
 
 	int wdt, hgt;
 	BYTE pix;
 
-	for (hgt = H; hgt; hgt--, dst -= out.line_width + W) {
+	for (hgt = H; hgt; hgt--, dst -= out.pitch() + W) {
 		for (wdt = W; wdt; wdt--) {
 			pix = *dst;
 			if (pix >= PAL16_BLUE) {

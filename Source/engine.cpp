@@ -37,8 +37,6 @@ void CelDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, in
 	BYTE *pRLEBytes;
 
 	assert(pCelBuff != NULL);
-	assert(out.begin != NULL);
-
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
@@ -48,7 +46,6 @@ void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int n
 	BYTE *pRLEBytes;
 	int nDataSize;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
@@ -61,7 +58,6 @@ void CelDrawLightTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCe
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
@@ -77,7 +73,6 @@ void CelClippedDrawLightTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, 
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
@@ -93,7 +88,6 @@ void CelDrawLightRedTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int 
 	int nDataSize, w, idx;
 	BYTE *pRLEBytes, *dst, *tbl;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
@@ -111,7 +105,7 @@ void CelDrawLightRedTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int 
 	tbl = &pLightTbl[idx];
 	end = &pRLEBytes[nDataSize];
 
-	for (; pRLEBytes != end; dst -= out.line_width + nWidth) {
+	for (; pRLEBytes != end; dst -= out.pitch() + nWidth) {
 		for (w = nWidth; w;) {
 			width = *pRLEBytes++;
 			if (!(width & 0x80)) {
@@ -137,19 +131,18 @@ void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDa
 	BYTE width;
 	BYTE *src, *dst;
 
-	assert(out.begin != NULL);
 	assert(pRLEBytes != NULL);
 
 	src = pRLEBytes;
 	dst = out.at(sx, sy);
 	w = nWidth;
 
-	for (; src != &pRLEBytes[nDataSize]; dst -= out.line_width + w) {
+	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + w) {
 		for (i = w; i;) {
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					memcpy(dst, src, width);
 				}
 				src += width;
@@ -168,7 +161,6 @@ void CelClippedDrawSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, i
 	BYTE *pRLEBytes;
 	int nDataSize;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
@@ -181,7 +173,6 @@ void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 	BYTE width;
 	BYTE *src, *dst;
 
-	assert(out.begin != NULL);
 	assert(pRLEBytes != NULL);
 
 	src = pRLEBytes;
@@ -190,12 +181,12 @@ void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 		tbl = &pLightTbl[light_table_index * 256];
 	w = nWidth;
 
-	for (; src != &pRLEBytes[nDataSize]; dst -= out.line_width + w) {
+	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + w) {
 		for (i = w; i;) {
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					if (width & 1) {
 						dst[0] = tbl[src[0]];
 						src++;
@@ -237,8 +228,6 @@ void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 	BYTE *tbl;
 
 	assert(pRLEBytes != NULL);
-	assert(out.begin != NULL);
-
 	int i;
 	BYTE width;
 	BYTE *src, *dst;
@@ -249,12 +238,12 @@ void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 	w = nWidth;
 	shift = (BYTE)(size_t)dst & 1;
 
-	for (; src != &pRLEBytes[nDataSize]; dst -= out.line_width + w, shift = (shift + 1) & 1) {
+	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + w, shift = (shift + 1) & 1) {
 		for (i = w; i;) {
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					if (((BYTE)(size_t)dst & 1) == shift) {
 						if (!(width & 1)) {
 							goto L_ODD;
@@ -326,7 +315,6 @@ static void CelBlitLightBlendedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE 
 	BYTE width;
 	BYTE *src, *dst;
 
-	assert(out.begin != NULL);
 	assert(pRLEBytes != NULL);
 
 	src = pRLEBytes;
@@ -335,12 +323,12 @@ static void CelBlitLightBlendedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE 
 		tbl = &pLightTbl[light_table_index * 256];
 	w = nWidth;
 
-	for (; src != &pRLEBytes[nDataSize]; dst -= out.line_width + w) {
+	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + w) {
 		for (i = w; i;) {
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					if (width & 1) {
 						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
 						src++;
@@ -400,7 +388,6 @@ void CelDrawLightRedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, 
 	int nDataSize, w, idx;
 	BYTE *pRLEBytes, *dst, *tbl;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
@@ -419,12 +406,12 @@ void CelDrawLightRedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, 
 
 	end = &pRLEBytes[nDataSize];
 
-	for (; pRLEBytes != end; dst -= out.line_width + nWidth) {
+	for (; pRLEBytes != end; dst -= out.pitch() + nWidth) {
 		for (w = nWidth; w;) {
 			width = *pRLEBytes++;
 			if (!(width & 0x80)) {
 				w -= width;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					while (width) {
 						*dst = tbl[*pRLEBytes];
 						pRLEBytes++;
@@ -449,8 +436,6 @@ void CelDrawUnsafeTo(CelOutputBuffer out, int x, int y, BYTE *pCelBuff, int nCel
 	BYTE *pRLEBytes, *dst, *end;
 
 	assert(pCelBuff != NULL);
-	assert(out.begin != NULL);
-
 	int i, nDataSize;
 	BYTE width;
 
@@ -458,7 +443,7 @@ void CelDrawUnsafeTo(CelOutputBuffer out, int x, int y, BYTE *pCelBuff, int nCel
 	end = &pRLEBytes[nDataSize];
 	dst = out.at(x, y);
 
-	for (; pRLEBytes != end; dst -= out.line_width + nWidth) {
+	for (; pRLEBytes != end; dst -= out.pitch() + nWidth) {
 		for (i = nWidth; i;) {
 			width = *pRLEBytes++;
 			if (!(width & 0x80)) {
@@ -482,22 +467,20 @@ void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelB
 	BYTE width;
 
 	assert(pCelBuff != NULL);
-	assert(out.begin != NULL);
-
 	src = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 	end = &src[nDataSize];
 	dst = out.at(sx, sy);
 
-	for (; src != end; dst -= out.line_width + nWidth) {
+	for (; src != end; dst -= out.pitch() + nWidth) {
 		for (w = nWidth; w;) {
 			width = *src++;
 			if (!(width & 0x80)) {
 				w -= width;
-				if (dst < out.end && dst > out.begin) {
-					if (dst >= out.end - out.line_width) {
+				if (dst < out.end() && dst > out.begin()) {
+					if (dst >= out.end() - out.pitch()) {
 						while (width) {
 							if (*src++) {
-								dst[-out.line_width] = col;
+								dst[-out.pitch()] = col;
 								dst[-1] = col;
 								dst[1] = col;
 							}
@@ -507,10 +490,10 @@ void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelB
 					} else {
 						while (width) {
 							if (*src++) {
-								dst[-out.line_width] = col;
+								dst[-out.pitch()] = col;
 								dst[-1] = col;
 								dst[1] = col;
-								dst[out.line_width] = col;
+								dst[out.pitch()] = col;
 							}
 							dst++;
 							width--;
@@ -531,7 +514,6 @@ void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelB
 
 void SetPixel(CelOutputBuffer out, int sx, int sy, BYTE col)
 {
-	assert(out.begin != NULL);
 	if (!out.in_bounds(sx, sy))
 		return;
 	*out.at(sx, sy) = col;
@@ -563,7 +545,7 @@ static void DrawHalfTransparentBlendedRectTo(CelOutputBuffer out, int sx, int sy
 			*pix = paletteTransparencyLookup[0][*pix];
 			pix++;
 		}
-		pix += out.line_width - width;
+		pix += out.pitch() - width;
 	}
 }
 
@@ -576,7 +558,7 @@ static void DrawHalfTransparentStippledRectTo(CelOutputBuffer out, int sx, int s
 				*pix = 0;
 			pix++;
 		}
-		pix += out.line_width - width;
+		pix += out.pitch() - width;
 	}
 }
 
@@ -837,7 +819,7 @@ static void Cl2BlitSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 				width -= 65;
 				nDataSize--;
 				fill = *src++;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					w -= width;
 					while (width) {
 						*dst = fill;
@@ -846,13 +828,13 @@ static void Cl2BlitSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 					}
 					if (!w) {
 						w = nWidth;
-						dst -= out.line_width + w;
+						dst -= out.pitch() + w;
 					}
 					continue;
 				}
 			} else {
 				nDataSize -= width;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					w -= width;
 					while (width) {
 						*dst = *src;
@@ -862,7 +844,7 @@ static void Cl2BlitSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 					}
 					if (!w) {
 						w = nWidth;
-						dst -= out.line_width + w;
+						dst -= out.pitch() + w;
 					}
 					continue;
 				} else {
@@ -882,7 +864,7 @@ static void Cl2BlitSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 			}
 			if (!w) {
 				w = nWidth;
-				dst -= out.line_width + w;
+				dst -= out.pitch() + w;
 			}
 		}
 	}
@@ -916,40 +898,40 @@ static void Cl2BlitOutlineSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBy
 			if (width > 65) {
 				width -= 65;
 				nDataSize--;
-				if (*src++ && dst < out.end && dst > out.begin) {
+				if (*src++ && dst < out.end() && dst > out.begin()) {
 					w -= width;
 					dst[-1] = col;
 					dst[width] = col;
 					while (width) {
-						dst[-out.line_width] = col;
-						dst[out.line_width] = col;
+						dst[-out.pitch()] = col;
+						dst[out.pitch()] = col;
 						dst++;
 						width--;
 					}
 					if (!w) {
 						w = nWidth;
-						dst -= out.line_width + w;
+						dst -= out.pitch() + w;
 					}
 					continue;
 				}
 			} else {
 				nDataSize -= width;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					w -= width;
 					while (width) {
 						if (*src++) {
 							dst[-1] = col;
 							dst[1] = col;
-							dst[-out.line_width] = col;
-							// BUGFIX: only set `if (dst+out.line_width < out.end)`
-							dst[out.line_width] = col;
+							dst[-out.pitch()] = col;
+							// BUGFIX: only set `if (dst+out.pitch() < out.end())`
+							dst[out.pitch()] = col;
 						}
 						dst++;
 						width--;
 					}
 					if (!w) {
 						w = nWidth;
-						dst -= out.line_width + w;
+						dst -= out.pitch() + w;
 					}
 					continue;
 				} else {
@@ -969,7 +951,7 @@ static void Cl2BlitOutlineSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBy
 			}
 			if (!w) {
 				w = nWidth;
-				dst -= out.line_width + w;
+				dst -= out.pitch() + w;
 			}
 		}
 	}
@@ -1006,7 +988,7 @@ static void Cl2BlitLightSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 				width -= 65;
 				nDataSize--;
 				fill = pTable[*src++];
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					w -= width;
 					while (width) {
 						*dst = fill;
@@ -1015,13 +997,13 @@ static void Cl2BlitLightSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 					}
 					if (w == 0) {
 						w = spriteWidth;
-						dst -= out.line_width + w;
+						dst -= out.pitch() + w;
 					}
 					continue;
 				}
 			} else {
 				nDataSize -= width;
-				if (dst < out.end && dst > out.begin) {
+				if (dst < out.end() && dst > out.begin()) {
 					w -= width;
 					while (width) {
 						*dst = pTable[*src];
@@ -1031,7 +1013,7 @@ static void Cl2BlitLightSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 					}
 					if (w == 0) {
 						w = spriteWidth;
-						dst -= out.line_width + w;
+						dst -= out.pitch() + w;
 					}
 					continue;
 				} else {
@@ -1051,7 +1033,7 @@ static void Cl2BlitLightSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 			}
 			if (w == 0) {
 				w = spriteWidth;
-				dst -= out.line_width + w;
+				dst -= out.pitch() + w;
 			}
 		}
 	}
@@ -1062,7 +1044,6 @@ void Cl2Draw(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int 
 	BYTE *pRLEBytes;
 	int nDataSize;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 	assert(nCel > 0);
 
@@ -1076,13 +1057,12 @@ void Cl2DrawOutline(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuf
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 	assert(nCel > 0);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
-	out.end -= out.line_width;
+	out = out.subregionY(0, out.h() - 1);
 	Cl2BlitOutlineSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, col);
 }
 
@@ -1091,7 +1071,6 @@ void Cl2DrawLightTbl(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nC
 	int nDataSize, idx;
 	BYTE *pRLEBytes;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 	assert(nCel > 0);
 
@@ -1111,7 +1090,6 @@ void Cl2DrawLight(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel,
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	assert(out.begin != NULL);
 	assert(pCelBuff != NULL);
 	assert(nCel > 0);
 

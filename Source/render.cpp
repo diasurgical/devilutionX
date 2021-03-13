@@ -376,7 +376,7 @@ inline static void RenderLine(CelOutputBuffer out, int &x, int y, BYTE **src, in
 {
 	BYTE *dst = out.at(x, y);
 #ifdef NO_OVERDRAW
-	if (y < SCREEN_Y || dst > out.end) {
+	if (y < SCREEN_Y || dst > out.end()) {
 		goto skip;
 	}
 #endif
@@ -579,13 +579,13 @@ void world_draw_black_tile(CelOutputBuffer out, int sx, int sy)
 		return;
 
 	BYTE *dst = out.at(sx + TILE_WIDTH / 2 - 2, sy);
-	for (i = TILE_HEIGHT - 2, j = 1; i >= 0; i -= 2, j++, dst -= out.line_width + 2) {
-		if (dst < out.end)
+	for (i = TILE_HEIGHT - 2, j = 1; i >= 0; i -= 2, j++, dst -= out.pitch() + 2) {
+		if (dst < out.end())
 			memset(dst, 0, 4 * j);
 	}
 	dst += 4;
-	for (i = 2, j = TILE_HEIGHT / 2 - 1; i != TILE_HEIGHT; i += 2, j--, dst -= out.line_width - 2) {
-		if (dst < out.end)
+	for (i = 2, j = TILE_HEIGHT / 2 - 1; i != TILE_HEIGHT; i += 2, j--, dst -= out.pitch() - 2) {
+		if (dst < out.end())
 			memset(dst, 0, 4 * j);
 	}
 }

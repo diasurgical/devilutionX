@@ -161,7 +161,7 @@ static void gmenu_clear_buffer(CelOutputBuffer out, int x, int y, int width, int
 	BYTE *i = out.at(x, y);
 	while (height--) {
 		memset(i, 205, width);
-		i -= out.line_width;
+		i -= out.pitch();
 	}
 }
 

@@ -13,10 +13,17 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+#include <SDL.h>
+
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#endif
+
 #include "../types.h"
 
 #ifdef __cplusplus
 #include <algorithm>
+#include <cstddef>
 #endif
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -57,37 +64,101 @@ inline BYTE *CelGetFrameClipped(BYTE *pCelBuff, int nCel, int *nDataSize)
 }
 
 struct CelOutputBuffer {
-	BYTE *begin;
-	BYTE *end;
-	int line_width;
+	// 8-bit palletized surface.
+	SDL_Surface *surface;
+	SDL_Rect region;
 
 #ifdef __cplusplus
-	BYTE *at(int x, int y) const
+	CelOutputBuffer()
+	    : surface(NULL)
+	    , region(SDL_Rect { 0, 0, 0, 0 })
 	{
-		return &begin[x + line_width * y];
 	}
 
-	bool in_bounds(int x, int y) const
+	explicit CelOutputBuffer(SDL_Surface *surface)
+	    : surface(surface)
+	    , region(SDL_Rect { 0, 0, surface->w, surface->h })
 	{
-		return x >= 0 && y >= 0 && begin + x + line_width * y < end;
+	}
+
+	CelOutputBuffer(SDL_Surface *surface, SDL_Rect region)
+	    : surface(surface)
+	    , region(region)
+	{
+	}
+
+	CelOutputBuffer(const CelOutputBuffer &other)
+	    : surface(other.surface)
+	    , region(other.region)
+	{
+	}
+
+	void operator=(const CelOutputBuffer &other)
+	{
+		surface = other.surface;
+		region = other.region;
 	}
 
 	/**
-	 * @brief Returns a buffer that starts at y0 and ends at y1.
+	 * @brief Allocate a buffer that owns its underlying data.
 	 */
-	CelOutputBuffer subregionY(int y0, int y1) const
+	static CelOutputBuffer Alloc(std::size_t width, std::size_t height)
 	{
-		return CelOutputBuffer { at(0, y0), std::min(at(0, y1), end), line_width };
+		return CelOutputBuffer(SDL_CreateRGBSurfaceWithFormat(0, width, height, 8, SDL_PIXELFORMAT_INDEX8));
+	}
+
+	/**
+	 * @brief Free the underlying data.
+	 *
+	 * Only use this if the buffer owns its data.
+	 */
+	void Free() {
+		SDL_FreeSurface(this->surface);
+		this->surface = NULL;
+	}
+
+	int w() const { return region.w; }
+	int h() const { return region.h; }
+
+	BYTE *at(int x, int y) const
+	{
+		return static_cast<BYTE *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
+	}
+
+	BYTE *begin() const { return at(0, 0); }
+	BYTE *end() const { return at(0, region.h); }
+
+	/**
+	 * @brief Line width of the raw underlying byte buffer.
+	 * May be wider than its logical width (for power-of-2 alignment).
+	 */
+	int pitch() { return surface->pitch; }
+
+	bool in_bounds(int x, int y) const
+	{
+		return x >= 0 && y >= 0 && x < region.w && y < region.h;
+	}
+
+	/**
+	 * @brief Returns a subregion of the given buffer.
+	 */
+	CelOutputBuffer subregion(int x, int y, int w, int h) const
+	{
+		return CelOutputBuffer(surface, SDL_Rect { x, y, w, h });
+	}
+
+	/**
+	 * @brief Returns a buffer that starts at `y` of height `h`.
+	 */
+	CelOutputBuffer subregionY(int y, int h) const
+	{
+		SDL_Rect subregion = region;
+		subregion.y = y;
+		subregion.h = h;
+		return CelOutputBuffer(surface, subregion);
 	}
 #endif
 };
-
-inline CelOutputBuffer GlobalBackBuffer()
-{
-	extern BYTE *gpBuffer;
-	extern BYTE *gpBufEnd;
-	return CelOutputBuffer { gpBuffer, gpBufEnd, BUFFER_WIDTH };
-}
 
 /**
  * @brief Blit CEL sprite to the back buffer at the given coordinates

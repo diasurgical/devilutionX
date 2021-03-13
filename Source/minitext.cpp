@@ -146,7 +146,7 @@ void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
 {
 	CelOutputBuffer buf = GlobalBackBuffer();
 	const int start_y = 49 + SCREEN_Y + UI_OFFSET_Y;
-	buf = buf.subregionY(start_y, 309 + SCREEN_Y + UI_OFFSET_Y);
+	buf = buf.subregionY(start_y, 260);
 	CelDrawTo(buf, sx, sy - start_y, pCelBuff, nCel, 22);
 }
 
