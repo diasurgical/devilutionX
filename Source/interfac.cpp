@@ -230,15 +230,11 @@ static void InitCutscene(unsigned int uMsg)
 	sgdwProgress = 0;
 }
 
-static void DrawProgress(int screen_x, int screen_y, int progress_id)
+static void DrawProgress(CelOutputBuffer out, int x, int y, int progress_id)
 {
-	BYTE *dst;
-	int i;
-
-	dst = &gpBuffer[screen_x + BUFFER_WIDTH * screen_y];
-	for (i = 0; i < 22; i++) {
+	BYTE *dst = out.at(x, y);
+	for (int i = 0; i < 22; ++i, dst += out.line_width) {
 		*dst = BarColor[progress_id];
-		dst += BUFFER_WIDTH;
 	}
 }
 
@@ -247,10 +243,12 @@ static void DrawCutscene()
 	DWORD i;
 
 	lock_buf(1);
-	CelDrawTo(GlobalBackBuffer(), PANEL_X, 480 + SCREEN_Y - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
+	CelOutputBuffer out = GlobalBackBuffer();
+	CelDrawTo(out, PANEL_X, 480 + SCREEN_Y - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
 
 	for (i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
+		    out,
 		    BarPos[progress_id][0] + i + PANEL_X,
 		    BarPos[progress_id][1] + SCREEN_Y + UI_OFFSET_Y,
 		    progress_id);
