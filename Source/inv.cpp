@@ -139,18 +139,18 @@ void InitInv()
 	drawsbarflag = FALSE;
 }
 
-void InvDrawSlotBack(int X, int Y, int W, int H)
+static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 {
 	BYTE *dst;
 
-	assert(gpBuffer);
+	assert(out.begin);
 
-	dst = &gpBuffer[X + BUFFER_WIDTH * Y];
+	dst = out.at(X, Y);
 
 	int wdt, hgt;
 	BYTE pix;
 
-	for (hgt = H; hgt; hgt--, dst -= BUFFER_WIDTH + W) {
+	for (hgt = H; hgt; hgt--, dst -= out.line_width + W) {
 		for (wdt = W; wdt; wdt--) {
 			pix = *dst;
 			if (pix >= PAL16_BLUE) {
@@ -172,7 +172,7 @@ void DrawInv(CelOutputBuffer out)
 	CelDrawTo(out, RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels, 1, SPANEL_WIDTH);
 
 	if (!plr[myplr].InvBody[INVLOC_HEAD].isEmpty()) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HEAD]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -208,7 +208,7 @@ void DrawInv(CelOutputBuffer out)
 	}
 
 	if (!plr[myplr].InvBody[INVLOC_RING_LEFT].isEmpty()) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_RING_LEFT]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -244,7 +244,7 @@ void DrawInv(CelOutputBuffer out)
 	}
 
 	if (!plr[myplr].InvBody[INVLOC_RING_RIGHT].isEmpty()) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_RING_RIGHT]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -280,7 +280,7 @@ void DrawInv(CelOutputBuffer out)
 	}
 
 	if (!plr[myplr].InvBody[INVLOC_AMULET].isEmpty()) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_AMULET]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -316,7 +316,7 @@ void DrawInv(CelOutputBuffer out)
 	}
 
 	if (!plr[myplr].InvBody[INVLOC_HAND_LEFT].isEmpty()) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 17, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, RIGHT_PANEL_X + 17, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -357,7 +357,7 @@ void DrawInv(CelOutputBuffer out)
 			if (plr[myplr]._pClass != PC_BARBARIAN
 			    || plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_SWORD
 			        && plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_MACE) {
-				InvDrawSlotBack(RIGHT_PANEL_X + 248, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+				InvDrawSlotBack(out, RIGHT_PANEL_X + 248, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 				light_table_index = 0;
 				cel_transparency_active = TRUE;
 
@@ -374,7 +374,7 @@ void DrawInv(CelOutputBuffer out)
 		}
 	}
 	if (!plr[myplr].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 248, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, RIGHT_PANEL_X + 248, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -413,7 +413,7 @@ void DrawInv(CelOutputBuffer out)
 	}
 
 	if (!plr[myplr].InvBody[INVLOC_CHEST].isEmpty()) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_CHEST]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -452,6 +452,7 @@ void DrawInv(CelOutputBuffer out)
 		invtest[i] = FALSE;
 		if (plr[myplr].InvGrid[i] != 0) {
 			InvDrawSlotBack(
+			    out,
 			    InvRect[i + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 			    InvRect[i + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 			    INV_SLOT_SIZE_PX,
@@ -542,7 +543,7 @@ void DrawInvBelt(CelOutputBuffer out)
 			continue;
 		}
 
-		InvDrawSlotBack(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 		frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 
