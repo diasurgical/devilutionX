@@ -107,28 +107,21 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 }
 
 /**
- * @brief Remove the cursor from the back buffer
+ * @brief Remove the cursor from the buffer
  */
-static void scrollrt_draw_cursor_back_buffer()
+static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
 {
-	int i;
-	BYTE *src, *dst;
-
 	if (sgdwCursWdt == 0) {
 		return;
 	}
 
-	assert(gpBuffer);
-	src = sgSaveBack;
-	dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
-	i = sgdwCursHgt;
-
-	if (sgdwCursHgt != 0) {
-		while (i--) {
-			memcpy(dst, src, sgdwCursWdt);
-			src += sgdwCursWdt;
-			dst += BUFFER_WIDTH;
-		}
+	assert(out.begin);
+	BYTE *src = sgSaveBack;
+	BYTE *dst = out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY);
+	for (int i = sgdwCursHgt; i-- > 0; ) {
+		memcpy(dst, src, sgdwCursWdt);
+		src += sgdwCursWdt;
+		dst += out.line_width;
 	}
 
 	sgdwCursXOld = sgdwCursX;
@@ -1496,7 +1489,7 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 
 	if (draw_cursor) {
 		lock_buf(0);
-		scrollrt_draw_cursor_back_buffer();
+		scrollrt_draw_cursor_back_buffer(GlobalBackBuffer());
 		unlock_buf(0);
 	}
 	RenderPresent();
@@ -1564,7 +1557,7 @@ void DrawAndBlit()
 	DrawMain(hgt, ddsdesc, drawhpflag, drawmanaflag, drawsbarflag, drawbtnflag);
 
 	lock_buf(0);
-	scrollrt_draw_cursor_back_buffer();
+	scrollrt_draw_cursor_back_buffer(GlobalBackBuffer());
 	unlock_buf(0);
 	RenderPresent();
 
