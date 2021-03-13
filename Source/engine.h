@@ -396,10 +396,10 @@ void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, i
  */
 int GetDirection(int x1, int y1, int x2, int y2);
 
-void SetRndSeed(int s);
+void SetRndSeed(Sint32 s);
 Sint32 AdvanceRndSeed();
 Sint32 GetRndSeed();
-Sint32 random_(BYTE idx, int v);
+Sint32 random_(BYTE idx, Sint32 v);
 BYTE *DiabloAllocPtr(DWORD dwBytes);
 void mem_free_dbg(void *p);
 BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen);
