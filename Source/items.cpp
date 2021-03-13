@@ -3994,18 +3994,14 @@ void PrintUString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char 
 	}
 }
 
-void DrawULine(int y)
+static void DrawULine(CelOutputBuffer out, int y)
 {
-	assert(gpBuffer);
+	assert(out.begin);
+	BYTE *src = out.at(SCREEN_X + 26 + RIGHT_PANEL - SPANEL_WIDTH, SCREEN_Y + 25);
+	BYTE *dst = out.at(26 + RIGHT_PANEL_X - SPANEL_WIDTH, SCREEN_Y + y * 12 + 38);
 
-	int i;
-	BYTE *src, *dst;
-
-	src = &gpBuffer[SCREENXY(26 + RIGHT_PANEL - SPANEL_WIDTH, 25)];
-	dst = &gpBuffer[BUFFER_WIDTH * (y * 12 + 38 + SCREEN_Y) + 26 + RIGHT_PANEL_X - SPANEL_WIDTH];
-
-	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
-		memcpy(dst, src, 266); // BUGFIX: should be 267
+	for (int i = 0; i < 3; i++, src += out.line_width, dst += out.line_width)
+		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)
 }
 
 void DrawUniqueInfo(CelOutputBuffer out)
@@ -4016,7 +4012,7 @@ void DrawUniqueInfo(CelOutputBuffer out)
 		uid = curruitem._iUid;
 		DrawUTextBack(GlobalBackBuffer());
 		PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, 2, TRUE, UniqueItemList[uid].UIName, 3);
-		DrawULine(5);
+		DrawULine(out, 5);
 		PrintItemPower(UniqueItemList[uid].UIPower1, &curruitem);
 		y = 6 - UniqueItemList[uid].UINumPL + 8;
 		PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, y, TRUE, tempstr, 0);
