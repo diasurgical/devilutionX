@@ -28,7 +28,7 @@ void FastDrawVertLine(CelOutputBuffer out, int x, int y, int height, BYTE col)
 	BYTE *p = out.at(SCREEN_X + x, SCREEN_Y + y);
 	for (int j = 0; j < height; j++) {
 		*p = col;
-		p += out.line_width;
+		p += out.pitch();
 	}
 }
 

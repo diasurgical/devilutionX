@@ -15,7 +15,6 @@
 namespace dvl {
 
 int sgdwLockCount;
-BYTE *gpBuffer;
 #ifdef _DEBUG
 int locktbl[256];
 #endif
@@ -32,7 +31,7 @@ unsigned int pal_surface_palette_version = 0;
 /** 24-bit renderer texture surface */
 SDL_Surface *renderer_texture_surface = NULL;
 
-/** 8-bit surface wrapper around #gpBuffer */
+/** 8-bit surface that we render to */
 SDL_Surface *pal_surface;
 
 static void dx_create_back_buffer()
@@ -41,9 +40,6 @@ static void dx_create_back_buffer()
 	if (pal_surface == NULL) {
 		ErrSdl();
 	}
-
-	gpBuffer = (BYTE *)pal_surface->pixels;
-	gpBufEnd = gpBuffer;
 
 #ifndef USE_SDL1
 	// In SDL2, `pal_surface` points to the global `palette`.
@@ -92,8 +88,6 @@ static void lock_buf_priv()
 		return;
 	}
 
-	gpBuffer = (BYTE *)pal_surface->pixels;
-	gpBufEnd = (BYTE *)pal_surface->pixels + pal_surface->pitch * pal_surface->h;
 	sgdwLockCount++;
 }
 
@@ -109,13 +103,8 @@ static void unlock_buf_priv()
 {
 	if (sgdwLockCount == 0)
 		app_fatal("draw main unlock error");
-	if (gpBuffer == NULL)
-		app_fatal("draw consistency error");
 
 	sgdwLockCount--;
-	if (sgdwLockCount == 0) {
-		gpBufEnd = gpBuffer;
-	}
 	sgMemCrit.Leave();
 }
 
@@ -129,13 +118,22 @@ void unlock_buf(BYTE idx)
 	unlock_buf_priv();
 }
 
+CelOutputBuffer GlobalBackBuffer()
+{
+	if (sgdwLockCount == 0) {
+		SDL_Log("WARNING: Trying to obtain GlobalBackBuffer() without holding a lock\n");
+		return CelOutputBuffer();
+	}
+
+	return CelOutputBuffer(pal_surface);
+}
+
 void dx_cleanup()
 {
 	if (ghMainWnd)
 		SDL_HideWindow(ghMainWnd);
 	sgMemCrit.Enter();
 	sgdwLockCount = 0;
-	gpBuffer = NULL;
 	sgMemCrit.Leave();
 
 	if (pal_surface == NULL)

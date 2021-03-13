@@ -12,7 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern BYTE *gpBuffer;
+CelOutputBuffer GlobalBackBuffer();
 
 void dx_init();
 void lock_buf(BYTE idx);

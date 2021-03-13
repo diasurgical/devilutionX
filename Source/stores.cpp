@@ -2346,7 +2346,7 @@ void DrawSLine(CelOutputBuffer out, int y)
 		width = 267; // BUGFIX: should be 267, not 266 (fixed)
 	}
 
-	for (int i = 0; i < 3; i++, src += out.line_width, dst += out.line_width)
+	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
 		memcpy(dst, src, width);
 }
 

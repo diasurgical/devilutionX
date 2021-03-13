@@ -233,7 +233,7 @@ static void InitCutscene(unsigned int uMsg)
 static void DrawProgress(CelOutputBuffer out, int x, int y, int progress_id)
 {
 	BYTE *dst = out.at(x, y);
-	for (int i = 0; i < 22; ++i, dst += out.line_width) {
+	for (int i = 0; i < 22; ++i, dst += out.pitch()) {
 		*dst = BarColor[progress_id];
 	}
 }

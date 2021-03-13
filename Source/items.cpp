@@ -3996,11 +3996,10 @@ void PrintUString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char 
 
 static void DrawULine(CelOutputBuffer out, int y)
 {
-	assert(out.begin);
 	BYTE *src = out.at(SCREEN_X + 26 + RIGHT_PANEL - SPANEL_WIDTH, SCREEN_Y + 25);
 	BYTE *dst = out.at(26 + RIGHT_PANEL_X - SPANEL_WIDTH, SCREEN_Y + y * 12 + 38);
 
-	for (int i = 0; i < 3; i++, src += out.line_width, dst += out.line_width)
+	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
 		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)
 }
 
