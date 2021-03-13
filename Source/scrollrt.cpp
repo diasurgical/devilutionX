@@ -1214,7 +1214,7 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 	if (automapflag) {
 		DrawAutomap(out.subregionY(0, SCREEN_Y + gnViewportHeight));
 	}
-	DrawMonsterHealthBar();
+	DrawMonsterHealthBar(out);
 
 	if (stextflag && !qtextflag)
 		DrawSText(out);
@@ -1554,7 +1554,7 @@ void DrawAndBlit()
 		DrawTalkPan(out);
 		hgt = gnScreenHeight;
 	}
-	DrawXPBar();
+	DrawXPBar(out);
 	scrollrt_draw_cursor_item(out);
 
 	DrawFPS(out);

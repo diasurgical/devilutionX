@@ -7,6 +7,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
+namespace {
 
 int GetTextWidth(const char *s)
 {
@@ -17,33 +18,35 @@ int GetTextWidth(const char *s)
 	return l;
 }
 
-inline void FastDrawHorizLine(int x, int y, int width, BYTE col)
+void FastDrawHorizLine(CelOutputBuffer out, int x, int y, int width, BYTE col)
 {
-	memset(&gpBuffer[SCREENXY(x, y)], col, width);
+	memset(out.at(SCREEN_X + x, SCREEN_Y + y), col, width);
 }
 
-inline void FastDrawVertLine(int x, int y, int height, BYTE col)
+void FastDrawVertLine(CelOutputBuffer out, int x, int y, int height, BYTE col)
 {
-	BYTE *p = &gpBuffer[SCREENXY(x, y)];
+	BYTE *p = out.at(SCREEN_X + x, SCREEN_Y + y);
 	for (int j = 0; j < height; j++) {
 		*p = col;
-		p += BUFFER_WIDTH;
+		p += out.line_width;
 	}
 }
 
-inline void FillRect(int x, int y, int width, int height, BYTE col)
+void FillRect(CelOutputBuffer out, int x, int y, int width, int height, BYTE col)
 {
 	for (int j = 0; j < height; j++) {
-		FastDrawHorizLine(x, y + j, width, col);
+		FastDrawHorizLine(out, x, y + j, width, col);
 	}
 }
 
-inline void FillSquare(int x, int y, int size, BYTE col)
+void FillSquare(CelOutputBuffer out, int x, int y, int size, BYTE col)
 {
-	FillRect(x, y, size, size, col);
+	FillRect(out, x, y, size, size, col);
 }
 
-void DrawMonsterHealthBar()
+} // namespace
+
+void DrawMonsterHealthBar(CelOutputBuffer out)
 {
 	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;
@@ -86,25 +89,25 @@ void DrawMonsterHealthBar()
 	if (mon->_uniqtype != 0)
 		borderSize <<= 1;
 
-	FillRect(xPos, yPos, (width * currentLife) / maxLife, height, filledColor);
+	FillRect(out, xPos, yPos, (width * currentLife) / maxLife, height, filledColor);
 	for (int j = 0; j < borderSize; j++) {
-		FastDrawHorizLine(xPos - xOffset - corners, yPos - borderSize - yOffset + j, (xOffset + corners) * 2 + width, borderColor);
-		FastDrawHorizLine(xPos - xOffset, yPos + height + yOffset + j, width + corners + xOffset * 2, borderColor);
+		FastDrawHorizLine(out, xPos - xOffset - corners, yPos - borderSize - yOffset + j, (xOffset + corners) * 2 + width, borderColor);
+		FastDrawHorizLine(out, xPos - xOffset, yPos + height + yOffset + j, width + corners + xOffset * 2, borderColor);
 	}
 	for (int j = -yOffset; j < yOffset + height + corners; ++j) {
-		FastDrawHorizLine(xPos - xOffset - borderSize, yPos + j, borderSize, borderColor);
-		FastDrawHorizLine(xPos + xOffset + width, yPos + j, borderSize, borderColor);
+		FastDrawHorizLine(out, xPos - xOffset - borderSize, yPos + j, borderSize, borderColor);
+		FastDrawHorizLine(out, xPos + xOffset + width, yPos + j, borderSize, borderColor);
 	}
 	for (int k = 0; k < resSize; ++k) {
 		if (mres & immunes[k]) {
 			drawImmu = true;
-			FillSquare(xPos + immuOffset, yPos + height - square, square, resistColors[k]);
+			FillSquare(out, xPos + immuOffset, yPos + height - square, square, resistColors[k]);
 			immuOffset += square + 2;
 		} else if ((mres & resists[k])) {
-			FillSquare(xPos + resOffset, yPos + yOffset + height + borderSize + 2, square, resistColors[k]);
+			FillSquare(out, xPos + resOffset, yPos + yOffset + height + borderSize + 2, square, resistColors[k]);
 			resOffset += square + 2;
 		} else {
-			FillSquare(xPos + vulOffset, yPos + yOffset + height + borderSize + 2, square, resistColors[k]);
+			FillSquare(out, xPos + vulOffset, yPos + yOffset + height + borderSize + 2, square, resistColors[k]);
 			vulOffset -= square + 2;
 		}
 	}
@@ -113,7 +116,6 @@ void DrawMonsterHealthBar()
 	strcpy(text, mon->mName);
 	if (mon->leader > 0)
 		strcat(text, " (minion)");
-	CelOutputBuffer out = GlobalBackBuffer();
 	PrintGameStr(out, xPos2 - GetTextWidth(text) / 2, yPos + 10, text, (mon->_uniqtype != 0 ? COL_GOLD : COL_WHITE));
 
 	sprintf(text, "%d", (maxLife >> 6));
@@ -134,7 +136,7 @@ void DrawMonsterHealthBar()
 	PrintGameStr(out, xPos2 + width / 2 - GetTextWidth(vulnText), yPos + yOffset + height + borderSize + 12, vulnText, COL_RED);
 }
 
-void DrawXPBar()
+void DrawXPBar(CelOutputBuffer out)
 {
 	if (!sgOptions.Gameplay.bExperienceBar)
 		return;
@@ -150,7 +152,6 @@ void DrawXPBar()
 	int frameColor = 245;
 	bool space = true; // add 1 pixel separator on top/bottom of the bar
 
-	CelOutputBuffer out = GlobalBackBuffer();
 	PrintGameStr(out, xPos - 22, yPos + 6, "XP", COL_WHITE);
 	int charLevel = plr[myplr]._pLevel;
 	if (charLevel == MAXCHARLEVEL - 1)
@@ -164,14 +165,14 @@ void DrawXPBar()
 		return;
 
 	int visibleBar = barWidth * (unsigned __int64)prevXpDelta_1 / prevXpDelta;
-	FillRect(xPos, yPos, barWidth, barHeight, emptyBarColor);
-	FillRect(xPos, yPos + (space ? 1 : 0), visibleBar, barHeight - (space ? 2 : 0), barColor);
-	FastDrawHorizLine(xPos - 1, yPos - 1, barWidth + 2, frameColor);
-	FastDrawHorizLine(xPos - 1, yPos + barHeight, barWidth + 2, frameColor);
-	FastDrawVertLine(xPos - 1, yPos - 1, barHeight + 2, frameColor);
-	FastDrawVertLine(xPos + barWidth, yPos - 1, barHeight + 2, frameColor);
+	FillRect(out, xPos, yPos, barWidth, barHeight, emptyBarColor);
+	FillRect(out, xPos, yPos + (space ? 1 : 0), visibleBar, barHeight - (space ? 2 : 0), barColor);
+	FastDrawHorizLine(out, xPos - 1, yPos - 1, barWidth + 2, frameColor);
+	FastDrawHorizLine(out, xPos - 1, yPos + barHeight, barWidth + 2, frameColor);
+	FastDrawVertLine(out, xPos - 1, yPos - 1, barHeight + 2, frameColor);
+	FastDrawVertLine(out, xPos + barWidth, yPos - 1, barHeight + 2, frameColor);
 	for (int i = 1; i < numDividers; i++)
-		FastDrawVertLine(xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight - 1, barHeight + dividerHeight * 2 + 2, frameColor);
+		FastDrawVertLine(out, xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight - 1, barHeight + dividerHeight * 2 + 2, frameColor);
 }
 
 void AutoGoldPickup(int pnum)
