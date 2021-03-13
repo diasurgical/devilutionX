@@ -105,6 +105,14 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 	sgdwCursWdtOld = 0;
 }
 
+static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
+{
+	const int h = std::min(sgdwCursY + 1, sgdwCursHgt);
+	for (int i = 0; i < h; ++i, src += src_pitch, dst += dst_pitch) {
+		memcpy(dst, src, sgdwCursWdt);
+	}
+}
+
 /**
  * @brief Remove the cursor from the buffer
  */
@@ -114,13 +122,9 @@ static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
 		return;
 	}
 
-	BYTE *src = sgSaveBack;
-	BYTE *dst = out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY);
-	for (int i = sgdwCursHgt; i-- > 0; ) {
-		memcpy(dst, src, sgdwCursWdt);
-		src += sgdwCursWdt;
-		dst += out.pitch();
-	}
+	BlitCursor(
+	    out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY), out.pitch(),
+	    sgSaveBack, sgdwCursWdt);
 
 	sgdwCursXOld = sgdwCursX;
 	sgdwCursYOld = sgdwCursY;
@@ -135,7 +139,6 @@ static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
 static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 {
 	int i, mx, my;
-	BYTE *src, *dst;
 	BYTE col;
 
 	assert(!sgdwCursWdt);
@@ -179,13 +182,9 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
 
-	assert(sgdwCursWdt * sgdwCursHgt < sizeof sgSaveBack);
-	dst = sgSaveBack;
-	src = out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY);
-
-	for (i = sgdwCursHgt; i != 0; i--, dst += sgdwCursWdt, src += out.pitch()) {
-		memcpy(dst, src, sgdwCursWdt);
-	}
+	BlitCursor(
+	    sgSaveBack, sgdwCursWdt,
+	    out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY), out.pitch());
 
 	mx++;
 	my++;
