@@ -1755,30 +1755,30 @@ void DrawDurIcon(CelOutputBuffer out)
 	DrawDurIcon4Item(out, &p->InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
-void RedBack()
+void RedBack(CelOutputBuffer out)
 {
 	int idx;
 
 	idx = light4flag ? 1536 : 4608;
 
-	assert(gpBuffer);
+	assert(out.begin != NULL);
 
 	int w, h;
 	BYTE *dst, *tbl;
 
 	if (leveltype != DTYPE_HELL) {
-		dst = &gpBuffer[SCREENXY(0, 0)];
+		dst = out.at(SCREEN_X, SCREEN_Y);
 		tbl = &pLightTbl[idx];
-		for (h = gnViewportHeight; h; h--, dst += BUFFER_WIDTH - gnScreenWidth) {
+		for (h = gnViewportHeight; h; h--, dst += out.line_width - gnScreenWidth) {
 			for (w = gnScreenWidth; w; w--) {
 				*dst = tbl[*dst];
 				dst++;
 			}
 		}
 	} else {
-		dst = &gpBuffer[SCREENXY(0, 0)];
+		dst = out.at(SCREEN_X, SCREEN_Y);
 		tbl = &pLightTbl[idx];
-		for (h = gnViewportHeight; h; h--, dst += BUFFER_WIDTH - gnScreenWidth) {
+		for (h = gnViewportHeight; h; h--, dst += out.line_width - gnScreenWidth) {
 			for (w = gnScreenWidth; w; w--) {
 				if (*dst >= 32)
 					*dst = tbl[*dst];

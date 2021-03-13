@@ -64,7 +64,7 @@ static void gmenu_print_text(CelOutputBuffer out, int x, int y, const char *pszS
 void gmenu_draw_pause(CelOutputBuffer out)
 {
 	if (currlevel != 0)
-		RedBack();
+		RedBack(out);
 	if (!sgpCurrentMenu) {
 		light_table_index = 0;
 		gmenu_print_text(out, 316 + PANEL_LEFT, 336, "Pause");
