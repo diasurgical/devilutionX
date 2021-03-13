@@ -6,10 +6,12 @@
 #ifndef __QOL_H__
 #define __QOL_H__
 
+#include "engine.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
-void DrawMonsterHealthBar();
-void DrawXPBar();
+void DrawMonsterHealthBar(CelOutputBuffer out);
+void DrawXPBar(CelOutputBuffer out);
 void AutoGoldPickup(int pnum);
 
 DEVILUTION_END_NAMESPACE
