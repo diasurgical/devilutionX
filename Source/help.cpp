@@ -486,7 +486,7 @@ void DrawHelp(CelOutputBuffer out)
 		PrintSString(out, 0, 2, TRUE, "Hellfire Help", COL_GOLD, 0);
 	else
 		PrintSString(out, 0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
-	DrawSLine(5);
+	DrawSLine(out, 5);
 
 	s = &gszHelpText[0];
 	if (gbIsSpawn)

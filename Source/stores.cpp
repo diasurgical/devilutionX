@@ -2331,33 +2331,23 @@ void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char 
 	}
 }
 
-void DrawSLine(int y)
+void DrawSLine(CelOutputBuffer out, int y)
 {
-	int xy, yy, width, line, sy;
-
-	sy = y * 12;
+	const int sy = y * 12;
+	BYTE *src, *dst;
+	int width;
 	if (stextsize) {
-		xy = SCREENXY(PANEL_LEFT + 26, 25 + UI_OFFSET_Y);
-		yy = BUFFER_WIDTH * (sy + 38 + SCREEN_Y + UI_OFFSET_Y) + 26 + PANEL_X;
-		width = 586 / 4;           // BUGFIX: should be 587, not 586
-		line = BUFFER_WIDTH - 586; // BUGFIX: should be 587, not 586
+		src = out.at(SCREEN_X + PANEL_LEFT + 26, SCREEN_Y + 25 + UI_OFFSET_Y);
+		dst = out.at(26 + PANEL_X, SCREEN_Y + sy + 38 + UI_OFFSET_Y);
+		width = 587; // BUGFIX: should be 587, not 586 (fixed)
 	} else {
-		xy = SCREENXY(PANEL_LEFT + 346, 25 + UI_OFFSET_Y);
-		yy = BUFFER_WIDTH * (sy + 38 + SCREEN_Y + UI_OFFSET_Y) + 346 + PANEL_X;
-		width = 266 / 4;           // BUGFIX: should be 267, not 266
-		line = BUFFER_WIDTH - 266; // BUGFIX: should be 267, not 266
+		src = out.at(SCREEN_X + PANEL_LEFT + 346, SCREEN_Y + 25 + UI_OFFSET_Y);
+		dst = out.at(346 + PANEL_X, SCREEN_Y + sy + 38 + UI_OFFSET_Y);
+		width = 267; // BUGFIX: should be 267, not 266 (fixed)
 	}
 
-	/// ASSERT: assert(gpBuffer);
-
-	int i;
-	BYTE *src, *dst;
-
-	src = &gpBuffer[xy];
-	dst = &gpBuffer[yy];
-
-	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
-		memcpy(dst, src, BUFFER_WIDTH - line);
+	for (int i = 0; i < 3; i++, src += out.line_width, dst += out.line_width)
+		memcpy(dst, src, width);
 }
 
 void DrawSTextHelp()
@@ -2515,7 +2505,7 @@ void DrawSText(CelOutputBuffer out)
 
 	for (i = 0; i < STORE_LINES; i++) {
 		if (stext[i]._sline)
-			DrawSLine(i);
+			DrawSLine(out, i);
 		if (stext[i]._sstr[0])
 			PrintSString(out, stext[i]._sx, i, stext[i]._sjust, stext[i]._sstr, stext[i]._sclr, stext[i]._sval);
 	}
