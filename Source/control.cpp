@@ -620,22 +620,22 @@ static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, in
  * Draws the dome of the flask that protrudes above the panel top line.
  * It draws a rectangle of fixed width 59 and height 'h' from the source buffer
  * into the target buffer.
+ * @param out The target buffer.
  * @param pCelBuff The flask cel buffer.
  * @param w Width of the cel.
  * @param nSrcOff Offset of the source buffer from where the bytes will start to be copied from.
  * @param pBuff Target buffer.
- * @param nDstOff Offset of the target buffer where the bytes will start to be copied to.
+ * @param sx Target buffer coordinate.
+ * @param sy Target buffer coordinate.
  * @param h How many lines of the source buffer that will be copied.
  */
-void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int h)
+static void DrawFlask(CelOutputBuffer out, BYTE *pCelBuff, int w, int nSrcOff, int x, int y, int h)
 {
 	int wdt, hgt;
-	BYTE *src, *dst;
+	BYTE *src = &pCelBuff[nSrcOff];
+	BYTE *dst = out.at(x, y);
 
-	src = &pCelBuff[nSrcOff];
-	dst = &pBuff[nDstOff];
-
-	for (hgt = h; hgt; hgt--, src += w - 59, dst += BUFFER_WIDTH - 59) {
+	for (hgt = h; hgt; hgt--, src += w - 59, dst += out.line_width - 59) {
 		for (wdt = 59; wdt; wdt--) {
 			if (*src)
 				*dst = *src;
@@ -645,11 +645,7 @@ void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int
 	}
 }
 
-/**
- * Draws the top dome of the life flask (that part that protrudes out of the control panel).
- * First it draws the empty flask cel and then draws the filled part on top if needed.
- */
-void DrawLifeFlask()
+void DrawLifeFlask(CelOutputBuffer out)
 {
 	double p;
 	int filled;
@@ -669,9 +665,9 @@ void DrawLifeFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pLifeBuff, 88, 88 * 3 + 13, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
+	DrawFlask(out, pLifeBuff, 88, 88 * 3 + 13, SCREEN_X + PANEL_LEFT + 109, SCREEN_Y + PANEL_TOP - 13, filled);
 	if (filled != 13)
-		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13 + filled), 13 - filled);
+		DrawFlask(out, pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, SCREEN_X + PANEL_LEFT + 109, SCREEN_Y + PANEL_TOP - 13 + filled, 13 - filled);
 }
 
 void UpdateLifeFlask(CelOutputBuffer out)
@@ -696,7 +692,7 @@ void UpdateLifeFlask(CelOutputBuffer out)
 		DrawPanelBox(out, 96, 85 - filled, 88, filled, 96 + PANEL_X, PANEL_Y + 69 - filled);
 }
 
-void DrawManaFlask()
+void DrawManaFlask(CelOutputBuffer out)
 {
 	int filled = plr[myplr]._pManaPer;
 	if (filled > 80)
@@ -706,9 +702,9 @@ void DrawManaFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pManaBuff, 88, 88 * 3 + 13, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
+	DrawFlask(out, pManaBuff, 88, 88 * 3 + 13, SCREEN_X + PANEL_LEFT + 475, SCREEN_Y + PANEL_TOP - 13, filled);
 	if (filled != 13)
-		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 475, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13 + filled), 13 - filled);
+		DrawFlask(out, pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 475, SCREEN_X + PANEL_LEFT + 475, SCREEN_Y + PANEL_TOP - 13 + filled, 13 - filled);
 }
 
 void control_update_life_mana()
