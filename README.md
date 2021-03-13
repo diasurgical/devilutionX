@@ -33,9 +33,13 @@ Nightly builds | Platform
       sudo apt update
       sudo apt install devilutionx
       ```
-    - Copy diabdat.mpq file to `~/.local/share/diasurgical/devilution/` folder
-    
-    - Run devilutionX from menu
+    - For Diablo I: copy diabdat.mpq file to `~/.local/share/diasurgical/devilution/` folder
+
+    - For Diablo Hellfire: copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq files to `~/.local/share/diasurgical/devilution/` folder
+
+    - Additionally for better widescreen support you can copy [devilutionx.mpq](https://github.com/diasurgical/devilutionX/raw/master/Packaging/resources/devilutionx.mpq) file to `~/.local/share/diasurgical/devilution/` folder
+
+    - Run DevilutionX or DevilutionX Hellfire from menu
 
 # Building from Source
 <details><summary>Linux</summary>
