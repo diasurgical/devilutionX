@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10) # CMP0083 NEW
+cmake_minimum_required(VERSION 3.13) # CMP0083 NEW
 
 include(CMake/out_of_tree.cmake)
 include(CMake/genex.cmake)
@@ -56,12 +56,6 @@ else()
   project(DevilutionX
     VERSION ${VERSION_NUM}
     LANGUAGES C CXX)
-endif()
-
-if(WIN32 AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.3 OR SYSTEM_BITS MATCHES x64)
-    SET(DISABLE_LTO ON)
-  endif()
 endif()
 
 # Not a genexp because CMake doesn't support it
