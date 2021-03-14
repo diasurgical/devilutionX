@@ -8,10 +8,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 CelOutputBuffer GlobalBackBuffer();
 
 void dx_init();
@@ -24,10 +20,6 @@ void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect);
 void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect);
 void RenderPresent();
 void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
-
-#ifdef __cplusplus
-}
-#endif
 
 DEVILUTION_END_NAMESPACE
 
