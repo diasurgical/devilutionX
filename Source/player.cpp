@@ -988,6 +988,8 @@ void InitPlayer(int pnum, BOOL FirstTime)
 	if (FirstTime) {
 		plr[pnum]._pRSplType = RSPLTYPE_INVALID;
 		plr[pnum]._pRSpell = SPL_INVALID;
+		if (pnum == myplr)
+			LoadHotkeys();
 		plr[pnum]._pSBkSpell = SPL_INVALID;
 		plr[pnum]._pSpell = plr[pnum]._pRSpell;
 		plr[pnum]._pSplType = plr[pnum]._pRSplType;

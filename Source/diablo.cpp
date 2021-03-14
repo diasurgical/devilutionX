@@ -1842,8 +1842,6 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 					dFlags[i][j] |= BFLAG_LIT;
 			}
 
-			if (!gbVanilla)
-				LoadHotkeys();
 			InitTowners();
 			InitItems();
 			InitMissiles();
