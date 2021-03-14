@@ -58,6 +58,12 @@ else()
     LANGUAGES C CXX)
 endif()
 
+if(WIN32 AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.3 OR SYSTEM_BITS MATCHES x64)
+    SET(DISABLE_LTO ON)
+  endif()
+endif()
+
 # Not a genexp because CMake doesn't support it
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20546
 if(NOT DISABLE_LTO)
