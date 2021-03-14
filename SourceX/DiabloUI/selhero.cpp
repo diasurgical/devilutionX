@@ -348,6 +348,14 @@ void selhero_ClassSelector_Focus(int value)
 	selhero_SetStats();
 }
 
+static bool shouldPrefillHeroName() {
+#ifdef PREFILL_PLAYER_NAME
+	return true;
+#else
+	return sgbControllerActive;
+#endif
+}
+
 void selhero_ClassSelector_Select(int value)
 {
 	int hClass = vecSelHeroDlgItems[value]->m_value;
@@ -364,10 +372,11 @@ void selhero_ClassSelector_Select(int value)
 		strncpy(title, "New Multi Player Hero", sizeof(title) - 1);
 	}
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
-#ifdef PREFILL_PLAYER_NAME
-	strncpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name) - 1);
-#elif defined __3DS__
+#if defined __3DS__
 	ctr_vkbdInput("Enter Hero name..", selhero_GenerateName(selhero_heroInfo.heroclass), selhero_heroInfo.name);
+#else
+	if (shouldPrefillHeroName())
+		strncpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name) - 1);
 #endif
 	selhero_FreeDlgItems();
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 264), (Sint16)(UI_OFFSET_Y + 211), 320, 33 };
@@ -429,9 +438,6 @@ void selhero_Name_Select(int value)
 	}
 
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
-#ifdef PREFILL_PLAYER_NAME
-	strncpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name) - 1);
-#endif
 	selhero_ClassSelector_Select(0);
 }
 
