@@ -19,7 +19,7 @@
 
 namespace dvl {
 
-const char *selhero_GenerateName(uint8_t hero_class);
+static const char *selhero_GenerateName(uint8_t hero_class);
 
 std::size_t selhero_SaveCount = 0;
 _uiheroinfo selhero_heros[MAX_CHARACTERS];
@@ -555,9 +555,9 @@ void UiSelHeroMultDialog(
 	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
 }
 
-const char *selhero_GenerateName(uint8_t hero_class)
+static const char *selhero_GenerateName(uint8_t hero_class)
 {
-	static const char *const kNames[4][10] = {
+	static const char *const kNames[6][10] = {
 		{
 		    // Warrior
 		    "Aidan",
@@ -609,12 +609,38 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		    "Vhalit",
 		    "Vylnas",
 		    "Zhota",
-		}
+		},
+		{
+		    // Bard (uses Rogue names)
+		    "Moreina",
+		    "Akara",
+		    "Kashya",
+		    "Flavie",
+		    "Divo",
+		    "Oriana",
+		    "Iantha",
+		    "Shikha",
+		    "Basanti",
+		    "Elexa",
+		},
+		{
+		    // Barbarian
+		    "Alaric",
+		    "Barloc",
+		    "Egtheow",
+		    "Guthlaf",
+		    "Heorogar",
+		    "Hrothgar",
+		    "Oslaf",
+		    "Qual-Kehk",
+		    "Ragnar",
+		    "Ulf",
+		},
 	};
 
 	int iRand = rand() % 10;
 
-	return kNames[hero_class][iRand];
+	return kNames[hero_class % 6][iRand];
 }
 
 } // namespace dvl
