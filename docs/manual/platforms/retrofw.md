@@ -9,7 +9,7 @@ Demo video:
 **Requires RetroFW 2.0+.**
 
 1. Copy [devilutionx-retrofw.opk](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-retrofw.opk) to the apps directory.
-2. Copy `diabdat.mpq` (**all lowercase**) from your CD, or GoG install folder to:
+2. Copy `diabdat.mpq` from your CD, or GoG install folder to:
 
    ~~~
    ~/.local/share/diasurgical/devilution
