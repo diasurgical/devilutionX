@@ -1765,7 +1765,7 @@ void GetStaffSpell(int i, int lvl, BOOL onlygood)
 			lvl = 10;
 
 		int s = SPL_FIREBOLT;
-        enum spell_id bs = SPL_NULL;
+		enum spell_id bs = SPL_NULL;
 		while (rv > 0) {
 			int sLevel = GetSpellStaffLevel(s);
 			if (sLevel != -1 && l >= sLevel) {
@@ -5328,13 +5328,14 @@ void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, BOOL delta)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
 
 	while (true) {
+		memset(&item[ii], 0, sizeof(*item));
 		SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * lvl, 1, TRUE, FALSE, delta);
 		if (item[ii]._iMiscId == IMISC_BOOK && item[ii]._iSpell == ispell)
 			break;
 	}
+	GetSuperItemSpace(x, y, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(FALSE, ii);
@@ -5348,16 +5349,17 @@ static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icur
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
 	int idx = RndTypeItems(imisc, imid, lvl);
 
 	while (true) {
+		memset(&item[ii], 0, sizeof(*item));
 		SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * lvl, 1, TRUE, FALSE, delta);
 		if (item[ii]._iCurs == icurs)
 			break;
 
 		idx = RndTypeItems(imisc, imid, lvl);
 	}
+	GetSuperItemSpace(x, y, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(FALSE, ii);
