@@ -22,7 +22,10 @@ int main(int argc, char **argv)
 {
 #ifdef RUN_TESTS
     testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    auto test_result = RUN_ALL_TESTS();
+    for(auto i = 0; i < argc; ++i)
+        if(strcasecmp(argv[i], "--tests-only") == 0)
+        return test_result;
 #endif
 #ifdef __SWITCH__
 	switch_enable_network();
@@ -30,6 +33,5 @@ int main(int argc, char **argv)
 #ifdef __3DS__
 	ctr_sys_init();
 #endif
-
 	return dvl::DiabloMain(argc, argv);
 }

@@ -411,7 +411,7 @@ if(RUN_TESTS)
   include_directories(${GTEST_INCLUDE_DIRS})
   add_definitions(-fprofile-arcs -ftest-coverage -DRUN_TESTS)
   target_link_libraries(${BIN_TARGET} PRIVATE -fprofile-arcs ${GTEST_LIBRARIES})
-  gtest_add_tests(${BIN_TARGET} "" AUTO)
+  gtest_add_tests(${BIN_TARGET} "--tests-only" AUTO)
 endif()
 
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
