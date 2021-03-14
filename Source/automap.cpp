@@ -7,26 +7,15 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+namespace {
 /**
  * Maps from tile_id to automap type.
  * BUGFIX: only the first 256 elements are ever read
  */
-WORD automaptype[512];
-static int AutoMapX;
-static int AutoMapY;
-/** Specifies whether the automap is enabled. */
-BOOL automapflag;
-/** Tracks the explored areas of the map. */
-BOOLEAN automapview[DMAXX][DMAXY];
-/** Specifies the scale of the automap. */
-int AutoMapScale;
-int AutoMapXOfs;
-int AutoMapYOfs;
-int AmLine64;
-int AmLine32;
-int AmLine16;
-int AmLine8;
-int AmLine4;
+Uint16 automaptype[512];
+
+static Sint32 AutoMapX;
+static Sint32 AutoMapY;
 
 /** color used to draw the player's arrow */
 #define COLOR_PLAYER (PAL8_ORANGE + 1)
@@ -49,161 +38,13 @@ int AmLine4;
 #define MAPFLAG_STAIRS 0x80
 
 /**
- * @brief Initializes the automap.
- */
-void InitAutomapOnce()
-{
-	automapflag = FALSE;
-	AutoMapScale = 50;
-	AmLine64 = 32;
-	AmLine32 = 16;
-	AmLine16 = 8;
-	AmLine8 = 4;
-	AmLine4 = 2;
-}
-
-/**
- * @brief Loads the mapping between tile IDs and automap shapes.
- */
-void InitAutomap()
-{
-	BYTE b1, b2;
-	DWORD dwTiles;
-	int x, y;
-	BYTE *pAFile, *pTmp;
-	DWORD i;
-
-	memset(automaptype, 0, sizeof(automaptype));
-
-	switch (leveltype) {
-	case DTYPE_CATHEDRAL:
-		if (currlevel < 21)
-			pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
-		else
-			pAFile = LoadFileInMem("NLevels\\L5Data\\L5.AMP", &dwTiles);
-		break;
-	case DTYPE_CATACOMBS:
-		pAFile = LoadFileInMem("Levels\\L2Data\\L2.AMP", &dwTiles);
-		break;
-	case DTYPE_CAVES:
-		if (currlevel < 17)
-			pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
-		else
-			pAFile = LoadFileInMem("NLevels\\L6Data\\L6.AMP", &dwTiles);
-		break;
-	case DTYPE_HELL:
-		pAFile = LoadFileInMem("Levels\\L4Data\\L4.AMP", &dwTiles);
-		break;
-	default:
-		return;
-	}
-
-	dwTiles /= 2;
-	pTmp = pAFile;
-
-	for (i = 1; i <= dwTiles; i++) {
-		b1 = *pTmp++;
-		b2 = *pTmp++;
-		automaptype[i] = b1 + (b2 << 8);
-	}
-
-	mem_free_dbg(pAFile);
-	memset(automapview, 0, sizeof(automapview));
-
-	for (y = 0; y < MAXDUNY; y++) {
-		for (x = 0; x < MAXDUNX; x++)
-			dFlags[x][y] &= ~BFLAG_EXPLORED;
-	}
-}
-
-/**
- * @brief Displays the automap.
- */
-void StartAutomap()
-{
-	AutoMapXOfs = 0;
-	AutoMapYOfs = 0;
-	automapflag = TRUE;
-}
-
-/**
- * @brief Scrolls the automap upwards.
- */
-void AutomapUp()
-{
-	AutoMapXOfs--;
-	AutoMapYOfs--;
-}
-
-/**
- * @brief Scrolls the automap downwards.
- */
-void AutomapDown()
-{
-	AutoMapXOfs++;
-	AutoMapYOfs++;
-}
-
-/**
- * @brief Scrolls the automap leftwards.
- */
-void AutomapLeft()
-{
-	AutoMapXOfs--;
-	AutoMapYOfs++;
-}
-
-/**
- * @brief Scrolls the automap rightwards.
- */
-void AutomapRight()
-{
-	AutoMapXOfs++;
-	AutoMapYOfs--;
-}
-
-/**
- * @brief Increases the zoom level of the automap.
- */
-void AutomapZoomIn()
-{
-	if (AutoMapScale < 200) {
-		AutoMapScale += 5;
-		AmLine64 = (AutoMapScale << 6) / 100;
-		AmLine32 = AmLine64 >> 1;
-		AmLine16 = AmLine32 >> 1;
-		AmLine8 = AmLine16 >> 1;
-		AmLine4 = AmLine8 >> 1;
-	}
-}
-
-/**
- * @brief Decreases the zoom level of the automap.
- */
-void AutomapZoomOut()
-{
-	if (AutoMapScale > 50) {
-		AutoMapScale -= 5;
-		AmLine64 = (AutoMapScale << 6) / 100;
-		AmLine32 = AmLine64 >> 1;
-		AmLine16 = AmLine32 >> 1;
-		AmLine8 = AmLine16 >> 1;
-		AmLine4 = AmLine8 >> 1;
-	}
-}
-
-/**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
-static void DrawAutomapTile(CelOutputBuffer out, int sx, int sy, WORD automap_type)
+void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_type)
 {
-	BOOL do_vert;
-	BOOL do_horz;
-	BOOL do_cave_horz;
-	BOOL do_cave_vert;
-	int x1, y1, x2, y2;
+	Sint32 x1, y1, x2, y2;
 
-	BYTE flags = automap_type >> 8;
+	Uint8 flags = automap_type >> 8;
 
 	if (flags & MAPFLAG_DIRT) {
 		SetPixel(out, sx, sy, COLOR_DIM);
@@ -231,10 +72,10 @@ static void DrawAutomapTile(CelOutputBuffer out, int sx, int sy, WORD automap_ty
 		DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, COLOR_BRIGHT);
 	}
 
-	do_vert = FALSE;
-	do_horz = FALSE;
-	do_cave_horz = FALSE;
-	do_cave_vert = FALSE;
+	bool do_vert = false;
+	bool do_horz = false;
+	bool do_cave_horz = false;
+	bool do_cave_vert = false;
 	switch (automap_type & MAPFLAG_TYPE) {
 	case 1: // stand-alone column or other unpassable object
 		x1 = sx - AmLine16;
@@ -248,33 +89,33 @@ static void DrawAutomapTile(CelOutputBuffer out, int sx, int sy, WORD automap_ty
 		break;
 	case 2:
 	case 5:
-		do_vert = TRUE;
+		do_vert = true;
 		break;
 	case 3:
 	case 6:
-		do_horz = TRUE;
+		do_horz = true;
 		break;
 	case 4:
-		do_vert = TRUE;
-		do_horz = TRUE;
+		do_vert = true;
+		do_horz = true;
 		break;
 	case 8:
-		do_vert = TRUE;
-		do_cave_horz = TRUE;
+		do_vert = true;
+		do_cave_horz = true;
 		break;
 	case 9:
-		do_horz = TRUE;
-		do_cave_vert = TRUE;
+		do_horz = true;
+		do_cave_vert = true;
 		break;
 	case 10:
-		do_cave_horz = TRUE;
+		do_cave_horz = true;
 		break;
 	case 11:
-		do_cave_vert = TRUE;
+		do_cave_vert = true;
 		break;
 	case 12:
-		do_cave_horz = TRUE;
-		do_cave_vert = TRUE;
+		do_cave_horz = true;
+		do_cave_vert = true;
 		break;
 	}
 
@@ -375,32 +216,28 @@ static void DrawAutomapTile(CelOutputBuffer out, int sx, int sy, WORD automap_ty
 			DrawLineTo(out, x1, y1, x2, y2, COLOR_BRIGHT);
 			DrawLineTo(out, x1, sy, sx, y2, COLOR_BRIGHT);
 			DrawLineTo(out, x1, sy, x2, y2, COLOR_BRIGHT);
-		} else
+		} else {
 			DrawLineTo(out, sx, sy + AmLine16, sx + AmLine32, sy, COLOR_DIM);
+		}
 	}
 }
 
-static void DrawAutomapItem(CelOutputBuffer out, int x, int y, BYTE color)
+void DrawAutomapItem(CelOutputBuffer out, Sint32 x, Sint32 y, Uint8 color)
 {
-	int x1, y1, x2, y2;
-
-	x1 = x - AmLine32 / 2;
-	y1 = y - AmLine16 / 2;
-	x2 = x1 + AmLine64 / 2;
-	y2 = y1 + AmLine32 / 2;
+	Sint32 x1 = x - AmLine32 / 2;
+	Sint32 y1 = y - AmLine16 / 2;
+	Sint32 x2 = x1 + AmLine64 / 2;
+	Sint32 y2 = y1 + AmLine32 / 2;
 	DrawLineTo(out, x, y1, x1, y, color);
 	DrawLineTo(out, x, y1, x2, y, color);
 	DrawLineTo(out, x, y2, x1, y, color);
 	DrawLineTo(out, x, y2, x2, y, color);
 }
 
-static void SearchAutomapItem(CelOutputBuffer out)
+void SearchAutomapItem(CelOutputBuffer out)
 {
-	int x, y;
-	int x1, y1, x2, y2;
-	int px, py;
-	int i, j;
-
+	Sint32 x = plr[myplr]._px;
+	Sint32 y = plr[myplr]._py;
 	if (plr[myplr]._pmode == PM_WALK3) {
 		x = plr[myplr]._pfutx;
 		y = plr[myplr]._pfuty;
@@ -408,40 +245,37 @@ static void SearchAutomapItem(CelOutputBuffer out)
 			x++;
 		else
 			y++;
-	} else {
-		x = plr[myplr]._px;
-		y = plr[myplr]._py;
 	}
 
-	x1 = x - 8;
+	Sint32 x1 = x - 8;
 	if (x1 < 0)
 		x1 = 0;
 	else if (x1 > MAXDUNX)
 		x1 = MAXDUNX;
 
-	y1 = y - 8;
+	Sint32 y1 = y - 8;
 	if (y1 < 0)
 		y1 = 0;
 	else if (y1 > MAXDUNY)
 		y1 = MAXDUNY;
 
-	x2 = x + 8;
+	Sint32 x2 = x + 8;
 	if (x2 < 0)
 		x2 = 0;
 	else if (x2 > MAXDUNX)
 		x2 = MAXDUNX;
 
-	y2 = y + 8;
+	Sint32 y2 = y + 8;
 	if (y2 < 0)
 		y2 = 0;
 	else if (y2 > MAXDUNY)
 		y2 = MAXDUNY;
 
-	for (i = x1; i < x2; i++) {
-		for (j = y1; j < y2; j++) {
+	for (Sint32 i = x1; i < x2; i++) {
+		for (Sint32 j = y1; j < y2; j++) {
 			if (dItem[i][j] != 0) {
-				px = i - 2 * AutoMapXOfs - ViewX;
-				py = j - 2 * AutoMapYOfs - ViewY;
+				Sint32 px = i - 2 * AutoMapXOfs - ViewX;
+				Sint32 py = j - 2 * AutoMapYOfs - ViewY;
 
 				x = (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + gnScreenWidth / 2 + SCREEN_X;
 				y = (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2 + SCREEN_Y;
@@ -462,7 +296,7 @@ static void SearchAutomapItem(CelOutputBuffer out)
 /**
  * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
  */
-static void DrawAutomapPlr(CelOutputBuffer out, int pnum)
+void DrawAutomapPlr(CelOutputBuffer out, int pnum)
 {
 	int px, py;
 	int x, y;
@@ -542,7 +376,7 @@ static void DrawAutomapPlr(CelOutputBuffer out, int pnum)
 /**
  * @brief Returns the automap shape at the given coordinate.
  */
-static WORD GetAutomapType(int x, int y, BOOL view)
+WORD GetAutomapType(int x, int y, BOOL view)
 {
 	WORD rv;
 
@@ -586,7 +420,7 @@ static WORD GetAutomapType(int x, int y, BOOL view)
 /**
  * @brief Renders game info, such as the name of the current level, and in multi player the name of the game and the game password.
  */
-static void DrawAutomapText(CelOutputBuffer out)
+void DrawAutomapText(CelOutputBuffer out)
 {
 	// TODO: Use the `out` buffer instead of the global one.
 
@@ -615,6 +449,136 @@ static void DrawAutomapText(CelOutputBuffer out)
 			sprintf(desc, "Level: Nest %i", currlevel - 16);
 		}
 		PrintGameStr(out, 8, nextline, desc, COL_GOLD);
+	}
+}
+
+}
+
+bool automapflag;
+bool automapview[DMAXX][DMAXY];
+Sint32 AutoMapScale;
+Sint32 AutoMapXOfs;
+Sint32 AutoMapYOfs;
+Sint32 AmLine64;
+Sint32 AmLine32;
+Sint32 AmLine16;
+Sint32 AmLine8;
+Sint32 AmLine4;
+
+void InitAutomapOnce()
+{
+	automapflag = FALSE;
+	AutoMapScale = 50;
+	AmLine64 = 32;
+	AmLine32 = 16;
+	AmLine16 = 8;
+	AmLine8 = 4;
+	AmLine4 = 2;
+}
+
+void InitAutomap()
+{
+	BYTE b1, b2;
+	DWORD dwTiles;
+	int x, y;
+	BYTE *pAFile, *pTmp;
+	DWORD i;
+
+	memset(automaptype, 0, sizeof(automaptype));
+
+	switch (leveltype) {
+	case DTYPE_CATHEDRAL:
+		if (currlevel < 21)
+			pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
+		else
+			pAFile = LoadFileInMem("NLevels\\L5Data\\L5.AMP", &dwTiles);
+		break;
+	case DTYPE_CATACOMBS:
+		pAFile = LoadFileInMem("Levels\\L2Data\\L2.AMP", &dwTiles);
+		break;
+	case DTYPE_CAVES:
+		if (currlevel < 17)
+			pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
+		else
+			pAFile = LoadFileInMem("NLevels\\L6Data\\L6.AMP", &dwTiles);
+		break;
+	case DTYPE_HELL:
+		pAFile = LoadFileInMem("Levels\\L4Data\\L4.AMP", &dwTiles);
+		break;
+	default:
+		return;
+	}
+
+	dwTiles /= 2;
+	pTmp = pAFile;
+
+	for (i = 1; i <= dwTiles; i++) {
+		b1 = *pTmp++;
+		b2 = *pTmp++;
+		automaptype[i] = b1 + (b2 << 8);
+	}
+
+	mem_free_dbg(pAFile);
+	memset(automapview, 0, sizeof(automapview));
+
+	for (y = 0; y < MAXDUNY; y++) {
+		for (x = 0; x < MAXDUNX; x++)
+			dFlags[x][y] &= ~BFLAG_EXPLORED;
+	}
+}
+
+void StartAutomap()
+{
+	AutoMapXOfs = 0;
+	AutoMapYOfs = 0;
+	automapflag = TRUE;
+}
+
+void AutomapUp()
+{
+	AutoMapXOfs--;
+	AutoMapYOfs--;
+}
+
+void AutomapDown()
+{
+	AutoMapXOfs++;
+	AutoMapYOfs++;
+}
+
+void AutomapLeft()
+{
+	AutoMapXOfs--;
+	AutoMapYOfs++;
+}
+
+void AutomapRight()
+{
+	AutoMapXOfs++;
+	AutoMapYOfs--;
+}
+
+void AutomapZoomIn()
+{
+	if (AutoMapScale < 200) {
+		AutoMapScale += 5;
+		AmLine64 = (AutoMapScale << 6) / 100;
+		AmLine32 = AmLine64 >> 1;
+		AmLine16 = AmLine32 >> 1;
+		AmLine8 = AmLine16 >> 1;
+		AmLine4 = AmLine8 >> 1;
+	}
+}
+
+void AutomapZoomOut()
+{
+	if (AutoMapScale > 50) {
+		AutoMapScale -= 5;
+		AmLine64 = (AutoMapScale << 6) / 100;
+		AmLine32 = AmLine64 >> 1;
+		AmLine16 = AmLine32 >> 1;
+		AmLine8 = AmLine16 >> 1;
+		AmLine4 = AmLine8 >> 1;
 	}
 }
 
@@ -716,10 +680,7 @@ void DrawAutomap(CelOutputBuffer out)
 	DrawAutomapText(out);
 }
 
-/**
- * @brief Marks the given coordinate as within view on the automap.
- */
-void SetAutomapView(int x, int y)
+void SetAutomapView(Sint32 x, Sint32 y)
 {
 	WORD maptype, solid;
 	int xx, yy;
@@ -791,9 +752,6 @@ void SetAutomapView(int x, int y)
 	}
 }
 
-/**
- * @brief Resets the zoom level of the automap.
- */
 void AutomapZoomReset()
 {
 	AutoMapXOfs = 0;
