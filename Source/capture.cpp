@@ -106,22 +106,18 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 /**
  * @brief Write the pixel data to the PCX file
  * @param buf Buffer
- * @param width Image width
- * @param height Image height
  * @return True if successful, else false
  */
-static bool CapturePix(CelOutputBuffer buf, WORD width, WORD height, std::ofstream *out)
+static bool CapturePix(CelOutputBuffer buf, std::ofstream *out)
 {
-	int writeSize;
-	BYTE *pBuffer, *pBufferEnd;
-
-	pBuffer = (BYTE *)DiabloAllocPtr(2 * width);
+	int width = buf.w();
+	int height = buf.h();
+	BYTE *pBuffer = (BYTE *)DiabloAllocPtr(2 * width);
 	BYTE *pixels = buf.begin();
 	while (height--) {
-		pBufferEnd = CaptureEnc(pixels, pBuffer, width);
+		const BYTE *pBufferEnd = CaptureEnc(pixels, pBuffer, width);
 		pixels += buf.pitch();
-		writeSize = pBufferEnd - pBuffer;
-		out->write(reinterpret_cast<const char *>(pBuffer), writeSize);
+		out->write(reinterpret_cast<const char *>(pBuffer), pBufferEnd - pBuffer);
 		if (out->fail())
 			return false;
 	}
@@ -185,9 +181,9 @@ void CaptureScreen()
 	lock_buf(2);
 	CelOutputBuffer buf = GlobalBackBuffer();
 	buf = buf.subregion(SCREEN_X, SCREEN_Y, gnScreenWidth, gnScreenHeight);
-	success = CaptureHdr(gnScreenWidth, gnScreenHeight, out_stream);
+	success = CaptureHdr(buf.w(), buf.h(), out_stream);
 	if (success) {
-		success = CapturePix(buf, gnScreenWidth, gnScreenHeight, out_stream);
+		success = CapturePix(buf, out_stream);
 	}
 	if (success) {
 		success = CapturePal(palette, out_stream);
