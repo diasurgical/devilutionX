@@ -13,6 +13,9 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+#include <algorithm>
+#include <cstddef>
+
 #include <SDL.h>
 
 #ifdef USE_SDL1
@@ -21,16 +24,7 @@
 
 #include "../types.h"
 
-#ifdef __cplusplus
-#include <algorithm>
-#include <cstddef>
-#endif
-
 DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
@@ -68,7 +62,6 @@ struct CelOutputBuffer {
 	SDL_Surface *surface;
 	SDL_Rect region;
 
-#ifdef __cplusplus
 	CelOutputBuffer()
 	    : surface(NULL)
 	    , region(SDL_Rect { 0, 0, 0, 0 })
@@ -157,7 +150,6 @@ struct CelOutputBuffer {
 		subregion.h = h;
 		return CelOutputBuffer(surface, subregion);
 	}
-#endif
 };
 
 /**
@@ -406,10 +398,6 @@ BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
-
-#ifdef __cplusplus
-}
-#endif
 
 DEVILUTION_END_NAMESPACE
 
