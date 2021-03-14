@@ -209,7 +209,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	ClrPlrPath(pnum);
 	pPlayer->destAction = ACTION_NONE;
 	strcpy(pPlayer->_pName, pPack->pName);
-	pPlayer->_pClass = pPack->pClass;
+	pPlayer->_pClass = (plr_class)pPack->pClass;
 	InitPlayer(pnum, TRUE);
 	pPlayer->_pBaseStr = pPack->pBaseStr;
 	pPlayer->_pStrength = pPack->pBaseStr;

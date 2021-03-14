@@ -924,7 +924,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 
 	if (plr[pnum].plrlevel == currlevel) {
 		if (plr[pnum]._pHitPoints >> 6 > 0) {
-			StartStand(pnum, 0);
+			StartStand(pnum, DIR_S);
 		} else {
 			plr[pnum]._pgfxnum = 0;
 			LoadPlrGFX(pnum, PFILE_DEATH);

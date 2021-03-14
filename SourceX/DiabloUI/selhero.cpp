@@ -339,7 +339,7 @@ void selhero_ClassSelector_Focus(int value)
 	gfnHeroStats(value, &defaults);
 
 	selhero_heroInfo.level = 1;
-	selhero_heroInfo.heroclass = vecSelHeroDlgItems[value]->m_value;
+	selhero_heroInfo.heroclass = (plr_class)vecSelHeroDlgItems[value]->m_value;
 	selhero_heroInfo.strength = defaults.strength;
 	selhero_heroInfo.magic = defaults.magic;
 	selhero_heroInfo.dexterity = defaults.dexterity;

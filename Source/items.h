@@ -313,7 +313,7 @@ void PrintItemPower(char plidx, ItemStruct *x);
 void DrawUniqueInfo(CelOutputBuffer out);
 void PrintItemDetails(ItemStruct *x);
 void PrintItemDur(ItemStruct *x);
-void UseItem(int p, int Mid, int spl);
+void UseItem(int p, item_misc_id Mid, spell_id spl);
 BOOL StoreStatOk(ItemStruct *h);
 void SpawnSmith(int lvl);
 void SpawnPremium(int pnum);

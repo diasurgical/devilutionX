@@ -47,7 +47,7 @@ void FocusOnCharInfo()
 		return;
 
 	// Find the first incrementable stat.
-	int pc = plr[myplr]._pClass;
+	plr_class pc = plr[myplr]._pClass;
 	int stat = -1;
 	for (int i = 4; i >= 0; --i) {
 		switch (i) {

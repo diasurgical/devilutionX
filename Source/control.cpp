@@ -40,7 +40,7 @@ BOOL pstrjust[4];
 int pnumlines;
 BOOL pinfoflag;
 BOOL talkbtndown[3];
-int pSpell;
+spell_id pSpell;
 char infoclr;
 int sgbPlrTalkTbl;
 BYTE *pGBoxBuff;
@@ -48,7 +48,7 @@ BYTE *pSBkBtnCel;
 char tempstr[256];
 BOOLEAN whisper[MAX_PLRS];
 int sbooktab;
-int pSplType;
+spell_type pSplType;
 int initialDropGoldIndex;
 BOOL talkflag;
 BYTE *pSBkIconCels;
@@ -221,13 +221,13 @@ RECT32 ChrBtnsRect[4] = {
 };
 
 /** Maps from spellbook page number and position to spell_id. */
-int SpellPages[6][7] = {
+spell_id SpellPages[6][7] = {
 	{ SPL_NULL, SPL_FIREBOLT, SPL_CBOLT, SPL_HBOLT, SPL_HEAL, SPL_HEALOTHER, SPL_FLAME },
 	{ SPL_RESURRECT, SPL_FIREWALL, SPL_TELEKINESIS, SPL_LIGHTNING, SPL_TOWN, SPL_FLASH, SPL_STONE },
 	{ SPL_RNDTELEPORT, SPL_MANASHIELD, SPL_ELEMENT, SPL_FIREBALL, SPL_WAVE, SPL_CHAIN, SPL_GUARDIAN },
 	{ SPL_NOVA, SPL_GOLEM, SPL_TELEPORT, SPL_APOCA, SPL_BONESPIRIT, SPL_FLARE, SPL_ETHEREALIZE },
 	{ SPL_LIGHTWALL, SPL_IMMOLAT, SPL_WARP, SPL_REFLECT, SPL_BERSERK, SPL_FIRERING, SPL_SEARCH },
-	{ -1, -1, -1, -1, -1, -1, -1 }
+	{ SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID }
 };
 
 #define SPLICONLENGTH 56
@@ -337,7 +337,7 @@ static void DrawSpell(CelOutputBuffer out)
 
 void DrawSpellList(CelOutputBuffer out)
 {
-	int i, j, x, y, c, s, t, v, lx, ly, trans;
+	int x, y, c, s, t, v, lx, ly, trans;
 	unsigned __int64 mask, spl;
 
 	pSpell = SPL_INVALID;
@@ -346,7 +346,7 @@ void DrawSpellList(CelOutputBuffer out)
 	y = PANEL_Y - 17;
 	ClearPanel();
 
-	for (i = 0; i < 4; i++) {
+	for (Sint32 i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
 			SetSpellTrans(RSPLTYPE_SKILL);
@@ -368,7 +368,8 @@ void DrawSpellList(CelOutputBuffer out)
 			c = SPLICONLAST + 2;
 			break;
 		}
-		for (spl = 1, j = 1; j < MAX_SPELLS; spl <<= 1, j++) {
+		Sint32 j = SPL_FIREBOLT;
+		for (spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
 			if (!(mask & spl))
 				continue;
 			if (i == RSPLTYPE_SPELL) {
@@ -387,8 +388,8 @@ void DrawSpellList(CelOutputBuffer out)
 			lx = x - BORDER_LEFT;
 			ly = y - BORDER_TOP - SPLICONLENGTH;
 			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
-				pSpell = j;
-				pSplType = i;
+				pSpell = (spell_id)j;
+				pSplType = (spell_type)i;
 				if (plr[myplr]._pClass == PC_MONK && j == SPL_SEARCH)
 					pSplType = RSPLTYPE_SKILL;
 				DrawSpellCel(out, x, y, pSpellCels, c, SPLICONLENGTH);
@@ -1368,7 +1369,7 @@ void DrawChr(CelOutputBuffer out)
 {
 	char col;
 	char chrstr[64];
-	int pc, mindam, maxdam;
+	int mindam, maxdam;
 
 	CelDrawTo(out, SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
 	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
@@ -1542,7 +1543,7 @@ void DrawChr(CelOutputBuffer out)
 	if (plr[myplr]._pStatPts > 0) {
 		sprintf(chrstr, "%i", plr[myplr]._pStatPts);
 		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
-		pc = plr[myplr]._pClass;
+		plr_class pc = plr[myplr]._pClass;
 		if (plr[myplr]._pBaseStr < MaxStats[pc][ATTRIB_STR])
 			CelDrawTo(out, 137 + SCREEN_X, 159 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
 		if (plr[myplr]._pBaseMag < MaxStats[pc][ATTRIB_MAG])
@@ -1602,10 +1603,10 @@ void DrawLevelUpIcon(CelOutputBuffer out)
 
 void CheckChrBtns()
 {
-	int pc, i, x, y;
+	int i, x, y;
 
 	if (!chrbtnactive && plr[myplr]._pStatPts) {
-		pc = plr[myplr]._pClass;
+		plr_class pc = plr[myplr]._pClass;
 		for (i = 0; i < 4; i++) {
 			switch (i) {
 			case ATTRIB_STR:
@@ -1895,15 +1896,11 @@ void DrawSpellBook(CelOutputBuffer out)
 
 void CheckSBook()
 {
-	int sn;
-	char st;
-	unsigned __int64 spl;
-
 	if (MouseX >= RIGHT_PANEL + 11 && MouseX < RIGHT_PANEL + 48 && MouseY >= 18 && MouseY < 314) {
-		sn = SpellPages[sbooktab][(MouseY - 18) / 43];
-		spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
-		if (sn != -1 && spl & SPELLBIT(sn)) {
-			st = RSPLTYPE_SPELL;
+		spell_id sn = SpellPages[sbooktab][(MouseY - 18) / 43];
+		Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
+		if (sn != SPL_INVALID && spl & SPELLBIT(sn)) {
+			spell_type st = RSPLTYPE_SPELL;
 			if (plr[myplr]._pISpells & SPELLBIT(sn)) {
 				st = RSPLTYPE_CHARGES;
 			}

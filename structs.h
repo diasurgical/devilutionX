@@ -219,7 +219,7 @@ typedef struct _uiheroinfo {
 	struct _uiheroinfo *next;
 	char name[16];
 	WORD level;
-	BYTE heroclass;
+	plr_class heroclass;
 	BYTE herorank;
 	WORD strength;
 	WORD magic;

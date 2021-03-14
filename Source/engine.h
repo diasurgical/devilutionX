@@ -394,7 +394,7 @@ void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, i
  * @param y2 Tile coordinate
  * @return A value from the direction enum
  */
-int GetDirection(int x1, int y1, int x2, int y2);
+direction GetDirection(int x1, int y1, int x2, int y2);
 
 void SetRndSeed(Sint32 s);
 Sint32 AdvanceRndSeed();

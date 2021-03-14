@@ -1354,9 +1354,9 @@ static DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 	TCmdParam1 *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1) {
-		int spell = p->wParam1;
+		spell_id spell = (spell_id)p->wParam1;
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			plr[pnum]._pSpell = p->wParam1;
+			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pSBkSplType;
 			plr[pnum]._pSplFrom = 1;
 			plr[pnum].destAction = ACTION_SPELL;
@@ -1620,15 +1620,15 @@ static DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 	TCmdLocParam3 *p = (TCmdLocParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int spell = p->wParam1;
+		spell_id spell = (spell_id)p->wParam1;
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLWALL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = p->wParam2;
+			plr[pnum].destParam3 = (direction)p->wParam2;
 			plr[pnum].destParam4 = p->wParam3;
-			plr[pnum]._pSpell = p->wParam1;
+			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
 		} else
@@ -1643,14 +1643,14 @@ static DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 	TCmdLocParam2 *p = (TCmdLocParam2 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int spell = p->wParam1;
+		spell_id spell = (spell_id)p->wParam1;
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = p->wParam2;
-			plr[pnum]._pSpell = p->wParam1;
+			plr[pnum].destParam3 = (direction)p->wParam2;
+			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
 		} else
@@ -1665,14 +1665,14 @@ static DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 	TCmdLocParam2 *p = (TCmdLocParam2 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int spell = p->wParam1;
+		spell_id spell = (spell_id)p->wParam1;
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = p->wParam2;
-			plr[pnum]._pSpell = p->wParam1;
+			plr[pnum].destParam3 = (direction)p->wParam2;
+			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;
 		} else
@@ -1786,13 +1786,13 @@ static DWORD On_SPELLID(TCmd *pCmd, int pnum)
 	TCmdParam3 *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int spell = p->wParam2;
+		spell_id spell = (spell_id)p->wParam2;
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLMON;
 			plr[pnum].destParam1 = p->wParam1;
 			plr[pnum].destParam2 = p->wParam3;
-			plr[pnum]._pSpell = p->wParam2;
+			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
 		} else
@@ -1807,13 +1807,13 @@ static DWORD On_SPELLPID(TCmd *pCmd, int pnum)
 	TCmdParam3 *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int spell = p->wParam2;
+		spell_id spell = (spell_id)p->wParam2;
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLPLR;
 			plr[pnum].destParam1 = p->wParam1;
 			plr[pnum].destParam2 = p->wParam3;
-			plr[pnum]._pSpell = p->wParam2;
+			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
 		} else
@@ -1828,13 +1828,13 @@ static DWORD On_TSPELLID(TCmd *pCmd, int pnum)
 	TCmdParam3 *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int spell = p->wParam2;
+		spell_id spell = (spell_id)p->wParam2;
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLMON;
 			plr[pnum].destParam1 = p->wParam1;
 			plr[pnum].destParam2 = p->wParam3;
-			plr[pnum]._pSpell = p->wParam2;
+			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;
 		} else
@@ -1849,13 +1849,13 @@ static DWORD On_TSPELLPID(TCmd *pCmd, int pnum)
 	TCmdParam3 *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int spell = p->wParam2;
+		spell_id spell = (spell_id)p->wParam2;
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLPLR;
 			plr[pnum].destParam1 = p->wParam1;
 			plr[pnum].destParam2 = p->wParam3;
-			plr[pnum]._pSpell = p->wParam2;
+			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;
 		} else
@@ -2215,7 +2215,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 				LoadPlrGFX(pnum, PFILE_STAND);
 				SyncInitPlr(pnum);
 				if ((plr[pnum]._pHitPoints >> 6) > 0)
-					StartStand(pnum, 0);
+					StartStand(pnum, DIR_S);
 				else {
 					plr[pnum]._pgfxnum = 0;
 					LoadPlrGFX(pnum, PFILE_DEATH);
