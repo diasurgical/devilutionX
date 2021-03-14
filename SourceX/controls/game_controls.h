@@ -1,7 +1,9 @@
 #pragma once
 
-#include "all.h"
-#include "controls/controller.h"
+#include <cstdint>
+#include <SDL.h>
+
+#include "./controller.h"
 
 namespace dvl {
 
@@ -22,7 +24,7 @@ enum GameActionType {
 };
 
 struct GameActionSendKey {
-	DWORD vk_code;
+	std::uint32_t vk_code;
 	bool up;
 };
 

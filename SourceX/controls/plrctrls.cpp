@@ -849,9 +849,17 @@ void WalkInDir(MoveDirection dir)
 	NetSendCmdLoc(true, CMD_WALKXY, dx, dy);
 }
 
+void QuestLogMove(MoveDirection move_dir)
+{
+	if (move_dir.y == MoveDirectionY_UP)
+		QuestlogUp();
+	else if (move_dir.y == MoveDirectionY_DOWN)
+		QuestlogDown();
+}
+
 void Movement()
 {
-	if (InGameMenu() || questlog
+	if (InGameMenu()
 	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)
 	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
 		return;
@@ -869,6 +877,8 @@ void Movement()
 		HotSpellMove(move_dir);
 	} else if (sbookflag) {
 		SpellBookMove(move_dir);
+	} else if (questlog) {
+		QuestLogMove(move_dir);
 	} else {
 		WalkInDir(move_dir);
 	}

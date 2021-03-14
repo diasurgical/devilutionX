@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-#include "controls/controller_buttons.h"
+#include "./controller_buttons.h"
 
 namespace dvl {
 

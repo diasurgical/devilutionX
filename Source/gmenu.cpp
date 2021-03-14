@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#include "../SourceX/controls/game_controls.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *optbar_cel;
@@ -133,6 +135,29 @@ static void gmenu_up_down(BOOL isDown)
 	}
 }
 
+static void gmenu_left_right(BOOL isRight)
+{
+	int step, steps;
+
+	if (!(sgpCurrItem->dwFlags & GMENU_SLIDER))
+		return;
+
+	step = sgpCurrItem->dwFlags & 0xFFF;
+	steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	if (isRight) {
+		if (step == steps)
+			return;
+		step++;
+	} else {
+		if (step == 0)
+			return;
+		step--;
+	}
+	sgpCurrItem->dwFlags &= 0xFFFFF000;
+	sgpCurrItem->dwFlags |= step;
+	sgpCurrItem->fnMenu(FALSE);
+}
+
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 {
 	int i;
@@ -206,6 +231,43 @@ static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
 	}
 }
 
+static void GameMenuMove(MoveDirection move_dir)
+{
+	const int minIntervalMs = 200;
+
+	if (move_dir.x == MoveDirectionX_LEFT) {
+		static int last_move_left_tick = 0;
+		const int now = SDL_GetTicks();
+		if (now - last_move_left_tick >= minIntervalMs) {
+			gmenu_left_right(/*isRight=*/false);
+			last_move_left_tick = now;
+		}
+	} else if (move_dir.x == MoveDirectionX_RIGHT) {
+		static int last_move_right_tick = 0;
+		const int now = SDL_GetTicks();
+		if (now - last_move_right_tick >= minIntervalMs) {
+			gmenu_left_right(/*isRight=*/true);
+			last_move_right_tick = now;
+		}
+	}
+
+	if (move_dir.y == MoveDirectionY_UP) {
+		static int last_move_up_tick = 0;
+		const int now = SDL_GetTicks();
+		if (now - last_move_up_tick >= minIntervalMs) {
+			gmenu_up_down(/*isDown=*/false);
+			last_move_up_tick = now;
+		}
+	} else if (move_dir.y == MoveDirectionY_DOWN) {
+		static int last_move_down_tick = 0;
+		const int now = SDL_GetTicks();
+		if (now - last_move_down_tick >= minIntervalMs) {
+			gmenu_up_down(/*isDown=*/true);
+			last_move_down_tick = now;
+		}
+	}
+}
+
 void gmenu_draw(CelOutputBuffer out)
 {
 	int y;
@@ -213,6 +275,7 @@ void gmenu_draw(CelOutputBuffer out)
 	DWORD ticks;
 
 	if (sgpCurrentMenu) {
+		GameMenuMove(GetMoveDirection());
 		if (gmenu_current_option)
 			gmenu_current_option(sgpCurrentMenu);
 		if (gbIsHellfire) {
@@ -237,29 +300,6 @@ void gmenu_draw(CelOutputBuffer out)
 			}
 		}
 	}
-}
-
-static void gmenu_left_right(BOOL isRight)
-{
-	int step, steps;
-
-	if (!(sgpCurrItem->dwFlags & GMENU_SLIDER))
-		return;
-
-	step = sgpCurrItem->dwFlags & 0xFFF;
-	steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
-	if (isRight) {
-		if (step == steps)
-			return;
-		step++;
-	} else {
-		if (step == 0)
-			return;
-		step--;
-	}
-	sgpCurrItem->dwFlags &= 0xFFFFF000;
-	sgpCurrItem->dwFlags |= step;
-	sgpCurrItem->fnMenu(FALSE);
 }
 
 BOOL gmenu_presskeys(int vkey)
