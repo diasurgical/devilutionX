@@ -1,14 +1,43 @@
 #include "controls/menu_controls.h"
 
 #include "controls/controller.h"
+#include "controls/controller_motion.h"
 #include "controls/remap_keyboard.h"
 #include "DiabloUI/diabloui.h"
 
 namespace dvl {
 
+MenuAction GetStickMenuAction()
+{
+	const float stickY = leftStickY;
+	const int minIntervalMs = 200;
+	if (stickY >= 0.5) {
+		static int last_up = 0;
+		const int now = SDL_GetTicks();
+		if (now - last_up >= minIntervalMs) {
+			last_up = now;
+			return MenuAction_UP;
+		}
+	} else if (stickY <= -0.5) {
+		static int last_down = 0;
+		const int now = SDL_GetTicks();
+		if (now - last_down >= minIntervalMs) {
+			last_down = now;
+			return MenuAction_DOWN;
+		}
+	}
+	return MenuAction_NONE;
+}
+
 MenuAction GetMenuAction(const SDL_Event &event)
 {
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
+
+	if (ProcessControllerMotion(event, ctrl_event)) {
+		sgbControllerActive = true;
+		return GetStickMenuAction();
+	}
+
 	if (ctrl_event.button != ControllerButton_NONE)
 		sgbControllerActive = true;
 

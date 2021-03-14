@@ -21,4 +21,7 @@ enum MenuAction {
 
 MenuAction GetMenuAction(const SDL_Event &event);
 
+// Menu action from moving the left stick.
+MenuAction GetStickMenuAction();
+
 } // namespace dvl
