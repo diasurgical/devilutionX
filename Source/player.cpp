@@ -513,7 +513,7 @@ void ClearPlrPVars(int pnum)
 
 	plr[pnum]._pVar1 = 0;
 	plr[pnum]._pVar2 = 0;
-	plr[pnum]._pVar3 = 0;
+	plr[pnum]._pVar3 = DIR_S;
 	plr[pnum]._pVar4 = 0;
 	plr[pnum]._pVar5 = 0;
 	plr[pnum]._pVar6 = 0;
@@ -523,7 +523,7 @@ void ClearPlrPVars(int pnum)
 
 void SetPlrAnims(int pnum)
 {
-	int pc, gn;
+	int gn;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("SetPlrAnims: illegal player %d", pnum);
@@ -537,7 +537,7 @@ void SetPlrAnims(int pnum)
 	plr[pnum]._pDWidth = 128;
 	plr[pnum]._pBWidth = 96;
 
-	pc = plr[pnum]._pClass;
+	plr_class pc = plr[pnum]._pClass;
 
 	if (leveltype == DTYPE_TOWN) {
 		plr[pnum]._pNFrames = PlrGFXAnimLens[pc][7];
@@ -658,7 +658,7 @@ void SetPlrAnims(int pnum)
 /**
  * @param c plr_classes value
  */
-void CreatePlayer(int pnum, char c)
+void CreatePlayer(int pnum, plr_class c)
 {
 	char val;
 	int hp, mana;
@@ -781,7 +781,7 @@ void CreatePlayer(int pnum, char c)
 	// interestingly, only the first three hotkeys are reset
 	// TODO: BUGFIX: clear all 4 hotkeys instead of 3 (demo leftover)
 	for (i = 0; i < 3; i++) {
-		plr[pnum]._pSplHotKey[i] = -1;
+		plr[pnum]._pSplHotKey[i] = SPL_INVALID;
 	}
 
 	if (c == PC_WARRIOR) {
@@ -821,9 +821,7 @@ void CreatePlayer(int pnum, char c)
 
 int CalcStatDiff(int pnum)
 {
-	int c;
-
-	c = plr[pnum]._pClass;
+	plr_class c = plr[pnum]._pClass;
 	return MaxStats[c][ATTRIB_STR]
 	    - plr[pnum]._pBaseStr
 	    + MaxStats[c][ATTRIB_MAG]
@@ -1179,7 +1177,7 @@ void SetPlayerOld(int pnum)
 	plr[pnum]._poldy = plr[pnum]._py;
 }
 
-void FixPlayerLocation(int pnum, int bDir)
+void FixPlayerLocation(int pnum, direction bDir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("FixPlayerLocation: illegal player %d", pnum);
@@ -1203,7 +1201,7 @@ void FixPlayerLocation(int pnum, int bDir)
 	ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
 }
 
-void StartStand(int pnum, int dir)
+void StartStand(int pnum, direction dir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartStand: illegal player %d", pnum);
@@ -1327,7 +1325,7 @@ void PM_ChangeOffset(int pnum)
 /**
  * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir, int variant)
+void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, direction EndDir, int sdir, int variant)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartWalk: illegal player %d", pnum);
@@ -1447,7 +1445,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	}
 }
 
-void StartAttack(int pnum, int d)
+void StartAttack(int pnum, direction d)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartAttack: illegal player %d", pnum);
@@ -1468,7 +1466,7 @@ void StartAttack(int pnum, int d)
 	SetPlayerOld(pnum);
 }
 
-void StartRangeAttack(int pnum, int d, int cx, int cy)
+void StartRangeAttack(int pnum, direction d, int cx, int cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartRangeAttack: illegal player %d", pnum);
@@ -1491,7 +1489,7 @@ void StartRangeAttack(int pnum, int d, int cx, int cy)
 	plr[pnum]._pVar2 = cy;
 }
 
-void StartPlrBlock(int pnum, int dir)
+void StartPlrBlock(int pnum, direction dir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlrBlock: illegal player %d", pnum);
@@ -1514,7 +1512,7 @@ void StartPlrBlock(int pnum, int dir)
 	SetPlayerOld(pnum);
 }
 
-void StartSpell(int pnum, int d, int cx, int cy)
+void StartSpell(int pnum, direction d, int cx, int cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS)
 		app_fatal("StartSpell: illegal player %d", pnum);
@@ -1609,8 +1607,6 @@ void RemovePlrFromMap(int pnum)
 
 void StartPlrHit(int pnum, int dam, BOOL forcehit)
 {
-	int pd;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlrHit: illegal player %d", pnum);
 	}
@@ -1643,7 +1639,7 @@ void StartPlrHit(int pnum, int dam, BOOL forcehit)
 		return;
 	}
 
-	pd = plr[pnum]._pdir;
+	direction pd = plr[pnum]._pdir;
 
 	if (!(plr[pnum]._pGFXLoad & PFILE_HIT)) {
 		LoadPlrGFX(pnum, PFILE_HIT);
@@ -2223,7 +2219,7 @@ bool PM_DoWalk(int pnum, int variant)
 		if (plr[pnum].walkpath[0] != WALK_NONE) {
 			StartWalkStand(pnum);
 		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
+			StartStand(pnum, (direction)plr[pnum]._pVar3);
 		}
 
 		ClearPlrPVars(pnum);
@@ -2581,7 +2577,7 @@ BOOL PlrHitMonst(int pnum, int m)
 BOOL PlrHitPlr(int pnum, char p)
 {
 	BOOL rv;
-	int hit, hper, blk, blkper, dir, mind, maxd, dam, lvl, skdam, tac;
+	int hit, hper, blk, blkper, mind, maxd, dam, lvl, skdam, tac;
 
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("PlrHitPlr: illegal target player %d", p);
@@ -2632,7 +2628,7 @@ BOOL PlrHitPlr(int pnum, char p)
 
 	if (hit < hper) {
 		if (blk < blkper) {
-			dir = GetDirection(plr[p]._px, plr[p]._py, plr[pnum]._px, plr[pnum]._py);
+			direction dir = GetDirection(plr[p]._px, plr[p]._py, plr[pnum]._px, plr[pnum]._py);
 			StartPlrBlock(p, dir);
 		} else {
 			mind = plr[pnum]._pIMinDam;
@@ -3071,7 +3067,7 @@ BOOL PM_DoNewLvl(int pnum)
 
 void CheckNewPath(int pnum)
 {
-	int i, x, y, d;
+	int i, x, y;
 	int xvel3, xvel, yvel;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -3088,6 +3084,7 @@ void CheckNewPath(int pnum)
 		MakePlrPath(pnum, plr[i]._pfutx, plr[i]._pfuty, FALSE);
 	}
 
+	direction d;
 	if (plr[pnum].walkpath[0] != WALK_NONE) {
 		if (plr[pnum]._pmode == PM_STAND) {
 			if (pnum == myplr) {
@@ -3414,7 +3411,7 @@ BOOL PlrDeathModeOK(int p)
 void ValidatePlayer()
 {
 	__int64 msk;
-	int gt, pc, i, b;
+	int gt, i, b;
 
 	msk = 0;
 
@@ -3439,7 +3436,7 @@ void ValidatePlayer()
 	if (gt != plr[myplr]._pGold)
 		plr[myplr]._pGold = gt;
 
-	pc = plr[myplr]._pClass;
+	plr_class pc = plr[myplr]._pClass;
 	if (plr[myplr]._pBaseStr > MaxStats[pc][ATTRIB_STR]) {
 		plr[myplr]._pBaseStr = MaxStats[pc][ATTRIB_STR];
 	}

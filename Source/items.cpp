@@ -4193,7 +4193,7 @@ void PrintItemDur(ItemStruct *x)
 	PrintItemInfo(x);
 }
 
-void UseItem(int p, int Mid, int spl)
+void UseItem(int p, item_misc_id Mid, spell_id spl)
 {
 	int l, j;
 
@@ -4942,7 +4942,7 @@ void SpawnBoy(int lvl)
 	int strength = get_max_strength(plr[myplr]._pClass);
 	int dexterity = get_max_dexterity(plr[myplr]._pClass);
 	int magic = get_max_magic(plr[myplr]._pClass);
-	int pc = plr[myplr]._pClass;
+	plr_class pc = plr[myplr]._pClass;
 
 	if (strength < plr[myplr]._pStrength) {
 		strength = plr[myplr]._pStrength;

@@ -571,10 +571,10 @@ void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, i
 	}
 }
 
-int GetDirection(int x1, int y1, int x2, int y2)
+direction GetDirection(int x1, int y1, int x2, int y2)
 {
-	int mx, my;
-	int md, ny;
+	int mx, my, ny;
+	direction md;
 
 	mx = x2 - x1;
 	my = y2 - y1;

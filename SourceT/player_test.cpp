@@ -14,13 +14,13 @@ int RunBlockTest(bool hellfire, int frames, int flags)
 	dvl::plr[pnum]._pHFrames = frames;
 	dvl::plr[pnum]._pVar8 = 1;
 	dvl::plr[pnum]._pIFlags = flags;
-	dvl::plr[pnum]._pmode = 7;
+	dvl::plr[pnum]._pmode = dvl::PM_GOTHIT;
 	dvl::plr[pnum]._pGFXLoad = -1;
 
 	int i = 1;
 	for (; i < 100; i++) {
 		dvl::PM_DoGotHit(pnum);
-		if (dvl::plr[pnum]._pmode != 7)
+		if (dvl::plr[pnum]._pmode != dvl::PM_GOTHIT)
 			break;
 		dvl::plr[pnum]._pAnimFrame++;
 	}

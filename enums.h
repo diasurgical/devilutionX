@@ -1892,21 +1892,6 @@ typedef enum MON_ANIM {
 	MA_SPECIAL = 5,
 } MON_ANIM;
 
-typedef enum PLR_MODE {
-	PM_STAND   = 0,
-	PM_WALK    = 1, //Movement towards N, NW, or NE
-	PM_WALK2   = 2, //Movement towards S, SW, or SE
-	PM_WALK3   = 3, //Movement towards W or E
-	PM_ATTACK  = 4,
-	PM_RATTACK = 5,
-	PM_BLOCK   = 6,
-	PM_GOTHIT  = 7,
-	PM_DEATH   = 8,
-	PM_SPELL   = 9,
-	PM_NEWLVL  = 10,
-	PM_QUIT    = 11,
-} PLR_MODE;
-
 typedef enum spell_type {
 	RSPLTYPE_SKILL   = 0x0,
 	RSPLTYPE_SPELL   = 0x1,
@@ -2516,12 +2501,12 @@ typedef enum _unique_items {
 } _unique_items;
 
 typedef enum plr_class {
-	PC_WARRIOR   = 0x0,
-	PC_ROGUE     = 0x1,
-	PC_SORCERER  = 0x2,
-	PC_MONK      = 0x3,
-	PC_BARD      = 0x4,
-	PC_BARBARIAN = 0x5,
+	PC_WARRIOR,
+	PC_ROGUE,
+	PC_SORCERER,
+	PC_MONK,
+	PC_BARD,
+	PC_BARBARIAN,
 	NUM_CLASSES
 } plr_class;
 
@@ -2536,11 +2521,6 @@ typedef enum _walk_path {
 	WALK_W    = 0x8,
 	WALK_NONE = -1,
 } _walk_path;
-
-typedef enum player_weapon_type {
-	WT_MELEE  = 0,
-	WT_RANGED = 1,
-} player_weapon_type;
 
 // Logical equipment locations
 typedef enum inv_body_loc {
@@ -2670,27 +2650,6 @@ typedef enum shrine_type {
 	SHRINE_MURPHYS      = 33,
 	NUM_SHRINETYPE
 } shrine_type;
-
-typedef enum action_id {
-	ACTION_WALK        = -2, // Automatic walk when using gamepad
-	ACTION_NONE        = -1,
-	ACTION_ATTACK      = 9,
-	ACTION_RATTACK     = 10,
-	ACTION_SPELL       = 12,
-	ACTION_OPERATE     = 13,
-	ACTION_DISARM      = 14,
-	ACTION_PICKUPITEM  = 15, // put item in hand (inventory screen open)
-	ACTION_PICKUPAITEM = 16, // put item in inventory
-	ACTION_TALK        = 17,
-	ACTION_OPERATETK   = 18, // operate via telekinesis
-	ACTION_ATTACKMON   = 20,
-	ACTION_ATTACKPLR   = 21,
-	ACTION_RATTACKMON  = 22,
-	ACTION_RATTACKPLR  = 23,
-	ACTION_SPELLMON    = 24,
-	ACTION_SPELLPLR    = 25,
-	ACTION_SPELLWALL   = 26,
-} action_id;
 
 typedef enum dlrg_flag {
 	DLRG_HDOOR     = 0x01,

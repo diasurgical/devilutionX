@@ -1870,7 +1870,7 @@ void Obj_Circle(int i)
 			track_repeat_walk(FALSE);
 			sgbMouseDown = CLICK_NONE;
 			ClrPlrPath(myplr);
-			StartStand(myplr, 0);
+			StartStand(myplr, DIR_S);
 		}
 	} else {
 		if (object[i]._otype == OBJ_MCIRCLE1)

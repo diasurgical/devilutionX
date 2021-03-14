@@ -26,8 +26,6 @@ int monstimgtot;
 int uniquetrans;
 int nummtypes;
 
-/** Maps from walking path step to facing direction. */
-const char plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };
 /** Maps from monster intelligence factor to missile type. */
 const BYTE counsmiss[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
 
@@ -2179,7 +2177,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (hper >= hit)
 		return;
 	if (blkper < blk) {
-		dir = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[i]._mx, monster[i]._my);
+		direction dir = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[i]._mx, monster[i]._my);
 		StartPlrBlock(pnum, dir);
 		if (pnum == myplr && plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
@@ -2899,9 +2897,12 @@ BOOL M_CallWalk(int i, int md)
 
 BOOL M_PathWalk(int i)
 {
-	char path[MAX_PATH_LENGTH];
+	Sint8 path[MAX_PATH_LENGTH];
 	BOOL(*Check)
 	(int, int, int);
+
+	/** Maps from walking path step to facing direction. */
+	const Sint8 plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };
 
 	commitment((DWORD)i < MAXMONSTERS, i);
 
@@ -2910,7 +2911,7 @@ BOOL M_PathWalk(int i)
 		Check = PosOkMonst;
 
 	if (FindPath(Check, i, monster[i]._mx, monster[i]._my, monster[i]._menemyx, monster[i]._menemyy, path)) {
-		M_CallWalk(i, plr2monst[path[0]]); /* plr2monst is local */
+		M_CallWalk(i, plr2monst[path[0]]);
 		return TRUE;
 	}
 

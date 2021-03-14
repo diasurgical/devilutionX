@@ -82,7 +82,7 @@ int GetDistance(int dx, int dy, int maxDistance)
 		return 0;
 	}
 
-	char walkpath[MAX_PATH_LENGTH];
+	Sint8 walkpath[MAX_PATH_LENGTH];
 	int steps = FindPath(PosOkPlayer, myplr, plr[myplr]._pfutx, plr[myplr]._pfuty, dx, dy, walkpath);
 	if (steps > maxDistance)
 		return 0;
@@ -838,7 +838,7 @@ void WalkInDir(MoveDirection dir)
 		return;
 	}
 
-	const int pdir = kFaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
+	const direction pdir = kFaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 	const int dx = x + kOffsets[pdir][0];
 	const int dy = y + kOffsets[pdir][1];
 	plr[myplr]._pdir = pdir;

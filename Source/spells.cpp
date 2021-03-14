@@ -53,7 +53,7 @@ int GetManaAmount(int id, int sn)
 		ma = spelldata[sn].sMinMana << 6;
 	}
 
-	return ma * (100 - plr[id]._pISplCost) / 100;
+	return ma;
 }
 
 void UseMana(int id, int sn)
@@ -133,15 +133,13 @@ bool IsReadiedSpellValid(const PlayerStruct &player)
  */
 void ClearReadiedSpell(PlayerStruct &player)
 {
-	int &readiedSpell = player._pRSpell;
-	if (readiedSpell != SPL_INVALID) {
-		readiedSpell = SPL_INVALID;
+	if (player._pRSpell != SPL_INVALID) {
+		player._pRSpell = SPL_INVALID;
 		force_redraw = 255;
 	}
 
-	char &readiedSpellType = player._pRSplType;
-	if (readiedSpellType != RSPLTYPE_INVALID) {
-		readiedSpellType = RSPLTYPE_INVALID;
+	if (player._pRSplType != RSPLTYPE_INVALID) {
+		player._pRSplType = RSPLTYPE_INVALID;
 		force_redraw = 255;
 	}
 }

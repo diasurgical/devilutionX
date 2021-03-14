@@ -284,17 +284,17 @@ static void LoadPlayer(LoadHelper *file, int p)
 {
 	PlayerStruct *pPlayer = &plr[p];
 
-	pPlayer->_pmode = file->nextLE<Sint32>();
+	pPlayer->_pmode = (PLR_MODE)file->nextLE<Sint32>();
 
 	for (int i = 0; i < MAX_PATH_LENGTH; i++) {
 		pPlayer->walkpath[i] = file->nextLE<Sint8>();
 	}
 	pPlayer->plractive = file->nextBool8();
 	file->skip(2); // Alignment
-	pPlayer->destAction = file->nextLE<Sint32>();
+	pPlayer->destAction = (action_id)file->nextLE<Sint32>();
 	pPlayer->destParam1 = file->nextLE<Sint32>();
 	pPlayer->destParam2 = file->nextLE<Sint32>();
-	pPlayer->destParam3 = file->nextLE<Sint32>();
+	pPlayer->destParam3 = (direction)file->nextLE<Sint32>();
 	pPlayer->destParam4 = file->nextLE<Sint32>();
 	pPlayer->plrlevel = file->nextLE<Sint32>();
 	pPlayer->_px = file->nextLE<Sint32>();
@@ -311,7 +311,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pyoff = file->nextLE<Sint32>();
 	pPlayer->_pxvel = file->nextLE<Sint32>();
 	pPlayer->_pyvel = file->nextLE<Sint32>();
-	pPlayer->_pdir = file->nextLE<Sint32>();
+	pPlayer->_pdir = (direction)file->nextLE<Sint32>();
 	file->skip(4); // Unused
 	pPlayer->_pgfxnum = file->nextLE<Sint32>();
 	file->skip(4); // Skip pointer _pAnimData
@@ -325,18 +325,18 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_plid = file->nextLE<Sint32>();
 	pPlayer->_pvid = file->nextLE<Sint32>();
 
-	pPlayer->_pSpell = file->nextLE<Sint32>();
-	pPlayer->_pSplType = file->nextLE<Sint8>();
+	pPlayer->_pSpell = (spell_id)file->nextLE<Sint32>();
+	pPlayer->_pSplType = (spell_type)file->nextLE<Sint8>();
 	pPlayer->_pSplFrom = file->nextLE<Sint8>();
 	file->skip(2); // Alignment
-	pPlayer->_pTSpell = file->nextLE<Sint32>();
-	pPlayer->_pTSplType = file->nextLE<Sint8>();
+	pPlayer->_pTSpell = (spell_id)file->nextLE<Sint32>();
+	pPlayer->_pTSplType = (spell_type)file->nextLE<Sint8>();
 	file->skip(3); // Alignment
-	pPlayer->_pRSpell = file->nextLE<Sint32>();
-	pPlayer->_pRSplType = file->nextLE<Sint8>();
+	pPlayer->_pRSpell = (spell_id)file->nextLE<Sint32>();
+	pPlayer->_pRSplType = (spell_type)file->nextLE<Sint8>();
 	file->skip(3); // Alignment
-	pPlayer->_pSBkSpell = file->nextLE<Sint32>();
-	pPlayer->_pSBkSplType = file->nextLE<Sint8>();
+	pPlayer->_pSBkSpell = (spell_id)file->nextLE<Sint32>();
+	pPlayer->_pSBkSplType = (spell_type)file->nextLE<Sint8>();
 	for (int i = 0; i < 64; i++)
 		pPlayer->_pSplLvl[i] = file->nextLE<Sint8>();
 	file->skip(7); // Alignment
@@ -346,18 +346,18 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pSpellFlags = file->nextLE<Uint8>();
 	file->skip(3); // Alignment
 	for (int i = 0; i < 4; i++)
-		pPlayer->_pSplHotKey[i] = file->nextLE<Sint32>();
+		pPlayer->_pSplHotKey[i] = (spell_id)file->nextLE<Sint32>();
 	for (int i = 0; i < 4; i++)
-		pPlayer->_pSplTHotKey[i] = file->nextLE<Sint8>();
+		pPlayer->_pSplTHotKey[i] = (spell_type)file->nextLE<Sint8>();
 
-	pPlayer->_pwtype = file->nextLE<Sint32>();
+	pPlayer->_pwtype = (player_weapon_type)file->nextLE<Sint32>();
 	pPlayer->_pBlockFlag = file->nextBool8();
 	pPlayer->_pInvincible = file->nextBool8();
 	pPlayer->_pLightRad = file->nextLE<Sint8>();
 	pPlayer->_pLvlChanging = file->nextBool8();
 
 	file->nextBytes(pPlayer->_pName, PLR_NAME_LEN);
-	pPlayer->_pClass = file->nextLE<Sint8>();
+	pPlayer->_pClass = (plr_class)file->nextLE<Sint8>();
 	file->skip(3); // Alignment
 	pPlayer->_pStrength = file->nextLE<Sint32>();
 	pPlayer->_pBaseStr = file->nextLE<Sint32>();
@@ -397,7 +397,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pInfraFlag = file->nextBool32();
 	pPlayer->_pVar1 = file->nextLE<Sint32>();
 	pPlayer->_pVar2 = file->nextLE<Sint32>();
-	pPlayer->_pVar3 = file->nextLE<Sint32>();
+	pPlayer->_pVar3 = (direction)file->nextLE<Sint32>();
 	pPlayer->_pVar4 = file->nextLE<Sint32>();
 	pPlayer->_pVar5 = file->nextLE<Sint32>();
 	pPlayer->_pVar6 = file->nextLE<Sint32>();
@@ -458,7 +458,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pIFlags = file->nextLE<Sint32>();
 	pPlayer->_pIGetHit = file->nextLE<Sint32>();
 	pPlayer->_pISplLvlAdd = file->nextLE<Sint8>();
-	pPlayer->_pISplCost = file->nextLE<Sint8>();
+	file->skip(1); // Unused
 	file->skip(2); // Alignment
 	pPlayer->_pISplDur = file->nextLE<Sint32>();
 	pPlayer->_pIEnAc = file->nextLE<Sint32>();
@@ -466,7 +466,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pIFMaxDam = file->nextLE<Sint32>();
 	pPlayer->_pILMinDam = file->nextLE<Sint32>();
 	pPlayer->_pILMaxDam = file->nextLE<Sint32>();
-	pPlayer->_pOilType = file->nextLE<Sint32>();
+	pPlayer->_pOilType = (item_misc_id)file->nextLE<Sint32>();
 	pPlayer->pTownWarps = file->nextLE<Uint8>();
 	pPlayer->pDungMsgs = file->nextLE<Uint8>();
 	pPlayer->pLvlLoad = file->nextLE<Uint8>();
@@ -884,13 +884,13 @@ void LoadHotkeys()
 	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
 
 	for (size_t i = 0; i < nHotkeyTypes; i++) {
-		plr[myplr]._pSplHotKey[i] = file.nextLE<Sint32>();
+		plr[myplr]._pSplHotKey[i] = (spell_id)file.nextLE<Sint32>();
 	}
 	for (size_t i = 0; i < nHotkeySpells; i++) {
-		plr[myplr]._pSplTHotKey[i] = file.nextLE<Sint8>();
+		plr[myplr]._pSplTHotKey[i] = (spell_type)file.nextLE<Sint8>();
 	}
-	plr[myplr]._pRSpell = file.nextLE<Sint32>();
-	plr[myplr]._pRSplType = file.nextLE<Sint8>();
+	plr[myplr]._pRSpell = (spell_id)file.nextLE<Sint32>();
+	plr[myplr]._pRSplType = (spell_type)file.nextLE<Sint8>();
 }
 
 void SaveHotkeys()
@@ -1380,7 +1380,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Sint32>(pPlayer->_pIGetHit);
 
 	file->writeLE<Sint8>(pPlayer->_pISplLvlAdd);
-	file->writeLE<Sint8>(pPlayer->_pISplCost);
+	file->skip(1); // Unused
 	file->skip(2); // Alignment
 	file->writeLE<Sint32>(pPlayer->_pISplDur);
 	file->writeLE<Sint32>(pPlayer->_pIEnAc);
