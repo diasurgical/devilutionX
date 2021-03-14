@@ -175,6 +175,18 @@ void DrawXPBar(CelOutputBuffer out)
 		FastDrawVertLine(out, xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight - 1, barHeight + dividerHeight * 2 + 2, frameColor);
 }
 
+bool HasRoomForGold()
+{
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+		int idx = plr[myplr].InvGrid[i];
+		if (idx == 0 || (plr[myplr].InvList[idx]._itype == ITYPE_GOLD && plr[myplr].InvList[idx]._ivalue < MaxGold)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void AutoGoldPickup(int pnum)
 {
 	if (!sgOptions.Gameplay.bAutoGoldPickup)
@@ -182,6 +194,8 @@ void AutoGoldPickup(int pnum)
 	if (pnum != myplr)
 		return;
 	if (leveltype == DTYPE_TOWN)
+		return;
+	if (!HasRoomForGold())
 		return;
 
 	for (int dir = 0; dir < 8; dir++) {
