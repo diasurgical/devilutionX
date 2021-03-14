@@ -1,8 +1,6 @@
 #pragma once
 // Unifies joystick, gamepad, and keyboard controller APIs.
 
-#include "all.h"
-
 namespace dvl {
 
 // NOTE: A, B, X, Y refer to physical positions on an XBox 360 controller.

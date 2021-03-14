@@ -5,6 +5,9 @@
  */
 #include "all.h"
 
+#include "../SourceX/controls/axis_direction.h"
+#include "../SourceX/controls/controller_motion.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *optbar_cel;
@@ -133,6 +136,29 @@ static void gmenu_up_down(BOOL isDown)
 	}
 }
 
+static void gmenu_left_right(BOOL isRight)
+{
+	int step, steps;
+
+	if (!(sgpCurrItem->dwFlags & GMENU_SLIDER))
+		return;
+
+	step = sgpCurrItem->dwFlags & 0xFFF;
+	steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	if (isRight) {
+		if (step == steps)
+			return;
+		step++;
+	} else {
+		if (step == 0)
+			return;
+		step--;
+	}
+	sgpCurrItem->dwFlags &= 0xFFFFF000;
+	sgpCurrItem->dwFlags |= step;
+	sgpCurrItem->fnMenu(FALSE);
+}
+
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 {
 	int i;
@@ -206,6 +232,16 @@ static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
 	}
 }
 
+static void GameMenuMove()
+{
+	static AxisDirectionRepeater repeater(/*min_interval_ms=*/200);
+	const AxisDirection move_dir = repeater.Get(GetLeftStickOrDpadDirection());
+	if (move_dir.x != AxisDirectionX_NONE)
+		gmenu_left_right(move_dir.x == AxisDirectionX_RIGHT);
+	if (move_dir.y != AxisDirectionY_NONE)
+		gmenu_up_down(move_dir.y == AxisDirectionY_DOWN);
+}
+
 void gmenu_draw(CelOutputBuffer out)
 {
 	int y;
@@ -213,6 +249,7 @@ void gmenu_draw(CelOutputBuffer out)
 	DWORD ticks;
 
 	if (sgpCurrentMenu) {
+		GameMenuMove();
 		if (gmenu_current_option)
 			gmenu_current_option(sgpCurrentMenu);
 		if (gbIsHellfire) {
@@ -237,29 +274,6 @@ void gmenu_draw(CelOutputBuffer out)
 			}
 		}
 	}
-}
-
-static void gmenu_left_right(BOOL isRight)
-{
-	int step, steps;
-
-	if (!(sgpCurrItem->dwFlags & GMENU_SLIDER))
-		return;
-
-	step = sgpCurrItem->dwFlags & 0xFFF;
-	steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
-	if (isRight) {
-		if (step == steps)
-			return;
-		step++;
-	} else {
-		if (step == 0)
-			return;
-		step--;
-	}
-	sgpCurrItem->dwFlags &= 0xFFFFF000;
-	sgpCurrItem->dwFlags |= step;
-	sgpCurrItem->fnMenu(FALSE);
 }
 
 BOOL gmenu_presskeys(int vkey)

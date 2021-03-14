@@ -6,6 +6,9 @@
 #include "controls/controller_motion.h"
 #include "stubs.h"
 
+// Defined in SourceX/controls/plctrls.cpp
+extern "C" bool sgbControllerActive;
+
 namespace dvl {
 
 std::vector<Joystick> *const Joystick::joysticks_ = new std::vector<Joystick>;

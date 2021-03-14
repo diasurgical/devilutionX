@@ -277,6 +277,7 @@ set(devilutionx_SRCS
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp
   SourceX/controls/devices/kbcontroller.cpp
+  SourceX/controls/axis_direction.cpp
   SourceX/controls/controller.cpp
   SourceX/controls/controller_motion.cpp
   SourceX/controls/game_controls.cpp

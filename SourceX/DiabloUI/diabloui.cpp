@@ -145,6 +145,8 @@ void UiPlaySelectSound()
 		gfnSoundFunction("sfx\\items\\titlslct.wav");
 }
 
+namespace {
+
 void UiFocus(std::size_t itemIndex)
 {
 	if (SelectedItem == itemIndex)
@@ -214,6 +216,39 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 
+bool HandleMenuAction(MenuAction menu_action)
+{
+	switch (menu_action) {
+	case MenuAction_SELECT:
+		UiFocusNavigationSelect();
+		return true;
+	case MenuAction_UP:
+		UiFocusUp();
+		return true;
+	case MenuAction_DOWN:
+		UiFocusDown();
+		return true;
+	case MenuAction_PAGE_UP:
+		UiFocusPageUp();
+		return true;
+	case MenuAction_PAGE_DOWN:
+		UiFocusPageDown();
+		return true;
+	case MenuAction_DELETE:
+		UiFocusNavigationYesNo();
+		return true;
+	case MenuAction_BACK:
+		if (!gfnListEsc)
+			return false;
+		UiFocusNavigationEsc();
+		return true;
+	default:
+		return false;
+	}
+}
+
+} // namespace
+
 void UiFocusNavigation(SDL_Event *event)
 {
 	switch (event->type) {
@@ -239,33 +274,7 @@ void UiFocusNavigation(SDL_Event *event)
 		break;
 	}
 
-	switch (GetMenuAction(*event)) {
-	case MenuAction_SELECT:
-		UiFocusNavigationSelect();
-		return;
-	case MenuAction_UP:
-		UiFocusUp();
-		return;
-	case MenuAction_DOWN:
-		UiFocusDown();
-		return;
-	case MenuAction_PAGE_UP:
-		UiFocusPageUp();
-		return;
-	case MenuAction_PAGE_DOWN:
-		UiFocusPageDown();
-		return;
-	case MenuAction_DELETE:
-		UiFocusNavigationYesNo();
-		return;
-	case MenuAction_BACK:
-		if (!gfnListEsc)
-			break;
-		UiFocusNavigationEsc();
-		return;
-	default:
-		break;
-	}
+	if (HandleMenuAction(GetMenuAction(*event))) return;
 
 #ifndef USE_SDL1
 	if (event->type == SDL_MOUSEWHEEL) {
@@ -617,6 +626,7 @@ void UiPollAndRender()
 		UiFocusNavigation(&event);
 		UiHandleEvents(&event);
 	}
+	HandleMenuAction(GetMenuHeldUpDownAction());
 	UiRenderItems(gUiItems);
 	DrawMouse();
 	UiFadeIn();
