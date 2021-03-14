@@ -184,6 +184,7 @@ void CaptureScreen()
 
 	lock_buf(2);
 	CelOutputBuffer buf = GlobalBackBuffer();
+	buf = buf.subregion(SCREEN_X, SCREEN_Y, gnScreenWidth, gnScreenHeight);
 	success = CaptureHdr(gnScreenWidth, gnScreenHeight, out_stream);
 	if (success) {
 		success = CapturePix(buf, gnScreenWidth, gnScreenHeight, out_stream);
