@@ -330,6 +330,55 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 	return false;
 }
 
+MoveDirection MoveDirectionRepeater::Get()
+{
+	MoveDirection md = GetMoveDirection();
+	const int now = SDL_GetTicks();
+	switch (md.x) {
+		case MoveDirectionX_LEFT:
+			last_right_ = 0;
+			if (now - last_left_ < min_interval_ms_) {
+				md.x = MoveDirectionX_NONE;
+			} else {
+				last_left_ = now;
+			}
+			break;
+		case MoveDirectionX_RIGHT:
+			last_left_ = 0;
+			if (now - last_right_ < min_interval_ms_) {
+				md.x = MoveDirectionX_NONE;
+			} else {
+				last_right_ = now;
+			}
+			break;
+		case MoveDirectionX_NONE:
+			last_left_ = last_right_ = 0;
+			break;
+	}
+	switch (md.y) {
+		case MoveDirectionY_UP:
+			last_down_ = 0;
+			if (now - last_up_ < min_interval_ms_) {
+				md.y = MoveDirectionY_NONE;
+			} else {
+				last_up_ = now;
+			}
+			break;
+		case MoveDirectionY_DOWN:
+			last_up_ = 0;
+			if (now - last_down_ < min_interval_ms_) {
+				md.y = MoveDirectionY_NONE;
+			} else {
+				last_down_ = now;
+			}
+			break;
+		case MoveDirectionY_NONE:
+			last_up_ = last_down_ = 0;
+			break;
+	}
+	return md;
+}
+
 MoveDirection GetMoveDirection()
 {
 	const float stickX = leftStickX;

@@ -231,41 +231,14 @@ static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
 	}
 }
 
-static void GameMenuMove(MoveDirection move_dir)
+static void GameMenuMove()
 {
-	const int minIntervalMs = 200;
-
-	if (move_dir.x == MoveDirectionX_LEFT) {
-		static int last_move_left_tick = 0;
-		const int now = SDL_GetTicks();
-		if (now - last_move_left_tick >= minIntervalMs) {
-			gmenu_left_right(/*isRight=*/false);
-			last_move_left_tick = now;
-		}
-	} else if (move_dir.x == MoveDirectionX_RIGHT) {
-		static int last_move_right_tick = 0;
-		const int now = SDL_GetTicks();
-		if (now - last_move_right_tick >= minIntervalMs) {
-			gmenu_left_right(/*isRight=*/true);
-			last_move_right_tick = now;
-		}
-	}
-
-	if (move_dir.y == MoveDirectionY_UP) {
-		static int last_move_up_tick = 0;
-		const int now = SDL_GetTicks();
-		if (now - last_move_up_tick >= minIntervalMs) {
-			gmenu_up_down(/*isDown=*/false);
-			last_move_up_tick = now;
-		}
-	} else if (move_dir.y == MoveDirectionY_DOWN) {
-		static int last_move_down_tick = 0;
-		const int now = SDL_GetTicks();
-		if (now - last_move_down_tick >= minIntervalMs) {
-			gmenu_up_down(/*isDown=*/true);
-			last_move_down_tick = now;
-		}
-	}
+	static MoveDirectionRepeater repeater(/*min_interval_ms=*/200);
+	const MoveDirection move_dir = repeater.Get();
+	if (move_dir.x != MoveDirectionX_NONE)
+		gmenu_left_right(move_dir.x == MoveDirectionX_RIGHT);
+	if (move_dir.y != MoveDirectionY_NONE)
+		gmenu_up_down(move_dir.y == MoveDirectionY_DOWN);
 }
 
 void gmenu_draw(CelOutputBuffer out)
@@ -275,7 +248,7 @@ void gmenu_draw(CelOutputBuffer out)
 	DWORD ticks;
 
 	if (sgpCurrentMenu) {
-		GameMenuMove(GetMoveDirection());
+		GameMenuMove();
 		if (gmenu_current_option)
 			gmenu_current_option(sgpCurrentMenu);
 		if (gbIsHellfire) {

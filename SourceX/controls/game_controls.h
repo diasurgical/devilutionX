@@ -86,6 +86,30 @@ struct MoveDirection {
 };
 MoveDirection GetMoveDirection();
 
+/**
+ * @brief Returns a non-empty MoveDirection at most once per the given time interval.
+ */
+class MoveDirectionRepeater {
+public:
+	MoveDirectionRepeater(int min_interval_ms)
+	    : last_left_(0)
+	    , last_right_(0)
+	    , last_up_(0)
+	    , last_down_(0)
+	    , min_interval_ms_(min_interval_ms)
+	{
+	}
+
+	MoveDirection Get();
+
+private:
+	int last_left_;
+	int last_right_;
+	int last_up_;
+	int last_down_;
+	int min_interval_ms_;
+};
+
 extern bool start_modifier_active;
 extern bool select_modifier_active;
 extern bool dpad_hotkeys;
