@@ -811,7 +811,7 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEA
 		if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
 			direction dir = plr[pnum]._pdir;
 			if (m != -1) {
-				tac = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[m]._mx, monster[m]._my);
+				dir = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[m]._mx, monster[m]._my);
 			}
 			*blocked = true;
 			StartPlrBlock(pnum, dir);
