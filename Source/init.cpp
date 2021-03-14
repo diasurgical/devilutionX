@@ -146,7 +146,12 @@ void init_archives()
 	fileinfo.versionstring = gszVersionNumber;
 	init_get_file_info();
 
-	diabdat_mpq = init_test_access("diabdat.mpq", "DiabloCD", 1000, FS_CD);
+	diabdat_mpq = init_test_access("DIABDAT.MPQ", "DiabloCD", 1000, FS_CD);
+	if (diabdat_mpq == NULL) {
+		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
+		diabdat_mpq = init_test_access("diabdat.mpq", "DiabloCD", 1000, FS_CD);
+	}
+
 	if (diabdat_mpq == NULL) {
 		spawn_mpq = init_test_access("spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 		if (spawn_mpq != NULL)

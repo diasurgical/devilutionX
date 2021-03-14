@@ -37,4 +37,4 @@ The mapping is based on the standard GameShell keyboard layout, devilutionX uses
 | Start + X    | Enter + U    | Start + Y    | quest log |
 | Start + A    | Enter + J    | Start + B    | spell book |
 | Select + LK5                | Space + L                  | Select + R1                | right mouse click |
-| Select + A/B/X/Y            | Space + J/K/U/I         | Select + A/B/X/Y            | hot spell | 
+| Select + A/B/X/Y            | Space + J/K/U/I         | Select + A/B/X/Y            | hot spell |
