@@ -26,6 +26,40 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+template <class T>
+T SwapLE(T in)
+{
+	static_assert((sizeof(T) == 1) || (sizeof(T) == 2) || (sizeof(T) == 4) || (sizeof(T) == 8),
+	    "SwapLE called for unsupported size");
+	switch (sizeof(T)) {
+	case 1:
+		return in;
+	case 2:
+		return static_cast<T>(SDL_SwapLE16(static_cast<Uint16>(in)));
+	case 4:
+		return static_cast<T>(SDL_SwapLE32(static_cast<Uint32>(in)));
+	case 8:
+		return static_cast<T>(SDL_SwapLE64(static_cast<Uint64>(in)));
+	}
+}
+
+template <class T>
+T SwapBE(T in)
+{
+	static_assert((sizeof(T) == 1) || (sizeof(T) == 2) || (sizeof(T) == 4) || (sizeof(T) == 8),
+	    "SwapBE called for unsupported size");
+	switch (sizeof(T)) {
+	case 1:
+		return in;
+	case 2:
+		return static_cast<T>(SDL_SwapBE16(static_cast<Uint16>(in)));
+	case 4:
+		return static_cast<T>(SDL_SwapBE32(static_cast<Uint32>(in)));
+	case 8:
+		return static_cast<T>(SDL_SwapBE64(static_cast<Uint64>(in)));
+	}
+}
+
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
 	DWORD *pFrameTable;
@@ -105,27 +139,43 @@ struct CelOutputBuffer {
 	 *
 	 * Only use this if the buffer owns its data.
 	 */
-	void Free() {
+	void Free()
+	{
 		SDL_FreeSurface(this->surface);
 		this->surface = NULL;
 	}
 
-	int w() const { return region.w; }
-	int h() const { return region.h; }
+	int w() const
+	{
+		return region.w;
+	}
+	int h() const
+	{
+		return region.h;
+	}
 
 	BYTE *at(int x, int y) const
 	{
 		return static_cast<BYTE *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
 	}
 
-	BYTE *begin() const { return at(0, 0); }
-	BYTE *end() const { return at(0, region.h); }
+	BYTE *begin() const
+	{
+		return at(0, 0);
+	}
+	BYTE *end() const
+	{
+		return at(0, region.h);
+	}
 
 	/**
 	 * @brief Line width of the raw underlying byte buffer.
 	 * May be wider than its logical width (for power-of-2 alignment).
 	 */
-	int pitch() { return surface->pitch; }
+	int pitch()
+	{
+		return surface->pitch;
+	}
 
 	bool in_bounds(Sint16 x, Sint16 y) const
 	{

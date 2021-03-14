@@ -1,4 +1,5 @@
 #include "dvlnet/packet.h"
+#include "engine.h"
 
 namespace dvl {
 namespace net {
