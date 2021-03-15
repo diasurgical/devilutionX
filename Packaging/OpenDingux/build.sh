@@ -17,7 +17,14 @@ if ! check_target "$@"; then
   exit 64
 fi
 
-declare -r TARGET="$1"
+declare -r TARGET=$(echo "$1" | cut -d "-" -f 1)
+
+if [[ $(echo "$1" | cut -d "-" -f 2) == hellfire ]]; then
+	declare -r HELLFIRE=ON
+else
+	declare -r HELLFIRE=OFF
+fi
+
 declare -r BUILD_DIR="build-${TARGET}"
 declare -rA BUILDROOT_REPOS=(
 	[retrofw]=https://github.com/retrofw/buildroot.git
@@ -64,7 +71,7 @@ build() {
 	mkdir -p "$BUILD_DIR"
 	cd "$BUILD_DIR"
 	rm -f CMakeCache.txt
-	cmake .. -DBINARY_RELEASE=ON "-DTARGET_PLATFORM=$TARGET" \
+	cmake .. -DBINARY_RELEASE=ON "-DHELLFIRE=$HELLFIRE" "-DTARGET_PLATFORM=$TARGET" \
 		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
 	make -j $(getconf _NPROCESSORS_ONLN)
 	cd -

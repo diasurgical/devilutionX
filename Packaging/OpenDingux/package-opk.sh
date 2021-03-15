@@ -11,15 +11,22 @@ package_opk() {
 	set -x
 	rm -rf "$tmp"
 	mkdir -p "$tmp"
-	cp "Packaging/OpenDingux/${TARGET}.desktop" "${tmp}/default.${ext}.desktop"
-	cp "Packaging/OpenDingux/${TARGET}-hellfire.desktop" "${tmp}/hellfire.${ext}.desktop"
+
+	if [[ $HELLFIRE == ON ]]; then
+		cp "Packaging/OpenDingux/${TARGET}-hellfire.desktop" "${tmp}/default.${ext}.desktop"
+		SUFFIX="-hellfire"
+	else
+		cp "Packaging/OpenDingux/${TARGET}.desktop" "${tmp}/default.${ext}.desktop"
+		SUFFIX=""
+	fi
+
 	cp "Packaging/OpenDingux/${TARGET}-manual.txt" "${tmp}/readme.${ext}.txt"
 	mksquashfs "${BUILD_DIR}/devilutionx" \
-		"${tmp}/default.${ext}.desktop" "${tmp}/hellfire.${ext}.desktop" \
+		"${tmp}/default.${ext}.desktop" \
 		"${tmp}/readme.${ext}.txt" Packaging/resources/icon_32.png \
 		Packaging/resources/hellfire_32.png Packaging/resources/CharisSILB.ttf \
 		Packaging/resources/devilutionx.mpq \
-		"${BUILD_DIR}/devilutionx-${TARGET}.opk" \
+		"${BUILD_DIR}/devilutionx-${TARGET}${SUFFIX}.opk" \
 		-all-root -no-xattrs -noappend -no-exports -no-progress
 }
 

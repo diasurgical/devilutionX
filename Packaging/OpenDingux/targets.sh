@@ -1,7 +1,10 @@
 declare -ra VALID_TARGETS=(
   retrofw
+  retrofw-hellfire
   rg350
+  rg350-hellfire
   gkd350h
+  gkd350h-hellfire
 )
 
 usage_target() {
