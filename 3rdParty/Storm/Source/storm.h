@@ -342,8 +342,8 @@ void
 BOOL SFileSetBasePath(const char *);
 BOOL SVidPlayContinue(void);
 BOOL SNetGetOwnerTurnsWaiting(DWORD *);
-BOOL SNetUnregisterEventHandler(int, SEVTHANDLER);
-BOOL SNetRegisterEventHandler(int, SEVTHANDLER);
+bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
+bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 BOOLEAN SNetSetBasePlayer(int);
 int SNetInitializeProvider(unsigned long, struct _SNETPROGRAMDATA *, struct _SNETPLAYERDATA *, struct _SNETUIDATA *, struct _SNETVERSIONDATA *);
 int SNetGetProviderCaps(struct _SNETCAPS *);

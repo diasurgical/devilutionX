@@ -43,7 +43,7 @@ int player_state[MAX_PLRS];
  * Contains the set of supported event types supported by the multiplayer
  * event handler.
  */
-const int event_types[3] = {
+const event_type event_types[3] = {
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
 	EVENT_TYPE_PLAYER_CREATE_GAME,
 	EVENT_TYPE_PLAYER_MESSAGE
@@ -696,8 +696,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 static void multi_event_handler(BOOL add)
 {
 	DWORD i;
-	BOOL(STORMAPI * fn)
-	(int, SEVTHANDLER);
+	bool (*fn)(event_type, SEVTHANDLER);
 
 	if (add)
 		fn = SNetRegisterEventHandler;

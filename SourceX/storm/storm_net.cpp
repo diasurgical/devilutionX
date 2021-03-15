@@ -48,14 +48,14 @@ int SNetGetProviderCaps(struct _SNETCAPS *caps)
 	return dvlnet_inst->SNetGetProviderCaps(caps);
 }
 
-BOOL SNetUnregisterEventHandler(int evtype, SEVTHANDLER func)
+bool SNetUnregisterEventHandler(event_type evtype, SEVTHANDLER func)
 {
-	return dvlnet_inst->SNetUnregisterEventHandler(*(event_type *)&evtype, func);
+	return dvlnet_inst->SNetUnregisterEventHandler(evtype, func);
 }
 
-BOOL SNetRegisterEventHandler(int evtype, SEVTHANDLER func)
+bool SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func)
 {
-	return dvlnet_inst->SNetRegisterEventHandler(*(event_type *)&evtype, func);
+	return dvlnet_inst->SNetRegisterEventHandler(evtype, func);
 }
 
 BOOL SNetDestroy()
