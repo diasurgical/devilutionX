@@ -24,10 +24,6 @@ end_of_line = lf
 [.gitignore]
 end_of_line = lf
 
-[CMakeLists.txt]
-indent_style = space
-indent_size = 2
-
 [*.cmake]
 indent_style = space
 indent_size = 2
@@ -39,3 +35,8 @@ end_of_line = lf
 
 [*.txt]
 end_of_line = lf
+
+[CMakeLists.txt]
+indent_style = space
+indent_size = 2
+end_of_line = crlf
