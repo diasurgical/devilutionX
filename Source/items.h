@@ -307,7 +307,7 @@ void SpawnRewardItem(int itemid, int xx, int yy);
 void SpawnMapOfDoom(int xx, int yy);
 void SpawnRuneBomb(int xx, int yy);
 void SpawnTheodore(int xx, int yy);
-void RespawnItem(int i, BOOL FlipFlag);
+void RespawnItem(ItemStruct *item, BOOL FlipFlag);
 void DeleteItem(int ii, int i);
 void ProcessItems();
 void FreeItemGFX();

@@ -1646,7 +1646,7 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y)
 	items[ii] = *itm;
 	items[ii]._ix = x;
 	items[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	RespawnItem(&items[ii], TRUE);
 
 	itm->_itype = ITYPE_NONE;
 }

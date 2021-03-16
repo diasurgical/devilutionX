@@ -800,7 +800,7 @@ void DeltaLoadLevel()
 				items[ii]._ix = x;
 				items[ii]._iy = y;
 				dItem[items[ii]._ix][items[ii]._iy] = ii + 1;
-				RespawnItem(ii, FALSE);
+				RespawnItem(&items[ii], FALSE);
 			}
 		}
 	}
