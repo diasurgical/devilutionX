@@ -53,7 +53,7 @@ void CheckInvItem(bool isShiftHeld = false);
 void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(int pnum);
 void InvGetItem(int pnum, ItemStruct *item, int ii);
-void AutoGetItem(int pnum, int ii);
+void AutoGetItem(int pnum, ItemStruct *item, int ii);
 int FindGetItem(int idx, WORD ci, int iseed);
 void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
 BOOL CanPut(int x, int y);
