@@ -2211,7 +2211,7 @@ void AutoGetItem(int pnum, int ii)
 		}
 	}
 	plr[pnum].HoldItem = items[ii];
-	RespawnItem(ii, TRUE);
+	RespawnItem(&items[ii], TRUE);
 	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, items[ii]._ix, items[ii]._iy);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
@@ -2411,7 +2411,7 @@ int InvPutItem(int pnum, int x, int y)
 	items[ii] = plr[pnum].HoldItem;
 	items[ii]._ix = x;
 	items[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	RespawnItem(&items[ii], TRUE);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = items[ii];
@@ -2498,7 +2498,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 
 	items[ii]._ix = x;
 	items[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	RespawnItem(&items[ii], TRUE);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = items[ii];

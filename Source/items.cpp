@@ -3058,7 +3058,7 @@ void items_427ABA(int x, int y)
 	UnPackItem(&PkSItem, &items[ii], (PkSItem.dwBuff & CF_HELLFIRE) != 0);
 	items[ii]._ix = x;
 	items[ii]._iy = y;
-	RespawnItem(ii, FALSE);
+	RespawnItem(&items[ii], FALSE);
 	CornerStone.item = items[ii];
 }
 
@@ -3172,35 +3172,35 @@ void SpawnTheodore(int xx, int yy)
 	SpawnRewardItem(IDI_THEODORE, xx, yy);
 }
 
-void RespawnItem(int i, BOOL FlipFlag)
+void RespawnItem(ItemStruct *item, BOOL FlipFlag)
 {
 	int it;
 
-	it = ItemCAnimTbl[items[i]._iCurs];
-	items[i]._iAnimData = itemanims[it];
-	items[i]._iAnimLen = ItemAnimLs[it];
-	items[i]._iAnimWidth = 96;
-	items[i]._iAnimWidth2 = 16;
-	items[i]._iPostDraw = FALSE;
-	items[i]._iRequest = FALSE;
+	it = ItemCAnimTbl[item->_iCurs];
+	item->_iAnimData = itemanims[it];
+	item->_iAnimLen = ItemAnimLs[it];
+	item->_iAnimWidth = 96;
+	item->_iAnimWidth2 = 16;
+	item->_iPostDraw = FALSE;
+	item->_iRequest = FALSE;
 	if (FlipFlag) {
-		items[i]._iAnimFrame = 1;
-		items[i]._iAnimFlag = TRUE;
-		items[i]._iSelFlag = 0;
+		item->_iAnimFrame = 1;
+		item->_iAnimFlag = TRUE;
+		item->_iSelFlag = 0;
 	} else {
-		items[i]._iAnimFrame = items[i]._iAnimLen;
-		items[i]._iAnimFlag = FALSE;
-		items[i]._iSelFlag = 1;
+		item->_iAnimFrame = item->_iAnimLen;
+		item->_iAnimFlag = FALSE;
+		item->_iSelFlag = 1;
 	}
 
-	if (items[i]._iCurs == ICURS_MAGIC_ROCK) {
-		items[i]._iSelFlag = 1;
-		PlaySfxLoc(ItemDropSnds[it], items[i]._ix, items[i]._iy);
+	if (item->_iCurs == ICURS_MAGIC_ROCK) {
+		item->_iSelFlag = 1;
+		PlaySfxLoc(ItemDropSnds[it], item->_ix, item->_iy);
 	}
-	if (items[i]._iCurs == ICURS_TAVERN_SIGN)
-		items[i]._iSelFlag = 1;
-	if (items[i]._iCurs == ICURS_ANVIL_OF_FURY)
-		items[i]._iSelFlag = 1;
+	if (item->_iCurs == ICURS_TAVERN_SIGN)
+		item->_iSelFlag = 1;
+	if (item->_iCurs == ICURS_ANVIL_OF_FURY)
+		item->_iSelFlag = 1;
 }
 
 void DeleteItem(int ii, int i)
