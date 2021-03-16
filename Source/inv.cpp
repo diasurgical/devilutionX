@@ -2150,7 +2150,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void AutoGetItem(int pnum, int ii)
+void AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
 	int i, idx;
 	int w, h;
@@ -2165,11 +2165,11 @@ void AutoGetItem(int pnum, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (dItem[items[ii]._ix][items[ii]._iy] == 0)
+	if (dItem[item->_ix][item->_iy] == 0)
 		return;
 
-	items[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = items[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
+	item->_iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
@@ -2177,8 +2177,8 @@ void AutoGetItem(int pnum, int ii)
 	if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 		done = GoldAutoPlace(pnum);
 		if (!done) {
-			items[ii]._ivalue = plr[pnum].HoldItem._ivalue;
-			SetPlrHandGoldCurs(&items[ii]);
+			item->_ivalue = plr[pnum].HoldItem._ivalue;
+			SetPlrHandGoldCurs(item);
 		}
 	} else {
 		done = AutoEquipEnabled(plr[pnum], plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
@@ -2210,9 +2210,9 @@ void AutoGetItem(int pnum, int ii)
 			PlaySFX(random_(0, 3) + PS_WARR14);
 		}
 	}
-	plr[pnum].HoldItem = items[ii];
-	RespawnItem(&items[ii], TRUE);
-	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, items[ii]._ix, items[ii]._iy);
+	plr[pnum].HoldItem = *item;
+	RespawnItem(item, TRUE);
+	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, item->_ix, item->_iy);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
