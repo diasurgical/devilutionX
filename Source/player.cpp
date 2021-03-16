@@ -1677,9 +1677,9 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y)
 
 	dItem[x][y] = ii + 1;
 
-	item[ii] = *itm;
-	item[ii]._ix = x;
-	item[ii]._iy = y;
+	items[ii] = *itm;
+	items[ii]._ix = x;
+	items[ii]._iy = y;
 	RespawnItem(ii, TRUE);
 
 	itm->_itype = ITYPE_NONE;
@@ -3322,19 +3322,19 @@ void CheckNewPath(int pnum)
 		case ACTION_PICKUPITEM:
 			if (pnum == myplr) {
 				i = plr[pnum].destParam1;
-				x = abs(plr[pnum]._px - item[i]._ix);
-				y = abs(plr[pnum]._py - item[i]._iy);
-				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item[i]._iRequest) {
+				x = abs(plr[pnum]._px - items[i]._ix);
+				y = abs(plr[pnum]._py - items[i]._iy);
+				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !items[i]._iRequest) {
 					NetSendCmdGItem(TRUE, CMD_REQUESTGITEM, myplr, myplr, i);
-					item[i]._iRequest = TRUE;
+					items[i]._iRequest = TRUE;
 				}
 			}
 			break;
 		case ACTION_PICKUPAITEM:
 			if (pnum == myplr) {
 				i = plr[pnum].destParam1;
-				x = abs(plr[pnum]._px - item[i]._ix);
-				y = abs(plr[pnum]._py - item[i]._iy);
+				x = abs(plr[pnum]._px - items[i]._ix);
+				y = abs(plr[pnum]._py - items[i]._iy);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
 					NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, myplr, myplr, i);
 				}

@@ -699,7 +699,7 @@ void Theme_Treasure(int t)
 				if (rv == 0 || rv >= treasrnd[leveltype - 1] - 2) {
 					i = ItemNoFlippy();
 					if (rv >= treasrnd[leveltype - 1] - 2 && leveltype != DTYPE_CATHEDRAL) {
-						item[i]._ivalue >>= 1;
+						items[i]._ivalue >>= 1;
 					}
 				}
 			}

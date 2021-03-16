@@ -228,9 +228,9 @@ void AutoGoldPickup(int pnum)
 		int y = plr[pnum]._py + pathydir[dir];
 		if (dItem[x][y] != 0) {
 			int itemIndex = dItem[x][y] - 1;
-			if (item[itemIndex]._itype == ITYPE_GOLD) {
+			if (items[itemIndex]._itype == ITYPE_GOLD) {
 				NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-				item[itemIndex]._iRequest = TRUE;
+				items[itemIndex]._iRequest = TRUE;
 				PlaySFX(IS_IGRAB);
 			}
 		}

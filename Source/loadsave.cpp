@@ -714,7 +714,7 @@ static void LoadObject(LoadHelper *file, int i)
 
 static void LoadItem(LoadHelper *file, int i)
 {
-	LoadItemData(file, &item[i]);
+	LoadItemData(file, &items[i]);
 	GetItemFrm(i);
 }
 
@@ -967,8 +967,8 @@ void RemoveEmptyLevelItems()
 {
 	for (int i = numitems; i >= 0; i--) {
 		int ii = itemactive[i];
-		if (item[ii].isEmpty()) {
-			dItem[item[ii]._ix][item[ii]._iy] = 0;
+		if (items[ii].isEmpty()) {
+			dItem[items[ii]._ix][items[ii]._iy] = 0;
 			DeleteItem(ii, i);
 		}
 	}
@@ -1840,7 +1840,7 @@ void SaveGame()
 	for (int i = 0; i < MAXITEMS; i++)
 		file.writeLE<Sint8>(itemavail[i]);
 	for (int i = 0; i < numitems; i++)
-		SaveItem(&file, &item[itemactive[i]]);
+		SaveItem(&file, &items[itemactive[i]]);
 	for (int i = 0; i < 128; i++)
 		file.writeLE<Sint8>(UniqueItemFlag[i]);
 
@@ -1949,7 +1949,7 @@ void SaveLevel()
 		file.writeLE<Sint8>(itemavail[i]);
 
 	for (int i = 0; i < numitems; i++)
-		SaveItem(&file, &item[itemactive[i]]);
+		SaveItem(&file, &items[itemactive[i]]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)

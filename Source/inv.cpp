@@ -1520,11 +1520,11 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId, ui
 {
 	PlayerStruct *p;
 
-	memset(&item[MAXITEMS], 0, sizeof(*item));
+	memset(&items[MAXITEMS], 0, sizeof(*items));
 	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	p = &plr[pnum];
-	p->HoldItem = item[MAXITEMS];
+	p->HoldItem = items[MAXITEMS];
 
 	if (bId) {
 		p->HoldItem._iIdentified = TRUE;
@@ -2085,21 +2085,21 @@ void CheckQuestItem(int pnum)
 				break;
 			}
 			item_num = itemactive[0];
-			tmp = item[item_num];
-			memset(&item[item_num], 0, sizeof(*item));
+			tmp = items[item_num];
+			memset(&items[item_num], 0, sizeof(*items));
 			GetItemAttrs(item_num, IDI_FULLNOTE, 16);
 			SetupItem(item_num);
-			plr[pnum].HoldItem = item[item_num];
-			item[item_num] = tmp;
+			plr[pnum].HoldItem = items[item_num];
+			items[item_num] = tmp;
 		}
 	}
 }
 
 void CleanupItems(int ii)
 {
-	dItem[item[ii]._ix][item[ii]._iy] = 0;
+	dItem[items[ii]._ix][items[ii]._iy] = 0;
 
-	if (currlevel == 21 & item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
+	if (currlevel == 21 & items[ii]._ix == CornerStone.x && items[ii]._iy == CornerStone.y) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
@@ -2128,14 +2128,14 @@ void InvGetItem(int pnum, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item[ii]._ix][item[ii]._iy] == 0)
+	if (dItem[items[ii]._ix][items[ii]._iy] == 0)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
 		NetSendCmdPItem(TRUE, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
 
-	item[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = item[ii];
+	items[ii]._iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = items[ii];
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
@@ -2163,11 +2163,11 @@ void AutoGetItem(int pnum, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item[ii]._ix][item[ii]._iy] == 0)
+	if (dItem[items[ii]._ix][items[ii]._iy] == 0)
 		return;
 
-	item[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = item[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
+	items[ii]._iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = items[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
@@ -2175,8 +2175,8 @@ void AutoGetItem(int pnum, int ii)
 	if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 		done = GoldAutoPlace(pnum);
 		if (!done) {
-			item[ii]._ivalue = plr[pnum].HoldItem._ivalue;
-			SetPlrHandGoldCurs(&item[ii]);
+			items[ii]._ivalue = plr[pnum].HoldItem._ivalue;
+			SetPlrHandGoldCurs(&items[ii]);
 		}
 	} else {
 		done = AutoEquipEnabled(plr[pnum], plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
@@ -2208,9 +2208,9 @@ void AutoGetItem(int pnum, int ii)
 			PlaySFX(random_(0, 3) + PS_WARR14);
 		}
 	}
-	plr[pnum].HoldItem = item[ii];
+	plr[pnum].HoldItem = items[ii];
 	RespawnItem(ii, TRUE);
-	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, item[ii]._ix, item[ii]._iy);
+	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, items[ii]._ix, items[ii]._iy);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
@@ -2223,7 +2223,7 @@ int FindGetItem(int idx, WORD ci, int iseed)
 	int i = 0;
 	while (1) {
 		ii = itemactive[i];
-		if (item[ii].IDidx == idx && item[ii]._iSeed == iseed && item[ii]._iCreateInfo == ci)
+		if (items[ii].IDidx == idx && items[ii]._iSeed == iseed && items[ii]._iCreateInfo == ci)
 			break;
 
 		i++;
@@ -2241,9 +2241,9 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 
 	if (dItem[x][y]) {
 		ii = dItem[x][y] - 1;
-		if (item[ii].IDidx == idx
-		    && item[ii]._iSeed == iseed
-		    && item[ii]._iCreateInfo == ci) {
+		if (items[ii].IDidx == idx
+		    && items[ii]._iSeed == iseed
+		    && items[ii]._iCreateInfo == ci) {
 			FindGetItem(idx, ci, iseed);
 		} else {
 			ii = FindGetItem(idx, ci, iseed);
@@ -2406,13 +2406,13 @@ int InvPutItem(int pnum, int x, int y)
 	int ii = AllocateItem();
 
 	dItem[x][y] = ii + 1;
-	item[ii] = plr[pnum].HoldItem;
-	item[ii]._ix = x;
-	item[ii]._iy = y;
+	items[ii] = plr[pnum].HoldItem;
+	items[ii]._ix = x;
+	items[ii]._iy = y;
 	RespawnItem(ii, TRUE);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
-		CornerStone.item = item[ii];
+		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = 0;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
@@ -2480,26 +2480,26 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	} else {
 		RecreateItem(ii, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (Id)
-			item[ii]._iIdentified = TRUE;
-		item[ii]._iDurability = dur;
-		item[ii]._iMaxDur = mdur;
-		item[ii]._iCharges = ch;
-		item[ii]._iMaxCharges = mch;
-		item[ii]._iPLToHit = to_hit;
-		item[ii]._iMaxDam = max_dam;
-		item[ii]._iMinStr = min_str;
-		item[ii]._iMinMag = min_mag;
-		item[ii]._iMinDex = min_dex;
-		item[ii]._iAC = ac;
-		item[ii].dwBuff = ibuff;
+			items[ii]._iIdentified = TRUE;
+		items[ii]._iDurability = dur;
+		items[ii]._iMaxDur = mdur;
+		items[ii]._iCharges = ch;
+		items[ii]._iMaxCharges = mch;
+		items[ii]._iPLToHit = to_hit;
+		items[ii]._iMaxDam = max_dam;
+		items[ii]._iMinStr = min_str;
+		items[ii]._iMinMag = min_mag;
+		items[ii]._iMinDex = min_dex;
+		items[ii]._iAC = ac;
+		items[ii].dwBuff = ibuff;
 	}
 
-	item[ii]._ix = x;
-	item[ii]._iy = y;
+	items[ii]._ix = x;
+	items[ii]._iy = y;
 	RespawnItem(ii, TRUE);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
-		CornerStone.item = item[ii];
+		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = 0;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
