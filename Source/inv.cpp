@@ -2097,11 +2097,11 @@ void CheckQuestItem(int pnum)
 	}
 }
 
-void CleanupItems(int ii)
+void CleanupItems(ItemStruct *item, int ii)
 {
-	dItem[items[ii]._ix][items[ii]._iy] = 0;
+	dItem[item->_ix][item->_iy] = 0;
 
-	if (currlevel == 21 & items[ii]._ix == CornerStone.x && items[ii]._iy == CornerStone.y) {
+	if (currlevel == 21 & item->_ix == CornerStone.x && item->_iy == CornerStone.y) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
@@ -2144,7 +2144,7 @@ void InvGetItem(int pnum, int ii)
 	bool cursor_updated = false;
 	if (gbIsHellfire && plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
 		cursor_updated = true;
-	CleanupItems(ii);
+	CleanupItems(&items[ii], ii);
 	pcursitem = -1;
 	if (!cursor_updated)
 		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -2191,7 +2191,7 @@ void AutoGetItem(int pnum, int ii)
 	}
 
 	if (done) {
-		CleanupItems(ii);
+		CleanupItems(&plr[pnum].HoldItem, ii);
 		return;
 	}
 
@@ -2257,7 +2257,7 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 	if (ii == -1)
 		return;
 
-	CleanupItems(ii);
+	CleanupItems(&items[ii], ii);
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
