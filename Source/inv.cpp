@@ -2123,28 +2123,28 @@ void CleanupItems(ItemStruct *item, int ii)
 	}
 }
 
-void InvGetItem(int pnum, int ii)
+void InvGetItem(int pnum, ItemStruct *item, int ii)
 {
 	if (dropGoldFlag) {
 		dropGoldFlag = FALSE;
 		dropGoldValue = 0;
 	}
 
-	if (dItem[items[ii]._ix][items[ii]._iy] == 0)
+	if (dItem[item->_ix][item->_iy] == 0)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
 		NetSendCmdPItem(TRUE, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
 
-	items[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = items[ii];
+	item->_iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = *item;
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
 	bool cursor_updated = false;
 	if (gbIsHellfire && plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
 		cursor_updated = true;
-	CleanupItems(&items[ii], ii);
+	CleanupItems(item, ii);
 	pcursitem = -1;
 	if (!cursor_updated)
 		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
