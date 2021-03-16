@@ -1079,9 +1079,9 @@ static void PressKey(int vkey)
 			sprintf(
 			    tempstr,
 			    "IDX = %i  :  Seed = %i  :  CF = %i",
-			    item[pcursitem].IDidx,
-			    item[pcursitem]._iSeed,
-			    item[pcursitem]._iCreateInfo);
+			    items[pcursitem].IDidx,
+			    items[pcursitem]._iSeed,
+			    items[pcursitem]._iCreateInfo);
 			NetSendCmdString(1 << myplr, tempstr);
 		}
 		sprintf(tempstr, "Numitems : %i", numitems);

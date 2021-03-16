@@ -266,7 +266,7 @@ typedef struct CornerStoneStruct {
 extern int itemactive[MAXITEMS];
 extern BOOL uitemflag;
 extern int itemavail[MAXITEMS];
-extern ItemStruct item[MAXITEMS + 1];
+extern ItemStruct items[MAXITEMS + 1];
 extern CornerStoneStruct CornerStone;
 extern BOOL UniqueItemFlag[128];
 extern int numitems;
