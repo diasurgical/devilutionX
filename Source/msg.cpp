@@ -1399,7 +1399,7 @@ static DWORD On_REQUESTGITEM(TCmd *pCmd, int pnum)
 				if (p->bPnum != myplr)
 					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 				else
-					InvGetItem(myplr, ii);
+					InvGetItem(myplr, &items[ii], ii);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, myplr, p->bPnum, p))
 				NetSendCmdExtra(p);
@@ -1423,9 +1423,9 @@ static DWORD On_GETITEM(TCmd *pCmd, int pnum)
 					if (currlevel != p->bLevel) {
 						ii = SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
-							InvGetItem(myplr, ii);
+							InvGetItem(myplr, &items[ii], ii);
 					} else
-						InvGetItem(myplr, ii);
+						InvGetItem(myplr, &items[ii], ii);
 				} else
 					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 			}
