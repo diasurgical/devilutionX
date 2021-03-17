@@ -25,7 +25,7 @@ namespace radon
 	}
 
 
-	Key::Key(const std::string & name, const float & value)
+	Key::Key(const std::string & name, float value)
 		: Named(name), value(Float2String(value))
 	{
 	}
@@ -43,7 +43,7 @@ namespace radon
 	}
 
 
-	void Key::setValue(float & value)
+	void Key::setValue(float value)
 	{
 		this->value = Float2String(value);
 	}
