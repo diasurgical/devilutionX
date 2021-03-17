@@ -94,28 +94,37 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	pSnd->start_tc = tc;
 }
 
-TSnd *sound_file_load(const char *path)
+TSnd *sound_file_load(const char *path, bool stream)
 {
 	HANDLE file;
-	BYTE *wave_file;
 	TSnd *pSnd;
-	DWORD dwBytes;
-	int error;
+	int error = 0;
 
-	SFileOpenFile(path, &file);
+	if (!SFileOpenFile(path, &file)) {
+		ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
+		return NULL;
+	}
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
 	pSnd->sound_path = path;
 	pSnd->start_tc = SDL_GetTicks() - 80 - 1;
-
-	dwBytes = SFileGetFileSize(file, NULL);
-	wave_file = DiabloAllocPtr(dwBytes);
-	SFileReadFile(file, wave_file, dwBytes, NULL, NULL);
-
 	pSnd->DSB = new SoundSample();
-	error = pSnd->DSB->SetChunk(wave_file, dwBytes);
-	SFileCloseFile(file);
-	mem_free_dbg(wave_file);
+
+	if (stream) {
+		pSnd->file_handle = file;
+		error = pSnd->DSB->SetChunkStream(file);
+		if (error != 0) {
+			SFileCloseFile(file);
+			ErrSdl();
+		}
+	} else {
+		DWORD dwBytes = SFileGetFileSize(file, NULL);
+		BYTE *wave_file = DiabloAllocPtr(dwBytes);
+		SFileReadFile(file, wave_file, dwBytes, NULL, NULL);
+		error = pSnd->DSB->SetChunk(wave_file, dwBytes);
+		SFileCloseFile(file);
+		mem_free_dbg(wave_file);
+	}
 	if (error != 0) {
 		ErrSdl();
 	}
@@ -132,6 +141,8 @@ void sound_file_cleanup(TSnd *sound_file)
 			delete sound_file->DSB;
 			sound_file->DSB = NULL;
 		}
+		if (sound_file->file_handle != NULL)
+			SFileCloseFile(sound_file->file_handle);
 
 		mem_free_dbg(sound_file);
 	}
