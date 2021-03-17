@@ -9,7 +9,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 namespace {
 
-Uint16 sync_word_6AA708[MAXMONSTERS];
+Uint16 sync_word[MAXMONSTERS];
 int sgnMonsters;
 Uint16 sgwLRU[MAXMONSTERS];
 int sgnSyncItem;
@@ -21,9 +21,9 @@ static void sync_one_monster()
 
 	for (i = 0; i < nummonsters; i++) {
 		m = monstactive[i];
-		sync_word_6AA708[m] = abs(plr[myplr]._px - monster[m]._mx) + abs(plr[myplr]._py - monster[m]._my);
+		sync_word[m] = abs(plr[myplr]._px - monster[m]._mx) + abs(plr[myplr]._py - monster[m]._my);
 		if (monster[m]._msquelch == 0) {
-			sync_word_6AA708[m] += 0x1000;
+			sync_word[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
 			sgwLRU[m]--;
 		}
@@ -36,9 +36,9 @@ static void sync_monster_pos(TSyncMonster *p, int ndx)
 	p->_mx = monster[ndx]._mx;
 	p->_my = monster[ndx]._my;
 	p->_menemy = encode_enemy(ndx);
-	p->_mdelta = sync_word_6AA708[ndx] > 255 ? 255 : sync_word_6AA708[ndx];
+	p->_mdelta = sync_word[ndx] > 255 ? 255 : sync_word[ndx];
 
-	sync_word_6AA708[ndx] = 0xFFFF;
+	sync_word[ndx] = 0xFFFF;
 	sgwLRU[ndx] = monster[ndx]._msquelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
@@ -52,8 +52,8 @@ static bool sync_monster_active(TSyncMonster *p)
 
 	for (i = 0; i < nummonsters; i++) {
 		m = monstactive[i];
-		if (sync_word_6AA708[m] < lru && sgwLRU[m] < 0xFFFE) {
-			lru = sync_word_6AA708[m];
+		if (sync_word[m] < lru && sgwLRU[m] < 0xFFFE) {
+			lru = sync_word[m];
 			ndx = monstactive[i];
 		}
 	}
