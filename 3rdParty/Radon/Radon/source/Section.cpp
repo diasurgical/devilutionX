@@ -17,16 +17,18 @@ namespace radon
 	{
 	}
 
+
 	Key *Section::getKey(const std::string & name)
 	{
-		for (auto & key : keys)
+		for (int i = 0; i < (int)keys.size(); i++)
 		{
-			if (key.getName() == name)
-				return &key;
+			if (keys[i].getName() == name)
+				return &keys[i];
 		}
 
-		return nullptr;
+		return NULL;
 	}
+
 
 	void Section::addKey(Key key)
 	{
