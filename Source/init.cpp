@@ -147,10 +147,17 @@ void init_archives()
 	init_get_file_info();
 
 	std::vector<std::string> paths;
-	paths.reserve(2);
+	paths.reserve(5);
 	paths.push_back(GetBasePath());
 	paths.push_back(GetPrefPath());
 	if (paths[0] == paths[1]) paths.pop_back();
+
+#ifdef __linux__
+	paths.push_back("/usr/share/diasurgical/devilutionx/");
+	paths.push_back("/usr/local/share/diasurgical/devilutionx/");
+#endif
+
+	paths.push_back(""); // PWD
 
 	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ", "DiabloCD", 1000, FS_CD);
 	if (diabdat_mpq == NULL) {
@@ -186,18 +193,6 @@ void init_archives()
 	hfopt1_mpq = init_test_access(paths, "hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
 	hfopt2_mpq = init_test_access(paths, "hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
 	devilutionx_mpq = init_test_access(paths, "devilutionx.mpq", "DiabloInstall", 9000, FS_PC);
-#ifdef __linux__
-	// On Linux, always try the global install directory for devilutionx.mpq,
-	// so that it is picked up even if `--data-dir` and `--config-dir` are set.
-	if (devilutionx_mpq == NULL) {
-		std::vector<std::string> share_paths;
-		share_paths.reserve(3);
-		share_paths.push_back("/usr/share/diasurgical/devilutionx/");
-		share_paths.push_back("/usr/local/share/diasurgical/devilutionx/");
-		share_paths.push_back(""); // PWD
-		devilutionx_mpq = init_test_access(share_paths, "devilutionx.mpq", "DiabloInstall", 9000, FS_PC);
-	}
-#endif
 }
 
 void init_create_window()
