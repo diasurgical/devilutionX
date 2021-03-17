@@ -6,6 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "stubs.h"
+#include "storm_sdl_rw.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 
@@ -15,9 +16,11 @@ BOOLEAN gbSndInited;
 /** Specifies whether background music is enabled. */
 HANDLE sghMusic;
 
+namespace {
+
 Mix_Music *music;
-SDL_RWops *musicRw;
-char *musicBuffer;
+
+} // namespace
 
 /* data */
 
@@ -157,12 +160,10 @@ void music_stop()
 {
 	if (sghMusic) {
 		Mix_HaltMusic();
-		SFileCloseFile(sghMusic);
-		sghMusic = NULL;
 		Mix_FreeMusic(music);
 		music = NULL;
-		musicRw = NULL;
-		mem_free_dbg(musicBuffer);
+		SFileCloseFile(sghMusic);
+		sghMusic = NULL;
 		sgnMusicTrack = NUM_MUSIC;
 	}
 }
@@ -183,17 +184,25 @@ void music_start(int nTrack)
 		if (!success) {
 			sghMusic = NULL;
 		} else {
-			int bytestoread = SFileGetFileSize(sghMusic, 0);
-			musicBuffer = (char *)DiabloAllocPtr(bytestoread);
-			SFileReadFile(sghMusic, musicBuffer, bytestoread, NULL, 0);
-
-			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
-			if (musicRw == NULL) {
-				ErrSdl();
+			music = Mix_LoadMUSType_RW(SFileRw_FromStormHandle(sghMusic), MUS_NONE, /*freesrc=*/1);
+			if (music == NULL) {
+				SDL_Log("Mix_LoadMUSType_RW: %s", Mix_GetError());
+				SFileCloseFile(sghMusic);
+				sghMusic = NULL;
+				sgnMusicTrack = NUM_MUSIC;
+				return;
 			}
-			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, 1);
+
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sgOptions.Audio.nMusicVolume / VOLUME_MIN);
-			Mix_PlayMusic(music, -1);
+			if (Mix_PlayMusic(music, -1) < 0) {
+				SDL_Log("Mix_PlayMusic: %s", Mix_GetError());
+				Mix_FreeMusic(music);
+				SFileCloseFile(sghMusic);
+				sghMusic = NULL;
+				music = NULL;
+				sgnMusicTrack = NUM_MUSIC;
+				return;
+			}
 
 			sgnMusicTrack = nTrack;
 		}
