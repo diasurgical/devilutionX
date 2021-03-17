@@ -62,6 +62,7 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 // MSCVRT emulation
 //
 
+#define DVL_FILE_BEGIN 0
 #define DVL_FILE_CURRENT 1
 #define DVL_FILE_END 2
 
