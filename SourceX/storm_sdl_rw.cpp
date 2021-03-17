@@ -19,10 +19,7 @@ static void SFileRw_SetHandle(struct SDL_RWops *context, HANDLE handle)
 #ifndef USE_SDL1
 static Sint64 SFileRw_size(struct SDL_RWops *context)
 {
-	DWORD result;
-	if (!SFileGetFileSize(SFileRw_GetHandle(context), &result))
-		return -1;
-	return result;
+	return SFileGetFileSize(SFileRw_GetHandle(context), NULL);
 }
 #endif
 
@@ -46,7 +43,11 @@ static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
 	default:
 		return -1;
 	}
-	return SFileSetFilePointer(SFileRw_GetHandle(context), offset, NULL, swhence);
+	DWORD result = SFileSetFilePointer(SFileRw_GetHandle(context), offset, NULL, swhence);
+	if (result == (DWORD)-1) {
+		SDL_Log("SFileRw_seek error: %ud", (unsigned int)SErrGetLastError());
+	}
+	return result;
 }
 
 #ifndef USE_SDL1
@@ -56,8 +57,13 @@ static int SFileRw_read(struct SDL_RWops *context, void *ptr, int size, int maxn
 #endif
 {
 	DWORD num_read = 0;
-	SFileReadFile(SFileRw_GetHandle(context), ptr, maxnum * size, &num_read, NULL);
-	return num_read;
+	if (!SFileReadFile(SFileRw_GetHandle(context), ptr, maxnum * size, &num_read, NULL)) {
+		const DWORD err_code = SErrGetLastError();
+		if (err_code != DVL_ERROR_HANDLE_EOF) {
+			SDL_Log("SFileRw_read error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)err_code);
+		}
+	}
+	return num_read / size;
 }
 
 static int SFileRw_close(struct SDL_RWops *context)

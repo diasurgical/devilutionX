@@ -66,6 +66,8 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 #define DVL_FILE_CURRENT 1
 #define DVL_FILE_END 2
 
+#define DVL_ERROR_HANDLE_EOF 1002
+
 #define DVL_WM_QUIT 0x0012
 
 //

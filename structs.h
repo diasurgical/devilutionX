@@ -23,6 +23,7 @@ typedef struct TextDataStruct {
 
 typedef struct TSnd {
 	const char *sound_path;
+	HANDLE file_handle; // for streamed audio
 	SoundSample *DSB;
 	int start_tc;
 } TSnd;
