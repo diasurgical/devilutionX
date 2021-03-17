@@ -145,7 +145,7 @@ int CalcTextSpeed(int nSFX)
 void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
 {
 	CelOutputBuffer buf = GlobalBackBuffer();
-	const int start_y = 49 + SCREEN_Y + UI_OFFSET_Y;
+	const int start_y = 49 + UI_OFFSET_Y;
 	buf = buf.subregionY(start_y, 260);
 	CelDrawTo(buf, sx, sy - start_y, pCelBuff, nCel, 22);
 }
@@ -158,7 +158,7 @@ void ScrollQTextContent(const char *pnl)
 {
 	for (Uint32 currTime = SDL_GetTicks(); sgLastScroll + qtextSpd < currTime; sgLastScroll += qtextSpd) {
 		qtexty--;
-		if (qtexty <= 49 + SCREEN_Y + UI_OFFSET_Y) {
+		if (qtexty <= 49 + UI_OFFSET_Y) {
 			qtexty += 38;
 			qtextptr = pnl;
 			if (*pnl == '|') {
@@ -202,7 +202,7 @@ static void DrawQTextContent(CelOutputBuffer out)
 		}
 		tx = 48 + PANEL_X;
 		ty += lineHeight;
-		if (ty > 341 + SCREEN_Y + UI_OFFSET_Y) {
+		if (ty > 341 + UI_OFFSET_Y) {
 			doneflag = true;
 		}
 	}
@@ -241,7 +241,7 @@ void InitQTextMsg(int m)
 		questlog = false;
 		qtextptr = alltext[m].txtstr;
 		qtextflag = true;
-		qtexty = 340 + SCREEN_Y + UI_OFFSET_Y;
+		qtexty = 340 + UI_OFFSET_Y;
 		qtextSpd = CalcTextSpeed(alltext[m].sfxnr);
 		sgLastScroll = SDL_GetTicks();
 	}
@@ -250,8 +250,8 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack(CelOutputBuffer out)
 {
-	CelDrawTo(out, PANEL_X + 24, SCREEN_Y + 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
-	DrawHalfTransparentRectTo(out, PANEL_X + 27, SCREEN_Y + UI_OFFSET_Y + 28, 585, 297);
+	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
+	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
 void DrawQText(CelOutputBuffer out)

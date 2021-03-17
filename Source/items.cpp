@@ -3962,8 +3962,8 @@ void PrintItemPower(char plidx, ItemStruct *x)
 
 static void DrawUTextBack(CelOutputBuffer out)
 {
-	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, SCREEN_Y + 327, pSTextBoxCels, 1, 271);
-	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, SCREEN_Y + 28, 265, 297);
+	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, pSTextBoxCels, 1, 271);
+	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
 void PrintUString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, int col)
@@ -3971,8 +3971,8 @@ void PrintUString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char 
 	int len, width, sx, sy, i, k;
 	BYTE c;
 
-	sx = x + 32 + SCREEN_X;
-	sy = y * 12 + 44 + SCREEN_Y;
+	sx = x + 32;
+	sy = y * 12 + 44;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -3996,8 +3996,8 @@ void PrintUString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char 
 
 static void DrawULine(CelOutputBuffer out, int y)
 {
-	BYTE *src = out.at(SCREEN_X + 26 + RIGHT_PANEL - SPANEL_WIDTH, SCREEN_Y + 25);
-	BYTE *dst = out.at(26 + RIGHT_PANEL_X - SPANEL_WIDTH, SCREEN_Y + y * 12 + 38);
+	BYTE *src = out.at(26 + RIGHT_PANEL - SPANEL_WIDTH, 25);
+	BYTE *dst = out.at(26 + RIGHT_PANEL_X - SPANEL_WIDTH, y * 12 + 38);
 
 	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
 		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)

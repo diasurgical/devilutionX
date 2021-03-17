@@ -122,9 +122,7 @@ static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
 		return;
 	}
 
-	BlitCursor(
-	    out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY), out.pitch(),
-	    sgSaveBack, sgdwCursWdt);
+	BlitCursor(out.at(sgdwCursX, sgdwCursY), out.pitch(), sgSaveBack, sgdwCursWdt);
 
 	sgdwCursXOld = sgdwCursX;
 	sgdwCursYOld = sgdwCursY;
@@ -182,14 +180,12 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
 
-	BlitCursor(
-	    sgSaveBack, sgdwCursWdt,
-	    out.at(SCREEN_X + sgdwCursX, SCREEN_Y + sgdwCursY), out.pitch());
+	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
 
 	mx++;
 	my++;
 
-	out = out.subregion(0, 0, out.w() - 2, SCREEN_Y + gnScreenHeight);
+	out = out.subregion(0, 0, out.w() - 2, out.h());
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
 		if (plr[myplr].HoldItem._iMagical != 0) {
@@ -199,22 +195,22 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 			col = PAL16_RED + 5;
 		}
 		if (pcurs <= 179) {
-			CelBlitOutlineTo(out, col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels, pcurs, cursW);
 			if (col != PAL16_RED + 5) {
-				CelClippedDrawSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW);
 			} else {
-				CelDrawLightRedSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW, 1);
+				CelDrawLightRedSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW, 1);
 			}
 		} else {
-			CelBlitOutlineTo(out, col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW);
+			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
 			if (col != PAL16_RED + 5) {
-				CelClippedDrawSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW);
+				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
 			} else {
-				CelDrawLightRedSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels2, pcurs - 179, cursW, 0);
+				CelDrawLightRedSafeTo(out, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW, 0);
 			}
 		}
 	} else {
-		CelClippedDrawSafeTo(out, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+		CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW);
 	}
 }
 
@@ -799,7 +795,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 		// Tree leaves should always cover player when entering or leaving the tile,
 		// So delay the rendering until after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
-		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT + SCREEN_Y) {
+		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT) {
 			char bArch = dSpecial[sx - 1][sy - 1];
 			if (bArch != 0) {
 				CelDrawTo(out, dx, dy - TILE_HEIGHT, pSpecialCels, bArch, 64);
@@ -876,7 +872,7 @@ static void scrollrt_draw(CelOutputBuffer out, int x, int y, int sx, int sy, int
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
-				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= SCREEN_X + gnScreenWidth) {
+				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= gnScreenWidth) {
 					// Render objects behind walls first to prevent sprites, that are moving
 					// between tiles, from poking through the walls as they exceed the tile bounds.
 					// A proper fix for this would probably be to layout the sceen and render by
@@ -919,8 +915,8 @@ static void Zoom(CelOutputBuffer out)
 {
 	int wdt = gnScreenWidth / 2;
 
-	int src_x = SCREEN_X + gnScreenWidth / 2 - 1;
-	int dst_x = SCREEN_X + gnScreenWidth - 1;
+	int src_x = gnScreenWidth / 2 - 1;
+	int dst_x = gnScreenWidth - 1;
 
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
@@ -933,8 +929,8 @@ static void Zoom(CelOutputBuffer out)
 		}
 	}
 
-	BYTE *src = out.at(src_x, SCREEN_Y + gnViewportHeight / 2 - 1);
-	BYTE *dst = out.at(dst_x, SCREEN_Y + gnViewportHeight - 1);
+	BYTE *src = out.at(src_x, gnViewportHeight / 2 - 1);
+	BYTE *dst = out.at(dst_x, gnViewportHeight - 1);
 
 	for (int hgt = 0; hgt < gnViewportHeight / 2; hgt++) {
 		for (int i = 0; i < wdt; i++) {
@@ -1098,12 +1094,12 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 
 	// Limit rendering to the view area
 	CelOutputBuffer out = zoomflag
-	    ? full_out.subregionY(0, SCREEN_Y + gnViewportHeight)
-	    : full_out.subregionY(0, SCREEN_Y + gnViewportHeight / 2);
+	    ? full_out.subregionY(0, gnViewportHeight)
+	    : full_out.subregionY(0, gnViewportHeight / 2);
 
 	// Adjust by player offset and tile grid alignment
-	sx = ScrollInfo._sxoff + tileOffsetX + SCREEN_X;
-	sy = ScrollInfo._syoff + tileOffsetY + SCREEN_Y;
+	sx = ScrollInfo._sxoff + tileOffsetX;
+	sy = ScrollInfo._syoff + tileOffsetY;
 
 	columns = tileColums;
 	rows = tileRows;
@@ -1185,7 +1181,7 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 	scrollrt_draw(out, x, y, sx, sy, rows, columns);
 
 	if (!zoomflag) {
-		Zoom(full_out.subregionY(0, SCREEN_Y + gnScreenHeight));
+		Zoom(full_out.subregionY(0, gnScreenHeight));
 	}
 }
 
@@ -1196,7 +1192,7 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 {
 	DrawGame(out, StartX, StartY);
 	if (automapflag) {
-		DrawAutomap(out.subregionY(0, SCREEN_Y + gnViewportHeight));
+		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
 	DrawMonsterHealthBar(out);
 
@@ -1264,8 +1260,8 @@ void ClearScreenBuffer()
 	assert(pal_surface != NULL);
 
 	SDL_Rect SrcRect = {
-		SCREEN_X,
-		SCREEN_Y,
+		BUFFER_BORDER_LEFT,
+		BUFFER_BORDER_TOP,
 		gnScreenWidth,
 		gnScreenHeight,
 	};
@@ -1397,10 +1393,7 @@ static void DrawFPS(CelOutputBuffer out)
  */
 static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 {
-	SDL_Rect SrcRect = { dwX, dwY, dwWdt, dwHgt };
-	SrcRect.x += SCREEN_X;
-	SrcRect.y += SCREEN_Y;
-
+	SDL_Rect SrcRect = { BUFFER_BORDER_LEFT + dwX, BUFFER_BORDER_TOP + dwY, dwWdt, dwHgt };
 	SDL_Rect DstRect = { dwX, dwY, dwWdt, dwHgt };
 
 	BltFast(&SrcRect, &DstRect);

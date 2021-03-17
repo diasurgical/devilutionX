@@ -152,8 +152,8 @@ static void RedPalette()
 	}
 	palette_update();
 	SDL_Rect SrcRect = {
-		SCREEN_X,
-		SCREEN_Y,
+		BUFFER_BORDER_LEFT,
+		BUFFER_BORDER_TOP,
 		gnScreenWidth,
 		gnScreenHeight,
 	};
@@ -180,7 +180,6 @@ void CaptureScreen()
 
 	lock_buf(2);
 	CelOutputBuffer buf = GlobalBackBuffer();
-	buf = buf.subregion(SCREEN_X, SCREEN_Y, gnScreenWidth, gnScreenHeight);
 	success = CaptureHdr(buf.w(), buf.h(), out_stream);
 	if (success) {
 		success = CapturePix(buf, out_stream);

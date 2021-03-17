@@ -87,8 +87,8 @@ void InitPlrMsg()
 void DrawPlrMsg(CelOutputBuffer out)
 {
 	int i;
-	DWORD x = 10 + SCREEN_X;
-	DWORD y = 70 + SCREEN_Y;
+	DWORD x = 10;
+	DWORD y = 70;
 	DWORD width = gnScreenWidth - 20;
 	_plrmsg *pMsg;
 

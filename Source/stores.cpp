@@ -63,16 +63,16 @@ const char *const talkname[] = {
 
 void DrawSTextBack(CelOutputBuffer out)
 {
-	CelDrawTo(out, PANEL_X + 344, 327 + SCREEN_Y + UI_OFFSET_Y, pSTextBoxCels, 1, 271);
-	DrawHalfTransparentRectTo(out, PANEL_X + 347, SCREEN_Y + UI_OFFSET_Y + 28, 265, 297);
+	CelDrawTo(out, PANEL_X + 344, 327 + UI_OFFSET_Y, pSTextBoxCels, 1, 271);
+	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297);
 }
 
 void DrawSSlider(CelOutputBuffer out, int y1, int y2)
 {
 	int yd1, yd2, yd3;
 
-	yd1 = y1 * 12 + 44 + SCREEN_Y + UI_OFFSET_Y;
-	yd2 = y2 * 12 + 44 + SCREEN_Y + UI_OFFSET_Y;
+	yd1 = y1 * 12 + 44 + UI_OFFSET_Y;
+	yd2 = y2 * 12 + 44 + UI_OFFSET_Y;
 	if (stextscrlubtn != -1)
 		CelDrawTo(out, PANEL_X + 601, yd1, pSTextSlidCels, 12, 12);
 	else
@@ -93,7 +93,7 @@ void DrawSSlider(CelOutputBuffer out, int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDrawTo(out, PANEL_X + 601, (y1 + 1) * 12 + 44 + SCREEN_Y + UI_OFFSET_Y + yd3, pSTextSlidCels, 13, 12);
+	CelDrawTo(out, PANEL_X + 601, (y1 + 1) * 12 + 44 + UI_OFFSET_Y + yd3, pSTextSlidCels, 13, 12);
 }
 
 void AddSLine(int y)
@@ -2289,7 +2289,7 @@ void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char 
 	else
 		xx = PANEL_X + 352;
 	sx = xx + x;
-	sy = s + 44 + SCREEN_Y + UI_OFFSET_Y;
+	sy = s + 44 + UI_OFFSET_Y;
 	len = strlen(str);
 	if (stextsize)
 		yy = 577;
@@ -2305,7 +2305,7 @@ void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char 
 		sx += k;
 	}
 	if (stextsel == y) {
-		CelDrawTo(out, cjustflag ? xx + x + k - 20 : xx + x - 20, s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? xx + x + k - 20 : xx + x - 20, s + 45 + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -2328,7 +2328,7 @@ void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char 
 		}
 	}
 	if (stextsel == y) {
-		CelDrawTo(out, cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 45 + SCREEN_Y + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 45 + UI_OFFSET_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	}
 }
 
@@ -2338,12 +2338,12 @@ void DrawSLine(CelOutputBuffer out, int y)
 	BYTE *src, *dst;
 	int width;
 	if (stextsize) {
-		src = out.at(SCREEN_X + PANEL_LEFT + 26, SCREEN_Y + 25 + UI_OFFSET_Y);
-		dst = out.at(26 + PANEL_X, SCREEN_Y + sy + 38 + UI_OFFSET_Y);
+		src = out.at(PANEL_LEFT + 26, 25 + UI_OFFSET_Y);
+		dst = out.at(26 + PANEL_X, sy + 38 + UI_OFFSET_Y);
 		width = 587; // BUGFIX: should be 587, not 586 (fixed)
 	} else {
-		src = out.at(SCREEN_X + PANEL_LEFT + 346, SCREEN_Y + 25 + UI_OFFSET_Y);
-		dst = out.at(346 + PANEL_X, SCREEN_Y + sy + 38 + UI_OFFSET_Y);
+		src = out.at(PANEL_LEFT + 346, 25 + UI_OFFSET_Y);
+		dst = out.at(346 + PANEL_X, sy + 38 + UI_OFFSET_Y);
 		width = 267; // BUGFIX: should be 267, not 266 (fixed)
 	}
 
