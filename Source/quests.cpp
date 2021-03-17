@@ -810,8 +810,8 @@ static void PrintQLString(CelOutputBuffer out, int x, int y, BOOL cjustflag, con
 	int len, width, i, k, sx, sy;
 	BYTE c;
 
-	sx = x + 32 + SCREEN_X;
-	sy = y * 12 + 44 + SCREEN_Y;
+	sx = x + 32;
+	sy = y * 12 + 44;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -823,7 +823,7 @@ static void PrintQLString(CelOutputBuffer out, int x, int y, BOOL cjustflag, con
 		sx += k;
 	}
 	if (qline == y) {
-		CelDrawTo(out, cjustflag ? x + k + 12 + SCREEN_X : x + 12 + SCREEN_X, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? x + k + 12 : x + 12, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -834,7 +834,7 @@ static void PrintQLString(CelOutputBuffer out, int x, int y, BOOL cjustflag, con
 		sx += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		CelDrawTo(out, cjustflag ? x + k + 36 + SCREEN_X : 276 + SCREEN_X - x, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? x + k + 36 : 276 - x, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
 	}
 }
 
@@ -843,7 +843,7 @@ void DrawQuestLog(CelOutputBuffer out)
 	int y, i;
 
 	PrintQLString(out, 0, 2, TRUE, "Quest Log", 3);
-	CelDrawTo(out, SCREEN_X, SCREEN_Y + 351, pQLogCel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, 0, 351, pQLogCel, 1, SPANEL_WIDTH);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
 		PrintQLString(out, 0, y, TRUE, questlist[qlist[i]]._qlstr, 0);

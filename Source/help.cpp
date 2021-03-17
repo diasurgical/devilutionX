@@ -460,7 +460,7 @@ static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, char col
 
 	width = 0;
 	sx = x + 32 + PANEL_X;
-	sy = y * 12 + 44 + SCREEN_Y + UI_OFFSET_Y;
+	sy = y * 12 + 44 + UI_OFFSET_Y;
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text];
 		text++;

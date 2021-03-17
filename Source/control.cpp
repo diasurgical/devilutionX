@@ -385,8 +385,8 @@ void DrawSpellList(CelOutputBuffer out)
 			if (currlevel == 0 && !spelldata[j].sTownSpell)
 				SetSpellTrans(RSPLTYPE_INVALID);
 			DrawSpellCel(out, x, y, pSpellCels, SpellITbl[j], SPLICONLENGTH);
-			lx = x - BORDER_LEFT;
-			ly = y - BORDER_TOP - SPLICONLENGTH;
+			lx = x;
+			ly = y - SPLICONLENGTH;
 			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
 				pSpell = (spell_id)j;
 				pSplType = (spell_type)i;
@@ -656,9 +656,9 @@ void DrawLifeFlask(CelOutputBuffer out)
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(out, pLifeBuff, 13, 3, SCREEN_X + PANEL_LEFT + 109, SCREEN_Y + PANEL_TOP - 13, filled);
+	DrawFlask(out, pLifeBuff, 13, 3, PANEL_LEFT + 109, PANEL_TOP - 13, filled);
 	if (filled != 13)
-		DrawFlask(out, pBtmBuff, 109, filled + 3, SCREEN_X + PANEL_LEFT + 109, SCREEN_Y + PANEL_TOP - 13 + filled, 13 - filled);
+		DrawFlask(out, pBtmBuff, 109, filled + 3, PANEL_LEFT + 109, PANEL_TOP - 13 + filled, 13 - filled);
 }
 
 void UpdateLifeFlask(CelOutputBuffer out)
@@ -693,9 +693,9 @@ void DrawManaFlask(CelOutputBuffer out)
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(out, pManaBuff, 13, 3, SCREEN_X + PANEL_LEFT + 475, SCREEN_Y + PANEL_TOP - 13, filled);
+	DrawFlask(out, pManaBuff, 13, 3, PANEL_LEFT + 475, PANEL_TOP - 13, filled);
 	if (filled != 13)
-		DrawFlask(out, pBtmBuff, 475, filled + 3, SCREEN_X + PANEL_LEFT + 475, SCREEN_Y + PANEL_TOP - 13 + filled, 13 - filled);
+		DrawFlask(out, pBtmBuff, 475, filled + 3, PANEL_LEFT + 475, PANEL_TOP - 13 + filled, 13 - filled);
 }
 
 void control_update_life_mana()
@@ -861,8 +861,8 @@ void DoSpeedBook()
 	spselflag = TRUE;
 	xo = PANEL_X + 12 + SPLICONLENGTH * 10;
 	yo = PANEL_Y - 17;
-	X = xo - (BORDER_LEFT - SPLICONLENGTH / 2);
-	Y = yo - (BORDER_TOP + SPLICONLENGTH / 2);
+	X = xo + SPLICONLENGTH / 2;
+	Y = yo - SPLICONLENGTH / 2;
 
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (i = 0; i < 4; i++) {
@@ -884,8 +884,8 @@ void DoSpeedBook()
 			for (j = 1; j < MAX_SPELLS; j++) {
 				if (spell & spells) {
 					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
-						X = xo - (BORDER_LEFT - SPLICONLENGTH / 2);
-						Y = yo - (BORDER_TOP + SPLICONLENGTH / 2);
+						X = xo + SPLICONLENGTH / 2;
+						Y = yo - SPLICONLENGTH / 2;
 					}
 					xo -= SPLICONLENGTH;
 					if (xo == PANEL_X + 12 - SPLICONLENGTH) {
@@ -1311,16 +1311,12 @@ void DrawInfoBox(CelOutputBuffer out)
 
 void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, int color)
 {
-	BYTE c;
-	int sx, sy;
-	sx = x + SCREEN_X;
-	sy = y + SCREEN_Y;
 	while (*str) {
-		c = gbFontTransTbl[(BYTE)*str++];
+		BYTE c = gbFontTransTbl[(BYTE)*str++];
 		c = fontframe[c];
 		if (c)
-			PrintChar(out, sx, sy, c, color);
-		sx += fontkern[c] + 1;
+			PrintChar(out, x, y, c, color);
+		x += fontkern[c] + 1;
 	}
 }
 
@@ -1338,10 +1334,8 @@ static void MY_PlrStringXY(CelOutputBuffer out, int x, int y, int endX, const ch
 {
 	BYTE c;
 	const char *tmp;
-	int sx, sy, screen_x, line, widthOffset;
+	int screen_x, line, widthOffset;
 
-	sx = x + SCREEN_X;
-	sy = y + SCREEN_Y;
 	widthOffset = endX - x + 1;
 	line = 0;
 	screen_x = 0;
@@ -1352,16 +1346,16 @@ static void MY_PlrStringXY(CelOutputBuffer out, int x, int y, int endX, const ch
 	}
 	if (screen_x < widthOffset)
 		line = (widthOffset - screen_x) >> 1;
-	sx += line;
+	x += line;
 	while (*pszStr) {
 		c = gbFontTransTbl[(BYTE)*pszStr++];
 		c = fontframe[c];
 		line += fontkern[c] + base;
 		if (c) {
 			if (line < widthOffset)
-				PrintChar(out, sx, sy, c, col);
+				PrintChar(out, x, y, c, col);
 		}
-		sx += fontkern[c] + base;
+		x += fontkern[c] + base;
 	}
 }
 
@@ -1371,7 +1365,7 @@ void DrawChr(CelOutputBuffer out)
 	char chrstr[64];
 	int mindam, maxdam;
 
-	CelDrawTo(out, SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, 0, 351, pChrPanel, 1, SPANEL_WIDTH);
 	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
 	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTblOld[plr[myplr]._pClass], COL_WHITE);
@@ -1545,13 +1539,13 @@ void DrawChr(CelOutputBuffer out)
 		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
 		plr_class pc = plr[myplr]._pClass;
 		if (plr[myplr]._pBaseStr < MaxStats[pc][ATTRIB_STR])
-			CelDrawTo(out, 137 + SCREEN_X, 159 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
+			CelDrawTo(out, 137, 159, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
 		if (plr[myplr]._pBaseMag < MaxStats[pc][ATTRIB_MAG])
-			CelDrawTo(out, 137 + SCREEN_X, 187 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_MAG] + 4, 41);
+			CelDrawTo(out, 137, 187, pChrButtons, chrbtn[ATTRIB_MAG] + 4, 41);
 		if (plr[myplr]._pBaseDex < MaxStats[pc][ATTRIB_DEX])
-			CelDrawTo(out, 137 + SCREEN_X, 216 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_DEX] + 6, 41);
+			CelDrawTo(out, 137, 216, pChrButtons, chrbtn[ATTRIB_DEX] + 6, 41);
 		if (plr[myplr]._pBaseVit < MaxStats[pc][ATTRIB_VIT])
-			CelDrawTo(out, 137 + SCREEN_X, 244 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_VIT] + 8, 41);
+			CelDrawTo(out, 137, 244, pChrButtons, chrbtn[ATTRIB_VIT] + 8, 41);
 	}
 
 	if (plr[myplr]._pMaxHP > plr[myplr]._pMaxHPBase)
@@ -1747,7 +1741,7 @@ void RedBack(CelOutputBuffer out)
 	BYTE *dst, *tbl;
 
 	if (leveltype != DTYPE_HELL) {
-		dst = out.at(SCREEN_X, SCREEN_Y);
+		dst = out.begin();
 		tbl = &pLightTbl[idx];
 		for (h = gnViewportHeight; h; h--, dst += out.pitch() - gnScreenWidth) {
 			for (w = gnScreenWidth; w; w--) {
@@ -1756,7 +1750,7 @@ void RedBack(CelOutputBuffer out)
 			}
 		}
 	} else {
-		dst = out.at(SCREEN_X, SCREEN_Y);
+		dst = out.begin();
 		tbl = &pLightTbl[idx];
 		for (h = gnViewportHeight; h; h--, dst += out.pitch() - gnScreenWidth) {
 			for (w = gnScreenWidth; w; w--) {
@@ -1833,20 +1827,20 @@ void DrawSpellBook(CelOutputBuffer out)
 	char st;
 	unsigned __int64 spl;
 
-	CelDrawTo(out, RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, RIGHT_PANEL_X, 351, pSpellBkCel, 1, SPANEL_WIDTH);
 	if (gbIsHellfire && sbooktab < 5) {
-		CelDrawTo(out, RIGHT_PANEL_X + 61 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 61);
+		CelDrawTo(out, RIGHT_PANEL_X + 61 * sbooktab + 7, 348, pSBkBtnCel, sbooktab + 1, 61);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
 		int sx = RIGHT_PANEL_X + 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		CelDrawTo(out, sx, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
+		CelDrawTo(out, sx, 348, pSBkBtnCel, sbooktab + 1, 76);
 	}
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
-	yp = 55 + SCREEN_Y;
+	yp = 55;
 	for (i = 1; i < 8; i++) {
 		sn = SpellPages[sbooktab][i - 1];
 		if (sn != -1 && spl & SPELLBIT(sn)) {
@@ -1932,7 +1926,7 @@ void DrawGoldSplit(CelOutputBuffer out, int amount)
 	int screen_x, i;
 
 	screen_x = 0;
-	CelDrawTo(out, 351 + SCREEN_X, 178 + SCREEN_Y, pGBoxBuff, 1, 261);
+	CelDrawTo(out, 351, 178, pGBoxBuff, 1, 261);
 	sprintf(tempstr, "You have %u gold", initialDropGoldValue);
 	ADD_PlrStringXY(out, 366, 87, 600, tempstr, COL_GOLD);
 	sprintf(tempstr, "%s.  How many do", get_pieces_str(initialDropGoldValue));
@@ -1951,7 +1945,7 @@ void DrawGoldSplit(CelOutputBuffer out, int amount)
 	} else {
 		screen_x = 450;
 	}
-	CelDrawTo(out, screen_x, 140 + SCREEN_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+	CelDrawTo(out, screen_x, 140, pSPentSpn2Cels, PentSpn2Spin(), 12);
 }
 
 void control_drop_gold(char vkey)
@@ -2029,7 +2023,7 @@ static char *control_print_talk_msg(CelOutputBuffer out, char *msg, int *x, int 
 	BYTE c;
 	int width;
 
-	*x += 200 + SCREEN_X;
+	*x += 200;
 	y += 22 + PANEL_Y;
 	width = *x;
 	while (*msg) {

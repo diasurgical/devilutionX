@@ -453,6 +453,14 @@ void RenderTile(CelOutputBuffer out, int x, int y)
 	DWORD m, *pFrameTable;
 	const DWORD *mask;
 
+	// TODO: Get rid of overdraw by rendering edge tiles separately.
+	out.region.x -= BUFFER_BORDER_LEFT;
+	out.region.y -= BUFFER_BORDER_TOP;
+	out.region.w += BUFFER_BORDER_LEFT;
+	out.region.h += BUFFER_BORDER_TOP;
+	x += BUFFER_BORDER_LEFT;
+	y += BUFFER_BORDER_TOP;
+
 	pFrameTable = (DWORD *)pDungeonCels;
 
 	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
@@ -505,7 +513,7 @@ void RenderTile(CelOutputBuffer out, int x, int y)
 	}
 #endif
 
-	BYTE *dst_begin = out.at(0, SCREEN_Y);
+	BYTE *dst_begin = out.at(0, BUFFER_BORDER_TOP);
 	BYTE *dst_end = out.end();
 	BYTE *dst = out.at(x, y);
 	const int dst_pitch = out.pitch();
@@ -580,11 +588,19 @@ void world_draw_black_tile(CelOutputBuffer out, int sx, int sy)
 {
 	int i, j;
 
-	if (sx >= SCREEN_X + gnScreenWidth || sy >= SCREEN_Y + gnViewportHeight + TILE_WIDTH / 2)
+	if (sx >= gnScreenWidth || sy >= gnViewportHeight + TILE_WIDTH / 2)
 		return;
 
-	if (sx < SCREEN_X - (TILE_WIDTH - 4) || sy < SCREEN_Y)
+	if (sx < -(TILE_WIDTH - 4) || sy < 0)
 		return;
+
+	// TODO: Get rid of overdraw by rendering edge tiles separately.
+	out.region.x -= BUFFER_BORDER_LEFT;
+	out.region.y -= BUFFER_BORDER_TOP;
+	out.region.w += BUFFER_BORDER_LEFT;
+	out.region.h += BUFFER_BORDER_TOP;
+	sx += BUFFER_BORDER_LEFT;
+	sy += BUFFER_BORDER_TOP;
 
 	BYTE *dst = out.at(sx + TILE_WIDTH / 2 - 2, sy);
 	for (i = TILE_HEIGHT - 2, j = 1; i >= 0; i -= 2, j++, dst -= out.pitch() + 2) {
