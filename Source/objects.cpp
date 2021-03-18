@@ -3478,6 +3478,8 @@ void OperateShrine(int pnum, int i, int sType)
 			case ITYPE_HARMOR:
 				plr[pnum].InvList[j]._iAC += 2;
 				break;
+			default:
+				break;
 			}
 		}
 		InitDiabloMsg(EMSG_SHRINE_GLOOMY);
@@ -3954,6 +3956,8 @@ void OperateShrine(int pnum, int i, int sType)
 		case PC_BARD:
 			ModifyPlrDex(myplr, 1);
 			ModifyPlrMag(myplr, 1);
+			break;
+		case NUM_CLASSES:
 			break;
 		}
 		CheckStats(pnum);

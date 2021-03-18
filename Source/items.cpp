@@ -1451,6 +1451,8 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
+	case NUM_CLASSES:
+		break;
 	}
 
 	SetPlrHandItem(&plr[p].HoldItem, IDI_GOLD);
@@ -2405,39 +2407,41 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 
 void GetItemBonus(int i, int idata, int minlvl, int maxlvl, BOOL onlygood, BOOLEAN allowspells)
 {
-	if (item[i]._iClass != ICLASS_GOLD) {
-		if (minlvl > 25)
-			minlvl = 25;
+	if (minlvl > 25)
+		minlvl = 25;
 
-		switch (item[i]._itype) {
-		case ITYPE_SWORD:
-		case ITYPE_AXE:
-		case ITYPE_MACE:
-			GetItemPower(i, minlvl, maxlvl, PLT_WEAP, onlygood);
-			break;
-		case ITYPE_BOW:
-			GetItemPower(i, minlvl, maxlvl, PLT_BOW, onlygood);
-			break;
-		case ITYPE_SHIELD:
-			GetItemPower(i, minlvl, maxlvl, PLT_SHLD, onlygood);
-			break;
-		case ITYPE_LARMOR:
-		case ITYPE_HELM:
-		case ITYPE_MARMOR:
-		case ITYPE_HARMOR:
-			GetItemPower(i, minlvl, maxlvl, PLT_ARMO, onlygood);
-			break;
-		case ITYPE_STAFF:
-			if (allowspells)
-				GetStaffSpell(i, maxlvl, onlygood);
-			else
-				GetItemPower(i, minlvl, maxlvl, PLT_STAFF, onlygood);
-			break;
-		case ITYPE_RING:
-		case ITYPE_AMULET:
-			GetItemPower(i, minlvl, maxlvl, PLT_MISC, onlygood);
-			break;
-		}
+	switch (item[i]._itype) {
+	case ITYPE_SWORD:
+	case ITYPE_AXE:
+	case ITYPE_MACE:
+		GetItemPower(i, minlvl, maxlvl, PLT_WEAP, onlygood);
+		break;
+	case ITYPE_BOW:
+		GetItemPower(i, minlvl, maxlvl, PLT_BOW, onlygood);
+		break;
+	case ITYPE_SHIELD:
+		GetItemPower(i, minlvl, maxlvl, PLT_SHLD, onlygood);
+		break;
+	case ITYPE_LARMOR:
+	case ITYPE_HELM:
+	case ITYPE_MARMOR:
+	case ITYPE_HARMOR:
+		GetItemPower(i, minlvl, maxlvl, PLT_ARMO, onlygood);
+		break;
+	case ITYPE_STAFF:
+		if (allowspells)
+			GetStaffSpell(i, maxlvl, onlygood);
+		else
+			GetItemPower(i, minlvl, maxlvl, PLT_STAFF, onlygood);
+		break;
+	case ITYPE_RING:
+	case ITYPE_AMULET:
+		GetItemPower(i, minlvl, maxlvl, PLT_MISC, onlygood);
+		break;
+	case ITYPE_NONE:
+	case ITYPE_MISC:
+	case ITYPE_GOLD:
+		break;
 	}
 }
 
@@ -3417,6 +3421,8 @@ static BOOL OilItem(ItemStruct *x, PlayerStruct *p)
 			return FALSE;
 		}
 		break;
+	default:
+		break;
 	}
 
 	switch (p->_pOilType) {
@@ -3497,6 +3503,8 @@ static BOOL OilItem(ItemStruct *x, PlayerStruct *p)
 			x->_iAC += random_(68, 3) + 3;
 		}
 		break;
+	default:
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -5035,6 +5043,8 @@ void SpawnBoy(int lvl)
 				case PC_BARBARIAN:
 					if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
 						ivalue = INT_MAX;
+					break;
+				case NUM_CLASSES:
 					break;
 				}
 			}

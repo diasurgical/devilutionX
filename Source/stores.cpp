@@ -1960,6 +1960,8 @@ void S_ConfirmEnter()
 		case STORE_SPBUY:
 			SmithBuyPItem();
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -2454,6 +2456,8 @@ void StartStore(talk_id s)
 	case STORE_BARMAID:
 		S_StartBarMaid();
 		break;
+	case STORE_NONE:
+		break;
 	}
 
 	stextsel = -1;
@@ -2496,6 +2500,8 @@ void DrawSText(CelOutputBuffer out)
 			break;
 		case STORE_SPBUY:
 			S_ScrollSPBuy(stextsval);
+			break;
+		default:
 			break;
 		}
 	}
@@ -2579,6 +2585,8 @@ void STextESC()
 			StartStore(stextshold);
 			stextsel = stextlhold;
 			stextsval = stextvhold;
+			break;
+		case STORE_NONE:
 			break;
 		}
 	}
@@ -2771,79 +2779,83 @@ void STextEnter()
 		qtextflag = FALSE;
 		if (leveltype == DTYPE_TOWN)
 			stream_stop();
-	} else {
-		PlaySFX(IS_TITLSLCT);
-		switch (stextflag) {
-		case STORE_SMITH:
-			S_SmithEnter();
-			break;
-		case STORE_SPBUY:
-			S_SPBuyEnter();
-			break;
-		case STORE_SBUY:
-			S_SBuyEnter();
-			break;
-		case STORE_SSELL:
-			S_SSellEnter();
-			break;
-		case STORE_SREPAIR:
-			S_SRepairEnter();
-			break;
-		case STORE_WITCH:
-			S_WitchEnter();
-			break;
-		case STORE_WBUY:
-			S_WBuyEnter();
-			break;
-		case STORE_WSELL:
-			S_WSellEnter();
-			break;
-		case STORE_WRECHARGE:
-			S_WRechargeEnter();
-			break;
-		case STORE_NOMONEY:
-		case STORE_NOROOM:
-			StartStore(stextshold);
-			stextsel = stextlhold;
-			stextsval = stextvhold;
-			break;
-		case STORE_CONFIRM:
-			S_ConfirmEnter();
-			break;
-		case STORE_BOY:
-			S_BoyEnter();
-			break;
-		case STORE_BBOY:
-			S_BBuyEnter();
-			break;
-		case STORE_HEALER:
-			S_HealerEnter();
-			break;
-		case STORE_STORY:
-			S_StoryEnter();
-			break;
-		case STORE_HBUY:
-			S_HBuyEnter();
-			break;
-		case STORE_SIDENTIFY:
-			S_SIDEnter();
-			break;
-		case STORE_GOSSIP:
-			S_TalkEnter();
-			break;
-		case STORE_IDSHOW:
-			StartStore(STORE_SIDENTIFY);
-			break;
-		case STORE_DRUNK:
-			S_DrunkEnter();
-			break;
-		case STORE_TAVERN:
-			S_TavernEnter();
-			break;
-		case STORE_BARMAID:
-			S_BarmaidEnter();
-			break;
-		}
+
+		return;
+	}
+
+	PlaySFX(IS_TITLSLCT);
+	switch (stextflag) {
+	case STORE_SMITH:
+		S_SmithEnter();
+		break;
+	case STORE_SPBUY:
+		S_SPBuyEnter();
+		break;
+	case STORE_SBUY:
+		S_SBuyEnter();
+		break;
+	case STORE_SSELL:
+		S_SSellEnter();
+		break;
+	case STORE_SREPAIR:
+		S_SRepairEnter();
+		break;
+	case STORE_WITCH:
+		S_WitchEnter();
+		break;
+	case STORE_WBUY:
+		S_WBuyEnter();
+		break;
+	case STORE_WSELL:
+		S_WSellEnter();
+		break;
+	case STORE_WRECHARGE:
+		S_WRechargeEnter();
+		break;
+	case STORE_NOMONEY:
+	case STORE_NOROOM:
+		StartStore(stextshold);
+		stextsel = stextlhold;
+		stextsval = stextvhold;
+		break;
+	case STORE_CONFIRM:
+		S_ConfirmEnter();
+		break;
+	case STORE_BOY:
+		S_BoyEnter();
+		break;
+	case STORE_BBOY:
+		S_BBuyEnter();
+		break;
+	case STORE_HEALER:
+		S_HealerEnter();
+		break;
+	case STORE_STORY:
+		S_StoryEnter();
+		break;
+	case STORE_HBUY:
+		S_HBuyEnter();
+		break;
+	case STORE_SIDENTIFY:
+		S_SIDEnter();
+		break;
+	case STORE_GOSSIP:
+		S_TalkEnter();
+		break;
+	case STORE_IDSHOW:
+		StartStore(STORE_SIDENTIFY);
+		break;
+	case STORE_DRUNK:
+		S_DrunkEnter();
+		break;
+	case STORE_TAVERN:
+		S_TavernEnter();
+		break;
+	case STORE_BARMAID:
+		S_BarmaidEnter();
+		break;
+	case STORE_NONE:
+		break;
 	}
 }
 

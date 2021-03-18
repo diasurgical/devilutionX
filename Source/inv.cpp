@@ -1785,9 +1785,10 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 						case PC_SORCERER:
 							PlaySFX(PS_MAGE15, false);
 							break;
-
 						case PC_MONK:
 							PlaySFX(PS_MONK15, false);
+							break;
+						case NUM_CLASSES:
 							break;
 						}
 					} else {
@@ -1796,18 +1797,17 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 						case PC_BARBARIAN:
 							PlaySFX(PS_WARR37, false);
 							break;
-
 						case PC_ROGUE:
 						case PC_BARD:
 							PlaySFX(PS_ROGUE37, false);
 							break;
-
 						case PC_SORCERER:
 							PlaySFX(PS_MAGE37, false);
 							break;
-
 						case PC_MONK:
 							PlaySFX(PS_MONK37, false);
+							break;
+						case NUM_CLASSES:
 							break;
 						}
 					}
