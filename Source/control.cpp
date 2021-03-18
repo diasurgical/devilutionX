@@ -367,6 +367,8 @@ void DrawSpellList(CelOutputBuffer out)
 			mask = plr[myplr]._pISpells;
 			c = SPLICONLAST + 2;
 			break;
+		case RSPLTYPE_INVALID:
+			break;
 		}
 		Sint32 j = SPL_FIREBOLT;
 		for (spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
@@ -440,6 +442,8 @@ void DrawSpellList(CelOutputBuffer out)
 						sprintf(tempstr, "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
 					AddPanelString(tempstr, TRUE);
 					break;
+				case RSPLTYPE_INVALID:
+					break;
 				}
 				for (t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
@@ -510,6 +514,8 @@ void ToggleSpell(int slot)
 	case RSPLTYPE_CHARGES:
 		spells = plr[myplr]._pISpells;
 		break;
+	case RSPLTYPE_INVALID:
+		return;
 	}
 
 	if (spells & GetSpellBitmask(plr[myplr]._pSplHotKey[slot])) {
@@ -1067,6 +1073,8 @@ void CheckPanelInfo()
 				else
 					sprintf(tempstr, "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
 				AddPanelString(tempstr, TRUE);
+				break;
+			case RSPLTYPE_INVALID:
 				break;
 			}
 		}
@@ -1678,26 +1686,25 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct *pItem, int x, int c
 	if (pItem->_iDurability > 5)
 		return x;
 	if (c == 0) {
-		if (pItem->_iClass == ICLASS_WEAPON) {
-			switch (pItem->_itype) {
-			case ITYPE_SWORD:
-				c = 2;
-				break;
-			case ITYPE_AXE:
-				c = 6;
-				break;
-			case ITYPE_BOW:
-				c = 7;
-				break;
-			case ITYPE_MACE:
-				c = 5;
-				break;
-			case ITYPE_STAFF:
-				c = 8;
-				break;
-			}
-		} else {
+		switch (pItem->_itype) {
+		case ITYPE_SWORD:
+			c = 2;
+			break;
+		case ITYPE_AXE:
+			c = 6;
+			break;
+		case ITYPE_BOW:
+			c = 7;
+			break;
+		case ITYPE_MACE:
+			c = 5;
+			break;
+		case ITYPE_STAFF:
+			c = 8;
+			break;
+		default:
 			c = 1;
+			break;
 		}
 	}
 	if (pItem->_iDurability > 2)

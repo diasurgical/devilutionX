@@ -351,6 +351,7 @@ void DrawAutomapPlr(CelOutputBuffer out, int pnum)
 		DrawLineTo(out, x + AmLine16, y + AmLine8, x + AmLine8, y + AmLine8, playerColor);
 		break;
 	case DIR_S:
+	case DIR_OMNI:
 		DrawLineTo(out, x, y, x, y + AmLine16, playerColor);
 		DrawLineTo(out, x, y + AmLine16, x + AmLine4, y + AmLine8, playerColor);
 		DrawLineTo(out, x, y + AmLine16, x - AmLine4, y + AmLine8, playerColor);

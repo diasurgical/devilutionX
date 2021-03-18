@@ -2453,10 +2453,11 @@ BOOL PlrHitMonst(int pnum, int m)
 				dam += dam >> 1;
 			}
 			break;
-		}
-
-		if (plr[pnum]._pIFlags & ISPL_3XDAMVDEM && monster[m].MData->mMonstClass == MC_DEMON) {
-			dam *= 3;
+		case MC_DEMON:
+			if (plr[pnum]._pIFlags & ISPL_3XDAMVDEM) {
+				dam *= 3;
+			}
+			break;
 		}
 
 		if (plr[pnum].pDamAcFlags & 0x01 && random_(6, 100) < 5) {
@@ -3301,6 +3302,8 @@ void CheckNewPath(int pnum)
 				TalkToTowner(pnum, plr[pnum].destParam1);
 			}
 			break;
+		default:
+			break;
 		}
 
 		FixPlayerLocation(pnum, plr[pnum]._pdir);
@@ -3489,7 +3492,6 @@ static void CheckCheatStats(int pnum)
 void ProcessPlayers()
 {
 	int pnum;
-	BOOL tplayer;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
 		app_fatal("ProcessPlayers: illegal player %d", myplr);
@@ -3547,7 +3549,7 @@ void ProcessPlayers()
 				}
 			}
 
-			tplayer = FALSE;
+			bool tplayer = false;
 			do {
 				switch (plr[pnum]._pmode) {
 				case PM_STAND:
@@ -3578,6 +3580,9 @@ void ProcessPlayers()
 					break;
 				case PM_NEWLVL:
 					tplayer = PM_DoNewLvl(pnum);
+					break;
+				case PM_QUIT:
+					tplayer = false;
 					break;
 				}
 				CheckNewPath(pnum);
@@ -3789,6 +3794,8 @@ void CheckPlrSpell()
 	case RSPLTYPE_CHARGES:
 		addflag = UseStaff();
 		break;
+	case RSPLTYPE_INVALID:
+		return;
 	}
 
 	if (addflag) {
