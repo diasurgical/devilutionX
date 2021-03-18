@@ -2900,7 +2900,7 @@ void OperateBook(int pnum, int i)
 		return;
 
 	if (setlvlnum == SL_BONECHAMB) {
-		plr[pnum]._pMemSpells |= SPELLBIT(SPL_GUARDIAN);
+		plr[pnum]._pMemSpells |= GetSpellBitmask(SPL_GUARDIAN);
 		if (plr[pnum]._pSplLvl[SPL_GUARDIAN] < MAX_SPELL_LEVEL)
 			plr[pnum]._pSplLvl[SPL_GUARDIAN]++;
 		quests[Q_SCHAMB]._qactive = QUEST_DONE;
@@ -3338,7 +3338,6 @@ void OperateShrine(int pnum, int i, int sType)
 	DWORD lv, t;
 	int xx, yy;
 	int v1, v2, v3, v4;
-	unsigned __int64 spell, spells;
 
 	if (dropGoldFlag) {
 		dropGoldFlag = FALSE;
@@ -3566,9 +3565,9 @@ void OperateShrine(int pnum, int i, int sType)
 		if (pnum != myplr)
 			return;
 		cnt = 0;
-		spell = 1;
+		Uint64 spell = 1;
 		int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-		spells = plr[pnum]._pMemSpells;
+		Uint64 spells = plr[pnum]._pMemSpells;
 		for (j = 0; j < maxSpells; j++) {
 			if (spell & spells)
 				cnt++;
@@ -3585,7 +3584,7 @@ void OperateShrine(int pnum, int i, int sType)
 			}
 			do {
 				r = random_(0, maxSpells);
-			} while (!(plr[pnum]._pMemSpells & SPELLBIT(r + 1)));
+			} while (!(plr[pnum]._pMemSpells & GetSpellBitmask(r + 1)));
 			if (plr[pnum]._pSplLvl[r + 1] >= 2)
 				plr[pnum]._pSplLvl[r + 1] -= 2;
 			else
@@ -3617,7 +3616,7 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		if (pnum != myplr)
 			return;
-		plr[pnum]._pMemSpells |= SPELLBIT(SPL_FIREBOLT);
+		plr[pnum]._pMemSpells |= GetSpellBitmask(SPL_FIREBOLT);
 		if (plr[pnum]._pSplLvl[SPL_FIREBOLT] < MAX_SPELL_LEVEL)
 			plr[pnum]._pSplLvl[SPL_FIREBOLT]++;
 		if (plr[pnum]._pSplLvl[SPL_FIREBOLT] < MAX_SPELL_LEVEL)
@@ -3750,7 +3749,7 @@ void OperateShrine(int pnum, int i, int sType)
 	case SHRINE_SACRED:
 		if (deltaload || pnum != myplr)
 			return;
-		plr[pnum]._pMemSpells |= SPELLBIT(SPL_CBOLT);
+		plr[pnum]._pMemSpells |= GetSpellBitmask(SPL_CBOLT);
 		if (plr[pnum]._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
 			plr[pnum]._pSplLvl[SPL_CBOLT]++;
 		if (plr[pnum]._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
@@ -3853,7 +3852,7 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		if (pnum != myplr)
 			return;
-		plr[pnum]._pMemSpells |= SPELLBIT(SPL_HBOLT);
+		plr[pnum]._pMemSpells |= GetSpellBitmask(SPL_HBOLT);
 		if (plr[pnum]._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
 			plr[pnum]._pSplLvl[SPL_HBOLT]++;
 		if (plr[pnum]._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
@@ -3978,10 +3977,10 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		InitDiabloMsg(EMSG_SHRINE_GLOWING);
 		int playerXP = plr[myplr]._pExperience;
-		int xpLoss, magicGain;
+		Sint32 xpLoss, magicGain;
 		if (playerXP > 5000) {
 			magicGain = 5;
-			xpLoss = (signed __int64)((double)playerXP * 0.95);
+			xpLoss = ((double)playerXP * 0.95);
 		} else {
 			magicGain = playerXP / 1000;
 			xpLoss = 0;

@@ -91,7 +91,7 @@ void MaxSpellsCheat()
 
 	for (i = 1; i < maxSpells; i++) {
 		if (GetSpellBookLevel(i) != -1) {
-			plr[myplr]._pMemSpells |= SPELLBIT(i);
+			plr[myplr]._pMemSpells |= GetSpellBitmask(i);
 			plr[myplr]._pSplLvl[i] = 10;
 		}
 	}
@@ -99,7 +99,7 @@ void MaxSpellsCheat()
 
 void SetSpellLevelCheat(char spl, int spllvl)
 {
-	plr[myplr]._pMemSpells |= SPELLBIT(spl);
+	plr[myplr]._pMemSpells |= GetSpellBitmask(spl);
 	plr[myplr]._pSplLvl[spl] = spllvl;
 }
 
