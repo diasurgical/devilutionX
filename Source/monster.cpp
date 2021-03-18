@@ -1191,7 +1191,6 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 	}
 	lm = (WORD *)pMap;
 	rw = SDL_SwapLE16(*lm++);
-	lm;
 	rh = SDL_SwapLE16(*lm++);
 	lm += rw * rh;
 	rw = rw << 1;

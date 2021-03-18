@@ -4602,28 +4602,22 @@ int RndPremiumItem(int minlvl, int maxlvl)
 
 static void SpawnOnePremium(int i, int plvl, int myplr)
 {
-	int itype;
-	ItemStruct holditem;
-
-	holditem = item[0];
-
 	int ivalue;
-	int count = 0;
+	ItemStruct holditem = item[0];
 
 	int strength = get_max_strength(plr[myplr]._pClass);
-	int dexterity = get_max_dexterity(plr[myplr]._pClass);
-	int magic = get_max_magic(plr[myplr]._pClass);
-
 	if (strength < plr[myplr]._pStrength) {
 		strength = plr[myplr]._pStrength;
 	}
 	strength *= 1.2;
 
+	int dexterity = get_max_dexterity(plr[myplr]._pClass);
 	if (dexterity < plr[myplr]._pDexterity) {
 		dexterity = plr[myplr]._pDexterity;
 	}
 	dexterity *= 1.2;
 
+	int magic = get_max_magic(plr[myplr]._pClass);
 	if (magic < plr[myplr]._pMagic) {
 		magic = plr[myplr]._pMagic;
 	}
@@ -4634,11 +4628,13 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	if (plvl < 1)
 		plvl = 1;
 
+	int count = 0;
+
 	do {
 		memset(&item[0], 0, sizeof(*item));
 		item[0]._iSeed = AdvanceRndSeed();
 		SetRndSeed(item[0]._iSeed);
-		itype = RndPremiumItem(plvl >> 2, plvl) - 1;
+		int itype = RndPremiumItem(plvl >> 2, plvl) - 1;
 		GetItemAttrs(0, itype, plvl);
 		GetItemBonus(0, itype, plvl >> 1, plvl, TRUE, !gbIsHellfire);
 

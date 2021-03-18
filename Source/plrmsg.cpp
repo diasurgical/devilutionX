@@ -61,8 +61,8 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = pnum;
 	pMsg->time = SDL_GetTicks();
-	strlen(plr[pnum]._pName); /* these are used in debug */
-	strlen(pszStr);
+	assert(strlen(plr[pnum]._pName) < PLR_NAME_LEN);
+	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
 	sprintf(pMsg->str, "%s (lvl %d): %s", plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
 }
 

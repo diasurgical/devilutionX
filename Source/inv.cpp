@@ -660,9 +660,8 @@ bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistI
  */
 bool CanEquip(const ItemStruct &item)
 {
-	return
-		item.isEquipment() &&
-		item._iStatFlag;
+	return item.isEquipment()
+	    && item._iStatFlag;
 }
 
 /**
@@ -702,23 +701,20 @@ bool CanWield(int playerNumber, const ItemStruct &item)
 	// Bard can dual wield swords and maces, so we allow equiping one-handed weapons in her free slot as long as her occupied
 	// slot is another one-handed weapon.
 	if (player._pClass == PC_BARD) {
-		bool occupiedHandIsOneHandedSwordOrMace =
-			occupiedHand._iLoc == ILOC_ONEHAND &&
-			(occupiedHand._itype == ITYPE_SWORD || occupiedHand._itype == ITYPE_MACE);
+		bool occupiedHandIsOneHandedSwordOrMace = occupiedHand._iLoc == ILOC_ONEHAND
+		    && (occupiedHand._itype == ITYPE_SWORD || occupiedHand._itype == ITYPE_MACE);
 
-		bool weaponToEquipIsOneHandedSwordOrMace =
-			item._iLoc == ILOC_ONEHAND &&
-			(item._itype == ITYPE_SWORD || item._itype == ITYPE_MACE);
+		bool weaponToEquipIsOneHandedSwordOrMace = item._iLoc == ILOC_ONEHAND
+		    && (item._itype == ITYPE_SWORD || item._itype == ITYPE_MACE);
 
 		if (occupiedHandIsOneHandedSwordOrMace && weaponToEquipIsOneHandedSwordOrMace) {
 			return true;
 		}
 	}
 
-	return
-		item._iLoc == ILOC_ONEHAND &&
-		occupiedHand._iLoc == ILOC_ONEHAND &&
-		item._iClass != occupiedHand._iClass;
+	return item._iLoc == ILOC_ONEHAND
+	    && occupiedHand._iLoc == ILOC_ONEHAND
+	    && item._iClass != occupiedHand._iClass;
 }
 
 /**
@@ -1776,12 +1772,10 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 						case PC_BARBARIAN:
 							PlaySFX(PS_WARR15, false);
 							break;
-
 						case PC_ROGUE:
 						case PC_BARD:
 							PlaySFX(PS_ROGUE15, false);
 							break;
-
 						case PC_SORCERER:
 							PlaySFX(PS_MAGE15, false);
 							break;
