@@ -635,9 +635,6 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   genex_for_option(DEBUG)
   target_compile_options(devilution PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
 
-  # Warnings for devilution
-  target_compile_options(devilution PRIVATE -Wno-int-to-pointer-cast)
-
   # Warnings for devilutionX
   target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-format-security)
 
@@ -648,15 +645,6 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(devilution PRIVATE "/W0")
-endif()
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  # Style issues
-  target_compile_options(${BIN_TARGET} PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
-  # Silence warnings about __int64 alignment hack not always being applicable
-  target_compile_options(${BIN_TARGET} PRIVATE -Wno-ignored-attributes)
-  # Silence appfat.cpp warnings
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
 endif()
 
 if(APPLE)
