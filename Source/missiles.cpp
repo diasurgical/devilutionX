@@ -4262,43 +4262,34 @@ void MI_Search(Sint32 i)
 
 void MI_LightningWallC(Sint32 i)
 {
-	int src, lvl, dmg, tx, ty, dp;
-
 	missile[i]._mirange--;
-	src = missile[i]._misource;
-	if (src > 0)
-		lvl = plr[src]._pLevel;
-	else
-		lvl = 0;
-	dmg = 16 * (random_(53, 10) + random_(53, 10) + lvl + 2);
+	int id = missile[i]._misource;
+	int lvl = 0;
+	if (id > 0)
+		lvl = plr[id]._pLevel;
+	int dmg = 16 * (random_(53, 10) + random_(53, 10) + lvl + 2);
 	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = TRUE;
 	} else {
-		dp = dPiece[missile[i]._miVar1][missile[i]._miVar2];
-		if (dp || 1) {
-			tx = missile[i]._miVar1 + XDirAdd[missile[i]._miVar3];
-			ty = missile[i]._miVar2 + YDirAdd[missile[i]._miVar3];
-			if (!nMissileTable[dp] && !missile[i]._miVar8 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
-				AddMissile(missile[i]._miVar1, missile[i]._miVar2, missile[i]._miVar1, missile[i]._miVar2, plr[src]._pdir, MIS_LIGHTWALL, TARGET_BOTH, src, dmg, missile[i]._mispllvl);
-				missile[i]._miVar1 = tx;
-				missile[i]._miVar2 = ty;
-			} else {
-				missile[i]._miVar8 = 1;
-			}
+		int dp = dPiece[missile[i]._miVar1][missile[i]._miVar2];
+		assert(dp <= MAXTILES && dp >= 0);
+		int tx = missile[i]._miVar1 + XDirAdd[missile[i]._miVar3];
+		int ty = missile[i]._miVar2 + YDirAdd[missile[i]._miVar3];
+		if (!nMissileTable[dp] && missile[i]._miVar8 == 0 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
+			AddMissile(missile[i]._miVar1, missile[i]._miVar2, missile[i]._miVar1, missile[i]._miVar2, plr[id]._pdir, MIS_LIGHTWALL, TARGET_BOTH, id, dmg, missile[i]._mispllvl);
+			missile[i]._miVar1 = tx;
+			missile[i]._miVar2 = ty;
 		} else {
 			missile[i]._miVar8 = 1;
 		}
 		dp = dPiece[missile[i]._miVar5][missile[i]._miVar6];
-		if (dp || 1) {
-			tx = missile[i]._miVar5 + XDirAdd[missile[i]._miVar4];
-			ty = missile[i]._miVar6 + YDirAdd[missile[i]._miVar4];
-			if (!nMissileTable[dp] && !missile[i]._miVar7 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
-				AddMissile(missile[i]._miVar5, missile[i]._miVar6, missile[i]._miVar5, missile[i]._miVar6, plr[src]._pdir, MIS_LIGHTWALL, TARGET_BOTH, src, dmg, missile[i]._mispllvl);
-				missile[i]._miVar5 = tx;
-				missile[i]._miVar6 = ty;
-			} else {
-				missile[i]._miVar7 = 1;
-			}
+		assert(dp <= MAXTILES && dp >= 0);
+		tx = missile[i]._miVar5 + XDirAdd[missile[i]._miVar4];
+		ty = missile[i]._miVar6 + YDirAdd[missile[i]._miVar4];
+		if (!nMissileTable[dp] && missile[i]._miVar7 == 0 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
+			AddMissile(missile[i]._miVar5, missile[i]._miVar6, missile[i]._miVar5, missile[i]._miVar6, plr[id]._pdir, MIS_LIGHTWALL, TARGET_BOTH, id, dmg, missile[i]._mispllvl);
+			missile[i]._miVar5 = tx;
+			missile[i]._miVar6 = ty;
 		} else {
 			missile[i]._miVar7 = 1;
 		}
@@ -5059,17 +5050,15 @@ void MI_Fireman(Sint32 i)
 
 void MI_FirewallC(Sint32 i)
 {
-	int tx, ty, id, dp;
-
 	missile[i]._mirange--;
-	id = missile[i]._misource;
+	int id = missile[i]._misource;
 	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = TRUE;
 	} else {
-		dp = dPiece[missile[i]._miVar1][missile[i]._miVar2];
+		int dp = dPiece[missile[i]._miVar1][missile[i]._miVar2];
 		assert(dp <= MAXTILES && dp >= 0);
-		tx = missile[i]._miVar1 + XDirAdd[missile[i]._miVar3];
-		ty = missile[i]._miVar2 + YDirAdd[missile[i]._miVar3];
+		int tx = missile[i]._miVar1 + XDirAdd[missile[i]._miVar3];
+		int ty = missile[i]._miVar2 + YDirAdd[missile[i]._miVar3];
 		if (!nMissileTable[dp] && missile[i]._miVar8 == 0 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
 			AddMissile(missile[i]._miVar1, missile[i]._miVar2, missile[i]._miVar1, missile[i]._miVar2, plr[id]._pdir, MIS_FIREWALL, TARGET_BOTH, id, 0, missile[i]._mispllvl);
 			missile[i]._miVar1 = tx;
