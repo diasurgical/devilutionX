@@ -157,14 +157,14 @@ void DrawXPBar(CelOutputBuffer out)
 	if (charLevel == MAXCHARLEVEL - 1)
 		return;
 
-	int curXp = ExpLvlsTbl[charLevel];
 	int prevXp = ExpLvlsTbl[charLevel - 1];
-	int prevXpDelta = curXp - prevXp;
-	int prevXpDelta_1 = plr[myplr]._pExperience - prevXp;
 	if (plr[myplr]._pExperience < prevXp)
 		return;
 
-	int visibleBar = barWidth * (unsigned __int64)prevXpDelta_1 / prevXpDelta;
+	Uint64 prevXpDelta_1 = plr[myplr]._pExperience - prevXp;
+	int prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
+	int visibleBar = barWidth * prevXpDelta_1 / prevXpDelta;
+
 	FillRect(out, xPos, yPos, barWidth, barHeight, emptyBarColor);
 	FillRect(out, xPos, yPos + (space ? 1 : 0), visibleBar, barHeight - (space ? 2 : 0), barColor);
 	FastDrawHorizLine(out, xPos - 1, yPos - 1, barWidth + 2, frameColor);
