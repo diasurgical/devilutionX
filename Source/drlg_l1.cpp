@@ -1352,19 +1352,17 @@ static BOOL L5checkRoom(int x, int y, int width, int height)
 
 static void L5roomGen(int x, int y, int w, int h, int dir)
 {
-	int num, dirProb;
 	BOOL ran, ran2;
 	int width, height, rx, ry, ry2;
 	int cw, ch, cx1, cy1, cx2;
 
-	dirProb = random_(0, 4);
+	int dirProb = random_(0, 4);
+	int num = 0;
 
-	switch (dir == 1 ? dirProb != 0 : dirProb == 0) {
-	case FALSE:
-		num = 0;
+	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
 		do {
-			cw = (random_(0, 5) + 2) & 0xFFFFFFFE;
-			ch = (random_(0, 5) + 2) & 0xFFFFFFFE;
+			cw = (random_(0, 5) + 2) & ~1;
+			ch = (random_(0, 5) + 2) & ~1;
 			cy1 = h / 2 + y - ch / 2;
 			cx1 = x - cw;
 			ran = L5checkRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
@@ -1381,30 +1379,28 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 			L5roomGen(cx1, cy1, cw, ch, 1);
 		if (ran2 == TRUE)
 			L5roomGen(cx2, cy1, cw, ch, 1);
-		break;
-	case TRUE:
-		num = 0;
-		do {
-			width = (random_(0, 5) + 2) & 0xFFFFFFFE;
-			height = (random_(0, 5) + 2) & 0xFFFFFFFE;
-			rx = w / 2 + x - width / 2;
-			ry = y - height;
-			ran = L5checkRoom(rx - 1, ry - 1, width + 2, height + 1);
-			num++;
-		} while (ran == FALSE && num < 20);
-
-		if (ran == TRUE)
-			L5drawRoom(rx, ry, width, height);
-		ry2 = y + h;
-		ran2 = L5checkRoom(rx - 1, ry2, width + 2, height + 1);
-		if (ran2 == TRUE)
-			L5drawRoom(rx, ry2, width, height);
-		if (ran == TRUE)
-			L5roomGen(rx, ry, width, height, 0);
-		if (ran2 == TRUE)
-			L5roomGen(rx, ry2, width, height, 0);
-		break;
+		return;
 	}
+
+	do {
+		width = (random_(0, 5) + 2) & ~1;
+		height = (random_(0, 5) + 2) & ~1;
+		rx = w / 2 + x - width / 2;
+		ry = y - height;
+		ran = L5checkRoom(rx - 1, ry - 1, width + 2, height + 1);
+		num++;
+	} while (ran == FALSE && num < 20);
+
+	if (ran == TRUE)
+		L5drawRoom(rx, ry, width, height);
+	ry2 = y + h;
+	ran2 = L5checkRoom(rx - 1, ry2, width + 2, height + 1);
+	if (ran2 == TRUE)
+		L5drawRoom(rx, ry2, width, height);
+	if (ran == TRUE)
+		L5roomGen(rx, ry, width, height, 0);
+	if (ran2 == TRUE)
+		L5roomGen(rx, ry2, width, height, 0);
 }
 
 static void L5firstRoom()
