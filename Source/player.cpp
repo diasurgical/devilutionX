@@ -3491,8 +3491,6 @@ static void CheckCheatStats(int pnum)
 
 void ProcessPlayers()
 {
-	int pnum;
-
 	if ((DWORD)myplr >= MAX_PLRS) {
 		app_fatal("ProcessPlayers: illegal player %d", myplr);
 	}
@@ -3525,7 +3523,7 @@ void ProcessPlayers()
 
 	ValidatePlayer();
 
-	for (pnum = 0; pnum < MAX_PLRS; pnum++) {
+	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
 		if (plr[pnum].plractive && currlevel == plr[pnum].plrlevel && (pnum == myplr || !plr[pnum]._pLvlChanging)) {
 			CheckCheatStats(pnum);
 
