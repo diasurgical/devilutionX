@@ -497,7 +497,7 @@ void ToggleSpell(int slot)
 {
 	Uint64 spells;
 
-	if (plr[myplr]._pSplHotKey[slot] == -1) {
+	if (plr[myplr]._pSplHotKey[slot] == SPL_INVALID) {
 		return;
 	}
 
@@ -990,7 +990,7 @@ void DoAutoMap()
  */
 void CheckPanelInfo()
 {
-	int i, c, v, s, xend, yend;
+	int i, c, s, xend, yend;
 
 	panelflag = FALSE;
 	ClearPanel();
@@ -1022,7 +1022,7 @@ void CheckPanelInfo()
 		pinfoflag = TRUE;
 		strcpy(tempstr, "Hotkey: 's'");
 		AddPanelString(tempstr, TRUE);
-		v = plr[myplr]._pRSpell;
+		spell_id v = plr[myplr]._pRSpell;
 		if (v != SPL_INVALID) {
 			switch (plr[myplr]._pRSplType) {
 			case RSPLTYPE_SKILL:
