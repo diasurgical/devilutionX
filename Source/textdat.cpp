@@ -696,6 +696,44 @@ const TextDataStruct alltext[] = {
 	    1, 5, TSFX_BMAID30 },
 	{ "I really don't know much about the priest Tremain. He never visits the tavern, preferring to keep to the company of Pepin and Cain. Perhaps it is because they, too, have more scholarly pursuits."
 	    1, 5, TSFX_BMAID38 },
+	{ "Roof and Inaius are missing? Light protect us! Is there no place that is safe? Our only hope of returning to a peaceful life rests in you. Please, you must find those boys and bring them home to their family. |"
+	    1, 5, TSFX_HEALER4 },
+	{ "Horazon was insane. Thereare forces with which one does not interfere. It would not surprise me if you found only the charred remains of this damned fool. |"
+	    1, 5, TSFX_HEALER6 },
+	{ "Farnham is often confused, but he speaks a powerful name when the word Izual passes his lips. Cain would be able to tell you in much greater detail the legend of this warrior. |"
+	    1, 5, TSFX_HEALER7 },
+	{ "I suppose it isn't beyond the realm of possibility if you could bear being in that room again. Your description of the atrocities committed there would be enough to keep me far from it. |"
+	    1, 5, TSFX_HEALER9 },
+	{ "For once I can vouch for Farnham's extraordinary claim. There are many mentions in the books that I have been reading about a place of great healing where warriors of light would go to mend the wounds sustained in the Sin War. If you could find this place it would most assuredly be to the benefit of us all. |"
+	    1, 5, TSFX_HEALER14 },
+	{ "I was asked to assist in the exorcism. My skills were able to ease the poor man's suffering as Tremain drove the demon from his body. While I was treating him for an exceptionally high fever, he spoke of a place of searing heat. The tortured fellow cried out about Hell and falling into a pit of flame. I could not make any sense of it, and thankfully he soon recovered. |"
+	    1, 5, TSFX_HEALER15 },
+	{ "Good hero, a moment of your time please. While attending one of the townsfolk who had taken quite ill, I noticed something odd about his home. There were strange sounds and a sickly sweet smell rising from the cellar. Thinking perhaps these fumes had something to do with his sickness. In his cellar were monstrous worms shifting and squirming up from the underground. I beg of you, slay these creatures before they can make their way into the town. I left the door to his house open for you. It is the one opposite of mine. |"
+	    1, 5, TSFX_HEALER23 },
+	{ "I fear that the worms could soon overrun the village. I know that they are coming up from under the house that is opposite mine. Just the thought of those slimy beasts oozing into my house makes me want to be ill. Please, rid us of them.|"
+	    1, 5, TSFX_HEALER24 },
+	{ "Once again you have saved this humble town from the encroaching evil. We are, as always, forever in your debt.|"
+	    1, 5, TSFX_HEALER25 },
+	{ "My friend, I must speak with you. While going to help a sick villager I came upon a demon in the town. I fled from the house and accidentally left the door open in my haste. I pray that the vial creature is still in there. Please help us before it comes for us all.|"
+	    1, 5, TSFX_HEALER28 },
+	{ "These creatures must be banished from our town. To my shame I left the door open, but that should make all the easier for you to find the house.|"
+	    1, 5, TSFX_HEALER29 },
+	{ "Once again the town is in your debt. It is only your strength and force of will that can leads us out of this evil time.|"
+	    1, 5, TSFX_HEALER30 },
+	{ "Once again I require your strong arm and quick quirks to aid the people of this town. I am in need of certain reagents to help fight the plagues that the demons have unleashed on the land by their very presence. If you could gather these few items, it will save many lives!|"
+	    1, 5, TSFX_HEALER31 },
+	{ "The diseases spread quickly and many are dying. Please, help me by finding the reagents so that I can use it to make an antidote.|"
+	    1, 5, TSFX_HEALER32 },
+	{ "Thank you so much! You bring hope and light to this dark and troubled times. I wish for you to have this in the hopes that will aid you in your battle against the darkness.|"
+	    1, 5, TSFX_HEALER33 },
+	{ "I know that I ask much of you, but I must now ask that you find a pool of clear water. Take these containers, fill them and return them me as soon as you can. With the clear water I can create an elixir of wondrous power that will benefit us all.|"
+	    1, 5, TSFX_HEALER34 },
+	{ "Have you brought what I need? The clear water will allow me to create a very power elixir, fill the containers that I gave you and return with them.|"
+	    1, 5, TSFX_HEALER35 },
+	{ "Very good, my friend! Very good! Just give a minute to mix these ingredients... Perfect! Here is some of the elixir as promised. |"
+	    1, 5, TSFX_HEALER36 },
+	{ "His Holiness is a wondrous man of great knowledge and understanding. He has shown me many cures for rare and deadly diseases. He brings me books and reagents for my work whenever he can. But I fear that he may some day take on a task that is too great even for him. |"
+	    1, 5, TSFX_HEALER44 },
 */
 };
 
