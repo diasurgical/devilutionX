@@ -338,7 +338,7 @@ static void DrawSpell(CelOutputBuffer out)
 void DrawSpellList(CelOutputBuffer out)
 {
 	int x, y, c, s, t, v, lx, ly, trans;
-	unsigned __int64 mask, spl;
+	Uint64 mask, spl;
 
 	pSpell = SPL_INVALID;
 	infostr[0] = '\0';
@@ -491,7 +491,7 @@ void SetSpeedSpell(int slot)
 
 void ToggleSpell(int slot)
 {
-	unsigned __int64 spells;
+	Uint64 spells;
 
 	if (plr[myplr]._pSplHotKey[slot] == -1) {
 		return;
@@ -512,7 +512,7 @@ void ToggleSpell(int slot)
 		break;
 	}
 
-	if (spells & SPELLBIT(plr[myplr]._pSplHotKey[slot])) {
+	if (spells & GetSpellBitmask(plr[myplr]._pSplHotKey[slot])) {
 		plr[myplr]._pRSpell = plr[myplr]._pSplHotKey[slot];
 		plr[myplr]._pRSplType = plr[myplr]._pSplTHotKey[slot];
 		force_redraw = 255;
@@ -855,7 +855,6 @@ void DrawCtrlBtns(CelOutputBuffer out)
  */
 void DoSpeedBook()
 {
-	unsigned __int64 spell, spells;
 	int xo, yo, X, Y, i, j;
 
 	spselflag = TRUE;
@@ -866,6 +865,7 @@ void DoSpeedBook()
 
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (i = 0; i < 4; i++) {
+			Uint64 spells;
 			switch (i) {
 			case RSPLTYPE_SKILL:
 				spells = plr[myplr]._pAblSpells;
@@ -880,7 +880,7 @@ void DoSpeedBook()
 				spells = plr[myplr]._pISpells;
 				break;
 			}
-			spell = (__int64)1;
+			Uint64 spell = 1;
 			for (j = 1; j < MAX_SPELLS; j++) {
 				if (spell & spells) {
 					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
@@ -893,7 +893,7 @@ void DoSpeedBook()
 						yo -= SPLICONLENGTH;
 					}
 				}
-				spell <<= (__int64)1;
+				spell <<= 1ULL;
 			}
 			if (spells && xo != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
 				xo -= SPLICONLENGTH;
@@ -1800,10 +1800,10 @@ char GetSBookTrans(int ii, BOOL townok)
 	if ((plr[myplr]._pClass == PC_MONK) && (ii == SPL_SEARCH))
 		return RSPLTYPE_SKILL;
 	st = RSPLTYPE_SPELL;
-	if (plr[myplr]._pISpells & SPELLBIT(ii)) {
+	if (plr[myplr]._pISpells & GetSpellBitmask(ii)) {
 		st = RSPLTYPE_CHARGES;
 	}
-	if (plr[myplr]._pAblSpells & SPELLBIT(ii)) {
+	if (plr[myplr]._pAblSpells & GetSpellBitmask(ii)) {
 		st = RSPLTYPE_SKILL;
 	}
 	if (st == RSPLTYPE_SPELL) {
@@ -1825,7 +1825,6 @@ void DrawSpellBook(CelOutputBuffer out)
 {
 	int i, sn, mana, lvl, yp, min, max;
 	char st;
-	unsigned __int64 spl;
 
 	CelDrawTo(out, RIGHT_PANEL_X, 351, pSpellBkCel, 1, SPANEL_WIDTH);
 	if (gbIsHellfire && sbooktab < 5) {
@@ -1838,12 +1837,12 @@ void DrawSpellBook(CelOutputBuffer out)
 		}
 		CelDrawTo(out, sx, 348, pSBkBtnCel, sbooktab + 1, 76);
 	}
-	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
+	Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
 	yp = 55;
 	for (i = 1; i < 8; i++) {
 		sn = SpellPages[sbooktab][i - 1];
-		if (sn != -1 && spl & SPELLBIT(sn)) {
+		if (sn != -1 && spl & GetSpellBitmask(sn)) {
 			st = GetSBookTrans(sn, TRUE);
 			SetSpellTrans(st);
 			DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, pSBkIconCels, SpellITbl[sn], 37);
@@ -1893,12 +1892,12 @@ void CheckSBook()
 	if (MouseX >= RIGHT_PANEL + 11 && MouseX < RIGHT_PANEL + 48 && MouseY >= 18 && MouseY < 314) {
 		spell_id sn = SpellPages[sbooktab][(MouseY - 18) / 43];
 		Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
-		if (sn != SPL_INVALID && spl & SPELLBIT(sn)) {
+		if (sn != SPL_INVALID && spl & GetSpellBitmask(sn)) {
 			spell_type st = RSPLTYPE_SPELL;
-			if (plr[myplr]._pISpells & SPELLBIT(sn)) {
+			if (plr[myplr]._pISpells & GetSpellBitmask(sn)) {
 				st = RSPLTYPE_CHARGES;
 			}
-			if (plr[myplr]._pAblSpells & SPELLBIT(sn)) {
+			if (plr[myplr]._pAblSpells & GetSpellBitmask(sn)) {
 				st = RSPLTYPE_SKILL;
 			}
 			plr[myplr]._pRSpell = sn;

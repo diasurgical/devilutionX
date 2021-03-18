@@ -174,8 +174,8 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	for (auto i = 0; i < MAXBELTITEMS; i++)
 		PackItemFullRejuv(pPack->SpdList+i, i);
 	for (auto i = 1; i < 37; i++) {
-		if(spelldat_vanilla[i] != -1) {
-			pPack->pMemSpells |= (__int64)1 << (i-1);
+		if (spelldat_vanilla[i] != -1) {
+			pPack->pMemSpells |= 1ULL << (i - 1);
 			pPack->pSplLvl[i] = 15;
 		}
 	}

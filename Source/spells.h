@@ -14,6 +14,7 @@ extern "C" {
 
 int GetManaAmount(int id, int sn);
 void UseMana(int id, int sn);
+Uint64 GetSpellBitmask(int spellId);
 BOOL CheckSpell(int id, int sn, char st, BOOL manaonly);
 void EnsureValidReadiedSpell(PlayerStruct &player);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);

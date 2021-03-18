@@ -95,7 +95,7 @@ void UseMana(int id, int sn)
  * @param spellId The id of the spell to get a bitmask for.
  * @return A 64bit bitmask representation for the specified spell.
  */
-unsigned long long GetSpellBitmask(int spellId)
+Uint64 GetSpellBitmask(int spellId)
 {
 	return 1ULL << (spellId - 1);
 }

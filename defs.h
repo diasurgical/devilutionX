@@ -21,7 +21,6 @@
 #define MAX_LVLMTYPES			24
 #define MAX_SPELLS				52
 #define MAX_SPELL_LEVEL			15
-#define SPELLBIT(s) ((__int64)1 << (s - 1))
 
 #define MAX_CHUNKS				(MAX_LVLS + 5)
 

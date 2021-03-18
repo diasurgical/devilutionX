@@ -749,21 +749,21 @@ void CreatePlayer(int pnum, plr_class c)
 	plr[pnum]._pInfraFlag = FALSE;
 
 	if (c == PC_WARRIOR) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_REPAIR);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_REPAIR);
 	} else if (c == PC_ROGUE) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_DISARM);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_DISARM);
 	} else if (c == PC_SORCERER) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_RECHARGE);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_RECHARGE);
 	} else if (c == PC_MONK) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_SEARCH);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_SEARCH);
 	} else if (c == PC_BARD) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_IDENTIFY);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_IDENTIFY);
 	} else if (c == PC_BARBARIAN) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_BLODBOIL);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_BLODBOIL);
 	}
 
 	if (c == PC_SORCERER) {
-		plr[pnum]._pMemSpells = SPELLBIT(SPL_FIREBOLT);
+		plr[pnum]._pMemSpells = GetSpellBitmask(SPL_FIREBOLT);
 	} else {
 		plr[pnum]._pMemSpells = 0;
 	}
@@ -1055,17 +1055,17 @@ void InitPlayer(int pnum, BOOL FirstTime)
 	}
 
 	if (plr[pnum]._pClass == PC_WARRIOR) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_REPAIR);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_REPAIR);
 	} else if (plr[pnum]._pClass == PC_ROGUE) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_DISARM);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_DISARM);
 	} else if (plr[pnum]._pClass == PC_SORCERER) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_RECHARGE);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_RECHARGE);
 	} else if (plr[pnum]._pClass == PC_MONK) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_SEARCH);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_SEARCH);
 	} else if (plr[pnum]._pClass == PC_BARD) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_IDENTIFY);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_IDENTIFY);
 	} else if (plr[pnum]._pClass == PC_BARBARIAN) {
-		plr[pnum]._pAblSpells = SPELLBIT(SPL_BLODBOIL);
+		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_BLODBOIL);
 	}
 
 #ifdef _DEBUG
@@ -3410,10 +3410,7 @@ BOOL PlrDeathModeOK(int p)
 
 void ValidatePlayer()
 {
-	__int64 msk;
 	int gt, i, b;
-
-	msk = 0;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
 		app_fatal("ValidatePlayer: illegal player %d", myplr);
@@ -3450,9 +3447,10 @@ void ValidatePlayer()
 		plr[myplr]._pBaseVit = MaxStats[pc][ATTRIB_VIT];
 	}
 
+	Uint64 msk = 0;
 	for (b = 1; b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel(b) != -1) {
-			msk |= SPELLBIT(b);
+			msk |= GetSpellBitmask(b);
 			if (plr[myplr]._pSplLvl[b] > MAX_SPELL_LEVEL)
 				plr[myplr]._pSplLvl[b] = MAX_SPELL_LEVEL;
 		}
