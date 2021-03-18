@@ -434,8 +434,6 @@ BOOL SmithSellOk(int i)
 		return FALSE;
 	if (pI->_itype == ITYPE_GOLD)
 		return FALSE;
-	if (pI->_itype == ITYPE_FOOD)
-		return FALSE;
 	if (pI->_itype == ITYPE_STAFF && (!gbIsHellfire || pI->_iSpell != SPL_NULL))
 		return FALSE;
 	if (pI->_iClass == ICLASS_QUEST)
@@ -563,8 +561,6 @@ BOOL SmithRepairOk(int i)
 	if (plr[myplr].InvList[i]._itype == ITYPE_MISC)
 		return FALSE;
 	if (plr[myplr].InvList[i]._itype == ITYPE_GOLD)
-		return FALSE;
-	if (plr[myplr].InvList[i]._itype == ITYPE_FOOD)
 		return FALSE;
 	if (plr[myplr].InvList[i]._iDurability == plr[myplr].InvList[i]._iMaxDur)
 		return FALSE;

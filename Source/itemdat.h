@@ -182,7 +182,6 @@ typedef enum item_type {
 	ITYPE_GOLD,
 	ITYPE_RING,
 	ITYPE_AMULET,
-	ITYPE_FOOD, /* used in demo */
 	ITYPE_NONE = -1,
 } item_type;
 

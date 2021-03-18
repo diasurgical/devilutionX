@@ -2535,8 +2535,6 @@ int RndUItem(int m)
 			okflag = FALSE;
 		if (AllItemsList[i].itype == ITYPE_GOLD)
 			okflag = FALSE;
-		if (AllItemsList[i].itype == ITYPE_FOOD)
-			okflag = FALSE;
 		if (AllItemsList[i].iMiscId == IMISC_BOOK)
 			okflag = TRUE;
 		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
@@ -4443,8 +4441,6 @@ BOOL SmithItemOk(int i)
 		rv = FALSE;
 	if (AllItemsList[i].itype == ITYPE_GOLD)
 		rv = FALSE;
-	if (AllItemsList[i].itype == ITYPE_FOOD)
-		rv = FALSE;
 	if (AllItemsList[i].itype == ITYPE_STAFF && (!gbIsHellfire || AllItemsList[i].iSpell))
 		rv = FALSE;
 	if (AllItemsList[i].itype == ITYPE_RING)
@@ -4557,8 +4553,6 @@ BOOL PremiumItemOk(int i)
 	if (AllItemsList[i].itype == ITYPE_MISC)
 		rv = FALSE;
 	if (AllItemsList[i].itype == ITYPE_GOLD)
-		rv = FALSE;
-	if (AllItemsList[i].itype == ITYPE_FOOD)
 		rv = FALSE;
 	if (!gbIsHellfire && AllItemsList[i].itype == ITYPE_STAFF)
 		rv = FALSE;
