@@ -50,6 +50,11 @@ prepare_buildroot() {
 	fi
 	git clone --depth=1 "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" "$BUILDROOT"
 	cd "$BUILDROOT"
+
+	# Work around a BR2_EXTERNAL initialization bug in older buildroots.
+	mkdir -p output
+	touch output/.br-external.mk
+
 	make ${BUILDROOT_DEFCONFIGS[$BUILDROOT_TARGET]}
 	cd -
 }
