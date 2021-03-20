@@ -42,7 +42,7 @@ void DrawInv(CelOutputBuffer out);
 void DrawInvBelt(CelOutputBuffer out);
 bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item);
 bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true);
-BOOL AutoPlace(int pnum, int ii, const ItemStruct &item, BOOL saveflag);
+BOOL AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, BOOL saveflag);
 BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item);
 BOOL GoldAutoPlace(int pnum);
 void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId, uint32_t dwBuff);

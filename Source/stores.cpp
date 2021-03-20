@@ -216,54 +216,54 @@ void StoreAutoPlace()
 			}
 		}
 		for (i = 30; i <= 39 && !done; i++) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 20; i <= 29 && !done; i++) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 10; i <= 19 && !done; i++) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 0; i <= 9 && !done; i++) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 	}
 	if (w == 1 && h == 2 && !done) {
 		for (i = 29; i >= 20 && !done; i--) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 9; i >= 0 && !done; i--) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 19; i >= 10 && !done; i--) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 	}
 	if (w == 1 && h == 3 && !done) {
 		for (i = 0; i < 20 && !done; i++) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 	}
 	if (w == 2 && h == 2 && !done) {
 		for (i = 0; i < 10 && !done; i++) {
-			done = AutoPlace(myplr, AP2x2Tbl[i], plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, AP2x2Tbl[i], plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 	}
 	if (w == 2 && h == 3 && !done) {
 		for (i = 0; i < 9 && !done; i++) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 		for (i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(myplr, i, plr[myplr].HoldItem, TRUE);
+			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, TRUE);
 		}
 	}
 }
@@ -1370,7 +1370,7 @@ void S_SBuyEnter()
 			}
 
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = AutoPlace(myplr, i, plr[myplr].HoldItem, FALSE);
+				done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, FALSE);
 			}
 			if (done)
 				StartStore(STORE_CONFIRM);
@@ -1438,7 +1438,7 @@ void S_SPBuyEnter()
 			}
 
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = AutoPlace(myplr, i, plr[myplr].HoldItem, FALSE);
+				done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, FALSE);
 			}
 			if (done)
 				StartStore(STORE_CONFIRM);
@@ -1884,7 +1884,7 @@ void S_BBuyEnter()
 	}
 
 	for (int i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-		done = AutoPlace(myplr, i, plr[myplr].HoldItem, false);
+		done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, false);
 	}
 
 	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
