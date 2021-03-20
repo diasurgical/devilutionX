@@ -1705,7 +1705,11 @@ void S_WBuyEnter()
 			}
 
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = SpecialAutoPlace(myplr, i, plr[myplr].HoldItem);
+				done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, false);
+			}
+
+			if (!done) {
+				done = AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false);
 			}
 
 			if (done)
@@ -2016,7 +2020,11 @@ void S_HBuyEnter()
 			}
 
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = SpecialAutoPlace(myplr, i, plr[myplr].HoldItem);
+				done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, false);
+			}
+
+			if (!done) {
+				done = AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false);
 			}
 
 			if (done)
