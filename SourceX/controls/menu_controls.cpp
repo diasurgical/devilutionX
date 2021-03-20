@@ -8,11 +8,10 @@
 
 namespace dvl {
 
-static AxisDirectionRepeater menuUpDownRepeater(/*min_interval_ms=*/200);
-
 MenuAction GetMenuHeldUpDownAction()
 {
-	const AxisDirection dir = menuUpDownRepeater.Get(GetLeftStickOrDpadDirection());
+	static AxisDirectionRepeater repeater;
+	const AxisDirection dir = repeater.Get(GetLeftStickOrDpadDirection());
 	switch (dir.y) {
 	case AxisDirectionY_UP:
 		return MenuAction_UP;

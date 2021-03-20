@@ -26,7 +26,7 @@ struct AxisDirection {
  */
 class AxisDirectionRepeater {
 public:
-	AxisDirectionRepeater(int min_interval_ms)
+	AxisDirectionRepeater(int min_interval_ms = 200)
 	    : last_left_(0)
 	    , last_right_(0)
 	    , last_up_(0)

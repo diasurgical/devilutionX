@@ -446,7 +446,7 @@ void Interact()
 
 void AttrIncBtnSnap(AxisDirection dir)
 {
-	static AxisDirectionRepeater repeater(/*min_interval_ms=*/200);
+	static AxisDirectionRepeater repeater;
 	dir = repeater.Get(dir);
 	if (dir.y == AxisDirectionY_NONE)
 		return;
@@ -677,7 +677,7 @@ bool HSExists(int x, int y)
 
 void HotSpellMove(AxisDirection dir)
 {
-	static AxisDirectionRepeater repeater(/*min_interval_ms=*/200);
+	static AxisDirectionRepeater repeater;
 	dir = repeater.Get(dir);
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 		return;
@@ -725,7 +725,7 @@ void HotSpellMove(AxisDirection dir)
 
 void SpellBookMove(AxisDirection dir)
 {
-	static AxisDirectionRepeater repeater(/*min_interval_ms=*/200);
+	static AxisDirectionRepeater repeater;
 	dir = repeater.Get(dir);
 
 	if (dir.x == AxisDirectionX_LEFT) {
@@ -824,7 +824,7 @@ void WalkInDir(AxisDirection dir)
 
 void QuestLogMove(AxisDirection move_dir)
 {
-	static AxisDirectionRepeater repeater(/*min_interval_ms=*/200);
+	static AxisDirectionRepeater repeater;
 	move_dir = repeater.Get(move_dir);
 	if (move_dir.y == AxisDirectionY_UP)
 		QuestlogUp();
