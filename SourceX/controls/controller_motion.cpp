@@ -1,5 +1,7 @@
 #include "controls/controller_motion.h"
 
+#include <cmath>
+
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
@@ -30,7 +32,7 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 	float analog_y = *y;
 	float dead_zone = deadzone * maximum;
 
-	float magnitude = sqrtf(analog_x * analog_x + analog_y * analog_y);
+	float magnitude = std::sqrt(analog_x * analog_x + analog_y * analog_y);
 	if (magnitude >= dead_zone) {
 		// find scaled axis values with magnitudes between zero and maximum
 		float scalingFactor = 1.0 / magnitude * (magnitude - dead_zone) / (maximum - dead_zone);
@@ -39,8 +41,8 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 
 		// clamp to ensure results will never exceed the max_axis value
 		float clamping_factor = 1.0f;
-		float abs_analog_x = fabs(analog_x);
-		float abs_analog_y = fabs(analog_y);
+		float abs_analog_x = std::fabs(analog_x);
+		float abs_analog_y = std::fabs(analog_y);
 		if (abs_analog_x > 1.0 || abs_analog_y > 1.0) {
 			if (abs_analog_x > abs_analog_y) {
 				clamping_factor = 1 / abs_analog_x;
@@ -142,6 +144,28 @@ bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_
 		return true;
 #endif
 	return SimulateRightStickWithDpad(event, ctrl_event);
+}
+
+AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad)
+{
+	const float stickX = leftStickX;
+	const float stickY = leftStickY;
+
+	AxisDirection result { AxisDirectionX_NONE, AxisDirectionY_NONE };
+
+	if (stickY >= 0.5 || (allow_dpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP))) {
+		result.y = AxisDirectionY_UP;
+	} else if (stickY <= -0.5 || (allow_dpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN))) {
+		result.y = AxisDirectionY_DOWN;
+	}
+
+	if (stickX <= -0.5 || (allow_dpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT))) {
+		result.x = AxisDirectionX_LEFT;
+	} else if (stickX >= 0.5 || (allow_dpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT))) {
+		result.x = AxisDirectionX_RIGHT;
+	}
+
+	return result;
 }
 
 } // namespace dvl

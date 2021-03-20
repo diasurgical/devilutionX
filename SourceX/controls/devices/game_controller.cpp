@@ -8,6 +8,9 @@
 #include "controls/devices/joystick.h"
 #include "stubs.h"
 
+// Defined in SourceX/controls/plctrls.cpp
+extern "C" bool sgbControllerActive;
+
 namespace dvl {
 
 std::vector<GameController> *const GameController::controllers_ = new std::vector<GameController>;

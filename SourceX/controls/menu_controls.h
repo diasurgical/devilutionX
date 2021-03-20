@@ -21,4 +21,7 @@ enum MenuAction {
 
 MenuAction GetMenuAction(const SDL_Event &event);
 
+/** Menu action from holding the left stick or DPad. */
+MenuAction GetMenuHeldUpDownAction();
+
 } // namespace dvl

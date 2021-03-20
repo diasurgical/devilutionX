@@ -15,9 +15,9 @@ namespace dvl {
 bool start_modifier_active = false;
 bool select_modifier_active = false;
 
-// gamepad dpad acts as hotkeys without holding "start"
+/** Gamepad dpad acts as hotkeys without holding "start" */
 bool dpad_hotkeys = false;
-// shoulder gamepad buttons act as potions by default
+/** Shoulder gamepad buttons act as potions by default */
 bool switch_potions_and_clicks = false;
 
 namespace {
@@ -308,6 +308,20 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 	}
 
 
+	// DPad navigation is handled separately for these.
+	if (gmenu_is_active() || questlog)
+	{
+		switch (ctrl_event.button) {
+			case ControllerButton_BUTTON_DPAD_UP:
+			case ControllerButton_BUTTON_DPAD_DOWN:
+			case ControllerButton_BUTTON_DPAD_LEFT:
+			case ControllerButton_BUTTON_DPAD_RIGHT:
+				return true;
+			default:
+				break;
+		}
+	}
+
 	// By default, map to a keyboard key.
 	if (ctrl_event.button != ControllerButton_NONE) {
 		*action = GameActionSendKey{ translate_controller_button_to_key(ctrl_event.button),
@@ -330,26 +344,9 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 	return false;
 }
 
-MoveDirection GetMoveDirection()
+AxisDirection GetMoveDirection()
 {
-	const float stickX = leftStickX;
-	const float stickY = leftStickY;
-
-	MoveDirection result{ MoveDirectionX_NONE, MoveDirectionY_NONE };
-
-	if (stickY >= 0.5 || (!dpad_hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP))) {
-		result.y = MoveDirectionY_UP;
-	} else if (stickY <= -0.5 || (!dpad_hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN))) {
-		result.y = MoveDirectionY_DOWN;
-	}
-
-	if (stickX <= -0.5 || (!dpad_hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT))) {
-		result.x = MoveDirectionX_LEFT;
-	} else if (stickX >= 0.5 || (!dpad_hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT))) {
-		result.x = MoveDirectionX_RIGHT;
-	}
-
-	return result;
+	return GetLeftStickOrDpadDirection(/*allow_dpad=*/!dpad_hotkeys);
 }
 
 } // namespace dvl
