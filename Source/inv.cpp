@@ -927,6 +927,15 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 	return done;
 }
 
+/**
+ * @brief Checks whether the given item can be placed on the specified player's inventory slot.
+ * If 'persistItem' is 'True', the item is also placed in the inventory slot.
+ * @param playerNumber The player number on whose inventory slot will be checked.
+ * @param slotIndex The 0-based index of the slot to put the item on.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
+ * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
+ */
 bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int i, j, xx, yy;
