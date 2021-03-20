@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.13) # CMP0083 NEW
 
+include(CMakeDependentOption)
 include(CMake/out_of_tree.cmake)
 include(CMake/genex.cmake)
 
@@ -31,6 +32,10 @@ if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set(DIST ON)
   set(CPACK ON)
 endif()
+
+option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
+cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
+                       "DIST OR NOT DEVILUTIONX_SYSTEM_LIBSODIUM" ON)
 
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
@@ -131,10 +136,6 @@ if(N3DS)
   include(n3ds_defs)
 endif()
 
-if(DIST)
-  set(sodium_USE_STATIC_LIBS ON)
-endif()
-
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -150,7 +151,12 @@ if(NOT N3DS)
 endif()
 
 if(NOT NONET)
-  find_package(sodium REQUIRED)
+  if(DEVILUTIONX_SYSTEM_LIBSODIUM)
+    set(sodium_USE_STATIC_LIBS ${DEVILUTIONX_STATIC_LIBSODIUM})
+    find_package(sodium REQUIRED)
+  else()
+    add_subdirectory(3rdParty/libsodium)
+  endif()
 endif()
 
 if(USE_SDL1)
