@@ -195,7 +195,7 @@ void PrintStoreItem(ItemStruct *x, int l, text_color iclr)
 void StoreAutoPlace()
 {
 	bool done;
-	int i, w, h, idx;
+	int i, w, h;
 
 	SetICursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 	w = icursW28;
@@ -206,15 +206,8 @@ void StoreAutoPlace()
 	}
 
 	if (w == 1 && h == 1 && !done) {
-		idx = plr[myplr].HoldItem.IDidx;
-		if (plr[myplr].HoldItem._iStatFlag && AllItemsList[idx].iUsable) {
-			for (i = 0; i < MAXBELTITEMS && !done; i++) {
-				if (plr[myplr].SpdList[i].isEmpty()) {
-					plr[myplr].SpdList[i] = plr[myplr].HoldItem;
-					done = true;
-				}
-			}
-		}
+		done = AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true);
+
 		for (i = 30; i <= 39 && !done; i++) {
 			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
 		}
