@@ -179,7 +179,7 @@ bool HasRoomForGold()
 {
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		int idx = plr[myplr].InvGrid[i];
-		if (idx == 0 || (plr[myplr].InvList[idx]._itype == ITYPE_GOLD && plr[myplr].InvList[idx]._ivalue < MaxGold)) {
+		if (idx == 0 || (idx > 0 && plr[myplr].InvList[idx]._itype == ITYPE_GOLD && plr[myplr].InvList[idx]._ivalue < MaxGold)) {
 			return true;
 		}
 	}
