@@ -1,4 +1,3 @@
-set(NONET ON)
 set(USE_SDL1 ON)
 
 # GKD350h IPU scaler is broken at the moment
@@ -7,6 +6,8 @@ set(DEFAULT_HEIGHT 240)
 
 set(SDL1_VIDEO_MODE_BPP 16)
 set(PREFILL_PLAYER_NAME ON)
+set(MULTIPLAYER_DEFAULT_IP "\"10.1.1.1\"")
+set(MULTIPLAYER_DEFAULT_PASSWORD "\"123\"")
 
 # In joystick mode, GKD350h reports D-Pad as left stick,
 # so we have to use keyboard mode instead.

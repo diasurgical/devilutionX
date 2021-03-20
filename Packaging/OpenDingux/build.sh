@@ -70,7 +70,8 @@ build() {
 	cd "$BUILD_DIR"
 	rm -f CMakeCache.txt
 	cmake .. -DBINARY_RELEASE=ON "-DTARGET_PLATFORM=$TARGET" \
-		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
+		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake" \
+		-DDEVILUTIONX_SYSTEM_LIBSODIUM=OFF
 	make -j $(getconf _NPROCESSORS_ONLN)
 	cd -
 }
