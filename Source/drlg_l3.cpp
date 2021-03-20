@@ -1602,6 +1602,8 @@ static void DRLG_L3PoolFix()
 				    && dungeon[dunx + 1][duny] >= 25 && dungeon[dunx + 1][duny] <= 41
 				    && dungeon[dunx + 1][duny + 1] >= 25 && dungeon[dunx + 1][duny + 1] <= 41) {
 					dungeon[dunx][duny] = 33;
+				} else if (dungeon[dunx + 1][duny] == 35 || dungeon[dunx + 1][duny] == 37) {
+					dungeon[dunx][duny] = 33;
 				}
 			}
 		}
