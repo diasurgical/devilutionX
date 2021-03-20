@@ -696,6 +696,8 @@ void CreatePlayer(int pnum, plr_class c)
 	plr[pnum].pDiabloKillLevel = 0;
 	plr[pnum].pDifficulty = DIFF_NORMAL;
 
+	plr[pnum]._pLevel = 1;
+
 	if (plr[pnum]._pClass == PC_MONK) {
 		plr[pnum]._pDamageMod = (plr[pnum]._pStrength + plr[pnum]._pDexterity) * plr[pnum]._pLevel / 150;
 	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
@@ -730,7 +732,6 @@ void CreatePlayer(int pnum, plr_class c)
 	plr[pnum]._pManaBase = plr[pnum]._pMana;
 	plr[pnum]._pMaxManaBase = plr[pnum]._pMana;
 
-	plr[pnum]._pLevel = 1;
 	plr[pnum]._pMaxLvl = plr[pnum]._pLevel;
 	plr[pnum]._pExperience = 0;
 	plr[pnum]._pMaxExp = plr[pnum]._pExperience;
