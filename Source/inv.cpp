@@ -860,74 +860,74 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 
 	if (itemSize.X == 1 && itemSize.Y == 1) {
 		for (int i = 30; i <= 39 && !done; i++) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 20; i <= 29 && !done; i++) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i <= 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 0; i <= 9 && !done; i++) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 2) {
 		for (int i = 29; i >= 20 && !done; i--) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 9; i >= 0 && !done; i--) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 19; i >= 10 && !done; i--) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 3) {
 		for (int i = 0; i < 20 && !done; i++) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 2) {
 		for (int i = 0; i < 10 && !done; i++) {
-			done = AutoPlace(playerNumber, AP2x2Tbl[i], item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, AP2x2Tbl[i], item, persistItem);
 		}
 
 		for (int i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 3) {
 		for (int i = 0; i < 9 && !done; i++) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	return done;
 }
 
-BOOL AutoPlace(int pnum, int ii, const ItemStruct &item, BOOL saveflag)
+BOOL AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, BOOL saveflag)
 {
 	int i, j, xx, yy;
 	BOOL done;
@@ -1364,7 +1364,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done2h = FALSE;
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done2h; i++)
-				done2h = AutoPlace(pnum, i, plr[pnum].HoldItem, TRUE);
+				done2h = AutoPlaceItemInInventorySlot(pnum, i, plr[pnum].HoldItem, TRUE);
 			plr[pnum].HoldItem = tempitem;
 			if (pnum == myplr)
 				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
