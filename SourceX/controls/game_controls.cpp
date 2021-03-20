@@ -15,9 +15,9 @@ namespace dvl {
 bool start_modifier_active = false;
 bool select_modifier_active = false;
 
-// gamepad dpad acts as hotkeys without holding "start"
+/** Gamepad dpad acts as hotkeys without holding "start" */
 bool dpad_hotkeys = false;
-// shoulder gamepad buttons act as potions by default
+/** Shoulder gamepad buttons act as potions by default */
 bool switch_potions_and_clicks = false;
 
 namespace {
