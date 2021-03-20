@@ -25,7 +25,7 @@ enum GameActionType {
 };
 
 struct GameActionSendKey {
-	std::uint32_t vk_code;
+	Uint32 vk_code;
 	bool up;
 };
 
