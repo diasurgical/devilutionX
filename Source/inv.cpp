@@ -993,42 +993,6 @@ bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStr
 	return done;
 }
 
-BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
-{
-	int i, j, xx, yy;
-	BOOL done;
-
-	done = TRUE;
-	yy = 10 * (ii / 10);
-	if (yy < 0) {
-		yy = 0;
-	}
-
-	InvXY itemSize = GetInventorySize(item);
-	for (j = 0; j < itemSize.Y && done; j++) {
-		if (yy >= NUM_INV_GRID_ELEM) {
-			done = FALSE;
-		}
-		xx = ii % 10;
-		if (xx < 0) {
-			xx = 0;
-		}
-		for (i = 0; i < itemSize.X && done; i++) {
-			if (xx >= 10) {
-				done = FALSE;
-			} else {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
-			}
-			xx++;
-		}
-		yy += 10;
-	}
-	if (!done) {
-		done = AutoPlaceItemInBelt(pnum, item);
-	}
-
-	return done;
-}
 
 BOOL GoldAutoPlace(int pnum)
 {
