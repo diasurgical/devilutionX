@@ -1,4 +1,3 @@
-set(sodium_USE_STATIC_LIBS ON)
 set(USE_SDL1 ON)
 
 # GKD350h IPU scaler is broken at the moment

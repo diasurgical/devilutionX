@@ -59,16 +59,9 @@ prepare_buildroot() {
 	cd -
 }
 
-buildroot_libsodium_enable_static() {
-	if ! grep 'enable-static' package/libsodium/libsodium.mk > /dev/null; then
-		echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
-	fi
-}
-
 make_buildroot() {
 	cd "$BUILDROOT"
-	buildroot_libsodium_enable_static
-	BR2_JLEVEL=0 make toolchain libsodium libzip sdl sdl_mixer sdl_ttf
+	BR2_JLEVEL=0 make toolchain libzip sdl sdl_mixer sdl_ttf
 	cd -
 }
 
@@ -77,7 +70,8 @@ build() {
 	cd "$BUILD_DIR"
 	rm -f CMakeCache.txt
 	cmake .. -DBINARY_RELEASE=ON "-DTARGET_PLATFORM=$TARGET" \
-		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
+		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake" \
+		-DDEVILUTIONX_SYSTEM_LIBSODIUM=OFF
 	make -j $(getconf _NPROCESSORS_ONLN)
 	cd -
 }

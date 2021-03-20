@@ -1,4 +1,3 @@
-set(sodium_USE_STATIC_LIBS ON)
 set(USE_SDL1 ON)
 set(PREFILL_PLAYER_NAME ON)
 set(MULTIPLAYER_DEFAULT_IP "\"169.254.1.2\"") # https://github.com/retrofw/retrofw.github.io/wiki/USB-Networking
