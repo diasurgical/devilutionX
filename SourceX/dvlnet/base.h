@@ -40,6 +40,8 @@ public:
 
 	void setup_gameinfo(buffer_t info);
 
+	virtual void setup_password(std::string pw);
+
 	virtual ~base() = default;
 
 protected:
@@ -72,7 +74,6 @@ protected:
 
 	std::unique_ptr<packet_factory> pktfty;
 
-	void setup_password(std::string pw);
 	void handle_accept(packet &pkt);
 	void recv_local(packet &pkt);
 	void run_event_handler(_SNETEVENT &ev);

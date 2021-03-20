@@ -7,6 +7,7 @@
 #include "all.h"
 #include "stubs.h"
 #include "dvlnet/abstract_net.h"
+#include "storm/storm_dvlnet.h"
 
 namespace dvl {
 
@@ -226,6 +227,21 @@ BOOL SNetPerformUpgrade(DWORD *upgradestatus)
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
 #endif
 	UNIMPLEMENTED();
+}
+
+void DvlNet_SendInfoRequest()
+{
+	dvlnet_inst->send_info_request();
+}
+
+std::vector<std::string> DvlNet_GetGamelist()
+{
+	return dvlnet_inst->get_gamelist();
+}
+
+void DvlNet_SetPassword(std::string pw)
+{
+	dvlnet_inst->setup_password(pw);
 }
 
 } // namespace dvl
