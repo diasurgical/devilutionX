@@ -927,12 +927,12 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 	return done;
 }
 
-BOOL AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, BOOL saveflag)
+bool AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, bool saveflag)
 {
 	int i, j, xx, yy;
-	BOOL done;
+	bool done;
 
-	done = TRUE;
+	done = true;
 	yy = 10 * (ii / 10);
 	if (yy < 0) {
 		yy = 0;
@@ -941,7 +941,7 @@ BOOL AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, BOOL
 	InvXY itemSize = GetInventorySize(item);
 	for (j = 0; j < itemSize.Y && done; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
-			done = FALSE;
+			done = false;
 		}
 		xx = ii % 10;
 		if (xx < 0) {
@@ -949,7 +949,7 @@ BOOL AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, BOOL
 		}
 		for (i = 0; i < itemSize.X && done; i++) {
 			if (xx >= 10) {
-				done = FALSE;
+				done = false;
 			} else {
 				done = plr[pnum].InvGrid[xx + yy] == 0;
 			}
@@ -1364,7 +1364,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done2h = FALSE;
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done2h; i++)
-				done2h = AutoPlaceItemInInventorySlot(pnum, i, plr[pnum].HoldItem, TRUE);
+				done2h = AutoPlaceItemInInventorySlot(pnum, i, plr[pnum].HoldItem, true);
 			plr[pnum].HoldItem = tempitem;
 			if (pnum == myplr)
 				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
