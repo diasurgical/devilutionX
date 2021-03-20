@@ -927,13 +927,13 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 	return done;
 }
 
-bool AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, bool saveflag)
+bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int i, j, xx, yy;
 	bool done;
 
 	done = true;
-	yy = 10 * (ii / 10);
+	yy = 10 * (slotIndex / 10);
 	if (yy < 0) {
 		yy = 0;
 	}
@@ -943,7 +943,7 @@ bool AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, bool
 		if (yy >= NUM_INV_GRID_ELEM) {
 			done = false;
 		}
-		xx = ii % 10;
+		xx = slotIndex % 10;
 		if (xx < 0) {
 			xx = 0;
 		}
@@ -951,35 +951,35 @@ bool AutoPlaceItemInInventorySlot(int pnum, int ii, const ItemStruct &item, bool
 			if (xx >= 10) {
 				done = false;
 			} else {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
+				done = plr[playerNumber].InvGrid[xx + yy] == 0;
 			}
 			xx++;
 		}
 		yy += 10;
 	}
-	if (done && saveflag) {
-		plr[pnum].InvList[plr[pnum]._pNumInv] = plr[pnum].HoldItem;
-		plr[pnum]._pNumInv++;
-		yy = 10 * (ii / 10);
+	if (done && persistItem) {
+		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = plr[playerNumber].HoldItem;
+		plr[playerNumber]._pNumInv++;
+		yy = 10 * (slotIndex / 10);
 		if (yy < 0) {
 			yy = 0;
 		}
 		for (j = 0; j < itemSize.Y; j++) {
-			xx = ii % 10;
+			xx = slotIndex % 10;
 			if (xx < 0) {
 				xx = 0;
 			}
 			for (i = 0; i < itemSize.X; i++) {
 				if (i != 0 || j != itemSize.Y - 1) {
-					plr[pnum].InvGrid[xx + yy] = -plr[pnum]._pNumInv;
+					plr[playerNumber].InvGrid[xx + yy] = -plr[playerNumber]._pNumInv;
 				} else {
-					plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
+					plr[playerNumber].InvGrid[xx + yy] = plr[playerNumber]._pNumInv;
 				}
 				xx++;
 			}
 			yy += 10;
 		}
-		CalcPlrScrolls(pnum);
+		CalcPlrScrolls(playerNumber);
 	}
 	return done;
 }
