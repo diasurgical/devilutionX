@@ -1,4 +1,3 @@
-set(NONET ON)
 set(USE_SDL1 ON)
 
 set(SDL1_VIDEO_MODE_BPP 8)
