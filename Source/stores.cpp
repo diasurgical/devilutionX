@@ -205,59 +205,8 @@ void StoreAutoPlace()
 		done = true;
 	}
 
-	if (w == 1 && h == 1 && !done) {
-		done = AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true);
-
-		for (i = 30; i <= 39 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-		for (i = 20; i <= 29 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-		for (i = 10; i <= 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-		for (i = 0; i <= 9 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-	}
-	if (w == 1 && h == 2 && !done) {
-		for (i = 29; i >= 20 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-		for (i = 9; i >= 0 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-		for (i = 19; i >= 10 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-	}
-	if (w == 1 && h == 3 && !done) {
-		for (i = 0; i < 20 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-	}
-	if (w == 2 && h == 2 && !done) {
-		for (i = 0; i < 10 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, AP2x2Tbl[i], plr[myplr].HoldItem, true);
-		}
-		for (i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-		for (i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-		for (i = 10; i < 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-	}
-	if (w == 2 && h == 3 && !done) {
-		for (i = 0; i < 9 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
-		for (i = 10; i < 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, true);
-		}
+	if (!done) {
+		AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true) || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, true);
 	}
 }
 
