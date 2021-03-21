@@ -896,15 +896,18 @@ struct RightStickAccumulator {
 
 	void pool(int *x, int *y, int slowdown)
 	{
-		DWORD tc = SDL_GetTicks();
-		hiresDX += rightStickX * (tc - lastTc);
-		hiresDY += rightStickY * (tc - lastTc);
-		*x += hiresDX / slowdown;
-		*y += -hiresDY / slowdown;
+		const Uint32 tc = SDL_GetTicks();
+		const int dtc = tc - lastTc;
+		hiresDX += rightStickX * dtc;
+		hiresDY += rightStickY * dtc;
+		const int dx = hiresDX / slowdown;
+		const int dy = hiresDY / slowdown;
+		*x += dx;
+		*y -= dy;
 		lastTc = tc;
 		// keep track of remainder for sub-pixel motion
-		hiresDX %= slowdown;
-		hiresDY %= slowdown;
+		hiresDX -= dx * slowdown;
+		hiresDY -= dy * slowdown;
 	}
 
 	void clear()
@@ -913,8 +916,8 @@ struct RightStickAccumulator {
 	}
 
 	DWORD lastTc;
-	int hiresDX;
-	int hiresDY;
+	float hiresDX;
+	float hiresDY;
 };
 
 } // namespace
@@ -1001,7 +1004,17 @@ void HandleRightStickMotion()
 		acc.pool(&x, &y, 2);
 		x = std::min(std::max(x, 0), gnScreenWidth - 1);
 		y = std::min(std::max(y, 0), gnScreenHeight - 1);
-		SetCursorPos(x, y);
+
+		// We avoid calling `SetCursorPos` within the same SDL tick because
+		// that can cause all stick motion events to arrive before all
+		// cursor position events.
+		static int lastMouseSetTick = 0;
+		const int now = SDL_GetTicks();
+		if (now - lastMouseSetTick > 0)
+		{
+			SetCursorPos(x, y);
+			lastMouseSetTick = now;
+		}
 	}
 }
 
@@ -1015,8 +1028,6 @@ void FocusOnInventory()
 
 void plrctrls_after_check_curs_move()
 {
-	HandleRightStickMotion();
-
 	// check for monsters first, then items, then towners.
 	if (sgbControllerActive) {
 		// Clear focuse set by cursor
@@ -1042,6 +1053,7 @@ void plrctrls_after_check_curs_move()
 void plrctrls_every_frame()
 {
 	ProcessLeftStickOrDPadGameUI();
+	HandleRightStickMotion();
 }
 
 void plrctrls_after_game_logic()
