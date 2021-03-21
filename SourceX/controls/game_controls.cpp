@@ -315,7 +315,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 
 
 	// DPad navigation is handled separately for these.
-	if (gmenu_is_active() || questlog)
+	if (gmenu_is_active() || questlog || stextflag != STORE_NONE)
 	{
 		switch (ctrl_event.button) {
 			case ControllerButton_BUTTON_DPAD_UP:
