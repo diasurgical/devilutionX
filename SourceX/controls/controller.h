@@ -3,6 +3,7 @@
 #include <SDL.h>
 
 #include "./controller_buttons.h"
+#include "./gamepad.h"
 
 namespace dvl {
 
