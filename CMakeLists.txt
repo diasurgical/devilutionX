@@ -35,7 +35,7 @@ endif()
 
 option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
-                       "DIST OR NOT DEVILUTIONX_SYSTEM_LIBSODIUM" ON)
+                       "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
 
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
