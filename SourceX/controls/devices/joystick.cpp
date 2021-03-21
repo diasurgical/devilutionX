@@ -219,26 +219,26 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 	switch (event.jaxis.axis) {
 #ifdef JOY_AXIS_LEFTX
 	case JOY_AXIS_LEFTX:
-		gamepad.leftStickXUnscaled = event.jaxis.value;
-		gamepad.leftStickNeedsScaling = true;
+		controller.leftStickXUnscaled = event.jaxis.value;
+		controller.leftStickNeedsScaling = true;
 		break;
 #endif
 #ifdef JOY_AXIS_LEFTY
 	case JOY_AXIS_LEFTY:
-		gamepad.leftStickYUnscaled = -event.jaxis.value;
-		gamepad.leftStickNeedsScaling = true;
+		controller.leftStickYUnscaled = -event.jaxis.value;
+		controller.leftStickNeedsScaling = true;
 		break;
 #endif
 #ifdef JOY_AXIS_RIGHTX
 	case JOY_AXIS_RIGHTX:
-		gamepad.rightStickXUnscaled = event.jaxis.value;
-		gamepad.rightStickNeedsScaling = true;
+		controller.rightStickXUnscaled = event.jaxis.value;
+		controller.rightStickNeedsScaling = true;
 		break;
 #endif
 #ifdef JOY_AXIS_RIGHTY
 	case JOY_AXIS_RIGHTY:
-		gamepad.rightStickYUnscaled = -event.jaxis.value;
-		gamepad.rightStickNeedsScaling = true;
+		controller.rightStickYUnscaled = -event.jaxis.value;
+		controller.rightStickNeedsScaling = true;
 		break;
 #endif
 	default:

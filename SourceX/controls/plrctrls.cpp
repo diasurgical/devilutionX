@@ -898,8 +898,8 @@ struct RightStickAccumulator {
 	{
 		const Uint32 tc = SDL_GetTicks();
 		const int dtc = tc - lastTc;
-		hiresDX += gamepad.rightStickX * dtc;
-		hiresDY += gamepad.rightStickY * dtc;
+		hiresDX += controller.rightStickX * dtc;
+		hiresDY += controller.rightStickY * dtc;
 		const int dx = hiresDX / slowdown;
 		const int dy = hiresDY / slowdown;
 		*x += dx;
@@ -977,14 +977,14 @@ bool IsAutomapActive()
 
 bool IsMovingMouseCursorWithController()
 {
-	return gamepad.rightStickX != 0 || gamepad.rightStickY != 0;
+	return controller.rightStickX != 0 || controller.rightStickY != 0;
 }
 
 void HandleRightStickMotion()
 {
 	static RightStickAccumulator acc;
 	// deadzone is handled in ScaleJoystickAxes() already
-	if (gamepad.rightStickX == 0 && gamepad.rightStickY == 0) {
+	if (controller.rightStickX == 0 && controller.rightStickY == 0) {
 		acc.clear();
 		return;
 	}

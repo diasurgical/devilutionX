@@ -10,7 +10,7 @@
 
 namespace dvl {
 
-Gamepad gamepad;
+Controller controller;
 
 namespace {
 
@@ -68,7 +68,7 @@ bool SimulateRightStickWithDpad(const SDL_Event &event, ControllerButtonEvent ct
 	static bool simulating = false;
 	if (ctrl_event.button == ControllerButton_BUTTON_BACK) {
 		if (ctrl_event.up && simulating) {
-			gamepad.rightStickX = gamepad.rightStickY = 0;
+			controller.rightStickX = controller.rightStickY = 0;
 			simulating = false;
 		}
 		return false;
@@ -77,21 +77,21 @@ bool SimulateRightStickWithDpad(const SDL_Event &event, ControllerButtonEvent ct
 		return false;
 	switch (ctrl_event.button) {
 	case ControllerButton_BUTTON_DPAD_LEFT:
-		gamepad.rightStickX = ctrl_event.up ? 0 : -1;
+		controller.rightStickX = ctrl_event.up ? 0 : -1;
 		break;
 	case ControllerButton_BUTTON_DPAD_RIGHT:
-		gamepad.rightStickX = ctrl_event.up ? 0 : 1;
+		controller.rightStickX = ctrl_event.up ? 0 : 1;
 		break;
 	case ControllerButton_BUTTON_DPAD_UP:
-		gamepad.rightStickY = ctrl_event.up ? 0 : 1;
+		controller.rightStickY = ctrl_event.up ? 0 : 1;
 		break;
 	case ControllerButton_BUTTON_DPAD_DOWN:
-		gamepad.rightStickY = ctrl_event.up ? 0 : -1;
+		controller.rightStickY = ctrl_event.up ? 0 : -1;
 		break;
 	default:
 		return false;
 	}
-	simulating = !(gamepad.rightStickX == 0 && gamepad.rightStickY == 0);
+	simulating = !(controller.rightStickX == 0 && controller.rightStickY == 0);
 
 	return true;
 }
@@ -105,18 +105,18 @@ void ScaleJoysticks()
 	const float rightDeadzone = 0.07;
 	const float leftDeadzone = 0.07;
 
-	if (gamepad.leftStickNeedsScaling) {
-		gamepad.leftStickX = gamepad.leftStickXUnscaled;
-		gamepad.leftStickY = gamepad.leftStickYUnscaled;
-		ScaleJoystickAxes(&gamepad.leftStickX, &gamepad.leftStickY, leftDeadzone);
-		gamepad.leftStickNeedsScaling = false;
+	if (controller.leftStickNeedsScaling) {
+		controller.leftStickX = controller.leftStickXUnscaled;
+		controller.leftStickY = controller.leftStickYUnscaled;
+		ScaleJoystickAxes(&controller.leftStickX, &controller.leftStickY, leftDeadzone);
+		controller.leftStickNeedsScaling = false;
 	}
 
-	if (gamepad.rightStickNeedsScaling) {
-		gamepad.rightStickX = gamepad.rightStickXUnscaled;
-		gamepad.rightStickY = gamepad.rightStickYUnscaled;
-		ScaleJoystickAxes(&gamepad.rightStickX, &gamepad.rightStickY, rightDeadzone);
-		gamepad.rightStickNeedsScaling = false;
+	if (controller.rightStickNeedsScaling) {
+		controller.rightStickX = controller.rightStickXUnscaled;
+		controller.rightStickY = controller.rightStickYUnscaled;
+		ScaleJoystickAxes(&controller.rightStickX, &controller.rightStickY, rightDeadzone);
+		controller.rightStickNeedsScaling = false;
 	}
 }
 
@@ -146,8 +146,8 @@ bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_
 
 AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad)
 {
-	const float stickX = gamepad.leftStickX;
-	const float stickY = gamepad.leftStickY;
+	const float stickX = controller.leftStickX;
+	const float stickY = controller.leftStickY;
 
 	AxisDirection result { AxisDirectionX_NONE, AxisDirectionY_NONE };
 
