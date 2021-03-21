@@ -443,7 +443,7 @@ static void SaveOptions()
 	setIniInt("Game", "Auto Equip Helms", sgOptions.Gameplay.bAutoEquipHelms);
 	setIniInt("Game", "Auto Equip Shields", sgOptions.Gameplay.bAutoEquipShields);
 	setIniInt("Game", "Auto Equip Jewelry", sgOptions.Gameplay.bAutoEquipJewelry);
-	setIniInt("Game", "Enable All Quests for Single Player", sgOptions.Gameplay.bAllQuests);
+	setIniInt("Game", "Randomize Quests", sgOptions.Gameplay.bRandomizeQuests);
 	setIniInt("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 
 	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
@@ -499,7 +499,7 @@ static void LoadOptions()
 	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms", false);
 	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields", false);
 	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry", false);
-	sgOptions.Gameplay.bAllQuests = getIniBool("Game", "Enable All Quests for Single Player", false);
+	sgOptions.Gameplay.bRandomizeQuests = getIniBool("Game", "Randomize Quests", true);
 	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");

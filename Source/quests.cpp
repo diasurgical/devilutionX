@@ -145,7 +145,7 @@ void InitQuests()
 		quests[z]._qmsg = questlist[z]._qdmsg;
 	}
 
-	if (!gbIsMultiplayer && !sgOptions.Gameplay.bAllQuests) {
+	if (!gbIsMultiplayer && sgOptions.Gameplay.bRandomizeQuests) {
 		SetRndSeed(glSeedTbl[15]);
 		if (random_(0, 2) != 0)
 			quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;

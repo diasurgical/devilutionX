@@ -96,8 +96,8 @@ typedef struct GameplayOptions {
 	bool bAutoEquipShields;
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
 	bool bAutoEquipJewelry;
-	/** @brief Enable All Quests for Single Player */
-	bool bAllQuests;
+	/** @brief Only enable 2/3 quests in each game sessoin */
+	bool bRandomizeQuests;
 	/** @brief Indicates whether or not mosnter type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
 } GameplayOptions;
