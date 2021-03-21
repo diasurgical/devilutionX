@@ -8,14 +8,18 @@ jobs:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git rpm
+      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git rpm wget
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
-      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
+      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
-      - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
+      - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./build/package/devilutionx ./build/devilutionx && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
+      - run: make install -Cbuild DESTDIR=AppDir
+      - run: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage && chmod +x linuxdeploy-x86_64.AppImage
+      - run: ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir=build/AppDir --output appimage && mv DevilutionX*.AppImage devilutionx.appimage
       - run: cd ./build/package/ && tar -cavf ../../devilutionx.tar.xz * && cd ../../
+      - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86_64.appimage}
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64.tar.xz}
   linux_x86_64_test:
     docker:
@@ -55,14 +59,18 @@ jobs:
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: dpkg --add-architecture i386
       - run: apt-get update -y
-      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git rpm
+      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git rpm wget
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev:i386
-      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
+      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
-      - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
+      - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./build/package/devilutionx ./build/devilutionx && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
+      - run: make install -Cbuild DESTDIR=AppDir
+      - run: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-i386.AppImage && chmod +x linuxdeploy-i386.AppImage
+      - run: ./linuxdeploy-i386.AppImage --appimage-extract-and-run --appdir=build/AppDir --output appimage && mv DevilutionX*.AppImage devilutionx.appimage
       - run: cd ./build/package/ && tar -cavf ../../devilutionx.tar.xz * && cd ../../
+      - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86.appimage}
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86.tar.xz}
   windows_x86:
     docker:
