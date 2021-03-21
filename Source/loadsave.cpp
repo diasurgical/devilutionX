@@ -772,7 +772,7 @@ static void LoadPortal(LoadHelper *file, int i)
 
 int RemapItemIdxFromDiablo(int i)
 {
-	if (i == IDI_SORCEROR) {
+	if (i == IDI_SORCERER) {
 		return 166;
 	}
 	if (i >= 156) {
@@ -791,7 +791,7 @@ int RemapItemIdxFromDiablo(int i)
 int RemapItemIdxToDiablo(int i)
 {
 	if (i == 166) {
-		return IDI_SORCEROR;
+		return IDI_SORCERER;
 	}
 	if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
 		return -1; // Hellfire exclusive items

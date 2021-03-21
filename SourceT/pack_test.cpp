@@ -141,7 +141,7 @@ const dvl::PkItemStruct PackedDiabloItems[] = {
 	{ 1272669062,         258, 115,   0,   10,    20,   0,    0,      0,      0 }, // Falchion
 	{ 1133884051,         278, 120,   2,   18,    40,   0,    0,      0,      0 }, // Sword of vim
 	{ 1743897351,         259, 146,   2,   10,    25,  60,   60,      0,      0 }, // Frog's Staff of Holy Bolt
-	{  429107209,           0,   5,   0,   25,    25,   9,   40,      0,      0 }, // IDI_SORCEROR
+	{  429107209,           0,   5,   0,   25,    25,   9,   40,      0,      0 }, // IDI_SORCERER
 	{  466015738,         257, 146,   0,   18,    25,  50,   50,      0,      0 }, // Staff of Charged Bolt
 	{  686949358,         193,  48,   3,   12,    15,   0,    0,      0,      0 }, // Cap of the mind armor
 	{  888855755,         195,  58,   3,   30,    30,   0,    0,      0,      0 }, // Armor of protection

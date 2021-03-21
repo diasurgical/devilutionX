@@ -307,7 +307,7 @@ bool IsItemAvailable(int i)
 		    && (i < 83 || i > 86)   // Oils
 		    && i != 92              // Scroll of Search
 		    && (i < 161 || i > 165) // Runes
-		    && i != IDI_SORCEROR;
+		    && i != IDI_SORCERER;
 	}
 
 	return true;
@@ -1408,7 +1408,7 @@ void CreatePlrItems(int p)
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
 	case PC_SORCERER:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCEROR : 166);
+		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
 		SetPlrHandItem(&plr[p].SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
@@ -2965,7 +2965,7 @@ void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, 
 	tempstr[15] = ibuff & 0x7F;
 	tempstr[16] = '\0';
 	sprintf(item[ii]._iName, "Ear of %s", tempstr);
-	item[ii]._iCurs = ((ivalue >> 6) & 3) + ICURS_EAR_SORCEROR;
+	item[ii]._iCurs = ((ivalue >> 6) & 3) + ICURS_EAR_SORCERER;
 	item[ii]._ivalue = ivalue & 0x3F;
 	item[ii]._iCreateInfo = ic;
 	item[ii]._iSeed = iseed;

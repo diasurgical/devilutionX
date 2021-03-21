@@ -1044,7 +1044,7 @@ typedef enum sfx_flag {
 	sfx_MONK     = 0x08,
 	sfx_ROGUE    = 0x10,
 	sfx_WARRIOR  = 0x20,
-	sfx_SORCEROR = 0x40,
+	sfx_SORCERER = 0x40,
 	sfx_HELLFIRE = 0x80,
 } sfx_flag;
 
@@ -2298,7 +2298,7 @@ typedef enum _item_indexes {
 	IDI_WARRSHLD,
 	IDI_WARRCLUB,
 	IDI_ROGUE,
-	IDI_SORCEROR,
+	IDI_SORCERER,
 	IDI_CLEAVER,
 	IDI_FIRSTQUEST = IDI_CLEAVER,
 	IDI_SKCROWN,

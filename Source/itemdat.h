@@ -53,7 +53,7 @@ typedef enum item_cursor_graphic {
 	ICURS_SPECTRAL_ELIXIR             = 15,
 	ICURS_GOLDEN_ELIXIR               = 17,
 	ICURS_EMPYREAN_BAND               = 18,
-	ICURS_EAR_SORCEROR                = 19,
+	ICURS_EAR_SORCERER                = 19,
 	ICURS_EAR_WARRIOR                 = 20,
 	ICURS_EAR_ROGUE                   = 21,
 	ICURS_BLOOD_STONE                 = 25,

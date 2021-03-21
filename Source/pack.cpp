@@ -26,7 +26,7 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 			id->bMDur = is->_iName[15];
 			id->bCh = is->_iName[16];
 			id->bMCh = is->_iName[17];
-			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCEROR) << 6));
+			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCERER) << 6));
 			id->dwBuff = LOAD_BE32(&is->_iName[19]);
 		} else {
 			id->iSeed = SwapLE32(is->_iSeed);

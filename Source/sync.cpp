@@ -116,7 +116,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 			pHdr->bItemMDur = item[ii]._iName[15];
 			pHdr->bItemCh = item[ii]._iName[16];
 			pHdr->bItemMCh = item[ii]._iName[17];
-			pHdr->wItemVal = (item[ii]._iName[18] << 8) | ((item[ii]._iCurs - ICURS_EAR_SORCEROR) << 6) | item[ii]._ivalue;
+			pHdr->wItemVal = (item[ii]._iName[18] << 8) | ((item[ii]._iCurs - ICURS_EAR_SORCERER) << 6) | item[ii]._ivalue;
 			pHdr->dwItemBuff = (item[ii]._iName[19] << 24) | (item[ii]._iName[20] << 16) | (item[ii]._iName[21] << 8) | item[ii]._iName[22];
 		} else {
 			pHdr->wItemCI = item[ii]._iCreateInfo;

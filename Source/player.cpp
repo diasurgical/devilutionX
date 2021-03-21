@@ -137,7 +137,7 @@ int ToBlkTbl[NUM_CLASSES] = {
 const char *const ClassStrTblOld[] = {
 	"Warrior",
 	"Rogue",
-	"Sorceror",
+	"Sorcerer",
 	"Monk",
 	"Bard",
 	"Barbarian",
@@ -210,7 +210,7 @@ int ExpLvlsTbl[MAXCHARLEVEL] = {
 const char *const ClassStrTbl[] = {
 	"Warrior",
 	"Rogue",
-	"Sorceror",
+	"Sorcerer",
 	"Monk",
 	"Rogue",
 	"Warrior",
@@ -1796,7 +1796,7 @@ StartPlayerKill(int pnum, int earflag)
 						SetPlrHandItem(&ear, IDI_EAR);
 						sprintf(ear._iName, "Ear of %s", plr[pnum]._pName);
 						if (plr[pnum]._pClass == PC_SORCERER) {
-							ear._iCurs = ICURS_EAR_SORCEROR;
+							ear._iCurs = ICURS_EAR_SORCERER;
 						} else if (plr[pnum]._pClass == PC_WARRIOR) {
 							ear._iCurs = ICURS_EAR_WARRIOR;
 						} else if (plr[pnum]._pClass == PC_ROGUE) {
