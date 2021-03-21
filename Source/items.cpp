@@ -1404,7 +1404,7 @@ void CreatePlrItems(int p)
 		{
 			SetPlrHandItem(&plr[p].HoldItem, IDI_WARRCLUB);
 			GetPlrHandSeed(&plr[p].HoldItem);
-			AutoPlaceItemInInventorySlot(p, 0, plr[p].HoldItem, TRUE);
+			AutoPlaceItemInInventory(p, plr[p].HoldItem, true);
 		}
 
 		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);

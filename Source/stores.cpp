@@ -1311,10 +1311,7 @@ void S_SBuyEnter()
 				done = true;
 			}
 
-			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, false);
-			}
-			if (done)
+			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1379,10 +1376,7 @@ void S_SPBuyEnter()
 				done = true;
 			}
 
-			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, false);
-			}
-			if (done)
+			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1646,15 +1640,7 @@ void S_WBuyEnter()
 				done = TRUE;
 			}
 
-			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, false);
-			}
-
-			if (!done) {
-				done = AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false);
-			}
-
-			if (done)
+			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1829,8 +1815,8 @@ void S_BBuyEnter()
 		done = true;
 	}
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-		done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, false);
+	if (!done) {
+		done = AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false);
 	}
 
 	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
@@ -1961,15 +1947,7 @@ void S_HBuyEnter()
 				done = TRUE;
 			}
 
-			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = AutoPlaceItemInInventorySlot(myplr, i, plr[myplr].HoldItem, false);
-			}
-
-			if (!done) {
-				done = AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false);
-			}
-
-			if (done)
+			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
