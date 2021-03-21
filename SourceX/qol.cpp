@@ -90,14 +90,18 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 		borderSize <<= 1;
 
 	FillRect(out, xPos, yPos, (width * currentLife) / maxLife, height, filledColor);
-	for (int j = 0; j < borderSize; j++) {
-		FastDrawHorizLine(out, xPos - xOffset - corners, yPos - borderSize - yOffset + j, (xOffset + corners) * 2 + width, borderColor);
-		FastDrawHorizLine(out, xPos - xOffset, yPos + height + yOffset + j, width + corners + xOffset * 2, borderColor);
+
+	if (sgOptions.Gameplay.bShowMonsterType) {
+		for (int j = 0; j < borderSize; j++) {
+			FastDrawHorizLine(out, xPos - xOffset - corners, yPos - borderSize - yOffset + j, (xOffset + corners) * 2 + width, borderColor);
+			FastDrawHorizLine(out, xPos - xOffset, yPos + height + yOffset + j, width + corners + xOffset * 2, borderColor);
+		}
+		for (int j = -yOffset; j < yOffset + height + corners; ++j) {
+			FastDrawHorizLine(out, xPos - xOffset - borderSize, yPos + j, borderSize, borderColor);
+			FastDrawHorizLine(out, xPos + xOffset + width, yPos + j, borderSize, borderColor);
+		}
 	}
-	for (int j = -yOffset; j < yOffset + height + corners; ++j) {
-		FastDrawHorizLine(out, xPos - xOffset - borderSize, yPos + j, borderSize, borderColor);
-		FastDrawHorizLine(out, xPos + xOffset + width, yPos + j, borderSize, borderColor);
-	}
+
 	for (int k = 0; k < resSize; ++k) {
 		if (mres & immunes[k]) {
 			drawImmu = true;
