@@ -378,6 +378,7 @@ if(RUN_TESTS)
     SourceT/file_util_test.cpp
     SourceT/inv_test.cpp
     SourceT/lighting_test.cpp
+    SourceT/missiles_test.cpp
     SourceT/pack_test.cpp
     SourceT/player_test.cpp
     SourceT/scrollrt_test.cpp

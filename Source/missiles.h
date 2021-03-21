@@ -97,6 +97,8 @@ extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
 int GetSpellLevel(int id, int sn);
+int GetDirection8(int x1, int y1, int x2, int y2);
+int GetDirection16(int x1, int y1, int x2, int y2);
 void DeleteMissile(int mi, int i);
 BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift);
 BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEAN shift, int earflag, BOOLEAN *blocked);
