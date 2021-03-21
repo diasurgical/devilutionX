@@ -194,13 +194,7 @@ void PrintStoreItem(ItemStruct *x, int l, text_color iclr)
 
 void StoreAutoPlace()
 {
-	bool done;
-	int i, w, h;
-
-	SetICursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
-	w = icursW28;
-	h = icursH28;
-	done = false;
+	bool done = false;
 	if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem)) {
 		done = true;
 	}
