@@ -447,6 +447,7 @@ static void SaveOptions()
 	setIniInt("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 
 	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
+	setIniInt("Network", "Port", sgOptions.Network.nPort);
 }
 
 /**
@@ -502,6 +503,7 @@ static void LoadOptions()
 	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
+	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
 }
 
 static void diablo_init_screen()

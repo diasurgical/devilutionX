@@ -105,6 +105,8 @@ typedef struct GameplayOptions {
 typedef struct NetworkOptions {
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
+	/** @brief What network port to use. */
+	Uint16 nPort;
 } NetworkOptions;
 
 typedef struct Options {
