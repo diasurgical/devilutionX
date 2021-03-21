@@ -42,6 +42,7 @@ void DrawInv(CelOutputBuffer out);
 void DrawInvBelt(CelOutputBuffer out);
 bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item);
 bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true);
+bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false);
 bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem);
 bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false);
 BOOL GoldAutoPlace(int pnum);

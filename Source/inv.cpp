@@ -853,7 +853,7 @@ bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false)
+bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	InvXY itemSize = GetInventorySize(item);
 	bool done = false;
