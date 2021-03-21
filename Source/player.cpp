@@ -36,15 +36,6 @@ const char CharChar[] = {
 	'R',
 	'S',
 	'M',
-	'R',
-	'W',
-	0
-};
-const char CharCharHF[] = {
-	'W',
-	'R',
-	'S',
-	'M',
 	'B',
 	'C',
 	0
@@ -134,14 +125,6 @@ int ToBlkTbl[NUM_CLASSES] = {
 	25,
 	30,
 };
-const char *const ClassStrTblOld[] = {
-	"Warrior",
-	"Rogue",
-	"Sorcerer",
-	"Monk",
-	"Bard",
-	"Barbarian",
-};
 /** Maps from player_class to maximum stats. */
 int MaxStats[NUM_CLASSES][4] = {
 	// clang-format off
@@ -207,10 +190,10 @@ int ExpLvlsTbl[MAXCHARLEVEL] = {
 	1310707109,
 	1583495809
 };
-const char *const ClassStrTbl[] = {
+const char *const ClassPathTbl[] = {
 	"Warrior",
 	"Rogue",
-	"Sorcerer",
+	"Sorceror",
 	"Monk",
 	"Rogue",
 	"Warrior",
@@ -231,7 +214,6 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	char pszName[256];
 	const char *szCel;
 	PlayerStruct *p;
-	const char *cs;
 	BYTE *pData, *pAnim;
 	DWORD i;
 
@@ -240,13 +222,16 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	}
 
 	p = &plr[pnum];
-	if ((p->_pClass != PC_BARD || hfbard_mpq == NULL) && (p->_pClass != PC_BARBARIAN || hfbarb_mpq == NULL)) {
-		sprintf(prefix, "%c%c%c", CharChar[p->_pClass], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
-		cs = ClassStrTbl[p->_pClass];
-	} else {
-		sprintf(prefix, "%c%c%c", CharCharHF[p->_pClass], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
-		cs = ClassStrTblOld[p->_pClass];
+
+	plr_class c = p->_pClass;
+	if (c == PC_BARD && hfbard_mpq == NULL) {
+		c = PC_ROGUE;
+	} else if (c == PC_BARBARIAN && hfbarb_mpq == NULL) {
+		c = PC_WARRIOR;
 	}
+
+	sprintf(prefix, "%c%c%c", CharChar[c], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
+	const char *cs = ClassPathTbl[c];
 
 	for (i = 1; i <= PFILE_NONDEATH; i <<= 1) {
 		if (!(i & gfxflag)) {
@@ -385,13 +370,8 @@ static DWORD GetPlrGFXSize(const char *szCel)
 				if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
 					continue; //No block without weapon
 				}
-				if ((c == PC_BARD && hfbard_mpq == NULL) || (c == PC_BARBARIAN && hfbarb_mpq == NULL)) {
-					sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
-					sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTbl[c], Type, Type, szCel);
-				} else {
-					sprintf(Type, "%c%c%c", CharCharHF[c], *a, *w);
-					sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTblOld[c], Type, Type, szCel);
-				}
+				sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
+				sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[c], Type, Type, szCel);
 				if (SFileOpenFile(pszName, &hsFile)) {
 					/// ASSERT: assert(hsFile);
 					dwSize = SFileGetFileSize(hsFile, NULL);
