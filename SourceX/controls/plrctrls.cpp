@@ -832,6 +832,16 @@ void QuestLogMove(AxisDirection move_dir)
 		QuestlogDown();
 }
 
+void StoreMove(AxisDirection move_dir)
+{
+	static AxisDirectionRepeater repeater;
+	move_dir = repeater.Get(move_dir);
+	if (move_dir.y == AxisDirectionY_UP)
+		STextUp();
+	else if (move_dir.y == AxisDirectionY_DOWN)
+		STextDown();
+}
+
 typedef void (*HandleLeftStickOrDPadFn)(dvl::AxisDirection);
 
 HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
@@ -846,6 +856,8 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 		return &SpellBookMove;
 	} else if (questlog) {
 		return &QuestLogMove;
+	} else if (stextflag != STORE_NONE) {
+		return &StoreMove;
 	}
 	return NULL;
 }
