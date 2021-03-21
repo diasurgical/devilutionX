@@ -100,6 +100,27 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 	if (HandleStartAndSelect(ctrl_event, action))
 		return true;
 
+	// Stick clicks simulate the mouse both in menus and in-game.
+	switch (ctrl_event.button) {
+	case ControllerButton_BUTTON_LEFTSTICK:
+		if (select_modifier_active) {
+			if (!IsAutomapActive())
+				*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
+			return true;
+		}
+		break;
+	case ControllerButton_BUTTON_RIGHTSTICK:
+		if (!IsAutomapActive()) {
+			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
+				*action = GameActionSendMouseClick { GameActionSendMouseClick::RIGHT, ctrl_event.up };
+			else
+				*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
+		}
+		return true;
+	default:
+		break;
+	}
+
 	if (!in_game_menu) {
 		switch (ctrl_event.button) {
 		case ControllerButton_BUTTON_LEFTSHOULDER:
@@ -132,13 +153,6 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 					*action = GameAction(GameActionType_TOGGLE_INVENTORY);
 			}
 			return true;
-		case ControllerButton_BUTTON_LEFTSTICK:
-			if (select_modifier_active) {
-				if (!IsAutomapActive())
-					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
-				return true;
-			}
-			break;
 		case ControllerButton_IGNORE:
 		case ControllerButton_BUTTON_START:
 		case ControllerButton_BUTTON_BACK:
@@ -288,14 +302,6 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 			case ControllerButton_BUTTON_DPAD_LEFT:
 			case ControllerButton_BUTTON_DPAD_RIGHT:
 				// The rest of D-Pad actions are handled in charMovement() on every game_logic() call.
-				return true;
-			case ControllerButton_BUTTON_RIGHTSTICK:
-				if (!IsAutomapActive()) {
-					if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-						*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
-					else
-						*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
-				}
 				return true;
 			default:
 				break;
