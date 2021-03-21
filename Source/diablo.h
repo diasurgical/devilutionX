@@ -98,6 +98,8 @@ typedef struct GameplayOptions {
 	bool bAutoEquipJewelry;
 	/** @brief Enable All Quests for Single Player */
 	bool bAllQuests;
+	/** @brief Indicates whether or not mosnter type (Animal, Demon, Undead) is shown along with other monster information. */
+	bool bShowMonsterType;
 } GameplayOptions;
 
 typedef struct NetworkOptions {
