@@ -274,6 +274,9 @@ static bool ProcessInput()
 	if (PauseMode == 2) {
 		return false;
 	}
+
+	plrctrls_every_frame();
+
 	if (!gbIsMultiplayer && gmenu_is_active()) {
 		force_redraw |= 1;
 		return false;
@@ -326,7 +329,6 @@ static void run_game_loop(unsigned int uMsg)
 		if (!gbRunGame)
 			break;
 		if (!nthread_has_500ms_passed()) {
-			plrctrls_every_frame();
 			ProcessInput();
 			force_redraw |= 1;
 			DrawAndBlit();
