@@ -868,9 +868,6 @@ void Movement()
 		sgbControllerActive = true;
 	}
 
-	// TODO: This should be called independently of game logic / tick rate.
-	ProcessLeftStickOrDPadGameUI();
-
 	if (GetLeftStickOrDPadGameUIHandler() == NULL) {
 		WalkInDir(move_dir);
 	}
@@ -1028,6 +1025,11 @@ void plrctrls_after_check_curs_move()
 			FindTrigger();
 		}
 	}
+}
+
+void plrctrls_every_frame()
+{
+	ProcessLeftStickOrDPadGameUI();
 }
 
 void plrctrls_after_game_logic()

@@ -91,6 +91,10 @@ BOOL was_window_init = false;
 BOOL was_ui_init = false;
 BOOL was_snd_init = false;
 
+// Controller support:
+extern void plrctrls_every_frame();
+extern void plrctrls_after_game_logic();
+
 static void print_help_and_exit()
 {
 	printInConsole("Options:\n");
@@ -322,6 +326,7 @@ static void run_game_loop(unsigned int uMsg)
 		if (!gbRunGame)
 			break;
 		if (!nthread_has_500ms_passed()) {
+			plrctrls_every_frame();
 			ProcessInput();
 			force_redraw |= 1;
 			DrawAndBlit();
@@ -1950,9 +1955,6 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 	if (!gbIsSpawn && setlevel && setlvlnum == SL_SKELKING && quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
 		PlaySFX(USFX_SKING1);
 }
-
-// Controller support:
-extern void plrctrls_after_game_logic();
 
 static void game_logic()
 {
