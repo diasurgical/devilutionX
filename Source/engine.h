@@ -137,7 +137,14 @@ struct CelOutputBuffer {
 	 */
 	CelOutputBuffer subregion(Sint16 x, Sint16 y, Uint16 w, Uint16 h) const
 	{
-		return CelOutputBuffer(surface, SDL_Rect { region.x + x, region.y + y, w, h });
+		// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
+		using CoordType = decltype(SDL_Rect {}.x);
+		return CelOutputBuffer(
+		    surface,
+		    SDL_Rect {
+		        static_cast<CoordType>(region.x + x),
+		        static_cast<CoordType>(region.y + y),
+		        w, h });
 	}
 
 	/**
