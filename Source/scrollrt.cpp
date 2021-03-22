@@ -1393,10 +1393,16 @@ static void DrawFPS(CelOutputBuffer out)
  */
 static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 {
-	SDL_Rect SrcRect = { BUFFER_BORDER_LEFT + dwX, BUFFER_BORDER_TOP + dwY, dwWdt, dwHgt };
-	SDL_Rect DstRect = { dwX, dwY, dwWdt, dwHgt };
+	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
+	using CoordType = decltype(SDL_Rect {}.x);
+	SDL_Rect src_rect {
+		static_cast<CoordType>(BUFFER_BORDER_LEFT + dwX),
+		static_cast<CoordType>(BUFFER_BORDER_TOP + dwY),
+		dwWdt, dwHgt
+	};
+	SDL_Rect dst_rect { dwX, dwY, dwWdt, dwHgt };
 
-	BltFast(&SrcRect, &DstRect);
+	BltFast(&src_rect, &dst_rect);
 }
 
 /**
