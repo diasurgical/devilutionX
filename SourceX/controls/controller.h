@@ -29,8 +29,8 @@ public:
 	void ScaleJoysticks();
 
 	// NOTE: Not idempotent because of how it handles axis triggers.
-    // Must be called exactly once for each SDL input event.
-    ControllerButton ToControllerButton(const SDL_Event &event) const;
+	// Must be called exactly once for each SDL input event.
+	ControllerButton ToControllerButton(const SDL_Event &event) const;
 
 private:
 	void ScaleJoystickAxes(float *x, float *y, float deadzone);
