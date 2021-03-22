@@ -4,6 +4,7 @@
  * Implementation of functions for interacting with the main menu.
  */
 #include "all.h"
+#include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 

@@ -5,6 +5,7 @@
  */
 #include <algorithm>
 #include "all.h"
+#include "options.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

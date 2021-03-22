@@ -7,6 +7,7 @@
 #include "controls/devices/kbcontroller.h"
 #include "controls/controller.h"
 #include "controls/game_controls.h"
+#include "options.h"
 
 namespace dvl {
 

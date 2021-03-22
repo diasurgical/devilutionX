@@ -1,5 +1,6 @@
 #ifndef USE_SDL1
 #include "display.h"
+#include "options.h"
 #include "touch.h"
 #include "../../defs.h"
 #include <math.h>

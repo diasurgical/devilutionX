@@ -6,6 +6,7 @@
 #include "all.h"
 #include "paths.h"
 #include "console.h"
+#include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>

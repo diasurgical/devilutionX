@@ -12,6 +12,7 @@
 #include "DiabloUI/selyesno.h"
 #include "DiabloUI/selok.h"
 #include "DiabloUI/selgame.h"
+#include "options.h"
 
 #ifdef __3DS__
 #include "../platform/ctr/keyboard.h"
