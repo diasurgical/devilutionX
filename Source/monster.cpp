@@ -5156,17 +5156,24 @@ void M_FallenFear(int x, int y)
 	}
 }
 
-const char* GetMonsterTypeText(const MonsterData& monsterData) {
+const char *GetMonsterTypeText(const MonsterData &monsterData)
+{
+	const char *type;
+
 	switch (monsterData.mMonstClass) {
 	case MC_ANIMAL:
-		return "Animal";
-
+		type = "Animal";
+		break;
 	case MC_DEMON:
-		return "Demon";
+		type = "Demon";
+		break;
 
 	case MC_UNDEAD:
-		return "Undead";
+		type = "Undead";
+		break;
 	}
+
+	return type;
 }
 
 void PrintMonstHistory(int mt)
