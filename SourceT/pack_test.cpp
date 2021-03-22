@@ -272,6 +272,7 @@ const dvl::PkItemStruct PackedDiabloMPItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
     {  309674341,         193, 109,   0,    0,     0,   0,    0,      0,      0 }, // Book of Firebolt
+	{ 1291471654,           6,  34,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Resurrect
 	// clang-format on
 };
 
@@ -279,6 +280,7 @@ const TestItemStruct DiabloMPItems[] = {
 	// clang-format off
 	//_iIName,            _itype, _iClass, _iCurs, _iIvalue, _iMinDam, _iMaxDam, _iAC,   _iFlags, _iMiscId, _iSpell, _iCharges, _iMaxCharges, _iDurability, _iMaxDur, _iPLDam, _iPLToHit, _iPLAC, _iPLStr, _iPLMag, _iPLDex, _iPLVit, _iPLFR, _iPLLR, _iPLMR, _iPLMana, _iPLHP, _iPLDamMod, _iPLGetHit, _iPLLight, _iSplLvlAdd, _iUid, _iFMinDam, _iFMaxDam, _iLMinDam, _iLMaxDam, _iPrePower, _iSufPower, _iMinStr, _iMinMag, _iMinDex, IDidx );
 	{ "Book of Firebolt",      0,       3,     87,     1000,        0,        0,    0,         0,       24,       1,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       15,        0,   114 },
+	{ "Scroll of Resurrect",   0,       3,      1,      250,        0,        0,    0,         0,       22,      32,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    34 },
 	// clang-format on
 };
 
@@ -351,6 +353,13 @@ const dvl::PkItemStruct PackedHellfireItems[] = {
 	{  342570085,        4114,  74,   3,  255,   255,   0,    0,      0,      0 }, // Shield of the ages
 	{ 1514523617,        2066, 139,   3,   20,    20,   0,    0,      0,      0 }, // Heavy Club of puncturing
 	{  701987341,        8208, 114,   1,    0,     0,   0,    0,      0,      0 }, // Book of Lightning
+	{  568338383,         196, 124,   3,   23,    45,   0,    0,      0,      0 }, // Jester's Sabre
+	{ 1308277119,        2056,  72,   3,   24,    24,   0,    0,      0,      0 }, // Shield of blocking
+	{          0,         512,   6,   5,   10,    10,   0,    0,      0,      0 }, // The Butcher's Cleaver
+	{ 1621745295,        2057, 121,   3,   28,    28,   0,    0,      0,      0 }, // Scimitar of peril
+	{  492619876,        2054, 132,   3,   12,    12,   0,    0,      0,      0 }, // Crystalline Axe
+	{ 1859493982,        2053,  56,   3,   18,    18,   0,    0,      0,      0 }, // Red Cloak
+	{ 1593032051,        2050, 136,   3,   32,    32,   0,    0,      0,      0 }, // Mace of decay
 	// clang-format on
 };
 
@@ -405,6 +414,13 @@ const TestItemStruct HellfireItems[] = {
 	{ "Shield of the ages",               5,       2,    113,     2600,        0,        0,   10,         0,        0,       0,         0,            0,          255,      255,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         37,       50,        0,        0,    74 },
 	{ "Heavy Club of puncturing",         4,       1,     70,     5239,        3,        6,    0,         0,        0,       0,         0,            0,           20,       20,      52,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          2,         57,       18,        0,        0,   139 },
 	{ "Book of Lightning",                0,       3,     88,     3000,        0,        0,    0,         0,       24,       3,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       20,        0,   114 },
+	{ "Jester's Sabre",                   1,       1,     67,     1710,        1,        8,    0,         0,        0,       0,         0,            0,           23,       45,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         87,         -1,       17,        0,        0,   124 },
+	{ "Shield of blocking",               5,       2,    105,     4360,        0,        0,    6,  16777216,        0,       0,         0,            0,           24,       24,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         60,       25,        0,        0,    72 },
+	{ "The Butcher's Cleaver",            2,       1,    106,     3650,        4,       24,    0,         0,       27,       0,         0,            0,           10,       10,       0,         0,      0,      10,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,     6 },
+	{ "Scimitar of peril",                1,       1,     72,      700,        3,        7,    0,         0,        0,       0,         0,            0,           28,       28,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         86,       23,        0,       23,   121 },
+	{ "Crystalline Axe",                  2,       1,    142,     5250,        6,       16,    0,         0,        0,       0,         0,            0,           12,       12,     280,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         88,         -1,       30,        0,        0,   132 },
+	{ "Red Cloak",                        6,       2,    149,      580,        0,        0,    3,         0,        0,       0,         0,            0,           18,       18,       0,         0,      0,       0,       0,       0,       0,     10,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          8,         -1,        0,        0,        0,    56 },
+	{ "Mace of decay",                    4,       1,     59,      600,        1,        8,    0,         0,        0,       0,         0,            0,           32,       32,     232,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         85,       16,        0,        0,   136 },
 	// clang-format on
 };
 
