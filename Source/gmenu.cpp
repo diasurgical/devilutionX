@@ -235,7 +235,7 @@ static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
 static void GameMenuMove()
 {
 	static AxisDirectionRepeater repeater;
-	const AxisDirection move_dir = repeater.Get(GetLeftStickOrDpadDirection());
+	const AxisDirection move_dir = repeater.Get(controller.GetLeftStickOrDpadDirection());
 	if (move_dir.x != AxisDirectionX_NONE)
 		gmenu_left_right(move_dir.x == AxisDirectionX_RIGHT);
 	if (move_dir.y != AxisDirectionY_NONE)
