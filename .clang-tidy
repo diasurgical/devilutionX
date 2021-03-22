@@ -1,13 +1,17 @@
 ---
 # clang-tidy configuration
 #
-# clang-tidy can be run manually over a set of files like this:
+# clang-tidy can be run manually like this:
 #
-#     clang-tidy -p build/compile_commands.json SourceS/**/*.cpp
+#     run-clang-tidy -p build 'Source.*'
 #
 # To apply fixes suggested by clang-tidy, run:
 #
-#     clang-tidy -p build/compile_commands.json --fix SourceS/**/*.cpp
+#     run-clang-tidy -p build -fix -format 'Source.*'
+#
+# To limit the run to certain checks:
+#
+#     run-clang-tidy -checks='-*,modernize-use-nullptr' -p build 'Source.*'
 #
 # clang-tidy also has several IDE integrations listed here:
 # https://clang.llvm.org/extra/clang-tidy/Integrations.html
