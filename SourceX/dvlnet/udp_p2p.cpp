@@ -1,4 +1,5 @@
 #include "dvlnet/udp_p2p.h"
+#include "options.h"
 
 #include <SDL.h>
 

@@ -6,6 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "display.h"
+#include "options.h"
 #include <SDL.h>
 
 #ifdef __3DS__

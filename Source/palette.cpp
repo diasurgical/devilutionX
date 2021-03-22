@@ -4,6 +4,7 @@
  * Implementation of functions for handling the engines color palette.
  */
 #include "all.h"
+#include "options.h"
 #include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 

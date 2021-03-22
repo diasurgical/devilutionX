@@ -9,6 +9,7 @@
 #include "controls/menu_controls.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
+#include "options.h"
 
 namespace dvl {
 

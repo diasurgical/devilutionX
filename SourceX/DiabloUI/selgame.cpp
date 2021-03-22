@@ -7,6 +7,7 @@
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/selok.h"
 #include "DiabloUI/selhero.h"
+#include "options.h"
 
 namespace dvl {
 

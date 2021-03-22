@@ -4,6 +4,7 @@
  * Implementation of functionality for rendering the level tiles.
  */
 #include "all.h"
+#include "options.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

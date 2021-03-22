@@ -1,4 +1,5 @@
 #include "dvlnet/tcp_client.h"
+#include "options.h"
 
 #include <functional>
 #include <exception>

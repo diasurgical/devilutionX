@@ -4,6 +4,7 @@
  * Implementation of general dungeon generation code.
  */
 #include "all.h"
+#include "options.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

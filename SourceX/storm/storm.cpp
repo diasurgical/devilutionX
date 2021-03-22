@@ -2,6 +2,7 @@
 #include <string>
 
 #include "all.h"
+#include "options.h"
 #include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
 

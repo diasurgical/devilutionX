@@ -5,6 +5,7 @@
 #include "all.h"
 #include "controls/controller.h"
 #include "controls/game_controls.h"
+#include "options.h"
 
 namespace dvl {
 
