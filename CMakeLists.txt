@@ -81,7 +81,6 @@ list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 if(SWITCH)
   set(ASAN OFF)
   set(UBSAN OFF)
-  set(PIE ON)
 
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
   find_package(LIBNX REQUIRED)
