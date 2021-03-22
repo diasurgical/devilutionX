@@ -1,5 +1,7 @@
 #include "storm_sdl_rw.h"
 
+#include <cstring>
+
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../Source/engine.h"
@@ -75,6 +77,7 @@ static int SFileRw_close(struct SDL_RWops *context)
 SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 {
 	SDL_RWops *result = (SDL_RWops *)DiabloAllocPtr(sizeof(SDL_RWops));
+	std::memset(result, 0, sizeof(*result));
 
 #ifndef USE_SDL1
 	result->size = &SFileRw_size;
