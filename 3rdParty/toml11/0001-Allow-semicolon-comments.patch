@@ -1,0 +1,27 @@
+From e80d508fcc2c02b3b686396fa95d841c86494f84 Mon Sep 17 00:00:00 2001
+From: Gleb Mazovetskiy <glex.spb@gmail.com>
+Date: Mon, 22 Mar 2021 00:45:09 +0000
+Subject: [PATCH] Allow semicolon comments
+
+---
+ toml/lexer.hpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/toml/lexer.hpp b/toml/lexer.hpp
+index 2eea996..2608af6 100644
+--- a/toml/lexer.hpp
++++ b/toml/lexer.hpp
+@@ -226,7 +226,9 @@ using lex_string = either<lex_ml_basic_string,   lex_basic_string,
+ 
+ // ===========================================================================
+ 
+-using lex_comment_start_symbol = character<'#'>;
++// DevilutionX patch: Also allow `;` as a comment symbol because the original
++// Diablo config file uses it.
++using lex_comment_start_symbol = either<character<'#'>, character<';'>>;
+ using lex_non_eol = either<character<'\t'>, exclude<in_range<0x00, 0x19>>>;
+ using lex_comment = sequence<lex_comment_start_symbol,
+                              repeat<lex_non_eol, unlimited>>;
+-- 
+2.27.0
+

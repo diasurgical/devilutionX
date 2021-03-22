@@ -33,6 +33,8 @@ if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set(CPACK ON)
 endif()
 
+option(DEVILUTIONX_SYSTEM_TOML11 "Use system-provided toml11" OFF)
+
 option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
                        "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
@@ -149,6 +151,12 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 if(NOT N3DS)
   find_package(Threads REQUIRED)
+endif()
+
+if(DEVILUTIONX_SYSTEM_TOML11)
+  find_package(toml11 REQUIRED)
+else()
+  add_subdirectory(3rdParty/toml11)
 endif()
 
 if(NOT NONET)
