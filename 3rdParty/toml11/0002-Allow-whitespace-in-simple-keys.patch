@@ -1,0 +1,26 @@
+From 6bd3a11a21f3ae46b974a7a185f1747c986591e4 Mon Sep 17 00:00:00 2001
+From: Gleb Mazovetskiy <glex.spb@gmail.com>
+Date: Mon, 22 Mar 2021 19:20:21 +0000
+Subject: [PATCH] Allow whitespace in simple keys
+
+---
+ toml/lexer.hpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/toml/lexer.hpp b/toml/lexer.hpp
+index 2eea996..b8eb286 100644
+--- a/toml/lexer.hpp
++++ b/toml/lexer.hpp
+@@ -234,7 +234,8 @@ using lex_comment = sequence<lex_comment_start_symbol,
+ using lex_dot_sep = sequence<maybe<lex_ws>, character<'.'>, maybe<lex_ws>>;
+ 
+ using lex_unquoted_key = repeat<either<lex_alpha, lex_digit,
+-                                       character<'-'>, character<'_'>>,
++                                       character<'-'>, character<'_'>,
++                                       character<' '>>,
+                                 at_least<1>>;
+ using lex_quoted_key = either<lex_basic_string, lex_literal_string>;
+ using lex_simple_key = either<lex_unquoted_key, lex_quoted_key>;
+-- 
+2.27.0
+
