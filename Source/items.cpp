@@ -1897,7 +1897,7 @@ int PLVal(int pv, int p1, int p2, int minv, int maxv)
 	return minv + (maxv - minv) * (100 * (pv - p1) / (p2 - p1)) / 100;
 }
 
-void SaveItemPower(int i, int power, int param1, int param2, int minval, int maxval, int multval)
+void SaveItemPower(int i, item_effect_type power, int param1, int param2, int minval, int maxval, int multval)
 {
 	int r, r2;
 

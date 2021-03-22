@@ -280,7 +280,7 @@ BOOL ItemSpaceOk(int i, int j);
 int AllocateItem();
 void GetSuperItemLoc(int x, int y, int *xx, int *yy);
 void GetItemAttrs(int i, int idata, int lvl);
-void SaveItemPower(int i, int power, int param1, int param2, int minval, int maxval, int multval);
+void SaveItemPower(int i, item_effect_type power, int param1, int param2, int minval, int maxval, int multval);
 void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood);
 void SetupItem(int i);
 int RndItem(int m);
