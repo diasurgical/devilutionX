@@ -4,6 +4,7 @@
  * Implementation of player inventory.
  */
 #include "all.h"
+#include "options.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

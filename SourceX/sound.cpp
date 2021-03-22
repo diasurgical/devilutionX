@@ -4,6 +4,7 @@
  * Implementation of functions setting up the audio pipeline.
  */
 #include "all.h"
+#include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "stubs.h"
 #include "storm_sdl_rw.h"

@@ -4,6 +4,7 @@
  * Implementation of functionality for handling quests.
  */
 #include "all.h"
+#include "options.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

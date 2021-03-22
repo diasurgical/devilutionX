@@ -4,6 +4,7 @@
  * Implementation of functionality for stores and towner dialogs.
  */
 #include "all.h"
+#include "options.h"
 #include <algorithm>
 
 DEVILUTION_BEGIN_NAMESPACE

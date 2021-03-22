@@ -4,6 +4,7 @@
 #include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
+#include "options.h"
 
 #ifdef __vita__
 #include <psp2/power.h>

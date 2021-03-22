@@ -1,6 +1,7 @@
 #include <memory>
 
 #include "all.h"
+#include "options.h"
 #include "stubs.h"
 #include "dvlnet/abstract_net.h"
 
