@@ -456,7 +456,7 @@ target_link_libraries(${BIN_TARGET} PRIVATE
   PKWare
   StormLib
   smacker
-  Radon)
+  toml11::toml11)
 
 if(NOT NONET)
   target_link_libraries(${BIN_TARGET} PRIVATE sodium)

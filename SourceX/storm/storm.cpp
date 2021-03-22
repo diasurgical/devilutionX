@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <fstream>
 #include <string>
 
 #include "all.h"
@@ -11,11 +12,11 @@
 
 #include "display.h"
 #include "stubs.h"
-#include "Radon.hpp"
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <SDL_mixer.h>
 #include <smacker.h>
+#include <toml.hpp>
 
 #include "DiabloUI/diabloui.h"
 
@@ -28,17 +29,30 @@ namespace {
 bool directFileAccess = false;
 std::string *SBasePath = NULL;
 
+using ConfigData = toml::basic_value<toml::preserve_comments, std::unordered_map, std::vector>;
+
+const std::string &iniPath() {
+	static const std::string kPath = GetConfigPath() + "diablo.ini";
+	return kPath;
+}
+
+ConfigData &getIni()
+{
+	static auto config = toml::parse<toml::preserve_comments>(iniPath());
+	return config;
+}
+
+void saveIni() {
+	constexpr int kConfigLineWidth = 80;
+	std::ofstream out{iniPath().c_str()};
+	out << std::setw(kConfigLineWidth) << getIni() << std::endl;
+}
+
 } // namespace
 
 #ifdef USE_SDL1
 static bool IsSVidVideoMode = false;
 #endif
-
-radon::File &getIni()
-{
-	static radon::File ini(GetConfigPath() + "diablo.ini");
-	return ini;
-}
 
 BOOL SFileDdaSetVolume(HANDLE hFile, signed int bigvolume, signed int volume)
 {
@@ -276,61 +290,39 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
 {
-	strncpy(string, defaultString, stringSize);
-
-	radon::Section *section = getIni().getSection(sectionName);
-	if (!section)
+	const auto &ini = getIni();
+	if (!ini.contains(sectionName))
 		return false;
 
-	radon::Key *key = section->getKey(keyName);
-	if (!key)
+	const auto &section = toml::find(ini, sectionName);
+	if (!section.contains(keyName)) {
+		strncpy(string, defaultString, stringSize);
 		return false;
+	}
 
-	std::string value = key->getStringValue();
-
-	if (string != NULL)
-		strncpy(string, value.c_str(), stringSize);
+	const std::string value = toml::find<std::string>(section, keyName);
+	strncpy(string, value.c_str(), stringSize);
 
 	return true;
 }
 
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len)
 {
-	radon::File &ini = getIni();
-
-	radon::Section *section = ini.getSection(sectionName);
-	if (!section) {
-		ini.addSection(sectionName);
-		section = ini.getSection(sectionName);
-	}
-
-	std::string stringValue(value, len ? len : strlen(value));
-
-	radon::Key *key = section->getKey(keyName);
-	if (!key) {
-		section->addKey(radon::Key(keyName, stringValue));
-	} else {
-		key->setValue(stringValue);
-	}
-
-	ini.saveToFile();
+	getIni()[sectionName][keyName] = toml::value(std::string(value, len != 0 ? len : strlen(value)));
+	saveIni();
 }
 
 int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 {
-	char string[10];
-	if (!getIniValue(keyname, valuename, string, sizeof(string))) {
-		return defaultValue;
-	}
-
-	return strtol(string, NULL, sizeof(string));
+	const auto &ini = getIni();
+	if (!ini.contains(keyname)) return defaultValue;
+	return toml::find_or(ini, valuename, defaultValue);
 }
 
 void setIniInt(const char *keyname, const char *valuename, int value)
 {
-	char str[10];
-	sprintf(str, "%d", value);
-	setIniValue(keyname, valuename, str);
+	getIni()[keyname][valuename] = toml::value(value);
+	saveIni();
 }
 
 double SVidFrameEnd;
