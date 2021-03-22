@@ -865,7 +865,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 void ProcessLeftStickOrDPadGameUI() {
 	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler();
 	if (handler != NULL)
-		handler(GetLeftStickOrDpadDirection(true));
+		handler(controller.GetLeftStickOrDpadDirection(true));
 }
 
 void Movement()

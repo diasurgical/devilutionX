@@ -5,12 +5,13 @@
 
 #include <SDL.h>
 
+#include "controls/controller.h"
 #include "controls/controller_buttons.h"
 
 #ifndef USE_SDL1
 namespace dvl {
 
-class GameController {
+class GameController : public Controller {
 	static std::vector<GameController> *const controllers_;
 
 public:
