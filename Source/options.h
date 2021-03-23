@@ -126,7 +126,7 @@ public:
 	/** @brief Player emits sound when walking. */
 	BooleanOption bWalkingSound = { "Walking Sound", true };
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
-	bool bAutoEquipSound;
+	BooleanOption bAutoEquipSound = { "Auto Equip Sound", false };
 };
 
 class GraphicsOptions final {

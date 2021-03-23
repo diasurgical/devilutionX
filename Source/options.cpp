@@ -60,6 +60,7 @@ AudioOptions::AudioOptions()
     : OptionGroup("Audio")
 {
 	AddOption(bWalkingSound);
+	AddOption(bAutoEquipSound);
 }
 
 Options::Options()
