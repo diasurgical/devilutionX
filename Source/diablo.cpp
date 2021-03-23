@@ -403,9 +403,6 @@ static void SaveOptions()
 	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
 	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
 #endif
-#ifndef __vita__
-	setIniInt("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
-#endif
 	setIniInt("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
 	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	setIniInt("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
@@ -454,11 +451,6 @@ static void LoadOptions()
 #else
 	sgOptions.Graphics.nWidth = DEFAULT_WIDTH;
 	sgOptions.Graphics.nHeight = DEFAULT_HEIGHT;
-#endif
-#if !defined(USE_SDL1) && !defined(__vita__)
-	sgOptions.Graphics.bUpscale = getIniBool("Graphics", "Upscale", true);
-#else
-	sgOptions.Graphics.bUpscale = false;
 #endif
 	sgOptions.Graphics.bFitToScreen = getIniBool("Graphics", "Fit to Screen", true);
 	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");

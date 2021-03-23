@@ -140,7 +140,15 @@ public:
 	/** @brief Run in fullscreen or windowed mode. */
 	BooleanOption bFullscreen = { "Fullscreen", true };
 	/** @brief Scale the image after rendering. */
-	bool bUpscale;
+	BooleanOption bUpscale =
+	{
+		"Upscale",
+#if !defined(USE_SDL1) && !defined(__vita__)
+		true
+#else
+		false
+#endif
+	};
 	/** @brief Expand the aspect ratio to match the screen. */
 	bool bFitToScreen;
 	/** @brief See SDL_HINT_RENDER_SCALE_QUALITY. */

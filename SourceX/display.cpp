@@ -163,7 +163,7 @@ bool SpawnWindow(const char *lpWindowName)
 	int width = sgOptions.Graphics.nWidth;
 	int height = sgOptions.Graphics.nHeight;
 
-	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
+	if (*sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
 		CalculatePreferdWindowSize(width, height);
 	}
 	AdjustToScreenGeometry(width, height);
@@ -176,7 +176,7 @@ bool SpawnWindow(const char *lpWindowName)
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
 	int flags = 0;
-	if (sgOptions.Graphics.bUpscale) {
+	if (*sgOptions.Graphics.bUpscale) {
 		if (!gbForceWindowed && *sgOptions.Graphics.bFullscreen) {
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
@@ -207,7 +207,7 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 	refreshDelay = 1000000 / refreshRate;
 
-	if (sgOptions.Graphics.bUpscale) {
+	if (*sgOptions.Graphics.bUpscale) {
 #ifndef USE_SDL1
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 

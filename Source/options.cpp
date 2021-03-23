@@ -67,6 +67,10 @@ GraphicsOptions::GraphicsOptions()
     : OptionGroup("Graphics")
 {
 	AddOption(bFullscreen);
+
+#ifndef __vita__
+	AddOption(bUpscale);
+#endif
 }
 
 Options::Options()
