@@ -2134,7 +2134,7 @@ bool PM_DoWalk(int pnum, int variant)
 	}
 
 	//Play walking sound effect on certain animation frames
-	if (sgOptions.Audio.bWalkingSound) {
+	if (*sgOptions.Audio.bWalkingSound) {
 		if (plr[pnum]._pAnimFrame == 3
 		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
 		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {

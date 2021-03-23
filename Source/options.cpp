@@ -56,4 +56,16 @@ void OptionGroup::AddOptionGroup(std::reference_wrapper<OptionGroup> optionGroup
 	m_optionGroups.push_back(optionGroup);
 }
 
+AudioOptions::AudioOptions()
+    : OptionGroup("Audio")
+{
+	AddOption(bWalkingSound);
+}
+
+Options::Options()
+    : OptionGroup("")
+{
+	AddOptionGroup(Audio);
+}
+
 }

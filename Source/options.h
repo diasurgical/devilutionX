@@ -115,14 +115,16 @@ private:
 	std::string m_sectionName;
 };
 
-class AudioOptions final {
+class AudioOptions final : public OptionGroup {
 public:
+	AudioOptions();
+
 	/** @brief Movie and SFX volume. */
 	Sint32 nSoundVolume;
 	/** @brief Music volume. */
 	Sint32 nMusicVolume;
 	/** @brief Player emits sound when walking. */
-	bool bWalkingSound;
+	BooleanOption bWalkingSound = { "Walking Sound", true };
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
 	bool bAutoEquipSound;
 };
@@ -205,8 +207,10 @@ public:
 	Uint16 nPort;
 };
 
-class Options final {
+class Options final : public OptionGroup {
 public:
+	Options();
+
 	AudioOptions Audio;
 	GameplayOptions Gameplay;
 	GraphicsOptions Graphics;

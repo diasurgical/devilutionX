@@ -398,7 +398,6 @@ static void SaveOptions()
 {
 	setIniInt("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	setIniInt("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
-	setIniInt("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
 	setIniInt("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
 
 #ifndef __vita__
@@ -440,6 +439,7 @@ static void SaveOptions()
 
 	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	setIniInt("Network", "Port", sgOptions.Network.nPort);
+	sgOptions.Save();
 }
 
 /**
@@ -449,7 +449,6 @@ static void LoadOptions()
 {
 	sgOptions.Audio.nSoundVolume = getIniInt("Audio", "Sound Volume", VOLUME_MAX);
 	sgOptions.Audio.nMusicVolume = getIniInt("Audio", "Music Volume", VOLUME_MAX);
-	sgOptions.Audio.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
 	sgOptions.Audio.bAutoEquipSound = getIniBool("Audio", "Auto Equip Sound", false);
 
 #ifndef __vita__
@@ -496,6 +495,7 @@ static void LoadOptions()
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
+	sgOptions.Load();
 }
 
 static void diablo_init_screen()
