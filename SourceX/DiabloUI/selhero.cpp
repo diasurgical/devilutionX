@@ -276,7 +276,7 @@ void selhero_List_Select(int value)
 		if (gbIsHellfire) {
 			vecSelHeroDlgItems.push_back(new UiListItem("Monk", PC_MONK));
 		}
-		if (gbBard || sgOptions.Gameplay.bTestBard) {
+		if (gbBard || *sgOptions.Gameplay.bTestBard) {
 			vecSelHeroDlgItems.push_back(new UiListItem("Bard", PC_BARD));
 		}
 		if (gbBarbarian || sgOptions.Gameplay.bTestBarbarian) {

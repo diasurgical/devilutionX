@@ -184,7 +184,7 @@ public:
 	/** @brief Will players still damage other players in non-PvP mode. */
 	BooleanOption bFriendlyFire = { "Friendly Fire", true };
 	/** @brief Enable the bard hero class. */
-	bool bTestBard;
+	BooleanOption bTestBard = { "Test Bard", false };
 	/** @brief Enable the babarian hero class. */
 	bool bTestBarbarian;
 	/** @brief Show the current level progress. */
