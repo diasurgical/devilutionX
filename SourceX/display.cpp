@@ -211,7 +211,7 @@ bool SpawnWindow(const char *lpWindowName)
 #ifndef USE_SDL1
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
-		if (sgOptions.Graphics.bVSync) {
+		if (*sgOptions.Graphics.bVSync) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 

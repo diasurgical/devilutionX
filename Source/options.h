@@ -156,7 +156,7 @@ public:
 	/** @brief Only scale by values divisible by the width and height. */
 	BooleanOption bIntegerScaling = { "Integer Scaling", false };
 	/** @brief Enable vsync on the output. */
-	bool bVSync;
+	BooleanOption bVSync = { "Vertical Sync", true };
 	/** @brief Use blended transparency rather than stippled. */
 	bool bBlendedTransparancy;
 	/** @brief Gamma correction level. */
