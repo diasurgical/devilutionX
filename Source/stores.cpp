@@ -628,7 +628,7 @@ void S_StartSRepair()
 
 void FillManaPlayer()
 {
-	if (!sgOptions.Gameplay.bAdriaRefillsMana)
+	if (!*sgOptions.Gameplay.bAdriaRefillsMana)
 		return;
 	if (plr[myplr]._pMana != plr[myplr]._pMaxMana) {
 		PlaySFX(IS_CAST8);

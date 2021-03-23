@@ -194,7 +194,7 @@ public:
 	/** @brief Automatically pick up goald when walking on to it. */
 	BooleanOption bAutoGoldPickup = { "Auto Gold Pickup", false };
 	/** @brief Recover mana when talking to Adria. */
-	bool bAdriaRefillsMana;
+	BooleanOption bAdriaRefillsMana = { "Adria Refills Mana", false };
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
 	bool bAutoEquipWeapons;
 	/** @brief Automatically attempt to equip armor-type items when picking them up. */

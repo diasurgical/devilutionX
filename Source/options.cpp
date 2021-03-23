@@ -93,6 +93,7 @@ GameplayOptions::GameplayOptions()
 	AddOption(bExperienceBar);
 	AddOption(bEnemyHealthBar);
 	AddOption(bAutoGoldPickup);
+	AddOption(bAdriaRefillsMana);
 }
 
 Options::Options()
