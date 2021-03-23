@@ -484,6 +484,7 @@ LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 	case WM_SYSKEYDOWN:
 	case WM_SYSCOMMAND:
+		return;
 	case WM_MOUSEMOVE:
 		GetMousePos(lParam);
 		return 0;
