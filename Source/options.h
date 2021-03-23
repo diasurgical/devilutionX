@@ -196,15 +196,15 @@ public:
 	/** @brief Recover mana when talking to Adria. */
 	BooleanOption bAdriaRefillsMana = { "Adria Refills Mana", false };
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
-	bool bAutoEquipWeapons;
+	BooleanOption bAutoEquipWeapons = { "Auto Equip Weapons", true };
 	/** @brief Automatically attempt to equip armor-type items when picking them up. */
-	bool bAutoEquipArmor;
+	BooleanOption bAutoEquipArmor = { "Auto Equip Armor", false };
 	/** @brief Automatically attempt to equip helm-type items when picking them up. */
-	bool bAutoEquipHelms;
+	BooleanOption bAutoEquipHelms = { "Auto Equip Helms", false };
 	/** @brief Automatically attempt to equip shield-type items when picking them up. */
-	bool bAutoEquipShields;
+	BooleanOption bAutoEquipShields = { "Auto Equip Shields", false };
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
-	bool bAutoEquipJewelry;
+	BooleanOption bAutoEquipJewelry = { "Auto Equip Jewelry", false };
 	/** @brief Only enable 2/3 quests in each game sessoin */
 	bool bRandomizeQuests;
 	/** @brief Indicates whether or not mosnter type (Animal, Demon, Undead) is shown along with other monster information. */

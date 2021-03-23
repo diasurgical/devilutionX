@@ -823,23 +823,23 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 bool AutoEquipEnabled(const ItemStruct &item)
 {
 	if (item.isWeapon()) {
-		return sgOptions.Gameplay.bAutoEquipWeapons;
+		return *sgOptions.Gameplay.bAutoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
-		return sgOptions.Gameplay.bAutoEquipArmor;
+		return *sgOptions.Gameplay.bAutoEquipArmor;
 	}
 
 	if (item.isHelm()) {
-		return sgOptions.Gameplay.bAutoEquipHelms;
+		return *sgOptions.Gameplay.bAutoEquipHelms;
 	}
 
 	if (item.isShield()) {
-		return sgOptions.Gameplay.bAutoEquipShields;
+		return *sgOptions.Gameplay.bAutoEquipShields;
 	}
 
 	if (item.isJewelry()) {
-		return sgOptions.Gameplay.bAutoEquipJewelry;
+		return *sgOptions.Gameplay.bAutoEquipJewelry;
 	}
 
 	return true;

@@ -407,11 +407,6 @@ static void SaveOptions()
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	setIniInt("Game", "Auto Equip Weapons", sgOptions.Gameplay.bAutoEquipWeapons);
-	setIniInt("Game", "Auto Equip Armor", sgOptions.Gameplay.bAutoEquipArmor);
-	setIniInt("Game", "Auto Equip Helms", sgOptions.Gameplay.bAutoEquipHelms);
-	setIniInt("Game", "Auto Equip Shields", sgOptions.Gameplay.bAutoEquipShields);
-	setIniInt("Game", "Auto Equip Jewelry", sgOptions.Gameplay.bAutoEquipJewelry);
 	setIniInt("Game", "Randomize Quests", sgOptions.Gameplay.bRandomizeQuests);
 	setIniInt("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 
@@ -439,11 +434,6 @@ static void LoadOptions()
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons", true);
-	sgOptions.Gameplay.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor", false);
-	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms", false);
-	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields", false);
-	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry", false);
 	sgOptions.Gameplay.bRandomizeQuests = getIniBool("Game", "Randomize Quests", true);
 	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
 

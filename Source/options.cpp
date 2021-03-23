@@ -94,6 +94,11 @@ GameplayOptions::GameplayOptions()
 	AddOption(bEnemyHealthBar);
 	AddOption(bAutoGoldPickup);
 	AddOption(bAdriaRefillsMana);
+	AddOption(bAutoEquipWeapons);
+	AddOption(bAutoEquipArmor);
+	AddOption(bAutoEquipHelms);
+	AddOption(bAutoEquipShields);
+	AddOption(bAutoEquipJewelry);
 }
 
 Options::Options()
