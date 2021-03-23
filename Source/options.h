@@ -167,12 +167,14 @@ public:
 	BooleanOption bFPSLimit = { "FPS Limiter", true };
 };
 
-class GameplayOptions final {
+class GameplayOptions final : public OptionGroup {
 public:
+	GameplayOptions();
+
 	/** @brief Game play ticks per secound. */
 	Sint32 nTickRate;
 	/** @brief Enable double walk speed when in town. */
-	bool bJogInTown;
+	BooleanOption bJogInTown = { "Fast Walk", false };
 	/** @brief Do not let the mouse leave the application window. */
 	bool bGrabInput;
 	/** @brief Enable the Theo quest. */

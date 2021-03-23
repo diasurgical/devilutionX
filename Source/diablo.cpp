@@ -407,7 +407,6 @@ static void SaveOptions()
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	setIniInt("Game", "Fast Walk", sgOptions.Gameplay.bJogInTown);
 	setIniInt("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
 	setIniInt("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
 	setIniInt("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
@@ -450,7 +449,6 @@ static void LoadOptions()
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bJogInTown = getIniBool("Game", "Fast Walk", false);
 	sgOptions.Gameplay.bGrabInput = getIniBool("Game", "Grab Input", false);
 	sgOptions.Gameplay.bTheoQuest = getIniBool("Game", "Theo Quest", false);
 	sgOptions.Gameplay.bCowQuest = getIniBool("Game", "Cow Quest", false);

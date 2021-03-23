@@ -744,7 +744,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
 		sgGameInitInfo.nDifficulty = gnDifficulty;
 		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
-		sgGameInitInfo.bJogInTown = sgOptions.Gameplay.bJogInTown;
+		sgGameInitInfo.bJogInTown = *sgOptions.Gameplay.bJogInTown;
 		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
 		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest;
 		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;

@@ -80,11 +80,18 @@ GraphicsOptions::GraphicsOptions()
 	AddOption(bFPSLimit);
 }
 
+GameplayOptions::GameplayOptions()
+    : OptionGroup("Game")
+{
+	AddOption(bJogInTown);
+}
+
 Options::Options()
     : OptionGroup("")
 {
 	AddOptionGroup(Audio);
 	AddOptionGroup(Graphics);
+	AddOptionGroup(Gameplay);
 }
 
 }

@@ -445,7 +445,7 @@ void selgame_Password_Select(int value)
 	GameData *data = m_client_info->initdata;
 	data->nDifficulty = nDifficulty;
 	data->nTickRate = nTickRate;
-	data->bJogInTown = sgOptions.Gameplay.bJogInTown;
+	data->bJogInTown = *sgOptions.Gameplay.bJogInTown;
 	data->bTheoQuest = sgOptions.Gameplay.bTheoQuest;
 	data->bCowQuest = sgOptions.Gameplay.bCowQuest;
 
