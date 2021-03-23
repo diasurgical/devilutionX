@@ -65,6 +65,7 @@ bool debug_mode_key_inverted_v = false;
 bool debug_mode_dollar_sign = false;
 bool debug_mode_key_d = false;
 bool debug_mode_key_i = false;
+int debug_mode_key_j = 0;
 int arrowdebug = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
@@ -115,7 +116,7 @@ static void print_help_and_exit()
 	printInConsole("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
 	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
-	//printInConsole("    %-20s %-30s\n", "-j <##>", "Init trigger at level");
+	printInConsole("    %-20s %-30s\n", "-j <##>", "Mausoleum warps to given level");
 	printInConsole("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
 	printInConsole("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
@@ -163,10 +164,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			debug_mode_key_d = true;
 		} else if (strcasecmp("-i", argv[i]) == 0) {
 			debug_mode_key_i = true;
-			/*
 		} else if (strcasecmp("-j", argv[i]) == 0) {
-			debug_mode_key_J_trigger = argv[++i];
-		*/
+			debug_mode_key_j = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-l", argv[i]) == 0) {
 			setlevel = FALSE;
 			leveldebug = true;

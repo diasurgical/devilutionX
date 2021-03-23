@@ -77,6 +77,8 @@ void InitTownTriggers()
 			trigs[numtrigs]._ty = 21;
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 			trigs[numtrigs]._tlvl = 5;
+			if (debug_mode_key_j)
+				trigs[numtrigs]._tlvl = debug_mode_key_j;
 			numtrigs++;
 		}
 		if (gbIsMultiplayer || plr[myplr].pTownWarps & 2 || (gbIsHellfire && plr[myplr]._pLevel >= 15)) {
