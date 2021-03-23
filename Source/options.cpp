@@ -87,6 +87,7 @@ GameplayOptions::GameplayOptions()
 	AddOption(bGrabInput);
 	AddOption(bTheoQuest);
 	AddOption(bCowQuest);
+	AddOption(bFriendlyFire);
 }
 
 Options::Options()

@@ -407,7 +407,6 @@ static void SaveOptions()
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	setIniInt("Game", "Friendly Fire", sgOptions.Gameplay.bFriendlyFire);
 	setIniInt("Game", "Test Bard", sgOptions.Gameplay.bTestBard);
 	setIniInt("Game", "Test Barbarian", sgOptions.Gameplay.bTestBarbarian);
 	setIniInt("Game", "Experience Bar", sgOptions.Gameplay.bExperienceBar);
@@ -446,7 +445,6 @@ static void LoadOptions()
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bFriendlyFire = getIniBool("Game", "Friendly Fire", true);
 	sgOptions.Gameplay.bTestBard = getIniBool("Game", "Test Bard", false);
 	sgOptions.Gameplay.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
 	sgOptions.Gameplay.bExperienceBar = getIniBool("Game", "Experience Bar", false);

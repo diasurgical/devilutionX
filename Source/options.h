@@ -182,7 +182,7 @@ public:
 	/** @brief Enable the cow quest. */
 	BooleanOption bCowQuest = { "Cow Quest", false };
 	/** @brief Will players still damage other players in non-PvP mode. */
-	bool bFriendlyFire;
+	BooleanOption bFriendlyFire = { "Friendly Fire", true };
 	/** @brief Enable the bard hero class. */
 	bool bTestBard;
 	/** @brief Enable the babarian hero class. */

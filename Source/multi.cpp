@@ -747,7 +747,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.bJogInTown = *sgOptions.Gameplay.bJogInTown;
 		sgGameInitInfo.bTheoQuest = *sgOptions.Gameplay.bTheoQuest;
 		sgGameInitInfo.bCowQuest = *sgOptions.Gameplay.bCowQuest;
-		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;
+		sgGameInitInfo.bFriendlyFire = *sgOptions.Gameplay.bFriendlyFire;
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
 		ProgramData.maxplayers = MAX_PLRS;
