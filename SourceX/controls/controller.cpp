@@ -1,5 +1,7 @@
 #include "controls/controller.h"
 
+#include <cmath>
+
 #include "controls/devices/kbcontroller.h"
 #include "controls/devices/joystick.h"
 #include "controls/devices/game_controller.h"
