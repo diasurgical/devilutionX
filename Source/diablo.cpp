@@ -52,23 +52,20 @@ Options sgOptions;
 
 bool gbForceWindowed = false;
 bool gbShowIntro = true;
-BOOL leveldebug;
+bool leveldebug = false;
 #ifdef _DEBUG
-BOOL monstdebug;
+bool monstdebug = false;
 _monster_id DebugMonsters[10];
-int debugmonsttypes;
-BOOL visiondebug;
+int debugmonsttypes = 0;
+bool visiondebug = false;
 int questdebug = -1;
-int debug_mode_key_s;
-int debug_mode_key_w;
-int debug_mode_key_inverted_v;
-int debug_mode_dollar_sign;
-int debug_mode_key_d;
-int debug_mode_key_i;
-int dbgplr;
-int dbgqst;
-int dbgmon;
-int arrowdebug;
+bool debug_mode_key_s = false;
+bool debug_mode_key_w = false;
+bool debug_mode_key_inverted_v = false;
+bool debug_mode_dollar_sign = false;
+bool debug_mode_key_d = false;
+bool debug_mode_key_i = false;
+int arrowdebug = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
@@ -116,7 +113,6 @@ static void print_help_and_exit()
 	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
 	printInConsole("    %-20s %-30s\n", "-$", "Enable god mode");
 	printInConsole("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
-	//printInConsole("    %-20s %-30s\n", "-b", "Enable item drop log");
 	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	//printInConsole("    %-20s %-30s\n", "-j <##>", "Init trigger at level");
@@ -151,53 +147,49 @@ static void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("-x", argv[i]) == 0) {
 			gbForceWindowed = true;
 		} else if (strcasecmp("--spawn", argv[i]) == 0) {
-			forceSpawn = TRUE;
+			forceSpawn = true;
 		} else if (strcasecmp("--diablo", argv[i]) == 0) {
-			forceDiablo = TRUE;
+			forceDiablo = true;
 		} else if (strcasecmp("--nestart", argv[i]) == 0) {
 			gbNestArt = true;
 		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
 			gbVanilla = true;
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
-			debug_mode_key_inverted_v = TRUE;
+			debug_mode_key_inverted_v = true;
 		} else if (strcasecmp("-$", argv[i]) == 0) {
-			debug_mode_dollar_sign = TRUE;
-			/*
-		} else if (strcasecmp("-b", argv[i]) == 0) {
-			debug_mode_key_b = 1;
-		*/
+			debug_mode_dollar_sign = true;
 		} else if (strcasecmp("-d", argv[i]) == 0) {
-			debug_mode_key_d = TRUE;
+			debug_mode_key_d = true;
 		} else if (strcasecmp("-i", argv[i]) == 0) {
-			debug_mode_key_i = TRUE;
+			debug_mode_key_i = true;
 			/*
 		} else if (strcasecmp("-j", argv[i]) == 0) {
 			debug_mode_key_J_trigger = argv[++i];
 		*/
 		} else if (strcasecmp("-l", argv[i]) == 0) {
 			setlevel = FALSE;
-			leveldebug = TRUE;
+			leveldebug = true;
 			leveltype = SDL_atoi(argv[++i]);
 			currlevel = SDL_atoi(argv[++i]);
 			plr[0].plrlevel = currlevel;
 		} else if (strcasecmp("-m", argv[i]) == 0) {
-			monstdebug = TRUE;
+			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-q", argv[i]) == 0) {
 			questdebug = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-r", argv[i]) == 0) {
 			setseed = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-s", argv[i]) == 0) {
-			debug_mode_key_s = TRUE;
+			debug_mode_key_s = true;
 		} else if (strcasecmp("-t", argv[i]) == 0) {
-			leveldebug = TRUE;
-			setlevel = TRUE;
+			leveldebug = true;
+			setlevel = true;
 			setlvlnum = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-v", argv[i]) == 0) {
-			visiondebug = TRUE;
+			visiondebug = true;
 		} else if (strcasecmp("-w", argv[i]) == 0) {
-			debug_mode_key_w = TRUE;
+			debug_mode_key_w = true;
 #endif
 		} else {
 			printInConsole("unrecognized option '%s'\n", argv[i]);

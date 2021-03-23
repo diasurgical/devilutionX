@@ -129,6 +129,8 @@ void SetAllSpellsCheat()
 	SetSpellLevelCheat(SPL_BONESPIRIT, 1);
 }
 
+int dbgplr;
+
 void PrintDebugPlayer(BOOL bNextPlayer)
 {
 	char dstr[128];
@@ -152,6 +154,8 @@ void PrintDebugPlayer(BOOL bNextPlayer)
 		NetSendCmdString(1 << myplr, dstr);
 	}
 }
+
+int dbgqst;
 
 void PrintDebugQuest()
 {
@@ -190,6 +194,8 @@ void PrintDebugMonster(int m)
 	sprintf(dstr, "Active List = %i, Squelch = %i", bActive, monster[m]._msquelch);
 	NetSendCmdString(1 << myplr, dstr);
 }
+
+int dbgmon;
 
 void GetDebugMonster()
 {

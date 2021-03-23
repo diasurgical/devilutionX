@@ -159,21 +159,18 @@ void diablo_color_cyc_logic();
 /* rdata */
 
 extern bool gbForceWindowed;
-extern BOOL leveldebug;
+extern bool leveldebug;
 #ifdef _DEBUG
-extern BOOL monstdebug;
-extern int debugmonsttypes;
+extern bool monstdebug;
 extern _monster_id DebugMonsters[10];
-extern BOOL visiondebug;
+extern int debugmonsttypes;
+extern bool visiondebug;
 extern int questdebug;
-extern int debug_mode_key_w;
-extern int debug_mode_key_inverted_v;
-extern int debug_mode_dollar_sign;
-extern int debug_mode_key_d;
-extern int debug_mode_key_i;
-extern int dbgplr;
-extern int dbgqst;
-extern int dbgmon;
+extern bool debug_mode_key_w;
+extern bool debug_mode_key_inverted_v;
+extern bool debug_mode_dollar_sign;
+extern bool debug_mode_key_d;
+extern bool debug_mode_key_i;
 #endif
 extern bool gbFriendlyMode;
 extern bool gbFriendlyFire;
