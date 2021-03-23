@@ -252,6 +252,7 @@ add_library(devilution STATIC
   Source/nthread.cpp
   Source/objdat.cpp
   Source/objects.cpp
+  Source/options.cpp
   Source/pack.cpp
   Source/palette.cpp
   Source/path.cpp
