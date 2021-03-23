@@ -75,6 +75,7 @@ GraphicsOptions::GraphicsOptions()
 	AddOption(bFitToScreen);
 	AddOption(bIntegerScaling);
 	AddOption(bVSync);
+	AddOption(bBlendedTransparancy);
 }
 
 Options::Options()

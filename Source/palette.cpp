@@ -136,7 +136,7 @@ void LoadPalette(const char *pszFileName)
 #endif
 	}
 
-	if (sgOptions.Graphics.bBlendedTransparancy) {
+	if (*sgOptions.Graphics.bBlendedTransparancy) {
 		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_CRYPT) {
 			GenerateBlendedLookupTable(orig_palette, 1, 31);
 		} else if (leveltype == DTYPE_NEST) {
@@ -270,7 +270,7 @@ static void CycleColors(int from, int to)
 	}
 	system_palette[to] = col;
 
-	if (!sgOptions.Graphics.bBlendedTransparancy)
+	if (!*sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
 	for (int i = 0; i < 256; i++) {
@@ -302,7 +302,7 @@ static void CycleColorsReverse(int from, int to)
 	}
 	system_palette[from] = col;
 
-	if (!sgOptions.Graphics.bBlendedTransparancy)
+	if (!*sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
 	for (int i = 0; i < 256; i++) {

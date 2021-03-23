@@ -158,7 +158,7 @@ public:
 	/** @brief Enable vsync on the output. */
 	BooleanOption bVSync = { "Vertical Sync", true };
 	/** @brief Use blended transparency rather than stippled. */
-	bool bBlendedTransparancy;
+	BooleanOption bBlendedTransparancy = { "Blended Transparency", true };
 	/** @brief Gamma correction level. */
 	Sint32 nGammaCorrection;
 	/** @brief Enable color cycling animations. */

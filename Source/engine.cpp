@@ -374,7 +374,7 @@ void CelClippedBlitLightTransTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelB
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
 	if (cel_transparency_active) {
-		if (sgOptions.Graphics.bBlendedTransparancy)
+		if (*sgOptions.Graphics.bBlendedTransparancy)
 			CelBlitLightBlendedSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth, NULL);
 		else
 			CelBlitLightTransSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
@@ -565,7 +565,7 @@ static void DrawHalfTransparentStippledRectTo(CelOutputBuffer out, int sx, int s
 
 void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
 {
-	if (sgOptions.Graphics.bBlendedTransparancy) {
+	if (*sgOptions.Graphics.bBlendedTransparancy) {
 		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
 	} else {
 		DrawHalfTransparentStippledRectTo(out, sx, sy, width, height);
