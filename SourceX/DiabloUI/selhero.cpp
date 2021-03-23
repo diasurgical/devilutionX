@@ -88,6 +88,7 @@ void selhero_Free()
 
 	selhero_FreeDlgItems();
 	selhero_FreeListItems();
+	UnloadScrollBar();
 
 	bUIElementsLoaded = false;
 }
@@ -457,7 +458,17 @@ void selhero_Load_Select(int value)
 	if (vecSelHeroDlgItems[value]->m_value == 0) {
 		selhero_result = SELHERO_CONTINUE;
 		return;
-	} else if (!selhero_isMultiPlayer) {
+	}
+
+	if (!selhero_isMultiPlayer) {
+		// This is part of a dangerous hack to enable difficulty selection in single-player.
+		// FIXME: Dialogs should not refer to each other's variables.
+
+		// We disable `selhero_endMenu` and replace the background and art
+		// and the item list with the difficulty selection ones.
+		//
+		// This means selhero's render loop will render selgame's items,
+		// which happens to work because the render loops are similar.
 		selhero_endMenu = false;
 		selhero_Free();
 		LoadBackgroundArt("ui_art\\selgame.pcx");
@@ -530,8 +541,6 @@ static void UiSelHeroDialog(
 
 	*dlgresult = selhero_result;
 	snprintf(*name, sizeof(*name), selhero_heroInfo.name);
-
-	UnloadScrollBar();
 }
 
 void UiSelHeroSingDialog(
