@@ -1464,7 +1464,7 @@ void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case DVL_WM_SYSKEYDOWN:
 	case DVL_WM_SYSCOMMAND:
 	case DVL_WM_MOUSEMOVE:
-		GetMousePos(lParam);
+		//GetMousePos(lParam);
 		return;
 	case DVL_WM_LBUTTONDOWN:
 		if (sgbMouseDown != CLICK_NONE)
