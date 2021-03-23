@@ -71,6 +71,8 @@ GraphicsOptions::GraphicsOptions()
 #ifndef __vita__
 	AddOption(bUpscale);
 #endif
+
+	AddOption(bFitToScreen);
 }
 
 Options::Options()

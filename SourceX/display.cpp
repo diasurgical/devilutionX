@@ -163,7 +163,7 @@ bool SpawnWindow(const char *lpWindowName)
 	int width = sgOptions.Graphics.nWidth;
 	int height = sgOptions.Graphics.nHeight;
 
-	if (*sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
+	if (*sgOptions.Graphics.bUpscale && *sgOptions.Graphics.bFitToScreen) {
 		CalculatePreferdWindowSize(width, height);
 	}
 	AdjustToScreenGeometry(width, height);

@@ -403,7 +403,6 @@ static void SaveOptions()
 	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
 	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
 #endif
-	setIniInt("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
 	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	setIniInt("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
 	setIniInt("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
@@ -452,7 +451,6 @@ static void LoadOptions()
 	sgOptions.Graphics.nWidth = DEFAULT_WIDTH;
 	sgOptions.Graphics.nHeight = DEFAULT_HEIGHT;
 #endif
-	sgOptions.Graphics.bFitToScreen = getIniBool("Graphics", "Fit to Screen", true);
 	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
 	sgOptions.Graphics.bIntegerScaling = getIniBool("Graphics", "Integer Scaling", false);
 	sgOptions.Graphics.bVSync = getIniBool("Graphics", "Vertical Sync", true);

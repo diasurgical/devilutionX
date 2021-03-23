@@ -150,7 +150,7 @@ public:
 #endif
 	};
 	/** @brief Expand the aspect ratio to match the screen. */
-	bool bFitToScreen;
+	BooleanOption bFitToScreen = { "Fit to Screen", true };
 	/** @brief See SDL_HINT_RENDER_SCALE_QUALITY. */
 	char szScaleQuality[2];
 	/** @brief Only scale by values divisible by the width and height. */
