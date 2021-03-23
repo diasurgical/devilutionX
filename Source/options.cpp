@@ -100,6 +100,7 @@ GameplayOptions::GameplayOptions()
 	AddOption(bAutoEquipShields);
 	AddOption(bAutoEquipJewelry);
 	AddOption(bRandomizeQuests);
+	AddOption(bShowMonsterType);
 }
 
 Options::Options()

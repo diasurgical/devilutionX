@@ -208,7 +208,7 @@ public:
 	/** @brief Only enable 2/3 quests in each game sessoin */
 	BooleanOption bRandomizeQuests = { "Randomize Quests", true };
 	/** @brief Indicates whether or not mosnter type (Animal, Demon, Undead) is shown along with other monster information. */
-	bool bShowMonsterType;
+	BooleanOption bShowMonsterType = { "Show Monster Type", false };
 };
 
 class NetworkOptions final {

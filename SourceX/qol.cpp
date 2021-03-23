@@ -92,7 +92,7 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 
 	FillRect(out, xPos, yPos, (width * currentLife) / maxLife, height, filledColor);
 
-	if (sgOptions.Gameplay.bShowMonsterType) {
+	if (*sgOptions.Gameplay.bShowMonsterType) {
 		for (int j = 0; j < borderSize; j++) {
 			FastDrawHorizLine(out, xPos - xOffset - corners, yPos - borderSize - yOffset + j, (xOffset + corners) * 2 + width, borderColor);
 			FastDrawHorizLine(out, xPos - xOffset, yPos + height + yOffset + j, width + corners + xOffset * 2, borderColor);

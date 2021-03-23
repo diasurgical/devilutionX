@@ -5181,7 +5181,7 @@ void PrintMonstHistory(int mt)
 {
 	int minHP, maxHP, res;
 
-	if (sgOptions.Gameplay.bShowMonsterType) {
+	if (*sgOptions.Gameplay.bShowMonsterType) {
 		sprintf(tempstr, "Type: %s  Kills: %i", GetMonsterTypeText(monsterdata[mt]), monstkills[mt]);
 	} else {
 		sprintf(tempstr, "Total kills: %i", monstkills[mt]);
@@ -5261,7 +5261,7 @@ void PrintUniqueHistory()
 {
 	int res;
 
-	if (sgOptions.Gameplay.bShowMonsterType) {
+	if (*sgOptions.Gameplay.bShowMonsterType) {
 		sprintf(tempstr, "Type: %s", GetMonsterTypeText(*monster[pcursmonst].MData));
 		AddPanelString(tempstr, TRUE);
 	}
