@@ -192,7 +192,7 @@ public:
 	/** @brief Show enemy health at the top of the screen. */
 	BooleanOption bEnemyHealthBar = { "Enemy Health Bar", false };
 	/** @brief Automatically pick up goald when walking on to it. */
-	bool bAutoGoldPickup;
+	BooleanOption bAutoGoldPickup = { "Auto Gold Pickup", false };
 	/** @brief Recover mana when talking to Adria. */
 	bool bAdriaRefillsMana;
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */

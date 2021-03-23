@@ -92,6 +92,7 @@ GameplayOptions::GameplayOptions()
 	AddOption(bTestBarbarian);
 	AddOption(bExperienceBar);
 	AddOption(bEnemyHealthBar);
+	AddOption(bAutoGoldPickup);
 }
 
 Options::Options()

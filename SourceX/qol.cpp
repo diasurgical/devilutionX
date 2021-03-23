@@ -194,7 +194,7 @@ bool HasRoomForGold()
 
 void AutoGoldPickup(int pnum)
 {
-	if (!sgOptions.Gameplay.bAutoGoldPickup)
+	if (!*sgOptions.Gameplay.bAutoGoldPickup)
 		return;
 	if (pnum != myplr)
 		return;
