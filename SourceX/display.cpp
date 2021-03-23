@@ -155,7 +155,7 @@ bool SpawnWindow(const char *lpWindowName)
 	GameController::Add(0);
 #endif
 #endif
-#ifdef HAS_KBCTRL == 1
+#if HAS_KBCTRL == 1
 	KeyboardController::Add(0);
 #endif
 
