@@ -63,10 +63,17 @@ AudioOptions::AudioOptions()
 	AddOption(bAutoEquipSound);
 }
 
+GraphicsOptions::GraphicsOptions()
+    : OptionGroup("Graphics")
+{
+	AddOption(bFullscreen);
+}
+
 Options::Options()
     : OptionGroup("")
 {
 	AddOptionGroup(Audio);
+	AddOptionGroup(Graphics);
 }
 
 }

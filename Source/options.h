@@ -129,14 +129,16 @@ public:
 	BooleanOption bAutoEquipSound = { "Auto Equip Sound", false };
 };
 
-class GraphicsOptions final {
+class GraphicsOptions final : public OptionGroup {
 public:
+	GraphicsOptions();
+
 	/** @brief Render width. */
 	Sint32 nWidth;
 	/** @brief Render height. */
 	Sint32 nHeight;
 	/** @brief Run in fullscreen or windowed mode. */
-	bool bFullscreen;
+	BooleanOption bFullscreen = { "Fullscreen", true };
 	/** @brief Scale the image after rendering. */
 	bool bUpscale;
 	/** @brief Expand the aspect ratio to match the screen. */

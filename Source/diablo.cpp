@@ -403,7 +403,6 @@ static void SaveOptions()
 	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
 	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
 #endif
-	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
 #ifndef __vita__
 	setIniInt("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
 #endif
@@ -456,7 +455,6 @@ static void LoadOptions()
 	sgOptions.Graphics.nWidth = DEFAULT_WIDTH;
 	sgOptions.Graphics.nHeight = DEFAULT_HEIGHT;
 #endif
-	sgOptions.Graphics.bFullscreen = getIniBool("Graphics", "Fullscreen", true);
 #if !defined(USE_SDL1) && !defined(__vita__)
 	sgOptions.Graphics.bUpscale = getIniBool("Graphics", "Upscale", true);
 #else
