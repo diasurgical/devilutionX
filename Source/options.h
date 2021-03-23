@@ -154,7 +154,7 @@ public:
 	/** @brief See SDL_HINT_RENDER_SCALE_QUALITY. */
 	char szScaleQuality[2];
 	/** @brief Only scale by values divisible by the width and height. */
-	bool bIntegerScaling;
+	BooleanOption bIntegerScaling = { "Integer Scaling", false };
 	/** @brief Enable vsync on the output. */
 	bool bVSync;
 	/** @brief Use blended transparency rather than stippled. */

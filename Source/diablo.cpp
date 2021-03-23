@@ -404,7 +404,6 @@ static void SaveOptions()
 	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
 #endif
 	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
-	setIniInt("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
 	setIniInt("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
 	setIniInt("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
@@ -452,7 +451,6 @@ static void LoadOptions()
 	sgOptions.Graphics.nHeight = DEFAULT_HEIGHT;
 #endif
 	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
-	sgOptions.Graphics.bIntegerScaling = getIniBool("Graphics", "Integer Scaling", false);
 	sgOptions.Graphics.bVSync = getIniBool("Graphics", "Vertical Sync", true);
 	sgOptions.Graphics.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);

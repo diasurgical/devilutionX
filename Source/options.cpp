@@ -73,6 +73,7 @@ GraphicsOptions::GraphicsOptions()
 #endif
 
 	AddOption(bFitToScreen);
+	AddOption(bIntegerScaling);
 }
 
 Options::Options()

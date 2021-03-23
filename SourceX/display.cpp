@@ -89,7 +89,7 @@ void CalculatePreferdWindowSize(int &width, int &height)
 		ErrSdl();
 	}
 
-	if (!sgOptions.Graphics.bIntegerScaling) {
+	if (!*sgOptions.Graphics.bIntegerScaling) {
 		float wFactor = (float)mode.w / width;
 		float hFactor = (float)mode.h / height;
 
@@ -225,7 +225,7 @@ bool SpawnWindow(const char *lpWindowName)
 			ErrSdl();
 		}
 
-		if (sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
+		if (*sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
 			ErrSdl();
 		}
 
