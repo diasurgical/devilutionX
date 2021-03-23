@@ -255,7 +255,7 @@ static void gamemenu_get_speed()
 
 static void gamemenu_get_color_cycling()
 {
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[*sgOptions.Graphics.bColorCycling ? 1 : 0];
 }
 
 static int gamemenu_slider_gamma()
@@ -393,8 +393,8 @@ void gamemenu_speed(BOOL bActivate)
 
 void gamemenu_color_cycling(BOOL bActivate)
 {
-	sgOptions.Graphics.bColorCycling = !sgOptions.Graphics.bColorCycling;
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
+	sgOptions.Graphics.bColorCycling = !*sgOptions.Graphics.bColorCycling;
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[*sgOptions.Graphics.bColorCycling ? 1 : 0];
 }
 
 DEVILUTION_END_NAMESPACE

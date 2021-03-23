@@ -162,7 +162,7 @@ public:
 	/** @brief Gamma correction level. */
 	Sint32 nGammaCorrection;
 	/** @brief Enable color cycling animations. */
-	bool bColorCycling;
+	BooleanOption bColorCycling = { "Color Cycling", true };
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
 };
