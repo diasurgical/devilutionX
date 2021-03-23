@@ -143,7 +143,7 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 
 void DrawXPBar(CelOutputBuffer out)
 {
-	if (!sgOptions.Gameplay.bExperienceBar)
+	if (!*sgOptions.Gameplay.bExperienceBar)
 		return;
 
 	int barWidth = 306;

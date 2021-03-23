@@ -188,7 +188,7 @@ public:
 	/** @brief Enable the babarian hero class. */
 	BooleanOption bTestBarbarian = { "Test Barbarian", false };
 	/** @brief Show the current level progress. */
-	bool bExperienceBar;
+	BooleanOption bExperienceBar = { "Experience Bar", false };
 	/** @brief Show enemy health at the top of the screen. */
 	bool bEnemyHealthBar;
 	/** @brief Automatically pick up goald when walking on to it. */

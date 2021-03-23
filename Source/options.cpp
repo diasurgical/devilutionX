@@ -90,6 +90,7 @@ GameplayOptions::GameplayOptions()
 	AddOption(bFriendlyFire);
 	AddOption(bTestBard);
 	AddOption(bTestBarbarian);
+	AddOption(bExperienceBar);
 }
 
 Options::Options()
