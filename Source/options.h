@@ -186,7 +186,7 @@ public:
 	/** @brief Enable the bard hero class. */
 	BooleanOption bTestBard = { "Test Bard", false };
 	/** @brief Enable the babarian hero class. */
-	bool bTestBarbarian;
+	BooleanOption bTestBarbarian = { "Test Barbarian", false };
 	/** @brief Show the current level progress. */
 	bool bExperienceBar;
 	/** @brief Show enemy health at the top of the screen. */

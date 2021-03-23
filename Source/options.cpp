@@ -89,6 +89,7 @@ GameplayOptions::GameplayOptions()
 	AddOption(bCowQuest);
 	AddOption(bFriendlyFire);
 	AddOption(bTestBard);
+	AddOption(bTestBarbarian);
 }
 
 Options::Options()
