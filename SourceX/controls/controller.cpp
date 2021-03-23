@@ -127,7 +127,7 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	}
 #endif
 
-	Joystick *const joystick = Joystick::Get(event);
+	const Joystick *const joystick = Joystick::Get(event)
 	if (joystick != NULL)
 		result.button = joystick->ToControllerButton(event);
 
