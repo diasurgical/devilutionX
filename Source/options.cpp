@@ -85,6 +85,7 @@ GameplayOptions::GameplayOptions()
 {
 	AddOption(bJogInTown);
 	AddOption(bGrabInput);
+	AddOption(bTheoQuest);
 }
 
 Options::Options()

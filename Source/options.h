@@ -178,7 +178,7 @@ public:
 	/** @brief Do not let the mouse leave the application window. */
 	BooleanOption bGrabInput = { "Grab Input", false };
 	/** @brief Enable the Theo quest. */
-	bool bTheoQuest;
+	BooleanOption bTheoQuest = { "Theo Quest", false };
 	/** @brief Enable the cow quest. */
 	bool bCowQuest;
 	/** @brief Will players still damage other players in non-PvP mode. */

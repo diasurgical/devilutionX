@@ -745,7 +745,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.nDifficulty = gnDifficulty;
 		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
 		sgGameInitInfo.bJogInTown = *sgOptions.Gameplay.bJogInTown;
-		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
+		sgGameInitInfo.bTheoQuest = *sgOptions.Gameplay.bTheoQuest;
 		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest;
 		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;
 		memset(&ProgramData, 0, sizeof(ProgramData));
