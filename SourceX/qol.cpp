@@ -49,7 +49,7 @@ void FillSquare(CelOutputBuffer out, int x, int y, int size, BYTE col)
 
 void DrawMonsterHealthBar(CelOutputBuffer out)
 {
-	if (!sgOptions.Gameplay.bEnemyHealthBar)
+	if (!*sgOptions.Gameplay.bEnemyHealthBar)
 		return;
 	if (currlevel == 0)
 		return;

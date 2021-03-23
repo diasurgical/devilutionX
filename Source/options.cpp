@@ -91,6 +91,7 @@ GameplayOptions::GameplayOptions()
 	AddOption(bTestBard);
 	AddOption(bTestBarbarian);
 	AddOption(bExperienceBar);
+	AddOption(bEnemyHealthBar);
 }
 
 Options::Options()

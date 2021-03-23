@@ -190,7 +190,7 @@ public:
 	/** @brief Show the current level progress. */
 	BooleanOption bExperienceBar = { "Experience Bar", false };
 	/** @brief Show enemy health at the top of the screen. */
-	bool bEnemyHealthBar;
+	BooleanOption bEnemyHealthBar = { "Enemy Health Bar", false };
 	/** @brief Automatically pick up goald when walking on to it. */
 	bool bAutoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */
