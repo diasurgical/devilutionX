@@ -164,7 +164,7 @@ public:
 	/** @brief Enable color cycling animations. */
 	BooleanOption bColorCycling = { "Color Cycling", true };
 	/** @brief Enable FPS Limit. */
-	bool bFPSLimit;
+	BooleanOption bFPSLimit = { "FPS Limiter", true };
 };
 
 class GameplayOptions final {

@@ -77,6 +77,7 @@ GraphicsOptions::GraphicsOptions()
 	AddOption(bVSync);
 	AddOption(bBlendedTransparancy);
 	AddOption(bColorCycling);
+	AddOption(bFPSLimit);
 }
 
 Options::Options()

@@ -405,7 +405,6 @@ static void SaveOptions()
 #endif
 	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
-	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
 	setIniInt("Game", "Fast Walk", sgOptions.Gameplay.bJogInTown);
@@ -449,7 +448,6 @@ static void LoadOptions()
 #endif
 	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
-	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
 	sgOptions.Gameplay.bJogInTown = getIniBool("Game", "Fast Walk", false);
