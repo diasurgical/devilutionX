@@ -246,7 +246,21 @@ void selgame_Diff_Select(int value)
 	nDifficulty = value;
 
 	if (!selhero_isMultiPlayer) {
+		// This is part of a dangerous hack to enable difficulty selection in single-player.
+		// FIXME: Dialogs should not refer to each other's variables.
+
+		// We're in the selhero loop instead of the selgame one.
+		// Free the selgame data and flag the end of the selhero loop.
 		selhero_endMenu = true;
+
+		// We only call FreeVectors because ArtBackground.Unload()
+		// will be called by selheroFree().
+		selgame_FreeVectors();
+
+		// We must clear the InitList because selhero's loop will perform
+		// one more iteration after this function exits.
+		UiInitList_clear();
+
 		return;
 	}
 
