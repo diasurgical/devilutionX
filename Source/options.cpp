@@ -84,6 +84,7 @@ GameplayOptions::GameplayOptions()
     : OptionGroup("Game")
 {
 	AddOption(bJogInTown);
+	AddOption(bGrabInput);
 }
 
 Options::Options()

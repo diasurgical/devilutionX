@@ -176,7 +176,7 @@ public:
 	/** @brief Enable double walk speed when in town. */
 	BooleanOption bJogInTown = { "Fast Walk", false };
 	/** @brief Do not let the mouse leave the application window. */
-	bool bGrabInput;
+	BooleanOption bGrabInput = { "Grab Input", false };
 	/** @brief Enable the Theo quest. */
 	bool bTheoQuest;
 	/** @brief Enable the cow quest. */
