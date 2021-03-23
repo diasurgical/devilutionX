@@ -2,7 +2,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-typedef struct AudioOptions {
+class AudioOptions final {
+public:
 	/** @brief Movie and SFX volume. */
 	Sint32 nSoundVolume;
 	/** @brief Music volume. */
@@ -11,9 +12,10 @@ typedef struct AudioOptions {
 	bool bWalkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
 	bool bAutoEquipSound;
-} AudioOptions;
+};
 
-typedef struct GraphicsOptions {
+class GraphicsOptions final {
+public:
 	/** @brief Render width. */
 	Sint32 nWidth;
 	/** @brief Render height. */
@@ -38,9 +40,10 @@ typedef struct GraphicsOptions {
 	bool bColorCycling;
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
-} GraphicsOptions;
+};
 
-typedef struct GameplayOptions {
+class GameplayOptions final {
+public:
 	/** @brief Game play ticks per secound. */
 	Sint32 nTickRate;
 	/** @brief Enable double walk speed when in town. */
@@ -79,21 +82,23 @@ typedef struct GameplayOptions {
 	bool bRandomizeQuests;
 	/** @brief Indicates whether or not mosnter type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
-} GameplayOptions;
+};
 
-typedef struct NetworkOptions {
+class NetworkOptions final {
+public:
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
 	/** @brief What network port to use. */
 	Uint16 nPort;
-} NetworkOptions;
+};
 
-typedef struct Options {
+class Options final {
+public:
 	AudioOptions Audio;
 	GameplayOptions Gameplay;
 	GraphicsOptions Graphics;
 	NetworkOptions Network;
-} Options;
+};
 
 extern Options sgOptions;
 
