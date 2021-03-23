@@ -180,7 +180,7 @@ public:
 	/** @brief Enable the Theo quest. */
 	BooleanOption bTheoQuest = { "Theo Quest", false };
 	/** @brief Enable the cow quest. */
-	bool bCowQuest;
+	BooleanOption bCowQuest = { "Cow Quest", false };
 	/** @brief Will players still damage other players in non-PvP mode. */
 	bool bFriendlyFire;
 	/** @brief Enable the bard hero class. */

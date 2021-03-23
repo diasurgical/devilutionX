@@ -407,7 +407,6 @@ static void SaveOptions()
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	setIniInt("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
 	setIniInt("Game", "Friendly Fire", sgOptions.Gameplay.bFriendlyFire);
 	setIniInt("Game", "Test Bard", sgOptions.Gameplay.bTestBard);
 	setIniInt("Game", "Test Barbarian", sgOptions.Gameplay.bTestBarbarian);
@@ -447,7 +446,6 @@ static void LoadOptions()
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bCowQuest = getIniBool("Game", "Cow Quest", false);
 	sgOptions.Gameplay.bFriendlyFire = getIniBool("Game", "Friendly Fire", true);
 	sgOptions.Gameplay.bTestBard = getIniBool("Game", "Test Bard", false);
 	sgOptions.Gameplay.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
