@@ -99,6 +99,7 @@ GameplayOptions::GameplayOptions()
 	AddOption(bAutoEquipHelms);
 	AddOption(bAutoEquipShields);
 	AddOption(bAutoEquipJewelry);
+	AddOption(bRandomizeQuests);
 }
 
 Options::Options()

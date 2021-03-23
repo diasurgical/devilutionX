@@ -206,7 +206,7 @@ public:
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
 	BooleanOption bAutoEquipJewelry = { "Auto Equip Jewelry", false };
 	/** @brief Only enable 2/3 quests in each game sessoin */
-	bool bRandomizeQuests;
+	BooleanOption bRandomizeQuests = { "Randomize Quests", true };
 	/** @brief Indicates whether or not mosnter type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
 };
