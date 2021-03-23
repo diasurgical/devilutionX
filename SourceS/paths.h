@@ -11,5 +11,6 @@ const std::string &GetConfigPath();
 void SetBasePath(const char *path);
 void SetPrefPath(const char *path);
 void SetConfigPath(const char *path);
+void SetTtfPath(const char *path);
 
 } // namespace dvl

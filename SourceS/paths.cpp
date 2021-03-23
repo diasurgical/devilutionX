@@ -13,6 +13,7 @@ namespace {
 std::string *basePath = NULL;
 std::string *prefPath = NULL;
 std::string *configPath = NULL;
+std::string *ttfPath = NULL;
 
 void AddTrailingSlash(std::string *path) {
 #ifdef _WIN32
@@ -80,6 +81,13 @@ void SetConfigPath(const char *path)
 		configPath = new std::string;
 	*configPath = path;
 	AddTrailingSlash(configPath);
+}
+
+void SetTtfPath(const char *path)
+{
+	if (ttfPath == NULL)
+		ttfPath = new std::string;
+	*ttfPath = path;
 }
 
 } // namespace dvl
