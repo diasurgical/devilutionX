@@ -67,6 +67,10 @@ void LoadTtfFont() {
 	{
 		ttf_font_path = ttfPath->data();
 	}
+	if (!FileExists(ttf_font_path))
+	{
+		ttf_font_path = TTF_FONT_DIR TTF_FONT_NAME;
+	}
 #ifdef __linux__
 	if (!FileExists(ttf_font_path))
 	{
