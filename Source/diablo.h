@@ -179,11 +179,6 @@ extern char sgbMouseDown;
 extern int gnTickRate;
 extern WORD gnTickDelay;
 extern Options sgOptions;
-
-/**
- * @brief Save game configurations to ini file
- */
-void SaveOptions();
 void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
 void diablo_quit(int exitStatus);
