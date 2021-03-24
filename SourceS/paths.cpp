@@ -6,6 +6,10 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#ifndef TTF_FONT_NAME
+#define TTF_FONT_NAME "CharisSILB.ttf"
+#endif
+
 namespace dvl {
 
 namespace {
@@ -27,11 +31,7 @@ void AddTrailingSlash(std::string *path) {
 
 void AddFontName(std::string *path)
 {
-#ifdef __AMIGA__
-	*path += "LiberationSerif - Bold.ttf";
-#else
-	*path += "CharisSILB.ttf";
-#endif
+	*path += TTF_FONT_NAME;
 }
 
 std::string *FromSDL(char *s) {

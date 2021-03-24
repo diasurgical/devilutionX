@@ -9,12 +9,6 @@ BYTE *FontTables[4];
 Art ArtFonts[4][2];
 /** This is so we know ttf has been init when we get to the diablo_deinit() function */
 BOOL was_fonts_init = false;
-#ifdef __AMIGA__
-std::string ttfFileName = "LiberationSerif - Bold.ttf";
-#endif
-#ifndef __AMIGA__
-std::string ttfFileName = "CharisSILB.ttf";
-#endif
 
 namespace {
 
@@ -68,7 +62,7 @@ void LoadTtfFont() {
 		was_fonts_init = true;
 	}
 
-	const char* ttf_font_path = ttfFileName.data();
+	const char* ttf_font_path = TTF_FONT_NAME;
 	if (ttfPath != NULL)
 	{
 		ttf_font_path = ttfPath->data();
@@ -76,7 +70,7 @@ void LoadTtfFont() {
 #ifdef __linux__
 	if (!FileExists(ttf_font_path))
 	{
-		ttf_font_path = "/usr/share/fonts/truetype/CharisSILB.ttf";
+		ttf_font_path = "/usr/share/fonts/truetype/" TTF_FONT_NAME;
 	}
 #endif
 	font = TTF_OpenFont(ttf_font_path, 17);
