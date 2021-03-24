@@ -179,6 +179,7 @@ extern char sgbMouseDown;
 extern int gnTickRate;
 extern WORD gnTickDelay;
 extern Options sgOptions;
+
 void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
 void diablo_quit(int exitStatus);
