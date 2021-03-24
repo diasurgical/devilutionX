@@ -6,6 +6,14 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#ifndef TTF_FONT_DIR
+#define TTF_FONT_DIR ""
+#endif
+
+#ifndef TTF_FONT_NAME
+#define TTF_FONT_NAME "CharisSILB.ttf"
+#endif
+
 namespace dvl {
 
 namespace {
@@ -13,6 +21,8 @@ namespace {
 std::string *basePath = NULL;
 std::string *prefPath = NULL;
 std::string *configPath = NULL;
+std::string *ttfPath = NULL;
+std::string *ttfName = NULL;
 
 void AddTrailingSlash(std::string *path) {
 #ifdef _WIN32
@@ -60,6 +70,20 @@ const std::string &GetConfigPath()
 	return *configPath;
 }
 
+const std::string &GetTtfPath()
+{
+	if (ttfPath == NULL)
+		ttfPath = new std::string(TTF_FONT_DIR);
+	return *ttfPath;
+}
+
+const std::string &GetTtfName()
+{
+	if (ttfName == NULL)
+		ttfName = new std::string(TTF_FONT_NAME);
+	return *ttfName;
+}
+
 void SetBasePath(const char *path)
 {
 	if (basePath == NULL) basePath = new std::string;
@@ -80,6 +104,21 @@ void SetConfigPath(const char *path)
 		configPath = new std::string;
 	*configPath = path;
 	AddTrailingSlash(configPath);
+}
+
+void SetTtfPath(const char *path)
+{
+	if (ttfPath == NULL)
+		ttfPath = new std::string;
+	*ttfPath = path;
+	AddTrailingSlash(ttfPath);
+}
+
+void SetTtfName(const char *path)
+{
+	if (ttfName == NULL)
+		ttfName = new std::string;
+	*ttfName = path;
 }
 
 } // namespace dvl
