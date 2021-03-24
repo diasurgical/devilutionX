@@ -1,2 +1,2 @@
 #!/bin/sh
-$APPDIR/usr/bin/devilutionx --ttf-file $APPDIR/usr/share/fonts/truetype/CharisSILB.ttf
+$APPDIR/usr/bin/devilutionx --ttf-dir $APPDIR/usr/share/fonts/truetype/

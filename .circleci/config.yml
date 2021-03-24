@@ -14,11 +14,8 @@ jobs:
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
-      - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./build/package/devilutionx ./build/devilutionx && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
-      - run: make install -Cbuild DESTDIR=AppDir && mv build/AppDir/usr/share/diasurgical/devilutionx/devilutionx.mpq build/AppDir/usr/bin/devilutionx.mpq
-      - run: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage && chmod +x linuxdeploy-x86_64.AppImage
-      - run: ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir=build/AppDir --custom-apprun=Packaging/nix/AppRun --output appimage && mv DevilutionX*.AppImage devilutionx.appimage
-      - run: cd ./build/package/ && tar -cavf ../../devilutionx.tar.xz * && cd ../../
+      - run: Packaging/nix/LinuxReleasePackaging.sh
+      - run: Packaging/nix/AppImage.sh
       - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86_64.appimage}
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64.tar.xz}
   linux_x86_64_test:
@@ -65,11 +62,8 @@ jobs:
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
-      - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./build/package/devilutionx ./build/devilutionx && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
-      - run: make install -Cbuild DESTDIR=AppDir
-      - run: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-i386.AppImage && chmod +x linuxdeploy-i386.AppImage
-      - run: ./linuxdeploy-i386.AppImage --appimage-extract-and-run --appdir=build/AppDir --output appimage && mv DevilutionX*.AppImage devilutionx.appimage
-      - run: cd ./build/package/ && tar -cavf ../../devilutionx.tar.xz * && cd ../../
+      - run: Packaging/nix/LinuxReleasePackaging.sh
+      - run: Packaging/nix/AppImage.sh
       - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86.appimage}
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86.tar.xz}
   windows_x86:
