@@ -2985,7 +2985,6 @@ void items_427A72()
 		} else {
 			sgOptions.Hellfire.szItem[0] = '\0';
 		}
-		SaveOptions();
 	}
 }
 

@@ -579,12 +579,10 @@ static void diablo_splash()
 	if (gbIsHellfire && sgOptions.Hellfire.bInto) {
 		play_movie("gendata\\Hellfire.smk", TRUE);
 		sgOptions.Hellfire.bInto = false;
-		SaveOptions();
 	}
 	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bInto) {
 		play_movie("gendata\\diablo1.smk", TRUE);
 		sgOptions.Diablo.bInto = false;
-		SaveOptions();
 	}
 
 	UiTitleDialog();
