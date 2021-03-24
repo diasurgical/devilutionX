@@ -132,16 +132,10 @@ bool SpawnWindow(const char *lpWindowName)
 	}
 
 #ifndef USE_SDL1
-	char mapping[1024];
-	memset(mapping, 0, 1024);
-	getIniValue("controls", "sdl2_controller_mapping", mapping, 1024);
-	if (mapping[0] != '\0') {
-		SDL_GameControllerAddMapping(mapping);
+	if (sgOptions.Controller.szMapping[0] != '\0') {
+		SDL_GameControllerAddMapping(sgOptions.Controller.szMapping);
 	}
 #endif
-
-	dpad_hotkeys = getIniBool("controls", "dpad_hotkeys");
-	switch_potions_and_clicks = getIniBool("controls", "switch_potions_and_clicks");
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);

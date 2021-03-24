@@ -6,6 +6,7 @@
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
 
+#include "pack.h"
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
@@ -22,6 +23,18 @@ extern "C" {
 #ifndef DEFAULT_HEIGHT
 #define DEFAULT_HEIGHT 480
 #endif
+
+typedef struct DiabloOptions {
+	/** @brief Play game intro video on startup. */
+	bool bInto;
+} DiabloOptions;
+
+typedef struct HellfireOptions {
+	/** @brief Play game intro video on startup. */
+	bool bInto;
+	/** @brief Corner stone of the world item. */
+	char szItem[sizeof(PkItemStruct) * 2 + 1];
+} HellfireOptions;
 
 typedef struct AudioOptions {
 	/** @brief Movie and SFX volume. */
@@ -102,18 +115,42 @@ typedef struct GameplayOptions {
 	bool bShowMonsterType;
 } GameplayOptions;
 
+typedef struct ControllerOptions {
+	/** @brief SDL Controller mapping, see SDL_GameControllerDB. */
+	char szMapping[1024];
+	/** @brief Use dpad for spell hotkeys without holding "start" */
+	bool bDpadHotkeys;
+	/** @brief Shoulder gamepad shoulder buttons act as potions by default */
+	bool bSwapShoulderButtonMode;
+#ifdef __vita__
+	/** @brief Enable input via rear touchpad */
+	bool bRearTouch;
+#endif
+} ControllerOptions;
+
 typedef struct NetworkOptions {
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
+	/** @brief Most recently entered Hostname in join dialog. */
+	char szPreviousHost[129];
 	/** @brief What network port to use. */
 	Uint16 nPort;
 } NetworkOptions;
 
+typedef struct ChatOptions {
+	/** @brief Quick chat messages. */
+	char szHotKeyMsgs[4][MAX_SEND_STR_LEN];
+} ChatOptions;
+
 typedef struct Options {
+	DiabloOptions Diablo;
+	HellfireOptions Hellfire;
 	AudioOptions Audio;
 	GameplayOptions Gameplay;
 	GraphicsOptions Graphics;
+	ControllerOptions Controller;
 	NetworkOptions Network;
+	ChatOptions Chat;
 } Options;
 
 extern SDL_Window *ghMainWnd;

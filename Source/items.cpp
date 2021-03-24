@@ -5,7 +5,6 @@
  */
 #include <algorithm>
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -2974,7 +2973,6 @@ void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, 
 void items_427A72()
 {
 	PkItemStruct id;
-	char hexId[sizeof(PkItemStruct) * 2 + 1];
 	BYTE *buffer;
 
 	if (CornerStone.activated) {
@@ -2982,12 +2980,10 @@ void items_427A72()
 			PackItem(&id, &CornerStone.item);
 			buffer = (BYTE *)&id;
 			for (int i = 0; i < sizeof(PkItemStruct); i++) {
-				sprintf(&hexId[i * 2], "%02X", buffer[i]);
+				sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
 			}
-
-			setIniValue("Hellfire", "SItem", hexId, sizeof(hexId));
 		} else {
-			setIniValue("Hellfire", "SItem", "", 1);
+			sgOptions.Hellfire.szItem[0] = '\0';
 		}
 	}
 }
@@ -3011,8 +3007,6 @@ void hex2bin(const char *src, int bytes, char *target)
 void items_427ABA(int x, int y)
 {
 	PkItemStruct PkSItem;
-	char hexPkSItem[sizeof(PkItemStruct) * 2 + 1];
-	BYTE *buffer;
 
 	if (CornerStone.activated || x == 0 || y == 0) {
 		return;
@@ -3031,13 +3025,10 @@ void items_427ABA(int x, int y)
 		dItem[x][y] = 0;
 	}
 
-	if (!getIniValue("Hellfire", "SItem", hexPkSItem, sizeof(hexPkSItem)))
+	if (strlen(sgOptions.Hellfire.szItem) < sizeof(PkItemStruct) * 2)
 		return;
 
-	if (strlen(hexPkSItem) < sizeof(PkItemStruct) * 2)
-		return;
-
-	hex2bin(hexPkSItem, sizeof(PkItemStruct), (char *)&PkSItem);
+	hex2bin(sgOptions.Hellfire.szItem, sizeof(PkItemStruct), (char *)&PkSItem);
 
 	int ii = AllocateItem();
 

@@ -73,14 +73,14 @@ bool gbFriendlyMode = true;
 /** Specifies players will still damage other players in non-PvP mode. */
 bool gbFriendlyFire;
 /** Default quick messages */
-const char *const spszMsgTbl[4] = {
+const char *const spszMsgTbl[] = {
 	"I need help! Come Here!",
 	"Follow me.",
 	"Here's something for you.",
 	"Now you DIE!"
 };
 /** INI files variable names for quick message keys */
-const char *const spszMsgHotKeyTbl[4] = { "F9", "F10", "F11", "F12" };
+const char *const spszMsgHotKeyTbl[] = { "F9", "F10", "F11", "F12" };
 
 /** To know if these things have been done when we get to the diablo_deinit() function */
 BOOL was_archives_init = false;
@@ -395,6 +395,10 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
  */
 static void SaveOptions()
 {
+	setIniInt("Diablo", "Intro", sgOptions.Diablo.bInto);
+	setIniInt("Hellfire", "Intro", sgOptions.Hellfire.bInto);
+	setIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
+
 	setIniInt("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	setIniInt("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
 	setIniInt("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
@@ -439,6 +443,17 @@ static void SaveOptions()
 
 	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	setIniInt("Network", "Port", sgOptions.Network.nPort);
+	setIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
+
+	for (int i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
+		setIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i]);
+
+	setIniValue("Controller", "Mapping", sgOptions.Controller.szMapping);
+	setIniInt("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
+	setIniInt("Controller", "Dpad Hotkeys", sgOptions.Controller.bDpadHotkeys);
+#ifdef __vita__
+	setIniInt("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
+#endif
 }
 
 /**
@@ -446,6 +461,10 @@ static void SaveOptions()
  */
 static void LoadOptions()
 {
+	sgOptions.Diablo.bInto = getIniBool("Diablo", "Intro", true);
+	sgOptions.Hellfire.bInto = getIniBool("Hellfire", "Intro", true);
+	getIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
+
 	sgOptions.Audio.nSoundVolume = getIniInt("Audio", "Sound Volume", VOLUME_MAX);
 	sgOptions.Audio.nMusicVolume = getIniInt("Audio", "Music Volume", VOLUME_MAX);
 	sgOptions.Audio.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
@@ -495,6 +514,17 @@ static void LoadOptions()
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
+	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
+
+	for (int i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
+		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, spszMsgTbl[i]);
+
+	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
+	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
+	sgOptions.Controller.bDpadHotkeys = getIniBool("Controller", "Dpad Hotkeys", false);
+#ifdef __vita__
+	sgOptions.Controller.bRearTouch = getIniBool("Controller", "Enable Rear Touchpad", true);
+#endif
 }
 
 static void diablo_init_screen()
@@ -549,13 +579,13 @@ static void diablo_splash()
 
 	play_movie("gendata\\logo.smk", TRUE);
 
-	if (gbIsHellfire && getIniBool("Hellfire", "Intro", true)) {
+	if (gbIsHellfire && sgOptions.Hellfire.bInto) {
 		play_movie("gendata\\Hellfire.smk", TRUE);
-		setIniValue("Hellfire", "Intro", "0");
+		sgOptions.Hellfire.bInto = false;
 	}
-	if (!gbIsHellfire && !gbIsSpawn && getIniBool("Diablo", "Intro", true)) {
+	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bInto) {
 		play_movie("gendata\\diablo1.smk", TRUE);
-		setIniValue("Diablo", "Intro", "0");
+		sgOptions.Diablo.bInto = false;
 	}
 
 	UiTitleDialog();
@@ -847,19 +877,13 @@ void diablo_pause_game()
 
 static void diablo_hotkey_msg(DWORD dwMsg)
 {
-	char szMsg[MAX_SEND_STR_LEN];
-
 	if (!gbIsMultiplayer) {
 		return;
 	}
 
 	assert(dwMsg < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]));
-	if (!getIniValue("NetMsg", spszMsgHotKeyTbl[dwMsg], szMsg, MAX_SEND_STR_LEN)) {
-		snprintf(szMsg, MAX_SEND_STR_LEN, "%s", spszMsgTbl[dwMsg]);
-		setIniValue("NetMsg", spszMsgHotKeyTbl[dwMsg], szMsg);
-	}
 
-	NetSendCmdString(-1, szMsg);
+	NetSendCmdString(-1, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
 }
 
 static BOOL PressSysKey(int wParam)

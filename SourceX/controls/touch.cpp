@@ -4,11 +4,6 @@
 #include "../../defs.h"
 #include <math.h>
 
-#ifdef __vita__
-#include "../3rdParty/Storm/Source/storm.h"
-static bool back_touch = false;
-#endif
-
 static int visible_width;
 static int visible_height;
 static int x_borderwidth;
@@ -93,9 +88,6 @@ static void init_touch(void)
 	visible_width = (current.h * dvl::gnScreenWidth) / dvl::gnScreenHeight;
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
-#ifdef __vita__
-	back_touch = dvl::getIniBool("controls", "enable_second_touchscreen", true);
-#endif
 }
 
 static void preprocess_events(SDL_Event *event)
@@ -114,7 +106,7 @@ static void preprocess_events(SDL_Event *event)
 	SDL_TouchID port = event->tfinger.touchId;
 	if (port != 0) {
 #ifdef __vita__
-		if (back_touch) {
+		if (dvl::sgOptions.Controller.bRearTouch) {
 			switch (event->type) {
 			case SDL_FINGERDOWN:
 				preprocess_back_finger_down(event);

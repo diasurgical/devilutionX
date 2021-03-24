@@ -15,11 +15,6 @@ namespace dvl {
 bool start_modifier_active = false;
 bool select_modifier_active = false;
 
-/** Gamepad dpad acts as hotkeys without holding "start" */
-bool dpad_hotkeys = false;
-/** Shoulder gamepad buttons act as potions by default */
-bool switch_potions_and_clicks = false;
-
 namespace {
 
 DWORD translate_controller_button_to_key(ControllerButton controller_button)
@@ -124,14 +119,14 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 	if (!in_game_menu) {
 		switch (ctrl_event.button) {
 		case ControllerButton_BUTTON_LEFTSHOULDER:
-			if ((select_modifier_active && !switch_potions_and_clicks) || (switch_potions_and_clicks && !select_modifier_active) ) {
+			if ((select_modifier_active && !sgOptions.Controller.bSwapShoulderButtonMode) || (sgOptions.Controller.bSwapShoulderButtonMode && !select_modifier_active)) {
 				if (!IsAutomapActive())
 					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
 				return true;
 			}
 			break;
 		case ControllerButton_BUTTON_RIGHTSHOULDER:
-			if ((select_modifier_active && !switch_potions_and_clicks) || (switch_potions_and_clicks && !select_modifier_active) ) {
+			if ((select_modifier_active && !sgOptions.Controller.bSwapShoulderButtonMode) || (sgOptions.Controller.bSwapShoulderButtonMode && !select_modifier_active)) {
 				if (!IsAutomapActive())
 					*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
 				return true;
@@ -161,7 +156,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 		default:
 			break;
 		}
-		if (dpad_hotkeys) {
+		if (sgOptions.Controller.bDpadHotkeys) {
 			switch (ctrl_event.button) {
 			case ControllerButton_BUTTON_DPAD_UP:
 				if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
@@ -352,7 +347,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 
 AxisDirection GetMoveDirection()
 {
-	return controller.GetLeftStickOrDpadDirection(/*allow_dpad=*/!dpad_hotkeys);
+	return controller.GetLeftStickOrDpadDirection(/*allow_dpad=*/!sgOptions.Controller.bDpadHotkeys);
 }
 
 } // namespace dvl

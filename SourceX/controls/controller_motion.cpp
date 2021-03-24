@@ -17,7 +17,7 @@ namespace {
 // SELECT + D-Pad to simulate right stick movement.
 bool SimulateRightStickWithDpad(const SDL_Event &event, ControllerButtonEvent ctrl_event)
 {
-	if (dpad_hotkeys)
+	if (sgOptions.Controller.bDpadHotkeys)
 		return false;
 	static bool simulating = false;
 	if (ctrl_event.button == ControllerButton_BUTTON_BACK) {
