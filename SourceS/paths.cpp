@@ -25,6 +25,15 @@ void AddTrailingSlash(std::string *path) {
 #endif
 }
 
+void AddFontName(std::string *path)
+{
+#ifdef __AMIGA__
+	*path += "LiberationSerif - Bold.ttf";
+#else
+	*path += "CharisSILB.ttf";
+#endif
+}
+
 std::string *FromSDL(char *s) {
 	std::string *result = new std::string(s != NULL ? s : "");
 	if (s != NULL) {
@@ -88,6 +97,8 @@ void SetTtfPath(const char *path)
 	if (ttfPath == NULL)
 		ttfPath = new std::string;
 	*ttfPath = path;
+	AddTrailingSlash(ttfPath);
+	AddFontName(ttfPath);
 }
 
 } // namespace dvl
