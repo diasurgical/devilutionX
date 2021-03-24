@@ -18,7 +18,7 @@ int numqlines;
 int WaterDone;
 int ReturnLvlX;
 int ReturnLvlY;
-int ReturnLvlT;
+dungeon_type ReturnLvlT;
 int ReturnLvl;
 
 /** Contains the data related to each quest_id. */

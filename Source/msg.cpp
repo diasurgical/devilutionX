@@ -296,7 +296,7 @@ static void DeltaImportJunk(BYTE *src)
 			    sgJunk.portal[i].x,
 			    sgJunk.portal[i].y,
 			    sgJunk.portal[i].level,
-			    sgJunk.portal[i].ltype);
+			    (dungeon_type)sgJunk.portal[i].ltype);
 		}
 	}
 
@@ -1244,7 +1244,7 @@ static DWORD On_STRING2(int pnum, TCmd *pCmd)
 	return len + 2; // length of string + nul terminator + sizeof(p->bCmd)
 }
 
-static void delta_open_portal(int pnum, BYTE x, BYTE y, BYTE bLevel, BYTE bLType, BYTE bSetLvl)
+static void delta_open_portal(int pnum, BYTE x, BYTE y, BYTE bLevel, dungeon_type bLType, BYTE bSetLvl)
 {
 	sgbDeltaChanged = TRUE;
 	sgJunk.portal[pnum].x = x;
@@ -2242,7 +2242,7 @@ static DWORD On_ACTIVATEPORTAL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
-		ActivatePortal(pnum, p->x, p->y, p->wParam1, p->wParam2, p->wParam3);
+		ActivatePortal(pnum, p->x, p->y, p->wParam1, (dungeon_type)p->wParam2, p->wParam3);
 		if (pnum != myplr) {
 			if (currlevel == 0)
 				AddInTownPortal(pnum);
@@ -2260,7 +2260,7 @@ static DWORD On_ACTIVATEPORTAL(TCmd *pCmd, int pnum)
 			} else
 				RemovePortalMissile(pnum);
 		}
-		delta_open_portal(pnum, p->x, p->y, p->wParam1, p->wParam2, p->wParam3);
+		delta_open_portal(pnum, p->x, p->y, p->wParam1, (dungeon_type)p->wParam2, p->wParam3);
 	}
 
 	return sizeof(*p);

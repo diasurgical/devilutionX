@@ -18,7 +18,7 @@ typedef struct QuestStruct {
 	Uint8 _qlevel;
 	Uint8 _qtype;
 	Uint8 _qactive;
-	Uint8 _qlvltype;
+	dungeon_type _qlvltype;
 	Sint32 _qtx;
 	Sint32 _qty;
 	Uint8 _qslvl;
@@ -32,7 +32,7 @@ typedef struct QuestStruct {
 typedef struct QuestData {
 	Uint8 _qdlvl;
 	Sint8 _qdmultlvl;
-	Uint8 _qlvlt;
+	dungeon_type _qlvlt;
 	Uint8 _qdtype;
 	Uint8 _qdrnd;
 	Uint8 _qslvl;
@@ -46,7 +46,7 @@ extern BYTE *pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
 extern int ReturnLvlX;
 extern int ReturnLvlY;
-extern int ReturnLvlT;
+extern dungeon_type ReturnLvlT;
 extern int ReturnLvl;
 
 void InitQuests();

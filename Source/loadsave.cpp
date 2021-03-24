@@ -716,7 +716,7 @@ static void LoadQuest(LoadHelper *file, int i)
 	pQuest->_qlevel = file->nextLE<Uint8>();
 	pQuest->_qtype = file->nextLE<Uint8>();
 	pQuest->_qactive = file->nextLE<Uint8>();
-	pQuest->_qlvltype = file->nextLE<Uint8>();
+	pQuest->_qlvltype = (dungeon_type)file->nextLE<Uint8>();
 	pQuest->_qtx = file->nextLE<Sint32>();
 	pQuest->_qty = file->nextLE<Sint32>();
 	pQuest->_qslvl = file->nextLE<Uint8>();
@@ -737,7 +737,7 @@ static void LoadQuest(LoadHelper *file, int i)
 	ReturnLvlX = file->nextBE<Sint32>();
 	ReturnLvlY = file->nextBE<Sint32>();
 	ReturnLvl = file->nextBE<Sint32>();
-	ReturnLvlT = file->nextBE<Sint32>();
+	ReturnLvlT = (dungeon_type)file->nextBE<Sint32>();
 	DoomQuestState = file->nextBE<Sint32>();
 }
 
@@ -766,7 +766,7 @@ static void LoadPortal(LoadHelper *file, int i)
 	pPortal->x = file->nextLE<Sint32>();
 	pPortal->y = file->nextLE<Sint32>();
 	pPortal->level = file->nextLE<Sint32>();
-	pPortal->ltype = file->nextLE<Sint32>();
+	pPortal->ltype = (dungeon_type)file->nextLE<Sint32>();
 	pPortal->setlvl = file->nextBool32();
 }
 
@@ -830,7 +830,7 @@ void ConvertLevels()
 	bool _setlevel = setlevel;
 	int _setlvlnum = setlvlnum;
 	int _currlevel = currlevel;
-	int _leveltype = leveltype;
+	dungeon_type _leveltype = leveltype;
 
 	gbSkipSync = true;
 
@@ -940,7 +940,7 @@ void LoadGame(BOOL firstflag)
 	setlevel = file.nextBool8();
 	setlvlnum = file.nextBE<Uint32>();
 	currlevel = file.nextBE<Uint32>();
-	leveltype = file.nextBE<Uint32>();
+	leveltype = (dungeon_type)file.nextBE<Uint32>();
 	if (!setlevel)
 		leveltype = gnLevelTypeTbl[currlevel];
 	int _ViewX = file.nextBE<Sint32>();

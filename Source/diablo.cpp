@@ -14,7 +14,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
-int gnLevelTypeTbl[NUMLEVELS];
+dungeon_type gnLevelTypeTbl[NUMLEVELS];
 int glEndSeed[NUMLEVELS];
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
@@ -175,7 +175,7 @@ static void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("-l", argv[i]) == 0) {
 			setlevel = FALSE;
 			leveldebug = true;
-			leveltype = SDL_atoi(argv[++i]);
+			leveltype = (dungeon_type)SDL_atoi(argv[++i]);
 			currlevel = SDL_atoi(argv[++i]);
 			plr[0].plrlevel = currlevel;
 		} else if (strcasecmp("-m", argv[i]) == 0) {
@@ -219,7 +219,7 @@ void FreeGameMem()
 	FreeTownerGFX();
 }
 
-static void start_game(unsigned int uMsg)
+static void start_game(interface_mode uMsg)
 {
 	zoomflag = TRUE;
 	CalcViewportGeometry();
@@ -291,7 +291,7 @@ static bool ProcessInput()
 	return true;
 }
 
-static void run_game_loop(unsigned int uMsg)
+static void run_game_loop(interface_mode uMsg)
 {
 	WNDPROC saveProc;
 	MSG msg;
@@ -361,7 +361,6 @@ static void run_game_loop(unsigned int uMsg)
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 {
 	BOOL fExitProgram;
-	unsigned int uMsg;
 
 	gbSelectProvider = TRUE;
 
@@ -382,9 +381,8 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 			InitPortals();
 			InitDungMsgs(myplr);
 		}
-		if (!gbValidSaveFile || !gbLoadGame) {
-			uMsg = WM_DIABNEWGAME;
-		} else {
+		interface_mode uMsg = WM_DIABNEWGAME;
+		if (gbValidSaveFile && gbLoadGame) {
 			uMsg = WM_DIABLOADGAME;
 		}
 		run_game_loop(uMsg);
@@ -1591,7 +1589,7 @@ void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		music_stop();
 		track_repeat_walk(FALSE);
 		sgbMouseDown = CLICK_NONE;
-		ShowProgress(uMsg);
+		ShowProgress((interface_mode)uMsg);
 		force_redraw = 255;
 		DrawAndBlit();
 		LoadPWaterPalette();

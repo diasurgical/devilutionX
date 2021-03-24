@@ -21,211 +21,127 @@ static void FreeInterface()
 	MemFreeDbg(sgpBackCel);
 }
 
-static void InitCutscene(unsigned int uMsg)
+static Cutseens PickCutscene(interface_mode uMsg)
 {
-	assert(!sgpBackCel);
-
 	switch (uMsg) {
-	case WM_DIABNEXTLVL:
-		switch (gnLevelTypeTbl[currlevel]) {
-		case DTYPE_TOWN:
-			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
-			LoadPalette("Gendata\\Cuttt.pal");
-			progress_id = 1;
-			break;
-		case DTYPE_CATHEDRAL:
-			if (currlevel < 17) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-				LoadPalette("Gendata\\Cutl1d.pal");
-				progress_id = 0;
-			} else {
-				sgpBackCel = LoadFileInMem("Nlevels\\cutl5.CEL", NULL);
-				LoadPalette("Nlevels\\cutl5.pal");
-				progress_id = 1;
-			}
-			break;
-		case DTYPE_CATACOMBS:
-			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
-			LoadPalette("Gendata\\Cut2.pal");
-			progress_id = 2;
-			break;
-		case DTYPE_CAVES:
-			if (currlevel < 17) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
-				LoadPalette("Gendata\\Cut3.pal");
-				progress_id = 1;
-			} else {
-				sgpBackCel = LoadFileInMem("Nlevels\\cutl6.CEL", NULL);
-				LoadPalette("Nlevels\\cutl6.pal");
-				progress_id = 1;
-			}
-			break;
-		case DTYPE_HELL:
-			if (currlevel < 15) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
-				LoadPalette("Gendata\\Cut4.pal");
-				progress_id = 1;
-			} else {
-				sgpBackCel = LoadFileInMem("Gendata\\Cutgate.CEL", NULL);
-				LoadPalette("Gendata\\Cutgate.pal");
-				progress_id = 1;
-			}
-			break;
-		default:
-			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-			LoadPalette("Gendata\\Cutl1d.pal");
-			progress_id = 0;
-			break;
-		}
-		break;
-	case WM_DIABPREVLVL:
-		if (gnLevelTypeTbl[currlevel - 1] == 0) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
-			LoadPalette("Gendata\\Cuttt.pal");
-			progress_id = 1;
-		} else {
-			switch (gnLevelTypeTbl[currlevel]) {
-			case DTYPE_TOWN:
-				sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
-				LoadPalette("Gendata\\Cuttt.pal");
-				progress_id = 1;
-				break;
-			case DTYPE_CATHEDRAL:
-				if (currlevel < 17) {
-					sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-					LoadPalette("Gendata\\Cutl1d.pal");
-					progress_id = 0;
-				} else {
-					sgpBackCel = LoadFileInMem("Nlevels\\cutl5.CEL", NULL);
-					LoadPalette("Nlevels\\cutl5.pal");
-					progress_id = 1;
-				}
-				break;
-			case DTYPE_CATACOMBS:
-				sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
-				LoadPalette("Gendata\\Cut2.pal");
-				progress_id = 2;
-				break;
-			case DTYPE_CAVES:
-				if (currlevel < 17) {
-					sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
-					LoadPalette("Gendata\\Cut3.pal");
-					progress_id = 1;
-				} else {
-					sgpBackCel = LoadFileInMem("Nlevels\\cutl6.CEL", NULL);
-					LoadPalette("Nlevels\\cutl6.pal");
-					progress_id = 1;
-				}
-				break;
-			case DTYPE_HELL:
-				sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
-				LoadPalette("Gendata\\Cut4.pal");
-				progress_id = 1;
-				break;
-			default:
-				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-				LoadPalette("Gendata\\Cutl1d.pal");
-				progress_id = 0;
-				break;
-			}
-		}
-		break;
-	case WM_DIABSETLVL:
-		if (setlvlnum == SL_BONECHAMB) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
-			LoadPalette("Gendata\\Cut2.pal");
-			progress_id = 2;
-		} else if (setlvlnum == SL_VILEBETRAYER) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", NULL);
-			LoadPalette("Gendata\\Cutportr.pal");
-			progress_id = 1;
-		} else {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-			LoadPalette("Gendata\\Cutl1d.pal");
-			progress_id = 0;
-		}
-		break;
-	case WM_DIABRTNLVL:
-		if (setlvlnum == SL_BONECHAMB) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
-			LoadPalette("Gendata\\Cut2.pal");
-			progress_id = 2;
-		} else if (setlvlnum == SL_VILEBETRAYER) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", NULL);
-			LoadPalette("Gendata\\Cutportr.pal");
-			progress_id = 1;
-		} else {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-			LoadPalette("Gendata\\Cutl1d.pal");
-			progress_id = 0;
-		}
-		break;
-	case WM_DIABWARPLVL:
-		sgpBackCel = LoadFileInMem("Gendata\\Cutportl.CEL", NULL);
-		LoadPalette("Gendata\\Cutportl.pal");
-		progress_id = 1;
-		break;
 	case WM_DIABLOADGAME:
-		sgpBackCel = LoadFileInMem("Gendata\\Cutstart.CEL", NULL);
-		LoadPalette("Gendata\\Cutstart.pal");
-		progress_id = 1;
-		break;
 	case WM_DIABNEWGAME:
-		sgpBackCel = LoadFileInMem("Gendata\\Cutstart.CEL", NULL);
-		LoadPalette("Gendata\\Cutstart.pal");
-		progress_id = 1;
-		break;
-	case WM_DIABTOWNWARP:
-	case WM_DIABTWARPUP:
-		switch (gnLevelTypeTbl[plr[myplr].plrlevel]) {
-		case DTYPE_TOWN:
-			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
-			LoadPalette("Gendata\\Cuttt.pal");
-			progress_id = 1;
-			break;
-		case DTYPE_CATHEDRAL:
-			if (plr[myplr].plrlevel < 17) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-				LoadPalette("Gendata\\Cutl1d.pal");
-				progress_id = 0;
-			} else {
-				sgpBackCel = LoadFileInMem("Nlevels\\Cutl5.CEL", NULL);
-				LoadPalette("Nlevels\\Cutl5.pal");
-				progress_id = 1;
-			}
-			break;
-		case DTYPE_CATACOMBS:
-			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
-			LoadPalette("Gendata\\Cut2.pal");
-			progress_id = 2;
-			break;
-		case DTYPE_CAVES:
-			if (plr[myplr].plrlevel < 17) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
-				LoadPalette("Gendata\\Cut3.pal");
-				progress_id = 1;
-			} else {
-				sgpBackCel = LoadFileInMem("Nlevels\\Cutl6.CEL", NULL);
-				LoadPalette("Nlevels\\Cutl6.pal");
-				progress_id = 1;
-			}
-			break;
-		case DTYPE_HELL:
-			sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
-			LoadPalette("Gendata\\Cut4.pal");
-			progress_id = 1;
-			break;
-		}
-		break;
+		return CutStart;
 	case WM_DIABRETOWN:
-		sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
-		LoadPalette("Gendata\\Cuttt.pal");
-		progress_id = 1;
-		break;
+		return CutTown;
+	case WM_DIABNEXTLVL:
+	case WM_DIABPREVLVL:
+	case WM_DIABTOWNWARP:
+	case WM_DIABTWARPUP: {
+		int lvl = currlevel;
+		if (uMsg = WM_DIABTWARPUP)
+			lvl = plr[myplr].plrlevel;
+
+		if (lvl == 1 && uMsg == WM_DIABPREVLVL)
+			return CutTown;
+		if (lvl == 16 && uMsg == WM_DIABNEXTLVL)
+			return CutGate;
+
+		switch (gnLevelTypeTbl[lvl]) {
+		case DTYPE_TOWN:
+			return CutTown;
+		case DTYPE_CATHEDRAL:
+			if (lvl > 16)
+				return CutLevel5;
+			return CutLevel1;
+		case DTYPE_CATACOMBS:
+			return CutLevel2;
+		case DTYPE_CAVES:
+			if (lvl > 16)
+				return CutLevel6;
+			return CutLevel3;
+		case DTYPE_HELL:
+			return CutLevel4;
+		default:
+			return CutLevel1;
+		}
+	};
+	case WM_DIABWARPLVL:
+		return CutPortal;
+	case WM_DIABSETLVL:
+	case WM_DIABRTNLVL:
+		if (setlvlnum == SL_BONECHAMB)
+			return CutLevel2;
+		if (setlvlnum == SL_VILEBETRAYER)
+			return CutPortalRed;
+		return CutLevel1;
 	default:
 		app_fatal("Unknown progress mode");
+		return CutLevel1;
+	}
+}
+
+static void InitCutscene(interface_mode uMsg)
+{
+	const char *celPath;
+	const char *palPath;
+
+	switch (PickCutscene(uMsg)) {
+	case CutStart:
+		celPath = "Gendata\\Cutstart.cel";
+		palPath = "Gendata\\Cutstart.pal";
+		progress_id = 1;
+		break;
+	case CutTown:
+		celPath = "Gendata\\Cuttt.cel";
+		palPath = "Gendata\\Cuttt.pal";
+		progress_id = 1;
+		break;
+	case CutLevel1:
+		celPath = "Gendata\\Cutl1d.cel";
+		palPath = "Gendata\\Cutl1d.pal";
+		progress_id = 0;
+		break;
+	case CutLevel2:
+		celPath = "Gendata\\Cut2.cel";
+		palPath = "Gendata\\Cut2.pal";
+		progress_id = 2;
+		break;
+	case CutLevel3:
+		celPath = "Gendata\\Cut3.cel";
+		palPath = "Gendata\\Cut3.pal";
+		progress_id = 1;
+		break;
+	case CutLevel4:
+		celPath = "Gendata\\Cut4.cel";
+		palPath = "Gendata\\Cut4.pal";
+		progress_id = 1;
+		break;
+	case CutLevel5:
+		celPath = "Gendata\\Cutl5.cel";
+		palPath = "Gendata\\Cutl5.pal";
+		progress_id = 1;
+		break;
+	case CutLevel6:
+		celPath = "Gendata\\Cutl6.cel";
+		palPath = "Gendata\\Cutl6.pal";
+		progress_id = 1;
+		break;
+	case CutPortal:
+		celPath = "Gendata\\Cutportl.cel";
+		palPath = "Gendata\\Cutportl.pal";
+		progress_id = 1;
+		break;
+	case CutPortalRed:
+		celPath = "Gendata\\Cutportr.cel";
+		palPath = "Gendata\\Cutportr.pal";
+		progress_id = 1;
+		break;
+	case CutGate:
+		celPath = "Gendata\\Cutgate.cel";
+		palPath = "Gendata\\Cutgate.pal";
+		progress_id = 1;
 		break;
 	}
+
+	assert(!sgpBackCel);
+	sgpBackCel = LoadFileInMem(celPath, NULL);
+	LoadPalette(palPath);
 
 	sgdwProgress = 0;
 }
@@ -271,7 +187,7 @@ void interface_msg_pump()
 	}
 }
 
-BOOL IncProgress()
+bool IncProgress()
 {
 	interface_msg_pump();
 	sgdwProgress += 23;
@@ -282,7 +198,7 @@ BOOL IncProgress()
 	return sgdwProgress >= 534;
 }
 
-void ShowProgress(unsigned int uMsg)
+void ShowProgress(interface_mode uMsg)
 {
 	WNDPROC saveProc;
 

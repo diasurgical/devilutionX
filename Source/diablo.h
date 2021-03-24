@@ -155,7 +155,7 @@ typedef struct Options {
 
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
-extern int gnLevelTypeTbl[NUMLEVELS];
+extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern int MouseX;
 extern int MouseY;
 extern BOOL gbRunGame;
