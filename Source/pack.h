@@ -6,6 +6,8 @@
 #ifndef __PACK_H__
 #define __PACK_H__
 
+#include "items.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus

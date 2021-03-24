@@ -69,7 +69,7 @@ void selgame_GameSelection_Init()
 		return;
 	}
 
-	getIniValue("Phone Book", "Entry1", selgame_Ip, 128);
+	strcpy(selgame_Ip, sgOptions.Network.szPreviousHost);
 
 	selgame_FreeVectors();
 
@@ -423,7 +423,7 @@ static bool IsGameCompatible(GameData *data)
 void selgame_Password_Select(int value)
 {
 	if (selgame_selectedGame) {
-		setIniValue("Phone Book", "Entry1", selgame_Ip);
+		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		if (SNetJoinGame(selgame_selectedGame, selgame_Ip, selgame_Password, NULL, NULL, gdwPlayerId)) {
 			if (!IsGameCompatible(m_client_info->initdata)) {
 				selgame_GameSelection_Select(1);
