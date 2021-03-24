@@ -390,7 +390,10 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 	return gbRunGameResult;
 }
 
-void SaveOptions()
+/**
+ * @brief Save game configurations to ini file
+ */
+static void SaveOptions()
 {
 	setIniInt("Diablo", "Intro", sgOptions.Diablo.bInto);
 	setIniInt("Hellfire", "Intro", sgOptions.Hellfire.bInto);
