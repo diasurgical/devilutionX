@@ -22,6 +22,7 @@ std::string *basePath = NULL;
 std::string *prefPath = NULL;
 std::string *configPath = NULL;
 std::string *ttfPath = NULL;
+std::string *ttfName = NULL;
 
 void AddTrailingSlash(std::string *path) {
 #ifdef _WIN32
@@ -31,11 +32,6 @@ void AddTrailingSlash(std::string *path) {
 	if (!path->empty() && path->back() != '/')
 		*path += '/';
 #endif
-}
-
-void AddFontName(std::string *path)
-{
-	*path += TTF_FONT_NAME;
 }
 
 std::string *FromSDL(char *s) {
@@ -77,8 +73,15 @@ const std::string &GetConfigPath()
 const std::string &GetTtfPath()
 {
 	if (ttfPath == NULL)
-		ttfPath = new std::string(TTF_FONT_DIR TTF_FONT_NAME);
+		ttfPath = new std::string(TTF_FONT_DIR);
 	return *ttfPath;
+}
+
+const std::string &GetTtfName()
+{
+	if (ttfName == NULL)
+		ttfName = new std::string(TTF_FONT_NAME);
+	return *ttfName;
 }
 
 void SetBasePath(const char *path)
@@ -109,7 +112,13 @@ void SetTtfPath(const char *path)
 		ttfPath = new std::string;
 	*ttfPath = path;
 	AddTrailingSlash(ttfPath);
-	AddFontName(ttfPath);
+}
+
+void SetTtfName(const char *path)
+{
+	if (ttfName == NULL)
+		ttfName = new std::string;
+	*ttfName = path;
 }
 
 } // namespace dvl

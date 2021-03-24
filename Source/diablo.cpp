@@ -104,6 +104,7 @@ static void print_help_and_exit()
 	printInConsole("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
 	printInConsole("    %-20s %-30s\n", "--config-dir", "Specify the location of diablo.ini");
 	printInConsole("    %-20s %-30s\n", "--ttf-dir", "Specify the location of the .ttf font");
+	printInConsole("    %-20s %-30s\n", "--ttf-name", "Specify the name of a custom .ttf font");
 	printInConsole("    %-20s %-30s\n", "-n", "Skip startup videos");
 	printInConsole("    %-20s %-30s\n", "-f", "Display frames per second");
 	printInConsole("    %-20s %-30s\n", "-x", "Run in windowed mode");
@@ -147,6 +148,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			SetConfigPath(argv[++i]);
 		} else if (strcasecmp("--ttf-dir", argv[i]) == 0) {
 			SetTtfPath(argv[++i]);
+		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
+			SetTtfName(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			gbShowIntro = false;
 		} else if (strcasecmp("-f", argv[i]) == 0) {
