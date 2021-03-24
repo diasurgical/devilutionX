@@ -62,15 +62,7 @@ void LoadTtfFont() {
 		was_fonts_init = true;
 	}
 
-	const char* ttf_font_path = TTF_FONT_NAME;
-	if (ttfPath != NULL)
-	{
-		ttf_font_path = ttfPath->data();
-	}
-	if (!FileExists(ttf_font_path))
-	{
-		ttf_font_path = TTF_FONT_DIR TTF_FONT_NAME;
-	}
+	const char* ttf_font_path = GetTtfPath().data();
 #ifdef __linux__
 	if (!FileExists(ttf_font_path))
 	{

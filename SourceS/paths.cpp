@@ -6,6 +6,10 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#ifndef TTF_FONT_DIR
+#define TTF_FONT_DIR ""
+#endif
+
 #ifndef TTF_FONT_NAME
 #define TTF_FONT_NAME "CharisSILB.ttf"
 #endif
@@ -68,6 +72,13 @@ const std::string &GetConfigPath()
 	if (configPath == NULL)
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 	return *configPath;
+}
+
+const std::string &GetTtfPath()
+{
+	if (ttfPath == NULL)
+		ttfPath = new std::string(TTF_FONT_DIR TTF_FONT_NAME);
+	return *ttfPath;
 }
 
 void SetBasePath(const char *path)

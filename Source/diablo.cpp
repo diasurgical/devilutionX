@@ -103,7 +103,7 @@ static void print_help_and_exit()
 	printInConsole("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
 	printInConsole("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
 	printInConsole("    %-20s %-30s\n", "--config-dir", "Specify the location of diablo.ini");
-	printInConsole("    %-20s %-30s\n", "--ttf-dir", "Specify the location of the ttf font");
+	printInConsole("    %-20s %-30s\n", "--ttf-dir", "Specify the location of the .ttf font");
 	printInConsole("    %-20s %-30s\n", "-n", "Skip startup videos");
 	printInConsole("    %-20s %-30s\n", "-f", "Display frames per second");
 	printInConsole("    %-20s %-30s\n", "-x", "Run in windowed mode");
