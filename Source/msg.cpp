@@ -537,7 +537,6 @@ static BOOL delta_get_item(TCmdGItem *pI, BYTE bLevel)
 		}
 
 		app_fatal("delta:1");
-		break;
 	}
 
 	if ((pI->wCI & CF_PREGEN) == 0)

@@ -916,7 +916,6 @@ void CheckTriggers()
 			break;
 		default:
 			app_fatal("Unknown trigger msg");
-			break;
 		}
 	}
 }

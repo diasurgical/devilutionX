@@ -82,7 +82,6 @@ int ObjIndex(int x, int y)
 			return oi;
 	}
 	app_fatal("ObjIndex: Active object not found at (%d,%d)", x, y);
-	return -1;
 }
 
 void AddSKingObjs()

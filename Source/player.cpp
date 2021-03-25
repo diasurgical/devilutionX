@@ -317,7 +317,6 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			break;
 		default:
 			app_fatal("PLR:2");
-			break;
 		}
 
 		sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", cs, prefix, prefix, szCel);
@@ -2062,7 +2061,6 @@ StartNewLvl(int pnum, int fom, int lvl)
 		break;
 	default:
 		app_fatal("StartNewLvl");
-		break;
 	}
 
 	if (pnum == myplr) {
@@ -3865,7 +3863,6 @@ void SyncPlrAnim(int pnum)
 		break;
 	default:
 		app_fatal("SyncPlrAnim");
-		break;
 	}
 }
 

@@ -182,7 +182,7 @@ extern Options sgOptions;
 
 void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
-void diablo_quit(int exitStatus);
+[[noreturn]] void diablo_quit(int exitStatus);
 int DiabloMain(int argc, char **argv);
 BOOL TryIconCurs();
 void diablo_pause_game();
