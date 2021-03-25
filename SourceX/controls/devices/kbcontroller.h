@@ -21,7 +21,6 @@ public:
 
 	ControllerButton ToControllerButton(const SDL_Event &event) const;
 
-	//bool ProcessKbCtrlAxisMotion(const SDL_Event &event);
 	bool ProcessAxisMotion(const SDL_Event &event);
 };
 

@@ -10,6 +10,13 @@ namespace dvl {
 
 std::vector<KeyboardController> *const KeyboardController::keyboardControllers_ = new std::vector<KeyboardController>;
 
+void KeyboardController::Add(int device_index)
+{
+	SDL_Log("Adding KeyboardController %d", device_index);
+	keyboardControllers_->push_back(KeyboardController());
+	sgbControllerActive = true;
+}
+
 KeyboardController *KeyboardController::Get(const SDL_Event &event) {
 	// Return the first (and only) one
 	KeyboardController &keyboardController = (*keyboardControllers_)[0];
