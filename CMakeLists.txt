@@ -16,6 +16,12 @@ option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
 option(HELLFIRE "Build hellfire version" OFF)
+
+option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
+mark_as_advanced(DISABLE_STREAMING_MUSIC)
+option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken platform implementations)" OFF)
+mark_as_advanced(DISABLE_STREAMING_SOUNDS)
+
 RELEASE_OPTION(CPACK "Configure CPack")
 
 
@@ -462,6 +468,8 @@ foreach(
   def_name
   NONET
   PREFILL_PLAYER_NAME
+  DISABLE_STREAMING_MUSIC
+  DISABLE_STREAMING_SOUNDS
 )
 if(${def_name})
   list(APPEND def_list ${def_name})

@@ -20,6 +20,18 @@ namespace {
 
 Mix_Music *music;
 
+#ifdef DISABLE_STREAMING_MUSIC
+char *musicBuffer;
+
+void FreeMusicBuffer()
+{
+	if (musicBuffer != nullptr) {
+		mem_free_dbg(musicBuffer);
+		musicBuffer = nullptr;
+	}
+}
+#endif // DISABLE_STREAMING_MUSIC
+
 } // namespace
 
 /* data */
@@ -169,13 +181,18 @@ void snd_init()
 
 void music_stop()
 {
-	if (sghMusic) {
+	if (music != nullptr) {
 		Mix_HaltMusic();
 		Mix_FreeMusic(music);
 		music = NULL;
+#ifndef DISABLE_STREAMING_MUSIC
 		SFileCloseFile(sghMusic);
 		sghMusic = NULL;
+#endif
 		sgnMusicTrack = NUM_MUSIC;
+#ifdef DISABLE_STREAMING_MUSIC
+		FreeMusicBuffer();
+#endif
 	}
 }
 
@@ -195,12 +212,30 @@ void music_start(int nTrack)
 		if (!success) {
 			sghMusic = NULL;
 		} else {
-			music = Mix_LoadMUSType_RW(SFileRw_FromStormHandle(sghMusic), MUS_NONE, /*freesrc=*/1);
+#ifndef DISABLE_STREAMING_MUSIC
+			SDL_RWops *musicRw = SFileRw_FromStormHandle(sghMusic);
+#else
+			int bytestoread = SFileGetFileSize(sghMusic, 0);
+			musicBuffer = (char *)DiabloAllocPtr(bytestoread);
+			SFileReadFile(sghMusic, musicBuffer, bytestoread, NULL, 0);
+			SFileCloseFile(sghMusic);
+			sghMusic = NULL;
+
+			SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
+			if (musicRw == nullptr)
+				ErrSdl();
+#endif
+			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, /*freesrc=*/1);
 			if (music == NULL) {
 				SDL_Log("Mix_LoadMUSType_RW: %s", Mix_GetError());
+#ifndef DISABLE_STREAMING_MUSIC
 				SFileCloseFile(sghMusic);
 				sghMusic = NULL;
+#endif
 				sgnMusicTrack = NUM_MUSIC;
+#ifdef DISABLE_STREAMING_MUSIC
+				FreeMusicBuffer();
+#endif
 				return;
 			}
 
@@ -208,10 +243,15 @@ void music_start(int nTrack)
 			if (Mix_PlayMusic(music, -1) < 0) {
 				SDL_Log("Mix_PlayMusic: %s", Mix_GetError());
 				Mix_FreeMusic(music);
+				music = NULL;
+#ifndef DISABLE_STREAMING_MUSIC
 				SFileCloseFile(sghMusic);
 				sghMusic = NULL;
-				music = NULL;
+#endif
 				sgnMusicTrack = NUM_MUSIC;
+#ifdef DISABLE_STREAMING_MUSIC
+				FreeMusicBuffer();
+#endif
 				return;
 			}
 
@@ -236,7 +276,7 @@ int sound_get_or_set_music_volume(int volume)
 
 	sgOptions.Audio.nMusicVolume = volume;
 
-	if (sghMusic)
+	if (music != nullptr)
 		Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * volume / VOLUME_MIN);
 
 	return sgOptions.Audio.nMusicVolume;
