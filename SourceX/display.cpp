@@ -304,23 +304,10 @@ SDL_Surface *CreateScaledSurface(SDL_Surface *src)
 SDLSurfaceUniquePtr ScaleSurfaceToOutput(SDLSurfaceUniquePtr surface)
 {
 #ifdef USE_SDL1
-	SDL_Surface *ptr = surface.release();
-	ScaleSurfaceToOutput(&ptr);
-	return SDLSurfaceUniquePtr{ptr};
-#else
+	if (OutputRequiresScaling())
+		return SDLSurfaceUniquePtr { CreateScaledSurface(surface.get()) };
+#endif
 	return surface;
-#endif
-}
-
-void ScaleSurfaceToOutput(SDL_Surface **surface)
-{
-#ifdef USE_SDL1
-	if (!OutputRequiresScaling())
-		return;
-	SDL_Surface *stretched = CreateScaledSurface(*surface);
-	SDL_FreeSurface((*surface));
-	*surface = stretched;
-#endif
 }
 
 } // namespace devilution
