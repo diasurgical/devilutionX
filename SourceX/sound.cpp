@@ -114,7 +114,6 @@ TSnd *sound_file_load(const char *path, bool stream)
 
 	if (!SFileOpenFile(path, &file)) {
 		ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
-		return NULL;
 	}
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));

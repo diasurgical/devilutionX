@@ -93,7 +93,7 @@ BOOL was_snd_init = false;
 extern void plrctrls_every_frame();
 extern void plrctrls_after_game_logic();
 
-static void print_help_and_exit()
+[[noreturn]] static void print_help_and_exit()
 {
 	printInConsole("Options:\n");
 	printInConsole("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
@@ -1659,7 +1659,6 @@ void LoadLvlGFX()
 		break;
 	default:
 		app_fatal("LoadLvlGFX");
-		break;
 	}
 }
 
@@ -1718,7 +1717,6 @@ void CreateLevel(int lvldir)
 		break;
 	default:
 		app_fatal("CreateLevel");
-		break;
 	}
 }
 
