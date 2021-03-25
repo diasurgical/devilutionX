@@ -301,6 +301,17 @@ SDL_Surface *CreateScaledSurface(SDL_Surface *src)
 } // namespace
 #endif // USE_SDL1
 
+SDLSurfaceUniquePtr ScaleSurfaceToOutput(SDLSurfaceUniquePtr surface)
+{
+#ifdef USE_SDL1
+	SDL_Surface *ptr = surface.release();
+	ScaleSurfaceToOutput(&ptr);
+	return SDLSurfaceUniquePtr{ptr};
+#else
+	return surface;
+#endif
+}
+
 void ScaleSurfaceToOutput(SDL_Surface **surface)
 {
 #ifdef USE_SDL1
