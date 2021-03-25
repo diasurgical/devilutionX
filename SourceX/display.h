@@ -3,6 +3,8 @@
 #include <cstdint>
 
 #include "all.h"
+#include "sdl_ptrs.h"
+
 #include <SDL.h>
 #include <type_traits>
 
@@ -38,6 +40,10 @@ bool OutputRequiresScaling();
 void ScaleOutputRect(SDL_Rect *rect);
 
 // If the output requires software scaling, replaces the given surface with a scaled one.
+SDLSurfaceUniquePtr ScaleSurfaceToOutput(SDLSurfaceUniquePtr surface);
+
+// Prefer the SDLSurfaceUniquePtr version.
+// FIXME: Delete this version.
 void ScaleSurfaceToOutput(SDL_Surface **surface);
 
 // Convert from output coordinates to logical (resolution-independent) coordinates.
