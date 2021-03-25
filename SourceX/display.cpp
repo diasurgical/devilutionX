@@ -4,6 +4,7 @@
 #include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
+#include "controls/devices/kbcontroller.h"
 
 #ifdef __vita__
 #include <psp2/power.h>
@@ -148,9 +149,6 @@ bool SpawnWindow(const char *lpWindowName)
 	// TODO: There is a bug in SDL2 on Switch where it does not report controllers on startup (Jan 1, 2020)
 	GameController::Add(0);
 #endif
-#endif
-#if HAS_KBCTRL == 1
-	KeyboardController::Add(0);
 #endif
 
 	int width = sgOptions.Graphics.nWidth;

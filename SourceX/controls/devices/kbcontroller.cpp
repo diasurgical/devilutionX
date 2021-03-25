@@ -8,21 +8,7 @@
 
 namespace dvl {
 
-std::vector<KeyboardController> *const KeyboardController::keyboardControllers_ = new std::vector<KeyboardController>;
-
-KeyboardController *KeyboardController::Get(const SDL_Event &event) {
-	// Return the first (and only) one
-	KeyboardController &keyboardController = (*keyboardControllers_)[0];
-	return &keyboardController;
-}
-
-bool KeyboardController::ProcessAxisMotion(const SDL_Event &event)
-{
-	// Mapping keyboard to right stick axis not implemented.
-	return false;
-}
-
-ControllerButton KeyboardController::ToControllerButton(const SDL_Event &event) const
+ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 {
 	switch (event.type) {
 	case SDL_KEYDOWN:
@@ -176,6 +162,12 @@ bool IsKbCtrlButtonPressed(ControllerButton button)
 #else
 	return SDL_GetKeyState(NULL)[key_code];
 #endif
+}
+
+bool ProcessKbCtrlAxisMotion(const SDL_Event &event)
+{
+	// Mapping keyboard to right stick axis not implemented.
+	return false;
 }
 
 } // namespace dvl
