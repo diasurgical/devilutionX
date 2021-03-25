@@ -277,7 +277,7 @@ int sound_get_or_set_music_volume(int volume)
 	sgOptions.Audio.nMusicVolume = volume;
 
 	if (music != nullptr)
-		SFileDdaSetVolume(sghMusic, volume, 0);
+		Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * volume / VOLUME_MIN);
 
 	return sgOptions.Audio.nMusicVolume;
 }
