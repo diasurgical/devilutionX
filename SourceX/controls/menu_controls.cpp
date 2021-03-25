@@ -11,7 +11,7 @@ namespace dvl {
 MenuAction GetMenuHeldUpDownAction()
 {
 	static AxisDirectionRepeater repeater;
-	const AxisDirection dir = repeater.Get(controller.GetLeftStickOrDpadDirection());
+	const AxisDirection dir = repeater.Get(GetLeftStickOrDpadDirection());
 	switch (dir.y) {
 	case AxisDirectionY_UP:
 		return MenuAction_UP;
