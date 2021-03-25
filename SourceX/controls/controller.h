@@ -16,11 +16,18 @@ struct ControllerButtonEvent {
 class Controller {
 public:
 	// Raw axis values.
-	float leftStickX = 0, leftStickY = 0, rightStickX = 0, rightStickY = 0;
+	float leftStickX = 0;
+	float leftStickY = 0;
+	float rightStickX = 0;
+	float rightStickY = 0;
 	// Axis values scaled to [-1, 1] range and clamped to a deadzone.
-	float leftStickXUnscaled = 0, leftStickYUnscaled = 0, rightStickXUnscaled = 0, rightStickYUnscaled = 0;
+	float leftStickXUnscaled = 0;
+	float leftStickYUnscaled = 0;
+	float rightStickXUnscaled = 0;
+	float rightStickYUnscaled = 0;
 	// Whether stick positions have been updated and need rescaling.
-	bool leftStickNeedsScaling = false, rightStickNeedsScaling = false;
+	bool leftStickNeedsScaling = false;
+	bool rightStickNeedsScaling = false;
 
 	// Returns direction of the left thumb stick or DPad (if allow_dpad = true).
 	AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad = true);
