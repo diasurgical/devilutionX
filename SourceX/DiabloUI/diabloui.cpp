@@ -14,6 +14,7 @@
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/text_draw.h"
 #include "display.h"
+#include "sdl_ptrs.h"
 #include "stubs.h"
 #include "utf8.h"
 
@@ -454,24 +455,22 @@ void LoadHeros()
 		}
 		SDL_Rect src_rect = makeRect(0, offset, ArtHero.w(), portraitHeight);
 		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
-		SDL_BlitSurface(ArtHero.surface, &src_rect, heros, &dst_rect);
+		SDL_BlitSurface(ArtHero.surface.get(), &src_rect, heros, &dst_rect);
 	}
 
-	Art ArtPortrait;
 	for (int i = 0; i <= NUM_CLASSES; i++) {
+		Art portrait;
 		char portraitPath[18];
 		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
-		LoadArt(portraitPath, &ArtPortrait);
-		if (ArtPortrait.surface == nullptr)
+		LoadArt(portraitPath, &portrait);
+		if (portrait.surface == nullptr)
 			continue;
 
-		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, ArtPortrait.w(), portraitHeight);
-		SDL_BlitSurface(ArtPortrait.surface, nullptr, heros, &dst_rect);
-		ArtPortrait.Unload();
+		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, portrait.w(), portraitHeight);
+		SDL_BlitSurface(portrait.surface.get(), nullptr, heros, &dst_rect);
 	}
 
-	ArtHero.Unload();
-	ArtHero.surface = heros;
+	ArtHero.surface = SDLSurfaceUniquePtr { heros };
 	ArtHero.frame_height = portraitHeight;
 	ArtHero.frames = NUM_CLASSES;
 }

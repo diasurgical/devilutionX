@@ -1,11 +1,13 @@
 #pragma once
 
 #include "all.h"
+#include "../sdl_ptrs.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 namespace devilution {
 
 struct Art {
-	SDL_Surface *surface;
+	SDLSurfaceUniquePtr surface;
 	int frames;
 	int logical_width;
 	int frame_height;
@@ -32,8 +34,7 @@ struct Art {
 
 	void Unload()
 	{
-		SDL_FreeSurface(surface);
-		surface = NULL;
+		surface = nullptr;
 	}
 };
 
