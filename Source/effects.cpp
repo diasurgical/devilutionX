@@ -1084,6 +1084,11 @@ void stream_stop()
 static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 {
 	BOOL success;
+#ifndef DISABLE_STREAMING_SOUNDS
+	constexpr bool kAllowStreaming = true;
+#else
+	constexpr bool kAllowStreaming = false;
+#endif
 
 	assert(pSFX);
 	assert(pSFX->bFlags & sfx_STREAM);
@@ -1093,7 +1098,7 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 		if (lVolume > VOLUME_MAX)
 			lVolume = VOLUME_MAX;
 		if (pSFX->pSnd == NULL)
-			pSFX->pSnd = sound_file_load(pSFX->pszName, /*stream=*/true);
+			pSFX->pSnd = sound_file_load(pSFX->pszName, kAllowStreaming);
 		pSFX->pSnd->DSB->Play(lVolume, lPan, 0);
 		sgpStreamSFX = pSFX;
 	}

@@ -2,6 +2,11 @@
 set(NONET ON)
 set(USE_SDL1 ON)
 
+# Streaming audio is broken on the 3DS as of 25 Mar 2021:
+# https://github.com/devkitPro/SDL/issues/72
+set(DISABLE_STREAMING_MUSIC ON)
+set(DISABLE_STREAMING_SOUNDS ON)
+
 #3DS libraries
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
 find_package(CITRO3D REQUIRED)
