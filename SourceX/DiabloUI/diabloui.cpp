@@ -457,12 +457,12 @@ const char **UiProfileGetString()
 
 char connect_plrinfostr[128];
 char connect_categorystr[128];
-void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, DWORD type)
+void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type)
 {
 	SStrCopy(connect_plrinfostr, infostr, sizeof(connect_plrinfostr));
 	char format[32] = "";
-	*(DWORD *)format = type;
-	strcpy(&format[sizeof(DWORD)], " %d %d %d %d %d %d %d %d %d");
+	memcpy(format, &type, 4);
+	strcpy(&format[4], " %d %d %d %d %d %d %d %d %d");
 
 	snprintf(
 	    connect_categorystr,
@@ -515,11 +515,11 @@ BOOL UiValidPlayerName(const char *name)
 	return true;
 }
 
-BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char (*desc)[128])
+BOOL UiCreatePlayerDescription(_uiheroinfo *info, Uint32 mode, char (*desc)[128])
 {
 	char format[32] = "";
-	*(DWORD *)format = mode;
-	strcpy(&format[sizeof(DWORD)], " %d %d %d %d %d %d %d %d %d");
+	memcpy(format, &mode, 4);
+	strcpy(&format[4], " %d %d %d %d %d %d %d %d %d");
 
 	snprintf(
 	    *desc,

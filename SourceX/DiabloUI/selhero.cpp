@@ -350,7 +350,9 @@ void selhero_ClassSelector_Focus(int value)
 }
 
 static bool shouldPrefillHeroName() {
-#ifdef PREFILL_PLAYER_NAME
+#if defined __3DS__
+	return false;
+#elif defined(PREFILL_PLAYER_NAME)
 	return true;
 #else
 	return sgbControllerActive;
@@ -375,10 +377,9 @@ void selhero_ClassSelector_Select(int value)
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
 #if defined __3DS__
 	ctr_vkbdInput("Enter Hero name..", selhero_GenerateName(selhero_heroInfo.heroclass), selhero_heroInfo.name);
-#else
+#endif
 	if (shouldPrefillHeroName())
 		strncpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name) - 1);
-#endif
 	selhero_FreeDlgItems();
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 264), (Sint16)(UI_OFFSET_Y + 211), 320, 33 };
 	vecSelDlgItems.push_back(new UiArtText("Enter Name", rect1, UIS_CENTER | UIS_BIG));

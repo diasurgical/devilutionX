@@ -167,10 +167,10 @@ static void DrawCutscene()
 		if (SDLC_SetSurfaceColors(ArtCutsceneWidescreen.surface, out.surface->format->palette) <= -1)
 			ErrSdl();
 		SDL_Rect dst_rect = {
-			BUFFER_BORDER_LEFT + PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2,
-			BUFFER_BORDER_TOP + UI_OFFSET_Y,
-			ArtCutsceneWidescreen.w(),
-			ArtCutsceneWidescreen.h()
+			(Sint16)(BUFFER_BORDER_LEFT + PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2),
+			(Sint16)(BUFFER_BORDER_TOP + UI_OFFSET_Y),
+			(Uint16)ArtCutsceneWidescreen.w(),
+			(Uint16)ArtCutsceneWidescreen.h()
 		};
 		if (SDL_BlitSurface(ArtCutsceneWidescreen.surface, NULL, out.surface, &dst_rect) < 0)
 			ErrSdl();

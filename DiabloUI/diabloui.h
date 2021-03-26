@@ -27,8 +27,8 @@ BOOL UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6);
 BOOL UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp);
 int UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, _SNETVERSIONDATA *file_info, int *a6);
 int UiSelectProvider(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, _SNETVERSIONDATA *file_info, int *type);
-BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char (*desc)[128]);
-void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, DWORD type);
+BOOL UiCreatePlayerDescription(_uiheroinfo *info, Uint32 mode, char (*desc)[128]);
+void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type);
 }
 
 #endif /* __DIABLOUI_H__ */

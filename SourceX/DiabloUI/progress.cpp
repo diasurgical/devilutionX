@@ -110,9 +110,11 @@ BOOL UiProgressDialog(const char *msg, int enable, int (*fnfunc)(), int rate)
 			case SDL_MOUSEBUTTONUP:
 				UiItemMouseEvents(&event, vecProgress);
 				break;
+#ifndef USE_SDL1
+			case SDLK_KP_ENTER:
+#endif
 			case SDLK_ESCAPE:
 			case SDLK_RETURN:
-			case SDLK_KP_ENTER:
 			case SDLK_SPACE:
 				endMenu = true;
 				break;
