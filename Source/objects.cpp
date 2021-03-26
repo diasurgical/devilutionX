@@ -2280,10 +2280,6 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 				dSpecial[i][j] = 6;
 			if (dPiece[i][j] == 553)
 				dSpecial[i][j] = 6;
-			if (dPiece[i][j] == 13)
-				dSpecial[i][j] = 5;
-			if (dPiece[i][j] == 17)
-				dSpecial[i][j] = 6;
 		}
 	}
 	for (j = y1; j <= y2; j++) {
@@ -2566,6 +2562,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, object[oi]._ox, object[oi]._oy);
 		ObjSetMicro(xp, yp, 17);
+		dSpecial[xp][yp] = 6;
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = TRUE;
 		object[oi]._oVar4 = 1;
@@ -2585,6 +2582,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
 		ObjSetMicro(xp, yp, 540);
+		dSpecial[xp][yp] = 0;
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = FALSE;
 		RedoPlayerVision();
@@ -2611,6 +2609,7 @@ void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, object[oi]._ox, object[oi]._oy);
 		ObjSetMicro(xp, yp, 13);
+		dSpecial[xp][yp] = 5;
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = TRUE;
 		object[oi]._oVar4 = 1;
@@ -2630,6 +2629,7 @@ void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
 		ObjSetMicro(xp, yp, 538);
+		dSpecial[xp][yp] = 0;
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = FALSE;
 		RedoPlayerVision();

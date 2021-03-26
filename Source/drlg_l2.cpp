@@ -3279,10 +3279,6 @@ static void DRLG_InitL2Vals()
 				pc = 6;
 			} else if (dPiece[i][j] == 553) {
 				pc = 6;
-			} else if (dPiece[i][j] == 13) {
-				pc = 5;
-			} else if (dPiece[i][j] == 17) {
-				pc = 6;
 			} else {
 				continue;
 			}
@@ -3362,12 +3358,6 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 				pc = 6;
 			}
 			if (dPiece[i][j] == 553) {
-				pc = 6;
-			}
-			if (dPiece[i][j] == 13) {
-				pc = 5;
-			}
-			if (dPiece[i][j] == 17) {
 				pc = 6;
 			}
 			dSpecial[i][j] = pc;
