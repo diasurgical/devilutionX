@@ -12,7 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-typedef enum Cutseens {
+typedef enum Cutscenes {
 	CutStart,
 	CutTown,
 	CutLevel1,
@@ -24,7 +24,7 @@ typedef enum Cutseens {
 	CutPortal,
 	CutPortalRed,
 	CutGate,
-} cutseens;
+} Cutscenes;
 
 void interface_msg_pump();
 bool IncProgress();

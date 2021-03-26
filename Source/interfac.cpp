@@ -9,7 +9,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *sgpBackCel;
-DWORD sgdwProgress;
+Uint32 sgdwProgress;
 int progress_id;
 
 /** The color used for the progress bar as an index into the palette. */
@@ -17,15 +17,15 @@ const BYTE BarColor[3] = { 138, 43, 254 };
 /** The screen position of the top left corner of the progress bar. */
 const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
-Art ArtCutseenWidescreen;
+Art ArtCutsceneWidescreen;
 
 static void FreeInterface()
 {
 	MemFreeDbg(sgpBackCel);
-	ArtCutseenWidescreen.Unload();
+	ArtCutsceneWidescreen.Unload();
 }
 
-static Cutseens PickCutscene(interface_mode uMsg)
+static Cutscenes PickCutscene(interface_mode uMsg)
 {
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
@@ -76,7 +76,6 @@ static Cutseens PickCutscene(interface_mode uMsg)
 		return CutLevel1;
 	default:
 		app_fatal("Unknown progress mode");
-		return CutLevel1;
 	}
 }
 
@@ -127,13 +126,13 @@ static void InitCutscene(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutPortal:
-		LoadArt("Gendata\\Cutportlw.pcx", &ArtCutseenWidescreen);
+		LoadArt("Gendata\\Cutportlw.pcx", &ArtCutsceneWidescreen);
 		celPath = "Gendata\\Cutportl.cel";
 		palPath = "Gendata\\Cutportl.pal";
 		progress_id = 1;
 		break;
 	case CutPortalRed:
-		LoadArt("Gendata\\Cutportrw.pcx", &ArtCutseenWidescreen);
+		LoadArt("Gendata\\Cutportrw.pcx", &ArtCutsceneWidescreen);
 		celPath = "Gendata\\Cutportr.cel";
 		palPath = "Gendata\\Cutportr.pal";
 		progress_id = 1;
@@ -164,21 +163,21 @@ static void DrawCutscene()
 {
 	lock_buf(1);
 	CelOutputBuffer out = GlobalBackBuffer();
-	if (ArtCutseenWidescreen.surface != NULL) {
-		if (SDLC_SetSurfaceColors(ArtCutseenWidescreen.surface, out.surface->format->palette) <= -1)
+	if (ArtCutsceneWidescreen.surface != NULL) {
+		if (SDLC_SetSurfaceColors(ArtCutsceneWidescreen.surface, out.surface->format->palette) <= -1)
 			ErrSdl();
 		SDL_Rect dst_rect = {
-			BUFFER_BORDER_LEFT + PANEL_X - (ArtCutseenWidescreen.w() - PANEL_WIDTH) / 2,
+			BUFFER_BORDER_LEFT + PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2,
 			BUFFER_BORDER_TOP + UI_OFFSET_Y,
-			ArtCutseenWidescreen.w(),
-			ArtCutseenWidescreen.h()
+			ArtCutsceneWidescreen.w(),
+			ArtCutsceneWidescreen.h()
 		};
-		if (SDL_BlitSurface(ArtCutseenWidescreen.surface, NULL, out.surface, &dst_rect) < 0)
+		if (SDL_BlitSurface(ArtCutsceneWidescreen.surface, NULL, out.surface, &dst_rect) < 0)
 			ErrSdl();
 	}
 	CelDrawTo(out, PANEL_X, 480 - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
 
-	for (auto i = 0; i < sgdwProgress; i++) {
+	for (Uint32 i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
 		    out,
 		    BarPos[progress_id][0] + i + PANEL_X,
