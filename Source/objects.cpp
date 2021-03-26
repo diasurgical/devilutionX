@@ -2456,6 +2456,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 					ObjSetMicro(xp - 1, yp, 86);
 			}
 		}
+		dSpecial[xp][yp] = 0;
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = FALSE;
 		RedoPlayerVision();
@@ -2538,6 +2539,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 					ObjSetMicro(xp, yp - 1, 86);
 			}
 		}
+		dSpecial[xp][yp] = 0;
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = FALSE;
 		RedoPlayerVision();
@@ -4872,8 +4874,7 @@ void SyncL1Doors(int i)
 			y--;
 		} else {
 			ObjSetMicro(x, y, 395);
-			if (currlevel < 17)
-				dSpecial[x][y] = 8;
+			dSpecial[x][y] = 8;
 			objects_set_door_piece(x, y - 1);
 			x--;
 		}
