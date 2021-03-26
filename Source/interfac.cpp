@@ -116,13 +116,13 @@ static void InitCutscene(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutLevel5:
-		celPath = "Gendata\\Cutl5.cel";
-		palPath = "Gendata\\Cutl5.pal";
+		celPath = "Nlevels\\Cutl5.cel";
+		palPath = "Nlevels\\Cutl5.pal";
 		progress_id = 1;
 		break;
 	case CutLevel6:
-		celPath = "Gendata\\Cutl6.cel";
-		palPath = "Gendata\\Cutl6.pal";
+		celPath = "Nlevels\\Cutl6.cel";
+		palPath = "Nlevels\\Cutl6.pal";
 		progress_id = 1;
 		break;
 	case CutPortal:
