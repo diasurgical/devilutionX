@@ -1190,24 +1190,25 @@ extern void DrawControllerModifierHints(CelOutputBuffer out);
 
 void DrawView(CelOutputBuffer out, int StartX, int StartY)
 {
+	int pnum = myplr;
 	DrawGame(out, StartX, StartY);
 	if (automapflag) {
-		DrawAutomap(out.subregionY(0, gnViewportHeight));
+		DrawAutomap(out.subregionY(0, gnViewportHeight), pnum);
 	}
 	DrawMonsterHealthBar(out);
 
 	if (stextflag && !qtextflag)
 		DrawSText(out);
 	if (invflag) {
-		DrawInv(out);
+		DrawInv(out, pnum);
 	} else if (sbookflag) {
-		DrawSpellBook(out);
+		DrawSpellBook(out, pnum);
 	}
 
-	DrawDurIcon(out);
+	DrawDurIcon(out, pnum);
 
 	if (chrflag) {
-		DrawChr(out);
+		DrawChr(out, pnum);
 	} else if (questlog) {
 		DrawQuestLog(out);
 	}
@@ -1222,7 +1223,7 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 		DrawQText(out);
 	}
 	if (spselflag) {
-		DrawSpellList(out);
+		DrawSpellList(out, pnum);
 	}
 	if (dropGoldFlag) {
 		DrawGoldSplit(out, dropGoldValue);
@@ -1243,9 +1244,9 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 	DrawPlrMsg(out);
 	gmenu_draw(out);
 	doom_draw(out);
-	DrawInfoBox(out);
-	DrawLifeFlask(out);
-	DrawManaFlask(out);
+	DrawInfoBox(out, pnum);
+	DrawLifeFlask(out, pnum);
+	DrawManaFlask(out, pnum);
 }
 
 extern SDL_Surface *pal_surface;
@@ -1497,6 +1498,7 @@ void DrawAndBlit()
 	int hgt = 0;
 	bool ddsdesc = false;
 	bool ctrlPan = false;
+	int pnum = myplr;
 
 	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255) {
 		drawhpflag = TRUE;
@@ -1519,22 +1521,22 @@ void DrawAndBlit()
 
 	DrawView(out, ViewX, ViewY);
 	if (ctrlPan) {
-		DrawCtrlPan(out);
+		DrawCtrlPan(out, pnum);
 	}
 	if (drawhpflag) {
-		UpdateLifeFlask(out);
+		UpdateLifeFlask(out, pnum);
 	}
 	if (drawmanaflag) {
-		UpdateManaFlask(out);
+		UpdateManaFlask(out, pnum);
 	}
 	if (drawbtnflag) {
 		DrawCtrlBtns(out);
 	}
 	if (drawsbarflag) {
-		DrawInvBelt(out);
+		DrawInvBelt(out, pnum);
 	}
 	if (talkflag) {
-		DrawTalkPan(out);
+		DrawTalkPan(out, pnum);
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar(out);

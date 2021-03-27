@@ -27,14 +27,14 @@ extern BOOL drawsbarflag;
 extern const InvXY InvRect[73];
 
 void FreeInvGFX();
-void InitInv();
+void InitInv(int pnum);
 
 /**
  * @brief Render the inventory panel to the given buffer.
  */
-void DrawInv(CelOutputBuffer out);
+void DrawInv(CelOutputBuffer out, int pnum);
 
-void DrawInvBelt(CelOutputBuffer out);
+void DrawInvBelt(CelOutputBuffer out, int pnum);
 bool AutoEquipEnabled(const ItemStruct &item);
 bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true);
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag);
@@ -44,27 +44,27 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId);
 void inv_update_rem_item(int pnum, BYTE iv);
 void RemoveInvItem(int pnum, int iv);
 void RemoveSpdBarItem(int pnum, int iv);
-void CheckInvItem(bool isShiftHeld = false);
-void CheckInvScrn(bool isShiftHeld);
+void CheckInvItem(int pnum, bool isShiftHeld = false);
+void CheckInvScrn(int pnum, bool isShiftHeld);
 void CheckItemStats(int pnum);
 void InvGetItem(int pnum, int ii);
 void AutoGetItem(int pnum, int ii);
 int FindGetItem(int idx, WORD ci, int iseed);
 void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
 BOOL CanPut(int x, int y);
-BOOL TryInvPut();
+BOOL TryInvPut(int pnum);
 void DrawInvMsg(const char *msg);
 int InvPutItem(int pnum, int x, int y);
 int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac);
-char CheckInvHLight();
+char CheckInvHLight(int pnum);
 void RemoveScroll(int pnum);
-BOOL UseScroll();
+BOOL UseScroll(int pnum);
 void UseStaffCharge(int pnum);
-BOOL UseStaff();
+BOOL UseStaff(int pnum);
 BOOL UseInvItem(int pnum, int cii);
-void DoTelekinesis();
+void DoTelekinesis(int pnum);
 int CalculateGold(int pnum);
-BOOL DropItemBeforeTrig();
+BOOL DropItemBeforeTrig(int pnum);
 
 /* data */
 

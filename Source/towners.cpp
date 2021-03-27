@@ -149,7 +149,7 @@ static void CowSFX(int pnum)
 		}
 	} else {
 		if (sgdwCowClicks >= 8) {
-			PlaySfxLoc(TSFX_COW1, plr[pnum]._px, plr[pnum]._py + 5);
+			PlaySfxLoc(pnum, TSFX_COW1, plr[pnum]._px, plr[pnum]._py + 5);
 			sgdwCowClicks = 4;
 			CowPlaying = snSFX[sgnCowMsg][plr[pnum]._pClass]; /* snSFX is local */
 			sgnCowMsg++;
@@ -160,7 +160,7 @@ static void CowSFX(int pnum)
 		}
 	}
 
-	PlaySfxLoc(CowPlaying, plr[pnum]._px, plr[pnum]._py);
+	PlaySfxLoc(pnum, CowPlaying, plr[pnum]._px, plr[pnum]._py);
 }
 
 int GetActiveTowner(int t)
@@ -499,16 +499,16 @@ void FreeTownerGFX()
 
 void TownCtrlMsg(int i)
 {
-	int p;
+	int pnum;
 	int dx, dy;
 
 	if (i == -1)
 		return;
 
 	if (towner[i]._tbtcnt != 0) {
-		p = towner[i]._tVar1;
-		dx = abs(towner[i]._tx - plr[p]._px);
-		dy = abs(towner[i]._ty - plr[p]._py);
+		pnum = towner[i]._tPlayerNumber;
+		dx = abs(towner[i]._tx - plr[pnum]._px);
+		dy = abs(towner[i]._ty - plr[pnum]._py);
 		if (dx >= 2 || dy >= 2) {
 			towner[i]._tbtcnt = 0;
 			qtextflag = FALSE;
@@ -718,14 +718,14 @@ void TownerTalk(int first, int t)
 	InitQTextMsg(first);
 }
 
-void TalkToTowner(int p, int t)
+void TalkToTowner(int pnum, int t)
 {
 	int i, dx, dy, rv1, rv2, rv3;
 	ItemStruct *Item;
 	int qt, t2;
 
-	dx = abs(plr[p]._px - towner[t]._tx);
-	dy = abs(plr[p]._py - towner[t]._ty);
+	dx = abs(plr[pnum]._px - towner[t]._tx);
+	dy = abs(plr[pnum]._py - towner[t]._ty);
 #ifdef _DEBUG
 	if (!debug_mode_key_d)
 #endif
@@ -743,13 +743,13 @@ void TalkToTowner(int p, int t)
 	}
 
 	if (t == GetActiveTowner(TOWN_TAVERN)) {
-		if (!plr[p]._pLvlVisited[0] && !towner[t]._tMsgSaid) {
+		if (!plr[pnum]._pLvlVisited[0] && !towner[t]._tMsgSaid) {
 			towner[t]._tbtcnt = 150;
-			towner[t]._tVar1 = p;
+			towner[t]._tPlayerNumber = pnum;
 			InitQTextMsg(TEXT_INTRO);
 			towner[t]._tMsgSaid = TRUE;
 		}
-		if ((plr[p]._pLvlVisited[2] || plr[p]._pLvlVisited[4]) && quests[Q_SKELKING]._qactive != QUEST_NOTAVAIL) {
+		if ((plr[pnum]._pLvlVisited[2] || plr[pnum]._pLvlVisited[4]) && quests[Q_SKELKING]._qactive != QUEST_NOTAVAIL) {
 			if (quests[Q_SKELKING]._qactive != QUEST_NOTAVAIL) {
 				if (quests[Q_SKELKING]._qvar2 == 0 && !towner[t]._tMsgSaid) {
 					quests[Q_SKELKING]._qvar2 = 1;
@@ -759,7 +759,7 @@ void TalkToTowner(int p, int t)
 						quests[Q_SKELKING]._qvar1 = 1;
 					}
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					InitQTextMsg(TEXT_KING2);
 					towner[t]._tMsgSaid = TRUE;
 					NetSendCmdQuest(TRUE, Q_SKELKING);
@@ -769,14 +769,14 @@ void TalkToTowner(int p, int t)
 				quests[Q_SKELKING]._qvar2 = 2;
 				quests[Q_SKELKING]._qvar1 = 2;
 				towner[t]._tbtcnt = 150;
-				towner[t]._tVar1 = p;
+				towner[t]._tPlayerNumber = pnum;
 				InitQTextMsg(TEXT_KING4);
 				towner[t]._tMsgSaid = TRUE;
 				NetSendCmdQuest(TRUE, Q_SKELKING);
 			}
 		}
 		if (!gbIsMultiplayer) {
-			if (plr[p]._pLvlVisited[3] && quests[Q_LTBANNER]._qactive != QUEST_NOTAVAIL) {
+			if (plr[pnum]._pLvlVisited[3] && quests[Q_LTBANNER]._qactive != QUEST_NOTAVAIL) {
 				if ((quests[Q_LTBANNER]._qactive == QUEST_INIT || quests[Q_LTBANNER]._qactive == QUEST_ACTIVE) && quests[Q_LTBANNER]._qvar2 == 0 && !towner[t]._tMsgSaid) {
 					quests[Q_LTBANNER]._qvar2 = 1;
 					if (quests[Q_LTBANNER]._qactive == QUEST_INIT) {
@@ -785,17 +785,17 @@ void TalkToTowner(int p, int t)
 					}
 					quests[Q_LTBANNER]._qlog = TRUE;
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					InitQTextMsg(TEXT_BANNER2);
 					towner[t]._tMsgSaid = TRUE;
 				}
-				if (quests[Q_LTBANNER]._qvar2 == 1 && PlrHasItem(p, IDI_BANNER, &i) != NULL && !towner[t]._tMsgSaid) {
+				if (quests[Q_LTBANNER]._qvar2 == 1 && PlrHasItem(pnum, IDI_BANNER, &i) != NULL && !towner[t]._tMsgSaid) {
 					quests[Q_LTBANNER]._qactive = QUEST_DONE;
 					quests[Q_LTBANNER]._qvar1 = 3;
-					RemoveInvItem(p, i);
+					RemoveInvItem(pnum, i);
 					SpawnUnique(UITEM_HARCREST, towner[t]._tx, towner[t]._ty + 1);
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					InitQTextMsg(TEXT_BANNER3);
 					towner[t]._tMsgSaid = TRUE;
 				}
@@ -804,32 +804,32 @@ void TalkToTowner(int p, int t)
 		if (!qtextflag) {
 			TownerTalk(TEXT_OGDEN1, t);
 			if (storeflag) {
-				StartStore(STORE_TAVERN);
+				StartStore(pnum, STORE_TAVERN);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_DEADGUY)) {
 		if (quests[Q_BUTCHER]._qactive == QUEST_ACTIVE && quests[Q_BUTCHER]._qvar1 == 1) {
 			towner[t]._tbtcnt = 150;
-			towner[t]._tVar1 = p;
+			towner[t]._tPlayerNumber = pnum;
 			quests[Q_BUTCHER]._qvar1 = 1;
-			if (plr[p]._pClass == PC_WARRIOR && !effect_is_playing(PS_WARR8)) {
-				PlaySFX(PS_WARR8);
-			} else if (plr[p]._pClass == PC_ROGUE && !effect_is_playing(PS_ROGUE8)) {
-				PlaySFX(PS_ROGUE8);
-			} else if (plr[p]._pClass == PC_SORCERER && !effect_is_playing(PS_MAGE8)) {
-				PlaySFX(PS_MAGE8);
-			} else if (plr[p]._pClass == PC_MONK && !effect_is_playing(PS_MONK8)) {
-				PlaySFX(PS_MONK8);
-			} else if (plr[p]._pClass == PC_BARD && !effect_is_playing(PS_ROGUE8)) {
-				PlaySFX(PS_ROGUE8);
-			} else if (plr[p]._pClass == PC_BARBARIAN && !effect_is_playing(PS_WARR8)) {
-				PlaySFX(PS_WARR8);
+			if (plr[pnum]._pClass == PC_WARRIOR && !effect_is_playing(PS_WARR8)) {
+				PlaySFX(pnum, PS_WARR8);
+			} else if (plr[pnum]._pClass == PC_ROGUE && !effect_is_playing(PS_ROGUE8)) {
+				PlaySFX(pnum, PS_ROGUE8);
+			} else if (plr[pnum]._pClass == PC_SORCERER && !effect_is_playing(PS_MAGE8)) {
+				PlaySFX(pnum, PS_MAGE8);
+			} else if (plr[pnum]._pClass == PC_MONK && !effect_is_playing(PS_MONK8)) {
+				PlaySFX(pnum, PS_MONK8);
+			} else if (plr[pnum]._pClass == PC_BARD && !effect_is_playing(PS_ROGUE8)) {
+				PlaySFX(pnum, PS_ROGUE8);
+			} else if (plr[pnum]._pClass == PC_BARBARIAN && !effect_is_playing(PS_WARR8)) {
+				PlaySFX(pnum, PS_WARR8);
 			}
 			towner[t]._tMsgSaid = TRUE;
 		} else if (quests[Q_BUTCHER]._qactive == QUEST_DONE && quests[Q_BUTCHER]._qvar1 == 1) {
 			quests[Q_BUTCHER]._qvar1 = 1;
 			towner[t]._tbtcnt = 150;
-			towner[t]._tVar1 = p;
+			towner[t]._tPlayerNumber = pnum;
 			towner[t]._tMsgSaid = TRUE;
 		} else if (quests[Q_BUTCHER]._qactive == QUEST_INIT || quests[Q_BUTCHER]._qactive == QUEST_ACTIVE && quests[Q_BUTCHER]._qvar1 == 0) {
 			quests[Q_BUTCHER]._qactive = QUEST_ACTIVE;
@@ -837,7 +837,7 @@ void TalkToTowner(int p, int t)
 			quests[Q_BUTCHER]._qmsg = TEXT_BUTCH9;
 			quests[Q_BUTCHER]._qvar1 = 1;
 			towner[t]._tbtcnt = 50;
-			towner[t]._tVar1 = p;
+			towner[t]._tPlayerNumber = pnum;
 			towner[t]._tVar2 = 3;
 			InitQTextMsg(TEXT_BUTCH9);
 			towner[t]._tMsgSaid = TRUE;
@@ -845,7 +845,7 @@ void TalkToTowner(int p, int t)
 		}
 	} else if (t == GetActiveTowner(TOWN_SMITH)) {
 		if (!gbIsMultiplayer) {
-			if (plr[p]._pLvlVisited[4] && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
+			if (plr[pnum]._pLvlVisited[4] && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 				if (quests[Q_ROCK]._qvar2 == 0) {
 					quests[Q_ROCK]._qvar2 = 1;
 					quests[Q_ROCK]._qlog = TRUE;
@@ -854,23 +854,23 @@ void TalkToTowner(int p, int t)
 						quests[Q_ROCK]._qvar1 = 1;
 					}
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					InitQTextMsg(TEXT_INFRA5);
 					towner[t]._tMsgSaid = TRUE;
 				}
-				if (quests[Q_ROCK]._qvar2 == 1 && PlrHasItem(p, IDI_ROCK, &i) != NULL && !towner[t]._tMsgSaid) {
+				if (quests[Q_ROCK]._qvar2 == 1 && PlrHasItem(pnum, IDI_ROCK, &i) != NULL && !towner[t]._tMsgSaid) {
 					quests[Q_ROCK]._qactive = QUEST_DONE;
 					quests[Q_ROCK]._qvar2 = 2;
 					quests[Q_ROCK]._qvar1 = 2;
-					RemoveInvItem(p, i);
+					RemoveInvItem(pnum, i);
 					SpawnUnique(UITEM_INFRARING, towner[t]._tx, towner[t]._ty + 1);
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					InitQTextMsg(TEXT_INFRA7);
 					towner[t]._tMsgSaid = TRUE;
 				}
 			}
-			if (plr[p]._pLvlVisited[9] && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
+			if (plr[pnum]._pLvlVisited[9] && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 				if ((quests[Q_ANVIL]._qactive == QUEST_INIT || quests[Q_ANVIL]._qactive == QUEST_ACTIVE) && quests[Q_ANVIL]._qvar2 == 0 && !towner[t]._tMsgSaid) {
 					if (quests[Q_ROCK]._qvar2 == 2 || quests[Q_ROCK]._qactive == QUEST_ACTIVE && quests[Q_ROCK]._qvar2 == 1) {
 						quests[Q_ANVIL]._qvar2 = 1;
@@ -880,20 +880,20 @@ void TalkToTowner(int p, int t)
 							quests[Q_ANVIL]._qvar1 = 1;
 						}
 						towner[t]._tbtcnt = 150;
-						towner[t]._tVar1 = p;
+						towner[t]._tPlayerNumber = pnum;
 						InitQTextMsg(TEXT_ANVIL5);
 						towner[t]._tMsgSaid = TRUE;
 					}
 				}
-				if (quests[Q_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL) {
+				if (quests[Q_ANVIL]._qvar2 == 1 && PlrHasItem(pnum, IDI_ANVIL, &i) != NULL) {
 					if (!towner[t]._tMsgSaid) {
 						quests[Q_ANVIL]._qactive = QUEST_DONE;
 						quests[Q_ANVIL]._qvar2 = 2;
 						quests[Q_ANVIL]._qvar1 = 2;
-						RemoveInvItem(p, i);
+						RemoveInvItem(pnum, i);
 						SpawnUnique(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
 						towner[t]._tbtcnt = 150;
-						towner[t]._tVar1 = p;
+						towner[t]._tPlayerNumber = pnum;
 						InitQTextMsg(TEXT_ANVIL7);
 						towner[t]._tMsgSaid = TRUE;
 					}
@@ -903,50 +903,50 @@ void TalkToTowner(int p, int t)
 		if (!qtextflag) {
 			TownerTalk(TEXT_GRISWOLD1, t);
 			if (storeflag) {
-				StartStore(STORE_SMITH);
+				StartStore(pnum, STORE_SMITH);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_WITCH)) {
-		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && PlrHasItem(p, IDI_FUNGALTM, &i) != NULL) {
-			RemoveInvItem(p, i);
+		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && PlrHasItem(pnum, IDI_FUNGALTM, &i) != NULL) {
+			RemoveInvItem(pnum, i);
 			quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
 			quests[Q_MUSHROOM]._qlog = TRUE;
 			quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
 			towner[t]._tbtcnt = 150;
-			towner[t]._tVar1 = p;
+			towner[t]._tPlayerNumber = pnum;
 			InitQTextMsg(TEXT_MUSH8);
 			towner[t]._tMsgSaid = TRUE;
 		} else if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 			if (quests[Q_MUSHROOM]._qvar1 >= QS_TOMEGIVEN && quests[Q_MUSHROOM]._qvar1 <= QS_MUSHPICKED) {
-				if (PlrHasItem(p, IDI_MUSHROOM, &i) != NULL) {
-					RemoveInvItem(p, i);
+				if (PlrHasItem(pnum, IDI_MUSHROOM, &i) != NULL) {
+					RemoveInvItem(pnum, i);
 					quests[Q_MUSHROOM]._qvar1 = 5;
 					Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
 					Qtalklist[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					quests[Q_MUSHROOM]._qmsg = TEXT_MUSH10;
 					InitQTextMsg(TEXT_MUSH10);
 					towner[t]._tMsgSaid = TRUE;
 				} else if (quests[Q_MUSHROOM]._qmsg != TEXT_MUSH9) {
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					quests[Q_MUSHROOM]._qmsg = TEXT_MUSH9;
 					InitQTextMsg(TEXT_MUSH9);
 					towner[t]._tMsgSaid = TRUE;
 				}
 			} else {
-				Item = PlrHasItem(p, IDI_SPECELIX, &i);
+				Item = PlrHasItem(pnum, IDI_SPECELIX, &i);
 				if (Item != NULL) {
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					InitQTextMsg(TEXT_MUSH12);
 					quests[Q_MUSHROOM]._qactive = QUEST_DONE;
 					towner[t]._tMsgSaid = TRUE;
 					AllItemsList[Item->IDidx].iUsable = TRUE;
-				} else if (PlrHasItem(p, IDI_BRAIN, &i) != NULL && quests[Q_MUSHROOM]._qvar2 != TEXT_MUSH11) {
+				} else if (PlrHasItem(pnum, IDI_BRAIN, &i) != NULL && quests[Q_MUSHROOM]._qvar2 != TEXT_MUSH11) {
 					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
+					towner[t]._tPlayerNumber = pnum;
 					quests[Q_MUSHROOM]._qvar2 = TEXT_MUSH11;
 					InitQTextMsg(TEXT_MUSH11);
 					towner[t]._tMsgSaid = TRUE;
@@ -956,11 +956,11 @@ void TalkToTowner(int p, int t)
 		if (!qtextflag) {
 			TownerTalk(TEXT_ADRIA1, t);
 			if (storeflag) {
-				StartStore(STORE_WITCH);
+				StartStore(pnum, STORE_WITCH);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_BMAID)) {
-		if (plr[p]._pLvlVisited[21] == false && PlrHasItem(p, IDI_MAPOFDOOM, &i)) {
+		if (plr[pnum]._pLvlVisited[21] == false && PlrHasItem(pnum, IDI_MAPOFDOOM, &i)) {
 			quests[Q_GRAVE]._qactive = 2;
 			quests[Q_GRAVE]._qlog = 1;
 			quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
@@ -970,19 +970,19 @@ void TalkToTowner(int p, int t)
 		if (!qtextflag) {
 			TownerTalk(TEXT_GILLIAN1, t);
 			if (storeflag) {
-				StartStore(STORE_BARMAID);
+				StartStore(pnum, STORE_BARMAID);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_DRUNK)) {
 		if (!qtextflag) {
 			TownerTalk(TEXT_FARNHAM1, t);
 			if (storeflag) {
-				StartStore(STORE_DRUNK);
+				StartStore(pnum, STORE_DRUNK);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_HEALER)) {
 		if (!gbIsMultiplayer) {
-			if (plr[p]._pLvlVisited[1] || (gbIsHellfire && plr[p]._pLvlVisited[5])) {
+			if (plr[pnum]._pLvlVisited[1] || (gbIsHellfire && plr[pnum]._pLvlVisited[5])) {
 				if (!towner[t]._tMsgSaid) {
 					if (quests[Q_PWATER]._qactive == QUEST_INIT) {
 						quests[Q_PWATER]._qactive = QUEST_ACTIVE;
@@ -990,21 +990,21 @@ void TalkToTowner(int p, int t)
 						quests[Q_PWATER]._qmsg = TEXT_POISON3;
 						quests[Q_PWATER]._qvar1 = 1;
 						towner[t]._tbtcnt = 150;
-						towner[t]._tVar1 = p;
+						towner[t]._tPlayerNumber = pnum;
 						InitQTextMsg(TEXT_POISON3);
 						towner[t]._tMsgSaid = TRUE;
 					} else if (quests[Q_PWATER]._qactive == QUEST_DONE && quests[Q_PWATER]._qvar1 != 2) {
 						quests[Q_PWATER]._qvar1 = 2;
 						towner[t]._tbtcnt = 150;
-						towner[t]._tVar1 = p;
+						towner[t]._tPlayerNumber = pnum;
 						InitQTextMsg(TEXT_POISON5);
 						SpawnUnique(UITEM_TRING, towner[t]._tx, towner[t]._ty + 1);
 						towner[t]._tMsgSaid = TRUE;
 					}
 				}
 			}
-			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qmsg == TEXT_MUSH10 && PlrHasItem(p, IDI_BRAIN, &i) != NULL) {
-				RemoveInvItem(p, i);
+			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qmsg == TEXT_MUSH10 && PlrHasItem(pnum, IDI_BRAIN, &i) != NULL) {
+				RemoveInvItem(pnum, i);
 				SpawnQuestItem(IDI_SPECELIX, towner[t]._tx, towner[t]._ty + 1, 0, 0);
 				InitQTextMsg(TEXT_MUSH4);
 				quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
@@ -1014,23 +1014,23 @@ void TalkToTowner(int p, int t)
 		if (!qtextflag) {
 			TownerTalk(TEXT_PEPIN1, t);
 			if (storeflag) {
-				StartStore(STORE_HEALER);
+				StartStore(pnum, STORE_HEALER);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_PEGBOY)) {
 		if (!qtextflag) {
 			TownerTalk(TEXT_WIRT1, t);
 			if (storeflag) {
-				StartStore(STORE_BOY);
+				StartStore(pnum, STORE_BOY);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_STORY)) {
 		if (!gbIsMultiplayer) {
-			if (quests[Q_BETRAYER]._qactive == QUEST_INIT && PlrHasItem(p, IDI_LAZSTAFF, &i) != NULL) {
-				RemoveInvItem(p, i);
+			if (quests[Q_BETRAYER]._qactive == QUEST_INIT && PlrHasItem(pnum, IDI_LAZSTAFF, &i) != NULL) {
+				RemoveInvItem(pnum, i);
 				quests[Q_BETRAYER]._qvar1 = 2;
 				towner[t]._tbtcnt = 150;
-				towner[t]._tVar1 = p;
+				towner[t]._tPlayerNumber = pnum;
 				InitQTextMsg(TEXT_VILE1);
 				towner[t]._tMsgSaid = TRUE;
 				quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
@@ -1038,7 +1038,7 @@ void TalkToTowner(int p, int t)
 			} else if (quests[Q_BETRAYER]._qactive == QUEST_DONE && quests[Q_BETRAYER]._qvar1 == 7) {
 				quests[Q_BETRAYER]._qvar1 = 8;
 				towner[t]._tbtcnt = 150;
-				towner[t]._tVar1 = p;
+				towner[t]._tPlayerNumber = pnum;
 				InitQTextMsg(TEXT_VILE3);
 				towner[t]._tMsgSaid = TRUE;
 				quests[Q_DIABLO]._qlog = TRUE;
@@ -1047,7 +1047,7 @@ void TalkToTowner(int p, int t)
 		if (gbIsMultiplayer) {
 			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && !quests[Q_BETRAYER]._qlog) {
 				towner[t]._tbtcnt = 150;
-				towner[t]._tVar1 = p;
+				towner[t]._tPlayerNumber = pnum;
 				InitQTextMsg(TEXT_VILE1);
 				towner[t]._tMsgSaid = TRUE;
 				quests[Q_BETRAYER]._qlog = TRUE;
@@ -1055,7 +1055,7 @@ void TalkToTowner(int p, int t)
 			} else if (quests[Q_BETRAYER]._qactive == QUEST_DONE && quests[Q_BETRAYER]._qvar1 == 7) {
 				quests[Q_BETRAYER]._qvar1 = 8;
 				towner[t]._tbtcnt = 150;
-				towner[t]._tVar1 = p;
+				towner[t]._tPlayerNumber = pnum;
 				InitQTextMsg(TEXT_VILE3);
 				towner[t]._tMsgSaid = TRUE;
 				NetSendCmdQuest(TRUE, Q_BETRAYER);
@@ -1066,32 +1066,32 @@ void TalkToTowner(int p, int t)
 		if (!qtextflag) {
 			TownerTalk(TEXT_STORY1, t);
 			if (storeflag) {
-				StartStore(STORE_STORY);
+				StartStore(pnum, STORE_STORY);
 			}
 		}
 	} else if (towner[t]._ttype == TOWN_COW) {
 		if (!qtextflag)
-			CowSFX(p);
+			CowSFX(pnum);
 	} else if (towner[t]._ttype == TOWN_FARMER) {
 		if (!qtextflag) {
 			qt = TEXT_FARMER1;
 			t2 = 1;
 			switch (quests[Q_FARMER]._qactive) {
 			case 0:
-				if (PlrHasItem(p, IDI_RUNEBOMB, &i)) {
+				if (PlrHasItem(pnum, IDI_RUNEBOMB, &i)) {
 					qt = TEXT_FARMER2;
 					quests[Q_FARMER]._qactive = 2;
 					quests[Q_FARMER]._qvar1 = 1;
 					quests[Q_FARMER]._qlog = 1;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					break;
-				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
+				} else if (!plr[pnum]._pLvlVisited[9] && plr[pnum]._pLevel < 15) {
 					qt = TEXT_FARMER8;
-					if (plr[p]._pLvlVisited[2])
+					if (plr[pnum]._pLvlVisited[2])
 						qt = TEXT_FARMER5;
-					if (plr[p]._pLvlVisited[5])
+					if (plr[pnum]._pLvlVisited[5])
 						qt = TEXT_FARMER7;
-					if (plr[p]._pLvlVisited[7])
+					if (plr[pnum]._pLvlVisited[7])
 						qt = TEXT_FARMER9;
 				} else {
 					qt = TEXT_FARMER1;
@@ -1104,27 +1104,27 @@ void TalkToTowner(int p, int t)
 					break;
 				}
 			case 2:
-				if (PlrHasItem(p, IDI_RUNEBOMB, &i))
+				if (PlrHasItem(pnum, IDI_RUNEBOMB, &i))
 					qt = TEXT_FARMER2;
 				else
 					qt = TEXT_FARMER3;
 				break;
 			case 1:
-				if (PlrHasItem(p, IDI_RUNEBOMB, &i)) {
+				if (PlrHasItem(pnum, IDI_RUNEBOMB, &i)) {
 					qt = TEXT_FARMER2;
 					quests[Q_FARMER]._qactive = 2;
 					quests[Q_FARMER]._qvar1 = 1;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					quests[Q_FARMER]._qlog = 1;
-				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
+				} else if (!plr[pnum]._pLvlVisited[9] && plr[pnum]._pLevel < 15) {
 					qt = TEXT_FARMER8;
-					if (plr[p]._pLvlVisited[2]) {
+					if (plr[pnum]._pLvlVisited[2]) {
 						qt = TEXT_FARMER5;
 					}
-					if (plr[p]._pLvlVisited[5]) {
+					if (plr[pnum]._pLvlVisited[5]) {
 						qt = TEXT_FARMER7;
 					}
-					if (plr[p]._pLvlVisited[7]) {
+					if (plr[pnum]._pLvlVisited[7]) {
 						qt = TEXT_FARMER9;
 					}
 				} else {
@@ -1156,7 +1156,7 @@ void TalkToTowner(int p, int t)
 				if (t2)
 					InitQTextMsg(qt);
 				else
-					PlaySFX(alltext[qt].sfxnr);
+					PlaySFX(pnum, alltext[qt].sfxnr);
 			}
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_FARMER);
@@ -1166,15 +1166,15 @@ void TalkToTowner(int p, int t)
 		if (!qtextflag) {
 			qt = TEXT_JERSEY1;
 			t2 = 1;
-			if (PlrHasItem(p, IDI_GREYSUIT, &i)) {
+			if (PlrHasItem(pnum, IDI_GREYSUIT, &i)) {
 				qt = TEXT_JERSEY7;
-				RemoveInvItem(p, i);
-			} else if (PlrHasItem(p, IDI_BROWNSUIT, &i)) {
+				RemoveInvItem(pnum, i);
+			} else if (PlrHasItem(pnum, IDI_BROWNSUIT, &i)) {
 				SpawnUnique(UITEM_BOVINE, towner[t]._tx + 1, towner[t]._ty);
-				RemoveInvItem(p, i);
+				RemoveInvItem(pnum, i);
 				qt = TEXT_JERSEY8;
 				quests[Q_JERSEY]._qactive = 3;
-			} else if (PlrHasItem(p, IDI_RUNEBOMB, &i)) {
+			} else if (PlrHasItem(pnum, IDI_RUNEBOMB, &i)) {
 				qt = TEXT_JERSEY5;
 				quests[Q_JERSEY]._qactive = 2;
 				quests[Q_JERSEY]._qvar1 = 1;
@@ -1205,7 +1205,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_JERSEY]._qactive = 9;
 					break;
 				case 9:
-					if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
+					if (!plr[pnum]._pLvlVisited[9] && plr[pnum]._pLevel < 15) {
 						switch (random_(0, 4) + 9) {
 						case 9:
 							qt = TEXT_JERSEY9;
@@ -1240,7 +1240,7 @@ void TalkToTowner(int p, int t)
 				if (t2)
 					InitQTextMsg(qt);
 				else
-					PlaySFX(alltext[qt].sfxnr);
+					PlaySFX(pnum, alltext[qt].sfxnr);
 			}
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_JERSEY);
@@ -1250,7 +1250,7 @@ void TalkToTowner(int p, int t)
 		if (!qtextflag) {
 			qt = TEXT_GIRL1;
 			t2 = 0;
-			if (!PlrHasItem(p, IDI_THEODORE, &i) || quests[Q_GIRL]._qactive == 3) {
+			if (!PlrHasItem(pnum, IDI_THEODORE, &i) || quests[Q_GIRL]._qactive == 3) {
 				switch (quests[Q_GIRL]._qactive) {
 				case 0:
 					qt = TEXT_GIRL2;
@@ -1282,7 +1282,7 @@ void TalkToTowner(int p, int t)
 				}
 			} else {
 				qt = TEXT_GIRL4;
-				RemoveInvItem(p, i);
+				RemoveInvItem(pnum, i);
 				CreateAmulet(towner[t]._tx, towner[t]._ty, 13, 0, 1);
 				quests[Q_GIRL]._qlog = 0;
 				quests[Q_GIRL]._qactive = 3;
@@ -1292,7 +1292,7 @@ void TalkToTowner(int p, int t)
 				if (t2 != 0) {
 					InitQTextMsg(qt);
 				} else {
-					PlaySFX(alltext[qt].sfxnr);
+					PlaySFX(pnum, alltext[qt].sfxnr);
 				}
 			}
 			if (gbIsMultiplayer) {

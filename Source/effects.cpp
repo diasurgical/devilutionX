@@ -1163,12 +1163,12 @@ void FreeMonsterSnd()
 	}
 }
 
-BOOL calc_snd_position(int x, int y, int *plVolume, int *plPan)
+BOOL calc_snd_position(int pnum, int x, int y, int *plVolume, int *plPan)
 {
 	int pan, volume;
 
-	x -= plr[myplr]._px;
-	y -= plr[myplr]._py;
+	x -= plr[pnum]._px;
+	y -= plr[pnum]._py;
 
 	pan = (x - y) * 256;
 	*plPan = pan;
@@ -1188,11 +1188,11 @@ BOOL calc_snd_position(int x, int y, int *plVolume, int *plPan)
 	return TRUE;
 }
 
-static void PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
+static void PlaySFX_priv(int pnum, TSFX *pSFX, BOOL loc, int x, int y)
 {
 	int lPan, lVolume;
 
-	if (plr[myplr].pLvlLoad && gbIsMultiplayer) {
+	if (plr[pnum].pLvlLoad && gbIsMultiplayer) {
 		return;
 	}
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
@@ -1205,7 +1205,7 @@ static void PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
 
 	lPan = 0;
 	lVolume = 0;
-	if (loc && !calc_snd_position(x, y, &lVolume, &lPan)) {
+	if (loc && !calc_snd_position(pnum, x, y, &lVolume, &lPan)) {
 		return;
 	}
 
@@ -1221,12 +1221,12 @@ static void PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
 		snd_play_snd(pSFX->pSnd, lVolume, lPan);
 }
 
-void PlayEffect(int i, int mode)
+void PlayEffect(int pnum, int i, int mode)
 {
 	int sndIdx, mi, lVolume, lPan;
 	TSnd *snd;
 
-	if (plr[myplr].pLvlLoad) {
+	if (plr[pnum].pLvlLoad) {
 		return;
 	}
 
@@ -1241,7 +1241,7 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	if (!calc_snd_position(monster[i]._mx, monster[i]._my, &lVolume, &lPan))
+	if (!calc_snd_position(pnum, monster[i]._mx, monster[i]._my, &lVolume, &lPan))
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);
@@ -1282,16 +1282,16 @@ static int RndSFX(int psfx)
 	return psfx + random_(165, nRand);
 }
 
-void PlaySFX(int psfx, bool randomizeByCategory)
+void PlaySFX(int pnum, int psfx, bool randomizeByCategory)
 {
 	if (randomizeByCategory) {
 		psfx = RndSFX(psfx);
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], FALSE, 0, 0);
+	PlaySFX_priv(pnum, &sgSFX[psfx], FALSE, 0, 0);
 }
 
-void PlaySfxLoc(int psfx, int x, int y)
+void PlaySfxLoc(int pnum, int psfx, int x, int y)
 {
 	TSnd *pSnd;
 
@@ -1303,7 +1303,7 @@ void PlaySfxLoc(int psfx, int x, int y)
 			pSnd->start_tc = 0;
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], TRUE, x, y);
+	PlaySFX_priv(pnum, &sgSFX[psfx], TRUE, x, y);
 }
 
 void sound_stop()

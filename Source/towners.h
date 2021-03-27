@@ -61,7 +61,7 @@ typedef struct TownerStruct {
 	bool _tMsgSaid;
 	TNQ qsts[MAXQUESTS];
 	int _tSeed;
-	int _tVar1;
+	int _tPlayerNumber;
 	int _tVar2;
 	int _tVar3;
 	int _tVar4;

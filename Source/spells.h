@@ -12,8 +12,8 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-int GetManaAmount(int id, int sn);
-void UseMana(int id, int sn);
+int GetManaAmount(int pnum, int sn);
+void UseMana(int pnum, int sn);
 Uint64 GetSpellBitmask(int spellId);
 BOOL CheckSpell(int id, int sn, char st, BOOL manaonly);
 void EnsureValidReadiedSpell(PlayerStruct &player);

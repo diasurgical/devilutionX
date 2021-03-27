@@ -47,10 +47,10 @@ extern int initialDropGoldValue;
 extern BOOL panbtndown;
 extern BOOL spselflag;
 
-void DrawSpellList(CelOutputBuffer out);
-void SetSpell();
-void SetSpeedSpell(int slot);
-void ToggleSpell(int slot);
+void DrawSpellList(CelOutputBuffer out, int pnum);
+void SetSpell(int pnum);
+void SetSpeedSpell(int pnum, int slot);
+void ToggleSpell(int pnum, int slot);
 
 /**
  * @brief Print letter to the given buffer
@@ -70,26 +70,26 @@ void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int s
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
  * First it draws the empty flask cel and then draws the filled part on top if needed.
  */
-void DrawLifeFlask(CelOutputBuffer out);
+void DrawLifeFlask(CelOutputBuffer out, int pnum);
 
 /**
  * Controls the drawing of the area of the life flask within the control panel.
  * First sets the fill amount then draws the empty flask cel portion then the filled
  * flask portion.
  */
-void UpdateLifeFlask(CelOutputBuffer out);
+void UpdateLifeFlask(CelOutputBuffer out, int pnum);
 
-void DrawManaFlask(CelOutputBuffer out);
-void control_update_life_mana();
+void DrawManaFlask(CelOutputBuffer out, int pnum);
+void control_update_life_mana(int pnum);
 
 /**
  * Controls the drawing of the area of the life flask within the control panel.
  * Also for some reason draws the current right mouse button spell.
  */
-void UpdateManaFlask(CelOutputBuffer out);
+void UpdateManaFlask(CelOutputBuffer out, int pnum);
 
-void InitControlPan();
-void DrawCtrlPan(CelOutputBuffer out);
+void InitControlPan(int pnum);
+void DrawCtrlPan(CelOutputBuffer out, int pnum);
 
 /**
  * Draws the control panel buttons in their current state. If the button is in the default
@@ -97,11 +97,11 @@ void DrawCtrlPan(CelOutputBuffer out);
  */
 void DrawCtrlBtns(CelOutputBuffer out);
 
-void DoSpeedBook();
-void DoPanBtn();
+void DoSpeedBook(int pnum);
+void DoPanBtn(int pnum);
 void control_check_btn_press();
 void DoAutoMap();
-void CheckPanelInfo();
+void CheckPanelInfo(int pnum);
 void CheckBtnUp();
 void FreeControlPan();
 BOOL control_WriteStringToBuffer(BYTE *str);
@@ -109,27 +109,27 @@ BOOL control_WriteStringToBuffer(BYTE *str);
 /**
  * Sets a string to be drawn in the info box and then draws it.
  */
-void DrawInfoBox(CelOutputBuffer out);
+void DrawInfoBox(CelOutputBuffer out, int pnum);
 
 void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, int color);
-void DrawChr(CelOutputBuffer out);
+void DrawChr(CelOutputBuffer out, int pnum);
 void CheckLvlBtn();
 void ReleaseLvlBtn();
 void DrawLevelUpIcon(CelOutputBuffer out);
-void CheckChrBtns();
-void ReleaseChrBtns(bool addAllStatPoints);
-void DrawDurIcon(CelOutputBuffer out);
+void CheckChrBtns(int pnum);
+void ReleaseChrBtns(int pnum, bool addAllStatPoints);
+void DrawDurIcon(CelOutputBuffer out, int pnum);
 void RedBack(CelOutputBuffer out);
-void DrawSpellBook(CelOutputBuffer out);
-void CheckSBook();
+void DrawSpellBook(CelOutputBuffer out, int pnum);
+void CheckSBook(int pnum);
 const char *get_pieces_str(int nGold);
 void DrawGoldSplit(CelOutputBuffer out, int amount);
-void control_drop_gold(char vkey);
+void control_drop_gold(int pnum, char vkey);
 void control_remove_gold(int pnum, int gold_index);
 void control_set_gold_curs(int pnum);
-void DrawTalkPan(CelOutputBuffer out);
+void DrawTalkPan(CelOutputBuffer out, int pnum);
 BOOL control_check_talk_btn();
-void control_release_talk_btn();
+void control_release_talk_btn(int pnum);
 void control_type_message();
 void control_reset_talk();
 BOOL control_talk_last_key(int vkey);

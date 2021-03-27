@@ -33,8 +33,8 @@ void DeactivatePortal(int i);
 BOOL PortalOnLevel(int i);
 void RemovePortalMissile(int id);
 void SetCurrentPortal(int p);
-void GetPortalLevel();
-void GetPortalLvlPos();
+void GetPortalLevel(int pnum);
+void GetPortalLvlPos(int pnum);
 BOOL PosOkPortal(int lvl, int x, int y);
 
 #ifdef __cplusplus

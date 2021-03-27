@@ -76,7 +76,7 @@ void AutomapZoomOut();
 /**
  * @brief Renders the automap to the given buffer.
  */
-void DrawAutomap(CelOutputBuffer out);
+void DrawAutomap(CelOutputBuffer out, int pnum);
 
 /**
  * @brief Marks the given coordinate as within view on the automap.

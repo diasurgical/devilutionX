@@ -509,7 +509,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 
 bool gbSkipSync = false;
 
-static void LoadMonster(LoadHelper *file, int i)
+static void LoadMonster(LoadHelper *file, int i, int pnum)
 {
 	MonsterStruct *pMonster = &monster[i];
 
@@ -595,8 +595,8 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->leaderflag = file->nextLE<Uint8>();
 	pMonster->packsize = file->nextLE<Uint8>();
 	pMonster->mlid = file->nextLE<Sint8>();
-	if (pMonster->mlid == plr[myplr]._plid)
-		pMonster->mlid = NO_LIGHT; // Correct incorect values in old saves
+	if (pMonster->mlid == plr[pnum]._plid)
+		pMonster->mlid = NO_LIGHT; // Correct incorrect values in old saves
 
 	// Omit pointer mName;
 	// Omit pointer MType;
@@ -824,7 +824,7 @@ bool IsHeaderValid(Uint32 magicNumber)
 	return false;
 }
 
-void ConvertLevels()
+void ConvertLevels(int pnum)
 {
 	// Backup current level state
 	bool _setlevel = setlevel;
@@ -842,8 +842,8 @@ void ConvertLevels()
 
 		leveltype = gnLevelTypeTbl[i];
 
-		LoadLevel();
-		SaveLevel();
+		LoadLevel(pnum);
+		SaveLevel(pnum);
 	}
 
 	setlevel = true; // Convert quest levels
@@ -861,8 +861,8 @@ void ConvertLevels()
 		if (!LevelFileExists())
 			continue;
 
-		LoadLevel();
-		SaveLevel();
+		LoadLevel(pnum);
+		SaveLevel(pnum);
 	}
 
 	gbSkipSync = false;
@@ -874,47 +874,47 @@ void ConvertLevels()
 	leveltype = _leveltype;
 }
 
-void LoadHotkeys()
+void LoadHotkeys(int pnum)
 {
 	LoadHelper file("hotkeys");
 	if (!file.isValid())
 		return;
 
-	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
-	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
+	const size_t nHotkeyTypes = sizeof(plr[pnum]._pSplHotKey) / sizeof(plr[pnum]._pSplHotKey[0]);
+	const size_t nHotkeySpells = sizeof(plr[pnum]._pSplTHotKey) / sizeof(plr[pnum]._pSplTHotKey[0]);
 
 	for (size_t i = 0; i < nHotkeyTypes; i++) {
-		plr[myplr]._pSplHotKey[i] = (spell_id)file.nextLE<Sint32>();
+		plr[pnum]._pSplHotKey[i] = (spell_id)file.nextLE<Sint32>();
 	}
 	for (size_t i = 0; i < nHotkeySpells; i++) {
-		plr[myplr]._pSplTHotKey[i] = (spell_type)file.nextLE<Sint8>();
+		plr[pnum]._pSplTHotKey[i] = (spell_type)file.nextLE<Sint8>();
 	}
-	plr[myplr]._pRSpell = (spell_id)file.nextLE<Sint32>();
-	plr[myplr]._pRSplType = (spell_type)file.nextLE<Sint8>();
+	plr[pnum]._pRSpell = (spell_id)file.nextLE<Sint32>();
+	plr[pnum]._pRSplType = (spell_type)file.nextLE<Sint8>();
 }
 
-void SaveHotkeys()
+void SaveHotkeys(int pnum)
 {
-	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
-	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
+	const size_t nHotkeyTypes = sizeof(plr[pnum]._pSplHotKey) / sizeof(plr[pnum]._pSplHotKey[0]);
+	const size_t nHotkeySpells = sizeof(plr[pnum]._pSplTHotKey) / sizeof(plr[pnum]._pSplTHotKey[0]);
 
 	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
 
 	for (size_t i = 0; i < nHotkeyTypes; i++) {
-		file.writeLE<Sint32>(plr[myplr]._pSplHotKey[i]);
+		file.writeLE<Sint32>(plr[pnum]._pSplHotKey[i]);
 	}
 	for (size_t i = 0; i < nHotkeySpells; i++) {
-		file.writeLE<Uint8>(plr[myplr]._pSplTHotKey[i]);
+		file.writeLE<Uint8>(plr[pnum]._pSplTHotKey[i]);
 	}
-	file.writeLE<Sint32>(plr[myplr]._pRSpell);
-	file.writeLE<Uint8>(plr[myplr]._pRSplType);
+	file.writeLE<Sint32>(plr[pnum]._pRSpell);
+	file.writeLE<Uint8>(plr[pnum]._pRSplType);
 }
 
 /**
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
-void LoadGame(BOOL firstflag)
+void LoadGame(int pnum, BOOL firstflag)
 {
 	FreeGameMem();
 	pfile_remove_temp_files();
@@ -960,9 +960,9 @@ void LoadGame(BOOL firstflag)
 		file.skip(4); // Skip loading gnLevelTypeTbl
 	}
 
-	LoadPlayer(&file, myplr);
+	LoadPlayer(&file, pnum);
 
-	gnDifficulty = plr[myplr].pDifficulty;
+	gnDifficulty = plr[pnum].pDifficulty;
 	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
 		gnDifficulty = DIFF_NORMAL;
 
@@ -972,11 +972,11 @@ void LoadGame(BOOL firstflag)
 		LoadPortal(&file, i);
 
 	if (gbIsHellfireSaveGame != gbIsHellfire)
-		ConvertLevels();
+		ConvertLevels(pnum);
 
-	LoadGameLevel(firstflag, ENTRY_LOAD);
-	SyncInitPlr(myplr);
-	SyncPlrAnim(myplr);
+	LoadGameLevel(pnum, firstflag, ENTRY_LOAD);
+	SyncInitPlr(pnum);
+	SyncPlrAnim(pnum);
 
 	ViewX = _ViewX;
 	ViewY = _ViewY;
@@ -992,7 +992,7 @@ void LoadGame(BOOL firstflag)
 		for (int i = 0; i < MAXMONSTERS; i++)
 			monstactive[i] = file.nextBE<Sint32>();
 		for (int i = 0; i < nummonsters; i++)
-			LoadMonster(&file, monstactive[i]);
+			LoadMonster(&file, monstactive[i], pnum);
 		for (int i = 0; i < MAXMISSILES; i++)
 			missileactive[i] = file.nextLE<Sint8>();
 		for (int i = 0; i < MAXMISSILES; i++)
@@ -1085,7 +1085,7 @@ void LoadGame(BOOL firstflag)
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
 		LoadPremium(&file, i);
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
-		SpawnPremium(myplr);
+		SpawnPremium(pnum);
 
 	automapflag = file.nextBool8();
 	AutoMapScale = file.nextBE<Sint32>();
@@ -1103,7 +1103,7 @@ void LoadGame(BOOL firstflag)
 	gbProcessPlayers = TRUE;
 
 	if (gbIsHellfireSaveGame != gbIsHellfire)
-		SaveGame();
+		SaveGame(pnum);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
@@ -1667,7 +1667,7 @@ static void SavePortal(SaveHelper *file, int i)
 	file->writeLE<Uint32>(pPortal->setlvl);
 }
 
-void SaveGame()
+void SaveGame(int pnum)
 {
 	SaveHelper file("game", FILEBUFF);
 
@@ -1710,8 +1710,8 @@ void SaveGame()
 		file.writeBE<Sint32>(gnLevelTypeTbl[i]);
 	}
 
-	plr[myplr].pDifficulty = gnDifficulty;
-	SavePlayer(&file, myplr);
+	plr[pnum].pDifficulty = gnDifficulty;
+	SavePlayer(&file, pnum);
 
 	for (int i = 0; i < giNumberQuests; i++)
 		SaveQuest(&file, i);
@@ -1822,12 +1822,12 @@ void SaveGame()
 
 	gbValidSaveFile = TRUE;
 	pfile_rename_temp_to_perm();
-	pfile_write_hero();
+	pfile_write_hero(pnum);
 }
 
-void SaveLevel()
+void SaveLevel(int pnum)
 {
-	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
+	DoUnVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
 		glSeedTbl[0] = AdvanceRndSeed();
@@ -1905,12 +1905,12 @@ void SaveLevel()
 	}
 
 	if (!setlevel)
-		plr[myplr]._pLvlVisited[currlevel] = TRUE;
+		plr[pnum]._pLvlVisited[currlevel] = TRUE;
 	else
-		plr[myplr]._pSLvlVisited[setlvlnum] = TRUE;
+		plr[pnum]._pSLvlVisited[setlvlnum] = TRUE;
 }
 
-void LoadLevel()
+void LoadLevel(int pnum)
 {
 	char szName[MAX_PATH];
 	GetPermLevelNames(szName);
@@ -1934,7 +1934,7 @@ void LoadLevel()
 		for (int i = 0; i < MAXMONSTERS; i++)
 			monstactive[i] = file.nextBE<Uint32>();
 		for (int i = 0; i < nummonsters; i++)
-			LoadMonster(&file, monstactive[i]);
+			LoadMonster(&file, monstactive[i], pnum);
 		for (int i = 0; i < MAXOBJECTS; i++)
 			objectactive[i] = file.nextLE<Uint8>();
 		for (int i = 0; i < MAXOBJECTS; i++)

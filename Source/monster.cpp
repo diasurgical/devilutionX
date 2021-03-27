@@ -625,7 +625,7 @@ void monster_some_crypt()
 
 	if (currlevel == 24 && UberDiabloMonsterIndex >= 0 && UberDiabloMonsterIndex < nummonsters) {
 		mon = &monster[UberDiabloMonsterIndex];
-		PlayEffect(UberDiabloMonsterIndex, 2);
+		PlayEffect(myplr, UberDiabloMonsterIndex, 2);
 		quests[Q_NAKRUL]._qlog = 0;
 		mon->mArmorClass -= 50;
 		hp = mon->_mmaxhp / 2;
@@ -1633,7 +1633,7 @@ void M_StartHit(int i, int pnum, int dam)
 		delta_monster_hp(i, monster[i]._mhitpoints, currlevel);
 		NetSendCmdMonDmg(FALSE, i, dam);
 	}
-	PlayEffect(i, 1);
+	PlayEffect(pnum, i, 1);
 	if (monster[i].MType->mtype >= MT_SNEAK && monster[i].MType->mtype <= MT_ILLWEAV || dam >> 6 >= monster[i].mLevel + 3) {
 		if (pnum >= 0) {
 			monster[i]._menemy = pnum;
@@ -1672,7 +1672,7 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 	int j, k;
 
 	Monst = &monster[i];
-	PlaySFX(USFX_DIABLOD);
+	PlaySFX(myplr, USFX_DIABLOD);
 	quests[Q_DIABLO]._qactive = QUEST_DONE;
 	if (sendmsg)
 		NetSendCmdQuest(TRUE, Q_DIABLO);
@@ -1753,7 +1753,7 @@ void M2MStartHit(int mid, int i, int dam)
 
 	delta_monster_hp(mid, monster[mid]._mhitpoints, currlevel);
 	NetSendCmdMonDmg(FALSE, mid, dam);
-	PlayEffect(mid, 1);
+	PlayEffect(myplr, mid, 1);
 
 	if (monster[mid].MType->mtype >= MT_SNEAK && monster[mid].MType->mtype <= MT_ILLWEAV || dam >> 6 >= monster[mid].mLevel + 3) {
 		if (i >= 0)
@@ -1807,7 +1807,7 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	if (Monst->MType->mtype == MT_DIABLO)
 		M_DiabloDeath(i, TRUE);
 	else
-		PlayEffect(i, 2);
+		PlayEffect(pnum, i, 2);
 
 	if (pnum >= 0)
 		md = M_GetDir(i);
@@ -1858,7 +1858,7 @@ void M2MStartKill(int i, int mid)
 	if (monster[mid].MType->mtype == MT_DIABLO)
 		M_DiabloDeath(mid, TRUE);
 	else
-		PlayEffect(mid, 2);
+		PlayEffect(myplr, mid, 2);
 
 	md = (monster[i]._mdir - 4) & 7;
 	if (monster[mid].MType->mtype == MT_GOLEM)
@@ -2068,7 +2068,7 @@ bool M_DoWalk(int i, int variant)
 	} else { //We didn't reach new tile so update monster's "sub-tile" position
 		if (monster[i]._mAnimCnt == 0) {
 			if (monster[i]._mVar8 == 0 && monster[i].MType->mtype == MT_FLESTHNG)
-				PlayEffect(i, 3);
+				PlayEffect(myplr, i, 3);
 			monster[i]._mVar8++;
 			monster[i]._mVar6 += monster[i]._mxvel;
 			monster[i]._mVar7 += monster[i]._myvel;
@@ -2285,6 +2285,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 
 BOOL M_DoAttack(int i)
 {
+	int pnum = myplr;
 	MonsterStruct *Monst;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
@@ -2295,18 +2296,18 @@ BOOL M_DoAttack(int i)
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum) {
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit, monster[i].mMinDamage, monster[i].mMaxDamage);
 		if (monster[i]._mAi != AI_SNAKE)
-			PlayEffect(i, 0);
+			PlayEffect(pnum, i, 0);
 	}
 	if (monster[i].MType->mtype >= MT_NMAGMA && monster[i].MType->mtype <= MT_WMAGMA && monster[i]._mAnimFrame == 9) {
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit + 10, monster[i].mMinDamage - 2, monster[i].mMaxDamage - 2);
-		PlayEffect(i, 0);
+		PlayEffect(pnum, i, 0);
 	}
 	if (monster[i].MType->mtype >= MT_STORM && monster[i].MType->mtype <= MT_MAEL && monster[i]._mAnimFrame == 13) {
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit - 20, monster[i].mMinDamage + 4, monster[i].mMaxDamage + 4);
-		PlayEffect(i, 0);
+		PlayEffect(pnum, i, 0);
 	}
 	if (monster[i]._mAi == AI_SNAKE && monster[i]._mAnimFrame == 1)
-		PlayEffect(i, 0);
+		PlayEffect(pnum, i, 0);
 	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
 		M_StartStand(i, monster[i]._mdir);
 		return TRUE;
@@ -2343,7 +2344,7 @@ BOOL M_DoRAttack(int i)
 				    0);
 			}
 		}
-		PlayEffect(i, 0);
+		PlayEffect(myplr, i, 0);
 	}
 
 	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
@@ -2372,7 +2373,7 @@ BOOL M_DoRSpAttack(int i)
 		    i,
 		    monster[i]._mVar3,
 		    0);
-		PlayEffect(i, 3);
+		PlayEffect(myplr, i, 3);
 	}
 
 	if (monster[i]._mAi == AI_MEGA && monster[i]._mAnimFrame == 3) {
@@ -2733,7 +2734,7 @@ BOOL M_DoSpStand(int i)
 	commitment(monster[i].MType != NULL, i);
 
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2)
-		PlayEffect(i, 3);
+		PlayEffect(myplr, i, 3);
 
 	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
 		M_StartStand(i, monster[i]._mdir);
@@ -3054,6 +3055,7 @@ void MAI_SkelSd(int i)
 
 BOOL MAI_Path(int i)
 {
+	int pnum = myplr;
 	MonsterStruct *Monst;
 	BOOL clear;
 
@@ -3080,7 +3082,7 @@ BOOL MAI_Path(int i)
 	    Monst->_menemyy);
 	if (!clear || Monst->_pathcount >= 5 && Monst->_pathcount < 8) {
 		if (Monst->_mFlags & MFLAG_CAN_OPEN_DOOR)
-			MonstCheckDoors(i);
+			MonstCheckDoors(pnum, i);
 		Monst->_pathcount++;
 		if (Monst->_pathcount < 5)
 			return FALSE;
@@ -3116,7 +3118,7 @@ void MAI_Snake(int i)
 	if (abs(mx) >= 2 || abs(my) >= 2) {
 		if (abs(mx) < 3 && abs(my) < 3 && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
 			if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
-				PlayEffect(i, 0);
+				PlayEffect(pnum, i, 0);
 				dMonster[Monst->_mx][Monst->_my] = -(i + 1);
 				Monst->_mmode = MM_CHARGE;
 			}
@@ -3538,6 +3540,7 @@ void MAI_Cleaver(int i)
 
 void MAI_Round(int i, BOOL special)
 {
+	int pnum = myplr;
 	MonsterStruct *Monst;
 	int fx, fy;
 	int mx, my, md;
@@ -3552,7 +3555,7 @@ void MAI_Round(int i, BOOL special)
 		my = Monst->_my - fy;
 		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
-			MonstCheckDoors(i);
+			MonstCheckDoors(pnum, i);
 		v = random_(114, 100);
 		if ((abs(mx) >= 2 || abs(my) >= 2) && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
 			if (Monst->_mgoal == MGOAL_MOVE || (abs(mx) >= 4 || abs(my) >= 4) && random_(115, 4) == 0) {
@@ -3601,6 +3604,7 @@ void MAI_GoatMc(int i)
 
 void MAI_Ranged(int i, int missile_type, BOOL special)
 {
+	int pnum = myplr;
 	int md;
 	int fx, fy, mx, my;
 	MonsterStruct *Monst;
@@ -3619,7 +3623,7 @@ void MAI_Ranged(int i, int missile_type, BOOL special)
 		my = Monst->_my - fy;
 		md = M_GetDir(i);
 		if (Monst->_msquelch < UCHAR_MAX)
-			MonstCheckDoors(i);
+			MonstCheckDoors(pnum, i);
 		Monst->_mdir = md;
 		if (Monst->_mVar1 == MM_RATTACK) {
 			M_StartDelay(i, random_(118, 20));
@@ -3829,6 +3833,7 @@ void MAI_Garg(int i)
 
 void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int lessmissiles)
 {
+	int pnum = myplr;
 	MonsterStruct *Monst;
 	int mx, my;
 	int fx, fy;
@@ -3843,7 +3848,7 @@ void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int less
 		my = Monst->_my - fy;
 		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (checkdoors && Monst->_msquelch < UCHAR_MAX)
-			MonstCheckDoors(i);
+			MonstCheckDoors(pnum, i);
 		v = random_(121, 10000);
 		dist = std::max(abs(mx), abs(my));
 		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
@@ -3914,6 +3919,7 @@ void MAI_Diablo(int i)
 
 void MAI_RR2(int i, int mistype, int dam)
 {
+	int pnum = myplr;
 	MonsterStruct *Monst;
 	int mx, my, fx, fy;
 	int dist, v, md;
@@ -3935,7 +3941,7 @@ void MAI_RR2(int i, int mistype, int dam)
 		my = Monst->_my - fy;
 		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
-			MonstCheckDoors(i);
+			MonstCheckDoors(pnum, i);
 		v = random_(121, 100);
 		dist = std::max(abs(mx), abs(my));
 		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
@@ -4066,6 +4072,7 @@ void MAI_Golum(int i)
 
 void MAI_SkelKing(int i)
 {
+	int pnum = myplr;
 	MonsterStruct *Monst;
 	int mx, my, fx, fy, nx, ny;
 	int dist, v, md;
@@ -4079,7 +4086,7 @@ void MAI_SkelKing(int i)
 		my = Monst->_my - fy;
 		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
-			MonstCheckDoors(i);
+			MonstCheckDoors(pnum, i);
 		v = random_(126, 100);
 		dist = std::max(abs(mx), abs(my));
 		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
@@ -4129,6 +4136,7 @@ void MAI_SkelKing(int i)
 
 void MAI_Rhino(int i)
 {
+	int pnum = myplr;
 	MonsterStruct *Monst;
 	int mx, my, fx, fy;
 	int v, dist, md;
@@ -4142,7 +4150,7 @@ void MAI_Rhino(int i)
 		my = Monst->_my - fy;
 		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
-			MonstCheckDoors(i);
+			MonstCheckDoors(pnum, i);
 		v = random_(131, 100);
 		dist = std::max(abs(mx), abs(my));
 		if (dist >= 2) {
@@ -4166,7 +4174,7 @@ void MAI_Rhino(int i)
 			    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
 				if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
 					if (Monst->MData->snd_special)
-						PlayEffect(i, 3);
+						PlayEffect(myplr, i, 3);
 					dMonster[Monst->_mx][Monst->_my] = -(i + 1);
 					Monst->_mmode = MM_CHARGE;
 				}
@@ -4194,6 +4202,7 @@ void MAI_Rhino(int i)
 
 void MAI_HorkDemon(int i)
 {
+	int pnum = myplr;
 	MonsterStruct *Monst;
 	int fx, fy, mx, my, md, v, dist;
 
@@ -4213,7 +4222,7 @@ void MAI_HorkDemon(int i)
 	md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 
 	if (Monst->_msquelch < 255) {
-		MonstCheckDoors(i);
+		MonstCheckDoors(pnum, i);
 	}
 
 	v = random_(131, 100);
@@ -4265,6 +4274,7 @@ void MAI_HorkDemon(int i)
 
 void MAI_Counselor(int i)
 {
+	int pnum = myplr;
 	int mx, my, fx, fy;
 	int dist, md, v;
 	MonsterStruct *Monst;
@@ -4279,7 +4289,7 @@ void MAI_Counselor(int i)
 		my = Monst->_my - fy;
 		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
-			MonstCheckDoors(i);
+			MonstCheckDoors(pnum, i);
 		v = random_(121, 100);
 		if (Monst->_mgoal == MGOAL_RETREAT) {
 			if (Monst->_mgoalvar1++ <= 3)
@@ -4686,20 +4696,20 @@ void ProcessMonsters()
 
 		if (dFlags[mx][my] & BFLAG_VISIBLE && Monst->_msquelch == 0) {
 			if (Monst->MType->mtype == MT_CLEAVER) {
-				PlaySFX(USFX_CLEAVER);
+				PlaySFX(myplr, USFX_CLEAVER);
 			}
 			if (Monst->MType->mtype == MT_NAKRUL) {
 				if (gbCowQuest) {
-					PlaySFX(USFX_NAKRUL6);
+					PlaySFX(myplr, USFX_NAKRUL6);
 				} else {
 					if (IsUberRoomOpened)
-						PlaySFX(USFX_NAKRUL4);
+						PlaySFX(myplr, USFX_NAKRUL4);
 					else
-						PlaySFX(USFX_NAKRUL5);
+						PlaySFX(myplr, USFX_NAKRUL5);
 				}
 			}
 			if (Monst->MType->mtype == MT_DEFILER)
-				PlaySFX(USFX_DEFILER8);
+				PlaySFX(myplr, USFX_DEFILER8);
 			M_Enemy(mi);
 		}
 

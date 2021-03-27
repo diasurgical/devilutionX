@@ -37,7 +37,7 @@ void NewCursor(int i);
 void InitLevelCursor();
 void CheckRportal();
 void CheckTown();
-void CheckCursMove();
+void CheckCursMove(int pnum);
 
 /* rdata */
 extern const int InvItemWidth[];

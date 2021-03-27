@@ -25,7 +25,7 @@ extern TriggerStruct trigs[MAXTRIGGERS];
 extern int TWarpFrom;
 
 void InitNoTriggers();
-void InitTownTriggers();
+void InitTownTriggers(int pnum);
 void InitL1Triggers();
 void InitL2Triggers();
 void InitL3Triggers();
@@ -36,7 +36,7 @@ void InitPWaterTriggers();
 void InitVPTriggers();
 void Freeupstairs();
 void CheckTrigForce();
-void CheckTriggers();
+void CheckTriggers(int pnum);
 
 #ifdef __cplusplus
 }

@@ -6,7 +6,7 @@ TEST(Control, SetSpell) {
 	dvl::pinfoflag = true;
 	dvl::pSpell = dvl::SPL_FIREBOLT;
 	dvl::pSplType = dvl::RSPLTYPE_CHARGES;
-	dvl::SetSpell();
+	dvl::SetSpell(myplr);
 	EXPECT_EQ(dvl::spselflag, false);
 	EXPECT_EQ(dvl::plr[dvl::myplr]._pRSpell, dvl::SPL_FIREBOLT);
 	EXPECT_EQ(dvl::plr[dvl::myplr]._pRSplType, dvl::RSPLTYPE_CHARGES);

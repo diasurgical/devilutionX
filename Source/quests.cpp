@@ -228,7 +228,7 @@ void CheckQuests()
 		    && nummonsters == 4
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, plr[myplr]._px, plr[myplr]._py);
+			PlaySfxLoc(myplr, IS_QUESTDN, plr[myplr]._px, plr[myplr]._py);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal");
 			WaterDone = 32;
 		}
@@ -885,7 +885,7 @@ void QuestlogUp()
 		} else {
 			qline -= 2;
 		}
-		PlaySFX(IS_TITLEMOV);
+		PlaySFX(myplr, IS_TITLEMOV);
 	}
 }
 
@@ -899,13 +899,13 @@ void QuestlogDown()
 		} else {
 			qline += 2;
 		}
-		PlaySFX(IS_TITLEMOV);
+		PlaySFX(myplr, IS_TITLEMOV);
 	}
 }
 
 void QuestlogEnter()
 {
-	PlaySFX(IS_TITLSLCT);
+	PlaySFX(myplr, IS_TITLSLCT);
 	if (numqlines && qline != 22)
 		InitQTextMsg(quests[qlist[(qline - qtopline) >> 1]]._qmsg);
 	questlog = FALSE;

@@ -95,7 +95,7 @@ extern MissileStruct missile[MAXMISSILES];
 extern int nummissiles;
 extern bool MissilePreFlag;
 
-void GetDamageAmt(int i, int *mind, int *maxd);
+void GetDamageAmt(int pnum, int i, int *mind, int *maxd);
 int GetSpellLevel(int id, int sn);
 int GetDirection8(int x1, int y1, int x2, int y2);
 int GetDirection16(int x1, int y1, int x2, int y2);
@@ -108,7 +108,7 @@ void LoadMissileGFX(BYTE mi);
 void InitMissileGFX();
 void FreeMissiles();
 void FreeMissiles2();
-void InitMissiles();
+void InitMissiles(int pnum);
 void AddHiveExplosion(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddFireRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddLightningRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);

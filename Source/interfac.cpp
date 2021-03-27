@@ -215,6 +215,7 @@ bool IncProgress()
 
 void ShowProgress(interface_mode uMsg)
 {
+	int pnum = myplr;
 	WNDPROC saveProc;
 
 	gbSomebodyWonGameKludge = FALSE;
@@ -238,7 +239,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABLOADGAME:
 		IncProgress();
 		IncProgress();
-		LoadGame(TRUE);
+		LoadGame(pnum, TRUE);
 		IncProgress();
 		IncProgress();
 		break;
@@ -249,13 +250,13 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		pfile_remove_temp_files();
 		IncProgress();
-		LoadGameLevel(TRUE, ENTRY_MAIN);
+		LoadGameLevel(pnum, TRUE, ENTRY_MAIN);
 		IncProgress();
 		break;
 	case WM_DIABNEXTLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			SaveLevel(pnum);
 		} else {
 			DeltaSaveLevel();
 		}
@@ -265,13 +266,13 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_MAIN);
+		LoadGameLevel(pnum, FALSE, ENTRY_MAIN);
 		IncProgress();
 		break;
 	case WM_DIABPREVLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			SaveLevel(pnum);
 		} else {
 			DeltaSaveLevel();
 		}
@@ -281,14 +282,14 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_PREV);
+		LoadGameLevel(pnum, FALSE, ENTRY_PREV);
 		IncProgress();
 		break;
 	case WM_DIABSETLVL:
 		SetReturnLvlPos();
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			SaveLevel(pnum);
 		} else {
 			DeltaSaveLevel();
 		}
@@ -297,13 +298,13 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = setlvltype;
 		FreeGameMem();
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_SETLVL);
+		LoadGameLevel(pnum, FALSE, ENTRY_SETLVL);
 		IncProgress();
 		break;
 	case WM_DIABRTNLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			SaveLevel(pnum);
 		} else {
 			DeltaSaveLevel();
 		}
@@ -312,27 +313,27 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		IncProgress();
 		GetReturnLvlPos();
-		LoadGameLevel(FALSE, ENTRY_RTNLVL);
+		LoadGameLevel(pnum, FALSE, ENTRY_RTNLVL);
 		IncProgress();
 		break;
 	case WM_DIABWARPLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			SaveLevel(pnum);
 		} else {
 			DeltaSaveLevel();
 		}
 		IncProgress();
 		FreeGameMem();
-		GetPortalLevel();
+		GetPortalLevel(pnum);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_WARPLVL);
+		LoadGameLevel(pnum, FALSE, ENTRY_WARPLVL);
 		IncProgress();
 		break;
 	case WM_DIABTOWNWARP:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			SaveLevel(pnum);
 		} else {
 			DeltaSaveLevel();
 		}
@@ -342,13 +343,13 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_TWARPDN);
+		LoadGameLevel(pnum, FALSE, ENTRY_TWARPDN);
 		IncProgress();
 		break;
 	case WM_DIABTWARPUP:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			SaveLevel(pnum);
 		} else {
 			DeltaSaveLevel();
 		}
@@ -358,13 +359,13 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_TWARPUP);
+		LoadGameLevel(pnum, FALSE, ENTRY_TWARPUP);
 		IncProgress();
 		break;
 	case WM_DIABRETOWN:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			SaveLevel(pnum);
 		} else {
 			DeltaSaveLevel();
 		}
@@ -374,7 +375,7 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_MAIN);
+		LoadGameLevel(pnum, FALSE, ENTRY_MAIN);
 		IncProgress();
 		break;
 	}

@@ -7,7 +7,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int GetManaAmount(int id, int sn)
+int GetManaAmount(int pnum, int sn)
 {
 	int ma; // mana amount
 
@@ -15,7 +15,7 @@ int GetManaAmount(int id, int sn)
 	int adj = 0;
 
 	// spell level
-	int sl = plr[id]._pSplLvl[sn] + plr[id]._pISplLvlAdd - 1;
+	int sl = plr[pnum]._pSplLvl[sn] + plr[pnum]._pISplLvlAdd - 1;
 
 	if (sl < 0) {
 		sl = 0;
@@ -32,9 +32,9 @@ int GetManaAmount(int id, int sn)
 	}
 
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj);
+		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[pnum]._pLevel - adj);
 	} else if (spelldata[sn].sManaCost == 255) {
-		ma = ((BYTE)plr[id]._pMaxManaBase - adj);
+		ma = ((BYTE)plr[pnum]._pMaxManaBase - adj);
 	} else {
 		ma = (spelldata[sn].sManaCost - adj);
 	}
@@ -43,9 +43,9 @@ int GetManaAmount(int id, int sn)
 		ma = 0;
 	ma <<= 6;
 
-	if (plr[id]._pClass == PC_SORCERER) {
+	if (plr[pnum]._pClass == PC_SORCERER) {
 		ma >>= 1;
-	} else if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_MONK || plr[id]._pClass == PC_BARD) {
+	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARD) {
 		ma -= ma >> 2;
 	}
 
@@ -56,28 +56,28 @@ int GetManaAmount(int id, int sn)
 	return ma;
 }
 
-void UseMana(int id, int sn)
+void UseMana(int pnum, int sn)
 {
 	int ma; // mana cost
 
-	if (id == myplr) {
-		switch (plr[id]._pSplType) {
+	if (pnum == myplr) {
+		switch (plr[pnum]._pSplType) {
 		case RSPLTYPE_SKILL:
 		case RSPLTYPE_INVALID:
 			break;
 		case RSPLTYPE_SCROLL:
-			RemoveScroll(id);
+			RemoveScroll(pnum);
 			break;
 		case RSPLTYPE_CHARGES:
-			UseStaffCharge(id);
+			UseStaffCharge(pnum);
 			break;
 		case RSPLTYPE_SPELL:
 #ifdef _DEBUG
 			if (!debug_mode_key_inverted_v) {
 #endif
-				ma = GetManaAmount(id, sn);
-				plr[id]._pMana -= ma;
-				plr[id]._pManaBase -= ma;
+				ma = GetManaAmount(pnum, sn);
+				plr[pnum]._pMana -= ma;
+				plr[pnum]._pManaBase -= ma;
 				drawmanaflag = TRUE;
 #ifdef _DEBUG
 			}

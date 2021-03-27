@@ -175,17 +175,17 @@ static void pfile_SFileCloseArchive(HANDLE hsArchive)
 	SFileCloseArchive(hsArchive);
 }
 
-void pfile_write_hero()
+void pfile_write_hero(int pnum)
 {
 	DWORD save_num;
 	PkPlayerStruct pkplr;
 
-	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
+	save_num = pfile_get_save_num_from_name(plr[pnum]._pName);
 	if (pfile_open_archive(save_num)) {
-		PackPlayer(&pkplr, myplr, !gbIsMultiplayer);
+		PackPlayer(&pkplr, pnum, !gbIsMultiplayer);
 		pfile_encode_hero(&pkplr);
 		if(!gbVanilla)
-			SaveHotkeys();
+			SaveHotkeys(pnum);
 		pfile_flush(!gbIsMultiplayer, save_num);
 	}
 }
@@ -236,7 +236,7 @@ BOOL pfile_rename_hero(const char *name_1, const char *name_2)
 		SStrCopy(gszHero, name_2, sizeof(gszHero));
 	game_2_ui_player(plr, &uihero, gbValidSaveFile);
 	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
-	pfile_write_hero();
+	pfile_write_hero(myplr);
 	return TRUE;
 }
 
@@ -570,7 +570,7 @@ void pfile_update(bool force_save)
 		return;
 
 	save_prev_tc = tick;
-	pfile_write_hero();
+	pfile_write_hero(myplr);
 }
 
 DEVILUTION_END_NAMESPACE
