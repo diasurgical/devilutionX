@@ -759,7 +759,7 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/libfreetype-6.dll"
       DESTINATION "."
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.9/i686-w64-mingw32/bin/SDL2.dll"
+    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/i686-w64-mingw32/bin/SDL2.dll"
       DESTINATION "."
     )
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2_mixer-2.0.4/i686-w64-mingw32/bin/SDL2_mixer.dll"
@@ -777,7 +777,7 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/LICENSE.freetype.txt"
       DESTINATION "LICENSE"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.9/README-SDL.txt"
+    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/README-SDL.txt"
       DESTINATION "LICENSE"
     )
 
@@ -799,7 +799,7 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/libfreetype-6.dll"
       DESTINATION "."
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.9/x86_64-w64-mingw32/bin/SDL2.dll"
+    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/x86_64-w64-mingw32/bin/SDL2.dll"
       DESTINATION "."
     )
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2_mixer-2.0.4/x86_64-w64-mingw32/bin/SDL2_mixer.dll"
@@ -817,7 +817,7 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/LICENSE.freetype.txt"
       DESTINATION "LICENSE"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.9/README-SDL.txt"
+    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/README-SDL.txt"
       DESTINATION "LICENSE"
     )
 
