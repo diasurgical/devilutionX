@@ -66,12 +66,13 @@ const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color C
 
 static void gamemenu_update_single(TMenuItem *pMenuItems)
 {
+	int pnum = myplr;
 	BOOL enable;
 
 	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
 
 	enable = FALSE;
-	if (plr[myplr]._pmode != PM_DEATH && !deathflag)
+	if (plr[pnum]._pmode != PM_DEATH && !deathflag)
 		enable = TRUE;
 
 	gmenu_enable(&sgSingleMenu[0], enable);
@@ -135,13 +136,14 @@ void gamemenu_quit_game(BOOL bActivate)
 
 void gamemenu_load_game(BOOL bActivate)
 {
+	int pnum = myplr;
 	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
 	gamemenu_off();
 	SetCursor_(CURSOR_NONE);
 	InitDiabloMsg(EMSG_LOADING);
 	force_redraw = 255;
 	DrawAndBlit();
-	LoadGame(FALSE);
+	LoadGame(pnum, FALSE);
 	ClrDiabloMsg();
 	CornerStone.activated = FALSE;
 	PaletteFadeOut(8);
@@ -157,11 +159,12 @@ void gamemenu_load_game(BOOL bActivate)
 
 void gamemenu_save_game(BOOL bActivate)
 {
+	int pnum = myplr;
 	if (pcurs != CURSOR_HAND) {
 		return;
 	}
 
-	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
+	if (plr[pnum]._pmode == PM_DEATH || deathflag) {
 		gamemenu_off();
 		return;
 	}
@@ -172,7 +175,7 @@ void gamemenu_save_game(BOOL bActivate)
 	InitDiabloMsg(EMSG_SAVING);
 	force_redraw = 255;
 	DrawAndBlit();
-	SaveGame();
+	SaveGame(pnum);
 	ClrDiabloMsg();
 	force_redraw = 255;
 	SetCursor_(CURSOR_HAND);
@@ -343,7 +346,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 			gbSoundOn = TRUE;
 		}
 	}
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(myplr, IS_TITLEMOV);
 	gamemenu_get_sound();
 }
 
@@ -352,7 +355,7 @@ void gamemenu_loadjog(BOOL bActivate)
 	if (!gbIsMultiplayer) {
 		sgOptions.Gameplay.bJogInTown = !sgOptions.Gameplay.bJogInTown;
 		gbJogInTown = sgOptions.Gameplay.bJogInTown;
-		PlaySFX(IS_TITLEMOV);
+		PlaySFX(myplr, IS_TITLEMOV);
 		gamemenu_jogging();
 	}
 }

@@ -245,7 +245,7 @@ void InitQTextMsg(int m)
 		qtextSpd = CalcTextSpeed(alltext[m].sfxnr);
 		sgLastScroll = SDL_GetTicks();
 	}
-	PlaySFX(alltext[m].sfxnr);
+	PlaySFX(myplr, alltext[m].sfxnr);
 }
 
 void DrawQTextBack(CelOutputBuffer out)

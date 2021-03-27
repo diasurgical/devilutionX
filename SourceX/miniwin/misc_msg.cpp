@@ -41,30 +41,30 @@ void SetCursorPos(int X, int Y)
 }
 
 // Moves the mouse to the first attribute "+" button.
-void FocusOnCharInfo()
+void FocusOnCharInfo(int pnum)
 {
-	if (invflag || plr[myplr]._pStatPts <= 0)
+	if (invflag || plr[pnum]._pStatPts <= 0)
 		return;
 
 	// Find the first incrementable stat.
-	plr_class pc = plr[myplr]._pClass;
+	plr_class pc = plr[pnum]._pClass;
 	int stat = -1;
 	for (int i = 4; i >= 0; --i) {
 		switch (i) {
 		case ATTRIB_STR:
-			if (plr[myplr]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
+			if (plr[pnum]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
 				continue;
 			break;
 		case ATTRIB_MAG:
-			if (plr[myplr]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
+			if (plr[pnum]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
 				continue;
 			break;
 		case ATTRIB_DEX:
-			if (plr[myplr]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
+			if (plr[pnum]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
 				continue;
 			break;
 		case ATTRIB_VIT:
-			if (plr[myplr]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
+			if (plr[pnum]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
 				continue;
 			break;
 		default:
@@ -277,16 +277,16 @@ bool false_avail(const char *name, int value)
  * @brief Try to clean the inventory related cursor states.
  * @return True if it is safe to close the inventory
  */
-bool BlurInventory()
+bool BlurInventory(int pnum)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		if (!TryDropItem()) {
-			if (plr[myplr]._pClass == PC_WARRIOR) {
-				PlaySFX(PS_WARR16); // "Where would I put this?"
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
-				PlaySFX(PS_ROGUE16);
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
-				PlaySFX(PS_MAGE16);
+		if (!TryDropItem(pnum)) {
+			if (plr[pnum]._pClass == PC_WARRIOR) {
+				PlaySFX(pnum, PS_WARR16); // "Where would I put this?"
+			} else if (plr[pnum]._pClass == PC_ROGUE) {
+				PlaySFX(pnum, PS_ROGUE16);
+			} else if (plr[pnum]._pClass == PC_SORCERER) {
+				PlaySFX(pnum, PS_MAGE16);
 			}
 			return false;
 		}
@@ -296,13 +296,14 @@ bool BlurInventory()
 	if (pcurs > CURSOR_HAND)
 		SetCursor_(CURSOR_HAND);
 	if (chrflag)
-		FocusOnCharInfo();
+		FocusOnCharInfo(pnum);
 
 	return true;
 }
 
 bool FetchMessage(LPMSG lpMsg)
 {
+	int pnum = myplr;
 #ifdef __SWITCH__
 	HandleDocking();
 #endif
@@ -374,18 +375,18 @@ bool FetchMessage(LPMSG lpMsg)
 			UseBeltItem(BLT_MANA);
 			break;
 		case GameActionType_PRIMARY_ACTION:
-			PerformPrimaryAction();
+			PerformPrimaryAction(pnum);
 			break;
 		case GameActionType_SECONDARY_ACTION:
-			PerformSecondaryAction();
+			PerformSecondaryAction(pnum);
 			break;
 		case GameActionType_CAST_SPELL:
-			PerformSpellAction();
+			PerformSpellAction(pnum);
 			break;
 		case GameActionType_TOGGLE_QUICK_SPELL_MENU:
-			if (!invflag || BlurInventory()) {
+			if (!invflag || BlurInventory(pnum)) {
 				if (!spselflag)
-					DoSpeedBook();
+					DoSpeedBook(pnum);
 				else
 					spselflag = false;
 				chrflag = false;
@@ -401,7 +402,7 @@ bool FetchMessage(LPMSG lpMsg)
 				spselflag = false;
 				if (pcurs == CURSOR_DISARM)
 					SetCursor_(CURSOR_HAND);
-				FocusOnCharInfo();
+				FocusOnCharInfo(pnum);
 			}
 			break;
 		case GameActionType_TOGGLE_QUEST_LOG:
@@ -415,7 +416,7 @@ bool FetchMessage(LPMSG lpMsg)
 			break;
 		case GameActionType_TOGGLE_INVENTORY:
 			if (invflag) {
-				BlurInventory();
+				BlurInventory(pnum);
 			} else {
 				sbookflag = false;
 				spselflag = false;
@@ -426,7 +427,7 @@ bool FetchMessage(LPMSG lpMsg)
 			}
 			break;
 		case GameActionType_TOGGLE_SPELL_BOOK:
-			if (BlurInventory()) {
+			if (BlurInventory(pnum)) {
 				invflag = false;
 				spselflag = false;
 				sbookflag = !sbookflag;

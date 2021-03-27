@@ -56,7 +56,7 @@ void InitNoTriggers()
 	trigflag = FALSE;
 }
 
-void InitTownTriggers()
+void InitTownTriggers(int pnum)
 {
 	int i;
 
@@ -71,7 +71,7 @@ void InitTownTriggers()
 		townwarps[i] = gbIsMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 1 || (gbIsHellfire && plr[myplr]._pLevel >= 10)) {
+		if (gbIsMultiplayer || plr[pnum].pTownWarps & 1 || (gbIsHellfire && plr[pnum]._pLevel >= 10)) {
 			townwarps[0] = TRUE;
 			trigs[numtrigs]._tx = 49;
 			trigs[numtrigs]._ty = 21;
@@ -83,7 +83,7 @@ void InitTownTriggers()
 #endif
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 2 || (gbIsHellfire && plr[myplr]._pLevel >= 15)) {
+		if (gbIsMultiplayer || plr[pnum].pTownWarps & 2 || (gbIsHellfire && plr[pnum]._pLevel >= 15)) {
 			townwarps[1] = TRUE;
 			trigs[numtrigs]._tx = 17;
 			trigs[numtrigs]._ty = 69;
@@ -91,7 +91,7 @@ void InitTownTriggers()
 			trigs[numtrigs]._tlvl = 9;
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 4 || (gbIsHellfire && plr[myplr]._pLevel >= 20)) {
+		if (gbIsMultiplayer || plr[pnum].pTownWarps & 4 || (gbIsHellfire && plr[pnum]._pLevel >= 20)) {
 			townwarps[2] = TRUE;
 			trigs[numtrigs]._tx = 41;
 			trigs[numtrigs]._ty = 80;
@@ -832,74 +832,74 @@ void CheckTrigForce()
 	}
 }
 
-void CheckTriggers()
+void CheckTriggers(int pnum)
 {
 	int x, y, i;
 	BOOL abort;
 	char abortflag;
 
-	if (plr[myplr]._pmode != PM_STAND)
+	if (plr[pnum]._pmode != PM_STAND)
 		return;
 
 	for (i = 0; i < numtrigs; i++) {
-		if (plr[myplr]._px != trigs[i]._tx || plr[myplr]._py != trigs[i]._ty) {
+		if (plr[pnum]._px != trigs[i]._tx || plr[pnum]._py != trigs[i]._ty) {
 			continue;
 		}
 
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
-				NetSendCmdLoc(TRUE, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
-				PlaySFX(PS_WARR18);
+				NetSendCmdLoc(TRUE, CMD_WALKXY, plr[pnum]._px, plr[pnum]._py + 1);
+				PlaySFX(pnum, PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
-				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
+				StartNewLvl(pnum, trigs[i]._tmsg, currlevel + 1);
 			}
 			break;
 		case WM_DIABPREVLVL:
-			StartNewLvl(myplr, trigs[i]._tmsg, currlevel - 1);
+			StartNewLvl(pnum, trigs[i]._tmsg, currlevel - 1);
 			break;
 		case WM_DIABRTNLVL:
-			StartNewLvl(myplr, trigs[i]._tmsg, ReturnLvl);
+			StartNewLvl(pnum, trigs[i]._tmsg, ReturnLvl);
 			break;
 		case WM_DIABTOWNWARP:
 			if (gbIsMultiplayer) {
 				abort = FALSE;
 
-				if (trigs[i]._tlvl == 5 && plr[myplr]._pLevel < 8) {
+				if (trigs[i]._tlvl == 5 && plr[pnum]._pLevel < 8) {
 					abort = TRUE;
-					x = plr[myplr]._px;
-					y = plr[myplr]._py + 1;
+					x = plr[pnum]._px;
+					y = plr[pnum]._py + 1;
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
-				if (trigs[i]._tlvl == 9 && plr[myplr]._pLevel < 13) {
+				if (trigs[i]._tlvl == 9 && plr[pnum]._pLevel < 13) {
 					abort = TRUE;
-					x = plr[myplr]._px + 1;
-					y = plr[myplr]._py;
+					x = plr[pnum]._px + 1;
+					y = plr[pnum]._py;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
-				if (trigs[i]._tlvl == 13 && plr[myplr]._pLevel < 17) {
+				if (trigs[i]._tlvl == 13 && plr[pnum]._pLevel < 17) {
 					abort = TRUE;
-					x = plr[myplr]._px;
-					y = plr[myplr]._py + 1;
+					x = plr[pnum]._px;
+					y = plr[pnum]._py + 1;
 					abortflag = EMSG_REQUIRES_LVL_17;
 				}
 
 				if (abort) {
-					if (plr[myplr]._pClass == PC_WARRIOR) {
-						PlaySFX(PS_WARR43);
-					} else if (plr[myplr]._pClass == PC_ROGUE) {
-						PlaySFX(PS_ROGUE43);
-					} else if (plr[myplr]._pClass == PC_SORCERER) {
-						PlaySFX(PS_MAGE43);
-					} else if (plr[myplr]._pClass == PC_MONK) {
-						PlaySFX(PS_MONK43);
-					} else if (plr[myplr]._pClass == PC_BARD) {
-						PlaySFX(PS_ROGUE43);
-					} else if (plr[myplr]._pClass == PC_BARBARIAN) {
-						PlaySFX(PS_WARR43);
+					if (plr[pnum]._pClass == PC_WARRIOR) {
+						PlaySFX(pnum, PS_WARR43);
+					} else if (plr[pnum]._pClass == PC_ROGUE) {
+						PlaySFX(pnum, PS_ROGUE43);
+					} else if (plr[pnum]._pClass == PC_SORCERER) {
+						PlaySFX(pnum, PS_MAGE43);
+					} else if (plr[pnum]._pClass == PC_MONK) {
+						PlaySFX(pnum, PS_MONK43);
+					} else if (plr[pnum]._pClass == PC_BARD) {
+						PlaySFX(pnum, PS_ROGUE43);
+					} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+						PlaySFX(pnum, PS_WARR43);
 					}
 
 					InitDiabloMsg(abortflag);
@@ -908,11 +908,11 @@ void CheckTriggers()
 				}
 			}
 
-			StartNewLvl(myplr, trigs[i]._tmsg, trigs[i]._tlvl);
+			StartNewLvl(pnum, trigs[i]._tmsg, trigs[i]._tlvl);
 			break;
 		case WM_DIABTWARPUP:
 			TWarpFrom = currlevel;
-			StartNewLvl(myplr, trigs[i]._tmsg, 0);
+			StartNewLvl(pnum, trigs[i]._tmsg, 0);
 			break;
 		default:
 			app_fatal("Unknown trigger msg");

@@ -3175,7 +3175,7 @@ void RespawnItem(int i, BOOL FlipFlag)
 
 	if (item[i]._iCurs == ICURS_MAGIC_ROCK) {
 		item[i]._iSelFlag = 1;
-		PlaySfxLoc(ItemDropSnds[it], item[i]._ix, item[i]._iy);
+		PlaySfxLoc(myplr, ItemDropSnds[it], item[i]._ix, item[i]._iy);
 	}
 	if (item[i]._iCurs == ICURS_TAVERN_SIGN)
 		item[i]._iSelFlag = 1;
@@ -3225,7 +3225,7 @@ void ProcessItems()
 					item[ii]._iAnimFrame = 11;
 			} else {
 				if (item[ii]._iAnimFrame == item[ii]._iAnimLen >> 1)
-					PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item[ii]._iCurs]], item[ii]._ix, item[ii]._iy);
+					PlaySfxLoc(myplr, ItemDropSnds[ItemCAnimTbl[item[ii]._iCurs]], item[ii]._ix, item[ii]._iy);
 
 				if (item[ii]._iAnimFrame >= item[ii]._iAnimLen) {
 					item[ii]._iAnimFrame = item[ii]._iAnimLen;
@@ -3323,7 +3323,7 @@ void DoRepair(int pnum, int cii)
 	ItemStruct *pi;
 
 	p = &plr[pnum];
-	PlaySfxLoc(IS_REPAIR, p->_px, p->_py);
+	PlaySfxLoc(pnum, IS_REPAIR, p->_px, p->_py);
 
 	if (cii >= NUM_INVLOC) {
 		pi = &p->InvList[cii - NUM_INVLOC];

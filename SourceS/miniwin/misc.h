@@ -41,7 +41,7 @@ typedef struct tagMSG {
 //
 
 void SetCursorPos(int X, int Y);
-void FocusOnCharInfo();
+void FocusOnCharInfo(int pnum);
 
 SHORT GetAsyncKeyState(int vKey);
 

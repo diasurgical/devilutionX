@@ -869,7 +869,7 @@ void NextPlrLevel(int pnum)
 	}
 
 	if (sgbControllerActive)
-		FocusOnCharInfo();
+		FocusOnCharInfo(pnum);
 
 	CalcPlrInv(pnum, TRUE);
 }
@@ -886,7 +886,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		app_fatal("AddPlrExperience: illegal player %d", myplr);
 	}
 
-	if (plr[myplr]._pHitPoints <= 0) {
+	if (plr[pnum]._pHitPoints <= 0) {
 		return;
 	}
 
@@ -934,7 +934,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		}
 	}
 
-	NetSendCmdParam1(FALSE, CMD_PLRLEVEL, plr[myplr]._pLevel);
+	NetSendCmdParam1(FALSE, CMD_PLRLEVEL, plr[pnum]._pLevel);
 }
 
 void AddPlrMonstExper(int lvl, int exp, char pmask)
@@ -950,7 +950,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 
 	if (totplrs) {
 		e = exp / totplrs;
-		if (pmask & (1 << myplr))
+		if (pmask & (1 << myplr)) // If couch coop is enabled, it should check if player is managed locally
 			AddPlrExperience(myplr, lvl, e);
 	}
 }
@@ -967,7 +967,7 @@ void InitPlayer(int pnum, BOOL FirstTime)
 		plr[pnum]._pRSplType = RSPLTYPE_INVALID;
 		plr[pnum]._pRSpell = SPL_INVALID;
 		if (pnum == myplr)
-			LoadHotkeys();
+			LoadHotkeys(pnum);
 		plr[pnum]._pSBkSpell = SPL_INVALID;
 		plr[pnum]._pSpell = plr[pnum]._pRSpell;
 		plr[pnum]._pSplType = plr[pnum]._pRSplType;
@@ -1027,7 +1027,7 @@ void InitPlayer(int pnum, BOOL FirstTime)
 
 		if (pnum == myplr) {
 			plr[pnum]._plid = AddLight(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad);
-			ChangeLightXY(plr[myplr]._plid, plr[myplr]._px, plr[myplr]._py); // fix for a bug where old light is still visible at the entrance after reentering level
+			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			plr[pnum]._plid = NO_LIGHT;
 		}
@@ -1072,14 +1072,14 @@ void InitPlayer(int pnum, BOOL FirstTime)
 	}
 }
 
-void InitMultiView()
+void InitMultiView(int pnum)
 {
-	if ((DWORD)myplr >= MAX_PLRS) {
-		app_fatal("InitPlayer: illegal player %d", myplr);
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("InitPlayer: illegal player %d", pnum);
 	}
 
-	ViewX = plr[myplr]._px;
-	ViewY = plr[myplr]._py;
+	ViewX = plr[pnum]._px;
+	ViewY = plr[pnum]._py;
 }
 
 BOOL SolidLoc(int x, int y)
@@ -1480,7 +1480,7 @@ void StartPlrBlock(int pnum, direction dir)
 		return;
 	}
 
-	PlaySfxLoc(IS_ISWORD, plr[pnum]._px, plr[pnum]._py);
+	PlaySfxLoc(pnum, IS_ISWORD, plr[pnum]._px, plr[pnum]._py);
 
 	if (!(plr[pnum]._pGFXLoad & PFILE_BLOCK)) {
 		LoadPlrGFX(pnum, PFILE_BLOCK);
@@ -1525,7 +1525,7 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 		}
 	}
 
-	PlaySfxLoc(spelldata[plr[pnum]._pSpell].sSFX, plr[pnum]._px, plr[pnum]._py);
+	PlaySfxLoc(pnum, spelldata[plr[pnum]._pSpell].sSFX, plr[pnum]._px, plr[pnum]._py);
 
 	plr[pnum]._pmode = PM_SPELL;
 
@@ -1597,17 +1597,17 @@ void StartPlrHit(int pnum, int dam, BOOL forcehit)
 	}
 
 	if (plr[pnum]._pClass == PC_WARRIOR) {
-		PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
+		PlaySfxLoc(pnum, PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 	} else if (plr[pnum]._pClass == PC_ROGUE) {
-		PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
+		PlaySfxLoc(pnum, PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 	} else if (plr[pnum]._pClass == PC_SORCERER) {
-		PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
+		PlaySfxLoc(pnum, PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
 	} else if (plr[pnum]._pClass == PC_MONK) {
-		PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
+		PlaySfxLoc(pnum, PS_MONK69, plr[pnum]._px, plr[pnum]._py);
 	} else if (plr[pnum]._pClass == PC_BARD) {
-		PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
+		PlaySfxLoc(pnum, PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 	} else if (plr[pnum]._pClass == PC_BARBARIAN) {
-		PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
+		PlaySfxLoc(pnum, PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 	}
 
 	drawhpflag = TRUE;
@@ -1715,17 +1715,17 @@ StartPlayerKill(int pnum, int earflag)
 	}
 
 	if (plr[pnum]._pClass == PC_WARRIOR) {
-		PlaySfxLoc(PS_DEAD, p->_px, p->_py); // BUGFIX: should use `PS_WARR71` like other classes
+		PlaySfxLoc(pnum, PS_DEAD, p->_px, p->_py); // BUGFIX: should use `PS_WARR71` like other classes
 	} else if (plr[pnum]._pClass == PC_ROGUE) {
-		PlaySfxLoc(PS_ROGUE71, p->_px, p->_py);
+		PlaySfxLoc(pnum, PS_ROGUE71, p->_px, p->_py);
 	} else if (plr[pnum]._pClass == PC_SORCERER) {
-		PlaySfxLoc(PS_MAGE71, p->_px, p->_py);
+		PlaySfxLoc(pnum, PS_MAGE71, p->_px, p->_py);
 	} else if (plr[pnum]._pClass == PC_MONK) {
-		PlaySfxLoc(PS_MONK71, p->_px, p->_py);
+		PlaySfxLoc(pnum, PS_MONK71, p->_px, p->_py);
 	} else if (plr[pnum]._pClass == PC_BARD) {
-		PlaySfxLoc(PS_ROGUE71, p->_px, p->_py);
+		PlaySfxLoc(pnum, PS_ROGUE71, p->_px, p->_py);
 	} else if (plr[pnum]._pClass == PC_BARBARIAN) {
-		PlaySfxLoc(PS_WARR71, p->_px, p->_py);
+		PlaySfxLoc(pnum, PS_WARR71, p->_px, p->_py);
 	}
 
 	if (p->_pgfxnum) {
@@ -2135,7 +2135,7 @@ bool PM_DoWalk(int pnum, int variant)
 		if (plr[pnum]._pAnimFrame == 3
 		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
 		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+			PlaySfxLoc(pnum, PS_WALK1, plr[pnum]._px, plr[pnum]._py);
 		}
 	}
 
@@ -2689,7 +2689,7 @@ BOOL PM_DoAttack(int pnum)
 		plr[pnum]._pAnimFrame += 2;
 	}
 	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum - 1) {
-		PlaySfxLoc(PS_SWING, plr[pnum]._px, plr[pnum]._py);
+		PlaySfxLoc(pnum, PS_SWING, plr[pnum]._px, plr[pnum]._py);
 	}
 
 	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum) {
@@ -2814,7 +2814,7 @@ BOOL PM_DoRangeAttack(int pnum)
 		    4,
 		    0);
 
-		PlaySfxLoc(PS_BFIRE, plr[pnum]._px, plr[pnum]._py);
+		PlaySfxLoc(pnum, PS_BFIRE, plr[pnum]._px, plr[pnum]._py);
 
 		if (WeaponDur(pnum, 40)) {
 			StartStand(pnum, plr[pnum]._pdir);
@@ -3495,7 +3495,7 @@ void ProcessPlayers()
 				InitQTextMsg(TEXT_DEFILER4);
 				break;
 			default:
-				PlaySFX(sfxdnum);
+				PlaySFX(myplr, sfxdnum);
 			}
 		}
 	}
@@ -3696,46 +3696,46 @@ void MakePlrPath(int pnum, int xx, int yy, BOOL endspace)
 	plr[pnum].walkpath[path] = WALK_NONE;
 }
 
-void CheckPlrSpell()
+void CheckPlrSpell(int pnum)
 {
 	BOOL addflag = FALSE;
 	int rspell, sd, sl;
 
-	if ((DWORD)myplr >= MAX_PLRS) {
-		app_fatal("CheckPlrSpell: illegal player %d", myplr);
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("CheckPlrSpell: illegal player %d", pnum);
 	}
 
-	rspell = plr[myplr]._pRSpell;
+	rspell = plr[pnum]._pRSpell;
 	if (rspell == SPL_INVALID) {
-		if (plr[myplr]._pClass == PC_WARRIOR) {
-			PlaySFX(PS_WARR34);
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
-			PlaySFX(PS_ROGUE34);
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
-			PlaySFX(PS_MAGE34);
-		} else if (plr[myplr]._pClass == PC_MONK) {
-			PlaySFX(PS_MONK34);
-		} else if (plr[myplr]._pClass == PC_BARD) {
-			PlaySFX(PS_ROGUE34);
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
-			PlaySFX(PS_WARR34);
+		if (plr[pnum]._pClass == PC_WARRIOR) {
+			PlaySFX(pnum, PS_WARR34);
+		} else if (plr[pnum]._pClass == PC_ROGUE) {
+			PlaySFX(pnum, PS_ROGUE34);
+		} else if (plr[pnum]._pClass == PC_SORCERER) {
+			PlaySFX(pnum, PS_MAGE34);
+		} else if (plr[pnum]._pClass == PC_MONK) {
+			PlaySFX(pnum, PS_MONK34);
+		} else if (plr[pnum]._pClass == PC_BARD) {
+			PlaySFX(pnum, PS_ROGUE34);
+		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			PlaySFX(pnum, PS_WARR34);
 		}
 		return;
 	}
 
 	if (leveltype == DTYPE_TOWN && !spelldata[rspell].sTownSpell) {
-		if (plr[myplr]._pClass == PC_WARRIOR) {
-			PlaySFX(PS_WARR27);
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
-			PlaySFX(PS_ROGUE27);
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
-			PlaySFX(PS_MAGE27);
-		} else if (plr[myplr]._pClass == PC_MONK) {
-			PlaySFX(PS_MONK27);
-		} else if (plr[myplr]._pClass == PC_BARD) {
-			PlaySFX(PS_ROGUE27);
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
-			PlaySFX(PS_WARR27);
+		if (plr[pnum]._pClass == PC_WARRIOR) {
+			PlaySFX(pnum, PS_WARR27);
+		} else if (plr[pnum]._pClass == PC_ROGUE) {
+			PlaySFX(pnum, PS_ROGUE27);
+		} else if (plr[pnum]._pClass == PC_SORCERER) {
+			PlaySFX(pnum, PS_MAGE27);
+		} else if (plr[pnum]._pClass == PC_MONK) {
+			PlaySFX(pnum, PS_MONK27);
+		} else if (plr[pnum]._pClass == PC_BARD) {
+			PlaySFX(pnum, PS_ROGUE27);
+		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			PlaySFX(pnum, PS_WARR27);
 		}
 		return;
 	}
@@ -3760,52 +3760,52 @@ void CheckPlrSpell()
 		}
 	}
 
-	switch (plr[myplr]._pRSplType) {
+	switch (plr[pnum]._pRSplType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_SPELL:
-		addflag = CheckSpell(myplr, rspell, plr[myplr]._pRSplType, FALSE);
+		addflag = CheckSpell(pnum, rspell, plr[pnum]._pRSplType, FALSE);
 		break;
 	case RSPLTYPE_SCROLL:
-		addflag = UseScroll();
+		addflag = UseScroll(pnum);
 		break;
 	case RSPLTYPE_CHARGES:
-		addflag = UseStaff();
+		addflag = UseStaff(pnum);
 		break;
 	case RSPLTYPE_INVALID:
 		return;
 	}
 
 	if (addflag) {
-		if (plr[myplr]._pRSpell == SPL_FIREWALL || plr[myplr]._pRSpell == SPL_LIGHTWALL) {
-			sd = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
-			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam3(TRUE, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);
+		if (plr[pnum]._pRSpell == SPL_FIREWALL || plr[pnum]._pRSpell == SPL_LIGHTWALL) {
+			sd = GetDirection(plr[pnum]._px, plr[pnum]._py, cursmx, cursmy);
+			sl = GetSpellLevel(pnum, plr[pnum]._pRSpell);
+			NetSendCmdLocParam3(TRUE, CMD_SPELLXYD, cursmx, cursmy, plr[pnum]._pRSpell, sd, sl);
 		} else if (pcursmonst != -1) {
-			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdParam3(TRUE, CMD_SPELLID, pcursmonst, plr[myplr]._pRSpell, sl);
+			sl = GetSpellLevel(pnum, plr[pnum]._pRSpell);
+			NetSendCmdParam3(TRUE, CMD_SPELLID, pcursmonst, plr[pnum]._pRSpell, sl);
 		} else if (pcursplr != -1) {
-			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdParam3(TRUE, CMD_SPELLPID, pcursplr, plr[myplr]._pRSpell, sl);
+			sl = GetSpellLevel(pnum, plr[pnum]._pRSpell);
+			NetSendCmdParam3(TRUE, CMD_SPELLPID, pcursplr, plr[pnum]._pRSpell, sl);
 		} else { //145
-			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam2(TRUE, CMD_SPELLXY, cursmx, cursmy, plr[myplr]._pRSpell, sl);
+			sl = GetSpellLevel(pnum, plr[pnum]._pRSpell);
+			NetSendCmdLocParam2(TRUE, CMD_SPELLXY, cursmx, cursmy, plr[pnum]._pRSpell, sl);
 		}
 		return;
 	}
 
-	if (plr[myplr]._pRSplType == RSPLTYPE_SPELL) {
-		if (plr[myplr]._pClass == PC_WARRIOR) {
-			PlaySFX(PS_WARR35);
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
-			PlaySFX(PS_ROGUE35);
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
-			PlaySFX(PS_MAGE35);
-		} else if (plr[myplr]._pClass == PC_MONK) {
-			PlaySFX(PS_MONK35);
-		} else if (plr[myplr]._pClass == PC_BARD) {
-			PlaySFX(PS_ROGUE35);
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
-			PlaySFX(PS_WARR35);
+	if (plr[pnum]._pRSplType == RSPLTYPE_SPELL) {
+		if (plr[pnum]._pClass == PC_WARRIOR) {
+			PlaySFX(pnum, PS_WARR35);
+		} else if (plr[pnum]._pClass == PC_ROGUE) {
+			PlaySFX(pnum, PS_ROGUE35);
+		} else if (plr[pnum]._pClass == PC_SORCERER) {
+			PlaySFX(pnum, PS_MAGE35);
+		} else if (plr[pnum]._pClass == PC_MONK) {
+			PlaySFX(pnum, PS_MONK35);
+		} else if (plr[pnum]._pClass == PC_BARD) {
+			PlaySFX(pnum, PS_ROGUE35);
+		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			PlaySFX(pnum, PS_WARR35);
 		}
 	}
 }

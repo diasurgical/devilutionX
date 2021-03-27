@@ -184,12 +184,12 @@ void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
 [[noreturn]] void diablo_quit(int exitStatus);
 int DiabloMain(int argc, char **argv);
-BOOL TryIconCurs();
+BOOL TryIconCurs(int pnum);
 void diablo_pause_game();
 bool PressEscKey();
 void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam);
-void LoadGameLevel(BOOL firstflag, int lvldir);
+void LoadGameLevel(int pnum, BOOL firstflag, int lvldir);
 void game_loop(BOOL bStartup);
 void diablo_color_cyc_logic();
 

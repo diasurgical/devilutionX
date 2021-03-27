@@ -22,36 +22,36 @@ const int XDirAdd[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
 const int YDirAdd[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 const int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
 
-void GetDamageAmt(int i, int *mind, int *maxd)
+void GetDamageAmt(int pnum, int i, int *mind, int *maxd)
 {
 	int k, sl;
 
-	assert(myplr >= 0 && myplr < MAX_PLRS);
+	assert(pnum >= 0 && pnum < MAX_PLRS);
 	assert(i >= 0 && i < 64);
-	sl = plr[myplr]._pSplLvl[i] + plr[myplr]._pISplLvlAdd;
+	sl = plr[pnum]._pSplLvl[i] + plr[pnum]._pISplLvlAdd;
 
 	switch (i) {
 	case SPL_FIREBOLT:
-		*mind = (plr[myplr]._pMagic >> 3) + sl + 1;
-		*maxd = (plr[myplr]._pMagic >> 3) + sl + 10;
+		*mind = (plr[pnum]._pMagic >> 3) + sl + 1;
+		*maxd = (plr[pnum]._pMagic >> 3) + sl + 10;
 		break;
 	case SPL_HEAL: /// BUGFIX: healing calculation is unused
-		*mind = plr[myplr]._pLevel + sl + 1;
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARBARIAN) {
+		*mind = plr[pnum]._pLevel + sl + 1;
+		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARBARIAN) {
 			*mind <<= 1;
-		} else if (plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
 			*mind += *mind >> 1;
 		}
 		*maxd = 10;
-		for (k = 0; k < plr[myplr]._pLevel; k++) {
+		for (k = 0; k < plr[pnum]._pLevel; k++) {
 			*maxd += 4;
 		}
 		for (k = 0; k < sl; k++) {
 			*maxd += 6;
 		}
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARBARIAN) {
+		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARBARIAN) {
 			*maxd <<= 1;
-		} else if (plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
 			*maxd += *maxd >> 1;
 		}
 		*mind = -1;
@@ -60,10 +60,10 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	case SPL_LIGHTNING:
 	case SPL_RUNELIGHT:
 		*mind = 2;
-		*maxd = plr[myplr]._pLevel + 2;
+		*maxd = plr[pnum]._pLevel + 2;
 		break;
 	case SPL_FLASH:
-		*mind = plr[myplr]._pLevel;
+		*mind = plr[pnum]._pLevel;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
 		}
@@ -99,48 +99,48 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	case SPL_FIREWALL:
 	case SPL_LIGHTWALL:
 	case SPL_FIRERING:
-		*mind = 2 * plr[myplr]._pLevel + 4;
-		*maxd = 2 * plr[myplr]._pLevel + 40;
+		*mind = 2 * plr[pnum]._pLevel + 4;
+		*maxd = 2 * plr[pnum]._pLevel + 40;
 		break;
 	case SPL_FIREBALL:
 	case SPL_RUNEFIRE:
-		*mind = 2 * plr[myplr]._pLevel + 4;
+		*mind = 2 * plr[pnum]._pLevel + 4;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
 		}
-		*maxd = 2 * plr[myplr]._pLevel + 40;
+		*maxd = 2 * plr[pnum]._pLevel + 40;
 		for (k = 0; k < sl; k++) {
 			*maxd += *maxd >> 3;
 		}
 		break;
 	case SPL_GUARDIAN:
-		*mind = (plr[myplr]._pLevel >> 1) + 1;
+		*mind = (plr[pnum]._pLevel >> 1) + 1;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
 		}
-		*maxd = (plr[myplr]._pLevel >> 1) + 10;
+		*maxd = (plr[pnum]._pLevel >> 1) + 10;
 		for (k = 0; k < sl; k++) {
 			*maxd += *maxd >> 3;
 		}
 		break;
 	case SPL_CHAIN:
 		*mind = 4;
-		*maxd = 2 * plr[myplr]._pLevel + 4;
+		*maxd = 2 * plr[pnum]._pLevel + 4;
 		break;
 	case SPL_WAVE:
-		*mind = 6 * (plr[myplr]._pLevel + 1);
-		*maxd = 6 * (plr[myplr]._pLevel + 10);
+		*mind = 6 * (plr[pnum]._pLevel + 1);
+		*maxd = 6 * (plr[pnum]._pLevel + 10);
 		break;
 	case SPL_NOVA:
 	case SPL_IMMOLAT:
 	case SPL_RUNEIMMOLAT:
 	case SPL_RUNENOVA:
-		*mind = (plr[myplr]._pLevel + 5) >> 1;
+		*mind = (plr[pnum]._pLevel + 5) >> 1;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
 		}
 		*mind *= 5;
-		*maxd = (plr[myplr]._pLevel + 30) >> 1;
+		*maxd = (plr[pnum]._pLevel + 30) >> 1;
 		for (k = 0; k < sl; k++) {
 			*maxd += *maxd >> 3;
 		}
@@ -148,7 +148,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		break;
 	case SPL_FLAME:
 		*mind = 3;
-		*maxd = plr[myplr]._pLevel + 4;
+		*maxd = plr[pnum]._pLevel + 4;
 		*maxd += *maxd >> 1;
 		break;
 	case SPL_GOLEM:
@@ -157,21 +157,21 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		break;
 	case SPL_APOCA:
 		*mind = 0;
-		for (k = 0; k < plr[myplr]._pLevel; k++) {
+		for (k = 0; k < plr[pnum]._pLevel; k++) {
 			*mind += 1;
 		}
 		*maxd = 0;
-		for (k = 0; k < plr[myplr]._pLevel; k++) {
+		for (k = 0; k < plr[pnum]._pLevel; k++) {
 			*maxd += 6;
 		}
 		break;
 	case SPL_ELEMENT:
-		*mind = 2 * plr[myplr]._pLevel + 4;
+		*mind = 2 * plr[pnum]._pLevel + 4;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
 		}
 		/// BUGFIX: add here '*mind >>= 1;'
-		*maxd = 2 * plr[myplr]._pLevel + 40;
+		*maxd = 2 * plr[pnum]._pLevel + 40;
 		for (k = 0; k < sl; k++) {
 			*maxd += *maxd >> 3;
 		}
@@ -179,38 +179,38 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		break;
 	case SPL_CBOLT:
 		*mind = 1;
-		*maxd = (plr[myplr]._pMagic >> 2) + 1;
+		*maxd = (plr[pnum]._pMagic >> 2) + 1;
 		break;
 	case SPL_HBOLT:
-		*mind = plr[myplr]._pLevel + 9;
-		*maxd = plr[myplr]._pLevel + 18;
+		*mind = plr[pnum]._pLevel + 9;
+		*maxd = plr[pnum]._pLevel + 18;
 		break;
 	case SPL_HEALOTHER: /// BUGFIX: healing calculation is unused
-		*mind = plr[myplr]._pLevel + sl + 1;
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARBARIAN) {
+		*mind = plr[pnum]._pLevel + sl + 1;
+		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARBARIAN) {
 			*mind <<= 1;
 		}
-		if (plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_BARD) {
+		if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
 			*mind += *mind >> 1;
 		}
 		*maxd = 10;
-		for (k = 0; k < plr[myplr]._pLevel; k++) {
+		for (k = 0; k < plr[pnum]._pLevel; k++) {
 			*maxd += 4;
 		}
 		for (k = 0; k < sl; k++) {
 			*maxd += 6;
 		}
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARBARIAN) {
+		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARBARIAN) {
 			*maxd <<= 1;
 		}
-		if (plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_BARD) {
+		if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
 			*maxd += *maxd >> 1;
 		}
 		*mind = -1;
 		*maxd = -1;
 		break;
 	case SPL_FLARE:
-		*mind = (plr[myplr]._pMagic >> 1) + 3 * sl - (plr[myplr]._pMagic >> 3);
+		*mind = (plr[pnum]._pMagic >> 1) + 3 * sl - (plr[pnum]._pMagic >> 3);
 		*maxd = *mind;
 		break;
 	}
@@ -593,7 +593,7 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shif
 			}
 		} else {
 			if (resist) {
-				PlayEffect(m, 1);
+				PlayEffect(myplr, m, 1);
 			} else if (monster[m]._mmode == MM_STONE) {
 				if (m > MAX_PLRS - 1)
 					M_StartHit(m, -1, dam);
@@ -710,7 +710,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 			}
 		} else {
 			if (resist) {
-				PlayEffect(m, 1);
+				PlayEffect(myplr, m, 1);
 			} else if (monster[m]._mmode == MM_STONE) {
 				if (m > MAX_PLRS - 1)
 					M_StartHit(m, pnum, dam);
@@ -869,17 +869,17 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEA
 				SyncPlrKill(pnum, earflag);
 			} else {
 				if (plr[pnum]._pClass == PC_WARRIOR) {
-					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
+					PlaySfxLoc(pnum, PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_ROGUE) {
-					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
+					PlaySfxLoc(pnum, PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_SORCERER) {
-					PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
+					PlaySfxLoc(pnum, PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_MONK) {
-					PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
+					PlaySfxLoc(pnum, PS_MONK69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_BARD) {
-					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
+					PlaySfxLoc(pnum, PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_BARBARIAN) {
-					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
+					PlaySfxLoc(pnum, PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 				}
 				drawhpflag = TRUE;
 			}
@@ -999,17 +999,17 @@ BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, B
 			if (pnum == myplr)
 				NetSendCmdDamage(TRUE, p, dam);
 			if (plr[pnum]._pClass == PC_WARRIOR) {
-				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
+				PlaySfxLoc(pnum, PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 			} else if (plr[pnum]._pClass == PC_ROGUE) {
-				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
+				PlaySfxLoc(pnum, PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
-				PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
+				PlaySfxLoc(pnum, PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
 			} else if (plr[pnum]._pClass == PC_MONK) {
-				PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
+				PlaySfxLoc(pnum, PS_MONK69, plr[pnum]._px, plr[pnum]._py);
 			} else if (plr[pnum]._pClass == PC_BARD) {
-				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
+				PlaySfxLoc(pnum, PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
-				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
+				PlaySfxLoc(pnum, PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 			}
 			return TRUE;
 		} else {
@@ -1194,7 +1194,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, BOOL shift, int mx, int my, 
 		missile[i]._miHitFlag = FALSE;
 	}
 	if (missile[i]._mirange == 0 && missiledata[missile[i]._mitype].miSFX != -1)
-		PlaySfxLoc(missiledata[missile[i]._mitype].miSFX, missile[i]._mix, missile[i]._miy);
+		PlaySfxLoc(myplr, missiledata[missile[i]._mitype].miSFX, missile[i]._mix, missile[i]._miy);
 }
 
 void SetMissAnim(int mi, int animtype)
@@ -1304,35 +1304,35 @@ void FreeMissiles2()
 	}
 }
 
-void InitMissiles()
+void InitMissiles(int pnum)
 {
 	int mi, src, i, j;
 
 	AutoMapShowItems = FALSE;
-	plr[myplr]._pSpellFlags &= ~0x1;
-	if (plr[myplr]._pInfraFlag == TRUE) {
+	plr[pnum]._pSpellFlags &= ~0x1;
+	if (plr[pnum]._pInfraFlag == TRUE) {
 		for (i = 0; i < nummissiles; ++i) {
 			mi = missileactive[i];
 			if (missile[mi]._mitype == MIS_INFRA) {
 				src = missile[mi]._misource;
-				if (src == myplr)
+				if (src == pnum)
 					CalcPlrItemVals(src, TRUE);
 			}
 		}
 	}
 
-	if ((plr[myplr]._pSpellFlags & 2) == 2 || (plr[myplr]._pSpellFlags & 4) == 4) {
-		plr[myplr]._pSpellFlags &= ~0x2;
-		plr[myplr]._pSpellFlags &= ~0x4;
+	if ((plr[pnum]._pSpellFlags & 2) == 2 || (plr[pnum]._pSpellFlags & 4) == 4) {
+		plr[pnum]._pSpellFlags &= ~0x2;
+		plr[pnum]._pSpellFlags &= ~0x4;
 		for (i = 0; i < nummissiles; ++i) {
 			mi = missileactive[i];
 			if (missile[mi]._mitype == MIS_BLODBOIL) {
-				if (missile[mi]._misource == myplr) {
-					int missingHP = plr[myplr]._pMaxHP - plr[myplr]._pHitPoints;
-					CalcPlrItemVals(myplr, TRUE);
-					plr[myplr]._pHitPoints -= missingHP + missile[mi]._miVar2;
-					if (plr[myplr]._pHitPoints < 64) {
-						plr[myplr]._pHitPoints = 64;
+				if (missile[mi]._misource == pnum) {
+					int missingHP = plr[pnum]._pMaxHP - plr[pnum]._pHitPoints;
+					CalcPlrItemVals(pnum, TRUE);
+					plr[pnum]._pHitPoints -= missingHP + missile[mi]._miVar2;
+					if (plr[pnum]._pHitPoints < 64) {
+						plr[pnum]._pHitPoints = 64;
 					}
 				}
 			}
@@ -1355,7 +1355,7 @@ void InitMissiles()
 			dFlags[i][j] &= ~BFLAG_MISSILE;
 		}
 	}
-	plr[myplr].wReflections = 0;
+	plr[pnum].wReflections = 0;
 }
 
 void AddHiveExplosion(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
@@ -1662,7 +1662,7 @@ void AddStealPotions(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint
 							plr[pnum].SpdList[si] = plr[pnum].HoldItem;
 						}
 						if (!hasPlayedSFX) {
-							PlaySfxLoc(IS_POPPOP2, tx, ty);
+							PlaySfxLoc(pnum, IS_POPPOP2, tx, ty);
 							hasPlayedSFX = TRUE;
 						}
 					}
@@ -1697,7 +1697,7 @@ void AddManaTrap(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 					plr[pid]._pManaBase = plr[pid]._pMana + plr[pid]._pMaxManaBase - plr[pid]._pMaxMana;
 					CalcPlrInv(pid, FALSE);
 					drawmanaflag = TRUE;
-					PlaySfxLoc(TSFX_COW7, tx, ty);
+					PlaySfxLoc(pid, TSFX_COW7, tx, ty);
 				}
 			}
 			pn += 2;
@@ -2954,7 +2954,7 @@ void AddHealOther(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 	if (id == myplr) {
 		SetCursor_(CURSOR_HEALOTHER);
 		if (sgbControllerActive)
-			TryIconCurs();
+			TryIconCurs(id);
 	}
 }
 
@@ -3110,7 +3110,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 		CalcPlrItemVals(id, TRUE);
 		force_redraw = 255;
-		PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
+		PlaySfxLoc(id, blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
 	}
 }
 
@@ -3290,7 +3290,7 @@ void AddResurrect(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 	if (id == myplr) {
 		SetCursor_(CURSOR_RESURRECT);
 		if (sgbControllerActive)
-			TryIconCurs();
+			TryIconCurs(id);
 	}
 	missile[mi]._miDelFlag = TRUE;
 }
@@ -3426,7 +3426,7 @@ int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, char micas
 	missile[mi]._mirnd = 0;
 
 	if (missiledata[mitype].mlSFX != -1) {
-		PlaySfxLoc(missiledata[mitype].mlSFX, missile[mi]._misx, missile[mi]._misy);
+		PlaySfxLoc(id, missiledata[mitype].mlSFX, missile[mi]._misx, missile[mi]._misy);
 	}
 
 	missiledata[mitype].mAddProc(mi, sx, sy, dx, dy, midir, micaster, id, midam);
@@ -3696,7 +3696,7 @@ void MI_Firebolt(Sint32 i)
 		if (missile[i]._mlid != NO_LIGHT)
 			AddUnLight(missile[i]._mlid);
 		missile[i]._miDelFlag = TRUE;
-		PlaySfxLoc(LS_BSIMPCT, missile[i]._mix, missile[i]._miy);
+		PlaySfxLoc(myplr, LS_BSIMPCT, missile[i]._mix, missile[i]._miy);
 		PutMissile(i);
 	} else
 		PutMissile(i);
@@ -4288,10 +4288,11 @@ void MI_LightningRing(Sint32 i)
 
 void MI_Search(Sint32 i)
 {
+	int pnum = missile[i]._miVar1;
 	missile[i]._mirange--;
 	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = TRUE;
-		PlaySfxLoc(IS_CAST7, plr[missile[i]._miVar1]._px, plr[missile[i]._miVar1]._py);
+		PlaySfxLoc(pnum, IS_CAST7, plr[pnum]._px, plr[pnum]._py);
 		AutoMapShowItems = FALSE;
 	}
 }
@@ -5270,7 +5271,7 @@ void MI_Blodboil(Sint32 i)
 			if (plr[id]._pHitPoints < 64)
 				plr[id]._pHitPoints = 64;
 			force_redraw = 255;
-			PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
+			PlaySfxLoc(id, blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
 		} else {
 			int blodboilSFX[NUM_CLASSES] = {
 				PS_WARR72,
@@ -5288,7 +5289,7 @@ void MI_Blodboil(Sint32 i)
 			if (plr[id]._pHitPoints < 64)
 				plr[id]._pHitPoints = 64;
 			force_redraw = 255;
-			PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
+			PlaySfxLoc(id, blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
 		}
 	}
 }

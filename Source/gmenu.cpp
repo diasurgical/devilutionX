@@ -129,7 +129,7 @@ static void gmenu_up_down(BOOL isDown)
 			}
 			if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
 				if (i)
-					PlaySFX(IS_TITLEMOV);
+					PlaySFX(myplr, IS_TITLEMOV);
 				return;
 			}
 		}
@@ -283,12 +283,12 @@ BOOL gmenu_presskeys(int vkey)
 	switch (vkey) {
 	case DVL_VK_RETURN:
 		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
-			PlaySFX(IS_TITLEMOV);
+			PlaySFX(myplr, IS_TITLEMOV);
 			sgpCurrItem->fnMenu(TRUE);
 		}
 		break;
 	case DVL_VK_ESCAPE:
-		PlaySFX(IS_TITLEMOV);
+		PlaySFX(myplr, IS_TITLEMOV);
 		gmenu_set_items(NULL, NULL);
 		break;
 	case DVL_VK_SPACE:
@@ -380,7 +380,7 @@ BOOL gmenu_left_mouse(BOOL isDown)
 		return TRUE;
 	}
 	sgpCurrItem = pItem;
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(myplr, IS_TITLEMOV);
 	if (pItem->dwFlags & GMENU_SLIDER) {
 		mouseNavigation = gmenu_get_mouse_slider(&dummy);
 		gmenu_on_mouse_move();

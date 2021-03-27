@@ -234,14 +234,14 @@ void DrawAutomapItem(CelOutputBuffer out, Sint32 x, Sint32 y, Uint8 color)
 	DrawLineTo(out, x, y2, x2, y, color);
 }
 
-void SearchAutomapItem(CelOutputBuffer out)
+void SearchAutomapItem(CelOutputBuffer out, int pnum)
 {
-	Sint32 x = plr[myplr]._px;
-	Sint32 y = plr[myplr]._py;
-	if (plr[myplr]._pmode == PM_WALK3) {
-		x = plr[myplr]._pfutx;
-		y = plr[myplr]._pfuty;
-		if (plr[myplr]._pdir == DIR_W)
+	Sint32 x = plr[pnum]._px;
+	Sint32 y = plr[pnum]._py;
+	if (plr[pnum]._pmode == PM_WALK3) {
+		x = plr[pnum]._pfutx;
+		y = plr[pnum]._pfuty;
+		if (plr[pnum]._pdir == DIR_W)
 			x++;
 		else
 			y++;
@@ -583,7 +583,7 @@ void AutomapZoomOut()
 	}
 }
 
-void DrawAutomap(CelOutputBuffer out)
+void DrawAutomap(CelOutputBuffer out, int pnum)
 {
 	int cells;
 	int sx, sy;
@@ -672,12 +672,12 @@ void DrawAutomap(CelOutputBuffer out)
 	}
 
 	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
-		if (plr[pnum].plrlevel == plr[myplr].plrlevel && plr[pnum].plractive) {
+		if (plr[pnum].plrlevel == plr[pnum].plrlevel && plr[pnum].plractive) {
 			DrawAutomapPlr(out, pnum);
 		}
 	}
 	if (AutoMapShowItems)
-		SearchAutomapItem(out);
+		SearchAutomapItem(out, myplr);
 	DrawAutomapText(out);
 }
 

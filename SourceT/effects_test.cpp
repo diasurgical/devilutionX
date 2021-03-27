@@ -51,7 +51,7 @@ TEST(Effects, calc_snd_position_extream_left)
 	dvl::plr[dvl::myplr]._py = 50;
 	int plVolume = 0;
 	int plPan = 0;
-	EXPECT_EQ(dvl::calc_snd_position(24, 50, &plVolume, &plPan), false);
+	EXPECT_EQ(dvl::calc_snd_position(myplr, 24, 50, &plVolume, &plPan), false);
 	EXPECT_EQ(plVolume, 0);
 	EXPECT_LT(plPan, -6400);
 }

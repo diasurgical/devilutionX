@@ -1077,25 +1077,25 @@ void UseBeltItem(int type)
 	}
 }
 
-void PerformPrimaryAction()
+void PerformPrimaryAction(int pnum)
 {
 	if (invflag) { // inventory is open
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
-			TryIconCurs();
+			TryIconCurs(pnum);
 			SetCursor_(CURSOR_HAND);
 		} else {
-			CheckInvItem();
+			CheckInvItem(pnum);
 		}
 		return;
 	}
 
 	if (spselflag) {
-		SetSpell();
+		SetSpell(pnum);
 		return;
 	}
 
 	if (chrflag && !chrbtnactive && plr[myplr]._pStatPts > 0) {
-		CheckChrBtns();
+		CheckChrBtns(pnum);
 		for (int i = 0; i < 4; i++) {
 			if (MouseX >= ChrBtnsRect[i].x
 			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
@@ -1103,7 +1103,7 @@ void PerformPrimaryAction()
 			    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
 				chrbtn[i] = 1;
 				chrbtnactive = true;
-				ReleaseChrBtns(false);
+				ReleaseChrBtns(pnum, false);
 			}
 		}
 		return;
@@ -1147,42 +1147,42 @@ void UpdateSpellTarget()
 /**
  * @brief Try dropping item in all 9 possible places
  */
-bool TryDropItem()
+bool TryDropItem(int pnum)
 {
 	cursmx = plr[myplr]._pfutx + 1;
 	cursmy = plr[myplr]._pfuty;
-	if (!DropItemBeforeTrig()) {
+	if (!DropItemBeforeTrig(pnum)) {
 		// Try to drop on the other side
 		cursmx = plr[myplr]._pfutx;
 		cursmy = plr[myplr]._pfuty + 1;
-		DropItemBeforeTrig();
+		DropItemBeforeTrig(pnum);
 	}
 
 	return pcurs == CURSOR_HAND;
 }
 
-void PerformSpellAction()
+void PerformSpellAction(int pnum)
 {
 	if (InGameMenu() || questlog || sbookflag)
 		return;
 
 	if (invflag) {
 		if (pcurs >= CURSOR_FIRSTITEM)
-			TryDropItem();
+			TryDropItem(pnum);
 		else if (pcurs > CURSOR_HAND) {
-			TryIconCurs();
+			TryIconCurs(pnum);
 			SetCursor_(CURSOR_HAND);
 		}
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
+	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem(pnum))
 		return;
 	if (pcurs > CURSOR_HAND)
 		SetCursor_(CURSOR_HAND);
 
 	if (spselflag) {
-		SetSpell();
+		SetSpell(pnum);
 		return;
 	}
 
@@ -1190,17 +1190,17 @@ void PerformSpellAction()
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
 	    || (pcursobj == -1 && spl == SPL_DISARM)) {
 		if (plr[myplr]._pClass == PC_WARRIOR) {
-			PlaySFX(PS_WARR27);
+			PlaySFX(pnum, PS_WARR27);
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
-			PlaySFX(PS_ROGUE27);
+			PlaySFX(pnum, PS_ROGUE27);
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
-			PlaySFX(PS_MAGE27);
+			PlaySFX(pnum, PS_MAGE27);
 		}
 		return;
 	}
 
 	UpdateSpellTarget();
-	CheckPlrSpell();
+	CheckPlrSpell(pnum);
 }
 
 void CtrlUseInvItem()
@@ -1222,14 +1222,14 @@ void CtrlUseInvItem()
 	UseInvItem(myplr, pcursinvitem);
 }
 
-void PerformSecondaryAction()
+void PerformSecondaryAction(int pnum)
 {
 	if (invflag) {
 		CtrlUseInvItem();
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
+	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem(pnum))
 		return;
 	if (pcurs > CURSOR_HAND)
 		SetCursor_(CURSOR_HAND);
@@ -1239,14 +1239,14 @@ void PerformSecondaryAction()
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 	} else if (pcursmissile != -1) {
-		MakePlrPath(myplr, missile[pcursmissile]._mix, missile[pcursmissile]._miy, true);
-		plr[myplr].destAction = ACTION_WALK;
+		MakePlrPath(pnum, missile[pcursmissile]._mix, missile[pcursmissile]._miy, true);
+		plr[pnum].destAction = ACTION_WALK;
 	} else if (pcurstrig != -1) {
-		MakePlrPath(myplr, trigs[pcurstrig]._tx, trigs[pcurstrig]._ty, true);
-		plr[myplr].destAction = ACTION_WALK;
+		MakePlrPath(pnum, trigs[pcurstrig]._tx, trigs[pcurstrig]._ty, true);
+		plr[pnum].destAction = ACTION_WALK;
 	} else if (pcursquest != -1) {
-		MakePlrPath(myplr, quests[pcursquest]._qtx, quests[pcursquest]._qty, true);
-		plr[myplr].destAction = ACTION_WALK;
+		MakePlrPath(pnum, quests[pcursquest]._qtx, quests[pcursquest]._qty, true);
+		plr[pnum].destAction = ACTION_WALK;
 	}
 }
 

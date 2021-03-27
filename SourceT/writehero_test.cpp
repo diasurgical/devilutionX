@@ -225,7 +225,7 @@ TEST(Writehero, pfile_write_hero)
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);
 	UnPackPlayer(&pks, myplr, TRUE);
-	pfile_write_hero();
+	pfile_write_hero(myplr);
 
 	std::ifstream f("multi_0.sv", std::ios::binary);
 	std::vector<unsigned char> s(picosha2::k_digest_size);

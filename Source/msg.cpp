@@ -2494,9 +2494,9 @@ static DWORD On_OPENCRYPT(TCmd *pCmd, int pnum)
 {
 	if (gbBufferMsgs != 1) {
 		TownOpenGrave();
-		InitTownTriggers();
+		InitTownTriggers(pnum);
 		if (currlevel == 0)
-			PlaySFX(IS_SARC);
+			PlaySFX(myplr, IS_SARC);
 	}
 	return sizeof(*pCmd);
 }

@@ -212,7 +212,7 @@ void CheckRportal()
 	}
 }
 
-void CheckCursMove()
+void CheckCursMove(int pnum)
 {
 	int i, sx, sy, fx, fy, mx, my, tx, ty, px, py, xx, yy, mi, columns, rows, xo, yo;
 	char bv;
@@ -251,10 +251,10 @@ void CheckCursMove()
 	sy -= ScrollInfo._syoff - yo;
 
 	// Predict the next frame when walking to avoid input jitter
-	fx = plr[myplr]._pVar6 / 256;
-	fy = plr[myplr]._pVar7 / 256;
-	fx -= (plr[myplr]._pVar6 + plr[myplr]._pxvel) / 256;
-	fy -= (plr[myplr]._pVar7 + plr[myplr]._pyvel) / 256;
+	fx = plr[pnum]._pVar6 / 256;
+	fy = plr[pnum]._pVar7 / 256;
+	fx -= (plr[pnum]._pVar6 + plr[pnum]._pxvel) / 256;
+	fy -= (plr[pnum]._pVar7 + plr[pnum]._pyvel) / 256;
 	if (ScrollInfo._sdir != SDIR_NONE) {
 		sx -= fx;
 		sy -= fy;
@@ -329,7 +329,7 @@ void CheckCursMove()
 	panelflag = FALSE;
 	trigflag = FALSE;
 
-	if (plr[myplr]._pInvincible) {
+	if (plr[pnum]._pInvincible) {
 		return;
 	}
 	if (pcurs >= CURSOR_FIRSTITEM || spselflag) {
@@ -338,14 +338,14 @@ void CheckCursMove()
 		return;
 	}
 	if (MouseY > PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
-		CheckPanelInfo();
+		CheckPanelInfo(pnum);
 		return;
 	}
 	if (doomflag) {
 		return;
 	}
 	if (invflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
-		pcursinvitem = CheckInvHLight();
+		pcursinvitem = CheckInvHLight(pnum);
 		return;
 	}
 	if (sbookflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
@@ -518,7 +518,7 @@ void CheckCursMove()
 	if (pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
 			bv = dPlayer[mx + 1][my] > 0 ? dPlayer[mx + 1][my] - 1 : -(dPlayer[mx + 1][my] + 1);
-			if (bv != myplr && plr[bv]._pHitPoints != 0) {
+			if (bv != pnum && plr[bv]._pHitPoints != 0) {
 				cursmx = mx + 1;
 				cursmy = my;
 				pcursplr = bv;
@@ -526,7 +526,7 @@ void CheckCursMove()
 		}
 		if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
 			bv = dPlayer[mx][my + 1] > 0 ? dPlayer[mx][my + 1] - 1 : -(dPlayer[mx][my + 1] + 1);
-			if (bv != myplr && plr[bv]._pHitPoints != 0) {
+			if (bv != pnum && plr[bv]._pHitPoints != 0) {
 				cursmx = mx;
 				cursmy = my + 1;
 				pcursplr = bv;
@@ -534,7 +534,7 @@ void CheckCursMove()
 		}
 		if (dPlayer[mx][my] != 0) {
 			bv = dPlayer[mx][my] > 0 ? dPlayer[mx][my] - 1 : -(dPlayer[mx][my] + 1);
-			if (bv != myplr) {
+			if (bv != pnum) {
 				cursmx = mx;
 				cursmy = my;
 				pcursplr = bv;
@@ -542,7 +542,7 @@ void CheckCursMove()
 		}
 		if (dFlags[mx][my] & BFLAG_DEAD_PLAYER) {
 			for (i = 0; i < MAX_PLRS; i++) {
-				if (plr[i]._px == mx && plr[i]._py == my && i != myplr) {
+				if (plr[i]._px == mx && plr[i]._py == my && i != pnum) {
 					cursmx = mx;
 					cursmy = my;
 					pcursplr = i;
@@ -554,7 +554,7 @@ void CheckCursMove()
 				for (yy = -1; yy < 2; yy++) {
 					if (mx + xx < MAXDUNX && my + yy < MAXDUNY && dFlags[mx + xx][my + yy] & BFLAG_DEAD_PLAYER) {
 						for (i = 0; i < MAX_PLRS; i++) {
-							if (plr[i]._px == mx + xx && plr[i]._py == my + yy && i != myplr) {
+							if (plr[i]._px == mx + xx && plr[i]._py == my + yy && i != pnum) {
 								cursmx = mx + xx;
 								cursmy = my + yy;
 								pcursplr = i;
@@ -566,7 +566,7 @@ void CheckCursMove()
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
 			bv = dPlayer[mx + 1][my + 1] > 0 ? dPlayer[mx + 1][my + 1] - 1 : -(dPlayer[mx + 1][my + 1] + 1);
-			if (bv != myplr && plr[bv]._pHitPoints != 0) {
+			if (bv != pnum && plr[bv]._pHitPoints != 0) {
 				cursmx = mx + 1;
 				cursmy = my + 1;
 				pcursplr = bv;

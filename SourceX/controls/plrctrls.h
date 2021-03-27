@@ -37,13 +37,13 @@ bool IsMovingMouseCursorWithController();
 void UseBeltItem(int type);
 
 // Talk to towners, click on inv items, attack, etc.
-void PerformPrimaryAction();
+void PerformPrimaryAction(int pnum);
 
 // Open chests, doors, pickup items.
-void PerformSecondaryAction();
-bool TryDropItem();
+void PerformSecondaryAction(int pnum);
+bool TryDropItem(int pnum);
 void FocusOnInventory();
-void PerformSpellAction();
+void PerformSpellAction(int pnum);
 void StoreSpellCoords();
 
 typedef struct coords {
