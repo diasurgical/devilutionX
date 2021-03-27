@@ -21,7 +21,7 @@ DEVILUTION_BEGIN_NAMESPACE
  */
 static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 {
-	PCXHEADER Buffer;
+	PCXHeader Buffer;
 
 	memset(&Buffer, 0, sizeof(Buffer));
 	Buffer.Manufacturer = 10;

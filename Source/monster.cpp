@@ -340,7 +340,6 @@ void InitMonsterGFX(int monst)
 			}
 		}
 
-		// TODO: either the AnimStruct members have wrong naming or the MonsterData ones it seems
 		Monsters[monst].Anims[anim].Frames = frames;
 		Monsters[monst].Anims[anim].Rate = monsterdata[mtype].Rate[anim];
 	}

@@ -36,6 +36,13 @@ typedef enum MON_MODE {
 	MM_TALK,
 } MON_MODE;
 
+typedef struct AnimStruct {
+	Uint8 *CMem;
+	Uint8 *Data[8];
+	Sint32 Frames;
+	Sint32 Rate;
+} AnimStruct;
+
 typedef struct CMonster {
 	_monster_id mtype;
 	/** placeflag enum as a flags*/

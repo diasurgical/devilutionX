@@ -6,11 +6,19 @@
 #ifndef __EFFECTS_H__
 #define __EFFECTS_H__
 
+#include "sound.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct TSFX {
+	Uint8 bFlags;
+	const char *pszName;
+	TSnd *pSnd;
+} TSFX;
 
 extern int sfxdelay;
 extern int sfxdnum;

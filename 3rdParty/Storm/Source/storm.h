@@ -5,6 +5,46 @@
 #include <string>
 namespace dvl {
 
+typedef struct PCXHeader {
+	Uint8 Manufacturer;
+	Uint8 Version;
+	Uint8 Encoding;
+	Uint8 BitsPerPixel;
+	Uint16 Xmin;
+	Uint16 Ymin;
+	Uint16 Xmax;
+	Uint16 Ymax;
+	Uint16 HDpi;
+	Uint16 VDpi;
+	Uint8 Colormap[48];
+	Uint8 Reserved;
+	Uint8 NPlanes;
+	Uint16 BytesPerLine;
+	Uint16 PaletteInfo;
+	Uint16 HscreenSize;
+	Uint16 VscreenSize;
+	Uint8 Filler[54];
+} PCXHeader;
+
+typedef struct _SNETCAPS {
+	Uint32 size;
+	Uint32 flags;
+	Uint32 maxmessagesize;
+	Uint32 maxqueuesize;
+	Uint32 maxplayers;
+	Uint32 bytessec;
+	Uint32 latencyms;
+	Uint32 defaultturnssec;
+	Uint32 defaultturnsintransit;
+} _SNETCAPS;
+
+typedef struct _SNETEVENT {
+	Uint32 eventid;
+	Uint32 playerid;
+	void *data;
+	Uint32 databytes;
+} _SNETEVENT;
+
 // Note to self: Linker error => forgot a return value in cpp
 
 // Storm API definition

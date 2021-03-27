@@ -8,7 +8,6 @@
 #include "all.h"
 #include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "../DiabloUI/diabloui.h"
 #include "file_util.h"
 
 DEVILUTION_BEGIN_NAMESPACE

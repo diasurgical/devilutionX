@@ -12,6 +12,11 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct ThemeStruct {
+	theme_id ttype;
+	Sint32 ttval;
+} ThemeStruct;
+
 extern int numthemes;
 extern BOOL armorFlag;
 extern BOOL weaponFlag;

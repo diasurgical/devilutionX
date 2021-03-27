@@ -7,6 +7,7 @@
 #define __CONTROL_H__
 
 #include "engine.h"
+#include "spelldat.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
