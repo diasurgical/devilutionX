@@ -41,7 +41,7 @@ int pnumlines;
 BOOL pinfoflag;
 BOOL talkbtndown[3];
 spell_id pSpell;
-char infoclr;
+text_color infoclr;
 int sgbPlrTalkTbl;
 BYTE *pGBoxBuff;
 BYTE *pSBkBtnCel;
@@ -533,7 +533,7 @@ void ToggleSpell(int slot)
 	}
 }
 
-void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, char col)
+void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, text_color col)
 {
 	int i;
 	BYTE pix;
@@ -561,7 +561,7 @@ void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, char col)
 			tbl[i] = pix;
 		}
 		break;
-	default:
+	case COL_GOLD:
 		for (i = 0; i < 256; i++) {
 			pix = i;
 			if (pix >= PAL16_GRAY) {
@@ -573,6 +573,10 @@ void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, char col)
 			tbl[i] = pix;
 		}
 		break;
+	case COL_BLACK:
+		light_table_index = 15;
+		CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, NULL);
+		return;
 	}
 	CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, tbl);
 }
@@ -1325,7 +1329,7 @@ void DrawInfoBox(CelOutputBuffer out)
 
 #define ADD_PlrStringXY(out, x, y, width, pszStr, col) MY_PlrStringXY(out, x, y, width, pszStr, col, 1)
 
-void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, int color)
+void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, text_color color)
 {
 	while (*str) {
 		BYTE c = gbFontTransTbl[(BYTE)*str++];
@@ -1346,7 +1350,7 @@ void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, int color)
  * @param col text_color color value
  * @param base Letter spacing
  */
-static void MY_PlrStringXY(CelOutputBuffer out, int x, int y, int endX, const char *pszStr, char col, int base)
+static void MY_PlrStringXY(CelOutputBuffer out, int x, int y, int endX, const char *pszStr, text_color col, int base)
 {
 	BYTE c;
 	const char *tmp;
@@ -1377,7 +1381,7 @@ static void MY_PlrStringXY(CelOutputBuffer out, int x, int y, int endX, const ch
 
 void DrawChr(CelOutputBuffer out)
 {
-	char col;
+	text_color col = COL_WHITE;
 	char chrstr[64];
 	int mindam, maxdam;
 
@@ -1777,7 +1781,7 @@ void RedBack(CelOutputBuffer out)
 	}
 }
 
-static void PrintSBookStr(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *pszStr, char col)
+static void PrintSBookStr(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *pszStr, text_color col)
 {
 	BYTE c;
 	const char *tmp;
@@ -2032,7 +2036,7 @@ void control_set_gold_curs(int pnum)
 	NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-static char *control_print_talk_msg(CelOutputBuffer out, char *msg, int *x, int y, int color)
+static char *control_print_talk_msg(CelOutputBuffer out, char *msg, int *x, int y, text_color color)
 {
 	BYTE c;
 	int width;
@@ -2058,7 +2062,7 @@ static char *control_print_talk_msg(CelOutputBuffer out, char *msg, int *x, int 
 
 void DrawTalkPan(CelOutputBuffer out)
 {
-	int i, off, talk_btn, color, nCel, x;
+	int i, off, talk_btn, nCel, x;
 	char *msg;
 
 	if (!talkflag)
@@ -2078,7 +2082,7 @@ void DrawTalkPan(CelOutputBuffer out)
 	msg = sgszTalkMsg;
 	for (i = 0; i < 39; i += 13) {
 		x = 0 + PANEL_LEFT;
-		msg = control_print_talk_msg(out, msg, &x, i, 0);
+		msg = control_print_talk_msg(out, msg, &x, i, COL_WHITE);
 		if (!msg)
 			break;
 	}
@@ -2089,6 +2093,7 @@ void DrawTalkPan(CelOutputBuffer out)
 	for (i = 0; i < 4; i++) {
 		if (i == myplr)
 			continue;
+		text_color color = COL_RED;
 		if (whisper[i]) {
 			color = COL_GOLD;
 			if (talkbtndown[talk_btn]) {
@@ -2099,7 +2104,6 @@ void DrawTalkPan(CelOutputBuffer out)
 				CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
 			}
 		} else {
-			color = COL_RED;
 			if (talk_btn != 0)
 				nCel = 2;
 			else

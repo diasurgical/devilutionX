@@ -115,7 +115,7 @@ void OffsetSTextY(int y, int yo)
 	stext[y]._syoff = yo;
 }
 
-void AddSText(int x, int y, bool j, const char *str, char clr, BOOL sel)
+void AddSText(int x, int y, bool j, const char *str, text_color clr, BOOL sel)
 {
 	stext[y]._sx = x;
 	stext[y]._syoff = 0;
@@ -126,7 +126,7 @@ void AddSText(int x, int y, bool j, const char *str, char clr, BOOL sel)
 	stext[y]._ssel = sel;
 }
 
-void PrintStoreItem(ItemStruct *x, int l, char iclr)
+void PrintStoreItem(ItemStruct *x, int l, text_color iclr)
 {
 	char sstr[128];
 	char str, dex;
@@ -288,7 +288,6 @@ void S_StartSmith()
 void S_ScrollSBuy(int idx)
 {
 	int l, ls;
-	char iclr;
 
 	ls = idx;
 	ClearSText(5, 21);
@@ -296,7 +295,7 @@ void S_ScrollSBuy(int idx)
 
 	for (l = 5; l < 20; l += 4) {
 		if (!smithitem[ls].isEmpty()) {
-			iclr = COL_WHITE;
+			text_color iclr = COL_WHITE;
 			if (smithitem[ls]._iMagical) {
 				iclr = COL_BLUE;
 			}
@@ -349,7 +348,6 @@ void S_StartSBuy()
 void S_ScrollSPBuy(int idx)
 {
 	int l, boughtitems;
-	char iclr;
 
 	ClearSText(5, 21);
 	boughtitems = idx;
@@ -362,7 +360,7 @@ void S_ScrollSPBuy(int idx)
 
 	for (l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
 		if (!premiumitem[idx].isEmpty()) {
-			iclr = COL_WHITE;
+			text_color iclr = COL_WHITE;
 			if (premiumitem[idx]._iMagical)
 				iclr = COL_BLUE;
 			if (!premiumitem[idx]._iStatFlag)
@@ -448,7 +446,6 @@ BOOL SmithSellOk(int i)
 void S_ScrollSSell(int idx)
 {
 	int l;
-	char iclr;
 
 	ClearSText(5, 21);
 	stextup = 5;
@@ -457,7 +454,7 @@ void S_ScrollSSell(int idx)
 		if (idx >= storenumh)
 			break;
 		if (!storehold[idx].isEmpty()) {
-			iclr = COL_WHITE;
+			text_color iclr = COL_WHITE;
 			if (storehold[idx]._iMagical) {
 				iclr = COL_BLUE;
 			}
@@ -657,7 +654,6 @@ void S_StartWitch()
 void S_ScrollWBuy(int idx)
 {
 	int l, ls;
-	char iclr;
 
 	ls = idx;
 	ClearSText(5, 21);
@@ -665,7 +661,7 @@ void S_ScrollWBuy(int idx)
 
 	for (l = 5; l < 20; l += 4) {
 		if (!witchitem[ls].isEmpty()) {
-			iclr = COL_WHITE;
+			text_color iclr = COL_WHITE;
 			if (witchitem[ls]._iMagical) {
 				iclr = COL_BLUE;
 			}
@@ -909,12 +905,11 @@ void S_StartNoRoom()
 void S_StartConfirm()
 {
 	BOOL idprint;
-	char iclr;
 
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-	iclr = COL_WHITE;
+	text_color iclr = COL_WHITE;
 
 	if (plr[myplr].HoldItem._iMagical != ITEM_QUALITY_NORMAL)
 		iclr = COL_BLUE;
@@ -993,15 +988,13 @@ void S_StartBoy()
 
 void S_StartBBoy()
 {
-	int iclr;
-
 	stextsize = true;
 	stextscrl = false;
 	sprintf(tempstr, "I have this item for sale:             Your gold: %i", plr[myplr]._pGold);
 	AddSText(0, 1, TRUE, tempstr, COL_GOLD, FALSE);
 	AddSLine(3);
 	AddSLine(21);
-	iclr = COL_WHITE;
+	text_color iclr = COL_WHITE;
 
 	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
 		iclr = COL_BLUE;
@@ -1049,13 +1042,12 @@ void S_StartHealer()
 void S_ScrollHBuy(int idx)
 {
 	int l;
-	char iclr;
 
 	ClearSText(5, 21);
 	stextup = 5;
 	for (l = 5; l < 20; l += 4) {
 		if (!healitem[idx].isEmpty()) {
-			iclr = COL_WHITE;
+			text_color iclr = COL_WHITE;
 			if (!healitem[idx]._iStatFlag) {
 				iclr = COL_RED;
 			}
@@ -1202,12 +1194,10 @@ void S_StartSIdentify()
 
 void S_StartIdShow()
 {
-	char iclr;
-
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-	iclr = COL_WHITE;
+	text_color iclr = COL_WHITE;
 
 	if (plr[myplr].HoldItem._iMagical != ITEM_QUALITY_NORMAL)
 		iclr = COL_BLUE;
@@ -2275,7 +2265,7 @@ void FreeStoreMem()
 	MemFreeDbg(pSTextSlidCels);
 }
 
-void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, char col, int val)
+void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col, int val)
 {
 	int len, width, sx, sy, i, k, s;
 	int xx, yy;

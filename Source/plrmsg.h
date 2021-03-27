@@ -27,7 +27,6 @@ void SendPlrMsg(int pnum, const char *pszStr);
 void ClearPlrMsg();
 void InitPlrMsg();
 void DrawPlrMsg(CelOutputBuffer out);
-void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, const char *str, BYTE col);
 
 #ifdef __cplusplus
 }

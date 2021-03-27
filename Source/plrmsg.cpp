@@ -11,7 +11,7 @@ static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 /** Maps from player_num to text color, as used in chat messages. */
-const char text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
+const text_color text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
 
 void plrmsg_delay(BOOL delay)
 {
@@ -84,35 +84,7 @@ void InitPlrMsg()
 	plr_msg_slot = 0;
 }
 
-void DrawPlrMsg(CelOutputBuffer out)
-{
-	int i;
-	DWORD x = 10;
-	DWORD y = 70;
-	DWORD width = gnScreenWidth - 20;
-	_plrmsg *pMsg;
-
-	if (chrflag || questlog) {
-		x += SPANEL_WIDTH;
-		width -= SPANEL_WIDTH;
-	}
-	if (invflag || sbookflag)
-		width -= SPANEL_WIDTH;
-
-	if (width < 300)
-		return;
-
-	pMsg = plr_msgs;
-	for (i = 0; i < PMSG_COUNT; i++) {
-		if (pMsg->str[0])
-			PrintPlrMsg(out, x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
-		pMsg++;
-		y += 35;
-	}
-}
-
-// TODO: Can be made static
-void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
+static void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, const char *str, text_color col)
 {
 	int line = 0;
 
@@ -150,6 +122,33 @@ void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, const char 
 		line++;
 		if (line == 3)
 			break;
+	}
+}
+
+void DrawPlrMsg(CelOutputBuffer out)
+{
+	int i;
+	DWORD x = 10;
+	DWORD y = 70;
+	DWORD width = gnScreenWidth - 20;
+	_plrmsg *pMsg;
+
+	if (chrflag || questlog) {
+		x += SPANEL_WIDTH;
+		width -= SPANEL_WIDTH;
+	}
+	if (invflag || sbookflag)
+		width -= SPANEL_WIDTH;
+
+	if (width < 300)
+		return;
+
+	pMsg = plr_msgs;
+	for (i = 0; i < PMSG_COUNT; i++) {
+		if (pMsg->str[0])
+			PrintPlrMsg(out, x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
+		pMsg++;
+		y += 35;
 	}
 }
 

@@ -14,6 +14,14 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef enum text_color {
+	COL_WHITE,
+	COL_BLUE,
+	COL_RED,
+	COL_GOLD,
+	COL_BLACK,
+} text_color;
+
 typedef struct RECT32 {
 	int x;
 	int y;
@@ -32,7 +40,7 @@ extern BYTE *pPanelText;
 extern int pnumlines;
 extern BOOL pinfoflag;
 extern spell_id pSpell;
-extern char infoclr;
+extern text_color infoclr;
 extern char tempstr[256];
 extern int sbooktab;
 extern spell_type pSplType;
@@ -60,7 +68,7 @@ void ToggleSpell(int slot);
  * @param nCel Number of letter in Windows-1252
  * @param col text_color color value
  */
-void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, char col);
+void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, text_color col);
 
 void AddPanelString(const char *str, BOOL just);
 void ClearPanel();
@@ -111,7 +119,7 @@ BOOL control_WriteStringToBuffer(BYTE *str);
  */
 void DrawInfoBox(CelOutputBuffer out);
 
-void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, int color);
+void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, text_color color);
 void DrawChr(CelOutputBuffer out);
 void CheckLvlBtn();
 void ReleaseLvlBtn();

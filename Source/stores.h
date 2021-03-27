@@ -46,7 +46,7 @@ typedef struct STextStruct {
 	int _syoff;
 	char _sstr[128];
 	bool _sjust;
-	char _sclr;
+	text_color _sclr;
 	int _sline;
 	bool _ssel;
 	int _sval;
@@ -97,7 +97,7 @@ void InitStores();
 int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
-void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, char col, int val);
+void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col, int val);
 void DrawSLine(CelOutputBuffer out, int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);

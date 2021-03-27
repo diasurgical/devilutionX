@@ -806,7 +806,7 @@ void ResyncQuests()
 	}
 }
 
-static void PrintQLString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, int col)
+static void PrintQLString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, text_color col)
 {
 	int len, width, i, k, sx, sy;
 	BYTE c;
@@ -843,14 +843,14 @@ void DrawQuestLog(CelOutputBuffer out)
 {
 	int y, i;
 
-	PrintQLString(out, 0, 2, TRUE, "Quest Log", 3);
+	PrintQLString(out, 0, 2, TRUE, "Quest Log", COL_GOLD);
 	CelDrawTo(out, 0, 351, pQLogCel, 1, SPANEL_WIDTH);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
-		PrintQLString(out, 0, y, TRUE, questlist[qlist[i]]._qlstr, 0);
+		PrintQLString(out, 0, y, TRUE, questlist[qlist[i]]._qlstr, COL_WHITE);
 		y += 2;
 	}
-	PrintQLString(out, 0, 22, TRUE, "Close Quest Log", 0);
+	PrintQLString(out, 0, 22, TRUE, "Close Quest Log", COL_WHITE);
 }
 
 void StartQuestlog()

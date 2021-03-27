@@ -1869,13 +1869,6 @@ typedef enum event_type {
 	EVENT_TYPE_15                 = 15,
 } event_type;
 
-typedef enum text_color {
-	COL_WHITE = 0x0,
-	COL_BLUE  = 0x1,
-	COL_RED   = 0x2,
-	COL_GOLD  = 0x3,
-} text_color;
-
 typedef enum _difficulty {
 	DIFF_NORMAL      = 0x0,
 	DIFF_NIGHTMARE   = 0x1,

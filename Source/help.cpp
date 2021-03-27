@@ -453,7 +453,7 @@ void InitHelp()
 	helpflag = FALSE;
 }
 
-static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, char color)
+static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, text_color color)
 {
 	int sx, sy, width;
 	BYTE c;
@@ -477,7 +477,6 @@ static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, char col
 void DrawHelp(CelOutputBuffer out)
 {
 	int i, c, w;
-	char col;
 	const char *s;
 
 	DrawSTextHelp();
@@ -530,11 +529,10 @@ void DrawHelp(CelOutputBuffer out)
 		while (*s == '\0') {
 			s++;
 		}
+		text_color col = COL_WHITE;
 		if (*s == '$') {
 			s++;
 			col = COL_RED;
-		} else {
-			col = COL_WHITE;
 		}
 		if (*s == '&') {
 			HelpTop = help_select_line;
