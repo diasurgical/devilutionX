@@ -458,6 +458,8 @@ static void SaveOptions()
 #ifdef __vita__
 	setIniInt("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
 #endif
+
+	SaveIni();
 }
 
 /**

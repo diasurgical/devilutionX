@@ -285,6 +285,7 @@ BOOL
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
+void SaveIni();
 int getIniInt(const char *keyname, const char *valuename, int defaultValue);
 void setIniInt(const char *keyname, const char *valuename, int value);
 

@@ -305,8 +305,11 @@ void setIniValue(const char *sectionName, const char *keyName, const char *value
 	} else {
 		key->setValue(stringValue);
 	}
+}
 
-	ini.saveToFile();
+void SaveIni()
+{
+	getIni().saveToFile();
 }
 
 int getIniInt(const char *keyname, const char *valuename, int defaultValue)
