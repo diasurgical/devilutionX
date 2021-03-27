@@ -13,7 +13,6 @@
 
 #include "all.h"
 #include "../SourceS/file_util.h"
-#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

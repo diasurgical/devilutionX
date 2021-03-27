@@ -1,6 +1,7 @@
 #include "selgame.h"
 
 #include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 #include "config.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"

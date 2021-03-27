@@ -4,7 +4,6 @@
  * Implementation of functions for loading and playing sounds.
  */
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
 #include <SDL_mixer.h>
 
 DEVILUTION_BEGIN_NAMESPACE

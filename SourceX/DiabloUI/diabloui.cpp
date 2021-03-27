@@ -5,6 +5,8 @@
 #include <string>
 #include <algorithm>
 
+#include "../3rdParty/Storm/Source/storm.h"
+
 #include "controls/menu_controls.h"
 
 #include "DiabloUI/scrollbar.h"
