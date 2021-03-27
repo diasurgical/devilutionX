@@ -677,7 +677,7 @@ static void LoadObject(LoadHelper *file, int i)
 {
 	ObjectStruct *pObject = &object[i];
 
-	pObject->_otype = file->nextLE<Sint32>();
+	pObject->_otype = (_object_id)file->nextLE<Sint32>();
 	pObject->_ox = file->nextLE<Sint32>();
 	pObject->_oy = file->nextLE<Sint32>();
 	pObject->_oLight = file->nextBool32();

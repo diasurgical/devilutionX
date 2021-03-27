@@ -4,6 +4,28 @@
 
 namespace dvl {
 
+typedef struct _uidefaultstats {
+	Uint16 strength;
+	Uint16 magic;
+	Uint16 dexterity;
+	Uint16 vitality;
+} _uidefaultstats;
+
+typedef struct _uiheroinfo {
+	struct _uiheroinfo *next;
+	char name[16];
+	Uint16 level;
+	plr_class heroclass;
+	Uint8 herorank;
+	Uint16 strength;
+	Uint16 magic;
+	Uint16 dexterity;
+	Uint16 vitality;
+	Sint32 gold;
+	Sint32 hassaved;
+	bool spawned;
+} _uiheroinfo;
+
 void UiDestroy();
 void UiTitleDialog();
 void UiSetSpawned(BOOL bSpawned);

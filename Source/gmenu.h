@@ -14,6 +14,12 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct TMenuItem {
+	Uint32 dwFlags;
+	const char *pszStr;
+	void (*fnMenu)(BOOL);
+} TMenuItem;
+
 extern TMenuItem *sgpCurrentMenu;
 
 void gmenu_draw_pause(CelOutputBuffer out);

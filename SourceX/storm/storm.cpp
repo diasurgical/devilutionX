@@ -131,7 +131,7 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 {
 	HANDLE hFile;
 	size_t size;
-	PCXHEADER pcxhdr;
+	PCXHeader pcxhdr;
 	BYTE paldata[256][3];
 	BYTE *dataPtr, *fileBuffer;
 	BYTE byte;

@@ -7,6 +7,7 @@
 #define __PFILE_H__
 
 #include "player.h"
+#include "../DiabloUI/diabloui.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

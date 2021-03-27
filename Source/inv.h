@@ -23,6 +23,11 @@ typedef enum item_color {
 	// clang-format on
 } item_color;
 
+typedef struct InvXY {
+	Sint32 X;
+	Sint32 Y;
+} InvXY;
+
 extern BOOL invflag;
 extern BOOL drawsbarflag;
 extern const InvXY InvRect[73];

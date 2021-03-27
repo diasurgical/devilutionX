@@ -11,6 +11,15 @@ DEVILUTION_BEGIN_NAMESPACE
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct TSnd {
+	const char *sound_path;
+	/** Used for streamed audio */
+	HANDLE file_handle;
+	SoundSample *DSB;
+	Uint32 start_tc;
+} TSnd;
+
 extern BOOLEAN gbSndInited;
 
 void snd_update(BOOL bStopAll);

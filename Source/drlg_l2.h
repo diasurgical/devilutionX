@@ -12,6 +12,23 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct HALLNODE {
+	Sint32 nHallx1;
+	Sint32 nHally1;
+	Sint32 nHallx2;
+	Sint32 nHally2;
+	Sint32 nHalldir;
+	struct HALLNODE *pNext;
+} HALLNODE;
+
+typedef struct ROOMNODE {
+	Sint32 nRoomx1;
+	Sint32 nRoomy1;
+	Sint32 nRoomx2;
+	Sint32 nRoomy2;
+	Sint32 nRoomDest;
+} ROOMNODE;
+
 extern BYTE predungeon[DMAXX][DMAXY];
 
 void InitDungeon();
