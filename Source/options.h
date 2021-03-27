@@ -2,19 +2,19 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-typedef struct DiabloOptions {
+struct DiabloOptions {
 	/** @brief Play game intro video on startup. */
 	bool bInto;
-} DiabloOptions;
+};
 
-typedef struct HellfireOptions {
+struct HellfireOptions {
 	/** @brief Play game intro video on startup. */
 	bool bInto;
 	/** @brief Corner stone of the world item. */
 	char szItem[sizeof(PkItemStruct) * 2 + 1];
-} HellfireOptions;
+};
 
-typedef struct AudioOptions {
+struct AudioOptions {
 	/** @brief Movie and SFX volume. */
 	Sint32 nSoundVolume;
 	/** @brief Music volume. */
@@ -23,9 +23,9 @@ typedef struct AudioOptions {
 	bool bWalkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
 	bool bAutoEquipSound;
-} AudioOptions;
+};
 
-typedef struct GraphicsOptions {
+struct GraphicsOptions {
 	/** @brief Render width. */
 	Sint32 nWidth;
 	/** @brief Render height. */
@@ -50,9 +50,9 @@ typedef struct GraphicsOptions {
 	bool bColorCycling;
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
-} GraphicsOptions;
+};
 
-typedef struct GameplayOptions {
+struct GameplayOptions {
 	/** @brief Game play ticks per secound. */
 	Sint32 nTickRate;
 	/** @brief Enable double walk speed when in town. */
@@ -91,9 +91,9 @@ typedef struct GameplayOptions {
 	bool bRandomizeQuests;
 	/** @brief Indicates whether or not mosnter type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
-} GameplayOptions;
+};
 
-typedef struct ControllerOptions {
+struct ControllerOptions {
 	/** @brief SDL Controller mapping, see SDL_GameControllerDB. */
 	char szMapping[1024];
 	/** @brief Use dpad for spell hotkeys without holding "start" */
@@ -104,23 +104,23 @@ typedef struct ControllerOptions {
 	/** @brief Enable input via rear touchpad */
 	bool bRearTouch;
 #endif
-} ControllerOptions;
+};
 
-typedef struct NetworkOptions {
+struct NetworkOptions {
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
 	/** @brief Most recently entered Hostname in join dialog. */
 	char szPreviousHost[129];
 	/** @brief What network port to use. */
 	Uint16 nPort;
-} NetworkOptions;
+};
 
-typedef struct ChatOptions {
+struct ChatOptions {
 	/** @brief Quick chat messages. */
 	char szHotKeyMsgs[4][MAX_SEND_STR_LEN];
-} ChatOptions;
+};
 
-typedef struct Options {
+struct Options {
 	DiabloOptions Diablo;
 	HellfireOptions Hellfire;
 	AudioOptions Audio;
@@ -129,7 +129,7 @@ typedef struct Options {
 	ControllerOptions Controller;
 	NetworkOptions Network;
 	ChatOptions Chat;
-} Options;
+};
 
 extern Options sgOptions;
 
