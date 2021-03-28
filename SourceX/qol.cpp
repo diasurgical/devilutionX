@@ -117,10 +117,10 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 		Sint32 resOffset = 5;
 		for (Sint32 i = 0; i < 3; i++) {
 			if (mon->mMagicRes & immunes[i]) {
-				DrawArt(out, xPos + resOffset, yPos + height - 11, &ArtResistance, i * 2 + 1);
+				DrawArt(out, xPos + resOffset, yPos + height - 6, &ArtResistance, i * 2 + 1);
 				resOffset += ArtResistance.w() + 2;
 			} else if (mon->mMagicRes & resists[i]) {
-				DrawArt(out, xPos + resOffset, yPos + height - 11, &ArtResistance, i * 2);
+				DrawArt(out, xPos + resOffset, yPos + height - 6, &ArtResistance, i * 2);
 				resOffset += ArtResistance.w() + 2;
 			}
 		}
