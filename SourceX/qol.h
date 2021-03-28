@@ -10,6 +10,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+void FreeQol();
+void InitQol();
 void DrawMonsterHealthBar(CelOutputBuffer out);
 void DrawXPBar(CelOutputBuffer out);
 void AutoGoldPickup(int pnum);

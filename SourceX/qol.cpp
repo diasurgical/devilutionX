@@ -5,9 +5,14 @@
  */
 #include "all.h"
 #include "options.h"
+#include "DiabloUI/art_draw.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 namespace {
+
+Art ArtHealthBox;
+Art ArtResistance;
+Art ArtHealth;
 
 int GetTextWidth(const char *s)
 {
@@ -39,12 +44,25 @@ void FillRect(CelOutputBuffer out, int x, int y, int width, int height, BYTE col
 	}
 }
 
-void FillSquare(CelOutputBuffer out, int x, int y, int size, BYTE col)
+} // namespace
+
+void FreeQol()
 {
-	FillRect(out, x, y, size, size, col);
+	if (sgOptions.Gameplay.bEnemyHealthBar) {
+		ArtHealthBox.Unload();
+		ArtHealth.Unload();
+		ArtResistance.Unload();
+	}
 }
 
-} // namespace
+void InitQol()
+{
+	if (sgOptions.Gameplay.bEnemyHealthBar) {
+		LoadMaskedArt("data\\healthbox.pcx", &ArtHealthBox, 1, 1);
+		LoadArt("data\\health.pcx", &ArtHealth);
+		LoadMaskedArt("data\\resistance.pcx", &ArtResistance, 6, 1);
+	}
+}
 
 void DrawMonsterHealthBar(CelOutputBuffer out)
 {
@@ -55,89 +73,58 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	if (pcursmonst == -1)
 		return;
 
-	int width = 250;
-	int height = 25;
-	int x = 0;          // x offset from the center of the screen
-	int y = 20;         // y position
-	int xOffset = 0;    // empty space between left/right borders and health bar
-	int yOffset = 1;    // empty space between top/bottom borders and health bar
-	int borderSize = 2; // size of the border around health bar
-	BYTE borderColors[] = { 242 /*undead*/, 232 /*demon*/, 182 /*beast*/ };
-	BYTE filledColor = 142;                                                   // filled health bar color
-	bool fillCorners = false;                                                 // true to fill border corners, false to cut them off
-	int square = 10;                                                          // resistance / immunity / vulnerability square size
-	const char *immuText = "IMMU: ", *resText = "RES: ", *vulnText = ":VULN"; // text displayed for immunities / resistances / vulnerabilities
-	int resSize = 3;                                                          // how many damage types
-	BYTE resistColors[] = { 148, 140, 129 };                                  // colors for these damage types
-	WORD immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };         // immunity flags for damage types
-	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };         // resistance flags for damage types
-
 	MonsterStruct *mon = &monster[pcursmonst];
-	BYTE borderColor = borderColors[(BYTE)mon->MData->mMonstClass];
-	WORD mres = mon->mMagicRes;
-	bool drawImmu = false;
-	int xPos = (gnScreenWidth - width) / 2 + x;
-	int xPos2 = xPos + width / 2;
-	int yPos = y;
-	int immuOffset = GetTextWidth(immuText) - 5;
-	int resOffset = GetTextWidth(resText);
-	int vulOffset = width - square - GetTextWidth(vulnText) - 4;
-	int corners = (fillCorners ? borderSize : 0);
-	int currentLife = mon->_mhitpoints, maxLife = mon->_mmaxhp;
-	if (currentLife > maxLife)
-		maxLife = currentLife;
-	if (mon->_uniqtype != 0)
-		borderSize <<= 1;
 
-	FillRect(out, xPos, yPos, (width * currentLife) / maxLife, height, filledColor);
+	Sint32 width = ArtHealthBox.w();
+	Sint32 height = ArtHealthBox.h();
+	Sint32 xPos = (gnScreenWidth - width) / 2;
+	Sint32 yPos = 18;
+	Sint32 border = 3;
+
+	Sint32 maxLife = mon->_mmaxhp;
+	if (mon->_mhitpoints > maxLife)
+		maxLife = mon->_mhitpoints;
+
+	DrawArt(out, xPos, yPos, &ArtHealthBox);
+	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
+	DrawArt(out, xPos + border + 1, yPos + border + 1, &ArtHealth, 0, (width * mon->_mhitpoints) / maxLife, height - (border * 2) - 2);
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		for (int j = 0; j < borderSize; j++) {
-			FastDrawHorizLine(out, xPos - xOffset - corners, yPos - borderSize - yOffset + j, (xOffset + corners) * 2 + width, borderColor);
-			FastDrawHorizLine(out, xPos - xOffset, yPos + height + yOffset + j, width + corners + xOffset * 2, borderColor);
-		}
-		for (int j = -yOffset; j < yOffset + height + corners; ++j) {
-			FastDrawHorizLine(out, xPos - xOffset - borderSize, yPos + j, borderSize, borderColor);
-			FastDrawHorizLine(out, xPos + xOffset + width, yPos + j, borderSize, borderColor);
-		}
+		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 172 /*beast*/ };
+		Uint8 borderColor = borderColors[mon->MData->mMonstClass];
+		Sint32 borderWidth = width - (border * 2);
+		FastDrawHorizLine(out, xPos + border, yPos + border, borderWidth, borderColor);
+		FastDrawHorizLine(out, xPos + border, yPos + height - border - 1, borderWidth, borderColor);
+		Sint32 borderHeight = height - (border * 2) - 2;
+		FastDrawVertLine(out, xPos + border, yPos + border + 1, borderHeight, borderColor);
+		FastDrawVertLine(out, xPos + width - border - 1, yPos + border + 1, borderHeight, borderColor);
 	}
 
-	for (int k = 0; k < resSize; ++k) {
-		if (mres & immunes[k]) {
-			drawImmu = true;
-			FillSquare(out, xPos + immuOffset, yPos + height - square, square, resistColors[k]);
-			immuOffset += square + 2;
-		} else if ((mres & resists[k])) {
-			FillSquare(out, xPos + resOffset, yPos + yOffset + height + borderSize + 2, square, resistColors[k]);
-			resOffset += square + 2;
-		} else {
-			FillSquare(out, xPos + vulOffset, yPos + yOffset + height + borderSize + 2, square, resistColors[k]);
-			vulOffset -= square + 2;
+	Sint32 barLableX = xPos + width / 2 - GetTextWidth(mon->mName) / 2;
+	Sint32 barLableY = yPos + 10 + (height - 11) / 2;
+	PrintGameStr(out, barLableX - 1, barLableY + 1, mon->mName, COL_BLACK);
+	text_color color = COL_WHITE;
+	if (mon->_uniqtype != 0)
+		color = COL_GOLD;
+	else if (mon->leader != 0)
+		color = COL_BLUE;
+	PrintGameStr(out, barLableX, barLableY, mon->mName, color);
+
+	if (mon->_uniqtype != 0 || monstkills[mon->MType->mtype] >= 15) {
+		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
+		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
+
+		Sint32 resOffset = 5;
+		for (Sint32 i = 0; i < 3; i++) {
+			if (mon->mMagicRes & immunes[i]) {
+				DrawArt(out, xPos + resOffset, yPos + height - 11, &ArtResistance, i * 2 + 1);
+				resOffset += ArtResistance.w() + 2;
+			} else if (mon->mMagicRes & resists[i]) {
+				DrawArt(out, xPos + resOffset, yPos + height - 11, &ArtResistance, i * 2);
+				resOffset += ArtResistance.w() + 2;
+			}
 		}
 	}
-
-	char text[64];
-	strcpy(text, mon->mName);
-	if (mon->leader > 0)
-		strcat(text, " (minion)");
-	PrintGameStr(out, xPos2 - GetTextWidth(text) / 2, yPos + 10, text, (mon->_uniqtype != 0 ? COL_GOLD : COL_WHITE));
-
-	sprintf(text, "%d", (maxLife >> 6));
-	PrintGameStr(out, xPos2 + GetTextWidth("/"), yPos + 23, text, COL_WHITE);
-
-	sprintf(text, "%d", (currentLife >> 6));
-	PrintGameStr(out, xPos2 - GetTextWidth(text) - GetTextWidth("/"), yPos + 23, text, COL_WHITE);
-
-	PrintGameStr(out, xPos2 - GetTextWidth("/") / 2, yPos + 23, "/", COL_WHITE);
-
-	sprintf(text, "kills: %d", monstkills[mon->MType->mtype]);
-	PrintGameStr(out, xPos2 - GetTextWidth("kills:") / 2 - 30, yPos + yOffset + height + borderSize + 12, text, COL_WHITE);
-
-	if (drawImmu)
-		PrintGameStr(out, xPos2 - width / 2, yPos + height, immuText, COL_GOLD);
-
-	PrintGameStr(out, xPos2 - width / 2, yPos + yOffset + height + borderSize + 12, resText, COL_GOLD);
-	PrintGameStr(out, xPos2 + width / 2 - GetTextWidth(vulnText), yPos + yOffset + height + borderSize + 12, vulnText, COL_RED);
 }
 
 void DrawXPBar(CelOutputBuffer out)
@@ -153,7 +140,7 @@ void DrawXPBar(CelOutputBuffer out)
 	int numDividers = 10;
 	int barColor = 198;
 	int emptyBarColor = 0;
-	int frameColor = 245;
+	int frameColor = 196;
 	bool space = true; // add 1 pixel separator on top/bottom of the bar
 
 	PrintGameStr(out, xPos - 22, yPos + 6, "XP", COL_WHITE);
@@ -170,13 +157,14 @@ void DrawXPBar(CelOutputBuffer out)
 	int visibleBar = barWidth * prevXpDelta_1 / prevXpDelta;
 
 	FillRect(out, xPos, yPos, barWidth, barHeight, emptyBarColor);
-	FillRect(out, xPos, yPos + (space ? 1 : 0), visibleBar, barHeight - (space ? 2 : 0), barColor);
 	FastDrawHorizLine(out, xPos - 1, yPos - 1, barWidth + 2, frameColor);
 	FastDrawHorizLine(out, xPos - 1, yPos + barHeight, barWidth + 2, frameColor);
 	FastDrawVertLine(out, xPos - 1, yPos - 1, barHeight + 2, frameColor);
 	FastDrawVertLine(out, xPos + barWidth, yPos - 1, barHeight + 2, frameColor);
 	for (int i = 1; i < numDividers; i++)
-		FastDrawVertLine(out, xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight - 1, barHeight + dividerHeight * 2 + 2, frameColor);
+		FastDrawVertLine(out, xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight + 3, barHeight, 245);
+
+	FillRect(out, xPos, yPos + (space ? 1 : 0), visibleBar, barHeight - (space ? 2 : 0), barColor);
 }
 
 bool HasRoomForGold()

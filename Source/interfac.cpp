@@ -4,7 +4,7 @@
  * Implementation of load screens.
  */
 #include "all.h"
-#include "../SourceX/DiabloUI/art.h"
+#include "../SourceX/DiabloUI/art_draw.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -43,7 +43,7 @@ static Cutscenes PickCutscene(interface_mode uMsg)
 
 		if (lvl == 1 && uMsg == WM_DIABPREVLVL)
 			return CutTown;
-		if (lvl == 16 && uMsg == WM_DIABNEXTLVL)
+		if (lvl == 16 && uMsg == WM_DIABTWARPUP)
 			return CutGate;
 
 		switch (gnLevelTypeTbl[lvl]) {
@@ -163,18 +163,7 @@ static void DrawCutscene()
 {
 	lock_buf(1);
 	CelOutputBuffer out = GlobalBackBuffer();
-	if (ArtCutsceneWidescreen.surface != NULL) {
-		if (SDLC_SetSurfaceColors(ArtCutsceneWidescreen.surface, out.surface->format->palette) <= -1)
-			ErrSdl();
-		SDL_Rect dst_rect = {
-			(Sint16)(BUFFER_BORDER_LEFT + PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2),
-			(Sint16)(BUFFER_BORDER_TOP + UI_OFFSET_Y),
-			(Uint16)ArtCutsceneWidescreen.w(),
-			(Uint16)ArtCutsceneWidescreen.h()
-		};
-		if (SDL_BlitSurface(ArtCutsceneWidescreen.surface, NULL, out.surface, &dst_rect) < 0)
-			ErrSdl();
-	}
+	DrawArt(out, PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y, &ArtCutsceneWidescreen);
 	CelDrawTo(out, PANEL_X, 480 - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
 
 	for (Uint32 i = 0; i < sgdwProgress; i++) {

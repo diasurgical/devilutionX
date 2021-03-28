@@ -232,6 +232,7 @@ static void start_game(interface_mode uMsg)
 #endif
 	assert(ghMainWnd);
 	music_stop();
+	InitQol();
 	ShowProgress(uMsg);
 	gmenu_init_menu();
 	InitLevelCursor();
@@ -244,6 +245,7 @@ static void free_game()
 {
 	int i;
 
+	FreeQol();
 	FreeControlPan();
 	FreeInvGFX();
 	FreeGMenu();
