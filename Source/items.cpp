@@ -20,7 +20,7 @@ BOOL itemhold[3][3];
 CornerStoneStruct CornerStone;
 BYTE *itemanims[ITEMTYPES];
 BOOL UniqueItemFlag[128];
-int auricGold = 10000;
+int auricGold = (GOLD_MAX_LIMIT * 2);
 int numitems;
 int gnNumGetRecords;
 
@@ -1073,7 +1073,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	}
 	if (plr[p].InvBody[INVLOC_AMULET].isEmpty() || plr[p].InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
 		int half = MaxGold;
-		MaxGold = auricGold / 2;
+		MaxGold = GOLD_MAX_LIMIT;
 
 		if (half != MaxGold)
 			StripTopGold(p);
