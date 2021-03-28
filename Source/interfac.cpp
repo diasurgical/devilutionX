@@ -38,12 +38,12 @@ static Cutscenes PickCutscene(interface_mode uMsg)
 	case WM_DIABTOWNWARP:
 	case WM_DIABTWARPUP: {
 		int lvl = currlevel;
-		if (uMsg = WM_DIABTWARPUP)
+		if (uMsg == WM_DIABTWARPUP)
 			lvl = plr[myplr].plrlevel;
 
 		if (lvl == 1 && uMsg == WM_DIABPREVLVL)
 			return CutTown;
-		if (lvl == 16 && uMsg == WM_DIABTWARPUP)
+		if (lvl == 16 && uMsg == WM_DIABNEXTLVL)
 			return CutGate;
 
 		switch (gnLevelTypeTbl[lvl]) {
