@@ -1,9 +1,15 @@
 /**
- * @file plrmsg.cpp
+ * @file scrollrt.cpp
  *
  * Implementation of functionality for rendering the dungeons, monsters and calling other render routines.
  */
 #include "all.h"
+#include "engine.h"
+#include "options.h"
+
+#include <string>
+#include <vector>
+#include <map>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -1188,6 +1194,144 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 // DevilutionX extension.
 extern void DrawControllerModifierHints(CelOutputBuffer out);
 
+void HighlightItemsNameOnMap(CelOutputBuffer out)
+{
+	if (!sgOptions.Gameplay.bHighlightItems)
+		return;
+	// items on ground name highlighting (Qndel)
+	class itemLabel
+	{
+	public:
+		int itemID;
+		int x;
+		int y;
+		int width;
+		int height;
+		int magicLevel;
+		std::string text;
+		itemLabel(int x, int y, int width, int height, int itemID, int q2, std::string text):
+			itemID(itemID), x(x), y(y), width(width), height(height), magicLevel(q2), text(text) {}
+	};
+
+	int horizontalPadding = 8;
+	int verticalPadding = 2;
+
+	char textOnGround[256];
+	std::vector<itemLabel> q;
+
+	for (int i = 0; i < numitems; i++) {
+		ItemStruct& item_local = item[itemactive[i]];
+		if (item_local._itype == ITYPE_GOLD) {
+			sprintf(textOnGround, "%i gold", item_local._ivalue);
+		}
+		else {
+			sprintf(textOnGround, "%s", item_local._iIdentified ? item_local._iIName : item_local._iName);
+		}
+
+		int walkStandX = ScrollInfo._sxoff;// +plr[myplr]._pyoff;
+		int walkStandY = ScrollInfo._syoff;// +plr[myplr]._pxoff;
+		if (plr[myplr]._pmode == PM_WALK2 && ScrollInfo._sdir == SDIR_SE) {
+			walkStandX += 32;
+			walkStandY += 16;
+		} else if (plr[myplr]._pmode == PM_WALK2 && ScrollInfo._sdir == SDIR_S) {
+			walkStandY += 32;
+		}
+
+		else if(plr[myplr]._pmode == PM_WALK2 && ScrollInfo._sdir == SDIR_SW) {
+			walkStandX += -32;
+			walkStandY += 16;
+		}
+
+		int row = item_local._ix - plr[myplr]._px;
+		int col = item_local._iy - plr[myplr]._py;
+		int x = (row - col) * TILE_WIDTH  / 2 + (200 * (walkStandX) / 100 >> 1);
+		int y = (row + col) * TILE_HEIGHT / 2 + (200 * (walkStandY) / 100 >> 1);
+
+
+		// add to drawing queue
+		const int labelWidth = CalculateTextWidth(textOnGround);
+		const int &id = itemactive[i];
+		const int &mag = item_local._iMagical;
+		const std::string &text = std::string(textOnGround);
+		q.push_back(itemLabel(x - labelWidth / 2, y, labelWidth, 13, id, mag, text));
+	}
+
+	const int borderX = 5;
+	for (unsigned int item1 = 0; item1 < q.size(); ++item1) {
+		std::map<int, bool> backtrace;
+		bool canShow = FALSE;
+		while (!canShow) {
+			canShow = TRUE;
+			for (unsigned int item2 = 0; item2 < item1; ++item2) {
+				if (abs(q[item2].y - q[item1].y) >= q[item1].height + 2) {
+					continue;
+				}
+				if (q[item2].x >= q[item1].x && q[item2].x - q[item1].x < q[item1].width + borderX) {
+					canShow = FALSE;
+					int newpos = q[item2].x - q[item1].width - borderX;
+					if (backtrace.find(newpos) == backtrace.end()) {
+						q[item1].x = newpos;
+						backtrace[newpos] = TRUE;
+					} else {
+						newpos = q[item2].x + q[item2].width + borderX;
+						q[item1].x = newpos;
+						backtrace[newpos] = TRUE;
+					}
+				} else if (q[item2].x < q[item1].x && q[item1].x - q[item2].x < q[item2].width + borderX) {
+					canShow = FALSE;
+					int newpos = q[item2].x + q[item2].width + borderX;
+					if (backtrace.find(newpos) == backtrace.end()) {
+						q[item1].x = newpos;
+						backtrace[newpos] = TRUE;
+					} else {
+						newpos = q[item2].x - q[item1].width - borderX;
+						q[item1].x = newpos;
+						backtrace[newpos] = TRUE;
+					}
+				}
+			}
+		}
+	}
+
+	for (unsigned int i = 0; i < q.size(); ++i) {
+		itemLabel &t = q[i];
+
+		int sx = t.x + (gnScreenWidth) / 2;
+		int sy = t.y + (PANEL_TOP) / 2  - 16;
+
+		if (sx < 0 || sx > gnScreenWidth || sy < 0 || sy > gnScreenWidth) {
+			continue;
+		}
+
+		if ((chrflag || questlog) && sx < SPANEL_WIDTH && sy < SPANEL_HEIGHT) {
+			continue;
+		}
+
+		if ((invflag || sbookflag) && sx + t.width > gnScreenWidth - SPANEL_WIDTH  && sy < SPANEL_HEIGHT) {
+			continue;
+		}
+
+		int bgcolor = 0;
+		// highlight label if item is under cursor:
+		if (pcursitem == t.itemID) {
+			bgcolor = 133;
+		}
+
+		text_color color = COL_WHITE;
+		if (t.magicLevel == ITEM_QUALITY_MAGIC) {
+			color = COL_BLUE;
+		} else if (t.magicLevel == ITEM_QUALITY_UNIQUE) {
+			color = COL_GOLD;
+		}
+
+		int width = t.width + horizontalPadding;
+		int height = t.height + verticalPadding;
+
+		DrawHalfTransparentRectTo(out, sx - 1 - horizontalPadding / 2, sy - t.height + 1 - verticalPadding / 2, width, height, bgcolor);
+		PrintGameStr(out, sx, sy, (char*)(t.text.c_str()), color);
+	}
+}
+
 void DrawView(CelOutputBuffer out, int StartX, int StartY)
 {
 	DrawGame(out, StartX, StartY);
@@ -1205,6 +1349,10 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 	}
 
 	DrawDurIcon(out);
+
+	if (drawitems) {
+		HighlightItemsNameOnMap(out);
+	}
 
 	if (chrflag) {
 		DrawChr(out);

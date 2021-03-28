@@ -386,6 +386,20 @@ void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_
 void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height);
 
 /**
+ * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
+ * even pixels on even lines.
+ *
+ * @brief Render a transparent black rectangle
+ * @param out Target buffer
+ * @param sx Screen coordinate
+ * @param sy Screen coordinate
+ * @param width Rectangle width
+ * @param height Rectangle height
+ * @param color Rectangle color
+ */
+void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height, int color);
+
+/**
  * @brief Calculate the best fit direction between two points
  * @param x1 Tile coordinate
  * @param y1 Tile coordinate
@@ -394,6 +408,12 @@ void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, i
  * @return A value from the direction enum
  */
 direction GetDirection(int x1, int y1, int x2, int y2);
+
+/**
+ * @brief Calculate the size of a text
+ * @param s Sentence
+ */
+int CalculateTextWidth(const char* s);
 
 void SetRndSeed(Sint32 s);
 Sint32 AdvanceRndSeed();

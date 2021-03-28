@@ -73,6 +73,8 @@ struct GameplayOptions {
 	bool bExperienceBar;
 	/** @brief Show enemy health at the top of the screen. */
 	bool bEnemyHealthBar;
+	/** @brief Highlight items when pressing Alt key. */
+    bool bHighlightItems;
 	/** @brief Automatically pick up goald when walking on to it. */
 	bool bAutoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */

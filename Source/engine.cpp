@@ -538,38 +538,43 @@ void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_
 	}
 }
 
-static void DrawHalfTransparentBlendedRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+static void DrawHalfTransparentBlendedRectTo(CelOutputBuffer out, int sx, int sy, int width, int height, int color)
 {
 	BYTE *pix = out.at(sx, sy);
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
-			*pix = paletteTransparencyLookup[0][*pix];
+			*pix = paletteTransparencyLookup[color][*pix];
 			pix++;
 		}
 		pix += out.pitch() - width;
 	}
 }
 
-static void DrawHalfTransparentStippledRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+static void DrawHalfTransparentStippledRectTo(CelOutputBuffer out, int sx, int sy, int width, int height, int color)
 {
 	BYTE *pix = out.at(sx, sy);
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1)))
-				*pix = 0;
+				*pix = color;
 			pix++;
 		}
 		pix += out.pitch() - width;
 	}
 }
 
-void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height, int color)
 {
 	if (sgOptions.Graphics.bBlendedTransparancy) {
-		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
+		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height, color);
 	} else {
-		DrawHalfTransparentStippledRectTo(out, sx, sy, width, height);
+		DrawHalfTransparentStippledRectTo(out, sx, sy, width, height, color);
 	}
+}
+
+void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+{
+	DrawHalfTransparentRectTo(out, sx, sy, width, height, 0);
 }
 
 direction GetDirection(int x1, int y1, int x2, int y2)
@@ -611,6 +616,15 @@ direction GetDirection(int x1, int y1, int x2, int y2)
 	}
 
 	return md;
+}
+
+int CalculateTextWidth(const char *s)
+{
+	int l = 0;
+	while (*s) {
+		l += fontkern[fontframe[gbFontTransTbl[static_cast<unsigned char>(*s++)]]] + 1;
+	}
+	return l;
 }
 
 /**
