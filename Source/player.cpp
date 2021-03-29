@@ -729,22 +729,31 @@ void CreatePlayer(int pnum, plr_class c)
 	plr[pnum]._pLightRad = 10;
 	plr[pnum]._pInfraFlag = FALSE;
 
+	plr[pnum]._pRSplType = RSPLTYPE_SKILL;
 	if (c == PC_WARRIOR) {
 		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_REPAIR);
+		plr[pnum]._pRSpell = SPL_REPAIR;
 	} else if (c == PC_ROGUE) {
 		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_DISARM);
+		plr[pnum]._pRSpell = SPL_DISARM;
 	} else if (c == PC_SORCERER) {
 		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_RECHARGE);
+		plr[pnum]._pRSpell = SPL_RECHARGE;
 	} else if (c == PC_MONK) {
 		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_SEARCH);
+		plr[pnum]._pRSpell = SPL_SEARCH;
 	} else if (c == PC_BARD) {
 		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_IDENTIFY);
+		plr[pnum]._pRSpell = SPL_IDENTIFY;
 	} else if (c == PC_BARBARIAN) {
 		plr[pnum]._pAblSpells = GetSpellBitmask(SPL_BLODBOIL);
+		plr[pnum]._pRSpell = SPL_BLODBOIL;
 	}
 
 	if (c == PC_SORCERER) {
 		plr[pnum]._pMemSpells = GetSpellBitmask(SPL_FIREBOLT);
+		plr[pnum]._pRSplType = RSPLTYPE_SPELL;
+		plr[pnum]._pRSpell = SPL_FIREBOLT;
 	} else {
 		plr[pnum]._pMemSpells = 0;
 	}

@@ -338,6 +338,9 @@ BOOL pfile_ui_save_create(_uiheroinfo *heroinfo)
 	PackPlayer(&pkplr, 0, TRUE);
 	pfile_encode_hero(&pkplr);
 	game_2_ui_player(&plr[0], heroinfo, FALSE);
+	if (!gbVanilla) {
+		SaveHotkeys();
+	}
 	pfile_flush(TRUE, save_num);
 	return TRUE;
 }
