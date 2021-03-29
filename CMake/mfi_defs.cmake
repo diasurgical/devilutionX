@@ -1,0 +1,23 @@
+#SDL Joystick axis mapping (circle-pad)
+set(JOY_AXIS_LEFTX 0)
+set(JOY_AXIS_LEFTY 1)
+
+#SDL Joystick button mapping (A / B and X / Y inverted for MFi Nimbus Plus, at least)
+set(JOY_BUTTON_A 1)
+set(JOY_BUTTON_B 0)
+set(JOY_BUTTON_X 3)
+set(JOY_BUTTON_Y 2)
+set(JOY_BUTTON_LEFTSHOULDER 4)
+set(JOY_BUTTON_RIGHTSHOULDER 5)
+set(JOY_BUTTON_BACK 15)
+set(JOY_BUTTON_START 14)
+
+# No use for it yet!
+#set(JOY_BUTTON_MENU 16)
+
+set(JOY_BUTTON_DPAD_DOWN 11)
+set(JOY_BUTTON_DPAD_LEFT 13)
+set(JOY_BUTTON_DPAD_UP 10)
+set(JOY_BUTTON_DPAD_RIGHT 12)
+set(JOY_BUTTON_TRIGGERLEFT 6)
+set(JOY_BUTTON_TRIGGERRIGHT 7)

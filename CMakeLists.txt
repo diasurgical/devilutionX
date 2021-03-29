@@ -140,6 +140,10 @@ if(N3DS)
   include(n3ds_defs)
 endif()
 
+if(APPLE)
+  include(mfi_defs)
+endif()
+
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()

@@ -40,6 +40,7 @@ private:
 
 	SDL_Joystick *sdl_joystick_ = NULL;
 	SDL_JoystickID instance_id_ = -1;
+	bool nimbus_axis_hack_ = false;
 };
 
 } // namespace dvl
