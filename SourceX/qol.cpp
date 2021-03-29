@@ -10,9 +10,13 @@
 DEVILUTION_BEGIN_NAMESPACE
 namespace {
 
-Art ArtHealthBox;
-Art ArtResistance;
-Art ArtHealth;
+struct QolArt {
+	Art healthBox;
+	Art resistance;
+	Art health;
+};
+
+QolArt *qolArt = nullptr;
 
 int GetTextWidth(const char *s)
 {
@@ -48,19 +52,17 @@ void FillRect(CelOutputBuffer out, int x, int y, int width, int height, BYTE col
 
 void FreeQol()
 {
-	if (sgOptions.Gameplay.bEnemyHealthBar) {
-		ArtHealthBox.Unload();
-		ArtHealth.Unload();
-		ArtResistance.Unload();
-	}
+	delete qolArt;
+	qolArt = nullptr;
 }
 
 void InitQol()
 {
 	if (sgOptions.Gameplay.bEnemyHealthBar) {
-		LoadMaskedArt("data\\healthbox.pcx", &ArtHealthBox, 1, 1);
-		LoadArt("data\\health.pcx", &ArtHealth);
-		LoadMaskedArt("data\\resistance.pcx", &ArtResistance, 6, 1);
+		qolArt = new QolArt();
+		LoadMaskedArt("data\\healthbox.pcx", &qolArt->healthBox, 1, 1);
+		LoadArt("data\\health.pcx", &qolArt->health);
+		LoadMaskedArt("data\\resistance.pcx", &qolArt->resistance, 6, 1);
 	}
 }
 
@@ -68,6 +70,7 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 {
 	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;
+	assert(qolArt != nullptr);
 	if (currlevel == 0)
 		return;
 	if (pcursmonst == -1)
@@ -75,8 +78,8 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 
 	MonsterStruct *mon = &monster[pcursmonst];
 
-	Sint32 width = ArtHealthBox.w();
-	Sint32 height = ArtHealthBox.h();
+	Sint32 width = qolArt->healthBox.w();
+	Sint32 height = qolArt->healthBox.h();
 	Sint32 xPos = (gnScreenWidth - width) / 2;
 	Sint32 yPos = 18;
 	Sint32 border = 3;
@@ -85,9 +88,9 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	if (mon->_mhitpoints > maxLife)
 		maxLife = mon->_mhitpoints;
 
-	DrawArt(out, xPos, yPos, &ArtHealthBox);
+	DrawArt(out, xPos, yPos, &qolArt->healthBox);
 	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
-	DrawArt(out, xPos + border + 1, yPos + border + 1, &ArtHealth, 0, (width * mon->_mhitpoints) / maxLife, height - (border * 2) - 2);
+	DrawArt(out, xPos + border + 1, yPos + border + 1, &qolArt->health, 0, (width * mon->_mhitpoints) / maxLife, height - (border * 2) - 2);
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
 		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 172 /*beast*/ };
@@ -117,11 +120,11 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 		Sint32 resOffset = 5;
 		for (Sint32 i = 0; i < 3; i++) {
 			if (mon->mMagicRes & immunes[i]) {
-				DrawArt(out, xPos + resOffset, yPos + height - 6, &ArtResistance, i * 2 + 1);
-				resOffset += ArtResistance.w() + 2;
+				DrawArt(out, xPos + resOffset, yPos + height - 6, &qolArt->resistance, i * 2 + 1);
+				resOffset += qolArt->resistance.w() + 2;
 			} else if (mon->mMagicRes & resists[i]) {
-				DrawArt(out, xPos + resOffset, yPos + height - 6, &ArtResistance, i * 2);
-				resOffset += ArtResistance.w() + 2;
+				DrawArt(out, xPos + resOffset, yPos + height - 6, &qolArt->resistance, i * 2);
+				resOffset += qolArt->resistance.w() + 2;
 			}
 		}
 	}
