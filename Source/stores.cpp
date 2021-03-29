@@ -961,6 +961,8 @@ void S_StartConfirm()
 	case STORE_SREPAIR:
 		strcpy(tempstr, "Are you sure you want to repair this item?");
 		break;
+	default:
+		app_fatal("Unknown store dialog %d", stextshold);
 	}
 	AddSText(0, 15, TRUE, tempstr, COL_WHITE, FALSE);
 	AddSText(0, 18, TRUE, "Yes", COL_WHITE, TRUE);
@@ -1789,7 +1791,7 @@ void S_BoyEnter()
 			TakePlrsMoney(50);
 			StartStore(STORE_BBOY);
 		}
-	} else if (stextsel == 8 && !boyitem.isEmpty() || stextsel == 12 && boyitem.isEmpty()) {
+	} else if ((stextsel == 8 && !boyitem.isEmpty()) || (stextsel == 12 && boyitem.isEmpty())) {
 		talker = TOWN_PEGBOY;
 		stextshold = STORE_BOY;
 		stextlhold = stextsel;
@@ -2894,7 +2896,7 @@ void CheckStoreBtn()
 					y--;
 				}
 			}
-			if (stext[y]._ssel || stextscrl && y == 22) {
+			if (stext[y]._ssel || (stextscrl && y == 22)) {
 				stextsel = y;
 				STextEnter();
 			}

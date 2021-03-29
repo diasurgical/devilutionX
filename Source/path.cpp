@@ -183,7 +183,7 @@ BOOL path_get_path(BOOL (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, 
 		dx = pPath->x + pathxdir[i];
 		dy = pPath->y + pathydir[i];
 		ok = PosOk(PosOkArg, dx, dy);
-		if (ok && path_solid_pieces(pPath, dx, dy) || !ok && dx == x && dy == y) {
+		if ((ok && path_solid_pieces(pPath, dx, dy)) || (!ok && dx == x && dy == y)) {
 			if (!path_parent_path(pPath, dx, dy, x, y))
 				return FALSE;
 		}

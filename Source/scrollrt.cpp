@@ -415,7 +415,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 		return;
 	}
 
-	if (!(dFlags[x][y] & BFLAG_LIT) || plr[myplr]._pInfraFlag && light_table_index > 8) {
+	if (!(dFlags[x][y] & BFLAG_LIT) || (plr[myplr]._pInfraFlag && light_table_index > 8)) {
 		Cl2DrawLightTbl(out, px, py, pCelBuff, nCel, nWidth, 1);
 		DrawManaShield(out, pnum, px, py, true);
 		return;

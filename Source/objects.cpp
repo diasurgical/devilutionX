@@ -3506,6 +3506,8 @@ void OperateShrine(int pnum, int i, int sType)
 			case ITYPE_STAFF:
 				plr[pnum].InvList[j]._iMaxDam++;
 				break;
+			default:
+				break;
 			}
 		}
 		InitDiabloMsg(EMSG_SHRINE_WEIRD);

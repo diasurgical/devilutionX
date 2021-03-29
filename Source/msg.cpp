@@ -712,7 +712,7 @@ void DeltaLoadLevel()
 					M_UpdateLeader(i);
 				} else {
 					decode_enemy(i, sgLevels[currlevel].monster[i]._menemy);
-					if (monster[i]._mx && monster[i]._mx != 1 || monster[i]._my)
+					if ((monster[i]._mx && monster[i]._mx != 1) || monster[i]._my)
 						dMonster[monster[i]._mx][monster[i]._my] = i + 1;
 					if (i < MAX_PLRS) {
 						MAI_Golum(i);

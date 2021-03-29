@@ -809,6 +809,8 @@ void CheckTrigForce()
 		case DTYPE_HELL:
 			trigflag = ForceL4Trig();
 			break;
+		default:
+			break;
 		}
 		if (leveltype != DTYPE_TOWN && !trigflag) {
 			trigflag = ForceQuests();

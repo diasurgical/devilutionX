@@ -831,7 +831,7 @@ void TalkToTowner(int p, int t)
 			towner[t]._tbtcnt = 150;
 			towner[t]._tVar1 = p;
 			towner[t]._tMsgSaid = TRUE;
-		} else if (quests[Q_BUTCHER]._qactive == QUEST_INIT || quests[Q_BUTCHER]._qactive == QUEST_ACTIVE && quests[Q_BUTCHER]._qvar1 == 0) {
+		} else if (quests[Q_BUTCHER]._qactive == QUEST_INIT || (quests[Q_BUTCHER]._qactive == QUEST_ACTIVE && quests[Q_BUTCHER]._qvar1 == 0)) {
 			quests[Q_BUTCHER]._qactive = QUEST_ACTIVE;
 			quests[Q_BUTCHER]._qlog = TRUE;
 			quests[Q_BUTCHER]._qmsg = TEXT_BUTCH9;
@@ -872,7 +872,7 @@ void TalkToTowner(int p, int t)
 			}
 			if (plr[p]._pLvlVisited[9] && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 				if ((quests[Q_ANVIL]._qactive == QUEST_INIT || quests[Q_ANVIL]._qactive == QUEST_ACTIVE) && quests[Q_ANVIL]._qvar2 == 0 && !towner[t]._tMsgSaid) {
-					if (quests[Q_ROCK]._qvar2 == 2 || quests[Q_ROCK]._qactive == QUEST_ACTIVE && quests[Q_ROCK]._qvar2 == 1) {
+					if (quests[Q_ROCK]._qvar2 == 2 || (quests[Q_ROCK]._qactive == QUEST_ACTIVE && quests[Q_ROCK]._qvar2 == 1)) {
 						quests[Q_ANVIL]._qvar2 = 1;
 						quests[Q_ANVIL]._qlog = TRUE;
 						if (quests[Q_ANVIL]._qactive == QUEST_INIT) {

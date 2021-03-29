@@ -354,8 +354,8 @@ void DrawInv(CelOutputBuffer out)
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
 			if (plr[myplr]._pClass != PC_BARBARIAN
-			    || plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_SWORD
-			        && plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_MACE) {
+			    || (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_SWORD
+			        && plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_MACE)) {
 				InvDrawSlotBack(out, RIGHT_PANEL_X + 248, 160, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 				light_table_index = 0;
 				cel_transparency_active = TRUE;
