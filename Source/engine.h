@@ -171,19 +171,6 @@ struct CelOutputBuffer {
 void CelDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 
 /**
- * @brief Blit vertically-cropped CEL sprite to the back buffer at the given coordinates
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pCelBuff Cel data
- * @param nCel CEL frame number
- * @param nWidth Width of sprite
- * @param startY At what Y coordinate to start drawing sprite (note: 0 is equal to bottom of image data)
- * @param endY Final Y coordinate to draw
- */
-void CelDrawTo_CropY(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int startX, int endY);
-
-/**
  * @briefBlit CEL sprite to the given buffer, does not perform bounds-checking.
  * @param out Target buffer
  * @param x Cordinate in the target buffer
@@ -260,19 +247,6 @@ void CelDrawLightRedTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int 
  * @param nWidth Width of sprite
  */
 void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth);
-
-/**
- * @brief Blit vertically-cropped CEL sprite to the given buffer, checks for drawing outside the buffer
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- * @param nWidth Width of sprite
- * @param startY At what Y coordinate to start drawing sprite (note: 0 is equal to bottom of image data)
- * @param endY Final Y coordinate to draw
- */
-void CelBlitSafeTo_CropY(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, int startY, int endY);
 
 /**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer

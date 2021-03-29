@@ -42,16 +42,6 @@ void CelDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, in
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelDrawTo_CropY(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int startX, int endY)
-{
-	int nDataSize;
-	BYTE *pRLEBytes;
-
-	assert(pCelBuff != NULL);
-	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
-	CelBlitSafeTo_CropY(out, sx, sy, pRLEBytes, nDataSize, nWidth, startX, endY);
-}
-
 void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE* pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
@@ -154,40 +144,6 @@ void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDa
 			if (!(width & 0x80)) {
 				i -= width;
 				if (dst < out.end() && dst > out.begin()) {
-					memcpy(dst, src, width);
-				}
-				src += width;
-				dst += width;
-			} else {
-				width = -(char)width;
-				dst += width;
-				i -= width;
-			}
-		}
-	}
-}
-
-void CelBlitSafeTo_CropY(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, int startY, int endY)
-{
-	int i, w;
-	BYTE width;
-	BYTE *src, *dst;
-
-	assert(pRLEBytes != NULL);
-
-	src = pRLEBytes;
-	dst = out.at(sx, sy);
-	w = nWidth;
-	int curY = 0;
-
-	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + w, curY++) {
-		if (curY > endY)
-			return;
-		for (i = w; i;) {
-			width = *src++;
-			if (!(width & 0x80)) {
-				i -= width;
-				if (curY >= startY && dst < out.end() && dst > out.begin()) {
 					memcpy(dst, src, width);
 				}
 				src += width;

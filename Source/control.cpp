@@ -1739,10 +1739,16 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c
 	}
 
 	//Draw icon
-	if (amount)
-		CelDrawTo_CropY(out, x, y, pDurIcons, c + 8, height, 0, amount); //Gold icon
-	if (amount != height)
-		CelDrawTo_CropY(out, x, y, pDurIcons, c, 32, amount, height); //Red icon
+	if (amount) {
+		CelOutputBuffer buf = GlobalBackBuffer();
+		buf = buf.subregionY(y - amount, amount);
+		CelDrawTo(buf, x, amount, pDurIcons, c + 8, 32); //Gold icon
+	}
+	if (amount != height) {
+		CelOutputBuffer buf = GlobalBackBuffer();
+		buf = buf.subregionY(y - height, height - amount);
+		CelDrawTo(buf, x, height, pDurIcons, c, 32); //Red icon
+	}
 
 	return x - 32 - 8;
 }
