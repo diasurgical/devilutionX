@@ -15,7 +15,6 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
-option(HELLFIRE "Build hellfire version" OFF)
 
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
@@ -360,9 +359,6 @@ if(N3DS)
   list(APPEND devilutionx_SRCS
     SourceX/platform/ctr/system.cpp
     SourceX/platform/ctr/keyboard.cpp)
-if(HELLFIRE)
-  set(BIN_TARGET hellfire)
-endif()
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
@@ -390,10 +386,6 @@ if(RUN_TESTS)
     SourceT/scrollrt_test.cpp
     SourceT/stores_test.cpp
     SourceT/writehero_test.cpp)
-endif()
-
-if(HELLFIRE)
-  add_definitions(-DHELLFIRE)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
@@ -725,12 +717,6 @@ if(N3DS)
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
   set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf")
-  if(HELLFIRE)
-	  set(APP_TITLE       "DevilutionX: Hellfire")
-	  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon_hellfire.png")
-	  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner_hellfire.png")
-	  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template_hellfire.rsf")
-  endif()
   file(MAKE_DIRECTORY ${APP_ROMFS})
   file(COPY ${APP_ROMFS_FILES}
      DESTINATION ${APP_ROMFS})
