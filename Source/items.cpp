@@ -631,7 +631,7 @@ void InitItems()
 	numitems = 0;
 
 	for (i = 0; i < MAXITEMS; i++) {
-		item[i]._itype = ITYPE_MISC;
+		item[i]._itype = ITYPE_NONE;
 		item[i]._ix = 0;
 		item[i]._iy = 0;
 		item[i]._iAnimFlag = FALSE;

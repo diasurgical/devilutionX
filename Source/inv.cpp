@@ -2101,7 +2101,7 @@ void CleanupItems(int ii)
 
 	if (currlevel == 21 & item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
 		CornerStone.item.IDidx = -1;
-		CornerStone.item._itype = ITYPE_MISC;
+		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
 		CornerStone.item._iy = 0;
