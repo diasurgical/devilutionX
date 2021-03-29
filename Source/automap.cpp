@@ -672,7 +672,7 @@ void DrawAutomap(CelOutputBuffer out)
 	}
 
 	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
-		if (plr[pnum].plrlevel == plr[myplr].plrlevel && plr[pnum].plractive) {
+		if (plr[pnum].plrlevel == plr[myplr].plrlevel && plr[pnum].plractive && !plr[pnum]._pLvlChanging) {
 			DrawAutomapPlr(out, pnum);
 		}
 	}
