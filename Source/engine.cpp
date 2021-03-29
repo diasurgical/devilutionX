@@ -42,7 +42,21 @@ void CelDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, in
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+//Fluffy: Same as CelDraw but with custom clipping of Y coordinate
+void CelDraw_CropY(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int startX, int endY)
+{
+	int nDataSize;
+	BYTE *pRLEBytes;
+	BYTE *pBuff = &gpBuffer[sx + BUFFER_WIDTH * sy];
+
+	assert(pCelBuff != NULL);
+	assert(pBuff != NULL);
+
+	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
+	CelBlitSafe_CropY(pBuff, pRLEBytes, nDataSize, nWidth, startX, endY);
+}
+
+void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE* pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
 	int nDataSize;
@@ -157,7 +171,53 @@ void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDa
 	}
 }
 
-void CelClippedDrawSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+//Fluffy
+/**
+ * @brief Blit vertically cropped CEL sprite to the given buffer, checks for drawing outside the buffer
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite
+ * @param startY At what  Y coordinate to start drawing CEL (note: 0 is equal to bottom of CEL)
+ * @param endY Final Y coordinate to draw
+ */
+void CelBlitSafe_CropY(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, int startY, int endY)
+{
+	int i, w;
+	BYTE width;
+	BYTE *src, *dst;
+
+	assert(pDecodeTo != NULL);
+	assert(pRLEBytes != NULL);
+	assert(gpBuffer);
+
+	src = pRLEBytes;
+	dst = pDecodeTo;
+	w = nWidth;
+	int curY = 0;
+
+	for (; src != &pRLEBytes[nDataSize]; dst -= BUFFER_WIDTH + w, curY++) {
+		if (curY > endY)
+			return;
+		for (i = w; i;) {
+			width = *src++;
+			if (!(width & 0x80)) {
+				i -= width;
+				if (curY >= startY && dst < gpBufEnd && dst > gpBufStart) {
+					memcpy(dst, src, width);
+				}
+				src += width;
+				dst += width;
+			} else {
+				width = -(char)width;
+				dst += width;
+				i -= width;
+			}
+		}
+	}
+}
+
+void CelClippedDrawSafeTo(CelOutputBuffer out, int sx, int sy, BYTE* pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
 	int nDataSize;
