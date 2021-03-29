@@ -11,15 +11,10 @@
 3. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 
 #### Install DevilutionX: Diablo - Hellfire
-1. Download [hellfire.3dsx](https://github.com/MrHuu/devilutionX-3ds/releases/latest/download/hellfire.3dsx).
-2. Put `hellfire.3dsx` into `sd:/3ds/devilutionx/`.
-3. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 4. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 
-*Note:* When both `devilutionx.3dsx` and `hellfire.3dsx` are copied to `sd:/3ds/devilutionx/`,
-	an .xml shortcut must be used to launch Hellfire.
-	For now, use either `devilutionx.3dsx` or `hellfire.3dsx`.
-	
+*Note:* When Hellfire is install you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
+
 </details>
 <details><summary>.cia installation</summary>
 
@@ -29,11 +24,7 @@
 	`devilutionx.cia` can be removed after being installed.
 3. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 
-#### Install DevilutionX: Diablo - Hellfire
-1. Download [hellfire.cia](https://github.com/MrHuu/devilutionX-3ds/releases/latest/download/hellfire.cia).
-2. Put `hellfire.cia` on your SD card and install with a title manager, e.g. [FBI](https://github.com/Steveice10/FBI).
-	`hellfire.cia` can be removed after being installed.
-3. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
+##### Install DevilutionX: Diablo - Hellfire
 4. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 </details>
 
@@ -41,11 +32,11 @@
 
 When using .3dsx:
 
-- Launch `devilutionx.3dsx` or `hellfire.3dsx` with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
+- Launch `devilutionx.3dsx` with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
 
 or, when using .cia:
 
-- Launch Diablo or Diablo: Hellfire from your 3DS Homemenu.
+- Launch Diablo from your 3DS Homemenu.
 
 ## Controls
 

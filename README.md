@@ -363,7 +363,6 @@ select Icons -> Information in the top menu.
 - `-DUSE_SDL1=ON` build for SDL v1 instead of v2, not all features are supported under SDL v1, notably upscaling.
 - `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
 - `-DCROSS_PREFIX=/path/to/prefix` set the path to the `i686-w64-mingw32` directory.
-- `-DHELLFIRE=ON` build Hellfire version
 
 ### Debug builds
 - `-DDEBUG=OFF` disable debug mode of the Diablo engine.
