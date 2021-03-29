@@ -1738,28 +1738,12 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c
 		amount = (height * cur) / max;
 	}
 
-	if (options_hwRendering) { //Fluffy: Render via SDL rendering
-		int renderX = x - BORDER_LEFT;
-		int renderY = y - (height - 1) - BORDER_TOP;
-		c -= 1;
-		if (amount)
-			Render_Texture_Crop(renderX, renderY + (height - amount), TEXTURE_DURABILITYWARNING, -1, height - amount, -1, -1, c + 8); //Gold icon
-		amount = height - amount;
-		if (amount)
-			Render_Texture_Crop(renderX, renderY, TEXTURE_DURABILITYWARNING, -1, -1, -1, amount, c); //Red icon
-		//TODO: This is more indirectly related, but we should make it so that when equipment is fully destroyed, we should show some kind of icon then as well (we could add a new variable to the player struct which defines if a slot is empty due to item destruction or not, and if true, show a durability icon for that slot)
-	} else {
-		if (amount)
-			CelDraw_CropY(x, y, pDurIcons, c + 8, height, 0, amount); //Gold icon
-		if (amount != height)
-			CelDraw_CropY(x, y, pDurIcons, c, 32, amount, height); //Red icon
-	}
-	if (pItem->_iDurability > 2)
-		c += 8;
-	CelDrawTo(out, x, -17 + PANEL_Y, pDurIcons, c, 32);
-		Render_Texture_FromBottom(x - BORDER_LEFT, -17 + PANEL_TOP, TEXTURE_DURABILITYWARNING, c - 1);
-	else
-		CelDraw(x, -17 + PANEL_Y, pDurIcons, c, 32);
+	//Draw icon
+	if (amount)
+		CelDrawTo_CropY(out, x, y, pDurIcons, c + 8, height, 0, amount); //Gold icon
+	if (amount != height)
+		CelDrawTo_CropY(out, x, y, pDurIcons, c, 32, amount, height); //Red icon
+
 	return x - 32 - 8;
 }
 
