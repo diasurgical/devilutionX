@@ -706,7 +706,7 @@ static void multi_event_handler(BOOL add)
 
 	for (i = 0; i < 3; i++) {
 		if (!fn(event_types[i], multi_handle_events) && add) {
-			app_fatal("SNetRegisterEventHandler:\n%s", TraceLastError());
+			app_fatal("SNetRegisterEventHandler:\n%s", SDL_GetError());
 		}
 	}
 }
@@ -831,7 +831,7 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 
 	unused = 0;
 	if (!SNetCreateGame("local", "local", "local", 0, (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), 1, "local", "local", &unused)) {
-		app_fatal("SNetCreateGame1:\n%s", TraceLastError());
+		app_fatal("SNetCreateGame1:\n%s", SDL_GetError());
 	}
 
 	myplr = 0;
