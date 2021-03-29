@@ -260,7 +260,6 @@ extern int itemavail[MAXITEMS];
 extern ItemStruct item[MAXITEMS + 1];
 extern CornerStoneStruct CornerStone;
 extern BOOL UniqueItemFlag[128];
-extern int auricGold;
 extern int numitems;
 
 bool IsItemAvailable(int i);

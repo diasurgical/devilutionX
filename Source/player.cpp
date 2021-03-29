@@ -3415,7 +3415,10 @@ void ValidatePlayer()
 	gt = 0;
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
 		if (plr[myplr].InvList[i]._itype == ITYPE_GOLD) {
-			int maxGold = gbIsHellfire ? auricGold : GOLD_MAX_LIMIT;
+			int maxGold = GOLD_MAX_LIMIT;
+			if (gbIsHellfire) {
+				maxGold *= 2;
+			}
 			if (plr[myplr].InvList[i]._ivalue > maxGold) {
 				plr[myplr].InvList[i]._ivalue = maxGold;
 			}

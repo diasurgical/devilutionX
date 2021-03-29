@@ -20,7 +20,6 @@ BOOL itemhold[3][3];
 CornerStoneStruct CornerStone;
 BYTE *itemanims[ITEMTYPES];
 BOOL UniqueItemFlag[128];
-int auricGold = (GOLD_MAX_LIMIT * 2);
 int numitems;
 int gnNumGetRecords;
 
@@ -1078,7 +1077,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 		if (half != MaxGold)
 			StripTopGold(p);
 	} else {
-		MaxGold = auricGold;
+		MaxGold = GOLD_MAX_LIMIT * 2;
 	}
 
 	drawmanaflag = TRUE;
