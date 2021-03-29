@@ -619,6 +619,7 @@ static void diablo_deinit()
 
 void diablo_quit(int exitStatus)
 {
+	SaveOptions();
 	diablo_deinit();
 	exit(exitStatus);
 }
