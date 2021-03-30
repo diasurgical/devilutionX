@@ -4,13 +4,13 @@ DEVILUTION_BEGIN_NAMESPACE
 
 struct DiabloOptions {
 	/** @brief Play game intro video on startup. */
-	bool bInto;
+	bool bIntro;
 };
 
 struct HellfireOptions {
 	/** @brief Play game intro video on startup. */
-	bool bInto;
-	/** @brief Corner stone of the world item. */
+	bool bIntro;
+	/** @brief Cornerstone of the world item. */
 	char szItem[sizeof(PkItemStruct) * 2 + 1];
 };
 
@@ -53,7 +53,7 @@ struct GraphicsOptions {
 };
 
 struct GameplayOptions {
-	/** @brief Game play ticks per secound. */
+	/** @brief Gameplay ticks per second. */
 	Sint32 nTickRate;
 	/** @brief Enable double walk speed when in town. */
 	bool bJogInTown;
@@ -73,7 +73,7 @@ struct GameplayOptions {
 	bool bExperienceBar;
 	/** @brief Show enemy health at the top of the screen. */
 	bool bEnemyHealthBar;
-	/** @brief Automatically pick up goald when walking on to it. */
+	/** @brief Automatically pick up gold when walking over it. */
 	bool bAutoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */
 	bool bAdriaRefillsMana;
@@ -87,9 +87,9 @@ struct GameplayOptions {
 	bool bAutoEquipShields;
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
 	bool bAutoEquipJewelry;
-	/** @brief Only enable 2/3 quests in each game sessoin */
+	/** @brief Only enable 2/3 quests in each game session */
 	bool bRandomizeQuests;
-	/** @brief Indicates whether or not mosnter type (Animal, Demon, Undead) is shown along with other monster information. */
+	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
 };
 
