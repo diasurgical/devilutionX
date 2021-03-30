@@ -1,5 +1,6 @@
 #include "storm_sdl_rw.h"
 
+#include <cstdint>
 #include <cstring>
 
 #include "all.h"
@@ -45,11 +46,17 @@ static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
 	default:
 		return -1;
 	}
-	DWORD result = SFileSetFilePointer(SFileRw_GetHandle(context), offset, NULL, swhence);
-	if (result == (DWORD)-1) {
+	int high = static_cast<std::uint64_t>(offset) >> 32;
+	int low = static_cast<int>(offset);
+	low = SFileSetFilePointer(SFileRw_GetHandle(context), low, &high, swhence);
+	if (low == -1) {
 		SDL_Log("SFileRw_seek error: %ud", (unsigned int)SErrGetLastError());
 	}
-	return result;
+#ifndef USE_SDL1
+	return (static_cast<std::uint64_t>(high) << 32) | low;
+#else
+	return low;
+#endif
 }
 
 #ifndef USE_SDL1
