@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <cstdint>
 #include <string>
 
 #include "all.h"
@@ -126,6 +127,23 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	return result;
 }
 
+static std::uint64_t GetFilePointer(HANDLE hFile)
+{
+    // We use `SFileSetFilePointer` with offset 0 to get the current position
+    // because there is no `SFileGetFilePointer`.
+    int high = 0;
+    const std::uint32_t low = SFileSetFilePointer(hFile, 0, &high, DVL_FILE_CURRENT);
+    return (static_cast<std::uint64_t>(high) << 32) | low;
+}
+
+static std::uint64_t SetFilePointer(HANDLE hFile, std::int64_t offset, int whence)
+{
+    int high = static_cast<std::uint64_t>(offset) >> 32;
+    int low = static_cast<int>(offset);
+    low = SFileSetFilePointer(hFile, low, &high, whence);
+    return (static_cast<std::uint64_t>(high) << 32) | low;
+}
+
 BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
 {
 	HANDLE hFile;
@@ -192,10 +210,11 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
-		SFileSetFilePointer(hFile, 0, 0, DVL_FILE_END);
+		SFileSetFilePointer(hFile, 0, NULL, DVL_FILE_END);
 		fileBuffer = NULL;
 	} else {
-		size = SFileGetFileSize(hFile, 0) - SFileSetFilePointer(hFile, 0, 0, DVL_FILE_CURRENT);
+		const auto pos = GetFilePointer(hFile);
+		size = SetFilePointer(hFile, 0, DVL_FILE_END) - SetFilePointer(hFile, pos, DVL_FILE_BEGIN);
 		fileBuffer = (BYTE *)malloc(size);
 	}
 
@@ -228,7 +247,7 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	}
 
 	if (pPalette && pcxhdr.BitsPerPixel == 8) {
-		SFileSetFilePointer(hFile, -768, 0, 1);
+		SFileSetFilePointer(hFile, -768, NULL, DVL_FILE_CURRENT);
 		SFileReadFile(hFile, paldata, 768, 0, 0);
 		for (int i = 0; i < 256; i++) {
 			pPalette[i].r = paldata[i][0];
