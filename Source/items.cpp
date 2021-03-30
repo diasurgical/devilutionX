@@ -2976,7 +2976,7 @@ void items_427A72()
 	BYTE *buffer;
 
 	if (CornerStone.activated) {
-		if (CornerStone.item.IDidx >= 0) {
+		if (!CornerStone.item.isEmpty()) {
 			PackItem(&id, &CornerStone.item);
 			buffer = (BYTE *)&id;
 			for (int i = 0; i < sizeof(PkItemStruct); i++) {
@@ -3012,7 +3012,7 @@ void items_427ABA(int x, int y)
 		return;
 	}
 
-	CornerStone.item.IDidx = 0;
+	CornerStone.item._itype = ITYPE_NONE;
 	CornerStone.activated = TRUE;
 	if (dItem[x][y]) {
 		int ii = dItem[x][y] - 1;

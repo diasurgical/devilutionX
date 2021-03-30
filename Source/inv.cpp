@@ -2100,7 +2100,6 @@ void CleanupItems(int ii)
 	dItem[item[ii]._ix][item[ii]._iy] = 0;
 
 	if (currlevel == 21 & item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
-		CornerStone.item.IDidx = -1;
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
@@ -2415,7 +2414,7 @@ int InvPutItem(int pnum, int x, int y)
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = item[ii];
 		InitQTextMsg(TEXT_CORNSTN);
-		quests[Q_CORNSTN]._qlog = FALSE;
+		quests[Q_CORNSTN]._qlog = 0;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 
@@ -2502,7 +2501,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 		CornerStone.item = item[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = 0;
-		quests[Q_CORNSTN]._qactive = 3;
+		quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 	return ii;
 }
