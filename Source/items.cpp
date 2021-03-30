@@ -2901,7 +2901,7 @@ void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL send
 
 void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
 {
-	if (idx == 0) {
+	if (idx == IDI_GOLD) {
 		SetPlrHandItem(&item[ii], IDI_GOLD);
 		item[ii]._iSeed = iseed;
 		item[ii]._iCreateInfo = icreateinfo;
@@ -2910,7 +2910,7 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
 		return;
 	}
 
-	if (!icreateinfo) {
+	if (icreateinfo == 0) {
 		SetPlrHandItem(&item[ii], idx);
 		SetPlrHandSeed(&item[ii], iseed);
 		return;
