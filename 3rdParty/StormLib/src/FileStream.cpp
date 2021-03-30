@@ -18,14 +18,7 @@
 #include "StormCommon.h"
 #include "FileStream.h"
 
-#ifdef __vita__
-#include <psp2/rtc.h>
-#define mmap(ptr, size, c, d, e, f) malloc(size)
-#define munmap(ptr, size) free(ptr)
-#define PROT_READ 0
-#define MAP_PRIVATE 0
-#endif
-
+#define HAVE_MMAP !(defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR) || defined(PLATFORM_VITA))
 
 
 #ifdef _MSC_VER
@@ -449,6 +442,8 @@ static void BaseFile_Init(TFileStream * pStream)
 //-----------------------------------------------------------------------------
 // Local functions - base memory-mapped file support
 
+#if HAVE_MMAP
+
 static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD dwStreamFlags)
 {
 #ifdef PLATFORM_WINDOWS
@@ -503,7 +498,7 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
         return false;
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR) || defined(PLATFORM_VITA)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
     struct stat64 fileinfo;
     intptr_t handle;
     bool bResult = false;
@@ -515,12 +510,7 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
         // Get the file size
         if(fstat64(handle, &fileinfo) != -1)
         {
-#if !defined(PLATFORM_AMIGA)
-#if defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR) || defined(PLATFORM_VITA)
-            pStream->Base.Map.pbFile = (LPBYTE)malloc((size_t)fileinfo.st_size);
-#else
             pStream->Base.Map.pbFile = (LPBYTE)mmap(NULL, (size_t)fileinfo.st_size, PROT_READ, MAP_PRIVATE, handle, 0);
-#endif
             if(pStream->Base.Map.pbFile != NULL)
             {
                 // time_t is number of seconds since 1.1.1970, UTC.
@@ -531,7 +521,6 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
                 pStream->Base.Map.FilePos = 0;
                 bResult = true;
             }
-#endif
         }
         close(handle);
     }
@@ -578,27 +567,30 @@ static void BaseMap_Close(TFileStream * pStream)
         UnmapViewOfFile(pStream->Base.Map.pbFile);
 #endif
 
-#if (defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)) && !defined(PLATFORM_AMIGA) && !defined(PLATFORM_SWITCH) && !defined(PLATFORM_CTR) && !defined(PLATFORM_VITA)
-    //Todo(Amiga): Fix a proper solution for this
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
     if(pStream->Base.Map.pbFile != NULL)
         munmap(pStream->Base.Map.pbFile, (size_t )pStream->Base.Map.FileSize);
-#elif defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR) || defined(PLATFORM_VITA)
-    if(pStream->Base.Map.pbFile != NULL)
-        free(pStream->Base.Map.pbFile);
 #endif
 
     pStream->Base.Map.pbFile = NULL;
 }
+#endif // HAVE_MMAP
 
 // Initializes base functions for the mapped file
 static void BaseMap_Init(TFileStream * pStream)
 {
     // Supply the file stream functions
+#if HAVE_MMAP
     pStream->BaseOpen    = BaseMap_Open;
     pStream->BaseRead    = BaseMap_Read;
+    pStream->BaseClose   = BaseMap_Close;
+#else
+    pStream->BaseOpen    = BaseFile_Open;
+    pStream->BaseRead    = BaseFile_Read;
+    pStream->BaseClose   = BaseFile_Close;
+#endif
     pStream->BaseGetSize = BaseFile_GetSize;    // Reuse BaseFile function
     pStream->BaseGetPos  = BaseFile_GetPos;     // Reuse BaseFile function
-    pStream->BaseClose   = BaseMap_Close;
 
     // Mapped files are read-only
     pStream->dwFlags |= STREAM_FLAG_READ_ONLY;
@@ -753,7 +745,7 @@ static bool BaseHttp_Read(
             // Add range request to the HTTP headers
             // http://www.clevercomponents.com/articles/article015/resuming.asp
             _stprintf(szRangeRequest, _T("Range: bytes=%u-%u"), (unsigned int)dwStartOffset, (unsigned int)dwEndOffset);
-            HttpAddRequestHeaders(hRequest, szRangeRequest, 0xFFFFFFFF, HTTP_ADDREQ_FLAG_ADD_IF_NEW); 
+            HttpAddRequestHeaders(hRequest, szRangeRequest, 0xFFFFFFFF, HTTP_ADDREQ_FLAG_ADD_IF_NEW);
 
             // Send the request to the server
             if(HttpSendRequest(hRequest, NULL, 0, NULL, 0))
@@ -1006,7 +998,11 @@ static void BlockStream_Close(TBlockStream * pStream)
 static STREAM_INIT StreamBaseInit[4] =
 {
     BaseFile_Init,
-    BaseMap_Init, 
+#if HAVE_MMAP
+    BaseMap_Init,
+#else
+    BaseFile_Init,
+#endif
     BaseHttp_Init,
     BaseNone_Init
 };
@@ -2049,7 +2045,7 @@ static bool MpqeStream_DetectFileKey(TEncryptedStream * pStream)
             // Prepare they decryption key from game serial number
             CreateKeyFromAuthCode(pStream->Key, AuthCodeArray[i]);
 
-            // Try to decrypt with the given key 
+            // Try to decrypt with the given key
             memcpy(FileHeader, EncryptedHeader, MPQE_CHUNK_SIZE);
             DecryptFileChunk((LPDWORD)FileHeader, pStream->Key, ByteOffset, MPQE_CHUNK_SIZE);
 
@@ -2305,7 +2301,7 @@ static TFileStream * Block4Stream_Open(const TCHAR * szFileName, DWORD dwStreamF
             RemainderBlock = FileSize % (BLOCK4_BLOCK_SIZE + BLOCK4_HASH_SIZE);
             BlockCount = FileSize / (BLOCK4_BLOCK_SIZE + BLOCK4_HASH_SIZE);
 
-            // Increment the stream size and number of blocks            
+            // Increment the stream size and number of blocks
             pStream->StreamSize += (BlockCount * BLOCK4_BLOCK_SIZE);
             pStream->BlockCount += (DWORD)BlockCount;
 
