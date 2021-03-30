@@ -4413,6 +4413,8 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -4635,7 +4637,6 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 			break;
 		}
 
-		ivalue = 0;
 		switch (item[0]._itype) {
 		case ITYPE_LARMOR:
 		case ITYPE_MARMOR:
@@ -4668,6 +4669,9 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 			break;
 		case ITYPE_AMULET:
 			ivalue = get_amulet_max_value(myplr);
+			break;
+		default:
+			ivalue = 0;
 			break;
 		}
 		ivalue *= 0.8;
