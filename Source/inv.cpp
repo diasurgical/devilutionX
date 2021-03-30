@@ -241,7 +241,7 @@ void DrawInv(CelOutputBuffer out)
 						light_table_index = 0;
 						cel_transparency_active = TRUE;
 
-						const int dst_x = RIGHT_PANEL_X + (frame_width == INV_SLOT_SIZE_PX ? 261 : 247);
+						const int dst_x = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X + (frame_width == INV_SLOT_SIZE_PX ? 13 : -1);
 						const int dst_y = slotPos[INVLOC_HAND_RIGHT].Y;
 						CelClippedBlitLightTransTo(out, dst_x, dst_y, cels, frame, frame_width);
 
