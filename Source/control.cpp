@@ -1726,13 +1726,12 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c
 
 	//Calculate how much of the icon should be gold and red
 	int height = 32;
-	int max = (pItem->_iMaxDur > DURABILITY_GOLD ? DURABILITY_GOLD : pItem->_iMaxDur) - DURABILITY_RED;
 	int amount;
-	if (pItem->_iDurability <= DURABILITY_RED || max <= 0)
+	if (pItem->_iDurability <= DURABILITY_RED)
 		amount = 0;
 	else {
 		int cur = pItem->_iDurability - DURABILITY_RED;
-		amount = (height * cur) / max;
+		amount = (height * cur) / (DURABILITY_GOLD - DURABILITY_RED);
 	}
 
 	//Draw icon
