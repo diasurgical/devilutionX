@@ -4,6 +4,7 @@
  * Implementation of the character and main control panels
  */
 #include "all.h"
+#include "options.h"
 
 #include <cstddef>
 
@@ -1730,8 +1731,12 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c
 	if (pItem->_iDurability <= DURABILITY_RED)
 		amount = 0;
 	else {
-		int cur = pItem->_iDurability - DURABILITY_RED;
-		amount = (height * cur) / (DURABILITY_GOLD - DURABILITY_RED);
+		if (!sgOptions.Graphics.bDurabilityIconGradual)
+			amount = height;
+		else {
+			int cur = pItem->_iDurability - DURABILITY_RED;
+			amount = (height * cur) / (DURABILITY_GOLD - DURABILITY_RED);
+		}
 	}
 
 	//Draw icon
