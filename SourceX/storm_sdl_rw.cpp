@@ -46,17 +46,11 @@ static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
 	default:
 		return -1;
 	}
-	int high = static_cast<std::uint64_t>(offset) >> 32;
-	int low = static_cast<int>(offset);
-	low = SFileSetFilePointer(SFileRw_GetHandle(context), low, &high, swhence);
-	if (low == -1) {
+	const std::uint64_t pos = SFileSetFilePointer(SFileRw_GetHandle(context), offset, swhence);
+	if (pos == static_cast<std::uint64_t>(-1)) {
 		SDL_Log("SFileRw_seek error: %ud", (unsigned int)SErrGetLastError());
 	}
-#ifndef USE_SDL1
-	return (static_cast<std::uint64_t>(high) << 32) | low;
-#else
-	return low;
-#endif
+	return pos;
 }
 
 #ifndef USE_SDL1
