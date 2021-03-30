@@ -346,7 +346,7 @@ bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 BOOLEAN SNetSetBasePlayer(int);
 int SNetInitializeProvider(unsigned long, struct _SNETPROGRAMDATA *, struct _SNETPLAYERDATA *, struct _SNETUIDATA *, struct _SNETVERSIONDATA *);
 int SNetGetProviderCaps(struct _SNETCAPS *);
-int SFileSetFilePointer(HANDLE, int, HANDLE, int);
+int SFileSetFilePointer(HANDLE, int, int*, int);
 BOOL SFileEnableDirectAccess(BOOL enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
