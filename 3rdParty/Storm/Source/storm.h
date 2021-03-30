@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <limits>
 #include <string>
 namespace dvl {
@@ -351,6 +352,26 @@ BOOL SFileEnableDirectAccess(BOOL enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
 }
+
+// Additions to Storm API:
+
+// Sets the file's 64-bit seek position.
+inline std::uint64_t SFileSetFilePointer(HANDLE hFile, std::int64_t offset, int whence)
+{
+    int high = static_cast<std::uint64_t>(offset) >> 32;
+    int low = static_cast<int>(offset);
+    low = SFileSetFilePointer(hFile, low, &high, whence);
+    return (static_cast<std::uint64_t>(high) << 32) | low;
+}
+
+// Returns the current 64-bit file seek position.
+inline std::uint64_t SFileGetFilePointer(HANDLE hFile)
+{
+    // We use `SFileSetFilePointer` with offset 0 to get the current position
+    // because there is no `SFileGetFilePointer`.
+    return SFileSetFilePointer(hFile, 0, DVL_FILE_CURRENT);
+}
+
 #endif
 
 } // namespace dvl
