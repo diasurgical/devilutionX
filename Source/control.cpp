@@ -1722,9 +1722,6 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c
 		}
 	}
 
-	if (pItem->_iDurability > DURABILITY_RED && pItem->_iDurability == pItem->_iMaxDur) //Avoid showing durability icon if it's equal to a low max (and above "red" durability value)
-		return x;
-
 	int y = -17 + PANEL_Y;
 
 	//Calculate how much of the icon should be gold and red
