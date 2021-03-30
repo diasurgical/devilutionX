@@ -198,13 +198,13 @@ GameController *GameController::Get(SDL_JoystickID instance_id)
 GameController *GameController::Get(const SDL_Event &event)
 {
 	switch (event.type) {
-		case SDL_CONTROLLERAXISMOTION:
-			return Get(event.caxis.which);
-		case SDL_CONTROLLERBUTTONDOWN:
-		case SDL_CONTROLLERBUTTONUP:
-			return Get(event.jball.which);
-		default:
-			return NULL;
+	case SDL_CONTROLLERAXISMOTION:
+		return Get(event.caxis.which);
+	case SDL_CONTROLLERBUTTONDOWN:
+	case SDL_CONTROLLERBUTTONUP:
+		return Get(event.jball.which);
+	default:
+		return NULL;
 	}
 }
 

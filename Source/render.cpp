@@ -395,8 +395,8 @@ inline void DoRenderLine(BYTE *dst, BYTE *src, int n, BYTE *tbl, DWORD mask)
 		assert(n != 0 && n <= sizeof(DWORD) * CHAR_BIT);
 		mask &= DWORD(-1) << ((sizeof(DWORD) * CHAR_BIT) - n);
 
-		if (sgOptions.Graphics.bBlendedTransparancy) {    // Blended transparancy
-			if (light_table_index == lightmax) { // Complete darkness
+		if (sgOptions.Graphics.bBlendedTransparancy) { // Blended transparancy
+			if (light_table_index == lightmax) {       // Complete darkness
 				for (int i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
 						dst[i] = 0;
@@ -431,7 +431,8 @@ inline void DoRenderLine(BYTE *dst, BYTE *src, int n, BYTE *tbl, DWORD mask)
 }
 
 DVL_ATTRIBUTE_ALWAYS_INLINE
-inline void RenderLine(BYTE *dst_begin, BYTE *dst_end, BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask) {
+inline void RenderLine(BYTE *dst_begin, BYTE *dst_end, BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
+{
 #ifdef NO_OVERDRAW
 	if (*dst >= dst_begin && *dst <= dst_end)
 #endif

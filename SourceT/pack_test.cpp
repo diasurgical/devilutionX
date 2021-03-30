@@ -61,50 +61,49 @@ typedef struct TestItemStruct {
 
 static void CompareItems(const dvl::ItemStruct *item1, const TestItemStruct *item2)
 {
-    ASSERT_STREQ(item1->_iIName, item2->_iIName);
-    ASSERT_EQ(item1->_itype, item2->_itype);
-    ASSERT_EQ(item1->_iClass, item2->_iClass);
-    ASSERT_EQ(item1->_iCurs, item2->_iCurs);
-    ASSERT_EQ(item1->_iIvalue, item2->_iIvalue);
-    ASSERT_EQ(item1->_iMinDam, item2->_iMinDam);
-    ASSERT_EQ(item1->_iMaxDam, item2->_iMaxDam);
-    ASSERT_EQ(item1->_iAC, item2->_iAC);
-    ASSERT_EQ(item1->_iFlags, item2->_iFlags);
-    ASSERT_EQ(item1->_iMiscId, item2->_iMiscId);
-    ASSERT_EQ(item1->_iSpell, item2->_iSpell);
-    ASSERT_EQ(item1->_iCharges, item2->_iCharges);
-    ASSERT_EQ(item1->_iMaxCharges, item2->_iMaxCharges);
-    ASSERT_EQ(item1->_iDurability, item2->_iDurability);
-    ASSERT_EQ(item1->_iMaxDur, item2->_iMaxDur);
-    ASSERT_EQ(item1->_iPLDam, item2->_iPLDam);
-    ASSERT_EQ(item1->_iPLToHit, item2->_iPLToHit);
-    ASSERT_EQ(item1->_iPLAC, item2->_iPLAC);
-    ASSERT_EQ(item1->_iPLStr, item2->_iPLStr);
-    ASSERT_EQ(item1->_iPLMag, item2->_iPLMag);
-    ASSERT_EQ(item1->_iPLDex, item2->_iPLDex);
-    ASSERT_EQ(item1->_iPLVit, item2->_iPLVit);
-    ASSERT_EQ(item1->_iPLFR, item2->_iPLFR);
-    ASSERT_EQ(item1->_iPLLR, item2->_iPLLR);
-    ASSERT_EQ(item1->_iPLMR, item2->_iPLMR);
-    ASSERT_EQ(item1->_iPLMana, item2->_iPLMana);
-    ASSERT_EQ(item1->_iPLHP, item2->_iPLHP);
-    ASSERT_EQ(item1->_iPLDamMod, item2->_iPLDamMod);
-    ASSERT_EQ(item1->_iPLGetHit, item2->_iPLGetHit);
-    ASSERT_EQ(item1->_iPLLight, item2->_iPLLight);
-    ASSERT_EQ(item1->_iSplLvlAdd, item2->_iSplLvlAdd);
-    ASSERT_EQ(item1->_iUid, item2->_iUid);
-    ASSERT_EQ(item1->_iFMinDam, item2->_iFMinDam);
-    ASSERT_EQ(item1->_iFMaxDam, item2->_iFMaxDam);
-    ASSERT_EQ(item1->_iLMinDam, item2->_iLMinDam);
-    ASSERT_EQ(item1->_iLMaxDam, item2->_iLMaxDam);
-    ASSERT_EQ(item1->_iPrePower, item2->_iPrePower);
-    ASSERT_EQ(item1->_iSufPower, item2->_iSufPower);
-    ASSERT_EQ(item1->_iMinStr, item2->_iMinStr);
-    ASSERT_EQ(item1->_iMinMag, item2->_iMinMag);
-    ASSERT_EQ(item1->_iMinDex, item2->_iMinDex);
-    ASSERT_EQ(item1->IDidx, item2->IDidx);
+	ASSERT_STREQ(item1->_iIName, item2->_iIName);
+	ASSERT_EQ(item1->_itype, item2->_itype);
+	ASSERT_EQ(item1->_iClass, item2->_iClass);
+	ASSERT_EQ(item1->_iCurs, item2->_iCurs);
+	ASSERT_EQ(item1->_iIvalue, item2->_iIvalue);
+	ASSERT_EQ(item1->_iMinDam, item2->_iMinDam);
+	ASSERT_EQ(item1->_iMaxDam, item2->_iMaxDam);
+	ASSERT_EQ(item1->_iAC, item2->_iAC);
+	ASSERT_EQ(item1->_iFlags, item2->_iFlags);
+	ASSERT_EQ(item1->_iMiscId, item2->_iMiscId);
+	ASSERT_EQ(item1->_iSpell, item2->_iSpell);
+	ASSERT_EQ(item1->_iCharges, item2->_iCharges);
+	ASSERT_EQ(item1->_iMaxCharges, item2->_iMaxCharges);
+	ASSERT_EQ(item1->_iDurability, item2->_iDurability);
+	ASSERT_EQ(item1->_iMaxDur, item2->_iMaxDur);
+	ASSERT_EQ(item1->_iPLDam, item2->_iPLDam);
+	ASSERT_EQ(item1->_iPLToHit, item2->_iPLToHit);
+	ASSERT_EQ(item1->_iPLAC, item2->_iPLAC);
+	ASSERT_EQ(item1->_iPLStr, item2->_iPLStr);
+	ASSERT_EQ(item1->_iPLMag, item2->_iPLMag);
+	ASSERT_EQ(item1->_iPLDex, item2->_iPLDex);
+	ASSERT_EQ(item1->_iPLVit, item2->_iPLVit);
+	ASSERT_EQ(item1->_iPLFR, item2->_iPLFR);
+	ASSERT_EQ(item1->_iPLLR, item2->_iPLLR);
+	ASSERT_EQ(item1->_iPLMR, item2->_iPLMR);
+	ASSERT_EQ(item1->_iPLMana, item2->_iPLMana);
+	ASSERT_EQ(item1->_iPLHP, item2->_iPLHP);
+	ASSERT_EQ(item1->_iPLDamMod, item2->_iPLDamMod);
+	ASSERT_EQ(item1->_iPLGetHit, item2->_iPLGetHit);
+	ASSERT_EQ(item1->_iPLLight, item2->_iPLLight);
+	ASSERT_EQ(item1->_iSplLvlAdd, item2->_iSplLvlAdd);
+	ASSERT_EQ(item1->_iUid, item2->_iUid);
+	ASSERT_EQ(item1->_iFMinDam, item2->_iFMinDam);
+	ASSERT_EQ(item1->_iFMaxDam, item2->_iFMaxDam);
+	ASSERT_EQ(item1->_iLMinDam, item2->_iLMinDam);
+	ASSERT_EQ(item1->_iLMaxDam, item2->_iLMaxDam);
+	ASSERT_EQ(item1->_iPrePower, item2->_iPrePower);
+	ASSERT_EQ(item1->_iSufPower, item2->_iSufPower);
+	ASSERT_EQ(item1->_iMinStr, item2->_iMinStr);
+	ASSERT_EQ(item1->_iMinMag, item2->_iMinMag);
+	ASSERT_EQ(item1->_iMinDex, item2->_iMinDex);
+	ASSERT_EQ(item1->IDidx, item2->IDidx);
 }
-
 
 const dvl::PkItemStruct PackedDiabloItems[] = {
 	// clang-format off
@@ -233,39 +232,38 @@ TEST(pack, UnPackItem_diablo)
 	}
 }
 
-
 TEST(pack, UnPackItem_diablo_unique_bug)
 {
 	dvl::PkItemStruct pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
-	dvl::PkItemStruct pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - fixed
+	dvl::PkItemStruct pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
 
 	dvl::gbIsHellfire = false;
 	dvl::gbIsHellfireSaveGame = false;
 	dvl::gbIsMultiplayer = false;
 
 	dvl::ItemStruct id;
-    dvl::UnPackItem(&pkItemBug, &id);
-    ASSERT_STREQ(id._iIName, "Veil of Steel");
-    ASSERT_EQ(id._itype, dvl::ITYPE_HELM);
-    ASSERT_EQ(id._iClass, dvl::ICLASS_ARMOR);
-    ASSERT_EQ(id._iCurs, 85);
-    ASSERT_EQ(id._iIvalue, 63800);
-    ASSERT_EQ(id._iAC, 18);
-    ASSERT_EQ(id._iMiscId, dvl::IMISC_UNIQUE);
-    ASSERT_EQ(id._iPLAC, 60);
-    ASSERT_EQ(id._iPLStr, 15);
-    ASSERT_EQ(id._iPLVit, 15);
-    ASSERT_EQ(id._iPLFR, 50);
-    ASSERT_EQ(id._iPLLR, 50);
-    ASSERT_EQ(id._iPLMR, 50);
-    ASSERT_EQ(id._iPLMana, -1920);
-    ASSERT_EQ(id._iPLLight, -2);
-    ASSERT_EQ(id._iUid, 6);
-    ASSERT_EQ(id.IDidx, dvl::IDI_STEELVEIL);
+	dvl::UnPackItem(&pkItemBug, &id);
+	ASSERT_STREQ(id._iIName, "Veil of Steel");
+	ASSERT_EQ(id._itype, dvl::ITYPE_HELM);
+	ASSERT_EQ(id._iClass, dvl::ICLASS_ARMOR);
+	ASSERT_EQ(id._iCurs, 85);
+	ASSERT_EQ(id._iIvalue, 63800);
+	ASSERT_EQ(id._iAC, 18);
+	ASSERT_EQ(id._iMiscId, dvl::IMISC_UNIQUE);
+	ASSERT_EQ(id._iPLAC, 60);
+	ASSERT_EQ(id._iPLStr, 15);
+	ASSERT_EQ(id._iPLVit, 15);
+	ASSERT_EQ(id._iPLFR, 50);
+	ASSERT_EQ(id._iPLLR, 50);
+	ASSERT_EQ(id._iPLMR, 50);
+	ASSERT_EQ(id._iPLMana, -1920);
+	ASSERT_EQ(id._iPLLight, -2);
+	ASSERT_EQ(id._iUid, 6);
+	ASSERT_EQ(id.IDidx, dvl::IDI_STEELVEIL);
 
 	dvl::PkItemStruct is;
-    dvl::PackItem(&is, &id);
-    ComparePackedItems(&is, &pkItem);
+	dvl::PackItem(&is, &id);
+	ComparePackedItems(&is, &pkItem);
 }
 
 const dvl::PkItemStruct PackedDiabloMPItems[] = {
@@ -466,13 +464,12 @@ TEST(pack, UnPackItem_empty)
 	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
 }
 
-
 TEST(pack, PackItem_empty)
 {
 	dvl::PkItemStruct is;
 	dvl::ItemStruct id;
 
-    id._itype = dvl::ITYPE_NONE;
+	id._itype = dvl::ITYPE_NONE;
 
 	dvl::PackItem(&is, &id);
 

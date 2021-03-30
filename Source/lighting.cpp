@@ -1175,7 +1175,7 @@ void InitVision()
 
 int AddVision(int x, int y, int r, BOOL mine)
 {
- 	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
+	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
 
 	if (numvision < MAXVISION) {
 		VisionList[numvision]._lx = x;

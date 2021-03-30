@@ -276,7 +276,8 @@ void UiFocusNavigation(SDL_Event *event)
 		break;
 	}
 
-	if (HandleMenuAction(GetMenuAction(*event))) return;
+	if (HandleMenuAction(GetMenuAction(*event)))
+		return;
 
 #ifndef USE_SDL1
 	if (event->type == SDL_MOUSEWHEEL) {

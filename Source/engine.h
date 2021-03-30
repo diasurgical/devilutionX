@@ -105,27 +105,43 @@ struct CelOutputBuffer {
 	 *
 	 * Only use this if the buffer owns its data.
 	 */
-	void Free() {
+	void Free()
+	{
 		SDL_FreeSurface(this->surface);
 		this->surface = NULL;
 	}
 
-	int w() const { return region.w; }
-	int h() const { return region.h; }
+	int w() const
+	{
+		return region.w;
+	}
+	int h() const
+	{
+		return region.h;
+	}
 
 	BYTE *at(int x, int y) const
 	{
 		return static_cast<BYTE *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
 	}
 
-	BYTE *begin() const { return at(0, 0); }
-	BYTE *end() const { return at(0, region.h); }
+	BYTE *begin() const
+	{
+		return at(0, 0);
+	}
+	BYTE *end() const
+	{
+		return at(0, region.h);
+	}
 
 	/**
 	 * @brief Line width of the raw underlying byte buffer.
 	 * May be wider than its logical width (for power-of-2 alignment).
 	 */
-	int pitch() { return surface->pitch; }
+	int pitch()
+	{
+		return surface->pitch;
+	}
 
 	bool in_bounds(Sint16 x, Sint16 y) const
 	{

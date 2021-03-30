@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-TEST(Cursor, SetCursor) {
+TEST(Cursor, SetCursor)
+{
 	int i = dvl::ICURS_SPIKED_CLUB + dvl::CURSOR_FIRSTITEM;
 	dvl::SetCursor_(i);
 	EXPECT_EQ(dvl::pcurs, i);

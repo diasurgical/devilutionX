@@ -350,7 +350,8 @@ void selhero_ClassSelector_Focus(int value)
 	selhero_SetStats();
 }
 
-static bool shouldPrefillHeroName() {
+static bool shouldPrefillHeroName()
+{
 #if defined __3DS__
 	return false;
 #elif defined(PREFILL_PLAYER_NAME)

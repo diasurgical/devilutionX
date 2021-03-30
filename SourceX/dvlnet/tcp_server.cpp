@@ -161,7 +161,7 @@ void tcp_server::start_accept()
 
 void tcp_server::handle_accept(scc con, const asio::error_code &ec)
 {
-	if(ec)
+	if (ec)
 		return;
 	if (next_free() == PLR_BROADCAST) {
 		drop_connection(con);

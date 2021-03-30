@@ -75,4 +75,4 @@ int WaitForEvent(event_emul *e)
 	return ret;
 }
 
-}
+} // namespace dvl
