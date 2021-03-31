@@ -2796,15 +2796,38 @@ BOOL PM_DoRangeAttack(int pnum)
 		app_fatal("PM_DoRangeAttack: illegal player %d", pnum);
 	}
 
-	origFrame = plr[pnum]._pAnimFrame;
-	if (plr[pnum]._pIFlags & ISPL_QUICKATTACK && origFrame == 1) {
-		plr[pnum]._pAnimFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTATTACK && (origFrame == 1 || origFrame == 3)) {
-		plr[pnum]._pAnimFrame++;
+	if (!gbIsHellfire) {
+		origFrame = plr[pnum]._pAnimFrame;
+		if (plr[pnum]._pIFlags & ISPL_QUICKATTACK && origFrame == 1) {
+			plr[pnum]._pAnimFrame++;
+		}
+		if (plr[pnum]._pIFlags & ISPL_FASTATTACK && (origFrame == 1 || origFrame == 3)) {
+			plr[pnum]._pAnimFrame++;
+		}
 	}
 
+	int arrows = 0;
 	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum) {
+		arrows = 1;
+	}
+	if ((plr[pnum]._pIFlags & ISPL_MULT_ARROWS) != 0 && plr[pnum]._pAnimFrame == plr[pnum]._pAFNum + 2) {
+		arrows = 2;
+	}
+
+	for (int arrow = 0; arrow < arrows; arrow++) {
+		int xoff = 0;
+		int yoff = 0;
+		if (arrows != 1) {
+			int angle = arrow == 0 ? -1 : 1;
+			int x = plr[pnum]._pVar1 - plr[pnum]._px;
+			if (x)
+				yoff = x < 0 ? angle : -angle;
+			int y = plr[pnum]._pVar2 - plr[pnum]._py;
+			if (y)
+				xoff = y < 0 ? -angle : angle;
+		}
+
+		int dmg = 4;
 		mistype = MIS_ARROW;
 		if (plr[pnum]._pIFlags & ISPL_FIRE_ARROWS) {
 			mistype = MIS_FARROW;
@@ -2812,19 +2835,26 @@ BOOL PM_DoRangeAttack(int pnum)
 		if (plr[pnum]._pIFlags & ISPL_LIGHT_ARROWS) {
 			mistype = MIS_LARROW;
 		}
+		if ((plr[pnum]._pIFlags & ISPL_FIRE_ARROWS) != 0 && (plr[pnum]._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
+			dmg = plr[pnum]._pIFMinDam + random_(3, plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
+			mistype = MIS_SPECARROW;
+		}
+
 		AddMissile(
 		    plr[pnum]._px,
 		    plr[pnum]._py,
-		    plr[pnum]._pVar1,
-		    plr[pnum]._pVar2,
+		    plr[pnum]._pVar1 + xoff,
+		    plr[pnum]._pVar2 + yoff,
 		    plr[pnum]._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
 		    pnum,
-		    4,
+		    dmg,
 		    0);
 
-		PlaySfxLoc(PS_BFIRE, plr[pnum]._px, plr[pnum]._py);
+		if (arrow == 0 && mistype != MIS_SPECARROW) {
+			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, plr[pnum]._px, plr[pnum]._py);
+		}
 
 		if (WeaponDur(pnum, 40)) {
 			StartStand(pnum, plr[pnum]._pdir);
