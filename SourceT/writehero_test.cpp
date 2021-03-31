@@ -291,7 +291,7 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(pPlayer->_pgfxnum, 36);
 	ASSERT_EQ(pPlayer->_pAnimDelay, 3);
 	ASSERT_EQ(pPlayer->_pAnimCnt, 1);
-	ASSERT_EQ(pPlayer->_pAnimLen, 8);
+	ASSERT_EQ(pPlayer->_pAnimLen, 20);
 	ASSERT_EQ(pPlayer->_pAnimFrame, 1);
 	ASSERT_EQ(pPlayer->_pAnimWidth, 96);
 	ASSERT_EQ(pPlayer->_pAnimWidth2, 16);
@@ -321,21 +321,21 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(pPlayer->_pLghtResist, 75);
 	ASSERT_EQ(CountBool(pPlayer->_pLvlVisited, NUMLEVELS), 0);
 	ASSERT_EQ(CountBool(pPlayer->_pSLvlVisited, NUMLEVELS), 0);
-	ASSERT_EQ(pPlayer->_pNFrames, 8);
+	ASSERT_EQ(pPlayer->_pNFrames, 20);
 	ASSERT_EQ(pPlayer->_pNWidth, 96);
 	ASSERT_EQ(pPlayer->_pWFrames, 8);
 	ASSERT_EQ(pPlayer->_pWWidth, 96);
-	ASSERT_EQ(pPlayer->_pAFrames, 18);
+	ASSERT_EQ(pPlayer->_pAFrames, 0);
 	ASSERT_EQ(pPlayer->_pAWidth, 128);
-	ASSERT_EQ(pPlayer->_pAFNum, 10);
+	ASSERT_EQ(pPlayer->_pAFNum, 0);
 	ASSERT_EQ(pPlayer->_pSFrames, 16);
 	ASSERT_EQ(pPlayer->_pSWidth, 96);
 	ASSERT_EQ(pPlayer->_pSFNum, 12);
-	ASSERT_EQ(pPlayer->_pHFrames, 7);
+	ASSERT_EQ(pPlayer->_pHFrames, 0);
 	ASSERT_EQ(pPlayer->_pHWidth, 96);
 	ASSERT_EQ(pPlayer->_pDFrames, 20);
 	ASSERT_EQ(pPlayer->_pDWidth, 128);
-	ASSERT_EQ(pPlayer->_pBFrames, 4);
+	ASSERT_EQ(pPlayer->_pBFrames, 0);
 	ASSERT_EQ(pPlayer->_pBWidth, 96);
 	ASSERT_EQ(pPlayer->_pIMinDam, 1);
 	ASSERT_EQ(pPlayer->_pIMaxDam, 14);
@@ -366,6 +366,7 @@ TEST(Writehero, pfile_write_hero)
 	gbIsHellfire = false;
 	gbIsMultiplayer = true;
 	gbIsHellfireSaveGame = false;
+	leveltype = DTYPE_TOWN;
 
 	myplr = 0;
 	_uiheroinfo info {};
