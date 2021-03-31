@@ -698,7 +698,8 @@ const TextDataStruct alltext[] = {
 	    1, 5, TSFX_BMAID38 },
 	{ "Roof and Inaius are missing? Light protect us! Is there no place that is safe? Our only hope of returning to a peaceful life rests in you. Please, you must find those boys and bring them home to their family. |"
 	    1, 5, TSFX_HEALER4 },
-	{ "Horazon was insane. Thereare forces with which one does not interfere. It would not surprise me if you found only the charred remains of this damned fool. |"
+	{ "Horazon was insane. There are forces with which one does not interfere. It would not surprise me if you found only the charred remains of this damned fool. |"
+
 	    1, 5, TSFX_HEALER6 },
 	{ "Farnham is often confused, but he speaks a powerful name when the word Izual passes his lips. Cain would be able to tell you in much greater detail the legend of this warrior. |"
 	    1, 5, TSFX_HEALER7 },
