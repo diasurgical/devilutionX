@@ -220,11 +220,10 @@ TEST(pack, UnPackItem_diablo)
 	dvl::PkItemStruct is;
 
 	dvl::gbIsHellfire = false;
-	dvl::gbIsHellfireSaveGame = false;
 	dvl::gbIsMultiplayer = false;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
-		dvl::UnPackItem(&PackedDiabloItems[i], &id);
+		dvl::UnPackItem(&PackedDiabloItems[i], &id, false);
 		CompareItems(&id, &DiabloItems[i]);
 
 		dvl::PackItem(&is, &id);
@@ -238,11 +237,10 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 	dvl::PkItemStruct pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
 
 	dvl::gbIsHellfire = false;
-	dvl::gbIsHellfireSaveGame = false;
 	dvl::gbIsMultiplayer = false;
 
 	dvl::ItemStruct id;
-	dvl::UnPackItem(&pkItemBug, &id);
+	dvl::UnPackItem(&pkItemBug, &id, false);
 	ASSERT_STREQ(id._iIName, "Veil of Steel");
 	ASSERT_EQ(id._itype, dvl::ITYPE_HELM);
 	ASSERT_EQ(id._iClass, dvl::ICLASS_ARMOR);
@@ -288,11 +286,10 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 	dvl::PkItemStruct is;
 
 	dvl::gbIsHellfire = false;
-	dvl::gbIsHellfireSaveGame = false;
 	dvl::gbIsMultiplayer = true;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
-		dvl::UnPackItem(&PackedDiabloMPItems[i], &id);
+		dvl::UnPackItem(&PackedDiabloMPItems[i], &id, false);
 		CompareItems(&id, &DiabloMPItems[i]);
 
 		dvl::PackItem(&is, &id);
@@ -428,14 +425,14 @@ TEST(pack, UnPackItem_hellfire)
 	dvl::PkItemStruct is;
 
 	dvl::gbIsHellfire = true;
-	dvl::gbIsHellfireSaveGame = true;
 	dvl::gbIsMultiplayer = false;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
-		dvl::UnPackItem(&PackedHellfireItems[i], &id);
+		dvl::UnPackItem(&PackedHellfireItems[i], &id, true);
 		CompareItems(&id, &HellfireItems[i]);
 
 		dvl::PackItem(&is, &id);
+		is.dwBuff &= ~dvl::CF_HELLFIRE;
 		ComparePackedItems(&is, &PackedHellfireItems[i]);
 	}
 }
@@ -446,10 +443,9 @@ TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 	dvl::ItemStruct id;
 
 	dvl::gbIsHellfire = false;
-	dvl::gbIsHellfireSaveGame = true;
 	dvl::gbIsMultiplayer = false;
 
-	dvl::UnPackItem(&is, &id);
+	dvl::UnPackItem(&is, &id, true);
 
 	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
 }
@@ -459,7 +455,7 @@ TEST(pack, UnPackItem_empty)
 	dvl::PkItemStruct is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
 	dvl::ItemStruct id;
 
-	dvl::UnPackItem(&is, &id);
+	dvl::UnPackItem(&is, &id, false);
 
 	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
 }
@@ -479,7 +475,7 @@ TEST(pack, PackItem_empty)
 static void compareGold(const dvl::PkItemStruct *is, int iCurs)
 {
 	dvl::ItemStruct id;
-	dvl::UnPackItem(is, &id);
+	dvl::UnPackItem(is, &id, false);
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, dvl::IDI_GOLD);
 	ASSERT_EQ(id._ivalue, is->wValue);
@@ -514,7 +510,7 @@ TEST(pack, UnPackItem_ear)
 	dvl::PkItemStruct is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
 	dvl::ItemStruct id;
 
-	dvl::UnPackItem(&is, &id);
+	dvl::UnPackItem(&is, &id, false);
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
 	ASSERT_EQ(id._ivalue, 3);
 

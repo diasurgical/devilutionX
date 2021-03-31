@@ -85,12 +85,8 @@ void TakeGoldCheat()
 
 void MaxSpellsCheat()
 {
-	int i;
-
-	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-
-	for (i = 1; i < maxSpells; i++) {
-		if (GetSpellBookLevel(i) != -1) {
+	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
+		if (GetSpellBookLevel((spell_id)i) != -1) {
 			plr[myplr]._pMemSpells |= GetSpellBitmask(i);
 			plr[myplr]._pSplLvl[i] = 10;
 		}

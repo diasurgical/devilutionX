@@ -183,6 +183,23 @@ public:
 
 }
 
+void RemoveInvalidItem(ItemStruct *pItem)
+{
+	bool isInvalid = !IsItemAvailable(pItem->IDidx) || !IsUniqueAvailable(pItem->_iUid);
+
+	if (!gbIsHellfire) {
+		isInvalid = isInvalid || (pItem->_itype == ITYPE_STAFF && GetSpellStaffLevel(pItem->_iSpell) == -1);
+		isInvalid = isInvalid || (pItem->_iMiscId == IMISC_BOOK && GetSpellBookLevel(pItem->_iSpell) == -1);
+		isInvalid = isInvalid || pItem->_iDamAcFlags != 0;
+		isInvalid = isInvalid || pItem->_iPrePower > IDI_LASTDIABLO;
+		isInvalid = isInvalid || pItem->_iSufPower > IDI_LASTDIABLO;
+	}
+
+	if (isInvalid) {
+		pItem->_itype = ITYPE_NONE;
+	}
+}
+
 static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 {
 	pItem->_iSeed = file->nextLE<Sint32>();
@@ -261,16 +278,13 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	if (!gbIsHellfireSaveGame) {
 		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
 	}
-	file->skip(4); // Unused
+	pItem->dwBuff = file->nextLE<Uint32>();
 	if (gbIsHellfireSaveGame)
 		pItem->_iDamAcFlags = file->nextLE<Sint32>();
 	else
 		pItem->_iDamAcFlags = 0;
 
-	if (!IsItemAvailable(pItem->IDidx)) {
-		pItem->IDidx = 0;
-		pItem->_itype = ITYPE_NONE;
-	}
+	RemoveInvalidItem(pItem);
 }
 
 static void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
@@ -824,7 +838,7 @@ bool IsHeaderValid(Uint32 magicNumber)
 	return false;
 }
 
-void ConvertLevels()
+static void ConvertLevels()
 {
 	// Backup current level state
 	bool _setlevel = setlevel;
@@ -910,6 +924,56 @@ void SaveHotkeys()
 	file.writeLE<Uint8>(plr[myplr]._pRSplType);
 }
 
+static void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
+{
+	ItemStruct tempItem;
+
+	for (int i = 0; i < n; i++) {
+		LoadItemData(file, &tempItem);
+		if (pItem[i].isEmpty() || tempItem.isEmpty())
+			continue;
+		if (pItem[i]._iSeed != tempItem._iSeed)
+			continue;
+		pItem[i] = tempItem;
+	}
+}
+
+void LoadHeroItems(PlayerStruct *pPlayer)
+{
+	LoadHelper file("heroitems");
+	if (!file.isValid())
+		return;
+
+	gbIsHellfireSaveGame = file.nextBool8();
+
+	LoadMatchingItems(&file, NUM_INVLOC, pPlayer->InvBody);
+	LoadMatchingItems(&file, NUM_INV_GRID_ELEM, pPlayer->InvList);
+	LoadMatchingItems(&file, MAXBELTITEMS, pPlayer->SpdList);
+
+	gbIsHellfireSaveGame = gbIsHellfire;
+}
+
+void RemoveEmptyInventory(int pnum)
+{
+	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
+		int idx = plr[pnum].InvGrid[i - 1];
+		if (idx > 0 && plr[pnum].InvList[idx - 1].isEmpty()) {
+			RemoveInvItem(pnum, idx - 1);
+		}
+	};
+}
+
+void RemoveEmptyLevelItems()
+{
+	for (int i = numitems; i >= 0; i--) {
+		int ii = itemactive[i];
+		if (item[ii].isEmpty()) {
+			dItem[item[ii]._ix][item[ii]._iy] = 0;
+			DeleteItem(ii, i);
+		}
+	}
+}
+
 /**
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
@@ -971,8 +1035,10 @@ void LoadGame(BOOL firstflag)
 	for (int i = 0; i < MAXPORTAL; i++)
 		LoadPortal(&file, i);
 
-	if (gbIsHellfireSaveGame != gbIsHellfire)
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		ConvertLevels();
+		RemoveEmptyInventory(myplr);
+	}
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);
 	SyncInitPlr(myplr);
@@ -1102,8 +1168,10 @@ void LoadGame(BOOL firstflag)
 	SetCursor_(CURSOR_HAND);
 	gbProcessPlayers = TRUE;
 
-	if (gbIsHellfireSaveGame != gbIsHellfire)
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		RemoveEmptyLevelItems();
 		SaveGame();
+	}
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
@@ -1192,7 +1260,7 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->skip(1); // Alignment
 	file->writeLE<Uint32>(pItem->_iStatFlag);
 	file->writeLE<Sint32>(idx);
-	file->skip(4); // Unused
+	file->writeLE<Uint32>(pItem->dwBuff);
 	if (gbIsHellfire)
 		file->writeLE<Uint32>(pItem->_iDamAcFlags);
 }
@@ -1667,6 +1735,18 @@ static void SavePortal(SaveHelper *file, int i)
 	file->writeLE<Uint32>(pPortal->setlvl);
 }
 
+void SaveHeroItems(PlayerStruct *pPlayer)
+{
+	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
+	SaveHelper file("heroitems", items * sizeof(ItemStruct));
+
+	file.writeLE<Uint8>(gbIsHellfire);
+
+	SaveItems(&file, pPlayer->InvBody, NUM_INVLOC);
+	SaveItems(&file, pPlayer->InvList, NUM_INV_GRID_ELEM);
+	SaveItems(&file, pPlayer->SpdList, MAXBELTITEMS);
+}
+
 void SaveGame()
 {
 	SaveHelper file("game", FILEBUFF);
@@ -1988,6 +2068,10 @@ void LoadLevel()
 			for (int i = 0; i < MAXDUNX; i++)
 				dMissile[i][j] = 0; /// BUGFIX: supposed to load saved missiles with "file.nextLE<Sint8>()"?
 		}
+	}
+
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		RemoveEmptyLevelItems();
 	}
 
 	if (!gbSkipSync) {

@@ -2006,6 +2006,7 @@ typedef enum spell_id {
 	SPL_HEALOTHER   = 0x22,
 	SPL_FLARE       = 0x23,
 	SPL_BONESPIRIT  = 0x24,
+	SPL_LASTDIABLO  = SPL_BONESPIRIT,
 	SPL_MANA        = 0x25,
 	SPL_MAGI        = 0x26,
 	SPL_JESTER      = 0x27,

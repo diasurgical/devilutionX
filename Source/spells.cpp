@@ -343,7 +343,7 @@ void DoHealOther(int pnum, int rid)
 	}
 }
 
-int GetSpellBookLevel(int s)
+int GetSpellBookLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
@@ -353,6 +353,8 @@ int GetSpellBookLevel(int s)
 		case SPL_FLARE:
 		case SPL_BONESPIRIT:
 			return -1;
+		default:
+			break;
 		}
 	}
 
@@ -361,6 +363,10 @@ int GetSpellBookLevel(int s)
 		case SPL_NOVA:
 		case SPL_APOCA:
 			return -1;
+		default:
+			if (s > SPL_LASTDIABLO)
+				return -1;
+			break;
 		}
 	}
 
@@ -368,13 +374,15 @@ int GetSpellBookLevel(int s)
 		switch (s) {
 		case SPL_ELEMENT:
 			return -1;
+		default:
+			break;
 		}
 	}
 
 	return spelldata[s].sBookLvl;
 }
 
-int GetSpellStaffLevel(int s)
+int GetSpellStaffLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
@@ -385,13 +393,20 @@ int GetSpellStaffLevel(int s)
 		case SPL_FLARE:
 		case SPL_BONESPIRIT:
 			return -1;
+		default:
+			break;
 		}
 	}
+
+	if (!gbIsHellfire && s > SPL_LASTDIABLO)
+		return -1;
 
 	if (gbIsHellfire) {
 		switch (s) {
 		case SPL_ELEMENT:
 			return -1;
+		default:
+			break;
 		}
 	}
 

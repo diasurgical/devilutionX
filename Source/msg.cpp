@@ -654,6 +654,7 @@ void DeltaAddItem(int ii)
 			pD->bMinMag = item[ii]._iMinMag;
 			pD->bMinDex = item[ii]._iMinDex;
 			pD->bAC = item[ii]._iAC;
+			pD->dwBuff = item[ii].dwBuff;
 			return;
 		}
 	}
@@ -761,7 +762,8 @@ void DeltaLoadLevel()
 					    sgLevels[currlevel].item[i].wIndx,
 					    sgLevels[currlevel].item[i].wCI,
 					    sgLevels[currlevel].item[i].dwSeed,
-					    sgLevels[currlevel].item[i].wValue);
+					    sgLevels[currlevel].item[i].wValue,
+					    (sgLevels[currlevel].item[i].dwBuff & CF_HELLFIRE) != 0);
 					if (sgLevels[currlevel].item[i].bId)
 						item[ii]._iIdentified = TRUE;
 					item[ii]._iDurability = sgLevels[currlevel].item[i].bDur;
@@ -774,6 +776,7 @@ void DeltaLoadLevel()
 					item[ii]._iMinMag = sgLevels[currlevel].item[i].bMinMag;
 					item[ii]._iMinDex = sgLevels[currlevel].item[i].bMinDex;
 					item[ii]._iAC = sgLevels[currlevel].item[i].bAC;
+					item[ii].dwBuff = sgLevels[currlevel].item[i].dwBuff;
 				}
 				x = sgLevels[currlevel].item[i].x;
 				y = sgLevels[currlevel].item[i].y;
@@ -1001,6 +1004,7 @@ void NetSendCmdGItem(BOOL bHiPri, BYTE bCmd, BYTE mast, BYTE pnum, BYTE ii)
 		cmd.bMinMag = item[ii]._iMinMag;
 		cmd.bMinDex = item[ii]._iMinDex;
 		cmd.bAC = item[ii]._iAC;
+		cmd.dwBuff = item[ii].dwBuff;
 	}
 
 	if (bHiPri)
@@ -1098,6 +1102,7 @@ void NetSendCmdPItem(BOOL bHiPri, BYTE bCmd, BYTE x, BYTE y)
 		cmd.bMinMag = plr[myplr].HoldItem._iMinMag;
 		cmd.bMinDex = plr[myplr].HoldItem._iMinDex;
 		cmd.bAC = plr[myplr].HoldItem._iAC;
+		cmd.dwBuff = plr[myplr].HoldItem.dwBuff;
 	}
 
 	if (bHiPri)
@@ -1116,6 +1121,7 @@ void NetSendCmdChItem(BOOL bHiPri, BYTE bLoc)
 	cmd.wCI = plr[myplr].HoldItem._iCreateInfo;
 	cmd.dwSeed = plr[myplr].HoldItem._iSeed;
 	cmd.bId = plr[myplr].HoldItem._iIdentified;
+	cmd.dwBuff = plr[myplr].HoldItem.dwBuff;
 
 	if (bHiPri)
 		NetSendHiPri((BYTE *)&cmd, sizeof(cmd));
@@ -1169,6 +1175,7 @@ void NetSendCmdDItem(BOOL bHiPri, int ii)
 		cmd.bMinMag = item[ii]._iMinMag;
 		cmd.bMinDex = item[ii]._iMinDex;
 		cmd.bAC = item[ii]._iAC;
+		cmd.dwBuff = item[ii].dwBuff;
 	}
 
 	if (bHiPri)
@@ -2133,7 +2140,7 @@ static DWORD On_CHANGEPLRITEMS(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId);
+		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId, p->dwBuff);
 
 	return sizeof(*p);
 }
