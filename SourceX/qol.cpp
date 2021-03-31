@@ -71,6 +71,8 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;
 	assert(qolArt != nullptr);
+	if (qolArt->healthBox.surface == nullptr)
+		return;
 	if (currlevel == 0)
 		return;
 	if (pcursmonst == -1)
