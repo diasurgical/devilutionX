@@ -1724,35 +1724,30 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c
 		}
 	}
 
-	int y = -17 + PANEL_Y;
-
-	//Calculate how much of the icon should be gold and red
-	int height = 32;
-	int amount;
-	if (pItem->_iDurability <= durabilityThresholdRed)
-		amount = 0;
-	else {
-		if (!sgOptions.Graphics.bDurabilityIconGradual)
-			amount = height;
+	// Calculate how much of the icon should be gold and red
+	int height = 32; // Height of durability icon CEL
+	int partition = 0;
+	if (pItem->_iDurability > durabilityThresholdRed) { 
+		if (!sgOptions.Graphics.bGradualDurabilityWarning)
+			partition = height;
 		else {
-			int cur = pItem->_iDurability - durabilityThresholdRed;
-			amount = (height * cur) / (durabilityThresholdGold - durabilityThresholdRed);
+			int current = pItem->_iDurability - durabilityThresholdRed;
+			partition = (height * current) / (durabilityThresholdGold - durabilityThresholdRed);
 		}
 	}
 
-	//Draw icon
-	if (amount) {
-		CelOutputBuffer buf = GlobalBackBuffer();
-		buf = buf.subregionY(y - amount, amount);
-		CelDrawTo(buf, x, amount, pDurIcons, c + 8, 32); //Gold icon
+	// Draw icon
+	int y = -17 + PANEL_Y;
+	if (partition > 0) {
+		CelOutputBuffer stenciledBuffer = out.subregionY(y - partition, partition);
+		CelDrawTo(stenciledBuffer, x, partition, pDurIcons, c + 8, 32); // Gold icon
 	}
-	if (amount != height) {
-		CelOutputBuffer buf = GlobalBackBuffer();
-		buf = buf.subregionY(y - height, height - amount);
-		CelDrawTo(buf, x, height, pDurIcons, c, 32); //Red icon
+	if (partition != height) {
+		CelOutputBuffer stenciledBuffer = out.subregionY(y - height, height - partition);
+		CelDrawTo(stenciledBuffer, x, height, pDurIcons, c, 32); // Red icon
 	}
 
-	return x - 32 - 8;
+	return x - 32 - 8; // Add in spacing for the next durability icon
 }
 
 void DrawDurIcon(CelOutputBuffer out)

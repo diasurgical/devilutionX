@@ -51,7 +51,7 @@ struct GraphicsOptions {
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
 	/** @brief If true, makes durability icon on the HUD gradually turn from gold to red. */
-	bool bDurabilityIconGradual;
+	bool bGradualDurabilityWarning;
 };
 
 struct GameplayOptions {
