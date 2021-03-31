@@ -42,7 +42,7 @@ void CelDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, in
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE* pCelBuff, int nCel, int nWidth)
+void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
 	int nDataSize;
