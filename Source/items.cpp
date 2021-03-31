@@ -312,11 +312,19 @@ bool IsItemAvailable(int i)
 	return true;
 }
 
+bool IsUniqueAvailable(int i)
+{
+	return gbIsHellfire || i <= 89;
+}
+
 static bool IsPrefixValidForItemType(int i, int flgs)
 {
 	int PLIType = PL_Prefix[i].PLIType;
 
 	if (!gbIsHellfire) {
+		if (i > 82)
+			return false;
+
 		if (i >= 12 && i <= 20)
 			PLIType &= ~PLT_STAFF;
 	}
@@ -329,6 +337,9 @@ static bool IsSuffixValidForItemType(int i, int flgs)
 	int PLIType = PL_Suffix[i].PLIType;
 
 	if (!gbIsHellfire) {
+		if (i > 94)
+			return false;
+
 		if ((i >= 0 && i <= 1)
 		    || (i >= 14 && i <= 15)
 		    || (i >= 21 && i <= 22)
@@ -1284,6 +1295,8 @@ void SetPlrHandItem(ItemStruct *h, int idata)
 	h->_iSufPower = IPL_INVALID;
 	h->_iMagical = ITEM_QUALITY_NORMAL;
 	h->IDidx = idata;
+	if (gbIsHellfire)
+		h->dwBuff |= CF_HELLFIRE;
 }
 
 void GetPlrHandSeed(ItemStruct *h)
@@ -1658,7 +1671,7 @@ void GetBookSpell(int i, int lvl)
 	int s = SPL_FIREBOLT;
 	enum spell_id bs = SPL_FIREBOLT;
 	while (rv > 0) {
-		int sLevel = GetSpellBookLevel(s);
+		int sLevel = GetSpellBookLevel(static_cast<spell_id>(s));
 		if (sLevel != -1 && lvl >= sLevel) {
 			rv--;
 			bs = static_cast<spell_id>(s);
@@ -1702,8 +1715,6 @@ void GetStaffPower(int i, int lvl, int bs, BOOL onlygood)
 	if (tmp == 0 || onlygood) {
 		nl = 0;
 		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
-			if (!gbIsHellfire && j > 82)
-				break;
 			if (IsPrefixValidForItemType(j, PLT_STAFF) && PL_Prefix[j].PLMinLvl <= lvl) {
 				addok = TRUE;
 				if (onlygood && !PL_Prefix[j].PLOk)
@@ -1768,7 +1779,7 @@ void GetStaffSpell(int i, int lvl, BOOL onlygood)
 		int s = SPL_FIREBOLT;
 		enum spell_id bs = SPL_NULL;
 		while (rv > 0) {
-			int sLevel = GetSpellStaffLevel(s);
+			int sLevel = GetSpellStaffLevel(static_cast<spell_id>(s));
 			if (sLevel != -1 && l >= sLevel) {
 				rv--;
 				bs = static_cast<spell_id>(s);
@@ -1853,6 +1864,8 @@ void GetItemAttrs(int i, int idata, int lvl)
 	item[i]._iMinMag = AllItemsList[idata].iMinMag;
 	item[i]._iMinDex = AllItemsList[idata].iMinDex;
 	item[i].IDidx = idata;
+	if (gbIsHellfire)
+		item[i].dwBuff |= CF_HELLFIRE;
 	item[i]._iPrePower = IPL_INVALID;
 	item[i]._iSufPower = IPL_INVALID;
 
@@ -2332,8 +2345,6 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 	if (pre == 0) {
 		nt = 0;
 		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
-			if (!gbIsHellfire && j > 82)
-				break;
 			if (IsPrefixValidForItemType(j, flgs)) {
 				if (PL_Prefix[j].PLMinLvl >= minlvl && PL_Prefix[j].PLMinLvl <= maxlvl && (!onlygood || PL_Prefix[j].PLOk) && (flgs != PLT_STAFF || PL_Prefix[j].PLPower != IPL_CHARGES)) {
 					l[nt] = j;
@@ -2365,8 +2376,6 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 	if (post != 0) {
 		nl = 0;
 		for (j = 0; PL_Suffix[j].PLPower != IPL_INVALID; j++) {
-			if (!gbIsHellfire && j > 94)
-				break;
 			if (IsSuffixValidForItemType(j, flgs)
 			    && PL_Suffix[j].PLMinLvl >= minlvl && PL_Suffix[j].PLMinLvl <= maxlvl
 			    && !((goe == GOE_GOOD && PL_Suffix[j].PLGOE == GOE_EVIL) || (goe == GOE_EVIL && PL_Suffix[j].PLGOE == GOE_GOOD))
@@ -2620,7 +2629,7 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 	numu = 0;
 	memset(uok, 0, sizeof(uok));
 	for (j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
-		if (!gbIsHellfire && j > 89)
+		if (!IsUniqueAvailable(j))
 			break;
 		if (UniqueItemList[j].UIItemId == AllItemsList[item[i].IDidx].iItemId
 		    && lvl >= UniqueItemList[j].UIMinLvl
@@ -2899,31 +2908,38 @@ void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL send
 	SetupBaseItem(x, y, idx, onlygood, sendmsg, delta);
 }
 
-void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
+void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool isHellfire)
 {
+	bool _gbIsHellfire = gbIsHellfire;
+	gbIsHellfire = isHellfire;
+
 	if (idx == IDI_GOLD) {
 		SetPlrHandItem(&item[ii], IDI_GOLD);
 		item[ii]._iSeed = iseed;
 		item[ii]._iCreateInfo = icreateinfo;
 		item[ii]._ivalue = ivalue;
 		SetPlrHandGoldCurs(&item[ii]);
+		gbIsHellfire = _gbIsHellfire;
 		return;
 	}
 
 	if (icreateinfo == 0) {
 		SetPlrHandItem(&item[ii], idx);
 		SetPlrHandSeed(&item[ii], iseed);
+		gbIsHellfire = _gbIsHellfire;
 		return;
 	}
 
 	if ((icreateinfo & CF_UNIQUE) == 0) {
 		if (icreateinfo & CF_TOWN) {
 			RecreateTownItem(ii, idx, icreateinfo, iseed, ivalue);
+			gbIsHellfire = _gbIsHellfire;
 			return;
 		}
 
 		if ((icreateinfo & CF_USEFUL) == CF_USEFUL) {
 			SetupAllUseful(ii, iseed, icreateinfo & CF_LEVEL);
+			gbIsHellfire = _gbIsHellfire;
 			return;
 		}
 	}
@@ -2941,6 +2957,7 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
 	SetupAllItems(ii, idx, iseed, level, uper, onlygood, recreate, pregen);
+	gbIsHellfire = _gbIsHellfire;
 }
 
 void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
@@ -3034,8 +3051,7 @@ void items_427ABA(int x, int y)
 
 	dItem[x][y] = ii + 1;
 
-	gbIsHellfireSaveGame = gbIsHellfire;
-	UnPackItem(&PkSItem, &item[ii]);
+	UnPackItem(&PkSItem, &item[ii], (PkSItem.dwBuff & CF_HELLFIRE) != 0);
 	item[ii]._ix = x;
 	item[ii]._iy = y;
 	RespawnItem(ii, FALSE);
@@ -5307,7 +5323,7 @@ int ItemNoFlippy()
 	return r;
 }
 
-void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, BOOL delta)
+void CreateSpellBook(int x, int y, spell_id ispell, BOOL sendmsg, BOOL delta)
 {
 	int lvl = currlevel;
 

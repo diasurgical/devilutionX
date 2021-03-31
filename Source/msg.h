@@ -139,6 +139,7 @@ typedef struct TCmdChItem {
 	Uint16 wCI;
 	Sint32 dwSeed;
 	Uint8 bId;
+	Uint32 dwBuff;
 } TCmdChItem;
 
 typedef struct TCmdDelItem {

@@ -20,8 +20,8 @@ void EnsureValidReadiedSpell(PlayerStruct &player);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);
 void DoResurrect(int pnum, int rid);
 void DoHealOther(int pnum, int rid);
-int GetSpellBookLevel(int s);
-int GetSpellStaffLevel(int s);
+int GetSpellBookLevel(spell_id s);
+int GetSpellStaffLevel(spell_id s);
 
 #ifdef __cplusplus
 }

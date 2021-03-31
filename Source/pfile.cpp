@@ -184,8 +184,10 @@ void pfile_write_hero()
 	if (pfile_open_archive(save_num)) {
 		PackPlayer(&pkplr, myplr, !gbIsMultiplayer);
 		pfile_encode_hero(&pkplr);
-		if (!gbVanilla)
+		if (!gbVanilla) {
 			SaveHotkeys();
+			SaveHeroItems(&plr[myplr]);
+		}
 		pfile_flush(!gbIsMultiplayer, save_num);
 	}
 }
@@ -276,9 +278,15 @@ BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
 				_uiheroinfo uihero;
 				strcpy(hero_names[i], pkplr.pName);
 				bool hasSaveGame = pfile_archive_contains_game(archive, i);
-				if (!hasSaveGame)
-					gbIsHellfireSaveGame = pkplr.bIsHellfire;
+				if (hasSaveGame)
+					pkplr.bIsHellfire = gbIsHellfireSaveGame;
+
 				UnPackPlayer(&pkplr, 0, FALSE);
+
+				LoadHeroItems(&plr[0]);
+				RemoveEmptyInventory(0);
+				CalcPlrInv(0, FALSE);
+
 				game_2_ui_player(plr, &uihero, hasSaveGame);
 				ui_add_hero_info(&uihero);
 			}
@@ -340,6 +348,7 @@ BOOL pfile_ui_save_create(_uiheroinfo *heroinfo)
 	game_2_ui_player(&plr[0], heroinfo, FALSE);
 	if (!gbVanilla) {
 		SaveHotkeys();
+		SaveHeroItems(&plr[0]);
 	}
 	pfile_flush(TRUE, save_num);
 	return TRUE;
@@ -396,9 +405,15 @@ void pfile_read_player_from_save()
 		app_fatal("Unable to load character");
 
 	gbValidSaveFile = pfile_archive_contains_game(archive, save_num);
-	if (!gbValidSaveFile)
-		gbIsHellfireSaveGame = pkplr.bIsHellfire;
+	if (gbValidSaveFile)
+		pkplr.bIsHellfire = gbIsHellfireSaveGame;
+
 	UnPackPlayer(&pkplr, myplr, FALSE);
+
+	LoadHeroItems(&plr[myplr]);
+	RemoveEmptyInventory(myplr);
+	CalcPlrInv(myplr, FALSE);
+
 	pfile_SFileCloseArchive(archive);
 }
 

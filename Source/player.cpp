@@ -3473,8 +3473,8 @@ void ValidatePlayer()
 	}
 
 	Uint64 msk = 0;
-	for (b = 1; b < MAX_SPELLS; b++) {
-		if (GetSpellBookLevel(b) != -1) {
+	for (b = SPL_FIREBOLT; b < MAX_SPELLS; b++) {
+		if (GetSpellBookLevel((spell_id)b) != -1) {
 			msk |= GetSpellBitmask(b);
 			if (plr[myplr]._pSplLvl[b] > MAX_SPELL_LEVEL)
 				plr[myplr]._pSplLvl[b] = MAX_SPELL_LEVEL;
