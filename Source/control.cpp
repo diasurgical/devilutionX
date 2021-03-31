@@ -1692,13 +1692,14 @@ void ReleaseChrBtns(bool addAllStatPoints)
 	}
 }
 
-#define DURABILITY_RED 2
-#define DURABILITY_GOLD 5
 static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c)
 {
+	const int durabilityThresholdGold = 5;
+	const int durabilityThresholdRed = 2;
+
 	if (pItem->isEmpty())
 		return x;
-	if (pItem->_iDurability > DURABILITY_GOLD)
+	if (pItem->_iDurability > durabilityThresholdGold)
 		return x;
 	if (c == 0) {
 		switch (pItem->_itype) {
@@ -1728,14 +1729,14 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c
 	//Calculate how much of the icon should be gold and red
 	int height = 32;
 	int amount;
-	if (pItem->_iDurability <= DURABILITY_RED)
+	if (pItem->_iDurability <= durabilityThresholdRed)
 		amount = 0;
 	else {
 		if (!sgOptions.Graphics.bDurabilityIconGradual)
 			amount = height;
 		else {
-			int cur = pItem->_iDurability - DURABILITY_RED;
-			amount = (height * cur) / (DURABILITY_GOLD - DURABILITY_RED);
+			int cur = pItem->_iDurability - durabilityThresholdRed;
+			amount = (height * cur) / (durabilityThresholdGold - durabilityThresholdRed);
 		}
 	}
 
