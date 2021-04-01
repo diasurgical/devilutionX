@@ -96,11 +96,7 @@ void selhero_Free()
 
 void selhero_SetStats()
 {
-	int heroclass = selhero_heroInfo.heroclass;
-	if (heroclass == PC_BARBARIAN) {
-		heroclass = PC_WARRIOR; // The graphics is missing from heros.pcx
-	}
-	SELHERO_DIALOG_HERO_IMG->m_frame = heroclass;
+	SELHERO_DIALOG_HERO_IMG->m_frame = selhero_heroInfo.heroclass;
 	snprintf(textStats[0], sizeof(textStats[0]), "%d", selhero_heroInfo.level);
 	snprintf(textStats[1], sizeof(textStats[1]), "%d", selhero_heroInfo.strength);
 	snprintf(textStats[2], sizeof(textStats[2]), "%d", selhero_heroInfo.magic);
@@ -154,11 +150,7 @@ void selhero_Init()
 	vecSelHeroDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 30), (Sint16)(UI_OFFSET_Y + 211), 180, 76 };
-	if (hellfire_mpq) {
-		SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, 5, rect2);
-	} else {
-		SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, 3, rect2);
-	}
+	SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, NUM_CLASSES, rect2);
 	vecSelHeroDialog.push_back(SELHERO_DIALOG_HERO_IMG);
 
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 39), (Sint16)(UI_OFFSET_Y + 323), 110, 21 };
@@ -243,7 +235,7 @@ void selhero_List_Focus(int value)
 		return;
 	}
 
-	SELHERO_DIALOG_HERO_IMG->m_frame = hellfire_mpq ? 5 : 3;
+	SELHERO_DIALOG_HERO_IMG->m_frame = NUM_CLASSES;
 	strncpy(textStats[0], "--", sizeof(textStats[0]) - 1);
 	strncpy(textStats[1], "--", sizeof(textStats[1]) - 1);
 	strncpy(textStats[2], "--", sizeof(textStats[2]) - 1);

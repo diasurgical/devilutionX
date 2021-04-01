@@ -428,6 +428,52 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 	return SDL_PointInRect(&point, &rect);
 }
 
+void LoadHeros()
+{
+	LoadArt("ui_art\\heros.pcx", &ArtHero);
+
+	const int portraitHeight = 76;
+	int portraitOrder[NUM_CLASSES + 1] = { 0, 1, 2, 2, 1, 0, 3 };
+	if (ArtHero.h() >= portraitHeight * 6) {
+		portraitOrder[PC_MONK] = 3;
+		portraitOrder[PC_BARD] = 4;
+		portraitOrder[NUM_CLASSES] = 5;
+	}
+	if (ArtHero.h() >= portraitHeight * 7) {
+		portraitOrder[PC_BARBARIAN] = 6;
+	}
+
+	SDL_Surface *heros = SDL_CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (NUM_CLASSES + 1), 8, SDL_PIXELFORMAT_INDEX8);
+
+	for (int i = 0; i <= NUM_CLASSES; i++) {
+		int offset = portraitOrder[i] * portraitHeight;
+		if (offset + portraitHeight > ArtHero.h()) {
+			offset = 0;
+		}
+		SDL_Rect src_rect = { 0, offset, ArtHero.w(), portraitHeight };
+		SDL_Rect dst_rect = { 0, i * portraitHeight, ArtHero.w(), portraitHeight };
+		SDL_BlitSurface(ArtHero.surface, &src_rect, heros, &dst_rect);
+	}
+
+	Art ArtPortrait;
+	for (int i = 0; i <= NUM_CLASSES; i++) {
+		char portraitPath[18];
+		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
+		LoadArt(portraitPath, &ArtPortrait);
+		if (ArtPortrait.surface == nullptr)
+			continue;
+
+		SDL_Rect dst_rect = { 0, i * portraitHeight, ArtPortrait.w(), portraitHeight };
+		SDL_BlitSurface(ArtPortrait.surface, nullptr, heros, &dst_rect);
+		ArtPortrait.Unload();
+	}
+
+	ArtHero.Unload();
+	ArtHero.surface = heros;
+	ArtHero.frame_height = portraitHeight;
+	ArtHero.frames = NUM_CLASSES;
+}
+
 void LoadUiGFX()
 {
 	if (gbIsHellfire) {
@@ -439,7 +485,8 @@ void LoadUiGFX()
 	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
 	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
-	LoadArt("ui_art\\heros.pcx", &ArtHero, gbIsHellfire ? 6 : 4);
+
+	LoadHeros();
 }
 
 void UiInitialize()
