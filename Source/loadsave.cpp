@@ -1839,60 +1839,60 @@ void SaveLevel()
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dDead[i][j]);
+				file.writeLE<Sint8>(dDead[i][j]);
 		}
 	}
 
-	file.writeBE<Uint32>(nummonsters);
-	file.writeBE<Uint32>(numitems);
-	file.writeBE<Uint32>(nobjects);
+	file.writeBE<Sint32>(nummonsters);
+	file.writeBE<Sint32>(numitems);
+	file.writeBE<Sint32>(nobjects);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < MAXMONSTERS; i++)
-			file.writeBE<Uint32>(monstactive[i]);
+			file.writeBE<Sint32>(monstactive[i]);
 		for (int i = 0; i < nummonsters; i++)
 			SaveMonster(&file, monstactive[i]);
 		for (int i = 0; i < MAXOBJECTS; i++)
-			file.writeLE<Uint8>(objectactive[i]);
+			file.writeLE<Sint8>(objectactive[i]);
 		for (int i = 0; i < MAXOBJECTS; i++)
-			file.writeLE<Uint8>(objectavail[i]);
+			file.writeLE<Sint8>(objectavail[i]);
 		for (int i = 0; i < nobjects; i++)
 			SaveObject(&file, objectactive[i]);
 	}
 
 	for (int i = 0; i < MAXITEMS; i++)
-		file.writeLE<Uint8>(itemactive[i]);
+		file.writeLE<Sint8>(itemactive[i]);
 	for (int i = 0; i < MAXITEMS; i++)
-		file.writeLE<Uint8>(itemavail[i]);
+		file.writeLE<Sint8>(itemavail[i]);
 
 	for (int i = 0; i < numitems; i++)
 		SaveItem(&file, &item[itemactive[i]]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
-			file.writeLE<Uint8>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
+			file.writeLE<Sint8>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
-			file.writeLE<Uint8>(dItem[i][j]);
+			file.writeLE<Sint8>(dItem[i][j]);
 	}
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeBE<Uint32>(dMonster[i][j]);
+				file.writeBE<Sint32>(dMonster[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dObject[i][j]);
+				file.writeLE<Sint8>(dObject[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dLight[i][j]);
+				file.writeLE<Sint8>(dLight[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dPreLight[i][j]);
+				file.writeLE<Sint8>(dPreLight[i][j]);
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
@@ -1900,7 +1900,7 @@ void SaveLevel()
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dMissile[i][j]);
+				file.writeLE<Sint8>(dMissile[i][j]);
 		}
 	}
 
@@ -1921,24 +1921,24 @@ void LoadLevel()
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dDead[i][j] = file.nextLE<Uint8>();
+				dDead[i][j] = file.nextLE<Sint8>();
 		}
 		SetDead();
 	}
 
-	nummonsters = file.nextBE<Uint32>();
-	numitems = file.nextBE<Uint32>();
-	nobjects = file.nextBE<Uint32>();
+	nummonsters = file.nextBE<Sint32>();
+	numitems = file.nextBE<Sint32>();
+	nobjects = file.nextBE<Sint32>();
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < MAXMONSTERS; i++)
-			monstactive[i] = file.nextBE<Uint32>();
+			monstactive[i] = file.nextBE<Sint32>();
 		for (int i = 0; i < nummonsters; i++)
 			LoadMonster(&file, monstactive[i]);
 		for (int i = 0; i < MAXOBJECTS; i++)
-			objectactive[i] = file.nextLE<Uint8>();
+			objectactive[i] = file.nextLE<Sint8>();
 		for (int i = 0; i < MAXOBJECTS; i++)
-			objectavail[i] = file.nextLE<Uint8>();
+			objectavail[i] = file.nextLE<Sint8>();
 		for (int i = 0; i < nobjects; i++)
 			LoadObject(&file, objectactive[i]);
 		if (!gbSkipSync) {
@@ -1948,37 +1948,37 @@ void LoadLevel()
 	}
 
 	for (int i = 0; i < MAXITEMS; i++)
-		itemactive[i] = file.nextLE<Uint8>();
+		itemactive[i] = file.nextLE<Sint8>();
 	for (int i = 0; i < MAXITEMS; i++)
-		itemavail[i] = file.nextLE<Uint8>();
+		itemavail[i] = file.nextLE<Sint8>();
 	for (int i = 0; i < numitems; i++)
 		LoadItem(&file, itemactive[i]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
-			dFlags[i][j] = file.nextLE<Uint8>();
+			dFlags[i][j] = file.nextLE<Sint8>();
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
-			dItem[i][j] = file.nextLE<Uint8>();
+			dItem[i][j] = file.nextLE<Sint8>();
 	}
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dMonster[i][j] = file.nextBE<Uint32>();
+				dMonster[i][j] = file.nextBE<Sint32>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dObject[i][j] = file.nextLE<Uint8>();
+				dObject[i][j] = file.nextLE<Sint8>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dLight[i][j] = file.nextLE<Uint8>();
+				dLight[i][j] = file.nextLE<Sint8>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dPreLight[i][j] = file.nextLE<Uint8>();
+				dPreLight[i][j] = file.nextLE<Sint8>();
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
