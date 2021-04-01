@@ -74,7 +74,7 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 /* data */
 
 char gszVersionNumber[64] = "internal version unknown";
-char gszProductName[64] = "Diablo v1.09";
+char gszProductName[64] = "DevilutionX vUnknown";
 
 void init_cleanup()
 {
