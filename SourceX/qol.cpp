@@ -63,6 +63,12 @@ void InitQol()
 		LoadMaskedArt("data\\healthbox.pcx", &qolArt->healthBox, 1, 1);
 		LoadArt("data\\health.pcx", &qolArt->health);
 		LoadMaskedArt("data\\resistance.pcx", &qolArt->resistance, 6, 1);
+
+		if ((qolArt->healthBox.surface == nullptr) ||
+			(qolArt->health.surface == nullptr) ||
+			(qolArt->resistance.surface == nullptr)) {
+			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
+		}
 	}
 }
 
@@ -71,8 +77,9 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;
 	assert(qolArt != nullptr);
-	if (qolArt->healthBox.surface == nullptr)
-		return;
+	assert(qolArt->healthBox.surface != nullptr);
+	assert(qolArt->health.surface != nullptr);
+	assert(qolArt->resistance.surface != nullptr);
 	if (currlevel == 0)
 		return;
 	if (pcursmonst == -1)
