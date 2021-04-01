@@ -461,7 +461,7 @@ void CelDrawUnsafeTo(CelOutputBuffer out, int x, int y, BYTE *pCelBuff, int nCel
 	}
 }
 
-void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, bool skipColorIndexZero)
 {
 	int nDataSize, w;
 	BYTE *src, *dst, *end;
@@ -480,22 +480,24 @@ void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelB
 				if (dst < out.end() && dst > out.begin()) {
 					if (dst >= out.end() - out.pitch()) {
 						while (width) {
-							if (*src++) {
+							if (!skipColorIndexZero || *src > 0) {
 								dst[-out.pitch()] = col;
 								dst[-1] = col;
 								dst[1] = col;
 							}
+							src++;
 							dst++;
 							width--;
 						}
 					} else {
 						while (width) {
-							if (*src++) {
+							if (!skipColorIndexZero || *src > 0) {
 								dst[-out.pitch()] = col;
 								dst[-1] = col;
 								dst[1] = col;
 								dst[out.pitch()] = col;
 							}
+							src++;
 							dst++;
 							width--;
 						}

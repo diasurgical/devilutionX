@@ -195,14 +195,14 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 			col = PAL16_RED + 5;
 		}
 		if (pcurs <= 179) {
-			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels, pcurs, cursW);
+			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels, pcurs, cursW, false);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW);
 			} else {
 				CelDrawLightRedSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW, 1);
 			}
 		} else {
-			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
+			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW, false);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
 			} else {
@@ -507,7 +507,7 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, BOOL p
 	}
 
 	if (bv == pcursobj)
-		CelBlitOutlineTo(out, 194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		CelBlitOutlineTo(out, 194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, true);
 	if (object[bv]._oLight) {
 		CelClippedDrawLightTo(out, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
 	} else {
@@ -609,7 +609,7 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre
 
 	int px = sx - pItem->_iAnimWidth2;
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
-		CelBlitOutlineTo(out, 181, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
+		CelBlitOutlineTo(out, 181, px, sy, pCelBuff, nCel, pItem->_iAnimWidth, true);
 	}
 	CelClippedDrawLightTo(out, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
 }
@@ -634,7 +634,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 	if (leveltype == DTYPE_TOWN) {
 		px = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			CelBlitOutlineTo(out, 166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, true);
 		}
 		assert(towner[mi]._tAnimData);
 		CelClippedDrawTo(out, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
