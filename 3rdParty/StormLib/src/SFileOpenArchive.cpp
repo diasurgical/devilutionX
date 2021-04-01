@@ -460,6 +460,7 @@ bool WINAPI SFileOpenArchive(
         nError = BuildFileTable(ha);
     }
 
+#ifdef FULL
     // Load the internal listfile and include it to the file table
     if(nError == ERROR_SUCCESS && (dwFlags & MPQ_OPEN_NO_LISTFILE) == 0)
     {
@@ -485,6 +486,7 @@ bool WINAPI SFileOpenArchive(
             ha->dwFileFlags2 = pFileEntry->dwFlags;
         }
     }
+#endif // FULL
 
     // Remember whether the archive has weak signature. Only for MPQs format 1.0.
     if(nError == ERROR_SUCCESS)
@@ -519,6 +521,7 @@ bool WINAPI SFileOpenArchive(
     return (nError == ERROR_SUCCESS);
 }
 
+#ifdef FULL
 //-----------------------------------------------------------------------------
 // bool WINAPI SFileSetDownloadCallback(HANDLE, SFILE_DOWNLOAD_CALLBACK, void *);
 //
@@ -626,6 +629,7 @@ bool WINAPI SFileFlushArchive(HANDLE hMpq)
         SetLastError(nResultError);
     return (nResultError == ERROR_SUCCESS);
 }
+#endif // FULL
 
 //-----------------------------------------------------------------------------
 // bool SFileCloseArchive(HANDLE hMpq);
@@ -648,8 +652,10 @@ bool WINAPI SFileCloseArchive(HANDLE hMpq)
     ha->pfnAddFileCB = NULL;
     ha->pvAddFileUserData = NULL;
 
+#ifdef FULL
     // Flush all unsaved data to the storage
     bResult = SFileFlushArchive(hMpq);
+#endif // FULL
 
     // Free all memory used by MPQ archive
     FreeArchiveHandle(ha);

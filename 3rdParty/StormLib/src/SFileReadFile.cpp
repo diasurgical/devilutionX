@@ -135,6 +135,7 @@ static int ReadMpqSectors(TMPQFile * hf, LPBYTE pbBuffer, DWORD dwByteOffset, DW
                 BSWAP_ARRAY32_UNSIGNED(pbInSector, dwRawBytesInThisSector);
             }
 
+#ifdef FULL
             // If the file has sector CRC check turned on, perform it
             if(hf->bCheckSectorCRCs && hf->SectorChksums != NULL)
             {
@@ -153,6 +154,7 @@ static int ReadMpqSectors(TMPQFile * hf, LPBYTE pbBuffer, DWORD dwByteOffset, DW
                     }
                 }
             }
+#endif // FULL
 
             // If the sector is really compressed, decompress it.
             // WARNING : Some sectors may not be compressed, it can be determined only
@@ -400,11 +402,15 @@ static int ReadMpkFileSingleUnit(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos
         // If the file is compressed, we have to decompress it now
         if(pFileEntry->dwFlags & MPQ_FILE_COMPRESS_MASK)
         {
+#ifdef FULL
             int cbOutBuffer = (int)hf->dwDataSize;
 
             hf->dwCompression0 = pbRawData[0];
             if(!SCompDecompressMpk(hf->pbFileSector, &cbOutBuffer, pbRawData, (int)pFileEntry->dwCmpSize))
                 nError = ERROR_FILE_CORRUPT;
+#else
+            assert(0);
+#endif
         }
         else
         {
@@ -569,6 +575,7 @@ static int ReadMpqFileSectorFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos
     return ERROR_SUCCESS;
 }
 
+#ifdef FULL
 static int ReadMpqFilePatchFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos, DWORD dwToRead, LPDWORD pdwBytesRead)
 {
     TMPQPatcher Patcher;
@@ -625,6 +632,7 @@ static int ReadMpqFilePatchFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos,
         *pdwBytesRead = dwBytesRead;
     return nError;
 }
+#endif // FULL
 
 static int ReadMpqFileLocalFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos, DWORD dwToRead, LPDWORD pdwBytesRead)
 {
@@ -705,11 +713,13 @@ bool WINAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD
         nError = ReadMpqFileLocalFile(hf, pvBuffer, hf->dwFilePos, dwToRead, &dwBytesRead);
     }
 
+#ifdef FULL
     // If the file is a patch file, we have to read it special way
     else if(hf->hfPatch != NULL && (hf->pFileEntry->dwFlags & MPQ_FILE_PATCH_FILE) == 0)
     {
         nError = ReadMpqFilePatchFile(hf, pvBuffer, hf->dwFilePos, dwToRead, &dwBytesRead);
     }
+#endif // FULL
 
     // If the archive is a MPK archive, we need special way to read the file
     else if(hf->ha->dwSubType == MPQ_SUBTYPE_MPK)

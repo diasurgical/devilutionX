@@ -244,12 +244,14 @@ void InitializeMpqCryptography()
             }
         }
 
+#ifdef FULL
         // Also register both MD5 and SHA1 hash algorithms
         register_hash(&md5_desc);
         register_hash(&sha1_desc);
 
         // Use LibTomMath as support math library for LibTomCrypt
         ltc_mp = ltm_desc;
+#endif // FULL
 
         // Don't do that again
         bMpqCryptographyInitialized = true;
@@ -365,6 +367,7 @@ DWORD GetNearestPowerOfTwo(DWORD dwFileCount)
     return dwPowerOfTwo;
 }
 */
+#ifdef FULL
 //-----------------------------------------------------------------------------
 // Calculates a Jenkin's Encrypting and decrypting MPQ file data
 
@@ -396,6 +399,7 @@ ULONGLONG HashStringJenkins(const char * szFileName)
     // Combine those 2 together
     return ((ULONGLONG)primary_hash << 0x20) | (ULONGLONG)secondary_hash;
 }
+#endif // FULL
 
 //-----------------------------------------------------------------------------
 // Default flags for (attributes) and (listfile)
@@ -969,11 +973,13 @@ void * LoadMpqTable(
         // If everything succeeded, read the raw table from the MPQ
         if(FileStream_Read(ha->pStream, &ByteOffset, pbToRead, dwBytesToRead))
         {
+#ifdef FULL
             // Verify the MD5 of the table, if present
             if(!VerifyDataBlockHash(pbToRead, dwBytesToRead, pbTableHash))
             {
                 nError = ERROR_FILE_CORRUPT;
             }
+#endif // FULL
         }
         else
         {
@@ -1472,6 +1478,7 @@ int WriteSectorChecksums(TMPQFile * hf)
     return nError;
 }
 
+#ifdef FULL
 int WriteMemDataMD5(
     TFileStream * pStream,
     ULONGLONG RawDataOffs,
@@ -1583,6 +1590,7 @@ int WriteMpqDataMD5(
     STORM_FREE(md5_array);
     return nError;
 }
+#endif // FULL
 
 // Frees the structure for MPQ file
 void FreeFileHandle(TMPQFile *& hf)
@@ -1644,8 +1652,10 @@ void FreeArchiveHandle(TMPQArchive *& ha)
 
         if(ha->pHashTable != NULL)
             STORM_FREE(ha->pHashTable);
+#ifdef FULL
         if(ha->pHetTable != NULL)
             FreeHetTable(ha->pHetTable);
+#endif // FULL
         STORM_FREE(ha);
         ha = NULL;
     }
@@ -1720,6 +1730,7 @@ bool IsValidSignature(LPBYTE pbSignature)
 }
 
 
+#ifdef FULL
 bool VerifyDataBlockHash(void * pvDataBlock, DWORD cbDataBlock, LPBYTE expected_md5)
 {
     hash_state md5_state;
@@ -1749,6 +1760,7 @@ void CalculateDataBlockHash(void * pvDataBlock, DWORD cbDataBlock, LPBYTE md5_ha
     md5_process(&md5_state, (unsigned char *)pvDataBlock, cbDataBlock);
     md5_done(&md5_state, md5_hash);
 }
+#endif // FULL
 
 
 //-----------------------------------------------------------------------------

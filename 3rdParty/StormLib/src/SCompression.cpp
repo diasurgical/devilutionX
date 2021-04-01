@@ -63,6 +63,7 @@ typedef struct
 } TDecompressTable;
 
 
+#ifdef FULL
 /*****************************************************************************/
 /*                                                                           */
 /*  Support for Huffman compression (0x01)                                   */
@@ -177,6 +178,7 @@ int Decompress_ZLIB(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, i
     }
     return nResult;
 }
+#endif // FULL
 
 /******************************************************************************/
 /*                                                                            */
@@ -307,6 +309,7 @@ static int Decompress_PKLIB(void * pvOutBuffer, int * pcbOutBuffer, void * pvInB
     return 1;
 }
 
+#ifdef FULL
 /******************************************************************************/
 /*                                                                            */
 /*  Support for Bzip2 compression (0x10)                                      */
@@ -667,6 +670,7 @@ static int Decompress_ADPCM_stereo(void * pvOutBuffer, int * pcbOutBuffer, void 
     *pcbOutBuffer = DecompressADPCM(pvOutBuffer, *pcbOutBuffer, pvInBuffer, cbInBuffer, 2);
     return 1;
 }
+#endif // FULL
 
 /*****************************************************************************/
 /*                                                                           */
@@ -757,13 +761,17 @@ int WINAPI SCompExplode(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffe
 
 static TCompressTable cmp_table[] =
 {
+#ifdef FULL
     {MPQ_COMPRESSION_SPARSE,       Compress_SPARSE},        // Sparse compression
     {MPQ_COMPRESSION_ADPCM_MONO,   Compress_ADPCM_mono},    // IMA ADPCM mono compression
     {MPQ_COMPRESSION_ADPCM_STEREO, Compress_ADPCM_stereo},  // IMA ADPCM stereo compression
     {MPQ_COMPRESSION_HUFFMANN,     Compress_huff},          // Huffmann compression
     {MPQ_COMPRESSION_ZLIB,         Compress_ZLIB},          // Compression with the "zlib" library
+#endif // FULL
     {MPQ_COMPRESSION_PKWARE,       Compress_PKLIB},         // Compression with Pkware DCL
+#ifdef FULL
     {MPQ_COMPRESSION_BZIP2,        Compress_BZIP2}          // Compression Bzip2 library
+#endif // FULL
 };
 
 int WINAPI SCompCompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer, unsigned uCompressionMask, int nCmpType, int nCmpLevel)
@@ -798,9 +806,13 @@ int WINAPI SCompCompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuff
     // Setup the compression function array
     if(uCompressionMask == MPQ_COMPRESSION_LZMA)
     {
+#ifdef FULL
         CompressFuncArray[0] = Compress_LZMA;
         CompressByte[0] = (char)uCompressionMask;
         nCompressCount = 1;
+#else
+        assert(0);
+#endif // FULL
     }
     else
     {
@@ -903,13 +915,17 @@ int WINAPI SCompCompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuff
 // of compressed data
 static TDecompressTable dcmp_table[] =
 {
+#ifdef FULL
     {MPQ_COMPRESSION_BZIP2,        Decompress_BZIP2},        // Decompression with Bzip2 library
+#endif // FULL
     {MPQ_COMPRESSION_PKWARE,       Decompress_PKLIB},        // Decompression with Pkware Data Compression Library
+#ifdef FULL
     {MPQ_COMPRESSION_ZLIB,         Decompress_ZLIB},         // Decompression with the "zlib" library
     {MPQ_COMPRESSION_HUFFMANN,     Decompress_huff},         // Huffmann decompression
     {MPQ_COMPRESSION_ADPCM_STEREO, Decompress_ADPCM_stereo}, // IMA ADPCM stereo decompression
     {MPQ_COMPRESSION_ADPCM_MONO,   Decompress_ADPCM_mono},   // IMA ADPCM mono decompression
     {MPQ_COMPRESSION_SPARSE,       Decompress_SPARSE}        // Sparse decompression
+#endif // FULL
 };
 
 int WINAPI SCompDecompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
@@ -1048,7 +1064,11 @@ int WINAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvInB
     switch((unsigned char)CompressionMethod)
     {
         case MPQ_COMPRESSION_ZLIB:
+#ifdef FULL
             pfnDecompress1 = Decompress_ZLIB;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case MPQ_COMPRESSION_PKWARE:
@@ -1056,25 +1076,45 @@ int WINAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvInB
             break;
 
         case MPQ_COMPRESSION_BZIP2:
+#ifdef FULL
             pfnDecompress1 = Decompress_BZIP2;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case MPQ_COMPRESSION_LZMA:
+#ifdef FULL
             pfnDecompress1 = Decompress_LZMA;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case MPQ_COMPRESSION_SPARSE:
+#ifdef FULL
             pfnDecompress1 = Decompress_SPARSE;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case (MPQ_COMPRESSION_SPARSE | MPQ_COMPRESSION_ZLIB):
+#ifdef FULL
             pfnDecompress1 = Decompress_ZLIB;
             pfnDecompress2 = Decompress_SPARSE;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case (MPQ_COMPRESSION_SPARSE | MPQ_COMPRESSION_BZIP2):
+#ifdef FULL
             pfnDecompress1 = Decompress_BZIP2;
             pfnDecompress2 = Decompress_SPARSE;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         //
@@ -1084,13 +1124,21 @@ int WINAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvInB
         //
 
         case (MPQ_COMPRESSION_ADPCM_MONO | MPQ_COMPRESSION_HUFFMANN):
+#ifdef FULL
             pfnDecompress1 = Decompress_huff;
             pfnDecompress2 = Decompress_ADPCM_mono;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case (MPQ_COMPRESSION_ADPCM_STEREO | MPQ_COMPRESSION_HUFFMANN):
+#ifdef FULL
             pfnDecompress1 = Decompress_huff;
             pfnDecompress2 = Decompress_ADPCM_stereo;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         default:
@@ -1132,6 +1180,7 @@ int WINAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvInB
     return nResult;
 }
 
+#ifdef FULL
 /*****************************************************************************/
 /*                                                                           */
 /*   File decompression for MPK archives                                     */
@@ -1142,4 +1191,5 @@ int SCompDecompressMpk(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer
 {
     return Decompress_LZMA_MPK(pvOutBuffer, pcbOutBuffer, pvInBuffer, cbInBuffer);
 }
+#endif // FULL
 
