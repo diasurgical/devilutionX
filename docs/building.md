@@ -336,27 +336,17 @@ docker build -f Packaging/amiga/Dockerfile -t devilutionx-amiga .
 ### Build DevilutionX Amiga binary
 
 ~~~ bash
-docker run --rm -v "${PWD}:/work" devilutionx-amiga
-sudo chown -R "${USER}:" build-amiga
+docker run -u "$(id -u "$USER"):$(id -g "$USER")" --rm -v "${PWD}:/work" devilutionx-amiga
 ~~~
 
 The command above builds DevilutionX in release mode.
 For other build options, you can run the container interactively:
 
 ~~~ bash
-docker run -ti --rm -v "${PWD}:/work" devilutionx-amiga bash
+docker run -u "$(id -u "$USER"):$(id -g "$USER")" -ti --rm -v "${PWD}:/work" devilutionx-amiga bash
 ~~~
 
 See the `CMD` in `Packaging/amiga/Dockerfile` for reference.
-
-### Copy the necessary files
-
-Outside of the Docker container, from the DevilutionX directory, run:
-
-~~~ bash
-sudo chown -R "${USER}:" build-amiga
-cp Packaging/amiga/devilutionx.info build-amiga/
-~~~
 
 To actually start DevilutionX, increase the stack size to 50KiB in Amiga.
 You can do this by selecting the DevilutionX icon, then hold right mouse button and
