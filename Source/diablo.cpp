@@ -84,11 +84,11 @@ const char *const spszMsgTbl[] = {
 const char *const spszMsgHotKeyTbl[] = { "F9", "F10", "F11", "F12" };
 
 /** To know if these things have been done when we get to the diablo_deinit() function */
-BOOL was_archives_init = false;
+bool was_archives_init = false;
 /** To know if surfaces have been initialized or not */
-BOOL was_window_init = false;
-BOOL was_ui_init = false;
-BOOL was_snd_init = false;
+bool was_window_init = false;
+bool was_ui_init = false;
+bool was_snd_init = false;
 bool sbWasOptionsLoaded = false;
 
 // Controller support:
