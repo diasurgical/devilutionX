@@ -141,7 +141,7 @@ TEST(Inv, RemoveInvItem)
 	// | (item) | (item) | ... | ...
 	dvl::plr[dvl::myplr]._pNumInv = 1;
 	dvl::plr[dvl::myplr].InvGrid[0] = 1;
-	dvl::plr[dvl::myplr].InvGrid[1] = 1;
+	dvl::plr[dvl::myplr].InvGrid[1] = -1;
 	dvl::plr[dvl::myplr].InvList[0]._itype = dvl::ITYPE_MISC;
 
 	dvl::RemoveInvItem(dvl::myplr, 0);
@@ -158,7 +158,7 @@ TEST(Inv, RemoveInvItem_other_item)
 	// | (item) | (item) | (ring) | ...
 	dvl::plr[dvl::myplr]._pNumInv = 2;
 	dvl::plr[dvl::myplr].InvGrid[0] = 1;
-	dvl::plr[dvl::myplr].InvGrid[1] = 1;
+	dvl::plr[dvl::myplr].InvGrid[1] = -1;
 	dvl::plr[dvl::myplr].InvList[0]._itype = dvl::ITYPE_MISC;
 
 	dvl::plr[dvl::myplr].InvGrid[2] = 2;
