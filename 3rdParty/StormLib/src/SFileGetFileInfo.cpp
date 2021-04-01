@@ -95,7 +95,9 @@ static bool GetInfo_TablePointer(void * pvFileInfo, DWORD cbFileInfo, void * pvT
     // Verify buffer pointer and buffer size
     if(!GetInfo_BufferCheck(pvFileInfo, cbFileInfo, sizeof(void *), pcbLengthNeeded))
     {
+#ifdef FULL
         SFileFreeFileInfo(pvTablePointer, InfoClass);
+#endif // FULL
         return false;
     }
 
@@ -247,6 +249,7 @@ bool WINAPI SFileGetFileInfo(
         case SFileMpqHeader:
             return GetInfo_ReadFromFile(pvFileInfo, cbFileInfo, ha->pStream, ha->MpqPos, pHeader->dwHeaderSize, pcbLengthNeeded);
 
+#ifdef FULL
         case SFileMpqHetTableOffset:
             return GetInfo(pvFileInfo, cbFileInfo, &pHeader->HetTablePos64, sizeof(ULONGLONG), pcbLengthNeeded);
 
@@ -287,6 +290,7 @@ bool WINAPI SFileGetFileInfo(
             if((pvSrcFileInfo = LoadBetTable(ha)) == NULL)
                 return GetInfo_ReturnError(ERROR_NOT_ENOUGH_MEMORY);
             return GetInfo_TablePointer(pvFileInfo, cbFileInfo, pvSrcFileInfo, InfoClass, pcbLengthNeeded);
+#endif // FULL
 
         case SFileMpqHashTableOffset:
             Int64Value = MAKE_OFFSET64(pHeader->wHashTablePosHi, pHeader->dwHashTablePos);
@@ -328,6 +332,7 @@ bool WINAPI SFileGetFileInfo(
         case SFileMpqHiBlockTable:
             return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
 
+#ifdef FULL
         case SFileMpqSignatures:
             if(!QueryMpqSignatureInfo(ha, &SignatureInfo))
                 return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
@@ -348,6 +353,7 @@ bool WINAPI SFileGetFileInfo(
             if(QueryMpqSignatureInfo(ha, &SignatureInfo) == false || (SignatureInfo.SignatureTypes & SIGNATURE_TYPE_STRONG) == 0)
                 return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
             return GetInfo(pvFileInfo, cbFileInfo, SignatureInfo.Signature, MPQ_STRONG_SIGNATURE_SIZE + 4, pcbLengthNeeded);
+#endif // FULL
 
         case SFileMpqArchiveSize64:
             return GetInfo(pvFileInfo, cbFileInfo, &pHeader->ArchiveSize64, sizeof(ULONGLONG), pcbLengthNeeded);
@@ -443,6 +449,7 @@ bool WINAPI SFileGetFileInfo(
     return GetInfo_ReturnError(ERROR_INVALID_PARAMETER);
 }
 
+#ifdef FULL
 bool WINAPI SFileFreeFileInfo(void * pvFileInfo, SFileInfoClass InfoClass)
 {
     switch(InfoClass)
@@ -462,6 +469,7 @@ bool WINAPI SFileFreeFileInfo(void * pvFileInfo, SFileInfoClass InfoClass)
     SetLastError(ERROR_INVALID_PARAMETER);
     return false;
 }
+#endif // FULL
 
 //-----------------------------------------------------------------------------
 // Tries to retrieve the file name
