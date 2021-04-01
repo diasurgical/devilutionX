@@ -89,6 +89,7 @@ BOOL was_archives_init = false;
 BOOL was_window_init = false;
 BOOL was_ui_init = false;
 BOOL was_snd_init = false;
+bool sbWasOptionsLoaded = false;
 
 // Controller support:
 extern void plrctrls_every_frame();
@@ -534,6 +535,8 @@ static void LoadOptions()
 #ifdef __vita__
 	sgOptions.Controller.bRearTouch = getIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
+
+	sbWasOptionsLoaded = true;
 }
 
 static void diablo_init_screen()
@@ -602,6 +605,8 @@ static void diablo_splash()
 
 static void diablo_deinit()
 {
+	if (sbWasOptionsLoaded)
+		SaveOptions();
 	if (was_snd_init) {
 		effects_cleanup_sfx();
 	}
@@ -619,7 +624,6 @@ static void diablo_deinit()
 
 void diablo_quit(int exitStatus)
 {
-	SaveOptions();
 	diablo_deinit();
 	exit(exitStatus);
 }
@@ -631,7 +635,6 @@ int DiabloMain(int argc, char **argv)
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
-	SaveOptions();
 	diablo_deinit();
 
 	return 0;
