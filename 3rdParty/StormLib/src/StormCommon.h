@@ -18,9 +18,8 @@
 // Compression support
 
 // Include functions from Pkware Data Compression Library
-#include "../../PKWare/pkware.h"
+#include "pklib/pklib.h"
 
-#ifdef FULL
 // Include functions from Huffmann compression
 #include "huffman/huff.h"
 
@@ -56,7 +55,6 @@
 
 // For HashStringJenkins
 #include "jenkins/lookup.h"
-#endif
 
 //-----------------------------------------------------------------------------
 // StormLib private defines
@@ -71,6 +69,18 @@
 
 // Macro for building 64-bit file offset from two 32-bit
 #define MAKE_OFFSET64(hi, lo)      (((ULONGLONG)hi << 32) | (ULONGLONG)lo)
+
+//-----------------------------------------------------------------------------
+// MTYPE definition - specifies what kind of MPQ is the map type
+
+typedef enum _MTYPE
+{
+    MapTypeNotChecked,                  // The map type was not checked yet
+    MapTypeNotRecognized,               // The file does not seems to be a map
+    MapTypeAviFile,                     // The file is actually an AVI file (Warcraft III cinematics)
+    MapTypeWarcraft3,                   // The file is a Warcraft III map
+    MapTypeStarcraft2                   // The file is a Starcraft II map
+} MTYPE, *PMTYPE;
 
 //-----------------------------------------------------------------------------
 // MPQ signature information
@@ -124,7 +134,10 @@ typedef struct _MPQ_SIGNATURE_INFO
 //-----------------------------------------------------------------------------
 // StormLib internal global variables
 
-extern LCID lcFileLocale;                       // Preferred file locale
+extern DWORD g_dwMpqSignature;                  // Marker for MPQ header
+extern DWORD g_dwHashTableKey;                  // Key for hash table
+extern DWORD g_dwBlockTableKey;                 // Key for block table
+extern LCID  g_lcFileLocale;                    // Preferred file locale
 
 //-----------------------------------------------------------------------------
 // Conversion to uppercase/lowercase (and "/" to "\")
@@ -135,8 +148,46 @@ extern unsigned char AsciiToUpperTable[256];
 //-----------------------------------------------------------------------------
 // Safe string functions
 
-void StringCopy(char * szTarget, size_t cchTarget, const char * szSource);
+template <typename XCHAR, typename XINT>
+XCHAR * IntToString(XCHAR * szBuffer, size_t cchMaxChars, XINT nValue, size_t nDigitCount = 0)
+{
+    XCHAR * szBufferEnd = szBuffer + cchMaxChars - 1;
+    XCHAR szNumberRev[0x20];
+    size_t nLength = 0;
+
+    // Always put the first digit
+    szNumberRev[nLength++] = (XCHAR)(nValue % 10) + '0';
+    nValue /= 10;
+
+    // Continue as long as we have non-zero
+    while(nValue != 0)
+    {
+        szNumberRev[nLength++] = (XCHAR)(nValue % 10) + '0';
+        nValue /= 10;
+    }
+
+    // Fill zeros, if needed
+    while(szBuffer < szBufferEnd && nLength < nDigitCount)
+    {
+        *szBuffer++ = '0';
+        nDigitCount--;
+    }
+
+    // Fill the buffer
+    while(szBuffer < szBufferEnd && nLength > 0)
+    {
+        nLength--;
+        *szBuffer++ = szNumberRev[nLength];
+    }
+
+    // Terminate the number with zeros
+    szBuffer[0] = 0;
+    return szBuffer;
+}
+
+char * StringCopy(char * szTarget, size_t cchTarget, const char * szSource);
 void StringCat(char * szTarget, size_t cchTargetMax, const char * szSource);
+void StringCreatePseudoFileName(char * szBuffer, size_t cchMaxChars, unsigned int nIndex, const char * szExtension);
 
 #ifdef _UNICODE
 void StringCopy(TCHAR * szTarget, size_t cchTarget, const char * szSource);
@@ -191,7 +242,7 @@ TMPQFile * IsValidFileHandle(HANDLE hFile);
 ULONGLONG FileOffsetFromMpqOffset(TMPQArchive * ha, ULONGLONG MpqOffset);
 ULONGLONG CalculateRawSectorOffset(TMPQFile * hf, DWORD dwSectorOffset);
 
-int ConvertMpqHeaderToFormat4(TMPQArchive * ha, ULONGLONG MpqOffset, ULONGLONG FileSize, DWORD dwFlags, bool bIsWarcraft3Map);
+int ConvertMpqHeaderToFormat4(TMPQArchive * ha, ULONGLONG MpqOffset, ULONGLONG FileSize, DWORD dwFlags, MTYPE MapType);
 
 bool IsValidHashEntry(TMPQArchive * ha, TMPQHash * pHash);
 
@@ -263,7 +314,7 @@ int SCompDecompressMpk(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer
 
 TMPQFile * CreateFileHandle(TMPQArchive * ha, TFileEntry * pFileEntry);
 TMPQFile * CreateWritableHandle(TMPQArchive * ha, DWORD dwFileSize);
-void * LoadMpqTable(TMPQArchive * ha, ULONGLONG ByteOffset, DWORD dwCompressedSize, DWORD dwRealSize, DWORD dwKey, bool * pbTableIsCut);
+void * LoadMpqTable(TMPQArchive * ha, ULONGLONG ByteOffset, LPBYTE pbTableHash, DWORD dwCompressedSize, DWORD dwRealSize, DWORD dwKey, bool * pbTableIsCut);
 int  AllocateSectorBuffer(TMPQFile * hf);
 int  AllocatePatchInfo(TMPQFile * hf, bool bLoadFromFile);
 int  AllocateSectorOffsets(TMPQFile * hf, bool bLoadFromFile);
@@ -299,7 +350,6 @@ void Patch_Finalize(TMPQPatcher * pPatcher);
 //-----------------------------------------------------------------------------
 // Utility functions
 
-bool CheckWildCard(const char * szString, const char * szWildCard);
 bool IsInternalMpqFileName(const char * szFileName);
 
 template <typename XCHAR>
