@@ -18,8 +18,9 @@
 // Compression support
 
 // Include functions from Pkware Data Compression Library
-#include "pklib/pklib.h"
+#include "../../PKWare/pkware.h"
 
+#ifdef FULL
 // Include functions from Huffmann compression
 #include "huffman/huff.h"
 
@@ -55,6 +56,7 @@
 
 // For HashStringJenkins
 #include "jenkins/lookup.h"
+#endif // FULL
 
 //-----------------------------------------------------------------------------
 // StormLib private defines
@@ -214,7 +216,9 @@ void  InitializeMpqCryptography();
 DWORD GetNearestPowerOfTwo(DWORD dwFileCount);
 
 bool IsPseudoFileName(const char * szFileName, LPDWORD pdwFileIndex);
+#ifdef FULL
 ULONGLONG HashStringJenkins(const char * szFileName);
+#endif // FULL
 
 DWORD GetDefaultSpecialFileFlags(DWORD dwFileSize, USHORT wFormatVersion);
 
@@ -227,8 +231,10 @@ DWORD DecryptFileKey(const char * szFileName, ULONGLONG MpqPos, DWORD dwFileSize
 
 bool IsValidMD5(LPBYTE pbMd5);
 bool IsValidSignature(LPBYTE pbSignature);
+#ifdef FULL
 bool VerifyDataBlockHash(void * pvDataBlock, DWORD cbDataBlock, LPBYTE expected_md5);
 void CalculateDataBlockHash(void * pvDataBlock, DWORD cbDataBlock, LPBYTE md5_hash);
+#endif // FULL
 
 //-----------------------------------------------------------------------------
 // Handle validation functions
@@ -264,6 +270,7 @@ ULONGLONG FindFreeMpqSpace(TMPQArchive * ha);
 int  CreateHashTable(TMPQArchive * ha, DWORD dwHashTableSize);
 int  LoadAnyHashTable(TMPQArchive * ha);
 int  BuildFileTable(TMPQArchive * ha);
+#ifdef FULL
 int  DefragmentFileTable(TMPQArchive * ha);
 
 int  CreateFileTable(TMPQArchive * ha, DWORD dwFileTableSize);
@@ -276,6 +283,7 @@ void FreeHetTable(TMPQHetTable * pHetTable);
 
 TMPQBetTable * CreateBetTable(DWORD dwMaxFileCount);
 void FreeBetTable(TMPQBetTable * pBetTable);
+#endif // FULL
 
 // Functions for finding files in the file table
 TFileEntry * GetFileEntryLocale2(TMPQArchive * ha, const char * szFileName, LCID lcLocale, LPDWORD PtrHashIndex);
@@ -307,7 +315,9 @@ int ConvertMpkHeaderToFormat4(TMPQArchive * ha, ULONGLONG FileSize, DWORD dwFlag
 void DecryptMpkTable(void * pvMpkTable, size_t cbSize);
 TMPQHash * LoadMpkHashTable(TMPQArchive * ha);
 TMPQBlock * LoadMpkBlockTable(TMPQArchive * ha);
+#ifdef FULL
 int SCompDecompressMpk(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer);
+#endif // FULL
 
 //-----------------------------------------------------------------------------
 // Common functions - MPQ File
@@ -322,8 +332,10 @@ int  AllocateSectorChecksums(TMPQFile * hf, bool bLoadFromFile);
 int  WritePatchInfo(TMPQFile * hf);
 int  WriteSectorOffsets(TMPQFile * hf);
 int  WriteSectorChecksums(TMPQFile * hf);
+#ifdef FULL
 int  WriteMemDataMD5(TFileStream * pStream, ULONGLONG RawDataOffs, void * pvRawData, DWORD dwRawDataSize, DWORD dwChunkSize, LPDWORD pcbTotalSize);
 int  WriteMpqDataMD5(TFileStream * pStream, ULONGLONG RawDataOffs, DWORD dwRawDataSize, DWORD dwChunkSize);
+#endif // FULL
 void FreeFileHandle(TMPQFile *& hf);
 void FreeArchiveHandle(TMPQArchive *& ha);
 
