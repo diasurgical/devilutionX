@@ -78,6 +78,9 @@ char gszProductName[64] = "Diablo v1.09";
 
 void init_cleanup()
 {
+	if (gbIsMultiplayer) {
+		pfile_write_hero();
+	}
 	pfile_flush_W();
 
 	if (spawn_mpq) {
