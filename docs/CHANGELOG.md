@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Reorganize ini-file
 - Show other players on the map
 - Widescreen menus
-- Scroll subtitles at the same speed as naration reader
+- Scroll subtitles at the same speed as narration reader
 - Preserve list position when buy and selling items in stores
 - Use belt via the numpad
 - Close panels when pressing <kbd>ESC</kbd>
@@ -79,7 +79,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Monsters being unable to properly see the location of firewalls
 - Fix more stability issues
 - Gold stacks are correctly topped when in dungeon
-- Gold icons graphics is always correct
+- Gold icons graphics are always correct
 - Arrows graphics not aligning with the move direction
 - Monsters miss calculating charge directions for some angles
 - Randomly being teleported from level 15 to Lazarus chamber
@@ -106,7 +106,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fallen fleeing in the wrong direction
 - Not getting XP for the first monster placed on a level
 - Loadscreen colors on entering the Poison Water quest
-- Being able to waist gold on red scrolls when not having room for them
+- Being able to waste gold on red scrolls when not having room for them
 - Inconsistent mouse behavior when opening/closing various panels
 - Items being destroyed if held in cursor when entering dungeon
 - Black Mushroom quest not resetting between games
@@ -117,12 +117,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - All bugs fixed between Diablo 1.04 and 1.09
 - Monster attack sound sometimes not playing
 - Firewall damage calculation being too low, and different for the first player in multiplayer
-- Missing sounds when bard and barbarians talks to cows
+- Missing sounds when bards and barbarians talk to cows
 - Right-hand item's decay suffix being applied to the left-hand item in multiplayer
 - Town Shrine would always cast TP from the host instead of the user
 - Oily Shrine and Sparkling Shrine would cast their traps as if the first player was doing it
 - The farmer would always think he was talking to the local player
-- Scavenger/Gravedigger AI being stuck for around after eating
+- Scavenger/Gravedigger AI being stuck for a round after eating
 - Minor typography corrections
 - Sync available quests in multiplayer
 - Correct spell level being ignored for Search and Rage
