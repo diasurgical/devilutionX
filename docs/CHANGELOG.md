@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Hellfire support
 - Shareware support
 - Fully migrate saves between Diablo and Hellfire
-- Support file paths longer then 259 characters
+- Support file paths longer than 259 characters
 - Allow for up to 99 save games of each type
 - Much lower memory usage (now in line with original)
-- Performance improvments
-- Gold picked goes to stack even when inventroy is open
+- Performance improvements
+- Gold picked goes to stack even when inventory is open
 - Pepin automatically heals
 - Reorganize ini file
 - Show other players on map
@@ -21,14 +21,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Scroll subtitles at same spead as reader
 - Preserve list position when buy and selling items in stores
 - Use belt via numpad
-- Close panels when pressing esc
+- Close panels when pressing <kbd>ESC</kbd>
 - Shift-click to spend all stat points
 - Shift-click to clear redied spell
 - Shift-click consumables to move them between the belt and inventory
 - Shift-click equipment eqipt/unequip them
-- Preserve hokeys and active spell across games
-- Set default active spell for new heros
-- Apply sound volumn to videos
+- Preserve hotkeys and active spell across games
+- Set default active spell for new heroes
+- Apply sound volume to videos
 - DIABDAT.MPQ can now be in upper case
 - Improved gamepad support:
   - D-Pad / Left stick navigation now works in all menus and is more responsive.
@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Disable walking sounds
 - No quest randomization
 - Adria refils mana
-- Barbarian and Bard heros in Diablo
+- Barbarian and Bard heroes in Diablo
 - Controller mapping
 - Configurable network port
 - Support for portable installs
