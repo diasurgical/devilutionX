@@ -86,7 +86,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Wrong death sound when monster/golem kill another monster
 - Scavengers/Gravediggers taking damage when eating on higher difficulties
 - Not getting XP from monsters hit by golems
-- Sneaks fleeing in the wrong direction of golem
+- Hiddens fleeing in the wrong direction of golem
 - Monsters going inactive when fighting golems offscreen
 - Gharbad the weak not dropping his item when killed by a golem
 - Lights not some times not properly following unique monsters
