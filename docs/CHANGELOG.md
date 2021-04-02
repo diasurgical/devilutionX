@@ -89,7 +89,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Not getting XP from monsters hit by golems
 - Monsters with hiding ability fleeing in the wrong direction from golems
 - Monsters going inactive when fighting golems offscreen
-- Gharbad the weak not dropping his item when killed by a golem
+- Gharbad the Weak not dropping his item when killed by a golem
 - Lights not always following unique monsters
 - Several bugs in Lazarous quest when re-entering the teleport
 - Lights added on map change not working (Arkaine's Valor etc)
