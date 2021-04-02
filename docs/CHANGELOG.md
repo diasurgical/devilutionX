@@ -84,7 +84,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Arrows graphics not aligning with the move direction
 - Monsters miss calculating charge directions for some angles
 - Randomly being teleported from level 15 to Lazarus chamber
-- Wrong death sound when monster/golem kill another monster
+- Wrong death sound when monster/golem kills another monster
 - Scavengers/Gravediggers taking damage when eating on higher difficulties
 - Not getting XP from monsters hit by golems
 - Monsters with hiding ability fleeing in the wrong direction from golems
