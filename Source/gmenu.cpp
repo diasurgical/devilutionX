@@ -70,7 +70,7 @@ void gmenu_draw_pause(CelOutputBuffer out)
 		RedBack(out);
 	if (!sgpCurrentMenu) {
 		light_table_index = 0;
-		gmenu_print_text(out, 316 + PANEL_LEFT, 336, "Pause");
+		gmenu_print_text(out, 252 + PANEL_LEFT, 176, "Pause");
 	}
 }
 
