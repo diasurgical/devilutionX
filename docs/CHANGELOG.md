@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Optional improvements
 - Improved transparency
 - Experience bar
-- Enemy health bar
+- Monster health bar
 - Auto equip all item types
 - Auto pickup gold
 - Run in town (also in multiplayer)
