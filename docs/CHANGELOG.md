@@ -89,7 +89,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Hiddens fleeing in the wrong direction of golem
 - Monsters going inactive when fighting golems offscreen
 - Gharbad the weak not dropping his item when killed by a golem
-- Lights not some times not properly following unique monsters
+- Lights not always following unique monsters
 - Several bugs in Lazarous quest when re-entering the teleport
 - Lights added on map change not working (Arkaine's Valor etc)
 - Player light radius not being following when a player is knocked back
