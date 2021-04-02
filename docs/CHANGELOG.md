@@ -36,10 +36,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Right stick mouse emulation has been improved.
   - Gamepads plugged in while the game is running can be used.
   - All connected gamepads can be used (previously, only the first one).
-- Add `--ttf-dir` and `-ttf-name` to allow for specifying a differen UI font
+- Add `--ttf-dir` and `--ttf-name` to allow for specifying a different UI font
 
 ### Optional improvments
-- Improved transparancy
+- Improved transparency
 - Experience bar
 - Enemy health bar
 - Auto equip all item types
@@ -126,7 +126,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Minor typography corrections
 - Sync avalible quests in multiplayer
 - Correct spell level being ignored for Search and Rage
-- "0 Gold" somtimes spawning on The Cornerston
+- "0 Gold" sometimes spawning on The Cornerstone
 
 ## DevilutionX 1.1.0
 ### Features
