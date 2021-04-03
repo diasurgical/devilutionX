@@ -1,61 +1,42 @@
 {
-  "configurations": [
-    {
-      "name": "x64-Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${workspaceRoot}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "intelliSenseMode": "windows-msvc-x64"
-    },
-    {
-      "name": "x64-Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "buildRoot": "${workspaceRoot}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-      "cmakeCommandArgs": "-DBINARY_RELEASE=ON",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "intelliSenseMode": "windows-msvc-x64"
-    },
-    {
-      "name": "x86-Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${workspaceRoot}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-      "inheritEnvironments": [ "msvc_x86" ],
-      "intelliSenseMode": "windows-msvc-x86"
-    },
-    {
-      "name": "x86-Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "buildRoot": "${workspaceRoot}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-      "cmakeCommandArgs": "-DBINARY_RELEASE=ON",
-      "inheritEnvironments": [ "msvc_x86" ],
-      "intelliSenseMode": "windows-msvc-x86"
-    },
-    {
-      "name": "CPI-Debug",
-      "generator": "Unix Makefiles",
-      "configurationType": "Debug",
-      "cmakeExecutable": "cmake",
-      "remoteCopySourcesExclusionList": [ ".vs", ".git", "out" ],
-      "cmakeCommandArgs": "-DTARGET_PLATFORM=cpigamesh -DVERSION_NUM=1.1.0 -DVERSION_SUFFIX=DKR_VERSION",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux_arm" ],
-      "remoteMachineName": "-1829704065;192.168.10.1 (username=cpi, port=22, authentication=Password)",
-      "remoteCMakeListsRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/src",
-      "remoteBuildRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/out/build/${name}",
-      "remoteInstallRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/out/install/${name}",
-      "remoteCopySources": true,
-      "rsyncCommandArgs": "-t --delete --delete-excluded",
-      "remoteCopyBuildOutput": false,
-      "remoteCopySourcesMethod": "rsync",
-      "addressSanitizerRuntimeFlags": "detect_leaks=0"
-    }
-  ]
+	"configurations": [
+		{
+			"name": "x64-Debug",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"buildRoot": "${workspaceRoot}\\build\\${name}",
+			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+			"inheritEnvironments": [ "msvc_x64" ],
+			"intelliSenseMode": "windows-msvc-x64"
+		},
+		{
+			"name": "x64-Release",
+			"generator": "Ninja",
+			"configurationType": "Release",
+			"buildRoot": "${workspaceRoot}\\build\\${name}",
+			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+			"cmakeCommandArgs": "-DBINARY_RELEASE=ON",
+			"inheritEnvironments": [ "msvc_x64" ],
+			"intelliSenseMode": "windows-msvc-x64"
+		},
+		{
+			"name": "x86-Debug",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"buildRoot": "${workspaceRoot}\\build\\${name}",
+			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+			"inheritEnvironments": [ "msvc_x86" ],
+			"intelliSenseMode": "windows-msvc-x86"
+		},
+		{
+			"name": "x86-Release",
+			"generator": "Ninja",
+			"configurationType": "Release",
+			"buildRoot": "${workspaceRoot}\\build\\${name}",
+			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+			"cmakeCommandArgs": "-DBINARY_RELEASE=ON",
+			"inheritEnvironments": [ "msvc_x86" ],
+			"intelliSenseMode": "windows-msvc-x86"
+		}
+	]
 }
