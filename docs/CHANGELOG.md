@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved transparency
 - Experience bar
 - Monster health bar
-- Auto equip all item types
+- Auto equip all item types on pickup or purchase
 - Auto pickup gold
 - Run in town (also in multiplayer)
 - Disable friendly fire
