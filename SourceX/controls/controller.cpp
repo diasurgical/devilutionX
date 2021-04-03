@@ -22,7 +22,11 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	default:
 		break;
 	}
-
+#if HAS_KBCTRL == 1
+	result.button = KbCtrlToControllerButton(event);
+	if (result.button != ControllerButton_NONE)
+		return result;
+#endifs
 #ifndef USE_SDL1
 	GameController *const controller = GameController::Get(event);
 	if (controller != NULL) {
