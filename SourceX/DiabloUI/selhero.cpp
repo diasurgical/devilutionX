@@ -329,11 +329,13 @@ void selhero_List_Esc()
 
 void selhero_ClassSelector_Focus(int value)
 {
+	const auto hero_class = static_cast<plr_class>(vecSelHeroDlgItems[value]->m_value);
+
 	_uidefaultstats defaults;
-	gfnHeroStats(value, &defaults);
+	gfnHeroStats(hero_class, &defaults);
 
 	selhero_heroInfo.level = 1;
-	selhero_heroInfo.heroclass = (plr_class)vecSelHeroDlgItems[value]->m_value;
+	selhero_heroInfo.heroclass = hero_class;
 	selhero_heroInfo.strength = defaults.strength;
 	selhero_heroInfo.magic = defaults.magic;
 	selhero_heroInfo.dexterity = defaults.dexterity;
