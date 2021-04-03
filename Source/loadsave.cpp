@@ -1745,6 +1745,8 @@ void SaveHeroItems(PlayerStruct *pPlayer)
 	SaveItems(&file, pPlayer->InvBody, NUM_INVLOC);
 	SaveItems(&file, pPlayer->InvList, NUM_INV_GRID_ELEM);
 	SaveItems(&file, pPlayer->SpdList, MAXBELTITEMS);
+
+    file.flush();
 }
 
 void SaveGame()
