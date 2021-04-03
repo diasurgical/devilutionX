@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Experience bar
 - Monster health bar
 - Auto equip all item types on pickup or purchase
+- Auto-equip sounds
 - Auto pickup gold
 - Run in town (also in multiplayer)
 - Disable friendly fire
@@ -94,7 +95,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Several bugs in Lazarus quest when re-entering the teleport
 - Lights added on map change not working (Arkaine's Valor etc)
 - Player light radius not readjusting when a player is knocked back
-- Player light radius not updating properly fully before changing level
+- Player light radius not updating properly before changing level
 - Tiles not properly being marked as out of visibility when walking
 - Quest items brought from previous games breaking the game state
 - Inconsistent repair prices caused by rounding errors
