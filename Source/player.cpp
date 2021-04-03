@@ -200,6 +200,27 @@ const char *const ClassPathTbl[] = {
 	"Warrior",
 };
 
+Sint32 PlayerStruct::GetBaseAttributeValue(attribute_id attribute) const
+{
+	switch (attribute) {
+	case attribute_id::ATTRIB_DEX:
+		return this->_pBaseDex;
+	case attribute_id::ATTRIB_MAG:
+		return this->_pBaseMag;
+	case attribute_id::ATTRIB_STR:
+		return this->_pBaseStr;
+	case attribute_id::ATTRIB_VIT:
+		return this->_pBaseVit;
+	default:
+		app_fatal("Unsupported attribute");
+	}
+}
+
+Sint32 PlayerStruct::GetMaximumAttributeValue(attribute_id attribute) const
+{
+	return MaxStats[_pClass][attribute];
+}
+
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {
 	int i;

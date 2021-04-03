@@ -1655,6 +1655,13 @@ void CheckChrBtns()
 	}
 }
 
+int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, attribute_id attribute)
+{
+	int pointsToReachCap = player.GetMaximumAttributeValue(attribute) - player.GetBaseAttributeValue(attribute);
+
+	return std::min(remainingStatPoints, pointsToReachCap);
+}
+
 void ReleaseChrBtns(bool addAllStatPoints)
 {
 	int i;
@@ -1671,18 +1678,22 @@ void ReleaseChrBtns(bool addAllStatPoints)
 				int statPointsToAdd = addAllStatPoints ? player._pStatPts : 1;
 				switch (i) {
 				case 0:
+					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_STR);
 					NetSendCmdParam1(TRUE, CMD_ADDSTR, statPointsToAdd);
 					player._pStatPts -= statPointsToAdd;
 					break;
 				case 1:
+					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_MAG);
 					NetSendCmdParam1(TRUE, CMD_ADDMAG, statPointsToAdd);
 					player._pStatPts -= statPointsToAdd;
 					break;
 				case 2:
+					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_DEX);
 					NetSendCmdParam1(TRUE, CMD_ADDDEX, statPointsToAdd);
 					player._pStatPts -= statPointsToAdd;
 					break;
 				case 3:
+					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_VIT);
 					NetSendCmdParam1(TRUE, CMD_ADDVIT, statPointsToAdd);
 					player._pStatPts -= statPointsToAdd;
 					break;
