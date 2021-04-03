@@ -80,7 +80,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Some unique items morphing on a new game
 - Monsters being unable to properly see the location of firewalls
 - Fix more stability issues
-- Gold stacks are correctly topped when in dungeon
+- Gold piles will be filled to their max, before starting a new one
 - Gold icons graphics are always correct
 - Arrows graphics not aligning with the move direction
 - Monsters miss calculating charge directions for some angles
