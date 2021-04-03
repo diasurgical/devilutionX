@@ -114,6 +114,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Black Mushroom quest not resetting between games
 - Lava pools sometimes having roof tiles in them
 - Doors sometimes missing in Halls of The Blind
+- Broken outline on some inventory items
 
 ### Original Hellfire bugs
 - All bugs fixed between Diablo 1.04 and 1.09
