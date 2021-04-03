@@ -38,6 +38,7 @@ void ErrorPlrMsg(const char *pszMsg)
 	pMsg->time = SDL_GetTicks();
 	strncpy(pMsg->str, pszMsg, sizeof(pMsg->str));
 	pMsg->str[sizeof(pMsg->str) - 1] = '\0';
+	SDL_Log("%s", pMsg->str);
 }
 
 size_t EventPlrMsg(const char *pszFmt, ...)
@@ -52,6 +53,7 @@ size_t EventPlrMsg(const char *pszFmt, ...)
 	pMsg->time = SDL_GetTicks();
 	vsprintf(pMsg->str, pszFmt, va);
 	va_end(va);
+	SDL_Log("%s", pMsg->str);
 	return strlen(pMsg->str);
 }
 
@@ -64,6 +66,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	assert(strlen(plr[pnum]._pName) < PLR_NAME_LEN);
 	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
 	sprintf(pMsg->str, "%s (lvl %d): %s", plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
+	SDL_Log("%s", pMsg->str);
 }
 
 void ClearPlrMsg()
