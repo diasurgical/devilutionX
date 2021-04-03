@@ -774,11 +774,6 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation, bool 
 		return false;
 	}
 
-	// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
-	// annoy players who prefer that playstyle.
-	if (plr[playerNumber]._pClass == PC_MONK && (bodyLocation == INVLOC_HAND_LEFT || bodyLocation == INVLOC_HAND_RIGHT))
-		return false;
-
 	if (persistItem) {
 		plr[playerNumber].InvBody[bodyLocation] = item;
 
@@ -818,14 +813,17 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 }
 
 /**
- * @brief Checks whether or not auto-equipping behavior is enabled for the given item.
+ * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
+ * @param player The player to check.
  * @param item The item to check.
- * @return 'True' if auto-equipping behavior is enabled for the item and 'False' otherwise.
+ * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
  */
-bool AutoEquipEnabled(const ItemStruct &item)
+bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
 {
 	if (item.isWeapon()) {
-		return sgOptions.Gameplay.bAutoEquipWeapons;
+		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
+		// annoy players who prefer that playstyle.
+		return player._pClass != PC_MONK && sgOptions.Gameplay.bAutoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
@@ -2181,7 +2179,7 @@ void AutoGetItem(int pnum, int ii)
 			SetPlrHandGoldCurs(&item[ii]);
 		}
 	} else {
-		done = AutoEquipEnabled(plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
+		done = AutoEquipEnabled(plr[pnum], plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
 		if (!done) {
 			done = AutoPlaceItemInBelt(pnum, plr[pnum].HoldItem, true);
 		}
