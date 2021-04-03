@@ -56,7 +56,7 @@ struct GameplayOptions {
 	/** @brief Gameplay ticks per second. */
 	Sint32 nTickRate;
 	/** @brief Enable double walk speed when in town. */
-	bool bJogInTown;
+	bool bRunInTown;
 	/** @brief Do not let the mouse leave the application window. */
 	bool bGrabInput;
 	/** @brief Enable the Theo quest. */

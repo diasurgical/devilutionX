@@ -430,7 +430,7 @@ static void SaveOptions()
 	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	setIniInt("Game", "Run in Town", sgOptions.Gameplay.bJogInTown);
+	setIniInt("Game", "Run in Town", sgOptions.Gameplay.bRunInTown);
 	setIniInt("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
 	setIniInt("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
 	setIniInt("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
@@ -503,7 +503,7 @@ static void LoadOptions()
 	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bJogInTown = getIniBool("Game", "Run in Town", false);
+	sgOptions.Gameplay.bRunInTown = getIniBool("Game", "Run in Town", false);
 	sgOptions.Gameplay.bGrabInput = getIniBool("Game", "Grab Input", false);
 	sgOptions.Gameplay.bTheoQuest = getIniBool("Game", "Theo Quest", false);
 	sgOptions.Gameplay.bCowQuest = getIniBool("Game", "Cow Quest", false);
