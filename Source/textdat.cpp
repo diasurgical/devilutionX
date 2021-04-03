@@ -819,6 +819,22 @@ const TextDataStruct alltext[] = {
 	    1, 5, TSFX_PEGBOY31 },
 	{ N_("Yeah, Tremain! He gets around, doesn't he? Or haven't you heard? My friends in some of the other towns say that he passes through, picking up a few books here, a pinch of bat claw there. Never seems to have the problems most do getting in and out of Tristram, that's for sure."),
 	    1, 5, TSFX_PEGBOY41 },
+	{ "All I can do now is pray for us all. |"
+	    1, 5, TSFX_PRIEST0 },
+	{ "I seek a champion to undertake a serious duty, and the people of this town speak well of your courage and skill. The Archbishop Lazarus, once King Leoric's most trusted advisor and a member of our order, has taken the path of evil. Not long ago, Lazarus led a party of simple townsfolk into the labyrinth to find the king's missing son, Albrecht. Only a few of them escaped with their lives. Curse me for a fool! I should have suspected his veiled treachery then! For I have learned that it was Lazarus himself who kidnapped Leoric's son and has since hidden him within the labyrinth. I still don't understand why the Archbishop has turned to the darkness, or what his interest is in Albrecht. Unless... he means to sacrifice him at the full moon. That must be what he has planned! The survivors of his rescue party say that Lazarus was last seen in the deepest bowels of the labyrinth, some sixteen levels beneath the Cathedral. You must hurry, and save the prince from the sacrificial blade of this demented fiend! |"
+	    1, 5, TSFX_PRIEST1 },
+	{ "Why do you delay?! Time is of the essence! The prince and the people of this kingdom are counting on you! |"
+	    1, 5, TSFX_PRIEST2 },
+	{ "So, Lazarus has paid the price for his betrayal and justice is served! For your services this day, I bestow this mace unto you. Its name is Lightforge, and it is the holiest of our order's artifacts. As I am the last of this order, I entrust it to you. May the Light guide you. |"
+	    1, 5, TSFX_PRIEST3 },
+	{ "This is terrible! Lazarus will surely burn in Hell for his horrific deed! Although the boy that you describe may not be our prince, I believe that Albrecht may yet be in danger. Whatever vile power lies beneath the ground, has assuredly secured its foothold in our world. All I can do now is pray for us all. |"
+	    1, 5, TSFX_PRIEST4 },
+	{ "I have had a most disturbing experience that I must share with you, my friend. Earlier today, I was called upon to help one of the men that escaped from the labyrinth. He was deranged, violent, and kept lashing out at all of those who tried to calm him. I suspected that he was possessed by some sort of demonic entity, and so began to drive the evil from within him. After many hours, I was able to exorcise a demon who called himself Fleshdoom, but the hellion fled into the labyrinth. You may think that I am mad, but after speaking with the man and battling with Fleshdoom, I believe that the labyrinth has somehow become a gateway to the underworld. As you descend deeper, you may find yourself upon the doorstep of Hell itself. Finally, the man who was possessed retained memories of an ancient demonblade named Shadowfang. If you find the demon Fleshdoom, beware this foul sword. While I fear the dangers below grow even greater, you must find Fleshdoom and slay him. Bring the sword to me and I can destroy it, but do not wield it. For its power can corrupt, absolutely. |"
+	    1, 5, TSFX_PRIEST5 },
+	{ "Fleshdoom's demise is a great good to the world, yet Shadowfang remains! It must be found and destroyed! Do not attempt to use the demonblade, champion. It will corrupt and madden any mortal who wields it. I alone can end its dark evil. |"
+	    1, 5, TSFX_PRIEST6 },
+	{ "Light be praised! You found the cursed demonblade! Only its destruction can ensure the safety of us all! Wait... what treachery is this?! Ow, it burns! Hellfire, consuming me! You must take this, to the Hellforge and cast it in before-NOOOOOOO! |"
+	    1, 5, TSFX_PRIEST7 },
 */
 };
 } // namespace devilution
