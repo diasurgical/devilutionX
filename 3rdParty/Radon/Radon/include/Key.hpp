@@ -8,28 +8,26 @@
 
 namespace radon
 {
-	class Key
+	class Key final
 		: public Named
 	{
 	public:
 
-		Key();
+		Key() = default;
 
 		Key(const std::string & name, const std::string & value);
 
 		Key(const std::string & name, float value);
 
-		std::string getStringValue();
+		std::string getStringValue() const;
 
-		float getFloatValue();
+		float getFloatValue() const;
 
 		void setValue(float value);
 
-		void setValue(std::string & value);
+		void setValue(const std::string & value);
 
 	private:
 		std::string value;
-
-		friend class File;
 	};
 }

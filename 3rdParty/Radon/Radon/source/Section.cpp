@@ -1,17 +1,10 @@
 // Copyright Dmitro bjornus Szewczuk 2017
 
-#include "../include/Radon.hpp"
-
-#include <assert.h>
+#include "../include/Section.hpp"
+#include "../include/Key.hpp"
 
 namespace radon
 {
-	Section::Section()
-		: Named()
-	{
-	}
-
-
 	Section::Section(const std::string & name)
 		: Named(name)
 	{
@@ -20,18 +13,36 @@ namespace radon
 
 	Key *Section::getKey(const std::string & name)
 	{
-		for (int i = 0; i < (int)keys.size(); i++)
+		for(auto &key: keys)
 		{
-			if (keys[i].getName() == name)
-				return &keys[i];
+			if (key.getName() == name)
+				return &key;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 
-	void Section::addKey(Key key)
+	const Key *Section::getKey(const std::string & name) const
 	{
-		keys.push_back(key);
+		for(const auto &key: keys)
+		{
+			if (key.getName() == name)
+				return &key;
+		}
+
+		return nullptr;
+	}
+
+
+	const std::vector<Key> &Section::getKeys() const
+	{
+		return keys;
+	}
+
+
+	void Section::addKey(const Key & key)
+	{
+		keys.emplace_back(key);
 	}
 }

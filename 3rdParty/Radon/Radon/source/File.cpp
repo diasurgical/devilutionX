@@ -1,45 +1,43 @@
 // Copyright Dmitro bjornus Szewczuk 2017
 
-#include "../include/Radon.hpp"
+#include "../include/File.hpp"
+#include "../include/Key.hpp"
 
-#include <string>
 #include <fstream>
 #include <algorithm>
 #include <iostream>
-#include <assert.h>
-
 namespace radon
 {
-	File::File(const std::string & path, bool reading)
+	File::File(const std::string & path, bool read)
+		: path(path)
 	{
-		this->path = path;
-		if (reading)
+		if (!read)
+			return;
+	
+		std::ifstream stream(path);
+		if (!stream.is_open())
+			return;
+
+		std::string buffer;
+		std::string nameOfCurrent;
+
+		while (std::getline(stream, buffer))
 		{
-			std::ifstream stream(path.c_str());
-
-			if (stream.is_open())
+			if (buffer[0] == ';' || buffer[0] == '#')
+				continue;
+			if (buffer[0] == '[')
 			{
-				std::string buffer;
-				std::string nameOfCurrent = "";
+				nameOfCurrent = buffer.substr(buffer.find("[") + 1, buffer.find("]") - 1);
+				sections.emplace_back(nameOfCurrent);
+			}
+			else
+			{
+				int equalsPosition = buffer.find('=');
 
-				while (std::getline(stream, buffer))
-				{
-					if (buffer[0] == ';' || buffer[0] == '#') continue;
-					if (buffer[0] == '[')
-					{
-						nameOfCurrent = buffer.substr(buffer.find("[") + 1, buffer.find("]") - 1);
-						sections.push_back(Section(nameOfCurrent));
-					}
-					else
-					{
-						int equalsPosition = buffer.find('=');
+				std::string nameOfElement = buffer.substr(0, equalsPosition);
+				std::string valueOfElement = buffer.substr(equalsPosition + 1, buffer.size());
 
-						std::string nameOfElement = buffer.substr(0, equalsPosition);
-						std::string valueOfElement = buffer.substr(equalsPosition + 1, buffer.size());
-
-						sections.back().addKey(Key(nameOfElement, valueOfElement));
-					}
-				}
+				sections.back().addKey({nameOfElement, valueOfElement});
 			}
 		}
 	}
@@ -47,36 +45,52 @@ namespace radon
 
 	Section *File::getSection(const std::string & name)
 	{
-		for (int i = 0; i < (int)sections.size(); i++)
+		for (auto &section: sections)
 		{
-			if (sections[i].getName() == name)
+			if (section.getName() == name)
 			{
-				return &sections[i];
+				return &section;
 			}
 		}
 
-		return NULL;
+		return nullptr;
+	}
+
+
+	const Section *File::getSection(const std::string & name) const
+	{
+		for (const auto &section: sections)
+		{
+			if (section.getName() == name)
+			{
+				return &section;
+			}
+		}
+
+		return nullptr;
 	}
 
 
 	void File::addSection(const std::string & name)
 	{
-		sections.push_back(Section(name));
+		sections.emplace_back(name);
 	}
 
 
-	void File::saveToFile()
+	void File::saveToFile() const
 	{
-		std::ofstream file(path.data(), std::ios::out | std::ios::trunc);
+		std::ofstream stream(path, std::ios::out | std::ios::trunc);
 
-		for (int i = 0; i < (int)sections.size(); i++)
+		if (!stream.is_open())
+			return;
+
+		for (const auto &section: sections)
 		{
-			file << "[" << sections[i].getName() << "] \n";
-			for(int j = 0; j < (int)sections[i].keys.size(); j++)
+			stream << "[" << section.getName() << "] \n";
+			for (const auto &key: section.getKeys())
 			{
-				file << sections[i].keys[j].getName() << "=" << sections[i].keys[j].getStringValue() << "\n";
+				stream << key.getName() << "=" << key.getStringValue() << "\n";
 			}
 		}
-		file.close();
 	}
 }

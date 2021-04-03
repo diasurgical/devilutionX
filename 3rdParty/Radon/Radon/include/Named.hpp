@@ -10,15 +10,17 @@ namespace radon
 	{
 	public:
 
-		Named();
+		Named() = default;
 
 		Named(const std::string & name);
 
+		virtual ~Named() = default;
+
 		void setName(const std::string & name);
 
-		std::string getName();
+		const std::string & getName() const;
 
 	protected:
-		std::string name;
+		std::string name{"You need to set a name!"};
 	};
 }

@@ -11,22 +11,24 @@ namespace radon
 {
 	class Key;
 
-	class Section
+	class Section final
 		: public Named
 	{
 	public:
 
-		Section();
+		Section() = default;
 
 		Section(const std::string & name);
 
 		Key *getKey(const std::string & name);
+		
+		const Key *getKey(const std::string & name) const;
 
-		void addKey(Key variable);
+		const std::vector<Key> &getKeys() const;
+
+		void addKey(const Key & key);
 
 	private:
 		std::vector<Key> keys;
-
-		friend class File;
 	};
 }

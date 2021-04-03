@@ -1,24 +1,9 @@
 // Copyright Dmitro bjornus Szewczuk 2017
 
-#include "../include/Radon.hpp"
-#include <sstream>
-
-std::string Float2String(float fVal)
-{
-	std::ostringstream ss;
-	ss << fVal;
-	std::string s(ss.str());
-	return s;
-}
+#include "../include/Key.hpp"
 
 namespace radon
 {
-	Key::Key()
-		: Named()
-	{
-	}
-
-
 	Key::Key(const std::string & name, const std::string & value)
 		: Named(name), value(value)
 	{
@@ -26,30 +11,30 @@ namespace radon
 
 
 	Key::Key(const std::string & name, float value)
-		: Named(name), value(Float2String(value))
+		: Named(name), value(std::to_string(value))
 	{
 	}
 
 
-	std::string Key::getStringValue()
+	std::string Key::getStringValue() const
 	{
 		return value;
 	}
 
 
-	float Key::getFloatValue()
+	float Key::getFloatValue() const
 	{
-		return (float)(atof(value.data()));
+		return std::stof(value);
 	}
 
 
 	void Key::setValue(float value)
 	{
-		this->value = Float2String(value);
+		this->value = std::to_string(value);
 	}
 
 
-	void Key::setValue(std::string & value)
+	void Key::setValue(const std::string & value)
 	{
 		this->value = value;
 	}

@@ -1,15 +1,9 @@
 // Copyright Dmitro bjornus Szewczuk 2017
 
-#include "../include/Radon.hpp"
+#include "../include/Named.hpp"
 
 namespace radon
 {
-	Named::Named()
-	{
-		setName("You need to set name!");
-	}
-
-
 	Named::Named(const std::string & name)
 	{
 		setName(name);
@@ -22,7 +16,7 @@ namespace radon
 	}
 
 
-	std::string Named::getName()
+	const std::string & Named::getName() const
 	{
 		return name;
 	}

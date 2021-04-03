@@ -2,25 +2,26 @@
 
 #pragma once
 
+#include "Section.hpp"
+
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace radon
 {
-	class Section;
-
-	class File
+	class File final
 	{
 	public:
 
 		File(const std::string & path, bool reading = true);
 
 		Section* getSection(const std::string & name);
+		
+		const Section* getSection(const std::string & name) const;
 
 		void addSection(const std::string & name);
 
-		void saveToFile();
+		void saveToFile() const;
 
 	private:
 		std::vector<Section> sections;
