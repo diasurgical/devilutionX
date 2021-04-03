@@ -358,7 +358,7 @@ static bool shouldPrefillHeroName()
 void selhero_ClassSelector_Select(int value)
 {
 	int hClass = vecSelHeroDlgItems[value]->m_value;
-	if (gbSpawned && (hClass == PC_ROGUE || hClass == PC_SORCERER || hClass == PC_BARD)) {
+	if (gbSpawned && hClass != PC_WARRIOR && hClass != PC_MONK) {
 		ArtBackground.Unload();
 		UiSelOkDialog(NULL, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
