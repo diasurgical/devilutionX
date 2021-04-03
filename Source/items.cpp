@@ -299,17 +299,21 @@ int premiumLvlAddHellfire[] = {
 
 bool IsItemAvailable(int i)
 {
-	if (!gbIsHellfire) {
-		return i != 22              // Cathedral Map
-		    && i != 32              // Bovine Plate
-		    && (i < 35 || i > 47)   // Hellfire exclusive items
-		    && (i < 83 || i > 86)   // Oils
-		    && i != 92              // Scroll of Search
-		    && (i < 161 || i > 165) // Runes
-		    && i != IDI_SORCERER;
-	}
-
-	return true;
+	if (gbIsHellfire)
+		return true;
+	return (
+	           i != IDI_MAPOFDOOM                   // Cathedral Map
+	           && i != IDI_LGTFORGE                 // Bovine Plate
+	           && (i < IDI_OIL || i > IDI_GREYSUIT) // Hellfire exclusive items
+	           && (i < 83 || i > 86)                // Oils
+	           && i != 92                           // Scroll of Search
+	           && (i < 161 || i > 165)              // Runes
+	           && i != IDI_SORCERER                 // Short Staff of Mana
+	           )
+	    || (
+	        // Bard items are technically Hellfire-exclusive
+	        // but are just normal items with adjusted stats.
+	        sgOptions.Gameplay.bTestBard && (i == IDI_BARDSWORD || i == IDI_BARDDAGGER));
 }
 
 bool IsUniqueAvailable(int i)
