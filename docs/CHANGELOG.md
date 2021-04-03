@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Hellfire support
 - Shareware support
 - Fully migrate saves between Diablo and Hellfire
-- Document [ini-file options](https://github.com/diasurgical/devilutionX/wiki)
+- Document [ini-file options](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide)
 - Support file paths longer than 259 characters
 - Allow for up to 99 save games of each type
 - Much lower memory usage (now in line with the original)
