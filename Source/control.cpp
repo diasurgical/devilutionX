@@ -1667,23 +1667,24 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
 			    && MouseY >= ChrBtnsRect[i].y
 			    && MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
-				int statPointsToAdd = addAllStatPoints ? plr[myplr]._pStatPts : 1;
+				PlayerStruct &player = plr[myplr];
+				int statPointsToAdd = addAllStatPoints ? player._pStatPts : 1;
 				switch (i) {
 				case 0:
 					NetSendCmdParam1(TRUE, CMD_ADDSTR, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
+					player._pStatPts -= statPointsToAdd;
 					break;
 				case 1:
 					NetSendCmdParam1(TRUE, CMD_ADDMAG, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
+					player._pStatPts -= statPointsToAdd;
 					break;
 				case 2:
 					NetSendCmdParam1(TRUE, CMD_ADDDEX, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
+					player._pStatPts -= statPointsToAdd;
 					break;
 				case 3:
 					NetSendCmdParam1(TRUE, CMD_ADDVIT, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
+					player._pStatPts -= statPointsToAdd;
 					break;
 				}
 			}
