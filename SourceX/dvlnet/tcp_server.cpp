@@ -15,7 +15,7 @@ tcp_server::tcp_server(asio::io_context &ioc, std::string bindaddr,
 {
 	auto addr = asio::ip::address::from_string(bindaddr);
 	auto ep = asio::ip::tcp::endpoint(addr, port);
-	acceptor.reset(new asio::ip::tcp::acceptor(ioc, ep));
+	acceptor.reset(new asio::ip::tcp::acceptor(ioc, ep, true));
 	start_accept();
 }
 
@@ -161,6 +161,8 @@ void tcp_server::start_accept()
 
 void tcp_server::handle_accept(scc con, const asio::error_code &ec)
 {
+	if (ec)
+		return;
 	if (next_free() == PLR_BROADCAST) {
 		drop_connection(con);
 	} else {
@@ -209,6 +211,11 @@ void tcp_server::drop_connection(scc con)
 	}
 	con->timer.cancel();
 	con->socket.close();
+}
+
+void tcp_server::close()
+{
+	acceptor->close();
 }
 
 tcp_server::~tcp_server()

@@ -75,7 +75,7 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 	do {
 		BYTE rlePixel = *src;
-		*src++;
+		src++;
 		rleLength = 1;
 
 		width--;
@@ -93,11 +93,11 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 		if (rleLength > 1 || rlePixel > 0xBF) {
 			*dst = rleLength | 0xC0;
-			*dst++;
+			dst++;
 		}
 
 		*dst = rlePixel;
-		*dst++;
+		dst++;
 	} while (width);
 
 	return dst;
@@ -105,23 +105,19 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 /**
  * @brief Write the pixel data to the PCX file
- * @param width Image width
- * @param height Image height
- * @param stride Buffer width
- * @param pixels Raw pixel buffer
+ * @param buf Buffer
  * @return True if successful, else false
  */
-static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::ofstream *out)
+static bool CapturePix(CelOutputBuffer buf, std::ofstream *out)
 {
-	int writeSize;
-	BYTE *pBuffer, *pBufferEnd;
-
-	pBuffer = (BYTE *)DiabloAllocPtr(2 * width);
+	int width = buf.w();
+	int height = buf.h();
+	BYTE *pBuffer = (BYTE *)DiabloAllocPtr(2 * width);
+	BYTE *pixels = buf.begin();
 	while (height--) {
-		pBufferEnd = CaptureEnc(pixels, pBuffer, width);
-		pixels += stride;
-		writeSize = pBufferEnd - pBuffer;
-		out->write(reinterpret_cast<const char *>(pBuffer), writeSize);
+		const BYTE *pBufferEnd = CaptureEnc(pixels, pBuffer, width);
+		pixels += buf.pitch();
+		out->write(reinterpret_cast<const char *>(pBuffer), pBufferEnd - pBuffer);
 		if (out->fail())
 			return false;
 	}
@@ -156,10 +152,10 @@ static void RedPalette()
 	}
 	palette_update();
 	SDL_Rect SrcRect = {
-		SCREEN_X,
-		SCREEN_Y,
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
+		BUFFER_BORDER_LEFT,
+		BUFFER_BORDER_TOP,
+		gnScreenWidth,
+		gnScreenHeight,
 	};
 	BltFast(&SrcRect, NULL);
 	RenderPresent();
@@ -175,23 +171,24 @@ void CaptureScreen()
 	std::string FileName;
 	BOOL success;
 
-	std::ofstream *out = CaptureFile(&FileName);
-	if (out == NULL)
+	std::ofstream *out_stream = CaptureFile(&FileName);
+	if (out_stream == NULL)
 		return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
 	RedPalette();
 
 	lock_buf(2);
-	success = CaptureHdr(SCREEN_WIDTH, SCREEN_HEIGHT, out);
+	CelOutputBuffer buf = GlobalBackBuffer();
+	success = CaptureHdr(buf.w(), buf.h(), out_stream);
 	if (success) {
-		success = CapturePix(SCREEN_WIDTH, SCREEN_HEIGHT, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)], out);
+		success = CapturePix(buf, out_stream);
 	}
 	if (success) {
-		success = CapturePal(palette, out);
+		success = CapturePal(palette, out_stream);
 	}
 	unlock_buf(2);
-	out->close();
+	out_stream->close();
 
 	if (!success) {
 		SDL_Log("Failed to save screenshot at %s", FileName.c_str());
@@ -205,7 +202,7 @@ void CaptureScreen()
 	}
 	palette_update();
 	force_redraw = 255;
-	delete out;
+	delete out_stream;
 }
 
 DEVILUTION_END_NAMESPACE

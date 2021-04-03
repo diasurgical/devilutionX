@@ -47,7 +47,7 @@ void FocusOnCharInfo()
 		return;
 
 	// Find the first incrementable stat.
-	int pc = plr[myplr]._pClass;
+	plr_class pc = plr[myplr]._pClass;
 	int stat = -1;
 	for (int i = 4; i >= 0; --i) {
 		switch (i) {
@@ -301,7 +301,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool PeekMessage(LPMSG lpMsg)
+bool FetchMessage(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -450,7 +450,11 @@ bool PeekMessage(LPMSG lpMsg)
 			break;
 		}
 		return true;
-	} else if (e.type < SDL_JOYAXISMOTION || (e.type >= 0x700 && e.type < 0x800)) {
+#ifndef USE_SDL1
+	} else if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
+#else
+	} else if (e.type < SDL_JOYAXISMOTION) {
+#endif
 		if (!mouseWarping || e.type != SDL_MOUSEMOTION)
 			sgbControllerActive = false;
 		if (mouseWarping && e.type == SDL_MOUSEMOTION)
@@ -710,7 +714,7 @@ SHORT GetAsyncKeyState(int vKey)
 	}
 }
 
-void DispatchMessage(const MSG *lpMsg)
+void PushMessage(const MSG *lpMsg)
 {
 	assert(CurrentProc);
 

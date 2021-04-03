@@ -9,6 +9,7 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#include "controls/controller.h"
 #include "controls/controller_buttons.h"
 
 namespace dvl {

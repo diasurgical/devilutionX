@@ -77,6 +77,10 @@ void InitTownTriggers()
 			trigs[numtrigs]._ty = 21;
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 			trigs[numtrigs]._tlvl = 5;
+#ifdef _DEBUG
+			if (debug_mode_key_j)
+				trigs[numtrigs]._tlvl = debug_mode_key_j;
+#endif
 			numtrigs++;
 		}
 		if (gbIsMultiplayer || plr[myplr].pTownWarps & 2 || (gbIsHellfire && plr[myplr]._pLevel >= 15)) {
@@ -805,6 +809,8 @@ void CheckTrigForce()
 		case DTYPE_HELL:
 			trigflag = ForceL4Trig();
 			break;
+		default:
+			break;
 		}
 		if (leveltype != DTYPE_TOWN && !trigflag) {
 			trigflag = ForceQuests();
@@ -849,14 +855,10 @@ void CheckTriggers()
 				PlaySFX(PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
-				if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
-					return;
 				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
 			}
 			break;
 		case WM_DIABPREVLVL:
-			if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
-				return;
 			StartNewLvl(myplr, trigs[i]._tmsg, currlevel - 1);
 			break;
 		case WM_DIABRTNLVL:
@@ -916,7 +918,6 @@ void CheckTriggers()
 			break;
 		default:
 			app_fatal("Unknown trigger msg");
-			break;
 		}
 	}
 }

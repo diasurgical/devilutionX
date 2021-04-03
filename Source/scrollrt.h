@@ -17,8 +17,6 @@ extern bool sgbControllerActive;
 extern bool IsMovingMouseCursorWithController();
 
 extern int light_table_index;
-extern BYTE *gpBufStart;
-extern BYTE *gpBufEnd;
 extern DWORD level_cel_block;
 extern char arch_draw_type;
 extern int cel_transparency_active;
@@ -32,7 +30,15 @@ int RowsCoveredByPanel();
 void CalcTileOffset(int *offsetX, int *offsetY);
 void TilesInView(int *columns, int *rows);
 void CalcViewportGeometry();
-void DrawView(int StartX, int StartY);
+
+/**
+ * @brief Start rendering of screen, town variation
+ * @param out Buffer to render to
+ * @param StartX Center of view in dPiece coordinate
+ * @param StartY Center of view in dPiece coordinate
+ */
+void DrawView(CelOutputBuffer out, int StartX, int StartY);
+
 void ClearScreenBuffer();
 #ifdef _DEBUG
 void ScrollView();

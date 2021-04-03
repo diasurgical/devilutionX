@@ -7,7 +7,7 @@ GitHub: https://github.com/diasurgical/devilutionX
 # How To Install:
  - Extract the files in the archive.
  - Install libsdl2 libsdl2-mixer libsdl2-ttf
- - Copy diabdat.mpq from your CD (or GoG install folder) to the DevilutionX install folder. Make sure it is all lowercase.
+ - Copy diabdat.mpq from your CD (or GoG install folder) to the DevilutionX install folder.
  - Run ./devilutionx
 
 # Raspberry Pi performance

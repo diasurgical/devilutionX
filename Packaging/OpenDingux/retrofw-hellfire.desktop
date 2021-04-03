@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=DevilutionX Hellfire
+Comment=Diablo 1: Hellfire for RetroFW
+Exec=devilutionx
+Terminal=false
+Type=Application
+StartupNotify=true
+Icon=hellfire_32
+Categories=games;
+X-OD-Manual=readme.retrofw.txt
+X-OD-NeedsDownscaling=true
+X-OD-NeedsJoystick=true

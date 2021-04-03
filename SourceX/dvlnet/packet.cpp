@@ -50,9 +50,11 @@ wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<p
 
 namespace {
 
-void CheckPacketTypeOneOf(std::initializer_list<packet_type> expected_types, std::uint8_t actual_type) {
+void CheckPacketTypeOneOf(std::initializer_list<packet_type> expected_types, std::uint8_t actual_type)
+{
 	for (std::uint8_t packet_type : expected_types)
-		if (actual_type == packet_type) return;
+		if (actual_type == packet_type)
+			return;
 	throw wrong_packet_type_exception(std::move(expected_types), actual_type);
 }
 
@@ -90,7 +92,7 @@ const buffer_t &packet::message()
 {
 	if (!have_decrypted)
 		ABORT();
-	CheckPacketTypeOneOf({PT_MESSAGE}, m_type);
+	CheckPacketTypeOneOf({ PT_MESSAGE }, m_type);
 	return m_message;
 }
 
@@ -98,7 +100,7 @@ turn_t packet::turn()
 {
 	if (!have_decrypted)
 		ABORT();
-	CheckPacketTypeOneOf({PT_TURN}, m_type);
+	CheckPacketTypeOneOf({ PT_TURN }, m_type);
 	return m_turn;
 }
 
@@ -106,7 +108,7 @@ cookie_t packet::cookie()
 {
 	if (!have_decrypted)
 		ABORT();
-	CheckPacketTypeOneOf({PT_JOIN_REQUEST, PT_JOIN_ACCEPT}, m_type);
+	CheckPacketTypeOneOf({ PT_JOIN_REQUEST, PT_JOIN_ACCEPT }, m_type);
 	return m_cookie;
 }
 
@@ -114,7 +116,7 @@ plr_t packet::newplr()
 {
 	if (!have_decrypted)
 		ABORT();
-	CheckPacketTypeOneOf({PT_JOIN_ACCEPT, PT_CONNECT, PT_DISCONNECT}, m_type);
+	CheckPacketTypeOneOf({ PT_JOIN_ACCEPT, PT_CONNECT, PT_DISCONNECT }, m_type);
 	return m_newplr;
 }
 
@@ -122,7 +124,7 @@ const buffer_t &packet::info()
 {
 	if (!have_decrypted)
 		ABORT();
-	CheckPacketTypeOneOf({PT_JOIN_REQUEST, PT_JOIN_ACCEPT}, m_type);
+	CheckPacketTypeOneOf({ PT_JOIN_REQUEST, PT_JOIN_ACCEPT }, m_type);
 	return m_info;
 }
 
@@ -130,7 +132,7 @@ leaveinfo_t packet::leaveinfo()
 {
 	if (!have_decrypted)
 		ABORT();
-	CheckPacketTypeOneOf({PT_DISCONNECT}, m_type);
+	CheckPacketTypeOneOf({ PT_DISCONNECT }, m_type);
 	return m_leaveinfo;
 }
 
@@ -151,20 +153,20 @@ void packet_in::decrypt()
 #ifndef NONET
 	if (!disable_encryption) {
 		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
-				+ crypto_secretbox_MACBYTES
-				+ sizeof(packet_type) + 2 * sizeof(plr_t))
+		        + crypto_secretbox_MACBYTES
+		        + sizeof(packet_type) + 2 * sizeof(plr_t))
 			throw packet_exception();
 		auto pktlen = (encrypted_buffer.size()
-			- crypto_secretbox_NONCEBYTES
-			- crypto_secretbox_MACBYTES);
+		    - crypto_secretbox_NONCEBYTES
+		    - crypto_secretbox_MACBYTES);
 		decrypted_buffer.resize(pktlen);
 		if (crypto_secretbox_open_easy(decrypted_buffer.data(),
-				encrypted_buffer.data()
-					+ crypto_secretbox_NONCEBYTES,
-				encrypted_buffer.size()
-					- crypto_secretbox_NONCEBYTES,
-				encrypted_buffer.data(),
-				key.data()))
+		        encrypted_buffer.data()
+		            + crypto_secretbox_NONCEBYTES,
+		        encrypted_buffer.size()
+		            - crypto_secretbox_NONCEBYTES,
+		        encrypted_buffer.data(),
+		        key.data()))
 			throw packet_exception();
 	} else
 #endif
@@ -192,17 +194,17 @@ void packet_out::encrypt()
 	if (!disable_encryption) {
 		auto len_cleartext = encrypted_buffer.size();
 		encrypted_buffer.insert(encrypted_buffer.begin(),
-			crypto_secretbox_NONCEBYTES, 0);
+		    crypto_secretbox_NONCEBYTES, 0);
 		encrypted_buffer.insert(encrypted_buffer.end(),
-			crypto_secretbox_MACBYTES, 0);
+		    crypto_secretbox_MACBYTES, 0);
 		randombytes_buf(encrypted_buffer.data(), crypto_secretbox_NONCEBYTES);
 		if (crypto_secretbox_easy(encrypted_buffer.data()
-					+ crypto_secretbox_NONCEBYTES,
-				encrypted_buffer.data()
-					+ crypto_secretbox_NONCEBYTES,
-				len_cleartext,
-				encrypted_buffer.data(),
-				key.data()))
+		            + crypto_secretbox_NONCEBYTES,
+		        encrypted_buffer.data()
+		            + crypto_secretbox_NONCEBYTES,
+		        len_cleartext,
+		        encrypted_buffer.data(),
+		        key.data()))
 			ABORT();
 	}
 #endif
@@ -216,14 +218,14 @@ packet_factory::packet_factory(std::string pw)
 		ABORT();
 	pw.resize(std::min<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MAX));
 	pw.resize(std::max<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MIN), 0);
-	std::string salt("devilution-salt 1.1.0");
+	std::string salt("W9bE9dQgVaeybwr2");
 	salt.resize(crypto_pwhash_argon2id_SALTBYTES, 0);
 	if (crypto_pwhash(key.data(), crypto_secretbox_KEYBYTES,
-			pw.data(), pw.size(),
-			reinterpret_cast<const unsigned char *>(salt.data()),
-			crypto_pwhash_argon2id_OPSLIMIT_INTERACTIVE,
-			crypto_pwhash_argon2id_MEMLIMIT_INTERACTIVE,
-			crypto_pwhash_ALG_ARGON2ID13))
+	        pw.data(), pw.size(),
+	        reinterpret_cast<const unsigned char *>(salt.data()),
+	        crypto_pwhash_argon2id_OPSLIMIT_INTERACTIVE,
+	        crypto_pwhash_argon2id_MEMLIMIT_INTERACTIVE,
+	        crypto_pwhash_ALG_ARGON2ID13))
 		ABORT();
 #endif
 }

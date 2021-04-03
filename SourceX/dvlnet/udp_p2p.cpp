@@ -1,4 +1,5 @@
 #include "dvlnet/udp_p2p.h"
+#include "options.h"
 
 #include <SDL.h>
 
@@ -21,20 +22,9 @@ int udp_p2p::create(std::string addrstr, std::string passwd)
 	else if (ipaddr.is_v6())
 		sock.open(asio::ip::udp::v6());
 	sock.non_blocking(true);
-	unsigned short port = default_port;
-	/*
-	while (port <= default_port+try_ports) {
-		try {
-			sock.bind(asio::ip::udp::endpoint(asio::ip::address_v6(), port));
-		} catch (std::exception &e) {
-			SDL_Log("bind: %s,  %s", asio::ip::address_v6().to_string(),
-			e.what());
-		}
-		++port;
-	}
-*/
+
 	try {
-		sock.bind(endpoint(ipaddr, port));
+		sock.bind(endpoint(ipaddr, sgOptions.Network.nPort));
 	} catch (std::exception &e) {
 		SDL_SetError(e.what());
 		return -1;
@@ -53,7 +43,7 @@ int udp_p2p::join(std::string addrstr, std::string passwd)
 	else if (ipaddr.is_v6())
 		sock.open(asio::ip::udp::v6());
 	sock.non_blocking(true);
-	endpoint themaster(ipaddr, default_port);
+	endpoint themaster(ipaddr, sgOptions.Network.nPort);
 	sock.connect(themaster);
 	master = themaster;
 	{ // hack: try to join for 5 seconds

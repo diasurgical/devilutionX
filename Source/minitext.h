@@ -17,8 +17,16 @@ extern bool qtextflag;
 void FreeQuestText();
 void InitQuestText();
 void InitQTextMsg(int m);
-void DrawQTextBack();
-void DrawQText();
+
+/**
+ * @brief Draw the quest dialog window decoration and background.
+ */
+void DrawQTextBack(CelOutputBuffer out);
+
+/**
+ * @brief Draw the quest dialog window text.
+ */
+void DrawQText(CelOutputBuffer out);
 
 #ifdef __cplusplus
 }

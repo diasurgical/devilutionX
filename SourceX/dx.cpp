@@ -6,6 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "display.h"
+#include "options.h"
 #include <SDL.h>
 
 #ifdef __3DS__
@@ -15,13 +16,11 @@
 namespace dvl {
 
 int sgdwLockCount;
-BYTE *gpBuffer;
 #ifdef _DEBUG
 int locktbl[256];
 #endif
 static CCritSect sgMemCrit;
 
-int vsyncEnabled;
 int refreshDelay;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
@@ -33,17 +32,20 @@ unsigned int pal_surface_palette_version = 0;
 /** 24-bit renderer texture surface */
 SDL_Surface *renderer_texture_surface = NULL;
 
-/** 8-bit surface wrapper around #gpBuffer */
+/** 8-bit surface that we render to */
 SDL_Surface *pal_surface;
 
 static void dx_create_back_buffer()
 {
-	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
+	pal_surface = SDL_CreateRGBSurfaceWithFormat(
+	    /*flags=*/0,
+	    /*width=*/BUFFER_BORDER_LEFT + gnScreenWidth + BUFFER_BORDER_RIGHT,
+	    /*height=*/BUFFER_BORDER_TOP + gnScreenHeight + BUFFER_BORDER_BOTTOM,
+	    /*depth=*/8,
+	    SDL_PIXELFORMAT_INDEX8);
 	if (pal_surface == NULL) {
 		ErrSdl();
 	}
-
-	gpBuffer = (BYTE *)pal_surface->pixels;
 
 #ifndef USE_SDL1
 	// In SDL2, `pal_surface` points to the global `palette`.
@@ -92,8 +94,6 @@ static void lock_buf_priv()
 		return;
 	}
 
-	gpBuffer = (BYTE *)pal_surface->pixels;
-	gpBufEnd += (uintptr_t)(BYTE *)pal_surface->pixels;
 	sgdwLockCount++;
 }
 
@@ -109,13 +109,8 @@ static void unlock_buf_priv()
 {
 	if (sgdwLockCount == 0)
 		app_fatal("draw main unlock error");
-	if (gpBuffer == NULL)
-		app_fatal("draw consistency error");
 
 	sgdwLockCount--;
-	if (sgdwLockCount == 0) {
-		gpBufEnd -= (uintptr_t)gpBuffer;
-	}
 	sgMemCrit.Leave();
 }
 
@@ -129,13 +124,22 @@ void unlock_buf(BYTE idx)
 	unlock_buf_priv();
 }
 
+CelOutputBuffer GlobalBackBuffer()
+{
+	if (sgdwLockCount == 0) {
+		SDL_Log("WARNING: Trying to obtain GlobalBackBuffer() without holding a lock\n");
+		return CelOutputBuffer();
+	}
+
+	return CelOutputBuffer(pal_surface, SDL_Rect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight });
+}
+
 void dx_cleanup()
 {
 	if (ghMainWnd)
 		SDL_HideWindow(ghMainWnd);
 	sgMemCrit.Enter();
 	sgdwLockCount = 0;
-	gpBuffer = NULL;
 	sgMemCrit.Leave();
 
 	if (pal_surface == NULL)
@@ -152,20 +156,23 @@ void dx_cleanup()
 void dx_reinit()
 {
 #ifdef USE_SDL1
-	ghMainWnd = SDL_SetVideoMode(0, 0, 0, ghMainWnd->flags ^ SDL_FULLSCREEN);
+	Uint32 flags = ghMainWnd->flags ^ SDL_FULLSCREEN;
+	if (!IsFullScreen()) {
+		flags |= SDL_FULLSCREEN;
+	}
+	ghMainWnd = SDL_SetVideoMode(0, 0, 0, flags);
 	if (ghMainWnd == NULL) {
 		ErrSdl();
 	}
 #else
 	Uint32 flags = 0;
-	if (!fullscreen) {
+	if (!IsFullScreen()) {
 		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
 	}
 	if (SDL_SetWindowFullscreen(ghMainWnd, flags)) {
 		ErrSdl();
 	}
 #endif
-	fullscreen = !fullscreen;
 	force_redraw = 255;
 }
 
@@ -187,8 +194,8 @@ void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
 	SDL_Surface *dst = GetOutputSurface();
 #ifndef USE_SDL1
 	if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
-			ErrSdl();
-		return;
+		ErrSdl();
+	return;
 #else
 	if (!OutputRequiresScaling()) {
 		if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
@@ -243,6 +250,8 @@ void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
  */
 void LimitFrameRate()
 {
+	if (!sgOptions.Graphics.bFPSLimit)
+		return;
 	static uint32_t frameDeadline;
 	uint32_t tc = SDL_GetTicks() * 1000;
 	uint32_t v = 0;
@@ -272,7 +281,7 @@ void RenderPresent()
 		// Clear buffer to avoid artifacts in case the window was resized
 #ifndef __vita__
 		// There's no window resizing on vita, so texture always properly overwrites display area.
-		// Thus, there's no need to clear the screen and unnecessary modify sdl render context state.
+		// Thus, there's no need to clear the screen and unnecessarily modify sdl render context state.
 		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) <= -1) { // TODO only do this if window was resized
 			ErrSdl();
 		}
@@ -286,7 +295,7 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 
-		if (!vsyncEnabled) {
+		if (!sgOptions.Graphics.bVSync) {
 			LimitFrameRate();
 		}
 	} else {

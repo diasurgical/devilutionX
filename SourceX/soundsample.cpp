@@ -2,6 +2,8 @@
 #include "stubs.h"
 #include <SDL.h>
 
+#include "storm_sdl_rw.h"
+
 namespace dvl {
 
 ///// SoundSample /////
@@ -9,6 +11,7 @@ namespace dvl {
 void SoundSample::Release()
 {
 	Mix_FreeChunk(chunk);
+	chunk = NULL;
 };
 
 /**
@@ -66,6 +69,16 @@ void SoundSample::Stop()
 	}
 };
 
+int SoundSample::SetChunkStream(HANDLE stormHandle)
+{
+	chunk = Mix_LoadWAV_RW(SFileRw_FromStormHandle(stormHandle), /*freesrc=*/1);
+	if (chunk == NULL) {
+		SDL_Log("Mix_LoadWAV_RW: %s", Mix_GetError());
+		return -1;
+	}
+	return 0;
+}
+
 /**
  * @brief This can load WAVE, AIFF, RIFF, OGG, and VOC formats
  * @param fileData Buffer containing file data
@@ -104,7 +117,9 @@ int SoundSample::GetLength()
 		bytePerSample = 1;
 	}
 
-	return chunk->alen * 1000 / (frequency * channels * bytePerSample);
+	Uint64 ms = 1000;                                  // milliseconds, 64bit to avoid overflow when multiplied by alen
+	Uint32 bps = frequency * channels * bytePerSample; // bytes per second
+	return (Uint32)(chunk->alen * ms / bps);
 };
 
 } // namespace dvl

@@ -1,5 +1,6 @@
 #include "DiabloUI/art.h"
 #include "display.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 namespace dvl {
 

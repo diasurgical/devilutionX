@@ -7,9 +7,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-void PackItem(PkItemStruct *id, ItemStruct *is)
+void PackItem(PkItemStruct *id, const ItemStruct *is)
 {
-	if (is->_itype == ITYPE_NONE) {
+	memset(id, 0, sizeof(*id));
+	if (is->isEmpty()) {
 		id->idx = 0xFFFF;
 	} else {
 		int idx = is->IDidx;
@@ -19,14 +20,14 @@ void PackItem(PkItemStruct *id, ItemStruct *is)
 		id->idx = SwapLE16(idx);
 		if (is->IDidx == IDI_EAR) {
 			id->iCreateInfo = is->_iName[8] | (is->_iName[7] << 8);
-			id->iSeed = SwapLE32(is->_iName[12] | ((is->_iName[11] | ((is->_iName[10] | (is->_iName[9] << 8)) << 8)) << 8));
+			id->iSeed = LOAD_BE32(&is->_iName[9]);
 			id->bId = is->_iName[13];
 			id->bDur = is->_iName[14];
 			id->bMDur = is->_iName[15];
 			id->bCh = is->_iName[16];
 			id->bMCh = is->_iName[17];
-			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCEROR) << 6));
-			id->dwBuff = SwapLE32(is->_iName[22] | ((is->_iName[21] | ((is->_iName[20] | (is->_iName[19] << 8)) << 8)) << 8));
+			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCERER) << 6));
+			id->dwBuff = LOAD_BE32(&is->_iName[19]);
 		} else {
 			id->iSeed = SwapLE32(is->_iSeed);
 			id->iCreateInfo = SwapLE16(is->_iCreateInfo);
@@ -37,6 +38,7 @@ void PackItem(PkItemStruct *id, ItemStruct *is)
 			id->bMCh = is->_iMaxCharges;
 			if (is->IDidx == IDI_GOLD)
 				id->wValue = SwapLE16(is->_ivalue);
+			id->dwBuff = is->dwBuff;
 		}
 	}
 }
@@ -114,6 +116,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 	pPack->pDifficulty = SwapLE32(pPlayer->pDifficulty);
 	pPack->pDamAcFlags = SwapLE32(pPlayer->pDamAcFlags);
 	pPack->pDiabloKillLevel = SwapLE32(pPlayer->pDiabloKillLevel);
+	pPack->bIsHellfire = gbIsHellfire;
 
 	if (!gbIsMultiplayer || manashield)
 		pPack->pManaShield = SwapLE32(pPlayer->pManaShield);
@@ -129,39 +132,53 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
  * @param is The source packed item
  * @param id The distination item
  */
-void UnPackItem(PkItemStruct *is, ItemStruct *id)
+void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 {
 	WORD idx = SwapLE16(is->idx);
-
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
-	} else {
-		if (!gbIsHellfireSaveGame) {
-			idx = RemapItemIdxFromDiablo(idx);
-		}
-		if (idx == IDI_EAR) {
-			RecreateEar(
-			    MAXITEMS,
-			    SwapLE16(is->iCreateInfo),
-			    SwapLE32(is->iSeed),
-			    is->bId,
-			    is->bDur,
-			    is->bMDur,
-			    is->bCh,
-			    is->bMCh,
-			    SwapLE16(is->wValue),
-			    SwapLE32(is->dwBuff));
-		} else {
-			RecreateItem(MAXITEMS, idx, SwapLE16(is->iCreateInfo), SwapLE32(is->iSeed), SwapLE16(is->wValue));
-			item[MAXITEMS]._iMagical = is->bId >> 1;
-			item[MAXITEMS]._iIdentified = is->bId & 1;
-			item[MAXITEMS]._iDurability = is->bDur;
-			item[MAXITEMS]._iMaxDur = is->bMDur;
-			item[MAXITEMS]._iCharges = is->bCh;
-			item[MAXITEMS]._iMaxCharges = is->bMCh;
-		}
-		*id = item[MAXITEMS];
+		return;
 	}
+
+	if (!isHellfire) {
+		idx = RemapItemIdxFromDiablo(idx);
+	}
+
+	if (!IsItemAvailable(idx)) {
+		id->_itype = ITYPE_NONE;
+		return;
+	}
+
+	if (idx == IDI_EAR) {
+		RecreateEar(
+		    MAXITEMS,
+		    SwapLE16(is->iCreateInfo),
+		    SwapLE32(is->iSeed),
+		    is->bId,
+		    is->bDur,
+		    is->bMDur,
+		    is->bCh,
+		    is->bMCh,
+		    SwapLE16(is->wValue),
+		    SwapLE32(is->dwBuff));
+	} else {
+		memset(&item[MAXITEMS], 0, sizeof(*item));
+		RecreateItem(MAXITEMS, idx, SwapLE16(is->iCreateInfo), SwapLE32(is->iSeed), SwapLE16(is->wValue), isHellfire);
+		item[MAXITEMS]._iMagical = is->bId >> 1;
+		item[MAXITEMS]._iIdentified = is->bId & 1;
+		item[MAXITEMS]._iDurability = is->bDur;
+		item[MAXITEMS]._iMaxDur = is->bMDur;
+		item[MAXITEMS]._iCharges = is->bCh;
+		item[MAXITEMS]._iMaxCharges = is->bMCh;
+
+		RemoveInvalidItem(&item[MAXITEMS]);
+
+		if (isHellfire)
+			item[MAXITEMS].dwBuff |= CF_HELLFIRE;
+		else
+			item[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
+	}
+	*id = item[MAXITEMS];
 }
 
 void VerifyGoldSeeds(PlayerStruct *pPlayer)
@@ -182,7 +199,7 @@ void VerifyGoldSeeds(PlayerStruct *pPlayer)
 	}
 }
 
-void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
+void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync)
 {
 	PlayerStruct *pPlayer;
 	int i;
@@ -190,7 +207,6 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	PkItemStruct *pki;
 
 	pPlayer = &plr[pnum];
-	ClearPlrRVars(pPlayer);
 	pPlayer->_px = pPack->px;
 	pPlayer->_py = pPack->py;
 	pPlayer->_pfutx = pPack->px;
@@ -201,7 +217,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	ClrPlrPath(pnum);
 	pPlayer->destAction = ACTION_NONE;
 	strcpy(pPlayer->_pName, pPack->pName);
-	pPlayer->_pClass = pPack->pClass;
+	pPlayer->_pClass = (plr_class)pPack->pClass;
 	InitPlayer(pnum, TRUE);
 	pPlayer->_pBaseStr = pPack->pBaseStr;
 	pPlayer->_pStrength = pPack->pBaseStr;
@@ -218,7 +234,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pPlayer->_pMaxHPBase = SwapLE32(pPack->pMaxHPBase);
 	pPlayer->_pHPBase = SwapLE32(pPack->pHPBase);
 	pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
-	if (!killok)
+	if (!netSync)
 		if ((int)(pPlayer->_pHPBase & 0xFFFFFFC0) < 64)
 			pPlayer->_pHPBase = 64;
 
@@ -235,7 +251,8 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pi = &pPlayer->InvBody[0];
 
 	for (i = 0; i < NUM_INVLOC; i++) {
-		UnPackItem(pki, pi);
+		bool isHellfire = netSync ? ((pki->dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		UnPackItem(pki, pi, isHellfire);
 		pki++;
 		pi++;
 	}
@@ -244,7 +261,8 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pi = &pPlayer->InvList[0];
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		UnPackItem(pki, pi);
+		bool isHellfire = netSync ? ((pki->dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		UnPackItem(pki, pi, isHellfire);
 		pki++;
 		pi++;
 	}
@@ -259,7 +277,8 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pi = &pPlayer->SpdList[0];
 
 	for (i = 0; i < MAXBELTITEMS; i++) {
-		UnPackItem(pki, pi);
+		bool isHellfire = netSync ? ((pki->dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		UnPackItem(pki, pi, isHellfire);
 		pki++;
 		pi++;
 	}

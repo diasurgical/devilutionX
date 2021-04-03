@@ -14,14 +14,14 @@ void HandleDocking()
 {
 	int docked;
 	switch (appletGetOperationMode()) {
-		case AppletOperationMode_Handheld:
-			docked = 0;
-			break;
-		case AppletOperationMode_Console:
-			docked = 1;
-			break;
-		default:
-			docked = 0;
+	case AppletOperationMode_Handheld:
+		docked = 0;
+		break;
+	case AppletOperationMode_Console:
+		docked = 1;
+		break;
+	default:
+		docked = 0;
 	}
 
 	int display_width;

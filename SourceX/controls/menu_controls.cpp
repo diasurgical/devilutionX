@@ -1,14 +1,36 @@
 #include "controls/menu_controls.h"
 
+#include "controls/axis_direction.h"
 #include "controls/controller.h"
+#include "controls/controller_motion.h"
 #include "controls/remap_keyboard.h"
 #include "DiabloUI/diabloui.h"
 
 namespace dvl {
 
+MenuAction GetMenuHeldUpDownAction()
+{
+	static AxisDirectionRepeater repeater;
+	const AxisDirection dir = repeater.Get(GetLeftStickOrDpadDirection());
+	switch (dir.y) {
+	case AxisDirectionY_UP:
+		return MenuAction_UP;
+	case AxisDirectionY_DOWN:
+		return MenuAction_DOWN;
+	default:
+		return MenuAction_NONE;
+	}
+}
+
 MenuAction GetMenuAction(const SDL_Event &event)
 {
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
+
+	if (ProcessControllerMotion(event, ctrl_event)) {
+		sgbControllerActive = true;
+		return GetMenuHeldUpDownAction();
+	}
+
 	if (ctrl_event.button != ControllerButton_NONE)
 		sgbControllerActive = true;
 
@@ -25,9 +47,8 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		case ControllerButton_BUTTON_X: // Left button
 			return MenuAction_DELETE;
 		case ControllerButton_BUTTON_DPAD_UP:
-			return MenuAction_UP;
 		case ControllerButton_BUTTON_DPAD_DOWN:
-			return MenuAction_DOWN;
+			return GetMenuHeldUpDownAction();
 		case ControllerButton_BUTTON_DPAD_LEFT:
 			return MenuAction_LEFT;
 		case ControllerButton_BUTTON_DPAD_RIGHT:

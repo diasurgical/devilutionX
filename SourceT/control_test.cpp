@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-TEST(Control, SetSpell) {
+TEST(Control, SetSpell)
+{
 	dvl::pnumlines = 1;
 	dvl::pinfoflag = true;
 	dvl::pSpell = dvl::SPL_FIREBOLT;
@@ -15,7 +16,8 @@ TEST(Control, SetSpell) {
 	EXPECT_EQ(dvl::force_redraw, 255);
 }
 
-TEST(Control, ClearPanel) {
+TEST(Control, ClearPanel)
+{
 	dvl::pnumlines = 1;
 	dvl::pinfoflag = true;
 	dvl::ClearPanel();

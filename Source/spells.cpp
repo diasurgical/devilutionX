@@ -53,7 +53,7 @@ int GetManaAmount(int id, int sn)
 		ma = spelldata[sn].sMinMana << 6;
 	}
 
-	return ma * (100 - plr[id]._pISplCost) / 100;
+	return ma;
 }
 
 void UseMana(int id, int sn)
@@ -95,7 +95,7 @@ void UseMana(int id, int sn)
  * @param spellId The id of the spell to get a bitmask for.
  * @return A 64bit bitmask representation for the specified spell.
  */
-unsigned long long GetSpellBitmask(int spellId)
+Uint64 GetSpellBitmask(int spellId)
 {
 	return 1ULL << (spellId - 1);
 }
@@ -133,15 +133,13 @@ bool IsReadiedSpellValid(const PlayerStruct &player)
  */
 void ClearReadiedSpell(PlayerStruct &player)
 {
-	int &readiedSpell = player._pRSpell;
-	if (readiedSpell != SPL_INVALID) {
-		readiedSpell = SPL_INVALID;
+	if (player._pRSpell != SPL_INVALID) {
+		player._pRSpell = SPL_INVALID;
 		force_redraw = 255;
 	}
 
-	char &readiedSpellType = player._pRSplType;
-	if (readiedSpellType != RSPLTYPE_INVALID) {
-		readiedSpellType = RSPLTYPE_INVALID;
+	if (player._pRSplType != RSPLTYPE_INVALID) {
+		player._pRSplType = RSPLTYPE_INVALID;
 		force_redraw = 255;
 	}
 }
@@ -345,7 +343,7 @@ void DoHealOther(int pnum, int rid)
 	}
 }
 
-int GetSpellBookLevel(int s)
+int GetSpellBookLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
@@ -355,6 +353,8 @@ int GetSpellBookLevel(int s)
 		case SPL_FLARE:
 		case SPL_BONESPIRIT:
 			return -1;
+		default:
+			break;
 		}
 	}
 
@@ -363,6 +363,10 @@ int GetSpellBookLevel(int s)
 		case SPL_NOVA:
 		case SPL_APOCA:
 			return -1;
+		default:
+			if (s > SPL_LASTDIABLO)
+				return -1;
+			break;
 		}
 	}
 
@@ -370,13 +374,15 @@ int GetSpellBookLevel(int s)
 		switch (s) {
 		case SPL_ELEMENT:
 			return -1;
+		default:
+			break;
 		}
 	}
 
 	return spelldata[s].sBookLvl;
 }
 
-int GetSpellStaffLevel(int s)
+int GetSpellStaffLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
@@ -387,13 +393,20 @@ int GetSpellStaffLevel(int s)
 		case SPL_FLARE:
 		case SPL_BONESPIRIT:
 			return -1;
+		default:
+			break;
 		}
 	}
+
+	if (!gbIsHellfire && s > SPL_LASTDIABLO)
+		return -1;
 
 	if (gbIsHellfire) {
 		switch (s) {
 		case SPL_ELEMENT:
 			return -1;
+		default:
+			break;
 		}
 	}
 

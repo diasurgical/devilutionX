@@ -6,11 +6,21 @@
 #ifndef __INV_H__
 #define __INV_H__
 
+#include "items.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef enum item_color {
+	// clang-format off
+	ICOL_WHITE = PAL16_YELLOW + 5,
+	ICOL_BLUE  = PAL16_BLUE + 5,
+	ICOL_RED   = PAL16_RED + 5,
+	// clang-format on
+} item_color;
 
 extern BOOL invflag;
 extern BOOL drawsbarflag;
@@ -18,17 +28,24 @@ extern const InvXY InvRect[73];
 
 void FreeInvGFX();
 void InitInv();
-void DrawInv();
-void DrawInvBelt();
+
+/**
+ * @brief Render the inventory panel to the given buffer.
+ */
+void DrawInv(CelOutputBuffer out);
+
+void DrawInvBelt(CelOutputBuffer out);
+bool AutoEquipEnabled(const ItemStruct &item);
+bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true);
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag);
-BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy);
+BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item);
 BOOL GoldAutoPlace(int pnum);
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId);
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId, uint32_t dwBuff);
 void inv_update_rem_item(int pnum, BYTE iv);
 void RemoveInvItem(int pnum, int iv);
 void RemoveSpdBarItem(int pnum, int iv);
-void CheckInvItem();
-void CheckInvScrn();
+void CheckInvItem(bool isShiftHeld = false);
+void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(int pnum);
 void InvGetItem(int pnum, int ii);
 void AutoGetItem(int pnum, int ii);

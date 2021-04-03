@@ -9,7 +9,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 namespace {
 
-Uint16 sync_word_6AA708[MAXMONSTERS];
+Uint16 sgnMonsterPriority[MAXMONSTERS];
 int sgnMonsters;
 Uint16 sgwLRU[MAXMONSTERS];
 int sgnSyncItem;
@@ -21,9 +21,9 @@ static void sync_one_monster()
 
 	for (i = 0; i < nummonsters; i++) {
 		m = monstactive[i];
-		sync_word_6AA708[m] = abs(plr[myplr]._px - monster[m]._mx) + abs(plr[myplr]._py - monster[m]._my);
+		sgnMonsterPriority[m] = abs(plr[myplr]._px - monster[m]._mx) + abs(plr[myplr]._py - monster[m]._my);
 		if (monster[m]._msquelch == 0) {
-			sync_word_6AA708[m] += 0x1000;
+			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
 			sgwLRU[m]--;
 		}
@@ -36,9 +36,9 @@ static void sync_monster_pos(TSyncMonster *p, int ndx)
 	p->_mx = monster[ndx]._mx;
 	p->_my = monster[ndx]._my;
 	p->_menemy = encode_enemy(ndx);
-	p->_mdelta = sync_word_6AA708[ndx] > 255 ? 255 : sync_word_6AA708[ndx];
+	p->_mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
 
-	sync_word_6AA708[ndx] = 0xFFFF;
+	sgnMonsterPriority[ndx] = 0xFFFF;
 	sgwLRU[ndx] = monster[ndx]._msquelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
@@ -52,8 +52,8 @@ static bool sync_monster_active(TSyncMonster *p)
 
 	for (i = 0; i < nummonsters; i++) {
 		m = monstactive[i];
-		if (sync_word_6AA708[m] < lru && sgwLRU[m] < 0xFFFE) {
-			lru = sync_word_6AA708[m];
+		if (sgnMonsterPriority[m] < lru && sgwLRU[m] < 0xFFFE) {
+			lru = sgnMonsterPriority[m];
 			ndx = monstactive[i];
 		}
 	}
@@ -116,7 +116,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 			pHdr->bItemMDur = item[ii]._iName[15];
 			pHdr->bItemCh = item[ii]._iName[16];
 			pHdr->bItemMCh = item[ii]._iName[17];
-			pHdr->wItemVal = (item[ii]._iName[18] << 8) | ((item[ii]._iCurs - ICURS_EAR_SORCEROR) << 6) | item[ii]._ivalue;
+			pHdr->wItemVal = (item[ii]._iName[18] << 8) | ((item[ii]._iCurs - ICURS_EAR_SORCERER) << 6) | item[ii]._ivalue;
 			pHdr->dwItemBuff = (item[ii]._iName[19] << 24) | (item[ii]._iName[20] << 16) | (item[ii]._iName[21] << 8) | item[ii]._iName[22];
 		} else {
 			pHdr->wItemCI = item[ii]._iCreateInfo;
@@ -136,7 +136,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 
 	assert(sgnSyncPInv > -1 && sgnSyncPInv < NUM_INVLOC);
 	pItem = &plr[myplr].InvBody[sgnSyncPInv];
-	if (pItem->_itype != ITYPE_NONE) {
+	if (!pItem->isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
 		pHdr->wPInvIndx = pItem->IDidx;
 		pHdr->wPInvCI = pItem->_iCreateInfo;

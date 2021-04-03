@@ -8,7 +8,6 @@
 
 namespace dvl {
 
-extern int vsyncEnabled;
 extern int refreshDelay; // Screen refresh rate in nanoseconds
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
@@ -20,9 +19,10 @@ extern unsigned int pal_surface_palette_version;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags);
-bool IsFullScreen();
 void SetVideoModeToPrimary(bool fullscreen, int width, int height);
 #endif
+
+bool IsFullScreen();
 
 // Returns:
 // SDL1: Video surface.
@@ -62,8 +62,8 @@ void OutputToLogical(T *x, T *y)
 	if (!OutputRequiresScaling())
 		return;
 	const SDL_Surface *surface = GetOutputSurface();
-	*x = *x * SCREEN_WIDTH / surface->w;
-	*y = *y * SCREEN_HEIGHT / surface->h;
+	*x = *x * gnScreenWidth / surface->w;
+	*y = *y * gnScreenHeight / surface->h;
 #endif
 }
 
@@ -88,8 +88,8 @@ void LogicalToOutput(T *x, T *y)
 	if (!OutputRequiresScaling())
 		return;
 	const SDL_Surface *surface = GetOutputSurface();
-	*x = *x * surface->w / SCREEN_WIDTH;
-	*y = *y * surface->h / SCREEN_HEIGHT;
+	*x = *x * surface->w / gnScreenWidth;
+	*y = *y * surface->h / gnScreenHeight;
 #endif
 }
 

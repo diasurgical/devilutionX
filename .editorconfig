@@ -7,6 +7,10 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+[*.{c++,cc,cpp,cppm,cxx,h,h++,hh,hpp,hxx,inl,ipp,ixx,tlh,tli}]
+# Visual C++ Code Style settings
+cpp_generate_documentation_comments = doxygen_slash_star
+
 [*.yml]
 indent_style = space
 end_of_line = lf
@@ -20,10 +24,6 @@ end_of_line = lf
 [.gitignore]
 end_of_line = lf
 
-[CMakeLists.txt]
-indent_style = space
-indent_size = 2
-
 [*.cmake]
 indent_style = space
 indent_size = 2
@@ -32,3 +32,14 @@ indent_size = 2
 indent_style = space
 indent_size = 2
 end_of_line = lf
+
+[*.txt]
+end_of_line = lf
+
+[AppRun]
+end_of_line = lf
+
+[CMakeLists.txt]
+indent_style = space
+indent_size = 2
+end_of_line = crlf

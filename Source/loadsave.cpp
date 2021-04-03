@@ -7,403 +7,507 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-BYTE *tbuff;
-
 bool gbIsHellfireSaveGame;
 int giNumberOfLevels;
 int giNumberQuests;
 int giNumberOfSmithPremiumItems;
 
-static char BLoad()
+namespace {
+
+template <class T>
+T SwapLE(T in)
 {
-	return *tbuff++;
-}
-
-#define WLoad ILoad
-
-static int ILoad()
-{
-	int rv = *tbuff++ << 24;
-	rv |= *tbuff++ << 16;
-	rv |= *tbuff++ << 8;
-	rv |= *tbuff++;
-
-	return rv;
-}
-
-static bool LoadBool8()
-{
-	if (*tbuff++ == TRUE)
-		return TRUE;
-	else
-		return FALSE;
-}
-
-static bool LoadBool32()
-{
-	Uint32 buf;
-	memcpy(&buf, tbuff, 4);
-	tbuff += 4;
-	return buf != 0;
-}
-
-static void CopyBytes(const void *src, const int n, void *dst)
-{
-	memcpy(dst, src, n);
-	tbuff += n;
-}
-
-static void CopyChar(const void *src, void *dst)
-{
-	*(char *)dst = *(char *)src;
-	tbuff += 1;
-}
-
-static void CopyShort(const void *src, void *dst)
-{
-	unsigned short buf;
-	memcpy(&buf, src, 2);
-	buf = SwapLE16(buf);
-	memcpy(dst, &buf, 2);
-	tbuff += 2;
-}
-
-static void CopyShorts(const void *src, const int n, void *dst)
-{
-	const unsigned short *s = reinterpret_cast<const unsigned short *>(src);
-	unsigned short *d = reinterpret_cast<unsigned short *>(dst);
-	for (int i = 0; i < n; i++) {
-		CopyShort(s, d);
-		++d;
-		++s;
+	switch (sizeof(T)) {
+	case 2:
+		return SDL_SwapLE16(in);
+	case 4:
+		return SDL_SwapLE32(in);
+	case 8:
+		return SDL_SwapLE64(in);
+	default:
+		return in;
 	}
 }
 
-static void CopyInt(const void *src, void *dst)
+template <class T>
+T SwapBE(T in)
 {
-	unsigned int buf;
-	memcpy(&buf, src, 4);
-	buf = SwapLE32(buf);
-	memcpy(dst, &buf, 4);
-	tbuff += 4;
-}
-
-static void CopyInts(const void *src, const int n, void *dst)
-{
-	const unsigned int *s = reinterpret_cast<const unsigned int *>(src);
-	const unsigned int *d = reinterpret_cast<unsigned int *>(dst);
-	for (int i = 0; i < n; i++) {
-		CopyInt(s, (void *)d);
-		++d;
-		++s;
+	switch (sizeof(T)) {
+	case 2:
+		return SDL_SwapBE16(in);
+	case 4:
+		return SDL_SwapBE32(in);
+	case 8:
+		return SDL_SwapBE64(in);
+	default:
+		return in;
 	}
 }
 
-static void CopyInt64(const void *src, void *dst)
-{
-	unsigned long long buf;
-	memcpy(&buf, src, 8);
-	buf = SDL_SwapLE64(buf);
-	memcpy(dst, &buf, 8);
-	tbuff += 8;
+class LoadHelper {
+	Uint8 *m_buffer;
+	Uint32 m_bufferPtr = 0;
+	Uint32 m_bufferLen;
+
+	template <class T>
+	T next()
+	{
+		const auto size = sizeof(T);
+		if (!isValid(size))
+			return 0;
+
+		T value;
+		memcpy(&value, &m_buffer[m_bufferPtr], size);
+		m_bufferPtr += size;
+
+		return value;
+	}
+
+public:
+	LoadHelper(const char *szFileName)
+	{
+		m_buffer = pfile_read(szFileName, &m_bufferLen);
+	}
+
+	bool isValid(Uint32 size = 1)
+	{
+		return m_buffer != nullptr
+		    && m_bufferLen >= (m_bufferPtr + size);
+	}
+
+	void skip(Uint32 size)
+	{
+		m_bufferPtr += size;
+	}
+
+	void nextBytes(void *bytes, size_t size)
+	{
+		if (!isValid(size))
+			return;
+
+		memcpy(bytes, &m_buffer[m_bufferPtr], size);
+		m_bufferPtr += size;
+	}
+
+	template <class T>
+	T nextLE()
+	{
+		return SwapLE(next<T>());
+	}
+
+	template <class T>
+	T nextBE()
+	{
+		return SwapBE(next<T>());
+	}
+
+	bool nextBool8()
+	{
+		return next<Uint8>() != 0;
+	}
+
+	bool nextBool32()
+	{
+		return next<Uint32>() != 0;
+	}
+
+	~LoadHelper()
+	{
+		mem_free_dbg(m_buffer);
+	}
+};
+
+class SaveHelper {
+	const char *m_szFileName;
+	Uint8 *m_buffer;
+	Uint32 m_bufferPtr = 0;
+	Uint32 m_bufferLen;
+
+public:
+	SaveHelper(const char *szFileName, size_t bufferLen)
+	{
+		m_szFileName = szFileName;
+		m_bufferLen = bufferLen;
+		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_bufferLen));
+	}
+
+	bool isValid(Uint32 len = 1)
+	{
+		return m_buffer != nullptr
+		    && m_bufferLen >= (m_bufferPtr + len);
+	}
+
+	void skip(Uint32 len)
+	{
+		m_bufferPtr += len;
+	}
+
+	void writeBytes(const void *bytes, size_t len)
+	{
+		if (!isValid(len))
+			return;
+
+		memcpy(&m_buffer[m_bufferPtr], bytes, len);
+		m_bufferPtr += len;
+	}
+
+	template <class T>
+	void writeLE(T value)
+	{
+		value = SwapLE(value);
+		writeBytes(&value, sizeof(value));
+	}
+
+	template <class T>
+	void writeBE(T value)
+	{
+		value = SwapBE(value);
+		writeBytes(&value, sizeof(value));
+	}
+
+	void flush()
+	{
+		if (m_buffer == nullptr)
+			return;
+
+		pfile_write_save_file(m_szFileName, m_buffer, m_bufferPtr, codec_get_encoded_len(m_bufferPtr));
+		mem_free_dbg(m_buffer);
+		m_buffer = nullptr;
+	}
+
+	~SaveHelper()
+	{
+		flush();
+	}
+};
+
 }
 
-static void LoadItemData(ItemStruct *pItem)
+void RemoveInvalidItem(ItemStruct *pItem)
 {
-	CopyInt(tbuff, &pItem->_iSeed);
-	CopyShort(tbuff, &pItem->_iCreateInfo);
-	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pItem->_itype);
-	CopyInt(tbuff, &pItem->_ix);
-	CopyInt(tbuff, &pItem->_iy);
-	CopyInt(tbuff, &pItem->_iAnimFlag);
-	tbuff += 4; // Skip pointer _iAnimData
-	CopyInt(tbuff, &pItem->_iAnimLen);
-	CopyInt(tbuff, &pItem->_iAnimFrame);
-	CopyInt(tbuff, &pItem->_iAnimWidth);
-	CopyInt(tbuff, &pItem->_iAnimWidth2);
-	CopyInt(tbuff, &pItem->_iDelFlag);
-	CopyChar(tbuff, &pItem->_iSelFlag);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pItem->_iPostDraw);
-	CopyInt(tbuff, &pItem->_iIdentified);
-	CopyChar(tbuff, &pItem->_iMagical);
-	CopyBytes(tbuff, 64, &pItem->_iName);
-	CopyBytes(tbuff, 64, &pItem->_iIName);
-	CopyChar(tbuff, &pItem->_iLoc);
-	CopyChar(tbuff, &pItem->_iClass);
-	tbuff += 1; // Alignment
-	CopyInt(tbuff, &pItem->_iCurs);
-	CopyInt(tbuff, &pItem->_ivalue);
-	CopyInt(tbuff, &pItem->_iIvalue);
-	CopyInt(tbuff, &pItem->_iMinDam);
-	CopyInt(tbuff, &pItem->_iMaxDam);
-	CopyInt(tbuff, &pItem->_iAC);
-	CopyInt(tbuff, &pItem->_iFlags);
-	CopyInt(tbuff, &pItem->_iMiscId);
-	CopyInt(tbuff, &pItem->_iSpell);
-	CopyInt(tbuff, &pItem->_iCharges);
-	CopyInt(tbuff, &pItem->_iMaxCharges);
-	CopyInt(tbuff, &pItem->_iDurability);
-	CopyInt(tbuff, &pItem->_iMaxDur);
-	CopyInt(tbuff, &pItem->_iPLDam);
-	CopyInt(tbuff, &pItem->_iPLToHit);
-	CopyInt(tbuff, &pItem->_iPLAC);
-	CopyInt(tbuff, &pItem->_iPLStr);
-	CopyInt(tbuff, &pItem->_iPLMag);
-	CopyInt(tbuff, &pItem->_iPLDex);
-	CopyInt(tbuff, &pItem->_iPLVit);
-	CopyInt(tbuff, &pItem->_iPLFR);
-	CopyInt(tbuff, &pItem->_iPLLR);
-	CopyInt(tbuff, &pItem->_iPLMR);
-	CopyInt(tbuff, &pItem->_iPLMana);
-	CopyInt(tbuff, &pItem->_iPLHP);
-	CopyInt(tbuff, &pItem->_iPLDamMod);
-	CopyInt(tbuff, &pItem->_iPLGetHit);
-	CopyInt(tbuff, &pItem->_iPLLight);
-	CopyChar(tbuff, &pItem->_iSplLvlAdd);
-	CopyChar(tbuff, &pItem->_iRequest);
-	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pItem->_iUid);
-	CopyInt(tbuff, &pItem->_iFMinDam);
-	CopyInt(tbuff, &pItem->_iFMaxDam);
-	CopyInt(tbuff, &pItem->_iLMinDam);
-	CopyInt(tbuff, &pItem->_iLMaxDam);
-	CopyInt(tbuff, &pItem->_iPLEnAc);
-	CopyChar(tbuff, &pItem->_iPrePower);
-	CopyChar(tbuff, &pItem->_iSufPower);
-	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pItem->_iVAdd1);
-	CopyInt(tbuff, &pItem->_iVMult1);
-	CopyInt(tbuff, &pItem->_iVAdd2);
-	CopyInt(tbuff, &pItem->_iVMult2);
-	CopyChar(tbuff, &pItem->_iMinStr);
-	CopyChar(tbuff, &pItem->_iMinMag);
-	CopyChar(tbuff, &pItem->_iMinDex);
-	tbuff += 1; // Alignment
-	CopyInt(tbuff, &pItem->_iStatFlag);
-	CopyInt(tbuff, &pItem->IDidx);
+	bool isInvalid = !IsItemAvailable(pItem->IDidx) || !IsUniqueAvailable(pItem->_iUid);
+
+	if (!gbIsHellfire) {
+		isInvalid = isInvalid || (pItem->_itype == ITYPE_STAFF && GetSpellStaffLevel(pItem->_iSpell) == -1);
+		isInvalid = isInvalid || (pItem->_iMiscId == IMISC_BOOK && GetSpellBookLevel(pItem->_iSpell) == -1);
+		isInvalid = isInvalid || pItem->_iDamAcFlags != 0;
+		isInvalid = isInvalid || pItem->_iPrePower > IDI_LASTDIABLO;
+		isInvalid = isInvalid || pItem->_iSufPower > IDI_LASTDIABLO;
+	}
+
+	if (isInvalid) {
+		pItem->_itype = ITYPE_NONE;
+	}
+}
+
+static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
+{
+	pItem->_iSeed = file->nextLE<Sint32>();
+	pItem->_iCreateInfo = file->nextLE<Uint16>();
+	file->skip(2); // Alignment
+	pItem->_itype = (item_type)file->nextLE<Uint32>();
+	pItem->_ix = file->nextLE<Sint32>();
+	pItem->_iy = file->nextLE<Sint32>();
+	pItem->_iAnimFlag = file->nextBool32();
+	file->skip(4); // Skip pointer _iAnimData
+	pItem->_iAnimLen = file->nextLE<Sint32>();
+	pItem->_iAnimFrame = file->nextLE<Sint32>();
+	pItem->_iAnimWidth = file->nextLE<Sint32>();
+	pItem->_iAnimWidth2 = file->nextLE<Sint32>();
+	file->skip(4); // Unused since 1.02
+	pItem->_iSelFlag = file->nextLE<Uint8>();
+	file->skip(3); // Alignment
+	pItem->_iPostDraw = file->nextBool32();
+	pItem->_iIdentified = file->nextBool32();
+	pItem->_iMagical = file->nextLE<Sint8>();
+	file->nextBytes(pItem->_iName, 64);
+	file->nextBytes(pItem->_iIName, 64);
+	pItem->_iLoc = (item_equip_type)file->nextLE<Sint8>();
+	pItem->_iClass = (item_class)file->nextLE<Uint8>();
+	file->skip(1); // Alignment
+	pItem->_iCurs = file->nextLE<Sint32>();
+	pItem->_ivalue = file->nextLE<Sint32>();
+	pItem->_iIvalue = file->nextLE<Sint32>();
+	pItem->_iMinDam = file->nextLE<Sint32>();
+	pItem->_iMaxDam = file->nextLE<Sint32>();
+	pItem->_iAC = file->nextLE<Sint32>();
+	pItem->_iFlags = file->nextLE<Sint32>();
+	pItem->_iMiscId = (item_misc_id)file->nextLE<Sint32>();
+	pItem->_iSpell = (spell_id)file->nextLE<Sint32>();
+	pItem->_iCharges = file->nextLE<Sint32>();
+	pItem->_iMaxCharges = file->nextLE<Sint32>();
+	pItem->_iDurability = file->nextLE<Sint32>();
+	pItem->_iMaxDur = file->nextLE<Sint32>();
+	pItem->_iPLDam = file->nextLE<Sint32>();
+	pItem->_iPLToHit = file->nextLE<Sint32>();
+	pItem->_iPLAC = file->nextLE<Sint32>();
+	pItem->_iPLStr = file->nextLE<Sint32>();
+	pItem->_iPLMag = file->nextLE<Sint32>();
+	pItem->_iPLDex = file->nextLE<Sint32>();
+	pItem->_iPLVit = file->nextLE<Sint32>();
+	pItem->_iPLFR = file->nextLE<Sint32>();
+	pItem->_iPLLR = file->nextLE<Sint32>();
+	pItem->_iPLMR = file->nextLE<Sint32>();
+	pItem->_iPLMana = file->nextLE<Sint32>();
+	pItem->_iPLHP = file->nextLE<Sint32>();
+	pItem->_iPLDamMod = file->nextLE<Sint32>();
+	pItem->_iPLGetHit = file->nextLE<Sint32>();
+	pItem->_iPLLight = file->nextLE<Sint32>();
+	pItem->_iSplLvlAdd = file->nextLE<Sint8>();
+	pItem->_iRequest = file->nextLE<Sint8>();
+	file->skip(2); // Alignment
+	pItem->_iUid = file->nextLE<Sint32>();
+	pItem->_iFMinDam = file->nextLE<Sint32>();
+	pItem->_iFMaxDam = file->nextLE<Sint32>();
+	pItem->_iLMinDam = file->nextLE<Sint32>();
+	pItem->_iLMaxDam = file->nextLE<Sint32>();
+	pItem->_iPLEnAc = file->nextLE<Sint32>();
+	pItem->_iPrePower = (item_effect_type)file->nextLE<Sint8>();
+	pItem->_iSufPower = (item_effect_type)file->nextLE<Sint8>();
+	file->skip(2); // Alignment
+	pItem->_iVAdd1 = file->nextLE<Sint32>();
+	pItem->_iVMult1 = file->nextLE<Sint32>();
+	pItem->_iVAdd2 = file->nextLE<Sint32>();
+	pItem->_iVMult2 = file->nextLE<Sint32>();
+	pItem->_iMinStr = file->nextLE<Sint8>();
+	pItem->_iMinMag = file->nextLE<Uint8>();
+	pItem->_iMinDex = file->nextLE<Sint8>();
+	file->skip(1); // Alignment
+	pItem->_iStatFlag = file->nextBool32();
+	pItem->IDidx = file->nextLE<Sint32>();
 	if (!gbIsHellfireSaveGame) {
 		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
 	}
-	CopyInt(tbuff, &pItem->offs016C);
+	pItem->dwBuff = file->nextLE<Uint32>();
 	if (gbIsHellfireSaveGame)
-		CopyInt(tbuff, &pItem->_iDamAcFlags);
+		pItem->_iDamAcFlags = file->nextLE<Sint32>();
 	else
 		pItem->_iDamAcFlags = 0;
+
+	RemoveInvalidItem(pItem);
 }
 
-static void LoadItems(const int n, ItemStruct *pItem)
+static void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
 {
 	for (int i = 0; i < n; i++) {
-		LoadItemData(&pItem[i]);
+		LoadItemData(file, &pItem[i]);
 	}
 }
 
-static void LoadPlayer(int i)
+static void LoadPlayer(LoadHelper *file, int p)
 {
-	PlayerStruct *pPlayer = &plr[i];
+	PlayerStruct *pPlayer = &plr[p];
 
-	CopyInt(tbuff, &pPlayer->_pmode);
-	CopyBytes(tbuff, MAX_PATH_LENGTH, pPlayer->walkpath);
-	CopyBytes(tbuff, 1, &pPlayer->plractive);
-	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pPlayer->destAction);
-	CopyInt(tbuff, &pPlayer->destParam1);
-	CopyInt(tbuff, &pPlayer->destParam2);
-	CopyInt(tbuff, &pPlayer->destParam3);
-	CopyInt(tbuff, &pPlayer->destParam4);
-	CopyInt(tbuff, &pPlayer->plrlevel);
-	CopyInt(tbuff, &pPlayer->_px);
-	CopyInt(tbuff, &pPlayer->_py);
-	CopyInt(tbuff, &pPlayer->_pfutx);
-	CopyInt(tbuff, &pPlayer->_pfuty);
-	CopyInt(tbuff, &pPlayer->_ptargx);
-	CopyInt(tbuff, &pPlayer->_ptargy);
-	CopyInt(tbuff, &pPlayer->_pownerx);
-	CopyInt(tbuff, &pPlayer->_pownery);
-	CopyInt(tbuff, &pPlayer->_poldx);
-	CopyInt(tbuff, &pPlayer->_poldy);
-	CopyInt(tbuff, &pPlayer->_pxoff);
-	CopyInt(tbuff, &pPlayer->_pyoff);
-	CopyInt(tbuff, &pPlayer->_pxvel);
-	CopyInt(tbuff, &pPlayer->_pyvel);
-	CopyInt(tbuff, &pPlayer->_pdir);
-	CopyInt(tbuff, &pPlayer->_nextdir);
-	CopyInt(tbuff, &pPlayer->_pgfxnum);
-	tbuff += 4; // Skip pointer _pAnimData
-	CopyInt(tbuff, &pPlayer->_pAnimDelay);
-	CopyInt(tbuff, &pPlayer->_pAnimCnt);
-	CopyInt(tbuff, &pPlayer->_pAnimLen);
-	CopyInt(tbuff, &pPlayer->_pAnimFrame);
-	CopyInt(tbuff, &pPlayer->_pAnimWidth);
-	CopyInt(tbuff, &pPlayer->_pAnimWidth2);
-	tbuff += 4; // Skip _peflag
-	CopyInt(tbuff, &pPlayer->_plid);
-	CopyInt(tbuff, &pPlayer->_pvid);
+	pPlayer->_pmode = (PLR_MODE)file->nextLE<Sint32>();
 
-	CopyInt(tbuff, &pPlayer->_pSpell);
-	CopyChar(tbuff, &pPlayer->_pSplType);
-	CopyChar(tbuff, &pPlayer->_pSplFrom);
-	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pPlayer->_pTSpell);
-	CopyChar(tbuff, &pPlayer->_pTSplType);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pPlayer->_pRSpell);
-	CopyChar(tbuff, &pPlayer->_pRSplType);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pPlayer->_pSBkSpell);
-	CopyChar(tbuff, &pPlayer->_pSBkSplType);
-	CopyBytes(tbuff, 64, &pPlayer->_pSplLvl);
-	tbuff += 7; // Alignment
-	CopyInt64(tbuff, &pPlayer->_pMemSpells);
-	CopyInt64(tbuff, &pPlayer->_pAblSpells);
-	CopyInt64(tbuff, &pPlayer->_pScrlSpells);
-	CopyChar(tbuff, &pPlayer->_pSpellFlags);
-	tbuff += 3; // Alignment
-	CopyInts(tbuff, 4, &pPlayer->_pSplHotKey);
-	CopyBytes(tbuff, 4, &pPlayer->_pSplTHotKey);
-
-	CopyInt(tbuff, &pPlayer->_pwtype);
-	CopyChar(tbuff, &pPlayer->_pBlockFlag);
-	CopyChar(tbuff, &pPlayer->_pInvincible);
-	CopyChar(tbuff, &pPlayer->_pLightRad);
-	CopyChar(tbuff, &pPlayer->_pLvlChanging);
-
-	CopyBytes(tbuff, PLR_NAME_LEN, &pPlayer->_pName);
-	CopyChar(tbuff, &pPlayer->_pClass);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pPlayer->_pStrength);
-	CopyInt(tbuff, &pPlayer->_pBaseStr);
-	CopyInt(tbuff, &pPlayer->_pMagic);
-	CopyInt(tbuff, &pPlayer->_pBaseMag);
-	CopyInt(tbuff, &pPlayer->_pDexterity);
-	CopyInt(tbuff, &pPlayer->_pBaseDex);
-	CopyInt(tbuff, &pPlayer->_pVitality);
-	CopyInt(tbuff, &pPlayer->_pBaseVit);
-	CopyInt(tbuff, &pPlayer->_pStatPts);
-	CopyInt(tbuff, &pPlayer->_pDamageMod);
-	CopyInt(tbuff, &pPlayer->_pBaseToBlk);
-	if (pPlayer->_pBaseToBlk == 0) {
-		pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+	for (int i = 0; i < MAX_PATH_LENGTH; i++) {
+		pPlayer->walkpath[i] = file->nextLE<Sint8>();
 	}
-	CopyInt(tbuff, &pPlayer->_pHPBase);
-	CopyInt(tbuff, &pPlayer->_pMaxHPBase);
-	CopyInt(tbuff, &pPlayer->_pHitPoints);
-	CopyInt(tbuff, &pPlayer->_pMaxHP);
-	CopyInt(tbuff, &pPlayer->_pHPPer);
-	CopyInt(tbuff, &pPlayer->_pManaBase);
-	CopyInt(tbuff, &pPlayer->_pMaxManaBase);
-	CopyInt(tbuff, &pPlayer->_pMana);
-	CopyInt(tbuff, &pPlayer->_pMaxMana);
-	CopyInt(tbuff, &pPlayer->_pManaPer);
-	CopyChar(tbuff, &pPlayer->_pLevel);
-	CopyChar(tbuff, &pPlayer->_pMaxLvl);
-	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pPlayer->_pExperience);
-	CopyInt(tbuff, &pPlayer->_pMaxExp);
-	CopyInt(tbuff, &pPlayer->_pNextExper);
-	CopyChar(tbuff, &pPlayer->_pArmorClass);
-	CopyChar(tbuff, &pPlayer->_pMagResist);
-	CopyChar(tbuff, &pPlayer->_pFireResist);
-	CopyChar(tbuff, &pPlayer->_pLghtResist);
-	CopyInt(tbuff, &pPlayer->_pGold);
+	pPlayer->plractive = file->nextBool8();
+	file->skip(2); // Alignment
+	pPlayer->destAction = (action_id)file->nextLE<Sint32>();
+	pPlayer->destParam1 = file->nextLE<Sint32>();
+	pPlayer->destParam2 = file->nextLE<Sint32>();
+	pPlayer->destParam3 = (direction)file->nextLE<Sint32>();
+	pPlayer->destParam4 = file->nextLE<Sint32>();
+	pPlayer->plrlevel = file->nextLE<Sint32>();
+	pPlayer->_px = file->nextLE<Sint32>();
+	pPlayer->_py = file->nextLE<Sint32>();
+	pPlayer->_pfutx = file->nextLE<Sint32>();
+	pPlayer->_pfuty = file->nextLE<Sint32>();
+	pPlayer->_ptargx = file->nextLE<Sint32>();
+	pPlayer->_ptargy = file->nextLE<Sint32>();
+	pPlayer->_pownerx = file->nextLE<Sint32>();
+	pPlayer->_pownery = file->nextLE<Sint32>();
+	pPlayer->_poldx = file->nextLE<Sint32>();
+	pPlayer->_poldy = file->nextLE<Sint32>();
+	pPlayer->_pxoff = file->nextLE<Sint32>();
+	pPlayer->_pyoff = file->nextLE<Sint32>();
+	pPlayer->_pxvel = file->nextLE<Sint32>();
+	pPlayer->_pyvel = file->nextLE<Sint32>();
+	pPlayer->_pdir = (direction)file->nextLE<Sint32>();
+	file->skip(4); // Unused
+	pPlayer->_pgfxnum = file->nextLE<Sint32>();
+	file->skip(4); // Skip pointer _pAnimData
+	pPlayer->_pAnimDelay = file->nextLE<Sint32>();
+	pPlayer->_pAnimCnt = file->nextLE<Sint32>();
+	pPlayer->_pAnimLen = file->nextLE<Sint32>();
+	pPlayer->_pAnimFrame = file->nextLE<Sint32>();
+	pPlayer->_pAnimWidth = file->nextLE<Sint32>();
+	pPlayer->_pAnimWidth2 = file->nextLE<Sint32>();
+	file->skip(4); // Skip _peflag
+	pPlayer->_plid = file->nextLE<Sint32>();
+	pPlayer->_pvid = file->nextLE<Sint32>();
 
-	CopyInt(tbuff, &pPlayer->_pInfraFlag);
-	CopyInt(tbuff, &pPlayer->_pVar1);
-	CopyInt(tbuff, &pPlayer->_pVar2);
-	CopyInt(tbuff, &pPlayer->_pVar3);
-	CopyInt(tbuff, &pPlayer->_pVar4);
-	CopyInt(tbuff, &pPlayer->_pVar5);
-	CopyInt(tbuff, &pPlayer->_pVar6);
-	CopyInt(tbuff, &pPlayer->_pVar7);
-	CopyInt(tbuff, &pPlayer->_pVar8);
-	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pLvlVisited);
-	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pSLvlVisited);
-	tbuff += 2; // Alignment
+	pPlayer->_pSpell = (spell_id)file->nextLE<Sint32>();
+	pPlayer->_pSplType = (spell_type)file->nextLE<Sint8>();
+	pPlayer->_pSplFrom = file->nextLE<Sint8>();
+	file->skip(2); // Alignment
+	pPlayer->_pTSpell = (spell_id)file->nextLE<Sint32>();
+	pPlayer->_pTSplType = (spell_type)file->nextLE<Sint8>();
+	file->skip(3); // Alignment
+	pPlayer->_pRSpell = (spell_id)file->nextLE<Sint32>();
+	pPlayer->_pRSplType = (spell_type)file->nextLE<Sint8>();
+	file->skip(3); // Alignment
+	pPlayer->_pSBkSpell = (spell_id)file->nextLE<Sint32>();
+	pPlayer->_pSBkSplType = (spell_type)file->nextLE<Sint8>();
+	for (int i = 0; i < 64; i++)
+		pPlayer->_pSplLvl[i] = file->nextLE<Sint8>();
+	file->skip(7); // Alignment
+	pPlayer->_pMemSpells = file->nextLE<Uint64>();
+	pPlayer->_pAblSpells = file->nextLE<Uint64>();
+	pPlayer->_pScrlSpells = file->nextLE<Uint64>();
+	pPlayer->_pSpellFlags = file->nextLE<Uint8>();
+	file->skip(3); // Alignment
+	for (int i = 0; i < 4; i++)
+		pPlayer->_pSplHotKey[i] = (spell_id)file->nextLE<Sint32>();
+	for (int i = 0; i < 4; i++)
+		pPlayer->_pSplTHotKey[i] = (spell_type)file->nextLE<Sint8>();
 
-	CopyInt(tbuff, &pPlayer->_pGFXLoad);
-	tbuff += 4 * 8; // Skip pointers _pNAnim
-	CopyInt(tbuff, &pPlayer->_pNFrames);
-	CopyInt(tbuff, &pPlayer->_pNWidth);
-	tbuff += 4 * 8; // Skip pointers _pWAnim
-	CopyInt(tbuff, &pPlayer->_pWFrames);
-	CopyInt(tbuff, &pPlayer->_pWWidth);
-	tbuff += 4 * 8; // Skip pointers _pAAnim
-	CopyInt(tbuff, &pPlayer->_pAFrames);
-	CopyInt(tbuff, &pPlayer->_pAWidth);
-	CopyInt(tbuff, &pPlayer->_pAFNum);
-	tbuff += 4 * 8; // Skip pointers _pLAnim
-	tbuff += 4 * 8; // Skip pointers _pFAnim
-	tbuff += 4 * 8; // Skip pointers _pTAnim
-	CopyInt(tbuff, &pPlayer->_pSFrames);
-	CopyInt(tbuff, &pPlayer->_pSWidth);
-	CopyInt(tbuff, &pPlayer->_pSFNum);
-	tbuff += 4 * 8; // Skip pointers _pHAnim
-	CopyInt(tbuff, &pPlayer->_pHFrames);
-	CopyInt(tbuff, &pPlayer->_pHWidth);
-	tbuff += 4 * 8; // Skip pointers _pDAnim
-	CopyInt(tbuff, &pPlayer->_pDFrames);
-	CopyInt(tbuff, &pPlayer->_pDWidth);
-	tbuff += 4 * 8; // Skip pointers _pBAnim
-	CopyInt(tbuff, &pPlayer->_pBFrames);
-	CopyInt(tbuff, &pPlayer->_pBWidth);
+	pPlayer->_pwtype = (player_weapon_type)file->nextLE<Sint32>();
+	pPlayer->_pBlockFlag = file->nextBool8();
+	pPlayer->_pInvincible = file->nextBool8();
+	pPlayer->_pLightRad = file->nextLE<Sint8>();
+	pPlayer->_pLvlChanging = file->nextBool8();
 
-	LoadItems(NUM_INVLOC, pPlayer->InvBody);
-	LoadItems(NUM_INV_GRID_ELEM, pPlayer->InvList);
-	CopyInt(tbuff, &pPlayer->_pNumInv);
-	CopyBytes(tbuff, NUM_INV_GRID_ELEM, pPlayer->InvGrid);
-	LoadItems(MAXBELTITEMS, pPlayer->SpdList);
-	LoadItemData(&pPlayer->HoldItem);
+	file->nextBytes(pPlayer->_pName, PLR_NAME_LEN);
+	pPlayer->_pClass = (plr_class)file->nextLE<Sint8>();
+	file->skip(3); // Alignment
+	pPlayer->_pStrength = file->nextLE<Sint32>();
+	pPlayer->_pBaseStr = file->nextLE<Sint32>();
+	pPlayer->_pMagic = file->nextLE<Sint32>();
+	pPlayer->_pBaseMag = file->nextLE<Sint32>();
+	pPlayer->_pDexterity = file->nextLE<Sint32>();
+	pPlayer->_pBaseDex = file->nextLE<Sint32>();
+	pPlayer->_pVitality = file->nextLE<Sint32>();
+	pPlayer->_pBaseVit = file->nextLE<Sint32>();
+	pPlayer->_pStatPts = file->nextLE<Sint32>();
+	pPlayer->_pDamageMod = file->nextLE<Sint32>();
+	pPlayer->_pBaseToBlk = file->nextLE<Sint32>();
+	if (pPlayer->_pBaseToBlk == 0)
+		pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+	pPlayer->_pHPBase = file->nextLE<Sint32>();
+	pPlayer->_pMaxHPBase = file->nextLE<Sint32>();
+	pPlayer->_pHitPoints = file->nextLE<Sint32>();
+	pPlayer->_pMaxHP = file->nextLE<Sint32>();
+	pPlayer->_pHPPer = file->nextLE<Sint32>();
+	pPlayer->_pManaBase = file->nextLE<Sint32>();
+	pPlayer->_pMaxManaBase = file->nextLE<Sint32>();
+	pPlayer->_pMana = file->nextLE<Sint32>();
+	pPlayer->_pMaxMana = file->nextLE<Sint32>();
+	pPlayer->_pManaPer = file->nextLE<Sint32>();
+	pPlayer->_pLevel = file->nextLE<Sint8>();
+	pPlayer->_pMaxLvl = file->nextLE<Sint8>();
+	file->skip(2); // Alignment
+	pPlayer->_pExperience = file->nextLE<Sint32>();
+	pPlayer->_pMaxExp = file->nextLE<Sint32>();
+	pPlayer->_pNextExper = file->nextLE<Sint32>();
+	pPlayer->_pArmorClass = file->nextLE<Sint8>();
+	pPlayer->_pMagResist = file->nextLE<Sint8>();
+	pPlayer->_pFireResist = file->nextLE<Sint8>();
+	pPlayer->_pLghtResist = file->nextLE<Sint8>();
+	pPlayer->_pGold = file->nextLE<Sint32>();
 
-	CopyInt(tbuff, &pPlayer->_pIMinDam);
-	CopyInt(tbuff, &pPlayer->_pIMaxDam);
-	CopyInt(tbuff, &pPlayer->_pIAC);
-	CopyInt(tbuff, &pPlayer->_pIBonusDam);
-	CopyInt(tbuff, &pPlayer->_pIBonusToHit);
-	CopyInt(tbuff, &pPlayer->_pIBonusAC);
-	CopyInt(tbuff, &pPlayer->_pIBonusDamMod);
-	tbuff += 4; // Alignment
+	pPlayer->_pInfraFlag = file->nextBool32();
+	pPlayer->_pVar1 = file->nextLE<Sint32>();
+	pPlayer->_pVar2 = file->nextLE<Sint32>();
+	pPlayer->_pVar3 = (direction)file->nextLE<Sint32>();
+	pPlayer->_pVar4 = file->nextLE<Sint32>();
+	pPlayer->_pVar5 = file->nextLE<Sint32>();
+	pPlayer->_pVar6 = file->nextLE<Sint32>();
+	pPlayer->_pVar7 = file->nextLE<Sint32>();
+	pPlayer->_pVar8 = file->nextLE<Sint32>();
+	for (int i = 0; i < giNumberOfLevels; i++)
+		pPlayer->_pLvlVisited[i] = file->nextBool8();
+	for (int i = 0; i < giNumberOfLevels; i++)
+		pPlayer->_pSLvlVisited[i] = file->nextBool8();
 
-	CopyInt64(tbuff, &pPlayer->_pISpells);
-	CopyInt(tbuff, &pPlayer->_pIFlags);
-	CopyInt(tbuff, &pPlayer->_pIGetHit);
-	CopyChar(tbuff, &pPlayer->_pISplLvlAdd);
-	CopyChar(tbuff, &pPlayer->_pISplCost);
-	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pPlayer->_pISplDur);
-	CopyInt(tbuff, &pPlayer->_pIEnAc);
-	CopyInt(tbuff, &pPlayer->_pIFMinDam);
-	CopyInt(tbuff, &pPlayer->_pIFMaxDam);
-	CopyInt(tbuff, &pPlayer->_pILMinDam);
-	CopyInt(tbuff, &pPlayer->_pILMaxDam);
-	CopyInt(tbuff, &pPlayer->_pOilType);
-	CopyChar(tbuff, &pPlayer->pTownWarps);
-	CopyChar(tbuff, &pPlayer->pDungMsgs);
-	CopyChar(tbuff, &pPlayer->pLvlLoad);
+	file->skip(2); // Alignment
+
+	pPlayer->_pGFXLoad = file->nextLE<Sint32>();
+	file->skip(4 * 8); // Skip pointers _pNAnim
+	pPlayer->_pNFrames = file->nextLE<Sint32>();
+	pPlayer->_pNWidth = file->nextLE<Sint32>();
+	file->skip(4 * 8); // Skip pointers _pWAnim
+	pPlayer->_pWFrames = file->nextLE<Sint32>();
+	pPlayer->_pWWidth = file->nextLE<Sint32>();
+	file->skip(4 * 8); // Skip pointers _pAAnim
+	pPlayer->_pAFrames = file->nextLE<Sint32>();
+	pPlayer->_pAWidth = file->nextLE<Sint32>();
+	pPlayer->_pAFNum = file->nextLE<Sint32>();
+	file->skip(4 * 8); // Skip pointers _pLAnim
+	file->skip(4 * 8); // Skip pointers _pFAnim
+	file->skip(4 * 8); // Skip pointers _pTAnim
+	pPlayer->_pSFrames = file->nextLE<Sint32>();
+	pPlayer->_pSWidth = file->nextLE<Sint32>();
+	pPlayer->_pSFNum = file->nextLE<Sint32>();
+	file->skip(4 * 8); // Skip pointers _pHAnim
+	pPlayer->_pHFrames = file->nextLE<Sint32>();
+	pPlayer->_pHWidth = file->nextLE<Sint32>();
+	file->skip(4 * 8); // Skip pointers _pDAnim
+	pPlayer->_pDFrames = file->nextLE<Sint32>();
+	pPlayer->_pDWidth = file->nextLE<Sint32>();
+	file->skip(4 * 8); // Skip pointers _pBAnim
+	pPlayer->_pBFrames = file->nextLE<Sint32>();
+	pPlayer->_pBWidth = file->nextLE<Sint32>();
+
+	LoadItems(file, NUM_INVLOC, pPlayer->InvBody);
+	LoadItems(file, NUM_INV_GRID_ELEM, pPlayer->InvList);
+	pPlayer->_pNumInv = file->nextLE<Sint32>();
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
+		pPlayer->InvGrid[i] = file->nextLE<Sint8>();
+	LoadItems(file, MAXBELTITEMS, pPlayer->SpdList);
+	LoadItemData(file, &pPlayer->HoldItem);
+
+	pPlayer->_pIMinDam = file->nextLE<Sint32>();
+	pPlayer->_pIMaxDam = file->nextLE<Sint32>();
+	pPlayer->_pIAC = file->nextLE<Sint32>();
+	pPlayer->_pIBonusDam = file->nextLE<Sint32>();
+	pPlayer->_pIBonusToHit = file->nextLE<Sint32>();
+	pPlayer->_pIBonusAC = file->nextLE<Sint32>();
+	pPlayer->_pIBonusDamMod = file->nextLE<Sint32>();
+	file->skip(4); // Alignment
+
+	pPlayer->_pISpells = file->nextLE<Uint64>();
+	pPlayer->_pIFlags = file->nextLE<Sint32>();
+	pPlayer->_pIGetHit = file->nextLE<Sint32>();
+	pPlayer->_pISplLvlAdd = file->nextLE<Sint8>();
+	file->skip(1); // Unused
+	file->skip(2); // Alignment
+	pPlayer->_pISplDur = file->nextLE<Sint32>();
+	pPlayer->_pIEnAc = file->nextLE<Sint32>();
+	pPlayer->_pIFMinDam = file->nextLE<Sint32>();
+	pPlayer->_pIFMaxDam = file->nextLE<Sint32>();
+	pPlayer->_pILMinDam = file->nextLE<Sint32>();
+	pPlayer->_pILMaxDam = file->nextLE<Sint32>();
+	pPlayer->_pOilType = (item_misc_id)file->nextLE<Sint32>();
+	pPlayer->pTownWarps = file->nextLE<Uint8>();
+	pPlayer->pDungMsgs = file->nextLE<Uint8>();
+	pPlayer->pLvlLoad = file->nextLE<Uint8>();
 
 	if (gbIsHellfireSaveGame) {
-		CopyChar(tbuff, &pPlayer->pDungMsgs2);
+		pPlayer->pDungMsgs2 = file->nextLE<Uint8>();
 		pPlayer->pBattleNet = false;
 	} else {
 		pPlayer->pDungMsgs2 = 0;
-		CopyChar(tbuff, &pPlayer->pBattleNet);
+		pPlayer->pBattleNet = file->nextBool8();
 	}
-	CopyChar(tbuff, &pPlayer->pManaShield);
+	pPlayer->pManaShield = file->nextBool8();
 	if (gbIsHellfireSaveGame) {
-		CopyChar(tbuff, &pPlayer->pOriginalCathedral);
+		pPlayer->pOriginalCathedral = file->nextBool8();
 	} else {
-		tbuff += 1;
+		file->skip(1);
 		pPlayer->pOriginalCathedral = true;
 	}
-	CopyBytes(tbuff, 2, &pPlayer->bReserved);
-	CopyShort(tbuff, &pPlayer->wReflections);
-	CopyShorts(tbuff, 7, &pPlayer->wReserved);
+	file->skip(2); // Available bytes
+	pPlayer->wReflections = file->nextLE<Uint16>();
+	file->skip(14); // Available bytes
 
-	CopyInt(tbuff, &pPlayer->pDiabloKillLevel);
-	CopyInt(tbuff, &pPlayer->pDifficulty);
-	CopyInt(tbuff, &pPlayer->pDamAcFlags);
-	CopyInts(tbuff, 5, &pPlayer->dwReserved);
+	pPlayer->pDiabloKillLevel = file->nextLE<Uint32>();
+	pPlayer->pDifficulty = file->nextLE<Uint32>();
+	pPlayer->pDamAcFlags = file->nextLE<Uint32>();
+	file->skip(20); // Available bytes
+	CalcPlrItemVals(p, FALSE);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -417,92 +521,94 @@ static void LoadPlayer(int i)
 	// Omit pointer pReserved
 }
 
-static void LoadMonster(int i)
+bool gbSkipSync = false;
+
+static void LoadMonster(LoadHelper *file, int i)
 {
 	MonsterStruct *pMonster = &monster[i];
 
-	CopyInt(tbuff, &pMonster->_mMTidx);
-	CopyInt(tbuff, &pMonster->_mmode);
-	CopyChar(tbuff, &pMonster->_mgoal);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pMonster->_mgoalvar1);
-	CopyInt(tbuff, &pMonster->_mgoalvar2);
-	CopyInt(tbuff, &pMonster->_mgoalvar3);
-	CopyInt(tbuff, &pMonster->field_18);
-	CopyChar(tbuff, &pMonster->_pathcount);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pMonster->_mx);
-	CopyInt(tbuff, &pMonster->_my);
-	CopyInt(tbuff, &pMonster->_mfutx);
-	CopyInt(tbuff, &pMonster->_mfuty);
-	CopyInt(tbuff, &pMonster->_moldx);
-	CopyInt(tbuff, &pMonster->_moldy);
-	CopyInt(tbuff, &pMonster->_mxoff);
-	CopyInt(tbuff, &pMonster->_myoff);
-	CopyInt(tbuff, &pMonster->_mxvel);
-	CopyInt(tbuff, &pMonster->_myvel);
-	CopyInt(tbuff, &pMonster->_mdir);
-	CopyInt(tbuff, &pMonster->_menemy);
-	CopyChar(tbuff, &pMonster->_menemyx);
-	CopyChar(tbuff, &pMonster->_menemyy);
-	CopyShort(tbuff, &pMonster->falign_52);
+	pMonster->_mMTidx = file->nextLE<Sint32>();
+	pMonster->_mmode = (MON_MODE)file->nextLE<Sint32>();
+	pMonster->_mgoal = file->nextLE<Uint8>();
+	file->skip(3); // Alignment
+	pMonster->_mgoalvar1 = file->nextLE<Sint32>();
+	pMonster->_mgoalvar2 = file->nextLE<Sint32>();
+	pMonster->_mgoalvar3 = file->nextLE<Sint32>();
+	file->skip(4); // Unused
+	pMonster->_pathcount = file->nextLE<Uint8>();
+	file->skip(3); // Alignment
+	pMonster->_mx = file->nextLE<Sint32>();
+	pMonster->_my = file->nextLE<Sint32>();
+	pMonster->_mfutx = file->nextLE<Sint32>();
+	pMonster->_mfuty = file->nextLE<Sint32>();
+	pMonster->_moldx = file->nextLE<Sint32>();
+	pMonster->_moldy = file->nextLE<Sint32>();
+	pMonster->_mxoff = file->nextLE<Sint32>();
+	pMonster->_myoff = file->nextLE<Sint32>();
+	pMonster->_mxvel = file->nextLE<Sint32>();
+	pMonster->_myvel = file->nextLE<Sint32>();
+	pMonster->_mdir = file->nextLE<Sint32>();
+	pMonster->_menemy = file->nextLE<Sint32>();
+	pMonster->_menemyx = file->nextLE<Uint8>();
+	pMonster->_menemyy = file->nextLE<Uint8>();
+	file->skip(2); // Unused
 
-	tbuff += 4; // Skip pointer _mAnimData
-	CopyInt(tbuff, &pMonster->_mAnimDelay);
-	CopyInt(tbuff, &pMonster->_mAnimCnt);
-	CopyInt(tbuff, &pMonster->_mAnimLen);
-	CopyInt(tbuff, &pMonster->_mAnimFrame);
-	tbuff += 4; // Skip _meflag
-	CopyInt(tbuff, &pMonster->_mDelFlag);
-	CopyInt(tbuff, &pMonster->_mVar1);
-	CopyInt(tbuff, &pMonster->_mVar2);
-	CopyInt(tbuff, &pMonster->_mVar3);
-	CopyInt(tbuff, &pMonster->_mVar4);
-	CopyInt(tbuff, &pMonster->_mVar5);
-	CopyInt(tbuff, &pMonster->_mVar6);
-	CopyInt(tbuff, &pMonster->_mVar7);
-	CopyInt(tbuff, &pMonster->_mVar8);
-	CopyInt(tbuff, &pMonster->_mmaxhp);
-	CopyInt(tbuff, &pMonster->_mhitpoints);
+	file->skip(4); // Skip pointer _mAnimData
+	pMonster->_mAnimDelay = file->nextLE<Sint32>();
+	pMonster->_mAnimCnt = file->nextLE<Sint32>();
+	pMonster->_mAnimLen = file->nextLE<Sint32>();
+	pMonster->_mAnimFrame = file->nextLE<Sint32>();
+	file->skip(4); // Skip _meflag
+	pMonster->_mDelFlag = file->nextBool32();
+	pMonster->_mVar1 = file->nextLE<Sint32>();
+	pMonster->_mVar2 = file->nextLE<Sint32>();
+	pMonster->_mVar3 = file->nextLE<Sint32>();
+	pMonster->_mVar4 = file->nextLE<Sint32>();
+	pMonster->_mVar5 = file->nextLE<Sint32>();
+	pMonster->_mVar6 = file->nextLE<Sint32>();
+	pMonster->_mVar7 = file->nextLE<Sint32>();
+	pMonster->_mVar8 = file->nextLE<Sint32>();
+	pMonster->_mmaxhp = file->nextLE<Sint32>();
+	pMonster->_mhitpoints = file->nextLE<Sint32>();
 
-	CopyChar(tbuff, &pMonster->_mAi);
-	CopyChar(tbuff, &pMonster->_mint);
-	CopyShort(tbuff, &pMonster->falign_9A);
-	CopyInt(tbuff, &pMonster->_mFlags);
-	CopyChar(tbuff, &pMonster->_msquelch);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pMonster->falign_A4);
-	CopyInt(tbuff, &pMonster->_lastx);
-	CopyInt(tbuff, &pMonster->_lasty);
-	CopyInt(tbuff, &pMonster->_mRndSeed);
-	CopyInt(tbuff, &pMonster->_mAISeed);
-	CopyInt(tbuff, &pMonster->falign_B8);
+	pMonster->_mAi = (_mai_id)file->nextLE<Uint8>();
+	pMonster->_mint = file->nextLE<Uint8>();
+	file->skip(2); // Alignment
+	pMonster->_mFlags = file->nextLE<Uint32>();
+	pMonster->_msquelch = file->nextLE<Uint8>();
+	file->skip(3); // Alignment
+	file->skip(4); // Unused
+	pMonster->_lastx = file->nextLE<Sint32>();
+	pMonster->_lasty = file->nextLE<Sint32>();
+	pMonster->_mRndSeed = file->nextLE<Sint32>();
+	pMonster->_mAISeed = file->nextLE<Sint32>();
+	file->skip(4); // Unused
 
-	CopyChar(tbuff, &pMonster->_uniqtype);
-	CopyChar(tbuff, &pMonster->_uniqtrans);
-	CopyChar(tbuff, &pMonster->_udeadval);
+	pMonster->_uniqtype = file->nextLE<Uint8>();
+	pMonster->_uniqtrans = file->nextLE<Uint8>();
+	pMonster->_udeadval = file->nextLE<Sint8>();
 
-	CopyChar(tbuff, &pMonster->mWhoHit);
-	CopyChar(tbuff, &pMonster->mLevel);
-	tbuff += 1; // Alignment
-	CopyShort(tbuff, &pMonster->mExp);
+	pMonster->mWhoHit = file->nextLE<Sint8>();
+	pMonster->mLevel = file->nextLE<Sint8>();
+	file->skip(1); // Alignment
+	pMonster->mExp = file->nextLE<Uint16>();
 
-	tbuff += 1; // Skip mHit as it's already initialized
-	CopyChar(tbuff, &pMonster->mMinDamage);
-	CopyChar(tbuff, &pMonster->mMaxDamage);
-	tbuff += 1; // Skip mHit2 as it's already initialized
-	CopyChar(tbuff, &pMonster->mMinDamage2);
-	CopyChar(tbuff, &pMonster->mMaxDamage2);
-	CopyChar(tbuff, &pMonster->mArmorClass);
-	CopyChar(tbuff, &pMonster->falign_CB);
-	CopyShort(tbuff, &pMonster->mMagicRes);
-	tbuff += 2; // Alignment
+	file->skip(1); // Skip mHit as it's already initialized
+	pMonster->mMinDamage = file->nextLE<Uint8>();
+	pMonster->mMaxDamage = file->nextLE<Uint8>();
+	file->skip(1); // Skip mHit2 as it's already initialized
+	pMonster->mMinDamage2 = file->nextLE<Uint8>();
+	pMonster->mMaxDamage2 = file->nextLE<Uint8>();
+	pMonster->mArmorClass = file->nextLE<Uint8>();
+	file->skip(1); // Alignment
+	pMonster->mMagicRes = file->nextLE<Uint16>();
+	file->skip(2); // Alignment
 
-	CopyInt(tbuff, &pMonster->mtalkmsg);
-	CopyChar(tbuff, &pMonster->leader);
-	CopyChar(tbuff, &pMonster->leaderflag);
-	CopyChar(tbuff, &pMonster->packsize);
-	CopyChar(tbuff, &pMonster->mlid);
+	pMonster->mtalkmsg = file->nextLE<Sint32>();
+	pMonster->leader = file->nextLE<Uint8>();
+	pMonster->leaderflag = file->nextLE<Uint8>();
+	pMonster->packsize = file->nextLE<Uint8>();
+	pMonster->mlid = file->nextLE<Sint8>();
 	if (pMonster->mlid == plr[myplr]._plid)
 		pMonster->mlid = NO_LIGHT; // Correct incorect values in old saves
 
@@ -510,197 +616,177 @@ static void LoadMonster(int i)
 	// Omit pointer MType;
 	// Omit pointer MData;
 
+	if (gbSkipSync)
+		return;
+
 	SyncMonsterAnim(i);
 }
 
-static void LoadMissile(int i)
+static void LoadMissile(LoadHelper *file, int i)
 {
 	MissileStruct *pMissile = &missile[i];
 
-	CopyInt(tbuff, &pMissile->_mitype);
-	CopyInt(tbuff, &pMissile->_mix);
-	CopyInt(tbuff, &pMissile->_miy);
-	CopyInt(tbuff, &pMissile->_mixoff);
-	CopyInt(tbuff, &pMissile->_miyoff);
-	CopyInt(tbuff, &pMissile->_mixvel);
-	CopyInt(tbuff, &pMissile->_miyvel);
-	CopyInt(tbuff, &pMissile->_misx);
-	CopyInt(tbuff, &pMissile->_misy);
-	CopyInt(tbuff, &pMissile->_mitxoff);
-	CopyInt(tbuff, &pMissile->_mityoff);
-	CopyInt(tbuff, &pMissile->_mimfnum);
-	CopyInt(tbuff, &pMissile->_mispllvl);
-	CopyInt(tbuff, &pMissile->_miDelFlag);
-	CopyChar(tbuff, &pMissile->_miAnimType);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pMissile->_miAnimFlags);
-	tbuff += 4; // Skip pointer _miAnimData
-	CopyInt(tbuff, &pMissile->_miAnimDelay);
-	CopyInt(tbuff, &pMissile->_miAnimLen);
-	CopyInt(tbuff, &pMissile->_miAnimWidth);
-	CopyInt(tbuff, &pMissile->_miAnimWidth2);
-	CopyInt(tbuff, &pMissile->_miAnimCnt);
-	CopyInt(tbuff, &pMissile->_miAnimAdd);
-	CopyInt(tbuff, &pMissile->_miAnimFrame);
-	CopyInt(tbuff, &pMissile->_miDrawFlag);
-	CopyInt(tbuff, &pMissile->_miLightFlag);
-	CopyInt(tbuff, &pMissile->_miPreFlag);
-	CopyInt(tbuff, &pMissile->_miUniqTrans);
-	CopyInt(tbuff, &pMissile->_mirange);
-	CopyInt(tbuff, &pMissile->_misource);
-	CopyInt(tbuff, &pMissile->_micaster);
-	CopyInt(tbuff, &pMissile->_midam);
-	CopyInt(tbuff, &pMissile->_miHitFlag);
-	CopyInt(tbuff, &pMissile->_midist);
-	CopyInt(tbuff, &pMissile->_mlid);
-	CopyInt(tbuff, &pMissile->_mirnd);
-	CopyInt(tbuff, &pMissile->_miVar1);
-	CopyInt(tbuff, &pMissile->_miVar2);
-	CopyInt(tbuff, &pMissile->_miVar3);
-	CopyInt(tbuff, &pMissile->_miVar4);
-	CopyInt(tbuff, &pMissile->_miVar5);
-	CopyInt(tbuff, &pMissile->_miVar6);
-	CopyInt(tbuff, &pMissile->_miVar7);
-	CopyInt(tbuff, &pMissile->_miVar8);
+	pMissile->_mitype = file->nextLE<Sint32>();
+	pMissile->_mix = file->nextLE<Sint32>();
+	pMissile->_miy = file->nextLE<Sint32>();
+	pMissile->_mixoff = file->nextLE<Sint32>();
+	pMissile->_miyoff = file->nextLE<Sint32>();
+	pMissile->_mixvel = file->nextLE<Sint32>();
+	pMissile->_miyvel = file->nextLE<Sint32>();
+	pMissile->_misx = file->nextLE<Sint32>();
+	pMissile->_misy = file->nextLE<Sint32>();
+	pMissile->_mitxoff = file->nextLE<Sint32>();
+	pMissile->_mityoff = file->nextLE<Sint32>();
+	pMissile->_mimfnum = file->nextLE<Sint32>();
+	pMissile->_mispllvl = file->nextLE<Sint32>();
+	pMissile->_miDelFlag = file->nextBool32();
+	pMissile->_miAnimType = file->nextLE<Uint8>();
+	file->skip(3); // Alignment
+	pMissile->_miAnimFlags = file->nextLE<Sint32>();
+	file->skip(4); // Skip pointer _miAnimData
+	pMissile->_miAnimDelay = file->nextLE<Sint32>();
+	pMissile->_miAnimLen = file->nextLE<Sint32>();
+	pMissile->_miAnimWidth = file->nextLE<Sint32>();
+	pMissile->_miAnimWidth2 = file->nextLE<Sint32>();
+	pMissile->_miAnimCnt = file->nextLE<Sint32>();
+	pMissile->_miAnimAdd = file->nextLE<Sint32>();
+	pMissile->_miAnimFrame = file->nextLE<Sint32>();
+	pMissile->_miDrawFlag = file->nextBool32();
+	pMissile->_miLightFlag = file->nextBool32();
+	pMissile->_miPreFlag = file->nextBool32();
+	pMissile->_miUniqTrans = file->nextLE<Uint32>();
+	pMissile->_mirange = file->nextLE<Sint32>();
+	pMissile->_misource = file->nextLE<Sint32>();
+	pMissile->_micaster = file->nextLE<Sint32>();
+	pMissile->_midam = file->nextLE<Sint32>();
+	pMissile->_miHitFlag = file->nextBool32();
+	pMissile->_midist = file->nextLE<Sint32>();
+	pMissile->_mlid = file->nextLE<Sint32>();
+	pMissile->_mirnd = file->nextLE<Sint32>();
+	pMissile->_miVar1 = file->nextLE<Sint32>();
+	pMissile->_miVar2 = file->nextLE<Sint32>();
+	pMissile->_miVar3 = file->nextLE<Sint32>();
+	pMissile->_miVar4 = file->nextLE<Sint32>();
+	pMissile->_miVar5 = file->nextLE<Sint32>();
+	pMissile->_miVar6 = file->nextLE<Sint32>();
+	pMissile->_miVar7 = file->nextLE<Sint32>();
+	pMissile->_miVar8 = file->nextLE<Sint32>();
 }
 
-static void LoadObject(int i)
+static void LoadObject(LoadHelper *file, int i)
 {
 	ObjectStruct *pObject = &object[i];
 
-	CopyInt(tbuff, &pObject->_otype);
-	CopyInt(tbuff, &pObject->_ox);
-	CopyInt(tbuff, &pObject->_oy);
-	CopyInt(tbuff, &pObject->_oLight);
-	CopyInt(tbuff, &pObject->_oAnimFlag);
-	tbuff += 4; // Skip pointer _oAnimData
-	CopyInt(tbuff, &pObject->_oAnimDelay);
-	CopyInt(tbuff, &pObject->_oAnimCnt);
-	CopyInt(tbuff, &pObject->_oAnimLen);
-	CopyInt(tbuff, &pObject->_oAnimFrame);
-	CopyInt(tbuff, &pObject->_oAnimWidth);
-	CopyInt(tbuff, &pObject->_oAnimWidth2);
-	CopyInt(tbuff, &pObject->_oDelFlag);
-	CopyChar(tbuff, &pObject->_oBreak);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pObject->_oSolidFlag);
-	CopyInt(tbuff, &pObject->_oMissFlag);
+	pObject->_otype = file->nextLE<Sint32>();
+	pObject->_ox = file->nextLE<Sint32>();
+	pObject->_oy = file->nextLE<Sint32>();
+	pObject->_oLight = file->nextBool32();
+	pObject->_oAnimFlag = file->nextLE<Uint32>();
+	file->skip(4); // Skip pointer _oAnimData
+	pObject->_oAnimDelay = file->nextLE<Sint32>();
+	pObject->_oAnimCnt = file->nextLE<Sint32>();
+	pObject->_oAnimLen = file->nextLE<Sint32>();
+	pObject->_oAnimFrame = file->nextLE<Sint32>();
+	pObject->_oAnimWidth = file->nextLE<Sint32>();
+	pObject->_oAnimWidth2 = file->nextLE<Sint32>();
+	pObject->_oDelFlag = file->nextBool32();
+	pObject->_oBreak = file->nextLE<Sint8>();
+	file->skip(3); // Alignment
+	pObject->_oSolidFlag = file->nextBool32();
+	pObject->_oMissFlag = file->nextBool32();
 
-	CopyChar(tbuff, &pObject->_oSelFlag);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pObject->_oPreFlag);
-	CopyInt(tbuff, &pObject->_oTrapFlag);
-	CopyInt(tbuff, &pObject->_oDoorFlag);
-	CopyInt(tbuff, &pObject->_olid);
-	CopyInt(tbuff, &pObject->_oRndSeed);
-	CopyInt(tbuff, &pObject->_oVar1);
-	CopyInt(tbuff, &pObject->_oVar2);
-	CopyInt(tbuff, &pObject->_oVar3);
-	CopyInt(tbuff, &pObject->_oVar4);
-	CopyInt(tbuff, &pObject->_oVar5);
-	CopyInt(tbuff, &pObject->_oVar6);
-	CopyInt(tbuff, &pObject->_oVar7);
-	CopyInt(tbuff, &pObject->_oVar8);
+	pObject->_oSelFlag = file->nextLE<Sint8>();
+	file->skip(3); // Alignment
+	pObject->_oPreFlag = file->nextBool32();
+	pObject->_oTrapFlag = file->nextBool32();
+	pObject->_oDoorFlag = file->nextBool32();
+	pObject->_olid = file->nextLE<Sint32>();
+	pObject->_oRndSeed = file->nextLE<Sint32>();
+	pObject->_oVar1 = file->nextLE<Sint32>();
+	pObject->_oVar2 = file->nextLE<Sint32>();
+	pObject->_oVar3 = file->nextLE<Sint32>();
+	pObject->_oVar4 = file->nextLE<Sint32>();
+	pObject->_oVar5 = file->nextLE<Sint32>();
+	pObject->_oVar6 = file->nextLE<Sint32>();
+	pObject->_oVar7 = (_speech_id)file->nextLE<Sint32>();
+	pObject->_oVar8 = file->nextLE<Sint32>();
 }
 
-static void LoadItem(int i)
+static void LoadItem(LoadHelper *file, int i)
 {
-	LoadItemData(&item[i]);
+	LoadItemData(file, &item[i]);
 	GetItemFrm(i);
 }
 
-static void LoadPremium(int i)
+static void LoadPremium(LoadHelper *file, int i)
 {
-	LoadItemData(&premiumitem[i]);
+	LoadItemData(file, &premiumitem[i]);
 }
 
-static void LoadQuest(int i)
+static void LoadQuest(LoadHelper *file, int i)
 {
 	QuestStruct *pQuest = &quests[i];
 
-	CopyChar(tbuff, &pQuest->_qlevel);
-	CopyChar(tbuff, &pQuest->_qtype);
-	CopyChar(tbuff, &pQuest->_qactive);
-	CopyChar(tbuff, &pQuest->_qlvltype);
-	CopyInt(tbuff, &pQuest->_qtx);
-	CopyInt(tbuff, &pQuest->_qty);
-	CopyChar(tbuff, &pQuest->_qslvl);
-	CopyChar(tbuff, &pQuest->_qidx);
+	pQuest->_qlevel = file->nextLE<Uint8>();
+	pQuest->_qtype = file->nextLE<Uint8>();
+	pQuest->_qactive = file->nextLE<Uint8>();
+	pQuest->_qlvltype = (dungeon_type)file->nextLE<Uint8>();
+	pQuest->_qtx = file->nextLE<Sint32>();
+	pQuest->_qty = file->nextLE<Sint32>();
+	pQuest->_qslvl = file->nextLE<Uint8>();
+	pQuest->_qidx = file->nextLE<Uint8>();
 	if (gbIsHellfireSaveGame) {
-		tbuff += 2; // Alignment
-		CopyInt(tbuff, &pQuest->_qmsg);
+		file->skip(2); // Alignment
+		pQuest->_qmsg = file->nextLE<Sint32>();
 	} else {
-		Uint8 tmp;
-		CopyChar(tbuff, &tmp);
-		pQuest->_qmsg = tmp;
+		pQuest->_qmsg = file->nextLE<Sint8>();
 	}
-	CopyChar(tbuff, &pQuest->_qvar1);
-	CopyChar(tbuff, &pQuest->_qvar2);
-	tbuff += 2; // Alignment
+	pQuest->_qvar1 = file->nextLE<Uint8>();
+	pQuest->_qvar2 = file->nextLE<Uint8>();
+	file->skip(2); // Alignment
 	if (!gbIsHellfireSaveGame)
-		tbuff += 1; // Alignment
-	pQuest->_qlog = LoadBool32();
+		file->skip(1); // Alignment
+	pQuest->_qlog = file->nextBool32();
 
-	ReturnLvlX = WLoad();
-	ReturnLvlY = WLoad();
-	ReturnLvl = WLoad();
-	ReturnLvlT = WLoad();
-	DoomQuestState = WLoad();
+	ReturnLvlX = file->nextBE<Sint32>();
+	ReturnLvlY = file->nextBE<Sint32>();
+	ReturnLvl = file->nextBE<Sint32>();
+	ReturnLvlT = (dungeon_type)file->nextBE<Sint32>();
+	DoomQuestState = file->nextBE<Sint32>();
 }
 
-static void LoadLighting(int i)
+static void LoadLighting(LoadHelper *file, LightListStruct *pLight)
 {
-	LightListStruct *pLight = &LightList[i];
-
-	CopyInt(tbuff, &pLight->_lx);
-	CopyInt(tbuff, &pLight->_ly);
-	CopyInt(tbuff, &pLight->_lradius);
-	CopyInt(tbuff, &pLight->_lid);
-	CopyInt(tbuff, &pLight->_ldel);
-	CopyInt(tbuff, &pLight->_lunflag);
-	CopyInt(tbuff, &pLight->field_18);
-	CopyInt(tbuff, &pLight->_lunx);
-	CopyInt(tbuff, &pLight->_luny);
-	CopyInt(tbuff, &pLight->_lunr);
-	CopyInt(tbuff, &pLight->_xoff);
-	CopyInt(tbuff, &pLight->_yoff);
-	CopyInt(tbuff, &pLight->_lflags);
+	pLight->_lx = file->nextLE<Sint32>();
+	pLight->_ly = file->nextLE<Sint32>();
+	pLight->_lradius = file->nextLE<Sint32>();
+	pLight->_lid = file->nextLE<Sint32>();
+	pLight->_ldel = file->nextBool32();
+	pLight->_lunflag = file->nextBool32();
+	file->skip(4); // Unused
+	pLight->_lunx = file->nextLE<Sint32>();
+	pLight->_luny = file->nextLE<Sint32>();
+	pLight->_lunr = file->nextLE<Sint32>();
+	pLight->_xoff = file->nextLE<Sint32>();
+	pLight->_yoff = file->nextLE<Sint32>();
+	pLight->_lflags = file->nextBool32();
 }
 
-static void LoadVision(int i)
-{
-	LightListStruct *pVision = &VisionList[i];
-
-	CopyInt(tbuff, &pVision->_lx);
-	CopyInt(tbuff, &pVision->_ly);
-	CopyInt(tbuff, &pVision->_lradius);
-	CopyInt(tbuff, &pVision->_lid);
-	CopyInt(tbuff, &pVision->_ldel);
-	CopyInt(tbuff, &pVision->_lunflag);
-	CopyInt(tbuff, &pVision->field_18);
-	CopyInt(tbuff, &pVision->_lunx);
-	CopyInt(tbuff, &pVision->_luny);
-	CopyInt(tbuff, &pVision->_lunr);
-	CopyInt(tbuff, &pVision->_xoff);
-	CopyInt(tbuff, &pVision->_yoff);
-	CopyInt(tbuff, &pVision->_lflags);
-}
-
-static void LoadPortal(int i)
+static void LoadPortal(LoadHelper *file, int i)
 {
 	PortalStruct *pPortal = &portal[i];
 
-	CopyInt(tbuff, &pPortal->open);
-	CopyInt(tbuff, &pPortal->x);
-	CopyInt(tbuff, &pPortal->y);
-	CopyInt(tbuff, &pPortal->level);
-	CopyInt(tbuff, &pPortal->ltype);
-	CopyInt(tbuff, &pPortal->setlvl);
+	pPortal->open = file->nextBool32();
+	pPortal->x = file->nextLE<Sint32>();
+	pPortal->y = file->nextLE<Sint32>();
+	pPortal->level = file->nextLE<Sint32>();
+	pPortal->ltype = (dungeon_type)file->nextLE<Sint32>();
+	pPortal->setlvl = file->nextBool32();
 }
 
 int RemapItemIdxFromDiablo(int i)
 {
-	if (i == IDI_SORCEROR) {
+	if (i == IDI_SORCERER) {
 		return 166;
 	}
 	if (i >= 156) {
@@ -719,7 +805,7 @@ int RemapItemIdxFromDiablo(int i)
 int RemapItemIdxToDiablo(int i)
 {
 	if (i == 166) {
-		return IDI_SORCEROR;
+		return IDI_SORCERER;
 	}
 	if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
 		return -1; // Hellfire exclusive items
@@ -734,22 +820,158 @@ int RemapItemIdxToDiablo(int i)
 	return i;
 }
 
-bool IsHeaderValid(int magicNumber)
+bool IsHeaderValid(Uint32 magicNumber)
 {
 	gbIsHellfireSaveGame = false;
-	if (magicNumber == 'SHAR') {
+	if (magicNumber == LOAD_LE32("SHAR")) {
 		return true;
-	} else if (magicNumber == 'SHLF') {
+	} else if (magicNumber == LOAD_LE32("SHLF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
-	} else if (!gbIsSpawn && magicNumber == 'RETL') {
+	} else if (!gbIsSpawn && magicNumber == LOAD_LE32("RETL")) {
 		return true;
-	} else if (!gbIsSpawn && magicNumber == 'HELF') {
+	} else if (!gbIsSpawn && magicNumber == LOAD_LE32("HELF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
 	}
 
 	return false;
+}
+
+static void ConvertLevels()
+{
+	// Backup current level state
+	bool _setlevel = setlevel;
+	int _setlvlnum = setlvlnum;
+	int _currlevel = currlevel;
+	dungeon_type _leveltype = leveltype;
+
+	gbSkipSync = true;
+
+	setlevel = false; // Convert regular levels
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		currlevel = i;
+		if (!LevelFileExists())
+			continue;
+
+		leveltype = gnLevelTypeTbl[i];
+
+		LoadLevel();
+		SaveLevel();
+	}
+
+	setlevel = true; // Convert quest levels
+	for (int i = 0; i < MAXQUESTS; i++) {
+		if (quests[i]._qactive == QUEST_NOTAVAIL) {
+			continue;
+		}
+
+		leveltype = quests[i]._qlvltype;
+		if (leveltype == DTYPE_NONE) {
+			continue;
+		}
+
+		setlvlnum = quests[i]._qslvl;
+		if (!LevelFileExists())
+			continue;
+
+		LoadLevel();
+		SaveLevel();
+	}
+
+	gbSkipSync = false;
+
+	// Restor current level state
+	setlevel = _setlevel;
+	setlvlnum = _setlvlnum;
+	currlevel = _currlevel;
+	leveltype = _leveltype;
+}
+
+void LoadHotkeys()
+{
+	LoadHelper file("hotkeys");
+	if (!file.isValid())
+		return;
+
+	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
+	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
+
+	for (size_t i = 0; i < nHotkeyTypes; i++) {
+		plr[myplr]._pSplHotKey[i] = (spell_id)file.nextLE<Sint32>();
+	}
+	for (size_t i = 0; i < nHotkeySpells; i++) {
+		plr[myplr]._pSplTHotKey[i] = (spell_type)file.nextLE<Sint8>();
+	}
+	plr[myplr]._pRSpell = (spell_id)file.nextLE<Sint32>();
+	plr[myplr]._pRSplType = (spell_type)file.nextLE<Sint8>();
+}
+
+void SaveHotkeys()
+{
+	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
+	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
+
+	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
+
+	for (size_t i = 0; i < nHotkeyTypes; i++) {
+		file.writeLE<Sint32>(plr[myplr]._pSplHotKey[i]);
+	}
+	for (size_t i = 0; i < nHotkeySpells; i++) {
+		file.writeLE<Uint8>(plr[myplr]._pSplTHotKey[i]);
+	}
+	file.writeLE<Sint32>(plr[myplr]._pRSpell);
+	file.writeLE<Uint8>(plr[myplr]._pRSplType);
+}
+
+static void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
+{
+	ItemStruct tempItem;
+
+	for (int i = 0; i < n; i++) {
+		LoadItemData(file, &tempItem);
+		if (pItem[i].isEmpty() || tempItem.isEmpty())
+			continue;
+		if (pItem[i]._iSeed != tempItem._iSeed)
+			continue;
+		pItem[i] = tempItem;
+	}
+}
+
+void LoadHeroItems(PlayerStruct *pPlayer)
+{
+	LoadHelper file("heroitems");
+	if (!file.isValid())
+		return;
+
+	gbIsHellfireSaveGame = file.nextBool8();
+
+	LoadMatchingItems(&file, NUM_INVLOC, pPlayer->InvBody);
+	LoadMatchingItems(&file, NUM_INV_GRID_ELEM, pPlayer->InvList);
+	LoadMatchingItems(&file, MAXBELTITEMS, pPlayer->SpdList);
+
+	gbIsHellfireSaveGame = gbIsHellfire;
+}
+
+void RemoveEmptyInventory(int pnum)
+{
+	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
+		int idx = plr[pnum].InvGrid[i - 1];
+		if (idx > 0 && plr[pnum].InvList[idx - 1].isEmpty()) {
+			RemoveInvItem(pnum, idx - 1);
+		}
+	};
+}
+
+void RemoveEmptyLevelItems()
+{
+	for (int i = numitems; i >= 0; i--) {
+		int ii = itemactive[i];
+		if (item[ii].isEmpty()) {
+			dItem[item[ii]._ix][item[ii]._iy] = 0;
+			DeleteItem(ii, i);
+		}
+	}
 }
 
 /**
@@ -758,17 +980,14 @@ bool IsHeaderValid(int magicNumber)
  */
 void LoadGame(BOOL firstflag)
 {
-	int i, j;
-	DWORD dwLen;
-	BYTE *LoadBuff;
-	int _ViewX, _ViewY, _nummonsters, _numitems, _nummissiles, _nobjects;
-
 	FreeGameMem();
 	pfile_remove_temp_files();
-	LoadBuff = pfile_read("game", &dwLen);
-	tbuff = LoadBuff;
 
-	if (!IsHeaderValid(ILoad()))
+	LoadHelper file("game");
+	if (!file.isValid())
+		app_fatal("Unable to open save file archive");
+
+	if (!IsHeaderValid(file.nextLE<Uint32>()))
 		app_fatal("Invalid save file");
 
 	if (gbIsHellfireSaveGame) {
@@ -782,34 +1001,44 @@ void LoadGame(BOOL firstflag)
 		giNumberOfSmithPremiumItems = 6;
 	}
 
-	setlevel = LoadBool8();
-	setlvlnum = WLoad();
-	currlevel = WLoad();
-	leveltype = WLoad();
-	_ViewX = WLoad();
-	_ViewY = WLoad();
-	invflag = LoadBool8();
-	chrflag = LoadBool8();
-	_nummonsters = WLoad();
-	_numitems = WLoad();
-	_nummissiles = WLoad();
-	_nobjects = WLoad();
+	setlevel = file.nextBool8();
+	setlvlnum = file.nextBE<Uint32>();
+	currlevel = file.nextBE<Uint32>();
+	leveltype = (dungeon_type)file.nextBE<Uint32>();
+	if (!setlevel)
+		leveltype = gnLevelTypeTbl[currlevel];
+	int _ViewX = file.nextBE<Sint32>();
+	int _ViewY = file.nextBE<Sint32>();
+	invflag = file.nextBool8();
+	chrflag = file.nextBool8();
+	int _nummonsters = file.nextBE<Sint32>();
+	int _numitems = file.nextBE<Sint32>();
+	int _nummissiles = file.nextBE<Sint32>();
+	int _nobjects = file.nextBE<Sint32>();
 
-	for (i = 0; i < giNumberOfLevels; i++) {
-		glSeedTbl[i] = ILoad();
-		gnLevelTypeTbl[i] = WLoad();
+	if (!gbIsHellfire && currlevel > 17)
+		app_fatal("Player is on a Hellfire only level");
+
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		glSeedTbl[i] = file.nextBE<Uint32>();
+		file.skip(4); // Skip loading gnLevelTypeTbl
 	}
 
-	LoadPlayer(myplr);
+	LoadPlayer(&file, myplr);
 
 	gnDifficulty = plr[myplr].pDifficulty;
 	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
 		gnDifficulty = DIFF_NORMAL;
 
-	for (i = 0; i < giNumberQuests; i++)
-		LoadQuest(i);
-	for (i = 0; i < MAXPORTAL; i++)
-		LoadPortal(i);
+	for (int i = 0; i < giNumberQuests; i++)
+		LoadQuest(&file, i);
+	for (int i = 0; i < MAXPORTAL; i++)
+		LoadPortal(&file, i);
+
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		ConvertLevels();
+		RemoveEmptyInventory(myplr);
+	}
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);
 	SyncInitPlr(myplr);
@@ -822,111 +1051,110 @@ void LoadGame(BOOL firstflag)
 	nummissiles = _nummissiles;
 	nobjects = _nobjects;
 
-	for (i = 0; i < MAXMONSTERS; i++)
-		monstkills[i] = ILoad();
+	for (int i = 0; i < MAXMONSTERS; i++)
+		monstkills[i] = file.nextBE<Sint32>();
 
 	if (leveltype != DTYPE_TOWN) {
-		for (i = 0; i < MAXMONSTERS; i++)
-			monstactive[i] = WLoad();
-		for (i = 0; i < nummonsters; i++)
-			LoadMonster(monstactive[i]);
-		for (i = 0; i < MAXMISSILES; i++)
-			missileactive[i] = BLoad();
-		for (i = 0; i < MAXMISSILES; i++)
-			missileavail[i] = BLoad();
-		for (i = 0; i < nummissiles; i++)
-			LoadMissile(missileactive[i]);
-		for (i = 0; i < MAXOBJECTS; i++)
-			objectactive[i] = BLoad();
-		for (i = 0; i < MAXOBJECTS; i++)
-			objectavail[i] = BLoad();
-		for (i = 0; i < nobjects; i++)
-			LoadObject(objectactive[i]);
-		for (i = 0; i < nobjects; i++)
+		for (int i = 0; i < MAXMONSTERS; i++)
+			monstactive[i] = file.nextBE<Sint32>();
+		for (int i = 0; i < nummonsters; i++)
+			LoadMonster(&file, monstactive[i]);
+		for (int i = 0; i < MAXMISSILES; i++)
+			missileactive[i] = file.nextLE<Sint8>();
+		for (int i = 0; i < MAXMISSILES; i++)
+			missileavail[i] = file.nextLE<Sint8>();
+		for (int i = 0; i < nummissiles; i++)
+			LoadMissile(&file, missileactive[i]);
+		for (int i = 0; i < MAXOBJECTS; i++)
+			objectactive[i] = file.nextLE<Sint8>();
+		for (int i = 0; i < MAXOBJECTS; i++)
+			objectavail[i] = file.nextLE<Sint8>();
+		for (int i = 0; i < nobjects; i++)
+			LoadObject(&file, objectactive[i]);
+		for (int i = 0; i < nobjects; i++)
 			SyncObjectAnim(objectactive[i]);
 
-		numlights = WLoad();
+		numlights = file.nextBE<Sint32>();
 
-		for (i = 0; i < MAXLIGHTS; i++)
-			lightactive[i] = BLoad();
-		for (i = 0; i < numlights; i++)
-			LoadLighting(lightactive[i]);
+		for (int i = 0; i < MAXLIGHTS; i++)
+			lightactive[i] = file.nextLE<Uint8>();
+		for (int i = 0; i < numlights; i++)
+			LoadLighting(&file, &LightList[lightactive[i]]);
 
-		visionid = WLoad();
-		numvision = WLoad();
+		visionid = file.nextBE<Sint32>();
+		numvision = file.nextBE<Sint32>();
 
-		for (i = 0; i < numvision; i++)
-			LoadVision(i);
+		for (int i = 0; i < numvision; i++)
+			LoadLighting(&file, &VisionList[i]);
 	}
 
-	for (i = 0; i < MAXITEMS; i++)
-		itemactive[i] = BLoad();
-	for (i = 0; i < MAXITEMS; i++)
-		itemavail[i] = BLoad();
-	for (i = 0; i < numitems; i++)
-		LoadItem(itemactive[i]);
-	for (i = 0; i < 128; i++)
-		UniqueItemFlag[i] = LoadBool8();
+	for (int i = 0; i < MAXITEMS; i++)
+		itemactive[i] = file.nextLE<Sint8>();
+	for (int i = 0; i < MAXITEMS; i++)
+		itemavail[i] = file.nextLE<Sint8>();
+	for (int i = 0; i < numitems; i++)
+		LoadItem(&file, itemactive[i]);
+	for (int i = 0; i < 128; i++)
+		UniqueItemFlag[i] = file.nextBool8();
 
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			dLight[i][j] = BLoad();
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			dLight[i][j] = file.nextLE<Sint8>();
 	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			dFlags[i][j] = BLoad();
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			dFlags[i][j] = file.nextLE<Sint8>();
 	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			dPlayer[i][j] = BLoad();
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			dPlayer[i][j] = file.nextLE<Sint8>();
 	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			dItem[i][j] = BLoad();
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			dItem[i][j] = file.nextLE<Sint8>();
 	}
 
 	if (leveltype != DTYPE_TOWN) {
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dMonster[i][j] = WLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dMonster[i][j] = file.nextBE<Sint32>();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dDead[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dDead[i][j] = file.nextLE<Sint8>();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dObject[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dObject[i][j] = file.nextLE<Sint8>();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dLight[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dLight[i][j] = file.nextLE<Sint8>();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dPreLight[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dPreLight[i][j] = file.nextLE<Sint8>();
 		}
-		for (j = 0; j < DMAXY; j++) {
-			for (i = 0; i < DMAXX; i++)
-				automapview[i][j] = LoadBool8();
+		for (int j = 0; j < DMAXY; j++) {
+			for (int i = 0; i < DMAXX; i++)
+				automapview[i][j] = file.nextBool8();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dMissile[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dMissile[i][j] = file.nextLE<Sint8>();
 		}
 	}
 
-	numpremium = WLoad();
-	premiumlevel = WLoad();
+	numpremium = file.nextBE<Sint32>();
+	premiumlevel = file.nextBE<Sint32>();
 
-	for (i = 0; i < giNumberOfSmithPremiumItems; i++)
-		LoadPremium(i);
+	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
+		LoadPremium(&file, i);
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
 		SpawnPremium(myplr);
 
-	automapflag = LoadBool8();
-	AutoMapScale = WLoad();
-	mem_free_dbg(LoadBuff);
+	automapflag = file.nextBool8();
+	AutoMapScale = file.nextBE<Sint32>();
 	AutomapZoomReset();
 	ResyncQuests();
 
@@ -940,47 +1168,15 @@ void LoadGame(BOOL firstflag)
 	SetCursor_(CURSOR_HAND);
 	gbProcessPlayers = TRUE;
 
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		RemoveEmptyLevelItems();
+		SaveGame();
+	}
+
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
-static void BSave(char v)
-{
-	*tbuff++ = v;
-}
-
-static void WSave(int v)
-{
-	*tbuff++ = v >> 24;
-	*tbuff++ = v >> 16;
-	*tbuff++ = v >> 8;
-	*tbuff++ = v;
-}
-
-static void ISave(int v)
-{
-	*tbuff++ = v >> 24;
-	*tbuff++ = v >> 16;
-	*tbuff++ = v >> 8;
-	*tbuff++ = v;
-}
-
-static void SaveBool8(bool v)
-{
-	if (v != false)
-		*tbuff++ = 1;
-	else
-		*tbuff++ = 0;
-}
-
-static void SaveBool32(bool value)
-{
-	Uint32 buf = value ? 1 : 0;
-	buf = SwapLE32(buf);
-	memcpy(tbuff, &buf, 4);
-	tbuff += 4;
-}
-
-static void SaveItem(ItemStruct *pItem)
+static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 {
 	int idx = pItem->IDidx;
 	if (!gbIsHellfire)
@@ -991,286 +1187,293 @@ static void SaveItem(ItemStruct *pItem)
 		iType = ITYPE_NONE;
 	}
 
-	CopyInt(&pItem->_iSeed, tbuff);
-	CopyShort(&pItem->_iCreateInfo, tbuff);
-	tbuff += 2; // Alignment
-
-	CopyInt(&iType, tbuff);
-
-	CopyInt(&pItem->_ix, tbuff);
-	CopyInt(&pItem->_iy, tbuff);
-	CopyInt(&pItem->_iAnimFlag, tbuff);
-	tbuff += 4; // Skip pointer _iAnimData
-	CopyInt(&pItem->_iAnimLen, tbuff);
-	CopyInt(&pItem->_iAnimFrame, tbuff);
-	CopyInt(&pItem->_iAnimWidth, tbuff);
-	CopyInt(&pItem->_iAnimWidth2, tbuff);
-	CopyInt(&pItem->_iDelFlag, tbuff);
-	CopyChar(&pItem->_iSelFlag, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pItem->_iPostDraw, tbuff);
-	CopyInt(&pItem->_iIdentified, tbuff);
-	CopyChar(&pItem->_iMagical, tbuff);
-	CopyBytes(&pItem->_iName, 64, tbuff);
-	CopyBytes(&pItem->_iIName, 64, tbuff);
-	CopyChar(&pItem->_iLoc, tbuff);
-	CopyChar(&pItem->_iClass, tbuff);
-	tbuff += 1; // Alignment
-	CopyInt(&pItem->_iCurs, tbuff);
-	CopyInt(&pItem->_ivalue, tbuff);
-	CopyInt(&pItem->_iIvalue, tbuff);
-	CopyInt(&pItem->_iMinDam, tbuff);
-	CopyInt(&pItem->_iMaxDam, tbuff);
-	CopyInt(&pItem->_iAC, tbuff);
-	CopyInt(&pItem->_iFlags, tbuff);
-	CopyInt(&pItem->_iMiscId, tbuff);
-	CopyInt(&pItem->_iSpell, tbuff);
-	CopyInt(&pItem->_iCharges, tbuff);
-	CopyInt(&pItem->_iMaxCharges, tbuff);
-	CopyInt(&pItem->_iDurability, tbuff);
-	CopyInt(&pItem->_iMaxDur, tbuff);
-	CopyInt(&pItem->_iPLDam, tbuff);
-	CopyInt(&pItem->_iPLToHit, tbuff);
-	CopyInt(&pItem->_iPLAC, tbuff);
-	CopyInt(&pItem->_iPLStr, tbuff);
-	CopyInt(&pItem->_iPLMag, tbuff);
-	CopyInt(&pItem->_iPLDex, tbuff);
-	CopyInt(&pItem->_iPLVit, tbuff);
-	CopyInt(&pItem->_iPLFR, tbuff);
-	CopyInt(&pItem->_iPLLR, tbuff);
-	CopyInt(&pItem->_iPLMR, tbuff);
-	CopyInt(&pItem->_iPLMana, tbuff);
-	CopyInt(&pItem->_iPLHP, tbuff);
-	CopyInt(&pItem->_iPLDamMod, tbuff);
-	CopyInt(&pItem->_iPLGetHit, tbuff);
-	CopyInt(&pItem->_iPLLight, tbuff);
-	CopyChar(&pItem->_iSplLvlAdd, tbuff);
-	CopyChar(&pItem->_iRequest, tbuff);
-	tbuff += 2; // Alignment
-	CopyInt(&pItem->_iUid, tbuff);
-	CopyInt(&pItem->_iFMinDam, tbuff);
-	CopyInt(&pItem->_iFMaxDam, tbuff);
-	CopyInt(&pItem->_iLMinDam, tbuff);
-	CopyInt(&pItem->_iLMaxDam, tbuff);
-	CopyInt(&pItem->_iPLEnAc, tbuff);
-	CopyChar(&pItem->_iPrePower, tbuff);
-	CopyChar(&pItem->_iSufPower, tbuff);
-	tbuff += 2; // Alignment
-	CopyInt(&pItem->_iVAdd1, tbuff);
-	CopyInt(&pItem->_iVMult1, tbuff);
-	CopyInt(&pItem->_iVAdd2, tbuff);
-	CopyInt(&pItem->_iVMult2, tbuff);
-	CopyChar(&pItem->_iMinStr, tbuff);
-	CopyChar(&pItem->_iMinMag, tbuff);
-	CopyChar(&pItem->_iMinDex, tbuff);
-	tbuff += 1; // Alignment
-	CopyInt(&pItem->_iStatFlag, tbuff);
-	CopyInt(&idx, tbuff);
-	CopyInt(&pItem->offs016C, tbuff);
+	file->writeLE<Sint32>(pItem->_iSeed);
+	file->writeLE<Sint16>(pItem->_iCreateInfo);
+	file->skip(2); // Alignment
+	file->writeLE<Sint32>(iType);
+	file->writeLE<Sint32>(pItem->_ix);
+	file->writeLE<Sint32>(pItem->_iy);
+	file->writeLE<Uint32>(pItem->_iAnimFlag);
+	file->skip(4); // Skip pointer _iAnimData
+	file->writeLE<Sint32>(pItem->_iAnimLen);
+	file->writeLE<Sint32>(pItem->_iAnimFrame);
+	file->writeLE<Sint32>(pItem->_iAnimWidth);
+	file->writeLE<Sint32>(pItem->_iAnimWidth2);
+	file->skip(4); // Unused since 1.02
+	file->writeLE<Uint8>(pItem->_iSelFlag);
+	file->skip(3); // Alignment
+	file->writeLE<Uint32>(pItem->_iPostDraw);
+	file->writeLE<Uint32>(pItem->_iIdentified);
+	file->writeLE<Sint8>(pItem->_iMagical);
+	file->writeBytes(pItem->_iName, 64);
+	file->writeBytes(pItem->_iIName, 64);
+	file->writeLE<Sint8>(pItem->_iLoc);
+	file->writeLE<Uint8>(pItem->_iClass);
+	file->skip(1); // Alignment
+	file->writeLE<Sint32>(pItem->_iCurs);
+	file->writeLE<Sint32>(pItem->_ivalue);
+	file->writeLE<Sint32>(pItem->_iIvalue);
+	file->writeLE<Sint32>(pItem->_iMinDam);
+	file->writeLE<Sint32>(pItem->_iMaxDam);
+	file->writeLE<Sint32>(pItem->_iAC);
+	file->writeLE<Sint32>(pItem->_iFlags);
+	file->writeLE<Sint32>(pItem->_iMiscId);
+	file->writeLE<Sint32>(pItem->_iSpell);
+	file->writeLE<Sint32>(pItem->_iCharges);
+	file->writeLE<Sint32>(pItem->_iMaxCharges);
+	file->writeLE<Sint32>(pItem->_iDurability);
+	file->writeLE<Sint32>(pItem->_iMaxDur);
+	file->writeLE<Sint32>(pItem->_iPLDam);
+	file->writeLE<Sint32>(pItem->_iPLToHit);
+	file->writeLE<Sint32>(pItem->_iPLAC);
+	file->writeLE<Sint32>(pItem->_iPLStr);
+	file->writeLE<Sint32>(pItem->_iPLMag);
+	file->writeLE<Sint32>(pItem->_iPLDex);
+	file->writeLE<Sint32>(pItem->_iPLVit);
+	file->writeLE<Sint32>(pItem->_iPLFR);
+	file->writeLE<Sint32>(pItem->_iPLLR);
+	file->writeLE<Sint32>(pItem->_iPLMR);
+	file->writeLE<Sint32>(pItem->_iPLMana);
+	file->writeLE<Sint32>(pItem->_iPLHP);
+	file->writeLE<Sint32>(pItem->_iPLDamMod);
+	file->writeLE<Sint32>(pItem->_iPLGetHit);
+	file->writeLE<Sint32>(pItem->_iPLLight);
+	file->writeLE<Sint8>(pItem->_iSplLvlAdd);
+	file->writeLE<Sint8>(pItem->_iRequest);
+	file->skip(2); // Alignment
+	file->writeLE<Sint32>(pItem->_iUid);
+	file->writeLE<Sint32>(pItem->_iFMinDam);
+	file->writeLE<Sint32>(pItem->_iFMaxDam);
+	file->writeLE<Sint32>(pItem->_iLMinDam);
+	file->writeLE<Sint32>(pItem->_iLMaxDam);
+	file->writeLE<Sint32>(pItem->_iPLEnAc);
+	file->writeLE<Sint8>(pItem->_iPrePower);
+	file->writeLE<Sint8>(pItem->_iSufPower);
+	file->skip(2); // Alignment
+	file->writeLE<Sint32>(pItem->_iVAdd1);
+	file->writeLE<Sint32>(pItem->_iVMult1);
+	file->writeLE<Sint32>(pItem->_iVAdd2);
+	file->writeLE<Sint32>(pItem->_iVMult2);
+	file->writeLE<Sint8>(pItem->_iMinStr);
+	file->writeLE<Uint8>(pItem->_iMinMag);
+	file->writeLE<Sint8>(pItem->_iMinDex);
+	file->skip(1); // Alignment
+	file->writeLE<Uint32>(pItem->_iStatFlag);
+	file->writeLE<Sint32>(idx);
+	file->writeLE<Uint32>(pItem->dwBuff);
 	if (gbIsHellfire)
-		CopyInt(&pItem->_iDamAcFlags, tbuff);
+		file->writeLE<Uint32>(pItem->_iDamAcFlags);
 }
 
-static void SaveItems(ItemStruct *pItem, const int n)
+static void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
 {
 	for (int i = 0; i < n; i++) {
-		SaveItem(&pItem[i]);
+		SaveItem(file, &pItem[i]);
 	}
 }
 
-static void SavePlayer(int i)
+static void SavePlayer(SaveHelper *file, int p)
 {
-	PlayerStruct *pPlayer = &plr[i];
+	PlayerStruct *pPlayer = &plr[p];
 
-	CopyInt(&pPlayer->_pmode, tbuff);
-	CopyBytes(&pPlayer->walkpath, MAX_PATH_LENGTH, tbuff);
-	CopyBytes(&pPlayer->plractive, 1, tbuff);
-	tbuff += 2; // Alignment
-	CopyInt(&pPlayer->destAction, tbuff);
-	CopyInt(&pPlayer->destParam1, tbuff);
-	CopyInt(&pPlayer->destParam2, tbuff);
-	CopyInt(&pPlayer->destParam3, tbuff);
-	CopyInt(&pPlayer->destParam4, tbuff);
-	CopyInt(&pPlayer->plrlevel, tbuff);
-	CopyInt(&pPlayer->_px, tbuff);
-	CopyInt(&pPlayer->_py, tbuff);
-	CopyInt(&pPlayer->_pfutx, tbuff);
-	CopyInt(&pPlayer->_pfuty, tbuff);
-	CopyInt(&pPlayer->_ptargx, tbuff);
-	CopyInt(&pPlayer->_ptargy, tbuff);
-	CopyInt(&pPlayer->_pownerx, tbuff);
-	CopyInt(&pPlayer->_pownery, tbuff);
-	CopyInt(&pPlayer->_poldx, tbuff);
-	CopyInt(&pPlayer->_poldy, tbuff);
-	CopyInt(&pPlayer->_pxoff, tbuff);
-	CopyInt(&pPlayer->_pyoff, tbuff);
-	CopyInt(&pPlayer->_pxvel, tbuff);
-	CopyInt(&pPlayer->_pyvel, tbuff);
-	CopyInt(&pPlayer->_pdir, tbuff);
-	CopyInt(&pPlayer->_nextdir, tbuff);
-	CopyInt(&pPlayer->_pgfxnum, tbuff);
-	tbuff += 4; // Skip pointer _pAnimData
-	CopyInt(&pPlayer->_pAnimDelay, tbuff);
-	CopyInt(&pPlayer->_pAnimCnt, tbuff);
-	CopyInt(&pPlayer->_pAnimLen, tbuff);
-	CopyInt(&pPlayer->_pAnimFrame, tbuff);
-	CopyInt(&pPlayer->_pAnimWidth, tbuff);
-	CopyInt(&pPlayer->_pAnimWidth2, tbuff);
-	tbuff += 4; // Skip _peflag
-	CopyInt(&pPlayer->_plid, tbuff);
-	CopyInt(&pPlayer->_pvid, tbuff);
+	file->writeLE<Sint32>(pPlayer->_pmode);
+	for (int i = 0; i < MAX_PATH_LENGTH; i++)
+		file->writeLE<Sint8>(pPlayer->walkpath[i]);
+	file->writeLE<Uint8>(pPlayer->plractive);
+	file->skip(2); // Alignment
+	file->writeLE<Sint32>(pPlayer->destAction);
+	file->writeLE<Sint32>(pPlayer->destParam1);
+	file->writeLE<Sint32>(pPlayer->destParam2);
+	file->writeLE<Sint32>(pPlayer->destParam3);
+	file->writeLE<Sint32>(pPlayer->destParam4);
+	file->writeLE<Sint32>(pPlayer->plrlevel);
+	file->writeLE<Sint32>(pPlayer->_px);
+	file->writeLE<Sint32>(pPlayer->_py);
+	file->writeLE<Sint32>(pPlayer->_pfutx);
+	file->writeLE<Sint32>(pPlayer->_pfuty);
+	file->writeLE<Sint32>(pPlayer->_ptargx);
+	file->writeLE<Sint32>(pPlayer->_ptargy);
+	file->writeLE<Sint32>(pPlayer->_pownerx);
+	file->writeLE<Sint32>(pPlayer->_pownery);
+	file->writeLE<Sint32>(pPlayer->_poldx);
+	file->writeLE<Sint32>(pPlayer->_poldy);
+	file->writeLE<Sint32>(pPlayer->_pxoff);
+	file->writeLE<Sint32>(pPlayer->_pyoff);
+	file->writeLE<Sint32>(pPlayer->_pxvel);
+	file->writeLE<Sint32>(pPlayer->_pyvel);
+	file->writeLE<Sint32>(pPlayer->_pdir);
+	file->skip(4); // Unused
+	file->writeLE<Sint32>(pPlayer->_pgfxnum);
+	file->skip(4); // Skip pointer _pAnimData
+	file->writeLE<Sint32>(pPlayer->_pAnimDelay);
+	file->writeLE<Sint32>(pPlayer->_pAnimCnt);
+	file->writeLE<Sint32>(pPlayer->_pAnimLen);
+	file->writeLE<Sint32>(pPlayer->_pAnimFrame);
+	file->writeLE<Sint32>(pPlayer->_pAnimWidth);
+	file->writeLE<Sint32>(pPlayer->_pAnimWidth2);
+	file->skip(4); // Skip _peflag
+	file->writeLE<Sint32>(pPlayer->_plid);
+	file->writeLE<Sint32>(pPlayer->_pvid);
 
-	CopyInt(&pPlayer->_pSpell, tbuff);
-	CopyChar(&pPlayer->_pSplType, tbuff);
-	CopyChar(&pPlayer->_pSplFrom, tbuff);
-	tbuff += 2; // Alignment
-	CopyInt(&pPlayer->_pTSpell, tbuff);
-	CopyChar(&pPlayer->_pTSplType, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pPlayer->_pRSpell, tbuff);
-	CopyChar(&pPlayer->_pRSplType, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pPlayer->_pSBkSpell, tbuff);
-	CopyChar(&pPlayer->_pSBkSplType, tbuff);
-	CopyBytes(&pPlayer->_pSplLvl, 64, tbuff);
-	tbuff += 7; // Alignment
-	CopyInt64(&pPlayer->_pMemSpells, tbuff);
-	CopyInt64(&pPlayer->_pAblSpells, tbuff);
-	CopyInt64(&pPlayer->_pScrlSpells, tbuff);
-	CopyChar(&pPlayer->_pSpellFlags, tbuff);
-	tbuff += 3; // Alignment
-	CopyInts(&pPlayer->_pSplHotKey, 4, tbuff);
-	CopyBytes(&pPlayer->_pSplTHotKey, 4, tbuff);
+	file->writeLE<Sint32>(pPlayer->_pSpell);
+	file->writeLE<Sint8>(pPlayer->_pSplType);
+	file->writeLE<Sint8>(pPlayer->_pSplFrom);
+	file->skip(2); // Alignment
+	file->writeLE<Sint32>(pPlayer->_pTSpell);
+	file->writeLE<Sint8>(pPlayer->_pTSplType);
+	file->skip(3); // Alignment
+	file->writeLE<Sint32>(pPlayer->_pRSpell);
+	file->writeLE<Sint8>(pPlayer->_pRSplType);
+	file->skip(3); // Alignment
+	file->writeLE<Sint32>(pPlayer->_pSBkSpell);
+	file->writeLE<Sint8>(pPlayer->_pSBkSplType);
+	for (int i = 0; i < 64; i++)
+		file->writeLE<Sint8>(pPlayer->_pSplLvl[i]);
+	file->skip(7); // Alignment
+	file->writeLE<Uint64>(pPlayer->_pMemSpells);
+	file->writeLE<Uint64>(pPlayer->_pAblSpells);
+	file->writeLE<Uint64>(pPlayer->_pScrlSpells);
+	file->writeLE<Uint8>(pPlayer->_pSpellFlags);
+	file->skip(3); // Alignment
+	for (int i = 0; i < 4; i++)
+		file->writeLE<Sint32>(pPlayer->_pSplHotKey[i]);
+	for (int i = 0; i < 4; i++)
+		file->writeLE<Sint8>(pPlayer->_pSplTHotKey[i]);
 
-	CopyInt(&pPlayer->_pwtype, tbuff);
-	CopyChar(&pPlayer->_pBlockFlag, tbuff);
-	CopyChar(&pPlayer->_pInvincible, tbuff);
-	CopyChar(&pPlayer->_pLightRad, tbuff);
-	CopyChar(&pPlayer->_pLvlChanging, tbuff);
+	file->writeLE<Sint32>(pPlayer->_pwtype);
+	file->writeLE<Uint8>(pPlayer->_pBlockFlag);
+	file->writeLE<Uint8>(pPlayer->_pInvincible);
+	file->writeLE<Sint8>(pPlayer->_pLightRad);
+	file->writeLE<Uint8>(pPlayer->_pLvlChanging);
 
-	CopyBytes(&pPlayer->_pName, PLR_NAME_LEN, tbuff);
-	CopyChar(&pPlayer->_pClass, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pPlayer->_pStrength, tbuff);
-	CopyInt(&pPlayer->_pBaseStr, tbuff);
-	CopyInt(&pPlayer->_pMagic, tbuff);
-	CopyInt(&pPlayer->_pBaseMag, tbuff);
-	CopyInt(&pPlayer->_pDexterity, tbuff);
-	CopyInt(&pPlayer->_pBaseDex, tbuff);
-	CopyInt(&pPlayer->_pVitality, tbuff);
-	CopyInt(&pPlayer->_pBaseVit, tbuff);
-	CopyInt(&pPlayer->_pStatPts, tbuff);
-	CopyInt(&pPlayer->_pDamageMod, tbuff);
-	CopyInt(&pPlayer->_pBaseToBlk, tbuff);
-	CopyInt(&pPlayer->_pHPBase, tbuff);
-	CopyInt(&pPlayer->_pMaxHPBase, tbuff);
-	CopyInt(&pPlayer->_pHitPoints, tbuff);
-	CopyInt(&pPlayer->_pMaxHP, tbuff);
-	CopyInt(&pPlayer->_pHPPer, tbuff);
-	CopyInt(&pPlayer->_pManaBase, tbuff);
-	CopyInt(&pPlayer->_pMaxManaBase, tbuff);
-	CopyInt(&pPlayer->_pMana, tbuff);
-	CopyInt(&pPlayer->_pMaxMana, tbuff);
-	CopyInt(&pPlayer->_pManaPer, tbuff);
-	CopyChar(&pPlayer->_pLevel, tbuff);
-	CopyChar(&pPlayer->_pMaxLvl, tbuff);
-	tbuff += 2; // Alignment
-	CopyInt(&pPlayer->_pExperience, tbuff);
-	CopyInt(&pPlayer->_pMaxExp, tbuff);
-	CopyInt(&pPlayer->_pNextExper, tbuff);
-	CopyChar(&pPlayer->_pArmorClass, tbuff);
-	CopyChar(&pPlayer->_pMagResist, tbuff);
-	CopyChar(&pPlayer->_pFireResist, tbuff);
-	CopyChar(&pPlayer->_pLghtResist, tbuff);
-	CopyInt(&pPlayer->_pGold, tbuff);
+	file->writeBytes(pPlayer->_pName, PLR_NAME_LEN);
+	file->writeLE<Sint8>(pPlayer->_pClass);
+	file->skip(3); // Alignment
+	file->writeLE<Sint32>(pPlayer->_pStrength);
+	file->writeLE<Sint32>(pPlayer->_pBaseStr);
+	file->writeLE<Sint32>(pPlayer->_pMagic);
+	file->writeLE<Sint32>(pPlayer->_pBaseMag);
+	file->writeLE<Sint32>(pPlayer->_pDexterity);
+	file->writeLE<Sint32>(pPlayer->_pBaseDex);
+	file->writeLE<Sint32>(pPlayer->_pVitality);
+	file->writeLE<Sint32>(pPlayer->_pBaseVit);
+	file->writeLE<Sint32>(pPlayer->_pStatPts);
+	file->writeLE<Sint32>(pPlayer->_pDamageMod);
 
-	CopyInt(&pPlayer->_pInfraFlag, tbuff);
-	CopyInt(&pPlayer->_pVar1, tbuff);
-	CopyInt(&pPlayer->_pVar2, tbuff);
-	CopyInt(&pPlayer->_pVar3, tbuff);
-	CopyInt(&pPlayer->_pVar4, tbuff);
-	CopyInt(&pPlayer->_pVar5, tbuff);
-	CopyInt(&pPlayer->_pVar6, tbuff);
-	CopyInt(&pPlayer->_pVar7, tbuff);
-	CopyInt(&pPlayer->_pVar8, tbuff);
-	CopyBytes(&pPlayer->_pLvlVisited, giNumberOfLevels, tbuff);
-	CopyBytes(&pPlayer->_pSLvlVisited, giNumberOfLevels, tbuff); // only 10 used
-	tbuff += 2;                                                  // Alignment
+	file->writeLE<Sint32>(pPlayer->_pBaseToBlk);
+	file->writeLE<Sint32>(pPlayer->_pHPBase);
+	file->writeLE<Sint32>(pPlayer->_pMaxHPBase);
+	file->writeLE<Sint32>(pPlayer->_pHitPoints);
+	file->writeLE<Sint32>(pPlayer->_pMaxHP);
+	file->writeLE<Sint32>(pPlayer->_pHPPer);
+	file->writeLE<Sint32>(pPlayer->_pManaBase);
+	file->writeLE<Sint32>(pPlayer->_pMaxManaBase);
+	file->writeLE<Sint32>(pPlayer->_pMana);
+	file->writeLE<Sint32>(pPlayer->_pMaxMana);
+	file->writeLE<Sint32>(pPlayer->_pManaPer);
+	file->writeLE<Sint8>(pPlayer->_pLevel);
+	file->writeLE<Sint8>(pPlayer->_pMaxLvl);
+	file->skip(2); // Alignment
+	file->writeLE<Sint32>(pPlayer->_pExperience);
+	file->writeLE<Sint32>(pPlayer->_pMaxExp);
+	file->writeLE<Sint32>(pPlayer->_pNextExper);
+	file->writeLE<Sint8>(pPlayer->_pArmorClass);
+	file->writeLE<Sint8>(pPlayer->_pMagResist);
+	file->writeLE<Sint8>(pPlayer->_pFireResist);
+	file->writeLE<Sint8>(pPlayer->_pLghtResist);
+	file->writeLE<Sint32>(pPlayer->_pGold);
 
-	CopyInt(&pPlayer->_pGFXLoad, tbuff);
-	tbuff += 4 * 8; // Skip pointers _pNAnim
-	CopyInt(&pPlayer->_pNFrames, tbuff);
-	CopyInt(&pPlayer->_pNWidth, tbuff);
-	tbuff += 4 * 8; // Skip pointers _pWAnim
-	CopyInt(&pPlayer->_pWFrames, tbuff);
-	CopyInt(&pPlayer->_pWWidth, tbuff);
-	tbuff += 4 * 8; // Skip pointers _pAAnim
-	CopyInt(&pPlayer->_pAFrames, tbuff);
-	CopyInt(&pPlayer->_pAWidth, tbuff);
-	CopyInt(&pPlayer->_pAFNum, tbuff);
-	tbuff += 4 * 8; // Skip pointers _pLAnim
-	tbuff += 4 * 8; // Skip pointers _pFAnim
-	tbuff += 4 * 8; // Skip pointers _pTAnim
-	CopyInt(&pPlayer->_pSFrames, tbuff);
-	CopyInt(&pPlayer->_pSWidth, tbuff);
-	CopyInt(&pPlayer->_pSFNum, tbuff);
-	tbuff += 4 * 8; // Skip pointers _pHAnim
-	CopyInt(&pPlayer->_pHFrames, tbuff);
-	CopyInt(&pPlayer->_pHWidth, tbuff);
-	tbuff += 4 * 8; // Skip pointers _pDAnim
-	CopyInt(&pPlayer->_pDFrames, tbuff);
-	CopyInt(&pPlayer->_pDWidth, tbuff);
-	tbuff += 4 * 8; // Skip pointers _pBAnim
-	CopyInt(&pPlayer->_pBFrames, tbuff);
-	CopyInt(&pPlayer->_pBWidth, tbuff);
+	file->writeLE<Uint32>(pPlayer->_pInfraFlag);
+	file->writeLE<Sint32>(pPlayer->_pVar1);
+	file->writeLE<Sint32>(pPlayer->_pVar2);
+	file->writeLE<Sint32>(pPlayer->_pVar3);
+	file->writeLE<Sint32>(pPlayer->_pVar4);
+	file->writeLE<Sint32>(pPlayer->_pVar5);
+	file->writeLE<Sint32>(pPlayer->_pVar6);
+	file->writeLE<Sint32>(pPlayer->_pVar7);
+	file->writeLE<Sint32>(pPlayer->_pVar8);
+	for (int i = 0; i < giNumberOfLevels; i++)
+		file->writeLE<Uint8>(pPlayer->_pLvlVisited[i]);
+	for (int i = 0; i < giNumberOfLevels; i++)
+		file->writeLE<Uint8>(pPlayer->_pSLvlVisited[i]); // only 10 used
 
-	SaveItems(pPlayer->InvBody, NUM_INVLOC);
-	SaveItems(pPlayer->InvList, NUM_INV_GRID_ELEM);
-	CopyInt(&pPlayer->_pNumInv, tbuff);
-	CopyBytes(pPlayer->InvGrid, NUM_INV_GRID_ELEM, tbuff);
-	SaveItems(pPlayer->SpdList, MAXBELTITEMS);
-	SaveItem(&pPlayer->HoldItem);
+	file->skip(2); // Alignment
 
-	CopyInt(&pPlayer->_pIMinDam, tbuff);
-	CopyInt(&pPlayer->_pIMaxDam, tbuff);
-	CopyInt(&pPlayer->_pIAC, tbuff);
-	CopyInt(&pPlayer->_pIBonusDam, tbuff);
-	CopyInt(&pPlayer->_pIBonusToHit, tbuff);
-	CopyInt(&pPlayer->_pIBonusAC, tbuff);
-	CopyInt(&pPlayer->_pIBonusDamMod, tbuff);
-	tbuff += 4; // Alignment
+	file->writeLE<Sint32>(pPlayer->_pGFXLoad);
+	file->skip(4 * 8); // Skip pointers _pNAnim
+	file->writeLE<Sint32>(pPlayer->_pNFrames);
+	file->writeLE<Sint32>(pPlayer->_pNWidth);
+	file->skip(4 * 8); // Skip pointers _pWAnim
+	file->writeLE<Sint32>(pPlayer->_pWFrames);
+	file->writeLE<Sint32>(pPlayer->_pWWidth);
+	file->skip(4 * 8); // Skip pointers _pAAnim
+	file->writeLE<Sint32>(pPlayer->_pAFrames);
+	file->writeLE<Sint32>(pPlayer->_pAWidth);
+	file->writeLE<Sint32>(pPlayer->_pAFNum);
+	file->skip(4 * 8); // Skip pointers _pLAnim
+	file->skip(4 * 8); // Skip pointers _pFAnim
+	file->skip(4 * 8); // Skip pointers _pTAnim
+	file->writeLE<Sint32>(pPlayer->_pSFrames);
+	file->writeLE<Sint32>(pPlayer->_pSWidth);
+	file->writeLE<Sint32>(pPlayer->_pSFNum);
+	file->skip(4 * 8); // Skip pointers _pHAnim
+	file->writeLE<Sint32>(pPlayer->_pHFrames);
+	file->writeLE<Sint32>(pPlayer->_pHWidth);
+	file->skip(4 * 8); // Skip pointers _pDAnim
+	file->writeLE<Sint32>(pPlayer->_pDFrames);
+	file->writeLE<Sint32>(pPlayer->_pDWidth);
+	file->skip(4 * 8); // Skip pointers _pBAnim
+	file->writeLE<Sint32>(pPlayer->_pBFrames);
+	file->writeLE<Sint32>(pPlayer->_pBWidth);
 
-	CopyInt64(&pPlayer->_pISpells, tbuff);
-	CopyInt(&pPlayer->_pIFlags, tbuff);
-	CopyInt(&pPlayer->_pIGetHit, tbuff);
+	SaveItems(file, pPlayer->InvBody, NUM_INVLOC);
+	SaveItems(file, pPlayer->InvList, NUM_INV_GRID_ELEM);
+	file->writeLE<Sint32>(pPlayer->_pNumInv);
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
+		file->writeLE<Sint8>(pPlayer->InvGrid[i]);
+	SaveItems(file, pPlayer->SpdList, MAXBELTITEMS);
+	SaveItem(file, &pPlayer->HoldItem);
 
-	CopyChar(&pPlayer->_pISplLvlAdd, tbuff);
-	CopyChar(&pPlayer->_pISplCost, tbuff);
-	tbuff += 2; // Alignment
-	CopyInt(&pPlayer->_pISplDur, tbuff);
-	CopyInt(&pPlayer->_pIEnAc, tbuff);
-	CopyInt(&pPlayer->_pIFMinDam, tbuff);
-	CopyInt(&pPlayer->_pIFMaxDam, tbuff);
-	CopyInt(&pPlayer->_pILMinDam, tbuff);
-	CopyInt(&pPlayer->_pILMaxDam, tbuff);
-	CopyInt(&pPlayer->_pOilType, tbuff);
-	CopyChar(&pPlayer->pTownWarps, tbuff);
-	CopyChar(&pPlayer->pDungMsgs, tbuff);
-	CopyChar(&pPlayer->pLvlLoad, tbuff);
+	file->writeLE<Sint32>(pPlayer->_pIMinDam);
+	file->writeLE<Sint32>(pPlayer->_pIMaxDam);
+	file->writeLE<Sint32>(pPlayer->_pIAC);
+	file->writeLE<Sint32>(pPlayer->_pIBonusDam);
+	file->writeLE<Sint32>(pPlayer->_pIBonusToHit);
+	file->writeLE<Sint32>(pPlayer->_pIBonusAC);
+	file->writeLE<Sint32>(pPlayer->_pIBonusDamMod);
+	file->skip(4); // Alignment
+
+	file->writeLE<Uint64>(pPlayer->_pISpells);
+	file->writeLE<Sint32>(pPlayer->_pIFlags);
+	file->writeLE<Sint32>(pPlayer->_pIGetHit);
+
+	file->writeLE<Sint8>(pPlayer->_pISplLvlAdd);
+	file->skip(1); // Unused
+	file->skip(2); // Alignment
+	file->writeLE<Sint32>(pPlayer->_pISplDur);
+	file->writeLE<Sint32>(pPlayer->_pIEnAc);
+	file->writeLE<Sint32>(pPlayer->_pIFMinDam);
+	file->writeLE<Sint32>(pPlayer->_pIFMaxDam);
+	file->writeLE<Sint32>(pPlayer->_pILMinDam);
+	file->writeLE<Sint32>(pPlayer->_pILMaxDam);
+	file->writeLE<Sint32>(pPlayer->_pOilType);
+	file->writeLE<Uint8>(pPlayer->pTownWarps);
+	file->writeLE<Uint8>(pPlayer->pDungMsgs);
+	file->writeLE<Uint8>(pPlayer->pLvlLoad);
 	if (gbIsHellfire)
-		CopyChar(&pPlayer->pDungMsgs2, tbuff);
+		file->writeLE<Uint8>(pPlayer->pDungMsgs2);
 	else
-		CopyChar(&pPlayer->pBattleNet, tbuff);
-	CopyChar(&pPlayer->pManaShield, tbuff);
-	CopyChar(&pPlayer->pOriginalCathedral, tbuff);
-	CopyBytes(&pPlayer->bReserved, 2, tbuff);
-	CopyShort(&pPlayer->wReflections, tbuff);
-	CopyShorts(&pPlayer->wReserved, 7, tbuff);
+		file->writeLE<Uint8>(pPlayer->pBattleNet);
+	file->writeLE<Uint8>(pPlayer->pManaShield);
+	file->writeLE<Uint8>(pPlayer->pOriginalCathedral);
+	file->skip(2); // Available bytes
+	file->writeLE<Uint16>(pPlayer->wReflections);
+	file->skip(14); // Available bytes
 
-	CopyInt(&pPlayer->pDiabloKillLevel, tbuff);
-	CopyInt(&pPlayer->pDifficulty, tbuff);
-	CopyInt(&pPlayer->pDamAcFlags, tbuff);
-	CopyInts(&pPlayer->dwReserved, 5, tbuff);
+	file->writeLE<Uint32>(pPlayer->pDiabloKillLevel);
+	file->writeLE<Uint32>(pPlayer->pDifficulty);
+	file->writeLE<Uint32>(pPlayer->pDamAcFlags);
+	file->skip(20); // Available bytes
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -1284,297 +1487,278 @@ static void SavePlayer(int i)
 	// Omit pointer pReserved
 }
 
-static void SaveMonster(int i)
+static void SaveMonster(SaveHelper *file, int i)
 {
 	MonsterStruct *pMonster = &monster[i];
-	char tempChar;
 
-	CopyInt(&pMonster->_mMTidx, tbuff);
-	CopyInt(&pMonster->_mmode, tbuff);
-	CopyChar(&pMonster->_mgoal, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pMonster->_mgoalvar1, tbuff);
-	CopyInt(&pMonster->_mgoalvar2, tbuff);
-	CopyInt(&pMonster->_mgoalvar3, tbuff);
-	CopyInt(&pMonster->field_18, tbuff);
-	CopyChar(&pMonster->_pathcount, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pMonster->_mx, tbuff);
-	CopyInt(&pMonster->_my, tbuff);
-	CopyInt(&pMonster->_mfutx, tbuff);
-	CopyInt(&pMonster->_mfuty, tbuff);
-	CopyInt(&pMonster->_moldx, tbuff);
-	CopyInt(&pMonster->_moldy, tbuff);
-	CopyInt(&pMonster->_mxoff, tbuff);
-	CopyInt(&pMonster->_myoff, tbuff);
-	CopyInt(&pMonster->_mxvel, tbuff);
-	CopyInt(&pMonster->_myvel, tbuff);
-	CopyInt(&pMonster->_mdir, tbuff);
-	CopyInt(&pMonster->_menemy, tbuff);
-	CopyChar(&pMonster->_menemyx, tbuff);
-	CopyChar(&pMonster->_menemyy, tbuff);
-	CopyShort(&pMonster->falign_52, tbuff);
+	file->writeLE<Sint32>(pMonster->_mMTidx);
+	file->writeLE<Sint32>(pMonster->_mmode);
+	file->writeLE<Uint8>(pMonster->_mgoal);
+	file->skip(3); // Alignment
+	file->writeLE<Sint32>(pMonster->_mgoalvar1);
+	file->writeLE<Sint32>(pMonster->_mgoalvar2);
+	file->writeLE<Sint32>(pMonster->_mgoalvar3);
+	file->skip(4); // Unused
+	file->writeLE<Uint8>(pMonster->_pathcount);
+	file->skip(3); // Alignment
+	file->writeLE<Sint32>(pMonster->_mx);
+	file->writeLE<Sint32>(pMonster->_my);
+	file->writeLE<Sint32>(pMonster->_mfutx);
+	file->writeLE<Sint32>(pMonster->_mfuty);
+	file->writeLE<Sint32>(pMonster->_moldx);
+	file->writeLE<Sint32>(pMonster->_moldy);
+	file->writeLE<Sint32>(pMonster->_mxoff);
+	file->writeLE<Sint32>(pMonster->_myoff);
+	file->writeLE<Sint32>(pMonster->_mxvel);
+	file->writeLE<Sint32>(pMonster->_myvel);
+	file->writeLE<Sint32>(pMonster->_mdir);
+	file->writeLE<Sint32>(pMonster->_menemy);
+	file->writeLE<Uint8>(pMonster->_menemyx);
+	file->writeLE<Uint8>(pMonster->_menemyy);
+	file->skip(2); // Unused
 
-	tbuff += 4; // Skip pointer _mAnimData
-	CopyInt(&pMonster->_mAnimDelay, tbuff);
-	CopyInt(&pMonster->_mAnimCnt, tbuff);
-	CopyInt(&pMonster->_mAnimLen, tbuff);
-	CopyInt(&pMonster->_mAnimFrame, tbuff);
-	tbuff += 4; // Skip _meflag
-	CopyInt(&pMonster->_mDelFlag, tbuff);
-	CopyInt(&pMonster->_mVar1, tbuff);
-	CopyInt(&pMonster->_mVar2, tbuff);
-	CopyInt(&pMonster->_mVar3, tbuff);
-	CopyInt(&pMonster->_mVar4, tbuff);
-	CopyInt(&pMonster->_mVar5, tbuff);
-	CopyInt(&pMonster->_mVar6, tbuff);
-	CopyInt(&pMonster->_mVar7, tbuff);
-	CopyInt(&pMonster->_mVar8, tbuff);
-	CopyInt(&pMonster->_mmaxhp, tbuff);
-	CopyInt(&pMonster->_mhitpoints, tbuff);
+	file->skip(4); // Skip pointer _mAnimData
+	file->writeLE<Sint32>(pMonster->_mAnimDelay);
+	file->writeLE<Sint32>(pMonster->_mAnimCnt);
+	file->writeLE<Sint32>(pMonster->_mAnimLen);
+	file->writeLE<Sint32>(pMonster->_mAnimFrame);
+	file->skip(4); // Skip _meflag
+	file->writeLE<Uint32>(pMonster->_mDelFlag);
+	file->writeLE<Sint32>(pMonster->_mVar1);
+	file->writeLE<Sint32>(pMonster->_mVar2);
+	file->writeLE<Sint32>(pMonster->_mVar3);
+	file->writeLE<Sint32>(pMonster->_mVar4);
+	file->writeLE<Sint32>(pMonster->_mVar5);
+	file->writeLE<Sint32>(pMonster->_mVar6);
+	file->writeLE<Sint32>(pMonster->_mVar7);
+	file->writeLE<Sint32>(pMonster->_mVar8);
+	file->writeLE<Sint32>(pMonster->_mmaxhp);
+	file->writeLE<Sint32>(pMonster->_mhitpoints);
 
-	CopyChar(&pMonster->_mAi, tbuff);
-	CopyChar(&pMonster->_mint, tbuff);
-	CopyShort(&pMonster->falign_9A, tbuff);
-	CopyInt(&pMonster->_mFlags, tbuff);
-	CopyChar(&pMonster->_msquelch, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pMonster->falign_A4, tbuff);
-	CopyInt(&pMonster->_lastx, tbuff);
-	CopyInt(&pMonster->_lasty, tbuff);
-	CopyInt(&pMonster->_mRndSeed, tbuff);
-	CopyInt(&pMonster->_mAISeed, tbuff);
-	CopyInt(&pMonster->falign_B8, tbuff);
+	file->writeLE<Uint8>(pMonster->_mAi);
+	file->writeLE<Uint8>(pMonster->_mint);
+	file->skip(2); // Alignment
+	file->writeLE<Uint32>(pMonster->_mFlags);
+	file->writeLE<Uint8>(pMonster->_msquelch);
+	file->skip(3); // Alignment
+	file->skip(4); // Unused
+	file->writeLE<Sint32>(pMonster->_lastx);
+	file->writeLE<Sint32>(pMonster->_lasty);
+	file->writeLE<Sint32>(pMonster->_mRndSeed);
+	file->writeLE<Sint32>(pMonster->_mAISeed);
+	file->skip(4); // Unused
 
-	CopyChar(&pMonster->_uniqtype, tbuff);
-	CopyChar(&pMonster->_uniqtrans, tbuff);
-	CopyChar(&pMonster->_udeadval, tbuff);
+	file->writeLE<Uint8>(pMonster->_uniqtype);
+	file->writeLE<Uint8>(pMonster->_uniqtrans);
+	file->writeLE<Sint8>(pMonster->_udeadval);
 
-	CopyChar(&pMonster->mWhoHit, tbuff);
-	CopyChar(&pMonster->mLevel, tbuff);
-	tbuff += 1; // Alignment
-	CopyShort(&pMonster->mExp, tbuff);
+	file->writeLE<Sint8>(pMonster->mWhoHit);
+	file->writeLE<Sint8>(pMonster->mLevel);
+	file->skip(1); // Alignment
+	file->writeLE<Uint16>(pMonster->mExp);
 
-	// Write mHit for backwards compatibility
-	tempChar = pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX;
-	CopyChar(&tempChar, tbuff);
-	CopyChar(&pMonster->mMinDamage, tbuff);
-	CopyChar(&pMonster->mMaxDamage, tbuff);
-	// Write mHit2 for backwards compatibility
-	tempChar = pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX;
-	CopyChar(&tempChar, tbuff);
-	CopyChar(&pMonster->mMinDamage2, tbuff);
-	CopyChar(&pMonster->mMaxDamage2, tbuff);
-	CopyChar(&pMonster->mArmorClass, tbuff);
-	CopyChar(&pMonster->falign_CB, tbuff);
-	CopyShort(&pMonster->mMagicRes, tbuff);
-	tbuff += 2; // Alignment
+	file->writeLE<Uint8>(pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX); // For backwards compatibility
+	file->writeLE<Uint8>(pMonster->mMinDamage);
+	file->writeLE<Uint8>(pMonster->mMaxDamage);
+	file->writeLE<Uint8>(pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX); // For backwards compatibility
+	file->writeLE<Uint8>(pMonster->mMinDamage2);
+	file->writeLE<Uint8>(pMonster->mMaxDamage2);
+	file->writeLE<Uint8>(pMonster->mArmorClass);
+	file->skip(1); // Alignment
+	file->writeLE<Uint16>(pMonster->mMagicRes);
+	file->skip(2); // Alignment
 
-	CopyInt(&pMonster->mtalkmsg, tbuff);
-	CopyChar(&pMonster->leader, tbuff);
-	CopyChar(&pMonster->leaderflag, tbuff);
-	CopyChar(&pMonster->packsize, tbuff);
-	CopyChar(&pMonster->mlid, tbuff);
+	file->writeLE<Sint32>(pMonster->mtalkmsg);
+	file->writeLE<Uint8>(pMonster->leader);
+	file->writeLE<Uint8>(pMonster->leaderflag);
+	file->writeLE<Uint8>(pMonster->packsize);
+	file->writeLE<Sint8>(pMonster->mlid);
 
 	// Omit pointer mName;
 	// Omit pointer MType;
 	// Omit pointer MData;
 }
 
-static void SaveMissile(int i)
+static void SaveMissile(SaveHelper *file, int i)
 {
 	MissileStruct *pMissile = &missile[i];
 
-	CopyInt(&pMissile->_mitype, tbuff);
-	CopyInt(&pMissile->_mix, tbuff);
-	CopyInt(&pMissile->_miy, tbuff);
-	CopyInt(&pMissile->_mixoff, tbuff);
-	CopyInt(&pMissile->_miyoff, tbuff);
-	CopyInt(&pMissile->_mixvel, tbuff);
-	CopyInt(&pMissile->_miyvel, tbuff);
-	CopyInt(&pMissile->_misx, tbuff);
-	CopyInt(&pMissile->_misy, tbuff);
-	CopyInt(&pMissile->_mitxoff, tbuff);
-	CopyInt(&pMissile->_mityoff, tbuff);
-	CopyInt(&pMissile->_mimfnum, tbuff);
-	CopyInt(&pMissile->_mispllvl, tbuff);
-	CopyInt(&pMissile->_miDelFlag, tbuff);
-	CopyChar(&pMissile->_miAnimType, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pMissile->_miAnimFlags, tbuff);
-	tbuff += 4; // Skip pointer _miAnimData
-	CopyInt(&pMissile->_miAnimDelay, tbuff);
-	CopyInt(&pMissile->_miAnimLen, tbuff);
-	CopyInt(&pMissile->_miAnimWidth, tbuff);
-	CopyInt(&pMissile->_miAnimWidth2, tbuff);
-	CopyInt(&pMissile->_miAnimCnt, tbuff);
-	CopyInt(&pMissile->_miAnimAdd, tbuff);
-	CopyInt(&pMissile->_miAnimFrame, tbuff);
-	CopyInt(&pMissile->_miDrawFlag, tbuff);
-	CopyInt(&pMissile->_miLightFlag, tbuff);
-	CopyInt(&pMissile->_miPreFlag, tbuff);
-	CopyInt(&pMissile->_miUniqTrans, tbuff);
-	CopyInt(&pMissile->_mirange, tbuff);
-	CopyInt(&pMissile->_misource, tbuff);
-	CopyInt(&pMissile->_micaster, tbuff);
-	CopyInt(&pMissile->_midam, tbuff);
-	CopyInt(&pMissile->_miHitFlag, tbuff);
-	CopyInt(&pMissile->_midist, tbuff);
-	CopyInt(&pMissile->_mlid, tbuff);
-	CopyInt(&pMissile->_mirnd, tbuff);
-	CopyInt(&pMissile->_miVar1, tbuff);
-	CopyInt(&pMissile->_miVar2, tbuff);
-	CopyInt(&pMissile->_miVar3, tbuff);
-	CopyInt(&pMissile->_miVar4, tbuff);
-	CopyInt(&pMissile->_miVar5, tbuff);
-	CopyInt(&pMissile->_miVar6, tbuff);
-	CopyInt(&pMissile->_miVar7, tbuff);
-	CopyInt(&pMissile->_miVar8, tbuff);
+	file->writeLE<Sint32>(pMissile->_mitype);
+	file->writeLE<Sint32>(pMissile->_mix);
+	file->writeLE<Sint32>(pMissile->_miy);
+	file->writeLE<Sint32>(pMissile->_mixoff);
+	file->writeLE<Sint32>(pMissile->_miyoff);
+	file->writeLE<Sint32>(pMissile->_mixvel);
+	file->writeLE<Sint32>(pMissile->_miyvel);
+	file->writeLE<Sint32>(pMissile->_misx);
+	file->writeLE<Sint32>(pMissile->_misy);
+	file->writeLE<Sint32>(pMissile->_mitxoff);
+	file->writeLE<Sint32>(pMissile->_mityoff);
+	file->writeLE<Sint32>(pMissile->_mimfnum);
+	file->writeLE<Sint32>(pMissile->_mispllvl);
+	file->writeLE<Uint32>(pMissile->_miDelFlag);
+	file->writeLE<Uint8>(pMissile->_miAnimType);
+	file->skip(3); // Alignment
+	file->writeLE<Sint32>(pMissile->_miAnimFlags);
+	file->skip(4); // Skip pointer _miAnimData
+	file->writeLE<Sint32>(pMissile->_miAnimDelay);
+	file->writeLE<Sint32>(pMissile->_miAnimLen);
+	file->writeLE<Sint32>(pMissile->_miAnimWidth);
+	file->writeLE<Sint32>(pMissile->_miAnimWidth2);
+	file->writeLE<Sint32>(pMissile->_miAnimCnt);
+	file->writeLE<Sint32>(pMissile->_miAnimAdd);
+	file->writeLE<Sint32>(pMissile->_miAnimFrame);
+	file->writeLE<Uint32>(pMissile->_miDrawFlag);
+	file->writeLE<Uint32>(pMissile->_miLightFlag);
+	file->writeLE<Uint32>(pMissile->_miPreFlag);
+	file->writeLE<Uint32>(pMissile->_miUniqTrans);
+	file->writeLE<Sint32>(pMissile->_mirange);
+	file->writeLE<Sint32>(pMissile->_misource);
+	file->writeLE<Sint32>(pMissile->_micaster);
+	file->writeLE<Sint32>(pMissile->_midam);
+	file->writeLE<Uint32>(pMissile->_miHitFlag);
+	file->writeLE<Sint32>(pMissile->_midist);
+	file->writeLE<Sint32>(pMissile->_mlid);
+	file->writeLE<Sint32>(pMissile->_mirnd);
+	file->writeLE<Sint32>(pMissile->_miVar1);
+	file->writeLE<Sint32>(pMissile->_miVar2);
+	file->writeLE<Sint32>(pMissile->_miVar3);
+	file->writeLE<Sint32>(pMissile->_miVar4);
+	file->writeLE<Sint32>(pMissile->_miVar5);
+	file->writeLE<Sint32>(pMissile->_miVar6);
+	file->writeLE<Sint32>(pMissile->_miVar7);
+	file->writeLE<Sint32>(pMissile->_miVar8);
 }
 
-static void SaveObject(int i)
+static void SaveObject(SaveHelper *file, int i)
 {
 	ObjectStruct *pObject = &object[i];
 
-	CopyInt(&pObject->_otype, tbuff);
-	CopyInt(&pObject->_ox, tbuff);
-	CopyInt(&pObject->_oy, tbuff);
-	CopyInt(&pObject->_oLight, tbuff);
-	CopyInt(&pObject->_oAnimFlag, tbuff);
-	tbuff += 4; // Skip pointer _oAnimData
-	CopyInt(&pObject->_oAnimDelay, tbuff);
-	CopyInt(&pObject->_oAnimCnt, tbuff);
-	CopyInt(&pObject->_oAnimLen, tbuff);
-	CopyInt(&pObject->_oAnimFrame, tbuff);
-	CopyInt(&pObject->_oAnimWidth, tbuff);
-	CopyInt(&pObject->_oAnimWidth2, tbuff);
-	CopyInt(&pObject->_oDelFlag, tbuff);
-	CopyChar(&pObject->_oBreak, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pObject->_oSolidFlag, tbuff);
-	CopyInt(&pObject->_oMissFlag, tbuff);
+	file->writeLE<Sint32>(pObject->_otype);
+	file->writeLE<Sint32>(pObject->_ox);
+	file->writeLE<Sint32>(pObject->_oy);
+	file->writeLE<Uint32>(pObject->_oLight);
+	file->writeLE<Uint32>(pObject->_oAnimFlag);
+	file->skip(4); // Skip pointer _oAnimData
+	file->writeLE<Sint32>(pObject->_oAnimDelay);
+	file->writeLE<Sint32>(pObject->_oAnimCnt);
+	file->writeLE<Sint32>(pObject->_oAnimLen);
+	file->writeLE<Sint32>(pObject->_oAnimFrame);
+	file->writeLE<Sint32>(pObject->_oAnimWidth);
+	file->writeLE<Sint32>(pObject->_oAnimWidth2);
+	file->writeLE<Uint32>(pObject->_oDelFlag);
+	file->writeLE<Sint8>(pObject->_oBreak);
+	file->skip(3); // Alignment
+	file->writeLE<Uint32>(pObject->_oSolidFlag);
+	file->writeLE<Uint32>(pObject->_oMissFlag);
 
-	CopyChar(&pObject->_oSelFlag, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pObject->_oPreFlag, tbuff);
-	CopyInt(&pObject->_oTrapFlag, tbuff);
-	CopyInt(&pObject->_oDoorFlag, tbuff);
-	CopyInt(&pObject->_olid, tbuff);
-	CopyInt(&pObject->_oRndSeed, tbuff);
-	CopyInt(&pObject->_oVar1, tbuff);
-	CopyInt(&pObject->_oVar2, tbuff);
-	CopyInt(&pObject->_oVar3, tbuff);
-	CopyInt(&pObject->_oVar4, tbuff);
-	CopyInt(&pObject->_oVar5, tbuff);
-	CopyInt(&pObject->_oVar6, tbuff);
-	CopyInt(&pObject->_oVar7, tbuff);
-	CopyInt(&pObject->_oVar8, tbuff);
+	file->writeLE<Sint8>(pObject->_oSelFlag);
+	file->skip(3); // Alignment
+	file->writeLE<Uint32>(pObject->_oPreFlag);
+	file->writeLE<Uint32>(pObject->_oTrapFlag);
+	file->writeLE<Uint32>(pObject->_oDoorFlag);
+	file->writeLE<Sint32>(pObject->_olid);
+	file->writeLE<Sint32>(pObject->_oRndSeed);
+	file->writeLE<Sint32>(pObject->_oVar1);
+	file->writeLE<Sint32>(pObject->_oVar2);
+	file->writeLE<Sint32>(pObject->_oVar3);
+	file->writeLE<Sint32>(pObject->_oVar4);
+	file->writeLE<Sint32>(pObject->_oVar5);
+	file->writeLE<Sint32>(pObject->_oVar6);
+	file->writeLE<Sint32>(pObject->_oVar7);
+	file->writeLE<Sint32>(pObject->_oVar8);
 }
 
-static void SavePremium(int i)
+static void SavePremium(SaveHelper *file, int i)
 {
-	SaveItem(&premiumitem[i]);
+	SaveItem(file, &premiumitem[i]);
 }
 
-static void SaveQuest(int i)
+static void SaveQuest(SaveHelper *file, int i)
 {
 	QuestStruct *pQuest = &quests[i];
 
-	CopyChar(&pQuest->_qlevel, tbuff);
-	CopyChar(&pQuest->_qtype, tbuff);
-	CopyChar(&pQuest->_qactive, tbuff);
-	CopyChar(&pQuest->_qlvltype, tbuff);
-	CopyInt(&pQuest->_qtx, tbuff);
-	CopyInt(&pQuest->_qty, tbuff);
-	CopyChar(&pQuest->_qslvl, tbuff);
-	CopyChar(&pQuest->_qidx, tbuff);
+	file->writeLE<Uint8>(pQuest->_qlevel);
+	file->writeLE<Uint8>(pQuest->_qtype);
+	file->writeLE<Uint8>(pQuest->_qactive);
+	file->writeLE<Uint8>(pQuest->_qlvltype);
+	file->writeLE<Sint32>(pQuest->_qtx);
+	file->writeLE<Sint32>(pQuest->_qty);
+	file->writeLE<Uint8>(pQuest->_qslvl);
+	file->writeLE<Uint8>(pQuest->_qidx);
 	if (gbIsHellfire) {
-		tbuff += 2; // Alignment
-		CopyInt(&pQuest->_qmsg, tbuff);
+		file->skip(2); // Alignment
+		file->writeLE<Sint32>(pQuest->_qmsg);
 	} else {
-		Uint8 tmp = pQuest->_qmsg;
-		CopyChar(&tmp, tbuff);
+		file->writeLE<Sint8>(pQuest->_qmsg);
 	}
-	CopyChar(&pQuest->_qvar1, tbuff);
-	CopyChar(&pQuest->_qvar2, tbuff);
-	tbuff += 2; // Alignment
+	file->writeLE<Uint8>(pQuest->_qvar1);
+	file->writeLE<Uint8>(pQuest->_qvar2);
+	file->skip(2); // Alignment
 	if (!gbIsHellfire)
-		tbuff += 1; // Alignment
-	SaveBool32(pQuest->_qlog);
+		file->skip(1); // Alignment
+	file->writeLE<Uint32>(pQuest->_qlog);
 
-	WSave(ReturnLvlX);
-	WSave(ReturnLvlY);
-	WSave(ReturnLvl);
-	WSave(ReturnLvlT);
-	WSave(DoomQuestState);
+	file->writeBE<Sint32>(ReturnLvlX);
+	file->writeBE<Sint32>(ReturnLvlY);
+	file->writeBE<Sint32>(ReturnLvl);
+	file->writeBE<Sint32>(ReturnLvlT);
+	file->writeBE<Sint32>(DoomQuestState);
 }
 
-static void SaveLighting(int i)
+static void SaveLighting(SaveHelper *file, LightListStruct *pLight)
 {
-	LightListStruct *pLight = &LightList[i];
-
-	CopyInt(&pLight->_lx, tbuff);
-	CopyInt(&pLight->_ly, tbuff);
-	CopyInt(&pLight->_lradius, tbuff);
-	CopyInt(&pLight->_lid, tbuff);
-	CopyInt(&pLight->_ldel, tbuff);
-	CopyInt(&pLight->_lunflag, tbuff);
-	CopyInt(&pLight->field_18, tbuff);
-	CopyInt(&pLight->_lunx, tbuff);
-	CopyInt(&pLight->_luny, tbuff);
-	CopyInt(&pLight->_lunr, tbuff);
-	CopyInt(&pLight->_xoff, tbuff);
-	CopyInt(&pLight->_yoff, tbuff);
-	CopyInt(&pLight->_lflags, tbuff);
+	file->writeLE<Sint32>(pLight->_lx);
+	file->writeLE<Sint32>(pLight->_ly);
+	file->writeLE<Sint32>(pLight->_lradius);
+	file->writeLE<Sint32>(pLight->_lid);
+	file->writeLE<Uint32>(pLight->_ldel);
+	file->writeLE<Uint32>(pLight->_lunflag);
+	file->skip(4); // Unused
+	file->writeLE<Sint32>(pLight->_lunx);
+	file->writeLE<Sint32>(pLight->_luny);
+	file->writeLE<Sint32>(pLight->_lunr);
+	file->writeLE<Sint32>(pLight->_xoff);
+	file->writeLE<Sint32>(pLight->_yoff);
+	file->writeLE<Uint32>(pLight->_lflags);
 }
 
-static void SaveVision(int i)
-{
-	LightListStruct *pVision = &VisionList[i];
-
-	CopyInt(&pVision->_lx, tbuff);
-	CopyInt(&pVision->_ly, tbuff);
-	CopyInt(&pVision->_lradius, tbuff);
-	CopyInt(&pVision->_lid, tbuff);
-	CopyInt(&pVision->_ldel, tbuff);
-	CopyInt(&pVision->_lunflag, tbuff);
-	CopyInt(&pVision->field_18, tbuff);
-	CopyInt(&pVision->_lunx, tbuff);
-	CopyInt(&pVision->_luny, tbuff);
-	CopyInt(&pVision->_lunr, tbuff);
-	CopyInt(&pVision->_xoff, tbuff);
-	CopyInt(&pVision->_yoff, tbuff);
-	CopyInt(&pVision->_lflags, tbuff);
-}
-
-static void SavePortal(int i)
+static void SavePortal(SaveHelper *file, int i)
 {
 	PortalStruct *pPortal = &portal[i];
 
-	CopyInt(&pPortal->open, tbuff);
-	CopyInt(&pPortal->x, tbuff);
-	CopyInt(&pPortal->y, tbuff);
-	CopyInt(&pPortal->level, tbuff);
-	CopyInt(&pPortal->ltype, tbuff);
-	CopyInt(&pPortal->setlvl, tbuff);
+	file->writeLE<Uint32>(pPortal->open);
+	file->writeLE<Sint32>(pPortal->x);
+	file->writeLE<Sint32>(pPortal->y);
+	file->writeLE<Sint32>(pPortal->level);
+	file->writeLE<Sint32>(pPortal->ltype);
+	file->writeLE<Uint32>(pPortal->setlvl);
+}
+
+void SaveHeroItems(PlayerStruct *pPlayer)
+{
+	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
+	SaveHelper file("heroitems", items * sizeof(ItemStruct));
+
+	file.writeLE<Uint8>(gbIsHellfire);
+
+	SaveItems(&file, pPlayer->InvBody, NUM_INVLOC);
+	SaveItems(&file, pPlayer->InvList, NUM_INV_GRID_ELEM);
+	SaveItems(&file, pPlayer->SpdList, MAXBELTITEMS);
 }
 
 void SaveGame()
 {
-	int i, j;
-
-	DWORD dwLen = codec_get_encoded_len(FILEBUFF);
-	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
-	tbuff = SaveBuff;
+	SaveHelper file("game", FILEBUFF);
 
 	if (gbIsSpawn && !gbIsHellfire)
-		ISave('SHAR');
+		file.writeLE<Uint32>(LOAD_LE32("SHAR"));
 	else if (gbIsSpawn && gbIsHellfire)
-		ISave('SHLF');
+		file.writeLE<Uint32>(LOAD_LE32("SHLF"));
 	else if (!gbIsSpawn && gbIsHellfire)
-		ISave('HELF');
+		file.writeLE<Uint32>(LOAD_LE32("HELF"));
 	else if (!gbIsSpawn && !gbIsHellfire)
-		ISave('RETL');
+		file.writeLE<Uint32>(LOAD_LE32("RETL"));
 	else
 		app_fatal("Invalid game state");
 
@@ -1588,134 +1772,134 @@ void SaveGame()
 		giNumberOfSmithPremiumItems = 6;
 	}
 
-	SaveBool8(setlevel);
-	WSave(setlvlnum);
-	WSave(currlevel);
-	WSave(leveltype);
-	WSave(ViewX);
-	WSave(ViewY);
-	SaveBool8(invflag);
-	SaveBool8(chrflag);
-	WSave(nummonsters);
-	WSave(numitems);
-	WSave(nummissiles);
-	WSave(nobjects);
+	file.writeLE<Uint8>(setlevel);
+	file.writeBE<Uint32>(setlvlnum);
+	file.writeBE<Uint32>(currlevel);
+	file.writeBE<Uint32>(leveltype);
+	file.writeBE<Sint32>(ViewX);
+	file.writeBE<Sint32>(ViewY);
+	file.writeLE<Uint8>(invflag);
+	file.writeLE<Uint8>(chrflag);
+	file.writeBE<Sint32>(nummonsters);
+	file.writeBE<Sint32>(numitems);
+	file.writeBE<Sint32>(nummissiles);
+	file.writeBE<Sint32>(nobjects);
 
-	for (i = 0; i < giNumberOfLevels; i++) {
-		ISave(glSeedTbl[i]);
-		WSave(gnLevelTypeTbl[i]);
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		file.writeBE<Uint32>(glSeedTbl[i]);
+		file.writeBE<Sint32>(gnLevelTypeTbl[i]);
 	}
 
 	plr[myplr].pDifficulty = gnDifficulty;
-	SavePlayer(myplr);
+	SavePlayer(&file, myplr);
 
-	for (i = 0; i < giNumberQuests; i++)
-		SaveQuest(i);
-	for (i = 0; i < MAXPORTAL; i++)
-		SavePortal(i);
-	for (i = 0; i < MAXMONSTERS; i++)
-		ISave(monstkills[i]);
-
-	if (leveltype != DTYPE_TOWN) {
-		for (i = 0; i < MAXMONSTERS; i++)
-			WSave(monstactive[i]);
-		for (i = 0; i < nummonsters; i++)
-			SaveMonster(monstactive[i]);
-		for (i = 0; i < MAXMISSILES; i++)
-			BSave(missileactive[i]);
-		for (i = 0; i < MAXMISSILES; i++)
-			BSave(missileavail[i]);
-		for (i = 0; i < nummissiles; i++)
-			SaveMissile(missileactive[i]);
-		for (i = 0; i < MAXOBJECTS; i++)
-			BSave(objectactive[i]);
-		for (i = 0; i < MAXOBJECTS; i++)
-			BSave(objectavail[i]);
-		for (i = 0; i < nobjects; i++)
-			SaveObject(objectactive[i]);
-
-		WSave(numlights);
-
-		for (i = 0; i < MAXLIGHTS; i++)
-			BSave(lightactive[i]);
-		for (i = 0; i < numlights; i++)
-			SaveLighting(lightactive[i]);
-
-		WSave(visionid);
-		WSave(numvision);
-
-		for (i = 0; i < numvision; i++)
-			SaveVision(i);
-	}
-
-	for (i = 0; i < MAXITEMS; i++)
-		BSave(itemactive[i]);
-	for (i = 0; i < MAXITEMS; i++)
-		BSave(itemavail[i]);
-	for (i = 0; i < numitems; i++)
-		SaveItem(&item[itemactive[i]]);
-	for (i = 0; i < 128; i++)
-		SaveBool8(UniqueItemFlag[i]);
-
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			BSave(dLight[i][j]);
-	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			BSave(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
-	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			BSave(dPlayer[i][j]);
-	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			BSave(dItem[i][j]);
-	}
+	for (int i = 0; i < giNumberQuests; i++)
+		SaveQuest(&file, i);
+	for (int i = 0; i < MAXPORTAL; i++)
+		SavePortal(&file, i);
+	for (int i = 0; i < MAXMONSTERS; i++)
+		file.writeBE<Sint32>(monstkills[i]);
 
 	if (leveltype != DTYPE_TOWN) {
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				WSave(dMonster[i][j]);
+		for (int i = 0; i < MAXMONSTERS; i++)
+			file.writeBE<Sint32>(monstactive[i]);
+		for (int i = 0; i < nummonsters; i++)
+			SaveMonster(&file, monstactive[i]);
+		for (int i = 0; i < MAXMISSILES; i++)
+			file.writeLE<Sint8>(missileactive[i]);
+		for (int i = 0; i < MAXMISSILES; i++)
+			file.writeLE<Sint8>(missileavail[i]);
+		for (int i = 0; i < nummissiles; i++)
+			SaveMissile(&file, missileactive[i]);
+		for (int i = 0; i < MAXOBJECTS; i++)
+			file.writeLE<Sint8>(objectactive[i]);
+		for (int i = 0; i < MAXOBJECTS; i++)
+			file.writeLE<Sint8>(objectavail[i]);
+		for (int i = 0; i < nobjects; i++)
+			SaveObject(&file, objectactive[i]);
+
+		file.writeBE<Sint32>(numlights);
+
+		for (int i = 0; i < MAXLIGHTS; i++)
+			file.writeLE<Uint8>(lightactive[i]);
+		for (int i = 0; i < numlights; i++)
+			SaveLighting(&file, &LightList[lightactive[i]]);
+
+		file.writeBE<Sint32>(visionid);
+		file.writeBE<Sint32>(numvision);
+
+		for (int i = 0; i < numvision; i++)
+			SaveLighting(&file, &VisionList[i]);
+	}
+
+	for (int i = 0; i < MAXITEMS; i++)
+		file.writeLE<Sint8>(itemactive[i]);
+	for (int i = 0; i < MAXITEMS; i++)
+		file.writeLE<Sint8>(itemavail[i]);
+	for (int i = 0; i < numitems; i++)
+		SaveItem(&file, &item[itemactive[i]]);
+	for (int i = 0; i < 128; i++)
+		file.writeLE<Sint8>(UniqueItemFlag[i]);
+
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			file.writeLE<Sint8>(dLight[i][j]);
+	}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			file.writeLE<Sint8>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
+	}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			file.writeLE<Sint8>(dPlayer[i][j]);
+	}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			file.writeLE<Sint8>(dItem[i][j]);
+	}
+
+	if (leveltype != DTYPE_TOWN) {
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeBE<Sint32>(dMonster[i][j]);
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dDead[i][j]);
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dDead[i][j]);
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dObject[i][j]);
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dObject[i][j]);
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dLight[i][j]);
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dLight[i][j]);
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dPreLight[i][j]);
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dPreLight[i][j]);
 		}
-		for (j = 0; j < DMAXY; j++) {
-			for (i = 0; i < DMAXX; i++)
-				SaveBool8(automapview[i][j]);
+		for (int j = 0; j < DMAXY; j++) {
+			for (int i = 0; i < DMAXX; i++)
+				file.writeLE<Uint8>(automapview[i][j]);
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dMissile[i][j]);
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dMissile[i][j]);
 		}
 	}
 
-	WSave(numpremium);
-	WSave(premiumlevel);
+	file.writeBE<Sint32>(numpremium);
+	file.writeBE<Sint32>(premiumlevel);
 
-	for (i = 0; i < giNumberOfSmithPremiumItems; i++)
-		SavePremium(i);
+	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
+		SavePremium(&file, i);
 
-	SaveBool8(automapflag);
-	WSave(AutoMapScale);
-	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
-	pfile_write_save_file("game", SaveBuff, tbuff - SaveBuff, dwLen);
-	mem_free_dbg(SaveBuff);
+	file.writeLE<Uint8>(automapflag);
+	file.writeBE<Sint32>(AutoMapScale);
+
+	file.flush();
+
 	gbValidSaveFile = TRUE;
 	pfile_rename_temp_to_perm();
 	pfile_write_hero();
@@ -1723,91 +1907,82 @@ void SaveGame()
 
 void SaveLevel()
 {
-	int i, j;
-	char szName[MAX_PATH];
-	int dwLen;
-	BYTE *SaveBuff;
-
 	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
 		glSeedTbl[0] = AdvanceRndSeed();
 
-	dwLen = codec_get_encoded_len(FILEBUFF);
-	SaveBuff = DiabloAllocPtr(dwLen);
-	tbuff = SaveBuff;
-
-	if (leveltype != DTYPE_TOWN) {
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dDead[i][j]);
-		}
-	}
-
-	WSave(nummonsters);
-	WSave(numitems);
-	WSave(nobjects);
-
-	if (leveltype != DTYPE_TOWN) {
-		for (i = 0; i < MAXMONSTERS; i++)
-			WSave(monstactive[i]);
-		for (i = 0; i < nummonsters; i++)
-			SaveMonster(monstactive[i]);
-		for (i = 0; i < MAXOBJECTS; i++)
-			BSave(objectactive[i]);
-		for (i = 0; i < MAXOBJECTS; i++)
-			BSave(objectavail[i]);
-		for (i = 0; i < nobjects; i++)
-			SaveObject(objectactive[i]);
-	}
-
-	for (i = 0; i < MAXITEMS; i++)
-		BSave(itemactive[i]);
-	for (i = 0; i < MAXITEMS; i++)
-		BSave(itemavail[i]);
-	for (i = 0; i < numitems; i++)
-		SaveItem(&item[itemactive[i]]);
-
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			BSave(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
-	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			BSave(dItem[i][j]);
-	}
-
-	if (leveltype != DTYPE_TOWN) {
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				WSave(dMonster[i][j]);
-		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dObject[i][j]);
-		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dLight[i][j]);
-		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dPreLight[i][j]);
-		}
-		for (j = 0; j < DMAXY; j++) {
-			for (i = 0; i < DMAXX; i++)
-				SaveBool8(automapview[i][j]);
-		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				BSave(dMissile[i][j]);
-		}
-	}
-
+	char szName[MAX_PATH];
 	GetTempLevelNames(szName);
-	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
-	pfile_write_save_file(szName, SaveBuff, tbuff - SaveBuff, dwLen);
-	mem_free_dbg(SaveBuff);
+	SaveHelper file(szName, FILEBUFF);
+
+	if (leveltype != DTYPE_TOWN) {
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dDead[i][j]);
+		}
+	}
+
+	file.writeBE<Sint32>(nummonsters);
+	file.writeBE<Sint32>(numitems);
+	file.writeBE<Sint32>(nobjects);
+
+	if (leveltype != DTYPE_TOWN) {
+		for (int i = 0; i < MAXMONSTERS; i++)
+			file.writeBE<Sint32>(monstactive[i]);
+		for (int i = 0; i < nummonsters; i++)
+			SaveMonster(&file, monstactive[i]);
+		for (int i = 0; i < MAXOBJECTS; i++)
+			file.writeLE<Sint8>(objectactive[i]);
+		for (int i = 0; i < MAXOBJECTS; i++)
+			file.writeLE<Sint8>(objectavail[i]);
+		for (int i = 0; i < nobjects; i++)
+			SaveObject(&file, objectactive[i]);
+	}
+
+	for (int i = 0; i < MAXITEMS; i++)
+		file.writeLE<Sint8>(itemactive[i]);
+	for (int i = 0; i < MAXITEMS; i++)
+		file.writeLE<Sint8>(itemavail[i]);
+
+	for (int i = 0; i < numitems; i++)
+		SaveItem(&file, &item[itemactive[i]]);
+
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			file.writeLE<Sint8>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
+	}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			file.writeLE<Sint8>(dItem[i][j]);
+	}
+
+	if (leveltype != DTYPE_TOWN) {
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeBE<Sint32>(dMonster[i][j]);
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dObject[i][j]);
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dLight[i][j]);
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dPreLight[i][j]);
+		}
+		for (int j = 0; j < DMAXY; j++) {
+			for (int i = 0; i < DMAXX; i++)
+				file.writeLE<Uint8>(automapview[i][j]);
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				file.writeLE<Sint8>(dMissile[i][j]);
+		}
+	}
 
 	if (!setlevel)
 		plr[myplr]._pLvlVisited[currlevel] = TRUE;
@@ -1817,96 +1992,99 @@ void SaveLevel()
 
 void LoadLevel()
 {
-	int i, j;
-	DWORD dwLen;
 	char szName[MAX_PATH];
-	BYTE *LoadBuff;
-
 	GetPermLevelNames(szName);
-	LoadBuff = pfile_read(szName, &dwLen);
-	tbuff = LoadBuff;
+	LoadHelper file(szName);
+	if (!file.isValid())
+		app_fatal("Unable to open save file archive");
 
 	if (leveltype != DTYPE_TOWN) {
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dDead[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dDead[i][j] = file.nextLE<Sint8>();
 		}
 		SetDead();
 	}
 
-	nummonsters = WLoad();
-	numitems = WLoad();
-	nobjects = WLoad();
+	nummonsters = file.nextBE<Sint32>();
+	numitems = file.nextBE<Sint32>();
+	nobjects = file.nextBE<Sint32>();
 
 	if (leveltype != DTYPE_TOWN) {
-		for (i = 0; i < MAXMONSTERS; i++)
-			monstactive[i] = WLoad();
-		for (i = 0; i < nummonsters; i++)
-			LoadMonster(monstactive[i]);
-		for (i = 0; i < MAXOBJECTS; i++)
-			objectactive[i] = BLoad();
-		for (i = 0; i < MAXOBJECTS; i++)
-			objectavail[i] = BLoad();
-		for (i = 0; i < nobjects; i++)
-			LoadObject(objectactive[i]);
-		for (i = 0; i < nobjects; i++)
-			SyncObjectAnim(objectactive[i]);
+		for (int i = 0; i < MAXMONSTERS; i++)
+			monstactive[i] = file.nextBE<Sint32>();
+		for (int i = 0; i < nummonsters; i++)
+			LoadMonster(&file, monstactive[i]);
+		for (int i = 0; i < MAXOBJECTS; i++)
+			objectactive[i] = file.nextLE<Sint8>();
+		for (int i = 0; i < MAXOBJECTS; i++)
+			objectavail[i] = file.nextLE<Sint8>();
+		for (int i = 0; i < nobjects; i++)
+			LoadObject(&file, objectactive[i]);
+		if (!gbSkipSync) {
+			for (int i = 0; i < nobjects; i++)
+				SyncObjectAnim(objectactive[i]);
+		}
 	}
 
-	for (i = 0; i < MAXITEMS; i++)
-		itemactive[i] = BLoad();
-	for (i = 0; i < MAXITEMS; i++)
-		itemavail[i] = BLoad();
-	for (i = 0; i < numitems; i++)
-		LoadItem(itemactive[i]);
+	for (int i = 0; i < MAXITEMS; i++)
+		itemactive[i] = file.nextLE<Sint8>();
+	for (int i = 0; i < MAXITEMS; i++)
+		itemavail[i] = file.nextLE<Sint8>();
+	for (int i = 0; i < numitems; i++)
+		LoadItem(&file, itemactive[i]);
 
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			dFlags[i][j] = BLoad();
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			dFlags[i][j] = file.nextLE<Sint8>();
 	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++)
-			dItem[i][j] = BLoad();
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++)
+			dItem[i][j] = file.nextLE<Sint8>();
 	}
 
 	if (leveltype != DTYPE_TOWN) {
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dMonster[i][j] = WLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dMonster[i][j] = file.nextBE<Sint32>();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dObject[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dObject[i][j] = file.nextLE<Sint8>();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dLight[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dLight[i][j] = file.nextLE<Sint8>();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dPreLight[i][j] = BLoad();
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dPreLight[i][j] = file.nextLE<Sint8>();
 		}
-		for (j = 0; j < DMAXY; j++) {
-			for (i = 0; i < DMAXX; i++)
-				automapview[i][j] = LoadBool8();
+		for (int j = 0; j < DMAXY; j++) {
+			for (int i = 0; i < DMAXX; i++)
+				automapview[i][j] = file.nextBool8();
 		}
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++)
-				dMissile[i][j] = 0; /// BUGFIX: supposed to load saved missiles with "BLoad()"?
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++)
+				dMissile[i][j] = 0; /// BUGFIX: supposed to load saved missiles with "file.nextLE<Sint8>()"?
 		}
 	}
 
-	AutomapZoomReset();
-	ResyncQuests();
-	SyncPortals();
-	dolighting = TRUE;
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		RemoveEmptyLevelItems();
+	}
 
-	for (i = 0; i < MAX_PLRS; i++) {
+	if (!gbSkipSync) {
+		AutomapZoomReset();
+		ResyncQuests();
+		SyncPortals();
+		dolighting = TRUE;
+	}
+
+	for (int i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)
 			LightList[plr[i]._plid]._lunflag = TRUE;
 	}
-
-	mem_free_dbg(LoadBuff);
 }
 
 DEVILUTION_END_NAMESPACE

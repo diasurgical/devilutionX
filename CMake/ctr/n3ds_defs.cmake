@@ -2,6 +2,11 @@
 set(NONET ON)
 set(USE_SDL1 ON)
 
+# Streaming audio is broken on the 3DS as of 25 Mar 2021:
+# https://github.com/devkitPro/SDL/issues/72
+set(DISABLE_STREAMING_MUSIC ON)
+set(DISABLE_STREAMING_SOUNDS ON)
+
 #3DS libraries
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
 find_package(CITRO3D REQUIRED)
@@ -19,8 +24,8 @@ set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE}\ -DTTF_FONT_PATH=\\"romfs
 
 #Force scaling, for now..
 set(SDL1_VIDEO_MODE_FLAGS SDL_FULLSCREEN)
-set(SDL1_VIDEO_MODE_WIDTH 800)
-set(SDL1_VIDEO_MODE_HEIGHT 480)
+set(DEFAULT_WIDTH 800)
+set(DEFAULT_HEIGHT 480)
 
 #SDL Joystick axis mapping (circle-pad)
 set(JOY_AXIS_LEFTX 0)

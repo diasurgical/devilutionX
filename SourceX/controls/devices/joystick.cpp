@@ -6,6 +6,9 @@
 #include "controls/controller_motion.h"
 #include "stubs.h"
 
+// Defined in SourceX/controls/plctrls.cpp
+extern "C" bool sgbControllerActive;
+
 namespace dvl {
 
 std::vector<Joystick> *const Joystick::joysticks_ = new std::vector<Joystick>;
@@ -299,27 +302,27 @@ Joystick *Joystick::Get(const SDL_Event &event)
 {
 	switch (event.type) {
 #ifndef USE_SDL1
-		case SDL_JOYAXISMOTION:
-			return Get(event.jaxis.which);
-		case SDL_JOYBALLMOTION:
-			return Get(event.jball.which);
-		case SDL_JOYHATMOTION:
-			return Get(event.jhat.which);
-		case SDL_JOYBUTTONDOWN:
-		case SDL_JOYBUTTONUP:
-			return Get(event.jbutton.which);
-			return Get(event.jbutton.which);
-		default:
-			return NULL;
+	case SDL_JOYAXISMOTION:
+		return Get(event.jaxis.which);
+	case SDL_JOYBALLMOTION:
+		return Get(event.jball.which);
+	case SDL_JOYHATMOTION:
+		return Get(event.jhat.which);
+	case SDL_JOYBUTTONDOWN:
+	case SDL_JOYBUTTONUP:
+		return Get(event.jbutton.which);
+		return Get(event.jbutton.which);
+	default:
+		return NULL;
 #else
-		case SDL_JOYAXISMOTION:
-		case SDL_JOYBALLMOTION:
-		case SDL_JOYHATMOTION:
-		case SDL_JOYBUTTONDOWN:
-		case SDL_JOYBUTTONUP:
-			return joysticks_->empty() ? NULL : &(*joysticks_)[0];
-		default:
-			return NULL;
+	case SDL_JOYAXISMOTION:
+	case SDL_JOYBALLMOTION:
+	case SDL_JOYHATMOTION:
+	case SDL_JOYBUTTONDOWN:
+	case SDL_JOYBUTTONUP:
+		return joysticks_->empty() ? NULL : &(*joysticks_)[0];
+	default:
+		return NULL;
 #endif
 	}
 }

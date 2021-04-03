@@ -11,7 +11,6 @@ BOOL storeflag;
 int sgnCowMsg;
 int numtowners;
 DWORD sgdwCowClicks;
-BOOL boyloadflag;
 BYTE *pCowCels;
 TownerStruct towner[NUM_TOWNERS];
 
@@ -113,23 +112,22 @@ int cowoffx[8] = { -1, 0, -1, -1, -1, 0, -1, -1 };
  */
 int cowoffy[8] = { -1, -1, -1, 0, -1, -1, -1, 0 };
 /** Contains the data related to quest gossip for each towner ID. */
-QuestTalkData Qtalklist[] = {
+_speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS] = {
 	// clang-format off
-	// _qinfra,      _qblkm,       _qgarb,      _qzhar,      _qveil,      _qmod,       _qbutch,      _qbol,         _qblind,      _qblood,      _qanvil,      _qwarlrd,      _qking,       _qpw,           _qbone,      _qvb,         _qgrv,        _qfarm, _qgirl, _qtrade, _qdefiler, _qnakrul, _qjersy, _qhf8
-	{ TEXT_INFRA6,  TEXT_MUSH6,  -1,          -1,          TEXT_VEIL5, -1,          TEXT_BUTCH5, TEXT_BANNER6, TEXT_BLIND5, TEXT_BLOOD5, TEXT_ANVIL6, TEXT_WARLRD5, TEXT_KING7,  TEXT_POISON7,  TEXT_BONE5, TEXT_VILE9,  TEXT_GRAVE2, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ TEXT_INFRA3,  -1,           -1,          -1,          TEXT_VEIL3, -1,          TEXT_BUTCH3, TEXT_BANNER4, TEXT_BLIND3, TEXT_BLOOD3, TEXT_ANVIL3, TEXT_WARLRD3, TEXT_KING5,  TEXT_POISON4,  TEXT_BONE3, TEXT_VILE7,  TEXT_GRAVE3, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ TEXT_INFRA2,  TEXT_MUSH2,  -1,          -1,          TEXT_VEIL2, -1,          TEXT_BUTCH2, -1,            TEXT_BLIND2, TEXT_BLOOD2, TEXT_ANVIL2, TEXT_WARLRD2, TEXT_KING3,  TEXT_POISON2,  TEXT_BONE2, TEXT_VILE4,  TEXT_GRAVE5, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ TEXT_INFRA1,  TEXT_MUSH1,  -1,          -1,          TEXT_VEIL1, TEXT_VILE3, TEXT_BUTCH1, TEXT_BANNER1, TEXT_BLIND1, TEXT_BLOOD1, TEXT_ANVIL1, TEXT_WARLRD1, TEXT_KING1,  TEXT_POISON1,  TEXT_BONE1, TEXT_VILE2,  TEXT_GRAVE6, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ TEXT_INFRA8,  TEXT_MUSH7,  -1,          -1,          TEXT_VEIL6, -1,          TEXT_BUTCH6, TEXT_BANNER7, TEXT_BLIND6, TEXT_BLOOD6, TEXT_ANVIL8, TEXT_WARLRD6, TEXT_KING8,  TEXT_POISON8,  TEXT_BONE6, TEXT_VILE10, TEXT_GRAVE7, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ TEXT_INFRA9,  TEXT_MUSH9,  -1,          -1,          TEXT_VEIL7, -1,          TEXT_BUTCH7, TEXT_BANNER8, TEXT_BLIND7, TEXT_BLOOD7, TEXT_ANVIL9, TEXT_WARLRD7, TEXT_KING9,  TEXT_POISON9,  TEXT_BONE7, TEXT_VILE11, TEXT_GRAVE1, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ TEXT_INFRA4,  TEXT_MUSH5,  -1,          -1,          TEXT_VEIL4, -1,          TEXT_BUTCH4, TEXT_BANNER5, TEXT_BLIND4, TEXT_BLOOD4, TEXT_ANVIL4, TEXT_WARLRD4, TEXT_KING6,  TEXT_POISON6,  TEXT_BONE4, TEXT_VILE8,  TEXT_GRAVE8, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ TEXT_INFRA10, TEXT_MUSH13, -1,          -1,          TEXT_VEIL8, -1,          TEXT_BUTCH8, TEXT_BANNER9, TEXT_BLIND8, TEXT_BLOOD8, TEXT_ANVIL10,TEXT_WARLRD8, TEXT_KING10, TEXT_POISON10, TEXT_BONE8, TEXT_VILE12, TEXT_GRAVE9, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
-	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	//                 Q_ROCK,       Q_MUSHROOM,  Q_GARBUD,  Q_ZHAR,    Q_VEIL,     Q_DIABLO,   Q_BUTCHER,   Q_LTBANNER,   Q_BLIND,     Q_BLOOD,     Q_ANVIL,      Q_WARLORD,    Q_SKELKING,  Q_PWATER,      Q_SCHAMB,   Q_BETRAYER,  Q_GRAVE,     Q_FARMER,  Q_GIRL,    Q_TRADER,  Q_DEFILER, Q_NAKRUL,  Q_CORNSTN, Q_JERSEY
+	/*TOWN_SMITH*/   { TEXT_INFRA6,  TEXT_MUSH6,  TEXT_NONE, TEXT_NONE, TEXT_VEIL5, TEXT_NONE,  TEXT_BUTCH5, TEXT_BANNER6, TEXT_BLIND5, TEXT_BLOOD5, TEXT_ANVIL6,  TEXT_WARLRD5, TEXT_KING7,  TEXT_POISON7,  TEXT_BONE5, TEXT_VILE9,  TEXT_GRAVE2, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_HEALER*/  { TEXT_INFRA3,  TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_VEIL3, TEXT_NONE,  TEXT_BUTCH3, TEXT_BANNER4, TEXT_BLIND3, TEXT_BLOOD3, TEXT_ANVIL3,  TEXT_WARLRD3, TEXT_KING5,  TEXT_POISON4,  TEXT_BONE3, TEXT_VILE7,  TEXT_GRAVE3, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_DEADGUY*/ { TEXT_NONE,    TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE,  TEXT_NONE,  TEXT_NONE,   TEXT_NONE,    TEXT_NONE,   TEXT_NONE,   TEXT_NONE,    TEXT_NONE,    TEXT_NONE,   TEXT_NONE,     TEXT_NONE,  TEXT_NONE,   TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_TAVERN*/  { TEXT_INFRA2,  TEXT_MUSH2,  TEXT_NONE, TEXT_NONE, TEXT_VEIL2, TEXT_NONE,  TEXT_BUTCH2, TEXT_NONE,    TEXT_BLIND2, TEXT_BLOOD2, TEXT_ANVIL2,  TEXT_WARLRD2, TEXT_KING3,  TEXT_POISON2,  TEXT_BONE2, TEXT_VILE4,  TEXT_GRAVE5, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_STORY*/   { TEXT_INFRA1,  TEXT_MUSH1,  TEXT_NONE, TEXT_NONE, TEXT_VEIL1, TEXT_VILE3, TEXT_BUTCH1, TEXT_BANNER1, TEXT_BLIND1, TEXT_BLOOD1, TEXT_ANVIL1,  TEXT_WARLRD1, TEXT_KING1,  TEXT_POISON1,  TEXT_BONE1, TEXT_VILE2,  TEXT_GRAVE6, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_DRUNK*/   { TEXT_INFRA8,  TEXT_MUSH7,  TEXT_NONE, TEXT_NONE, TEXT_VEIL6, TEXT_NONE,  TEXT_BUTCH6, TEXT_BANNER7, TEXT_BLIND6, TEXT_BLOOD6, TEXT_ANVIL8,  TEXT_WARLRD6, TEXT_KING8,  TEXT_POISON8,  TEXT_BONE6, TEXT_VILE10, TEXT_GRAVE7, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_WITCH*/   { TEXT_INFRA9,  TEXT_MUSH9,  TEXT_NONE, TEXT_NONE, TEXT_VEIL7, TEXT_NONE,  TEXT_BUTCH7, TEXT_BANNER8, TEXT_BLIND7, TEXT_BLOOD7, TEXT_ANVIL9,  TEXT_WARLRD7, TEXT_KING9,  TEXT_POISON9,  TEXT_BONE7, TEXT_VILE11, TEXT_GRAVE1, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_BMAID*/   { TEXT_INFRA4,  TEXT_MUSH5,  TEXT_NONE, TEXT_NONE, TEXT_VEIL4, TEXT_NONE,  TEXT_BUTCH4, TEXT_BANNER5, TEXT_BLIND4, TEXT_BLOOD4, TEXT_ANVIL4,  TEXT_WARLRD4, TEXT_KING6,  TEXT_POISON6,  TEXT_BONE4, TEXT_VILE8,  TEXT_GRAVE8, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_PEGBOY*/  { TEXT_INFRA10, TEXT_MUSH13, TEXT_NONE, TEXT_NONE, TEXT_VEIL8, TEXT_NONE,  TEXT_BUTCH8, TEXT_BANNER9, TEXT_BLIND8, TEXT_BLOOD8, TEXT_ANVIL10, TEXT_WARLRD8, TEXT_KING10, TEXT_POISON10, TEXT_BONE8, TEXT_VILE12, TEXT_GRAVE9, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_COW*/     { TEXT_NONE,    TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE,  TEXT_NONE,  TEXT_NONE,   TEXT_NONE,    TEXT_NONE,   TEXT_NONE,   TEXT_NONE,    TEXT_NONE,    TEXT_NONE,   TEXT_NONE,     TEXT_NONE,  TEXT_NONE,   TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_FARMER*/  { TEXT_NONE,    TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE,  TEXT_NONE,  TEXT_NONE,   TEXT_NONE,    TEXT_NONE,   TEXT_NONE,   TEXT_NONE,    TEXT_NONE,    TEXT_NONE,   TEXT_NONE,     TEXT_NONE,  TEXT_NONE,   TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_GIRL*/    { TEXT_NONE,    TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE,  TEXT_NONE,  TEXT_NONE,   TEXT_NONE,    TEXT_NONE,   TEXT_NONE,   TEXT_NONE,    TEXT_NONE,    TEXT_NONE,   TEXT_NONE,     TEXT_NONE,  TEXT_NONE,   TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
+	/*TOWN_COWFARM*/ { TEXT_NONE,    TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE,  TEXT_NONE,  TEXT_NONE,   TEXT_NONE,    TEXT_NONE,   TEXT_NONE,   TEXT_NONE,    TEXT_NONE,    TEXT_NONE,   TEXT_NONE,     TEXT_NONE,  TEXT_NONE,   TEXT_NONE,   TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
 	// clang-format on
 };
 /** Specifies the active sound effect ID for interacting with cows. */
@@ -214,32 +212,24 @@ void InitTownerInfo(int i, int w, int sel, int t, int x, int y, int ao, int tp)
 	towner[i]._tSeed = AdvanceRndSeed();
 }
 
-void InitQstSnds(int i)
+void InitQstSnds(int id, _talker_id type)
 {
-	int j, tl;
-	tl = i;
-	if (boyloadflag)
-		tl++;
-	for (j = 0; j < MAXQUESTS; j++) {
-		towner[i].qsts[j]._qsttype = quests[j]._qtype;
-		towner[i].qsts[j]._qstmsg = ((int *)(Qtalklist + tl))[j];
-		if (((int *)(Qtalklist + tl))[j] != -1)
-			towner[i].qsts[j]._qstmsgact = TRUE;
-		else
-			towner[i].qsts[j]._qstmsgact = FALSE;
+	for (int i = 0; i < MAXQUESTS; i++) {
+		towner[id].qsts[i]._qsttype = quests[i]._qtype;
+		towner[id].qsts[i]._qstmsg = Qtalklist[type][i];
+		towner[id].qsts[i]._qstmsgact = Qtalklist[type][i] != TEXT_NONE;
 	}
 }
 
 /**
  * @brief Load Griswold into the game
-
  */
 void InitSmith()
 {
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_SMITH, 62, 63, 0, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_SMITH);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -253,7 +243,7 @@ void InitSmith()
 void InitBarOwner()
 {
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_TAVERN, 55, 62, 3, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_TAVERN);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", NULL);
 	for (int i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -269,7 +259,7 @@ void InitTownDead()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_DEADGUY, 24, 32, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_DEADGUY);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -285,7 +275,7 @@ void InitWitch()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_WITCH, 80, 20, 5, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_WITCH);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -301,7 +291,7 @@ void InitBarmaid()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_BMAID, 43, 66, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_BMAID);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -316,9 +306,8 @@ void InitBoy()
 {
 	int i;
 
-	boyloadflag = TRUE;
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_PEGBOY, 11, 53, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_PEGBOY);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -334,7 +323,7 @@ void InitHealer()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_HEALER, 55, 79, 1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_HEALER);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -350,7 +339,7 @@ void InitTeller()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_STORY, 62, 71, 2, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_STORY);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -366,7 +355,7 @@ void InitDrunk()
 	int i;
 
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_DRUNK, 71, 84, 4, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_DRUNK);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -416,7 +405,7 @@ void InitFarmer()
 	int i;
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_FARMER, 62, 16, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_FARMER);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\Farmrn2.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -432,7 +421,7 @@ void InitCowFarmer()
 	int i;
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_COWFARM, 61, 22, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_COWFARM);
 	if (quests[Q_JERSEY]._qactive != 3) {
 		towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\cfrmrn2.CEL", NULL);
 	} else {
@@ -452,7 +441,7 @@ void InitGirl()
 	int i;
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_GIRL, 77, 43, -1, 10);
-	InitQstSnds(numtowners);
+	InitQstSnds(numtowners, TOWN_GIRL);
 	if (quests[Q_GIRL]._qactive != 3) {
 		towner[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girlw1.CEL", NULL);
 	} else {
@@ -470,7 +459,6 @@ void InitGirl()
 void InitTowners()
 {
 	numtowners = 0;
-	boyloadflag = FALSE;
 	InitSmith();
 	InitHealer();
 	if (quests[Q_BUTCHER]._qactive != QUEST_NOTAVAIL && quests[Q_BUTCHER]._qactive != QUEST_DONE)
@@ -483,12 +471,12 @@ void InitTowners()
 	InitBoy();
 	InitCows();
 	if (gbIsHellfire) {
-		if (UseCowFarmer) {
+		if (gbCowQuest) {
 			InitCowFarmer();
 		} else if (quests[Q_FARMER]._qactive != 10) {
 			InitFarmer();
 		}
-		if (UseTheoQuest && plr->_pLvlVisited[17]) {
+		if (gbTheoQuest && plr->_pLvlVisited[17]) {
 			InitGirl();
 		}
 	}
@@ -750,7 +738,7 @@ void TalkToTowner(int p, int t)
 
 	towner[t]._tMsgSaid = FALSE;
 
-	if (pcurs >= CURSOR_FIRSTITEM && !DropItemBeforeTrig()) {
+	if (pcurs >= CURSOR_FIRSTITEM) {
 		return;
 	}
 
@@ -805,7 +793,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_LTBANNER]._qactive = QUEST_DONE;
 					quests[Q_LTBANNER]._qvar1 = 3;
 					RemoveInvItem(p, i);
-					CreateItem(UITEM_HARCREST, towner[t]._tx, towner[t]._ty + 1);
+					SpawnUnique(UITEM_HARCREST, towner[t]._tx, towner[t]._ty + 1);
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;
 					InitQTextMsg(TEXT_BANNER3);
@@ -843,7 +831,7 @@ void TalkToTowner(int p, int t)
 			towner[t]._tbtcnt = 150;
 			towner[t]._tVar1 = p;
 			towner[t]._tMsgSaid = TRUE;
-		} else if (quests[Q_BUTCHER]._qactive == QUEST_INIT || quests[Q_BUTCHER]._qactive == QUEST_ACTIVE && quests[Q_BUTCHER]._qvar1 == 0) {
+		} else if (quests[Q_BUTCHER]._qactive == QUEST_INIT || (quests[Q_BUTCHER]._qactive == QUEST_ACTIVE && quests[Q_BUTCHER]._qvar1 == 0)) {
 			quests[Q_BUTCHER]._qactive = QUEST_ACTIVE;
 			quests[Q_BUTCHER]._qlog = TRUE;
 			quests[Q_BUTCHER]._qmsg = TEXT_BUTCH9;
@@ -875,7 +863,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_ROCK]._qvar2 = 2;
 					quests[Q_ROCK]._qvar1 = 2;
 					RemoveInvItem(p, i);
-					CreateItem(UITEM_INFRARING, towner[t]._tx, towner[t]._ty + 1);
+					SpawnUnique(UITEM_INFRARING, towner[t]._tx, towner[t]._ty + 1);
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;
 					InitQTextMsg(TEXT_INFRA7);
@@ -884,7 +872,7 @@ void TalkToTowner(int p, int t)
 			}
 			if (plr[p]._pLvlVisited[9] && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 				if ((quests[Q_ANVIL]._qactive == QUEST_INIT || quests[Q_ANVIL]._qactive == QUEST_ACTIVE) && quests[Q_ANVIL]._qvar2 == 0 && !towner[t]._tMsgSaid) {
-					if (quests[Q_ROCK]._qvar2 == 2 || quests[Q_ROCK]._qactive == QUEST_ACTIVE && quests[Q_ROCK]._qvar2 == 1) {
+					if (quests[Q_ROCK]._qvar2 == 2 || (quests[Q_ROCK]._qactive == QUEST_ACTIVE && quests[Q_ROCK]._qvar2 == 1)) {
 						quests[Q_ANVIL]._qvar2 = 1;
 						quests[Q_ANVIL]._qlog = TRUE;
 						if (quests[Q_ANVIL]._qactive == QUEST_INIT) {
@@ -903,7 +891,7 @@ void TalkToTowner(int p, int t)
 						quests[Q_ANVIL]._qvar2 = 2;
 						quests[Q_ANVIL]._qvar1 = 2;
 						RemoveInvItem(p, i);
-						CreateItem(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
+						SpawnUnique(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
 						towner[t]._tbtcnt = 150;
 						towner[t]._tVar1 = p;
 						InitQTextMsg(TEXT_ANVIL7);
@@ -933,8 +921,8 @@ void TalkToTowner(int p, int t)
 				if (PlrHasItem(p, IDI_MUSHROOM, &i) != NULL) {
 					RemoveInvItem(p, i);
 					quests[Q_MUSHROOM]._qvar1 = 5;
-					Qtalklist[TOWN_HEALER]._qblkm = TEXT_MUSH3;
-					Qtalklist[TOWN_WITCH]._qblkm = -1;
+					Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
+					Qtalklist[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;
 					quests[Q_MUSHROOM]._qmsg = TEXT_MUSH10;
@@ -1010,7 +998,7 @@ void TalkToTowner(int p, int t)
 						towner[t]._tbtcnt = 150;
 						towner[t]._tVar1 = p;
 						InitQTextMsg(TEXT_POISON5);
-						CreateItem(UITEM_TRING, towner[t]._tx, towner[t]._ty + 1);
+						SpawnUnique(UITEM_TRING, towner[t]._tx, towner[t]._ty + 1);
 						towner[t]._tMsgSaid = TRUE;
 					}
 				}
@@ -1020,7 +1008,7 @@ void TalkToTowner(int p, int t)
 				SpawnQuestItem(IDI_SPECELIX, towner[t]._tx, towner[t]._ty + 1, 0, 0);
 				InitQTextMsg(TEXT_MUSH4);
 				quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
-				Qtalklist[TOWN_HEALER]._qblkm = -1;
+				Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
 			}
 		}
 		if (!qtextflag) {
@@ -1086,7 +1074,7 @@ void TalkToTowner(int p, int t)
 			CowSFX(p);
 	} else if (towner[t]._ttype == TOWN_FARMER) {
 		if (!qtextflag) {
-			qt = 277;
+			qt = TEXT_FARMER1;
 			t2 = 1;
 			switch (quests[Q_FARMER]._qactive) {
 			case 0:
@@ -1098,13 +1086,13 @@ void TalkToTowner(int p, int t)
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					break;
 				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
-					qt = 309;
+					qt = TEXT_FARMER8;
 					if (plr[p]._pLvlVisited[2])
-						qt = 281;
+						qt = TEXT_FARMER5;
 					if (plr[p]._pLvlVisited[5])
-						qt = 308;
+						qt = TEXT_FARMER7;
 					if (plr[p]._pLvlVisited[7])
-						qt = 310;
+						qt = TEXT_FARMER9;
 				} else {
 					qt = TEXT_FARMER1;
 					quests[Q_FARMER]._qactive = 2;
@@ -1157,14 +1145,14 @@ void TalkToTowner(int p, int t)
 				t2 = 1;
 				break;
 			case 10:
-				qt = -1;
+				qt = TEXT_NONE;
 				break;
 			default:
 				quests[Q_FARMER]._qactive = 0;
 				qt = TEXT_FARMER4;
 				break;
 			}
-			if (qt != -1) {
+			if (qt != TEXT_NONE) {
 				if (t2)
 					InitQTextMsg(qt);
 				else
@@ -1176,13 +1164,13 @@ void TalkToTowner(int p, int t)
 		}
 	} else if (towner[t]._ttype == TOWN_COWFARM) {
 		if (!qtextflag) {
-			qt = 297;
+			qt = TEXT_JERSEY1;
 			t2 = 1;
 			if (PlrHasItem(p, IDI_GREYSUIT, &i)) {
 				qt = TEXT_JERSEY7;
 				RemoveInvItem(p, i);
 			} else if (PlrHasItem(p, IDI_BROWNSUIT, &i)) {
-				CreateItem(UITEM_BOVINE, towner[t]._tx + 1, towner[t]._ty);
+				SpawnUnique(UITEM_BOVINE, towner[t]._tx + 1, towner[t]._ty);
 				RemoveInvItem(p, i);
 				qt = TEXT_JERSEY8;
 				quests[Q_JERSEY]._qactive = 3;
@@ -1260,7 +1248,7 @@ void TalkToTowner(int p, int t)
 		}
 	} else if (towner[t]._ttype == TOWN_GIRL) {
 		if (!qtextflag) {
-			qt = 282;
+			qt = TEXT_GIRL1;
 			t2 = 0;
 			if (!PlrHasItem(p, IDI_THEODORE, &i) || quests[Q_GIRL]._qactive == 3) {
 				switch (quests[Q_GIRL]._qactive) {
@@ -1285,7 +1273,7 @@ void TalkToTowner(int p, int t)
 					t2 = 1;
 					break;
 				case 3:
-					qt = -1;
+					qt = TEXT_NONE;
 					break;
 				default:
 					quests[Q_GIRL]._qactive = 0;

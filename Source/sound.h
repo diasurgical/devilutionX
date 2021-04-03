@@ -17,7 +17,7 @@ void snd_update(BOOL bStopAll);
 void snd_stop_snd(TSnd *pSnd);
 BOOL snd_playing(TSnd *pSnd);
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
-TSnd *sound_file_load(const char *path);
+TSnd *sound_file_load(const char *path, bool stream = false);
 void sound_file_cleanup(TSnd *sound_file);
 void snd_init();
 void sound_cleanup();

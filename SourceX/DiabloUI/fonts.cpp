@@ -1,5 +1,6 @@
 #include "DiabloUI/fonts.h"
 #include "file_util.h"
+#include "../SourceS/paths.h"
 
 namespace dvl {
 
@@ -52,7 +53,8 @@ void UnloadArtFonts()
 	FontTables[AFT_HUGE] = NULL;
 }
 
-void LoadTtfFont() {
+void LoadTtfFont()
+{
 	if (!TTF_WasInit()) {
 		if (TTF_Init() == -1) {
 			SDL_Log("TTF_Init: %s", TTF_GetError());
@@ -61,18 +63,13 @@ void LoadTtfFont() {
 		was_fonts_init = true;
 	}
 
-	const char* ttf_font_path = TTF_FONT_NAME;
-	if (!FileExists(ttf_font_path))
-	{
-		ttf_font_path = TTF_FONT_DIR TTF_FONT_NAME;
-	}
+	std::string ttf_font_path = GetTtfPath() + GetTtfName();
 #ifdef __linux__
-	if (!FileExists(ttf_font_path))
-	{
-		ttf_font_path = "/usr/share/fonts/truetype/" TTF_FONT_NAME;
+	if (!FileExists(ttf_font_path.c_str())) {
+		ttf_font_path = "/usr/share/fonts/truetype/" + GetTtfName();
 	}
 #endif
-	font = TTF_OpenFont(ttf_font_path, 17);
+	font = TTF_OpenFont(ttf_font_path.c_str(), 17);
 	if (font == NULL) {
 		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
 		return;
@@ -82,14 +79,16 @@ void LoadTtfFont() {
 	TTF_SetFontHinting(font, TTF_HINTING_MONO);
 }
 
-void UnloadTtfFont() {
+void UnloadTtfFont()
+{
 	if (font && TTF_WasInit())
 		TTF_CloseFont(font);
 	font = NULL;
 }
 
-void FontsCleanup() {
-	TTF_Quit();	
+void FontsCleanup()
+{
+	TTF_Quit();
 }
 
 } // namespace dvl

@@ -6,6 +6,8 @@
 #ifndef __PFILE_H__
 #define __PFILE_H__
 
+#include "player.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
@@ -26,13 +28,14 @@ BOOL pfile_ui_save_create(_uiheroinfo *heroinfo);
 BOOL pfile_get_file_name(DWORD lvl, char *dst);
 BOOL pfile_delete_save(_uiheroinfo *hero_info);
 void pfile_read_player_from_save();
+bool LevelFileExists();
 void GetTempLevelNames(char *szTemp);
 void GetPermLevelNames(char *szPerm);
 void pfile_remove_temp_files();
 void pfile_rename_temp_to_perm();
 void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD qwLen);
 BYTE *pfile_read(const char *pszName, DWORD *pdwLen);
-void pfile_update(BOOL force_save);
+void pfile_update(bool force_save);
 
 #ifdef __cplusplus
 }

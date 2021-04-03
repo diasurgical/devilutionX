@@ -45,10 +45,10 @@ void FocusOnCharInfo();
 
 SHORT GetAsyncKeyState(int vKey);
 
-bool PeekMessage(LPMSG lpMsg);
+bool FetchMessage(LPMSG lpMsg);
 
 bool TranslateMessage(const MSG *lpMsg);
-void DispatchMessage(const MSG *lpMsg);
+void PushMessage(const MSG *lpMsg);
 bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 
 #ifndef TRUE
@@ -62,8 +62,11 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 // MSCVRT emulation
 //
 
+#define DVL_FILE_BEGIN 0
 #define DVL_FILE_CURRENT 1
 #define DVL_FILE_END 2
+
+#define DVL_ERROR_HANDLE_EOF 1002
 
 #define DVL_WM_QUIT 0x0012
 

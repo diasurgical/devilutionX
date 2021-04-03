@@ -1,6 +1,7 @@
 #include <memory>
 
 #include "all.h"
+#include "options.h"
 #include "stubs.h"
 #include "dvlnet/abstract_net.h"
 
@@ -48,14 +49,14 @@ int SNetGetProviderCaps(struct _SNETCAPS *caps)
 	return dvlnet_inst->SNetGetProviderCaps(caps);
 }
 
-BOOL SNetUnregisterEventHandler(int evtype, SEVTHANDLER func)
+bool SNetUnregisterEventHandler(event_type evtype, SEVTHANDLER func)
 {
-	return dvlnet_inst->SNetUnregisterEventHandler(*(event_type *)&evtype, func);
+	return dvlnet_inst->SNetUnregisterEventHandler(evtype, func);
 }
 
-BOOL SNetRegisterEventHandler(int evtype, SEVTHANDLER func)
+bool SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func)
 {
-	return dvlnet_inst->SNetRegisterEventHandler(*(event_type *)&evtype, func);
+	return dvlnet_inst->SNetRegisterEventHandler(evtype, func);
 }
 
 BOOL SNetDestroy()
@@ -106,20 +107,18 @@ int SNetInitializeProvider(unsigned long provider, struct _SNETPROGRAMDATA *clie
  * @brief Called by engine for single, called by ui for multi
  */
 BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString,
-	DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
+    DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
     const char *creatorName, const char *a11, int *playerID)
 {
-	if (GameTemplateSize != sizeof(_gamedata))
+	if (GameTemplateSize != sizeof(GameData))
 		ABORT();
 	net::buffer_t game_init_info(GameTemplateData, GameTemplateData + GameTemplateSize);
 	dvlnet_inst->setup_gameinfo(std::move(game_init_info));
 
-	char addrstr[129] = "0.0.0.0";
-	getIniValue("dvlnet", "bindaddr", addrstr, 128);
-	strncpy(gpszGameName, addrstr, sizeof(gpszGameName) - 1);
+	strncpy(gpszGameName, sgOptions.Network.szBindAddress, sizeof(gpszGameName) - 1);
 	if (pszGamePassword)
 		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
-	*playerID = dvlnet_inst->create(addrstr, pszGamePassword);
+	*playerID = dvlnet_inst->create(sgOptions.Network.szBindAddress, pszGamePassword);
 	return *playerID != -1;
 }
 
@@ -162,4 +161,4 @@ BOOL SNetPerformUpgrade(DWORD *upgradestatus)
 	UNIMPLEMENTED();
 }
 
-}
+} // namespace dvl

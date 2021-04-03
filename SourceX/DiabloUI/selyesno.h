@@ -8,4 +8,4 @@ void selyesno_Free();
 void selyesno_Select(int value);
 void selyesno_Esc();
 
-}
+} // namespace dvl

@@ -4,22 +4,36 @@
  * Implementation of functions setting up the audio pipeline.
  */
 #include "all.h"
+#include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "stubs.h"
+#include "storm_sdl_rw.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 
 namespace dvl {
 
 BOOLEAN gbSndInited;
-int sglMusicVolume;
-int sglSoundVolume;
 /** Specifies whether background music is enabled. */
 HANDLE sghMusic;
 
+namespace {
+
 Mix_Music *music;
-SDL_RWops *musicRw;
+
+#ifdef DISABLE_STREAMING_MUSIC
 char *musicBuffer;
+
+void FreeMusicBuffer()
+{
+	if (musicBuffer != nullptr) {
+		mem_free_dbg(musicBuffer);
+		musicBuffer = nullptr;
+	}
+}
+#endif // DISABLE_STREAMING_MUSIC
+
+} // namespace
 
 /* data */
 
@@ -51,25 +65,14 @@ const char *const sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\Dintro.wav",
 };
 
-static void snd_get_volume(const char *value_name, int *value)
+static int CapVolume(int volume)
 {
-	int v = *value;
-	if (!SRegLoadValue("Diablo", value_name, 0, &v)) {
-		v = VOLUME_MAX;
+	if (volume < VOLUME_MIN) {
+		volume = VOLUME_MIN;
+	} else if (volume > VOLUME_MAX) {
+		volume = VOLUME_MAX;
 	}
-	*value = v;
-
-	if (*value < VOLUME_MIN) {
-		*value = VOLUME_MIN;
-	} else if (*value > VOLUME_MAX) {
-		*value = VOLUME_MAX;
-	}
-	*value -= *value % 100;
-}
-
-static void snd_set_volume(const char *key, int value)
-{
-	SRegSaveValue("Diablo", key, 0, value);
+	return volume - volume % 100;
 }
 
 BOOL snd_playing(TSnd *pSnd)
@@ -99,38 +102,41 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 		return;
 	}
 
-	lVolume += sglSoundVolume;
-	if (lVolume < VOLUME_MIN) {
-		lVolume = VOLUME_MIN;
-	} else if (lVolume > VOLUME_MAX) {
-		lVolume = VOLUME_MAX;
-	}
+	lVolume = CapVolume(lVolume + sgOptions.Audio.nSoundVolume);
 	DSB->Play(lVolume, lPan);
 	pSnd->start_tc = tc;
 }
 
-TSnd *sound_file_load(const char *path)
+TSnd *sound_file_load(const char *path, bool stream)
 {
 	HANDLE file;
-	BYTE *wave_file;
 	TSnd *pSnd;
-	DWORD dwBytes;
-	int error;
+	int error = 0;
 
-	SFileOpenFile(path, &file);
+	if (!SFileOpenFile(path, &file)) {
+		ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
+	}
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
 	pSnd->sound_path = path;
 	pSnd->start_tc = SDL_GetTicks() - 80 - 1;
-
-	dwBytes = SFileGetFileSize(file, NULL);
-	wave_file = DiabloAllocPtr(dwBytes);
-	SFileReadFile(file, wave_file, dwBytes, NULL, NULL);
-
 	pSnd->DSB = new SoundSample();
-	error = pSnd->DSB->SetChunk(wave_file, dwBytes);
-	SFileCloseFile(file);
-	mem_free_dbg(wave_file);
+
+	if (stream) {
+		pSnd->file_handle = file;
+		error = pSnd->DSB->SetChunkStream(file);
+		if (error != 0) {
+			SFileCloseFile(file);
+			ErrSdl();
+		}
+	} else {
+		DWORD dwBytes = SFileGetFileSize(file, NULL);
+		BYTE *wave_file = DiabloAllocPtr(dwBytes);
+		SFileReadFile(file, wave_file, dwBytes, NULL, NULL);
+		error = pSnd->DSB->SetChunk(wave_file, dwBytes);
+		SFileCloseFile(file);
+		mem_free_dbg(wave_file);
+	}
 	if (error != 0) {
 		ErrSdl();
 	}
@@ -147,6 +153,8 @@ void sound_file_cleanup(TSnd *sound_file)
 			delete sound_file->DSB;
 			sound_file->DSB = NULL;
 		}
+		if (sound_file->file_handle != NULL)
+			SFileCloseFile(sound_file->file_handle);
 
 		mem_free_dbg(sound_file);
 	}
@@ -154,12 +162,12 @@ void sound_file_cleanup(TSnd *sound_file)
 
 void snd_init()
 {
-	snd_get_volume("Sound Volume", &sglSoundVolume);
-	gbSoundOn = sglSoundVolume > VOLUME_MIN;
+	sgOptions.Audio.nSoundVolume = CapVolume(sgOptions.Audio.nSoundVolume);
+	gbSoundOn = sgOptions.Audio.nSoundVolume > VOLUME_MIN;
 	sgbSaveSoundOn = gbSoundOn;
 
-	snd_get_volume("Music Volume", &sglMusicVolume);
-	gbMusicOn = sglMusicVolume > VOLUME_MIN;
+	sgOptions.Audio.nMusicVolume = CapVolume(sgOptions.Audio.nMusicVolume);
+	gbMusicOn = sgOptions.Audio.nMusicVolume > VOLUME_MIN;
 
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
 	if (result < 0) {
@@ -171,26 +179,20 @@ void snd_init()
 	gbSndInited = true;
 }
 
-void sound_cleanup()
-{
-	if (gbSndInited) {
-		gbSndInited = false;
-		snd_set_volume("Sound Volume", sglSoundVolume);
-		snd_set_volume("Music Volume", sglMusicVolume);
-	}
-}
-
 void music_stop()
 {
-	if (sghMusic) {
+	if (music != nullptr) {
 		Mix_HaltMusic();
-		SFileCloseFile(sghMusic);
-		sghMusic = NULL;
 		Mix_FreeMusic(music);
 		music = NULL;
-		musicRw = NULL;
-		mem_free_dbg(musicBuffer);
+#ifndef DISABLE_STREAMING_MUSIC
+		SFileCloseFile(sghMusic);
+		sghMusic = NULL;
+#endif
 		sgnMusicTrack = NUM_MUSIC;
+#ifdef DISABLE_STREAMING_MUSIC
+		FreeMusicBuffer();
+#endif
 	}
 }
 
@@ -210,17 +212,48 @@ void music_start(int nTrack)
 		if (!success) {
 			sghMusic = NULL;
 		} else {
+#ifndef DISABLE_STREAMING_MUSIC
+			SDL_RWops *musicRw = SFileRw_FromStormHandle(sghMusic);
+#else
 			int bytestoread = SFileGetFileSize(sghMusic, 0);
 			musicBuffer = (char *)DiabloAllocPtr(bytestoread);
 			SFileReadFile(sghMusic, musicBuffer, bytestoread, NULL, 0);
+			SFileCloseFile(sghMusic);
+			sghMusic = NULL;
 
-			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
-			if (musicRw == NULL) {
+			SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
+			if (musicRw == nullptr)
 				ErrSdl();
+#endif
+			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, /*freesrc=*/1);
+			if (music == NULL) {
+				SDL_Log("Mix_LoadMUSType_RW: %s", Mix_GetError());
+#ifndef DISABLE_STREAMING_MUSIC
+				SFileCloseFile(sghMusic);
+				sghMusic = NULL;
+#endif
+				sgnMusicTrack = NUM_MUSIC;
+#ifdef DISABLE_STREAMING_MUSIC
+				FreeMusicBuffer();
+#endif
+				return;
 			}
-			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, 1);
-			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
-			Mix_PlayMusic(music, -1);
+
+			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sgOptions.Audio.nMusicVolume / VOLUME_MIN);
+			if (Mix_PlayMusic(music, -1) < 0) {
+				SDL_Log("Mix_PlayMusic: %s", Mix_GetError());
+				Mix_FreeMusic(music);
+				music = NULL;
+#ifndef DISABLE_STREAMING_MUSIC
+				SFileCloseFile(sghMusic);
+				sghMusic = NULL;
+#endif
+				sgnMusicTrack = NUM_MUSIC;
+#ifdef DISABLE_STREAMING_MUSIC
+				FreeMusicBuffer();
+#endif
+				return;
+			}
 
 			sgnMusicTrack = nTrack;
 		}
@@ -239,24 +272,24 @@ void sound_disable_music(BOOL disable)
 int sound_get_or_set_music_volume(int volume)
 {
 	if (volume == 1)
-		return sglMusicVolume;
+		return sgOptions.Audio.nMusicVolume;
 
-	sglMusicVolume = volume;
+	sgOptions.Audio.nMusicVolume = volume;
 
-	if (sghMusic)
-		SFileDdaSetVolume(sghMusic, volume, 0);
+	if (music != nullptr)
+		Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * volume / VOLUME_MIN);
 
-	return sglMusicVolume;
+	return sgOptions.Audio.nMusicVolume;
 }
 
 int sound_get_or_set_sound_volume(int volume)
 {
 	if (volume == 1)
-		return sglSoundVolume;
+		return sgOptions.Audio.nSoundVolume;
 
-	sglSoundVolume = volume;
+	sgOptions.Audio.nSoundVolume = volume;
 
-	return sglSoundVolume;
+	return sgOptions.Audio.nSoundVolume;
 }
 
 } // namespace dvl

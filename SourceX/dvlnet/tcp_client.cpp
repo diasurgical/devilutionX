@@ -1,4 +1,5 @@
 #include "dvlnet/tcp_client.h"
+#include "options.h"
 
 #include <functional>
 #include <exception>
@@ -16,7 +17,7 @@ namespace net {
 int tcp_client::create(std::string addrstr, std::string passwd)
 {
 	try {
-		auto port = default_port;
+		auto port = sgOptions.Network.nPort;
 		local_server.reset(new tcp_server(ioc, addrstr, port, passwd));
 		return join(local_server->localhost_self(), passwd);
 	} catch (std::system_error &e) {
@@ -33,7 +34,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 	setup_password(passwd);
 	try {
 		std::stringstream port;
-		port << default_port;
+		port << sgOptions.Network.nPort;
 		asio::connect(sock, resolver.resolve(addrstr, port.str()));
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);
@@ -121,7 +122,8 @@ bool tcp_client::SNetLeaveGame(int type)
 {
 	auto ret = base::SNetLeaveGame(type);
 	poll();
-	local_server.reset();
+	if (local_server != NULL)
+		local_server->close();
 	return ret;
 }
 

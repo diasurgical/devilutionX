@@ -4,6 +4,7 @@
  * Implementation of general dungeon generation code.
  */
 #include "all.h"
+#include "options.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -60,13 +61,14 @@ int dmaxx;
 int dmaxy;
 int gnDifficulty;
 /** Specifies the active dungeon type of the current game. */
-BYTE leveltype;
+dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
 BYTE currlevel;
 BOOLEAN setlevel;
 /** Specifies the active quest level of the current game. */
 BYTE setlvlnum;
-char setlvltype;
+/** Level type of the active quest level */
+dungeon_type setlvltype;
 /** Specifies the player viewpoint X-coordinate of the map. */
 int ViewX;
 /** Specifies the player viewpoint Y-coordinate of the map. */

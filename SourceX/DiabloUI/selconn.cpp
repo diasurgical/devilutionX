@@ -3,6 +3,7 @@
 #include "all.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 namespace dvl {
 
@@ -38,36 +39,36 @@ void selconn_Load()
 	UiAddBackground(&vecSelConnDlg);
 	UiAddLogo(&vecSelConnDlg);
 
-	SDL_Rect rect1 = { PANEL_LEFT + 24, (UI_OFFSET_Y + 161), 590, 35 };
+	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(Sint16)(UI_OFFSET_Y + 161), 590, 35 };
 	vecSelConnDlg.push_back(new UiArtText("Multi Player Game", rect1, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect2 = { PANEL_LEFT + 35, (UI_OFFSET_Y + 218), DESCRIPTION_WIDTH, 21 };
+	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 218), DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_MaxPlayers, rect2));
 
-	SDL_Rect rect3 = { PANEL_LEFT + 35, (UI_OFFSET_Y + 256), DESCRIPTION_WIDTH, 21 };
+	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 256), DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect3));
 
-	SDL_Rect rect4 = { PANEL_LEFT + 35, (UI_OFFSET_Y + 275), DESCRIPTION_WIDTH, 66 };
+	SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 275), DESCRIPTION_WIDTH, 66 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_Description, rect4));
 
-	SDL_Rect rect5 = { PANEL_LEFT + 30, (UI_OFFSET_Y + 356), 220, 31 };
+	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 30), (Sint16)(UI_OFFSET_Y + 356), 220, 31 };
 	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect5, UIS_CENTER | UIS_MED));
 
-	SDL_Rect rect6 = { PANEL_LEFT + 35, (UI_OFFSET_Y + 393), DESCRIPTION_WIDTH, 21 };
+	SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 393), DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect6, UIS_CENTER));
 
-	SDL_Rect rect7 = { PANEL_LEFT + 300, (UI_OFFSET_Y + 211), 295, 33 };
+	SDL_Rect rect7 = { (Sint16)(PANEL_LEFT + 300), (Sint16)(UI_OFFSET_Y + 211), 295, 33 };
 	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect7, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect8 = { PANEL_LEFT + 16, (UI_OFFSET_Y + 427), 250, 35 };
+	SDL_Rect rect8 = { (Sint16)(PANEL_LEFT + 16), (Sint16)(UI_OFFSET_Y + 427), 250, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect8, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
 
 	vecSelConnDlg.push_back(new UiList(vecConnItems, PANEL_LEFT + 305, (UI_OFFSET_Y + 256), 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD));
 
-	SDL_Rect rect9 = { PANEL_LEFT + 299, (UI_OFFSET_Y + 427), 140, 35 };
+	SDL_Rect rect9 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect9, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	SDL_Rect rect10 = { PANEL_LEFT + 454, (UI_OFFSET_Y + 427), 140, 35 };
+	SDL_Rect rect10 = { (Sint16)(PANEL_LEFT + 454), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect10, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
 	UiInitList(vecConnItems.size(), selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);

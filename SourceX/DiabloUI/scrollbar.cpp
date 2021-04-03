@@ -6,16 +6,18 @@ Art ArtScrollBarBackground;
 Art ArtScrollBarThumb;
 Art ArtScrollBarArrow;
 
-void LoadScrollBar() {
+void LoadScrollBar()
+{
 	LoadArt("ui_art\\sb_bg.pcx", &ArtScrollBarBackground);
 	LoadArt("ui_art\\sb_thumb.pcx", &ArtScrollBarThumb);
 	LoadArt("ui_art\\sb_arrow.pcx", &ArtScrollBarArrow, 4);
 }
 
-void UnloadScrollBar() {
+void UnloadScrollBar()
+{
 	ArtScrollBarArrow.Unload();
 	ArtScrollBarThumb.Unload();
 	ArtScrollBarBackground.Unload();
 }
 
-} // namespace
+} // namespace dvl

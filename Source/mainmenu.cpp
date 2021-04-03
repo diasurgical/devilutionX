@@ -4,6 +4,7 @@
  * Implementation of functions for interacting with the main menu.
  */
 #include "all.h"
+#include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
@@ -51,23 +52,18 @@ static BOOL mainmenu_init_menu(int type)
 
 static BOOL mainmenu_single_player()
 {
-	if (!SRegLoadValue("Hellfire", jogging_title, 0, &jogging_opt)) {
-		jogging_opt = TRUE;
-	}
-	if (!gbIsHellfire) {
-		jogging_opt = FALSE;
-	}
-
 	gbIsMultiplayer = false;
 
-	ticks_per_sec = sgOptions.ticksPerSecound;
+	gbRunInTown = sgOptions.Gameplay.bRunInTown;
+	gnTickRate = sgOptions.Gameplay.nTickRate;
+	gbTheoQuest = sgOptions.Gameplay.bTheoQuest;
+	gbCowQuest = sgOptions.Gameplay.bCowQuest;
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
 static BOOL mainmenu_multi_player()
 {
-	jogging_opt = FALSE;
 	gbIsMultiplayer = true;
 	return mainmenu_init_menu(SELHERO_CONNECT);
 }
@@ -87,7 +83,7 @@ void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, 
 		pfile_rename_hero(name_1, name_2);
 }
 
-BOOL mainmenu_select_hero_dialog(
+bool mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
     const _SNETUIDATA *ui_info,
@@ -95,36 +91,34 @@ BOOL mainmenu_select_hero_dialog(
     DWORD mode,
     char *cname, DWORD clen,
     char *cdesc, DWORD cdlen,
-    BOOL *multi)
+    bool *multi)
 {
 	BOOL hero_is_created = TRUE;
 	int dlgresult = 0;
 	if (!gbIsMultiplayer) {
-		if (!UiSelHeroSingDialog(
-		        pfile_ui_set_hero_infos,
-		        pfile_ui_save_create,
-		        pfile_delete_save,
-		        pfile_ui_set_class_stats,
-		        &dlgresult,
-		        &gszHero,
-		        &gnDifficulty))
-			app_fatal("Unable to display SelHeroSing");
-		client_info->initdata->bDiff = gnDifficulty;
+		UiSelHeroSingDialog(
+		    pfile_ui_set_hero_infos,
+		    pfile_ui_save_create,
+		    pfile_delete_save,
+		    pfile_ui_set_class_stats,
+		    &dlgresult,
+		    &gszHero,
+		    &gnDifficulty);
+		client_info->initdata->nDifficulty = gnDifficulty;
 
 		if (dlgresult == SELHERO_CONTINUE)
 			gbLoadGame = TRUE;
 		else
 			gbLoadGame = FALSE;
-
-	} else if (!UiSelHeroMultDialog(
-	               pfile_ui_set_hero_infos,
-	               pfile_ui_save_create,
-	               pfile_delete_save,
-	               pfile_ui_set_class_stats,
-	               &dlgresult,
-	               &hero_is_created,
-	               &gszHero)) {
-		app_fatal("Can't load multiplayer dialog");
+	} else {
+		UiSelHeroMultDialog(
+		    pfile_ui_set_hero_infos,
+		    pfile_ui_save_create,
+		    pfile_delete_save,
+		    pfile_ui_set_class_stats,
+		    &dlgresult,
+		    &hero_is_created,
+		    &gszHero);
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);
@@ -133,10 +127,7 @@ BOOL mainmenu_select_hero_dialog(
 
 	pfile_create_player_description(cdesc, cdlen);
 	if (multi) {
-		if (mode == 'BNET')
-			*multi = hero_is_created || !plr[myplr].pBattleNet;
-		else
-			*multi = hero_is_created;
+		*multi = hero_is_created;
 	}
 	if (cname && clen)
 		SStrCopy(cname, gszHero, clen);

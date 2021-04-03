@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include "all.h"
+#include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -26,8 +27,6 @@ int monstimgtot;
 int uniquetrans;
 int nummtypes;
 
-/** Maps from walking path step to facing direction. */
-const char plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };
 /** Maps from monster intelligence factor to missile type. */
 const BYTE counsmiss[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
 
@@ -166,7 +165,7 @@ void InitLevelMonsters()
 	uniquetrans = 0;
 }
 
-int AddMonsterType(int type, int placeflag)
+int AddMonsterType(_monster_id type, int placeflag)
 {
 	BOOL done = FALSE;
 	int i;
@@ -195,8 +194,8 @@ void GetLevelMTypes()
 	int i;
 
 	// this array is merged with skeltypes down below.
-	int typelist[MAXMONSTERS];
-	int skeltypes[NUM_MTYPES];
+	_monster_id typelist[MAXMONSTERS];
+	_monster_id skeltypes[NUM_MTYPES];
 
 	int minl; // min level
 	int maxl; // max level
@@ -257,7 +256,7 @@ void GetLevelMTypes()
 
 					if (currlevel >= minl && currlevel <= maxl) {
 						if (MonstAvailTbl[i] & mamask) {
-							skeltypes[nt++] = i;
+							skeltypes[nt++] = (_monster_id)i;
 						}
 					}
 				}
@@ -266,13 +265,13 @@ void GetLevelMTypes()
 		}
 
 		nt = 0;
-		for (i = 0; i < NUM_MTYPES; i++) {
+		for (i = MT_NZOMBIE; i < NUM_MTYPES; i++) {
 			minl = 15 * monsterdata[i].mMinDLvl / 30 + 1;
 			maxl = 15 * monsterdata[i].mMaxDLvl / 30 + 1;
 
 			if (currlevel >= minl && currlevel <= maxl) {
 				if (MonstAvailTbl[i] & mamask) {
-					typelist[nt++] = i;
+					typelist[nt++] = (_monster_id)i;
 				}
 			}
 		}
@@ -320,8 +319,8 @@ void InitMonsterGFX(int monst)
 
 	for (anim = 0; anim < 6; anim++) {
 		int frames = monsterdata[mtype].Frames[anim];
-		if (!gbIsHellfire && mtype == MT_DIABLO && anim == 3)
-			frames = 6;
+		if (gbIsHellfire && mtype == MT_DIABLO && anim == 3)
+			frames = 2;
 
 		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && frames > 0) {
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
@@ -495,7 +494,6 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mgoalvar1 = 0;
 	monster[i]._mgoalvar2 = 0;
 	monster[i]._mgoalvar3 = 0;
-	monster[i].field_18 = 0;
 	monster[i]._pathcount = 0;
 	monster[i]._mDelFlag = FALSE;
 	monster[i]._uniqtype = 0;
@@ -1194,7 +1192,6 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 	}
 	lm = (WORD *)pMap;
 	rw = SDL_SwapLE16(*lm++);
-	lm;
 	rh = SDL_SwapLE16(*lm++);
 	lm += rw * rh;
 	rw = rw << 1;
@@ -1715,15 +1712,15 @@ void SpawnLoot(int i, BOOL sendmsg)
 	MonsterStruct *Monst;
 
 	Monst = &monster[i];
-	if (QuestStatus(Q_GARBUD) && Monst->mName == UniqMonst[UMT_GARBUD].mName) {
+	if (QuestStatus(Q_GARBUD) && Monst->_uniqtype - 1 == UMT_GARBUD) {
 		CreateTypeItem(Monst->_mx + 1, Monst->_my + 1, TRUE, ITYPE_MACE, IMISC_NONE, TRUE, FALSE);
-	} else if (Monst->mName == UniqMonst[UMT_DEFILER].mName) {
+	} else if (Monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
 		quests[Q_DEFILER]._qlog = 0;
 		SpawnMapOfDoom(Monst->_mx, Monst->_my);
-	} else if (Monst->mName == UniqMonst[UMT_HORKDMN].mName) {
-		if (UseTheoQuest) {
+	} else if (Monst->_uniqtype - 1 == UMT_HORKDMN) {
+		if (gbTheoQuest) {
 			SpawnTheodore(Monst->_mx, Monst->_my);
 		} else {
 			CreateAmulet(Monst->_mx, Monst->_my, 13, FALSE, TRUE);
@@ -1731,7 +1728,7 @@ void SpawnLoot(int i, BOOL sendmsg)
 	} else if (Monst->MType->mtype == MT_HORKSPWN) {
 	} else if (Monst->MType->mtype == MT_NAKRUL) {
 		nSFX = IsUberRoomOpened ? USFX_NAKRUL4 : USFX_NAKRUL5;
-		if (UseCowFarmer)
+		if (gbCowQuest)
 			nSFX = USFX_NAKRUL6;
 		if (effect_is_playing(nSFX))
 			stream_stop();
@@ -2180,7 +2177,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (hper >= hit)
 		return;
 	if (blkper < blk) {
-		dir = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[i]._mx, monster[i]._my);
+		direction dir = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[i]._mx, monster[i]._my);
 		StartPlrBlock(pnum, dir);
 		if (pnum == myplr && plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
@@ -2489,7 +2486,7 @@ BOOL M_DoTalk(int i)
 	if (effect_is_playing(alltext[monster[i].mtalkmsg].sfxnr))
 		return FALSE;
 	InitQTextMsg(monster[i].mtalkmsg);
-	if (monster[i].mName == UniqMonst[UMT_GARBUD].mName) {
+	if (monster[i]._uniqtype - 1 == UMT_GARBUD) {
 		if (monster[i].mtalkmsg == TEXT_GARBUD1) {
 			quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
 			quests[Q_GARBUD]._qlog = TRUE; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
@@ -2499,7 +2496,7 @@ BOOL M_DoTalk(int i)
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
-	if (monster[i].mName == UniqMonst[UMT_ZHAR].mName
+	if (monster[i]._uniqtype - 1 == UMT_ZHAR
 	    && monster[i].mtalkmsg == TEXT_ZHAR1
 	    && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
 		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
@@ -2507,7 +2504,7 @@ BOOL M_DoTalk(int i)
 		CreateTypeItem(monster[i]._mx + 1, monster[i]._my + 1, FALSE, ITYPE_MISC, IMISC_BOOK, TRUE, FALSE);
 		monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
-	if (monster[i].mName == UniqMonst[UMT_SNOTSPIL].mName) {
+	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {
 		if (monster[i].mtalkmsg == TEXT_BANNER10 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
 			ObjChangeMap(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 2, (setpc_h >> 1) + setpc_y - 2);
 			tren = TransVal;
@@ -2520,11 +2517,10 @@ BOOL M_DoTalk(int i)
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 		if (quests[Q_LTBANNER]._qvar1 < 2) {
-			sprintf(tempstr, "SS Talk = %i, Flags = %i", monster[i].mtalkmsg, monster[i]._mFlags); // CODEFIX: no need for tempstr, app_fatal supports v_args
-			app_fatal(tempstr);
+			app_fatal("SS Talk = %i, Flags = %i", monster[i].mtalkmsg, monster[i]._mFlags);
 		}
 	}
-	if (monster[i].mName == UniqMonst[UMT_LACHDAN].mName) {
+	if (monster[i]._uniqtype - 1 == UMT_LACHDAN) {
 		if (monster[i].mtalkmsg == TEXT_VEIL9) {
 			quests[Q_VEIL]._qactive = QUEST_ACTIVE;
 			quests[Q_VEIL]._qlog = TRUE;
@@ -2534,9 +2530,9 @@ BOOL M_DoTalk(int i)
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
-	if (monster[i].mName == UniqMonst[UMT_WARLORD].mName)
+	if (monster[i]._uniqtype - 1 == UMT_WARLORD)
 		quests[Q_WARLORD]._qvar1 = 2;
-	if (monster[i].mName == UniqMonst[UMT_LAZURUS].mName && gbIsMultiplayer) {
+	if (monster[i]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) {
 		quests[Q_BETRAYER]._qvar1 = 6;
 		monster[i]._mgoal = MGOAL_NORMAL;
 		monster[i]._msquelch = UCHAR_MAX;
@@ -2901,9 +2897,12 @@ BOOL M_CallWalk(int i, int md)
 
 BOOL M_PathWalk(int i)
 {
-	char path[MAX_PATH_LENGTH];
+	Sint8 path[MAX_PATH_LENGTH];
 	BOOL(*Check)
 	(int, int, int);
+
+	/** Maps from walking path step to facing direction. */
+	const Sint8 plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };
 
 	commitment((DWORD)i < MAXMONSTERS, i);
 
@@ -2912,7 +2911,7 @@ BOOL M_PathWalk(int i)
 		Check = PosOkMonst;
 
 	if (FindPath(Check, i, monster[i]._mx, monster[i]._my, monster[i]._menemyx, monster[i]._menemyy, path)) {
-		M_CallWalk(i, plr2monst[path[0]]); /* plr2monst is local */
+		M_CallWalk(i, plr2monst[path[0]]);
 		return TRUE;
 	}
 
@@ -2948,7 +2947,7 @@ BOOL M_DumbWalk(int i, int md)
 	return ok;
 }
 
-BOOL M_RoundWalk(int i, int md, int *dir)
+BOOL M_RoundWalk(int i, int md, Sint32 *dir)
 {
 	int mdtemp;
 	BOOL ok;
@@ -4349,12 +4348,22 @@ void MAI_Garbud(int i)
 	_my = Monst->_my;
 	md = M_GetDir(i);
 
-	if (Monst->mtalkmsg < TEXT_GARBUD4
-	    && Monst->mtalkmsg > TEXT_DOOM10
+	if (Monst->mtalkmsg >= TEXT_GARBUD1
+	    && Monst->mtalkmsg <= TEXT_GARBUD3
 	    && !(dFlags[_mx][_my] & BFLAG_VISIBLE)
 	    && Monst->_mgoal == MGOAL_TALKING) {
 		Monst->_mgoal = MGOAL_INQUIRING;
-		Monst->mtalkmsg++;
+		switch (Monst->mtalkmsg) {
+		case TEXT_GARBUD1:
+			Monst->mtalkmsg = TEXT_GARBUD2;
+			break;
+		case TEXT_GARBUD2:
+			Monst->mtalkmsg = TEXT_GARBUD3;
+			break;
+		case TEXT_GARBUD3:
+			Monst->mtalkmsg = TEXT_GARBUD4;
+			break;
+		}
 	}
 
 	if (dFlags[_mx][_my] & BFLAG_VISIBLE) {
@@ -4680,7 +4689,7 @@ void ProcessMonsters()
 				PlaySFX(USFX_CLEAVER);
 			}
 			if (Monst->MType->mtype == MT_NAKRUL) {
-				if (UseCowFarmer) {
+				if (gbCowQuest) {
 					PlaySFX(USFX_NAKRUL6);
 				} else {
 					if (IsUberRoomOpened)
@@ -4710,7 +4719,7 @@ void ProcessMonsters()
 				Monst->_msquelch = UCHAR_MAX;
 				Monst->_lastx = plr[Monst->_menemy]._pfutx;
 				Monst->_lasty = plr[Monst->_menemy]._pfuty;
-			} else if (Monst->_msquelch != 0 && Monst->_mAi != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
+			} else if (Monst->_msquelch != 0 && Monst->MType->mtype != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
 				Monst->_msquelch--;
 			}
 		}
@@ -5148,11 +5157,30 @@ void M_FallenFear(int x, int y)
 	}
 }
 
+const char *GetMonsterTypeText(const MonsterData &monsterData)
+{
+	switch (monsterData.mMonstClass) {
+	case MC_ANIMAL:
+		return "Animal";
+	case MC_DEMON:
+		return "Demon";
+	case MC_UNDEAD:
+		return "Undead";
+	}
+
+	app_fatal("Unknown mMonstClass %d", monsterData.mMonstClass);
+}
+
 void PrintMonstHistory(int mt)
 {
 	int minHP, maxHP, res;
 
-	sprintf(tempstr, "Total kills: %i", monstkills[mt]);
+	if (sgOptions.Gameplay.bShowMonsterType) {
+		sprintf(tempstr, "Type: %s  Kills: %i", GetMonsterTypeText(monsterdata[mt]), monstkills[mt]);
+	} else {
+		sprintf(tempstr, "Total kills: %i", monstkills[mt]);
+	}
+
 	AddPanelString(tempstr, TRUE);
 	if (monstkills[mt] >= 30) {
 		minHP = monsterdata[mt].mMinHP;
@@ -5226,6 +5254,11 @@ void PrintMonstHistory(int mt)
 void PrintUniqueHistory()
 {
 	int res;
+
+	if (sgOptions.Gameplay.bShowMonsterType) {
+		sprintf(tempstr, "Type: %s", GetMonsterTypeText(*monster[pcursmonst].MData));
+		AddPanelString(tempstr, TRUE);
+	}
 
 	res = monster[pcursmonst].mMagicRes & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (!res) {

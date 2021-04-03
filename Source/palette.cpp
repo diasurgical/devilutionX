@@ -4,6 +4,7 @@
  * Implementation of functions for handling the engines color palette.
  */
 #include "all.h"
+#include "options.h"
 #include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -16,10 +17,6 @@ Uint8 paletteTransparencyLookup[256][256]; //Lookup table for transparency
 
 /* data */
 
-/** Specifies the gamma correction level. */
-int gamma_correction = 100;
-/** Specifies whether colour cycling is enabled. */
-BOOL color_cycling_enabled = TRUE;
 /** Specifies whether the palette has max brightness. */
 BOOLEAN sgbFadedIn = TRUE;
 
@@ -37,7 +34,7 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 	int i;
 	double g;
 
-	g = gamma_correction / 100.0;
+	g = sgOptions.Graphics.nGammaCorrection / 100.0;
 
 	for (i = 0; i < n; i++) {
 		dst[i].r = pow(src[i].r / 256.0, g) * 256.0;
@@ -47,30 +44,16 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 	force_redraw = 255;
 }
 
-static void SaveGamma()
-{
-	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
-	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);
-}
-
 static void LoadGamma()
 {
-	int gamma_value;
-	int value;
+	int gamma_value = sgOptions.Graphics.nGammaCorrection;
 
-	value = gamma_correction;
-	if (!SRegLoadValue("Diablo", "Gamma Correction", 0, &value))
-		value = 100;
-	gamma_value = value;
-	if (value < 30) {
+	if (gamma_value < 30) {
 		gamma_value = 30;
-	} else if (value > 100) {
+	} else if (gamma_value > 100) {
 		gamma_value = 100;
 	}
-	gamma_correction = gamma_value - gamma_value % 5;
-	if (!SRegLoadValue("Diablo", "Color Cycling", 0, &value))
-		value = 1;
-	color_cycling_enabled = value;
+	sgOptions.Graphics.nGammaCorrection = gamma_value - gamma_value % 5;
 }
 
 void palette_init()
@@ -85,7 +68,7 @@ void palette_init()
  *
  * This is based of the same technique found in Quake2.
  *
- * To mimic 50% transparency we figure out what colours in the existing palette are the best match for the combination of any 2 colours.
+ * To mimic 50% transparency we figure out what colors in the existing palette are the best match for the combination of any 2 colors.
  * We save this into a lookup table for use during rendering.
  *
  * @param palette The colors to operate on
@@ -97,7 +80,7 @@ static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int ski
 {
 	for (int i = 0; i < 256; i++) {
 		for (int j = 0; j < 256; j++) {
-			if (i == j) { // No need to calculate transparency between 2 identical colours
+			if (i == j) { // No need to calculate transparency between 2 identical colors
 				paletteTransparencyLookup[i][j] = j;
 				continue;
 			}
@@ -153,7 +136,7 @@ void LoadPalette(const char *pszFileName)
 #endif
 	}
 
-	if (sgOptions.blendedTransparancy) {
+	if (sgOptions.Graphics.bBlendedTransparancy) {
 		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_CRYPT) {
 			GenerateBlendedLookupTable(orig_palette, 1, 31);
 		} else if (leveltype == DTYPE_NEST) {
@@ -178,7 +161,7 @@ void LoadRndLvlPal(int l)
 			sprintf(szFileName, "NLevels\\L5Data\\L5Base.PAL");
 		}
 		if (l == 6) {
-			if (!UseNestArt) {
+			if (!gbNestArt) {
 				rv++;
 			}
 			sprintf(szFileName, "NLevels\\L%iData\\L%iBase%i.PAL", 6, 6, rv);
@@ -193,10 +176,10 @@ void ResetPal()
 
 void IncreaseGamma()
 {
-	if (gamma_correction < 100) {
-		gamma_correction += 5;
-		if (gamma_correction > 100)
-			gamma_correction = 100;
+	if (sgOptions.Graphics.nGammaCorrection < 100) {
+		sgOptions.Graphics.nGammaCorrection += 5;
+		if (sgOptions.Graphics.nGammaCorrection > 100)
+			sgOptions.Graphics.nGammaCorrection = 100;
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
@@ -204,10 +187,10 @@ void IncreaseGamma()
 
 void DecreaseGamma()
 {
-	if (gamma_correction > 30) {
-		gamma_correction -= 5;
-		if (gamma_correction < 30)
-			gamma_correction = 30;
+	if (sgOptions.Graphics.nGammaCorrection > 30) {
+		sgOptions.Graphics.nGammaCorrection -= 5;
+		if (sgOptions.Graphics.nGammaCorrection < 30)
+			sgOptions.Graphics.nGammaCorrection = 30;
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
@@ -216,12 +199,11 @@ void DecreaseGamma()
 int UpdateGamma(int gamma)
 {
 	if (gamma) {
-		gamma_correction = 130 - gamma;
+		sgOptions.Graphics.nGammaCorrection = 130 - gamma;
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
-	SaveGamma();
-	return 130 - gamma_correction;
+	return 130 - sgOptions.Graphics.nGammaCorrection;
 }
 
 void SetFadeLevel(DWORD fadeval)
@@ -249,7 +231,7 @@ void PaletteFadeIn(int fr)
 	DWORD tc = SDL_GetTicks();
 	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 		SetFadeLevel(i);
-		SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
+		SDL_Rect SrcRect = { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
 		BltFast(&SrcRect, NULL);
 		RenderPresent();
 	}
@@ -266,7 +248,7 @@ void PaletteFadeOut(int fr)
 		DWORD tc = SDL_GetTicks();
 		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 			SetFadeLevel(i);
-			SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
+			SDL_Rect SrcRect = { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
 			BltFast(&SrcRect, NULL);
 			RenderPresent();
 		}
@@ -288,7 +270,7 @@ static void CycleColors(int from, int to)
 	}
 	system_palette[to] = col;
 
-	if (!sgOptions.blendedTransparancy)
+	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
 	for (int i = 0; i < 256; i++) {
@@ -320,7 +302,7 @@ static void CycleColorsReverse(int from, int to)
 	}
 	system_palette[from] = col;
 
-	if (!sgOptions.blendedTransparancy)
+	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
 	for (int i = 0; i < 256; i++) {
@@ -333,9 +315,9 @@ static void CycleColorsReverse(int from, int to)
 
 	Uint8 colRow[256];
 	memcpy(colRow, &paletteTransparencyLookup[to], sizeof(*paletteTransparencyLookup));
-    for (int i = to; i > from; i--) {
+	for (int i = to; i > from; i--) {
 		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i - 1], sizeof(*paletteTransparencyLookup));
-    }
+	}
 	memcpy(&paletteTransparencyLookup[from], colRow, sizeof(colRow));
 }
 
@@ -399,18 +381,6 @@ void palette_update_quest_palette(int n)
 	ApplyGamma(system_palette, logical_palette, 32);
 	palette_update();
 	GenerateBlendedLookupTable(logical_palette, 1, 31, 32 - n); // Possible optimization would be to only update color 0 as only the UI can overlap with transparency in this quest
-
-}
-
-BOOL palette_get_color_cycling()
-{
-	return color_cycling_enabled;
-}
-
-BOOL palette_set_color_cycling(BOOL enabled)
-{
-	color_cycling_enabled = enabled;
-	return enabled;
 }
 
 DEVILUTION_END_NAMESPACE

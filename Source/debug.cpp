@@ -85,13 +85,9 @@ void TakeGoldCheat()
 
 void MaxSpellsCheat()
 {
-	int i;
-
-	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-
-	for (i = 1; i < maxSpells; i++) {
-		if (GetSpellBookLevel(i) != -1) {
-			plr[myplr]._pMemSpells |= SPELLBIT(i);
+	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
+		if (GetSpellBookLevel((spell_id)i) != -1) {
+			plr[myplr]._pMemSpells |= GetSpellBitmask(i);
 			plr[myplr]._pSplLvl[i] = 10;
 		}
 	}
@@ -99,7 +95,7 @@ void MaxSpellsCheat()
 
 void SetSpellLevelCheat(char spl, int spllvl)
 {
-	plr[myplr]._pMemSpells |= SPELLBIT(spl);
+	plr[myplr]._pMemSpells |= GetSpellBitmask(spl);
 	plr[myplr]._pSplLvl[spl] = spllvl;
 }
 
@@ -129,6 +125,8 @@ void SetAllSpellsCheat()
 	SetSpellLevelCheat(SPL_BONESPIRIT, 1);
 }
 
+int dbgplr;
+
 void PrintDebugPlayer(BOOL bNextPlayer)
 {
 	char dstr[128];
@@ -152,6 +150,8 @@ void PrintDebugPlayer(BOOL bNextPlayer)
 		NetSendCmdString(1 << myplr, dstr);
 	}
 }
+
+int dbgqst;
 
 void PrintDebugQuest()
 {
@@ -190,6 +190,8 @@ void PrintDebugMonster(int m)
 	sprintf(dstr, "Active List = %i, Squelch = %i", bActive, monster[m]._msquelch);
 	NetSendCmdString(1 << myplr, dstr);
 }
+
+int dbgmon;
 
 void GetDebugMonster()
 {

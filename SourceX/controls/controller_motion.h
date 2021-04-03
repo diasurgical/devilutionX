@@ -2,8 +2,10 @@
 
 // Processes and stores mouse and joystick motion.
 
-#include "all.h"
-#include "controls/controller.h"
+#include <SDL.h>
+
+#include "./axis_direction.h"
+#include "./controller.h"
 
 namespace dvl {
 
@@ -18,5 +20,8 @@ extern bool leftStickNeedsScaling, rightStickNeedsScaling;
 
 // Updates motion state for mouse and joystick sticks.
 bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_event);
+
+// Returns direction of the left thumb stick or DPad (if allow_dpad = true).
+AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad = true);
 
 } // namespace dvl

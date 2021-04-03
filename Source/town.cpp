@@ -185,14 +185,14 @@ void T_Pass3()
 	mem_free_dbg(pSector);
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
-		if (gbIsSpawn || !(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10)) {
+		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
 			T_FillTile(P3Tiles, 48, 20, 320);
 		}
-		if (gbIsSpawn || !(plr[myplr].pTownWarps & 2) && (!gbIsHellfire || plr[myplr]._pLevel < 15)) {
+		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 2) && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
 			T_FillTile(P3Tiles, 16, 68, 332);
 			T_FillTile(P3Tiles, 16, 70, 331);
 		}
-		if (gbIsSpawn || !(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20)) {
+		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (x = 36; x < 46; x++) {
 				T_FillTile(P3Tiles, x, 78, random_(0, 4) + 1);
 			}

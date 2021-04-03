@@ -6,9 +6,9 @@
 
 TEST(Scrool_rt, calc_tiles_in_view_original)
 {
-	dvl::screenWidth = 640;
-	dvl::screenHeight = 480;
-	dvl::viewportHeight = dvl::screenHeight - 128;
+	dvl::gnScreenWidth = 640;
+	dvl::gnScreenHeight = 480;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = true;
 	int columns = 0;
 	int rows = 0;
@@ -19,9 +19,9 @@ TEST(Scrool_rt, calc_tiles_in_view_original)
 
 TEST(Scrool_rt, calc_tiles_in_view_original_zoom)
 {
-	dvl::screenWidth = 640;
-	dvl::screenHeight = 480;
-	dvl::viewportHeight = dvl::screenHeight - 128;
+	dvl::gnScreenWidth = 640;
+	dvl::gnScreenHeight = 480;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = false;
 	int columns = 0;
 	int rows = 0;
@@ -32,9 +32,9 @@ TEST(Scrool_rt, calc_tiles_in_view_original_zoom)
 
 TEST(Scrool_rt, calc_tiles_in_view_960_540)
 {
-	dvl::screenWidth = 960;
-	dvl::screenHeight = 540;
-	dvl::viewportHeight = dvl::screenHeight;
+	dvl::gnScreenWidth = 960;
+	dvl::gnScreenHeight = 540;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = true;
 	int columns = 0;
 	int rows = 0;
@@ -45,9 +45,9 @@ TEST(Scrool_rt, calc_tiles_in_view_960_540)
 
 TEST(Scrool_rt, calc_tiles_in_view_640_512)
 {
-	dvl::screenWidth = 640;
-	dvl::screenHeight = 512;
-	dvl::viewportHeight = dvl::screenHeight - 128;
+	dvl::gnScreenWidth = 640;
+	dvl::gnScreenHeight = 512;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = true;
 	int columns = 0;
 	int rows = 0;
@@ -56,12 +56,11 @@ TEST(Scrool_rt, calc_tiles_in_view_640_512)
 	EXPECT_EQ(rows, 12);
 }
 
-
 TEST(Scrool_rt, calc_tiles_in_view_768_480_zoom)
 {
-	dvl::screenWidth = 768;
-	dvl::screenHeight = 480;
-	dvl::viewportHeight = dvl::screenHeight;
+	dvl::gnScreenWidth = 768;
+	dvl::gnScreenHeight = 480;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = false;
 	int columns = 0;
 	int rows = 0;
@@ -74,9 +73,9 @@ TEST(Scrool_rt, calc_tiles_in_view_768_480_zoom)
 
 TEST(Scrool_rt, calc_tile_offset_original)
 {
-	dvl::screenWidth = 640;
-	dvl::screenHeight = 480;
-	dvl::viewportHeight = dvl::screenHeight - 128;
+	dvl::gnScreenWidth = 640;
+	dvl::gnScreenHeight = 480;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = true;
 	int x = 0;
 	int y = 0;
@@ -87,9 +86,9 @@ TEST(Scrool_rt, calc_tile_offset_original)
 
 TEST(Scrool_rt, calc_tile_offset_original_zoom)
 {
-	dvl::screenWidth = 640;
-	dvl::screenHeight = 480;
-	dvl::viewportHeight = dvl::screenHeight - 128;
+	dvl::gnScreenWidth = 640;
+	dvl::gnScreenHeight = 480;
+	dvl::gnViewportHeight = dvl::gnScreenHeight - 128;
 	dvl::zoomflag = false;
 	int x = 0;
 	int y = 0;
@@ -100,9 +99,9 @@ TEST(Scrool_rt, calc_tile_offset_original_zoom)
 
 TEST(Scrool_rt, calc_tile_offset_960_540)
 {
-	dvl::screenWidth = 960;
-	dvl::screenHeight = 540;
-	dvl::viewportHeight = dvl::screenHeight;
+	dvl::gnScreenWidth = 960;
+	dvl::gnScreenHeight = 540;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = true;
 	int x = 0;
 	int y = 0;
@@ -113,9 +112,9 @@ TEST(Scrool_rt, calc_tile_offset_960_540)
 
 TEST(Scrool_rt, calc_tile_offset_853_480)
 {
-	dvl::screenWidth = 853;
-	dvl::screenHeight = 480;
-	dvl::viewportHeight = dvl::screenHeight;
+	dvl::gnScreenWidth = 853;
+	dvl::gnScreenHeight = 480;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = true;
 	int x = 0;
 	int y = 0;
@@ -126,9 +125,9 @@ TEST(Scrool_rt, calc_tile_offset_853_480)
 
 TEST(Scrool_rt, calc_tile_offset_768_480_zoom)
 {
-	dvl::screenWidth = 768;
-	dvl::screenHeight = 480;
-	dvl::viewportHeight = dvl::screenHeight;
+	dvl::gnScreenWidth = 768;
+	dvl::gnScreenHeight = 480;
+	dvl::gnViewportHeight = dvl::gnScreenHeight;
 	dvl::zoomflag = false;
 	int x = 0;
 	int y = 0;
@@ -141,21 +140,21 @@ TEST(Scrool_rt, calc_tile_offset_768_480_zoom)
 
 TEST(Scrool_rt, calc_tiles_covered_by_panel_original)
 {
-	dvl::screenWidth = 640;
+	dvl::gnScreenWidth = 640;
 	dvl::zoomflag = true;
 	EXPECT_EQ(dvl::RowsCoveredByPanel(), 0);
 }
 
 TEST(Scrool_rt, calc_tiles_covered_by_panel_960)
 {
-	dvl::screenWidth = 960;
+	dvl::gnScreenWidth = 960;
 	dvl::zoomflag = true;
 	EXPECT_EQ(dvl::RowsCoveredByPanel(), 4);
 }
 
 TEST(Scrool_rt, calc_tiles_covered_by_panel_960_zoom)
 {
-	dvl::screenWidth = 960;
+	dvl::gnScreenWidth = 960;
 	dvl::zoomflag = false;
 	EXPECT_EQ(dvl::RowsCoveredByPanel(), 2);
 }

@@ -8,25 +8,18 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=-all
 export DEB_CFLAGS_MAINT_APPEND  = -Wno-error
 export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
-GIT_VERSION_DEVILUTIONX ?= $(shell pwd | tail -c 23 | cut -c-5)
-GIT_COMMIT_DEVILUTIONX := $(shell pwd | tail -c 8)
+GIT_VERSION_DEVILUTIONX ?= $(shell git describe --tags --abbrev=0)
+GIT_COMMIT_DEVILUTIONX := $(shell git rev-parse --short HEAD)
 
 %:
 	dh $@ --buildsystem=cmake --builddirectory=obj-${DEB_HOST_MULTIARCH}
 
 override_dh_auto_configure:
-	dh_auto_configure -- -DNIGHTLY_BUILD=ON -DVERSION_NUM=${GIT_VERSION_DEVILUTIONX} -DVERSION_SUFFIX=-${GIT_COMMIT_DEVILUTIONX} #-DSPAWN=ON
+	dh_auto_configure -- \
+		-DNIGHTLY_BUILD=ON \
+		-DVERSION_NUM=${GIT_VERSION_DEVILUTIONX} \
+		-DVERSION_SUFFIX=-${GIT_COMMIT_DEVILUTIONX} \
+		#-DSPAWN=ON
 
 override_dh_auto_install:
-	install -pdm755 debian/diablo-data/usr/share/games/diablo/
-	test -f "../diabdat.mpq" && cp ../diabdat.mpq debian/diablo-data/usr/share/games/diablo/ || true
-	dh_auto_install
-	install -pdm755 debian/devilutionx/usr/share/icons/hicolor/512x512/apps/
-	install -pdm755 debian/devilutionx/usr/share/applications/
-	install -pdm755 debian/devilutionx/usr/share/fonts/truetype/
-	install -pdm755 debian/devilutionx/usr/share/games/diablo/
-	install -Dm664 Packaging/resources/icon.png debian/devilutionx/usr/share/icons/hicolor/512x512/apps/devilutionx.png
-	install -Dm664 Packaging/fedora/devilutionx.desktop debian/devilutionx/usr/share/applications/
-	install -Dm664 Packaging/resources/CharisSILB.ttf debian/devilutionx/usr/share/fonts/truetype/
-	install -Dm755 obj-${DEB_HOST_MULTIARCH}/devilutionx debian/devilutionx/usr/share/games/diablo/
-
+	DESTDIR=$$(pwd)/debian/devilutionx cmake --install ./obj-${DEB_HOST_MULTIARCH}

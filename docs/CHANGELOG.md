@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## DevilutionX 1.2.0 (unreleased)
+### Features
+- Improved gamepad support:
+  - D-Pad / Left stick navigation now works in all menus and is more responsive.
+  - START + SELECT now opens the main menu.
+  - Right stick mouse emulation has been improved.
+  - Gamepads plugged in while the game is running can be used.
+  - All connected gamepads can be used (previously, only the first one).
+
 ## DevilutionX 1.1.0
 ### Features
 - Proper widescreen (and other aspects) support

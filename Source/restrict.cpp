@@ -5,7 +5,6 @@
  */
 #include "all.h"
 #include "paths.h"
-#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

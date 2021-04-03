@@ -6,6 +6,8 @@
 #ifndef __GMENU_H__
 #define __GMENU_H__
 
+#include "engine.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __cplusplus
@@ -14,12 +16,12 @@ extern "C" {
 
 extern TMenuItem *sgpCurrentMenu;
 
-void gmenu_draw_pause();
+void gmenu_draw_pause(CelOutputBuffer out);
 void FreeGMenu();
 void gmenu_init_menu();
 BOOL gmenu_is_active();
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *));
-void gmenu_draw();
+void gmenu_draw(CelOutputBuffer out);
 BOOL gmenu_presskeys(int vkey);
 BOOL gmenu_on_mouse_move();
 BOOL gmenu_left_mouse(BOOL isDown);

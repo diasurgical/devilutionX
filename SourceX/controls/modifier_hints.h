@@ -1,7 +1,9 @@
 #pragma once
 
+#include "engine.h"
+
 namespace dvl {
 
-void DrawControllerModifierHints();
+void DrawControllerModifierHints(CelOutputBuffer out);
 
 } // namespace dvl

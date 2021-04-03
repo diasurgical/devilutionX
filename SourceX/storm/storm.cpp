@@ -1,7 +1,9 @@
 #include <cstddef>
+#include <cstdint>
 #include <string>
 
 #include "all.h"
+#include "options.h"
 #include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -38,13 +40,6 @@ radon::File &getIni()
 {
 	static radon::File ini(GetConfigPath() + "diablo.ini");
 	return ini;
-}
-
-BOOL SFileDdaSetVolume(HANDLE hFile, signed int bigvolume, signed int volume)
-{
-	Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * bigvolume / VOLUME_MIN);
-
-	return true;
 }
 
 // Converts ASCII characters to lowercase
@@ -198,10 +193,11 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
-		SFileSetFilePointer(hFile, 0, 0, DVL_FILE_END);
+		SFileSetFilePointer(hFile, 0, NULL, DVL_FILE_END);
 		fileBuffer = NULL;
 	} else {
-		size = SFileGetFileSize(hFile, 0) - SFileSetFilePointer(hFile, 0, 0, DVL_FILE_CURRENT);
+		const auto pos = SFileGetFilePointer(hFile);
+		size = SFileSetFilePointer(hFile, 0, DVL_FILE_END) - SFileSetFilePointer(hFile, pos, DVL_FILE_BEGIN);
 		fileBuffer = (BYTE *)malloc(size);
 	}
 
@@ -234,8 +230,12 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	}
 
 	if (pPalette && pcxhdr.BitsPerPixel == 8) {
-		SFileSetFilePointer(hFile, -768, 0, 1);
-		SFileReadFile(hFile, paldata, 768, 0, 0);
+		const auto pos = SFileSetFilePointer(hFile, -768, DVL_FILE_CURRENT);
+		if (pos == static_cast<std::uint64_t>(-1)) {
+			SDL_Log("SFileSetFilePointer error: %ud", (unsigned int)SErrGetLastError());
+		}
+		SFileReadFile(hFile, paldata, 768, 0, NULL);
+
 		for (int i = 0; i < 256; i++) {
 			pPalette[i].r = paldata[i][0];
 			pPalette[i].g = paldata[i][1];
@@ -274,8 +274,10 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 	return strtol(string, NULL, 10) != 0;
 }
 
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize)
+bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
 {
+	strncpy(string, defaultString, stringSize);
+
 	radon::Section *section = getIni().getSection(sectionName);
 	if (!section)
 		return false;
@@ -285,8 +287,6 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 		return false;
 
 	std::string value = key->getStringValue();
-	if (dataSize)
-		*dataSize = value.length();
 
 	if (string != NULL)
 		strncpy(string, value.c_str(), stringSize);
@@ -312,32 +312,34 @@ void setIniValue(const char *sectionName, const char *keyName, const char *value
 	} else {
 		key->setValue(stringValue);
 	}
-
-	ini.saveToFile();
 }
 
-BOOL SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value)
+void SaveIni()
+{
+	getIni().saveToFile();
+}
+
+int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 {
 	char string[10];
-	if (getIniValue(keyname, valuename, string, 10)) {
-		*value = strtol(string, NULL, 10);
-		return true;
+	if (!getIniValue(keyname, valuename, string, sizeof(string))) {
+		return defaultValue;
 	}
 
-	return false;
+	return strtol(string, NULL, sizeof(string));
 }
 
-BOOL SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD result)
+void setIniInt(const char *keyname, const char *valuename, int value)
 {
 	char str[10];
-	sprintf(str, "%d", result);
+	sprintf(str, "%d", value);
 	setIniValue(keyname, valuename, str);
-
-	return true;
 }
 
 double SVidFrameEnd;
 double SVidFrameLength;
+char SVidAudioDepth;
+double SVidVolume;
 BYTE SVidLoop;
 smk SVidSMK;
 SDL_Color SVidPreviousPalette[256];
@@ -495,7 +497,11 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 		SDL_zero(audioFormat);
 		audioFormat.freq = rate[0];
 		audioFormat.format = depth[0] == 16 ? AUDIO_S16SYS : AUDIO_U8;
+		SVidAudioDepth = depth[0];
 		audioFormat.channels = channels[0];
+
+		SVidVolume = sgOptions.Audio.nSoundVolume - VOLUME_MIN;
+		SVidVolume /= -VOLUME_MIN;
 
 		Mix_CloseAudio();
 
@@ -617,6 +623,21 @@ BOOL SVidLoadNextFrame()
 	return true;
 }
 
+unsigned char *SVidApplyVolume(const unsigned char *raw, unsigned long rawLen)
+{
+	unsigned char *scaled = (unsigned char *)malloc(rawLen);
+
+	if (SVidAudioDepth == 16) {
+		for (unsigned long i = 0; i < rawLen / 2; i++)
+			((Sint16 *)scaled)[i] = ((Sint16 *)raw)[i] * SVidVolume;
+	} else {
+		for (unsigned long i = 0; i < rawLen; i++)
+			scaled[i] = raw[i] * SVidVolume;
+	}
+
+	return (unsigned char *)scaled;
+}
+
 BOOL SVidPlayContinue(void)
 {
 	if (smk_palette_updated(SVidSMK)) {
@@ -648,14 +669,17 @@ BOOL SVidPlayContinue(void)
 	}
 
 	if (HaveAudio()) {
+		unsigned long len = smk_get_audio_size(SVidSMK, 0);
+		unsigned char *audio = SVidApplyVolume(smk_get_audio(SVidSMK, 0), len);
 #if SDL_VERSION_ATLEAST(2, 0, 4)
-		if (SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
+		if (SDL_QueueAudio(deviceId, audio, len) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
 #else
-		sVidAudioQueue->Enqueue(smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0));
+		sVidAudioQueue->Enqueue(audio, len);
 #endif
+		free(audio);
 	}
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
@@ -680,15 +704,12 @@ BOOL SVidPlayContinue(void)
 		} else {
 			factor = wFactor;
 		}
-		const Sint16 scaledW = SVidWidth * factor;
-		const Sint16 scaledH = SVidHeight * factor;
+		const Uint16 scaledW = SVidWidth * factor;
+		const Uint16 scaledH = SVidHeight * factor;
+		const Sint16 scaledX = (output_surface->w - scaledW) / 2;
+		const Sint16 scaledY = (output_surface->h - scaledH) / 2;
 
-		SDL_Rect pal_surface_offset = {
-			(output_surface->w - scaledW) / 2,
-			(output_surface->h - scaledH) / 2,
-			scaledW,
-			scaledH
-		};
+		SDL_Rect pal_surface_offset = { scaledX, scaledY, scaledW, scaledH };
 		if (factor == 1) {
 			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &pal_surface_offset) <= -1) {
 				ErrSdl();
@@ -753,17 +774,17 @@ void SVidPlayEnd(HANDLE video)
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
 		if (texture == NULL) {
 			ErrSdl();
 		}
-		if (renderer && SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) <= -1) {
+		if (renderer && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}
 	}
 #else
 	if (IsSVidVideoMode)
-		SetVideoModeToPrimary(IsFullScreen(), screenWidth, screenHeight);
+		SetVideoModeToPrimary(IsFullScreen(), gnScreenWidth, gnScreenHeight);
 #endif
 }
 

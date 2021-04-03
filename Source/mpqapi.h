@@ -40,7 +40,6 @@ typedef struct _BLOCKENTRY {
 	Uint32 flags;
 } _BLOCKENTRY;
 
-
 void mpqapi_remove_hash_entry(const char *pszName);
 void mpqapi_remove_hash_entries(BOOL (*fnGetName)(DWORD, char *));
 BOOL mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen);

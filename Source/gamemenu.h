@@ -12,8 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern const char *jogging_title;
-extern BOOL jogging_opt;
+extern bool gbRunInTown;
 
 void gamemenu_on();
 void gamemenu_off();
