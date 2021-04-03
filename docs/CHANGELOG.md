@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Show other players on the map
 - Widescreen menus
 - Scroll subtitles at the same speed as narration reader
-- Preserve list position when buy and selling items in stores
+- Preserve list position when buying and selling items in stores
 - Use belt via the numpad
 - Close panels when pressing <kbd>ESC</kbd>
 - Shift-click to spend all stat points
@@ -58,7 +58,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Support for portable installs
 
 ### Platforms
-- Switch Windows releases to 64bit
+- Switch Windows releases to 64-bit
 - Added support for PlayStation Vita
 - Added support for Nintendo 3DS
 - Added support for DragonFly BSD
@@ -84,7 +84,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Gold icons graphics are always correct
 - Arrows graphics not aligning with the move direction
 - Monsters miss calculating charge directions for some angles
-- Randomly being teleported from level 15 to Lazarus chamber
+- Randomly being teleported from level 15 to Lazarus' chamber
 - Wrong death sound when monster/golem kills another monster
 - Scavengers/Gravediggers taking damage when eating on higher difficulties
 - Not getting XP from monsters hit by golems
@@ -93,7 +93,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Gharbad the Weak not dropping his item when killed by a golem
 - Lights not always following unique monsters
 - Several bugs in Lazarus quest when re-entering the teleport
-- Lights added on map change not working (Arkaine's Valor etc)
+- Lights added on map update not working (Arkaine's Valor, etc.)
 - Player light radius not readjusting when a player is knocked back
 - Player light radius not updating properly before changing level
 - Tiles not properly being marked as out of visibility when walking
