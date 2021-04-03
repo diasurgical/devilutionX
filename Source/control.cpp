@@ -1959,9 +1959,9 @@ void DrawGoldSplit(CelOutputBuffer out, int amount)
 			BYTE c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
 			screen_x += fontkern[c] + 1;
 		}
-		screen_x += 452;
+		screen_x += 388;
 	} else {
-		screen_x = 450;
+		screen_x = 386;
 	}
 	CelDrawTo(out, screen_x, 140, pSPentSpn2Cels, PentSpn2Spin(), 12);
 }
