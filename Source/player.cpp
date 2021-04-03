@@ -1293,7 +1293,7 @@ void PM_ChangeOffset(int pnum)
 	plr[pnum]._pVar6 += plr[pnum]._pxvel;
 	plr[pnum]._pVar7 += plr[pnum]._pyvel;
 
-	if (currlevel == 0 && gbJogInTown) {
+	if (currlevel == 0 && gbRunInTown) {
 		plr[pnum]._pVar6 += plr[pnum]._pxvel;
 		plr[pnum]._pVar7 += plr[pnum]._pyvel;
 	}
@@ -2150,7 +2150,7 @@ bool PM_DoWalk(int pnum, int variant)
 	}
 
 	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
-	if (currlevel == 0 && gbJogInTown) {
+	if (currlevel == 0 && gbRunInTown) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;

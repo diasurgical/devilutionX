@@ -12,7 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern bool gbJogInTown;
+extern bool gbRunInTown;
 
 void gamemenu_on();
 void gamemenu_off();

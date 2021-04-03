@@ -744,7 +744,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
 		sgGameInitInfo.nDifficulty = gnDifficulty;
 		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
-		sgGameInitInfo.bJogInTown = sgOptions.Gameplay.bJogInTown;
+		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown;
 		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
 		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest;
 		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;
@@ -803,7 +803,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	gnDifficulty = sgGameInitInfo.nDifficulty;
 	gnTickRate = sgGameInitInfo.nTickRate;
 	gnTickDelay = 1000 / gnTickRate;
-	gbJogInTown = sgGameInitInfo.bJogInTown;
+	gbRunInTown = sgGameInitInfo.bRunInTown;
 	gbTheoQuest = sgGameInitInfo.bTheoQuest;
 	gbCowQuest = sgGameInitInfo.bCowQuest;
 	gbFriendlyFire = sgGameInitInfo.bFriendlyFire;

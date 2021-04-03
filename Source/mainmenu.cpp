@@ -54,7 +54,7 @@ static BOOL mainmenu_single_player()
 {
 	gbIsMultiplayer = false;
 
-	gbJogInTown = sgOptions.Gameplay.bJogInTown;
+	gbRunInTown = sgOptions.Gameplay.bRunInTown;
 	gnTickRate = sgOptions.Gameplay.nTickRate;
 	gbTheoQuest = sgOptions.Gameplay.bTheoQuest;
 	gbCowQuest = sgOptions.Gameplay.bCowQuest;
