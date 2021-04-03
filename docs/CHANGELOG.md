@@ -93,7 +93,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Lights not always following unique monsters
 - Several bugs in Lazarus quest when re-entering the teleport
 - Lights added on map change not working (Arkaine's Valor etc)
-- Player light radius not being following when a player is knocked back
+- Player light radius not readjusting when a player is knocked back
 - Player light radius not updating properly fully before changing level
 - Tiles not properly being marked as out of visibility when walking
 - Quest items brought from previous games breaking the game state
