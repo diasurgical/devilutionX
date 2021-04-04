@@ -78,7 +78,7 @@ void FocusOnCharInfo()
 	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
 }
 
-static int translate_sdl_key(SDL_Keysym key)
+int translate_sdl_key(SDL_Keysym key)
 {
 	// ref: https://wiki.libsdl.org/SDL_Keycode
 	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
@@ -244,6 +244,153 @@ static int translate_sdl_key(SDL_Keysym key)
 			return DVL_VK_F1 + (sym - SDLK_F1);
 		}
 		SDL_Log("unknown key: name=%s sym=0x%X scan=%d mod=0x%X", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
+		return -1;
+	}
+}
+
+SDL_Keycode translate_dvl_key(int key)
+{
+	// ref: https://wiki.libsdl.org/SDL_Keycode
+	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+	switch (key) {
+	case DVL_VK_BACK:
+	 	return SDLK_BACKSPACE;
+	case DVL_VK_TAB:
+	 	return SDLK_TAB;
+	case DVL_VK_RETURN:
+	 	return SDLK_RETURN;
+	case DVL_VK_ESCAPE:
+	 	return SDLK_ESCAPE;
+	case DVL_VK_SPACE:
+	 	return SDLK_SPACE;
+	case DVL_VK_OEM_7:
+	 	return SDLK_QUOTE;
+	case DVL_VK_OEM_COMMA:
+	 	return SDLK_COMMA;
+	case DVL_VK_OEM_MINUS:
+	 	return SDLK_KP_MINUS;
+	case DVL_VK_OEM_PERIOD:
+	 	return SDLK_PERIOD;
+	case DVL_VK_OEM_2:
+	 	return SDLK_SLASH;
+	case DVL_VK_OEM_1:
+	 	return SDLK_SEMICOLON;
+	case DVL_VK_OEM_PLUS:
+	 	return SDLK_KP_PLUS;
+	case DVL_VK_OEM_4:
+	 	return SDLK_LEFTBRACKET;
+	case DVL_VK_OEM_5:
+	 	return SDLK_BACKSLASH;
+	case DVL_VK_OEM_6:
+	 	return SDLK_RIGHTBRACKET;
+	case DVL_VK_OEM_3:
+	 	return SDLK_BACKQUOTE;
+	case DVL_VK_DELETE:
+	 	return SDLK_DELETE;
+	case DVL_VK_CAPITAL:
+	 	return SDLK_CAPSLOCK;
+	case DVL_VK_F1:
+	 	return SDLK_F1;
+	case DVL_VK_F2:
+	 	return SDLK_F2;
+	case DVL_VK_F3:
+	 	return SDLK_F3;
+	case DVL_VK_F4:
+	 	return SDLK_F4;
+	case DVL_VK_F5:
+	 	return SDLK_F5;
+	case DVL_VK_F6:
+	 	return SDLK_F6;
+	case DVL_VK_F7:
+	 	return SDLK_F7;
+	case DVL_VK_F8:
+	 	return SDLK_F8;
+	case DVL_VK_F9:
+	 	return SDLK_F9;
+	case DVL_VK_F10:
+	 	return SDLK_F10;
+	case DVL_VK_F11:
+	 	return SDLK_F11;
+	case DVL_VK_F12:
+	 	return SDLK_F12;
+	case DVL_VK_SNAPSHOT:
+	 	return SDLK_PRINTSCREEN;
+	case DVL_VK_SCROLL:
+	 	return SDLK_SCROLLLOCK;
+	case DVL_VK_PAUSE:
+	 	return SDLK_PAUSE;
+	case DVL_VK_INSERT:
+	 	return SDLK_INSERT;
+	case DVL_VK_HOME:
+	 	return SDLK_HOME;
+	case DVL_VK_PRIOR:
+	 	return SDLK_PAGEUP;
+	case DVL_VK_END:
+	 	return SDLK_END;
+	case DVL_VK_NEXT:
+	 	return SDLK_PAGEDOWN;
+	case DVL_VK_RIGHT:
+	 	return SDLK_RIGHT;
+	case DVL_VK_LEFT:
+	 	return SDLK_LEFT;
+	case DVL_VK_DOWN:
+	 	return SDLK_DOWN;
+	case DVL_VK_UP:
+	 	return SDLK_UP;
+	case DVL_VK_NUMLOCK:
+	 	return SDLK_NUMLOCKCLEAR;
+	case DVL_VK_DIVIDE:
+	 	return SDLK_KP_DIVIDE;
+	case DVL_VK_MULTIPLY:
+	 	return SDLK_KP_MULTIPLY;
+	case DVL_VK_NUMPAD1:
+	 	return SDLK_KP_1;
+	case DVL_VK_NUMPAD2:
+	 	return SDLK_KP_2;
+	case DVL_VK_NUMPAD3:
+	 	return SDLK_KP_3;
+	case DVL_VK_NUMPAD4:
+	 	return SDLK_KP_4;
+	case DVL_VK_NUMPAD5:
+	 	return SDLK_KP_5;
+	case DVL_VK_NUMPAD6:
+	 	return SDLK_KP_6;
+	case DVL_VK_NUMPAD7:
+	 	return SDLK_KP_7;
+	case DVL_VK_NUMPAD8:
+	 	return SDLK_KP_8;
+	case DVL_VK_NUMPAD9:
+	 	return SDLK_KP_9;
+	case DVL_VK_NUMPAD0:
+	 	return SDLK_KP_0;
+	case DVL_VK_DECIMAL:
+	 	return SDLK_KP_PERIOD;
+	case DVL_VK_MENU:
+	 	return SDLK_MENU;
+	case DVL_VK_LCONTROL:
+	 	return SDLK_LCTRL;
+	case DVL_VK_LSHIFT:
+	 	return SDLK_LSHIFT;
+	case DVL_VK_LMENU:
+	 	return SDLK_LALT;
+	case DVL_VK_LWIN:
+	 	return SDLK_LGUI;
+	case DVL_VK_RCONTROL:
+	 	return SDLK_RCTRL;
+	case DVL_VK_RSHIFT:
+	 	return SDLK_RSHIFT;
+	case DVL_VK_RMENU:
+	 	return SDLK_RALT;
+	case DVL_VK_RWIN:
+	 	return SDLK_RGUI;
+	default:
+		if (key >= 'A' && key <= 'Z') {
+			return SDLK_a + (key - 'A');
+		} else if (key >= '0' && key <= '9') {
+			return SDLK_0 + (key - '0');
+		} else if (key >= DVL_VK_F1 && key <= DVL_VK_F12) {
+			return SDLK_F1 + (key - DVL_VK_F1);
+		}
 		return -1;
 	}
 }

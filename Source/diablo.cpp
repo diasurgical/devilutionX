@@ -8,6 +8,7 @@
 #include "console.h"
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "../SourceX/controls/keymapper.hpp"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
 
@@ -48,6 +49,21 @@ int gnTickRate;
 WORD gnTickDelay = 50;
 /** Game options */
 Options sgOptions;
+Keymapper keymapper {
+	// Workaround: remove once the INI library has been replaced.
+	[](const std::string &key, const std::string &value)
+	{
+		setIniValue("Controller.Keymapping", key.c_str(), value.c_str());
+	},
+	[](const std::string &key) -> std::string
+	{
+		std::string result;
+		result.resize(64);
+		if(!getIniValue("Controller.Keymapping", key.c_str(), &result[0], result.size()))
+			return {};
+		return result;
+	}
+};
 
 /* rdata */
 
@@ -94,6 +110,8 @@ bool sbWasOptionsLoaded = false;
 // Controller support:
 extern void plrctrls_every_frame();
 extern void plrctrls_after_game_logic();
+
+void initKeymapActions();
 
 [[noreturn]] static void print_help_and_exit()
 {
@@ -472,6 +490,8 @@ static void SaveOptions()
 	setIniInt("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
 #endif
 
+	keymapper.save();
+
 	SaveIni();
 }
 
@@ -544,6 +564,8 @@ static void LoadOptions()
 #ifdef __vita__
 	sgOptions.Controller.bRearTouch = getIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
+
+	keymapper.load();
 
 	sbWasOptionsLoaded = true;
 }
@@ -640,6 +662,7 @@ void diablo_quit(int exitStatus)
 int DiabloMain(int argc, char **argv)
 {
 	diablo_parse_flags(argc, argv);
+	initKeymapActions();
 	LoadOptions();
 	diablo_init();
 	diablo_splash();
@@ -1000,18 +1023,7 @@ static void PressKey(int vkey)
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
 		}
-		if (vkey == DVL_VK_F9) {
-			diablo_hotkey_msg(0);
-		}
-		if (vkey == DVL_VK_F10) {
-			diablo_hotkey_msg(1);
-		}
-		if (vkey == DVL_VK_F11) {
-			diablo_hotkey_msg(2);
-		}
-		if (vkey == DVL_VK_F12) {
-			diablo_hotkey_msg(3);
-		}
+		keymapper.keyPressed(vkey, deathflag);
 		if (vkey == DVL_VK_RETURN) {
 			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000)
 				dx_reinit();
@@ -1043,6 +1055,8 @@ static void PressKey(int vkey)
 		return;
 	}
 
+	keymapper.keyPressed(vkey, deathflag);
+
 	if (vkey == DVL_VK_RETURN) {
 		if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
 			dx_reinit();
@@ -1053,91 +1067,6 @@ static void PressKey(int vkey)
 		} else {
 			control_type_message();
 		}
-	} else if (vkey == DVL_VK_F1) {
-		if (helpflag) {
-			helpflag = FALSE;
-		} else if (stextflag != STORE_NONE) {
-			ClearPanel();
-			AddPanelString("No help available", TRUE); /// BUGFIX: message isn't displayed
-			AddPanelString("while in stores", TRUE);
-			track_repeat_walk(FALSE);
-		} else {
-			invflag = FALSE;
-			chrflag = FALSE;
-			sbookflag = FALSE;
-			spselflag = FALSE;
-			if (qtextflag && leveltype == DTYPE_TOWN) {
-				qtextflag = FALSE;
-				stream_stop();
-			}
-			questlog = FALSE;
-			automapflag = FALSE;
-			msgdelay = 0;
-			gamemenu_off();
-			DisplayHelp();
-			doom_close();
-		}
-	}
-#ifdef _DEBUG
-	else if (vkey == DVL_VK_F2) {
-	}
-#endif
-#ifdef _DEBUG
-	else if (vkey == DVL_VK_F3) {
-		if (pcursitem != -1) {
-			sprintf(
-			    tempstr,
-			    "IDX = %i  :  Seed = %i  :  CF = %i",
-			    items[pcursitem].IDidx,
-			    items[pcursitem]._iSeed,
-			    items[pcursitem]._iCreateInfo);
-			NetSendCmdString(1 << myplr, tempstr);
-		}
-		sprintf(tempstr, "Numitems : %i", numitems);
-		NetSendCmdString(1 << myplr, tempstr);
-	}
-#endif
-#ifdef _DEBUG
-	else if (vkey == DVL_VK_F4) {
-		PrintDebugQuest();
-	}
-#endif
-	else if (vkey == DVL_VK_F5) {
-		if (spselflag) {
-			SetSpeedSpell(0);
-			return;
-		}
-		ToggleSpell(0);
-		return;
-	} else if (vkey == DVL_VK_F6) {
-		if (spselflag) {
-			SetSpeedSpell(1);
-			return;
-		}
-		ToggleSpell(1);
-		return;
-	} else if (vkey == DVL_VK_F7) {
-		if (spselflag) {
-			SetSpeedSpell(2);
-			return;
-		}
-		ToggleSpell(2);
-		return;
-	} else if (vkey == DVL_VK_F8) {
-		if (spselflag) {
-			SetSpeedSpell(3);
-			return;
-		}
-		ToggleSpell(3);
-		return;
-	} else if (vkey == DVL_VK_F9) {
-		diablo_hotkey_msg(0);
-	} else if (vkey == DVL_VK_F10) {
-		diablo_hotkey_msg(1);
-	} else if (vkey == DVL_VK_F11) {
-		diablo_hotkey_msg(2);
-	} else if (vkey == DVL_VK_F12) {
-		diablo_hotkey_msg(3);
 	} else if (vkey == DVL_VK_UP) {
 		if (stextflag) {
 			STextUp();
@@ -1215,192 +1144,11 @@ static void PressChar(WPARAM vkey)
 		return;
 	}
 
-	switch (vkey) {
-	case 'G':
-	case 'g':
-		DecreaseGamma();
-		return;
-	case 'F':
-	case 'f':
-		IncreaseGamma();
-		return;
-	case 'I':
-	case 'i':
-		if (stextflag == STORE_NONE) {
-			invflag = !invflag;
-			if (!chrflag && !questlog && PANELS_COVER) {
-				if (!invflag) { // We closed the invetory
-					if (MouseX < 480 && MouseY < PANEL_TOP) {
-						SetCursorPos(MouseX + 160, MouseY);
-					}
-				} else if (!sbookflag) { // We opened the invetory
-					if (MouseX > 160 && MouseY < PANEL_TOP) {
-						SetCursorPos(MouseX - 160, MouseY);
-					}
-				}
-			}
-			sbookflag = FALSE;
-		}
-		return;
-	case 'C':
-	case 'c':
-		if (stextflag == STORE_NONE) {
-			chrflag = !chrflag;
-			if (!invflag && !sbookflag && PANELS_COVER) {
-				if (!chrflag) { // We closed the character sheet
-					if (MouseX > 160 && MouseY < PANEL_TOP) {
-						SetCursorPos(MouseX - 160, MouseY);
-					}
-				} else if (!questlog) { // We opened the character sheet
-					if (MouseX < 480 && MouseY < PANEL_TOP) {
-						SetCursorPos(MouseX + 160, MouseY);
-					}
-				}
-			}
-			questlog = FALSE;
-		}
-		return;
-	case 'Q':
-	case 'q':
-		if (stextflag == STORE_NONE) {
-			if (!questlog) {
-				StartQuestlog();
-			} else {
-				questlog = FALSE;
-			}
-			if (!invflag && !sbookflag && PANELS_COVER) {
-				if (!questlog) { // We closed the quest log
-					if (MouseX > 160 && MouseY < PANEL_TOP) {
-						SetCursorPos(MouseX - 160, MouseY);
-					}
-				} else if (!chrflag) { // We opened the character quest log
-					if (MouseX < 480 && MouseY < PANEL_TOP) {
-						SetCursorPos(MouseX + 160, MouseY);
-					}
-				}
-			}
-			chrflag = FALSE;
-		}
-		return;
-	case 'Z':
-	case 'z':
-		zoomflag = !zoomflag;
-		CalcViewportGeometry();
-		return;
-	case 'S':
-	case 's':
-		if (stextflag == STORE_NONE) {
-			chrflag = FALSE;
-			questlog = FALSE;
-			invflag = FALSE;
-			sbookflag = FALSE;
-			if (!spselflag) {
-				DoSpeedBook();
-			} else {
-				spselflag = FALSE;
-			}
-			track_repeat_walk(FALSE);
-		}
-		return;
-	case 'B':
-	case 'b':
-		if (stextflag == STORE_NONE) {
-			sbookflag = !sbookflag;
-			if (!chrflag && !questlog && PANELS_COVER) {
-				if (!sbookflag) { // We closed the invetory
-					if (MouseX < 480 && MouseY < PANEL_TOP) {
-						SetCursorPos(MouseX + 160, MouseY);
-					}
-				} else if (!invflag) { // We opened the invetory
-					if (MouseX > 160 && MouseY < PANEL_TOP) {
-						SetCursorPos(MouseX - 160, MouseY);
-					}
-				}
-			}
-			invflag = FALSE;
-		}
-		return;
-	case '+':
-	case '=':
-		if (automapflag) {
-			AutomapZoomIn();
-		}
-		return;
-	case '-':
-	case '_':
-		if (automapflag) {
-			AutomapZoomOut();
-		}
-		return;
-	case 'v': {
-		char pszStr[120];
-		const char *difficulties[3] = {
-			"Normal",
-			"Nightmare",
-			"Hell",
-		};
-		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[gnDifficulty]);
-		NetSendCmdString(1 << myplr, pszStr);
-		return;
-	}
-	case 'V':
-		NetSendCmdString(1 << myplr, gszVersionNumber);
-		return;
-	case '!':
-	case '1':
-		if (!plr[myplr].SpdList[0].isEmpty() && plr[myplr].SpdList[0]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST);
-		}
-		return;
-	case '@':
-	case '2':
-		if (!plr[myplr].SpdList[1].isEmpty() && plr[myplr].SpdList[1]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 1);
-		}
-		return;
-	case '#':
-	case '3':
-		if (!plr[myplr].SpdList[2].isEmpty() && plr[myplr].SpdList[2]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 2);
-		}
-		return;
-	case '$':
-	case '4':
-		if (!plr[myplr].SpdList[3].isEmpty() && plr[myplr].SpdList[3]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 3);
-		}
-		return;
-	case '%':
-	case '5':
-		if (!plr[myplr].SpdList[4].isEmpty() && plr[myplr].SpdList[4]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 4);
-		}
-		return;
-	case '^':
-	case '6':
-		if (!plr[myplr].SpdList[5].isEmpty() && plr[myplr].SpdList[5]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 5);
-		}
-		return;
-	case '&':
-	case '7':
-		if (!plr[myplr].SpdList[6].isEmpty() && plr[myplr].SpdList[6]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 6);
-		}
-		return;
-	case '*':
-	case '8':
+	keymapper.keyPressed(vkey, deathflag);
+
 #ifdef _DEBUG
-		if (debug_mode_key_inverted_v || debug_mode_key_w) {
-			NetSendCmd(TRUE, CMD_CHEAT_EXPERIENCE);
-			return;
-		}
-#endif
-		if (!plr[myplr].SpdList[7].isEmpty() && plr[myplr].SpdList[7]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 7);
-		}
-		return;
-#ifdef _DEBUG
+	switch(vkey)
+	{
 	case ')':
 	case '0':
 		if (debug_mode_key_inverted_v) {
@@ -1482,8 +1230,8 @@ static void PressChar(WPARAM vkey)
 			GiveGoldCheat();
 		}
 		return;
-#endif
 	}
+#endif
 }
 
 static void GetMousePos(LPARAM lParam)
@@ -2093,5 +1841,281 @@ void diablo_color_cyc_logic()
 		palette_update_caves();
 	}
 }
+
+void helpKeyPressed()
+{
+	if (helpflag) {
+		helpflag = FALSE;
+	} else if (stextflag != STORE_NONE) {
+		ClearPanel();
+		AddPanelString("No help available", TRUE); /// BUGFIX: message isn't displayed
+		AddPanelString("while in stores", TRUE);
+		track_repeat_walk(FALSE);
+	} else {
+		invflag = FALSE;
+		chrflag = FALSE;
+		sbookflag = FALSE;
+		spselflag = FALSE;
+		if (qtextflag && leveltype == DTYPE_TOWN) {
+			qtextflag = FALSE;
+			stream_stop();
+		}
+		questlog = FALSE;
+		automapflag = FALSE;
+		msgdelay = 0;
+		gamemenu_off();
+		DisplayHelp();
+		doom_close();
+	}
+}
+
+void itemInfoKeyPressed()
+{
+	if (pcursitem != -1) {
+		sprintf(
+			tempstr,
+			"IDX = %i  :  Seed = %i  :  CF = %i",
+			item[pcursitem].IDidx,
+			item[pcursitem]._iSeed,
+			item[pcursitem]._iCreateInfo);
+		NetSendCmdString(1 << myplr, tempstr);
+	}
+	sprintf(tempstr, "Numitems : %i", numitems);
+	NetSendCmdString(1 << myplr, tempstr);
+}
+
+void inventoryKeyPressed()
+{
+	if (stextflag == STORE_NONE) {
+		invflag = !invflag;
+		if (!chrflag && !questlog && PANELS_COVER) {
+			if (!invflag) { // We closed the invetory
+				if (MouseX < 480 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX + 160, MouseY);
+				}
+			} else if (!sbookflag) { // We opened the invetory
+				if (MouseX > 160 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX - 160, MouseY);
+				}
+			}
+		}
+		sbookflag = FALSE;
+	}
+}
+
+void characterSheetKeyPressed()
+{
+	if (stextflag == STORE_NONE) {
+		chrflag = !chrflag;
+		if (!invflag && !sbookflag && PANELS_COVER) {
+			if (!chrflag) { // We closed the character sheet
+				if (MouseX > 160 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX - 160, MouseY);
+				}
+			} else if (!questlog) { // We opened the character sheet
+				if (MouseX < 480 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX + 160, MouseY);
+				}
+			}
+		}
+		questlog = FALSE;
+	}
+}
+
+void questLogKeyPressed()
+{
+	if (stextflag == STORE_NONE) {
+		if (!questlog) {
+			StartQuestlog();
+		} else {
+			questlog = FALSE;
+		}
+		if (!invflag && !sbookflag && PANELS_COVER) {
+			if (!questlog) { // We closed the quest log
+				if (MouseX > 160 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX - 160, MouseY);
+				}
+			} else if (!chrflag) { // We opened the character quest log
+				if (MouseX < 480 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX + 160, MouseY);
+				}
+			}
+		}
+		chrflag = FALSE;
+	}
+}
+
+void displaySpellsKeyPressed()
+{
+	if (stextflag == STORE_NONE) {
+		chrflag = FALSE;
+		questlog = FALSE;
+		invflag = FALSE;
+		sbookflag = FALSE;
+		if (!spselflag) {
+			DoSpeedBook();
+		} else {
+			spselflag = FALSE;
+		}
+		track_repeat_walk(FALSE);
+	}
+}
+
+void spellBookKeyPressed()
+{
+	if (stextflag == STORE_NONE) {
+		sbookflag = !sbookflag;
+		if (!chrflag && !questlog && PANELS_COVER) {
+			if (!sbookflag) { // We closed the invetory
+				if (MouseX < 480 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX + 160, MouseY);
+				}
+			} else if (!invflag) { // We opened the invetory
+				if (MouseX > 160 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX - 160, MouseY);
+				}
+			}
+		}
+		invflag = FALSE;
+	}
+}
+
+void initKeymapActions()
+{
+	keymapper.addAction({
+		"Help",
+		DVL_VK_F1,
+		helpKeyPressed
+	});
+#ifdef _DEBUG
+	keymapper.addAction({
+		"ItemInfo",
+		DVL_VK_F3,
+		itemInfoKeyPressed,
+	});
+	keymapper.addAction({
+		"QuestDebug",
+		DVL_VK_F4,
+		PrintDebugQuest,
+	});
+#endif
+	for(int i = 0; i < 4; ++i) {
+		keymapper.addAction({
+			std::string("QuickSpell") + std::to_string(i+1),
+			DVL_VK_F5+i,
+			[i]()
+			{
+				if (spselflag) {
+					SetSpeedSpell(i);
+					return;
+				}
+				ToggleSpell(i);
+			},
+			Keymapper::Action::IfDead::Allow,
+		});
+	}
+	for(int i = 0; i < 4; ++i) {
+		keymapper.addAction({
+			std::string("QuickMessage") + std::to_string(i+1),
+			DVL_VK_F9+i,
+			[i](){ diablo_hotkey_msg(i); },
+			Keymapper::Action::IfDead::Allow,
+		});
+	}
+	keymapper.addAction({
+		"DecreaseGamma",
+		'G',
+		DecreaseGamma
+	});
+	keymapper.addAction({
+		"IncreaseGamma",
+		'F',
+		IncreaseGamma
+	});
+	keymapper.addAction({
+		"Inventory",
+		'I',
+		inventoryKeyPressed
+	});
+	keymapper.addAction({
+		"Character",
+		'C',
+		characterSheetKeyPressed
+	});
+	keymapper.addAction({
+		"QuestLog",
+		'Q',
+		questLogKeyPressed
+	});
+	keymapper.addAction({
+		"Zoom",
+		'Z',
+		[]
+		{
+			zoomflag = !zoomflag;
+			CalcViewportGeometry();
+		}
+	});
+	keymapper.addAction({
+		"DisplaySpells",
+		'S',
+		displaySpellsKeyPressed
+	});
+	keymapper.addAction({
+		"SpellBook",
+		'B',
+		spellBookKeyPressed
+	});
+	keymapper.addAction({
+		"ZoomAutomapIn",
+		'+',
+		[]
+		{
+			if(automapflag)
+				AutomapZoomIn();
+		}
+	});
+	keymapper.addAction({
+		"ZoomAutomapOut",
+		'-',
+		[]
+		{
+			if(automapflag)
+				AutomapZoomOut();
+		}
+	});
+	keymapper.addAction({
+		"GameInfo",
+		'V',
+		[]
+		{
+			char pszStr[120];
+			const char *difficulties[3] = {
+				"Normal",
+				"Nightmare",
+				"Hell",
+			};
+			sprintf(pszStr, "%s, version = %s, mode = %s", gszProductName, gszVersionNumber, difficulties[gnDifficulty]);
+			NetSendCmdString(1 << myplr, pszStr);
+		}
+	});
+	for(int i = 0; i < 8; ++i) {
+		keymapper.addAction({
+			std::string("Belt") + std::to_string(i+1),
+			'1'+i,
+			[i]
+			{
+#ifdef _DEBUG
+				if (i == 7 && (debug_mode_key_inverted_v || debug_mode_key_w)) {
+					NetSendCmd(TRUE, CMD_CHEAT_EXPERIENCE);
+					return;
+				}
+#endif
+				if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
+					UseInvItem(myplr, INVITEM_BELT_FIRST + i);
+				}
+			}
+		});
+	}
 
 } // namespace devilution

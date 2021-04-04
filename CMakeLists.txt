@@ -297,6 +297,7 @@ set(devilutionx_SRCS
   SourceX/controls/modifier_hints.cpp
   SourceX/controls/plrctrls.cpp
   SourceX/controls/touch.cpp
+  SourceX/controls/keymapper.cpp
   SourceX/display.cpp
   SourceX/miniwin/misc_msg.cpp
   SourceX/thread.cpp
