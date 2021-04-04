@@ -197,7 +197,9 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		fileBuffer = NULL;
 	} else {
 		const auto pos = SFileGetFilePointer(hFile);
-		size = SFileSetFilePointer(hFile, 0, DVL_FILE_END) - SFileSetFilePointer(hFile, pos, DVL_FILE_BEGIN);
+		const auto end = SFileSetFilePointer(hFile, 0, DVL_FILE_END);
+		const auto begin = SFileSetFilePointer(hFile, pos, DVL_FILE_BEGIN);
+		size = end - begin;
 		fileBuffer = (BYTE *)malloc(size);
 	}
 
