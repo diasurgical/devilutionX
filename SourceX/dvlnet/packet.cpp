@@ -34,8 +34,7 @@ wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<p
 		const char *type_str = packet_type_to_string(t);
 		if (type_str != NULL)
 			message_.append(type_str);
-		else
-			message_.append(std::to_string(t));
+
 	};
 
 	constexpr char kJoinTypes[] = " or ";

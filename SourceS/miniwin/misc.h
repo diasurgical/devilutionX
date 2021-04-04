@@ -172,4 +172,11 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 #define DVL_MK_LBUTTON 0x0001
 #define DVL_MK_RBUTTON 0x0002
 
+
+int snprintf(char *s, size_t n, const char *format, ...);
+
+int vsnprintf(char *s, size_t n, const char *format, va_list arg);
+
+#define strcasecmp strcmp
+
 } // namespace dvl

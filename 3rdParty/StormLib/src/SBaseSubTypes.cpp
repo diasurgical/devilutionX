@@ -21,24 +21,24 @@
 typedef struct _TSQPHeader
 {
     // The ID_MPQ ('MPQ\x1A') signature
-    DWORD dwID;                         
+    DWORD dwID;
 
     // Size of the archive header
-    DWORD dwHeaderSize;                   
+    DWORD dwHeaderSize;
 
     // 32-bit size of MPQ archive
     DWORD dwArchiveSize;
 
     // Offset to the beginning of the hash table, relative to the beginning of the archive.
     DWORD dwHashTablePos;
-    
+
     // Offset to the beginning of the block table, relative to the beginning of the archive.
     DWORD dwBlockTablePos;
-    
+
     // Number of entries in the hash table. Must be a power of two, and must be less than 2^16 for
     // the original MoPaQ format, or less than 2^20 for the Burning Crusade format.
     DWORD dwHashTableSize;
-    
+
     // Number of entries in the block table
     DWORD dwBlockTableSize;
 
@@ -66,7 +66,7 @@ typedef struct _TSQPHash
 
     // The hash of the file path, using method A.
     DWORD dwName1;
-    
+
     // The hash of the file path, using method B.
     DWORD dwName2;
 
@@ -76,16 +76,16 @@ typedef struct _TSQPBlock
 {
     // Offset of the beginning of the file, relative to the beginning of the archive.
     DWORD dwFilePos;
-    
+
     // Flags for the file. See MPQ_FILE_XXXX constants
-    DWORD dwFlags;                      
+    DWORD dwFlags;
 
     // Compressed file size
     DWORD dwCSize;
-    
+
     // Uncompressed file size
-    DWORD dwFSize;                      
-    
+    DWORD dwFSize;
+
 } TSQPBlock;
 
 //-----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ int ConvertSqpHeaderToFormat4(
     Header.wSectorSize = BSWAP_INT16_UNSIGNED(pSqpHeader->wSectorSize);
 
     // Verify the SQP header
-    if(Header.dwID == ID_MPQ && Header.dwHeaderSize == sizeof(TSQPHeader) && Header.dwArchiveSize == FileSize)
+    if(Header.dwID == g_dwMpqSignature && Header.dwHeaderSize == sizeof(TSQPHeader) && Header.dwArchiveSize == FileSize)
     {
         // Check for fixed values of version and sector size
         if(Header.wFormatVersion == MPQ_FORMAT_VERSION_1 && Header.wSectorSize == 3)
@@ -143,7 +143,7 @@ int ConvertSqpHeaderToFormat4(
 
             // Copy the converted MPQ header back
             memcpy(ha->HeaderData, &Header, sizeof(TMPQHeader));
-            
+
             // Mark this file as SQP file
             ha->pfnHashString = HashStringSlash;
             ha->dwFlags |= MPQ_FLAG_READ_ONLY;
@@ -292,13 +292,13 @@ typedef struct _TMPKHeader
 {
     // The ID_MPK ('MPK\x1A') signature
     DWORD dwID;
-    
+
     // Contains '2000'
     DWORD dwVersion;
-    
+
     // 32-bit size of the archive
     DWORD dwArchiveSize;
-    
+
     // Size of the archive header
     DWORD dwHeaderSize;
 
@@ -315,7 +315,7 @@ typedef struct _TMPKHash
 {
     // The hash of the file path, using method A.
     DWORD dwName1;
-    
+
     // The hash of the file path, using method B.
     DWORD dwName2;
 
@@ -334,7 +334,7 @@ typedef struct _TMPKHash
 
 typedef struct _TMPKBlock
 {
-    DWORD  dwFlags;         // 0x1121 - Compressed , 0x1120 - Not compressed 
+    DWORD  dwFlags;         // 0x1121 - Compressed , 0x1120 - Not compressed
     DWORD  dwFilePos;       // Offset of the beginning of the file, relative to the beginning of the archive.
     DWORD  dwFSize;         // Uncompressed file size
     DWORD  dwCSize;         // Compressed file size
@@ -414,7 +414,7 @@ int ConvertMpkHeaderToFormat4(
     if(Header.dwID == ID_MPK && Header.dwHeaderSize == sizeof(TMPKHeader) && Header.dwArchiveSize == (DWORD)FileSize)
     {
         // The header ID must be ID_MPQ
-        Header.dwID = ID_MPQ;
+        Header.dwID = g_dwMpqSignature;
         Header.wFormatVersion = MPQ_FORMAT_VERSION_1;
         Header.wSectorSize = 3;
 
