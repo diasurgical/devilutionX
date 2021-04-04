@@ -2106,7 +2106,7 @@ void InitLevelChange(int pnum)
 		plr[pnum]._pLvlVisited[plr[pnum].plrlevel] = true;
 	}
 
-	ClrPlrPath(pnum);
+	ClrPlrPath(&plr[pnum]);
 	plr[pnum].destAction = ACTION_NONE;
 	plr[pnum]._pLvlChanging = true;
 
@@ -3167,7 +3167,7 @@ void CheckNewPath(int pnum)
 					}
 
 					if (x < 2 && y < 2) {
-						ClrPlrPath(pnum);
+						ClrPlrPath(&plr[pnum]);
 						if (monster[i].mtalkmsg && monster[i].mtalkmsg != TEXT_VILE14) {
 							TalktoMonster(i);
 						} else {
@@ -3651,13 +3651,9 @@ void ProcessPlayers()
 	}
 }
 
-void ClrPlrPath(int pnum)
+void ClrPlrPath(PlayerStruct *player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("ClrPlrPath: illegal player %d", pnum);
-	}
-
-	memset(plr[pnum].walkpath, WALK_NONE, sizeof(plr[pnum].walkpath));
+	memset(player->walkpath, WALK_NONE, sizeof(player->walkpath));
 }
 
 bool PosOkPlayer(int pnum, int x, int y)

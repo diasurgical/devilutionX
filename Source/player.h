@@ -428,7 +428,7 @@ void StartNewLvl(int pnum, interface_mode fom, int lvl);
 void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
-void ClrPlrPath(int pnum);
+void ClrPlrPath(PlayerStruct *player);
 bool PosOkPlayer(int pnum, int x, int y);
 void MakePlrPath(int pnum, int xx, int yy, bool endspace);
 void CheckPlrSpell();

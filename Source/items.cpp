@@ -4078,7 +4078,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			if (p == myplr)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
-			ClrPlrPath(p);
+			ClrPlrPath(&plr[p]);
 			plr[p]._pSpell = spl;
 			plr[p]._pSplType = RSPLTYPE_INVALID;
 			plr[p]._pSplFrom = 3;
@@ -4096,7 +4096,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			if (p == myplr)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
-			ClrPlrPath(p);
+			ClrPlrPath(&plr[p]);
 			plr[p]._pSpell = spl;
 			plr[p]._pSplType = RSPLTYPE_INVALID;
 			plr[p]._pSplFrom = 3;
