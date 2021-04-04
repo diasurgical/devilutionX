@@ -64,9 +64,9 @@ void InitQol()
 		LoadArt("data\\health.pcx", &qolArt->health);
 		LoadMaskedArt("data\\resistance.pcx", &qolArt->resistance, 6, 1);
 
-		if ((qolArt->healthBox.surface == nullptr) ||
-			(qolArt->health.surface == nullptr) ||
-			(qolArt->resistance.surface == nullptr)) {
+		if ((qolArt->healthBox.surface == nullptr)
+		    || (qolArt->health.surface == nullptr)
+		    || (qolArt->resistance.surface == nullptr)) {
 			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
 		}
 	}
@@ -90,6 +90,14 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	Sint32 width = qolArt->healthBox.w();
 	Sint32 height = qolArt->healthBox.h();
 	Sint32 xPos = (gnScreenWidth - width) / 2;
+
+	if (PANELS_COVER) {
+		if (invflag || sbookflag)
+			xPos -= SPANEL_WIDTH / 2;
+		if (chrflag || questlog)
+			xPos += SPANEL_WIDTH / 2;
+	}
+
 	Sint32 yPos = 18;
 	Sint32 border = 3;
 
