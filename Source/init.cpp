@@ -78,7 +78,7 @@ char gszProductName[64] = "DevilutionX vUnknown";
 
 void init_cleanup()
 {
-	if (gbIsMultiplayer) {
+	if (gbIsMultiplayer && gbRunGame) {
 		pfile_write_hero();
 	}
 	pfile_flush_W();
