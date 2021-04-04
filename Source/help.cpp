@@ -445,10 +445,6 @@ const char gszHelpText[] = {
 	"$Spell Books|"
 	"Reading more than one book increases your knowledge of that "
 	"spell, allowing you to cast the spell more effectively.|"
-	"|"
-	"$Auto-refill Belt Itmes|"
-	"Press Shift+A to toggle auto-refilling. Belt items will be refilled "
-	"as long as there is a replacement in the inventory.|"
 	"&"
 };
 

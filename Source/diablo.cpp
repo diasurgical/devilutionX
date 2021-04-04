@@ -448,6 +448,7 @@ static void SaveOptions()
 	setIniInt("Game", "Auto Equip Jewelry", sgOptions.Gameplay.bAutoEquipJewelry);
 	setIniInt("Game", "Randomize Quests", sgOptions.Gameplay.bRandomizeQuests);
 	setIniInt("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
+	setIniInt("Game", "Auto Refill Belt", sgOptions.Gameplay.bAutoRefillBelt);
 
 	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	setIniInt("Network", "Port", sgOptions.Network.nPort);
@@ -521,6 +522,7 @@ static void LoadOptions()
 	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry", false);
 	sgOptions.Gameplay.bRandomizeQuests = getIniBool("Game", "Randomize Quests", true);
 	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
+	sgOptions.Gameplay.bAutoRefillBelt = getIniBool("Game", "Auto Refill Belt", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
@@ -1474,14 +1476,14 @@ static void PressChar(WPARAM vkey)
 		}
 		return;
 #endif
-	case 'A':
-		plr[myplr].autoRefillBelt = !plr[myplr].autoRefillBelt;
-		if (plr[myplr].autoRefillBelt)
-			NetSendCmdString(1 << myplr, "Auto-refill belt activated");
-		else
-			NetSendCmdString(1 << myplr, "Auto-refill belt de-activated");
-		PlaySFX(IS_IGRAB);
-		return;
+		//	case 'A':
+		//		plr[myplr].autoRefillBelt = !plr[myplr].autoRefillBelt;
+		//		if (plr[myplr].autoRefillBelt)
+		//			NetSendCmdString(1 << myplr, "Auto-refill belt activated");
+		//		else
+		//			NetSendCmdString(1 << myplr, "Auto-refill belt de-activated");
+		//		PlaySFX(IS_IGRAB);
+		//		return;
 	}
 }
 

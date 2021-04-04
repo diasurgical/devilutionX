@@ -483,7 +483,7 @@ void DrawInv(CelOutputBuffer out)
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
 					    pCursCels, frame, frame_width,
-						false);
+					    false);
 				} else {
 					CelBlitOutlineTo(
 					    out,
@@ -491,7 +491,7 @@ void DrawInv(CelOutputBuffer out)
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
 					    pCursCels2, frame - 179, frame_width,
-						false);
+					    false);
 				}
 			}
 
@@ -2726,7 +2726,7 @@ BOOL UseInvItem(int pnum, int cii)
 	}
 
 	//If selected speedlist item exists in InvList, use the InvList item.
-	for (int i = 0; i < plr[pnum]._pNumInv && plr[pnum].autoRefillBelt; i++) {
+	for (int i = 0; i < plr[pnum]._pNumInv && sgOptions.Gameplay.bAutoRefillBelt; i++) {
 		if (plr[myplr].InvList[i]._iMiscId == Item->_iMiscId && plr[myplr].InvList[i]._iSpell == Item->_iSpell) {
 			c = i;
 			Item = &plr[pnum].InvList[c];
