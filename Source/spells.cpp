@@ -279,7 +279,7 @@ void DoResurrect(int pnum, int rid)
 			drawmanaflag = true;
 		}
 
-		ClrPlrPath(rid);
+		ClrPlrPath(&plr[rid]);
 		plr[rid].destAction = ACTION_NONE;
 		plr[rid]._pInvincible = false;
 		PlacePlayer(rid);

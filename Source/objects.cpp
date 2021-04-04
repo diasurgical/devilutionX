@@ -1956,7 +1956,7 @@ void Obj_Circle(int i)
 			AddMissile(plr[myplr].position.tile.x, plr[myplr].position.tile.y, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
 			track_repeat_walk(false);
 			sgbMouseDown = CLICK_NONE;
-			ClrPlrPath(myplr);
+			ClrPlrPath(&plr[myplr]);
 			StartStand(myplr, DIR_S);
 		}
 	} else {

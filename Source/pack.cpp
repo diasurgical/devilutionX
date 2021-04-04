@@ -216,7 +216,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	pPlayer->position.tile = { pPack->px, pPack->py };
 	pPlayer->position.future = { pPack->px, pPack->py };
 	pPlayer->plrlevel = pPack->plrlevel;
-	ClrPlrPath(pnum);
+	ClrPlrPath(pPlayer);
 	pPlayer->destAction = ACTION_NONE;
 	strcpy(pPlayer->_pName, pPack->pName);
 	pPlayer->_pClass = (HeroClass)pPack->pClass;
