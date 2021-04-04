@@ -64,9 +64,9 @@ void InitQol()
 		LoadArt("data\\health.pcx", &qolArt->health);
 		LoadMaskedArt("data\\resistance.pcx", &qolArt->resistance, 6, 1);
 
-		if ((qolArt->healthBox.surface == nullptr) ||
-			(qolArt->health.surface == nullptr) ||
-			(qolArt->resistance.surface == nullptr)) {
+		if ((qolArt->healthBox.surface == nullptr)
+		    || (qolArt->health.surface == nullptr)
+		    || (qolArt->resistance.surface == nullptr)) {
 			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
 		}
 	}
@@ -90,6 +90,14 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	Sint32 width = qolArt->healthBox.w();
 	Sint32 height = qolArt->healthBox.h();
 	Sint32 xPos = (gnScreenWidth - width) / 2;
+
+	if (PANELS_COVER) {
+		if (invflag || sbookflag)
+			xPos -= SPANEL_WIDTH / 2;
+		if (chrflag || questlog)
+			xPos += SPANEL_WIDTH / 2;
+	}
+
 	Sint32 yPos = 18;
 	Sint32 border = 3;
 
@@ -183,9 +191,19 @@ bool HasRoomForGold()
 {
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		int idx = plr[myplr].InvGrid[i];
-		if (idx == 0 || (idx > 0 && plr[myplr].InvList[idx]._itype == ITYPE_GOLD && plr[myplr].InvList[idx]._ivalue < MaxGold)) {
+
+		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
+		if (idx < 0)
+			continue;
+
+		// Empty cell. 1x1 space available.
+		if (idx == 0)
 			return true;
-		}
+
+		// Main item cell. Potentially a gold pile so check it.
+		auto item = plr[myplr].InvList[idx - 1];
+		if (item._itype == ITYPE_GOLD && item._ivalue < MaxGold)
+			return true;
 	}
 
 	return false;

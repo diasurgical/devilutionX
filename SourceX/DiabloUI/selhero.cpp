@@ -136,6 +136,14 @@ void selhero_ScrollIntoView(std::size_t index)
 	}
 }
 
+BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
+{
+	selhero_heros[selhero_SaveCount] = *pInfo;
+	selhero_SaveCount++;
+
+	return true;
+}
+
 } // namespace
 
 void selhero_Init()
@@ -144,6 +152,10 @@ void selhero_Init()
 	UiAddBackground(&vecSelHeroDialog);
 	UiAddLogo(&vecSelHeroDialog);
 	LoadScrollBar();
+
+	selhero_SaveCount = 0;
+	gfnHeroInfo(SelHero_GetHeroInfo);
+	std::reverse(selhero_heros, selhero_heros + selhero_SaveCount);
 
 	selhero_FreeDlgItems();
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
@@ -329,11 +341,13 @@ void selhero_List_Esc()
 
 void selhero_ClassSelector_Focus(int value)
 {
+	const auto hero_class = static_cast<plr_class>(vecSelHeroDlgItems[value]->m_value);
+
 	_uidefaultstats defaults;
-	gfnHeroStats(value, &defaults);
+	gfnHeroStats(hero_class, &defaults);
 
 	selhero_heroInfo.level = 1;
-	selhero_heroInfo.heroclass = (plr_class)vecSelHeroDlgItems[value]->m_value;
+	selhero_heroInfo.heroclass = hero_class;
 	selhero_heroInfo.strength = defaults.strength;
 	selhero_heroInfo.magic = defaults.magic;
 	selhero_heroInfo.dexterity = defaults.dexterity;
@@ -356,7 +370,7 @@ static bool shouldPrefillHeroName()
 void selhero_ClassSelector_Select(int value)
 {
 	int hClass = vecSelHeroDlgItems[value]->m_value;
-	if (gbSpawned && (hClass == PC_ROGUE || hClass == PC_SORCERER || hClass == PC_BARD)) {
+	if (gbSpawned && (hClass == PC_ROGUE || hClass == PC_SORCERER || (hClass == PC_BARD && !hfbard_mpq))) {
 		ArtBackground.Unload();
 		UiSelOkDialog(NULL, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
@@ -473,14 +487,6 @@ void selhero_Load_Select(int value)
 	selhero_result = 0;
 }
 
-BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
-{
-	selhero_heros[selhero_SaveCount] = *pInfo;
-	selhero_SaveCount++;
-
-	return true;
-}
-
 static void UiSelHeroDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
@@ -492,8 +498,6 @@ static void UiSelHeroDialog(
 	bUIElementsLoaded = true;
 
 	do {
-		selhero_Init();
-
 		gfnHeroInfo = fninfo;
 		gfnHeroCreate = fncreate;
 		gfnHeroStats = fnstats;
@@ -501,9 +505,7 @@ static void UiSelHeroDialog(
 
 		selhero_navigateYesNo = false;
 
-		selhero_SaveCount = 0;
-		gfnHeroInfo(SelHero_GetHeroInfo);
-		std::reverse(selhero_heros, selhero_heros + selhero_SaveCount);
+		selhero_Init();
 
 		if (selhero_SaveCount) {
 			selhero_List_Init();

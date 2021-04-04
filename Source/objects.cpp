@@ -4,6 +4,7 @@
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
 #include "all.h"
+#include "options.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -3996,6 +3997,9 @@ void OperateShrine(int pnum, int i, int sType)
 		}
 		ModifyPlrMag(myplr, magicGain);
 		plr[myplr]._pExperience = xpLoss;
+		if (sgOptions.Gameplay.bExperienceBar) {
+			force_redraw = 255;
+		}
 		CheckStats(pnum);
 	} break;
 

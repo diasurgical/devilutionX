@@ -201,7 +201,7 @@ void StoreAutoPlace()
 	w = icursW28;
 	h = icursH28;
 	done = FALSE;
-	if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem)) {
+	if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem)) {
 		done = TRUE;
 	}
 
@@ -1365,7 +1365,7 @@ void S_SBuyEnter()
 			plr[myplr].HoldItem = smithitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
-			if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = TRUE;
 			}
 
@@ -1433,7 +1433,7 @@ void S_SPBuyEnter()
 			plr[myplr].HoldItem = premiumitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
-			if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = TRUE;
 			}
 
@@ -1700,7 +1700,7 @@ void S_WBuyEnter()
 			plr[myplr].HoldItem = witchitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
-			if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = TRUE;
 			}
 
@@ -1879,7 +1879,7 @@ void S_BBuyEnter()
 	SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	bool done = false;
-	if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+	if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 		done = true;
 	}
 
@@ -2011,7 +2011,7 @@ void S_HBuyEnter()
 			plr[myplr].HoldItem = healitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
-			if (AutoEquipEnabled(plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = TRUE;
 			}
 

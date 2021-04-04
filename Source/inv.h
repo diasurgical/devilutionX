@@ -7,6 +7,7 @@
 #define __INV_H__
 
 #include "items.h"
+#include "player.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -35,7 +36,7 @@ void InitInv();
 void DrawInv(CelOutputBuffer out);
 
 void DrawInvBelt(CelOutputBuffer out);
-bool AutoEquipEnabled(const ItemStruct &item);
+bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item);
 bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true);
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag);
 BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item);

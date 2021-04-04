@@ -200,6 +200,27 @@ const char *const ClassPathTbl[] = {
 	"Warrior",
 };
 
+Sint32 PlayerStruct::GetBaseAttributeValue(attribute_id attribute) const
+{
+	switch (attribute) {
+	case attribute_id::ATTRIB_DEX:
+		return this->_pBaseDex;
+	case attribute_id::ATTRIB_MAG:
+		return this->_pBaseMag;
+	case attribute_id::ATTRIB_STR:
+		return this->_pBaseStr;
+	case attribute_id::ATTRIB_VIT:
+		return this->_pBaseVit;
+	default:
+		app_fatal("Unsupported attribute");
+	}
+}
+
+Sint32 PlayerStruct::GetMaximumAttributeValue(attribute_id attribute) const
+{
+	return MaxStats[_pClass][attribute];
+}
+
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {
 	int i;
@@ -928,6 +949,10 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		plr[pnum]._pExperience = MAXEXP;
 	}
 
+	if (sgOptions.Gameplay.bExperienceBar) {
+		force_redraw = 255;
+	}
+
 	if (plr[pnum]._pExperience >= ExpLvlsTbl[49]) {
 		plr[pnum]._pLevel = 50;
 		return;
@@ -1293,7 +1318,7 @@ void PM_ChangeOffset(int pnum)
 	plr[pnum]._pVar6 += plr[pnum]._pxvel;
 	plr[pnum]._pVar7 += plr[pnum]._pyvel;
 
-	if (currlevel == 0 && gbJogInTown) {
+	if (currlevel == 0 && gbRunInTown) {
 		plr[pnum]._pVar6 += plr[pnum]._pxvel;
 		plr[pnum]._pVar7 += plr[pnum]._pyvel;
 	}
@@ -2150,7 +2175,7 @@ bool PM_DoWalk(int pnum, int variant)
 	}
 
 	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
-	if (currlevel == 0 && gbJogInTown) {
+	if (currlevel == 0 && gbRunInTown) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;
@@ -3439,8 +3464,12 @@ void ValidatePlayer()
 	}
 	if (plr[myplr]._pLevel > MAXCHARLEVEL - 1)
 		plr[myplr]._pLevel = MAXCHARLEVEL - 1;
-	if (plr[myplr]._pExperience > plr[myplr]._pNextExper)
+	if (plr[myplr]._pExperience > plr[myplr]._pNextExper) {
 		plr[myplr]._pExperience = plr[myplr]._pNextExper;
+		if (sgOptions.Gameplay.bExperienceBar) {
+			force_redraw = 255;
+		}
+	}
 
 	gt = 0;
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {

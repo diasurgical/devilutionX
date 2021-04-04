@@ -1655,6 +1655,13 @@ void CheckChrBtns()
 	}
 }
 
+int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, attribute_id attribute)
+{
+	int pointsToReachCap = player.GetMaximumAttributeValue(attribute) - player.GetBaseAttributeValue(attribute);
+
+	return std::min(remainingStatPoints, pointsToReachCap);
+}
+
 void ReleaseChrBtns(bool addAllStatPoints)
 {
 	int i;
@@ -1667,23 +1674,28 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
 			    && MouseY >= ChrBtnsRect[i].y
 			    && MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
-				int statPointsToAdd = addAllStatPoints ? plr[myplr]._pStatPts : 1;
+				PlayerStruct &player = plr[myplr];
+				int statPointsToAdd = addAllStatPoints ? player._pStatPts : 1;
 				switch (i) {
 				case 0:
+					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_STR);
 					NetSendCmdParam1(TRUE, CMD_ADDSTR, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
+					player._pStatPts -= statPointsToAdd;
 					break;
 				case 1:
+					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_MAG);
 					NetSendCmdParam1(TRUE, CMD_ADDMAG, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
+					player._pStatPts -= statPointsToAdd;
 					break;
 				case 2:
+					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_DEX);
 					NetSendCmdParam1(TRUE, CMD_ADDDEX, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
+					player._pStatPts -= statPointsToAdd;
 					break;
 				case 3:
+					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_VIT);
 					NetSendCmdParam1(TRUE, CMD_ADDVIT, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
+					player._pStatPts -= statPointsToAdd;
 					break;
 				}
 			}
@@ -1959,9 +1971,9 @@ void DrawGoldSplit(CelOutputBuffer out, int amount)
 			BYTE c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
 			screen_x += fontkern[c] + 1;
 		}
-		screen_x += 452;
+		screen_x += 388;
 	} else {
-		screen_x = 450;
+		screen_x = 386;
 	}
 	CelDrawTo(out, screen_x, 140, pSPentSpn2Cels, PentSpn2Spin(), 12);
 }

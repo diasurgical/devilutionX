@@ -185,9 +185,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -221,9 +221,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -257,9 +257,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -293,9 +293,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -332,9 +332,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -390,9 +390,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -426,9 +426,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -482,14 +482,16 @@ void DrawInv(CelOutputBuffer out)
 					    color,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-					    pCursCels, frame, frame_width);
+					    pCursCels, frame, frame_width,
+						false);
 				} else {
 					CelBlitOutlineTo(
 					    out,
 					    color,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-					    pCursCels2, frame - 179, frame_width);
+					    pCursCels2, frame - 179, frame_width,
+						false);
 				}
 			}
 
@@ -554,9 +556,9 @@ void DrawInvBelt(CelOutputBuffer out)
 				color = ICOL_RED;
 			if (!sgbControllerActive || invflag) {
 				if (frame <= 179)
-					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
+					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, false);
 				else
-					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
+					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -772,11 +774,6 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation, bool 
 		return false;
 	}
 
-	// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
-	// annoy players who prefer that playstyle.
-	if (plr[playerNumber]._pClass == PC_MONK && (bodyLocation == INVLOC_HAND_LEFT || bodyLocation == INVLOC_HAND_RIGHT))
-		return false;
-
 	if (persistItem) {
 		plr[playerNumber].InvBody[bodyLocation] = item;
 
@@ -816,14 +813,17 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 }
 
 /**
- * @brief Checks whether or not auto-equipping behavior is enabled for the given item.
+ * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
+ * @param player The player to check.
  * @param item The item to check.
- * @return 'True' if auto-equipping behavior is enabled for the item and 'False' otherwise.
+ * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
  */
-bool AutoEquipEnabled(const ItemStruct &item)
+bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
 {
 	if (item.isWeapon()) {
-		return sgOptions.Gameplay.bAutoEquipWeapons;
+		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
+		// annoy players who prefer that playstyle.
+		return player._pClass != PC_MONK && sgOptions.Gameplay.bAutoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
@@ -2179,7 +2179,7 @@ void AutoGetItem(int pnum, int ii)
 			SetPlrHandGoldCurs(&item[ii]);
 		}
 	} else {
-		done = AutoEquipEnabled(plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
+		done = AutoEquipEnabled(plr[pnum], plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
 		if (!done) {
 			done = AutoPlaceItemInBelt(pnum, plr[pnum].HoldItem, true);
 		}
