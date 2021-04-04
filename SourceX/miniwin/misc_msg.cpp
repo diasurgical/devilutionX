@@ -25,6 +25,25 @@
 
 namespace dvl {
 
+	int snprintf(char *s, size_t n, const char *format, ...)
+{
+    char message[256];
+    va_list ap;
+    va_start(ap, format);
+    vsprintf(message, format, ap);
+    va_end(ap);
+    
+    return sprintf(s, format, message); // Security?
+}
+
+int vsnprintf(char *s, size_t n, const char *format, va_list arg)
+{
+    char message[256];
+    vsprintf(message, format, arg);
+
+    return sprintf(s, format, message); // Security?
+}
+
 static std::deque<MSG> message_queue;
 
 bool mouseWarping = false;

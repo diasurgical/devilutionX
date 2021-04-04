@@ -57,7 +57,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 			return NULL;
 		}
 
-#ifdef __3DS__
+#if 1
 		memcpy(str, text, str_len + 1);
 #else
 		SDL_strlcpy(str, text, str_len + 1);

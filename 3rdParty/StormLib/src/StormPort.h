@@ -222,8 +222,6 @@
 //-----------------------------------------------------------------------------
 // Defines for Vita platform
 
-#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__vita__)
-
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <fcntl.h>
@@ -238,6 +236,12 @@
   #include <assert.h>
   #include <errno.h>
 
+int ftruncate(int fd, off_t length)
+{
+return 0;
+}
+
+
   #ifndef __BIG_ENDIAN__
     #define STORMLIB_LITTLE_ENDIAN
   #endif
@@ -246,7 +250,7 @@
   #define STORMLIB_VITA
   #define STORMLIB_PLATFORM_DEFINED
 
-#endif
+
 
 //-----------------------------------------------------------------------------
 // Assumption: If the platform is not defined, this must be Linux *grin*
