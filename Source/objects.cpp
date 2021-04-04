@@ -3996,6 +3996,9 @@ void OperateShrine(int pnum, int i, int sType)
 		}
 		ModifyPlrMag(myplr, magicGain);
 		plr[myplr]._pExperience = xpLoss;
+		if (sgOptions.Gameplay.bExperienceBar) {
+			force_redraw = 255;
+		}
 		CheckStats(pnum);
 	} break;
 

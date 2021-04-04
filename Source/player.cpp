@@ -949,6 +949,10 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		plr[pnum]._pExperience = MAXEXP;
 	}
 
+	if (sgOptions.Gameplay.bExperienceBar) {
+		force_redraw = 255;
+	}
+
 	if (plr[pnum]._pExperience >= ExpLvlsTbl[49]) {
 		plr[pnum]._pLevel = 50;
 		return;
@@ -3460,8 +3464,12 @@ void ValidatePlayer()
 	}
 	if (plr[myplr]._pLevel > MAXCHARLEVEL - 1)
 		plr[myplr]._pLevel = MAXCHARLEVEL - 1;
-	if (plr[myplr]._pExperience > plr[myplr]._pNextExper)
+	if (plr[myplr]._pExperience > plr[myplr]._pNextExper) {
 		plr[myplr]._pExperience = plr[myplr]._pNextExper;
+		if (sgOptions.Gameplay.bExperienceBar) {
+			force_redraw = 255;
+		}
+	}
 
 	gt = 0;
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {

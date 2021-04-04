@@ -2406,6 +2406,9 @@ static DWORD On_CHEAT_EXPERIENCE(TCmd *pCmd, int pnum)
 		msg_send_packet(pnum, pCmd, sizeof(*pCmd));
 	else if (plr[pnum]._pLevel < MAXCHARLEVEL - 1) {
 		plr[pnum]._pExperience = plr[pnum]._pNextExper;
+		if (sgOptions.Gameplay.bExperienceBar) {
+			force_redraw = 255;
+		}
 		NextPlrLevel(pnum);
 	}
 #endif
