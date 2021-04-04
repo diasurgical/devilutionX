@@ -183,9 +183,19 @@ bool HasRoomForGold()
 {
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		int idx = plr[myplr].InvGrid[i];
-		if (idx == 0 || (idx > 0 && plr[myplr].InvList[idx - 1]._itype == ITYPE_GOLD && plr[myplr].InvList[idx - 1]._ivalue < MaxGold)) {
+
+		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
+		if (idx < 0)
+			continue;
+
+		// Empty cell. 1x1 space available.
+		if (idx == 0)
 			return true;
-		}
+
+		// Main item cell. Potentially a gold pile so check it.
+		auto item = plr[myplr].InvList[idx - 1];
+		if (item._itype == ITYPE_GOLD && item._ivalue < MaxGold)
+			return true;
 	}
 
 	return false;
