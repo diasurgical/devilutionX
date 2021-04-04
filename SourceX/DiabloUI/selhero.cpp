@@ -136,6 +136,14 @@ void selhero_ScrollIntoView(std::size_t index)
 	}
 }
 
+BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
+{
+	selhero_heros[selhero_SaveCount] = *pInfo;
+	selhero_SaveCount++;
+
+	return true;
+}
+
 } // namespace
 
 void selhero_Init()
@@ -144,6 +152,10 @@ void selhero_Init()
 	UiAddBackground(&vecSelHeroDialog);
 	UiAddLogo(&vecSelHeroDialog);
 	LoadScrollBar();
+
+	selhero_SaveCount = 0;
+	gfnHeroInfo(SelHero_GetHeroInfo);
+	std::reverse(selhero_heros, selhero_heros + selhero_SaveCount);
 
 	selhero_FreeDlgItems();
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
@@ -475,14 +487,6 @@ void selhero_Load_Select(int value)
 	selhero_result = 0;
 }
 
-BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
-{
-	selhero_heros[selhero_SaveCount] = *pInfo;
-	selhero_SaveCount++;
-
-	return true;
-}
-
 static void UiSelHeroDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
@@ -494,8 +498,6 @@ static void UiSelHeroDialog(
 	bUIElementsLoaded = true;
 
 	do {
-		selhero_Init();
-
 		gfnHeroInfo = fninfo;
 		gfnHeroCreate = fncreate;
 		gfnHeroStats = fnstats;
@@ -503,9 +505,7 @@ static void UiSelHeroDialog(
 
 		selhero_navigateYesNo = false;
 
-		selhero_SaveCount = 0;
-		gfnHeroInfo(SelHero_GetHeroInfo);
-		std::reverse(selhero_heros, selhero_heros + selhero_SaveCount);
+		selhero_Init();
 
 		if (selhero_SaveCount) {
 			selhero_List_Init();
