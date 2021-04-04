@@ -107,7 +107,9 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 
 	DrawArt(out, xPos, yPos, &qolArt->healthBox);
 	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
-	DrawArt(out, xPos + border + 1, yPos + border + 1, &qolArt->health, 0, (width * mon->_mhitpoints) / maxLife, height - (border * 2) - 2);
+	if (mon->_mhitpoints) {
+		DrawArt(out, xPos + border + 1, yPos + border + 1, &qolArt->health, 0, (width * mon->_mhitpoints) / maxLife, height - (border * 2) - 2);
+	}
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
 		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 172 /*beast*/ };
