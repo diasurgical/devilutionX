@@ -4,6 +4,7 @@
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
 #include "all.h"
+#include "options.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
