@@ -20,7 +20,7 @@
 
 # What is DevilutionX
 
-DevilutionX is a source port of Hellfire/Diablo that strives to make it simple to run the game while providing engine inprovments, bugfixes, and some optional quality of life features.
+DevilutionX is a source port of Hellfire/Diablo that strives to make it simple to run the game while providing engine inprovements, bugfixes, and some optional quality of life features.
 
 For a full list of changes see our [changelog](docs/CHANGELOG.md).
 
@@ -28,25 +28,25 @@ For a full list of changes see our [changelog](docs/CHANGELOG.md).
 
 Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) and extract the contents to a location of your choosing.
 
-For more detailed instructions: [Installation Instructions](./docs/installing.md)
+For more detailed instructions: [Installation Instructions](./docs/installing.md).
 
 # Contributing
 
-We are always looking for more people to help with [coding](docs/CONTRIBUTING.md), [documentation](https://github.com/diasurgical/devilutionX/wiki), testing the [latest builds](https://app.circleci.com/pipelines/github/diasurgical/devilutionX?branch=master), spreading the word, or simply just having out on [the chat](https://discord.gg/YQKCAYQ).
+We are always looking for more people to help with [coding](docs/CONTRIBUTING.md), [documentation](https://github.com/diasurgical/devilutionX/wiki), testing the [latest builds](https://app.circleci.com/pipelines/github/diasurgical/devilutionX?branch=master), spreading the word, or simply just hanging out on [the chat](https://discord.gg/YQKCAYQ).
 
 # Mods
 
-We hope to provide a good starting points for mods, in addition to the full Devilution source code we also provide modding tools. Also checkout the list of known [mods based on DevilutionX](https://github.com/diasurgical/devilutionX/wiki/Mods-and-related-projects)
+We hope to provide a good starting point for mods, in addition to the full Devilution source code we also provide modding tools. Also checkout the list of known [mods based on DevilutionX](https://github.com/diasurgical/devilutionX/wiki/Mods-and-related-projects).
 
 # Building from Source
 
-Want to compile the program by yourself, great! Simply follow the [build instructions](./docs/building.md)
+Want to compile the program by yourself? Great! Simply follow the [build instructions](./docs/building.md).
 
 # Credits
 
 - The original Devilution project [Devilution](https://github.com/diasurgical/devilution#credits)
 - [Everyone](https://github.com/diasurgical/devilutionX/graphs/contributors) who worked on Devilution/DevilutionX
-- [Nikolay Popov](https://www.instagram.com/nikolaypopovz/) who provided new backgrounds and icons.
+- [Nikolay Popov](https://www.instagram.com/nikolaypopovz/) who provided new backgrounds and icons
 - And a thanks to all who support the project, report bugs and help spread the word ❤️
 
 # Legal
