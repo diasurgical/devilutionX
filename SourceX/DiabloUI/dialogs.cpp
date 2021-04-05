@@ -242,7 +242,7 @@ void DialogLoop(std::vector<UiItemBase *> items, std::vector<UiItemBase *> rende
 		}
 
 		if (renderBehind.size() == 0) {
-			SDL_FillRect(GetOutputSurface(), NULL, 0);
+			SDL_FillRect(DiabloUiSurface(), NULL, 0);
 		} else {
 			UiRenderItems(renderBehind);
 		}

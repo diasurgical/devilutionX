@@ -61,7 +61,7 @@ void progress_Free()
 
 void progress_Render(BYTE progress)
 {
-	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	SDL_FillRect(DiabloUiSurface(), NULL, 0x000000);
 	DrawArt(0, 0, &ArtBackground);
 
 	Sint16 x = GetCenterOffset(280);
