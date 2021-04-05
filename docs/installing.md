@@ -1,6 +1,6 @@
 # Installing
 
-Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) and extract the contents to a location of your choosing or [build from source](./docs/building.md).
+Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) and extract the contents to a location of your choosing or [build from source](building.md).
 
 <details><summary>Windows</summary>
 
