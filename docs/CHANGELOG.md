@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for DragonFly BSD
 - Added AppImage for Linux
 
-### Optional improvements
+### Optional Features
 #### Gameplay
 - Experience bar
 - Monster health bar
@@ -78,44 +78,41 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Command-line output missing on Windows
 - Correct visuals and function of the joining-game-dialog
 #### Controls
-- Dragging on touch devices
-- Mouse not releasing when exiting the window
 - Mouse jumping to the top of the windows when using the menu
+- Mouse not releasing when exiting the window
+- Dragging on touch devices
 #### Stability / Performance / System
 - Multiplayer host crashing after beating the game
 
 ### Bugfixes for original Diablo bugs
-#### Bugs fixed applied form Hellfire 1.01
-- Monster hitpoints being capped in Nightmare/Hell difficulty
-- Some stability issues
-- Some unique items morphing on a new game
-- Monsters being unable to properly see the location of firewalls
-- Gharbad the Weak not dropping his item when killed by a golem
-- Fix more stability issues
 #### Gameplay
-- Gold piles will be filled to their max, before starting a new one
-- Monsters miss calculating charge directions for some angles
-- Randomly being teleported from level 15 to Lazarus' chamber
-- Scavengers/Gravediggers taking damage when eating on higher difficulties
-- Not getting XP from monsters hit by golems
-- Monsters with hiding ability fleeing in the wrong direction from golems
-- Monsters going inactive when fighting golems offscreen
-- Several bugs in Lazarus quest when re-entering the teleport
+- Base damage not being updated when leveling up
 - Player vision radius not updating properly before changing level
 - Tiles not properly being marked as out of visibility when walking
+- Scavengers/Gravediggers taking damage when eating on higher difficulties
+- Flash only dealing 10% damage in some directions
+- Not getting XP for the first monster placed on a level
+- Not getting XP from monsters hit by golems
+- Monsters going inactive when fighting golems offscreen
+- Monsters with hiding ability fleeing in the wrong direction from golems
+- Fallen fleeing in the wrong direction
+- Monsters charge directions being biased for some angles
+- Monsters not being able to properly judge the location of firewalls
+- Some unique items morphing on a new game
+- Incorrectly seeing legit items as duplicates
+- Items being destroyed if held in cursor when entering dungeon
+- Being able to waste gold on red scrolls when not having room for them
+- Gaining mana from reading books despite wearing an item with corruption
+- Gold piles will be filled to their max, before starting a new one
 - Inconsistent repair prices caused by rounding errors
-- Base damage not being updated when leveling up
 - Arkaine's Valor brought from previous games breaking the game state
 - Several issues causing Arkaine's Valor to enter a broken state
-- Flash only dealing 10% damage in some directions
-- Town portals appearing on two levels when cast in a quest level
-- Incorrectly seeing legit items as duplicates
-- Gaining mana from reading books despite wearing an item with corruption
-- Fallen fleeing in the wrong direction
-- Not getting XP for the first monster placed on a level
-- Being able to waste gold on red scrolls when not having room for them
-- Items being destroyed if held in cursor when entering dungeon
 - Black Mushroom quest not resetting between games
+- Randomly being teleported from level 15 to Lazarus' chamber
+- Several bugs in Lazarus quest when re-entering the teleport
+- Town portals appearing on two levels when cast in a quest level
+#### Controls
+- Inconsistent mouse behavior when opening/closing various panels
 #### Graphics / Audio
 - Gold icons graphics are always correct
 - Arrows graphics not aligning with the move direction
@@ -124,14 +121,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Lights added on map update not working (Arkaine's Valor, etc.)
 - Player light radius not readjusting when a player is knocked back
 - Loadscreen colors on entering the Poison Water quest
-#### Controls
-- Inconsistent mouse behavior when opening/closing various panels
 - Lava pools sometimes having roof tiles in them
 - Doors sometimes missing in Halls of The Blind
 - Broken outline on some inventory items
+#### Stability / Performance / System
+- Fix more stability issues
+#### Bugfixes from Hellfire 1.00 - 1.01
+- Monster hitpoints overflowing in Nightmare/Hell difficulty
+- Gharbad the Weak not dropping his item when killed by a golem
+- Some stability issues
 
 ### Bugfixes for original Hellfire bugs
-#### Bugs fixed applied form Diablo 1.03 - 1.09
+#### Gameplay
+- Firewall damage calculation being too low
+- Firewall/Lightningwall damage being based on the dungion level instead of spell level for the first player
+- Right-hand item's decay suffix being applied to the left-hand item in multiplayer
+- Town Shrine would always cast TP from the first player instead of the user
+- Oily Shrine and Sparkling Shrine would cast their traps as if the first player was doing it
+- The farmer would always think he was talking to the local player
+- Scavenger/Gravedigger AI being stuck for a round after eating
+- Sync available quests in multiplayer
+- Correct spell level being ignored for Search and Rage
+#### Graphics / Audio
+- Monster attack sound sometimes not playing
+- Missing sounds when bards and barbarians talk to cows
+- "0 Gold" sometimes spawning on The Cornerstone
+- Minor typography corrections
+#### Bugfixes from Diablo 1.03 - 1.09
 - The Hidden Shrine freezes when not holding an applicable item
 - Memory corruption when casting town portal
 - Crashes associated with Black Death
@@ -153,21 +169,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Diablo's scream being muted if you load a save game during his death throes
 - Multiplayer character files are now located in the data directory, and may be moved between computers
 - Some stability issues
-#### Gameplay
-- Firewall damage calculation being too low
-- Firewall/Lightningwall damage being based on the dungion level instead of spell level for the first player
-- Right-hand item's decay suffix being applied to the left-hand item in multiplayer
-- Town Shrine would always cast TP from the first player instead of the user
-- Oily Shrine and Sparkling Shrine would cast their traps as if the first player was doing it
-- The farmer would always think he was talking to the local player
-- Scavenger/Gravedigger AI being stuck for a round after eating
-- Sync available quests in multiplayer
-- Correct spell level being ignored for Search and Rage
-#### Graphics / Audio
-- Monster attack sound sometimes not playing
-- Missing sounds when bards and barbarians talk to cows
-- Minor typography corrections
-- "0 Gold" sometimes spawning on The Cornerstone
 
 ## DevilutionX 1.1.0
 ### Features
