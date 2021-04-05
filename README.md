@@ -1,12 +1,20 @@
+<p align="center">
+<img width="554" height="102" src="https://user-images.githubusercontent.com/204594/113575181-c946a400-961d-11eb-8347-a8829fa3830c.png">
+</p>
+
+---
+
 [![Downloads](https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg)](https://github.com/diasurgical/devilutionX/releases)
 [![github stars](https://img.shields.io/github/stars/diasurgical/devilutionX.svg)](https://github.com/diasurgical/devilutionX/stargazers)
 [![codecov](https://codecov.io/gh/diasurgical/devilutionX/branch/master/graph/badge.svg)](https://codecov.io/gh/diasurgical/devilutionX)
+[![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=shield)](https://circleci.com/gh/diasurgical/devilutionX) [![Build status](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx)
 
-Test builds [![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=shield)](https://circleci.com/gh/diasurgical/devilutionX) [![Build status](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx)
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/YQKCAYQ)
 
-![image](https://user-images.githubusercontent.com/204594/113553850-aa81e680-95f8-11eb-8230-234520436970.png)
+<p align="center">
+<img width="900" height="480" src="https://user-images.githubusercontent.com/204594/113553850-aa81e680-95f8-11eb-8230-234520436970.png">
+</p>
 
 <sub>*(The health-bar, and XP-bar are off by default, but can be enabled in the [ini-file](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide). Widescreen and transparency can also be disabled if preferred)*</sub>
 
