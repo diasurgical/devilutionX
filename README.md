@@ -26,7 +26,7 @@ For a full list of changes see our [changelog](docs/CHANGELOG.md).
 
 # How To Install:
 
-Download the latest DevilutionX release and extract the contents to the location or your choice, or [build from source](#building-from-source)
+Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) and extract the contents to a location of your choosing.
 
 For more detailed instructions: [Installation Instructions](./docs/installing.md)
 
