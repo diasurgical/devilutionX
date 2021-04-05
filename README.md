@@ -26,7 +26,10 @@ For a full list of changes see our [changelog](docs/CHANGELOG.md).
 
 # How To Install:
 
-Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) and extract the contents to a location of your choosing.
+Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) and extract the contents to a location of your choosing or [build from source](#building-from-source).
+
+- Copy `diabdat.mpq` from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to the folder containing the DevilutionX executable or to the data folder.
+- To run the Hellfire expansion of Diablo you will need to copy `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq` into the same location as diabdat.mpq.
 
 For more detailed instructions: [Installation Instructions](./docs/installing.md)
 
