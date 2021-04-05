@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Preserve list position when buying and selling items in stores
 - Preserve hotkeys and active spell across games
 - Set default active spell for new heroes
+- Experience bar (off by default)
+- Monster health bar (off by default)
+- Auto equip all item types on pickup or purchase (off by default)
+- Auto pickup gold (off by default)
+- Run in town (off by default) (also in multiplayer)
+- Disable friendly fire from arrows an spells (off by default)
+- Disable quest randomization (off by default)
+- Adria refills mana (off by default)
+- Barbarian and Bard heroes in Diablo (off by default)
 #### Controls
 - Use belt via the numpad
 - Close panels when pressing <kbd>ESC</kbd>
@@ -23,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - <kbd>Shift-click</kbd> to clear readied spell
 - <kbd>Shift-click</kbd> consumables to move them between the belt and inventory
 - <kbd>Shift-click</kbd> equipment equip/unequip them
+- Controller mapping
 - <kbd>D-Pad</kbd> / Left stick navigation now works in all menus and is more responsive.
 - <kbd>START</kbd> + <kbd>SELECT</kbd> now opens the main menu.
 - Right stick mouse emulation has been improved.
@@ -32,11 +42,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Widescreen menus
 - Scroll subtitles at the same speed as narration reader
 - Apply sound volume to videos
+- Improved transparency (on by default)
+- Auto-equip sounds (off by default)
+- Show monster type (off by default)
+- Disable walking sounds (off by default)
 #### Stability / Performance / System
 - Document [ini-file options](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide)
 - Reorganize ini-file
 - Allow for up to 99 save games of each type
 - Much lower memory usage (now in line with the original)
+- Configurable network port
 - Performance improvements
 - DIABDAT.MPQ may now be upper case
 - Support for portable installs
@@ -47,27 +62,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for Nintendo 3DS
 - Added support for DragonFly BSD
 - Added AppImage for Linux
-
-### Optional Features
-#### Gameplay
-- Experience bar
-- Monster health bar
-- Auto equip all item types on pickup or purchase
-- Auto pickup gold
-- Run in town (also in multiplayer)
-- Disable friendly fire
-- Disable quest randomization
-- Adria refills mana
-- Barbarian and Bard heroes in Diablo
-#### Controls
-- Controller mapping
-#### Graphics / Audio
-- Improved transparency
-- Auto-equip sounds
-- Show monster type
-- Disable walking sounds
-#### Stability / Performance / System
-- Configurable network port
 
 ### Bugfixes
 #### Gameplay
