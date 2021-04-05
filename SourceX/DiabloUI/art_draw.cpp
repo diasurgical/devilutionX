@@ -1,10 +1,9 @@
 #include "DiabloUI/art_draw.h"
+
+#include "DiabloUI/diabloui.h"
 #include "display.h"
 
 namespace dvl {
-
-extern SDL_Surface *pal_surface;
-extern unsigned int pal_surface_palette_version;
 
 void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
@@ -32,7 +31,7 @@ void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, 
 		art->palette_version = pal_surface_palette_version;
 	}
 
-	if (SDL_BlitSurface(art->surface, &src_rect, GetOutputSurface(), &dst_rect) < 0)
+	if (SDL_BlitSurface(art->surface, &src_rect, DiabloUiSurface(), &dst_rect) < 0)
 		ErrSdl();
 }
 
