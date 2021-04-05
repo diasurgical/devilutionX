@@ -3056,8 +3056,7 @@ BOOL PM_DoGotHit(int pnum)
 		plr[pnum]._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
-		if (!gbIsHellfire || !(plr[pnum]._pIFlags & ISPL_FASTESTRECOVER))
-			plr[pnum]._pAnimFrame++;
+		plr[pnum]._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
 		plr[pnum]._pAnimFrame++;
