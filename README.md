@@ -24,16 +24,11 @@ DevilutionX is a source port of Hellfire/Diablo that strives to make it simple t
 
 For a full list of changes see our [changelog](docs/CHANGELOG.md).
 
-
 # How To Install:
 
- - Download [the latest DevilutionX release](https://github.com/diasurgical/devilutionX/releases), or build from source
+Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) and extract the contents to a location of your choosing.
 
-> Wow, does this mean I can download and play Diablo for free now?
-
-No, you'll need access to the data from the original game. If you don't have an original CD then you can [buy Diablo from GoG.com](https://www.gog.com/game/diablo). Alternately you can use `spawn.mpq` from the [shareware](http://ftp.blizzard.com/pub/demos/diablosw.exe) version to play the shareware portion of the game.
-
- - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the DevilutionX install folder or data folder. The DevilutionX install folder is the one that contains the DevilutionX executable. 
+For more detailed instructions: [Installation Instructions](./docs/installing.md)
 
 # Contributing
 
@@ -48,12 +43,14 @@ We hope to provide a good starting points for mods, in addition to the full Devi
 Want to compile the program by yourself, great! Simply follow the [build instructions](./docs/building.md);
 
 # Credits
+
 - The original Devilution project [Devilution](https://github.com/diasurgical/devilution#credits)
 - [Everyone](https://github.com/diasurgical/devilutionX/graphs/contributors) who worked on Devilution/DevilutionX
 - [Nikolay Popov](https://www.instagram.com/nikolaypopovz/) who provided new backgrounds and icons.
 - And a thanks to all who support the project, report bugs and help spread the word <3
 
 # Legal
+
 DevilutionX is released to the Public Domain. The documentation and functionality provided by DevilutionX may only be utilized with assets provided by ownership of Diablo.
 
 The source code in this repository is for non-commerical use only. If you use the source code you may not charge others for access to it or any derivative work thereof.
