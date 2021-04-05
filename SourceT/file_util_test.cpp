@@ -5,7 +5,8 @@
 
 #include "file_util.h"
 
-namespace dvl {
+using namespace dvl;
+
 namespace {
 
 void WriteDummyFile(const char *name, std::uintmax_t size)
@@ -63,4 +64,3 @@ TEST(FileUtil, ResizeFile)
 }
 
 } // namespace
-} // namespace dvl
