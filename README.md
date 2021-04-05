@@ -40,14 +40,14 @@ We hope to provide a good starting points for mods, in addition to the full Devi
 
 # Building from Source
 
-Want to compile the program by yourself, great! Simply follow the [build instructions](./docs/building.md);
+Want to compile the program by yourself, great! Simply follow the [build instructions](./docs/building.md)
 
 # Credits
 
 - The original Devilution project [Devilution](https://github.com/diasurgical/devilution#credits)
 - [Everyone](https://github.com/diasurgical/devilutionX/graphs/contributors) who worked on Devilution/DevilutionX
 - [Nikolay Popov](https://www.instagram.com/nikolaypopovz/) who provided new backgrounds and icons.
-- And a thanks to all who support the project, report bugs and help spread the word <3
+- And a thanks to all who support the project, report bugs and help spread the word ❤️
 
 # Legal
 
