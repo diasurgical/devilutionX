@@ -59,7 +59,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `--ttf-dir` and `--ttf-name` to allow for specifying a different UI font
 - Switch Windows releases to 64-bit
 - Added support for PlayStation Vita
-- Added support for Nintendo 3DS
 - Added support for DragonFly BSD
 - Added AppImage for Linux
 
@@ -163,6 +162,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Diablo's scream being muted if you load a save game during his death throes
 - Multiplayer character files are now located in the data directory, and may be moved between computers
 - Some stability issues
+
+### Known issues
+- Save game difficaulity does not carry over from 1.1.0
+- Amiga builds are currently unstable
 
 ## DevilutionX 1.1.0
 ### Features
