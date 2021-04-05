@@ -6,12 +6,14 @@ Test builds [![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?sty
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/YQKCAYQ)
 
+![image](https://user-images.githubusercontent.com/204594/113553850-aa81e680-95f8-11eb-8230-234520436970.png)
+
 # How To Play:
  - Download [the latest DevilutionX release](https://github.com/diasurgical/devilutionX/releases), or build from source
  - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the DevilutionX install folder or data folder. The DevilutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
     - macOS `~/Library/Application Support/diasurgical/devilution`
     - Linux `~/.local/share/diasurgical/devilution/`
-    - Windows `C:\Users\[username]\AppData\Roaming\diasurgical\devilution`
+    - Windows `%AppData%\Roaming\diasurgical\devilution`
  - Install [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) (included in macOS and Windows releases):
     - Ubuntu/Debian/Rasbian `sudo apt-get install libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0`
  - Run `./devilutionx`
@@ -424,7 +426,7 @@ DevilutionX's main focus is to make the game work on multiple platforms. An addi
 Yes, the game will automatically adjust to your screen. This can be further adjusted in the game ini file.
 > What about Hellfire?
 
-Hellfire is being worked on and is mostly done, though not fully playable at the moment.
+Yes, you can play both Hellfire, regular Diablo, or the shareware version all from the same installation of DevilutionX.
 > Does it work with Battle.net?
 
 Battle.net is a service provided by Blizzard. We are not associated with them, so we have not worked on intergrating with their service.
@@ -433,6 +435,7 @@ Battle.net is a service provided by Blizzard. We are not associated with them, s
 # Credits
 - The original Devilution project [Devilution](https://github.com/diasurgical/devilution#credits)
 - [Everyone](https://github.com/diasurgical/devilutionX/graphs/contributors) who worked on Devilution/DevilutionX
+- [Nikolay Popov](https://www.instagram.com/nikolaypopovz/) who provided new backgrounds and icons.
 - And a thanks to all who support the project, report bugs and help spread the word <3
 
 # Changelog
