@@ -65,6 +65,7 @@ Keymapper keymapper {
 		return {result.data()};
 	}
 };
+std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 /* rdata */
 
@@ -2013,7 +2014,7 @@ void initKeymapActions()
 	});
 #endif
 	for(int i = 0; i < 4; ++i) {
-		keymapper.addAction({
+		quickSpellActionIndexes[i] = keymapper.addAction({
 			std::string("QuickSpell") + std::to_string(i+1),
 			DVL_VK_F5+i,
 			[i]()
@@ -2028,7 +2029,7 @@ void initKeymapActions()
 	}
 	for(int i = 0; i < 4; ++i) {
 		keymapper.addAction({
-			std::string("QuickMessage") + std::to_string(i+1),
+			spszMsgNameTbl[i],
 			DVL_VK_F9+i,
 			[i](){ diablo_hotkey_msg(i); },
 			Keymapper::Action::IfDead::Allow,

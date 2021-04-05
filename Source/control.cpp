@@ -4,8 +4,10 @@
  * Implementation of the character and main control panels
  */
 #include "all.h"
+#include "../SourceX/controls/keymapper.hpp"
 
 #include <cstddef>
+#include <array>
 
 namespace devilution {
 
@@ -65,6 +67,8 @@ int initialDropGoldValue;
 BYTE *pSpellCels;
 BOOL panbtndown;
 BOOL spselflag;
+extern Keymapper keymapper;
+extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 /** Map of hero class names */
 const char *const ClassStrTbl[] = {
@@ -345,6 +349,30 @@ static void DrawSpell(CelOutputBuffer out)
 		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, SPLICONLENGTH);
 }
 
+static void PrintSBookHotkey(CelOutputBuffer out, int x, int y, const std::string &text, text_color col)
+{
+	x += SPLICONLENGTH;
+	y -= SPLICONLENGTH;
+
+	int totalWidth = 0;
+
+	for(const char txtChar: text) {
+		auto c = gbFontTransTbl[static_cast<BYTE>(txtChar)];
+		c = fontframe[c];
+
+		totalWidth += fontkern[c] + 1;
+	}
+
+	for(const char txtChar: text) {
+		auto c = gbFontTransTbl[static_cast<BYTE>(txtChar)];
+		c = fontframe[c];
+		if (c) {
+			PrintChar(out, x - totalWidth - 5, y + 17, c, col);
+		}
+		x += fontkern[c] + 1;
+	}
+}
+
 void DrawSpellList(CelOutputBuffer out)
 {
 	int x, y, c, s, t, v, lx, ly, trans;
@@ -457,8 +485,9 @@ void DrawSpellList(CelOutputBuffer out)
 				}
 				for (t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
-						DrawSpellCel(out, x, y, pSpellCels, t + SPLICONLAST + 5, SPLICONLENGTH);
-						sprintf(tempstr, "Spell Hotkey #F%i", t + 5);
+						auto hotkeyName = keymapper.keyNameForAction(quickSpellActionIndexes[t]);
+						PrintSBookHotkey(out, x, y, hotkeyName, COL_RED);
+						sprintf(tempstr, "Spell Hotkey %s", hotkeyName.c_str());
 						AddPanelString(tempstr, TRUE);
 					}
 				}

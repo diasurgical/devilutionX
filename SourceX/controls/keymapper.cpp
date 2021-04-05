@@ -7,6 +7,8 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#include <cassert>
+
 namespace dvl {
 
 Keymapper::Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction getKeyFunction):
@@ -30,9 +32,11 @@ Keymapper::Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction g
     }
 }
 
-void Keymapper::addAction(const Action &action)
+Keymapper::ActionIndex Keymapper::addAction(const Action &action)
 {
     actions.emplace_back(action);
+
+    return actions.size() - 1;
 }
 
 void Keymapper::keyPressed(int key, bool isPlayerDead) const
@@ -48,6 +52,15 @@ void Keymapper::keyPressed(int key, bool isPlayerDead) const
         return;
 
     action();
+}
+
+std::string Keymapper::keyNameForAction(ActionIndex actionIndex) const
+{
+    assert(actionIndex < actions.size());
+    auto key = actions[actionIndex].key;
+    auto it = keyIDToKeyName.find(key);
+    assert(it != keyIDToKeyName.end());
+    return it->second;
 }
 
 void Keymapper::save() const

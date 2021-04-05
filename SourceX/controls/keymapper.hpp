@@ -13,6 +13,7 @@ class Keymapper final
 public:
 	using SetConfigKeyFunction = std::function<void(const std::string &key, const std::string &value)>;
 	using GetConfigKeyFunction = std::function<std::string(const std::string &key)>;
+	using ActionIndex = std::size_t;
 
 	// Action represents an action that can be triggered using a keyboard shortcut.
 	class Action final
@@ -46,8 +47,9 @@ public:
 	// This is mostly a workaround and should be replaced later when another INI library will be used.
 	Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction getKeyFunction);
 
-	void addAction(const Action &action);
+	ActionIndex addAction(const Action &action);
 	void keyPressed(int key, bool isPlayerDead) const;
+	std::string keyNameForAction(ActionIndex actionIndex) const;
 	void save() const;
 	void load();
 
