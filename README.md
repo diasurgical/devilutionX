@@ -51,7 +51,7 @@
 
 # Building from Source
 
-Want to compile the program by yourself, grate! Simply follow the [build instructions](./docs/building.md);
+Want to compile the program by yourself, great! Simply follow the [build instructions](./docs/building.md);
 
 # Multiplayer
  - TCP/IP only requires the host to expose port 6112
