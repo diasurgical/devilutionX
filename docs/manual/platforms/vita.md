@@ -2,7 +2,7 @@
 
 ## How To Play:
  - Install VPK
- - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the `ux0:/data/diasurgical/devilution/`.
+ - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to the `ux0:/data/diasurgical/devilution/`.
 
 # Building from Source
 
