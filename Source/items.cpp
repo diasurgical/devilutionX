@@ -2624,7 +2624,7 @@ int RndTypeItems(int itype, int imid, int lvl)
 
 int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 {
-	int j, idata, numu;
+	int j, idata, numu, rv;
 	BOOLEAN uok[128];
 
 	if (random_(28, 100) > uper)
@@ -2635,7 +2635,8 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 	for (j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
 		if (!IsUniqueAvailable(j))
 			break;
-		if (UniqueItemList[j].UIItemId == AllItemsList[item[i].IDidx].iItemId
+		idata = item[i].IDidx;
+		if (UniqueItemList[j].UIItemId == AllItemsList[idata].iItemId
 		    && lvl >= UniqueItemList[j].UIMinLvl
 		    && (recreate || !UniqueItemFlag[j] || gbIsMultiplayer)) {
 			uok[j] = TRUE;
@@ -2646,19 +2647,19 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 	if (numu == 0)
 		return UITYPE_INVALID;
 
-	random_(29, 10); /// BUGFIX: unused, last unique in array always gets chosen
-	idata = 0;
-	while (numu > 0) {
-		if (uok[idata])
-			numu--;
-		if (numu > 0) {
-			idata++;
-			if (idata == 128)
-				idata = 0;
+	rv = random_(29, numu);
+	int k = 0;
+	for (j = 0; j < sizeof(uok); j++) {
+		if (!uok[j]) {
+			continue;
 		}
+		if (k == rv) {
+			break;
+		}
+		k++;
 	}
 
-	return idata;
+	return j;
 }
 
 void GetUniqueItem(int i, int uid)
