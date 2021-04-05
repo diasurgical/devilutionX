@@ -2,7 +2,6 @@
 
 #include <string>
 #include <functional>
-#include <memory>
 #include <vector>
 #include <unordered_map>
 
@@ -12,8 +11,8 @@ namespace dvl {
 class Keymapper final
 {
 public:
-	using SetKeyFunction = std::function<void(const std::string &key, const std::string &value)>;
-	using GetKeyFunction = std::function<std::string(const std::string &key)>;
+	using SetConfigKeyFunction = std::function<void(const std::string &key, const std::string &value)>;
+	using GetConfigKeyFunction = std::function<std::string(const std::string &key)>;
 
 	// Action represents an action that can be triggered using a keyboard shortcut.
 	class Action final
@@ -43,8 +42,9 @@ public:
 		friend class Keymapper;
 	};
 
-	// Keymapper for now uses to function pointers to interact with the configuration. This is mostly a workaround and should be replaced later when another INI library will be used.
-	Keymapper(SetKeyFunction setKeyFunction, GetKeyFunction getKeyFunction);
+	// Keymapper for now uses to function pointers to interact with the configuration.
+	// This is mostly a workaround and should be replaced later when another INI library will be used.
+	Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction getKeyFunction);
 
 	void addAction(const Action &action);
 	void keyPressed(int key, bool isPlayerDead) const;
@@ -54,10 +54,12 @@ public:
 private:
 	int getActionKey(const Action &action);
 
-	std::vector<std::shared_ptr<Action>> actions;
-	std::unordered_map<int, std::shared_ptr<Action>> keyToAction;
-	SetKeyFunction setKeyFunction;
-	GetKeyFunction getKeyFunction;
+	std::vector<Action> actions;
+	std::unordered_map<int, std::reference_wrapper<Action>> keyIDToAction;
+	std::unordered_map<int, std::string> keyIDToKeyName;
+	std::unordered_map<std::string, int> keyNameToKeyID;
+	SetConfigKeyFunction setKeyFunction;
+	GetConfigKeyFunction getKeyFunction;
 };
 
 } // namespace dvl

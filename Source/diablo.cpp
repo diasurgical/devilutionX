@@ -12,6 +12,8 @@
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
 
+#include <array>
+
 namespace devilution {
 
 SDL_Window *ghMainWnd;
@@ -57,11 +59,10 @@ Keymapper keymapper {
 	},
 	[](const std::string &key) -> std::string
 	{
-		std::string result;
-		result.resize(64);
-		if(!getIniValue("Controller.Keymapping", key.c_str(), &result[0], result.size()))
+		std::array<char, 64> result;
+		if(!getIniValue("Controller.Keymapping", key.c_str(), result.data(), result.size()))
 			return {};
-		return result;
+		return {result.data()};
 	}
 };
 
@@ -96,8 +97,8 @@ const char *const spszMsgTbl[] = {
 	"Here's something for you.",
 	"Now you DIE!"
 };
-/** INI files variable names for quick message keys */
-const char *const spszMsgHotKeyTbl[] = { "F9", "F10", "F11", "F12" };
+/** INI files variable names for quick messages */
+const char *const spszMsgNameTbl[] = { "QuickMessage1", "QuickMessage2", "QuickMessage3", "QuickMessage4" };
 
 /** To know if these things have been done when we get to the diablo_deinit() function */
 bool was_archives_init = false;
@@ -481,7 +482,7 @@ static void SaveOptions()
 	setIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
 
 	for (int i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		setIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i]);
+		setIniValue("NetMsg", spszMsgNameTbl[i], sgOptions.Chat.szHotKeyMsgs[i]);
 
 	setIniValue("Controller", "Mapping", sgOptions.Controller.szMapping);
 	setIniInt("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
@@ -556,7 +557,7 @@ static void LoadOptions()
 	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
 	for (int i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, spszMsgTbl[i]);
+		getIniValue("NetMsg", spszMsgNameTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, spszMsgTbl[i]);
 
 	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
 	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
@@ -1149,6 +1150,18 @@ static void PressChar(WPARAM vkey)
 #ifdef _DEBUG
 	switch(vkey)
 	{
+	case '+':
+	case '=':
+		if (automapflag) {
+			AutomapZoomIn();
+		}
+		return;
+	case '-':
+	case '_':
+		if (automapflag) {
+			AutomapZoomOut();
+		}
+		return;
 	case ')':
 	case '0':
 		if (debug_mode_key_inverted_v) {
@@ -2011,7 +2024,6 @@ void initKeymapActions()
 				}
 				ToggleSpell(i);
 			},
-			Keymapper::Action::IfDead::Allow,
 		});
 	}
 	for(int i = 0; i < 4; ++i) {
@@ -2065,24 +2077,6 @@ void initKeymapActions()
 		"SpellBook",
 		'B',
 		spellBookKeyPressed
-	});
-	keymapper.addAction({
-		"ZoomAutomapIn",
-		'+',
-		[]
-		{
-			if(automapflag)
-				AutomapZoomIn();
-		}
-	});
-	keymapper.addAction({
-		"ZoomAutomapOut",
-		'-',
-		[]
-		{
-			if(automapflag)
-				AutomapZoomOut();
-		}
 	});
 	keymapper.addAction({
 		"GameInfo",
