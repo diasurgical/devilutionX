@@ -6,129 +6,167 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## DevilutionX 1.2.0 (unreleased)
 ### Features
+#### Gameplay
 - Hellfire support
 - Shareware support
 - Fully migrate saves between Diablo and Hellfire
+- Gold picked goes to stack even when inventory is open
+- Pepin automatically heals
+- Show other players on the map
+- Preserve list position when buying and selling items in stores
+- Preserve hotkeys and active spell across games
+- Set default active spell for new heroes
+#### Controls
+- Use belt via the numpad
+- Close panels when pressing <kbd>ESC</kbd>
+- <kbd>Shift-click</kbd> to spend all stat points
+- <kbd>Shift-click</kbd> to clear readied spell
+- <kbd>Shift-click</kbd> consumables to move them between the belt and inventory
+- <kbd>Shift-click</kbd> equipment equip/unequip them
+- <kbd>D-Pad</kbd> / Left stick navigation now works in all menus and is more responsive.
+- <kbd>START</kbd> + <kbd>SELECT</kbd> now opens the main menu.
+- Right stick mouse emulation has been improved.
+- Gamepads plugged in while the game is running can be used.
+- All connected gamepads can be used (previously, only the first one).
+#### Graphics / Audio
+- Widescreen menus
+- Scroll subtitles at the same speed as narration reader
+- Apply sound volume to videos
+#### Stability / Performance / System
 - Document [ini-file options](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide)
-- Support file paths longer than 259 characters
+- Reorganize ini-file
 - Allow for up to 99 save games of each type
 - Much lower memory usage (now in line with the original)
 - Performance improvements
-- Gold picked goes to stack even when inventory is open
-- Pepin automatically heals
-- Reorganize ini-file
-- Show other players on the map
-- Widescreen menus
-- Scroll subtitles at the same speed as narration reader
-- Preserve list position when buying and selling items in stores
-- Use belt via the numpad
-- Close panels when pressing <kbd>ESC</kbd>
-- Shift-click to spend all stat points
-- Shift-click to clear readied spell
-- Shift-click consumables to move them between the belt and inventory
-- Shift-click equipment equip/unequip them
-- Preserve hotkeys and active spell across games
-- Set default active spell for new heroes
-- Apply sound volume to videos
 - DIABDAT.MPQ may now be upper case
-- Improved gamepad support:
-  - D-Pad / Left stick navigation now works in all menus and is more responsive.
-  - START + SELECT now opens the main menu.
-  - Right stick mouse emulation has been improved.
-  - Gamepads plugged in while the game is running can be used.
-  - All connected gamepads can be used (previously, only the first one).
-- Add `--ttf-dir` and `--ttf-name` to allow for specifying a different UI font
-
-### Optional improvements
-- Improved transparency
-- Experience bar
-- Monster health bar
-- Auto equip all item types on pickup or purchase
-- Auto-equip sounds
-- Auto pickup gold
-- Run in town (also in multiplayer)
-- Disable friendly fire
-- Show monster type
-- Disable walking sounds
-- No quest randomization
-- Adria refills mana
-- Barbarian and Bard heroes in Diablo
-- Controller mapping
-- Configurable network port
 - Support for portable installs
-
-### Platforms
+- Support file paths longer than 259 characters
+- Add `--ttf-dir` and `--ttf-name` to allow for specifying a different UI font
 - Switch Windows releases to 64-bit
 - Added support for PlayStation Vita
 - Added support for Nintendo 3DS
 - Added support for DragonFly BSD
 - Added AppImage for Linux
 
+### Optional improvements
+#### Gameplay
+- Experience bar
+- Monster health bar
+- Auto equip all item types on pickup or purchase
+- Auto pickup gold
+- Run in town (also in multiplayer)
+- Disable friendly fire
+- Disable quest randomization
+- Adria refills mana
+- Barbarian and Bard heroes in Diablo
+#### Controls
+- Controller mapping
+#### Graphics / Audio
+- Improved transparency
+- Auto-equip sounds
+- Show monster type
+- Disable walking sounds
+#### Stability / Performance / System
+- Configurable network port
+
 ### Bugfixes
-- Incorrect graphics under cave doors in multiplayer
+#### Gameplay
 - Catacombs doors never having traps
-- Dragging on touch devices
-- Mouse not releasing when exiting the window
-- Multiplayer host crashing after beating the game
+#### Graphics / Audio
+- Incorrect graphics under cave doors in multiplayer
 - Minor color issues in some videos
 - Command-line output missing on Windows
 - Correct visuals and function of the joining-game-dialog
+#### Controls
+- Dragging on touch devices
+- Mouse not releasing when exiting the window
 - Mouse jumping to the top of the windows when using the menu
+#### Stability / Performance / System
+- Multiplayer host crashing after beating the game
 
-### Original Diablo bugs
-- All bugs fixed in Hellfire 1.01
+### Bugfixes for original Diablo bugs
+#### Bugs fixed applied form Hellfire 1.01
+- Monster hitpoints being capped in Nightmare/Hell difficulty
+- Some stability issues
 - Some unique items morphing on a new game
 - Monsters being unable to properly see the location of firewalls
+- Gharbad the Weak not dropping his item when killed by a golem
 - Fix more stability issues
+#### Gameplay
 - Gold piles will be filled to their max, before starting a new one
-- Gold icons graphics are always correct
-- Arrows graphics not aligning with the move direction
 - Monsters miss calculating charge directions for some angles
 - Randomly being teleported from level 15 to Lazarus' chamber
-- Wrong death sound when monster/golem kills another monster
 - Scavengers/Gravediggers taking damage when eating on higher difficulties
 - Not getting XP from monsters hit by golems
 - Monsters with hiding ability fleeing in the wrong direction from golems
 - Monsters going inactive when fighting golems offscreen
-- Gharbad the Weak not dropping his item when killed by a golem
-- Lights not always following unique monsters
 - Several bugs in Lazarus quest when re-entering the teleport
-- Lights added on map update not working (Arkaine's Valor, etc.)
-- Player light radius not readjusting when a player is knocked back
-- Player light radius not updating properly before changing level
+- Player vision radius not updating properly before changing level
 - Tiles not properly being marked as out of visibility when walking
-- Quest items brought from previous games breaking the game state
 - Inconsistent repair prices caused by rounding errors
-- Several issues causing Arkaine's Valor to enter a broken state
 - Base damage not being updated when leveling up
+- Arkaine's Valor brought from previous games breaking the game state
+- Several issues causing Arkaine's Valor to enter a broken state
 - Flash only dealing 10% damage in some directions
 - Town portals appearing on two levels when cast in a quest level
 - Incorrectly seeing legit items as duplicates
 - Gaining mana from reading books despite wearing an item with corruption
 - Fallen fleeing in the wrong direction
 - Not getting XP for the first monster placed on a level
-- Loadscreen colors on entering the Poison Water quest
 - Being able to waste gold on red scrolls when not having room for them
-- Inconsistent mouse behavior when opening/closing various panels
 - Items being destroyed if held in cursor when entering dungeon
 - Black Mushroom quest not resetting between games
+#### Graphics / Audio
+- Gold icons graphics are always correct
+- Arrows graphics not aligning with the move direction
+- Wrong death sound when monster/golem kills another monster
+- Lights not always following unique monsters
+- Lights added on map update not working (Arkaine's Valor, etc.)
+- Player light radius not readjusting when a player is knocked back
+- Loadscreen colors on entering the Poison Water quest
+#### Controls
+- Inconsistent mouse behavior when opening/closing various panels
 - Lava pools sometimes having roof tiles in them
 - Doors sometimes missing in Halls of The Blind
 - Broken outline on some inventory items
 
-### Original Hellfire bugs
-- All bugs fixed between Diablo 1.04 and 1.09
-- Monster attack sound sometimes not playing
-- Firewall damage calculation being too low, and different for the first player in multiplayer
-- Missing sounds when bards and barbarians talk to cows
+### Bugfixes for original Hellfire bugs
+#### Bugs fixed applied form Diablo 1.03 - 1.09
+- The Hidden Shrine freezes when not holding an applicable item
+- Memory corruption when casting town portal
+- Crashes associated with Black Death
+- Players getting stuck in a wall when using Town Portals
+- Some Hell difficulty monsters being too easy to hit
+- Mana Shield bugs that could make a player invulnerable and/or invisible
+- Disarming skill not working on levels 13 through 15
+- Mana Shield permanetly using up level missiles
+- Corrected behaviour of Thieves, Speed/Haste, Balance/Stability/Harmony, and Piercing/Bashing/Puncturing
+- Mana Shield becomming less effective with increasing spell level
+- Excessive damage when a Mana Shield expired due to an attack
+- Bows with fire damage prevented the Gargoyles from healing
+- Right-clicking belt item 5-8 not working while the Spellbook is open
+- Mana Shield and Nova not appearing for other players
+- Shields disappearing when worn after wielding two-handed weapons
+- Adria's books appear white even when the player can't read them
+- Equipped shields not appear properly to other players
+- Monster health not appearing correctly on Nightmare and Hell difficulty
+- Diablo's scream being muted if you load a save game during his death throes
+- Multiplayer character files are now located in the data directory, and may be moved between computers
+- Some stability issues
+#### Gameplay
+- Firewall damage calculation being too low
+- Firewall/Lightningwall damage being based on the dungion level instead of spell level for the first player
 - Right-hand item's decay suffix being applied to the left-hand item in multiplayer
-- Town Shrine would always cast TP from the host instead of the user
+- Town Shrine would always cast TP from the first player instead of the user
 - Oily Shrine and Sparkling Shrine would cast their traps as if the first player was doing it
 - The farmer would always think he was talking to the local player
 - Scavenger/Gravedigger AI being stuck for a round after eating
-- Minor typography corrections
 - Sync available quests in multiplayer
 - Correct spell level being ignored for Search and Rage
+#### Graphics / Audio
+- Monster attack sound sometimes not playing
+- Missing sounds when bards and barbarians talk to cows
+- Minor typography corrections
 - "0 Gold" sometimes spawning on The Cornerstone
 
 ## DevilutionX 1.1.0
