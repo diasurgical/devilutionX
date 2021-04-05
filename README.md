@@ -8,6 +8,8 @@ Test builds [![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?sty
 
 ![image](https://user-images.githubusercontent.com/204594/113553850-aa81e680-95f8-11eb-8230-234520436970.png)
 
+<sub>*(The health-bar, and XP-bar are off by default, but can be enabled in the [ini-file](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide). Widescreen and transparency can also be disabled if preferred)*</sub>
+
 # How To Play:
  - Download [the latest DevilutionX release](https://github.com/diasurgical/devilutionX/releases), or build from source
  - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the DevilutionX install folder or data folder. The DevilutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
