@@ -363,14 +363,7 @@ static void PrintSBookHotkey(CelOutputBuffer out, int x, int y, const std::strin
 		totalWidth += fontkern[c] + 1;
 	}
 
-	for(const char txtChar: text) {
-		auto c = gbFontTransTbl[static_cast<BYTE>(txtChar)];
-		c = fontframe[c];
-		if (c) {
-			PrintChar(out, x - totalWidth - 5, y + 17, c, col);
-		}
-		x += fontkern[c] + 1;
-	}
+	PrintGameStr(out, x - totalWidth - 4, y + 17, text.c_str(), col);
 }
 
 void DrawSpellList(CelOutputBuffer out)
@@ -486,7 +479,8 @@ void DrawSpellList(CelOutputBuffer out)
 				for (t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
 						auto hotkeyName = keymapper.keyNameForAction(quickSpellActionIndexes[t]);
-						PrintSBookHotkey(out, x, y, hotkeyName, COL_RED);
+						PrintSBookHotkey(out, x - 1, y + 1, hotkeyName, COL_BLACK);
+						PrintSBookHotkey(out, x, y, hotkeyName, COL_WHITE);
 						sprintf(tempstr, "Spell Hotkey %s", hotkeyName.c_str());
 						AddPanelString(tempstr, TRUE);
 					}
