@@ -7,7 +7,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include <config.h>
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -49,7 +49,7 @@ void FreeDlg()
 	SNetDestroy();
 }
 
-}
+} // namespace
 
 /**
  * @brief Terminates the game and displays an error message box.
@@ -173,4 +173,4 @@ void DirErrorDlg(const char *error)
 	app_fatal(NULL);
 }
 
-}
+} // namespace devilution

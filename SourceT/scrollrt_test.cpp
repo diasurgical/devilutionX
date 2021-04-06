@@ -2,7 +2,7 @@
 #include "all.h"
 #include "ui_fwd.h"
 
-using namespace dvl;
+using namespace devilution;
 
 // TilesInView
 

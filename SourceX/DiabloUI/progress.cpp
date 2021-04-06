@@ -7,7 +7,7 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/fonts.h"
 
-namespace dvl {
+namespace devilution {
 
 Art dialogArt;
 char dialogText[256];
@@ -137,4 +137,4 @@ BOOL UiProgressDialog(const char *msg, int enable, int (*fnfunc)(), int rate)
 	return progress == 100;
 }
 
-} // namespace dvl
+} // namespace devilution

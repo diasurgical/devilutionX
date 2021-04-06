@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dvl {
+namespace devilution {
 
 struct DiabloOptions {
 	/** @brief Play game intro video on startup. */

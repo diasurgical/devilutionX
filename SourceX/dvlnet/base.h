@@ -10,7 +10,7 @@
 #include "dvlnet/abstract_net.h"
 #include "dvlnet/packet.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class base : public abstract_net {

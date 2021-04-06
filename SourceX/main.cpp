@@ -31,5 +31,5 @@ int main(int argc, char **argv)
 	ctr_sys_init();
 #endif
 
-	return dvl::DiabloMain(argc, argv);
+	return devilution::DiabloMain(argc, argv);
 }

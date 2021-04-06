@@ -8,7 +8,7 @@
 
 #include "engine.h"
 
-namespace dvl {
+namespace devilution {
 
 void FreeQol();
 void InitQol();

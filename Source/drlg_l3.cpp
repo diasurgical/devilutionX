@@ -8,7 +8,7 @@
 
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -2756,4 +2756,4 @@ void LoadPreL3Dungeon(const char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-}
+} // namespace devilution

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-using namespace dvl;
+using namespace devilution;
 
 static void ComparePackedItems(const PkItemStruct *item1, const PkItemStruct *item2)
 {

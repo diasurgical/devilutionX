@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-using namespace dvl;
+using namespace devilution;
 
 /* Set up a given item as a spell scroll, allowing for its usage. */
 void set_up_scroll(ItemStruct &item, spell_id spell)

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dvl {
+namespace devilution {
 
 extern const unsigned char btnData[];
 extern const unsigned char popupData[];

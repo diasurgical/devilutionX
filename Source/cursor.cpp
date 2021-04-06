@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 /** Pixel width of the current cursor image */
 int cursW;
@@ -661,4 +661,4 @@ void CheckCursMove()
 	}
 }
 
-}
+} // namespace devilution

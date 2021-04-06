@@ -13,7 +13,7 @@
 #include <3ds.h>
 #endif
 
-namespace dvl {
+namespace devilution {
 
 int sgdwLockCount;
 #ifdef _DEBUG

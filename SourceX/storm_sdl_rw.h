@@ -4,7 +4,7 @@
 
 #include "../SourceS/miniwin/misc.h"
 
-namespace dvl {
+namespace devilution {
 
 /**
  * @brief Creates a read-only SDL_RWops from a Storm file handle.

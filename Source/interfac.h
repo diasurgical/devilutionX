@@ -6,7 +6,7 @@
 #ifndef __INTERFAC_H__
 #define __INTERFAC_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

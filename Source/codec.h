@@ -6,7 +6,7 @@
 #ifndef __CODEC_H__
 #define __CODEC_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

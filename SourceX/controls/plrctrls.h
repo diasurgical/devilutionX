@@ -3,7 +3,7 @@
 
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 typedef enum belt_item_type {
 	BLT_HEALING,

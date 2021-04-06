@@ -6,7 +6,7 @@
 #ifndef __THEMES_H__
 #define __THEMES_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

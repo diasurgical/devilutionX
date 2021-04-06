@@ -6,7 +6,7 @@
 #ifndef __DX_H__
 #define __DX_H__
 
-namespace dvl {
+namespace devilution {
 
 CelOutputBuffer GlobalBackBuffer();
 

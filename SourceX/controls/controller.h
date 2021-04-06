@@ -5,7 +5,7 @@
 #include "all.h"
 #include "./controller_buttons.h"
 
-namespace dvl {
+namespace devilution {
 
 struct ControllerButtonEvent {
 	ControllerButton button;

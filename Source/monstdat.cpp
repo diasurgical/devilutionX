@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 /** Contains the data related to each monster ID. */
 const MonsterData monsterdata[] = {
@@ -566,4 +566,4 @@ const UniqMonstStruct UniqMonst[] = {
 	// clang-format on
 };
 
-}
+} // namespace devilution

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace dvl {
+namespace devilution {
 
 extern bool selhero_isMultiPlayer;
 extern bool selhero_endMenu;

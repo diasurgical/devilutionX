@@ -8,7 +8,7 @@
 
 #include "items.h"
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 BOOL invflag;
 BYTE *pInvCels;
@@ -2871,4 +2871,4 @@ BOOL DropItemBeforeTrig()
 	return FALSE;
 }
 
-}
+} // namespace devilution

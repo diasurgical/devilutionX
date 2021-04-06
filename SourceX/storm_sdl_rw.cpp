@@ -7,7 +7,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../Source/engine.h"
 
-namespace dvl {
+namespace devilution {
 
 static HANDLE SFileRw_GetHandle(struct SDL_RWops *context)
 {

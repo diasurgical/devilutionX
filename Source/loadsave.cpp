@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 bool gbIsHellfireSaveGame;
 int giNumberOfLevels;
@@ -181,7 +181,7 @@ public:
 	}
 };
 
-}
+} // namespace
 
 void RemoveInvalidItem(ItemStruct *pItem)
 {
@@ -2090,4 +2090,4 @@ void LoadLevel()
 	}
 }
 
-}
+} // namespace devilution

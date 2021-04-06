@@ -6,7 +6,7 @@
 #ifndef __CURSOR_H__
 #define __CURSOR_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

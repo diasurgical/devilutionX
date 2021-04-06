@@ -7,7 +7,7 @@
 
 #include <cstddef>
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -2311,4 +2311,4 @@ BOOL control_presskeys(int vkey)
 	return ret;
 }
 
-}
+} // namespace devilution

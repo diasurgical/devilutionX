@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dvl {
+namespace devilution {
 extern "C" {
 
 extern DWORD nLastError;

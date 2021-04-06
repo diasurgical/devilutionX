@@ -2,7 +2,7 @@
 #include "file_util.h"
 #include "../SourceS/paths.h"
 
-namespace dvl {
+namespace devilution {
 
 TTF_Font *font = NULL;
 BYTE *FontTables[4];
@@ -91,4 +91,4 @@ void FontsCleanup()
 	TTF_Quit();
 }
 
-} // namespace dvl
+} // namespace devilution

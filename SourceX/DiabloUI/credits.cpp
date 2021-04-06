@@ -13,7 +13,7 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/fonts.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -261,4 +261,4 @@ BOOL UiSupportDialog()
 	return TextDialog();
 }
 
-} // namespace dvl
+} // namespace devilution

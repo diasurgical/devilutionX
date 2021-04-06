@@ -6,7 +6,7 @@
 #ifndef __DTHREAD_H__
 #define __DTHREAD_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

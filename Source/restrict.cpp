@@ -6,7 +6,7 @@
 #include "all.h"
 #include "paths.h"
 
-namespace dvl {
+namespace devilution {
 
 /**
  * @brief Check that we have write access to the game install folder
@@ -24,4 +24,4 @@ void ReadOnlyTest()
 	remove(path.c_str());
 }
 
-}
+} // namespace devilution

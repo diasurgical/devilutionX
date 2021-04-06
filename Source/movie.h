@@ -6,7 +6,7 @@
 #ifndef __MOVIE_H__
 #define __MOVIE_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

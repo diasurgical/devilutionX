@@ -6,7 +6,7 @@
 #ifndef __ITEMDAT_H__
 #define __ITEMDAT_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

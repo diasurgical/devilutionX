@@ -6,7 +6,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-namespace dvl {
+namespace devilution {
 
 typedef enum PLR_MODE {
 	PM_STAND,

@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -220,7 +220,7 @@ void T_Pass3()
 	mem_free_dbg(P3Tiles);
 }
 
-}
+} // namespace
 
 /**
  * @brief Update the map to show the open hive
@@ -385,4 +385,4 @@ void CreateTown(int entry)
 	}
 }
 
-}
+} // namespace devilution

@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 #define NO_OVERDRAW
 
@@ -616,4 +616,4 @@ void world_draw_black_tile(CelOutputBuffer out, int sx, int sy)
 	}
 }
 
-}
+} // namespace devilution

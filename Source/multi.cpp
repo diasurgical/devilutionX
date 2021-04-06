@@ -9,7 +9,7 @@
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
 
-namespace dvl {
+namespace devilution {
 
 BOOLEAN gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
@@ -919,4 +919,4 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 	}
 }
 
-}
+} // namespace devilution

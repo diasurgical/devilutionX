@@ -2,7 +2,7 @@
 
 #include "engine.h"
 
-namespace dvl {
+namespace devilution {
 
 void DrawControllerModifierHints(CelOutputBuffer out);
 

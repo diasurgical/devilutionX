@@ -6,7 +6,7 @@
 #ifndef __RESTRICT_H__
 #define __RESTRICT_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

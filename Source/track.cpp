@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -13,7 +13,7 @@ BYTE sgbIsScrolling;
 Uint32 sgdwLastWalk;
 bool sgbIsWalking;
 
-}
+} // namespace
 
 void track_process()
 {
@@ -57,4 +57,4 @@ bool track_isscrolling()
 	return sgbIsScrolling;
 }
 
-}
+} // namespace devilution

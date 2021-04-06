@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-using namespace dvl;
+using namespace devilution;
 
 TEST(Doom, doom_get_frame_from_time)
 {

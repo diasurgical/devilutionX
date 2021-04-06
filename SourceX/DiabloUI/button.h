@@ -3,7 +3,7 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
 
-namespace dvl {
+namespace devilution {
 
 extern Art SmlButton;
 void LoadSmlButtonArt();

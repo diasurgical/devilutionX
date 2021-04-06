@@ -6,7 +6,7 @@
 #include "all.h"
 #include "paths.h"
 
-using namespace dvl;
+using namespace devilution;
 
 int spelldat_vanilla[] = {
 	0, 1, 1, 4, 5, -1, 3, 3, 6, -1, 7, 6, 8, 9,

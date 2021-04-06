@@ -6,7 +6,7 @@
 #ifndef __LIGHTING_H__
 #define __LIGHTING_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 void PackItem(PkItemStruct *id, const ItemStruct *is)
 {
@@ -301,4 +301,4 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync)
 	pPlayer->pDamAcFlags = SwapLE32(pPack->pDamAcFlags);
 }
 
-}
+} // namespace devilution

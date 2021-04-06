@@ -1,6 +1,6 @@
 #include "DiabloUI/credits_lines.h"
 
-namespace dvl {
+namespace devilution {
 
 const char *const CREDITS_LINES[] = {
 	"Game Design",
@@ -553,4 +553,4 @@ const char *const CREDITS_LINES[] = {
 
 const std::size_t CREDITS_LINES_SIZE = sizeof(CREDITS_LINES) / sizeof(CREDITS_LINES[0]);
 
-} // namespace dvl
+} // namespace devilution

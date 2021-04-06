@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 /** Maps from dun_object_id to object_id. */
 const _object_id ObjTypeConv[] = {
@@ -435,4 +435,4 @@ const char *ObjHiveLoadList[] = {
 	"LzStand",
 };
 
-}
+} // namespace devilution

@@ -6,7 +6,7 @@
 #ifndef __MONSTDAT_H__
 #define __MONSTDAT_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

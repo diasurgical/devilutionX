@@ -11,7 +11,7 @@
 #include "controls/plrctrls.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 bool start_modifier_active = false;
 bool select_modifier_active = false;
@@ -349,4 +349,4 @@ AxisDirection GetMoveDirection()
 	return GetLeftStickOrDpadDirection(/*allow_dpad=*/!sgOptions.Controller.bDpadHotkeys);
 }
 
-} // namespace dvl
+} // namespace devilution

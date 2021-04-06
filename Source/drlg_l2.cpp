@@ -8,7 +8,7 @@
 
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 BYTE predungeon[DMAXX][DMAXY];
 
@@ -3471,4 +3471,4 @@ void CreateL2Dungeon(DWORD rseed, int entry)
 	DRLG_SetPC();
 }
 
-}
+} // namespace devilution

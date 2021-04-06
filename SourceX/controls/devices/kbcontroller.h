@@ -9,7 +9,7 @@
 #include <SDL.h>
 #include "controls/controller_buttons.h"
 
-namespace dvl {
+namespace devilution {
 
 ControllerButton KbCtrlToControllerButton(const SDL_Event &event);
 

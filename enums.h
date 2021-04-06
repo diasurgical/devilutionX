@@ -4,7 +4,7 @@
  * Various global enumerators.
  */
 
-namespace dvl {
+namespace devilution {
 
 typedef enum _sfx_id {
 	PS_WALK1,

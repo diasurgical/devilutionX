@@ -18,7 +18,7 @@
 #include "../platform/ctr/keyboard.h"
 #endif
 
-namespace dvl {
+namespace devilution {
 
 static const char *selhero_GenerateName(uint8_t hero_class);
 
@@ -654,4 +654,4 @@ static const char *selhero_GenerateName(uint8_t hero_class)
 	return kNames[hero_class % 6][iRand];
 }
 
-} // namespace dvl
+} // namespace devilution

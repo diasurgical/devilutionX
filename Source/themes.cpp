@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 int numthemes;
 BOOL armorFlag;
@@ -1066,4 +1066,4 @@ void CreateThemeRooms()
 	}
 }
 
-}
+} // namespace devilution

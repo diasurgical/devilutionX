@@ -8,7 +8,7 @@
 #endif
 #include "dvlnet/loopback.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
@@ -32,4 +32,4 @@ std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

@@ -4,7 +4,7 @@
 
 #include "DiabloUI/ui_item.h"
 
-namespace dvl {
+namespace devilution {
 
 void UiErrorOkDialog(const char *text, std::vector<UiItemBase *> renderBehind);
 void UiErrorOkDialog(const char *text, const char *caption, std::vector<UiItemBase *> renderBehind);

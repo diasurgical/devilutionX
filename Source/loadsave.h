@@ -8,7 +8,7 @@
 
 #include "player.h"
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

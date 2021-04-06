@@ -6,7 +6,7 @@
 #ifndef __TRACK_H__
 #define __TRACK_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

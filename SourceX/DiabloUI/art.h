@@ -2,7 +2,7 @@
 
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 struct Art {
 	SDL_Surface *surface;

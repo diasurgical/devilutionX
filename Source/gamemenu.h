@@ -6,7 +6,7 @@
 #ifndef __GAMEMENU_H__
 #define __GAMEMENU_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

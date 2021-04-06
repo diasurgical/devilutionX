@@ -22,7 +22,7 @@
 #include "platform/switch/keyboard.h"
 #endif
 
-namespace dvl {
+namespace devilution {
 
 std::size_t SelectedItemMax;
 std::size_t ListViewportSize = 1;
@@ -928,4 +928,4 @@ void DrawMouse()
 
 	DrawArt(MouseX, MouseY, &ArtCursor);
 }
-} // namespace dvl
+} // namespace devilution
