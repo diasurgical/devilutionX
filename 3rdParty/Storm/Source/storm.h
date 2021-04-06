@@ -241,48 +241,6 @@ BOOL
         DWORD *pdwHeight,
         DWORD *pdwBpp);
 
-/*  SMemAlloc @ 401
- *
- *  Allocates a block of memory. This block is different
- *  from the standard malloc by including a header containing
- *  information about the block.
- *
- *  amount:       The amount of memory to allocate, in bytes.
- *  logfilename:  The name of the file or object that this call belongs to.
- *  logline:      The line in the file or one of the SLOG_ macros.
- *  defaultValue: The default value of a byte in the allocated memory.
- *
- *  Returns a pointer to the allocated memory. This pointer does NOT include
- *  the additional storm header.
- */
-void *
-    STORMAPI
-    SMemAlloc(
-        unsigned int amount,
-        const char *logfilename,
-        int logline,
-        int defaultValue);
-
-/*  SMemFree @ 403
- *
- *  Frees a block of memory that was created using SMemAlloc,
- *  includes the log file and line for debugging purposes.
- *
- *  location:     The memory location to be freed.
- *  logfilename:  The name of the file or object that this call belongs to.
- *  logline:      The line in the file or one of the SLOG_ macros.
- *  defaultValue:
- *
- *  Returns TRUE if the call was successful and FALSE otherwise.
- */
-BOOL
-    STORMAPI
-    SMemFree(
-        void *location,
-        const char *logfilename,
-        int logline,
-        char defaultValue);
-
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
