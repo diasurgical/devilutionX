@@ -7,6 +7,7 @@
 #include "controls/controller_motion.h"
 #include "controls/devices/joystick.h"
 #include "stubs.h"
+#include "sdl_ptrs.h"
 
 // Defined in SourceX/controls/plctrls.cpp
 extern "C" bool sgbControllerActive;
@@ -166,9 +167,8 @@ void GameController::Add(int joystick_index)
 	controllers_->push_back(result);
 
 	const SDL_JoystickGUID guid = SDL_JoystickGetGUID(sdl_joystick);
-	char *mapping = SDL_GameControllerMappingForGUID(guid);
-	SDL_Log("Opened game controller with mapping:\n%s", mapping);
-	SDL_free(mapping);
+	SDLUniquePtr<char> mapping{SDL_GameControllerMappingForGUID(guid)};
+	SDL_Log("Opened game controller with mapping:\n%s", mapping.get());
 }
 
 void GameController::Remove(SDL_JoystickID instance_id)
