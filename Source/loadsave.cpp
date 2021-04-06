@@ -1735,10 +1735,13 @@ static void SavePortal(SaveHelper *file, int i)
 	file->writeLE<Uint32>(pPortal->setlvl);
 }
 
+const int DiabloItemSaveSize = 368;
+const int HellfireItemSaveSize = 372;
+
 void SaveHeroItems(PlayerStruct *pPlayer)
 {
 	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", items * sizeof(ItemStruct));
+	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize));
 
 	file.writeLE<Uint8>(gbIsHellfire);
 
