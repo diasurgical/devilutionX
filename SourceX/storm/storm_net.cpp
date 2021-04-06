@@ -93,14 +93,11 @@ BOOL SNetLeaveGame(int type)
 /**
  * @brief Called by engine for single, called by ui for multi
  * @param provider BNET, IPXN, MODM, SCBL or UDPN
- * @param fileinfo Ignore
  */
-int SNetInitializeProvider(unsigned long provider, struct _SNETPROGRAMDATA *client_info,
-    struct _SNETPLAYERDATA *user_info, struct _SNETUIDATA *ui_info,
-    struct _SNETVERSIONDATA *fileinfo)
+int SNetInitializeProvider(Uint32 provider, struct GameData *gameData)
 {
 	dvlnet_inst = net::abstract_net::make_net(provider);
-	return ui_info->selectnamecallback(client_info, user_info, ui_info, fileinfo, provider, NULL, 0, NULL, 0, NULL);
+	return mainmenu_select_hero_dialog(gameData);
 }
 
 /**

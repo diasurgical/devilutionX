@@ -729,10 +729,6 @@ void NetClose()
 
 BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 {
-	_SNETPROGRAMDATA ProgramData;
-	_SNETUIDATA UiData;
-	_SNETPLAYERDATA plrdata;
-
 	while (1) {
 		*pfExitProgram = FALSE;
 		SetRndSeed(0);
@@ -748,17 +744,6 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
 		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest;
 		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;
-		memset(&ProgramData, 0, sizeof(ProgramData));
-		ProgramData.size = sizeof(ProgramData);
-		ProgramData.maxplayers = MAX_PLRS;
-		ProgramData.initdata = &sgGameInitInfo;
-		memset(&plrdata, 0, sizeof(plrdata));
-		plrdata.size = sizeof(plrdata);
-		memset(&UiData, 0, sizeof(UiData));
-		UiData.size = sizeof(UiData);
-		UiData.selectnamecallback = mainmenu_select_hero_dialog;
-		UiData.changenamecallback = (void (*)())mainmenu_change_name;
-		UiData.profilefields = UiProfileGetString();
 		memset(sgbPlayerTurnBitTbl, 0, sizeof(sgbPlayerTurnBitTbl));
 		gbGameDestroyed = FALSE;
 		memset(sgbPlayerLeftGameTbl, 0, sizeof(sgbPlayerLeftGameTbl));
@@ -768,10 +753,10 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		memset(sgwPackPlrOffsetTbl, 0, sizeof(sgwPackPlrOffsetTbl));
 		SNetSetBasePlayer(0);
 		if (bSinglePlayer) {
-			if (!multi_init_single(&ProgramData, &plrdata, &UiData))
+			if (!multi_init_single(&sgGameInitInfo))
 				return FALSE;
 		} else {
-			if (!multi_init_multi(&ProgramData, &plrdata, &UiData, pfExitProgram))
+			if (!multi_init_multi(&sgGameInitInfo, pfExitProgram))
 				return FALSE;
 		}
 		sgbNetInited = TRUE;
@@ -820,11 +805,11 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	return TRUE;
 }
 
-BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info)
+BOOL multi_init_single(GameData *gameData)
 {
 	int unused;
 
-	if (!SNetInitializeProvider(SELCONN_LOOPBACK, client_info, user_info, ui_info, &fileinfo)) {
+	if (!SNetInitializeProvider(SELCONN_LOOPBACK, gameData)) {
 		SErrGetLastError();
 		return FALSE;
 	}
@@ -840,23 +825,21 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 	return TRUE;
 }
 
-BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, BOOL *pfExitProgram)
+BOOL multi_init_multi(GameData *gameData, BOOL *pfExitProgram)
 {
 	BOOL first;
 	int playerId;
-	int type;
 
 	for (first = TRUE;; first = FALSE) {
-		type = 0x00;
 		if (gbSelectProvider) {
-			if (!UiSelectProvider(0, client_info, user_info, ui_info, &fileinfo, &type)
+			if (!UiSelectProvider(gameData)
 			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
 				return FALSE;
 			}
 		}
 
 		multi_event_handler(TRUE);
-		if (UiSelectGame(1, client_info, user_info, ui_info, &fileinfo, &playerId))
+		if (UiSelectGame(gameData, &playerId))
 			break;
 
 		gbSelectProvider = TRUE;

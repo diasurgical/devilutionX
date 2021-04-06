@@ -20,7 +20,6 @@ int _newlib_heap_size_user = 100 * 1024 * 1024;
 
 DEVILUTION_BEGIN_NAMESPACE
 
-_SNETVERSIONDATA fileinfo;
 /** True if the game is the current active window */
 int gbActive;
 /** A handle to an hellfire.mpq archive. */
@@ -143,10 +142,6 @@ static void init_get_file_info()
 
 void init_archives()
 {
-	HANDLE fh = NULL;
-	memset(&fileinfo, 0, sizeof(fileinfo));
-	fileinfo.size = sizeof(fileinfo);
-	fileinfo.versionstring = gszVersionNumber;
 	init_get_file_info();
 
 	std::vector<std::string> paths;
@@ -174,6 +169,7 @@ void init_archives()
 		if (spawn_mpq != NULL)
 			gbIsSpawn = true;
 	}
+	HANDLE fh = NULL;
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
 	SFileCloseFile(fh);

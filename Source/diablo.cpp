@@ -28,7 +28,7 @@ BOOL gbRunGameResult;
 BOOL zoomflag;
 /** Enable updating of player character, set to false once Diablo dies */
 BOOL gbProcessPlayers;
-BOOL gbLoadGame;
+bool gbLoadGame;
 BOOLEAN cineflag;
 int force_redraw;
 BOOL light4flag;
@@ -370,7 +370,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 
 	do {
 		fExitProgram = FALSE;
-		gbLoadGame = FALSE;
+		gbLoadGame = false;
 
 		if (!NetInit(bSinglePlayer, &fExitProgram)) {
 			gbRunGameResult = !fExitProgram;
@@ -395,7 +395,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 		}
 		run_game_loop(uMsg);
 		NetClose();
-		pfile_create_player_description(NULL, 0);
+		pfile_create_player_description();
 
 		// If the player left the game into the main menu,
 		// initialize main menu resources.

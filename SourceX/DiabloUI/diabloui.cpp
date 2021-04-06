@@ -500,16 +500,11 @@ void UiInitialize()
 	}
 }
 
-const char **UiProfileGetString()
-{
-	return NULL;
-}
-
 char connect_plrinfostr[128];
 char connect_categorystr[128];
 void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type)
 {
-	SStrCopy(connect_plrinfostr, infostr, sizeof(connect_plrinfostr));
+	strncpy(connect_plrinfostr, infostr, sizeof(connect_plrinfostr));
 	char format[32] = "";
 	memcpy(format, &type, 4);
 	strcpy(&format[4], " %d %d %d %d %d %d %d %d %d");
@@ -561,29 +556,6 @@ BOOL UiValidPlayerName(const char *name)
 		if (strstr(tmpname, reserved[i]))
 			return false;
 	}
-
-	return true;
-}
-
-BOOL UiCreatePlayerDescription(_uiheroinfo *info, Uint32 mode, char (*desc)[128])
-{
-	char format[32] = "";
-	memcpy(format, &mode, 4);
-	strcpy(&format[4], " %d %d %d %d %d %d %d %d %d");
-
-	snprintf(
-	    *desc,
-	    sizeof(*desc),
-	    format,
-	    info->level,
-	    info->heroclass,
-	    info->herorank,
-	    info->strength,
-	    info->magic,
-	    info->dexterity,
-	    info->vitality,
-	    info->gold,
-	    info->spawned);
 
 	return true;
 }

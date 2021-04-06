@@ -268,37 +268,6 @@ typedef struct _SNETEVENT {
 // TPDEF PTR FCN UCHAR SNETSELECTEDPROC
 // TPDEF PTR FCN UCHAR SNETSTATUSPROC
 
-typedef struct _SNETPLAYERDATA {
-	int size;
-	char *playername;
-	char *playerdescription;
-} _SNETPLAYERDATA;
-
-typedef struct _SNETVERSIONDATA {
-	int size;
-	const char *versionstring;
-} _SNETVERSIONDATA;
-
-typedef struct _SNETUIDATA {
-	int size;
-	void (*selectedcallback)();
-	void (*statuscallback)();
-	void (*categorylistcallback)();
-	void (*newaccountcallback)();
-	const char **profilefields;
-	bool (*selectnamecallback)(
-	    const struct _SNETPROGRAMDATA *,
-	    const struct _SNETPLAYERDATA *,
-	    const struct _SNETUIDATA *,
-	    const struct _SNETVERSIONDATA *,
-	    DWORD provider, /* e.g. 'BNET', 'IPXN', 'MODM', 'SCBL' */
-	    char *, DWORD,  /* character name will be copied here */
-	    char *, DWORD,  /* character "description" will be copied here (used to advertise games) */
-	    bool *          /* new character? - unsure about this */
-	);
-	void (*changenamecallback)();
-} _SNETUIDATA;
-
 // TPDEF PTR FCN UCHAR SNETSPIBIND
 // TPDEF PTR FCN UCHAR SNETSPIQUERY
 
