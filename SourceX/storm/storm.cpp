@@ -253,19 +253,6 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	return true;
 }
 
-void *SMemAlloc(unsigned int amount, const char *logfilename, int logline, int defaultValue)
-{
-	assert(amount != -1u);
-	return malloc(amount);
-}
-
-BOOL SMemFree(void *location, const char *logfilename, int logline, char defaultValue)
-{
-	assert(location);
-	free(location);
-	return true;
-}
-
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 {
 	char string[2];
