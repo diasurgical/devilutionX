@@ -3,8 +3,7 @@
  *
  * Interface of functionality for rendering the town, towners and calling other render routines.
  */
-#ifndef __TOWN_H__
-#define __TOWN_H__
+#pragma once
 
 namespace devilution {
 
@@ -21,5 +20,3 @@ void CreateTown(int entry);
 #endif
 
 }
-
-#endif /* __TOWN_H__ */

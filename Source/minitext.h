@@ -3,8 +3,7 @@
  *
  * Interface of scrolling dialog text.
  */
-#ifndef __MINITEXT_H__
-#define __MINITEXT_H__
+#pragma once
 
 namespace devilution {
 
@@ -33,5 +32,3 @@ void DrawQText(CelOutputBuffer out);
 #endif
 
 }
-
-#endif /* __MINITEXT_H__ */

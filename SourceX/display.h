@@ -93,4 +93,4 @@ void LogicalToOutput(T *x, T *y)
 #endif
 }
 
-} // namespace dvl
+} // namespace devilution

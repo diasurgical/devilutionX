@@ -3,8 +3,7 @@
  *
  * Interface of functionality for handling town portals.
  */
-#ifndef __PORTAL_H__
-#define __PORTAL_H__
+#pragma once
 
 namespace devilution {
 
@@ -42,5 +41,3 @@ BOOL PosOkPortal(int lvl, int x, int y);
 #endif
 
 }
-
-#endif /* __PORTAL_H__ */

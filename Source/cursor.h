@@ -3,8 +3,7 @@
  *
  * Interface of cursor tracking functionality.
  */
-#ifndef __CURSOR_H__
-#define __CURSOR_H__
+#pragma once
 
 namespace devilution {
 
@@ -48,5 +47,3 @@ extern const int InvItemHeight[];
 #endif
 
 }
-
-#endif /* __CURSOR_H__ */

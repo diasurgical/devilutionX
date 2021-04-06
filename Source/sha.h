@@ -3,8 +3,7 @@
  *
  * Interface of functionality for calculating X-SHA-1 (a flawed implementation of SHA-1).
  */
-#ifndef __SHA_H__
-#define __SHA_H__
+#pragma once
 
 namespace devilution {
 
@@ -30,5 +29,3 @@ void SHA1Reset(int n);
 #endif
 
 }
-
-#endif /* __SHA_H__ */

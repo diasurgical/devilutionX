@@ -3,8 +3,7 @@
  *
  * Interface of the in-game menu functions.
  */
-#ifndef __GAMEMENU_H__
-#define __GAMEMENU_H__
+#pragma once
 
 namespace devilution {
 
@@ -36,5 +35,3 @@ void gamemenu_color_cycling(BOOL bActivate);
 #endif
 
 }
-
-#endif /* __GAMEMENU_H__ */

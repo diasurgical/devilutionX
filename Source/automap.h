@@ -3,8 +3,7 @@
  *
  * Interface of the in-game map overlay.
  */
-#ifndef __AUTOMAP_H__
-#define __AUTOMAP_H__
+#pragma once
 
 #include "engine.h"
 
@@ -93,5 +92,3 @@ void AutomapZoomReset();
 #endif
 
 }
-
-#endif /* __AUTOMAP_H__ */

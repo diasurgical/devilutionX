@@ -292,4 +292,4 @@ int sound_get_or_set_sound_volume(int volume)
 	return sgOptions.Audio.nSoundVolume;
 }
 
-} // namespace dvl
+} // namespace devilution

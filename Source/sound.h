@@ -3,8 +3,7 @@
  *
  * Interface of functions setting up the audio pipeline.
  */
-#ifndef __SOUND_H__
-#define __SOUND_H__
+#pragma once
 
 namespace devilution {
 
@@ -47,5 +46,3 @@ extern BOOLEAN gbDupSounds;
 #endif
 
 }
-
-#endif /* __SOUND_H__ */

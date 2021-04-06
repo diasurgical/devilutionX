@@ -3,8 +3,7 @@
  *
  * Interface of functions for handling the engines color palette.
  */
-#ifndef __PALETTE_H__
-#define __PALETTE_H__
+#pragma once
 
 namespace devilution {
 
@@ -40,5 +39,3 @@ void palette_update_quest_palette(int n);
 #endif
 
 }
-
-#endif /* __PALETTE_H__ */

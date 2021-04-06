@@ -3,8 +3,7 @@
  *
  * Interface of function for sending and reciving network messages.
  */
-#ifndef __MSG_H__
-#define __MSG_H__
+#pragma once
 
 namespace devilution {
 
@@ -339,5 +338,3 @@ DWORD ParseCmd(int pnum, TCmd *pCmd);
 #endif
 
 }
-
-#endif /* __MSG_H__ */

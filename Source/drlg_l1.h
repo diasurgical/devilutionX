@@ -3,8 +3,7 @@
  *
  * Interface of the cathedral level generation algorithms.
  */
-#ifndef __DRLG_L1_H__
-#define __DRLG_L1_H__
+#pragma once
 
 namespace devilution {
 
@@ -39,5 +38,3 @@ void drlg_l1_crypt_pattern7(int rndper);
 #endif
 
 }
-
-#endif /* __DRLG_L1_H__ */

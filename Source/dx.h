@@ -3,8 +3,7 @@
  *
  * Interface of functions setting up the graphics pipeline.
  */
-#ifndef __DX_H__
-#define __DX_H__
+#pragma once
 
 namespace devilution {
 
@@ -22,5 +21,3 @@ void RenderPresent();
 void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
 
 }
-
-#endif /* __DX_H__ */

@@ -3,8 +3,7 @@
  *
  * Interface of missile functionality.
  */
-#ifndef __MISSILES_H__
-#define __MISSILES_H__
+#pragma once
 
 namespace devilution {
 
@@ -263,5 +262,3 @@ void ClearMissileSpot(int mi);
 #endif
 
 }
-
-#endif /* __MISSILES_H__ */

@@ -3,8 +3,7 @@
  *
  * Interface of functions for interacting with the main menu.
  */
-#ifndef __MAINMENU_H__
-#define __MAINMENU_H__
+#pragma once
 
 #include "multi.h"
 
@@ -24,5 +23,3 @@ void mainmenu_loop();
 #endif
 
 }
-
-#endif /* __MAINMENU_H__ */

@@ -3,8 +3,7 @@
  *
  * Interface of the caves level generation algorithms.
  */
-#ifndef __DRLG_L3_H__
-#define __DRLG_L3_H__
+#pragma once
 
 namespace devilution {
 
@@ -22,5 +21,3 @@ void LoadPreL3Dungeon(const char *sFileName, int vx, int vy);
 #endif
 
 }
-
-#endif /* __DRLG_L3_H__ */

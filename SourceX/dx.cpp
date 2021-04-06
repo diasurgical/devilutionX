@@ -321,4 +321,4 @@ void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries)
 		lpEntries[i] = system_palette[i];
 	}
 }
-} // namespace dvl
+} // namespace devilution

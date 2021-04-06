@@ -3,8 +3,7 @@
  *
  * Interface of save game functionality.
  */
-#ifndef __LOADSAVE_H__
-#define __LOADSAVE_H__
+#pragma once
 
 #include "player.h"
 
@@ -40,5 +39,3 @@ void LoadLevel();
 #endif
 
 }
-
-#endif /* __LOADSAVE_H__ */

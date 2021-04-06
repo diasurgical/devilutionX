@@ -3,8 +3,7 @@
  *
  * Interface of general dungeon generation code.
  */
-#ifndef __GENDUNG_H__
-#define __GENDUNG_H__
+#pragma once
 
 namespace devilution {
 
@@ -122,5 +121,3 @@ void InitLevels();
 #endif
 
 }
-
-#endif /* __GENDUNG_H__ */

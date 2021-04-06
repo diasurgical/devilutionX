@@ -3,8 +3,7 @@
  *
  * Interface of item functionality.
  */
-#ifndef __ITEMS_H__
-#define __ITEMS_H__
+#pragma once
 
 #include "itemdat.h"
 
@@ -354,5 +353,3 @@ extern int ItemInvSnds[];
 #endif
 
 }
-
-#endif /* __ITEMS_H__ */

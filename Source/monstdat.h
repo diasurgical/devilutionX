@@ -3,8 +3,7 @@
  *
  * Interface of all monster data.
  */
-#ifndef __MONSTDAT_H__
-#define __MONSTDAT_H__
+#pragma once
 
 namespace devilution {
 
@@ -292,5 +291,3 @@ extern const UniqMonstStruct UniqMonst[];
 #endif
 
 }
-
-#endif /* __MONSTDAT_H__ */

@@ -13,4 +13,4 @@ namespace devilution {
  */
 SDL_RWops *SFileRw_FromStormHandle(HANDLE handle);
 
-} // namespace dvl
+} // namespace devilution

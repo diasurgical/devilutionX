@@ -3,8 +3,7 @@
  *
  * Interface of functions for creating and editing MPQ files.
  */
-#ifndef __MPQAPI_H__
-#define __MPQAPI_H__
+#pragma once
 
 #include <stdint.h>
 
@@ -53,5 +52,3 @@ BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar);
 #endif
 
 }
-
-#endif /* __MPQAPI_H__ */

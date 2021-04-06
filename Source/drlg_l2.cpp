@@ -1837,7 +1837,7 @@ static void DRLG_LoadL2SP()
 
 	if (QuestStatus(Q_BLIND)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", NULL);
-		pSetPiece[26] = 154; // Close outer wall
+		pSetPiece[26] = 154;  // Close outer wall
 		pSetPiece[200] = 154; // Close outer wall
 		setloadflag = TRUE;
 	} else if (QuestStatus(Q_BLOOD)) {

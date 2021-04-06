@@ -3,8 +3,7 @@
  *
  * Interface of the character and main control panels
  */
-#ifndef __CONTROL_H__
-#define __CONTROL_H__
+#pragma once
 
 #include "engine.h"
 #include "spelldat.h"
@@ -158,5 +157,3 @@ extern RECT32 ChrBtnsRect[4];
 #endif
 
 }
-
-#endif /* __CONTROL_H__ */

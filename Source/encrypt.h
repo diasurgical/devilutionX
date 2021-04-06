@@ -3,8 +3,7 @@
  *
  * Interface of functions for compression and decompressing MPQ data.
  */
-#ifndef __ENCRYPT_H__
-#define __ENCRYPT_H__
+#pragma once
 
 namespace devilution {
 
@@ -32,5 +31,3 @@ void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes);
 #endif
 
 }
-
-#endif /* __ENCRYPT_H__ */

@@ -3,8 +3,7 @@
  *
  * Interface of the theme room placing algorithms.
  */
-#ifndef __THEMES_H__
-#define __THEMES_H__
+#pragma once
 
 namespace devilution {
 
@@ -31,5 +30,3 @@ void CreateThemeRooms();
 }
 #endif
 }
-
-#endif /* __THEMES_H__ */

@@ -3,8 +3,7 @@
  *
  * Interface of functionality for rendering the dungeons, monsters and calling other render routines.
  */
-#ifndef __SCROLLRT_H__
-#define __SCROLLRT_H__
+#pragma once
 
 namespace devilution {
 
@@ -52,5 +51,3 @@ void DrawAndBlit();
 #endif
 
 }
-
-#endif /* __SCROLLRT_H__ */

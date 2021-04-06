@@ -3,8 +3,7 @@
  *
  * Interface of player functionality, leveling, actions, creation, loading, etc.
  */
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#pragma once
 
 namespace devilution {
 
@@ -326,5 +325,3 @@ extern int ExpLvlsTbl[MAXCHARLEVEL];
 #endif
 
 }
-
-#endif /* __PLAYER_H__ */

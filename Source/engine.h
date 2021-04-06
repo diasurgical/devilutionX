@@ -10,8 +10,7 @@
  * - File loading
  * - Video playback
  */
-#ifndef __ENGINE_H__
-#define __ENGINE_H__
+#pragma once
 
 #include <algorithm>
 #include <cstddef>
@@ -441,5 +440,3 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
 }
-
-#endif /* __ENGINE_H__ */

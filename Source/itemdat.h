@@ -3,8 +3,7 @@
  *
  * Interface of all item data.
  */
-#ifndef __ITEMDAT_H__
-#define __ITEMDAT_H__
+#pragma once
 
 namespace devilution {
 
@@ -549,5 +548,3 @@ extern const UItemStruct UniqueItemList[];
 #endif
 
 }
-
-#endif /* __ITEMDAT_H__ */

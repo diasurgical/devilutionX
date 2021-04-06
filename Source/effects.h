@@ -3,8 +3,7 @@
  *
  * Interface of functions for loading and playing sounds.
  */
-#ifndef __EFFECTS_H__
-#define __EFFECTS_H__
+#pragma once
 
 #include "sound.h"
 
@@ -44,5 +43,3 @@ int GetSFXLength(int nSFX);
 #endif
 
 }
-
-#endif /* __EFFECTS_H__ */

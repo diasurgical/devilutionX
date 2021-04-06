@@ -3,8 +3,7 @@
  *
  * Interface of functions for managing game ticks.
  */
-#ifndef __NTHREAD_H__
-#define __NTHREAD_H__
+#pragma once
 
 namespace devilution {
 
@@ -34,5 +33,3 @@ BOOL nthread_has_500ms_passed();
 #endif
 
 }
-
-#endif /* __NTHREAD_H__ */
