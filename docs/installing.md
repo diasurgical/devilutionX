@@ -62,7 +62,7 @@ sudo apt install devilutionx
 
 <details><summary>New Nintendo 3DS</summary>
 
-<details><summary>.3dsx installation</summary>
+### .3dsx installation
 
 - Copy `devilutionx.3dsx` into `sd:/3ds/devilutionx/`.
 - Copy `DIABDAT.MPQ` from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to `sd:/3ds/devilutionx/`.
@@ -70,16 +70,12 @@ sudo apt install devilutionx
 - Launch `devilutionx.3dsx` with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
   - *Note:* When the Hellfire .mpqs are installed you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
 
-</details>
-
-<details><summary>.cia installation</summary>
+### .cia installation
 
 - Copy `devilutionx.cia` to your SD card and install with a title manager, e.g. [FBI](https://github.com/Steveice10/FBI). `devilutionx.cia` can be removed after being installed.
 - Copy `DIABDAT.MPQ` from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to `sd:/3ds/devilutionx/`.
 - To run the Hellfire expansion of Diablo you will need to copy `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq` into the same location as `DIABDAT.MPQ`.
 - Launch Diablo from your 3DS Homemenu.
-
-</details>
 
 </details>
 
