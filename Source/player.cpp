@@ -11,21 +11,10 @@
 
 namespace devilution {
 
-int plr_lframe_size;
-int plr_wframe_size;
-BYTE plr_gfx_flag = 0;
-int plr_aframe_size;
 int myplr;
 PlayerStruct plr[MAX_PLRS];
-int plr_fframe_size;
-int plr_qframe_size;
 BOOL deathflag;
-int plr_hframe_size;
-int plr_bframe_size;
-BYTE plr_gfx_bflag = 0;
-int plr_sframe_size;
 int deathdelay;
-int plr_dframe_size;
 
 /** Maps from armor animation to letter used in graphic files. */
 const char ArmourChar[4] = { 'L', 'M', 'H', 0 };
@@ -414,63 +403,43 @@ void InitPlrGFXMem(int pnum)
 		app_fatal("InitPlrGFXMem: illegal player %d", pnum);
 	}
 
-	if (!(plr_gfx_flag & 0x1)) { //STAND
-		plr_gfx_flag |= 0x1;
-		// ST: TOWN, AS: DUNGEON
-		plr_sframe_size = std::max(GetPlrGFXSize("ST"), GetPlrGFXSize("AS"));
-	}
-	plr[pnum]._pNData = DiabloAllocPtr(plr_sframe_size);
+	auto &player = plr[pnum];
+	if (player.bGfxMemAllocated)
+		return;
 
-	if (!(plr_gfx_flag & 0x2)) { //WALK
-		plr_gfx_flag |= 0x2;
-		// WL: TOWN, AW: DUNGEON
-		plr_wframe_size = std::max(GetPlrGFXSize("WL"), GetPlrGFXSize("AW"));
-	}
-	plr[pnum]._pWData = DiabloAllocPtr(plr_wframe_size);
+	// FIXME: GetPlrGFXSize should accept the player class
+	// and only return the required memory for that class.
 
-	if (!(plr_gfx_flag & 0x4)) { //ATTACK
-		plr_gfx_flag |= 0x4;
-		plr_aframe_size = GetPlrGFXSize("AT");
-	}
-	plr[pnum]._pAData = DiabloAllocPtr(plr_aframe_size);
+	// STAND (ST: TOWN, AS: DUNGEON)
+	player._pNData = DiabloAllocPtr(std::max(GetPlrGFXSize("ST"), GetPlrGFXSize("AS")));
 
-	if (!(plr_gfx_flag & 0x8)) { //HIT
-		plr_gfx_flag |= 0x8;
-		plr_hframe_size = GetPlrGFXSize("HT");
-	}
-	plr[pnum]._pHData = DiabloAllocPtr(plr_hframe_size);
+	// WALK (WL: TOWN, AW: DUNGEON)
+	player._pWData = DiabloAllocPtr(std::max(GetPlrGFXSize("WL"), GetPlrGFXSize("AW")));
 
-	if (!(plr_gfx_flag & 0x10)) { //LIGHTNING
-		plr_gfx_flag |= 0x10;
-		plr_lframe_size = GetPlrGFXSize("LM");
-	}
-	plr[pnum]._pLData = DiabloAllocPtr(plr_lframe_size);
+	// ATTACK
+	player._pAData = DiabloAllocPtr(GetPlrGFXSize("AT"));
 
-	if (!(plr_gfx_flag & 0x20)) { //FIRE
-		plr_gfx_flag |= 0x20;
-		plr_fframe_size = GetPlrGFXSize("FM");
-	}
-	plr[pnum]._pFData = DiabloAllocPtr(plr_fframe_size);
+	// HIT
+	player._pHData = DiabloAllocPtr(GetPlrGFXSize("HT"));
 
-	if (!(plr_gfx_flag & 0x40)) { //MAGIC
-		plr_gfx_flag |= 0x40;
-		plr_qframe_size = GetPlrGFXSize("QM");
-	}
-	plr[pnum]._pTData = DiabloAllocPtr(plr_qframe_size);
+	// LIGHTNING
+	player._pLData = DiabloAllocPtr(GetPlrGFXSize("LM"));
 
-	if (!(plr_gfx_flag & 0x80)) { //DEATH
-		plr_gfx_flag |= 0x80;
-		plr_dframe_size = GetPlrGFXSize("DT");
-	}
-	plr[pnum]._pDData = DiabloAllocPtr(plr_dframe_size);
+	// FIRE
+	player._pFData = DiabloAllocPtr(GetPlrGFXSize("FM"));
 
-	if (!(plr_gfx_bflag & 0x1)) { //BLOCK
-		plr_gfx_bflag |= 0x1;
-		plr_bframe_size = GetPlrGFXSize("BL");
-	}
-	plr[pnum]._pBData = DiabloAllocPtr(plr_bframe_size);
+	// MAGIC
+	player._pTData = DiabloAllocPtr(GetPlrGFXSize("QM"));
 
-	plr[pnum]._pGFXLoad = 0;
+	// DEATH
+	player._pDData = DiabloAllocPtr(GetPlrGFXSize("DT"));
+
+	// BLOCK
+	player._pBData = DiabloAllocPtr(GetPlrGFXSize("BL"));
+
+	player._pGFXLoad = 0;
+
+	player.bGfxMemAllocated = true;
 }
 
 void FreePlayerGFX(int pnum)
@@ -489,6 +458,7 @@ void FreePlayerGFX(int pnum)
 	MemFreeDbg(plr[pnum]._pDData);
 	MemFreeDbg(plr[pnum]._pBData);
 	plr[pnum]._pGFXLoad = 0;
+	plr[pnum].bGfxMemAllocated = false;
 }
 
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width)
