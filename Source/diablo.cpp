@@ -377,6 +377,10 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 			break;
 		}
 
+		// Save 1.3 MiB of RAM by freeing all main menu resources
+		// before starting the game.
+		UiDestroy();
+
 		gbSelectProvider = FALSE;
 
 		if (bNewGame || !gbValidSaveFile) {
@@ -392,6 +396,11 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 		run_game_loop(uMsg);
 		NetClose();
 		pfile_create_player_description(NULL, 0);
+
+		// If the player left the game into the main menu,
+		// initialize main menu resources.
+		if (gbRunGameResult)
+			UiInitialize();
 	} while (gbRunGameResult);
 
 	SNetDestroy();
