@@ -105,7 +105,7 @@ sudo apt install devilutionx
 <details><summary>GKD350h</summary>
 
 - Copy [devilutionx-gkd350h.opk](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-gkd350h.opk) to `/media/data/apps` or `/media/sdcard/apps/`.
-- Copy `DIABDAT.MPQ` from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to `/usr/local/home/.local/share/diasurgical/devilution/`DIABDAT.MPQ``
+- Copy `DIABDAT.MPQ` from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to `/usr/local/home/.local/share/diasurgical/devilution/DIABDAT.MPQ`
 - To run the Hellfire expansion of Diablo you will need to copy `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq` into the same location as `DIABDAT.MPQ`.
 
 </details>
@@ -127,7 +127,7 @@ sudo apt install devilutionx
 **Requires firmware v1.5+**
 
 - Copy [devilutionx-rg350.opk](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-rg350.opk) to `/media/sdcard/APPS/`.
-- Copy `DIABDAT.MPQ` from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer))  to `/media/home/.local/share/diasurgical/devilution/`DIABDAT.MPQ``
+- Copy `DIABDAT.MPQ` from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer))  to `/media/home/.local/share/diasurgical/devilution/DIABDAT.MPQ`
 - To run the Hellfire expansion of Diablo you will need to copy `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq` into the same location as `DIABDAT.MPQ`.
 - 
    **NOTE:** You can copy `DIABDAT.MPQ` to sdcard instead and create a symlink at the expected location. To do this, SSH into your RG350 and run:
