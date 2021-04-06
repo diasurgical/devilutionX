@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <SDL.h>
 
@@ -24,8 +25,8 @@ typedef enum _artLogo {
 	LOGO_BIG,
 } _artLogo;
 
-extern Art ArtLogos[3];
-extern Art ArtFocus[3];
+extern std::array<Art, 3> ArtLogos;
+extern std::array<Art, 3> ArtFocus;
 extern Art ArtBackground;
 extern Art ArtBackgroundWidescreen;
 extern Art ArtCursor;
