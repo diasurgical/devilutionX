@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <limits>
 #include <string>
-namespace dvl {
+namespace devilution {
 
 typedef struct PCXHeader {
 	Uint8 Manufacturer;

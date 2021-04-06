@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <set>
 
-namespace dvl {
+namespace devilution {
 
 static int SDLCALL thread_translate(void *ptr)
 {

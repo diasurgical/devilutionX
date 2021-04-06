@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-namespace dvl {
+namespace devilution {
 
 [[noreturn]] void app_fatal(const char *pszFmt, ...);
 void DrawDlg(const char *pszFmt, ...);

@@ -6,7 +6,7 @@
 #ifndef __INIT_H__
 #define __INIT_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

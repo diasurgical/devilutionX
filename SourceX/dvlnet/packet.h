@@ -11,7 +11,7 @@
 #include "dvlnet/abstract_net.h"
 #include "stubs.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 enum packet_type : uint8_t {

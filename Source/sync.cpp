@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -152,7 +152,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 	}
 }
 
-}
+} // namespace
 
 Uint32 sync_all_monsters(const Uint8 *pbBuf, Uint32 dwMaxLen)
 {
@@ -289,4 +289,4 @@ void sync_init()
 	memset(sgwLRU, 255, sizeof(sgwLRU));
 }
 
-}
+} // namespace devilution

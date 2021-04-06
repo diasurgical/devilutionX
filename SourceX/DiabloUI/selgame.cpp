@@ -10,7 +10,7 @@
 #include "DiabloUI/selhero.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 char selgame_Label[32];
 char selgame_Ip[129] = "";
@@ -484,4 +484,4 @@ int UiSelectGame(GameData *gameData, int *playerId)
 
 	return selgame_enteringGame;
 }
-} // namespace dvl
+} // namespace devilution

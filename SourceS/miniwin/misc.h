@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dvl {
+namespace devilution {
 
 typedef uint16_t SHORT;
 typedef int32_t LONG;

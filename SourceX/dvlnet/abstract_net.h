@@ -8,7 +8,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 typedef std::vector<unsigned char> buffer_t;

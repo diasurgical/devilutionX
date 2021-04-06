@@ -6,7 +6,7 @@
 #include "all.h"
 #include "textdat.h"
 
-namespace dvl {
+namespace devilution {
 
 /* todo: move text out of struct */
 
@@ -738,4 +738,4 @@ const TextDataStruct alltext[] = {
 */
 };
 
-}
+} // namespace devilution

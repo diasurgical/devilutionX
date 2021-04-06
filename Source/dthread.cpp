@@ -6,7 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-namespace dvl {
+namespace devilution {
 
 static CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
@@ -140,4 +140,4 @@ void dthread_cleanup()
 	}
 }
 
-}
+} // namespace devilution

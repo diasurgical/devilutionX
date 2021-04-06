@@ -6,7 +6,7 @@
 #include <SDL.h>
 #include <type_traits>
 
-namespace dvl {
+namespace devilution {
 
 extern int refreshDelay; // Screen refresh rate in nanoseconds
 extern SDL_Window *window;

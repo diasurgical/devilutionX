@@ -8,7 +8,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 char gszHero[16];
 
@@ -156,4 +156,4 @@ void mainmenu_loop()
 	music_stop();
 }
 
-}
+} // namespace devilution

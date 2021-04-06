@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace dvl {
+namespace devilution {
 
 const std::string &GetBasePath();
 const std::string &GetPrefPath();

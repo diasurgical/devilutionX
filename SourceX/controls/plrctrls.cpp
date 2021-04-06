@@ -10,7 +10,7 @@
 
 #define SPLICONLENGTH 56
 
-namespace dvl {
+namespace devilution {
 
 bool sgbControllerActive = false;
 coords speedspellscoords[50];
@@ -842,7 +842,7 @@ void StoreMove(AxisDirection move_dir)
 		STextDown();
 }
 
-typedef void (*HandleLeftStickOrDPadFn)(dvl::AxisDirection);
+typedef void (*HandleLeftStickOrDPadFn)(devilution::AxisDirection);
 
 HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 {
@@ -1250,4 +1250,4 @@ void PerformSecondaryAction()
 	}
 }
 
-} // namespace dvl
+} // namespace devilution

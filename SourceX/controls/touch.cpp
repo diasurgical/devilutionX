@@ -86,7 +86,7 @@ static void init_touch(void)
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
 	visible_height = current.h;
-	visible_width = (current.h * dvl::gnScreenWidth) / dvl::gnScreenHeight;
+	visible_width = (current.h * devilution::gnScreenWidth) / devilution::gnScreenHeight;
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
 }
@@ -107,7 +107,7 @@ static void preprocess_events(SDL_Event *event)
 	SDL_TouchID port = event->tfinger.touchId;
 	if (port != 0) {
 #ifdef __vita__
-		if (dvl::sgOptions.Controller.bRearTouch) {
+		if (devilution::sgOptions.Controller.bRearTouch) {
 			switch (event->type) {
 			case SDL_FINGERDOWN:
 				preprocess_back_finger_down(event);
@@ -147,7 +147,7 @@ static void preprocess_finger_down(SDL_Event *event)
 	if (direct_touch) {
 		x = event->tfinger.x * visible_width + x_borderwidth;
 		y = event->tfinger.y * visible_height + y_borderwidth;
-		dvl::OutputToLogical(&x, &y);
+		devilution::OutputToLogical(&x, &y);
 	}
 
 	// make sure each finger is not reported down multiple times
@@ -245,8 +245,8 @@ static void preprocess_finger_up(SDL_Event *event)
 
 			// short (<MAX_TAP_TIME ms) tap is interpreted as right/left mouse click depending on # fingers already down
 			// but only if the finger hasn't moved since it was pressed down by more than MAX_TAP_MOTION_DISTANCE pixels
-			float xrel = ((event->tfinger.x * dvl::GetOutputSurface()->w) - (finger[port][i].last_down_x * dvl::GetOutputSurface()->w));
-			float yrel = ((event->tfinger.y * dvl::GetOutputSurface()->h) - (finger[port][i].last_down_y * dvl::GetOutputSurface()->h));
+			float xrel = ((event->tfinger.x * devilution::GetOutputSurface()->w) - (finger[port][i].last_down_x * devilution::GetOutputSurface()->w));
+			float yrel = ((event->tfinger.y * devilution::GetOutputSurface()->h) - (finger[port][i].last_down_y * devilution::GetOutputSurface()->h));
 			float max_r_squared = (float)(MAX_TAP_MOTION_DISTANCE * MAX_TAP_MOTION_DISTANCE);
 			if ((xrel * xrel + yrel * yrel) >= max_r_squared) {
 				continue;
@@ -268,7 +268,7 @@ static void preprocess_finger_up(SDL_Event *event)
 				if (direct_touch) {
 					x = event->tfinger.x * visible_width + x_borderwidth;
 					y = event->tfinger.y * visible_height + y_borderwidth;
-					dvl::OutputToLogical(&x, &y);
+					devilution::OutputToLogical(&x, &y);
 				}
 			}
 			set_mouse_button_event(event, SDL_MOUSEBUTTONDOWN, simulated_button, x, y);
@@ -314,19 +314,19 @@ static void preprocess_finger_motion(SDL_Event *event)
 		if (direct_touch) {
 			x = event->tfinger.x * visible_width + x_borderwidth;
 			y = event->tfinger.y * visible_height + y_borderwidth;
-			dvl::OutputToLogical(&x, &y);
+			devilution::OutputToLogical(&x, &y);
 		} else {
 			// for relative mode, use the pointer speed setting
 			float speedFactor = 1.0;
 
 			// convert touch events to relative mouse pointer events
 			// Whenever an SDL_event involving the mouse is processed,
-			x = (mouse_x + (event->tfinger.dx * 1.25 * speedFactor * dvl::GetOutputSurface()->w));
-			y = (mouse_y + (event->tfinger.dy * 1.25 * speedFactor * dvl::GetOutputSurface()->h));
+			x = (mouse_x + (event->tfinger.dx * 1.25 * speedFactor * devilution::GetOutputSurface()->w));
+			y = (mouse_y + (event->tfinger.dy * 1.25 * speedFactor * devilution::GetOutputSurface()->h));
 		}
 
-		x = clip(x, 0, dvl::GetOutputSurface()->w);
-		y = clip(y, 0, dvl::GetOutputSurface()->h);
+		x = clip(x, 0, devilution::GetOutputSurface()->w);
+		y = clip(y, 0, devilution::GetOutputSurface()->h);
 		xrel = x - mouse_x;
 		yrel = y - mouse_y;
 
@@ -414,7 +414,7 @@ static void preprocess_finger_motion(SDL_Event *event)
 	}
 }
 
-namespace dvl {
+namespace devilution {
 
 void handle_touch(SDL_Event *event, int current_mouse_x, int current_mouse_y)
 {
@@ -463,7 +463,7 @@ void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y)
 	}
 }
 
-} // namespace dvl
+} // namespace devilution
 
 static void set_mouse_button_event(SDL_Event *event, uint32_t type, uint8_t button, int32_t x, int32_t y)
 {

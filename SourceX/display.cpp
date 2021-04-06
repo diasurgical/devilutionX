@@ -20,7 +20,7 @@
 #endif
 #endif
 
-namespace dvl {
+namespace devilution {
 
 extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 

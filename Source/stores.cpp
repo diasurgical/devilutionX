@@ -7,7 +7,7 @@
 #include "options.h"
 #include <algorithm>
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -2160,7 +2160,7 @@ void S_DrunkEnter()
 	}
 }
 
-}
+} // namespace
 
 ItemStruct golditem;
 
@@ -2910,4 +2910,4 @@ void ReleaseStoreBtn()
 	stextscrldbtn = -1;
 }
 
-}
+} // namespace devilution

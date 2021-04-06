@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 BOOL storeflag;
 int sgnCowMsg;
@@ -1302,4 +1302,4 @@ void TalkToTowner(int p, int t)
 	}
 }
 
-}
+} // namespace devilution

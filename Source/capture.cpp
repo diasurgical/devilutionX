@@ -10,7 +10,7 @@
 #include "paths.h"
 #include "file_util.h"
 
-namespace dvl {
+namespace devilution {
 
 /**
  * @brief Write the PCX-file header
@@ -205,4 +205,4 @@ void CaptureScreen()
 	delete out_stream;
 }
 
-}
+} // namespace devilution

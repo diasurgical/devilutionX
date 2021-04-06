@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 int GetManaAmount(int id, int sn)
 {
@@ -413,4 +413,4 @@ int GetSpellStaffLevel(spell_id s)
 	return spelldata[s].sStaffLvl;
 }
 
-}
+} // namespace devilution

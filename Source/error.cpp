@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 char msgtable[MAX_SEND_STR_LEN];
 DWORD msgdelay;
@@ -162,4 +162,4 @@ void DrawDiabloMsg(CelOutputBuffer out)
 	}
 }
 
-}
+} // namespace devilution

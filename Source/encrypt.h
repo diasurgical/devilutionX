@@ -6,7 +6,7 @@
 #ifndef __ENCRYPT_H__
 #define __ENCRYPT_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

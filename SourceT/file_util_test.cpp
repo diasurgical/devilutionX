@@ -5,7 +5,7 @@
 
 #include "file_util.h"
 
-using namespace dvl;
+using namespace devilution;
 
 namespace {
 

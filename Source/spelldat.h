@@ -6,7 +6,7 @@
 #ifndef __SPELLDAT_H__
 #define __SPELLDAT_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

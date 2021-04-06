@@ -9,7 +9,7 @@
 #include "player.h"
 #include "../DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

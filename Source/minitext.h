@@ -6,7 +6,7 @@
 #ifndef __MINITEXT_H__
 #define __MINITEXT_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

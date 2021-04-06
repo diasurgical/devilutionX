@@ -5,7 +5,7 @@
 #include "DiabloUI/text.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-namespace dvl {
+namespace devilution {
 
 char selconn_MaxPlayers[21];
 char selconn_Description[64];
@@ -142,4 +142,4 @@ int UiSelectProvider(GameData *gameData)
 	return selconn_ReturnValue;
 }
 
-} // namespace dvl
+} // namespace devilution

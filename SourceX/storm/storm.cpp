@@ -21,7 +21,7 @@
 
 #include "DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 DWORD nLastError = 0;
 
@@ -800,4 +800,4 @@ BOOL SFileEnableDirectAccess(BOOL enable)
 	directFileAccess = enable;
 	return true;
 }
-} // namespace dvl
+} // namespace devilution

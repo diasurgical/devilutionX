@@ -6,7 +6,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-namespace dvl {
+namespace devilution {
 
 void printInConsole(const char *fmt, ...)
 {

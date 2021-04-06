@@ -8,7 +8,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace dvl {
+namespace devilution {
 
 typedef struct CodecSignature {
 	DWORD checksum;
@@ -142,4 +142,4 @@ void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, const char *pszPasswo
 	SHA1Clear();
 }
 
-}
+} // namespace devilution

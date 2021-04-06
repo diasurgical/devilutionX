@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-namespace dvl {
+namespace devilution {
 
 AxisDirection AxisDirectionRepeater::Get(AxisDirection axis_direction)
 {
@@ -52,4 +52,4 @@ AxisDirection AxisDirectionRepeater::Get(AxisDirection axis_direction)
 	return axis_direction;
 }
 
-} // namespace dvl
+} // namespace devilution

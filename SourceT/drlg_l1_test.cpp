@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-using namespace dvl;
+using namespace devilution;
 
 TEST(Drlg_l1, DRLG_Init_Globals_4flag)
 {

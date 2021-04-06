@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 #ifdef _DEBUG
 BOOL update_seed_check = FALSE;
@@ -224,4 +224,4 @@ void NextDebugMonster()
 }
 #endif
 
-}
+} // namespace devilution

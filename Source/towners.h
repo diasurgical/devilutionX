@@ -6,7 +6,7 @@
 #ifndef __TOWNERS_H__
 #define __TOWNERS_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

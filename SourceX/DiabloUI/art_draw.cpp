@@ -3,7 +3,7 @@
 #include "DiabloUI/diabloui.h"
 #include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
@@ -74,4 +74,4 @@ int GetAnimationFrame(int frames, int fps)
 	return frame > frames ? 0 : frame;
 }
 
-} // namespace dvl
+} // namespace devilution

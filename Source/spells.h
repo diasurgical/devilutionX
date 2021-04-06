@@ -6,7 +6,7 @@
 #ifndef __SPELLS_H__
 #define __SPELLS_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

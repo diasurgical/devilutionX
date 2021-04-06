@@ -7,7 +7,7 @@
 #include "DiabloUI/ui_item.h"
 #include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 extern std::size_t SelectedItem;
 extern bool textInputActive;

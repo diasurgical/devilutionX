@@ -6,7 +6,7 @@
 
 #include "DiabloUI/art.h"
 
-namespace dvl {
+namespace devilution {
 
 enum _artFontTables {
 	AFT_SMALL,

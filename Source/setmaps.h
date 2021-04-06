@@ -6,7 +6,7 @@
 #ifndef __SETMAPS_H__
 #define __SETMAPS_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

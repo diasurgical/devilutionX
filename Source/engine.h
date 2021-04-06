@@ -25,7 +25,7 @@
 
 #include "../types.h"
 
-namespace dvl {
+namespace devilution {
 
 // `malloc` that returns a user-friendly error on OOM.
 //

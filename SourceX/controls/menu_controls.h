@@ -2,7 +2,7 @@
 
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 enum MenuAction {
 	MenuAction_NONE = 0,

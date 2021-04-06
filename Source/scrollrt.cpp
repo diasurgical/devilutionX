@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 /**
  * Specifies the current light entry.
@@ -1557,4 +1557,4 @@ void DrawAndBlit()
 	drawsbarflag = FALSE;
 }
 
-}
+} // namespace devilution

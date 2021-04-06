@@ -4,7 +4,7 @@
 
 #include "storm_sdl_rw.h"
 
-namespace dvl {
+namespace devilution {
 
 ///// SoundSample /////
 

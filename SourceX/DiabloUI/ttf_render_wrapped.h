@@ -4,7 +4,7 @@
 
 #include <SDL_ttf.h>
 
-namespace dvl {
+namespace devilution {
 
 enum TextAlignment {
 	TextAlignment_BEGIN = 0,

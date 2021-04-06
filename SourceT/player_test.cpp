@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-using namespace dvl;
+using namespace devilution;
 
-namespace dvl {
+namespace devilution {
 extern int PM_DoGotHit(int pnum);
 }
 

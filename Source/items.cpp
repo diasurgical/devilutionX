@@ -7,7 +7,7 @@
 #include "all.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 int itemactive[MAXITEMS];
 BOOL uitemflag;
@@ -5472,4 +5472,4 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex)
 	}
 }
 
-}
+} // namespace devilution

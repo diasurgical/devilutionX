@@ -14,7 +14,7 @@
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-namespace dvl {
+namespace devilution {
 
 /** Seed value before the most recent call to SetRndSeed() */
 Sint32 orgseed;
@@ -1084,4 +1084,4 @@ void PlayInGameMovie(const char *pszMovie)
 	force_redraw = 255;
 }
 
-}
+} // namespace devilution

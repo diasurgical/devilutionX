@@ -11,7 +11,7 @@
 #include "monstdat.h"
 #endif
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

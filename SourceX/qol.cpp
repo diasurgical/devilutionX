@@ -7,7 +7,7 @@
 #include "options.h"
 #include "DiabloUI/art_draw.h"
 
-namespace dvl {
+namespace devilution {
 namespace {
 
 struct QolArt {

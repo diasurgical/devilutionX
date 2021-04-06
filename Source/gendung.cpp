@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 /** Contains the tile IDs of the map. */
 BYTE dungeon[DMAXX][DMAXY];
@@ -604,4 +604,4 @@ void InitLevels()
 	setlevel = FALSE;
 }
 
-}
+} // namespace devilution

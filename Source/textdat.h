@@ -6,7 +6,7 @@
 #ifndef __TEXTDAT_H__
 #define __TEXTDAT_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

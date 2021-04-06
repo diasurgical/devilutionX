@@ -9,7 +9,7 @@
 #include "DiabloUI/errorart.h"
 #include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -296,4 +296,4 @@ void UiErrorOkDialog(const char *text, std::vector<UiItemBase *> renderBehind)
 	UiErrorOkDialog(text, NULL, renderBehind);
 }
 
-} // namespace dvl
+} // namespace devilution

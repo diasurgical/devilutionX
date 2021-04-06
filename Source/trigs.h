@@ -6,7 +6,7 @@
 #ifndef __TRIGS_H__
 #define __TRIGS_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

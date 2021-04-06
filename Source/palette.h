@@ -6,7 +6,7 @@
 #ifndef __PALETTE_H__
 #define __PALETTE_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

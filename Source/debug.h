@@ -6,7 +6,7 @@
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

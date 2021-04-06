@@ -8,7 +8,7 @@
 #include "DiabloUI/ttf_render_wrapped.h"
 #include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 extern SDL_Surface *pal_surface;
 
@@ -99,4 +99,4 @@ void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawText
 	}
 }
 
-} // namespace dvl
+} // namespace devilution

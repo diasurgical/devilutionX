@@ -5,7 +5,7 @@
 #include "stubs.h"
 #include "dvlnet/abstract_net.h"
 
-namespace dvl {
+namespace devilution {
 
 static std::unique_ptr<net::abstract_net> dvlnet_inst;
 static char gpszGameName[128] = {};
@@ -158,4 +158,4 @@ BOOL SNetPerformUpgrade(DWORD *upgradestatus)
 	UNIMPLEMENTED();
 }
 
-} // namespace dvl
+} // namespace devilution

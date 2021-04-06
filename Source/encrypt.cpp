@@ -6,7 +6,7 @@
 #include "all.h"
 #include "../3rdParty/PKWare/pkware.h"
 
-namespace dvl {
+namespace devilution {
 
 DWORD hashtable[5][256];
 
@@ -161,4 +161,4 @@ void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes)
 	mem_free_dbg(pbOutBuff);
 }
 
-}
+} // namespace devilution

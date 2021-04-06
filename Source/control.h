@@ -9,7 +9,7 @@
 #include "engine.h"
 #include "spelldat.h"
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

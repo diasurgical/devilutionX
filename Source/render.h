@@ -6,7 +6,7 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

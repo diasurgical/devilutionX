@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 DeadStruct dead[MAXDEAD];
 int stonendx;
@@ -91,4 +91,4 @@ void SetDead()
 	}
 }
 
-}
+} // namespace devilution

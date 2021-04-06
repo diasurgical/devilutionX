@@ -2,7 +2,7 @@
 #ifndef __DIABLOUI_H__
 #define __DIABLOUI_H__
 
-namespace dvl {
+namespace devilution {
 
 typedef struct _uidefaultstats {
 	Uint16 strength;

@@ -4,7 +4,7 @@
 
 #include "dvlnet/abstract_net.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class frame_queue_exception : public dvlnet_exception {

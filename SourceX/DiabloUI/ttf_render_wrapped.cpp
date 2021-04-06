@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstring>
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -174,4 +174,4 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	return textbuf;
 }
 
-} // namespace dvl
+} // namespace devilution

@@ -3,7 +3,7 @@
 #include "DiabloUI/text.h"
 #include "DiabloUI/selok.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -89,4 +89,4 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	selok_Free();
 }
-} // namespace dvl
+} // namespace devilution

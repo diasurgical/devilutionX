@@ -7,7 +7,7 @@
 #include "./axis_direction.h"
 #include "./controller.h"
 
-namespace dvl {
+namespace devilution {
 
 // Raw axis values.
 extern float leftStickXUnscaled, leftStickYUnscaled, rightStickXUnscaled, rightStickYUnscaled;

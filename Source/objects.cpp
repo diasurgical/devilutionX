@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 int trapid;
 int trapdir;
@@ -5271,4 +5271,4 @@ bool objects_lv_24_454B04(int s)
 	return FALSE;
 }
 
-}
+} // namespace devilution

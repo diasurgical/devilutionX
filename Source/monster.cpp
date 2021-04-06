@@ -9,7 +9,7 @@
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-namespace dvl {
+namespace devilution {
 
 /** Tracks which missile files are already loaded */
 int MissileFileFlag;
@@ -5707,4 +5707,4 @@ void decode_enemy(int m, int enemy)
 	}
 }
 
-}
+} // namespace devilution

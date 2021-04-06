@@ -12,7 +12,7 @@
 #include "controls/controller.h"
 #include "controls/controller_buttons.h"
 
-namespace dvl {
+namespace devilution {
 
 class Joystick {
 	static std::vector<Joystick> *const joysticks_;

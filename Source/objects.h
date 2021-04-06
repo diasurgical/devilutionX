@@ -6,7 +6,7 @@
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

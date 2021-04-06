@@ -6,7 +6,7 @@
 #ifndef __DRLG_L3_H__
 #define __DRLG_L3_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {

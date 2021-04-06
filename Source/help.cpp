@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 int help_select_line;
 BOOL helpflag;
@@ -586,4 +586,4 @@ void HelpScrollDown()
 		help_select_line++;
 }
 
-}
+} // namespace devilution

@@ -8,7 +8,7 @@
 #include "controls/controller_buttons.h"
 
 #ifndef USE_SDL1
-namespace dvl {
+namespace devilution {
 
 class GameController {
 	static std::vector<GameController> *const controllers_;

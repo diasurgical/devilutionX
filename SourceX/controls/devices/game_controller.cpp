@@ -11,7 +11,7 @@
 // Defined in SourceX/controls/plctrls.cpp
 extern "C" bool sgbControllerActive;
 
-namespace dvl {
+namespace devilution {
 
 std::vector<GameController> *const GameController::controllers_ = new std::vector<GameController>;
 
@@ -221,5 +221,5 @@ bool GameController::IsPressedOnAnyController(ControllerButton button)
 	return false;
 }
 
-} // namespace dvl
+} // namespace devilution
 #endif

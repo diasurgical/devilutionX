@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-using namespace dvl;
+using namespace devilution;
 
 TEST(Codec, codec_get_encoded_len)
 {

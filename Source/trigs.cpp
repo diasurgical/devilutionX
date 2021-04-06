@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 BOOL townwarps[3];
 BOOL trigflag;
@@ -922,4 +922,4 @@ void CheckTriggers()
 	}
 }
 
-}
+} // namespace devilution

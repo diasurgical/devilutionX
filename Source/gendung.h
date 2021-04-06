@@ -6,7 +6,7 @@
 #ifndef __GENDUNG_H__
 #define __GENDUNG_H__
 
-namespace dvl {
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
