@@ -5,7 +5,7 @@ First, you will need access to the game MPQ files.
 - For the Diablo: Hellfire expansion you will also need `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq`.
 - Lastly, DevilutionX comes with [devilutionx.mpq](https://github.com/diasurgical/devilutionX/raw/master/Packaging/resources/devilutionx.mpq) which you will also need.
 
-Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) system (if available) and extract the contents to a location of your choosing, or [build from source](building.md). Then follow the system-specific instructions below.
+Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) for your system (if available) and extract the contents to a location of your choosing, or [build from source](building.md). Then follow the system-specific instructions below.
 
 <details><summary>Windows</summary>
 
