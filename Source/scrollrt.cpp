@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 /**
  * Specifies the current light entry.
@@ -1557,4 +1557,4 @@ void DrawAndBlit()
 	drawsbarflag = FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+}

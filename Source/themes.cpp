@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 int numthemes;
 BOOL armorFlag;
@@ -1066,4 +1066,4 @@ void CreateThemeRooms()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

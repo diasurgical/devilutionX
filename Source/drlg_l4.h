@@ -6,7 +6,7 @@
 #ifndef __DRLG_L4_H__
 #define __DRLG_L4_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,6 +28,6 @@ void CreateL4Dungeon(DWORD rseed, int entry);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __DRLG_L4_H__ */

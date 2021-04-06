@@ -6,7 +6,7 @@
 #ifndef __INIT_H__
 #define __INIT_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,6 +45,6 @@ extern char gszProductName[64];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __INIT_H__ */

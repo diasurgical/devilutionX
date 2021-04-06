@@ -6,7 +6,7 @@
 #ifndef __DEAD_H__
 #define __DEAD_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +31,6 @@ void SetDead();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __DEAD_H__ */

@@ -6,7 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 BYTE sgbNetUpdateRate;
 DWORD gdwMsgLenTbl[MAX_PLRS];
@@ -242,4 +242,4 @@ BOOL nthread_has_500ms_passed()
 	return ticksElapsed >= 0;
 }
 
-DEVILUTION_END_NAMESPACE
+}

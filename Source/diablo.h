@@ -11,7 +11,7 @@
 #include "monstdat.h"
 #endif
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -87,6 +87,6 @@ extern bool gbFriendlyFire;
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __DIABLO_H__ */

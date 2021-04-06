@@ -10,7 +10,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "file_util.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #define PASSWORD_SPAWN_SINGLE "adslhfb1"
 #define PASSWORD_SPAWN_MULTI "lshbkfg1"
@@ -551,4 +551,4 @@ void pfile_update(bool force_save)
 	pfile_write_hero();
 }
 
-DEVILUTION_END_NAMESPACE
+}

@@ -8,7 +8,7 @@
 
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 namespace {
 
@@ -2756,4 +2756,4 @@ void LoadPreL3Dungeon(const char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-DEVILUTION_END_NAMESPACE
+}

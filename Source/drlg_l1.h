@@ -6,7 +6,7 @@
 #ifndef __DRLG_L1_H__
 #define __DRLG_L1_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,6 +38,6 @@ void drlg_l1_crypt_pattern7(int rndper);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __DRLG_L1_H__ */

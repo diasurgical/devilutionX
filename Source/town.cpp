@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 namespace {
 
@@ -385,4 +385,4 @@ void CreateTown(int entry)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

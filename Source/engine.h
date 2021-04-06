@@ -25,7 +25,7 @@
 
 #include "../types.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 // `malloc` that returns a user-friendly error on OOM.
 //
@@ -440,6 +440,6 @@ DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __ENGINE_H__ */

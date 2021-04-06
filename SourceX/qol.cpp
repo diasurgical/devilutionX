@@ -7,7 +7,7 @@
 #include "options.h"
 #include "DiabloUI/art_draw.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 namespace {
 
 struct QolArt {
@@ -237,4 +237,4 @@ void AutoGoldPickup(int pnum)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

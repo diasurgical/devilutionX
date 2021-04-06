@@ -8,7 +8,7 @@
 
 #include "sound.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,6 +43,6 @@ int GetSFXLength(int nSFX);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __EFFECTS_H__ */

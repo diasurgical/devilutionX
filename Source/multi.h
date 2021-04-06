@@ -8,7 +8,7 @@
 
 #include "msg.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,6 +60,6 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __MULTI_H__ */

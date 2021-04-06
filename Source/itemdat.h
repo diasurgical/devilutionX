@@ -6,7 +6,7 @@
 #ifndef __ITEMDAT_H__
 #define __ITEMDAT_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -548,6 +548,6 @@ extern const UItemStruct UniqueItemList[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __ITEMDAT_H__ */

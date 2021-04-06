@@ -6,7 +6,7 @@
 #ifndef __PATH_H__
 #define __PATH_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,6 +45,6 @@ extern const char pathydir[8];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __PATH_H__ */

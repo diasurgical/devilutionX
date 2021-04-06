@@ -6,7 +6,7 @@
 #ifndef __SYNC_H__
 #define __SYNC_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +20,6 @@ void sync_init();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __SYNC_H__ */

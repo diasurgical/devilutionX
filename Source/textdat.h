@@ -6,7 +6,7 @@
 #ifndef __TEXTDAT_H__
 #define __TEXTDAT_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +24,6 @@ extern const TextDataStruct alltext[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __TEXTDAT_H__ */

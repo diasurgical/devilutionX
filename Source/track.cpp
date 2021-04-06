@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 namespace {
 
@@ -57,4 +57,4 @@ bool track_isscrolling()
 	return sgbIsScrolling;
 }
 
-DEVILUTION_END_NAMESPACE
+}

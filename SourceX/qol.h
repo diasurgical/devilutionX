@@ -8,7 +8,7 @@
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 void FreeQol();
 void InitQol();
@@ -16,6 +16,6 @@ void DrawMonsterHealthBar(CelOutputBuffer out);
 void DrawXPBar(CelOutputBuffer out);
 void AutoGoldPickup(int pnum);
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __QOL_H__ */

@@ -6,7 +6,7 @@
 #ifndef __MSG_H__
 #define __MSG_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -338,6 +338,6 @@ DWORD ParseCmd(int pnum, TCmd *pCmd);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __MSG_H__ */

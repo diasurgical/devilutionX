@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 /** Pixel width of the current cursor image */
 int cursW;
@@ -661,4 +661,4 @@ void CheckCursMove()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

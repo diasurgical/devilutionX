@@ -8,7 +8,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 char gszHero[16];
 
@@ -156,4 +156,4 @@ void mainmenu_loop()
 	music_stop();
 }
 
-DEVILUTION_END_NAMESPACE
+}

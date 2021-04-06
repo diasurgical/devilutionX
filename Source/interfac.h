@@ -6,7 +6,7 @@
 #ifndef __INTERFAC_H__
 #define __INTERFAC_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,6 +34,6 @@ void ShowProgress(interface_mode uMsg);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __INTERFAC_H__ */

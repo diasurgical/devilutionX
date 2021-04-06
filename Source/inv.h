@@ -9,7 +9,7 @@
 #include "items.h"
 #include "player.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,6 +80,6 @@ extern int AP2x2Tbl[10];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __INV_H__ */

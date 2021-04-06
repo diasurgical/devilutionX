@@ -6,7 +6,7 @@
 #ifndef __ENCRYPT_H__
 #define __ENCRYPT_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +31,6 @@ void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __ENCRYPT_H__ */

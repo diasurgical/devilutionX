@@ -8,7 +8,7 @@
 
 #include "missiles.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,6 +21,6 @@ extern MisFileData misfiledata[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __MISDAT_H__ */

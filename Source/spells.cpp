@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 int GetManaAmount(int id, int sn)
 {
@@ -413,4 +413,4 @@ int GetSpellStaffLevel(spell_id s)
 	return spelldata[s].sStaffLvl;
 }
 
-DEVILUTION_END_NAMESPACE
+}

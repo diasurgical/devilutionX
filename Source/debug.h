@@ -6,7 +6,7 @@
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,6 +30,6 @@ void NextDebugMonster();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __DEBUG_H__ */

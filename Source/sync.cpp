@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 namespace {
 
@@ -289,4 +289,4 @@ void sync_init()
 	memset(sgwLRU, 255, sizeof(sgwLRU));
 }
 
-DEVILUTION_END_NAMESPACE
+}

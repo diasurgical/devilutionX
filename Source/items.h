@@ -8,7 +8,7 @@
 
 #include "itemdat.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -353,6 +353,6 @@ extern int ItemInvSnds[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __ITEMS_H__ */

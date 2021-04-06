@@ -1,6 +1,6 @@
 #pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 struct DiabloOptions {
 	/** @brief Play game intro video on startup. */
@@ -133,4 +133,4 @@ struct Options {
 
 extern Options sgOptions;
 
-DEVILUTION_END_NAMESPACE
+}

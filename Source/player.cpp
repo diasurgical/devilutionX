@@ -9,7 +9,7 @@
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 int plr_lframe_size;
 int plr_wframe_size;
@@ -4411,4 +4411,4 @@ int get_max_dexterity(int i)
 	return MaxStats[i][ATTRIB_DEX];
 }
 
-DEVILUTION_END_NAMESPACE
+}
