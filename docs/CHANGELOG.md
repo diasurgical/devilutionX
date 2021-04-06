@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Support file paths longer than 259 characters
 - Add `--ttf-dir` and `--ttf-name` to allow for specifying a different UI font
 - Switch Windows releases to 64-bit
+- Added support for Nintendo 3DS
 - Added support for PlayStation Vita
 - Added support for DragonFly BSD
 - Added AppImage for Linux
