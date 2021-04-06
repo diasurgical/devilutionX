@@ -3,8 +3,7 @@
  *
  * Interface of the map of the stars quest.
  */
-#ifndef __DOOM_H__
-#define __DOOM_H__
+#pragma once
 
 #include "engine.h"
 
@@ -27,5 +26,3 @@ void doom_draw(CelOutputBuffer out);
 #endif
 
 }
-
-#endif /* __DOOM_H__ */

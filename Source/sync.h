@@ -3,8 +3,7 @@
  *
  * Interface of functionality for syncing game state with other players.
  */
-#ifndef __SYNC_H__
-#define __SYNC_H__
+#pragma once
 
 namespace devilution {
 
@@ -21,5 +20,3 @@ void sync_init();
 #endif
 
 }
-
-#endif /* __SYNC_H__ */

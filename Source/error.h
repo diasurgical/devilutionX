@@ -3,8 +3,7 @@
  *
  * Interface of in-game message functions.
  */
-#ifndef __ERROR_H__
-#define __ERROR_H__
+#pragma once
 
 #include "engine.h"
 
@@ -26,5 +25,3 @@ void DrawDiabloMsg(CelOutputBuffer out);
 #endif
 
 }
-
-#endif /* __ERROR_H__ */

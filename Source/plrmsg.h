@@ -3,8 +3,7 @@
  *
  * Interface of functionality for printing the ingame chat messages.
  */
-#ifndef __PLRMSG_H__
-#define __PLRMSG_H__
+#pragma once
 
 #include "engine.h"
 
@@ -33,5 +32,3 @@ void DrawPlrMsg(CelOutputBuffer out);
 #endif
 
 }
-
-#endif /* __PLRMSG_H__ */

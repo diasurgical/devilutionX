@@ -122,4 +122,4 @@ int SoundSample::GetLength()
 	return (Uint32)(chunk->alen * ms / bps);
 };
 
-} // namespace dvl
+} // namespace devilution

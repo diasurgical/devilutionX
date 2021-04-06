@@ -3,8 +3,7 @@
  *
  * Interface of functionality for stores and towner dialogs.
  */
-#ifndef __STORES_H__
-#define __STORES_H__
+#pragma once
 
 #include "engine.h"
 
@@ -122,5 +121,3 @@ void ReleaseStoreBtn();
 #endif
 
 }
-
-#endif /* __STORES_H__ */

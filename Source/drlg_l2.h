@@ -3,8 +3,7 @@
  *
  * Interface of the catacombs level generation algorithms.
  */
-#ifndef __DRLG_L2_H__
-#define __DRLG_L2_H__
+#pragma once
 
 namespace devilution {
 
@@ -41,5 +40,3 @@ void CreateL2Dungeon(DWORD rseed, int entry);
 #endif
 
 }
-
-#endif /* __DRLG_L2_H__ */

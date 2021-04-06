@@ -3,8 +3,7 @@
  *
  * Interface of the in-game navigation and interaction.
  */
-#ifndef __GMENU_H__
-#define __GMENU_H__
+#pragma once
 
 #include "engine.h"
 
@@ -41,5 +40,3 @@ void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
 #endif
 
 }
-
-#endif /* __GMENU_H__ */

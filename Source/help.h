@@ -3,8 +3,7 @@
  *
  * Interface of the in-game help text.
  */
-#ifndef __HELP_H__
-#define __HELP_H__
+#pragma once
 
 namespace devilution {
 
@@ -25,5 +24,3 @@ void HelpScrollDown();
 #endif
 
 }
-
-#endif /* __HELP_H__ */

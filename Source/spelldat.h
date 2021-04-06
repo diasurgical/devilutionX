@@ -3,8 +3,7 @@
  *
  * Interface of all spell data.
  */
-#ifndef __SPELLDAT_H__
-#define __SPELLDAT_H__
+#pragma once
 
 namespace devilution {
 
@@ -215,5 +214,3 @@ extern SpellData spelldata[];
 #endif
 
 }
-
-#endif /* __SPELLDAT_H__ */

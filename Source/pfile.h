@@ -3,8 +3,7 @@
  *
  * Interface of the save game encoding functionality.
  */
-#ifndef __PFILE_H__
-#define __PFILE_H__
+#pragma once
 
 #include "player.h"
 #include "../DiabloUI/diabloui.h"
@@ -41,5 +40,3 @@ void pfile_update(bool force_save);
 #endif
 
 }
-
-#endif /* __PFILE_H__ */

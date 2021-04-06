@@ -3,8 +3,7 @@
  *
  * Interface of functions for minifying player data structure.
  */
-#ifndef __PACK_H__
-#define __PACK_H__
+#pragma once
 
 #include "items.h"
 
@@ -90,5 +89,3 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
 #endif
 
 }
-
-#endif /* __PACK_H__ */

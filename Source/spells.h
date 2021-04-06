@@ -3,8 +3,7 @@
  *
  * Interface of functionality for casting player spells.
  */
-#ifndef __SPELLS_H__
-#define __SPELLS_H__
+#pragma once
 
 namespace devilution {
 
@@ -28,5 +27,3 @@ int GetSpellStaffLevel(spell_id s);
 #endif
 
 }
-
-#endif /* __SPELLS_H__ */

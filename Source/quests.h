@@ -3,8 +3,7 @@
  *
  * Interface of functionality for handling quests.
  */
-#ifndef __QUESTS_H__
-#define __QUESTS_H__
+#pragma once
 
 #include "engine.h"
 
@@ -76,5 +75,3 @@ extern QuestData questlist[];
 #endif
 
 }
-
-#endif /* __QUESTS_H__ */

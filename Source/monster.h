@@ -3,8 +3,7 @@
  *
  * Interface of monster functionality, AI, actions, spawning, loading, etc.
  */
-#ifndef __MONSTER_H__
-#define __MONSTER_H__
+#pragma once
 
 namespace devilution {
 
@@ -271,5 +270,3 @@ extern int offset_y[8];
 #endif
 
 }
-
-#endif /* __MONSTER_H__ */

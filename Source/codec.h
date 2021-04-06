@@ -3,8 +3,7 @@
  *
  * Interface of save game encryption algorithm.
  */
-#ifndef __CODEC_H__
-#define __CODEC_H__
+#pragma once
 
 namespace devilution {
 
@@ -21,5 +20,3 @@ void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, const char *pszPasswo
 #endif
 
 }
-
-#endif /* __CODEC_H__ */

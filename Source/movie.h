@@ -3,8 +3,7 @@
  *
  * Interface of video playback.
  */
-#ifndef __MOVIE_H__
-#define __MOVIE_H__
+#pragma once
 
 namespace devilution {
 
@@ -22,5 +21,3 @@ void play_movie(const char *pszMovie, BOOL user_can_close);
 #endif
 
 }
-
-#endif /* __MOVIE_H__ */

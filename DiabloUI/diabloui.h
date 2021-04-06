@@ -1,6 +1,5 @@
 //HEADER_GOES_HERE
-#ifndef __DIABLOUI_H__
-#define __DIABLOUI_H__
+#pragma once
 
 namespace devilution {
 
@@ -49,6 +48,5 @@ BOOL UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BY
 int UiSelectGame(GameData *gameData, int *playerId);
 int UiSelectProvider(GameData *gameData);
 void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type);
-} // namespace dvl
 
-#endif /* __DIABLOUI_H__ */
+} // namespace devilution

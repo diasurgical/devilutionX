@@ -483,7 +483,7 @@ void DrawInv(CelOutputBuffer out)
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
 					    pCursCels, frame, frame_width,
-						false);
+					    false);
 				} else {
 					CelBlitOutlineTo(
 					    out,
@@ -491,7 +491,7 @@ void DrawInv(CelOutputBuffer out)
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
 					    pCursCels2, frame - 179, frame_width,
-						false);
+					    false);
 				}
 			}
 

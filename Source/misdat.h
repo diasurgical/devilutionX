@@ -3,8 +3,7 @@
  *
  * Interface of data related to missiles.
  */
-#ifndef __MISDAT_H__
-#define __MISDAT_H__
+#pragma once
 
 #include "missiles.h"
 
@@ -22,5 +21,3 @@ extern MisFileData misfiledata[];
 #endif
 
 }
-
-#endif /* __MISDAT_H__ */

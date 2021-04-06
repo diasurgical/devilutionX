@@ -237,4 +237,4 @@ void AutoGoldPickup(int pnum)
 	}
 }
 
-}
+} // namespace devilution

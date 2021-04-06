@@ -3,8 +3,7 @@
  *
  * Interface of functionality for rendering the level tiles.
  */
-#ifndef __RENDER_H__
-#define __RENDER_H__
+#pragma once
 
 namespace devilution {
 
@@ -33,5 +32,3 @@ void world_draw_black_tile(CelOutputBuffer out, int sx, int sy);
 #endif
 
 }
-
-#endif /* __RENDER_H__ */

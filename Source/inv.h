@@ -3,8 +3,7 @@
  *
  * Interface of player inventory.
  */
-#ifndef __INV_H__
-#define __INV_H__
+#pragma once
 
 #include "items.h"
 #include "player.h"
@@ -81,5 +80,3 @@ extern int AP2x2Tbl[10];
 #endif
 
 }
-
-#endif /* __INV_H__ */

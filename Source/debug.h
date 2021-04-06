@@ -3,8 +3,7 @@
  *
  * Interface of debug functions.
  */
-#ifndef __DEBUG_H__
-#define __DEBUG_H__
+#pragma once
 
 namespace devilution {
 
@@ -31,5 +30,3 @@ void NextDebugMonster();
 #endif
 
 }
-
-#endif /* __DEBUG_H__ */

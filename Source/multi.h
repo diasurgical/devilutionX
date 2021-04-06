@@ -3,8 +3,7 @@
  *
  * Interface of functions for keeping multiplayer games in sync.
  */
-#ifndef __MULTI_H__
-#define __MULTI_H__
+#pragma once
 
 #include "msg.h"
 
@@ -61,5 +60,3 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv);
 #endif
 
 }
-
-#endif /* __MULTI_H__ */

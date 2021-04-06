@@ -306,4 +306,4 @@ void ScaleSurfaceToOutput(SDL_Surface **surface)
 #endif
 }
 
-} // namespace dvl
+} // namespace devilution

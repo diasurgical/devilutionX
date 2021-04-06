@@ -3,8 +3,7 @@
  *
  * Interface of functionality transmitting chat messages.
  */
-#ifndef __TMSG_H__
-#define __TMSG_H__
+#pragma once
 
 namespace devilution {
 
@@ -39,5 +38,3 @@ void tmsg_cleanup();
 #endif
 
 }
-
-#endif /* __TMSG_H__ */

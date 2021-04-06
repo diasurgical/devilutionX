@@ -3,8 +3,7 @@
  *
  * Interface of object functionality, interaction, spawning, loading, etc.
  */
-#ifndef __OBJECTS_H__
-#define __OBJECTS_H__
+#pragma once
 
 namespace devilution {
 
@@ -92,5 +91,3 @@ bool objects_lv_24_454B04(int s);
 #endif
 
 }
-
-#endif /* __OBJECTS_H__ */

@@ -3,8 +3,7 @@
  *
  * Interface of the main game initialization functions.
  */
-#ifndef __DIABLO_H__
-#define __DIABLO_H__
+#pragma once
 
 #include "pack.h"
 #ifdef _DEBUG
@@ -88,5 +87,3 @@ extern bool gbFriendlyFire;
 #endif
 
 }
-
-#endif /* __DIABLO_H__ */

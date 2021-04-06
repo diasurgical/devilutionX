@@ -3,8 +3,7 @@
  *
  * Interface of the screenshot function.
  */
-#ifndef __CAPTURE_H__
-#define __CAPTURE_H__
+#pragma once
 
 namespace devilution {
 
@@ -19,5 +18,3 @@ void CaptureScreen();
 #endif
 
 }
-
-#endif /* __CAPTURE_H__ */

@@ -3,8 +3,7 @@
  *
  * Interface of the path finding algorithms.
  */
-#ifndef __PATH_H__
-#define __PATH_H__
+#pragma once
 
 namespace devilution {
 
@@ -46,5 +45,3 @@ extern const char pathydir[8];
 #endif
 
 }
-
-#endif /* __PATH_H__ */

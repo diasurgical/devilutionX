@@ -3,8 +3,7 @@
  *
  * Interface of load screens.
  */
-#ifndef __INTERFAC_H__
-#define __INTERFAC_H__
+#pragma once
 
 namespace devilution {
 
@@ -35,5 +34,3 @@ void ShowProgress(interface_mode uMsg);
 #endif
 
 }
-
-#endif /* __INTERFAC_H__ */

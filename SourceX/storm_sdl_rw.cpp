@@ -95,4 +95,4 @@ SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 	return result;
 }
 
-} // namespace dvl
+} // namespace devilution

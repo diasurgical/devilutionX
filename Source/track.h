@@ -3,8 +3,7 @@
  *
  * Interface of functionality tracking what the mouse cursor is pointing at.
  */
-#ifndef __TRACK_H__
-#define __TRACK_H__
+#pragma once
 
 namespace devilution {
 
@@ -21,5 +20,3 @@ bool track_isscrolling();
 #endif
 
 }
-
-#endif /* __TRACK_H__ */
