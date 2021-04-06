@@ -1738,7 +1738,10 @@ static void SavePortal(SaveHelper *file, int i)
 void SaveHeroItems(PlayerStruct *pPlayer)
 {
 	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", items * sizeof(ItemStruct));
+	int itemSize = 368;
+	if (gbIsHellfire)
+		itemSize + 4;
+	SaveHelper file("heroitems", items * itemSize);
 
 	file.writeLE<Uint8>(gbIsHellfire);
 
