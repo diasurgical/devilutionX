@@ -303,7 +303,7 @@ BOOL SNetGetOwnerTurnsWaiting(DWORD *);
 bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 BOOLEAN SNetSetBasePlayer(int);
-int SNetInitializeProvider(unsigned long, struct _SNETPROGRAMDATA *, struct _SNETPLAYERDATA *, struct _SNETUIDATA *, struct _SNETVERSIONDATA *);
+int SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
 int SNetGetProviderCaps(struct _SNETCAPS *);
 int SFileSetFilePointer(HANDLE, int, int*, int);
 BOOL SFileEnableDirectAccess(BOOL enable);

@@ -2179,10 +2179,10 @@ typedef enum _mainmenu_selections {
 } _mainmenu_selections;
 
 typedef enum _selhero_selections {
-	SELHERO_NEW_DUNGEON = 1,
-	SELHERO_CONTINUE    = 2,
-	SELHERO_CONNECT     = 3,
-	SELHERO_PREVIOUS    = 4
+	SELHERO_NEW_DUNGEON,
+	SELHERO_CONTINUE,
+	SELHERO_CONNECT,
+	SELHERO_PREVIOUS,
 } _selhero_selections;
 
 typedef enum panel_button_id {

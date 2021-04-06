@@ -787,11 +787,6 @@ void SErrSetLastError(DWORD dwErrCode)
 	nLastError = dwErrCode;
 }
 
-void SStrCopy(char *dest, const char *src, int max_length)
-{
-	strncpy(dest, src, max_length);
-}
-
 BOOL SFileSetBasePath(const char *path)
 {
 	if (SBasePath == NULL)

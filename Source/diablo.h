@@ -33,7 +33,7 @@ extern BOOL gbRunGame;
 extern BOOL gbRunGameResult;
 extern BOOL zoomflag;
 extern BOOL gbProcessPlayers;
-extern BOOL gbLoadGame;
+extern bool gbLoadGame;
 extern BOOLEAN cineflag;
 extern int force_redraw;
 /* These are defined in fonts.h */
