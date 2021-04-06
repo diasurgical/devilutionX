@@ -9,7 +9,7 @@
 
 #include <cassert>
 
-namespace dvl {
+namespace devilution {
 
 Keymapper::Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction getKeyFunction):
     setKeyFunction{setKeyFunction},
@@ -109,4 +109,4 @@ int Keymapper::getActionKey(const Keymapper::Action &action)
     return keyIt->second;
 }
 
-}
+} // namespace dvl

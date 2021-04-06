@@ -78,7 +78,7 @@ void FocusOnCharInfo()
 	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
 }
 
-int translate_sdl_key(SDL_Keysym key)
+static int translate_sdl_key(SDL_Keysym key)
 {
 	// ref: https://wiki.libsdl.org/SDL_Keycode
 	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

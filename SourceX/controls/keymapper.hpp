@@ -5,7 +5,7 @@
 #include <vector>
 #include <unordered_map>
 
-namespace dvl {
+namespace devilution {
 
 // The Keymapper maps keys to actions.
 class Keymapper final

@@ -2113,4 +2113,6 @@ void initKeymapActions()
 		});
 	}
 
+}
+
 } // namespace devilution
