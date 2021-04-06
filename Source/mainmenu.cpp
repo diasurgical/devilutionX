@@ -53,12 +53,6 @@ static BOOL mainmenu_init_menu(int type)
 static BOOL mainmenu_single_player()
 {
 	gbIsMultiplayer = false;
-
-	gbRunInTown = sgOptions.Gameplay.bRunInTown;
-	gnTickRate = sgOptions.Gameplay.nTickRate;
-	gbTheoQuest = sgOptions.Gameplay.bTheoQuest;
-	gbCowQuest = sgOptions.Gameplay.bCowQuest;
-
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
