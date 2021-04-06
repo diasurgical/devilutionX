@@ -7,7 +7,7 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 int itemactive[MAXITEMS];
 BOOL uitemflag;
@@ -5472,4 +5472,4 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

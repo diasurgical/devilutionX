@@ -8,7 +8,7 @@
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -121,6 +121,6 @@ void ReleaseStoreBtn();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __STORES_H__ */

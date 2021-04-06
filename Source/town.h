@@ -6,7 +6,7 @@
 #ifndef __TOWN_H__
 #define __TOWN_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +20,6 @@ void CreateTown(int entry);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __TOWN_H__ */

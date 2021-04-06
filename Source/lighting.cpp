@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 LightListStruct VisionList[MAXVISION];
 BYTE lightactive[MAXLIGHTS];
@@ -1297,4 +1297,4 @@ void lighting_color_cycling()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

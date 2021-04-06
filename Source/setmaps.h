@@ -6,7 +6,7 @@
 #ifndef __SETMAPS_H__
 #define __SETMAPS_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,6 +22,6 @@ extern const char *const quest_level_names[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __SETMAPS_H__ */

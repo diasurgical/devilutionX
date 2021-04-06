@@ -8,7 +8,7 @@
 #include "../DiabloUI/diabloui.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 static DWORD sgdwOwnerWait;
 static DWORD sgdwRecvOffset;
@@ -2685,4 +2685,4 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	return On_DLEVEL(pnum, pCmd);
 }
 
-DEVILUTION_END_NAMESPACE
+}

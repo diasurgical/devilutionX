@@ -6,7 +6,7 @@
 #ifndef __TOWNERS_H__
 #define __TOWNERS_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,6 +85,6 @@ extern _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __TOWNERS_H__ */

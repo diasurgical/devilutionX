@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 int trapid;
 int trapdir;
@@ -5271,4 +5271,4 @@ bool objects_lv_24_454B04(int s)
 	return FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+}

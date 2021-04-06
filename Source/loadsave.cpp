@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 bool gbIsHellfireSaveGame;
 int giNumberOfLevels;
@@ -2090,4 +2090,4 @@ void LoadLevel()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

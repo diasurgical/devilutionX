@@ -6,7 +6,7 @@
 #ifndef __GENDUNG_H__
 #define __GENDUNG_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -121,6 +121,6 @@ void InitLevels();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __GENDUNG_H__ */

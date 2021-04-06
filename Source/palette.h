@@ -6,7 +6,7 @@
 #ifndef __PALETTE_H__
 #define __PALETTE_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,6 +39,6 @@ void palette_update_quest_palette(int n);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __PALETTE_H__ */

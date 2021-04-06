@@ -6,7 +6,7 @@
 #ifndef __GAMEMENU_H__
 #define __GAMEMENU_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,6 +35,6 @@ void gamemenu_color_cycling(BOOL bActivate);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __GAMEMENU_H__ */

@@ -11,7 +11,7 @@
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
@@ -2094,4 +2094,4 @@ void diablo_color_cyc_logic()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

@@ -6,7 +6,7 @@
 #ifndef __MONSTDAT_H__
 #define __MONSTDAT_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -291,6 +291,6 @@ extern const UniqMonstStruct UniqMonst[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __MONSTDAT_H__ */

@@ -6,7 +6,7 @@
 #ifndef __TRIGS_H__
 #define __TRIGS_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,6 +42,6 @@ void CheckTriggers();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __TRIGS_H__ */

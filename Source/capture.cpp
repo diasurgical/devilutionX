@@ -10,7 +10,7 @@
 #include "paths.h"
 #include "file_util.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 /**
  * @brief Write the PCX-file header
@@ -205,4 +205,4 @@ void CaptureScreen()
 	delete out_stream;
 }
 
-DEVILUTION_END_NAMESPACE
+}

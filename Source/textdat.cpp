@@ -6,7 +6,7 @@
 #include "all.h"
 #include "textdat.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 /* todo: move text out of struct */
 
@@ -738,4 +738,4 @@ const TextDataStruct alltext[] = {
 */
 };
 
-DEVILUTION_END_NAMESPACE
+}

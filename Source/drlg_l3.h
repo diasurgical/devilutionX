@@ -6,7 +6,7 @@
 #ifndef __DRLG_L3_H__
 #define __DRLG_L3_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,6 +21,6 @@ void LoadPreL3Dungeon(const char *sFileName, int vx, int vy);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __DRLG_L3_H__ */

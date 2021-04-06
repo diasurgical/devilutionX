@@ -6,7 +6,7 @@
 #ifndef __SPELLDAT_H__
 #define __SPELLDAT_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -214,6 +214,6 @@ extern SpellData spelldata[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __SPELLDAT_H__ */

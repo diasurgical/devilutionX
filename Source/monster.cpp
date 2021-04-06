@@ -9,7 +9,7 @@
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 /** Tracks which missile files are already loaded */
 int MissileFileFlag;
@@ -5707,4 +5707,4 @@ void decode_enemy(int m, int enemy)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

@@ -6,7 +6,7 @@
 #ifndef __TRACK_H__
 #define __TRACK_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +20,6 @@ bool track_isscrolling();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __TRACK_H__ */

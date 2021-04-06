@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 namespace {
 
@@ -63,4 +63,4 @@ void tmsg_cleanup()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+}

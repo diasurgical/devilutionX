@@ -6,7 +6,7 @@
 #ifndef __LIGHTING_H__
 #define __LIGHTING_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,6 +73,6 @@ extern const BYTE vCrawlTable[23][30];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __LIGHTING_H__ */

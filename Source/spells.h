@@ -6,7 +6,7 @@
 #ifndef __SPELLS_H__
 #define __SPELLS_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,6 +27,6 @@ int GetSpellStaffLevel(spell_id s);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __SPELLS_H__ */

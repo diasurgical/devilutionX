@@ -4,7 +4,7 @@
  * Various global enumerators.
  */
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 typedef enum _sfx_id {
 	PS_WALK1,
@@ -2343,4 +2343,4 @@ typedef enum conn_type {
 	SELCONN_LOOPBACK,
 } conn_type;
 
-DEVILUTION_END_NAMESPACE
+}

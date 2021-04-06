@@ -6,7 +6,7 @@
 #ifndef __HELP_H__
 #define __HELP_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +24,6 @@ void HelpScrollDown();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __HELP_H__ */

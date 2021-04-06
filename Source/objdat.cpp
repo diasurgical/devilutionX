@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 /** Maps from dun_object_id to object_id. */
 const _object_id ObjTypeConv[] = {
@@ -435,4 +435,4 @@ const char *ObjHiveLoadList[] = {
 	"LzStand",
 };
 
-DEVILUTION_END_NAMESPACE
+}

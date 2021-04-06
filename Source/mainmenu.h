@@ -8,7 +8,7 @@
 
 #include "multi.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,6 +23,6 @@ void mainmenu_loop();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __MAINMENU_H__ */

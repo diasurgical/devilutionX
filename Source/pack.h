@@ -8,7 +8,7 @@
 
 #include "items.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -89,6 +89,6 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __PACK_H__ */

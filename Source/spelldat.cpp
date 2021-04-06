@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 /** Data related to each spell ID. */
 SpellData spelldata[] = {
@@ -66,4 +66,4 @@ SpellData spelldata[] = {
 	// clang-format on
 };
 
-DEVILUTION_END_NAMESPACE
+}

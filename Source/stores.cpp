@@ -7,7 +7,7 @@
 #include "options.h"
 #include <algorithm>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 namespace {
 
@@ -2910,4 +2910,4 @@ void ReleaseStoreBtn()
 	stextscrldbtn = -1;
 }
 
-DEVILUTION_END_NAMESPACE
+}

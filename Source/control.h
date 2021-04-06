@@ -9,7 +9,7 @@
 #include "engine.h"
 #include "spelldat.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -157,6 +157,6 @@ extern RECT32 ChrBtnsRect[4];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __CONTROL_H__ */

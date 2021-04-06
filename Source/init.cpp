@@ -18,7 +18,7 @@
 int _newlib_heap_size_user = 100 * 1024 * 1024;
 #endif
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 /** True if the game is the current active window */
 int gbActive;
@@ -231,4 +231,4 @@ WNDPROC SetWindowProc(WNDPROC NewProc)
 	return OldProc;
 }
 
-DEVILUTION_END_NAMESPACE
+}

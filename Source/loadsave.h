@@ -8,7 +8,7 @@
 
 #include "player.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,6 +39,6 @@ void LoadLevel();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __LOADSAVE_H__ */

@@ -6,7 +6,7 @@
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,6 +91,6 @@ bool objects_lv_24_454B04(int s);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __OBJECTS_H__ */

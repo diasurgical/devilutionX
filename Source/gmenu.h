@@ -8,7 +8,7 @@
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,6 +40,6 @@ void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __GMENU_H__ */

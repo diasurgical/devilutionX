@@ -6,7 +6,7 @@
 #ifndef __MISSILES_H__
 #define __MISSILES_H__
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -262,6 +262,6 @@ void ClearMissileSpot(int mi);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __MISSILES_H__ */

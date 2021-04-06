@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 BOOL invflag;
 BYTE *pInvCels;
@@ -2871,4 +2871,4 @@ BOOL DropItemBeforeTrig()
 	return FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+}

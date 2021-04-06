@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 namespace {
 /**
@@ -764,4 +764,4 @@ void AutomapZoomReset()
 	AmLine4 = AmLine8 >> 1;
 }
 
-DEVILUTION_END_NAMESPACE
+}

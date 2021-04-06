@@ -8,7 +8,7 @@
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace dvl {
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,6 +75,6 @@ extern QuestData questlist[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+}
 
 #endif /* __QUESTS_H__ */
