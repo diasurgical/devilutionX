@@ -22,13 +22,17 @@
 
 DevilutionX is a source port of Hellfire/Diablo that strives to make it simple to run the game while providing engine inprovements, bugfixes, and some optional quality of life features.
 
+Check out the [manual](https://github.com/diasurgical/devilutionX/wiki) for what features are available and how best to take advantage of them.
+
 For a full list of changes see our [changelog](docs/CHANGELOG.md).
 
-# How To Install:
+# How to Install
+
+Note: You'll need access to the data from the original game. If you don't have an original CD then you can [buy Diablo from GoG.com](https://www.gog.com/game/diablo). Alternately you can use `spawn.mpq` from the [shareware](http://ftp.blizzard.com/pub/demos/diablosw.exe) version, in place of `DIABDAT.MPQ`, to play the shareware portion of the game.
 
 Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) and extract the contents to a location of your choosing or [build from source](#building-from-source).
 
-- Copy `DIABDAT.MPQ` from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to the folder containing the DevilutionX executable or to the data folder.
+- Copy `DIABDAT.MPQ` from your CD or GOG-installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to the folder containing the DevilutionX executable or to the data folder.
 - To run the Hellfire expansion of Diablo you will need to copy `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq` into the same location as `DIABDAT.MPQ`.
 
 For more detailed instructions: [Installation Instructions](./docs/installing.md).
