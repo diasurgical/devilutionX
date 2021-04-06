@@ -1,23 +1,21 @@
-#include "all.h"
-#include "display.h"
-#include "stubs.h"
-#include "utf8.h"
-#include <string>
+#include "DiabloUI/diabloui.h"
+
 #include <algorithm>
+#include <string>
 
 #include "../3rdParty/Storm/Source/storm.h"
 
+#include "controls/controller.h"
 #include "controls/menu_controls.h"
-
-#include "DiabloUI/scrollbar.h"
-#include "DiabloUI/diabloui.h"
-
 #include "DiabloUI/art_draw.h"
-#include "DiabloUI/text_draw.h"
-#include "DiabloUI/fonts.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
-#include "controls/controller.h"
+#include "DiabloUI/fonts.h"
+#include "DiabloUI/scrollbar.h"
+#include "DiabloUI/text_draw.h"
+#include "display.h"
+#include "stubs.h"
+#include "utf8.h"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
@@ -30,8 +28,8 @@ std::size_t SelectedItemMax;
 std::size_t ListViewportSize = 1;
 const std::size_t *ListOffset = NULL;
 
-Art ArtLogos[3];
-Art ArtFocus[3];
+std::array<Art, 3> ArtLogos;
+std::array<Art, 3> ArtFocus;
 Art ArtBackgroundWidescreen;
 Art ArtBackground;
 Art ArtCursor;
@@ -68,13 +66,6 @@ struct scrollBarState {
 } scrollBarState;
 
 } // namespace
-
-void UiDestroy()
-{
-	ArtHero.Unload();
-	UnloadTtfFont();
-	UnloadArtFonts();
-}
 
 void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool itemsWraps, bool (*fnYesNo)())
 {
@@ -422,6 +413,8 @@ void UiFocusNavigationYesNo()
 		UiPlaySelectSound();
 }
 
+namespace {
+
 bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 {
 	const SDL_Point point = { event.button.x, event.button.y };
@@ -489,6 +482,18 @@ void LoadUiGFX()
 	LoadHeros();
 }
 
+void UnloadUiGFX()
+{
+	ArtHero.Unload();
+	ArtCursor.Unload();
+	for (auto &art : ArtFocus)
+		art.Unload();
+	for (auto &art : ArtLogos)
+		art.Unload();
+}
+
+} // namespace
+
 void UiInitialize()
 {
 	LoadUiGFX();
@@ -498,6 +503,13 @@ void UiInitialize()
 			ErrSdl();
 		}
 	}
+}
+
+void UiDestroy()
+{
+	UnloadTtfFont();
+	UnloadArtFonts();
+	UnloadUiGFX();
 }
 
 char connect_plrinfostr[128];
