@@ -2208,6 +2208,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 	else {
 		plr[pnum]._pLvlChanging = FALSE;
 		if (plr[pnum]._pName[0] != 0 && !plr[pnum].plractive) {
+			InitPlrGFXMem(pnum);
 			plr[pnum].plractive = TRUE;
 			gbActivePlayers++;
 			EventPlrMsg("Player '%s' (level %d) just joined the game", plr[pnum]._pName, plr[pnum]._pLevel);

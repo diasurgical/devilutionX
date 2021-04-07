@@ -267,6 +267,7 @@ static void multi_player_left_msg(int pnum, int left)
 		}
 		plr[pnum].plractive = FALSE;
 		plr[pnum]._pName[0] = '\0';
+		FreePlayerGFX(pnum);
 		gbActivePlayers--;
 	}
 }
@@ -777,8 +778,11 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		nthread_send_and_recv_turn(0, 0);
 		SetupLocalCoords();
 		multi_send_pinfo(-2, CMD_SEND_PLRINFO);
+
+		InitPlrGFXMem(myplr);
 		plr[myplr].plractive = TRUE;
 		gbActivePlayers = 1;
+
 		if (sgbPlayerTurnBitTbl[myplr] == FALSE || msg_wait_resync())
 			break;
 		NetClose();
@@ -884,13 +888,13 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	multi_player_left_msg(pnum, 0);
-	plr[pnum]._pGFXLoad = 0;
 	UnPackPlayer(&netplr[pnum], pnum, TRUE);
 
 	if (!recv) {
 		return;
 	}
 
+	InitPlrGFXMem(pnum);
 	plr[pnum].plractive = TRUE;
 	gbActivePlayers++;
 
