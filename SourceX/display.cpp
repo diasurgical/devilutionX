@@ -125,9 +125,9 @@ bool SpawnWindow(const char *lpWindowName)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
 
-	int initFlags = SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC;
-#ifdef __3DS__
-	initFlags = SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+	int initFlags = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+#ifndef USE_SDL1
+	initFlags |= SDL_INIT_GAMECONTROLLER;
 #endif
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();
