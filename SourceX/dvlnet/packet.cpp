@@ -22,6 +22,10 @@ const char *packet_type_to_string(uint8_t packet_type)
 		return "PT_CONNECT";
 	case PT_DISCONNECT:
 		return "PT_DISCONNECT";
+	case PT_INFO_REQUEST:
+		return "PT_INFO_REQUEST";
+	case PT_INFO_REPLY:
+		return "PT_INFO_REPLY";
 	default:
 		return NULL;
 	}
@@ -124,7 +128,7 @@ const buffer_t &packet::info()
 {
 	if (!have_decrypted)
 		ABORT();
-	CheckPacketTypeOneOf({ PT_JOIN_REQUEST, PT_JOIN_ACCEPT }, m_type);
+	CheckPacketTypeOneOf({ PT_JOIN_REQUEST, PT_JOIN_ACCEPT, PT_CONNECT, PT_INFO_REPLY }, m_type);
 	return m_info;
 }
 

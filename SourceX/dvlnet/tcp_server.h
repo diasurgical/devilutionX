@@ -76,4 +76,4 @@ private:
 };
 
 } //namespace net
-} //namespace dvl
+} //namespace devilution

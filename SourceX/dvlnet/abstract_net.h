@@ -49,8 +49,23 @@ public:
 	virtual void setup_gameinfo(buffer_t info) = 0;
 	virtual ~abstract_net() = default;
 
+	virtual std::string make_default_gamename() = 0;
+
+	virtual void setup_password(std::string passwd)
+	{
+	}
+
+	virtual void send_info_request()
+	{
+	}
+
+	virtual std::vector<std::string> get_gamelist()
+	{
+		return std::vector<std::string>();
+	}
+
 	static std::unique_ptr<abstract_net> make_net(provider_t provider);
 };
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution
