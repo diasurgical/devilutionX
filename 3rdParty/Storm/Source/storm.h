@@ -226,16 +226,16 @@ BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes);
  */
 BOOL SNetSendTurn(char *data, unsigned int databytes);
 
-BOOL WINAPI SFileCloseArchive(HANDLE hArchive);
-BOOL WINAPI SFileCloseFile(HANDLE hFile);
+BOOL SFileOpenFile(const char *filename, HANDLE *phFile);
 
-LONG WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
-BOOL WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
-
-BOOL WINAPI SFileOpenFile(const char *filename, HANDLE *phFile);
-BOOL WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
-
-BOOL WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, LONG *lpDistanceToMoveHigh);
+// Functions implemented in StormLib
+bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
+bool WINAPI SFileCloseArchive(HANDLE hArchive);
+bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
+bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, LONG *lpDistanceToMoveHigh);
+DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
+DWORD WINAPI SFileSetFilePointer(HANDLE, int, int*, int);
+bool WINAPI SFileCloseFile(HANDLE hFile);
 
 /*  SBmpLoadImage @ 323
  *
@@ -315,7 +315,6 @@ bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 BOOLEAN SNetSetBasePlayer(int);
 int SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
 int SNetGetProviderCaps(struct _SNETCAPS *);
-int SFileSetFilePointer(HANDLE, int, int*, int);
 BOOL SFileEnableDirectAccess(BOOL enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
@@ -342,4 +341,4 @@ inline std::uint64_t SFileGetFilePointer(HANDLE hFile)
 
 #endif
 
-} // namespace dvl
+} // namespace devilution
