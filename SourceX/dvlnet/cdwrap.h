@@ -41,9 +41,17 @@ public:
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);
 	virtual bool SNetGetTurnsInTransit(DWORD *turns);
 	virtual void setup_gameinfo(buffer_t info);
+	virtual std::string make_default_gamename();
 
+	cdwrap();
 	virtual ~cdwrap() = default;
 };
+
+template <class T>
+cdwrap<T>::cdwrap()
+{
+	reset();
+}
 
 template <class T>
 void cdwrap<T>::reset()
@@ -65,6 +73,7 @@ int cdwrap<T>::create(std::string addrstr, std::string passwd)
 template <class T>
 int cdwrap<T>::join(std::string addrstr, std::string passwd)
 {
+	game_init_info = buffer_t();
 	reset();
 	return dvlnet_wrap->join(addrstr, passwd);
 }
@@ -151,5 +160,11 @@ bool cdwrap<T>::SNetGetTurnsInTransit(DWORD *turns)
 	return dvlnet_wrap->SNetGetTurnsInTransit(turns);
 }
 
+template <class T>
+std::string cdwrap<T>::make_default_gamename()
+{
+        return dvlnet_wrap->make_default_gamename();
+}
+
 } // namespace net
-} // namespace dvl
+} // namespace devilution

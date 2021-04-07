@@ -38,7 +38,8 @@ public:
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);
 	virtual bool SNetGetTurnsInTransit(DWORD *turns);
 	virtual void setup_gameinfo(buffer_t info);
+	virtual std::string make_default_gamename();
 };
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution
