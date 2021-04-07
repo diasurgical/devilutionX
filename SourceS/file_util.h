@@ -20,6 +20,9 @@
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 #include <unistd.h>
 #include <sys/stat.h>
+#if defined(__sgi)
+extern int truncate(const char *, off_t);
+#endif
 #else
 #include <cstdio>
 #endif
@@ -88,6 +91,8 @@ inline bool ResizeFile(const char *path, std::uintmax_t size)
 		return false;
 	}
 	::CloseHandle(file);
+	return true;
+#elif defined(__sgi)
 	return true;
 #elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 	return ::truncate(path, static_cast<off_t>(size)) == 0;

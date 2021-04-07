@@ -249,6 +249,35 @@
 #endif
 
 //-----------------------------------------------------------------------------
+// Defines for IRIX platform
+
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__sgi)
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <sys/mman.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <strings.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #define STORMLIB_BIG_ENDIAN
+
+  #define STORMLIB_IRIX
+  #define STORMLIB_MAC
+  #define STORMLIB_HAS_MMAP                         // Indicate that we have mmap support
+  #define STORMLIB_PLATFORM_DEFINED
+
+#endif
+
+//-----------------------------------------------------------------------------
 // Assumption: If the platform is not defined, this must be Linux *grin*
 
 #if !defined(STORMLIB_PLATFORM_DEFINED)

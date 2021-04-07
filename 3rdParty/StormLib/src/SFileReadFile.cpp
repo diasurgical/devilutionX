@@ -704,7 +704,7 @@ static int ReadMpqFileLocalFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos,
 //-----------------------------------------------------------------------------
 // SFileReadFile
 
-bool STORMAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD pdwRead, LPOVERLAPPED lpOverlapped)
+bool WINAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD pdwRead, LPOVERLAPPED lpOverlapped)
 {
     TMPQFile * hf = (TMPQFile *)hFile;
     DWORD dwBytesRead = 0;                      // Number of bytes read
@@ -793,7 +793,7 @@ bool STORMAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWO
 //-----------------------------------------------------------------------------
 // SFileGetFileSize
 
-DWORD STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
+DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
 {
     ULONGLONG FileSize;
     TMPQFile * hf = (TMPQFile *)hFile;
@@ -840,7 +840,7 @@ DWORD STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
     return SFILE_INVALID_SIZE;
 }
 
-DWORD STORMAPI SFileSetFilePointer(HANDLE hFile, LONG lFilePos, LONG * plFilePosHigh, DWORD dwMoveMethod)
+DWORD WINAPI SFileSetFilePointer(HANDLE hFile, LONG lFilePos, LONG * plFilePosHigh, DWORD dwMoveMethod)
 {
     TMPQFile * hf = (TMPQFile *)hFile;
     ULONGLONG OldPosition;

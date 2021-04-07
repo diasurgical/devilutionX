@@ -209,6 +209,9 @@ bool SpawnWindow(const char *lpWindowName)
 
 		renderer = SDL_CreateRenderer(ghMainWnd, -1, rendererFlags);
 		if (renderer == NULL) {
+			renderer = SDL_CreateRenderer(ghMainWnd, -1, SDL_RENDERER_SOFTWARE);
+		}
+		if (renderer == NULL) {
 			ErrSdl();
 		}
 
