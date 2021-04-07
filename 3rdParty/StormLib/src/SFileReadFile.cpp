@@ -13,6 +13,8 @@
 #include "StormLib.h"
 #include "StormCommon.h"
 
+#define NEEDS_ALIGNMENT 1
+
 //-----------------------------------------------------------------------------
 // Local functions
 
@@ -118,12 +120,22 @@ static int ReadMpqSectors(TMPQFile * hf, LPBYTE pbBuffer, DWORD dwByteOffset, DW
             // If the file is encrypted, we have to decrypt the sector
             if(pFileEntry->dwFlags & MPQ_FILE_ENCRYPTED)
             {
+#ifdef NEEDS_ALIGNMENT
+		LPBYTE *buf = (LPBYTE *) malloc(dwRawBytesInThisSector);
+		memcpy(buf, pbInSector, dwRawBytesInThisSector);
+                BSWAP_ARRAY32_UNSIGNED(buf, dwRawBytesInThisSector);
+#else
                 BSWAP_ARRAY32_UNSIGNED(pbInSector, dwRawBytesInThisSector);
+#endif
 
                 // If we don't know the key, try to detect it by file content
                 if(hf->dwFileKey == 0)
                 {
+#ifdef NEEDS_ALIGNMENT
+                    hf->dwFileKey = DetectFileKeyByContent(buf, dwBytesInThisSector, hf->dwDataSize);
+#else
                     hf->dwFileKey = DetectFileKeyByContent(pbInSector, dwBytesInThisSector, hf->dwDataSize);
+#endif
                     if(hf->dwFileKey == 0)
                     {
                         nError = ERROR_UNKNOWN_FILE_KEY;
@@ -131,8 +143,15 @@ static int ReadMpqSectors(TMPQFile * hf, LPBYTE pbBuffer, DWORD dwByteOffset, DW
                     }
                 }
 
+#ifdef NEEDS_ALIGNMENT
+		DecryptMpqBlock(buf, dwRawBytesInThisSector, hf->dwFileKey + dwIndex);
+                BSWAP_ARRAY32_UNSIGNED(buf, dwRawBytesInThisSector);
+		memcpy(pbInSector, buf, dwRawBytesInThisSector);
+		free(buf);
+#else
                 DecryptMpqBlock(pbInSector, dwRawBytesInThisSector, hf->dwFileKey + dwIndex);
                 BSWAP_ARRAY32_UNSIGNED(pbInSector, dwRawBytesInThisSector);
+#endif
             }
 
 #ifdef FULL
@@ -154,7 +173,7 @@ static int ReadMpqSectors(TMPQFile * hf, LPBYTE pbBuffer, DWORD dwByteOffset, DW
                     }
                 }
             }
-#endif // FULL
+#endif
 
             // If the sector is really compressed, decompress it.
             // WARNING : Some sectors may not be compressed, it can be determined only
@@ -346,10 +365,11 @@ static int ReadMpqFileSingleUnit(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos
 
         // Give the number of bytes read
         *pdwBytesRead = dwToRead;
+        return ERROR_SUCCESS;
     }
 
     // An error, sorry
-    return nError;
+    return ERROR_CAN_NOT_COMPLETE;
 }
 
 static int ReadMpkFileSingleUnit(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos, DWORD dwToRead, LPDWORD pdwBytesRead)
@@ -409,7 +429,7 @@ static int ReadMpkFileSingleUnit(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos
             if(!SCompDecompressMpk(hf->pbFileSector, &cbOutBuffer, pbRawData, (int)pFileEntry->dwCmpSize))
                 nError = ERROR_FILE_CORRUPT;
 #else
-            assert(0);
+			assert(0);
 #endif
         }
         else
@@ -529,11 +549,24 @@ static int ReadMpqFileSectorFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos
     if(dwBytesToRead >= ha->dwSectorSize)
     {
         DWORD dwBlockBytes = dwBytesToRead & ~dwSectorSizeMask;
+#ifdef NEEDS_ALIGNMENT
+	LPBYTE buf = (BYTE *) malloc(dwBytesToRead);
+	memcpy(buf, pbBuffer, dwBytesToRead);
+#endif
 
         // Load all sectors to the output buffer
+#ifdef NEEDS_ALIGNMENT
+        nError = ReadMpqSectors(hf, buf, dwFileSectorPos, dwBlockBytes, &dwBytesRead);
+#else
         nError = ReadMpqSectors(hf, pbBuffer, dwFileSectorPos, dwBlockBytes, &dwBytesRead);
+#endif
         if(nError != ERROR_SUCCESS)
             return nError;
+
+#ifdef NEEDS_ALIGNMENT
+	memcpy(pbBuffer, buf, dwBytesToRead);
+	free(buf);
+#endif
 
         // Update pointers
         dwTotalBytesRead += dwBytesRead;
@@ -627,12 +660,14 @@ static int ReadMpqFilePatchFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos,
         nError = (dwBytesRead == dwBytesToRead) ? ERROR_SUCCESS : ERROR_HANDLE_EOF;
     }
 
+    BSWAP_ARRAY32_UNSIGNED(pvBuffer, dwBytesRead);
+
     // Give the result to the caller
     if(pdwBytesRead != NULL)
         *pdwBytesRead = dwBytesRead;
     return nError;
 }
-#endif // FULL
+#endif
 
 static int ReadMpqFileLocalFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos, DWORD dwToRead, LPDWORD pdwBytesRead)
 {
@@ -669,7 +704,7 @@ static int ReadMpqFileLocalFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos,
 //-----------------------------------------------------------------------------
 // SFileReadFile
 
-bool WINAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD pdwRead, LPOVERLAPPED lpOverlapped)
+bool STORMAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD pdwRead, LPOVERLAPPED lpOverlapped)
 {
     TMPQFile * hf = (TMPQFile *)hFile;
     DWORD dwBytesRead = 0;                      // Number of bytes read
@@ -712,15 +747,13 @@ bool WINAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD
     {
         nError = ReadMpqFileLocalFile(hf, pvBuffer, hf->dwFilePos, dwToRead, &dwBytesRead);
     }
-
 #ifdef FULL
     // If the file is a patch file, we have to read it special way
     else if(hf->hfPatch != NULL && (hf->pFileEntry->dwFlags & MPQ_FILE_PATCH_FILE) == 0)
     {
         nError = ReadMpqFilePatchFile(hf, pvBuffer, hf->dwFilePos, dwToRead, &dwBytesRead);
     }
-#endif // FULL
-
+#endif
     // If the archive is a MPK archive, we need special way to read the file
     else if(hf->ha->dwSubType == MPQ_SUBTYPE_MPK)
     {
@@ -760,7 +793,7 @@ bool WINAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD
 //-----------------------------------------------------------------------------
 // SFileGetFileSize
 
-DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
+DWORD STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
 {
     ULONGLONG FileSize;
     TMPQFile * hf = (TMPQFile *)hFile;
@@ -807,7 +840,7 @@ DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
     return SFILE_INVALID_SIZE;
 }
 
-DWORD WINAPI SFileSetFilePointer(HANDLE hFile, LONG lFilePos, LONG * plFilePosHigh, DWORD dwMoveMethod)
+DWORD STORMAPI SFileSetFilePointer(HANDLE hFile, LONG lFilePos, LONG * plFilePosHigh, DWORD dwMoveMethod)
 {
     TMPQFile * hf = (TMPQFile *)hFile;
     ULONGLONG OldPosition;
@@ -896,9 +929,10 @@ DWORD WINAPI SFileSetFilePointer(HANDLE hFile, LONG lFilePos, LONG * plFilePosHi
         if(!FileStream_Read(hf->pStream, &NewPosition, NULL, 0))
             return SFILE_INVALID_POS;
     }
-
-    // Also, store the new file position to the TMPQFile struct
-    hf->dwFilePos = (DWORD)NewPosition;
+    else
+    {
+        hf->dwFilePos = (DWORD)NewPosition;
+    }
 
     // Return the new file position
     if(plFilePosHigh != NULL)
