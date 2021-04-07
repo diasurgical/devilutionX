@@ -72,6 +72,7 @@ build() {
 	cmake .. -DBINARY_RELEASE=ON "-DTARGET_PLATFORM=$TARGET" \
 		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
 	make -j $(getconf _NPROCESSORS_ONLN)
+	"${TOOLCHAIN}/bin/"*-linux-strip devilutionx
 	cd -
 }
 
