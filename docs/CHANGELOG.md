@@ -128,7 +128,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Bugfixes for original Hellfire bugs
 #### Gameplay
 - Firewall damage calculation being too low
-- Firewall/Lightningwall damage being based on the dungion level instead of spell level for the first player
+- Firewall/Lightningwall damage being based on the dungeon level instead of spell level for the first player
 - Right-hand item's decay suffix being applied to the left-hand item in multiplayer
 - Town Shrine would always cast TP from the first player instead of the user
 - Oily Shrine and Sparkling Shrine would cast their traps as if the first player was doing it
@@ -149,9 +149,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Some Hell difficulty monsters being too easy to hit
 - Mana Shield bugs that could make a player invulnerable and/or invisible
 - Disarming skill not working on levels 13 through 15
-- Mana Shield permanetly using up level missiles
+- Mana Shield permanently using up level missiles
 - Corrected behaviour of Thieves, Speed/Haste, Balance/Stability/Harmony, and Piercing/Bashing/Puncturing
-- Mana Shield becomming less effective with increasing spell level
+- Mana Shield becoming less effective with increasing spell level
 - Excessive damage when a Mana Shield expired due to an attack
 - Bows with fire damage prevented the Gargoyles from healing
 - Right-clicking belt item 5-8 not working while the Spellbook is open
@@ -165,7 +165,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Some stability issues
 
 ### Known issues
-- Save game difficaulity does not carry over from 1.1.0
+- Save game difficulty does not carry over from 1.1.0
 - Amiga builds are currently unstable
 
 ## DevilutionX 1.1.0
@@ -231,7 +231,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support Clockwork PI GameShell
 - Added support for GKD350h
 - Switch to OPK for RetroFW (requires 2.0)
-- Update OpendDingus/RetroFW build root
+- Update OpenDingux/RetroFW build root
 
 ### Bugfixes
 - Game crashing on systems that do not report monitor refresh rate.
