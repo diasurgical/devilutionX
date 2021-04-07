@@ -8,30 +8,40 @@
 namespace devilution {
 
 // The Keymapper maps keys to actions.
-class Keymapper final
-{
+class Keymapper final {
 public:
 	using SetConfigKeyFunction = std::function<void(const std::string &key, const std::string &value)>;
 	using GetConfigKeyFunction = std::function<std::string(const std::string &key)>;
 	using ActionIndex = std::size_t;
 
 	// Action represents an action that can be triggered using a keyboard shortcut.
-	class Action final
-	{
+	class Action final {
 	public:
 		// Can this action be triggered while the player is dead?
-		enum class IfDead
-		{
+		enum class IfDead {
 			Allow,
 			Ignore,
 		};
 
-		Action(const std::string &name, int defaultKey, std::function<void()> action):
-			name{name}, defaultKey{defaultKey}, action{action}, ifDead{IfDead::Ignore} {}
-		Action(const std::string &name, int defaultKey, std::function<void()> action, IfDead ifDead):
-			name{name}, defaultKey{defaultKey}, action{action}, ifDead{ifDead} {}
+		Action(const std::string &name, int defaultKey, std::function<void()> action)
+		    : name(name)
+		    , defaultKey(defaultKey)
+		    , action(action)
+		    , ifDead(IfDead::Ignore)
+		{
+		}
+		Action(const std::string &name, int defaultKey, std::function<void()> action, IfDead ifDead)
+		    : name(name)
+		    , defaultKey(defaultKey)
+		    , action(action)
+		    , ifDead(ifDead)
+		{
+		}
 
-		void operator()() const { action(); }
+		void operator()() const
+		{
+			action();
+		}
 
 	private:
 		std::string name;
@@ -64,4 +74,4 @@ private:
 	GetConfigKeyFunction getKeyFunction;
 };
 
-} // namespace dvl
+} // namespace devilution

@@ -51,18 +51,16 @@ int gnTickRate;
 WORD gnTickDelay = 50;
 /** Game options */
 Options sgOptions;
-Keymapper keymapper {
+Keymapper keymapper{
 	// Workaround: remove once the INI library has been replaced.
-	[](const std::string &key, const std::string &value)
-	{
-		setIniValue("Controller.Keymapping", key.c_str(), value.c_str());
+	[](const std::string &key, const std::string &value) {
+	    setIniValue("Controller.Keymapping", key.c_str(), value.c_str());
 	},
-	[](const std::string &key) -> std::string
-	{
-		std::array<char, 64> result;
-		if(!getIniValue("Controller.Keymapping", key.c_str(), result.data(), result.size()))
-			return {};
-		return {result.data()};
+	[](const std::string &key) -> std::string {
+	    std::array<char, 64> result;
+	    if (!getIniValue("Controller.Keymapping", key.c_str(), result.data(), result.size()))
+		    return {};
+	    return { result.data() };
 	}
 };
 std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
@@ -1149,8 +1147,7 @@ static void PressChar(WPARAM vkey)
 	keymapper.keyPressed(vkey, deathflag);
 
 #ifdef _DEBUG
-	switch(vkey)
-	{
+	switch (vkey) {
 	case '+':
 	case '=':
 		if (automapflag) {
@@ -1887,11 +1884,11 @@ void itemInfoKeyPressed()
 {
 	if (pcursitem != -1) {
 		sprintf(
-			tempstr,
-			"IDX = %i  :  Seed = %i  :  CF = %i",
-			items[pcursitem].IDidx,
-			items[pcursitem]._iSeed,
-			items[pcursitem]._iCreateInfo);
+		    tempstr,
+		    "IDX = %i  :  Seed = %i  :  CF = %i",
+		    items[pcursitem].IDidx,
+		    items[pcursitem]._iSeed,
+		    items[pcursitem]._iCreateInfo);
 		NetSendCmdString(1 << myplr, tempstr);
 	}
 	sprintf(tempstr, "Numitems : %i", numitems);
@@ -1996,123 +1993,96 @@ void spellBookKeyPressed()
 
 void initKeymapActions()
 {
-	keymapper.addAction({
-		"Help",
-		DVL_VK_F1,
-		helpKeyPressed
-	});
+	keymapper.addAction({ "Help",
+	    DVL_VK_F1,
+	    helpKeyPressed });
 #ifdef _DEBUG
 	keymapper.addAction({
-		"ItemInfo",
-		DVL_VK_F3,
-		itemInfoKeyPressed,
+	    "ItemInfo",
+	    DVL_VK_F3,
+	    itemInfoKeyPressed,
 	});
 	keymapper.addAction({
-		"QuestDebug",
-		DVL_VK_F4,
-		PrintDebugQuest,
+	    "QuestDebug",
+	    DVL_VK_F4,
+	    PrintDebugQuest,
 	});
 #endif
-	for(int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 4; ++i) {
 		quickSpellActionIndexes[i] = keymapper.addAction({
-			std::string("QuickSpell") + std::to_string(i+1),
-			DVL_VK_F5+i,
-			[i]()
-			{
-				if (spselflag) {
-					SetSpeedSpell(i);
-					return;
-				}
-				ToggleSpell(i);
-			},
+		    std::string("QuickSpell") + std::to_string(i + 1),
+		    DVL_VK_F5 + i,
+		    [i]() {
+			    if (spselflag) {
+				    SetSpeedSpell(i);
+				    return;
+			    }
+			    ToggleSpell(i);
+		    },
 		});
 	}
-	for(int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 4; ++i) {
 		keymapper.addAction({
-			spszMsgNameTbl[i],
-			DVL_VK_F9+i,
-			[i](){ diablo_hotkey_msg(i); },
-			Keymapper::Action::IfDead::Allow,
+		    spszMsgNameTbl[i],
+		    DVL_VK_F9 + i,
+		    [i]() { diablo_hotkey_msg(i); },
+		    Keymapper::Action::IfDead::Allow,
 		});
 	}
-	keymapper.addAction({
-		"DecreaseGamma",
-		'G',
-		DecreaseGamma
-	});
-	keymapper.addAction({
-		"IncreaseGamma",
-		'F',
-		IncreaseGamma
-	});
-	keymapper.addAction({
-		"Inventory",
-		'I',
-		inventoryKeyPressed
-	});
-	keymapper.addAction({
-		"Character",
-		'C',
-		characterSheetKeyPressed
-	});
-	keymapper.addAction({
-		"QuestLog",
-		'Q',
-		questLogKeyPressed
-	});
-	keymapper.addAction({
-		"Zoom",
-		'Z',
-		[]
-		{
-			zoomflag = !zoomflag;
-			CalcViewportGeometry();
-		}
-	});
-	keymapper.addAction({
-		"DisplaySpells",
-		'S',
-		displaySpellsKeyPressed
-	});
-	keymapper.addAction({
-		"SpellBook",
-		'B',
-		spellBookKeyPressed
-	});
-	keymapper.addAction({
-		"GameInfo",
-		'V',
-		[]
-		{
-			char pszStr[120];
-			const char *difficulties[3] = {
-				"Normal",
-				"Nightmare",
-				"Hell",
-			};
-			sprintf(pszStr, "%s, version = %s, mode = %s", gszProductName, gszVersionNumber, difficulties[gnDifficulty]);
-			NetSendCmdString(1 << myplr, pszStr);
-		}
-	});
-	for(int i = 0; i < 8; ++i) {
-		keymapper.addAction({
-			std::string("Belt") + std::to_string(i+1),
-			'1'+i,
-			[i]
-			{
+	keymapper.addAction({ "DecreaseGamma",
+	    'G',
+	    DecreaseGamma });
+	keymapper.addAction({ "IncreaseGamma",
+	    'F',
+	    IncreaseGamma });
+	keymapper.addAction({ "Inventory",
+	    'I',
+	    inventoryKeyPressed });
+	keymapper.addAction({ "Character",
+	    'C',
+	    characterSheetKeyPressed });
+	keymapper.addAction({ "QuestLog",
+	    'Q',
+	    questLogKeyPressed });
+	keymapper.addAction({ "Zoom",
+	    'Z',
+	    [] {
+		    zoomflag = !zoomflag;
+		    CalcViewportGeometry();
+	    } });
+	keymapper.addAction({ "DisplaySpells",
+	    'S',
+	    displaySpellsKeyPressed });
+	keymapper.addAction({ "SpellBook",
+	    'B',
+	    spellBookKeyPressed });
+	keymapper.addAction({ "GameInfo",
+	    'V',
+	    [] {
+		    char pszStr[120];
+		    const char *difficulties[3] = {
+			    "Normal",
+			    "Nightmare",
+			    "Hell",
+		    };
+		    sprintf(pszStr, "%s, version = %s, mode = %s", gszProductName, gszVersionNumber, difficulties[gnDifficulty]);
+		    NetSendCmdString(1 << myplr, pszStr);
+	    } });
+	for (int i = 0; i < 8; ++i) {
+		keymapper.addAction({ std::string("Belt") + std::to_string(i + 1),
+		    '1' + i,
+		    [i] {
 #ifdef _DEBUG
-				if (i == 7 && (debug_mode_key_inverted_v || debug_mode_key_w)) {
-					NetSendCmd(TRUE, CMD_CHEAT_EXPERIENCE);
-					return;
-				}
+			    if (i == 7 && (debug_mode_key_inverted_v || debug_mode_key_w)) {
+				    NetSendCmd(TRUE, CMD_CHEAT_EXPERIENCE);
+				    return;
+			    }
 #endif
-				if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
-					UseInvItem(myplr, INVITEM_BELT_FIRST + i);
-				}
-			}
-		});
+			    if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
+				    UseInvItem(myplr, INVITEM_BELT_FIRST + i);
+			    }
+		    } });
 	}
-
 }
 
 } // namespace devilution

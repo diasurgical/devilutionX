@@ -13,9 +13,9 @@ namespace devilution {
 
 namespace {
 
-CelOutputBuffer pBtmBuff;
-CelOutputBuffer pLifeBuff;
-CelOutputBuffer pManaBuff;
+	CelOutputBuffer pBtmBuff;
+	CelOutputBuffer pLifeBuff;
+	CelOutputBuffer pManaBuff;
 
 } // namespace
 
@@ -356,7 +356,7 @@ static void PrintSBookHotkey(CelOutputBuffer out, int x, int y, const std::strin
 
 	int totalWidth = 0;
 
-	for(const char txtChar: text) {
+	for (const char txtChar : text) {
 		auto c = gbFontTransTbl[static_cast<BYTE>(txtChar)];
 		c = fontframe[c];
 
