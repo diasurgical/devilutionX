@@ -351,44 +351,47 @@ void InitPlayerGFX(int pnum)
 	}
 }
 
-static DWORD GetPlrGFXSize(const char *szCel)
+static plr_class GetPlrGFXClass(plr_class c)
 {
-	DWORD c;
+	switch (c) {
+	case PC_BARD:
+		return hfbard_mpq == nullptr ? PC_ROGUE : c;
+	case PC_BARBARIAN:
+		return hfbarb_mpq == nullptr ? PC_WARRIOR : c;
+	default:
+		return c;
+	}
+}
+
+static DWORD GetPlrGFXSize(plr_class c, const char *szCel)
+{
 	const char *a, *w;
 	DWORD dwSize, dwMaxSize;
 	HANDLE hsFile;
 	char pszName[256];
 	char Type[16];
 
+	c = GetPlrGFXClass(c);
 	dwMaxSize = 0;
 
-	for (c = 0; c < NUM_CLASSES; c++) {
-		if (gbIsSpawn && (c == PC_ROGUE || c == PC_SORCERER))
-			continue;
-		if (!gbIsHellfire && c == PC_MONK)
-			continue;
-		if ((c == PC_BARD && hfbard_mpq == NULL) || (c == PC_BARBARIAN && hfbarb_mpq == NULL))
-			continue;
-
-		for (a = &ArmourChar[0]; *a; a++) {
-			if (gbIsSpawn && a != &ArmourChar[0])
-				break;
-			for (w = &WepChar[0]; *w; w++) { // BUGFIX loads non-existing animagions; DT is only for N, BT is only for U, D & H (fixed)
-				if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
-					continue; //Death has no weapon
-				}
-				if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
-					continue; //No block without weapon
-				}
-				sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
-				sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[c], Type, Type, szCel);
-				if (SFileOpenFile(pszName, &hsFile)) {
-					/// ASSERT: assert(hsFile);
-					dwSize = SFileGetFileSize(hsFile, NULL);
-					SFileCloseFile(hsFile);
-					if (dwMaxSize <= dwSize) {
-						dwMaxSize = dwSize;
-					}
+	for (a = &ArmourChar[0]; *a; a++) {
+		if (gbIsSpawn && a != &ArmourChar[0])
+			break;
+		for (w = &WepChar[0]; *w; w++) { // BUGFIX loads non-existing animagions; DT is only for N, BT is only for U, D & H (fixed)
+			if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
+				continue; //Death has no weapon
+			}
+			if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
+				continue; //No block without weapon
+			}
+			sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
+			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[c], Type, Type, szCel);
+			if (SFileOpenFile(pszName, &hsFile)) {
+				/// ASSERT: assert(hsFile);
+				dwSize = SFileGetFileSize(hsFile, NULL);
+				SFileCloseFile(hsFile);
+				if (dwMaxSize <= dwSize) {
+					dwMaxSize = dwSize;
 				}
 			}
 		}
@@ -404,42 +407,36 @@ void InitPlrGFXMem(int pnum)
 	}
 
 	auto &player = plr[pnum];
-	if (player.bGfxMemAllocated)
-		return;
-
-	// FIXME: GetPlrGFXSize should accept the player class
-	// and only return the required memory for that class.
+	const plr_class c = player._pClass;
 
 	// STAND (ST: TOWN, AS: DUNGEON)
-	player._pNData = DiabloAllocPtr(std::max(GetPlrGFXSize("ST"), GetPlrGFXSize("AS")));
+	player._pNData = DiabloAllocPtr(std::max(GetPlrGFXSize(c, "ST"), GetPlrGFXSize(c, "AS")));
 
 	// WALK (WL: TOWN, AW: DUNGEON)
-	player._pWData = DiabloAllocPtr(std::max(GetPlrGFXSize("WL"), GetPlrGFXSize("AW")));
+	player._pWData = DiabloAllocPtr(std::max(GetPlrGFXSize(c, "WL"), GetPlrGFXSize(c, "AW")));
 
 	// ATTACK
-	player._pAData = DiabloAllocPtr(GetPlrGFXSize("AT"));
+	player._pAData = DiabloAllocPtr(GetPlrGFXSize(c, "AT"));
 
 	// HIT
-	player._pHData = DiabloAllocPtr(GetPlrGFXSize("HT"));
+	player._pHData = DiabloAllocPtr(GetPlrGFXSize(c, "HT"));
 
 	// LIGHTNING
-	player._pLData = DiabloAllocPtr(GetPlrGFXSize("LM"));
+	player._pLData = DiabloAllocPtr(GetPlrGFXSize(c, "LM"));
 
 	// FIRE
-	player._pFData = DiabloAllocPtr(GetPlrGFXSize("FM"));
+	player._pFData = DiabloAllocPtr(GetPlrGFXSize(c, "FM"));
 
 	// MAGIC
-	player._pTData = DiabloAllocPtr(GetPlrGFXSize("QM"));
+	player._pTData = DiabloAllocPtr(GetPlrGFXSize(c, "QM"));
 
 	// DEATH
-	player._pDData = DiabloAllocPtr(GetPlrGFXSize("DT"));
+	player._pDData = DiabloAllocPtr(GetPlrGFXSize(c, "DT"));
 
 	// BLOCK
-	player._pBData = DiabloAllocPtr(GetPlrGFXSize("BL"));
+	player._pBData = DiabloAllocPtr(GetPlrGFXSize(c, "BL"));
 
 	player._pGFXLoad = 0;
-
-	player.bGfxMemAllocated = true;
 }
 
 void FreePlayerGFX(int pnum)
@@ -458,7 +455,6 @@ void FreePlayerGFX(int pnum)
 	MemFreeDbg(plr[pnum]._pDData);
 	MemFreeDbg(plr[pnum]._pBData);
 	plr[pnum]._pGFXLoad = 0;
-	plr[pnum].bGfxMemAllocated = false;
 }
 
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width)

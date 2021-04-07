@@ -215,7 +215,6 @@ typedef struct PlayerStruct {
 	Uint32 pDiabloKillLevel;
 	Uint32 pDifficulty;
 	Uint32 pDamAcFlags;
-	bool bGfxMemAllocated;
 	Uint8 *_pNData;
 	Uint8 *_pWData;
 	Uint8 *_pAData;
