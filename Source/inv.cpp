@@ -634,7 +634,7 @@ bool CanBePlacedOnBelt(const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
-bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false)
+bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	if (!CanBePlacedOnBelt(item)) {
 		return false;
@@ -853,142 +853,96 @@ bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false)
+bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	InvXY itemSize = GetInventorySize(item);
 	bool done = false;
 
 	if (itemSize.X == 1 && itemSize.Y == 1) {
 		for (int i = 30; i <= 39 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 20; i <= 29 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i <= 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 0; i <= 9 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 2) {
 		for (int i = 29; i >= 20 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 9; i >= 0 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 19; i >= 10 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 3) {
 		for (int i = 0; i < 20 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 2) {
 		for (int i = 0; i < 10 && !done; i++) {
-			done = AutoPlace(playerNumber, AP2x2Tbl[i], itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, AP2x2Tbl[i], item, persistItem);
 		}
 
 		for (int i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 3) {
 		for (int i = 0; i < 9 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	return done;
 }
 
-BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
+/**
+ * @brief Checks whether the given item can be placed on the specified player's inventory slot.
+ * If 'persistItem' is 'True', the item is also placed in the inventory slot.
+ * @param playerNumber The player number on whose inventory slot will be checked.
+ * @param slotIndex The 0-based index of the slot to put the item on.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
+ * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
+ */
+bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int i, j, xx, yy;
-	BOOL done;
+	bool done;
 
-	done = TRUE;
-	yy = 10 * (ii / 10);
-	if (yy < 0) {
-		yy = 0;
-	}
-	for (j = 0; j < sy && done; j++) {
-		if (yy >= NUM_INV_GRID_ELEM) {
-			done = FALSE;
-		}
-		xx = ii % 10;
-		if (xx < 0) {
-			xx = 0;
-		}
-		for (i = 0; i < sx && done; i++) {
-			if (xx >= 10) {
-				done = FALSE;
-			} else {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
-			}
-			xx++;
-		}
-		yy += 10;
-	}
-	if (done && saveflag) {
-		plr[pnum].InvList[plr[pnum]._pNumInv] = plr[pnum].HoldItem;
-		plr[pnum]._pNumInv++;
-		yy = 10 * (ii / 10);
-		if (yy < 0) {
-			yy = 0;
-		}
-		for (j = 0; j < sy; j++) {
-			xx = ii % 10;
-			if (xx < 0) {
-				xx = 0;
-			}
-			for (i = 0; i < sx; i++) {
-				if (i != 0 || j != sy - 1) {
-					plr[pnum].InvGrid[xx + yy] = -plr[pnum]._pNumInv;
-				} else {
-					plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
-				}
-				xx++;
-			}
-			yy += 10;
-		}
-		CalcPlrScrolls(pnum);
-	}
-	return done;
-}
-
-BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
-{
-	int i, j, xx, yy;
-	BOOL done;
-
-	done = TRUE;
-	yy = 10 * (ii / 10);
+	done = true;
+	yy = 10 * (slotIndex / 10);
 	if (yy < 0) {
 		yy = 0;
 	}
@@ -996,28 +950,49 @@ BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
 	InvXY itemSize = GetInventorySize(item);
 	for (j = 0; j < itemSize.Y && done; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
-			done = FALSE;
+			done = false;
 		}
-		xx = ii % 10;
+		xx = slotIndex % 10;
 		if (xx < 0) {
 			xx = 0;
 		}
 		for (i = 0; i < itemSize.X && done; i++) {
 			if (xx >= 10) {
-				done = FALSE;
+				done = false;
 			} else {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
+				done = plr[playerNumber].InvGrid[xx + yy] == 0;
 			}
 			xx++;
 		}
 		yy += 10;
 	}
-	if (!done) {
-		done = AutoPlaceItemInBelt(pnum, item);
+	if (done && persistItem) {
+		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = plr[playerNumber].HoldItem;
+		plr[playerNumber]._pNumInv++;
+		yy = 10 * (slotIndex / 10);
+		if (yy < 0) {
+			yy = 0;
+		}
+		for (j = 0; j < itemSize.Y; j++) {
+			xx = slotIndex % 10;
+			if (xx < 0) {
+				xx = 0;
+			}
+			for (i = 0; i < itemSize.X; i++) {
+				if (i != 0 || j != itemSize.Y - 1) {
+					plr[playerNumber].InvGrid[xx + yy] = -plr[playerNumber]._pNumInv;
+				} else {
+					plr[playerNumber].InvGrid[xx + yy] = plr[playerNumber]._pNumInv;
+				}
+				xx++;
+			}
+			yy += 10;
+		}
+		CalcPlrScrolls(playerNumber);
 	}
-
 	return done;
 }
+
 
 BOOL GoldAutoPlace(int pnum)
 {
@@ -1360,9 +1335,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
-			done2h = FALSE;
-			for (i = 0; i < NUM_INV_GRID_ELEM && !done2h; i++)
-				done2h = AutoPlace(pnum, i, icursW28, icursH28, TRUE);
+			done2h = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
 			plr[pnum].HoldItem = tempitem;
 			if (pnum == myplr)
 				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -2095,11 +2068,11 @@ void CheckQuestItem(int pnum)
 	}
 }
 
-void CleanupItems(int ii)
+void CleanupItems(ItemStruct *item, int ii)
 {
-	dItem[items[ii]._ix][items[ii]._iy] = 0;
+	dItem[item->_ix][item->_iy] = 0;
 
-	if (currlevel == 21 & items[ii]._ix == CornerStone.x && items[ii]._iy == CornerStone.y) {
+	if (currlevel == 21 & item->_ix == CornerStone.x && item->_iy == CornerStone.y) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
@@ -2121,34 +2094,34 @@ void CleanupItems(int ii)
 	}
 }
 
-void InvGetItem(int pnum, int ii)
+void InvGetItem(int pnum, ItemStruct *item, int ii)
 {
 	if (dropGoldFlag) {
 		dropGoldFlag = FALSE;
 		dropGoldValue = 0;
 	}
 
-	if (dItem[items[ii]._ix][items[ii]._iy] == 0)
+	if (dItem[item->_ix][item->_iy] == 0)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
 		NetSendCmdPItem(TRUE, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
 
-	items[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = items[ii];
+	item->_iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = *item;
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
 	bool cursor_updated = false;
 	if (gbIsHellfire && plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
 		cursor_updated = true;
-	CleanupItems(ii);
+	CleanupItems(item, ii);
 	pcursitem = -1;
 	if (!cursor_updated)
 		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void AutoGetItem(int pnum, int ii)
+void AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
 	int i, idx;
 	int w, h;
@@ -2163,11 +2136,11 @@ void AutoGetItem(int pnum, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (dItem[items[ii]._ix][items[ii]._iy] == 0)
+	if (dItem[item->_ix][item->_iy] == 0)
 		return;
 
-	items[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = items[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
+	item->_iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
@@ -2175,8 +2148,8 @@ void AutoGetItem(int pnum, int ii)
 	if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 		done = GoldAutoPlace(pnum);
 		if (!done) {
-			items[ii]._ivalue = plr[pnum].HoldItem._ivalue;
-			SetPlrHandGoldCurs(&items[ii]);
+			item->_ivalue = plr[pnum].HoldItem._ivalue;
+			SetPlrHandGoldCurs(item);
 		}
 	} else {
 		done = AutoEquipEnabled(plr[pnum], plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
@@ -2189,7 +2162,7 @@ void AutoGetItem(int pnum, int ii)
 	}
 
 	if (done) {
-		CleanupItems(ii);
+		CleanupItems(&plr[pnum].HoldItem, ii);
 		return;
 	}
 
@@ -2208,9 +2181,9 @@ void AutoGetItem(int pnum, int ii)
 			PlaySFX(random_(0, 3) + PS_WARR14);
 		}
 	}
-	plr[pnum].HoldItem = items[ii];
-	RespawnItem(ii, TRUE);
-	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, items[ii]._ix, items[ii]._iy);
+	plr[pnum].HoldItem = *item;
+	RespawnItem(item, TRUE);
+	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, item->_ix, item->_iy);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
@@ -2255,7 +2228,7 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 	if (ii == -1)
 		return;
 
-	CleanupItems(ii);
+	CleanupItems(&items[ii], ii);
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
@@ -2409,7 +2382,7 @@ int InvPutItem(int pnum, int x, int y)
 	items[ii] = plr[pnum].HoldItem;
 	items[ii]._ix = x;
 	items[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	RespawnItem(&items[ii], TRUE);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = items[ii];
@@ -2496,7 +2469,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 
 	items[ii]._ix = x;
 	items[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	RespawnItem(&items[ii], TRUE);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = items[ii];
