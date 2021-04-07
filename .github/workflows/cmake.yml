@@ -42,9 +42,12 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . -j 2 ; zip -r devilutionx-mac.zip devilutionx.app
+      run: cmake --build . -j 2 --target package
     
-    - uses: actions/upload-artifact@v2
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        name: devilutionx-mac
-        path: ${{github.workspace}}/build/devilutionx-mac.zip
+        files: ${{github.workspace}}/build/devilutionx.dmg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
