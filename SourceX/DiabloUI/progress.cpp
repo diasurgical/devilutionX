@@ -7,7 +7,7 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/fonts.h"
 
-namespace dvl {
+namespace devilution {
 
 Art dialogArt;
 char dialogText[256];
@@ -61,7 +61,7 @@ void progress_Free()
 
 void progress_Render(BYTE progress)
 {
-	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	SDL_FillRect(DiabloUiSurface(), NULL, 0x000000);
 	DrawArt(0, 0, &ArtBackground);
 
 	Sint16 x = GetCenterOffset(280);
@@ -137,4 +137,4 @@ BOOL UiProgressDialog(const char *msg, int enable, int (*fnfunc)(), int rate)
 	return progress == 100;
 }
 
-} // namespace dvl
+} // namespace devilution

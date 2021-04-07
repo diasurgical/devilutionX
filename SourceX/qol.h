@@ -3,12 +3,11 @@
  *
  * Quality of life features
  */
-#ifndef __QOL_H__
-#define __QOL_H__
+#pragma once
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 void FreeQol();
 void InitQol();
@@ -16,6 +15,4 @@ void DrawMonsterHealthBar(CelOutputBuffer out);
 void DrawXPBar(CelOutputBuffer out);
 void AutoGoldPickup(int pnum);
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __QOL_H__ */
+} // namespace devilution

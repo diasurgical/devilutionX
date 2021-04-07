@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 /** Notes visisted by the path finding algorithm. */
 PATHNODE path_nodes[MAXPATHNODES];
 /** size of the pnode_tblptr stack */
@@ -379,4 +379,4 @@ PATHNODE *path_new_step()
 	return new_node;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

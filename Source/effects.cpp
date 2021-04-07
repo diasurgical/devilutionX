@@ -6,7 +6,7 @@
 #include "all.h"
 #include <SDL_mixer.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int sfxdelay;
 int sfxdnum;
@@ -1420,4 +1420,4 @@ int GetSFXLength(int nSFX)
 	return sgSFX[nSFX].pSnd->DSB->GetLength();
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

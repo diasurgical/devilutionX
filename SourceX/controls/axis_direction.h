@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dvl {
+namespace devilution {
 
 enum AxisDirectionX {
 	AxisDirectionX_NONE = 0,

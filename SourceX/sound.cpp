@@ -11,7 +11,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
-namespace dvl {
+namespace devilution {
 
 BOOLEAN gbSndInited;
 /** Specifies whether background music is enabled. */
@@ -292,4 +292,4 @@ int sound_get_or_set_sound_volume(int volume)
 	return sgOptions.Audio.nSoundVolume;
 }
 
-} // namespace dvl
+} // namespace devilution

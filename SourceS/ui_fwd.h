@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dvl {
+namespace devilution {
 
 extern Uint16 gnScreenWidth;
 extern Uint16 gnScreenHeight;

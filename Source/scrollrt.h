@@ -3,10 +3,9 @@
  *
  * Interface of functionality for rendering the dungeons, monsters and calling other render routines.
  */
-#ifndef __SCROLLRT_H__
-#define __SCROLLRT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,6 +50,4 @@ void DrawAndBlit();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SCROLLRT_H__ */
+}

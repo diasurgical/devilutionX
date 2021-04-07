@@ -7,7 +7,7 @@
 #include "controls/game_controls.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -139,4 +139,4 @@ void DrawControllerModifierHints(CelOutputBuffer out)
 	DrawSelectModifierMenu(out);
 }
 
-} // namespace dvl
+} // namespace devilution

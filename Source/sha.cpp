@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 // NOTE: Diablo's "SHA1" is different from actual SHA1 in that it uses arithmetic
 // right shifts (sign bit extension).
@@ -158,4 +158,4 @@ void SHA1Reset(int n)
 	SHA1Init(&sgSHA1[n]);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

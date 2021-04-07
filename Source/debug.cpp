@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef _DEBUG
 BOOL update_seed_check = FALSE;
@@ -224,4 +224,4 @@ void NextDebugMonster()
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

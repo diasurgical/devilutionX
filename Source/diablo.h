@@ -3,15 +3,14 @@
  *
  * Interface of the main game initialization functions.
  */
-#ifndef __DIABLO_H__
-#define __DIABLO_H__
+#pragma once
 
 #include "pack.h"
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,7 +32,7 @@ extern BOOL gbRunGame;
 extern BOOL gbRunGameResult;
 extern BOOL zoomflag;
 extern BOOL gbProcessPlayers;
-extern BOOL gbLoadGame;
+extern bool gbLoadGame;
 extern BOOLEAN cineflag;
 extern int force_redraw;
 /* These are defined in fonts.h */
@@ -87,6 +86,4 @@ extern bool gbFriendlyFire;
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DIABLO_H__ */
+}

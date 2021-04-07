@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /**
  * Specifies the current light entry.
@@ -590,7 +590,7 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre
 	if (bItem > MAXITEMS || bItem <= 0)
 		return;
 
-	ItemStruct *pItem = &item[bItem - 1];
+	ItemStruct *pItem = &items[bItem - 1];
 	if (pItem->_iPostDraw == pre)
 		return;
 
@@ -1557,4 +1557,4 @@ void DrawAndBlit()
 	drawsbarflag = FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

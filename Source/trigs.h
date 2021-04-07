@@ -3,10 +3,9 @@
  *
  * Interface of functionality for triggering events when the player enters an area.
  */
-#ifndef __TRIGS_H__
-#define __TRIGS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,6 +41,4 @@ void CheckTriggers();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TRIGS_H__ */
+}

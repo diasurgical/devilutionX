@@ -3,10 +3,9 @@
  *
  * Interface of functionality for loading and spawning towners.
  */
-#ifndef __TOWNERS_H__
-#define __TOWNERS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,6 +84,4 @@ extern _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TOWNERS_H__ */
+}

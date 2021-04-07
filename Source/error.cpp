@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 char msgtable[MAX_SEND_STR_LEN];
 DWORD msgdelay;
@@ -162,4 +162,4 @@ void DrawDiabloMsg(CelOutputBuffer out)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

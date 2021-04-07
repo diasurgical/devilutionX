@@ -6,7 +6,7 @@
 #include "all.h"
 #include "dvlnet/abstract_net.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class loopback : public abstract_net {

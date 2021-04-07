@@ -14,7 +14,7 @@
 #define TTF_FONT_NAME "CharisSILB.ttf"
 #endif
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -128,4 +128,4 @@ void SetTtfName(const char *path)
 	*ttfName = path;
 }
 
-} // namespace dvl
+} // namespace devilution

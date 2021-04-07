@@ -1,39 +1,41 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-namespace dvl {
+using namespace devilution;
+
+namespace devilution {
 extern int PM_DoGotHit(int pnum);
 }
 
 int RunBlockTest(int frames, int flags)
 {
 	int pnum = 0;
-	dvl::plr[pnum]._pAnimFrame = 1;
-	dvl::plr[pnum]._pHFrames = frames;
-	dvl::plr[pnum]._pVar8 = 1;
-	dvl::plr[pnum]._pIFlags = flags;
-	dvl::plr[pnum]._pmode = dvl::PM_GOTHIT;
-	dvl::plr[pnum]._pGFXLoad = -1;
+	plr[pnum]._pAnimFrame = 1;
+	plr[pnum]._pHFrames = frames;
+	plr[pnum]._pVar8 = 1;
+	plr[pnum]._pIFlags = flags;
+	plr[pnum]._pmode = PM_GOTHIT;
+	plr[pnum]._pGFXLoad = -1;
 
 	int i = 1;
 	for (; i < 100; i++) {
-		dvl::PM_DoGotHit(pnum);
-		if (dvl::plr[pnum]._pmode != dvl::PM_GOTHIT)
+		PM_DoGotHit(pnum);
+		if (plr[pnum]._pmode != PM_GOTHIT)
 			break;
-		dvl::plr[pnum]._pAnimFrame++;
+		plr[pnum]._pAnimFrame++;
 	}
 
 	return i;
 }
 
 #define NORM 0
-#define BAL dvl::ISPL_FASTRECOVER
-#define STA dvl::ISPL_FASTERRECOVER
-#define HAR dvl::ISPL_FASTESTRECOVER
-#define BALSTA (dvl::ISPL_FASTRECOVER | dvl::ISPL_FASTERRECOVER)
-#define BALHAR (dvl::ISPL_FASTRECOVER | dvl::ISPL_FASTESTRECOVER)
-#define STAHAR (dvl::ISPL_FASTERRECOVER | dvl::ISPL_FASTESTRECOVER)
-#define ZEN (dvl::ISPL_FASTRECOVER | dvl::ISPL_FASTERRECOVER | dvl::ISPL_FASTESTRECOVER)
+#define BAL ISPL_FASTRECOVER
+#define STA ISPL_FASTERRECOVER
+#define HAR ISPL_FASTESTRECOVER
+#define BALSTA (ISPL_FASTRECOVER | ISPL_FASTERRECOVER)
+#define BALHAR (ISPL_FASTRECOVER | ISPL_FASTESTRECOVER)
+#define STAHAR (ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)
+#define ZEN (ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)
 #define WAR 6
 #define ROU 7
 #define SRC 8

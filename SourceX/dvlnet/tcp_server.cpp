@@ -5,7 +5,7 @@
 
 #include "dvlnet/base.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 tcp_server::tcp_server(asio::io_context &ioc, std::string bindaddr,
@@ -223,4 +223,4 @@ tcp_server::~tcp_server()
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

@@ -3,10 +3,9 @@
  *
  * Interface of player functionality, leveling, actions, creation, loading, etc.
  */
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 typedef enum PLR_MODE {
 	PM_STAND,
@@ -325,6 +324,4 @@ extern int ExpLvlsTbl[MAXCHARLEVEL];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PLAYER_H__ */
+}

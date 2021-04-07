@@ -3,10 +3,9 @@
  *
  * Interface of functions for compression and decompressing MPQ data.
  */
-#ifndef __ENCRYPT_H__
-#define __ENCRYPT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +30,4 @@ void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ENCRYPT_H__ */
+}

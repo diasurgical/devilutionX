@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Data related to each missile ID. */
 MissileData missiledata[] = {
@@ -189,4 +189,4 @@ MisFileData misfiledata[] = {
 	// clang-format on
 };
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

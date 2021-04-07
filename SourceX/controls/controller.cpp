@@ -6,7 +6,7 @@
 #include "controls/devices/joystick.h"
 #include "controls/devices/game_controller.h"
 
-namespace dvl {
+namespace devilution {
 
 ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 {
@@ -81,4 +81,4 @@ bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event)
 #endif
 }
 
-} // namespace dvl
+} // namespace devilution

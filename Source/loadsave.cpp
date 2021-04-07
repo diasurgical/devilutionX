@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 bool gbIsHellfireSaveGame;
 int giNumberOfLevels;
@@ -181,7 +181,7 @@ public:
 	}
 };
 
-}
+} // namespace
 
 void RemoveInvalidItem(ItemStruct *pItem)
 {
@@ -677,7 +677,7 @@ static void LoadObject(LoadHelper *file, int i)
 {
 	ObjectStruct *pObject = &object[i];
 
-	pObject->_otype = file->nextLE<Sint32>();
+	pObject->_otype = (_object_id)file->nextLE<Sint32>();
 	pObject->_ox = file->nextLE<Sint32>();
 	pObject->_oy = file->nextLE<Sint32>();
 	pObject->_oLight = file->nextBool32();
@@ -714,7 +714,7 @@ static void LoadObject(LoadHelper *file, int i)
 
 static void LoadItem(LoadHelper *file, int i)
 {
-	LoadItemData(file, &item[i]);
+	LoadItemData(file, &items[i]);
 	GetItemFrm(i);
 }
 
@@ -967,8 +967,8 @@ void RemoveEmptyLevelItems()
 {
 	for (int i = numitems; i >= 0; i--) {
 		int ii = itemactive[i];
-		if (item[ii].isEmpty()) {
-			dItem[item[ii]._ix][item[ii]._iy] = 0;
+		if (items[ii].isEmpty()) {
+			dItem[items[ii]._ix][items[ii]._iy] = 0;
 			DeleteItem(ii, i);
 		}
 	}
@@ -1735,10 +1735,13 @@ static void SavePortal(SaveHelper *file, int i)
 	file->writeLE<Uint32>(pPortal->setlvl);
 }
 
+const int DiabloItemSaveSize = 368;
+const int HellfireItemSaveSize = 372;
+
 void SaveHeroItems(PlayerStruct *pPlayer)
 {
 	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", items * sizeof(ItemStruct));
+	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize));
 
 	file.writeLE<Uint8>(gbIsHellfire);
 
@@ -1837,7 +1840,7 @@ void SaveGame()
 	for (int i = 0; i < MAXITEMS; i++)
 		file.writeLE<Sint8>(itemavail[i]);
 	for (int i = 0; i < numitems; i++)
-		SaveItem(&file, &item[itemactive[i]]);
+		SaveItem(&file, &items[itemactive[i]]);
 	for (int i = 0; i < 128; i++)
 		file.writeLE<Sint8>(UniqueItemFlag[i]);
 
@@ -1946,7 +1949,7 @@ void SaveLevel()
 		file.writeLE<Sint8>(itemavail[i]);
 
 	for (int i = 0; i < numitems; i++)
-		SaveItem(&file, &item[itemactive[i]]);
+		SaveItem(&file, &items[itemactive[i]]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
@@ -2087,4 +2090,4 @@ void LoadLevel()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

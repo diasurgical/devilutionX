@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 // BUGFIX: constant data should be const
 BYTE SkelKingTrans1[] = {
@@ -199,4 +199,4 @@ void LoadSetMap()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

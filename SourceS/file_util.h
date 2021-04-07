@@ -24,7 +24,7 @@
 #include <cstdio>
 #endif
 
-namespace dvl {
+namespace devilution {
 
 inline bool FileExists(const char *path)
 {

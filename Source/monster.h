@@ -3,10 +3,9 @@
  *
  * Interface of monster functionality, AI, actions, spawning, loading, etc.
  */
-#ifndef __MONSTER_H__
-#define __MONSTER_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,6 +34,13 @@ typedef enum MON_MODE {
 	MM_HEAL,
 	MM_TALK,
 } MON_MODE;
+
+typedef struct AnimStruct {
+	Uint8 *CMem;
+	Uint8 *Data[8];
+	Sint32 Frames;
+	Sint32 Rate;
+} AnimStruct;
 
 typedef struct CMonster {
 	_monster_id mtype;
@@ -263,6 +269,4 @@ extern int offset_y[8];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MONSTER_H__ */
+}

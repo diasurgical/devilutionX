@@ -8,7 +8,7 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
-namespace dvl {
+namespace devilution {
 
 // Re-maps a keyboard key as per the REMAP_KEYBOARD_KEYS define.
 inline void remap_keyboard_key(SDL_Keycode *sym)

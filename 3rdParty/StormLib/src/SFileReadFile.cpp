@@ -154,7 +154,7 @@ static int ReadMpqSectors(TMPQFile * hf, LPBYTE pbBuffer, DWORD dwByteOffset, DW
                     }
                 }
             }
-#endif
+#endif // FULL
 
             // If the sector is really compressed, decompress it.
             // WARNING : Some sectors may not be compressed, it can be determined only
@@ -346,11 +346,10 @@ static int ReadMpqFileSingleUnit(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos
 
         // Give the number of bytes read
         *pdwBytesRead = dwToRead;
-        return ERROR_SUCCESS;
     }
 
     // An error, sorry
-    return ERROR_CAN_NOT_COMPLETE;
+    return nError;
 }
 
 static int ReadMpkFileSingleUnit(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos, DWORD dwToRead, LPDWORD pdwBytesRead)
@@ -410,7 +409,7 @@ static int ReadMpkFileSingleUnit(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos
             if(!SCompDecompressMpk(hf->pbFileSector, &cbOutBuffer, pbRawData, (int)pFileEntry->dwCmpSize))
                 nError = ERROR_FILE_CORRUPT;
 #else
-			assert(0);
+            assert(0);
 #endif
         }
         else
@@ -633,7 +632,7 @@ static int ReadMpqFilePatchFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos,
         *pdwBytesRead = dwBytesRead;
     return nError;
 }
-#endif
+#endif // FULL
 
 static int ReadMpqFileLocalFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos, DWORD dwToRead, LPDWORD pdwBytesRead)
 {
@@ -670,7 +669,7 @@ static int ReadMpqFileLocalFile(TMPQFile * hf, void * pvBuffer, DWORD dwFilePos,
 //-----------------------------------------------------------------------------
 // SFileReadFile
 
-bool STORMAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD pdwRead, LPOVERLAPPED lpOverlapped)
+bool WINAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWORD pdwRead, LPOVERLAPPED lpOverlapped)
 {
     TMPQFile * hf = (TMPQFile *)hFile;
     DWORD dwBytesRead = 0;                      // Number of bytes read
@@ -711,20 +710,17 @@ bool STORMAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWO
     // If the file is local file, read the data directly from the stream
     if(hf->pStream != NULL)
     {
-        ULONGLONG pos;
-        if (!FileStream_GetPos(hf->pStream, &pos)) {
-            SetLastError(ERROR_CAN_NOT_COMPLETE);
-            return false;
-        }
-        nError = ReadMpqFileLocalFile(hf, pvBuffer, pos, dwToRead, &dwBytesRead);
+        nError = ReadMpqFileLocalFile(hf, pvBuffer, hf->dwFilePos, dwToRead, &dwBytesRead);
     }
+
 #ifdef FULL
     // If the file is a patch file, we have to read it special way
     else if(hf->hfPatch != NULL && (hf->pFileEntry->dwFlags & MPQ_FILE_PATCH_FILE) == 0)
     {
         nError = ReadMpqFilePatchFile(hf, pvBuffer, hf->dwFilePos, dwToRead, &dwBytesRead);
     }
-#endif
+#endif // FULL
+
     // If the archive is a MPK archive, we need special way to read the file
     else if(hf->ha->dwSubType == MPQ_SUBTYPE_MPK)
     {
@@ -744,8 +740,7 @@ bool STORMAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWO
     }
 
     // Increment the file position
-    if(hf->pStream == NULL)
-        hf->dwFilePos += dwBytesRead;
+    hf->dwFilePos += dwBytesRead;
 
     // Give the caller the number of bytes read
     if(pdwRead != NULL)
@@ -765,7 +760,7 @@ bool STORMAPI SFileReadFile(HANDLE hFile, void * pvBuffer, DWORD dwToRead, LPDWO
 //-----------------------------------------------------------------------------
 // SFileGetFileSize
 
-DWORD STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
+DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
 {
     ULONGLONG FileSize;
     TMPQFile * hf = (TMPQFile *)hFile;
@@ -812,7 +807,7 @@ DWORD STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD pdwFileSizeHigh)
     return SFILE_INVALID_SIZE;
 }
 
-DWORD STORMAPI SFileSetFilePointer(HANDLE hFile, LONG lFilePos, LONG * plFilePosHigh, DWORD dwMoveMethod)
+DWORD WINAPI SFileSetFilePointer(HANDLE hFile, LONG lFilePos, LONG * plFilePosHigh, DWORD dwMoveMethod)
 {
     TMPQFile * hf = (TMPQFile *)hFile;
     ULONGLONG OldPosition;
@@ -901,10 +896,9 @@ DWORD STORMAPI SFileSetFilePointer(HANDLE hFile, LONG lFilePos, LONG * plFilePos
         if(!FileStream_Read(hf->pStream, &NewPosition, NULL, 0))
             return SFILE_INVALID_POS;
     }
-    else
-    {
-        hf->dwFilePos = (DWORD)NewPosition;
-    }
+
+    // Also, store the new file position to the TMPQFile struct
+    hf->dwFilePos = (DWORD)NewPosition;
 
     // Return the new file position
     if(plFilePosHigh != NULL)

@@ -3,7 +3,7 @@
 #include "display.h"
 #include "platform/switch/docking.h"
 
-namespace dvl {
+namespace devilution {
 
 static int currently_docked = -1; // keep track of docked or handheld mode
 

@@ -6,7 +6,7 @@
 #include "all.h"
 #include "../SourceX/DiabloUI/art_draw.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BYTE *sgpBackCel;
 Uint32 sgdwProgress;
@@ -387,4 +387,4 @@ void ShowProgress(interface_mode uMsg)
 	gbSomebodyWonGameKludge = FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

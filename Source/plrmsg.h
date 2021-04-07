@@ -3,12 +3,11 @@
  *
  * Interface of functionality for printing the ingame chat messages.
  */
-#ifndef __PLRMSG_H__
-#define __PLRMSG_H__
+#pragma once
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,6 +31,4 @@ void DrawPlrMsg(CelOutputBuffer out);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PLRMSG_H__ */
+}

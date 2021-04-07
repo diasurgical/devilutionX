@@ -9,7 +9,7 @@
 // Defined in SourceX/controls/plctrls.cpp
 extern "C" bool sgbControllerActive;
 
-namespace dvl {
+namespace devilution {
 
 std::vector<Joystick> *const Joystick::joysticks_ = new std::vector<Joystick>;
 
@@ -335,4 +335,4 @@ bool Joystick::IsPressedOnAnyJoystick(ControllerButton button)
 	return false;
 }
 
-} // namespace dvl
+} // namespace devilution

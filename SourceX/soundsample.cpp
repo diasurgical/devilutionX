@@ -4,7 +4,7 @@
 
 #include "storm_sdl_rw.h"
 
-namespace dvl {
+namespace devilution {
 
 ///// SoundSample /////
 
@@ -122,4 +122,4 @@ int SoundSample::GetLength()
 	return (Uint32)(chunk->alen * ms / bps);
 };
 
-} // namespace dvl
+} // namespace devilution

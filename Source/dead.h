@@ -3,10 +3,9 @@
  *
  * Interface of functions for placing dead monsters.
  */
-#ifndef __DEAD_H__
-#define __DEAD_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +30,4 @@ void SetDead();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DEAD_H__ */
+}

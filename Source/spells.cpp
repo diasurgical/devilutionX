@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int GetManaAmount(int id, int sn)
 {
@@ -190,7 +190,7 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 		dir = plr[id]._pVar3;
 	}
 
-	for (int i = 0; spelldata[spl].sMissiles[i] != 0 && i < 3; i++) {
+	for (int i = 0; spelldata[spl].sMissiles[i] != MIS_NULL && i < 3; i++) {
 		AddMissile(sx, sy, dx, dy, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 	}
 
@@ -413,4 +413,4 @@ int GetSpellStaffLevel(spell_id s)
 	return spelldata[s].sStaffLvl;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

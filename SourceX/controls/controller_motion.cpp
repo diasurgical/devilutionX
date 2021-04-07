@@ -9,7 +9,7 @@
 #include "controls/game_controls.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -169,4 +169,4 @@ AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad)
 	return result;
 }
 
-} // namespace dvl
+} // namespace devilution

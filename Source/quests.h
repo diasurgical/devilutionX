@@ -3,12 +3,11 @@
  *
  * Interface of functionality for handling quests.
  */
-#ifndef __QUESTS_H__
-#define __QUESTS_H__
+#pragma once
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,6 +74,4 @@ extern QuestData questlist[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __QUESTS_H__ */
+}

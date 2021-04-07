@@ -3,10 +3,9 @@
  *
  * Interface of functionality for the special quest dungeons.
  */
-#ifndef __SETMAPS_H__
-#define __SETMAPS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,6 +21,4 @@ extern const char *const quest_level_names[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SETMAPS_H__ */
+}

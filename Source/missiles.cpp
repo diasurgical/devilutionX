@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int missileactive[MAXMISSILES];
 int missileavail[MAXMISSILES];
@@ -5671,4 +5671,4 @@ void ClearMissileSpot(int mi)
 	dMissile[missile[mi]._mix][missile[mi]._miy] = 0;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

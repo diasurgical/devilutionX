@@ -21,7 +21,7 @@
 
 #include "DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 DWORD nLastError = 0;
 
@@ -131,7 +131,7 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 {
 	HANDLE hFile;
 	size_t size;
-	PCXHEADER pcxhdr;
+	PCXHeader pcxhdr;
 	BYTE paldata[256][3];
 	BYTE *dataPtr, *fileBuffer;
 	BYTE byte;
@@ -197,7 +197,9 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		fileBuffer = NULL;
 	} else {
 		const auto pos = SFileGetFilePointer(hFile);
-		size = SFileSetFilePointer(hFile, 0, DVL_FILE_END) - SFileSetFilePointer(hFile, pos, DVL_FILE_BEGIN);
+		const auto end = SFileSetFilePointer(hFile, 0, DVL_FILE_END);
+		const auto begin = SFileSetFilePointer(hFile, pos, DVL_FILE_BEGIN);
+		size = end - begin;
 		fileBuffer = (BYTE *)malloc(size);
 	}
 
@@ -248,19 +250,6 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 
 	SFileCloseFile(hFile);
 
-	return true;
-}
-
-void *SMemAlloc(unsigned int amount, const char *logfilename, int logline, int defaultValue)
-{
-	assert(amount != -1u);
-	return malloc(amount);
-}
-
-BOOL SMemFree(void *location, const char *logfilename, int logline, char defaultValue)
-{
-	assert(location);
-	free(location);
 	return true;
 }
 
@@ -798,11 +787,6 @@ void SErrSetLastError(DWORD dwErrCode)
 	nLastError = dwErrCode;
 }
 
-void SStrCopy(char *dest, const char *src, int max_length)
-{
-	strncpy(dest, src, max_length);
-}
-
 BOOL SFileSetBasePath(const char *path)
 {
 	if (SBasePath == NULL)
@@ -816,4 +800,4 @@ BOOL SFileEnableDirectAccess(BOOL enable)
 	directFileAccess = enable;
 	return true;
 }
-} // namespace dvl
+} // namespace devilution

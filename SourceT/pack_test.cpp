@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-static void ComparePackedItems(const dvl::PkItemStruct *item1, const dvl::PkItemStruct *item2)
+using namespace devilution;
+
+static void ComparePackedItems(const PkItemStruct *item1, const PkItemStruct *item2)
 {
 	ASSERT_EQ(item1->iSeed, item2->iSeed);
 	ASSERT_EQ(item1->iCreateInfo, item2->iCreateInfo);
@@ -59,7 +61,7 @@ typedef struct TestItemStruct {
 	Sint32 IDidx;
 } TestItemStruct;
 
-static void CompareItems(const dvl::ItemStruct *item1, const TestItemStruct *item2)
+static void CompareItems(const ItemStruct *item1, const TestItemStruct *item2)
 {
 	ASSERT_STREQ(item1->_iIName, item2->_iIName);
 	ASSERT_EQ(item1->_itype, item2->_itype);
@@ -105,7 +107,7 @@ static void CompareItems(const dvl::ItemStruct *item1, const TestItemStruct *ite
 	ASSERT_EQ(item1->IDidx, item2->IDidx);
 }
 
-const dvl::PkItemStruct PackedDiabloItems[] = {
+const PkItemStruct PackedDiabloItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
 	{ 2082213289,       0x119,  53,   3,   60,    60,   0,    0,      0,      0 }, // Amber Helm of harmony
@@ -216,38 +218,38 @@ const TestItemStruct DiabloItems[] = {
 
 TEST(pack, UnPackItem_diablo)
 {
-	dvl::ItemStruct id;
-	dvl::PkItemStruct is;
+	ItemStruct id;
+	PkItemStruct is;
 
-	dvl::gbIsHellfire = false;
-	dvl::gbIsMultiplayer = false;
+	gbIsHellfire = false;
+	gbIsMultiplayer = false;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
-		dvl::UnPackItem(&PackedDiabloItems[i], &id, false);
+		UnPackItem(&PackedDiabloItems[i], &id, false);
 		CompareItems(&id, &DiabloItems[i]);
 
-		dvl::PackItem(&is, &id);
+		PackItem(&is, &id);
 		ComparePackedItems(&is, &PackedDiabloItems[i]);
 	}
 }
 
 TEST(pack, UnPackItem_diablo_unique_bug)
 {
-	dvl::PkItemStruct pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
-	dvl::PkItemStruct pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
+	PkItemStruct pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
+	PkItemStruct pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
 
-	dvl::gbIsHellfire = false;
-	dvl::gbIsMultiplayer = false;
+	gbIsHellfire = false;
+	gbIsMultiplayer = false;
 
-	dvl::ItemStruct id;
-	dvl::UnPackItem(&pkItemBug, &id, false);
+	ItemStruct id;
+	UnPackItem(&pkItemBug, &id, false);
 	ASSERT_STREQ(id._iIName, "Veil of Steel");
-	ASSERT_EQ(id._itype, dvl::ITYPE_HELM);
-	ASSERT_EQ(id._iClass, dvl::ICLASS_ARMOR);
+	ASSERT_EQ(id._itype, ITYPE_HELM);
+	ASSERT_EQ(id._iClass, ICLASS_ARMOR);
 	ASSERT_EQ(id._iCurs, 85);
 	ASSERT_EQ(id._iIvalue, 63800);
 	ASSERT_EQ(id._iAC, 18);
-	ASSERT_EQ(id._iMiscId, dvl::IMISC_UNIQUE);
+	ASSERT_EQ(id._iMiscId, IMISC_UNIQUE);
 	ASSERT_EQ(id._iPLAC, 60);
 	ASSERT_EQ(id._iPLStr, 15);
 	ASSERT_EQ(id._iPLVit, 15);
@@ -257,14 +259,14 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 	ASSERT_EQ(id._iPLMana, -1920);
 	ASSERT_EQ(id._iPLLight, -2);
 	ASSERT_EQ(id._iUid, 6);
-	ASSERT_EQ(id.IDidx, dvl::IDI_STEELVEIL);
+	ASSERT_EQ(id.IDidx, IDI_STEELVEIL);
 
-	dvl::PkItemStruct is;
-	dvl::PackItem(&is, &id);
+	PkItemStruct is;
+	PackItem(&is, &id);
 	ComparePackedItems(&is, &pkItem);
 }
 
-const dvl::PkItemStruct PackedDiabloMPItems[] = {
+const PkItemStruct PackedDiabloMPItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
     {  309674341,         193, 109,   0,    0,     0,   0,    0,      0,      0 }, // Book of Firebolt
@@ -282,22 +284,22 @@ const TestItemStruct DiabloMPItems[] = {
 
 TEST(pack, UnPackItem_diablo_multiplayer)
 {
-	dvl::ItemStruct id;
-	dvl::PkItemStruct is;
+	ItemStruct id;
+	PkItemStruct is;
 
-	dvl::gbIsHellfire = false;
-	dvl::gbIsMultiplayer = true;
+	gbIsHellfire = false;
+	gbIsMultiplayer = true;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
-		dvl::UnPackItem(&PackedDiabloMPItems[i], &id, false);
+		UnPackItem(&PackedDiabloMPItems[i], &id, false);
 		CompareItems(&id, &DiabloMPItems[i]);
 
-		dvl::PackItem(&is, &id);
+		PackItem(&is, &id);
 		ComparePackedItems(&is, &PackedDiabloMPItems[i]);
 	}
 }
 
-const dvl::PkItemStruct PackedHellfireItems[] = {
+const PkItemStruct PackedHellfireItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
 	{ 1717442367,         266, 156,   3,    0,     0,   0,    0,      0,      0 }, // Ring of stability
@@ -421,100 +423,100 @@ const TestItemStruct HellfireItems[] = {
 
 TEST(pack, UnPackItem_hellfire)
 {
-	dvl::ItemStruct id;
-	dvl::PkItemStruct is;
+	ItemStruct id;
+	PkItemStruct is;
 
-	dvl::gbIsHellfire = true;
-	dvl::gbIsMultiplayer = false;
+	gbIsHellfire = true;
+	gbIsMultiplayer = false;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
-		dvl::UnPackItem(&PackedHellfireItems[i], &id, true);
+		UnPackItem(&PackedHellfireItems[i], &id, true);
 		CompareItems(&id, &HellfireItems[i]);
 
-		dvl::PackItem(&is, &id);
-		is.dwBuff &= ~dvl::CF_HELLFIRE;
+		PackItem(&is, &id);
+		is.dwBuff &= ~CF_HELLFIRE;
 		ComparePackedItems(&is, &PackedHellfireItems[i]);
 	}
 }
 
 TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 {
-	dvl::PkItemStruct is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
-	dvl::ItemStruct id;
+	PkItemStruct is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
+	ItemStruct id;
 
-	dvl::gbIsHellfire = false;
-	dvl::gbIsMultiplayer = false;
+	gbIsHellfire = false;
+	gbIsMultiplayer = false;
 
-	dvl::UnPackItem(&is, &id, true);
+	UnPackItem(&is, &id, true);
 
-	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
+	ASSERT_EQ(id._itype, ITYPE_NONE);
 }
 
 TEST(pack, UnPackItem_empty)
 {
-	dvl::PkItemStruct is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
-	dvl::ItemStruct id;
+	PkItemStruct is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
+	ItemStruct id;
 
-	dvl::UnPackItem(&is, &id, false);
+	UnPackItem(&is, &id, false);
 
-	ASSERT_EQ(id._itype, dvl::ITYPE_NONE);
+	ASSERT_EQ(id._itype, ITYPE_NONE);
 }
 
 TEST(pack, PackItem_empty)
 {
-	dvl::PkItemStruct is;
-	dvl::ItemStruct id;
+	PkItemStruct is;
+	ItemStruct id;
 
-	id._itype = dvl::ITYPE_NONE;
+	id._itype = ITYPE_NONE;
 
-	dvl::PackItem(&is, &id);
+	PackItem(&is, &id);
 
 	ASSERT_EQ(is.idx, 0xFFFF);
 }
 
-static void compareGold(const dvl::PkItemStruct *is, int iCurs)
+static void compareGold(const PkItemStruct *is, int iCurs)
 {
-	dvl::ItemStruct id;
-	dvl::UnPackItem(is, &id, false);
+	ItemStruct id;
+	UnPackItem(is, &id, false);
 	ASSERT_EQ(id._iCurs, iCurs);
-	ASSERT_EQ(id.IDidx, dvl::IDI_GOLD);
+	ASSERT_EQ(id.IDidx, IDI_GOLD);
 	ASSERT_EQ(id._ivalue, is->wValue);
-	ASSERT_EQ(id._itype, dvl::ITYPE_GOLD);
-	ASSERT_EQ(id._iClass, dvl::ICLASS_GOLD);
+	ASSERT_EQ(id._itype, ITYPE_GOLD);
+	ASSERT_EQ(id._iClass, ICLASS_GOLD);
 
-	dvl::PkItemStruct is2;
-	dvl::PackItem(&is2, &id);
+	PkItemStruct is2;
+	PackItem(&is2, &id);
 	ComparePackedItems(is, &is2);
 }
 
 TEST(pack, UnPackItem_gold_small)
 {
-	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
-	compareGold(&is, dvl::ICURS_GOLD_SMALL);
+	PkItemStruct is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
+	compareGold(&is, ICURS_GOLD_SMALL);
 }
 
 TEST(pack, UnPackItem_gold_medium)
 {
-	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
-	compareGold(&is, dvl::ICURS_GOLD_MEDIUM);
+	PkItemStruct is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
+	compareGold(&is, ICURS_GOLD_MEDIUM);
 }
 
 TEST(pack, UnPackItem_gold_large)
 {
-	dvl::PkItemStruct is = { 0, 0, dvl::IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
-	compareGold(&is, dvl::ICURS_GOLD_LARGE);
+	PkItemStruct is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
+	compareGold(&is, ICURS_GOLD_LARGE);
 }
 
 TEST(pack, UnPackItem_ear)
 {
-	dvl::PkItemStruct is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
-	dvl::ItemStruct id;
+	PkItemStruct is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
+	ItemStruct id;
 
-	dvl::UnPackItem(&is, &id, false);
+	UnPackItem(&is, &id, false);
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
 	ASSERT_EQ(id._ivalue, 3);
 
-	dvl::PkItemStruct is2;
-	dvl::PackItem(&is2, &id);
+	PkItemStruct is2;
+	PackItem(&is2, &id);
 	ComparePackedItems(&is, &is2);
 }

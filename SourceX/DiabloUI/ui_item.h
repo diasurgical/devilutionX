@@ -11,7 +11,7 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/text_draw.h"
 
-namespace dvl {
+namespace devilution {
 
 enum UiType {
 	UI_TEXT,

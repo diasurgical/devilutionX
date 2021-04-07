@@ -3,12 +3,11 @@
  *
  * Interface of item functionality.
  */
-#ifndef __ITEMS_H__
-#define __ITEMS_H__
+#pragma once
 
 #include "itemdat.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -266,7 +265,7 @@ typedef struct CornerStoneStruct {
 extern int itemactive[MAXITEMS];
 extern BOOL uitemflag;
 extern int itemavail[MAXITEMS];
-extern ItemStruct item[MAXITEMS + 1];
+extern ItemStruct items[MAXITEMS + 1];
 extern CornerStoneStruct CornerStone;
 extern BOOL UniqueItemFlag[128];
 extern int numitems;
@@ -353,6 +352,4 @@ extern int ItemInvSnds[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ITEMS_H__ */
+}

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## DevilutionX 1.2.0 (unreleased)
+## DevilutionX 1.2.0
 ### Features
 #### Gameplay
 - Hellfire support
@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Preserve list position when buying and selling items in stores
 - Preserve hotkeys and active spell across games
 - Set default active spell for new heroes
+- Experience bar (off by default)
+- Monster health bar (off by default)
+- Auto equip all item types on pickup or purchase (off by default)
+- Auto pickup gold (off by default)
+- Run in town (off by default) (also in multiplayer)
+- Disable friendly fire from arrows an spells (off by default)
+- Disable quest randomization (off by default)
+- Adria refills mana (off by default)
+- Barbarian and Bard heroes in Diablo (off by default)
 #### Controls
 - Use belt via the numpad
 - Close panels when pressing <kbd>ESC</kbd>
@@ -23,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - <kbd>Shift-click</kbd> to clear readied spell
 - <kbd>Shift-click</kbd> consumables to move them between the belt and inventory
 - <kbd>Shift-click</kbd> equipment equip/unequip them
+- Controller mapping
 - <kbd>D-Pad</kbd> / Left stick navigation now works in all menus and is more responsive.
 - <kbd>START</kbd> + <kbd>SELECT</kbd> now opens the main menu.
 - Right stick mouse emulation has been improved.
@@ -32,42 +42,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Widescreen menus
 - Scroll subtitles at the same speed as narration reader
 - Apply sound volume to videos
+- Improved transparency (on by default)
+- Auto-equip sounds (off by default)
+- Show monster type (off by default)
+- Disable walking sounds (off by default)
 #### Stability / Performance / System
 - Document [ini-file options](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide)
 - Reorganize ini-file
 - Allow for up to 99 save games of each type
 - Much lower memory usage (now in line with the original)
+- Configurable network port
 - Performance improvements
 - DIABDAT.MPQ may now be upper case
 - Support for portable installs
 - Support file paths longer than 259 characters
 - Add `--ttf-dir` and `--ttf-name` to allow for specifying a different UI font
 - Switch Windows releases to 64-bit
-- Added support for PlayStation Vita
 - Added support for Nintendo 3DS
+- Added support for PlayStation Vita
 - Added support for DragonFly BSD
 - Added AppImage for Linux
-
-### Optional Features
-#### Gameplay
-- Experience bar
-- Monster health bar
-- Auto equip all item types on pickup or purchase
-- Auto pickup gold
-- Run in town (also in multiplayer)
-- Disable friendly fire
-- Disable quest randomization
-- Adria refills mana
-- Barbarian and Bard heroes in Diablo
-#### Controls
-- Controller mapping
-#### Graphics / Audio
-- Improved transparency
-- Auto-equip sounds
-- Show monster type
-- Disable walking sounds
-#### Stability / Performance / System
-- Configurable network port
 
 ### Bugfixes
 #### Gameplay
@@ -134,7 +128,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Bugfixes for original Hellfire bugs
 #### Gameplay
 - Firewall damage calculation being too low
-- Firewall/Lightningwall damage being based on the dungion level instead of spell level for the first player
+- Firewall/Lightningwall damage being based on the dungeon level instead of spell level for the first player
 - Right-hand item's decay suffix being applied to the left-hand item in multiplayer
 - Town Shrine would always cast TP from the first player instead of the user
 - Oily Shrine and Sparkling Shrine would cast their traps as if the first player was doing it
@@ -155,9 +149,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Some Hell difficulty monsters being too easy to hit
 - Mana Shield bugs that could make a player invulnerable and/or invisible
 - Disarming skill not working on levels 13 through 15
-- Mana Shield permanetly using up level missiles
+- Mana Shield permanently using up level missiles
 - Corrected behaviour of Thieves, Speed/Haste, Balance/Stability/Harmony, and Piercing/Bashing/Puncturing
-- Mana Shield becomming less effective with increasing spell level
+- Mana Shield becoming less effective with increasing spell level
 - Excessive damage when a Mana Shield expired due to an attack
 - Bows with fire damage prevented the Gargoyles from healing
 - Right-clicking belt item 5-8 not working while the Spellbook is open
@@ -169,6 +163,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Diablo's scream being muted if you load a save game during his death throes
 - Multiplayer character files are now located in the data directory, and may be moved between computers
 - Some stability issues
+
+### Known issues
+- Save game difficulty does not carry over from 1.1.0
+- Amiga builds are currently unstable
 
 ## DevilutionX 1.1.0
 ### Features
@@ -233,7 +231,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support Clockwork PI GameShell
 - Added support for GKD350h
 - Switch to OPK for RetroFW (requires 2.0)
-- Update OpendDingus/RetroFW build root
+- Update OpenDingux/RetroFW build root
 
 ### Bugfixes
 - Game crashing on systems that do not report monitor refresh rate.

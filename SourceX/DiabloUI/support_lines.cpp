@@ -1,6 +1,6 @@
 #include "DiabloUI/support_lines.h"
 
-namespace dvl {
+namespace devilution {
 
 const char *const SUPPORT_LINES[] = {
 	"",
@@ -26,4 +26,4 @@ const char *const SUPPORT_LINES[] = {
 
 const std::size_t SUPPORT_LINES_SIZE = sizeof(SUPPORT_LINES) / sizeof(SUPPORT_LINES[0]);
 
-} // namespace dvl
+} // namespace devilution

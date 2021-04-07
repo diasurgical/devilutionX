@@ -8,7 +8,7 @@
 #include "../SourceX/controls/axis_direction.h"
 #include "../SourceX/controls/controller_motion.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BYTE *optbar_cel;
 BOOLEAN mouseNavigation;
@@ -436,4 +436,4 @@ void gmenu_slider_steps(TMenuItem *pItem, int steps)
 	pItem->dwFlags |= (steps << 12) & 0xFFF000;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -13,7 +13,7 @@
 #include <3ds.h>
 #endif
 
-namespace dvl {
+namespace devilution {
 
 int sgdwLockCount;
 #ifdef _DEBUG
@@ -321,4 +321,4 @@ void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries)
 		lpEntries[i] = system_palette[i];
 	}
 }
-} // namespace dvl
+} // namespace devilution

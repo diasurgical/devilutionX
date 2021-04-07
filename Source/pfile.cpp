@@ -8,10 +8,9 @@
 #include "all.h"
 #include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "../DiabloUI/diabloui.h"
 #include "file_util.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #define PASSWORD_SPAWN_SINGLE "adslhfb1"
 #define PASSWORD_SPAWN_MULTI "lshbkfg1"
@@ -192,62 +191,7 @@ void pfile_write_hero()
 	}
 }
 
-BOOL pfile_create_player_description(char *dst, DWORD len)
-{
-	char desc[128];
-	_uiheroinfo uihero;
-
-	myplr = 0;
-	pfile_read_player_from_save();
-	game_2_ui_player(plr, &uihero, gbValidSaveFile);
-	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
-
-	if (dst != NULL && len) {
-		if (UiCreatePlayerDescription(&uihero, GAME_ID, &desc) == 0)
-			return FALSE;
-		SStrCopy(dst, desc, len);
-	}
-	return TRUE;
-}
-
-BOOL pfile_rename_hero(const char *name_1, const char *name_2)
-{
-	int i;
-	DWORD save_num;
-	_uiheroinfo uihero;
-	BOOL found = FALSE;
-
-	if (pfile_get_save_num_from_name(name_2) == MAX_CHARACTERS) {
-		for (i = 0; i != MAX_PLRS; i++) {
-			if (!strcasecmp(name_1, plr[i]._pName)) {
-				found = TRUE;
-				break;
-			}
-		}
-	}
-
-	if (!found)
-		return FALSE;
-	save_num = pfile_get_save_num_from_name(name_1);
-	if (save_num == MAX_CHARACTERS)
-		return FALSE;
-
-	SStrCopy(hero_names[save_num], name_2, PLR_NAME_LEN);
-	SStrCopy(plr[i]._pName, name_2, PLR_NAME_LEN);
-	if (!strcasecmp(gszHero, name_1))
-		SStrCopy(gszHero, name_2, sizeof(gszHero));
-	game_2_ui_player(plr, &uihero, gbValidSaveFile);
-	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
-	pfile_write_hero();
-	return TRUE;
-}
-
-void pfile_flush_W()
-{
-	pfile_flush(TRUE, pfile_get_save_num_from_name(plr[myplr]._pName));
-}
-
-void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSaveFile)
+static void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSaveFile)
 {
 	memset(heroinfo, 0, sizeof(*heroinfo));
 	strncpy(heroinfo->name, p->_pName, sizeof(heroinfo->name) - 1);
@@ -264,16 +208,32 @@ void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSav
 	heroinfo->spawned = gbIsSpawn;
 }
 
+BOOL pfile_create_player_description()
+{
+	char desc[128];
+	_uiheroinfo uihero;
+
+	myplr = 0;
+	pfile_read_player_from_save();
+	game_2_ui_player(&plr[myplr], &uihero, gbValidSaveFile);
+	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
+
+	return TRUE;
+}
+
+void pfile_flush_W()
+{
+	pfile_flush(TRUE, pfile_get_save_num_from_name(plr[myplr]._pName));
+}
+
 BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
 {
-	DWORD i;
-
 	memset(hero_names, 0, sizeof(hero_names));
 
-	for (i = 0; i < MAX_CHARACTERS; i++) {
-		PkPlayerStruct pkplr;
+	for (DWORD i = 0; i < MAX_CHARACTERS; i++) {
 		HANDLE archive = pfile_open_save_archive(i);
 		if (archive) {
+			PkPlayerStruct pkplr;
 			if (pfile_read_hero(archive, &pkplr)) {
 				_uiheroinfo uihero;
 				strcpy(hero_names[i], pkplr.pName);
@@ -287,7 +247,7 @@ BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
 				RemoveEmptyInventory(0);
 				CalcPlrInv(0, FALSE);
 
-				game_2_ui_player(plr, &uihero, hasSaveGame);
+				game_2_ui_player(&plr[0], &uihero, hasSaveGame);
 				ui_add_hero_info(&uihero);
 			}
 			pfile_SFileCloseArchive(archive);
@@ -591,4 +551,4 @@ void pfile_update(bool force_save)
 	pfile_write_hero();
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

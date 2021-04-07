@@ -3,10 +3,9 @@
  *
  * Interface of functions setting up the graphics pipeline.
  */
-#ifndef __DX_H__
-#define __DX_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 CelOutputBuffer GlobalBackBuffer();
 
@@ -21,6 +20,4 @@ void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect);
 void RenderPresent();
 void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DX_H__ */
+}

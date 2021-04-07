@@ -3,14 +3,19 @@
  *
  * Interface of all dialog texts.
  */
-#ifndef __TEXTDAT_H__
-#define __TEXTDAT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct TextDataStruct {
+	const char *txtstr;
+	bool scrlltxt;
+	_sfx_id sfxnr;
+} TextDataStruct;
 
 extern const TextDataStruct alltext[];
 
@@ -18,6 +23,4 @@ extern const TextDataStruct alltext[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TEXTDAT_H__ */
+}

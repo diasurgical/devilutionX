@@ -23,7 +23,7 @@
  * Windows message handling and keyboard event conversion for SDL.
  */
 
-namespace dvl {
+namespace devilution {
 
 static std::deque<MSG> message_queue;
 
@@ -733,4 +733,4 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
-} // namespace dvl
+} // namespace devilution

@@ -7,7 +7,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../SourceX/display.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Should the movie continue playing. */
 BYTE movie_playing;
@@ -56,4 +56,4 @@ void play_movie(const char *pszMovie, BOOL user_can_close)
 	OutputToLogical(&MouseX, &MouseY);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

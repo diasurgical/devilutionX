@@ -7,7 +7,7 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 bool gbRunInTown = false;
 
@@ -396,4 +396,4 @@ void gamemenu_color_cycling(BOOL bActivate)
 	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

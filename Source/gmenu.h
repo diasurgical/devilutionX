@@ -3,16 +3,21 @@
  *
  * Interface of the in-game navigation and interaction.
  */
-#ifndef __GMENU_H__
-#define __GMENU_H__
+#pragma once
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct TMenuItem {
+	Uint32 dwFlags;
+	const char *pszStr;
+	void (*fnMenu)(BOOL);
+} TMenuItem;
 
 extern TMenuItem *sgpCurrentMenu;
 
@@ -34,6 +39,4 @@ void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __GMENU_H__ */
+}

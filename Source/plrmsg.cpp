@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
@@ -152,4 +152,4 @@ void DrawPlrMsg(CelOutputBuffer out)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

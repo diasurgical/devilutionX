@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Contains the data related to each item ID. */
 ItemDataStruct AllItemsList[] = {
@@ -500,4 +500,4 @@ const UItemStruct UniqueItemList[] = {
 	// clang-format on
 };
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

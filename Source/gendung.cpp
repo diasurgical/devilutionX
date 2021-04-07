@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Contains the tile IDs of the map. */
 BYTE dungeon[DMAXX][DMAXY];
@@ -604,4 +604,4 @@ void InitLevels()
 	setlevel = FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

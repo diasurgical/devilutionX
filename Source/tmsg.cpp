@@ -5,13 +5,13 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 namespace {
 
 TMsg *sgpTimedMsgHead;
 
-}
+} // namespace
 
 int tmsg_get(Uint8 *pbMsg, Uint32 dwMaxLen)
 {
@@ -63,4 +63,4 @@ void tmsg_cleanup()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

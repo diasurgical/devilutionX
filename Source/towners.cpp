@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BOOL storeflag;
 int sgnCowMsg;
@@ -1302,4 +1302,4 @@ void TalkToTowner(int p, int t)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

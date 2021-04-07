@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BOOL townwarps[3];
 BOOL trigflag;
@@ -922,4 +922,4 @@ void CheckTriggers()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

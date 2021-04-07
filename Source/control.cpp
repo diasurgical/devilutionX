@@ -7,7 +7,7 @@
 
 #include <cstddef>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 namespace {
 
@@ -2311,4 +2311,4 @@ BOOL control_presskeys(int vkey)
 	return ret;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

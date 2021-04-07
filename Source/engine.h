@@ -10,11 +10,11 @@
  * - File loading
  * - Video playback
  */
-#ifndef __ENGINE_H__
-#define __ENGINE_H__
+#pragma once
 
 #include <algorithm>
 #include <cstddef>
+#include <cstdlib>
 
 #include <SDL.h>
 
@@ -24,7 +24,25 @@
 
 #include "../types.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
+
+// `malloc` that returns a user-friendly error on OOM.
+//
+// Defined as a macro so that:
+// 1. We provide the correct location for the OOM error.
+// 2. Get better attribution from memory profilers.
+#define DiabloAllocPtr(NUM_BYTES)                                                                                    \
+	[](std::size_t num_bytes) {                                                                                      \
+		BYTE *ptr = static_cast<BYTE *>(std::malloc(num_bytes));                                                     \
+		constexpr char kMesage[] = "System memory exhausted.\n"                                                      \
+		                           "Make sure you have at least 64MB of free system memory before running the game"; \
+		if (ptr == NULL)                                                                                             \
+			ErrDlg("Out of Memory Error", kMesage, __FILE__, __LINE__);                                              \
+		return ptr;                                                                                                  \
+	}(NUM_BYTES)
+
+#define mem_free_dbg(PTR) \
+	std::free(PTR)
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
@@ -416,13 +434,9 @@ void SetRndSeed(Sint32 s);
 Sint32 AdvanceRndSeed();
 Sint32 GetRndSeed();
 Sint32 random_(BYTE idx, Sint32 v);
-BYTE *DiabloAllocPtr(DWORD dwBytes);
-void mem_free_dbg(void *p);
 BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ENGINE_H__ */
+}

@@ -7,7 +7,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../Source/engine.h"
 
-namespace dvl {
+namespace devilution {
 
 static HANDLE SFileRw_GetHandle(struct SDL_RWops *context)
 {
@@ -95,4 +95,4 @@ SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 	return result;
 }
 
-} // namespace dvl
+} // namespace devilution

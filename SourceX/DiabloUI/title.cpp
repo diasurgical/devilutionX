@@ -2,7 +2,7 @@
 #include "controls/menu_controls.h"
 #include "DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 std::vector<UiItemBase *> vecTitleScreen;
 
@@ -76,4 +76,4 @@ void UiSetSpawned(BOOL bSpawned)
 	gbSpawned = bSpawned;
 }
 
-} // namespace dvl
+} // namespace devilution

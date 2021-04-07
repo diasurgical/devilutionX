@@ -10,7 +10,7 @@
 #include "dvlnet/packet.h"
 #include "dvlnet/base.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class udp_p2p : public base {

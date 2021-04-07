@@ -3,10 +3,9 @@
  *
  * Interface of function for sending and reciving network messages.
  */
-#ifndef __MSG_H__
-#define __MSG_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -338,6 +337,4 @@ DWORD ParseCmd(int pnum, TCmd *pCmd);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MSG_H__ */
+}

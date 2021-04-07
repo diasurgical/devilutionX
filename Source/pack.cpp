@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 void PackItem(PkItemStruct *id, const ItemStruct *is)
 {
@@ -162,23 +162,23 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 		    SwapLE16(is->wValue),
 		    SwapLE32(is->dwBuff));
 	} else {
-		memset(&item[MAXITEMS], 0, sizeof(*item));
+		memset(&items[MAXITEMS], 0, sizeof(*items));
 		RecreateItem(MAXITEMS, idx, SwapLE16(is->iCreateInfo), SwapLE32(is->iSeed), SwapLE16(is->wValue), isHellfire);
-		item[MAXITEMS]._iMagical = is->bId >> 1;
-		item[MAXITEMS]._iIdentified = is->bId & 1;
-		item[MAXITEMS]._iDurability = is->bDur;
-		item[MAXITEMS]._iMaxDur = is->bMDur;
-		item[MAXITEMS]._iCharges = is->bCh;
-		item[MAXITEMS]._iMaxCharges = is->bMCh;
+		items[MAXITEMS]._iMagical = is->bId >> 1;
+		items[MAXITEMS]._iIdentified = is->bId & 1;
+		items[MAXITEMS]._iDurability = is->bDur;
+		items[MAXITEMS]._iMaxDur = is->bMDur;
+		items[MAXITEMS]._iCharges = is->bCh;
+		items[MAXITEMS]._iMaxCharges = is->bMCh;
 
-		RemoveInvalidItem(&item[MAXITEMS]);
+		RemoveInvalidItem(&items[MAXITEMS]);
 
 		if (isHellfire)
-			item[MAXITEMS].dwBuff |= CF_HELLFIRE;
+			items[MAXITEMS].dwBuff |= CF_HELLFIRE;
 		else
-			item[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
+			items[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
 	}
-	*id = item[MAXITEMS];
+	*id = items[MAXITEMS];
 }
 
 void VerifyGoldSeeds(PlayerStruct *pPlayer)
@@ -301,4 +301,4 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync)
 	pPlayer->pDamAcFlags = SwapLE32(pPack->pDamAcFlags);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

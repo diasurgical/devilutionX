@@ -3,10 +3,9 @@
  *
  * Interface of functionality for rendering the town, towners and calling other render routines.
  */
-#ifndef __TOWN_H__
-#define __TOWN_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +19,4 @@ void CreateTown(int entry);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TOWN_H__ */
+}

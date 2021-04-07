@@ -20,7 +20,10 @@ char StormLibCopyright[] = "StormLib v " STORMLIB_VERSION_STRING " Copyright Lad
 //-----------------------------------------------------------------------------
 // Local variables
 
-LCID    lcFileLocale = LANG_NEUTRAL;            // File locale
+DWORD g_dwMpqSignature = ID_MPQ;                // Marker for MPQ header
+DWORD g_dwHashTableKey = MPQ_KEY_HASH_TABLE;    // Key for hash table
+DWORD g_dwBlockTableKey = MPQ_KEY_BLOCK_TABLE;  // Key for block table
+LCID  g_lcFileLocale = LANG_NEUTRAL;            // File locale
 USHORT  wPlatform = 0;                          // File platform
 
 //-----------------------------------------------------------------------------
@@ -95,11 +98,13 @@ unsigned char AsciiToUpperTable_Slash[256] =
 //-----------------------------------------------------------------------------
 // Safe string functions (for ANSI builds)
 
-void StringCopy(char * szTarget, size_t cchTarget, const char * szSource)
+char * StringCopy(char * szTarget, size_t cchTarget, const char * szSource)
 {
+    size_t cchSource = 0;
+
     if(cchTarget > 0)
     {
-        size_t cchSource = strlen(szSource);
+        cchSource = strlen(szSource);
 
         if(cchSource >= cchTarget)
             cchSource = cchTarget - 1;
@@ -107,6 +112,8 @@ void StringCopy(char * szTarget, size_t cchTarget, const char * szSource)
         memcpy(szTarget, szSource, cchSource);
         szTarget[cchSource] = 0;
     }
+
+    return szTarget + cchSource;
 }
 
 void StringCat(char * szTarget, size_t cchTargetMax, const char * szSource)
@@ -119,6 +126,26 @@ void StringCat(char * szTarget, size_t cchTargetMax, const char * szSource)
     {
         StringCopy(szTarget + cchTarget, (cchTargetMax - cchTarget), szSource);
     }
+}
+
+void StringCreatePseudoFileName(char * szBuffer, size_t cchMaxChars, unsigned int nIndex, const char * szExtension)
+{
+    char * szBufferEnd = szBuffer + cchMaxChars;
+
+    // "File"
+    szBuffer = StringCopy(szBuffer, (szBufferEnd - szBuffer), "File");
+
+    // Number
+    szBuffer = IntToString(szBuffer, szBufferEnd - szBuffer + 1, nIndex, 8);
+
+    // Dot
+    if(szBuffer < szBufferEnd)
+        *szBuffer++ = '.';
+
+    // Extension
+    while(szExtension[0] == '.')
+        szExtension++;
+    StringCopy(szBuffer, (szBufferEnd - szBuffer), szExtension);
 }
 
 //-----------------------------------------------------------------------------
@@ -224,7 +251,8 @@ void InitializeMpqCryptography()
 
         // Use LibTomMath as support math library for LibTomCrypt
         ltc_mp = ltm_desc;
-#endif
+#endif // FULL
+
         // Don't do that again
         bMpqCryptographyInitialized = true;
     }
@@ -339,7 +367,6 @@ DWORD GetNearestPowerOfTwo(DWORD dwFileCount)
     return dwPowerOfTwo;
 }
 */
-
 #ifdef FULL
 //-----------------------------------------------------------------------------
 // Calculates a Jenkin's Encrypting and decrypting MPQ file data
@@ -372,7 +399,7 @@ ULONGLONG HashStringJenkins(const char * szFileName)
     // Combine those 2 together
     return ((ULONGLONG)primary_hash << 0x20) | (ULONGLONG)secondary_hash;
 }
-#endif
+#endif // FULL
 
 //-----------------------------------------------------------------------------
 // Default flags for (attributes) and (listfile)
@@ -610,7 +637,7 @@ TMPQArchive * IsValidMpqHandle(HANDLE hMpq)
 {
     TMPQArchive * ha = (TMPQArchive *)hMpq;
 
-    return (ha != NULL && ha->pHeader != NULL && ha->pHeader->dwID == ID_MPQ) ? ha : NULL;
+    return (ha != NULL && ha->pHeader != NULL && ha->pHeader->dwID == g_dwMpqSignature) ? ha : NULL;
 }
 
 TMPQFile * IsValidFileHandle(HANDLE hFile)
@@ -887,6 +914,7 @@ TMPQFile * CreateWritableHandle(TMPQArchive * ha, DWORD dwFileSize)
 void * LoadMpqTable(
     TMPQArchive * ha,
     ULONGLONG ByteOffset,
+    LPBYTE pbTableHash,
     DWORD dwCompressedSize,
     DWORD dwTableSize,
     DWORD dwKey,
@@ -925,6 +953,7 @@ void * LoadMpqTable(
         // On archives v 1.0, hash table and block table can go beyond EOF.
         // Storm.dll reads as much as possible, then fills the missing part with zeros.
         // Abused by Spazzler map protector which sets hash table size to 0x00100000
+        // Abused by NP_Protect in MPQs v4 as well
         if(ha->pHeader->wFormatVersion == MPQ_FORMAT_VERSION_1)
         {
             // Cut the table size
@@ -941,8 +970,23 @@ void * LoadMpqTable(
             }
         }
 
-        // If everything succeeded, read the raw table form the MPQ
+        // If everything succeeded, read the raw table from the MPQ
         if(FileStream_Read(ha->pStream, &ByteOffset, pbToRead, dwBytesToRead))
+        {
+#ifdef FULL
+            // Verify the MD5 of the table, if present
+            if(!VerifyDataBlockHash(pbToRead, dwBytesToRead, pbTableHash))
+            {
+                nError = ERROR_FILE_CORRUPT;
+            }
+#endif // FULL
+        }
+        else
+        {
+            nError = GetLastError();
+        }
+
+        if(nError == ERROR_SUCCESS)
         {
             // First of all, decrypt the table
             if(dwKey != 0)
@@ -964,10 +1008,6 @@ void * LoadMpqTable(
 
             // Make sure that the table is properly byte-swapped
             BSWAP_ARRAY32_UNSIGNED(pbMpqTable, dwTableSize);
-        }
-        else
-        {
-            nError = GetLastError();
         }
 
         // If read failed, free the table and return
@@ -1320,7 +1360,7 @@ int AllocateSectorChecksums(TMPQFile * hf, bool bLoadFromFile)
             RawFilePos = CalculateRawSectorOffset(hf, dwCrcOffset);
 
             // Now read the table from the MPQ
-            hf->SectorChksums = (DWORD *)LoadMpqTable(ha, RawFilePos, dwCompressedSize, dwCrcSize, 0, NULL);
+            hf->SectorChksums = (DWORD *)LoadMpqTable(ha, RawFilePos, NULL, dwCompressedSize, dwCrcSize, 0, NULL);
             if(hf->SectorChksums == NULL)
                 return ERROR_NOT_ENOUGH_MEMORY;
         }
@@ -1380,7 +1420,6 @@ int WriteSectorOffsets(TMPQFile * hf)
     return ERROR_SUCCESS;
 }
 
-
 int WriteSectorChecksums(TMPQFile * hf)
 {
     TMPQArchive * ha = hf->ha;
@@ -1439,6 +1478,7 @@ int WriteSectorChecksums(TMPQFile * hf)
     return nError;
 }
 
+#ifdef FULL
 int WriteMemDataMD5(
     TFileStream * pStream,
     ULONGLONG RawDataOffs,
@@ -1550,6 +1590,7 @@ int WriteMpqDataMD5(
     STORM_FREE(md5_array);
     return nError;
 }
+#endif // FULL
 
 // Frees the structure for MPQ file
 void FreeFileHandle(TMPQFile *& hf)
@@ -1614,7 +1655,7 @@ void FreeArchiveHandle(TMPQArchive *& ha)
 #ifdef FULL
         if(ha->pHetTable != NULL)
             FreeHetTable(ha->pHetTable);
-#endif
+#endif // FULL
         STORM_FREE(ha);
         ha = NULL;
     }
@@ -1674,7 +1715,7 @@ bool IsValidMD5(LPBYTE pbMd5)
 {
     LPDWORD Md5 = (LPDWORD)pbMd5;
 
-    return (Md5[0] | Md5[1] | Md5[2] | Md5[3]) ? true : false;
+    return ((Md5 != NULL) && (Md5[0] | Md5[1] | Md5[2] | Md5[3])) ? true : false;
 }
 
 bool IsValidSignature(LPBYTE pbSignature)
@@ -1689,129 +1730,85 @@ bool IsValidSignature(LPBYTE pbSignature)
 }
 
 
+#ifdef FULL
 bool VerifyDataBlockHash(void * pvDataBlock, DWORD cbDataBlock, LPBYTE expected_md5)
 {
-#ifdef FULL
     hash_state md5_state;
     BYTE md5_digest[MD5_DIGEST_SIZE];
+    bool bResult = true;
 
     // Don't verify the block if the MD5 is not valid.
-    if(!IsValidMD5(expected_md5))
-        return true;
+    if(IsValidMD5(expected_md5))
+    {
+        // Calculate the MD5 of the data block
+        md5_init(&md5_state);
+        md5_process(&md5_state, (unsigned char *)pvDataBlock, cbDataBlock);
+        md5_done(&md5_state, md5_digest);
 
-    // Calculate the MD5 of the data block
-    md5_init(&md5_state);
-    md5_process(&md5_state, (unsigned char *)pvDataBlock, cbDataBlock);
-    md5_done(&md5_state, md5_digest);
+        // Does the MD5's match?
+        bResult = (memcmp(md5_digest, expected_md5, MD5_DIGEST_SIZE) == 0);
+    }
 
-    // Does the MD5's match?
-    return (memcmp(md5_digest, expected_md5, MD5_DIGEST_SIZE) == 0);
-#else
-	assert(0);
-	return false;
-#endif
+    return bResult;
 }
 
 void CalculateDataBlockHash(void * pvDataBlock, DWORD cbDataBlock, LPBYTE md5_hash)
 {
-#ifdef FULL
     hash_state md5_state;
 
     md5_init(&md5_state);
     md5_process(&md5_state, (unsigned char *)pvDataBlock, cbDataBlock);
     md5_done(&md5_state, md5_hash);
-#else
-	assert(0);
-#endif
 }
+#endif // FULL
 
 
 //-----------------------------------------------------------------------------
 // Swapping functions
 
-#if !defined(PLATFORM_LITTLE_ENDIAN)
-//
-// Note that those functions are implemented for Mac operating system,
-// as this is the only supported platform that uses big endian.
-//
+#ifndef STORMLIB_LITTLE_ENDIAN
 
-#if defined(PLATFORM_MAC)
 // Swaps a signed 16-bit integer
-int16_t SwapInt16(uint16_t data)
-{
-	return (int16_t)CFSwapInt16(data);
-}
-
-// Swaps an unsigned 16-bit integer
-uint16_t SwapUInt16(uint16_t data)
-{
-	return CFSwapInt16(data);
-}
-
-// Swaps signed 32-bit integer
-int32_t SwapInt32(uint32_t data)
-{
-	return (int32_t)CFSwapInt32(data);
-}
-
-// Swaps an unsigned 32-bit integer
-uint32_t SwapUInt32(uint32_t data)
-{
-	return CFSwapInt32(data);
-}
-
-// Swaps signed 64-bit integer
-int64_t SwapInt64(int64_t data)
-{
-       return (int64_t)CFSwapInt64(data);
-}
-
-// Swaps an unsigned 64-bit integer
-uint64_t SwapUInt64(uint64_t data)
-{
-       return CFSwapInt64(data);
-}
-#else
-//! Byte swap unsigned short
-uint16_t SwapUInt16( uint16_t val )
-{
-    return (val << 8) | (val >> 8 );
-}
-
-//! Byte swap short
-int16_t SwapInt16( int16_t val )
+int16_t SwapInt16(uint16_t val)
 {
     return (val << 8) | ((val >> 8) & 0xFF);
 }
 
-//! Byte swap unsigned int
-uint32_t SwapUInt32( uint32_t val )
+// Swaps an unsigned 16-bit integer
+uint16_t SwapUInt16(uint16_t val)
 {
-    val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
-    return (val << 16) | (val >> 16);
+    return (val << 8) | (val >> 8 );
 }
 
-//! Byte swap int
-int32_t SwapInt32( int32_t val )
+// Swaps a signed 32-bit integer
+int32_t SwapInt32(uint32_t val)
 {
     val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
     return (val << 16) | ((val >> 16) & 0xFFFF);
 }
 
-int64_t SwapInt64( int64_t val )
+// Swaps an unsigned 32-bit integer
+uint32_t SwapUInt32(uint32_t val)
+{
+    val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
+    return (val << 16) | (val >> 16);
+}
+
+// Swaps a signed 64-bit integer
+int64_t SwapInt64(uint64_t val)
 {
     val = ((val << 8) & 0xFF00FF00FF00FF00ULL ) | ((val >> 8) & 0x00FF00FF00FF00FFULL );
     val = ((val << 16) & 0xFFFF0000FFFF0000ULL ) | ((val >> 16) & 0x0000FFFF0000FFFFULL );
     return (val << 32) | ((val >> 32) & 0xFFFFFFFFULL);
 }
 
-uint64_t SwapUInt64( uint64_t val )
+// Swaps an unsigned 64-bit integer
+uint64_t SwapUInt64(uint64_t val)
 {
     val = ((val << 8) & 0xFF00FF00FF00FF00ULL ) | ((val >> 8) & 0x00FF00FF00FF00FFULL );
     val = ((val << 16) & 0xFFFF0000FFFF0000ULL ) | ((val >> 16) & 0x0000FFFF0000FFFFULL );
     return (val << 32) | (val >> 32);
 }
-#endif
 
 // Swaps array of unsigned 16-bit integers
 void ConvertUInt16Buffer(void * ptr, size_t length)
@@ -1895,4 +1892,4 @@ void ConvertTMPQHeader(void *header, uint16_t version)
     }
 }
 
-#endif  // PLATFORM_LITTLE_ENDIAN
+#endif  // STORMLIB_LITTLE_ENDIAN

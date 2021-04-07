@@ -1,12 +1,14 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <SDL.h>
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
+#include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 extern std::size_t SelectedItem;
 extern bool textInputActive;
@@ -23,8 +25,8 @@ typedef enum _artLogo {
 	LOGO_BIG,
 } _artLogo;
 
-extern Art ArtLogos[3];
-extern Art ArtFocus[3];
+extern std::array<Art, 3> ArtLogos;
+extern std::array<Art, 3> ArtFocus;
 extern Art ArtBackground;
 extern Art ArtBackgroundWidescreen;
 extern Art ArtCursor;
@@ -33,6 +35,11 @@ extern bool gbSpawned;
 
 extern void (*gfnSoundFunction)(const char *file);
 extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
+
+inline SDL_Surface *DiabloUiSurface()
+{
+	return GetOutputSurface();
+}
 
 void UiFadeIn();
 void UiHandleEvents(SDL_Event *event);

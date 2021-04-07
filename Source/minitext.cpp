@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Specify if the quest dialog window is being shown */
 bool qtextflag;
@@ -260,4 +260,4 @@ void DrawQText(CelOutputBuffer out)
 	DrawQTextContent(out);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

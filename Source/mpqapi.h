@@ -3,12 +3,11 @@
  *
  * Interface of functions for creating and editing MPQ files.
  */
-#ifndef __MPQAPI_H__
-#define __MPQAPI_H__
+#pragma once
 
 #include <stdint.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,6 +51,4 @@ BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MPQAPI_H__ */
+}

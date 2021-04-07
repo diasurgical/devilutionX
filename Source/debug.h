@@ -3,10 +3,9 @@
  *
  * Interface of debug functions.
  */
-#ifndef __DEBUG_H__
-#define __DEBUG_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,6 +29,4 @@ void NextDebugMonster();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DEBUG_H__ */
+}

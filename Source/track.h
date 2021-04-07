@@ -3,10 +3,9 @@
  *
  * Interface of functionality tracking what the mouse cursor is pointing at.
  */
-#ifndef __TRACK_H__
-#define __TRACK_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +19,4 @@ bool track_isscrolling();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TRACK_H__ */
+}

@@ -14,13 +14,12 @@
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Seed value before the most recent call to SetRndSeed() */
 Sint32 orgseed;
 /** Current game seed */
 Sint32 sglGameSeed;
-static CCritSect sgMemCrit;
 
 /**
  * Specifies the increment used in the Borland C/C++ pseudo-random.
@@ -660,40 +659,6 @@ Sint32 random_(BYTE idx, Sint32 v)
 }
 
 /**
- * @brief Multithreaded safe malloc
- * @param dwBytes Byte size to allocate
- */
-BYTE *DiabloAllocPtr(DWORD dwBytes)
-{
-	BYTE *buf;
-
-	sgMemCrit.Enter();
-	buf = (BYTE *)SMemAlloc(dwBytes, __FILE__, __LINE__, 0);
-	sgMemCrit.Leave();
-
-	if (buf == NULL) {
-		const char *text = "System memory exhausted.\n"
-		                   "Make sure you have at least 64MB of free system memory before running the game";
-		ErrDlg("Out of Memory Error", text, __FILE__, __LINE__);
-	}
-
-	return buf;
-}
-
-/**
- * @brief Multithreaded safe memfree
- * @param p Memory pointer to free
- */
-void mem_free_dbg(void *p)
-{
-	if (p) {
-		sgMemCrit.Enter();
-		SMemFree(p, __FILE__, __LINE__, 0);
-		sgMemCrit.Leave();
-	}
-}
-
-/**
  * @brief Load a file in to a buffer
  * @param pszName Path of file
  * @param pdwFileLen Will be set to file size if non-NULL
@@ -1119,4 +1084,4 @@ void PlayInGameMovie(const char *pszMovie)
 	force_redraw = 255;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

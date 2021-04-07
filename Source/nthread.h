@@ -3,10 +3,9 @@
  *
  * Interface of functions for managing game ticks.
  */
-#ifndef __NTHREAD_H__
-#define __NTHREAD_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,6 +32,4 @@ BOOL nthread_has_500ms_passed();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __NTHREAD_H__ */
+}

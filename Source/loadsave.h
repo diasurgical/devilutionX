@@ -3,12 +3,11 @@
  *
  * Interface of save game functionality.
  */
-#ifndef __LOADSAVE_H__
-#define __LOADSAVE_H__
+#pragma once
 
 #include "player.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,6 +38,4 @@ void LoadLevel();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __LOADSAVE_H__ */
+}
