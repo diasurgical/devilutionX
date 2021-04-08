@@ -31,11 +31,11 @@ struct ScrollStruct {
 };
 
 struct THEME_LOC {
-	Sint32 x;
-	Sint32 y;
-	Sint32 ttval;
-	Sint32 width;
-	Sint32 height;
+	Sint16 x;
+	Sint16 y;
+	Sint16 ttval;
+	Sint16 width;
+	Sint16 height;
 };
 
 struct MICROS {
