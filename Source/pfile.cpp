@@ -164,7 +164,7 @@ static HANDLE pfile_open_save_archive(DWORD save_num)
 {
 	HANDLE archive;
 
-	if (SFileOpenArchive(GetSavePath(save_num).c_str(), 0x7000, FS_PC, &archive))
+	if (SFileOpenArchive(GetSavePath(save_num).c_str(), 0, 0, &archive))
 		return archive;
 	return NULL;
 }
