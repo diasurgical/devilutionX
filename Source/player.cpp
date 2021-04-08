@@ -50,6 +50,30 @@ char PlrGFXAnimLens[NUM_CLASSES][11] = {
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 };
+/** Specifies frames to skip in the warrior's (6-frame) hit recovery animation. */
+int WarHFrameSkipTbl[5][6] = {
+	{ 0, 1, 2, 3, 4, 5 }, // Normal
+	{ 0, 1, 2, 4, 4, 5 }, // Fast
+	{ 0, 2, 2, 3, 5, 5 }, // Faster
+	{ 0, 2, 2, 4, 4, 6 }, // Fastest
+	{ 1, 1, 4, 4, 4, 6 }  // Zen
+};
+/** Specifies frames to skip in the rogue's (7-frame) hit recovery animation. */
+int RouHFrameSkipTbl[5][7] = {
+	{ 0, 1, 2, 3, 4, 5, 6 }, // Normal
+	{ 0, 1, 2, 4, 4, 5, 6 }, // Fast
+	{ 0, 2, 2, 3, 4, 6, 6 }, // Faster
+	{ 0, 2, 2, 4, 4, 6, 6 }, // Fastest
+	{ 0, 3, 3, 3, 6, 6, 6 }  // Zen
+};
+/** Specifies frames to skip in the sorcerer's (8-frame) hit recovery animation. */
+int SrcHFrameSkipTbl[5][8] = {
+	{ 0, 1, 2, 3, 4, 5, 6, 7 }, // Normal
+	{ 0, 1, 2, 4, 4, 5, 6, 7 }, // Fast
+	{ 0, 1, 3, 3, 4, 6, 6, 7 }, // Faster
+	{ 0, 2, 2, 4, 4, 6, 6, 7 }, // Fastest
+	{ 0, 2, 2, 4, 4, 6, 6, 8 }  // Zen
+};
 /** Maps from player class to player velocity. */
 int PWVel[NUM_CLASSES][3] = {
 	{ 2048, 1024, 512 },
@@ -1626,12 +1650,58 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth);
+	plr[pnum]._pAnimFrame = 0;
+	SkipPlrHFrames(pnum);
+	plr[pnum]._pAnimFrame++;
 
 	plr[pnum]._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);
 	FixPlrWalkTags(pnum);
 	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
 	SetPlayerOld(pnum);
+}
+
+void SkipPlrHFrames(int pnum)
+{
+	int frame;
+	int frameskip;
+	int zenflags;
+
+	frame = plr[pnum]._pAnimFrame;
+	if (plr[pnum]._pHFrames >= 6 && plr[pnum]._pHFrames <= 8) {
+		if (frame < plr[pnum]._pHFrames) {
+			zenflags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
+			if (!gbIsHellfire && (plr[pnum]._pIFlags & zenflags) == zenflags) {
+				frameskip = 4;
+			} else if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER) {
+				frameskip = 3;
+			} else if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER) {
+				frameskip = 2;
+			} else if (plr[pnum]._pIFlags & ISPL_FASTRECOVER) {
+				frameskip = 1;
+			} else {
+				frameskip = 0;
+			}
+
+			if (plr[pnum]._pHFrames == 6) {
+				plr[pnum]._pAnimFrame = WarHFrameSkipTbl[frameskip][frame];
+			} else if (plr[pnum]._pHFrames == 7) {
+				plr[pnum]._pAnimFrame = RouHFrameSkipTbl[frameskip][frame];
+			} else if (plr[pnum]._pHFrames == 8) {
+				plr[pnum]._pAnimFrame = SrcHFrameSkipTbl[frameskip][frame];
+			}
+		}
+	} else {
+		if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
+			plr[pnum]._pAnimFrame++;
+		}
+		if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
+			plr[pnum]._pAnimFrame++;
+		}
+		if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
+			plr[pnum]._pAnimFrame++;
+		}
+	}
 }
 
 void RespawnDeadItem(ItemStruct *itm, int x, int y)
@@ -3012,22 +3082,11 @@ bool PM_DoSpell(int pnum)
 
 bool PM_DoGotHit(int pnum)
 {
-	int frame;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoGotHit: illegal player %d", pnum);
 	}
 
-	frame = plr[pnum]._pAnimFrame;
-	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
-		plr[pnum]._pAnimFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
-	}
+	SkipPlrHFrames(pnum);
 
 	if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
