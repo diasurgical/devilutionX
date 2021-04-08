@@ -3,10 +3,9 @@
  *
  * Interface of missile functionality.
  */
-#ifndef __MISSILES_H__
-#define __MISSILES_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,7 +55,7 @@ typedef struct MissileStruct {
 	Sint32 _mityoff; // How far the missile has travelled in its lifespan along the Y-axis. mix/miy/mxoff/myoff get updated every game tick based on this
 	Sint32 _mimfnum; // The direction of the missile (direction enum)
 	Sint32 _mispllvl;
-	bool _miDelFlag; // Indicate weather the missile should be deleted
+	bool _miDelFlag; // Indicate whether the missile should be deleted
 	Uint8 _miAnimType;
 	Sint32 _miAnimFlags;
 	Uint8 *_miAnimData;
@@ -262,6 +261,4 @@ void ClearMissileSpot(int mi);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MISSILES_H__ */
+}

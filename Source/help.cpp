@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int help_select_line;
 BOOL helpflag;
@@ -586,4 +586,4 @@ void HelpScrollDown()
 		help_select_line++;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

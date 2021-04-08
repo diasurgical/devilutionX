@@ -3,14 +3,22 @@
  *
  * Interface of functions setting up the audio pipeline.
  */
-#ifndef __SOUND_H__
-#define __SOUND_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct TSnd {
+	const char *sound_path;
+	/** Used for streamed audio */
+	HANDLE file_handle;
+	SoundSample *DSB;
+	Uint32 start_tc;
+} TSnd;
+
 extern BOOLEAN gbSndInited;
 
 void snd_update(BOOL bStopAll);
@@ -37,6 +45,4 @@ extern BOOLEAN gbDupSounds;
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SOUND_H__ */
+}

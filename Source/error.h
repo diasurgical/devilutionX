@@ -3,12 +3,11 @@
  *
  * Interface of in-game message functions.
  */
-#ifndef __ERROR_H__
-#define __ERROR_H__
+#pragma once
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,6 +24,4 @@ void DrawDiabloMsg(CelOutputBuffer out);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ERROR_H__ */
+}

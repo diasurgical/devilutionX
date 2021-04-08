@@ -11,7 +11,7 @@
 // Defined in SourceX/controls/plctrls.cpp
 extern "C" bool sgbControllerActive;
 
-namespace dvl {
+namespace devilution {
 
 std::vector<GameController> *const GameController::controllers_ = new std::vector<GameController>;
 
@@ -198,13 +198,13 @@ GameController *GameController::Get(SDL_JoystickID instance_id)
 GameController *GameController::Get(const SDL_Event &event)
 {
 	switch (event.type) {
-		case SDL_CONTROLLERAXISMOTION:
-			return Get(event.caxis.which);
-		case SDL_CONTROLLERBUTTONDOWN:
-		case SDL_CONTROLLERBUTTONUP:
-			return Get(event.jball.which);
-		default:
-			return NULL;
+	case SDL_CONTROLLERAXISMOTION:
+		return Get(event.caxis.which);
+	case SDL_CONTROLLERBUTTONDOWN:
+	case SDL_CONTROLLERBUTTONUP:
+		return Get(event.jball.which);
+	default:
+		return NULL;
 	}
 }
 
@@ -221,5 +221,5 @@ bool GameController::IsPressedOnAnyController(ControllerButton button)
 	return false;
 }
 
-} // namespace dvl
+} // namespace devilution
 #endif

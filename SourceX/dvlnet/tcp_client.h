@@ -12,7 +12,7 @@
 #include "dvlnet/base.h"
 #include "dvlnet/tcp_server.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class tcp_client : public base {

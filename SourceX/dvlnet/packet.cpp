@@ -1,6 +1,6 @@
 #include "dvlnet/packet.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 #ifndef NONET
@@ -231,4 +231,4 @@ packet_factory::packet_factory(std::string pw)
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

@@ -7,10 +7,12 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include <config.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
+
+namespace {
 
 /** Set to true when a fatal error is encountered and the application should shut down. */
-BOOL terminating;
+bool terminating = false;
 /** Thread id of the last callee to FreeDlg(). */
 SDL_threadID cleanup_thread_id;
 
@@ -19,7 +21,7 @@ SDL_threadID cleanup_thread_id;
  * @param pszFmt Error message format
  * @param va Additional parameters for message format
  */
-static void MsgBox(const char *pszFmt, va_list va)
+void MsgBox(const char *pszFmt, va_list va)
 {
 	char text[256];
 
@@ -31,12 +33,12 @@ static void MsgBox(const char *pszFmt, va_list va)
 /**
  * @brief Cleans up after a fatal application error.
  */
-static void FreeDlg()
+void FreeDlg()
 {
 	if (terminating && cleanup_thread_id != SDL_GetThreadID(NULL))
 		SDL_Delay(20000);
 
-	terminating = TRUE;
+	terminating = true;
 	cleanup_thread_id = SDL_GetThreadID(NULL);
 
 	if (gbIsMultiplayer) {
@@ -46,6 +48,8 @@ static void FreeDlg()
 
 	SNetDestroy();
 }
+
+} // namespace
 
 /**
  * @brief Terminates the game and displays an error message box.
@@ -169,4 +173,4 @@ void DirErrorDlg(const char *error)
 	app_fatal(NULL);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

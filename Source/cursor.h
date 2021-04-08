@@ -3,10 +3,9 @@
  *
  * Interface of cursor tracking functionality.
  */
-#ifndef __CURSOR_H__
-#define __CURSOR_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,6 +46,4 @@ extern const int InvItemHeight[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __CURSOR_H__ */
+}

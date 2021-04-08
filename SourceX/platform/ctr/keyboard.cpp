@@ -3,7 +3,7 @@
 
 #include "platform/ctr/keyboard.h"
 
-const char* ctr_vkbdInput(const char *hintText, const char *inText, char *outText)
+const char *ctr_vkbdInput(const char *hintText, const char *inText, char *outText)
 {
 	SwkbdState swkbd;
 
@@ -16,8 +16,7 @@ const char* ctr_vkbdInput(const char *hintText, const char *inText, char *outTex
 
 	SwkbdButton button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
 
-	if (button == SWKBD_BUTTON_CONFIRM)
-	{
+	if (button == SWKBD_BUTTON_CONFIRM) {
 		strcpy(outText, mybuf);
 		return 0;
 	}

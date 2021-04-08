@@ -3,12 +3,11 @@
  *
  * Interface of functions for minifying player data structure.
  */
-#ifndef __PACK_H__
-#define __PACK_H__
+#pragma once
 
 #include "items.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,15 +79,13 @@ typedef struct PkPlayerStruct {
 #pragma pack(pop)
 
 void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield);
-void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok);
+void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync);
 void PackItem(PkItemStruct *id, const ItemStruct *is);
-void UnPackItem(const PkItemStruct *is, ItemStruct *id);
+void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
 
 /* rdata */
 #ifdef __cplusplus
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PACK_H__ */
+}

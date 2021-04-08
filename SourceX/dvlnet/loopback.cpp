@@ -1,7 +1,7 @@
 #include "dvlnet/loopback.h"
 #include "stubs.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 int loopback::create(std::string addrstr, std::string passwd)
@@ -59,12 +59,12 @@ int loopback::SNetGetProviderCaps(struct _SNETCAPS *caps)
 	caps->latencyms = 0;             // unused
 	caps->defaultturnssec = 10;      // ?
 	caps->defaultturnsintransit = 1; // maximum acceptable number
-									 // of turns in queue?
+	                                 // of turns in queue?
 	return 1;
 }
 
 bool loopback::SNetRegisterEventHandler(event_type evtype,
-	SEVTHANDLER func)
+    SEVTHANDLER func)
 {
 	// not called in real singleplayer mode
 	// not needed in pseudo multiplayer mode (?)
@@ -72,7 +72,7 @@ bool loopback::SNetRegisterEventHandler(event_type evtype,
 }
 
 bool loopback::SNetUnregisterEventHandler(event_type evtype,
-	SEVTHANDLER func)
+    SEVTHANDLER func)
 {
 	// not called in real singleplayer mode
 	// not needed in pseudo multiplayer mode (?)
@@ -106,4 +106,4 @@ bool loopback::SNetGetTurnsInTransit(DWORD *turns)
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

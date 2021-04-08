@@ -3,10 +3,9 @@
  *
  * Interface of functionality for calculating X-SHA-1 (a flawed implementation of SHA-1).
  */
-#ifndef __SHA_H__
-#define __SHA_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,6 +28,4 @@ void SHA1Reset(int n);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SHA_H__ */
+}

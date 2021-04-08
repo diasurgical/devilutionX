@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BOOL invflag;
 BYTE *pInvCels;
@@ -185,9 +185,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 59, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -221,9 +221,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 48, 205, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -257,9 +257,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 249, 205, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -293,9 +293,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 205, 60, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -332,9 +332,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -390,9 +390,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, screen_x, screen_y, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -426,9 +426,9 @@ void DrawInv(CelOutputBuffer out)
 				color = ICOL_RED;
 			}
 			if (frame <= 179) {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160, pCursCels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160, pCursCels, frame, frame_width, false);
 			} else {
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160, pCursCels2, frame - 179, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + 133, 160, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -482,14 +482,16 @@ void DrawInv(CelOutputBuffer out)
 					    color,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-					    pCursCels, frame, frame_width);
+					    pCursCels, frame, frame_width,
+					    false);
 				} else {
 					CelBlitOutlineTo(
 					    out,
 					    color,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-					    pCursCels2, frame - 179, frame_width);
+					    pCursCels2, frame - 179, frame_width,
+					    false);
 				}
 			}
 
@@ -554,9 +556,9 @@ void DrawInvBelt(CelOutputBuffer out)
 				color = ICOL_RED;
 			if (!sgbControllerActive || invflag) {
 				if (frame <= 179)
-					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
+					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, false);
 				else
-					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
+					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -632,7 +634,7 @@ bool CanBePlacedOnBelt(const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
-bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false)
+bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	if (!CanBePlacedOnBelt(item)) {
 		return false;
@@ -772,11 +774,6 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation, bool 
 		return false;
 	}
 
-	// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
-	// annoy players who prefer that playstyle.
-	if (plr[playerNumber]._pClass == PC_MONK && (bodyLocation == INVLOC_HAND_LEFT || bodyLocation == INVLOC_HAND_RIGHT))
-		return false;
-
 	if (persistItem) {
 		plr[playerNumber].InvBody[bodyLocation] = item;
 
@@ -816,14 +813,17 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 }
 
 /**
- * @brief Checks whether or not auto-equipping behavior is enabled for the given item.
+ * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
+ * @param player The player to check.
  * @param item The item to check.
- * @return 'True' if auto-equipping behavior is enabled for the item and 'False' otherwise.
+ * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
  */
-bool AutoEquipEnabled(const ItemStruct &item)
+bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
 {
 	if (item.isWeapon()) {
-		return sgOptions.Gameplay.bAutoEquipWeapons;
+		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
+		// annoy players who prefer that playstyle.
+		return player._pClass != PC_MONK && sgOptions.Gameplay.bAutoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
@@ -853,142 +853,96 @@ bool AutoEquipEnabled(const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false)
+bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	InvXY itemSize = GetInventorySize(item);
 	bool done = false;
 
 	if (itemSize.X == 1 && itemSize.Y == 1) {
 		for (int i = 30; i <= 39 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 20; i <= 29 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i <= 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 0; i <= 9 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 2) {
 		for (int i = 29; i >= 20 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 9; i >= 0 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 19; i >= 10 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 3) {
 		for (int i = 0; i < 20 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 2) {
 		for (int i = 0; i < 10 && !done; i++) {
-			done = AutoPlace(playerNumber, AP2x2Tbl[i], itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, AP2x2Tbl[i], item, persistItem);
 		}
 
 		for (int i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 3) {
 		for (int i = 0; i < 9 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	return done;
 }
 
-BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
+/**
+ * @brief Checks whether the given item can be placed on the specified player's inventory slot.
+ * If 'persistItem' is 'True', the item is also placed in the inventory slot.
+ * @param playerNumber The player number on whose inventory slot will be checked.
+ * @param slotIndex The 0-based index of the slot to put the item on.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
+ * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
+ */
+bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int i, j, xx, yy;
-	BOOL done;
+	bool done;
 
-	done = TRUE;
-	yy = 10 * (ii / 10);
-	if (yy < 0) {
-		yy = 0;
-	}
-	for (j = 0; j < sy && done; j++) {
-		if (yy >= NUM_INV_GRID_ELEM) {
-			done = FALSE;
-		}
-		xx = ii % 10;
-		if (xx < 0) {
-			xx = 0;
-		}
-		for (i = 0; i < sx && done; i++) {
-			if (xx >= 10) {
-				done = FALSE;
-			} else {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
-			}
-			xx++;
-		}
-		yy += 10;
-	}
-	if (done && saveflag) {
-		plr[pnum].InvList[plr[pnum]._pNumInv] = plr[pnum].HoldItem;
-		plr[pnum]._pNumInv++;
-		yy = 10 * (ii / 10);
-		if (yy < 0) {
-			yy = 0;
-		}
-		for (j = 0; j < sy; j++) {
-			xx = ii % 10;
-			if (xx < 0) {
-				xx = 0;
-			}
-			for (i = 0; i < sx; i++) {
-				if (i != 0 || j != sy - 1) {
-					plr[pnum].InvGrid[xx + yy] = -plr[pnum]._pNumInv;
-				} else {
-					plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
-				}
-				xx++;
-			}
-			yy += 10;
-		}
-		CalcPlrScrolls(pnum);
-	}
-	return done;
-}
-
-BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
-{
-	int i, j, xx, yy;
-	BOOL done;
-
-	done = TRUE;
-	yy = 10 * (ii / 10);
+	done = true;
+	yy = 10 * (slotIndex / 10);
 	if (yy < 0) {
 		yy = 0;
 	}
@@ -996,28 +950,49 @@ BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
 	InvXY itemSize = GetInventorySize(item);
 	for (j = 0; j < itemSize.Y && done; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
-			done = FALSE;
+			done = false;
 		}
-		xx = ii % 10;
+		xx = slotIndex % 10;
 		if (xx < 0) {
 			xx = 0;
 		}
 		for (i = 0; i < itemSize.X && done; i++) {
 			if (xx >= 10) {
-				done = FALSE;
+				done = false;
 			} else {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
+				done = plr[playerNumber].InvGrid[xx + yy] == 0;
 			}
 			xx++;
 		}
 		yy += 10;
 	}
-	if (!done) {
-		done = AutoPlaceItemInBelt(pnum, item);
+	if (done && persistItem) {
+		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = plr[playerNumber].HoldItem;
+		plr[playerNumber]._pNumInv++;
+		yy = 10 * (slotIndex / 10);
+		if (yy < 0) {
+			yy = 0;
+		}
+		for (j = 0; j < itemSize.Y; j++) {
+			xx = slotIndex % 10;
+			if (xx < 0) {
+				xx = 0;
+			}
+			for (i = 0; i < itemSize.X; i++) {
+				if (i != 0 || j != itemSize.Y - 1) {
+					plr[playerNumber].InvGrid[xx + yy] = -plr[playerNumber]._pNumInv;
+				} else {
+					plr[playerNumber].InvGrid[xx + yy] = plr[playerNumber]._pNumInv;
+				}
+				xx++;
+			}
+			yy += 10;
+		}
+		CalcPlrScrolls(playerNumber);
 	}
-
 	return done;
 }
+
 
 BOOL GoldAutoPlace(int pnum)
 {
@@ -1360,9 +1335,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
-			done2h = FALSE;
-			for (i = 0; i < NUM_INV_GRID_ELEM && !done2h; i++)
-				done2h = AutoPlace(pnum, i, icursW28, icursH28, TRUE);
+			done2h = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
 			plr[pnum].HoldItem = tempitem;
 			if (pnum == myplr)
 				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -1516,15 +1489,15 @@ void CheckInvPaste(int pnum, int mx, int my)
 	}
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId)
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId, uint32_t dwBuff)
 {
 	PlayerStruct *p;
 
-	memset(&item[MAXITEMS], 0, sizeof(*item));
-	RecreateItem(MAXITEMS, idx, wCI, seed, 0);
+	memset(&items[MAXITEMS], 0, sizeof(*items));
+	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	p = &plr[pnum];
-	p->HoldItem = item[MAXITEMS];
+	p->HoldItem = items[MAXITEMS];
 
 	if (bId) {
 		p->HoldItem._iIdentified = TRUE;
@@ -2085,22 +2058,21 @@ void CheckQuestItem(int pnum)
 				break;
 			}
 			item_num = itemactive[0];
-			tmp = item[item_num];
-			memset(&item[item_num], 0, sizeof(*item));
+			tmp = items[item_num];
+			memset(&items[item_num], 0, sizeof(*items));
 			GetItemAttrs(item_num, IDI_FULLNOTE, 16);
 			SetupItem(item_num);
-			plr[pnum].HoldItem = item[item_num];
-			item[item_num] = tmp;
+			plr[pnum].HoldItem = items[item_num];
+			items[item_num] = tmp;
 		}
 	}
 }
 
-void CleanupItems(int ii)
+void CleanupItems(ItemStruct *item, int ii)
 {
-	dItem[item[ii]._ix][item[ii]._iy] = 0;
+	dItem[item->_ix][item->_iy] = 0;
 
-	if (currlevel == 21 & item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
-		CornerStone.item.IDidx = -1;
+	if (currlevel == 21 & item->_ix == CornerStone.x && item->_iy == CornerStone.y) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
@@ -2122,34 +2094,34 @@ void CleanupItems(int ii)
 	}
 }
 
-void InvGetItem(int pnum, int ii)
+void InvGetItem(int pnum, ItemStruct *item, int ii)
 {
 	if (dropGoldFlag) {
 		dropGoldFlag = FALSE;
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item[ii]._ix][item[ii]._iy] == 0)
+	if (dItem[item->_ix][item->_iy] == 0)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
 		NetSendCmdPItem(TRUE, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
 
-	item[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = item[ii];
+	item->_iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = *item;
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
 	bool cursor_updated = false;
 	if (gbIsHellfire && plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
 		cursor_updated = true;
-	CleanupItems(ii);
+	CleanupItems(item, ii);
 	pcursitem = -1;
 	if (!cursor_updated)
 		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void AutoGetItem(int pnum, int ii)
+void AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
 	int i, idx;
 	int w, h;
@@ -2164,11 +2136,11 @@ void AutoGetItem(int pnum, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item[ii]._ix][item[ii]._iy] == 0)
+	if (dItem[item->_ix][item->_iy] == 0)
 		return;
 
-	item[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = item[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
+	item->_iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
@@ -2176,11 +2148,11 @@ void AutoGetItem(int pnum, int ii)
 	if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 		done = GoldAutoPlace(pnum);
 		if (!done) {
-			item[ii]._ivalue = plr[pnum].HoldItem._ivalue;
-			SetPlrHandGoldCurs(&item[ii]);
+			item->_ivalue = plr[pnum].HoldItem._ivalue;
+			SetPlrHandGoldCurs(item);
 		}
 	} else {
-		done = AutoEquipEnabled(plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
+		done = AutoEquipEnabled(plr[pnum], plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
 		if (!done) {
 			done = AutoPlaceItemInBelt(pnum, plr[pnum].HoldItem, true);
 		}
@@ -2190,7 +2162,7 @@ void AutoGetItem(int pnum, int ii)
 	}
 
 	if (done) {
-		CleanupItems(ii);
+		CleanupItems(&plr[pnum].HoldItem, ii);
 		return;
 	}
 
@@ -2209,9 +2181,9 @@ void AutoGetItem(int pnum, int ii)
 			PlaySFX(random_(0, 3) + PS_WARR14);
 		}
 	}
-	plr[pnum].HoldItem = item[ii];
-	RespawnItem(ii, TRUE);
-	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, item[ii]._ix, item[ii]._iy);
+	plr[pnum].HoldItem = *item;
+	RespawnItem(item, TRUE);
+	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, item->_ix, item->_iy);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
@@ -2224,7 +2196,7 @@ int FindGetItem(int idx, WORD ci, int iseed)
 	int i = 0;
 	while (1) {
 		ii = itemactive[i];
-		if (item[ii].IDidx == idx && item[ii]._iSeed == iseed && item[ii]._iCreateInfo == ci)
+		if (items[ii].IDidx == idx && items[ii]._iSeed == iseed && items[ii]._iCreateInfo == ci)
 			break;
 
 		i++;
@@ -2242,9 +2214,9 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 
 	if (dItem[x][y]) {
 		ii = dItem[x][y] - 1;
-		if (item[ii].IDidx == idx
-		    && item[ii]._iSeed == iseed
-		    && item[ii]._iCreateInfo == ci) {
+		if (items[ii].IDidx == idx
+		    && items[ii]._iSeed == iseed
+		    && items[ii]._iCreateInfo == ci) {
 			FindGetItem(idx, ci, iseed);
 		} else {
 			ii = FindGetItem(idx, ci, iseed);
@@ -2256,7 +2228,7 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 	if (ii == -1)
 		return;
 
-	CleanupItems(ii);
+	CleanupItems(&items[ii], ii);
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
@@ -2407,15 +2379,15 @@ int InvPutItem(int pnum, int x, int y)
 	int ii = AllocateItem();
 
 	dItem[x][y] = ii + 1;
-	item[ii] = plr[pnum].HoldItem;
-	item[ii]._ix = x;
-	item[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	items[ii] = plr[pnum].HoldItem;
+	items[ii]._ix = x;
+	items[ii]._iy = y;
+	RespawnItem(&items[ii], TRUE);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
-		CornerStone.item = item[ii];
+		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
-		quests[Q_CORNSTN]._qlog = FALSE;
+		quests[Q_CORNSTN]._qlog = 0;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 
@@ -2479,30 +2451,31 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	if (idx == IDI_EAR) {
 		RecreateEar(ii, icreateinfo, iseed, Id, dur, mdur, ch, mch, ivalue, ibuff);
 	} else {
-		RecreateItem(ii, idx, icreateinfo, iseed, ivalue);
+		RecreateItem(ii, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (Id)
-			item[ii]._iIdentified = TRUE;
-		item[ii]._iDurability = dur;
-		item[ii]._iMaxDur = mdur;
-		item[ii]._iCharges = ch;
-		item[ii]._iMaxCharges = mch;
-		item[ii]._iPLToHit = to_hit;
-		item[ii]._iMaxDam = max_dam;
-		item[ii]._iMinStr = min_str;
-		item[ii]._iMinMag = min_mag;
-		item[ii]._iMinDex = min_dex;
-		item[ii]._iAC = ac;
+			items[ii]._iIdentified = TRUE;
+		items[ii]._iDurability = dur;
+		items[ii]._iMaxDur = mdur;
+		items[ii]._iCharges = ch;
+		items[ii]._iMaxCharges = mch;
+		items[ii]._iPLToHit = to_hit;
+		items[ii]._iMaxDam = max_dam;
+		items[ii]._iMinStr = min_str;
+		items[ii]._iMinMag = min_mag;
+		items[ii]._iMinDex = min_dex;
+		items[ii]._iAC = ac;
+		items[ii].dwBuff = ibuff;
 	}
 
-	item[ii]._ix = x;
-	item[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	items[ii]._ix = x;
+	items[ii]._iy = y;
+	RespawnItem(&items[ii], TRUE);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
-		CornerStone.item = item[ii];
+		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = 0;
-		quests[Q_CORNSTN]._qactive = 3;
+		quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 	return ii;
 }
@@ -2871,4 +2844,4 @@ BOOL DropItemBeforeTrig()
 	return FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -3,14 +3,21 @@
  *
  * Interface of functions for loading and playing sounds.
  */
-#ifndef __EFFECTS_H__
-#define __EFFECTS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "sound.h"
+
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct TSFX {
+	Uint8 bFlags;
+	const char *pszName;
+	TSnd *pSnd;
+} TSFX;
 
 extern int sfxdelay;
 extern int sfxdnum;
@@ -35,6 +42,4 @@ int GetSFXLength(int nSFX);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __EFFECTS_H__ */
+}

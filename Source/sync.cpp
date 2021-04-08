@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 namespace {
 
@@ -105,29 +105,29 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 		}
 		ii = itemactive[sgnSyncItem++];
 		pHdr->bItemI = ii;
-		pHdr->bItemX = item[ii]._ix;
-		pHdr->bItemY = item[ii]._iy;
-		pHdr->wItemIndx = item[ii].IDidx;
-		if (item[ii].IDidx == IDI_EAR) {
-			pHdr->wItemCI = (item[ii]._iName[7] << 8) | item[ii]._iName[8];
-			pHdr->dwItemSeed = (item[ii]._iName[9] << 24) | (item[ii]._iName[10] << 16) | (item[ii]._iName[11] << 8) | item[ii]._iName[12];
-			pHdr->bItemId = item[ii]._iName[13];
-			pHdr->bItemDur = item[ii]._iName[14];
-			pHdr->bItemMDur = item[ii]._iName[15];
-			pHdr->bItemCh = item[ii]._iName[16];
-			pHdr->bItemMCh = item[ii]._iName[17];
-			pHdr->wItemVal = (item[ii]._iName[18] << 8) | ((item[ii]._iCurs - ICURS_EAR_SORCERER) << 6) | item[ii]._ivalue;
-			pHdr->dwItemBuff = (item[ii]._iName[19] << 24) | (item[ii]._iName[20] << 16) | (item[ii]._iName[21] << 8) | item[ii]._iName[22];
+		pHdr->bItemX = items[ii]._ix;
+		pHdr->bItemY = items[ii]._iy;
+		pHdr->wItemIndx = items[ii].IDidx;
+		if (items[ii].IDidx == IDI_EAR) {
+			pHdr->wItemCI = (items[ii]._iName[7] << 8) | items[ii]._iName[8];
+			pHdr->dwItemSeed = (items[ii]._iName[9] << 24) | (items[ii]._iName[10] << 16) | (items[ii]._iName[11] << 8) | items[ii]._iName[12];
+			pHdr->bItemId = items[ii]._iName[13];
+			pHdr->bItemDur = items[ii]._iName[14];
+			pHdr->bItemMDur = items[ii]._iName[15];
+			pHdr->bItemCh = items[ii]._iName[16];
+			pHdr->bItemMCh = items[ii]._iName[17];
+			pHdr->wItemVal = (items[ii]._iName[18] << 8) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) << 6) | items[ii]._ivalue;
+			pHdr->dwItemBuff = (items[ii]._iName[19] << 24) | (items[ii]._iName[20] << 16) | (items[ii]._iName[21] << 8) | items[ii]._iName[22];
 		} else {
-			pHdr->wItemCI = item[ii]._iCreateInfo;
-			pHdr->dwItemSeed = item[ii]._iSeed;
-			pHdr->bItemId = item[ii]._iIdentified;
-			pHdr->bItemDur = item[ii]._iDurability;
-			pHdr->bItemMDur = item[ii]._iMaxDur;
-			pHdr->bItemCh = item[ii]._iCharges;
-			pHdr->bItemMCh = item[ii]._iMaxCharges;
-			if (item[ii].IDidx == IDI_GOLD) {
-				pHdr->wItemVal = item[ii]._ivalue;
+			pHdr->wItemCI = items[ii]._iCreateInfo;
+			pHdr->dwItemSeed = items[ii]._iSeed;
+			pHdr->bItemId = items[ii]._iIdentified;
+			pHdr->bItemDur = items[ii]._iDurability;
+			pHdr->bItemMDur = items[ii]._iMaxDur;
+			pHdr->bItemCh = items[ii]._iCharges;
+			pHdr->bItemMCh = items[ii]._iMaxCharges;
+			if (items[ii].IDidx == IDI_GOLD) {
+				pHdr->wItemVal = items[ii]._ivalue;
 			}
 		}
 	} else {
@@ -152,7 +152,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 	}
 }
 
-}
+} // namespace
 
 Uint32 sync_all_monsters(const Uint8 *pbBuf, Uint32 dwMaxLen)
 {
@@ -289,4 +289,4 @@ void sync_init()
 	memset(sgwLRU, 255, sizeof(sgwLRU));
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

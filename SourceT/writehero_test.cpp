@@ -6,7 +6,7 @@
 #include "all.h"
 #include "paths.h"
 
-using namespace dvl;
+using namespace devilution;
 
 int spelldat_vanilla[] = {
 	0, 1, 1, 4, 5, -1, 3, 3, 6, -1, 7, 6, 8, 9,
@@ -207,6 +207,156 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	pPack->_pNumInv = 2;
 }
 
+static int CountItems(ItemStruct *items, int n)
+{
+	int count = n;
+	for (int i = 0; i < n; i++)
+		if (items[i].isEmpty())
+			count--;
+
+	return count;
+}
+
+static int Count8(Sint8 *ints, int n)
+{
+	int count = n;
+	for (int i = 0; i < n; i++)
+		if (ints[i] == 0)
+			count--;
+
+	return count;
+}
+
+static int CountBool(bool *bools, int n)
+{
+	int count = n;
+	for (int i = 0; i < n; i++)
+		if (!bools[i])
+			count--;
+
+	return count;
+}
+
+static void AssertPlayer(PlayerStruct *pPlayer)
+{
+	ASSERT_EQ(Count8(pPlayer->_pSplLvl, 64), 23);
+	ASSERT_EQ(Count8(pPlayer->InvGrid, NUM_INV_GRID_ELEM), 9);
+	ASSERT_EQ(CountItems(pPlayer->InvBody, NUM_INVLOC), 6);
+	ASSERT_EQ(CountItems(pPlayer->InvList, NUM_INV_GRID_ELEM), 2);
+	ASSERT_EQ(CountItems(pPlayer->SpdList, MAXBELTITEMS), 8);
+	ASSERT_EQ(CountItems(&pPlayer->HoldItem, 1), 1);
+
+	ASSERT_EQ(pPlayer->_px, 75);
+	ASSERT_EQ(pPlayer->_py, 68);
+	ASSERT_EQ(pPlayer->_pfutx, 75);
+	ASSERT_EQ(pPlayer->_pfuty, 68);
+	ASSERT_EQ(pPlayer->_ptargx, 75);
+	ASSERT_EQ(pPlayer->_ptargy, 68);
+	ASSERT_EQ(pPlayer->plrlevel, 0);
+	ASSERT_EQ(pPlayer->destAction, -1);
+	ASSERT_STREQ(pPlayer->_pName, "TestPlayer");
+	ASSERT_EQ(pPlayer->_pClass, 1);
+	ASSERT_EQ(pPlayer->_pBaseStr, 55);
+	ASSERT_EQ(pPlayer->_pStrength, 124);
+	ASSERT_EQ(pPlayer->_pBaseMag, 70);
+	ASSERT_EQ(pPlayer->_pMagic, 80);
+	ASSERT_EQ(pPlayer->_pBaseDex, 250);
+	ASSERT_EQ(pPlayer->_pDexterity, 281);
+	ASSERT_EQ(pPlayer->_pBaseVit, 80);
+	ASSERT_EQ(pPlayer->_pVitality, 90);
+	ASSERT_EQ(pPlayer->_pLevel, 50);
+	ASSERT_EQ(pPlayer->_pStatPts, 0);
+	ASSERT_EQ(pPlayer->_pExperience, 1583495809);
+	ASSERT_EQ(pPlayer->_pGold, 0);
+	ASSERT_EQ(pPlayer->_pMaxHPBase, 12864);
+	ASSERT_EQ(pPlayer->_pHPBase, 12864);
+	ASSERT_EQ(pPlayer->_pBaseToBlk, 20);
+	ASSERT_EQ(pPlayer->_pMaxManaBase, 11104);
+	ASSERT_EQ(pPlayer->_pManaBase, 11104);
+	ASSERT_EQ(pPlayer->_pMemSpells, 66309357295);
+	ASSERT_EQ(pPlayer->_pNumInv, 2);
+	ASSERT_EQ(pPlayer->wReflections, 0);
+	ASSERT_EQ(pPlayer->pTownWarps, 0);
+	ASSERT_EQ(pPlayer->pDungMsgs, 0);
+	ASSERT_EQ(pPlayer->pDungMsgs2, 0);
+	ASSERT_EQ(pPlayer->pLvlLoad, 0);
+	ASSERT_EQ(pPlayer->pDiabloKillLevel, 3);
+	ASSERT_EQ(pPlayer->pBattleNet, 0);
+	ASSERT_EQ(pPlayer->pManaShield, 0);
+	ASSERT_EQ(pPlayer->pDifficulty, 0);
+	ASSERT_EQ(pPlayer->pDamAcFlags, 0);
+
+	ASSERT_EQ(pPlayer->_pmode, 0);
+	ASSERT_EQ(Count8(pPlayer->walkpath, MAX_PATH_LENGTH), 25);
+	ASSERT_EQ(pPlayer->_pgfxnum, 36);
+	ASSERT_EQ(pPlayer->_pAnimDelay, 3);
+	ASSERT_EQ(pPlayer->_pAnimCnt, 1);
+	ASSERT_EQ(pPlayer->_pAnimLen, 20);
+	ASSERT_EQ(pPlayer->_pAnimFrame, 1);
+	ASSERT_EQ(pPlayer->_pAnimWidth, 96);
+	ASSERT_EQ(pPlayer->_pAnimWidth2, 16);
+	ASSERT_EQ(pPlayer->_pSpell, -1);
+	ASSERT_EQ(pPlayer->_pSplType, 4);
+	ASSERT_EQ(pPlayer->_pSplFrom, 0);
+	ASSERT_EQ(pPlayer->_pTSpell, 0);
+	ASSERT_EQ(pPlayer->_pTSplType, 0);
+	ASSERT_EQ(pPlayer->_pRSpell, -1);
+	ASSERT_EQ(pPlayer->_pRSplType, 4);
+	ASSERT_EQ(pPlayer->_pSBkSpell, -1);
+	ASSERT_EQ(pPlayer->_pSBkSplType, 0);
+	ASSERT_EQ(pPlayer->_pAblSpells, 134217728);
+	ASSERT_EQ(pPlayer->_pScrlSpells, 0);
+	ASSERT_EQ(pPlayer->_pSpellFlags, 0);
+	ASSERT_EQ(pPlayer->_pwtype, 1);
+	ASSERT_EQ(pPlayer->_pBlockFlag, 0);
+	ASSERT_EQ(pPlayer->_pLightRad, 11);
+	ASSERT_EQ(pPlayer->_pDamageMod, 101);
+	ASSERT_EQ(pPlayer->_pHitPoints, 16640);
+	ASSERT_EQ(pPlayer->_pMaxHP, 16640);
+	ASSERT_EQ(pPlayer->_pMana, 14624);
+	ASSERT_EQ(pPlayer->_pMaxMana, 14624);
+	ASSERT_EQ(pPlayer->_pNextExper, 2000);
+	ASSERT_EQ(pPlayer->_pMagResist, 75);
+	ASSERT_EQ(pPlayer->_pFireResist, 16);
+	ASSERT_EQ(pPlayer->_pLghtResist, 75);
+	ASSERT_EQ(CountBool(pPlayer->_pLvlVisited, NUMLEVELS), 0);
+	ASSERT_EQ(CountBool(pPlayer->_pSLvlVisited, NUMLEVELS), 0);
+	ASSERT_EQ(pPlayer->_pNFrames, 20);
+	ASSERT_EQ(pPlayer->_pNWidth, 96);
+	ASSERT_EQ(pPlayer->_pWFrames, 8);
+	ASSERT_EQ(pPlayer->_pWWidth, 96);
+	ASSERT_EQ(pPlayer->_pAFrames, 0);
+	ASSERT_EQ(pPlayer->_pAWidth, 128);
+	ASSERT_EQ(pPlayer->_pAFNum, 0);
+	ASSERT_EQ(pPlayer->_pSFrames, 16);
+	ASSERT_EQ(pPlayer->_pSWidth, 96);
+	ASSERT_EQ(pPlayer->_pSFNum, 12);
+	ASSERT_EQ(pPlayer->_pHFrames, 0);
+	ASSERT_EQ(pPlayer->_pHWidth, 96);
+	ASSERT_EQ(pPlayer->_pDFrames, 20);
+	ASSERT_EQ(pPlayer->_pDWidth, 128);
+	ASSERT_EQ(pPlayer->_pBFrames, 0);
+	ASSERT_EQ(pPlayer->_pBWidth, 96);
+	ASSERT_EQ(pPlayer->_pIMinDam, 1);
+	ASSERT_EQ(pPlayer->_pIMaxDam, 14);
+	ASSERT_EQ(pPlayer->_pIAC, 115);
+	ASSERT_EQ(pPlayer->_pIBonusDam, 0);
+	ASSERT_EQ(pPlayer->_pIBonusToHit, 0);
+	ASSERT_EQ(pPlayer->_pIBonusAC, 0);
+	ASSERT_EQ(pPlayer->_pIBonusDamMod, 0);
+	ASSERT_EQ(pPlayer->_pISpells, 0);
+	ASSERT_EQ(pPlayer->_pIFlags, 0);
+	ASSERT_EQ(pPlayer->_pIGetHit, 0);
+	ASSERT_EQ(pPlayer->_pISplLvlAdd, 0);
+	ASSERT_EQ(pPlayer->_pISplDur, 0);
+	ASSERT_EQ(pPlayer->_pIEnAc, 0);
+	ASSERT_EQ(pPlayer->_pIFMinDam, 0);
+	ASSERT_EQ(pPlayer->_pIFMaxDam, 0);
+	ASSERT_EQ(pPlayer->_pILMinDam, 0);
+	ASSERT_EQ(pPlayer->_pILMaxDam, 0);
+	ASSERT_EQ(pPlayer->pOriginalCathedral, 0);
+}
+
 TEST(Writehero, pfile_write_hero)
 {
 	SetPrefPath(".");
@@ -216,6 +366,7 @@ TEST(Writehero, pfile_write_hero)
 	gbIsHellfire = false;
 	gbIsMultiplayer = true;
 	gbIsHellfireSaveGame = false;
+	leveltype = DTYPE_TOWN;
 
 	myplr = 0;
 	_uiheroinfo info {};
@@ -225,6 +376,7 @@ TEST(Writehero, pfile_write_hero)
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);
 	UnPackPlayer(&pks, myplr, TRUE);
+	AssertPlayer(&plr[0]);
 	pfile_write_hero();
 
 	std::ifstream f("multi_0.sv", std::ios::binary);

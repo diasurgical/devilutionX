@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 LightListStruct VisionList[MAXVISION];
 BYTE lightactive[MAXLIGHTS];
@@ -1175,7 +1175,7 @@ void InitVision()
 
 int AddVision(int x, int y, int r, BOOL mine)
 {
- 	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
+	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
 
 	if (numvision < MAXVISION) {
 		VisionList[numvision]._lx = x;
@@ -1297,4 +1297,4 @@ void lighting_color_cycling()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

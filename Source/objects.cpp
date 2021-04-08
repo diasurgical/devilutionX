@@ -4,13 +4,14 @@
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
 #include "all.h"
+#include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int trapid;
 int trapdir;
 BYTE *pObjCels[40];
-char ObjFileList[40];
+object_graphic_id ObjFileList[40];
 int objectactive[MAXOBJECTS];
 /** Specifies the number of active objects. */
 int nobjects;
@@ -238,9 +239,9 @@ void InitObjectGFX()
 		}
 	}
 
-	for (i = 0; i < 56; i++) {
+	for (int i = OFILE_L1BRAZ; i <= OFILE_LZSTAND; i++) {
 		if (fileload[i]) {
-			ObjFileList[numobjfiles] = i;
+			ObjFileList[numobjfiles] = (object_graphic_id)i;
 			sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
 			if (currlevel >= 17 && currlevel < 21)
 				sprintf(filestr, "Objects\\%s.CEL", ObjHiveLoadList[i]);
@@ -290,7 +291,7 @@ static bool WallTrapLocOkK(int xp, int yp)
 		return FALSE;
 }
 
-void InitRndLocObj(int min, int max, int objtype)
+void InitRndLocObj(int min, int max, _object_id objtype)
 {
 	int i, xp, yp, numobjs;
 
@@ -316,7 +317,7 @@ void InitRndLocObj(int min, int max, int objtype)
 	}
 }
 
-void InitRndLocBigObj(int min, int max, int objtype)
+void InitRndLocBigObj(int min, int max, _object_id objtype)
 {
 	int i, xp, yp, numobjs;
 
@@ -344,7 +345,7 @@ void InitRndLocBigObj(int min, int max, int objtype)
 	}
 }
 
-void InitRndLocObj5x5(int min, int max, int objtype)
+void InitRndLocObj5x5(int min, int max, _object_id objtype)
 {
 	bool exit;
 	int xp, yp, numobjs, i, cnt, m, n;
@@ -669,7 +670,17 @@ void AddChestTraps()
 			if (dObject[i][j] > 0) {
 				oi = dObject[i][j] - 1;
 				if (object[oi]._otype >= OBJ_CHEST1 && object[oi]._otype <= OBJ_CHEST3 && !object[oi]._oTrapFlag && random_(0, 100) < 10) {
-					object[oi]._otype += OBJ_TCHEST1 - OBJ_CHEST1;
+					switch (object[oi]._otype) {
+					case OBJ_CHEST1:
+						object[oi]._otype = OBJ_TCHEST1;
+						break;
+					case OBJ_CHEST2:
+						object[oi]._otype = OBJ_TCHEST2;
+						break;
+					case OBJ_CHEST3:
+						object[oi]._otype = OBJ_TCHEST3;
+						break;
+					}
 					object[oi]._oTrapFlag = TRUE;
 					if (leveltype == DTYPE_CATACOMBS) {
 						object[oi]._oVar4 = random_(0, 2);
@@ -1135,11 +1146,11 @@ void SetMapObjects(BYTE *pMap, int startx, int starty)
 		}
 	}
 
-	for (i = 0; i < 56; i++) {
+	for (i = OFILE_L1BRAZ; i <= OFILE_LZSTAND; i++) {
 		if (!fileload[i])
 			continue;
 
-		ObjFileList[numobjfiles] = i;
+		ObjFileList[numobjfiles] = (object_graphic_id)i;
 		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
 		pObjCels[numobjfiles] = LoadFileInMem(filestr, NULL);
 		numobjfiles++;
@@ -1169,16 +1180,13 @@ void DeleteObject_(int oi, int i)
 		objectactive[i] = objectactive[nobjects];
 }
 
-void SetupObject(int i, int x, int y, int ot)
+void SetupObject(int i, int x, int y, _object_id ot)
 {
-	int ofi;
-	int j;
-
 	object[i]._otype = ot;
-	ofi = AllObjects[ot].ofindex;
+	object_graphic_id ofi = AllObjects[ot].ofindex;
 	object[i]._ox = x;
 	object[i]._oy = y;
-	j = 0;
+	int j = 0;
 	while (ObjFileList[j] != ofi) {
 		j++;
 	}
@@ -1573,7 +1581,7 @@ void AddSlainHero()
 	AddObject(OBJ_SLAINHERO, x + 2, y + 2);
 }
 
-void objects_44D8C5(int ot, int v2, int ox, int oy)
+void objects_44D8C5(_object_id ot, int v2, int ox, int oy)
 {
 	int oi;
 
@@ -1659,7 +1667,7 @@ void objects_44DA68(int i, int a2)
 	}
 }
 
-void AddObject(int ot, int ox, int oy)
+void AddObject(_object_id ot, int ox, int oy)
 {
 	int oi;
 
@@ -3996,6 +4004,9 @@ void OperateShrine(int pnum, int i, int sType)
 		}
 		ModifyPlrMag(myplr, magicGain);
 		plr[myplr]._pExperience = xpLoss;
+		if (sgOptions.Gameplay.bExperienceBar) {
+			force_redraw = 255;
+		}
 		CheckStats(pnum);
 	} break;
 
@@ -5002,10 +5013,8 @@ void SyncL3Doors(int i)
 
 void SyncObjectAnim(int o)
 {
-	int i, index;
-
-	index = AllObjects[object[o]._otype].ofindex;
-	i = 0;
+	object_graphic_id index = AllObjects[object[o]._otype].ofindex;
+	int i = 0;
 	while (ObjFileList[i] != index) {
 		i++;
 	}
@@ -5262,4 +5271,4 @@ bool objects_lv_24_454B04(int s)
 	return FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

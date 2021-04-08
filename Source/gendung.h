@@ -3,34 +3,45 @@
  *
  * Interface of general dungeon generation code.
  */
-#ifndef __GENDUNG_H__
-#define __GENDUNG_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct ScrollStruct {
-	int _sxoff; // X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff
-	int _syoff; // Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff
-	int _sdx;
-	int _sdy;
-	int _sdir;
+	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff */
+	Sint32 _sxoff;
+	/** @brief Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff */
+	Sint32 _syoff;
+	Sint32 _sdx;
+	Sint32 _sdy;
+	Sint32 _sdir;
 } ScrollStruct;
 
 typedef struct THEME_LOC {
-	int x;
-	int y;
-	int ttval;
-	int width;
-	int height;
+	Sint32 x;
+	Sint32 y;
+	Sint32 ttval;
+	Sint32 width;
+	Sint32 height;
 } THEME_LOC;
 
 typedef struct MICROS {
 	Uint16 mt[16];
 } MICROS;
+
+typedef struct ShadowStruct {
+	Uint8 strig;
+	Uint8 s1;
+	Uint8 s2;
+	Uint8 s3;
+	Uint8 nv1;
+	Uint8 nv2;
+	Uint8 nv3;
+} ShadowStruct;
 
 extern BYTE dungeon[DMAXX][DMAXY];
 extern BYTE pdungeon[DMAXX][DMAXY];
@@ -109,6 +120,4 @@ void InitLevels();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __GENDUNG_H__ */
+}

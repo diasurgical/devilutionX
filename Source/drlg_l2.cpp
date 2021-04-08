@@ -8,7 +8,7 @@
 
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BYTE predungeon[DMAXX][DMAXY];
 
@@ -1836,7 +1836,9 @@ static void DRLG_LoadL2SP()
 	setloadflag = FALSE;
 
 	if (QuestStatus(Q_BLIND)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", NULL);
+		pSetPiece[26] = 154;  // Close outer wall
+		pSetPiece[200] = 154; // Close outer wall
 		setloadflag = TRUE;
 	} else if (QuestStatus(Q_BLOOD)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", NULL);
@@ -3469,4 +3471,4 @@ void CreateL2Dungeon(DWORD rseed, int entry)
 	DRLG_SetPC();
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

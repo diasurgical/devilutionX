@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int GetManaAmount(int id, int sn)
 {
@@ -190,7 +190,7 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 		dir = plr[id]._pVar3;
 	}
 
-	for (int i = 0; spelldata[spl].sMissiles[i] != 0 && i < 3; i++) {
+	for (int i = 0; spelldata[spl].sMissiles[i] != MIS_NULL && i < 3; i++) {
 		AddMissile(sx, sy, dx, dy, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 	}
 
@@ -343,7 +343,7 @@ void DoHealOther(int pnum, int rid)
 	}
 }
 
-int GetSpellBookLevel(int s)
+int GetSpellBookLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
@@ -353,6 +353,8 @@ int GetSpellBookLevel(int s)
 		case SPL_FLARE:
 		case SPL_BONESPIRIT:
 			return -1;
+		default:
+			break;
 		}
 	}
 
@@ -361,6 +363,10 @@ int GetSpellBookLevel(int s)
 		case SPL_NOVA:
 		case SPL_APOCA:
 			return -1;
+		default:
+			if (s > SPL_LASTDIABLO)
+				return -1;
+			break;
 		}
 	}
 
@@ -368,13 +374,15 @@ int GetSpellBookLevel(int s)
 		switch (s) {
 		case SPL_ELEMENT:
 			return -1;
+		default:
+			break;
 		}
 	}
 
 	return spelldata[s].sBookLvl;
 }
 
-int GetSpellStaffLevel(int s)
+int GetSpellStaffLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
@@ -385,17 +393,24 @@ int GetSpellStaffLevel(int s)
 		case SPL_FLARE:
 		case SPL_BONESPIRIT:
 			return -1;
+		default:
+			break;
 		}
 	}
+
+	if (!gbIsHellfire && s > SPL_LASTDIABLO)
+		return -1;
 
 	if (gbIsHellfire) {
 		switch (s) {
 		case SPL_ELEMENT:
 			return -1;
+		default:
+			break;
 		}
 	}
 
 	return spelldata[s].sStaffLvl;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

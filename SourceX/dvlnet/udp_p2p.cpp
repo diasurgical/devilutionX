@@ -7,7 +7,7 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 const udp_p2p::endpoint udp_p2p::none;
@@ -168,4 +168,4 @@ void udp_p2p::recv_decrypted(packet &pkt, endpoint sender)
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /**
  * Specifies the current light entry.
@@ -195,14 +195,14 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 			col = PAL16_RED + 5;
 		}
 		if (pcurs <= 179) {
-			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels, pcurs, cursW);
+			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels, pcurs, cursW, false);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW);
 			} else {
 				CelDrawLightRedSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW, 1);
 			}
 		} else {
-			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
+			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW, false);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
 			} else {
@@ -590,7 +590,7 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre
 	if (bItem > MAXITEMS || bItem <= 0)
 		return;
 
-	ItemStruct *pItem = &item[bItem - 1];
+	ItemStruct *pItem = &items[bItem - 1];
 	if (pItem->_iPostDraw == pre)
 		return;
 
@@ -1557,4 +1557,4 @@ void DrawAndBlit()
 	drawsbarflag = FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

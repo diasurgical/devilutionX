@@ -3,12 +3,11 @@
  *
  * Interface of functions for creating and editing MPQ files.
  */
-#ifndef __MPQAPI_H__
-#define __MPQAPI_H__
+#pragma once
 
 #include <stdint.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,7 +39,6 @@ typedef struct _BLOCKENTRY {
 	Uint32 flags;
 } _BLOCKENTRY;
 
-
 void mpqapi_remove_hash_entry(const char *pszName);
 void mpqapi_remove_hash_entries(BOOL (*fnGetName)(DWORD, char *));
 BOOL mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen);
@@ -53,6 +51,4 @@ BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MPQAPI_H__ */
+}

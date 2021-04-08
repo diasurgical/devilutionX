@@ -11,7 +11,7 @@
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
@@ -28,7 +28,7 @@ BOOL gbRunGameResult;
 BOOL zoomflag;
 /** Enable updating of player character, set to false once Diablo dies */
 BOOL gbProcessPlayers;
-BOOL gbLoadGame;
+bool gbLoadGame;
 BOOLEAN cineflag;
 int force_redraw;
 BOOL light4flag;
@@ -84,11 +84,12 @@ const char *const spszMsgTbl[] = {
 const char *const spszMsgHotKeyTbl[] = { "F9", "F10", "F11", "F12" };
 
 /** To know if these things have been done when we get to the diablo_deinit() function */
-BOOL was_archives_init = false;
+bool was_archives_init = false;
 /** To know if surfaces have been initialized or not */
-BOOL was_window_init = false;
-BOOL was_ui_init = false;
-BOOL was_snd_init = false;
+bool was_window_init = false;
+bool was_ui_init = false;
+bool was_snd_init = false;
+bool sbWasOptionsLoaded = false;
 
 // Controller support:
 extern void plrctrls_every_frame();
@@ -369,12 +370,16 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 
 	do {
 		fExitProgram = FALSE;
-		gbLoadGame = FALSE;
+		gbLoadGame = false;
 
 		if (!NetInit(bSinglePlayer, &fExitProgram)) {
 			gbRunGameResult = !fExitProgram;
 			break;
 		}
+
+		// Save 2.8 MiB of RAM by freeing all main menu resources
+		// before starting the game.
+		UiDestroy();
 
 		gbSelectProvider = FALSE;
 
@@ -390,7 +395,12 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 		}
 		run_game_loop(uMsg);
 		NetClose();
-		pfile_create_player_description(NULL, 0);
+		pfile_create_player_description();
+
+		// If the player left the game into the main menu,
+		// initialize main menu resources.
+		if (gbRunGameResult)
+			UiInitialize();
 	} while (gbRunGameResult);
 
 	SNetDestroy();
@@ -402,8 +412,8 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
  */
 static void SaveOptions()
 {
-	setIniInt("Diablo", "Intro", sgOptions.Diablo.bInto);
-	setIniInt("Hellfire", "Intro", sgOptions.Hellfire.bInto);
+	setIniInt("Diablo", "Intro", sgOptions.Diablo.bIntro);
+	setIniInt("Hellfire", "Intro", sgOptions.Hellfire.bIntro);
 	setIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
 
 	setIniInt("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
@@ -429,7 +439,7 @@ static void SaveOptions()
 	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	setIniInt("Game", "Fast Walk", sgOptions.Gameplay.bJogInTown);
+	setIniInt("Game", "Run in Town", sgOptions.Gameplay.bRunInTown);
 	setIniInt("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
 	setIniInt("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
 	setIniInt("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
@@ -470,8 +480,8 @@ static void SaveOptions()
  */
 static void LoadOptions()
 {
-	sgOptions.Diablo.bInto = getIniBool("Diablo", "Intro", true);
-	sgOptions.Hellfire.bInto = getIniBool("Hellfire", "Intro", true);
+	sgOptions.Diablo.bIntro = getIniBool("Diablo", "Intro", true);
+	sgOptions.Hellfire.bIntro = getIniBool("Hellfire", "Intro", true);
 	getIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
 
 	sgOptions.Audio.nSoundVolume = getIniInt("Audio", "Sound Volume", VOLUME_MAX);
@@ -502,7 +512,7 @@ static void LoadOptions()
 	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bJogInTown = getIniBool("Game", "Fast Walk", false);
+	sgOptions.Gameplay.bRunInTown = getIniBool("Game", "Run in Town", false);
 	sgOptions.Gameplay.bGrabInput = getIniBool("Game", "Grab Input", false);
 	sgOptions.Gameplay.bTheoQuest = getIniBool("Game", "Theo Quest", false);
 	sgOptions.Gameplay.bCowQuest = getIniBool("Game", "Cow Quest", false);
@@ -534,6 +544,8 @@ static void LoadOptions()
 #ifdef __vita__
 	sgOptions.Controller.bRearTouch = getIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
+
+	sbWasOptionsLoaded = true;
 }
 
 static void diablo_init_screen()
@@ -588,13 +600,13 @@ static void diablo_splash()
 
 	play_movie("gendata\\logo.smk", TRUE);
 
-	if (gbIsHellfire && sgOptions.Hellfire.bInto) {
+	if (gbIsHellfire && sgOptions.Hellfire.bIntro) {
 		play_movie("gendata\\Hellfire.smk", TRUE);
-		sgOptions.Hellfire.bInto = false;
+		sgOptions.Hellfire.bIntro = false;
 	}
-	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bInto) {
+	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bIntro) {
 		play_movie("gendata\\diablo1.smk", TRUE);
-		sgOptions.Diablo.bInto = false;
+		sgOptions.Diablo.bIntro = false;
 	}
 
 	UiTitleDialog();
@@ -602,6 +614,8 @@ static void diablo_splash()
 
 static void diablo_deinit()
 {
+	if (sbWasOptionsLoaded)
+		SaveOptions();
 	if (was_snd_init) {
 		effects_cleanup_sfx();
 	}
@@ -619,7 +633,6 @@ static void diablo_deinit()
 
 void diablo_quit(int exitStatus)
 {
-	SaveOptions();
 	diablo_deinit();
 	exit(exitStatus);
 }
@@ -631,7 +644,6 @@ int DiabloMain(int argc, char **argv)
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
-	SaveOptions();
 	diablo_deinit();
 
 	return 0;
@@ -1076,9 +1088,9 @@ static void PressKey(int vkey)
 			sprintf(
 			    tempstr,
 			    "IDX = %i  :  Seed = %i  :  CF = %i",
-			    item[pcursitem].IDidx,
-			    item[pcursitem]._iSeed,
-			    item[pcursitem]._iCreateInfo);
+			    items[pcursitem].IDidx,
+			    items[pcursitem]._iSeed,
+			    items[pcursitem]._iCreateInfo);
 			NetSendCmdString(1 << myplr, tempstr);
 		}
 		sprintf(tempstr, "Numitems : %i", numitems);
@@ -1766,11 +1778,6 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		InitInv();
 		InitItemGFX();
 		InitQuestText();
-
-		int players = gbIsMultiplayer ? MAX_PLRS : 1;
-		for (i = 0; i < players; i++)
-			InitPlrGFXMem(i);
-
 		InitStores();
 		InitAutomapOnce();
 		InitHelp();
@@ -2082,4 +2089,4 @@ void diablo_color_cyc_logic()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

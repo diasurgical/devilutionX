@@ -6,7 +6,7 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int qtopline;
 bool questlog;
@@ -944,4 +944,4 @@ void SetMultiQuest(int q, int s, int l, int v1)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

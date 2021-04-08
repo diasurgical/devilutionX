@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int UberRow;
 int UberCol;
@@ -2904,4 +2904,4 @@ void drlg_l1_crypt_pattern7(int rndper)
 	drlg_l1_crypt_rndset(byte_48A1DC, rndper);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

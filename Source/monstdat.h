@@ -3,10 +3,9 @@
  *
  * Interface of all monster data.
  */
-#ifndef __MONSTDAT_H__
-#define __MONSTDAT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -291,6 +290,4 @@ extern const UniqMonstStruct UniqMonst[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MONSTDAT_H__ */
+}

@@ -3,12 +3,12 @@
  *
  * Interface of the character and main control panels
  */
-#ifndef __CONTROL_H__
-#define __CONTROL_H__
+#pragma once
 
 #include "engine.h"
+#include "spelldat.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -156,6 +156,4 @@ extern RECT32 ChrBtnsRect[4];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __CONTROL_H__ */
+}

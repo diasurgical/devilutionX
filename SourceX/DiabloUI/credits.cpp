@@ -13,7 +13,7 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/fonts.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -148,7 +148,7 @@ void CreditsRenderer::Render()
 		return;
 	prev_offset_y_ = offset_y;
 
-	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	SDL_FillRect(DiabloUiSurface(), NULL, 0x000000);
 	DrawArt(PANEL_LEFT - 320, UI_OFFSET_Y, &ArtBackgroundWidescreen);
 	DrawArt(PANEL_LEFT, UI_OFFSET_Y, &ArtBackground);
 	if (font == NULL)
@@ -170,7 +170,7 @@ void CreditsRenderer::Render()
 	viewport.x += PANEL_LEFT;
 	viewport.y += UI_OFFSET_Y;
 	ScaleOutputRect(&viewport);
-	SDL_SetClipRect(GetOutputSurface(), &viewport);
+	SDL_SetClipRect(DiabloUiSurface(), &viewport);
 
 	// We use unscaled coordinates for calculation throughout.
 	Sint16 dest_y = UI_OFFSET_Y + VIEWPORT.y - (offset_y - lines_begin * LINE_H);
@@ -194,10 +194,10 @@ void CreditsRenderer::Render()
 		ScaleOutputRect(&dst_rect);
 		dst_rect.w = line.m_surface->w;
 		dst_rect.h = line.m_surface->h;
-		if (SDL_BlitSurface(line.m_surface, NULL, GetOutputSurface(), &dst_rect) < 0)
+		if (SDL_BlitSurface(line.m_surface, NULL, DiabloUiSurface(), &dst_rect) < 0)
 			ErrSdl();
 	}
-	SDL_SetClipRect(GetOutputSurface(), NULL);
+	SDL_SetClipRect(DiabloUiSurface(), NULL);
 }
 
 BOOL TextDialog()
@@ -261,4 +261,4 @@ BOOL UiSupportDialog()
 	return TextDialog();
 }
 
-} // namespace dvl
+} // namespace devilution

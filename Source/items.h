@@ -3,12 +3,11 @@
  *
  * Interface of item functionality.
  */
-#ifndef __ITEMS_H__
-#define __ITEMS_H__
+#pragma once
 
 #include "itemdat.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +36,7 @@ typedef enum item_quality {
  CF_TOWN is combining all store flags and indicates if item has been bought from a NPC
  */
 typedef enum icreateinfo_flag {
+	// clang-format off
 	CF_LEVEL        = (1 << 6) - 1,
 	CF_ONLYGOOD     = 1 << 6,
 	CF_UPER15       = 1 << 7,
@@ -51,7 +51,14 @@ typedef enum icreateinfo_flag {
 
 	CF_USEFUL = CF_UPER15 | CF_UPER1,
 	CF_TOWN   = CF_SMITH | CF_SMITHPREMIUM | CF_BOY | CF_WITCH | CF_HEALER,
+	// clang-format on
 } icreateinfo_flag;
+
+typedef enum icreateinfo_flag2 {
+	// clang-format off
+	CF_HELLFIRE = 1,
+	// clang-format on
+} icreateinfo_flag2;
 
 typedef struct ItemStruct {
 	Sint32 _iSeed;
@@ -121,6 +128,7 @@ typedef struct ItemStruct {
 	Sint8 _iMinDex;
 	bool _iStatFlag;
 	Sint32 IDidx;
+	Uint32 dwBuff;
 	Sint32 _iDamAcFlags;
 
 	/**
@@ -257,12 +265,13 @@ typedef struct CornerStoneStruct {
 extern int itemactive[MAXITEMS];
 extern BOOL uitemflag;
 extern int itemavail[MAXITEMS];
-extern ItemStruct item[MAXITEMS + 1];
+extern ItemStruct items[MAXITEMS + 1];
 extern CornerStoneStruct CornerStone;
 extern BOOL UniqueItemFlag[128];
 extern int numitems;
 
 bool IsItemAvailable(int i);
+bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(int p, BOOL Loadgfx);
@@ -288,7 +297,7 @@ void SpawnItem(int m, int x, int y, BOOL sendmsg);
 void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, BOOL delta);
 void CreateRndUseful(int pnum, int x, int y, BOOL sendmsg);
 void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL sendmsg, BOOL delta);
-void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue);
+void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool isHellfire);
 void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void items_427A72();
 void items_427ABA(int x, int y);
@@ -298,7 +307,7 @@ void SpawnRewardItem(int itemid, int xx, int yy);
 void SpawnMapOfDoom(int xx, int yy);
 void SpawnRuneBomb(int xx, int yy);
 void SpawnTheodore(int xx, int yy);
-void RespawnItem(int i, BOOL FlipFlag);
+void RespawnItem(ItemStruct *item, BOOL FlipFlag);
 void DeleteItem(int ii, int i);
 void ProcessItems();
 void FreeItemGFX();
@@ -324,7 +333,7 @@ void SpawnStoreGold();
 void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue);
 void RecalcStoreStats();
 int ItemNoFlippy();
-void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, BOOL delta);
+void CreateSpellBook(int x, int y, spell_id ispell, BOOL sendmsg, BOOL delta);
 void CreateMagicArmor(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta);
 void CreateAmulet(int x, int y, int curlv, BOOL sendmsg, BOOL delta);
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta);
@@ -343,6 +352,4 @@ extern int ItemInvSnds[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ITEMS_H__ */
+}

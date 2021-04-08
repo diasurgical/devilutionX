@@ -21,8 +21,8 @@ extern "C" const char *__asan_default_options()
 int main(int argc, char **argv)
 {
 #ifdef RUN_TESTS
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 #endif
 #ifdef __SWITCH__
 	switch_enable_network();
@@ -31,5 +31,5 @@ int main(int argc, char **argv)
 	ctr_sys_init();
 #endif
 
-	return dvl::DiabloMain(argc, argv);
+	return devilution::DiabloMain(argc, argv);
 }

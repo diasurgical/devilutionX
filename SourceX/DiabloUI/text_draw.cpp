@@ -1,13 +1,14 @@
 #include "DiabloUI/text_draw.h"
 
 #include "DiabloUI/art_draw.h"
+#include "DiabloUI/diabloui.h"
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/text.h"
 #include "DiabloUI/ui_item.h"
 #include "DiabloUI/ttf_render_wrapped.h"
 #include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 extern SDL_Surface *pal_surface;
 
@@ -61,9 +62,9 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 	SDL_Rect shadow_rect = dest_rect;
 	++shadow_rect.x;
 	++shadow_rect.y;
-	if (SDL_BlitSurface(shadow_surface, NULL, GetOutputSurface(), &shadow_rect) < 0)
+	if (SDL_BlitSurface(shadow_surface, NULL, DiabloUiSurface(), &shadow_rect) < 0)
 		ErrSdl();
-	if (SDL_BlitSurface(text_surface, NULL, GetOutputSurface(), &dest_rect) < 0)
+	if (SDL_BlitSurface(text_surface, NULL, DiabloUiSurface(), &dest_rect) < 0)
 		ErrSdl();
 }
 
@@ -98,4 +99,4 @@ void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawText
 	}
 }
 
-} // namespace dvl
+} // namespace devilution

@@ -3,16 +3,14 @@
  *
  * Interface of routines for initializing the environment, disable screen saver, load MPQ.
  */
-#ifndef __INIT_H__
-#define __INIT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern _SNETVERSIONDATA fileinfo;
 extern int gbActive;
 extern HANDLE hellfire_mpq;
 extern WNDPROC CurrentProc;
@@ -46,6 +44,4 @@ extern char gszProductName[64];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __INIT_H__ */
+}

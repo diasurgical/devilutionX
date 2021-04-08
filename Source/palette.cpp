@@ -8,7 +8,7 @@
 #include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 SDL_Color logical_palette[256];
 SDL_Color system_palette[256];
@@ -383,4 +383,4 @@ void palette_update_quest_palette(int n)
 	GenerateBlendedLookupTable(logical_palette, 1, 31, 32 - n); // Possible optimization would be to only update color 0 as only the UI can overlap with transparency in this quest
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

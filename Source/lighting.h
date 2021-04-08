@@ -3,10 +3,9 @@
  *
  * Interface of light and vision.
  */
-#ifndef __LIGHTING_H__
-#define __LIGHTING_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,6 +72,4 @@ extern const BYTE vCrawlTable[23][30];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __LIGHTING_H__ */
+}

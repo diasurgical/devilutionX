@@ -13,7 +13,7 @@
 #include <3ds.h>
 #endif
 
-namespace dvl {
+namespace devilution {
 
 int sgdwLockCount;
 #ifdef _DEBUG
@@ -38,11 +38,11 @@ SDL_Surface *pal_surface;
 static void dx_create_back_buffer()
 {
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(
-		/*flags=*/0,
-		/*width=*/BUFFER_BORDER_LEFT + gnScreenWidth + BUFFER_BORDER_RIGHT,
-		/*height=*/BUFFER_BORDER_TOP + gnScreenHeight + BUFFER_BORDER_BOTTOM,
-		/*depth=*/8,
-		SDL_PIXELFORMAT_INDEX8);
+	    /*flags=*/0,
+	    /*width=*/BUFFER_BORDER_LEFT + gnScreenWidth + BUFFER_BORDER_RIGHT,
+	    /*height=*/BUFFER_BORDER_TOP + gnScreenHeight + BUFFER_BORDER_BOTTOM,
+	    /*depth=*/8,
+	    SDL_PIXELFORMAT_INDEX8);
 	if (pal_surface == NULL) {
 		ErrSdl();
 	}
@@ -131,7 +131,7 @@ CelOutputBuffer GlobalBackBuffer()
 		return CelOutputBuffer();
 	}
 
-	return CelOutputBuffer(pal_surface, SDL_Rect{BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight});
+	return CelOutputBuffer(pal_surface, SDL_Rect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight });
 }
 
 void dx_cleanup()
@@ -321,4 +321,4 @@ void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries)
 		lpEntries[i] = system_palette[i];
 	}
 }
-} // namespace dvl
+} // namespace devilution

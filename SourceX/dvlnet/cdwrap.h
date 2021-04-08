@@ -10,7 +10,7 @@
 
 #include "dvlnet/abstract_net.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 template <class T>

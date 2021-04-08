@@ -2,7 +2,7 @@
 #include "display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-namespace dvl {
+namespace devilution {
 
 void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 {
@@ -66,4 +66,4 @@ void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 	ScaleSurfaceToOutput(&art->surface);
 }
 
-} // namespace dvl
+} // namespace devilution

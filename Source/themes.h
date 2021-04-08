@@ -3,14 +3,18 @@
  *
  * Interface of the theme room placing algorithms.
  */
-#ifndef __THEMES_H__
-#define __THEMES_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct ThemeStruct {
+	theme_id ttype;
+	Sint32 ttval;
+} ThemeStruct;
 
 extern int numthemes;
 extern BOOL armorFlag;
@@ -25,6 +29,4 @@ void CreateThemeRooms();
 #ifdef __cplusplus
 }
 #endif
-DEVILUTION_END_NAMESPACE
-
-#endif /* __THEMES_H__ */
+}

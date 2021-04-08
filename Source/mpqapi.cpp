@@ -14,7 +14,7 @@
 #include "all.h"
 #include "../SourceS/file_util.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #define INDEX_ENTRIES 2048
 
@@ -704,4 +704,4 @@ BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar)
 	return cur_archive.Close(/*clear_tables=*/bFree);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -1,6 +1,6 @@
 #include "DiabloUI/errorart.h"
 
-namespace dvl {
+namespace devilution {
 
 const unsigned char btnData[] = {
 	// clang-format off
@@ -348,4 +348,4 @@ const unsigned char popupData[] = {
 	// clang-format on
 };
 
-} // namespace dvl
+} // namespace devilution

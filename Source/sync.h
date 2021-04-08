@@ -3,10 +3,9 @@
  *
  * Interface of functionality for syncing game state with other players.
  */
-#ifndef __SYNC_H__
-#define __SYNC_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +19,4 @@ void sync_init();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SYNC_H__ */
+}

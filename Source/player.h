@@ -3,10 +3,9 @@
  *
  * Interface of player functionality, leveling, actions, creation, loading, etc.
  */
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 typedef enum PLR_MODE {
 	PM_STAND,
@@ -225,6 +224,20 @@ typedef struct PlayerStruct {
 	Uint8 *_pHData;
 	Uint8 *_pDData;
 	Uint8 *_pBData;
+
+	/**
+	 * @brief Gets the base value of the player's specified attribute.
+	 * @param attribute The attribute to retrieve the base value for
+	 * @return The base value for the requested attribute.
+	*/
+	Sint32 GetBaseAttributeValue(attribute_id attribute) const;
+
+	/**
+	 * @brief Gets the maximum value of the player's specified attribute.
+	 * @param attribute The attribute to retrieve the maximum value for
+	 * @return The maximum value for the requested attribute.
+	*/
+	Sint32 GetMaximumAttributeValue(attribute_id attribute) const;
 } PlayerStruct;
 
 #ifdef __cplusplus
@@ -311,6 +324,4 @@ extern int ExpLvlsTbl[MAXCHARLEVEL];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PLAYER_H__ */
+}

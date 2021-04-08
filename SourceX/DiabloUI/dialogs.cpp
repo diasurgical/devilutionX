@@ -9,7 +9,7 @@
 #include "DiabloUI/errorart.h"
 #include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -242,7 +242,7 @@ void DialogLoop(std::vector<UiItemBase *> items, std::vector<UiItemBase *> rende
 		}
 
 		if (renderBehind.size() == 0) {
-			SDL_FillRect(GetOutputSurface(), NULL, 0);
+			SDL_FillRect(DiabloUiSurface(), NULL, 0);
 		} else {
 			UiRenderItems(renderBehind);
 		}
@@ -296,4 +296,4 @@ void UiErrorOkDialog(const char *text, std::vector<UiItemBase *> renderBehind)
 	UiErrorOkDialog(text, NULL, renderBehind);
 }
 
-} // namespace dvl
+} // namespace devilution

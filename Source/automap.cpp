@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 namespace {
 /**
@@ -453,7 +453,7 @@ void DrawAutomapText(CelOutputBuffer out)
 	}
 }
 
-}
+} // namespace
 
 bool automapflag;
 bool automapview[DMAXX][DMAXY];
@@ -764,4 +764,4 @@ void AutomapZoomReset()
 	AmLine4 = AmLine8 >> 1;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

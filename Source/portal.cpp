@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** In-game state of portals. */
 PortalStruct portal[MAXPORTAL];
@@ -183,4 +183,4 @@ BOOL PosOkPortal(int lvl, int x, int y)
 	return FALSE;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

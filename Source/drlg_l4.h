@@ -3,10 +3,9 @@
  *
  * Interface of the hell level generation algorithms.
  */
-#ifndef __DRLG_L4_H__
-#define __DRLG_L4_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,6 +27,4 @@ void CreateL4Dungeon(DWORD rseed, int entry);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DRLG_L4_H__ */
+}

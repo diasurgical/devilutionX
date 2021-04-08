@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <cstdint>
 #include <string>
 
 #include "all.h"
@@ -20,7 +21,7 @@
 
 #include "DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 DWORD nLastError = 0;
 
@@ -130,7 +131,7 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 {
 	HANDLE hFile;
 	size_t size;
-	PCXHEADER pcxhdr;
+	PCXHeader pcxhdr;
 	BYTE paldata[256][3];
 	BYTE *dataPtr, *fileBuffer;
 	BYTE byte;
@@ -192,10 +193,13 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
-		SFileSetFilePointer(hFile, 0, 0, DVL_FILE_END);
+		SFileSetFilePointer(hFile, 0, NULL, DVL_FILE_END);
 		fileBuffer = NULL;
 	} else {
-		size = SFileGetFileSize(hFile, 0) - SFileSetFilePointer(hFile, 0, 0, DVL_FILE_CURRENT);
+		const auto pos = SFileGetFilePointer(hFile);
+		const auto end = SFileSetFilePointer(hFile, 0, DVL_FILE_END);
+		const auto begin = SFileSetFilePointer(hFile, pos, DVL_FILE_BEGIN);
+		size = end - begin;
 		fileBuffer = (BYTE *)malloc(size);
 	}
 
@@ -228,8 +232,12 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	}
 
 	if (pPalette && pcxhdr.BitsPerPixel == 8) {
-		SFileSetFilePointer(hFile, -768, 0, 1);
-		SFileReadFile(hFile, paldata, 768, 0, 0);
+		const auto pos = SFileSetFilePointer(hFile, -768, DVL_FILE_CURRENT);
+		if (pos == static_cast<std::uint64_t>(-1)) {
+			SDL_Log("SFileSetFilePointer error: %ud", (unsigned int)SErrGetLastError());
+		}
+		SFileReadFile(hFile, paldata, 768, 0, NULL);
+
 		for (int i = 0; i < 256; i++) {
 			pPalette[i].r = paldata[i][0];
 			pPalette[i].g = paldata[i][1];
@@ -242,19 +250,6 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 
 	SFileCloseFile(hFile);
 
-	return true;
-}
-
-void *SMemAlloc(unsigned int amount, const char *logfilename, int logline, int defaultValue)
-{
-	assert(amount != -1u);
-	return malloc(amount);
-}
-
-BOOL SMemFree(void *location, const char *logfilename, int logline, char defaultValue)
-{
-	assert(location);
-	free(location);
 	return true;
 }
 
@@ -792,11 +787,6 @@ void SErrSetLastError(DWORD dwErrCode)
 	nLastError = dwErrCode;
 }
 
-void SStrCopy(char *dest, const char *src, int max_length)
-{
-	strncpy(dest, src, max_length);
-}
-
 BOOL SFileSetBasePath(const char *path)
 {
 	if (SBasePath == NULL)
@@ -810,4 +800,4 @@ BOOL SFileEnableDirectAccess(BOOL enable)
 	directFileAccess = enable;
 	return true;
 }
-} // namespace dvl
+} // namespace devilution

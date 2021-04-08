@@ -3,10 +3,9 @@
  *
  * Interface of all item data.
  */
-#ifndef __ITEMDAT_H__
-#define __ITEMDAT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -463,6 +462,7 @@ typedef enum item_effect_type {
 	IPL_ADDMANAAC,
 	IPL_FIRERESCLVL,
 	IPL_AC_CURSE,
+	IDI_LASTDIABLO = IPL_AC_CURSE,
 	IPL_FIRERES_CURSE,
 	IPL_LIGHTRES_CURSE,
 	IPL_MAGICRES_CURSE,
@@ -547,6 +547,4 @@ extern const UItemStruct UniqueItemList[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ITEMDAT_H__ */
+}

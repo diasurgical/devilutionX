@@ -12,7 +12,7 @@
 #include "dvlnet/abstract_net.h"
 #include "dvlnet/frame_queue.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class server_exception : public dvlnet_exception {

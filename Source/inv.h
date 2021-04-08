@@ -3,12 +3,12 @@
  *
  * Interface of player inventory.
  */
-#ifndef __INV_H__
-#define __INV_H__
+#pragma once
 
 #include "items.h"
+#include "player.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,6 +21,11 @@ typedef enum item_color {
 	ICOL_RED   = PAL16_RED + 5,
 	// clang-format on
 } item_color;
+
+typedef struct InvXY {
+	Sint32 X;
+	Sint32 Y;
+} InvXY;
 
 extern BOOL invflag;
 extern BOOL drawsbarflag;
@@ -35,20 +40,21 @@ void InitInv();
 void DrawInv(CelOutputBuffer out);
 
 void DrawInvBelt(CelOutputBuffer out);
-bool AutoEquipEnabled(const ItemStruct &item);
+bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item);
 bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true);
-BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag);
-BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item);
+bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false);
+bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem);
+bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false);
 BOOL GoldAutoPlace(int pnum);
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId);
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId, uint32_t dwBuff);
 void inv_update_rem_item(int pnum, BYTE iv);
 void RemoveInvItem(int pnum, int iv);
 void RemoveSpdBarItem(int pnum, int iv);
 void CheckInvItem(bool isShiftHeld = false);
 void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(int pnum);
-void InvGetItem(int pnum, int ii);
-void AutoGetItem(int pnum, int ii);
+void InvGetItem(int pnum, ItemStruct *item, int ii);
+void AutoGetItem(int pnum, ItemStruct *item, int ii);
 int FindGetItem(int idx, WORD ci, int iseed);
 void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
 BOOL CanPut(int x, int y);
@@ -74,6 +80,4 @@ extern int AP2x2Tbl[10];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __INV_H__ */
+}

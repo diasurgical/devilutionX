@@ -3,10 +3,9 @@
  *
  * Interface of functionality for casting player spells.
  */
-#ifndef __SPELLS_H__
-#define __SPELLS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,13 +19,11 @@ void EnsureValidReadiedSpell(PlayerStruct &player);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);
 void DoResurrect(int pnum, int rid);
 void DoHealOther(int pnum, int rid);
-int GetSpellBookLevel(int s);
-int GetSpellStaffLevel(int s);
+int GetSpellBookLevel(spell_id s);
+int GetSpellStaffLevel(spell_id s);
 
 #ifdef __cplusplus
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SPELLS_H__ */
+}

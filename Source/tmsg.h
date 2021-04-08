@@ -3,10 +3,9 @@
  *
  * Interface of functionality transmitting chat messages.
  */
-#ifndef __TMSG_H__
-#define __TMSG_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,6 +37,4 @@ void tmsg_cleanup();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TMSG_H__ */
+}

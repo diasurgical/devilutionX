@@ -6,7 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BYTE sgbNetUpdateRate;
 DWORD gdwMsgLenTbl[MAX_PLRS];
@@ -40,7 +40,7 @@ void nthread_terminate_game(const char *pszFcn)
 	} else if (sErr == STORM_ERROR_NOT_IN_GAME) {
 		gbGameDestroyed = TRUE;
 	} else {
-		app_fatal("%s:\n%s", pszFcn, TraceLastError());
+		app_fatal("%s:\n%s", pszFcn, SDL_GetError());
 	}
 }
 
@@ -160,7 +160,7 @@ void nthread_start(BOOL set_turn_upper_bit)
 		turn_upper_bit = 0;
 	caps.size = 36;
 	if (!SNetGetProviderCaps(&caps)) {
-		err = TraceLastError();
+		err = SDL_GetError();
 		app_fatal("SNetGetProviderCaps:\n%s", err);
 	}
 	gdwTurnsInTransit = caps.defaultturnsintransit;
@@ -193,7 +193,7 @@ void nthread_start(BOOL set_turn_upper_bit)
 		nthread_should_run = TRUE;
 		sghThread = CreateThread(nthread_handler, &glpNThreadId);
 		if (sghThread == NULL) {
-			err2 = TraceLastError();
+			err2 = SDL_GetError();
 			app_fatal("nthread2:\n%s", err2);
 		}
 	}
@@ -242,4 +242,4 @@ BOOL nthread_has_500ms_passed()
 	return ticksElapsed >= 0;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

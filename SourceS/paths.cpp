@@ -14,7 +14,7 @@
 #define TTF_FONT_NAME "CharisSILB.ttf"
 #endif
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -24,25 +24,27 @@ std::string *configPath = NULL;
 std::string *ttfPath = NULL;
 std::string *ttfName = NULL;
 
-void AddTrailingSlash(std::string *path) {
+void AddTrailingSlash(std::string *path)
+{
 #ifdef _WIN32
-	if (!path->empty() && path->back() != '\\')
-		*path += '\\';
+    if (!path->empty() && path->back() != '\\')
+        *path += '\\';
 #else
-	if (!path->empty() && path->back() != '/')
-		*path += '/';
+    if (!path->empty() && path->back() != '/')
+        *path += '/';
 #endif
 }
 
-std::string *FromSDL(char *s) {
-	std::string *result = new std::string(s != NULL ? s : "");
-	if (s != NULL) {
-		SDL_free(s);
-	} else {
-		SDL_Log("%s", SDL_GetError());
-		SDL_ClearError();
-	}
-	return result;
+std::string *FromSDL(char *s)
+{
+    std::string *result = new std::string(s != NULL ? s : "");
+    if (s != NULL) {
+        SDL_free(s);
+    } else {
+        SDL_Log("%s", SDL_GetError());
+        SDL_ClearError();
+    }
+    return result;
 }
 
 } // namespace
@@ -50,16 +52,19 @@ std::string *FromSDL(char *s) {
 const std::string &GetBasePath()
 {
 #ifdef __vita__
-	if (basePath == NULL) basePath = new std::string(GetPrefPath());
+	if (basePath == NULL)
+		basePath = new std::string(GetPrefPath());
 #else
-	if (basePath == NULL) basePath = FromSDL(SDL_GetBasePath());
+	if (basePath == NULL)
+		basePath = FromSDL(SDL_GetBasePath());
 #endif
 	return *basePath;
 }
 
 const std::string &GetPrefPath()
 {
-	if (prefPath == NULL) prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+	if (prefPath == NULL)
+		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 	return *prefPath;
 }
 
@@ -86,14 +91,16 @@ const std::string &GetTtfName()
 
 void SetBasePath(const char *path)
 {
-	if (basePath == NULL) basePath = new std::string;
+	if (basePath == NULL)
+		basePath = new std::string;
 	*basePath = path;
 	AddTrailingSlash(basePath);
 }
 
 void SetPrefPath(const char *path)
 {
-	if (prefPath == NULL) prefPath = new std::string;
+	if (prefPath == NULL)
+		prefPath = new std::string;
 	*prefPath = path;
 	AddTrailingSlash(prefPath);
 }
@@ -121,4 +128,4 @@ void SetTtfName(const char *path)
 	*ttfName = path;
 }
 
-} // namespace dvl
+} // namespace devilution

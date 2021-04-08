@@ -8,7 +8,7 @@
 #include "../SourceX/controls/axis_direction.h"
 #include "../SourceX/controls/controller_motion.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BYTE *optbar_cel;
 BOOLEAN mouseNavigation;
@@ -70,7 +70,7 @@ void gmenu_draw_pause(CelOutputBuffer out)
 		RedBack(out);
 	if (!sgpCurrentMenu) {
 		light_table_index = 0;
-		gmenu_print_text(out, 316 + PANEL_LEFT, 336, "Pause");
+		gmenu_print_text(out, 252 + PANEL_LEFT, 176, "Pause");
 	}
 }
 
@@ -436,4 +436,4 @@ void gmenu_slider_steps(TMenuItem *pItem, int steps)
 	pItem->dwFlags |= (steps << 12) & 0xFFF000;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

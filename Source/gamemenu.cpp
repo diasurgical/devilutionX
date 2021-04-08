@@ -7,9 +7,9 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-bool gbJogInTown = false;
+bool gbRunInTown = false;
 
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
@@ -220,8 +220,8 @@ static void gamemenu_get_sound()
 static void gamemenu_jogging()
 {
 	gmenu_slider_steps(&sgOptionsMenu[3], 2);
-	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, sgOptions.Gameplay.bJogInTown);
-	sgOptionsMenu[3].pszStr = jogging_toggle_names[!sgOptions.Gameplay.bJogInTown ? 1 : 0];
+	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, sgOptions.Gameplay.bRunInTown);
+	sgOptionsMenu[3].pszStr = jogging_toggle_names[!sgOptions.Gameplay.bRunInTown ? 1 : 0];
 }
 
 static void gamemenu_get_gamma()
@@ -350,8 +350,8 @@ void gamemenu_sound_volume(BOOL bActivate)
 void gamemenu_loadjog(BOOL bActivate)
 {
 	if (!gbIsMultiplayer) {
-		sgOptions.Gameplay.bJogInTown = !sgOptions.Gameplay.bJogInTown;
-		gbJogInTown = sgOptions.Gameplay.bJogInTown;
+		sgOptions.Gameplay.bRunInTown = !sgOptions.Gameplay.bRunInTown;
+		gbRunInTown = sgOptions.Gameplay.bRunInTown;
 		PlaySFX(IS_TITLEMOV);
 		gamemenu_jogging();
 	}
@@ -396,4 +396,4 @@ void gamemenu_color_cycling(BOOL bActivate)
 	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution
