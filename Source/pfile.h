@@ -16,6 +16,7 @@ extern "C" {
 
 extern BOOL gbValidSaveFile;
 
+const char *pfile_get_password();
 void pfile_write_hero();
 BOOL pfile_create_player_description();
 void pfile_flush_W();
