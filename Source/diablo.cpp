@@ -533,7 +533,7 @@ static void LoadOptions()
 	sgOptions.Gameplay.bRandomizeQuests = getIniBool("Game", "Randomize Quests", true);
 	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
 	sgOptions.Gameplay.bMonsterHealthScaling = getIniBool("Game", "Monster HP Scaling", false);
-	sgOptions.Gameplay.bMonsterHealthScalingModifier = getIniInt("Game", "Monster HP Scaling Percentage", 25);
+	sgOptions.Gameplay.bMonsterHealthScalingModifier = getIniInt("Game", "Monster HP Scaling Percentage", 33);
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
