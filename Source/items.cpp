@@ -3,11 +3,21 @@
  *
  * Implementation of item functionality.
  */
+#include <stdint.h>
+
 #include <algorithm>
 #include "all.h"
 #include "options.h"
 
 namespace devilution {
+
+enum anim_armor_id : uint8_t {
+	// clang-format off
+	ANIM_ID_LIGHT_ARMOR  = 0x00,
+	ANIM_ID_MEDIUM_ARMOR = 0x10,
+	ANIM_ID_HEAVY_ARMOR  = 0x20,
+	// clang-format on
+};
 
 int itemactive[MAXITEMS];
 BOOL uitemflag;

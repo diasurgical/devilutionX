@@ -7,9 +7,9 @@
 
 namespace devilution {
 
-char msgtable[MAX_SEND_STR_LEN];
+diablo_message msgtable[MAX_SEND_STR_LEN];
 DWORD msgdelay;
-char msgflag;
+diablo_message msgflag;
 char msgcnt;
 
 /** Maps from error_id to error message. */
@@ -71,7 +71,7 @@ const char *const MsgStrings[] = {
 	"That which can break will.",
 };
 
-void InitDiabloMsg(char e)
+void InitDiabloMsg(diablo_message e)
 {
 	int i;
 
@@ -95,9 +95,9 @@ void ClrDiabloMsg()
 	int i;
 
 	for (i = 0; i < sizeof(msgtable); i++)
-		msgtable[i] = 0;
+		msgtable[i] = EMSG_NONE;
 
-	msgflag = 0;
+	msgflag = EMSG_NONE;
 	msgcnt = 0;
 }
 
@@ -154,7 +154,7 @@ void DrawDiabloMsg(CelOutputBuffer out)
 	if (msgdelay == 0) {
 		msgcnt--;
 		if (msgcnt == 0) {
-			msgflag = 0;
+			msgflag = EMSG_NONE;
 		} else {
 			msgflag = msgtable[msgcnt];
 			msgdelay = SDL_GetTicks();

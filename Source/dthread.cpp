@@ -39,7 +39,7 @@ static unsigned int dthread_handler(void *data)
 
 		if (pkt) {
 			if (pkt->dwSpaceLeft != MAX_PLRS)
-				multi_send_zero_packet(pkt->dwSpaceLeft, pkt->data[0], &pkt->data[8], *(DWORD *)&pkt->data[4]);
+				multi_send_zero_packet(pkt->dwSpaceLeft, static_cast<_cmd_id>(pkt->data[0]), &pkt->data[8], *(DWORD *)&pkt->data[4]);
 
 			dwMilliseconds = 1000 * *(DWORD *)&pkt->data[4] / gdwDeltaBytesSec;
 			if (dwMilliseconds >= 1)

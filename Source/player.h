@@ -5,7 +5,21 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
+
+enum anim_weapon_id : uint8_t {
+	ANIM_ID_UNARMED,
+	ANIM_ID_UNARMED_SHIELD,
+	ANIM_ID_SWORD,
+	ANIM_ID_SWORD_SHIELD,
+	ANIM_ID_BOW,
+	ANIM_ID_AXE,
+	ANIM_ID_MACE,
+	ANIM_ID_MACE_SHIELD,
+	ANIM_ID_STAFF,
+};
 
 typedef enum PLR_MODE {
 	PM_STAND,

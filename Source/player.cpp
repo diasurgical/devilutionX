@@ -491,8 +491,6 @@ void ClearPlrPVars(int pnum)
 
 void SetPlrAnims(int pnum)
 {
-	int gn;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("SetPlrAnims: illegal player %d", pnum);
 	}
@@ -524,7 +522,7 @@ void SetPlrAnims(int pnum)
 	}
 	plr[pnum]._pSFNum = PlrGFXAnimLens[pc][10];
 
-	gn = plr[pnum]._pgfxnum & 0xF;
+	anim_weapon_id gn = static_cast<anim_weapon_id>(plr[pnum]._pgfxnum & 0xF);
 	if (pc == PC_WARRIOR) {
 		if (gn == ANIM_ID_BOW) {
 			if (leveltype != DTYPE_TOWN) {

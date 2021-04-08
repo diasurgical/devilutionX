@@ -3,10 +3,50 @@
  *
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
+#include <stdint.h>
+
 #include "all.h"
 #include "options.h"
 
 namespace devilution {
+
+enum shrine_type : uint8_t {
+	SHRINE_MYSTERIOUS,
+	SHRINE_HIDDEN,
+	SHRINE_GLOOMY,
+	SHRINE_WEIRD,
+	SHRINE_MAGICAL,
+	SHRINE_STONE,
+	SHRINE_RELIGIOUS,
+	SHRINE_ENCHANTED,
+	SHRINE_THAUMATURGIC,
+	SHRINE_FASCINATING,
+	SHRINE_CRYPTIC,
+	SHRINE_MAGICAL2,
+	SHRINE_ELDRITCH,
+	SHRINE_EERIE,
+	SHRINE_DIVINE,
+	SHRINE_HOLY,
+	SHRINE_SACRED,
+	SHRINE_SPIRITUAL,
+	SHRINE_SPOOKY,
+	SHRINE_ABANDONED,
+	SHRINE_CREEPY,
+	SHRINE_QUIET,
+	SHRINE_SECLUDED,
+	SHRINE_ORNATE,
+	SHRINE_GLIMMERING,
+	SHRINE_TAINTED,
+	SHRINE_OILY,
+	SHRINE_GLOWING,
+	SHRINE_MENDICANT,
+	SHRINE_SPARKLING,
+	SHRINE_TOWN,
+	SHRINE_SHIMMERING,
+	SHRINE_SOLAR,
+	SHRINE_MURPHYS,
+	NUM_SHRINETYPE
+};
 
 int trapid;
 int trapdir;
@@ -138,14 +178,20 @@ char shrinemax[] = {
 	MAX_LVLS, // Solar,
 	MAX_LVLS, // Murphy's
 };
+
 /**
  * Specifies the game type for which each shrine may appear.
- * SHRINETYPE_ANY - 0 - sp & mp
- * SHRINETYPE_SINGLE - 1 - sp only
- * SHRINETYPE_MULTI - 2 - mp only
+ * SHRINETYPE_ANY - sp & mp
+ * SHRINETYPE_SINGLE - sp only
+ * SHRINETYPE_MULTI - mp only
  */
+enum shrine_gametype : uint8_t {
+	SHRINETYPE_ANY,
+	SHRINETYPE_SINGLE,
+	SHRINETYPE_MULTI,
+};
 
-BYTE shrineavail[] = {
+shrine_gametype shrineavail[] = {
 	SHRINETYPE_ANY,    // SHRINE_MYSTERIOUS
 	SHRINETYPE_ANY,    // SHRINE_HIDDEN
 	SHRINETYPE_SINGLE, // SHRINE_GLOOMY
@@ -1382,9 +1428,9 @@ void AddShrine(int i)
 
 	for (j = 0; j < shrines; j++) {
 		slist[j] = currlevel >= shrinemin[j] && currlevel <= shrinemax[j];
-		if (gbIsMultiplayer && shrineavail[j] == 1) {
+		if (gbIsMultiplayer && shrineavail[j] == SHRINETYPE_SINGLE) {
 			slist[j] = false;
-		} else if (!gbIsMultiplayer && shrineavail[j] == 2) {
+		} else if (!gbIsMultiplayer && shrineavail[j] == SHRINETYPE_MULTI) {
 			slist[j] = false;
 		}
 	}
@@ -4222,13 +4268,13 @@ int FindValidShrine(int i)
 		}
 		if (done) {
 			if (gbIsMultiplayer) {
-				if (shrineavail[rv] == 1) {
+				if (shrineavail[rv] == SHRINETYPE_SINGLE) {
 					done = FALSE;
 					continue;
 				}
 			}
 			if (!gbIsMultiplayer) {
-				if (shrineavail[rv] == 2) {
+				if (shrineavail[rv] == SHRINETYPE_MULTI) {
 					done = FALSE;
 					continue;
 				}
