@@ -5,13 +5,46 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum monster_flag : uint16_t {
+	// clang-format off
+	MFLAG_HIDDEN          = 0x0001,
+	MFLAG_LOCK_ANIMATION  = 0x0002,
+	MFLAG_ALLOW_SPECIAL   = 0x0004,
+	MFLAG_NOHEAL          = 0x0008,
+	MFLAG_TARGETS_MONSTER = 0x0010,
+	MFLAG_GOLEM           = 0x0020,
+	MFLAG_QUEST_COMPLETE  = 0x0040,
+	MFLAG_KNOCKBACK       = 0x0080,
+	MFLAG_SEARCH          = 0x0100,
+	MFLAG_CAN_OPEN_DOOR   = 0x0200,
+	MFLAG_NO_ENEMY        = 0x0400,
+	MFLAG_BERSERK         = 0x0800,
+	MFLAG_NOLIFESTEAL     = 0x1000
+	// clang-format on
+};
 
-typedef enum MON_MODE {
+/** this enum contains indexes from UniqMonst array for special unique monsters (usually quest related) */
+enum : uint8_t {
+	UMT_GARBUD,
+	UMT_SKELKING,
+	UMT_ZHAR,
+	UMT_SNOTSPIL,
+	UMT_LAZURUS,
+	UMT_RED_VEX,
+	UMT_BLACKJADE,
+	UMT_LACHDAN,
+	UMT_WARLORD,
+	UMT_BUTCHER,
+	UMT_HORKDMN,
+	UMT_DEFILER,
+	UMT_NAKRUL,
+};
+
+enum MON_MODE {
 	MM_STAND,
 	/** Movement towards N, NW, or NE */
 	MM_WALK,
@@ -33,16 +66,16 @@ typedef enum MON_MODE {
 	MM_STONE,
 	MM_HEAL,
 	MM_TALK,
-} MON_MODE;
+};
 
-typedef struct AnimStruct {
+struct AnimStruct {
 	Uint8 *CMem;
 	Uint8 *Data[8];
 	Sint32 Frames;
 	Sint32 Rate;
-} AnimStruct;
+};
 
-typedef struct CMonster {
+struct CMonster {
 	_monster_id mtype;
 	/** placeflag enum as a flags*/
 	Uint8 mPlaceFlags;
@@ -61,9 +94,9 @@ typedef struct CMonster {
 	 * as indexes into a palette. (a 256 byte array of palette indices)
 	 */
 	Uint8 *trans_file;
-} CMonster;
+};
 
-typedef struct MonsterStruct { // note: missing field _mAFNum
+struct MonsterStruct { // note: missing field _mAFNum
 	Sint32 _mMTidx;
 	MON_MODE _mmode;
 	Uint8 _mgoal;
@@ -152,7 +185,7 @@ typedef struct MonsterStruct { // note: missing field _mAFNum
 	const char *mName;
 	CMonster *MType;
 	const MonsterData *MData;
-} MonsterStruct;
+};
 
 extern int monstkills[MAXMONSTERS];
 extern int monstactive[MAXMONSTERS];
@@ -264,9 +297,5 @@ void decode_enemy(int m, int enemy);
 extern int opposite[8];
 extern int offset_x[8];
 extern int offset_y[8];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

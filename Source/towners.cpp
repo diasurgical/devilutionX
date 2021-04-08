@@ -21,7 +21,7 @@ TownerStruct towner[NUM_TOWNERS];
  * ref: enum _sfx_id
  * ref: enum plr_class
  */
-const int snSFX[3][NUM_CLASSES] = {
+const _sfx_id snSFX[3][NUM_CLASSES] = {
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52, PS_MONK52, PS_ROGUE52, PS_WARR52 }, // BUGFIX: add warrior sounds for barbarian instead of 0 - walk sound (fixed)
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49, PS_MONK49, PS_ROGUE49, PS_WARR49 },
 	{ PS_WARR50, PS_ROGUE50, PS_MAGE50, PS_MONK50, PS_ROGUE50, PS_WARR50 },
@@ -131,7 +131,7 @@ _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS] = {
 	// clang-format on
 };
 /** Specifies the active sound effect ID for interacting with cows. */
-int CowPlaying = -1;
+_sfx_id CowPlaying = SFX_NONE;
 
 static void CowSFX(int pnum)
 {

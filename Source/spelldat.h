@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "effects.h"
+
 namespace devilution {
 
 #ifdef __cplusplus
