@@ -12,9 +12,9 @@ extern "C" {
 #endif
 
 typedef struct MissileData {
-	Uint8 mName;
 	void (*mAddProc)(Sint32, Sint32, Sint32, Sint32, Sint32, Sint32, Sint8, Sint32, Sint32);
 	void (*mProc)(Sint32);
+	Uint8 mName;
 	bool mDraw;
 	Uint8 mType;
 	Uint8 mResist;
