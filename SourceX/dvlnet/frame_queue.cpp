@@ -4,7 +4,7 @@
 
 #include "dvlnet/packet.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 framesize_t frame_queue::size()
@@ -21,16 +21,16 @@ buffer_t frame_queue::read(framesize_t s)
 		s -= buffer_deque.front().size();
 		current_size -= buffer_deque.front().size();
 		ret.insert(ret.end(),
-			buffer_deque.front().begin(),
-			buffer_deque.front().end());
+		    buffer_deque.front().begin(),
+		    buffer_deque.front().end());
 		buffer_deque.pop_front();
 	}
 	if (s > 0) {
 		ret.insert(ret.end(),
-			buffer_deque.front().begin(),
-			buffer_deque.front().begin() + s);
+		    buffer_deque.front().begin(),
+		    buffer_deque.front().begin() + s);
 		buffer_deque.front().erase(buffer_deque.front().begin(),
-			buffer_deque.front().begin() + s);
+		    buffer_deque.front().begin() + s);
 		current_size -= s;
 	}
 	return ret;
@@ -79,4 +79,4 @@ buffer_t frame_queue::make_frame(buffer_t packetbuf)
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

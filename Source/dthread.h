@@ -3,10 +3,9 @@
  *
  * Interface of functions for updating game state from network commands.
  */
-#ifndef __DTHREAD_H__
-#define __DTHREAD_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,6 +21,4 @@ void dthread_cleanup();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DTHREAD_H__ */
+}

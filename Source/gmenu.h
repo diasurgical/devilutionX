@@ -3,23 +3,30 @@
  *
  * Interface of the in-game navigation and interaction.
  */
-#ifndef __GMENU_H__
-#define __GMENU_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "engine.h"
+
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef struct TMenuItem {
+	Uint32 dwFlags;
+	const char *pszStr;
+	void (*fnMenu)(BOOL);
+} TMenuItem;
+
 extern TMenuItem *sgpCurrentMenu;
 
-void gmenu_draw_pause();
+void gmenu_draw_pause(CelOutputBuffer out);
 void FreeGMenu();
 void gmenu_init_menu();
 BOOL gmenu_is_active();
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *));
-void gmenu_draw();
+void gmenu_draw(CelOutputBuffer out);
 BOOL gmenu_presskeys(int vkey);
 BOOL gmenu_on_mouse_move();
 BOOL gmenu_left_mouse(BOOL isDown);
@@ -32,6 +39,4 @@ void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __GMENU_H__ */
+}

@@ -3,10 +3,9 @@
  *
  * Interface of functionality for rendering the dungeons, monsters and calling other render routines.
  */
-#ifndef __SCROLLRT_H__
-#define __SCROLLRT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,8 +16,6 @@ extern bool sgbControllerActive;
 extern bool IsMovingMouseCursorWithController();
 
 extern int light_table_index;
-extern BYTE *gpBufStart;
-extern BYTE *gpBufEnd;
 extern DWORD level_cel_block;
 extern char arch_draw_type;
 extern int cel_transparency_active;
@@ -32,7 +29,15 @@ int RowsCoveredByPanel();
 void CalcTileOffset(int *offsetX, int *offsetY);
 void TilesInView(int *columns, int *rows);
 void CalcViewportGeometry();
-void DrawView(int StartX, int StartY);
+
+/**
+ * @brief Start rendering of screen, town variation
+ * @param out Buffer to render to
+ * @param StartX Center of view in dPiece coordinate
+ * @param StartY Center of view in dPiece coordinate
+ */
+void DrawView(CelOutputBuffer out, int StartX, int StartY);
+
 void ClearScreenBuffer();
 #ifdef _DEBUG
 void ScrollView();
@@ -45,6 +50,4 @@ void DrawAndBlit();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SCROLLRT_H__ */
+}

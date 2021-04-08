@@ -7,7 +7,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../SourceX/display.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Should the movie continue playing. */
 BYTE movie_playing;
@@ -31,7 +31,7 @@ void play_movie(const char *pszMovie, BOOL user_can_close)
 	SVidPlayBegin(pszMovie, 0, 0, 0, 0, loop_movie ? 0x100C0808 : 0x10280808, &video_stream);
 	MSG Msg;
 	while (video_stream && movie_playing) {
-		while (movie_playing && PeekMessage(&Msg)) {
+		while (movie_playing && FetchMessage(&Msg)) {
 			switch (Msg.message) {
 			case DVL_WM_KEYDOWN:
 			case DVL_WM_LBUTTONDOWN:
@@ -56,4 +56,4 @@ void play_movie(const char *pszMovie, BOOL user_can_close)
 	OutputToLogical(&MouseX, &MouseY);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

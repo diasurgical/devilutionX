@@ -2,7 +2,7 @@
 #include "controls/menu_controls.h"
 #include "DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 std::vector<UiItemBase *> vecTitleScreen;
 
@@ -40,7 +40,7 @@ void UiTitleDialog()
 		UiAddBackground(&vecTitleScreen);
 		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
-		SDL_Rect rect = { PANEL_LEFT + 49, (UI_OFFSET_Y + 410), 550, 26 };
+		SDL_Rect rect = { (Sint16)(PANEL_LEFT + 49), (Sint16)(UI_OFFSET_Y + 410), 550, 26 };
 		vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));
 	}
 	title_Load();
@@ -76,4 +76,4 @@ void UiSetSpawned(BOOL bSpawned)
 	gbSpawned = bSpawned;
 }
 
-} // namespace dvl
+} // namespace devilution

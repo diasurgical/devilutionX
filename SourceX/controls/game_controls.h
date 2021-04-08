@@ -1,9 +1,12 @@
 #pragma once
 
-#include "all.h"
-#include "controls/controller.h"
+#include <cstdint>
+#include <SDL.h>
 
-namespace dvl {
+#include "./axis_direction.h"
+#include "./controller.h"
+
+namespace devilution {
 
 enum GameActionType {
 	GameActionType_NONE = 0,
@@ -22,7 +25,7 @@ enum GameActionType {
 };
 
 struct GameActionSendKey {
-	DWORD vk_code;
+	Uint32 vk_code;
 	bool up;
 };
 
@@ -68,25 +71,9 @@ struct GameAction {
 
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, GameAction *action);
 
-enum MoveDirectionX {
-	MoveDirectionX_NONE = 0,
-	MoveDirectionX_LEFT,
-	MoveDirectionX_RIGHT
-};
-enum MoveDirectionY {
-	MoveDirectionY_NONE = 0,
-	MoveDirectionY_UP,
-	MoveDirectionY_DOWN
-};
-struct MoveDirection {
-	MoveDirectionX x;
-	MoveDirectionY y;
-};
-MoveDirection GetMoveDirection();
+AxisDirection GetMoveDirection();
 
 extern bool start_modifier_active;
 extern bool select_modifier_active;
-extern bool dpad_hotkeys;
-extern bool switch_potions_and_clicks;
 
 } // namespace dvl

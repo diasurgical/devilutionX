@@ -2,7 +2,7 @@
 
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 enum MenuAction {
 	MenuAction_NONE = 0,
@@ -20,5 +20,8 @@ enum MenuAction {
 };
 
 MenuAction GetMenuAction(const SDL_Event &event);
+
+/** Menu action from holding the left stick or DPad. */
+MenuAction GetMenuHeldUpDownAction();
 
 } // namespace dvl

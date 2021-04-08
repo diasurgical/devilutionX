@@ -3,10 +3,9 @@
  *
  * Interface of functionality for checking if the game will be able run on the system.
  */
-#ifndef __RESTRICT_H__
-#define __RESTRICT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,6 +17,4 @@ void ReadOnlyTest();
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __RESTRICT_H__ */
+}

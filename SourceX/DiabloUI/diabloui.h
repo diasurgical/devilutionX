@@ -1,12 +1,14 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <SDL.h>
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
+#include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 extern std::size_t SelectedItem;
 extern bool textInputActive;
@@ -23,8 +25,8 @@ typedef enum _artLogo {
 	LOGO_BIG,
 } _artLogo;
 
-extern Art ArtLogos[3];
-extern Art ArtFocus[3];
+extern std::array<Art, 3> ArtLogos;
+extern std::array<Art, 3> ArtFocus;
 extern Art ArtBackground;
 extern Art ArtBackgroundWidescreen;
 extern Art ArtCursor;
@@ -34,10 +36,15 @@ extern bool gbSpawned;
 extern void (*gfnSoundFunction)(const char *file);
 extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 
+inline SDL_Surface *DiabloUiSurface()
+{
+	return GetOutputSurface();
+}
+
 void UiFadeIn();
 void UiHandleEvents(SDL_Event *event);
 bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items);
-int GetCenterOffset(int w, int bw = 0);
+Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
 void LoadBackgroundArt(const char *pszFile, int frames = 1);
@@ -52,9 +59,6 @@ void UiClearScreen();
 void UiPollAndRender();
 void UiRenderItems(std::vector<UiItemBase *> items);
 void UiInitList_clear();
-
-void DvlIntSetting(const char *valuename, int *value);
-void DvlStringSetting(const char *valuename, char *string, int len);
 
 void mainmenu_restart_repintro();
 } // namespace dvl

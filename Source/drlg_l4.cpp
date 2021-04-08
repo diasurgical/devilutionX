@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int diabquad1x;
 int diabquad1y;
@@ -15,6 +15,9 @@ int diabquad3x;
 int diabquad3y;
 int diabquad4x;
 int diabquad4y;
+
+namespace {
+
 BOOL hallok[20];
 int l4holdx;
 int l4holdy;
@@ -140,6 +143,8 @@ const BYTE L4BTYPES[140] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
+
+} // namespace
 
 static void DRLG_L4Shadows()
 {
@@ -1117,16 +1122,14 @@ static BOOL L4checkRoom(int x, int y, int width, int height)
 
 static void L4roomGen(int x, int y, int w, int h, int dir)
 {
-	int num;
 	BOOL ran, ran2;
 	int width, height, rx, ry, ry2;
 	int cw, ch, cx1, cy1, cx2;
 
 	int dirProb = random_(0, 4);
+	int num = 0;
 
-	switch (dir == 1 ? dirProb != 0 : dirProb == 0) {
-	case FALSE:
-		num = 0;
+	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
 		do {
 			cw = (random_(0, 5) + 2) & ~1;
 			ch = (random_(0, 5) + 2) & ~1;
@@ -1146,30 +1149,28 @@ static void L4roomGen(int x, int y, int w, int h, int dir)
 			L4roomGen(cx1, cy1, cw, ch, 1);
 		if (ran2 == TRUE)
 			L4roomGen(cx2, cy1, cw, ch, 1);
-		break;
-	case TRUE:
-		num = 0;
-		do {
-			width = (random_(0, 5) + 2) & ~1;
-			height = (random_(0, 5) + 2) & ~1;
-			rx = w / 2 + x - width / 2;
-			ry = y - height;
-			ran = L4checkRoom(rx - 1, ry - 1, width + 2, height + 1);
-			num++;
-		} while (ran == FALSE && num < 20);
-
-		if (ran == TRUE)
-			L4drawRoom(rx, ry, width, height);
-		ry2 = y + h;
-		ran2 = L4checkRoom(rx - 1, ry2, width + 2, height + 1);
-		if (ran2 == TRUE)
-			L4drawRoom(rx, ry2, width, height);
-		if (ran == TRUE)
-			L4roomGen(rx, ry, width, height, 0);
-		if (ran2 == TRUE)
-			L4roomGen(rx, ry2, width, height, 0);
-		break;
+		return;
 	}
+
+	do {
+		width = (random_(0, 5) + 2) & ~1;
+		height = (random_(0, 5) + 2) & ~1;
+		rx = w / 2 + x - width / 2;
+		ry = y - height;
+		ran = L4checkRoom(rx - 1, ry - 1, width + 2, height + 1);
+		num++;
+	} while (ran == FALSE && num < 20);
+
+	if (ran == TRUE)
+		L4drawRoom(rx, ry, width, height);
+	ry2 = y + h;
+	ran2 = L4checkRoom(rx - 1, ry2, width + 2, height + 1);
+	if (ran2 == TRUE)
+		L4drawRoom(rx, ry2, width, height);
+	if (ran == TRUE)
+		L4roomGen(rx, ry, width, height, 0);
+	if (ran2 == TRUE)
+		L4roomGen(rx, ry2, width, height, 0);
 }
 
 static void L4firstRoom()
@@ -1401,7 +1402,7 @@ static BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 
 #if defined(__3DS__)
 #pragma GCC push_options
-#pragma GCC optimize ("O0")
+#pragma GCC optimize("O0")
 #endif
 
 static void DRLG_L4FTVR(int i, int j, int x, int y, int d)
@@ -1890,4 +1891,4 @@ void LoadPreL4Dungeon(char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

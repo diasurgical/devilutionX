@@ -1,13 +1,9 @@
 #ifndef USE_SDL1
 #include "display.h"
+#include "options.h"
 #include "touch.h"
 #include "../../defs.h"
 #include <math.h>
-
-#ifdef __vita__
-#include "../3rdParty/Storm/Source/storm.h"
-static bool back_touch = false;
-#endif
 
 static int visible_width;
 static int visible_height;
@@ -43,15 +39,15 @@ static void set_mouse_motion_event(SDL_Event *event, int32_t x, int32_t y, int32
 static bool touch_initialized = false;
 static unsigned int simulated_click_start_time[TOUCH_PORT_MAX_NUM][2]; // initiation time of last simulated left or right click (zero if no click)
 static int direct_touch = 1;                                           // pointer jumps to finger
-static int mouse_x      = 0;                                           // always reflects current mouse position
-static int mouse_y      = 0;
+static int mouse_x = 0;                                                // always reflects current mouse position
+static int mouse_y = 0;
 
 enum {
-	MAX_NUM_FINGERS          = 3,   // number of fingers to track per panel
-	MAX_TAP_TIME             = 250, // taps longer than this will not result in mouse click events
-	MAX_TAP_MOTION_DISTANCE  = 10,  // max distance finger motion in Vita screen pixels to be considered a tap
-	SIMULATED_CLICK_DURATION = 50,  // time in ms how long simulated mouse clicks should be
-};                                  // track three fingers per panel
+	MAX_NUM_FINGERS = 3,           // number of fingers to track per panel
+	MAX_TAP_TIME = 250,            // taps longer than this will not result in mouse click events
+	MAX_TAP_MOTION_DISTANCE = 10,  // max distance finger motion in Vita screen pixels to be considered a tap
+	SIMULATED_CLICK_DURATION = 50, // time in ms how long simulated mouse clicks should be
+};                                 // track three fingers per panel
 
 typedef struct {
 	int id; // -1: not touching
@@ -90,12 +86,9 @@ static void init_touch(void)
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
 	visible_height = current.h;
-	visible_width = (current.h * SCREEN_WIDTH) / SCREEN_HEIGHT;
+	visible_width = (current.h * devilution::gnScreenWidth) / devilution::gnScreenHeight;
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
-#ifdef __vita__
-	back_touch = dvl::getIniBool("controls","enable_second_touchscreen", true);
-#endif
 }
 
 static void preprocess_events(SDL_Event *event)
@@ -114,9 +107,9 @@ static void preprocess_events(SDL_Event *event)
 	SDL_TouchID port = event->tfinger.touchId;
 	if (port != 0) {
 #ifdef __vita__
-		if(back_touch) {
+		if (devilution::sgOptions.Controller.bRearTouch) {
 			switch (event->type) {
-				case SDL_FINGERDOWN:
+			case SDL_FINGERDOWN:
 				preprocess_back_finger_down(event);
 				break;
 			case SDL_FINGERUP:
@@ -154,7 +147,7 @@ static void preprocess_finger_down(SDL_Event *event)
 	if (direct_touch) {
 		x = event->tfinger.x * visible_width + x_borderwidth;
 		y = event->tfinger.y * visible_height + y_borderwidth;
-		dvl::OutputToLogical(&x, &y);
+		devilution::OutputToLogical(&x, &y);
 	}
 
 	// make sure each finger is not reported down multiple times
@@ -172,12 +165,12 @@ static void preprocess_finger_down(SDL_Event *event)
 		if (finger[port][i].id != NO_TOUCH) {
 			continue;
 		}
-		finger[port][i].id             = id;
+		finger[port][i].id = id;
 		finger[port][i].time_last_down = event->tfinger.timestamp;
-		finger[port][i].last_down_x    = event->tfinger.x;
-		finger[port][i].last_down_y    = event->tfinger.y;
-		finger[port][i].last_x         = x;
-		finger[port][i].last_y         = y;
+		finger[port][i].last_down_x = event->tfinger.x;
+		finger[port][i].last_down_y = event->tfinger.y;
+		finger[port][i].last_x = x;
+		finger[port][i].last_y = y;
 		break;
 	}
 }
@@ -187,12 +180,14 @@ static void preprocess_back_finger_down(SDL_Event *event)
 	// front (0) or back (1) panel
 	SDL_TouchID port = event->tfinger.touchId;
 
-	if (port != 1) return;
+	if (port != 1)
+		return;
 
-	event->type          = SDL_CONTROLLERAXISMOTION;
+	event->type = SDL_CONTROLLERAXISMOTION;
 	event->caxis.value = 32767;
 	event->caxis.which = 0;
-	if (event->tfinger.x <= 0.5) {;
+	if (event->tfinger.x <= 0.5) {
+		;
 		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERLEFT;
 	} else {
 		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
@@ -204,12 +199,14 @@ static void preprocess_back_finger_up(SDL_Event *event)
 	// front (0) or back (1) panel
 	SDL_TouchID port = event->tfinger.touchId;
 
-	if (port != 1) return;
+	if (port != 1)
+		return;
 
-	event->type          = SDL_CONTROLLERAXISMOTION;
+	event->type = SDL_CONTROLLERAXISMOTION;
 	event->caxis.value = 0;
 	event->caxis.which = 0;
-	if (event->tfinger.x <= 0.5) {;
+	if (event->tfinger.x <= 0.5) {
+		;
 		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERLEFT;
 	} else {
 		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
@@ -248,8 +245,8 @@ static void preprocess_finger_up(SDL_Event *event)
 
 			// short (<MAX_TAP_TIME ms) tap is interpreted as right/left mouse click depending on # fingers already down
 			// but only if the finger hasn't moved since it was pressed down by more than MAX_TAP_MOTION_DISTANCE pixels
-			float xrel          = ((event->tfinger.x * dvl::GetOutputSurface()->w) - (finger[port][i].last_down_x * dvl::GetOutputSurface()->w));
-			float yrel          = ((event->tfinger.y * dvl::GetOutputSurface()->h) - (finger[port][i].last_down_y * dvl::GetOutputSurface()->h));
+			float xrel = ((event->tfinger.x * devilution::GetOutputSurface()->w) - (finger[port][i].last_down_x * devilution::GetOutputSurface()->w));
+			float yrel = ((event->tfinger.y * devilution::GetOutputSurface()->h) - (finger[port][i].last_down_y * devilution::GetOutputSurface()->h));
 			float max_r_squared = (float)(MAX_TAP_MOTION_DISTANCE * MAX_TAP_MOTION_DISTANCE);
 			if ((xrel * xrel + yrel * yrel) >= max_r_squared) {
 				continue;
@@ -271,7 +268,7 @@ static void preprocess_finger_up(SDL_Event *event)
 				if (direct_touch) {
 					x = event->tfinger.x * visible_width + x_borderwidth;
 					y = event->tfinger.y * visible_height + y_borderwidth;
-					dvl::OutputToLogical(&x, &y);
+					devilution::OutputToLogical(&x, &y);
 				}
 			}
 			set_mouse_button_event(event, SDL_MOUSEBUTTONDOWN, simulated_button, x, y);
@@ -309,27 +306,27 @@ static void preprocess_finger_motion(SDL_Event *event)
 	}
 
 	if (num_fingers_down >= 1) {
-		int x    = mouse_x;
-		int y    = mouse_y;
+		int x = mouse_x;
+		int y = mouse_y;
 		int xrel = 0;
 		int yrel = 0;
 
 		if (direct_touch) {
 			x = event->tfinger.x * visible_width + x_borderwidth;
 			y = event->tfinger.y * visible_height + y_borderwidth;
-			dvl::OutputToLogical(&x, &y);
+			devilution::OutputToLogical(&x, &y);
 		} else {
 			// for relative mode, use the pointer speed setting
 			float speedFactor = 1.0;
 
 			// convert touch events to relative mouse pointer events
 			// Whenever an SDL_event involving the mouse is processed,
-			x = (mouse_x + (event->tfinger.dx * 1.25 * speedFactor * dvl::GetOutputSurface()->w));
-			y = (mouse_y + (event->tfinger.dy * 1.25 * speedFactor * dvl::GetOutputSurface()->h));
+			x = (mouse_x + (event->tfinger.dx * 1.25 * speedFactor * devilution::GetOutputSurface()->w));
+			y = (mouse_y + (event->tfinger.dy * 1.25 * speedFactor * devilution::GetOutputSurface()->h));
 		}
 
-		x    = clip(x, 0, dvl::GetOutputSurface()->w);
-		y    = clip(y, 0, dvl::GetOutputSurface()->h);
+		x = clip(x, 0, devilution::GetOutputSurface()->w);
+		y = clip(y, 0, devilution::GetOutputSurface()->h);
 		xrel = x - mouse_x;
 		yrel = y - mouse_y;
 
@@ -363,8 +360,8 @@ static void preprocess_finger_motion(SDL_Event *event)
 							for (int j = 0; j < MAX_NUM_FINGERS; j++) {
 								if (finger[port][j].id >= 0 && (i != j)) {
 									if (finger[port][j].time_last_down < earliest_time) {
-										mouse_down_x  = finger[port][j].last_x;
-										mouse_down_y  = finger[port][j].last_y;
+										mouse_down_x = finger[port][j].last_x;
+										mouse_down_y = finger[port][j].last_y;
 										earliest_time = finger[port][j].time_last_down;
 									}
 								}
@@ -376,10 +373,10 @@ static void preprocess_finger_motion(SDL_Event *event)
 
 				Uint8 simulated_button = 0;
 				if (num_fingers_downlong == 2) {
-					simulated_button            = SDL_BUTTON_LEFT;
+					simulated_button = SDL_BUTTON_LEFT;
 					multi_finger_dragging[port] = DRAG_TWO_FINGER;
 				} else {
-					simulated_button            = SDL_BUTTON_RIGHT;
+					simulated_button = SDL_BUTTON_RIGHT;
 					multi_finger_dragging[port] = DRAG_THREE_FINGER;
 				}
 				SDL_Event ev;
@@ -417,7 +414,7 @@ static void preprocess_finger_motion(SDL_Event *event)
 	}
 }
 
-namespace dvl {
+namespace devilution {
 
 void handle_touch(SDL_Event *event, int current_mouse_x, int current_mouse_y)
 {
@@ -430,7 +427,7 @@ void handle_touch(SDL_Event *event, int current_mouse_x, int current_mouse_y)
 	}
 	preprocess_events(event);
 	if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP || event->type == SDL_FINGERMOTION) {
-		event->type      = SDL_USEREVENT;
+		event->type = SDL_USEREVENT;
 		event->user.code = -1; // ensure this event is ignored;
 	}
 }
@@ -466,11 +463,11 @@ void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y)
 	}
 }
 
-}
+} // namespace devilution
 
 static void set_mouse_button_event(SDL_Event *event, uint32_t type, uint8_t button, int32_t x, int32_t y)
 {
-	event->type          = type;
+	event->type = type;
 	event->button.button = button;
 	if (type == SDL_MOUSEBUTTONDOWN) {
 		event->button.state = SDL_PRESSED;
@@ -483,9 +480,9 @@ static void set_mouse_button_event(SDL_Event *event, uint32_t type, uint8_t butt
 
 static void set_mouse_motion_event(SDL_Event *event, int32_t x, int32_t y, int32_t xrel, int32_t yrel)
 {
-	event->type        = SDL_MOUSEMOTION;
-	event->motion.x    = x;
-	event->motion.y    = y;
+	event->type = SDL_MOUSEMOTION;
+	event->motion.x = x;
+	event->motion.y = y;
 	event->motion.xrel = xrel;
 	event->motion.yrel = yrel;
 }

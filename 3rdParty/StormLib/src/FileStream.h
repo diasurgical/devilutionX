@@ -202,7 +202,7 @@ struct TBlockStream : public TFileStream
     DWORD BlockCount;                       // Number of data blocks in the file
     DWORD IsComplete;                       // If nonzero, no blocks are missing
     DWORD IsModified;                       // nonzero if the bitmap has been modified
-};        
+};
 
 //-----------------------------------------------------------------------------
 // Structure for encrypted stream

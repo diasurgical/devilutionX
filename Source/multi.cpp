@@ -4,11 +4,12 @@
  * Implementation of functions for keeping multiplaye games in sync.
  */
 #include "all.h"
+#include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 BOOLEAN gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
@@ -22,7 +23,7 @@ BOOL gbShouldValidatePackage;
 BYTE gbActivePlayers;
 BOOLEAN gbGameDestroyed;
 BOOLEAN sgbSendDeltaTbl[MAX_PLRS];
-_gamedata sgGameInitInfo;
+GameData sgGameInitInfo;
 BOOLEAN gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
@@ -43,7 +44,7 @@ int player_state[MAX_PLRS];
  * Contains the set of supported event types supported by the multiplayer
  * event handler.
  */
-const int event_types[3] = {
+const event_type event_types[3] = {
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
 	EVENT_TYPE_PLAYER_CREATE_GAME,
 	EVENT_TYPE_PLAYER_MESSAGE
@@ -105,7 +106,7 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
-	pkt->hdr.wCheck = 'ip';
+	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
 	pkt->hdr.px = plr[myplr]._px;
 	pkt->hdr.py = plr[myplr]._py;
 	pkt->hdr.targx = plr[myplr]._ptargx;
@@ -266,6 +267,7 @@ static void multi_player_left_msg(int pnum, int left)
 		}
 		plr[pnum].plractive = FALSE;
 		plr[pnum]._pName[0] = '\0';
+		FreePlayerGFX(pnum);
 		gbActivePlayers--;
 	}
 }
@@ -433,7 +435,7 @@ static void multi_process_tmsgs()
 	int cnt;
 	TPkt pkt;
 
-	while (cnt = tmsg_get((BYTE *)&pkt, 512)) {
+	while ((cnt = tmsg_get((BYTE *)&pkt, 512)) != 0) {
 		multi_handle_all_packets(myplr, (BYTE *)&pkt, cnt);
 	}
 }
@@ -457,7 +459,7 @@ void multi_process_network_packets()
 			continue;
 		if (dwID >= MAX_PLRS)
 			continue;
-		if (pkt->wCheck != 'ip')
+		if (pkt->wCheck != LOAD_BE32("\0\0ip"))
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
@@ -522,7 +524,7 @@ void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen)
 	dwOffset = 0;
 
 	while (dwLen != 0) {
-		pkt.hdr.wCheck = 'ip';
+		pkt.hdr.wCheck = LOAD_BE32("\0\0ip");
 		pkt.hdr.px = 0;
 		pkt.hdr.py = 0;
 		pkt.hdr.targx = 0;
@@ -582,7 +584,7 @@ static void multi_send_pinfo(int pnum, char cmd)
 	dthread_send_delta(pnum, cmd, &pkplr, sizeof(pkplr));
 }
 
-static int InitLevelType(int l)
+static dungeon_type InitLevelType(int l)
 {
 	if (l == 0)
 		return DTYPE_TOWN;
@@ -659,16 +661,17 @@ static BOOL multi_upgrade(BOOL *pfExitProgram)
 static void multi_handle_events(_SNETEVENT *pEvt)
 {
 	DWORD LeftReason;
-	_gamedata *gameData;
+	GameData *gameData;
 
 	switch (pEvt->eventid) {
-	case EVENT_TYPE_PLAYER_CREATE_GAME:
-		gameData = (_gamedata *)pEvt->data;
-		sgGameInitInfo.dwSeed = gameData->dwSeed;
-		sgGameInitInfo.bDiff = gameData->bDiff;
-		sgGameInitInfo.bRate = gameData->bRate;
+	case EVENT_TYPE_PLAYER_CREATE_GAME: {
+		GameData *gameData = (GameData *)pEvt->data;
+		if (gameData->size != sizeof(GameData))
+			app_fatal("Invalid size of game data: %d", gameData->size);
+		sgGameInitInfo = *gameData;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = TRUE;
 		break;
+	}
 	case EVENT_TYPE_PLAYER_LEAVE_GAME:
 		sgbPlayerLeftGameTbl[pEvt->playerid] = TRUE;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = FALSE;
@@ -695,8 +698,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 static void multi_event_handler(BOOL add)
 {
 	DWORD i;
-	BOOL(STORMAPI * fn)
-	(int, SEVTHANDLER);
+	bool (*fn)(event_type, SEVTHANDLER);
 
 	if (add)
 		fn = SNetRegisterEventHandler;
@@ -705,7 +707,7 @@ static void multi_event_handler(BOOL add)
 
 	for (i = 0; i < 3; i++) {
 		if (!fn(event_types[i], multi_handle_events) && add) {
-			app_fatal("SNetRegisterEventHandler:\n%s", TraceLastError());
+			app_fatal("SNetRegisterEventHandler:\n%s", SDL_GetError());
 		}
 	}
 }
@@ -728,46 +730,21 @@ void NetClose()
 
 BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 {
-	int i;
-	_SNETPROGRAMDATA ProgramData;
-	_SNETUIDATA UiData;
-	_SNETPLAYERDATA plrdata;
-
 	while (1) {
 		*pfExitProgram = FALSE;
 		SetRndSeed(0);
+		sgGameInitInfo.size = sizeof(sgGameInitInfo);
 		sgGameInitInfo.dwSeed = time(NULL);
-		sgGameInitInfo.bDiff = gnDifficulty;
-		sgGameInitInfo.bRate = ticks_per_sec;
-		memset(&ProgramData, 0, sizeof(ProgramData));
-		ProgramData.size = sizeof(ProgramData);
-
-		ProgramData.programname = PROJECT_NAME;
-
-		ProgramData.programdescription = gszVersionNumber;
-		ProgramData.programid = GAME_ID;
-		ProgramData.versionid = GAME_VERSION;
-		ProgramData.maxplayers = MAX_PLRS;
-		ProgramData.initdata = &sgGameInitInfo;
-		ProgramData.initdatabytes = sizeof(sgGameInitInfo);
-		ProgramData.optcategorybits = 15;
-		ProgramData.lcid = 1033; /* LANG_ENGLISH */
-		memset(&plrdata, 0, sizeof(plrdata));
-		plrdata.size = sizeof(plrdata);
-		memset(&UiData, 0, sizeof(UiData));
-		UiData.size = sizeof(UiData);
-		UiData.artcallback = (void (*)())UiArtCallback;
-		UiData.createcallback = (void (*)())UiCreateGameCallback;
-		UiData.drawdesccallback = (void (*)())UiDrawDescCallback;
-		UiData.soundcallback = (void (*)())UiSoundCallback;
-		UiData.authcallback = (void (*)())UiAuthCallback;
-		UiData.getdatacallback = (void (*)())UiGetDataCallback;
-		UiData.categorycallback = (void (*)())UiCategoryCallback;
-		UiData.selectnamecallback = mainmenu_select_hero_dialog;
-		UiData.changenamecallback = (void (*)())mainmenu_change_name;
-		UiData.profilebitmapcallback = (void (*)())UiProfileDraw;
-		UiData.profilecallback = (void (*)())UiProfileCallback;
-		UiData.profilefields = UiProfileGetString();
+		sgGameInitInfo.programid = GAME_ID;
+		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
+		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
+		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
+		sgGameInitInfo.nDifficulty = gnDifficulty;
+		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
+		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown;
+		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
+		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest;
+		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;
 		memset(sgbPlayerTurnBitTbl, 0, sizeof(sgbPlayerTurnBitTbl));
 		gbGameDestroyed = FALSE;
 		memset(sgbPlayerLeftGameTbl, 0, sizeof(sgbPlayerLeftGameTbl));
@@ -777,10 +754,10 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		memset(sgwPackPlrOffsetTbl, 0, sizeof(sgwPackPlrOffsetTbl));
 		SNetSetBasePlayer(0);
 		if (bSinglePlayer) {
-			if (!multi_init_single(&ProgramData, &plrdata, &UiData))
+			if (!multi_init_single(&sgGameInitInfo))
 				return FALSE;
 		} else {
-			if (!multi_init_multi(&ProgramData, &plrdata, &UiData, pfExitProgram))
+			if (!multi_init_multi(&sgGameInitInfo, pfExitProgram))
 				return FALSE;
 		}
 		sgbNetInited = TRUE;
@@ -801,20 +778,26 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		nthread_send_and_recv_turn(0, 0);
 		SetupLocalCoords();
 		multi_send_pinfo(-2, CMD_SEND_PLRINFO);
+
+		InitPlrGFXMem(myplr);
 		plr[myplr].plractive = TRUE;
 		gbActivePlayers = 1;
+
 		if (sgbPlayerTurnBitTbl[myplr] == FALSE || msg_wait_resync())
 			break;
 		NetClose();
 		gbSelectProvider = FALSE;
 	}
-	gnDifficulty = sgGameInitInfo.bDiff;
-	ticks_per_sec = sgGameInitInfo.bRate;
-	tick_delay = 1000 / ticks_per_sec;
 	SetRndSeed(sgGameInitInfo.dwSeed);
+	gnDifficulty = sgGameInitInfo.nDifficulty;
+	gnTickRate = sgGameInitInfo.nTickRate;
+	gnTickDelay = 1000 / gnTickRate;
+	gbRunInTown = sgGameInitInfo.bRunInTown;
+	gbTheoQuest = sgGameInitInfo.bTheoQuest;
+	gbCowQuest = sgGameInitInfo.bCowQuest;
+	gbFriendlyFire = sgGameInitInfo.bFriendlyFire;
 
-	int numberOfLevels = gbIsHellfire ? NUMLEVELS : 17;
-	for (i = 0; i < numberOfLevels; i++) {
+	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
@@ -826,18 +809,18 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	return TRUE;
 }
 
-BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info)
+BOOL multi_init_single(GameData *gameData)
 {
 	int unused;
 
-	if (!SNetInitializeProvider(SELCONN_LOOPBACK, client_info, user_info, ui_info, &fileinfo)) {
+	if (!SNetInitializeProvider(SELCONN_LOOPBACK, gameData)) {
 		SErrGetLastError();
 		return FALSE;
 	}
 
 	unused = 0;
 	if (!SNetCreateGame("local", "local", "local", 0, (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), 1, "local", "local", &unused)) {
-		app_fatal("SNetCreateGame1:\n%s", TraceLastError());
+		app_fatal("SNetCreateGame1:\n%s", SDL_GetError());
 	}
 
 	myplr = 0;
@@ -846,25 +829,21 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 	return TRUE;
 }
 
-BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, BOOL *pfExitProgram)
+BOOL multi_init_multi(GameData *gameData, BOOL *pfExitProgram)
 {
 	BOOL first;
 	int playerId;
-	int type;
 
 	for (first = TRUE;; first = FALSE) {
-		type = 0x00;
 		if (gbSelectProvider) {
-			if (!UiSelectProvider(0, client_info, user_info, ui_info, &fileinfo, &type)
+			if (!UiSelectProvider(gameData)
 			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
 				return FALSE;
 			}
-			if (type == 'BNET')
-				plr[0].pBattleNet = 1;
 		}
 
 		multi_event_handler(TRUE);
-		if (UiSelectGame(1, client_info, user_info, ui_info, &fileinfo, &playerId))
+		if (UiSelectGame(gameData, &playerId))
 			break;
 
 		gbSelectProvider = TRUE;
@@ -877,9 +856,6 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 		gbIsMultiplayer = true;
 
 		pfile_read_player_from_save();
-
-		if (type == 'BNET')
-			plr[myplr].pBattleNet = 1;
 
 		return TRUE;
 	}
@@ -912,14 +888,13 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	multi_player_left_msg(pnum, 0);
-	plr[pnum]._pGFXLoad = 0;
-	gbIsHellfireSaveGame = gbIsHellfire;
 	UnPackPlayer(&netplr[pnum], pnum, TRUE);
 
 	if (!recv) {
 		return;
 	}
 
+	InitPlrGFXMem(pnum);
 	plr[pnum].plractive = TRUE;
 	gbActivePlayers++;
 
@@ -935,7 +910,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 
 	if (plr[pnum].plrlevel == currlevel) {
 		if (plr[pnum]._pHitPoints >> 6 > 0) {
-			StartStand(pnum, 0);
+			StartStand(pnum, DIR_S);
 		} else {
 			plr[pnum]._pgfxnum = 0;
 			LoadPlrGFX(pnum, PFILE_DEATH);
@@ -948,4 +923,4 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -33,13 +33,20 @@ if [[ $TARGET == gkd350h ]]; then
 	# Use the rg350 buildroot for gkd350h because gkd350h buildroot is not open-source.
 	BUILDROOT_TARGET=rg350
 fi
-BUILDROOT="${BUILDROOT:-$HOME/devilutionx-buildroots/$BUILDROOT_TARGET}"
+
+# If a TOOLCHAIN environment variable is set, just use that.
+if [[ -z ${TOOLCHAIN:-} ]]; then
+	BUILDROOT="${BUILDROOT:-$HOME/devilutionx-buildroots/$BUILDROOT_TARGET}"
+	TOOLCHAIN="${BUILDROOT}/output/host"
+fi
 
 main() {
 	>&2 echo "Building for target ${TARGET} in ${BUILD_DIR}"
 	set -x
-	prepare_buildroot
-	make_buildroot
+	if [[ -n ${BUILDROOT:-} ]]; then
+		prepare_buildroot
+		make_buildroot
+	fi
 	build
 	package_opk
 }
@@ -50,6 +57,11 @@ prepare_buildroot() {
 	fi
 	git clone --depth=1 "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" "$BUILDROOT"
 	cd "$BUILDROOT"
+
+	# Work around a BR2_EXTERNAL initialization bug in older buildroots.
+	mkdir -p output
+	touch output/.br-external.mk
+
 	make ${BUILDROOT_DEFCONFIGS[$BUILDROOT_TARGET]}
 	cd -
 }
@@ -65,8 +77,9 @@ build() {
 	cd "$BUILD_DIR"
 	rm -f CMakeCache.txt
 	cmake .. -DBINARY_RELEASE=ON "-DTARGET_PLATFORM=$TARGET" \
-		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
+		-DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}/usr/share/buildroot/toolchainfile.cmake"
 	make -j $(getconf _NPROCESSORS_ONLN)
+	"${TOOLCHAIN}/bin/"*-linux-strip devilutionx
 	cd -
 }
 

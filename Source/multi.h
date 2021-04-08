@@ -3,14 +3,30 @@
  *
  * Interface of functions for keeping multiplayer games in sync.
  */
-#ifndef __MULTI_H__
-#define __MULTI_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "msg.h"
+
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct GameData {
+	Sint32 size;
+	Sint32 dwSeed;
+	Uint32 programid;
+	Uint8 versionMajor;
+	Uint8 versionMinor;
+	Uint8 versionPatch;
+	Uint8 nDifficulty;
+	Uint8 nTickRate;
+	Uint8 bRunInTown;
+	Uint8 bTheoQuest;
+	Uint8 bCowQuest;
+	Uint8 bFriendlyFire;
+} GameData;
 
 extern BOOLEAN gbSomebodyWonGameKludge;
 extern char szPlayerDescript[128];
@@ -35,14 +51,12 @@ void multi_process_network_packets();
 void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen);
 void NetClose();
 BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram);
-BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info);
-BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, BOOL *pfExitProgram);
+BOOL multi_init_single(GameData *gameData);
+BOOL multi_init_multi(GameData *gameData, BOOL *pfExitProgram);
 void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv);
 
 #ifdef __cplusplus
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MULTI_H__ */
+}

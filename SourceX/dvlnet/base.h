@@ -7,11 +7,10 @@
 #include <memory>
 
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
 #include "dvlnet/abstract_net.h"
 #include "dvlnet/packet.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class base : public abstract_net {

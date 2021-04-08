@@ -3,10 +3,11 @@
  *
  * Interface of data related to missiles.
  */
-#ifndef __MISDAT_H__
-#define __MISDAT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "missiles.h"
+
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,6 +20,4 @@ extern MisFileData misfiledata[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MISDAT_H__ */
+}

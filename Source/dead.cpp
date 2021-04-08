@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 DeadStruct dead[MAXDEAD];
 int stonendx;
@@ -91,4 +91,4 @@ void SetDead()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

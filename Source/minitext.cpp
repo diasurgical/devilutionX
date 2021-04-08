@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Specify if the quest dialog window is being shown */
 bool qtextflag;
@@ -144,17 +144,10 @@ int CalcTextSpeed(int nSFX)
  */
 void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
 {
-	Uint8 *pStart, *pEnd;
-
-	assert(gpBuffer);
-	pStart = gpBufStart;
-	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y + UI_OFFSET_Y)];
-	pEnd = gpBufEnd;
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (309 + SCREEN_Y + UI_OFFSET_Y)];
-	CelDraw(sx, sy, pCelBuff, nCel, 22);
-
-	gpBufStart = pStart;
-	gpBufEnd = pEnd;
+	CelOutputBuffer buf = GlobalBackBuffer();
+	const int start_y = 49 + UI_OFFSET_Y;
+	buf = buf.subregionY(start_y, 260);
+	CelDrawTo(buf, sx, sy - start_y, pCelBuff, nCel, 22);
 }
 
 /**
@@ -165,7 +158,7 @@ void ScrollQTextContent(const char *pnl)
 {
 	for (Uint32 currTime = SDL_GetTicks(); sgLastScroll + qtextSpd < currTime; sgLastScroll += qtextSpd) {
 		qtexty--;
-		if (qtexty <= 49 + SCREEN_Y + UI_OFFSET_Y) {
+		if (qtexty <= 49 + UI_OFFSET_Y) {
 			qtexty += 38;
 			qtextptr = pnl;
 			if (*pnl == '|') {
@@ -179,8 +172,9 @@ void ScrollQTextContent(const char *pnl)
 /**
  * @brief Draw the current text in the quest dialog window
  */
-void DrawQTextContent()
+static void DrawQTextContent(CelOutputBuffer out)
 {
+	// TODO: Draw to the given `out` buffer.
 	const char *text, *pnl;
 	char line[128];
 
@@ -208,7 +202,7 @@ void DrawQTextContent()
 		}
 		tx = 48 + PANEL_X;
 		ty += lineHeight;
-		if (ty > 341 + SCREEN_Y + UI_OFFSET_Y) {
+		if (ty > 341 + UI_OFFSET_Y) {
 			doneflag = true;
 		}
 	}
@@ -247,29 +241,23 @@ void InitQTextMsg(int m)
 		questlog = false;
 		qtextptr = alltext[m].txtstr;
 		qtextflag = true;
-		qtexty = 340 + SCREEN_Y + UI_OFFSET_Y;
+		qtexty = 340 + UI_OFFSET_Y;
 		qtextSpd = CalcTextSpeed(alltext[m].sfxnr);
 		sgLastScroll = SDL_GetTicks();
 	}
 	PlaySFX(alltext[m].sfxnr);
 }
 
-/**
- * @brief Draw the quest dialog window decoration and background
- */
-void DrawQTextBack()
+void DrawQTextBack(CelOutputBuffer out)
 {
-	CelDraw(PANEL_X + 24, SCREEN_Y + 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
-	trans_rect(PANEL_LEFT + 27, UI_OFFSET_Y + 28, 585, 297);
+	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
+	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
-/**
- * @brief Draw the quest dialog window decoration and background
- */
-void DrawQText()
+void DrawQText(CelOutputBuffer out)
 {
-	DrawQTextBack();
-	DrawQTextContent();
+	DrawQTextBack(out);
+	DrawQTextContent(out);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -3,30 +3,36 @@
  *
  * Interface of the main game initialization functions.
  */
-#ifndef __DIABLO_H__
-#define __DIABLO_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "pack.h"
+#ifdef _DEBUG
+#include "monstdat.h"
+#endif
+
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct Options {
-	bool blendedTransparancy; // Use blended transparency rather than stippled
-	int ticksPerSecound;      // Game play ticks per secound
-} Options;
+#ifndef DEFAULT_WIDTH
+#define DEFAULT_WIDTH 640
+#endif
+#ifndef DEFAULT_HEIGHT
+#define DEFAULT_HEIGHT 480
+#endif
 
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
-extern int gnLevelTypeTbl[NUMLEVELS];
+extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern int MouseX;
 extern int MouseY;
 extern BOOL gbRunGame;
 extern BOOL gbRunGameResult;
 extern BOOL zoomflag;
 extern BOOL gbProcessPlayers;
-extern BOOL gbLoadGame;
+extern bool gbLoadGame;
 extern BOOLEAN cineflag;
 extern int force_redraw;
 /* These are defined in fonts.h */
@@ -34,24 +40,22 @@ extern BOOL was_fonts_init;
 extern void FontsCleanup();
 extern BOOL light4flag;
 extern int PauseMode;
-extern BOOLEAN UseTheoQuest;
-extern BOOLEAN UseCowFarmer;
-extern BOOLEAN UseNestArt;
-extern BOOLEAN UseBardTest;
-extern BOOLEAN UseBarbarianTest;
-extern BOOLEAN UseMultiTest;
+extern bool gbTheoQuest;
+extern bool gbCowQuest;
+extern bool gbNestArt;
+extern bool gbBard;
+extern bool gbBarbarian;
 extern char sgbMouseDown;
-extern int ticks_per_sec;
-extern WORD tick_delay;
-extern Options sgOptions;
+extern int gnTickRate;
+extern WORD gnTickDelay;
 
 void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
-void diablo_quit(int exitStatus);
+[[noreturn]] void diablo_quit(int exitStatus);
 int DiabloMain(int argc, char **argv);
 BOOL TryIconCurs();
 void diablo_pause_game();
-BOOL PressEscKey();
+bool PressEscKey();
 void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void LoadGameLevel(BOOL firstflag, int lvldir);
@@ -60,29 +64,26 @@ void diablo_color_cyc_logic();
 
 /* rdata */
 
-extern BOOL fullscreen;
-extern BOOL leveldebug;
+extern bool gbForceWindowed;
+extern bool leveldebug;
 #ifdef _DEBUG
-extern BOOL monstdebug;
+extern bool monstdebug;
+extern _monster_id DebugMonsters[10];
 extern int debugmonsttypes;
-extern int DebugMonsters[10];
-extern BOOL visiondebug;
+extern bool visiondebug;
 extern int questdebug;
-extern int debug_mode_key_w;
-extern int debug_mode_key_inverted_v;
-extern int debug_mode_dollar_sign;
-extern int debug_mode_key_d;
-extern int debug_mode_key_i;
-extern int dbgplr;
-extern int dbgqst;
-extern int dbgmon;
+extern bool debug_mode_key_w;
+extern bool debug_mode_key_inverted_v;
+extern bool debug_mode_dollar_sign;
+extern bool debug_mode_key_d;
+extern bool debug_mode_key_i;
+extern int debug_mode_key_j;
 #endif
-extern BOOL FriendlyMode;
+extern bool gbFriendlyMode;
+extern bool gbFriendlyFire;
 
 #ifdef __cplusplus
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DIABLO_H__ */
+}

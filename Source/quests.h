@@ -3,10 +3,11 @@
  *
  * Interface of functionality for handling quests.
  */
-#ifndef __QUESTS_H__
-#define __QUESTS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "engine.h"
+
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,12 +17,12 @@ typedef struct QuestStruct {
 	Uint8 _qlevel;
 	Uint8 _qtype;
 	Uint8 _qactive;
-	Uint8 _qlvltype;
+	dungeon_type _qlvltype;
 	Sint32 _qtx;
 	Sint32 _qty;
 	Uint8 _qslvl;
 	Uint8 _qidx;
-	Uint32 _qmsg;
+	Sint32 _qmsg;
 	Uint8 _qvar1;
 	Uint8 _qvar2;
 	bool _qlog;
@@ -30,7 +31,7 @@ typedef struct QuestStruct {
 typedef struct QuestData {
 	Uint8 _qdlvl;
 	Sint8 _qdmultlvl;
-	Uint8 _qlvlt;
+	dungeon_type _qlvlt;
 	Uint8 _qdtype;
 	Uint8 _qdrnd;
 	Uint8 _qslvl;
@@ -39,13 +40,12 @@ typedef struct QuestData {
 	const char *_qlstr;
 } QuestData;
 
-extern bool allquests;
 extern bool questlog;
 extern BYTE *pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
 extern int ReturnLvlX;
 extern int ReturnLvlY;
-extern int ReturnLvlT;
+extern dungeon_type ReturnLvlT;
 extern int ReturnLvl;
 
 void InitQuests();
@@ -59,7 +59,7 @@ void GetReturnLvlPos();
 void LoadPWaterPalette();
 void ResyncMPQuests();
 void ResyncQuests();
-void DrawQuestLog();
+void DrawQuestLog(CelOutputBuffer out);
 void StartQuestlog();
 void QuestlogUp();
 void QuestlogDown();
@@ -74,6 +74,4 @@ extern QuestData questlist[];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __QUESTS_H__ */
+}

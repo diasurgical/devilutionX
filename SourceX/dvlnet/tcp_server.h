@@ -12,7 +12,7 @@
 #include "dvlnet/abstract_net.h"
 #include "dvlnet/frame_queue.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class server_exception : public dvlnet_exception {
@@ -28,6 +28,7 @@ public:
 	tcp_server(asio::io_context &ioc, std::string bindaddr,
 	    unsigned short port, std::string pw);
 	std::string localhost_self();
+	void close();
 	virtual ~tcp_server();
 
 private:

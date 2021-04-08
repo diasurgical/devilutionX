@@ -5,13 +5,13 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 namespace {
 
 TMsg *sgpTimedMsgHead;
 
-}
+} // namespace
 
 int tmsg_get(Uint8 *pbMsg, Uint32 dwMaxLen)
 {
@@ -38,7 +38,7 @@ void tmsg_add(Uint8 *pbMsg, Uint8 bLen)
 
 	TMsg *msg = (TMsg *)DiabloAllocPtr(bLen + sizeof(*msg));
 	msg->hdr.pNext = nullptr;
-	msg->hdr.dwTime = SDL_GetTicks() + tick_delay * 10;
+	msg->hdr.dwTime = SDL_GetTicks() + gnTickDelay * 10;
 	msg->hdr.bLen = bLen;
 	memcpy(msg->body, pbMsg, bLen);
 	for (tail = &sgpTimedMsgHead; *tail; tail = &(*tail)->hdr.pNext) {
@@ -63,4 +63,4 @@ void tmsg_cleanup()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -8,10 +8,12 @@
 
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
+
+namespace {
 
 /** This will be true if a lava pool has been generated for the level */
-BOOLEAN lavapool;
+Uint8 lavapool;
 int lockoutcnt;
 BOOLEAN lockout[DMAXX][DMAXY];
 
@@ -832,6 +834,8 @@ const BYTE byte_48A9C8[] = {
 	// clang-format on
 };
 
+} // namespace
+
 static void InitL3Dungeon()
 {
 	int i, j;
@@ -1573,7 +1577,7 @@ static void DRLG_L3Pool()
 							if (k != 0 && k <= 37) {
 								dungeon[i][j] = k;
 							}
-							lavapool = TRUE;
+							lavapool = 1;
 						}
 					}
 				}
@@ -1597,6 +1601,8 @@ static void DRLG_L3PoolFix()
 				    && dungeon[dunx + 1][duny - 1] >= 25 && dungeon[dunx + 1][duny - 1] <= 41
 				    && dungeon[dunx + 1][duny] >= 25 && dungeon[dunx + 1][duny] <= 41
 				    && dungeon[dunx + 1][duny + 1] >= 25 && dungeon[dunx + 1][duny + 1] <= 41) {
+					dungeon[dunx][duny] = 33;
+				} else if (dungeon[dunx + 1][duny] == 35 || dungeon[dunx + 1][duny] == 37) {
 					dungeon[dunx][duny] = 33;
 				}
 			}
@@ -2165,7 +2171,7 @@ static void DRLG_L3Wood()
 	FenceDoorFix();
 }
 
-BOOL DRLG_L3Anvil()
+static BOOL DRLG_L3Anvil()
 {
 	int sx, sy, sw, sh, xx, yy, ii, trys;
 	BOOL found;
@@ -2226,7 +2232,7 @@ BOOL DRLG_L3Anvil()
 	return FALSE;
 }
 
-void FixL3Warp()
+static void FixL3Warp()
 {
 	int i, j;
 
@@ -2246,7 +2252,7 @@ void FixL3Warp()
 	}
 }
 
-void FixL3HallofHeroes()
+static void FixL3HallofHeroes()
 {
 	int i, j;
 
@@ -2273,7 +2279,7 @@ void FixL3HallofHeroes()
 	}
 }
 
-void DRLG_L3LockRec(int x, int y)
+static void DRLG_L3LockRec(int x, int y)
 {
 	if (!lockout[x][y]) {
 		return;
@@ -2316,7 +2322,7 @@ static void DRLG_L3(int entry)
 	int x1, y1, x2, y2, i, j;
 	BOOL found, genok;
 
-	lavapool = FALSE;
+	lavapool = 0;
 
 	do {
 		do {
@@ -2428,9 +2434,9 @@ static void DRLG_L3(int entry)
 			lavapool += drlg_l3_hive_rnd_piece(byte_48A948, 50);
 			lavapool += drlg_l3_hive_rnd_piece(byte_48A970, 60);
 			if (lavapool < 3)
-				lavapool = FALSE;
+				lavapool = 0;
 		}
-	} while (!lavapool);
+	} while (lavapool == 0);
 
 	if (currlevel < 17)
 		DRLG_L3PoolFix();
@@ -2750,4 +2756,4 @@ void LoadPreL3Dungeon(const char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

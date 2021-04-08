@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int doom_quest_time;
 int doom_stars_drawn;
@@ -86,13 +86,13 @@ void doom_close()
 	doom_cleanup();
 }
 
-void doom_draw()
+void doom_draw(CelOutputBuffer out)
 {
 	if (!doomflag) {
 		return;
 	}
 
-	CelDraw(PANEL_X, PANEL_Y - 1, pDoomCel, 1, 640);
+	CelDrawTo(out, PANEL_X, PANEL_Y - 1, pDoomCel, 1, 640);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

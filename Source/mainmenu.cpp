@@ -4,10 +4,11 @@
  * Implementation of functions for interacting with the main menu.
  */
 #include "all.h"
+#include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 char gszHero[16];
 
@@ -51,23 +52,18 @@ static BOOL mainmenu_init_menu(int type)
 
 static BOOL mainmenu_single_player()
 {
-	if (!SRegLoadValue("Hellfire", jogging_title, 0, &jogging_opt)) {
-		jogging_opt = TRUE;
-	}
-	if (!gbIsHellfire) {
-		jogging_opt = FALSE;
-	}
-
 	gbIsMultiplayer = false;
 
-	ticks_per_sec = sgOptions.ticksPerSecound;
+	gbRunInTown = sgOptions.Gameplay.bRunInTown;
+	gnTickRate = sgOptions.Gameplay.nTickRate;
+	gbTheoQuest = sgOptions.Gameplay.bTheoQuest;
+	gbCowQuest = sgOptions.Gameplay.bCowQuest;
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
 static BOOL mainmenu_multi_player()
 {
-	jogging_opt = FALSE;
 	gbIsMultiplayer = true;
 	return mainmenu_init_menu(SELHERO_CONNECT);
 }
@@ -81,65 +77,37 @@ static void mainmenu_play_intro()
 		play_movie("gendata\\diablo1.smk", TRUE);
 	mainmenu_refresh_music();
 }
-void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
-{
-	if (UiValidPlayerName(name_2))
-		pfile_rename_hero(name_1, name_2);
-}
 
-BOOL mainmenu_select_hero_dialog(
-    const _SNETPROGRAMDATA *client_info,
-    const _SNETPLAYERDATA *user_info,
-    const _SNETUIDATA *ui_info,
-    const _SNETVERSIONDATA *fileinfo,
-    DWORD mode,
-    char *cname, DWORD clen,
-    char *cdesc, DWORD cdlen,
-    BOOL *multi)
+bool mainmenu_select_hero_dialog(GameData *gameData)
 {
-	BOOL hero_is_created = TRUE;
-	int dlgresult = 0;
+	_selhero_selections dlgresult = SELHERO_NEW_DUNGEON;
 	if (!gbIsMultiplayer) {
-		if (!UiSelHeroSingDialog(
-		        pfile_ui_set_hero_infos,
-		        pfile_ui_save_create,
-		        pfile_delete_save,
-		        pfile_ui_set_class_stats,
-		        &dlgresult,
-		        &gszHero,
-		        &gnDifficulty))
-			app_fatal("Unable to display SelHeroSing");
-		client_info->initdata->bDiff = gnDifficulty;
+		UiSelHeroSingDialog(
+		    pfile_ui_set_hero_infos,
+		    pfile_ui_save_create,
+		    pfile_delete_save,
+		    pfile_ui_set_class_stats,
+		    &dlgresult,
+		    &gszHero,
+		    &gnDifficulty);
+		gameData->nDifficulty = gnDifficulty;
 
-		if (dlgresult == SELHERO_CONTINUE)
-			gbLoadGame = TRUE;
-		else
-			gbLoadGame = FALSE;
-
-	} else if (!UiSelHeroMultDialog(
-	               pfile_ui_set_hero_infos,
-	               pfile_ui_save_create,
-	               pfile_delete_save,
-	               pfile_ui_set_class_stats,
-	               &dlgresult,
-	               &hero_is_created,
-	               &gszHero)) {
-		app_fatal("Can't load multiplayer dialog");
+		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
+	} else {
+		UiSelHeroMultDialog(
+		    pfile_ui_set_hero_infos,
+		    pfile_ui_save_create,
+		    pfile_delete_save,
+		    pfile_ui_set_class_stats,
+		    &dlgresult,
+		    &gszHero);
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);
 		return FALSE;
 	}
 
-	pfile_create_player_description(cdesc, cdlen);
-	if (multi) {
-		if (mode == 'BNET')
-			*multi = hero_is_created || !plr[myplr].pBattleNet;
-		else
-			*multi = hero_is_created;
-	}
-	if (cname && clen)
-		SStrCopy(cname, gszHero, clen);
+	pfile_create_player_description();
 
 	return TRUE;
 }
@@ -188,4 +156,4 @@ void mainmenu_loop()
 	music_stop();
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

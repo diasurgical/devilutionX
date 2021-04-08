@@ -1,12 +1,7 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-namespace dvl {
-
-extern ItemStruct storehold[48];
-extern int storenumh;
-
-void AddStoreHoldRepair(ItemStruct *itm, int i);
+using namespace devilution;
 
 namespace {
 
@@ -76,4 +71,3 @@ TEST(Stores, AddStoreHoldRepair_normal)
 	EXPECT_EQ(1, item->_iIvalue);
 }
 } // namespace
-} // namespace dvl

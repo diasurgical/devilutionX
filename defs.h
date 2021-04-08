@@ -16,12 +16,11 @@
 // must be unsigned to generate unsigned comparisons with pnum
 #define MAX_PLRS				4
 
-#define MAX_CHARACTERS			10
+#define MAX_CHARACTERS			99
 #define MAX_LVLS				24
 #define MAX_LVLMTYPES			24
 #define MAX_SPELLS				52
 #define MAX_SPELL_LEVEL			15
-#define SPELLBIT(s) ((__int64)1 << (s - 1))
 
 #define MAX_CHUNKS				(MAX_LVLS + 5)
 
@@ -92,8 +91,7 @@
 
 #define PMSG_COUNT				8
 
-#define GAME_ID					(gbIsHellfire ? (gbIsSpawn ? 'HSHR' : 'HRTL') : (gbIsSpawn ? 'DSHR' : 'DRTL'))
-#define GAME_VERSION			50
+#define GAME_ID					(gbIsHellfire ? (gbIsSpawn ? LOAD_BE32("HSHR") : LOAD_BE32("HRTL")) : (gbIsSpawn ? LOAD_BE32("DSHR") : LOAD_BE32("DRTL")))
 
 // Diablo uses a 256 color palette
 // Entry 0-127 (0x00-0x7F) are level specific
@@ -115,9 +113,6 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-#define SCREEN_WIDTH	dvl::screenWidth
-#define SCREEN_HEIGHT	dvl::screenHeight
-
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
 
@@ -127,42 +122,32 @@
 #define SCREEN_BPP		32
 #endif
 
-#define BORDER_LEFT		64
-#define BORDER_TOP		160
-#define BORDER_RIGHT	dvl::borderRight
-#define BORDER_BOTTOM	16
+#define BUFFER_BORDER_LEFT		64
+#define BUFFER_BORDER_TOP		160
+#define BUFFER_BORDER_RIGHT	devilution::borderRight
+#define BUFFER_BORDER_BOTTOM	16
 
-#define SCREEN_X		BORDER_LEFT
-#define SCREEN_Y		BORDER_TOP
-
-#define BUFFER_WIDTH	(BORDER_LEFT + SCREEN_WIDTH + BORDER_RIGHT)
-#define BUFFER_HEIGHT	(BORDER_TOP + SCREEN_HEIGHT + BORDER_BOTTOM)
-
-#define UI_OFFSET_Y		((SCREEN_HEIGHT - 480) / 2)
+#define UI_OFFSET_Y		((Sint16)((gnScreenHeight - 480) / 2))
 
 #define TILE_WIDTH		64
 #define TILE_HEIGHT		32
 
 #define PANEL_WIDTH     640
 #define PANEL_HEIGHT    128
-#define PANEL_TOP		(SCREEN_HEIGHT - PANEL_HEIGHT)
-#define PANEL_LEFT		(SCREEN_WIDTH - PANEL_WIDTH) / 2
-#define PANEL_X			(SCREEN_X + PANEL_LEFT)
-#define PANEL_Y			(SCREEN_Y + PANEL_TOP)
+#define PANEL_TOP		(gnScreenHeight - PANEL_HEIGHT)
+#define PANEL_LEFT		(gnScreenWidth - PANEL_WIDTH) / 2
+#define PANEL_X			PANEL_LEFT
+#define PANEL_Y			PANEL_TOP
 
 #define SPANEL_WIDTH	 320
 #define SPANEL_HEIGHT	 352
-#define PANELS_COVER (SCREEN_WIDTH <= PANEL_WIDTH && SCREEN_HEIGHT <= SPANEL_HEIGHT + PANEL_HEIGHT)
+#define PANELS_COVER (gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT)
 
-#define RIGHT_PANEL		(SCREEN_WIDTH - SPANEL_WIDTH)
-#define RIGHT_PANEL_X	(SCREEN_X + RIGHT_PANEL)
+#define RIGHT_PANEL		(gnScreenWidth - SPANEL_WIDTH)
+#define RIGHT_PANEL_X	RIGHT_PANEL
 
-#define VIEWPORT_HEIGHT dvl::viewportHeight
-
-#define DIALOG_TOP		((SCREEN_HEIGHT - PANEL_HEIGHT) / 2 - 18)
-#define DIALOG_Y		(SCREEN_Y + DIALOG_TOP)
-
-#define SCREENXY(x, y) ((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
+#define DIALOG_TOP		((gnScreenHeight - PANEL_HEIGHT) / 2 - 18)
+#define DIALOG_Y		DIALOG_TOP
 
 #define NIGHTMARE_TO_HIT_BONUS  85
 #define HELL_TO_HIT_BONUS      120
@@ -190,8 +175,6 @@
 #define commitment(exp, value) (void)((exp) || (app_fatal("%s: %s was %i", __func__, #exp, value), 0))
 #endif
 
-#define ERR_DLG(title, text) ErrDlg(title, text, __FILE__, __LINE__)
-
 // To apply to certain functions which have local variables aligned by 1 for unknown yet reason
 #if (_MSC_VER == 1200)
 #define ALIGN_BY_1 __declspec(align(1))
@@ -207,4 +190,16 @@
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
 #define strncasecmp _strnicmp
+#endif
+
+#ifdef __has_attribute
+#define DVL_HAVE_ATTRIBUTE(x) __has_attribute(x)
+#else
+#define DVL_HAVE_ATTRIBUTE(x) 0
+#endif
+
+#if DVL_HAVE_ATTRIBUTE(always_inline) ||  (defined(__GNUC__) && !defined(__clang__))
+#define DVL_ATTRIBUTE_ALWAYS_INLINE __attribute__((always_inline))
+#else
+#define DVL_ATTRIBUTE_ALWAYS_INLINE
 #endif

@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Pixel width of the current cursor image */
 int cursW;
@@ -164,13 +164,13 @@ void CheckTown()
 	for (i = 0; i < nummissiles; i++) {
 		mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_TOWN) {
-			if (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy
-			    || cursmx == missile[mx]._mix && cursmy == missile[mx]._miy - 1
-			    || cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 1
-			    || cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 1
-			    || cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2
-			    || cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2
-			    || cursmx == missile[mx]._mix && cursmy == missile[mx]._miy) {
+			if ((cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy)
+			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy - 1)
+			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 1)
+			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 1)
+			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2)
+			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2)
+			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy)) {
 				trigflag = TRUE;
 				ClearPanel();
 				strcpy(infostr, "Town Portal");
@@ -223,14 +223,14 @@ void CheckCursMove()
 
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
-			if (sx >= SCREEN_WIDTH / 2) { /// BUGFIX: (sx >= SCREEN_WIDTH / 2) (fixed)
-				sx -= SCREEN_WIDTH / 4;
+			if (sx >= gnScreenWidth / 2) { /// BUGFIX: (sx >= gnScreenWidth / 2) (fixed)
+				sx -= gnScreenWidth / 4;
 			} else {
 				sx = 0;
 			}
 		} else if (invflag || sbookflag) {
-			if (sx <= SCREEN_WIDTH / 2) {
-				sx += SCREEN_WIDTH / 4;
+			if (sx <= gnScreenWidth / 2) {
+				sx += gnScreenWidth / 4;
 			} else {
 				sx = 0;
 			}
@@ -610,7 +610,7 @@ void CheckCursMove()
 	if (pcursplr == -1 && pcursobj == -1 && pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
 			bv = dItem[mx + 1][my] - 1;
-			if (item[bv]._iSelFlag >= 2) {
+			if (items[bv]._iSelFlag >= 2) {
 				cursmx = mx + 1;
 				cursmy = my;
 				pcursitem = bv;
@@ -618,7 +618,7 @@ void CheckCursMove()
 		}
 		if (flipflag && my + 1 < MAXDUNY && dItem[mx][my + 1] > 0) {
 			bv = dItem[mx][my + 1] - 1;
-			if (item[bv]._iSelFlag >= 2) {
+			if (items[bv]._iSelFlag >= 2) {
 				cursmx = mx;
 				cursmy = my + 1;
 				pcursitem = bv;
@@ -626,7 +626,7 @@ void CheckCursMove()
 		}
 		if (dItem[mx][my] > 0) {
 			bv = dItem[mx][my] - 1;
-			if (item[bv]._iSelFlag == 1 || item[bv]._iSelFlag == 3) {
+			if (items[bv]._iSelFlag == 1 || items[bv]._iSelFlag == 3) {
 				cursmx = mx;
 				cursmy = my;
 				pcursitem = bv;
@@ -634,7 +634,7 @@ void CheckCursMove()
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dItem[mx + 1][my + 1] > 0) {
 			bv = dItem[mx + 1][my + 1] - 1;
-			if (item[bv]._iSelFlag >= 2) {
+			if (items[bv]._iSelFlag >= 2) {
 				cursmx = mx + 1;
 				cursmy = my + 1;
 				pcursitem = bv;
@@ -661,4 +661,4 @@ void CheckCursMove()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

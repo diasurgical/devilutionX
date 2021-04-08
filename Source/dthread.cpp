@@ -6,7 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 static CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
@@ -25,7 +25,7 @@ static unsigned int dthread_handler(void *data)
 
 	while (dthread_running) {
 		if (!sgpInfoHead && WaitForEvent(sghWorkToDoEvent) == -1) {
-			error_buf = TraceLastError();
+			error_buf = SDL_GetError();
 			app_fatal("dthread4:\n%s", error_buf);
 		}
 
@@ -103,7 +103,7 @@ void dthread_start()
 
 	sghWorkToDoEvent = StartEvent();
 	if (sghWorkToDoEvent == NULL) {
-		error_buf = TraceLastError();
+		error_buf = SDL_GetError();
 		app_fatal("dthread:1\n%s", error_buf);
 	}
 
@@ -111,7 +111,7 @@ void dthread_start()
 
 	sghThread = CreateThread(dthread_handler, &glpDThreadId);
 	if (sghThread == NULL) {
-		error_buf = TraceLastError();
+		error_buf = SDL_GetError();
 		app_fatal("dthread2:\n%s", error_buf);
 	}
 }
@@ -140,4 +140,4 @@ void dthread_cleanup()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

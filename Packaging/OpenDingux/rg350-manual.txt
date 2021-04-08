@@ -1,7 +1,7 @@
 Copy diabdat.mpq from your CD (or GoG install folder) to:
-/media/home/.local/share/diasurgical/devilution/diabdat.mpq
+/media/home/.local/share/diasurgical/devilution/
 
-diabdat.mpq filename must be lowercase.
+For Hellfire, also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, and hfvoice.mpq.
 
 Game saves and diablo.ini are located at:
 /media/home/.local/share/diasurgical/devilution/

@@ -4,7 +4,7 @@
 #include "DiabloUI/errorart.h"
 #include "display.h"
 
-namespace dvl {
+namespace devilution {
 
 Art SmlButton;
 
@@ -54,4 +54,4 @@ void HandleGlobalMouseUpButton(UiButton *button)
 	button->m_pressed = false;
 }
 
-} // namespace dvl
+} // namespace devilution

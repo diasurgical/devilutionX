@@ -3,10 +3,11 @@
  *
  * Interface of the map of the stars quest.
  */
-#ifndef __DOOM_H__
-#define __DOOM_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "engine.h"
+
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,12 +19,10 @@ extern int DoomQuestState;
 int doom_get_frame_from_time();
 void doom_init();
 void doom_close();
-void doom_draw();
+void doom_draw(CelOutputBuffer out);
 
 #ifdef __cplusplus
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DOOM_H__ */
+}

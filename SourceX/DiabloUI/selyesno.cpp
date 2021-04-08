@@ -4,7 +4,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 
-namespace dvl {
+namespace devilution {
 
 bool selyesno_endMenu;
 bool selyesno_value;
@@ -51,10 +51,10 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	UiAddBackground(&vecSelYesNoDialog);
 	UiAddLogo(&vecSelYesNoDialog);
 
-	SDL_Rect rect1 = { PANEL_LEFT + 24, (UI_OFFSET_Y + 161), 590, 35 };
+	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
 	vecSelYesNoDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect2 = { PANEL_LEFT + 120, (UI_OFFSET_Y + 236), MESSAGE_WIDTH, 168 };
+	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 120), (Sint16)(UI_OFFSET_Y + 236), MESSAGE_WIDTH, 168 };
 	vecSelYesNoDialog.push_back(new UiArtText(selyesno_confirmationMessage, rect2, UIS_MED));
 
 	vecSelYesNoDialogItems.push_back(new UiListItem("Yes", 0));
@@ -78,4 +78,4 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 
 	return selyesno_value;
 }
-} // namespace dvl
+} // namespace devilution

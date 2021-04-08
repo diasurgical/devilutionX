@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int help_select_line;
 BOOL helpflag;
@@ -33,8 +33,10 @@ const char gszSpawnHelpText[] = {
 	"Q:  Opens the Quest log (non-functional in the Shareware version)|"
 	"1 - 8:  Use that item from your Belt|"
 	"F5, F6, F7, F8:  Sets a hotkey for a selected skill or spell|"
-	"Shift + Left Click: Use any weapon without moving|"
-	"Shift + Left Click (on character screen): Assign all stat points|"
+	"Shift + Left Mouse Button: Use any weapon without moving|"
+	"Shift + Left Mouse Button (on character screen): Assign all stat points|"
+	"Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip item|"
+	"Shift + Left Mouse Button (on belt): Move item to inventory|"
 	"|"
 	"|"
 	"$Movement:|"
@@ -196,6 +198,7 @@ const char gszSpawnHelpText[] = {
 	"open a 'Speedbook' menu that also allows you to ready a skill "
 	"or spell for use.  To use a readied skill or spell, simply "
 	"right-click in the main play area.|"
+	"Shift + Left-clicking on the 'select current spell' button will clear the readied spell|"
 	"|"
 	"Skills are the innate abilities of your character. These skills "
 	"are different depending on what class you choose and require no "
@@ -389,8 +392,10 @@ const char gszHelpText[] = {
 	"+ / -: Zoom Automap|"
 	"1 - 8: Use Belt item|"
 	"F5, F6, F7, F8:     Set hotkey for skill or spell|"
-	"Shift + Left Click: Attack without moving|"
-	"Shift + Left Click (on character screen): Assign all stat points|"
+	"Shift + Left Mouse Button: Attack without moving|"
+	"Shift + Left Mouse Button (on character screen): Assign all stat points|"
+	"Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip item|"
+	"Shift + Left Mouse Button (on belt): Move item to inventory|"
 	"|"
 	"$Movement:|"
 	"If you hold the mouse button down while moving, the character "
@@ -429,6 +434,7 @@ const char gszHelpText[] = {
 	"which allows you to select a skill or spell for immediate use.  "
 	"To use a readied skill or spell, simply right-click in the main play "
 	"area.|"
+	"Shift + Left-clicking on the 'select current spell' button will clear the readied spell|"
 	"|"
 	"$Setting Spell Hotkeys|"
 	"You can assign up to four Hotkeys for skills, spells or scrolls.  "
@@ -447,14 +453,14 @@ void InitHelp()
 	helpflag = FALSE;
 }
 
-static void DrawHelpLine(int x, int y, char *text, char color)
+static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, text_color color)
 {
 	int sx, sy, width;
 	BYTE c;
 
 	width = 0;
 	sx = x + 32 + PANEL_X;
-	sy = y * 12 + 44 + SCREEN_Y + UI_OFFSET_Y;
+	sy = y * 12 + 44 + UI_OFFSET_Y;
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text];
 		text++;
@@ -462,25 +468,24 @@ static void DrawHelpLine(int x, int y, char *text, char color)
 		width += fontkern[c] + 1;
 		if (c) {
 			if (width <= 577)
-				PrintChar(sx, sy, c, color);
+				PrintChar(out, sx, sy, c, color);
 		}
 		sx += fontkern[c] + 1;
 	}
 }
 
-void DrawHelp()
+void DrawHelp(CelOutputBuffer out)
 {
 	int i, c, w;
-	char col;
 	const char *s;
 
 	DrawSTextHelp();
-	DrawQTextBack();
+	DrawQTextBack(out);
 	if (gbIsHellfire)
-		PrintSString(0, 2, TRUE, "Hellfire Help", COL_GOLD, 0);
+		PrintSString(out, 0, 2, TRUE, "Hellfire Help", COL_GOLD, 0);
 	else
-		PrintSString(0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
-	DrawSLine(5);
+		PrintSString(out, 0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
+	DrawSLine(out, 5);
 
 	s = &gszHelpText[0];
 	if (gbIsSpawn)
@@ -524,11 +529,10 @@ void DrawHelp()
 		while (*s == '\0') {
 			s++;
 		}
+		text_color col = COL_WHITE;
 		if (*s == '$') {
 			s++;
 			col = COL_RED;
-		} else {
-			col = COL_WHITE;
 		}
 		if (*s == '&') {
 			HelpTop = help_select_line;
@@ -553,14 +557,14 @@ void DrawHelp()
 		}
 		if (c != 0) {
 			tempstr[c] = '\0';
-			DrawHelpLine(0, i, tempstr, col);
+			DrawHelpLine(out, 0, i, tempstr, col);
 		}
 		if (*s == '|') {
 			s++;
 		}
 	}
 
-	PrintSString(0, 23, TRUE, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
+	PrintSString(out, 0, 23, TRUE, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
 }
 
 void DisplayHelp()
@@ -582,4 +586,4 @@ void HelpScrollDown()
 		help_select_line++;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

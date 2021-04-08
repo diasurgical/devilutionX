@@ -5,7 +5,7 @@
 ## Installation
 
 1. Copy [devilutionx-gkd350h.opk](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-gkd350h.opk) to `/media/data/apps` or `/media/sdcard/apps/`.
-2. Copy `diabdat.mpq` (**all lowercase**) from your CD, or GoG install folder to:
+2. Copy `diabdat.mpq` from your CD, or GoG install folder to:
 
    ~~~
    /usr/local/home/.local/share/diasurgical/devilution/diabdat.mpq

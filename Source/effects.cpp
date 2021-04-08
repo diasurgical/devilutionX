@@ -4,10 +4,9 @@
  * Implementation of functions for loading and playing sounds.
  */
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
 #include <SDL_mixer.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int sfxdelay;
 int sfxdnum;
@@ -274,6 +273,12 @@ TSFX sgSFX[] = {
 	{ sfx_STREAM,                "Sfx\\Towners\\Bsmith56.wav",  NULL },
 	{ sfx_MISC,                  "Sfx\\Towners\\Cow1.wav",      NULL },
 	{ sfx_MISC,                  "Sfx\\Towners\\Cow2.wav",      NULL },
+/*
+	{ sfx_MISC,                  "Sfx\\Towners\\Cow3.wav",      NULL },
+	{ sfx_MISC,                  "Sfx\\Towners\\Cow4.wav",      NULL },
+	{ sfx_MISC,                  "Sfx\\Towners\\Cow5.wav",      NULL },
+	{ sfx_MISC,                  "Sfx\\Towners\\Cow6.wav",      NULL },
+*/
 	{ sfx_MISC | sfx_HELLFIRE,   "Sfx\\Towners\\Cow7.wav",      NULL },
 	{ sfx_MISC | sfx_HELLFIRE,   "Sfx\\Towners\\Cow8.wav",      NULL },
 	{ sfx_STREAM,                "Sfx\\Towners\\Deadguy2.wav",  NULL },
@@ -546,109 +551,109 @@ TSFX sgSFX[] = {
 	{ sfx_STREAM,                "Sfx\\Towners\\Witch49.wav",   NULL },
 	{ sfx_STREAM,                "Sfx\\Towners\\Witch50.wav",   NULL },
 	{ sfx_STREAM,                "Sfx\\Towners\\Wound01.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage01.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage02.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage03.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage04.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage05.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage06.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage07.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage08.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage09.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage10.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage11.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage12.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage13.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage14.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage15.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage16.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage17.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage18.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage19.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage20.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage21.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage22.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage23.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage24.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage25.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage26.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage27.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage28.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage29.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage30.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage31.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage32.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage33.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage34.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage35.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage36.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage37.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage38.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage39.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage40.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage41.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage42.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage43.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage44.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage45.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage46.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage47.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage48.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage49.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage50.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage51.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage52.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage53.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage54.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage55.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage56.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage57.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage58.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage59.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage60.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage61.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage62.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage63.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage64.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage65.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage66.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage67.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage68.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage69.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage69b.wav",  NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage70.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage71.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage72.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage73.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage74.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage75.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage76.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage77.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage78.wav",   NULL },
-	{ sfx_SORCEROR,              "Sfx\\Sorceror\\Mage79.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage80.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage81.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage82.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage83.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage84.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage85.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage86.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage87.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage88.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage89.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage90.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage91.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage92.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage93.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage94.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage95.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage96.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage97.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage98.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage99.wav",   NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage100.wav",  NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage101.wav",  NULL },
-	{ sfx_STREAM | sfx_SORCEROR, "Sfx\\Sorceror\\Mage102.wav",  NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage01.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage02.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage03.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage04.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage05.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage06.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage07.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage08.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage09.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage10.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage11.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage12.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage13.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage14.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage15.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage16.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage17.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage18.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage19.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage20.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage21.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage22.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage23.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage24.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage25.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage26.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage27.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage28.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage29.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage30.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage31.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage32.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage33.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage34.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage35.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage36.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage37.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage38.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage39.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage40.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage41.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage42.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage43.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage44.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage45.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage46.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage47.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage48.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage49.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage50.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage51.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage52.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage53.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage54.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage55.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage56.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage57.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage58.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage59.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage60.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage61.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage62.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage63.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage64.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage65.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage66.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage67.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage68.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage69.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage69b.wav",  NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage70.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage71.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage72.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage73.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage74.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage75.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage76.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage77.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage78.wav",   NULL },
+	{ sfx_SORCERER,              "Sfx\\Sorceror\\Mage79.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage80.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage81.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage82.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage83.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage84.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage85.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage86.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage87.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage88.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage89.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage90.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage91.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage92.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage93.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage94.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage95.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage96.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage97.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage98.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage99.wav",   NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage100.wav",  NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage101.wav",  NULL },
+	{ sfx_STREAM | sfx_SORCERER, "Sfx\\Sorceror\\Mage102.wav",  NULL },
 	{ sfx_STREAM | sfx_ROGUE,    "Sfx\\Rogue\\Rogue01.wav",     NULL },
 	{ sfx_STREAM | sfx_ROGUE,    "Sfx\\Rogue\\Rogue02.wav",     NULL },
 	{ sfx_STREAM | sfx_ROGUE,    "Sfx\\Rogue\\Rogue03.wav",     NULL },
@@ -1078,6 +1083,11 @@ void stream_stop()
 static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 {
 	BOOL success;
+#ifndef DISABLE_STREAMING_SOUNDS
+	constexpr bool kAllowStreaming = true;
+#else
+	constexpr bool kAllowStreaming = false;
+#endif
 
 	assert(pSFX);
 	assert(pSFX->bFlags & sfx_STREAM);
@@ -1087,7 +1097,7 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 		if (lVolume > VOLUME_MAX)
 			lVolume = VOLUME_MAX;
 		if (pSFX->pSnd == NULL)
-			pSFX->pSnd = sound_file_load(pSFX->pszName);
+			pSFX->pSnd = sound_file_load(pSFX->pszName, kAllowStreaming);
 		pSFX->pSnd->DSB->Play(lVolume, lPan, 0);
 		sgpStreamSFX = pSFX;
 	}
@@ -1271,9 +1281,12 @@ static int RndSFX(int psfx)
 	return psfx + random_(165, nRand);
 }
 
-void PlaySFX(int psfx)
+void PlaySFX(int psfx, bool randomizeByCategory)
 {
-	psfx = RndSFX(psfx);
+	if (randomizeByCategory) {
+		psfx = RndSFX(psfx);
+	}
+
 	PlaySFX_priv(&sgSFX[psfx], FALSE, 0, 0);
 }
 
@@ -1355,7 +1368,7 @@ void sound_init()
 	if (gbIsMultiplayer) {
 		mask |= sfx_WARRIOR;
 		if (!gbIsSpawn)
-			mask |= (sfx_ROGUE | sfx_SORCEROR);
+			mask |= (sfx_ROGUE | sfx_SORCERER);
 		if (gbIsHellfire)
 			mask |= sfx_MONK;
 	} else if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1363,7 +1376,7 @@ void sound_init()
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		mask |= sfx_ROGUE;
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
-		mask |= sfx_SORCEROR;
+		mask |= sfx_SORCERER;
 	} else if (plr[myplr]._pClass == PC_MONK) {
 		mask |= sfx_MONK;
 	} else if (plr[myplr]._pClass == PC_BARD) {
@@ -1407,4 +1420,4 @@ int GetSFXLength(int nSFX)
 	return sgSFX[nSFX].pSnd->DSB->GetLength();
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

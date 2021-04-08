@@ -2,9 +2,10 @@
 
 #include <SDL.h>
 
-#include "controls/controller_buttons.h"
+#include "all.h"
+#include "./controller_buttons.h"
 
-namespace dvl {
+namespace devilution {
 
 struct ControllerButtonEvent {
 	ControllerButton button;

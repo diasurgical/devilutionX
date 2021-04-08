@@ -3,14 +3,156 @@
  *
  * Interface of monster functionality, AI, actions, spawning, loading, etc.
  */
-#ifndef __MONSTER_H__
-#define __MONSTER_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef enum MON_MODE {
+	MM_STAND,
+	/** Movement towards N, NW, or NE */
+	MM_WALK,
+	/** Movement towards S, SW, or SE */
+	MM_WALK2,
+	/** Movement towards W or E */
+	MM_WALK3,
+	MM_ATTACK,
+	MM_GOTHIT,
+	MM_DEATH,
+	MM_SATTACK,
+	MM_FADEIN,
+	MM_FADEOUT,
+	MM_RATTACK,
+	MM_SPSTAND,
+	MM_RSPATTACK,
+	MM_DELAY,
+	MM_CHARGE,
+	MM_STONE,
+	MM_HEAL,
+	MM_TALK,
+} MON_MODE;
+
+typedef struct AnimStruct {
+	Uint8 *CMem;
+	Uint8 *Data[8];
+	Sint32 Frames;
+	Sint32 Rate;
+} AnimStruct;
+
+typedef struct CMonster {
+	_monster_id mtype;
+	/** placeflag enum as a flags*/
+	Uint8 mPlaceFlags;
+	AnimStruct Anims[6];
+	TSnd *Snds[4][2];
+	Sint32 width;
+	Sint32 width2;
+	Uint8 mMinHP;
+	Uint8 mMaxHP;
+	bool has_special;
+	Uint8 mAFNum;
+	Sint8 mdeadval;
+	const MonsterData *MData;
+	/**
+	 * A TRN file contains a sequence of color transitions, represented
+	 * as indexes into a palette. (a 256 byte array of palette indices)
+	 */
+	Uint8 *trans_file;
+} CMonster;
+
+typedef struct MonsterStruct { // note: missing field _mAFNum
+	Sint32 _mMTidx;
+	MON_MODE _mmode;
+	Uint8 _mgoal;
+	Sint32 _mgoalvar1;
+	Sint32 _mgoalvar2;
+	Sint32 _mgoalvar3;
+	Uint8 _pathcount;
+	/** Tile X-position of monster */
+	Sint32 _mx;
+	/** Tile Y-position of monster */
+	Sint32 _my;
+	/** Future tile X-position of monster. Set at start of walking animation */
+	Sint32 _mfutx;
+	/** Future tile Y-position of monster. Set at start of walking animation */
+	Sint32 _mfuty;
+	/** Most recent X-position in dMonster. */
+	Sint32 _moldx;
+	/** Most recent Y-position in dMonster. */
+	Sint32 _moldy;
+	/** Monster sprite's pixel X-offset from tile. */
+	Sint32 _mxoff;
+	/** Monster sprite's pixel Y-offset from tile. */
+	Sint32 _myoff;
+	/** Pixel X-velocity while walking. Applied to _mxoff */
+	Sint32 _mxvel;
+	/** Pixel Y-velocity while walking. Applied to _myoff */
+	Sint32 _myvel;
+	/** Direction faced by monster (direction enum) */
+	Sint32 _mdir;
+	/** The current target of the mosnter. An index in to either the plr or monster array based on the _meflag value. */
+	Sint32 _menemy;
+	/** X-coordinate of enemy (usually correspond's to the enemy's futx value) */
+	Uint8 _menemyx;
+	/** Y-coordinate of enemy (usually correspond's to the enemy's futy value) */
+	Uint8 _menemyy;
+	Uint8 *_mAnimData;
+	/** Tick length of each frame in the current animation */
+	Sint32 _mAnimDelay;
+	/** Increases by one each game tick, counting how close we are to _pAnimDelay */
+	Sint32 _mAnimCnt;
+	/** Number of frames in current animation */
+	Sint32 _mAnimLen;
+	/** Current frame of animation. */
+	Sint32 _mAnimFrame;
+	bool _mDelFlag;
+	Sint32 _mVar1;
+	Sint32 _mVar2;
+	Sint32 _mVar3;
+	Sint32 _mVar4;
+	Sint32 _mVar5;
+	/** Used as _mxoff but with a higher range so that we can correctly apply velocities of a smaller number */
+	Sint32 _mVar6;
+	/** Used as _myoff but with a higher range so that we can correctly apply velocities of a smaller number */
+	Sint32 _mVar7;
+	/** Value used to measure progress for moving from one tile to another */
+	Sint32 _mVar8;
+	Sint32 _mmaxhp;
+	Sint32 _mhitpoints;
+	_mai_id _mAi;
+	Uint8 _mint;
+	Uint32 _mFlags;
+	Uint8 _msquelch;
+	Sint32 _lastx;
+	Sint32 _lasty;
+	Sint32 _mRndSeed;
+	Sint32 _mAISeed;
+	Uint8 _uniqtype;
+	Uint8 _uniqtrans;
+	Sint8 _udeadval;
+	Sint8 mWhoHit;
+	Sint8 mLevel;
+	Uint16 mExp;
+	Uint16 mHit;
+	Uint8 mMinDamage;
+	Uint8 mMaxDamage;
+	Uint16 mHit2;
+	Uint8 mMinDamage2;
+	Uint8 mMaxDamage2;
+	Uint8 mArmorClass;
+	Uint16 mMagicRes;
+	Sint32 mtalkmsg;
+	Uint8 leader;
+	Uint8 leaderflag;
+	Uint8 packsize;
+	Sint8 mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
+	const char *mName;
+	CMonster *MType;
+	const MonsterData *MData;
+} MonsterStruct;
 
 extern int monstkills[MAXMONSTERS];
 extern int monstactive[MAXMONSTERS];
@@ -127,6 +269,4 @@ extern int offset_y[8];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MONSTER_H__ */
+}

@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 /** Notes visisted by the path finding algorithm. */
 PATHNODE path_nodes[MAXPATHNODES];
 /** size of the pnode_tblptr stack */
@@ -16,7 +16,7 @@ int gdwCurNodes;
  * for reconstructing the path after the A* search is done. The longest
  * possible path is actually 24 steps, even though we can fit 25
  */
-int pnode_vals[MAX_PATH_LENGTH];
+Sint8 pnode_vals[MAX_PATH_LENGTH];
 /** A linked list of all visited nodes */
 PATHNODE *pnode_ptr;
 /** A stack for recursively searching nodes */
@@ -39,14 +39,14 @@ const char pathydir[8] = { -1, 1, -1, 1, 0, -1, 0, 1 };
  * dy 0|2 0 3
  *    1|8 4 7
  */
-char path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
+Sint8 path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
 
 /**
  * find the shortest path from (sx,sy) to (dx,dy), using PosOk(PosOkArg,x,y) to
  * check that each step is a valid position. Store the step directions (see
  * path_directions) in path, which must have room for 24 steps
  */
-int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, char *path)
+int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, Sint8 path[MAX_PATH_LENGTH])
 {
 	PATHNODE *path_start, *next_node, *current;
 	int path_length, i;
@@ -183,7 +183,7 @@ BOOL path_get_path(BOOL (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, 
 		dx = pPath->x + pathxdir[i];
 		dy = pPath->y + pathydir[i];
 		ok = PosOk(PosOkArg, dx, dy);
-		if (ok && path_solid_pieces(pPath, dx, dy) || !ok && dx == x && dy == y) {
+		if ((ok && path_solid_pieces(pPath, dx, dy)) || (!ok && dx == x && dy == y)) {
 			if (!path_parent_path(pPath, dx, dy, x, y))
 				return FALSE;
 		}
@@ -379,4 +379,4 @@ PATHNODE *path_new_step()
 	return new_node;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

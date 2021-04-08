@@ -1,10 +1,12 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
+using namespace devilution;
+
 TEST(Diablo, diablo_pause_game_unpause)
 {
-	dvl::gbIsMultiplayer = false;
-	dvl::PauseMode = 1;
-	dvl::diablo_pause_game();
-	EXPECT_EQ(dvl::PauseMode, 0);
+	gbIsMultiplayer = false;
+	PauseMode = 1;
+	diablo_pause_game();
+	EXPECT_EQ(PauseMode, 0);
 }

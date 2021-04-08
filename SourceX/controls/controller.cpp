@@ -1,10 +1,12 @@
 #include "controls/controller.h"
 
+#include <cmath>
+
 #include "controls/devices/kbcontroller.h"
 #include "controls/devices/joystick.h"
 #include "controls/devices/game_controller.h"
 
-namespace dvl {
+namespace devilution {
 
 ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 {
@@ -20,13 +22,11 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	default:
 		break;
 	}
-
 #if HAS_KBCTRL == 1
 	result.button = KbCtrlToControllerButton(event);
 	if (result.button != ControllerButton_NONE)
 		return result;
 #endif
-
 #ifndef USE_SDL1
 	GameController *const controller = GameController::Get(event);
 	if (controller != NULL) {
@@ -81,4 +81,4 @@ bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event)
 #endif
 }
 
-} // namespace dvl
+} // namespace devilution

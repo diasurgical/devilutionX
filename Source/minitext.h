@@ -3,10 +3,9 @@
  *
  * Interface of scrolling dialog text.
  */
-#ifndef __MINITEXT_H__
-#define __MINITEXT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,13 +16,19 @@ extern bool qtextflag;
 void FreeQuestText();
 void InitQuestText();
 void InitQTextMsg(int m);
-void DrawQTextBack();
-void DrawQText();
+
+/**
+ * @brief Draw the quest dialog window decoration and background.
+ */
+void DrawQTextBack(CelOutputBuffer out);
+
+/**
+ * @brief Draw the quest dialog window text.
+ */
+void DrawQText(CelOutputBuffer out);
 
 #ifdef __cplusplus
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MINITEXT_H__ */
+}

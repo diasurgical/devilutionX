@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Contains the data related to each monster ID. */
 const MonsterData monsterdata[] = {
@@ -121,7 +121,7 @@ const MonsterData monsterdata[] = {
 	{    128,   2000, "Monsters\\Mage\\Mage%c.CL2",       TRUE,        "Monsters\\Mage\\Mage%c%i.WAV",      FALSE,       TRUE,      "Monsters\\Mage\\Cnselgd.TRN",     { 12,  1, 20,  8, 28, 20 }, { 0, 0, 0, 0, 0, 0 }, "Cabalist",                28,       30,     29,    120,    120, AI_COUNSLR,                                                   MFLAG_CAN_OPEN_DOOR,    2,  110,      8,         14,         30,     0,       0,           0,           0,           0, MC_DEMON,    RESIST_MAGIC | RESIST_FIRE | IMMUNE_LIGHTNING  | IMMUNE_NULL_40, IMMUNE_MAGIC  | RESIST_FIRE | IMMUNE_LIGHTNING  | IMMUNE_NULL_40,         0,        7,  4929 },
 	{    128,   2000, "Monsters\\Mage\\Mage%c.CL2",       TRUE,        "Monsters\\Mage\\Mage%c%i.WAV",      FALSE,       TRUE,      "Monsters\\Mage\\Cnselbk.TRN",     { 12,  1, 20,  8, 28, 20 }, { 0, 0, 0, 0, 0, 0 }, "Advocate",                30,       30,     30,    145,    145, AI_COUNSLR,                                                   MFLAG_CAN_OPEN_DOOR,    3,  120,      8,         15,         25,     0,       0,           0,           0,           0, MC_DEMON,    IMMUNE_MAGIC  | RESIST_FIRE | IMMUNE_LIGHTNING  | IMMUNE_NULL_40, IMMUNE_MAGIC  | IMMUNE_FIRE  | IMMUNE_LIGHTNING  | IMMUNE_NULL_40,         0,        7,  4968 },
 	{     96,    386, "Monsters\\Golem\\Golem%c.CL2",     TRUE,        "Monsters\\Golem\\Golm%c%i.WAV",     FALSE,       FALSE,     NULL,                              {  0, 16, 12,  0, 12, 20 }, { 0, 0, 0, 0, 0, 0 }, "Golem",                    0,        0,     12,      1,      1, AI_GOLUM,                                                     MFLAG_CAN_OPEN_DOOR,    0,    0,      7,          1,          1,     0,       0,           0,           0,           1, MC_DEMON,    0                                                            , 0                                                            ,         0,        0,     0 },
-	{    160,   2000, "Monsters\\Diablo\\Diablo%c.CL2",   TRUE,        "Monsters\\Diablo\\Diablo%c%i.WAV",  TRUE,        FALSE,     NULL,                              { 16,  6, 16,  2, 16, 16 }, { 0, 0, 0, 0, 0, 0 }, "The Dark Lord",           50,       50,     45,   3333,   3333, AI_DIABLO,                   MFLAG_KNOCKBACK | MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,    3,  220,      4,         30,         60,     0,      11,           0,           0,          90, MC_DEMON,    IMMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40, IMMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40,         0,        7,  31666 },
+	{    160,   2000, "Monsters\\Diablo\\Diablo%c.CL2",   TRUE,        "Monsters\\Diablo\\Diablo%c%i.WAV",  TRUE,        FALSE,     NULL,                              { 16,  6, 16,  6, 16, 16 }, { 0, 0, 0, 0, 0, 0 }, "The Dark Lord",           50,       50,     45,   3333,   3333, AI_DIABLO,                   MFLAG_KNOCKBACK | MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,    3,  220,      4,         30,         60,     0,      11,           0,           0,          90, MC_DEMON,    IMMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40, IMMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40,         0,        7,  31666 },
 	{    128,   1060, "Monsters\\DarkMage\\Dmage%c.CL2",  TRUE,        "Monsters\\DarkMage\\Dmag%c%i.WAV",  FALSE,       FALSE,     NULL,                              {  6,  1, 21,  6, 23, 18 }, { 0, 0, 0, 0, 0, 0 }, "The Arch-Litch Malignus", 40,       41,     30,    160,    160, AI_COUNSLR,                                                   MFLAG_CAN_OPEN_DOOR,    3,  120,      8,         20,         40,     0,       0,           0,           0,          70, MC_DEMON,    RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40, IMMUNE_MAGIC  | IMMUNE_FIRE  | IMMUNE_LIGHTNING  | IMMUNE_NULL_40,         0,        7,  4968 },
 	{    188,    800, "Monsters\\Fork\\Fork%c.CL2",       FALSE,       "Monsters\\newsfx\\HBoar%c%i.WAV",   FALSE,       FALSE,     NULL,                              { 10, 10, 15,  6, 16,  0 }, { 2, 0, 0, 0, 0, 0 }, "Hellboar",                32,       35,     23,     80,    100, AI_SKELSD,                   MFLAG_KNOCKBACK | MFLAG_SEARCH                      ,    2,   70,      7,         16,         24,     0,       0,           0,           0,          60, MC_DEMON,    0                                                            ,                RESIST_FIRE | RESIST_LIGHTNING                ,         0,        3,   750 },
 	{     64,    305, "Monsters\\Scorp\\Scorp%c.CL2",     FALSE,       "Monsters\\newsfx\\Stingr%c%i.WAV",  FALSE,       FALSE,     NULL,                              { 10, 10, 12,  6, 15,  0 }, { 2, 0, 0, 0, 0, 0 }, "Stinger",                 32,       35,     22,     30,     40, AI_SKELSD,    0                                                                  ,    3,   85,      8,          1,         20,     0,       0,           0,           0,          50, MC_ANIMAL,   0                                                            ,                              RESIST_LIGHTNING                ,         0,        1,   500 },
@@ -155,7 +155,7 @@ const MonsterData monsterdata[] = {
 /**
  * Map between .DUN file value and monster type enum
  */
-const int MonstConvTbl[] = {
+const _monster_id MonstConvTbl[] = {
 	MT_NZOMBIE,
 	MT_BZOMBIE,
 	MT_GZOMBIE,
@@ -225,18 +225,18 @@ const int MonstConvTbl[] = {
 	MT_REDDTH,
 	MT_LTCHDMN,
 	MT_UDEDBLRG,
-	0,
-	0,
-	0,
-	0,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
 	MT_INCIN,
 	MT_FLAMLRD,
 	MT_DOOMFIRE,
 	MT_HELLBURN,
-	0,
-	0,
-	0,
-	0,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
 	MT_RSTORM,
 	MT_STORM,
 	MT_STORML,
@@ -269,19 +269,19 @@ const int MonstConvTbl[] = {
 	MT_MAGISTR,
 	MT_CABALIST,
 	MT_ADVOCATE,
-	0,
+	MT_INVALID,
 	MT_DIABLO,
-	0,
+	MT_INVALID,
 	MT_GOLEM,
-	0,
-	0,
-	0, // Monster from blood1.dun and blood2.dun
-	0,
-	0,
-	0,
-	0, // Snotspill from banner2.dun
-	0,
-	0,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID, // Monster from blood1.dun and blood2.dun
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID,
+	MT_INVALID, // Snotspill from banner2.dun
+	MT_INVALID,
+	MT_INVALID,
 	MT_BIGFALL,
 	MT_DARKMAGE,
 	MT_HELLBOAR,
@@ -315,9 +315,6 @@ const int MonstConvTbl[] = {
 	MT_LRDSAYTR,
 };
 
-#define MAT_NEVER 0
-#define MAT_ALWAYS 1
-#define MAT_RETAIL 2
 /**
  * Define what version a monster type is available in
  */
@@ -565,8 +562,8 @@ const UniqMonstStruct UniqMonst[] = {
 	{  MT_SOLBRNR,  "Fleshdancer",              "GENERAL",    16,    999, AI_SUCC,     3,         30,         50, IMMUNE_MAGIC | RESIST_FIRE |                    IMMUNE_NULL_40,        0,        0,        0, 0              },
 	{  MT_OBLORD,   "Grimspike",                "GENERAL",    19,    534, AI_SNEAK,    1,         25,         40, IMMUNE_MAGIC | RESIST_FIRE |                    IMMUNE_NULL_40,        3,        0,        0, 0              },
 	{  MT_STORML,   "Doomlock",                 "GENERAL",    28,    534, AI_SNEAK,    1,         35,         55, IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40,        3,        0,        0, 0              },
-	{  -1,          NULL,                       NULL,          0,      0, 0,           0,          0,          0, 0                                                             ,        0,        0,        0, 0              },
+	{  MT_INVALID,  NULL,                       NULL,          0,      0, AI_INVALID,  0,          0,          0, 0                                                             ,        0,        0,        0, 0              },
 	// clang-format on
 };
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

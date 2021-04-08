@@ -3,10 +3,11 @@
  *
  * Interface of functionality for printing the ingame chat messages.
  */
-#ifndef __PLRMSG_H__
-#define __PLRMSG_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "engine.h"
+
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,13 +25,10 @@ size_t EventPlrMsg(const char *pszFmt, ...);
 void SendPlrMsg(int pnum, const char *pszStr);
 void ClearPlrMsg();
 void InitPlrMsg();
-void DrawPlrMsg();
-void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col);
+void DrawPlrMsg(CelOutputBuffer out);
 
 #ifdef __cplusplus
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PLRMSG_H__ */
+}

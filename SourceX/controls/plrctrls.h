@@ -3,15 +3,19 @@
 
 #include "all.h"
 
-namespace dvl {
+namespace devilution {
 
 typedef enum belt_item_type {
 	BLT_HEALING,
 	BLT_MANA,
 } belt_item_type;
 
+// Runs every frame.
+// Handles menu movement.
+void plrctrls_every_frame();
+
 // Run after every game logic iteration.
-// Handles player and menu movement.
+// Handles player movement.
 void plrctrls_after_game_logic();
 
 // Runs at the end of CheckCursMove()

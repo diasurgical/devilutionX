@@ -4,11 +4,12 @@
 #include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
+#include "controls/devices/kbcontroller.h"
+#include "options.h"
 
 #ifdef __vita__
 #include <psp2/power.h>
 #endif
-
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -17,32 +18,20 @@
 #ifndef SDL1_VIDEO_MODE_FLAGS
 #define SDL1_VIDEO_MODE_FLAGS SDL_SWSURFACE
 #endif
-#ifdef SDL1_VIDEO_MODE_WIDTH
-#define DEFAULT_WIDTH SDL1_VIDEO_MODE_WIDTH
-#endif
-#ifdef SDL1_VIDEO_MODE_HEIGHT
-#define DEFAULT_HEIGHT SDL1_VIDEO_MODE_HEIGHT
-#endif
 #endif
 
-#ifndef DEFAULT_WIDTH
-#define DEFAULT_WIDTH 640
-#endif
-#ifndef DEFAULT_HEIGHT
-#define DEFAULT_HEIGHT 480
-#endif
-
-namespace dvl {
+namespace devilution {
 
 extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 
-int screenWidth;
-int screenHeight;
-int viewportHeight;
-int borderRight;
+Uint16 gnScreenWidth;
+Uint16 gnScreenHeight;
+Uint16 gnViewportHeight;
+Uint16 borderRight;
 
 #ifdef USE_SDL1
-void SetVideoMode(int width, int height, int bpp, uint32_t flags) {
+void SetVideoMode(int width, int height, int bpp, uint32_t flags)
+{
 	SDL_Log("Setting video mode %dx%d bpp=%u flags=0x%08X", width, height, bpp, flags);
 	SDL_SetVideoMode(width, height, bpp, flags);
 	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
@@ -51,7 +40,8 @@ void SetVideoMode(int width, int height, int bpp, uint32_t flags) {
 	ghMainWnd = SDL_GetVideoSurface();
 }
 
-void SetVideoModeToPrimary(bool fullscreen, int width, int height) {
+void SetVideoModeToPrimary(bool fullscreen, int width, int height)
+{
 	int flags = SDL1_VIDEO_MODE_FLAGS | SDL_HWPALETTE;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
@@ -59,31 +49,36 @@ void SetVideoModeToPrimary(bool fullscreen, int width, int height) {
 	if (OutputRequiresScaling())
 		SDL_Log("Using software scaling");
 }
-
-bool IsFullScreen() {
-	return (SDL_GetVideoSurface()->flags & SDL_FULLSCREEN) != 0;
-}
 #endif
+
+bool IsFullScreen()
+{
+#ifdef USE_SDL1
+	return (SDL_GetVideoSurface()->flags & SDL_FULLSCREEN) != 0;
+#else
+	return (SDL_GetWindowFlags(ghMainWnd) & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP)) != 0;
+#endif
+}
 
 void AdjustToScreenGeometry(int width, int height)
 {
-	screenWidth = width;
-	screenHeight = height;
+	gnScreenWidth = width;
+	gnScreenHeight = height;
 
 	borderRight = 64;
-	if (screenWidth % 4) {
+	if (gnScreenWidth % 4) {
 		// The buffer needs to be devisable by 4 for the engine to blit correctly
-		borderRight += 4 - screenWidth % 4;
+		borderRight += 4 - gnScreenWidth % 4;
 	}
 
-	viewportHeight = screenHeight;
-	if (screenWidth <= PANEL_WIDTH) {
+	gnViewportHeight = gnScreenHeight;
+	if (gnScreenWidth <= PANEL_WIDTH) {
 		// Part of the screen is fully obscured by the UI
-		viewportHeight -= PANEL_HEIGHT;
+		gnViewportHeight -= PANEL_HEIGHT;
 	}
 }
 
-void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
+void CalculatePreferdWindowSize(int &width, int &height)
 {
 #ifdef USE_SDL1
 	const SDL_VideoInfo &best = *SDL_GetVideoInfo();
@@ -95,7 +90,7 @@ void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
 		ErrSdl();
 	}
 
-	if (!useIntegerScaling) {
+	if (!sgOptions.Graphics.bIntegerScaling) {
 		float wFactor = (float)mode.w / width;
 		float hFactor = (float)mode.h / height;
 
@@ -126,30 +121,23 @@ bool SpawnWindow(const char *lpWindowName)
 	scePowerSetArmClockFrequency(444);
 #endif
 
-#if SDL_VERSION_ATLEAST(2,0,6)
+#if SDL_VERSION_ATLEAST(2, 0, 6)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
 
-	int initFlags = SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC;
-#ifdef __3DS__
-	initFlags = SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+	int initFlags = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+#ifndef USE_SDL1
+	initFlags |= SDL_INIT_GAMECONTROLLER;
 #endif
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();
 	}
 
 #ifndef USE_SDL1
-	char mapping[1024];
-	memset(mapping, 0, 1024);
-	getIniValue("controls","sdl2_controller_mapping", mapping, 1024);
-	if (mapping[0] != '\0') {
-		SDL_GameControllerAddMapping(mapping);
+	if (sgOptions.Controller.szMapping[0] != '\0') {
+		SDL_GameControllerAddMapping(sgOptions.Controller.szMapping);
 	}
 #endif
-
-	dpad_hotkeys = getIniBool("controls","dpad_hotkeys");
-	switch_potions_and_clicks = getIniBool("controls","switch_potions_and_clicks");
-
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
@@ -159,66 +147,39 @@ bool SpawnWindow(const char *lpWindowName)
 	// Always try to initialize the first joystick.
 	Joystick::Add(0);
 #ifdef __SWITCH__
-	// TODO: There is a bug in SDL2 on Switch where it does not repport controllers on startup (Jan 1, 2020)
+	// TODO: There is a bug in SDL2 on Switch where it does not report controllers on startup (Jan 1, 2020)
 	GameController::Add(0);
 #endif
 #endif
 
-	int width = DEFAULT_WIDTH;
-	int height = DEFAULT_HEIGHT;
-#ifndef __vita__
-	DvlIntSetting("width", &width);
-	DvlIntSetting("height", &height);
-#endif
-	BOOL integerScalingEnabled = false;
-	DvlIntSetting("integer scaling", &integerScalingEnabled);
+	int width = sgOptions.Graphics.nWidth;
+	int height = sgOptions.Graphics.nHeight;
 
-	if (fullscreen)
-		DvlIntSetting("fullscreen", &fullscreen);
-
-	int grabInput = 0;
-	DvlIntSetting("grab input", &grabInput);
-
-#ifdef __vita__
-	BOOL upscale = false;
-#else
-	BOOL upscale = true;
-	DvlIntSetting("upscale", &upscale);
-#endif
-	BOOL oar = false;
-	DvlIntSetting("original aspect ratio", &oar);
-
-	if (upscale && !oar) {
-		CalculatePreferdWindowSize(width, height, integerScalingEnabled);
+	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
+		CalculatePreferdWindowSize(width, height);
 	}
 	AdjustToScreenGeometry(width, height);
 
 #ifdef USE_SDL1
-	if (upscale) {
-		upscale = false;
-		SDL_Log("upscaling not supported with USE_SDL1");
-	}
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
-	SetVideoModeToPrimary(fullscreen, width, height);
-	if (grabInput)
+	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, width, height);
+	if (sgOptions.Gameplay.bGrabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
 	int flags = 0;
-	if (upscale) {
-		if (fullscreen) {
+	if (sgOptions.Graphics.bUpscale) {
+		if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 		flags |= SDL_WINDOW_RESIZABLE;
 
-		char scaleQuality[2] = "2";
-		DvlStringSetting("scaling quality", scaleQuality, 2);
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaleQuality);
-	} else if (fullscreen) {
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, sgOptions.Graphics.szScaleQuality);
+	} else if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
-	if (grabInput) {
+	if (sgOptions.Gameplay.bGrabInput) {
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
@@ -238,13 +199,11 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 	refreshDelay = 1000000 / refreshRate;
 
-	if (upscale) {
+	if (sgOptions.Graphics.bUpscale) {
 #ifndef USE_SDL1
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
-		vsyncEnabled = 1;
-		DvlIntSetting("vsync", &vsyncEnabled);
-		if (vsyncEnabled) {
+		if (sgOptions.Graphics.bVSync) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 
@@ -258,7 +217,7 @@ bool SpawnWindow(const char *lpWindowName)
 			ErrSdl();
 		}
 
-		if (integerScalingEnabled && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
+		if (sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
 			ErrSdl();
 		}
 
@@ -294,7 +253,7 @@ SDL_Surface *GetOutputSurface()
 bool OutputRequiresScaling()
 {
 #ifdef USE_SDL1
-	return SCREEN_WIDTH != GetOutputSurface()->w || SCREEN_HEIGHT != GetOutputSurface()->h;
+	return gnScreenWidth != GetOutputSurface()->w || gnScreenHeight != GetOutputSurface()->h;
 #else // SDL2, scaling handled by renderer.
 	return false;
 #endif
@@ -305,10 +264,10 @@ void ScaleOutputRect(SDL_Rect *rect)
 	if (!OutputRequiresScaling())
 		return;
 	const SDL_Surface *surface = GetOutputSurface();
-	rect->x = rect->x * surface->w / SCREEN_WIDTH;
-	rect->y = rect->y * surface->h / SCREEN_HEIGHT;
-	rect->w = rect->w * surface->w / SCREEN_WIDTH;
-	rect->h = rect->h * surface->h / SCREEN_HEIGHT;
+	rect->x = rect->x * surface->w / gnScreenWidth;
+	rect->y = rect->y * surface->h / gnScreenHeight;
+	rect->w = rect->w * surface->w / gnScreenWidth;
+	rect->h = rect->h * surface->h / gnScreenHeight;
 }
 
 #ifdef USE_SDL1
@@ -319,7 +278,7 @@ SDL_Surface *CreateScaledSurface(SDL_Surface *src)
 	SDL_Rect stretched_rect = { 0, 0, static_cast<Uint16>(src->w), static_cast<Uint16>(src->h) };
 	ScaleOutputRect(&stretched_rect);
 	SDL_Surface *stretched = SDL_CreateRGBSurface(
-			SDL_SWSURFACE, stretched_rect.w, stretched_rect.h, src->format->BitsPerPixel,
+	    SDL_SWSURFACE, stretched_rect.w, stretched_rect.h, src->format->BitsPerPixel,
 	    src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask);
 	if (SDL_HasColorKey(src)) {
 		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
@@ -347,4 +306,4 @@ void ScaleSurfaceToOutput(SDL_Surface **surface)
 #endif
 }
 
-} // namespace dvl
+} // namespace devilution

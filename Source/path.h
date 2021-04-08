@@ -3,10 +3,9 @@
  *
  * Interface of the path finding algorithms.
  */
-#ifndef __PATH_H__
-#define __PATH_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,7 +22,7 @@ typedef struct PATHNODE {
 	struct PATHNODE *NextNode;
 } PATHNODE;
 
-int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, char *path);
+int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, Sint8 path[MAX_PATH_LENGTH]);
 int path_get_h_cost(int sx, int sy, int dx, int dy);
 PATHNODE *GetNextPath();
 BOOL path_solid_pieces(PATHNODE *pPath, int dx, int dy);
@@ -45,6 +44,4 @@ extern const char pathydir[8];
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PATH_H__ */
+}

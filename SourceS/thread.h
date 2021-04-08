@@ -1,6 +1,12 @@
 #pragma once
 
-namespace dvl {
+#include <SDL.h>
+
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#endif
+
+namespace devilution {
 
 typedef struct event_emul {
 	SDL_mutex *mutex;

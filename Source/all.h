@@ -3,10 +3,11 @@
  *
  * Include all application headers.
  */
-#ifndef __ALL_H__
-#define __ALL_H__
+#pragma once
 
 #include <SDL.h>
+#include <map>
+#include <vector>
 
 #ifdef USE_SDL1
 #include "sdl2_to_1_2_backports.h"
@@ -17,6 +18,8 @@
 #include "sdl_compat.h"
 
 #include "../types.h"
+
+#include "../SourceX/qol.h"
 
 #include "appfat.h"
 #include "automap.h"
@@ -89,5 +92,3 @@
 #include "track.h"
 #include "trigs.h"
 #include "render.h" // linked last, likely .s/.asm
-
-#endif /* __ALL_H__ */

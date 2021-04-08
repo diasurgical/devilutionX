@@ -2,7 +2,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/selok.h"
 
-namespace dvl {
+namespace devilution {
 
 int mainmenu_attract_time_out; //seconds
 DWORD dwAttractTicks;
@@ -61,7 +61,7 @@ void mainmenu_Load(const char *name, void (*fnSound)(const char *file))
 
 	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
 
-	SDL_Rect rect = { 17, (SCREEN_HEIGHT - 36), 605, 21 };
+	SDL_Rect rect = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
 	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
 
 	UiInitList(vecMenuItems.size(), NULL, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, true);
@@ -115,4 +115,4 @@ BOOL UiMainMenuDialog(const char *name, int *pdwResult, void (*fnSound)(const ch
 	return true;
 }
 
-} // namespace dvl
+} // namespace devilution

@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 int numthemes;
 BOOL armorFlag;
@@ -25,7 +25,7 @@ BOOL bFountainFlag;
 BOOL bCrossFlag;
 
 /** Specifies the set of special theme IDs from which one will be selected at random. */
-int ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
+theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 /** Specifies a 5x5 area to fit theme objects. */
 int trm5x[] = {
 	-2, -1, 0, 1, 2,
@@ -218,7 +218,7 @@ BOOL TFit_Obj3(int t)
 	return FALSE;
 }
 
-BOOL CheckThemeReqs(int t)
+BOOL CheckThemeReqs(theme_id t)
 {
 	BOOL rv;
 
@@ -271,7 +271,7 @@ BOOL CheckThemeReqs(int t)
 	return rv;
 }
 
-BOOL SpecialThemeFit(int i, int t)
+static BOOL SpecialThemeFit(int i, theme_id t)
 {
 	BOOL rv;
 
@@ -397,7 +397,7 @@ BOOL CheckThemeRoom(int tv)
 
 void InitThemes()
 {
-	int i, j;
+	int i;
 
 	zharlib = -1;
 	numthemes = 0;
@@ -421,10 +421,9 @@ void InitThemes()
 		for (i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes].ttval = i;
-				for (j = ThemeGood[random_(0, 4)];; j = random_(0, 17)) {
-					if (SpecialThemeFit(numthemes, j)) {
-						break;
-					}
+				theme_id j = ThemeGood[random_(0, 4)];
+				while (!SpecialThemeFit(numthemes, j)) {
+					j = (theme_id)random_(0, 17);
 				}
 				themes[numthemes].ttype = j;
 				numthemes++;
@@ -435,7 +434,7 @@ void InitThemes()
 		for (i = 0; i < themeCount; i++)
 			themes[i].ttype = THEME_NONE;
 		if (QuestStatus(Q_ZHAR)) {
-			for (j = 0; j < themeCount; j++) {
+			for (int j = 0; j < themeCount; j++) {
 				themes[j].ttval = themeLoc[j].ttval;
 				if (SpecialThemeFit(j, THEME_LIBRARY)) {
 					themes[j].ttype = THEME_LIBRARY;
@@ -447,10 +446,9 @@ void InitThemes()
 		for (i = 0; i < themeCount; i++) {
 			if (themes[i].ttype == THEME_NONE) {
 				themes[i].ttval = themeLoc[i].ttval;
-				for (j = ThemeGood[random_(0, 4)];; j = random_(0, 17)) {
-					if (SpecialThemeFit(i, j)) {
-						break;
-					}
+				theme_id j = ThemeGood[random_(0, 4)];
+				while (!SpecialThemeFit(i, j)) {
+					j = (theme_id)random_(0, 17);
 				}
 				themes[i].ttype = j;
 			}
@@ -523,7 +521,7 @@ void PlaceThemeMonsts(int t, int f)
  */
 void Theme_Barrel(int t)
 {
-	int xp, yp, r;
+	int xp, yp;
 	char barrnd[4] = { 2, 6, 4, 8 };
 	char monstrnd[4] = { 5, 7, 3, 9 };
 
@@ -531,9 +529,8 @@ void Theme_Barrel(int t)
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {
 				if (random_(0, barrnd[leveltype - 1]) == 0) {
-					if (random_(0, barrnd[leveltype - 1]) == 0) {
-						r = OBJ_BARREL;
-					} else {
+					_object_id r = OBJ_BARREL;
+					if (random_(0, barrnd[leveltype - 1]) != 0) {
 						r = OBJ_BARRELEX;
 					}
 					AddObject(r, xp, yp);
@@ -699,7 +696,7 @@ void Theme_Treasure(int t)
 				if (rv == 0 || rv >= treasrnd[leveltype - 1] - 2) {
 					i = ItemNoFlippy();
 					if (rv >= treasrnd[leveltype - 1] - 2 && leveltype != DTYPE_CATHEDRAL) {
-						item[i]._ivalue >>= 1;
+						items[i]._ivalue >>= 1;
 					}
 				}
 			}
@@ -1069,4 +1066,4 @@ void CreateThemeRooms()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

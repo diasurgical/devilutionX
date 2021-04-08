@@ -12,15 +12,13 @@
 #include "dvlnet/base.h"
 #include "dvlnet/tcp_server.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class tcp_client : public base {
 public:
 	int create(std::string addrstr, std::string passwd);
 	int join(std::string addrstr, std::string passwd);
-
-	constexpr static unsigned short default_port = 6112;
 
 	virtual void poll();
 	virtual void send(packet &pkt);

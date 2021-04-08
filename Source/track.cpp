@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 namespace {
 
@@ -13,7 +13,7 @@ BYTE sgbIsScrolling;
 Uint32 sgdwLastWalk;
 bool sgbIsWalking;
 
-}
+} // namespace
 
 void track_process()
 {
@@ -28,7 +28,7 @@ void track_process()
 
 	if (cursmx != plr[myplr]._ptargx || cursmy != plr[myplr]._ptargy) {
 		Uint32 tick = SDL_GetTicks();
-		if ((int)(tick - sgdwLastWalk) >= tick_delay * 6) {
+		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * 6) {
 			sgdwLastWalk = tick;
 			NetSendCmdLoc(true, CMD_WALKXY, cursmx, cursmy);
 			if (!sgbIsScrolling)
@@ -45,7 +45,7 @@ void track_repeat_walk(bool rep)
 	sgbIsWalking = rep;
 	if (rep) {
 		sgbIsScrolling = false;
-		sgdwLastWalk = SDL_GetTicks() - tick_delay;
+		sgdwLastWalk = SDL_GetTicks() - gnTickDelay;
 		NetSendCmdLoc(true, CMD_WALKXY, cursmx, cursmy);
 	} else if (sgbIsScrolling) {
 		sgbIsScrolling = false;
@@ -57,4 +57,4 @@ bool track_isscrolling()
 	return sgbIsScrolling;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

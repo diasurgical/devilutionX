@@ -3,10 +3,9 @@
  *
  * Interface of functions for handling the engines color palette.
  */
-#ifndef __PALETTE_H__
-#define __PALETTE_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,13 +33,9 @@ void palette_update_caves();
 void palette_update_crypt();
 void palette_update_hive();
 void palette_update_quest_palette(int n);
-BOOL palette_get_color_cycling();
-BOOL palette_set_color_cycling(BOOL enabled);
 
 #ifdef __cplusplus
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PALETTE_H__ */
+}

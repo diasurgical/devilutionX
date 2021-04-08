@@ -1,14 +1,58 @@
 #pragma once
 
+#include <cstdint>
 #include <limits>
 #include <string>
-namespace dvl {
+namespace devilution {
+
+typedef struct PCXHeader {
+	Uint8 Manufacturer;
+	Uint8 Version;
+	Uint8 Encoding;
+	Uint8 BitsPerPixel;
+	Uint16 Xmin;
+	Uint16 Ymin;
+	Uint16 Xmax;
+	Uint16 Ymax;
+	Uint16 HDpi;
+	Uint16 VDpi;
+	Uint8 Colormap[48];
+	Uint8 Reserved;
+	Uint8 NPlanes;
+	Uint16 BytesPerLine;
+	Uint16 PaletteInfo;
+	Uint16 HscreenSize;
+	Uint16 VscreenSize;
+	Uint8 Filler[54];
+} PCXHeader;
+
+typedef struct _SNETCAPS {
+	Uint32 size;
+	Uint32 flags;
+	Uint32 maxmessagesize;
+	Uint32 maxqueuesize;
+	Uint32 maxplayers;
+	Uint32 bytessec;
+	Uint32 latencyms;
+	Uint32 defaultturnssec;
+	Uint32 defaultturnsintransit;
+} _SNETCAPS;
+
+typedef struct _SNETEVENT {
+	Uint32 eventid;
+	Uint32 playerid;
+	void *data;
+	Uint32 databytes;
+} _SNETEVENT;
 
 // Note to self: Linker error => forgot a return value in cpp
 
-// Storm API definition
-#ifndef STORMAPI
-#define STORMAPI
+// We declare the StormLib methods we use here.
+// StormLib uses the Windows calling convention on Windows for these methods.
+#ifdef _WIN32
+#define WINAPI __stdcall
+#else
+#define WINAPI
 #endif
 
 #ifdef __cplusplus
@@ -59,8 +103,8 @@ struct CCritSect {
 extern "C" {
 #endif
 
-BOOL STORMAPI SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, const char *creatorName, const char *a11, int *playerID);
-BOOL STORMAPI SNetDestroy();
+BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, const char *creatorName, const char *a11, int *playerID);
+BOOL SNetDestroy();
 
 /*  SNetDropPlayer @ 106
  *
@@ -71,11 +115,7 @@ BOOL STORMAPI SNetDestroy();
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL
-STORMAPI
-SNetDropPlayer(
-      int playerid,
-      DWORD flags);
+BOOL SNetDropPlayer(int playerid, DWORD flags);
 
 /*  SNetGetGameInfo @ 107
  *
@@ -88,12 +128,7 @@ SNetDropPlayer(
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL
-STORMAPI
-SNetGetGameInfo(
-    int type,
-    void *dst,
-    unsigned int length);
+BOOL SNetGetGameInfo(int type, void *dst, unsigned int length);
 
 /*  SNetGetTurnsInTransit @ 115
  *
@@ -105,39 +140,36 @@ SNetGetGameInfo(
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
 BOOL
-STORMAPI
-SNetGetTurnsInTransit(
-      DWORD *turns);
+    SNetGetTurnsInTransit(
+        DWORD *turns);
 
 // Network provider structures
-typedef struct _client_info
-{
-  DWORD dwSize; // 60
-  char  *pszName;
-  char  *pszVersion;
-  DWORD dwProduct;
-  DWORD dwVerbyte;
-  DWORD dwUnk5;
-  DWORD dwMaxPlayers;
-  DWORD dwUnk7;
-  DWORD dwUnk8;
-  DWORD dwUnk9;
-  DWORD dwUnk10; // 0xFF
-  char  *pszCdKey;
-  char  *pszCdOwner;
-  DWORD dwIsShareware;
-  DWORD dwLangId;
+typedef struct _client_info {
+	DWORD dwSize; // 60
+	char *pszName;
+	char *pszVersion;
+	DWORD dwProduct;
+	DWORD dwVerbyte;
+	DWORD dwUnk5;
+	DWORD dwMaxPlayers;
+	DWORD dwUnk7;
+	DWORD dwUnk8;
+	DWORD dwUnk9;
+	DWORD dwUnk10; // 0xFF
+	char *pszCdKey;
+	char *pszCdOwner;
+	DWORD dwIsShareware;
+	DWORD dwLangId;
 } client_info;
 
-typedef struct _user_info
-{
-  DWORD dwSize; // 16
-  char  *pszPlayerName;
-  char  *pszUnknown;
-  DWORD dwUnknown;
+typedef struct _user_info {
+	DWORD dwSize; // 16
+	char *pszPlayerName;
+	char *pszUnknown;
+	DWORD dwUnknown;
 } user_info;
 
-BOOL STORMAPI SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, char *userStats, int *playerid);
+BOOL SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, char *userStats, int *playerid);
 
 /*  SNetLeaveGame @ 119
  *
@@ -148,16 +180,13 @@ BOOL STORMAPI SNetJoinGame(int id, char *gameName, char *gamePassword, char *pla
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL
-STORMAPI
-SNetLeaveGame(
-    int type);
+BOOL SNetLeaveGame(int type);
 
-BOOL STORMAPI SNetPerformUpgrade(DWORD *upgradestatus);
-BOOL STORMAPI SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
-BOOL STORMAPI SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
+BOOL SNetPerformUpgrade(DWORD *upgradestatus);
+BOOL SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
+BOOL SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
 
-typedef void (STORMAPI *SEVTHANDLER)(struct _SNETEVENT *);
+typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
 
 /*  SNetSendMessage @ 127
  *
@@ -174,13 +203,7 @@ typedef void (STORMAPI *SEVTHANDLER)(struct _SNETEVENT *);
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL
-STORMAPI
-SNetSendMessage(
-      int    playerID,
-      void   *data,
-      unsigned int databytes);
-
+BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes);
 
 // Macro values to target specific players
 #define SNPLAYER_ALL    -1
@@ -201,24 +224,18 @@ SNetSendMessage(
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL
-STORMAPI
-SNetSendTurn(
-      char    *data,
-      unsigned int  databytes);
+BOOL SNetSendTurn(char *data, unsigned int databytes);
 
-BOOL STORMAPI SFileCloseArchive(HANDLE hArchive);
-BOOL STORMAPI SFileCloseFile(HANDLE hFile);
+BOOL SFileOpenFile(const char *filename, HANDLE *phFile);
 
-BOOL STORMAPI SFileDdaSetVolume(HANDLE hFile, signed int bigvolume, signed int volume);
-
-LONG STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
-BOOL STORMAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
-
-BOOL STORMAPI SFileOpenFile(const char *filename, HANDLE *phFile);
-BOOL STORMAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
-
-BOOL STORMAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, LONG *lpDistanceToMoveHigh);
+// Functions implemented in StormLib
+bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
+bool WINAPI SFileCloseArchive(HANDLE hArchive);
+bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
+bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, LONG *lpDistanceToMoveHigh);
+DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
+DWORD WINAPI SFileSetFilePointer(HANDLE, int, int*, int);
+bool WINAPI SFileCloseFile(HANDLE hFile);
 
 /*  SBmpLoadImage @ 323
  *
@@ -235,63 +252,21 @@ BOOL STORMAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRe
  *  Returns TRUE if the image was supported and loaded correctly, FALSE otherwise.
  */
 BOOL
-STORMAPI
-SBmpLoadImage(
-    const char *pszFileName,
-    SDL_Color  *pPalette ,
-    BYTE       *pBuffer,
-    DWORD      dwBuffersize,
-    DWORD      *pdwWidth,
-    DWORD      *pdwHeight,
-    DWORD      *pdwBpp);
-
-/*  SMemAlloc @ 401
- *
- *  Allocates a block of memory. This block is different
- *  from the standard malloc by including a header containing
- *  information about the block.
- *
- *  amount:       The amount of memory to allocate, in bytes.
- *  logfilename:  The name of the file or object that this call belongs to.
- *  logline:      The line in the file or one of the SLOG_ macros.
- *  defaultValue: The default value of a byte in the allocated memory.
- *
- *  Returns a pointer to the allocated memory. This pointer does NOT include
- *  the additional storm header.
- */
-void *
-    STORMAPI
-    SMemAlloc(
-        unsigned int amount,
-        const char *logfilename,
-        int logline,
-        int defaultValue);
-
-/*  SMemFree @ 403
- *
- *  Frees a block of memory that was created using SMemAlloc,
- *  includes the log file and line for debugging purposes.
- *
- *  location:     The memory location to be freed.
- *  logfilename:  The name of the file or object that this call belongs to.
- *  logline:      The line in the file or one of the SLOG_ macros.
- *  defaultValue:
- *
- *  Returns TRUE if the call was successful and FALSE otherwise.
- */
-BOOL
-STORMAPI
-SMemFree(
-    void *location,
-    const char *logfilename,
-    int  logline,
-    char defaultValue);
+    SBmpLoadImage(
+        const char *pszFileName,
+        SDL_Color *pPalette,
+        BYTE *pBuffer,
+        DWORD dwBuffersize,
+        DWORD *pdwWidth,
+        DWORD *pdwHeight,
+        DWORD *pdwBpp);
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize = NULL);
+bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
-BOOL STORMAPI SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value);
-BOOL STORMAPI SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD result);
+void SaveIni();
+int getIniInt(const char *keyname, const char *valuename, int defaultValue);
+void setIniInt(const char *keyname, const char *valuename, int value);
 
 void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video);
 void SVidPlayEnd(HANDLE video);
@@ -303,9 +278,7 @@ void SVidPlayEnd(HANDLE video);
  *
  *  Returns the last error set within the Storm library.
  */
-DWORD
-STORMAPI
-SErrGetLastError();
+DWORD SErrGetLastError();
 
 /*  SErrSetLastError @ 465
  *
@@ -313,10 +286,7 @@ SErrGetLastError();
  *
  *  dwErrCode:  The error code that will be set.
  */
-void
-STORMAPI
-SErrSetLastError(
-    DWORD dwErrCode);
+void SErrSetLastError(DWORD dwErrCode);
 
 // Values for dwErrCode
 #define STORM_ERROR_GAME_TERMINATED              0x85100069
@@ -335,26 +305,40 @@ SErrSetLastError(
  *  max_length:   The maximum length of dest.
  *
  */
-void
-STORMAPI
-SStrCopy(
-    char *dest,
-    const char *src,
-    int max_length);
+void SStrCopy(char *dest, const char *src, int max_length);
 
 BOOL SFileSetBasePath(const char *);
 BOOL SVidPlayContinue(void);
 BOOL SNetGetOwnerTurnsWaiting(DWORD *);
-BOOL SNetUnregisterEventHandler(int, SEVTHANDLER);
-BOOL SNetRegisterEventHandler(int, SEVTHANDLER);
+bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
+bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 BOOLEAN SNetSetBasePlayer(int);
-int SNetInitializeProvider(unsigned long, struct _SNETPROGRAMDATA *, struct _SNETPLAYERDATA *, struct _SNETUIDATA *, struct _SNETVERSIONDATA *);
+int SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
 int SNetGetProviderCaps(struct _SNETCAPS *);
-int SFileSetFilePointer(HANDLE, int, HANDLE, int);
 BOOL SFileEnableDirectAccess(BOOL enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
 }
+
+// Additions to Storm API:
+
+// Sets the file's 64-bit seek position.
+inline std::uint64_t SFileSetFilePointer(HANDLE hFile, std::int64_t offset, int whence)
+{
+    int high = static_cast<std::uint64_t>(offset) >> 32;
+    int low = static_cast<int>(offset);
+    low = SFileSetFilePointer(hFile, low, &high, whence);
+    return (static_cast<std::uint64_t>(high) << 32) | low;
+}
+
+// Returns the current 64-bit file seek position.
+inline std::uint64_t SFileGetFilePointer(HANDLE hFile)
+{
+    // We use `SFileSetFilePointer` with offset 0 to get the current position
+    // because there is no `SFileGetFilePointer`.
+    return SFileSetFilePointer(hFile, 0, DVL_FILE_CURRENT);
+}
+
 #endif
 
-}
+} // namespace devilution

@@ -3,17 +3,15 @@
  *
  * Interface of the in-game menu functions.
  */
-#ifndef __GAMEMENU_H__
-#define __GAMEMENU_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern const char *jogging_title;
-extern BOOL jogging_opt;
+extern bool gbRunInTown;
 
 void gamemenu_on();
 void gamemenu_off();
@@ -36,6 +34,4 @@ void gamemenu_color_cycling(BOOL bActivate);
 }
 #endif
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __GAMEMENU_H__ */
+}

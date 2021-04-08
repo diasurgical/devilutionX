@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 // BUGFIX: constant data should be const
 BYTE SkelKingTrans1[] = {
@@ -82,7 +82,6 @@ int ObjIndex(int x, int y)
 			return oi;
 	}
 	app_fatal("ObjIndex: Active object not found at (%d,%d)", x, y);
-	return -1;
 }
 
 void AddSKingObjs()
@@ -200,4 +199,4 @@ void LoadSetMap()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -8,12 +8,16 @@ jobs:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git rpm
+      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git rpm wget
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
-      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
-      - run: cmake --build build -j $(nproc)
-      - run: cmake --build build --target package
+      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
+      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
+      - run: Packaging/nix/LinuxReleasePackaging.sh
+      - run: Packaging/nix/AppImage.sh
+      - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86_64.appimage}
+      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64.tar.xz}
   linux_x86_64_test:
     docker:
       - image: debian:stable
@@ -23,9 +27,11 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git cmake libsodium-dev libgtest-dev lcov curl
       - run: cmake -S. -Bbuild -DRUN_TESTS=ON
-      - run: cmake --build build -j $(nproc)
-      - run: cmake --build build -j $(nproc) --target test
+      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --target test
       - run: bash <(curl -s https://codecov.io/bash)
+    environment:
+      CTEST_OUTPUT_ON_FAILURE: 1
   linux_x86_64_sdl1:
     docker:
       - image: debian:stretch-backports
@@ -37,9 +43,12 @@ jobs:
       - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev git rpm
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
-      - run: cmake --build build -j $(nproc)
-      - run: cmake --build build --target package
+      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
+      - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
+      - run: cd ./build/package/ && tar -cavf ../../devilutionx.tar.xz * && cd ../../
+      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64_sdl1.tar.xz}
   linux_x86:
     docker:
       - image: debian:stretch-backports
@@ -49,12 +58,16 @@ jobs:
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: dpkg --add-architecture i386
       - run: apt-get update -y
-      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git rpm
+      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git rpm wget
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev:i386
-      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
-      - run: cmake --build build -j $(nproc)
-      - run: cmake --build build --target package
+      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
+      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
+      - run: Packaging/nix/LinuxReleasePackaging.sh
+      - run: Packaging/nix/AppImage.sh
+      - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86.appimage}
+      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86.tar.xz}
   windows_x86:
     docker:
       - image: debian:stable
@@ -65,8 +78,8 @@ jobs:
       - run: apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 wget git sudo
       - run: Packaging/windows/mingw-prep.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
-      - run: cmake --build build -j $(nproc)
-      - run: cmake --build build --target package
+      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
       - store_artifacts: {path: ./build/devilutionx.zip, destination: devilutionx_x86.zip}
   windows_x64:
@@ -83,13 +96,13 @@ jobs:
       - run: DEBIAN_FRONTEND="noninteractive" TZ="America/Los_Angeles" apt-get install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wget git sudo
       - run: Packaging/windows/mingw-prep64.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake
-      - run: cmake --build build -j $(nproc)
-      - run: cmake --build build --target package
+      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x64.exe}
       - store_artifacts: {path: ./build/devilutionx.zip, destination: devilutionx_x64.zip}
   switch:
     docker:
-      - image: devkitpro/devkita64:20200528
+      - image: devkitpro/devkita64:latest
     working_directory: ~/repo
     steps:
       - checkout
@@ -99,8 +112,8 @@ jobs:
       - run: dkp-pacman -Syu --noconfirm
       # Install cmake files (https://github.com/devkitPro/docker/issues/3)
       - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
-      - run: cmake -S. -Bbuild .. -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
-      - run: cmake --build build -j $(nproc)
+      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
+      - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
   3ds:
     docker:
@@ -119,7 +132,7 @@ jobs:
       - run: unzip -j "makerom_016_ctrtool.zip" "Ubuntu/makerom" -d "/opt/devkitpro/tools/bin"
       - run: sudo chmod +rx /opt/devkitpro/tools/bin/makerom
       - run: cd build && cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
-      - run: cd build && cmake --build . -j $(nproc)
+      - run: cd build && cmake --build . -j 2
       - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
       - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
   amigaos-m68k:
@@ -130,7 +143,7 @@ jobs:
       - checkout
       - run: Packaging/amiga/prep.sh
       - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
-      - run: cd build && make -j$(nproc)
+      - run: cd build && make -j2
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
   vita:
     docker:
@@ -138,9 +151,9 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: apk --no-cache add cmake ninja
+      - run: apk --no-cache add git cmake ninja
       - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
-      - run: cmake --build build -j $(nproc)
+      - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
 
 workflows:
