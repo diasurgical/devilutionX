@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct TextDataStruct {
 	const char *txtstr;
 	bool scrlltxt;
@@ -19,8 +15,4 @@ typedef struct TextDataStruct {
 
 extern const TextDataStruct alltext[];
 
-#ifdef __cplusplus
-}
-#endif
-
-}
+} // namespace devilution

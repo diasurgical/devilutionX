@@ -93,7 +93,7 @@ typedef struct MonsterData {
 	Sint32 mMaxHP;
 	_mai_id mAi;
 	/** Usign monster_flag as bitflags */
-	Sint32 mFlags;
+	Uint32 mFlags;
 	Uint8 mInt;
 	Uint16 mHit;
 	Uint8 mAFNum;
