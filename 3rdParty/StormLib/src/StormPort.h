@@ -249,13 +249,12 @@
 #endif
 
 //-----------------------------------------------------------------------------
-// Assumption: If the platform is not defined, this must be Linux *grin*
+// Assumption: If the platform is not defined, assume a Linux-like platform
 
 #if !defined(STORMLIB_PLATFORM_DEFINED)
 
   #include <sys/types.h>
   #include <sys/stat.h>
-  #include <sys/mman.h>
   #include <fcntl.h>
   #include <unistd.h>
   #include <stdint.h>
@@ -273,7 +272,13 @@
   #endif
 
   #define STORMLIB_LINUX
-  #define STORMLIB_HAS_MMAP                         // Indicate that we have mmap support
+
+  // Platforms with mmap support
+  #if defined(__linux__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
+    #include <sys/mman.h>
+    #define STORMLIB_HAS_MMAP
+  #endif
+
   #define STORMLIB_PLATFORM_DEFINED
 
 #endif
