@@ -481,7 +481,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 
 
 	if (sgOptions.Gameplay.bMonsterHealthScaling) {
-		// new behavior: scale max HP for each active player
+		// new behavior: always divide max HP in half, then scale up for each additional player
 		monster[i]._mmaxhp /= 2;
 		if (monster[i]._mmaxhp < 64) {
 			monster[i]._mmaxhp = 64;
@@ -493,15 +493,9 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 					activePlayerCount++;
 				}
 			}
-			for (int j = 0; j < activePlayerCount - 1; j++) {
-				if (gnDifficulty == DIFF_NORMAL) {
-					monster[i]._mmaxhp *= 1.1;
-				} else if (gnDifficulty == DIFF_NIGHTMARE) {
-					monster[i]._mmaxhp *= 1.2;
-				} else if (gnDifficulty == DIFF_HELL) {
-					monster[i]._mmaxhp *= 1.3;
-				}
-			}
+			float modifier = sgOptions.Gameplay.bMonsterHealthScalingModifier / 100;
+			float adjustment = (float)monster[i]._mmaxhp * modifier;
+			monster[i]._mmaxhp += (adjustment * (activePlayerCount - 1));
 		}
 	} else {
 		// original behavior: divide max HP in half for singleplayer
