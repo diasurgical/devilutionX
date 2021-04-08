@@ -1,6 +1,7 @@
 name: CMake
 
-on: [push]
+# When creating a new workflow in GitHub’s action builder the default trigger is the push event. We want to extend this to push and pull request events.
+on: [push, pull_request]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
