@@ -9,7 +9,7 @@
 namespace devilution {
 
 int sfxdelay;
-int sfxdnum;
+_sfx_id sfxdnum = SFX_NONE;
 /** Specifies the sound file and the playback state of the current sound effect. */
 static TSFX *sgpStreamSFX = NULL;
 
@@ -1246,42 +1246,39 @@ void PlayEffect(int i, int mode)
 	snd_play_snd(snd, lVolume, lPan);
 }
 
-static int RndSFX(int psfx)
+static _sfx_id RndSFX(_sfx_id psfx)
 {
 	int nRand;
 
-	if (psfx == PS_WARR69)
+	switch (psfx) {
+	case PS_WARR69:
+	case PS_MAGE69:
+	case PS_ROGUE69:
+	case PS_MONK69:
+	case PS_SWING:
+	case LS_ACID:
+	case IS_FMAG:
+	case IS_MAGIC:
+	case IS_BHIT:
 		nRand = 2;
-	else if (psfx == PS_WARR14)
+		break;
+	case PS_WARR14:
+	case PS_WARR15:
+	case PS_WARR16:
+	case PS_WARR2:
+	case PS_ROGUE14:
+	case PS_MAGE14:
+	case PS_MONK14:
 		nRand = 3;
-	else if (psfx == PS_WARR15)
-		nRand = 3;
-	else if (psfx == PS_WARR16)
-		nRand = 3;
-	else if (psfx == PS_MAGE69)
-		nRand = 2;
-	else if (psfx == PS_ROGUE69)
-		nRand = 2;
-	else if (psfx == PS_MONK69)
-		nRand = 2;
-	else if (psfx == PS_SWING)
-		nRand = 2;
-	else if (psfx == LS_ACID)
-		nRand = 2;
-	else if (psfx == IS_FMAG)
-		nRand = 2;
-	else if (psfx == IS_MAGIC)
-		nRand = 2;
-	else if (psfx == IS_BHIT)
-		nRand = 2;
-	else if (psfx == PS_WARR2)
-		nRand = 3;
-	else
+		break;
+	default:
 		return psfx;
-	return psfx + random_(165, nRand);
+	}
+
+	return static_cast<_sfx_id>(psfx + random_(165, nRand));
 }
 
-void PlaySFX(int psfx, bool randomizeByCategory)
+void PlaySFX(_sfx_id psfx, bool randomizeByCategory)
 {
 	if (randomizeByCategory) {
 		psfx = RndSFX(psfx);
@@ -1290,7 +1287,7 @@ void PlaySFX(int psfx, bool randomizeByCategory)
 	PlaySFX_priv(&sgSFX[psfx], FALSE, 0, 0);
 }
 
-void PlaySfxLoc(int psfx, int x, int y)
+void PlaySfxLoc(_sfx_id psfx, int x, int y)
 {
 	TSnd *pSnd;
 

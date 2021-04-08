@@ -172,7 +172,7 @@ BYTE ItemAnimLs[] = {
 	15,
 };
 /** Maps of drop sounds effect of dropping the item on ground. */
-int ItemDropSnds[] = {
+_sfx_id ItemDropSnds[] = {
 	IS_FHARM,
 	IS_FAXE,
 	IS_FPOT,
@@ -218,7 +218,7 @@ int ItemDropSnds[] = {
 	IS_FLARM,
 };
 /** Maps of drop sounds effect of placing the item in the inventory. */
-int ItemInvSnds[] = {
+_sfx_id ItemInvSnds[] = {
 	IS_IHARM,
 	IS_IAXE,
 	IS_IPOT,

@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "textdat.h"
+
 namespace devilution {
 
 #ifdef __cplusplus

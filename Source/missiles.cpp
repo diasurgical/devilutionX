@@ -530,7 +530,7 @@ void MoveMissilePos(int i)
 
 BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift)
 {
-	int hit, hper, dam, mor, mir;
+	int hit, hper, dam, mor;
 	BOOL resist, ret;
 
 	resist = FALSE;
@@ -545,7 +545,7 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shif
 	if (monster[m]._mmode == MM_CHARGE)
 		return FALSE;
 
-	mir = missiledata[t].mResist;
+	missile_resistance mir = missiledata[t].mResist;
 	mor = monster[m].mMagicRes;
 	if (mor & IMMUNE_MAGIC && mir == MISR_MAGIC
 	    || mor & IMMUNE_FIRE && mir == MISR_FIRE
@@ -611,7 +611,7 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shif
 
 BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift)
 {
-	int hit, hper, dam, mor, mir;
+	int hit, hper, dam, mor;
 	BOOL resist, ret;
 
 	resist = FALSE;
@@ -626,7 +626,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 		return FALSE;
 
 	mor = monster[m].mMagicRes;
-	mir = missiledata[t].mResist;
+	missile_resistance mir = missiledata[t].mResist;
 
 	if (mor & IMMUNE_MAGIC && mir == MISR_MAGIC
 	    || mor & IMMUNE_FIRE && mir == MISR_FIRE
@@ -3085,7 +3085,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
 		missile[mi]._miDelFlag = TRUE;
 	} else {
-		int blodboilSFX[NUM_CLASSES] = {
+		_sfx_id blodboilSFX[NUM_CLASSES] = {
 			PS_WARR70,
 			PS_ROGUE70,
 			PS_MAGE70,
@@ -3493,13 +3493,13 @@ void MI_SetManashield(Sint32 i)
 
 void MI_LArrow(Sint32 i)
 {
-	int p, mind, maxd, rst;
+	int p, mind, maxd;
 
 	missile[i]._mirange--;
 	p = missile[i]._misource;
 	if (missile[i]._miAnimType == MFILE_MINILTNG || missile[i]._miAnimType == MFILE_MAGBLOS) {
 		ChangeLight(missile[i]._mlid, missile[i]._mix, missile[i]._miy, missile[i]._miAnimFrame + 5);
-		rst = missiledata[missile[i]._mitype].mResist;
+		missile_resistance rst = missiledata[missile[i]._mitype].mResist;
 		if (missile[i]._mitype == MIS_LARROW) {
 			if (p != -1) {
 				mind = plr[p]._pILMinDam;
@@ -3543,8 +3543,8 @@ void MI_LArrow(Sint32 i)
 		}
 
 		if (missile[i]._mix != missile[i]._misx || missile[i]._miy != missile[i]._misy) {
-			rst = missiledata[missile[i]._mitype].mResist;
-			missiledata[missile[i]._mitype].mResist = 0;
+			missile_resistance rst = missiledata[missile[i]._mitype].mResist;
+			missiledata[missile[i]._mitype].mResist = MISR_NONE;
 			CheckMissileCol(i, mind, maxd, FALSE, missile[i]._mix, missile[i]._miy, FALSE);
 			missiledata[missile[i]._mitype].mResist = rst;
 		}
@@ -5245,7 +5245,7 @@ void MI_Blodboil(Sint32 i)
 	if (missile[i]._mirange == 0) {
 		id = missile[i]._miVar1;
 		if ((plr[id]._pSpellFlags & 2) == 2) {
-			int blodboilSFX[NUM_CLASSES] = {
+			_sfx_id blodboilSFX[NUM_CLASSES] = {
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,
@@ -5267,7 +5267,7 @@ void MI_Blodboil(Sint32 i)
 			force_redraw = 255;
 			PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
 		} else {
-			int blodboilSFX[NUM_CLASSES] = {
+			_sfx_id blodboilSFX[NUM_CLASSES] = {
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,

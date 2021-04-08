@@ -3342,7 +3342,7 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 	return i;
 }
 
-void OperateShrine(int pnum, int i, int sType)
+void OperateShrine(int pnum, int i, _sfx_id sType)
 {
 	int cnt;
 	int r, j;
@@ -4239,7 +4239,7 @@ int FindValidShrine(int i)
 	return rv;
 }
 
-void OperateGoatShrine(int pnum, int i, int sType)
+void OperateGoatShrine(int pnum, int i, _sfx_id sType)
 {
 	SetRndSeed(object[i]._oRndSeed);
 	object[i]._oVar1 = FindValidShrine(i);
@@ -4248,7 +4248,7 @@ void OperateGoatShrine(int pnum, int i, int sType)
 	force_redraw = 255;
 }
 
-void OperateCauldron(int pnum, int i, int sType)
+void OperateCauldron(int pnum, int i, _sfx_id sType)
 {
 	SetRndSeed(object[i]._oRndSeed);
 	object[i]._oVar1 = FindValidShrine(i);

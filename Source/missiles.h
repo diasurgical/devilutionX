@@ -5,43 +5,19 @@
  */
 #pragma once
 
+#include <stdint.h>
+
+#include "misdat.h"
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct MissileData {
-	void (*mAddProc)(Sint32, Sint32, Sint32, Sint32, Sint32, Sint32, Sint8, Sint32, Sint32);
-	void (*mProc)(Sint32);
-	Uint8 mName;
-	bool mDraw;
-	Uint8 mType;
-	Uint8 mResist;
-	Uint8 mFileNum;
-	Sint16 mlSFX;
-	Sint16 miSFX;
-} MissileData;
-
-typedef struct MisFileData {
-	const char *mName;
-	Uint8 mAnimName;
-	Uint8 mAnimFAmt;
-	Sint32 mFlags;
-	Uint8 *mAnimData[16];
-	Uint8 mAnimDelay[16];
-	Uint8 mAnimLen[16];
-	Sint16 mAnimWidth[16];
-	Sint16 mAnimWidth2[16];
-} MisFileData;
-
-typedef struct ChainStruct {
+struct ChainStruct {
 	Sint32 idx;
 	Sint32 _mitype;
 	Sint32 _mirange;
-} ChainStruct;
+};
 
-typedef struct MissileStruct {
+struct MissileStruct {
 	Sint32 _mitype;  // Type of projectile (missile_id)
 	Sint32 _mix;     // Tile X-position of the missile
 	Sint32 _miy;     // Tile Y-position of the missile
@@ -86,7 +62,7 @@ typedef struct MissileStruct {
 	Sint32 _miVar6;
 	Sint32 _miVar7;
 	Sint32 _miVar8;
-} MissileStruct;
+};
 
 extern int missileactive[MAXMISSILES];
 extern int missileavail[MAXMISSILES];
@@ -256,9 +232,5 @@ void MI_Rportal(Sint32 i);
 void ProcessMissiles();
 void missiles_process_charge();
 void ClearMissileSpot(int mi);
-
-#ifdef __cplusplus
-}
-#endif
 
 }
