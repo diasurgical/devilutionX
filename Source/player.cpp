@@ -115,17 +115,7 @@ int ToBlkTbl[NUM_CLASSES] = {
 	25,
 	30,
 };
-/** Maps from player_class to maximum stats. */
-int MaxStats[NUM_CLASSES][4] = {
-	// clang-format off
-	{ 250,  50,  60, 100 },
-	{  55,  70, 250,  80 },
-	{  45, 250,  85,  80 },
-	{ 150,  80, 150,  80 },
-	{ 120, 120, 120, 100 },
-	{ 255,   0,  55, 150 },
-	// clang-format on
-};
+
 /** Specifies the experience point limit of each level. */
 int ExpLvlsTbl[MAXCHARLEVEL] = {
 	0,
@@ -207,6 +197,17 @@ Sint32 PlayerStruct::GetBaseAttributeValue(attribute_id attribute) const
 
 Sint32 PlayerStruct::GetMaximumAttributeValue(attribute_id attribute) const
 {
+	static const int MaxStats[NUM_CLASSES][4] = {
+		// clang-format off
+		{ 250,  50,  60, 100 },
+		{  55,  70, 250,  80 },
+		{  45, 250,  85,  80 },
+		{ 150,  80, 150,  80 },
+		{ 120, 120, 120, 100 },
+		{ 255,   0,  55, 150 },
+		// clang-format on
+	};
+
 	return MaxStats[_pClass][attribute];
 }
 
