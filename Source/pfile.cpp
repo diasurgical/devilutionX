@@ -53,6 +53,13 @@ std::string GetSavePath(DWORD save_num)
 static char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 BOOL gbValidSaveFile;
 
+const char *pfile_get_password()
+{
+	if (gbIsSpawn)
+		return gbIsMultiplayer ? PASSWORD_SPAWN_MULTI : PASSWORD_SPAWN_SINGLE;
+	return gbIsMultiplayer ? PASSWORD_MULTI : PASSWORD_SINGLE;
+}
+
 static DWORD pfile_get_save_num_from_name(const char *name)
 {
 	DWORD i;
@@ -83,24 +90,10 @@ static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, DWORD *pdwL
 		return NULL;
 	SFileCloseFile(file);
 
-	{
-		const char *password;
-		DWORD nSize = 16;
+	*pdwLen = codec_decode(buf, *pdwLen, pfile_get_password());
+	if (*pdwLen == 0)
+		return NULL;
 
-		if (gbIsSpawn) {
-			password = PASSWORD_SPAWN_SINGLE;
-			if (gbIsMultiplayer)
-				password = PASSWORD_SPAWN_MULTI;
-		} else {
-			password = PASSWORD_SINGLE;
-			if (gbIsMultiplayer)
-				password = PASSWORD_MULTI;
-		}
-
-		*pdwLen = codec_decode(buf, *pdwLen, password);
-		if (*pdwLen == 0)
-			return NULL;
-	}
 	return buf;
 }
 
@@ -127,22 +120,11 @@ static void pfile_encode_hero(const PkPlayerStruct *pPack)
 {
 	BYTE *packed;
 	DWORD packed_len;
-	const char *password;
-
-	if (gbIsSpawn) {
-		password = PASSWORD_SPAWN_SINGLE;
-		if (gbIsMultiplayer)
-			password = PASSWORD_SPAWN_MULTI;
-	} else {
-		password = PASSWORD_SINGLE;
-		if (gbIsMultiplayer)
-			password = PASSWORD_MULTI;
-	}
 
 	packed_len = codec_get_encoded_len(sizeof(*pPack));
 	packed = (BYTE *)DiabloAllocPtr(packed_len);
 	memcpy(packed, pPack, sizeof(*pPack));
-	codec_encode(packed, sizeof(*pPack), packed_len, password);
+	codec_encode(packed, sizeof(*pPack), packed_len, pfile_get_password());
 	mpqapi_write_file("hero", packed, packed_len);
 	mem_free_dbg(packed);
 }
@@ -497,20 +479,7 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 	DWORD save_num;
 
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
-	{
-		const char *password;
-		if (gbIsSpawn) {
-			password = PASSWORD_SPAWN_SINGLE;
-			if (gbIsMultiplayer)
-				password = PASSWORD_SPAWN_MULTI;
-		} else {
-			password = PASSWORD_SINGLE;
-			if (gbIsMultiplayer)
-				password = PASSWORD_MULTI;
-		}
-
-		codec_encode(pbData, dwLen, qwLen, password);
-	}
+	codec_encode(pbData, dwLen, qwLen, pfile_get_password());
 	if (!pfile_open_archive(save_num))
 		app_fatal("Unable to write to save file archive");
 	mpqapi_write_file(pszName, pbData, qwLen);
