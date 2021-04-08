@@ -1114,11 +1114,6 @@ typedef enum missile_graphic_id : uint8_t {
 	MFILE_NONE, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata. (fixed)
 } missile_graphic_id;
 
-typedef enum FILE_SYSTEM {
-	FS_PC = 0,
-	FS_CD = 1,
-} FILE_SYSTEM;
-
 typedef enum _artfonts : uint8_t {
 	AF_SMALL     = 0,
 	AF_SMALLGRAY = 1,
