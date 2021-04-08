@@ -100,7 +100,7 @@ extern char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
 extern char dFlags[MAXDUNX][MAXDUNY];
 extern char dPlayer[MAXDUNX][MAXDUNY];
-extern int dMonster[MAXDUNX][MAXDUNY];
+extern int16_t dMonster[MAXDUNX][MAXDUNY];
 extern char dDead[MAXDUNX][MAXDUNY];
 extern char dObject[MAXDUNX][MAXDUNY];
 extern char dItem[MAXDUNX][MAXDUNY];

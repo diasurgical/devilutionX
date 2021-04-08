@@ -102,7 +102,7 @@ char dPlayer[MAXDUNX][MAXDUNY];
  * towner number (towners array index) in Tristram and a monster number
  * (monsters array index) in the dungeon.
  */
-int dMonster[MAXDUNX][MAXDUNY];
+int16_t dMonster[MAXDUNX][MAXDUNY];
 /**
  * Contains the dead numbers (deads array indices) and dead direction of
  * the map, encoded as specified by the pseudo-code below.
