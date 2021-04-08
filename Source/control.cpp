@@ -1495,25 +1495,25 @@ void DrawChr(CelOutputBuffer out)
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseStr);
-	if (MaxStats[plr[myplr]._pClass][ATTRIB_STR] == plr[myplr]._pBaseStr)
+	if (plr[myplr].GetMaximumAttributeValue(ATTRIB_STR) == plr[myplr]._pBaseStr)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 155, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseMag);
-	if (MaxStats[plr[myplr]._pClass][ATTRIB_MAG] == plr[myplr]._pBaseMag)
+	if (plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG) == plr[myplr]._pBaseMag)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 183, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseDex);
-	if (MaxStats[plr[myplr]._pClass][ATTRIB_DEX] == plr[myplr]._pBaseDex)
+	if (plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX) == plr[myplr]._pBaseDex)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 211, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseVit);
-	if (MaxStats[plr[myplr]._pClass][ATTRIB_VIT] == plr[myplr]._pBaseVit)
+	if (plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT) == plr[myplr]._pBaseVit)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 239, 126, chrstr, col);
 
@@ -1557,14 +1557,13 @@ void DrawChr(CelOutputBuffer out)
 	if (plr[myplr]._pStatPts > 0) {
 		sprintf(chrstr, "%i", plr[myplr]._pStatPts);
 		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
-		plr_class pc = plr[myplr]._pClass;
-		if (plr[myplr]._pBaseStr < MaxStats[pc][ATTRIB_STR])
+		if (plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(ATTRIB_STR))
 			CelDrawTo(out, 137, 159, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
-		if (plr[myplr]._pBaseMag < MaxStats[pc][ATTRIB_MAG])
+		if (plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG))
 			CelDrawTo(out, 137, 187, pChrButtons, chrbtn[ATTRIB_MAG] + 4, 41);
-		if (plr[myplr]._pBaseDex < MaxStats[pc][ATTRIB_DEX])
+		if (plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX))
 			CelDrawTo(out, 137, 216, pChrButtons, chrbtn[ATTRIB_DEX] + 6, 41);
-		if (plr[myplr]._pBaseVit < MaxStats[pc][ATTRIB_VIT])
+		if (plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT))
 			CelDrawTo(out, 137, 244, pChrButtons, chrbtn[ATTRIB_VIT] + 8, 41);
 	}
 
@@ -1624,19 +1623,19 @@ void CheckChrBtns()
 		for (i = 0; i < 4; i++) {
 			switch (i) {
 			case ATTRIB_STR:
-				if (plr[myplr]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
+				if (plr[myplr]._pBaseStr >= plr[myplr].GetMaximumAttributeValue(ATTRIB_STR))
 					continue;
 				break;
 			case ATTRIB_MAG:
-				if (plr[myplr]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
+				if (plr[myplr]._pBaseMag >= plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG))
 					continue;
 				break;
 			case ATTRIB_DEX:
-				if (plr[myplr]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
+				if (plr[myplr]._pBaseDex >= plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX))
 					continue;
 				break;
 			case ATTRIB_VIT:
-				if (plr[myplr]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
+				if (plr[myplr]._pBaseVit >= plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT))
 					continue;
 				break;
 			default:

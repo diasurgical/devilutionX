@@ -303,9 +303,6 @@ void SetPlrDex(int p, int v);
 void SetPlrVit(int p, int v);
 void InitDungMsgs(int pnum);
 void PlayDungMsgs();
-int get_max_strength(int i);
-int get_max_magic(int i);
-int get_max_dexterity(int i);
 
 /* data */
 

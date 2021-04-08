@@ -798,14 +798,13 @@ void CreatePlayer(int pnum, plr_class c)
 
 int CalcStatDiff(int pnum)
 {
-	plr_class c = plr[pnum]._pClass;
-	return MaxStats[c][ATTRIB_STR]
+	return plr[pnum].GetMaximumAttributeValue(ATTRIB_STR)
 	    - plr[pnum]._pBaseStr
-	    + MaxStats[c][ATTRIB_MAG]
+	    + plr[pnum].GetMaximumAttributeValue(ATTRIB_MAG)
 	    - plr[pnum]._pBaseMag
-	    + MaxStats[c][ATTRIB_DEX]
+	    + plr[pnum].GetMaximumAttributeValue(ATTRIB_DEX)
 	    - plr[pnum]._pBaseDex
-	    + MaxStats[c][ATTRIB_VIT]
+	    + plr[pnum].GetMaximumAttributeValue(ATTRIB_VIT)
 	    - plr[pnum]._pBaseVit;
 }
 
@@ -3452,18 +3451,17 @@ void ValidatePlayer()
 	if (gt != plr[myplr]._pGold)
 		plr[myplr]._pGold = gt;
 
-	plr_class pc = plr[myplr]._pClass;
-	if (plr[myplr]._pBaseStr > MaxStats[pc][ATTRIB_STR]) {
-		plr[myplr]._pBaseStr = MaxStats[pc][ATTRIB_STR];
+	if (plr[myplr]._pBaseStr > plr[myplr].GetMaximumAttributeValue(ATTRIB_STR)) {
+		plr[myplr]._pBaseStr = plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
 	}
-	if (plr[myplr]._pBaseMag > MaxStats[pc][ATTRIB_MAG]) {
-		plr[myplr]._pBaseMag = MaxStats[pc][ATTRIB_MAG];
+	if (plr[myplr]._pBaseMag > plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG)) {
+		plr[myplr]._pBaseMag = plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG);
 	}
-	if (plr[myplr]._pBaseDex > MaxStats[pc][ATTRIB_DEX]) {
-		plr[myplr]._pBaseDex = MaxStats[pc][ATTRIB_DEX];
+	if (plr[myplr]._pBaseDex > plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX)) {
+		plr[myplr]._pBaseDex = plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX);
 	}
-	if (plr[myplr]._pBaseVit > MaxStats[pc][ATTRIB_VIT]) {
-		plr[myplr]._pBaseVit = MaxStats[pc][ATTRIB_VIT];
+	if (plr[myplr]._pBaseVit > plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT)) {
+		plr[myplr]._pBaseVit = plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT);
 	}
 
 	Uint64 msk = 0;
@@ -3965,52 +3963,38 @@ void SyncInitPlr(int pnum)
 
 void CheckStats(int p)
 {
-	int c, i;
+	int i;
 
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("CheckStats: illegal player %d", p);
 	}
 
-	if (plr[p]._pClass == PC_WARRIOR) {
-		c = PC_WARRIOR;
-	} else if (plr[p]._pClass == PC_ROGUE) {
-		c = PC_ROGUE;
-	} else if (plr[p]._pClass == PC_SORCERER) {
-		c = PC_SORCERER;
-	} else if (plr[p]._pClass == PC_MONK) {
-		c = PC_MONK;
-	} else if (plr[p]._pClass == PC_BARD) {
-		c = PC_BARD;
-	} else if (plr[p]._pClass == PC_BARBARIAN) {
-		c = PC_BARBARIAN;
-	}
-
 	for (i = 0; i < 4; i++) {
 		switch (i) {
 		case ATTRIB_STR:
-			if (plr[p]._pBaseStr > MaxStats[c][ATTRIB_STR]) {
-				plr[p]._pBaseStr = MaxStats[c][ATTRIB_STR];
+			if (plr[p]._pBaseStr > plr[p].GetMaximumAttributeValue(ATTRIB_STR)) {
+				plr[p]._pBaseStr = plr[p].GetMaximumAttributeValue(ATTRIB_STR);
 			} else if (plr[p]._pBaseStr < 0) {
 				plr[p]._pBaseStr = 0;
 			}
 			break;
 		case ATTRIB_MAG:
-			if (plr[p]._pBaseMag > MaxStats[c][ATTRIB_MAG]) {
-				plr[p]._pBaseMag = MaxStats[c][ATTRIB_MAG];
+			if (plr[p]._pBaseMag > plr[p].GetMaximumAttributeValue(ATTRIB_MAG)) {
+				plr[p]._pBaseMag = plr[p].GetMaximumAttributeValue(ATTRIB_MAG);
 			} else if (plr[p]._pBaseMag < 0) {
 				plr[p]._pBaseMag = 0;
 			}
 			break;
 		case ATTRIB_DEX:
-			if (plr[p]._pBaseDex > MaxStats[c][ATTRIB_DEX]) {
-				plr[p]._pBaseDex = MaxStats[c][ATTRIB_DEX];
+			if (plr[p]._pBaseDex > plr[p].GetMaximumAttributeValue(ATTRIB_DEX)) {
+				plr[p]._pBaseDex = plr[p].GetMaximumAttributeValue(ATTRIB_DEX);
 			} else if (plr[p]._pBaseDex < 0) {
 				plr[p]._pBaseDex = 0;
 			}
 			break;
 		case ATTRIB_VIT:
-			if (plr[p]._pBaseVit > MaxStats[c][ATTRIB_VIT]) {
-				plr[p]._pBaseVit = MaxStats[c][ATTRIB_VIT];
+			if (plr[p]._pBaseVit > plr[p].GetMaximumAttributeValue(ATTRIB_VIT)) {
+				plr[p]._pBaseVit = plr[p].GetMaximumAttributeValue(ATTRIB_VIT);
 			} else if (plr[p]._pBaseVit < 0) {
 				plr[p]._pBaseVit = 0;
 			}
@@ -4027,7 +4011,7 @@ void ModifyPlrStr(int p, int l)
 		app_fatal("ModifyPlrStr: illegal player %d", p);
 	}
 
-	max = MaxStats[plr[p]._pClass][ATTRIB_STR];
+	max = plr[p].GetMaximumAttributeValue(ATTRIB_STR);
 	if (plr[p]._pBaseStr + l > max) {
 		l = max - plr[p]._pBaseStr;
 	}
@@ -4056,7 +4040,7 @@ void ModifyPlrMag(int p, int l)
 		app_fatal("ModifyPlrMag: illegal player %d", p);
 	}
 
-	max = MaxStats[plr[p]._pClass][ATTRIB_MAG];
+	max = plr[p].GetMaximumAttributeValue(ATTRIB_MAG);
 	if (plr[p]._pBaseMag + l > max) {
 		l = max - plr[p]._pBaseMag;
 	}
@@ -4093,7 +4077,7 @@ void ModifyPlrDex(int p, int l)
 		app_fatal("ModifyPlrDex: illegal player %d", p);
 	}
 
-	max = MaxStats[plr[p]._pClass][ATTRIB_DEX];
+	max = plr[p].GetMaximumAttributeValue(ATTRIB_DEX);
 	if (plr[p]._pBaseDex + l > max) {
 		l = max - plr[p]._pBaseDex;
 	}
@@ -4119,7 +4103,7 @@ void ModifyPlrVit(int p, int l)
 		app_fatal("ModifyPlrVit: illegal player %d", p);
 	}
 
-	max = MaxStats[plr[p]._pClass][ATTRIB_VIT];
+	max = plr[p].GetMaximumAttributeValue(ATTRIB_VIT);
 	if (plr[p]._pBaseVit + l > max) {
 		l = max - plr[p]._pBaseVit;
 	}
@@ -4360,21 +4344,6 @@ void PlayDungMsgs()
 	} else {
 		sfxdelay = 0;
 	}
-}
-
-int get_max_strength(int i)
-{
-	return MaxStats[i][ATTRIB_STR];
-}
-
-int get_max_magic(int i)
-{
-	return MaxStats[i][ATTRIB_MAG];
-}
-
-int get_max_dexterity(int i)
-{
-	return MaxStats[i][ATTRIB_DEX];
 }
 
 } // namespace devilution
