@@ -351,6 +351,7 @@ void StartPlrBlock(int pnum, direction dir);
 void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, bool forcehit);
+void SkipPlrHFrames(int pnum);
 void StartPlayerKill(int pnum, int earflag);
 void DropHalfPlayersGold(int pnum);
 void StripTopGold(int pnum);

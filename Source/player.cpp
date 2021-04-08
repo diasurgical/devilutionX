@@ -1626,12 +1626,58 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth);
+	plr[pnum]._pAnimFrame = 0;
+	SkipPlrHFrames(pnum);
+	plr[pnum]._pAnimFrame++;
 
 	plr[pnum]._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);
 	FixPlrWalkTags(pnum);
 	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
 	SetPlayerOld(pnum);
+}
+
+void SkipPlrHFrames(int pnum)
+{
+	int nextframe;
+	int skippedframe;
+	int frameskips;
+	int zenflags;
+	float regionsize;
+	float region;
+
+	zenflags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
+	if (!gbIsHellfire && (plr[pnum]._pIFlags & zenflags) == zenflags) {
+		frameskips = 4;
+	} else if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER) {
+		frameskips = 3;
+	} else if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER) {
+		frameskips = 2;
+	} else if (plr[pnum]._pIFlags & ISPL_FASTRECOVER) {
+		frameskips = 1;
+	} else {
+		frameskips = 0;
+	}
+
+	if (frameskips >= plr[pnum]._pHFrames) {
+		frameskips = plr[pnum]._pHFrames - 1;
+	}
+
+	if (frameskips > 0) {
+		nextframe = plr[pnum]._pAnimFrame + 1;
+		while (true) {
+			regionsize = plr[pnum]._pHFrames / (float)frameskips;
+			region = (int)((nextframe - 0.5) / regionsize) * regionsize + 0.5;
+			skippedframe = round(region + regionsize / 2);
+
+			if (nextframe == skippedframe) {
+				nextframe++;
+			} else {
+				break;
+			}
+		}
+		plr[pnum]._pAnimFrame = nextframe - 1;
+	}
 }
 
 void RespawnDeadItem(ItemStruct *itm, int x, int y)
@@ -3012,22 +3058,11 @@ bool PM_DoSpell(int pnum)
 
 bool PM_DoGotHit(int pnum)
 {
-	int frame;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoGotHit: illegal player %d", pnum);
 	}
 
-	frame = plr[pnum]._pAnimFrame;
-	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
-		plr[pnum]._pAnimFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
-	}
+	SkipPlrHFrames(pnum);
 
 	if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
