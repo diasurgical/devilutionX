@@ -91,6 +91,8 @@ struct GameplayOptions {
 	bool bRandomizeQuests;
 	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
+	/** @brief Indicates whether or not the max HP of monsters should scale based on the player count. */
+	bool bMonsterHealthScaling;
 };
 
 struct ControllerOptions {

@@ -479,24 +479,36 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
 	}
 
-	monster[i]._mmaxhp /= 2;
-	if (monster[i]._mmaxhp < 64) {
-		monster[i]._mmaxhp = 64;
-	}
-	if (gbIsMultiplayer) {
-		int activePlayerCount = 0;
-		for (int j = 0; j < MAX_PLRS; j++) {
-			if (plr[j].plractive) {
-				activePlayerCount++;
+
+	if (sgOptions.Gameplay.bMonsterHealthScaling) {
+		// new behavior: scale max HP for each active player
+		monster[i]._mmaxhp /= 2;
+		if (monster[i]._mmaxhp < 64) {
+			monster[i]._mmaxhp = 64;
+		}
+		if (gbIsMultiplayer) {
+			int activePlayerCount = 0;
+			for (int j = 0; j < MAX_PLRS; j++) {
+				if (plr[j].plractive) {
+					activePlayerCount++;
+				}
+			}
+			for (int j = 0; j < activePlayerCount - 1; j++) {
+				if (gnDifficulty == DIFF_NORMAL) {
+					monster[i]._mmaxhp *= 1.1;
+				} else if (gnDifficulty == DIFF_NIGHTMARE) {
+					monster[i]._mmaxhp *= 1.2;
+				} else if (gnDifficulty == DIFF_HELL) {
+					monster[i]._mmaxhp *= 1.3;
+				}
 			}
 		}
-		for (int j = 0; j < activePlayerCount - 1; j++) {
-			if (gnDifficulty == DIFF_NORMAL) {
-				monster[i]._mmaxhp *= 1.1;
-			} else if (gnDifficulty == DIFF_NIGHTMARE) {
-				monster[i]._mmaxhp *= 1.2;
-			} else if (gnDifficulty == DIFF_HELL) {
-				monster[i]._mmaxhp *= 1.3;
+	} else {
+		// original behavior: divide max HP in half for singleplayer
+		if (!gbIsMultiplayer) {
+			monster[i]._mmaxhp >>= 1;
+			if (monster[i]._mmaxhp < 64) {
+				monster[i]._mmaxhp = 64;
 			}
 		}
 	}
