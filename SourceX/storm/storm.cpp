@@ -263,6 +263,19 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 	return strtol(string, NULL, 10) != 0;
 }
 
+float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
+{
+    radon::Section *section = getIni().getSection(sectionName);
+    if (!section)
+        return defaultValue;
+
+    radon::Key *key = section->getKey(keyName);
+    if (!key)
+        return defaultValue;
+
+    return key->getFloatValue();
+}
+
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
 {
 	strncpy(string, defaultString, stringSize);
@@ -322,6 +335,13 @@ void setIniInt(const char *keyname, const char *valuename, int value)
 {
 	char str[10];
 	sprintf(str, "%d", value);
+	setIniValue(keyname, valuename, str);
+}
+
+void setIniFloat(const char *keyname, const char *valuename, float value)
+{
+	char str[10];
+	sprintf(str, "%.2f", value);
 	setIniValue(keyname, valuename, str);
 }
 

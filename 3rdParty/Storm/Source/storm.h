@@ -262,11 +262,13 @@ BOOL
         DWORD *pdwBpp);
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
+float getIniFloat(const char *sectionName, const char *keyName, float defaultValue);
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
 void SaveIni();
 int getIniInt(const char *keyname, const char *valuename, int defaultValue);
 void setIniInt(const char *keyname, const char *valuename, int value);
+void setIniFloat(const char *keyname, const char *valuename, float value);
 
 void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video);
 void SVidPlayEnd(HANDLE video);
