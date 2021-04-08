@@ -9,6 +9,16 @@
 
 namespace devilution {
 
+enum plr_class : uint8_t {
+	PC_WARRIOR,
+	PC_ROGUE,
+	PC_SORCERER,
+	PC_MONK,
+	PC_BARD,
+	PC_BARBARIAN,
+	NUM_CLASSES
+};
+
 enum anim_weapon_id : uint8_t {
 	ANIM_ID_UNARMED,
 	ANIM_ID_UNARMED_SHIELD,

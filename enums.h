@@ -35,12 +35,6 @@ typedef enum placeflag {
 	PLACE_UNIQUE  = 4,
 } placeflag;
 
-typedef enum mienemy_type {
-	TARGET_MONSTERS = 0,
-	TARGET_PLAYERS  = 1,
-	TARGET_BOTH     = 2,
-} mienemy_type;
-
 typedef enum dungeon_message {
 	DMSG_CATHEDRAL = 1 << 0,
 	DMSG_CATACOMBS = 1 << 1,
@@ -441,16 +435,6 @@ typedef enum _unique_items {
 	UITEM_ENGAGE       = 0x59,
 	UITEM_INVALID      = 0x5A,
 } _unique_items;
-
-typedef enum plr_class {
-	PC_WARRIOR,
-	PC_ROGUE,
-	PC_SORCERER,
-	PC_MONK,
-	PC_BARD,
-	PC_BARBARIAN,
-	NUM_CLASSES
-} plr_class;
 
 typedef enum _walk_path {
 	WALK_NE   = 0x1,
