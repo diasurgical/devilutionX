@@ -165,19 +165,15 @@ public:
 		writeBytes(&value, sizeof(value));
 	}
 
-	void flush()
-	{
-		if (m_buffer == nullptr)
-			return;
-
-		pfile_write_save_file(m_szFileName, m_buffer, m_cur, codec_get_encoded_len(m_cur));
-		mem_free_dbg(m_buffer);
-		m_buffer = nullptr;
-	}
-
 	~SaveHelper()
 	{
-		flush();
+		const auto encoded_len = codec_get_encoded_len(m_cur);
+		const char *const password = pfile_get_password();
+		codec_encode(m_buffer, m_cur, encoded_len, password);
+		mpqapi_write_file(m_szFileName, m_buffer, encoded_len);
+
+		mem_free_dbg(m_buffer);
+		m_buffer = nullptr;
 	}
 };
 
@@ -1750,7 +1746,7 @@ void SaveHeroItems(PlayerStruct *pPlayer)
 	SaveItems(&file, pPlayer->SpdList, MAXBELTITEMS);
 }
 
-void SaveGame()
+void SaveGameData()
 {
 	SaveHelper file("game", FILEBUFF);
 
@@ -1901,15 +1897,17 @@ void SaveGame()
 	file.writeLE<Uint8>(automapflag);
 	file.writeBE<Sint32>(AutoMapScale);
 
-	file.flush();
+}
 
+void SaveGame() {
 	gbValidSaveFile = true;
-	pfile_rename_temp_to_perm();
-	pfile_write_hero();
+	pfile_write_hero(/*save_game_data=*/true);
 }
 
 void SaveLevel()
 {
+	PFileScopedArchiveWriter scoped_writer;
+
 	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
