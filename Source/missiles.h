@@ -24,15 +24,15 @@ typedef struct MissileData {
 } MissileData;
 
 typedef struct MisFileData {
+	const char *mName;
 	Uint8 mAnimName;
 	Uint8 mAnimFAmt;
-	const char *mName;
 	Sint32 mFlags;
 	Uint8 *mAnimData[16];
 	Uint8 mAnimDelay[16];
 	Uint8 mAnimLen[16];
-	Sint32 mAnimWidth[16];
-	Sint32 mAnimWidth2[16];
+	Sint16 mAnimWidth[16];
+	Sint16 mAnimWidth2[16];
 } MisFileData;
 
 typedef struct ChainStruct {
