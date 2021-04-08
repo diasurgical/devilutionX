@@ -170,7 +170,7 @@ public:
 		if (m_buffer == nullptr)
 			return;
 
-		pfile_write_save_file(m_szFileName, m_buffer, m_bufferPtr, codec_get_encoded_len(m_bufferPtr));
+		pfile_write_save_file(m_szFileName, m_buffer, m_bufferLen, codec_get_encoded_len(m_bufferLen));
 		mem_free_dbg(m_buffer);
 		m_buffer = nullptr;
 	}
