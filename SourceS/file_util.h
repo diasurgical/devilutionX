@@ -21,7 +21,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #if defined(__sgi)
-extern int truncate(const char *, off_t);
+#include <sys/types.h>
+#include <fcntl.h>
 #endif
 #else
 #include <cstdio>
@@ -93,6 +94,9 @@ inline bool ResizeFile(const char *path, std::uintmax_t size)
 	::CloseHandle(file);
 	return true;
 #elif defined(__sgi)
+	int fd = open(path, O_RDWR);
+	ftruncate(fd, static_cast<off_t>(size));
+	close(fd);
 	return true;
 #elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 	return ::truncate(path, static_cast<off_t>(size)) == 0;
