@@ -3362,7 +3362,7 @@ void AddDiabApoca(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 	missile[mi]._miDelFlag = TRUE;
 }
 
-int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, char micaster, int id, int midam, int spllvl)
+int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl)
 {
 	int i, mi;
 
@@ -4329,22 +4329,19 @@ void MI_LightningWallC(Sint32 i)
 
 void MI_FireNova(Sint32 i)
 {
-	int k, id, sx, sy, dir, en, sx1, sy1, dam;
-
-	sx1 = 0;
-	sy1 = 0;
-	id = missile[i]._misource;
-	dam = missile[i]._midam;
-	sx = missile[i]._mix;
-	sy = missile[i]._miy;
+	int sx1 = 0;
+	int sy1 = 0;
+	int id = missile[i]._misource;
+	int dam = missile[i]._midam;
+	int sx = missile[i]._mix;
+	int sy = missile[i]._miy;
+	int dir = 0;
+	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
 		dir = plr[id]._pdir;
 		en = TARGET_MONSTERS;
-	} else {
-		dir = 0;
-		en = TARGET_PLAYERS;
 	}
-	for (k = 0; k < 23; k++) {
+	for (int k = 0; k < 23; k++) {
 		if (sx1 != vCrawlTable[k][6] || sy1 != vCrawlTable[k][7]) {
 			AddMissile(sx, sy, sx + vCrawlTable[k][6], sy + vCrawlTable[k][7], dir, MIS_FIRENOVA, en, id, dam, missile[i]._mispllvl);
 			AddMissile(sx, sy, sx - vCrawlTable[k][6], sy - vCrawlTable[k][7], dir, MIS_FIRENOVA, en, id, dam, missile[i]._mispllvl);
@@ -4361,16 +4358,16 @@ void MI_FireNova(Sint32 i)
 
 void MI_SpecArrow(Sint32 i)
 {
-	int dir, src, dam, sx, sy, dx, dy, spllvl, mitype, micaster;
-
-	src = missile[i]._misource;
-	dam = missile[i]._midam;
-	sx = missile[i]._mix;
-	sy = missile[i]._miy;
-	dx = missile[i]._miVar1;
-	dy = missile[i]._miVar2;
-	spllvl = missile[i]._miVar3;
-	mitype = 0;
+	int src = missile[i]._misource;
+	int dam = missile[i]._midam;
+	int sx = missile[i]._mix;
+	int sy = missile[i]._miy;
+	int dx = missile[i]._miVar1;
+	int dy = missile[i]._miVar2;
+	int spllvl = missile[i]._miVar3;
+	int mitype = 0;
+	int dir = 0;
+	mienemy_type micaster = TARGET_PLAYERS;
 	if (src != -1) {
 		dir = plr[src]._pdir;
 		micaster = TARGET_MONSTERS;
@@ -4389,9 +4386,6 @@ void MI_SpecArrow(Sint32 i)
 			mitype = MIS_HBOLTARROW;
 			break;
 		}
-	} else {
-		dir = 0;
-		micaster = TARGET_PLAYERS;
 	}
 	AddMissile(sx, sy, dx, dy, dir, mitype, micaster, src, dam, spllvl);
 	if (mitype == MIS_CBOLTARROW) {
@@ -5207,22 +5201,19 @@ void MI_Wave(Sint32 i)
 
 void MI_Nova(Sint32 i)
 {
-	int k, id, sx, sy, dir, en, sx1, sy1, dam;
-
-	sx1 = 0;
-	sy1 = 0;
-	id = missile[i]._misource;
-	dam = missile[i]._midam;
-	sx = missile[i]._mix;
-	sy = missile[i]._miy;
+	int sx1 = 0;
+	int sy1 = 0;
+	int id = missile[i]._misource;
+	int dam = missile[i]._midam;
+	int sx = missile[i]._mix;
+	int sy = missile[i]._miy;
+	int dir = 0;
+	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
 		dir = plr[id]._pdir;
 		en = TARGET_MONSTERS;
-	} else {
-		dir = 0;
-		en = TARGET_PLAYERS;
 	}
-	for (k = 0; k < 23; k++) {
+	for (int k = 0; k < 23; k++) {
 		if (sx1 != vCrawlTable[k][6] || sy1 != vCrawlTable[k][7]) {
 			AddMissile(sx, sy, sx + vCrawlTable[k][6], sy + vCrawlTable[k][7], dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
 			AddMissile(sx, sy, sx - vCrawlTable[k][6], sy - vCrawlTable[k][7], dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);

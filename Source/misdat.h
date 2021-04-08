@@ -9,6 +9,12 @@
 
 namespace devilution {
 
+enum mienemy_type : uint8_t {
+	TARGET_MONSTERS,
+	TARGET_PLAYERS,
+	TARGET_BOTH,
+};
+
 enum missile_resistance : uint8_t {
 	MISR_NONE,
 	MISR_FIRE,
