@@ -4,9 +4,11 @@
  * Various global enumerators.
  */
 
+#include <stdint.h>
+
 namespace devilution {
 
-typedef enum _sfx_id {
+typedef enum _sfx_id : int16_t {
 	PS_WALK1,
 	PS_WALK2,
 	PS_WALK3,
@@ -1038,7 +1040,7 @@ typedef enum _sfx_id {
 	SFX_NONE = -1,
 } _sfx_id;
 
-typedef enum sfx_flag {
+typedef enum sfx_flag : uint8_t {
 	sfx_STREAM   = 0x01,
 	sfx_MISC     = 0x02,
 	sfx_UI       = 0x04,
@@ -1049,7 +1051,7 @@ typedef enum sfx_flag {
 	sfx_HELLFIRE = 0x80,
 } sfx_flag;
 
-typedef enum missile_graphic_id {
+typedef enum missile_graphic_id : uint8_t {
 	MFILE_ARROWS,
 	MFILE_FIREBA,
 	MFILE_GUARD,
@@ -1117,7 +1119,7 @@ typedef enum FILE_SYSTEM {
 	FS_CD = 1,
 } FILE_SYSTEM;
 
-typedef enum _artfonts {
+typedef enum _artfonts : uint8_t {
 	AF_SMALL     = 0,
 	AF_SMALLGRAY = 1,
 	AF_MED       = 2,
@@ -1129,7 +1131,7 @@ typedef enum _artfonts {
 } _artfonts;
 
 // this enum contains indexes from UniqMonst array for special unique monsters (usually quest related)
-typedef enum {
+typedef enum : uint8_t {
 	UMT_GARBUD    = 0,
 	UMT_SKELKING  = 1,
 	UMT_ZHAR      = 2,
@@ -1145,7 +1147,7 @@ typedef enum {
 	UMT_NAKRUL    = 12,
 } _uniq_monsterid;
 
-typedef enum monster_flag {
+typedef enum monster_flag : uint16_t {
 	MFLAG_HIDDEN          = 0x01,
 	MFLAG_LOCK_ANIMATION  = 0x02,
 	MFLAG_ALLOW_SPECIAL   = 0x04,
@@ -1179,7 +1181,7 @@ typedef enum missile_resistance {
 	MISR_ACID      = 4,
 } missile_resistance;
 
-typedef enum _speech_id {
+typedef enum _speech_id : int16_t {
 	TEXT_KING1,
 	TEXT_KING2,
 	TEXT_KING3,
@@ -1568,7 +1570,7 @@ typedef enum _speech_id {
 	TEXT_NONE = -1,
 } _speech_id;
 
-typedef enum dungeon_type {
+typedef enum dungeon_type : int8_t {
 	DTYPE_TOWN      = 0x0,
 	DTYPE_CATHEDRAL = 0x1,
 	DTYPE_CATACOMBS = 0x2,

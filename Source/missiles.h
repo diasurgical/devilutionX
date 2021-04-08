@@ -19,8 +19,8 @@ typedef struct MissileData {
 	Uint8 mType;
 	Uint8 mResist;
 	Uint8 mFileNum;
-	Sint32 mlSFX;
-	Sint32 miSFX;
+	Sint16 mlSFX;
+	Sint16 miSFX;
 } MissileData;
 
 typedef struct MisFileData {
