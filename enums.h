@@ -49,7 +49,7 @@ typedef enum dungeon_message {
 	DMSG_DIABLO    = 1 << 4,
 } dungeon_message;
 
-typedef enum theme_id {
+typedef enum theme_id : int8_t {
 	THEME_BARREL            = 0x0,
 	THEME_SHRINE            = 0x1,
 	THEME_MONSTPIT          = 0x2,

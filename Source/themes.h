@@ -13,7 +13,7 @@ extern "C" {
 
 typedef struct ThemeStruct {
 	theme_id ttype;
-	Sint32 ttval;
+	Sint16 ttval;
 } ThemeStruct;
 
 extern int numthemes;
