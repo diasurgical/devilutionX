@@ -5,19 +5,22 @@
  */
 #pragma once
 
+#include <stdint.h>
+#include <stdbool.h>
+
 namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef enum item_drop_rate {
+typedef enum item_drop_rate : uint8_t {
 	IDROP_NEVER,
 	IDROP_REGULAR,
 	IDROP_DOUBLE,
 } item_drop_rate;
 
-typedef enum item_class {
+typedef enum item_class : uint8_t {
 	ICLASS_NONE,
 	ICLASS_WEAPON,
 	ICLASS_ARMOR,
@@ -26,7 +29,7 @@ typedef enum item_class {
 	ICLASS_QUEST,
 } item_class;
 
-typedef enum item_equip_type {
+typedef enum item_equip_type : int8_t {
 	ILOC_NONE,
 	ILOC_ONEHAND,
 	ILOC_TWOHAND,
@@ -40,7 +43,7 @@ typedef enum item_equip_type {
 } item_equip_type;
 
 /// Item graphic IDs; frame_num-11 of objcurs.cel.
-typedef enum item_cursor_graphic {
+typedef enum item_cursor_graphic : uint8_t {
 	// clang-format off
 	ICURS_POTION_OF_FULL_MANA         = 0,
 	ICURS_SCROLL_OF                   = 1,
@@ -166,7 +169,7 @@ typedef enum item_cursor_graphic {
 	// clang-format on
 } item_cursor_graphic;
 
-typedef enum item_type {
+typedef enum item_type : int8_t {
 	ITYPE_MISC,
 	ITYPE_SWORD,
 	ITYPE_AXE,
@@ -184,7 +187,7 @@ typedef enum item_type {
 	ITYPE_NONE = -1,
 } item_type;
 
-typedef enum unique_base_item {
+typedef enum unique_base_item : int8_t {
 	UITYPE_NONE,
 	UITYPE_SHORTBOW,
 	UITYPE_LONGBOW,
@@ -296,7 +299,7 @@ typedef enum item_special_effect {
 	// clang-format on
 } item_special_effect;
 
-typedef enum item_misc_id {
+typedef enum item_misc_id : int8_t {
 	IMISC_NONE,
 	IMISC_USEFIRST,
 	IMISC_FULLHEAL,
@@ -364,21 +367,21 @@ typedef struct ItemDataStruct {
 	enum unique_base_item iItemId;
 	const char *iName;
 	const char *iSName;
-	Sint8 iMinMLvl;
-	Sint32 iDurability;
-	Sint32 iMinDam;
-	Sint32 iMaxDam;
-	Sint32 iMinAC;
-	Sint32 iMaxAC;
-	Sint8 iMinStr;
-	Sint8 iMinMag;
-	Sint8 iMinDex;
+	Uint8 iMinMLvl;
+	Uint8 iDurability;
+	Uint8 iMinDam;
+	Uint8 iMaxDam;
+	Uint8 iMinAC;
+	Uint8 iMaxAC;
+	Uint8 iMinStr;
+	Uint8 iMinMag;
+	Uint8 iMinDex;
 	Sint32 iFlags; // item_special_effect as bit flags
 	enum item_misc_id iMiscId;
 	enum spell_id iSpell;
-	BOOL iUsable;
-	Sint32 iValue;
-	Sint32 iMaxValue;
+	bool iUsable;
+	Uint16 iValue;
+	Uint16 iMaxValue;
 } ItemDataStruct;
 
 typedef enum item_effect_type {
