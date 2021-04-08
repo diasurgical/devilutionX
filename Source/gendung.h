@@ -5,13 +5,22 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum dungeon_type : int8_t {
+	DTYPE_TOWN,
+	DTYPE_CATHEDRAL,
+	DTYPE_CATACOMBS,
+	DTYPE_CAVES,
+	DTYPE_HELL,
+	DTYPE_NEST,
+	DTYPE_CRYPT,
+	DTYPE_NONE = -1,
+};
 
-typedef struct ScrollStruct {
+struct ScrollStruct {
 	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff */
 	Sint32 _sxoff;
 	/** @brief Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff */
@@ -19,21 +28,21 @@ typedef struct ScrollStruct {
 	Sint32 _sdx;
 	Sint32 _sdy;
 	Sint32 _sdir;
-} ScrollStruct;
+};
 
-typedef struct THEME_LOC {
+struct THEME_LOC {
 	Sint32 x;
 	Sint32 y;
 	Sint32 ttval;
 	Sint32 width;
 	Sint32 height;
-} THEME_LOC;
+};
 
-typedef struct MICROS {
+struct MICROS {
 	Uint16 mt[16];
-} MICROS;
+};
 
-typedef struct ShadowStruct {
+struct ShadowStruct {
 	Uint8 strig;
 	Uint8 s1;
 	Uint8 s2;
@@ -41,7 +50,7 @@ typedef struct ShadowStruct {
 	Uint8 nv1;
 	Uint8 nv2;
 	Uint8 nv3;
-} ShadowStruct;
+};
 
 extern BYTE dungeon[DMAXX][DMAXY];
 extern BYTE pdungeon[DMAXX][DMAXY];
@@ -115,9 +124,5 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 void DRLG_HoldThemeRooms();
 BOOL SkipThemeRoom(int x, int y);
 void InitLevels();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

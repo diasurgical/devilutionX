@@ -5,16 +5,21 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 #include "pack.h"
+#include "gendung.h"
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum clicktype : int8_t {
+	CLICK_NONE,
+	CLICK_LEFT,
+	CLICK_RIGHT,
+};
 
 #ifndef DEFAULT_WIDTH
 #define DEFAULT_WIDTH 640
@@ -45,7 +50,7 @@ extern bool gbCowQuest;
 extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
-extern char sgbMouseDown;
+extern clicktype sgbMouseDown;
 extern int gnTickRate;
 extern WORD gnTickDelay;
 
@@ -81,9 +86,5 @@ extern int debug_mode_key_j;
 #endif
 extern bool gbFriendlyMode;
 extern bool gbFriendlyFire;
-
-#ifdef __cplusplus
-}
-#endif
 
 }

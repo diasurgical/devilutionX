@@ -511,7 +511,7 @@ void multi_process_network_packets()
 		nthread_terminate_game("SNetReceiveMsg");
 }
 
-void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen)
+void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen)
 {
 	DWORD dwOffset, dwBody, dwMsg;
 	TPkt pkt;
