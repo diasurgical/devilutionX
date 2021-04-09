@@ -509,7 +509,7 @@ void TownCtrlMsg(int i)
 	if (i == -1)
 		return;
 
-	if (towner[i]._tbtcnt != 0) {
+	if (towner[i]._tbtcnt) {
 		p = towner[i]._tTalkingToPlayer;
 		dx = abs(towner[i]._tx - plr[p]._px);
 		dy = abs(towner[i]._ty - plr[p]._py);
