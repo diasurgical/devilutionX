@@ -71,7 +71,7 @@ void UiTitleDialog()
 	title_Free();
 }
 
-void UiSetSpawned(BOOL bSpawned)
+void UiSetSpawned(bool bSpawned)
 {
 	gbSpawned = bSpawned;
 }

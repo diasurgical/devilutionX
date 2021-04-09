@@ -252,7 +252,7 @@ void CheckQuests()
 	}
 }
 
-BOOL ForceQuests()
+bool ForceQuests()
 {
 	int i, j, qx, qy, ql;
 
@@ -284,7 +284,7 @@ BOOL ForceQuests()
 	return FALSE;
 }
 
-BOOL QuestStatus(int i)
+bool QuestStatus(int i)
 {
 	if (setlevel)
 		return FALSE;
@@ -297,7 +297,7 @@ BOOL QuestStatus(int i)
 	return TRUE;
 }
 
-void CheckQuestKill(int m, BOOL sendmsg)
+void CheckQuestKill(int m, bool sendmsg)
 {
 	int i, j;
 
@@ -806,7 +806,7 @@ void ResyncQuests()
 	}
 }
 
-static void PrintQLString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, text_color col)
+static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col)
 {
 	int len, width, i, k, sx, sy;
 	BYTE c;

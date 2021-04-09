@@ -1058,7 +1058,7 @@ TSFX sgSFX[] = {
 	// clang-format on
 };
 
-BOOL effect_is_playing(int nSFX)
+bool effect_is_playing(int nSFX)
 {
 	TSFX *sfx = &sgSFX[nSFX];
 	if (sfx->pSnd)
@@ -1082,7 +1082,7 @@ void stream_stop()
 
 static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 {
-	BOOL success;
+	bool success;
 #ifndef DISABLE_STREAMING_SOUNDS
 	constexpr bool kAllowStreaming = true;
 #else
@@ -1162,7 +1162,7 @@ void FreeMonsterSnd()
 	}
 }
 
-BOOL calc_snd_position(int x, int y, int *plVolume, int *plPan)
+bool calc_snd_position(int x, int y, int *plVolume, int *plPan)
 {
 	int pan, volume;
 
@@ -1187,7 +1187,7 @@ BOOL calc_snd_position(int x, int y, int *plVolume, int *plPan)
 	return TRUE;
 }
 
-static void PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
+static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
 {
 	int lPan, lVolume;
 

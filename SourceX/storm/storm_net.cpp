@@ -20,7 +20,7 @@ static char gpszGamePassword[128] = {};
 static std::mutex storm_net_mutex;
 #endif
 
-BOOL SNetReceiveMessage(int *senderplayerid, char **data, int *databytes)
+bool SNetReceiveMessage(int *senderplayerid, char **data, int *databytes)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -32,7 +32,7 @@ BOOL SNetReceiveMessage(int *senderplayerid, char **data, int *databytes)
 	return true;
 }
 
-BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes)
+bool SNetSendMessage(int playerID, void *data, unsigned int databytes)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -40,7 +40,7 @@ BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes)
 	return dvlnet_inst->SNetSendMessage(playerID, data, databytes);
 }
 
-BOOL SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arraydatabytes,
+bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arraydatabytes,
     DWORD *arrayplayerstatus)
 {
 #ifndef NONET
@@ -57,7 +57,7 @@ BOOL SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arr
 	return true;
 }
 
-BOOL SNetSendTurn(char *data, unsigned int databytes)
+bool SNetSendTurn(char *data, unsigned int databytes)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -89,7 +89,7 @@ bool SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func)
 	return dvlnet_inst->SNetRegisterEventHandler(evtype, func);
 }
 
-BOOL SNetDestroy()
+bool SNetDestroy()
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -97,7 +97,7 @@ BOOL SNetDestroy()
 	return true;
 }
 
-BOOL SNetDropPlayer(int playerid, DWORD flags)
+bool SNetDropPlayer(int playerid, DWORD flags)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -105,7 +105,7 @@ BOOL SNetDropPlayer(int playerid, DWORD flags)
 	return dvlnet_inst->SNetDropPlayer(playerid, flags);
 }
 
-BOOL SNetGetGameInfo(int type, void *dst, unsigned int length)
+bool SNetGetGameInfo(int type, void *dst, unsigned int length)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -122,7 +122,7 @@ BOOL SNetGetGameInfo(int type, void *dst, unsigned int length)
 	return true;
 }
 
-BOOL SNetLeaveGame(int type)
+bool SNetLeaveGame(int type)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -148,7 +148,7 @@ int SNetInitializeProvider(Uint32 provider, struct GameData *gameData)
 /**
  * @brief Called by engine for single, called by ui for multi
  */
-BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString,
+bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString,
     DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
     const char *creatorName, const char *a11, int *playerID)
 {
@@ -173,7 +173,7 @@ BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
 	return *playerID != -1;
 }
 
-BOOL SNetJoinGame(int id, char *pszGameName, char *pszGamePassword, char *playerName, char *userStats, int *playerID)
+bool SNetJoinGame(int id, char *pszGameName, char *pszGamePassword, char *playerName, char *userStats, int *playerID)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -189,7 +189,7 @@ BOOL SNetJoinGame(int id, char *pszGameName, char *pszGamePassword, char *player
 /**
  * @brief Is this the mirror image of SNetGetTurnsInTransit?
  */
-BOOL SNetGetOwnerTurnsWaiting(DWORD *turns)
+bool SNetGetOwnerTurnsWaiting(DWORD *turns)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -197,7 +197,7 @@ BOOL SNetGetOwnerTurnsWaiting(DWORD *turns)
 	return dvlnet_inst->SNetGetOwnerTurnsWaiting(turns);
 }
 
-BOOL SNetGetTurnsInTransit(DWORD *turns)
+bool SNetGetTurnsInTransit(DWORD *turns)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -219,7 +219,7 @@ bool SNetSetBasePlayer(int)
 /**
  * @brief since we never signal STORM_ERROR_REQUIRES_UPGRADE the engine will not call this function
  */
-BOOL SNetPerformUpgrade(DWORD *upgradestatus)
+bool SNetPerformUpgrade(DWORD *upgradestatus)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);

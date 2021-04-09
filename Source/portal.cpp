@@ -27,7 +27,7 @@ void InitPortals()
 	}
 }
 
-void SetPortalStats(int i, BOOL o, int x, int y, int lvl, dungeon_type lvltype)
+void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
 {
 	portal[i].open = o;
 	portal[i].x = x;
@@ -79,7 +79,7 @@ void AddInTownPortal(int i)
 	AddWarpMissile(i, WarpDropX[i], WarpDropY[i]);
 }
 
-void ActivatePortal(int i, int x, int y, int lvl, dungeon_type lvltype, BOOL sp)
+void ActivatePortal(int i, int x, int y, int lvl, dungeon_type lvltype, bool sp)
 {
 	portal[i].open = TRUE;
 
@@ -97,7 +97,7 @@ void DeactivatePortal(int i)
 	portal[i].open = FALSE;
 }
 
-BOOL PortalOnLevel(int i)
+bool PortalOnLevel(int i)
 {
 	if (portal[i].level == currlevel)
 		return TRUE;
@@ -172,7 +172,7 @@ void GetPortalLvlPos()
 	}
 }
 
-BOOL PosOkPortal(int lvl, int x, int y)
+bool PosOkPortal(int lvl, int x, int y)
 {
 	int i;
 

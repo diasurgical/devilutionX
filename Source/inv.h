@@ -27,8 +27,8 @@ typedef struct InvXY {
 	Sint32 Y;
 } InvXY;
 
-extern BOOL invflag;
-extern BOOL drawsbarflag;
+extern bool invflag;
+extern bool drawsbarflag;
 extern const InvXY InvRect[73];
 
 void FreeInvGFX();
@@ -45,8 +45,8 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true
 bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false);
 bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem);
 bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false);
-BOOL GoldAutoPlace(int pnum);
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId, uint32_t dwBuff);
+bool GoldAutoPlace(int pnum);
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(int pnum, BYTE iv);
 void RemoveInvItem(int pnum, int iv);
 void RemoveSpdBarItem(int pnum, int iv);
@@ -57,20 +57,20 @@ void InvGetItem(int pnum, ItemStruct *item, int ii);
 void AutoGetItem(int pnum, ItemStruct *item, int ii);
 int FindGetItem(int idx, WORD ci, int iseed);
 void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
-BOOL CanPut(int x, int y);
-BOOL TryInvPut();
+bool CanPut(int x, int y);
+bool TryInvPut();
 void DrawInvMsg(const char *msg);
 int InvPutItem(int pnum, int x, int y);
 int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac);
 char CheckInvHLight();
 void RemoveScroll(int pnum);
-BOOL UseScroll();
+bool UseScroll();
 void UseStaffCharge(int pnum);
-BOOL UseStaff();
-BOOL UseInvItem(int pnum, int cii);
+bool UseStaff();
+bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(int pnum);
-BOOL DropItemBeforeTrig();
+bool DropItemBeforeTrig();
 
 /* data */
 

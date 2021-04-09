@@ -115,7 +115,7 @@ void OffsetSTextY(int y, int yo)
 	stext[y]._syoff = yo;
 }
 
-void AddSText(int x, int y, bool j, const char *str, text_color clr, BOOL sel)
+void AddSText(int x, int y, bool j, const char *str, text_color clr, bool sel)
 {
 	stext[y]._sx = x;
 	stext[y]._syoff = 0;
@@ -314,7 +314,7 @@ void S_ScrollSPBuy(int idx)
 		stextsel = stextdown;
 }
 
-BOOL S_StartSPBuy()
+bool S_StartSPBuy()
 {
 	int i;
 
@@ -349,7 +349,7 @@ BOOL S_StartSPBuy()
 	return TRUE;
 }
 
-BOOL SmithSellOk(int i)
+bool SmithSellOk(int i)
 {
 	ItemStruct *pI;
 
@@ -421,7 +421,7 @@ void S_ScrollSSell(int idx)
 void S_StartSSell()
 {
 	int i;
-	BOOL sellok;
+	bool sellok;
 
 	stextsize = true;
 	sellok = FALSE;
@@ -488,7 +488,7 @@ void S_StartSSell()
 	}
 }
 
-BOOL SmithRepairOk(int i)
+bool SmithRepairOk(int i)
 {
 	if (plr[myplr].InvList[i].isEmpty())
 		return FALSE;
@@ -504,7 +504,7 @@ BOOL SmithRepairOk(int i)
 
 void S_StartSRepair()
 {
-	BOOL repairok;
+	bool repairok;
 	int i;
 
 	stextsize = true;
@@ -648,9 +648,9 @@ void S_StartWBuy()
 		stextsmax = 0;
 }
 
-BOOL WitchSellOk(int i)
+bool WitchSellOk(int i)
 {
-	BOOL rv;
+	bool rv;
 	ItemStruct *pI;
 
 	rv = FALSE;
@@ -678,7 +678,7 @@ BOOL WitchSellOk(int i)
 void S_StartWSell()
 {
 	int i;
-	BOOL sellok;
+	bool sellok;
 
 	stextsize = true;
 	sellok = FALSE;
@@ -745,9 +745,9 @@ void S_StartWSell()
 	}
 }
 
-BOOL WitchRechargeOk(int i)
+bool WitchRechargeOk(int i)
 {
-	BOOL rv;
+	bool rv;
 
 	rv = FALSE;
 	if (plr[myplr].InvList[i]._itype == ITYPE_STAFF
@@ -774,7 +774,7 @@ void AddStoreHoldRecharge(ItemStruct itm, int i)
 void S_StartWRecharge()
 {
 	int i;
-	BOOL rechargeok;
+	bool rechargeok;
 
 	stextsize = true;
 	rechargeok = FALSE;
@@ -840,7 +840,7 @@ void S_StartNoRoom()
 
 void S_StartConfirm()
 {
-	BOOL idprint;
+	bool idprint;
 
 	StartStore(stextshold);
 	stextscrl = false;
@@ -1038,7 +1038,7 @@ void S_StartStory()
 	AddSLine(5);
 }
 
-BOOL IdItemOk(ItemStruct *i)
+bool IdItemOk(ItemStruct *i)
 {
 	if (i->isEmpty()) {
 		return FALSE;
@@ -1060,7 +1060,7 @@ void AddStoreHoldId(ItemStruct itm, int i)
 
 void S_StartSIdentify()
 {
-	BOOL idok;
+	bool idok;
 	int i;
 
 	idok = FALSE;
@@ -1379,7 +1379,7 @@ void S_SPBuyEnter()
 	}
 }
 
-BOOL StoreGoldFit(int idx)
+bool StoreGoldFit(int idx)
 {
 	int i, sz, cost, numsqrs;
 
@@ -1422,7 +1422,7 @@ BOOL StoreGoldFit(int idx)
  */
 void PlaceStoreGold(int v)
 {
-	BOOL done;
+	bool done;
 	int ii, xx, yy, i;
 
 	done = FALSE;
@@ -1613,7 +1613,7 @@ void WitchBuyItem()
 void S_WBuyEnter()
 {
 	int i, idx;
-	BOOL done;
+	bool done;
 
 	if (stextsel == 22) {
 		StartStore(STORE_WITCH);
@@ -1920,7 +1920,7 @@ void S_HealerEnter()
 void S_HBuyEnter()
 {
 	int i, idx;
-	BOOL done;
+	bool done;
 
 	if (stextsel == 22) {
 		StartStore(STORE_HEALER);

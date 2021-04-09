@@ -158,9 +158,9 @@ void EnsureValidReadiedSpell(PlayerStruct &player)
 	}
 }
 
-BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
+bool CheckSpell(int id, int sn, char st, bool manaonly)
 {
-	BOOL result;
+	bool result;
 
 #ifdef _DEBUG
 	if (debug_mode_key_inverted_v)
@@ -209,7 +209,7 @@ static void PlacePlayer(int pnum)
 {
 	int nx, ny, max, min, x, y;
 	DWORD i;
-	BOOL done;
+	bool done;
 
 	if (plr[pnum].plrlevel == currlevel) {
 		for (i = 0; i < 8; i++) {

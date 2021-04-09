@@ -50,9 +50,9 @@ extern int ReturnLvl;
 
 void InitQuests();
 void CheckQuests();
-BOOL ForceQuests();
-BOOL QuestStatus(int i);
-void CheckQuestKill(int m, BOOL sendmsg);
+bool ForceQuests();
+bool QuestStatus(int i);
+void CheckQuestKill(int m, bool sendmsg);
 void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
 void GetReturnLvlPos();

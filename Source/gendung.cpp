@@ -24,7 +24,7 @@ int setpc_h;
 /** Contains the contents of the single player quest DUN file. */
 BYTE *pSetPiece;
 /** Specifies whether a single player quest DUN has been loaded. */
-BOOL setloadflag;
+bool setloadflag;
 BYTE *pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 BYTE *pMegaTiles;
@@ -335,13 +335,13 @@ void Make_SetPC(int x, int y, int w, int h)
 	}
 }
 
-BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
+bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
 {
 	int ii, xx, yy;
 	int xSmallest, ySmallest;
 	int xArray[20], yArray[20];
 	int xCount, yCount;
-	BOOL yFlag, xFlag;
+	bool yFlag, xFlag;
 
 	yFlag = TRUE;
 	xFlag = TRUE;
@@ -579,7 +579,7 @@ void DRLG_HoldThemeRooms()
 	}
 }
 
-BOOL SkipThemeRoom(int x, int y)
+bool SkipThemeRoom(int x, int y)
 {
 	int i;
 

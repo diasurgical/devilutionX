@@ -73,7 +73,7 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 	return new_cur_turn;
 }
 
-BOOL nthread_recv_turns(BOOL *pfSendAsync)
+bool nthread_recv_turns(bool *pfSendAsync)
 {
 	*pfSendAsync = FALSE;
 	sgbPacketCountdown--;
@@ -116,7 +116,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 static unsigned int nthread_handler(void *data)
 {
 	int delta;
-	BOOL received;
+	bool received;
 
 	if (nthread_should_run) {
 		while (1) {
@@ -144,7 +144,7 @@ void nthread_set_turn_upper_bit()
 	turn_upper_bit = 0x80000000;
 }
 
-void nthread_start(BOOL set_turn_upper_bit)
+void nthread_start(bool set_turn_upper_bit)
 {
 	const char *err, *err2;
 	DWORD largestMsgSize;
@@ -213,7 +213,7 @@ void nthread_cleanup()
 	}
 }
 
-void nthread_ignore_mutex(BOOL bStart)
+void nthread_ignore_mutex(bool bStart)
 {
 	if (sghThread != NULL) {
 		if (bStart)
@@ -228,7 +228,7 @@ void nthread_ignore_mutex(BOOL bStart)
  * @brief Checks if it's time for the logic to advance
  * @return True if the engine should tick
  */
-BOOL nthread_has_500ms_passed()
+bool nthread_has_500ms_passed()
 {
 	DWORD currentTickCount;
 	int ticksElapsed;

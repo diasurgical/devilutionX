@@ -13,7 +13,7 @@ namespace devilution {
 
 int myplr;
 PlayerStruct plr[MAX_PLRS];
-BOOL deathflag;
+bool deathflag;
 int deathdelay;
 
 /** Maps from armor animation to letter used in graphic files. */
@@ -954,7 +954,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	}
 }
 
-void InitPlayer(int pnum, BOOL FirstTime)
+void InitPlayer(int pnum, bool FirstTime)
 {
 	DWORD i;
 
@@ -1081,7 +1081,7 @@ void InitMultiView()
 	ViewY = plr[myplr]._py;
 }
 
-BOOL SolidLoc(int x, int y)
+bool SolidLoc(int x, int y)
 {
 	if (x < 0 || y < 0 || x >= MAXDUNX || y >= MAXDUNY) {
 		return FALSE;
@@ -1090,10 +1090,10 @@ BOOL SolidLoc(int x, int y)
 	return nSolidTable[dPiece[x][y]];
 }
 
-BOOL PlrDirOK(int pnum, int dir)
+bool PlrDirOK(int pnum, int dir)
 {
 	int px, py;
-	BOOL isOk;
+	bool isOk;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PlrDirOK: illegal player %d", pnum);
@@ -1584,7 +1584,7 @@ void RemovePlrFromMap(int pnum)
 				dPlayer[x][y] = 0;
 }
 
-void StartPlrHit(int pnum, int dam, BOOL forcehit)
+void StartPlrHit(int pnum, int dam, bool forcehit)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlrHit: illegal player %d", pnum);
@@ -1692,7 +1692,7 @@ __attribute__((no_sanitize("shift-base")))
 void
 StartPlayerKill(int pnum, int earflag)
 {
-	BOOL diablolevel;
+	bool diablolevel;
 	int i, pdd;
 	PlayerStruct *p;
 	ItemStruct ear;
@@ -2115,7 +2115,7 @@ void StartWarpLvl(int pnum, int pidx)
 	}
 }
 
-BOOL PM_DoStand(int pnum)
+bool PM_DoStand(int pnum)
 {
 	return FALSE;
 }
@@ -2230,7 +2230,7 @@ static bool WeaponDurDecay(int pnum, int ii)
 	return false;
 }
 
-BOOL WeaponDur(int pnum, int durrnd)
+bool WeaponDur(int pnum, int durrnd)
 {
 	if (pnum != myplr) {
 		return FALSE;
@@ -2308,13 +2308,13 @@ BOOL WeaponDur(int pnum, int durrnd)
 	return FALSE;
 }
 
-BOOL PlrHitMonst(int pnum, int m)
+bool PlrHitMonst(int pnum, int m)
 {
-	BOOL rv, ret;
+	bool rv, ret;
 	int hit, hper, mind, maxd, ddp, dam, skdam, phanditype, tmac;
 	hper = 0;
 	ret = FALSE;
-	BOOL adjacentDamage = FALSE;
+	bool adjacentDamage = FALSE;
 
 	if ((DWORD)m >= MAXMONSTERS) {
 		app_fatal("PlrHitMonst: illegal monster %d", m);
@@ -2553,9 +2553,9 @@ BOOL PlrHitMonst(int pnum, int m)
 	return rv;
 }
 
-BOOL PlrHitPlr(int pnum, char p)
+bool PlrHitPlr(int pnum, char p)
 {
-	BOOL rv;
+	bool rv;
 	int hit, hper, blk, blkper, mind, maxd, dam, lvl, skdam, tac;
 
 	if ((DWORD)p >= MAX_PLRS) {
@@ -2647,7 +2647,7 @@ BOOL PlrHitPlr(int pnum, char p)
 	return rv;
 }
 
-BOOL PlrHitObj(int pnum, int mx, int my)
+bool PlrHitObj(int pnum, int mx, int my)
 {
 	int oi;
 
@@ -2665,10 +2665,10 @@ BOOL PlrHitObj(int pnum, int mx, int my)
 	return FALSE;
 }
 
-BOOL PM_DoAttack(int pnum)
+bool PM_DoAttack(int pnum)
 {
 	int frame, dir, dx, dy, m;
-	BOOL didhit = FALSE;
+	bool didhit = FALSE;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoAttack: illegal player %d", pnum);
@@ -2777,7 +2777,7 @@ BOOL PM_DoAttack(int pnum)
 	}
 }
 
-BOOL PM_DoRangeAttack(int pnum)
+bool PM_DoRangeAttack(int pnum)
 {
 	int origFrame, mistype;
 
@@ -2896,7 +2896,7 @@ void ShieldDur(int pnum)
 	}
 }
 
-BOOL PM_DoBlock(int pnum)
+bool PM_DoBlock(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoBlock: illegal player %d", pnum);
@@ -2969,7 +2969,7 @@ static void ArmorDur(int pnum)
 	CalcPlrInv(pnum, TRUE);
 }
 
-BOOL PM_DoSpell(int pnum)
+bool PM_DoSpell(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoSpell: illegal player %d", pnum);
@@ -3007,7 +3007,7 @@ BOOL PM_DoSpell(int pnum)
 	return FALSE;
 }
 
-BOOL PM_DoGotHit(int pnum)
+bool PM_DoGotHit(int pnum)
 {
 	int frame;
 
@@ -3039,7 +3039,7 @@ BOOL PM_DoGotHit(int pnum)
 	return FALSE;
 }
 
-BOOL PM_DoDeath(int pnum)
+bool PM_DoDeath(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoDeath: illegal player %d", pnum);
@@ -3068,7 +3068,7 @@ BOOL PM_DoDeath(int pnum)
 	return FALSE;
 }
 
-BOOL PM_DoNewLvl(int pnum)
+bool PM_DoNewLvl(int pnum)
 {
 	return FALSE;
 }
@@ -3397,7 +3397,7 @@ void CheckNewPath(int pnum)
 	}
 }
 
-BOOL PlrDeathModeOK(int p)
+bool PlrDeathModeOK(int p)
 {
 	if (p != myplr) {
 		return TRUE;
@@ -3620,7 +3620,7 @@ void ClrPlrPath(int pnum)
 	memset(plr[pnum].walkpath, WALK_NONE, sizeof(plr[pnum].walkpath));
 }
 
-BOOL PosOkPlayer(int pnum, int x, int y)
+bool PosOkPlayer(int pnum, int x, int y)
 {
 	DWORD p;
 	char bv;
@@ -3670,7 +3670,7 @@ BOOL PosOkPlayer(int pnum, int x, int y)
 	return TRUE;
 }
 
-void MakePlrPath(int pnum, int xx, int yy, BOOL endspace)
+void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 {
 	int path;
 
@@ -3732,7 +3732,7 @@ void MakePlrPath(int pnum, int xx, int yy, BOOL endspace)
 
 void CheckPlrSpell()
 {
-	BOOL addflag = FALSE;
+	bool addflag = FALSE;
 	int rspell, sd, sl;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
@@ -3904,7 +3904,7 @@ void SyncInitPlrPos(int pnum)
 {
 	int x, y, xx, yy, range;
 	DWORD i;
-	BOOL posOk;
+	bool posOk;
 
 	plr[pnum]._ptargx = plr[pnum]._px;
 	plr[pnum]._ptargy = plr[pnum]._py;

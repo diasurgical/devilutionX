@@ -8,21 +8,21 @@
 namespace devilution {
 
 int numthemes;
-BOOL armorFlag;
-BOOL ThemeGoodIn[4];
-BOOL weaponFlag;
-BOOL treasureFlag;
-BOOL mFountainFlag;
-BOOL cauldronFlag;
-BOOL tFountainFlag;
+bool armorFlag;
+bool ThemeGoodIn[4];
+bool weaponFlag;
+bool treasureFlag;
+bool mFountainFlag;
+bool cauldronFlag;
+bool tFountainFlag;
 int zharlib;
 int themex;
 int themey;
 int themeVar1;
 ThemeStruct themes[MAXTHEMES];
-BOOL pFountainFlag;
-BOOL bFountainFlag;
-BOOL bCrossFlag;
+bool pFountainFlag;
+bool bFountainFlag;
+bool bCrossFlag;
 
 /** Specifies the set of special theme IDs from which one will be selected at random. */
 theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
@@ -55,7 +55,7 @@ int trm3y[] = {
 	1, 1, 1
 };
 
-BOOL TFit_Shrine(int i)
+bool TFit_Shrine(int i)
 {
 	int xp, yp, found;
 
@@ -100,11 +100,11 @@ BOOL TFit_Shrine(int i)
 	return TRUE;
 }
 
-BOOL TFit_Obj5(int t)
+bool TFit_Obj5(int t)
 {
 	int xp, yp;
 	int i, r, rs;
-	BOOL found;
+	bool found;
 
 	xp = 0;
 	yp = 0;
@@ -148,7 +148,7 @@ BOOL TFit_Obj5(int t)
 	return TRUE;
 }
 
-BOOL TFit_SkelRoom(int t)
+bool TFit_SkelRoom(int t)
 {
 	int i;
 
@@ -166,7 +166,7 @@ BOOL TFit_SkelRoom(int t)
 	return FALSE;
 }
 
-BOOL TFit_GoatShrine(int t)
+bool TFit_GoatShrine(int t)
 {
 	int i;
 
@@ -180,7 +180,7 @@ BOOL TFit_GoatShrine(int t)
 	return FALSE;
 }
 
-BOOL CheckThemeObj3(int xp, int yp, int t, int f)
+bool CheckThemeObj3(int xp, int yp, int t, int f)
 {
 	int i;
 
@@ -200,7 +200,7 @@ BOOL CheckThemeObj3(int xp, int yp, int t, int f)
 	return TRUE;
 }
 
-BOOL TFit_Obj3(int t)
+bool TFit_Obj3(int t)
 {
 	int xp, yp;
 	char objrnd[4] = { 4, 4, 3, 5 };
@@ -218,9 +218,9 @@ BOOL TFit_Obj3(int t)
 	return FALSE;
 }
 
-BOOL CheckThemeReqs(theme_id t)
+bool CheckThemeReqs(theme_id t)
 {
-	BOOL rv;
+	bool rv;
 
 	rv = TRUE;
 	switch (t) {
@@ -271,9 +271,9 @@ BOOL CheckThemeReqs(theme_id t)
 	return rv;
 }
 
-static BOOL SpecialThemeFit(int i, theme_id t)
+static bool SpecialThemeFit(int i, theme_id t)
 {
-	BOOL rv;
+	bool rv;
 
 	rv = CheckThemeReqs(t);
 	switch (t) {
@@ -353,7 +353,7 @@ static BOOL SpecialThemeFit(int i, theme_id t)
 	return rv;
 }
 
-BOOL CheckThemeRoom(int tv)
+bool CheckThemeRoom(int tv)
 {
 	int i, j, tarea;
 

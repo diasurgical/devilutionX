@@ -7,7 +7,7 @@
 
 namespace devilution {
 
-BOOL storeflag;
+bool storeflag;
 int sgnCowMsg;
 int numtowners;
 DWORD sgdwCowClicks;

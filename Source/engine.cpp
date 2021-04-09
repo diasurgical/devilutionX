@@ -224,7 +224,7 @@ void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	int w;
-	BOOL shift;
+	bool shift;
 	BYTE *tbl;
 
 	assert(pRLEBytes != NULL);

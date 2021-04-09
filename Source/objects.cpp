@@ -58,8 +58,8 @@ int nobjects;
 int leverid;
 int objectavail[MAXOBJECTS];
 ObjectStruct object[MAXOBJECTS];
-BOOL InitObjFlag;
-BOOL LoadMapObjsFlag;
+bool InitObjFlag;
+bool LoadMapObjsFlag;
 int numobjfiles;
 int dword_6DE0E0;
 
@@ -2646,7 +2646,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
+void OperateL2LDoor(int pnum, int oi, bool sendflag)
 {
 	int xp, yp;
 	bool dok;
@@ -4144,7 +4144,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		if (pnum != myplr)
 			return;
 		InitDiabloMsg(EMSG_SHRINE_MURPHYS);
-		BOOL broke = FALSE;
+		bool broke = FALSE;
 		for (int j = 0; j < NUM_INVLOC; j++) {
 			ItemStruct *item = &plr[myplr].InvBody[j];
 			if (!item->isEmpty() && random_(0, 3) == 0) {
@@ -4229,7 +4229,7 @@ void OperateDecap(int pnum, int i, bool sendmsg)
 
 void OperateArmorStand(int pnum, int i, bool sendmsg)
 {
-	BOOL uniqueRnd;
+	bool uniqueRnd;
 
 	if (object[i]._oSelFlag != 0) {
 		object[i]._oSelFlag = 0;
@@ -4308,7 +4308,7 @@ bool OperateFountains(int pnum, int i)
 {
 	int prev, add, rnd, cnt;
 	bool applied;
-	BOOL done;
+	bool done;
 
 	applied = FALSE;
 	SetRndSeed(object[i]._oRndSeed);
@@ -4494,9 +4494,9 @@ void OperateLazStand(int pnum, int i)
 	}
 }
 
-void OperateObject(int pnum, int i, BOOL TeleFlag)
+void OperateObject(int pnum, int i, bool TeleFlag)
 {
-	BOOL sendmsg;
+	bool sendmsg;
 
 	sendmsg = (pnum == myplr);
 	switch (object[i]._otype) {
@@ -4798,7 +4798,7 @@ void BreakCrux(int i)
 	ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 }
 
-void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
+void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 {
 	int oi;
 	int xp, yp;

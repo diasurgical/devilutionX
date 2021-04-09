@@ -216,10 +216,10 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	}
 }
 
-BOOL CheckBlock(int fx, int fy, int tx, int ty)
+bool CheckBlock(int fx, int fy, int tx, int ty)
 {
 	int pn;
-	BOOL coll;
+	bool coll;
 
 	coll = FALSE;
 	while (fx != tx || fy != ty) {
@@ -528,10 +528,10 @@ void MoveMissilePos(int i)
 	}
 }
 
-BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
+bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 {
 	int hit, hper, dam, mor;
-	BOOL resist, ret;
+	bool resist, ret;
 
 	resist = FALSE;
 	if (monster[m].mtalkmsg) {
@@ -609,10 +609,10 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 	}
 }
 
-BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool shift)
+bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool shift)
 {
 	int hit, hper, dam, mor;
-	BOOL resist, ret;
+	bool resist, ret;
 
 	resist = FALSE;
 	if (monster[m].mtalkmsg
@@ -735,7 +735,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	return FALSE;
 }
 
-BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
+bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
 {
 	int hit, hper, tac, dam, blk, blkper, resper;
 	*blocked = false;
@@ -903,7 +903,7 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 	return FALSE;
 }
 
-BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, bool shift, bool *blocked)
+bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, bool shift, bool *blocked)
 {
 	int dam, blk, blkper, hper, hit, resper;
 
@@ -1027,7 +1027,7 @@ BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 	return FALSE;
 }
 
-void CheckMissileCol(int i, int mindam, int maxdam, BOOL shift, int mx, int my, bool nodel)
+void CheckMissileCol(int i, int mindam, int maxdam, bool shift, int mx, int my, bool nodel)
 {
 	int oi;
 	bool blocked;
@@ -1594,7 +1594,7 @@ void AddJester(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 void AddStealPotions(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
 	int i, l, k, j, tx, ty, si, ii, pnum;
-	BOOL hasPlayedSFX;
+	bool hasPlayedSFX;
 
 	missile[mi]._misource = id;
 	for (i = 0; i < 3; i++) {
@@ -2431,7 +2431,7 @@ void AddWeapexp(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mi
 	missile[mi]._mirange = missile[mi]._miAnimLen - 1;
 }
 
-BOOL CheckIfTrig(int x, int y)
+bool CheckIfTrig(int x, int y)
 {
 	int i;
 
@@ -5118,7 +5118,7 @@ void MI_Infra(Sint32 i)
 void MI_Apoca(Sint32 i)
 {
 	int j, k, id;
-	BOOL exit;
+	bool exit;
 
 	id = missile[i]._misource;
 	exit = FALSE;
@@ -5148,7 +5148,7 @@ void MI_Wave(Sint32 i)
 {
 	int sx, sy, sd, nxa, nxb, nya, nyb, dira, dirb;
 	int j, id, pn;
-	BOOL f1, f2;
+	bool f1, f2;
 	int v1, v2;
 
 	f1 = FALSE;

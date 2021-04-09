@@ -43,7 +43,7 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 	}
 }
 
-void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
+void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 {
 	PlayerStruct *pPlayer;
 	int i;
@@ -199,7 +199,7 @@ void VerifyGoldSeeds(PlayerStruct *pPlayer)
 	}
 }
 
-void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync)
+void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 {
 	PlayerStruct *pPlayer;
 	int i;

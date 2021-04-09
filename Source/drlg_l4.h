@@ -19,8 +19,8 @@ extern int diabquad3x;
 extern int diabquad3y;
 extern int diabquad4x;
 extern int diabquad4y;
-BOOL IsDURWall(char d);
-BOOL IsDLLWall(char dd);
+bool IsDURWall(char d);
+bool IsDLLWall(char dd);
 void CreateL4Dungeon(DWORD rseed, int entry);
 
 #ifdef __cplusplus

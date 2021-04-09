@@ -53,7 +53,7 @@ DWORD sgdwCursHgtOld;
 bool dRendered[MAXDUNX][MAXDUNY];
 
 int frames;
-BOOL frameflag;
+bool frameflag;
 int frameend;
 int framerate;
 int framestart;
@@ -222,7 +222,7 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, BOOL pre)
+void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, bool pre)
 {
 	if (m->_miPreFlag != pre || !m->_miDrawFlag)
 		return;
@@ -257,7 +257,7 @@ void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, B
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
+void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
 {
 	int i;
 	MissileStruct *m;
@@ -468,7 +468,7 @@ void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param oy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, BOOL pre)
+static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool pre)
 {
 	if (dObject[x][y] == 0 || light_table_index >= lightmax)
 		return;
@@ -581,7 +581,7 @@ static void drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
+static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
 {
 	char bItem = dItem[x][y];
 
@@ -1276,7 +1276,7 @@ void ClearScreenBuffer()
  */
 void ScrollView()
 {
-	BOOL scroll;
+	bool scroll;
 
 	if (pcurs >= CURSOR_FIRSTITEM)
 		return;
@@ -1414,7 +1414,7 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
  * @param draw_sbar Render belt
  * @param draw_btn Render panel buttons
  */
-static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw_sbar, BOOL draw_btn)
+static void DrawMain(int dwHgt, bool draw_desc, bool draw_hp, bool draw_mana, bool draw_sbar, bool draw_btn)
 {
 	if (!gbActive) {
 		return;
@@ -1460,7 +1460,7 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
  * @brief Redraw screen
  * @param draw_cursor
  */
-void scrollrt_draw_game_screen(BOOL draw_cursor)
+void scrollrt_draw_game_screen(bool draw_cursor)
 {
 	int hgt = 0;
 

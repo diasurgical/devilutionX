@@ -103,8 +103,8 @@ struct CCritSect {
 extern "C" {
 #endif
 
-BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, const char *creatorName, const char *a11, int *playerID);
-BOOL SNetDestroy();
+bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, const char *creatorName, const char *a11, int *playerID);
+bool SNetDestroy();
 
 /*  SNetDropPlayer @ 106
  *
@@ -115,7 +115,7 @@ BOOL SNetDestroy();
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL SNetDropPlayer(int playerid, DWORD flags);
+bool SNetDropPlayer(int playerid, DWORD flags);
 
 /*  SNetGetGameInfo @ 107
  *
@@ -128,7 +128,7 @@ BOOL SNetDropPlayer(int playerid, DWORD flags);
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL SNetGetGameInfo(int type, void *dst, unsigned int length);
+bool SNetGetGameInfo(int type, void *dst, unsigned int length);
 
 /*  SNetGetTurnsInTransit @ 115
  *
@@ -139,7 +139,7 @@ BOOL SNetGetGameInfo(int type, void *dst, unsigned int length);
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL
+bool
     SNetGetTurnsInTransit(
         DWORD *turns);
 
@@ -169,7 +169,7 @@ typedef struct _user_info {
 	DWORD dwUnknown;
 } user_info;
 
-BOOL SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, char *userStats, int *playerid);
+bool SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, char *userStats, int *playerid);
 
 /*  SNetLeaveGame @ 119
  *
@@ -180,11 +180,11 @@ BOOL SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, 
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL SNetLeaveGame(int type);
+bool SNetLeaveGame(int type);
 
-BOOL SNetPerformUpgrade(DWORD *upgradestatus);
-BOOL SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
-BOOL SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
+bool SNetPerformUpgrade(DWORD *upgradestatus);
+bool SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
+bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
 
 typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
 
@@ -203,7 +203,7 @@ typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes);
+bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
 
 // Macro values to target specific players
 #define SNPLAYER_ALL    -1
@@ -224,9 +224,9 @@ BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes);
  *
  *  Returns TRUE if the function was called successfully and FALSE otherwise.
  */
-BOOL SNetSendTurn(char *data, unsigned int databytes);
+bool SNetSendTurn(char *data, unsigned int databytes);
 
-BOOL SFileOpenFile(const char *filename, HANDLE *phFile);
+bool SFileOpenFile(const char *filename, HANDLE *phFile);
 
 // Functions implemented in StormLib
 bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
@@ -251,7 +251,7 @@ bool WINAPI SFileCloseFile(HANDLE hFile);
  *
  *  Returns TRUE if the image was supported and loaded correctly, FALSE otherwise.
  */
-BOOL
+bool
     SBmpLoadImage(
         const char *pszFileName,
         SDL_Color *pPalette,
@@ -309,15 +309,15 @@ void SErrSetLastError(DWORD dwErrCode);
  */
 void SStrCopy(char *dest, const char *src, int max_length);
 
-BOOL SFileSetBasePath(const char *);
-BOOL SVidPlayContinue(void);
-BOOL SNetGetOwnerTurnsWaiting(DWORD *);
+bool SFileSetBasePath(const char *);
+bool SVidPlayContinue(void);
+bool SNetGetOwnerTurnsWaiting(DWORD *);
 bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 bool SNetSetBasePlayer(int);
 int SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
 int SNetGetProviderCaps(struct _SNETCAPS *);
-BOOL SFileEnableDirectAccess(BOOL enable);
+bool SFileEnableDirectAccess(bool enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
 }

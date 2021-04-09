@@ -850,7 +850,7 @@ static void InitL3Dungeon()
 	}
 }
 
-static BOOL DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
+static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 {
 	int i, j, v;
 
@@ -1175,7 +1175,7 @@ static void DRLG_L3River()
 	int river[3][100];
 	int rivercnt, riveramt;
 	int i, trys, found, bridge, lpcnt;
-	BOOL bail;
+	bool bail;
 
 	rivercnt = 0;
 	bail = FALSE;
@@ -1421,9 +1421,9 @@ static void DRLG_L3River()
 	}
 }
 
-static BOOL DRLG_L3Spawn(int x, int y, int *totarea);
+static bool DRLG_L3Spawn(int x, int y, int *totarea);
 
-static BOOL DRLG_L3SpawnEdge(int x, int y, int *totarea)
+static bool DRLG_L3SpawnEdge(int x, int y, int *totarea)
 {
 	BYTE i;
 	static BYTE spawntable[15] = { 0x00, 0x0A, 0x43, 0x05, 0x2c, 0x06, 0x09, 0x00, 0x00, 0x1c, 0x83, 0x06, 0x09, 0x0A, 0x05 };
@@ -1473,7 +1473,7 @@ static BOOL DRLG_L3SpawnEdge(int x, int y, int *totarea)
 	return FALSE;
 }
 
-static BOOL DRLG_L3Spawn(int x, int y, int *totarea)
+static bool DRLG_L3Spawn(int x, int y, int *totarea)
 {
 	BYTE i;
 	static BYTE spawntable[15] = { 0x00, 0x0A, 0x03, 0x05, 0x0C, 0x06, 0x09, 0x00, 0x00, 0x0C, 0x03, 0x06, 0x09, 0x0A, 0x05 };
@@ -1534,7 +1534,7 @@ static BOOL DRLG_L3Spawn(int x, int y, int *totarea)
 static void DRLG_L3Pool()
 {
 	int i, j, dunx, duny, totarea, poolchance;
-	BOOL found;
+	bool found;
 	BYTE k;
 	static BYTE poolsub[15] = { 0, 35, 26, 36, 25, 29, 34, 7, 33, 28, 27, 37, 32, 31, 30 };
 
@@ -1610,10 +1610,10 @@ static void DRLG_L3PoolFix()
 	}
 }
 
-static BOOL DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int ldir)
+static bool DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
 {
 	int sx, sy, sw, sh, xx, yy, i, ii, numt, trys;
-	BOOL found;
+	bool found;
 
 	sw = miniset[0];
 	sh = miniset[1];
@@ -1694,7 +1694,7 @@ static BOOL DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 static void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
-	BOOL found;
+	bool found;
 
 	sw = miniset[0];
 	sh = miniset[1];
@@ -1748,7 +1748,7 @@ static void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 bool drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
-	BOOL found;
+	bool found;
 	bool placed;
 
 	placed = FALSE;
@@ -1804,7 +1804,7 @@ bool drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper)
 	return placed;
 }
 
-static BOOL WoodVertU(int i, int y)
+static bool WoodVertU(int i, int y)
 {
 	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
 	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
@@ -1831,7 +1831,7 @@ static BOOL WoodVertU(int i, int y)
 	return FALSE;
 }
 
-static BOOL WoodVertD(int i, int y)
+static bool WoodVertD(int i, int y)
 {
 	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
 	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
@@ -1852,7 +1852,7 @@ static BOOL WoodVertD(int i, int y)
 	return FALSE;
 }
 
-static BOOL WoodHorizL(int x, int j)
+static bool WoodHorizL(int x, int j)
 {
 	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
 	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
@@ -1879,7 +1879,7 @@ static BOOL WoodHorizL(int x, int j)
 	return FALSE;
 }
 
-static BOOL WoodHorizR(int x, int j)
+static bool WoodHorizR(int x, int j)
 {
 	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
 	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
@@ -1979,7 +1979,7 @@ static void DRLG_L3Wood()
 
 #endif
 	int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
-	BOOL skip;
+	bool skip;
 
 	for (j = 1; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (i = 1; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1' (fixed)
@@ -2171,10 +2171,10 @@ static void DRLG_L3Wood()
 	FenceDoorFix();
 }
 
-static BOOL DRLG_L3Anvil()
+static bool DRLG_L3Anvil()
 {
 	int sx, sy, sw, sh, xx, yy, ii, trys;
-	BOOL found;
+	bool found;
 
 	sw = L3ANVIL[0];
 	sh = L3ANVIL[1];
@@ -2293,7 +2293,7 @@ static void DRLG_L3LockRec(int x, int y)
 	DRLG_L3LockRec(x + 1, y);
 }
 
-BOOL DRLG_L3Lockout()
+bool DRLG_L3Lockout()
 {
 	int i, j, t, fx, fy;
 
@@ -2320,7 +2320,7 @@ BOOL DRLG_L3Lockout()
 static void DRLG_L3(int entry)
 {
 	int x1, y1, x2, y2, i, j;
-	BOOL found, genok;
+	bool found, genok;
 
 	lavapool = 0;
 

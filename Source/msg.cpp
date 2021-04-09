@@ -23,7 +23,7 @@ static DJunk sgJunk;
 static TMegaPkt *sgpMegaPkt;
 static bool sgbDeltaChanged;
 static BYTE sgbDeltaChunks;
-BOOL deltaload;
+bool deltaload;
 BYTE gbBufferMsgs;
 int dwRecCount;
 
@@ -108,7 +108,7 @@ void msg_send_drop_pkt(int pnum, int reason)
 
 static int msg_wait_for_turns()
 {
-	BOOL received;
+	bool received;
 	DWORD turns;
 
 	if (sgbDeltaChunks == 0) {
@@ -139,9 +139,9 @@ static int msg_wait_for_turns()
 	return 100 * sgbDeltaChunks / MAX_CHUNKS;
 }
 
-BOOL msg_wait_resync()
+bool msg_wait_resync()
 {
-	BOOL success;
+	bool success;
 
 	msg_get_next_packet();
 	sgbDeltaChunks = 0;
@@ -511,7 +511,7 @@ static void delta_sync_object(int oi, _cmd_id bCmd, BYTE bLevel)
 	sgLevels[bLevel].object[oi].bCmd = bCmd;
 }
 
-static BOOL delta_get_item(TCmdGItem *pI, BYTE bLevel)
+static bool delta_get_item(TCmdGItem *pI, BYTE bLevel)
 {
 	int i;
 
@@ -605,12 +605,12 @@ static void delta_put_item(TCmdPItem *pI, int x, int y, BYTE bLevel)
 	}
 }
 
-BOOL delta_portal_inited(int i)
+bool delta_portal_inited(int i)
 {
 	return sgJunk.portal[i].x == 0xFF;
 }
 
-BOOL delta_quest_inited(int i)
+bool delta_quest_inited(int i)
 {
 	return sgJunk.quests[i].qstate != 0xFF;
 }
@@ -679,7 +679,7 @@ void DeltaLoadLevel()
 	int ot;
 	int i, j, k, l;
 	int x, y, xx, yy;
-	BOOL done;
+	bool done;
 
 	if (!gbIsMultiplayer)
 		return;
@@ -829,7 +829,7 @@ void DeltaLoadLevel()
 	deltaload = FALSE;
 }
 
-void NetSendCmd(BOOL bHiPri, _cmd_id bCmd)
+void NetSendCmd(bool bHiPri, _cmd_id bCmd)
 {
 	TCmd cmd;
 
@@ -854,7 +854,7 @@ void NetSendCmdGolem(BYTE mx, BYTE my, BYTE dir, BYTE menemy, int hp, BYTE cl)
 	NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLoc(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
+void NetSendCmdLoc(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
 {
 	ALIGN_BY_1 TCmdLoc cmd;
 
@@ -867,7 +867,7 @@ void NetSendCmdLoc(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam1(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1)
+void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1)
 {
 	TCmdLocParam1 cmd;
 
@@ -881,7 +881,7 @@ void NetSendCmdLocParam1(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam2(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2)
+void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2)
 {
 	TCmdLocParam2 cmd;
 
@@ -896,7 +896,7 @@ void NetSendCmdLocParam2(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam3(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2, WORD wParam3)
+void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2, WORD wParam3)
 {
 	TCmdLocParam3 cmd;
 
@@ -912,7 +912,7 @@ void NetSendCmdLocParam3(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdParam1(BOOL bHiPri, _cmd_id bCmd, WORD wParam1)
+void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, WORD wParam1)
 {
 	ALIGN_BY_1 TCmdParam1 cmd;
 
@@ -924,7 +924,7 @@ void NetSendCmdParam1(BOOL bHiPri, _cmd_id bCmd, WORD wParam1)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdParam2(BOOL bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2)
+void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2)
 {
 	TCmdParam2 cmd;
 
@@ -937,7 +937,7 @@ void NetSendCmdParam2(BOOL bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdParam3(BOOL bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2, WORD wParam3)
+void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2, WORD wParam3)
 {
 	TCmdParam3 cmd;
 
@@ -951,7 +951,7 @@ void NetSendCmdParam3(BOOL bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2, WOR
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdQuest(BOOL bHiPri, BYTE q)
+void NetSendCmdQuest(bool bHiPri, BYTE q)
 {
 	TCmdQuest cmd;
 
@@ -966,7 +966,7 @@ void NetSendCmdQuest(BOOL bHiPri, BYTE q)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGItem(BOOL bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
 {
 	TCmdGItem cmd;
 
@@ -1014,7 +1014,7 @@ void NetSendCmdGItem(BOOL bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGItem2(BOOL usonly, _cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
+void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
 {
 	TCmdGItem cmd;
 
@@ -1039,7 +1039,7 @@ void NetSendCmdGItem2(BOOL usonly, _cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem
 	multi_msg_add((BYTE *)&cmd.bCmd, sizeof(cmd));
 }
 
-BOOL NetSendCmdReq2(_cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
+bool NetSendCmdReq2(_cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
 {
 	TCmdGItem cmd;
 
@@ -1069,7 +1069,7 @@ void NetSendCmdExtra(TCmdGItem *p)
 	NetSendHiPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdPItem(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
+void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
 {
 	TCmdPItem cmd;
 
@@ -1112,7 +1112,7 @@ void NetSendCmdPItem(BOOL bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdChItem(BOOL bHiPri, BYTE bLoc)
+void NetSendCmdChItem(bool bHiPri, BYTE bLoc)
 {
 	TCmdChItem cmd;
 
@@ -1130,7 +1130,7 @@ void NetSendCmdChItem(BOOL bHiPri, BYTE bLoc)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDelItem(BOOL bHiPri, BYTE bLoc)
+void NetSendCmdDelItem(bool bHiPri, BYTE bLoc)
 {
 	TCmdDelItem cmd;
 
@@ -1142,7 +1142,7 @@ void NetSendCmdDelItem(BOOL bHiPri, BYTE bLoc)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDItem(BOOL bHiPri, int ii)
+void NetSendCmdDItem(bool bHiPri, int ii)
 {
 	TCmdPItem cmd;
 
@@ -1185,7 +1185,7 @@ void NetSendCmdDItem(BOOL bHiPri, int ii)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-static BOOL i_own_level(int nReqLevel)
+static bool i_own_level(int nReqLevel)
 {
 	int i;
 
@@ -1203,7 +1203,7 @@ static BOOL i_own_level(int nReqLevel)
 	return i == myplr;
 }
 
-void NetSendCmdDamage(BOOL bHiPri, BYTE bPlr, DWORD dwDam)
+void NetSendCmdDamage(bool bHiPri, BYTE bPlr, DWORD dwDam)
 {
 	TCmdDamage cmd;
 
@@ -1216,7 +1216,7 @@ void NetSendCmdDamage(BOOL bHiPri, BYTE bPlr, DWORD dwDam)
 		NetSendLoPri((BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdMonDmg(BOOL bHiPri, WORD wMon, DWORD dwDam)
+void NetSendCmdMonDmg(bool bHiPri, WORD wMon, DWORD dwDam)
 {
 	TCmdMonDamage cmd;
 
@@ -1987,7 +1987,7 @@ static DWORD On_AWAKEGOLEM(TCmd *pCmd, int pnum)
 	else if (pnum != myplr) {
 		int i;
 		// check if this player already has an active golem
-		BOOL addGolem = TRUE;
+		bool addGolem = TRUE;
 		for (i = 0; i < nummissiles; i++) {
 			int mi = missileactive[i];
 			if (missile[mi]._mitype == MIS_GOLEM && missile[mi]._misource == pnum) {
@@ -2255,7 +2255,7 @@ static DWORD On_ACTIVATEPORTAL(TCmd *pCmd, int pnum)
 			if (currlevel == 0)
 				AddInTownPortal(pnum);
 			else if (currlevel == plr[pnum].plrlevel) {
-				BOOL addPortal = TRUE;
+				bool addPortal = TRUE;
 				for (int i = 0; i < nummissiles; i++) {
 					int mi = missileactive[i];
 					if (missile[mi]._mitype == MIS_TOWN && missile[mi]._misource == pnum) {

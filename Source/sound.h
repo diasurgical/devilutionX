@@ -21,9 +21,9 @@ typedef struct TSnd {
 
 extern bool gbSndInited;
 
-void snd_update(BOOL bStopAll);
+void snd_update(bool bStopAll);
 void snd_stop_snd(TSnd *pSnd);
-BOOL snd_playing(TSnd *pSnd);
+bool snd_playing(TSnd *pSnd);
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
 TSnd *sound_file_load(const char *path, bool stream = false);
 void sound_file_cleanup(TSnd *sound_file);
@@ -31,7 +31,7 @@ void snd_init();
 void sound_cleanup();
 void music_stop();
 void music_start(int nTrack);
-void sound_disable_music(BOOL disable);
+void sound_disable_music(bool disable);
 int sound_get_or_set_music_volume(int volume);
 int sound_get_or_set_sound_volume(int volume);
 

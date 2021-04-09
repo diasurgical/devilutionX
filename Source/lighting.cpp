@@ -12,14 +12,14 @@ BYTE lightactive[MAXLIGHTS];
 LightListStruct LightList[MAXLIGHTS];
 int numlights;
 BYTE lightradius[16][128];
-BOOL dovision;
+bool dovision;
 int numvision;
 char lightmax;
-BOOL dolighting;
+bool dolighting;
 BYTE lightblock[64][16][16];
 int visionid;
 BYTE *pLightTbl;
-BOOL lightflag;
+bool lightflag;
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
@@ -668,9 +668,9 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 	}
 }
 
-void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
+void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
 {
-	BOOL nBlockerFlag;
+	bool nBlockerFlag;
 	int nCrawlX, nCrawlY, nLineLen, nTrans;
 	int j, k, v, x1adj, x2adj, y1adj, y2adj;
 
@@ -1173,7 +1173,7 @@ void InitVision()
 	}
 }
 
-int AddVision(int x, int y, int r, BOOL mine)
+int AddVision(int x, int y, int r, bool mine)
 {
 	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
 
@@ -1229,7 +1229,7 @@ void ChangeVisionXY(int id, int x, int y)
 void ProcessVisionList()
 {
 	int i;
-	BOOL delflag;
+	bool delflag;
 
 	if (dovision) {
 		for (i = 0; i < numvision; i++) {

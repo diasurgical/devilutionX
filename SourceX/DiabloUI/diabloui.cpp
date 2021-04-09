@@ -545,7 +545,7 @@ void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type)
 	    pInfo->spawned);
 }
 
-BOOL UiValidPlayerName(const char *name)
+bool UiValidPlayerName(const char *name)
 {
 	if (!strlen(name))
 		return false;

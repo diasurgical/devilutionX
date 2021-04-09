@@ -8,7 +8,7 @@
 namespace devilution {
 
 #ifdef _DEBUG
-BOOL update_seed_check = FALSE;
+bool update_seed_check = FALSE;
 
 #define DEBUGSEEDS 4096
 int seed_index;
@@ -127,7 +127,7 @@ void SetAllSpellsCheat()
 
 int dbgplr;
 
-void PrintDebugPlayer(BOOL bNextPlayer)
+void PrintDebugPlayer(bool bNextPlayer)
 {
 	char dstr[128];
 
@@ -167,7 +167,7 @@ void PrintDebugQuest()
 
 void PrintDebugMonster(int m)
 {
-	BOOL bActive;
+	bool bActive;
 	int i;
 	char dstr[128];
 

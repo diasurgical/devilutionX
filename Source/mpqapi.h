@@ -40,12 +40,12 @@ typedef struct _BLOCKENTRY {
 } _BLOCKENTRY;
 
 void mpqapi_remove_hash_entry(const char *pszName);
-void mpqapi_remove_hash_entries(BOOL (*fnGetName)(DWORD, char *));
-BOOL mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen);
+void mpqapi_remove_hash_entries(bool (*fnGetName)(DWORD, char *));
+bool mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen);
 void mpqapi_rename(char *pszOld, char *pszNew);
-BOOL mpqapi_has_file(const char *pszName);
-BOOL OpenMPQ(const char *pszArchive, DWORD dwChar);
-BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar);
+bool mpqapi_has_file(const char *pszName);
+bool OpenMPQ(const char *pszArchive, DWORD dwChar);
+bool mpqapi_flush_and_close(const char *pszArchive, bool bFree, DWORD dwChar);
 
 #ifdef __cplusplus
 }

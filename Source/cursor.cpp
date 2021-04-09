@@ -216,7 +216,7 @@ void CheckCursMove()
 {
 	int i, sx, sy, fx, fy, mx, my, tx, ty, px, py, xx, yy, mi, columns, rows, xo, yo;
 	char bv;
-	BOOL flipflag, flipx, flipy;
+	bool flipflag, flipx, flipy;
 
 	sx = MouseX;
 	sy = MouseY;
