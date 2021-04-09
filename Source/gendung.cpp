@@ -171,15 +171,15 @@ void FillSolidBlockTbls()
 	for (i = 1; i <= dwTiles; i++) {
 		bv = *pTmp++;
 		if (bv & 1)
-			nSolidTable[i] = TRUE;
+			nSolidTable[i] = true;
 		if (bv & 2)
-			nBlockTable[i] = TRUE;
+			nBlockTable[i] = true;
 		if (bv & 4)
-			nMissileTable[i] = TRUE;
+			nMissileTable[i] = true;
 		if (bv & 8)
-			nTransTable[i] = TRUE;
+			nTransTable[i] = true;
 		if (bv & 0x80)
-			nTrapTable[i] = TRUE;
+			nTrapTable[i] = true;
 		block_lvid[i] = (bv & 0x70) >> 4; /* beta: (bv >> 4) & 7 */
 	}
 
@@ -343,17 +343,17 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 	int xCount, yCount;
 	bool yFlag, xFlag;
 
-	yFlag = TRUE;
-	xFlag = TRUE;
+	yFlag = true;
+	xFlag = true;
 	xCount = 0;
 	yCount = 0;
 
 	// BUGFIX: change '&&' to '||' (fixed)
 	if (x > DMAXX - maxSize || y > DMAXY - maxSize) {
-		return FALSE;
+		return false;
 	}
 	if (!SkipThemeRoom(x, y)) {
-		return FALSE;
+		return false;
 	}
 
 	memset(xArray, 0, sizeof(xArray));
@@ -366,7 +366,7 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 					if (xx >= minSize) {
 						break;
 					}
-					xFlag = FALSE;
+					xFlag = false;
 				} else {
 					xCount++;
 				}
@@ -382,7 +382,7 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 					if (yy >= minSize) {
 						break;
 					}
-					yFlag = FALSE;
+					yFlag = false;
 				} else {
 					yCount++;
 				}
@@ -396,7 +396,7 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 
 	for (ii = 0; ii < minSize; ii++) {
 		if (xArray[ii] < minSize || yArray[ii] < minSize) {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -417,7 +417,7 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 
 	*width = xSmallest - 2;
 	*height = ySmallest - 2;
-	return TRUE;
+	return true;
 }
 
 void DRLG_CreateThemeRoom(int themeIndex)
@@ -586,10 +586,10 @@ bool SkipThemeRoom(int x, int y)
 	for (i = 0; i < themeCount; i++) {
 		if (x >= themeLoc[i].x - 2 && x <= themeLoc[i].x + themeLoc[i].width + 2
 		    && y >= themeLoc[i].y - 2 && y <= themeLoc[i].y + themeLoc[i].height + 2)
-			return FALSE;
+			return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 void InitLevels()
@@ -601,7 +601,7 @@ void InitLevels()
 
 	currlevel = 0;
 	leveltype = DTYPE_TOWN;
-	setlevel = FALSE;
+	setlevel = false;
 }
 
 } // namespace devilution

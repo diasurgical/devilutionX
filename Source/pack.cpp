@@ -121,7 +121,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 	if (!gbIsMultiplayer || manashield)
 		pPack->pManaShield = SwapLE32(pPlayer->pManaShield);
 	else
-		pPack->pManaShield = FALSE;
+		pPack->pManaShield = false;
 }
 
 /**
@@ -218,7 +218,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	pPlayer->destAction = ACTION_NONE;
 	strcpy(pPlayer->_pName, pPack->pName);
 	pPlayer->_pClass = (plr_class)pPack->pClass;
-	InitPlayer(pnum, TRUE);
+	InitPlayer(pnum, true);
 	pPlayer->_pBaseStr = pPack->pBaseStr;
 	pPlayer->_pStrength = pPack->pBaseStr;
 	pPlayer->_pBaseMag = pPack->pBaseMag;
@@ -288,7 +288,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 			witchitem[i]._itype = ITYPE_NONE;
 	}
 
-	CalcPlrInv(pnum, FALSE);
+	CalcPlrInv(pnum, false);
 	pPlayer->wReflections = SwapLE16(pPack->wReflections);
 	pPlayer->pTownWarps = 0;
 	pPlayer->pDungMsgs = 0;

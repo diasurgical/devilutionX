@@ -1067,7 +1067,7 @@ bool effect_is_playing(int nSFX)
 	if (sfx->bFlags & sfx_STREAM)
 		return sfx == sgpStreamSFX;
 
-	return FALSE;
+	return false;
 }
 
 void stream_stop()
@@ -1173,18 +1173,18 @@ bool calc_snd_position(int x, int y, int *plVolume, int *plPan)
 	*plPan = pan;
 
 	if (abs(pan) > 6400)
-		return FALSE;
+		return false;
 
 	volume = abs(x) > abs(y) ? abs(x) : abs(y);
 	volume *= 64;
 	*plVolume = volume;
 
 	if (volume >= 6400)
-		return FALSE;
+		return false;
 
 	*plVolume = -volume;
 
-	return TRUE;
+	return true;
 }
 
 static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
@@ -1284,7 +1284,7 @@ void PlaySFX(_sfx_id psfx, bool randomizeByCategory)
 		psfx = RndSFX(psfx);
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], FALSE, 0, 0);
+	PlaySFX_priv(&sgSFX[psfx], false, 0, 0);
 }
 
 void PlaySfxLoc(_sfx_id psfx, int x, int y)
@@ -1299,7 +1299,7 @@ void PlaySfxLoc(_sfx_id psfx, int x, int y)
 			pSnd->start_tc = 0;
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], TRUE, x, y);
+	PlaySFX_priv(&sgSFX[psfx], true, x, y);
 }
 
 void sound_stop()

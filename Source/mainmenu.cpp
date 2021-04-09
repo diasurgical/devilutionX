@@ -39,7 +39,7 @@ static bool mainmenu_init_menu(int type)
 	bool success;
 
 	if (type == SELHERO_PREVIOUS)
-		return TRUE;
+		return true;
 
 	music_stop();
 
@@ -72,9 +72,9 @@ static void mainmenu_play_intro()
 {
 	music_stop();
 	if (gbIsHellfire)
-		play_movie("gendata\\Hellfire.smk", TRUE);
+		play_movie("gendata\\Hellfire.smk", true);
 	else
-		play_movie("gendata\\diablo1.smk", TRUE);
+		play_movie("gendata\\diablo1.smk", true);
 	mainmenu_refresh_music();
 }
 
@@ -104,12 +104,12 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);
-		return FALSE;
+		return false;
 	}
 
 	pfile_create_player_description();
 
-	return TRUE;
+	return true;
 }
 
 void mainmenu_loop()
@@ -118,7 +118,7 @@ void mainmenu_loop()
 	int menu;
 
 	mainmenu_refresh_music();
-	done = FALSE;
+	done = false;
 
 	do {
 		menu = 0;
@@ -128,16 +128,16 @@ void mainmenu_loop()
 		switch (menu) {
 		case MAINMENU_SINGLE_PLAYER:
 			if (!mainmenu_single_player())
-				done = TRUE;
+				done = true;
 			break;
 		case MAINMENU_MULTIPLAYER:
 			if (!mainmenu_multi_player())
-				done = TRUE;
+				done = true;
 			break;
 		case MAINMENU_ATTRACT_MODE:
 		case MAINMENU_REPLAY_INTRO:
 			if (gbIsSpawn && !gbIsHellfire)
-				done = FALSE;
+				done = false;
 			else if (gbActive)
 				mainmenu_play_intro();
 			break;
@@ -148,7 +148,7 @@ void mainmenu_loop()
 			UiSupportDialog();
 			break;
 		case MAINMENU_EXIT_DIABLO:
-			done = TRUE;
+			done = true;
 			break;
 		}
 	} while (!done);

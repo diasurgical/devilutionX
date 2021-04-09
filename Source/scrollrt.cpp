@@ -728,7 +728,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 #endif
 
 	if (MissilePreFlag) {
-		DrawMissile(out, sx, sy, dx, dy, TRUE);
+		DrawMissile(out, sx, sy, dx, dy, true);
 	}
 
 	if (light_table_index < lightmax && bDead != 0) {
@@ -771,7 +771,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	if (dMonster[sx][sy] > 0) {
 		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
 	}
-	DrawMissile(out, sx, sy, dx, dy, FALSE);
+	DrawMissile(out, sx, sy, dx, dy, false);
 	DrawObject(out, sx, sy, dx, dy, 0);
 	DrawItem(out, sx, sy, dx, dy, 0);
 
@@ -1281,70 +1281,70 @@ void ScrollView()
 	if (pcurs >= CURSOR_FIRSTITEM)
 		return;
 
-	scroll = FALSE;
+	scroll = false;
 
 	if (MouseX < 20) {
 		if (dmaxy - 1 <= ViewY || dminx >= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminx < ViewX) {
 				ViewX--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewY++;
 			ViewX--;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseX > gnScreenWidth - 20) {
 		if (dmaxx - 1 <= ViewX || dminy >= ViewY) {
 			if (dmaxx - 1 > ViewX) {
 				ViewX++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminy < ViewY) {
 				ViewY--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewY--;
 			ViewX++;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseY < 20) {
 		if (dminy >= ViewY || dminx >= ViewX) {
 			if (dminy < ViewY) {
 				ViewY--;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminx < ViewX) {
 				ViewX--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewX--;
 			ViewY--;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseY > gnScreenHeight - 20) {
 		if (dmaxy - 1 <= ViewY || dmaxx - 1 <= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dmaxx - 1 > ViewX) {
 				ViewX++;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewX++;
 			ViewY++;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 
@@ -1475,7 +1475,7 @@ void scrollrt_draw_game_screen(bool draw_cursor)
 		unlock_buf(0);
 	}
 
-	DrawMain(hgt, FALSE, FALSE, FALSE, FALSE, FALSE);
+	DrawMain(hgt, false, false, false, false, false);
 
 	if (draw_cursor) {
 		lock_buf(0);
@@ -1499,10 +1499,10 @@ void DrawAndBlit()
 	bool ctrlPan = false;
 
 	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255) {
-		drawhpflag = TRUE;
-		drawmanaflag = TRUE;
-		drawbtnflag = TRUE;
-		drawsbarflag = TRUE;
+		drawhpflag = true;
+		drawmanaflag = true;
+		drawbtnflag = true;
+		drawsbarflag = true;
 		ddsdesc = false;
 		ctrlPan = true;
 		hgt = gnScreenHeight;
@@ -1551,10 +1551,10 @@ void DrawAndBlit()
 	unlock_buf(0);
 	RenderPresent();
 
-	drawhpflag = FALSE;
-	drawmanaflag = FALSE;
-	drawbtnflag = FALSE;
-	drawsbarflag = FALSE;
+	drawhpflag = false;
+	drawmanaflag = false;
+	drawbtnflag = false;
+	drawsbarflag = false;
 }
 
 } // namespace devilution

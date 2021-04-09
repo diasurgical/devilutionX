@@ -375,7 +375,7 @@ TEST(Writehero, pfile_write_hero)
 	pfile_ui_save_create(&info);
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);
-	UnPackPlayer(&pks, myplr, TRUE);
+	UnPackPlayer(&pks, myplr, true);
 	AssertPlayer(&plr[0]);
 	pfile_write_hero();
 

@@ -36,9 +36,9 @@ void nthread_terminate_game(const char *pszFcn)
 	if (sErr == STORM_ERROR_INVALID_PLAYER) {
 		return;
 	} else if (sErr == STORM_ERROR_GAME_TERMINATED) {
-		gbGameDestroyed = TRUE;
+		gbGameDestroyed = true;
 	} else if (sErr == STORM_ERROR_NOT_IN_GAME) {
-		gbGameDestroyed = TRUE;
+		gbGameDestroyed = true;
 	} else {
 		app_fatal("%s:\n%s", pszFcn, SDL_GetError());
 	}
@@ -75,40 +75,40 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 
 bool nthread_recv_turns(bool *pfSendAsync)
 {
-	*pfSendAsync = FALSE;
+	*pfSendAsync = false;
 	sgbPacketCountdown--;
 	if (sgbPacketCountdown) {
 		last_tick += gnTickDelay;
-		return TRUE;
+		return true;
 	}
 	sgbSyncCountdown--;
 	sgbPacketCountdown = sgbNetUpdateRate;
 	if (sgbSyncCountdown != 0) {
 
-		*pfSendAsync = TRUE;
+		*pfSendAsync = true;
 		last_tick += gnTickDelay;
-		return TRUE;
+		return true;
 	}
 #ifdef __3DS__
-	return FALSE;
+	return false;
 #else
 	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 			nthread_terminate_game("SNetReceiveTurns");
-		sgbTicsOutOfSync = FALSE;
+		sgbTicsOutOfSync = false;
 		sgbSyncCountdown = 1;
 		sgbPacketCountdown = 1;
-		return FALSE;
+		return false;
 	} else {
 		if (!sgbTicsOutOfSync) {
-			sgbTicsOutOfSync = TRUE;
+			sgbTicsOutOfSync = true;
 			last_tick = SDL_GetTicks();
 		}
 		sgbSyncCountdown = 4;
 		multi_msg_countdown();
-		*pfSendAsync = TRUE;
+		*pfSendAsync = true;
 		last_tick += gnTickDelay;
-		return TRUE;
+		return true;
 	}
 #endif
 }
@@ -153,7 +153,7 @@ void nthread_start(bool set_turn_upper_bit)
 	last_tick = SDL_GetTicks();
 	sgbPacketCountdown = 1;
 	sgbSyncCountdown = 1;
-	sgbTicsOutOfSync = TRUE;
+	sgbTicsOutOfSync = true;
 	if (set_turn_upper_bit)
 		nthread_set_turn_upper_bit();
 	else
@@ -188,9 +188,9 @@ void nthread_start(bool set_turn_upper_bit)
 	if (gdwNormalMsgSize > largestMsgSize)
 		gdwNormalMsgSize = largestMsgSize;
 	if (gbIsMultiplayer) {
-		sgbThreadIsRunning = FALSE;
+		sgbThreadIsRunning = false;
 		sgMemCrit.Enter();
-		nthread_should_run = TRUE;
+		nthread_should_run = true;
 		sghThread = CreateThread(nthread_handler, &glpNThreadId);
 		if (sghThread == NULL) {
 			err2 = SDL_GetError();
@@ -201,7 +201,7 @@ void nthread_start(bool set_turn_upper_bit)
 
 void nthread_cleanup()
 {
-	nthread_should_run = FALSE;
+	nthread_should_run = false;
 	gdwTurnsInTransit = 0;
 	gdwNormalMsgSize = 0;
 	gdwLargestMsgSize = 0;

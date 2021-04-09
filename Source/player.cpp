@@ -713,7 +713,7 @@ void CreatePlayer(int pnum, plr_class c)
 		plr[pnum]._pLghtResist = 0;
 	}
 	plr[pnum]._pLightRad = 10;
-	plr[pnum]._pInfraFlag = FALSE;
+	plr[pnum]._pInfraFlag = false;
 
 	plr[pnum]._pRSplType = RSPLTYPE_SKILL;
 	if (c == PC_WARRIOR) {
@@ -775,18 +775,18 @@ void CreatePlayer(int pnum, plr_class c)
 	}
 
 	for (i = 0; i < NUMLEVELS; i++) {
-		plr[pnum]._pLvlVisited[i] = FALSE;
+		plr[pnum]._pLvlVisited[i] = false;
 	}
 
 	for (i = 0; i < 10; i++) {
-		plr[pnum]._pSLvlVisited[i] = FALSE;
+		plr[pnum]._pSLvlVisited[i] = false;
 	}
 
-	plr[pnum]._pLvlChanging = FALSE;
+	plr[pnum]._pLvlChanging = false;
 	plr[pnum].pTownWarps = 0;
 	plr[pnum].pLvlLoad = 0;
-	plr[pnum].pBattleNet = FALSE;
-	plr[pnum].pManaShield = FALSE;
+	plr[pnum].pBattleNet = false;
+	plr[pnum].pManaShield = false;
 	plr[pnum].pDamAcFlags = 0;
 	plr[pnum].wReflections = 0;
 
@@ -818,7 +818,7 @@ void NextPlrLevel(int pnum)
 	plr[pnum]._pLevel++;
 	plr[pnum]._pMaxLvl++;
 
-	CalcPlrInv(pnum, TRUE);
+	CalcPlrInv(pnum, true);
 
 	if (CalcStatDiff(pnum) < 5) {
 		plr[pnum]._pStatPts = CalcStatDiff(pnum);
@@ -838,7 +838,7 @@ void NextPlrLevel(int pnum)
 	plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
 
 	if (pnum == myplr) {
-		drawhpflag = TRUE;
+		drawhpflag = true;
 	}
 
 	if (plr[pnum]._pClass == PC_WARRIOR)
@@ -860,13 +860,13 @@ void NextPlrLevel(int pnum)
 	}
 
 	if (pnum == myplr) {
-		drawmanaflag = TRUE;
+		drawmanaflag = true;
 	}
 
 	if (sgbControllerActive)
 		FocusOnCharInfo();
 
-	CalcPlrInv(pnum, TRUE);
+	CalcPlrInv(pnum, true);
 }
 
 void AddPlrExperience(int pnum, int lvl, int exp)
@@ -933,7 +933,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		}
 	}
 
-	NetSendCmdParam1(FALSE, CMD_PLRLEVEL, plr[myplr]._pLevel);
+	NetSendCmdParam1(false, CMD_PLRLEVEL, plr[myplr]._pLevel);
 }
 
 void AddPlrMonstExper(int lvl, int exp, char pmask)
@@ -975,7 +975,7 @@ void InitPlayer(int pnum, bool FirstTime)
 		} else {
 			plr[pnum]._pwtype = WT_MELEE;
 		}
-		plr[pnum].pManaShield = FALSE;
+		plr[pnum].pManaShield = false;
 	}
 
 	if (plr[pnum].plrlevel == currlevel || leveldebug) {
@@ -1060,11 +1060,11 @@ void InitPlayer(int pnum, bool FirstTime)
 #endif
 
 	plr[pnum]._pNextExper = ExpLvlsTbl[plr[pnum]._pLevel];
-	plr[pnum]._pInvincible = FALSE;
+	plr[pnum]._pInvincible = false;
 
 	if (pnum == myplr) {
 		deathdelay = 0;
-		deathflag = FALSE;
+		deathflag = false;
 		ScrollInfo._sxoff = 0;
 		ScrollInfo._syoff = 0;
 		ScrollInfo._sdir = SDIR_NONE;
@@ -1084,7 +1084,7 @@ void InitMultiView()
 bool SolidLoc(int x, int y)
 {
 	if (x < 0 || y < 0 || x >= MAXDUNX || y >= MAXDUNY) {
-		return FALSE;
+		return false;
 	}
 
 	return nSolidTable[dPiece[x][y]];
@@ -1103,10 +1103,10 @@ bool PlrDirOK(int pnum, int dir)
 	py = plr[pnum]._py + offset_y[dir];
 
 	if (px < 0 || !dPiece[px][py] || !PosOkPlayer(pnum, px, py)) {
-		return FALSE;
+		return false;
 	}
 
-	isOk = TRUE;
+	isOk = true;
 	if (dir == DIR_E) {
 		isOk = !SolidLoc(px, py + 1) && !(dFlags[px][py + 1] & BFLAG_PLAYERLR);
 	}
@@ -1124,7 +1124,7 @@ void PlrClrTrans(int x, int y)
 
 	for (i = y - 1; i <= y + 1; i++) {
 		for (j = x - 1; j <= x + 1; j++) {
-			TransList[dTransVal[j][i]] = FALSE;
+			TransList[dTransVal[j][i]] = false;
 		}
 	}
 }
@@ -1134,12 +1134,12 @@ void PlrDoTrans(int x, int y)
 	int i, j;
 
 	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
-		TransList[1] = TRUE;
+		TransList[1] = true;
 	} else {
 		for (i = y - 1; i <= y + 1; i++) {
 			for (j = x - 1; j <= x + 1; j++) {
 				if (!nSolidTable[dPiece[j][i]] && dTransVal[j][i]) {
-					TransList[dTransVal[j][i]] = TRUE;
+					TransList[dTransVal[j][i]] = true;
 				}
 			}
 		}
@@ -1609,7 +1609,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 	}
 
-	drawhpflag = TRUE;
+	drawhpflag = true;
 	if (plr[pnum]._pClass == PC_BARBARIAN) {
 		if (dam >> 6 < plr[pnum]._pLevel + plr[pnum]._pLevel / 4 && !forcehit) {
 			return;
@@ -1644,7 +1644,7 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y)
 	items[ii] = *itm;
 	items[ii]._ix = x;
 	items[ii]._iy = y;
-	RespawnItem(&items[ii], TRUE);
+	RespawnItem(&items[ii], true);
 
 	itm->_itype = ITYPE_NONE;
 }
@@ -1666,7 +1666,7 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 	if ((xx || yy) && ItemSpaceOk(x, y)) {
 		RespawnDeadItem(itm, x, y);
 		plr[pnum].HoldItem = *itm;
-		NetSendCmdPItem(FALSE, CMD_RESPAWNITEM, x, y);
+		NetSendCmdPItem(false, CMD_RESPAWNITEM, x, y);
 		return;
 	}
 
@@ -1678,7 +1678,7 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 				if (ItemSpaceOk(x, y)) {
 					RespawnDeadItem(itm, x, y);
 					plr[pnum].HoldItem = *itm;
-					NetSendCmdPItem(FALSE, CMD_RESPAWNITEM, x, y);
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, x, y);
 					return;
 				}
 			}
@@ -1704,7 +1704,7 @@ StartPlayerKill(int pnum, int earflag)
 	}
 
 	if (myplr == pnum) {
-		NetSendCmdParam1(TRUE, CMD_PLRDEAD, earflag);
+		NetSendCmdParam1(true, CMD_PLRDEAD, earflag);
 	}
 
 	diablolevel = gbIsMultiplayer && plr[pnum].plrlevel == 16;
@@ -1739,9 +1739,9 @@ StartPlayerKill(int pnum, int earflag)
 
 	NewPlrAnim(pnum, p->_pDAnim[p->_pdir], p->_pDFrames, 1, p->_pDWidth);
 
-	p->_pBlockFlag = FALSE;
+	p->_pBlockFlag = false;
 	p->_pmode = PM_DEATH;
-	p->_pInvincible = TRUE;
+	p->_pInvincible = true;
 	SetPlayerHitPoints(pnum, 0);
 	p->_pVar8 = 1;
 
@@ -1749,7 +1749,7 @@ StartPlayerKill(int pnum, int earflag)
 		for (i = 0; i < NUM_INVLOC; i++) {
 			p->InvBody[i]._itype = ITYPE_NONE;
 		}
-		CalcPlrInv(pnum, FALSE);
+		CalcPlrInv(pnum, false);
 	}
 
 	if (plr[pnum].plrlevel == currlevel) {
@@ -1759,7 +1759,7 @@ StartPlayerKill(int pnum, int earflag)
 		SetPlayerOld(pnum);
 
 		if (pnum == myplr) {
-			drawhpflag = TRUE;
+			drawhpflag = true;
 			deathdelay = 30;
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
@@ -1799,7 +1799,7 @@ StartPlayerKill(int pnum, int earflag)
 							pi++;
 						}
 
-						CalcPlrInv(pnum, FALSE);
+						CalcPlrInv(pnum, false);
 					}
 				}
 			}
@@ -1959,7 +1959,7 @@ void SyncPlrKill(int pnum, int earflag)
 
 	for (i = 0; i < nummissiles; i++) {
 		ma = missileactive[i];
-		if (missile[ma]._mitype == MIS_MANASHIELD && missile[ma]._misource == pnum && missile[ma]._miDelFlag == FALSE) {
+		if (missile[ma]._mitype == MIS_MANASHIELD && missile[ma]._misource == pnum && missile[ma]._miDelFlag == false) {
 			if (earflag != -1) {
 				missile[ma]._miVar8 = earflag;
 			}
@@ -1983,7 +1983,7 @@ void RemovePlrMissiles(int pnum)
 		mx = monster[myplr]._mx;
 		my = monster[myplr]._my;
 		dMonster[mx][my] = 0;
-		monster[myplr]._mDelFlag = TRUE;
+		monster[myplr]._mDelFlag = true;
 		DeleteMonsterList();
 	}
 
@@ -2007,7 +2007,7 @@ void InitLevelChange(int pnum)
 {
 	RemovePlrMissiles(pnum);
 	if (pnum == myplr && qtextflag) {
-		qtextflag = FALSE;
+		qtextflag = false;
 		stream_stop();
 	}
 
@@ -2016,12 +2016,12 @@ void InitLevelChange(int pnum)
 	if (pnum == myplr) {
 		dPlayer[plr[myplr]._px][plr[myplr]._py] = myplr + 1;
 	} else {
-		plr[pnum]._pLvlVisited[plr[pnum].plrlevel] = TRUE;
+		plr[pnum]._pLvlVisited[plr[pnum].plrlevel] = true;
 	}
 
 	ClrPlrPath(pnum);
 	plr[pnum].destAction = ACTION_NONE;
-	plr[pnum]._pLvlChanging = TRUE;
+	plr[pnum]._pLvlChanging = true;
 
 	if (pnum == myplr) {
 		plr[pnum].pLvlLoad = 10;
@@ -2064,10 +2064,10 @@ StartNewLvl(int pnum, int fom, int lvl)
 
 	if (pnum == myplr) {
 		plr[pnum]._pmode = PM_NEWLVL;
-		plr[pnum]._pInvincible = TRUE;
+		plr[pnum]._pInvincible = true;
 		PostMessage(fom, 0, 0);
 		if (gbIsMultiplayer) {
-			NetSendCmdParam2(TRUE, CMD_NEWLVL, fom, lvl);
+			NetSendCmdParam2(true, CMD_NEWLVL, fom, lvl);
 		}
 	}
 }
@@ -2079,18 +2079,18 @@ void RestartTownLvl(int pnum)
 	}
 
 	plr[pnum].plrlevel = 0;
-	plr[pnum]._pInvincible = FALSE;
+	plr[pnum]._pInvincible = false;
 
 	SetPlayerHitPoints(pnum, 64);
 
 	plr[pnum]._pMana = 0;
 	plr[pnum]._pManaBase = plr[pnum]._pMana - (plr[pnum]._pMaxMana - plr[pnum]._pMaxManaBase);
 
-	CalcPlrInv(pnum, FALSE);
+	CalcPlrInv(pnum, false);
 
 	if (pnum == myplr) {
 		plr[pnum]._pmode = PM_NEWLVL;
-		plr[pnum]._pInvincible = TRUE;
+		plr[pnum]._pInvincible = true;
 		PostMessage(WM_DIABRETOWN, 0, 0);
 	}
 }
@@ -2110,14 +2110,14 @@ void StartWarpLvl(int pnum, int pidx)
 	if (pnum == myplr) {
 		SetCurrentPortal(pidx);
 		plr[pnum]._pmode = PM_NEWLVL;
-		plr[pnum]._pInvincible = TRUE;
+		plr[pnum]._pInvincible = true;
 		PostMessage(WM_DIABWARPLVL, 0, 0);
 	}
 }
 
 bool PM_DoStand(int pnum)
 {
-	return FALSE;
+	return false;
 }
 
 /**
@@ -2220,12 +2220,12 @@ static bool WeaponDurDecay(int pnum, int ii)
 	if (!plr[pnum].InvBody[ii].isEmpty() && plr[pnum].InvBody[ii]._iClass == ICLASS_WEAPON && plr[pnum].InvBody[ii]._iDamAcFlags & 2) {
 		plr[pnum].InvBody[ii]._iPLDam -= 5;
 		if (plr[pnum].InvBody[ii]._iPLDam <= -100) {
-			NetSendCmdDelItem(TRUE, ii);
+			NetSendCmdDelItem(true, ii);
 			plr[pnum].InvBody[ii]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, TRUE);
+			CalcPlrInv(pnum, true);
 			return true;
 		}
-		CalcPlrInv(pnum, TRUE);
+		CalcPlrInv(pnum, true);
 	}
 	return false;
 }
@@ -2233,16 +2233,16 @@ static bool WeaponDurDecay(int pnum, int ii)
 bool WeaponDur(int pnum, int durrnd)
 {
 	if (pnum != myplr) {
-		return FALSE;
+		return false;
 	}
 
 	if (WeaponDurDecay(pnum, INVLOC_HAND_LEFT))
-		return TRUE;
+		return true;
 	if (WeaponDurDecay(pnum, INVLOC_HAND_RIGHT))
-		return TRUE;
+		return true;
 
 	if (random_(3, durrnd) != 0) {
-		return FALSE;
+		return false;
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -2251,61 +2251,61 @@ bool WeaponDur(int pnum, int durrnd)
 
 	if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
-			return FALSE;
+			return false;
 		}
 
 		plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
-			NetSendCmdDelItem(TRUE, INVLOC_HAND_LEFT);
+			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, TRUE);
-			return TRUE;
+			CalcPlrInv(pnum, true);
+			return true;
 		}
 	}
 
 	if (!plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON) {
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
-			return FALSE;
+			return false;
 		}
 
 		plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(TRUE, INVLOC_HAND_RIGHT);
+			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 			plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, TRUE);
-			return TRUE;
+			CalcPlrInv(pnum, true);
+			return true;
 		}
 	}
 
 	if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD) {
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
-			return FALSE;
+			return false;
 		}
 
 		plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(TRUE, INVLOC_HAND_RIGHT);
+			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 			plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, TRUE);
-			return TRUE;
+			CalcPlrInv(pnum, true);
+			return true;
 		}
 	}
 
 	if (plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD) {
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
-			return FALSE;
+			return false;
 		}
 
 		plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(TRUE, INVLOC_HAND_LEFT);
+			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, TRUE);
-			return TRUE;
+			CalcPlrInv(pnum, true);
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 bool PlrHitMonst(int pnum, int m)
@@ -2313,27 +2313,27 @@ bool PlrHitMonst(int pnum, int m)
 	bool rv, ret;
 	int hit, hper, mind, maxd, ddp, dam, skdam, phanditype, tmac;
 	hper = 0;
-	ret = FALSE;
-	bool adjacentDamage = FALSE;
+	ret = false;
+	bool adjacentDamage = false;
 
 	if ((DWORD)m >= MAXMONSTERS) {
 		app_fatal("PlrHitMonst: illegal monster %d", m);
 	}
 
 	if ((monster[m]._mhitpoints >> 6) <= 0) {
-		return FALSE;
+		return false;
 	}
 
 	if (monster[m].MType->mtype == MT_ILLWEAV && monster[m]._mgoal == MGOAL_RETREAT) {
-		return FALSE;
+		return false;
 	}
 
 	if (monster[m]._mmode == MM_CHARGE) {
-		return FALSE;
+		return false;
 	}
 
 	if (pnum < 0) {
-		adjacentDamage = TRUE;
+		adjacentDamage = true;
 		pnum = -pnum;
 		if (plr[pnum]._pLevel > 20)
 			hper -= 30;
@@ -2345,7 +2345,7 @@ bool PlrHitMonst(int pnum, int m)
 		app_fatal("PlrHitMonst: illegal player %d", pnum);
 	}
 
-	rv = FALSE;
+	rv = false;
 
 	hit = random_(4, 100);
 	if (monster[m]._mmode == MM_STONE) {
@@ -2485,7 +2485,7 @@ bool PlrHitMonst(int pnum, int m)
 			if (plr[pnum]._pHPBase > plr[pnum]._pMaxHPBase) {
 				plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
 			}
-			drawhpflag = TRUE;
+			drawhpflag = true;
 		}
 		if (plr[pnum]._pIFlags & (ISPL_STEALMANA_3 | ISPL_STEALMANA_5) && !(plr[pnum]._pIFlags & ISPL_NOMANA)) {
 			if (plr[pnum]._pIFlags & ISPL_STEALMANA_3) {
@@ -2502,7 +2502,7 @@ bool PlrHitMonst(int pnum, int m)
 			if (plr[pnum]._pManaBase > plr[pnum]._pMaxManaBase) {
 				plr[pnum]._pManaBase = plr[pnum]._pMaxManaBase;
 			}
-			drawmanaflag = TRUE;
+			drawmanaflag = true;
 		}
 		if (plr[pnum]._pIFlags & (ISPL_STEALLIFE_3 | ISPL_STEALLIFE_5)) {
 			if (plr[pnum]._pIFlags & ISPL_STEALLIFE_3) {
@@ -2519,7 +2519,7 @@ bool PlrHitMonst(int pnum, int m)
 			if (plr[pnum]._pHPBase > plr[pnum]._pMaxHPBase) {
 				plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
 			}
-			drawhpflag = TRUE;
+			drawhpflag = true;
 		}
 		if (plr[pnum]._pIFlags & ISPL_NOHEALPLR) {
 			monster[m]._mFlags |= MFLAG_NOHEAL;
@@ -2547,7 +2547,7 @@ bool PlrHitMonst(int pnum, int m)
 				M_StartHit(m, pnum, dam);
 			}
 		}
-		rv = TRUE;
+		rv = true;
 	}
 
 	return rv;
@@ -2562,7 +2562,7 @@ bool PlrHitPlr(int pnum, char p)
 		app_fatal("PlrHitPlr: illegal target player %d", p);
 	}
 
-	rv = FALSE;
+	rv = false;
 
 	if (plr[p]._pInvincible) {
 		return rv;
@@ -2633,15 +2633,15 @@ bool PlrHitPlr(int pnum, char p)
 				if (plr[pnum]._pHPBase > plr[pnum]._pMaxHPBase) {
 					plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
 				}
-				drawhpflag = TRUE;
+				drawhpflag = true;
 			}
 			if (pnum == myplr) {
-				NetSendCmdDamage(TRUE, p, skdam);
+				NetSendCmdDamage(true, p, skdam);
 			}
-			StartPlrHit(p, skdam, FALSE);
+			StartPlrHit(p, skdam, false);
 		}
 
-		rv = TRUE;
+		rv = true;
 	}
 
 	return rv;
@@ -2659,16 +2659,16 @@ bool PlrHitObj(int pnum, int mx, int my)
 
 	if (object[oi]._oBreak == 1) {
 		BreakObject(pnum, oi);
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 bool PM_DoAttack(int pnum)
 {
 	int frame, dir, dx, dy, m;
-	bool didhit = FALSE;
+	bool didhit = false;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoAttack: illegal player %d", pnum);
@@ -2703,7 +2703,7 @@ bool PM_DoAttack(int pnum)
 			}
 			if (CanTalkToMonst(m)) {
 				plr[pnum]._pVar1 = 0;
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -2750,30 +2750,30 @@ bool PM_DoAttack(int pnum)
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
 			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
 				if (PlrHitMonst(-pnum, m))
-					didhit = TRUE;
+					didhit = true;
 			}
 			dx = plr[pnum]._px + offset_x[(plr[pnum]._pdir + 7) % 8];
 			dy = plr[pnum]._py + offset_y[(plr[pnum]._pdir + 7) % 8];
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
 			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
 				if (PlrHitMonst(-pnum, m))
-					didhit = TRUE;
+					didhit = true;
 			}
 		}
 
 		if (didhit && WeaponDur(pnum, 30)) {
 			StartStand(pnum, plr[pnum]._pdir);
 			ClearPlrPVars(pnum);
-			return TRUE;
+			return true;
 		}
 	}
 
 	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
-		return TRUE;
+		return true;
 	} else {
-		return FALSE;
+		return false;
 	}
 }
 
@@ -2848,16 +2848,16 @@ bool PM_DoRangeAttack(int pnum)
 		if (WeaponDur(pnum, 40)) {
 			StartStand(pnum, plr[pnum]._pdir);
 			ClearPlrPVars(pnum);
-			return TRUE;
+			return true;
 		}
 	}
 
 	if (plr[pnum]._pAnimFrame >= plr[pnum]._pAFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
-		return TRUE;
+		return true;
 	} else {
-		return FALSE;
+		return false;
 	}
 }
 
@@ -2878,9 +2878,9 @@ void ShieldDur(int pnum)
 
 		plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(TRUE, INVLOC_HAND_LEFT);
+			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, TRUE);
+			CalcPlrInv(pnum, true);
 		}
 	}
 
@@ -2888,9 +2888,9 @@ void ShieldDur(int pnum)
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
 			plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 			if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-				NetSendCmdDelItem(TRUE, INVLOC_HAND_RIGHT);
+				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 				plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-				CalcPlrInv(pnum, TRUE);
+				CalcPlrInv(pnum, true);
 			}
 		}
 	}
@@ -2913,10 +2913,10 @@ bool PM_DoBlock(int pnum)
 		if (random_(3, 10) == 0) {
 			ShieldDur(pnum);
 		}
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 static void ArmorDur(int pnum)
@@ -2961,12 +2961,12 @@ static void ArmorDur(int pnum)
 	}
 
 	if (a != 0) {
-		NetSendCmdDelItem(TRUE, INVLOC_CHEST);
+		NetSendCmdDelItem(true, INVLOC_CHEST);
 	} else {
-		NetSendCmdDelItem(TRUE, INVLOC_HEAD);
+		NetSendCmdDelItem(true, INVLOC_HEAD);
 	}
 	pi->_itype = ITYPE_NONE;
-	CalcPlrInv(pnum, TRUE);
+	CalcPlrInv(pnum, true);
 }
 
 bool PM_DoSpell(int pnum)
@@ -2996,15 +2996,15 @@ bool PM_DoSpell(int pnum)
 		if (plr[pnum]._pVar8 > plr[pnum]._pSFrames) {
 			StartWalkStand(pnum);
 			ClearPlrPVars(pnum);
-			return TRUE;
+			return true;
 		}
 	} else if (plr[pnum]._pAnimFrame == plr[pnum]._pSFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 bool PM_DoGotHit(int pnum)
@@ -3033,10 +3033,10 @@ bool PM_DoGotHit(int pnum)
 			ArmorDur(pnum);
 		}
 
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 bool PM_DoDeath(int pnum)
@@ -3049,7 +3049,7 @@ bool PM_DoDeath(int pnum)
 		if (deathdelay > 1 && pnum == myplr) {
 			deathdelay--;
 			if (deathdelay == 1) {
-				deathflag = TRUE;
+				deathflag = true;
 				if (!gbIsMultiplayer) {
 					gamemenu_on();
 				}
@@ -3065,12 +3065,12 @@ bool PM_DoDeath(int pnum)
 		plr[pnum]._pVar8++;
 	}
 
-	return FALSE;
+	return false;
 }
 
 bool PM_DoNewLvl(int pnum)
 {
-	return FALSE;
+	return false;
 }
 
 void CheckNewPath(int pnum)
@@ -3084,12 +3084,12 @@ void CheckNewPath(int pnum)
 
 	if (plr[pnum].destAction == ACTION_ATTACKMON) {
 		i = plr[pnum].destParam1;
-		MakePlrPath(pnum, monster[i]._mfutx, monster[i]._mfuty, FALSE);
+		MakePlrPath(pnum, monster[i]._mfutx, monster[i]._mfuty, false);
 	}
 
 	if (plr[pnum].destAction == ACTION_ATTACKPLR) {
 		i = plr[pnum].destParam1;
-		MakePlrPath(pnum, plr[i]._pfutx, plr[i]._pfuty, FALSE);
+		MakePlrPath(pnum, plr[i]._pfutx, plr[i]._pfuty, false);
 	}
 
 	direction d;
@@ -3256,7 +3256,7 @@ void CheckNewPath(int pnum)
 					d = GetDirection(plr[pnum]._px, plr[pnum]._py, object[i]._ox, object[i]._oy);
 					StartAttack(pnum, d);
 				} else {
-					OperateObject(pnum, i, FALSE);
+					OperateObject(pnum, i, false);
 				}
 			}
 			break;
@@ -3273,14 +3273,14 @@ void CheckNewPath(int pnum)
 					StartAttack(pnum, d);
 				} else {
 					TryDisarm(pnum, i);
-					OperateObject(pnum, i, FALSE);
+					OperateObject(pnum, i, false);
 				}
 			}
 			break;
 		case ACTION_OPERATETK:
 			i = plr[pnum].destParam1;
 			if (object[i]._oBreak != 1) {
-				OperateObject(pnum, i, TRUE);
+				OperateObject(pnum, i, true);
 			}
 			break;
 		case ACTION_PICKUPITEM:
@@ -3289,8 +3289,8 @@ void CheckNewPath(int pnum)
 				x = abs(plr[pnum]._px - items[i]._ix);
 				y = abs(plr[pnum]._py - items[i]._iy);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !items[i]._iRequest) {
-					NetSendCmdGItem(TRUE, CMD_REQUESTGITEM, myplr, myplr, i);
-					items[i]._iRequest = TRUE;
+					NetSendCmdGItem(true, CMD_REQUESTGITEM, myplr, myplr, i);
+					items[i]._iRequest = true;
 				}
 			}
 			break;
@@ -3300,7 +3300,7 @@ void CheckNewPath(int pnum)
 				x = abs(plr[pnum]._px - items[i]._ix);
 				y = abs(plr[pnum]._py - items[i]._iy);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
-					NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, myplr, myplr, i);
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, myplr, myplr, i);
 				}
 			}
 			break;
@@ -3354,7 +3354,7 @@ void CheckNewPath(int pnum)
 					d = GetDirection(plr[pnum]._px, plr[pnum]._py, object[i]._ox, object[i]._oy);
 					StartAttack(pnum, d);
 				} else {
-					OperateObject(pnum, i, FALSE);
+					OperateObject(pnum, i, false);
 				}
 			}
 		}
@@ -3400,7 +3400,7 @@ void CheckNewPath(int pnum)
 bool PlrDeathModeOK(int p)
 {
 	if (p != myplr) {
-		return TRUE;
+		return true;
 	}
 
 	if ((DWORD)p >= MAX_PLRS) {
@@ -3408,14 +3408,14 @@ bool PlrDeathModeOK(int p)
 	}
 
 	if (plr[p]._pmode == PM_DEATH) {
-		return TRUE;
+		return true;
 	} else if (plr[p]._pmode == PM_QUIT) {
-		return TRUE;
+		return true;
 	} else if (plr[p]._pmode == PM_NEWLVL) {
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 void ValidatePlayer()
@@ -3551,12 +3551,12 @@ void ProcessPlayers()
 					if ((plr[pnum]._pHitPoints >> 6) <= 0) {
 						SyncPlrKill(pnum, 0);
 					}
-					drawhpflag = TRUE;
+					drawhpflag = true;
 				}
 				if (plr[pnum]._pIFlags & ISPL_NOMANA && plr[pnum]._pManaBase > 0) {
 					plr[pnum]._pManaBase -= plr[pnum]._pMana;
 					plr[pnum]._pMana = 0;
-					drawmanaflag = TRUE;
+					drawmanaflag = true;
 				}
 			}
 
@@ -3626,11 +3626,11 @@ bool PosOkPlayer(int pnum, int x, int y)
 	char bv;
 
 	if (x < 0 || x >= MAXDUNX || y < 0 || y >= MAXDUNY)
-		return FALSE;
+		return false;
 	if (dPiece[x][y] == 0)
-		return FALSE;
+		return false;
 	if (SolidLoc(x, y))
-		return FALSE;
+		return false;
 	if (dPlayer[x][y] != 0) {
 		if (dPlayer[x][y] > 0) {
 			p = dPlayer[x][y] - 1;
@@ -3640,19 +3640,19 @@ bool PosOkPlayer(int pnum, int x, int y)
 		if (p != pnum
 		    && p < MAX_PLRS
 		    && plr[p]._pHitPoints != 0) {
-			return FALSE;
+			return false;
 		}
 	}
 
 	if (dMonster[x][y] != 0) {
 		if (currlevel == 0) {
-			return FALSE;
+			return false;
 		}
 		if (dMonster[x][y] <= 0) {
-			return FALSE;
+			return false;
 		}
 		if ((monster[dMonster[x][y] - 1]._mhitpoints >> 6) > 0) {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -3663,11 +3663,11 @@ bool PosOkPlayer(int pnum, int x, int y)
 			bv = -(dObject[x][y] + 1);
 		}
 		if (object[bv]._oSolidFlag) {
-			return FALSE;
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void MakePlrPath(int pnum, int xx, int yy, bool endspace)
@@ -3732,7 +3732,7 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 
 void CheckPlrSpell()
 {
-	bool addflag = FALSE;
+	bool addflag = false;
 	int rspell, sd, sl;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
@@ -3797,7 +3797,7 @@ void CheckPlrSpell()
 	switch (plr[myplr]._pRSplType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_SPELL:
-		addflag = CheckSpell(myplr, rspell, plr[myplr]._pRSplType, FALSE);
+		addflag = CheckSpell(myplr, rspell, plr[myplr]._pRSplType, false);
 		break;
 	case RSPLTYPE_SCROLL:
 		addflag = UseScroll();
@@ -3813,16 +3813,16 @@ void CheckPlrSpell()
 		if (plr[myplr]._pRSpell == SPL_FIREWALL || plr[myplr]._pRSpell == SPL_LIGHTWALL) {
 			sd = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam3(TRUE, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);
+			NetSendCmdLocParam3(true, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);
 		} else if (pcursmonst != -1) {
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdParam3(TRUE, CMD_SPELLID, pcursmonst, plr[myplr]._pRSpell, sl);
+			NetSendCmdParam3(true, CMD_SPELLID, pcursmonst, plr[myplr]._pRSpell, sl);
 		} else if (pcursplr != -1) {
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdParam3(TRUE, CMD_SPELLPID, pcursplr, plr[myplr]._pRSpell, sl);
+			NetSendCmdParam3(true, CMD_SPELLPID, pcursplr, plr[myplr]._pRSpell, sl);
 		} else { //145
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam2(TRUE, CMD_SPELLXY, cursmx, cursmy, plr[myplr]._pRSpell, sl);
+			NetSendCmdLocParam2(true, CMD_SPELLXY, cursmx, cursmy, plr[myplr]._pRSpell, sl);
 		}
 		return;
 	}
@@ -3922,14 +3922,14 @@ void SyncInitPlrPos(int pnum)
 	}
 
 	if (!PosOkPlayer(pnum, x, y)) {
-		posOk = FALSE;
+		posOk = false;
 		for (range = 1; range < 50 && !posOk; range++) {
 			for (yy = -range; yy <= range && !posOk; yy++) {
 				y = yy + plr[pnum]._py;
 				for (xx = -range; xx <= range && !posOk; xx++) {
 					x = xx + plr[pnum]._px;
 					if (PosOkPlayer(pnum, x, y) && !PosOkPortal(currlevel, x, y)) {
-						posOk = TRUE;
+						posOk = true;
 					}
 				}
 			}
@@ -4024,10 +4024,10 @@ void ModifyPlrStr(int p, int l)
 		plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 100;
 	}
 
-	CalcPlrInv(p, TRUE);
+	CalcPlrInv(p, true);
 
 	if (p == myplr) {
-		NetSendCmdParam1(FALSE, CMD_SETSTR, plr[p]._pBaseStr);
+		NetSendCmdParam1(false, CMD_SETSTR, plr[p]._pBaseStr);
 	}
 }
 
@@ -4061,10 +4061,10 @@ void ModifyPlrMag(int p, int l)
 		plr[p]._pMana += ms;
 	}
 
-	CalcPlrInv(p, TRUE);
+	CalcPlrInv(p, true);
 
 	if (p == myplr) {
-		NetSendCmdParam1(FALSE, CMD_SETMAG, plr[p]._pBaseMag);
+		NetSendCmdParam1(false, CMD_SETMAG, plr[p]._pBaseMag);
 	}
 }
 
@@ -4083,14 +4083,14 @@ void ModifyPlrDex(int p, int l)
 
 	plr[p]._pDexterity += l;
 	plr[p]._pBaseDex += l;
-	CalcPlrInv(p, TRUE);
+	CalcPlrInv(p, true);
 
 	if (plr[p]._pClass == PC_ROGUE) {
 		plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pDexterity + plr[p]._pStrength) / 200;
 	}
 
 	if (p == myplr) {
-		NetSendCmdParam1(FALSE, CMD_SETDEX, plr[p]._pBaseDex);
+		NetSendCmdParam1(false, CMD_SETDEX, plr[p]._pBaseDex);
 	}
 }
 
@@ -4122,10 +4122,10 @@ void ModifyPlrVit(int p, int l)
 	plr[p]._pHitPoints += ms;
 	plr[p]._pMaxHP += ms;
 
-	CalcPlrInv(p, TRUE);
+	CalcPlrInv(p, true);
 
 	if (p == myplr) {
-		NetSendCmdParam1(FALSE, CMD_SETVIT, plr[p]._pBaseVit);
+		NetSendCmdParam1(false, CMD_SETVIT, plr[p]._pBaseVit);
 	}
 }
 
@@ -4139,7 +4139,7 @@ void SetPlayerHitPoints(int pnum, int val)
 	plr[pnum]._pHPBase = val + plr[pnum]._pMaxHPBase - plr[pnum]._pMaxHP;
 
 	if (pnum == myplr) {
-		drawhpflag = TRUE;
+		drawhpflag = true;
 	}
 }
 
@@ -4152,7 +4152,7 @@ void SetPlrStr(int p, int v)
 	}
 
 	plr[p]._pBaseStr = v;
-	CalcPlrInv(p, TRUE);
+	CalcPlrInv(p, true);
 
 	if (plr[p]._pClass == PC_ROGUE) {
 		dm = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
@@ -4182,7 +4182,7 @@ void SetPlrMag(int p, int v)
 
 	plr[p]._pMaxManaBase = m;
 	plr[p]._pMaxMana = m;
-	CalcPlrInv(p, TRUE);
+	CalcPlrInv(p, true);
 }
 
 void SetPlrDex(int p, int v)
@@ -4194,7 +4194,7 @@ void SetPlrDex(int p, int v)
 	}
 
 	plr[p]._pBaseDex = v;
-	CalcPlrInv(p, TRUE);
+	CalcPlrInv(p, true);
 
 	if (plr[p]._pClass == PC_ROGUE) {
 		dm = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
@@ -4224,7 +4224,7 @@ void SetPlrVit(int p, int v)
 
 	plr[p]._pHPBase = hp;
 	plr[p]._pMaxHPBase = hp;
-	CalcPlrInv(p, TRUE);
+	CalcPlrInv(p, true);
 }
 
 void InitDungMsgs(int pnum)

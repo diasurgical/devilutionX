@@ -54,7 +54,7 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 #ifndef TRUE
 #define TRUE true
 #endif
-#ifndef FALSE
+#ifndef false
 #define FALSE false
 #endif
 

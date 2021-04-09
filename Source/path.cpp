@@ -150,7 +150,7 @@ PATHNODE *GetNextPath()
  */
 bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
 {
-	bool rv = TRUE;
+	bool rv = true;
 	switch (path_directions[3 * (dy - pPath->y) + 3 - pPath->x + 1 + dx]) {
 	case 5:
 		rv = !nSolidTable[dPiece[dx][dy + 1]] && !nSolidTable[dPiece[dx + 1][dy]];
@@ -171,7 +171,7 @@ bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
 /**
  * @brief perform a single step of A* bread-first search by trying to step in every possible direction from pPath with goal (x,y). Check each step with PosOk
  *
- * @return FALSE if we ran out of preallocated nodes to use, else TRUE
+ * @return false if we ran out of preallocated nodes to use, else true
  */
 bool path_get_path(bool (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, int x, int y)
 {
@@ -185,17 +185,17 @@ bool path_get_path(bool (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, 
 		ok = PosOk(PosOkArg, dx, dy);
 		if ((ok && path_solid_pieces(pPath, dx, dy)) || (!ok && dx == x && dy == y)) {
 			if (!path_parent_path(pPath, dx, dy, x, y))
-				return FALSE;
+				return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 /**
  * @brief add a step from pPath to (dx,dy), return 1 if successful, and update the frontier/visited nodes accordingly
  *
- * @return TRUE if step successfully added, FALSE if we ran out of nodes to use
+ * @return true if step successfully added, false if we ran out of nodes to use
  */
 bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 {
@@ -243,7 +243,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 			// case 3: (dx,dy) is totally new
 			dxdy = path_new_step();
 			if (dxdy == NULL)
-				return FALSE;
+				return false;
 			dxdy->Parent = pPath;
 			dxdy->g = next_g;
 			dxdy->h = path_get_h_cost(dx, dy, sx, sy);
@@ -260,7 +260,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 			pPath->Child[i] = dxdy;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 /**

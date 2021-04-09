@@ -8,7 +8,7 @@
 namespace devilution {
 
 #ifdef _DEBUG
-bool update_seed_check = FALSE;
+bool update_seed_check = false;
 
 #define DEBUGSEEDS 4096
 int seed_index;
@@ -180,11 +180,11 @@ void PrintDebugMonster(int m)
 	sprintf(dstr, "Mode = %i, Var1 = %i", monster[m]._mmode, monster[m]._mVar1);
 	NetSendCmdString(1 << myplr, dstr);
 
-	bActive = FALSE;
+	bActive = false;
 
 	for (i = 0; i < nummonsters; i++) {
 		if (monstactive[i] == m)
-			bActive = TRUE;
+			bActive = true;
 	}
 
 	sprintf(dstr, "Active List = %i, Squelch = %i", bActive, monster[m]._msquelch);

@@ -176,7 +176,7 @@ static void DrawCutscene()
 
 	unlock_buf(1);
 	force_redraw = 255;
-	scrollrt_draw_game_screen(FALSE);
+	scrollrt_draw_game_screen(false);
 }
 
 void interface_msg_pump()
@@ -206,15 +206,15 @@ void ShowProgress(interface_mode uMsg)
 {
 	WNDPROC saveProc;
 
-	gbSomebodyWonGameKludge = FALSE;
-	plrmsg_delay(TRUE);
+	gbSomebodyWonGameKludge = false;
+	plrmsg_delay(true);
 
 	assert(ghMainWnd);
 	saveProc = SetWindowProc(DisableInputWndProc);
 
 	interface_msg_pump();
 	ClearScreenBuffer();
-	scrollrt_draw_game_screen(TRUE);
+	scrollrt_draw_game_screen(true);
 	InitCutscene(uMsg);
 	BlackPalette();
 	DrawCutscene();
@@ -227,7 +227,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABLOADGAME:
 		IncProgress();
 		IncProgress();
-		LoadGame(TRUE);
+		LoadGame(true);
 		IncProgress();
 		IncProgress();
 		break;
@@ -238,7 +238,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		pfile_remove_temp_files();
 		IncProgress();
-		LoadGameLevel(TRUE, ENTRY_MAIN);
+		LoadGameLevel(true, ENTRY_MAIN);
 		IncProgress();
 		break;
 	case WM_DIABNEXTLVL:
@@ -254,7 +254,7 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_MAIN);
+		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
 		break;
 	case WM_DIABPREVLVL:
@@ -270,7 +270,7 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_PREV);
+		LoadGameLevel(false, ENTRY_PREV);
 		IncProgress();
 		break;
 	case WM_DIABSETLVL:
@@ -282,11 +282,11 @@ void ShowProgress(interface_mode uMsg)
 			DeltaSaveLevel();
 		}
 		IncProgress();
-		setlevel = TRUE;
+		setlevel = true;
 		leveltype = setlvltype;
 		FreeGameMem();
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_SETLVL);
+		LoadGameLevel(false, ENTRY_SETLVL);
 		IncProgress();
 		break;
 	case WM_DIABRTNLVL:
@@ -297,11 +297,11 @@ void ShowProgress(interface_mode uMsg)
 			DeltaSaveLevel();
 		}
 		IncProgress();
-		setlevel = FALSE;
+		setlevel = false;
 		FreeGameMem();
 		IncProgress();
 		GetReturnLvlPos();
-		LoadGameLevel(FALSE, ENTRY_RTNLVL);
+		LoadGameLevel(false, ENTRY_RTNLVL);
 		IncProgress();
 		break;
 	case WM_DIABWARPLVL:
@@ -315,7 +315,7 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		GetPortalLevel();
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_WARPLVL);
+		LoadGameLevel(false, ENTRY_WARPLVL);
 		IncProgress();
 		break;
 	case WM_DIABTOWNWARP:
@@ -331,7 +331,7 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_TWARPDN);
+		LoadGameLevel(false, ENTRY_TWARPDN);
 		IncProgress();
 		break;
 	case WM_DIABTWARPUP:
@@ -347,7 +347,7 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_TWARPUP);
+		LoadGameLevel(false, ENTRY_TWARPUP);
 		IncProgress();
 		break;
 	case WM_DIABRETOWN:
@@ -363,7 +363,7 @@ void ShowProgress(interface_mode uMsg)
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
-		LoadGameLevel(FALSE, ENTRY_MAIN);
+		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
 		break;
 	}
@@ -376,15 +376,15 @@ void ShowProgress(interface_mode uMsg)
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == DisableInputWndProc);
 
-	NetSendCmdLocParam1(TRUE, CMD_PLAYER_JOINLEVEL, plr[myplr]._px, plr[myplr]._py, plr[myplr].plrlevel);
-	plrmsg_delay(FALSE);
+	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, plr[myplr]._px, plr[myplr]._py, plr[myplr].plrlevel);
+	plrmsg_delay(false);
 	ResetPal();
 
 	if (gbSomebodyWonGameKludge && plr[myplr].plrlevel == 16) {
 		PrepDoEnding();
 	}
 
-	gbSomebodyWonGameKludge = FALSE;
+	gbSomebodyWonGameKludge = false;
 }
 
 } // namespace devilution
