@@ -894,5 +894,5 @@ endif()
 
 if(NOT NONET)
   add_subdirectory(3rdParty/libzt)
-  target_link_libraries(devilutionx PRIVATE zt-static)
+  target_link_libraries(${BIN_TARGET} PRIVATE zt-static)
 endif()
