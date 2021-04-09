@@ -50,7 +50,11 @@ void DrawArt(CelOutputBuffer out, Sint16 screenX, Sint16 screenY, Art *art, int 
 		src_rect.w = srcW;
 	if (srcH && srcH < src_rect.h)
 		src_rect.h = srcH;
-	SDL_Rect dst_rect = { BUFFER_BORDER_LEFT + screenX, BUFFER_BORDER_TOP + screenY, src_rect.w, src_rect.h };
+	SDL_Rect dst_rect;
+	dst_rect.x = BUFFER_BORDER_LEFT + screenX;
+	dst_rect.y = BUFFER_BORDER_TOP + screenY;
+	dst_rect.w = src_rect.w;
+	dst_rect.h = src_rect.h;
 
 	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
 		if (SDLC_SetSurfaceColors(art->surface, out.surface->format->palette) <= -1)

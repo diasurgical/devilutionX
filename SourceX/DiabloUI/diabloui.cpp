@@ -421,6 +421,15 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 	return SDL_PointInRect(&point, &rect);
 }
 
+// Equivalent to SDL_Rect { ... } but avoids -Wnarrowing.
+inline SDL_Rect makeRect(int x, int y, int w, int h)
+{
+	using Pos = decltype(SDL_Rect {}.x);
+	using Len = decltype(SDL_Rect {}.w);
+	return SDL_Rect { static_cast<Pos>(x), static_cast<Pos>(y),
+		static_cast<Len>(w), static_cast<Len>(h) };
+}
+
 void LoadHeros()
 {
 	LoadArt("ui_art\\heros.pcx", &ArtHero);
@@ -443,8 +452,8 @@ void LoadHeros()
 		if (offset + portraitHeight > ArtHero.h()) {
 			offset = 0;
 		}
-		SDL_Rect src_rect = { 0, offset, ArtHero.w(), portraitHeight };
-		SDL_Rect dst_rect = { 0, i * portraitHeight, ArtHero.w(), portraitHeight };
+		SDL_Rect src_rect = makeRect(0, offset, ArtHero.w(), portraitHeight);
+		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
 		SDL_BlitSurface(ArtHero.surface, &src_rect, heros, &dst_rect);
 	}
 
@@ -456,7 +465,7 @@ void LoadHeros()
 		if (ArtPortrait.surface == nullptr)
 			continue;
 
-		SDL_Rect dst_rect = { 0, i * portraitHeight, ArtPortrait.w(), portraitHeight };
+		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, ArtPortrait.w(), portraitHeight);
 		SDL_BlitSurface(ArtPortrait.surface, nullptr, heros, &dst_rect);
 		ArtPortrait.Unload();
 	}
