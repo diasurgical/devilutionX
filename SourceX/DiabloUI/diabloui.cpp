@@ -336,7 +336,7 @@ void UiFocusNavigation(SDL_Event *event)
 #ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			if (textInputActive) {
-#if defined(__SWITCH__) || defined(__vita__)
+#ifdef __vita__
 				selhero_SetName(event->text.text, UiTextInput, UiTextInputLen);
 #else
 				selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
