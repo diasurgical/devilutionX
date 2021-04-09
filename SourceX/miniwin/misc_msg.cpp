@@ -47,24 +47,23 @@ void FocusOnCharInfo()
 		return;
 
 	// Find the first incrementable stat.
-	plr_class pc = plr[myplr]._pClass;
 	int stat = -1;
 	for (int i = 4; i >= 0; --i) {
 		switch (i) {
 		case ATTRIB_STR:
-			if (plr[myplr]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
+			if (plr[myplr]._pBaseStr >= plr[myplr].GetMaximumAttributeValue(ATTRIB_STR))
 				continue;
 			break;
 		case ATTRIB_MAG:
-			if (plr[myplr]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
+			if (plr[myplr]._pBaseMag >= plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG))
 				continue;
 			break;
 		case ATTRIB_DEX:
-			if (plr[myplr]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
+			if (plr[myplr]._pBaseDex >= plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX))
 				continue;
 			break;
 		case ATTRIB_VIT:
-			if (plr[myplr]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
+			if (plr[myplr]._pBaseVit >= plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT))
 				continue;
 			break;
 		default:

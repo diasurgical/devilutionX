@@ -11,7 +11,7 @@
 namespace devilution {
 
 BYTE *optbar_cel;
-BOOLEAN mouseNavigation;
+bool mouseNavigation;
 BYTE *PentSpin_cel;
 TMenuItem *sgpCurrItem;
 BYTE *BigTGold_cel;
@@ -90,7 +90,7 @@ void gmenu_init_menu()
 	sgpCurrItem = NULL;
 	gmenu_current_option = NULL;
 	sgCurrentMenuIdx = 0;
-	mouseNavigation = FALSE;
+	mouseNavigation = false;
 	if (gbIsHellfire)
 		sgpLogo = LoadFileInMem("Data\\hf_logo3.CEL", NULL);
 	else
@@ -101,19 +101,19 @@ void gmenu_init_menu()
 	optbar_cel = LoadFileInMem("Data\\optbar.CEL", NULL);
 }
 
-BOOL gmenu_is_active()
+bool gmenu_is_active()
 {
 	return sgpCurrentMenu != NULL;
 }
 
-static void gmenu_up_down(BOOL isDown)
+static void gmenu_up_down(bool isDown)
 {
 	int i;
 
 	if (!sgpCurrItem) {
 		return;
 	}
-	mouseNavigation = FALSE;
+	mouseNavigation = false;
 	i = sgCurrentMenuIdx;
 	if (sgCurrentMenuIdx) {
 		while (i) {
@@ -136,7 +136,7 @@ static void gmenu_up_down(BOOL isDown)
 	}
 }
 
-static void gmenu_left_right(BOOL isRight)
+static void gmenu_left_right(bool isRight)
 {
 	int step, steps;
 
@@ -156,7 +156,7 @@ static void gmenu_left_right(BOOL isRight)
 	}
 	sgpCurrItem->dwFlags &= 0xFFFFF000;
 	sgpCurrItem->dwFlags |= step;
-	sgpCurrItem->fnMenu(FALSE);
+	sgpCurrItem->fnMenu(false);
 }
 
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
@@ -164,7 +164,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 	int i;
 
 	PauseMode = 0;
-	mouseNavigation = FALSE;
+	mouseNavigation = false;
 	sgpCurrentMenu = pItem;
 	gmenu_current_option = gmFunc;
 	if (gmFunc) {
@@ -179,7 +179,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 	}
 	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
 	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : NULL;
-	gmenu_up_down(TRUE);
+	gmenu_up_down(true);
 }
 
 static void gmenu_clear_buffer(CelOutputBuffer out, int x, int y, int width, int height)
@@ -276,15 +276,15 @@ void gmenu_draw(CelOutputBuffer out)
 	}
 }
 
-BOOL gmenu_presskeys(int vkey)
+bool gmenu_presskeys(int vkey)
 {
 	if (!sgpCurrentMenu)
-		return FALSE;
+		return false;
 	switch (vkey) {
 	case DVL_VK_RETURN:
 		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
 			PlaySFX(IS_TITLEMOV);
-			sgpCurrItem->fnMenu(TRUE);
+			sgpCurrItem->fnMenu(true);
 		}
 		break;
 	case DVL_VK_ESCAPE:
@@ -292,44 +292,44 @@ BOOL gmenu_presskeys(int vkey)
 		gmenu_set_items(NULL, NULL);
 		break;
 	case DVL_VK_SPACE:
-		return FALSE;
+		return false;
 	case DVL_VK_LEFT:
-		gmenu_left_right(FALSE);
+		gmenu_left_right(false);
 		break;
 	case DVL_VK_RIGHT:
-		gmenu_left_right(TRUE);
+		gmenu_left_right(true);
 		break;
 	case DVL_VK_UP:
-		gmenu_up_down(FALSE);
+		gmenu_up_down(false);
 		break;
 	case DVL_VK_DOWN:
-		gmenu_up_down(TRUE);
+		gmenu_up_down(true);
 		break;
 	}
-	return TRUE;
+	return true;
 }
 
-static BOOLEAN gmenu_get_mouse_slider(int *plOffset)
+static bool gmenu_get_mouse_slider(int *plOffset)
 {
 	*plOffset = 282;
 	if (MouseX < 282 + PANEL_LEFT) {
 		*plOffset = 0;
-		return FALSE;
+		return false;
 	}
 	if (MouseX > 538 + PANEL_LEFT) {
 		*plOffset = 256;
-		return FALSE;
+		return false;
 	}
 	*plOffset = MouseX - 282 - PANEL_LEFT;
-	return TRUE;
+	return true;
 }
 
-BOOL gmenu_on_mouse_move()
+bool gmenu_on_mouse_move()
 {
 	int step, nSteps;
 
 	if (!mouseNavigation)
-		return FALSE;
+		return false;
 	gmenu_get_mouse_slider(&step);
 	nSteps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
 	step *= nSteps;
@@ -337,47 +337,47 @@ BOOL gmenu_on_mouse_move()
 
 	sgpCurrItem->dwFlags &= 0xFFFFF000;
 	sgpCurrItem->dwFlags |= step;
-	sgpCurrItem->fnMenu(FALSE);
-	return TRUE;
+	sgpCurrItem->fnMenu(false);
+	return true;
 }
 
-BOOL gmenu_left_mouse(BOOL isDown)
+bool gmenu_left_mouse(bool isDown)
 {
 	TMenuItem *pItem;
 	int i, w, dummy;
 
 	if (!isDown) {
 		if (mouseNavigation) {
-			mouseNavigation = FALSE;
-			return TRUE;
+			mouseNavigation = false;
+			return true;
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
 	if (!sgpCurrentMenu) {
-		return FALSE;
+		return false;
 	}
 	if (MouseY >= PANEL_TOP) {
-		return FALSE;
+		return false;
 	}
 	if (MouseY - (117 + UI_OFFSET_Y) < 0) {
-		return TRUE;
+		return true;
 	}
 	i = (MouseY - (117 + UI_OFFSET_Y)) / 45;
 	if (i >= sgCurrentMenuIdx) {
-		return TRUE;
+		return true;
 	}
 	pItem = &sgpCurrentMenu[i];
 	if (!(sgpCurrentMenu[i].dwFlags & GMENU_ENABLED)) {
-		return TRUE;
+		return true;
 	}
 	w = gmenu_get_lfont(pItem);
 	if (MouseX < gnScreenWidth / 2 - w / 2) {
-		return TRUE;
+		return true;
 	}
 	if (MouseX > gnScreenWidth / 2 + w / 2) {
-		return TRUE;
+		return true;
 	}
 	sgpCurrItem = pItem;
 	PlaySFX(IS_TITLEMOV);
@@ -385,12 +385,12 @@ BOOL gmenu_left_mouse(BOOL isDown)
 		mouseNavigation = gmenu_get_mouse_slider(&dummy);
 		gmenu_on_mouse_move();
 	} else {
-		sgpCurrItem->fnMenu(TRUE);
+		sgpCurrItem->fnMenu(true);
 	}
-	return TRUE;
+	return true;
 }
 
-void gmenu_enable(TMenuItem *pMenuItem, BOOL enable)
+void gmenu_enable(TMenuItem *pMenuItem, bool enable)
 {
 	if (enable)
 		pMenuItem->dwFlags |= GMENU_ENABLED;

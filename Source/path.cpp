@@ -46,7 +46,7 @@ Sint8 path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
  * check that each step is a valid position. Store the step directions (see
  * path_directions) in path, which must have room for 24 steps
  */
-int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, Sint8 path[MAX_PATH_LENGTH])
+int FindPath(bool (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, Sint8 path[MAX_PATH_LENGTH])
 {
 	PATHNODE *path_start, *next_node, *current;
 	int path_length, i;
@@ -148,9 +148,9 @@ PATHNODE *GetNextPath()
  *
  *  @return true if step is allowed
  */
-BOOL path_solid_pieces(PATHNODE *pPath, int dx, int dy)
+bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
 {
-	BOOL rv = TRUE;
+	bool rv = true;
 	switch (path_directions[3 * (dy - pPath->y) + 3 - pPath->x + 1 + dx]) {
 	case 5:
 		rv = !nSolidTable[dPiece[dx][dy + 1]] && !nSolidTable[dPiece[dx + 1][dy]];
@@ -171,13 +171,13 @@ BOOL path_solid_pieces(PATHNODE *pPath, int dx, int dy)
 /**
  * @brief perform a single step of A* bread-first search by trying to step in every possible direction from pPath with goal (x,y). Check each step with PosOk
  *
- * @return FALSE if we ran out of preallocated nodes to use, else TRUE
+ * @return false if we ran out of preallocated nodes to use, else true
  */
-BOOL path_get_path(BOOL (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, int x, int y)
+bool path_get_path(bool (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, int x, int y)
 {
 	int dx, dy;
 	int i;
-	BOOL ok;
+	bool ok;
 
 	for (i = 0; i < 8; i++) {
 		dx = pPath->x + pathxdir[i];
@@ -185,19 +185,19 @@ BOOL path_get_path(BOOL (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, 
 		ok = PosOk(PosOkArg, dx, dy);
 		if ((ok && path_solid_pieces(pPath, dx, dy)) || (!ok && dx == x && dy == y)) {
 			if (!path_parent_path(pPath, dx, dy, x, y))
-				return FALSE;
+				return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 /**
  * @brief add a step from pPath to (dx,dy), return 1 if successful, and update the frontier/visited nodes accordingly
  *
- * @return TRUE if step successfully added, FALSE if we ran out of nodes to use
+ * @return true if step successfully added, false if we ran out of nodes to use
  */
-BOOL path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
+bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 {
 	int next_g;
 	PATHNODE *dxdy;
@@ -243,7 +243,7 @@ BOOL path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 			// case 3: (dx,dy) is totally new
 			dxdy = path_new_step();
 			if (dxdy == NULL)
-				return FALSE;
+				return false;
 			dxdy->Parent = pPath;
 			dxdy->g = next_g;
 			dxdy->h = path_get_h_cost(dx, dy, sx, sy);
@@ -260,7 +260,7 @@ BOOL path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 			pPath->Child[i] = dxdy;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 /**

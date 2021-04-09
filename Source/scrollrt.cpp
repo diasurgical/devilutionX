@@ -28,7 +28,7 @@ DWORD sgdwCursHgt;
 DWORD level_cel_block;
 DWORD sgdwCursXOld;
 DWORD sgdwCursYOld;
-BOOLEAN AutoMapShowItems;
+bool AutoMapShowItems;
 /**
  * Specifies the type of arches to render.
  */
@@ -53,7 +53,7 @@ DWORD sgdwCursHgtOld;
 bool dRendered[MAXDUNX][MAXDUNY];
 
 int frames;
-BOOL frameflag;
+bool frameflag;
 int frameend;
 int framerate;
 int framestart;
@@ -222,7 +222,7 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, BOOL pre)
+void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, bool pre)
 {
 	if (m->_miPreFlag != pre || !m->_miDrawFlag)
 		return;
@@ -257,7 +257,7 @@ void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, B
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
+void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
 {
 	int i;
 	MissileStruct *m;
@@ -468,7 +468,7 @@ void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param oy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, BOOL pre)
+static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool pre)
 {
 	if (dObject[x][y] == 0 || light_table_index >= lightmax)
 		return;
@@ -581,7 +581,7 @@ static void drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
+static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
 {
 	char bItem = dItem[x][y];
 
@@ -728,7 +728,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 #endif
 
 	if (MissilePreFlag) {
-		DrawMissile(out, sx, sy, dx, dy, TRUE);
+		DrawMissile(out, sx, sy, dx, dy, true);
 	}
 
 	if (light_table_index < lightmax && bDead != 0) {
@@ -771,7 +771,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	if (dMonster[sx][sy] > 0) {
 		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
 	}
-	DrawMissile(out, sx, sy, dx, dy, FALSE);
+	DrawMissile(out, sx, sy, dx, dy, false);
 	DrawObject(out, sx, sy, dx, dy, 0);
 	DrawItem(out, sx, sy, dx, dy, 0);
 
@@ -1276,75 +1276,75 @@ void ClearScreenBuffer()
  */
 void ScrollView()
 {
-	BOOL scroll;
+	bool scroll;
 
 	if (pcurs >= CURSOR_FIRSTITEM)
 		return;
 
-	scroll = FALSE;
+	scroll = false;
 
 	if (MouseX < 20) {
 		if (dmaxy - 1 <= ViewY || dminx >= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminx < ViewX) {
 				ViewX--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewY++;
 			ViewX--;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseX > gnScreenWidth - 20) {
 		if (dmaxx - 1 <= ViewX || dminy >= ViewY) {
 			if (dmaxx - 1 > ViewX) {
 				ViewX++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminy < ViewY) {
 				ViewY--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewY--;
 			ViewX++;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseY < 20) {
 		if (dminy >= ViewY || dminx >= ViewX) {
 			if (dminy < ViewY) {
 				ViewY--;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminx < ViewX) {
 				ViewX--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewX--;
 			ViewY--;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseY > gnScreenHeight - 20) {
 		if (dmaxy - 1 <= ViewY || dmaxx - 1 <= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dmaxx - 1 > ViewX) {
 				ViewX++;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewX++;
 			ViewY++;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 
@@ -1414,7 +1414,7 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
  * @param draw_sbar Render belt
  * @param draw_btn Render panel buttons
  */
-static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw_sbar, BOOL draw_btn)
+static void DrawMain(int dwHgt, bool draw_desc, bool draw_hp, bool draw_mana, bool draw_sbar, bool draw_btn)
 {
 	if (!gbActive) {
 		return;
@@ -1460,7 +1460,7 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
  * @brief Redraw screen
  * @param draw_cursor
  */
-void scrollrt_draw_game_screen(BOOL draw_cursor)
+void scrollrt_draw_game_screen(bool draw_cursor)
 {
 	int hgt = 0;
 
@@ -1475,7 +1475,7 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 		unlock_buf(0);
 	}
 
-	DrawMain(hgt, FALSE, FALSE, FALSE, FALSE, FALSE);
+	DrawMain(hgt, false, false, false, false, false);
 
 	if (draw_cursor) {
 		lock_buf(0);
@@ -1499,10 +1499,10 @@ void DrawAndBlit()
 	bool ctrlPan = false;
 
 	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255) {
-		drawhpflag = TRUE;
-		drawmanaflag = TRUE;
-		drawbtnflag = TRUE;
-		drawsbarflag = TRUE;
+		drawhpflag = true;
+		drawmanaflag = true;
+		drawbtnflag = true;
+		drawsbarflag = true;
 		ddsdesc = false;
 		ctrlPan = true;
 		hgt = gnScreenHeight;
@@ -1551,10 +1551,10 @@ void DrawAndBlit()
 	unlock_buf(0);
 	RenderPresent();
 
-	drawhpflag = FALSE;
-	drawmanaflag = FALSE;
-	drawbtnflag = FALSE;
-	drawsbarflag = FALSE;
+	drawhpflag = false;
+	drawmanaflag = false;
+	drawbtnflag = false;
+	drawsbarflag = false;
 }
 
 } // namespace devilution

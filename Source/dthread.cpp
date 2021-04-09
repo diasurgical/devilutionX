@@ -11,7 +11,7 @@ namespace devilution {
 static CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
 TMegaPkt *sgpInfoHead; /* may not be right struct */
-BOOLEAN dthread_running;
+bool dthread_running;
 event_emul *sghWorkToDoEvent;
 
 /* rdata */
@@ -39,7 +39,7 @@ static unsigned int dthread_handler(void *data)
 
 		if (pkt) {
 			if (pkt->dwSpaceLeft != MAX_PLRS)
-				multi_send_zero_packet(pkt->dwSpaceLeft, pkt->data[0], &pkt->data[8], *(DWORD *)&pkt->data[4]);
+				multi_send_zero_packet(pkt->dwSpaceLeft, static_cast<_cmd_id>(pkt->data[0]), &pkt->data[8], *(DWORD *)&pkt->data[4]);
 
 			dwMilliseconds = 1000 * *(DWORD *)&pkt->data[4] / gdwDeltaBytesSec;
 			if (dwMilliseconds >= 1)
@@ -107,7 +107,7 @@ void dthread_start()
 		app_fatal("dthread:1\n%s", error_buf);
 	}
 
-	dthread_running = TRUE;
+	dthread_running = true;
 
 	sghThread = CreateThread(dthread_handler, &glpDThreadId);
 	if (sghThread == NULL) {
@@ -124,7 +124,7 @@ void dthread_cleanup()
 		return;
 	}
 
-	dthread_running = FALSE;
+	dthread_running = false;
 	SetEvent(sghWorkToDoEvent);
 	if (sghThread != NULL && glpDThreadId != SDL_GetThreadID(NULL)) {
 		SDL_WaitThread(sghThread, NULL);

@@ -122,7 +122,7 @@ void selgame_GameSelection_Focus(int value)
  * @param pInfo Hero info
  * @return always true
  */
-BOOL UpdateHeroLevel(_uiheroinfo *pInfo)
+bool UpdateHeroLevel(_uiheroinfo *pInfo)
 {
 	if (strcasecmp(pInfo->name, gszHero) == 0)
 		heroLevel = pInfo->level;

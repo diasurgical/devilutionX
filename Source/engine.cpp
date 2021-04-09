@@ -224,7 +224,7 @@ void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	int w;
-	BOOL shift;
+	bool shift;
 	BYTE *tbl;
 
 	assert(pRLEBytes != NULL);
@@ -1076,10 +1076,10 @@ void Cl2DrawLight(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel,
 void PlayInGameMovie(const char *pszMovie)
 {
 	PaletteFadeOut(8);
-	play_movie(pszMovie, FALSE);
+	play_movie(pszMovie, false);
 	ClearScreenBuffer();
 	force_redraw = 255;
-	scrollrt_draw_game_screen(TRUE);
+	scrollrt_draw_game_screen(true);
 	PaletteFadeIn(8);
 	force_redraw = 255;
 }

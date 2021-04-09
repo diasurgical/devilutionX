@@ -105,8 +105,8 @@ namespace {
 
 void ScaleJoysticks()
 {
-	const float rightDeadzone = 0.07;
-	const float leftDeadzone = 0.07;
+	const float rightDeadzone = sgOptions.Controller.fDeadzone;
+	const float leftDeadzone = sgOptions.Controller.fDeadzone;
 
 	if (leftStickNeedsScaling) {
 		leftStickX = leftStickXUnscaled;

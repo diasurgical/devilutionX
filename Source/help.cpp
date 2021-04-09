@@ -8,7 +8,7 @@
 namespace devilution {
 
 int help_select_line;
-BOOL helpflag;
+bool helpflag;
 int HelpTop;
 
 const char gszSpawnHelpText[] = {
@@ -450,7 +450,7 @@ const char gszHelpText[] = {
 
 void InitHelp()
 {
-	helpflag = FALSE;
+	helpflag = false;
 }
 
 static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, text_color color)
@@ -482,9 +482,9 @@ void DrawHelp(CelOutputBuffer out)
 	DrawSTextHelp();
 	DrawQTextBack(out);
 	if (gbIsHellfire)
-		PrintSString(out, 0, 2, TRUE, "Hellfire Help", COL_GOLD, 0);
+		PrintSString(out, 0, 2, true, "Hellfire Help", COL_GOLD, 0);
 	else
-		PrintSString(out, 0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
+		PrintSString(out, 0, 2, true, "Diablo Help", COL_GOLD, 0);
 	DrawSLine(out, 5);
 
 	s = &gszHelpText[0];
@@ -564,13 +564,13 @@ void DrawHelp(CelOutputBuffer out)
 		}
 	}
 
-	PrintSString(out, 0, 23, TRUE, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
+	PrintSString(out, 0, 23, true, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
 }
 
 void DisplayHelp()
 {
 	help_select_line = 0;
-	helpflag = TRUE;
+	helpflag = true;
 	HelpTop = 5000;
 }
 

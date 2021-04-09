@@ -46,8 +46,8 @@ T SwapBE(T in)
 
 class LoadHelper {
 	Uint8 *m_buffer;
-	Uint32 m_bufferPtr = 0;
-	Uint32 m_bufferLen;
+	Uint32 m_cur = 0;
+	Uint32 m_size;
 
 	template <class T>
 	T next()
@@ -57,8 +57,8 @@ class LoadHelper {
 			return 0;
 
 		T value;
-		memcpy(&value, &m_buffer[m_bufferPtr], size);
-		m_bufferPtr += size;
+		memcpy(&value, &m_buffer[m_cur], size);
+		m_cur += size;
 
 		return value;
 	}
@@ -66,18 +66,18 @@ class LoadHelper {
 public:
 	LoadHelper(const char *szFileName)
 	{
-		m_buffer = pfile_read(szFileName, &m_bufferLen);
+		m_buffer = pfile_read(szFileName, &m_size);
 	}
 
 	bool isValid(Uint32 size = 1)
 	{
 		return m_buffer != nullptr
-		    && m_bufferLen >= (m_bufferPtr + size);
+		    && m_size >= (m_cur + size);
 	}
 
 	void skip(Uint32 size)
 	{
-		m_bufferPtr += size;
+		m_cur += size;
 	}
 
 	void nextBytes(void *bytes, size_t size)
@@ -85,8 +85,8 @@ public:
 		if (!isValid(size))
 			return;
 
-		memcpy(bytes, &m_buffer[m_bufferPtr], size);
-		m_bufferPtr += size;
+		memcpy(bytes, &m_buffer[m_cur], size);
+		m_cur += size;
 	}
 
 	template <class T>
@@ -120,26 +120,26 @@ public:
 class SaveHelper {
 	const char *m_szFileName;
 	Uint8 *m_buffer;
-	Uint32 m_bufferPtr = 0;
-	Uint32 m_bufferLen;
+	Uint32 m_cur = 0;
+	Uint32 m_capacity;
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
 	{
 		m_szFileName = szFileName;
-		m_bufferLen = bufferLen;
-		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_bufferLen));
+		m_capacity = bufferLen;
+		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_capacity));
 	}
 
 	bool isValid(Uint32 len = 1)
 	{
 		return m_buffer != nullptr
-		    && m_bufferLen >= (m_bufferPtr + len);
+		    && m_capacity >= (m_cur + len);
 	}
 
 	void skip(Uint32 len)
 	{
-		m_bufferPtr += len;
+		m_cur += len;
 	}
 
 	void writeBytes(const void *bytes, size_t len)
@@ -147,8 +147,8 @@ public:
 		if (!isValid(len))
 			return;
 
-		memcpy(&m_buffer[m_bufferPtr], bytes, len);
-		m_bufferPtr += len;
+		memcpy(&m_buffer[m_cur], bytes, len);
+		m_cur += len;
 	}
 
 	template <class T>
@@ -170,7 +170,7 @@ public:
 		if (m_buffer == nullptr)
 			return;
 
-		pfile_write_save_file(m_szFileName, m_buffer, m_bufferPtr, codec_get_encoded_len(m_bufferPtr));
+		pfile_write_save_file(m_szFileName, m_buffer, m_cur, codec_get_encoded_len(m_cur));
 		mem_free_dbg(m_buffer);
 		m_buffer = nullptr;
 	}
@@ -507,7 +507,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->pDifficulty = file->nextLE<Uint32>();
 	pPlayer->pDamAcFlags = file->nextLE<Uint32>();
 	file->skip(20); // Available bytes
-	CalcPlrItemVals(p, FALSE);
+	CalcPlrItemVals(p, false);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -965,7 +965,7 @@ void RemoveEmptyInventory(int pnum)
 
 void RemoveEmptyLevelItems()
 {
-	for (int i = numitems; i >= 0; i--) {
+	for (int i = numitems; i > 0; i--) {
 		int ii = itemactive[i];
 		if (items[ii].isEmpty()) {
 			dItem[items[ii]._ix][items[ii]._iy] = 0;
@@ -978,7 +978,7 @@ void RemoveEmptyLevelItems()
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
-void LoadGame(BOOL firstflag)
+void LoadGame(bool firstflag)
 {
 	FreeGameMem();
 	pfile_remove_temp_files();
@@ -1166,7 +1166,7 @@ void LoadGame(BOOL firstflag)
 	missiles_process_charge();
 	ResetPal();
 	SetCursor_(CURSOR_HAND);
-	gbProcessPlayers = TRUE;
+	gbProcessPlayers = true;
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		RemoveEmptyLevelItems();
@@ -1741,7 +1741,7 @@ const int HellfireItemSaveSize = 372;
 void SaveHeroItems(PlayerStruct *pPlayer)
 {
 	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize));
+	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(Uint8));
 
 	file.writeLE<Uint8>(gbIsHellfire);
 
@@ -1903,7 +1903,7 @@ void SaveGame()
 
 	file.flush();
 
-	gbValidSaveFile = TRUE;
+	gbValidSaveFile = true;
 	pfile_rename_temp_to_perm();
 	pfile_write_hero();
 }
@@ -1988,9 +1988,9 @@ void SaveLevel()
 	}
 
 	if (!setlevel)
-		plr[myplr]._pLvlVisited[currlevel] = TRUE;
+		plr[myplr]._pLvlVisited[currlevel] = true;
 	else
-		plr[myplr]._pSLvlVisited[setlvlnum] = TRUE;
+		plr[myplr]._pSLvlVisited[setlvlnum] = true;
 }
 
 void LoadLevel()
@@ -2081,12 +2081,12 @@ void LoadLevel()
 		AutomapZoomReset();
 		ResyncQuests();
 		SyncPortals();
-		dolighting = TRUE;
+		dolighting = true;
 	}
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)
-			LightList[plr[i]._plid]._lunflag = TRUE;
+			LightList[plr[i]._plid]._lunflag = true;
 	}
 }
 

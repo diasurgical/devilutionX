@@ -26,10 +26,8 @@ void selconn_Load()
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
 #ifndef NONET
+	vecConnItems.push_back(new UiListItem("Zerotier", SELCONN_ZT));
 	vecConnItems.push_back(new UiListItem("Client-Server (TCP)", SELCONN_TCP));
-#ifdef BUGGY
-	vecConnItems.push_back(new UiListItem("Peer-to-Peer (UDP)", SELCONN_UDP));
-#endif
 #endif
 	vecConnItems.push_back(new UiListItem("Loopback", SELCONN_LOOPBACK));
 
@@ -103,8 +101,8 @@ void selconn_Focus(int value)
 		strncpy(selconn_Description, "All computers must be connected to a TCP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
-	case SELCONN_UDP:
-		strncpy(selconn_Description, "All computers must be connected to a UDP-compatible network.", sizeof(selconn_Description) - 1);
+	case SELCONN_ZT:
+		strncpy(selconn_Description, "All computers must be connected to the internet.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
 	case SELCONN_LOOPBACK:

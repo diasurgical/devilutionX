@@ -18,7 +18,7 @@ Uint8 paletteTransparencyLookup[256][256]; //Lookup table for transparency
 /* data */
 
 /** Specifies whether the palette has max brightness. */
-BOOLEAN sgbFadedIn = TRUE;
+bool sgbFadedIn = true;
 
 void palette_update()
 {
@@ -237,7 +237,7 @@ void PaletteFadeIn(int fr)
 	}
 	SetFadeLevel(256);
 	memcpy(logical_palette, orig_palette, sizeof(orig_palette));
-	sgbFadedIn = TRUE;
+	sgbFadedIn = true;
 }
 
 void PaletteFadeOut(int fr)
@@ -253,7 +253,7 @@ void PaletteFadeOut(int fr)
 			RenderPresent();
 		}
 		SetFadeLevel(0);
-		sgbFadedIn = FALSE;
+		sgbFadedIn = false;
 	}
 }
 

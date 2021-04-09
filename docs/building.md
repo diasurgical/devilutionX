@@ -1,4 +1,10 @@
 # Building from Source
+
+Note: If you do not use git to manage the source you must provide the verion to CMake manually:
+```bash
+cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF
+```
+
 <details><summary>Linux</summary>
 
 ### Installing dependencies on Debian and Ubuntu

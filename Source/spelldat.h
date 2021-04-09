@@ -5,13 +5,15 @@
  */
 #pragma once
 
+#include "effects.h"
+
 namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef enum spell_id {
+typedef enum spell_id : int8_t {
 	SPL_NULL,
 	SPL_FIREBOLT,
 	SPL_HEAL,

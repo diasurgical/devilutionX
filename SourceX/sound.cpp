@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-BOOLEAN gbSndInited;
+bool gbSndInited;
 /** Specifies whether background music is enabled. */
 HANDLE sghMusic;
 
@@ -37,9 +37,9 @@ void FreeMusicBuffer()
 
 /* data */
 
-BOOLEAN gbMusicOn = true;
+bool gbMusicOn = true;
 /** Specifies whether sound effects are enabled. */
-BOOLEAN gbSoundOn = true;
+bool gbSoundOn = true;
 /** Specifies the active background music track id. */
 int sgnMusicTrack = NUM_MUSIC;
 /** Maps from track ID to track name in spawn. */
@@ -75,7 +75,7 @@ static int CapVolume(int volume)
 	return volume - volume % 100;
 }
 
-BOOL snd_playing(TSnd *pSnd)
+bool snd_playing(TSnd *pSnd)
 {
 	if (pSnd == NULL || pSnd->DSB == NULL)
 		return false;
@@ -198,7 +198,7 @@ void music_stop()
 
 void music_start(int nTrack)
 {
-	BOOL success;
+	bool success;
 	const char *trackPath;
 
 	assert((DWORD)nTrack < NUM_MUSIC);
@@ -260,7 +260,7 @@ void music_start(int nTrack)
 	}
 }
 
-void sound_disable_music(BOOL disable)
+void sound_disable_music(bool disable)
 {
 	if (disable) {
 		music_stop();

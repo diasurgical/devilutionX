@@ -27,6 +27,7 @@ public:
 
 	virtual ~tcp_client();
 
+	virtual std::string make_default_gamename();
 private:
 	frame_queue recv_queue;
 	buffer_t recv_buffer = buffer_t(frame_queue::max_frame_size);
@@ -42,4 +43,4 @@ private:
 };
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

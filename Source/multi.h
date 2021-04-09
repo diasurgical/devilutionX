@@ -28,12 +28,12 @@ typedef struct GameData {
 	Uint8 bFriendlyFire;
 } GameData;
 
-extern BOOLEAN gbSomebodyWonGameKludge;
+extern bool gbSomebodyWonGameKludge;
 extern char szPlayerDescript[128];
 extern WORD sgwPackPlrOffsetTbl[MAX_PLRS];
 extern BYTE gbActivePlayers;
-extern BOOLEAN gbGameDestroyed;
-extern BOOLEAN gbSelectProvider;
+extern bool gbGameDestroyed;
+extern bool gbSelectProvider;
 extern bool gbIsMultiplayer;
 extern char szPlayerName[128];
 extern BYTE gbDeltaSender;
@@ -48,12 +48,12 @@ void multi_player_left(int pnum, int reason);
 void multi_net_ping();
 int multi_handle_delta();
 void multi_process_network_packets();
-void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen);
+void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen);
 void NetClose();
-BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram);
-BOOL multi_init_single(GameData *gameData);
-BOOL multi_init_multi(GameData *gameData, BOOL *pfExitProgram);
-void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv);
+bool NetInit(bool bSinglePlayer, bool *pfExitProgram);
+bool multi_init_single(GameData *gameData);
+bool multi_init_multi(GameData *gameData, bool *pfExitProgram);
+void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv);
 
 #ifdef __cplusplus
 }

@@ -13,12 +13,12 @@ extern "C" {
 
 typedef struct ThemeStruct {
 	theme_id ttype;
-	Sint32 ttval;
+	Sint16 ttval;
 } ThemeStruct;
 
 extern int numthemes;
-extern BOOL armorFlag;
-extern BOOL weaponFlag;
+extern bool armorFlag;
+extern bool weaponFlag;
 extern int zharlib;
 extern ThemeStruct themes[MAXTHEMES];
 

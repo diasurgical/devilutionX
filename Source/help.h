@@ -11,7 +11,7 @@ namespace devilution {
 extern "C" {
 #endif
 
-extern BOOL helpflag;
+extern bool helpflag;
 
 void InitHelp();
 void DrawHelp(CelOutputBuffer out);
