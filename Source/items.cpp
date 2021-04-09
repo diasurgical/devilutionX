@@ -4625,7 +4625,7 @@ int RndPremiumItem(int minlvl, int maxlvl)
 
 static void SpawnOnePremium(int i, int plvl, int myplr)
 {
-	int ivalue;
+	int ivalue = 0;
 	ItemStruct holditem = items[0];
 
 	int strength = plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
