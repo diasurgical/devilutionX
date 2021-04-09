@@ -954,7 +954,7 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 		abort = false;
 		found = 0;
 
-		while (abort == false) {
+		while (!abort) {
 			abort = true;
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
 				sx++;
@@ -996,7 +996,7 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 				}
 			}
 
-			if (abort == false) {
+			if (!abort) {
 				if (++sx == DMAXX - sw) {
 					sx = 0;
 					if (++sy == DMAXY - sh)
@@ -1367,7 +1367,7 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 			cx1 = x - cw;
 			ran = L5checkRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
 			num++;
-		} while (ran == false && num < 20);
+		} while (!ran && num < 20);
 
 		if (ran == true)
 			L5drawRoom(cx1, cy1, cw, ch);
@@ -1389,7 +1389,7 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 		ry = y - height;
 		ran = L5checkRoom(rx - 1, ry - 1, width + 2, height + 1);
 		num++;
-	} while (ran == false && num < 20);
+	} while (!ran && num < 20);
 
 	if (ran == true)
 		L5drawRoom(rx, ry, width, height);
@@ -2644,7 +2644,7 @@ static void DRLG_L5(int entry)
 				}
 			}
 		}
-	} while (doneflag == false);
+	} while (!doneflag);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {

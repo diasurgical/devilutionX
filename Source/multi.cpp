@@ -783,7 +783,7 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 		plr[myplr].plractive = true;
 		gbActivePlayers = 1;
 
-		if (sgbPlayerTurnBitTbl[myplr] == false || msg_wait_resync())
+		if (!sgbPlayerTurnBitTbl[myplr] || msg_wait_resync())
 			break;
 		NetClose();
 		gbSelectProvider = false;

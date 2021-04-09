@@ -4884,7 +4884,7 @@ bool PosOkMissile(int x, int y)
 
 bool CheckNoSolid(int x, int y)
 {
-	return nSolidTable[dPiece[x][y]] == false;
+	return !nSolidTable[dPiece[x][y]];
 }
 
 bool LineClearF(bool (*Clear)(int, int), int x1, int y1, int x2, int y2)
