@@ -190,7 +190,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 extern int monstkills[MAXMONSTERS];
 extern int monstactive[MAXMONSTERS];
 extern int nummonsters;
-extern BOOLEAN sgbSaveSoundOn;
+extern bool sgbSaveSoundOn;
 extern MonsterStruct monster[MAXMONSTERS];
 extern CMonster Monsters[MAX_LVLMTYPES];
 extern int nummtypes;
@@ -277,7 +277,7 @@ void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void MissToMonst(int i, int x, int y);
 BOOL PosOkMonst(int i, int x, int y);
-BOOLEAN monster_posok(int i, int x, int y);
+bool monster_posok(int i, int x, int y);
 BOOL PosOkMonst2(int i, int x, int y);
 BOOL PosOkMonst3(int i, int x, int y);
 BOOL IsSkel(int mt);

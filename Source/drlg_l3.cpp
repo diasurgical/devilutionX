@@ -15,7 +15,7 @@ namespace {
 /** This will be true if a lava pool has been generated for the level */
 Uint8 lavapool;
 int lockoutcnt;
-BOOLEAN lockout[DMAXX][DMAXY];
+bool lockout[DMAXX][DMAXY];
 
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
@@ -1745,11 +1745,11 @@ static void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 	}
 }
 
-BOOLEAN drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper)
+bool drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
 	BOOL found;
-	BOOLEAN placed;
+	bool placed;
 
 	placed = FALSE;
 	sw = miniset[0];

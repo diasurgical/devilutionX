@@ -38,7 +38,7 @@ extern BOOL gbRunGameResult;
 extern BOOL zoomflag;
 extern BOOL gbProcessPlayers;
 extern bool gbLoadGame;
-extern BOOLEAN cineflag;
+extern bool cineflag;
 extern int force_redraw;
 /* These are defined in fonts.h */
 extern BOOL was_fonts_init;

@@ -11,20 +11,20 @@
 
 namespace devilution {
 
-BOOLEAN gbSomebodyWonGameKludge;
+bool gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
 WORD sgwPackPlrOffsetTbl[MAX_PLRS];
 PkPlayerStruct netplr[MAX_PLRS];
-BOOLEAN sgbPlayerTurnBitTbl[MAX_PLRS];
-BOOLEAN sgbPlayerLeftGameTbl[MAX_PLRS];
+bool sgbPlayerTurnBitTbl[MAX_PLRS];
+bool sgbPlayerLeftGameTbl[MAX_PLRS];
 DWORD sgbSentThisCycle;
 BOOL gbShouldValidatePackage;
 BYTE gbActivePlayers;
-BOOLEAN gbGameDestroyed;
-BOOLEAN sgbSendDeltaTbl[MAX_PLRS];
+bool gbGameDestroyed;
+bool sgbSendDeltaTbl[MAX_PLRS];
 GameData sgGameInitInfo;
-BOOLEAN gbSelectProvider;
+bool gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
@@ -34,7 +34,7 @@ DWORD sgdwGameLoops;
  * represents a single player game and 4 represents a multi player game.
  */
 bool gbIsMultiplayer;
-BOOLEAN sgbTimeout;
+bool sgbTimeout;
 char szPlayerName[128];
 BYTE gbDeltaSender;
 BOOL sgbNetInited;

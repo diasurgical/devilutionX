@@ -18,7 +18,7 @@ Uint8 paletteTransparencyLookup[256][256]; //Lookup table for transparency
 /* data */
 
 /** Specifies whether the palette has max brightness. */
-BOOLEAN sgbFadedIn = TRUE;
+bool sgbFadedIn = TRUE;
 
 void palette_update()
 {

@@ -11,7 +11,7 @@ namespace devilution {
 static CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
 TMegaPkt *sgpInfoHead; /* may not be right struct */
-BOOLEAN dthread_running;
+bool dthread_running;
 event_emul *sghWorkToDoEvent;
 
 /* rdata */

@@ -50,16 +50,16 @@ void doom_cleanup()
 	}
 }
 
-static BOOLEAN doom_alloc_cel()
+static bool doom_alloc_cel()
 {
 	doom_cleanup();
 	pDoomCel = DiabloAllocPtr(0x39000);
 	return pDoomCel ? TRUE : FALSE;
 }
 
-static BOOLEAN doom_load_graphics()
+static bool doom_load_graphics()
 {
-	BOOLEAN ret;
+	bool ret;
 
 	ret = FALSE;
 	strcpy(tempstr, "Items\\Map\\MapZtown.CEL");

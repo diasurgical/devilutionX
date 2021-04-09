@@ -46,7 +46,7 @@ int sgbPlrTalkTbl;
 BYTE *pGBoxBuff;
 BYTE *pSBkBtnCel;
 char tempstr[256];
-BOOLEAN whisper[MAX_PLRS];
+bool whisper[MAX_PLRS];
 int sbooktab;
 spell_type pSplType;
 int initialDropGoldIndex;
@@ -1102,7 +1102,7 @@ void CheckPanelInfo()
 void CheckBtnUp()
 {
 	int i;
-	BOOLEAN gamemenuOff;
+	bool gamemenuOff;
 
 	gamemenuOff = TRUE;
 	drawbtnflag = TRUE;

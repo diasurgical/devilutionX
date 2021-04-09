@@ -21,7 +21,7 @@ extern char arch_draw_type;
 extern int cel_transparency_active;
 extern int cel_foliage_active;
 extern int level_piece_id;
-extern BOOLEAN AutoMapShowItems;
+extern bool AutoMapShowItems;
 
 void ClearCursor();
 void ShiftGrid(int *x, int *y, int horizontal, int vertical);

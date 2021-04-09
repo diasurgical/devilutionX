@@ -28,7 +28,7 @@ DWORD sgdwCursHgt;
 DWORD level_cel_block;
 DWORD sgdwCursXOld;
 DWORD sgdwCursYOld;
-BOOLEAN AutoMapShowItems;
+bool AutoMapShowItems;
 /**
  * Specifies the type of arches to render.
  */

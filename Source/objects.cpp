@@ -255,7 +255,7 @@ _speech_id StoryText[3][3] = {
 
 void InitObjectGFX()
 {
-	BOOLEAN fileload[56];
+	bool fileload[56];
 	char filestr[32];
 	int i, j;
 
@@ -2032,7 +2032,7 @@ void Obj_FlameTrap(int i)
 		if (dMonster[x][y] > 0)
 			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, FALSE);
 		if (dPlayer[x][y] > 0) {
-			BOOLEAN unused;
+			bool unused;
 			PlayerMHit(dPlayer[x][y] - 1, -1, 0, mindam, maxdam, MIS_FIREWALLC, FALSE, 0, &unused);
 		}
 
@@ -2046,7 +2046,7 @@ void Obj_FlameTrap(int i)
 void Obj_Trap(int i)
 {
 	int oti, dir;
-	BOOLEAN otrig;
+	bool otrig;
 	int sx, sy, dx, dy, x, y;
 
 	otrig = FALSE;
@@ -4847,7 +4847,7 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 			for (xp = object[i]._ox - 1; xp <= object[i]._ox + 1; xp++) {
 				if (dMonster[xp][yp] > 0)
 					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, FALSE);
-				BOOLEAN unused;
+				bool unused;
 				if (dPlayer[xp][yp] > 0)
 					PlayerMHit(dPlayer[xp][yp] - 1, -1, 0, 8, 16, MIS_FIREBOLT, FALSE, 0, &unused);
 				if (dObject[xp][yp] > 0) {

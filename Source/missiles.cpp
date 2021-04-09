@@ -528,7 +528,7 @@ void MoveMissilePos(int i)
 	}
 }
 
-BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift)
+BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 {
 	int hit, hper, dam, mor;
 	BOOL resist, ret;
@@ -609,7 +609,7 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shif
 	}
 }
 
-BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift)
+BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool shift)
 {
 	int hit, hper, dam, mor;
 	BOOL resist, ret;
@@ -735,7 +735,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 	return FALSE;
 }
 
-BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEAN shift, int earflag, BOOLEAN *blocked)
+BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
 {
 	int hit, hper, tac, dam, blk, blkper, resper;
 	*blocked = false;
@@ -903,7 +903,7 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEA
 	return FALSE;
 }
 
-BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, BOOLEAN shift, BOOLEAN *blocked)
+BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, bool shift, bool *blocked)
 {
 	int dam, blk, blkper, hper, hit, resper;
 
@@ -1027,10 +1027,10 @@ BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, B
 	return FALSE;
 }
 
-void CheckMissileCol(int i, int mindam, int maxdam, BOOL shift, int mx, int my, BOOLEAN nodel)
+void CheckMissileCol(int i, int mindam, int maxdam, BOOL shift, int mx, int my, bool nodel)
 {
 	int oi;
-	BOOLEAN blocked;
+	bool blocked;
 	int dir, mAnimFAmt;
 
 	if (i >= MAXMISSILES || i < 0)
