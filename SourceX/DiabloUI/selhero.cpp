@@ -358,6 +358,14 @@ void selhero_ClassSelector_Focus(int value)
 
 static bool shouldPrefillHeroName()
 {
+#ifndef USE_SDL1
+	// On-screen keyboard does not allow editing existing text in SDL.
+	// Make sure the text is empty so that any name can be used.
+	// See https://github.com/diasurgical/devilutionX/issues/1414
+	if (SDL_HasScreenKeyboardSupport())
+		return false;
+#endif
+
 #if defined __3DS__
 	return false;
 #elif defined(PREFILL_PLAYER_NAME)
