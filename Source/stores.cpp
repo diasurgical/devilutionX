@@ -53,6 +53,7 @@ namespace {
 	ItemStruct smithbuybackitems[SMITH_ITEMS];
 	ItemStruct witchbuybackitems[WITCH_ITEMS];
 	ItemStruct *itemlist;
+	int itemlistsize;
 
 	/** Maps from towner IDs to NPC names. */
 	const char *const talkname[] = {
@@ -225,6 +226,9 @@ namespace {
 		AddSText(0, 22, TRUE, "Leave the shop", COL_WHITE, TRUE);
 		AddSLine(5);
 		storenumh = 20;
+
+		itemlist = smithbuybackitems;
+		itemlistsize = SMITH_ITEMS;
 	}
 
 	void S_ScrollSBuy(int idx)
@@ -592,6 +596,9 @@ namespace {
 		AddSText(0, 22, TRUE, "Leave the shack", COL_WHITE, TRUE);
 		AddSLine(5);
 		storenumh = 20;
+
+        itemlist = witchbuybackitems;
+		itemlistsize = WITCH_ITEMS;
 	}
 
 	void S_ScrollWBuy(int idx)
@@ -1466,7 +1473,7 @@ namespace {
 		int i, idx, cost, s;
 
 		idx = stextvhold + ((stextlhold - stextup) >> 2);
-
+/*
 		switch (stextshold) {
 		case STORE_SSELL:
 			itemlist = smithbuybackitems;
@@ -1476,8 +1483,8 @@ namespace {
 			itemlist = witchbuybackitems;
 			s = WITCH_ITEMS;
 		}
-
-		for (int i = s - 2; i > 0; i--)
+*/
+		for (int i = itemlistsize - 2; i > 0; i--)
 			itemlist[i] = itemlist[i - 1];
 
 		if (storehidx[idx] >= 0) {
@@ -1916,11 +1923,11 @@ namespace {
 				SmithBuyPItem();
 				break;
 			case STORE_SBUYBACK:
-				itemlist = smithbuybackitems;
+//				itemlist = smithbuybackitems;
 				BuyBackItem();
 				break;
 			case STORE_WBUYBACK:
-				itemlist = witchbuybackitems;
+//				itemlist = witchbuybackitems;
 				BuyBackItem();
 				break;
 			default:
@@ -2974,32 +2981,30 @@ void S_ScrollBuyBack(int idx)
 
 void S_SBuyBackEnter()
 {
-	int idx, i;
+	int idx;
 	BOOL done;
 
 	if (stextsel == 22) {
-		StartStore(STORE_SMITH);
-		stextsel = 12;
+            StartStore(STORE_SMITH);
+            stextsel = 12;
 	} else {
 		stextlhold = stextsel;
 		stextvhold = stextsval;
 		stextshold = STORE_SBUYBACK;
+		stextshold = stextshold;
 		idx = stextsval + ((stextsel - stextup) >> 2);
-		if (plr[myplr]._pGold < smithbuybackitems[idx]._iIvalue) {
+		if (plr[myplr]._pGold < itemlist[idx]._iIvalue) {
 			StartStore(STORE_NOMONEY);
 		} else {
-			plr[myplr].HoldItem = smithbuybackitems[idx];
+			plr[myplr].HoldItem = itemlist[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
 
-			if (AutoEquipEnabled(plr[myplr], smithbuybackitems[idx]) && AutoEquip(myplr, smithbuybackitems[idx], false)) {
+			if (AutoEquipEnabled(plr[myplr], itemlist[idx]) && AutoEquip(myplr, itemlist[idx], false)) {
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, smithbuybackitems[idx], false))
-				StartStore(STORE_CONFIRM);
-
-			if (done)
+			if (done || AutoPlaceItemInInventory(myplr, itemlist[idx], false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -3010,7 +3015,7 @@ void S_SBuyBackEnter()
 
 void S_WBuyBackEnter()
 {
-	int idx, i;
+	int idx;
 	BOOL done;
 
 	if (stextsel == 22) {
@@ -3021,19 +3026,19 @@ void S_WBuyBackEnter()
 		stextvhold = stextsval;
 		stextshold = STORE_WBUYBACK;
 		idx = stextsval + ((stextsel - stextup) >> 2);
-		if (plr[myplr]._pGold < witchbuybackitems[idx]._iIvalue) {
+		if (plr[myplr]._pGold < itemlist[idx]._iIvalue) {
 			StartStore(STORE_NOMONEY);
 		} else {
-			plr[myplr].HoldItem = witchbuybackitems[idx];
+			plr[myplr].HoldItem = itemlist[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 			done = FALSE;
 
-			if (AutoEquipEnabled(plr[myplr], witchbuybackitems[idx]) && AutoEquip(myplr, witchbuybackitems[idx], false)) {
+			if (AutoEquipEnabled(plr[myplr], itemlist[idx]) && AutoEquip(myplr, itemlist[idx], false)) {
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, witchbuybackitems[idx], false))
+			if (done || AutoPlaceItemInInventory(myplr, itemlist[idx], false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -3044,12 +3049,7 @@ void S_WBuyBackEnter()
 
 void BuyBackItem()
 {
-	int idx, s;
-
-	if (itemlist == smithbuybackitems)
-		s = SMITH_ITEMS;
-	else if (itemlist == witchbuybackitems)
-		s = WITCH_ITEMS;
+	int idx;
 
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
 	if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_NORMAL)
@@ -3058,8 +3058,8 @@ void BuyBackItem()
 		plr[myplr].HoldItem._iIdentified = TRUE;
 	StoreAutoPlace();
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
-	if (idx == s - 1) {
-		itemlist[s - 1]._itype = ITYPE_NONE;
+	if (idx == itemlistsize - 1) {
+		itemlist[itemlistsize - 1]._itype = ITYPE_NONE;
 	} else {
 		for (; itemlist[idx + 1]._itype != ITYPE_NONE; idx++) {
 			itemlist[idx] = itemlist[idx + 1];
