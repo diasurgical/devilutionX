@@ -13,7 +13,7 @@ extern "C" {
 
 void TownOpenHive();
 void TownOpenGrave();
-void CreateTown(int entry);
+void CreateTown(lvl_entry entry);
 
 #ifdef __cplusplus
 }

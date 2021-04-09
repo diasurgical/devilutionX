@@ -21,7 +21,7 @@ extern int diabquad4x;
 extern int diabquad4y;
 bool IsDURWall(char d);
 bool IsDLLWall(char dd);
-void CreateL4Dungeon(DWORD rseed, int entry);
+void CreateL4Dungeon(DWORD rseed, lvl_entry entry);
 
 #ifdef __cplusplus
 }

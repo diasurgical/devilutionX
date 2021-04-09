@@ -63,7 +63,7 @@ void diablo_pause_game();
 bool PressEscKey();
 void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam);
-void LoadGameLevel(bool firstflag, int lvldir);
+void LoadGameLevel(bool firstflag, lvl_entry lvldir);
 void game_loop(bool bStartup);
 void diablo_color_cyc_logic();
 

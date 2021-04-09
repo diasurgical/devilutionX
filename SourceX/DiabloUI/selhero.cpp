@@ -547,7 +547,7 @@ void UiSelHeroSingDialog(
     void (*fnstats)(unsigned int, _uidefaultstats *),
     _selhero_selections *dlgresult,
     char (*name)[16],
-    int *difficulty)
+    _difficulty *difficulty)
 {
 	selhero_isMultiPlayer = false;
 	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);

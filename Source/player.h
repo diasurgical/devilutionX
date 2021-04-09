@@ -7,7 +7,26 @@
 
 #include <stdint.h>
 
+#include "gendung.h"
+#include "items.h"
+#include "spelldat.h"
+
 namespace devilution {
+
+/** Walking directions */
+enum {
+	// clang-format off
+	WALK_NE   =  1,
+	WALK_NW   =  2,
+	WALK_SE   =  3,
+	WALK_SW   =  4,
+	WALK_N    =  5,
+	WALK_E    =  6,
+	WALK_S    =  7,
+	WALK_W    =  8,
+	WALK_NONE = -1,
+	// clang-format on
+};
 
 enum plr_class : uint8_t {
 	PC_WARRIOR,
@@ -17,6 +36,25 @@ enum plr_class : uint8_t {
 	PC_BARD,
 	PC_BARBARIAN,
 	NUM_CLASSES
+};
+
+enum attribute_id : uint8_t {
+	ATTRIB_STR,
+	ATTRIB_MAG,
+	ATTRIB_DEX,
+	ATTRIB_VIT,
+};
+
+// Logical equipment locations
+enum inv_body_loc : uint8_t {
+	INVLOC_HEAD,
+	INVLOC_RING_LEFT,
+	INVLOC_RING_RIGHT,
+	INVLOC_AMULET,
+	INVLOC_HAND_LEFT,
+	INVLOC_HAND_RIGHT,
+	INVLOC_CHEST,
+	NUM_INVLOC,
 };
 
 enum anim_weapon_id : uint8_t {
@@ -237,7 +275,7 @@ typedef struct PlayerStruct {
 	bool pOriginalCathedral;
 	Uint16 wReflections;
 	Uint32 pDiabloKillLevel;
-	Uint32 pDifficulty;
+	_difficulty pDifficulty;
 	Uint32 pDamAcFlags;
 	Uint8 *_pNData;
 	Uint8 *_pWData;

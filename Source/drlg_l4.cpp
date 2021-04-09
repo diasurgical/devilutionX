@@ -1589,7 +1589,7 @@ void DRLG_L4GeneralFix()
 	}
 }
 
-static void DRLG_L4(int entry)
+static void DRLG_L4(lvl_entry entry)
 {
 	int i, j, spi, spj, ar;
 	bool doneflag;
@@ -1795,7 +1795,7 @@ static void DRLG_L4Pass3()
 	}
 }
 
-void CreateL4Dungeon(DWORD rseed, int entry)
+void CreateL4Dungeon(DWORD rseed, lvl_entry entry)
 {
 	SetRndSeed(rseed);
 

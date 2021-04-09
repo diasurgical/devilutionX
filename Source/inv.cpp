@@ -724,11 +724,11 @@ bool CanWield(int playerNumber, const ItemStruct &item)
  * @brief Checks whether the specified item can be equipped in the desired body location on the player.
  * @param playerNumber The player number whose inventory will be checked for compatibility with the item.
  * @param item The item to check.
- * @param bodyLocation The location in the inventory to be checked against. Can be one of 'inv_body_loc' members.
+ * @param bodyLocation The location in the inventory to be checked against.
  * @return 'True' if the player can currently equip the item in the specified body location (i.e. the body location is empty and
  * allows the item), and 'False' otherwise.
  */
-bool CanEquip(int playerNumber, const ItemStruct &item, int bodyLocation)
+bool CanEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation)
 {
 	PlayerStruct &player = plr[playerNumber];
 	if (!CanEquip(item) || player._pmode > PM_WALK3 || !player.InvBody[bodyLocation].isEmpty()) {
@@ -763,12 +763,12 @@ bool CanEquip(int playerNumber, const ItemStruct &item, int bodyLocation)
  * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
  * @param playerNumber The player number whose inventory will be checked for compatibility with the item.
  * @param item The item to equip.
- * @param bodyLocation The location in the inventory where the item should be equipped. Can be one of 'inv_body_loc' members.
+ * @param bodyLocation The location in the inventory where the item should be equipped.
  * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation, bool persistItem)
+bool AutoEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation, bool persistItem)
 {
 	if (!CanEquip(playerNumber, item, bodyLocation)) {
 		return false;
@@ -804,7 +804,7 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 	}
 
 	for (int bodyLocation = INVLOC_HEAD; bodyLocation < NUM_INVLOC; bodyLocation++) {
-		if (AutoEquip(playerNumber, item, bodyLocation, persistItem)) {
+		if (AutoEquip(playerNumber, item, (inv_body_loc)bodyLocation, persistItem)) {
 			return true;
 		}
 	}
@@ -1039,7 +1039,7 @@ bool GoldAutoPlace(int pnum)
 				plr[pnum].HoldItem._ivalue = 0;
 				done = true;
 				plr[pnum]._pGold = CalculateGold(pnum);
-				SetCursor_(CURSOR_HAND);
+				NewCursor(CURSOR_HAND);
 			}
 		}
 	}
@@ -1332,13 +1332,13 @@ void CheckInvPaste(int pnum, int mx, int my)
 			else
 				plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HAND_LEFT];
 			if (pnum == myplr)
-				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+				NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done2h = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
 			plr[pnum].HoldItem = tempitem;
 			if (pnum == myplr)
-				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+				NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			if (!done2h)
@@ -1485,7 +1485,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	if (pnum == myplr) {
 		if (cn == CURSOR_HAND)
 			SetCursorPos(MouseX + (cursW >> 1), MouseY + (cursH >> 1));
-		SetCursor_(cn);
+		NewCursor(cn);
 	}
 }
 
@@ -1783,7 +1783,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 
 				holdItem._itype = ITYPE_NONE;
 			} else {
-				SetCursor_(holdItem._iCurs + CURSOR_FIRSTITEM);
+				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
 				SetCursorPos(mx - (cursW >> 1), MouseY - (cursH >> 1));
 			}
 		}
@@ -2118,7 +2118,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 	CleanupItems(item, ii);
 	pcursitem = -1;
 	if (!cursor_updated)
-		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+		NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
 void AutoGetItem(int pnum, ItemStruct *item, int ii)
@@ -2357,7 +2357,7 @@ int InvPutItem(int pnum, int x, int y)
 		xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
 			NetSendCmdLocParam2(0, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
-			quests[Q_FARMER]._qactive = 3;
+			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
 				return -1;
@@ -2366,7 +2366,7 @@ int InvPutItem(int pnum, int x, int y)
 		}
 		if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM && xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24) {
 			NetSendCmd(false, CMD_OPENCRYPT);
-			quests[Q_GRAVE]._qactive = 3;
+			quests[Q_GRAVE]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_GRAVE);
 			}

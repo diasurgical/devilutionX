@@ -2905,7 +2905,7 @@ void OperateLever(int pnum, int i)
 			operate_lv24_lever();
 			IsUberLeverActivated = 1;
 			mapflag = false;
-			quests[Q_NAKRUL]._qactive = 3;
+			quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		}
 		if (mapflag)
 			ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
@@ -3352,7 +3352,7 @@ void TryDisarm(int pnum, int i)
 	bool checkflag;
 
 	if (pnum == myplr)
-		SetCursor_(CURSOR_HAND);
+		NewCursor(CURSOR_HAND);
 	if (object[i]._oTrapFlag) {
 		trapdisper = 2 * plr[pnum]._pDexterity - 5 * currlevel;
 		if (random_(154, 100) <= trapdisper) {
@@ -4464,12 +4464,12 @@ void OperateStoryBook(int pnum, int i)
 		object[i]._oAnimFrame = object[i]._oVar4;
 		PlaySfxLoc(IS_ISCROL, object[i]._ox, object[i]._oy);
 		if (object[i]._oVar8 != 0 && currlevel == 24) {
-			if (IsUberLeverActivated != 1 && quests[Q_NAKRUL]._qactive != 3 && objects_lv_24_454B04(object[i]._oVar8)) {
+			if (IsUberLeverActivated != 1 && quests[Q_NAKRUL]._qactive != QUEST_DONE && objects_lv_24_454B04(object[i]._oVar8)) {
 				NetSendCmd(false, CMD_NAKRUL);
 				return;
 			}
 		} else if (currlevel >= 21) {
-			quests[Q_NAKRUL]._qactive = 2;
+			quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
 			quests[Q_NAKRUL]._qlog = 1;
 			quests[Q_NAKRUL]._qmsg = object[i]._oVar2;
 		}

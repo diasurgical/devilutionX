@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "quests.h"
+
 namespace devilution {
 
 enum _cmd_id : uint8_t {
@@ -188,7 +190,7 @@ struct TCmdGolem {
 struct TCmdQuest {
 	_cmd_id bCmd;
 	Uint8 q;
-	Uint8 qstate;
+	quest_state qstate;
 	Uint8 qlog;
 	Uint8 qvar1;
 };
@@ -382,7 +384,7 @@ struct DPortal {
 };
 
 struct MultiQuests {
-	Uint8 qstate;
+	quest_state qstate;
 	Uint8 qlog;
 	Uint8 qvar1;
 };

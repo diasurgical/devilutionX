@@ -20,7 +20,7 @@ typedef struct GameData {
 	Uint8 versionMajor;
 	Uint8 versionMinor;
 	Uint8 versionPatch;
-	Uint8 nDifficulty;
+	_difficulty nDifficulty;
 	Uint8 nTickRate;
 	Uint8 bRunInTown;
 	Uint8 bTheoQuest;

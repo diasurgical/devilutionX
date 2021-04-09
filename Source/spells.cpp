@@ -7,7 +7,7 @@
 
 namespace devilution {
 
-int GetManaAmount(int id, int sn)
+int GetManaAmount(int id, spell_id sn)
 {
 	int ma; // mana amount
 
@@ -56,7 +56,7 @@ int GetManaAmount(int id, int sn)
 	return ma;
 }
 
-void UseMana(int id, int sn)
+void UseMana(int id, spell_id sn)
 {
 	int ma; // mana cost
 
@@ -158,7 +158,7 @@ void EnsureValidReadiedSpell(PlayerStruct &player)
 	}
 }
 
-bool CheckSpell(int id, int sn, char st, bool manaonly)
+bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 {
 	bool result;
 

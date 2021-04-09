@@ -2316,7 +2316,7 @@ bool DRLG_L3Lockout()
 	return t == lockoutcnt;
 }
 
-static void DRLG_L3(int entry)
+static void DRLG_L3(lvl_entry entry)
 {
 	int x1, y1, x2, y2, i, j;
 	bool found, genok;
@@ -2616,7 +2616,7 @@ static void DRLG_L3Pass3()
 	}
 }
 
-void CreateL3Dungeon(DWORD rseed, int entry)
+void CreateL3Dungeon(DWORD rseed, lvl_entry entry)
 {
 	int i, j;
 

@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "inv.h"
 #include "items.h"
 
 namespace devilution {

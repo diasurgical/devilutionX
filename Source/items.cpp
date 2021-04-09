@@ -2304,6 +2304,8 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		items[i]._iPLHP -= (r2 << 6);
 		items[i]._iPLMana += (r2 << 6);
 		break;
+	default:
+		break;
 	}
 	if (items[i]._iVAdd1 || items[i]._iVMult1) {
 		items[i]._iVAdd2 = PLVal(r, param1, param2, minval, maxval);
@@ -2632,13 +2634,13 @@ int RndTypeItems(int itype, int imid, int lvl)
 	return ril[random_(27, ri)];
 }
 
-int CheckUnique(int i, int lvl, int uper, bool recreate)
+_unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 {
-	int j, idata, numu;
+	int j, numu;
 	bool uok[128];
 
 	if (random_(28, 100) > uper)
-		return UITYPE_INVALID;
+		return UITEM_INVALID;
 
 	numu = 0;
 	memset(uok, 0, sizeof(uok));
@@ -2654,10 +2656,10 @@ int CheckUnique(int i, int lvl, int uper, bool recreate)
 	}
 
 	if (numu == 0)
-		return UITYPE_INVALID;
+		return UITEM_INVALID;
 
 	random_(29, 10); /// BUGFIX: unused, last unique in array always gets chosen
-	idata = 0;
+	uint8_t idata = 0;
 	while (numu > 0) {
 		if (uok[idata])
 			numu--;
@@ -2668,10 +2670,10 @@ int CheckUnique(int i, int lvl, int uper, bool recreate)
 		}
 	}
 
-	return idata;
+	return (_unique_items)idata;
 }
 
-void GetUniqueItem(int i, int uid)
+void GetUniqueItem(int i, _unique_items uid)
 {
 	UniqueItemFlag[uid] = true;
 	SaveItemPower(i, UniqueItemList[uid].UIPower1, UniqueItemList[uid].UIParam1, UniqueItemList[uid].UIParam2, 0, 0, 1);
@@ -2698,7 +2700,7 @@ void GetUniqueItem(int i, int uid)
 	items[i]._iCreateInfo |= CF_UNIQUE;
 }
 
-void SpawnUnique(int uid, int x, int y)
+void SpawnUnique(_unique_items uid, int x, int y)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -2726,7 +2728,7 @@ void ItemRndDur(int ii)
 
 void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
-	int iblvl, uid;
+	int iblvl;
 
 	items[ii]._iSeed = iseed;
 	SetRndSeed(iseed);
@@ -2762,8 +2764,8 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 		if (uper == 15)
 			iblvl = lvl + 4;
 		if (iblvl != -1) {
-			uid = CheckUnique(ii, iblvl, uper, recreate);
-			if (uid == UITYPE_INVALID) {
+			_unique_items uid = CheckUnique(ii, iblvl, uper, recreate);
+			if (uid == UITEM_INVALID) {
 				GetItemBonus(ii, idx, iblvl >> 1, iblvl, onlygood, true);
 			} else {
 				GetUniqueItem(ii, uid);
@@ -2773,7 +2775,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 			ItemRndDur(ii);
 	} else {
 		if (items[ii]._iLoc != ILOC_UNEQUIPABLE) {
-			GetUniqueItem(ii, iseed); // uid is stored in iseed for uniques
+			GetUniqueItem(ii, (_unique_items)iseed); // uid is stored in iseed for uniques
 		}
 	}
 	SetupItem(ii);
@@ -2787,7 +2789,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
-			SpawnUnique(-(idx + 1), x, y);
+			SpawnUnique((_unique_items)-(idx + 1), x, y);
 			return;
 		}
 		onlygood = true;
@@ -2799,7 +2801,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 			idx--;
 			onlygood = false;
 		} else {
-			SpawnUnique(-(idx + 1), x, y);
+			SpawnUnique((_unique_items)-(idx + 1), x, y);
 			return;
 		}
 	} else {
@@ -3313,7 +3315,7 @@ void CheckIdentify(int pnum, int cii)
 	CalcPlrInv(pnum, true);
 
 	if (pnum == myplr)
-		SetCursor_(CURSOR_HAND);
+		NewCursor(CURSOR_HAND);
 }
 
 static void RepairItem(ItemStruct *i, int lvl)
@@ -3365,7 +3367,7 @@ void DoRepair(int pnum, int cii)
 	CalcPlrInv(pnum, true);
 
 	if (pnum == myplr)
-		SetCursor_(CURSOR_HAND);
+		NewCursor(CURSOR_HAND);
 }
 
 static void RechargeItem(ItemStruct *i, int r)
@@ -3403,7 +3405,7 @@ void DoRecharge(int pnum, int cii)
 	}
 
 	if (pnum == myplr)
-		SetCursor_(CURSOR_HAND);
+		NewCursor(CURSOR_HAND);
 }
 
 static bool OilItem(ItemStruct *x, PlayerStruct *p)
@@ -3538,7 +3540,7 @@ void DoOil(int pnum, int cii)
 		if (OilItem(&p->InvBody[cii], p)) {
 			CalcPlrInv(pnum, true);
 			if (pnum == myplr) {
-				SetCursor_(CURSOR_HAND);
+				NewCursor(CURSOR_HAND);
 			}
 		}
 	}

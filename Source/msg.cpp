@@ -266,7 +266,7 @@ static BYTE *DeltaExportJunk(BYTE *dst)
 	}
 
 	for (i = 0, q = 0; i < MAXQUESTS; i++) {
-		if (questlist[i]._qflags & QUEST_ANY) {
+		if (questlist[i]._qflags == QUEST_ANY) {
 			sgJunk.quests[q].qlog = quests[i]._qlog;
 			sgJunk.quests[q].qstate = quests[i]._qactive;
 			sgJunk.quests[q].qvar1 = quests[i]._qvar1;
@@ -302,7 +302,7 @@ static void DeltaImportJunk(BYTE *src)
 	}
 
 	for (i = 0, q = 0; i < MAXQUESTS; i++) {
-		if (questlist[i]._qflags & QUEST_ANY) {
+		if (questlist[i]._qflags == QUEST_ANY) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
 			quests[i]._qlog = sgJunk.quests[q].qlog;
@@ -612,7 +612,7 @@ bool delta_portal_inited(int i)
 
 bool delta_quest_inited(int i)
 {
-	return sgJunk.quests[i].qstate != 0xFF;
+	return sgJunk.quests[i].qstate != QUEST_INVALID;
 }
 
 void DeltaAddItem(int ii)
@@ -2486,7 +2486,7 @@ static DWORD On_NAKRUL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1) {
 		operate_lv24_lever();
 		IsUberRoomOpened = 1;
-		quests[Q_NAKRUL]._qactive = 3;
+		quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		monster_some_crypt();
 	}
 	return sizeof(*pCmd);

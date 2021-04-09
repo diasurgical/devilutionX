@@ -258,7 +258,7 @@ static void DrawSpellCel(CelOutputBuffer out, int xp, int yp, BYTE *Trans, int n
 	CelDrawLightTo(out, xp, yp, Trans, nCel, w, SplTransTbl);
 }
 
-void SetSpellTrans(char t)
+void SetSpellTrans(spell_type t)
 {
 	int i;
 
@@ -312,6 +312,8 @@ void SetSpellTrans(char t)
 		SplTransTbl[PAL16_YELLOW + 15] = 0;
 		SplTransTbl[PAL16_ORANGE + 15] = 0;
 		break;
+	case RSPLTYPE_SKILL:
+		break;
 	}
 }
 
@@ -320,16 +322,13 @@ void SetSpellTrans(char t)
  */
 static void DrawSpell(CelOutputBuffer out)
 {
-	char st;
-	int spl, tlvl;
-
-	spl = plr[myplr]._pRSpell;
-	st = plr[myplr]._pRSplType;
+	spell_id spl = plr[myplr]._pRSpell;
+	spell_type st = plr[myplr]._pRSplType;
 
 	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
 	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
-		tlvl = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[spl];
-		if (!CheckSpell(myplr, spl, RSPLTYPE_SPELL, true))
+		int tlvl = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[spl];
+		if (!CheckSpell(myplr, spl, st, true))
 			st = RSPLTYPE_INVALID;
 		if (tlvl <= 0)
 			st = RSPLTYPE_INVALID;
@@ -347,7 +346,7 @@ static void DrawSpell(CelOutputBuffer out)
 
 void DrawSpellList(CelOutputBuffer out)
 {
-	int x, y, c, s, t, v, lx, ly, trans;
+	int x, y, c, s, t, v, lx, ly;
 	Uint64 mask, spl;
 
 	pSpell = SPL_INVALID;
@@ -388,10 +387,9 @@ void DrawSpellList(CelOutputBuffer out)
 				s = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[j];
 				if (s < 0)
 					s = 0;
+				spell_type trans = RSPLTYPE_INVALID;
 				if (s > 0)
 					trans = RSPLTYPE_SPELL;
-				else
-					trans = RSPLTYPE_INVALID;
 				SetSpellTrans(trans);
 			}
 			if (currlevel == 0 && !spelldata[j].sTownSpell)
@@ -882,7 +880,7 @@ void DoSpeedBook()
 	Y = yo - SPLICONLENGTH / 2;
 
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
-		for (i = 0; i < 4; i++) {
+		for (i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
 			Uint64 spells;
 			switch (i) {
 			case RSPLTYPE_SKILL:
@@ -1094,6 +1092,17 @@ void CheckPanelInfo()
 	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
 		pcursinvitem = CheckInvHLight();
 }
+
+enum panel_button_id {
+	PANBTN_CHARINFO,
+	PANBTN_QLOG,
+	PANBTN_AUTOMAP,
+	PANBTN_MAINMENU,
+	PANBTN_INVENTORY,
+	PANBTN_SPELLBOOK,
+	PANBTN_SENDMSG,
+	PANBTN_FRIENDLY,
+};
 
 /**
  * Check if the mouse is within a control panel button that's flagged.
@@ -1616,26 +1625,27 @@ void DrawLevelUpIcon(CelOutputBuffer out)
 
 void CheckChrBtns()
 {
-	int i, x, y;
+	int x, y;
 
 	if (!chrbtnactive && plr[myplr]._pStatPts) {
 		plr_class pc = plr[myplr]._pClass;
-		for (i = 0; i < 4; i++) {
+		for (int i = ATTRIB_STR; i <= ATTRIB_VIT; i++) {
+			int max = plr[myplr].GetMaximumAttributeValue((attribute_id)i);
 			switch (i) {
 			case ATTRIB_STR:
-				if (plr[myplr]._pBaseStr >= plr[myplr].GetMaximumAttributeValue(ATTRIB_STR))
+				if (plr[myplr]._pBaseStr >= max)
 					continue;
 				break;
 			case ATTRIB_MAG:
-				if (plr[myplr]._pBaseMag >= plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG))
+				if (plr[myplr]._pBaseMag >= max)
 					continue;
 				break;
 			case ATTRIB_DEX:
-				if (plr[myplr]._pBaseDex >= plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX))
+				if (plr[myplr]._pBaseDex >= max)
 					continue;
 				break;
 			case ATTRIB_VIT:
-				if (plr[myplr]._pBaseVit >= plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT))
+				if (plr[myplr]._pBaseVit >= max)
 					continue;
 				break;
 			default:
@@ -1663,40 +1673,37 @@ int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, attr
 
 void ReleaseChrBtns(bool addAllStatPoints)
 {
-	int i;
-
 	chrbtnactive = false;
-	for (i = 0; i < 4; ++i) {
-		if (chrbtn[i]) {
-			chrbtn[i] = false;
-			if (MouseX >= ChrBtnsRect[i].x
-			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
-			    && MouseY >= ChrBtnsRect[i].y
-			    && MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
-				PlayerStruct &player = plr[myplr];
-				int statPointsToAdd = addAllStatPoints ? player._pStatPts : 1;
-				switch (i) {
-				case 0:
-					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_STR);
-					NetSendCmdParam1(true, CMD_ADDSTR, statPointsToAdd);
-					player._pStatPts -= statPointsToAdd;
-					break;
-				case 1:
-					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_MAG);
-					NetSendCmdParam1(true, CMD_ADDMAG, statPointsToAdd);
-					player._pStatPts -= statPointsToAdd;
-					break;
-				case 2:
-					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_DEX);
-					NetSendCmdParam1(true, CMD_ADDDEX, statPointsToAdd);
-					player._pStatPts -= statPointsToAdd;
-					break;
-				case 3:
-					statPointsToAdd = CapStatPointsToAdd(statPointsToAdd, player, attribute_id::ATTRIB_VIT);
-					NetSendCmdParam1(true, CMD_ADDVIT, statPointsToAdd);
-					player._pStatPts -= statPointsToAdd;
-					break;
-				}
+	for (int i = ATTRIB_STR; i <= ATTRIB_VIT; ++i) {
+		if (!chrbtn[i])
+			continue;
+
+		chrbtn[i] = false;
+		if (MouseX >= ChrBtnsRect[i].x
+			&& MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
+			&& MouseY >= ChrBtnsRect[i].y
+			&& MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
+			PlayerStruct &player = plr[myplr];
+			int statPointsToAdd = 1;
+			if (addAllStatPoints)
+				statPointsToAdd = CapStatPointsToAdd(player._pStatPts, player, (attribute_id)i);
+			switch (i) {
+			case ATTRIB_STR:
+				NetSendCmdParam1(true, CMD_ADDSTR, statPointsToAdd);
+				player._pStatPts -= statPointsToAdd;
+				break;
+			case ATTRIB_MAG:
+				NetSendCmdParam1(true, CMD_ADDMAG, statPointsToAdd);
+				player._pStatPts -= statPointsToAdd;
+				break;
+			case ATTRIB_DEX:
+				NetSendCmdParam1(true, CMD_ADDDEX, statPointsToAdd);
+				player._pStatPts -= statPointsToAdd;
+				break;
+			case ATTRIB_VIT:
+				NetSendCmdParam1(true, CMD_ADDVIT, statPointsToAdd);
+				player._pStatPts -= statPointsToAdd;
+				break;
 			}
 		}
 	}
@@ -1823,13 +1830,11 @@ static void PrintSBookStr(CelOutputBuffer out, int x, int y, bool cjustflag, con
 	}
 }
 
-char GetSBookTrans(int ii, bool townok)
+spell_type GetSBookTrans(spell_id ii, bool townok)
 {
-	char st;
-
 	if ((plr[myplr]._pClass == PC_MONK) && (ii == SPL_SEARCH))
 		return RSPLTYPE_SKILL;
-	st = RSPLTYPE_SPELL;
+	spell_type st = RSPLTYPE_SPELL;
 	if (plr[myplr]._pISpells & GetSpellBitmask(ii)) {
 		st = RSPLTYPE_CHARGES;
 	}
@@ -1837,7 +1842,7 @@ char GetSBookTrans(int ii, bool townok)
 		st = RSPLTYPE_SKILL;
 	}
 	if (st == RSPLTYPE_SPELL) {
-		if (!CheckSpell(myplr, ii, RSPLTYPE_SPELL, true)) {
+		if (!CheckSpell(myplr, ii, st, true)) {
 			st = RSPLTYPE_INVALID;
 		}
 		if ((char)(plr[myplr]._pSplLvl[ii] + plr[myplr]._pISplLvlAdd) <= 0) {
@@ -1853,8 +1858,7 @@ char GetSBookTrans(int ii, bool townok)
 
 void DrawSpellBook(CelOutputBuffer out)
 {
-	int i, sn, mana, lvl, yp, min, max;
-	char st;
+	int i, mana, lvl, yp, min, max;
 
 	CelDrawTo(out, RIGHT_PANEL_X, 351, pSpellBkCel, 1, SPANEL_WIDTH);
 	if (gbIsHellfire && sbooktab < 5) {
@@ -1871,9 +1875,9 @@ void DrawSpellBook(CelOutputBuffer out)
 
 	yp = 55;
 	for (i = 1; i < 8; i++) {
-		sn = SpellPages[sbooktab][i - 1];
-		if (sn != -1 && spl & GetSpellBitmask(sn)) {
-			st = GetSBookTrans(sn, true);
+		spell_id sn = SpellPages[sbooktab][i - 1];
+		if (sn != SPL_INVALID && spl & GetSpellBitmask(sn)) {
+			spell_type st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
 			DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, pSBkIconCels, SpellITbl[sn], 37);
 			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {

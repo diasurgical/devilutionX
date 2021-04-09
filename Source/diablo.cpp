@@ -1695,7 +1695,7 @@ void LoadAllGFX()
 /**
  * @param lvldir method of entry
  */
-void CreateLevel(int lvldir)
+void CreateLevel(lvl_entry lvldir)
 {
 	switch (leveltype) {
 	case DTYPE_TOWN:
@@ -1758,7 +1758,7 @@ static void UpdateMonsterLights()
 	}
 }
 
-void LoadGameLevel(bool firstflag, int lvldir)
+void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
 	int i, j;
 	bool visited;
