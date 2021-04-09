@@ -70,9 +70,9 @@ static void gamemenu_update_single(TMenuItem *pMenuItems)
 
 	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
 
-	enable = FALSE;
+	enable = false;
 	if (plr[myplr]._pmode != PM_DEATH && !deathflag)
-		enable = TRUE;
+		enable = true;
 
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
@@ -116,21 +116,21 @@ void gamemenu_new_game(bool bActivate)
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		plr[i]._pmode = PM_QUIT;
-		plr[i]._pInvincible = TRUE;
+		plr[i]._pInvincible = true;
 	}
 
-	deathflag = FALSE;
+	deathflag = false;
 	force_redraw = 255;
-	scrollrt_draw_game_screen(TRUE);
-	CornerStone.activated = FALSE;
-	gbRunGame = FALSE;
+	scrollrt_draw_game_screen(true);
+	CornerStone.activated = false;
+	gbRunGame = false;
 	gamemenu_off();
 }
 
 void gamemenu_quit_game(bool bActivate)
 {
 	gamemenu_new_game(bActivate);
-	gbRunGameResult = FALSE;
+	gbRunGameResult = false;
 }
 
 void gamemenu_load_game(bool bActivate)
@@ -141,11 +141,11 @@ void gamemenu_load_game(bool bActivate)
 	InitDiabloMsg(EMSG_LOADING);
 	force_redraw = 255;
 	DrawAndBlit();
-	LoadGame(FALSE);
+	LoadGame(false);
 	ClrDiabloMsg();
-	CornerStone.activated = FALSE;
+	CornerStone.activated = false;
 	PaletteFadeOut(8);
-	deathflag = FALSE;
+	deathflag = false;
 	force_redraw = 255;
 	DrawAndBlit();
 	LoadPWaterPalette();
@@ -185,7 +185,7 @@ void gamemenu_save_game(bool bActivate)
 
 void gamemenu_restart_town(bool bActivate)
 {
-	NetSendCmd(TRUE, CMD_RETOWN);
+	NetSendCmd(true, CMD_RETOWN);
 }
 
 static void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
@@ -279,11 +279,11 @@ void gamemenu_music_volume(bool bActivate)
 
 	if (bActivate) {
 		if (gbMusicOn) {
-			gbMusicOn = FALSE;
+			gbMusicOn = false;
 			music_stop();
 			sound_get_or_set_music_volume(VOLUME_MIN);
 		} else {
-			gbMusicOn = TRUE;
+			gbMusicOn = true;
 			sound_get_or_set_music_volume(VOLUME_MAX);
 			int lt;
 			if (currlevel >= 17) {
@@ -300,11 +300,11 @@ void gamemenu_music_volume(bool bActivate)
 		sound_get_or_set_music_volume(volume);
 		if (volume == VOLUME_MIN) {
 			if (gbMusicOn) {
-				gbMusicOn = FALSE;
+				gbMusicOn = false;
 				music_stop();
 			}
 		} else if (!gbMusicOn) {
-			gbMusicOn = TRUE;
+			gbMusicOn = true;
 			int lt;
 			if (currlevel >= 17) {
 				if (currlevel > 20)
@@ -324,11 +324,11 @@ void gamemenu_sound_volume(bool bActivate)
 	int volume;
 	if (bActivate) {
 		if (gbSoundOn) {
-			gbSoundOn = FALSE;
+			gbSoundOn = false;
 			sound_stop();
 			sound_get_or_set_sound_volume(VOLUME_MIN);
 		} else {
-			gbSoundOn = TRUE;
+			gbSoundOn = true;
 			sound_get_or_set_sound_volume(VOLUME_MAX);
 		}
 	} else {
@@ -336,11 +336,11 @@ void gamemenu_sound_volume(bool bActivate)
 		sound_get_or_set_sound_volume(volume);
 		if (volume == VOLUME_MIN) {
 			if (gbSoundOn) {
-				gbSoundOn = FALSE;
+				gbSoundOn = false;
 				sound_stop();
 			}
 		} else if (!gbSoundOn) {
-			gbSoundOn = TRUE;
+			gbSoundOn = true;
 		}
 	}
 	PlaySFX(IS_TITLEMOV);

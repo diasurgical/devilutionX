@@ -861,14 +861,14 @@ static void DRLG_L1Shadows()
 
 			for (i = 0; i < 37; i++) {
 				if (SPATS[i].strig == sd[0][0]) {
-					patflag = TRUE;
+					patflag = true;
 					if (SPATS[i].s1 && SPATS[i].s1 != sd[1][1])
-						patflag = FALSE;
+						patflag = false;
 					if (SPATS[i].s2 && SPATS[i].s2 != sd[0][1])
-						patflag = FALSE;
+						patflag = false;
 					if (SPATS[i].s3 && SPATS[i].s3 != sd[1][0])
-						patflag = FALSE;
-					if (patflag == TRUE) {
+						patflag = false;
+					if (patflag == true) {
 						if (SPATS[i].nv1 && !L5dflags[x - 1][y - 1])
 							dungeon[x - 1][y - 1] = SPATS[i].nv1;
 						if (SPATS[i].nv2 && !L5dflags[x][y - 1])
@@ -951,52 +951,52 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 	for (i = 0; i < numt; i++) {
 		sx = random_(0, DMAXX - sw);
 		sy = random_(0, DMAXY - sh);
-		abort = FALSE;
+		abort = false;
 		found = 0;
 
-		while (abort == FALSE) {
-			abort = TRUE;
+		while (abort == false) {
+			abort = true;
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
 				sx++;
-				abort = FALSE;
+				abort = false;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
 				sy++;
-				abort = FALSE;
+				abort = false;
 			}
 
 			switch (noquad) {
 			case 0:
 				if (sx < cx && sy < cy)
-					abort = FALSE;
+					abort = false;
 				break;
 			case 1:
 				if (sx > cx && sy < cy)
-					abort = FALSE;
+					abort = false;
 				break;
 			case 2:
 				if (sx < cx && sy > cy)
-					abort = FALSE;
+					abort = false;
 				break;
 			case 3:
 				if (sx > cx && sy > cy)
-					abort = FALSE;
+					abort = false;
 				break;
 			}
 
 			ii = 2;
 
-			for (yy = 0; yy < sh && abort == TRUE; yy++) {
-				for (xx = 0; xx < sw && abort == TRUE; xx++) {
+			for (yy = 0; yy < sh && abort == true; yy++) {
+				for (xx = 0; xx < sw && abort == true; xx++) {
 					if (miniset[ii] && dungeon[xx + sx][sy + yy] != miniset[ii])
-						abort = FALSE;
+						abort = false;
 					if (L5dflags[xx + sx][sy + yy])
-						abort = FALSE;
+						abort = false;
 					ii++;
 				}
 			}
 
-			if (abort == FALSE) {
+			if (abort == false) {
 				if (++sx == DMAXX - sw) {
 					sx = 0;
 					if (++sy == DMAXY - sh)
@@ -1028,7 +1028,7 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 		quests[Q_PWATER]._qty = 2 * sy + 22;
 	}
 
-	if (setview == TRUE) {
+	if (setview == true) {
 		ViewX = 2 * sx + 19;
 		ViewY = 2 * sy + 20;
 	}
@@ -1113,18 +1113,18 @@ static void DRLG_L1Pass3()
 
 static void DRLG_LoadL1SP()
 {
-	L5setloadflag = FALSE;
+	L5setloadflag = false;
 	if (QuestStatus(Q_BUTCHER)) {
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", NULL);
-		L5setloadflag = TRUE;
+		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", NULL);
-		L5setloadflag = TRUE;
+		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_LTBANNER)) {
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", NULL);
-		L5setloadflag = TRUE;
+		L5setloadflag = true;
 	}
 }
 
@@ -1341,13 +1341,13 @@ static bool L5checkRoom(int x, int y, int width, int height)
 	for (j = 0; j < height; j++) {
 		for (i = 0; i < width; i++) {
 			if (i + x < 0 || i + x >= DMAXX || j + y < 0 || j + y >= DMAXY)
-				return FALSE;
+				return false;
 			if (dungeon[i + x][j + y])
-				return FALSE;
+				return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 static void L5roomGen(int x, int y, int w, int h, int dir)
@@ -1367,17 +1367,17 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 			cx1 = x - cw;
 			ran = L5checkRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
 			num++;
-		} while (ran == FALSE && num < 20);
+		} while (ran == false && num < 20);
 
-		if (ran == TRUE)
+		if (ran == true)
 			L5drawRoom(cx1, cy1, cw, ch);
 		cx2 = x + w;
 		ran2 = L5checkRoom(cx2, cy1 - 1, cw + 1, ch + 2);
-		if (ran2 == TRUE)
+		if (ran2 == true)
 			L5drawRoom(cx2, cy1, cw, ch);
-		if (ran == TRUE)
+		if (ran == true)
 			L5roomGen(cx1, cy1, cw, ch, 1);
-		if (ran2 == TRUE)
+		if (ran2 == true)
 			L5roomGen(cx2, cy1, cw, ch, 1);
 		return;
 	}
@@ -1389,17 +1389,17 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 		ry = y - height;
 		ran = L5checkRoom(rx - 1, ry - 1, width + 2, height + 1);
 		num++;
-	} while (ran == FALSE && num < 20);
+	} while (ran == false && num < 20);
 
-	if (ran == TRUE)
+	if (ran == true)
 		L5drawRoom(rx, ry, width, height);
 	ry2 = y + h;
 	ran2 = L5checkRoom(rx - 1, ry2, width + 2, height + 1);
-	if (ran2 == TRUE)
+	if (ran2 == true)
 		L5drawRoom(rx, ry2, width, height);
-	if (ran == TRUE)
+	if (ran == true)
 		L5roomGen(rx, ry, width, height, 0);
-	if (ran2 == TRUE)
+	if (ran2 == true)
 		L5roomGen(rx, ry2, width, height, 0);
 }
 
@@ -1559,15 +1559,15 @@ static int L5HWallOk(int i, int j)
 			break;
 	}
 
-	wallok = FALSE;
+	wallok = false;
 	if (dungeon[i + x][j] >= 3 && dungeon[i + x][j] <= 7)
-		wallok = TRUE;
+		wallok = true;
 	if (dungeon[i + x][j] >= 16 && dungeon[i + x][j] <= 24)
-		wallok = TRUE;
+		wallok = true;
 	if (dungeon[i + x][j] == 22)
-		wallok = FALSE;
+		wallok = false;
 	if (x == 1)
-		wallok = FALSE;
+		wallok = false;
 
 	if (wallok)
 		return x;
@@ -1585,15 +1585,15 @@ static int L5VWallOk(int i, int j)
 			break;
 	}
 
-	wallok = FALSE;
+	wallok = false;
 	if (dungeon[i][j + y] >= 3 && dungeon[i][j + y] <= 7)
-		wallok = TRUE;
+		wallok = true;
 	if (dungeon[i][j + y] >= 16 && dungeon[i][j + y] <= 24)
-		wallok = TRUE;
+		wallok = true;
 	if (dungeon[i][j + y] == 22)
-		wallok = FALSE;
+		wallok = false;
 	if (y == 1)
-		wallok = FALSE;
+		wallok = false;
 
 	if (wallok)
 		return y;
@@ -1745,7 +1745,7 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 {
 	int i, j;
 
-	if (topflag == TRUE) {
+	if (topflag == true) {
 		dungeon[sx + 2][sy] = 12;
 		dungeon[sx + 3][sy] = 12;
 		dungeon[sx + 4][sy] = 3;
@@ -1753,7 +1753,7 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 		dungeon[sx + 8][sy] = 12;
 		dungeon[sx + 9][sy] = 2;
 	}
-	if (bottomflag == TRUE) {
+	if (bottomflag == true) {
 		sy += 11;
 		dungeon[sx + 2][sy] = 10;
 		dungeon[sx + 3][sy] = 12;
@@ -1765,7 +1765,7 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 		}
 		sy -= 11;
 	}
-	if (leftflag == TRUE) {
+	if (leftflag == true) {
 		dungeon[sx][sy + 2] = 11;
 		dungeon[sx][sy + 3] = 11;
 		dungeon[sx][sy + 4] = 3;
@@ -1773,7 +1773,7 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 		dungeon[sx][sy + 8] = 11;
 		dungeon[sx][sy + 9] = 1;
 	}
-	if (rightflag == TRUE) {
+	if (rightflag == true) {
 		sx += 11;
 		dungeon[sx][sy + 2] = 14;
 		dungeon[sx][sy + 3] = 11;
@@ -1949,37 +1949,37 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 
 	for (sy = 0; sy < DMAXY - sh; sy++) {
 		for (sx = 0; sx < DMAXX - sw; sx++) {
-			found = TRUE;
+			found = true;
 			ii = 2;
-			for (yy = 0; yy < sh && found == TRUE; yy++) {
-				for (xx = 0; xx < sw && found == TRUE; xx++) {
+			for (yy = 0; yy < sh && found == true; yy++) {
+				for (xx = 0; xx < sw && found == true; xx++) {
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
-						found = FALSE;
+						found = false;
 					}
 					if (dflags[xx + sx][yy + sy] != 0) {
-						found = FALSE;
+						found = false;
 					}
 					ii++;
 				}
 			}
 			kk = sw * sh + 2;
-			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found == TRUE) {
+			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found == true) {
 				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
 				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 (fixed)
 				if (sx > 0 && dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
-					found = FALSE;
+					found = false;
 				}
 				if (sx < DMAXX - 1 && dungeon[sx + 1][sy] >= 84 && dungeon[sx + 1][sy] <= 100) {
-					found = FALSE;
+					found = false;
 				}
 				if (sy < DMAXY - 1 && dungeon[sx][sy + 1] >= 84 && dungeon[sx][sy + 1] <= 100) {
-					found = FALSE;
+					found = false;
 				}
 				if (sy > 0 && dungeon[sx][sy - 1] >= 84 && dungeon[sx][sy - 1] <= 100) {
-					found = FALSE;
+					found = false;
 				}
 			}
-			if (found == TRUE && random_(0, 100) < rndper) {
+			if (found == true && random_(0, 100) < rndper) {
 				for (yy = 0; yy < sh; yy++) {
 					for (xx = 0; xx < sw; xx++) {
 						if (miniset[kk] != 0) {
@@ -2540,25 +2540,25 @@ static void DRLG_L5(int entry)
 		L5ClearFlags();
 		DRLG_L5FloodTVal();
 
-		doneflag = TRUE;
+		doneflag = true;
 
 		if (QuestStatus(Q_PWATER)) {
 			if (entry == ENTRY_MAIN) {
-				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, true, -1, 0) < 0)
+					doneflag = false;
 			} else {
-				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, false, -1, 0) < 0)
+					doneflag = false;
 				ViewY--;
 			}
 		}
 		if (QuestStatus(Q_LTBANNER)) {
 			if (entry == ENTRY_MAIN) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1, 0) < 0)
+					doneflag = false;
 			} else {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1, 0) < 0)
+					doneflag = false;
 				if (entry == ENTRY_PREV) {
 					ViewX = 2 * setpc_x + 20;
 					ViewY = 2 * setpc_y + 28;
@@ -2569,82 +2569,82 @@ static void DRLG_L5(int entry)
 		} else if (entry == ENTRY_MAIN) {
 			if (currlevel < 21) {
 				if (!plr[myplr].pOriginalCathedral) {
-					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-						doneflag = FALSE;
-					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1, 0) < 0)
+						doneflag = false;
+					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+						doneflag = false;
 				} else {
-					if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-						doneflag = FALSE;
-					else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, true, -1, 0) < 0)
+						doneflag = false;
+					else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+						doneflag = false;
 				}
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, FALSE, -1, 6) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1, 6) < 0)
+					doneflag = false;
+				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+					doneflag = false;
 				ViewY++;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1, 0) < 0)
+					doneflag = false;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+						doneflag = false;
 				}
 				ViewY++;
 			}
 		} else if (!plr[myplr].pOriginalCathedral && entry == ENTRY_PREV) {
 			if (currlevel < 21) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1, 0) < 0)
+					doneflag = false;
+				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1, 1) < 0)
+					doneflag = false;
 				ViewY--;
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, FALSE, -1, 6) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1, 6) < 0)
+					doneflag = false;
+				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1, 1) < 0)
+					doneflag = false;
 				ViewY += 3;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1, 0) < 0)
+					doneflag = false;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1, 1) < 0)
+						doneflag = false;
 				}
 				ViewY += 3;
 			}
 		} else {
 			if (currlevel < 21) {
 				if (!plr[myplr].pOriginalCathedral) {
-					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-						doneflag = FALSE;
-					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1, 0) < 0)
+						doneflag = false;
+					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+						doneflag = false;
 				} else {
-					if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-						doneflag = FALSE;
-					else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, false, -1, 0) < 0)
+						doneflag = false;
+					else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1, 1) < 0)
+						doneflag = false;
 					ViewY--;
 				}
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, TRUE, -1, 6) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, true, -1, 6) < 0)
+					doneflag = false;
+				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+					doneflag = false;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1, 0) < 0)
+					doneflag = false;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+						doneflag = false;
 				}
 			}
 		}
-	} while (doneflag == FALSE);
+	} while (doneflag == false);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -2720,7 +2720,7 @@ static void DRLG_L5(int entry)
 
 	if (currlevel < 21) {
 		DRLG_L1Shadows();
-		DRLG_PlaceMiniSet(LAMPS, 5, 10, 0, 0, FALSE, -1, 4);
+		DRLG_PlaceMiniSet(LAMPS, 5, 10, 0, 0, false, -1, 4);
 		DRLG_L1Floor();
 	}
 

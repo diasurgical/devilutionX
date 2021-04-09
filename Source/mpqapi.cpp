@@ -553,24 +553,24 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 
 #ifdef CAN_SEEKP_BEYOND_EOF
 	if (!cur_archive.stream.seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
-		return FALSE;
+		return false;
 #else
 	// Ensure we do not seekp beyond EOF by filling the missing space.
 	std::streampos stream_end;
 	if (!cur_archive.stream.seekp(0, std::ios::end) || !cur_archive.stream.tellp(&stream_end))
-		return FALSE;
+		return false;
 	const std::uintmax_t cur_size = stream_end - cur_archive.stream_begin;
 	if (cur_size < pBlk->offset + offset_table_bytesize) {
 		if (cur_size < pBlk->offset) {
 			std::unique_ptr<char[]> filler(new char[pBlk->offset - cur_size]);
 			if (!cur_archive.stream.write(filler.get(), pBlk->offset - cur_size))
-				return FALSE;
+				return false;
 		}
 		if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))
-			return FALSE;
+			return false;
 	} else {
 		if (!cur_archive.stream.seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
-			return FALSE;
+			return false;
 	}
 #endif
 
@@ -583,7 +583,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 		pbData += len;
 		len = PkwareCompress(mpq_buf, len);
 		if (!cur_archive.stream.write((char *)mpq_buf, len))
-			return FALSE;
+			return false;
 		sectoroffsettable[cur_sector++] = SwapLE32(destsize);
 		destsize += len; // compressed length
 		if (dwLen > kSectorSize)
@@ -594,11 +594,11 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 
 	sectoroffsettable[num_sectors] = SwapLE32(destsize);
 	if (!cur_archive.stream.seekp(pBlk->offset, std::ios::beg))
-		return FALSE;
+		return false;
 	if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))
-		return FALSE;
+		return false;
 	if (!cur_archive.stream.seekp(destsize - offset_table_bytesize, std::ios::cur))
-		return FALSE;
+		return false;
 
 	if (destsize < pBlk->sizealloc) {
 		const uint32_t block_size = pBlk->sizealloc - destsize;
@@ -607,7 +607,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 			mpqapi_alloc_block(pBlk->sizealloc + pBlk->offset, block_size);
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 bool mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen)
@@ -619,9 +619,9 @@ bool mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen)
 	blockEntry = mpqapi_add_file(pszName, 0, 0);
 	if (!mpqapi_write_file_contents(pszName, pbData, dwLen, blockEntry)) {
 		mpqapi_remove_hash_entry(pszName);
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 void mpqapi_rename(char *pszOld, char *pszNew)
@@ -654,7 +654,7 @@ bool OpenMPQ(const char *pszArchive, DWORD dwChar)
 	InitHash();
 
 	if (!cur_archive.Open(pszArchive)) {
-		return FALSE;
+		return false;
 	}
 	if (cur_archive.sgpBlockTbl == NULL || cur_archive.sgpHashTbl == NULL) {
 		if (!cur_archive.exists) {
@@ -693,10 +693,10 @@ bool OpenMPQ(const char *pszArchive, DWORD dwChar)
 			cur_archive.WriteHeaderAndTables();
 #endif
 	}
-	return TRUE;
+	return true;
 on_error:
 	cur_archive.Close(/*clear_tables=*/true);
-	return FALSE;
+	return false;
 }
 
 bool mpqapi_flush_and_close(const char *pszArchive, bool bFree, DWORD dwChar)

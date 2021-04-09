@@ -113,7 +113,7 @@ bool SNetDestroy();
  *  playerid:     The player ID for the player to be dropped.
  *  flags:
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
 bool SNetDropPlayer(int playerid, DWORD flags);
 
@@ -126,7 +126,7 @@ bool SNetDropPlayer(int playerid, DWORD flags);
  *  dst:          The destination buffer for the data.
  *  length:       The maximum size of the destination buffer.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
 bool SNetGetGameInfo(int type, void *dst, unsigned int length);
 
@@ -137,7 +137,7 @@ bool SNetGetGameInfo(int type, void *dst, unsigned int length);
  *
  *  turns: A pointer to an integer that will receive the value.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
 bool
     SNetGetTurnsInTransit(
@@ -178,7 +178,7 @@ bool SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, 
  *
  *  type: The leave type. It doesn't appear to be important, no documentation available.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
 bool SNetLeaveGame(int type);
 
@@ -201,7 +201,7 @@ typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
  *  data:       A pointer to the data.
  *  databytes:  The amount of bytes that the data pointer contains.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
 bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
 
@@ -222,7 +222,7 @@ bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
  *  data:       A pointer to the data.
  *  databytes:  The amount of bytes that the data pointer contains.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
 bool SNetSendTurn(char *data, unsigned int databytes);
 
@@ -249,7 +249,7 @@ bool WINAPI SFileCloseFile(HANDLE hFile);
  *  pdwHeight:    An optional variable that receives the image height.
  *  pdwBpp:       An optional variable that receives the image bits per pixel.
  *
- *  Returns TRUE if the image was supported and loaded correctly, FALSE otherwise.
+ *  Returns true if the image was supported and loaded correctly, false otherwise.
  */
 bool
     SBmpLoadImage(
