@@ -256,7 +256,7 @@ int FindClosest(int sx, int sy, int rad)
 	return -1;
 }
 
-int GetSpellLevel(int id, int sn)
+int GetSpellLevel(int id, spell_id sn)
 {
 	int result;
 
@@ -2947,7 +2947,7 @@ void AddHealOther(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_HEALOTHER);
 	if (id == myplr) {
-		SetCursor_(CURSOR_HEALOTHER);
+		NewCursor(CURSOR_HEALOTHER);
 		if (sgbControllerActive)
 			TryIconCurs();
 	}
@@ -2992,7 +2992,7 @@ void AddIdentify(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 			if (sgbControllerActive)
 				FocusOnInventory();
 		}
-		SetCursor_(CURSOR_IDENTIFY);
+		NewCursor(CURSOR_IDENTIFY);
 	}
 }
 
@@ -3093,7 +3093,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 			PS_ROGUE70,
 			PS_WARR70
 		};
-		UseMana(id, 22);
+		UseMana(id, SPL_BLODBOIL);
 		missile[mi]._miVar1 = id;
 		int tmp = 3 * plr[id]._pLevel;
 		tmp <<= 7;
@@ -3121,7 +3121,7 @@ void AddRepair(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 			if (sgbControllerActive)
 				FocusOnInventory();
 		}
-		SetCursor_(CURSOR_REPAIR);
+		NewCursor(CURSOR_REPAIR);
 	}
 }
 
@@ -3137,7 +3137,7 @@ void AddRecharge(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 			if (sgbControllerActive)
 				FocusOnInventory();
 		}
-		SetCursor_(CURSOR_RECHARGE);
+		NewCursor(CURSOR_RECHARGE);
 	}
 }
 
@@ -3146,12 +3146,12 @@ void AddDisarm(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_DISARM);
 	if (id == myplr) {
-		SetCursor_(CURSOR_DISARM);
+		NewCursor(CURSOR_DISARM);
 		if (sgbControllerActive) {
 			if (pcursobj != -1)
 				NetSendCmdLocParam1(true, CMD_DISARMXY, cursmx, cursmy, pcursobj);
 			else
-				SetCursor_(CURSOR_HAND);
+				NewCursor(CURSOR_HAND);
 		}
 	}
 }
@@ -3283,7 +3283,7 @@ void AddResurrect(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 {
 	UseMana(id, SPL_RESURRECT);
 	if (id == myplr) {
-		SetCursor_(CURSOR_RESURRECT);
+		NewCursor(CURSOR_RESURRECT);
 		if (sgbControllerActive)
 			TryIconCurs();
 	}
@@ -3306,7 +3306,7 @@ void AddTelekinesis(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint3
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_TELEKINESIS);
 	if (id == myplr)
-		SetCursor_(CURSOR_TELEKINESIS);
+		NewCursor(CURSOR_TELEKINESIS);
 }
 
 void AddBoneSpirit(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)

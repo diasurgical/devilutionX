@@ -10,26 +10,76 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/** @todo add missing values and apply */
+enum _item_indexes : uint8_t {
+	IDI_GOLD,
+	IDI_WARRIOR,
+	IDI_WARRSHLD,
+	IDI_WARRCLUB,
+	IDI_ROGUE,
+	IDI_SORCERER,
+	IDI_CLEAVER,
+	IDI_FIRSTQUEST = IDI_CLEAVER,
+	IDI_SKCROWN,
+	IDI_INFRARING,
+	IDI_ROCK,
+	IDI_OPTAMULET,
+	IDI_TRING,
+	IDI_BANNER,
+	IDI_HARCREST,
+	IDI_STEELVEIL,
+	IDI_GLDNELIX,
+	IDI_ANVIL,
+	IDI_MUSHROOM,
+	IDI_BRAIN,
+	IDI_FUNGALTM,
+	IDI_SPECELIX,
+	IDI_BLDSTONE,
+	IDI_MAPOFDOOM,
+	IDI_LASTQUEST = IDI_MAPOFDOOM,
+	IDI_EAR,
+	IDI_HEAL,
+	IDI_MANA,
+	IDI_IDENTIFY,
+	IDI_PORTAL,
+	IDI_ARMOFVAL,
+	IDI_FULLHEAL,
+	IDI_FULLMANA,
+	IDI_GRISWOLD,
+	IDI_LGTFORGE,
+	IDI_LAZSTAFF,
+	IDI_RESURRECT,
+	IDI_OIL,
+	IDI_SHORTSTAFF,
+	IDI_BARDSWORD,
+	IDI_BARDDAGGER,
+	IDI_RUNEBOMB,
+	IDI_THEODORE,
+	IDI_AURIC,
+	IDI_NOTE1,
+	IDI_NOTE2,
+	IDI_NOTE3,
+	IDI_FULLNOTE,
+	IDI_BROWNSUIT,
+	IDI_GREYSUIT,
+};
 
-typedef enum item_drop_rate : uint8_t {
+enum item_drop_rate : uint8_t {
 	IDROP_NEVER,
 	IDROP_REGULAR,
 	IDROP_DOUBLE,
-} item_drop_rate;
+};
 
-typedef enum item_class : uint8_t {
+enum item_class : uint8_t {
 	ICLASS_NONE,
 	ICLASS_WEAPON,
 	ICLASS_ARMOR,
 	ICLASS_MISC,
 	ICLASS_GOLD,
 	ICLASS_QUEST,
-} item_class;
+};
 
-typedef enum item_equip_type : int8_t {
+enum item_equip_type : int8_t {
 	ILOC_NONE,
 	ILOC_ONEHAND,
 	ILOC_TWOHAND,
@@ -40,10 +90,10 @@ typedef enum item_equip_type : int8_t {
 	ILOC_UNEQUIPABLE,
 	ILOC_BELT,
 	ILOC_INVALID = -1,
-} item_equip_type;
+};
 
 /// Item graphic IDs; frame_num-11 of objcurs.cel.
-typedef enum item_cursor_graphic : uint8_t {
+enum item_cursor_graphic : uint8_t {
 	// clang-format off
 	ICURS_POTION_OF_FULL_MANA         = 0,
 	ICURS_SCROLL_OF                   = 1,
@@ -167,9 +217,9 @@ typedef enum item_cursor_graphic : uint8_t {
 	ICURS_BROWN_SUIT                  = 199,
 	ICURS_BOVINE                      = 226,
 	// clang-format on
-} item_cursor_graphic;
+};
 
-typedef enum item_type : int8_t {
+enum item_type : int8_t {
 	ITYPE_MISC,
 	ITYPE_SWORD,
 	ITYPE_AXE,
@@ -185,9 +235,9 @@ typedef enum item_type : int8_t {
 	ITYPE_RING,
 	ITYPE_AMULET,
 	ITYPE_NONE = -1,
-} item_type;
+};
 
-typedef enum unique_base_item : int8_t {
+enum unique_base_item : int8_t {
 	UITYPE_NONE,
 	UITYPE_SHORTBOW,
 	UITYPE_LONGBOW,
@@ -259,9 +309,9 @@ typedef enum unique_base_item : int8_t {
 	UITYPE_LAZSTAFF,
 	UITYPE_BOVINE,
 	UITYPE_INVALID = -1,
-} unique_base_item;
+};
 
-typedef enum item_special_effect {
+enum item_special_effect {
 	// clang-format off
 	ISPL_NONE           = 0x00000000,
 	ISPL_INFRAVISION    = 0x00000001,
@@ -297,9 +347,9 @@ typedef enum item_special_effect {
 	ISPL_3XDAMVDEM      = 0x40000000,
 	ISPL_ALLRESZERO     = 0x80000000,
 	// clang-format on
-} item_special_effect;
+};
 
-typedef enum item_misc_id : int8_t {
+enum item_misc_id : int8_t {
 	IMISC_NONE,
 	IMISC_USEFIRST,
 	IMISC_FULLHEAL,
@@ -356,9 +406,9 @@ typedef enum item_misc_id : int8_t {
 	IMISC_AURIC,
 	IMISC_NOTE,
 	IMISC_INVALID = -1,
-} item_misc_id;
+};
 
-typedef struct ItemDataStruct {
+struct ItemDataStruct {
 	enum item_drop_rate iRnd;
 	enum item_class iClass;
 	enum item_equip_type iLoc;
@@ -382,9 +432,9 @@ typedef struct ItemDataStruct {
 	bool iUsable;
 	Uint16 iValue;
 	Uint16 iMaxValue;
-} ItemDataStruct;
+};
 
-typedef enum item_effect_type {
+enum item_effect_type {
 	IPL_TOHIT,
 	IPL_TOHIT_CURSE,
 	IPL_DAMP,
@@ -481,15 +531,15 @@ typedef enum item_effect_type {
 	IPL_MANATOLIFE,
 	IPL_LIFETOMANA,
 	IPL_INVALID = -1,
-} item_effect_type;
+};
 
-typedef enum goodorevil {
+enum goodorevil {
 	GOE_ANY,
 	GOE_EVIL,
 	GOE_GOOD,
-} goodorevil;
+};
 
-typedef enum affix_item_type {
+enum affix_item_type {
 	// clang-format off
 	PLT_MISC  = 0x000001,
 	PLT_BOW   = 0x000010,
@@ -498,9 +548,9 @@ typedef enum affix_item_type {
 	PLT_SHLD  = 0x010000,
 	PLT_ARMO  = 0x100000,
 	// clang-format on
-} affix_item_type;
+};
 
-typedef struct PLStruct {
+struct PLStruct {
 	const char *PLName;
 	enum item_effect_type PLPower;
 	Sint32 PLParam1;
@@ -513,9 +563,9 @@ typedef struct PLStruct {
 	Sint32 PLMinVal;
 	Sint32 PLMaxVal;
 	Sint32 PLMultVal;
-} PLStruct;
+};
 
-typedef struct UItemStruct {
+struct UItemStruct {
 	const char *UIName;
 	enum unique_base_item UIItemId;
 	Sint8 UIMinLvl;
@@ -539,15 +589,11 @@ typedef struct UItemStruct {
 	enum item_effect_type UIPower6;
 	Sint32 UIParam11;
 	Sint32 UIParam12;
-} UItemStruct;
+};
 
 extern ItemDataStruct AllItemsList[];
 extern const PLStruct PL_Prefix[];
 extern const PLStruct PL_Suffix[];
 extern const UItemStruct UniqueItemList[];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

@@ -266,6 +266,8 @@ bool CheckThemeReqs(theme_id t)
 			rv = false;
 		}
 		break;
+	default:
+		break;
 	}
 
 	return rv;
@@ -347,6 +349,8 @@ static bool SpecialThemeFit(int i, theme_id t)
 		if (rv) {
 			treasureFlag = false;
 		}
+		break;
+	default:
 		break;
 	}
 
@@ -1058,6 +1062,8 @@ void CreateThemeRooms()
 		case THEME_WEAPONRACK:
 			Theme_WeaponRack(i);
 			break;
+		case THEME_NONE:
+			app_fatal("Unknown theme type: %d", themes[i].ttype);
 		}
 	}
 	InitObjFlag = false;

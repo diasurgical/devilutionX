@@ -1,8 +1,9 @@
 #pragma once
+#include "all.h"
 
 namespace devilution {
 
-extern int nDifficulty;
+extern _difficulty nDifficulty;
 
 void selgame_GameSelection_Init();
 void selgame_GameSelection_Focus(int value);

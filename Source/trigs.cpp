@@ -106,7 +106,7 @@ void InitTownTriggers()
 		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 		trigs[numtrigs]._tlvl = 17;
 		numtrigs++;
-		if (gbIsMultiplayer || quests[Q_GRAVE]._qactive == 3) {
+		if (gbIsMultiplayer || quests[Q_GRAVE]._qactive == QUEST_DONE) {
 			trigs[numtrigs]._tx = 36;
 			trigs[numtrigs]._ty = 24;
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;

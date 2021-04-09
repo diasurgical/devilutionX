@@ -7,9 +7,17 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum _scroll_direction : uint8_t {
+	SDIR_NONE,
+	SDIR_N,
+	SDIR_NE,
+	SDIR_E,
+	SDIR_SE,
+	SDIR_S,
+	SDIR_SW,
+	SDIR_W,
+	SDIR_NW,
+};
 
 // Defined in SourceX/controls/plctrls.cpp
 extern bool sgbControllerActive;
@@ -45,9 +53,5 @@ void ScrollView();
 void EnableFrameCount();
 void scrollrt_draw_game_screen(bool draw_cursor);
 void DrawAndBlit();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

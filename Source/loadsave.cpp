@@ -504,7 +504,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	file->skip(14); // Available bytes
 
 	pPlayer->pDiabloKillLevel = file->nextLE<Uint32>();
-	pPlayer->pDifficulty = file->nextLE<Uint32>();
+	pPlayer->pDifficulty = (_difficulty)file->nextLE<Uint32>();
 	pPlayer->pDamAcFlags = file->nextLE<Uint32>();
 	file->skip(20); // Available bytes
 	CalcPlrItemVals(p, false);
@@ -529,7 +529,7 @@ static void LoadMonster(LoadHelper *file, int i)
 
 	pMonster->_mMTidx = file->nextLE<Sint32>();
 	pMonster->_mmode = (MON_MODE)file->nextLE<Sint32>();
-	pMonster->_mgoal = file->nextLE<Uint8>();
+	pMonster->_mgoal = (monster_goal)file->nextLE<Uint8>();
 	file->skip(3); // Alignment
 	pMonster->_mgoalvar1 = file->nextLE<Sint32>();
 	pMonster->_mgoalvar2 = file->nextLE<Sint32>();
@@ -729,7 +729,7 @@ static void LoadQuest(LoadHelper *file, int i)
 
 	pQuest->_qlevel = file->nextLE<Uint8>();
 	pQuest->_qtype = file->nextLE<Uint8>();
-	pQuest->_qactive = file->nextLE<Uint8>();
+	pQuest->_qactive = (quest_state)file->nextLE<Uint8>();
 	pQuest->_qlvltype = (dungeon_type)file->nextLE<Uint8>();
 	pQuest->_qtx = file->nextLE<Sint32>();
 	pQuest->_qty = file->nextLE<Sint32>();
@@ -1165,7 +1165,7 @@ void LoadGame(bool firstflag)
 	ProcessVisionList();
 	missiles_process_charge();
 	ResetPal();
-	SetCursor_(CURSOR_HAND);
+	NewCursor(CURSOR_HAND);
 	gbProcessPlayers = true;
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {

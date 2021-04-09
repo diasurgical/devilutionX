@@ -297,7 +297,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	pPlayer->pDiabloKillLevel = SwapLE32(pPack->pDiabloKillLevel);
 	pPlayer->pBattleNet = pPack->pBattleNet;
 	pPlayer->pManaShield = SwapLE32(pPack->pManaShield);
-	pPlayer->pDifficulty = SwapLE32(pPack->pDifficulty);
+	pPlayer->pDifficulty = (_difficulty)SwapLE32(pPack->pDifficulty);
 	pPlayer->pDamAcFlags = SwapLE32(pPack->pDamAcFlags);
 }
 

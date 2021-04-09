@@ -7,6 +7,7 @@
 
 #include "engine.h"
 #include "spelldat.h"
+#include "spells.h"
 
 namespace devilution {
 

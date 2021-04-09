@@ -137,7 +137,7 @@ void gamemenu_load_game(bool bActivate)
 {
 	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
 	gamemenu_off();
-	SetCursor_(CURSOR_NONE);
+	NewCursor(CURSOR_NONE);
 	InitDiabloMsg(EMSG_LOADING);
 	force_redraw = 255;
 	DrawAndBlit();
@@ -150,7 +150,7 @@ void gamemenu_load_game(bool bActivate)
 	DrawAndBlit();
 	LoadPWaterPalette();
 	PaletteFadeIn(8);
-	SetCursor_(CURSOR_HAND);
+	NewCursor(CURSOR_HAND);
 	interface_msg_pump();
 	SetWindowProc(saveProc);
 }
@@ -167,7 +167,7 @@ void gamemenu_save_game(bool bActivate)
 	}
 
 	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
-	SetCursor_(CURSOR_NONE);
+	NewCursor(CURSOR_NONE);
 	gamemenu_off();
 	InitDiabloMsg(EMSG_SAVING);
 	force_redraw = 255;
@@ -175,7 +175,7 @@ void gamemenu_save_game(bool bActivate)
 	SaveGame();
 	ClrDiabloMsg();
 	force_redraw = 255;
-	SetCursor_(CURSOR_HAND);
+	NewCursor(CURSOR_HAND);
 	if (CornerStone.activated) {
 		items_427A72();
 	}

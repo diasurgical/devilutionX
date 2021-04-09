@@ -44,7 +44,7 @@ enum : uint8_t {
 	UMT_NAKRUL,
 };
 
-enum MON_MODE {
+enum MON_MODE : uint8_t {
 	MM_STAND,
 	/** Movement towards N, NW, or NE */
 	MM_WALK,
@@ -66,6 +66,32 @@ enum MON_MODE {
 	MM_STONE,
 	MM_HEAL,
 	MM_TALK,
+};
+
+enum {
+	MA_STAND,
+	MA_WALK,
+	MA_ATTACK,
+	MA_GOTHIT,
+	MA_DEATH,
+	MA_SPECIAL,
+};
+
+enum monster_goal : uint8_t {
+	MGOAL_NONE,
+	MGOAL_NORMAL,
+	MGOAL_RETREAT,
+	MGOAL_HEALING,
+	MGOAL_MOVE,
+	MGOAL_ATTACK2,
+	MGOAL_INQUIRING,
+	MGOAL_TALKING,
+};
+
+enum placeflag : uint8_t {
+	PLACE_SCATTER = 1,
+	PLACE_SPECIAL = 2,
+	PLACE_UNIQUE  = 4,
 };
 
 struct AnimStruct {
@@ -99,7 +125,7 @@ struct CMonster {
 struct MonsterStruct { // note: missing field _mAFNum
 	Sint32 _mMTidx;
 	MON_MODE _mmode;
-	Uint8 _mgoal;
+	monster_goal _mgoal;
 	Sint32 _mgoalvar1;
 	Sint32 _mgoalvar2;
 	Sint32 _mgoalvar3;

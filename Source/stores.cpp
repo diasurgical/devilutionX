@@ -1299,7 +1299,7 @@ void S_SBuyEnter()
 			StartStore(STORE_NOMONEY);
 		} else {
 			plr[myplr].HoldItem = smithitem[idx];
-			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
+			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
 			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = true;
@@ -1309,7 +1309,7 @@ void S_SBuyEnter()
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
-			SetCursor_(CURSOR_HAND);
+			NewCursor(CURSOR_HAND);
 		}
 	}
 }
@@ -1364,7 +1364,7 @@ void S_SPBuyEnter()
 			StartStore(STORE_NOMONEY);
 		} else {
 			plr[myplr].HoldItem = premiumitem[idx];
-			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
+			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
 			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = true;
@@ -1374,7 +1374,7 @@ void S_SPBuyEnter()
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
-			SetCursor_(CURSOR_HAND);
+			NewCursor(CURSOR_HAND);
 		}
 	}
 }
@@ -1388,9 +1388,9 @@ bool StoreGoldFit(int idx)
 	if (cost % GOLD_MAX_LIMIT != 0)
 		sz++;
 
-	SetCursor_(storehold[idx]._iCurs + CURSOR_FIRSTITEM);
+	NewCursor(storehold[idx]._iCurs + CURSOR_FIRSTITEM);
 	numsqrs = cursW / 28 * (cursH / 28);
-	SetCursor_(CURSOR_HAND);
+	NewCursor(CURSOR_HAND);
 
 	if (numsqrs >= sz)
 		return true;
@@ -1628,7 +1628,7 @@ void S_WBuyEnter()
 			StartStore(STORE_NOMONEY);
 		} else {
 			plr[myplr].HoldItem = witchitem[idx];
-			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
+			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
 			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = true;
@@ -1639,7 +1639,7 @@ void S_WBuyEnter()
 			else
 				StartStore(STORE_NOROOM);
 
-			SetCursor_(CURSOR_HAND);
+			NewCursor(CURSOR_HAND);
 		}
 	}
 }
@@ -1802,7 +1802,7 @@ void S_BBuyEnter()
 
 	plr[myplr].HoldItem = boyitem;
 	plr[myplr].HoldItem._iIvalue = price;
-	SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
+	NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	bool done = false;
 	if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
@@ -1815,7 +1815,7 @@ void S_BBuyEnter()
 
 	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
 
-	SetCursor_(CURSOR_HAND);
+	NewCursor(CURSOR_HAND);
 }
 
 void StoryIdItem()
@@ -1935,7 +1935,7 @@ void S_HBuyEnter()
 			StartStore(STORE_NOMONEY);
 		} else {
 			plr[myplr].HoldItem = healitem[idx];
-			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
+			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
 			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = true;
@@ -1946,7 +1946,7 @@ void S_HBuyEnter()
 			else
 				StartStore(STORE_NOROOM);
 
-			SetCursor_(CURSOR_HAND);
+			NewCursor(CURSOR_HAND);
 		}
 	}
 }

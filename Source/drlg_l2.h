@@ -33,7 +33,7 @@ extern BYTE predungeon[DMAXX][DMAXY];
 void InitDungeon();
 void LoadL2Dungeon(const char *sFileName, int vx, int vy);
 void LoadPreL2Dungeon(const char *sFileName, int vx, int vy);
-void CreateL2Dungeon(DWORD rseed, int entry);
+void CreateL2Dungeon(DWORD rseed, lvl_entry entry);
 
 #ifdef __cplusplus
 }

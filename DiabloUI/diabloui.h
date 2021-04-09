@@ -3,14 +3,32 @@
 
 namespace devilution {
 
-typedef struct _uidefaultstats {
+enum _mainmenu_selections : uint8_t {
+	MAINMENU_NONE,
+	MAINMENU_SINGLE_PLAYER,
+	MAINMENU_MULTIPLAYER,
+	MAINMENU_REPLAY_INTRO,
+	MAINMENU_SHOW_SUPPORT,
+	MAINMENU_SHOW_CREDITS,
+	MAINMENU_EXIT_DIABLO,
+	MAINMENU_ATTRACT_MODE,
+};
+
+enum _selhero_selections : uint8_t {
+	SELHERO_NEW_DUNGEON,
+	SELHERO_CONTINUE,
+	SELHERO_CONNECT,
+	SELHERO_PREVIOUS,
+};
+
+struct _uidefaultstats {
 	Uint16 strength;
 	Uint16 magic;
 	Uint16 dexterity;
 	Uint16 vitality;
-} _uidefaultstats;
+};
 
-typedef struct _uiheroinfo {
+struct _uiheroinfo {
 	struct _uiheroinfo *next;
 	char name[16];
 	Uint16 level;
@@ -23,7 +41,7 @@ typedef struct _uiheroinfo {
 	Sint32 gold;
 	Sint32 hassaved;
 	bool spawned;
-} _uiheroinfo;
+};
 
 void UiDestroy();
 void UiTitleDialog();
@@ -31,10 +49,10 @@ void UiSetSpawned(bool bSpawned);
 void UiInitialize();
 bool UiValidPlayerName(const char *name); /* check */
 void UiSelHeroMultDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool (*fncreate)(_uiheroinfo *), bool (*fnremove)(_uiheroinfo *), void (*fnstats)(unsigned int, _uidefaultstats *), _selhero_selections *dlgresult, char (*name)[16]);
-void UiSelHeroSingDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool (*fncreate)(_uiheroinfo *), bool (*fnremove)(_uiheroinfo *), void (*fnstats)(unsigned int, _uidefaultstats *), _selhero_selections *dlgresult, char (*name)[16], int *difficulty);
+void UiSelHeroSingDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool (*fncreate)(_uiheroinfo *), bool (*fnremove)(_uiheroinfo *), void (*fnstats)(unsigned int, _uidefaultstats *), _selhero_selections *dlgresult, char (*name)[16], _difficulty *difficulty);
 bool UiCreditsDialog();
 bool UiSupportDialog();
-bool UiMainMenuDialog(const char *name, int *pdwResult, void (*fnSound)(const char *file), int attractTimeOut);
+bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut);
 bool UiProgressDialog(const char *msg, int enable, int (*fnfunc)(), int rate);
 void UiProfileCallback();
 void UiProfileDraw();

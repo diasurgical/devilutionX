@@ -10,22 +10,18 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef enum item_color {
+enum item_color {
 	// clang-format off
 	ICOL_WHITE = PAL16_YELLOW + 5,
 	ICOL_BLUE  = PAL16_BLUE + 5,
 	ICOL_RED   = PAL16_RED + 5,
 	// clang-format on
-} item_color;
+};
 
-typedef struct InvXY {
+struct InvXY {
 	Sint32 X;
 	Sint32 Y;
-} InvXY;
+};
 
 extern bool invflag;
 extern bool drawsbarflag;
@@ -75,9 +71,5 @@ bool DropItemBeforeTrig();
 /* data */
 
 extern int AP2x2Tbl[10];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

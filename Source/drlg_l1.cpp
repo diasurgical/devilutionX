@@ -2506,7 +2506,7 @@ static void DRLG_L5CornerFix()
 	}
 }
 
-static void DRLG_L5(int entry)
+static void DRLG_L5(lvl_entry entry)
 {
 	int i, j;
 	LONG minarea;
@@ -2734,7 +2734,7 @@ static void DRLG_L5(int entry)
 	DRLG_CheckQuests(setpc_x, setpc_y);
 }
 
-void CreateL5Dungeon(DWORD rseed, int entry)
+void CreateL5Dungeon(DWORD rseed, lvl_entry entry)
 {
 	int i, j;
 

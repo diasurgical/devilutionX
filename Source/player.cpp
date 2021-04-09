@@ -1304,7 +1304,7 @@ void PM_ChangeOffset(int pnum)
 /**
  * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, direction EndDir, int sdir, int variant)
+void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, direction EndDir, _scroll_direction sdir, int variant)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartWalk: illegal player %d", pnum);
@@ -1764,7 +1764,7 @@ StartPlayerKill(int pnum, int earflag)
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
 				PlrDeadItem(pnum, &p->HoldItem, 0, 0);
-				SetCursor_(CURSOR_HAND);
+				NewCursor(CURSOR_HAND);
 			}
 
 			if (!diablolevel) {
@@ -3733,13 +3733,13 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 void CheckPlrSpell()
 {
 	bool addflag = false;
-	int rspell, sd, sl;
+	int sd, sl;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
 		app_fatal("CheckPlrSpell: illegal player %d", myplr);
 	}
 
-	rspell = plr[myplr]._pRSpell;
+	spell_id rspell = plr[myplr]._pRSpell;
 	if (rspell == SPL_INVALID) {
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			PlaySFX(PS_WARR34);
@@ -3962,38 +3962,37 @@ void SyncInitPlr(int pnum)
 
 void CheckStats(int p)
 {
-	int i;
-
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("CheckStats: illegal player %d", p);
 	}
 
-	for (i = 0; i < 4; i++) {
+	for (int i = ATTRIB_STR; i <= ATTRIB_VIT; i++) {
+		int maxStatPoint = plr[p].GetMaximumAttributeValue((attribute_id)i);
 		switch (i) {
 		case ATTRIB_STR:
-			if (plr[p]._pBaseStr > plr[p].GetMaximumAttributeValue(ATTRIB_STR)) {
-				plr[p]._pBaseStr = plr[p].GetMaximumAttributeValue(ATTRIB_STR);
+			if (plr[p]._pBaseStr > maxStatPoint) {
+				plr[p]._pBaseStr = maxStatPoint;
 			} else if (plr[p]._pBaseStr < 0) {
 				plr[p]._pBaseStr = 0;
 			}
 			break;
 		case ATTRIB_MAG:
-			if (plr[p]._pBaseMag > plr[p].GetMaximumAttributeValue(ATTRIB_MAG)) {
-				plr[p]._pBaseMag = plr[p].GetMaximumAttributeValue(ATTRIB_MAG);
+			if (plr[p]._pBaseMag > maxStatPoint) {
+				plr[p]._pBaseMag = maxStatPoint;
 			} else if (plr[p]._pBaseMag < 0) {
 				plr[p]._pBaseMag = 0;
 			}
 			break;
 		case ATTRIB_DEX:
-			if (plr[p]._pBaseDex > plr[p].GetMaximumAttributeValue(ATTRIB_DEX)) {
-				plr[p]._pBaseDex = plr[p].GetMaximumAttributeValue(ATTRIB_DEX);
+			if (plr[p]._pBaseDex > maxStatPoint) {
+				plr[p]._pBaseDex = maxStatPoint;
 			} else if (plr[p]._pBaseDex < 0) {
 				plr[p]._pBaseDex = 0;
 			}
 			break;
 		case ATTRIB_VIT:
-			if (plr[p]._pBaseVit > plr[p].GetMaximumAttributeValue(ATTRIB_VIT)) {
-				plr[p]._pBaseVit = plr[p].GetMaximumAttributeValue(ATTRIB_VIT);
+			if (plr[p]._pBaseVit > maxStatPoint) {
+				plr[p]._pBaseVit = maxStatPoint;
 			} else if (plr[p]._pBaseVit < 0) {
 				plr[p]._pBaseVit = 0;
 			}
@@ -4004,13 +4003,11 @@ void CheckStats(int p)
 
 void ModifyPlrStr(int p, int l)
 {
-	int max;
-
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("ModifyPlrStr: illegal player %d", p);
 	}
 
-	max = plr[p].GetMaximumAttributeValue(ATTRIB_STR);
+	int max = plr[p].GetMaximumAttributeValue(ATTRIB_STR);
 	if (plr[p]._pBaseStr + l > max) {
 		l = max - plr[p]._pBaseStr;
 	}
@@ -4033,13 +4030,11 @@ void ModifyPlrStr(int p, int l)
 
 void ModifyPlrMag(int p, int l)
 {
-	int max, ms;
-
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("ModifyPlrMag: illegal player %d", p);
 	}
 
-	max = plr[p].GetMaximumAttributeValue(ATTRIB_MAG);
+	int max = plr[p].GetMaximumAttributeValue(ATTRIB_MAG);
 	if (plr[p]._pBaseMag + l > max) {
 		l = max - plr[p]._pBaseMag;
 	}
@@ -4047,7 +4042,7 @@ void ModifyPlrMag(int p, int l)
 	plr[p]._pMagic += l;
 	plr[p]._pBaseMag += l;
 
-	ms = l << 6;
+	int ms = l << 6;
 	if (plr[p]._pClass == PC_SORCERER) {
 		ms <<= 1;
 	} else if (plr[p]._pClass == PC_BARD) {
@@ -4070,13 +4065,11 @@ void ModifyPlrMag(int p, int l)
 
 void ModifyPlrDex(int p, int l)
 {
-	int max;
-
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("ModifyPlrDex: illegal player %d", p);
 	}
 
-	max = plr[p].GetMaximumAttributeValue(ATTRIB_DEX);
+	int max = plr[p].GetMaximumAttributeValue(ATTRIB_DEX);
 	if (plr[p]._pBaseDex + l > max) {
 		l = max - plr[p]._pBaseDex;
 	}
@@ -4096,13 +4089,11 @@ void ModifyPlrDex(int p, int l)
 
 void ModifyPlrVit(int p, int l)
 {
-	int max, ms;
-
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("ModifyPlrVit: illegal player %d", p);
 	}
 
-	max = plr[p].GetMaximumAttributeValue(ATTRIB_VIT);
+	int max = plr[p].GetMaximumAttributeValue(ATTRIB_VIT);
 	if (plr[p]._pBaseVit + l > max) {
 		l = max - plr[p]._pBaseVit;
 	}
@@ -4110,7 +4101,7 @@ void ModifyPlrVit(int p, int l)
 	plr[p]._pVitality += l;
 	plr[p]._pBaseVit += l;
 
-	ms = l << 6;
+	int ms = l << 6;
 	if (plr[p]._pClass == PC_WARRIOR) {
 		ms <<= 1;
 	} else if (plr[p]._pClass == PC_BARBARIAN) {
@@ -4316,7 +4307,7 @@ void PlayDungMsgs()
 	} else if (currlevel == 17 && !plr[myplr]._pLvlVisited[17] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs2 & 1)) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER1;
-		quests[Q_DEFILER]._qactive = 2;
+		quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
 		quests[Q_DEFILER]._qlog = 1;
 		quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
 		plr[myplr].pDungMsgs2 |= 1;

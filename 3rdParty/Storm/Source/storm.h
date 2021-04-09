@@ -5,7 +5,13 @@
 #include <string>
 namespace devilution {
 
-typedef struct PCXHeader {
+enum conn_type {
+	SELCONN_ZT,
+	SELCONN_TCP,
+	SELCONN_LOOPBACK,
+};
+
+struct PCXHeader {
 	Uint8 Manufacturer;
 	Uint8 Version;
 	Uint8 Encoding;
@@ -24,9 +30,9 @@ typedef struct PCXHeader {
 	Uint16 HscreenSize;
 	Uint16 VscreenSize;
 	Uint8 Filler[54];
-} PCXHeader;
+};
 
-typedef struct _SNETCAPS {
+struct _SNETCAPS {
 	Uint32 size;
 	Uint32 flags;
 	Uint32 maxmessagesize;
@@ -36,14 +42,14 @@ typedef struct _SNETCAPS {
 	Uint32 latencyms;
 	Uint32 defaultturnssec;
 	Uint32 defaultturnsintransit;
-} _SNETCAPS;
+};
 
-typedef struct _SNETEVENT {
+struct _SNETEVENT {
 	Uint32 eventid;
 	Uint32 playerid;
 	void *data;
 	Uint32 databytes;
-} _SNETEVENT;
+};
 
 // Note to self: Linker error => forgot a return value in cpp
 

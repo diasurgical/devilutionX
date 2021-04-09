@@ -26,6 +26,18 @@
 
 namespace devilution {
 
+enum direction {
+	DIR_S,
+	DIR_SW,
+	DIR_W,
+	DIR_NW,
+	DIR_N,
+	DIR_NE,
+	DIR_E,
+	DIR_SE,
+	DIR_OMNI,
+};
+
 // `malloc` that returns a user-friendly error on OOM.
 //
 // Defined as a macro so that:

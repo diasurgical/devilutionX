@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "scrollrt.h"
+
 namespace devilution {
 
 enum dungeon_type : int8_t {
@@ -20,6 +22,46 @@ enum dungeon_type : int8_t {
 	DTYPE_NONE = -1,
 };
 
+enum lvl_entry : uint8_t {
+	ENTRY_MAIN,
+	ENTRY_PREV,
+	ENTRY_SETLVL,
+	ENTRY_RTNLVL,
+	ENTRY_LOAD,
+	ENTRY_WARPLVL,
+	ENTRY_TWARPDN,
+	ENTRY_TWARPUP,
+};
+
+enum {
+	// clang-format off
+	DLRG_HDOOR     = 0x01,
+	DLRG_VDOOR     = 0x02,
+	DLRG_CHAMBER   = 0x40,
+	DLRG_PROTECTED = 0x80,
+	// clang-format on
+};
+
+enum {
+	// clang-format off
+	BFLAG_MISSILE     = 0x01,
+	BFLAG_VISIBLE     = 0x02,
+	BFLAG_DEAD_PLAYER = 0x04,
+	BFLAG_POPULATED   = 0x08,
+	BFLAG_MONSTLR     = 0x10,
+	BFLAG_PLAYERLR    = 0x20,
+	BFLAG_LIT         = 0x40,
+	BFLAG_EXPLORED    = 0x80,
+	// clang-format on
+};
+
+enum _difficulty : uint8_t {
+	DIFF_NORMAL,
+	DIFF_NIGHTMARE,
+	DIFF_HELL,
+	NUM_DIFFICULTIES,
+};
+
 struct ScrollStruct {
 	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff */
 	Sint32 _sxoff;
@@ -27,7 +69,7 @@ struct ScrollStruct {
 	Sint32 _syoff;
 	Sint32 _sdx;
 	Sint32 _sdy;
-	Sint32 _sdir;
+	_scroll_direction _sdir;
 };
 
 struct THEME_LOC {
@@ -75,7 +117,7 @@ extern int dminx;
 extern int dminy;
 extern int dmaxx;
 extern int dmaxy;
-extern int gnDifficulty;
+extern _difficulty gnDifficulty;
 extern dungeon_type leveltype;
 extern BYTE currlevel;
 extern bool setlevel;

@@ -105,7 +105,7 @@ void InitQuests()
 		}
 	} else {
 		for (i = 0; i < MAXQUESTS; i++) {
-			if (!(questlist[i]._qflags & QUEST_ANY)) {
+			if (!(questlist[i]._qflags == QUEST_ANY)) {
 				quests[i]._qactive = QUEST_NOTAVAIL;
 			}
 		}
@@ -119,7 +119,7 @@ void InitQuests()
 	initiatedQuests = 0;
 
 	for (z = 0; z < MAXQUESTS; z++) {
-		if (gbIsMultiplayer && !(questlist[z]._qflags & QUEST_ANY))
+		if (gbIsMultiplayer && !(questlist[z]._qflags == QUEST_ANY))
 			continue;
 		quests[z]._qtype = questlist[z]._qdtype;
 		if (gbIsMultiplayer) {
@@ -292,7 +292,7 @@ bool QuestStatus(int i)
 		return false;
 	if (quests[i]._qactive == QUEST_NOTAVAIL)
 		return false;
-	if (gbIsMultiplayer && !(questlist[i]._qflags & QUEST_ANY))
+	if (gbIsMultiplayer && questlist[i]._qflags != QUEST_ANY)
 		return false;
 	return true;
 }
@@ -711,20 +711,20 @@ void ResyncMPQuests()
 	}
 	if (QuestStatus(Q_BETRAYER))
 		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
-	if (quests[Q_GRAVE]._qactive == 1 && currlevel == quests[Q_GRAVE]._qlevel - 1) {
-		quests[Q_GRAVE]._qactive = 2;
+	if (quests[Q_GRAVE]._qactive == QUEST_INIT && currlevel == quests[Q_GRAVE]._qlevel - 1) {
+		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, Q_GRAVE);
 	}
-	if (quests[Q_DEFILER]._qactive == 1 && currlevel == quests[Q_DEFILER]._qlevel - 1) {
-		quests[Q_DEFILER]._qactive = 2;
+	if (quests[Q_DEFILER]._qactive == QUEST_INIT && currlevel == quests[Q_DEFILER]._qlevel - 1) {
+		quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, Q_DEFILER);
 	}
-	if (quests[Q_NAKRUL]._qactive == 1 && currlevel == quests[Q_NAKRUL]._qlevel - 1) {
-		quests[Q_NAKRUL]._qactive = 2;
+	if (quests[Q_NAKRUL]._qactive == QUEST_INIT && currlevel == quests[Q_NAKRUL]._qlevel - 1) {
+		quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, Q_NAKRUL);
 	}
-	if (quests[Q_JERSEY]._qactive == 1 && currlevel == quests[Q_JERSEY]._qlevel - 1) {
-		quests[Q_JERSEY]._qactive = 2;
+	if (quests[Q_JERSEY]._qactive == QUEST_INIT && currlevel == quests[Q_JERSEY]._qlevel - 1) {
+		quests[Q_JERSEY]._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, Q_JERSEY);
 	}
 }
@@ -770,7 +770,7 @@ void ResyncQuests()
 		}
 	}
 	if (currlevel == quests[Q_MUSHROOM]._qlevel) {
-		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && quests[Q_MUSHROOM]._qvar1 == 0) {
+		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && quests[Q_MUSHROOM]._qvar1 == QS_INIT) {
 			SpawnQuestItem(IDI_FUNGALTM, 0, 0, 5, 1);
 			quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
 		} else {
@@ -930,7 +930,7 @@ void QuestlogESC()
 	}
 }
 
-void SetMultiQuest(int q, int s, int l, int v1)
+void SetMultiQuest(int q, quest_state s, int l, int v1)
 {
 	if (gbIsSpawn)
 		return;

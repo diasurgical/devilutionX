@@ -165,7 +165,7 @@ void InitLevelMonsters()
 	uniquetrans = 0;
 }
 
-int AddMonsterType(_monster_id type, int placeflag)
+int AddMonsterType(_monster_id type, placeflag placeflag)
 {
 	bool done = false;
 	int i;
@@ -567,7 +567,7 @@ void ClrAllMonsters()
 		Monst = &monster[i];
 		ClearMVars(i);
 		Monst->mName = "Invalid Monster";
-		Monst->_mgoal = 0;
+		Monst->_mgoal = MGOAL_NONE;
 		Monst->_mmode = MM_STAND;
 		Monst->_mVar1 = 0;
 		Monst->_mVar2 = 0;
@@ -1815,7 +1815,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 	Monst->_mdir = md;
 	NewMonsterAnim(i, &Monst->MType->Anims[MA_DEATH], md);
 	Monst->_mmode = MM_DEATH;
-	Monst->_mgoal = 0;
+	Monst->_mgoal = MGOAL_NONE;
 	Monst->_mxoff = 0;
 	Monst->_myoff = 0;
 	Monst->_mVar1 = 0;
@@ -4218,20 +4218,20 @@ void MAI_HorkDemon(int i)
 	v = random_(131, 100);
 
 	if (abs(mx) < 2 && abs(my) < 2) {
-		Monst->_mgoal = 1;
+		Monst->_mgoal = MGOAL_NORMAL;
 	} else if (Monst->_mgoal == 4 || ((abs(mx) >= 5 || abs(my) >= 5) && random_(132, 4) != 0)) {
 		if (Monst->_mgoal != 4) {
 			Monst->_mgoalvar1 = 0;
 			Monst->_mgoalvar2 = random_(133, 2);
 		}
-		Monst->_mgoal = 4;
+		Monst->_mgoal = MGOAL_MOVE;
 		if (abs(mx) > abs(my)) {
 			dist = abs(mx);
 		} else {
 			dist = abs(my);
 		}
 		if (Monst->_mgoalvar1++ >= 2 * dist || dTransVal[Monst->_mx][Monst->_my] != dTransVal[fx][fy]) {
-			Monst->_mgoal = 1;
+			Monst->_mgoal = MGOAL_NORMAL;
 		} else if (!M_RoundWalk(i, md, &Monst->_mgoalvar2)) {
 			M_StartDelay(i, random_(125, 10) + 10);
 		}

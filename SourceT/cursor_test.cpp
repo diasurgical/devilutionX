@@ -6,7 +6,7 @@ using namespace devilution;
 TEST(Cursor, SetCursor)
 {
 	int i = ICURS_SPIKED_CLUB + CURSOR_FIRSTITEM;
-	SetCursor_(i);
+	NewCursor(i);
 	EXPECT_EQ(pcurs, i);
 	EXPECT_EQ(cursW, 1 * 28);
 	EXPECT_EQ(cursH, 3 * 28);

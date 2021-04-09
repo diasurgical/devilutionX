@@ -23,7 +23,7 @@ struct ObjectStruct {
 	Sint32 _oAnimWidth;
 	Sint32 _oAnimWidth2;
 	bool _oDelFlag;
-	Uint8 _oBreak;
+	Sint8 _oBreak;
 	bool _oSolidFlag;
 	bool _oMissFlag;
 	Uint8 _oSelFlag;
