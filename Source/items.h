@@ -62,12 +62,12 @@ struct ItemStruct {
 	Sint32 _iSeed;
 	Uint16 _iCreateInfo;
 	enum item_type _itype;
-	Sint32 _ix;
-	Sint32 _iy;
+	Sint16 _ix;
+	Sint16 _iy;
 	bool _iAnimFlag;
 	Uint8 *_iAnimData;  // PSX name -> ItemFrame
-	Sint32 _iAnimLen;   // Number of frames in current animation
-	Sint32 _iAnimFrame; // Current frame of animation.
+	Uint8 _iAnimLen;   // Number of frames in current animation
+	Uint8 _iAnimFrame; // Current frame of animation.
 	Sint32 _iAnimWidth;
 	Sint32 _iAnimWidth2; // width 2?
 	bool _iDelFlag;      // set when item is flagged for deletion, deprecated in 1.02
@@ -79,42 +79,42 @@ struct ItemStruct {
 	char _iIName[64];
 	enum item_equip_type _iLoc;
 	enum item_class _iClass;
-	Sint32 _iCurs;
+	Uint8 _iCurs;
 	Sint32 _ivalue;
 	Sint32 _iIvalue;
-	Sint32 _iMinDam;
-	Sint32 _iMaxDam;
-	Sint32 _iAC;
+	Uint8 _iMinDam;
+	Uint8 _iMaxDam;
+	Sint16 _iAC;
 	Sint32 _iFlags; // item_special_effect
 	enum item_misc_id _iMiscId;
 	enum spell_id _iSpell;
 	Sint32 _iCharges;
 	Sint32 _iMaxCharges;
-	Sint32 _iDurability;
-	Sint32 _iMaxDur;
-	Sint32 _iPLDam;
-	Sint32 _iPLToHit;
-	Sint32 _iPLAC;
-	Sint32 _iPLStr;
-	Sint32 _iPLMag;
-	Sint32 _iPLDex;
-	Sint32 _iPLVit;
-	Sint32 _iPLFR;
-	Sint32 _iPLLR;
-	Sint32 _iPLMR;
-	Sint32 _iPLMana;
-	Sint32 _iPLHP;
-	Sint32 _iPLDamMod;
-	Sint32 _iPLGetHit;
-	Sint32 _iPLLight;
+	Uint8 _iDurability;
+	Uint8 _iMaxDur;
+	Sint16 _iPLDam;
+	Sint16 _iPLToHit;
+	Sint16 _iPLAC;
+	Sint16 _iPLStr;
+	Sint16 _iPLMag;
+	Sint16 _iPLDex;
+	Sint16 _iPLVit;
+	Sint16 _iPLFR;
+	Sint16 _iPLLR;
+	Sint16 _iPLMR;
+	Sint16 _iPLMana;
+	Sint16 _iPLHP;
+	Sint16 _iPLDamMod;
+	Sint16 _iPLGetHit;
+	Sint16 _iPLLight;
 	Sint8 _iSplLvlAdd;
 	Sint8 _iRequest;
 	Sint32 _iUid;
-	Sint32 _iFMinDam;
-	Sint32 _iFMaxDam;
-	Sint32 _iLMinDam;
-	Sint32 _iLMaxDam;
-	Sint32 _iPLEnAc;
+	Sint16 _iFMinDam;
+	Sint16 _iFMaxDam;
+	Sint16 _iLMinDam;
+	Sint16 _iLMaxDam;
+	Sint16 _iPLEnAc;
 	enum item_effect_type _iPrePower;
 	enum item_effect_type _iSufPower;
 	Sint32 _iVAdd1;
@@ -260,11 +260,11 @@ struct CornerStoneStruct {
 };
 
 extern int itemactive[MAXITEMS];
-extern BOOL uitemflag;
+extern bool uitemflag;
 extern int itemavail[MAXITEMS];
 extern ItemStruct items[MAXITEMS + 1];
 extern CornerStoneStruct CornerStone;
-extern BOOL UniqueItemFlag[128];
+extern bool UniqueItemFlag[128];
 extern int numitems;
 
 bool IsItemAvailable(int i);
