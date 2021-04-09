@@ -51,7 +51,7 @@ std::string GetSavePath(DWORD save_num)
 
 /** List of character names for the character selection screen. */
 static char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
-BOOL gbValidSaveFile;
+bool gbValidSaveFile;
 
 const char *pfile_get_password()
 {
@@ -97,7 +97,7 @@ static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, DWORD *pdwL
 	return buf;
 }
 
-static BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
+static bool pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 {
 	DWORD read;
 	BYTE *buf;
@@ -106,7 +106,7 @@ static BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 	if (buf == NULL)
 		return FALSE;
 
-	BOOL ret = FALSE;
+	bool ret = FALSE;
 	if (read == sizeof(*pPack)) {
 		memcpy(pPack, buf, sizeof(*pPack));
 		ret = TRUE;
@@ -129,7 +129,7 @@ static void pfile_encode_hero(const PkPlayerStruct *pPack)
 	mem_free_dbg(packed);
 }
 
-static BOOL pfile_open_archive(DWORD save_num)
+static bool pfile_open_archive(DWORD save_num)
 {
 	if (OpenMPQ(GetSavePath(save_num).c_str(), save_num))
 		return TRUE;
@@ -137,7 +137,7 @@ static BOOL pfile_open_archive(DWORD save_num)
 	return FALSE;
 }
 
-static void pfile_flush(BOOL is_single_player, DWORD save_num)
+static void pfile_flush(bool is_single_player, DWORD save_num)
 {
 	mpqapi_flush_and_close(GetSavePath(save_num).c_str(), is_single_player, save_num);
 }
@@ -173,7 +173,7 @@ void pfile_write_hero()
 	}
 }
 
-static void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSaveFile)
+static void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
 	memset(heroinfo, 0, sizeof(*heroinfo));
 	strncpy(heroinfo->name, p->_pName, sizeof(heroinfo->name) - 1);
@@ -190,7 +190,7 @@ static void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL 
 	heroinfo->spawned = gbIsSpawn;
 }
 
-BOOL pfile_create_player_description()
+bool pfile_create_player_description()
 {
 	char desc[128];
 	_uiheroinfo uihero;
@@ -208,7 +208,7 @@ void pfile_flush_W()
 	pfile_flush(TRUE, pfile_get_save_num_from_name(plr[myplr]._pName));
 }
 
-BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
+bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 {
 	memset(hero_names, 0, sizeof(hero_names));
 
@@ -239,7 +239,7 @@ BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
 	return TRUE;
 }
 
-BOOL pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
+bool pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
 {
 	if (gbIsMultiplayer)
 		return FALSE;
@@ -263,7 +263,7 @@ void pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *cla
 	class_stats->vitality = VitalityTbl[player_class_nr];
 }
 
-BOOL pfile_ui_save_create(_uiheroinfo *heroinfo)
+bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 {
 	DWORD save_num;
 	PkPlayerStruct pkplr;
@@ -296,7 +296,7 @@ BOOL pfile_ui_save_create(_uiheroinfo *heroinfo)
 	return TRUE;
 }
 
-BOOL pfile_get_file_name(DWORD lvl, char *dst)
+bool pfile_get_file_name(DWORD lvl, char *dst)
 {
 	const char *fmt;
 
@@ -321,7 +321,7 @@ BOOL pfile_get_file_name(DWORD lvl, char *dst)
 	return TRUE;
 }
 
-BOOL pfile_delete_save(_uiheroinfo *hero_info)
+bool pfile_delete_save(_uiheroinfo *hero_info)
 {
 	DWORD save_num;
 
@@ -385,7 +385,7 @@ void GetTempLevelNames(char *szTemp)
 void GetPermLevelNames(char *szPerm)
 {
 	DWORD save_num;
-	BOOL has_file;
+	bool has_file;
 
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	GetTempLevelNames(szPerm);
@@ -402,7 +402,7 @@ void GetPermLevelNames(char *szPerm)
 	}
 }
 
-static BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)
+static bool GetPermSaveNames(DWORD dwIndex, char *szPerm)
 {
 	const char *fmt;
 
@@ -418,7 +418,7 @@ static BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)
 	return TRUE;
 }
 
-static BOOL GetTempSaveNames(DWORD dwIndex, char *szTemp)
+static bool GetTempSaveNames(DWORD dwIndex, char *szTemp)
 {
 	const char *fmt;
 
@@ -449,7 +449,7 @@ void pfile_remove_temp_files()
 void pfile_rename_temp_to_perm()
 {
 	DWORD dwChar, dwIndex;
-	BOOL bResult;
+	bool bResult;
 	char szTemp[MAX_PATH];
 	char szPerm[MAX_PATH];
 

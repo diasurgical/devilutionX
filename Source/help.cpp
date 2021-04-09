@@ -8,7 +8,7 @@
 namespace devilution {
 
 int help_select_line;
-BOOL helpflag;
+bool helpflag;
 int HelpTop;
 
 const char gszSpawnHelpText[] = {

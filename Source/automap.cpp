@@ -377,7 +377,7 @@ void DrawAutomapPlr(CelOutputBuffer out, int pnum)
 /**
  * @brief Returns the automap shape at the given coordinate.
  */
-WORD GetAutomapType(int x, int y, BOOL view)
+WORD GetAutomapType(int x, int y, bool view)
 {
 	WORD rv;
 

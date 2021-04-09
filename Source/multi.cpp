@@ -19,7 +19,7 @@ PkPlayerStruct netplr[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
 DWORD sgbSentThisCycle;
-BOOL gbShouldValidatePackage;
+bool gbShouldValidatePackage;
 BYTE gbActivePlayers;
 bool gbGameDestroyed;
 bool sgbSendDeltaTbl[MAX_PLRS];
@@ -37,7 +37,7 @@ bool gbIsMultiplayer;
 bool sgbTimeout;
 char szPlayerName[128];
 BYTE gbDeltaSender;
-BOOL sgbNetInited;
+bool sgbNetInited;
 int player_state[MAX_PLRS];
 
 /**
@@ -380,7 +380,7 @@ static void multi_begin_timeout()
 int multi_handle_delta()
 {
 	int i;
-	BOOL received;
+	bool received;
 
 	if (gbGameDestroyed) {
 		gbRunGame = FALSE;
@@ -446,7 +446,7 @@ void multi_process_network_packets()
 	TPktHdr *pkt;
 	DWORD dwMsgSize;
 	DWORD dwID;
-	BOOL cond;
+	bool cond;
 	char *data;
 
 	multi_clear_left_tbl();
@@ -636,9 +636,9 @@ static void SetupLocalCoords()
 	plr[myplr].destAction = ACTION_NONE;
 }
 
-static BOOL multi_upgrade(BOOL *pfExitProgram)
+static bool multi_upgrade(bool *pfExitProgram)
 {
-	BOOL result;
+	bool result;
 	int status;
 
 	SNetPerformUpgrade((LPDWORD)&status);
@@ -695,7 +695,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 	}
 }
 
-static void multi_event_handler(BOOL add)
+static void multi_event_handler(bool add)
 {
 	DWORD i;
 	bool (*fn)(event_type, SEVTHANDLER);
@@ -728,7 +728,7 @@ void NetClose()
 		SDL_Delay(2000);
 }
 
-BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
+bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 {
 	while (1) {
 		*pfExitProgram = FALSE;
@@ -809,7 +809,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	return TRUE;
 }
 
-BOOL multi_init_single(GameData *gameData)
+bool multi_init_single(GameData *gameData)
 {
 	int unused;
 
@@ -829,9 +829,9 @@ BOOL multi_init_single(GameData *gameData)
 	return TRUE;
 }
 
-BOOL multi_init_multi(GameData *gameData, BOOL *pfExitProgram)
+bool multi_init_multi(GameData *gameData, bool *pfExitProgram)
 {
-	BOOL first;
+	bool first;
 	int playerId;
 
 	for (first = TRUE;; first = FALSE) {
@@ -861,7 +861,7 @@ BOOL multi_init_multi(GameData *gameData, BOOL *pfExitProgram)
 	}
 }
 
-void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
+void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 {
 	const char *szEvent;
 

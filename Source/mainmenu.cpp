@@ -34,9 +34,9 @@ void mainmenu_refresh_music()
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 }
 
-static BOOL mainmenu_init_menu(int type)
+static bool mainmenu_init_menu(int type)
 {
-	BOOL success;
+	bool success;
 
 	if (type == SELHERO_PREVIOUS)
 		return TRUE;
@@ -50,7 +50,7 @@ static BOOL mainmenu_init_menu(int type)
 	return success;
 }
 
-static BOOL mainmenu_single_player()
+static bool mainmenu_single_player()
 {
 	gbIsMultiplayer = false;
 
@@ -62,7 +62,7 @@ static BOOL mainmenu_single_player()
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
-static BOOL mainmenu_multi_player()
+static bool mainmenu_multi_player()
 {
 	gbIsMultiplayer = true;
 	return mainmenu_init_menu(SELHERO_CONNECT);
@@ -114,7 +114,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 
 void mainmenu_loop()
 {
-	BOOL done;
+	bool done;
 	int menu;
 
 	mainmenu_refresh_music();

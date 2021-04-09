@@ -60,7 +60,7 @@ extern int setpc_y;
 extern int setpc_w;
 extern int setpc_h;
 extern BYTE *pSetPiece;
-extern BOOL setloadflag;
+extern bool setloadflag;
 extern BYTE *pSpecialCels;
 extern BYTE *pMegaTiles;
 extern BYTE *pLevelPieces;
@@ -122,7 +122,7 @@ void DRLG_SetPC();
 void Make_SetPC(int x, int y, int w, int h);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rndSize);
 void DRLG_HoldThemeRooms();
-BOOL SkipThemeRoom(int x, int y);
+bool SkipThemeRoom(int x, int y);
 void InitLevels();
 
 }

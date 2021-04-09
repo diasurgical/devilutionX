@@ -21,7 +21,7 @@ namespace {
 BYTE L5dungeon[80][80];
 BYTE L5dflags[DMAXX][DMAXY];
 /** Specifies whether a single player quest DUN has been loaded. */
-BOOL L5setloadflag;
+bool L5setloadflag;
 /** Specifies whether to generate a horizontal room at position 1 in the Cathedral. */
 int HR1;
 /** Specifies whether to generate a horizontal room at position 2 in the Cathedral. */
@@ -30,11 +30,11 @@ int HR2;
 int HR3;
 
 /** Specifies whether to generate a vertical room at position 1 in the Cathedral. */
-BOOL VR1;
+bool VR1;
 /** Specifies whether to generate a vertical room at position 2 in the Cathedral. */
-BOOL VR2;
+bool VR2;
 /** Specifies whether to generate a vertical room at position 3 in the Cathedral. */
-BOOL VR3;
+bool VR3;
 /** Contains the contents of the single player quest DUN file. */
 BYTE *L5pSetPiece;
 
@@ -850,7 +850,7 @@ static void DRLG_L1Shadows()
 	int x, y, i;
 	BYTE sd[2][2];
 	BYTE tnv3;
-	BOOL patflag;
+	bool patflag;
 
 	for (y = 1; y < DMAXY; y++) {
 		for (x = 1; x < DMAXX; x++) {
@@ -935,10 +935,10 @@ static void DRLG_L1Shadows()
 	}
 }
 
-static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int noquad, int ldir)
+static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int noquad, int ldir)
 {
 	int sx, sy, sw, sh, xx, yy, i, ii, numt, found, t;
-	BOOL abort;
+	bool abort;
 
 	sw = miniset[0];
 	sh = miniset[1];
@@ -1334,7 +1334,7 @@ static void L5drawRoom(int x, int y, int w, int h)
 	}
 }
 
-static BOOL L5checkRoom(int x, int y, int width, int height)
+static bool L5checkRoom(int x, int y, int width, int height)
 {
 	int i, j;
 
@@ -1352,7 +1352,7 @@ static BOOL L5checkRoom(int x, int y, int width, int height)
 
 static void L5roomGen(int x, int y, int w, int h, int dir)
 {
-	BOOL ran, ran2;
+	bool ran, ran2;
 	int width, height, rx, ry, ry2;
 	int cw, ch, cx1, cy1, cx2;
 
@@ -1552,7 +1552,7 @@ static void L5makeDmt()
 static int L5HWallOk(int i, int j)
 {
 	int x;
-	BOOL wallok;
+	bool wallok;
 
 	for (x = 1; dungeon[i + x][j] == 13; x++) {
 		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || L5dflags[i + x][j])
@@ -1578,7 +1578,7 @@ static int L5HWallOk(int i, int j)
 static int L5VWallOk(int i, int j)
 {
 	int y;
-	BOOL wallok;
+	bool wallok;
 
 	for (y = 1; dungeon[i][j + y] == 13; y++) {
 		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || L5dflags[i][j + y])
@@ -1741,7 +1741,7 @@ static void L5AddWall()
 	}
 }
 
-static void DRLG_L5GChamber(int sx, int sy, BOOL topflag, BOOL bottomflag, BOOL leftflag, BOOL rightflag)
+static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool leftflag, bool rightflag)
 {
 	int i, j;
 
@@ -1942,7 +1942,7 @@ static void L5tileFix()
 void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
-	BOOL found;
+	bool found;
 
 	sw = miniset[0];
 	sh = miniset[1];
@@ -2510,7 +2510,7 @@ static void DRLG_L5(int entry)
 {
 	int i, j;
 	LONG minarea;
-	BOOL doneflag;
+	bool doneflag;
 
 	switch (currlevel) {
 	case 1:

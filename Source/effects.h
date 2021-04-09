@@ -1065,11 +1065,11 @@ struct TSFX {
 extern int sfxdelay;
 extern _sfx_id sfxdnum;
 
-BOOL effect_is_playing(int nSFX);
+bool effect_is_playing(int nSFX);
 void stream_stop();
 void InitMonsterSND(int monst);
 void FreeMonsterSnd();
-BOOL calc_snd_position(int x, int y, int *plVolume, int *plPan);
+bool calc_snd_position(int x, int y, int *plVolume, int *plPan);
 void PlayEffect(int i, int mode);
 void PlaySFX(_sfx_id psfx, bool randomizeByCategory = true);
 void PlaySfxLoc(_sfx_id psfx, int x, int y);

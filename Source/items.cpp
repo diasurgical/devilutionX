@@ -565,7 +565,7 @@ void InitItemGFX()
 	memset(UniqueItemFlag, 0, sizeof(UniqueItemFlag));
 }
 
-BOOL ItemPlace(int xp, int yp)
+bool ItemPlace(int xp, int yp)
 {
 	if (dMonster[xp][yp] != 0)
 		return FALSE;
@@ -688,7 +688,7 @@ void InitItems()
 	uitemflag = FALSE;
 }
 
-void CalcPlrItemVals(int p, BOOL Loadgfx)
+void CalcPlrItemVals(int p, bool Loadgfx)
 {
 	int pvid, d;
 
@@ -1145,7 +1145,7 @@ void CalcSelfItems(int pnum)
 	int i;
 	PlayerStruct *p;
 	ItemStruct *pi;
-	BOOL sf, changeflag;
+	bool sf, changeflag;
 	int sa, ma, da;
 
 	p = &plr[pnum];
@@ -1190,7 +1190,7 @@ void CalcSelfItems(int pnum)
 	} while (changeflag);
 }
 
-static BOOL ItemMinStats(PlayerStruct *p, ItemStruct *x)
+static bool ItemMinStats(PlayerStruct *p, ItemStruct *x)
 {
 	if (p->_pMagic < x->_iMinMag)
 		return FALSE;
@@ -1257,7 +1257,7 @@ void CalcPlrBookVals(int p)
 	}
 }
 
-void CalcPlrInv(int p, BOOL Loadgfx)
+void CalcPlrInv(int p, bool Loadgfx)
 {
 	CalcPlrItemMin(p);
 	CalcSelfItems(p);
@@ -1326,7 +1326,7 @@ void GetPlrHandSeed(ItemStruct *h)
 void GetGoldSeed(int pnum, ItemStruct *h)
 {
 	int i, ii, s;
-	BOOL doneflag;
+	bool doneflag;
 
 	do {
 		doneflag = TRUE;
@@ -1508,7 +1508,7 @@ void CreatePlrItems(int p)
 	CalcPlrItemVals(p, FALSE);
 }
 
-BOOL ItemSpaceOk(int i, int j)
+bool ItemSpaceOk(int i, int j)
 {
 	int oi;
 
@@ -1551,7 +1551,7 @@ static bool GetItemSpace(int x, int y, char inum)
 {
 	int i, j, rs;
 	int xx, yy;
-	BOOL savail;
+	bool savail;
 
 	yy = 0;
 	for (j = y - 1; j <= y + 1; j++) {
@@ -1716,12 +1716,12 @@ void GetBookSpell(int i, int lvl)
 		items[i]._iCurs = ICURS_BOOK_GREY;
 }
 
-void GetStaffPower(int i, int lvl, int bs, BOOL onlygood)
+void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 {
 	int l[256];
 	char istr[128];
 	int nl, j, preidx;
-	BOOL addok;
+	bool addok;
 	int tmp;
 
 	tmp = random_(15, 10);
@@ -1773,7 +1773,7 @@ void GetStaffPower(int i, int lvl, int bs, BOOL onlygood)
 	CalcItemValue(i);
 }
 
-void GetStaffSpell(int i, int lvl, BOOL onlygood)
+void GetStaffSpell(int i, int lvl, bool onlygood)
 {
 	int l, rv, minc, maxc, v;
 	char istr[68];
@@ -2336,7 +2336,7 @@ static void SaveItemSuffix(int i, int sufidx)
 	    PL_Suffix[sufidx].PLMultVal);
 }
 
-void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
+void GetItemPower(int i, int minlvl, int maxlvl, int flgs, bool onlygood)
 {
 	int pre, post, nt, nl, j, preidx, sufidx;
 	int l[256];
@@ -2427,7 +2427,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 		CalcItemValue(i);
 }
 
-void GetItemBonus(int i, int idata, int minlvl, int maxlvl, BOOL onlygood, bool allowspells)
+void GetItemBonus(int i, int idata, int minlvl, int maxlvl, bool onlygood, bool allowspells)
 {
 	if (minlvl > 25)
 		minlvl = 25;
@@ -2536,7 +2536,7 @@ int RndUItem(int m)
 {
 	int i, ri;
 	int ril[512];
-	BOOL okflag;
+	bool okflag;
 
 	if (m != -1 && (monster[m].MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
 		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
@@ -2606,7 +2606,7 @@ int RndAllItems()
 int RndTypeItems(int itype, int imid, int lvl)
 {
 	int i, ri;
-	BOOL okflag;
+	bool okflag;
 	int ril[512];
 
 	ri = 0;
@@ -2632,7 +2632,7 @@ int RndTypeItems(int itype, int imid, int lvl)
 	return ril[random_(27, ri)];
 }
 
-int CheckUnique(int i, int lvl, int uper, BOOL recreate)
+int CheckUnique(int i, int lvl, int uper, bool recreate)
 {
 	int j, idata, numu;
 	bool uok[128];
@@ -2724,7 +2724,7 @@ void ItemRndDur(int ii)
 		items[ii]._iDurability = random_(0, items[ii]._iMaxDur >> 1) + (items[ii]._iMaxDur >> 2) + 1;
 }
 
-void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, BOOL onlygood, BOOL recreate, BOOL pregen)
+void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
 	int iblvl, uid;
 
@@ -2779,10 +2779,10 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, BOOL onlygood,
 	SetupItem(ii);
 }
 
-void SpawnItem(int m, int x, int y, BOOL sendmsg)
+void SpawnItem(int m, int x, int y, bool sendmsg)
 {
 	int idx;
-	BOOL onlygood;
+	bool onlygood;
 
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
@@ -2841,7 +2841,7 @@ static void SetupBaseItem(Sint32 x, Sint32 y, Sint32 idx, bool onlygood, bool se
 		DeltaAddItem(ii);
 }
 
-void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, BOOL delta)
+void CreateRndItem(int x, int y, bool onlygood, bool sendmsg, bool delta)
 {
 	int idx = onlygood ? RndUItem(-1) : RndAllItems();
 
@@ -2895,7 +2895,7 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	SetupItem(ii);
 }
 
-void CreateRndUseful(int pnum, int x, int y, BOOL sendmsg)
+void CreateRndUseful(int pnum, int x, int y, bool sendmsg)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -2909,7 +2909,7 @@ void CreateRndUseful(int pnum, int x, int y, BOOL sendmsg)
 		NetSendCmdDItem(FALSE, ii);
 }
 
-void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL sendmsg, BOOL delta)
+void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
 {
 	int idx;
 
@@ -3182,7 +3182,7 @@ void SpawnTheodore(int xx, int yy)
 	SpawnRewardItem(IDI_THEODORE, xx, yy);
 }
 
-void RespawnItem(ItemStruct *item, BOOL FlipFlag)
+void RespawnItem(ItemStruct *item, bool FlipFlag)
 {
 	int it;
 
@@ -3406,7 +3406,7 @@ void DoRecharge(int pnum, int cii)
 		SetCursor_(CURSOR_HAND);
 }
 
-static BOOL OilItem(ItemStruct *x, PlayerStruct *p)
+static bool OilItem(ItemStruct *x, PlayerStruct *p)
 {
 	int dur, r;
 
@@ -3993,7 +3993,7 @@ static void DrawUTextBack(CelOutputBuffer out)
 	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
-void PrintUString(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *str, text_color col)
+void PrintUString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col)
 {
 	int len, width, sx, sy, i, k;
 	BYTE c;
@@ -4448,9 +4448,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	}
 }
 
-BOOL StoreStatOk(ItemStruct *h)
+bool StoreStatOk(ItemStruct *h)
 {
-	BOOL sf;
+	bool sf;
 
 	sf = TRUE;
 	if (plr[myplr]._pStrength < h->_iMinStr)
@@ -4463,9 +4463,9 @@ BOOL StoreStatOk(ItemStruct *h)
 	return sf;
 }
 
-BOOL SmithItemOk(int i)
+bool SmithItemOk(int i)
 {
-	BOOL rv;
+	bool rv;
 
 	rv = TRUE;
 	if (AllItemsList[i].itype == ITYPE_MISC)
@@ -4519,7 +4519,7 @@ void BubbleSwapItem(ItemStruct *a, ItemStruct *b)
 void SortSmith()
 {
 	int j, k;
-	BOOL sorted;
+	bool sorted;
 
 	j = 0;
 	while (!smithitem[j + 1].isEmpty()) {
@@ -4576,9 +4576,9 @@ void SpawnSmith(int lvl)
 	items[0] = holditem;
 }
 
-BOOL PremiumItemOk(int i)
+bool PremiumItemOk(int i)
 {
-	BOOL rv;
+	bool rv;
 
 	rv = TRUE;
 	if (AllItemsList[i].itype == ITYPE_MISC)
@@ -4764,9 +4764,9 @@ void SpawnPremium(int pnum)
 	}
 }
 
-BOOL WitchItemOk(int i)
+bool WitchItemOk(int i)
 {
-	BOOL rv;
+	bool rv;
 
 	rv = FALSE;
 	if (AllItemsList[i].itype == ITYPE_MISC)
@@ -4817,7 +4817,7 @@ int RndWitchItem(int lvl)
 void SortWitch()
 {
 	int j, k;
-	BOOL sorted;
+	bool sorted;
 
 	j = 3;
 	while (!witchitem[j + 1].isEmpty()) {
@@ -5083,7 +5083,7 @@ void SpawnBoy(int lvl)
 	}
 }
 
-BOOL HealerItemOk(int i)
+bool HealerItemOk(int i)
 {
 	if (AllItemsList[i].itype != ITYPE_MISC)
 		return FALSE;
@@ -5135,7 +5135,7 @@ int RndHealerItem(int lvl)
 void SortHealer()
 {
 	int j, k;
-	BOOL sorted;
+	bool sorted;
 
 	j = 2;
 	while (!healitem[j + 1].isEmpty()) {
@@ -5337,7 +5337,7 @@ int ItemNoFlippy()
 	return r;
 }
 
-void CreateSpellBook(int x, int y, spell_id ispell, BOOL sendmsg, BOOL delta)
+void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta)
 {
 	int lvl = currlevel;
 
@@ -5368,7 +5368,7 @@ void CreateSpellBook(int x, int y, spell_id ispell, BOOL sendmsg, BOOL delta)
 		DeltaAddItem(ii);
 }
 
-static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icurs, BOOL sendmsg, BOOL delta)
+static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -5392,18 +5392,18 @@ static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icur
 		DeltaAddItem(ii);
 }
 
-void CreateMagicArmor(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta)
+void CreateMagicArmor(int x, int y, int imisc, int icurs, bool sendmsg, bool delta)
 {
 	int lvl = items_get_currlevel();
 	CreateMagicItem(x, y, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
 }
 
-void CreateAmulet(int x, int y, int lvl, BOOL sendmsg, BOOL delta)
+void CreateAmulet(int x, int y, int lvl, bool sendmsg, bool delta)
 {
 	CreateMagicItem(x, y, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
 }
 
-void CreateMagicWeapon(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta)
+void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool delta)
 {
 	int imid = IMISC_NONE;
 	if (imisc == ITYPE_STAFF)
@@ -5428,7 +5428,7 @@ static void NextItemRecord(int i)
 	itemrecord[i].nIndex = itemrecord[gnNumGetRecords].nIndex;
 }
 
-BOOL GetItemRecord(int nSeed, WORD wCI, int nIndex)
+bool GetItemRecord(int nSeed, WORD wCI, int nIndex)
 {
 	int i;
 	DWORD dwTicks;

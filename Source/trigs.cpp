@@ -7,8 +7,8 @@
 
 namespace devilution {
 
-BOOL townwarps[3];
-BOOL trigflag;
+bool townwarps[3];
+bool trigflag;
 int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
 int TWarpFrom;
@@ -341,7 +341,7 @@ void InitVPTriggers()
 	trigs[0]._tmsg = WM_DIABRTNLVL;
 }
 
-BOOL ForceTownTrig()
+bool ForceTownTrig()
 {
 	int i, j, k, l;
 
@@ -409,7 +409,7 @@ BOOL ForceTownTrig()
 	return FALSE;
 }
 
-BOOL ForceL1Trig()
+bool ForceL1Trig()
 {
 	int i, j;
 	int dx, dy;
@@ -494,7 +494,7 @@ BOOL ForceL1Trig()
 	return FALSE;
 }
 
-BOOL ForceL2Trig()
+bool ForceL2Trig()
 {
 	int i, j, dx, dy;
 
@@ -550,7 +550,7 @@ BOOL ForceL2Trig()
 	return FALSE;
 }
 
-BOOL ForceL3Trig()
+bool ForceL3Trig()
 {
 	int i, j, dx, dy;
 
@@ -650,7 +650,7 @@ BOOL ForceL3Trig()
 	return FALSE;
 }
 
-BOOL ForceL4Trig()
+bool ForceL4Trig()
 {
 	int i, j, dx, dy;
 
@@ -733,7 +733,7 @@ void Freeupstairs()
 	}
 }
 
-BOOL ForceSKingTrig()
+bool ForceSKingTrig()
 {
 	int i;
 
@@ -750,7 +750,7 @@ BOOL ForceSKingTrig()
 	return FALSE;
 }
 
-BOOL ForceSChambTrig()
+bool ForceSChambTrig()
 {
 	int i;
 
@@ -767,7 +767,7 @@ BOOL ForceSChambTrig()
 	return FALSE;
 }
 
-BOOL ForcePWaterTrig()
+bool ForcePWaterTrig()
 {
 	int i;
 

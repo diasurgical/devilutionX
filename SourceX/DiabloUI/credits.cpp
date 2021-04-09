@@ -200,7 +200,7 @@ void CreditsRenderer::Render()
 	SDL_SetClipRect(DiabloUiSurface(), NULL);
 }
 
-BOOL TextDialog()
+bool TextDialog()
 {
 	CreditsRenderer credits_renderer;
 	bool endMenu = false;
@@ -234,7 +234,7 @@ BOOL TextDialog()
 
 } // namespace
 
-BOOL UiCreditsDialog()
+bool UiCreditsDialog()
 {
 	text = CREDITS_LINES;
 	textLines = CREDITS_LINES_SIZE;
@@ -245,7 +245,7 @@ BOOL UiCreditsDialog()
 	return TextDialog();
 }
 
-BOOL UiSupportDialog()
+bool UiSupportDialog()
 {
 	text = SUPPORT_LINES;
 	textLines = SUPPORT_LINES_SIZE;

@@ -101,12 +101,12 @@ void gmenu_init_menu()
 	optbar_cel = LoadFileInMem("Data\\optbar.CEL", NULL);
 }
 
-BOOL gmenu_is_active()
+bool gmenu_is_active()
 {
 	return sgpCurrentMenu != NULL;
 }
 
-static void gmenu_up_down(BOOL isDown)
+static void gmenu_up_down(bool isDown)
 {
 	int i;
 
@@ -136,7 +136,7 @@ static void gmenu_up_down(BOOL isDown)
 	}
 }
 
-static void gmenu_left_right(BOOL isRight)
+static void gmenu_left_right(bool isRight)
 {
 	int step, steps;
 
@@ -276,7 +276,7 @@ void gmenu_draw(CelOutputBuffer out)
 	}
 }
 
-BOOL gmenu_presskeys(int vkey)
+bool gmenu_presskeys(int vkey)
 {
 	if (!sgpCurrentMenu)
 		return FALSE;
@@ -324,7 +324,7 @@ static bool gmenu_get_mouse_slider(int *plOffset)
 	return TRUE;
 }
 
-BOOL gmenu_on_mouse_move()
+bool gmenu_on_mouse_move()
 {
 	int step, nSteps;
 
@@ -341,7 +341,7 @@ BOOL gmenu_on_mouse_move()
 	return TRUE;
 }
 
-BOOL gmenu_left_mouse(BOOL isDown)
+bool gmenu_left_mouse(bool isDown)
 {
 	TMenuItem *pItem;
 	int i, w, dummy;
@@ -390,7 +390,7 @@ BOOL gmenu_left_mouse(BOOL isDown)
 	return TRUE;
 }
 
-void gmenu_enable(TMenuItem *pMenuItem, BOOL enable)
+void gmenu_enable(TMenuItem *pMenuItem, bool enable)
 {
 	if (enable)
 		pMenuItem->dwFlags |= GMENU_ENABLED;

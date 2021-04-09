@@ -27,7 +27,7 @@ void LoadHeroItems(PlayerStruct *pPlayer);
  * @param pnum The id of the player
  */
 void RemoveEmptyInventory(int pnum);
-void LoadGame(BOOL firstflag);
+void LoadGame(bool firstflag);
 void SaveHotkeys();
 void SaveHeroItems(PlayerStruct *pPlayer);
 void SaveGame();

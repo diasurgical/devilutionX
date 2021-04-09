@@ -78,8 +78,8 @@ typedef struct PkPlayerStruct {
 } PkPlayerStruct;
 #pragma pack(pop)
 
-void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield);
-void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync);
+void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield);
+void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync);
 void PackItem(PkItemStruct *id, const ItemStruct *is);
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
 

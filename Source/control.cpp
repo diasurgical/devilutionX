@@ -21,25 +21,25 @@ BYTE sgbNextTalkSave;
 BYTE sgbTalkSavePos;
 BYTE *pDurIcons;
 BYTE *pChrButtons;
-BOOL drawhpflag;
-BOOL dropGoldFlag;
-BOOL panbtn[8];
-BOOL chrbtn[4];
+bool drawhpflag;
+bool dropGoldFlag;
+bool panbtn[8];
+bool chrbtn[4];
 BYTE *pMultiBtns;
 BYTE *pPanelButtons;
 BYTE *pChrPanel;
-BOOL lvlbtndown;
+bool lvlbtndown;
 char sgszTalkSave[8][80];
 int dropGoldValue;
-BOOL drawmanaflag;
-BOOL chrbtnactive;
+bool drawmanaflag;
+bool chrbtnactive;
 char sgszTalkMsg[MAX_SEND_STR_LEN];
 BYTE *pPanelText;
 BYTE *pTalkBtns;
-BOOL pstrjust[4];
+bool pstrjust[4];
 int pnumlines;
-BOOL pinfoflag;
-BOOL talkbtndown[3];
+bool pinfoflag;
+bool talkbtndown[3];
 spell_id pSpell;
 text_color infoclr;
 int sgbPlrTalkTbl;
@@ -50,21 +50,21 @@ bool whisper[MAX_PLRS];
 int sbooktab;
 spell_type pSplType;
 int initialDropGoldIndex;
-BOOL talkflag;
+bool talkflag;
 BYTE *pSBkIconCels;
-BOOL sbookflag;
-BOOL chrflag;
-BOOL drawbtnflag;
+bool sbookflag;
+bool chrflag;
+bool drawbtnflag;
 BYTE *pSpellBkCel;
 char infostr[64];
 int numpanbtns;
 char panelstr[4][64];
-BOOL panelflag;
+bool panelflag;
 BYTE SplTransTbl[256];
 int initialDropGoldValue;
 BYTE *pSpellCels;
-BOOL panbtndown;
-BOOL spselflag;
+bool panbtndown;
+bool spselflag;
 
 /** Map of hero class names */
 const char *const ClassStrTbl[] = {
@@ -581,7 +581,7 @@ void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, text_color col)
 	CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, tbl);
 }
 
-void AddPanelString(const char *str, BOOL just)
+void AddPanelString(const char *str, bool just)
 {
 	strcpy(panelstr[pnumlines], str);
 	pstrjust[pnumlines] = just;
@@ -1194,7 +1194,7 @@ void FreeControlPan()
 	MemFreeDbg(pGBoxBuff);
 }
 
-BOOL control_WriteStringToBuffer(BYTE *str)
+bool control_WriteStringToBuffer(BYTE *str)
 {
 	int k;
 	BYTE ichar;
@@ -1211,7 +1211,7 @@ BOOL control_WriteStringToBuffer(BYTE *str)
 	return TRUE;
 }
 
-static void CPrintString(CelOutputBuffer out, int y, const char *str, BOOL center, int lines)
+static void CPrintString(CelOutputBuffer out, int y, const char *str, bool center, int lines)
 {
 	BYTE c;
 	const char *tmp;
@@ -1792,7 +1792,7 @@ void RedBack(CelOutputBuffer out)
 	}
 }
 
-static void PrintSBookStr(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *pszStr, text_color col)
+static void PrintSBookStr(CelOutputBuffer out, int x, int y, bool cjustflag, const char *pszStr, text_color col)
 {
 	BYTE c;
 	const char *tmp;
@@ -1823,7 +1823,7 @@ static void PrintSBookStr(CelOutputBuffer out, int x, int y, BOOL cjustflag, con
 	}
 }
 
-char GetSBookTrans(int ii, BOOL townok)
+char GetSBookTrans(int ii, bool townok)
 {
 	char st;
 
@@ -2132,7 +2132,7 @@ void DrawTalkPan(CelOutputBuffer out)
 	}
 }
 
-BOOL control_check_talk_btn()
+bool control_check_talk_btn()
 {
 	int i;
 
@@ -2243,7 +2243,7 @@ static void control_press_enter()
 	control_reset_talk();
 }
 
-BOOL control_talk_last_key(int vkey)
+bool control_talk_last_key(int vkey)
 {
 	int result;
 
@@ -2277,10 +2277,10 @@ static void control_up_down(int v)
 	}
 }
 
-BOOL control_presskeys(int vkey)
+bool control_presskeys(int vkey)
 {
 	int len;
-	BOOL ret;
+	bool ret;
 
 	if (gbIsMultiplayer) {
 		if (!talkflag) {

@@ -978,7 +978,7 @@ void RemoveEmptyLevelItems()
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
-void LoadGame(BOOL firstflag)
+void LoadGame(bool firstflag)
 {
 	FreeGameMem();
 	pfile_remove_temp_files();

@@ -8,9 +8,9 @@
 
 namespace devilution {
 
-BOOL invflag;
+bool invflag;
 BYTE *pInvCels;
-BOOL drawsbarflag;
+bool drawsbarflag;
 int sgdwLastTime; // check name
 
 /**
@@ -165,7 +165,7 @@ static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 
 void DrawInv(CelOutputBuffer out)
 {
-	BOOL invtest[NUM_INV_GRID_ELEM];
+	bool invtest[NUM_INV_GRID_ELEM];
 	int frame, frame_width, color, screen_x, screen_y, i, j, ii;
 
 	CelDrawTo(out, RIGHT_PANEL_X, 351, pInvCels, 1, SPANEL_WIDTH);
@@ -994,7 +994,7 @@ bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStr
 }
 
 
-BOOL GoldAutoPlace(int pnum)
+bool GoldAutoPlace(int pnum)
 {
 	bool done = false;
 
@@ -1047,7 +1047,7 @@ BOOL GoldAutoPlace(int pnum)
 	return done;
 }
 
-BOOL WeaponAutoPlace(int pnum)
+bool WeaponAutoPlace(int pnum)
 {
 	if (plr[pnum]._pClass == PC_MONK)
 		return FALSE;
@@ -1094,7 +1094,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 {
 	int r, sx, sy;
 	int i, j, xx, yy, ii;
-	BOOL done, done2h;
+	bool done, done2h;
 	int il, cn, it, iv, ig, gt;
 	ItemStruct tempitem;
 
@@ -1489,7 +1489,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	}
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId, uint32_t dwBuff)
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	PlayerStruct *p;
 
@@ -1519,7 +1519,7 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId, ui
 void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 {
 	int r;
-	BOOL done;
+	bool done;
 	char ii;
 	int iv, i, j, offs, ig;
 	PlayerStruct &player = plr[pnum];
@@ -2125,7 +2125,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
 	int i, idx;
 	int w, h;
-	BOOL done;
+	bool done;
 
 	if (pcurs != CURSOR_HAND) {
 		return;
@@ -2232,7 +2232,7 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
-BOOL CanPut(int x, int y)
+bool CanPut(int x, int y)
 {
 	char oi, oi2;
 
@@ -2269,7 +2269,7 @@ BOOL CanPut(int x, int y)
 	return TRUE;
 }
 
-BOOL TryInvPut()
+bool TryInvPut()
 {
 	int dir;
 
@@ -2307,7 +2307,7 @@ void DrawInvMsg(const char *msg)
 
 int InvPutItem(int pnum, int x, int y)
 {
-	BOOL done;
+	bool done;
 	int d;
 	int i, j, l;
 	int xx, yy;
@@ -2397,7 +2397,7 @@ int InvPutItem(int pnum, int x, int y)
 
 int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
 {
-	BOOL done;
+	bool done;
 	int d;
 	int i, j, l;
 	int xx, yy;
@@ -2602,7 +2602,7 @@ void RemoveScroll(int pnum)
 	}
 }
 
-BOOL UseScroll()
+bool UseScroll()
 {
 	int i;
 
@@ -2642,7 +2642,7 @@ void UseStaffCharge(int pnum)
 	}
 }
 
-BOOL UseStaff()
+bool UseStaff()
 {
 	if (pcurs == CURSOR_HAND) {
 		if (!plr[myplr].InvBody[INVLOC_HAND_LEFT].isEmpty()
@@ -2669,11 +2669,11 @@ void StartGoldDrop()
 		control_reset_talk();
 }
 
-BOOL UseInvItem(int pnum, int cii)
+bool UseInvItem(int pnum, int cii)
 {
 	int c, idata;
 	ItemStruct *Item;
-	BOOL speedlist;
+	bool speedlist;
 
 	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr)
 		return TRUE;
@@ -2833,7 +2833,7 @@ int CalculateGold(int pnum)
 	return gold;
 }
 
-BOOL DropItemBeforeTrig()
+bool DropItemBeforeTrig()
 {
 	if (TryInvPut()) {
 		NetSendCmdPItem(TRUE, CMD_PUTITEM, cursmx, cursmy);

@@ -50,10 +50,10 @@ int multi_handle_delta();
 void multi_process_network_packets();
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen);
 void NetClose();
-BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram);
-BOOL multi_init_single(GameData *gameData);
-BOOL multi_init_multi(GameData *gameData, BOOL *pfExitProgram);
-void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv);
+bool NetInit(bool bSinglePlayer, bool *pfExitProgram);
+bool multi_init_single(GameData *gameData);
+bool multi_init_multi(GameData *gameData, bool *pfExitProgram);
+void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv);
 
 #ifdef __cplusplus
 }

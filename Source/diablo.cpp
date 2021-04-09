@@ -22,16 +22,16 @@ int glMid2Seed[NUMLEVELS];
 int glMid3Seed[NUMLEVELS];
 int MouseX;
 int MouseY;
-BOOL gbGameLoopStartup;
-BOOL gbRunGame;
-BOOL gbRunGameResult;
-BOOL zoomflag;
+bool gbGameLoopStartup;
+bool gbRunGame;
+bool gbRunGameResult;
+bool zoomflag;
 /** Enable updating of player character, set to false once Diablo dies */
-BOOL gbProcessPlayers;
+bool gbProcessPlayers;
 bool gbLoadGame;
 bool cineflag;
 int force_redraw;
-BOOL light4flag;
+bool light4flag;
 int setseed;
 int PauseMode;
 bool forceSpawn;
@@ -362,9 +362,9 @@ static void run_game_loop(interface_mode uMsg)
 	}
 }
 
-BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
+bool StartGame(bool bNewGame, bool bSinglePlayer)
 {
-	BOOL fExitProgram;
+	bool fExitProgram;
 
 	gbSelectProvider = TRUE;
 
@@ -651,9 +651,9 @@ int DiabloMain(int argc, char **argv)
 	return 0;
 }
 
-static BOOL LeftMouseCmd(BOOL bShift)
+static bool LeftMouseCmd(bool bShift)
 {
-	BOOL bNear;
+	bool bNear;
 
 	assert(MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH);
 
@@ -706,7 +706,7 @@ static BOOL LeftMouseCmd(BOOL bShift)
 	return FALSE;
 }
 
-BOOL TryIconCurs()
+bool TryIconCurs()
 {
 	if (pcurs == CURSOR_RESURRECT) {
 		NetSendCmdParam1(TRUE, CMD_RESURRECT, pcursplr);
@@ -774,7 +774,7 @@ BOOL TryIconCurs()
 	return FALSE;
 }
 
-static BOOL LeftMouseDown(int wParam)
+static bool LeftMouseDown(int wParam)
 {
 	if (gmenu_left_mouse(TRUE))
 		return FALSE;
@@ -910,7 +910,7 @@ static void diablo_hotkey_msg(DWORD dwMsg)
 	NetSendCmdString(-1, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
 }
 
-static BOOL PressSysKey(int wParam)
+static bool PressSysKey(int wParam)
 {
 	if (gmenu_is_active() || wParam != DVL_VK_F10)
 		return FALSE;
@@ -1758,10 +1758,10 @@ static void UpdateMonsterLights()
 	}
 }
 
-void LoadGameLevel(BOOL firstflag, int lvldir)
+void LoadGameLevel(bool firstflag, int lvldir)
 {
 	int i, j;
-	BOOL visited;
+	bool visited;
 
 	if (setseed)
 		glSeedTbl[currlevel] = setseed;
@@ -2032,7 +2032,7 @@ static void game_logic()
 	plrctrls_after_game_logic();
 }
 
-static void timeout_cursor(BOOL bTimeout)
+static void timeout_cursor(bool bTimeout)
 {
 	if (bTimeout) {
 		if (sgnTimeoutCurs == CURSOR_NONE && sgbMouseDown == CLICK_NONE) {
@@ -2056,7 +2056,7 @@ static void timeout_cursor(BOOL bTimeout)
 /**
  * @param bStartup Process additional ticks before returning
  */
-void game_loop(BOOL bStartup)
+void game_loop(bool bStartup)
 {
 	int i;
 

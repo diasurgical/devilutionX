@@ -18,7 +18,7 @@ int diabquad4y;
 
 namespace {
 
-BOOL hallok[20];
+bool hallok[20];
 int l4holdx;
 int l4holdy;
 int SP4x1;
@@ -149,7 +149,7 @@ const BYTE L4BTYPES[140] = {
 static void DRLG_L4Shadows()
 {
 	int x, y;
-	BOOL okflag;
+	bool okflag;
 
 	for (y = 1; y < DMAXY; y++) {
 		for (x = 1; x < DMAXY; x++) {
@@ -259,7 +259,7 @@ static void L4makeDmt()
 static int L4HWallOk(int i, int j)
 {
 	int x;
-	BOOL wallok;
+	bool wallok;
 
 	for (x = 1; dungeon[i + x][j] == 6; x++) {
 		if (dflags[i + x][j] != 0) {
@@ -310,7 +310,7 @@ static int L4HWallOk(int i, int j)
 static int L4VWallOk(int i, int j)
 {
 	int y;
-	BOOL wallok;
+	bool wallok;
 
 	for (y = 1; dungeon[i][j + y] == 6; y++) {
 		if (dflags[i][j + y] != 0) {
@@ -1098,7 +1098,7 @@ static void L4drawRoom(int x, int y, int width, int height)
 	}
 }
 
-static BOOL L4checkRoom(int x, int y, int width, int height)
+static bool L4checkRoom(int x, int y, int width, int height)
 {
 	int i, j;
 
@@ -1122,7 +1122,7 @@ static BOOL L4checkRoom(int x, int y, int width, int height)
 
 static void L4roomGen(int x, int y, int w, int h, int dir)
 {
-	BOOL ran, ran2;
+	bool ran, ran2;
 	int width, height, rx, ry, ry2;
 	int cw, ch, cx1, cy1, cx2;
 
@@ -1272,7 +1272,7 @@ void DRLG_L4SetRoom(BYTE *pSetPiece, int rx1, int ry1)
 	}
 }
 
-void DRLG_LoadDiabQuads(BOOL preflag)
+void DRLG_LoadDiabQuads(bool preflag)
 {
 	BYTE *lpSetPiece;
 
@@ -1313,10 +1313,10 @@ void DRLG_LoadDiabQuads(BOOL preflag)
 	mem_free_dbg(lpSetPiece);
 }
 
-static BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int ldir)
+static bool DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
 {
 	int sx, sy, sw, sh, xx, yy, i, ii, numt, bailcnt;
-	BOOL found;
+	bool found;
 
 	sw = miniset[0];
 	sh = miniset[1];
@@ -1474,7 +1474,7 @@ static void DRLG_L4FloodTVal()
 #pragma GCC pop_options
 #endif
 
-BOOL IsDURWall(char d)
+bool IsDURWall(char d)
 {
 	if (d == 25) {
 		return TRUE;
@@ -1489,7 +1489,7 @@ BOOL IsDURWall(char d)
 	return FALSE;
 }
 
-BOOL IsDLLWall(char dd)
+bool IsDLLWall(char dd)
 {
 	if (dd == 27) {
 		return TRUE;
@@ -1592,7 +1592,7 @@ void DRLG_L4GeneralFix()
 static void DRLG_L4(int entry)
 {
 	int i, j, spi, spj, ar;
-	BOOL doneflag;
+	bool doneflag;
 
 	do {
 		DRLG_InitTrans();
