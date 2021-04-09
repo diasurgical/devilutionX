@@ -965,7 +965,7 @@ void RemoveEmptyInventory(int pnum)
 
 void RemoveEmptyLevelItems()
 {
-	for (int i = numitems; i >= 0; i--) {
+	for (int i = numitems; i > 0; i--) {
 		int ii = itemactive[i];
 		if (item[ii].isEmpty()) {
 			dItem[item[ii]._ix][item[ii]._iy] = 0;
