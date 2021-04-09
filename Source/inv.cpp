@@ -2168,17 +2168,17 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 
 	if (pnum == myplr) {
 		if (plr[pnum]._pClass == PC_WARRIOR) {
-			PlaySFX(random_(0, 3) + PS_WARR14);
+			PlaySFX(PS_WARR14);
 		} else if (plr[pnum]._pClass == PC_ROGUE) {
-			PlaySFX(random_(0, 3) + PS_ROGUE14);
+			PlaySFX(PS_ROGUE14);
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
-			PlaySFX(random_(0, 3) + PS_MAGE14);
+			PlaySFX(PS_MAGE14);
 		} else if (plr[pnum]._pClass == PC_MONK) {
-			PlaySFX(random_(0, 3) + PS_MONK14);
+			PlaySFX(PS_MONK14);
 		} else if (plr[pnum]._pClass == PC_BARD) {
-			PlaySFX(random_(0, 3) + PS_ROGUE14);
+			PlaySFX(PS_ROGUE14);
 		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
-			PlaySFX(random_(0, 3) + PS_WARR14);
+			PlaySFX(PS_WARR14);
 		}
 	}
 	plr[pnum].HoldItem = *item;

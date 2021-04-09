@@ -49,7 +49,7 @@ HANDLE devilutionx_mpq;
 
 namespace {
 
-HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_name, const char *reg_loc, int dwPriority, int fs)
+HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_name)
 {
 	HANDLE archive;
 	std::string mpq_abspath;
@@ -59,7 +59,7 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 #endif
 	for (int i = 0; i < paths.size(); i++) {
 		mpq_abspath = paths[i] + mpq_name;
-		if (SFileOpenArchive(mpq_abspath.c_str(), dwPriority, mpq_flags, &archive)) {
+		if (SFileOpenArchive(mpq_abspath.c_str(), 0, mpq_flags, &archive)) {
 			SFileSetBasePath(paths[i].c_str());
 			return archive;
 		}
@@ -158,14 +158,14 @@ void init_archives()
 
 	paths.push_back(""); // PWD
 
-	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ", "DiabloCD", 1000, FS_CD);
+	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ");
 	if (diabdat_mpq == NULL) {
 		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
-		diabdat_mpq = init_test_access(paths, "diabdat.mpq", "DiabloCD", 1000, FS_CD);
+		diabdat_mpq = init_test_access(paths, "diabdat.mpq");
 	}
 
 	if (diabdat_mpq == NULL) {
-		spawn_mpq = init_test_access(paths, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
+		spawn_mpq = init_test_access(paths, "spawn.mpq");
 		if (spawn_mpq != NULL)
 			gbIsSpawn = true;
 	}
@@ -174,31 +174,31 @@ void init_archives()
 		InsertCDDlg();
 	SFileCloseFile(fh);
 
-	patch_rt_mpq = init_test_access(paths, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
+	patch_rt_mpq = init_test_access(paths, "patch_rt.mpq");
 	if (patch_rt_mpq == NULL)
-		patch_rt_mpq = init_test_access(paths, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
+		patch_rt_mpq = init_test_access(paths, "patch_sh.mpq");
 
-	hellfire_mpq = init_test_access(paths, "hellfire.mpq", "DiabloInstall", 8000, FS_PC);
+	hellfire_mpq = init_test_access(paths, "hellfire.mpq");
 	if (hellfire_mpq != NULL)
 		gbIsHellfire = true;
-	hfmonk_mpq = init_test_access(paths, "hfmonk.mpq", "DiabloInstall", 8100, FS_PC);
-	hfbard_mpq = init_test_access(paths, "hfbard.mpq", "DiabloInstall", 8110, FS_PC);
+	hfmonk_mpq = init_test_access(paths, "hfmonk.mpq");
+	hfbard_mpq = init_test_access(paths, "hfbard.mpq");
 	if (hfbard_mpq != NULL)
 		gbBard = true;
-	hfbarb_mpq = init_test_access(paths, "hfbarb.mpq", "DiabloInstall", 8120, FS_PC);
+	hfbarb_mpq = init_test_access(paths, "hfbarb.mpq");
 	if (hfbarb_mpq != NULL)
 		gbBarbarian = true;
-	hfmusic_mpq = init_test_access(paths, "hfmusic.mpq", "DiabloInstall", 8200, FS_PC);
-	hfvoice_mpq = init_test_access(paths, "hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
-	hfopt1_mpq = init_test_access(paths, "hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
-	hfopt2_mpq = init_test_access(paths, "hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
+	hfmusic_mpq = init_test_access(paths, "hfmusic.mpq");
+	hfvoice_mpq = init_test_access(paths, "hfvoice.mpq");
+	hfopt1_mpq = init_test_access(paths, "hfopt1.mpq");
+	hfopt2_mpq = init_test_access(paths, "hfopt2.mpq");
 
 	if (gbIsHellfire && (hfmonk_mpq == NULL || hfmusic_mpq == NULL || hfvoice_mpq == NULL)) {
 		UiErrorOkDialog("Some Hellfire MPQs are missing", "Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files.");
 		app_fatal(NULL);
 	}
 
-	devilutionx_mpq = init_test_access(paths, "devilutionx.mpq", "DiabloInstall", 9000, FS_PC);
+	devilutionx_mpq = init_test_access(paths, "devilutionx.mpq");
 }
 
 void init_create_window()

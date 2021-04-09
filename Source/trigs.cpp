@@ -836,14 +836,10 @@ void CheckTrigForce()
 
 void CheckTriggers()
 {
-	int x, y, i;
-	BOOL abort;
-	char abortflag;
-
 	if (plr[myplr]._pmode != PM_STAND)
 		return;
 
-	for (i = 0; i < numtrigs; i++) {
+	for (int i = 0; i < numtrigs; i++) {
 		if (plr[myplr]._px != trigs[i]._tx || plr[myplr]._py != trigs[i]._ty) {
 			continue;
 		}
@@ -866,24 +862,26 @@ void CheckTriggers()
 			break;
 		case WM_DIABTOWNWARP:
 			if (gbIsMultiplayer) {
-				abort = FALSE;
+				int x, y;
+				bool abort = false;
+				diablo_message abortflag;
 
 				if (trigs[i]._tlvl == 5 && plr[myplr]._pLevel < 8) {
-					abort = TRUE;
+					abort = true;
 					x = plr[myplr]._px;
 					y = plr[myplr]._py + 1;
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
 				if (trigs[i]._tlvl == 9 && plr[myplr]._pLevel < 13) {
-					abort = TRUE;
+					abort = true;
 					x = plr[myplr]._px + 1;
 					y = plr[myplr]._py;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
 				if (trigs[i]._tlvl == 13 && plr[myplr]._pLevel < 17) {
-					abort = TRUE;
+					abort = true;
 					x = plr[myplr]._px;
 					y = plr[myplr]._py + 1;
 					abortflag = EMSG_REQUIRES_LVL_17;

@@ -343,7 +343,10 @@ if(NOT NONET)
   list(APPEND devilutionx_SRCS
     SourceX/dvlnet/tcp_client.cpp
     SourceX/dvlnet/tcp_server.cpp
-    SourceX/dvlnet/udp_p2p.cpp)
+    SourceX/dvlnet/protocol_zt.cpp
+    SourceX/dvlnet/base_protocol.cpp
+    SourceX/dvlnet/zerotier_native.cpp
+    SourceX/dvlnet/zerotier_lwip.cpp)
 endif()
 
 set(BIN_TARGET devilutionx)
@@ -887,4 +890,9 @@ if(CPACK)
   set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   include(CPack)
+endif()
+
+if(NOT NONET)
+  add_subdirectory(3rdParty/libzt)
+  target_link_libraries(devilutionx PRIVATE zt-static)
 endif()

@@ -21,6 +21,8 @@ enum packet_type : uint8_t {
 	PT_JOIN_ACCEPT = 0x12,
 	PT_CONNECT = 0x13,
 	PT_DISCONNECT = 0x14,
+	PT_INFO_REQUEST = 0x21,
+	PT_INFO_REPLY = 0x22
 };
 
 // Returns NULL for an invalid packet type.
@@ -152,10 +154,16 @@ void packet_proc<P>::process_data()
 		break;
 	case PT_CONNECT:
 		self.process_element(m_newplr);
+		self.process_element(m_info);
 		break;
 	case PT_DISCONNECT:
 		self.process_element(m_newplr);
 		self.process_element(m_leaveinfo);
+		break;
+	case PT_INFO_REPLY:
+		self.process_element(m_info);
+		break;
+	case PT_INFO_REQUEST:
 		break;
 	}
 }
@@ -174,6 +182,29 @@ void packet_in::process_element(T &x)
 	std::memcpy(&x, decrypted_buffer.data(), sizeof(T));
 	decrypted_buffer.erase(decrypted_buffer.begin(),
 	    decrypted_buffer.begin() + sizeof(T));
+}
+
+template <>
+inline void packet_out::create<PT_INFO_REQUEST>(plr_t s, plr_t d)
+{
+	if (have_encrypted || have_decrypted)
+		ABORT();
+	have_decrypted = true;
+	m_type = PT_INFO_REQUEST;
+	m_src = s;
+	m_dest = d;
+}
+
+template <>
+inline void packet_out::create<PT_INFO_REPLY>(plr_t s, plr_t d, buffer_t i)
+{
+	if (have_encrypted || have_decrypted)
+		ABORT();
+	have_decrypted = true;
+	m_type = PT_INFO_REPLY;
+	m_src = s;
+	m_dest = d;
+	m_info = std::move(i);
 }
 
 template <>
@@ -225,6 +256,19 @@ inline void packet_out::create<PT_JOIN_ACCEPT>(plr_t s, plr_t d, cookie_t c,
 	m_src = s;
 	m_dest = d;
 	m_cookie = c;
+	m_newplr = n;
+	m_info = i;
+}
+
+template <>
+inline void packet_out::create<PT_CONNECT>(plr_t s, plr_t d, plr_t n, buffer_t i)
+{
+	if (have_encrypted || have_decrypted)
+		ABORT();
+	have_decrypted = true;
+	m_type = PT_CONNECT;
+	m_src = s;
+	m_dest = d;
 	m_newplr = n;
 	m_info = i;
 }
@@ -308,4 +352,4 @@ std::unique_ptr<packet> packet_factory::make_packet(Args... args)
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

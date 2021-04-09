@@ -5,13 +5,11 @@
  */
 #pragma once
 
+#include "textdat.h"
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct ObjectStruct {
+struct ObjectStruct {
 	_object_id _otype;
 	Sint32 _ox;
 	Sint32 _oy;
@@ -42,7 +40,7 @@ typedef struct ObjectStruct {
 	Sint32 _oVar6;
 	_speech_id _oVar7;
 	Sint32 _oVar8;
-} ObjectStruct;
+};
 
 extern int objectactive[MAXOBJECTS];
 extern int nobjects;
@@ -85,9 +83,5 @@ void operate_lv24_lever();
 void objects_454BA8();
 void objects_rnd_454BEA();
 bool objects_lv_24_454B04(int s);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

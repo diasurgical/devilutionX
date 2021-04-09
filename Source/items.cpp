@@ -3,11 +3,21 @@
  *
  * Implementation of item functionality.
  */
+#include <stdint.h>
+
 #include <algorithm>
 #include "all.h"
 #include "options.h"
 
 namespace devilution {
+
+enum anim_armor_id : uint8_t {
+	// clang-format off
+	ANIM_ID_LIGHT_ARMOR  = 0x00,
+	ANIM_ID_MEDIUM_ARMOR = 0x10,
+	ANIM_ID_HEAVY_ARMOR  = 0x20,
+	// clang-format on
+};
 
 int itemactive[MAXITEMS];
 BOOL uitemflag;
@@ -172,7 +182,7 @@ BYTE ItemAnimLs[] = {
 	15,
 };
 /** Maps of drop sounds effect of dropping the item on ground. */
-int ItemDropSnds[] = {
+_sfx_id ItemDropSnds[] = {
 	IS_FHARM,
 	IS_FAXE,
 	IS_FPOT,
@@ -218,7 +228,7 @@ int ItemDropSnds[] = {
 	IS_FLARM,
 };
 /** Maps of drop sounds effect of placing the item in the inventory. */
-int ItemInvSnds[] = {
+_sfx_id ItemInvSnds[] = {
 	IS_IHARM,
 	IS_IAXE,
 	IS_IPOT,
@@ -4618,19 +4628,19 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	int ivalue;
 	ItemStruct holditem = items[0];
 
-	int strength = get_max_strength(plr[myplr]._pClass);
+	int strength = plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
 	if (strength < plr[myplr]._pStrength) {
 		strength = plr[myplr]._pStrength;
 	}
 	strength *= 1.2;
 
-	int dexterity = get_max_dexterity(plr[myplr]._pClass);
+	int dexterity = plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX);
 	if (dexterity < plr[myplr]._pDexterity) {
 		dexterity = plr[myplr]._pDexterity;
 	}
 	dexterity *= 1.2;
 
-	int magic = get_max_magic(plr[myplr]._pClass);
+	int magic = plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG);
 	if (magic < plr[myplr]._pMagic) {
 		magic = plr[myplr]._pMagic;
 	}
@@ -4952,9 +4962,9 @@ void SpawnBoy(int lvl)
 	int ivalue;
 	int count = 0;
 
-	int strength = get_max_strength(plr[myplr]._pClass);
-	int dexterity = get_max_dexterity(plr[myplr]._pClass);
-	int magic = get_max_magic(plr[myplr]._pClass);
+	int strength = plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
+	int dexterity = plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX);
+	int magic = plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG);
 	plr_class pc = plr[myplr]._pClass;
 
 	if (strength < plr[myplr]._pStrength) {
@@ -5085,13 +5095,13 @@ BOOL HealerItemOk(int i)
 
 	if (!gbIsMultiplayer) {
 		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
-			return !gbIsHellfire || plr[myplr]._pBaseStr < MaxStats[plr[myplr]._pClass][ATTRIB_STR];
+			return !gbIsHellfire || plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXMAG)
-			return !gbIsHellfire || plr[myplr]._pBaseMag < MaxStats[plr[myplr]._pClass][ATTRIB_MAG];
+			return !gbIsHellfire || plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXDEX)
-			return !gbIsHellfire || plr[myplr]._pBaseDex < MaxStats[plr[myplr]._pClass][ATTRIB_DEX];
+			return !gbIsHellfire || plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXVIT)
-			return !gbIsHellfire || plr[myplr]._pBaseVit < MaxStats[plr[myplr]._pClass][ATTRIB_VIT];
+			return !gbIsHellfire || plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT);
 	}
 
 	if (AllItemsList[i].iMiscId == IMISC_REJUV)

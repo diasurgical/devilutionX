@@ -42,7 +42,7 @@ bool gbNestArt;
 bool gbBard;
 bool gbBarbarian;
 int sgnTimeoutCurs;
-char sgbMouseDown;
+clicktype sgbMouseDown;
 int color_cycle_timer;
 int gnTickRate;
 WORD gnTickDelay = 50;

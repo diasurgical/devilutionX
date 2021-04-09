@@ -5,13 +5,15 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef enum _mai_id {
+typedef enum _mai_id : int8_t {
 	AI_ZOMBIE,
 	AI_FAT,
 	AI_SKELSD,
@@ -55,13 +57,13 @@ typedef enum _mai_id {
 	AI_INVALID = -1,
 } _mai_id;
 
-typedef enum _mc_id {
+typedef enum _mc_id : uint8_t {
 	MC_UNDEAD,
 	MC_DEMON,
 	MC_ANIMAL,
 } _mc_id;
 
-typedef enum monster_resistance {
+typedef enum monster_resistance : uint8_t {
 	// clang-format off
 	RESIST_MAGIC     = 0x01,
 	RESIST_FIRE      = 0x02,
@@ -75,42 +77,42 @@ typedef enum monster_resistance {
 } monster_resistance;
 
 typedef struct MonsterData {
-	Sint32 width;
-	Sint32 mImage;
+	const char *mName;
 	const char *GraphicType;
-	bool has_special;
 	const char *sndfile;
+	const char *TransFile;
+	Uint16 width;
+	Uint16 mImage;
+	bool has_special;
 	bool snd_special;
 	bool has_trans;
-	const char *TransFile;
-	Sint32 Frames[6];
-	Sint32 Rate[6];
-	const char *mName;
+	Uint8 Frames[6];
+	Uint8 Rate[6];
 	Sint8 mMinDLvl;
 	Sint8 mMaxDLvl;
 	Sint8 mLevel;
-	Sint32 mMinHP;
-	Sint32 mMaxHP;
+	Uint16 mMinHP;
+	Uint16 mMaxHP;
 	_mai_id mAi;
 	/** Usign monster_flag as bitflags */
-	Sint32 mFlags;
+	Uint16 mFlags;
 	Uint8 mInt;
-	Uint16 mHit;
+	Uint8 mHit;
 	Uint8 mAFNum;
 	Uint8 mMinDamage;
 	Uint8 mMaxDamage;
-	Uint16 mHit2;
+	Uint8 mHit2;
 	Uint8 mAFNum2;
 	Uint8 mMinDamage2;
 	Uint8 mMaxDamage2;
 	Uint8 mArmorClass;
 	_mc_id mMonstClass;
 	/** Using monster_resistance as bitflags */
-	Uint16 mMagicRes;
+	Uint8 mMagicRes;
 	/** Using monster_resistance as bitflags */
-	Uint16 mMagicRes2;
-	Uint16 mTreasure; // TODO Create enum
+	Uint8 mMagicRes2;
 	Sint8 mSelFlag;   // TODO Create enum
+	Uint16 mTreasure; // TODO Create enum
 	Uint16 mExp;
 } MonsterData;
 

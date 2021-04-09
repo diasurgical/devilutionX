@@ -5,7 +5,21 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
+
+enum anim_weapon_id : uint8_t {
+	ANIM_ID_UNARMED,
+	ANIM_ID_UNARMED_SHIELD,
+	ANIM_ID_SWORD,
+	ANIM_ID_SWORD_SHIELD,
+	ANIM_ID_BOW,
+	ANIM_ID_AXE,
+	ANIM_ID_MACE,
+	ANIM_ID_MACE_SHIELD,
+	ANIM_ID_STAFF,
+};
 
 typedef enum PLR_MODE {
 	PM_STAND,
@@ -303,9 +317,6 @@ void SetPlrDex(int p, int v);
 void SetPlrVit(int p, int v);
 void InitDungMsgs(int pnum);
 void PlayDungMsgs();
-int get_max_strength(int i);
-int get_max_magic(int i);
-int get_max_dexterity(int i);
 
 /* data */
 
@@ -317,7 +328,6 @@ extern int StrengthTbl[NUM_CLASSES];
 extern int MagicTbl[NUM_CLASSES];
 extern int DexterityTbl[NUM_CLASSES];
 extern int VitalityTbl[NUM_CLASSES];
-extern int MaxStats[NUM_CLASSES][4];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 
 #ifdef __cplusplus
