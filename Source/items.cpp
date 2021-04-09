@@ -20,16 +20,16 @@ enum anim_armor_id : uint8_t {
 };
 
 int itemactive[MAXITEMS];
-BOOL uitemflag;
+bool uitemflag;
 int itemavail[MAXITEMS];
 ItemStruct curruitem;
 ItemGetRecordStruct itemrecord[MAXITEMS];
 /** Contains the items on ground in the current game. */
 ItemStruct items[MAXITEMS + 1];
-BOOL itemhold[3][3];
+bool itemhold[3][3];
 CornerStoneStruct CornerStone;
 BYTE *itemanims[ITEMTYPES];
-BOOL UniqueItemFlag[128];
+bool UniqueItemFlag[128];
 int numitems;
 int gnNumGetRecords;
 
@@ -2673,7 +2673,7 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 
 void GetUniqueItem(int i, int uid)
 {
-	UniqueItemFlag[uid] = TRUE;
+	UniqueItemFlag[uid] = true;
 	SaveItemPower(i, UniqueItemList[uid].UIPower1, UniqueItemList[uid].UIParam1, UniqueItemList[uid].UIParam2, 0, 0, 1);
 
 	if (UniqueItemList[uid].UINumPL > 1)
