@@ -714,7 +714,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	if (uniqindex == UMT_ZHAR) {
 		zharflag = true;
 		for (i = 0; i < themeCount; i++) {
-			if (i == zharlib && zharflag == true) {
+			if (i == zharlib && zharflag) {
 				zharflag = false;
 				xp = 2 * themeLoc[i].x + 20;
 				yp = 2 * themeLoc[i].y + 20;

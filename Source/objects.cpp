@@ -331,7 +331,7 @@ static bool WallTrapLocOkK(int xp, int yp)
 	if (dFlags[xp][yp] & BFLAG_POPULATED)
 		return false;
 
-	if (nTrapTable[dPiece[xp][yp]] != false)
+	if (nTrapTable[dPiece[xp][yp]])
 		return true;
 	else
 		return false;

@@ -1919,7 +1919,7 @@ void CheckQuestItem(int pnum)
 			quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 			quests[Q_ANVIL]._qvar1 = 1;
 		}
-		if (quests[Q_ANVIL]._qlog == true) {
+		if (quests[Q_ANVIL]._qlog) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				sfxdnum = PS_WARR89;
@@ -1957,7 +1957,7 @@ void CheckQuestItem(int pnum)
 			quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 			quests[Q_ROCK]._qvar1 = 1;
 		}
-		if (quests[Q_ROCK]._qlog == true) {
+		if (quests[Q_ROCK]._qlog) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				sfxdnum = PS_WARR87;

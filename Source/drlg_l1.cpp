@@ -868,7 +868,7 @@ static void DRLG_L1Shadows()
 						patflag = false;
 					if (SPATS[i].s3 && SPATS[i].s3 != sd[1][0])
 						patflag = false;
-					if (patflag == true) {
+					if (patflag) {
 						if (SPATS[i].nv1 && !L5dflags[x - 1][y - 1])
 							dungeon[x - 1][y - 1] = SPATS[i].nv1;
 						if (SPATS[i].nv2 && !L5dflags[x][y - 1])
@@ -986,8 +986,8 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 
 			ii = 2;
 
-			for (yy = 0; yy < sh && abort == true; yy++) {
-				for (xx = 0; xx < sw && abort == true; xx++) {
+			for (yy = 0; yy < sh && abort; yy++) {
+				for (xx = 0; xx < sw && abort; xx++) {
 					if (miniset[ii] && dungeon[xx + sx][sy + yy] != miniset[ii])
 						abort = false;
 					if (L5dflags[xx + sx][sy + yy])
@@ -1028,7 +1028,7 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 		quests[Q_PWATER]._qty = 2 * sy + 22;
 	}
 
-	if (setview == true) {
+	if (setview) {
 		ViewX = 2 * sx + 19;
 		ViewY = 2 * sy + 20;
 	}
@@ -1369,15 +1369,15 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 			num++;
 		} while (!ran && num < 20);
 
-		if (ran == true)
+		if (ran)
 			L5drawRoom(cx1, cy1, cw, ch);
 		cx2 = x + w;
 		ran2 = L5checkRoom(cx2, cy1 - 1, cw + 1, ch + 2);
-		if (ran2 == true)
+		if (ran2)
 			L5drawRoom(cx2, cy1, cw, ch);
-		if (ran == true)
+		if (ran)
 			L5roomGen(cx1, cy1, cw, ch, 1);
-		if (ran2 == true)
+		if (ran2)
 			L5roomGen(cx2, cy1, cw, ch, 1);
 		return;
 	}
@@ -1391,15 +1391,15 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 		num++;
 	} while (!ran && num < 20);
 
-	if (ran == true)
+	if (ran)
 		L5drawRoom(rx, ry, width, height);
 	ry2 = y + h;
 	ran2 = L5checkRoom(rx - 1, ry2, width + 2, height + 1);
-	if (ran2 == true)
+	if (ran2)
 		L5drawRoom(rx, ry2, width, height);
-	if (ran == true)
+	if (ran)
 		L5roomGen(rx, ry, width, height, 0);
-	if (ran2 == true)
+	if (ran2)
 		L5roomGen(rx, ry2, width, height, 0);
 }
 
@@ -1745,7 +1745,7 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 {
 	int i, j;
 
-	if (topflag == true) {
+	if (topflag) {
 		dungeon[sx + 2][sy] = 12;
 		dungeon[sx + 3][sy] = 12;
 		dungeon[sx + 4][sy] = 3;
@@ -1753,7 +1753,7 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 		dungeon[sx + 8][sy] = 12;
 		dungeon[sx + 9][sy] = 2;
 	}
-	if (bottomflag == true) {
+	if (bottomflag) {
 		sy += 11;
 		dungeon[sx + 2][sy] = 10;
 		dungeon[sx + 3][sy] = 12;
@@ -1765,7 +1765,7 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 		}
 		sy -= 11;
 	}
-	if (leftflag == true) {
+	if (leftflag) {
 		dungeon[sx][sy + 2] = 11;
 		dungeon[sx][sy + 3] = 11;
 		dungeon[sx][sy + 4] = 3;
@@ -1773,7 +1773,7 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 		dungeon[sx][sy + 8] = 11;
 		dungeon[sx][sy + 9] = 1;
 	}
-	if (rightflag == true) {
+	if (rightflag) {
 		sx += 11;
 		dungeon[sx][sy + 2] = 14;
 		dungeon[sx][sy + 3] = 11;
@@ -1951,8 +1951,8 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 		for (sx = 0; sx < DMAXX - sw; sx++) {
 			found = true;
 			ii = 2;
-			for (yy = 0; yy < sh && found == true; yy++) {
-				for (xx = 0; xx < sw && found == true; xx++) {
+			for (yy = 0; yy < sh && found; yy++) {
+				for (xx = 0; xx < sw && found; xx++) {
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
 						found = false;
 					}
@@ -1963,7 +1963,7 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 				}
 			}
 			kk = sw * sh + 2;
-			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found == true) {
+			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found) {
 				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
 				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 (fixed)
 				if (sx > 0 && dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
@@ -1979,7 +1979,7 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 					found = false;
 				}
 			}
-			if (found == true && random_(0, 100) < rndper) {
+			if (found && random_(0, 100) < rndper) {
 				for (yy = 0; yy < sh; yy++) {
 					for (xx = 0; xx < sw; xx++) {
 						if (miniset[kk] != 0) {

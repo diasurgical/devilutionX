@@ -1139,15 +1139,15 @@ static void L4roomGen(int x, int y, int w, int h, int dir)
 			num++;
 		} while (!ran && num < 20);
 
-		if (ran == true)
+		if (ran)
 			L4drawRoom(cx1, cy1, cw, ch);
 		cx2 = x + w;
 		ran2 = L4checkRoom(cx2, cy1 - 1, cw + 1, ch + 2);
-		if (ran2 == true)
+		if (ran2)
 			L4drawRoom(cx2, cy1, cw, ch);
-		if (ran == true)
+		if (ran)
 			L4roomGen(cx1, cy1, cw, ch, 1);
-		if (ran2 == true)
+		if (ran2)
 			L4roomGen(cx2, cy1, cw, ch, 1);
 		return;
 	}
@@ -1161,15 +1161,15 @@ static void L4roomGen(int x, int y, int w, int h, int dir)
 		num++;
 	} while (!ran && num < 20);
 
-	if (ran == true)
+	if (ran)
 		L4drawRoom(rx, ry, width, height);
 	ry2 = y + h;
 	ran2 = L4checkRoom(rx - 1, ry2, width + 2, height + 1);
-	if (ran2 == true)
+	if (ran2)
 		L4drawRoom(rx, ry2, width, height);
-	if (ran == true)
+	if (ran)
 		L4roomGen(rx, ry, width, height, 0);
-	if (ran2 == true)
+	if (ran2)
 		L4roomGen(rx, ry2, width, height, 0);
 }
 
@@ -1347,8 +1347,8 @@ static bool DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 				found = false;
 			}
 			ii = 2;
-			for (yy = 0; yy < sh && found == true; yy++) {
-				for (xx = 0; xx < sw && found == true; xx++) {
+			for (yy = 0; yy < sh && found; yy++) {
+				for (xx = 0; xx < sw && found; xx++) {
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
 						found = false;
 					}
@@ -1388,7 +1388,7 @@ static bool DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 		quests[Q_BETRAYER]._qtx = sx + 1;
 		quests[Q_BETRAYER]._qty = sy + 1;
 	}
-	if (setview == true) {
+	if (setview) {
 		ViewX = 2 * sx + 21;
 		ViewY = 2 * sy + 22;
 	}

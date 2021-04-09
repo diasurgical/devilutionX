@@ -1220,7 +1220,7 @@ static void CPrintString(CelOutputBuffer out, int y, const char *str, bool cente
 	lineOffset = 0;
 	sx = 177 + PANEL_X;
 	sy = lineOffsets[lines][y] + PANEL_Y;
-	if (center == true) {
+	if (center) {
 		strWidth = 0;
 		tmp = str;
 		while (*tmp) {
