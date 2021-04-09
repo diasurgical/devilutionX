@@ -4700,6 +4700,9 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_AMULET:
 			ivalue = get_amulet_max_value(myplr);
 			break;
+		default:
+			ivalue = 0;
+			break;
 		}
 		ivalue *= 0.8;
 
