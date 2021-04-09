@@ -5,16 +5,39 @@ using namespace devilution;
 
 static void ComparePackedItems(const PkItemStruct *item1, const PkItemStruct *item2)
 {
-	ASSERT_EQ(item1->iSeed, item2->iSeed);
-	ASSERT_EQ(item1->iCreateInfo, item2->iCreateInfo);
-	ASSERT_EQ(item1->idx, item2->idx);
-	ASSERT_EQ(item1->bId, item2->bId);
-	ASSERT_EQ(item1->bDur, item2->bDur);
-	ASSERT_EQ(item1->bMDur, item2->bMDur);
-	ASSERT_EQ(item1->bCh, item2->bCh);
-	ASSERT_EQ(item1->bMCh, item2->bMCh);
-	ASSERT_EQ(item1->wValue, item2->wValue);
-	ASSERT_EQ(item1->dwBuff, item2->dwBuff);
+	// `PkItemStruct` is packed, so we copy the unaligned values out before comparing them.
+	// This avoids the following UBSAN error such as this one:
+	// runtime error: load of misaligned address for type 'const unsigned int', which requires 4 byte alignment
+	{
+		const auto item1_iSeed = item1->iSeed;
+		const auto item2_iSeed = item2->iSeed;
+		EXPECT_EQ(item1_iSeed, item2_iSeed);
+	}
+	{
+		const auto item1_iCreateInfo = item1->iCreateInfo;
+		const auto item2_iCreateInfo = item2->iCreateInfo;
+		EXPECT_EQ(item1_iCreateInfo, item2_iCreateInfo);
+	}
+	{
+		const auto item1_idx = item1->idx;
+		const auto item2_idx = item2->idx;
+		EXPECT_EQ(item1_idx, item2_idx);
+	}
+	EXPECT_EQ(item1->bId, item2->bId);
+	EXPECT_EQ(item1->bDur, item2->bDur);
+	EXPECT_EQ(item1->bMDur, item2->bMDur);
+	EXPECT_EQ(item1->bCh, item2->bCh);
+	EXPECT_EQ(item1->bMCh, item2->bMCh);
+	{
+		const auto item1_wValue = item1->wValue;
+		const auto item2_wValue = item2->wValue;
+		EXPECT_EQ(item1_wValue, item2_wValue);
+	}
+	{
+		const auto item1_dwBuff = item1->dwBuff;
+		const auto item2_dwBuff = item2->dwBuff;
+		EXPECT_EQ(item1_dwBuff, item2_dwBuff);
+	}
 }
 typedef struct TestItemStruct {
 	char _iIName[64];
@@ -64,47 +87,47 @@ typedef struct TestItemStruct {
 static void CompareItems(const ItemStruct *item1, const TestItemStruct *item2)
 {
 	ASSERT_STREQ(item1->_iIName, item2->_iIName);
-	ASSERT_EQ(item1->_itype, item2->_itype);
-	ASSERT_EQ(item1->_iClass, item2->_iClass);
-	ASSERT_EQ(item1->_iCurs, item2->_iCurs);
-	ASSERT_EQ(item1->_iIvalue, item2->_iIvalue);
-	ASSERT_EQ(item1->_iMinDam, item2->_iMinDam);
-	ASSERT_EQ(item1->_iMaxDam, item2->_iMaxDam);
-	ASSERT_EQ(item1->_iAC, item2->_iAC);
-	ASSERT_EQ(item1->_iFlags, item2->_iFlags);
-	ASSERT_EQ(item1->_iMiscId, item2->_iMiscId);
-	ASSERT_EQ(item1->_iSpell, item2->_iSpell);
-	ASSERT_EQ(item1->_iCharges, item2->_iCharges);
-	ASSERT_EQ(item1->_iMaxCharges, item2->_iMaxCharges);
-	ASSERT_EQ(item1->_iDurability, item2->_iDurability);
-	ASSERT_EQ(item1->_iMaxDur, item2->_iMaxDur);
-	ASSERT_EQ(item1->_iPLDam, item2->_iPLDam);
-	ASSERT_EQ(item1->_iPLToHit, item2->_iPLToHit);
-	ASSERT_EQ(item1->_iPLAC, item2->_iPLAC);
-	ASSERT_EQ(item1->_iPLStr, item2->_iPLStr);
-	ASSERT_EQ(item1->_iPLMag, item2->_iPLMag);
-	ASSERT_EQ(item1->_iPLDex, item2->_iPLDex);
-	ASSERT_EQ(item1->_iPLVit, item2->_iPLVit);
-	ASSERT_EQ(item1->_iPLFR, item2->_iPLFR);
-	ASSERT_EQ(item1->_iPLLR, item2->_iPLLR);
-	ASSERT_EQ(item1->_iPLMR, item2->_iPLMR);
-	ASSERT_EQ(item1->_iPLMana, item2->_iPLMana);
-	ASSERT_EQ(item1->_iPLHP, item2->_iPLHP);
-	ASSERT_EQ(item1->_iPLDamMod, item2->_iPLDamMod);
-	ASSERT_EQ(item1->_iPLGetHit, item2->_iPLGetHit);
-	ASSERT_EQ(item1->_iPLLight, item2->_iPLLight);
-	ASSERT_EQ(item1->_iSplLvlAdd, item2->_iSplLvlAdd);
-	ASSERT_EQ(item1->_iUid, item2->_iUid);
-	ASSERT_EQ(item1->_iFMinDam, item2->_iFMinDam);
-	ASSERT_EQ(item1->_iFMaxDam, item2->_iFMaxDam);
-	ASSERT_EQ(item1->_iLMinDam, item2->_iLMinDam);
-	ASSERT_EQ(item1->_iLMaxDam, item2->_iLMaxDam);
-	ASSERT_EQ(item1->_iPrePower, item2->_iPrePower);
-	ASSERT_EQ(item1->_iSufPower, item2->_iSufPower);
-	ASSERT_EQ(item1->_iMinStr, item2->_iMinStr);
-	ASSERT_EQ(item1->_iMinMag, item2->_iMinMag);
-	ASSERT_EQ(item1->_iMinDex, item2->_iMinDex);
-	ASSERT_EQ(item1->IDidx, item2->IDidx);
+	EXPECT_EQ(item1->_itype, item2->_itype);
+	EXPECT_EQ(item1->_iClass, item2->_iClass);
+	EXPECT_EQ(item1->_iCurs, item2->_iCurs);
+	EXPECT_EQ(item1->_iIvalue, item2->_iIvalue);
+	EXPECT_EQ(item1->_iMinDam, item2->_iMinDam);
+	EXPECT_EQ(item1->_iMaxDam, item2->_iMaxDam);
+	EXPECT_EQ(item1->_iAC, item2->_iAC);
+	EXPECT_EQ(item1->_iFlags, item2->_iFlags);
+	EXPECT_EQ(item1->_iMiscId, item2->_iMiscId);
+	EXPECT_EQ(item1->_iSpell, item2->_iSpell);
+	EXPECT_EQ(item1->_iCharges, item2->_iCharges);
+	EXPECT_EQ(item1->_iMaxCharges, item2->_iMaxCharges);
+	EXPECT_EQ(item1->_iDurability, item2->_iDurability);
+	EXPECT_EQ(item1->_iMaxDur, item2->_iMaxDur);
+	EXPECT_EQ(item1->_iPLDam, item2->_iPLDam);
+	EXPECT_EQ(item1->_iPLToHit, item2->_iPLToHit);
+	EXPECT_EQ(item1->_iPLAC, item2->_iPLAC);
+	EXPECT_EQ(item1->_iPLStr, item2->_iPLStr);
+	EXPECT_EQ(item1->_iPLMag, item2->_iPLMag);
+	EXPECT_EQ(item1->_iPLDex, item2->_iPLDex);
+	EXPECT_EQ(item1->_iPLVit, item2->_iPLVit);
+	EXPECT_EQ(item1->_iPLFR, item2->_iPLFR);
+	EXPECT_EQ(item1->_iPLLR, item2->_iPLLR);
+	EXPECT_EQ(item1->_iPLMR, item2->_iPLMR);
+	EXPECT_EQ(item1->_iPLMana, item2->_iPLMana);
+	EXPECT_EQ(item1->_iPLHP, item2->_iPLHP);
+	EXPECT_EQ(item1->_iPLDamMod, item2->_iPLDamMod);
+	EXPECT_EQ(item1->_iPLGetHit, item2->_iPLGetHit);
+	EXPECT_EQ(item1->_iPLLight, item2->_iPLLight);
+	EXPECT_EQ(item1->_iSplLvlAdd, item2->_iSplLvlAdd);
+	EXPECT_EQ(item1->_iUid, item2->_iUid);
+	EXPECT_EQ(item1->_iFMinDam, item2->_iFMinDam);
+	EXPECT_EQ(item1->_iFMaxDam, item2->_iFMaxDam);
+	EXPECT_EQ(item1->_iLMinDam, item2->_iLMinDam);
+	EXPECT_EQ(item1->_iLMaxDam, item2->_iLMaxDam);
+	EXPECT_EQ(item1->_iPrePower, item2->_iPrePower);
+	EXPECT_EQ(item1->_iSufPower, item2->_iSufPower);
+	EXPECT_EQ(item1->_iMinStr, item2->_iMinStr);
+	EXPECT_EQ(item1->_iMinMag, item2->_iMinMag);
+	EXPECT_EQ(item1->_iMinDex, item2->_iMinDex);
+	EXPECT_EQ(item1->IDidx, item2->IDidx);
 }
 
 const PkItemStruct PackedDiabloItems[] = {
