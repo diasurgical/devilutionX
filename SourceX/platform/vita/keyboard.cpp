@@ -78,7 +78,7 @@ static int vita_input_thread(void *ime_buffer)
 	return 0;
 }
 
-static int vita_keyboard_get(const char *guide_text, char *initial_text, int max_len, SceWChar16 *buf)
+static int vita_keyboard_get(const char *guide_text, const char *initial_text, int max_len, SceWChar16 *buf)
 {
 	SceWChar16 title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
 	SceWChar16 text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
@@ -111,7 +111,7 @@ static int vita_keyboard_get(const char *guide_text, char *initial_text, int max
 	return 1;
 }
 
-void vita_start_text_input(const char *guide_text, char *initial_text, int max_length)
+void vita_start_text_input(const char *guide_text, const char *initial_text, int max_length)
 {
 	SceWChar16 ime_buffer[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
 	if (vita_keyboard_get(guide_text, initial_text, max_length, ime_buffer)) {
