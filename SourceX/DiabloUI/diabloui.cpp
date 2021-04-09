@@ -21,6 +21,10 @@
 // for virtual keyboard on Switch
 #include "platform/switch/keyboard.h"
 #endif
+#ifdef __vita__
+// for virtual keyboard on Vita
+#include "platform/vita/keyboard.h"
+#endif
 
 namespace devilution {
 
@@ -93,6 +97,8 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 			textInputActive = true;
 #ifdef __SWITCH__
 			switch_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
+#elif defined(__vita__)
+			vita_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #else
 			SDL_StartTextInput();
 #endif
@@ -207,6 +213,12 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 {
 	std::string output = utf8_to_latin1(in_buf);
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
+}
+
+void selhero_SetName(char *in_buf, char *out_buf, int cnt)
+{
+	std::string output = utf8_to_latin1(in_buf);
+	strncpy(out_buf, output.c_str(), cnt);
 }
 
 bool HandleMenuAction(MenuAction menu_action)
@@ -324,7 +336,7 @@ void UiFocusNavigation(SDL_Event *event)
 #ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			if (textInputActive) {
-				selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
+				selhero_SetName(event->text.text, UiTextInput, UiTextInputLen);
 			}
 			return;
 #endif
