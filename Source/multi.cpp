@@ -898,7 +898,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	plr[pnum].plractive = true;
 	gbActivePlayers++;
 
-	if (sgbPlayerTurnBitTbl[pnum] != false) {
+	if (sgbPlayerTurnBitTbl[pnum]) {
 		szEvent = "Player '%s' (level %d) just joined the game";
 	} else {
 		szEvent = "Player '%s' (level %d) is already in the game";
