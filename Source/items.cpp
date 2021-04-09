@@ -2427,7 +2427,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 		CalcItemValue(i);
 }
 
-void GetItemBonus(int i, int idata, int minlvl, int maxlvl, BOOL onlygood, BOOLEAN allowspells)
+void GetItemBonus(int i, int idata, int minlvl, int maxlvl, BOOL onlygood, bool allowspells)
 {
 	if (minlvl > 25)
 		minlvl = 25;
@@ -2635,7 +2635,7 @@ int RndTypeItems(int itype, int imid, int lvl)
 int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 {
 	int j, idata, numu;
-	BOOLEAN uok[128];
+	bool uok[128];
 
 	if (random_(28, 100) > uper)
 		return UITYPE_INVALID;

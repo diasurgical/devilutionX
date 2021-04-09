@@ -21,7 +21,7 @@ static BYTE sgbRecvCmd;
 static LocalLevel sgLocals[NUMLEVELS];
 static DJunk sgJunk;
 static TMegaPkt *sgpMegaPkt;
-static BOOLEAN sgbDeltaChanged;
+static bool sgbDeltaChanged;
 static BYTE sgbDeltaChunks;
 BOOL deltaload;
 BYTE gbBufferMsgs;

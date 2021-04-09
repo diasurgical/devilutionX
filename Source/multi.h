@@ -28,12 +28,12 @@ typedef struct GameData {
 	Uint8 bFriendlyFire;
 } GameData;
 
-extern BOOLEAN gbSomebodyWonGameKludge;
+extern bool gbSomebodyWonGameKludge;
 extern char szPlayerDescript[128];
 extern WORD sgwPackPlrOffsetTbl[MAX_PLRS];
 extern BYTE gbActivePlayers;
-extern BOOLEAN gbGameDestroyed;
-extern BOOLEAN gbSelectProvider;
+extern bool gbGameDestroyed;
+extern bool gbSelectProvider;
 extern bool gbIsMultiplayer;
 extern char szPlayerName[128];
 extern BYTE gbDeltaSender;

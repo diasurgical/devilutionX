@@ -29,7 +29,7 @@ BOOL zoomflag;
 /** Enable updating of player character, set to false once Diablo dies */
 BOOL gbProcessPlayers;
 bool gbLoadGame;
-BOOLEAN cineflag;
+bool cineflag;
 int force_redraw;
 BOOL light4flag;
 int setseed;

@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-BOOLEAN gbSndInited;
+bool gbSndInited;
 /** Specifies whether background music is enabled. */
 HANDLE sghMusic;
 
@@ -37,9 +37,9 @@ void FreeMusicBuffer()
 
 /* data */
 
-BOOLEAN gbMusicOn = true;
+bool gbMusicOn = true;
 /** Specifies whether sound effects are enabled. */
-BOOLEAN gbSoundOn = true;
+bool gbSoundOn = true;
 /** Specifies the active background music track id. */
 int sgnMusicTrack = NUM_MUSIC;
 /** Maps from track ID to track name in spawn. */

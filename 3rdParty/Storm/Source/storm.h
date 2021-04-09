@@ -314,7 +314,7 @@ BOOL SVidPlayContinue(void);
 BOOL SNetGetOwnerTurnsWaiting(DWORD *);
 bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
-BOOLEAN SNetSetBasePlayer(int);
+bool SNetSetBasePlayer(int);
 int SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
 int SNetGetProviderCaps(struct _SNETCAPS *);
 BOOL SFileEnableDirectAccess(BOOL enable);

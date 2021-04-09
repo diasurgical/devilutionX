@@ -19,7 +19,7 @@ int MissileFileFlag;
 int monstkills[MAXMONSTERS];
 int monstactive[MAXMONSTERS];
 int nummonsters;
-BOOLEAN sgbSaveSoundOn;
+bool sgbSaveSoundOn;
 MonsterStruct monster[MAXMONSTERS];
 int totalmonsters;
 CMonster Monsters[MAX_LVLMTYPES];
@@ -5373,10 +5373,10 @@ BOOL PosOkMonst(int i, int x, int y)
 	return ret;
 }
 
-BOOLEAN monster_posok(int i, int x, int y)
+bool monster_posok(int i, int x, int y)
 {
 	int mi, j;
-	BOOLEAN ret, fire, lightning;
+	bool ret, fire, lightning;
 
 	ret = TRUE;
 	mi = dMissile[x][y];

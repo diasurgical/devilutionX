@@ -37,20 +37,20 @@ char block_lvid[MAXTILES + 1];
 /**
  * List of light blocking dPieces
  */
-BOOLEAN nBlockTable[MAXTILES + 1];
+bool nBlockTable[MAXTILES + 1];
 /**
  * List of path blocking dPieces
  */
-BOOLEAN nSolidTable[MAXTILES + 1];
+bool nSolidTable[MAXTILES + 1];
 /**
  * List of transparent dPieces
  */
-BOOLEAN nTransTable[MAXTILES + 1];
+bool nTransTable[MAXTILES + 1];
 /**
  * List of missile blocking dPieces
  */
-BOOLEAN nMissileTable[MAXTILES + 1];
-BOOLEAN nTrapTable[MAXTILES + 1];
+bool nMissileTable[MAXTILES + 1];
+bool nTrapTable[MAXTILES + 1];
 /** Specifies the minimum X-coordinate of the map. */
 int dminx;
 /** Specifies the minimum Y-coordinate of the map. */
@@ -64,7 +64,7 @@ int gnDifficulty;
 dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
 BYTE currlevel;
-BOOLEAN setlevel;
+bool setlevel;
 /** Specifies the active quest level of the current game. */
 BYTE setlvlnum;
 /** Level type of the active quest level */
@@ -85,7 +85,7 @@ int LvlViewY;
 int MicroTileLen;
 char TransVal;
 /** Specifies the active transparency indices. */
-BOOLEAN TransList[256];
+bool TransList[256];
 /** Contains the piece IDs of each tile on the map. */
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */

@@ -11,7 +11,7 @@
 namespace devilution {
 
 BYTE *optbar_cel;
-BOOLEAN mouseNavigation;
+bool mouseNavigation;
 BYTE *PentSpin_cel;
 TMenuItem *sgpCurrItem;
 BYTE *BigTGold_cel;
@@ -309,7 +309,7 @@ BOOL gmenu_presskeys(int vkey)
 	return TRUE;
 }
 
-static BOOLEAN gmenu_get_mouse_slider(int *plOffset)
+static bool gmenu_get_mouse_slider(int *plOffset)
 {
 	*plOffset = 282;
 	if (MouseX < 282 + PANEL_LEFT) {

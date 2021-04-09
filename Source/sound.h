@@ -19,7 +19,7 @@ typedef struct TSnd {
 	Uint32 start_tc;
 } TSnd;
 
-extern BOOLEAN gbSndInited;
+extern bool gbSndInited;
 
 void snd_update(BOOL bStopAll);
 void snd_stop_snd(TSnd *pSnd);
@@ -37,9 +37,9 @@ int sound_get_or_set_sound_volume(int volume);
 
 /* data */
 
-extern BOOLEAN gbMusicOn;
-extern BOOLEAN gbSoundOn;
-extern BOOLEAN gbDupSounds;
+extern bool gbMusicOn;
+extern bool gbSoundOn;
+extern bool gbDupSounds;
 
 #ifdef __cplusplus
 }
