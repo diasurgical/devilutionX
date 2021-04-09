@@ -1225,7 +1225,7 @@ void SetMissDir(int mi, int dir)
 void LoadMissileGFX(BYTE mi)
 {
 	MisFileData *mfd = &misfiledata[mi];
-	if (mfd->mAnimData[0] == NULL)
+	if (mfd->mAnimData[0] != NULL)
 		return;
 
 	char pszName[256];
