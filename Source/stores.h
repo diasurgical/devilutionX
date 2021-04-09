@@ -38,6 +38,8 @@ typedef enum talk_id {
 	STORE_TAVERN,
 	STORE_DRUNK,
 	STORE_BARMAID,
+	STORE_SBUYBACK,
+	STORE_WBUYBACK,
 } talk_id;
 
 typedef struct STextStruct {
@@ -114,6 +116,11 @@ void STextEnter();
 void CheckStoreBtn();
 void ReleaseStoreBtn();
 
+void S_StartBuyBack();
+void S_ScrollBuyBack(int idx);
+void BuyBackItem();
+void S_SBuyBackEnter();
+void S_WBuyBackEnter();
 /* rdata */
 
 #ifdef __cplusplus
