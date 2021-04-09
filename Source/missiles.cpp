@@ -826,7 +826,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 		if (mtype == MIS_BONESPIRIT) {
 			dam = plr[pnum]._pHitPoints / 3;
 		} else {
-			if (shift == false) {
+			if (!shift) {
 
 				dam = (mind << 6) + random_(75, (maxd - mind + 1) << 6);
 				if (m == -1)
@@ -2603,7 +2603,7 @@ void AddGuardian(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 		}
 	}
 
-	if (missile[mi]._miDelFlag != true) {
+	if (!missile[mi]._miDelFlag) {
 		missile[mi]._misource = id;
 		missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 1);
 		missile[mi]._mirange = missile[mi]._mispllvl + (plr[id]._pLevel >> 1);
@@ -3025,7 +3025,7 @@ void AddFirewallC(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 		}
 	}
 
-	if (missile[mi]._miDelFlag != true) {
+	if (!missile[mi]._miDelFlag) {
 		missile[mi]._miVar7 = 0;
 		missile[mi]._miVar8 = 0;
 		missile[mi]._miVar3 = (midir - 2) & 7;

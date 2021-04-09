@@ -1959,7 +1959,7 @@ void SyncPlrKill(int pnum, int earflag)
 
 	for (i = 0; i < nummissiles; i++) {
 		ma = missileactive[i];
-		if (missile[ma]._mitype == MIS_MANASHIELD && missile[ma]._misource == pnum && missile[ma]._miDelFlag == false) {
+		if (missile[ma]._mitype == MIS_MANASHIELD && missile[ma]._misource == pnum && !missile[ma]._miDelFlag) {
 			if (earflag != -1) {
 				missile[ma]._miVar8 = earflag;
 			}

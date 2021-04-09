@@ -54,7 +54,7 @@ static bool doom_alloc_cel()
 {
 	doom_cleanup();
 	pDoomCel = DiabloAllocPtr(0x39000);
-	return pDoomCel ? true : false;
+	return pDoomCel != NULL;
 }
 
 static bool doom_load_graphics()
