@@ -4625,7 +4625,7 @@ int RndPremiumItem(int minlvl, int maxlvl)
 
 static void SpawnOnePremium(int i, int plvl, int myplr)
 {
-	int ivalue;
+	int ivalue = 0;
 	ItemStruct holditem = items[0];
 
 	int strength = plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
@@ -4699,9 +4699,6 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 			break;
 		case ITYPE_AMULET:
 			ivalue = get_amulet_max_value(myplr);
-			break;
-		default:
-			ivalue = 0;
 			break;
 		}
 		ivalue *= 0.8;
