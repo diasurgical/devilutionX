@@ -507,7 +507,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->pDifficulty = file->nextLE<Uint32>();
 	pPlayer->pDamAcFlags = file->nextLE<Uint32>();
 	file->skip(20); // Available bytes
-	CalcPlrItemVals(p, FALSE);
+	CalcPlrItemVals(p, true);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -978,7 +978,7 @@ void RemoveEmptyLevelItems()
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
-void LoadGame(BOOL firstflag)
+void LoadGame(bool firstflag)
 {
 	FreeGameMem();
 	pfile_remove_temp_files();
@@ -1166,7 +1166,7 @@ void LoadGame(BOOL firstflag)
 	missiles_process_charge();
 	ResetPal();
 	SetCursor_(CURSOR_HAND);
-	gbProcessPlayers = TRUE;
+	gbProcessPlayers = true;
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		RemoveEmptyLevelItems();
@@ -1903,7 +1903,7 @@ void SaveGame()
 
 	file.flush();
 
-	gbValidSaveFile = TRUE;
+	gbValidSaveFile = true;
 	pfile_rename_temp_to_perm();
 	pfile_write_hero();
 }
@@ -1988,9 +1988,9 @@ void SaveLevel()
 	}
 
 	if (!setlevel)
-		plr[myplr]._pLvlVisited[currlevel] = TRUE;
+		plr[myplr]._pLvlVisited[currlevel] = true;
 	else
-		plr[myplr]._pSLvlVisited[setlvlnum] = TRUE;
+		plr[myplr]._pSLvlVisited[setlvlnum] = true;
 }
 
 void LoadLevel()
@@ -2081,12 +2081,12 @@ void LoadLevel()
 		AutomapZoomReset();
 		ResyncQuests();
 		SyncPortals();
-		dolighting = TRUE;
+		dolighting = true;
 	}
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)
-			LightList[plr[i]._plid]._lunflag = TRUE;
+			LightList[plr[i]._plid]._lunflag = true;
 	}
 }
 

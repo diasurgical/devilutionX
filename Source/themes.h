@@ -17,8 +17,8 @@ typedef struct ThemeStruct {
 } ThemeStruct;
 
 extern int numthemes;
-extern BOOL armorFlag;
-extern BOOL weaponFlag;
+extern bool armorFlag;
+extern bool weaponFlag;
 extern int zharlib;
 extern ThemeStruct themes[MAXTHEMES];
 

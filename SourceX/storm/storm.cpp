@@ -71,7 +71,7 @@ unsigned char AsciiToLowerTable_Path[256] = {
 	0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
 };
 
-BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
+bool SFileOpenFile(const char *filename, HANDLE *phFile)
 {
 	bool result = false;
 
@@ -127,7 +127,7 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	return result;
 }
 
-BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
+bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
 {
 	HANDLE hFile;
 	size_t size;
@@ -617,7 +617,7 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 }
 
-BOOL SVidLoadNextFrame()
+bool SVidLoadNextFrame()
 {
 	SVidFrameEnd += SVidFrameLength;
 
@@ -647,7 +647,7 @@ unsigned char *SVidApplyVolume(const unsigned char *raw, unsigned long rawLen)
 	return (unsigned char *)scaled;
 }
 
-BOOL SVidPlayContinue(void)
+bool SVidPlayContinue(void)
 {
 	if (smk_palette_updated(SVidSMK)) {
 		SDL_Color colors[256];
@@ -807,7 +807,7 @@ void SErrSetLastError(DWORD dwErrCode)
 	nLastError = dwErrCode;
 }
 
-BOOL SFileSetBasePath(const char *path)
+bool SFileSetBasePath(const char *path)
 {
 	if (SBasePath == NULL)
 		SBasePath = new std::string;
@@ -815,7 +815,7 @@ BOOL SFileSetBasePath(const char *path)
 	return true;
 }
 
-BOOL SFileEnableDirectAccess(BOOL enable)
+bool SFileEnableDirectAccess(bool enable)
 {
 	directFileAccess = enable;
 	return true;

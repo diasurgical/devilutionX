@@ -171,11 +171,11 @@ void CheckTown()
 			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2)
 			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2)
 			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy)) {
-				trigflag = TRUE;
+				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, "Town Portal");
 				sprintf(tempstr, "from %s", plr[missile[mx]._misource]._pName);
-				AddPanelString(tempstr, TRUE);
+				AddPanelString(tempstr, true);
 				cursmx = missile[mx]._mix;
 				cursmy = missile[mx]._miy;
 			}
@@ -197,14 +197,14 @@ void CheckRportal()
 			    || cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2
 			    || cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2
 			    || cursmx == missile[mx]._mix && cursmy == missile[mx]._miy) {
-				trigflag = TRUE;
+				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, "Portal to");
 				if (!setlevel)
 					strcpy(tempstr, "The Unholy Altar");
 				else
 					strcpy(tempstr, "level 15");
-				AddPanelString(tempstr, TRUE);
+				AddPanelString(tempstr, true);
 				cursmx = missile[mx]._mix;
 				cursmy = missile[mx]._miy;
 			}
@@ -216,7 +216,7 @@ void CheckCursMove()
 {
 	int i, sx, sy, fx, fy, mx, my, tx, ty, px, py, xx, yy, mi, columns, rows, xo, yo;
 	char bv;
-	BOOL flipflag, flipx, flipy;
+	bool flipflag, flipx, flipy;
 
 	sx = MouseX;
 	sy = MouseY;
@@ -321,13 +321,13 @@ void CheckCursMove()
 	pcursobj = -1;
 	pcursitem = -1;
 	if (pcursinvitem != -1) {
-		drawsbarflag = TRUE;
+		drawsbarflag = true;
 	}
 	pcursinvitem = -1;
 	pcursplr = -1;
-	uitemflag = FALSE;
-	panelflag = FALSE;
-	trigflag = FALSE;
+	uitemflag = true;
+	panelflag = true;
+	trigflag = true;
 
 	if (plr[myplr]._pInvincible) {
 		return;

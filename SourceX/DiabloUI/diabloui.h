@@ -34,7 +34,7 @@ extern Art ArtHero;
 extern bool gbSpawned;
 
 extern void (*gfnSoundFunction)(const char *file);
-extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
+extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 
 inline SDL_Surface *DiabloUiSurface()
 {

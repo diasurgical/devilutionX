@@ -86,7 +86,7 @@ void mainmenu_Free()
 	vecMenuItems.clear();
 }
 
-BOOL UiMainMenuDialog(const char *name, int *pdwResult, void (*fnSound)(const char *file), int attractTimeOut)
+bool UiMainMenuDialog(const char *name, int *pdwResult, void (*fnSound)(const char *file), int attractTimeOut)
 {
 	MainMenuResult = 0;
 	while (MainMenuResult == 0) {

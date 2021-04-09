@@ -19,7 +19,7 @@ typedef struct _plrmsg {
 	char str[144];
 } _plrmsg;
 
-void plrmsg_delay(BOOL delay);
+void plrmsg_delay(bool delay);
 void ErrorPlrMsg(const char *pszMsg);
 size_t EventPlrMsg(const char *pszFmt, ...);
 void SendPlrMsg(int pnum, const char *pszStr);

@@ -18,7 +18,7 @@ typedef struct TriggerStruct {
 	int _tlvl;
 } TriggerStruct;
 
-extern BOOL trigflag;
+extern bool trigflag;
 extern int numtrigs;
 extern TriggerStruct trigs[MAXTRIGGERS];
 extern int TWarpFrom;

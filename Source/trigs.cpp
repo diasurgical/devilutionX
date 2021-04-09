@@ -7,8 +7,8 @@
 
 namespace devilution {
 
-BOOL townwarps[3];
-BOOL trigflag;
+bool townwarps[3];
+bool trigflag;
 int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
 int TWarpFrom;
@@ -53,7 +53,7 @@ int L6DownList[] = { 57, 58, 59, 60, 61, 62, 63, 64, -1 };
 void InitNoTriggers()
 {
 	numtrigs = 0;
-	trigflag = FALSE;
+	trigflag = true;
 }
 
 void InitTownTriggers()
@@ -72,7 +72,7 @@ void InitTownTriggers()
 	}
 	if (!gbIsSpawn) {
 		if (gbIsMultiplayer || plr[myplr].pTownWarps & 1 || (gbIsHellfire && plr[myplr]._pLevel >= 10)) {
-			townwarps[0] = TRUE;
+			townwarps[0] = true;
 			trigs[numtrigs]._tx = 49;
 			trigs[numtrigs]._ty = 21;
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -84,7 +84,7 @@ void InitTownTriggers()
 			numtrigs++;
 		}
 		if (gbIsMultiplayer || plr[myplr].pTownWarps & 2 || (gbIsHellfire && plr[myplr]._pLevel >= 15)) {
-			townwarps[1] = TRUE;
+			townwarps[1] = true;
 			trigs[numtrigs]._tx = 17;
 			trigs[numtrigs]._ty = 69;
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -92,7 +92,7 @@ void InitTownTriggers()
 			numtrigs++;
 		}
 		if (gbIsMultiplayer || plr[myplr].pTownWarps & 4 || (gbIsHellfire && plr[myplr]._pLevel >= 20)) {
-			townwarps[2] = TRUE;
+			townwarps[2] = true;
 			trigs[numtrigs]._tx = 41;
 			trigs[numtrigs]._ty = 80;
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -115,7 +115,7 @@ void InitTownTriggers()
 		}
 	}
 
-	trigflag = FALSE;
+	trigflag = true;
 }
 
 void InitL1Triggers()
@@ -165,7 +165,7 @@ void InitL1Triggers()
 			}
 		}
 	}
-	trigflag = FALSE;
+	trigflag = true;
 }
 
 void InitL2Triggers()
@@ -198,7 +198,7 @@ void InitL2Triggers()
 			}
 		}
 	}
-	trigflag = FALSE;
+	trigflag = true;
 }
 
 void InitL3Triggers()
@@ -258,7 +258,7 @@ void InitL3Triggers()
 			}
 		}
 	}
-	trigflag = FALSE;
+	trigflag = true;
 }
 
 void InitL4Triggers()
@@ -302,12 +302,12 @@ void InitL4Triggers()
 			}
 		}
 	}
-	trigflag = FALSE;
+	trigflag = true;
 }
 
 void InitSKingTriggers()
 {
-	trigflag = FALSE;
+	trigflag = true;
 	numtrigs = 1;
 	trigs[0]._tx = 82;
 	trigs[0]._ty = 42;
@@ -316,7 +316,7 @@ void InitSKingTriggers()
 
 void InitSChambTriggers()
 {
-	trigflag = FALSE;
+	trigflag = true;
 	numtrigs = 1;
 	trigs[0]._tx = 70;
 	trigs[0]._ty = 39;
@@ -325,7 +325,7 @@ void InitSChambTriggers()
 
 void InitPWaterTriggers()
 {
-	trigflag = FALSE;
+	trigflag = true;
 	numtrigs = 1;
 	trigs[0]._tx = 30;
 	trigs[0]._ty = 83;
@@ -334,14 +334,14 @@ void InitPWaterTriggers()
 
 void InitVPTriggers()
 {
-	trigflag = FALSE;
+	trigflag = true;
 	numtrigs = 1;
 	trigs[0]._tx = 35;
 	trigs[0]._ty = 32;
 	trigs[0]._tmsg = WM_DIABRTNLVL;
 }
 
-BOOL ForceTownTrig()
+bool ForceTownTrig()
 {
 	int i, j, k, l;
 
@@ -350,7 +350,7 @@ BOOL ForceTownTrig()
 			strcpy(infostr, "Down to dungeon");
 			cursmx = 25;
 			cursmy = 29;
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -360,7 +360,7 @@ BOOL ForceTownTrig()
 				strcpy(infostr, "Down to catacombs");
 				cursmx = 49;
 				cursmy = 21;
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -371,7 +371,7 @@ BOOL ForceTownTrig()
 				strcpy(infostr, "Down to caves");
 				cursmx = 17;
 				cursmy = 69;
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -382,7 +382,7 @@ BOOL ForceTownTrig()
 				strcpy(infostr, "Down to hell");
 				cursmx = 41;
 				cursmy = 80;
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -393,7 +393,7 @@ BOOL ForceTownTrig()
 				strcpy(infostr, "Down to Crypt");
 				cursmx = 36;
 				cursmy = 24;
-				return TRUE;
+				return true;
 			}
 		}
 		for (i = 0; TownHiveList[i] != -1; i++) {
@@ -401,15 +401,15 @@ BOOL ForceTownTrig()
 				strcpy(infostr, "Down to Hive");
 				cursmx = 80;
 				cursmy = 62;
-				return TRUE;
+				return true;
 			}
 		}
 	}
 
-	return FALSE;
+	return true;
 }
 
-BOOL ForceL1Trig()
+bool ForceL1Trig()
 {
 	int i, j;
 	int dx, dy;
@@ -425,7 +425,7 @@ BOOL ForceL1Trig()
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -437,7 +437,7 @@ BOOL ForceL1Trig()
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -450,14 +450,14 @@ BOOL ForceL1Trig()
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
 		}
 		if (dPiece[cursmx][cursmy] == 317) {
 			strcpy(infostr, "Cornerstone of the World");
-			return TRUE;
+			return true;
 		}
 		for (i = 0; L5DownList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L5DownList[i]) {
@@ -466,7 +466,7 @@ BOOL ForceL1Trig()
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -482,7 +482,7 @@ BOOL ForceL1Trig()
 								strcpy(infostr, "Up to town");
 								cursmx = trigs[j]._tx;
 								cursmy = trigs[j]._ty;
-								return TRUE;
+								return true;
 							}
 						}
 					}
@@ -491,10 +491,10 @@ BOOL ForceL1Trig()
 		}
 	}
 
-	return FALSE;
+	return true;
 }
 
-BOOL ForceL2Trig()
+bool ForceL2Trig()
 {
 	int i, j, dx, dy;
 
@@ -508,7 +508,7 @@ BOOL ForceL2Trig()
 						sprintf(infostr, "Up to level %i", currlevel - 1);
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -522,7 +522,7 @@ BOOL ForceL2Trig()
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursmx = trigs[j]._tx;
 					cursmy = trigs[j]._ty;
-					return TRUE;
+					return true;
 				}
 			}
 		}
@@ -539,7 +539,7 @@ BOOL ForceL2Trig()
 							strcpy(infostr, "Up to town");
 							cursmx = trigs[j]._tx;
 							cursmy = trigs[j]._ty;
-							return TRUE;
+							return true;
 						}
 					}
 				}
@@ -547,10 +547,10 @@ BOOL ForceL2Trig()
 		}
 	}
 
-	return FALSE;
+	return true;
 }
 
-BOOL ForceL3Trig()
+bool ForceL3Trig()
 {
 	int i, j, dx, dy;
 
@@ -562,7 +562,7 @@ BOOL ForceL3Trig()
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -576,7 +576,7 @@ BOOL ForceL3Trig()
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -589,7 +589,7 @@ BOOL ForceL3Trig()
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -603,7 +603,7 @@ BOOL ForceL3Trig()
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
@@ -621,7 +621,7 @@ BOOL ForceL3Trig()
 							strcpy(infostr, "Up to town");
 							cursmx = trigs[j]._tx;
 							cursmy = trigs[j]._ty;
-							return TRUE;
+							return true;
 						}
 					}
 				}
@@ -639,7 +639,7 @@ BOOL ForceL3Trig()
 							strcpy(infostr, "Up to town");
 							cursmx = trigs[j]._tx;
 							cursmy = trigs[j]._ty;
-							return TRUE;
+							return true;
 						}
 					}
 				}
@@ -647,10 +647,10 @@ BOOL ForceL3Trig()
 		}
 	}
 
-	return FALSE;
+	return true;
 }
 
-BOOL ForceL4Trig()
+bool ForceL4Trig()
 {
 	int i, j, dx, dy;
 
@@ -661,7 +661,7 @@ BOOL ForceL4Trig()
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					cursmx = trigs[j]._tx;
 					cursmy = trigs[j]._ty;
-					return TRUE;
+					return true;
 				}
 			}
 		}
@@ -674,7 +674,7 @@ BOOL ForceL4Trig()
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursmx = trigs[j]._tx;
 					cursmy = trigs[j]._ty;
-					return TRUE;
+					return true;
 				}
 			}
 		}
@@ -691,7 +691,7 @@ BOOL ForceL4Trig()
 							strcpy(infostr, "Up to town");
 							cursmx = trigs[j]._tx;
 							cursmy = trigs[j]._ty;
-							return TRUE;
+							return true;
 						}
 					}
 				}
@@ -707,14 +707,14 @@ BOOL ForceL4Trig()
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
-						return TRUE;
+						return true;
 					}
 				}
 			}
 		}
 	}
 
-	return FALSE;
+	return true;
 }
 
 void Freeupstairs()
@@ -733,7 +733,7 @@ void Freeupstairs()
 	}
 }
 
-BOOL ForceSKingTrig()
+bool ForceSKingTrig()
 {
 	int i;
 
@@ -743,14 +743,14 @@ BOOL ForceSKingTrig()
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return true;
 }
 
-BOOL ForceSChambTrig()
+bool ForceSChambTrig()
 {
 	int i;
 
@@ -760,14 +760,14 @@ BOOL ForceSChambTrig()
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return true;
 }
 
-BOOL ForcePWaterTrig()
+bool ForcePWaterTrig()
 {
 	int i;
 
@@ -777,16 +777,16 @@ BOOL ForcePWaterTrig()
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return true;
 }
 
 void CheckTrigForce()
 {
-	trigflag = FALSE;
+	trigflag = true;
 
 	if (!sgbControllerActive && MouseY > PANEL_TOP - 1) {
 		return;
@@ -847,7 +847,7 @@ void CheckTriggers()
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
-				NetSendCmdLoc(TRUE, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
+				NetSendCmdLoc(true, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
 				PlaySFX(PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
@@ -903,7 +903,7 @@ void CheckTriggers()
 					}
 
 					InitDiabloMsg(abortflag);
-					NetSendCmdLoc(TRUE, CMD_WALKXY, x, y);
+					NetSendCmdLoc(true, CMD_WALKXY, x, y);
 					return;
 				}
 			}

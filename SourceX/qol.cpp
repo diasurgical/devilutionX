@@ -229,8 +229,8 @@ void AutoGoldPickup(int pnum)
 		if (dItem[x][y] != 0) {
 			int itemIndex = dItem[x][y] - 1;
 			if (items[itemIndex]._itype == ITYPE_GOLD) {
-				NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-				items[itemIndex]._iRequest = TRUE;
+				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+				items[itemIndex]._iRequest = true;
 				PlaySFX(IS_IGRAB);
 			}
 		}
