@@ -373,28 +373,28 @@ endif()
 
 if(RUN_TESTS)
   list(APPEND devilutionx_SRCS
-    SourceT/appfat_test.cpp
-    SourceT/automap_test.cpp
-    SourceT/control_test.cpp
-    SourceT/cursor_test.cpp
-    SourceT/codec_test.cpp
-    SourceT/dead_test.cpp
-    SourceT/diablo_test.cpp
-    SourceT/doom_test.cpp
-    SourceT/drlg_l1_test.cpp
-    SourceT/drlg_l2_test.cpp
-    SourceT/drlg_l3_test.cpp
-    SourceT/drlg_l4_test.cpp
-    SourceT/effects_test.cpp
-    SourceT/file_util_test.cpp
-    SourceT/inv_test.cpp
-    SourceT/lighting_test.cpp
-    SourceT/missiles_test.cpp
-    SourceT/pack_test.cpp
-    SourceT/player_test.cpp
-    SourceT/scrollrt_test.cpp
-    SourceT/stores_test.cpp
-    SourceT/writehero_test.cpp)
+    test/appfat_test.cpp
+    test/automap_test.cpp
+    test/control_test.cpp
+    test/cursor_test.cpp
+    test/codec_test.cpp
+    test/dead_test.cpp
+    test/diablo_test.cpp
+    test/doom_test.cpp
+    test/drlg_l1_test.cpp
+    test/drlg_l2_test.cpp
+    test/drlg_l3_test.cpp
+    test/drlg_l4_test.cpp
+    test/effects_test.cpp
+    test/file_util_test.cpp
+    test/inv_test.cpp
+    test/lighting_test.cpp
+    test/missiles_test.cpp
+    test/pack_test.cpp
+    test/player_test.cpp
+    test/scrollrt_test.cpp
+    test/stores_test.cpp
+    test/writehero_test.cpp)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
