@@ -229,6 +229,7 @@ add_library(devilution STATIC
   Source/drlg_l2.cpp
   Source/drlg_l3.cpp
   Source/drlg_l4.cpp
+  Source/dx.cpp
   Source/dthread.cpp
   Source/effects.cpp
   Source/encrypt.cpp
@@ -271,6 +272,7 @@ add_library(devilution STATIC
   Source/scrollrt.cpp
   Source/setmaps.cpp
   Source/sha.cpp
+  Source/sound.cpp
   Source/spelldat.cpp
   Source/spells.cpp
   Source/stores.cpp
@@ -285,7 +287,6 @@ add_library(devilution STATIC
 
 set(devilutionx_SRCS
   SourceX/qol.cpp
-  SourceX/dx.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp
   SourceX/controls/devices/kbcontroller.cpp
@@ -300,7 +301,6 @@ set(devilutionx_SRCS
   SourceX/display.cpp
   SourceX/miniwin/misc_msg.cpp
   SourceX/thread.cpp
-  SourceX/sound.cpp
   SourceX/soundsample.cpp
   SourceX/storm_sdl_rw.cpp
   SourceX/storm/storm.cpp
