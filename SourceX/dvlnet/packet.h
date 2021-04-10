@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <string>
 #include <memory>
 #include <array>
@@ -15,14 +16,16 @@ namespace devilution {
 namespace net {
 
 enum packet_type : uint8_t {
-	PT_MESSAGE = 0x01,
-	PT_TURN = 0x02,
+	// clang-format off
+	PT_MESSAGE      = 0x01,
+	PT_TURN         = 0x02,
 	PT_JOIN_REQUEST = 0x11,
-	PT_JOIN_ACCEPT = 0x12,
-	PT_CONNECT = 0x13,
-	PT_DISCONNECT = 0x14,
+	PT_JOIN_ACCEPT  = 0x12,
+	PT_CONNECT      = 0x13,
+	PT_DISCONNECT   = 0x14,
 	PT_INFO_REQUEST = 0x21,
-	PT_INFO_REPLY = 0x22
+	PT_INFO_REPLY   = 0x22,
+	// clang-format on
 };
 
 // Returns NULL for an invalid packet type.

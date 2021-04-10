@@ -1,6 +1,8 @@
 //HEADER_GOES_HERE
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
 enum _mainmenu_selections : uint8_t {

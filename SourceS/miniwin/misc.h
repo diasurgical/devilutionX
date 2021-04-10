@@ -163,4 +163,4 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 #define DVL_MK_LBUTTON 0x0001
 #define DVL_MK_RBUTTON 0x0002
 
-} // namespace dvl
+} // namespace devilution

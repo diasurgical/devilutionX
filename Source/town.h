@@ -7,16 +7,8 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void TownOpenHive();
 void TownOpenGrave();
 void CreateTown(lvl_entry entry);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

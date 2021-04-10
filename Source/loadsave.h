@@ -9,10 +9,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern bool gbIsHellfireSaveGame;
 extern int giNumberOfLevels;
 
@@ -33,9 +29,5 @@ void SaveHeroItems(PlayerStruct *pPlayer);
 void SaveGame();
 void SaveLevel();
 void LoadLevel();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

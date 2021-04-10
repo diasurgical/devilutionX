@@ -7,14 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void CaptureScreen();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

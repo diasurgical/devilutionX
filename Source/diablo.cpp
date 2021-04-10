@@ -188,7 +188,7 @@ static void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("-t", argv[i]) == 0) {
 			leveldebug = true;
 			setlevel = true;
-			setlvlnum = SDL_atoi(argv[++i]);
+			setlvlnum = (_setlevels)SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-v", argv[i]) == 0) {
 			visiondebug = true;
 		} else if (strcasecmp("-w", argv[i]) == 0) {

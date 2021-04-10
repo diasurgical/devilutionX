@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
 enum theme_id : int8_t {
@@ -28,7 +30,7 @@ enum theme_id : int8_t {
 	THEME_NONE = -1,
 };
 
-enum object_graphic_id {
+enum object_graphic_id : int8_t {
 	OFILE_L1BRAZ,
 	OFILE_L1DOORS,
 	OFILE_LEVER,
@@ -88,7 +90,7 @@ enum object_graphic_id {
 	OFILE_NULL = -1,
 };
 
-enum _object_id {
+enum _object_id : int8_t {
 	OBJ_L1LIGHT,
 	OBJ_L1LDOOR,
 	OBJ_L1RDOOR,

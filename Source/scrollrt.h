@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
 enum _scroll_direction : uint8_t {

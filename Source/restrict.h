@@ -7,14 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void ReadOnlyTest();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

@@ -170,5 +170,5 @@ bool ProcessKbCtrlAxisMotion(const SDL_Event &event)
 	return false;
 }
 
-} // namespace dvl
+} // namespace devilution
 #endif

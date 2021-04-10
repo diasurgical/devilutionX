@@ -5,9 +5,11 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-enum cursor_id {
+enum cursor_id : uint8_t {
 	CURSOR_NONE,
 	CURSOR_HAND,
 	CURSOR_IDENTIFY,

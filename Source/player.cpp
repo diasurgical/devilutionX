@@ -2034,7 +2034,7 @@ void InitLevelChange(int pnum)
 __attribute__((no_sanitize("shift-base")))
 #endif
 void
-StartNewLvl(int pnum, int fom, int lvl)
+StartNewLvl(int pnum, interface_mode fom, int lvl)
 {
 	InitLevelChange(pnum);
 
@@ -2052,7 +2052,7 @@ StartNewLvl(int pnum, int fom, int lvl)
 		plr[pnum].plrlevel = lvl;
 		break;
 	case WM_DIABSETLVL:
-		setlvlnum = lvl;
+		setlvlnum = (_setlevels)lvl;
 		break;
 	case WM_DIABTWARPUP:
 		plr[myplr].pTownWarps |= 1 << (leveltype - 2);
@@ -2073,6 +2073,7 @@ StartNewLvl(int pnum, int fom, int lvl)
 		}
 	}
 }
+
 void RestartTownLvl(int pnum)
 {
 	InitLevelChange(pnum);
@@ -4229,6 +4230,16 @@ void InitDungMsgs(int pnum)
 	plr[pnum].pDungMsgs = 0;
 	plr[pnum].pDungMsgs2 = 0;
 }
+
+enum {
+	// clang-format off
+	DMSG_CATHEDRAL = 1 << 0,
+	DMSG_CATACOMBS = 1 << 1,
+	DMSG_CAVES     = 1 << 2,
+	DMSG_HELL      = 1 << 3,
+	DMSG_DIABLO    = 1 << 4,
+	// clang-format on
+};
 
 void PlayDungMsgs()
 {

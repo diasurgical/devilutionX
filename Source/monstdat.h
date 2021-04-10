@@ -9,11 +9,7 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef enum _mai_id : int8_t {
+enum _mai_id : int8_t {
 	AI_ZOMBIE,
 	AI_FAT,
 	AI_SKELSD,
@@ -55,15 +51,15 @@ typedef enum _mai_id : int8_t {
 	AI_NECROMORB,
 	AI_BONEDEMON,
 	AI_INVALID = -1,
-} _mai_id;
+};
 
-typedef enum _mc_id : uint8_t {
+enum _mc_id : uint8_t {
 	MC_UNDEAD,
 	MC_DEMON,
 	MC_ANIMAL,
-} _mc_id;
+};
 
-typedef enum monster_resistance : uint8_t {
+enum monster_resistance : uint8_t {
 	// clang-format off
 	RESIST_MAGIC     = 0x01,
 	RESIST_FIRE      = 0x02,
@@ -74,9 +70,9 @@ typedef enum monster_resistance : uint8_t {
 	IMMUNE_NULL_40   = 0x40,
 	IMMUNE_ACID      = 0x80,
 	// clang-format on
-} monster_resistance;
+};
 
-typedef struct MonsterData {
+struct MonsterData {
 	const char *mName;
 	const char *GraphicType;
 	const char *sndfile;
@@ -114,9 +110,9 @@ typedef struct MonsterData {
 	Sint8 mSelFlag;   // TODO Create enum
 	Uint16 mTreasure; // TODO Create enum
 	Uint16 mExp;
-} MonsterData;
+};
 
-typedef enum _monster_id {
+enum _monster_id : int16_t {
 	MT_NZOMBIE,
 	MT_BZOMBIE,
 	MT_GZOMBIE,
@@ -257,15 +253,15 @@ typedef enum _monster_id {
 	MT_NAKRUL,
 	NUM_MTYPES,
 	MT_INVALID = -1,
-} _monster_id;
+};
 
-typedef enum _monster_availability {
+enum _monster_availability : uint8_t {
 	MAT_NEVER,
 	MAT_ALWAYS,
 	MAT_RETAIL,
-} _monster_availability;
+};
 
-typedef struct UniqMonstStruct {
+struct UniqMonstStruct {
 	_monster_id mtype;
 	const char *mName;
 	const char *mTrnName;
@@ -281,15 +277,11 @@ typedef struct UniqMonstStruct {
 	Uint8 mUnqVar1;
 	Uint8 mUnqVar2;
 	Sint32 mtalkmsg;
-} UniqMonstStruct;
+};
 
 extern const MonsterData monsterdata[];
 extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
 extern const UniqMonstStruct UniqMonst[];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

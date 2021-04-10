@@ -16,4 +16,4 @@ void SetConfigPath(const char *path);
 void SetTtfPath(const char *path);
 void SetTtfName(const char *path);
 
-} // namespace dvl
+} // namespace devilution

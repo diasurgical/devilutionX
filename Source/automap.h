@@ -9,10 +9,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /** Specifies whether the automap is enabled. */
 extern bool automapflag;
 /** Tracks the explored areas of the map. */
@@ -86,9 +82,5 @@ void SetAutomapView(Sint32 x, Sint32 y);
  * @brief Resets the zoom level of the automap.
  */
 void AutomapZoomReset();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

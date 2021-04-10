@@ -65,7 +65,7 @@ dungeon_type leveltype;
 BYTE currlevel;
 bool setlevel;
 /** Specifies the active quest level of the current game. */
-BYTE setlvlnum;
+_setlevels setlvlnum;
 /** Level type of the active quest level */
 dungeon_type setlvltype;
 /** Specifies the player viewpoint X-coordinate of the map. */

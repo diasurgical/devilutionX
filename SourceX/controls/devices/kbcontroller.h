@@ -17,5 +17,5 @@ bool IsKbCtrlButtonPressed(ControllerButton button);
 
 bool ProcessKbCtrlAxisMotion(const SDL_Event &event);
 
-} // namespace dvl
+} // namespace devilution
 #endif

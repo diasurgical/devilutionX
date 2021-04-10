@@ -9,15 +9,11 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct TMenuItem {
+struct TMenuItem {
 	Uint32 dwFlags;
 	const char *pszStr;
 	void (*fnMenu)(bool);
-} TMenuItem;
+};
 
 extern TMenuItem *sgpCurrentMenu;
 
@@ -34,9 +30,5 @@ void gmenu_enable(TMenuItem *pMenuItem, bool enable);
 void gmenu_slider_set(TMenuItem *pItem, int min, int max, int gamma);
 int gmenu_slider_get(TMenuItem *pItem, int min, int max);
 void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

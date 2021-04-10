@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdlib>
+#include <stdint.h>
 
 #include <SDL.h>
 
@@ -26,7 +27,7 @@
 
 namespace devilution {
 
-enum direction {
+enum direction : uint8_t {
 	DIR_S,
 	DIR_SW,
 	DIR_W,

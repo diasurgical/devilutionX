@@ -139,7 +139,7 @@ void GetPortalLevel()
 	} else {
 		if (portal[portalindex].setlvl) {
 			setlevel = true;
-			setlvlnum = portal[portalindex].level;
+			setlvlnum = (_setlevels)portal[portalindex].level;
 			currlevel = portal[portalindex].level;
 			plr[myplr].plrlevel = setlvlnum;
 			leveltype = portal[portalindex].ltype;

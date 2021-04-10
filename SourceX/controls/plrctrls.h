@@ -1,11 +1,13 @@
 #pragma once
 // Controller actions implementation
 
+#include <stdint.h>
+
 #include "all.h"
 
 namespace devilution {
 
-typedef enum belt_item_type {
+typedef enum belt_item_type : uint8_t {
 	BLT_HEALING,
 	BLT_MANA,
 } belt_item_type;
@@ -52,4 +54,4 @@ typedef struct coords {
 } coords;
 extern int speedspellcount;
 
-} // namespace dvl
+} // namespace devilution

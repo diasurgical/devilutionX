@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 #include "effects.h"
 
 namespace devilution {
@@ -74,13 +76,13 @@ enum spell_id : int8_t {
 	SPL_INVALID = -1,
 };
 
-enum magic_type {
+enum magic_type : uint8_t {
 	STYPE_FIRE,
 	STYPE_LIGHTNING,
 	STYPE_MAGIC,
 };
 
-enum missile_id {
+enum missile_id : int8_t {
 	MIS_ARROW,
 	MIS_FIREBOLT,
 	MIS_GUARDIAN,

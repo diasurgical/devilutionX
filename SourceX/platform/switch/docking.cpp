@@ -46,4 +46,4 @@ void HandleDocking()
 	}
 }
 
-} // namespace dvl
+} // namespace devilution

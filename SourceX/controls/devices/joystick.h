@@ -42,4 +42,4 @@ private:
 	SDL_JoystickID instance_id_ = -1;
 };
 
-} // namespace dvl
+} // namespace devilution

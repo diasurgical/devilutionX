@@ -37,7 +37,7 @@ int gnNumGetRecords;
 
 int OilLevels[] = { 1, 10, 1, 10, 4, 1, 5, 17, 1, 10 };
 int OilValues[] = { 500, 2500, 500, 2500, 1500, 100, 2500, 15000, 500, 2500 };
-enum item_misc_id OilMagic[] = {
+item_misc_id OilMagic[] = {
 	IMISC_OILACC,
 	IMISC_OILMAST,
 	IMISC_OILSHARP,
@@ -2338,7 +2338,7 @@ static void SaveItemSuffix(int i, int sufidx)
 	    PL_Suffix[sufidx].PLMultVal);
 }
 
-void GetItemPower(int i, int minlvl, int maxlvl, int flgs, bool onlygood)
+void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
 {
 	int pre, post, nt, nl, j, preidx, sufidx;
 	int l[256];

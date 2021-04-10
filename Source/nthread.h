@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern BYTE sgbNetUpdateRate;
 extern DWORD gdwMsgLenTbl[MAX_PLRS];
 extern DWORD gdwDeltaBytesSec;
@@ -27,9 +23,5 @@ void nthread_start(bool set_turn_upper_bit);
 void nthread_cleanup();
 void nthread_ignore_mutex(bool bStart);
 bool nthread_has_500ms_passed();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

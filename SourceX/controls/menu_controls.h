@@ -1,10 +1,12 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "all.h"
 
 namespace devilution {
 
-enum MenuAction {
+enum MenuAction : uint8_t {
 	MenuAction_NONE = 0,
 	MenuAction_SELECT,
 	MenuAction_BACK,
@@ -24,4 +26,4 @@ MenuAction GetMenuAction(const SDL_Event &event);
 /** Menu action from holding the left stick or DPad. */
 MenuAction GetMenuHeldUpDownAction();
 
-} // namespace dvl
+} // namespace devilution

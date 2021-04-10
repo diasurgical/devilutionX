@@ -196,6 +196,18 @@ char SpellITbl[] = {
 	35,
 	35,
 };
+
+enum panel_button_id {
+	PANBTN_CHARINFO,
+	PANBTN_QLOG,
+	PANBTN_AUTOMAP,
+	PANBTN_MAINMENU,
+	PANBTN_INVENTORY,
+	PANBTN_SPELLBOOK,
+	PANBTN_SENDMSG,
+	PANBTN_FRIENDLY,
+};
+
 /** Maps from panel_button_id to the position and dimensions of a panel button. */
 int PanBtnPos[8][5] = {
 	// clang-format off
@@ -1092,17 +1104,6 @@ void CheckPanelInfo()
 	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
 		pcursinvitem = CheckInvHLight();
 }
-
-enum panel_button_id {
-	PANBTN_CHARINFO,
-	PANBTN_QLOG,
-	PANBTN_AUTOMAP,
-	PANBTN_MAINMENU,
-	PANBTN_INVENTORY,
-	PANBTN_SPELLBOOK,
-	PANBTN_SENDMSG,
-	PANBTN_FRIENDLY,
-};
 
 /**
  * Check if the mouse is within a control panel button that's flagged.

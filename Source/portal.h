@@ -7,18 +7,14 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct PortalStruct {
+struct PortalStruct {
 	bool open;
 	Sint32 x;
 	Sint32 y;
 	Sint32 level;
 	dungeon_type ltype;
 	bool setlvl;
-} PortalStruct;
+};
 
 extern PortalStruct portal[MAXPORTAL];
 
@@ -35,9 +31,5 @@ void SetCurrentPortal(int p);
 void GetPortalLevel();
 void GetPortalLvlPos();
 bool PosOkPortal(int lvl, int x, int y);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

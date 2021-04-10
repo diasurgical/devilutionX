@@ -111,4 +111,4 @@ inline void RemoveFile(const char *lpFileName)
 	}
 }
 
-} // namespace dvl
+} // namespace devilution

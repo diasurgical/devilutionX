@@ -8,4 +8,4 @@ namespace devilution {
 void handle_touch(SDL_Event *event, int current_mouse_x, int current_mouse_y);
 #endif
 
-} // namespace dvl
+} // namespace devilution

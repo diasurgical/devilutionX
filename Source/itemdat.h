@@ -434,7 +434,7 @@ struct ItemDataStruct {
 	Uint16 iMaxValue;
 };
 
-enum item_effect_type {
+enum item_effect_type : int8_t {
 	IPL_TOHIT,
 	IPL_TOHIT_CURSE,
 	IPL_DAMP,
@@ -533,20 +533,20 @@ enum item_effect_type {
 	IPL_INVALID = -1,
 };
 
-enum goodorevil {
+enum goodorevil : uint8_t {
 	GOE_ANY,
 	GOE_EVIL,
 	GOE_GOOD,
 };
 
-enum affix_item_type {
+enum affix_item_type : uint8_t {
 	// clang-format off
-	PLT_MISC  = 0x000001,
-	PLT_BOW   = 0x000010,
-	PLT_STAFF = 0x000100,
-	PLT_WEAP  = 0x001000,
-	PLT_SHLD  = 0x010000,
-	PLT_ARMO  = 0x100000,
+	PLT_MISC  = 1 << 0,
+	PLT_BOW   = 1 << 1,
+	PLT_STAFF = 1 << 2,
+	PLT_WEAP  = 1 << 3,
+	PLT_SHLD  = 1 << 4,
+	PLT_ARMO  = 1 << 5,
 	// clang-format on
 };
 

@@ -5,15 +5,19 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 #include "msg.h"
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum event_type : uint8_t {
+	EVENT_TYPE_PLAYER_CREATE_GAME,
+	EVENT_TYPE_PLAYER_LEAVE_GAME,
+	EVENT_TYPE_PLAYER_MESSAGE,
+};
 
-typedef struct GameData {
+struct GameData {
 	Sint32 size;
 	Sint32 dwSeed;
 	Uint32 programid;
@@ -26,7 +30,7 @@ typedef struct GameData {
 	Uint8 bTheoQuest;
 	Uint8 bCowQuest;
 	Uint8 bFriendlyFire;
-} GameData;
+};
 
 extern bool gbSomebodyWonGameKludge;
 extern char szPlayerDescript[128];
@@ -55,9 +59,5 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram);
 bool multi_init_single(GameData *gameData);
 bool multi_init_multi(GameData *gameData, bool *pfExitProgram);
 void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

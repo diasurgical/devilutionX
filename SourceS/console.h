@@ -29,7 +29,7 @@ void printInConsole(const char *fmt, ...)
 	WriteConsole(stderrHandle, message, strlen(message), NULL, NULL);
 }
 
-} // namespace dvl
+} // namespace devilution
 #else
 #define printInConsole printf
 #endif

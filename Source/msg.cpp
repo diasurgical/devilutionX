@@ -1931,7 +1931,7 @@ static DWORD On_NEWLVL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		StartNewLvl(pnum, p->wParam1, p->wParam2);
+		StartNewLvl(pnum, (interface_mode)p->wParam1, p->wParam2);
 
 	return sizeof(*p);
 }

@@ -2,20 +2,21 @@
 
 #include "all.h"
 
+#include <stdint.h>
 #include <SDL_ttf.h>
 
 #include "DiabloUI/art.h"
 
 namespace devilution {
 
-enum _artFontTables {
+enum _artFontTables : uint8_t {
 	AFT_SMALL,
 	AFT_MED,
 	AFT_BIG,
 	AFT_HUGE,
 };
 
-enum _artFontColors {
+enum _artFontColors : uint8_t {
 	AFC_SILVER,
 	AFC_GOLD,
 };
@@ -31,4 +32,4 @@ void LoadTtfFont();
 void UnloadTtfFont();
 void FontsCleanup();
 
-} // namespace dvl
+} // namespace devilution
