@@ -907,7 +907,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 {
 	int dam, blk, blkper, hper, hit, resper;
 
-	if (!gbFriendlyFire && gbFriendlyMode)
+	if (!sgGameInitInfo.bFriendlyFire && gbFriendlyMode)
 		return false;
 
 	*blocked = false;

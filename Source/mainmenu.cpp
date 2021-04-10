@@ -83,8 +83,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		    pfile_ui_set_class_stats,
 		    &dlgresult,
 		    &gszHero,
-		    &gnDifficulty);
-		gameData->nDifficulty = gnDifficulty;
+		    &gameData->nDifficulty);
 
 		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
 	} else {

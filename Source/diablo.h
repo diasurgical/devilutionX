@@ -45,13 +45,10 @@ extern bool was_fonts_init;
 extern void FontsCleanup();
 extern bool light4flag;
 extern int PauseMode;
-extern bool gbTheoQuest;
-extern bool gbCowQuest;
 extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
 extern clicktype sgbMouseDown;
-extern int gnTickRate;
 extern WORD gnTickDelay;
 
 void FreeGameMem();
@@ -85,6 +82,5 @@ extern bool debug_mode_key_i;
 extern int debug_mode_key_j;
 #endif
 extern bool gbFriendlyMode;
-extern bool gbFriendlyFire;
 
 }

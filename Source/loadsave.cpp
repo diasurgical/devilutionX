@@ -1026,9 +1026,9 @@ void LoadGame(bool firstflag)
 
 	LoadPlayer(&file, myplr);
 
-	gnDifficulty = plr[myplr].pDifficulty;
-	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
-		gnDifficulty = DIFF_NORMAL;
+	sgGameInitInfo.nDifficulty = plr[myplr].pDifficulty;
+	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
+		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
 
 	for (int i = 0; i < giNumberQuests; i++)
 		LoadQuest(&file, i);
@@ -1793,7 +1793,7 @@ void SaveGame()
 		file.writeBE<Sint32>(gnLevelTypeTbl[i]);
 	}
 
-	plr[myplr].pDifficulty = gnDifficulty;
+	plr[myplr].pDifficulty = sgGameInitInfo.nDifficulty;
 	SavePlayer(&file, myplr);
 
 	for (int i = 0; i < giNumberQuests; i++)

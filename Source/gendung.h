@@ -117,7 +117,6 @@ extern int dminx;
 extern int dminy;
 extern int dmaxx;
 extern int dmaxy;
-extern _difficulty gnDifficulty;
 extern dungeon_type leveltype;
 extern BYTE currlevel;
 extern bool setlevel;

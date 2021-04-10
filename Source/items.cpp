@@ -675,9 +675,9 @@ void InitItems()
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))
 			SpawnQuestItem(IDI_ANVIL, 2 * setpc_x + 27, 2 * setpc_y + 27, 0, 1);
-		if (gbCowQuest && currlevel == 20)
+		if (sgGameInitInfo.bCowQuest && currlevel == 20)
 			SpawnQuestItem(IDI_BROWNSUIT, 25, 25, 3, 1);
-		if (gbCowQuest && currlevel == 19)
+		if (sgGameInitInfo.bCowQuest && currlevel == 19)
 			SpawnQuestItem(IDI_GREYSUIT, 25, 25, 3, 1);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
@@ -1894,11 +1894,11 @@ void GetItemAttrs(int i, int idata, int lvl)
 
 	int rndv;
 	int itemlevel = items_get_currlevel();
-	if (gnDifficulty == DIFF_NORMAL)
+	if (sgGameInitInfo.nDifficulty == DIFF_NORMAL)
 		rndv = 5 * itemlevel + random_(21, 10 * itemlevel);
-	else if (gnDifficulty == DIFF_NIGHTMARE)
+	else if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE)
 		rndv = 5 * (itemlevel + 16) + random_(21, 10 * (itemlevel + 16));
-	else if (gnDifficulty == DIFF_HELL)
+	else if (sgGameInitInfo.nDifficulty == DIFF_HELL)
 		rndv = 5 * (itemlevel + 32) + random_(21, 10 * (itemlevel + 32));
 	if (leveltype == DTYPE_HELL)
 		rndv += rndv >> 3;

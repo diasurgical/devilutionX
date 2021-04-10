@@ -11,8 +11,6 @@ namespace devilution {
 extern "C" {
 #endif
 
-extern bool gbRunInTown;
-
 void gamemenu_on();
 void gamemenu_off();
 void gamemenu_handle_previous();

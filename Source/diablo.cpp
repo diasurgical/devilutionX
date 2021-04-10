@@ -7,6 +7,7 @@
 #include "paths.h"
 #include "console.h"
 #include "options.h"
+#include "multi.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
@@ -36,15 +37,12 @@ int setseed;
 int PauseMode;
 bool forceSpawn;
 bool forceDiablo;
-bool gbTheoQuest;
-bool gbCowQuest;
 bool gbNestArt;
 bool gbBard;
 bool gbBarbarian;
 int sgnTimeoutCurs;
 clicktype sgbMouseDown;
 int color_cycle_timer;
-int gnTickRate;
 WORD gnTickDelay = 50;
 /** Game options */
 Options sgOptions;
@@ -71,8 +69,6 @@ int arrowdebug = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
-/** Specifies players will still damage other players in non-PvP mode. */
-bool gbFriendlyFire;
 /** Default quick messages */
 const char *const spszMsgTbl[] = {
 	"I need help! Come Here!",
@@ -1341,7 +1337,7 @@ static void PressChar(WPARAM vkey)
 			"Nightmare",
 			"Hell",
 		};
-		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[gnDifficulty]);
+		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[sgGameInitInfo.nDifficulty]);
 		NetSendCmdString(1 << myplr, pszStr);
 		return;
 	}
@@ -2060,7 +2056,7 @@ void game_loop(bool bStartup)
 {
 	int i;
 
-	i = bStartup ? gnTickRate * 3 : 3;
+	i = bStartup ? sgGameInitInfo.nTickRate * 3 : 3;
 
 	while (i--) {
 		if (!multi_handle_delta()) {
