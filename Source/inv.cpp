@@ -1382,15 +1382,15 @@ void CheckInvPaste(int pnum, int mx, int my)
 				il--;
 				gt = plr[pnum].InvList[il]._ivalue;
 				ig = plr[pnum].HoldItem._ivalue + gt;
-				if (ig <= GOLD_MAX_LIMIT) {
+				if (ig <= MaxGold) {
 					plr[pnum].InvList[il]._ivalue = ig;
 					plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
 					SetPlrHandGoldCurs(&plr[pnum].InvList[il]);
 				} else {
-					ig = GOLD_MAX_LIMIT - gt;
+					ig = MaxGold - gt;
 					plr[pnum]._pGold += ig;
 					plr[pnum].HoldItem._ivalue -= ig;
-					plr[pnum].InvList[il]._ivalue = GOLD_MAX_LIMIT;
+					plr[pnum].InvList[il]._ivalue = MaxGold;
 					plr[pnum].InvList[il]._iCurs = ICURS_GOLD_LARGE;
 					// BUGFIX: incorrect values here are leftover from beta (fixed)
 					cn = GetGoldCursor(plr[pnum].HoldItem._ivalue);
@@ -1448,15 +1448,15 @@ void CheckInvPaste(int pnum, int mx, int my)
 			if (!plr[pnum].SpdList[ii].isEmpty()) {
 				if (plr[pnum].SpdList[ii]._itype == ITYPE_GOLD) {
 					i = plr[pnum].HoldItem._ivalue + plr[pnum].SpdList[ii]._ivalue;
-					if (i <= GOLD_MAX_LIMIT) {
+					if (i <= MaxGold) {
 						plr[pnum].SpdList[ii]._ivalue = i;
 						plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
 						SetPlrHandGoldCurs(&plr[pnum].SpdList[ii]);
 					} else {
-						i = GOLD_MAX_LIMIT - plr[pnum].SpdList[ii]._ivalue;
+						i = MaxGold - plr[pnum].SpdList[ii]._ivalue;
 						plr[pnum]._pGold += i;
 						plr[pnum].HoldItem._ivalue -= i;
-						plr[pnum].SpdList[ii]._ivalue = GOLD_MAX_LIMIT;
+						plr[pnum].SpdList[ii]._ivalue = MaxGold;
 						plr[pnum].SpdList[ii]._iCurs = ICURS_GOLD_LARGE;
 
 						// BUGFIX: incorrect values here are leftover from beta (fixed)
