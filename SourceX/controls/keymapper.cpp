@@ -93,7 +93,7 @@ void Keymapper::load()
 			// Skip if the action has no key bound to it.
 			continue;
 		}
-		// Store the key here and in the map so we can save() the actions while keeping the same order as they have been added.
+		// Store the key in action.key and in the map so we can save() the actions while keeping the same order as they have been added.
 		keyIDToAction.emplace(key, action);
 	}
 }

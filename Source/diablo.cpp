@@ -2031,34 +2031,51 @@ void initKeymapActions()
 		    Keymapper::Action::IfDead::Allow,
 		});
 	}
-	keymapper.addAction({ "DecreaseGamma",
+	keymapper.addAction({
+	    "DecreaseGamma",
 	    'G',
-	    DecreaseGamma });
-	keymapper.addAction({ "IncreaseGamma",
+	    DecreaseGamma,
+	});
+	keymapper.addAction({
+	    "IncreaseGamma",
 	    'F',
-	    IncreaseGamma });
-	keymapper.addAction({ "Inventory",
+	    IncreaseGamma,
+	});
+	keymapper.addAction({
+	    "Inventory",
 	    'I',
-	    inventoryKeyPressed });
-	keymapper.addAction({ "Character",
+	    inventoryKeyPressed,
+	});
+	keymapper.addAction({
+	    "Character",
 	    'C',
-	    characterSheetKeyPressed });
-	keymapper.addAction({ "QuestLog",
+	    characterSheetKeyPressed,
+	});
+	keymapper.addAction({
+	    "QuestLog",
 	    'Q',
-	    questLogKeyPressed });
-	keymapper.addAction({ "Zoom",
+	    questLogKeyPressed,
+	});
+	keymapper.addAction({
+	    "Zoom",
 	    'Z',
 	    [] {
 		    zoomflag = !zoomflag;
 		    CalcViewportGeometry();
-	    } });
-	keymapper.addAction({ "DisplaySpells",
+	    },
+	});
+	keymapper.addAction({
+	    "DisplaySpells",
 	    'S',
-	    displaySpellsKeyPressed });
-	keymapper.addAction({ "SpellBook",
+	    displaySpellsKeyPressed,
+	});
+	keymapper.addAction({
+	    "SpellBook",
 	    'B',
-	    spellBookKeyPressed });
-	keymapper.addAction({ "GameInfo",
+	    spellBookKeyPressed,
+	});
+	keymapper.addAction({
+	    "GameInfo",
 	    'V',
 	    [] {
 		    char pszStr[120];
@@ -2069,9 +2086,11 @@ void initKeymapActions()
 		    };
 		    sprintf(pszStr, "%s, version = %s, mode = %s", gszProductName, gszVersionNumber, difficulties[gnDifficulty]);
 		    NetSendCmdString(1 << myplr, pszStr);
-	    } });
+	    },
+	});
 	for (int i = 0; i < 8; ++i) {
-		keymapper.addAction({ std::string("Belt") + std::to_string(i + 1),
+		keymapper.addAction({
+		    std::string("Belt") + std::to_string(i + 1),
 		    '1' + i,
 		    [i] {
 #ifdef _DEBUG
@@ -2083,7 +2102,8 @@ void initKeymapActions()
 			    if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
 				    UseInvItem(myplr, INVITEM_BELT_FIRST + i);
 			    }
-		    } });
+		    },
+		});
 	}
 	keymapper.addAction({
 	    "QuickSave",
