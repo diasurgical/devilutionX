@@ -12,8 +12,8 @@ namespace devilution {
  */
 int light_table_index;
 DWORD sgdwCursWdtOld;
-DWORD sgdwCursX;
-DWORD sgdwCursY;
+int sgdwCursX;
+int sgdwCursY;
 /**
  * Lower bound of back buffer.
  */
@@ -26,8 +26,8 @@ DWORD sgdwCursHgt;
  * frameType := block & 0x7000 >> 12
  */
 DWORD level_cel_block;
-DWORD sgdwCursXOld;
-DWORD sgdwCursYOld;
+int sgdwCursXOld;
+int sgdwCursYOld;
 bool AutoMapShowItems;
 /**
  * Specifies the type of arches to render.
@@ -107,8 +107,7 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 
 static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
 {
-	const int h = std::min(sgdwCursY + 1, sgdwCursHgt);
-	for (int i = 0; i < h; ++i, src += src_pitch, dst += dst_pitch) {
+	for (int i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 }
@@ -179,6 +178,15 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	}
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
+
+	if (sgdwCursX < 0) {
+		sgdwCursWdt -= sgdwCursX;
+		sgdwCursX = 0;
+	}
+	if (sgdwCursY < 0) {
+		sgdwCursHgt -= sgdwCursY;
+		sgdwCursY = 0;
+	}
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
 
