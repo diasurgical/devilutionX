@@ -43,9 +43,9 @@ int GetManaAmount(int id, spell_id sn)
 		ma = 0;
 	ma <<= 6;
 
-	if (plr[id]._pClass == PC_SORCERER) {
+	if (plr[id]._pClass == plr_class::PC_SORCERER) {
 		ma >>= 1;
-	} else if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_MONK || plr[id]._pClass == PC_BARD) {
+	} else if (plr[id]._pClass == plr_class::PC_ROGUE || plr[id]._pClass == plr_class::PC_MONK || plr[id]._pClass == plr_class::PC_BARD) {
 		ma -= ma >> 2;
 	}
 
@@ -319,11 +319,11 @@ void DoHealOther(int pnum, int rid)
 			hp += (random_(57, 6) + 1) << 6;
 		}
 
-		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
+		if (plr[pnum]._pClass == plr_class::PC_WARRIOR || plr[pnum]._pClass == plr_class::PC_BARBARIAN) {
 			hp <<= 1;
-		} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
+		} else if (plr[pnum]._pClass == plr_class::PC_ROGUE || plr[pnum]._pClass == plr_class::PC_BARD) {
 			hp += hp >> 1;
-		} else if (plr[pnum]._pClass == PC_MONK) {
+		} else if (plr[pnum]._pClass == plr_class::PC_MONK) {
 			hp *= 3;
 		}
 

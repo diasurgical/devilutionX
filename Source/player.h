@@ -29,7 +29,7 @@ enum {
 	// clang-format on
 };
 
-enum plr_class : uint8_t {
+enum class plr_class : uint8_t {
 	PC_WARRIOR,
 	PC_ROGUE,
 	PC_SORCERER,
@@ -323,7 +323,7 @@ struct PlayerStruct {
 extern int myplr;
 extern PlayerStruct plr[MAX_PLRS];
 extern bool deathflag;
-extern int ToBlkTbl[NUM_CLASSES];
+extern int ToBlkTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
 
 void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
@@ -386,10 +386,10 @@ extern int plrxoff[9];
 extern int plryoff[9];
 extern int plrxoff2[9];
 extern int plryoff2[9];
-extern int StrengthTbl[NUM_CLASSES];
-extern int MagicTbl[NUM_CLASSES];
-extern int DexterityTbl[NUM_CLASSES];
-extern int VitalityTbl[NUM_CLASSES];
+extern int StrengthTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
+extern int MagicTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
+extern int DexterityTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
+extern int VitalityTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 
 }

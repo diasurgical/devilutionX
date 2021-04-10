@@ -888,17 +888,17 @@ void CheckTriggers()
 				}
 
 				if (abort) {
-					if (plr[myplr]._pClass == PC_WARRIOR) {
+					if (plr[myplr]._pClass == plr_class::PC_WARRIOR) {
 						PlaySFX(PS_WARR43);
-					} else if (plr[myplr]._pClass == PC_ROGUE) {
+					} else if (plr[myplr]._pClass == plr_class::PC_ROGUE) {
 						PlaySFX(PS_ROGUE43);
-					} else if (plr[myplr]._pClass == PC_SORCERER) {
+					} else if (plr[myplr]._pClass == plr_class::PC_SORCERER) {
 						PlaySFX(PS_MAGE43);
-					} else if (plr[myplr]._pClass == PC_MONK) {
+					} else if (plr[myplr]._pClass == plr_class::PC_MONK) {
 						PlaySFX(PS_MONK43);
-					} else if (plr[myplr]._pClass == PC_BARD) {
+					} else if (plr[myplr]._pClass == plr_class::PC_BARD) {
 						PlaySFX(PS_ROGUE43);
-					} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+					} else if (plr[myplr]._pClass == plr_class::PC_BARBARIAN) {
 						PlaySFX(PS_WARR43);
 					}
 
