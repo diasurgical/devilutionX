@@ -1993,18 +1993,20 @@ void spellBookKeyPressed()
 
 void initKeymapActions()
 {
-	keymapper.addAction({ "Help",
+	keymapper.addAction({
+	    "Help",
 	    DVL_VK_F1,
-	    helpKeyPressed });
+	    helpKeyPressed,
+	});
 #ifdef _DEBUG
 	keymapper.addAction({
 	    "ItemInfo",
-	    DVL_VK_F3,
+	    0,
 	    itemInfoKeyPressed,
 	});
 	keymapper.addAction({
 	    "QuestDebug",
-	    DVL_VK_F4,
+	    0,
 	    PrintDebugQuest,
 	});
 #endif
@@ -2083,6 +2085,13 @@ void initKeymapActions()
 			    }
 		    } });
 	}
+	keymapper.addAction({ "QuickSave",
+	    DVL_VK_F2,
+	    [] { gamemenu_save_game(FALSE); } });
+	keymapper.addAction({ "QuickLoad",
+	    DVL_VK_F3,
+	    [] { gamemenu_load_game(FALSE); },
+	    Keymapper::Action::IfDead::Allow });
 }
 
 } // namespace devilution
