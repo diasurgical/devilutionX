@@ -466,7 +466,7 @@ void multi_process_network_packets()
 		plr[dwID]._pownerx = pkt->px;
 		plr[dwID]._pownery = pkt->py;
 		if (dwID != myplr) {
-			assert(gbBufferMsgs != BUFFER_PROCESS);
+			assert(gbBufferMsgs != 2);
 			plr[dwID]._pHitPoints = pkt->php;
 			plr[dwID]._pMaxHP = pkt->pmhp;
 			cond = gbBufferMsgs == 1;
