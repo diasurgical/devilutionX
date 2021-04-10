@@ -58,7 +58,7 @@ void LoadTtfFont()
 	if (!TTF_WasInit()) {
 		if (TTF_Init() == -1) {
 			SDL_Log("TTF_Init: %s", TTF_GetError());
-			diablo_quit(1);
+			diablo_quit(EXIT_FAILURE);
 		}
 		was_fonts_init = true;
 	}

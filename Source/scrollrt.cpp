@@ -237,13 +237,13 @@ void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, b
 
 	BYTE *pCelBuff = m->_miAnimData;
 	if (pCelBuff == NULL) {
-		SDL_Log("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
+		LOG_WARN(log::Drawing, "Draw Missile 2 type {}: NULL Cel Buffer", m->_mitype);
 		return;
 	}
 	int nCel = m->_miAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		SDL_Log("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
+		LOG_WARN(log::Drawing, "Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
 		return;
 	}
 	int mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -300,13 +300,13 @@ void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
 static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m)
 {
 	if (m < 0 || m >= MAXMONSTERS) {
-		SDL_Log("Draw Monster: tried to draw illegal monster %d", m);
+		LOG_ERROR(log::Drawing, "Draw Monster: tried to draw illegal monster {}", m);
 		return;
 	}
 
 	BYTE *pCelBuff = monster[m]._mAnimData;
 	if (pCelBuff == NULL) {
-		SDL_Log("Draw Monster \"%s\": NULL Cel Buffer", monster[m].mName);
+		LOG_ERROR(log::Drawing, "Draw Monster \"{}\": NULL Cel Buffer", monster[m].mName);
 		return;
 	}
 
@@ -316,8 +316,9 @@ static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m
 		const char *szMode = "unknown action";
 		if (monster[m]._mmode <= 17)
 			szMode = szMonModeAssert[monster[m]._mmode];
-		SDL_Log(
-		    "Draw Monster \"%s\" %s: facing %d, frame %d of %d",
+		LOG_ERROR(
+		    log::Drawing,
+		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster[m].mName,
 		    szMode,
 		    monster[m]._mdir,
@@ -394,7 +395,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 	}
 
 	if (pCelBuff == NULL) {
-		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
+		LOG_ERROR(log::Drawing, "Drawing player {} \"{}\": NULL Cel Buffer", pnum, plr[pnum]._pName);
 		return;
 	}
 
@@ -403,8 +404,9 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 		const char *szMode = "unknown action";
 		if (plr[pnum]._pmode <= PM_QUIT)
 			szMode = szPlrModeAssert[plr[pnum]._pmode];
-		SDL_Log(
-		    "Drawing player %d \"%s\" %s: facing %d, frame %d of %d",
+		LOG_ERROR(
+		    log::Drawing,
+		    "Drawing player {} \"{}\" {}: facing {}, frame {} of {}",
 		    pnum,
 		    plr[pnum]._pName,
 		    szMode,
@@ -503,14 +505,14 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool p
 
 	BYTE *pCelBuff = object[bv]._oAnimData;
 	if (pCelBuff == NULL) {
-		SDL_Log("Draw Object type %d: NULL Cel Buffer", object[bv]._otype);
+		LOG_ERROR(log::Drawing, "Draw Object type {}: NULL Cel Buffer", object[bv]._otype);
 		return;
 	}
 
 	int nCel = object[bv]._oAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		SDL_Log("Draw Object: frame %d of %d, object type==%d", nCel, frames, object[bv]._otype);
+		LOG_ERROR(log::Drawing, "Draw Object: frame {} of {}, object type=={}", nCel, frames, object[bv]._otype);
 		return;
 	}
 
@@ -604,14 +606,14 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre
 
 	BYTE *pCelBuff = pItem->_iAnimData;
 	if (pCelBuff == NULL) {
-		SDL_Log("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
+		LOG_ERROR(log::Drawing, "Draw Item \"{}\" 1: NULL Cel Buffer", pItem->_iIName);
 		return;
 	}
 
 	int nCel = pItem->_iAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		SDL_Log("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, frames, pItem->_itype);
+		LOG_ERROR(log::Drawing, "Draw \"{}\" Item 1: frame {} of {}, item type=={}", pItem->_iIName, nCel, frames, pItem->_itype);
 		return;
 	}
 
@@ -653,7 +655,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
-		SDL_Log("Draw Monster: tried to draw illegal monster %d", mi);
+		LOG_ERROR(log::Drawing, "Draw Monster: tried to draw illegal monster {}", mi);
 		return;
 	}
 
@@ -663,7 +665,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 	}
 
 	if (pMonster->MType == NULL) {
-		SDL_Log("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
+		LOG_ERROR(log::Drawing, "Draw Monster \"{}\": uninitialized monster", pMonster->mName);
 		return;
 	}
 
@@ -689,7 +691,7 @@ static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
 	p = p > 0 ? p - 1 : -(p + 1);
 
 	if (p < 0 || p >= MAX_PLRS) {
-		SDL_Log("draw player: tried to draw illegal player %d", p);
+		LOG_ERROR(log::Drawing, "draw player: tried to draw illegal player {}", p);
 		return;
 	}
 
@@ -751,7 +753,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 			int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 			int nCel = pDeadGuy->_deadFrame;
 			if (nCel < 1 || frames > 50 || nCel > frames) {
-				SDL_Log("Unclipped dead: frame %d of %d, deadnum==%d", nCel, frames, (bDead & 0x1F) - 1);
+				LOG_ERROR(log::Drawing, "Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}
 			if (pDeadGuy->_deadtrans != 0) {
@@ -1404,13 +1406,13 @@ static void DrawFPS(CelOutputBuffer out)
 static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 {
 	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
-	using CoordType = decltype(SDL_Rect {}.x);
-	SDL_Rect src_rect {
+	using CoordType = decltype(SDL_Rect{}.x);
+	SDL_Rect src_rect{
 		static_cast<CoordType>(BUFFER_BORDER_LEFT + dwX),
 		static_cast<CoordType>(BUFFER_BORDER_TOP + dwY),
 		dwWdt, dwHgt
 	};
-	SDL_Rect dst_rect { dwX, dwY, dwWdt, dwHgt };
+	SDL_Rect dst_rect{ dwX, dwY, dwWdt, dwHgt };
 
 	BltFast(&src_rect, &dst_rect);
 }

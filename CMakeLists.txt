@@ -16,6 +16,7 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
+option(TRACE_LOGGING "Enable trace-level logging" OFF)
 
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
@@ -183,6 +184,8 @@ else()
   find_package(SDL2_mixer REQUIRED)
 endif()
 
+add_subdirectory(3rdParty/spdlog)
+
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
   3rdParty/libsmacker/smk_hufftree.c
@@ -287,6 +290,7 @@ add_library(devilution STATIC
 
 set(devilutionx_SRCS
   SourceX/qol.cpp
+  SourceX/log.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp
   SourceX/controls/devices/kbcontroller.cpp
@@ -435,21 +439,37 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
-target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
+target_compile_definitions(devilution PUBLIC SPDLOG_COMPILED_LIB)
+target_compile_definitions(${BIN_TARGET} PUBLIC SPDLOG_COMPILED_LIB)
+
+if(TRACE_LOGGING)
+target_compile_definitions(devilution PUBLIC TRACE_LOGGING)
+target_compile_definitions(${BIN_TARGET} PUBLIC TRACE_LOGGING)
+endif()
+
+if(${CMAKE_VERSION} VERSION_GREATER "3.16.0") 
+  target_precompile_headers(devilution PRIVATE SourceX/pch.hpp)
+  target_precompile_headers(${BIN_TARGET} PRIVATE SourceX/pch.hpp)
+endif()
+
+target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR} 3rdParty/spdlog/include)
 target_include_directories(${BIN_TARGET} PRIVATE
   SourceS
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
-  3rdParty/libsmacker)
+  3rdParty/libsmacker
+  3rdParty/spdlog/include)
 
 if(N3DS)
   target_link_libraries(devilution PUBLIC
-  SourceS)
+  SourceS
+  spdlog)
 else()
   target_link_libraries(devilution PUBLIC
   Threads::Threads
-  SourceS)
+  SourceS
+  spdlog)
 endif()
 
 target_link_libraries(${BIN_TARGET} PRIVATE
@@ -458,7 +478,8 @@ target_link_libraries(${BIN_TARGET} PRIVATE
   PKWare
   StormLib
   smacker
-  Radon)
+  Radon
+  spdlog)
 
 if(NOT NONET)
   target_link_libraries(${BIN_TARGET} PRIVATE sodium)

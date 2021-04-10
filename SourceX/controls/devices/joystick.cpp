@@ -252,11 +252,11 @@ void Joystick::Add(int device_index)
 	if (SDL_NumJoysticks() <= device_index)
 		return;
 	Joystick result;
-	SDL_Log("Adding joystick %d: %s", device_index,
+	LOG_INFO(log::Input, "Adding joystick {}: {}", device_index,
 	    SDL_JoystickNameForIndex(device_index));
 	result.sdl_joystick_ = SDL_JoystickOpen(device_index);
 	if (result.sdl_joystick_ == NULL) {
-		SDL_Log(SDL_GetError());
+		LOG_ERROR(log::Input, SDL_GetError());
 		SDL_ClearError();
 		return;
 	}
@@ -270,7 +270,7 @@ void Joystick::Add(int device_index)
 void Joystick::Remove(SDL_JoystickID instance_id)
 {
 #ifndef USE_SDL1
-	SDL_Log("Removing joystick (instance id: %d)", instance_id);
+	LOG_INFO(log::Input, "Removing joystick (instance id: {})", instance_id);
 	for (std::size_t i = 0; i < joysticks_->size(); ++i) {
 		const Joystick &joystick = (*joysticks_)[i];
 		if (joystick.instance_id_ != instance_id)
@@ -279,7 +279,7 @@ void Joystick::Remove(SDL_JoystickID instance_id)
 		sgbControllerActive = !joysticks_->empty();
 		return;
 	}
-	SDL_Log("Joystick not found with instance id: %d", instance_id);
+	LOG_INFO(log::Input, "Joystick not found with instance id: {}", instance_id);
 #endif
 }
 

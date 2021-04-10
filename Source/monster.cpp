@@ -1342,8 +1342,8 @@ void M_Enemy(int i)
 		        && dist >= 2
 		        && !M_Ranged(i))
 		    || (!(Monst->_mFlags & MFLAG_GOLEM)
-		        && !(Monst->_mFlags & MFLAG_BERSERK)
-		        && !(monster[mi]._mFlags & MFLAG_GOLEM))) {
+		           && !(Monst->_mFlags & MFLAG_BERSERK)
+		           && !(monster[mi]._mFlags & MFLAG_GOLEM))) {
 			continue;
 		}
 		sameroom = dTransVal[Monst->_mx][Monst->_my] == dTransVal[monster[mi]._mx][monster[mi]._my];
@@ -2897,8 +2897,7 @@ bool M_CallWalk(int i, int md)
 bool M_PathWalk(int i)
 {
 	Sint8 path[MAX_PATH_LENGTH];
-	bool(*Check)
-	(int, int, int);
+	bool (*Check)(int, int, int);
 
 	/** Maps from walking path step to facing direction. */
 	const Sint8 plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };
@@ -3220,8 +3219,8 @@ void MAI_Bat(int i)
 	} else if (abs(xd) >= 2 || abs(yd) >= 2) {
 		if ((Monst->_mVar2 > 20 && v < Monst->_mint + 13)
 		    || ((Monst->_mVar1 == MM_WALK || Monst->_mVar1 == MM_WALK2 || Monst->_mVar1 == MM_WALK3)
-		        && Monst->_mVar2 == 0
-		        && v < Monst->_mint + 63)) {
+		           && Monst->_mVar2 == 0
+		           && v < Monst->_mint + 63)) {
 			M_CallWalk(i, md);
 		}
 	} else if (v < 4 * Monst->_mint + 8) {
@@ -3261,8 +3260,8 @@ void MAI_SkelBow(int i)
 	if (abs(mx) < 4 && abs(my) < 4) {
 		if ((Monst->_mVar2 > 20 && v < 2 * Monst->_mint + 13)
 		    || ((Monst->_mVar1 == MM_WALK || Monst->_mVar1 == MM_WALK2 || Monst->_mVar1 == MM_WALK3)
-		        && Monst->_mVar2 == 0
-		        && v < 2 * Monst->_mint + 63)) {
+		           && Monst->_mVar2 == 0
+		           && v < 2 * Monst->_mint + 63)) {
 			walking = M_DumbWalk(i, opposite[md]);
 		}
 	}
@@ -3300,8 +3299,8 @@ void MAI_Fat(int i)
 	if (abs(mx) >= 2 || abs(my) >= 2) {
 		if ((Monst->_mVar2 > 20 && v < 4 * Monst->_mint + 20)
 		    || ((Monst->_mVar1 == MM_WALK || Monst->_mVar1 == MM_WALK2 || Monst->_mVar1 == MM_WALK3)
-		        && Monst->_mVar2 == 0
-		        && v < 4 * Monst->_mint + 70)) {
+		           && Monst->_mVar2 == 0
+		           && v < 4 * Monst->_mint + 70)) {
 			M_CallWalk(i, md);
 		}
 	} else if (v < 4 * Monst->_mint + 15) {
@@ -3576,8 +3575,8 @@ void MAI_Round(int i, bool special)
 			if (abs(mx) >= 2 || abs(my) >= 2) {
 				if ((Monst->_mVar2 > 20 && v < 2 * Monst->_mint + 28)
 				    || ((Monst->_mVar1 == MM_WALK || Monst->_mVar1 == MM_WALK2 || Monst->_mVar1 == MM_WALK3)
-				        && Monst->_mVar2 == 0
-				        && v < 2 * Monst->_mint + 78)) {
+				           && Monst->_mVar2 == 0
+				           && v < 2 * Monst->_mint + 78)) {
 					M_CallWalk(i, md);
 				}
 			} else if (v < 2 * Monst->_mint + 23) {
@@ -3742,11 +3741,11 @@ void MAI_Scav(int i)
 								continue;
 							done = dDead[Monst->_mx + x][Monst->_my + y] != 0
 							    && LineClearF(
-							        CheckNoSolid,
-							        Monst->_mx,
-							        Monst->_my,
-							        Monst->_mx + x,
-							        Monst->_my + y);
+							           CheckNoSolid,
+							           Monst->_mx,
+							           Monst->_my,
+							           Monst->_mx + x,
+							           Monst->_my + y);
 						}
 					}
 					x--;
@@ -3759,11 +3758,11 @@ void MAI_Scav(int i)
 								continue;
 							done = dDead[Monst->_mx + x][Monst->_my + y] != 0
 							    && LineClearF(
-							        CheckNoSolid,
-							        Monst->_mx,
-							        Monst->_my,
-							        Monst->_mx + x,
-							        Monst->_my + y);
+							           CheckNoSolid,
+							           Monst->_mx,
+							           Monst->_my,
+							           Monst->_mx + x,
+							           Monst->_my + y);
 						}
 					}
 					x++;
@@ -3960,8 +3959,8 @@ void MAI_RR2(int i, int mistype, int dam)
 				v = random_(124, 100);
 				if (v < 2 * (5 * Monst->_mint + 25)
 				    || ((Monst->_mVar1 == MM_WALK || Monst->_mVar1 == MM_WALK2 || Monst->_mVar1 == MM_WALK3)
-				        && Monst->_mVar2 == 0
-				        && v < 2 * (5 * Monst->_mint + 40))) {
+				           && Monst->_mVar2 == 0
+				           && v < 2 * (5 * Monst->_mint + 40))) {
 					M_CallWalk(i, md);
 				}
 			} else {
@@ -4174,8 +4173,8 @@ void MAI_Rhino(int i)
 					v = random_(134, 100);
 					if (v >= 2 * Monst->_mint + 33
 					    && ((Monst->_mVar1 != MM_WALK && Monst->_mVar1 != MM_WALK2 && Monst->_mVar1 != MM_WALK3)
-					        || Monst->_mVar2
-					        || v >= 2 * Monst->_mint + 83)) {
+					           || Monst->_mVar2
+					           || v >= 2 * Monst->_mint + 83)) {
 						M_StartDelay(i, random_(135, 10) + 10);
 					} else {
 						M_CallWalk(i, md);

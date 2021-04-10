@@ -217,7 +217,7 @@ void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam)
 		force_redraw = 255;
 		break;
 	case DVL_WM_QUERYENDSESSION:
-		diablo_quit(0);
+		diablo_quit(EXIT_SUCCESS);
 		break;
 	}
 }

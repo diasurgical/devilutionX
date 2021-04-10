@@ -122,7 +122,7 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 
 	if (!result || !*phFile) {
-		SDL_Log("%s: Not found: %s", __FUNCTION__, filename);
+		LOG_ERROR(log::Storm, "Not found: {}", filename);
 	}
 	return result;
 }
@@ -234,7 +234,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	if (pPalette && pcxhdr.BitsPerPixel == 8) {
 		const auto pos = SFileSetFilePointer(hFile, -768, DVL_FILE_CURRENT);
 		if (pos == static_cast<std::uint64_t>(-1)) {
-			SDL_Log("SFileSetFilePointer error: %ud", (unsigned int)SErrGetLastError());
+			LOG_ERROR(log::Storm, "SFileSetFilePointer error: {}", SErrGetLastError());
 		}
 		SFileReadFile(hFile, paldata, 768, 0, NULL);
 
@@ -265,15 +265,15 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
 {
-    radon::Section *section = getIni().getSection(sectionName);
-    if (!section)
-        return defaultValue;
+	radon::Section *section = getIni().getSection(sectionName);
+	if (!section)
+		return defaultValue;
 
-    radon::Key *key = section->getKey(keyName);
-    if (!key)
-        return defaultValue;
+	radon::Key *key = section->getKey(keyName);
+	if (!key)
+		return defaultValue;
 
-    return key->getFloatValue();
+	return key->getFloatValue();
 }
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
@@ -373,7 +373,7 @@ static bool HaveAudio()
 void SVidRestartMixer()
 {
 	if (Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024) < 0) {
-		SDL_Log(Mix_GetError());
+		LOG_ERROR(log::Storm, Mix_GetError());
 	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1);
@@ -668,7 +668,7 @@ bool SVidPlayContinue(void)
 		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
 
 		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface, SVidPalette, colors, 0, 256) <= -1) {
-			SDL_Log(SDL_GetError());
+			LOG_ERROR(log::Storm, SDL_GetError());
 			return false;
 		}
 	}
@@ -682,7 +682,7 @@ bool SVidPlayContinue(void)
 		unsigned char *audio = SVidApplyVolume(smk_get_audio(SVidSMK, 0), len);
 #if SDL_VERSION_ATLEAST(2, 0, 4)
 		if (SDL_QueueAudio(deviceId, audio, len) <= -1) {
-			SDL_Log(SDL_GetError());
+			LOG_ERROR(log::Storm, SDL_GetError());
 			return false;
 		}
 #else
@@ -698,7 +698,7 @@ bool SVidPlayContinue(void)
 #ifndef USE_SDL1
 	if (renderer) {
 		if (SDL_BlitSurface(SVidSurface, NULL, GetOutputSurface(), NULL) <= -1) {
-			SDL_Log(SDL_GetError());
+			LOG_ERROR(log::Storm, SDL_GetError());
 			return false;
 		}
 	} else
@@ -731,7 +731,7 @@ bool SVidPlayContinue(void)
 			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 #endif
 			if (SDL_BlitScaled(tmp, NULL, output_surface, &pal_surface_offset) <= -1) {
-				SDL_Log(SDL_GetError());
+				LOG_ERROR(log::Storm, SDL_GetError());
 				return false;
 			}
 			SDL_FreeSurface(tmp);

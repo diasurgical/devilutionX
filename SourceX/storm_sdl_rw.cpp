@@ -48,7 +48,7 @@ static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
 	}
 	const std::uint64_t pos = SFileSetFilePointer(SFileRw_GetHandle(context), offset, swhence);
 	if (pos == static_cast<std::uint64_t>(-1)) {
-		SDL_Log("SFileRw_seek error: %ud", (unsigned int)SErrGetLastError());
+		LOG_ERROR(log::Storm, "SFileRw_seek error: {}", SErrGetLastError());
 	}
 	return pos;
 }
@@ -63,7 +63,7 @@ static int SFileRw_read(struct SDL_RWops *context, void *ptr, int size, int maxn
 	if (!SFileReadFile(SFileRw_GetHandle(context), ptr, maxnum * size, &num_read, NULL)) {
 		const DWORD err_code = SErrGetLastError();
 		if (err_code != DVL_ERROR_HANDLE_EOF) {
-			SDL_Log("SFileRw_read error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)err_code);
+			LOG_ERROR(log::Storm, "SFileRw_read error: size: {} maxnum: {} error code: {}", size, maxnum, err_code);
 		}
 	}
 	return num_read / size;

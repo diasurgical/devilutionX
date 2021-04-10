@@ -378,7 +378,7 @@ void UiHandleEvents(SDL_Event *event)
 	}
 
 	if (event->type == SDL_QUIT)
-		diablo_quit(0);
+		diablo_quit(EXIT_SUCCESS);
 
 #ifndef USE_SDL1
 	HandleControllerAddedOrRemovedEvent(*event);
@@ -443,9 +443,9 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 // Equivalent to SDL_Rect { ... } but avoids -Wnarrowing.
 inline SDL_Rect makeRect(int x, int y, int w, int h)
 {
-	using Pos = decltype(SDL_Rect {}.x);
-	using Len = decltype(SDL_Rect {}.w);
-	return SDL_Rect { static_cast<Pos>(x), static_cast<Pos>(y),
+	using Pos = decltype(SDL_Rect{}.x);
+	using Len = decltype(SDL_Rect{}.w);
+	return SDL_Rect{ static_cast<Pos>(x), static_cast<Pos>(y),
 		static_cast<Len>(w), static_cast<Len>(h) };
 }
 
@@ -488,7 +488,7 @@ void LoadHeros()
 		SDL_BlitSurface(portrait.surface.get(), nullptr, heros, &dst_rect);
 	}
 
-	ArtHero.surface = SDLSurfaceUniquePtr { heros };
+	ArtHero.surface = SDLSurfaceUniquePtr{ heros };
 	ArtHero.frame_height = portraitHeight;
 	ArtHero.frames = NUM_CLASSES;
 }

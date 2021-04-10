@@ -44,6 +44,7 @@ int sgnTimeoutCurs;
 clicktype sgbMouseDown;
 int color_cycle_timer;
 WORD gnTickDelay = 50;
+std::string logFilepath = "log.txt";
 /** Game options */
 Options sgOptions;
 
@@ -101,6 +102,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "--config-dir", "Specify the location of diablo.ini");
 	printInConsole("    %-20s %-30s\n", "--ttf-dir", "Specify the location of the .ttf font");
 	printInConsole("    %-20s %-30s\n", "--ttf-name", "Specify the name of a custom .ttf font");
+	printInConsole("    %-20s %-30s\n", "--log-file", "Specify the filename of the file to write logs to; set to empty to disable (default: \"log.txt\")");
 	printInConsole("    %-20s %-30s\n", "-n", "Skip startup videos");
 	printInConsole("    %-20s %-30s\n", "-f", "Display frames per second");
 	printInConsole("    %-20s %-30s\n", "-x", "Run in windowed mode");
@@ -124,7 +126,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
 	printInConsole("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
-	diablo_quit(0);
+	diablo_quit(EXIT_SUCCESS);
 }
 
 static void diablo_parse_flags(int argc, char **argv)
@@ -134,7 +136,7 @@ static void diablo_parse_flags(int argc, char **argv)
 			print_help_and_exit();
 		} else if (strcasecmp("--version", argv[i]) == 0) {
 			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
-			diablo_quit(0);
+			diablo_quit(EXIT_SUCCESS);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
 			SetBasePath(argv[++i]);
 		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
@@ -145,6 +147,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			SetTtfPath(argv[++i]);
 		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
 			SetTtfName(argv[++i]);
+		} else if (strcasecmp("--log-file", argv[i]) == 0) {
+			logFilepath = argv[++i];
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			gbShowIntro = false;
 		} else if (strcasecmp("-f", argv[i]) == 0) {
@@ -638,13 +642,16 @@ void diablo_quit(int exitStatus)
 int DiabloMain(int argc, char **argv)
 {
 	diablo_parse_flags(argc, argv);
+	log::Logger logger(logFilepath);
+	LOG_INFO(log::Main, "Starting game");
 	LoadOptions();
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
 	diablo_deinit();
+	LOG_INFO(log::Main, "Shutting down");
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 static bool LeftMouseCmd(bool bShift)
@@ -868,8 +875,8 @@ static void RightMouseDown()
 				SetSpell();
 			} else if (MouseY >= SPANEL_HEIGHT
 			    || ((!sbookflag || MouseX <= RIGHT_PANEL)
-			        && !TryIconCurs()
-			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
+			           && !TryIconCurs()
+			           && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
 				if (pcurs == CURSOR_HAND) {
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();

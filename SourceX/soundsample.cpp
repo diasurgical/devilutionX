@@ -42,7 +42,7 @@ void SoundSample::Play(int lVolume, int lPan, int channel)
 
 	channel = Mix_PlayChannel(channel, chunk, 0);
 	if (channel == -1) {
-		SDL_Log("Too few channels, skipping sound");
+		LOG_ERROR(log::Audio, "Too few channels, skipping sound");
 		return;
 	}
 
@@ -73,7 +73,7 @@ int SoundSample::SetChunkStream(HANDLE stormHandle)
 {
 	chunk = Mix_LoadWAV_RW(SFileRw_FromStormHandle(stormHandle), /*freesrc=*/1);
 	if (chunk == NULL) {
-		SDL_Log("Mix_LoadWAV_RW: %s", Mix_GetError());
+		LOG_ERROR(log::Audio, "Mix_LoadWAV_RW: {}", Mix_GetError());
 		return -1;
 	}
 	return 0;

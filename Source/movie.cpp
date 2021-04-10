@@ -41,7 +41,7 @@ void play_movie(const char *pszMovie, bool user_can_close)
 				break;
 			case DVL_WM_QUIT:
 				SVidPlayEnd(video_stream);
-				diablo_quit(0);
+				diablo_quit(EXIT_SUCCESS);
 				break;
 			}
 		}

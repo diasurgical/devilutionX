@@ -11,43 +11,43 @@ namespace devilution {
 
 namespace {
 
-/** Set to true when a fatal error is encountered and the application should shut down. */
-bool terminating = false;
-/** Thread id of the last callee to FreeDlg(). */
-SDL_threadID cleanup_thread_id;
+	/** Set to true when a fatal error is encountered and the application should shut down. */
+	bool terminating = false;
+	/** Thread id of the last callee to FreeDlg(). */
+	SDL_threadID cleanup_thread_id;
 
-/**
+	/**
  * @brief Displays an error message box based on the given format string and variable argument list.
  * @param pszFmt Error message format
  * @param va Additional parameters for message format
  */
-void MsgBox(const char *pszFmt, va_list va)
-{
-	char text[256];
+	void MsgBox(const char *pszFmt, va_list va)
+	{
+		char text[256];
 
-	vsnprintf(text, 256, pszFmt, va);
+		vsnprintf(text, 256, pszFmt, va);
 
-	UiErrorOkDialog("Error", text);
-}
-
-/**
- * @brief Cleans up after a fatal application error.
- */
-void FreeDlg()
-{
-	if (terminating && cleanup_thread_id != SDL_GetThreadID(NULL))
-		SDL_Delay(20000);
-
-	terminating = true;
-	cleanup_thread_id = SDL_GetThreadID(NULL);
-
-	if (gbIsMultiplayer) {
-		if (SNetLeaveGame(3))
-			SDL_Delay(2000);
+		UiErrorOkDialog("Error", text);
 	}
 
-	SNetDestroy();
-}
+	/**
+ * @brief Cleans up after a fatal application error.
+ */
+	void FreeDlg()
+	{
+		if (terminating && cleanup_thread_id != SDL_GetThreadID(NULL))
+			SDL_Delay(20000);
+
+		terminating = true;
+		cleanup_thread_id = SDL_GetThreadID(NULL);
+
+		if (gbIsMultiplayer) {
+			if (SNetLeaveGame(3))
+				SDL_Delay(2000);
+		}
+
+		SNetDestroy();
+	}
 
 } // namespace
 
@@ -68,7 +68,7 @@ void app_fatal(const char *pszFmt, ...)
 
 	va_end(va);
 
-	diablo_quit(1);
+	diablo_quit(EXIT_FAILURE);
 }
 
 /**

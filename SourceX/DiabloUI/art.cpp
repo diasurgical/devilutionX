@@ -13,7 +13,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 
 	DWORD width, height, bpp;
 	if (!SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, &bpp)) {
-		SDL_Log("Failed to load image meta");
+		LOG_ERROR(log::Drawing, "Failed to load image meta");
 		return;
 	}
 
@@ -32,11 +32,11 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 		format = 0;
 		break;
 	}
-	SDLSurfaceUniquePtr art_surface { SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format) };
+	SDLSurfaceUniquePtr art_surface{ SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format) };
 
 	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(art_surface->pixels),
 	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
-		SDL_Log("Failed to load image");
+		LOG_ERROR(log::Drawing, "Failed to load image");
 		return;
 	}
 
@@ -56,8 +56,8 @@ void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 {
 	art->frames = frames;
-	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr{SDL_CreateRGBSurfaceWithFormatFrom(
-	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8)});
+	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr{ SDL_CreateRGBSurfaceWithFormatFrom(
+	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8) });
 	art->logical_width = w;
 	art->frame_height = h / frames;
 }

@@ -171,7 +171,7 @@ void snd_init()
 
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
 	if (result < 0) {
-		SDL_Log(Mix_GetError());
+		LOG_CRITICAL(log::Audio, Mix_GetError());
 	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
@@ -227,7 +227,7 @@ void music_start(uint8_t nTrack)
 #endif
 			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, /*freesrc=*/1);
 			if (music == NULL) {
-				SDL_Log("Mix_LoadMUSType_RW: %s", Mix_GetError());
+				LOG_ERROR(log::Audio, "Mix_LoadMUSType_RW: {}", Mix_GetError());
 #ifndef DISABLE_STREAMING_MUSIC
 				SFileCloseFile(sghMusic);
 				sghMusic = NULL;
@@ -241,7 +241,7 @@ void music_start(uint8_t nTrack)
 
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sgOptions.Audio.nMusicVolume / VOLUME_MIN);
 			if (Mix_PlayMusic(music, -1) < 0) {
-				SDL_Log("Mix_PlayMusic: %s", Mix_GetError());
+				LOG_ERROR(log::Audio, "Mix_PlayMusic: {}", Mix_GetError());
 				Mix_FreeMusic(music);
 				music = NULL;
 #ifndef DISABLE_STREAMING_MUSIC

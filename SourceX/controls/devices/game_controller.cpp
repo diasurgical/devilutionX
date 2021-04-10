@@ -154,11 +154,11 @@ bool GameController::ProcessAxisMotion(const SDL_Event &event)
 
 void GameController::Add(int joystick_index)
 {
-	SDL_Log("Opening game controller for joystick at index %d", joystick_index);
+	LOG_INFO(log::Input, "Opening game controller for joystick at index {}", joystick_index);
 	GameController result;
 	result.sdl_game_controller_ = SDL_GameControllerOpen(joystick_index);
 	if (result.sdl_game_controller_ == NULL) {
-		SDL_Log(SDL_GetError());
+		LOG_ERROR(log::Input, SDL_GetError());
 		SDL_ClearError();
 		return;
 	}
@@ -167,13 +167,13 @@ void GameController::Add(int joystick_index)
 	controllers_->push_back(result);
 
 	const SDL_JoystickGUID guid = SDL_JoystickGetGUID(sdl_joystick);
-	SDLUniquePtr<char> mapping{SDL_GameControllerMappingForGUID(guid)};
-	SDL_Log("Opened game controller with mapping:\n%s", mapping.get());
+	SDLUniquePtr<char> mapping{ SDL_GameControllerMappingForGUID(guid) };
+	LOG_INFO(log::Input, "Opened game controller with mapping:\n{}", mapping.get());
 }
 
 void GameController::Remove(SDL_JoystickID instance_id)
 {
-	SDL_Log("Removing game controller with instance id %d", instance_id);
+	LOG_INFO(log::Input, "Removing game controller with instance id {}", instance_id);
 	for (std::size_t i = 0; i < controllers_->size(); ++i) {
 		const GameController &controller = (*controllers_)[i];
 		if (controller.instance_id_ != instance_id)
@@ -182,7 +182,7 @@ void GameController::Remove(SDL_JoystickID instance_id)
 		sgbControllerActive = !controllers_->empty();
 		return;
 	}
-	SDL_Log("Game controller not found with instance id: %d", instance_id);
+	LOG_INFO(log::Input, "Game controller not found with instance id: {}", instance_id);
 }
 
 GameController *GameController::Get(SDL_JoystickID instance_id)

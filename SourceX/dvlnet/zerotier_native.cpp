@@ -30,21 +30,21 @@ static std::atomic_bool zt_joined(false);
 static void callback(struct zts_callback_msg *msg)
 {
 	//printf("callback %i\n", msg->eventCode);
-	if(msg->eventCode == ZTS_EVENT_NODE_ONLINE) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NODE_ONLINE, nodeId=%llx\n", (unsigned long long)msg->node->address);
+	if (msg->eventCode == ZTS_EVENT_NODE_ONLINE) {
+		LOG_ERROR(log::Network, "ZeroTier: ZTS_EVENT_NODE_ONLINE, nodeId={0:x}", (unsigned long long)msg->node->address);
 		zt_node_online = true;
-		if(!zt_joined) {
+		if (!zt_joined) {
 			zts_join(zt_network);
 			zt_joined = true;
 		}
-	} else if(msg->eventCode == ZTS_EVENT_NODE_OFFLINE) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NODE_OFFLINE\n");
+	} else if (msg->eventCode == ZTS_EVENT_NODE_OFFLINE) {
+		LOG_ERROR(log::Network, "ZeroTier: ZTS_EVENT_NODE_OFFLINE");
 		zt_node_online = false;
-	} else if(msg->eventCode == ZTS_EVENT_NETWORK_READY_IP6) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NETWORK_READY_IP6, networkId=%llx\n", (unsigned long long)msg->network->nwid);
+	} else if (msg->eventCode == ZTS_EVENT_NETWORK_READY_IP6) {
+		LOG_ERROR(log::Network, "ZeroTier: ZTS_EVENT_NETWORK_READY_IP6, networkId={0:x}", (unsigned long long)msg->network->nwid);
 		zt_ip6setup();
 		zt_network_ready = true;
-	} else if(msg->eventCode == ZTS_EVENT_ADDR_ADDED_IP6) {
+	} else if (msg->eventCode == ZTS_EVENT_ADDR_ADDED_IP6) {
 		print_ip6_addr(&(msg->addr->addr));
 	}
 }
@@ -61,11 +61,11 @@ void zerotier_network_stop()
 
 void zerotier_network_start()
 {
-	if(zt_started)
+	if (zt_started)
 		return;
-	zts_start(GetPrefPath().c_str(), (void(*)(void*))callback, 0);
+	zts_start(GetPrefPath().c_str(), (void (*)(void *))callback, 0);
 	std::atexit(zerotier_network_stop);
 }
 
-}
-}
+} // namespace net
+} // namespace devilution
