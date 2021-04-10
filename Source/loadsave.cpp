@@ -733,7 +733,7 @@ static void LoadQuest(LoadHelper *file, int i)
 	pQuest->_qlvltype = (dungeon_type)file->nextLE<Uint8>();
 	pQuest->_qtx = file->nextLE<Sint32>();
 	pQuest->_qty = file->nextLE<Sint32>();
-	pQuest->_qslvl = file->nextLE<Uint8>();
+	pQuest->_qslvl = (_setlevels)file->nextLE<Uint8>();
 	pQuest->_qidx = file->nextLE<Uint8>();
 	if (gbIsHellfireSaveGame) {
 		file->skip(2); // Alignment
@@ -842,7 +842,7 @@ static void ConvertLevels()
 {
 	// Backup current level state
 	bool _setlevel = setlevel;
-	int _setlvlnum = setlvlnum;
+	_setlevels _setlvlnum = setlvlnum;
 	int _currlevel = currlevel;
 	dungeon_type _leveltype = leveltype;
 
@@ -1002,7 +1002,7 @@ void LoadGame(bool firstflag)
 	}
 
 	setlevel = file.nextBool8();
-	setlvlnum = file.nextBE<Uint32>();
+	setlvlnum = (_setlevels)file.nextBE<Uint32>();
 	currlevel = file.nextBE<Uint32>();
 	leveltype = (dungeon_type)file.nextBE<Uint32>();
 	if (!setlevel)

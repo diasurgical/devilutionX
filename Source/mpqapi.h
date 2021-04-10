@@ -9,11 +9,7 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct _FILEHEADER {
+struct _FILEHEADER {
 	int signature;
 	int headersize;
 	int filesize;
@@ -24,20 +20,20 @@ typedef struct _FILEHEADER {
 	int hashcount;
 	int blockcount;
 	Uint8 pad[72];
-} _FILEHEADER;
+};
 
-typedef struct _HASHENTRY {
+struct _HASHENTRY {
 	Uint32 hashcheck[2];
 	Uint32 lcid;
 	Uint32 block;
-} _HASHENTRY;
+};
 
-typedef struct _BLOCKENTRY {
+struct _BLOCKENTRY {
 	Uint32 offset;
 	Uint32 sizealloc;
 	Uint32 sizefile;
 	Uint32 flags;
-} _BLOCKENTRY;
+};
 
 void mpqapi_remove_hash_entry(const char *pszName);
 void mpqapi_remove_hash_entries(bool (*fnGetName)(DWORD, char *));
@@ -46,9 +42,5 @@ void mpqapi_rename(char *pszOld, char *pszNew);
 bool mpqapi_has_file(const char *pszName);
 bool OpenMPQ(const char *pszArchive, DWORD dwChar);
 bool mpqapi_flush_and_close(const char *pszArchive, bool bFree, DWORD dwChar);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

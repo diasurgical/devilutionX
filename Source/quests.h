@@ -5,7 +5,10 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 #include "engine.h"
+#include "gendung.h"
 
 namespace devilution {
 
@@ -40,7 +43,7 @@ struct QuestStruct {
 	dungeon_type _qlvltype;
 	Sint32 _qtx;
 	Sint32 _qty;
-	Uint8 _qslvl;
+	_setlevels _qslvl;
 	Uint8 _qidx;
 	Sint32 _qmsg;
 	Uint8 _qvar1;
@@ -54,7 +57,7 @@ struct QuestData {
 	dungeon_type _qlvlt;
 	Uint8 _qdtype;
 	Uint8 _qdrnd;
-	Uint8 _qslvl;
+	_setlevels _qslvl;
 	bool isSinglePlayerOnly;
 	Sint32 _qdmsg;
 	const char *_qlstr;

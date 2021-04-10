@@ -2,11 +2,12 @@
 
 #include "all.h"
 
+#include <stdint.h>
 #include <SDL_ttf.h>
 
 namespace devilution {
 
-enum TextAlignment {
+enum TextAlignment : uint8_t {
 	TextAlignment_BEGIN = 0,
 	TextAlignment_CENTER,
 	TextAlignment_END,
@@ -21,4 +22,4 @@ enum TextAlignment {
 SDL_Surface *RenderUTF8_Solid_Wrapped(
     TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, const int x_align = TextAlignment_BEGIN);
 
-} // namespace dvl
+} // namespace devilution

@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern BYTE *pSquareCel;
 
 void FreeDebugGFX();
@@ -24,9 +20,5 @@ void PrintDebugPlayer(bool bNextPlayer);
 void PrintDebugQuest();
 void GetDebugMonster();
 void NextDebugMonster();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

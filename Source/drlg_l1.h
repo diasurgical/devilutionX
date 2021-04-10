@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern int UberRow;
 extern int UberCol;
 extern bool IsUberRoomOpened;
@@ -32,9 +28,5 @@ void drlg_l1_crypt_pattern4(int rndper);
 void drlg_l1_crypt_pattern5(int rndper);
 void drlg_l1_crypt_pattern6(int rndper);
 void drlg_l1_crypt_pattern7(int rndper);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

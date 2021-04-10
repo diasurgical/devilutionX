@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <array>
 #include <cstddef>
 #include <SDL.h>
@@ -13,17 +14,17 @@ namespace devilution {
 extern std::size_t SelectedItem;
 extern bool textInputActive;
 
-typedef enum _artFocus {
+enum _artFocus : uint8_t {
 	FOCUS_SMALL,
 	FOCUS_MED,
 	FOCUS_BIG,
-} _artFocus;
+};
 
-typedef enum _artLogo {
+enum _artLogo : uint8_t {
 	LOGO_SMALL,
 	LOGO_MED,
 	LOGO_BIG,
-} _artLogo;
+};
 
 extern std::array<Art, 3> ArtLogos;
 extern std::array<Art, 3> ArtFocus;
@@ -61,4 +62,4 @@ void UiRenderItems(std::vector<UiItemBase *> items);
 void UiInitList_clear();
 
 void mainmenu_restart_repintro();
-} // namespace dvl
+} // namespace devilution

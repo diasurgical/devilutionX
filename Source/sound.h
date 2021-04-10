@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
 enum _music_id : uint8_t {

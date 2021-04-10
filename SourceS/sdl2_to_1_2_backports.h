@@ -96,11 +96,13 @@ inline void SDL_DisableScreenSaver()
 
 //= Messagebox (simply logged to stderr for now)
 
-typedef enum {
-	SDL_MESSAGEBOX_ERROR = 0x00000010,      /**< error dialog */
-	SDL_MESSAGEBOX_WARNING = 0x00000020,    /**< warning dialog */
-	SDL_MESSAGEBOX_INFORMATION = 0x00000040 /**< informational dialog */
-} SDL_MessageBoxFlags;
+enum {
+	// clang-format off
+	SDL_MESSAGEBOX_ERROR       = 0x10, /**< error dialog */
+	SDL_MESSAGEBOX_WARNING     = 0x20, /**< warning dialog */
+	SDL_MESSAGEBOX_INFORMATION = 0x40, /**< informational dialog */
+	// clang-format on
+};
 
 inline int SDL_ShowSimpleMessageBox(Uint32 flags,
     const char *title,

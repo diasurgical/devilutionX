@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-enum UiType {
+enum UiType : uint8_t {
 	UI_TEXT,
 	UI_ART_TEXT,
 	UI_ART_TEXT_BUTTON,
@@ -24,7 +24,7 @@ enum UiType {
 	UI_EDIT,
 };
 
-enum UiFlags {
+enum UiFlags : uint16_t {
 	UIS_SMALL = 1 << 0,
 	UIS_MED = 1 << 1,
 	UIS_BIG = 1 << 2,
@@ -260,7 +260,7 @@ public:
 		m_render_cache = NULL;
 	}
 
-	enum FrameKey {
+	enum FrameKey : uint8_t {
 		DEFAULT = 0,
 		PRESSED,
 		DISABLED
@@ -348,4 +348,4 @@ public:
 	Uint16 m_width, m_height;
 	std::vector<UiListItem *> m_vecItems;
 };
-} // namespace dvl
+} // namespace devilution

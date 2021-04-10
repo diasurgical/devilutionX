@@ -105,7 +105,7 @@ bool SNetDropPlayer(int playerid, DWORD flags)
 	return dvlnet_inst->SNetDropPlayer(playerid, flags);
 }
 
-bool SNetGetGameInfo(int type, void *dst, unsigned int length)
+bool SNetGetGameInfo(game_info type, void *dst, unsigned int length)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -161,7 +161,7 @@ bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
 	dvlnet_inst->setup_gameinfo(std::move(game_init_info));
 
 	std::string default_name;
-	if(!pszGameName) {
+	if (!pszGameName) {
 		default_name = dvlnet_inst->make_default_gamename();
 		pszGameName = default_name.c_str();
 	}

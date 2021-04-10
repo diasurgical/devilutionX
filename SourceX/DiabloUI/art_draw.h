@@ -14,4 +14,4 @@ void DrawAnimatedArt(Art *art, int screenX, int screenY);
 
 int GetAnimationFrame(int frames, int fps = 60);
 
-} // namespace dvl
+} // namespace devilution

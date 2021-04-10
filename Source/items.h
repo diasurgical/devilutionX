@@ -11,7 +11,7 @@
 
 namespace devilution {
 
-enum item_quality {
+enum item_quality : uint8_t {
 	ITEM_QUALITY_NORMAL,
 	ITEM_QUALITY_MAGIC,
 	ITEM_QUALITY_UNIQUE,
@@ -380,7 +380,7 @@ int AllocateItem();
 void GetSuperItemLoc(int x, int y, int *xx, int *yy);
 void GetItemAttrs(int i, int idata, int lvl);
 void SaveItemPower(int i, item_effect_type power, int param1, int param2, int minval, int maxval, int multval);
-void GetItemPower(int i, int minlvl, int maxlvl, int flgs, bool onlygood);
+void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood);
 void SetupItem(int i);
 int RndItem(int m);
 void SpawnUnique(_unique_items uid, int x, int y);

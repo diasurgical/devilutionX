@@ -17,4 +17,4 @@ void DrawTTF(const char *text, const SDL_Rect &rect, int flags,
 
 void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawTextCursor = false);
 
-} // namespace dvl
+} // namespace devilution

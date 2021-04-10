@@ -11,6 +11,15 @@
 
 namespace devilution {
 
+enum _setlevels : int8_t {
+	SL_NONE,
+	SL_SKELKING,
+	SL_BONECHAMB,
+	SL_MAZE,
+	SL_POISONWATER,
+	SL_VILEBETRAYER,
+};
+
 enum dungeon_type : int8_t {
 	DTYPE_TOWN,
 	DTYPE_CATHEDRAL,
@@ -120,7 +129,7 @@ extern int dmaxy;
 extern dungeon_type leveltype;
 extern BYTE currlevel;
 extern bool setlevel;
-extern BYTE setlvlnum;
+extern _setlevels setlvlnum;
 extern dungeon_type setlvltype;
 extern int ViewX;
 extern int ViewY;

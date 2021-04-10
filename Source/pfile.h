@@ -10,10 +10,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern bool gbValidSaveFile;
 
 const char *pfile_get_password();
@@ -35,9 +31,5 @@ void pfile_rename_temp_to_perm();
 void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD qwLen);
 BYTE *pfile_read(const char *pszName, DWORD *pdwLen);
 void pfile_update(bool force_save);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

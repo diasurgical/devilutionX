@@ -7,11 +7,7 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct LightListStruct {
+struct LightListStruct {
 	int _lx;
 	int _ly;
 	int _lradius;
@@ -24,7 +20,7 @@ typedef struct LightListStruct {
 	int _xoff;
 	int _yoff;
 	bool _lflags;
-} LightListStruct;
+};
 
 extern LightListStruct VisionList[MAXVISION];
 extern BYTE lightactive[MAXLIGHTS];
@@ -67,9 +63,5 @@ void lighting_color_cycling();
 
 extern const char CrawlTable[2749];
 extern const BYTE vCrawlTable[23][30];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

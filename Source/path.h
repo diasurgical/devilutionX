@@ -7,11 +7,7 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct PATHNODE {
+struct PATHNODE {
 	Uint8 f;
 	Uint8 h;
 	Uint8 g;
@@ -20,7 +16,7 @@ typedef struct PATHNODE {
 	struct PATHNODE *Parent;
 	struct PATHNODE *Child[8];
 	struct PATHNODE *NextNode;
-} PATHNODE;
+};
 
 int FindPath(bool (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, Sint8 path[MAX_PATH_LENGTH]);
 int path_get_h_cost(int sx, int sy, int dx, int dy);
@@ -40,8 +36,5 @@ PATHNODE *path_new_step();
 
 extern const char pathxdir[8];
 extern const char pathydir[8];
-#ifdef __cplusplus
-}
-#endif
 
 }

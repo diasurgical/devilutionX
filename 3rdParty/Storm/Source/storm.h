@@ -5,7 +5,12 @@
 #include <string>
 namespace devilution {
 
-enum conn_type {
+enum game_info : uint8_t {
+	GAMEINFO_NAME,
+	GAMEINFO_PASSWORD,
+};
+
+enum conn_type : uint8_t {
 	SELCONN_ZT,
 	SELCONN_TCP,
 	SELCONN_LOOPBACK,
@@ -134,7 +139,7 @@ bool SNetDropPlayer(int playerid, DWORD flags);
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool SNetGetGameInfo(int type, void *dst, unsigned int length);
+bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
 
 /*  SNetGetTurnsInTransit @ 115
  *
