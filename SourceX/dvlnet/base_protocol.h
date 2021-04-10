@@ -7,6 +7,7 @@
 
 #include "dvlnet/packet.h"
 #include "dvlnet/base.h"
+#include "log.hpp"
 
 namespace devilution {
 namespace net {

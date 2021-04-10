@@ -1,4 +1,5 @@
 #include "dvlnet/zerotier_native.h"
+#include "log.hpp"
 
 #include <atomic>
 #include <SDL.h>

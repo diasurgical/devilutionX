@@ -1,4 +1,5 @@
 #include "dvlnet/protocol_zt.h"
+#include "log.hpp"
 
 #include <random>
 

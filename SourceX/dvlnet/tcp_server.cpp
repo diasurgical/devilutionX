@@ -1,4 +1,5 @@
 #include "dvlnet/tcp_server.h"
+#include "log.hpp"
 
 #include <functional>
 #include <chrono>

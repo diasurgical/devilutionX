@@ -1,4 +1,5 @@
 #include "dvlnet/zerotier_lwip.h"
+#include "log.hpp"
 
 #include <lwip/sockets.h>
 #include <lwip/tcpip.h>
