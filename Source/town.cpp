@@ -199,8 +199,8 @@ void T_Pass3()
 		}
 	}
 	if (gbIsHellfire) {
-		if (quests[Q_FARMER]._qactive == QUEST_DONE || quests[Q_FARMER]._qactive == 10
-		    || quests[Q_JERSEY]._qactive == QUEST_DONE || quests[Q_JERSEY]._qactive == 10) {
+		if (quests[Q_FARMER]._qactive == QUEST_DONE || quests[Q_FARMER]._qactive == QUEST_HIVE_DONE
+		    || quests[Q_JERSEY]._qactive == QUEST_DONE || quests[Q_JERSEY]._qactive == QUEST_HIVE_DONE) {
 			TownOpenHive();
 		} else {
 			TownCloseHive();
