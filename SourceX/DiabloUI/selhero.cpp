@@ -20,7 +20,7 @@
 
 namespace devilution {
 
-static const char *selhero_GenerateName(uint8_t hero_class);
+static const char *selhero_GenerateName(plr_class hero_class);
 
 std::size_t selhero_SaveCount = 0;
 _uiheroinfo selhero_heros[MAX_CHARACTERS];
@@ -566,7 +566,7 @@ void UiSelHeroMultDialog(
 	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
 }
 
-static const char *selhero_GenerateName(uint8_t hero_class)
+static const char *selhero_GenerateName(plr_class hero_class)
 {
 	static const char *const kNames[6][10] = {
 		{
