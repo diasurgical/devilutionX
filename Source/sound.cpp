@@ -6,8 +6,8 @@
 #include "all.h"
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "stubs.h"
-#include "storm_sdl_rw.h"
+#include "../SourceX/stubs.h"
+#include "../SourceX/storm_sdl_rw.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 
