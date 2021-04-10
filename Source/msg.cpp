@@ -404,7 +404,7 @@ static DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 		}
 	}
 
-	/// ASSERT: assert(p->wOffset == sgdwRecvOffset);
+	assert(p->wOffset == sgdwRecvOffset);
 	memcpy(&sgRecvBuf[p->wOffset], &p[1], p->wBytes);
 	sgdwRecvOffset += p->wBytes;
 	return p->wBytes + sizeof(*p);
@@ -448,8 +448,8 @@ void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 	if (!gbIsMultiplayer)
 		return;
 
-	/// ASSERT: assert(pSync != NULL);
-	/// ASSERT: assert(bLevel < NUMLEVELS);
+	assert(pSync != NULL);
+	assert(bLevel < NUMLEVELS);
 	sgbDeltaChanged = true;
 
 	DMonsterStr *pD = &sgLevels[bLevel].monster[pSync->_mndx];
@@ -704,11 +704,12 @@ void DeltaLoadLevel()
 					monster[i]._moldy = sgLevels[currlevel].monster[i]._my; // CODEFIX: useless assignment
 					M_ClearSquares(i);
 					if (monster[i]._mAi != AI_DIABLO) {
-						if (monster[i]._uniqtype == 0)
-							/// ASSERT: assert(monster[i].MType != NULL);
+						if (monster[i]._uniqtype == 0) {
+							assert(monster[i].MType != NULL);
 							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, (direction)monster[i]._mdir);
-						else
+						} else {
 							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, (direction)monster[i]._mdir);
+						}
 					}
 					monster[i]._mDelFlag = true;
 					M_UpdateLeader(i);

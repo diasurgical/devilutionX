@@ -388,7 +388,7 @@ static DWORD GetPlrGFXSize(plr_class c, const char *szCel)
 			sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
 			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[c], Type, Type, szCel);
 			if (SFileOpenFile(pszName, &hsFile)) {
-				/// ASSERT: assert(hsFile);
+				assert(hsFile);
 				dwSize = SFileGetFileSize(hsFile, NULL);
 				SFileCloseFile(hsFile);
 				if (dwMaxSize <= dwSize) {

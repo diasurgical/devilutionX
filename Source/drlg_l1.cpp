@@ -1095,7 +1095,7 @@ static void DRLG_L1Pass3()
 		xx = 16;
 		for (i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
-			/// ASSERT: assert(lv >= 0);
+			assert(lv >= 0);
 			MegaTiles = (WORD *)&pMegaTiles[lv * 8];
 			v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
 			v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
