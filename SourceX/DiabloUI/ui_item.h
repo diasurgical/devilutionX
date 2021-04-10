@@ -25,17 +25,19 @@ enum UiType : uint8_t {
 };
 
 enum UiFlags : uint16_t {
-	UIS_SMALL = 1 << 0,
-	UIS_MED = 1 << 1,
-	UIS_BIG = 1 << 2,
-	UIS_HUGE = 1 << 3,
-	UIS_CENTER = 1 << 4,
-	UIS_RIGHT = 1 << 5,
-	UIS_VCENTER = 1 << 6,
-	UIS_SILVER = 1 << 7,
-	UIS_GOLD = 1 << 8,
+	// clang-format off
+	UIS_SMALL    = 1 << 0,
+	UIS_MED      = 1 << 1,
+	UIS_BIG      = 1 << 2,
+	UIS_HUGE     = 1 << 3,
+	UIS_CENTER   = 1 << 4,
+	UIS_RIGHT    = 1 << 5,
+	UIS_VCENTER  = 1 << 6,
+	UIS_SILVER   = 1 << 7,
+	UIS_GOLD     = 1 << 8,
 	UIS_DISABLED = 1 << 9,
-	UIS_HIDDEN = 1 << 10,
+	UIS_HIDDEN   = 1 << 10,
+	// clang-format on
 };
 
 class UiItemBase {
@@ -261,7 +263,7 @@ public:
 	}
 
 	enum FrameKey : uint8_t {
-		DEFAULT = 0,
+		DEFAULT,
 		PRESSED,
 		DISABLED
 	};

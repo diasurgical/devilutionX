@@ -8,7 +8,7 @@
 namespace devilution {
 
 enum TextAlignment : uint8_t {
-	TextAlignment_BEGIN = 0,
+	TextAlignment_BEGIN,
 	TextAlignment_CENTER,
 	TextAlignment_END,
 };

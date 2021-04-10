@@ -13,9 +13,9 @@ namespace devilution {
 
 enum anim_armor_id : uint8_t {
 	// clang-format off
-	ANIM_ID_LIGHT_ARMOR  = 0x00,
-	ANIM_ID_MEDIUM_ARMOR = 0x10,
-	ANIM_ID_HEAVY_ARMOR  = 0x20,
+	ANIM_ID_LIGHT_ARMOR  = 0,
+	ANIM_ID_MEDIUM_ARMOR = 1 << 4,
+	ANIM_ID_HEAVY_ARMOR  = 1 << 5,
 	// clang-format on
 };
 

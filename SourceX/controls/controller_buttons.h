@@ -8,7 +8,7 @@ namespace devilution {
 // NOTE: A, B, X, Y refer to physical positions on an XBox 360 controller.
 // A<->B and X<->Y are reversed on a Nintendo controller.
 enum ControllerButton : uint8_t {
-	ControllerButton_NONE = 0,
+	ControllerButton_NONE,
 	ControllerButton_IGNORE,
 	ControllerButton_AXIS_TRIGGERLEFT,  // ZL (aka L2)
 	ControllerButton_AXIS_TRIGGERRIGHT, // ZR (aka R2)

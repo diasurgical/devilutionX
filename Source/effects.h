@@ -1045,14 +1045,14 @@ enum _sfx_id : int16_t {
 
 enum sfx_flag : uint8_t {
 	// clang-format off
-	sfx_STREAM   = 0x01,
-	sfx_MISC     = 0x02,
-	sfx_UI       = 0x04,
-	sfx_MONK     = 0x08,
-	sfx_ROGUE    = 0x10,
-	sfx_WARRIOR  = 0x20,
-	sfx_SORCERER = 0x40,
-	sfx_HELLFIRE = 0x80,
+	sfx_STREAM   = 1 << 0,
+	sfx_MISC     = 1 << 1,
+	sfx_UI       = 1 << 2,
+	sfx_MONK     = 1 << 3,
+	sfx_ROGUE    = 1 << 4,
+	sfx_WARRIOR  = 1 << 5,
+	sfx_SORCERER = 1 << 6,
+	sfx_HELLFIRE = 1 << 7,
 	// clang-format on
 };
 
