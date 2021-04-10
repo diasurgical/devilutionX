@@ -216,11 +216,13 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 
+#ifdef __vita__
 void selhero_SetName(char *in_buf, char *out_buf, int cnt)
 {
 	std::string output = utf8_to_latin1(in_buf);
 	strncpy(out_buf, output.c_str(), cnt);
 }
+#endif
 
 bool HandleMenuAction(MenuAction menu_action)
 {

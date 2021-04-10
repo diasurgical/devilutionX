@@ -588,6 +588,8 @@ void SetPlrAnims(int pnum)
 			plr[pnum]._pAFrames = 13;
 			plr[pnum]._pAFNum = 8;
 			break;
+		default:
+			break;
 		}
 	} else if (pc == PC_BARD) {
 		if (gn == ANIM_ID_AXE) {
