@@ -9,8 +9,6 @@
 
 namespace devilution {
 
-bool gbRunInTown = false;
-
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
@@ -234,13 +232,13 @@ static void gamemenu_get_speed()
 {
 	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
-		if (gnTickRate >= 50)
+		if (sgGameInitInfo.nTickRate >= 50)
 			sgOptionsMenu[3].pszStr = "Speed: Fastest";
-		else if (gnTickRate >= 40)
+		else if (sgGameInitInfo.nTickRate >= 40)
 			sgOptionsMenu[3].pszStr = "Speed: Faster";
-		else if (gnTickRate >= 30)
+		else if (sgGameInitInfo.nTickRate >= 30)
 			sgOptionsMenu[3].pszStr = "Speed: Fast";
-		else if (gnTickRate == 20)
+		else if (sgGameInitInfo.nTickRate == 20)
 			sgOptionsMenu[3].pszStr = "Speed: Normal";
 		return;
 	}
@@ -249,7 +247,7 @@ static void gamemenu_get_speed()
 
 	sgOptionsMenu[3].pszStr = "Speed";
 	gmenu_slider_steps(&sgOptionsMenu[3], 46);
-	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, gnTickRate);
+	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 }
 
 static void gamemenu_get_color_cycling()
@@ -351,7 +349,7 @@ void gamemenu_loadjog(bool bActivate)
 {
 	if (!gbIsMultiplayer) {
 		sgOptions.Gameplay.bRunInTown = !sgOptions.Gameplay.bRunInTown;
-		gbRunInTown = sgOptions.Gameplay.bRunInTown;
+		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown;
 		PlaySFX(IS_TITLEMOV);
 		gamemenu_jogging();
 	}
@@ -377,17 +375,17 @@ void gamemenu_gamma(bool bActivate)
 void gamemenu_speed(bool bActivate)
 {
 	if (bActivate) {
-		if (gnTickRate != 20)
-			gnTickRate = 20;
+		if (sgGameInitInfo.nTickRate != 20)
+			sgGameInitInfo.nTickRate = 20;
 		else
-			gnTickRate = 50;
-		gmenu_slider_set(&sgOptionsMenu[3], 20, 50, gnTickRate);
+			sgGameInitInfo.nTickRate = 50;
+		gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 	} else {
-		gnTickRate = gmenu_slider_get(&sgOptionsMenu[3], 20, 50);
+		sgGameInitInfo.nTickRate = gmenu_slider_get(&sgOptionsMenu[3], 20, 50);
 	}
 
-	sgOptions.Gameplay.nTickRate = gnTickRate;
-	gnTickDelay = 1000 / gnTickRate;
+	sgOptions.Gameplay.nTickRate = sgGameInitInfo.nTickRate;
+	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 }
 
 void gamemenu_color_cycling(bool bActivate)

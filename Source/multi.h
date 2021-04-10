@@ -33,6 +33,7 @@ extern char szPlayerDescript[128];
 extern WORD sgwPackPlrOffsetTbl[MAX_PLRS];
 extern BYTE gbActivePlayers;
 extern bool gbGameDestroyed;
+extern GameData sgGameInitInfo;
 extern bool gbSelectProvider;
 extern bool gbIsMultiplayer;
 extern char szPlayerName[128];

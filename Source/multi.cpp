@@ -739,7 +739,6 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
 		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
-		sgGameInitInfo.nDifficulty = gnDifficulty;
 		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
 		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown;
 		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
@@ -789,13 +788,7 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 		gbSelectProvider = false;
 	}
 	SetRndSeed(sgGameInitInfo.dwSeed);
-	gnDifficulty = sgGameInitInfo.nDifficulty;
-	gnTickRate = sgGameInitInfo.nTickRate;
-	gnTickDelay = 1000 / gnTickRate;
-	gbRunInTown = sgGameInitInfo.bRunInTown;
-	gbTheoQuest = sgGameInitInfo.bTheoQuest;
-	gbCowQuest = sgGameInitInfo.bCowQuest;
-	gbFriendlyFire = sgGameInitInfo.bFriendlyFire;
+	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
