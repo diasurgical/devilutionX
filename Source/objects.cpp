@@ -3841,7 +3841,7 @@ bool OperateShrineDivine(int pnum, int x, int y)
 	if (pnum != myplr)
 		return false;
 
-	if (2 * currlevel < 7) {
+	if (currlevel < 4) {
 		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
 		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
 	} else {
