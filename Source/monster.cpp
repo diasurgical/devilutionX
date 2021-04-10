@@ -2631,11 +2631,11 @@ void DoEnding()
 	if (gbIsSpawn)
 		return;
 
-	if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_BARBARIAN) {
+	if (plr[myplr]._pClass == plr_class::PC_WARRIOR || plr[myplr]._pClass == plr_class::PC_BARBARIAN) {
 		play_movie("gendata\\DiabVic2.smk", false);
-	} else if (plr[myplr]._pClass == PC_SORCERER) {
+	} else if (plr[myplr]._pClass == plr_class::PC_SORCERER) {
 		play_movie("gendata\\DiabVic1.smk", false);
-	} else if (plr[myplr]._pClass == PC_MONK) {
+	} else if (plr[myplr]._pClass == plr_class::PC_MONK) {
 		play_movie("gendata\\DiabVic1.smk", false);
 	} else {
 		play_movie("gendata\\DiabVic3.smk", false);

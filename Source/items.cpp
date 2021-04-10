@@ -794,7 +794,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 			maxd = 3;
 		}
 
-		if (plr[p]._pClass == PC_MONK) {
+		if (plr[p]._pClass == plr_class::PC_MONK) {
 			mind = std::max(mind, plr[p]._pLevel >> 1);
 			maxd = std::max(maxd, (int)plr[p]._pLevel);
 		}
@@ -855,9 +855,9 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		plr[p]._pVitality = 0;
 	}
 
-	if (plr[p]._pClass == PC_ROGUE) {
+	if (plr[p]._pClass == plr_class::PC_ROGUE) {
 		plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
-	} else if (plr[p]._pClass == PC_MONK) {
+	} else if (plr[p]._pClass == plr_class::PC_MONK) {
 		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_STAFF) {
 			if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && (!plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty() || !plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty())) {
 				plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 300;
@@ -867,7 +867,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		} else {
 			plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 150;
 		}
-	} else if (plr[p]._pClass == PC_BARD) {
+	} else if (plr[p]._pClass == plr_class::PC_BARD) {
 		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD)
 			plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 150;
 		else if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_BOW) {
@@ -875,7 +875,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		} else {
 			plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 100;
 		}
-	} else if (plr[p]._pClass == PC_BARBARIAN) {
+	} else if (plr[p]._pClass == plr_class::PC_BARBARIAN) {
 
 		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_AXE || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_AXE) {
 			plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 75;
@@ -907,7 +907,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	plr[p]._pISplLvlAdd = spllvladd;
 	plr[p]._pIEnAc = enac;
 
-	if (plr[p]._pClass == PC_BARBARIAN) {
+	if (plr[p]._pClass == plr_class::PC_BARBARIAN) {
 		mr += plr[p]._pLevel;
 		fr += plr[p]._pLevel;
 		lr += plr[p]._pLevel;
@@ -944,22 +944,22 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		lr = 0;
 	plr[p]._pLghtResist = lr;
 
-	if (plr[p]._pClass == PC_WARRIOR) {
+	if (plr[p]._pClass == plr_class::PC_WARRIOR) {
 		vadd <<= 1;
-	} else if (plr[p]._pClass == PC_BARBARIAN) {
+	} else if (plr[p]._pClass == plr_class::PC_BARBARIAN) {
 		vadd += vadd;
 		vadd += (vadd >> 2);
-	} else if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK || plr[p]._pClass == PC_BARD) {
+	} else if (plr[p]._pClass == plr_class::PC_ROGUE || plr[p]._pClass == plr_class::PC_MONK || plr[p]._pClass == plr_class::PC_BARD) {
 		vadd += vadd >> 1;
 	}
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
-	if (plr[p]._pClass == PC_SORCERER) {
+	if (plr[p]._pClass == plr_class::PC_SORCERER) {
 		madd <<= 1;
 	}
-	if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK) {
+	if (plr[p]._pClass == plr_class::PC_ROGUE || plr[p]._pClass == plr_class::PC_MONK) {
 		madd += madd >> 1;
-	} else if (plr[p]._pClass == PC_BARD) {
+	} else if (plr[p]._pClass == plr_class::PC_BARD) {
 		madd += (madd >> 2) + (madd >> 1);
 	}
 	imana += (madd << 6);
@@ -990,7 +990,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	}
 
 	plr[p]._pBlockFlag = false;
-	if (plr[p]._pClass == PC_MONK) {
+	if (plr[p]._pClass == plr_class::PC_MONK) {
 		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 			plr[p]._pBlockFlag = true;
 			plr[p]._pIFlags |= ISPL_FASTBLOCK;
@@ -1051,18 +1051,18 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	}
 
 	if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
-		if (plr[p]._pClass == PC_MONK && plr[p].InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
+		if (plr[p]._pClass == plr_class::PC_MONK && plr[p].InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
 			plr[p]._pIAC += plr[p]._pLevel >> 1;
 		g += ANIM_ID_HEAVY_ARMOR;
 	} else if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
-		if (plr[p]._pClass == PC_MONK) {
+		if (plr[p]._pClass == plr_class::PC_MONK) {
 			if (plr[p].InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
 				plr[p]._pIAC += plr[p]._pLevel << 1;
 			else
 				plr[p]._pIAC += plr[p]._pLevel >> 1;
 		}
 		g += ANIM_ID_MEDIUM_ARMOR;
-	} else if (plr[p]._pClass == PC_MONK) {
+	} else if (plr[p]._pClass == plr_class::PC_MONK) {
 		plr[p]._pIAC += plr[p]._pLevel << 1;
 	}
 
@@ -1401,7 +1401,7 @@ void CreatePlrItems(int p)
 	}
 
 	switch (plr[p]._pClass) {
-	case PC_WARRIOR:
+	case plr_class::PC_WARRIOR:
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_WARRIOR);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
@@ -1423,7 +1423,7 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
-	case PC_ROGUE:
+	case plr_class::PC_ROGUE:
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
@@ -1433,7 +1433,7 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
-	case PC_SORCERER:
+	case plr_class::PC_SORCERER:
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
@@ -1444,7 +1444,7 @@ void CreatePlrItems(int p)
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
 
-	case PC_MONK:
+	case plr_class::PC_MONK:
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);
@@ -1453,7 +1453,7 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
-	case PC_BARD:
+	case plr_class::PC_BARD:
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
@@ -1465,7 +1465,7 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
-	case PC_BARBARIAN:
+	case plr_class::PC_BARBARIAN:
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], 139); // TODO: add more enums to items
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
@@ -1477,7 +1477,7 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
-	case NUM_CLASSES:
+	case plr_class::NUM_CLASSES:
 		break;
 	}
 
@@ -4231,9 +4231,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_FOOD:
 		j = plr[p]._pMaxHP >> 8;
 		l = ((j >> 1) + random_(39, j)) << 6;
-		if (plr[p]._pClass == PC_WARRIOR || plr[p]._pClass == PC_BARBARIAN)
+		if (plr[p]._pClass == plr_class::PC_WARRIOR || plr[p]._pClass == plr_class::PC_BARBARIAN)
 			l <<= 1;
-		if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK || plr[p]._pClass == PC_BARD)
+		if (plr[p]._pClass == plr_class::PC_ROGUE || plr[p]._pClass == plr_class::PC_MONK || plr[p]._pClass == plr_class::PC_BARD)
 			l += l >> 1;
 		plr[p]._pHitPoints += l;
 		if (plr[p]._pHitPoints > plr[p]._pMaxHP)
@@ -4251,9 +4251,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_MANA:
 		j = plr[p]._pMaxMana >> 8;
 		l = ((j >> 1) + random_(40, j)) << 6;
-		if (plr[p]._pClass == PC_SORCERER)
+		if (plr[p]._pClass == plr_class::PC_SORCERER)
 			l <<= 1;
-		if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK || plr[p]._pClass == PC_BARD)
+		if (plr[p]._pClass == plr_class::PC_ROGUE || plr[p]._pClass == plr_class::PC_MONK || plr[p]._pClass == plr_class::PC_BARD)
 			l += l >> 1;
 		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
 			plr[p]._pMana += l;
@@ -4297,9 +4297,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_REJUV:
 		j = plr[p]._pMaxHP >> 8;
 		l = ((j >> 1) + random_(39, j)) << 6;
-		if (plr[p]._pClass == PC_WARRIOR || plr[p]._pClass == PC_BARBARIAN)
+		if (plr[p]._pClass == plr_class::PC_WARRIOR || plr[p]._pClass == plr_class::PC_BARBARIAN)
 			l <<= 1;
-		if (plr[p]._pClass == PC_ROGUE)
+		if (plr[p]._pClass == plr_class::PC_ROGUE)
 			l += l >> 1;
 		plr[p]._pHitPoints += l;
 		if (plr[p]._pHitPoints > plr[p]._pMaxHP)
@@ -4310,9 +4310,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		drawhpflag = true;
 		j = plr[p]._pMaxMana >> 8;
 		l = ((j >> 1) + random_(40, j)) << 6;
-		if (plr[p]._pClass == PC_SORCERER)
+		if (plr[p]._pClass == plr_class::PC_SORCERER)
 			l <<= 1;
-		if (plr[p]._pClass == PC_ROGUE)
+		if (plr[p]._pClass == plr_class::PC_ROGUE)
 			l += l >> 1;
 		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
 			plr[p]._pMana += l;
@@ -5043,31 +5043,31 @@ void SpawnBoy(int lvl)
 
 			if (count < 200) {
 				switch (pc) {
-				case PC_WARRIOR:
+				case plr_class::PC_WARRIOR:
 					if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
 						ivalue = INT_MAX;
 					break;
-				case PC_ROGUE:
+				case plr_class::PC_ROGUE:
 					if (itemType == ITYPE_SWORD || itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_SHIELD)
 						ivalue = INT_MAX;
 					break;
-				case PC_SORCERER:
+				case plr_class::PC_SORCERER:
 					if (itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_BOW || itemType == ITYPE_MACE)
 						ivalue = INT_MAX;
 					break;
-				case PC_MONK:
+				case plr_class::PC_MONK:
 					if (itemType == ITYPE_BOW || itemType == ITYPE_MARMOR || itemType == ITYPE_SHIELD || itemType == ITYPE_MACE)
 						ivalue = INT_MAX;
 					break;
-				case PC_BARD:
+				case plr_class::PC_BARD:
 					if (itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_STAFF)
 						ivalue = INT_MAX;
 					break;
-				case PC_BARBARIAN:
+				case plr_class::PC_BARBARIAN:
 					if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
 						ivalue = INT_MAX;
 					break;
-				case NUM_CLASSES:
+				case plr_class::NUM_CLASSES:
 					break;
 				}
 			}
