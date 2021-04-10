@@ -412,7 +412,7 @@ void DrawSpellList(CelOutputBuffer out)
 			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
 				pSpell = (spell_id)j;
 				pSplType = (spell_type)i;
-				if (plr[myplr]._pClass == PC_MONK && j == SPL_SEARCH)
+				if (plr[myplr]._pClass == plr_class::PC_MONK && j == SPL_SEARCH)
 					pSplType = RSPLTYPE_SKILL;
 				DrawSpellCel(out, x, y, pSpellCels, c, SPLICONLENGTH);
 				switch (pSplType) {
@@ -831,17 +831,17 @@ void InitControlPan()
 	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
 	sbooktab = 0;
 	sbookflag = false;
-	if (plr[myplr]._pClass == PC_WARRIOR) {
+	if (plr[myplr]._pClass == plr_class::PC_WARRIOR) {
 		SpellPages[0][0] = SPL_REPAIR;
-	} else if (plr[myplr]._pClass == PC_ROGUE) {
+	} else if (plr[myplr]._pClass == plr_class::PC_ROGUE) {
 		SpellPages[0][0] = SPL_DISARM;
-	} else if (plr[myplr]._pClass == PC_SORCERER) {
+	} else if (plr[myplr]._pClass == plr_class::PC_SORCERER) {
 		SpellPages[0][0] = SPL_RECHARGE;
-	} else if (plr[myplr]._pClass == PC_MONK) {
+	} else if (plr[myplr]._pClass == plr_class::PC_MONK) {
 		SpellPages[0][0] = SPL_SEARCH;
-	} else if (plr[myplr]._pClass == PC_BARD) {
+	} else if (plr[myplr]._pClass == plr_class::PC_BARD) {
 		SpellPages[0][0] = SPL_IDENTIFY;
-	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+	} else if (plr[myplr]._pClass == plr_class::PC_BARBARIAN) {
 		SpellPages[0][0] = SPL_BLODBOIL;
 	}
 	pQLogCel = LoadFileInMem("Data\\Quest.CEL", NULL);
@@ -1327,7 +1327,7 @@ void DrawInfoBox(CelOutputBuffer out)
 			infoclr = COL_GOLD;
 			strcpy(infostr, plr[pcursplr]._pName);
 			ClearPanel();
-			sprintf(tempstr, "%s, Level: %i", ClassStrTbl[plr[pcursplr]._pClass], plr[pcursplr]._pLevel);
+			sprintf(tempstr, "%s, Level: %i", ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)], plr[pcursplr]._pLevel);
 			AddPanelString(tempstr, true);
 			sprintf(tempstr, "Hit Points %i of %i", plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
 			AddPanelString(tempstr, true);
@@ -1398,7 +1398,7 @@ void DrawChr(CelOutputBuffer out)
 	CelDrawTo(out, 0, 351, pChrPanel, 1, SPANEL_WIDTH);
 	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
-	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTbl[plr[myplr]._pClass], COL_WHITE);
+	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)], COL_WHITE);
 
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
 	ADD_PlrStringXY(out, 66, 69, 109, chrstr, COL_WHITE);
@@ -1443,7 +1443,7 @@ void DrawChr(CelOutputBuffer out)
 	mindam += plr[myplr]._pIBonusDam * mindam / 100;
 	mindam += plr[myplr]._pIBonusDamMod;
 	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW) {
-		if (plr[myplr]._pClass == PC_ROGUE)
+		if (plr[myplr]._pClass == plr_class::PC_ROGUE)
 			mindam += plr[myplr]._pDamageMod;
 		else
 			mindam += plr[myplr]._pDamageMod >> 1;
@@ -1454,7 +1454,7 @@ void DrawChr(CelOutputBuffer out)
 	maxdam += plr[myplr]._pIBonusDam * maxdam / 100;
 	maxdam += plr[myplr]._pIBonusDamMod;
 	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW) {
-		if (plr[myplr]._pClass == PC_ROGUE)
+		if (plr[myplr]._pClass == plr_class::PC_ROGUE)
 			maxdam += plr[myplr]._pDamageMod;
 		else
 			maxdam += plr[myplr]._pDamageMod >> 1;
@@ -1833,7 +1833,7 @@ static void PrintSBookStr(CelOutputBuffer out, int x, int y, bool cjustflag, con
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
 {
-	if ((plr[myplr]._pClass == PC_MONK) && (ii == SPL_SEARCH))
+	if ((plr[myplr]._pClass == plr_class::PC_MONK) && (ii == SPL_SEARCH))
 		return RSPLTYPE_SKILL;
 	spell_type st = RSPLTYPE_SPELL;
 	if (plr[myplr]._pISpells & GetSpellBitmask(ii)) {

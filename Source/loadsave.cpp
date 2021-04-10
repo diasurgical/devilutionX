@@ -381,7 +381,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pDamageMod = file->nextLE<Sint32>();
 	pPlayer->_pBaseToBlk = file->nextLE<Sint32>();
 	if (pPlayer->_pBaseToBlk == 0)
-		pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+		pPlayer->_pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(pPlayer->_pClass)];
 	pPlayer->_pHPBase = file->nextLE<Sint32>();
 	pPlayer->_pMaxHPBase = file->nextLE<Sint32>();
 	pPlayer->_pHitPoints = file->nextLE<Sint32>();
@@ -1343,7 +1343,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Uint8>(pPlayer->_pLvlChanging);
 
 	file->writeBytes(pPlayer->_pName, PLR_NAME_LEN);
-	file->writeLE<Sint8>(pPlayer->_pClass);
+	file->writeLE<Sint8>(static_cast<Sint8>(pPlayer->_pClass));
 	file->skip(3); // Alignment
 	file->writeLE<Sint32>(pPlayer->_pStrength);
 	file->writeLE<Sint32>(pPlayer->_pBaseStr);

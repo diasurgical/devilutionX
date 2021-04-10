@@ -184,7 +184,7 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	for (auto i = 0; i < 7; i++)
 		pPack->InvBody[i].idx = -1;
 	strcpy(pPack->pName, "TestPlayer");
-	pPack->pClass = PC_ROGUE;
+	pPack->pClass = plr_class::PC_ROGUE;
 	pPack->pBaseStr = 20 + 35;
 	pPack->pBaseMag = 15 + 55;
 	pPack->pBaseDex = 30 + 220;
@@ -371,7 +371,7 @@ TEST(Writehero, pfile_write_hero)
 	myplr = 0;
 	_uiheroinfo info {};
 	strcpy(info.name, "TestPlayer");
-	info.heroclass = PC_ROGUE;
+	info.heroclass = plr_class::PC_ROGUE;
 	pfile_ui_save_create(&info);
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);
