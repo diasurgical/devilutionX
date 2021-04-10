@@ -44,23 +44,23 @@ enum lvl_entry : uint8_t {
 
 enum {
 	// clang-format off
-	DLRG_HDOOR     = 0x01,
-	DLRG_VDOOR     = 0x02,
-	DLRG_CHAMBER   = 0x40,
-	DLRG_PROTECTED = 0x80,
+	DLRG_HDOOR     = 1 << 0,
+	DLRG_VDOOR     = 1 << 1,
+	DLRG_CHAMBER   = 1 << 2,
+	DLRG_PROTECTED = 1 << 3,
 	// clang-format on
 };
 
 enum {
 	// clang-format off
-	BFLAG_MISSILE     = 0x01,
-	BFLAG_VISIBLE     = 0x02,
-	BFLAG_DEAD_PLAYER = 0x04,
-	BFLAG_POPULATED   = 0x08,
-	BFLAG_MONSTLR     = 0x10,
-	BFLAG_PLAYERLR    = 0x20,
-	BFLAG_LIT         = 0x40,
-	BFLAG_EXPLORED    = 0x80,
+	BFLAG_MISSILE     = 1 << 0,
+	BFLAG_VISIBLE     = 1 << 1,
+	BFLAG_DEAD_PLAYER = 1 << 2,
+	BFLAG_POPULATED   = 1 << 3,
+	BFLAG_MONSTLR     = 1 << 4,
+	BFLAG_PLAYERLR    = 1 << 5,
+	BFLAG_LIT         = 1 << 6,
+	BFLAG_EXPLORED    = 1 << 7,
 	// clang-format on
 };
 

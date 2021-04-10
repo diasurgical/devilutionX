@@ -14,7 +14,7 @@ const Uint16 SCROLLBAR_BG_WIDTH = 25;
 
 extern Art ArtScrollBarArrow;
 enum ScrollBarArrowFrame : uint8_t {
-	ScrollBarArrowFrame_UP_ACTIVE = 0,
+	ScrollBarArrowFrame_UP_ACTIVE,
 	ScrollBarArrowFrame_UP,
 	ScrollBarArrowFrame_DOWN_ACTIVE,
 	ScrollBarArrowFrame_DOWN,

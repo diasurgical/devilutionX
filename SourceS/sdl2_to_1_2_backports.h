@@ -98,9 +98,9 @@ inline void SDL_DisableScreenSaver()
 
 enum {
 	// clang-format off
-	SDL_MESSAGEBOX_ERROR       = 0x10, /**< error dialog */
-	SDL_MESSAGEBOX_WARNING     = 0x20, /**< warning dialog */
-	SDL_MESSAGEBOX_INFORMATION = 0x40, /**< informational dialog */
+	SDL_MESSAGEBOX_ERROR       = 1 << 4, /**< error dialog */
+	SDL_MESSAGEBOX_WARNING     = 1 << 5, /**< warning dialog */
+	SDL_MESSAGEBOX_INFORMATION = 1 << 6, /**< informational dialog */
 	// clang-format on
 };
 

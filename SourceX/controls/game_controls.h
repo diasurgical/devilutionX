@@ -10,7 +10,7 @@
 namespace devilution {
 
 enum GameActionType : uint8_t {
-	GameActionType_NONE = 0,
+	GameActionType_NONE,
 	GameActionType_USE_HEALTH_POTION,
 	GameActionType_USE_MANA_POTION,
 	GameActionType_PRIMARY_ACTION,   // Talk to towners, click on inv items, attack, etc.
@@ -32,7 +32,7 @@ struct GameActionSendKey {
 
 struct GameActionSendMouseClick {
 	enum Button : uint8_t {
-		LEFT = 0,
+		LEFT,
 		RIGHT,
 	};
 	Button button;

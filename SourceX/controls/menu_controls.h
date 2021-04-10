@@ -7,7 +7,7 @@
 namespace devilution {
 
 enum MenuAction : uint8_t {
-	MenuAction_NONE = 0,
+	MenuAction_NONE,
 	MenuAction_SELECT,
 	MenuAction_BACK,
 	MenuAction_DELETE,

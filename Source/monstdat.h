@@ -61,14 +61,14 @@ enum _mc_id : uint8_t {
 
 enum monster_resistance : uint8_t {
 	// clang-format off
-	RESIST_MAGIC     = 0x01,
-	RESIST_FIRE      = 0x02,
-	RESIST_LIGHTNING = 0x04,
-	IMMUNE_MAGIC     = 0x08,
-	IMMUNE_FIRE      = 0x10,
-	IMMUNE_LIGHTNING = 0x20,
-	IMMUNE_NULL_40   = 0x40,
-	IMMUNE_ACID      = 0x80,
+	RESIST_MAGIC     = 1 << 0,
+	RESIST_FIRE      = 1 << 1,
+	RESIST_LIGHTNING = 1 << 2,
+	IMMUNE_MAGIC     = 1 << 3,
+	IMMUNE_FIRE      = 1 << 4,
+	IMMUNE_LIGHTNING = 1 << 5,
+	IMMUNE_NULL_40   = 1 << 6,
+	IMMUNE_ACID      = 1 << 7,
 	// clang-format on
 };
 

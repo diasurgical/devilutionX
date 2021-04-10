@@ -5,12 +5,12 @@
 namespace devilution {
 
 enum AxisDirectionX : uint8_t {
-	AxisDirectionX_NONE = 0,
+	AxisDirectionX_NONE,
 	AxisDirectionX_LEFT,
 	AxisDirectionX_RIGHT
 };
 enum AxisDirectionY : uint8_t {
-	AxisDirectionY_NONE = 0,
+	AxisDirectionY_NONE,
 	AxisDirectionY_UP,
 	AxisDirectionY_DOWN
 };
