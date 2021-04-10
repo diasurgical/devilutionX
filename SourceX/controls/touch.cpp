@@ -49,7 +49,7 @@ enum {
 	MAX_TAP_MOTION_DISTANCE  =  10, // max distance finger motion in Vita screen pixels to be considered a tap
 	SIMULATED_CLICK_DURATION =  50, // time in ms how long simulated mouse clicks should be
 	// clang-format on
-}; // track three fingers per panel
+};
 
 typedef struct {
 	int id; // -1: not touching
