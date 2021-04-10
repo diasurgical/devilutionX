@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "engine.h"
+
 namespace devilution {
 
 /**
@@ -18,9 +20,9 @@ void RenderTile(CelOutputBuffer out, int x, int y);
 /**
  * @brief Render a black tile
  * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
+ * @param sx Target buffer coordinate (left corner of the tile)
+ * @param sy Target buffer coordinate (bottom corner of the tile)
  */
 void world_draw_black_tile(CelOutputBuffer out, int sx, int sy);
 
-}
+} // namespace devilution
