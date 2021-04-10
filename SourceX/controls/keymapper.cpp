@@ -67,6 +67,12 @@ void Keymapper::save() const
 {
 	// Use the action vector to go though the actions to keep the same order.
 	for (const auto &action : actions) {
+		if (action.key == DVL_VK_INVALID) {
+			// Just add an empty config entry if the action is unbound.
+			setKeyFunction(action.name, "");
+			continue;
+		}
+
 		auto keyNameIt = keyIDToKeyName.find(action.key);
 		if (keyNameIt == keyIDToKeyName.end()) {
 			SDL_Log("Keymapper: no name found for key '%d'", action.key);
@@ -82,7 +88,12 @@ void Keymapper::load()
 
 	for (auto &action : actions) {
 		auto key = getActionKey(action);
-		action.key = key; // Store the key here and in the map so we can save() the actions while keeping the same order as they have been added.
+		action.key = key;
+		if (key == DVL_VK_INVALID) {
+			// Skip if the action has no key bound to it.
+			continue;
+		}
+		// Store the key here and in the map so we can save() the actions while keeping the same order as they have been added.
 		keyIDToAction.emplace(key, action);
 	}
 }

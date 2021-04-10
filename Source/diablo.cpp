@@ -2001,12 +2001,12 @@ void initKeymapActions()
 #ifdef _DEBUG
 	keymapper.addAction({
 	    "ItemInfo",
-	    0,
+	    DVL_VK_INVALID,
 	    itemInfoKeyPressed,
 	});
 	keymapper.addAction({
 	    "QuestDebug",
-	    0,
+	    DVL_VK_INVALID,
 	    PrintDebugQuest,
 	});
 #endif
@@ -2085,13 +2085,23 @@ void initKeymapActions()
 			    }
 		    } });
 	}
-	keymapper.addAction({ "QuickSave",
+	keymapper.addAction({
+	    "QuickSave",
 	    DVL_VK_F2,
-	    [] { gamemenu_save_game(FALSE); } });
-	keymapper.addAction({ "QuickLoad",
+	    [] { gamemenu_save_game(FALSE); },
+	});
+	keymapper.addAction({
+	    "QuickLoad",
 	    DVL_VK_F3,
 	    [] { gamemenu_load_game(FALSE); },
-	    Keymapper::Action::IfDead::Allow });
+	    Keymapper::Action::IfDead::Allow,
+	});
+	keymapper.addAction({
+	    "QuitGame",
+	    DVL_VK_INVALID,
+	    [] { gamemenu_quit_game(FALSE); },
+	    Keymapper::Action::IfDead::Allow,
+	});
 }
 
 } // namespace devilution
