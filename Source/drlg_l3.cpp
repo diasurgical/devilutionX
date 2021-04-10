@@ -1272,7 +1272,7 @@ static void DRLG_L3River()
 					river[0][riveramt] = rx;
 					river[1][riveramt] = ry;
 					riveramt++;
-					if (dir == 0 && pdir == 2 || dir == 3 && pdir == 1) {
+					if ((dir == 0 && pdir == 2) || (dir == 3 && pdir == 1)) {
 						if (riveramt > 2) {
 							river[2][riveramt - 2] = 22;
 						}
@@ -1282,7 +1282,7 @@ static void DRLG_L3River()
 							nodir2 = 2;
 						}
 					}
-					if (dir == 0 && pdir == 3 || dir == 2 && pdir == 1) {
+					if ((dir == 0 && pdir == 3) || (dir == 2 && pdir == 1)) {
 						if (riveramt > 2) {
 							river[2][riveramt - 2] = 21;
 						}
@@ -1292,7 +1292,7 @@ static void DRLG_L3River()
 							nodir2 = 3;
 						}
 					}
-					if (dir == 1 && pdir == 2 || dir == 3 && pdir == 0) {
+					if ((dir == 1 && pdir == 2) || (dir == 3 && pdir == 0)) {
 						if (riveramt > 2) {
 							river[2][riveramt - 2] = 20;
 						}
@@ -1302,7 +1302,7 @@ static void DRLG_L3River()
 							nodir2 = 2;
 						}
 					}
-					if (dir == 1 && pdir == 3 || dir == 2 && pdir == 0) {
+					if ((dir == 1 && pdir == 3) || (dir == 2 && pdir == 0)) {
 						if (riveramt > 2) {
 							river[2][riveramt - 2] = 19;
 						}

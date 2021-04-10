@@ -817,6 +817,8 @@ void DeltaLoadLevel()
 			case CMD_BREAKOBJ:
 				SyncBreakObj(-1, i);
 				break;
+			default:
+				break;
 			}
 		}
 
@@ -2676,6 +2678,8 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 		return On_OPENHIVE(pCmd, pnum);
 	case CMD_OPENCRYPT:
 		return On_OPENCRYPT(pCmd, pnum);
+	default:
+		break;
 	}
 
 	if (pCmd->bCmd < CMD_DLEVEL_0 || pCmd->bCmd > CMD_DLEVEL_END) {

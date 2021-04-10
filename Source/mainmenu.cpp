@@ -119,6 +119,8 @@ void mainmenu_loop()
 			app_fatal("Unable to display mainmenu");
 
 		switch (menu) {
+		case MAINMENU_NONE:
+			break;
 		case MAINMENU_SINGLE_PLAYER:
 			if (!mainmenu_single_player())
 				done = true;

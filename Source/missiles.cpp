@@ -547,9 +547,9 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 
 	missile_resistance mir = missiledata[t].mResist;
 	mor = monster[m].mMagicRes;
-	if (mor & IMMUNE_MAGIC && mir == MISR_MAGIC
-	    || mor & IMMUNE_FIRE && mir == MISR_FIRE
-	    || mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING) {
+	if ((mor & IMMUNE_MAGIC && mir == MISR_MAGIC)
+	    || (mor & IMMUNE_FIRE && mir == MISR_FIRE)
+	    || (mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING)) {
 		return false;
 	}
 
@@ -617,7 +617,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	resist = false;
 	if (monster[m].mtalkmsg
 	    || monster[m]._mhitpoints >> 6 <= 0
-	    || t == MIS_HBOLT && monster[m].MType->mtype != MT_DIABLO && monster[m].MData->mMonstClass != MC_UNDEAD) {
+	    || (t == MIS_HBOLT && monster[m].MType->mtype != MT_DIABLO && monster[m].MData->mMonstClass != MC_UNDEAD)) {
 		return false;
 	}
 	if (monster[m].MType->mtype == MT_ILLWEAV && monster[m]._mgoal == MGOAL_RETREAT)
@@ -628,15 +628,15 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	mor = monster[m].mMagicRes;
 	missile_resistance mir = missiledata[t].mResist;
 
-	if (mor & IMMUNE_MAGIC && mir == MISR_MAGIC
-	    || mor & IMMUNE_FIRE && mir == MISR_FIRE
-	    || mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING
-	    || (mor & IMMUNE_ACID) && mir == MISR_ACID)
+	if ((mor & IMMUNE_MAGIC && mir == MISR_MAGIC)
+	    || (mor & IMMUNE_FIRE && mir == MISR_FIRE)
+	    || (mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING)
+	    || (mor & IMMUNE_ACID && mir == MISR_ACID))
 		return false;
 
-	if (mor & RESIST_MAGIC && mir == MISR_MAGIC
-	    || mor & RESIST_FIRE && mir == MISR_FIRE
-	    || mor & RESIST_LIGHTNING && mir == MISR_LIGHTNING)
+	if ((mor & RESIST_MAGIC && mir == MISR_MAGIC)
+	    || (mor & RESIST_FIRE && mir == MISR_FIRE)
+	    || (mor & RESIST_LIGHTNING && mir == MISR_LIGHTNING))
 		resist = true;
 
 	if (gbIsHellfire && t == MIS_HBOLT && (monster[m].MType->mtype == MT_DIABLO || monster[m].MType->mtype == MT_BONEDEMN))
@@ -1514,7 +1514,7 @@ void AddBerserk(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mi
 						if (monster[dm]._uniqtype == 0 && monster[dm]._mAi != AI_DIABLO) {
 							if (monster[dm]._mmode != MM_FADEIN && monster[dm]._mmode != MM_FADEOUT) {
 								if (!(monster[dm].mMagicRes & IMMUNE_MAGIC)) {
-									if ((!(monster[dm].mMagicRes & RESIST_MAGIC) || (monster[dm].mMagicRes & RESIST_MAGIC) == 1 && !random_(99, 2)) && monster[dm]._mmode != MM_CHARGE) {
+									if ((!(monster[dm].mMagicRes & RESIST_MAGIC) || ((monster[dm].mMagicRes & RESIST_MAGIC) == 1 && !random_(99, 2))) && monster[dm]._mmode != MM_CHARGE) {
 										j = 6;
 										double slvl = (double)GetSpellLevel(id, SPL_BERSERK);
 										monster[dm]._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
@@ -2379,11 +2379,8 @@ void AddLightning(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 
 void AddMisexp(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	CMonster *mon;
-
 	if (mienemy && id > 0) {
-		mon = monster[id].MType;
-		switch (mon->mtype) {
+		switch (monster[id].MType->mtype) {
 		case MT_SUCCUBUS:
 			SetMissAnim(mi, MFILE_FLAREEXP);
 			break;
@@ -2395,6 +2392,8 @@ void AddMisexp(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 			break;
 		case MT_SOLBRNR:
 			SetMissAnim(mi, MFILE_SCBSEXPC);
+			break;
+		default:
 			break;
 		}
 	}
@@ -2758,7 +2757,7 @@ void AddAcid(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 {
 	GetMissileVel(mi, sx, sy, dx, dy, 16);
 	SetMissDir(mi, GetDirection16(sx, sy, dx, dy));
-	if (!gbIsHellfire && missile[mi]._mixvel & 0xFFFF0000 || missile[mi]._miyvel & 0xFFFF0000)
+	if ((!gbIsHellfire && missile[mi]._mixvel & 0xFFFF0000) || missile[mi]._miyvel & 0xFFFF0000)
 		missile[mi]._mirange = 5 * (monster[id]._mint + 4);
 	else
 		missile[mi]._mirange = 1;
@@ -3842,13 +3841,13 @@ void MI_Fireball(Sint32 i)
 				missile[i]._miyoff -= 32;
 			}
 			if (missile[i]._miyvel > 0
-			    && (TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]]
-			        || TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]])) {
+			    && ((TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]])
+			        || (TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]]))) {
 				missile[i]._miyoff -= 32;
 			}
 			if (missile[i]._mixvel > 0
-			    && (TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]]
-			        || TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]])) {
+			    && ((TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]])
+			        || (TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]]))) {
 				missile[i]._mixoff -= 32;
 			}
 			missile[i]._mimfnum = 0;
@@ -4052,13 +4051,13 @@ void MI_Immolation(Sint32 i)
 				missile[i]._miyoff -= 32;
 			}
 			if (missile[i]._miyvel > 0
-			    && (TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]]
-			        || TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]])) {
+			    && ((TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]])
+			        || (TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]]))) {
 				missile[i]._miyoff -= 32;
 			}
 			if (missile[i]._mixvel > 0
-			    && (TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]]
-			        || TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]])) {
+			    && ((TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]])
+			        || (TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]]))) {
 				missile[i]._mixoff -= 32;
 			}
 			missile[i]._mimfnum = 0;
@@ -4741,7 +4740,7 @@ void MI_Guardian(Sint32 i)
 	if (missile[i]._miVar2 > 0) {
 		missile[i]._miVar2--;
 	}
-	if (missile[i]._mirange == missile[i]._miVar1 || missile[i]._mimfnum == MFILE_GUARD && missile[i]._miVar2 == 0) {
+	if (missile[i]._mirange == missile[i]._miVar1 || (missile[i]._mimfnum == MFILE_GUARD && missile[i]._miVar2 == 0)) {
 		SetMissDir(i, 1);
 	}
 
@@ -5052,7 +5051,7 @@ void MI_Fireman(Sint32 i)
 		cx = monster[enemy]._mx;
 		cy = monster[enemy]._my;
 	}
-	if ((bx != ax || by != ay) && (missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, ax, ay)) {
+	if ((bx != ax || by != ay) && ((missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4)) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, ax, ay)) {
 		MissToMonst(i, ax, ay);
 		missile[i]._miDelFlag = true;
 	} else if (!(monster[src]._mFlags & MFLAG_TARGETS_MONSTER)) {
@@ -5060,7 +5059,7 @@ void MI_Fireman(Sint32 i)
 	} else {
 		j = dMonster[bx][by];
 	}
-	if (!PosOkMissile(bx, by) || j > 0 && !(missile[i]._miVar1 & 1)) {
+	if (!PosOkMissile(bx, by) || (j > 0 && !(missile[i]._miVar1 & 1))) {
 		missile[i]._mixvel *= -1;
 		missile[i]._miyvel *= -1;
 		missile[i]._mimfnum = opposite[missile[i]._mimfnum];

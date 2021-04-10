@@ -726,6 +726,8 @@ void AddChestTraps()
 					case OBJ_CHEST3:
 						object[oi]._otype = OBJ_TCHEST3;
 						break;
+					default:
+						break;
 					}
 					object[oi]._oTrapFlag = true;
 					if (leveltype == DTYPE_CATACOMBS) {
@@ -1857,6 +1859,8 @@ void AddObject(_object_id ot, int ox, int oy)
 	case OBJ_TNUDEM2:
 		AddTorturedBody(oi);
 		break;
+	default:
+		break;
 	}
 	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) >> 1;
 	nobjects++;
@@ -2071,6 +2075,8 @@ void Obj_Trap(int i)
 			if (object[oti]._oSelFlag == 0)
 				otrig = true;
 			break;
+		default:
+			break;
 		}
 		if (otrig) {
 			object[i]._oVar4 = 1;
@@ -2193,6 +2199,8 @@ void ProcessObjects()
 		case OBJ_TBCROSS:
 			Obj_Light(oi, 10);
 			Obj_BCrossDamage(oi);
+			break;
+		default:
 			break;
 		}
 		if (object[oi]._oAnimFlag == 0)
@@ -4419,6 +4427,8 @@ bool OperateFountains(int pnum, int i)
 		if (pnum == myplr)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		break;
+	default:
+		break;
 	}
 	force_redraw = 255;
 	return applied;
@@ -4618,6 +4628,8 @@ void OperateObject(int pnum, int i, bool TeleFlag)
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(pnum, i);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -4767,6 +4779,8 @@ void SyncOpObject(int pnum, int cmd, int i)
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(pnum, i);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -4899,6 +4913,8 @@ void BreakObject(int pnum, int oi)
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
 		BreakBarrel(pnum, oi, objdam, false, true);
+		break;
+	default:
 		break;
 	}
 }
@@ -5097,6 +5113,8 @@ void SyncObjectAnim(int o)
 	case OBJ_PEDISTAL:
 		SyncPedistal(o);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -5237,6 +5255,8 @@ void GetObjectStr(int i)
 		break;
 	case OBJ_SLAINHERO:
 		strcpy(infostr, "Slain Hero");
+		break;
+	default:
 		break;
 	}
 	if (plr[myplr]._pClass == PC_ROGUE) {

@@ -1175,6 +1175,8 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 		columns++;
 		rows++;
 		break;
+	case SDIR_NONE:
+		break;
 	}
 
 	scrollrt_drawFloor(out, x, y, sx, sy, rows, columns);
