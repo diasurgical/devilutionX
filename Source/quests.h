@@ -33,11 +33,6 @@ enum quest_state : uint8_t {
 	QUEST_INVALID = 0xFF,
 };
 
-enum quest_gametype : uint8_t {
-	QUEST_SINGLE,
-	QUEST_ANY,
-};
-
 struct QuestStruct {
 	Uint8 _qlevel;
 	Uint8 _qtype;
@@ -60,7 +55,7 @@ struct QuestData {
 	Uint8 _qdtype;
 	Uint8 _qdrnd;
 	Uint8 _qslvl;
-	quest_gametype _qflags;
+	bool isSinglePlayerOnly;
 	Sint32 _qdmsg;
 	const char *_qlstr;
 };

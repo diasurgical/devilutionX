@@ -266,7 +266,7 @@ static BYTE *DeltaExportJunk(BYTE *dst)
 	}
 
 	for (i = 0, q = 0; i < MAXQUESTS; i++) {
-		if (questlist[i]._qflags == QUEST_ANY) {
+		if (!questlist[i].isSinglePlayerOnly) {
 			sgJunk.quests[q].qlog = quests[i]._qlog;
 			sgJunk.quests[q].qstate = quests[i]._qactive;
 			sgJunk.quests[q].qvar1 = quests[i]._qvar1;
@@ -302,7 +302,7 @@ static void DeltaImportJunk(BYTE *src)
 	}
 
 	for (i = 0, q = 0; i < MAXQUESTS; i++) {
-		if (questlist[i]._qflags == QUEST_ANY) {
+		if (!questlist[i].isSinglePlayerOnly) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
 			quests[i]._qlog = sgJunk.quests[q].qlog;
