@@ -4085,10 +4085,10 @@ void MI_LightningArrow(Sint32 i)
 
 	mx = missile[i]._mix;
 	my = missile[i]._miy;
-	/// ASSERT: assert((DWORD)mx < MAXDUNX);
-	/// ASSERT: assert((DWORD)my < MAXDUNY);
+	assert((DWORD)mx < MAXDUNX);
+	assert((DWORD)my < MAXDUNY);
 	pn = dPiece[mx][my];
-	/// ASSERT: assert((DWORD)pn <= MAXTILES);
+	assert((DWORD)pn <= MAXTILES);
 
 	if (missile[i]._misource == -1) {
 		if ((mx != missile[i]._misx || my != missile[i]._misy) && nMissileTable[pn]) {

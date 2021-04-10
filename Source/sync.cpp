@@ -261,7 +261,7 @@ Uint32 sync_update(int pnum, const Uint8 *pbBuf)
 		app_fatal("bad sync command");
 	}
 
-	/// ASSERT: assert(gbBufferMsgs != BUFFER_PROCESS);
+	assert(gbBufferMsgs != 2);
 
 	if (gbBufferMsgs == 1) {
 		return pHdr->wLen + sizeof(*pHdr);
