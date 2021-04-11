@@ -1654,7 +1654,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 
-	int skippedAnimationFrames = 0;
+	int skippedAnimationFrames = 0; // GotHit can start with Frame 1. GotHit can for example be called in ProcessMonsters() and this is after ProcessPlayers().
 	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER) {
 		skippedAnimationFrames += 1;
 	}
