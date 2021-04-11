@@ -479,31 +479,10 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
 	}
 
-
-	if (sgOptions.Gameplay.bMonsterHealthScaling) {
-		// new behavior: always divide max HP in half, then scale up for each additional player
-		monster[i]._mmaxhp /= 2;
+	if (!gbIsMultiplayer) {
+		monster[i]._mmaxhp >>= 1;
 		if (monster[i]._mmaxhp < 64) {
 			monster[i]._mmaxhp = 64;
-		}
-		if (gbIsMultiplayer) {
-			int activePlayerCount = 0;
-			for (int j = 0; j < MAX_PLRS; j++) {
-				if (plr[j].plractive) {
-					activePlayerCount++;
-				}
-			}
-			float modifier = sgOptions.Gameplay.bMonsterHealthScalingModifier / 100;
-			float adjustment = (float)monster[i]._mmaxhp * modifier;
-			monster[i]._mmaxhp += (adjustment * (activePlayerCount - 1));
-		}
-	} else {
-		// original behavior: divide max HP in half for singleplayer
-		if (!gbIsMultiplayer) {
-			monster[i]._mmaxhp >>= 1;
-			if (monster[i]._mmaxhp < 64) {
-				monster[i]._mmaxhp = 64;
-			}
 		}
 	}
 
