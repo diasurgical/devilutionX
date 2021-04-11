@@ -10,11 +10,11 @@ DWORD dwAttractTicks;
 std::vector<UiItemBase *> vecMainMenuDialog;
 std::vector<UiListItem *> vecMenuItems;
 
-int MainMenuResult;
+_mainmenu_selections MainMenuResult;
 
 void UiMainMenuSelect(int value)
 {
-	MainMenuResult = vecMenuItems[value]->m_value;
+	MainMenuResult = (_mainmenu_selections)vecMenuItems[value]->m_value;
 }
 
 void mainmenu_Esc()
@@ -86,16 +86,16 @@ void mainmenu_Free()
 	vecMenuItems.clear();
 }
 
-BOOL UiMainMenuDialog(const char *name, int *pdwResult, void (*fnSound)(const char *file), int attractTimeOut)
+bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut)
 {
-	MainMenuResult = 0;
-	while (MainMenuResult == 0) {
+	MainMenuResult = MAINMENU_NONE;
+	while (MainMenuResult == MAINMENU_NONE) {
 		mainmenu_attract_time_out = attractTimeOut;
 		mainmenu_Load(name, fnSound);
 
 		mainmenu_restart_repintro(); // for automatic starts
 
-		while (MainMenuResult == 0) {
+		while (MainMenuResult == MAINMENU_NONE) {
 			UiClearScreen();
 			UiPollAndRender();
 			if (!gbSpawned && SDL_GetTicks() >= dwAttractTicks) {
@@ -107,7 +107,7 @@ BOOL UiMainMenuDialog(const char *name, int *pdwResult, void (*fnSound)(const ch
 
 		if (gbSpawned && !gbIsHellfire && MainMenuResult == MAINMENU_REPLAY_INTRO) {
 			UiSelOkDialog(NULL, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
-			MainMenuResult = 0;
+			MainMenuResult = MAINMENU_NONE;
 		}
 	}
 

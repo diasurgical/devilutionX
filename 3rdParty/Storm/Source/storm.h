@@ -5,7 +5,18 @@
 #include <string>
 namespace devilution {
 
-typedef struct PCXHeader {
+enum game_info : uint8_t {
+	GAMEINFO_NAME,
+	GAMEINFO_PASSWORD,
+};
+
+enum conn_type : uint8_t {
+	SELCONN_ZT,
+	SELCONN_TCP,
+	SELCONN_LOOPBACK,
+};
+
+struct PCXHeader {
 	Uint8 Manufacturer;
 	Uint8 Version;
 	Uint8 Encoding;
@@ -24,9 +35,9 @@ typedef struct PCXHeader {
 	Uint16 HscreenSize;
 	Uint16 VscreenSize;
 	Uint8 Filler[54];
-} PCXHeader;
+};
 
-typedef struct _SNETCAPS {
+struct _SNETCAPS {
 	Uint32 size;
 	Uint32 flags;
 	Uint32 maxmessagesize;
@@ -36,14 +47,14 @@ typedef struct _SNETCAPS {
 	Uint32 latencyms;
 	Uint32 defaultturnssec;
 	Uint32 defaultturnsintransit;
-} _SNETCAPS;
+};
 
-typedef struct _SNETEVENT {
+struct _SNETEVENT {
 	Uint32 eventid;
 	Uint32 playerid;
 	void *data;
 	Uint32 databytes;
-} _SNETEVENT;
+};
 
 // Note to self: Linker error => forgot a return value in cpp
 
@@ -103,8 +114,8 @@ struct CCritSect {
 extern "C" {
 #endif
 
-BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, const char *creatorName, const char *a11, int *playerID);
-BOOL SNetDestroy();
+bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, const char *creatorName, const char *a11, int *playerID);
+bool SNetDestroy();
 
 /*  SNetDropPlayer @ 106
  *
@@ -113,9 +124,9 @@ BOOL SNetDestroy();
  *  playerid:     The player ID for the player to be dropped.
  *  flags:
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
-BOOL SNetDropPlayer(int playerid, DWORD flags);
+bool SNetDropPlayer(int playerid, DWORD flags);
 
 /*  SNetGetGameInfo @ 107
  *
@@ -126,9 +137,9 @@ BOOL SNetDropPlayer(int playerid, DWORD flags);
  *  dst:          The destination buffer for the data.
  *  length:       The maximum size of the destination buffer.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
-BOOL SNetGetGameInfo(int type, void *dst, unsigned int length);
+bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
 
 /*  SNetGetTurnsInTransit @ 115
  *
@@ -137,9 +148,9 @@ BOOL SNetGetGameInfo(int type, void *dst, unsigned int length);
  *
  *  turns: A pointer to an integer that will receive the value.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
-BOOL
+bool
     SNetGetTurnsInTransit(
         DWORD *turns);
 
@@ -169,7 +180,7 @@ typedef struct _user_info {
 	DWORD dwUnknown;
 } user_info;
 
-BOOL SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, char *userStats, int *playerid);
+bool SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, char *userStats, int *playerid);
 
 /*  SNetLeaveGame @ 119
  *
@@ -178,13 +189,13 @@ BOOL SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, 
  *
  *  type: The leave type. It doesn't appear to be important, no documentation available.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
-BOOL SNetLeaveGame(int type);
+bool SNetLeaveGame(int type);
 
-BOOL SNetPerformUpgrade(DWORD *upgradestatus);
-BOOL SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
-BOOL SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
+bool SNetPerformUpgrade(DWORD *upgradestatus);
+bool SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
+bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
 
 typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
 
@@ -201,9 +212,9 @@ typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
  *  data:       A pointer to the data.
  *  databytes:  The amount of bytes that the data pointer contains.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
-BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes);
+bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
 
 // Macro values to target specific players
 #define SNPLAYER_ALL    -1
@@ -222,11 +233,11 @@ BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes);
  *  data:       A pointer to the data.
  *  databytes:  The amount of bytes that the data pointer contains.
  *
- *  Returns TRUE if the function was called successfully and FALSE otherwise.
+ *  Returns true if the function was called successfully and false otherwise.
  */
-BOOL SNetSendTurn(char *data, unsigned int databytes);
+bool SNetSendTurn(char *data, unsigned int databytes);
 
-BOOL SFileOpenFile(const char *filename, HANDLE *phFile);
+bool SFileOpenFile(const char *filename, HANDLE *phFile);
 
 // Functions implemented in StormLib
 bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
@@ -249,9 +260,9 @@ bool WINAPI SFileCloseFile(HANDLE hFile);
  *  pdwHeight:    An optional variable that receives the image height.
  *  pdwBpp:       An optional variable that receives the image bits per pixel.
  *
- *  Returns TRUE if the image was supported and loaded correctly, FALSE otherwise.
+ *  Returns true if the image was supported and loaded correctly, false otherwise.
  */
-BOOL
+bool
     SBmpLoadImage(
         const char *pszFileName,
         SDL_Color *pPalette,
@@ -262,11 +273,13 @@ BOOL
         DWORD *pdwBpp);
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
+float getIniFloat(const char *sectionName, const char *keyName, float defaultValue);
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
 void SaveIni();
 int getIniInt(const char *keyname, const char *valuename, int defaultValue);
 void setIniInt(const char *keyname, const char *valuename, int value);
+void setIniFloat(const char *keyname, const char *valuename, float value);
 
 void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video);
 void SVidPlayEnd(HANDLE video);
@@ -307,15 +320,15 @@ void SErrSetLastError(DWORD dwErrCode);
  */
 void SStrCopy(char *dest, const char *src, int max_length);
 
-BOOL SFileSetBasePath(const char *);
-BOOL SVidPlayContinue(void);
-BOOL SNetGetOwnerTurnsWaiting(DWORD *);
+bool SFileSetBasePath(const char *);
+bool SVidPlayContinue(void);
+bool SNetGetOwnerTurnsWaiting(DWORD *);
 bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
-BOOLEAN SNetSetBasePlayer(int);
+bool SNetSetBasePlayer(int);
 int SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
 int SNetGetProviderCaps(struct _SNETCAPS *);
-BOOL SFileEnableDirectAccess(BOOL enable);
+bool SFileEnableDirectAccess(bool enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
 }

@@ -26,12 +26,12 @@ void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, 
 	ScaleOutputRect(&dst_rect);
 
 	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
-		if (SDLC_SetSurfaceColors(art->surface, pal_surface->format->palette) <= -1)
+		if (SDLC_SetSurfaceColors(art->surface.get(), pal_surface->format->palette) <= -1)
 			ErrSdl();
 		art->palette_version = pal_surface_palette_version;
 	}
 
-	if (SDL_BlitSurface(art->surface, &src_rect, DiabloUiSurface(), &dst_rect) < 0)
+	if (SDL_BlitSurface(art->surface.get(), &src_rect, DiabloUiSurface(), &dst_rect) < 0)
 		ErrSdl();
 }
 
@@ -50,15 +50,19 @@ void DrawArt(CelOutputBuffer out, Sint16 screenX, Sint16 screenY, Art *art, int 
 		src_rect.w = srcW;
 	if (srcH && srcH < src_rect.h)
 		src_rect.h = srcH;
-	SDL_Rect dst_rect = { BUFFER_BORDER_LEFT + screenX, BUFFER_BORDER_TOP + screenY, src_rect.w, src_rect.h };
+	SDL_Rect dst_rect;
+	dst_rect.x = BUFFER_BORDER_LEFT + screenX;
+	dst_rect.y = BUFFER_BORDER_TOP + screenY;
+	dst_rect.w = src_rect.w;
+	dst_rect.h = src_rect.h;
 
 	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
-		if (SDLC_SetSurfaceColors(art->surface, out.surface->format->palette) <= -1)
+		if (SDLC_SetSurfaceColors(art->surface.get(), out.surface->format->palette) <= -1)
 			ErrSdl();
 		art->palette_version = pal_surface_palette_version;
 	}
 
-	if (SDL_BlitSurface(art->surface, &src_rect, out.surface, &dst_rect) < 0)
+	if (SDL_BlitSurface(art->surface.get(), &src_rect, out.surface, &dst_rect) < 0)
 		ErrSdl();
 }
 

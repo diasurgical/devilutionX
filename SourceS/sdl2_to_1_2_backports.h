@@ -10,6 +10,7 @@
 #include <cstddef>
 
 #include "console.h"
+#include "../defs.h"
 #include "../SourceX/stubs.h"
 
 #define WINDOW_ICON_NAME 0
@@ -54,6 +55,8 @@
 #define SDL_JoystickID Sint32
 #define SDL_JoystickNameForIndex SDL_JoystickName
 
+void SDL_Log(const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
+
 inline void SDL_Log(const char *fmt, ...)
 {
 	char message[256];
@@ -96,11 +99,13 @@ inline void SDL_DisableScreenSaver()
 
 //= Messagebox (simply logged to stderr for now)
 
-typedef enum {
-	SDL_MESSAGEBOX_ERROR = 0x00000010,      /**< error dialog */
-	SDL_MESSAGEBOX_WARNING = 0x00000020,    /**< warning dialog */
-	SDL_MESSAGEBOX_INFORMATION = 0x00000040 /**< informational dialog */
-} SDL_MessageBoxFlags;
+enum {
+	// clang-format off
+	SDL_MESSAGEBOX_ERROR       = 1 << 4, /**< error dialog */
+	SDL_MESSAGEBOX_WARNING     = 1 << 5, /**< warning dialog */
+	SDL_MESSAGEBOX_INFORMATION = 1 << 6, /**< informational dialog */
+	// clang-format on
+};
 
 inline int SDL_ShowSimpleMessageBox(Uint32 flags,
     const char *title,

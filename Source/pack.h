@@ -5,16 +5,13 @@
  */
 #pragma once
 
+#include "inv.h"
 #include "items.h"
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #pragma pack(push, 1)
-typedef struct PkItemStruct {
+struct PkItemStruct {
 	Uint32 iSeed;
 	Uint16 iCreateInfo;
 	Uint16 idx;
@@ -25,9 +22,9 @@ typedef struct PkItemStruct {
 	Uint8 bMCh;
 	Uint16 wValue;
 	Uint32 dwBuff;
-} PkItemStruct;
+};
 
-typedef struct PkPlayerStruct {
+struct PkPlayerStruct {
 	Uint32 dwLowDateTime;
 	Uint32 dwHighDateTime;
 	Sint8 destAction;
@@ -75,17 +72,12 @@ typedef struct PkPlayerStruct {
 	Uint32 pDifficulty;
 	Sint32 pDamAcFlags;
 	Sint32 dwReserved[5]; // For future use
-} PkPlayerStruct;
+};
 #pragma pack(pop)
 
-void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield);
-void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync);
+void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield);
+void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync);
 void PackItem(PkItemStruct *id, const ItemStruct *is);
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
-
-/* rdata */
-#ifdef __cplusplus
-}
-#endif
 
 }

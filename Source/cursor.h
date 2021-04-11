@@ -5,11 +5,25 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum cursor_id : uint8_t {
+	CURSOR_NONE,
+	CURSOR_HAND,
+	CURSOR_IDENTIFY,
+	CURSOR_REPAIR,
+	CURSOR_RECHARGE,
+	CURSOR_DISARM,
+	CURSOR_OIL,
+	CURSOR_TELEKINESIS,
+	CURSOR_RESURRECT,
+	CURSOR_TELEPORT,
+	CURSOR_HEALOTHER,
+	CURSOR_HOURGLASS,
+	CURSOR_FIRSTITEM,
+};
 
 extern int cursW;
 extern int cursH;
@@ -31,7 +45,6 @@ extern int pcurs;
 void InitCursor();
 void FreeCursor();
 void SetICursor(int i);
-void SetCursor_(int i);
 void NewCursor(int i);
 void InitLevelCursor();
 void CheckRportal();
@@ -41,9 +54,5 @@ void CheckCursMove();
 /* rdata */
 extern const int InvItemWidth[];
 extern const int InvItemHeight[];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

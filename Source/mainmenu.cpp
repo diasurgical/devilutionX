@@ -15,7 +15,7 @@ char gszHero[16];
 /* data */
 
 /** The active music track id for the main menu. */
-int menu_music_track_id = TMUSIC_INTRO;
+uint8_t menu_music_track_id = TMUSIC_INTRO;
 
 void mainmenu_refresh_music()
 {
@@ -34,12 +34,12 @@ void mainmenu_refresh_music()
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 }
 
-static BOOL mainmenu_init_menu(int type)
+static bool mainmenu_init_menu(_selhero_selections type)
 {
-	BOOL success;
+	bool success;
 
 	if (type == SELHERO_PREVIOUS)
-		return TRUE;
+		return true;
 
 	music_stop();
 
@@ -50,19 +50,13 @@ static BOOL mainmenu_init_menu(int type)
 	return success;
 }
 
-static BOOL mainmenu_single_player()
+static bool mainmenu_single_player()
 {
 	gbIsMultiplayer = false;
-
-	gbRunInTown = sgOptions.Gameplay.bRunInTown;
-	gnTickRate = sgOptions.Gameplay.nTickRate;
-	gbTheoQuest = sgOptions.Gameplay.bTheoQuest;
-	gbCowQuest = sgOptions.Gameplay.bCowQuest;
-
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
-static BOOL mainmenu_multi_player()
+static bool mainmenu_multi_player()
 {
 	gbIsMultiplayer = true;
 	return mainmenu_init_menu(SELHERO_CONNECT);
@@ -72,9 +66,9 @@ static void mainmenu_play_intro()
 {
 	music_stop();
 	if (gbIsHellfire)
-		play_movie("gendata\\Hellfire.smk", TRUE);
+		play_movie("gendata\\Hellfire.smk", true);
 	else
-		play_movie("gendata\\diablo1.smk", TRUE);
+		play_movie("gendata\\diablo1.smk", true);
 	mainmenu_refresh_music();
 }
 
@@ -89,8 +83,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		    pfile_ui_set_class_stats,
 		    &dlgresult,
 		    &gszHero,
-		    &gnDifficulty);
-		gameData->nDifficulty = gnDifficulty;
+		    &gameData->nDifficulty);
 
 		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
 	} else {
@@ -104,40 +97,42 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);
-		return FALSE;
+		return false;
 	}
 
 	pfile_create_player_description();
 
-	return TRUE;
+	return true;
 }
 
 void mainmenu_loop()
 {
-	BOOL done;
-	int menu;
+	bool done;
+	_mainmenu_selections menu;
 
 	mainmenu_refresh_music();
-	done = FALSE;
+	done = false;
 
 	do {
-		menu = 0;
+		menu = MAINMENU_NONE;
 		if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
 			app_fatal("Unable to display mainmenu");
 
 		switch (menu) {
+		case MAINMENU_NONE:
+			break;
 		case MAINMENU_SINGLE_PLAYER:
 			if (!mainmenu_single_player())
-				done = TRUE;
+				done = true;
 			break;
 		case MAINMENU_MULTIPLAYER:
 			if (!mainmenu_multi_player())
-				done = TRUE;
+				done = true;
 			break;
 		case MAINMENU_ATTRACT_MODE:
 		case MAINMENU_REPLAY_INTRO:
 			if (gbIsSpawn && !gbIsHellfire)
-				done = FALSE;
+				done = false;
 			else if (gbActive)
 				mainmenu_play_intro();
 			break;
@@ -148,7 +143,7 @@ void mainmenu_loop()
 			UiSupportDialog();
 			break;
 		case MAINMENU_EXIT_DIABLO:
-			done = TRUE;
+			done = true;
 			break;
 		}
 	} while (!done);

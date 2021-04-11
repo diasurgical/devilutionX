@@ -11,20 +11,20 @@
 
 namespace devilution {
 
-BOOLEAN gbSomebodyWonGameKludge;
+bool gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
 WORD sgwPackPlrOffsetTbl[MAX_PLRS];
 PkPlayerStruct netplr[MAX_PLRS];
-BOOLEAN sgbPlayerTurnBitTbl[MAX_PLRS];
-BOOLEAN sgbPlayerLeftGameTbl[MAX_PLRS];
+bool sgbPlayerTurnBitTbl[MAX_PLRS];
+bool sgbPlayerLeftGameTbl[MAX_PLRS];
 DWORD sgbSentThisCycle;
-BOOL gbShouldValidatePackage;
+bool gbShouldValidatePackage;
 BYTE gbActivePlayers;
-BOOLEAN gbGameDestroyed;
-BOOLEAN sgbSendDeltaTbl[MAX_PLRS];
+bool gbGameDestroyed;
+bool sgbSendDeltaTbl[MAX_PLRS];
 GameData sgGameInitInfo;
-BOOLEAN gbSelectProvider;
+bool gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
@@ -34,10 +34,10 @@ DWORD sgdwGameLoops;
  * represents a single player game and 4 represents a multi player game.
  */
 bool gbIsMultiplayer;
-BOOLEAN sgbTimeout;
+bool sgbTimeout;
 char szPlayerName[128];
 BYTE gbDeltaSender;
-BOOL sgbNetInited;
+bool sgbNetInited;
 int player_state[MAX_PLRS];
 
 /**
@@ -85,7 +85,7 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 	if (pBuf->dwNextWriteOffset != 0) {
 		src_ptr = pBuf->bData;
-		while (TRUE) {
+		while (true) {
 			if (*src_ptr == 0)
 				break;
 			chunk_size = *src_ptr;
@@ -156,7 +156,7 @@ void NetSendHiPri(BYTE *pbMsg, BYTE bLen)
 		multi_send_packet(pbMsg, bLen);
 	}
 	if (!gbShouldValidatePackage) {
-		gbShouldValidatePackage = TRUE;
+		gbShouldValidatePackage = true;
 		NetRecvPlrData(&pkt);
 		size = gdwNormalMsgSize - sizeof(TPktHdr);
 		hipri_body = multi_recv_packet(&sgHiPriBuf, pkt.body, &size);
@@ -209,7 +209,7 @@ static void multi_handle_turn_upper_bit(int pnum)
 	}
 
 	if (myplr == i) {
-		sgbSendDeltaTbl[pnum] = TRUE;
+		sgbSendDeltaTbl[pnum] = true;
 	} else if (myplr == pnum) {
 		gbDeltaSender = i;
 	}
@@ -257,7 +257,7 @@ static void multi_player_left_msg(int pnum, int left)
 			switch (sgdwPlayerLeftReasonTbl[pnum]) {
 			case LEAVE_ENDING:
 				pszFmt = "Player '%s' killed Diablo and left the game!";
-				gbSomebodyWonGameKludge = TRUE;
+				gbSomebodyWonGameKludge = true;
 				break;
 			case LEAVE_DROP:
 				pszFmt = "Player '%s' dropped due to timeout";
@@ -265,7 +265,7 @@ static void multi_player_left_msg(int pnum, int left)
 			}
 			EventPlrMsg(pszFmt, plr[pnum]._pName);
 		}
-		plr[pnum].plractive = FALSE;
+		plr[pnum].plractive = false;
 		plr[pnum]._pName[0] = '\0';
 		FreePlayerGFX(pnum);
 		gbActivePlayers--;
@@ -283,7 +283,7 @@ static void multi_clear_left_tbl()
 			else
 				multi_player_left_msg(i, 1);
 
-			sgbPlayerLeftGameTbl[i] = FALSE;
+			sgbPlayerLeftGameTbl[i] = false;
 			sgdwPlayerLeftReasonTbl[i] = 0;
 		}
 	}
@@ -291,14 +291,14 @@ static void multi_clear_left_tbl()
 
 void multi_player_left(int pnum, int reason)
 {
-	sgbPlayerLeftGameTbl[pnum] = TRUE;
+	sgbPlayerLeftGameTbl[pnum] = true;
 	sgdwPlayerLeftReasonTbl[pnum] = reason;
 	multi_clear_left_tbl();
 }
 
 void multi_net_ping()
 {
-	sgbTimeout = TRUE;
+	sgbTimeout = true;
 	sglTimeoutStart = SDL_GetTicks();
 }
 
@@ -329,7 +329,7 @@ static void multi_begin_timeout()
 
 	nTicks = SDL_GetTicks() - sglTimeoutStart;
 	if (nTicks > 20000) {
-		gbRunGame = FALSE;
+		gbRunGame = false;
 		return;
 	}
 	if (nTicks < 10000) {
@@ -357,15 +357,15 @@ static void multi_begin_timeout()
 		}
 	}
 
-	/// ASSERT: assert(bGroupPlayers);
-	/// ASSERT: assert(nLowestActive != -1);
-	/// ASSERT: assert(nLowestPlayer != -1);
+	assert(bGroupPlayers);
+	assert(nLowestActive != -1);
+	assert(nLowestPlayer != -1);
 
 	if (bGroupPlayers < bGroupCount) {
-		gbGameDestroyed = TRUE;
+		gbGameDestroyed = true;
 	} else if (bGroupPlayers == bGroupCount) {
 		if (nLowestPlayer != nLowestActive) {
-			gbGameDestroyed = TRUE;
+			gbGameDestroyed = true;
 		} else if (nLowestActive == myplr) {
 			multi_check_drop_player();
 		}
@@ -380,16 +380,16 @@ static void multi_begin_timeout()
 int multi_handle_delta()
 {
 	int i;
-	BOOL received;
+	bool received;
 
 	if (gbGameDestroyed) {
-		gbRunGame = FALSE;
-		return FALSE;
+		gbRunGame = false;
+		return false;
 	}
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		if (sgbSendDeltaTbl[i]) {
-			sgbSendDeltaTbl[i] = FALSE;
+			sgbSendDeltaTbl[i] = false;
 			DeltaExportData(i);
 		}
 	}
@@ -397,23 +397,23 @@ int multi_handle_delta()
 	sgbSentThisCycle = nthread_send_and_recv_turn(sgbSentThisCycle, 1);
 	if (!nthread_recv_turns(&received)) {
 		multi_begin_timeout();
-		return FALSE;
+		return false;
 	}
 
-	sgbTimeout = FALSE;
+	sgbTimeout = false;
 	if (received) {
 		if (!gbShouldValidatePackage) {
 			NetSendHiPri(0, 0);
-			gbShouldValidatePackage = FALSE;
+			gbShouldValidatePackage = false;
 		} else {
-			gbShouldValidatePackage = FALSE;
+			gbShouldValidatePackage = false;
 			if (!multi_check_pkt_valid(&sgHiPriBuf))
 				NetSendHiPri(0, 0);
 		}
 	}
 	multi_mon_seeds();
 
-	return TRUE;
+	return true;
 }
 
 static void multi_handle_all_packets(int pnum, BYTE *pData, int nSize)
@@ -446,7 +446,7 @@ void multi_process_network_packets()
 	TPktHdr *pkt;
 	DWORD dwMsgSize;
 	DWORD dwID;
-	BOOL cond;
+	bool cond;
 	char *data;
 
 	multi_clear_left_tbl();
@@ -466,7 +466,7 @@ void multi_process_network_packets()
 		plr[dwID]._pownerx = pkt->px;
 		plr[dwID]._pownery = pkt->py;
 		if (dwID != myplr) {
-			// ASSERT: gbBufferMsgs != BUFFER_PROCESS (2)
+			assert(gbBufferMsgs != 2);
 			plr[dwID]._pHitPoints = pkt->php;
 			plr[dwID]._pMaxHP = pkt->pmhp;
 			cond = gbBufferMsgs == 1;
@@ -494,7 +494,7 @@ void multi_process_network_packets()
 						plr[dwID]._pfutx = plr[dwID]._px;
 						plr[dwID]._pfuty = plr[dwID]._py;
 					}
-					MakePlrPath(dwID, pkt->targx, pkt->targy, TRUE);
+					MakePlrPath(dwID, pkt->targx, pkt->targy, true);
 				} else {
 					plr[dwID]._px = pkt->px;
 					plr[dwID]._py = pkt->py;
@@ -511,15 +511,15 @@ void multi_process_network_packets()
 		nthread_terminate_game("SNetReceiveMsg");
 }
 
-void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen)
+void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen)
 {
 	DWORD dwOffset, dwBody, dwMsg;
 	TPkt pkt;
 	TCmdPlrInfoHdr *p;
 
-	/// ASSERT: assert(pnum != myplr);
-	/// ASSERT: assert(pbSrc);
-	/// ASSERT: assert(dwLen <= 0x0ffff);
+	assert(pnum != myplr);
+	assert(pbSrc);
+	assert(dwLen <= 0x0ffff);
 
 	dwOffset = 0;
 
@@ -541,7 +541,7 @@ void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen)
 		if (dwLen < dwBody) {
 			dwBody = dwLen;
 		}
-		/// ASSERT: assert(dwBody <= 0x0ffff);
+		assert(dwBody <= 0x0ffff);
 		p->wBytes = dwBody;
 		memcpy(&pkt.body[sizeof(*p)], pbSrc, p->wBytes);
 		dwMsg = sizeof(pkt.hdr);
@@ -580,7 +580,7 @@ static void multi_send_pinfo(int pnum, char cmd)
 {
 	PkPlayerStruct pkplr;
 
-	PackPlayer(&pkplr, myplr, TRUE);
+	PackPlayer(&pkplr, myplr, true);
 	dthread_send_delta(pnum, cmd, &pkplr, sizeof(pkplr));
 }
 
@@ -611,7 +611,7 @@ static void SetupLocalCoords()
 	if (!leveldebug || gbIsMultiplayer) {
 		currlevel = 0;
 		leveltype = DTYPE_TOWN;
-		setlevel = FALSE;
+		setlevel = false;
 	}
 	x = 75;
 	y = 68;
@@ -630,19 +630,19 @@ static void SetupLocalCoords()
 	plr[myplr]._ptargx = x;
 	plr[myplr]._ptargy = y;
 	plr[myplr].plrlevel = currlevel;
-	plr[myplr]._pLvlChanging = TRUE;
+	plr[myplr]._pLvlChanging = true;
 	plr[myplr].pLvlLoad = 0;
 	plr[myplr]._pmode = PM_NEWLVL;
 	plr[myplr].destAction = ACTION_NONE;
 }
 
-static BOOL multi_upgrade(BOOL *pfExitProgram)
+static bool multi_upgrade(bool *pfExitProgram)
 {
-	BOOL result;
+	bool result;
 	int status;
 
 	SNetPerformUpgrade((LPDWORD)&status);
-	result = TRUE;
+	result = true;
 	if (status && status != 1) {
 		if (status != 2) {
 			if (status == -1) {
@@ -652,7 +652,7 @@ static BOOL multi_upgrade(BOOL *pfExitProgram)
 			*pfExitProgram = 1;
 		}
 
-		result = FALSE;
+		result = false;
 	}
 
 	return result;
@@ -669,21 +669,21 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 		if (gameData->size != sizeof(GameData))
 			app_fatal("Invalid size of game data: %d", gameData->size);
 		sgGameInitInfo = *gameData;
-		sgbPlayerTurnBitTbl[pEvt->playerid] = TRUE;
+		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
 		break;
 	}
 	case EVENT_TYPE_PLAYER_LEAVE_GAME:
-		sgbPlayerLeftGameTbl[pEvt->playerid] = TRUE;
-		sgbPlayerTurnBitTbl[pEvt->playerid] = FALSE;
+		sgbPlayerLeftGameTbl[pEvt->playerid] = true;
+		sgbPlayerTurnBitTbl[pEvt->playerid] = false;
 
 		LeftReason = 0;
 		if (pEvt->data && pEvt->databytes >= sizeof(DWORD))
 			LeftReason = *(DWORD *)pEvt->data;
 		sgdwPlayerLeftReasonTbl[pEvt->playerid] = LeftReason;
 		if (LeftReason == LEAVE_ENDING)
-			gbSomebodyWonGameKludge = TRUE;
+			gbSomebodyWonGameKludge = true;
 
-		sgbSendDeltaTbl[pEvt->playerid] = FALSE;
+		sgbSendDeltaTbl[pEvt->playerid] = false;
 		dthread_remove_player(pEvt->playerid);
 
 		if (gbDeltaSender == pEvt->playerid)
@@ -695,7 +695,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 	}
 }
 
-static void multi_event_handler(BOOL add)
+static void multi_event_handler(bool add)
 {
 	DWORD i;
 	bool (*fn)(event_type, SEVTHANDLER);
@@ -718,20 +718,20 @@ void NetClose()
 		return;
 	}
 
-	sgbNetInited = FALSE;
+	sgbNetInited = false;
 	nthread_cleanup();
 	dthread_cleanup();
 	tmsg_cleanup();
-	multi_event_handler(FALSE);
+	multi_event_handler(false);
 	SNetLeaveGame(3);
 	if (gbIsMultiplayer)
 		SDL_Delay(2000);
 }
 
-BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
+bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 {
 	while (1) {
-		*pfExitProgram = FALSE;
+		*pfExitProgram = false;
 		SetRndSeed(0);
 		sgGameInitInfo.size = sizeof(sgGameInitInfo);
 		sgGameInitInfo.dwSeed = time(NULL);
@@ -739,14 +739,13 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
 		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
-		sgGameInitInfo.nDifficulty = gnDifficulty;
 		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
 		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown;
 		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
 		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest;
 		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;
 		memset(sgbPlayerTurnBitTbl, 0, sizeof(sgbPlayerTurnBitTbl));
-		gbGameDestroyed = FALSE;
+		gbGameDestroyed = false;
 		memset(sgbPlayerLeftGameTbl, 0, sizeof(sgbPlayerLeftGameTbl));
 		memset(sgdwPlayerLeftReasonTbl, 0, sizeof(sgdwPlayerLeftReasonTbl));
 		memset(sgbSendDeltaTbl, 0, sizeof(sgbSendDeltaTbl));
@@ -755,18 +754,18 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		SNetSetBasePlayer(0);
 		if (bSinglePlayer) {
 			if (!multi_init_single(&sgGameInitInfo))
-				return FALSE;
+				return false;
 		} else {
 			if (!multi_init_multi(&sgGameInitInfo, pfExitProgram))
-				return FALSE;
+				return false;
 		}
-		sgbNetInited = TRUE;
-		sgbTimeout = FALSE;
+		sgbNetInited = true;
+		sgbTimeout = false;
 		delta_init();
 		InitPlrMsg();
 		buffer_init(&sgHiPriBuf);
 		buffer_init(&sgLoPriBuf);
-		gbShouldValidatePackage = FALSE;
+		gbShouldValidatePackage = false;
 		sync_init();
 		nthread_start(sgbPlayerTurnBitTbl[myplr]);
 		dthread_start();
@@ -774,28 +773,22 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgdwGameLoops = 0;
 		sgbSentThisCycle = 0;
 		gbDeltaSender = myplr;
-		gbSomebodyWonGameKludge = FALSE;
+		gbSomebodyWonGameKludge = false;
 		nthread_send_and_recv_turn(0, 0);
 		SetupLocalCoords();
 		multi_send_pinfo(-2, CMD_SEND_PLRINFO);
 
 		InitPlrGFXMem(myplr);
-		plr[myplr].plractive = TRUE;
+		plr[myplr].plractive = true;
 		gbActivePlayers = 1;
 
-		if (sgbPlayerTurnBitTbl[myplr] == FALSE || msg_wait_resync())
+		if (!sgbPlayerTurnBitTbl[myplr] || msg_wait_resync())
 			break;
 		NetClose();
-		gbSelectProvider = FALSE;
+		gbSelectProvider = false;
 	}
 	SetRndSeed(sgGameInitInfo.dwSeed);
-	gnDifficulty = sgGameInitInfo.nDifficulty;
-	gnTickRate = sgGameInitInfo.nTickRate;
-	gnTickDelay = 1000 / gnTickRate;
-	gbRunInTown = sgGameInitInfo.bRunInTown;
-	gbTheoQuest = sgGameInitInfo.bTheoQuest;
-	gbCowQuest = sgGameInitInfo.bCowQuest;
-	gbFriendlyFire = sgGameInitInfo.bFriendlyFire;
+	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
@@ -806,16 +799,16 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	if (!SNetGetGameInfo(GAMEINFO_PASSWORD, szPlayerDescript, 128))
 		nthread_terminate_game("SNetGetGameInfo2");
 
-	return TRUE;
+	return true;
 }
 
-BOOL multi_init_single(GameData *gameData)
+bool multi_init_single(GameData *gameData)
 {
 	int unused;
 
 	if (!SNetInitializeProvider(SELCONN_LOOPBACK, gameData)) {
 		SErrGetLastError();
-		return FALSE;
+		return false;
 	}
 
 	unused = 0;
@@ -826,49 +819,49 @@ BOOL multi_init_single(GameData *gameData)
 	myplr = 0;
 	gbIsMultiplayer = false;
 
-	return TRUE;
+	return true;
 }
 
-BOOL multi_init_multi(GameData *gameData, BOOL *pfExitProgram)
+bool multi_init_multi(GameData *gameData, bool *pfExitProgram)
 {
-	BOOL first;
+	bool first;
 	int playerId;
 
-	for (first = TRUE;; first = FALSE) {
+	for (first = true;; first = false) {
 		if (gbSelectProvider) {
 			if (!UiSelectProvider(gameData)
 			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		multi_event_handler(TRUE);
+		multi_event_handler(true);
 		if (UiSelectGame(gameData, &playerId))
 			break;
 
-		gbSelectProvider = TRUE;
+		gbSelectProvider = true;
 	}
 
 	if ((DWORD)playerId >= MAX_PLRS) {
-		return FALSE;
+		return false;
 	} else {
 		myplr = playerId;
 		gbIsMultiplayer = true;
 
 		pfile_read_player_from_save();
 
-		return TRUE;
+		return true;
 	}
 }
 
-void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
+void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 {
 	const char *szEvent;
 
 	if (myplr == pnum) {
 		return;
 	}
-	/// ASSERT: assert((DWORD)pnum < MAX_PLRS);
+	assert((DWORD)pnum < MAX_PLRS);
 
 	if (sgwPackPlrOffsetTbl[pnum] != p->wOffset) {
 		sgwPackPlrOffsetTbl[pnum] = 0;
@@ -888,17 +881,17 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	multi_player_left_msg(pnum, 0);
-	UnPackPlayer(&netplr[pnum], pnum, TRUE);
+	UnPackPlayer(&netplr[pnum], pnum, true);
 
 	if (!recv) {
 		return;
 	}
 
 	InitPlrGFXMem(pnum);
-	plr[pnum].plractive = TRUE;
+	plr[pnum].plractive = true;
 	gbActivePlayers++;
 
-	if (sgbPlayerTurnBitTbl[pnum] != FALSE) {
+	if (sgbPlayerTurnBitTbl[pnum]) {
 		szEvent = "Player '%s' (level %d) just joined the game";
 	} else {
 		szEvent = "Player '%s' (level %d) is already in the game";

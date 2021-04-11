@@ -5,7 +5,7 @@
  */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "display.h"
+#include "../SourceX/display.h"
 #include "options.h"
 #include <SDL.h>
 

@@ -5,13 +5,11 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef enum _mai_id {
+enum _mai_id : int8_t {
 	AI_ZOMBIE,
 	AI_FAT,
 	AI_SKELSD,
@@ -53,68 +51,68 @@ typedef enum _mai_id {
 	AI_NECROMORB,
 	AI_BONEDEMON,
 	AI_INVALID = -1,
-} _mai_id;
+};
 
-typedef enum _mc_id {
+enum _mc_id : uint8_t {
 	MC_UNDEAD,
 	MC_DEMON,
 	MC_ANIMAL,
-} _mc_id;
+};
 
-typedef enum monster_resistance {
+enum monster_resistance : uint8_t {
 	// clang-format off
-	RESIST_MAGIC     = 0x01,
-	RESIST_FIRE      = 0x02,
-	RESIST_LIGHTNING = 0x04,
-	IMMUNE_MAGIC     = 0x08,
-	IMMUNE_FIRE      = 0x10,
-	IMMUNE_LIGHTNING = 0x20,
-	IMMUNE_NULL_40   = 0x40,
-	IMMUNE_ACID      = 0x80,
+	RESIST_MAGIC     = 1 << 0,
+	RESIST_FIRE      = 1 << 1,
+	RESIST_LIGHTNING = 1 << 2,
+	IMMUNE_MAGIC     = 1 << 3,
+	IMMUNE_FIRE      = 1 << 4,
+	IMMUNE_LIGHTNING = 1 << 5,
+	IMMUNE_NULL_40   = 1 << 6,
+	IMMUNE_ACID      = 1 << 7,
 	// clang-format on
-} monster_resistance;
+};
 
-typedef struct MonsterData {
-	Sint32 width;
-	Sint32 mImage;
+struct MonsterData {
+	const char *mName;
 	const char *GraphicType;
-	bool has_special;
 	const char *sndfile;
+	const char *TransFile;
+	Uint16 width;
+	Uint16 mImage;
+	bool has_special;
 	bool snd_special;
 	bool has_trans;
-	const char *TransFile;
-	Sint32 Frames[6];
-	Sint32 Rate[6];
-	const char *mName;
+	Uint8 Frames[6];
+	Uint8 Rate[6];
 	Sint8 mMinDLvl;
 	Sint8 mMaxDLvl;
 	Sint8 mLevel;
-	Sint32 mMinHP;
-	Sint32 mMaxHP;
+	Uint16 mMinHP;
+	Uint16 mMaxHP;
 	_mai_id mAi;
 	/** Usign monster_flag as bitflags */
-	Sint32 mFlags;
+	Uint16 mFlags;
 	Uint8 mInt;
-	Uint16 mHit;
+	Uint8 mHit;
 	Uint8 mAFNum;
 	Uint8 mMinDamage;
 	Uint8 mMaxDamage;
-	Uint16 mHit2;
+	Uint8 mHit2;
 	Uint8 mAFNum2;
 	Uint8 mMinDamage2;
 	Uint8 mMaxDamage2;
 	Uint8 mArmorClass;
 	_mc_id mMonstClass;
 	/** Using monster_resistance as bitflags */
-	Uint16 mMagicRes;
+	Uint8 mMagicRes;
 	/** Using monster_resistance as bitflags */
-	Uint16 mMagicRes2;
-	Uint16 mTreasure; // TODO Create enum
+	Uint8 mMagicRes2;
 	Sint8 mSelFlag;   // TODO Create enum
+	Uint16 mTreasure; // TODO Create enum
 	Uint16 mExp;
-} MonsterData;
+};
 
-typedef enum _monster_id {
+enum _monster_id : int16_t {
 	MT_NZOMBIE,
 	MT_BZOMBIE,
 	MT_GZOMBIE,
@@ -255,15 +253,15 @@ typedef enum _monster_id {
 	MT_NAKRUL,
 	NUM_MTYPES,
 	MT_INVALID = -1,
-} _monster_id;
+};
 
-typedef enum _monster_availability {
+enum _monster_availability : uint8_t {
 	MAT_NEVER,
 	MAT_ALWAYS,
 	MAT_RETAIL,
-} _monster_availability;
+};
 
-typedef struct UniqMonstStruct {
+struct UniqMonstStruct {
 	_monster_id mtype;
 	const char *mName;
 	const char *mTrnName;
@@ -279,15 +277,11 @@ typedef struct UniqMonstStruct {
 	Uint8 mUnqVar1;
 	Uint8 mUnqVar2;
 	Sint32 mtalkmsg;
-} UniqMonstStruct;
+};
 
 extern const MonsterData monsterdata[];
 extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
 extern const UniqMonstStruct UniqMonst[];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

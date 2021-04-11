@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdlib>
+#include <stdint.h>
 
 #include <SDL.h>
 
@@ -25,6 +26,18 @@
 #include "../types.h"
 
 namespace devilution {
+
+enum direction : uint8_t {
+	DIR_S,
+	DIR_SW,
+	DIR_W,
+	DIR_NW,
+	DIR_N,
+	DIR_NE,
+	DIR_E,
+	DIR_SE,
+	DIR_OMNI,
+};
 
 // `malloc` that returns a user-friendly error on OOM.
 //

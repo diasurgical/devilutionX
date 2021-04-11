@@ -14,12 +14,17 @@
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/text_draw.h"
 #include "display.h"
+#include "sdl_ptrs.h"
 #include "stubs.h"
 #include "utf8.h"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
 #include "platform/switch/keyboard.h"
+#endif
+#ifdef __vita__
+// for virtual keyboard on Vita
+#include "platform/vita/keyboard.h"
 #endif
 
 namespace devilution {
@@ -93,6 +98,8 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 			textInputActive = true;
 #ifdef __SWITCH__
 			switch_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
+#elif defined(__vita__)
+			vita_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #else
 			SDL_StartTextInput();
 #endif
@@ -209,6 +216,14 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 
+#ifdef __vita__
+void selhero_SetName(char *in_buf, char *out_buf, int cnt)
+{
+	std::string output = utf8_to_latin1(in_buf);
+	strncpy(out_buf, output.c_str(), cnt);
+}
+#endif
+
 bool HandleMenuAction(MenuAction menu_action)
 {
 	switch (menu_action) {
@@ -324,7 +339,11 @@ void UiFocusNavigation(SDL_Event *event)
 #ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			if (textInputActive) {
+#ifdef __vita__
+				selhero_SetName(event->text.text, UiTextInput, UiTextInputLen);
+#else
 				selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
+#endif
 			}
 			return;
 #endif
@@ -421,6 +440,15 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 	return SDL_PointInRect(&point, &rect);
 }
 
+// Equivalent to SDL_Rect { ... } but avoids -Wnarrowing.
+inline SDL_Rect makeRect(int x, int y, int w, int h)
+{
+	using Pos = decltype(SDL_Rect {}.x);
+	using Len = decltype(SDL_Rect {}.w);
+	return SDL_Rect { static_cast<Pos>(x), static_cast<Pos>(y),
+		static_cast<Len>(w), static_cast<Len>(h) };
+}
+
 void LoadHeros()
 {
 	LoadArt("ui_art\\heros.pcx", &ArtHero);
@@ -443,26 +471,24 @@ void LoadHeros()
 		if (offset + portraitHeight > ArtHero.h()) {
 			offset = 0;
 		}
-		SDL_Rect src_rect = { 0, offset, ArtHero.w(), portraitHeight };
-		SDL_Rect dst_rect = { 0, i * portraitHeight, ArtHero.w(), portraitHeight };
-		SDL_BlitSurface(ArtHero.surface, &src_rect, heros, &dst_rect);
+		SDL_Rect src_rect = makeRect(0, offset, ArtHero.w(), portraitHeight);
+		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
+		SDL_BlitSurface(ArtHero.surface.get(), &src_rect, heros, &dst_rect);
 	}
 
-	Art ArtPortrait;
 	for (int i = 0; i <= NUM_CLASSES; i++) {
+		Art portrait;
 		char portraitPath[18];
 		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
-		LoadArt(portraitPath, &ArtPortrait);
-		if (ArtPortrait.surface == nullptr)
+		LoadArt(portraitPath, &portrait);
+		if (portrait.surface == nullptr)
 			continue;
 
-		SDL_Rect dst_rect = { 0, i * portraitHeight, ArtPortrait.w(), portraitHeight };
-		SDL_BlitSurface(ArtPortrait.surface, nullptr, heros, &dst_rect);
-		ArtPortrait.Unload();
+		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, portrait.w(), portraitHeight);
+		SDL_BlitSurface(portrait.surface.get(), nullptr, heros, &dst_rect);
 	}
 
-	ArtHero.Unload();
-	ArtHero.surface = heros;
+	ArtHero.surface = SDLSurfaceUniquePtr { heros };
 	ArtHero.frame_height = portraitHeight;
 	ArtHero.frames = NUM_CLASSES;
 }
@@ -536,7 +562,7 @@ void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type)
 	    pInfo->spawned);
 }
 
-BOOL UiValidPlayerName(const char *name)
+bool UiValidPlayerName(const char *name)
 {
 	if (!strlen(name))
 		return false;

@@ -104,6 +104,8 @@ struct ControllerOptions {
 	bool bDpadHotkeys;
 	/** @brief Shoulder gamepad shoulder buttons act as potions by default */
 	bool bSwapShoulderButtonMode;
+    /** @brief Configure gamepad joysticks deadzone */
+	float fDeadzone;
 #ifdef __vita__
 	/** @brief Enable input via rear touchpad */
 	bool bRearTouch;

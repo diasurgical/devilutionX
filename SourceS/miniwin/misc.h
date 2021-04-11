@@ -4,12 +4,10 @@ namespace devilution {
 
 typedef uint16_t SHORT;
 typedef int32_t LONG;
-typedef uint8_t BOOLEAN;
 
 typedef unsigned char UCHAR;
 
 typedef uint32_t DWORD;
-typedef int BOOL;
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef DWORD *LPDWORD;
@@ -50,13 +48,6 @@ bool FetchMessage(LPMSG lpMsg);
 bool TranslateMessage(const MSG *lpMsg);
 void PushMessage(const MSG *lpMsg);
 bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
-
-#ifndef TRUE
-#define TRUE true
-#endif
-#ifndef FALSE
-#define FALSE false
-#endif
 
 //
 // MSCVRT emulation
@@ -172,4 +163,4 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 #define DVL_MK_LBUTTON 0x0001
 #define DVL_MK_RBUTTON 0x0002
 
-} // namespace dvl
+} // namespace devilution

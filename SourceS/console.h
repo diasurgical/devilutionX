@@ -1,6 +1,8 @@
 #pragma once
 
 #if defined(_WIN64) || defined(_WIN32)
+#include "../defs.h"
+
 // Suppress definitions of `min` and `max` macros by <windows.h>:
 #define NOMINMAX 1
 #define WIN32_LEAN_AND_MEAN
@@ -8,7 +10,9 @@
 
 namespace devilution {
 
-void printInConsole(const char *fmt, ...)
+void printInConsole(const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
+
+inline void printInConsole(const char *fmt, ...)
 {
 	static HANDLE stderrHandle = NULL;
 	if (stderrHandle == NULL) {
@@ -29,7 +33,7 @@ void printInConsole(const char *fmt, ...)
 	WriteConsole(stderrHandle, message, strlen(message), NULL, NULL);
 }
 
-} // namespace dvl
+} // namespace devilution
 #else
 #define printInConsole printf
 #endif

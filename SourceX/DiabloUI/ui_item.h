@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-enum UiType {
+enum UiType : uint8_t {
 	UI_TEXT,
 	UI_ART_TEXT,
 	UI_ART_TEXT_BUTTON,
@@ -24,18 +24,20 @@ enum UiType {
 	UI_EDIT,
 };
 
-enum UiFlags {
-	UIS_SMALL = 1 << 0,
-	UIS_MED = 1 << 1,
-	UIS_BIG = 1 << 2,
-	UIS_HUGE = 1 << 3,
-	UIS_CENTER = 1 << 4,
-	UIS_RIGHT = 1 << 5,
-	UIS_VCENTER = 1 << 6,
-	UIS_SILVER = 1 << 7,
-	UIS_GOLD = 1 << 8,
+enum UiFlags : uint16_t {
+	// clang-format off
+	UIS_SMALL    = 1 << 0,
+	UIS_MED      = 1 << 1,
+	UIS_BIG      = 1 << 2,
+	UIS_HUGE     = 1 << 3,
+	UIS_CENTER   = 1 << 4,
+	UIS_RIGHT    = 1 << 5,
+	UIS_VCENTER  = 1 << 6,
+	UIS_SILVER   = 1 << 7,
+	UIS_GOLD     = 1 << 8,
 	UIS_DISABLED = 1 << 9,
-	UIS_HIDDEN = 1 << 10,
+	UIS_HIDDEN   = 1 << 10,
+	// clang-format on
 };
 
 class UiItemBase {
@@ -260,8 +262,8 @@ public:
 		m_render_cache = NULL;
 	}
 
-	enum FrameKey {
-		DEFAULT = 0,
+	enum FrameKey : uint8_t {
+		DEFAULT,
 		PRESSED,
 		DISABLED
 	};
@@ -348,4 +350,4 @@ public:
 	Uint16 m_width, m_height;
 	std::vector<UiListItem *> m_vecItems;
 };
-} // namespace dvl
+} // namespace devilution

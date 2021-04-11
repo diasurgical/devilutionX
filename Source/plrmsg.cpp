@@ -13,7 +13,7 @@ _plrmsg plr_msgs[PMSG_COUNT];
 /** Maps from player_num to text color, as used in chat messages. */
 const text_color text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
 
-void plrmsg_delay(BOOL delay)
+void plrmsg_delay(bool delay)
 {
 	int i;
 	_plrmsg *pMsg;

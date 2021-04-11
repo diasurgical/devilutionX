@@ -24,7 +24,7 @@ int setpc_h;
 /** Contains the contents of the single player quest DUN file. */
 BYTE *pSetPiece;
 /** Specifies whether a single player quest DUN has been loaded. */
-BOOL setloadflag;
+bool setloadflag;
 BYTE *pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 BYTE *pMegaTiles;
@@ -37,20 +37,20 @@ char block_lvid[MAXTILES + 1];
 /**
  * List of light blocking dPieces
  */
-BOOLEAN nBlockTable[MAXTILES + 1];
+bool nBlockTable[MAXTILES + 1];
 /**
  * List of path blocking dPieces
  */
-BOOLEAN nSolidTable[MAXTILES + 1];
+bool nSolidTable[MAXTILES + 1];
 /**
  * List of transparent dPieces
  */
-BOOLEAN nTransTable[MAXTILES + 1];
+bool nTransTable[MAXTILES + 1];
 /**
  * List of missile blocking dPieces
  */
-BOOLEAN nMissileTable[MAXTILES + 1];
-BOOLEAN nTrapTable[MAXTILES + 1];
+bool nMissileTable[MAXTILES + 1];
+bool nTrapTable[MAXTILES + 1];
 /** Specifies the minimum X-coordinate of the map. */
 int dminx;
 /** Specifies the minimum Y-coordinate of the map. */
@@ -59,14 +59,13 @@ int dminy;
 int dmaxx;
 /** Specifies the maximum Y-coordinate of the map. */
 int dmaxy;
-int gnDifficulty;
 /** Specifies the active dungeon type of the current game. */
 dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
 BYTE currlevel;
-BOOLEAN setlevel;
+bool setlevel;
 /** Specifies the active quest level of the current game. */
-BYTE setlvlnum;
+_setlevels setlvlnum;
 /** Level type of the active quest level */
 dungeon_type setlvltype;
 /** Specifies the player viewpoint X-coordinate of the map. */
@@ -85,7 +84,7 @@ int LvlViewY;
 int MicroTileLen;
 char TransVal;
 /** Specifies the active transparency indices. */
-BOOLEAN TransList[256];
+bool TransList[256];
 /** Contains the piece IDs of each tile on the map. */
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
@@ -102,7 +101,7 @@ char dPlayer[MAXDUNX][MAXDUNY];
  * towner number (towners array index) in Tristram and a monster number
  * (monsters array index) in the dungeon.
  */
-int dMonster[MAXDUNX][MAXDUNY];
+int16_t dMonster[MAXDUNX][MAXDUNY];
 /**
  * Contains the dead numbers (deads array indices) and dead direction of
  * the map, encoded as specified by the pseudo-code below.
@@ -171,15 +170,15 @@ void FillSolidBlockTbls()
 	for (i = 1; i <= dwTiles; i++) {
 		bv = *pTmp++;
 		if (bv & 1)
-			nSolidTable[i] = TRUE;
+			nSolidTable[i] = true;
 		if (bv & 2)
-			nBlockTable[i] = TRUE;
+			nBlockTable[i] = true;
 		if (bv & 4)
-			nMissileTable[i] = TRUE;
+			nMissileTable[i] = true;
 		if (bv & 8)
-			nTransTable[i] = TRUE;
+			nTransTable[i] = true;
 		if (bv & 0x80)
-			nTrapTable[i] = TRUE;
+			nTrapTable[i] = true;
 		block_lvid[i] = (bv & 0x70) >> 4; /* beta: (bv >> 4) & 7 */
 	}
 
@@ -335,25 +334,25 @@ void Make_SetPC(int x, int y, int w, int h)
 	}
 }
 
-BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
+bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
 {
 	int ii, xx, yy;
 	int xSmallest, ySmallest;
 	int xArray[20], yArray[20];
 	int xCount, yCount;
-	BOOL yFlag, xFlag;
+	bool yFlag, xFlag;
 
-	yFlag = TRUE;
-	xFlag = TRUE;
+	yFlag = true;
+	xFlag = true;
 	xCount = 0;
 	yCount = 0;
 
 	// BUGFIX: change '&&' to '||' (fixed)
 	if (x > DMAXX - maxSize || y > DMAXY - maxSize) {
-		return FALSE;
+		return false;
 	}
 	if (!SkipThemeRoom(x, y)) {
-		return FALSE;
+		return false;
 	}
 
 	memset(xArray, 0, sizeof(xArray));
@@ -366,7 +365,7 @@ BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 					if (xx >= minSize) {
 						break;
 					}
-					xFlag = FALSE;
+					xFlag = false;
 				} else {
 					xCount++;
 				}
@@ -382,7 +381,7 @@ BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 					if (yy >= minSize) {
 						break;
 					}
-					yFlag = FALSE;
+					yFlag = false;
 				} else {
 					yCount++;
 				}
@@ -396,7 +395,7 @@ BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 
 	for (ii = 0; ii < minSize; ii++) {
 		if (xArray[ii] < minSize || yArray[ii] < minSize) {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -417,7 +416,7 @@ BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 
 	*width = xSmallest - 2;
 	*height = ySmallest - 2;
-	return TRUE;
+	return true;
 }
 
 void DRLG_CreateThemeRoom(int themeIndex)
@@ -579,17 +578,17 @@ void DRLG_HoldThemeRooms()
 	}
 }
 
-BOOL SkipThemeRoom(int x, int y)
+bool SkipThemeRoom(int x, int y)
 {
 	int i;
 
 	for (i = 0; i < themeCount; i++) {
 		if (x >= themeLoc[i].x - 2 && x <= themeLoc[i].x + themeLoc[i].width + 2
 		    && y >= themeLoc[i].y - 2 && y <= themeLoc[i].y + themeLoc[i].height + 2)
-			return FALSE;
+			return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 void InitLevels()
@@ -601,7 +600,7 @@ void InitLevels()
 
 	currlevel = 0;
 	leveltype = DTYPE_TOWN;
-	setlevel = FALSE;
+	setlevel = false;
 }
 
 } // namespace devilution

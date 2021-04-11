@@ -20,7 +20,7 @@ bool selgame_enteringGame;
 int selgame_selectedGame;
 bool selgame_endMenu;
 int *gdwPlayerId;
-int nDifficulty;
+_difficulty nDifficulty;
 int nTickRate;
 int heroLevel;
 
@@ -122,7 +122,7 @@ void selgame_GameSelection_Focus(int value)
  * @param pInfo Hero info
  * @return always true
  */
-BOOL UpdateHeroLevel(_uiheroinfo *pInfo)
+bool UpdateHeroLevel(_uiheroinfo *pInfo)
 {
 	if (strcasecmp(pInfo->name, gszHero) == 0)
 		heroLevel = pInfo->level;
@@ -245,7 +245,7 @@ void selgame_Diff_Select(int value)
 		return;
 	}
 
-	nDifficulty = value;
+	nDifficulty = (_difficulty)vecSelGameDlgItems[value]->m_value;
 
 	if (!selhero_isMultiPlayer) {
 		// This is part of a dangerous hack to enable difficulty selection in single-player.

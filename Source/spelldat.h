@@ -5,13 +5,21 @@
  */
 #pragma once
 
+#include <stdint.h>
+
+#include "effects.h"
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum spell_type : uint8_t {
+	RSPLTYPE_SKILL,
+	RSPLTYPE_SPELL,
+	RSPLTYPE_SCROLL,
+	RSPLTYPE_CHARGES,
+	RSPLTYPE_INVALID,
+};
 
-typedef enum spell_id {
+enum spell_id : int8_t {
 	SPL_NULL,
 	SPL_FIREBOLT,
 	SPL_HEAL,
@@ -66,15 +74,15 @@ typedef enum spell_id {
 	SPL_RUNEIMMOLAT,
 	SPL_RUNESTONE,
 	SPL_INVALID = -1,
-} spell_id;
+};
 
-typedef enum magic_type {
+enum magic_type : uint8_t {
 	STYPE_FIRE,
 	STYPE_LIGHTNING,
 	STYPE_MAGIC,
-} magic_type;
+};
 
-typedef enum missile_id {
+enum missile_id : int8_t {
 	MIS_ARROW,
 	MIS_FIREBOLT,
 	MIS_GUARDIAN,
@@ -184,9 +192,9 @@ typedef enum missile_id {
 	MIS_EXBL3,
 	MIS_EXORA1,
 	MIS_NULL = -1,
-} missile_id;
+};
 
-typedef struct SpellData {
+struct SpellData {
 	spell_id sName;
 	Uint8 sManaCost;
 	magic_type sType;
@@ -205,12 +213,8 @@ typedef struct SpellData {
 	Sint32 sStaffMax;
 	Sint32 sBookCost;
 	Sint32 sStaffCost;
-} SpellData;
+};
 
 extern SpellData spelldata[];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

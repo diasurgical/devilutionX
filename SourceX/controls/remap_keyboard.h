@@ -29,4 +29,4 @@ inline void remap_keyboard_key(SDL_Keycode *sym)
 #endif
 }
 
-} // namespace dvl
+} // namespace devilution

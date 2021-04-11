@@ -5,13 +5,11 @@
  */
 #pragma once
 
+#include "textdat.h"
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct ObjectStruct {
+struct ObjectStruct {
 	_object_id _otype;
 	Sint32 _ox;
 	Sint32 _oy;
@@ -25,7 +23,7 @@ typedef struct ObjectStruct {
 	Sint32 _oAnimWidth;
 	Sint32 _oAnimWidth2;
 	bool _oDelFlag;
-	Uint8 _oBreak;
+	Sint8 _oBreak;
 	bool _oSolidFlag;
 	bool _oMissFlag;
 	Uint8 _oSelFlag;
@@ -42,14 +40,14 @@ typedef struct ObjectStruct {
 	Sint32 _oVar6;
 	_speech_id _oVar7;
 	Sint32 _oVar8;
-} ObjectStruct;
+};
 
 extern int objectactive[MAXOBJECTS];
 extern int nobjects;
 extern int objectavail[MAXOBJECTS];
 extern ObjectStruct object[MAXOBJECTS];
-extern BOOL InitObjFlag;
-extern BOOL LoadMapObjsFlag;
+extern bool InitObjFlag;
+extern bool LoadMapObjsFlag;
 
 void InitObjectGFX();
 void FreeObjectGFX();
@@ -75,7 +73,7 @@ void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 void TryDisarm(int pnum, int i);
 int ItemMiscIdIdx(item_misc_id imiscid);
-void OperateObject(int pnum, int i, BOOL TeleFlag);
+void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
 void BreakObject(int pnum, int oi);
 void SyncBreakObj(int pnum, int oi);
@@ -85,9 +83,5 @@ void operate_lv24_lever();
 void objects_454BA8();
 void objects_rnd_454BEA();
 bool objects_lv_24_454B04(int s);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

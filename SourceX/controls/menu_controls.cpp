@@ -112,6 +112,6 @@ MenuAction GetMenuAction(const SDL_Event &event)
 #endif
 
 	return MenuAction_NONE;
-} // namespace dvl
+} // namespace devilution
 
 } // namespace devilution

@@ -1,0 +1,5 @@
+exclude:
+- /Packaging
+- /3rdParty
+languages:
+- cpp

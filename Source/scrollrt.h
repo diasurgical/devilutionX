@@ -5,11 +5,21 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum _scroll_direction : uint8_t {
+	SDIR_NONE,
+	SDIR_N,
+	SDIR_NE,
+	SDIR_E,
+	SDIR_SE,
+	SDIR_S,
+	SDIR_SW,
+	SDIR_W,
+	SDIR_NW,
+};
 
 // Defined in SourceX/controls/plctrls.cpp
 extern bool sgbControllerActive;
@@ -21,7 +31,7 @@ extern char arch_draw_type;
 extern int cel_transparency_active;
 extern int cel_foliage_active;
 extern int level_piece_id;
-extern BOOLEAN AutoMapShowItems;
+extern bool AutoMapShowItems;
 
 void ClearCursor();
 void ShiftGrid(int *x, int *y, int horizontal, int vertical);
@@ -43,11 +53,7 @@ void ClearScreenBuffer();
 void ScrollView();
 #endif
 void EnableFrameCount();
-void scrollrt_draw_game_screen(BOOL draw_cursor);
+void scrollrt_draw_game_screen(bool draw_cursor);
 void DrawAndBlit();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

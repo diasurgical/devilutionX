@@ -13,6 +13,5 @@
 
 #include <limits.h>
 #include "defs.h"
-#include "enums.h"
 
 #endif

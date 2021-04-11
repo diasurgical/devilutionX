@@ -47,28 +47,26 @@ void FocusOnCharInfo()
 		return;
 
 	// Find the first incrementable stat.
-	plr_class pc = plr[myplr]._pClass;
 	int stat = -1;
-	for (int i = 4; i >= 0; --i) {
+	for (int i = ATTRIB_VIT; i >= ATTRIB_STR; i--) {
+		int max = plr[myplr].GetMaximumAttributeValue((attribute_id)i);
 		switch (i) {
 		case ATTRIB_STR:
-			if (plr[myplr]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
+			if (plr[myplr]._pBaseStr >= max)
 				continue;
 			break;
 		case ATTRIB_MAG:
-			if (plr[myplr]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
+			if (plr[myplr]._pBaseMag >= max)
 				continue;
 			break;
 		case ATTRIB_DEX:
-			if (plr[myplr]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
+			if (plr[myplr]._pBaseDex >= max)
 				continue;
 			break;
 		case ATTRIB_VIT:
-			if (plr[myplr]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
+			if (plr[myplr]._pBaseVit >= max)
 				continue;
 			break;
-		default:
-			continue;
 		}
 		stat = i;
 	}
@@ -294,7 +292,7 @@ bool BlurInventory()
 
 	invflag = false;
 	if (pcurs > CURSOR_HAND)
-		SetCursor_(CURSOR_HAND);
+		NewCursor(CURSOR_HAND);
 	if (chrflag)
 		FocusOnCharInfo();
 
@@ -400,7 +398,7 @@ bool FetchMessage(LPMSG lpMsg)
 				questlog = false;
 				spselflag = false;
 				if (pcurs == CURSOR_DISARM)
-					SetCursor_(CURSOR_HAND);
+					NewCursor(CURSOR_HAND);
 				FocusOnCharInfo();
 			}
 			break;
@@ -421,7 +419,7 @@ bool FetchMessage(LPMSG lpMsg)
 				spselflag = false;
 				invflag = true;
 				if (pcurs == CURSOR_DISARM)
-					SetCursor_(CURSOR_HAND);
+					NewCursor(CURSOR_HAND);
 				FocusOnInventory();
 			}
 			break;

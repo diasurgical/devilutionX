@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern int UberRow;
 extern int UberCol;
 extern bool IsUberRoomOpened;
@@ -22,7 +18,7 @@ extern int UberDiabloMonsterIndex;
 void DRLG_Init_Globals();
 void LoadL1Dungeon(const char *sFileName, int vx, int vy);
 void LoadPreL1Dungeon(const char *sFileName, int vx, int vy);
-void CreateL5Dungeon(DWORD rseed, int entry);
+void CreateL5Dungeon(DWORD rseed, lvl_entry entry);
 void drlg_l1_set_crypt_room(int rx1, int ry1);
 void drlg_l1_set_corner_room(int rx1, int ry1);
 void drlg_l1_crypt_pattern1(int rndper);
@@ -32,9 +28,5 @@ void drlg_l1_crypt_pattern4(int rndper);
 void drlg_l1_crypt_pattern5(int rndper);
 void drlg_l1_crypt_pattern6(int rndper);
 void drlg_l1_crypt_pattern7(int rndper);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

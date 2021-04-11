@@ -46,8 +46,8 @@ T SwapBE(T in)
 
 class LoadHelper {
 	Uint8 *m_buffer;
-	Uint32 m_bufferPtr = 0;
-	Uint32 m_bufferLen;
+	Uint32 m_cur = 0;
+	Uint32 m_size;
 
 	template <class T>
 	T next()
@@ -57,8 +57,8 @@ class LoadHelper {
 			return 0;
 
 		T value;
-		memcpy(&value, &m_buffer[m_bufferPtr], size);
-		m_bufferPtr += size;
+		memcpy(&value, &m_buffer[m_cur], size);
+		m_cur += size;
 
 		return value;
 	}
@@ -66,18 +66,18 @@ class LoadHelper {
 public:
 	LoadHelper(const char *szFileName)
 	{
-		m_buffer = pfile_read(szFileName, &m_bufferLen);
+		m_buffer = pfile_read(szFileName, &m_size);
 	}
 
 	bool isValid(Uint32 size = 1)
 	{
 		return m_buffer != nullptr
-		    && m_bufferLen >= (m_bufferPtr + size);
+		    && m_size >= (m_cur + size);
 	}
 
 	void skip(Uint32 size)
 	{
-		m_bufferPtr += size;
+		m_cur += size;
 	}
 
 	void nextBytes(void *bytes, size_t size)
@@ -85,8 +85,8 @@ public:
 		if (!isValid(size))
 			return;
 
-		memcpy(bytes, &m_buffer[m_bufferPtr], size);
-		m_bufferPtr += size;
+		memcpy(bytes, &m_buffer[m_cur], size);
+		m_cur += size;
 	}
 
 	template <class T>
@@ -120,26 +120,26 @@ public:
 class SaveHelper {
 	const char *m_szFileName;
 	Uint8 *m_buffer;
-	Uint32 m_bufferPtr = 0;
-	Uint32 m_bufferLen;
+	Uint32 m_cur = 0;
+	Uint32 m_capacity;
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
 	{
 		m_szFileName = szFileName;
-		m_bufferLen = bufferLen;
-		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_bufferLen));
+		m_capacity = bufferLen;
+		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_capacity));
 	}
 
 	bool isValid(Uint32 len = 1)
 	{
 		return m_buffer != nullptr
-		    && m_bufferLen >= (m_bufferPtr + len);
+		    && m_capacity >= (m_cur + len);
 	}
 
 	void skip(Uint32 len)
 	{
-		m_bufferPtr += len;
+		m_cur += len;
 	}
 
 	void writeBytes(const void *bytes, size_t len)
@@ -147,8 +147,8 @@ public:
 		if (!isValid(len))
 			return;
 
-		memcpy(&m_buffer[m_bufferPtr], bytes, len);
-		m_bufferPtr += len;
+		memcpy(&m_buffer[m_cur], bytes, len);
+		m_cur += len;
 	}
 
 	template <class T>
@@ -170,7 +170,7 @@ public:
 		if (m_buffer == nullptr)
 			return;
 
-		pfile_write_save_file(m_szFileName, m_buffer, m_bufferPtr, codec_get_encoded_len(m_bufferPtr));
+		pfile_write_save_file(m_szFileName, m_buffer, m_cur, codec_get_encoded_len(m_cur));
 		mem_free_dbg(m_buffer);
 		m_buffer = nullptr;
 	}
@@ -504,10 +504,10 @@ static void LoadPlayer(LoadHelper *file, int p)
 	file->skip(14); // Available bytes
 
 	pPlayer->pDiabloKillLevel = file->nextLE<Uint32>();
-	pPlayer->pDifficulty = file->nextLE<Uint32>();
+	pPlayer->pDifficulty = (_difficulty)file->nextLE<Uint32>();
 	pPlayer->pDamAcFlags = file->nextLE<Uint32>();
 	file->skip(20); // Available bytes
-	CalcPlrItemVals(p, FALSE);
+	CalcPlrItemVals(p, false);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -529,7 +529,7 @@ static void LoadMonster(LoadHelper *file, int i)
 
 	pMonster->_mMTidx = file->nextLE<Sint32>();
 	pMonster->_mmode = (MON_MODE)file->nextLE<Sint32>();
-	pMonster->_mgoal = file->nextLE<Uint8>();
+	pMonster->_mgoal = (monster_goal)file->nextLE<Uint8>();
 	file->skip(3); // Alignment
 	pMonster->_mgoalvar1 = file->nextLE<Sint32>();
 	pMonster->_mgoalvar2 = file->nextLE<Sint32>();
@@ -729,17 +729,17 @@ static void LoadQuest(LoadHelper *file, int i)
 
 	pQuest->_qlevel = file->nextLE<Uint8>();
 	pQuest->_qtype = file->nextLE<Uint8>();
-	pQuest->_qactive = file->nextLE<Uint8>();
+	pQuest->_qactive = (quest_state)file->nextLE<Uint8>();
 	pQuest->_qlvltype = (dungeon_type)file->nextLE<Uint8>();
 	pQuest->_qtx = file->nextLE<Sint32>();
 	pQuest->_qty = file->nextLE<Sint32>();
-	pQuest->_qslvl = file->nextLE<Uint8>();
+	pQuest->_qslvl = (_setlevels)file->nextLE<Uint8>();
 	pQuest->_qidx = file->nextLE<Uint8>();
 	if (gbIsHellfireSaveGame) {
 		file->skip(2); // Alignment
 		pQuest->_qmsg = file->nextLE<Sint32>();
 	} else {
-		pQuest->_qmsg = file->nextLE<Sint8>();
+		pQuest->_qmsg = file->nextLE<Uint8>();
 	}
 	pQuest->_qvar1 = file->nextLE<Uint8>();
 	pQuest->_qvar2 = file->nextLE<Uint8>();
@@ -842,7 +842,7 @@ static void ConvertLevels()
 {
 	// Backup current level state
 	bool _setlevel = setlevel;
-	int _setlvlnum = setlvlnum;
+	_setlevels _setlvlnum = setlvlnum;
 	int _currlevel = currlevel;
 	dungeon_type _leveltype = leveltype;
 
@@ -965,7 +965,7 @@ void RemoveEmptyInventory(int pnum)
 
 void RemoveEmptyLevelItems()
 {
-	for (int i = numitems; i >= 0; i--) {
+	for (int i = numitems; i > 0; i--) {
 		int ii = itemactive[i];
 		if (items[ii].isEmpty()) {
 			dItem[items[ii]._ix][items[ii]._iy] = 0;
@@ -978,7 +978,7 @@ void RemoveEmptyLevelItems()
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
-void LoadGame(BOOL firstflag)
+void LoadGame(bool firstflag)
 {
 	FreeGameMem();
 	pfile_remove_temp_files();
@@ -1002,7 +1002,7 @@ void LoadGame(BOOL firstflag)
 	}
 
 	setlevel = file.nextBool8();
-	setlvlnum = file.nextBE<Uint32>();
+	setlvlnum = (_setlevels)file.nextBE<Uint32>();
 	currlevel = file.nextBE<Uint32>();
 	leveltype = (dungeon_type)file.nextBE<Uint32>();
 	if (!setlevel)
@@ -1026,9 +1026,9 @@ void LoadGame(BOOL firstflag)
 
 	LoadPlayer(&file, myplr);
 
-	gnDifficulty = plr[myplr].pDifficulty;
-	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
-		gnDifficulty = DIFF_NORMAL;
+	sgGameInitInfo.nDifficulty = plr[myplr].pDifficulty;
+	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
+		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
 
 	for (int i = 0; i < giNumberQuests; i++)
 		LoadQuest(&file, i);
@@ -1165,8 +1165,8 @@ void LoadGame(BOOL firstflag)
 	ProcessVisionList();
 	missiles_process_charge();
 	ResetPal();
-	SetCursor_(CURSOR_HAND);
-	gbProcessPlayers = TRUE;
+	NewCursor(CURSOR_HAND);
+	gbProcessPlayers = true;
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		RemoveEmptyLevelItems();
@@ -1690,7 +1690,7 @@ static void SaveQuest(SaveHelper *file, int i)
 		file->skip(2); // Alignment
 		file->writeLE<Sint32>(pQuest->_qmsg);
 	} else {
-		file->writeLE<Sint8>(pQuest->_qmsg);
+		file->writeLE<Uint8>(pQuest->_qmsg);
 	}
 	file->writeLE<Uint8>(pQuest->_qvar1);
 	file->writeLE<Uint8>(pQuest->_qvar2);
@@ -1741,7 +1741,7 @@ const int HellfireItemSaveSize = 372;
 void SaveHeroItems(PlayerStruct *pPlayer)
 {
 	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize));
+	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(Uint8));
 
 	file.writeLE<Uint8>(gbIsHellfire);
 
@@ -1793,7 +1793,7 @@ void SaveGame()
 		file.writeBE<Sint32>(gnLevelTypeTbl[i]);
 	}
 
-	plr[myplr].pDifficulty = gnDifficulty;
+	plr[myplr].pDifficulty = sgGameInitInfo.nDifficulty;
 	SavePlayer(&file, myplr);
 
 	for (int i = 0; i < giNumberQuests; i++)
@@ -1903,7 +1903,7 @@ void SaveGame()
 
 	file.flush();
 
-	gbValidSaveFile = TRUE;
+	gbValidSaveFile = true;
 	pfile_rename_temp_to_perm();
 	pfile_write_hero();
 }
@@ -1988,9 +1988,9 @@ void SaveLevel()
 	}
 
 	if (!setlevel)
-		plr[myplr]._pLvlVisited[currlevel] = TRUE;
+		plr[myplr]._pLvlVisited[currlevel] = true;
 	else
-		plr[myplr]._pSLvlVisited[setlvlnum] = TRUE;
+		plr[myplr]._pSLvlVisited[setlvlnum] = true;
 }
 
 void LoadLevel()
@@ -2081,12 +2081,12 @@ void LoadLevel()
 		AutomapZoomReset();
 		ResyncQuests();
 		SyncPortals();
-		dolighting = TRUE;
+		dolighting = true;
 	}
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)
-			LightList[plr[i]._plid]._lunflag = TRUE;
+			LightList[plr[i]._plid]._lunflag = true;
 	}
 }
 

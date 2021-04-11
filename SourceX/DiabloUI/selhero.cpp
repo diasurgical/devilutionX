@@ -36,9 +36,9 @@ bool selhero_isMultiPlayer;
 bool selhero_navigateYesNo;
 bool selhero_deleteEnabled;
 
-BOOL(*gfnHeroInfo)
-(BOOL (*fninfofunc)(_uiheroinfo *));
-BOOL(*gfnHeroCreate)
+bool(*gfnHeroInfo)
+(bool (*fninfofunc)(_uiheroinfo *));
+bool(*gfnHeroCreate)
 (_uiheroinfo *);
 void (*gfnHeroStats)(unsigned int, _uidefaultstats *);
 
@@ -136,7 +136,7 @@ void selhero_ScrollIntoView(std::size_t index)
 	}
 }
 
-BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
+bool SelHero_GetHeroInfo(_uiheroinfo *pInfo)
 {
 	selhero_heros[selhero_SaveCount] = *pInfo;
 	selhero_SaveCount++;
@@ -488,10 +488,10 @@ void selhero_Load_Select(int value)
 }
 
 static void UiSelHeroDialog(
-    BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
-    BOOL (*fncreate)(_uiheroinfo *),
+    bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
+    bool (*fncreate)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
-    BOOL (*fnremove)(_uiheroinfo *),
+    bool (*fnremove)(_uiheroinfo *),
     _selhero_selections *dlgresult,
     char (*name)[16])
 {
@@ -541,13 +541,13 @@ static void UiSelHeroDialog(
 }
 
 void UiSelHeroSingDialog(
-    BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
-    BOOL (*fncreate)(_uiheroinfo *),
-    BOOL (*fnremove)(_uiheroinfo *),
+    bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
+    bool (*fncreate)(_uiheroinfo *),
+    bool (*fnremove)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
     _selhero_selections *dlgresult,
     char (*name)[16],
-    int *difficulty)
+    _difficulty *difficulty)
 {
 	selhero_isMultiPlayer = false;
 	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
@@ -555,9 +555,9 @@ void UiSelHeroSingDialog(
 }
 
 void UiSelHeroMultDialog(
-    BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
-    BOOL (*fncreate)(_uiheroinfo *),
-    BOOL (*fnremove)(_uiheroinfo *),
+    bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)),
+    bool (*fncreate)(_uiheroinfo *),
+    bool (*fnremove)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
     _selhero_selections *dlgresult,
     char (*name)[16])

@@ -23,25 +23,25 @@ void InitPortals()
 
 	for (i = 0; i < MAXPORTAL; i++) {
 		if (delta_portal_inited(i))
-			portal[i].open = FALSE;
+			portal[i].open = false;
 	}
 }
 
-void SetPortalStats(int i, BOOL o, int x, int y, int lvl, dungeon_type lvltype)
+void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
 {
 	portal[i].open = o;
 	portal[i].x = x;
 	portal[i].y = y;
 	portal[i].level = lvl;
 	portal[i].ltype = lvltype;
-	portal[i].setlvl = FALSE;
+	portal[i].setlvl = false;
 }
 
 void AddWarpMissile(int i, int x, int y)
 {
 	int mi;
 
-	missiledata[MIS_TOWN].mlSFX = -1;
+	missiledata[MIS_TOWN].mlSFX = SFX_NONE;
 	dMissile[x][y] = 0;
 	mi = AddMissile(0, 0, x, y, 0, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
 
@@ -79,9 +79,9 @@ void AddInTownPortal(int i)
 	AddWarpMissile(i, WarpDropX[i], WarpDropY[i]);
 }
 
-void ActivatePortal(int i, int x, int y, int lvl, dungeon_type lvltype, BOOL sp)
+void ActivatePortal(int i, int x, int y, int lvl, dungeon_type lvltype, bool sp)
 {
-	portal[i].open = TRUE;
+	portal[i].open = true;
 
 	if (lvl != 0) {
 		portal[i].x = x;
@@ -94,13 +94,13 @@ void ActivatePortal(int i, int x, int y, int lvl, dungeon_type lvltype, BOOL sp)
 
 void DeactivatePortal(int i)
 {
-	portal[i].open = FALSE;
+	portal[i].open = false;
 }
 
-BOOL PortalOnLevel(int i)
+bool PortalOnLevel(int i)
 {
 	if (portal[i].level == currlevel)
-		return TRUE;
+		return true;
 	else
 		return currlevel == 0;
 }
@@ -132,25 +132,25 @@ void SetCurrentPortal(int p)
 void GetPortalLevel()
 {
 	if (currlevel != 0) {
-		setlevel = FALSE;
+		setlevel = false;
 		currlevel = 0;
 		plr[myplr].plrlevel = 0;
 		leveltype = DTYPE_TOWN;
 	} else {
 		if (portal[portalindex].setlvl) {
-			setlevel = TRUE;
-			setlvlnum = portal[portalindex].level;
+			setlevel = true;
+			setlvlnum = (_setlevels)portal[portalindex].level;
 			currlevel = portal[portalindex].level;
 			plr[myplr].plrlevel = setlvlnum;
 			leveltype = portal[portalindex].ltype;
 		} else {
-			setlevel = FALSE;
+			setlevel = false;
 			currlevel = portal[portalindex].level;
 			plr[myplr].plrlevel = currlevel;
 			leveltype = portal[portalindex].ltype;
 		}
 		if (portalindex == myplr) {
-			NetSendCmd(TRUE, CMD_DEACTIVATEPORTAL);
+			NetSendCmd(true, CMD_DEACTIVATEPORTAL);
 			DeactivatePortal(portalindex);
 		}
 	}
@@ -172,15 +172,15 @@ void GetPortalLvlPos()
 	}
 }
 
-BOOL PosOkPortal(int lvl, int x, int y)
+bool PosOkPortal(int lvl, int x, int y)
 {
 	int i;
 
 	for (i = 0; i < MAXPORTAL; i++) {
 		if (portal[i].open && portal[i].level == lvl && ((portal[i].x == x && portal[i].y == y) || (portal[i].x == x - 1 && portal[i].y == y - 1)))
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 } // namespace devilution

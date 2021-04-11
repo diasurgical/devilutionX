@@ -50,21 +50,21 @@ void doom_cleanup()
 	}
 }
 
-static BOOLEAN doom_alloc_cel()
+static bool doom_alloc_cel()
 {
 	doom_cleanup();
 	pDoomCel = DiabloAllocPtr(0x39000);
-	return pDoomCel ? TRUE : FALSE;
+	return pDoomCel != NULL;
 }
 
-static BOOLEAN doom_load_graphics()
+static bool doom_load_graphics()
 {
-	BOOLEAN ret;
+	bool ret;
 
-	ret = FALSE;
+	ret = false;
 	strcpy(tempstr, "Items\\Map\\MapZtown.CEL");
 	if (LoadFileWithMem(tempstr, pDoomCel))
-		ret = TRUE;
+		ret = true;
 	return ret;
 }
 
@@ -73,7 +73,7 @@ void doom_init()
 	if (doom_alloc_cel()) {
 		doom_quest_time = doom_get_frame_from_time() == 31 ? 31 : 0;
 		if (doom_load_graphics()) {
-			doomflag = TRUE;
+			doomflag = true;
 		} else {
 			doom_close();
 		}
@@ -82,7 +82,7 @@ void doom_init()
 
 void doom_close()
 {
-	doomflag = FALSE;
+	doomflag = false;
 	doom_cleanup();
 }
 

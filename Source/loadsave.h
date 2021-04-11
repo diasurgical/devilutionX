@@ -9,10 +9,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern bool gbIsHellfireSaveGame;
 extern int giNumberOfLevels;
 
@@ -27,15 +23,11 @@ void LoadHeroItems(PlayerStruct *pPlayer);
  * @param pnum The id of the player
  */
 void RemoveEmptyInventory(int pnum);
-void LoadGame(BOOL firstflag);
+void LoadGame(bool firstflag);
 void SaveHotkeys();
 void SaveHeroItems(PlayerStruct *pPlayer);
 void SaveGame();
 void SaveLevel();
 void LoadLevel();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

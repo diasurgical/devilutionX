@@ -7,7 +7,7 @@
 
 namespace devilution {
 
-int GetManaAmount(int id, int sn)
+int GetManaAmount(int id, spell_id sn)
 {
 	int ma; // mana amount
 
@@ -56,7 +56,7 @@ int GetManaAmount(int id, int sn)
 	return ma;
 }
 
-void UseMana(int id, int sn)
+void UseMana(int id, spell_id sn)
 {
 	int ma; // mana cost
 
@@ -78,7 +78,7 @@ void UseMana(int id, int sn)
 				ma = GetManaAmount(id, sn);
 				plr[id]._pMana -= ma;
 				plr[id]._pManaBase -= ma;
-				drawmanaflag = TRUE;
+				drawmanaflag = true;
 #ifdef _DEBUG
 			}
 #endif
@@ -158,22 +158,22 @@ void EnsureValidReadiedSpell(PlayerStruct &player)
 	}
 }
 
-BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
+bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 {
-	BOOL result;
+	bool result;
 
 #ifdef _DEBUG
 	if (debug_mode_key_inverted_v)
-		return TRUE;
+		return true;
 #endif
 
-	result = TRUE;
+	result = true;
 	if (!manaonly && pcurs != CURSOR_HAND) {
-		result = FALSE;
+		result = false;
 	} else {
 		if (st != RSPLTYPE_SKILL) {
 			if (GetSpellLevel(id, sn) <= 0) {
-				result = FALSE;
+				result = false;
 			} else {
 				result = plr[id]._pMana >= GetManaAmount(id, sn);
 			}
@@ -209,7 +209,7 @@ static void PlacePlayer(int pnum)
 {
 	int nx, ny, max, min, x, y;
 	DWORD i;
-	BOOL done;
+	bool done;
 
 	if (plr[pnum].plrlevel == currlevel) {
 		for (i = 0; i < 8; i++) {
@@ -222,7 +222,7 @@ static void PlacePlayer(int pnum)
 		}
 
 		if (!PosOkPlayer(pnum, nx, ny)) {
-			done = FALSE;
+			done = false;
 
 			for (max = 1, min = -1; min > -50 && !done; max++, min--) {
 				for (y = min; y <= max && !done; y++) {
@@ -232,7 +232,7 @@ static void PlacePlayer(int pnum)
 						nx = plr[pnum]._px + x;
 
 						if (PosOkPlayer(pnum, nx, ny)) {
-							done = TRUE;
+							done = true;
 						}
 					}
 				}
@@ -269,15 +269,15 @@ void DoResurrect(int pnum, int rid)
 
 	if ((char)rid != -1 && plr[rid]._pHitPoints == 0) {
 		if (rid == myplr) {
-			deathflag = FALSE;
+			deathflag = false;
 			gamemenu_off();
-			drawhpflag = TRUE;
-			drawmanaflag = TRUE;
+			drawhpflag = true;
+			drawmanaflag = true;
 		}
 
 		ClrPlrPath(rid);
 		plr[rid].destAction = ACTION_NONE;
-		plr[rid]._pInvincible = FALSE;
+		plr[rid]._pInvincible = false;
 		PlacePlayer(rid);
 
 		hp = 10 << 6;
@@ -290,7 +290,7 @@ void DoResurrect(int pnum, int rid)
 		plr[rid]._pMana = 0;
 		plr[rid]._pManaBase = plr[rid]._pMana + (plr[rid]._pMaxManaBase - plr[rid]._pMaxMana);
 
-		CalcPlrInv(rid, TRUE);
+		CalcPlrInv(rid, true);
 
 		if (plr[rid].plrlevel == currlevel) {
 			StartStand(rid, plr[rid]._pdir);
@@ -339,7 +339,7 @@ void DoHealOther(int pnum, int rid)
 			plr[rid]._pHPBase = plr[rid]._pMaxHPBase;
 		}
 
-		drawhpflag = TRUE;
+		drawhpflag = true;
 	}
 }
 

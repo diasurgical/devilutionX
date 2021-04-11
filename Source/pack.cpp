@@ -43,7 +43,7 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 	}
 }
 
-void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
+void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 {
 	PlayerStruct *pPlayer;
 	int i;
@@ -121,7 +121,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 	if (!gbIsMultiplayer || manashield)
 		pPack->pManaShield = SwapLE32(pPlayer->pManaShield);
 	else
-		pPack->pManaShield = FALSE;
+		pPack->pManaShield = false;
 }
 
 /**
@@ -199,7 +199,7 @@ void VerifyGoldSeeds(PlayerStruct *pPlayer)
 	}
 }
 
-void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync)
+void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 {
 	PlayerStruct *pPlayer;
 	int i;
@@ -218,7 +218,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync)
 	pPlayer->destAction = ACTION_NONE;
 	strcpy(pPlayer->_pName, pPack->pName);
 	pPlayer->_pClass = (plr_class)pPack->pClass;
-	InitPlayer(pnum, TRUE);
+	InitPlayer(pnum, true);
 	pPlayer->_pBaseStr = pPack->pBaseStr;
 	pPlayer->_pStrength = pPack->pBaseStr;
 	pPlayer->_pBaseMag = pPack->pBaseMag;
@@ -288,7 +288,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync)
 			witchitem[i]._itype = ITYPE_NONE;
 	}
 
-	CalcPlrInv(pnum, FALSE);
+	CalcPlrInv(pnum, false);
 	pPlayer->wReflections = SwapLE16(pPack->wReflections);
 	pPlayer->pTownWarps = 0;
 	pPlayer->pDungMsgs = 0;
@@ -297,7 +297,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL netSync)
 	pPlayer->pDiabloKillLevel = SwapLE32(pPack->pDiabloKillLevel);
 	pPlayer->pBattleNet = pPack->pBattleNet;
 	pPlayer->pManaShield = SwapLE32(pPack->pManaShield);
-	pPlayer->pDifficulty = SwapLE32(pPack->pDifficulty);
+	pPlayer->pDifficulty = (_difficulty)SwapLE32(pPack->pDifficulty);
 	pPlayer->pDamAcFlags = SwapLE32(pPack->pDamAcFlags);
 }
 

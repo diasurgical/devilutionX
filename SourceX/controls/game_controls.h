@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <cstdint>
 #include <SDL.h>
 
@@ -8,8 +9,8 @@
 
 namespace devilution {
 
-enum GameActionType {
-	GameActionType_NONE = 0,
+enum GameActionType : uint8_t {
+	GameActionType_NONE,
 	GameActionType_USE_HEALTH_POTION,
 	GameActionType_USE_MANA_POTION,
 	GameActionType_PRIMARY_ACTION,   // Talk to towners, click on inv items, attack, etc.
@@ -30,8 +31,8 @@ struct GameActionSendKey {
 };
 
 struct GameActionSendMouseClick {
-	enum Button {
-		LEFT = 0,
+	enum Button : uint8_t {
+		LEFT,
 		RIGHT,
 	};
 	Button button;
@@ -76,4 +77,4 @@ AxisDirection GetMoveDirection();
 extern bool start_modifier_active;
 extern bool select_modifier_active;
 
-} // namespace dvl
+} // namespace devilution
