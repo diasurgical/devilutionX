@@ -163,6 +163,9 @@ struct PlayerStruct {
 	Sint32 _pAnimFrame; // Current frame of animation.
 	Sint32 _pAnimWidth;
 	Sint32 _pAnimWidth2;
+	Sint32 _pAnimNumSkippedFrames; // Number of Frames skipping (for example with modifier "faster attack")
+	Sint32 _pAnimGameTicksSinceSequenceStarted; // Number of GameTicks after the current animation sequence started
+	Sint32 _pAnimStopDistributingAfterFrame; // Distribute the Animationsframe only to this 
 	Sint32 _plid;
 	Sint32 _pvid;
 	spell_id _pSpell;
@@ -330,7 +333,16 @@ void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames);
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames, int stopDistributingAfterFrame);
 void SetPlrAnims(int pnum);
+void ProcessPlayerAnimation(int pnum);
+/**
+ * @brief Calculates the Frame to use for the Animation rendering
+ * @param pPlayer Player
+ * @return The Frame to use for rendering
+ */
+Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer);
 void CreatePlayer(int pnum, plr_class c);
 int CalcStatDiff(int pnum);
 #ifdef _DEBUG
