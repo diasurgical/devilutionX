@@ -21,7 +21,7 @@ TownerStruct towner[NUM_TOWNERS];
  * ref: enum _sfx_id
  * ref: enum HeroClass
  */
-const _sfx_id snSFX[3][static_cast<std::size_t>(HeroClass::ClassCount)] = {
+const _sfx_id snSFX[3][enum_size<HeroClass>::value] = {
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52, PS_MONK52, PS_ROGUE52, PS_WARR52 }, // BUGFIX: add warrior sounds for barbarian instead of 0 - walk sound (fixed)
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49, PS_MONK49, PS_ROGUE49, PS_WARR49 },
 	{ PS_WARR50, PS_ROGUE50, PS_MAGE50, PS_MONK50, PS_ROGUE50, PS_WARR50 },

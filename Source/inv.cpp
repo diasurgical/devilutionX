@@ -1756,8 +1756,6 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 						case HeroClass::Monk:
 							PlaySFX(PS_MONK15, false);
 							break;
-						case HeroClass::ClassCount:
-							break;
 						}
 					} else {
 						switch (player._pClass) {
@@ -1774,8 +1772,6 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 							break;
 						case HeroClass::Monk:
 							PlaySFX(PS_MONK37, false);
-							break;
-						case HeroClass::ClassCount:
 							break;
 						}
 					}

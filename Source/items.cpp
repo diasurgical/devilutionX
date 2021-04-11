@@ -1470,8 +1470,6 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
-	case HeroClass::ClassCount:
-		break;
 	}
 
 	SetPlrHandItem(&plr[p].HoldItem, IDI_GOLD);
@@ -5044,8 +5042,6 @@ void SpawnBoy(int lvl)
 				case HeroClass::Barbarian:
 					if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
 						ivalue = INT_MAX;
-					break;
-				case HeroClass::ClassCount:
 					break;
 				}
 			}

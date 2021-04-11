@@ -162,7 +162,7 @@ void selhero_Init()
 	vecSelHeroDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 30), (Sint16)(UI_OFFSET_Y + 211), 180, 76 };
-	SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, static_cast<int>(HeroClass::ClassCount), rect2);
+	SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, static_cast<int>(enum_size<HeroClass>::value), rect2);
 	vecSelHeroDialog.push_back(SELHERO_DIALOG_HERO_IMG);
 
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 39), (Sint16)(UI_OFFSET_Y + 323), 110, 21 };
@@ -247,7 +247,7 @@ void selhero_List_Focus(int value)
 		return;
 	}
 
-	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(HeroClass::ClassCount);
+	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(enum_size<HeroClass>::value);
 	strncpy(textStats[0], "--", sizeof(textStats[0]) - 1);
 	strncpy(textStats[1], "--", sizeof(textStats[1]) - 1);
 	strncpy(textStats[2], "--", sizeof(textStats[2]) - 1);

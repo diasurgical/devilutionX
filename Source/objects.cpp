@@ -4153,8 +4153,6 @@ bool OperateShrineOily(int pnum, int x, int y)
 		ModifyPlrDex(myplr, 1);
 		ModifyPlrMag(myplr, 1);
 		break;
-	case HeroClass::ClassCount:
-		break;
 	}
 
 	CheckStats(pnum);
