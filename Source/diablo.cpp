@@ -575,6 +575,8 @@ static void diablo_init()
 	if (forceDiablo)
 		gbIsHellfire = false;
 
+	gbIsHellfireSaveGame = gbIsHellfire;
+
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);
 	was_ui_init = true;
