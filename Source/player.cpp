@@ -894,7 +894,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	}
 
 	// Prevent power leveling
-	if (gbIsMultiplayer) {
+	if (gbIsMultiplayer && !sgOptions.Gameplay.bPowerLeveling) {
 		powerLvlCap = plr[pnum]._pLevel < 0 ? 0 : plr[pnum]._pLevel;
 		if (powerLvlCap >= 50) {
 			powerLvlCap = 50;

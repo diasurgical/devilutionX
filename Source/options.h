@@ -91,6 +91,10 @@ struct GameplayOptions {
 	bool bRandomizeQuests;
 	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
+	/** @brief Indicates whether or not monsters should have the same max health in multiplayer as they do in singleplayer. */
+	bool bReduceEnemyHealth;
+	/** @brief Indicates whether or not experience gains should be capped in multiplayer. */
+	bool bPowerLeveling;
 };
 
 struct ControllerOptions {
