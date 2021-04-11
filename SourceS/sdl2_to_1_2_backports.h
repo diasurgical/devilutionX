@@ -10,6 +10,7 @@
 #include <cstddef>
 
 #include "console.h"
+#include "../defs.h"
 #include "../SourceX/stubs.h"
 
 #define WINDOW_ICON_NAME 0
@@ -53,6 +54,8 @@
 
 #define SDL_JoystickID Sint32
 #define SDL_JoystickNameForIndex SDL_JoystickName
+
+void SDL_Log(const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
 
 inline void SDL_Log(const char *fmt, ...)
 {
