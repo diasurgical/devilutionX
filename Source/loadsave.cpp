@@ -739,7 +739,7 @@ static void LoadQuest(LoadHelper *file, int i)
 		file->skip(2); // Alignment
 		pQuest->_qmsg = file->nextLE<Sint32>();
 	} else {
-		pQuest->_qmsg = file->nextLE<Sint8>();
+		pQuest->_qmsg = file->nextLE<Uint8>();
 	}
 	pQuest->_qvar1 = file->nextLE<Uint8>();
 	pQuest->_qvar2 = file->nextLE<Uint8>();
@@ -1690,7 +1690,7 @@ static void SaveQuest(SaveHelper *file, int i)
 		file->skip(2); // Alignment
 		file->writeLE<Sint32>(pQuest->_qmsg);
 	} else {
-		file->writeLE<Sint8>(pQuest->_qmsg);
+		file->writeLE<Uint8>(pQuest->_qmsg);
 	}
 	file->writeLE<Uint8>(pQuest->_qvar1);
 	file->writeLE<Uint8>(pQuest->_qvar2);
