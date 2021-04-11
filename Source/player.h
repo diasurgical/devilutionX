@@ -41,11 +41,14 @@ enum class HeroClass : uint8_t {
 	LAST = Barbarian
 };
 
-enum attribute_id : uint8_t {
+enum class attribute_id : uint8_t {
 	ATTRIB_STR,
 	ATTRIB_MAG,
 	ATTRIB_DEX,
 	ATTRIB_VIT,
+
+	FIRST = ATTRIB_STR,
+	LAST = ATTRIB_VIT
 };
 
 // Logical equipment locations

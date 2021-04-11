@@ -197,7 +197,7 @@ Sint32 PlayerStruct::GetBaseAttributeValue(attribute_id attribute) const
 
 Sint32 PlayerStruct::GetMaximumAttributeValue(attribute_id attribute) const
 {
-	static const int MaxStats[enum_size<HeroClass>::value][4] = {
+	static const int MaxStats[enum_size<HeroClass>::value][enum_size<attribute_id>::value] = {
 		// clang-format off
 		{ 250,  50,  60, 100 },
 		{  55,  70, 250,  80 },
@@ -208,7 +208,7 @@ Sint32 PlayerStruct::GetMaximumAttributeValue(attribute_id attribute) const
 		// clang-format on
 	};
 
-	return MaxStats[static_cast<std::size_t>(_pClass)][attribute];
+	return MaxStats[static_cast<std::size_t>(_pClass)][static_cast<std::size_t>(attribute)];
 }
 
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
@@ -802,13 +802,13 @@ void CreatePlayer(int pnum, HeroClass c)
 
 int CalcStatDiff(int pnum)
 {
-	return plr[pnum].GetMaximumAttributeValue(ATTRIB_STR)
+	return plr[pnum].GetMaximumAttributeValue(attribute_id::ATTRIB_STR)
 	    - plr[pnum]._pBaseStr
-	    + plr[pnum].GetMaximumAttributeValue(ATTRIB_MAG)
+	    + plr[pnum].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG)
 	    - plr[pnum]._pBaseMag
-	    + plr[pnum].GetMaximumAttributeValue(ATTRIB_DEX)
+	    + plr[pnum].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX)
 	    - plr[pnum]._pBaseDex
-	    + plr[pnum].GetMaximumAttributeValue(ATTRIB_VIT)
+	    + plr[pnum].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT)
 	    - plr[pnum]._pBaseVit;
 }
 
@@ -3493,17 +3493,17 @@ void ValidatePlayer()
 	if (gt != plr[myplr]._pGold)
 		plr[myplr]._pGold = gt;
 
-	if (plr[myplr]._pBaseStr > plr[myplr].GetMaximumAttributeValue(ATTRIB_STR)) {
-		plr[myplr]._pBaseStr = plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
+	if (plr[myplr]._pBaseStr > plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR)) {
+		plr[myplr]._pBaseStr = plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR);
 	}
-	if (plr[myplr]._pBaseMag > plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG)) {
-		plr[myplr]._pBaseMag = plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG);
+	if (plr[myplr]._pBaseMag > plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG)) {
+		plr[myplr]._pBaseMag = plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG);
 	}
-	if (plr[myplr]._pBaseDex > plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX)) {
-		plr[myplr]._pBaseDex = plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX);
+	if (plr[myplr]._pBaseDex > plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX)) {
+		plr[myplr]._pBaseDex = plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX);
 	}
-	if (plr[myplr]._pBaseVit > plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT)) {
-		plr[myplr]._pBaseVit = plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT);
+	if (plr[myplr]._pBaseVit > plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT)) {
+		plr[myplr]._pBaseVit = plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT);
 	}
 
 	Uint64 msk = 0;
@@ -4052,31 +4052,31 @@ void CheckStats(int p)
 		app_fatal("CheckStats: illegal player %d", p);
 	}
 
-	for (int i = ATTRIB_STR; i <= ATTRIB_VIT; i++) {
-		int maxStatPoint = plr[p].GetMaximumAttributeValue((attribute_id)i);
+	for (auto i : enum_values<attribute_id>()) {
+		int maxStatPoint = plr[p].GetMaximumAttributeValue(i);
 		switch (i) {
-		case ATTRIB_STR:
+		case attribute_id::ATTRIB_STR:
 			if (plr[p]._pBaseStr > maxStatPoint) {
 				plr[p]._pBaseStr = maxStatPoint;
 			} else if (plr[p]._pBaseStr < 0) {
 				plr[p]._pBaseStr = 0;
 			}
 			break;
-		case ATTRIB_MAG:
+		case attribute_id::ATTRIB_MAG:
 			if (plr[p]._pBaseMag > maxStatPoint) {
 				plr[p]._pBaseMag = maxStatPoint;
 			} else if (plr[p]._pBaseMag < 0) {
 				plr[p]._pBaseMag = 0;
 			}
 			break;
-		case ATTRIB_DEX:
+		case attribute_id::ATTRIB_DEX:
 			if (plr[p]._pBaseDex > maxStatPoint) {
 				plr[p]._pBaseDex = maxStatPoint;
 			} else if (plr[p]._pBaseDex < 0) {
 				plr[p]._pBaseDex = 0;
 			}
 			break;
-		case ATTRIB_VIT:
+		case attribute_id::ATTRIB_VIT:
 			if (plr[p]._pBaseVit > maxStatPoint) {
 				plr[p]._pBaseVit = maxStatPoint;
 			} else if (plr[p]._pBaseVit < 0) {
@@ -4093,7 +4093,7 @@ void ModifyPlrStr(int p, int l)
 		app_fatal("ModifyPlrStr: illegal player %d", p);
 	}
 
-	int max = plr[p].GetMaximumAttributeValue(ATTRIB_STR);
+	int max = plr[p].GetMaximumAttributeValue(attribute_id::ATTRIB_STR);
 	if (plr[p]._pBaseStr + l > max) {
 		l = max - plr[p]._pBaseStr;
 	}
@@ -4120,7 +4120,7 @@ void ModifyPlrMag(int p, int l)
 		app_fatal("ModifyPlrMag: illegal player %d", p);
 	}
 
-	int max = plr[p].GetMaximumAttributeValue(ATTRIB_MAG);
+	int max = plr[p].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG);
 	if (plr[p]._pBaseMag + l > max) {
 		l = max - plr[p]._pBaseMag;
 	}
@@ -4155,7 +4155,7 @@ void ModifyPlrDex(int p, int l)
 		app_fatal("ModifyPlrDex: illegal player %d", p);
 	}
 
-	int max = plr[p].GetMaximumAttributeValue(ATTRIB_DEX);
+	int max = plr[p].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX);
 	if (plr[p]._pBaseDex + l > max) {
 		l = max - plr[p]._pBaseDex;
 	}
@@ -4179,7 +4179,7 @@ void ModifyPlrVit(int p, int l)
 		app_fatal("ModifyPlrVit: illegal player %d", p);
 	}
 
-	int max = plr[p].GetMaximumAttributeValue(ATTRIB_VIT);
+	int max = plr[p].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT);
 	if (plr[p]._pBaseVit + l > max) {
 		l = max - plr[p]._pBaseVit;
 	}
