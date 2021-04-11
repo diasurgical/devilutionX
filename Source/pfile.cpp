@@ -151,9 +151,13 @@ static HANDLE pfile_open_save_archive(DWORD save_num)
 	return NULL;
 }
 
-static void pfile_SFileCloseArchive(HANDLE hsArchive)
+static void pfile_SFileCloseArchive(HANDLE *hsArchive)
 {
-	SFileCloseArchive(hsArchive);
+	if (*hsArchive == NULL)
+		return;
+
+	SFileCloseArchive(*hsArchive);
+	*hsArchive = NULL;
 }
 
 void pfile_write_hero()
@@ -225,6 +229,7 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 
 				UnPackPlayer(&pkplr, 0, false);
 
+				pfile_SFileCloseArchive(&archive);
 				LoadHeroItems(&plr[0]);
 				RemoveEmptyInventory(0);
 				CalcPlrInv(0, false);
@@ -232,7 +237,7 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 				game_2_ui_player(&plr[0], &uihero, hasSaveGame);
 				ui_add_hero_info(&uihero);
 			}
-			pfile_SFileCloseArchive(archive);
+			pfile_SFileCloseArchive(&archive);
 		}
 	}
 
@@ -350,13 +355,13 @@ void pfile_read_player_from_save()
 	if (gbValidSaveFile)
 		pkplr.bIsHellfire = gbIsHellfireSaveGame;
 
+	pfile_SFileCloseArchive(&archive);
+
 	UnPackPlayer(&pkplr, myplr, false);
 
 	LoadHeroItems(&plr[myplr]);
 	RemoveEmptyInventory(myplr);
 	CalcPlrInv(myplr, false);
-
-	pfile_SFileCloseArchive(archive);
 }
 
 bool LevelFileExists()
@@ -498,7 +503,7 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 		return NULL;
 
 	buf = pfile_read_archive(archive, pszName, pdwLen);
-	pfile_SFileCloseArchive(archive);
+	pfile_SFileCloseArchive(&archive);
 	if (buf == NULL)
 		return NULL;
 
