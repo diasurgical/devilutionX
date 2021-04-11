@@ -264,7 +264,7 @@ bool false_avail(const char *name, int value)
 {
 #ifndef __vita__
 	// Logging on Vita is slow due slow IO, so disable spamming unhandled events to log
-	SDL_Log("Unhandled SDL event: %s %d", name, value);
+	SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Unhandled SDL event: %s %d", name, value);
 #endif
 	return true;
 }

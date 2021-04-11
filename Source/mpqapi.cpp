@@ -156,10 +156,10 @@ private:
 			const char *error_message = std::strerror(errno);
 			if (error_message == NULL)
 				error_message = "";
-			SDL_Log(fmt_with_error.c_str(), args..., error_message);
+			SDL_LogError(SDL_LOG_CATEGORY_SYSTEM, fmt_with_error.c_str(), args..., error_message);
 #ifdef _DEBUG
 		} else {
-			SDL_Log(fmt, args...);
+			SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM, fmt, args...);
 #endif
 		}
 		return !s_->fail();
