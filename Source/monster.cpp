@@ -471,12 +471,10 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mAnimFrame = random_(88, monster[i]._mAnimLen - 1) + 1;
 
 	monster[i].mLevel = monst->MData->mLevel;
-	if (monst->mtype == MT_DIABLO) {
-		monster[i]._mmaxhp = (random_(88, 1) + (gbIsHellfire ? 3333 : 1666)) << 6;
-		if (!gbIsHellfire)
-			monster[i].mLevel -= 15;
-	} else {
-		monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
+	monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
+	if (monst->mtype == MT_DIABLO && !gbIsHellfire) {
+		monster[i]._mmaxhp /= 2;
+		monster[i].mLevel -= 15;
 	}
 
 	if (!gbIsMultiplayer) {
