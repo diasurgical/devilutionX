@@ -4616,6 +4616,7 @@ int RndPremiumItem(int minlvl, int maxlvl)
 static void SpawnOnePremium(int i, int plvl, int myplr)
 {
 	int ivalue;
+	bool keepgoing = false;
 	ItemStruct holditem = item[0];
 
 	int strength = get_max_strength(plr[myplr]._pClass);
@@ -4644,6 +4645,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	int count = 0;
 
 	do {
+		keepgoing = false;
 		memset(&item[0], 0, sizeof(*item));
 		item[0]._iSeed = AdvanceRndSeed();
 		SetRndSeed(item[0]._iSeed);
@@ -4652,8 +4654,10 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		GetItemBonus(0, itype, plvl >> 1, plvl, TRUE, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
-			if (item[0]._iIvalue > 140000)
+			if (item[0]._iIvalue > 140000) {
+				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
+			}
 			break;
 		}
 
@@ -4697,12 +4701,12 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		ivalue *= 0.8;
 
 		count++;
-	} while ((item[0]._iIvalue > 200000
+	} while (keepgoing || ((item[0]._iIvalue > 200000
 	             || item[0]._iMinStr > strength
 	             || item[0]._iMinMag > magic
 	             || item[0]._iMinDex > dexterity
 	             || item[0]._iIvalue < ivalue)
-	    && count < 150);
+	    && count < 150));
 	premiumitem[i] = item[0];
 	premiumitem[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumitem[i]._iIdentified = TRUE;
