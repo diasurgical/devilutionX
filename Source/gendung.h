@@ -46,8 +46,8 @@ enum {
 	// clang-format off
 	DLRG_HDOOR     = 1 << 0,
 	DLRG_VDOOR     = 1 << 1,
-	DLRG_CHAMBER   = 1 << 2,
-	DLRG_PROTECTED = 1 << 3,
+	DLRG_CHAMBER   = 1 << 6,
+	DLRG_PROTECTED = 1 << 7,
 	// clang-format on
 };
 
