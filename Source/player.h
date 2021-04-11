@@ -332,9 +332,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames);
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames, int stopDistributingAfterFrame);
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames = 0, int stopDistributingAfterFrame = 0);
 void SetPlrAnims(int pnum);
 void ProcessPlayerAnimation(int pnum);
 /**

@@ -458,17 +458,7 @@ void FreePlayerGFX(int pnum)
 	plr[pnum]._pGFXLoad = 0;
 }
 
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width)
-{
-	NewPlrAnim(pnum, Peq, numFrames, Delay, width, 0);
-}
-
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames)
-{
-	NewPlrAnim(pnum, Peq, numFrames, Delay, width, numSkippedFrames, 0);
-}
-
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames, int stopDistributingAfterFrame)
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames /*= 0*/, int stopDistributingAfterFrame /*= 0*/)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("NewPlrAnim: illegal player %d", pnum);
