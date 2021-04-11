@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 
+#include "enum_traits.h"
 #include "gendung.h"
 #include "items.h"
 #include "spelldat.h"
@@ -36,7 +37,8 @@ enum class HeroClass : uint8_t {
 	Monk,
 	Bard,
 	Barbarian,
-	ClassCount
+
+	LAST = Barbarian
 };
 
 enum attribute_id : uint8_t {
@@ -323,7 +325,7 @@ struct PlayerStruct {
 extern int myplr;
 extern PlayerStruct plr[MAX_PLRS];
 extern bool deathflag;
-extern int ToBlkTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
+extern int ToBlkTbl[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
@@ -386,10 +388,10 @@ extern int plrxoff[9];
 extern int plryoff[9];
 extern int plrxoff2[9];
 extern int plryoff2[9];
-extern int StrengthTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
-extern int MagicTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
-extern int DexterityTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
-extern int VitalityTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
+extern int StrengthTbl[enum_size<HeroClass>::value];
+extern int MagicTbl[enum_size<HeroClass>::value];
+extern int DexterityTbl[enum_size<HeroClass>::value];
+extern int VitalityTbl[enum_size<HeroClass>::value];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 
 }

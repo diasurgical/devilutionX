@@ -42,7 +42,7 @@ int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instanced when casting resurrect. */
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
-char PlrGFXAnimLens[static_cast<std::size_t>(HeroClass::ClassCount)][11] = {
+char PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
@@ -51,7 +51,7 @@ char PlrGFXAnimLens[static_cast<std::size_t>(HeroClass::ClassCount)][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 };
 /** Maps from player class to player velocity. */
-int PWVel[static_cast<std::size_t>(HeroClass::ClassCount)][3] = {
+int PWVel[enum_size<HeroClass>::value][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
@@ -60,7 +60,7 @@ int PWVel[static_cast<std::size_t>(HeroClass::ClassCount)][3] = {
 	{ 2048, 1024, 512 },
 };
 /** Total number of frames in walk animation. */
-int AnimLenFromClass[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+int AnimLenFromClass[enum_size<HeroClass>::value] = {
 	8,
 	8,
 	8,
@@ -69,7 +69,7 @@ int AnimLenFromClass[static_cast<std::size_t>(HeroClass::ClassCount)] = {
 	8,
 };
 /** Maps from player_class to starting stat in strength. */
-int StrengthTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+int StrengthTbl[enum_size<HeroClass>::value] = {
 	30,
 	20,
 	15,
@@ -78,7 +78,7 @@ int StrengthTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
 	40,
 };
 /** Maps from player_class to starting stat in magic. */
-int MagicTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+int MagicTbl[enum_size<HeroClass>::value] = {
 	// clang-format off
 	10,
 	15,
@@ -89,7 +89,7 @@ int MagicTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
 	// clang-format on
 };
 /** Maps from player_class to starting stat in dexterity. */
-int DexterityTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+int DexterityTbl[enum_size<HeroClass>::value] = {
 	20,
 	30,
 	15,
@@ -98,7 +98,7 @@ int DexterityTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
 	20,
 };
 /** Maps from player_class to starting stat in vitality. */
-int VitalityTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+int VitalityTbl[enum_size<HeroClass>::value] = {
 	25,
 	20,
 	20,
@@ -107,7 +107,7 @@ int VitalityTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
 	25,
 };
 /** Specifies the chance to block bonus of each player class.*/
-int ToBlkTbl[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+int ToBlkTbl[enum_size<HeroClass>::value] = {
 	30,
 	20,
 	10,
@@ -197,7 +197,7 @@ Sint32 PlayerStruct::GetBaseAttributeValue(attribute_id attribute) const
 
 Sint32 PlayerStruct::GetMaximumAttributeValue(attribute_id attribute) const
 {
-	static const int MaxStats[static_cast<std::size_t>(HeroClass::ClassCount)][4] = {
+	static const int MaxStats[enum_size<HeroClass>::value][4] = {
 		// clang-format off
 		{ 250,  50,  60, 100 },
 		{  55,  70, 250,  80 },

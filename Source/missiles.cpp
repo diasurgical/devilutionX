@@ -3084,7 +3084,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
 		missile[mi]._miDelFlag = true;
 	} else {
-		_sfx_id blodboilSFX[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+		_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
 			PS_WARR70,
 			PS_ROGUE70,
 			PS_MAGE70,
@@ -5234,7 +5234,7 @@ void MI_Blodboil(Sint32 i)
 	if (missile[i]._mirange == 0) {
 		id = missile[i]._miVar1;
 		if ((plr[id]._pSpellFlags & 2) == 2) {
-			_sfx_id blodboilSFX[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+			_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,
@@ -5256,7 +5256,7 @@ void MI_Blodboil(Sint32 i)
 			force_redraw = 255;
 			PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
 		} else {
-			_sfx_id blodboilSFX[static_cast<std::size_t>(HeroClass::ClassCount)] = {
+			_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,

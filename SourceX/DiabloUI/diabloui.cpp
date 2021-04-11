@@ -454,19 +454,19 @@ void LoadHeros()
 	LoadArt("ui_art\\heros.pcx", &ArtHero);
 
 	const int portraitHeight = 76;
-	int portraitOrder[static_cast<std::size_t>(HeroClass::ClassCount) + 1] = { 0, 1, 2, 2, 1, 0, 3 };
+	int portraitOrder[enum_size<HeroClass>::value + 1] = { 0, 1, 2, 2, 1, 0, 3 };
 	if (ArtHero.h() >= portraitHeight * 6) {
 		portraitOrder[static_cast<std::size_t>(HeroClass::Monk)] = 3;
 		portraitOrder[static_cast<std::size_t>(HeroClass::Bard)] = 4;
-		portraitOrder[static_cast<std::size_t>(HeroClass::ClassCount)] = 5;
+		portraitOrder[enum_size<HeroClass>::value] = 5;
 	}
 	if (ArtHero.h() >= portraitHeight * 7) {
 		portraitOrder[static_cast<std::size_t>(HeroClass::Barbarian)] = 6;
 	}
 
-	SDL_Surface *heros = SDL_CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (static_cast<int>(HeroClass::ClassCount) + 1), 8, SDL_PIXELFORMAT_INDEX8);
+	SDL_Surface *heros = SDL_CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (static_cast<int>(enum_size<HeroClass>::value) + 1), 8, SDL_PIXELFORMAT_INDEX8);
 
-	for (int i = 0; i <= static_cast<int>(HeroClass::ClassCount); i++) {
+	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
 		int offset = portraitOrder[i] * portraitHeight;
 		if (offset + portraitHeight > ArtHero.h()) {
 			offset = 0;
@@ -476,7 +476,7 @@ void LoadHeros()
 		SDL_BlitSurface(ArtHero.surface.get(), &src_rect, heros, &dst_rect);
 	}
 
-	for (int i = 0; i <= static_cast<int>(HeroClass::ClassCount); i++) {
+	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
 		Art portrait;
 		char portraitPath[18];
 		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
@@ -490,7 +490,7 @@ void LoadHeros()
 
 	ArtHero.surface = SDLSurfaceUniquePtr { heros };
 	ArtHero.frame_height = portraitHeight;
-	ArtHero.frames = static_cast<int>(HeroClass::ClassCount);
+	ArtHero.frames = static_cast<int>(enum_size<HeroClass>::value);
 }
 
 void LoadUiGFX()
