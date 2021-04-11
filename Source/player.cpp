@@ -1654,7 +1654,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 
-	int skippedAnimationFrames = 1; // Every GotHit start with Frame 2. Because ProcessPlayerAnimation is called after StartPlrHit and its increases the AnimationFrame.
+	int skippedAnimationFrames = 0;
 	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER) {
 		skippedAnimationFrames += 1;
 	}
