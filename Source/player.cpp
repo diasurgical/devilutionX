@@ -458,7 +458,7 @@ void FreePlayerGFX(int pnum)
 	plr[pnum]._pGFXLoad = 0;
 }
 
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames /*= 0*/, int stopDistributingAfterFrame /*= 0*/)
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames /*= 0*/, bool processAnimationPending /*= false*/, int stopDistributingAfterFrame /*= 0*/)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("NewPlrAnim: illegal player %d", pnum);
@@ -472,7 +472,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int nu
 	plr[pnum]._pAnimWidth = width;
 	plr[pnum]._pAnimWidth2 = (width - 64) >> 1;
 	plr[pnum]._pAnimNumSkippedFrames = numSkippedFrames;
-	plr[pnum]._pAnimGameTicksSinceSequenceStarted = 0;
+	plr[pnum]._pAnimGameTicksSinceSequenceStarted = processAnimationPending ? -1 : 0;
 	plr[pnum]._pAnimStopDistributingAfterFrame = stopDistributingAfterFrame;
 }
 
@@ -1407,7 +1407,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	}
 
 	//Start walk animation
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, (currlevel == 0 && sgGameInitInfo.bRunInTown) ? (plr[pnum]._pWFrames / 2) : 0);
+	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, (currlevel == 0 && sgGameInitInfo.bRunInTown) ? (plr[pnum]._pWFrames / 2) : 0, true);
 
 	plr[pnum]._pdir = EndDir;
 	plr[pnum]._pVar8 = 0;
@@ -1455,7 +1455,7 @@ void StartAttack(int pnum, direction d)
 		skippedAnimationFrames += 2;
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, skippedAnimationFrames, plr[pnum]._pAFNum);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, skippedAnimationFrames, true, plr[pnum]._pAFNum);
 	plr[pnum]._pmode = PM_ATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
@@ -1483,7 +1483,7 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 		}
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, skippedAnimationFrames, plr[pnum]._pAFNum);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, skippedAnimationFrames, true, plr[pnum]._pAFNum);
 
 	plr[pnum]._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
@@ -1537,19 +1537,19 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 			if (!(plr[pnum]._pGFXLoad & PFILE_FIRE)) {
 				LoadPlrGFX(pnum, PFILE_FIRE);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
+			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
 			break;
 		case STYPE_LIGHTNING:
 			if (!(plr[pnum]._pGFXLoad & PFILE_LIGHTNING)) {
 				LoadPlrGFX(pnum, PFILE_LIGHTNING);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
+			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
 			break;
 		case STYPE_MAGIC:
 			if (!(plr[pnum]._pGFXLoad & PFILE_MAGIC)) {
 				LoadPlrGFX(pnum, PFILE_MAGIC);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth);
+			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
 			break;
 		}
 	}
@@ -1654,15 +1654,18 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 
-	int skippedAnimationFrames = 0; // GotHit can start with Frame 1. GotHit can for example be called in ProcessMonsters() and this is after ProcessPlayers().
-	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER) {
-		skippedAnimationFrames += 1;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER) {
-		skippedAnimationFrames += 2;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER) {
-		skippedAnimationFrames += 2;
+	int skippedAnimationFrames; // GotHit can start with Frame 1. GotHit can for example be called in ProcessMonsters() and this is after ProcessPlayers().
+	const int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
+	if ((plr[pnum]._pIFlags & ZenFlags) == ZenFlags) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
+		skippedAnimationFrames = 4;
+	} else if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER) {
+		skippedAnimationFrames = 3;
+	} else if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER) {
+		skippedAnimationFrames = 2;
+	} else if (plr[pnum]._pIFlags & ISPL_FASTRECOVER) {
+		skippedAnimationFrames = 1;
+	} else {
+		skippedAnimationFrames = 0;
 	}
 
 	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth, skippedAnimationFrames);
@@ -3673,7 +3676,7 @@ Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct* pPlayer)
 	if (pPlayer->_pAnimStopDistributingAfterFrame != 0) {
 		if (pPlayer->_pAnimFrame >= pPlayer->_pAnimStopDistributingAfterFrame)
 			return pPlayer->_pAnimFrame;
-		relevantAnimationLenght = pPlayer->_pAnimStopDistributingAfterFrame;
+		relevantAnimationLenght = pPlayer->_pAnimStopDistributingAfterFrame - 1;
 	} else {
 		relevantAnimationLenght = pPlayer->_pAnimLen;
 	}
@@ -3685,12 +3688,12 @@ Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct* pPlayer)
 	else
 		animationMaxGameTickets = (relevantAnimationLenght * pPlayer->_pAnimDelay);
 	float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLenght - pPlayer->_pAnimNumSkippedFrames); // if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
-	int absolutAnimationFrame = (int)(totalGameTicksForCurrentAnimationSequence * gameTickModifier);
-	if (absolutAnimationFrame > pPlayer->_pAnimLen) // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
-		return pPlayer->_pAnimLen;
+	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * gameTickModifier); // 1 added for rounding reasons. float to int cast always truncate.
+	if (absolutAnimationFrame > relevantAnimationLenght) // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
+		return relevantAnimationLenght;
 	if (absolutAnimationFrame <= 0) {
 		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame");
-		return 0;
+		return 1;
 	}
 	return absolutAnimationFrame;
 }

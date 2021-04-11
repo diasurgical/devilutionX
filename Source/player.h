@@ -163,9 +163,9 @@ struct PlayerStruct {
 	Sint32 _pAnimFrame; // Current frame of animation.
 	Sint32 _pAnimWidth;
 	Sint32 _pAnimWidth2;
-	Sint32 _pAnimNumSkippedFrames; // Number of Frames skipping (for example with modifier "faster attack")
+	Sint32 _pAnimNumSkippedFrames; // Number of Frames that will be skipped (for example with modifier "faster attack")
 	Sint32 _pAnimGameTicksSinceSequenceStarted; // Number of GameTicks after the current animation sequence started
-	Sint32 _pAnimStopDistributingAfterFrame; // Distribute the Animationsframe only to this 
+	Sint32 _pAnimStopDistributingAfterFrame; // Distribute the NumSkippedFrames only before this frame
 	Sint32 _plid;
 	Sint32 _pvid;
 	spell_id _pSpell;
@@ -332,7 +332,18 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames = 0, int stopDistributingAfterFrame = 0);
+/**
+ * @brief Sets the new Plr Animation with all relevant informations for rendering
+ * @param pnum Player Id
+ * @param Peq Pointer to Animation Data
+ * @param numFrames Number of Frames in Animation
+ * @param Delay Delay after each Animation sequence
+ * @param width Width of sprite
+ * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
+ * @param processAnimationPending true if first ProcessAnimation will be called in same gametick after NewPlrAnim
+ * @param stopDistributingAfterFrame Distribute the NumSkippedFrames only before this frame
+ */
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames = 0, bool processAnimationPending = false, int stopDistributingAfterFrame = 0);
 void SetPlrAnims(int pnum);
 void ProcessPlayerAnimation(int pnum);
 /**
