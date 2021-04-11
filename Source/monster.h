@@ -44,8 +44,8 @@ typedef struct CMonster {
 	TSnd *Snds[4][2];
 	Sint32 width;
 	Sint32 width2;
-	Uint8 mMinHP;
-	Uint8 mMaxHP;
+	uint16_t mMinHP;
+	uint16_t mMaxHP;
 	bool has_special;
 	Uint8 mAFNum;
 	Sint8 mdeadval;
