@@ -4631,22 +4631,11 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	bool keepgoing = false;
 	ItemStruct holditem = items[0];
 
-	int strength = plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
-	if (strength < plr[myplr]._pStrength) {
-		strength = plr[myplr]._pStrength;
-	}
+	int strength = std::max(plr[myplr].GetMaximumAttributeValue(ATTRIB_STR), plr[myplr]._pStrength);
+	int dexterity = std::max(plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX), plr[myplr]._pDexterity);
+	int magic = std::max(plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG), plr[myplr]._pMagic);
 	strength *= 1.2;
-
-	int dexterity = plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX);
-	if (dexterity < plr[myplr]._pDexterity) {
-		dexterity = plr[myplr]._pDexterity;
-	}
 	dexterity *= 1.2;
-
-	int magic = plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG);
-	if (magic < plr[myplr]._pMagic) {
-		magic = plr[myplr]._pMagic;
-	}
 	magic *= 1.2;
 
 	if (plvl > 30)
@@ -4965,31 +4954,21 @@ void SpawnBoy(int lvl)
 {
 	int itype;
 
-	int ivalue;
+	int ivalue = 0;
+	bool keepgoing = false;
 	int count = 0;
 
-	int strength = plr[myplr].GetMaximumAttributeValue(ATTRIB_STR);
-	int dexterity = plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX);
-	int magic = plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG);
 	plr_class pc = plr[myplr]._pClass;
-
-	if (strength < plr[myplr]._pStrength) {
-		strength = plr[myplr]._pStrength;
-	}
+	int strength = std::max(plr[myplr].GetMaximumAttributeValue(ATTRIB_STR), plr[myplr]._pStrength);
+	int dexterity = std::max(plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX), plr[myplr]._pDexterity);
+	int magic = std::max(plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG), plr[myplr]._pMagic);
 	strength *= 1.2;
-
-	if (dexterity < plr[myplr]._pDexterity) {
-		dexterity = plr[myplr]._pDexterity;
-	}
 	dexterity *= 1.2;
-
-	if (magic < plr[myplr]._pMagic) {
-		magic = plr[myplr]._pMagic;
-	}
 	magic *= 1.2;
 
 	if (boylevel < (lvl >> 1) || boyitem.isEmpty()) {
 		do {
+			keepgoing = false;
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(items[0]._iSeed);
@@ -4998,8 +4977,10 @@ void SpawnBoy(int lvl)
 			GetItemBonus(0, itype, lvl, 2 * lvl, true, true);
 
 			if (!gbIsHellfire) {
-				if (items[0]._iIvalue > 140000)
+				if (items[0]._iIvalue > 140000) {
+					keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 					continue;
+				}
 				break;
 			}
 
@@ -5075,12 +5056,12 @@ void SpawnBoy(int lvl)
 					break;
 				}
 			}
-		} while ((items[0]._iIvalue > 200000
+		} while (keepgoing || ((items[0]._iIvalue > 200000
 		             || items[0]._iMinStr > strength
 		             || items[0]._iMinMag > magic
 		             || items[0]._iMinDex > dexterity
 		             || items[0]._iIvalue < ivalue)
-		    && count < 250);
+		    && count < 250));
 		boyitem = items[0];
 		boyitem._iCreateInfo = lvl | CF_BOY;
 		boyitem._iIdentified = true;
