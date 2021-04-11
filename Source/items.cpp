@@ -4622,9 +4622,9 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	bool keepgoing = false;
 	ItemStruct holditem = items[0];
 
-	int strength = std::max(plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR), plr[myplr]._pStrength);
-	int dexterity = std::max(plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX), plr[myplr]._pDexterity);
-	int magic = std::max(plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG), plr[myplr]._pMagic);
+	int strength = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength), plr[myplr]._pStrength);
+	int dexterity = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity), plr[myplr]._pDexterity);
+	int magic = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic), plr[myplr]._pMagic);
 	strength *= 1.2;
 	dexterity *= 1.2;
 	magic *= 1.2;
@@ -4950,9 +4950,9 @@ void SpawnBoy(int lvl)
 	int count = 0;
 
 	HeroClass pc = plr[myplr]._pClass;
-	int strength = std::max(plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR), plr[myplr]._pStrength);
-	int dexterity = std::max(plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX), plr[myplr]._pDexterity);
-	int magic = std::max(plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG), plr[myplr]._pMagic);
+	int strength = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength), plr[myplr]._pStrength);
+	int dexterity = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity), plr[myplr]._pDexterity);
+	int magic = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic), plr[myplr]._pMagic);
 	strength *= 1.2;
 	dexterity *= 1.2;
 	magic *= 1.2;
@@ -5071,13 +5071,13 @@ bool HealerItemOk(int i)
 
 	if (!gbIsMultiplayer) {
 		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
-			return !gbIsHellfire || plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR);
+			return !gbIsHellfire || plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXMAG)
-			return !gbIsHellfire || plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG);
+			return !gbIsHellfire || plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXDEX)
-			return !gbIsHellfire || plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX);
+			return !gbIsHellfire || plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXVIT)
-			return !gbIsHellfire || plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT);
+			return !gbIsHellfire || plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
 	if (AllItemsList[i].iMiscId == IMISC_REJUV)

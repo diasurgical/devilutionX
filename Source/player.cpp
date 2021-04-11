@@ -179,25 +179,25 @@ const char *const ClassPathTbl[] = {
 	"Warrior",
 };
 
-Sint32 PlayerStruct::GetBaseAttributeValue(attribute_id attribute) const
+Sint32 PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
-	case attribute_id::ATTRIB_DEX:
+	case CharacterAttribute::Dexterity:
 		return this->_pBaseDex;
-	case attribute_id::ATTRIB_MAG:
+	case CharacterAttribute::Magic:
 		return this->_pBaseMag;
-	case attribute_id::ATTRIB_STR:
+	case CharacterAttribute::Strength:
 		return this->_pBaseStr;
-	case attribute_id::ATTRIB_VIT:
+	case CharacterAttribute::Vitality:
 		return this->_pBaseVit;
 	default:
 		app_fatal("Unsupported attribute");
 	}
 }
 
-Sint32 PlayerStruct::GetMaximumAttributeValue(attribute_id attribute) const
+Sint32 PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
-	static const int MaxStats[enum_size<HeroClass>::value][enum_size<attribute_id>::value] = {
+	static const int MaxStats[enum_size<HeroClass>::value][enum_size<CharacterAttribute>::value] = {
 		// clang-format off
 		{ 250,  50,  60, 100 },
 		{  55,  70, 250,  80 },
@@ -802,13 +802,13 @@ void CreatePlayer(int pnum, HeroClass c)
 
 int CalcStatDiff(int pnum)
 {
-	return plr[pnum].GetMaximumAttributeValue(attribute_id::ATTRIB_STR)
+	return plr[pnum].GetMaximumAttributeValue(CharacterAttribute::Strength)
 	    - plr[pnum]._pBaseStr
-	    + plr[pnum].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG)
+	    + plr[pnum].GetMaximumAttributeValue(CharacterAttribute::Magic)
 	    - plr[pnum]._pBaseMag
-	    + plr[pnum].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX)
+	    + plr[pnum].GetMaximumAttributeValue(CharacterAttribute::Dexterity)
 	    - plr[pnum]._pBaseDex
-	    + plr[pnum].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT)
+	    + plr[pnum].GetMaximumAttributeValue(CharacterAttribute::Vitality)
 	    - plr[pnum]._pBaseVit;
 }
 
@@ -3493,17 +3493,17 @@ void ValidatePlayer()
 	if (gt != plr[myplr]._pGold)
 		plr[myplr]._pGold = gt;
 
-	if (plr[myplr]._pBaseStr > plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR)) {
-		plr[myplr]._pBaseStr = plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR);
+	if (plr[myplr]._pBaseStr > plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength)) {
+		plr[myplr]._pBaseStr = plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength);
 	}
-	if (plr[myplr]._pBaseMag > plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG)) {
-		plr[myplr]._pBaseMag = plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG);
+	if (plr[myplr]._pBaseMag > plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic)) {
+		plr[myplr]._pBaseMag = plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic);
 	}
-	if (plr[myplr]._pBaseDex > plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX)) {
-		plr[myplr]._pBaseDex = plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX);
+	if (plr[myplr]._pBaseDex > plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity)) {
+		plr[myplr]._pBaseDex = plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 	}
-	if (plr[myplr]._pBaseVit > plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT)) {
-		plr[myplr]._pBaseVit = plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT);
+	if (plr[myplr]._pBaseVit > plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality)) {
+		plr[myplr]._pBaseVit = plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
 	Uint64 msk = 0;
@@ -4052,31 +4052,31 @@ void CheckStats(int p)
 		app_fatal("CheckStats: illegal player %d", p);
 	}
 
-	for (auto i : enum_values<attribute_id>()) {
+	for (auto i : enum_values<CharacterAttribute>()) {
 		int maxStatPoint = plr[p].GetMaximumAttributeValue(i);
 		switch (i) {
-		case attribute_id::ATTRIB_STR:
+		case CharacterAttribute::Strength:
 			if (plr[p]._pBaseStr > maxStatPoint) {
 				plr[p]._pBaseStr = maxStatPoint;
 			} else if (plr[p]._pBaseStr < 0) {
 				plr[p]._pBaseStr = 0;
 			}
 			break;
-		case attribute_id::ATTRIB_MAG:
+		case CharacterAttribute::Magic:
 			if (plr[p]._pBaseMag > maxStatPoint) {
 				plr[p]._pBaseMag = maxStatPoint;
 			} else if (plr[p]._pBaseMag < 0) {
 				plr[p]._pBaseMag = 0;
 			}
 			break;
-		case attribute_id::ATTRIB_DEX:
+		case CharacterAttribute::Dexterity:
 			if (plr[p]._pBaseDex > maxStatPoint) {
 				plr[p]._pBaseDex = maxStatPoint;
 			} else if (plr[p]._pBaseDex < 0) {
 				plr[p]._pBaseDex = 0;
 			}
 			break;
-		case attribute_id::ATTRIB_VIT:
+		case CharacterAttribute::Vitality:
 			if (plr[p]._pBaseVit > maxStatPoint) {
 				plr[p]._pBaseVit = maxStatPoint;
 			} else if (plr[p]._pBaseVit < 0) {
@@ -4093,7 +4093,7 @@ void ModifyPlrStr(int p, int l)
 		app_fatal("ModifyPlrStr: illegal player %d", p);
 	}
 
-	int max = plr[p].GetMaximumAttributeValue(attribute_id::ATTRIB_STR);
+	int max = plr[p].GetMaximumAttributeValue(CharacterAttribute::Strength);
 	if (plr[p]._pBaseStr + l > max) {
 		l = max - plr[p]._pBaseStr;
 	}
@@ -4120,7 +4120,7 @@ void ModifyPlrMag(int p, int l)
 		app_fatal("ModifyPlrMag: illegal player %d", p);
 	}
 
-	int max = plr[p].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG);
+	int max = plr[p].GetMaximumAttributeValue(CharacterAttribute::Magic);
 	if (plr[p]._pBaseMag + l > max) {
 		l = max - plr[p]._pBaseMag;
 	}
@@ -4155,7 +4155,7 @@ void ModifyPlrDex(int p, int l)
 		app_fatal("ModifyPlrDex: illegal player %d", p);
 	}
 
-	int max = plr[p].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX);
+	int max = plr[p].GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 	if (plr[p]._pBaseDex + l > max) {
 		l = max - plr[p]._pBaseDex;
 	}
@@ -4179,7 +4179,7 @@ void ModifyPlrVit(int p, int l)
 		app_fatal("ModifyPlrVit: illegal player %d", p);
 	}
 
-	int max = plr[p].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT);
+	int max = plr[p].GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	if (plr[p]._pBaseVit + l > max) {
 		l = max - plr[p]._pBaseVit;
 	}

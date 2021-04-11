@@ -3408,17 +3408,17 @@ bool OperateShrineMysterious(int pnum)
 	ModifyPlrDex(pnum, -1);
 	ModifyPlrVit(pnum, -1);
 
-	switch (static_cast<attribute_id>(random_(0, 4))) {
-	case attribute_id::ATTRIB_STR:
+	switch (static_cast<CharacterAttribute>(random_(0, 4))) {
+	case CharacterAttribute::Strength:
 		ModifyPlrStr(pnum, 6);
 		break;
-	case attribute_id::ATTRIB_MAG:
+	case CharacterAttribute::Magic:
 		ModifyPlrMag(pnum, 6);
 		break;
-	case attribute_id::ATTRIB_DEX:
+	case CharacterAttribute::Dexterity:
 		ModifyPlrDex(pnum, 6);
 		break;
-	case attribute_id::ATTRIB_VIT:
+	case CharacterAttribute::Vitality:
 		ModifyPlrVit(pnum, 6);
 		break;
 	}
