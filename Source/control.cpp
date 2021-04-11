@@ -1505,25 +1505,25 @@ void DrawChr(CelOutputBuffer out)
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseStr);
-	if (plr[myplr].GetMaximumAttributeValue(ATTRIB_STR) == plr[myplr]._pBaseStr)
+	if (plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR) == plr[myplr]._pBaseStr)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 155, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseMag);
-	if (plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG) == plr[myplr]._pBaseMag)
+	if (plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG) == plr[myplr]._pBaseMag)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 183, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseDex);
-	if (plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX) == plr[myplr]._pBaseDex)
+	if (plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX) == plr[myplr]._pBaseDex)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 211, 126, chrstr, col);
 
 	col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseVit);
-	if (plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT) == plr[myplr]._pBaseVit)
+	if (plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT) == plr[myplr]._pBaseVit)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 239, 126, chrstr, col);
 
@@ -1567,14 +1567,14 @@ void DrawChr(CelOutputBuffer out)
 	if (plr[myplr]._pStatPts > 0) {
 		sprintf(chrstr, "%i", plr[myplr]._pStatPts);
 		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
-		if (plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(ATTRIB_STR))
-			CelDrawTo(out, 137, 159, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
-		if (plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG))
-			CelDrawTo(out, 137, 187, pChrButtons, chrbtn[ATTRIB_MAG] + 4, 41);
-		if (plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX))
-			CelDrawTo(out, 137, 216, pChrButtons, chrbtn[ATTRIB_DEX] + 6, 41);
-		if (plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT))
-			CelDrawTo(out, 137, 244, pChrButtons, chrbtn[ATTRIB_VIT] + 8, 41);
+		if (plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_STR))
+			CelDrawTo(out, 137, 159, pChrButtons, chrbtn[static_cast<size_t>(attribute_id::ATTRIB_STR)] + 2, 41);
+		if (plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_MAG))
+			CelDrawTo(out, 137, 187, pChrButtons, chrbtn[static_cast<size_t>(attribute_id::ATTRIB_MAG)] + 4, 41);
+		if (plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_DEX))
+			CelDrawTo(out, 137, 216, pChrButtons, chrbtn[static_cast<size_t>(attribute_id::ATTRIB_DEX)] + 6, 41);
+		if (plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(attribute_id::ATTRIB_VIT))
+			CelDrawTo(out, 137, 244, pChrButtons, chrbtn[static_cast<size_t>(attribute_id::ATTRIB_VIT)] + 8, 41);
 	}
 
 	if (plr[myplr]._pMaxHP > plr[myplr]._pMaxHPBase)
@@ -1630,35 +1630,35 @@ void CheckChrBtns()
 
 	if (!chrbtnactive && plr[myplr]._pStatPts) {
 		HeroClass pc = plr[myplr]._pClass;
-		for (int i = ATTRIB_STR; i <= ATTRIB_VIT; i++) {
-			int max = plr[myplr].GetMaximumAttributeValue((attribute_id)i);
+		for (auto i : enum_values<attribute_id>()) {
+			int max = plr[myplr].GetMaximumAttributeValue(i);
 			switch (i) {
-			case ATTRIB_STR:
+			case attribute_id::ATTRIB_STR:
 				if (plr[myplr]._pBaseStr >= max)
 					continue;
 				break;
-			case ATTRIB_MAG:
+			case attribute_id::ATTRIB_MAG:
 				if (plr[myplr]._pBaseMag >= max)
 					continue;
 				break;
-			case ATTRIB_DEX:
+			case attribute_id::ATTRIB_DEX:
 				if (plr[myplr]._pBaseDex >= max)
 					continue;
 				break;
-			case ATTRIB_VIT:
+			case attribute_id::ATTRIB_VIT:
 				if (plr[myplr]._pBaseVit >= max)
 					continue;
 				break;
 			default:
 				continue;
 			}
-			x = ChrBtnsRect[i].x + ChrBtnsRect[i].w;
-			y = ChrBtnsRect[i].y + ChrBtnsRect[i].h;
-			if (MouseX >= ChrBtnsRect[i].x
+			x = ChrBtnsRect[static_cast<size_t>(i)].x + ChrBtnsRect[static_cast<size_t>(i)].w;
+			y = ChrBtnsRect[static_cast<size_t>(i)].y + ChrBtnsRect[static_cast<size_t>(i)].h;
+			if (MouseX >= ChrBtnsRect[static_cast<size_t>(i)].x
 			    && MouseX <= x
-			    && MouseY >= ChrBtnsRect[i].y
+			    && MouseY >= ChrBtnsRect[static_cast<size_t>(i)].y
 			    && MouseY <= y) {
-				chrbtn[i] = true;
+				chrbtn[static_cast<size_t>(i)] = true;
 				chrbtnactive = true;
 			}
 		}
@@ -1675,33 +1675,33 @@ int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, attr
 void ReleaseChrBtns(bool addAllStatPoints)
 {
 	chrbtnactive = false;
-	for (int i = ATTRIB_STR; i <= ATTRIB_VIT; ++i) {
-		if (!chrbtn[i])
+	for (auto i : enum_values<attribute_id>()) {
+		if (!chrbtn[static_cast<size_t>(i)])
 			continue;
 
-		chrbtn[i] = false;
-		if (MouseX >= ChrBtnsRect[i].x
-			&& MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
-			&& MouseY >= ChrBtnsRect[i].y
-			&& MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
+		chrbtn[static_cast<size_t>(i)] = false;
+		if (MouseX >= ChrBtnsRect[static_cast<size_t>(i)].x
+			&& MouseX <= ChrBtnsRect[static_cast<size_t>(i)].x + ChrBtnsRect[static_cast<size_t>(i)].w
+			&& MouseY >= ChrBtnsRect[static_cast<size_t>(i)].y
+			&& MouseY <= ChrBtnsRect[static_cast<size_t>(i)].y + ChrBtnsRect[static_cast<size_t>(i)].h) {
 			PlayerStruct &player = plr[myplr];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
-				statPointsToAdd = CapStatPointsToAdd(player._pStatPts, player, (attribute_id)i);
+				statPointsToAdd = CapStatPointsToAdd(player._pStatPts, player, i);
 			switch (i) {
-			case ATTRIB_STR:
+			case attribute_id::ATTRIB_STR:
 				NetSendCmdParam1(true, CMD_ADDSTR, statPointsToAdd);
 				player._pStatPts -= statPointsToAdd;
 				break;
-			case ATTRIB_MAG:
+			case attribute_id::ATTRIB_MAG:
 				NetSendCmdParam1(true, CMD_ADDMAG, statPointsToAdd);
 				player._pStatPts -= statPointsToAdd;
 				break;
-			case ATTRIB_DEX:
+			case attribute_id::ATTRIB_DEX:
 				NetSendCmdParam1(true, CMD_ADDDEX, statPointsToAdd);
 				player._pStatPts -= statPointsToAdd;
 				break;
-			case ATTRIB_VIT:
+			case attribute_id::ATTRIB_VIT:
 				NetSendCmdParam1(true, CMD_ADDVIT, statPointsToAdd);
 				player._pStatPts -= statPointsToAdd;
 				break;
