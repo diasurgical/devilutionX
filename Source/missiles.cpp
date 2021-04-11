@@ -37,9 +37,9 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		break;
 	case SPL_HEAL: /// BUGFIX: healing calculation is unused
 		*mind = plr[myplr]._pLevel + sl + 1;
-		if (plr[myplr]._pClass == plr_class::PC_WARRIOR || plr[myplr]._pClass == plr_class::PC_MONK || plr[myplr]._pClass == plr_class::PC_BARBARIAN) {
+		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*mind <<= 1;
-		} else if (plr[myplr]._pClass == plr_class::PC_ROGUE || plr[myplr]._pClass == plr_class::PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*mind += *mind >> 1;
 		}
 		*maxd = 10;
@@ -49,9 +49,9 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		for (k = 0; k < sl; k++) {
 			*maxd += 6;
 		}
-		if (plr[myplr]._pClass == plr_class::PC_WARRIOR || plr[myplr]._pClass == plr_class::PC_MONK || plr[myplr]._pClass == plr_class::PC_BARBARIAN) {
+		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*maxd <<= 1;
-		} else if (plr[myplr]._pClass == plr_class::PC_ROGUE || plr[myplr]._pClass == plr_class::PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*maxd += *maxd >> 1;
 		}
 		*mind = -1;
@@ -187,10 +187,10 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		break;
 	case SPL_HEALOTHER: /// BUGFIX: healing calculation is unused
 		*mind = plr[myplr]._pLevel + sl + 1;
-		if (plr[myplr]._pClass == plr_class::PC_WARRIOR || plr[myplr]._pClass == plr_class::PC_MONK || plr[myplr]._pClass == plr_class::PC_BARBARIAN) {
+		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*mind <<= 1;
 		}
-		if (plr[myplr]._pClass == plr_class::PC_ROGUE || plr[myplr]._pClass == plr_class::PC_BARD) {
+		if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*mind += *mind >> 1;
 		}
 		*maxd = 10;
@@ -200,10 +200,10 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		for (k = 0; k < sl; k++) {
 			*maxd += 6;
 		}
-		if (plr[myplr]._pClass == plr_class::PC_WARRIOR || plr[myplr]._pClass == plr_class::PC_MONK || plr[myplr]._pClass == plr_class::PC_BARBARIAN) {
+		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*maxd <<= 1;
 		}
-		if (plr[myplr]._pClass == plr_class::PC_ROGUE || plr[myplr]._pClass == plr_class::PC_BARD) {
+		if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*maxd += *maxd >> 1;
 		}
 		*mind = -1;
@@ -652,15 +652,15 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 			hper -= (dist * dist) >> 1;
 			hper += plr[pnum]._pIEnAc;
 			hper += 50;
-			if (plr[pnum]._pClass == plr_class::PC_ROGUE)
+			if (plr[pnum]._pClass == HeroClass::Rogue)
 				hper += 20;
-			if (plr[pnum]._pClass == plr_class::PC_WARRIOR || plr[pnum]._pClass == plr_class::PC_BARD)
+			if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Bard)
 				hper += 10;
 		} else {
 			hper = plr[pnum]._pMagic - (monster[m].mLevel << 1) - dist + 50;
-			if (plr[pnum]._pClass == plr_class::PC_SORCERER)
+			if (plr[pnum]._pClass == HeroClass::Sorcerer)
 				hper += 20;
-			else if (plr[pnum]._pClass == plr_class::PC_BARD)
+			else if (plr[pnum]._pClass == HeroClass::Bard)
 				hper += 10;
 		}
 	} else {
@@ -687,7 +687,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 		}
 		if (missiledata[t].mType == 0) {
 			dam = plr[pnum]._pIBonusDamMod + dam * plr[pnum]._pIBonusDam / 100 + dam;
-			if (plr[pnum]._pClass == plr_class::PC_ROGUE)
+			if (plr[pnum]._pClass == HeroClass::Rogue)
 				dam += plr[pnum]._pDamageMod;
 			else
 				dam += (plr[pnum]._pDamageMod >> 1);
@@ -868,17 +868,17 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 			if (plr[pnum]._pHitPoints >> 6 <= 0) {
 				SyncPlrKill(pnum, earflag);
 			} else {
-				if (plr[pnum]._pClass == plr_class::PC_WARRIOR) {
+				if (plr[pnum]._pClass == HeroClass::Warrior) {
 					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == plr_class::PC_ROGUE) {
+				} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == plr_class::PC_SORCERER) {
+				} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 					PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == plr_class::PC_MONK) {
+				} else if (plr[pnum]._pClass == HeroClass::Monk) {
 					PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == plr_class::PC_BARD) {
+				} else if (plr[pnum]._pClass == HeroClass::Bard) {
 					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == plr_class::PC_BARBARIAN) {
+				} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 				}
 				drawhpflag = true;
@@ -948,18 +948,18 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		    - plr[p]._pIBonusAC
 		    - plr[p]._pIAC
 		    + plr[pnum]._pDexterity + 50;
-		if (plr[pnum]._pClass == plr_class::PC_ROGUE)
+		if (plr[pnum]._pClass == HeroClass::Rogue)
 			hit += 20;
-		if (plr[pnum]._pClass == plr_class::PC_WARRIOR || plr[pnum]._pClass == plr_class::PC_BARD)
+		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Bard)
 			hit += 10;
 	} else {
 		hit = plr[pnum]._pMagic
 		    - (plr[p]._pLevel << 1)
 		    - dist
 		    + 50;
-		if (plr[pnum]._pClass == plr_class::PC_SORCERER)
+		if (plr[pnum]._pClass == HeroClass::Sorcerer)
 			hit += 20;
-		else if (plr[pnum]._pClass == plr_class::PC_BARD)
+		else if (plr[pnum]._pClass == HeroClass::Bard)
 			hit += 10;
 	}
 	if (hit < 5)
@@ -998,17 +998,17 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			dam -= (dam * resper) / 100;
 			if (pnum == myplr)
 				NetSendCmdDamage(true, p, dam);
-			if (plr[pnum]._pClass == plr_class::PC_WARRIOR) {
+			if (plr[pnum]._pClass == HeroClass::Warrior) {
 				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == plr_class::PC_ROGUE) {
+			} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == plr_class::PC_SORCERER) {
+			} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 				PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == plr_class::PC_MONK) {
+			} else if (plr[pnum]._pClass == HeroClass::Monk) {
 				PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == plr_class::PC_BARD) {
+			} else if (plr[pnum]._pClass == HeroClass::Bard) {
 				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == plr_class::PC_BARBARIAN) {
+			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 			}
 			return true;
@@ -1708,9 +1708,9 @@ void AddSpecArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 
 	av = 0;
 	if (mienemy == TARGET_MONSTERS) {
-		if (plr[id]._pClass == plr_class::PC_ROGUE)
+		if (plr[id]._pClass == HeroClass::Rogue)
 			av += (plr[id]._pLevel - 1) >> 2;
-		else if (plr[id]._pClass == plr_class::PC_WARRIOR || plr[id]._pClass == plr_class::PC_BARD)
+		else if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 			av += (plr[id]._pLevel - 1) >> 3;
 
 		if (plr[id]._pIFlags & ISPL_QUICKATTACK)
@@ -1916,9 +1916,9 @@ void AddMana(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 	for (i = 0; i < missile[mi]._mispllvl; i++) {
 		ManaAmount += (random_(57, 6) + 1) << 6;
 	}
-	if (plr[id]._pClass == plr_class::PC_SORCERER)
+	if (plr[id]._pClass == HeroClass::Sorcerer)
 		ManaAmount <<= 1;
-	if (plr[id]._pClass == plr_class::PC_ROGUE || plr[id]._pClass == plr_class::PC_BARD)
+	if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Bard)
 		ManaAmount += ManaAmount >> 1;
 	plr[id]._pMana += ManaAmount;
 	if (plr[id]._pMana > plr[id]._pMaxMana)
@@ -2055,9 +2055,9 @@ void AddLArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 	if (mienemy == TARGET_MONSTERS) {
 		int av = 32;
 
-		if (plr[id]._pClass == plr_class::PC_ROGUE)
+		if (plr[id]._pClass == HeroClass::Rogue)
 			av += (plr[id]._pLevel) >> 2;
-		else if (plr[id]._pClass == plr_class::PC_WARRIOR || plr[id]._pClass == plr_class::PC_BARD)
+		else if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 			av += (plr[id]._pLevel) >> 3;
 
 		if (gbIsHellfire) {
@@ -2070,7 +2070,7 @@ void AddLArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 			if (plr[id]._pIFlags & ISPL_FASTESTATTACK)
 				av += 8;
 		} else {
-			if (plr[id]._pClass == plr_class::PC_ROGUE || plr[id]._pClass == plr_class::PC_WARRIOR || plr[id]._pClass == plr_class::PC_BARD)
+			if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 				av -= 1;
 		}
 
@@ -2098,9 +2098,9 @@ void AddArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 		if (plr[id]._pIFlags & ISPL_RNDARROWVEL) {
 			av = random_(64, 32) + 16;
 		}
-		if (plr[id]._pClass == plr_class::PC_ROGUE)
+		if (plr[id]._pClass == HeroClass::Rogue)
 			av += (plr[id]._pLevel - 1) >> 2;
-		else if (plr[id]._pClass == plr_class::PC_WARRIOR || plr[id]._pClass == plr_class::PC_BARD)
+		else if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 			av += (plr[id]._pLevel - 1) >> 3;
 		if (gbIsHellfire) {
 			if (plr[id]._pIFlags & ISPL_QUICKATTACK)
@@ -2923,9 +2923,9 @@ void AddHeal(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 		HealAmount += (random_(57, 6) + 1) << 6;
 	}
 
-	if (plr[id]._pClass == plr_class::PC_WARRIOR || plr[id]._pClass == plr_class::PC_BARBARIAN || plr[id]._pClass == plr_class::PC_MONK)
+	if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Barbarian || plr[id]._pClass == HeroClass::Monk)
 		HealAmount <<= 1;
-	else if (plr[id]._pClass == plr_class::PC_ROGUE || plr[id]._pClass == plr_class::PC_BARD)
+	else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Bard)
 		HealAmount += HealAmount >> 1;
 
 	plr[id]._pHitPoints += HealAmount;
@@ -3084,7 +3084,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
 		missile[mi]._miDelFlag = true;
 	} else {
-		_sfx_id blodboilSFX[static_cast<std::size_t>(plr_class::NUM_CLASSES)] = {
+		_sfx_id blodboilSFX[static_cast<std::size_t>(HeroClass::ClassCount)] = {
 			PS_WARR70,
 			PS_ROGUE70,
 			PS_MAGE70,
@@ -5234,7 +5234,7 @@ void MI_Blodboil(Sint32 i)
 	if (missile[i]._mirange == 0) {
 		id = missile[i]._miVar1;
 		if ((plr[id]._pSpellFlags & 2) == 2) {
-			_sfx_id blodboilSFX[static_cast<std::size_t>(plr_class::NUM_CLASSES)] = {
+			_sfx_id blodboilSFX[static_cast<std::size_t>(HeroClass::ClassCount)] = {
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,
@@ -5256,7 +5256,7 @@ void MI_Blodboil(Sint32 i)
 			force_redraw = 255;
 			PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
 		} else {
-			_sfx_id blodboilSFX[static_cast<std::size_t>(plr_class::NUM_CLASSES)] = {
+			_sfx_id blodboilSFX[static_cast<std::size_t>(HeroClass::ClassCount)] = {
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,

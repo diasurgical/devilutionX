@@ -217,7 +217,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	ClrPlrPath(pnum);
 	pPlayer->destAction = ACTION_NONE;
 	strcpy(pPlayer->_pName, pPack->pName);
-	pPlayer->_pClass = (plr_class)pPack->pClass;
+	pPlayer->_pClass = (HeroClass)pPack->pClass;
 	InitPlayer(pnum, true);
 	pPlayer->_pBaseStr = pPack->pBaseStr;
 	pPlayer->_pStrength = pPack->pBaseStr;

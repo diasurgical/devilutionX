@@ -367,7 +367,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pLvlChanging = file->nextBool8();
 
 	file->nextBytes(pPlayer->_pName, PLR_NAME_LEN);
-	pPlayer->_pClass = (plr_class)file->nextLE<Sint8>();
+	pPlayer->_pClass = (HeroClass)file->nextLE<Sint8>();
 	file->skip(3); // Alignment
 	pPlayer->_pStrength = file->nextLE<Sint32>();
 	pPlayer->_pBaseStr = file->nextLE<Sint32>();
