@@ -2133,9 +2133,9 @@ void AddStoreHoldRepair(ItemStruct *itm, int i)
 
 void InitStores()
 {
-	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", NULL);
-	pSPentSpn2Cels = LoadFileInMem("Data\\PentSpn2.CEL", NULL);
-	pSTextSlidCels = LoadFileInMem("Data\\TextSlid.CEL", NULL);
+	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", nullptr);
+	pSPentSpn2Cels = LoadFileInMem("Data\\PentSpn2.CEL", nullptr);
+	pSTextSlidCels = LoadFileInMem("Data\\TextSlid.CEL", nullptr);
 	ClearSText(0, STORE_LINES);
 	stextflag = STORE_NONE;
 	stextsize = false;

@@ -159,7 +159,7 @@
 	{                       \
 		void *p__p;         \
 		p__p = p;           \
-		p = NULL;           \
+		p = nullptr;           \
 		mem_free_dbg(p__p); \
 	}
 

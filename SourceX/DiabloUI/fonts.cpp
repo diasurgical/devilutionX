@@ -4,7 +4,7 @@
 
 namespace devilution {
 
-TTF_Font *font = NULL;
+TTF_Font *font = nullptr;
 BYTE *FontTables[4];
 Art ArtFonts[4][2];
 /** This is so we know ttf has been init when we get to the diablo_deinit() function */
@@ -44,13 +44,13 @@ void UnloadArtFonts()
 	ArtFonts[AFT_BIG][AFC_GOLD].Unload();
 	ArtFonts[AFT_HUGE][AFC_GOLD].Unload();
 	mem_free_dbg(FontTables[AFT_SMALL]);
-	FontTables[AFT_SMALL] = NULL;
+	FontTables[AFT_SMALL] = nullptr;
 	mem_free_dbg(FontTables[AFT_MED]);
-	FontTables[AFT_MED] = NULL;
+	FontTables[AFT_MED] = nullptr;
 	mem_free_dbg(FontTables[AFT_BIG]);
-	FontTables[AFT_BIG] = NULL;
+	FontTables[AFT_BIG] = nullptr;
 	mem_free_dbg(FontTables[AFT_HUGE]);
-	FontTables[AFT_HUGE] = NULL;
+	FontTables[AFT_HUGE] = nullptr;
 }
 
 void LoadTtfFont()
@@ -70,7 +70,7 @@ void LoadTtfFont()
 	}
 #endif
 	font = TTF_OpenFont(ttf_font_path.c_str(), 17);
-	if (font == NULL) {
+	if (font == nullptr) {
 		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
 		return;
 	}
@@ -83,7 +83,7 @@ void UnloadTtfFont()
 {
 	if (font && TTF_WasInit())
 		TTF_CloseFont(font);
-	font = NULL;
+	font = nullptr;
 }
 
 void FontsCleanup()

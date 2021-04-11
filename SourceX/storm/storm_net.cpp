@@ -127,7 +127,7 @@ bool SNetLeaveGame(int type)
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
 #endif
-	if (dvlnet_inst == NULL)
+	if (dvlnet_inst == nullptr)
 		return true;
 	return dvlnet_inst->SNetLeaveGame(type);
 }

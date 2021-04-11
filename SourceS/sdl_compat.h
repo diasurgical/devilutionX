@@ -29,9 +29,9 @@
 inline const Uint8 *SDLC_GetKeyState()
 {
 #ifndef USE_SDL1
-	return SDL_GetKeyboardState(NULL);
+	return SDL_GetKeyboardState(nullptr);
 #else
-	return SDL_GetKeyState(NULL);
+	return SDL_GetKeyState(nullptr);
 #endif
 }
 

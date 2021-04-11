@@ -372,7 +372,7 @@ void selhero_ClassSelector_Select(int value)
 	int hClass = vecSelHeroDlgItems[value]->m_value;
 	if (gbSpawned && (hClass == PC_ROGUE || hClass == PC_SORCERER || (hClass == PC_BARD && !hfbard_mpq))) {
 		ArtBackground.Unload();
-		UiSelOkDialog(NULL, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
+		UiSelOkDialog(nullptr, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
 		selhero_List_Select(selhero_SaveCount);
 		return;
@@ -401,7 +401,7 @@ void selhero_ClassSelector_Select(int value)
 	SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 429), (Sint16)(UI_OFFSET_Y + 429), 140, 35 };
 	vecSelDlgItems.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect4, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, NULL, selhero_Name_Select, selhero_Name_Esc, vecSelDlgItems);
+	UiInitList(0, nullptr, selhero_Name_Select, selhero_Name_Esc, vecSelDlgItems);
 }
 
 void selhero_ClassSelector_Esc()

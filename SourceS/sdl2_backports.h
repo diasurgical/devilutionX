@@ -23,7 +23,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
 	int bpp;
 	Uint32 rmask, gmask, bmask, amask;
 	if (!SDL_PixelFormatEnumToMasks(format, &bpp, &rmask, &gmask, &bmask, &amask))
-		return NULL;
+		return nullptr;
 	return SDL_CreateRGBSurface(flags, width, height, bpp, rmask, gmask, bmask, amask);
 }
 
@@ -36,13 +36,13 @@ SDL_CreateRGBSurfaceWithFormatFrom(void *pixels,
 	SDL_Surface *surface;
 
 	surface = SDL_CreateRGBSurfaceWithFormat(0, 0, 0, depth, format);
-	if (surface != NULL) {
+	if (surface != nullptr) {
 		surface->flags |= SDL_PREALLOC;
 		surface->pixels = pixels;
 		surface->w = width;
 		surface->h = height;
 		surface->pitch = pitch;
-		SDL_SetClipRect(surface, NULL);
+		SDL_SetClipRect(surface, nullptr);
 	}
 	return surface;
 }

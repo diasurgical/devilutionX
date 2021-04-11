@@ -6,7 +6,7 @@ namespace devilution {
 
 void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 {
-	if (art == NULL || art->surface != NULL)
+	if (art == nullptr || art->surface != nullptr)
 		return;
 
 	art->frames = frames;
@@ -49,7 +49,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
-	if (art->surface != NULL)
+	if (art->surface != nullptr)
 		SDLC_SetColorKey(art->surface.get(), mask);
 }
 

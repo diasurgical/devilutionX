@@ -49,7 +49,7 @@ enum direction : uint8_t {
 		BYTE *ptr = static_cast<BYTE *>(std::malloc(num_bytes));                                                     \
 		constexpr char kMesage[] = "System memory exhausted.\n"                                                      \
 		                           "Make sure you have at least 64MB of free system memory before running the game"; \
-		if (ptr == NULL)                                                                                             \
+		if (ptr == nullptr)                                                                                             \
 			ErrDlg("Out of Memory Error", kMesage, __FILE__, __LINE__);                                              \
 		return ptr;                                                                                                  \
 	}(NUM_BYTES)
@@ -94,7 +94,7 @@ struct CelOutputBuffer {
 	SDL_Rect region;
 
 	CelOutputBuffer()
-	    : surface(NULL)
+	    : surface(nullptr)
 	    , region(SDL_Rect { 0, 0, 0, 0 })
 	{
 	}
@@ -139,7 +139,7 @@ struct CelOutputBuffer {
 	void Free()
 	{
 		SDL_FreeSurface(this->surface);
-		this->surface = NULL;
+		this->surface = nullptr;
 	}
 
 	int w() const

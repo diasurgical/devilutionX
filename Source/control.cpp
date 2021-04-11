@@ -222,7 +222,7 @@ int PanBtnPos[8][5] = {
 	// clang-format on
 };
 /** Maps from panel_button_id to hotkey name. */
-const char *const PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", NULL };
+const char *const PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", nullptr };
 /** Maps from panel_button_id to panel button description. */
 const char *const PanBtnStr[8] = {
 	"Character Information",
@@ -585,7 +585,7 @@ void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, text_color col)
 		break;
 	case COL_BLACK:
 		light_table_index = 15;
-		CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, NULL);
+		CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, nullptr);
 		return;
 	}
 	CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, tbl);
@@ -777,27 +777,27 @@ void InitControlPan()
 	pManaBuff = CelOutputBuffer::Alloc(88, 88);
 	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
 
-	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
-	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
+	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", nullptr);
+	pChrPanel = LoadFileInMem("Data\\Char.CEL", nullptr);
 	if (!gbIsHellfire)
-		pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", NULL);
+		pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", nullptr);
 	else
-		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", NULL);
+		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", nullptr);
 	SetSpellTrans(RSPLTYPE_SKILL);
-	BYTE *pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
+	BYTE *pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", nullptr);
 	CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, pStatusPanel, 1, PANEL_WIDTH);
 	MemFreeDbg(pStatusPanel);
-	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
+	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", nullptr);
 	CelDrawUnsafeTo(pLifeBuff, 0, 87, pStatusPanel, 1, 88);
 	CelDrawUnsafeTo(pManaBuff, 0, 87, pStatusPanel, 2, 88);
 	MemFreeDbg(pStatusPanel);
 	talkflag = false;
 	if (gbIsMultiplayer) {
-		BYTE *pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
+		BYTE *pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", nullptr);
 		CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, pTalkPanel, 1, PANEL_WIDTH);
 		MemFreeDbg(pTalkPanel);
-		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", NULL);
-		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
+		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", nullptr);
+		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", nullptr);
 		sgbPlrTalkTbl = 0;
 		sgszTalkMsg[0] = '\0';
 		for (i = 0; i < MAX_PLRS; i++)
@@ -807,7 +807,7 @@ void InitControlPan()
 	}
 	panelflag = false;
 	lvlbtndown = false;
-	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", NULL);
+	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", nullptr);
 	for (i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
 		panbtn[i] = false;
 	panbtndown = false;
@@ -815,20 +815,20 @@ void InitControlPan()
 		numpanbtns = 6;
 	else
 		numpanbtns = 8;
-	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", NULL);
+	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", nullptr);
 	for (i = 0; i < sizeof(chrbtn) / sizeof(chrbtn[0]); i++)
 		chrbtn[i] = false;
 	chrbtnactive = false;
-	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", NULL);
+	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", nullptr);
 	strcpy(infostr, "");
 	ClearPanel();
 	drawhpflag = true;
 	drawmanaflag = true;
 	chrflag = false;
 	spselflag = false;
-	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", NULL);
-	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", NULL);
-	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
+	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", nullptr);
+	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", nullptr);
+	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", nullptr);
 	sbooktab = 0;
 	sbookflag = false;
 	if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -844,8 +844,8 @@ void InitControlPan()
 	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 		SpellPages[0][0] = SPL_BLODBOIL;
 	}
-	pQLogCel = LoadFileInMem("Data\\Quest.CEL", NULL);
-	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", NULL);
+	pQLogCel = LoadFileInMem("Data\\Quest.CEL", nullptr);
+	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", nullptr);
 	dropGoldFlag = false;
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
@@ -1028,7 +1028,7 @@ void CheckPanelInfo()
 				else
 					strcpy(infostr, "Player attack");
 			}
-			if (PanBtnHotKey[i] != NULL) {
+			if (PanBtnHotKey[i] != nullptr) {
 				sprintf(tempstr, "Hotkey: %s", PanBtnHotKey[i]);
 				AddPanelString(tempstr, true);
 			}
@@ -2073,7 +2073,7 @@ static char *control_print_talk_msg(CelOutputBuffer out, char *msg, int *x, int 
 		}
 		*x += fontkern[c] + 1;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void DrawTalkPan(CelOutputBuffer out)

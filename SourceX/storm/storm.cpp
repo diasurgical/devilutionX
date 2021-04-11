@@ -28,7 +28,7 @@ DWORD nLastError = 0;
 namespace {
 
 bool directFileAccess = false;
-std::string *SBasePath = NULL;
+std::string *SBasePath = nullptr;
 
 } // namespace
 
@@ -75,49 +75,49 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 {
 	bool result = false;
 
-	if (directFileAccess && SBasePath != NULL) {
+	if (directFileAccess && SBasePath != nullptr) {
 		std::string path = *SBasePath + filename;
 		for (std::size_t i = SBasePath->size(); i < path.size(); ++i)
 			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
 		result = SFileOpenFileEx((HANDLE)0, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
 
-	if (!result && devilutionx_mpq != NULL) {
+	if (!result && devilutionx_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)devilutionx_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 	if (gbIsHellfire) {
-		if (!result && hfopt2_mpq != NULL) {
+		if (!result && hfopt2_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfopt1_mpq != NULL) {
+		if (!result && hfopt1_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfopt1_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfvoice_mpq != NULL) {
+		if (!result && hfvoice_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfvoice_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfmusic_mpq != NULL) {
+		if (!result && hfmusic_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfmusic_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfbarb_mpq != NULL) {
+		if (!result && hfbarb_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfbarb_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfbard_mpq != NULL) {
+		if (!result && hfbard_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfbard_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfmonk_mpq != NULL) {
+		if (!result && hfmonk_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfmonk_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 		if (!result) {
 			result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 	}
-	if (!result && patch_rt_mpq != NULL) {
+	if (!result && patch_rt_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
-	if (!result && spawn_mpq != NULL) {
+	if (!result && spawn_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)spawn_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
-	if (!result && diabdat_mpq != NULL) {
+	if (!result && diabdat_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 
@@ -193,8 +193,8 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
-		SFileSetFilePointer(hFile, 0, NULL, DVL_FILE_END);
-		fileBuffer = NULL;
+		SFileSetFilePointer(hFile, 0, nullptr, DVL_FILE_END);
+		fileBuffer = nullptr;
 	} else {
 		const auto pos = SFileGetFilePointer(hFile);
 		const auto end = SFileSetFilePointer(hFile, 0, DVL_FILE_END);
@@ -236,7 +236,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		if (pos == static_cast<std::uint64_t>(-1)) {
 			SDL_Log("SFileSetFilePointer error: %ud", (unsigned int)SErrGetLastError());
 		}
-		SFileReadFile(hFile, paldata, 768, 0, NULL);
+		SFileReadFile(hFile, paldata, 768, 0, nullptr);
 
 		for (int i = 0; i < 256; i++) {
 			pPalette[i].r = paldata[i][0];
@@ -260,7 +260,7 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 	if (!getIniValue(sectionName, keyName, string, 2))
 		return defaultValue;
 
-	return strtol(string, NULL, 10) != 0;
+	return strtol(string, nullptr, 10) != 0;
 }
 
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
@@ -290,7 +290,7 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 
 	std::string value = key->getStringValue();
 
-	if (string != NULL)
+	if (string != nullptr)
 		strncpy(string, value.c_str(), stringSize);
 
 	return true;
@@ -328,7 +328,7 @@ int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 		return defaultValue;
 	}
 
-	return strtol(string, NULL, sizeof(string));
+	return strtol(string, nullptr, sizeof(string));
 }
 
 void setIniInt(const char *keyname, const char *valuename, int value)
@@ -433,7 +433,7 @@ private:
 	{
 		SDL_memset(out, 0, sizeof(out[0]) * out_len);
 		AudioQueueItem *item;
-		while ((item = Next()) != NULL) {
+		while ((item = Next()) != nullptr) {
 			if (static_cast<unsigned long>(out_len) <= item->len) {
 				SDL_MixAudio(out, item->pos, out_len, SDL_MIX_MAXVOLUME);
 				item->pos += out_len;
@@ -453,7 +453,7 @@ private:
 		while (!queue_.empty() && queue_.front().len == 0)
 			Pop();
 		if (queue_.empty())
-			return NULL;
+			return nullptr;
 		return &queue_.front();
 	}
 
@@ -490,16 +490,16 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 
 	int bytestoread = SFileGetFileSize(*video, 0);
 	SVidBuffer = DiabloAllocPtr(bytestoread);
-	SFileReadFile(*video, SVidBuffer, bytestoread, NULL, 0);
+	SFileReadFile(*video, SVidBuffer, bytestoread, nullptr, 0);
 
 	SVidSMK = smk_open_memory(SVidBuffer, bytestoread);
-	if (SVidSMK == NULL) {
+	if (SVidSMK == nullptr) {
 		return;
 	}
 
 	unsigned char channels[7], depth[7];
 	unsigned long rate[7];
-	smk_info_audio(SVidSMK, NULL, channels, depth, rate);
+	smk_info_audio(SVidSMK, nullptr, channels, depth, rate);
 	if (enableAudio && depth[0] != 0) {
 		smk_enable_audio(SVidSMK, 0, enableAudio);
 		SDL_AudioSpec audioFormat;
@@ -515,7 +515,7 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 		Mix_CloseAudio();
 
 #if SDL_VERSION_ATLEAST(2, 0, 4)
-		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
+		deviceId = SDL_OpenAudioDevice(nullptr, 0, &audioFormat, nullptr, 0);
 		if (deviceId == 0) {
 			ErrSdl();
 		}
@@ -523,7 +523,7 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 		SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
 #else
 		sVidAudioQueue->Subscribe(&audioFormat);
-		if (SDL_OpenAudio(&audioFormat, NULL) != 0) {
+		if (SDL_OpenAudio(&audioFormat, nullptr) != 0) {
 			ErrSdl();
 		}
 		SDL_PauseAudio(0);
@@ -531,18 +531,18 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 	}
 
 	unsigned long nFrames;
-	smk_info_all(SVidSMK, NULL, &nFrames, &SVidFrameLength);
-	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
+	smk_info_all(SVidSMK, nullptr, &nFrames, &SVidFrameLength);
+	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
 
 	smk_enable_video(SVidSMK, enableVideo);
 	smk_first(SVidSMK); // Decode first frame
 
-	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
+	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
-		if (texture == NULL) {
+		if (texture == nullptr) {
 			ErrSdl();
 		}
 		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
@@ -557,7 +557,7 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 
 		if (IsSVidVideoMode) {
 			/* Get available fullscreen/hardware modes */
-			SDL_Rect **modes = SDL_ListModes(NULL, display->flags);
+			SDL_Rect **modes = SDL_ListModes(nullptr, display->flags);
 
 			/* Check is there are any modes available */
 			if (modes == (SDL_Rect **)0) {
@@ -601,12 +601,12 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 	    8,
 	    SVidWidth,
 	    SDL_PIXELFORMAT_INDEX8);
-	if (SVidSurface == NULL) {
+	if (SVidSurface == nullptr) {
 		ErrSdl();
 	}
 
 	SVidPalette = SDL_AllocPalette(256);
-	if (SVidPalette == NULL) {
+	if (SVidPalette == nullptr) {
 		ErrSdl();
 	}
 	if (SDLC_SetSurfaceColors(SVidSurface, SVidPalette) <= -1) {
@@ -614,7 +614,7 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 	}
 
 	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
-	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	SDL_FillRect(GetOutputSurface(), nullptr, 0x000000);
 }
 
 bool SVidLoadNextFrame()
@@ -697,7 +697,7 @@ bool SVidPlayContinue(void)
 
 #ifndef USE_SDL1
 	if (renderer) {
-		if (SDL_BlitSurface(SVidSurface, NULL, GetOutputSurface(), NULL) <= -1) {
+		if (SDL_BlitSurface(SVidSurface, nullptr, GetOutputSurface(), nullptr) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
@@ -720,7 +720,7 @@ bool SVidPlayContinue(void)
 
 		SDL_Rect pal_surface_offset = { scaledX, scaledY, scaledW, scaledH };
 		if (factor == 1) {
-			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &pal_surface_offset) <= -1) {
+			if (SDL_BlitSurface(SVidSurface, nullptr, output_surface, &pal_surface_offset) <= -1) {
 				ErrSdl();
 			}
 		} else {
@@ -730,7 +730,7 @@ bool SVidPlayContinue(void)
 			Uint32 format = SDL_GetWindowPixelFormat(ghMainWnd);
 			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 #endif
-			if (SDL_BlitScaled(tmp, NULL, output_surface, &pal_surface_offset) <= -1) {
+			if (SDL_BlitScaled(tmp, nullptr, output_surface, &pal_surface_offset) <= -1) {
 				SDL_Log(SDL_GetError());
 				return false;
 			}
@@ -767,24 +767,24 @@ void SVidPlayEnd(HANDLE video)
 
 	if (SVidBuffer) {
 		mem_free_dbg(SVidBuffer);
-		SVidBuffer = NULL;
+		SVidBuffer = nullptr;
 	}
 
 	SDL_FreePalette(SVidPalette);
-	SVidPalette = NULL;
+	SVidPalette = nullptr;
 
 	SDL_FreeSurface(SVidSurface);
-	SVidSurface = NULL;
+	SVidSurface = nullptr;
 
 	SFileCloseFile(video);
-	video = NULL;
+	video = nullptr;
 
 	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
-		if (texture == NULL) {
+		if (texture == nullptr) {
 			ErrSdl();
 		}
 		if (renderer && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
@@ -809,7 +809,7 @@ void SErrSetLastError(DWORD dwErrCode)
 
 bool SFileSetBasePath(const char *path)
 {
-	if (SBasePath == NULL)
+	if (SBasePath == nullptr)
 		SBasePath = new std::string;
 	*SBasePath = path;
 	return true;

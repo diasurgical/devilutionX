@@ -158,9 +158,9 @@ bool IsKbCtrlButtonPressed(ControllerButton button)
 	if (key_code == -1)
 		return false;
 #ifndef USE_SDL1
-	return SDL_GetKeyboardState(NULL)[SDL_GetScancodeFromKey(key_code)];
+	return SDL_GetKeyboardState(nullptr)[SDL_GetScancodeFromKey(key_code)];
 #else
-	return SDL_GetKeyState(NULL)[key_code];
+	return SDL_GetKeyState(nullptr)[key_code];
 #endif
 }
 

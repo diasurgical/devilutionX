@@ -49,7 +49,7 @@ DWORD Hash(const char *s, int type)
 
 	seed1 = 0x7FED7FED;
 	seed2 = 0xEEEEEEEE;
-	while (s != NULL && *s) {
+	while (s != nullptr && *s) {
 		ch = *s++;
 		ch = toupper(ch);
 		seed1 = hashtable[type][ch] ^ (seed1 + seed2);

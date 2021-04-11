@@ -859,13 +859,13 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	} else if (stextflag != STORE_NONE) {
 		return &StoreMove;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void ProcessLeftStickOrDPadGameUI()
 {
 	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler();
-	if (handler != NULL)
+	if (handler != nullptr)
 		handler(GetLeftStickOrDpadDirection(true));
 }
 
@@ -881,7 +881,7 @@ void Movement()
 		sgbControllerActive = true;
 	}
 
-	if (GetLeftStickOrDPadGameUIHandler() == NULL) {
+	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
 		WalkInDir(move_dir);
 	}
 }

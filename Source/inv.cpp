@@ -120,20 +120,20 @@ void FreeInvGFX()
 void InitInv()
 {
 	if (plr[myplr]._pClass == PC_WARRIOR) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", nullptr);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", nullptr);
 	} else if (plr[myplr]._pClass == PC_MONK) {
 		if (!gbIsSpawn)
-			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", nullptr);
 		else
-			pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+			pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
 	} else if (plr[myplr]._pClass == PC_BARD) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", nullptr);
 	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
 	}
 
 	invflag = false;
@@ -2508,7 +2508,7 @@ char CheckInvHLight()
 
 	rv = -1;
 	infoclr = COL_WHITE;
-	pi = NULL;
+	pi = nullptr;
 	p = &plr[myplr];
 	ClearPanel();
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST) {

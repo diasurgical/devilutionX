@@ -77,7 +77,7 @@ static int CapVolume(int volume)
 
 bool snd_playing(TSnd *pSnd)
 {
-	if (pSnd == NULL || pSnd->DSB == NULL)
+	if (pSnd == nullptr || pSnd->DSB == nullptr)
 		return false;
 
 	return pSnd->DSB->IsPlaying();
@@ -93,7 +93,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	}
 
 	DSB = pSnd->DSB;
-	if (DSB == NULL) {
+	if (DSB == nullptr) {
 		return;
 	}
 
@@ -130,9 +130,9 @@ TSnd *sound_file_load(const char *path, bool stream)
 			ErrSdl();
 		}
 	} else {
-		DWORD dwBytes = SFileGetFileSize(file, NULL);
+		DWORD dwBytes = SFileGetFileSize(file, nullptr);
 		BYTE *wave_file = DiabloAllocPtr(dwBytes);
-		SFileReadFile(file, wave_file, dwBytes, NULL, NULL);
+		SFileReadFile(file, wave_file, dwBytes, nullptr, nullptr);
 		error = pSnd->DSB->SetChunk(wave_file, dwBytes);
 		SFileCloseFile(file);
 		mem_free_dbg(wave_file);
@@ -151,9 +151,9 @@ void sound_file_cleanup(TSnd *sound_file)
 			sound_file->DSB->Stop();
 			sound_file->DSB->Release();
 			delete sound_file->DSB;
-			sound_file->DSB = NULL;
+			sound_file->DSB = nullptr;
 		}
-		if (sound_file->file_handle != NULL)
+		if (sound_file->file_handle != nullptr)
 			SFileCloseFile(sound_file->file_handle);
 
 		mem_free_dbg(sound_file);
@@ -184,10 +184,10 @@ void music_stop()
 	if (music != nullptr) {
 		Mix_HaltMusic();
 		Mix_FreeMusic(music);
-		music = NULL;
+		music = nullptr;
 #ifndef DISABLE_STREAMING_MUSIC
 		SFileCloseFile(sghMusic);
-		sghMusic = NULL;
+		sghMusic = nullptr;
 #endif
 		sgnMusicTrack = NUM_MUSIC;
 #ifdef DISABLE_STREAMING_MUSIC
@@ -210,27 +210,27 @@ void music_start(uint8_t nTrack)
 			trackPath = sgszMusicTracks[nTrack];
 		success = SFileOpenFile(trackPath, &sghMusic);
 		if (!success) {
-			sghMusic = NULL;
+			sghMusic = nullptr;
 		} else {
 #ifndef DISABLE_STREAMING_MUSIC
 			SDL_RWops *musicRw = SFileRw_FromStormHandle(sghMusic);
 #else
 			int bytestoread = SFileGetFileSize(sghMusic, 0);
 			musicBuffer = (char *)DiabloAllocPtr(bytestoread);
-			SFileReadFile(sghMusic, musicBuffer, bytestoread, NULL, 0);
+			SFileReadFile(sghMusic, musicBuffer, bytestoread, nullptr, 0);
 			SFileCloseFile(sghMusic);
-			sghMusic = NULL;
+			sghMusic = nullptr;
 
 			SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == nullptr)
 				ErrSdl();
 #endif
 			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, /*freesrc=*/1);
-			if (music == NULL) {
+			if (music == nullptr) {
 				SDL_Log("Mix_LoadMUSType_RW: %s", Mix_GetError());
 #ifndef DISABLE_STREAMING_MUSIC
 				SFileCloseFile(sghMusic);
-				sghMusic = NULL;
+				sghMusic = nullptr;
 #endif
 				sgnMusicTrack = NUM_MUSIC;
 #ifdef DISABLE_STREAMING_MUSIC
@@ -243,10 +243,10 @@ void music_start(uint8_t nTrack)
 			if (Mix_PlayMusic(music, -1) < 0) {
 				SDL_Log("Mix_PlayMusic: %s", Mix_GetError());
 				Mix_FreeMusic(music);
-				music = NULL;
+				music = nullptr;
 #ifndef DISABLE_STREAMING_MUSIC
 				SFileCloseFile(sghMusic);
-				sghMusic = NULL;
+				sghMusic = nullptr;
 #endif
 				sgnMusicTrack = NUM_MUSIC;
 #ifdef DISABLE_STREAMING_MUSIC

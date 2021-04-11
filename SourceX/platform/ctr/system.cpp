@@ -46,7 +46,7 @@ void ctr_lcd_backlight_off()
 bool ctr_check_dsp()
 {
 	FILE *dsp = fopen("sdmc:/3ds/dspfirm.cdc", "r");
-	if (dsp == NULL) {
+	if (dsp == nullptr) {
 		fclose(dsp);
 		gfxInitDefault();
 		errorConf error;
@@ -65,7 +65,7 @@ void ctr_sys_init()
 	if (ctr_check_dsp() == false)
 		exit(0);
 
-	aptHook(&cookie, aptHookFunc, NULL);
+	aptHook(&cookie, aptHookFunc, nullptr);
 
 	APT_CheckNew3DS(&isN3DS);
 	if (isN3DS)

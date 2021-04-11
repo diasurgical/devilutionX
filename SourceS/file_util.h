@@ -32,7 +32,7 @@ inline bool FileExists(const char *path)
 	return ::access(path, F_OK) == 0;
 #else
 	FILE *file = std::fopen(path, "rb");
-	if (file == NULL)
+	if (file == nullptr)
 		return false;
 	std::fclose(file);
 	return true;
@@ -43,7 +43,7 @@ inline bool GetFileSize(const char *path, std::uintmax_t *size)
 {
 #if defined(_WIN64) || defined(_WIN32)
 	WIN32_FILE_ATTRIBUTE_DATA attr;
-	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
+	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, nullptr, 0);
 	wchar_t *path_utf16 = new wchar_t[path_utf16_size];
 	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
 		delete[] path_utf16;
@@ -73,17 +73,17 @@ inline bool ResizeFile(const char *path, std::uintmax_t size)
 	if (lisize.QuadPart < 0) {
 		return false;
 	}
-	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
+	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, nullptr, 0);
 	wchar_t *path_utf16 = new wchar_t[path_utf16_size];
 	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
 		delete[] path_utf16;
 		return false;
 	}
-	HANDLE file = ::CreateFileW(path_utf16, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE file = ::CreateFileW(path_utf16, GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
 	delete[] path_utf16;
 	if (file == INVALID_HANDLE_VALUE) {
 		return false;
-	} else if (::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0 || ::SetEndOfFile(file) == 0) {
+	} else if (::SetFilePointerEx(file, lisize, nullptr, FILE_BEGIN) == 0 || ::SetEndOfFile(file) == 0) {
 		::CloseHandle(file);
 		return false;
 	}
@@ -104,7 +104,7 @@ inline void RemoveFile(const char *lpFileName)
 	if (f) {
 		fclose(f);
 		remove(name.c_str());
-		f = NULL;
+		f = nullptr;
 		SDL_Log("Removed file: %s", name.c_str());
 	} else {
 		SDL_Log("Failed to remove file: %s", name.c_str());

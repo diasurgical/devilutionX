@@ -90,12 +90,12 @@ public:
 
 	void Close()
 	{
-		s_ = NULL;
+		s_ = nullptr;
 	}
 
 	bool IsOpen() const
 	{
-		return s_ != NULL;
+		return s_ != nullptr;
 	}
 
 	bool seekg(std::streampos pos)
@@ -154,7 +154,7 @@ private:
 			std::string fmt_with_error = fmt;
 			fmt_with_error.append(": failed with \"%s\"");
 			const char *error_message = std::strerror(errno);
-			if (error_message == NULL)
+			if (error_message == nullptr)
 				error_message = "";
 			SDL_Log(fmt_with_error.c_str(), args..., error_message);
 #ifdef _DEBUG
@@ -238,9 +238,9 @@ struct Archive {
 		name.clear();
 		if (clear_tables) {
 			delete[] sgpHashTbl;
-			sgpHashTbl = NULL;
+			sgpHashTbl = nullptr;
 			delete[] sgpBlockTbl;
-			sgpBlockTbl = NULL;
+			sgpBlockTbl = nullptr;
 		}
 		return result;
 	}
@@ -402,7 +402,7 @@ void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
 	if (block_offset + block_size == cur_archive.size) {
 		cur_archive.size = block_offset;
 	} else {
-		block = mpqapi_new_block(NULL);
+		block = mpqapi_new_block(nullptr);
 		block->offset = block_offset;
 		block->sizealloc = block_size;
 		block->sizefile = 0;
@@ -656,7 +656,7 @@ bool OpenMPQ(const char *pszArchive, DWORD dwChar)
 	if (!cur_archive.Open(pszArchive)) {
 		return false;
 	}
-	if (cur_archive.sgpBlockTbl == NULL || cur_archive.sgpHashTbl == NULL) {
+	if (cur_archive.sgpBlockTbl == nullptr || cur_archive.sgpHashTbl == nullptr) {
 		if (!cur_archive.exists) {
 			InitDefaultMpqHeader(&cur_archive, &fhdr);
 		} else if (!ReadMPQHeader(&cur_archive, &fhdr)) {

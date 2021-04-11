@@ -28,7 +28,7 @@ enum packet_type : uint8_t {
 	// clang-format on
 };
 
-// Returns NULL for an invalid packet type.
+// Returns nullptr for an invalid packet type.
 const char *packet_type_to_string(uint8_t packet_type);
 
 typedef uint8_t plr_t;

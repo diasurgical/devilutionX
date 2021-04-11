@@ -52,7 +52,7 @@ void OutputToLogical(T *x, T *y)
 	if (!renderer)
 		return;
 	float scaleX;
-	SDL_RenderGetScale(renderer, &scaleX, NULL);
+	SDL_RenderGetScale(renderer, &scaleX, nullptr);
 	*x /= scaleX;
 	*y /= scaleX;
 
@@ -83,7 +83,7 @@ void LogicalToOutput(T *x, T *y)
 	*y += view.y;
 
 	float scaleX;
-	SDL_RenderGetScale(renderer, &scaleX, NULL);
+	SDL_RenderGetScale(renderer, &scaleX, nullptr);
 	*x *= scaleX;
 	*y *= scaleX;
 #else

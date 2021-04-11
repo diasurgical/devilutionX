@@ -18,7 +18,7 @@ TMenuItem sgSingleMenu[] = {
 	{ GMENU_ENABLED, "New Game",      &gamemenu_new_game   },
 	{ GMENU_ENABLED, "Load Game",     &gamemenu_load_game  },
 	{ GMENU_ENABLED, "Quit Game",     &gamemenu_quit_game  },
-	{ GMENU_ENABLED, NULL,            NULL }
+	{ GMENU_ENABLED, nullptr,         nullptr }
 	// clang-format on
 };
 /** Contains the game menu items of the multi player menu. */
@@ -29,20 +29,20 @@ TMenuItem sgMultiMenu[] = {
 	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
 	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
 	{ GMENU_ENABLED, "Quit Game",       &gamemenu_quit_game    },
-	{ GMENU_ENABLED, NULL,              NULL                   },
+	{ GMENU_ENABLED, nullptr,           nullptr                   },
 	// clang-format on
 };
 TMenuItem sgOptionsMenu[] = {
 	// clang-format off
 //	  dwFlags,                      pszStr,          fnMenu
-	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
-	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
+	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,         &gamemenu_music_volume  },
+	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,         &gamemenu_sound_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
-//	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
+//	{ GMENU_ENABLED               , nullptr,         &gamemenu_color_cycling },
 	{ GMENU_ENABLED | GMENU_SLIDER, "Speed",         &gamemenu_speed         },
-//	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_loadjog       },
+//	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,         &gamemenu_loadjog       },
 	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous      },
-	{ GMENU_ENABLED               , NULL,            NULL                    },
+	{ GMENU_ENABLED               , nullptr,         nullptr                    },
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
@@ -92,7 +92,7 @@ void gamemenu_on()
 
 void gamemenu_off()
 {
-	gmenu_set_items(NULL, NULL);
+	gmenu_set_items(nullptr, nullptr);
 }
 
 void gamemenu_handle_previous()
@@ -268,7 +268,7 @@ void gamemenu_options(bool bActivate)
 	gamemenu_get_gamma();
 	gamemenu_get_speed();
 	//gamemenu_get_color_cycling();
-	gmenu_set_items(sgOptionsMenu, NULL);
+	gmenu_set_items(sgOptionsMenu, nullptr);
 }
 
 void gamemenu_music_volume(bool bActivate)

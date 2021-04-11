@@ -734,7 +734,7 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 		*pfExitProgram = false;
 		SetRndSeed(0);
 		sgGameInitInfo.size = sizeof(sgGameInitInfo);
-		sgGameInitInfo.dwSeed = time(NULL);
+		sgGameInitInfo.dwSeed = time(nullptr);
 		sgGameInitInfo.programid = GAME_ID;
 		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;

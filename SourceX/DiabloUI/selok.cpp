@@ -61,7 +61,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	UiAddBackground(&vecSelOkDialog);
 	UiAddLogo(&vecSelOkDialog);
 
-	if (title != NULL) {
+	if (title != nullptr) {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
 		vecSelOkDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
@@ -78,7 +78,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	strncpy(dialogText, body, sizeof(dialogText) - 1);
 	WordWrapArtStr(dialogText, MESSAGE_WIDTH);
 
-	UiInitList(0, NULL, selok_Select, selok_Esc, vecSelOkDialog, false, NULL);
+	UiInitList(0, nullptr, selok_Select, selok_Esc, vecSelOkDialog, false, nullptr);
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {

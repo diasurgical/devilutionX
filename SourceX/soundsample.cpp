@@ -11,7 +11,7 @@ namespace devilution {
 void SoundSample::Release()
 {
 	Mix_FreeChunk(chunk);
-	chunk = NULL;
+	chunk = nullptr;
 };
 
 /**
@@ -19,7 +19,7 @@ void SoundSample::Release()
  */
 bool SoundSample::IsPlaying()
 {
-	if (chunk == NULL)
+	if (chunk == nullptr)
 		return false;
 
 	int channels = Mix_AllocateChannels(-1);
@@ -37,7 +37,7 @@ bool SoundSample::IsPlaying()
  */
 void SoundSample::Play(int lVolume, int lPan, int channel)
 {
-	if (chunk == NULL)
+	if (chunk == nullptr)
 		return;
 
 	channel = Mix_PlayChannel(channel, chunk, 0);
@@ -56,7 +56,7 @@ void SoundSample::Play(int lVolume, int lPan, int channel)
  */
 void SoundSample::Stop()
 {
-	if (chunk == NULL)
+	if (chunk == nullptr)
 		return;
 
 	int channels = Mix_AllocateChannels(-1);
@@ -72,7 +72,7 @@ void SoundSample::Stop()
 int SoundSample::SetChunkStream(HANDLE stormHandle)
 {
 	chunk = Mix_LoadWAV_RW(SFileRw_FromStormHandle(stormHandle), /*freesrc=*/1);
-	if (chunk == NULL) {
+	if (chunk == nullptr) {
 		SDL_Log("Mix_LoadWAV_RW: %s", Mix_GetError());
 		return -1;
 	}
@@ -88,12 +88,12 @@ int SoundSample::SetChunkStream(HANDLE stormHandle)
 int SoundSample::SetChunk(BYTE *fileData, DWORD dwBytes)
 {
 	SDL_RWops *buf1 = SDL_RWFromConstMem(fileData, dwBytes);
-	if (buf1 == NULL) {
+	if (buf1 == nullptr) {
 		return -1;
 	}
 
 	chunk = Mix_LoadWAV_RW(buf1, 1);
-	if (chunk == NULL) {
+	if (chunk == nullptr) {
 		return -1;
 	}
 
@@ -105,7 +105,7 @@ int SoundSample::SetChunk(BYTE *fileData, DWORD dwBytes)
  */
 int SoundSample::GetLength()
 {
-	if (chunk == NULL)
+	if (chunk == nullptr)
 		return 0;
 
 	int frequency, channels;

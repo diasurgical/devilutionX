@@ -31,7 +31,7 @@ public:
 private:
 	SDL_GameControllerButton ToSdlGameControllerButton(ControllerButton button) const;
 
-	SDL_GameController *sdl_game_controller_ = NULL;
+	SDL_GameController *sdl_game_controller_ = nullptr;
 	SDL_JoystickID instance_id_ = -1;
 
 	bool trigger_left_is_down_ = false;

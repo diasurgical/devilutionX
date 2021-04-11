@@ -191,7 +191,7 @@ bool SpawnWindow(const char *lpWindowName)
 
 	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 #endif
-	if (ghMainWnd == NULL) {
+	if (ghMainWnd == nullptr) {
 		ErrSdl();
 	}
 
@@ -214,12 +214,12 @@ bool SpawnWindow(const char *lpWindowName)
 		}
 
 		renderer = SDL_CreateRenderer(ghMainWnd, -1, rendererFlags);
-		if (renderer == NULL) {
+		if (renderer == nullptr) {
 			ErrSdl();
 		}
 
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
-		if (texture == NULL) {
+		if (texture == nullptr) {
 			ErrSdl();
 		}
 
@@ -242,7 +242,7 @@ bool SpawnWindow(const char *lpWindowName)
 		AdjustToScreenGeometry(width, height);
 	}
 
-	return ghMainWnd != NULL;
+	return ghMainWnd != nullptr;
 }
 
 SDL_Surface *GetOutputSurface()
@@ -288,10 +288,10 @@ SDL_Surface *CreateScaledSurface(SDL_Surface *src)
 	    src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask);
 	if (SDL_HasColorKey(src)) {
 		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
-		if (src->format->palette != NULL)
+		if (src->format->palette != nullptr)
 			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
 	}
-	if (SDL_SoftStretch((src), NULL, stretched, &stretched_rect) < 0) {
+	if (SDL_SoftStretch((src), nullptr, stretched, &stretched_rect) < 0) {
 		SDL_FreeSurface(stretched);
 		ErrSdl();
 	}

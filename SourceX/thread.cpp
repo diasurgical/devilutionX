@@ -9,7 +9,7 @@ static int SDLCALL thread_translate(void *ptr)
 {
 	unsigned int (*handler)(void *) = (unsigned int (*)(void *))ptr;
 
-	return handler(NULL);
+	return handler(nullptr);
 }
 
 SDL_Thread *CreateThread(unsigned int (*handler)(void *), SDL_threadID *ThreadID)
@@ -17,9 +17,9 @@ SDL_Thread *CreateThread(unsigned int (*handler)(void *), SDL_threadID *ThreadID
 #ifdef USE_SDL1
 	SDL_Thread *ret = SDL_CreateThread(thread_translate, (void *)handler);
 #else
-	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL, (void *)handler);
+	SDL_Thread *ret = SDL_CreateThread(thread_translate, nullptr, (void *)handler);
 #endif
-	if (ret == NULL) {
+	if (ret == nullptr) {
 		ErrSdl();
 	}
 	*ThreadID = SDL_GetThreadID(ret);
@@ -31,11 +31,11 @@ event_emul *StartEvent()
 	event_emul *ret;
 	ret = (event_emul *)malloc(sizeof(event_emul));
 	ret->mutex = SDL_CreateMutex();
-	if (ret->mutex == NULL) {
+	if (ret->mutex == nullptr) {
 		ErrSdl();
 	}
 	ret->cond = SDL_CreateCond();
-	if (ret->cond == NULL) {
+	if (ret->cond == nullptr) {
 		ErrSdl();
 	}
 	return ret;

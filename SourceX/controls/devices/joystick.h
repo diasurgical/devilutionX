@@ -38,7 +38,7 @@ private:
 	int ToSdlJoyButton(ControllerButton button) const;
 	bool IsHatButtonPressed(ControllerButton button) const;
 
-	SDL_Joystick *sdl_joystick_ = NULL;
+	SDL_Joystick *sdl_joystick_ = nullptr;
 	SDL_JoystickID instance_id_ = -1;
 };
 

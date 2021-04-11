@@ -212,7 +212,7 @@ public:
 		m_shadow_color = color2;
 
 		m_text = text;
-		m_render_cache = NULL;
+		m_render_cache = nullptr;
 	}
 
 	UiText(const char *text, SDL_Rect rect, int flags = 0)
@@ -227,7 +227,7 @@ public:
 		m_shadow_color = color2;
 
 		m_text = text;
-		m_render_cache = NULL;
+		m_render_cache = nullptr;
 	}
 
 	//private:
@@ -241,7 +241,7 @@ public:
 	virtual void FreeCache()
 	{
 		delete m_render_cache;
-		m_render_cache = NULL;
+		m_render_cache = nullptr;
 	}
 };
 
@@ -259,7 +259,7 @@ public:
 		m_text = text;
 		m_action = action;
 		m_pressed = false;
-		m_render_cache = NULL;
+		m_render_cache = nullptr;
 	}
 
 	enum FrameKey : uint8_t {
@@ -281,7 +281,7 @@ public:
 	virtual void FreeCache()
 	{
 		delete m_render_cache;
-		m_render_cache = NULL;
+		m_render_cache = nullptr;
 	}
 };
 

@@ -157,7 +157,7 @@ void GameController::Add(int joystick_index)
 	SDL_Log("Opening game controller for joystick at index %d", joystick_index);
 	GameController result;
 	result.sdl_game_controller_ = SDL_GameControllerOpen(joystick_index);
-	if (result.sdl_game_controller_ == NULL) {
+	if (result.sdl_game_controller_ == nullptr) {
 		SDL_Log(SDL_GetError());
 		SDL_ClearError();
 		return;
@@ -192,7 +192,7 @@ GameController *GameController::Get(SDL_JoystickID instance_id)
 		if (controller.instance_id_ == instance_id)
 			return &controller;
 	}
-	return NULL;
+	return nullptr;
 }
 
 GameController *GameController::Get(const SDL_Event &event)
@@ -204,7 +204,7 @@ GameController *GameController::Get(const SDL_Event &event)
 	case SDL_CONTROLLERBUTTONUP:
 		return Get(event.jball.which);
 	default:
-		return NULL;
+		return nullptr;
 	}
 }
 

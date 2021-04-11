@@ -236,9 +236,9 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	p = &plr[pnum];
 
 	plr_class c = p->_pClass;
-	if (c == PC_BARD && hfbard_mpq == NULL) {
+	if (c == PC_BARD && hfbard_mpq == nullptr) {
 		c = PC_ROGUE;
-	} else if (c == PC_BARBARIAN && hfbarb_mpq == NULL) {
+	} else if (c == PC_BARBARIAN && hfbarb_mpq == nullptr) {
 		c = PC_WARRIOR;
 	}
 
@@ -389,7 +389,7 @@ static DWORD GetPlrGFXSize(plr_class c, const char *szCel)
 			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[c], Type, Type, szCel);
 			if (SFileOpenFile(pszName, &hsFile)) {
 				assert(hsFile);
-				dwSize = SFileGetFileSize(hsFile, NULL);
+				dwSize = SFileGetFileSize(hsFile, nullptr);
 				SFileCloseFile(hsFile);
 				if (dwMaxSize <= dwSize) {
 					dwMaxSize = dwSize;

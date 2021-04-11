@@ -22,7 +22,7 @@ static void SFileRw_SetHandle(struct SDL_RWops *context, HANDLE handle)
 #ifndef USE_SDL1
 static Sint64 SFileRw_size(struct SDL_RWops *context)
 {
-	return SFileGetFileSize(SFileRw_GetHandle(context), NULL);
+	return SFileGetFileSize(SFileRw_GetHandle(context), nullptr);
 }
 #endif
 
@@ -60,7 +60,7 @@ static int SFileRw_read(struct SDL_RWops *context, void *ptr, int size, int maxn
 #endif
 {
 	DWORD num_read = 0;
-	if (!SFileReadFile(SFileRw_GetHandle(context), ptr, maxnum * size, &num_read, NULL)) {
+	if (!SFileReadFile(SFileRw_GetHandle(context), ptr, maxnum * size, &num_read, nullptr)) {
 		const DWORD err_code = SErrGetLastError();
 		if (err_code != DVL_ERROR_HANDLE_EOF) {
 			SDL_Log("SFileRw_read error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)err_code);
@@ -89,7 +89,7 @@ SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 
 	result->seek = &SFileRw_seek;
 	result->read = &SFileRw_read;
-	result->write = NULL;
+	result->write = nullptr;
 	result->close = &SFileRw_close;
 	SFileRw_SetHandle(result, handle);
 	return result;

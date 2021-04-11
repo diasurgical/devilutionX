@@ -560,7 +560,7 @@ void InitItemGFX()
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
 		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
-		itemanims[i] = LoadFileInMem(arglist, NULL);
+		itemanims[i] = LoadFileInMem(arglist, nullptr);
 	}
 	memset(UniqueItemFlag, 0, sizeof(UniqueItemFlag));
 }

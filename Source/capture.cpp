@@ -138,7 +138,7 @@ static std::ofstream *CaptureFile(std::string *dst_path)
 			return new std::ofstream(*dst_path, std::ios::binary | std::ios::trunc);
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -157,7 +157,7 @@ static void RedPalette()
 		gnScreenWidth,
 		gnScreenHeight,
 	};
-	BltFast(&SrcRect, NULL);
+	BltFast(&SrcRect, nullptr);
 	RenderPresent();
 }
 
@@ -172,7 +172,7 @@ void CaptureScreen()
 	bool success;
 
 	std::ofstream *out_stream = CaptureFile(&FileName);
-	if (out_stream == NULL)
+	if (out_stream == nullptr)
 		return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);

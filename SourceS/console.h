@@ -10,14 +10,14 @@ namespace devilution {
 
 void printInConsole(const char *fmt, ...)
 {
-	static HANDLE stderrHandle = NULL;
-	if (stderrHandle == NULL) {
+	static HANDLE stderrHandle = nullptr;
+	if (stderrHandle == nullptr) {
 		if (AttachConsole(ATTACH_PARENT_PROCESS)) {
 			stderrHandle = GetStdHandle(STD_ERROR_HANDLE);
 		}
 	}
 
-	if (stderrHandle == NULL)
+	if (stderrHandle == nullptr)
 		return;
 
 	char message[256];
@@ -26,7 +26,7 @@ void printInConsole(const char *fmt, ...)
 	vsprintf(message, fmt, ap);
 	va_end(ap);
 
-	WriteConsole(stderrHandle, message, strlen(message), NULL, NULL);
+	WriteConsole(stderrHandle, message, strlen(message), nullptr, nullptr);
 }
 
 } // namespace devilution

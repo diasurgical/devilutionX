@@ -1836,15 +1836,15 @@ static void DRLG_LoadL2SP()
 	setloadflag = false;
 
 	if (QuestStatus(Q_BLIND)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
 		pSetPiece[26] = 154;  // Close outer wall
 		pSetPiece[200] = 154; // Close outer wall
 		setloadflag = true;
 	} else if (QuestStatus(Q_BLOOD)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", nullptr);
 		setloadflag = true;
 	} else if (QuestStatus(Q_SCHAMB)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", nullptr);
 		setloadflag = true;
 	}
 }
@@ -1958,14 +1958,14 @@ static void AddHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 {
 	HALLNODE *p1, *p2;
 
-	if (pHallList == NULL) {
+	if (pHallList == nullptr) {
 		pHallList = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
 		pHallList->nHallx1 = nX1;
 		pHallList->nHally1 = nY1;
 		pHallList->nHallx2 = nX2;
 		pHallList->nHally2 = nY2;
 		pHallList->nHalldir = nHd;
-		pHallList->pNext = NULL;
+		pHallList->pNext = nullptr;
 	} else {
 		p1 = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
 		p1->nHallx1 = nX1;
@@ -1973,9 +1973,9 @@ static void AddHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 		p1->nHallx2 = nX2;
 		p1->nHally2 = nY2;
 		p1->nHalldir = nHd;
-		p1->pNext = NULL;
+		p1->pNext = nullptr;
 		p2 = pHallList;
-		while (p2->pNext != NULL) {
+		while (p2->pNext != nullptr) {
 			p2 = p2->pNext;
 		}
 		p2->pNext = p1;
@@ -2774,7 +2774,7 @@ static bool CreateDungeon()
 
 	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, ForceHW, ForceH, ForceW);
 
-	while (pHallList != NULL) {
+	while (pHallList != nullptr) {
 		GetHall(&nHx1, &nHy1, &nHx2, &nHy2, &nHd);
 		ConnectHall(nHx1, nHy1, nHx2, nHy2, nHd);
 	}
@@ -3307,7 +3307,7 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 
 	InitDungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -3391,7 +3391,7 @@ void LoadPreL2Dungeon(const char *sFileName, int vx, int vy)
 
 	InitDungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {

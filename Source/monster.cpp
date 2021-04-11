@@ -325,7 +325,7 @@ void InitMonsterGFX(int monst)
 		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && frames > 0) {
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
 
-			celBuf = LoadFileInMem(strBuff, NULL);
+			celBuf = LoadFileInMem(strBuff, nullptr);
 			Monsters[monst].Anims[anim].CMem = celBuf;
 
 			if (Monsters[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
@@ -357,7 +357,7 @@ void InitMonsterGFX(int monst)
 	Monsters[monst].MData = &monsterdata[mtype];
 
 	if (monsterdata[mtype].has_trans) {
-		Monsters[monst].trans_file = LoadFileInMem(monsterdata[mtype].TransFile, NULL);
+		Monsters[monst].trans_file = LoadFileInMem(monsterdata[mtype].TransFile, nullptr);
 		InitMonsterTRN(monst, monsterdata[mtype].has_special);
 		MemFreeDbg(Monsters[monst].trans_file);
 	}
@@ -580,7 +580,7 @@ void ClrAllMonsters()
 		Monst->_mdir = random_(89, 8);
 		Monst->_mxvel = 0;
 		Monst->_myvel = 0;
-		Monst->_mAnimData = NULL;
+		Monst->_mAnimData = nullptr;
 		Monst->_mAnimDelay = 0;
 		Monst->_mAnimCnt = 0;
 		Monst->_mAnimLen = 0;
@@ -938,27 +938,27 @@ void PlaceQuestMonsters()
 		}
 
 		if (QuestStatus(Q_LTBANNER)) {
-			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", NULL);
+			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(Q_BLOOD)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", NULL);
+			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(Q_BLIND)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", NULL);
+			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(Q_ANVIL)) {
-			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", NULL);
+			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", nullptr);
 			SetMapMonsters(setp, 2 * setpc_x + 2, 2 * setpc_y + 2);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(Q_WARLORD)) {
-			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
+			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_SCATTER);
@@ -976,7 +976,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_LAZURUS, 0, 0);
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
-			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", NULL);
+			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
@@ -1081,16 +1081,16 @@ void LoadDiabMonsts()
 {
 	BYTE *lpSetPiece;
 
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", NULL);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", nullptr);
 	SetMapMonsters(lpSetPiece, 2 * diabquad1x, 2 * diabquad1y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", NULL);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", nullptr);
 	SetMapMonsters(lpSetPiece, 2 * diabquad2x, 2 * diabquad2y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", NULL);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", nullptr);
 	SetMapMonsters(lpSetPiece, 2 * diabquad3x, 2 * diabquad3y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", NULL);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", nullptr);
 	SetMapMonsters(lpSetPiece, 2 * diabquad4x, 2 * diabquad4y);
 	mem_free_dbg(lpSetPiece);
 }
@@ -1745,7 +1745,7 @@ void SpawnLoot(int i, bool sendmsg)
 void M2MStartHit(int mid, int i, int dam)
 {
 	assurance((DWORD)mid < MAXMONSTERS, mid);
-	assurance(monster[mid].MType != NULL, mid);
+	assurance(monster[mid].MType != nullptr, mid);
 
 	if (i >= 0 && i < MAX_PLRS)
 		monster[mid].mWhoHit |= 1 << i;
@@ -1793,7 +1793,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 	assurance((DWORD)i < MAXMONSTERS, i);
 
 	Monst = &monster[i];
-	assurance(Monst->MType != NULL, i);
+	assurance(Monst->MType != nullptr, i);
 
 	if (pnum >= 0)
 		Monst->mWhoHit |= 1 << pnum;
@@ -1837,7 +1837,7 @@ void M2MStartKill(int i, int mid)
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance((DWORD)mid < MAXMONSTERS, mid);
-	assurance(monster[mid].MType != NULL, mid); /// BUGFIX: should check `mid` (fixed)
+	assurance(monster[mid].MType != nullptr, mid); /// BUGFIX: should check `mid` (fixed)
 
 	delta_kill_monster(mid, monster[mid]._mx, monster[mid]._my, currlevel);
 	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[mid]._mx, monster[mid]._my, mid);
@@ -1926,7 +1926,7 @@ void M_SyncStartKill(int i, int x, int y, int pnum)
 void M_StartFadein(int i, int md, bool backwards)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
-	assurance(monster[i].MType != NULL, i);
+	assurance(monster[i].MType != nullptr, i);
 
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_SPECIAL], md);
 	monster[i]._mmode = MM_FADEIN;
@@ -1947,8 +1947,8 @@ void M_StartFadein(int i, int md, bool backwards)
 void M_StartFadeout(int i, int md, bool backwards)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
-	assurance(monster[i].MType != NULL, i);
-	assurance(monster[i].MType != NULL, i);
+	assurance(monster[i].MType != nullptr, i);
+	assurance(monster[i].MType != nullptr, i);
 
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_SPECIAL], md);
 	monster[i]._mmode = MM_FADEOUT;
@@ -1970,7 +1970,7 @@ void M_StartHeal(int i)
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
-	assurance(monster[i].MType != NULL, i);
+	assurance(monster[i].MType != nullptr, i);
 
 	Monst = &monster[i];
 	Monst->_mAnimData = Monst->MType->Anims[MA_SPECIAL].Data[Monst->_mdir];
@@ -2014,7 +2014,7 @@ bool M_DoStand(int i)
 	MonsterStruct *Monst;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
+	commitment(monster[i].MType != nullptr, i);
 
 	Monst = &monster[i];
 	if (Monst->MType->mtype == MT_GOLEM)
@@ -2038,7 +2038,7 @@ bool M_DoWalk(int i, int variant)
 	bool returnValue;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
+	commitment(monster[i].MType != nullptr, i);
 
 	//Check if we reached new tile
 	if (monster[i]._mVar8 == monster[i].MType->Anims[MA_WALK].Frames) {
@@ -2088,7 +2088,7 @@ void M_TryM2MHit(int i, int mid, int hper, int mind, int maxd)
 	bool ret;
 
 	assurance((DWORD)mid < MAXMONSTERS, mid);
-	assurance(monster[mid].MType != NULL, mid);
+	assurance(monster[mid].MType != nullptr, mid);
 	if (monster[mid]._mhitpoints >> 6 > 0 && (monster[mid].MType->mtype != MT_ILLWEAV || monster[mid]._mgoal != MGOAL_RETREAT)) {
 		int hit = random_(4, 100);
 		if (monster[mid]._mmode == MM_STONE)
@@ -2125,7 +2125,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	int j, misnum, ms_num, cur_ms_num, new_hp, dir, ac;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
-	assurance(monster[i].MType != NULL, i);
+	assurance(monster[i].MType != nullptr, i);
 	if (monster[i]._mFlags & MFLAG_TARGETS_MONSTER) {
 		M_TryM2MHit(i, pnum, Hit, MinDam, MaxDam);
 		return;
@@ -2288,8 +2288,8 @@ bool M_DoAttack(int i)
 
 	commitment((DWORD)i < MAXMONSTERS, i);
 	Monst = &monster[i];
-	commitment(Monst->MType != NULL, i);
-	commitment(Monst->MData != NULL, i); // BUGFIX: should check MData (fixed)
+	commitment(Monst->MType != nullptr, i);
+	commitment(Monst->MData != nullptr, i); // BUGFIX: should check MData (fixed)
 
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum) {
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit, monster[i].mMinDamage, monster[i].mMaxDamage);
@@ -2319,8 +2319,8 @@ bool M_DoRAttack(int i)
 	int multimissiles, mi;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
-	commitment(monster[i].MData != NULL, i);
+	commitment(monster[i].MType != nullptr, i);
+	commitment(monster[i].MData != nullptr, i);
 
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum) {
 		if (monster[i]._mVar1 != -1) {
@@ -2356,8 +2356,8 @@ bool M_DoRAttack(int i)
 bool M_DoRSpAttack(int i)
 {
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
-	commitment(monster[i].MData != NULL, i); // BUGFIX: should check MData (fixed)
+	commitment(monster[i].MType != nullptr, i);
+	commitment(monster[i].MData != nullptr, i); // BUGFIX: should check MData (fixed)
 
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2 && monster[i]._mAnimCnt == 0) {
 		AddMissile(
@@ -2393,8 +2393,8 @@ bool M_DoRSpAttack(int i)
 bool M_DoSAttack(int i)
 {
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
-	commitment(monster[i].MData != NULL, i);
+	commitment(monster[i].MType != nullptr, i);
+	commitment(monster[i].MData != nullptr, i);
 
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2)
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit2, monster[i].mMinDamage2, monster[i].mMaxDamage2);
@@ -2585,7 +2585,7 @@ void M_Teleport(int i)
 bool M_DoGotHit(int i)
 {
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
+	commitment(monster[i].MType != nullptr, i);
 
 	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
 		M_StartStand(i, monster[i]._mdir);
@@ -2691,7 +2691,7 @@ bool M_DoDeath(int i)
 	int x, y;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
+	commitment(monster[i].MType != nullptr, i);
 
 	monster[i]._mVar1++;
 	if (monster[i].MType->mtype == MT_DIABLO) {
@@ -2729,7 +2729,7 @@ bool M_DoDeath(int i)
 bool M_DoSpStand(int i)
 {
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
+	commitment(monster[i].MType != nullptr, i);
 
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2)
 		PlayEffect(i, 3);
@@ -2747,7 +2747,7 @@ bool M_DoDelay(int i)
 	int oFrame;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
+	commitment(monster[i].MType != nullptr, i);
 
 	monster[i]._mAnimData = monster[i].MType->Anims[MA_STAND].Data[M_GetDir(i)];
 	if (monster[i]._mAi == AI_LAZURUS) {

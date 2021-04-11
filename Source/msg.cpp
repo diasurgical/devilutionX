@@ -32,7 +32,7 @@ static void msg_get_next_packet()
 	TMegaPkt *result;
 
 	sgpCurrPkt = (TMegaPkt *)DiabloAllocPtr(sizeof(TMegaPkt));
-	sgpCurrPkt->pNext = NULL;
+	sgpCurrPkt->pNext = nullptr;
 	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
 
 	result = (TMegaPkt *)&sgpMegaPkt;
@@ -56,7 +56,7 @@ static void msg_pre_packet()
 	int i;
 
 	i = -1;
-	for (TMegaPkt *pkt = sgpMegaPkt; pkt != NULL; pkt = pkt->pNext) {
+	for (TMegaPkt *pkt = sgpMegaPkt; pkt != nullptr; pkt = pkt->pNext) {
 		BYTE *data = pkt->data;
 		int spaceLeft = sizeof(pkt->data);
 		while (spaceLeft != pkt->dwSpaceLeft) {
@@ -448,7 +448,7 @@ void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 	if (!gbIsMultiplayer)
 		return;
 
-	assert(pSync != NULL);
+	assert(pSync != nullptr);
 	assert(bLevel < NUMLEVELS);
 	sgbDeltaChanged = true;
 
@@ -705,7 +705,7 @@ void DeltaLoadLevel()
 					M_ClearSquares(i);
 					if (monster[i]._mAi != AI_DIABLO) {
 						if (monster[i]._uniqtype == 0) {
-							assert(monster[i].MType != NULL);
+							assert(monster[i].MType != nullptr);
 							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, (direction)monster[i]._mdir);
 						} else {
 							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, (direction)monster[i]._mdir);

@@ -168,7 +168,7 @@ SDL_WarpMouseInWindow(SDL_Window *window, int x, int y)
 
 inline void SDL_DestroyRenderer(SDL_Renderer *renderer)
 {
-	if (renderer != NULL)
+	if (renderer != nullptr)
 		UNIMPLEMENTED();
 }
 
@@ -178,7 +178,7 @@ inline void SDL_DestroyRenderer(SDL_Renderer *renderer)
 
 inline void SDL_DestroyTexture(SDL_Texture *texture)
 {
-	if (texture != NULL)
+	if (texture != nullptr)
 		UNIMPLEMENTED();
 }
 
@@ -192,18 +192,18 @@ SDL_AllocPalette(int ncolors)
 	/* Input validation */
 	if (ncolors < 1) {
 		SDL_InvalidParamError("ncolors");
-		return NULL;
+		return nullptr;
 	}
 
 	palette = (SDL_Palette *)SDL_malloc(sizeof(*palette));
 	if (!palette) {
 		SDL_OutOfMemory();
-		return NULL;
+		return nullptr;
 	}
 	palette->colors = (SDL_Color *)SDL_malloc(ncolors * sizeof(*palette->colors));
 	if (!palette->colors) {
 		SDL_free(palette);
-		return NULL;
+		return nullptr;
 	}
 	palette->ncolors = ncolors;
 	SDL_memset(palette->colors, 0xFF, ncolors * sizeof(*palette->colors));
@@ -270,7 +270,7 @@ inline void SDLBackport_PixelformatToMask(int pixelformat, Uint32 *flags, Uint32
  */
 inline bool SDLBackport_PixelFormatFormatEq(const SDL_PixelFormat *a, const SDL_PixelFormat *b)
 {
-	return a->BitsPerPixel == b->BitsPerPixel && (a->palette != NULL) == (b->palette != NULL)
+	return a->BitsPerPixel == b->BitsPerPixel && (a->palette != nullptr) == (b->palette != nullptr)
 	    && a->Rmask == b->Rmask && a->Gmask == b->Gmask && a->Bmask == b->Bmask;
 }
 
@@ -279,7 +279,7 @@ inline bool SDLBackport_PixelFormatFormatEq(const SDL_PixelFormat *a, const SDL_
  */
 inline bool SDLBackport_IsPixelFormatIndexed(const SDL_PixelFormat *pf)
 {
-	return pf->BitsPerPixel == 8 && pf->palette != NULL;
+	return pf->BitsPerPixel == 8 && pf->palette != nullptr;
 }
 
 //= Surface creation
@@ -363,7 +363,7 @@ SDL_SoftStretch(SDL_Surface *src, const SDL_Rect *srcrect,
 	int pos, inc;
 	int dst_maxrow;
 	int src_row, dst_row;
-	Uint8 *srcp = NULL;
+	Uint8 *srcp = nullptr;
 	Uint8 *dstp;
 	SDL_Rect full_src;
 	SDL_Rect full_dst;
@@ -492,7 +492,7 @@ SDL_UpperBlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 
 	/* Make sure the surfaces aren't locked */
 	if (!src || !dst) {
-		SDL_SetError("SDL_UpperBlitScaled: passed a NULL surface");
+		SDL_SetError("SDL_UpperBlitScaled: passed a nullptr surface");
 		return -1;
 	}
 	if (src->locked || dst->locked) {
@@ -500,7 +500,7 @@ SDL_UpperBlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 		return -1;
 	}
 
-	if (NULL == srcrect) {
+	if (nullptr == srcrect) {
 		src_w = src->w;
 		src_h = src->h;
 	} else {
@@ -508,7 +508,7 @@ SDL_UpperBlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 		src_h = srcrect->h;
 	}
 
-	if (NULL == dstrect) {
+	if (nullptr == dstrect) {
 		dst_w = dst->w;
 		dst_h = dst->h;
 	} else {
@@ -524,7 +524,7 @@ SDL_UpperBlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 	scaling_w = (double)dst_w / src_w;
 	scaling_h = (double)dst_h / src_h;
 
-	if (NULL == dstrect) {
+	if (nullptr == dstrect) {
 		dst_x0 = 0;
 		dst_y0 = 0;
 		dst_x1 = dst_w - 1;
@@ -536,7 +536,7 @@ SDL_UpperBlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 		dst_y1 = dst_y0 + dst_h - 1;
 	}
 
-	if (NULL == srcrect) {
+	if (nullptr == srcrect) {
 		src_x0 = 0;
 		src_y0 = 0;
 		src_x1 = src_w - 1;
@@ -656,7 +656,7 @@ inline int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode *mode)
 		UNIMPLEMENTED();
 
 	const SDL_VideoInfo *info = SDL_GetVideoInfo();
-	if (info == NULL)
+	if (info == nullptr)
 		return 0;
 
 	switch (info->vfmt->BitsPerPixel) {
@@ -677,7 +677,7 @@ inline int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode *mode)
 	mode->w = info->current_w;
 	mode->h = info->current_h;
 	mode->refresh_rate = 0;
-	mode->driverdata = NULL;
+	mode->driverdata = nullptr;
 
 	return 0;
 }
@@ -689,13 +689,13 @@ inline char *
 readSymLink(const char *path)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
-	char *retval = NULL;
+	char *retval = nullptr;
 	ssize_t len = 64;
 	ssize_t rc = -1;
 
 	while (1) {
 		char *ptr = (char *)SDL_realloc(retval, (size_t)len);
-		if (ptr == NULL) {
+		if (ptr == nullptr) {
 			SDL_OutOfMemory();
 			break;
 		}
@@ -714,7 +714,7 @@ readSymLink(const char *path)
 	}
 
 	SDL_free(retval);
-	return NULL;
+	return nullptr;
 }
 #endif
 
@@ -722,17 +722,17 @@ inline char *SDL_GetBasePath()
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
 
-	char *retval = NULL;
+	char *retval = nullptr;
 
 #if defined(__FREEBSD__)
 	char fullpath[PATH_MAX];
 	size_t buflen = sizeof(fullpath);
 	const int mib[] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
-	if (sysctl(mib, SDL_arraysize(mib), fullpath, &buflen, NULL, 0) != -1) {
+	if (sysctl(mib, SDL_arraysize(mib), fullpath, &buflen, nullptr, 0) != -1) {
 		retval = SDL_strdup(fullpath);
 		if (!retval) {
 			SDL_OutOfMemory();
-			return NULL;
+			return nullptr;
 		}
 	}
 #endif
@@ -740,13 +740,13 @@ inline char *SDL_GetBasePath()
 	char **retvalargs;
 	size_t len;
 	const int mib[] = { CTL_KERN, KERN_PROC_ARGS, getpid(), KERN_PROC_ARGV };
-	if (sysctl(mib, 4, NULL, &len, NULL, 0) != -1) {
+	if (sysctl(mib, 4, nullptr, &len, nullptr, 0) != -1) {
 		retvalargs = SDL_malloc(len);
 		if (!retvalargs) {
 			SDL_OutOfMemory();
-			return NULL;
+			return nullptr;
 		}
-		sysctl(mib, 4, retvalargs, &len, NULL, 0);
+		sysctl(mib, 4, retvalargs, &len, nullptr, 0);
 		retval = SDL_malloc(PATH_MAX + 1);
 		if (retval)
 			realpath(retvalargs[0], retval);
@@ -756,11 +756,11 @@ inline char *SDL_GetBasePath()
 #endif
 #if defined(__SOLARIS__)
 	const char *path = getexecname();
-	if ((path != NULL) && (path[0] == '/')) { /* must be absolute path... */
+	if ((path != nullptr) && (path[0] == '/')) { /* must be absolute path... */
 		retval = SDL_strdup(path);
 		if (!retval) {
 			SDL_OutOfMemory();
-			return NULL;
+			return nullptr;
 		}
 	}
 #endif
@@ -779,10 +779,10 @@ inline char *SDL_GetBasePath()
 #elif defined(__NETBSD__)
 		retval = readSymLink("/proc/curproc/exe");
 #elif defined(__QNXNTO__)
-		retval = SDL_LoadFile("/proc/self/exefile", NULL);
+		retval = SDL_LoadFile("/proc/self/exefile", nullptr);
 #else
 		retval = readSymLink("/proc/self/exe"); /* linux. */
-		if (retval == NULL) {
+		if (retval == nullptr) {
 			/* older kernels don't have /proc/self ... try PID version... */
 			char path[64];
 			const int rc = (int)SDL_snprintf(path, sizeof(path),
@@ -798,20 +798,20 @@ inline char *SDL_GetBasePath()
 	/* If we had access to argv[0] here, we could check it for a path,
         or troll through $PATH looking for it, too. */
 
-	if (retval != NULL) { /* chop off filename. */
+	if (retval != nullptr) { /* chop off filename. */
 		char *ptr = SDL_strrchr(retval, '/');
-		if (ptr != NULL) {
+		if (ptr != nullptr) {
 			*(ptr + 1) = '\0';
 		} else { /* shouldn't happen, but just in case... */
 			SDL_free(retval);
-			retval = NULL;
+			retval = nullptr;
 		}
 	}
 
-	if (retval != NULL) {
+	if (retval != nullptr) {
 		/* try to shrink buffer... */
 		char *ptr = (char *)SDL_realloc(retval, strlen(retval) + 1);
-		if (ptr != NULL)
+		if (ptr != nullptr)
 			retval = ptr; /* oh well if it failed. */
 	}
 
@@ -830,8 +830,8 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
      */
 	const char *envr = SDL_getenv("XDG_DATA_HOME");
 	const char *append;
-	char *retval = NULL;
-	char *ptr = NULL;
+	char *retval = nullptr;
+	char *ptr = nullptr;
 	size_t len = 0;
 
 #if defined(__3DS__)
@@ -841,7 +841,7 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 
 	if (!app) {
 		SDL_InvalidParamError("app");
-		return NULL;
+		return nullptr;
 	}
 	if (!org) {
 		org = "";
@@ -853,7 +853,7 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 		if (!envr) {
 			/* we could take heroic measures with /etc/passwd, but oh well. */
 			SDL_SetError("neither XDG_DATA_HOME nor HOME environment is set");
-			return NULL;
+			return nullptr;
 		}
 #if defined(__unix__) || defined(__unix)
 		append = "/.local/share/";
@@ -872,7 +872,7 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 	retval = (char *)SDL_malloc(len);
 	if (!retval) {
 		SDL_OutOfMemory();
-		return NULL;
+		return nullptr;
 	}
 
 	if (*org) {
@@ -893,7 +893,7 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 	error:
 		SDL_SetError("Couldn't create directory '%s': '%s'", retval, strerror(errno));
 		SDL_free(retval);
-		return NULL;
+		return nullptr;
 	}
 
 	// Append trailing /
