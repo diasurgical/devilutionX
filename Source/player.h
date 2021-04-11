@@ -29,14 +29,14 @@ enum {
 	// clang-format on
 };
 
-enum class plr_class : uint8_t {
-	PC_WARRIOR,
-	PC_ROGUE,
-	PC_SORCERER,
-	PC_MONK,
-	PC_BARD,
-	PC_BARBARIAN,
-	NUM_CLASSES
+enum class HeroClass : uint8_t {
+	Warrior,
+	Rogue,
+	Sorcerer,
+	Monk,
+	Bard,
+	Barbarian,
+	ClassCount
 };
 
 enum attribute_id : uint8_t {
@@ -188,7 +188,7 @@ struct PlayerStruct {
 	Sint8 _pLightRad;
 	bool _pLvlChanging; // True when the player is transitioning between levels
 	char _pName[PLR_NAME_LEN];
-	plr_class _pClass;
+	HeroClass _pClass;
 	Sint32 _pStrength;
 	Sint32 _pBaseStr;
 	Sint32 _pMagic;
@@ -323,7 +323,7 @@ struct PlayerStruct {
 extern int myplr;
 extern PlayerStruct plr[MAX_PLRS];
 extern bool deathflag;
-extern int ToBlkTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
+extern int ToBlkTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
 
 void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
@@ -331,7 +331,7 @@ void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
 void SetPlrAnims(int pnum);
-void CreatePlayer(int pnum, plr_class c);
+void CreatePlayer(int pnum, HeroClass c);
 int CalcStatDiff(int pnum);
 #ifdef _DEBUG
 void NextPlrLevel(int pnum);
@@ -386,10 +386,10 @@ extern int plrxoff[9];
 extern int plryoff[9];
 extern int plrxoff2[9];
 extern int plryoff2[9];
-extern int StrengthTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
-extern int MagicTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
-extern int DexterityTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
-extern int VitalityTbl[static_cast<std::size_t>(plr_class::NUM_CLASSES)];
+extern int StrengthTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
+extern int MagicTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
+extern int DexterityTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
+extern int VitalityTbl[static_cast<std::size_t>(HeroClass::ClassCount)];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 
 }

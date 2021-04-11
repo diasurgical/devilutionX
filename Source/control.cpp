@@ -412,7 +412,7 @@ void DrawSpellList(CelOutputBuffer out)
 			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
 				pSpell = (spell_id)j;
 				pSplType = (spell_type)i;
-				if (plr[myplr]._pClass == plr_class::PC_MONK && j == SPL_SEARCH)
+				if (plr[myplr]._pClass == HeroClass::Monk && j == SPL_SEARCH)
 					pSplType = RSPLTYPE_SKILL;
 				DrawSpellCel(out, x, y, pSpellCels, c, SPLICONLENGTH);
 				switch (pSplType) {
@@ -831,17 +831,17 @@ void InitControlPan()
 	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
 	sbooktab = 0;
 	sbookflag = false;
-	if (plr[myplr]._pClass == plr_class::PC_WARRIOR) {
+	if (plr[myplr]._pClass == HeroClass::Warrior) {
 		SpellPages[0][0] = SPL_REPAIR;
-	} else if (plr[myplr]._pClass == plr_class::PC_ROGUE) {
+	} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 		SpellPages[0][0] = SPL_DISARM;
-	} else if (plr[myplr]._pClass == plr_class::PC_SORCERER) {
+	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 		SpellPages[0][0] = SPL_RECHARGE;
-	} else if (plr[myplr]._pClass == plr_class::PC_MONK) {
+	} else if (plr[myplr]._pClass == HeroClass::Monk) {
 		SpellPages[0][0] = SPL_SEARCH;
-	} else if (plr[myplr]._pClass == plr_class::PC_BARD) {
+	} else if (plr[myplr]._pClass == HeroClass::Bard) {
 		SpellPages[0][0] = SPL_IDENTIFY;
-	} else if (plr[myplr]._pClass == plr_class::PC_BARBARIAN) {
+	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 		SpellPages[0][0] = SPL_BLODBOIL;
 	}
 	pQLogCel = LoadFileInMem("Data\\Quest.CEL", NULL);
@@ -1443,7 +1443,7 @@ void DrawChr(CelOutputBuffer out)
 	mindam += plr[myplr]._pIBonusDam * mindam / 100;
 	mindam += plr[myplr]._pIBonusDamMod;
 	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW) {
-		if (plr[myplr]._pClass == plr_class::PC_ROGUE)
+		if (plr[myplr]._pClass == HeroClass::Rogue)
 			mindam += plr[myplr]._pDamageMod;
 		else
 			mindam += plr[myplr]._pDamageMod >> 1;
@@ -1454,7 +1454,7 @@ void DrawChr(CelOutputBuffer out)
 	maxdam += plr[myplr]._pIBonusDam * maxdam / 100;
 	maxdam += plr[myplr]._pIBonusDamMod;
 	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW) {
-		if (plr[myplr]._pClass == plr_class::PC_ROGUE)
+		if (plr[myplr]._pClass == HeroClass::Rogue)
 			maxdam += plr[myplr]._pDamageMod;
 		else
 			maxdam += plr[myplr]._pDamageMod >> 1;
@@ -1629,7 +1629,7 @@ void CheckChrBtns()
 	int x, y;
 
 	if (!chrbtnactive && plr[myplr]._pStatPts) {
-		plr_class pc = plr[myplr]._pClass;
+		HeroClass pc = plr[myplr]._pClass;
 		for (int i = ATTRIB_STR; i <= ATTRIB_VIT; i++) {
 			int max = plr[myplr].GetMaximumAttributeValue((attribute_id)i);
 			switch (i) {
@@ -1833,7 +1833,7 @@ static void PrintSBookStr(CelOutputBuffer out, int x, int y, bool cjustflag, con
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
 {
-	if ((plr[myplr]._pClass == plr_class::PC_MONK) && (ii == SPL_SEARCH))
+	if ((plr[myplr]._pClass == HeroClass::Monk) && (ii == SPL_SEARCH))
 		return RSPLTYPE_SKILL;
 	spell_type st = RSPLTYPE_SPELL;
 	if (plr[myplr]._pISpells & GetSpellBitmask(ii)) {
