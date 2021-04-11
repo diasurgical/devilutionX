@@ -4977,7 +4977,7 @@ void SpawnBoy(int lvl)
 			GetItemBonus(0, itype, lvl, 2 * lvl, true, true);
 
 			if (!gbIsHellfire) {
-				if (items[0]._iIvalue > 140000) {
+				if (items[0]._iIvalue > 90000) {
 					keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 					continue;
 				}
