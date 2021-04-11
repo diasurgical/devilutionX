@@ -4954,6 +4954,7 @@ void SpawnBoy(int lvl)
 	int itype;
 
 	int ivalue;
+	bool keepgoing = false;
 	int count = 0;
 
 	int strength = get_max_strength(plr[myplr]._pClass);
@@ -4978,6 +4979,7 @@ void SpawnBoy(int lvl)
 
 	if (boylevel < (lvl >> 1) || boyitem.isEmpty()) {
 		do {
+			keepgoing = false;
 			memset(&item[0], 0, sizeof(*item));
 			item[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(item[0]._iSeed);
@@ -4986,8 +4988,10 @@ void SpawnBoy(int lvl)
 			GetItemBonus(0, itype, lvl, 2 * lvl, TRUE, TRUE);
 
 			if (!gbIsHellfire) {
-				if (item[0]._iIvalue > 140000)
+				if (item[0]._iIvalue > 140000) {
+					keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 					continue;
+				}
 				break;
 			}
 
@@ -5063,12 +5067,12 @@ void SpawnBoy(int lvl)
 					break;
 				}
 			}
-		} while ((item[0]._iIvalue > 200000
+		} while (keepgoing || ((item[0]._iIvalue > 200000
 		             || item[0]._iMinStr > strength
 		             || item[0]._iMinMag > magic
 		             || item[0]._iMinDex > dexterity
 		             || item[0]._iIvalue < ivalue)
-		    && count < 250);
+		    && count < 250));
 		boyitem = item[0];
 		boyitem._iCreateInfo = lvl | CF_BOY;
 		boyitem._iIdentified = TRUE;
