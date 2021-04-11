@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.13) # CMP0083 NEW
 include(CMakeDependentOption)
 include(CMake/out_of_tree.cmake)
 include(CMake/genex.cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/sdl2)
 
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
@@ -558,10 +559,10 @@ foreach(target devilution ${BIN_TARGET} SourceS)
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
     target_link_libraries(${target} PRIVATE
-      SDL2::SDL2
-      SDL2::SDL2main
-      SDL2::SDL2_ttf
-      SDL2::SDL2_mixer)
+      SDL2::Core
+      SDL2::Main
+      SDL2::TTF
+      SDL2::Mixer)
   endif()
 
   if(SWITCH)
