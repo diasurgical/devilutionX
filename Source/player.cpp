@@ -2165,8 +2165,6 @@ bool PM_DoWalk(int pnum, int variant)
 		switch (variant) {
 		case PM_WALK:
 			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
-			if (leveltype != DTYPE_TOWN && pnum == myplr)
-				DoUnVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad); // fix for incorrect vision updating
 			plr[pnum]._px += plr[pnum]._pVar1;
 			plr[pnum]._py += plr[pnum]._pVar2;
 			dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
@@ -2176,8 +2174,6 @@ bool PM_DoWalk(int pnum, int variant)
 			break;
 		case PM_WALK3:
 			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
-			if (leveltype != DTYPE_TOWN && pnum == myplr)
-				DoUnVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad); // fix for incorrect vision updating
 			dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
 			plr[pnum]._px = plr[pnum]._pVar1;
 			plr[pnum]._py = plr[pnum]._pVar2;
