@@ -25,7 +25,7 @@ void nthread_ignore_mutex(bool bStart);
 bool nthread_has_500ms_passed();
 /**
  * @brief Calculates the progress in time to the next game tick
- * @return progress in percent (0.0f to 1.0f)
+ * @return Progress as a fraction (0.0f to 1.0f)
  */
 float nthread_GetProgressToNextGameTick();
 
