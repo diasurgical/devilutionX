@@ -9,14 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 #### Gameplay
 - Items with negative AC morphing in multiplayer (originally a Hellfire bug)
 - Gharbad not having to go out of vision before progressing his quest
-- Hellfire: Some monsters having lower then intended HP
-- Hellfire: Auric Amulet not taking effect in most senarios
-- Diablo: Grisworld and Wirt selling unusually expensive items
+- Hellfire: Some monsters having lower than intended HP
+- Hellfire: Auric Amulet not taking effect in most scenarios
+- Diablo: Griswold and Wirt selling unusually expensive items
 - Diablo: Gold not going directly to inventory
 #### Graphics / Audio
 - Windows: Glitchy audio
 #### Controls
-- Vita: Inability to edit hero name on creation screen
+- Vita: Inability to edit hero name on the creation screen
 #### Stability / Performance / System
 - Quest panel crashing the game for some quests
 - Windows: Some systems getting a sensor permission error
