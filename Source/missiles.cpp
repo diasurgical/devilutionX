@@ -1973,7 +1973,7 @@ void AddSearch(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 	missile[mi]._miVar8 = 0;
 	AutoMapShowItems = true;
 	int lvl = 2;
-	if (id > 0)
+	if (id >= 0)
 		lvl = plr[id]._pLevel * 2;
 	missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 	if (mienemy == TARGET_MONSTERS)
