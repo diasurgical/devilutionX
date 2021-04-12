@@ -24,6 +24,7 @@ bool sgbThreadIsRunning;
 DWORD gdwLargestMsgSize;
 DWORD gdwNormalMsgSize;
 int last_tick;
+float gfProgressToNextGameTick = 0.0f;
 
 /* data */
 static SDL_Thread *sghThread = NULL;
@@ -242,21 +243,23 @@ bool nthread_has_500ms_passed()
 	return ticksElapsed >= 0;
 }
 
-float nthread_GetProgressToNextGameTick()
+void nthread_UpdateProgressToNextGameTick()
 {
 	if (!gbRunGame || PauseMode || (!gbIsMultiplayer && gmenu_is_active())) // if game is not running or paused there is no next gametick in the near future
-		return 0.0f;
+		return;
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = last_tick - currentTickCount;
-	if (ticksElapsed <= 0)
-		return 1.0f; // game tick is due
+	if (ticksElapsed <= 0) {
+		gfProgressToNextGameTick = 1.0f; // game tick is due
+		return;
+	}
 	int ticksAdvanced = gnTickDelay - ticksElapsed;
-	float percent = (float)ticksAdvanced / (float)gnTickDelay;
-	if (percent > 1.0f)
-		return 1.0f;
-	if (percent < 0.0f)
-		return 0.0f;
-	return percent;
+	float fraction = (float)ticksAdvanced / (float)gnTickDelay;
+	if (fraction > 1.0f)
+		gfProgressToNextGameTick = 1.0f;
+	if (fraction < 0.0f)
+		gfProgressToNextGameTick = 0.0f;
+	gfProgressToNextGameTick = fraction;
 }
 
 } // namespace devilution

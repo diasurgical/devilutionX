@@ -14,6 +14,7 @@ extern DWORD gdwTurnsInTransit;
 extern uintptr_t glpMsgTbl[MAX_PLRS];
 extern DWORD gdwLargestMsgSize;
 extern DWORD gdwNormalMsgSize;
+extern float gfProgressToNextGameTick; // the progress as a fraction (0.0f to 1.0f) in time to the next game tick
 
 void nthread_terminate_game(const char *pszFcn);
 DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta);
@@ -27,6 +28,6 @@ bool nthread_has_500ms_passed();
  * @brief Calculates the progress in time to the next game tick
  * @return Progress as a fraction (0.0f to 1.0f)
  */
-float nthread_GetProgressToNextGameTick();
+void nthread_UpdateProgressToNextGameTick();
 
 }

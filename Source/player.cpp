@@ -3681,7 +3681,7 @@ Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct* pPlayer)
 	} else {
 		relevantAnimationLength = pPlayer->_pAnimLen;
 	}
-	float progressToNextGameTick = nthread_GetProgressToNextGameTick();
+	float progressToNextGameTick = gfProgressToNextGameTick;
 	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted; // we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
 	int animationMaxGameTickets = relevantAnimationLength;
 	if (pPlayer->_pAnimDelay > 1)
