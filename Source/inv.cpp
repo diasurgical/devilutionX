@@ -2140,7 +2140,7 @@ void InvGetItem(int pnum, int ii)
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
 	bool cursor_updated = false;
-	if (gbIsHellfire && plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
+	if (plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
 		cursor_updated = true;
 	CleanupItems(ii);
 	pcursitem = -1;
