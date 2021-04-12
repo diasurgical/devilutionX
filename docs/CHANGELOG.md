@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## DevilutionX 1.2.1
 ### Bugfixes
 #### Gameplay
-- Items with negative AC morphing in multiplayer (originally a Hellfire bug)
 - Gharbad not having to go out of vision before progressing his quest
-- Hellfire: Some monsters having lower than intended HP
-- Hellfire: Auric Amulet not taking effect in most scenarios
+- Diablo: Items with negative AC morphing in multiplayer
 - Diablo: Griswold and Wirt selling unusually expensive items
 - Diablo: Gold not going directly to inventory
+- Hellfire: Some monsters having lower than intended HP
+- Hellfire: Auric Amulet not taking effect in most scenarios
 #### Graphics / Audio
 - Windows: Glitchy audio
 #### Controls
@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Quest panel crashing the game for some quests
 - Windows: Some systems getting a sensor permission error
 - Windows: Stability issues and item morphing in Hellfire
+
+### Bugfixes for original Hellfire bugs
+#### Gameplay
+- Rage/Search/Lightningwall not factoring in the hero level for the first player
+- Sparkling Shrine dealing an incorrect amount of damage
+- Items with negative AC morphing in multiplayer
 
 ## DevilutionX 1.2.0
 ### Features
