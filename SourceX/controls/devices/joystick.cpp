@@ -225,7 +225,14 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 #endif
 #ifdef JOY_AXIS_LEFTY
 	case JOY_AXIS_LEFTY:
-		leftStickYUnscaled = -event.jaxis.value;
+		// Work around Nimbus that reports inverted Y. No known fix,
+		// AFAIK, and no SDL remapping.
+		// https://forums.libsdl.org/viewtopic.php?p=51409
+		if (nimbus_axis_hack_) {
+			leftStickYUnscaled = event.jaxis.value;
+		} else {
+			leftStickYUnscaled = -event.jaxis.value;
+		}
 		leftStickNeedsScaling = true;
 		break;
 #endif
@@ -263,6 +270,11 @@ void Joystick::Add(int device_index)
 #ifndef USE_SDL1
 	result.instance_id_ = SDL_JoystickInstanceID(result.sdl_joystick_);
 #endif
+	if (strstr(SDL_JoystickNameForIndex(device_index), "Nimbus") != NULL) {
+		SDL_Log("Applying Nimbus axis hack");
+		result.nimbus_axis_hack_ = true;
+	}
+
 	joysticks_->push_back(result);
 	sgbControllerActive = true;
 }
