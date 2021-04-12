@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## DevilutionX 1.2.1
+### Bugfixes
+#### Gameplay
+- Items with negative AC morphing in multiplayer (originally a Hellfire bug)
+- Gharbad not having to go out of vision before progressing his quest
+- Hellfire: Some monsters having lower then intended HP
+- Hellfire: Auric Amulet not taking effect in most senarios
+- Diablo: Grisworld and Wirt selling unusually expensive items
+- Diablo: Gold not going directly to inventory
+#### Graphics / Audio
+- Windows: Glitchy audio
+#### Controls
+- Vita: Inability to edit hero name on creation screen
+#### Stability / Performance / System
+- Quest panel crashing the game for some quests
+- Windows: Some systems getting a sensor permission error
+- Windows: Stability issues and item morphing in Hellfire
+
 ## DevilutionX 1.2.0
 ### Features
 #### Gameplay
