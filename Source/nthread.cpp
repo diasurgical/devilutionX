@@ -242,4 +242,21 @@ bool nthread_has_500ms_passed()
 	return ticksElapsed >= 0;
 }
 
+float nthread_GetProgressToNextGameTick()
+{
+	if (!gbRunGame || PauseMode || (!gbIsMultiplayer && gmenu_is_active())) // if game is not running or paused there is no next gametick in the near future
+		return 0.0f;
+	int currentTickCount = SDL_GetTicks();
+	int ticksElapsed = last_tick - currentTickCount;
+	if (ticksElapsed <= 0)
+		return 1.0f; // game tick is due
+	int ticksAdvanced = gnTickDelay - ticksElapsed;
+	float percent = (float)ticksAdvanced / (float)gnTickDelay;
+	if (percent > 1.0f)
+		return 1.0f;
+	if (percent < 0.0f)
+		return 0.0f;
+	return percent;
+}
+
 } // namespace devilution
