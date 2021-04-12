@@ -2016,7 +2016,7 @@ static DWORD On_MONSTDAMAGE(TCmd *pCmd, int pnum)
 			monster[p->wMon].mWhoHit |= 1 << pnum;
 			if (monster[p->wMon]._mhitpoints > 0) {
 				monster[p->wMon]._mhitpoints -= p->dwDam;
-				if ((monster[p->wMon]._mhitpoints >> 6) < 1)
+				if ((monster[p->wMon]._mhitpoints / 64) < 1)
 					monster[p->wMon]._mhitpoints = 1 << 6;
 				delta_monster_hp(p->wMon, monster[p->wMon]._mhitpoints, plr[pnum].plrlevel);
 			}
@@ -2045,7 +2045,7 @@ static DWORD On_PLRDAMAGE(TCmd *pCmd, int pnum)
 	TCmdDamage *p = (TCmdDamage *)pCmd;
 
 	if (p->bPlr == myplr && currlevel != 0 && gbBufferMsgs != 1) {
-		if (currlevel == plr[pnum].plrlevel && p->dwDam <= 192000 && plr[myplr]._pHitPoints >> 6 > 0) {
+		if (currlevel == plr[pnum].plrlevel && p->dwDam <= 192000 && plr[myplr]._pHitPoints / 64 > 0) {
 			drawhpflag = true;
 			plr[myplr]._pHitPoints -= p->dwDam;
 			plr[myplr]._pHPBase -= p->dwDam;
@@ -2053,7 +2053,7 @@ static DWORD On_PLRDAMAGE(TCmd *pCmd, int pnum)
 				plr[myplr]._pHitPoints = plr[myplr]._pMaxHP;
 				plr[myplr]._pHPBase = plr[myplr]._pMaxHPBase;
 			}
-			if (plr[myplr]._pHitPoints >> 6 <= 0) {
+			if (plr[myplr]._pHitPoints / 64 <= 0) {
 				SyncPlrKill(myplr, 1);
 			}
 		}
@@ -2225,7 +2225,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 			if (currlevel == plr[pnum].plrlevel) {
 				LoadPlrGFX(pnum, PFILE_STAND);
 				SyncInitPlr(pnum);
-				if ((plr[pnum]._pHitPoints >> 6) > 0)
+				if ((plr[pnum]._pHitPoints / 64) > 0)
 					StartStand(pnum, DIR_S);
 				else {
 					plr[pnum]._pgfxnum = 0;

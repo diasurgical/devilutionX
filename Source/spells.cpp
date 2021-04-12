@@ -46,10 +46,10 @@ int GetManaAmount(int id, spell_id sn)
 	if (plr[id]._pClass == HeroClass::Sorcerer) {
 		ma >>= 1;
 	} else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Monk || plr[id]._pClass == HeroClass::Bard) {
-		ma -= ma >> 2;
+		ma -= ma / 4;
 	}
 
-	if (spelldata[sn].sMinMana > ma >> 6) {
+	if (spelldata[sn].sMinMana > ma / 64) {
 		ma = spelldata[sn].sMinMana << 6;
 	}
 
@@ -308,7 +308,7 @@ void DoHealOther(int pnum, int rid)
 		NewCursor(CURSOR_HAND);
 	}
 
-	if ((char)rid != -1 && (plr[rid]._pHitPoints >> 6) > 0) {
+	if ((char)rid != -1 && (plr[rid]._pHitPoints / 64) > 0) {
 		hp = (random_(57, 10) + 1) << 6;
 
 		for (i = 0; i < plr[pnum]._pLevel; i++) {

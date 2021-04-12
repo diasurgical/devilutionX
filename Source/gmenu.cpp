@@ -144,7 +144,7 @@ static void gmenu_left_right(bool isRight)
 		return;
 
 	step = sgpCurrItem->dwFlags & 0xFFF;
-	steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) / 4096;
 	if (isRight) {
 		if (step == steps)
 			return;
@@ -216,7 +216,7 @@ static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
 		x = 16 + w / 2;
 		CelDrawTo(out, x + PANEL_LEFT, y - 10, optbar_cel, 1, 287);
 		step = pItem->dwFlags & 0xFFF;
-		nSteps = (pItem->dwFlags & 0xFFF000) >> 12;
+		nSteps = (pItem->dwFlags & 0xFFF000) / 4096;
 		if (nSteps < 2)
 			nSteps = 2;
 		pos = step * 256 / nSteps;
@@ -331,7 +331,7 @@ bool gmenu_on_mouse_move()
 	if (!mouseNavigation)
 		return false;
 	gmenu_get_mouse_slider(&step);
-	nSteps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	nSteps = (int)(sgpCurrItem->dwFlags & 0xFFF000) / 4096;
 	step *= nSteps;
 	step /= 256;
 
@@ -406,7 +406,7 @@ void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 	int nSteps;
 
 	assert(pItem);
-	nSteps = (int)(pItem->dwFlags & 0xFFF000) >> 12;
+	nSteps = (int)(pItem->dwFlags & 0xFFF000) / 4096;
 	if (nSteps < 2)
 		nSteps = 2;
 	pItem->dwFlags &= 0xFFFFF000;
@@ -421,7 +421,7 @@ int gmenu_slider_get(TMenuItem *pItem, int min, int max)
 	int nSteps, step;
 
 	step = pItem->dwFlags & 0xFFF;
-	nSteps = (int)(pItem->dwFlags & 0xFFF000) >> 12;
+	nSteps = (int)(pItem->dwFlags & 0xFFF000) / 4096;
 	if (nSteps < 2)
 		nSteps = 2;
 	return min + (step * (max - min) + (nSteps - 1) / 2) / nSteps;

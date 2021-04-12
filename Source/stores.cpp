@@ -91,7 +91,7 @@ void DrawSSlider(CelOutputBuffer out, int y1, int y2)
 	else
 		yd3 = stextsel;
 	if (storenumh > 1)
-		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
+		yd3 = 1000 * (stextsval + ((yd3 - stextup) / 4)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
 	CelDrawTo(out, PANEL_X + 601, (y1 + 1) * 12 + 44 + UI_OFFSET_Y + yd3, pSTextSlidCels, 13, 12);
@@ -944,7 +944,7 @@ void S_StartBBoy()
 		AddSText(20, 10, false, boyitem._iName, iclr, true);
 
 	if (gbIsHellfire)
-		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue >> 2));
+		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue / 4));
 	else
 		AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue / 2));
 	PrintStoreItem(&boyitem, 11, iclr);
@@ -1270,7 +1270,7 @@ void SmithBuyItem()
 	if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_NORMAL)
 		plr[myplr].HoldItem._iIdentified = false;
 	StoreAutoPlace();
-	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == SMITH_ITEMS - 1) {
 		smithitem[SMITH_ITEMS - 1]._itype = ITYPE_NONE;
 	} else {
@@ -1294,7 +1294,7 @@ void S_SBuyEnter()
 		stextlhold = stextsel;
 		stextvhold = stextsval;
 		stextshold = STORE_SBUY;
-		idx = stextsval + ((stextsel - stextup) >> 2);
+		idx = stextsval + ((stextsel - stextup) / 4);
 		if (plr[myplr]._pGold < smithitem[idx]._iIvalue) {
 			StartStore(STORE_NOMONEY);
 		} else {
@@ -1326,7 +1326,7 @@ void SmithBuyPItem()
 		plr[myplr].HoldItem._iIdentified = false;
 	StoreAutoPlace();
 
-	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	idx = stextvhold + ((stextlhold - stextup) / 4);
 	xx = 0;
 	for (i = 0; idx >= 0; i++) {
 		if (!premiumitem[i].isEmpty()) {
@@ -1352,7 +1352,7 @@ void S_SPBuyEnter()
 		stextshold = STORE_SPBUY;
 		stextlhold = stextsel;
 		stextvhold = stextsval;
-		xx = stextsval + ((stextsel - stextup) >> 2);
+		xx = stextsval + ((stextsel - stextup) / 4);
 		idx = 0;
 		for (i = 0; xx >= 0; i++) {
 			if (!premiumitem[i].isEmpty()) {
@@ -1450,7 +1450,7 @@ void StoreSellItem()
 {
 	int i, idx, cost;
 
-	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (storehidx[idx] >= 0)
 		RemoveInvItem(myplr, storehidx[idx]);
 	else
@@ -1496,7 +1496,7 @@ void S_SSellEnter()
 		stextsel = 16;
 	} else {
 		stextlhold = stextsel;
-		idx = stextsval + ((stextsel - stextup) >> 2);
+		idx = stextsval + ((stextsel - stextup) / 4);
 		stextshold = STORE_SSELL;
 		stextvhold = stextsval;
 		plr[myplr].HoldItem = storehold[idx];
@@ -1517,7 +1517,7 @@ void SmithRepairItem()
 
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
 
-	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iDurability = storehold[idx]._iMaxDur;
 
 	i = storehidx[idx];
@@ -1546,7 +1546,7 @@ void S_SRepairEnter()
 		stextshold = STORE_SREPAIR;
 		stextlhold = stextsel;
 		stextvhold = stextsval;
-		idx = stextsval + ((stextsel - stextup) >> 2);
+		idx = stextsval + ((stextsel - stextup) / 4);
 		plr[myplr].HoldItem = storehold[idx];
 		if (plr[myplr]._pGold < storehold[idx]._iIvalue)
 			StartStore(STORE_NOMONEY);
@@ -1588,7 +1588,7 @@ void WitchBuyItem()
 {
 	int idx;
 
-	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	idx = stextvhold + ((stextlhold - stextup) / 4);
 
 	if (idx < 3)
 		plr[myplr].HoldItem._iSeed = AdvanceRndSeed();
@@ -1622,7 +1622,7 @@ void S_WBuyEnter()
 		stextlhold = stextsel;
 		stextvhold = stextsval;
 		stextshold = STORE_WBUY;
-		idx = stextsval + ((stextsel - stextup) >> 2);
+		idx = stextsval + ((stextsel - stextup) / 4);
 
 		if (plr[myplr]._pGold < witchitem[idx]._iIvalue) {
 			StartStore(STORE_NOMONEY);
@@ -1653,7 +1653,7 @@ void S_WSellEnter()
 		stextsel = 16;
 	} else {
 		stextlhold = stextsel;
-		idx = stextsval + ((stextsel - stextup) >> 2);
+		idx = stextsval + ((stextsel - stextup) / 4);
 		stextshold = STORE_WSELL;
 		stextvhold = stextsval;
 		plr[myplr].HoldItem = storehold[idx];
@@ -1673,7 +1673,7 @@ void WitchRechargeItem()
 
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
 
-	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iCharges = storehold[idx]._iMaxCharges;
 
 	i = storehidx[idx];
@@ -1696,7 +1696,7 @@ void S_WRechargeEnter()
 		stextshold = STORE_WRECHARGE;
 		stextlhold = stextsel;
 		stextvhold = stextsval;
-		idx = stextsval + ((stextsel - stextup) >> 2);
+		idx = stextsval + ((stextsel - stextup) / 4);
 		plr[myplr].HoldItem = storehold[idx];
 		if (plr[myplr]._pGold < storehold[idx]._iIvalue)
 			StartStore(STORE_NOMONEY);
@@ -1746,7 +1746,7 @@ void HealerBuyItem()
 {
 	int idx;
 
-	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (!gbIsMultiplayer) {
 		if (idx < 2)
 			plr[myplr].HoldItem._iSeed = AdvanceRndSeed();
@@ -1767,7 +1767,7 @@ void HealerBuyItem()
 		if (idx < 3)
 			return;
 	}
-	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == 19) {
 		healitem[19]._itype = ITYPE_NONE;
 	} else {
@@ -1791,7 +1791,7 @@ void S_BBuyEnter()
 	stextlhold = 10;
 	int price = boyitem._iIvalue;
 	if (gbIsHellfire)
-		price -= boyitem._iIvalue >> 2;
+		price -= boyitem._iIvalue / 4;
 	else
 		price += boyitem._iIvalue / 2;
 
@@ -1822,7 +1822,7 @@ void StoryIdItem()
 {
 	int idx;
 
-	idx = storehidx[((stextlhold - stextup) >> 2) + stextvhold];
+	idx = storehidx[((stextlhold - stextup) / 4) + stextvhold];
 	if (idx < 0) {
 		if (idx == -1)
 			plr[myplr].InvBody[INVLOC_HEAD]._iIdentified = true;
@@ -1929,7 +1929,7 @@ void S_HBuyEnter()
 		stextlhold = stextsel;
 		stextvhold = stextsval;
 		stextshold = STORE_HBUY;
-		idx = stextsval + ((stextsel - stextup) >> 2);
+		idx = stextsval + ((stextsel - stextup) / 4);
 
 		if (plr[myplr]._pGold < healitem[idx]._iIvalue) {
 			StartStore(STORE_NOMONEY);
@@ -1982,7 +1982,7 @@ void S_SIDEnter()
 		stextshold = STORE_SIDENTIFY;
 		stextlhold = stextsel;
 		stextvhold = stextsval;
-		idx = stextsval + ((stextsel - stextup) >> 2);
+		idx = stextsval + ((stextsel - stextup) / 4);
 		plr[myplr].HoldItem = storehold[idx];
 		if (plr[myplr]._pGold < storehold[idx]._iIvalue)
 			StartStore(STORE_NOMONEY);

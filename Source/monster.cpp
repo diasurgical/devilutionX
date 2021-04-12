@@ -1308,7 +1308,7 @@ void M_Enemy(int i)
 	if (Monst->_mFlags & MFLAG_BERSERK || !(Monst->_mFlags & MFLAG_GOLEM)) {
 		for (pnum = 0; pnum < MAX_PLRS; pnum++) {
 			if (!plr[pnum].plractive || currlevel != plr[pnum].plrlevel || plr[pnum]._pLvlChanging
-			    || (((plr[pnum]._pHitPoints >> 6) == 0) && gbIsMultiplayer))
+			    || (((plr[pnum]._pHitPoints / 64) == 0) && gbIsMultiplayer))
 				continue;
 			sameroom = (dTransVal[Monst->_mx][Monst->_my] == dTransVal[plr[pnum]._px][plr[pnum]._py]);
 			dist = std::max(abs(Monst->_mx - plr[pnum]._px), abs(Monst->_my - plr[pnum]._py));
@@ -1328,7 +1328,7 @@ void M_Enemy(int i)
 		mi = monstactive[j];
 		if (mi == i)
 			continue;
-		if (!((monster[mi]._mhitpoints >> 6) > 0))
+		if (!((monster[mi]._mhitpoints / 64) > 0))
 			continue;
 		if (monster[mi]._mx == 1 && monster[mi]._my == 0)
 			continue;
@@ -1631,7 +1631,7 @@ void M_StartHit(int i, int pnum, int dam)
 		NetSendCmdMonDmg(false, i, dam);
 	}
 	PlayEffect(i, 1);
-	if ((monster[i].MType->mtype >= MT_SNEAK && monster[i].MType->mtype <= MT_ILLWEAV) || dam >> 6 >= monster[i].mLevel + 3) {
+	if ((monster[i].MType->mtype >= MT_SNEAK && monster[i].MType->mtype <= MT_ILLWEAV) || dam / 64 >= monster[i].mLevel + 3) {
 		if (pnum >= 0) {
 			monster[i]._menemy = pnum;
 			monster[i]._menemyx = plr[pnum]._pfutx;
@@ -1752,7 +1752,7 @@ void M2MStartHit(int mid, int i, int dam)
 	NetSendCmdMonDmg(false, mid, dam);
 	PlayEffect(mid, 1);
 
-	if ((monster[mid].MType->mtype >= MT_SNEAK && monster[mid].MType->mtype <= MT_ILLWEAV) || dam >> 6 >= monster[mid].mLevel + 3) {
+	if ((monster[mid].MType->mtype >= MT_SNEAK && monster[mid].MType->mtype <= MT_ILLWEAV) || dam / 64 >= monster[mid].mLevel + 3) {
 		if (i >= 0)
 			monster[mid]._mdir = (monster[i]._mdir - 4) & 7;
 
@@ -1994,7 +1994,7 @@ void M_ChangeLightOffset(int monst)
 		sign = 1;
 	}
 
-	_mxoff = sign * (lx >> 3);
+	_mxoff = sign * (lx / 8);
 	if (ly < 0) {
 		_myoff = -1;
 		ly = -ly;
@@ -2002,7 +2002,7 @@ void M_ChangeLightOffset(int monst)
 		_myoff = 1;
 	}
 
-	_myoff *= (ly >> 3);
+	_myoff *= (ly / 8);
 	if (monster[monst].mlid != NO_LIGHT)
 		ChangeLightOff(monster[monst].mlid, _mxoff, _myoff);
 }
@@ -2069,8 +2069,8 @@ bool M_DoWalk(int i, int variant)
 			monster[i]._mVar8++;
 			monster[i]._mVar6 += monster[i]._mxvel;
 			monster[i]._mVar7 += monster[i]._myvel;
-			monster[i]._mxoff = monster[i]._mVar6 >> 4;
-			monster[i]._myoff = monster[i]._mVar7 >> 4;
+			monster[i]._mxoff = monster[i]._mVar6 / 16;
+			monster[i]._myoff = monster[i]._mVar7 / 16;
 		}
 		returnValue = false;
 	}
@@ -2087,14 +2087,14 @@ void M_TryM2MHit(int i, int mid, int hper, int mind, int maxd)
 
 	assurance((DWORD)mid < MAXMONSTERS, mid);
 	assurance(monster[mid].MType != NULL, mid);
-	if (monster[mid]._mhitpoints >> 6 > 0 && (monster[mid].MType->mtype != MT_ILLWEAV || monster[mid]._mgoal != MGOAL_RETREAT)) {
+	if (monster[mid]._mhitpoints / 64 > 0 && (monster[mid].MType->mtype != MT_ILLWEAV || monster[mid]._mgoal != MGOAL_RETREAT)) {
 		int hit = random_(4, 100);
 		if (monster[mid]._mmode == MM_STONE)
 			hit = 0;
 		if (!CheckMonsterHit(mid, &ret) && hit < hper) {
 			int dam = (mind + random_(5, maxd - mind + 1)) << 6;
 			monster[mid]._mhitpoints -= dam;
-			if (monster[mid]._mhitpoints >> 6 <= 0) {
+			if (monster[mid]._mhitpoints / 64 <= 0) {
 				if (monster[mid]._mmode == MM_STONE) {
 					M2MStartKill(i, mid);
 					monster[mid]._mmode = MM_STONE;
@@ -2128,7 +2128,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		M_TryM2MHit(i, pnum, Hit, MinDam, MaxDam);
 		return;
 	}
-	if (plr[pnum]._pHitPoints >> 6 <= 0 || plr[pnum]._pInvincible || plr[pnum]._pSpellFlags & 1)
+	if (plr[pnum]._pHitPoints / 64 <= 0 || plr[pnum]._pInvincible || plr[pnum]._pSpellFlags & 1)
 		return;
 	dx = abs(monster[i]._mx - plr[pnum]._px);
 	dy = abs(monster[i]._my - plr[pnum]._py);
@@ -2187,7 +2187,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			dam -= mdam;
 			if (dam < 0)
 				dam = 0;
-			if (monster[i]._mhitpoints >> 6 <= 0)
+			if (monster[i]._mhitpoints / 64 <= 0)
 				M_StartKill(i, pnum);
 			else
 				M_StartHit(i, pnum, mdam);
@@ -2235,7 +2235,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			dam -= mdam;
 			if (dam < 0)
 				dam = 0;
-			if (monster[i]._mhitpoints >> 6 <= 0)
+			if (monster[i]._mhitpoints / 64 <= 0)
 				M_StartKill(i, pnum);
 			else
 				M_StartHit(i, pnum, mdam);
@@ -2246,7 +2246,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (plr[pnum]._pIFlags & ISPL_THORNS) {
 		mdam = (random_(99, 3) + 1) << 6;
 		monster[i]._mhitpoints -= mdam;
-		if (monster[i]._mhitpoints >> 6 <= 0)
+		if (monster[i]._mhitpoints / 64 <= 0)
 			M_StartKill(i, pnum);
 		else
 			M_StartHit(i, pnum, mdam);
@@ -2257,7 +2257,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
 		plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
 	}
-	if (plr[pnum]._pHitPoints >> 6 <= 0) {
+	if (plr[pnum]._pHitPoints / 64 <= 0) {
 		SyncPlrKill(pnum, 0);
 		if (gbIsHellfire)
 			M_StartStand(i, monster[i]._mdir);
@@ -2676,9 +2676,9 @@ void PrepDoEnding()
 		plr[i]._pmode = PM_QUIT;
 		plr[i]._pInvincible = true;
 		if (gbIsMultiplayer) {
-			if (plr[i]._pHitPoints >> 6 == 0)
+			if (plr[i]._pHitPoints / 64 == 0)
 				plr[i]._pHitPoints = 64;
-			if (plr[i]._pMana >> 6 == 0)
+			if (plr[i]._pMana / 64 == 0)
 				plr[i]._pMana = 64;
 		}
 	}
@@ -3713,7 +3713,7 @@ void MAI_Scav(int i)
 			if (!(Monst->_mFlags & MFLAG_NOHEAL)) {
 				if (gbIsHellfire) {
 					int mMaxHP = Monst->_mmaxhp; // BUGFIX use _mmaxhp or we loose health when difficulty isn't normal (fixed)
-					Monst->_mhitpoints += mMaxHP >> 3;
+					Monst->_mhitpoints += mMaxHP / 8;
 					if (Monst->_mhitpoints > Monst->_mmaxhp)
 						Monst->_mhitpoints = Monst->_mmaxhp;
 					if (Monst->_mgoalvar3 <= 0 || Monst->_mhitpoints == Monst->_mmaxhp)
@@ -3724,7 +3724,7 @@ void MAI_Scav(int i)
 			}
 			int targetHealth = Monst->_mmaxhp;
 			if (!gbIsHellfire)
-				targetHealth = (Monst->_mmaxhp / 2) + (Monst->_mmaxhp >> 2);
+				targetHealth = (Monst->_mmaxhp / 2) + (Monst->_mmaxhp / 4);
 			if (Monst->_mhitpoints >= targetHealth) {
 				Monst->_mgoal = MGOAL_NORMAL;
 				Monst->_mgoalvar1 = 0;
@@ -4671,7 +4671,7 @@ void ProcessMonsters()
 			SetRndSeed(Monst->_mAISeed);
 			Monst->_mAISeed = AdvanceRndSeed();
 		}
-		if (!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints >> 6 > 0) {
+		if (!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints / 64 > 0) {
 			if (Monst->mLevel > 1) {
 				Monst->_mhitpoints += Monst->mLevel / 2;
 			} else {
@@ -5146,7 +5146,7 @@ void M_FallenFear(int x, int y)
 		if (m->_mAi == AI_FALLEN
 		    && abs(x - m->_mx) < 5
 		    && abs(y - m->_my) < 5
-		    && m->_mhitpoints >> 6 > 0) {
+		    && m->_mhitpoints / 64 > 0) {
 			m->_mgoal = MGOAL_RETREAT;
 			m->_mgoalvar1 = rundist;
 			m->_mdir = GetDirection(x, y, m->_mx, m->_my);

@@ -583,7 +583,7 @@ bool TranslateMessage(const MSG *lpMsg)
 {
 	if (lpMsg->message == DVL_WM_KEYDOWN) {
 		int key = lpMsg->wParam;
-		unsigned mod = (DWORD)lpMsg->lParam >> 16;
+		unsigned mod = (DWORD)lpMsg->lParam / 65536;
 
 		bool shift = (mod & KMOD_SHIFT) != 0;
 		bool upper = shift != (mod & KMOD_CAPS);

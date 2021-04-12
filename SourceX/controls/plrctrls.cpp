@@ -180,7 +180,7 @@ bool CanTargetMonster(int mi)
 
 	if (monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM))
 		return false;
-	if (monst._mhitpoints >> 6 <= 0) // dead
+	if (monst._mhitpoints / 64 <= 0) // dead
 		return false;
 
 	const int mx = monst._mx;

@@ -1559,7 +1559,7 @@ void AddStoryBook(int i)
 		object[i]._oVar2 = StoryText[object[i]._oVar1][1];
 	else if (currlevel == 12)
 		object[i]._oVar2 = StoryText[object[i]._oVar1][2];
-	object[i]._oVar3 = (currlevel >> 2) + 3 * object[i]._oVar1 - 1;
+	object[i]._oVar3 = (currlevel / 4) + 3 * object[i]._oVar1 - 1;
 	object[i]._oAnimFrame = 5 - 2 * object[i]._oVar1;
 	object[i]._oVar4 = object[i]._oAnimFrame + 1;
 }
@@ -2119,7 +2119,7 @@ void Obj_BCrossDamage(int i)
 
 	plr[myplr]._pHitPoints -= damage[leveltype - 1];
 	plr[myplr]._pHPBase -= damage[leveltype - 1];
-	if (plr[myplr]._pHitPoints >> 6 <= 0) {
+	if (plr[myplr]._pHitPoints / 64 <= 0) {
 		SyncPlrKill(myplr, 0);
 	} else {
 		if (plr[myplr]._pClass == HeroClass::Warrior) {
@@ -3727,11 +3727,11 @@ bool OperateShrineFascinating(int pnum)
 	plr[pnum]._pMana -= t;
 	plr[pnum]._pMaxMana -= t;
 	plr[pnum]._pMaxManaBase -= t;
-	if (plr[pnum]._pMana >> 6 <= 0) {
+	if (plr[pnum]._pMana / 64 <= 0) {
 		plr[pnum]._pMana = v1;
 		plr[pnum]._pManaBase = 0;
 	}
-	if (plr[pnum]._pMaxMana >> 6 <= 0) {
+	if (plr[pnum]._pMaxMana / 64 <= 0) {
 		plr[pnum]._pMaxMana = v2;
 		plr[pnum]._pMaxManaBase = 0;
 	}
@@ -3905,11 +3905,11 @@ bool OperateShrineSacred(int pnum)
 	plr[pnum]._pMana -= t;
 	plr[pnum]._pMaxMana -= t;
 	plr[pnum]._pMaxManaBase -= t;
-	if (plr[pnum]._pMana >> 6 <= 0) {
+	if (plr[pnum]._pMana / 64 <= 0) {
 		plr[pnum]._pMana = v1;
 		plr[pnum]._pManaBase = 0;
 	}
-	if (plr[pnum]._pMaxMana >> 6 <= 0) {
+	if (plr[pnum]._pMaxMana / 64 <= 0) {
 		plr[pnum]._pMaxMana = v2;
 		plr[pnum]._pMaxManaBase = 0;
 	}
@@ -4057,11 +4057,11 @@ bool OperateShrineOrnate(int pnum)
 	plr[pnum]._pMana -= t;
 	plr[pnum]._pMaxMana -= t;
 	plr[pnum]._pMaxManaBase -= t;
-	if (plr[pnum]._pMana >> 6 <= 0) {
+	if (plr[pnum]._pMana / 64 <= 0) {
 		plr[pnum]._pMana = v1;
 		plr[pnum]._pManaBase = 0;
 	}
-	if (plr[pnum]._pMaxMana >> 6 <= 0) {
+	if (plr[pnum]._pMaxMana / 64 <= 0) {
 		plr[pnum]._pMaxMana = v2;
 		plr[pnum]._pMaxManaBase = 0;
 	}

@@ -948,7 +948,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		vadd <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {
 		vadd += vadd;
-		vadd += (vadd >> 2);
+		vadd += (vadd / 4);
 	} else if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard) {
 		vadd += vadd / 2;
 	}
@@ -969,7 +969,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	if (plr[p]._pHitPoints > plr[p]._pMaxHP)
 		plr[p]._pHitPoints = plr[p]._pMaxHP;
 
-	if (p == myplr && (plr[p]._pHitPoints >> 6) <= 0) {
+	if (p == myplr && (plr[p]._pHitPoints / 64) <= 0) {
 		SetPlayerHitPoints(p, 0);
 	}
 
@@ -1892,7 +1892,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 	else if (sgGameInitInfo.nDifficulty == DIFF_HELL)
 		rndv = 5 * (itemlevel + 32) + random_(21, 10 * (itemlevel + 32));
 	if (leveltype == DTYPE_HELL)
-		rndv += rndv >> 3;
+		rndv += rndv / 8;
 	if (rndv > GOLD_MAX_LIMIT)
 		rndv = GOLD_MAX_LIMIT;
 
@@ -2286,12 +2286,12 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		items[i]._iDamAcFlags |= 0x40;
 		break;
 	case IPL_MANATOLIFE:
-		r2 = ((plr[myplr]._pMaxManaBase >> 6) * 50 / 100);
+		r2 = ((plr[myplr]._pMaxManaBase / 64) * 50 / 100);
 		items[i]._iPLMana -= (r2 << 6);
 		items[i]._iPLHP += (r2 << 6);
 		break;
 	case IPL_LIFETOMANA:
-		r2 = ((plr[myplr]._pMaxHPBase >> 6) * 40 / 100);
+		r2 = ((plr[myplr]._pMaxHPBase / 64) * 40 / 100);
 		items[i]._iPLHP -= (r2 << 6);
 		items[i]._iPLMana += (r2 << 6);
 		break;
@@ -2714,7 +2714,7 @@ void SpawnUnique(_unique_items uid, int x, int y)
 void ItemRndDur(int ii)
 {
 	if (items[ii]._iDurability && items[ii]._iDurability != DUR_INDESTRUCTIBLE)
-		items[ii]._iDurability = random_(0, items[ii]._iMaxDur / 2) + (items[ii]._iMaxDur >> 2) + 1;
+		items[ii]._iDurability = random_(0, items[ii]._iMaxDur / 2) + (items[ii]._iMaxDur / 4) + 1;
 }
 
 void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
@@ -3794,11 +3794,11 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_LIFE:
 	case IPL_LIFE_CURSE:
-		sprintf(tempstr, "Hit Points: %+i", x->_iPLHP >> 6);
+		sprintf(tempstr, "Hit Points: %+i", x->_iPLHP / 64);
 		break;
 	case IPL_MANA:
 	case IPL_MANA_CURSE:
-		sprintf(tempstr, "Mana: %+i", x->_iPLMana >> 6);
+		sprintf(tempstr, "Mana: %+i", x->_iPLMana / 64);
 		break;
 	case IPL_DUR:
 		strcpy(tempstr, "high durability");
@@ -4220,7 +4220,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	switch (Mid) {
 	case IMISC_HEAL:
 	case IMISC_FOOD:
-		j = plr[p]._pMaxHP >> 8;
+		j = plr[p]._pMaxHP / 256;
 		l = ((j >> 1) + random_(39, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
 			l <<= 1;
@@ -4240,7 +4240,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		drawhpflag = true;
 		break;
 	case IMISC_MANA:
-		j = plr[p]._pMaxMana >> 8;
+		j = plr[p]._pMaxMana / 256;
 		l = ((j >> 1) + random_(40, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
 			l <<= 1;
@@ -4286,7 +4286,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		}
 		break;
 	case IMISC_REJUV:
-		j = plr[p]._pMaxHP >> 8;
+		j = plr[p]._pMaxHP / 256;
 		l = ((j / 2) + random_(39, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
 			l <<= 1;
@@ -4299,7 +4299,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		if (plr[p]._pHPBase > plr[p]._pMaxHPBase)
 			plr[p]._pHPBase = plr[p]._pMaxHPBase;
 		drawhpflag = true;
-		j = plr[p]._pMaxMana >> 8;
+		j = plr[p]._pMaxMana / 256;
 		l = ((j / 2) + random_(40, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
 			l <<= 1;
@@ -4641,7 +4641,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
 		SetRndSeed(items[0]._iSeed);
-		int itype = RndPremiumItem(plvl >> 2, plvl) - 1;
+		int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 		GetItemAttrs(0, itype, plvl);
 		GetItemBonus(0, itype, plvl / 2, plvl, true, !gbIsHellfire);
 
@@ -5198,7 +5198,7 @@ void RecreateSmithItem(int ii, int idx, int lvl, int iseed)
 void RecreatePremiumItem(int ii, int idx, int plvl, int iseed)
 {
 	SetRndSeed(iseed);
-	int itype = RndPremiumItem(plvl >> 2, plvl) - 1;
+	int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 	GetItemAttrs(ii, itype, plvl);
 	GetItemBonus(ii, itype, plvl / 2, plvl, true, !gbIsHellfire);
 

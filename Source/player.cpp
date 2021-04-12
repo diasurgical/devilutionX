@@ -242,7 +242,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 		c = HeroClass::Warrior;
 	}
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
+	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[p->_pgfxnum / 16], WepChar[p->_pgfxnum & 0xF]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	for (i = 1; i <= PFILE_NONDEATH; i <<= 1) {
@@ -344,7 +344,7 @@ void InitPlayerGFX(int pnum)
 		app_fatal("InitPlayerGFX: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pHitPoints >> 6 == 0) {
+	if (plr[pnum]._pHitPoints / 64 == 0) {
 		plr[pnum]._pgfxnum = 0;
 		LoadPlrGFX(pnum, PFILE_DEATH);
 	} else {
@@ -994,7 +994,7 @@ void InitPlayer(int pnum, bool FirstTime)
 
 		ClearPlrPVars(pnum);
 
-		if (plr[pnum]._pHitPoints >> 6 > 0) {
+		if (plr[pnum]._pHitPoints / 64 > 0) {
 			plr[pnum]._pmode = PM_STAND;
 			NewPlrAnim(pnum, plr[pnum]._pNAnim[DIR_S], plr[pnum]._pNFrames, 3, plr[pnum]._pNWidth);
 			plr[pnum]._pAnimFrame = random_(2, plr[pnum]._pNFrames - 1) + 1;
@@ -1259,8 +1259,8 @@ void PM_ChangeLightOff(int pnum)
 		ymul = 1;
 	}
 
-	x = (x >> 3) * xmul;
-	y = (y >> 3) * ymul;
+	x = (x / 8) * xmul;
+	y = (y / 8) * ymul;
 	lx = x + (l->_lx << 3);
 	ly = y + (l->_ly << 3);
 	offx = l->_xoff + (l->_lx << 3);
@@ -1292,11 +1292,11 @@ void PM_ChangeOffset(int pnum)
 		plr[pnum]._pVar7 += plr[pnum]._pyvel;
 	}
 
-	plr[pnum]._pxoff = plr[pnum]._pVar6 >> 8;
-	plr[pnum]._pyoff = plr[pnum]._pVar7 >> 8;
+	plr[pnum]._pxoff = plr[pnum]._pVar6 / 256;
+	plr[pnum]._pyoff = plr[pnum]._pVar7 / 256;
 
-	px -= plr[pnum]._pVar6 >> 8;
-	py -= plr[pnum]._pVar7 >> 8;
+	px -= plr[pnum]._pVar6 / 256;
+	py -= plr[pnum]._pVar7 / 256;
 
 	if (pnum == myplr && ScrollInfo._sdir) {
 		ScrollInfo._sxoff += px;
@@ -1642,10 +1642,10 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 
 	drawhpflag = true;
 	if (plr[pnum]._pClass == HeroClass::Barbarian) {
-		if (dam >> 6 < plr[pnum]._pLevel + plr[pnum]._pLevel / 4 && !forcehit) {
+		if (dam / 64 < plr[pnum]._pLevel + plr[pnum]._pLevel / 4 && !forcehit) {
 			return;
 		}
-	} else if (dam >> 6 < plr[pnum]._pLevel && !forcehit) {
+	} else if (dam / 64 < plr[pnum]._pLevel && !forcehit) {
 		return;
 	}
 
@@ -2363,7 +2363,7 @@ bool PlrHitMonst(int pnum, int m)
 		app_fatal("PlrHitMonst: illegal monster %d", m);
 	}
 
-	if ((monster[m]._mhitpoints >> 6) <= 0) {
+	if ((monster[m]._mhitpoints / 64) <= 0) {
 		return false;
 	}
 
@@ -2401,7 +2401,7 @@ bool PlrHitMonst(int pnum, int m)
 		if (_pIEnAc > 0)
 			tmac >>= _pIEnAc;
 		else
-			tmac -= tmac >> 2;
+			tmac -= tmac / 4;
 
 		if (plr[pnum]._pClass == HeroClass::Barbarian) {
 			tmac -= monster[m].mArmorClass / 8;
@@ -2519,7 +2519,7 @@ bool PlrHitMonst(int pnum, int m)
 		}
 
 		if (plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) {
-			skdam = random_(7, dam >> 3);
+			skdam = random_(7, dam / 8);
 			plr[pnum]._pHitPoints += skdam;
 			if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
 				plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
@@ -2572,7 +2572,7 @@ bool PlrHitMonst(int pnum, int m)
 			monster[m]._mhitpoints = 0; /* double check */
 		}
 #endif
-		if ((monster[m]._mhitpoints >> 6) <= 0) {
+		if ((monster[m]._mhitpoints / 64) <= 0) {
 			if (monster[m]._mmode == MM_STONE) {
 				M_StartKill(m, pnum);
 				monster[m]._mmode = MM_STONE;
@@ -2667,7 +2667,7 @@ bool PlrHitPlr(int pnum, char p)
 			}
 			skdam = dam << 6;
 			if (plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) {
-				tac = random_(7, skdam >> 3);
+				tac = random_(7, skdam / 8);
 				plr[pnum]._pHitPoints += tac;
 				if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
 					plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
@@ -3583,7 +3583,7 @@ void ProcessPlayers()
 		if (plr[pnum].plractive && currlevel == plr[pnum].plrlevel && (pnum == myplr || !plr[pnum]._pLvlChanging)) {
 			CheckCheatStats(pnum);
 
-			if (!PlrDeathModeOK(pnum) && (plr[pnum]._pHitPoints >> 6) <= 0) {
+			if (!PlrDeathModeOK(pnum) && (plr[pnum]._pHitPoints / 64) <= 0) {
 				SyncPlrKill(pnum, -1);
 			}
 
@@ -3591,7 +3591,7 @@ void ProcessPlayers()
 				if ((plr[pnum]._pIFlags & ISPL_DRAINLIFE) && currlevel != 0) {
 					plr[pnum]._pHitPoints -= 4;
 					plr[pnum]._pHPBase -= 4;
-					if ((plr[pnum]._pHitPoints >> 6) <= 0) {
+					if ((plr[pnum]._pHitPoints / 64) <= 0) {
 						SyncPlrKill(pnum, 0);
 					}
 					drawhpflag = true;
@@ -3737,7 +3737,7 @@ bool PosOkPlayer(int pnum, int x, int y)
 		if (dMonster[x][y] <= 0) {
 			return false;
 		}
-		if ((monster[dMonster[x][y] - 1]._mhitpoints >> 6) > 0) {
+		if ((monster[dMonster[x][y] - 1]._mhitpoints / 64) > 0) {
 			return false;
 		}
 	}

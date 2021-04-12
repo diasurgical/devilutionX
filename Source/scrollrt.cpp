@@ -23,7 +23,7 @@ DWORD sgdwCursHgt;
  * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
  *
  * frameNum  := block & 0x0FFF
- * frameType := block & 0x7000 >> 12
+ * frameType := block & 0x7000 / 4096
  */
 DWORD level_cel_block;
 int sgdwCursXOld;
@@ -748,7 +748,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	if (light_table_index < lightmax && bDead != 0) {
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
-			char dd = (bDead >> 5) & 7;
+			char dd = (bDead / 32) & 7;
 			int px = dx - pDeadGuy->_deadWidth2;
 			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != NULL);
