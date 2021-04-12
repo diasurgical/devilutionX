@@ -1655,7 +1655,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 
-	int skippedAnimationFrames; // GotHit can start with Frame 1. GotHit can for example be called in ProcessMonsters() and this is after ProcessPlayers().
+	int skippedAnimationFrames = 0; // GotHit can start with Frame 1. GotHit can for example be called in ProcessMonsters() and this is after ProcessPlayers().
 	const int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
 	if ((plr[pnum]._pIFlags & ZenFlags) == ZenFlags) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
 		skippedAnimationFrames = 4;
