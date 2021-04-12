@@ -571,7 +571,7 @@ void InitRndBarrels()
 				AddObject(o, xp, yp);
 				c++;
 			}
-			p = c >> 1;
+			p = c / 2;
 		}
 	}
 }
@@ -774,8 +774,8 @@ void LoadMapObjects(BYTE *pMap, int startx, int starty, int x1, int y1, int w, i
 	lm += 2;
 	rh = *lm;
 	mapoff = (rw * rh + 1) * 2;
-	rw <<= 1;
-	rh <<= 1;
+	rw *= 2;
+	rh *= 2;
 	mapoff += rw * 2 * rh * 2;
 	lm += mapoff;
 
@@ -808,8 +808,8 @@ void LoadMapObjs(BYTE *pMap, int startx, int starty)
 	lm += 2;
 	rh = *lm;
 	mapoff = (rw * rh + 1) * 2;
-	rw <<= 1;
-	rh <<= 1;
+	rw *= 2;
+	rh *= 2;
 	mapoff += 2 * rw * rh * 2;
 	lm += mapoff;
 
@@ -1221,8 +1221,8 @@ void SetMapObjects(BYTE *pMap, int startx, int starty)
 	lm += 2;
 	rh = *lm;
 	mapoff = (rw * rh + 1) * 2;
-	rw <<= 1;
-	rh <<= 1;
+	rw *= 2;
+	rh *= 2;
 	mapoff += 2 * rw * rh * 2;
 	lm += mapoff;
 	h = lm;
@@ -1601,7 +1601,7 @@ void AddStoryBook(int i)
 		object[i]._oVar2 = StoryText[object[i]._oVar1][1];
 	else if (currlevel == 12)
 		object[i]._oVar2 = StoryText[object[i]._oVar1][2];
-	object[i]._oVar3 = (currlevel >> 2) + 3 * object[i]._oVar1 - 1;
+	object[i]._oVar3 = (currlevel / 4) + 3 * object[i]._oVar1 - 1;
 	object[i]._oAnimFrame = 5 - 2 * object[i]._oVar1;
 	object[i]._oVar4 = object[i]._oAnimFrame + 1;
 }
@@ -1684,7 +1684,7 @@ void objects_44D8C5(_object_id ot, int v2, int ox, int oy)
 	dObject[ox][oy] = oi + 1;
 	SetupObject(oi, ox, oy, ot);
 	objects_44DA68(oi, v2);
-	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) >> 1;
+	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) / 2;
 	nobjects++;
 }
 
@@ -1904,7 +1904,7 @@ void AddObject(_object_id ot, int ox, int oy)
 	default:
 		break;
 	}
-	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) >> 1;
+	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) / 2;
 	nobjects++;
 }
 
@@ -3660,7 +3660,7 @@ bool OperateShrineEnchanted(int pnum)
 	for (int j = 0; j < maxSpells; j++) {
 		if (spell & spells)
 			cnt++;
-		spell <<= 1;
+		spell *= 2;
 	}
 	if (cnt > 1) {
 		spell = 1;
@@ -3669,7 +3669,7 @@ bool OperateShrineEnchanted(int pnum)
 				if (plr[pnum]._pSplLvl[j] < MAX_SPELL_LEVEL)
 					plr[pnum]._pSplLvl[j]++;
 			}
-			spell <<= 1;
+			spell *= 2;
 		}
 		int r;
 		do {

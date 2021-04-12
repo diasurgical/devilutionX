@@ -214,9 +214,9 @@ void SetFadeLevel(DWORD fadeval)
 	int i;
 
 	for (i = 0; i < 256; i++) { // BUGFIX: should be 256 (fixed)
-		system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
-		system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
-		system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;
+		system_palette[i].r = (fadeval * logical_palette[i].r) / 256;
+		system_palette[i].g = (fadeval * logical_palette[i].g) / 256;
+		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;
 	}
 	palette_update();
 }

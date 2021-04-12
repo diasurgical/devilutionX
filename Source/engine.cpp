@@ -194,14 +194,14 @@ void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 						src++;
 						dst++;
 					}
-					width >>= 1;
+					width /= 2;
 					if (width & 1) {
 						dst[0] = tbl[src[0]];
 						dst[1] = tbl[src[1]];
 						src += 2;
 						dst += 2;
 					}
-					width >>= 1;
+					width /= 2;
 					for (; width; width--) {
 						dst[0] = tbl[src[0]];
 						dst[1] = tbl[src[1]];
@@ -253,13 +253,13 @@ void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 							src++;
 							dst++;
 						L_EVEN:
-							width >>= 1;
+							width /= 2;
 							if (width & 1) {
 								dst[0] = tbl[src[0]];
 								src += 2;
 								dst += 2;
 							}
-							width >>= 1;
+							width /= 2;
 							for (; width; width--) {
 								dst[0] = tbl[src[0]];
 								dst[2] = tbl[src[2]];
@@ -275,13 +275,13 @@ void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 							src++;
 							dst++;
 						L_ODD:
-							width >>= 1;
+							width /= 2;
 							if (width & 1) {
 								dst[1] = tbl[src[1]];
 								src += 2;
 								dst += 2;
 							}
-							width >>= 1;
+							width /= 2;
 							for (; width; width--) {
 								dst[1] = tbl[src[1]];
 								dst[3] = tbl[src[3]];
@@ -336,14 +336,14 @@ static void CelBlitLightBlendedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE 
 						src++;
 						dst++;
 					}
-					width >>= 1;
+					width /= 2;
 					if (width & 1) {
 						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
 						dst[1] = paletteTransparencyLookup[dst[1]][tbl[src[1]]];
 						src += 2;
 						dst += 2;
 					}
-					width >>= 1;
+					width /= 2;
 					for (; width; width--) {
 						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
 						dst[1] = paletteTransparencyLookup[dst[1]][tbl[src[1]]];

@@ -1521,8 +1521,8 @@ static void L5makeDungeon()
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			j_2 = j << 1;
-			i_2 = i << 1;
+			j_2 = j * 2;
+			i_2 = i * 2;
 			L5dungeon[i_2][j_2] = dungeon[i][j];
 			L5dungeon[i_2][j_2 + 1] = dungeon[i][j];
 			L5dungeon[i_2 + 1][j_2] = dungeon[i][j];

@@ -641,7 +641,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		}
 
 		if (plr[p]._pClass == HeroClass::Monk) {
-			mind = std::max(mind, plr[p]._pLevel >> 1);
+			mind = std::max(mind, plr[p]._pLevel / 2);
 			maxd = std::max(maxd, (int)plr[p]._pLevel);
 		}
 	}
@@ -791,22 +791,22 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	plr[p]._pLghtResist = lr;
 
 	if (plr[p]._pClass == HeroClass::Warrior) {
-		vadd <<= 1;
+		vadd *= 2;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {
 		vadd += vadd;
-		vadd += (vadd >> 2);
+		vadd += (vadd / 4);
 	} else if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard) {
-		vadd += vadd >> 1;
+		vadd += vadd / 2;
 	}
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
-		madd <<= 1;
+		madd *= 2;
 	}
 	if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk) {
-		madd += madd >> 1;
+		madd += madd / 2;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
-		madd += (madd >> 2) + (madd >> 1);
+		madd += (madd / 4) + (madd / 2);
 	}
 	imana += (madd << 6);
 
@@ -898,18 +898,18 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 
 	if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (plr[p]._pClass == HeroClass::Monk && plr[p].InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-			plr[p]._pIAC += plr[p]._pLevel >> 1;
+			plr[p]._pIAC += plr[p]._pLevel / 2;
 		g += ANIM_ID_HEAVY_ARMOR;
 	} else if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (plr[p]._pClass == HeroClass::Monk) {
 			if (plr[p].InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-				plr[p]._pIAC += plr[p]._pLevel << 1;
+				plr[p]._pIAC += plr[p]._pLevel * 2;
 			else
-				plr[p]._pIAC += plr[p]._pLevel >> 1;
+				plr[p]._pIAC += plr[p]._pLevel / 2;
 		}
 		g += ANIM_ID_MEDIUM_ARMOR;
 	} else if (plr[p]._pClass == HeroClass::Monk) {
-		plr[p]._pIAC += plr[p]._pLevel << 1;
+		plr[p]._pIAC += plr[p]._pLevel * 2;
 	}
 
 	if (plr[p]._pgfxnum != g && Loadgfx) {
@@ -1608,10 +1608,10 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 	char istr[68];
 
 	if (!gbIsHellfire && random_(17, 4) == 0) {
-		GetItemPower(i, lvl >> 1, lvl, PLT_STAFF, onlygood);
+		GetItemPower(i, lvl / 2, lvl, PLT_STAFF, onlygood);
 	} else {
 		int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-		l = lvl >> 1;
+		l = lvl / 2;
 		if (l == 0)
 			l = 1;
 		rv = random_(18, maxSpells) + 1;
@@ -1735,7 +1735,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 		break;
 	}
 	if (leveltype == DTYPE_HELL)
-		rndv += rndv >> 3;
+		rndv += rndv / 8;
 	if (rndv > GOLD_MAX_LIMIT)
 		rndv = GOLD_MAX_LIMIT;
 
@@ -2453,7 +2453,7 @@ int RndTypeItems(int itype, int imid, int lvl)
 		okflag = true;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = false;
-		if (lvl << 1 < AllItemsList[i].iMinMLvl)
+		if (lvl * 2 < AllItemsList[i].iMinMLvl)
 			okflag = false;
 		if (AllItemsList[i].itype != itype)
 			okflag = false;
@@ -2557,7 +2557,7 @@ void SpawnUnique(_unique_items uid, int x, int y)
 void ItemRndDur(int ii)
 {
 	if (items[ii]._iDurability && items[ii]._iDurability != DUR_INDESTRUCTIBLE)
-		items[ii]._iDurability = random_(0, items[ii]._iMaxDur >> 1) + (items[ii]._iMaxDur >> 2) + 1;
+		items[ii]._iDurability = random_(0, items[ii]._iMaxDur / 2) + (items[ii]._iMaxDur / 4) + 1;
 }
 
 void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
@@ -2566,7 +2566,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 
 	items[ii]._iSeed = iseed;
 	SetRndSeed(iseed);
-	GetItemAttrs(ii, idx, lvl >> 1);
+	GetItemAttrs(ii, idx, lvl / 2);
 	items[ii]._iCreateInfo = lvl;
 
 	if (pregen)
@@ -2600,7 +2600,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 		if (iblvl != -1) {
 			_unique_items uid = CheckUnique(ii, iblvl, uper, recreate);
 			if (uid == UITEM_INVALID) {
-				GetItemBonus(ii, idx, iblvl >> 1, iblvl, onlygood, true);
+				GetItemBonus(ii, idx, iblvl / 2, iblvl, onlygood, true);
 			} else {
 				GetUniqueItem(ii, uid);
 			}
@@ -3090,7 +3090,7 @@ void ProcessItems()
 				if (items[ii]._iSelFlag == 2 && items[ii]._iAnimFrame == 21)
 					items[ii]._iAnimFrame = 11;
 			} else {
-				if (items[ii]._iAnimFrame == items[ii]._iAnimLen >> 1)
+				if (items[ii]._iAnimFrame == items[ii]._iAnimLen / 2)
 					PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii]._ix, items[ii]._iy);
 
 				if (items[ii]._iAnimFrame >= items[ii]._iAnimLen) {
@@ -3843,7 +3843,7 @@ void PrintUString(CelOutputBuffer out, int x, int y, bool cjustflag, const char 
 		for (i = 0; i < len; i++)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < 257)
-			k = (257 - width) >> 1;
+			k = (257 - width) / 2;
 		sx += k;
 	}
 
@@ -4066,9 +4066,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		j = plr[p]._pMaxHP >> 8;
 		l = ((j >> 1) + random_(39, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
-			l <<= 1;
+			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
-			l += l >> 1;
+			l += l / 2;
 		plr[p]._pHitPoints += l;
 		if (plr[p]._pHitPoints > plr[p]._pMaxHP)
 			plr[p]._pHitPoints = plr[p]._pMaxHP;
@@ -4086,9 +4086,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		j = plr[p]._pMaxMana >> 8;
 		l = ((j >> 1) + random_(40, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
-			l <<= 1;
+			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
-			l += l >> 1;
+			l += l / 2;
 		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
 			plr[p]._pMana += l;
 			if (plr[p]._pMana > plr[p]._pMaxMana)
@@ -4130,11 +4130,11 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		break;
 	case IMISC_REJUV:
 		j = plr[p]._pMaxHP >> 8;
-		l = ((j >> 1) + random_(39, j)) << 6;
+		l = ((j / 2) + random_(39, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
-			l <<= 1;
+			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue)
-			l += l >> 1;
+			l += l / 2;
 		plr[p]._pHitPoints += l;
 		if (plr[p]._pHitPoints > plr[p]._pMaxHP)
 			plr[p]._pHitPoints = plr[p]._pMaxHP;
@@ -4143,11 +4143,11 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			plr[p]._pHPBase = plr[p]._pMaxHPBase;
 		drawhpflag = true;
 		j = plr[p]._pMaxMana >> 8;
-		l = ((j >> 1) + random_(40, j)) << 6;
+		l = ((j / 2) + random_(40, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
-			l <<= 1;
+			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue)
-			l += l >> 1;
+			l += l / 2;
 		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
 			plr[p]._pMana += l;
 			if (plr[p]._pMana > plr[p]._pMaxMana)
@@ -4484,9 +4484,9 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
 		SetRndSeed(items[0]._iSeed);
-		int itype = RndPremiumItem(plvl >> 2, plvl) - 1;
+		int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 		GetItemAttrs(0, itype, plvl);
-		GetItemBonus(0, itype, plvl >> 1, plvl, true, !gbIsHellfire);
+		GetItemBonus(0, itype, plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
 			if (items[0]._iIvalue > 140000) {
@@ -4747,7 +4747,7 @@ void SpawnWitch(int lvl)
 			if (maxlvl == -1 && items[0]._iMiscId == IMISC_STAFF)
 				maxlvl = 2 * lvl;
 			if (maxlvl != -1)
-				GetItemBonus(0, idata, maxlvl >> 1, maxlvl, true, true);
+				GetItemBonus(0, idata, maxlvl / 2, maxlvl, true, true);
 		} while (items[0]._iIvalue > maxValue);
 		witchitem[i] = items[0];
 		witchitem[i]._iCreateInfo = lvl | CF_WITCH;
@@ -4798,7 +4798,7 @@ void SpawnBoy(int lvl)
 	dexterity *= 1.2;
 	magic *= 1.2;
 
-	if (boylevel < (lvl >> 1) || boyitem.isEmpty()) {
+	if (boylevel < (lvl / 2) || boyitem.isEmpty()) {
 		do {
 			keepgoing = false;
 			memset(&items[0], 0, sizeof(*items));
@@ -4894,7 +4894,7 @@ void SpawnBoy(int lvl)
 		boyitem._iCreateInfo = lvl | CF_BOY;
 		boyitem._iIdentified = true;
 		boyitem._iStatFlag = StoreStatOk(&boyitem);
-		boylevel = lvl >> 1;
+		boylevel = lvl / 2;
 	}
 }
 
@@ -5037,9 +5037,9 @@ void RecreateSmithItem(int ii, int idx, int lvl, int iseed)
 void RecreatePremiumItem(int ii, int idx, int plvl, int iseed)
 {
 	SetRndSeed(iseed);
-	int itype = RndPremiumItem(plvl >> 2, plvl) - 1;
+	int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 	GetItemAttrs(ii, itype, plvl);
-	GetItemBonus(ii, itype, plvl >> 1, plvl, true, !gbIsHellfire);
+	GetItemBonus(ii, itype, plvl / 2, plvl, true, !gbIsHellfire);
 
 	items[ii]._iSeed = iseed;
 	items[ii]._iCreateInfo = plvl | CF_SMITHPREMIUM;
@@ -5076,7 +5076,7 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 		if (iblvl == -1 && items[ii]._iMiscId == IMISC_STAFF)
 			iblvl = 2 * lvl;
 		if (iblvl != -1)
-			GetItemBonus(ii, itype, iblvl >> 1, iblvl, true, true);
+			GetItemBonus(ii, itype, iblvl / 2, iblvl, true, true);
 	}
 
 	items[ii]._iSeed = iseed;

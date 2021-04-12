@@ -519,8 +519,8 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool p
 			return;
 		int xx = object[bv]._ox - x;
 		int yy = object[bv]._oy - y;
-		sx = (xx << 5) + ox - object[bv]._oAnimWidth2 - (yy << 5);
-		sy = oy + (yy << 4) + (xx << 4);
+		sx = (xx * TILE_WIDTH / 2) + ox - object[bv]._oAnimWidth2 - (yy * TILE_WIDTH / 2);
+		sy = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
 	assert(bv >= 0 && bv < MAXOBJECTS);
@@ -563,7 +563,7 @@ static void drawCell(CelOutputBuffer out, int x, int y, int sx, int sy)
 	level_piece_id = dPiece[x][y];
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 	cel_foliage_active = !nSolidTable[level_piece_id];
-	for (int i = 0; i < (MicroTileLen >> 1); i++) {
+	for (int i = 0; i < (MicroTileLen / 2); i++) {
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
