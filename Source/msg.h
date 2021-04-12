@@ -107,7 +107,7 @@ typedef struct TCmdGItem {
 	Uint8 bMinStr;
 	Uint8 bMinMag;
 	Uint8 bMinDex;
-	Uint8 bAC;
+	Sint16 bAC;
 } TCmdGItem;
 
 typedef struct TCmdPItem {
@@ -129,7 +129,7 @@ typedef struct TCmdPItem {
 	Uint8 bMinStr;
 	Uint8 bMinMag;
 	Uint8 bMinDex;
-	Uint8 bAC;
+	Sint16 bAC;
 } TCmdPItem;
 
 typedef struct TCmdChItem {
