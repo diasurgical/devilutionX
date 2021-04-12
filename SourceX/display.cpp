@@ -301,15 +301,13 @@ SDL_Surface *CreateScaledSurface(SDL_Surface *src)
 } // namespace
 #endif // USE_SDL1
 
-void ScaleSurfaceToOutput(SDL_Surface **surface)
+SDLSurfaceUniquePtr ScaleSurfaceToOutput(SDLSurfaceUniquePtr surface)
 {
 #ifdef USE_SDL1
-	if (!OutputRequiresScaling())
-		return;
-	SDL_Surface *stretched = CreateScaledSurface(*surface);
-	SDL_FreeSurface((*surface));
-	*surface = stretched;
+	if (OutputRequiresScaling())
+		return SDLSurfaceUniquePtr { CreateScaledSurface(surface.get()) };
 #endif
+	return surface;
 }
 
 } // namespace devilution

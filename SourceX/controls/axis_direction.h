@@ -1,14 +1,16 @@
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-enum AxisDirectionX {
-	AxisDirectionX_NONE = 0,
+enum AxisDirectionX : uint8_t {
+	AxisDirectionX_NONE,
 	AxisDirectionX_LEFT,
 	AxisDirectionX_RIGHT
 };
-enum AxisDirectionY {
-	AxisDirectionY_NONE = 0,
+enum AxisDirectionY : uint8_t {
+	AxisDirectionY_NONE,
 	AxisDirectionY_UP,
 	AxisDirectionY_DOWN
 };
@@ -45,4 +47,4 @@ private:
 	int min_interval_ms_;
 };
 
-} // namespace dvl
+} // namespace devilution

@@ -14,12 +14,17 @@
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/text_draw.h"
 #include "display.h"
+#include "sdl_ptrs.h"
 #include "stubs.h"
 #include "utf8.h"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
 #include "platform/switch/keyboard.h"
+#endif
+#ifdef __vita__
+// for virtual keyboard on Vita
+#include "platform/vita/keyboard.h"
 #endif
 
 namespace devilution {
@@ -93,6 +98,8 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 			textInputActive = true;
 #ifdef __SWITCH__
 			switch_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
+#elif defined(__vita__)
+			vita_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #else
 			SDL_StartTextInput();
 #endif
@@ -209,6 +216,14 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 
+#ifdef __vita__
+void selhero_SetName(char *in_buf, char *out_buf, int cnt)
+{
+	std::string output = utf8_to_latin1(in_buf);
+	strncpy(out_buf, output.c_str(), cnt);
+}
+#endif
+
 bool HandleMenuAction(MenuAction menu_action)
 {
 	switch (menu_action) {
@@ -324,7 +339,11 @@ void UiFocusNavigation(SDL_Event *event)
 #ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			if (textInputActive) {
+#ifdef __vita__
+				selhero_SetName(event->text.text, UiTextInput, UiTextInputLen);
+#else
 				selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
+#endif
 			}
 			return;
 #endif
@@ -435,45 +454,43 @@ void LoadHeros()
 	LoadArt("ui_art\\heros.pcx", &ArtHero);
 
 	const int portraitHeight = 76;
-	int portraitOrder[NUM_CLASSES + 1] = { 0, 1, 2, 2, 1, 0, 3 };
+	int portraitOrder[enum_size<HeroClass>::value + 1] = { 0, 1, 2, 2, 1, 0, 3 };
 	if (ArtHero.h() >= portraitHeight * 6) {
-		portraitOrder[PC_MONK] = 3;
-		portraitOrder[PC_BARD] = 4;
-		portraitOrder[NUM_CLASSES] = 5;
+		portraitOrder[static_cast<std::size_t>(HeroClass::Monk)] = 3;
+		portraitOrder[static_cast<std::size_t>(HeroClass::Bard)] = 4;
+		portraitOrder[enum_size<HeroClass>::value] = 5;
 	}
 	if (ArtHero.h() >= portraitHeight * 7) {
-		portraitOrder[PC_BARBARIAN] = 6;
+		portraitOrder[static_cast<std::size_t>(HeroClass::Barbarian)] = 6;
 	}
 
-	SDL_Surface *heros = SDL_CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (NUM_CLASSES + 1), 8, SDL_PIXELFORMAT_INDEX8);
+	SDL_Surface *heros = SDL_CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (static_cast<int>(enum_size<HeroClass>::value) + 1), 8, SDL_PIXELFORMAT_INDEX8);
 
-	for (int i = 0; i <= NUM_CLASSES; i++) {
+	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
 		int offset = portraitOrder[i] * portraitHeight;
 		if (offset + portraitHeight > ArtHero.h()) {
 			offset = 0;
 		}
 		SDL_Rect src_rect = makeRect(0, offset, ArtHero.w(), portraitHeight);
 		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
-		SDL_BlitSurface(ArtHero.surface, &src_rect, heros, &dst_rect);
+		SDL_BlitSurface(ArtHero.surface.get(), &src_rect, heros, &dst_rect);
 	}
 
-	Art ArtPortrait;
-	for (int i = 0; i <= NUM_CLASSES; i++) {
+	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
+		Art portrait;
 		char portraitPath[18];
 		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
-		LoadArt(portraitPath, &ArtPortrait);
-		if (ArtPortrait.surface == nullptr)
+		LoadArt(portraitPath, &portrait);
+		if (portrait.surface == nullptr)
 			continue;
 
-		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, ArtPortrait.w(), portraitHeight);
-		SDL_BlitSurface(ArtPortrait.surface, nullptr, heros, &dst_rect);
-		ArtPortrait.Unload();
+		SDL_Rect dst_rect = makeRect(0, i * portraitHeight, portrait.w(), portraitHeight);
+		SDL_BlitSurface(portrait.surface.get(), nullptr, heros, &dst_rect);
 	}
 
-	ArtHero.Unload();
-	ArtHero.surface = heros;
+	ArtHero.surface = SDLSurfaceUniquePtr { heros };
 	ArtHero.frame_height = portraitHeight;
-	ArtHero.frames = NUM_CLASSES;
+	ArtHero.frames = static_cast<int>(enum_size<HeroClass>::value);
 }
 
 void LoadUiGFX()

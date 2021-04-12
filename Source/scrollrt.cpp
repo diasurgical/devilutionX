@@ -12,8 +12,8 @@ namespace devilution {
  */
 int light_table_index;
 DWORD sgdwCursWdtOld;
-DWORD sgdwCursX;
-DWORD sgdwCursY;
+int sgdwCursX;
+int sgdwCursY;
 /**
  * Lower bound of back buffer.
  */
@@ -26,8 +26,8 @@ DWORD sgdwCursHgt;
  * frameType := block & 0x7000 >> 12
  */
 DWORD level_cel_block;
-DWORD sgdwCursXOld;
-DWORD sgdwCursYOld;
+int sgdwCursXOld;
+int sgdwCursYOld;
 bool AutoMapShowItems;
 /**
  * Specifies the type of arches to render.
@@ -107,8 +107,7 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 
 static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
 {
-	const int h = std::min(sgdwCursY + 1, sgdwCursHgt);
-	for (int i = 0; i < h; ++i, src += src_pitch, dst += dst_pitch) {
+	for (int i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 }
@@ -179,6 +178,15 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	}
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
+
+	if (sgdwCursX < 0) {
+		sgdwCursWdt -= sgdwCursX;
+		sgdwCursX = 0;
+	}
+	if (sgdwCursY < 0) {
+		sgdwCursHgt -= sgdwCursY;
+		sgdwCursY = 0;
+	}
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
 
@@ -379,11 +387,17 @@ static void DrawManaShield(CelOutputBuffer out, int pnum, int x, int y, bool lig
  * @param nCel frame
  * @param nWidth width
  */
-static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
+static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py)
 {
 	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
+
+	PlayerStruct *pPlayer = &plr[pnum];
+
+	BYTE *pCelBuff = pPlayer->_pAnimData;
+	int nCel = GetFrameToUseForPlayerRendering(pPlayer);
+	int nWidth = pPlayer->_pAnimWidth;
 
 	if (pCelBuff == NULL) {
 		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
@@ -454,7 +468,7 @@ void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
 			px = sx + p->_pxoff - p->_pAnimWidth2;
 			py = sy + p->_pyoff;
-			DrawPlayer(out, i, x, y, px, py, p->_pAnimData, p->_pAnimFrame, p->_pAnimWidth);
+			DrawPlayer(out, i, x, y, px, py);
 		}
 	}
 }
@@ -689,7 +703,7 @@ static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
 	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
 	int py = sy + pPlayer->_pyoff;
 
-	DrawPlayer(out, p, x, y, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	DrawPlayer(out, p, x, y, px, py);
 }
 
 /**
@@ -1175,6 +1189,8 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 		columns++;
 		rows++;
 		break;
+	case SDIR_NONE:
+		break;
 	}
 
 	scrollrt_drawFloor(out, x, y, sx, sy, rows, columns);
@@ -1516,6 +1532,8 @@ void DrawAndBlit()
 
 	lock_buf(0);
 	CelOutputBuffer out = GlobalBackBuffer();
+
+	nthread_UpdateProgressToNextGameTick();
 
 	DrawView(out, ViewX, ViewY);
 	if (ctrlPan) {

@@ -142,8 +142,8 @@ void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDa
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < out.end() && dst > out.begin()) {
-					memcpy(dst, src, width);
+				if (dst < out.end() && dst >= out.begin()) {
+					memcpy(dst, src, std::min(static_cast<ptrdiff_t>(width), out.end() - dst));
 				}
 				src += width;
 				dst += width;

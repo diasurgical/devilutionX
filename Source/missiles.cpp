@@ -37,9 +37,9 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		break;
 	case SPL_HEAL: /// BUGFIX: healing calculation is unused
 		*mind = plr[myplr]._pLevel + sl + 1;
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARBARIAN) {
+		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*mind <<= 1;
-		} else if (plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*mind += *mind >> 1;
 		}
 		*maxd = 10;
@@ -49,9 +49,9 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		for (k = 0; k < sl; k++) {
 			*maxd += 6;
 		}
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARBARIAN) {
+		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*maxd <<= 1;
-		} else if (plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*maxd += *maxd >> 1;
 		}
 		*mind = -1;
@@ -187,10 +187,10 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		break;
 	case SPL_HEALOTHER: /// BUGFIX: healing calculation is unused
 		*mind = plr[myplr]._pLevel + sl + 1;
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARBARIAN) {
+		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*mind <<= 1;
 		}
-		if (plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_BARD) {
+		if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*mind += *mind >> 1;
 		}
 		*maxd = 10;
@@ -200,10 +200,10 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		for (k = 0; k < sl; k++) {
 			*maxd += 6;
 		}
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARBARIAN) {
+		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*maxd <<= 1;
 		}
-		if (plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_BARD) {
+		if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*maxd += *maxd >> 1;
 		}
 		*mind = -1;
@@ -256,7 +256,7 @@ int FindClosest(int sx, int sy, int rad)
 	return -1;
 }
 
-int GetSpellLevel(int id, int sn)
+int GetSpellLevel(int id, spell_id sn)
 {
 	int result;
 
@@ -547,9 +547,9 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 
 	missile_resistance mir = missiledata[t].mResist;
 	mor = monster[m].mMagicRes;
-	if (mor & IMMUNE_MAGIC && mir == MISR_MAGIC
-	    || mor & IMMUNE_FIRE && mir == MISR_FIRE
-	    || mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING) {
+	if ((mor & IMMUNE_MAGIC && mir == MISR_MAGIC)
+	    || (mor & IMMUNE_FIRE && mir == MISR_FIRE)
+	    || (mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING)) {
 		return false;
 	}
 
@@ -617,7 +617,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	resist = false;
 	if (monster[m].mtalkmsg
 	    || monster[m]._mhitpoints >> 6 <= 0
-	    || t == MIS_HBOLT && monster[m].MType->mtype != MT_DIABLO && monster[m].MData->mMonstClass != MC_UNDEAD) {
+	    || (t == MIS_HBOLT && monster[m].MType->mtype != MT_DIABLO && monster[m].MData->mMonstClass != MC_UNDEAD)) {
 		return false;
 	}
 	if (monster[m].MType->mtype == MT_ILLWEAV && monster[m]._mgoal == MGOAL_RETREAT)
@@ -628,15 +628,15 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	mor = monster[m].mMagicRes;
 	missile_resistance mir = missiledata[t].mResist;
 
-	if (mor & IMMUNE_MAGIC && mir == MISR_MAGIC
-	    || mor & IMMUNE_FIRE && mir == MISR_FIRE
-	    || mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING
-	    || (mor & IMMUNE_ACID) && mir == MISR_ACID)
+	if ((mor & IMMUNE_MAGIC && mir == MISR_MAGIC)
+	    || (mor & IMMUNE_FIRE && mir == MISR_FIRE)
+	    || (mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING)
+	    || (mor & IMMUNE_ACID && mir == MISR_ACID))
 		return false;
 
-	if (mor & RESIST_MAGIC && mir == MISR_MAGIC
-	    || mor & RESIST_FIRE && mir == MISR_FIRE
-	    || mor & RESIST_LIGHTNING && mir == MISR_LIGHTNING)
+	if ((mor & RESIST_MAGIC && mir == MISR_MAGIC)
+	    || (mor & RESIST_FIRE && mir == MISR_FIRE)
+	    || (mor & RESIST_LIGHTNING && mir == MISR_LIGHTNING))
 		resist = true;
 
 	if (gbIsHellfire && t == MIS_HBOLT && (monster[m].MType->mtype == MT_DIABLO || monster[m].MType->mtype == MT_BONEDEMN))
@@ -652,15 +652,15 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 			hper -= (dist * dist) >> 1;
 			hper += plr[pnum]._pIEnAc;
 			hper += 50;
-			if (plr[pnum]._pClass == PC_ROGUE)
+			if (plr[pnum]._pClass == HeroClass::Rogue)
 				hper += 20;
-			if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARD)
+			if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Bard)
 				hper += 10;
 		} else {
 			hper = plr[pnum]._pMagic - (monster[m].mLevel << 1) - dist + 50;
-			if (plr[pnum]._pClass == PC_SORCERER)
+			if (plr[pnum]._pClass == HeroClass::Sorcerer)
 				hper += 20;
-			else if (plr[pnum]._pClass == PC_BARD)
+			else if (plr[pnum]._pClass == HeroClass::Bard)
 				hper += 10;
 		}
 	} else {
@@ -687,7 +687,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 		}
 		if (missiledata[t].mType == 0) {
 			dam = plr[pnum]._pIBonusDamMod + dam * plr[pnum]._pIBonusDam / 100 + dam;
-			if (plr[pnum]._pClass == PC_ROGUE)
+			if (plr[pnum]._pClass == HeroClass::Rogue)
 				dam += plr[pnum]._pDamageMod;
 			else
 				dam += (plr[pnum]._pDamageMod >> 1);
@@ -868,17 +868,17 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 			if (plr[pnum]._pHitPoints >> 6 <= 0) {
 				SyncPlrKill(pnum, earflag);
 			} else {
-				if (plr[pnum]._pClass == PC_WARRIOR) {
+				if (plr[pnum]._pClass == HeroClass::Warrior) {
 					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == PC_ROGUE) {
+				} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == PC_SORCERER) {
+				} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 					PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == PC_MONK) {
+				} else if (plr[pnum]._pClass == HeroClass::Monk) {
 					PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == PC_BARD) {
+				} else if (plr[pnum]._pClass == HeroClass::Bard) {
 					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+				} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 				}
 				drawhpflag = true;
@@ -907,7 +907,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 {
 	int dam, blk, blkper, hper, hit, resper;
 
-	if (!gbFriendlyFire && gbFriendlyMode)
+	if (!sgGameInitInfo.bFriendlyFire && gbFriendlyMode)
 		return false;
 
 	*blocked = false;
@@ -948,18 +948,18 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		    - plr[p]._pIBonusAC
 		    - plr[p]._pIAC
 		    + plr[pnum]._pDexterity + 50;
-		if (plr[pnum]._pClass == PC_ROGUE)
+		if (plr[pnum]._pClass == HeroClass::Rogue)
 			hit += 20;
-		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARD)
+		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Bard)
 			hit += 10;
 	} else {
 		hit = plr[pnum]._pMagic
 		    - (plr[p]._pLevel << 1)
 		    - dist
 		    + 50;
-		if (plr[pnum]._pClass == PC_SORCERER)
+		if (plr[pnum]._pClass == HeroClass::Sorcerer)
 			hit += 20;
-		else if (plr[pnum]._pClass == PC_BARD)
+		else if (plr[pnum]._pClass == HeroClass::Bard)
 			hit += 10;
 	}
 	if (hit < 5)
@@ -998,17 +998,17 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			dam -= (dam * resper) / 100;
 			if (pnum == myplr)
 				NetSendCmdDamage(true, p, dam);
-			if (plr[pnum]._pClass == PC_WARRIOR) {
+			if (plr[pnum]._pClass == HeroClass::Warrior) {
 				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == PC_ROGUE) {
+			} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == PC_SORCERER) {
+			} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 				PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == PC_MONK) {
+			} else if (plr[pnum]._pClass == HeroClass::Monk) {
 				PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == PC_BARD) {
+			} else if (plr[pnum]._pClass == HeroClass::Bard) {
 				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 			}
 			return true;
@@ -1514,7 +1514,7 @@ void AddBerserk(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mi
 						if (monster[dm]._uniqtype == 0 && monster[dm]._mAi != AI_DIABLO) {
 							if (monster[dm]._mmode != MM_FADEIN && monster[dm]._mmode != MM_FADEOUT) {
 								if (!(monster[dm].mMagicRes & IMMUNE_MAGIC)) {
-									if ((!(monster[dm].mMagicRes & RESIST_MAGIC) || (monster[dm].mMagicRes & RESIST_MAGIC) == 1 && !random_(99, 2)) && monster[dm]._mmode != MM_CHARGE) {
+									if ((!(monster[dm].mMagicRes & RESIST_MAGIC) || ((monster[dm].mMagicRes & RESIST_MAGIC) == 1 && !random_(99, 2))) && monster[dm]._mmode != MM_CHARGE) {
 										j = 6;
 										double slvl = (double)GetSpellLevel(id, SPL_BERSERK);
 										monster[dm]._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
@@ -1708,9 +1708,9 @@ void AddSpecArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 
 	av = 0;
 	if (mienemy == TARGET_MONSTERS) {
-		if (plr[id]._pClass == PC_ROGUE)
+		if (plr[id]._pClass == HeroClass::Rogue)
 			av += (plr[id]._pLevel - 1) >> 2;
-		else if (plr[id]._pClass == PC_WARRIOR || plr[id]._pClass == PC_BARD)
+		else if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 			av += (plr[id]._pLevel - 1) >> 3;
 
 		if (plr[id]._pIFlags & ISPL_QUICKATTACK)
@@ -1916,9 +1916,9 @@ void AddMana(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 	for (i = 0; i < missile[mi]._mispllvl; i++) {
 		ManaAmount += (random_(57, 6) + 1) << 6;
 	}
-	if (plr[id]._pClass == PC_SORCERER)
+	if (plr[id]._pClass == HeroClass::Sorcerer)
 		ManaAmount <<= 1;
-	if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_BARD)
+	if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Bard)
 		ManaAmount += ManaAmount >> 1;
 	plr[id]._pMana += ManaAmount;
 	if (plr[id]._pMana > plr[id]._pMaxMana)
@@ -2055,9 +2055,9 @@ void AddLArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 	if (mienemy == TARGET_MONSTERS) {
 		int av = 32;
 
-		if (plr[id]._pClass == PC_ROGUE)
+		if (plr[id]._pClass == HeroClass::Rogue)
 			av += (plr[id]._pLevel) >> 2;
-		else if (plr[id]._pClass == PC_WARRIOR || plr[id]._pClass == PC_BARD)
+		else if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 			av += (plr[id]._pLevel) >> 3;
 
 		if (gbIsHellfire) {
@@ -2070,7 +2070,7 @@ void AddLArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 			if (plr[id]._pIFlags & ISPL_FASTESTATTACK)
 				av += 8;
 		} else {
-			if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_WARRIOR || plr[id]._pClass == PC_BARD)
+			if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 				av -= 1;
 		}
 
@@ -2098,9 +2098,9 @@ void AddArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 		if (plr[id]._pIFlags & ISPL_RNDARROWVEL) {
 			av = random_(64, 32) + 16;
 		}
-		if (plr[id]._pClass == PC_ROGUE)
+		if (plr[id]._pClass == HeroClass::Rogue)
 			av += (plr[id]._pLevel - 1) >> 2;
-		else if (plr[id]._pClass == PC_WARRIOR || plr[id]._pClass == PC_BARD)
+		else if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 			av += (plr[id]._pLevel - 1) >> 3;
 		if (gbIsHellfire) {
 			if (plr[id]._pIFlags & ISPL_QUICKATTACK)
@@ -2379,11 +2379,8 @@ void AddLightning(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 
 void AddMisexp(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	CMonster *mon;
-
 	if (mienemy && id > 0) {
-		mon = monster[id].MType;
-		switch (mon->mtype) {
+		switch (monster[id].MType->mtype) {
 		case MT_SUCCUBUS:
 			SetMissAnim(mi, MFILE_FLAREEXP);
 			break;
@@ -2395,6 +2392,8 @@ void AddMisexp(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 			break;
 		case MT_SOLBRNR:
 			SetMissAnim(mi, MFILE_SCBSEXPC);
+			break;
+		default:
 			break;
 		}
 	}
@@ -2758,7 +2757,7 @@ void AddAcid(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 {
 	GetMissileVel(mi, sx, sy, dx, dy, 16);
 	SetMissDir(mi, GetDirection16(sx, sy, dx, dy));
-	if (!gbIsHellfire && missile[mi]._mixvel & 0xFFFF0000 || missile[mi]._miyvel & 0xFFFF0000)
+	if ((!gbIsHellfire && missile[mi]._mixvel & 0xFFFF0000) || missile[mi]._miyvel & 0xFFFF0000)
 		missile[mi]._mirange = 5 * (monster[id]._mint + 4);
 	else
 		missile[mi]._mirange = 1;
@@ -2924,9 +2923,9 @@ void AddHeal(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 		HealAmount += (random_(57, 6) + 1) << 6;
 	}
 
-	if (plr[id]._pClass == PC_WARRIOR || plr[id]._pClass == PC_BARBARIAN || plr[id]._pClass == PC_MONK)
+	if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Barbarian || plr[id]._pClass == HeroClass::Monk)
 		HealAmount <<= 1;
-	else if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_BARD)
+	else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Bard)
 		HealAmount += HealAmount >> 1;
 
 	plr[id]._pHitPoints += HealAmount;
@@ -2947,7 +2946,7 @@ void AddHealOther(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_HEALOTHER);
 	if (id == myplr) {
-		SetCursor_(CURSOR_HEALOTHER);
+		NewCursor(CURSOR_HEALOTHER);
 		if (sgbControllerActive)
 			TryIconCurs();
 	}
@@ -2992,7 +2991,7 @@ void AddIdentify(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 			if (sgbControllerActive)
 				FocusOnInventory();
 		}
-		SetCursor_(CURSOR_IDENTIFY);
+		NewCursor(CURSOR_IDENTIFY);
 	}
 }
 
@@ -3085,7 +3084,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
 		missile[mi]._miDelFlag = true;
 	} else {
-		_sfx_id blodboilSFX[NUM_CLASSES] = {
+		_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
 			PS_WARR70,
 			PS_ROGUE70,
 			PS_MAGE70,
@@ -3093,7 +3092,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 			PS_ROGUE70,
 			PS_WARR70
 		};
-		UseMana(id, 22);
+		UseMana(id, SPL_BLODBOIL);
 		missile[mi]._miVar1 = id;
 		int tmp = 3 * plr[id]._pLevel;
 		tmp <<= 7;
@@ -3105,7 +3104,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 		CalcPlrItemVals(id, true);
 		force_redraw = 255;
-		PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
+		PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
 	}
 }
 
@@ -3121,7 +3120,7 @@ void AddRepair(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 			if (sgbControllerActive)
 				FocusOnInventory();
 		}
-		SetCursor_(CURSOR_REPAIR);
+		NewCursor(CURSOR_REPAIR);
 	}
 }
 
@@ -3137,7 +3136,7 @@ void AddRecharge(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 			if (sgbControllerActive)
 				FocusOnInventory();
 		}
-		SetCursor_(CURSOR_RECHARGE);
+		NewCursor(CURSOR_RECHARGE);
 	}
 }
 
@@ -3146,12 +3145,12 @@ void AddDisarm(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_DISARM);
 	if (id == myplr) {
-		SetCursor_(CURSOR_DISARM);
+		NewCursor(CURSOR_DISARM);
 		if (sgbControllerActive) {
 			if (pcursobj != -1)
 				NetSendCmdLocParam1(true, CMD_DISARMXY, cursmx, cursmy, pcursobj);
 			else
-				SetCursor_(CURSOR_HAND);
+				NewCursor(CURSOR_HAND);
 		}
 	}
 }
@@ -3283,7 +3282,7 @@ void AddResurrect(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 {
 	UseMana(id, SPL_RESURRECT);
 	if (id == myplr) {
-		SetCursor_(CURSOR_RESURRECT);
+		NewCursor(CURSOR_RESURRECT);
 		if (sgbControllerActive)
 			TryIconCurs();
 	}
@@ -3306,7 +3305,7 @@ void AddTelekinesis(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint3
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_TELEKINESIS);
 	if (id == myplr)
-		SetCursor_(CURSOR_TELEKINESIS);
+		NewCursor(CURSOR_TELEKINESIS);
 }
 
 void AddBoneSpirit(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
@@ -3842,13 +3841,13 @@ void MI_Fireball(Sint32 i)
 				missile[i]._miyoff -= 32;
 			}
 			if (missile[i]._miyvel > 0
-			    && (TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]]
-			        || TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]])) {
+			    && ((TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]])
+			        || (TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]]))) {
 				missile[i]._miyoff -= 32;
 			}
 			if (missile[i]._mixvel > 0
-			    && (TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]]
-			        || TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]])) {
+			    && ((TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]])
+			        || (TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]]))) {
 				missile[i]._mixoff -= 32;
 			}
 			missile[i]._mimfnum = 0;
@@ -4052,13 +4051,13 @@ void MI_Immolation(Sint32 i)
 				missile[i]._miyoff -= 32;
 			}
 			if (missile[i]._miyvel > 0
-			    && (TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]]
-			        || TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]])) {
+			    && ((TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]])
+			        || (TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]]))) {
 				missile[i]._miyoff -= 32;
 			}
 			if (missile[i]._mixvel > 0
-			    && (TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]]
-			        || TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]])) {
+			    && ((TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]])
+			        || (TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]]))) {
 				missile[i]._mixoff -= 32;
 			}
 			missile[i]._mimfnum = 0;
@@ -4086,10 +4085,10 @@ void MI_LightningArrow(Sint32 i)
 
 	mx = missile[i]._mix;
 	my = missile[i]._miy;
-	/// ASSERT: assert((DWORD)mx < MAXDUNX);
-	/// ASSERT: assert((DWORD)my < MAXDUNY);
+	assert((DWORD)mx < MAXDUNX);
+	assert((DWORD)my < MAXDUNY);
 	pn = dPiece[mx][my];
-	/// ASSERT: assert((DWORD)pn <= MAXTILES);
+	assert((DWORD)pn <= MAXTILES);
 
 	if (missile[i]._misource == -1) {
 		if ((mx != missile[i]._misx || my != missile[i]._misy) && nMissileTable[pn]) {
@@ -4741,7 +4740,7 @@ void MI_Guardian(Sint32 i)
 	if (missile[i]._miVar2 > 0) {
 		missile[i]._miVar2--;
 	}
-	if (missile[i]._mirange == missile[i]._miVar1 || missile[i]._mimfnum == MFILE_GUARD && missile[i]._miVar2 == 0) {
+	if (missile[i]._mirange == missile[i]._miVar1 || (missile[i]._mimfnum == MFILE_GUARD && missile[i]._miVar2 == 0)) {
 		SetMissDir(i, 1);
 	}
 
@@ -5052,7 +5051,7 @@ void MI_Fireman(Sint32 i)
 		cx = monster[enemy]._mx;
 		cy = monster[enemy]._my;
 	}
-	if ((bx != ax || by != ay) && (missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, ax, ay)) {
+	if ((bx != ax || by != ay) && ((missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4)) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, ax, ay)) {
 		MissToMonst(i, ax, ay);
 		missile[i]._miDelFlag = true;
 	} else if (!(monster[src]._mFlags & MFLAG_TARGETS_MONSTER)) {
@@ -5060,7 +5059,7 @@ void MI_Fireman(Sint32 i)
 	} else {
 		j = dMonster[bx][by];
 	}
-	if (!PosOkMissile(bx, by) || j > 0 && !(missile[i]._miVar1 & 1)) {
+	if (!PosOkMissile(bx, by) || (j > 0 && !(missile[i]._miVar1 & 1))) {
 		missile[i]._mixvel *= -1;
 		missile[i]._miyvel *= -1;
 		missile[i]._mimfnum = opposite[missile[i]._mimfnum];
@@ -5235,7 +5234,7 @@ void MI_Blodboil(Sint32 i)
 	if (missile[i]._mirange == 0) {
 		id = missile[i]._miVar1;
 		if ((plr[id]._pSpellFlags & 2) == 2) {
-			_sfx_id blodboilSFX[NUM_CLASSES] = {
+			_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,
@@ -5255,9 +5254,9 @@ void MI_Blodboil(Sint32 i)
 			if (plr[id]._pHitPoints < 64)
 				plr[id]._pHitPoints = 64;
 			force_redraw = 255;
-			PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
+			PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
 		} else {
-			_sfx_id blodboilSFX[NUM_CLASSES] = {
+			_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,
@@ -5273,7 +5272,7 @@ void MI_Blodboil(Sint32 i)
 			if (plr[id]._pHitPoints < 64)
 				plr[id]._pHitPoints = 64;
 			force_redraw = 255;
-			PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
+			PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
 		}
 	}
 }

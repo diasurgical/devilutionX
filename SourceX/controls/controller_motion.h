@@ -24,4 +24,4 @@ bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_
 // Returns direction of the left thumb stick or DPad (if allow_dpad = true).
 AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad = true);
 
-} // namespace dvl
+} // namespace devilution

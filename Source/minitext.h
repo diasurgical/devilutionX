@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern bool qtextflag;
 
 void FreeQuestText();
@@ -26,9 +22,5 @@ void DrawQTextBack(CelOutputBuffer out);
  * @brief Draw the quest dialog window text.
  */
 void DrawQText(CelOutputBuffer out);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

@@ -4,6 +4,7 @@
  * Implementation of functions for placing dead monsters.
  */
 #include "all.h"
+#include "monster.h"
 
 namespace devilution {
 

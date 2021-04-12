@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 namespace devilution {
+
 enum _talker_id : uint8_t {
 	TOWN_SMITH,
 	TOWN_HEALER,

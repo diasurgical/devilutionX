@@ -165,19 +165,15 @@ public:
 		writeBytes(&value, sizeof(value));
 	}
 
-	void flush()
-	{
-		if (m_buffer == nullptr)
-			return;
-
-		pfile_write_save_file(m_szFileName, m_buffer, m_cur, codec_get_encoded_len(m_cur));
-		mem_free_dbg(m_buffer);
-		m_buffer = nullptr;
-	}
-
 	~SaveHelper()
 	{
-		flush();
+		const auto encoded_len = codec_get_encoded_len(m_cur);
+		const char *const password = pfile_get_password();
+		codec_encode(m_buffer, m_cur, encoded_len, password);
+		mpqapi_write_file(m_szFileName, m_buffer, encoded_len);
+
+		mem_free_dbg(m_buffer);
+		m_buffer = nullptr;
 	}
 };
 
@@ -371,7 +367,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pLvlChanging = file->nextBool8();
 
 	file->nextBytes(pPlayer->_pName, PLR_NAME_LEN);
-	pPlayer->_pClass = (plr_class)file->nextLE<Sint8>();
+	pPlayer->_pClass = (HeroClass)file->nextLE<Sint8>();
 	file->skip(3); // Alignment
 	pPlayer->_pStrength = file->nextLE<Sint32>();
 	pPlayer->_pBaseStr = file->nextLE<Sint32>();
@@ -385,7 +381,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pDamageMod = file->nextLE<Sint32>();
 	pPlayer->_pBaseToBlk = file->nextLE<Sint32>();
 	if (pPlayer->_pBaseToBlk == 0)
-		pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+		pPlayer->_pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(pPlayer->_pClass)];
 	pPlayer->_pHPBase = file->nextLE<Sint32>();
 	pPlayer->_pMaxHPBase = file->nextLE<Sint32>();
 	pPlayer->_pHitPoints = file->nextLE<Sint32>();
@@ -504,7 +500,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	file->skip(14); // Available bytes
 
 	pPlayer->pDiabloKillLevel = file->nextLE<Uint32>();
-	pPlayer->pDifficulty = file->nextLE<Uint32>();
+	pPlayer->pDifficulty = (_difficulty)file->nextLE<Uint32>();
 	pPlayer->pDamAcFlags = file->nextLE<Uint32>();
 	file->skip(20); // Available bytes
 	CalcPlrItemVals(p, false);
@@ -529,7 +525,7 @@ static void LoadMonster(LoadHelper *file, int i)
 
 	pMonster->_mMTidx = file->nextLE<Sint32>();
 	pMonster->_mmode = (MON_MODE)file->nextLE<Sint32>();
-	pMonster->_mgoal = file->nextLE<Uint8>();
+	pMonster->_mgoal = (monster_goal)file->nextLE<Uint8>();
 	file->skip(3); // Alignment
 	pMonster->_mgoalvar1 = file->nextLE<Sint32>();
 	pMonster->_mgoalvar2 = file->nextLE<Sint32>();
@@ -729,17 +725,17 @@ static void LoadQuest(LoadHelper *file, int i)
 
 	pQuest->_qlevel = file->nextLE<Uint8>();
 	pQuest->_qtype = file->nextLE<Uint8>();
-	pQuest->_qactive = file->nextLE<Uint8>();
+	pQuest->_qactive = (quest_state)file->nextLE<Uint8>();
 	pQuest->_qlvltype = (dungeon_type)file->nextLE<Uint8>();
 	pQuest->_qtx = file->nextLE<Sint32>();
 	pQuest->_qty = file->nextLE<Sint32>();
-	pQuest->_qslvl = file->nextLE<Uint8>();
+	pQuest->_qslvl = (_setlevels)file->nextLE<Uint8>();
 	pQuest->_qidx = file->nextLE<Uint8>();
 	if (gbIsHellfireSaveGame) {
 		file->skip(2); // Alignment
 		pQuest->_qmsg = file->nextLE<Sint32>();
 	} else {
-		pQuest->_qmsg = file->nextLE<Sint8>();
+		pQuest->_qmsg = file->nextLE<Uint8>();
 	}
 	pQuest->_qvar1 = file->nextLE<Uint8>();
 	pQuest->_qvar2 = file->nextLE<Uint8>();
@@ -842,7 +838,7 @@ static void ConvertLevels()
 {
 	// Backup current level state
 	bool _setlevel = setlevel;
-	int _setlvlnum = setlvlnum;
+	_setlevels _setlvlnum = setlvlnum;
 	int _currlevel = currlevel;
 	dungeon_type _leveltype = leveltype;
 
@@ -1002,7 +998,7 @@ void LoadGame(bool firstflag)
 	}
 
 	setlevel = file.nextBool8();
-	setlvlnum = file.nextBE<Uint32>();
+	setlvlnum = (_setlevels)file.nextBE<Uint32>();
 	currlevel = file.nextBE<Uint32>();
 	leveltype = (dungeon_type)file.nextBE<Uint32>();
 	if (!setlevel)
@@ -1026,9 +1022,9 @@ void LoadGame(bool firstflag)
 
 	LoadPlayer(&file, myplr);
 
-	gnDifficulty = plr[myplr].pDifficulty;
-	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
-		gnDifficulty = DIFF_NORMAL;
+	sgGameInitInfo.nDifficulty = plr[myplr].pDifficulty;
+	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
+		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
 
 	for (int i = 0; i < giNumberQuests; i++)
 		LoadQuest(&file, i);
@@ -1165,7 +1161,7 @@ void LoadGame(bool firstflag)
 	ProcessVisionList();
 	missiles_process_charge();
 	ResetPal();
-	SetCursor_(CURSOR_HAND);
+	NewCursor(CURSOR_HAND);
 	gbProcessPlayers = true;
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
@@ -1347,7 +1343,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Uint8>(pPlayer->_pLvlChanging);
 
 	file->writeBytes(pPlayer->_pName, PLR_NAME_LEN);
-	file->writeLE<Sint8>(pPlayer->_pClass);
+	file->writeLE<Sint8>(static_cast<Sint8>(pPlayer->_pClass));
 	file->skip(3); // Alignment
 	file->writeLE<Sint32>(pPlayer->_pStrength);
 	file->writeLE<Sint32>(pPlayer->_pBaseStr);
@@ -1690,7 +1686,7 @@ static void SaveQuest(SaveHelper *file, int i)
 		file->skip(2); // Alignment
 		file->writeLE<Sint32>(pQuest->_qmsg);
 	} else {
-		file->writeLE<Sint8>(pQuest->_qmsg);
+		file->writeLE<Uint8>(pQuest->_qmsg);
 	}
 	file->writeLE<Uint8>(pQuest->_qvar1);
 	file->writeLE<Uint8>(pQuest->_qvar2);
@@ -1750,7 +1746,7 @@ void SaveHeroItems(PlayerStruct *pPlayer)
 	SaveItems(&file, pPlayer->SpdList, MAXBELTITEMS);
 }
 
-void SaveGame()
+void SaveGameData()
 {
 	SaveHelper file("game", FILEBUFF);
 
@@ -1793,7 +1789,7 @@ void SaveGame()
 		file.writeBE<Sint32>(gnLevelTypeTbl[i]);
 	}
 
-	plr[myplr].pDifficulty = gnDifficulty;
+	plr[myplr].pDifficulty = sgGameInitInfo.nDifficulty;
 	SavePlayer(&file, myplr);
 
 	for (int i = 0; i < giNumberQuests; i++)
@@ -1901,15 +1897,17 @@ void SaveGame()
 	file.writeLE<Uint8>(automapflag);
 	file.writeBE<Sint32>(AutoMapScale);
 
-	file.flush();
+}
 
+void SaveGame() {
 	gbValidSaveFile = true;
-	pfile_rename_temp_to_perm();
-	pfile_write_hero();
+	pfile_write_hero(/*save_game_data=*/true);
 }
 
 void SaveLevel()
 {
+	PFileScopedArchiveWriter scoped_writer;
+
 	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)

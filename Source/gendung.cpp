@@ -59,14 +59,13 @@ int dminy;
 int dmaxx;
 /** Specifies the maximum Y-coordinate of the map. */
 int dmaxy;
-int gnDifficulty;
 /** Specifies the active dungeon type of the current game. */
 dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
 BYTE currlevel;
 bool setlevel;
 /** Specifies the active quest level of the current game. */
-BYTE setlvlnum;
+_setlevels setlvlnum;
 /** Level type of the active quest level */
 dungeon_type setlvltype;
 /** Specifies the player viewpoint X-coordinate of the map. */

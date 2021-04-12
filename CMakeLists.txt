@@ -211,8 +211,14 @@ add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
 
-add_library(SourceS STATIC
-  SourceS/paths.cpp)
+set(SourceS_SRCS
+  SourceS/console.cpp
+  SourceS/paths.cpp
+)
+if(USE_SDL1)
+  list(APPEND SourceS_SRCS SourceS/sdl2_to_1_2_backports.cpp)
+endif()
+add_library(SourceS STATIC ${SourceS_SRCS})
 
 add_library(devilution STATIC
   Source/appfat.cpp
@@ -229,6 +235,7 @@ add_library(devilution STATIC
   Source/drlg_l2.cpp
   Source/drlg_l3.cpp
   Source/drlg_l4.cpp
+  Source/dx.cpp
   Source/dthread.cpp
   Source/effects.cpp
   Source/encrypt.cpp
@@ -271,6 +278,7 @@ add_library(devilution STATIC
   Source/scrollrt.cpp
   Source/setmaps.cpp
   Source/sha.cpp
+  Source/sound.cpp
   Source/spelldat.cpp
   Source/spells.cpp
   Source/stores.cpp
@@ -285,7 +293,6 @@ add_library(devilution STATIC
 
 set(devilutionx_SRCS
   SourceX/qol.cpp
-  SourceX/dx.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp
   SourceX/controls/devices/kbcontroller.cpp
@@ -300,7 +307,6 @@ set(devilutionx_SRCS
   SourceX/display.cpp
   SourceX/miniwin/misc_msg.cpp
   SourceX/thread.cpp
-  SourceX/sound.cpp
   SourceX/soundsample.cpp
   SourceX/storm_sdl_rw.cpp
   SourceX/storm/storm.cpp
@@ -359,6 +365,11 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
+if(VITA)
+  list(APPEND devilutionx_SRCS
+    SourceX/platform/vita/keyboard.cpp)
+endif()
+
 if(N3DS)
   list(APPEND devilutionx_SRCS
     SourceX/platform/ctr/system.cpp
@@ -368,34 +379,35 @@ endif()
 
 if(RUN_TESTS)
   list(APPEND devilutionx_SRCS
-    SourceT/appfat_test.cpp
-    SourceT/automap_test.cpp
-    SourceT/control_test.cpp
-    SourceT/cursor_test.cpp
-    SourceT/codec_test.cpp
-    SourceT/dead_test.cpp
-    SourceT/diablo_test.cpp
-    SourceT/doom_test.cpp
-    SourceT/drlg_l1_test.cpp
-    SourceT/drlg_l2_test.cpp
-    SourceT/drlg_l3_test.cpp
-    SourceT/drlg_l4_test.cpp
-    SourceT/effects_test.cpp
-    SourceT/file_util_test.cpp
-    SourceT/inv_test.cpp
-    SourceT/lighting_test.cpp
-    SourceT/missiles_test.cpp
-    SourceT/pack_test.cpp
-    SourceT/player_test.cpp
-    SourceT/scrollrt_test.cpp
-    SourceT/stores_test.cpp
-    SourceT/writehero_test.cpp)
+    test/appfat_test.cpp
+    test/automap_test.cpp
+    test/control_test.cpp
+    test/cursor_test.cpp
+    test/codec_test.cpp
+    test/dead_test.cpp
+    test/diablo_test.cpp
+    test/doom_test.cpp
+    test/drlg_l1_test.cpp
+    test/drlg_l2_test.cpp
+    test/drlg_l3_test.cpp
+    test/drlg_l4_test.cpp
+    test/effects_test.cpp
+    test/file_util_test.cpp
+    test/inv_test.cpp
+    test/lighting_test.cpp
+    test/missiles_test.cpp
+    test/pack_test.cpp
+    test/player_test.cpp
+    test/scrollrt_test.cpp
+    test/stores_test.cpp
+    test/writehero_test.cpp)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
 
-# Copy the font to the build directory to it works from the build directory
+# Copy the font and devilutionx.mpq to the build directory to it works from the build directory
 file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Use file GENERATE instead of configure_file because configure_file
 # does not support generator expressions.

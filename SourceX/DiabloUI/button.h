@@ -18,4 +18,4 @@ void RenderButton(UiButton *button);
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button);
 void HandleGlobalMouseUpButton(UiButton *button);
 
-} // namespace dvl
+} // namespace devilution

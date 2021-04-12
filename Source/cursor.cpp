@@ -131,7 +131,7 @@ void SetICursor(int i)
 	icursH28 = icursH / 28;
 }
 
-void SetCursor_(int i)
+void NewCursor(int i)
 {
 	pcurs = i;
 	cursW = InvItemWidth[i];
@@ -139,14 +139,9 @@ void SetCursor_(int i)
 	SetICursor(i);
 }
 
-void NewCursor(int i)
-{
-	SetCursor_(i);
-}
-
 void InitLevelCursor()
 {
-	SetCursor_(CURSOR_HAND);
+	NewCursor(CURSOR_HAND);
 	cursmx = ViewX;
 	cursmy = ViewY;
 	pcurstemp = -1;
@@ -190,13 +185,13 @@ void CheckRportal()
 	for (i = 0; i < nummissiles; i++) {
 		mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_RPORTAL) {
-			if (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy
-			    || cursmx == missile[mx]._mix && cursmy == missile[mx]._miy - 1
-			    || cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 1
-			    || cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 1
-			    || cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2
-			    || cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2
-			    || cursmx == missile[mx]._mix && cursmy == missile[mx]._miy) {
+			if ((cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy)
+			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy - 1)
+			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 1)
+			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 1)
+			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2)
+			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2)
+			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, "Portal to");
@@ -314,7 +309,7 @@ void CheckCursMove()
 		my = MAXDUNY - 1;
 	}
 
-	flipflag = flipy && flipx || (flipy || flipx) && px < TILE_WIDTH / 2;
+	flipflag = (flipy && flipx) || ((flipy || flipx) && px < TILE_WIDTH / 2);
 
 	pcurstemp = pcursmonst;
 	pcursmonst = -1;

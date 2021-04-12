@@ -17,4 +17,4 @@ private:
 	Mix_Chunk *chunk;
 };
 
-} // namespace dvl
+} // namespace devilution

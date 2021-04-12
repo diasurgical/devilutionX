@@ -7,12 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern bool gbRunInTown;
-
 void gamemenu_on();
 void gamemenu_off();
 void gamemenu_handle_previous();
@@ -29,9 +23,5 @@ void gamemenu_loadjog(bool bActivate);
 void gamemenu_gamma(bool bActivate);
 void gamemenu_speed(bool bActivate);
 void gamemenu_color_cycling(bool bActivate);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

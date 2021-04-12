@@ -7,14 +7,10 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct ThemeStruct {
+struct ThemeStruct {
 	theme_id ttype;
 	Sint16 ttval;
-} ThemeStruct;
+};
 
 extern int numthemes;
 extern bool armorFlag;
@@ -26,7 +22,4 @@ void InitThemes();
 void HoldThemeRooms();
 void CreateThemeRooms();
 
-#ifdef __cplusplus
-}
-#endif
 }

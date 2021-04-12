@@ -15,7 +15,7 @@ char gszHero[16];
 /* data */
 
 /** The active music track id for the main menu. */
-int menu_music_track_id = TMUSIC_INTRO;
+uint8_t menu_music_track_id = TMUSIC_INTRO;
 
 void mainmenu_refresh_music()
 {
@@ -34,7 +34,7 @@ void mainmenu_refresh_music()
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 }
 
-static bool mainmenu_init_menu(int type)
+static bool mainmenu_init_menu(_selhero_selections type)
 {
 	bool success;
 
@@ -83,8 +83,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		    pfile_ui_set_class_stats,
 		    &dlgresult,
 		    &gszHero,
-		    &gnDifficulty);
-		gameData->nDifficulty = gnDifficulty;
+		    &gameData->nDifficulty);
 
 		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
 	} else {
@@ -109,17 +108,19 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 void mainmenu_loop()
 {
 	bool done;
-	int menu;
+	_mainmenu_selections menu;
 
 	mainmenu_refresh_music();
 	done = false;
 
 	do {
-		menu = 0;
+		menu = MAINMENU_NONE;
 		if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
 			app_fatal("Unable to display mainmenu");
 
 		switch (menu) {
+		case MAINMENU_NONE:
+			break;
 		case MAINMENU_SINGLE_PLAYER:
 			if (!mainmenu_single_player())
 				done = true;

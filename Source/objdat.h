@@ -5,13 +5,32 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum theme_id : int8_t {
+	THEME_BARREL,
+	THEME_SHRINE,
+	THEME_MONSTPIT,
+	THEME_SKELROOM,
+	THEME_TREASURE,
+	THEME_LIBRARY,
+	THEME_TORTURE,
+	THEME_BLOODFOUNTAIN,
+	THEME_DECAPITATED,
+	THEME_PURIFYINGFOUNTAIN,
+	THEME_ARMORSTAND,
+	THEME_GOATSHRINE,
+	THEME_CAULDRON,
+	THEME_MURKYFOUNTAIN,
+	THEME_TEARFOUNTAIN,
+	THEME_BRNCROSS,
+	THEME_WEAPONRACK,
+	THEME_NONE = -1,
+};
 
-typedef enum object_graphic_id {
+enum object_graphic_id : int8_t {
 	OFILE_L1BRAZ,
 	OFILE_L1DOORS,
 	OFILE_LEVER,
@@ -69,9 +88,9 @@ typedef enum object_graphic_id {
 	OFILE_MUSHPTCH,
 	OFILE_LZSTAND,
 	OFILE_NULL = -1,
-} object_graphic_id;
+};
 
-typedef enum _object_id {
+enum _object_id : int8_t {
 	OBJ_L1LIGHT,
 	OBJ_L1LDOOR,
 	OBJ_L1RDOOR,
@@ -172,9 +191,37 @@ typedef enum _object_id {
 	OBJ_SIGNCHEST,
 	OBJ_BOOKSHELFR,
 	OBJ_NULL = -1,
-} _object_id;
+};
 
-typedef struct ObjDataStruct {
+enum quest_id : int8_t {
+	Q_ROCK,
+	Q_MUSHROOM,
+	Q_GARBUD,
+	Q_ZHAR,
+	Q_VEIL,
+	Q_DIABLO,
+	Q_BUTCHER,
+	Q_LTBANNER,
+	Q_BLIND,
+	Q_BLOOD,
+	Q_ANVIL,
+	Q_WARLORD,
+	Q_SKELKING,
+	Q_PWATER,
+	Q_SCHAMB,
+	Q_BETRAYER,
+	Q_GRAVE,
+	Q_FARMER,
+	Q_GIRL,
+	Q_TRADER,
+	Q_DEFILER,
+	Q_NAKRUL,
+	Q_CORNSTN,
+	Q_JERSEY,
+	Q_INVALID = -1,
+};
+
+struct ObjDataStruct {
 	Sint8 oload; // Todo create enum
 	object_graphic_id ofindex;
 	Sint8 ominlvl;
@@ -192,16 +239,12 @@ typedef struct ObjDataStruct {
 	Sint8 oBreak;   // TODO Create enum
 	Sint8 oSelFlag; // TODO Create enum
 	bool oTrapFlag;
-} ObjDataStruct;
+};
 
 extern const _object_id ObjTypeConv[];
 extern const ObjDataStruct AllObjects[];
 extern const char *const ObjMasterLoadList[];
 extern const char *ObjCryptLoadList[];
 extern const char *ObjHiveLoadList[];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

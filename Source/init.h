@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern int gbActive;
 extern HANDLE hellfire_mpq;
 extern WNDPROC CurrentProc;
@@ -39,9 +35,5 @@ WNDPROC SetWindowProc(WNDPROC NewProc);
 
 extern char gszVersionNumber[64];
 extern char gszProductName[64];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

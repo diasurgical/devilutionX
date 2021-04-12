@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern bool helpflag;
 
 void InitHelp();
@@ -18,9 +14,5 @@ void DrawHelp(CelOutputBuffer out);
 void DisplayHelp();
 void HelpScrollUp();
 void HelpScrollDown();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

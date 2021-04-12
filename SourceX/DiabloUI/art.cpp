@@ -32,38 +32,34 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 		format = 0;
 		break;
 	}
-	SDL_Surface *art_surface = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format);
+	SDLSurfaceUniquePtr art_surface { SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format) };
 
 	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(art_surface->pixels),
 	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
 		SDL_Log("Failed to load image");
-		SDL_FreeSurface(art_surface);
-		art->surface = NULL;
 		return;
 	}
 
-	art->surface = art_surface;
 	art->logical_width = art_surface->w;
 	art->frame_height = height / frames;
 
-	ScaleSurfaceToOutput(&art->surface);
+	art->surface = ScaleSurfaceToOutput(std::move(art_surface));
 }
 
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
 	if (art->surface != NULL)
-		SDLC_SetColorKey(art->surface, mask);
+		SDLC_SetColorKey(art->surface.get(), mask);
 }
 
 void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 {
 	art->frames = frames;
-	art->surface = SDL_CreateRGBSurfaceWithFormatFrom(
-	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
+	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr{SDL_CreateRGBSurfaceWithFormatFrom(
+	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8)});
 	art->logical_width = w;
 	art->frame_height = h / frames;
-	ScaleSurfaceToOutput(&art->surface);
 }
 
 } // namespace devilution

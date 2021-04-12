@@ -43,11 +43,13 @@ static int mouse_x = 0;                                                // always
 static int mouse_y = 0;
 
 enum {
-	MAX_NUM_FINGERS = 3,           // number of fingers to track per panel
-	MAX_TAP_TIME = 250,            // taps longer than this will not result in mouse click events
-	MAX_TAP_MOTION_DISTANCE = 10,  // max distance finger motion in Vita screen pixels to be considered a tap
-	SIMULATED_CLICK_DURATION = 50, // time in ms how long simulated mouse clicks should be
-};                                 // track three fingers per panel
+	// clang-format off
+	MAX_NUM_FINGERS          =   3, // number of fingers to track per panel
+	MAX_TAP_TIME             = 250, // taps longer than this will not result in mouse click events
+	MAX_TAP_MOTION_DISTANCE  =  10, // max distance finger motion in Vita screen pixels to be considered a tap
+	SIMULATED_CLICK_DURATION =  50, // time in ms how long simulated mouse clicks should be
+	// clang-format on
+};
 
 typedef struct {
 	int id; // -1: not touching
@@ -61,7 +63,7 @@ typedef struct {
 static Touch finger[TOUCH_PORT_MAX_NUM][MAX_NUM_FINGERS]; // keep track of finger status
 
 typedef enum {
-	DRAG_NONE = 0,
+	DRAG_NONE,
 	DRAG_TWO_FINGER,
 	DRAG_THREE_FINGER,
 } DraggingType;

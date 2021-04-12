@@ -7,6 +7,7 @@
 #include "paths.h"
 #include "console.h"
 #include "options.h"
+#include "multi.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
@@ -36,15 +37,12 @@ int setseed;
 int PauseMode;
 bool forceSpawn;
 bool forceDiablo;
-bool gbTheoQuest;
-bool gbCowQuest;
 bool gbNestArt;
 bool gbBard;
 bool gbBarbarian;
 int sgnTimeoutCurs;
 clicktype sgbMouseDown;
 int color_cycle_timer;
-int gnTickRate;
 WORD gnTickDelay = 50;
 /** Game options */
 Options sgOptions;
@@ -71,8 +69,6 @@ int arrowdebug = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
-/** Specifies players will still damage other players in non-PvP mode. */
-bool gbFriendlyFire;
 /** Default quick messages */
 const char *const spszMsgTbl[] = {
 	"I need help! Come Here!",
@@ -108,6 +104,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "-n", "Skip startup videos");
 	printInConsole("    %-20s %-30s\n", "-f", "Display frames per second");
 	printInConsole("    %-20s %-30s\n", "-x", "Run in windowed mode");
+	printInConsole("    %-20s %-30s\n", "--verbose", "Enable verbose logging");
 	printInConsole("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
 	printInConsole("\nHellfire options:\n");
 	printInConsole("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
@@ -163,6 +160,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			gbNestArt = true;
 		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
 			gbVanilla = true;
+		} else if (strcasecmp("--verbose", argv[i]) == 0) {
+			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = true;
@@ -192,7 +191,7 @@ static void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("-t", argv[i]) == 0) {
 			leveldebug = true;
 			setlevel = true;
-			setlvlnum = SDL_atoi(argv[++i]);
+			setlvlnum = (_setlevels)SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-v", argv[i]) == 0) {
 			visiondebug = true;
 		} else if (strcasecmp("-w", argv[i]) == 0) {
@@ -579,6 +578,8 @@ static void diablo_init()
 	if (forceDiablo)
 		gbIsHellfire = false;
 
+	gbIsHellfireSaveGame = gbIsHellfire;
+
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);
 	was_ui_init = true;
@@ -641,6 +642,10 @@ void diablo_quit(int exitStatus)
 
 int DiabloMain(int argc, char **argv)
 {
+#ifdef _DEBUG
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
+#endif
+
 	diablo_parse_flags(argc, argv);
 	LoadOptions();
 	diablo_init();
@@ -871,9 +876,9 @@ static void RightMouseDown()
 			if (spselflag) {
 				SetSpell();
 			} else if (MouseY >= SPANEL_HEIGHT
-			    || (!sbookflag || MouseX <= RIGHT_PANEL)
+			    || ((!sbookflag || MouseX <= RIGHT_PANEL)
 			        && !TryIconCurs()
-			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
+			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
 				if (pcurs == CURSOR_HAND) {
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();
@@ -1341,7 +1346,7 @@ static void PressChar(WPARAM vkey)
 			"Nightmare",
 			"Hell",
 		};
-		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[gnDifficulty]);
+		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[sgGameInitInfo.nDifficulty]);
 		NetSendCmdString(1 << myplr, pszStr);
 		return;
 	}
@@ -1695,7 +1700,7 @@ void LoadAllGFX()
 /**
  * @param lvldir method of entry
  */
-void CreateLevel(int lvldir)
+void CreateLevel(lvl_entry lvldir)
 {
 	switch (leveltype) {
 	case DTYPE_TOWN:
@@ -1758,7 +1763,7 @@ static void UpdateMonsterLights()
 	}
 }
 
-void LoadGameLevel(bool firstflag, int lvldir)
+void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
 	int i, j;
 	bool visited;
@@ -2060,7 +2065,7 @@ void game_loop(bool bStartup)
 {
 	int i;
 
-	i = bStartup ? gnTickRate * 3 : 3;
+	i = bStartup ? sgGameInitInfo.nTickRate * 3 : 3;
 
 	while (i--) {
 		if (!multi_handle_delta()) {

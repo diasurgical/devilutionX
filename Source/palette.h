@@ -7,10 +7,6 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern SDL_Color logical_palette[256];
 extern SDL_Color system_palette[256];
 extern SDL_Color orig_palette[256];
@@ -33,9 +29,5 @@ void palette_update_caves();
 void palette_update_crypt();
 void palette_update_hive();
 void palette_update_quest_palette(int n);
-
-#ifdef __cplusplus
-}
-#endif
 
 }

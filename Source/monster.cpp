@@ -165,7 +165,7 @@ void InitLevelMonsters()
 	uniquetrans = 0;
 }
 
-int AddMonsterType(_monster_id type, int placeflag)
+int AddMonsterType(_monster_id type, placeflag placeflag)
 {
 	bool done = false;
 	int i;
@@ -471,12 +471,10 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mAnimFrame = random_(88, monster[i]._mAnimLen - 1) + 1;
 
 	monster[i].mLevel = monst->MData->mLevel;
-	if (monst->mtype == MT_DIABLO) {
-		monster[i]._mmaxhp = (random_(88, 1) + (gbIsHellfire ? 3333 : 1666)) << 6;
-		if (!gbIsHellfire)
-			monster[i].mLevel -= 15;
-	} else {
-		monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
+	monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
+	if (monst->mtype == MT_DIABLO && !gbIsHellfire) {
+		monster[i]._mmaxhp /= 2;
+		monster[i].mLevel -= 15;
 	}
 
 	if (!gbIsMultiplayer) {
@@ -522,7 +520,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mmode = MM_SATTACK;
 	}
 
-	if (gnDifficulty == DIFF_NIGHTMARE) {
+	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 		monster[i]._mmaxhp = 3 * monster[i]._mmaxhp;
 		if (gbIsHellfire)
 			monster[i]._mmaxhp += (gbIsMultiplayer ? 100 : 50) << 6;
@@ -538,7 +536,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i].mMinDamage2 = 2 * (monster[i].mMinDamage2 + 2);
 		monster[i].mMaxDamage2 = 2 * (monster[i].mMaxDamage2 + 2);
 		monster[i].mArmorClass += NIGHTMARE_AC_BONUS;
-	} else if (gnDifficulty == DIFF_HELL) {
+	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster[i]._mmaxhp = 4 * monster[i]._mmaxhp;
 		if (gbIsHellfire)
 			monster[i]._mmaxhp += (gbIsMultiplayer ? 200 : 100) << 6;
@@ -567,7 +565,7 @@ void ClrAllMonsters()
 		Monst = &monster[i];
 		ClearMVars(i);
 		Monst->mName = "Invalid Monster";
-		Monst->_mgoal = 0;
+		Monst->_mgoal = MGOAL_NONE;
 		Monst->_mmode = MM_STAND;
 		Monst->_mVar1 = 0;
 		Monst->_mVar2 = 0;
@@ -816,7 +814,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		Monst->_mgoal = MGOAL_INQUIRING;
 	}
 
-	if (gnDifficulty == DIFF_NIGHTMARE) {
+	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 		Monst->_mmaxhp = 3 * Monst->_mmaxhp;
 		if (gbIsHellfire)
 			Monst->_mmaxhp += (gbIsMultiplayer ? 100 : 50) << 6;
@@ -829,7 +827,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		Monst->mMaxDamage = 2 * (Monst->mMaxDamage + 2);
 		Monst->mMinDamage2 = 2 * (Monst->mMinDamage2 + 2);
 		Monst->mMaxDamage2 = 2 * (Monst->mMaxDamage2 + 2);
-	} else if (gnDifficulty == DIFF_HELL) {
+	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		Monst->_mmaxhp = 4 * Monst->_mmaxhp;
 		if (gbIsHellfire)
 			Monst->_mmaxhp += (gbIsMultiplayer ? 200 : 100) << 6;
@@ -853,10 +851,10 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		Monst->mHit = Uniq->mUnqVar1;
 		Monst->mHit2 = Uniq->mUnqVar1;
 
-		if (gnDifficulty == DIFF_NIGHTMARE) {
+		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			Monst->mHit += NIGHTMARE_TO_HIT_BONUS;
 			Monst->mHit2 += NIGHTMARE_TO_HIT_BONUS;
-		} else if (gnDifficulty == DIFF_HELL) {
+		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			Monst->mHit += HELL_TO_HIT_BONUS;
 			Monst->mHit2 += HELL_TO_HIT_BONUS;
 		}
@@ -864,9 +862,9 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	if (Uniq->mUnqAttr & 8) {
 		Monst->mArmorClass = Uniq->mUnqVar1;
 
-		if (gnDifficulty == DIFF_NIGHTMARE) {
+		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			Monst->mArmorClass += NIGHTMARE_AC_BONUS;
-		} else if (gnDifficulty == DIFF_HELL) {
+		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			Monst->mArmorClass += HELL_AC_BONUS;
 		}
 	}
@@ -1719,7 +1717,7 @@ void SpawnLoot(int i, bool sendmsg)
 		quests[Q_DEFILER]._qlog = 0;
 		SpawnMapOfDoom(Monst->_mx, Monst->_my);
 	} else if (Monst->_uniqtype - 1 == UMT_HORKDMN) {
-		if (gbTheoQuest) {
+		if (sgGameInitInfo.bTheoQuest) {
 			SpawnTheodore(Monst->_mx, Monst->_my);
 		} else {
 			CreateAmulet(Monst->_mx, Monst->_my, 13, false, true);
@@ -1727,7 +1725,7 @@ void SpawnLoot(int i, bool sendmsg)
 	} else if (Monst->MType->mtype == MT_HORKSPWN) {
 	} else if (Monst->MType->mtype == MT_NAKRUL) {
 		nSFX = IsUberRoomOpened ? USFX_NAKRUL4 : USFX_NAKRUL5;
-		if (gbCowQuest)
+		if (sgGameInitInfo.bCowQuest)
 			nSFX = USFX_NAKRUL6;
 		if (effect_is_playing(nSFX))
 			stream_stop();
@@ -1815,7 +1813,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 	Monst->_mdir = md;
 	NewMonsterAnim(i, &Monst->MType->Anims[MA_DEATH], md);
 	Monst->_mmode = MM_DEATH;
-	Monst->_mgoal = 0;
+	Monst->_mgoal = MGOAL_NONE;
 	Monst->_mxoff = 0;
 	Monst->_myoff = 0;
 	Monst->_mVar1 = 0;
@@ -2631,11 +2629,11 @@ void DoEnding()
 	if (gbIsSpawn)
 		return;
 
-	if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_BARBARIAN) {
+	if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Barbarian) {
 		play_movie("gendata\\DiabVic2.smk", false);
-	} else if (plr[myplr]._pClass == PC_SORCERER) {
+	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 		play_movie("gendata\\DiabVic1.smk", false);
-	} else if (plr[myplr]._pClass == PC_MONK) {
+	} else if (plr[myplr]._pClass == HeroClass::Monk) {
 		play_movie("gendata\\DiabVic1.smk", false);
 	} else {
 		play_movie("gendata\\DiabVic3.smk", false);
@@ -2669,7 +2667,7 @@ void PrepDoEnding()
 	cineflag = true;
 
 	killLevel = &plr[myplr].pDiabloKillLevel;
-	newKillLevel = gnDifficulty + 1;
+	newKillLevel = sgGameInitInfo.nDifficulty + 1;
 	if (*killLevel > newKillLevel)
 		newKillLevel = *killLevel;
 	plr[myplr].pDiabloKillLevel = newKillLevel;
@@ -4218,20 +4216,20 @@ void MAI_HorkDemon(int i)
 	v = random_(131, 100);
 
 	if (abs(mx) < 2 && abs(my) < 2) {
-		Monst->_mgoal = 1;
+		Monst->_mgoal = MGOAL_NORMAL;
 	} else if (Monst->_mgoal == 4 || ((abs(mx) >= 5 || abs(my) >= 5) && random_(132, 4) != 0)) {
 		if (Monst->_mgoal != 4) {
 			Monst->_mgoalvar1 = 0;
 			Monst->_mgoalvar2 = random_(133, 2);
 		}
-		Monst->_mgoal = 4;
+		Monst->_mgoal = MGOAL_MOVE;
 		if (abs(mx) > abs(my)) {
 			dist = abs(mx);
 		} else {
 			dist = abs(my);
 		}
 		if (Monst->_mgoalvar1++ >= 2 * dist || dTransVal[Monst->_mx][Monst->_my] != dTransVal[fx][fy]) {
-			Monst->_mgoal = 1;
+			Monst->_mgoal = MGOAL_NORMAL;
 		} else if (!M_RoundWalk(i, md, &Monst->_mgoalvar2)) {
 			M_StartDelay(i, random_(125, 10) + 10);
 		}
@@ -4688,7 +4686,7 @@ void ProcessMonsters()
 				PlaySFX(USFX_CLEAVER);
 			}
 			if (Monst->MType->mtype == MT_NAKRUL) {
-				if (gbCowQuest) {
+				if (sgGameInitInfo.bCowQuest) {
 					PlaySFX(USFX_NAKRUL6);
 				} else {
 					if (IsUberRoomOpened)
@@ -5203,10 +5201,10 @@ void PrintMonstHistory(int mt)
 			hpBonusNightmare = (!gbIsMultiplayer ? 50 : 100);
 			hpBonusHell = (!gbIsMultiplayer ? 100 : 200);
 		}
-		if (gnDifficulty == DIFF_NIGHTMARE) {
+		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			minHP = 3 * minHP + hpBonusNightmare;
 			maxHP = 3 * maxHP + hpBonusNightmare;
-		} else if (gnDifficulty == DIFF_HELL) {
+		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
@@ -5214,7 +5212,7 @@ void PrintMonstHistory(int mt)
 		AddPanelString(tempstr, true);
 	}
 	if (monstkills[mt] >= 15) {
-		if (gnDifficulty != DIFF_HELL)
+		if (sgGameInitInfo.nDifficulty != DIFF_HELL)
 			res = monsterdata[mt].mMagicRes;
 		else
 			res = monsterdata[mt].mMagicRes2;

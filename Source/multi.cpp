@@ -357,9 +357,9 @@ static void multi_begin_timeout()
 		}
 	}
 
-	/// ASSERT: assert(bGroupPlayers);
-	/// ASSERT: assert(nLowestActive != -1);
-	/// ASSERT: assert(nLowestPlayer != -1);
+	assert(bGroupPlayers);
+	assert(nLowestActive != -1);
+	assert(nLowestPlayer != -1);
 
 	if (bGroupPlayers < bGroupCount) {
 		gbGameDestroyed = true;
@@ -466,7 +466,7 @@ void multi_process_network_packets()
 		plr[dwID]._pownerx = pkt->px;
 		plr[dwID]._pownery = pkt->py;
 		if (dwID != myplr) {
-			// ASSERT: gbBufferMsgs != BUFFER_PROCESS (2)
+			assert(gbBufferMsgs != 2);
 			plr[dwID]._pHitPoints = pkt->php;
 			plr[dwID]._pMaxHP = pkt->pmhp;
 			cond = gbBufferMsgs == 1;
@@ -517,9 +517,9 @@ void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen)
 	TPkt pkt;
 	TCmdPlrInfoHdr *p;
 
-	/// ASSERT: assert(pnum != myplr);
-	/// ASSERT: assert(pbSrc);
-	/// ASSERT: assert(dwLen <= 0x0ffff);
+	assert(pnum != myplr);
+	assert(pbSrc);
+	assert(dwLen <= 0x0ffff);
 
 	dwOffset = 0;
 
@@ -541,7 +541,7 @@ void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen)
 		if (dwLen < dwBody) {
 			dwBody = dwLen;
 		}
-		/// ASSERT: assert(dwBody <= 0x0ffff);
+		assert(dwBody <= 0x0ffff);
 		p->wBytes = dwBody;
 		memcpy(&pkt.body[sizeof(*p)], pbSrc, p->wBytes);
 		dwMsg = sizeof(pkt.hdr);
@@ -739,7 +739,6 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
 		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
-		sgGameInitInfo.nDifficulty = gnDifficulty;
 		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
 		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown;
 		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
@@ -789,13 +788,7 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 		gbSelectProvider = false;
 	}
 	SetRndSeed(sgGameInitInfo.dwSeed);
-	gnDifficulty = sgGameInitInfo.nDifficulty;
-	gnTickRate = sgGameInitInfo.nTickRate;
-	gnTickDelay = 1000 / gnTickRate;
-	gbRunInTown = sgGameInitInfo.bRunInTown;
-	gbTheoQuest = sgGameInitInfo.bTheoQuest;
-	gbCowQuest = sgGameInitInfo.bCowQuest;
-	gbFriendlyFire = sgGameInitInfo.bFriendlyFire;
+	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
@@ -868,7 +861,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	if (myplr == pnum) {
 		return;
 	}
-	/// ASSERT: assert((DWORD)pnum < MAX_PLRS);
+	assert((DWORD)pnum < MAX_PLRS);
 
 	if (sgwPackPlrOffsetTbl[pnum] != p->wOffset) {
 		sgwPackPlrOffsetTbl[pnum] = 0;

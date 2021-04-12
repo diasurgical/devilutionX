@@ -38,5 +38,5 @@ private:
 	bool trigger_right_is_down_ = false;
 };
 
-} // namespace dvl
+} // namespace devilution
 #endif

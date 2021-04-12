@@ -1368,17 +1368,17 @@ void sound_init()
 			mask |= (sfx_ROGUE | sfx_SORCERER);
 		if (gbIsHellfire)
 			mask |= sfx_MONK;
-	} else if (plr[myplr]._pClass == PC_WARRIOR) {
+	} else if (plr[myplr]._pClass == HeroClass::Warrior) {
 		mask |= sfx_WARRIOR;
-	} else if (plr[myplr]._pClass == PC_ROGUE) {
+	} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 		mask |= sfx_ROGUE;
-	} else if (plr[myplr]._pClass == PC_SORCERER) {
+	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 		mask |= sfx_SORCERER;
-	} else if (plr[myplr]._pClass == PC_MONK) {
+	} else if (plr[myplr]._pClass == HeroClass::Monk) {
 		mask |= sfx_MONK;
-	} else if (plr[myplr]._pClass == PC_BARD) {
+	} else if (plr[myplr]._pClass == HeroClass::Bard) {
 		mask |= sfx_ROGUE;
-	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 		mask |= sfx_WARRIOR;
 	} else {
 		app_fatal("effects:1");

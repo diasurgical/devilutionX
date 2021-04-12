@@ -5,19 +5,29 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum _music_id : uint8_t {
+	TMUSIC_TOWN,
+	TMUSIC_L1,
+	TMUSIC_L2,
+	TMUSIC_L3,
+	TMUSIC_L4,
+	TMUSIC_L5,
+	TMUSIC_L6,
+	TMUSIC_INTRO,
+	NUM_MUSIC,
+};
 
-typedef struct TSnd {
+struct TSnd {
 	const char *sound_path;
 	/** Used for streamed audio */
 	HANDLE file_handle;
 	SoundSample *DSB;
 	Uint32 start_tc;
-} TSnd;
+};
 
 extern bool gbSndInited;
 
@@ -30,7 +40,7 @@ void sound_file_cleanup(TSnd *sound_file);
 void snd_init();
 void sound_cleanup();
 void music_stop();
-void music_start(int nTrack);
+void music_start(uint8_t nTrack);
 void sound_disable_music(bool disable);
 int sound_get_or_set_music_volume(int volume);
 int sound_get_or_set_sound_volume(int volume);
@@ -40,9 +50,5 @@ int sound_get_or_set_sound_volume(int volume);
 extern bool gbMusicOn;
 extern bool gbSoundOn;
 extern bool gbDupSounds;
-
-#ifdef __cplusplus
-}
-#endif
 
 }

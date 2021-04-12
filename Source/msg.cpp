@@ -266,7 +266,7 @@ static BYTE *DeltaExportJunk(BYTE *dst)
 	}
 
 	for (i = 0, q = 0; i < MAXQUESTS; i++) {
-		if (questlist[i]._qflags & QUEST_ANY) {
+		if (!questlist[i].isSinglePlayerOnly) {
 			sgJunk.quests[q].qlog = quests[i]._qlog;
 			sgJunk.quests[q].qstate = quests[i]._qactive;
 			sgJunk.quests[q].qvar1 = quests[i]._qvar1;
@@ -302,7 +302,7 @@ static void DeltaImportJunk(BYTE *src)
 	}
 
 	for (i = 0, q = 0; i < MAXQUESTS; i++) {
-		if (questlist[i]._qflags & QUEST_ANY) {
+		if (!questlist[i].isSinglePlayerOnly) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
 			quests[i]._qlog = sgJunk.quests[q].qlog;
@@ -404,7 +404,7 @@ static DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 		}
 	}
 
-	/// ASSERT: assert(p->wOffset == sgdwRecvOffset);
+	assert(p->wOffset == sgdwRecvOffset);
 	memcpy(&sgRecvBuf[p->wOffset], &p[1], p->wBytes);
 	sgdwRecvOffset += p->wBytes;
 	return p->wBytes + sizeof(*p);
@@ -448,8 +448,8 @@ void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 	if (!gbIsMultiplayer)
 		return;
 
-	/// ASSERT: assert(pSync != NULL);
-	/// ASSERT: assert(bLevel < NUMLEVELS);
+	assert(pSync != NULL);
+	assert(bLevel < NUMLEVELS);
 	sgbDeltaChanged = true;
 
 	DMonsterStr *pD = &sgLevels[bLevel].monster[pSync->_mndx];
@@ -612,7 +612,7 @@ bool delta_portal_inited(int i)
 
 bool delta_quest_inited(int i)
 {
-	return sgJunk.quests[i].qstate != 0xFF;
+	return sgJunk.quests[i].qstate != QUEST_INVALID;
 }
 
 void DeltaAddItem(int ii)
@@ -704,11 +704,12 @@ void DeltaLoadLevel()
 					monster[i]._moldy = sgLevels[currlevel].monster[i]._my; // CODEFIX: useless assignment
 					M_ClearSquares(i);
 					if (monster[i]._mAi != AI_DIABLO) {
-						if (monster[i]._uniqtype == 0)
-							/// ASSERT: assert(monster[i].MType != NULL);
+						if (monster[i]._uniqtype == 0) {
+							assert(monster[i].MType != NULL);
 							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, (direction)monster[i]._mdir);
-						else
+						} else {
 							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, (direction)monster[i]._mdir);
+						}
 					}
 					monster[i]._mDelFlag = true;
 					M_UpdateLeader(i);
@@ -816,6 +817,8 @@ void DeltaLoadLevel()
 				break;
 			case CMD_BREAKOBJ:
 				SyncBreakObj(-1, i);
+				break;
+			default:
 				break;
 			}
 		}
@@ -1928,7 +1931,7 @@ static DWORD On_NEWLVL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		StartNewLvl(pnum, p->wParam1, p->wParam2);
+		StartNewLvl(pnum, (interface_mode)p->wParam1, p->wParam2);
 
 	return sizeof(*p);
 }
@@ -2486,7 +2489,7 @@ static DWORD On_NAKRUL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1) {
 		operate_lv24_lever();
 		IsUberRoomOpened = 1;
-		quests[Q_NAKRUL]._qactive = 3;
+		quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		monster_some_crypt();
 	}
 	return sizeof(*pCmd);
@@ -2676,6 +2679,8 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 		return On_OPENHIVE(pCmd, pnum);
 	case CMD_OPENCRYPT:
 		return On_OPENCRYPT(pCmd, pnum);
+	default:
+		break;
 	}
 
 	if (pCmd->bCmd < CMD_DLEVEL_0 || pCmd->bCmd > CMD_DLEVEL_END) {

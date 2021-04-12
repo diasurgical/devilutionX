@@ -7,16 +7,12 @@
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct TriggerStruct {
+struct TriggerStruct {
 	int _tx;
 	int _ty;
-	int _tmsg;
+	interface_mode _tmsg;
 	int _tlvl;
-} TriggerStruct;
+};
 
 extern bool trigflag;
 extern int numtrigs;
@@ -36,9 +32,5 @@ void InitVPTriggers();
 void Freeupstairs();
 void CheckTrigForce();
 void CheckTriggers();
-
-#ifdef __cplusplus
-}
-#endif
 
 }

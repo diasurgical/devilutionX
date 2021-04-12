@@ -199,19 +199,19 @@ void T_Pass3()
 		}
 	}
 	if (gbIsHellfire) {
-		if (quests[Q_FARMER]._qactive == 3 || quests[Q_FARMER]._qactive == 10
-		    || quests[Q_JERSEY]._qactive == 3 || quests[Q_JERSEY]._qactive == 10) {
+		if (quests[Q_FARMER]._qactive == QUEST_DONE || quests[Q_FARMER]._qactive == QUEST_HIVE_DONE
+		    || quests[Q_JERSEY]._qactive == QUEST_DONE || quests[Q_JERSEY]._qactive == QUEST_HIVE_DONE) {
 			TownOpenHive();
 		} else {
 			TownCloseHive();
 		}
-		if (quests[Q_GRAVE]._qactive == 3 || plr[myplr]._pLvlVisited[21])
+		if (quests[Q_GRAVE]._qactive == QUEST_DONE || plr[myplr]._pLvlVisited[21])
 			TownOpenGrave();
 		else
 			TownCloseGrave();
 	}
 
-	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive) {
+	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
 		T_FillTile(P3Tiles, 60, 70, 342);
 	} else {
 		T_FillTile(P3Tiles, 60, 70, 71);
@@ -298,7 +298,7 @@ void TownOpenGrave()
  * @brief Initialize town level
  * @param entry Methode of entry
  */
-void CreateTown(int entry)
+void CreateTown(lvl_entry entry)
 {
 	int x, y;
 

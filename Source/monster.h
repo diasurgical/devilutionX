@@ -11,19 +11,19 @@ namespace devilution {
 
 enum monster_flag : uint16_t {
 	// clang-format off
-	MFLAG_HIDDEN          = 0x0001,
-	MFLAG_LOCK_ANIMATION  = 0x0002,
-	MFLAG_ALLOW_SPECIAL   = 0x0004,
-	MFLAG_NOHEAL          = 0x0008,
-	MFLAG_TARGETS_MONSTER = 0x0010,
-	MFLAG_GOLEM           = 0x0020,
-	MFLAG_QUEST_COMPLETE  = 0x0040,
-	MFLAG_KNOCKBACK       = 0x0080,
-	MFLAG_SEARCH          = 0x0100,
-	MFLAG_CAN_OPEN_DOOR   = 0x0200,
-	MFLAG_NO_ENEMY        = 0x0400,
-	MFLAG_BERSERK         = 0x0800,
-	MFLAG_NOLIFESTEAL     = 0x1000
+	MFLAG_HIDDEN          = 1 << 0,
+	MFLAG_LOCK_ANIMATION  = 1 << 1,
+	MFLAG_ALLOW_SPECIAL   = 1 << 2,
+	MFLAG_NOHEAL          = 1 << 3,
+	MFLAG_TARGETS_MONSTER = 1 << 4,
+	MFLAG_GOLEM           = 1 << 5,
+	MFLAG_QUEST_COMPLETE  = 1 << 6,
+	MFLAG_KNOCKBACK       = 1 << 7,
+	MFLAG_SEARCH          = 1 << 8,
+	MFLAG_CAN_OPEN_DOOR   = 1 << 9,
+	MFLAG_NO_ENEMY        = 1 << 10,
+	MFLAG_BERSERK         = 1 << 11,
+	MFLAG_NOLIFESTEAL     = 1 << 12,
 	// clang-format on
 };
 
@@ -44,7 +44,7 @@ enum : uint8_t {
 	UMT_NAKRUL,
 };
 
-enum MON_MODE {
+enum MON_MODE : uint8_t {
 	MM_STAND,
 	/** Movement towards N, NW, or NE */
 	MM_WALK,
@@ -68,6 +68,32 @@ enum MON_MODE {
 	MM_TALK,
 };
 
+enum {
+	MA_STAND,
+	MA_WALK,
+	MA_ATTACK,
+	MA_GOTHIT,
+	MA_DEATH,
+	MA_SPECIAL,
+};
+
+enum monster_goal : uint8_t {
+	MGOAL_NONE,
+	MGOAL_NORMAL,
+	MGOAL_RETREAT,
+	MGOAL_HEALING,
+	MGOAL_MOVE,
+	MGOAL_ATTACK2,
+	MGOAL_INQUIRING,
+	MGOAL_TALKING,
+};
+
+enum placeflag : uint8_t {
+	PLACE_SCATTER = 1 << 0,
+	PLACE_SPECIAL = 1 << 1,
+	PLACE_UNIQUE  = 1 << 2,
+};
+
 struct AnimStruct {
 	Uint8 *CMem;
 	Uint8 *Data[8];
@@ -83,8 +109,8 @@ struct CMonster {
 	TSnd *Snds[4][2];
 	Sint32 width;
 	Sint32 width2;
-	Uint8 mMinHP;
-	Uint8 mMaxHP;
+	uint16_t mMinHP;
+	uint16_t mMaxHP;
 	bool has_special;
 	Uint8 mAFNum;
 	Sint8 mdeadval;
@@ -99,7 +125,7 @@ struct CMonster {
 struct MonsterStruct { // note: missing field _mAFNum
 	Sint32 _mMTidx;
 	MON_MODE _mmode;
-	Uint8 _mgoal;
+	monster_goal _mgoal;
 	Sint32 _mgoalvar1;
 	Sint32 _mgoalvar2;
 	Sint32 _mgoalvar3;

@@ -5,7 +5,18 @@
 #include <string>
 namespace devilution {
 
-typedef struct PCXHeader {
+enum game_info : uint8_t {
+	GAMEINFO_NAME,
+	GAMEINFO_PASSWORD,
+};
+
+enum conn_type : uint8_t {
+	SELCONN_ZT,
+	SELCONN_TCP,
+	SELCONN_LOOPBACK,
+};
+
+struct PCXHeader {
 	Uint8 Manufacturer;
 	Uint8 Version;
 	Uint8 Encoding;
@@ -24,9 +35,9 @@ typedef struct PCXHeader {
 	Uint16 HscreenSize;
 	Uint16 VscreenSize;
 	Uint8 Filler[54];
-} PCXHeader;
+};
 
-typedef struct _SNETCAPS {
+struct _SNETCAPS {
 	Uint32 size;
 	Uint32 flags;
 	Uint32 maxmessagesize;
@@ -36,14 +47,14 @@ typedef struct _SNETCAPS {
 	Uint32 latencyms;
 	Uint32 defaultturnssec;
 	Uint32 defaultturnsintransit;
-} _SNETCAPS;
+};
 
-typedef struct _SNETEVENT {
+struct _SNETEVENT {
 	Uint32 eventid;
 	Uint32 playerid;
 	void *data;
 	Uint32 databytes;
-} _SNETEVENT;
+};
 
 // Note to self: Linker error => forgot a return value in cpp
 
@@ -128,7 +139,7 @@ bool SNetDropPlayer(int playerid, DWORD flags);
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool SNetGetGameInfo(int type, void *dst, unsigned int length);
+bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
 
 /*  SNetGetTurnsInTransit @ 115
  *

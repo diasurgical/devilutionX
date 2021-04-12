@@ -6,8 +6,8 @@
 #include "all.h"
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "stubs.h"
-#include "storm_sdl_rw.h"
+#include "../SourceX/stubs.h"
+#include "../SourceX/storm_sdl_rw.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 
@@ -41,7 +41,7 @@ bool gbMusicOn = true;
 /** Specifies whether sound effects are enabled. */
 bool gbSoundOn = true;
 /** Specifies the active background music track id. */
-int sgnMusicTrack = NUM_MUSIC;
+_music_id sgnMusicTrack = NUM_MUSIC;
 /** Maps from track ID to track name in spawn. */
 const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sTowne.wav",
@@ -196,7 +196,7 @@ void music_stop()
 	}
 }
 
-void music_start(int nTrack)
+void music_start(uint8_t nTrack)
 {
 	bool success;
 	const char *trackPath;
@@ -255,7 +255,7 @@ void music_start(int nTrack)
 				return;
 			}
 
-			sgnMusicTrack = nTrack;
+			sgnMusicTrack = (_music_id)nTrack;
 		}
 	}
 }

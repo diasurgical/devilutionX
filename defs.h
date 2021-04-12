@@ -203,3 +203,10 @@
 #else
 #define DVL_ATTRIBUTE_ALWAYS_INLINE
 #endif
+
+#if DVL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
+#define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg) \
+  __attribute__((__format__(__printf__, fmtargnum, firstarg)))
+#else
+#define DVL_PRINTF_ATTRIBUTE(fmtargnum)
+#endif

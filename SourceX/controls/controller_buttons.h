@@ -1,12 +1,14 @@
 #pragma once
 // Unifies joystick, gamepad, and keyboard controller APIs.
 
+#include <stdint.h>
+
 namespace devilution {
 
 // NOTE: A, B, X, Y refer to physical positions on an XBox 360 controller.
 // A<->B and X<->Y are reversed on a Nintendo controller.
-enum ControllerButton {
-	ControllerButton_NONE = 0,
+enum ControllerButton : uint8_t {
+	ControllerButton_NONE,
 	ControllerButton_IGNORE,
 	ControllerButton_AXIS_TRIGGERLEFT,  // ZL (aka L2)
 	ControllerButton_AXIS_TRIGGERRIGHT, // ZR (aka R2)
@@ -34,4 +36,4 @@ inline bool IsDPadButton(ControllerButton button)
 	    || button == ControllerButton_BUTTON_DPAD_RIGHT;
 }
 
-} // namespace dvl
+} // namespace devilution

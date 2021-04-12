@@ -1217,7 +1217,7 @@ static void L4firstRoom()
 		l4holdx = x;
 		l4holdy = y;
 	}
-	if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
+	if (QuestStatus(Q_WARLORD) || (currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
 		SP4x1 = x + 1;
 		SP4y1 = y + 1;
 		SP4x2 = SP4x1 + w;
@@ -1589,7 +1589,7 @@ void DRLG_L4GeneralFix()
 	}
 }
 
-static void DRLG_L4(int entry)
+static void DRLG_L4(lvl_entry entry)
 {
 	int i, j, spi, spj, ar;
 	bool doneflag;
@@ -1611,7 +1611,7 @@ static void DRLG_L4(int entry)
 		if (currlevel == 16) {
 			L4SaveQuads();
 		}
-		if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
+		if (QuestStatus(Q_WARLORD) || (currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
 			for (spi = SP4x1; spi < SP4x2; spi++) {
 				for (spj = SP4y1; spj < SP4y2; spj++) {
 					dflags[spi][spj] = 1;
@@ -1795,7 +1795,7 @@ static void DRLG_L4Pass3()
 	}
 }
 
-void CreateL4Dungeon(DWORD rseed, int entry)
+void CreateL4Dungeon(DWORD rseed, lvl_entry entry)
 {
 	SetRndSeed(rseed);
 

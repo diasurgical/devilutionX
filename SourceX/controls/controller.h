@@ -20,4 +20,4 @@ bool IsControllerButtonPressed(ControllerButton button);
 
 bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event);
 
-} // namespace dvl
+} // namespace devilution

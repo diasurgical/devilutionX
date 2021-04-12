@@ -8,6 +8,7 @@
 #include "dvlnet/protocol_zt.h"
 #endif
 #include "dvlnet/loopback.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 namespace devilution {
 namespace net {

@@ -5,29 +5,28 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 #include "engine.h"
 #include "spelldat.h"
+#include "spells.h"
 
 namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef enum text_color {
+enum text_color : uint8_t {
 	COL_WHITE,
 	COL_BLUE,
 	COL_RED,
 	COL_GOLD,
 	COL_BLACK,
-} text_color;
+};
 
-typedef struct RECT32 {
+struct RECT32 {
 	int x;
 	int y;
 	int w;
 	int h;
-} RECT32;
+};
 
 extern bool drawhpflag;
 extern bool dropGoldFlag;
@@ -151,9 +150,5 @@ extern const BYTE gbFontTransTbl[256];
 /* data */
 
 extern RECT32 ChrBtnsRect[4];
-
-#ifdef __cplusplus
-}
-#endif
 
 }

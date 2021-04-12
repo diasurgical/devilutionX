@@ -1,25 +1,14 @@
 #pragma once
 
-#include "all.h"
+#include <SDL.h>
+
+#include "sdl_ptrs.h"
 
 namespace devilution {
 
 struct TtfSurfaceCache {
-
-	TtfSurfaceCache()
-	{
-		text = NULL;
-		shadow = NULL;
-	}
-
-	~TtfSurfaceCache()
-	{
-		mem_free_dbg(text);
-		mem_free_dbg(shadow);
-	}
-
-	SDL_Surface *text;
-	SDL_Surface *shadow;
+	SDLSurfaceUniquePtr text;
+	SDLSurfaceUniquePtr shadow;
 };
 
 void DrawTTF(const char *text, const SDL_Rect &rect, int flags,
@@ -28,4 +17,4 @@ void DrawTTF(const char *text, const SDL_Rect &rect, int flags,
 
 void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawTextCursor = false);
 
-} // namespace dvl
+} // namespace devilution

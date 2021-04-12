@@ -48,26 +48,25 @@ void FocusOnCharInfo()
 
 	// Find the first incrementable stat.
 	int stat = -1;
-	for (int i = 4; i >= 0; --i) {
+	for (int i = ATTRIB_VIT; i >= ATTRIB_STR; i--) {
+		int max = plr[myplr].GetMaximumAttributeValue((attribute_id)i);
 		switch (i) {
 		case ATTRIB_STR:
-			if (plr[myplr]._pBaseStr >= plr[myplr].GetMaximumAttributeValue(ATTRIB_STR))
+			if (plr[myplr]._pBaseStr >= max)
 				continue;
 			break;
 		case ATTRIB_MAG:
-			if (plr[myplr]._pBaseMag >= plr[myplr].GetMaximumAttributeValue(ATTRIB_MAG))
+			if (plr[myplr]._pBaseMag >= max)
 				continue;
 			break;
 		case ATTRIB_DEX:
-			if (plr[myplr]._pBaseDex >= plr[myplr].GetMaximumAttributeValue(ATTRIB_DEX))
+			if (plr[myplr]._pBaseDex >= max)
 				continue;
 			break;
 		case ATTRIB_VIT:
-			if (plr[myplr]._pBaseVit >= plr[myplr].GetMaximumAttributeValue(ATTRIB_VIT))
+			if (plr[myplr]._pBaseVit >= max)
 				continue;
 			break;
-		default:
-			continue;
 		}
 		stat = i;
 	}
@@ -265,7 +264,7 @@ bool false_avail(const char *name, int value)
 {
 #ifndef __vita__
 	// Logging on Vita is slow due slow IO, so disable spamming unhandled events to log
-	SDL_Log("Unhandled SDL event: %s %d", name, value);
+	SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Unhandled SDL event: %s %d", name, value);
 #endif
 	return true;
 }
@@ -280,11 +279,11 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				PlaySFX(PS_WARR16); // "Where would I put this?"
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				PlaySFX(PS_ROGUE16);
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				PlaySFX(PS_MAGE16);
 			}
 			return false;
@@ -293,7 +292,7 @@ bool BlurInventory()
 
 	invflag = false;
 	if (pcurs > CURSOR_HAND)
-		SetCursor_(CURSOR_HAND);
+		NewCursor(CURSOR_HAND);
 	if (chrflag)
 		FocusOnCharInfo();
 
@@ -399,7 +398,7 @@ bool FetchMessage(LPMSG lpMsg)
 				questlog = false;
 				spselflag = false;
 				if (pcurs == CURSOR_DISARM)
-					SetCursor_(CURSOR_HAND);
+					NewCursor(CURSOR_HAND);
 				FocusOnCharInfo();
 			}
 			break;
@@ -420,7 +419,7 @@ bool FetchMessage(LPMSG lpMsg)
 				spselflag = false;
 				invflag = true;
 				if (pcurs == CURSOR_DISARM)
-					SetCursor_(CURSOR_HAND);
+					NewCursor(CURSOR_HAND);
 				FocusOnInventory();
 			}
 			break;

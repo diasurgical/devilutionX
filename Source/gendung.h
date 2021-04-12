@@ -7,7 +7,18 @@
 
 #include <stdint.h>
 
+#include "scrollrt.h"
+
 namespace devilution {
+
+enum _setlevels : int8_t {
+	SL_NONE,
+	SL_SKELKING,
+	SL_BONECHAMB,
+	SL_MAZE,
+	SL_POISONWATER,
+	SL_VILEBETRAYER,
+};
 
 enum dungeon_type : int8_t {
 	DTYPE_TOWN,
@@ -20,6 +31,46 @@ enum dungeon_type : int8_t {
 	DTYPE_NONE = -1,
 };
 
+enum lvl_entry : uint8_t {
+	ENTRY_MAIN,
+	ENTRY_PREV,
+	ENTRY_SETLVL,
+	ENTRY_RTNLVL,
+	ENTRY_LOAD,
+	ENTRY_WARPLVL,
+	ENTRY_TWARPDN,
+	ENTRY_TWARPUP,
+};
+
+enum {
+	// clang-format off
+	DLRG_HDOOR     = 1 << 0,
+	DLRG_VDOOR     = 1 << 1,
+	DLRG_CHAMBER   = 1 << 6,
+	DLRG_PROTECTED = 1 << 7,
+	// clang-format on
+};
+
+enum {
+	// clang-format off
+	BFLAG_MISSILE     = 1 << 0,
+	BFLAG_VISIBLE     = 1 << 1,
+	BFLAG_DEAD_PLAYER = 1 << 2,
+	BFLAG_POPULATED   = 1 << 3,
+	BFLAG_MONSTLR     = 1 << 4,
+	BFLAG_PLAYERLR    = 1 << 5,
+	BFLAG_LIT         = 1 << 6,
+	BFLAG_EXPLORED    = 1 << 7,
+	// clang-format on
+};
+
+enum _difficulty : uint8_t {
+	DIFF_NORMAL,
+	DIFF_NIGHTMARE,
+	DIFF_HELL,
+	NUM_DIFFICULTIES,
+};
+
 struct ScrollStruct {
 	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff */
 	Sint32 _sxoff;
@@ -27,7 +78,7 @@ struct ScrollStruct {
 	Sint32 _syoff;
 	Sint32 _sdx;
 	Sint32 _sdy;
-	Sint32 _sdir;
+	_scroll_direction _sdir;
 };
 
 struct THEME_LOC {
@@ -75,11 +126,10 @@ extern int dminx;
 extern int dminy;
 extern int dmaxx;
 extern int dmaxy;
-extern int gnDifficulty;
 extern dungeon_type leveltype;
 extern BYTE currlevel;
 extern bool setlevel;
-extern BYTE setlvlnum;
+extern _setlevels setlvlnum;
 extern dungeon_type setlvltype;
 extern int ViewX;
 extern int ViewY;

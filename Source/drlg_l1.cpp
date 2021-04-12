@@ -1095,7 +1095,7 @@ static void DRLG_L1Pass3()
 		xx = 16;
 		for (i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
-			/// ASSERT: assert(lv >= 0);
+			assert(lv >= 0);
 			MegaTiles = (WORD *)&pMegaTiles[lv * 8];
 			v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
 			v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
@@ -2506,7 +2506,7 @@ static void DRLG_L5CornerFix()
 	}
 }
 
-static void DRLG_L5(int entry)
+static void DRLG_L5(lvl_entry entry)
 {
 	int i, j;
 	LONG minarea;
@@ -2734,7 +2734,7 @@ static void DRLG_L5(int entry)
 	DRLG_CheckQuests(setpc_x, setpc_y);
 }
 
-void CreateL5Dungeon(DWORD rseed, int entry)
+void CreateL5Dungeon(DWORD rseed, lvl_entry entry)
 {
 	int i, j;
 
