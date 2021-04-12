@@ -3673,25 +3673,25 @@ Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct* pPlayer)
 	// In normal attacks frame skipping always happens before the attack actual hit.
 	// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
 	// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
-	int relevantAnimationLenght;
+	int relevantAnimationLength;
 	if (pPlayer->_pAnimStopDistributingAfterFrame != 0) {
 		if (pPlayer->_pAnimFrame >= pPlayer->_pAnimStopDistributingAfterFrame)
 			return pPlayer->_pAnimFrame;
-		relevantAnimationLenght = pPlayer->_pAnimStopDistributingAfterFrame - 1;
+		relevantAnimationLength = pPlayer->_pAnimStopDistributingAfterFrame - 1;
 	} else {
-		relevantAnimationLenght = pPlayer->_pAnimLen;
+		relevantAnimationLength = pPlayer->_pAnimLen;
 	}
 	float progressToNextGameTick = nthread_GetProgressToNextGameTick();
 	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted; // we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
 	int animationMaxGameTickets;
 	if (pPlayer->_pAnimDelay <= 1)
-		animationMaxGameTickets = relevantAnimationLenght;
+		animationMaxGameTickets = relevantAnimationLength;
 	else
-		animationMaxGameTickets = (relevantAnimationLenght * pPlayer->_pAnimDelay);
-	float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLenght - pPlayer->_pAnimNumSkippedFrames); // if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
+		animationMaxGameTickets = (relevantAnimationLength * pPlayer->_pAnimDelay);
+	float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLength - pPlayer->_pAnimNumSkippedFrames); // if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
 	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * gameTickModifier); // 1 added for rounding reasons. float to int cast always truncate.
-	if (absolutAnimationFrame > relevantAnimationLenght) // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
-		return relevantAnimationLenght;
+	if (absolutAnimationFrame > relevantAnimationLength) // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
+		return relevantAnimationLength;
 	if (absolutAnimationFrame <= 0) {
 		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame");
 		return 1;
