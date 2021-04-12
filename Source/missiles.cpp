@@ -1904,7 +1904,7 @@ void AddFlashBack(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 	if (mienemy == TARGET_MONSTERS && id != -1) {
 		missile[mi]._midam = 0;
 		int lvl = 2;
-		if (id > 0)
+		if (id > -1)
 			lvl = plr[id]._pLevel * 2;
 		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 	}
@@ -1978,7 +1978,7 @@ void AddSearch(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 	missile[mi]._miVar8 = 0;
 	AutoMapShowItems = TRUE;
 	int lvl = 2;
-	if (id > 0)
+	if (id > -1)
 		lvl = plr[id]._pLevel * 2;
 	missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 	if (mienemy == TARGET_MONSTERS)
@@ -3105,7 +3105,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 		plr[id]._pSpellFlags |= 2u;
 		missile[mi]._miVar2 = tmp;
 		int lvl = 2;
-		if (id > 0)
+		if (id > -1)
 			lvl = plr[id]._pLevel * 2;
 		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 		CalcPlrItemVals(id, TRUE);
@@ -4301,7 +4301,7 @@ void MI_LightningWallC(Sint32 i)
 	missile[i]._mirange--;
 	int id = missile[i]._misource;
 	int lvl = 0;
-	if (id > 0)
+	if (id > -1)
 		lvl = plr[id]._pLevel;
 	int dmg = 16 * (random_(53, 10) + random_(53, 10) + lvl + 2);
 	if (missile[i]._mirange == 0) {
@@ -5261,7 +5261,7 @@ void MI_Blodboil(Sint32 i)
 			plr[id]._pSpellFlags &= ~0x2;
 			plr[id]._pSpellFlags |= 4;
 			int lvl = 2;
-			if (id > 0)
+			if (id > -1)
 				lvl = plr[id]._pLevel * 2;
 			missile[i]._mirange = lvl + 10 * missile[i]._mispllvl + 245;
 			hpdif = plr[id]._pMaxHP - plr[id]._pHitPoints;
