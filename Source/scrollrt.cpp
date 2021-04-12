@@ -1533,6 +1533,8 @@ void DrawAndBlit()
 	lock_buf(0);
 	CelOutputBuffer out = GlobalBackBuffer();
 
+	nthread_UpdateProgressToNextGameTick();
+
 	DrawView(out, ViewX, ViewY);
 	if (ctrlPan) {
 		DrawCtrlPan(out);
