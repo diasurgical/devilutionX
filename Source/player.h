@@ -333,7 +333,8 @@ void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
 /**
- * @brief Sets the new Plr Animation with all relevant informations for rendering
+ * @brief Sets the new Player Animation with all relevant information for rendering
+
  * @param pnum Player Id
  * @param Peq Pointer to Animation Data
  * @param numFrames Number of Frames in Animation
