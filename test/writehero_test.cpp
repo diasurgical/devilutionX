@@ -189,9 +189,9 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	pPack->pBaseMag = 15 + 55;
 	pPack->pBaseDex = 30 + 220;
 	pPack->pBaseVit = 20 + 60;
-	pPack->pHPBase = ((20 + 10) << 6) + ((20 + 10) << 5) + 48 * 128 + (60 << 6);
+	pPack->pHPBase = ((20 + 10) * 64) + ((20 + 10) * 32) + 48 * 128 + (60 * 64);
 	pPack->pMaxHPBase = pPack->pHPBase;
-	pPack->pManaBase = (15 << 6) + (15 << 5) + 48 * 128 + (55 << 6);
+	pPack->pManaBase = (15 * 64) + (15 * 32) + 48 * 128 + (55 * 64);
 	pPack->pMaxManaBase = pPack->pManaBase;
 
 	PackItemUnique(pPack->InvBody + INVLOC_HEAD, 52);

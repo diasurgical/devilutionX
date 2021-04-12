@@ -501,8 +501,8 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool p
 			return;
 		int xx = object[bv]._ox - x;
 		int yy = object[bv]._oy - y;
-		sx = (xx << 5) + ox - object[bv]._oAnimWidth2 - (yy << 5);
-		sy = oy + (yy << 4) + (xx << 4);
+		sx = (xx * 32) + ox - object[bv]._oAnimWidth2 - (yy * 32);
+		sy = oy + (yy * 16) + (xx * 16);
 	}
 
 	assert(bv >= 0 && bv < MAXOBJECTS);

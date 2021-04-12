@@ -952,7 +952,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	} else if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard) {
 		vadd += vadd / 2;
 	}
-	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
+	ihp += (vadd * 64); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
 		madd <<= 1;
@@ -962,7 +962,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	} else if (plr[p]._pClass == HeroClass::Bard) {
 		madd += (madd / 4) + (madd / 2);
 	}
-	imana += (madd << 6);
+	imana += (madd * 64);
 
 	plr[p]._pHitPoints = ihp + plr[p]._pHPBase;
 	plr[p]._pMaxHP = ihp + plr[p]._pMaxHPBase;
@@ -2069,17 +2069,17 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		items[i]._iPLGetHit -= r;
 		break;
 	case IPL_LIFE:
-		items[i]._iPLHP += r << 6;
+		items[i]._iPLHP += r * 64;
 		break;
 	case IPL_LIFE_CURSE:
-		items[i]._iPLHP -= r << 6;
+		items[i]._iPLHP -= r * 64;
 		break;
 	case IPL_MANA:
-		items[i]._iPLMana += r << 6;
+		items[i]._iPLMana += r * 64;
 		drawmanaflag = true;
 		break;
 	case IPL_MANA_CURSE:
-		items[i]._iPLMana -= r << 6;
+		items[i]._iPLMana -= r * 64;
 		drawmanaflag = true;
 		break;
 	case IPL_DUR:
@@ -2287,13 +2287,13 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		break;
 	case IPL_MANATOLIFE:
 		r2 = ((plr[myplr]._pMaxManaBase / 64) * 50 / 100);
-		items[i]._iPLMana -= (r2 << 6);
-		items[i]._iPLHP += (r2 << 6);
+		items[i]._iPLMana -= (r2 * 64);
+		items[i]._iPLHP += (r2 * 64);
 		break;
 	case IPL_LIFETOMANA:
 		r2 = ((plr[myplr]._pMaxHPBase / 64) * 40 / 100);
-		items[i]._iPLHP -= (r2 << 6);
-		items[i]._iPLMana += (r2 << 6);
+		items[i]._iPLHP -= (r2 * 64);
+		items[i]._iPLMana += (r2 * 64);
 		break;
 	default:
 		break;
@@ -3024,7 +3024,7 @@ int char2int(char input)
 void hex2bin(const char *src, int bytes, char *target)
 {
 	for (int i = 0; i < bytes; i++, src += 2) {
-		target[i] = (char2int(*src) << 4) | char2int(src[1]);
+		target[i] = (char2int(*src) * 16) | char2int(src[1]);
 	}
 }
 
@@ -4221,7 +4221,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_HEAL:
 	case IMISC_FOOD:
 		j = plr[p]._pMaxHP / 256;
-		l = ((j >> 1) + random_(39, j)) << 6;
+		l = ((j >> 1) + random_(39, j)) * 64;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
 			l <<= 1;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
@@ -4241,7 +4241,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		break;
 	case IMISC_MANA:
 		j = plr[p]._pMaxMana / 256;
-		l = ((j >> 1) + random_(40, j)) << 6;
+		l = ((j >> 1) + random_(40, j)) * 64;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
 			l <<= 1;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
@@ -4287,7 +4287,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		break;
 	case IMISC_REJUV:
 		j = plr[p]._pMaxHP / 256;
-		l = ((j / 2) + random_(39, j)) << 6;
+		l = ((j / 2) + random_(39, j)) * 64;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
 			l <<= 1;
 		if (plr[p]._pClass == HeroClass::Rogue)
@@ -4300,7 +4300,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			plr[p]._pHPBase = plr[p]._pMaxHPBase;
 		drawhpflag = true;
 		j = plr[p]._pMaxMana / 256;
-		l = ((j / 2) + random_(40, j)) << 6;
+		l = ((j / 2) + random_(40, j)) * 64;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
 			l <<= 1;
 		if (plr[p]._pClass == HeroClass::Rogue)
@@ -4364,10 +4364,10 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		if (plr[p]._pSplLvl[spl] < MAX_SPELL_LEVEL)
 			plr[p]._pSplLvl[spl]++;
 		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
-			plr[p]._pMana += spelldata[spl].sManaCost << 6;
+			plr[p]._pMana += spelldata[spl].sManaCost * 64;
 			if (plr[p]._pMana > plr[p]._pMaxMana)
 				plr[p]._pMana = plr[p]._pMaxMana;
-			plr[p]._pManaBase += spelldata[spl].sManaCost << 6;
+			plr[p]._pManaBase += spelldata[spl].sManaCost * 64;
 			if (plr[p]._pManaBase > plr[p]._pMaxManaBase)
 				plr[p]._pManaBase = plr[p]._pMaxManaBase;
 		}

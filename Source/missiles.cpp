@@ -420,7 +420,7 @@ void GetMissileVel(int i, int sx, int sy, int dx, int dy, int v)
 		dxp = (dx + sy - sx - dy) * (1 << 21);
 		dyp = (dy + dx - sx - sy) * (1 << 21);
 		dr = sqrt(dxp * dxp + dyp * dyp);
-		missile[i]._mixvel = (dxp * (v << 16)) / dr;
+		missile[i]._mixvel = (dxp * (v * 65536)) / dr;
 		missile[i]._miyvel = (dyp * (v << 15)) / dr;
 	} else {
 		missile[i]._mixvel = 0;
@@ -519,8 +519,8 @@ void MoveMissilePos(int i)
 	if (PosOkMonst(missile[i]._misource, x, y)) {
 		missile[i]._mix += dx;
 		missile[i]._miy += dy;
-		missile[i]._mixoff += (dy << 5) - (dx << 5);
-		missile[i]._miyoff -= (dy << 4) + (dx << 4);
+		missile[i]._mixoff += (dy * 32) - (dx * 32);
+		missile[i]._miyoff -= (dy * 16) + (dx * 16);
 	}
 }
 
@@ -824,7 +824,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 		} else {
 			if (!shift) {
 
-				dam = (mind << 6) + random_(75, (maxd - mind + 1) << 6);
+				dam = (mind * 64) + random_(75, (maxd - mind + 1) * 64);
 				if (m == -1)
 					if (plr[pnum]._pIFlags & ISPL_ABSHALFTRAP)
 						dam >>= 1;
@@ -1905,12 +1905,12 @@ void AddMana(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 {
 	int i, ManaAmount;
 
-	ManaAmount = (random_(57, 10) + 1) << 6;
+	ManaAmount = (random_(57, 10) + 1) * 64;
 	for (i = 0; i < plr[id]._pLevel; i++) {
-		ManaAmount += (random_(57, 4) + 1) << 6;
+		ManaAmount += (random_(57, 4) + 1) * 64;
 	}
 	for (i = 0; i < missile[mi]._mispllvl; i++) {
-		ManaAmount += (random_(57, 6) + 1) << 6;
+		ManaAmount += (random_(57, 6) + 1) * 64;
 	}
 	if (plr[id]._pClass == HeroClass::Sorcerer)
 		ManaAmount <<= 1;
@@ -2911,12 +2911,12 @@ void AddHeal(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 	int i;
 	int HealAmount;
 
-	HealAmount = (random_(57, 10) + 1) << 6;
+	HealAmount = (random_(57, 10) + 1) * 64;
 	for (i = 0; i < plr[id]._pLevel; i++) {
-		HealAmount += (random_(57, 4) + 1) << 6;
+		HealAmount += (random_(57, 4) + 1) * 64;
 	}
 	for (i = 0; i < missile[mi]._mispllvl; i++) {
-		HealAmount += (random_(57, 6) + 1) << 6;
+		HealAmount += (random_(57, 6) + 1) * 64;
 	}
 
 	if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Barbarian || plr[id]._pClass == HeroClass::Monk)
@@ -3077,7 +3077,7 @@ void AddNova(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 
 void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
+	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel * 64) {
 		missile[mi]._miDelFlag = true;
 	} else {
 		_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
@@ -4402,7 +4402,7 @@ void MI_Lightctrl(Sint32 i)
 	p = missile[i]._misource;
 	if (p != -1) {
 		if (missile[i]._micaster == TARGET_MONSTERS) {
-			dam = (random_(79, 2) + random_(79, plr[p]._pLevel) + 2) << 6;
+			dam = (random_(79, 2) + random_(79, plr[p]._pLevel) + 2) * 64;
 		} else {
 			dam = 2 * (monster[p].mMinDamage + random_(80, monster[p].mMaxDamage - monster[p].mMinDamage + 1));
 		}

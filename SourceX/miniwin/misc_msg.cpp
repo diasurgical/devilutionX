@@ -250,7 +250,7 @@ namespace {
 
 LPARAM position_for_mouse(short x, short y)
 {
-	return (((uint16_t)(y & 0xFFFF)) << 16) | (uint16_t)(x & 0xFFFF);
+	return (((uint16_t)(y & 0xFFFF)) * 65536) | (uint16_t)(x & 0xFFFF);
 }
 
 WPARAM keystate_for_mouse(WPARAM ret)
@@ -471,7 +471,7 @@ bool FetchMessage(LPMSG lpMsg)
 		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
 		lpMsg->wParam = (DWORD)key;
 		// HACK: Encode modifier in lParam for TranslateMessage later
-		lpMsg->lParam = e.key.keysym.mod << 16;
+		lpMsg->lParam = e.key.keysym.mod * 65536;
 	} break;
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;

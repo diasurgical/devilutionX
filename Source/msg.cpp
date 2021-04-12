@@ -984,15 +984,15 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
 	cmd.wIndx = items[ii].IDidx;
 
 	if (items[ii].IDidx == IDI_EAR) {
-		cmd.wCI = items[ii]._iName[8] | (items[ii]._iName[7] << 8);
-		cmd.dwSeed = items[ii]._iName[12] | ((items[ii]._iName[11] | ((items[ii]._iName[10] | (items[ii]._iName[9] << 8)) << 8)) << 8);
+		cmd.wCI = items[ii]._iName[8] | (items[ii]._iName[7] * 256);
+		cmd.dwSeed = items[ii]._iName[12] | ((items[ii]._iName[11] | ((items[ii]._iName[10] | (items[ii]._iName[9] * 256)) * 256)) * 256);
 		cmd.bId = items[ii]._iName[13];
 		cmd.bDur = items[ii]._iName[14];
 		cmd.bMDur = items[ii]._iName[15];
 		cmd.bCh = items[ii]._iName[16];
 		cmd.bMCh = items[ii]._iName[17];
-		cmd.wValue = items[ii]._ivalue | (items[ii]._iName[18] << 8) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = items[ii]._iName[22] | ((items[ii]._iName[21] | ((items[ii]._iName[20] | (items[ii]._iName[19] << 8)) << 8)) << 8);
+		cmd.wValue = items[ii]._ivalue | (items[ii]._iName[18] * 256) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) * 64);
+		cmd.dwBuff = items[ii]._iName[22] | ((items[ii]._iName[21] | ((items[ii]._iName[20] | (items[ii]._iName[19] * 256)) * 256)) * 256);
 	} else {
 		cmd.wCI = items[ii]._iCreateInfo;
 		cmd.dwSeed = items[ii]._iSeed;
@@ -1082,15 +1082,15 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
 	cmd.wIndx = plr[myplr].HoldItem.IDidx;
 
 	if (plr[myplr].HoldItem.IDidx == IDI_EAR) {
-		cmd.wCI = plr[myplr].HoldItem._iName[8] | (plr[myplr].HoldItem._iName[7] << 8);
-		cmd.dwSeed = plr[myplr].HoldItem._iName[12] | ((plr[myplr].HoldItem._iName[11] | ((plr[myplr].HoldItem._iName[10] | (plr[myplr].HoldItem._iName[9] << 8)) << 8)) << 8);
+		cmd.wCI = plr[myplr].HoldItem._iName[8] | (plr[myplr].HoldItem._iName[7] * 256);
+		cmd.dwSeed = plr[myplr].HoldItem._iName[12] | ((plr[myplr].HoldItem._iName[11] | ((plr[myplr].HoldItem._iName[10] | (plr[myplr].HoldItem._iName[9] * 256)) * 256)) * 256);
 		cmd.bId = plr[myplr].HoldItem._iName[13];
 		cmd.bDur = plr[myplr].HoldItem._iName[14];
 		cmd.bMDur = plr[myplr].HoldItem._iName[15];
 		cmd.bCh = plr[myplr].HoldItem._iName[16];
 		cmd.bMCh = plr[myplr].HoldItem._iName[17];
-		cmd.wValue = plr[myplr].HoldItem._ivalue | (plr[myplr].HoldItem._iName[18] << 8) | ((plr[myplr].HoldItem._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = plr[myplr].HoldItem._iName[22] | ((plr[myplr].HoldItem._iName[21] | ((plr[myplr].HoldItem._iName[20] | (plr[myplr].HoldItem._iName[19] << 8)) << 8)) << 8);
+		cmd.wValue = plr[myplr].HoldItem._ivalue | (plr[myplr].HoldItem._iName[18] * 256) | ((plr[myplr].HoldItem._iCurs - ICURS_EAR_SORCERER) * 64);
+		cmd.dwBuff = plr[myplr].HoldItem._iName[22] | ((plr[myplr].HoldItem._iName[21] | ((plr[myplr].HoldItem._iName[20] | (plr[myplr].HoldItem._iName[19] * 256)) * 256)) * 256);
 	} else {
 		cmd.wCI = plr[myplr].HoldItem._iCreateInfo;
 		cmd.dwSeed = plr[myplr].HoldItem._iSeed;
@@ -1155,15 +1155,15 @@ void NetSendCmdDItem(bool bHiPri, int ii)
 	cmd.wIndx = items[ii].IDidx;
 
 	if (items[ii].IDidx == IDI_EAR) {
-		cmd.wCI = items[ii]._iName[8] | (items[ii]._iName[7] << 8);
-		cmd.dwSeed = items[ii]._iName[12] | ((items[ii]._iName[11] | ((items[ii]._iName[10] | (items[ii]._iName[9] << 8)) << 8)) << 8);
+		cmd.wCI = items[ii]._iName[8] | (items[ii]._iName[7] * 256);
+		cmd.dwSeed = items[ii]._iName[12] | ((items[ii]._iName[11] | ((items[ii]._iName[10] | (items[ii]._iName[9] * 256)) * 256)) * 256);
 		cmd.bId = items[ii]._iName[13];
 		cmd.bDur = items[ii]._iName[14];
 		cmd.bMDur = items[ii]._iName[15];
 		cmd.bCh = items[ii]._iName[16];
 		cmd.bMCh = items[ii]._iName[17];
-		cmd.wValue = items[ii]._ivalue | (items[ii]._iName[18] << 8) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = items[ii]._iName[22] | ((items[ii]._iName[21] | ((items[ii]._iName[20] | (items[ii]._iName[19] << 8)) << 8)) << 8);
+		cmd.wValue = items[ii]._ivalue | (items[ii]._iName[18] * 256) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) * 64);
+		cmd.dwBuff = items[ii]._iName[22] | ((items[ii]._iName[21] | ((items[ii]._iName[20] | (items[ii]._iName[19] * 256)) * 256)) * 256);
 	} else {
 		cmd.wCI = items[ii]._iCreateInfo;
 		cmd.dwSeed = items[ii]._iSeed;
@@ -2017,7 +2017,7 @@ static DWORD On_MONSTDAMAGE(TCmd *pCmd, int pnum)
 			if (monster[p->wMon]._mhitpoints > 0) {
 				monster[p->wMon]._mhitpoints -= p->dwDam;
 				if ((monster[p->wMon]._mhitpoints / 64) < 1)
-					monster[p->wMon]._mhitpoints = 1 << 6;
+					monster[p->wMon]._mhitpoints = 1 * 64;
 				delta_monster_hp(p->wMon, monster[p->wMon]._mhitpoints, plr[pnum].plrlevel);
 			}
 		}

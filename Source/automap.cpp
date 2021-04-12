@@ -382,18 +382,18 @@ WORD GetAutomapType(int x, int y, bool view)
 	WORD rv;
 
 	if (view && x == -1 && y >= 0 && y < DMAXY && automapview[0][y]) {
-		if (GetAutomapType(0, y, false) & (MAPFLAG_DIRT << 8)) {
+		if (GetAutomapType(0, y, false) & (MAPFLAG_DIRT * 256)) {
 			return 0;
 		} else {
-			return MAPFLAG_DIRT << 8;
+			return MAPFLAG_DIRT * 256;
 		}
 	}
 
 	if (view && y == -1 && x >= 0 && x < DMAXY && automapview[x][0]) {
-		if (GetAutomapType(x, 0, false) & (MAPFLAG_DIRT << 8)) {
+		if (GetAutomapType(x, 0, false) & (MAPFLAG_DIRT * 256)) {
 			return 0;
 		} else {
-			return MAPFLAG_DIRT << 8;
+			return MAPFLAG_DIRT * 256;
 		}
 	}
 
@@ -516,7 +516,7 @@ void InitAutomap()
 	for (i = 1; i <= dwTiles; i++) {
 		b1 = *pTmp++;
 		b2 = *pTmp++;
-		automaptype[i] = b1 + (b2 << 8);
+		automaptype[i] = b1 + (b2 * 256);
 	}
 
 	mem_free_dbg(pAFile);
@@ -563,7 +563,7 @@ void AutomapZoomIn()
 {
 	if (AutoMapScale < 200) {
 		AutoMapScale += 5;
-		AmLine64 = (AutoMapScale << 6) / 100;
+		AmLine64 = (AutoMapScale * 64) / 100;
 		AmLine32 = AmLine64 / 2;
 		AmLine16 = AmLine32 / 2;
 		AmLine8 = AmLine16 / 2;
@@ -575,7 +575,7 @@ void AutomapZoomOut()
 {
 	if (AutoMapScale > 50) {
 		AutoMapScale -= 5;
-		AmLine64 = (AutoMapScale << 6) / 100;
+		AmLine64 = (AutoMapScale * 64) / 100;
 		AmLine32 = AmLine64 / 2;
 		AmLine16 = AmLine32 / 2;
 		AmLine8 = AmLine16 / 2;
@@ -609,11 +609,11 @@ void DrawAutomap(CelOutputBuffer out)
 		AutoMapYOfs--;
 	AutoMapY += AutoMapYOfs;
 
-	d = (AutoMapScale << 6) / 100;
+	d = (AutoMapScale * 64) / 100;
 	cells = 2 * (gnScreenWidth / 2 / d) + 1;
 	if ((gnScreenWidth / 2) % d)
 		cells++;
-	if ((gnScreenWidth / 2) % d >= (AutoMapScale << 5) / 100)
+	if ((gnScreenWidth / 2) % d >= (AutoMapScale * 32) / 100)
 		cells++;
 
 	if (ScrollInfo._sxoff + ScrollInfo._syoff)
@@ -757,7 +757,7 @@ void AutomapZoomReset()
 {
 	AutoMapXOfs = 0;
 	AutoMapYOfs = 0;
-	AmLine64 = (AutoMapScale << 6) / 100;
+	AmLine64 = (AutoMapScale * 64) / 100;
 	AmLine32 = AmLine64 / 2;
 	AmLine16 = AmLine32 / 2;
 	AmLine8 = AmLine16 / 2;

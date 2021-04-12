@@ -433,7 +433,7 @@ int gmenu_slider_get(TMenuItem *pItem, int min, int max)
 void gmenu_slider_steps(TMenuItem *pItem, int steps)
 {
 	pItem->dwFlags &= 0xFF000FFF;
-	pItem->dwFlags |= (steps << 12) & 0xFFF000;
+	pItem->dwFlags |= (steps * 4096) & 0xFFF000;
 }
 
 } // namespace devilution

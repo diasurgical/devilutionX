@@ -679,7 +679,7 @@ void CreatePlayer(int pnum, HeroClass c)
 
 	plr[pnum]._pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(c)];
 
-	plr[pnum]._pHitPoints = (plr[pnum]._pVitality + 10) << 6;
+	plr[pnum]._pHitPoints = (plr[pnum]._pVitality + 10) * 64;
 	if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 		plr[pnum]._pHitPoints <<= 1;
 	} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Monk || plr[pnum]._pClass == HeroClass::Bard) {
@@ -690,7 +690,7 @@ void CreatePlayer(int pnum, HeroClass c)
 	plr[pnum]._pHPBase = plr[pnum]._pHitPoints;
 	plr[pnum]._pMaxHPBase = plr[pnum]._pHitPoints;
 
-	plr[pnum]._pMana = plr[pnum]._pMagic << 6;
+	plr[pnum]._pMana = plr[pnum]._pMagic * 64;
 	if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 		plr[pnum]._pMana <<= 1;
 	} else if (plr[pnum]._pClass == HeroClass::Bard) {
@@ -1261,10 +1261,10 @@ void PM_ChangeLightOff(int pnum)
 
 	x = (x / 8) * xmul;
 	y = (y / 8) * ymul;
-	lx = x + (l->_lx << 3);
-	ly = y + (l->_ly << 3);
-	offx = l->_xoff + (l->_lx << 3);
-	offy = l->_yoff + (l->_ly << 3);
+	lx = x + (l->_lx * 8);
+	ly = y + (l->_ly * 8);
+	offx = l->_xoff + (l->_lx * 8);
+	offy = l->_yoff + (l->_ly * 8);
 
 	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
 		return;
@@ -1829,8 +1829,8 @@ StartPlayerKill(int pnum, int earflag)
 							ear._iCurs = ICURS_EAR_ROGUE;
 						}
 
-						ear._iCreateInfo = plr[pnum]._pName[0] << 8 | plr[pnum]._pName[1];
-						ear._iSeed = plr[pnum]._pName[2] << 24 | plr[pnum]._pName[3] << 16 | plr[pnum]._pName[4] << 8 | plr[pnum]._pName[5];
+						ear._iCreateInfo = plr[pnum]._pName[0] * 256 | plr[pnum]._pName[1];
+						ear._iSeed = plr[pnum]._pName[2] << 24 | plr[pnum]._pName[3] * 65536 | plr[pnum]._pName[4] * 256 | plr[pnum]._pName[5];
 						ear._ivalue = plr[pnum]._pLevel;
 
 						if (FindGetItem(IDI_EAR, ear._iCreateInfo, ear._iSeed) == -1) {
@@ -2442,7 +2442,7 @@ bool PlrHitMonst(int pnum, int m)
 		dam = random_(5, maxd - mind + 1) + mind;
 		dam += dam * plr[pnum]._pIBonusDam / 100;
 		dam += plr[pnum]._pIBonusDamMod;
-		int dam2 = dam << 6;
+		int dam2 = dam * 64;
 		dam += plr[pnum]._pDamageMod;
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 			ddp = plr[pnum]._pLevel;
@@ -2502,13 +2502,13 @@ bool PlrHitMonst(int pnum, int m)
 
 		if (pnum == myplr) {
 			if (plr[pnum].pDamAcFlags & 0x04) {
-				dam2 += plr[pnum]._pIGetHit << 6;
+				dam2 += plr[pnum]._pIGetHit * 64;
 				if (dam2 >= 0) {
 					if (plr[pnum]._pHitPoints > dam2) {
 						plr[pnum]._pHitPoints -= dam2;
 						plr[pnum]._pHPBase -= dam2;
 					} else {
-						dam2 = (1 << 6);
+						dam2 = (1 * 64);
 						plr[pnum]._pHPBase -= plr[pnum]._pHitPoints - dam2;
 						plr[pnum]._pHitPoints = dam2;
 					}
@@ -2665,7 +2665,7 @@ bool PlrHitPlr(int pnum, char p)
 					dam <<= 1;
 				}
 			}
-			skdam = dam << 6;
+			skdam = dam * 64;
 			if (plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) {
 				tac = random_(7, skdam / 8);
 				plr[pnum]._pHitPoints += tac;
@@ -4128,7 +4128,7 @@ void ModifyPlrMag(int p, int l)
 	plr[p]._pMagic += l;
 	plr[p]._pBaseMag += l;
 
-	int ms = l << 6;
+	int ms = l * 64;
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
 		ms <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
@@ -4187,7 +4187,7 @@ void ModifyPlrVit(int p, int l)
 	plr[p]._pVitality += l;
 	plr[p]._pBaseVit += l;
 
-	int ms = l << 6;
+	int ms = l * 64;
 	if (plr[p]._pClass == HeroClass::Warrior) {
 		ms <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {
@@ -4250,7 +4250,7 @@ void SetPlrMag(int p, int v)
 
 	plr[p]._pBaseMag = v;
 
-	m = v << 6;
+	m = v * 64;
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
 		m <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
@@ -4292,7 +4292,7 @@ void SetPlrVit(int p, int v)
 
 	plr[p]._pBaseVit = v;
 
-	hp = v << 6;
+	hp = v * 64;
 	if (plr[p]._pClass == HeroClass::Warrior) {
 		hp <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {

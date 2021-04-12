@@ -97,7 +97,7 @@ void CelDrawLightRedTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int 
 	if (light == 2)
 		idx += 256; // gray colors
 	if (light >= 4)
-		idx += (light - 1) << 8;
+		idx += (light - 1) * 256;
 
 	BYTE width;
 	BYTE *end;
@@ -397,7 +397,7 @@ void CelDrawLightRedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, 
 	if (light == 2)
 		idx += 256; // gray colors
 	if (light >= 4)
-		idx += (light - 1) << 8;
+		idx += (light - 1) * 256;
 
 	tbl = &pLightTbl[idx];
 
@@ -1048,7 +1048,7 @@ void Cl2DrawLightTbl(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nC
 	if (light == 2)
 		idx += 256; // gray colors
 	if (light >= 4)
-		idx += (light - 1) << 8;
+		idx += (light - 1) * 256;
 
 	Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, &pLightTbl[idx]);
 }

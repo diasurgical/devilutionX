@@ -66,8 +66,8 @@ inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 	return pCelBuff + SwapLE32(pFrameTable[nCel]);
 }
 
-#define LOAD_LE32(b) (((DWORD)(b)[3] << 24) | ((DWORD)(b)[2] << 16) | ((DWORD)(b)[1] << 8) | (DWORD)(b)[0])
-#define LOAD_BE32(b) (((DWORD)(b)[0] << 24) | ((DWORD)(b)[1] << 16) | ((DWORD)(b)[2] << 8) | (DWORD)(b)[3])
+#define LOAD_LE32(b) (((DWORD)(b)[3] << 24) | ((DWORD)(b)[2] * 65536) | ((DWORD)(b)[1] * 256) | (DWORD)(b)[0])
+#define LOAD_BE32(b) (((DWORD)(b)[0] << 24) | ((DWORD)(b)[1] * 65536) | ((DWORD)(b)[2] * 256) | (DWORD)(b)[3])
 inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
 {
 	DWORD nCellStart;
@@ -82,7 +82,7 @@ inline BYTE *CelGetFrameClipped(BYTE *pCelBuff, int nCel, int *nDataSize)
 	DWORD nDataStart;
 	BYTE *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
 
-	nDataStart = pRLEBytes[1] << 8 | pRLEBytes[0];
+	nDataStart = pRLEBytes[1] * 256 | pRLEBytes[0];
 	*nDataSize -= nDataStart;
 
 	return pRLEBytes + nDataStart;
