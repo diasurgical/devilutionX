@@ -2784,7 +2784,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 void SpawnItem(int m, int x, int y, bool sendmsg)
 {
 	int idx;
-	bool onlygood;
+	bool onlygood = true;
 
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
