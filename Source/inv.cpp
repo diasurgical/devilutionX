@@ -1099,8 +1099,8 @@ void CheckInvPaste(int pnum, int mx, int my)
 	ItemStruct tempitem;
 
 	SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
-	i = mx + (icursW >> 1);
-	j = my + (icursH >> 1);
+	i = mx + (icursW / 2);
+	j = my + (icursH / 2);
 	sx = icursW28;
 	sy = icursH28;
 	done = false;
@@ -1183,13 +1183,13 @@ void CheckInvPaste(int pnum, int mx, int my)
 				}
 			}
 		} else {
-			yy = 10 * ((ii / 10) - ((sy - 1) >> 1));
+			yy = 10 * ((ii / 10) - ((sy - 1) / 2));
 			if (yy < 0)
 				yy = 0;
 			for (j = 0; j < sy && done; j++) {
 				if (yy >= NUM_INV_GRID_ELEM)
 					done = false;
-				xx = (ii % 10) - ((sx - 1) >> 1);
+				xx = (ii % 10) - ((sx - 1) / 2);
 				if (xx < 0)
 					xx = 0;
 				for (i = 0; i < sx && done; i++) {
@@ -1424,11 +1424,11 @@ void CheckInvPaste(int pnum, int mx, int my)
 				}
 			}
 			ii = r - SLOTXY_INV_FIRST;
-			yy = 10 * (ii / 10 - ((sy - 1) >> 1));
+			yy = 10 * (ii / 10 - ((sy - 1) / 2));
 			if (yy < 0)
 				yy = 0;
 			for (j = 0; j < sy; j++) {
-				xx = (ii % 10 - ((sx - 1) >> 1));
+				xx = (ii % 10 - ((sx - 1) / 2));
 				if (xx < 0)
 					xx = 0;
 				for (i = 0; i < sx; i++) {
@@ -1484,7 +1484,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	CalcPlrInv(pnum, true);
 	if (pnum == myplr) {
 		if (cn == CURSOR_HAND)
-			SetCursorPos(MouseX + (cursW >> 1), MouseY + (cursH >> 1));
+			SetCursorPos(MouseX + (cursW / 2), MouseY + (cursH / 2));
 		NewCursor(cn);
 	}
 }
@@ -1780,7 +1780,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 				holdItem._itype = ITYPE_NONE;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-				SetCursorPos(mx - (cursW >> 1), MouseY - (cursH >> 1));
+				SetCursorPos(mx - (cursW / 2), MouseY - (cursH / 2));
 			}
 		}
 	}

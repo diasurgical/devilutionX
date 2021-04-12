@@ -946,7 +946,7 @@ void S_StartBBoy()
 	if (gbIsHellfire)
 		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue >> 2));
 	else
-		AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue >> 1));
+		AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue / 2));
 	PrintStoreItem(&boyitem, 11, iclr);
 	AddSText(0, 22, true, "Leave", COL_WHITE, true);
 	OffsetSTextY(22, 6);
@@ -1174,7 +1174,7 @@ void S_StartTalk()
 	}
 
 	if (sn > 6) {
-		sn = 14 - (sn >> 1);
+		sn = 14 - (sn / 2);
 		la = 1;
 	} else {
 		sn = 15 - sn;
@@ -1793,7 +1793,7 @@ void S_BBuyEnter()
 	if (gbIsHellfire)
 		price -= boyitem._iIvalue >> 2;
 	else
-		price += boyitem._iIvalue >> 1;
+		price += boyitem._iIvalue / 2;
 
 	if (plr[myplr]._pGold < price) {
 		StartStore(STORE_NOMONEY);
@@ -2007,7 +2007,7 @@ void S_TalkEnter()
 			sn++;
 	}
 	if (sn > 6) {
-		sn = 14 - (sn >> 1);
+		sn = 14 - (sn / 2);
 		la = 1;
 	} else {
 		sn = 15 - sn;
@@ -2167,7 +2167,7 @@ void SetupTownStores()
 				l = i;
 		}
 	} else {
-		l = plr[myplr]._pLevel >> 1;
+		l = plr[myplr]._pLevel / 2;
 	}
 	l += 2;
 	if (l < 6)
@@ -2214,7 +2214,7 @@ void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char 
 		for (i = 0; i < len; i++)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < yy)
-			k = (yy - width) >> 1;
+			k = (yy - width) / 2;
 		sx += k;
 	}
 	if (stextsel == y) {

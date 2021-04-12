@@ -806,7 +806,7 @@ void MakeLightTable()
 			}
 		}
 		for (j = 16; j < 20; j++) {
-			col = 8 * j + (shade >> 1);
+			col = 8 * j + (shade / 2);
 			max = 8 * j + 7;
 			for (k = 0; k < 8; k++) {
 				*tbl++ = col;

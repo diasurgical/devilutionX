@@ -749,12 +749,12 @@ void ResyncQuests()
 			    setpc_h + setpc_y - 2,
 			    setpc_w + setpc_x + 1,
 			    setpc_h + setpc_y + 1);
-			ObjChangeMapResync(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 2, (setpc_h >> 1) + setpc_y - 2);
+			ObjChangeMapResync(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
 			for (i = 0; i < nobjects; i++)
 				SyncObjectAnim(objectactive[i]);
 			tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 4, setpc_y + (setpc_h >> 1));
+			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
 		}
 		if (quests[Q_LTBANNER]._qvar1 == 3) {
@@ -765,7 +765,7 @@ void ResyncQuests()
 				SyncObjectAnim(objectactive[i]);
 			tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 4, setpc_y + (setpc_h >> 1));
+			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
 		}
 	}
@@ -820,7 +820,7 @@ static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, con
 		for (i = 0; i < len; i++)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < 257)
-			k = (257 - width) >> 1;
+			k = (257 - width) / 2;
 		sx += k;
 	}
 	if (qline == y) {
@@ -865,7 +865,7 @@ void StartQuestlog()
 		}
 	}
 	if (numqlines > 5) {
-		qtopline = 5 - (numqlines >> 1);
+		qtopline = 5 - (numqlines / 2);
 	} else {
 		qtopline = 8;
 	}
@@ -907,7 +907,7 @@ void QuestlogEnter()
 {
 	PlaySFX(IS_TITLSLCT);
 	if (numqlines && qline != 22)
-		InitQTextMsg(quests[qlist[(qline - qtopline) >> 1]]._qmsg);
+		InitQTextMsg(quests[qlist[(qline - qtopline) / 2]]._qmsg);
 	questlog = false;
 }
 

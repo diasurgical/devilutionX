@@ -470,7 +470,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int nu
 	plr[pnum]._pAnimCnt = 0;
 	plr[pnum]._pAnimDelay = Delay;
 	plr[pnum]._pAnimWidth = width;
-	plr[pnum]._pAnimWidth2 = (width - 64) >> 1;
+	plr[pnum]._pAnimWidth2 = (width - 64) / 2;
 	plr[pnum]._pAnimNumSkippedFrames = numSkippedFrames;
 	plr[pnum]._pAnimGameTicksSinceSequenceStarted = processAnimationPending ? -1 : 0;
 	plr[pnum]._pAnimStopDistributingAfterFrame = stopDistributingAfterFrame;
@@ -683,7 +683,7 @@ void CreatePlayer(int pnum, HeroClass c)
 	if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 		plr[pnum]._pHitPoints <<= 1;
 	} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Monk || plr[pnum]._pClass == HeroClass::Bard) {
-		plr[pnum]._pHitPoints += plr[pnum]._pHitPoints >> 1;
+		plr[pnum]._pHitPoints += plr[pnum]._pHitPoints / 2;
 	}
 
 	plr[pnum]._pMaxHP = plr[pnum]._pHitPoints;
@@ -696,7 +696,7 @@ void CreatePlayer(int pnum, HeroClass c)
 	} else if (plr[pnum]._pClass == HeroClass::Bard) {
 		plr[pnum]._pMana += plr[pnum]._pMana * 3 / 4;
 	} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Monk) {
-		plr[pnum]._pMana += plr[pnum]._pMana >> 1;
+		plr[pnum]._pMana += plr[pnum]._pMana / 2;
 	}
 
 	plr[pnum]._pMaxMana = plr[pnum]._pMana;
@@ -1862,7 +1862,7 @@ void DropHalfPlayersGold(int pnum)
 		app_fatal("DropHalfPlayersGold: illegal player %d", pnum);
 	}
 
-	hGold = plr[pnum]._pGold >> 1;
+	hGold = plr[pnum]._pGold / 2;
 	for (i = 0; i < MAXBELTITEMS && hGold > 0; i++) {
 		if (plr[pnum].SpdList[i]._itype == ITYPE_GOLD && plr[pnum].SpdList[i]._ivalue != MaxGold) {
 			if (hGold < plr[pnum].SpdList[i]._ivalue) {
@@ -2413,7 +2413,7 @@ bool PlrHitMonst(int pnum, int m)
 		tmac -= plr[pnum]._pIEnAc;
 	}
 
-	hper += (plr[pnum]._pDexterity >> 1) + plr[pnum]._pLevel + 50 - tmac;
+	hper += (plr[pnum]._pDexterity / 2) + plr[pnum]._pLevel + 50 - tmac;
 	if (plr[pnum]._pClass == HeroClass::Warrior) {
 		hper += 20;
 	}
@@ -2462,16 +2462,16 @@ bool PlrHitMonst(int pnum, int m)
 		switch (monster[m].MData->mMonstClass) {
 		case MC_UNDEAD:
 			if (phanditype == ITYPE_SWORD) {
-				dam -= dam >> 1;
+				dam -= dam / 2;
 			} else if (phanditype == ITYPE_MACE) {
-				dam += dam >> 1;
+				dam += dam / 2;
 			}
 			break;
 		case MC_ANIMAL:
 			if (phanditype == ITYPE_MACE) {
-				dam -= dam >> 1;
+				dam -= dam / 2;
 			} else if (phanditype == ITYPE_SWORD) {
-				dam += dam >> 1;
+				dam += dam / 2;
 			}
 			break;
 		case MC_DEMON:
@@ -2621,7 +2621,7 @@ bool PlrHitPlr(int pnum, char p)
 
 	hit = random_(4, 100);
 
-	hper = (plr[pnum]._pDexterity >> 1) + plr[pnum]._pLevel + 50 - (plr[p]._pIBonusAC + plr[p]._pIAC + plr[p]._pDexterity / 5);
+	hper = (plr[pnum]._pDexterity / 2) + plr[pnum]._pLevel + 50 - (plr[p]._pIBonusAC + plr[p]._pIAC + plr[p]._pDexterity / 5);
 
 	if (plr[pnum]._pClass == HeroClass::Warrior) {
 		hper += 20;
@@ -2640,7 +2640,7 @@ bool PlrHitPlr(int pnum, char p)
 		blk = 100;
 	}
 
-	blkper = plr[p]._pDexterity + plr[p]._pBaseToBlk + (plr[p]._pLevel << 1) - (plr[pnum]._pLevel << 1);
+	blkper = plr[p]._pDexterity + plr[p]._pBaseToBlk + (plr[p]._pLevel * 2) - (plr[pnum]._pLevel * 2);
 	if (blkper < 0) {
 		blkper = 0;
 	}
@@ -4132,7 +4132,7 @@ void ModifyPlrMag(int p, int l)
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
 		ms <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
-		ms += ms >> 1;
+		ms += ms / 2;
 	}
 
 	plr[p]._pMaxManaBase += ms;
@@ -4254,7 +4254,7 @@ void SetPlrMag(int p, int v)
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
 		m <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
-		m += m >> 1;
+		m += m / 2;
 	}
 
 	plr[p]._pMaxManaBase = m;

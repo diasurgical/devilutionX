@@ -552,7 +552,7 @@ void InitRndBarrels()
 				AddObject(o, xp, yp);
 				c++;
 			}
-			p = c >> 1;
+			p = c / 2;
 		}
 	}
 }
@@ -1642,7 +1642,7 @@ void objects_44D8C5(_object_id ot, int v2, int ox, int oy)
 	dObject[ox][oy] = oi + 1;
 	SetupObject(oi, ox, oy, ot);
 	objects_44DA68(oi, v2);
-	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) >> 1;
+	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) / 2;
 	nobjects++;
 }
 
@@ -1862,7 +1862,7 @@ void AddObject(_object_id ot, int ox, int oy)
 	default:
 		break;
 	}
-	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) >> 1;
+	object[oi]._oAnimWidth2 = (object[oi]._oAnimWidth - 64) / 2;
 	nobjects++;
 }
 

@@ -199,7 +199,7 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 	} else if (spl == SPL_CBOLT) {
 		UseMana(id, SPL_CBOLT);
 
-		for (int i = (spllvl >> 1) + 3; i > 0; i--) {
+		for (int i = (spllvl / 2) + 3; i > 0; i--) {
 			AddMissile(sx, sy, dx, dy, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
 		}
 	}
@@ -322,7 +322,7 @@ void DoHealOther(int pnum, int rid)
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 			hp <<= 1;
 		} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Bard) {
-			hp += hp >> 1;
+			hp += hp / 2;
 		} else if (plr[pnum]._pClass == HeroClass::Monk) {
 			hp *= 3;
 		}

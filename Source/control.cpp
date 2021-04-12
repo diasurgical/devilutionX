@@ -1238,7 +1238,7 @@ static void CPrintString(CelOutputBuffer out, int y, const char *str, bool cente
 			strWidth += fontkern[fontframe[c]] + 2;
 		}
 		if (strWidth < 288)
-			lineOffset = (288 - strWidth) >> 1;
+			lineOffset = (288 - strWidth) / 2;
 		sx += lineOffset;
 	}
 	while (*str) {
@@ -1375,7 +1375,7 @@ static void MY_PlrStringXY(CelOutputBuffer out, int x, int y, int endX, const ch
 		screen_x += fontkern[fontframe[c]] + base;
 	}
 	if (screen_x < widthOffset)
-		line = (widthOffset - screen_x) >> 1;
+		line = (widthOffset - screen_x) / 2;
 	x += line;
 	while (*pszStr) {
 		c = gbFontTransTbl[(BYTE)*pszStr++];
@@ -1431,7 +1431,7 @@ void DrawChr(CelOutputBuffer out)
 		col = COL_BLUE;
 	if (plr[myplr]._pIBonusToHit < 0)
 		col = COL_RED;
-	sprintf(chrstr, "%i%%", (plr[myplr]._pDexterity >> 1) + plr[myplr]._pIBonusToHit + 50);
+	sprintf(chrstr, "%i%%", (plr[myplr]._pDexterity / 2) + plr[myplr]._pIBonusToHit + 50);
 	ADD_PlrStringXY(out, 258, 211, 301, chrstr, col);
 
 	col = COL_WHITE;
@@ -1446,7 +1446,7 @@ void DrawChr(CelOutputBuffer out)
 		if (plr[myplr]._pClass == HeroClass::Rogue)
 			mindam += plr[myplr]._pDamageMod;
 		else
-			mindam += plr[myplr]._pDamageMod >> 1;
+			mindam += plr[myplr]._pDamageMod / 2;
 	} else {
 		mindam += plr[myplr]._pDamageMod;
 	}
@@ -1457,7 +1457,7 @@ void DrawChr(CelOutputBuffer out)
 		if (plr[myplr]._pClass == HeroClass::Rogue)
 			maxdam += plr[myplr]._pDamageMod;
 		else
-			maxdam += plr[myplr]._pDamageMod >> 1;
+			maxdam += plr[myplr]._pDamageMod / 2;
 	} else {
 		maxdam += plr[myplr]._pDamageMod;
 	}
@@ -1816,7 +1816,7 @@ static void PrintSBookStr(CelOutputBuffer out, int x, int y, bool cjustflag, con
 			screen_x += fontkern[fontframe[c]] + 1;
 		}
 		if (screen_x < 222)
-			line = (222 - screen_x) >> 1;
+			line = (222 - screen_x) / 2;
 		sx += line;
 	}
 	while (*pszStr) {
@@ -2087,7 +2087,7 @@ void DrawTalkPan(CelOutputBuffer out)
 	DrawPanelBox(out, 175, sgbPlrTalkTbl + 20, 294, 5, PANEL_X + 175, PANEL_Y + 4);
 	off = 0;
 	for (i = 293; i > 283; off++, i--) {
-		DrawPanelBox(out, (off >> 1) + 175, sgbPlrTalkTbl + off + 25, i, 1, (off >> 1) + PANEL_X + 175, off + PANEL_Y + 9);
+		DrawPanelBox(out, (off / 2) + 175, sgbPlrTalkTbl + off + 25, i, 1, (off / 2) + PANEL_X + 175, off + PANEL_Y + 9);
 	}
 	DrawPanelBox(out, 185, sgbPlrTalkTbl + 35, 274, 30, PANEL_X + 185, PANEL_Y + 19);
 	DrawPanelBox(out, 180, sgbPlrTalkTbl + 65, 284, 5, PANEL_X + 180, PANEL_Y + 49);

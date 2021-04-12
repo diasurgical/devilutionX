@@ -204,7 +204,7 @@ void InitTownerInfo(int i, int w, int sel, _talker_id t, int x, int y, int ao)
 	memset(&towner[i], 0, sizeof(TownerStruct));
 	towner[i]._tSelFlag = sel;
 	towner[i]._tAnimWidth = w;
-	towner[i]._tAnimWidth2 = (w - 64) >> 1;
+	towner[i]._tAnimWidth2 = (w - 64) / 2;
 	towner[i]._tMsgSaid = false;
 	towner[i]._ttype = t;
 	towner[i]._tx = x;

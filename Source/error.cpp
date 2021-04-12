@@ -137,7 +137,7 @@ void DrawDiabloMsg(CelOutputBuffer out)
 	}
 
 	if (width < 442) {
-		sx += (442 - width) >> 1;
+		sx += (442 - width) / 2;
 	}
 
 	for (i = 0; i < len; i++) {

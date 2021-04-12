@@ -948,8 +948,8 @@ static void L4makeDungeon()
 
 	for (j = 0; j < 20; j++) {
 		for (i = 0; i < 20; i++) {
-			k = i << 1;
-			l = j << 1;
+			k = i * 2;
+			l = j * 2;
 			L4dungeon[k][l] = dung[i][j];
 			L4dungeon[k][l + 1] = dung[i][j];
 			L4dungeon[k + 1][l] = dung[i][j];
@@ -958,8 +958,8 @@ static void L4makeDungeon()
 	}
 	for (j = 0; j < 20; j++) {
 		for (i = 0; i < 20; i++) {
-			k = i << 1;
-			l = j << 1;
+			k = i * 2;
+			l = j * 2;
 			L4dungeon[k][l + 40] = dung[i][19 - j];
 			L4dungeon[k][l + 41] = dung[i][19 - j];
 			L4dungeon[k + 1][l + 40] = dung[i][19 - j];
@@ -968,8 +968,8 @@ static void L4makeDungeon()
 	}
 	for (j = 0; j < 20; j++) {
 		for (i = 0; i < 20; i++) {
-			k = i << 1;
-			l = j << 1;
+			k = i * 2;
+			l = j * 2;
 			L4dungeon[k + 40][l] = dung[19 - i][j];
 			L4dungeon[k + 40][l + 1] = dung[19 - i][j];
 			L4dungeon[k + 41][l] = dung[19 - i][j];
@@ -978,8 +978,8 @@ static void L4makeDungeon()
 	}
 	for (j = 0; j < 20; j++) {
 		for (i = 0; i < 20; i++) {
-			k = i << 1;
-			l = j << 1;
+			k = i * 2;
+			l = j * 2;
 			L4dungeon[k + 40][l + 40] = dung[19 - i][19 - j];
 			L4dungeon[k + 40][l + 41] = dung[19 - i][19 - j];
 			L4dungeon[k + 41][l + 40] = dung[19 - i][19 - j];
@@ -1194,7 +1194,7 @@ static void L4firstRoom()
 		h = 14;
 	}
 
-	xmin = (20 - w) >> 1;
+	xmin = (20 - w) / 2;
 	xmax = 19 - w;
 	rndx = random_(0, xmax - xmin + 1) + xmin;
 	if (rndx + w > 19) {
@@ -1203,7 +1203,7 @@ static void L4firstRoom()
 	} else {
 		x = rndx;
 	}
-	ymin = (20 - h) >> 1;
+	ymin = (20 - h) / 2;
 	ymax = 19 - h;
 	rndy = random_(0, ymax - ymin + 1) + ymin;
 	if (rndy + h > 19) {

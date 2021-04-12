@@ -287,11 +287,11 @@ void CheckCursMove()
 	py = sy % TILE_HEIGHT;
 
 	// Shift position to match diamond grid aligment
-	flipy = py < (px >> 1);
+	flipy = py < (px / 2);
 	if (flipy) {
 		my--;
 	}
-	flipx = py >= TILE_HEIGHT - (px >> 1);
+	flipx = py >= TILE_HEIGHT - (px / 2);
 	if (flipx) {
 		mx++;
 	}

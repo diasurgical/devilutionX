@@ -40,7 +40,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*mind <<= 1;
 		} else if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
-			*mind += *mind >> 1;
+			*mind += *mind / 2;
 		}
 		*maxd = 10;
 		for (k = 0; k < plr[myplr]._pLevel; k++) {
@@ -52,12 +52,8 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
 			*maxd <<= 1;
 		} else if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
-			*maxd += *maxd >> 1;
+			*maxd += *maxd / 2;
 		}
-		*mind = -1;
-		*maxd = -1;
-		break;
-	case SPL_LIGHTNING:
 	case SPL_RUNELIGHT:
 		*mind = 2;
 		*maxd = plr[myplr]._pLevel + 2;
@@ -67,7 +63,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
 		}
-		*mind += *mind >> 1;
+		*mind += *mind / 2;
 		*maxd = *mind * 2;
 		break;
 	case SPL_IDENTIFY:
@@ -114,11 +110,11 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		}
 		break;
 	case SPL_GUARDIAN:
-		*mind = (plr[myplr]._pLevel >> 1) + 1;
+		*mind = (plr[myplr]._pLevel / 2) + 1;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
 		}
-		*maxd = (plr[myplr]._pLevel >> 1) + 10;
+		*maxd = (plr[myplr]._pLevel / 2) + 10;
 		for (k = 0; k < sl; k++) {
 			*maxd += *maxd >> 3;
 		}
@@ -135,12 +131,12 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	case SPL_IMMOLAT:
 	case SPL_RUNEIMMOLAT:
 	case SPL_RUNENOVA:
-		*mind = (plr[myplr]._pLevel + 5) >> 1;
+		*mind = (plr[myplr]._pLevel + 5) / 2;
 		for (k = 0; k < sl; k++) {
 			*mind += *mind >> 3;
 		}
 		*mind *= 5;
-		*maxd = (plr[myplr]._pLevel + 30) >> 1;
+		*maxd = (plr[myplr]._pLevel + 30) / 2;
 		for (k = 0; k < sl; k++) {
 			*maxd += *maxd >> 3;
 		}
@@ -149,7 +145,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	case SPL_FLAME:
 		*mind = 3;
 		*maxd = plr[myplr]._pLevel + 4;
-		*maxd += *maxd >> 1;
+		*maxd += *maxd / 2;
 		break;
 	case SPL_GOLEM:
 		*mind = 11;
@@ -191,7 +187,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 			*mind <<= 1;
 		}
 		if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
-			*mind += *mind >> 1;
+			*mind += *mind / 2;
 		}
 		*maxd = 10;
 		for (k = 0; k < plr[myplr]._pLevel; k++) {
@@ -204,13 +200,13 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 			*maxd <<= 1;
 		}
 		if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
-			*maxd += *maxd >> 1;
+			*maxd += *maxd / 2;
 		}
 		*mind = -1;
 		*maxd = -1;
 		break;
 	case SPL_FLARE:
-		*mind = (plr[myplr]._pMagic >> 1) + 3 * sl - (plr[myplr]._pMagic >> 3);
+		*mind = (plr[myplr]._pMagic / 2) + 3 * sl - (plr[myplr]._pMagic >> 3);
 		*maxd = *mind;
 		break;
 	}
@@ -296,30 +292,30 @@ int GetDirection8(int x1, int y1, int x2, int y2)
 	my = y2 - y1;
 	if (mx >= 0) {
 		if (my >= 0) {
-			if (5 * mx <= (my << 1)) // mx/my <= 0.4, approximation of tan(22.5)
+			if (5 * mx <= (my * 2)) // mx/my <= 0.4, approximation of tan(22.5)
 				return 1;            // DIR_SW
 			md = 0;                  // DIR_S
 		} else {
 			my = -my;
-			if (5 * mx <= (my << 1))
+			if (5 * mx <= (my * 2))
 				return 5; // DIR_NE
 			md = 6;       // DIR_E
 		}
-		if (5 * my <= (mx << 1)) // my/mx <= 0.4
+		if (5 * my <= (mx * 2)) // my/mx <= 0.4
 			md = 7;              // DIR_SE
 	} else {
 		mx = -mx;
 		if (my >= 0) {
-			if (5 * mx <= (my << 1))
+			if (5 * mx <= (my * 2))
 				return 1; // DIR_SW
 			md = 2;       // DIR_W
 		} else {
 			my = -my;
-			if (5 * mx <= (my << 1))
+			if (5 * mx <= (my * 2))
 				return 5; // DIR_NE
 			md = 4;       // DIR_N
 		}
-		if (5 * my <= (mx << 1))
+		if (5 * my <= (mx * 2))
 			md = 3; // DIR_NW
 	}
 	return md;
@@ -352,7 +348,7 @@ int GetDirection16(int x1, int y1, int x2, int y2)
 	my = y2 - y1;
 	if (mx >= 0) {
 		if (my >= 0) {
-			if (3 * mx <= (my << 1)) { // mx/my <= 2/3, approximation of tan(33.75)
+			if (3 * mx <= (my * 2)) { // mx/my <= 2/3, approximation of tan(33.75)
 				if (5 * mx < my)       // mx/my < 0.2, approximation of tan(11.25)
 					return 2;          // DIR_SW;
 				return 1;              // DIR_Sw;
@@ -360,14 +356,14 @@ int GetDirection16(int x1, int y1, int x2, int y2)
 			md = 0; // DIR_S;
 		} else {
 			my = -my;
-			if (3 * mx <= (my << 1)) {
+			if (3 * mx <= (my * 2)) {
 				if (5 * mx < my)
 					return 10; // DIR_NE;
 				return 11;     // DIR_nE;
 			}
 			md = 12; // DIR_E;
 		}
-		if (3 * my <= (mx << 1)) {    // my/mx <= 2/3
+		if (3 * my <= (mx * 2)) {    // my/mx <= 2/3
 			if (5 * my < mx)          // my/mx < 0.2
 				return 14;            // DIR_SE;
 			return md == 0 ? 15 : 13; // DIR_S ? DIR_Se : DIR_sE;
@@ -375,7 +371,7 @@ int GetDirection16(int x1, int y1, int x2, int y2)
 	} else {
 		mx = -mx;
 		if (my >= 0) {
-			if (3 * mx <= (my << 1)) {
+			if (3 * mx <= (my * 2)) {
 				if (5 * mx < my)
 					return 2; // DIR_SW;
 				return 3;     // DIR_sW;
@@ -383,14 +379,14 @@ int GetDirection16(int x1, int y1, int x2, int y2)
 			md = 4; // DIR_W;
 		} else {
 			my = -my;
-			if (3 * mx <= (my << 1)) {
+			if (3 * mx <= (my * 2)) {
 				if (5 * mx < my)
 					return 10; // DIR_NE;
 				return 9;      // DIR_Ne;
 			}
 			md = 8; // DIR_N;
 		}
-		if (3 * my <= (mx << 1)) {
+		if (3 * my <= (mx * 2)) {
 			if (5 * my < mx)
 				return 6;           // DIR_NW;
 			return md == 4 ? 5 : 7; // DIR_W ? DIR_nW : DIR_Nw;
@@ -649,7 +645,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 			hper += plr[pnum]._pIBonusToHit;
 			hper += plr[pnum]._pLevel;
 			hper -= monster[m].mArmorClass;
-			hper -= (dist * dist) >> 1;
+			hper -= (dist * dist) / 2;
 			hper += plr[pnum]._pIEnAc;
 			hper += 50;
 			if (plr[pnum]._pClass == HeroClass::Rogue)
@@ -657,7 +653,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 			if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Bard)
 				hper += 10;
 		} else {
-			hper = plr[pnum]._pMagic - (monster[m].mLevel << 1) - dist + 50;
+			hper = plr[pnum]._pMagic - (monster[m].mLevel * 2) - dist + 50;
 			if (plr[pnum]._pClass == HeroClass::Sorcerer)
 				hper += 20;
 			else if (plr[pnum]._pClass == HeroClass::Bard)
@@ -690,7 +686,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 			if (plr[pnum]._pClass == HeroClass::Rogue)
 				dam += plr[pnum]._pDamageMod;
 			else
-				dam += (plr[pnum]._pDamageMod >> 1);
+				dam += (plr[pnum]._pDamageMod / 2);
 		}
 		if (!shift)
 			dam <<= 6;
@@ -763,13 +759,13 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 			hper = monster[m].mHit
 			    + ((monster[m].mLevel - plr[pnum]._pLevel) * 2)
 			    + 30
-			    - (dist << 1) - tac;
+			    - (dist * 2) - tac;
 		} else {
-			hper = 100 - (tac >> 1) - (dist << 1);
+			hper = 100 - (tac / 2) - (dist * 2);
 		}
 	} else {
 		if (m != -1) {
-			hper = +40 - (plr[pnum]._pLevel << 1) - (dist << 1) + (monster[m].mLevel << 1);
+			hper = +40 - (plr[pnum]._pLevel * 2) - (dist * 2) + (monster[m].mLevel * 2);
 		} else {
 			hper = 40;
 		}
@@ -943,7 +939,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 	if (missiledata[mtype].mType == 0) {
 		hit = plr[pnum]._pIBonusToHit
 		    + plr[pnum]._pLevel
-		    - (dist * dist >> 1)
+		    - (dist * dist / 2)
 		    - plr[p]._pDexterity / 5
 		    - plr[p]._pIBonusAC
 		    - plr[p]._pIAC
@@ -954,7 +950,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			hit += 10;
 	} else {
 		hit = plr[pnum]._pMagic
-		    - (plr[p]._pLevel << 1)
+		    - (plr[p]._pLevel * 2)
 		    - dist
 		    + 50;
 		if (plr[pnum]._pClass == HeroClass::Sorcerer)
@@ -974,7 +970,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		}
 		if (shift)
 			blkper = 100;
-		blk = plr[p]._pDexterity + plr[p]._pBaseToBlk + (plr[p]._pLevel << 1) - (plr[pnum]._pLevel << 1);
+		blk = plr[p]._pDexterity + plr[p]._pBaseToBlk + (plr[p]._pLevel * 2) - (plr[pnum]._pLevel * 2);
 
 		if (blk < 0) {
 			blk = 0;
@@ -1919,7 +1915,7 @@ void AddMana(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 	if (plr[id]._pClass == HeroClass::Sorcerer)
 		ManaAmount <<= 1;
 	if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Bard)
-		ManaAmount += ManaAmount >> 1;
+		ManaAmount += ManaAmount / 2;
 	plr[id]._pMana += ManaAmount;
 	if (plr[id]._pMana > plr[id]._pMaxMana)
 		plr[id]._pMana = plr[id]._pMaxMana;
@@ -2372,7 +2368,7 @@ void AddLightning(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 		else
 			missile[mi]._mirange = 10;
 	} else {
-		missile[mi]._mirange = (missile[mi]._mispllvl >> 1) + 6;
+		missile[mi]._mirange = (missile[mi]._mispllvl / 2) + 6;
 	}
 	missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 4);
 }
@@ -2509,13 +2505,13 @@ void AddFlash(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 			for (i = missile[mi]._mispllvl; i > 0; i--) {
 				missile[mi]._midam += missile[mi]._midam >> 3;
 			}
-			missile[mi]._midam += missile[mi]._midam >> 1;
+			missile[mi]._midam += missile[mi]._midam / 2;
 			UseMana(id, SPL_FLASH);
 		} else {
-			missile[mi]._midam = monster[id].mLevel << 1;
+			missile[mi]._midam = monster[id].mLevel / 2;
 		}
 	} else {
-		missile[mi]._midam = currlevel >> 1;
+		missile[mi]._midam = currlevel * 2;
 	}
 	missile[mi]._mirange = 19;
 }
@@ -2533,9 +2529,9 @@ void AddFlash2(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 			for (i = missile[mi]._mispllvl; i > 0; i--) {
 				missile[mi]._midam += missile[mi]._midam >> 3;
 			}
-			missile[mi]._midam += missile[mi]._midam >> 1;
+			missile[mi]._midam += missile[mi]._midam / 2;
 		} else {
-			missile[mi]._midam = currlevel >> 1;
+			missile[mi]._midam = currlevel / 2;
 		}
 	}
 	missile[mi]._miPreFlag = true;
@@ -2571,7 +2567,7 @@ void AddGuardian(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 {
 	int i, pn, k, j, tx, ty;
 
-	missile[mi]._midam = random_(62, 10) + (plr[id]._pLevel >> 1) + 1;
+	missile[mi]._midam = random_(62, 10) + (plr[id]._pLevel / 2) + 1;
 	for (i = missile[mi]._mispllvl; i > 0; i--) {
 		missile[mi]._midam += missile[mi]._midam >> 3;
 	}
@@ -2605,7 +2601,7 @@ void AddGuardian(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 	if (!missile[mi]._miDelFlag) {
 		missile[mi]._misource = id;
 		missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 1);
-		missile[mi]._mirange = missile[mi]._mispllvl + (plr[id]._pLevel >> 1);
+		missile[mi]._mirange = missile[mi]._mispllvl + (plr[id]._pLevel / 2);
 		missile[mi]._mirange += (missile[mi]._mirange * plr[id]._pISplDur) >> 7;
 
 		if (missile[mi]._mirange > 30)
@@ -2865,7 +2861,7 @@ void AddEtherealize(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint3
 {
 	int i;
 
-	missile[mi]._mirange = 16 * plr[id]._pLevel >> 1;
+	missile[mi]._mirange = 16 * plr[id]._pLevel / 2;
 	for (i = missile[mi]._mispllvl; i > 0; i--) {
 		missile[mi]._mirange += missile[mi]._mirange >> 3;
 	}
@@ -2926,7 +2922,7 @@ void AddHeal(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 	if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Barbarian || plr[id]._pClass == HeroClass::Monk)
 		HealAmount <<= 1;
 	else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Bard)
-		HealAmount += HealAmount >> 1;
+		HealAmount += HealAmount / 2;
 
 	plr[id]._pHitPoints += HealAmount;
 	if (plr[id]._pHitPoints > plr[id]._pMaxHP)
@@ -3074,7 +3070,7 @@ void AddNova(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 		if (mienemy == TARGET_MONSTERS)
 			UseMana(id, SPL_NOVA);
 	} else {
-		missile[mi]._midam = ((DWORD)currlevel >> 1) + random_(66, 3) + random_(66, 3) + random_(66, 3);
+		missile[mi]._midam = ((DWORD)currlevel / 2) + random_(66, 3) + random_(66, 3) + random_(66, 3);
 	}
 	missile[mi]._mirange = 1;
 }
@@ -3199,7 +3195,7 @@ void AddFlame(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 	missile[mi]._mlid = AddLight(sx, sy, 1);
 	if (mienemy == TARGET_MONSTERS) {
 		i = random_(79, plr[id]._pLevel) + random_(79, 2);
-		missile[mi]._midam = 8 * i + 16 + ((8 * i + 16) >> 1);
+		missile[mi]._midam = 8 * i + 16 + ((8 * i + 16) / 2);
 	} else {
 		missile[mi]._midam = monster[id].mMinDamage + random_(77, monster[id].mMaxDamage - monster[id].mMinDamage + 1);
 	}
@@ -3621,7 +3617,7 @@ void MI_Firebolt(Sint32 i)
 					d = random_(75, 10) + (plr[p]._pMagic >> 3) + missile[i]._mispllvl + 1;
 					break;
 				case MIS_FLARE:
-					d = 3 * missile[i]._mispllvl - (plr[p]._pMagic >> 3) + (plr[p]._pMagic >> 1);
+					d = 3 * missile[i]._mispllvl - (plr[p]._pMagic >> 3) + (plr[p]._pMagic / 2);
 					break;
 				case MIS_BONESPIRIT:
 					d = 0;
@@ -4231,7 +4227,7 @@ void MI_FireRing(Sint32 i)
 		lvl = plr[src]._pLevel;
 	else
 		lvl = currlevel;
-	dmg = 16 * (random_(53, 10) + random_(53, 10) + lvl + 2) >> 1;
+	dmg = 16 * (random_(53, 10) + random_(53, 10) + lvl + 2) / 2;
 	for (j = CrawlTable[b]; j > 0; j--, k += 2) {
 		tx = missile[i]._miVar1 + CrawlTable[k - 1];
 		ty = missile[i]._miVar2 + CrawlTable[k];
@@ -4262,7 +4258,7 @@ void MI_LightningRing(Sint32 i)
 		lvl = plr[src]._pLevel;
 	else
 		lvl = currlevel;
-	dmg = 16 * (random_(53, 10) + random_(53, 10) + lvl + 2) >> 1;
+	dmg = 16 * (random_(53, 10) + random_(53, 10) + lvl + 2) / 2;
 	for (j = CrawlTable[b]; j > 0; j--, k += 2) {
 		tx = missile[i]._miVar1 + CrawlTable[k - 1];
 		ty = missile[i]._miVar2 + CrawlTable[k];
@@ -5171,7 +5167,7 @@ void MI_Wave(Sint32 i)
 		nya += YDirAdd[dira];
 		nxb = sx + XDirAdd[sd] + XDirAdd[dirb];
 		nyb = sy + YDirAdd[sd] + YDirAdd[dirb];
-		for (j = 0; j < (missile[i]._mispllvl >> 1) + 2; j++) {
+		for (j = 0; j < (missile[i]._mispllvl / 2) + 2; j++) {
 			pn = dPiece[nxa][nya]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
 			assert((DWORD)pn <= MAXTILES);
 			if (nMissileTable[pn] || f1 || nxa <= 0 || nxa >= MAXDUNX || nya <= 0 || nya >= MAXDUNY) {
