@@ -2500,8 +2500,8 @@ void AddFlash(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 {
 	int i;
 
-	if (mienemy == TARGET_MONSTERS) {
-		if (id != -1) {
+	if (id != -1) {
+		if (mienemy == TARGET_MONSTERS) {
 			missile[mi]._midam = 0;
 			for (i = 0; i <= plr[id]._pLevel; i++) {
 				missile[mi]._midam += random_(55, 20) + 1;
@@ -2512,10 +2512,10 @@ void AddFlash(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 			missile[mi]._midam += missile[mi]._midam >> 1;
 			UseMana(id, SPL_FLASH);
 		} else {
-			missile[mi]._midam = currlevel >> 1;
+			missile[mi]._midam = monster[id].mLevel << 1;
 		}
 	} else {
-		missile[mi]._midam = monster[id].mLevel << 1;
+		missile[mi]._midam = currlevel >> 1;
 	}
 	missile[mi]._mirange = 19;
 }
