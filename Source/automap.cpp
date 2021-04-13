@@ -382,18 +382,18 @@ WORD GetAutomapType(int x, int y, bool view)
 	WORD rv;
 
 	if (view && x == -1 && y >= 0 && y < DMAXY && automapview[0][y]) {
-		if (GetAutomapType(0, y, false) & (MAPFLAG_DIRT * 256)) {
+		if (GetAutomapType(0, y, false) & (MAPFLAG_DIRT << 8)) {
 			return 0;
 		} else {
-			return MAPFLAG_DIRT * 256;
+			return MAPFLAG_DIRT << 8;
 		}
 	}
 
 	if (view && y == -1 && x >= 0 && x < DMAXY && automapview[x][0]) {
-		if (GetAutomapType(x, 0, false) & (MAPFLAG_DIRT * 256)) {
+		if (GetAutomapType(x, 0, false) & (MAPFLAG_DIRT << 8)) {
 			return 0;
 		} else {
-			return MAPFLAG_DIRT * 256;
+			return MAPFLAG_DIRT << 8;
 		}
 	}
 
@@ -516,7 +516,7 @@ void InitAutomap()
 	for (i = 1; i <= dwTiles; i++) {
 		b1 = *pTmp++;
 		b2 = *pTmp++;
-		automaptype[i] = b1 + (b2 * 256);
+		automaptype[i] = b1 + (b2 << 8);
 	}
 
 	mem_free_dbg(pAFile);

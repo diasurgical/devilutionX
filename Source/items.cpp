@@ -4220,7 +4220,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	switch (Mid) {
 	case IMISC_HEAL:
 	case IMISC_FOOD:
-		j = plr[p]._pMaxHP / 256;
+		j = plr[p]._pMaxHP >> 8;
 		l = ((j >> 1) + random_(39, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
 			l <<= 1;
@@ -4240,7 +4240,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		drawhpflag = true;
 		break;
 	case IMISC_MANA:
-		j = plr[p]._pMaxMana / 256;
+		j = plr[p]._pMaxMana >> 8;
 		l = ((j >> 1) + random_(40, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
 			l <<= 1;
@@ -4286,7 +4286,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		}
 		break;
 	case IMISC_REJUV:
-		j = plr[p]._pMaxHP / 256;
+		j = plr[p]._pMaxHP >> 8;
 		l = ((j / 2) + random_(39, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
 			l <<= 1;
@@ -4299,7 +4299,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		if (plr[p]._pHPBase > plr[p]._pMaxHPBase)
 			plr[p]._pHPBase = plr[p]._pMaxHPBase;
 		drawhpflag = true;
-		j = plr[p]._pMaxMana / 256;
+		j = plr[p]._pMaxMana >> 8;
 		l = ((j / 2) + random_(40, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
 			l <<= 1;
