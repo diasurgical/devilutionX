@@ -1187,11 +1187,11 @@ void PerformSpellAction()
 	int spl = plr[myplr]._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
 	    || (pcursobj == -1 && spl == SPL_DISARM)) {
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			PlaySFX(PS_WARR27);
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			PlaySFX(PS_ROGUE27);
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			PlaySFX(PS_MAGE27);
 		}
 		return;

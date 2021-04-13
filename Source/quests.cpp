@@ -307,17 +307,17 @@ void CheckQuestKill(int m, bool sendmsg)
 	if (monster[m].MType->mtype == MT_SKING) {
 		quests[Q_SKELKING]._qactive = QUEST_DONE;
 		sfxdelay = 30;
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR82;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE82;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE82;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK82;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE82;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR82;
 		}
 		if (sendmsg)
@@ -326,17 +326,17 @@ void CheckQuestKill(int m, bool sendmsg)
 	} else if (monster[m].MType->mtype == MT_CLEAVER) {
 		quests[Q_BUTCHER]._qactive = QUEST_DONE;
 		sfxdelay = 30;
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR80;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE80;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE80;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK80;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE80;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR80;
 		}
 		if (sendmsg)
@@ -344,33 +344,33 @@ void CheckQuestKill(int m, bool sendmsg)
 	} else if (monster[m]._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		quests[Q_GARBUD]._qactive = QUEST_DONE;
 		sfxdelay = 30;
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR61;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE61;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE61;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK61;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE61;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR61;
 		}
 	} else if (monster[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		quests[Q_ZHAR]._qactive = QUEST_DONE;
 		sfxdelay = 30;
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR62;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE62;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE62;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK62;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE62;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR62;
 		}
 	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
@@ -389,17 +389,17 @@ void CheckQuestKill(int m, bool sendmsg)
 				}
 			}
 		}
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR83;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE83;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE83;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK83;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE83;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR83;
 		}
 		if (sendmsg) {
@@ -414,33 +414,33 @@ void CheckQuestKill(int m, bool sendmsg)
 		quests[Q_BETRAYER]._qvar2 = 4;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
 		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR83;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE83;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE83;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK83;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE83;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR83;
 		}
 	} else if (monster[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;
 		sfxdelay = 30;
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR94;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE94;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE94;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK94;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE94;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR94;
 		}
 	}

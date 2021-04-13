@@ -165,19 +165,15 @@ public:
 		writeBytes(&value, sizeof(value));
 	}
 
-	void flush()
-	{
-		if (m_buffer == nullptr)
-			return;
-
-		pfile_write_save_file(m_szFileName, m_buffer, m_cur, codec_get_encoded_len(m_cur));
-		mem_free_dbg(m_buffer);
-		m_buffer = nullptr;
-	}
-
 	~SaveHelper()
 	{
-		flush();
+		const auto encoded_len = codec_get_encoded_len(m_cur);
+		const char *const password = pfile_get_password();
+		codec_encode(m_buffer, m_cur, encoded_len, password);
+		mpqapi_write_file(m_szFileName, m_buffer, encoded_len);
+
+		mem_free_dbg(m_buffer);
+		m_buffer = nullptr;
 	}
 };
 
@@ -371,7 +367,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pLvlChanging = file->nextBool8();
 
 	file->nextBytes(pPlayer->_pName, PLR_NAME_LEN);
-	pPlayer->_pClass = (plr_class)file->nextLE<Sint8>();
+	pPlayer->_pClass = (HeroClass)file->nextLE<Sint8>();
 	file->skip(3); // Alignment
 	pPlayer->_pStrength = file->nextLE<Sint32>();
 	pPlayer->_pBaseStr = file->nextLE<Sint32>();
@@ -385,7 +381,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pDamageMod = file->nextLE<Sint32>();
 	pPlayer->_pBaseToBlk = file->nextLE<Sint32>();
 	if (pPlayer->_pBaseToBlk == 0)
-		pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+		pPlayer->_pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(pPlayer->_pClass)];
 	pPlayer->_pHPBase = file->nextLE<Sint32>();
 	pPlayer->_pMaxHPBase = file->nextLE<Sint32>();
 	pPlayer->_pHitPoints = file->nextLE<Sint32>();
@@ -1347,7 +1343,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Uint8>(pPlayer->_pLvlChanging);
 
 	file->writeBytes(pPlayer->_pName, PLR_NAME_LEN);
-	file->writeLE<Sint8>(pPlayer->_pClass);
+	file->writeLE<Sint8>(static_cast<Sint8>(pPlayer->_pClass));
 	file->skip(3); // Alignment
 	file->writeLE<Sint32>(pPlayer->_pStrength);
 	file->writeLE<Sint32>(pPlayer->_pBaseStr);
@@ -1750,7 +1746,7 @@ void SaveHeroItems(PlayerStruct *pPlayer)
 	SaveItems(&file, pPlayer->SpdList, MAXBELTITEMS);
 }
 
-void SaveGame()
+void SaveGameData()
 {
 	SaveHelper file("game", FILEBUFF);
 
@@ -1901,15 +1897,17 @@ void SaveGame()
 	file.writeLE<Uint8>(automapflag);
 	file.writeBE<Sint32>(AutoMapScale);
 
-	file.flush();
+}
 
+void SaveGame() {
 	gbValidSaveFile = true;
-	pfile_rename_temp_to_perm();
-	pfile_write_hero();
+	pfile_write_hero(/*save_game_data=*/true);
 }
 
 void SaveLevel()
 {
+	PFileScopedArchiveWriter scoped_writer;
+
 	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)

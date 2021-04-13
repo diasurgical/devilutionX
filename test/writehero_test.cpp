@@ -184,7 +184,7 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	for (auto i = 0; i < 7; i++)
 		pPack->InvBody[i].idx = -1;
 	strcpy(pPack->pName, "TestPlayer");
-	pPack->pClass = PC_ROGUE;
+	pPack->pClass = static_cast<Sint8>(HeroClass::Rogue);
 	pPack->pBaseStr = 20 + 35;
 	pPack->pBaseMag = 15 + 55;
 	pPack->pBaseDex = 30 + 220;
@@ -255,7 +255,7 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(pPlayer->plrlevel, 0);
 	ASSERT_EQ(pPlayer->destAction, -1);
 	ASSERT_STREQ(pPlayer->_pName, "TestPlayer");
-	ASSERT_EQ(pPlayer->_pClass, 1);
+	ASSERT_EQ(pPlayer->_pClass, HeroClass::Rogue);
 	ASSERT_EQ(pPlayer->_pBaseStr, 55);
 	ASSERT_EQ(pPlayer->_pStrength, 124);
 	ASSERT_EQ(pPlayer->_pBaseMag, 70);
@@ -371,7 +371,7 @@ TEST(Writehero, pfile_write_hero)
 	myplr = 0;
 	_uiheroinfo info {};
 	strcpy(info.name, "TestPlayer");
-	info.heroclass = PC_ROGUE;
+	info.heroclass = HeroClass::Rogue;
 	pfile_ui_save_create(&info);
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);

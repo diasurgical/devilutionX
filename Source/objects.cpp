@@ -1075,17 +1075,17 @@ void InitObjects()
 			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddL2Torches();
 			if (QuestStatus(Q_BLIND)) {
-				if (plr[myplr]._pClass == PC_WARRIOR) {
+				if (plr[myplr]._pClass == HeroClass::Warrior) {
 					sp_id = TEXT_BLINDING;
-				} else if (plr[myplr]._pClass == PC_ROGUE) {
+				} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 					sp_id = TEXT_RBLINDING;
-				} else if (plr[myplr]._pClass == PC_SORCERER) {
+				} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 					sp_id = TEXT_MBLINDING;
-				} else if (plr[myplr]._pClass == PC_MONK) {
+				} else if (plr[myplr]._pClass == HeroClass::Monk) {
 					sp_id = TEXT_HBLINDING;
-				} else if (plr[myplr]._pClass == PC_BARD) {
+				} else if (plr[myplr]._pClass == HeroClass::Bard) {
 					sp_id = TEXT_BBLINDING;
-				} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+				} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 					sp_id = TEXT_BLINDING;
 				}
 				quests[Q_BLIND]._qmsg = sp_id;
@@ -1095,17 +1095,17 @@ void InitObjects()
 				mem_free_dbg(mem);
 			}
 			if (QuestStatus(Q_BLOOD)) {
-				if (plr[myplr]._pClass == PC_WARRIOR) {
+				if (plr[myplr]._pClass == HeroClass::Warrior) {
 					sp_id = TEXT_BLOODY;
-				} else if (plr[myplr]._pClass == PC_ROGUE) {
+				} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 					sp_id = TEXT_RBLOODY;
-				} else if (plr[myplr]._pClass == PC_SORCERER) {
+				} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 					sp_id = TEXT_MBLOODY;
-				} else if (plr[myplr]._pClass == PC_MONK) {
+				} else if (plr[myplr]._pClass == HeroClass::Monk) {
 					sp_id = TEXT_HBLOODY;
-				} else if (plr[myplr]._pClass == PC_BARD) {
+				} else if (plr[myplr]._pClass == HeroClass::Bard) {
 					sp_id = TEXT_BBLOODY;
-				} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+				} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 					sp_id = TEXT_BLOODY;
 				}
 				quests[Q_BLOOD]._qmsg = sp_id;
@@ -1120,17 +1120,17 @@ void InitObjects()
 		}
 		if (leveltype == DTYPE_HELL) {
 			if (QuestStatus(Q_WARLORD)) {
-				if (plr[myplr]._pClass == PC_WARRIOR) {
+				if (plr[myplr]._pClass == HeroClass::Warrior) {
 					sp_id = TEXT_BLOODWAR;
-				} else if (plr[myplr]._pClass == PC_ROGUE) {
+				} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 					sp_id = TEXT_RBLOODWAR;
-				} else if (plr[myplr]._pClass == PC_SORCERER) {
+				} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 					sp_id = TEXT_MBLOODWAR;
-				} else if (plr[myplr]._pClass == PC_MONK) {
+				} else if (plr[myplr]._pClass == HeroClass::Monk) {
 					sp_id = TEXT_HBLOODWAR;
-				} else if (plr[myplr]._pClass == PC_BARD) {
+				} else if (plr[myplr]._pClass == HeroClass::Bard) {
 					sp_id = TEXT_BBLOODWAR;
-				} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+				} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 					sp_id = TEXT_BLOODWAR;
 				}
 				quests[Q_WARLORD]._qmsg = sp_id;
@@ -1653,47 +1653,47 @@ void objects_44DA68(int i, int a2)
 		object[i]._oVar8 = a2;
 		switch (a2) {
 		case 6:
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				object[i]._oVar2 = TEXT_BOOKA;
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				object[i]._oVar2 = TEXT_RBOOKA;
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				object[i]._oVar2 = TEXT_MBOOKA;
-			} else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == HeroClass::Monk) {
 				object[i]._oVar2 = TEXT_OBOOKA;
-			} else if (plr[myplr]._pClass == PC_BARD) {
+			} else if (plr[myplr]._pClass == HeroClass::Bard) {
 				object[i]._oVar2 = TEXT_BBOOKA;
-			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 				object[i]._oVar2 = TEXT_BOOKA;
 			}
 			break;
 		case 7:
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				object[i]._oVar2 = TEXT_BOOKB;
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				object[i]._oVar2 = TEXT_RBOOKB;
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				object[i]._oVar2 = TEXT_MBOOKB;
-			} else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == HeroClass::Monk) {
 				object[i]._oVar2 = TEXT_OBOOKB;
-			} else if (plr[myplr]._pClass == PC_BARD) {
+			} else if (plr[myplr]._pClass == HeroClass::Bard) {
 				object[i]._oVar2 = TEXT_BBOOKB;
-			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 				object[i]._oVar2 = TEXT_BOOKB;
 			}
 			break;
 		case 8:
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				object[i]._oVar2 = TEXT_BOOKC;
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				object[i]._oVar2 = TEXT_RBOOKC;
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				object[i]._oVar2 = TEXT_MBOOKC;
-			} else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == HeroClass::Monk) {
 				object[i]._oVar2 = TEXT_OBOOKC;
-			} else if (plr[myplr]._pClass == PC_BARD) {
+			} else if (plr[myplr]._pClass == HeroClass::Bard) {
 				object[i]._oVar2 = TEXT_BBOOKC;
-			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 				object[i]._oVar2 = TEXT_BOOKC;
 			}
 			break;
@@ -2122,17 +2122,17 @@ void Obj_BCrossDamage(int i)
 	if (plr[myplr]._pHitPoints >> 6 <= 0) {
 		SyncPlrKill(myplr, 0);
 	} else {
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			PlaySfxLoc(PS_WARR68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			PlaySfxLoc(PS_ROGUE68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			PlaySfxLoc(PS_MAGE68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			PlaySfxLoc(PS_MONK68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			PlaySfxLoc(PS_ROGUE68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			PlaySfxLoc(PS_WARR68, plr[myplr]._px, plr[myplr]._py);
 		}
 	}
@@ -3055,17 +3055,17 @@ void OperateSChambBk(int pnum, int i)
 			quests[Q_SCHAMB]._qactive = QUEST_ACTIVE;
 			quests[Q_SCHAMB]._qlog = true;
 		}
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			textdef = TEXT_BONER;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			textdef = TEXT_RBONER;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			textdef = TEXT_MBONER;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			textdef = TEXT_HBONER;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			textdef = TEXT_BBONER;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			textdef = TEXT_BONER;
 		}
 		quests[Q_SCHAMB]._qmsg = textdef;
@@ -3140,17 +3140,17 @@ void OperateMushPatch(int pnum, int i)
 
 	if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || quests[Q_MUSHROOM]._qvar1 < QS_TOMEGIVEN) {
 		if (!deltaload && pnum == myplr) {
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				PlaySFX(PS_WARR13);
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				PlaySFX(PS_ROGUE13);
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				PlaySFX(PS_MAGE13);
-			} else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == HeroClass::Monk) {
 				PlaySFX(PS_MONK13);
-			} else if (plr[myplr]._pClass == PC_BARD) {
+			} else if (plr[myplr]._pClass == HeroClass::Bard) {
 				PlaySFX(PS_ROGUE13);
-			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 				PlaySFX(PS_WARR13);
 			}
 		}
@@ -3179,17 +3179,17 @@ void OperateInnSignChest(int pnum, int i)
 
 	if (quests[Q_LTBANNER]._qvar1 != 2) {
 		if (!deltaload && pnum == myplr) {
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				PlaySFX(PS_WARR24);
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				PlaySFX(PS_ROGUE24);
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				PlaySFX(PS_MAGE24);
-			} else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == HeroClass::Monk) {
 				PlaySFX(PS_MONK24);
-			} else if (plr[myplr]._pClass == PC_BARD) {
+			} else if (plr[myplr]._pClass == HeroClass::Bard) {
 				PlaySFX(PS_ROGUE24);
-			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 				PlaySFX(PS_WARR24);
 			}
 		}
@@ -3212,22 +3212,22 @@ void OperateSlainHero(int pnum, int i, bool sendmsg)
 	if (object[i]._oSelFlag != 0) {
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
-			if (plr[pnum]._pClass == PC_WARRIOR) {
+			if (plr[pnum]._pClass == HeroClass::Warrior) {
 				CreateMagicArmor(object[i]._ox, object[i]._oy, ITYPE_HARMOR, ICURS_BREAST_PLATE, false, true);
 				PlaySfxLoc(PS_WARR9, plr[myplr]._px, plr[myplr]._py);
-			} else if (plr[pnum]._pClass == PC_ROGUE) {
+			} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
 				PlaySfxLoc(PS_ROGUE9, plr[myplr]._px, plr[myplr]._py);
-			} else if (plr[pnum]._pClass == PC_SORCERER) {
+			} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 				CreateSpellBook(object[i]._ox, object[i]._oy, SPL_LIGHTNING, false, true);
 				PlaySfxLoc(PS_MAGE9, plr[myplr]._px, plr[myplr]._py);
-			} else if (plr[pnum]._pClass == PC_MONK) {
+			} else if (plr[pnum]._pClass == HeroClass::Monk) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
 				PlaySfxLoc(PS_MONK9, plr[myplr]._px, plr[myplr]._py);
-			} else if (plr[pnum]._pClass == PC_BARD) {
+			} else if (plr[pnum]._pClass == HeroClass::Bard) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_SWORD, ICURS_BASTARD_SWORD, false, true);
 				PlaySfxLoc(PS_ROGUE9, plr[myplr]._px, plr[myplr]._py);
-			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
 				PlaySfxLoc(PS_WARR9, plr[myplr]._px, plr[myplr]._py);
 			}
@@ -3408,17 +3408,17 @@ bool OperateShrineMysterious(int pnum)
 	ModifyPlrDex(pnum, -1);
 	ModifyPlrVit(pnum, -1);
 
-	switch (random_(0, 4)) {
-	case ATTRIB_STR:
+	switch (static_cast<CharacterAttribute>(random_(0, 4))) {
+	case CharacterAttribute::Strength:
 		ModifyPlrStr(pnum, 6);
 		break;
-	case ATTRIB_MAG:
+	case CharacterAttribute::Magic:
 		ModifyPlrMag(pnum, 6);
 		break;
-	case ATTRIB_DEX:
+	case CharacterAttribute::Dexterity:
 		ModifyPlrDex(pnum, 6);
 		break;
-	case ATTRIB_VIT:
+	case CharacterAttribute::Vitality:
 		ModifyPlrVit(pnum, 6);
 		break;
 	}
@@ -4133,27 +4133,25 @@ bool OperateShrineOily(int pnum, int x, int y)
 		return false;
 
 	switch (plr[myplr]._pClass) {
-	case PC_WARRIOR:
+	case HeroClass::Warrior:
 		ModifyPlrStr(myplr, 2);
 		break;
-	case PC_ROGUE:
+	case HeroClass::Rogue:
 		ModifyPlrDex(myplr, 2);
 		break;
-	case PC_SORCERER:
+	case HeroClass::Sorcerer:
 		ModifyPlrMag(myplr, 2);
 		break;
-	case PC_BARBARIAN:
+	case HeroClass::Barbarian:
 		ModifyPlrVit(myplr, 2);
 		break;
-	case PC_MONK:
+	case HeroClass::Monk:
 		ModifyPlrStr(myplr, 1);
 		ModifyPlrDex(myplr, 1);
 		break;
-	case PC_BARD:
+	case HeroClass::Bard:
 		ModifyPlrDex(myplr, 1);
 		ModifyPlrMag(myplr, 1);
-		break;
-	case NUM_CLASSES:
 		break;
 	}
 
@@ -5594,7 +5592,7 @@ void GetObjectStr(int i)
 	default:
 		break;
 	}
-	if (plr[myplr]._pClass == PC_ROGUE) {
+	if (plr[myplr]._pClass == HeroClass::Rogue) {
 		if (object[i]._oTrapFlag) {
 			sprintf(tempstr, "Trapped %s", infostr);
 			strcpy(infostr, tempstr);

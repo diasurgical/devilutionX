@@ -471,12 +471,10 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mAnimFrame = random_(88, monster[i]._mAnimLen - 1) + 1;
 
 	monster[i].mLevel = monst->MData->mLevel;
-	if (monst->mtype == MT_DIABLO) {
-		monster[i]._mmaxhp = (random_(88, 1) + (gbIsHellfire ? 3333 : 1666)) << 6;
-		if (!gbIsHellfire)
-			monster[i].mLevel -= 15;
-	} else {
-		monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
+	monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
+	if (monst->mtype == MT_DIABLO && !gbIsHellfire) {
+		monster[i]._mmaxhp /= 2;
+		monster[i].mLevel -= 15;
 	}
 
 	if (!gbIsMultiplayer || sgOptions.Gameplay.bReduceEnemyHealth) {
@@ -2631,11 +2629,11 @@ void DoEnding()
 	if (gbIsSpawn)
 		return;
 
-	if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_BARBARIAN) {
+	if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Barbarian) {
 		play_movie("gendata\\DiabVic2.smk", false);
-	} else if (plr[myplr]._pClass == PC_SORCERER) {
+	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 		play_movie("gendata\\DiabVic1.smk", false);
-	} else if (plr[myplr]._pClass == PC_MONK) {
+	} else if (plr[myplr]._pClass == HeroClass::Monk) {
 		play_movie("gendata\\DiabVic1.smk", false);
 	} else {
 		play_movie("gendata\\DiabVic3.smk", false);
