@@ -370,6 +370,11 @@ if(VITA)
     SourceX/platform/vita/keyboard.cpp)
 endif()
 
+if(VITA)
+  list(APPEND devilutionx_SRCS
+    SourceX/platform/vita/keyboard.cpp)
+endif()
+
 if(N3DS)
   list(APPEND devilutionx_SRCS
     SourceX/platform/ctr/system.cpp

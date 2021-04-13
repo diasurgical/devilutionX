@@ -219,7 +219,7 @@ struct TCmdGItem {
 	Uint8 bMinStr;
 	Uint8 bMinMag;
 	Uint8 bMinDex;
-	Uint8 bAC;
+	Sint16 bAC;
 };
 
 struct TCmdPItem {
@@ -241,7 +241,7 @@ struct TCmdPItem {
 	Uint8 bMinStr;
 	Uint8 bMinMag;
 	Uint8 bMinDex;
-	Uint8 bAC;
+	Sint16 bAC;
 };
 
 struct TCmdChItem {
