@@ -210,3 +210,9 @@
 #else
 #define DVL_PRINTF_ATTRIBUTE(fmtargnum)
 #endif
+
+#if DVL_HAVE_ATTRIBUTE(flag_enum)
+#define DVL_FLAG_ENUM_ATTRIBUTE __attribute__((flag_enum))
+#else
+#define DVL_FLAG_ENUM_ATTRIBUTE
+#endif

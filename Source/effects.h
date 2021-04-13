@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 
+#include "../defs.h"
 #include "sound.h"
 
 namespace devilution {
@@ -1043,7 +1044,7 @@ enum _sfx_id : int16_t {
 	SFX_NONE = -1,
 };
 
-enum sfx_flag : uint8_t {
+enum DVL_FLAG_ENUM_ATTRIBUTE sfx_flag : uint8_t {
 	// clang-format off
 	sfx_STREAM   = 1 << 0,
 	sfx_MISC     = 1 << 1,

@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 
+#include "../defs.h"
 #include "scrollrt.h"
 
 namespace devilution {
@@ -42,7 +43,7 @@ enum lvl_entry : uint8_t {
 	ENTRY_TWARPUP,
 };
 
-enum {
+enum DVL_FLAG_ENUM_ATTRIBUTE _dlrg_l5_dflags {
 	// clang-format off
 	DLRG_HDOOR     = 1 << 0,
 	DLRG_VDOOR     = 1 << 1,
@@ -51,7 +52,7 @@ enum {
 	// clang-format on
 };
 
-enum {
+enum DVL_FLAG_ENUM_ATTRIBUTE _dungeon_bflags {
 	// clang-format off
 	BFLAG_MISSILE     = 1 << 0,
 	BFLAG_VISIBLE     = 1 << 1,

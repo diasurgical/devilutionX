@@ -63,7 +63,7 @@ enum inv_body_loc : uint8_t {
 	NUM_INVLOC,
 };
 
-enum player_graphic : uint16_t {
+enum DVL_FLAG_ENUM_ATTRIBUTE player_graphic : uint16_t {
 	// clang-format off
 	PFILE_STAND     = 1 << 0,
 	PFILE_WALK      = 1 << 1,

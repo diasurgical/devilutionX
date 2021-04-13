@@ -127,7 +127,7 @@ enum _unique_items : int8_t {
  combining CF_UPER15 and CF_UPER1 flags (CF_USEFUL) is used to mark potions and town portal scrolls created on the ground
  CF_TOWN is combining all store flags and indicates if item has been bought from a NPC
  */
-enum icreateinfo_flag {
+enum DVL_FLAG_ENUM_ATTRIBUTE icreateinfo_flag {
 	// clang-format off
 	CF_LEVEL        = (1 << 6) - 1,
 	CF_ONLYGOOD     = 1 << 6,

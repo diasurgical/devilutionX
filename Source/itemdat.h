@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "../defs.h"
+
 namespace devilution {
 
 /** @todo add missing values and apply */
@@ -311,7 +313,7 @@ enum unique_base_item : int8_t {
 	UITYPE_INVALID = -1,
 };
 
-enum item_special_effect {
+enum DVL_FLAG_ENUM_ATTRIBUTE item_special_effect {
 	// clang-format off
 	ISPL_NONE           = 0,
 	ISPL_INFRAVISION    = 1 << 0,
@@ -539,7 +541,7 @@ enum goodorevil : uint8_t {
 	GOE_GOOD,
 };
 
-enum affix_item_type : uint8_t {
+enum DVL_FLAG_ENUM_ATTRIBUTE affix_item_type : uint8_t {
 	// clang-format off
 	PLT_MISC  = 1 << 0,
 	PLT_BOW   = 1 << 1,

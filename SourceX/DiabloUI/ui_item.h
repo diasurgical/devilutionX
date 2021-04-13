@@ -24,7 +24,7 @@ enum UiType : uint8_t {
 	UI_EDIT,
 };
 
-enum UiFlags : uint16_t {
+enum DVL_FLAG_ENUM_ATTRIBUTE UiFlags : uint16_t {
 	// clang-format off
 	UIS_SMALL    = 1 << 0,
 	UIS_MED      = 1 << 1,

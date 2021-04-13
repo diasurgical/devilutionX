@@ -7,9 +7,11 @@
 
 #include <stdint.h>
 
+#include "../defs.h"
+
 namespace devilution {
 
-enum monster_flag : uint16_t {
+enum DVL_FLAG_ENUM_ATTRIBUTE monster_flag : uint16_t {
 	// clang-format off
 	MFLAG_HIDDEN          = 1 << 0,
 	MFLAG_LOCK_ANIMATION  = 1 << 1,

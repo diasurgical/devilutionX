@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "../defs.h"
+
 namespace devilution {
 
 enum _mai_id : int8_t {
@@ -59,7 +61,7 @@ enum _mc_id : uint8_t {
 	MC_ANIMAL,
 };
 
-enum monster_resistance : uint8_t {
+enum DVL_FLAG_ENUM_ATTRIBUTE monster_resistance : uint8_t {
 	// clang-format off
 	RESIST_MAGIC     = 1 << 0,
 	RESIST_FIRE      = 1 << 1,

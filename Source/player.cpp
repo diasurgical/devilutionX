@@ -4314,7 +4314,7 @@ void InitDungMsgs(int pnum)
 	plr[pnum].pDungMsgs2 = 0;
 }
 
-enum {
+enum DVL_FLAG_ENUM_ATTRIBUTE _dmsg_flags {
 	// clang-format off
 	DMSG_CATHEDRAL = 1 << 0,
 	DMSG_CATACOMBS = 1 << 1,
