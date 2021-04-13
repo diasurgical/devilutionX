@@ -643,6 +643,7 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 	int i, j, x1, y1, x2, y2;
 
 	nRadius++;
+	nRadius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
 	y1 = nYPos - nRadius;
 	y2 = nYPos + nRadius;
 	x1 = nXPos - nRadius;

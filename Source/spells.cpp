@@ -43,9 +43,9 @@ int GetManaAmount(int id, spell_id sn)
 		ma = 0;
 	ma <<= 6;
 
-	if (plr[id]._pClass == PC_SORCERER) {
+	if (plr[id]._pClass == HeroClass::Sorcerer) {
 		ma >>= 1;
-	} else if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_MONK || plr[id]._pClass == PC_BARD) {
+	} else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Monk || plr[id]._pClass == HeroClass::Bard) {
 		ma -= ma >> 2;
 	}
 
@@ -319,11 +319,11 @@ void DoHealOther(int pnum, int rid)
 			hp += (random_(57, 6) + 1) << 6;
 		}
 
-		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
+		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 			hp <<= 1;
-		} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
+		} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Bard) {
 			hp += hp >> 1;
-		} else if (plr[pnum]._pClass == PC_MONK) {
+		} else if (plr[pnum]._pClass == HeroClass::Monk) {
 			hp *= 3;
 		}
 

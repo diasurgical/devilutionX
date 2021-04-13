@@ -12,8 +12,20 @@ namespace devilution {
 
 extern bool gbValidSaveFile;
 
+class PFileScopedArchiveWriter {
+public:
+	// Opens the player save file for writing
+	PFileScopedArchiveWriter();
+
+	// Finishes writing and closes the player save file.
+	~PFileScopedArchiveWriter();
+
+private:
+	DWORD save_num_;
+};
+
 const char *pfile_get_password();
-void pfile_write_hero();
+void pfile_write_hero(bool write_game_data = false);
 bool pfile_create_player_description();
 void pfile_flush_W();
 bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *));
@@ -27,9 +39,8 @@ bool LevelFileExists();
 void GetTempLevelNames(char *szTemp);
 void GetPermLevelNames(char *szPerm);
 void pfile_remove_temp_files();
-void pfile_rename_temp_to_perm();
 void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD qwLen);
 BYTE *pfile_read(const char *pszName, DWORD *pdwLen);
 void pfile_update(bool force_save);
 
-}
+} // namespace devilution

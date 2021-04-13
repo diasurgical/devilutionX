@@ -61,7 +61,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 	pPack->targx = pPlayer->_ptargx;
 	pPack->targy = pPlayer->_ptargy;
 	strcpy(pPack->pName, pPlayer->_pName);
-	pPack->pClass = pPlayer->_pClass;
+	pPack->pClass = static_cast<Sint8>(pPlayer->_pClass);
 	pPack->pBaseStr = pPlayer->_pBaseStr;
 	pPack->pBaseMag = pPlayer->_pBaseMag;
 	pPack->pBaseDex = pPlayer->_pBaseDex;
@@ -217,7 +217,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	ClrPlrPath(pnum);
 	pPlayer->destAction = ACTION_NONE;
 	strcpy(pPlayer->_pName, pPack->pName);
-	pPlayer->_pClass = (plr_class)pPack->pClass;
+	pPlayer->_pClass = (HeroClass)pPack->pClass;
 	InitPlayer(pnum, true);
 	pPlayer->_pBaseStr = pPack->pBaseStr;
 	pPlayer->_pStrength = pPack->pBaseStr;
@@ -233,7 +233,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	pPlayer->_pGold = SwapLE32(pPack->pGold);
 	pPlayer->_pMaxHPBase = SwapLE32(pPack->pMaxHPBase);
 	pPlayer->_pHPBase = SwapLE32(pPack->pHPBase);
-	pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+	pPlayer->_pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(pPlayer->_pClass)];
 	if (!netSync)
 		if ((int)(pPlayer->_pHPBase & 0xFFFFFFC0) < 64)
 			pPlayer->_pHPBase = 64;

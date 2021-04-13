@@ -19,9 +19,9 @@ TownerStruct towner[NUM_TOWNERS];
  * effect ID for interacting with cows in Tristram.
  *
  * ref: enum _sfx_id
- * ref: enum plr_class
+ * ref: enum HeroClass
  */
-const _sfx_id snSFX[3][NUM_CLASSES] = {
+const _sfx_id snSFX[3][enum_size<HeroClass>::value] = {
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52, PS_MONK52, PS_ROGUE52, PS_WARR52 }, // BUGFIX: add warrior sounds for barbarian instead of 0 - walk sound (fixed)
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49, PS_MONK49, PS_ROGUE49, PS_WARR49 },
 	{ PS_WARR50, PS_ROGUE50, PS_MAGE50, PS_MONK50, PS_ROGUE50, PS_WARR50 },
@@ -154,7 +154,7 @@ void CowSFX(int pnum)
 		if (sgdwCowClicks >= 8) {
 			PlaySfxLoc(TSFX_COW1, plr[pnum]._px, plr[pnum]._py + 5);
 			sgdwCowClicks = 4;
-			CowPlaying = snSFX[sgnCowMsg][plr[pnum]._pClass]; /* snSFX is local */
+			CowPlaying = snSFX[sgnCowMsg][static_cast<std::size_t>(plr[pnum]._pClass)]; /* snSFX is local */
 			sgnCowMsg++;
 			if (sgnCowMsg >= 3)
 				sgnCowMsg = 0;
@@ -818,17 +818,17 @@ void TalkToTowner(int p, int t)
 			towner[t]._tbtcnt = true;
 			towner[t]._tTalkingToPlayer = p;
 			quests[Q_BUTCHER]._qvar1 = 1;
-			if (plr[p]._pClass == PC_WARRIOR && !effect_is_playing(PS_WARR8)) {
+			if (plr[p]._pClass == HeroClass::Warrior && !effect_is_playing(PS_WARR8)) {
 				PlaySFX(PS_WARR8);
-			} else if (plr[p]._pClass == PC_ROGUE && !effect_is_playing(PS_ROGUE8)) {
+			} else if (plr[p]._pClass == HeroClass::Rogue && !effect_is_playing(PS_ROGUE8)) {
 				PlaySFX(PS_ROGUE8);
-			} else if (plr[p]._pClass == PC_SORCERER && !effect_is_playing(PS_MAGE8)) {
+			} else if (plr[p]._pClass == HeroClass::Sorcerer && !effect_is_playing(PS_MAGE8)) {
 				PlaySFX(PS_MAGE8);
-			} else if (plr[p]._pClass == PC_MONK && !effect_is_playing(PS_MONK8)) {
+			} else if (plr[p]._pClass == HeroClass::Monk && !effect_is_playing(PS_MONK8)) {
 				PlaySFX(PS_MONK8);
-			} else if (plr[p]._pClass == PC_BARD && !effect_is_playing(PS_ROGUE8)) {
+			} else if (plr[p]._pClass == HeroClass::Bard && !effect_is_playing(PS_ROGUE8)) {
 				PlaySFX(PS_ROGUE8);
-			} else if (plr[p]._pClass == PC_BARBARIAN && !effect_is_playing(PS_WARR8)) {
+			} else if (plr[p]._pClass == HeroClass::Barbarian && !effect_is_playing(PS_WARR8)) {
 				PlaySFX(PS_WARR8);
 			}
 			towner[t]._tMsgSaid = true;

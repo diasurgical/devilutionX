@@ -387,11 +387,17 @@ static void DrawManaShield(CelOutputBuffer out, int pnum, int x, int y, bool lig
  * @param nCel frame
  * @param nWidth width
  */
-static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
+static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py)
 {
 	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
+
+	PlayerStruct *pPlayer = &plr[pnum];
+
+	BYTE *pCelBuff = pPlayer->_pAnimData;
+	int nCel = GetFrameToUseForPlayerRendering(pPlayer);
+	int nWidth = pPlayer->_pAnimWidth;
 
 	if (pCelBuff == NULL) {
 		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
@@ -462,7 +468,7 @@ void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
 			px = sx + p->_pxoff - p->_pAnimWidth2;
 			py = sy + p->_pyoff;
-			DrawPlayer(out, i, x, y, px, py, p->_pAnimData, p->_pAnimFrame, p->_pAnimWidth);
+			DrawPlayer(out, i, x, y, px, py);
 		}
 	}
 }
@@ -697,7 +703,7 @@ static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
 	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
 	int py = sy + pPlayer->_pyoff;
 
-	DrawPlayer(out, p, x, y, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	DrawPlayer(out, p, x, y, px, py);
 }
 
 /**
@@ -1526,6 +1532,8 @@ void DrawAndBlit()
 
 	lock_buf(0);
 	CelOutputBuffer out = GlobalBackBuffer();
+
+	nthread_UpdateProgressToNextGameTick();
 
 	DrawView(out, ViewX, ViewY);
 	if (ctrlPan) {

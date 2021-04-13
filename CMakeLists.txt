@@ -211,8 +211,14 @@ add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
 
-add_library(SourceS STATIC
-  SourceS/paths.cpp)
+set(SourceS_SRCS
+  SourceS/console.cpp
+  SourceS/paths.cpp
+)
+if(USE_SDL1)
+  list(APPEND SourceS_SRCS SourceS/sdl2_to_1_2_backports.cpp)
+endif()
+add_library(SourceS STATIC ${SourceS_SRCS})
 
 add_library(devilution STATIC
   Source/appfat.cpp
@@ -399,8 +405,9 @@ endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
 
-# Copy the font to the build directory to it works from the build directory
+# Copy the font and devilutionx.mpq to the build directory to it works from the build directory
 file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Use file GENERATE instead of configure_file because configure_file
 # does not support generator expressions.

@@ -48,27 +48,27 @@ void FocusOnCharInfo()
 
 	// Find the first incrementable stat.
 	int stat = -1;
-	for (int i = ATTRIB_VIT; i >= ATTRIB_STR; i--) {
-		int max = plr[myplr].GetMaximumAttributeValue((attribute_id)i);
+	for (auto i : enum_values<CharacterAttribute>()) {
+		int max = plr[myplr].GetMaximumAttributeValue(i);
 		switch (i) {
-		case ATTRIB_STR:
+		case CharacterAttribute::Strength:
 			if (plr[myplr]._pBaseStr >= max)
 				continue;
 			break;
-		case ATTRIB_MAG:
+		case CharacterAttribute::Magic:
 			if (plr[myplr]._pBaseMag >= max)
 				continue;
 			break;
-		case ATTRIB_DEX:
+		case CharacterAttribute::Dexterity:
 			if (plr[myplr]._pBaseDex >= max)
 				continue;
 			break;
-		case ATTRIB_VIT:
+		case CharacterAttribute::Vitality:
 			if (plr[myplr]._pBaseVit >= max)
 				continue;
 			break;
 		}
-		stat = i;
+		stat = static_cast<int>(i);
 	}
 	if (stat == -1)
 		return;
@@ -264,7 +264,7 @@ bool false_avail(const char *name, int value)
 {
 #ifndef __vita__
 	// Logging on Vita is slow due slow IO, so disable spamming unhandled events to log
-	SDL_Log("Unhandled SDL event: %s %d", name, value);
+	SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Unhandled SDL event: %s %d", name, value);
 #endif
 	return true;
 }
@@ -279,11 +279,11 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				PlaySFX(PS_WARR16); // "Where would I put this?"
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				PlaySFX(PS_ROGUE16);
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				PlaySFX(PS_MAGE16);
 			}
 			return false;

@@ -26,6 +26,7 @@ void RemoveEmptyInventory(int pnum);
 void LoadGame(bool firstflag);
 void SaveHotkeys();
 void SaveHeroItems(PlayerStruct *pPlayer);
+void SaveGameData();
 void SaveGame();
 void SaveLevel();
 void LoadLevel();

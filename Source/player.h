@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 
+#include "enum_traits.h"
 #include "gendung.h"
 #include "items.h"
 #include "spelldat.h"
@@ -29,21 +30,25 @@ enum {
 	// clang-format on
 };
 
-enum plr_class : uint8_t {
-	PC_WARRIOR,
-	PC_ROGUE,
-	PC_SORCERER,
-	PC_MONK,
-	PC_BARD,
-	PC_BARBARIAN,
-	NUM_CLASSES
+enum class HeroClass : uint8_t {
+	Warrior,
+	Rogue,
+	Sorcerer,
+	Monk,
+	Bard,
+	Barbarian,
+
+	LAST = Barbarian
 };
 
-enum attribute_id : uint8_t {
-	ATTRIB_STR,
-	ATTRIB_MAG,
-	ATTRIB_DEX,
-	ATTRIB_VIT,
+enum class CharacterAttribute : uint8_t {
+	Strength,
+	Magic,
+	Dexterity,
+	Vitality,
+
+	FIRST = Strength,
+	LAST = Vitality
 };
 
 // Logical equipment locations
@@ -163,6 +168,9 @@ struct PlayerStruct {
 	Sint32 _pAnimFrame; // Current frame of animation.
 	Sint32 _pAnimWidth;
 	Sint32 _pAnimWidth2;
+	Sint32 _pAnimNumSkippedFrames; // Number of Frames that will be skipped (for example with modifier "faster attack")
+	Sint32 _pAnimGameTicksSinceSequenceStarted; // Number of GameTicks after the current animation sequence started
+	Sint32 _pAnimStopDistributingAfterFrame; // Distribute the NumSkippedFrames only before this frame
 	Sint32 _plid;
 	Sint32 _pvid;
 	spell_id _pSpell;
@@ -188,7 +196,7 @@ struct PlayerStruct {
 	Sint8 _pLightRad;
 	bool _pLvlChanging; // True when the player is transitioning between levels
 	char _pName[PLR_NAME_LEN];
-	plr_class _pClass;
+	HeroClass _pClass;
 	Sint32 _pStrength;
 	Sint32 _pBaseStr;
 	Sint32 _pMagic;
@@ -310,28 +318,47 @@ struct PlayerStruct {
 	 * @param attribute The attribute to retrieve the base value for
 	 * @return The base value for the requested attribute.
 	*/
-	Sint32 GetBaseAttributeValue(attribute_id attribute) const;
+	Sint32 GetBaseAttributeValue(CharacterAttribute attribute) const;
 
 	/**
 	 * @brief Gets the maximum value of the player's specified attribute.
 	 * @param attribute The attribute to retrieve the maximum value for
 	 * @return The maximum value for the requested attribute.
 	*/
-	Sint32 GetMaximumAttributeValue(attribute_id attribute) const;
+	Sint32 GetMaximumAttributeValue(CharacterAttribute attribute) const;
 };
 
 extern int myplr;
 extern PlayerStruct plr[MAX_PLRS];
 extern bool deathflag;
-extern int ToBlkTbl[NUM_CLASSES];
+extern int ToBlkTbl[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
+/**
+ * @brief Sets the new Player Animation with all relevant information for rendering
+
+ * @param pnum Player Id
+ * @param Peq Pointer to Animation Data
+ * @param numFrames Number of Frames in Animation
+ * @param Delay Delay after each Animation sequence
+ * @param width Width of sprite
+ * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
+ * @param processAnimationPending true if first ProcessAnimation will be called in same gametick after NewPlrAnim
+ * @param stopDistributingAfterFrame Distribute the NumSkippedFrames only before this frame
+ */
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames = 0, bool processAnimationPending = false, int stopDistributingAfterFrame = 0);
 void SetPlrAnims(int pnum);
-void CreatePlayer(int pnum, plr_class c);
+void ProcessPlayerAnimation(int pnum);
+/**
+ * @brief Calculates the Frame to use for the Animation rendering
+ * @param pPlayer Player
+ * @return The Frame to use for rendering
+ */
+Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer);
+void CreatePlayer(int pnum, HeroClass c);
 int CalcStatDiff(int pnum);
 #ifdef _DEBUG
 void NextPlrLevel(int pnum);
@@ -386,10 +413,10 @@ extern int plrxoff[9];
 extern int plryoff[9];
 extern int plrxoff2[9];
 extern int plryoff2[9];
-extern int StrengthTbl[NUM_CLASSES];
-extern int MagicTbl[NUM_CLASSES];
-extern int DexterityTbl[NUM_CLASSES];
-extern int VitalityTbl[NUM_CLASSES];
+extern int StrengthTbl[enum_size<HeroClass>::value];
+extern int MagicTbl[enum_size<HeroClass>::value];
+extern int DexterityTbl[enum_size<HeroClass>::value];
+extern int VitalityTbl[enum_size<HeroClass>::value];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 
 }

@@ -20,7 +20,7 @@
 
 namespace devilution {
 
-static const char *selhero_GenerateName(uint8_t hero_class);
+static const char *selhero_GenerateName(HeroClass hero_class);
 
 std::size_t selhero_SaveCount = 0;
 _uiheroinfo selhero_heros[MAX_CHARACTERS];
@@ -96,7 +96,7 @@ void selhero_Free()
 
 void selhero_SetStats()
 {
-	SELHERO_DIALOG_HERO_IMG->m_frame = selhero_heroInfo.heroclass;
+	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(selhero_heroInfo.heroclass);
 	snprintf(textStats[0], sizeof(textStats[0]), "%d", selhero_heroInfo.level);
 	snprintf(textStats[1], sizeof(textStats[1]), "%d", selhero_heroInfo.strength);
 	snprintf(textStats[2], sizeof(textStats[2]), "%d", selhero_heroInfo.magic);
@@ -162,7 +162,7 @@ void selhero_Init()
 	vecSelHeroDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 30), (Sint16)(UI_OFFSET_Y + 211), 180, 76 };
-	SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, NUM_CLASSES, rect2);
+	SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, static_cast<int>(enum_size<HeroClass>::value), rect2);
 	vecSelHeroDialog.push_back(SELHERO_DIALOG_HERO_IMG);
 
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 39), (Sint16)(UI_OFFSET_Y + 323), 110, 21 };
@@ -247,7 +247,7 @@ void selhero_List_Focus(int value)
 		return;
 	}
 
-	SELHERO_DIALOG_HERO_IMG->m_frame = NUM_CLASSES;
+	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(enum_size<HeroClass>::value);
 	strncpy(textStats[0], "--", sizeof(textStats[0]) - 1);
 	strncpy(textStats[1], "--", sizeof(textStats[1]) - 1);
 	strncpy(textStats[2], "--", sizeof(textStats[2]) - 1);
@@ -274,17 +274,17 @@ void selhero_List_Select(int value)
 
 		selhero_FreeListItems();
 		int itemH = 33;
-		vecSelHeroDlgItems.push_back(new UiListItem("Warrior", PC_WARRIOR));
-		vecSelHeroDlgItems.push_back(new UiListItem("Rogue", PC_ROGUE));
-		vecSelHeroDlgItems.push_back(new UiListItem("Sorcerer", PC_SORCERER));
+		vecSelHeroDlgItems.push_back(new UiListItem("Warrior", static_cast<int>(HeroClass::Warrior)));
+		vecSelHeroDlgItems.push_back(new UiListItem("Rogue", static_cast<int>(HeroClass::Rogue)));
+		vecSelHeroDlgItems.push_back(new UiListItem("Sorcerer", static_cast<int>(HeroClass::Sorcerer)));
 		if (gbIsHellfire) {
-			vecSelHeroDlgItems.push_back(new UiListItem("Monk", PC_MONK));
+			vecSelHeroDlgItems.push_back(new UiListItem("Monk", static_cast<int>(HeroClass::Monk)));
 		}
 		if (gbBard || sgOptions.Gameplay.bTestBard) {
-			vecSelHeroDlgItems.push_back(new UiListItem("Bard", PC_BARD));
+			vecSelHeroDlgItems.push_back(new UiListItem("Bard", static_cast<int>(HeroClass::Bard)));
 		}
 		if (gbBarbarian || sgOptions.Gameplay.bTestBarbarian) {
-			vecSelHeroDlgItems.push_back(new UiListItem("Barbarian", PC_BARBARIAN));
+			vecSelHeroDlgItems.push_back(new UiListItem("Barbarian", static_cast<int>(HeroClass::Barbarian)));
 		}
 		if (vecSelHeroDlgItems.size() > 4)
 			itemH = 26;
@@ -341,10 +341,10 @@ void selhero_List_Esc()
 
 void selhero_ClassSelector_Focus(int value)
 {
-	const auto hero_class = static_cast<plr_class>(vecSelHeroDlgItems[value]->m_value);
+	const auto hero_class = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
 
 	_uidefaultstats defaults;
-	gfnHeroStats(hero_class, &defaults);
+	gfnHeroStats(static_cast<unsigned int>(hero_class), &defaults);
 
 	selhero_heroInfo.level = 1;
 	selhero_heroInfo.heroclass = hero_class;
@@ -369,8 +369,8 @@ static bool shouldPrefillHeroName()
 
 void selhero_ClassSelector_Select(int value)
 {
-	int hClass = vecSelHeroDlgItems[value]->m_value;
-	if (gbSpawned && (hClass == PC_ROGUE || hClass == PC_SORCERER || (hClass == PC_BARD && !hfbard_mpq))) {
+	auto hClass = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
+	if (gbSpawned && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && !hfbard_mpq))) {
 		ArtBackground.Unload();
 		UiSelOkDialog(NULL, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
@@ -566,7 +566,7 @@ void UiSelHeroMultDialog(
 	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
 }
 
-static const char *selhero_GenerateName(uint8_t hero_class)
+static const char *selhero_GenerateName(HeroClass hero_class)
 {
 	static const char *const kNames[6][10] = {
 		{
@@ -651,7 +651,7 @@ static const char *selhero_GenerateName(uint8_t hero_class)
 
 	int iRand = rand() % 10;
 
-	return kNames[hero_class % 6][iRand];
+	return kNames[static_cast<std::size_t>(hero_class) % 6][iRand];
 }
 
 } // namespace devilution
