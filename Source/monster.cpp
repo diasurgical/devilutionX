@@ -471,7 +471,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mAnimFrame = random_(88, monster[i]._mAnimLen - 1) + 1;
 
 	monster[i].mLevel = monst->MData->mLevel;
-	monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) * 64;
+	monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
 	if (monst->mtype == MT_DIABLO && !gbIsHellfire) {
 		monster[i]._mmaxhp /= 2;
 		monster[i].mLevel -= 15;
@@ -523,7 +523,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 		monster[i]._mmaxhp = 3 * monster[i]._mmaxhp;
 		if (gbIsHellfire)
-			monster[i]._mmaxhp += (gbIsMultiplayer ? 100 : 50) * 64;
+			monster[i]._mmaxhp += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
 			monster[i]._mmaxhp += 64;
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
@@ -539,7 +539,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster[i]._mmaxhp = 4 * monster[i]._mmaxhp;
 		if (gbIsHellfire)
-			monster[i]._mmaxhp += (gbIsMultiplayer ? 200 : 100) * 64;
+			monster[i]._mmaxhp += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
 			monster[i]._mmaxhp += 192;
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
@@ -779,7 +779,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	Monst->mExp *= 2;
 	Monst->mName = Uniq->mName;
-	Monst->_mmaxhp = Uniq->mmaxhp * 64;
+	Monst->_mmaxhp = Uniq->mmaxhp << 6;
 
 	if (!gbIsMultiplayer) {
 		Monst->_mmaxhp = Monst->_mmaxhp / 2;
@@ -817,7 +817,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 		Monst->_mmaxhp = 3 * Monst->_mmaxhp;
 		if (gbIsHellfire)
-			Monst->_mmaxhp += (gbIsMultiplayer ? 100 : 50) * 64;
+			Monst->_mmaxhp += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
 			Monst->_mmaxhp += 64;
 		Monst->mLevel += 15;
@@ -830,7 +830,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		Monst->_mmaxhp = 4 * Monst->_mmaxhp;
 		if (gbIsHellfire)
-			Monst->_mmaxhp += (gbIsMultiplayer ? 200 : 100) * 64;
+			Monst->_mmaxhp += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
 			Monst->_mmaxhp += 192;
 		Monst->mLevel += 30;
@@ -1308,7 +1308,7 @@ void M_Enemy(int i)
 	if (Monst->_mFlags & MFLAG_BERSERK || !(Monst->_mFlags & MFLAG_GOLEM)) {
 		for (pnum = 0; pnum < MAX_PLRS; pnum++) {
 			if (!plr[pnum].plractive || currlevel != plr[pnum].plrlevel || plr[pnum]._pLvlChanging
-			    || (((plr[pnum]._pHitPoints / 64) == 0) && gbIsMultiplayer))
+			    || (((plr[pnum]._pHitPoints >> 6) == 0) && gbIsMultiplayer))
 				continue;
 			sameroom = (dTransVal[Monst->_mx][Monst->_my] == dTransVal[plr[pnum]._px][plr[pnum]._py]);
 			dist = std::max(abs(Monst->_mx - plr[pnum]._px), abs(Monst->_my - plr[pnum]._py));
@@ -1328,7 +1328,7 @@ void M_Enemy(int i)
 		mi = monstactive[j];
 		if (mi == i)
 			continue;
-		if (!((monster[mi]._mhitpoints / 64) > 0))
+		if (!((monster[mi]._mhitpoints >> 6) > 0))
 			continue;
 		if (monster[mi]._mx == 1 && monster[mi]._my == 0)
 			continue;
@@ -1631,7 +1631,7 @@ void M_StartHit(int i, int pnum, int dam)
 		NetSendCmdMonDmg(false, i, dam);
 	}
 	PlayEffect(i, 1);
-	if ((monster[i].MType->mtype >= MT_SNEAK && monster[i].MType->mtype <= MT_ILLWEAV) || dam / 64 >= monster[i].mLevel + 3) {
+	if ((monster[i].MType->mtype >= MT_SNEAK && monster[i].MType->mtype <= MT_ILLWEAV) || dam >> 6 >= monster[i].mLevel + 3) {
 		if (pnum >= 0) {
 			monster[i]._menemy = pnum;
 			monster[i]._menemyx = plr[pnum]._pfutx;
@@ -1697,10 +1697,10 @@ void M_DiabloDeath(int i, bool sendmsg)
 	dist = std::max(abs(ViewX - Monst->_mx), abs(ViewY - Monst->_my));
 	if (dist > 20)
 		dist = 20;
-	Monst->_mVar3 = ViewX * 65536;
-	Monst->_mVar4 = ViewY * 65536;
-	Monst->_mVar5 = (int)((Monst->_mVar3 - (Monst->_mx * 65536)) / (double)dist);
-	Monst->_mVar6 = (int)((Monst->_mVar4 - (Monst->_my * 65536)) / (double)dist);
+	Monst->_mVar3 = ViewX << 16;
+	Monst->_mVar4 = ViewY << 16;
+	Monst->_mVar5 = (int)((Monst->_mVar3 - (Monst->_mx << 16)) / (double)dist);
+	Monst->_mVar6 = (int)((Monst->_mVar4 - (Monst->_my << 16)) / (double)dist);
 }
 
 void SpawnLoot(int i, bool sendmsg)
@@ -1752,7 +1752,7 @@ void M2MStartHit(int mid, int i, int dam)
 	NetSendCmdMonDmg(false, mid, dam);
 	PlayEffect(mid, 1);
 
-	if ((monster[mid].MType->mtype >= MT_SNEAK && monster[mid].MType->mtype <= MT_ILLWEAV) || dam / 64 >= monster[mid].mLevel + 3) {
+	if ((monster[mid].MType->mtype >= MT_SNEAK && monster[mid].MType->mtype <= MT_ILLWEAV) || dam >> 6 >= monster[mid].mLevel + 3) {
 		if (i >= 0)
 			monster[mid]._mdir = (monster[i]._mdir - 4) & 7;
 
@@ -2087,14 +2087,14 @@ void M_TryM2MHit(int i, int mid, int hper, int mind, int maxd)
 
 	assurance((DWORD)mid < MAXMONSTERS, mid);
 	assurance(monster[mid].MType != NULL, mid);
-	if (monster[mid]._mhitpoints / 64 > 0 && (monster[mid].MType->mtype != MT_ILLWEAV || monster[mid]._mgoal != MGOAL_RETREAT)) {
+	if (monster[mid]._mhitpoints >> 6 > 0 && (monster[mid].MType->mtype != MT_ILLWEAV || monster[mid]._mgoal != MGOAL_RETREAT)) {
 		int hit = random_(4, 100);
 		if (monster[mid]._mmode == MM_STONE)
 			hit = 0;
 		if (!CheckMonsterHit(mid, &ret) && hit < hper) {
-			int dam = (mind + random_(5, maxd - mind + 1)) * 64;
+			int dam = (mind + random_(5, maxd - mind + 1)) << 6;
 			monster[mid]._mhitpoints -= dam;
-			if (monster[mid]._mhitpoints / 64 <= 0) {
+			if (monster[mid]._mhitpoints >> 6 <= 0) {
 				if (monster[mid]._mmode == MM_STONE) {
 					M2MStartKill(i, mid);
 					monster[mid]._mmode = MM_STONE;
@@ -2128,7 +2128,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		M_TryM2MHit(i, pnum, Hit, MinDam, MaxDam);
 		return;
 	}
-	if (plr[pnum]._pHitPoints / 64 <= 0 || plr[pnum]._pInvincible || plr[pnum]._pSpellFlags & 1)
+	if (plr[pnum]._pHitPoints >> 6 <= 0 || plr[pnum]._pInvincible || plr[pnum]._pSpellFlags & 1)
 		return;
 	dx = abs(monster[i]._mx - plr[pnum]._px);
 	dy = abs(monster[i]._my - plr[pnum]._py);
@@ -2178,8 +2178,8 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		StartPlrBlock(pnum, dir);
 		if (pnum == myplr && plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
-			dam = random_(99, (MaxDam - MinDam + 1) * 64) + (MinDam * 64);
-			dam += plr[pnum]._pIGetHit * 64;
+			dam = random_(99, (MaxDam - MinDam + 1) << 6) + (MinDam << 6);
+			dam += plr[pnum]._pIGetHit << 6;
 			if (dam < 64)
 				dam = 64;
 			mdam = dam * (0.01 * (random_(100, 10) + 20));
@@ -2187,7 +2187,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			dam -= mdam;
 			if (dam < 0)
 				dam = 0;
-			if (monster[i]._mhitpoints / 64 <= 0)
+			if (monster[i]._mhitpoints >> 6 <= 0)
 				M_StartKill(i, pnum);
 			else
 				M_StartHit(i, pnum, mdam);
@@ -2223,8 +2223,8 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			}
 		}
 	}
-	dam = (MinDam * 64) + random_(99, (MaxDam - MinDam + 1) * 64);
-	dam += (plr[pnum]._pIGetHit * 64);
+	dam = (MinDam << 6) + random_(99, (MaxDam - MinDam + 1) << 6);
+	dam += (plr[pnum]._pIGetHit << 6);
 	if (dam < 64)
 		dam = 64;
 	if (pnum == myplr) {
@@ -2235,7 +2235,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			dam -= mdam;
 			if (dam < 0)
 				dam = 0;
-			if (monster[i]._mhitpoints / 64 <= 0)
+			if (monster[i]._mhitpoints >> 6 <= 0)
 				M_StartKill(i, pnum);
 			else
 				M_StartHit(i, pnum, mdam);
@@ -2244,9 +2244,9 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		plr[pnum]._pHPBase -= dam;
 	}
 	if (plr[pnum]._pIFlags & ISPL_THORNS) {
-		mdam = (random_(99, 3) + 1) * 64;
+		mdam = (random_(99, 3) + 1) << 6;
 		monster[i]._mhitpoints -= mdam;
-		if (monster[i]._mhitpoints / 64 <= 0)
+		if (monster[i]._mhitpoints >> 6 <= 0)
 			M_StartKill(i, pnum);
 		else
 			M_StartHit(i, pnum, mdam);
@@ -2257,7 +2257,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
 		plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
 	}
-	if (plr[pnum]._pHitPoints / 64 <= 0) {
+	if (plr[pnum]._pHitPoints >> 6 <= 0) {
 		SyncPlrKill(pnum, 0);
 		if (gbIsHellfire)
 			M_StartStand(i, monster[i]._mdir);
@@ -2676,9 +2676,9 @@ void PrepDoEnding()
 		plr[i]._pmode = PM_QUIT;
 		plr[i]._pInvincible = true;
 		if (gbIsMultiplayer) {
-			if (plr[i]._pHitPoints / 64 == 0)
+			if (plr[i]._pHitPoints >> 6 == 0)
 				plr[i]._pHitPoints = 64;
-			if (plr[i]._pMana / 64 == 0)
+			if (plr[i]._pMana >> 6 == 0)
 				plr[i]._pMana = 64;
 		}
 	}
@@ -4671,7 +4671,7 @@ void ProcessMonsters()
 			SetRndSeed(Monst->_mAISeed);
 			Monst->_mAISeed = AdvanceRndSeed();
 		}
-		if (!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints / 64 > 0) {
+		if (!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints >> 6 > 0) {
 			if (Monst->mLevel > 1) {
 				Monst->_mhitpoints += Monst->mLevel / 2;
 			} else {
@@ -5146,7 +5146,7 @@ void M_FallenFear(int x, int y)
 		if (m->_mAi == AI_FALLEN
 		    && abs(x - m->_mx) < 5
 		    && abs(y - m->_my) < 5
-		    && m->_mhitpoints / 64 > 0) {
+		    && m->_mhitpoints >> 6 > 0) {
 			m->_mgoal = MGOAL_RETREAT;
 			m->_mgoalvar1 = rundist;
 			m->_mdir = GetDirection(x, y, m->_mx, m->_my);

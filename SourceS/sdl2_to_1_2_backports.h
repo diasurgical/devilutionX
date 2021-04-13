@@ -340,7 +340,7 @@ SDL_CreateRGBSurfaceWithFormatFrom(void *pixels, Uint32 flags, int width, int he
 		type pixel = 0;                                          \
                                                                  \
 		pos = 0x10000;                                           \
-		inc = (src_w * 65536) / dst_w;                             \
+		inc = (src_w << 16) / dst_w;                             \
 		for (i = dst_w; i > 0; --i) {                            \
 			while (pos >= 0x10000L) {                            \
 				pixel = *src++;                                  \
@@ -362,7 +362,7 @@ copy_row3(Uint8 *src, int src_w, Uint8 *dst, int dst_w)
 	Uint8 pixel[3] = { 0, 0, 0 };
 
 	pos = 0x10000;
-	inc = (src_w * 65536) / dst_w;
+	inc = (src_w << 16) / dst_w;
 	for (i = dst_w; i > 0; --i) {
 		while (pos >= 0x10000L) {
 			pixel[0] = *src++;
@@ -450,7 +450,7 @@ SDL_SoftStretch(SDL_Surface *src, const SDL_Rect *srcrect,
 
 	/* Set up the data... */
 	pos = 0x10000;
-	inc = (srcrect->h * 65536) / dstrect->h;
+	inc = (srcrect->h << 16) / dstrect->h;
 	src_row = srcrect->y;
 	dst_row = dstrect->y;
 

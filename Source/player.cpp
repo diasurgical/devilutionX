@@ -242,7 +242,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 		c = HeroClass::Warrior;
 	}
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[p->_pgfxnum / 16], WepChar[p->_pgfxnum & 0xF]);
+	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	for (i = 1; i <= PFILE_NONDEATH; i <<= 1) {
@@ -344,7 +344,7 @@ void InitPlayerGFX(int pnum)
 		app_fatal("InitPlayerGFX: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pHitPoints / 64 == 0) {
+	if (plr[pnum]._pHitPoints >> 6 == 0) {
 		plr[pnum]._pgfxnum = 0;
 		LoadPlrGFX(pnum, PFILE_DEATH);
 	} else {
@@ -679,7 +679,7 @@ void CreatePlayer(int pnum, HeroClass c)
 
 	plr[pnum]._pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(c)];
 
-	plr[pnum]._pHitPoints = (plr[pnum]._pVitality + 10) * 64;
+	plr[pnum]._pHitPoints = (plr[pnum]._pVitality + 10) << 6;
 	if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 		plr[pnum]._pHitPoints <<= 1;
 	} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Monk || plr[pnum]._pClass == HeroClass::Bard) {
@@ -690,7 +690,7 @@ void CreatePlayer(int pnum, HeroClass c)
 	plr[pnum]._pHPBase = plr[pnum]._pHitPoints;
 	plr[pnum]._pMaxHPBase = plr[pnum]._pHitPoints;
 
-	plr[pnum]._pMana = plr[pnum]._pMagic * 64;
+	plr[pnum]._pMana = plr[pnum]._pMagic << 6;
 	if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 		plr[pnum]._pMana <<= 1;
 	} else if (plr[pnum]._pClass == HeroClass::Bard) {
@@ -994,7 +994,7 @@ void InitPlayer(int pnum, bool FirstTime)
 
 		ClearPlrPVars(pnum);
 
-		if (plr[pnum]._pHitPoints / 64 > 0) {
+		if (plr[pnum]._pHitPoints >> 6 > 0) {
 			plr[pnum]._pmode = PM_STAND;
 			NewPlrAnim(pnum, plr[pnum]._pNAnim[DIR_S], plr[pnum]._pNFrames, 3, plr[pnum]._pNWidth);
 			plr[pnum]._pAnimFrame = random_(2, plr[pnum]._pNFrames - 1) + 1;
@@ -1642,10 +1642,10 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 
 	drawhpflag = true;
 	if (plr[pnum]._pClass == HeroClass::Barbarian) {
-		if (dam / 64 < plr[pnum]._pLevel + plr[pnum]._pLevel / 4 && !forcehit) {
+		if (dam >> 6 < plr[pnum]._pLevel + plr[pnum]._pLevel / 4 && !forcehit) {
 			return;
 		}
-	} else if (dam / 64 < plr[pnum]._pLevel && !forcehit) {
+	} else if (dam >> 6 < plr[pnum]._pLevel && !forcehit) {
 		return;
 	}
 
@@ -1829,8 +1829,8 @@ StartPlayerKill(int pnum, int earflag)
 							ear._iCurs = ICURS_EAR_ROGUE;
 						}
 
-						ear._iCreateInfo = plr[pnum]._pName[0] * 256 | plr[pnum]._pName[1];
-						ear._iSeed = plr[pnum]._pName[2] << 24 | plr[pnum]._pName[3] * 65536 | plr[pnum]._pName[4] * 256 | plr[pnum]._pName[5];
+						ear._iCreateInfo = plr[pnum]._pName[0] << 8 | plr[pnum]._pName[1];
+						ear._iSeed = plr[pnum]._pName[2] << 24 | plr[pnum]._pName[3] << 16 | plr[pnum]._pName[4] << 8 | plr[pnum]._pName[5];
 						ear._ivalue = plr[pnum]._pLevel;
 
 						if (FindGetItem(IDI_EAR, ear._iCreateInfo, ear._iSeed) == -1) {
@@ -2363,7 +2363,7 @@ bool PlrHitMonst(int pnum, int m)
 		app_fatal("PlrHitMonst: illegal monster %d", m);
 	}
 
-	if ((monster[m]._mhitpoints / 64) <= 0) {
+	if ((monster[m]._mhitpoints >> 6) <= 0) {
 		return false;
 	}
 
@@ -2442,7 +2442,7 @@ bool PlrHitMonst(int pnum, int m)
 		dam = random_(5, maxd - mind + 1) + mind;
 		dam += dam * plr[pnum]._pIBonusDam / 100;
 		dam += plr[pnum]._pIBonusDamMod;
-		int dam2 = dam * 64;
+		int dam2 = dam << 6;
 		dam += plr[pnum]._pDamageMod;
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 			ddp = plr[pnum]._pLevel;
@@ -2502,13 +2502,13 @@ bool PlrHitMonst(int pnum, int m)
 
 		if (pnum == myplr) {
 			if (plr[pnum].pDamAcFlags & 0x04) {
-				dam2 += plr[pnum]._pIGetHit * 64;
+				dam2 += plr[pnum]._pIGetHit << 6;
 				if (dam2 >= 0) {
 					if (plr[pnum]._pHitPoints > dam2) {
 						plr[pnum]._pHitPoints -= dam2;
 						plr[pnum]._pHPBase -= dam2;
 					} else {
-						dam2 = (1 * 64);
+						dam2 = (1 << 6);
 						plr[pnum]._pHPBase -= plr[pnum]._pHitPoints - dam2;
 						plr[pnum]._pHitPoints = dam2;
 					}
@@ -2572,7 +2572,7 @@ bool PlrHitMonst(int pnum, int m)
 			monster[m]._mhitpoints = 0; /* double check */
 		}
 #endif
-		if ((monster[m]._mhitpoints / 64) <= 0) {
+		if ((monster[m]._mhitpoints >> 6) <= 0) {
 			if (monster[m]._mmode == MM_STONE) {
 				M_StartKill(m, pnum);
 				monster[m]._mmode = MM_STONE;
@@ -2665,7 +2665,7 @@ bool PlrHitPlr(int pnum, char p)
 					dam <<= 1;
 				}
 			}
-			skdam = dam * 64;
+			skdam = dam << 6;
 			if (plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) {
 				tac = random_(7, skdam / 8);
 				plr[pnum]._pHitPoints += tac;
@@ -3583,7 +3583,7 @@ void ProcessPlayers()
 		if (plr[pnum].plractive && currlevel == plr[pnum].plrlevel && (pnum == myplr || !plr[pnum]._pLvlChanging)) {
 			CheckCheatStats(pnum);
 
-			if (!PlrDeathModeOK(pnum) && (plr[pnum]._pHitPoints / 64) <= 0) {
+			if (!PlrDeathModeOK(pnum) && (plr[pnum]._pHitPoints >> 6) <= 0) {
 				SyncPlrKill(pnum, -1);
 			}
 
@@ -3591,7 +3591,7 @@ void ProcessPlayers()
 				if ((plr[pnum]._pIFlags & ISPL_DRAINLIFE) && currlevel != 0) {
 					plr[pnum]._pHitPoints -= 4;
 					plr[pnum]._pHPBase -= 4;
-					if ((plr[pnum]._pHitPoints / 64) <= 0) {
+					if ((plr[pnum]._pHitPoints >> 6) <= 0) {
 						SyncPlrKill(pnum, 0);
 					}
 					drawhpflag = true;
@@ -3737,7 +3737,7 @@ bool PosOkPlayer(int pnum, int x, int y)
 		if (dMonster[x][y] <= 0) {
 			return false;
 		}
-		if ((monster[dMonster[x][y] - 1]._mhitpoints / 64) > 0) {
+		if ((monster[dMonster[x][y] - 1]._mhitpoints >> 6) > 0) {
 			return false;
 		}
 	}
@@ -4128,7 +4128,7 @@ void ModifyPlrMag(int p, int l)
 	plr[p]._pMagic += l;
 	plr[p]._pBaseMag += l;
 
-	int ms = l * 64;
+	int ms = l << 6;
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
 		ms <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
@@ -4187,7 +4187,7 @@ void ModifyPlrVit(int p, int l)
 	plr[p]._pVitality += l;
 	plr[p]._pBaseVit += l;
 
-	int ms = l * 64;
+	int ms = l << 6;
 	if (plr[p]._pClass == HeroClass::Warrior) {
 		ms <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {
@@ -4250,7 +4250,7 @@ void SetPlrMag(int p, int v)
 
 	plr[p]._pBaseMag = v;
 
-	m = v * 64;
+	m = v << 6;
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
 		m <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
@@ -4292,7 +4292,7 @@ void SetPlrVit(int p, int v)
 
 	plr[p]._pBaseVit = v;
 
-	hp = v * 64;
+	hp = v << 6;
 	if (plr[p]._pClass == HeroClass::Warrior) {
 		hp <<= 1;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {

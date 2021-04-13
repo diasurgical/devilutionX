@@ -15,12 +15,12 @@ void Decrypt(DWORD *castBlock, DWORD size, DWORD key)
 	DWORD seed, i;
 
 	seed = 0xEEEEEEEE;
-	for (i = 0; i < (size / 4); i++) {
+	for (i = 0; i < (size >> 2); i++) {
 		DWORD t = SwapLE32(*castBlock);
 		seed += hashtable[4][(key & 0xFF)];
 		t ^= seed + key;
 		*castBlock = t;
-		seed += t + (seed * 32) + 3;
+		seed += t + (seed << 5) + 3;
 		castBlock++;
 		key = (((key << 0x15) ^ 0xFFE00000) + 0x11111111) | (key >> 0x0B);
 	}
@@ -31,13 +31,13 @@ void Encrypt(DWORD *castBlock, DWORD size, DWORD key)
 	DWORD seed, i, ch;
 
 	seed = 0xEEEEEEEE;
-	for (i = 0; i < (size / 4); i++) {
+	for (i = 0; i < (size >> 2); i++) {
 		DWORD t = ch = *castBlock;
 		seed += hashtable[4][(key & 0xFF)];
 		t ^= seed + key;
 		*castBlock = SwapLE32(t);
 		castBlock++;
-		seed += ch + (seed * 32) + 3;
+		seed += ch + (seed << 5) + 3;
 		key = ((key << 0x15) ^ 0xFFE00000) + 0x11111111 | (key >> 0x0B);
 	}
 }
@@ -53,7 +53,7 @@ DWORD Hash(const char *s, int type)
 		ch = *s++;
 		ch = toupper(ch);
 		seed1 = hashtable[type][ch] ^ (seed1 + seed2);
-		seed2 += ch + seed1 + (seed2 * 32) + 3;
+		seed2 += ch + seed1 + (seed2 << 5) + 3;
 	}
 	return seed1;
 }
@@ -70,7 +70,7 @@ void InitHash()
 			seed = (125 * seed + 3) % 0x2AAAAB;
 			ch = (seed & 0xFFFF);
 			seed = (125 * seed + 3) % 0x2AAAAB;
-			hashtable[j][i] = ch * 65536 | (seed & 0xFFFF);
+			hashtable[j][i] = ch << 16 | (seed & 0xFFFF);
 		}
 	}
 }

@@ -109,15 +109,15 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 		pHdr->bItemY = items[ii]._iy;
 		pHdr->wItemIndx = items[ii].IDidx;
 		if (items[ii].IDidx == IDI_EAR) {
-			pHdr->wItemCI = (items[ii]._iName[7] * 256) | items[ii]._iName[8];
-			pHdr->dwItemSeed = (items[ii]._iName[9] << 24) | (items[ii]._iName[10] * 65536) | (items[ii]._iName[11] * 256) | items[ii]._iName[12];
+			pHdr->wItemCI = (items[ii]._iName[7] << 8) | items[ii]._iName[8];
+			pHdr->dwItemSeed = (items[ii]._iName[9] << 24) | (items[ii]._iName[10] << 16) | (items[ii]._iName[11] << 8) | items[ii]._iName[12];
 			pHdr->bItemId = items[ii]._iName[13];
 			pHdr->bItemDur = items[ii]._iName[14];
 			pHdr->bItemMDur = items[ii]._iName[15];
 			pHdr->bItemCh = items[ii]._iName[16];
 			pHdr->bItemMCh = items[ii]._iName[17];
-			pHdr->wItemVal = (items[ii]._iName[18] * 256) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) * 64) | items[ii]._ivalue;
-			pHdr->dwItemBuff = (items[ii]._iName[19] << 24) | (items[ii]._iName[20] * 65536) | (items[ii]._iName[21] * 256) | items[ii]._iName[22];
+			pHdr->wItemVal = (items[ii]._iName[18] << 8) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) << 6) | items[ii]._ivalue;
+			pHdr->dwItemBuff = (items[ii]._iName[19] << 24) | (items[ii]._iName[20] << 16) | (items[ii]._iName[21] << 8) | items[ii]._iName[22];
 		} else {
 			pHdr->wItemCI = items[ii]._iCreateInfo;
 			pHdr->dwItemSeed = items[ii]._iSeed;

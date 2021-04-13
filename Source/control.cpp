@@ -1329,7 +1329,7 @@ void DrawInfoBox(CelOutputBuffer out)
 			ClearPanel();
 			sprintf(tempstr, "%s, Level: %i", ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)], plr[pcursplr]._pLevel);
 			AddPanelString(tempstr, true);
-			sprintf(tempstr, "Hit Points %i of %i", plr[pcursplr]._pHitPoints / 64, plr[pcursplr]._pMaxHP / 64);
+			sprintf(tempstr, "Hit Points %i of %i", plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
 			AddPanelString(tempstr, true);
 		}
 	}
@@ -1581,22 +1581,22 @@ void DrawChr(CelOutputBuffer out)
 		col = COL_BLUE;
 	else
 		col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pMaxHP / 64);
+	sprintf(chrstr, "%i", plr[myplr]._pMaxHP >> 6);
 	ADD_PlrStringXY(out, 95, 304, 126, chrstr, col);
 	if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pHitPoints / 64);
+	sprintf(chrstr, "%i", plr[myplr]._pHitPoints >> 6);
 	ADD_PlrStringXY(out, 143, 304, 174, chrstr, col);
 
 	if (plr[myplr]._pMaxMana > plr[myplr]._pMaxManaBase)
 		col = COL_BLUE;
 	else
 		col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pMaxMana / 64);
+	sprintf(chrstr, "%i", plr[myplr]._pMaxMana >> 6);
 	ADD_PlrStringXY(out, 95, 332, 126, chrstr, col);
 	if (plr[myplr]._pMana != plr[myplr]._pMaxMana)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pMana / 64);
+	sprintf(chrstr, "%i", plr[myplr]._pMana >> 6);
 	ADD_PlrStringXY(out, 143, 332, 174, chrstr, col);
 }
 
@@ -1894,7 +1894,7 @@ void DrawSpellBook(CelOutputBuffer out)
 				sprintf(tempstr, "Staff (%i charges)", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
 				break;
 			default:
-				mana = GetManaAmount(myplr, sn) / 64;
+				mana = GetManaAmount(myplr, sn) >> 6;
 				GetDamageAmt(sn, &min, &max);
 				if (min != -1) {
 					sprintf(tempstr, "Mana: %i  Dam: %i - %i", mana, min, max);
@@ -1986,7 +1986,7 @@ void control_drop_gold(char vkey)
 {
 	char input[6];
 
-	if (plr[myplr]._pHitPoints / 64 <= 0) {
+	if (plr[myplr]._pHitPoints >> 6 <= 0) {
 		dropGoldFlag = false;
 		dropGoldValue = 0;
 		return;

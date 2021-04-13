@@ -71,7 +71,7 @@ void InitDead()
 
 void AddDead(int dx, int dy, char dv, int ddir)
 {
-	dDead[dx][dy] = (dv & 0x1F) + (ddir * 32);
+	dDead[dx][dy] = (dv & 0x1F) + (ddir << 5);
 }
 
 void SetDead()

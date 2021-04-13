@@ -49,8 +49,8 @@ int GetManaAmount(int id, spell_id sn)
 		ma -= ma / 4;
 	}
 
-	if (spelldata[sn].sMinMana > ma / 64) {
-		ma = spelldata[sn].sMinMana * 64;
+	if (spelldata[sn].sMinMana > ma >> 6) {
+		ma = spelldata[sn].sMinMana << 6;
 	}
 
 	return ma;
@@ -280,8 +280,8 @@ void DoResurrect(int pnum, int rid)
 		plr[rid]._pInvincible = false;
 		PlacePlayer(rid);
 
-		hp = 10 * 64;
-		if (plr[rid]._pMaxHPBase < (10 * 64)) {
+		hp = 10 << 6;
+		if (plr[rid]._pMaxHPBase < (10 << 6)) {
 			hp = plr[rid]._pMaxHPBase;
 		}
 		SetPlayerHitPoints(rid, hp);
@@ -308,15 +308,15 @@ void DoHealOther(int pnum, int rid)
 		NewCursor(CURSOR_HAND);
 	}
 
-	if ((char)rid != -1 && (plr[rid]._pHitPoints / 64) > 0) {
-		hp = (random_(57, 10) + 1) * 64;
+	if ((char)rid != -1 && (plr[rid]._pHitPoints >> 6) > 0) {
+		hp = (random_(57, 10) + 1) << 6;
 
 		for (i = 0; i < plr[pnum]._pLevel; i++) {
-			hp += (random_(57, 4) + 1) * 64;
+			hp += (random_(57, 4) + 1) << 6;
 		}
 
 		for (j = 0; j < GetSpellLevel(pnum, SPL_HEALOTHER); ++j) {
-			hp += (random_(57, 6) + 1) * 64;
+			hp += (random_(57, 6) + 1) << 6;
 		}
 
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {

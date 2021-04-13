@@ -44,7 +44,7 @@ void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_t
 {
 	Sint32 x1, y1, x2, y2;
 
-	Uint8 flags = automap_type / 256;
+	Uint8 flags = automap_type >> 8;
 
 	if (flags & MAPFLAG_DIRT) {
 		SetPixel(out, sx, sy, COLOR_DIM);
@@ -409,8 +409,8 @@ WORD GetAutomapType(int x, int y, bool view)
 
 	rv = automaptype[(BYTE)dungeon[x][y]];
 	if (rv == 7) {
-		if ((GetAutomapType(x - 1, y, false) / 256) & MAPFLAG_HORZARCH) {
-			if ((GetAutomapType(x, y - 1, false) / 256) & MAPFLAG_VERTARCH) {
+		if ((GetAutomapType(x - 1, y, false) >> 8) & MAPFLAG_HORZARCH) {
+			if ((GetAutomapType(x, y - 1, false) >> 8) & MAPFLAG_VERTARCH) {
 				rv = 1;
 			}
 		}
