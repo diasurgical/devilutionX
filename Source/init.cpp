@@ -53,13 +53,9 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 {
 	HANDLE archive;
 	std::string mpq_abspath;
-	DWORD mpq_flags = 0;
-#if !defined(__SWITCH__) && !defined(__AMIGA__) && !defined(__vita__)
-	mpq_flags |= MPQ_FLAG_READ_ONLY;
-#endif
 	for (int i = 0; i < paths.size(); i++) {
 		mpq_abspath = paths[i] + mpq_name;
-		if (SFileOpenArchive(mpq_abspath.c_str(), 0, mpq_flags, &archive)) {
+		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_FLAG_READ_ONLY, &archive)) {
 			SFileSetBasePath(paths[i].c_str());
 			return archive;
 		}
