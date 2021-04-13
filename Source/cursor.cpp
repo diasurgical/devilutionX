@@ -343,6 +343,10 @@ void CheckCursMove()
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
+	if (CheckStashHit(MouseX, MouseY)) {
+		pcursinvitem = CheckStashHighlight(MouseX, MouseY);
+		return;
+	}
 	if (sbookflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
 		return;
 	}

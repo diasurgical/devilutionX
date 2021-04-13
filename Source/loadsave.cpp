@@ -1748,6 +1748,8 @@ void SaveHeroItems(PlayerStruct *pPlayer)
 
 void SaveGameData()
 {
+	SaveStash();
+
 	SaveHelper file("game", FILEBUFF);
 
 	if (gbIsSpawn && !gbIsHellfire)

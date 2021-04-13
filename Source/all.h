@@ -20,6 +20,7 @@
 #include "../types.h"
 
 #include "../SourceX/qol.h"
+#include "../SourceX/stash.h"
 
 #include "appfat.h"
 #include "automap.h"

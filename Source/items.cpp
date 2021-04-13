@@ -1248,6 +1248,8 @@ void CalcPlrBookVals(int p)
 			plr[p].InvList[i]._iStatFlag = ItemMinStats(&plr[p], &plr[p].InvList[i]);
 		}
 	}
+
+	StashUpdateSpellbookRequirements(p);
 }
 
 void CalcPlrInv(int p, bool Loadgfx)
@@ -3297,7 +3299,9 @@ void CheckIdentify(int pnum, int cii)
 {
 	ItemStruct *pi;
 
-	if (cii >= NUM_INVLOC)
+	if (cii < -1)
+		pi = StashCheckItem(pnum, cii);
+	else if (cii >= NUM_INVLOC)
 		pi = &plr[pnum].InvList[cii - NUM_INVLOC];
 	else
 		pi = &plr[pnum].InvBody[cii];
@@ -3348,7 +3352,9 @@ void DoRepair(int pnum, int cii)
 	p = &plr[pnum];
 	PlaySfxLoc(IS_REPAIR, p->_px, p->_py);
 
-	if (cii >= NUM_INVLOC) {
+	if (cii < -1)
+		pi = StashCheckItem(pnum, cii);
+	else if (cii >= NUM_INVLOC) {
 		pi = &p->InvList[cii - NUM_INVLOC];
 	} else {
 		pi = &p->InvBody[cii];
@@ -3383,7 +3389,10 @@ void DoRecharge(int pnum, int cii)
 	int r;
 
 	p = &plr[pnum];
-	if (cii >= NUM_INVLOC) {
+
+	if (cii < -1)
+		pi = StashCheckItem(pnum, cii);
+	else if (cii >= NUM_INVLOC) {
 		pi = &p->InvList[cii - NUM_INVLOC];
 	} else {
 		pi = &p->InvBody[cii];
@@ -3527,7 +3536,9 @@ void DoOil(int pnum, int cii)
 {
 	PlayerStruct *p = &plr[pnum];
 
-	if (cii >= NUM_INVLOC || cii == INVLOC_HEAD || (cii > INVLOC_AMULET && cii <= INVLOC_CHEST)) {
+	if (cii < -1)
+		OilItem(StashCheckItem(pnum, cii), p);
+	else if (cii >= NUM_INVLOC || cii == INVLOC_HEAD || (cii > INVLOC_AMULET && cii <= INVLOC_CHEST)) {
 		if (OilItem(&p->InvBody[cii], p)) {
 			CalcPlrInv(pnum, true);
 			if (pnum == myplr) {

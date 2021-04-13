@@ -1205,6 +1205,9 @@ void CtrlUseInvItem()
 {
 	ItemStruct *Item;
 
+	if (pcursinvitem < -1)
+		return;
+
 	if (pcursinvitem == -1)
 		return;
 
