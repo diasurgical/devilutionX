@@ -1682,28 +1682,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 			}
 
 			if (!automaticMove || automaticallyMoved) {
-				for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-					if (player.InvGrid[i] == iv || player.InvGrid[i] == -iv) {
-						player.InvGrid[i] = 0;
-					}
-				}
-
-				iv--;
-
-				player._pNumInv--;
-
-				if (player._pNumInv > 0 && player._pNumInv != iv) {
-					player.InvList[iv] = player.InvList[player._pNumInv];
-
-					for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-						if (player.InvGrid[j] == player._pNumInv + 1) {
-							player.InvGrid[j] = iv + 1;
-						}
-						if (player.InvGrid[j] == -(player._pNumInv + 1)) {
-							player.InvGrid[j] = -iv - 1;
-						}
-					}
-				}
+				RemoveInvItem(pnum, iv - 1, false);
 			}
 		}
 	}
@@ -1799,12 +1778,13 @@ void inv_update_rem_item(int pnum, BYTE iv)
 	}
 }
 
-void RemoveInvItem(int pnum, int iv)
+void RemoveInvItem(int pnum, int iv, bool calcPlrScrolls)
 {
 	int i, j;
 
 	iv++;
 
+	//Iterate through invGrid and remove every reference to item
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		if (plr[pnum].InvGrid[i] == iv || plr[pnum].InvGrid[i] == -iv) {
 			plr[pnum].InvGrid[i] = 0;
@@ -1814,6 +1794,7 @@ void RemoveInvItem(int pnum, int iv)
 	iv--;
 	plr[pnum]._pNumInv--;
 
+	//If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (plr[pnum]._pNumInv > 0 && plr[pnum]._pNumInv != iv) {
 		plr[pnum].InvList[iv] = plr[pnum].InvList[plr[pnum]._pNumInv];
 
@@ -1827,7 +1808,8 @@ void RemoveInvItem(int pnum, int iv)
 		}
 	}
 
-	CalcPlrScrolls(pnum);
+	if (calcPlrScrolls)
+		CalcPlrScrolls(pnum);
 }
 
 void RemoveSpdBarItem(int pnum, int iv)
