@@ -455,6 +455,8 @@ static void SaveOptions()
 	setIniInt("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 	setIniInt("Game", "Monster HP Scaling", sgOptions.Gameplay.bMonsterHealthScaling);
 	setIniInt("Game", "Monster HP Scaling Percentage", sgOptions.Gameplay.bMonsterHealthScalingModifier);
+	setIniInt("Game", "Player Experience Scaling", sgOptions.Gameplay.bPlayerExperienceScaling);
+	setIniInt("Game", "Player Experience Scaling Percentage", sgOptions.Gameplay.bPlayerExperienceScalingModifier);
 
 	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	setIniInt("Network", "Port", sgOptions.Network.nPort);
@@ -531,6 +533,8 @@ static void LoadOptions()
 	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
 	sgOptions.Gameplay.bMonsterHealthScaling = getIniBool("Game", "Monster HP Scaling", false);
 	sgOptions.Gameplay.bMonsterHealthScalingModifier = getIniInt("Game", "Monster HP Scaling Percentage", 33);
+	sgOptions.Gameplay.bPlayerExperienceScaling = getIniBool("Game", "Player Experience Scaling", false);
+	sgOptions.Gameplay.bPlayerExperienceScalingModifier = getIniInt("Game", "Player Experience Scaling Percentage", 33);
 
 	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);

@@ -1630,7 +1630,7 @@ void M_GetKnockback(int i)
 void M_StartHit(int i, int pnum, int dam)
 {
 	std::stringstream ss; // TODO: Remove
-	ss << "Hit monster: " << monster[i].mName
+	ss << "Hit monster: " << monster[i].mName << " with " << dam << " points of damage!"
 	   << "\n\tHealth: " << monster[i]._mhitpoints << "/" << monster[i]._mmaxhp
 	   << "\t(base: " << monster[i]._mbasemaxhp << ")";
 	std::string msg = ss.str();
