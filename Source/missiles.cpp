@@ -170,12 +170,12 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		for (k = 0; k < sl; k++) {
 			*mind += *mind / 8;
 		}
-		/// BUGFIX: add here '*mind >>= 1;'
+		/// BUGFIX: add here '*mind /= 2;'
 		*maxd = 2 * plr[myplr]._pLevel + 40;
 		for (k = 0; k < sl; k++) {
 			*maxd += *maxd / 8;
 		}
-		/// BUGFIX: add here '*maxd >>= 1;'
+		/// BUGFIX: add here '*maxd /= 2;'
 		break;
 	case SPL_CBOLT:
 		*mind = 1;
@@ -188,7 +188,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	case SPL_HEALOTHER: /// BUGFIX: healing calculation is unused
 		*mind = plr[myplr]._pLevel + sl + 1;
 		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
-			*mind <<= 1;
+			*mind *= 2;
 		}
 		if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*mind += *mind / 2;
@@ -201,7 +201,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 			*maxd += 6;
 		}
 		if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Monk || plr[myplr]._pClass == HeroClass::Barbarian) {
-			*maxd <<= 1;
+			*maxd *= 2;
 		}
 		if (plr[myplr]._pClass == HeroClass::Rogue || plr[myplr]._pClass == HeroClass::Bard) {
 			*maxd += *maxd / 2;
@@ -831,13 +831,13 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 				dam = (mind << 6) + random_(75, (maxd - mind + 1) << 6);
 				if (m == -1)
 					if (plr[pnum]._pIFlags & ISPL_ABSHALFTRAP)
-						dam >>= 1;
+						dam /= 2;
 				dam += (plr[pnum]._pIGetHit << 6);
 			} else {
 				dam = mind + random_(75, maxd - mind + 1);
 				if (m == -1)
 					if (plr[pnum]._pIFlags & ISPL_ABSHALFTRAP)
-						dam >>= 1;
+						dam /= 2;
 				dam += plr[pnum]._pIGetHit;
 			}
 
@@ -993,7 +993,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 				dam <<= 6;
 		}
 		if (missiledata[mtype].mType != 0)
-			dam >>= 1;
+			dam /= 2;
 		if (resper > 0) {
 			dam -= (dam * resper) / 100;
 			if (pnum == myplr)
@@ -1917,7 +1917,7 @@ void AddMana(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 		ManaAmount += (random_(57, 6) + 1) << 6;
 	}
 	if (plr[id]._pClass == HeroClass::Sorcerer)
-		ManaAmount <<= 1;
+		ManaAmount *= 2;
 	if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Bard)
 		ManaAmount += ManaAmount / 2;
 	plr[id]._pMana += ManaAmount;
@@ -2924,7 +2924,7 @@ void AddHeal(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 	}
 
 	if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Barbarian || plr[id]._pClass == HeroClass::Monk)
-		HealAmount <<= 1;
+		HealAmount *= 2;
 	else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Bard)
 		HealAmount += HealAmount / 2;
 
@@ -2964,7 +2964,7 @@ void AddElement(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mi
 	for (i = missile[mi]._mispllvl; i > 0; i--) {
 		missile[mi]._midam += missile[mi]._midam / 8;
 	}
-	missile[mi]._midam >>= 1;
+	missile[mi]._midam /= 2;
 	GetMissileVel(mi, sx, sy, dx, dy, 16);
 	SetMissDir(mi, GetDirection8(sx, sy, dx, dy));
 	missile[mi]._mirange = 256;
@@ -3067,7 +3067,7 @@ void AddNova(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir
 	if (id != -1) {
 		missile[mi]._midam = (random_(66, 6) + random_(66, 6) + random_(66, 6) + random_(66, 6) + random_(66, 6));
 		missile[mi]._midam += plr[id]._pLevel + 5;
-		missile[mi]._midam >>= 1;
+		missile[mi]._midam /= 2;
 		for (k = missile[mi]._mispllvl; k > 0; k--) {
 			missile[mi]._midam += missile[mi]._midam / 8;
 		}

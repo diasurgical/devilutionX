@@ -25,7 +25,7 @@ int GetManaAmount(int id, spell_id sn)
 		adj = sl * spelldata[sn].sManaAdj;
 	}
 	if (sn == SPL_FIREBOLT) {
-		adj >>= 1;
+		adj /= 2;
 	}
 	if (sn == SPL_RESURRECT && sl > 0) {
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
@@ -44,7 +44,7 @@ int GetManaAmount(int id, spell_id sn)
 	ma <<= 6;
 
 	if (plr[id]._pClass == HeroClass::Sorcerer) {
-		ma >>= 1;
+		ma /= 2;
 	} else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Monk || plr[id]._pClass == HeroClass::Bard) {
 		ma -= ma / 4;
 	}
@@ -320,7 +320,7 @@ void DoHealOther(int pnum, int rid)
 		}
 
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
-			hp <<= 1;
+			hp *= 2;
 		} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Bard) {
 			hp += hp / 2;
 		} else if (plr[pnum]._pClass == HeroClass::Monk) {

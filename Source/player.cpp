@@ -245,7 +245,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
-	for (i = 1; i <= PFILE_NONDEATH; i <<= 1) {
+	for (i = 1; i <= PFILE_NONDEATH; i *= 2) {
 		if (!(i & gfxflag)) {
 			continue;
 		}
@@ -681,7 +681,7 @@ void CreatePlayer(int pnum, HeroClass c)
 
 	plr[pnum]._pHitPoints = (plr[pnum]._pVitality + 10) << 6;
 	if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
-		plr[pnum]._pHitPoints <<= 1;
+		plr[pnum]._pHitPoints *= 2;
 	} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Monk || plr[pnum]._pClass == HeroClass::Bard) {
 		plr[pnum]._pHitPoints += plr[pnum]._pHitPoints / 2;
 	}
@@ -692,7 +692,7 @@ void CreatePlayer(int pnum, HeroClass c)
 
 	plr[pnum]._pMana = plr[pnum]._pMagic << 6;
 	if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-		plr[pnum]._pMana <<= 1;
+		plr[pnum]._pMana *= 2;
 	} else if (plr[pnum]._pClass == HeroClass::Bard) {
 		plr[pnum]._pMana += plr[pnum]._pMana * 3 / 4;
 	} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Monk) {
@@ -2447,7 +2447,7 @@ bool PlrHitMonst(int pnum, int m)
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 			ddp = plr[pnum]._pLevel;
 			if (random_(6, 100) < ddp) {
-				dam <<= 1;
+				dam *= 2;
 			}
 		}
 
@@ -2513,7 +2513,7 @@ bool PlrHitMonst(int pnum, int m)
 						plr[pnum]._pHitPoints = dam2;
 					}
 				}
-				dam <<= 1;
+				dam *= 2;
 			}
 			monster[m]._mhitpoints -= dam;
 		}
@@ -2662,7 +2662,7 @@ bool PlrHitPlr(int pnum, char p)
 			if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 				lvl = plr[pnum]._pLevel;
 				if (random_(6, 100) < lvl) {
-					dam <<= 1;
+					dam *= 2;
 				}
 			}
 			skdam = dam << 6;
@@ -4130,7 +4130,7 @@ void ModifyPlrMag(int p, int l)
 
 	int ms = l << 6;
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
-		ms <<= 1;
+		ms *= 2;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
 		ms += ms / 2;
 	}
@@ -4189,9 +4189,9 @@ void ModifyPlrVit(int p, int l)
 
 	int ms = l << 6;
 	if (plr[p]._pClass == HeroClass::Warrior) {
-		ms <<= 1;
+		ms *= 2;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {
-		ms <<= 1;
+		ms *= 2;
 	}
 
 	plr[p]._pHPBase += ms;
@@ -4252,7 +4252,7 @@ void SetPlrMag(int p, int v)
 
 	m = v << 6;
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
-		m <<= 1;
+		m *= 2;
 	} else if (plr[p]._pClass == HeroClass::Bard) {
 		m += m / 2;
 	}
@@ -4294,9 +4294,9 @@ void SetPlrVit(int p, int v)
 
 	hp = v << 6;
 	if (plr[p]._pClass == HeroClass::Warrior) {
-		hp <<= 1;
+		hp *= 2;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {
-		hp <<= 1;
+		hp *= 2;
 	}
 
 	plr[p]._pHPBase = hp;

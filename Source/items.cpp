@@ -945,7 +945,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	plr[p]._pLghtResist = lr;
 
 	if (plr[p]._pClass == HeroClass::Warrior) {
-		vadd <<= 1;
+		vadd *= 2;
 	} else if (plr[p]._pClass == HeroClass::Barbarian) {
 		vadd += vadd;
 		vadd += (vadd / 4);
@@ -955,7 +955,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
 	if (plr[p]._pClass == HeroClass::Sorcerer) {
-		madd <<= 1;
+		madd *= 2;
 	}
 	if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk) {
 		madd += madd / 2;
@@ -4223,7 +4223,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		j = plr[p]._pMaxHP >> 8;
 		l = ((j >> 1) + random_(39, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
-			l <<= 1;
+			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
 			l += l / 2;
 		plr[p]._pHitPoints += l;
@@ -4243,7 +4243,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		j = plr[p]._pMaxMana >> 8;
 		l = ((j >> 1) + random_(40, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
-			l <<= 1;
+			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
 			l += l / 2;
 		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
@@ -4289,7 +4289,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		j = plr[p]._pMaxHP >> 8;
 		l = ((j / 2) + random_(39, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
-			l <<= 1;
+			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue)
 			l += l / 2;
 		plr[p]._pHitPoints += l;
@@ -4302,7 +4302,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		j = plr[p]._pMaxMana >> 8;
 		l = ((j / 2) + random_(40, j)) << 6;
 		if (plr[p]._pClass == HeroClass::Sorcerer)
-			l <<= 1;
+			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue)
 			l += l / 2;
 		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {

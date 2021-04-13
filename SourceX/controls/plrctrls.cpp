@@ -958,7 +958,7 @@ void StoreSpellCoords()
 					yo -= SPLICONLENGTH;
 				}
 			}
-			spell <<= 1;
+			spell *= 2;
 		}
 		if (spells && xo != END_X)
 			xo -= SPLICONLENGTH;

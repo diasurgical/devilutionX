@@ -478,7 +478,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	}
 
 	if (!gbIsMultiplayer) {
-		monster[i]._mmaxhp >>= 1;
+		monster[i]._mmaxhp /= 2;
 		if (monster[i]._mmaxhp < 64) {
 			monster[i]._mmaxhp = 64;
 		}
@@ -5187,8 +5187,8 @@ void PrintMonstHistory(int mt)
 			maxHP -= 2000;
 		}
 		if (!gbIsMultiplayer) {
-			minHP >>= 1;
-			maxHP >>= 1;
+			minHP /= 2;
+			maxHP /= 2;
 		}
 		if (minHP < 1)
 			minHP = 1;

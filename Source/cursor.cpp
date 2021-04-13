@@ -236,8 +236,8 @@ void CheckCursMove()
 	}
 
 	if (!zoomflag) {
-		sx >>= 1;
-		sy >>= 1;
+		sx /= 2;
+		sy /= 2;
 	}
 
 	// Adjust by player offset and tile grid alignment

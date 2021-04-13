@@ -755,8 +755,8 @@ void LoadMapObjects(BYTE *pMap, int startx, int starty, int x1, int y1, int w, i
 	lm += 2;
 	rh = *lm;
 	mapoff = (rw * rh + 1) * 2;
-	rw <<= 1;
-	rh <<= 1;
+	rw *= 2;
+	rh *= 2;
 	mapoff += rw * 2 * rh * 2;
 	lm += mapoff;
 
@@ -789,8 +789,8 @@ void LoadMapObjs(BYTE *pMap, int startx, int starty)
 	lm += 2;
 	rh = *lm;
 	mapoff = (rw * rh + 1) * 2;
-	rw <<= 1;
-	rh <<= 1;
+	rw *= 2;
+	rh *= 2;
 	mapoff += 2 * rw * rh * 2;
 	lm += mapoff;
 
@@ -1179,8 +1179,8 @@ void SetMapObjects(BYTE *pMap, int startx, int starty)
 	lm += 2;
 	rh = *lm;
 	mapoff = (rw * rh + 1) * 2;
-	rw <<= 1;
-	rh <<= 1;
+	rw *= 2;
+	rh *= 2;
 	mapoff += 2 * rw * rh * 2;
 	lm += mapoff;
 	h = lm;
@@ -3654,7 +3654,7 @@ bool OperateShrineEnchanted(int pnum)
 	for (int j = 0; j < maxSpells; j++) {
 		if (spell & spells)
 			cnt++;
-		spell <<= 1;
+		spell *= 2;
 	}
 	if (cnt > 1) {
 		spell = 1;
@@ -3663,7 +3663,7 @@ bool OperateShrineEnchanted(int pnum)
 				if (plr[pnum]._pSplLvl[j] < MAX_SPELL_LEVEL)
 					plr[pnum]._pSplLvl[j]++;
 			}
-			spell <<= 1;
+			spell *= 2;
 		}
 		int r;
 		do {

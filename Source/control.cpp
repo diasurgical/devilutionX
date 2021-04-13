@@ -392,7 +392,7 @@ void DrawSpellList(CelOutputBuffer out)
 			break;
 		}
 		Sint32 j = SPL_FIREBOLT;
-		for (spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
+		for (spl = 1; j < MAX_SPELLS; spl *= 2, j++) {
 			if (!(mask & spl))
 				continue;
 			if (i == RSPLTYPE_SPELL) {

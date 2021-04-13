@@ -178,7 +178,7 @@ void multi_send_msg_packet(int pmask, BYTE *src, BYTE len)
 	t = len + sizeof(pkt.hdr);
 	pkt.hdr.wLen = t;
 	memcpy(pkt.body, src, len);
-	for (v = 1, p = 0; p < MAX_PLRS; p++, v <<= 1) {
+	for (v = 1, p = 0; p < MAX_PLRS; p++, v *= 2) {
 		if (v & pmask) {
 			if (!SNetSendMessage(p, &pkt.hdr, t) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
 				nthread_terminate_game("SNetSendMessage");

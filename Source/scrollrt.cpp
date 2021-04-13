@@ -934,10 +934,10 @@ static void Zoom(CelOutputBuffer out)
 
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
-			wdt >>= 1;
+			wdt /= 2;
 			src_x -= wdt;
 		} else if (invflag || sbookflag) {
-			wdt >>= 1;
+			wdt /= 2;
 			src_x -= wdt;
 			dst_x -= SPANEL_WIDTH;
 		}
