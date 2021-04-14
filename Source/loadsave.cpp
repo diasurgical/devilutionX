@@ -1749,6 +1749,10 @@ void SaveHeroItems(PlayerStruct *pPlayer)
 	SaveItems(&file, pPlayer->SpdList, MAXBELTITEMS);
 }
 
+// 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)
+// final game uses 4-byte magic instead of 3
+#define FILEBUFF ((256 * 1024) + 3)
+
 void SaveGameData()
 {
 	SaveHelper file("game", FILEBUFF);

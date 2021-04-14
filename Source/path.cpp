@@ -6,6 +6,9 @@
 #include "all.h"
 
 namespace devilution {
+
+#define MAXPATHNODES 300
+
 /** Notes visisted by the path finding algorithm. */
 PATHNODE path_nodes[MAXPATHNODES];
 /** size of the pnode_tblptr stack */

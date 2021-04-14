@@ -7,6 +7,8 @@
 
 namespace devilution {
 
+#define MAXTRIGGERS 7
+
 struct TriggerStruct {
 	int _tx;
 	int _ty;

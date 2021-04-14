@@ -4,6 +4,7 @@
  * Implementation of functionality for handling quests.
  */
 #include "all.h"
+#include "gendung.h"
 #include "options.h"
 
 namespace devilution {

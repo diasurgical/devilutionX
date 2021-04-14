@@ -8,9 +8,12 @@
 #include <stdint.h>
 
 #include "items.h"
+#include "palette.h"
 #include "player.h"
 
 namespace devilution {
+
+#define INV_SLOT_SIZE_PX 28
 
 enum inv_item : int8_t {
 	// clang-format off
@@ -127,4 +130,4 @@ bool DropItemBeforeTrig();
 
 extern int AP2x2Tbl[10];
 
-}
+} // namespace devilution

@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "player.h"
 #include "inv.h"
 #include "items.h"
 

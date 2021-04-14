@@ -2,7 +2,6 @@
 #include "display.h"
 #include "options.h"
 #include "touch.h"
-#include "../../defs.h"
 #include <math.h>
 
 static int visible_width;

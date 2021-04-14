@@ -7,6 +7,11 @@
 
 namespace devilution {
 
+#define MAXLIGHTS 32
+#define MAXVISION 32
+#define LIGHTSIZE (27 * 256)
+#define NO_LIGHT -1
+
 struct LightListStruct {
 	int _lx;
 	int _ly;
@@ -64,4 +69,4 @@ void lighting_color_cycling();
 extern const char CrawlTable[2749];
 extern const BYTE vCrawlTable[23][30];
 
-}
+} // namespace devilution

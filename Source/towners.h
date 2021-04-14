@@ -7,7 +7,11 @@
 
 #include <stdint.h>
 
+#include "quests.h"
+
 namespace devilution {
+
+#define NUM_TOWNERS 16
 
 enum _talker_id : uint8_t {
 	TOWN_SMITH,

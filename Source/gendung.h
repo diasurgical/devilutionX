@@ -11,6 +11,15 @@
 
 namespace devilution {
 
+#define DMAXX 40
+#define DMAXY 40
+
+#define MAXDUNX (16 + DMAXX * 2 + 16)
+#define MAXDUNY (16 + DMAXY * 2 + 16)
+
+#define MAXTHEMES 50
+#define MAXTILES 2048
+
 enum _setlevels : int8_t {
 	SL_NONE,
 	SL_SKELKING,

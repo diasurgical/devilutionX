@@ -7,13 +7,24 @@
 
 #include <stdint.h>
 
+#include "diablo.h"
 #include "enum_traits.h"
 #include "gendung.h"
 #include "items.h"
+#include "multi.h"
 #include "spelldat.h"
+#include "path.h"
 #include "interfac.h"
 
 namespace devilution {
+
+// number of inventory grid cells
+#define NUM_INV_GRID_ELEM 40
+#define MAXBELTITEMS 8
+#define MAXRESIST 75
+#define MAXCHARLEVEL 51
+#define MAX_SPELL_LEVEL 15
+#define PLR_NAME_LEN 32
 
 /** Walking directions */
 enum {
@@ -168,9 +179,9 @@ struct PlayerStruct {
 	Sint32 _pAnimFrame; // Current frame of animation.
 	Sint32 _pAnimWidth;
 	Sint32 _pAnimWidth2;
-	Sint32 _pAnimNumSkippedFrames; // Number of Frames that will be skipped (for example with modifier "faster attack")
+	Sint32 _pAnimNumSkippedFrames;              // Number of Frames that will be skipped (for example with modifier "faster attack")
 	Sint32 _pAnimGameTicksSinceSequenceStarted; // Number of GameTicks after the current animation sequence started
-	Sint32 _pAnimStopDistributingAfterFrame; // Distribute the NumSkippedFrames only before this frame
+	Sint32 _pAnimStopDistributingAfterFrame;    // Distribute the NumSkippedFrames only before this frame
 	Sint32 _plid;
 	Sint32 _pvid;
 	spell_id _pSpell;
@@ -419,4 +430,4 @@ extern int DexterityTbl[enum_size<HeroClass>::value];
 extern int VitalityTbl[enum_size<HeroClass>::value];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 
-}
+} // namespace devilution

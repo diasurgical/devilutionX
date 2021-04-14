@@ -1681,9 +1681,9 @@ void ReleaseChrBtns(bool addAllStatPoints)
 
 		chrbtn[static_cast<size_t>(i)] = false;
 		if (MouseX >= ChrBtnsRect[static_cast<size_t>(i)].x
-			&& MouseX <= ChrBtnsRect[static_cast<size_t>(i)].x + ChrBtnsRect[static_cast<size_t>(i)].w
-			&& MouseY >= ChrBtnsRect[static_cast<size_t>(i)].y
-			&& MouseY <= ChrBtnsRect[static_cast<size_t>(i)].y + ChrBtnsRect[static_cast<size_t>(i)].h) {
+		    && MouseX <= ChrBtnsRect[static_cast<size_t>(i)].x + ChrBtnsRect[static_cast<size_t>(i)].w
+		    && MouseY >= ChrBtnsRect[static_cast<size_t>(i)].y
+		    && MouseY <= ChrBtnsRect[static_cast<size_t>(i)].y + ChrBtnsRect[static_cast<size_t>(i)].h) {
 			PlayerStruct &player = plr[myplr];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)

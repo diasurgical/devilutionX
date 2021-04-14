@@ -4,6 +4,7 @@
  * Implementation of functions for loading and playing sounds.
  */
 #include "all.h"
+#include "sound.h"
 #include <SDL_mixer.h>
 
 namespace devilution {

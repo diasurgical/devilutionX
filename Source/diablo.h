@@ -7,7 +7,6 @@
 
 #include <stdint.h>
 
-#include "pack.h"
 #include "gendung.h"
 #ifdef _DEBUG
 #include "monstdat.h"
@@ -15,18 +14,15 @@
 
 namespace devilution {
 
+#define GAME_ID (gbIsHellfire ? (gbIsSpawn ? LOAD_BE32("HSHR") : LOAD_BE32("HRTL")) : (gbIsSpawn ? LOAD_BE32("DSHR") : LOAD_BE32("DRTL")))
+
+#define NUMLEVELS 25
+
 enum clicktype : int8_t {
 	CLICK_NONE,
 	CLICK_LEFT,
 	CLICK_RIGHT,
 };
-
-#ifndef DEFAULT_WIDTH
-#define DEFAULT_WIDTH 640
-#endif
-#ifndef DEFAULT_HEIGHT
-#define DEFAULT_HEIGHT 480
-#endif
 
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];

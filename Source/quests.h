@@ -12,6 +12,8 @@
 
 namespace devilution {
 
+#define MAXQUESTS 24
+
 /** States of the mushroom quest */
 enum {
 	QS_INIT,

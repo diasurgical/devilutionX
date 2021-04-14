@@ -9,6 +9,8 @@
 
 namespace devilution {
 
+#define PANELS_COVER (gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT)
+
 enum _scroll_direction : uint8_t {
 	SDIR_NONE,
 	SDIR_N,

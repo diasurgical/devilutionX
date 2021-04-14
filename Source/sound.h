@@ -9,6 +9,9 @@
 
 namespace devilution {
 
+#define VOLUME_MIN -1600
+#define VOLUME_MAX 0
+
 enum _music_id : uint8_t {
 	TMUSIC_TOWN,
 	TMUSIC_L1,

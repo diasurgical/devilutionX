@@ -584,7 +584,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 		len = PkwareCompress(mpq_buf, len);
 		if (!cur_archive.stream.write((char *)mpq_buf, len))
 			return false;
-		sectoroffsettable[cur_sector++] = SwapLE32(destsize);
+		sectoroffsettable[cur_sector++] = SDL_SwapLE32(destsize);
 		destsize += len; // compressed length
 		if (dwLen > kSectorSize)
 			dwLen -= kSectorSize;
@@ -592,7 +592,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 			break;
 	}
 
-	sectoroffsettable[num_sectors] = SwapLE32(destsize);
+	sectoroffsettable[num_sectors] = SDL_SwapLE32(destsize);
 	if (!cur_archive.stream.seekp(pBlk->offset, std::ios::beg))
 		return false;
 	if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))

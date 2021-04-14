@@ -7,6 +7,8 @@
 
 namespace devilution {
 
+#define MAXDEAD 31
+
 struct DeadStruct {
 	Uint8 *_deadData[8];
 	int _deadFrame;

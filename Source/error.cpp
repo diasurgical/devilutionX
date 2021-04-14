@@ -101,6 +101,8 @@ void ClrDiabloMsg()
 	msgcnt = 0;
 }
 
+#define DIALOG_Y ((gnScreenHeight - PANEL_HEIGHT) / 2 - 18)
+
 void DrawDiabloMsg(CelOutputBuffer out)
 {
 	int i, len, width, sx, sy;

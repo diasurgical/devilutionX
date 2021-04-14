@@ -12,6 +12,5 @@
 #include "ui_fwd.h"
 
 #include <limits.h>
-#include "defs.h"
 
 #endif

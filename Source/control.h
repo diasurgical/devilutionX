@@ -13,6 +13,18 @@
 
 namespace devilution {
 
+#define PANEL_WIDTH 640
+#define PANEL_HEIGHT 128
+#define PANEL_TOP (gnScreenHeight - PANEL_HEIGHT)
+#define PANEL_LEFT (gnScreenWidth - PANEL_WIDTH) / 2
+#define PANEL_X PANEL_LEFT
+#define PANEL_Y PANEL_TOP
+
+#define SPANEL_WIDTH 320
+#define SPANEL_HEIGHT 352
+#define RIGHT_PANEL (gnScreenWidth - SPANEL_WIDTH)
+#define RIGHT_PANEL_X RIGHT_PANEL
+
 enum text_color : uint8_t {
 	COL_WHITE,
 	COL_BLUE,

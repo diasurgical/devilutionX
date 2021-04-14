@@ -11,6 +11,12 @@
 
 namespace devilution {
 
+#define NIGHTMARE_TO_HIT_BONUS 85
+#define HELL_TO_HIT_BONUS 120
+
+#define NIGHTMARE_AC_BONUS 50
+#define HELL_AC_BONUS 80
+
 /** Tracks which missile files are already loaded */
 int MissileFileFlag;
 
@@ -2895,8 +2901,7 @@ bool M_CallWalk(int i, int md)
 bool M_PathWalk(int i)
 {
 	Sint8 path[MAX_PATH_LENGTH];
-	bool(*Check)
-	(int, int, int);
+	bool (*Check)(int, int, int);
 
 	/** Maps from walking path step to facing direction. */
 	const Sint8 plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };

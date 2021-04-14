@@ -7,7 +7,12 @@
 
 #include <stdint.h>
 
+#include "monstdat.h"
+
 namespace devilution {
+
+#define MAXMONSTERS 200
+#define MAX_LVLMTYPES 24
 
 enum monster_flag : uint16_t {
 	// clang-format off
