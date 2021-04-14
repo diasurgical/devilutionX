@@ -4,6 +4,7 @@
  * Implementation of the character and main control panels
  */
 #include "all.h"
+#include "options.h"
 
 #include <cstddef>
 
@@ -1710,11 +1711,14 @@ void ReleaseChrBtns(bool addAllStatPoints)
 	}
 }
 
-static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct *pItem, int x, int c)
+static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct* pItem, int x, int c)
 {
+	const int durabilityThresholdGold = 5;
+	const int durabilityThresholdRed = 2;
+
 	if (pItem->isEmpty())
 		return x;
-	if (pItem->_iDurability > 5)
+	if (pItem->_iDurability > durabilityThresholdGold)
 		return x;
 	if (c == 0) {
 		switch (pItem->_itype) {
@@ -1738,10 +1742,31 @@ static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct *pItem, int x, int c
 			break;
 		}
 	}
-	if (pItem->_iDurability > 2)
-		c += 8;
-	CelDrawTo(out, x, -17 + PANEL_Y, pDurIcons, c, 32);
-	return x - 32 - 8;
+
+	// Calculate how much of the icon should be gold and red
+	int height = 32; // Height of durability icon CEL
+	int partition = 0;
+	if (pItem->_iDurability > durabilityThresholdRed) { 
+		if (!sgOptions.Graphics.bGradualDurabilityWarning)
+			partition = height;
+		else {
+			int current = pItem->_iDurability - durabilityThresholdRed;
+			partition = (height * current) / (durabilityThresholdGold - durabilityThresholdRed);
+		}
+	}
+
+	// Draw icon
+	int y = -17 + PANEL_Y;
+	if (partition > 0) {
+		CelOutputBuffer stenciledBuffer = out.subregionY(y - partition, partition);
+		CelDrawTo(stenciledBuffer, x, partition, pDurIcons, c + 8, 32); // Gold icon
+	}
+	if (partition != height) {
+		CelOutputBuffer stenciledBuffer = out.subregionY(y - height, height - partition);
+		CelDrawTo(stenciledBuffer, x, height, pDurIcons, c, 32); // Red icon
+	}
+
+	return x - 32 - 8; // Add in spacing for the next durability icon
 }
 
 void DrawDurIcon(CelOutputBuffer out)
