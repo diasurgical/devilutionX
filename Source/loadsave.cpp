@@ -589,7 +589,10 @@ static void LoadMonster(LoadHelper *file, int i)
 	file->skip(1); // Alignment
 	pMonster->mExp = file->nextLE<Uint16>();
 
-	file->skip(1); // Skip mHit as it's already initialized
+	if (i < MAX_PLRS) // Don't skip for golems
+		pMonster->mHit = file->nextLE<Uint8>();
+	else
+		file->skip(1); // Skip mHit as it's already initialized
 	pMonster->mMinDamage = file->nextLE<Uint8>();
 	pMonster->mMaxDamage = file->nextLE<Uint8>();
 	file->skip(1); // Skip mHit2 as it's already initialized
@@ -1553,10 +1556,10 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(1); // Alignment
 	file->writeLE<Uint16>(pMonster->mExp);
 
-	file->writeLE<Uint8>(pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX); // For backwards compatibility
+	file->writeLE<Uint8>(pMonster->mHit < UCHAR_MAX ? pMonster->mHit : UCHAR_MAX); // For backwards compatibility
 	file->writeLE<Uint8>(pMonster->mMinDamage);
 	file->writeLE<Uint8>(pMonster->mMaxDamage);
-	file->writeLE<Uint8>(pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX); // For backwards compatibility
+	file->writeLE<Uint8>(pMonster->mHit2 < UCHAR_MAX ? pMonster->mHit2 : UCHAR_MAX); // For backwards compatibility
 	file->writeLE<Uint8>(pMonster->mMinDamage2);
 	file->writeLE<Uint8>(pMonster->mMaxDamage2);
 	file->writeLE<Uint8>(pMonster->mArmorClass);
