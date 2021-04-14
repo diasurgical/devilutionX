@@ -1430,7 +1430,8 @@ void CheckInvPaste(int pnum, int mx, int my)
 			}
 			ii = r - SLOTXY_INV_FIRST;
 
-			//Calculate topleft position of item for InvGrid and then add item to InvGrid
+			// Calculate top-left position of item for InvGrid and then add item to InvGrid
+
 			yy = 10 * (ii / 10 - ((sy - 1) >> 1));
 			xx = (ii % 10 - ((sx - 1) >> 1));
 			if (yy < 0)
