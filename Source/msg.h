@@ -427,7 +427,7 @@ void DeltaSaveLevel();
 void DeltaLoadLevel();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
 void NetSendCmdGolem(BYTE mx, BYTE my, BYTE dir, BYTE menemy, int hp, BYTE cl);
-void NetSendCmdLoc(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y);
+void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2);
 void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2, WORD wParam3);

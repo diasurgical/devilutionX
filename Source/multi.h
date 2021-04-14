@@ -45,8 +45,8 @@ extern BYTE gbDeltaSender;
 extern int player_state[MAX_PLRS];
 
 void multi_msg_add(BYTE *pbMsg, BYTE bLen);
-void NetSendLoPri(BYTE *pbMsg, BYTE bLen);
-void NetSendHiPri(BYTE *pbMsg, BYTE bLen);
+void NetSendLoPri(int playerId, BYTE *pbMsg, BYTE bLen);
+void NetSendHiPri(int playerId, BYTE *pbMsg, BYTE bLen);
 void multi_send_msg_packet(int pmask, BYTE *src, BYTE len);
 void multi_msg_countdown();
 void multi_player_left(int pnum, int reason);

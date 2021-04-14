@@ -677,7 +677,7 @@ static bool LeftMouseCmd(bool bShift)
 			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 		} else if (plr[myplr]._pwtype == WT_RANGED) {
 			if (bShift) {
-				NetSendCmdLoc(true, CMD_RATTACKXY, cursmx, cursmy);
+				NetSendCmdLoc(myplr, true, CMD_RATTACKXY, cursmx, cursmy);
 			} else if (pcursmonst != -1) {
 				if (CanTalkToMonst(pcursmonst)) {
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -693,10 +693,10 @@ static bool LeftMouseCmd(bool bShift)
 					if (CanTalkToMonst(pcursmonst)) {
 						NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 					} else {
-						NetSendCmdLoc(true, CMD_SATTACKXY, cursmx, cursmy);
+						NetSendCmdLoc(myplr, true, CMD_SATTACKXY, cursmx, cursmy);
 					}
 				} else {
-					NetSendCmdLoc(true, CMD_SATTACKXY, cursmx, cursmy);
+					NetSendCmdLoc(myplr, true, CMD_SATTACKXY, cursmx, cursmy);
 				}
 			} else if (pcursmonst != -1) {
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
