@@ -526,6 +526,8 @@ void DrawInv(CelOutputBuffer out)
 			}
 		}
 	}
+
+	DrawStash(out);
 }
 
 void DrawInvBelt(CelOutputBuffer out)

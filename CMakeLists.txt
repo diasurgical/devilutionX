@@ -293,6 +293,7 @@ add_library(devilution STATIC
 
 set(devilutionx_SRCS
   SourceX/qol.cpp
+  SourceX/stash.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp
   SourceX/controls/devices/kbcontroller.cpp
@@ -453,7 +454,8 @@ target_include_directories(${BIN_TARGET} PRIVATE
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
-  3rdParty/libsmacker)
+  3rdParty/libsmacker
+  3rdParty/rapidjson)
 
 if(N3DS)
   target_link_libraries(devilution PUBLIC

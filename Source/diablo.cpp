@@ -649,6 +649,7 @@ int DiabloMain(int argc, char **argv)
 	diablo_parse_flags(argc, argv);
 	LoadOptions();
 	diablo_init();
+	LoadStash();
 	diablo_splash();
 	mainmenu_loop();
 	diablo_deinit();
@@ -829,6 +830,9 @@ static bool LeftMouseDown(int wParam)
 					CheckInvItem(isShiftHeld);
 			} else if (sbookflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 				CheckSBook();
+			}
+			else if (CheckStashHit(MouseX, MouseY)) {
+				StashClick(MouseX, MouseY, isShiftHeld);
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
 					NetSendCmdPItem(true, CMD_PUTITEM, cursmx, cursmy);
