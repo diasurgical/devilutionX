@@ -194,7 +194,7 @@ static void multi_mon_seeds()
 	DWORD l;
 
 	sgdwGameLoops++;
-	l = (sgdwGameLoops / 256) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
+	l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
 	for (i = 0; i < MAXMONSTERS; i++)
 		monster[i]._mAISeed = l + i;
 }

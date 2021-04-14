@@ -23,7 +23,7 @@ DWORD sgdwCursHgt;
  * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
  *
  * frameNum  := block & 0x0FFF
- * frameType := block & 0x7000 / 4096
+ * frameType := block & 0x7000 >> 12
  */
 DWORD level_cel_block;
 int sgdwCursXOld;
