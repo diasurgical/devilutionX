@@ -585,6 +585,28 @@ void DrawInvBelt(CelOutputBuffer out)
 }
 
 /**
+ * @brief Adds an item to a player's InvGrid array
+ * @param playerNumber Player index
+ * @param invGridIndex Item's position in InvGrid (this should be the item's topleft grid tile)
+ * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
+ * @param sizeX Horizontal size of item
+ * @param sizeY Vertical size of item
+ */
+static void AddItemToInvGrid(int playerNumber, int invGridIndex, int invListIndex, int sizeX, int sizeY)
+{
+	const int pitch = 10;
+	for (int y = 0; y < sizeY; y++) {
+		for (int x = 0; x < sizeX; x++) {
+			if (x == 0 & y == sizeY - 1)
+				plr[playerNumber].InvGrid[invGridIndex + x] = invListIndex;
+			else
+				plr[playerNumber].InvGrid[invGridIndex + x] = -invListIndex;
+		}
+		invGridIndex += pitch;
+	}
+}
+
+/**
  * @brief Gets the size, in inventory cells, of the given item.
  * @param item The item whose size is to be determined.
  * @return The size, in inventory cells, of the item.
@@ -969,25 +991,8 @@ bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStr
 	if (done && persistItem) {
 		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = plr[playerNumber].HoldItem;
 		plr[playerNumber]._pNumInv++;
-		yy = 10 * (slotIndex / 10);
-		if (yy < 0) {
-			yy = 0;
-		}
-		for (j = 0; j < itemSize.Y; j++) {
-			xx = slotIndex % 10;
-			if (xx < 0) {
-				xx = 0;
-			}
-			for (i = 0; i < itemSize.X; i++) {
-				if (i != 0 || j != itemSize.Y - 1) {
-					plr[playerNumber].InvGrid[xx + yy] = -plr[playerNumber]._pNumInv;
-				} else {
-					plr[playerNumber].InvGrid[xx + yy] = plr[playerNumber]._pNumInv;
-				}
-				xx++;
-			}
-			yy += 10;
-		}
+
+		AddItemToInvGrid(playerNumber, slotIndex, plr[playerNumber]._pNumInv, itemSize.X, itemSize.Y);
 		CalcPlrScrolls(playerNumber);
 	}
 	return done;
@@ -1424,22 +1429,16 @@ void CheckInvPaste(int pnum, int mx, int my)
 				}
 			}
 			ii = r - SLOTXY_INV_FIRST;
+
+			// Calculate top-left position of item for InvGrid and then add item to InvGrid
+
 			yy = 10 * (ii / 10 - ((sy - 1) >> 1));
+			xx = (ii % 10 - ((sx - 1) >> 1));
 			if (yy < 0)
 				yy = 0;
-			for (j = 0; j < sy; j++) {
-				xx = (ii % 10 - ((sx - 1) >> 1));
-				if (xx < 0)
-					xx = 0;
-				for (i = 0; i < sx; i++) {
-					if (i != 0 || j != sy - 1)
-						plr[pnum].InvGrid[xx + yy] = -it;
-					else
-						plr[pnum].InvGrid[xx + yy] = it;
-					xx++;
-				}
-				yy += 10;
-			}
+			if (xx < 0)
+				xx = 0;
+			AddItemToInvGrid(pnum, xx + yy, it, sx, sy);
 		}
 		break;
 	case ILOC_BELT:
