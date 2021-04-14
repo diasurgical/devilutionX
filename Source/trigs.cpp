@@ -847,7 +847,7 @@ void CheckTriggers()
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
-				NetSendCmdLoc(true, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
+				NetSendCmdLoc(myplr, true, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
 				PlaySFX(PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
@@ -903,7 +903,7 @@ void CheckTriggers()
 					}
 
 					InitDiabloMsg(abortflag);
-					NetSendCmdLoc(true, CMD_WALKXY, x, y);
+					NetSendCmdLoc(myplr, true, CMD_WALKXY, x, y);
 					return;
 				}
 			}

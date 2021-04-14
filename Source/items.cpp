@@ -4340,7 +4340,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			plr[p].destParam1 = cursmx;
 			plr[p].destParam2 = cursmy;
 			if (p == myplr && spl == SPL_NOVA)
-				NetSendCmdLoc(true, CMD_NOVA, cursmx, cursmy);
+				NetSendCmdLoc(myplr, true, CMD_NOVA, cursmx, cursmy);
 		}
 		break;
 	case IMISC_SCROLLT:

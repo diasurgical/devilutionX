@@ -125,26 +125,26 @@ void multi_msg_add(BYTE *pbMsg, BYTE bLen)
 	}
 }
 
-static void multi_send_packet(void *packet, BYTE dwSize)
+static void multi_send_packet(int playerId, void *packet, BYTE dwSize)
 {
 	TPkt pkt;
 
 	NetRecvPlrData(&pkt);
 	pkt.hdr.wLen = dwSize + sizeof(pkt.hdr);
 	memcpy(pkt.body, packet, dwSize);
-	if (!SNetSendMessage(myplr, &pkt.hdr, pkt.hdr.wLen))
+	if (!SNetSendMessage(playerId, &pkt.hdr, pkt.hdr.wLen))
 		nthread_terminate_game("SNetSendMessage0");
 }
 
-void NetSendLoPri(BYTE *pbMsg, BYTE bLen)
+void NetSendLoPri(int playerId, BYTE *pbMsg, BYTE bLen)
 {
 	if (pbMsg && bLen) {
 		multi_copy_packet(&sgLoPriBuf, pbMsg, bLen);
-		multi_send_packet(pbMsg, bLen);
+		multi_send_packet(playerId, pbMsg, bLen);
 	}
 }
 
-void NetSendHiPri(BYTE *pbMsg, BYTE bLen)
+void NetSendHiPri(int playerId, BYTE *pbMsg, BYTE bLen)
 {
 	BYTE *hipri_body;
 	BYTE *lowpri_body;
@@ -153,7 +153,7 @@ void NetSendHiPri(BYTE *pbMsg, BYTE bLen)
 
 	if (pbMsg && bLen) {
 		multi_copy_packet(&sgHiPriBuf, pbMsg, bLen);
-		multi_send_packet(pbMsg, bLen);
+		multi_send_packet(playerId, pbMsg, bLen);
 	}
 	if (!gbShouldValidatePackage) {
 		gbShouldValidatePackage = true;
@@ -403,12 +403,12 @@ int multi_handle_delta()
 	sgbTimeout = false;
 	if (received) {
 		if (!gbShouldValidatePackage) {
-			NetSendHiPri(0, 0);
+			NetSendHiPri(myplr, 0, 0);
 			gbShouldValidatePackage = false;
 		} else {
 			gbShouldValidatePackage = false;
 			if (!multi_check_pkt_valid(&sgHiPriBuf))
-				NetSendHiPri(0, 0);
+				NetSendHiPri(myplr, 0, 0);
 		}
 	}
 	multi_mon_seeds();
