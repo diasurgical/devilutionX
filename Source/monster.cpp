@@ -5621,6 +5621,12 @@ void SpawnGolum(int i, int x, int y, int mi)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
+	// Set lower limits on spell level and max mana
+	// so that the Golem doesn't spawn with negative HP
+	const Sint32 minMispllvl = 1;
+	const Sint32 minPMaxMana = 0;
+	Sint32 mispllvl = std::max(missile[mi]._mispllvl, minMispllvl);
+	Sint32 pMaxMana = std::max(plr[i]._pMaxMana, minMispllvl);
 	dMonster[x][y] = i + 1;
 	monster[i]._mx = x;
 	monster[i]._my = y;
@@ -5629,12 +5635,12 @@ void SpawnGolum(int i, int x, int y, int mi)
 	monster[i]._moldx = x;
 	monster[i]._moldy = y;
 	monster[i]._pathcount = 0;
-	monster[i]._mmaxhp = 2 * (320 * missile[mi]._mispllvl + plr[i]._pMaxMana / 3);
+	monster[i]._mmaxhp = 2 * (320 * mispllvl + pMaxMana / 3);
 	monster[i]._mhitpoints = monster[i]._mmaxhp;
 	monster[i].mArmorClass = 25;
-	monster[i].mHit = 5 * (missile[mi]._mispllvl + 8) + 2 * plr[i]._pLevel;
-	monster[i].mMinDamage = 2 * (missile[mi]._mispllvl + 4);
-	monster[i].mMaxDamage = 2 * (missile[mi]._mispllvl + 8);
+	monster[i].mHit = 5 * (mispllvl + 8) + 2 * plr[i]._pLevel;
+	monster[i].mMinDamage = 2 * (mispllvl + 4);
+	monster[i].mMaxDamage = 2 * (mispllvl + 8);
 	monster[i]._mFlags |= MFLAG_GOLEM;
 	M_StartSpStand(i, 0);
 	M_Enemy(i);
