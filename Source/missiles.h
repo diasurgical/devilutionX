@@ -11,6 +11,8 @@
 
 namespace devilution {
 
+#define MAXMISSILES 125
+
 struct ChainStruct {
 	Sint32 idx;
 	Sint32 _mitype;

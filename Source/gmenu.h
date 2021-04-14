@@ -9,6 +9,9 @@
 
 namespace devilution {
 
+#define GMENU_SLIDER 0x40000000
+#define GMENU_ENABLED 0x80000000
+
 struct TMenuItem {
 	Uint32 dwFlags;
 	const char *pszStr;

@@ -8,11 +8,19 @@
 #include "console.h"
 #include "options.h"
 #include "multi.h"
+#include "sound.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
 
 namespace devilution {
+
+#ifndef DEFAULT_WIDTH
+#define DEFAULT_WIDTH 640
+#endif
+#ifndef DEFAULT_HEIGHT
+#define DEFAULT_HEIGHT 480
+#endif
 
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];

@@ -3,7 +3,13 @@
  *
  * Implementation of the in-game map overlay.
  */
-#include "all.h"
+#include "automap.h"
+#include "control.h"
+#include "player.h"
+#include "palette.h"
+#include "inv.h"
+#include "monster.h"
+#include "setmaps.h"
 
 namespace devilution {
 

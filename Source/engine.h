@@ -27,6 +27,14 @@
 
 namespace devilution {
 
+#define MemFreeDbg(p)       \
+	{                       \
+		void *p__p;         \
+		p__p = p;           \
+		p = NULL;           \
+		mem_free_dbg(p__p); \
+	}
+
 enum direction : uint8_t {
 	DIR_S,
 	DIR_SW,
@@ -63,7 +71,7 @@ inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 
 	pFrameTable = (DWORD *)pCelBuff;
 
-	return pCelBuff + SwapLE32(pFrameTable[nCel]);
+	return pCelBuff + SDL_SwapLE32(pFrameTable[nCel]);
 }
 
 #define LOAD_LE32(b) (((DWORD)(b)[3] << 24) | ((DWORD)(b)[2] << 16) | ((DWORD)(b)[1] << 8) | (DWORD)(b)[0])
@@ -452,4 +460,4 @@ DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
-}
+} // namespace devilution

@@ -6,6 +6,7 @@
 #pragma once
 
 #include "engine.h"
+#include "gendung.h"
 
 namespace devilution {
 

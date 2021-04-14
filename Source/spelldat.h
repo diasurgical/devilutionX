@@ -11,6 +11,8 @@
 
 namespace devilution {
 
+#define MAX_SPELLS 52
+
 enum spell_type : uint8_t {
 	RSPLTYPE_SKILL,
 	RSPLTYPE_SPELL,

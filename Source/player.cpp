@@ -874,6 +874,8 @@ void NextPlrLevel(int pnum)
 	CalcPlrInv(pnum, true);
 }
 
+#define MAXEXP 2000000000
+
 void AddPlrExperience(int pnum, int lvl, int exp)
 {
 	int powerLvlCap, expCap, newLvl, i;

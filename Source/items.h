@@ -11,6 +11,15 @@
 
 namespace devilution {
 
+#define MAXITEMS 127
+
+#define GOLD_SMALL_LIMIT 1000
+#define GOLD_MEDIUM_LIMIT 2500
+#define GOLD_MAX_LIMIT 5000
+
+// Item indestructible durability
+#define DUR_INDESTRUCTIBLE 255
+
 enum item_quality : uint8_t {
 	ITEM_QUALITY_NORMAL,
 	ITEM_QUALITY_MAGIC,
@@ -159,7 +168,7 @@ struct ItemStruct {
 	Sint16 _ix;
 	Sint16 _iy;
 	bool _iAnimFlag;
-	Uint8 *_iAnimData;  // PSX name -> ItemFrame
+	Uint8 *_iAnimData; // PSX name -> ItemFrame
 	Uint8 _iAnimLen;   // Number of frames in current animation
 	Uint8 _iAnimFrame; // Current frame of animation.
 	Sint32 _iAnimWidth;
@@ -439,4 +448,4 @@ extern int MaxGold;
 extern BYTE ItemCAnimTbl[];
 extern _sfx_id ItemInvSnds[];
 
-}
+} // namespace devilution

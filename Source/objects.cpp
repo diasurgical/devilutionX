@@ -141,6 +141,9 @@ char shrinemin[] = {
 	1, // Solar,
 	1, // Murphy's
 };
+
+#define MAX_LVLS 24
+
 /** Specifies the maximum dungeon level on which each shrine will appear. */
 char shrinemax[] = {
 	MAX_LVLS, // Mysterious

@@ -10,6 +10,8 @@
 
 namespace devilution {
 
+#define MAX_CHARACTERS 99
+
 extern bool gbValidSaveFile;
 
 class PFileScopedArchiveWriter {

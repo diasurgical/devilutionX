@@ -9,6 +9,11 @@
 
 namespace devilution {
 
+#define WITCH_ITEMS 25
+#define SMITH_ITEMS 25
+#define SMITH_PREMIUM_ITEMS 15
+#define STORE_LINES 104
+
 enum talk_id : uint8_t {
 	STORE_NONE,
 	STORE_SMITH,

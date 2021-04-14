@@ -10,7 +10,6 @@
 #include <cstddef>
 
 #include "console.h"
-#include "../defs.h"
 #include "../SourceX/stubs.h"
 
 #define WINDOW_ICON_NAME 0

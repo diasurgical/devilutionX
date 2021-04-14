@@ -9,6 +9,8 @@
 
 namespace devilution {
 
+#define UI_OFFSET_Y ((Sint16)((gnScreenHeight - 480) / 2))
+
 enum interface_mode : uint16_t {
 	// clang-format off
 	WM_DIABNEXTLVL  = 0x402, // WM_USER+2

@@ -6,9 +6,12 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#include "objects.h"
 #include "options.h"
 
 namespace devilution {
+
+#define MAX_CHUNKS (NUMLEVELS + 4)
 
 static DWORD sgdwOwnerWait;
 static DWORD sgdwRecvOffset;
@@ -859,7 +862,7 @@ void NetSendCmdGolem(BYTE mx, BYTE my, BYTE dir, BYTE menemy, int hp, BYTE cl)
 
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
 {
-	ALIGN_BY_1 TCmdLoc cmd;
+	TCmdLoc cmd;
 
 	cmd.bCmd = bCmd;
 	cmd.x = x;
@@ -917,7 +920,7 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1
 
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, WORD wParam1)
 {
-	ALIGN_BY_1 TCmdParam1 cmd;
+	TCmdParam1 cmd;
 
 	cmd.bCmd = bCmd;
 	cmd.wParam1 = wParam1;

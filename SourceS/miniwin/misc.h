@@ -1,6 +1,21 @@
 #pragma once
 
+#include <stdint.h>
+
 namespace devilution {
+
+#ifdef __has_attribute
+#define DVL_HAVE_ATTRIBUTE(x) __has_attribute(x)
+#else
+#define DVL_HAVE_ATTRIBUTE(x) 0
+#endif
+
+#if DVL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
+#define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg) \
+	__attribute__((__format__(__printf__, fmtargnum, firstarg)))
+#else
+#define DVL_PRINTF_ATTRIBUTE(fmtargnum)
+#endif
 
 typedef uint16_t SHORT;
 typedef int32_t LONG;
@@ -48,6 +63,11 @@ bool FetchMessage(LPMSG lpMsg);
 bool TranslateMessage(const MSG *lpMsg);
 void PushMessage(const MSG *lpMsg);
 bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
+
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#endif
 
 //
 // MSCVRT emulation

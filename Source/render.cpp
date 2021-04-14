@@ -430,7 +430,9 @@ inline void DoRenderLine(BYTE *dst, BYTE *src, int n, BYTE *tbl, DWORD mask)
 	}
 }
 
-DVL_ATTRIBUTE_ALWAYS_INLINE
+#if DVL_HAVE_ATTRIBUTE(always_inline) || (defined(__GNUC__) && !defined(__clang__))
+__attribute__((always_inline))
+#endif
 inline void RenderLine(BYTE *dst_begin, BYTE *dst_end, BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
 {
 #ifdef NO_OVERDRAW

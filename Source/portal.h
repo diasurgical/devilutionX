@@ -7,6 +7,8 @@
 
 namespace devilution {
 
+#define MAXPORTAL 4
+
 struct PortalStruct {
 	bool open;
 	Sint32 x;

@@ -16,7 +16,7 @@ void Decrypt(DWORD *castBlock, DWORD size, DWORD key)
 
 	seed = 0xEEEEEEEE;
 	for (i = 0; i < (size >> 2); i++) {
-		DWORD t = SwapLE32(*castBlock);
+		DWORD t = SDL_SwapLE32(*castBlock);
 		seed += hashtable[4][(key & 0xFF)];
 		t ^= seed + key;
 		*castBlock = t;
@@ -35,7 +35,7 @@ void Encrypt(DWORD *castBlock, DWORD size, DWORD key)
 		DWORD t = ch = *castBlock;
 		seed += hashtable[4][(key & 0xFF)];
 		t ^= seed + key;
-		*castBlock = SwapLE32(t);
+		*castBlock = SDL_SwapLE32(t);
 		castBlock++;
 		seed += ch + (seed << 5) + 3;
 		key = ((key << 0x15) ^ 0xFFE00000) + 0x11111111 | (key >> 0x0B);

@@ -7,6 +7,8 @@
 
 namespace devilution {
 
+#define MAX_PATH_LENGTH 25
+
 struct PATHNODE {
 	Uint8 f;
 	Uint8 h;

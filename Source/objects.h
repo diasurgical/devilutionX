@@ -5,9 +5,12 @@
  */
 #pragma once
 
+#include "objdat.h"
 #include "textdat.h"
 
 namespace devilution {
+
+#define MAXOBJECTS 127
 
 struct ObjectStruct {
 	_object_id _otype;
@@ -84,4 +87,4 @@ void objects_454BA8();
 void objects_rnd_454BEA();
 bool objects_lv_24_454B04(int s);
 
-}
+} // namespace devilution

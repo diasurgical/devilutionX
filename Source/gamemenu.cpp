@@ -6,6 +6,7 @@
  */
 #include "all.h"
 #include "options.h"
+#include "sound.h"
 
 namespace devilution {
 

@@ -8,8 +8,14 @@
 #include <stdint.h>
 
 #include "quests.h"
+#include "objects.h"
+#include "monster.h"
+#include "portal.h"
 
 namespace devilution {
+
+#define MAX_SEND_STR_LEN 80
+#define MAXMULTIQUESTS 10
 
 enum _cmd_id : uint8_t {
 	CMD_STAND,

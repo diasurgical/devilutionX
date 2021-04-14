@@ -3,7 +3,7 @@
 #include <cstdarg>
 #include <cstddef>
 
-#include "../defs.h"
+#include "miniwin/misc.h"
 
 namespace devilution {
 

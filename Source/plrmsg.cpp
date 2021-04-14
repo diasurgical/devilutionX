@@ -7,6 +7,8 @@
 
 namespace devilution {
 
+#define PMSG_COUNT 8
+
 static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
