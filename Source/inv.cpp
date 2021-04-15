@@ -1113,7 +1113,6 @@ void CheckInvPaste(int pnum, int mx, int my)
 		cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].HoldItem);
 		break;
 	case ILOC_TWOHAND:
-		NetSendCmdDelItem(false, INVLOC_HAND_RIGHT);
 		if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && !plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			tempitem = plr[pnum].HoldItem;
 			if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
@@ -1138,6 +1137,8 @@ void CheckInvPaste(int pnum, int mx, int my)
 			else
 				plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
 		}
+
+		NetSendCmdDelItem(false, INVLOC_HAND_RIGHT);
 
 		if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() || !plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			NetSendCmdChItem(false, INVLOC_HAND_LEFT);
