@@ -1117,6 +1117,11 @@ void CheckPanelInfo()
 	}
 	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
 		pcursinvitem = CheckInvHLight();
+
+	if (CheckXPBarInfo()) {
+		panelflag = true;
+		pinfoflag = true;
+	}
 }
 
 /**
