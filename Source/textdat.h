@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "effects.h"
+
 namespace devilution {
 
 enum _speech_id : int16_t {

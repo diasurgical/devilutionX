@@ -4,8 +4,8 @@
  * Implementation of function for sending and reciving network messages.
  */
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
-#include "../DiabloUI/diabloui.h"
+#include "storm/storm.h"
+#include "DiabloUI/diabloui.h"
 #include "objects.h"
 #include "options.h"
 

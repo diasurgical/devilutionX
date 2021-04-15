@@ -7,6 +7,7 @@
 
 #include "objdat.h"
 #include "textdat.h"
+#include "itemdat.h"
 
 namespace devilution {
 

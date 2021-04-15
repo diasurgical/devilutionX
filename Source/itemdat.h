@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "spelldat.h"
+
 namespace devilution {
 
 /** @todo add missing values and apply */

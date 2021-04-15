@@ -4,7 +4,7 @@
  * Implementation of functions setting up the graphics pipeline.
  */
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 #include "../SourceX/display.h"
 #include "options.h"
 #include <SDL.h>

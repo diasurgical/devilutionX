@@ -3,6 +3,10 @@
 #include <cstdint>
 #include <limits>
 #include <string>
+
+#include "appfat.h"
+#include "multi.h"
+
 namespace devilution {
 
 enum game_info : uint8_t {

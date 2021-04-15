@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <SDL.h>
 
+#include "controls/controller.h"
 #include "./axis_direction.h"
-#include "./controller.h"
 
 namespace devilution {
 

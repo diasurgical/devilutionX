@@ -7,7 +7,7 @@
 
 #include "all.h"
 #include "options.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 
 namespace devilution {
 

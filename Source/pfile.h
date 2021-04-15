@@ -6,7 +6,7 @@
 #pragma once
 
 #include "player.h"
-#include "../DiabloUI/diabloui.h"
+#include "DiabloUI/diabloui.h"
 
 namespace devilution {
 

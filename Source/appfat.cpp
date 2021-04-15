@@ -4,7 +4,7 @@
  * Implementation of error dialogs.
  */
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 #include <config.h>
 
 namespace devilution {

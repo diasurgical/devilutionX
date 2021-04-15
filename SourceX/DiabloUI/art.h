@@ -1,8 +1,7 @@
 #pragma once
 
-#include "all.h"
 #include "../sdl_ptrs.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 
 namespace devilution {
 

@@ -9,8 +9,8 @@
 #include "options.h"
 #include "multi.h"
 #include "sound.h"
-#include "../3rdParty/Storm/Source/storm.h"
-#include "../DiabloUI/diabloui.h"
+#include "storm/storm.h"
+#include "DiabloUI/diabloui.h"
 #include <config.h>
 
 namespace devilution {

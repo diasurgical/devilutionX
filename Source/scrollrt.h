@@ -7,6 +7,9 @@
 
 #include <stdint.h>
 
+#include "engine.h"
+#include "miniwin.h"
+
 namespace devilution {
 
 #define PANELS_COVER (gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT)

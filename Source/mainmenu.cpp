@@ -5,8 +5,8 @@
  */
 #include "all.h"
 #include "options.h"
-#include "../3rdParty/Storm/Source/storm.h"
-#include "../DiabloUI/diabloui.h"
+#include "storm/storm.h"
+#include "DiabloUI/diabloui.h"
 
 namespace devilution {
 

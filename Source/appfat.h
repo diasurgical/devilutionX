@@ -7,6 +7,8 @@
 
 #include <SDL.h>
 
+#include "miniwin.h"
+
 namespace devilution {
 
 #define ErrSdl() ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)

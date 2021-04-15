@@ -6,7 +6,7 @@
 #include <fstream>
 
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 #include "paths.h"
 #include "file_util.h"
 
