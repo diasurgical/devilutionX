@@ -10,6 +10,8 @@
 #include "inv.h"
 #include "monster.h"
 #include "setmaps.h"
+#include "miniwin.h"
+#include "ui_fwd.h"
 
 namespace devilution {
 
