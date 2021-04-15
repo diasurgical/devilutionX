@@ -1,5 +1,7 @@
 #pragma once
 
+#include "pack.h"
+
 namespace devilution {
 
 struct DiabloOptions {

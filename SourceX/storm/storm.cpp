@@ -5,7 +5,7 @@
 #include "all.h"
 #include "options.h"
 #include "paths.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 
 #if !SDL_VERSION_ATLEAST(2, 0, 4)
 #include <queue>

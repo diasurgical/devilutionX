@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <string>
 
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 
 #include "controls/controller.h"
 #include "controls/menu_controls.h"

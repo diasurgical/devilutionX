@@ -4,7 +4,7 @@
  * Implementation of video playback.
  */
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 #include "../SourceX/display.h"
 
 namespace devilution {

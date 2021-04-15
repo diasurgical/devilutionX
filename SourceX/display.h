@@ -2,10 +2,15 @@
 
 #include <cstdint>
 
-#include "all.h"
 #include "sdl_ptrs.h"
 
 #include <SDL.h>
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#else
+#include "sdl2_backports.h"
+#endif
+
 #include <type_traits>
 
 namespace devilution {

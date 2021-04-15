@@ -7,7 +7,7 @@
 
 #include "all.h"
 #include "paths.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 #include "file_util.h"
 
 namespace devilution {

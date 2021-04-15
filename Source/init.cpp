@@ -8,8 +8,8 @@
 
 #include "all.h"
 #include "paths.h"
-#include "../3rdParty/Storm/Source/storm.h"
-#include "../DiabloUI/diabloui.h"
+#include "storm/storm.h"
+#include "DiabloUI/diabloui.h"
 #include <SDL.h>
 #include <config.h>
 

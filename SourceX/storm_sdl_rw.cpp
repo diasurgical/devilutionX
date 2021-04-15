@@ -4,7 +4,7 @@
 #include <cstring>
 
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 #include "../Source/engine.h"
 
 namespace devilution {

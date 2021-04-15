@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "all.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 
 namespace devilution {
 namespace net {

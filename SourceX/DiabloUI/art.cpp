@@ -1,6 +1,7 @@
 #include "DiabloUI/art.h"
 #include "display.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
+#include "sdl_compat.h"
 
 namespace devilution {
 

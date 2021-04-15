@@ -3,7 +3,7 @@
 #include "all.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "storm/storm.h"
 
 namespace devilution {
 
