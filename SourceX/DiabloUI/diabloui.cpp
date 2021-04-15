@@ -305,7 +305,7 @@ void UiFocusNavigation(SDL_Event *event)
 				if (SDL_GetModState() & KMOD_CTRL) {
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == NULL) {
-						SDL_Log(SDL_GetError());
+						SDL_Log("%s", SDL_GetError());
 					} else {
 						selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 					}

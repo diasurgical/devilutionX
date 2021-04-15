@@ -653,6 +653,8 @@ void SetReturnLvlPos()
 		ReturnLvl = quests[Q_SCHAMB]._qlevel;
 		ReturnLvlT = DTYPE_CATACOMBS;
 		break;
+	case SL_MAZE:
+		break;
 	case SL_POISONWATER:
 		ReturnLvlX = quests[Q_PWATER]._qtx;
 		ReturnLvlY = quests[Q_PWATER]._qty + 1;
@@ -664,6 +666,8 @@ void SetReturnLvlPos()
 		ReturnLvlY = quests[Q_BETRAYER]._qty - 1;
 		ReturnLvl = quests[Q_BETRAYER]._qlevel;
 		ReturnLvlT = DTYPE_HELL;
+		break;
+	case SL_NONE:
 		break;
 	}
 }

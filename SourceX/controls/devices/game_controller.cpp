@@ -158,7 +158,7 @@ void GameController::Add(int joystick_index)
 	GameController result;
 	result.sdl_game_controller_ = SDL_GameControllerOpen(joystick_index);
 	if (result.sdl_game_controller_ == NULL) {
-		SDL_Log(SDL_GetError());
+		SDL_Log("%s", SDL_GetError());
 		SDL_ClearError();
 		return;
 	}

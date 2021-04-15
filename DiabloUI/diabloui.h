@@ -55,7 +55,7 @@ void UiSelHeroSingDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool
 bool UiCreditsDialog();
 bool UiSupportDialog();
 bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut);
-bool UiProgressDialog(const char *msg, int enable, int (*fnfunc)(), int rate);
+bool UiProgressDialog(const char *msg, int (*fnfunc)(), int rate);
 void UiProfileCallback();
 void UiProfileDraw();
 bool UiCategoryCallback(int a1, int a2, int a3, int a4, int a5, DWORD *a6, DWORD *a7);

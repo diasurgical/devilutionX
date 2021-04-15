@@ -69,7 +69,7 @@ int WaitForEvent(event_emul *e)
 	}
 	int ret = SDL_CondWait(e->cond, e->mutex);
 	if (ret <= -1 || SDL_CondSignal(e->cond) <= -1 || SDL_UnlockMutex(e->mutex) <= -1) {
-		SDL_Log(SDL_GetError());
+		SDL_Log("%s", SDL_GetError());
 		return -1;
 	}
 	return ret;

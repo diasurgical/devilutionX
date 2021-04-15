@@ -181,11 +181,11 @@ void base_protocol<P>::recv()
 			} catch (packet_exception &e) {
 				// drop packet
 				proto.disconnect(sender);
-				SDL_Log(e.what());
+				SDL_Log("%s", e.what());
 			}
 		}
 	} catch (std::exception &e) {
-		SDL_Log(e.what());
+		SDL_Log("%s", e.what());
 		return;
 	}
 }

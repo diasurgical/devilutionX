@@ -373,7 +373,7 @@ static bool HaveAudio()
 void SVidRestartMixer()
 {
 	if (Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024) < 0) {
-		SDL_Log(Mix_GetError());
+		SDL_Log("%s", Mix_GetError());
 	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1);
@@ -469,7 +469,7 @@ private:
 static AudioQueue *sVidAudioQueue = new AudioQueue();
 #endif
 
-void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video)
+void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 {
 	if (flags & 0x10000 || flags & 0x20000000) {
 		return;
@@ -668,7 +668,7 @@ bool SVidPlayContinue(void)
 		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
 
 		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface, SVidPalette, colors, 0, 256) <= -1) {
-			SDL_Log(SDL_GetError());
+			SDL_Log("%s", SDL_GetError());
 			return false;
 		}
 	}
@@ -682,7 +682,7 @@ bool SVidPlayContinue(void)
 		unsigned char *audio = SVidApplyVolume(smk_get_audio(SVidSMK, 0), len);
 #if SDL_VERSION_ATLEAST(2, 0, 4)
 		if (SDL_QueueAudio(deviceId, audio, len) <= -1) {
-			SDL_Log(SDL_GetError());
+			SDL_Log("%s", SDL_GetError());
 			return false;
 		}
 #else
@@ -698,7 +698,7 @@ bool SVidPlayContinue(void)
 #ifndef USE_SDL1
 	if (renderer) {
 		if (SDL_BlitSurface(SVidSurface, NULL, GetOutputSurface(), NULL) <= -1) {
-			SDL_Log(SDL_GetError());
+			SDL_Log("%s", SDL_GetError());
 			return false;
 		}
 	} else
@@ -731,7 +731,7 @@ bool SVidPlayContinue(void)
 			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 #endif
 			if (SDL_BlitScaled(tmp, NULL, output_surface, &pal_surface_offset) <= -1) {
-				SDL_Log(SDL_GetError());
+				SDL_Log("%s", SDL_GetError());
 				return false;
 			}
 			SDL_FreeSurface(tmp);

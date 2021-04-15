@@ -256,7 +256,7 @@ void Joystick::Add(int device_index)
 	    SDL_JoystickNameForIndex(device_index));
 	result.sdl_joystick_ = SDL_JoystickOpen(device_index);
 	if (result.sdl_joystick_ == NULL) {
-		SDL_Log(SDL_GetError());
+		SDL_Log("%s", SDL_GetError());
 		SDL_ClearError();
 		return;
 	}

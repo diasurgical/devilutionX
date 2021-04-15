@@ -57,7 +57,7 @@ SDL_Surface *RenderText(const char *text, SDL_Color color)
 		return NULL;
 	SDL_Surface *result = TTF_RenderUTF8_Solid(font, text, color);
 	if (result == NULL)
-		SDL_Log(TTF_GetError());
+		SDL_Log("%s", TTF_GetError());
 	return result;
 }
 
@@ -79,7 +79,7 @@ CachedLine PrepareLine(std::size_t index)
 		const SDL_Color &text_color = palette->colors[224];
 		SDL_Color colors[3] = { mask_color, text_color, shadow_color };
 		if (SDLC_SetSurfaceColors(surface.get(), colors, 0, 3) <= -1)
-			SDL_Log(SDL_GetError());
+			SDL_Log("%s", SDL_GetError());
 		SDLC_SetColorKey(surface.get(), 0);
 
 		// Blit the shadow first:
