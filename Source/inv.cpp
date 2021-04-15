@@ -267,7 +267,7 @@ void DrawInv(CelOutputBuffer out)
 		if (plr[myplr].InvGrid[j] > 0) { // first slot of an item
 			ii = plr[myplr].InvGrid[j] - 1;
 
-			invtest[j] = false;
+			invtest[j] = true;
 
 			frame = plr[myplr].InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 			frame_width = InvItemWidth[frame];
