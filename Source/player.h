@@ -325,6 +325,36 @@ struct PlayerStruct {
 	Uint8 *_pBData;
 
 	/**
+	 * @brief Gets the most valuable item out of all the player's items that match the given predicate.
+	 * @param itemPredicate The predicate used to match the items.
+	 * @return The most valuable item out of all the player's items that match the given predicate, or 'nullptr' in case no
+	 * matching items were found.
+	 */
+	template <typename TPredicate>
+	const ItemStruct *GetMostValuableItem(const TPredicate &itemPredicate) const
+	{
+		const auto getMostValuableItem = [&itemPredicate](const ItemStruct *begin, const ItemStruct *end, const ItemStruct *mostValuableItem = nullptr) {
+			for (const auto *item = begin; item < end; item++) {
+				if (item->isEmpty() || !itemPredicate(*item)) {
+					continue;
+				}
+
+				if (mostValuableItem == nullptr || item->_iIvalue > mostValuableItem->_iIvalue) {
+					mostValuableItem = item;
+				}
+			}
+
+			return mostValuableItem;
+		};
+
+		const ItemStruct *mostValuableItem = getMostValuableItem(SpdList, SpdList + MAXBELTITEMS);
+		mostValuableItem = getMostValuableItem(InvBody, InvBody + inv_body_loc::NUM_INVLOC, mostValuableItem);
+		mostValuableItem = getMostValuableItem(InvList, InvList + _pNumInv, mostValuableItem);
+
+		return mostValuableItem;
+	}
+
+	/**
 	 * @brief Gets the base value of the player's specified attribute.
 	 * @param attribute The attribute to retrieve the base value for
 	 * @return The base value for the requested attribute.
