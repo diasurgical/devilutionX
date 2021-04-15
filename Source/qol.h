@@ -13,6 +13,7 @@ void FreeQol();
 void InitQol();
 void DrawMonsterHealthBar(CelOutputBuffer out);
 void DrawXPBar(CelOutputBuffer out);
+bool CheckXPBarInfo(void);
 void AutoGoldPickup(int pnum);
 
 } // namespace devilution

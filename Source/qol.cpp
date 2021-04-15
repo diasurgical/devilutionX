@@ -12,10 +12,25 @@
 namespace devilution {
 namespace {
 
+namespace xpbar {
+	constexpr int barWidth = 307;
+	constexpr int barHeight = 5;
+
+	constexpr int goldGradient[] = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4, 0xC3, 0xC2, 0xC1, 0xC0 };
+	constexpr int goldGrades = 12;
+
+	constexpr int whiteGradient[] = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0xF8, 0xF7, 0xF6, 0xF5, 0xF4, 0xF3, 0xF2, 0xF1, 0xF0, 0xFF };
+	constexpr int whiteGrades = 12;
+
+	constexpr int backWidth = 313;
+	constexpr int backHeight = 9;
+} // namespace xpbar
+
 struct QolArt {
 	Art healthBox;
 	Art resistance;
 	Art health;
+	Art xpbar;
 };
 
 QolArt *qolArt = nullptr;
@@ -27,6 +42,18 @@ int GetTextWidth(const char *s)
 		l += fontkern[fontframe[gbFontTransTbl[(BYTE)*s++]]] + 1;
 	}
 	return l;
+}
+
+// Fills out with printed number n using ',' thousands separator.
+// Returns pointer to first char after the written number.
+char* PrintWithSeparator(char* out, long long n)
+{
+	if (n < 1000) {
+		return out + sprintf(out, "%lld", n);
+	}
+
+	char* append = PrintWithSeparator(out, n / 1000);
+	return append + sprintf(append, ",%03lld", n % 1000);
 }
 
 void FastDrawHorizLine(CelOutputBuffer out, int x, int y, int width, BYTE col)
@@ -60,8 +87,12 @@ void FreeQol()
 
 void InitQol()
 {
-	if (sgOptions.Gameplay.bEnemyHealthBar) {
+	const bool needsQolArt = (sgOptions.Gameplay.bEnemyHealthBar || sgOptions.Gameplay.bExperienceBar);
+
+	if (needsQolArt)
 		qolArt = new QolArt();
+
+	if (sgOptions.Gameplay.bEnemyHealthBar) {
 		LoadMaskedArt("data\\healthbox.pcx", &qolArt->healthBox, 1, 1);
 		LoadArt("data\\health.pcx", &qolArt->health);
 		LoadMaskedArt("data\\resistance.pcx", &qolArt->resistance, 6, 1);
@@ -71,6 +102,10 @@ void InitQol()
 		    || (qolArt->resistance.surface == nullptr)) {
 			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
 		}
+	}
+
+	if (sgOptions.Gameplay.bExperienceBar) {
+		LoadMaskedArt("data\\xpbar.pcx", &qolArt->xpbar, 1, 1);
 	}
 }
 
@@ -157,39 +192,103 @@ void DrawXPBar(CelOutputBuffer out)
 	if (!sgOptions.Gameplay.bExperienceBar)
 		return;
 
-	int barWidth = 306;
-	int barHeight = 5;
-	int yPos = gnScreenHeight - 9;                 // y position of xp bar
-	int xPos = (gnScreenWidth - barWidth) / 2 + 5; // x position of xp bar
-	int dividerHeight = 3;
-	int numDividers = 10;
-	int barColor = 198;
-	int emptyBarColor = 0;
-	int frameColor = 196;
-	bool space = true; // add 1 pixel separator on top/bottom of the bar
+	const PlayerStruct& player = plr[myplr];
 
-	PrintGameStr(out, xPos - 22, yPos + 6, "XP", COL_WHITE);
-	int charLevel = plr[myplr]._pLevel;
-	if (charLevel == MAXCHARLEVEL - 1)
+	const int backX = gnScreenWidth / 2 - 155;
+	const int backY = gnScreenHeight - 11;
+
+	const int xPos = backX + 3;
+	const int yPos = backY + 2;
+
+	DrawArt(out, backX, backY, &qolArt->xpbar);
+
+	const int charLevel = player._pLevel;
+
+	if (charLevel == MAXCHARLEVEL - 1) {
+		// Draw a nice golden bar for max level characters.
+		FastDrawHorizLine(out, xPos, yPos + 1, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGrades * 3 / 4 - 1]);
+		FastDrawHorizLine(out, xPos, yPos + 2, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGrades - 1]);
+		FastDrawHorizLine(out, xPos, yPos + 3, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGrades / 2 - 1]);
+
+		return;
+	}
+
+	const int prevXp = ExpLvlsTbl[charLevel - 1];
+	if (player._pExperience < prevXp)
 		return;
 
-	int prevXp = ExpLvlsTbl[charLevel - 1];
-	if (plr[myplr]._pExperience < prevXp)
-		return;
+	Uint64 prevXpDelta_1 = player._pExperience - prevXp;
+	Uint64 prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
+	Uint64 fullBar = xpbar::barWidth * prevXpDelta_1 / prevXpDelta;
 
-	Uint64 prevXpDelta_1 = plr[myplr]._pExperience - prevXp;
-	int prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
-	int visibleBar = barWidth * prevXpDelta_1 / prevXpDelta;
+	// Figure out how much to fill the last pixel of the XP bar, to make it gradually appear with gained XP
+	Uint64 onePx = prevXpDelta / xpbar::barWidth;
+	Uint64 lastFullPx = fullBar * prevXpDelta / xpbar::barWidth;
 
-	FillRect(out, xPos, yPos, barWidth, barHeight, emptyBarColor);
-	FastDrawHorizLine(out, xPos - 1, yPos - 1, barWidth + 2, frameColor);
-	FastDrawHorizLine(out, xPos - 1, yPos + barHeight, barWidth + 2, frameColor);
-	FastDrawVertLine(out, xPos - 1, yPos - 1, barHeight + 2, frameColor);
-	FastDrawVertLine(out, xPos + barWidth, yPos - 1, barHeight + 2, frameColor);
-	for (int i = 1; i < numDividers; i++)
-		FastDrawVertLine(out, xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight + 3, barHeight, 245);
+	const Uint64 fade = (prevXpDelta_1 - lastFullPx) * (xpbar::whiteGrades - 1) / onePx;
 
-	FillRect(out, xPos, yPos + (space ? 1 : 0), visibleBar, barHeight - (space ? 2 : 0), barColor);
+	// Draw beginning of bar full brightness
+	FastDrawHorizLine(out, xPos, yPos + 1, fullBar, xpbar::whiteGradient[xpbar::whiteGrades * 3 / 4 - 1]);
+	FastDrawHorizLine(out, xPos, yPos + 2, fullBar, xpbar::whiteGradient[xpbar::whiteGrades - 1]);
+	FastDrawHorizLine(out, xPos, yPos + 3, fullBar, xpbar::whiteGradient[xpbar::whiteGrades / 2 - 1]);
+
+	// End pixels appear gradually
+	SetPixel(out, xPos + fullBar, yPos + 1, xpbar::whiteGradient[fade * 3 / 4]);
+	SetPixel(out, xPos + fullBar, yPos + 2, xpbar::whiteGradient[fade]);
+	SetPixel(out, xPos + fullBar, yPos + 3, xpbar::whiteGradient[fade / 2]);
+}
+
+bool CheckXPBarInfo(void)
+{
+	if (!sgOptions.Gameplay.bExperienceBar)
+		return false;
+
+	const int backX = (gnScreenWidth / 2) - 155;
+	const int backY = gnScreenHeight - 11;
+
+	if (MouseX < backX || MouseX >= backX + xpbar::backWidth ||
+		MouseY < backY || MouseY >= backY + xpbar::backHeight)
+		return false;
+
+	const PlayerStruct& player = plr[myplr];
+
+	const int charLevel = player._pLevel;
+
+	char tempstr[64];
+
+	if (charLevel == MAXCHARLEVEL - 1) {
+		// Show a maximum level indicator for max level players.
+		infoclr = COL_GOLD;
+
+		sprintf(tempstr, "Level %d", charLevel);
+		AddPanelString(tempstr, true);
+
+		sprintf(tempstr, "Experience: ");
+		PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, ExpLvlsTbl[charLevel - 1]);
+		AddPanelString(tempstr, true);
+
+		AddPanelString("Maximum Level", true);
+
+		return true;
+	}
+
+	infoclr = COL_WHITE;
+
+	sprintf(tempstr, "Level %d", charLevel);
+	AddPanelString(tempstr, true);
+
+	sprintf(tempstr, "Experience: ");
+	PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, player._pExperience);
+	AddPanelString(tempstr, true);
+
+	sprintf(tempstr, "Next Level: ");
+	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
+	AddPanelString(tempstr, true);
+
+	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), " to Level %d", charLevel + 1);
+	AddPanelString(tempstr, true);
+
+	return true;
 }
 
 bool HasRoomForGold()
