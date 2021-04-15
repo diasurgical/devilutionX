@@ -375,180 +375,6 @@ static bool IsSuffixValidForItemType(int i, int flgs)
 	return (flgs & PLIType) != 0;
 }
 
-int get_ring_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_RING && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_RING && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_bow_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_BOW && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_BOW && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_staff_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_STAFF && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_STAFF && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_sword_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_SWORD && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_SWORD && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_helm_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_HELM && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_HELM && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_shield_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_SHIELD && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_SHIELD && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_armor_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE
-		    && (plr[i].InvBody[j]._itype == ITYPE_LARMOR || plr[i].InvBody[j]._itype == ITYPE_MARMOR || plr[i].InvBody[j]._itype == ITYPE_HARMOR)
-		    && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE
-		    && (plr[i].InvList[j]._itype == ITYPE_LARMOR || plr[i].InvList[j]._itype == ITYPE_MARMOR || plr[i].InvList[j]._itype == ITYPE_HARMOR)
-		    && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_mace_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_MACE && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_MACE && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_amulet_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_AMULET && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_AMULET && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
-int get_axe_max_value(int i)
-{
-	int j, res;
-
-	res = 0;
-	for (j = 0; j < NUM_INVLOC; j++) {
-		if (plr[i].InvBody[j]._iClass != ICLASS_NONE && plr[i].InvBody[j]._itype == ITYPE_AXE && res < plr[i].InvBody[j]._iIvalue)
-			res = plr[i].InvBody[j]._iIvalue;
-	}
-	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[i].InvList[j]._iClass != ICLASS_NONE && plr[i].InvList[j]._itype == ITYPE_AXE && res < plr[i].InvList[j]._iIvalue)
-			res = plr[i].InvList[j]._iIvalue;
-	}
-
-	return res;
-}
-
 int items_get_currlevel()
 {
 	int lvl;
@@ -4665,36 +4491,32 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		switch (items[0]._itype) {
 		case ITYPE_LARMOR:
 		case ITYPE_MARMOR:
-		case ITYPE_HARMOR:
-			ivalue = get_armor_max_value(myplr);
+		case ITYPE_HARMOR: {
+			const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
+				[](const ItemStruct &item) {
+					return item._itype == ITYPE_LARMOR
+						|| item._itype == ITYPE_MARMOR
+						|| item._itype == ITYPE_HARMOR;
+				});
+
+			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
 			break;
+		}
 		case ITYPE_SHIELD:
-			ivalue = get_shield_max_value(myplr);
-			break;
 		case ITYPE_AXE:
-			ivalue = get_axe_max_value(myplr);
-			break;
 		case ITYPE_BOW:
-			ivalue = get_bow_max_value(myplr);
-			break;
 		case ITYPE_MACE:
-			ivalue = get_mace_max_value(myplr);
-			break;
 		case ITYPE_SWORD:
-			ivalue = get_sword_max_value(myplr);
-			break;
 		case ITYPE_HELM:
-			ivalue = get_helm_max_value(myplr);
-			break;
 		case ITYPE_STAFF:
-			ivalue = get_staff_max_value(myplr);
-			break;
 		case ITYPE_RING:
-			ivalue = get_ring_max_value(myplr);
+		case ITYPE_AMULET: {
+			const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
+				[](const ItemStruct &item) { return item._itype == items[0]._itype; });
+
+			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
-		case ITYPE_AMULET:
-			ivalue = get_amulet_max_value(myplr);
-			break;
+		}
 		default:
 			ivalue = 0;
 			break;
@@ -4991,36 +4813,32 @@ void SpawnBoy(int lvl)
 			switch (itemType) {
 			case ITYPE_LARMOR:
 			case ITYPE_MARMOR:
-			case ITYPE_HARMOR:
-				ivalue = get_armor_max_value(myplr);
+			case ITYPE_HARMOR: {
+				const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
+					[](const ItemStruct &item) {
+						return item._itype == ITYPE_LARMOR
+							|| item._itype == ITYPE_MARMOR
+							|| item._itype == ITYPE_HARMOR;
+					});
+
+				ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
 				break;
+			}
 			case ITYPE_SHIELD:
-				ivalue = get_shield_max_value(myplr);
-				break;
 			case ITYPE_AXE:
-				ivalue = get_axe_max_value(myplr);
-				break;
 			case ITYPE_BOW:
-				ivalue = get_bow_max_value(myplr);
-				break;
 			case ITYPE_MACE:
-				ivalue = get_mace_max_value(myplr);
-				break;
 			case ITYPE_SWORD:
-				ivalue = get_sword_max_value(myplr);
-				break;
 			case ITYPE_HELM:
-				ivalue = get_helm_max_value(myplr);
-				break;
 			case ITYPE_STAFF:
-				ivalue = get_staff_max_value(myplr);
-				break;
 			case ITYPE_RING:
-				ivalue = get_ring_max_value(myplr);
+			case ITYPE_AMULET: {
+				const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
+					[itemType](const ItemStruct &item) { return item._itype == itemType; });
+
+				ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 				break;
-			case ITYPE_AMULET:
-				ivalue = get_amulet_max_value(myplr);
-				break;
+			}
 			}
 			ivalue *= 0.8;
 
