@@ -3,7 +3,11 @@
  *
  * Implementation of the cathedral level generation algorithms.
  */
-#include "all.h"
+#include "drlg_l1.h"
+
+#include "lighting.h"
+#include "player.h"
+#include "quests.h"
 
 namespace devilution {
 

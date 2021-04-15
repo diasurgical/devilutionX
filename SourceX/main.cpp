@@ -9,7 +9,7 @@
 #include <gtest/gtest.h>
 #endif
 
-#include "all.h"
+#include "diablo.h"
 
 #if !defined(__APPLE__)
 extern "C" const char *__asan_default_options()

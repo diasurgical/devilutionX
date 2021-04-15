@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#include "all.h"
-
 namespace devilution {
 
 typedef enum belt_item_type : uint8_t {

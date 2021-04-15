@@ -3,9 +3,15 @@
  *
  * Implementation of functionality for stores and towner dialogs.
  */
-#include "all.h"
-#include "options.h"
+#include "stores.h"
+
 #include <algorithm>
+
+#include "cursor.h"
+#include "init.h"
+#include "minitext.h"
+#include "options.h"
+#include "towners.h"
 
 namespace devilution {
 

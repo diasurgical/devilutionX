@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "control.h"
+#include "lighting.h"
 
 using namespace devilution;
 

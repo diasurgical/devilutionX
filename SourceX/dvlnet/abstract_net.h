@@ -1,11 +1,10 @@
 #pragma once
 
-#include <vector>
+#include <exception>
 #include <memory>
 #include <string>
-#include <exception>
+#include <vector>
 
-#include "all.h"
 #include "storm/storm.h"
 
 namespace devilution {

@@ -1,8 +1,8 @@
 #include "selconn.h"
 
-#include "all.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
+#include "stores.h"
 #include "storm/storm.h"
 
 namespace devilution {

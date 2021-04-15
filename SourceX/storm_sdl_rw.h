@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-#include "../SourceS/miniwin/misc.h"
+#include "miniwin.h"
 
 namespace devilution {
 

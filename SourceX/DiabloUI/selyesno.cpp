@@ -1,6 +1,6 @@
 #include "selyesno.h"
 
-#include "all.h"
+#include "control.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 

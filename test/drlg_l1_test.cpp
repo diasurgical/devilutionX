@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "diablo.h"
+#include "drlg_l1.h"
+#include "lighting.h"
 
 using namespace devilution;
 

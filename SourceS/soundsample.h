@@ -1,5 +1,8 @@
 #pragma once
+
 #include <SDL_mixer.h>
+
+#include "miniwin.h"
 
 namespace devilution {
 

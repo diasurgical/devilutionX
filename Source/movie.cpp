@@ -3,9 +3,10 @@
  *
  * Implementation of video playback.
  */
-#include "all.h"
+
+#include "diablo.h"
+#include "display.h"
 #include "storm/storm.h"
-#include "../SourceX/display.h"
 
 namespace devilution {
 

@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "spelldat.h"
 #include "spells.h"
+#include "ui_fwd.h"
 
 namespace devilution {
 

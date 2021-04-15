@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 
+#include "engine.h"
 #include "itemdat.h"
 
 namespace devilution {

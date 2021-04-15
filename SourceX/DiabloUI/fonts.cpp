@@ -1,6 +1,8 @@
 #include "DiabloUI/fonts.h"
+
+#include "diablo.h"
 #include "file_util.h"
-#include "../SourceS/paths.h"
+#include "paths.h"
 
 namespace devilution {
 

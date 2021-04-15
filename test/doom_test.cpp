@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "doom.h"
 
 using namespace devilution;
 

@@ -3,7 +3,11 @@
  *
  * Implementation of the in-game help text.
  */
-#include "all.h"
+
+#include "control.h"
+#include "init.h"
+#include "minitext.h"
+#include "stores.h"
 
 namespace devilution {
 

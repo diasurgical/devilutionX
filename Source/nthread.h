@@ -5,6 +5,9 @@
  */
 #pragma once
 
+#include "miniwin.h"
+#include "player.h"
+
 namespace devilution {
 
 extern BYTE sgbNetUpdateRate;

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "player.h"
 
 using namespace devilution;
 

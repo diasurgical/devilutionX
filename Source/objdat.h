@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "gendung.h"
+
 namespace devilution {
 
 enum theme_id : int8_t {

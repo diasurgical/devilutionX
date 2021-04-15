@@ -1,8 +1,7 @@
 #pragma once
 
+#include <SDL.h>
 #include <stdint.h>
-
-#include "all.h"
 
 namespace devilution {
 

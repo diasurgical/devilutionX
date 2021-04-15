@@ -15,14 +15,14 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdlib>
-#include <stdint.h>
-
 #include <SDL.h>
+#include <stdint.h>
 
 #ifdef USE_SDL1
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#include "appfat.h"
 #include "miniwin.h"
 
 namespace devilution {

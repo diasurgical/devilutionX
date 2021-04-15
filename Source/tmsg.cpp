@@ -3,7 +3,9 @@
  *
  * Implementation of functionality transmitting chat messages.
  */
-#include "all.h"
+#include "tmsg.h"
+
+#include "diablo.h"
 
 namespace devilution {
 

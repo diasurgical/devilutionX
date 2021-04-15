@@ -3,8 +3,13 @@
  *
  * Implementation of player inventory.
  */
-#include "all.h"
+
+#include "cursor.h"
+#include "minitext.h"
 #include "options.h"
+#include "plrmsg.h"
+#include "stores.h"
+#include "towners.h"
 
 namespace devilution {
 

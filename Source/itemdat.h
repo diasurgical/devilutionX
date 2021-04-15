@@ -5,9 +5,10 @@
  */
 #pragma once
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
+#include "objdat.h"
 #include "spelldat.h"
 
 namespace devilution {

@@ -1,12 +1,11 @@
 #pragma once
 
-#include <string>
-#include <map>
-#include <deque>
 #include <array>
+#include <deque>
+#include <map>
 #include <memory>
+#include <string>
 
-#include "all.h"
 #include "dvlnet/abstract_net.h"
 #include "dvlnet/packet.h"
 

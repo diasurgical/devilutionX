@@ -14,8 +14,8 @@ namespace devilution {
 #define BUFFER_BORDER_RIGHT devilution::borderRight
 #define BUFFER_BORDER_BOTTOM 16
 
-#define TILE_WIDTH		64
-#define TILE_HEIGHT		32
+#define TILE_WIDTH 64
+#define TILE_HEIGHT 32
 
 /**
  * @brief Blit current world CEL to the given buffer

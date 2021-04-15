@@ -3,7 +3,8 @@
  *
  * Implementation of all item data.
  */
-#include "all.h"
+
+#include "itemdat.h"
 
 namespace devilution {
 

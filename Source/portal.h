@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "gendung.h"
+
 namespace devilution {
 
 #define MAXPORTAL 4

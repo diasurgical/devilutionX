@@ -3,9 +3,17 @@
  *
  * Implementation of functionality for handling quests.
  */
-#include "all.h"
+
+#include "control.h"
+#include "cursor.h"
 #include "gendung.h"
+#include "init.h"
+#include "minitext.h"
+#include "missiles.h"
 #include "options.h"
+#include "stores.h"
+#include "towners.h"
+#include "trigs.h"
 
 namespace devilution {
 

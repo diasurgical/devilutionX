@@ -3,7 +3,23 @@
  *
  * Implementation of save game functionality.
  */
-#include "all.h"
+#include "loadsave.h"
+
+#include <limits.h>
+
+#include "automap.h"
+#include "codec.h"
+#include "control.h"
+#include "cursor.h"
+#include "dead.h"
+#include "doom.h"
+#include "init.h"
+#include "inv.h"
+#include "lighting.h"
+#include "missiles.h"
+#include "mpqapi.h"
+#include "pfile.h"
+#include "stores.h"
 
 namespace devilution {
 

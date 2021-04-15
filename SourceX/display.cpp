@@ -1,15 +1,17 @@
 #include "display.h"
-#include "DiabloUI/diabloui.h"
-#include "controls/game_controls.h"
-#include "controls/controller.h"
-#include "controls/devices/game_controller.h"
-#include "controls/devices/joystick.h"
-#include "controls/devices/kbcontroller.h"
-#include "options.h"
 
 #ifdef __vita__
 #include <psp2/power.h>
 #endif
+
+#include "control.h"
+#include "controls/controller.h"
+#include "controls/devices/game_controller.h"
+#include "controls/devices/joystick.h"
+#include "controls/devices/kbcontroller.h"
+#include "controls/game_controls.h"
+#include "DiabloUI/diabloui.h"
+#include "options.h"
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -130,7 +132,7 @@ bool SpawnWindow(const char *lpWindowName)
 	// https://github.com/diasurgical/devilutionX/issues/1434
 	SDL_setenv("SDL_AUDIODRIVER", "winmm", /*overwrite=*/false);
 #endif
-	
+
 	int initFlags = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
 #ifndef USE_SDL1
 	initFlags |= SDL_INIT_GAMECONTROLLER;

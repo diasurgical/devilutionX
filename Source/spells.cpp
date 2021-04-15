@@ -3,7 +3,12 @@
  *
  * Implementation of functionality for casting player spells.
  */
-#include "all.h"
+
+#include "control.h"
+#include "cursor.h"
+#include "gamemenu.h"
+#include "inv.h"
+#include "missiles.h"
 
 namespace devilution {
 

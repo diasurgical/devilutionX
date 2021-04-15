@@ -3,7 +3,12 @@
  *
  * Implementation of functionality for triggering events when the player enters an area.
  */
-#include "all.h"
+#include "trigs.h"
+
+#include "control.h"
+#include "cursor.h"
+#include "error.h"
+#include "init.h"
 
 namespace devilution {
 

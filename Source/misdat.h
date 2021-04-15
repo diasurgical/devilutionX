@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "effects.h"
+
 namespace devilution {
 
 enum mienemy_type : uint8_t {

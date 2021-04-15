@@ -3,7 +3,7 @@
  *
  * Implementation of all spell data.
  */
-#include "all.h"
+#include "spelldat.h"
 
 namespace devilution {
 

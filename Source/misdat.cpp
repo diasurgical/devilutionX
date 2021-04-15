@@ -3,7 +3,9 @@
  *
  * Implementation of data related to missiles.
  */
-#include "all.h"
+#include "misdat.h"
+
+#include "missiles.h"
 
 namespace devilution {
 

@@ -447,7 +447,7 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
-target_include_directories(devilution PUBLIC Source SourceS SourceX ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(devilution PUBLIC 3rdParty/PKWare Source SourceS SourceX ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
   SourceS
   SourceX

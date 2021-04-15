@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <SDL.h>
+
 namespace devilution {
 
 #define SHA1HashSize 20

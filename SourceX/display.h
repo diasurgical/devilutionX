@@ -1,8 +1,7 @@
 #pragma once
 
 #include <cstdint>
-
-#include "sdl_ptrs.h"
+#include <type_traits>
 
 #include <SDL.h>
 #ifdef USE_SDL1
@@ -11,7 +10,8 @@
 #include "sdl2_backports.h"
 #endif
 
-#include <type_traits>
+#include "ui_fwd.h"
+#include "sdl_ptrs.h"
 
 namespace devilution {
 

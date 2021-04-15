@@ -3,12 +3,19 @@
  *
  * Implementation of functions for keeping multiplaye games in sync.
  */
-#include "all.h"
-#include "diablo.h"
-#include "options.h"
-#include "storm/storm.h"
-#include "DiabloUI/diabloui.h"
+
 #include <config.h>
+
+#include "diablo.h"
+#include "DiabloUI/diabloui.h"
+#include "dthread.h"
+#include "nthread.h"
+#include "options.h"
+#include "pfile.h"
+#include "plrmsg.h"
+#include "storm/storm.h"
+#include "sync.h"
+#include "tmsg.h"
 
 namespace devilution {
 

@@ -3,7 +3,13 @@
  *
  * Implementation of functionality for handling town portals.
  */
-#include "all.h"
+#include "portal.h"
+
+#include "lighting.h"
+#include "misdat.h"
+#include "missiles.h"
+#include "multi.h"
+#include "player.h"
 
 namespace devilution {
 

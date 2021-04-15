@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "diablo.h"
+#include "scrollrt.h"
 #include "ui_fwd.h"
 
 using namespace devilution;

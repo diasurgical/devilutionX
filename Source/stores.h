@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "control.h"
 #include "engine.h"
 
 namespace devilution {

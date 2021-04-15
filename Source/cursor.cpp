@@ -3,7 +3,16 @@
  *
  * Implementation of cursor tracking functionality.
  */
-#include "all.h"
+#include "cursor.h"
+
+#include "control.h"
+#include "doom.h"
+#include "inv.h"
+#include "missiles.h"
+#include "render.h"
+#include "towners.h"
+#include "track.h"
+#include "trigs.h"
 
 namespace devilution {
 

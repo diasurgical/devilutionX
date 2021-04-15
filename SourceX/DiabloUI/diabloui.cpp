@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <string>
 
-#include "storm/storm.h"
-
 #include "controls/controller.h"
 #include "controls/menu_controls.h"
 #include "DiabloUI/art_draw.h"
@@ -14,7 +12,11 @@
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/text_draw.h"
 #include "display.h"
+#include "dx.h"
+#include "palette.h"
+#include "sdl_compat.h"
 #include "sdl_ptrs.h"
+#include "storm/storm.h"
 #include "stubs.h"
 #include "utf8.h"
 

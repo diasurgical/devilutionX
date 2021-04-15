@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "diablo.h"
+#include "multi.h"
 
 using namespace devilution;
 

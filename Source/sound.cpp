@@ -3,13 +3,14 @@
  *
  * Implementation of functions setting up the audio pipeline.
  */
-#include "all.h"
-#include "options.h"
-#include "storm/storm.h"
-#include "../SourceX/stubs.h"
-#include "../SourceX/storm_sdl_rw.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
+
+#include "init.h"
+#include "options.h"
+#include "storm_sdl_rw.h"
+#include "storm/storm.h"
+#include "stubs.h"
 
 namespace devilution {
 

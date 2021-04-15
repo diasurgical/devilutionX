@@ -3,8 +3,10 @@
  *
  * Implementation of functions for updating game state from network commands.
  */
-#include "all.h"
+
+#include "nthread.h"
 #include "storm/storm.h"
+#include "thread.h"
 
 namespace devilution {
 

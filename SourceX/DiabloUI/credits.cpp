@@ -2,17 +2,17 @@
 #include <memory>
 #include <vector>
 
+#include "control.h"
 #include "controls/menu_controls.h"
-#include "all.h"
-#include "display.h"
-#include "sdl_ptrs.h"
-
-#include "DiabloUI/diabloui.h"
-#include "DiabloUI/credits_lines.h"
-#include "DiabloUI/support_lines.h"
-#include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
+#include "DiabloUI/art.h"
+#include "DiabloUI/credits_lines.h"
+#include "DiabloUI/diabloui.h"
 #include "DiabloUI/fonts.h"
+#include "DiabloUI/support_lines.h"
+#include "display.h"
+#include "sdl_compat.h"
+#include "sdl_ptrs.h"
 
 namespace devilution {
 

@@ -3,7 +3,13 @@
  *
  * Implementation of functions for placing dead monsters.
  */
-#include "all.h"
+#include "dead.h"
+
+#include <SDL.h>
+
+#include "gendung.h"
+#include "lighting.h"
+#include "misdat.h"
 #include "monster.h"
 
 namespace devilution {

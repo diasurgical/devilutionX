@@ -3,7 +3,10 @@
  *
  * Implementation of in-game message functions.
  */
-#include "all.h"
+#include "error.h"
+
+#include "control.h"
+#include "stores.h"
 
 namespace devilution {
 

@@ -3,6 +3,8 @@
  *
  * Implementation of functions for creating and editing MPQ files.
  */
+#include "mpqapi.h"
+
 #include <cerrno>
 #include <cinttypes>
 #include <cstdint>
@@ -11,8 +13,10 @@
 #include <memory>
 #include <type_traits>
 
-#include "all.h"
-#include "../SourceS/file_util.h"
+#include "appfat.h"
+#include "encrypt.h"
+#include "engine.h"
+#include "file_util.h"
 
 namespace devilution {
 

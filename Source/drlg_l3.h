@@ -5,6 +5,9 @@
  */
 #pragma once
 
+#include "gendung.h"
+#include "miniwin.h"
+
 namespace devilution {
 
 void AddFenceDoors();

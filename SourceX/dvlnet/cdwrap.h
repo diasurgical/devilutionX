@@ -1,12 +1,10 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-#include <string>
 #include <exception>
 #include <map>
-
-#include "all.h"
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "dvlnet/abstract_net.h"
 

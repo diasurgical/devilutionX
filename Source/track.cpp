@@ -3,7 +3,9 @@
  *
  * Implementation of functionality tracking what the mouse cursor is pointing at.
  */
-#include "all.h"
+
+#include "cursor.h"
+#include "player.h"
 
 namespace devilution {
 

@@ -3,7 +3,16 @@
  *
  * Implementation of functionality the special quest dungeons.
  */
-#include "all.h"
+#include "setmaps.h"
+
+#include "drlg_l1.h"
+#include "drlg_l2.h"
+#include "drlg_l3.h"
+#include "objdat.h"
+#include "objects.h"
+#include "palette.h"
+#include "quests.h"
+#include "trigs.h"
 
 namespace devilution {
 

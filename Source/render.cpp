@@ -3,7 +3,11 @@
  *
  * Implementation of functionality for rendering the level tiles.
  */
-#include "all.h"
+#include "render.h"
+
+#include <limits.h>
+
+#include "lighting.h"
 #include "options.h"
 
 namespace devilution {

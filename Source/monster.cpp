@@ -4,10 +4,27 @@
  * Implementation of monster functionality, AI, actions, spawning, loading, etc.
  */
 #include <algorithm>
+#include <limits.h>
 
-#include "all.h"
+#include "control.h"
+#include "cursor.h"
+#include "dead.h"
+#ifdef _DEBUG
+#include "debug.h"
+#endif
+#include "drlg_l1.h"
+#include "drlg_l4.h"
+#include "init.h"
+#include "lighting.h"
+#include "minitext.h"
+#include "missiles.h"
+#include "movie.h"
 #include "options.h"
+#include "sound.h"
 #include "storm/storm.h"
+#include "themes.h"
+#include "towners.h"
+#include "trigs.h"
 
 namespace devilution {
 

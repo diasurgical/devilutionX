@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "miniwin.h"
+
 namespace devilution {
 
 enum cursor_id : uint8_t {

@@ -1,7 +1,10 @@
+#include "platform/switch/docking.h"
+
 #include <switch.h>
 #include <SDL.h>
+
+#include "diablo.h"
 #include "display.h"
-#include "platform/switch/docking.h"
 
 namespace devilution {
 

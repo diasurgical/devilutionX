@@ -3,9 +3,11 @@
  *
  * Quality of life features
  */
-#include "all.h"
-#include "options.h"
+
+#include "control.h"
+#include "cursor.h"
 #include "DiabloUI/art_draw.h"
+#include "options.h"
 
 namespace devilution {
 namespace {

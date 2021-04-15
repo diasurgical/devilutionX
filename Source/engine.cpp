@@ -10,7 +10,9 @@
  * - File loading
  * - Video playback
  */
-#include "all.h"
+
+#include "lighting.h"
+#include "movie.h"
 #include "options.h"
 #include "storm/storm.h"
 

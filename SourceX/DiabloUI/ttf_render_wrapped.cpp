@@ -3,6 +3,15 @@
 #include <cstddef>
 #include <cstring>
 
+#include <SDL.h>
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#else
+#include "sdl2_backports.h"
+#endif
+
+#include "sdl_compat.h"
+
 namespace devilution {
 
 namespace {

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "all.h"
-
-#include "../SourceX/DiabloUI/art.h"
+#include "DiabloUI/art.h"
 
 namespace devilution {
 

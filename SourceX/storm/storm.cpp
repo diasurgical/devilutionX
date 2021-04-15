@@ -1,25 +1,26 @@
+#include "storm/storm.h"
+
 #include <cstddef>
 #include <cstdint>
+#include <SDL_endian.h>
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <smacker.h>
 #include <string>
-
-#include "all.h"
-#include "options.h"
-#include "paths.h"
-#include "storm/storm.h"
 
 #if !SDL_VERSION_ATLEAST(2, 0, 4)
 #include <queue>
 #endif
 
-#include "display.h"
-#include "stubs.h"
 #include "Radon.hpp"
-#include <SDL.h>
-#include <SDL_endian.h>
-#include <SDL_mixer.h>
-#include <smacker.h>
 
 #include "DiabloUI/diabloui.h"
+#include "display.h"
+#include "dx.h"
+#include "options.h"
+#include "paths.h"
+#include "sdl_compat.h"
+#include "stubs.h"
 
 namespace devilution {
 

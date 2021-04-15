@@ -3,7 +3,9 @@
  *
  * Implementation of the map of the stars quest.
  */
-#include "all.h"
+#include "doom.h"
+
+#include "control.h"
 
 namespace devilution {
 

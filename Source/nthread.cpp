@@ -3,8 +3,11 @@
  *
  * Implementation of functions for managing game ticks.
  */
-#include "all.h"
+
+#include "diablo.h"
+#include "gmenu.h"
 #include "storm/storm.h"
+#include "thread.h"
 
 namespace devilution {
 

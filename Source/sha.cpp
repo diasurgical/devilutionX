@@ -3,9 +3,12 @@
  *
  * Implementation of functionality for calculating X-SHA-1 (a flawed implementation of SHA-1).
  */
-#include "all.h"
+#include "sha.h"
 
 #include <cstdint>
+#include <SDL.h>
+
+#include "appfat.h"
 
 namespace devilution {
 

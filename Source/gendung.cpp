@@ -3,7 +3,8 @@
  *
  * Implementation of general dungeon generation code.
  */
-#include "all.h"
+
+#include "init.h"
 #include "options.h"
 
 namespace devilution {

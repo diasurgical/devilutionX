@@ -3,11 +3,14 @@
  *
  * Implementation of functions setting up the graphics pipeline.
  */
-#include "all.h"
-#include "storm/storm.h"
-#include "../SourceX/display.h"
-#include "options.h"
+#include "dx.h"
+
 #include <SDL.h>
+
+#include "display.h"
+#include "options.h"
+#include "render.h"
+#include "storm/storm.h"
 
 #ifdef __3DS__
 #include <3ds.h>

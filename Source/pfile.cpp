@@ -3,12 +3,19 @@
  *
  * Implementation of the save game encoding functionality.
  */
+#include "pfile.h"
+
 #include <string>
 
-#include "all.h"
+#include "codec.h"
+#include "file_util.h"
+#include "init.h"
+#include "loadsave.h"
+#include "mainmenu.h"
+#include "mpqapi.h"
+#include "pack.h"
 #include "paths.h"
 #include "storm/storm.h"
-#include "file_util.h"
 
 namespace devilution {
 

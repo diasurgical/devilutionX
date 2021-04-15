@@ -3,7 +3,7 @@
  *
  * Implementation of all object data.
  */
-#include "all.h"
+#include "objdat.h"
 
 namespace devilution {
 

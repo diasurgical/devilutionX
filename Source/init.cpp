@@ -3,15 +3,17 @@
  *
  * Implementation of routines for initializing the environment, disable screen saver, load MPQ.
  */
+#include <config.h>
+#include <SDL.h>
 #include <string>
 #include <vector>
 
-#include "all.h"
-#include "paths.h"
-#include "storm/storm.h"
 #include "DiabloUI/diabloui.h"
-#include <SDL.h>
-#include <config.h>
+#include "dx.h"
+#include "paths.h"
+#include "pfile.h"
+#include "storm/storm.h"
+#include "ui_fwd.h"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita

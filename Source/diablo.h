@@ -7,10 +7,11 @@
 
 #include <stdint.h>
 
-#include "gendung.h"
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
+#include "gendung.h"
+#include "init.h"
 
 namespace devilution {
 

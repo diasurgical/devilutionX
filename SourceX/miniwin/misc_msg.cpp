@@ -2,16 +2,19 @@
 #include <deque>
 #include <SDL.h>
 
-#include "all.h"
-#include "display.h"
-#include "stubs.h"
+#include "control.h"
+#include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "controls/touch.h"
+#include "cursor.h"
 #include "display.h"
-#include "controls/controller.h"
+#include "inv.h"
+#include "movie.h"
+#include "sdl_compat.h"
+#include "stubs.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
