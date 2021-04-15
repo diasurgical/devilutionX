@@ -7,7 +7,6 @@
 
 #include "automap.h"
 #include "capture.h"
-#include "console.h"
 #include "control.h"
 #include "cursor.h"
 #include "dead.h"
@@ -36,13 +35,12 @@
 #include "multi.h"
 #include "nthread.h"
 #include "options.h"
-#include "paths.h"
 #include "pfile.h"
 #include "plrmsg.h"
+#include "qol.h"
 #include "restrict.h"
 #include "setmaps.h"
 #include "sound.h"
-#include "qol.h"
 #include "stores.h"
 #include "storm/storm.h"
 #include "themes.h"
@@ -50,6 +48,8 @@
 #include "town.h"
 #include "track.h"
 #include "trigs.h"
+#include "utils/console.h"
+#include "utils/paths.h"
 
 namespace devilution {
 

@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 #include "engine.h"
-#include "miniwin.h"
+#include "miniwin/miniwin.h"
 
 namespace devilution {
 

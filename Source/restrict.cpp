@@ -5,7 +5,7 @@
  */
 
 #include "appfat.h"
-#include "paths.h"
+#include "utils/paths.h"
 
 namespace devilution {
 

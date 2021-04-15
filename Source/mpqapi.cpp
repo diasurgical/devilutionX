@@ -16,7 +16,7 @@
 #include "appfat.h"
 #include "encrypt.h"
 #include "engine.h"
-#include "file_util.h"
+#include "utils/file_util.h"
 
 namespace devilution {
 

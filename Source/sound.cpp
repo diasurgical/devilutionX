@@ -8,9 +8,9 @@
 
 #include "init.h"
 #include "options.h"
-#include "storm_sdl_rw.h"
 #include "storm/storm.h"
-#include "stubs.h"
+#include "storm/storm_sdl_rw.h"
+#include "utils/stubs.h"
 
 namespace devilution {
 

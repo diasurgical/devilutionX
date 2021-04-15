@@ -7,8 +7,8 @@
 
 #include <stdint.h>
 
-#include "miniwin.h"
-#include "soundsample.h"
+#include "miniwin/miniwin.h"
+#include "utils/soundsample.h"
 
 namespace devilution {
 

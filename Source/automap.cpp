@@ -5,13 +5,13 @@
  */
 #include "automap.h"
 #include "control.h"
-#include "player.h"
-#include "palette.h"
 #include "inv.h"
+#include "miniwin/miniwin.h"
 #include "monster.h"
+#include "palette.h"
+#include "player.h"
 #include "setmaps.h"
-#include "miniwin.h"
-#include "ui_fwd.h"
+#include "utils/ui_fwd.h"
 
 namespace devilution {
 

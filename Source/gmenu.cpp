@@ -9,7 +9,7 @@
 #include "controls/axis_direction.h"
 #include "controls/controller_motion.h"
 #include "stores.h"
-#include "ui_fwd.h"
+#include "utils/ui_fwd.h"
 
 namespace devilution {
 

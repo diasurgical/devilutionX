@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#include "miniwin.h"
+#include "miniwin/miniwin.h"
 
 namespace devilution {
 

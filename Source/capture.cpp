@@ -7,12 +7,12 @@
 
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
-#include "file_util.h"
 #include "palette.h"
-#include "paths.h"
 #include "render.h"
 #include "storm/storm.h"
-#include "ui_fwd.h"
+#include "utils/file_util.h"
+#include "utils/paths.h"
+#include "utils/ui_fwd.h"
 
 namespace devilution {
 

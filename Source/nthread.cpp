@@ -7,7 +7,7 @@
 #include "diablo.h"
 #include "gmenu.h"
 #include "storm/storm.h"
-#include "thread.h"
+#include "utils/thread.h"
 
 namespace devilution {
 

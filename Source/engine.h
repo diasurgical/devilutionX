@@ -19,11 +19,11 @@
 #include <stdint.h>
 
 #ifdef USE_SDL1
-#include "sdl2_to_1_2_backports.h"
+#include "utils/sdl2_to_1_2_backports.h"
 #endif
 
 #include "appfat.h"
-#include "miniwin.h"
+#include "miniwin/miniwin.h"
 
 namespace devilution {
 

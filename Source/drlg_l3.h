@@ -6,7 +6,7 @@
 #pragma once
 
 #include "gendung.h"
-#include "miniwin.h"
+#include "miniwin/miniwin.h"
 
 namespace devilution {
 

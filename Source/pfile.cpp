@@ -8,14 +8,14 @@
 #include <string>
 
 #include "codec.h"
-#include "file_util.h"
 #include "init.h"
 #include "loadsave.h"
 #include "mainmenu.h"
 #include "mpqapi.h"
 #include "pack.h"
-#include "paths.h"
 #include "storm/storm.h"
+#include "utils/file_util.h"
+#include "utils/paths.h"
 
 namespace devilution {
 

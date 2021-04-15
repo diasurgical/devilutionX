@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#include "ui_fwd.h"
+#include "utils/ui_fwd.h"
 
 namespace devilution {
 
