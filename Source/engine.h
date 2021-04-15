@@ -23,7 +23,7 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
-#include "../types.h"
+#include "miniwin.h"
 
 namespace devilution {
 

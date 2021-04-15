@@ -17,7 +17,12 @@
 
 #include "sdl_compat.h"
 
-#include "../types.h"
+#include "miniwin.h"
+#include "soundsample.h"
+#include "thread.h"
+#include "ui_fwd.h"
+
+#include <limits.h>
 
 #include "../SourceX/qol.h"
 

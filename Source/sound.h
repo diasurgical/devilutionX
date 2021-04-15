@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "soundsample.h"
+
 namespace devilution {
 
 #define VOLUME_MIN -1600
