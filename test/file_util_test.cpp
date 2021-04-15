@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "file_util.h"
+#include "utils/file_util.h"
 
 using namespace devilution;
 

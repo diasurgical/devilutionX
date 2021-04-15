@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include "miniwin.h"
+#include "miniwin/miniwin.h"
 #include "player.h"
 
 namespace devilution {

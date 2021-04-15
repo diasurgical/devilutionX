@@ -8,7 +8,7 @@
 #include <cstdint>
 
 #include "appfat.h"
-#include "miniwin.h"
+#include "miniwin/miniwin.h"
 #include "sha.h"
 
 namespace devilution {

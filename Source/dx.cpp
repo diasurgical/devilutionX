@@ -7,10 +7,10 @@
 
 #include <SDL.h>
 
-#include "display.h"
 #include "options.h"
 #include "render.h"
 #include "storm/storm.h"
+#include "utils/display.h"
 
 #ifdef __3DS__
 #include <3ds.h>

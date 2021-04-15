@@ -10,10 +10,10 @@
 
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
-#include "paths.h"
 #include "pfile.h"
 #include "storm/storm.h"
-#include "ui_fwd.h"
+#include "utils/paths.h"
+#include "utils/ui_fwd.h"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita

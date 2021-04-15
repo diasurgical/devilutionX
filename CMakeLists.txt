@@ -211,16 +211,7 @@ add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
 
-set(SourceS_SRCS
-  SourceS/console.cpp
-  SourceS/paths.cpp
-)
-if(USE_SDL1)
-  list(APPEND SourceS_SRCS SourceS/sdl2_to_1_2_backports.cpp)
-endif()
-add_library(SourceS STATIC ${SourceS_SRCS})
-
-add_library(devilution STATIC
+set(devilutionx_SRCS
   Source/appfat.cpp
   Source/automap.cpp
   Source/capture.cpp
@@ -235,8 +226,8 @@ add_library(devilution STATIC
   Source/drlg_l2.cpp
   Source/drlg_l3.cpp
   Source/drlg_l4.cpp
-  Source/dx.cpp
   Source/dthread.cpp
+  Source/dx.cpp
   Source/effects.cpp
   Source/encrypt.cpp
   Source/engine.cpp
@@ -252,6 +243,7 @@ add_library(devilution STATIC
   Source/items.cpp
   Source/lighting.cpp
   Source/loadsave.cpp
+  Source/main.cpp
   Source/mainmenu.cpp
   Source/minitext.cpp
   Source/misdat.cpp
@@ -272,6 +264,7 @@ add_library(devilution STATIC
   Source/player.cpp
   Source/plrmsg.cpp
   Source/portal.cpp
+  Source/qol.cpp
   Source/quests.cpp
   Source/render.cpp
   Source/restrict.cpp
@@ -289,96 +282,98 @@ add_library(devilution STATIC
   Source/town.cpp
   Source/towners.cpp
   Source/track.cpp
-  Source/trigs.cpp)
-
-set(devilutionx_SRCS
-  SourceX/qol.cpp
-  SourceX/controls/devices/game_controller.cpp
-  SourceX/controls/devices/joystick.cpp
-  SourceX/controls/devices/kbcontroller.cpp
-  SourceX/controls/axis_direction.cpp
-  SourceX/controls/controller.cpp
-  SourceX/controls/controller_motion.cpp
-  SourceX/controls/game_controls.cpp
-  SourceX/controls/menu_controls.cpp
-  SourceX/controls/modifier_hints.cpp
-  SourceX/controls/plrctrls.cpp
-  SourceX/controls/touch.cpp
-  SourceX/display.cpp
-  SourceX/miniwin/misc_msg.cpp
-  SourceX/thread.cpp
-  SourceX/soundsample.cpp
-  SourceX/storm_sdl_rw.cpp
-  SourceX/storm/storm.cpp
-  SourceX/storm/storm_net.cpp
-  SourceX/dvlnet/abstract_net.cpp
-  SourceX/dvlnet/loopback.cpp
-  SourceX/dvlnet/packet.cpp
-  SourceX/dvlnet/base.cpp
-  SourceX/dvlnet/frame_queue.cpp
-  SourceX/dvlnet/cdwrap.cpp
-  SourceX/DiabloUI/art_draw.cpp
-  SourceX/DiabloUI/errorart.cpp
-  SourceX/DiabloUI/art.cpp
-  SourceX/DiabloUI/button.cpp
-  SourceX/DiabloUI/credits.cpp
-  SourceX/DiabloUI/credits_lines.cpp
-  SourceX/DiabloUI/support_lines.cpp
-  SourceX/DiabloUI/diabloui.cpp
-  SourceX/DiabloUI/dialogs.cpp
-  SourceX/DiabloUI/fonts.cpp
-  SourceX/DiabloUI/mainmenu.cpp
-  SourceX/DiabloUI/progress.cpp
-  SourceX/DiabloUI/scrollbar.cpp
-  SourceX/DiabloUI/selconn.cpp
-  SourceX/DiabloUI/selgame.cpp
-  SourceX/DiabloUI/selhero.cpp
-  SourceX/DiabloUI/selyesno.cpp
-  SourceX/DiabloUI/selok.cpp
-  SourceX/DiabloUI/text_draw.cpp
-  SourceX/DiabloUI/text.cpp
-  SourceX/DiabloUI/title.cpp
-  SourceX/DiabloUI/ttf_render_wrapped.cpp
-  SourceX/main.cpp
-  SourceX/devilutionx.exe.manifest
+  Source/trigs.cpp
+  Source/controls/axis_direction.cpp
+  Source/controls/controller.cpp
+  Source/controls/controller_motion.cpp
+  Source/controls/devices/game_controller.cpp
+  Source/controls/devices/joystick.cpp
+  Source/controls/devices/kbcontroller.cpp
+  Source/controls/game_controls.cpp
+  Source/controls/menu_controls.cpp
+  Source/controls/modifier_hints.cpp
+  Source/controls/plrctrls.cpp
+  Source/controls/touch.cpp
+  Source/utils/console.cpp
+  Source/utils/display.cpp
+  Source/utils/paths.cpp
+  Source/utils/soundsample.cpp
+  Source/utils/thread.cpp
+  Source/DiabloUI/art.cpp
+  Source/DiabloUI/art_draw.cpp
+  Source/DiabloUI/button.cpp
+  Source/DiabloUI/credits.cpp
+  Source/DiabloUI/credits_lines.cpp
+  Source/DiabloUI/diabloui.cpp
+  Source/DiabloUI/dialogs.cpp
+  Source/DiabloUI/errorart.cpp
+  Source/DiabloUI/fonts.cpp
+  Source/DiabloUI/mainmenu.cpp
+  Source/DiabloUI/progress.cpp
+  Source/DiabloUI/scrollbar.cpp
+  Source/DiabloUI/selconn.cpp
+  Source/DiabloUI/selgame.cpp
+  Source/DiabloUI/selhero.cpp
+  Source/DiabloUI/selok.cpp
+  Source/DiabloUI/selyesno.cpp
+  Source/DiabloUI/support_lines.cpp
+  Source/DiabloUI/text.cpp
+  Source/DiabloUI/text_draw.cpp
+  Source/DiabloUI/title.cpp
+  Source/DiabloUI/ttf_render_wrapped.cpp
+  Source/dvlnet/abstract_net.cpp
+  Source/dvlnet/base.cpp
+  Source/dvlnet/cdwrap.cpp
+  Source/dvlnet/frame_queue.cpp
+  Source/dvlnet/loopback.cpp
+  Source/dvlnet/packet.cpp
+  Source/storm/storm.cpp
+  Source/storm/storm_net.cpp
+  Source/storm/storm_sdl_rw.cpp
+  Source/miniwin/misc_msg.cpp
+  Source/devilutionx.exe.manifest
   Packaging/macOS/AppIcon.icns
   Packaging/resources/CharisSILB.ttf
   Packaging/windows/devilutionx.rc)
 
+if(USE_SDL1)
+  list(APPEND devilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
+endif()
+
 if(NOT NONET)
   list(APPEND devilutionx_SRCS
-    SourceX/dvlnet/tcp_client.cpp
-    SourceX/dvlnet/tcp_server.cpp
-    SourceX/dvlnet/protocol_zt.cpp
-    SourceX/dvlnet/base_protocol.cpp
-    SourceX/dvlnet/zerotier_native.cpp
-    SourceX/dvlnet/zerotier_lwip.cpp)
+    Source/dvlnet/tcp_client.cpp
+    Source/dvlnet/tcp_server.cpp
+    Source/dvlnet/protocol_zt.cpp
+    Source/dvlnet/base_protocol.cpp
+    Source/dvlnet/zerotier_native.cpp
+    Source/dvlnet/zerotier_lwip.cpp)
 endif()
 
 set(BIN_TARGET devilutionx)
 
 if(SWITCH)
   list(APPEND devilutionx_SRCS
-    SourceX/platform/switch/network.cpp
-    SourceX/platform/switch/keyboard.cpp
-    SourceX/platform/switch/docking.cpp)
+    Source/platform/switch/network.cpp
+    Source/platform/switch/keyboard.cpp
+    Source/platform/switch/docking.cpp)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
 if(VITA)
   list(APPEND devilutionx_SRCS
-    SourceX/platform/vita/keyboard.cpp)
+    Source/platform/vita/keyboard.cpp)
 endif()
 
 if(VITA)
   list(APPEND devilutionx_SRCS
-    SourceX/platform/vita/keyboard.cpp)
+    Source/platform/vita/keyboard.cpp)
 endif()
 
 if(N3DS)
   list(APPEND devilutionx_SRCS
-    SourceX/platform/ctr/system.cpp
-    SourceX/platform/ctr/keyboard.cpp)
+    Source/platform/ctr/system.cpp
+    Source/platform/ctr/keyboard.cpp)
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
@@ -419,7 +414,6 @@ file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BIN
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(is_multi_config)
   set(CONFIG_PATH $<CONFIG>/config.h)
-  target_include_directories(devilution PRIVATE ${CMAKE_BINARY_DIR}/$<CONFIG>)
   target_include_directories(${BIN_TARGET} PRIVATE ${CMAKE_BINARY_DIR}/$<CONFIG>)
 else()
   set(CONFIG_PATH config.h)
@@ -447,26 +441,20 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
-target_include_directories(devilution PUBLIC 3rdParty/PKWare Source SourceS SourceX ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
-  SourceS
-  SourceX
+  Source
+  3rdParty/PKWare
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
-  3rdParty/libsmacker)
+  3rdParty/libsmacker
+  ${CMAKE_CURRENT_BINARY_DIR})
 
-if(N3DS)
-  target_link_libraries(devilution PUBLIC
-  SourceS)
-else()
-  target_link_libraries(devilution PUBLIC
-  Threads::Threads
-  SourceS)
+if(NOT N3DS)
+  target_link_libraries(${BIN_TARGET} PUBLIC
+  Threads::Threads)
 endif()
 
 target_link_libraries(${BIN_TARGET} PRIVATE
-  devilution
-  SourceS
   PKWare
   StormLib
   smacker
@@ -477,7 +465,7 @@ if(NOT NONET)
 endif()
 
 genex_for_option(DEBUG)
-target_compile_definitions(devilution PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
+target_compile_definitions(${BIN_TARGET} PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
 target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
 
 # Defines without value
@@ -556,81 +544,79 @@ endforeach(def_name)
 
 genex_for_option(ASAN)
 genex_for_option(UBSAN)
-foreach(target devilution ${BIN_TARGET} SourceS)
-  target_compile_options(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-  target_link_libraries(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-  target_compile_options(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
-  target_link_libraries(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+target_compile_options(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+target_link_libraries(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+target_compile_options(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+target_link_libraries(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
 
-  if(USE_SDL1)
-    target_link_libraries(${target} PRIVATE
-      ${SDL_TTF_LIBRARY}
-      ${SDL_MIXER_LIBRARY}
-      ${SDL_LIBRARY})
-    target_compile_definitions(${target} PRIVATE USE_SDL1)
-  else()
-    target_link_libraries(${target} PRIVATE
-      SDL2::SDL2
-      SDL2::SDL2main
-      SDL2::SDL2_ttf
-      SDL2::SDL2_mixer)
+if(USE_SDL1)
+  target_link_libraries(${BIN_TARGET} PRIVATE
+    ${SDL_TTF_LIBRARY}
+    ${SDL_MIXER_LIBRARY}
+    ${SDL_LIBRARY})
+  target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
+else()
+  target_link_libraries(${BIN_TARGET} PRIVATE
+    SDL2::SDL2
+    SDL2::SDL2main
+    SDL2::SDL2_ttf
+    SDL2::SDL2_mixer)
+endif()
+
+if(SWITCH)
+  target_link_libraries(${BIN_TARGET} PRIVATE switch::libnx
+    -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+endif()
+
+if(AMIGA)
+  target_link_libraries(${BIN_TARGET} PRIVATE
+    ${FREETYPE_LIBRARY}
+    ${ZLIB_LIBRARY})
+  if(NOT WARPOS)
+    target_link_libraries(${BIN_TARGET} PRIVATE -ldebug)
   endif()
+endif()
 
-  if(SWITCH)
-    target_link_libraries(${target} PRIVATE switch::libnx
-      -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
-  endif()
+if (VITA)
+  target_link_libraries(${BIN_TARGET} PRIVATE
+        SceAppMgr_stub
+        SceAudio_stub
+        SceCommonDialog_stub
+        SceCtrl_stub
+        SceDisplay_stub
+        SceGxm_stub
+        SceHid_stub
+        SceIofilemgr_stub
+        SceMotion_stub
+        ScePower_stub
+        SceSysmodule_stub
+        SceTouch_stub
+        freetype
+        png
+        m
+        z
+        FLAC
+        vorbisfile
+        vorbis
+        ogg
+        mikmod
+        mpg123
+  )
+  target_compile_definitions(${BIN_TARGET} PRIVATE VITA)
+endif()
 
-  if(AMIGA)
-    target_link_libraries(${target} PRIVATE
-      ${FREETYPE_LIBRARY}
-      ${ZLIB_LIBRARY})
-    if(NOT WARPOS)
-      target_link_libraries(${target} PRIVATE -ldebug)
-    endif()
-  endif()
+if(N3DS)
+  target_link_libraries(${BIN_TARGET} PRIVATE ${TREMOR_LIBRARIES})
+  target_include_directories(${BIN_TARGET} PRIVATE ${TREMOR_INCLUDE_DIRS})
+  target_link_libraries(${BIN_TARGET} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
+  target_link_libraries(${BIN_TARGET} PRIVATE 3ds::citro3d 3ds::ctrulib)
+endif()
 
-  if (VITA)
-    target_link_libraries(${target} PRIVATE
-          SceAppMgr_stub
-          SceAudio_stub
-          SceCommonDialog_stub
-          SceCtrl_stub
-          SceDisplay_stub
-          SceGxm_stub
-          SceHid_stub
-          SceIofilemgr_stub
-          SceMotion_stub
-          ScePower_stub
-          SceSysmodule_stub
-          SceTouch_stub
-          freetype
-          png
-          m
-          z
-          FLAC
-          vorbisfile
-          vorbis
-          ogg
-          mikmod
-          mpg123
-    )
-    target_compile_definitions(${target} PRIVATE VITA)
-  endif()
+target_compile_definitions(${BIN_TARGET} PRIVATE ${def_list})
 
-  if(N3DS)
-    target_link_libraries(${target} PRIVATE ${TREMOR_LIBRARIES})
-    target_include_directories(${target} PRIVATE ${TREMOR_INCLUDE_DIRS})
-    target_link_libraries(${target} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
-    target_link_libraries(${target} PRIVATE 3ds::citro3d 3ds::ctrulib)
-  endif()
-
-  target_compile_definitions(${target} PRIVATE ${def_list})
-
-  if (GPERF)
-    target_link_libraries(${target} PRIVATE ${GPERFTOOLS_LIBRARIES})
-  endif()
-endforeach(target)
+if (GPERF)
+  target_link_libraries(${BIN_TARGET} PRIVATE ${GPERFTOOLS_LIBRARIES})
+endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU AND NOT VITA)
   target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
@@ -640,7 +626,7 @@ if(WIN32)
   target_link_libraries(${BIN_TARGET} PRIVATE wsock32 ws2_32 wininet)
 
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
+    target_compile_options(${BIN_TARGET} PUBLIC $<$<CONFIG:Debug>:-gstabs>)
   endif()
 endif()
 
@@ -655,8 +641,8 @@ endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Change __FILE__ to only show the path relative to the project folder
-  get_target_property(devilution_SRCS devilution SOURCES)
-  foreach(SOURCE_FILE ${devilution_SRCS} ${devilutionx_SRCS})
+  get_target_property(devilutionx_SRCS ${BIN_TARGET} SOURCES)
+  foreach(SOURCE_FILE ${devilutionx_SRCS})
     set_source_files_properties(${SOURCE_FILE} PROPERTIES
       COMPILE_DEFINITIONS __FILE__="${SOURCE_FILE}"
     )
@@ -666,18 +652,17 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
   # Note: For Valgrind support.
   genex_for_option(DEBUG)
-  target_compile_options(devilution PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
+  target_compile_options(${BIN_TARGET} PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
 
   # Warnings for devilutionX
   target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter)
 
   # For ARM and other default unsigned char platforms
-  target_compile_options(devilution PRIVATE -fsigned-char)
   target_compile_options(${BIN_TARGET} PRIVATE -fsigned-char)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  target_compile_options(devilution PRIVATE "/W0")
+  target_compile_options(${BIN_TARGET} PRIVATE "/W0")
 endif()
 
 if(APPLE)

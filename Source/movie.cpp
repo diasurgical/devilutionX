@@ -5,8 +5,8 @@
  */
 
 #include "diablo.h"
-#include "display.h"
 #include "storm/storm.h"
+#include "utils/display.h"
 
 namespace devilution {
 

@@ -5,8 +5,8 @@
 
 #include "loadsave.h"
 #include "pack.h"
-#include "paths.h"
 #include "pfile.h"
+#include "utils/paths.h"
 
 #include "picosha2.h"
 
