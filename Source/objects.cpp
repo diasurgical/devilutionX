@@ -4541,6 +4541,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			CreateTypeItem(object[i]._ox, object[i]._oy, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
 			if (QuestStatus(Q_ZHAR)
+			    && monster[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 			    && monster[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
 			    && monster[MAX_PLRS]._msquelch == UCHAR_MAX
 			    && monster[MAX_PLRS]._mhitpoints) {
