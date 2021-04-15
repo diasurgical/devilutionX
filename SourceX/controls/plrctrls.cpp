@@ -10,7 +10,7 @@
 
 #define SPLICONLENGTH 56
 
-namespace dvl {
+namespace devilution {
 
 bool sgbControllerActive = false;
 coords speedspellscoords[50];
@@ -113,8 +113,8 @@ void FindItemOrObject()
 			if (dItem[mx + xx][my + yy] <= 0)
 				continue;
 			int i = dItem[mx + xx][my + yy] - 1;
-			if (item[i].isEmpty()
-			    || item[i]._iSelFlag == 0)
+			if (items[i].isEmpty()
+			    || items[i]._iSelFlag == 0)
 				continue;
 			int newRotations = GetRotaryDistance(mx + xx, my + yy);
 			if (rotations < newRotations)
@@ -800,26 +800,26 @@ bool IsPathBlocked(int x, int y, int dir)
 	return !PosOkPlayer(myplr, d1x, d1y) && !PosOkPlayer(myplr, d2x, d2y);
 }
 
-void WalkInDir(AxisDirection dir)
+void WalkInDir(int playerId, AxisDirection dir)
 {
-	const int x = plr[myplr]._pfutx;
-	const int y = plr[myplr]._pfuty;
+	const int x = plr[playerId]._pfutx;
+	const int y = plr[playerId]._pfuty;
 
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
-		if (sgbControllerActive && plr[myplr].walkpath[0] != WALK_NONE && plr[myplr].destAction == ACTION_NONE)
-			NetSendCmdLoc(true, CMD_WALKXY, x, y); // Stop walking
+		if (sgbControllerActive && plr[playerId].walkpath[0] != WALK_NONE && plr[playerId].destAction == ACTION_NONE)
+			NetSendCmdLoc(playerId, true, CMD_WALKXY, x, y); // Stop walking
 		return;
 	}
 
 	const direction pdir = kFaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 	const int dx = x + kOffsets[pdir][0];
 	const int dy = y + kOffsets[pdir][1];
-	plr[myplr]._pdir = pdir;
+	plr[playerId]._pdir = pdir;
 
-	if (PosOkPlayer(myplr, dx, dy) && IsPathBlocked(x, y, pdir))
+	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, pdir))
 		return; // Don't start backtrack around obstacles
 
-	NetSendCmdLoc(true, CMD_WALKXY, dx, dy);
+	NetSendCmdLoc(playerId, true, CMD_WALKXY, dx, dy);
 }
 
 void QuestLogMove(AxisDirection move_dir)
@@ -842,7 +842,7 @@ void StoreMove(AxisDirection move_dir)
 		STextDown();
 }
 
-typedef void (*HandleLeftStickOrDPadFn)(dvl::AxisDirection);
+typedef void (*HandleLeftStickOrDPadFn)(devilution::AxisDirection);
 
 HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 {
@@ -862,13 +862,14 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	return NULL;
 }
 
-void ProcessLeftStickOrDPadGameUI() {
+void ProcessLeftStickOrDPadGameUI()
+{
 	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler();
 	if (handler != NULL)
 		handler(GetLeftStickOrDpadDirection(true));
 }
 
-void Movement()
+void Movement(int playerId)
 {
 	if (InGameMenu()
 	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)
@@ -881,7 +882,7 @@ void Movement()
 	}
 
 	if (GetLeftStickOrDPadGameUIHandler() == NULL) {
-		WalkInDir(move_dir);
+		WalkInDir(playerId, move_dir);
 	}
 }
 
@@ -930,7 +931,7 @@ void StoreSpellCoords()
 	speedspellcount = 0;
 	int xo = END_X;
 	int yo = END_Y;
-	for (int i = 0; i < 4; i++) {
+	for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
 		std::uint64_t spells;
 		switch (i) {
 		case RSPLTYPE_SKILL:
@@ -945,8 +946,6 @@ void StoreSpellCoords()
 		case RSPLTYPE_CHARGES:
 			spells = plr[myplr]._pISpells;
 			break;
-		default:
-			continue;
 		}
 		std::uint64_t spell = 1;
 		for (int j = 1; j < MAX_SPELLS; j++) {
@@ -1010,8 +1009,7 @@ void HandleRightStickMotion()
 		// cursor position events.
 		static int lastMouseSetTick = 0;
 		const int now = SDL_GetTicks();
-		if (now - lastMouseSetTick > 0)
-		{
+		if (now - lastMouseSetTick > 0) {
 			SetCursorPos(x, y);
 			lastMouseSetTick = now;
 		}
@@ -1058,7 +1056,7 @@ void plrctrls_every_frame()
 
 void plrctrls_after_game_logic()
 {
-	Movement();
+	Movement(myplr);
 }
 
 void UseBeltItem(int type)
@@ -1082,7 +1080,7 @@ void PerformPrimaryAction()
 	if (invflag) { // inventory is open
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			TryIconCurs();
-			SetCursor_(CURSOR_HAND);
+			NewCursor(CURSOR_HAND);
 		} else {
 			CheckInvItem();
 		}
@@ -1171,7 +1169,7 @@ void PerformSpellAction()
 			TryDropItem();
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
-			SetCursor_(CURSOR_HAND);
+			NewCursor(CURSOR_HAND);
 		}
 		return;
 	}
@@ -1179,7 +1177,7 @@ void PerformSpellAction()
 	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
-		SetCursor_(CURSOR_HAND);
+		NewCursor(CURSOR_HAND);
 
 	if (spselflag) {
 		SetSpell();
@@ -1189,11 +1187,11 @@ void PerformSpellAction()
 	int spl = plr[myplr]._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
 	    || (pcursobj == -1 && spl == SPL_DISARM)) {
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			PlaySFX(PS_WARR27);
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			PlaySFX(PS_ROGUE27);
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			PlaySFX(PS_MAGE27);
 		}
 		return;
@@ -1232,7 +1230,7 @@ void PerformSecondaryAction()
 	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
-		SetCursor_(CURSOR_HAND);
+		NewCursor(CURSOR_HAND);
 
 	if (pcursitem != -1) {
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
@@ -1250,4 +1248,4 @@ void PerformSecondaryAction()
 	}
 }
 
-} // namespace dvl
+} // namespace devilution

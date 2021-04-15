@@ -5,7 +5,7 @@
 
 #include "dvlnet/base.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 tcp_server::tcp_server(asio::io_context &ioc, std::string bindaddr,
@@ -161,7 +161,7 @@ void tcp_server::start_accept()
 
 void tcp_server::handle_accept(scc con, const asio::error_code &ec)
 {
-	if(ec)
+	if (ec)
 		return;
 	if (next_free() == PLR_BROADCAST) {
 		drop_connection(con);
@@ -223,4 +223,4 @@ tcp_server::~tcp_server()
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

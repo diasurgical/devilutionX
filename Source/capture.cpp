@@ -10,7 +10,7 @@
 #include "paths.h"
 #include "file_util.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /**
  * @brief Write the PCX-file header
@@ -19,9 +19,9 @@ DEVILUTION_BEGIN_NAMESPACE
  * @param out File stream to write to
  * @return True on success
  */
-static BOOL CaptureHdr(short width, short height, std::ofstream *out)
+static bool CaptureHdr(short width, short height, std::ofstream *out)
 {
-	PCXHEADER Buffer;
+	PCXHeader Buffer;
 
 	memset(&Buffer, 0, sizeof(Buffer));
 	Buffer.Manufacturer = 10;
@@ -45,7 +45,7 @@ static BOOL CaptureHdr(short width, short height, std::ofstream *out)
  * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
-static BOOL CapturePal(SDL_Color *palette, std::ofstream *out)
+static bool CapturePal(SDL_Color *palette, std::ofstream *out)
 {
 	BYTE pcx_palette[1 + 256 * 3];
 	int i;
@@ -169,7 +169,7 @@ void CaptureScreen()
 {
 	SDL_Color palette[256];
 	std::string FileName;
-	BOOL success;
+	bool success;
 
 	std::ofstream *out_stream = CaptureFile(&FileName);
 	if (out_stream == NULL)
@@ -205,4 +205,4 @@ void CaptureScreen()
 	delete out_stream;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

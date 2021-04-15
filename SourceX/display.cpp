@@ -20,7 +20,7 @@
 #endif
 #endif
 
-namespace dvl {
+namespace devilution {
 
 extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 
@@ -125,9 +125,15 @@ bool SpawnWindow(const char *lpWindowName)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
 
-	int initFlags = SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC;
-#ifdef __3DS__
-	initFlags = SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+#ifdef _WIN32
+	// The default WASAPI backend causes distortions
+	// https://github.com/diasurgical/devilutionX/issues/1434
+	SDL_setenv("SDL_AUDIODRIVER", "winmm", /*overwrite=*/false);
+#endif
+	
+	int initFlags = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+#ifndef USE_SDL1
+	initFlags |= SDL_INIT_GAMECONTROLLER;
 #endif
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();
@@ -295,15 +301,13 @@ SDL_Surface *CreateScaledSurface(SDL_Surface *src)
 } // namespace
 #endif // USE_SDL1
 
-void ScaleSurfaceToOutput(SDL_Surface **surface)
+SDLSurfaceUniquePtr ScaleSurfaceToOutput(SDLSurfaceUniquePtr surface)
 {
 #ifdef USE_SDL1
-	if (!OutputRequiresScaling())
-		return;
-	SDL_Surface *stretched = CreateScaledSurface(*surface);
-	SDL_FreeSurface((*surface));
-	*surface = stretched;
+	if (OutputRequiresScaling())
+		return SDLSurfaceUniquePtr { CreateScaledSurface(surface.get()) };
 #endif
+	return surface;
 }
 
-} // namespace dvl
+} // namespace devilution

@@ -3,18 +3,13 @@
  *
  * Interface of functionality for stores and towner dialogs.
  */
-#ifndef __STORES_H__
-#define __STORES_H__
+#pragma once
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef enum talk_id {
+enum talk_id : uint8_t {
 	STORE_NONE,
 	STORE_SMITH,
 	STORE_SBUY,
@@ -39,9 +34,9 @@ typedef enum talk_id {
 	STORE_TAVERN,
 	STORE_DRUNK,
 	STORE_BARMAID,
-} talk_id;
+};
 
-typedef struct STextStruct {
+struct STextStruct {
 	int _sx;
 	int _syoff;
 	char _sstr[128];
@@ -50,7 +45,7 @@ typedef struct STextStruct {
 	int _sline;
 	bool _ssel;
 	int _sval;
-} STextStruct;
+};
 
 /** Shop frame graphics */
 extern BYTE *pSTextBoxCels;
@@ -115,12 +110,4 @@ void STextEnter();
 void CheckStoreBtn();
 void ReleaseStoreBtn();
 
-/* rdata */
-
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __STORES_H__ */

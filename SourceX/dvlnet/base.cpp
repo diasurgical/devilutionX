@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cstring>
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 void base::setup_gameinfo(buffer_t info)
@@ -24,6 +24,10 @@ void base::run_event_handler(_SNETEVENT &ev)
 	}
 }
 
+void base::disconnect_net(plr_t plr)
+{
+}
+
 void base::handle_accept(packet &pkt)
 {
 	if (plr_self != PLR_BROADCAST) {
@@ -34,7 +38,11 @@ void base::handle_accept(packet &pkt)
 		connected_table[plr_self] = true;
 	}
 	if (game_init_info != pkt.info()) {
+		if(pkt.info().size() != sizeof(GameData)) {
+			ABORT();
+		}
 		// we joined and did not create
+		game_init_info = pkt.info();
 		_SNETEVENT ev;
 		ev.eventid = EVENT_TYPE_PLAYER_CREATE_GAME;
 		ev.playerid = plr_self;
@@ -83,6 +91,7 @@ void base::recv_local(packet &pkt)
 				ev.databytes = sizeof(leaveinfo_t);
 				run_event_handler(ev);
 				connected_table[pkt.newplr()] = false;
+				disconnect_net(pkt.newplr());
 				clear_msg(pkt.newplr());
 				turn_queue[pkt.newplr()].clear();
 			}
@@ -255,4 +264,4 @@ bool base::SNetGetTurnsInTransit(DWORD *turns)
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

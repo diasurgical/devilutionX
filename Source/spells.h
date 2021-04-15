@@ -3,30 +3,21 @@
  *
  * Interface of functionality for casting player spells.
  */
-#ifndef __SPELLS_H__
-#define __SPELLS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "player.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
-int GetManaAmount(int id, int sn);
-void UseMana(int id, int sn);
+int GetManaAmount(int id, spell_id sn);
+void UseMana(int id, spell_id sn);
 Uint64 GetSpellBitmask(int spellId);
-BOOL CheckSpell(int id, int sn, char st, BOOL manaonly);
+bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
 void EnsureValidReadiedSpell(PlayerStruct &player);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);
 void DoResurrect(int pnum, int rid);
 void DoHealOther(int pnum, int rid);
-int GetSpellBookLevel(int s);
-int GetSpellStaffLevel(int s);
+int GetSpellBookLevel(spell_id s);
+int GetSpellStaffLevel(spell_id s);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SPELLS_H__ */

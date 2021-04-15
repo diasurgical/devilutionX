@@ -14,13 +14,12 @@
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /** Seed value before the most recent call to SetRndSeed() */
 Sint32 orgseed;
 /** Current game seed */
 Sint32 sglGameSeed;
-static CCritSect sgMemCrit;
 
 /**
  * Specifies the increment used in the Borland C/C++ pseudo-random.
@@ -143,8 +142,8 @@ void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDa
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < out.end() && dst > out.begin()) {
-					memcpy(dst, src, width);
+				if (dst < out.end() && dst >= out.begin()) {
+					memcpy(dst, src, std::min(static_cast<ptrdiff_t>(width), out.end() - dst));
 				}
 				src += width;
 				dst += width;
@@ -225,7 +224,7 @@ void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	int w;
-	BOOL shift;
+	bool shift;
 	BYTE *tbl;
 
 	assert(pRLEBytes != NULL);
@@ -461,7 +460,7 @@ void CelDrawUnsafeTo(CelOutputBuffer out, int x, int y, BYTE *pCelBuff, int nCel
 	}
 }
 
-void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, bool skipColorIndexZero)
 {
 	int nDataSize, w;
 	BYTE *src, *dst, *end;
@@ -480,22 +479,24 @@ void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelB
 				if (dst < out.end() && dst > out.begin()) {
 					if (dst >= out.end() - out.pitch()) {
 						while (width) {
-							if (*src++) {
+							if (!skipColorIndexZero || *src > 0) {
 								dst[-out.pitch()] = col;
 								dst[-1] = col;
 								dst[1] = col;
 							}
+							src++;
 							dst++;
 							width--;
 						}
 					} else {
 						while (width) {
-							if (*src++) {
+							if (!skipColorIndexZero || *src > 0) {
 								dst[-out.pitch()] = col;
 								dst[-1] = col;
 								dst[1] = col;
 								dst[out.pitch()] = col;
 							}
+							src++;
 							dst++;
 							width--;
 						}
@@ -655,40 +656,6 @@ Sint32 random_(BYTE idx, Sint32 v)
 	if (v < 0xFFFF)
 		return (AdvanceRndSeed() >> 16) % v;
 	return AdvanceRndSeed() % v;
-}
-
-/**
- * @brief Multithreaded safe malloc
- * @param dwBytes Byte size to allocate
- */
-BYTE *DiabloAllocPtr(DWORD dwBytes)
-{
-	BYTE *buf;
-
-	sgMemCrit.Enter();
-	buf = (BYTE *)SMemAlloc(dwBytes, __FILE__, __LINE__, 0);
-	sgMemCrit.Leave();
-
-	if (buf == NULL) {
-		const char *text = "System memory exhausted.\n"
-		                   "Make sure you have at least 64MB of free system memory before running the game";
-		ErrDlg("Out of Memory Error", text, __FILE__, __LINE__);
-	}
-
-	return buf;
-}
-
-/**
- * @brief Multithreaded safe memfree
- * @param p Memory pointer to free
- */
-void mem_free_dbg(void *p)
-{
-	if (p) {
-		sgMemCrit.Enter();
-		SMemFree(p, __FILE__, __LINE__, 0);
-		sgMemCrit.Leave();
-	}
 }
 
 /**
@@ -1109,12 +1076,12 @@ void Cl2DrawLight(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel,
 void PlayInGameMovie(const char *pszMovie)
 {
 	PaletteFadeOut(8);
-	play_movie(pszMovie, FALSE);
+	play_movie(pszMovie, false);
 	ClearScreenBuffer();
 	force_redraw = 255;
-	scrollrt_draw_game_screen(TRUE);
+	scrollrt_draw_game_screen(true);
 	PaletteFadeIn(8);
 	force_redraw = 255;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

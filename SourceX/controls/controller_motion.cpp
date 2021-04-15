@@ -9,7 +9,7 @@
 #include "controls/game_controls.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -105,8 +105,8 @@ namespace {
 
 void ScaleJoysticks()
 {
-	const float rightDeadzone = 0.07;
-	const float leftDeadzone = 0.07;
+	const float rightDeadzone = sgOptions.Controller.fDeadzone;
+	const float leftDeadzone = sgOptions.Controller.fDeadzone;
 
 	if (leftStickNeedsScaling) {
 		leftStickX = leftStickXUnscaled;
@@ -169,4 +169,4 @@ AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad)
 	return result;
 }
 
-} // namespace dvl
+} // namespace devilution

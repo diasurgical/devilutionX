@@ -5,6 +5,7 @@
 #include "controls/menu_controls.h"
 #include "all.h"
 #include "display.h"
+#include "sdl_ptrs.h"
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/credits_lines.h"
@@ -13,7 +14,7 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/fonts.h"
 
-namespace dvl {
+namespace devilution {
 
 namespace {
 
@@ -35,19 +36,18 @@ struct CachedLine {
 	CachedLine()
 	{
 		m_index = 0;
-		m_surface = NULL;
 		palette_version = pal_surface_palette_version;
 	}
 
-	CachedLine(std::size_t index, SDL_Surface *surface)
+	CachedLine(std::size_t index, SDLSurfaceUniquePtr surface)
 	{
 		m_index = index;
-		m_surface = surface;
+		m_surface = std::move(surface);
 		palette_version = pal_surface_palette_version;
 	}
 
 	std::size_t m_index;
-	SDL_Surface *m_surface;
+	SDLSurfaceUniquePtr m_surface;
 	unsigned int palette_version;
 };
 
@@ -68,40 +68,37 @@ CachedLine PrepareLine(std::size_t index)
 		++contents;
 
 	const SDL_Color shadow_color = { 0, 0, 0, 0 };
-	SDL_Surface *text = RenderText(contents, shadow_color);
+	SDLSurfaceUniquePtr text { RenderText(contents, shadow_color) };
 
 	// Precompose shadow and text:
-	SDL_Surface *surface = NULL;
-	if (text != NULL) {
+	SDLSurfaceUniquePtr surface;
+	if (text != nullptr) {
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
-		surface = SDL_CreateRGBSurfaceWithFormat(0, text->w + SHADOW_OFFSET_X, text->h + SHADOW_OFFSET_Y, 8, SDL_PIXELFORMAT_INDEX8);
+		surface = SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormat(0, text->w + SHADOW_OFFSET_X, text->h + SHADOW_OFFSET_Y, 8, SDL_PIXELFORMAT_INDEX8) };
 		const SDL_Color mask_color = { 0, 255, 0, 0 }; // Any color different from both shadow and text
 		const SDL_Color &text_color = palette->colors[224];
 		SDL_Color colors[3] = { mask_color, text_color, shadow_color };
-		if (SDLC_SetSurfaceColors(surface, colors, 0, 3) <= -1)
+		if (SDLC_SetSurfaceColors(surface.get(), colors, 0, 3) <= -1)
 			SDL_Log(SDL_GetError());
-		SDLC_SetColorKey(surface, 0);
+		SDLC_SetColorKey(surface.get(), 0);
 
 		// Blit the shadow first:
 		SDL_Rect shadow_rect = { SHADOW_OFFSET_X, SHADOW_OFFSET_Y, 0, 0 };
-		if (SDL_BlitSurface(text, NULL, surface, &shadow_rect) <= -1)
+		if (SDL_BlitSurface(text.get(), NULL, surface.get(), &shadow_rect) <= -1)
 			ErrSdl();
 
 		// Change the text surface color and blit again:
 		SDL_Color text_colors[2] = { mask_color, text_color };
-		if (SDLC_SetSurfaceColors(text, text_colors, 0, 2) <= -1)
+		if (SDLC_SetSurfaceColors(text.get(), text_colors, 0, 2) <= -1)
 			ErrSdl();
-		SDLC_SetColorKey(text, 0);
+		SDLC_SetColorKey(text.get(), 0);
 
-		if (SDL_BlitSurface(text, NULL, surface, NULL) <= -1)
+		if (SDL_BlitSurface(text.get(), NULL, surface.get(), NULL) <= -1)
 			ErrSdl();
 
-		SDL_Surface *surface_ptr = surface;
-		ScaleSurfaceToOutput(&surface_ptr);
-		surface = surface_ptr;
+		surface = ScaleSurfaceToOutput(std::move(surface));
 	}
-	SDL_FreeSurface(text);
-	return CachedLine(index, surface);
+	return CachedLine(index, std::move(surface));
 }
 
 class CreditsRenderer {
@@ -120,11 +117,7 @@ public:
 		ArtBackgroundWidescreen.Unload();
 		ArtBackground.Unload();
 		UnloadTtfFont();
-
-		for (size_t x = 0; x < lines_.size(); x++) {
-			if (lines_[x].m_surface)
-				SDL_FreeSurface(lines_[x].m_surface);
-		}
+		lines_.clear();
 	}
 
 	void Render();
@@ -148,7 +141,7 @@ void CreditsRenderer::Render()
 		return;
 	prev_offset_y_ = offset_y;
 
-	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	SDL_FillRect(DiabloUiSurface(), NULL, 0x000000);
 	DrawArt(PANEL_LEFT - 320, UI_OFFSET_Y, &ArtBackgroundWidescreen);
 	DrawArt(PANEL_LEFT, UI_OFFSET_Y, &ArtBackground);
 	if (font == NULL)
@@ -170,18 +163,17 @@ void CreditsRenderer::Render()
 	viewport.x += PANEL_LEFT;
 	viewport.y += UI_OFFSET_Y;
 	ScaleOutputRect(&viewport);
-	SDL_SetClipRect(GetOutputSurface(), &viewport);
+	SDL_SetClipRect(DiabloUiSurface(), &viewport);
 
 	// We use unscaled coordinates for calculation throughout.
 	Sint16 dest_y = UI_OFFSET_Y + VIEWPORT.y - (offset_y - lines_begin * LINE_H);
 	for (std::size_t i = lines_begin; i < lines_end; ++i, dest_y += LINE_H) {
 		CachedLine &line = lines_[i];
-		if (line.m_surface == NULL)
+		if (line.m_surface == nullptr)
 			continue;
 
 		// Still fading in: the cached line was drawn with a different fade level.
 		if (line.palette_version != pal_surface_palette_version) {
-			SDL_FreeSurface(line.m_surface);
 			line = PrepareLine(line.m_index);
 		}
 
@@ -194,13 +186,13 @@ void CreditsRenderer::Render()
 		ScaleOutputRect(&dst_rect);
 		dst_rect.w = line.m_surface->w;
 		dst_rect.h = line.m_surface->h;
-		if (SDL_BlitSurface(line.m_surface, NULL, GetOutputSurface(), &dst_rect) < 0)
+		if (SDL_BlitSurface(line.m_surface.get(), NULL, DiabloUiSurface(), &dst_rect) < 0)
 			ErrSdl();
 	}
-	SDL_SetClipRect(GetOutputSurface(), NULL);
+	SDL_SetClipRect(DiabloUiSurface(), NULL);
 }
 
-BOOL TextDialog()
+bool TextDialog()
 {
 	CreditsRenderer credits_renderer;
 	bool endMenu = false;
@@ -234,7 +226,7 @@ BOOL TextDialog()
 
 } // namespace
 
-BOOL UiCreditsDialog()
+bool UiCreditsDialog()
 {
 	text = CREDITS_LINES;
 	textLines = CREDITS_LINES_SIZE;
@@ -245,7 +237,7 @@ BOOL UiCreditsDialog()
 	return TextDialog();
 }
 
-BOOL UiSupportDialog()
+bool UiSupportDialog()
 {
 	text = SUPPORT_LINES;
 	textLines = SUPPORT_LINES_SIZE;
@@ -261,4 +253,4 @@ BOOL UiSupportDialog()
 	return TextDialog();
 }
 
-} // namespace dvl
+} // namespace devilution

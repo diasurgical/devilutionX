@@ -5,21 +5,21 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 LightListStruct VisionList[MAXVISION];
 BYTE lightactive[MAXLIGHTS];
 LightListStruct LightList[MAXLIGHTS];
 int numlights;
 BYTE lightradius[16][128];
-BOOL dovision;
+bool dovision;
 int numvision;
 char lightmax;
-BOOL dolighting;
+bool dolighting;
 BYTE lightblock[64][16][16];
 int visionid;
 BYTE *pLightTbl;
-BOOL lightflag;
+bool lightflag;
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
@@ -643,6 +643,7 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 	int i, j, x1, y1, x2, y2;
 
 	nRadius++;
+	nRadius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
 	y1 = nYPos - nRadius;
 	y2 = nYPos + nRadius;
 	x1 = nXPos - nRadius;
@@ -668,16 +669,16 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 	}
 }
 
-void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
+void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
 {
-	BOOL nBlockerFlag;
+	bool nBlockerFlag;
 	int nCrawlX, nCrawlY, nLineLen, nTrans;
 	int j, k, v, x1adj, x2adj, y1adj, y2adj;
 
 	if (nXPos >= 0 && nXPos <= MAXDUNX && nYPos >= 0 && nYPos <= MAXDUNY) {
 		if (doautomap) {
 			if (dFlags[nXPos][nYPos] >= 0) {
-				SetAutomapView(nXPos, nXPos);
+				SetAutomapView(nXPos, nYPos);
 			}
 			dFlags[nXPos][nYPos] |= BFLAG_EXPLORED;
 		}
@@ -689,7 +690,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 
 	for (v = 0; v < 4; v++) {
 		for (j = 0; j < 23; j++) {
-			nBlockerFlag = FALSE;
+			nBlockerFlag = false;
 			nLineLen = 2 * (nRadius - RadiusAdj[j]);
 			for (k = 0; k < nLineLen && !nBlockerFlag; k += 2) {
 				x1adj = 0;
@@ -749,7 +750,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 						if (!nBlockerFlag) {
 							nTrans = dTransVal[nCrawlX][nCrawlY];
 							if (nTrans != 0) {
-								TransList[nTrans] = TRUE;
+								TransList[nTrans] = true;
 							}
 						}
 					}
@@ -981,7 +982,7 @@ void ToggleLighting()
 {
 	int i;
 
-	lightflag ^= TRUE;
+	lightflag ^= true;
 
 	if (lightflag) {
 		memset(dLight, 0, sizeof(dLight));
@@ -1010,8 +1011,8 @@ void InitLighting()
 	int i;
 
 	numlights = 0;
-	dolighting = FALSE;
-	lightflag = FALSE;
+	dolighting = false;
+	lightflag = false;
 
 	for (i = 0; i < MAXLIGHTS; i++) {
 		lightactive[i] = i;
@@ -1035,9 +1036,9 @@ int AddLight(int x, int y, int r)
 		LightList[lid]._lradius = r;
 		LightList[lid]._xoff = 0;
 		LightList[lid]._yoff = 0;
-		LightList[lid]._ldel = FALSE;
-		LightList[lid]._lunflag = FALSE;
-		dolighting = TRUE;
+		LightList[lid]._ldel = false;
+		LightList[lid]._lunflag = false;
+		dolighting = true;
 	}
 
 	return lid;
@@ -1049,8 +1050,8 @@ void AddUnLight(int i)
 		return;
 	}
 
-	LightList[i]._ldel = TRUE;
-	dolighting = TRUE;
+	LightList[i]._ldel = true;
+	dolighting = true;
 }
 
 void ChangeLightRadius(int i, int r)
@@ -1059,12 +1060,12 @@ void ChangeLightRadius(int i, int r)
 		return;
 	}
 
-	LightList[i]._lunflag = TRUE;
+	LightList[i]._lunflag = true;
 	LightList[i]._lunx = LightList[i]._lx;
 	LightList[i]._luny = LightList[i]._ly;
 	LightList[i]._lunr = LightList[i]._lradius;
 	LightList[i]._lradius = r;
-	dolighting = TRUE;
+	dolighting = true;
 }
 
 void ChangeLightXY(int i, int x, int y)
@@ -1073,13 +1074,13 @@ void ChangeLightXY(int i, int x, int y)
 		return;
 	}
 
-	LightList[i]._lunflag = TRUE;
+	LightList[i]._lunflag = true;
 	LightList[i]._lunx = LightList[i]._lx;
 	LightList[i]._luny = LightList[i]._ly;
 	LightList[i]._lunr = LightList[i]._lradius;
 	LightList[i]._lx = x;
 	LightList[i]._ly = y;
-	dolighting = TRUE;
+	dolighting = true;
 }
 
 void ChangeLightOff(int i, int x, int y)
@@ -1088,13 +1089,13 @@ void ChangeLightOff(int i, int x, int y)
 		return;
 	}
 
-	LightList[i]._lunflag = TRUE;
+	LightList[i]._lunflag = true;
 	LightList[i]._lunx = LightList[i]._lx;
 	LightList[i]._luny = LightList[i]._ly;
 	LightList[i]._lunr = LightList[i]._lradius;
 	LightList[i]._xoff = x;
 	LightList[i]._yoff = y;
-	dolighting = TRUE;
+	dolighting = true;
 }
 
 void ChangeLight(int i, int x, int y, int r)
@@ -1103,14 +1104,14 @@ void ChangeLight(int i, int x, int y, int r)
 		return;
 	}
 
-	LightList[i]._lunflag = TRUE;
+	LightList[i]._lunflag = true;
 	LightList[i]._lunx = LightList[i]._lx;
 	LightList[i]._luny = LightList[i]._ly;
 	LightList[i]._lunr = LightList[i]._lradius;
 	LightList[i]._lx = x;
 	LightList[i]._ly = y;
 	LightList[i]._lradius = r;
-	dolighting = TRUE;
+	dolighting = true;
 }
 
 void ProcessLightList()
@@ -1130,7 +1131,7 @@ void ProcessLightList()
 			}
 			if (LightList[j]._lunflag) {
 				DoUnLight(LightList[j]._lunx, LightList[j]._luny, LightList[j]._lunr);
-				LightList[j]._lunflag = FALSE;
+				LightList[j]._lunflag = false;
 			}
 		}
 		for (i = 0; i < numlights; i++) {
@@ -1152,7 +1153,7 @@ void ProcessLightList()
 		}
 	}
 
-	dolighting = FALSE;
+	dolighting = false;
 }
 
 void SavePreLighting()
@@ -1165,17 +1166,17 @@ void InitVision()
 	int i;
 
 	numvision = 0;
-	dovision = FALSE;
+	dovision = false;
 	visionid = 1;
 
 	for (i = 0; i < TransVal; i++) {
-		TransList[i] = FALSE;
+		TransList[i] = false;
 	}
 }
 
-int AddVision(int x, int y, int r, BOOL mine)
+int AddVision(int x, int y, int r, bool mine)
 {
- 	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
+	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
 
 	if (numvision < MAXVISION) {
 		VisionList[numvision]._lx = x;
@@ -1183,11 +1184,11 @@ int AddVision(int x, int y, int r, BOOL mine)
 		VisionList[numvision]._lradius = r;
 		vid = visionid++;
 		VisionList[numvision]._lid = vid;
-		VisionList[numvision]._ldel = FALSE;
-		VisionList[numvision]._lunflag = FALSE;
+		VisionList[numvision]._ldel = false;
+		VisionList[numvision]._lunflag = false;
 		VisionList[numvision]._lflags = mine != 0;
 		numvision++;
-		dovision = TRUE;
+		dovision = true;
 	}
 
 	return vid;
@@ -1199,12 +1200,12 @@ void ChangeVisionRadius(int id, int r)
 
 	for (i = 0; i < numvision; i++) {
 		if (VisionList[i]._lid == id) {
-			VisionList[i]._lunflag = TRUE;
+			VisionList[i]._lunflag = true;
 			VisionList[i]._lunx = VisionList[i]._lx;
 			VisionList[i]._luny = VisionList[i]._ly;
 			VisionList[i]._lunr = VisionList[i]._lradius;
 			VisionList[i]._lradius = r;
-			dovision = TRUE;
+			dovision = true;
 		}
 	}
 }
@@ -1215,13 +1216,13 @@ void ChangeVisionXY(int id, int x, int y)
 
 	for (i = 0; i < numvision; i++) {
 		if (VisionList[i]._lid == id) {
-			VisionList[i]._lunflag = TRUE;
+			VisionList[i]._lunflag = true;
 			VisionList[i]._lunx = VisionList[i]._lx;
 			VisionList[i]._luny = VisionList[i]._ly;
 			VisionList[i]._lunr = VisionList[i]._lradius;
 			VisionList[i]._lx = x;
 			VisionList[i]._ly = y;
-			dovision = TRUE;
+			dovision = true;
 		}
 	}
 }
@@ -1229,7 +1230,7 @@ void ChangeVisionXY(int id, int x, int y)
 void ProcessVisionList()
 {
 	int i;
-	BOOL delflag;
+	bool delflag;
 
 	if (dovision) {
 		for (i = 0; i < numvision; i++) {
@@ -1238,11 +1239,11 @@ void ProcessVisionList()
 			}
 			if (VisionList[i]._lunflag) {
 				DoUnVision(VisionList[i]._lunx, VisionList[i]._luny, VisionList[i]._lunr);
-				VisionList[i]._lunflag = FALSE;
+				VisionList[i]._lunflag = false;
 			}
 		}
 		for (i = 0; i < TransVal; i++) {
-			TransList[i] = FALSE;
+			TransList[i] = false;
 		}
 		for (i = 0; i < numvision; i++) {
 			if (!VisionList[i]._ldel) {
@@ -1255,20 +1256,20 @@ void ProcessVisionList()
 			}
 		}
 		do {
-			delflag = FALSE;
+			delflag = false;
 			for (i = 0; i < numvision; i++) {
 				if (VisionList[i]._ldel) {
 					numvision--;
 					if (numvision > 0 && i != numvision) {
 						VisionList[i] = VisionList[numvision];
 					}
-					delflag = TRUE;
+					delflag = true;
 				}
 			}
 		} while (delflag);
 	}
 
-	dovision = FALSE;
+	dovision = false;
 }
 
 void lighting_color_cycling()
@@ -1297,4 +1298,4 @@ void lighting_color_cycling()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

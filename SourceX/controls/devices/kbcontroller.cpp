@@ -6,7 +6,7 @@
 #include "sdl_compat.h"
 #include "stubs.h"
 
-namespace dvl {
+namespace devilution {
 
 ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 {
@@ -170,5 +170,5 @@ bool ProcessKbCtrlAxisMotion(const SDL_Event &event)
 	return false;
 }
 
-} // namespace dvl
+} // namespace devilution
 #endif

@@ -1,13 +1,16 @@
 #pragma once
 
 #include <deque>
+#include <exception>
+#include <vector>
+#include <cstdint>
 
-#include "dvlnet/abstract_net.h"
-
-namespace dvl {
+namespace devilution {
 namespace net {
 
-class frame_queue_exception : public dvlnet_exception {
+typedef std::vector<unsigned char> buffer_t;
+
+class frame_queue_exception : public std::exception {
 public:
 	const char *what() const throw() override
 	{
@@ -38,4 +41,4 @@ public:
 };
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

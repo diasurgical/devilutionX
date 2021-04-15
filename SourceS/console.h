@@ -1,35 +1,13 @@
 #pragma once
 
-#if defined(_WIN64) || defined(_WIN32)
-// Suppress definitions of `min` and `max` macros by <windows.h>:
-#define NOMINMAX 1
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <cstdarg>
+#include <cstddef>
 
-namespace dvl {
+#include "../defs.h"
 
-void printInConsole(const char *fmt, ...)
-{
-	static HANDLE stderrHandle = NULL;
-	if (stderrHandle == NULL) {
-		if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-			stderrHandle = GetStdHandle(STD_ERROR_HANDLE);
-		}
-	}
+namespace devilution {
 
-	if (stderrHandle == NULL)
-		return;
+void printInConsole(const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
+void printInConsoleV(const char *fmt, std::va_list ap) DVL_PRINTF_ATTRIBUTE(1, 0);
 
-	char message[256];
-	va_list ap;
-	va_start(ap, fmt);
-	vsprintf(message, fmt, ap);
-	va_end(ap);
-
-	WriteConsole(stderrHandle, message, strlen(message), NULL, NULL);
-}
-
-} // namespace dvl
-#else
-#define printInConsole printf
-#endif
+} // namespace devilution

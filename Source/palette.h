@@ -3,14 +3,9 @@
  *
  * Interface of functions for handling the engines color palette.
  */
-#ifndef __PALETTE_H__
-#define __PALETTE_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 extern SDL_Color logical_palette[256];
 extern SDL_Color system_palette[256];
@@ -35,10 +30,4 @@ void palette_update_crypt();
 void palette_update_hive();
 void palette_update_quest_palette(int n);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PALETTE_H__ */

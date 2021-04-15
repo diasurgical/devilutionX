@@ -12,7 +12,7 @@
 #include "controls/controller.h"
 #include "controls/controller_buttons.h"
 
-namespace dvl {
+namespace devilution {
 
 class Joystick {
 	static std::vector<Joystick> *const joysticks_;
@@ -42,4 +42,4 @@ private:
 	SDL_JoystickID instance_id_ = -1;
 };
 
-} // namespace dvl
+} // namespace devilution

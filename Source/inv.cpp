@@ -6,11 +6,11 @@
 #include "all.h"
 #include "options.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-BOOL invflag;
+bool invflag;
 BYTE *pInvCels;
-BOOL drawsbarflag;
+bool drawsbarflag;
 int sgdwLastTime; // check name
 
 /**
@@ -119,25 +119,25 @@ void FreeInvGFX()
 
 void InitInv()
 {
-	if (plr[myplr]._pClass == PC_WARRIOR) {
+	if (plr[myplr]._pClass == HeroClass::Warrior) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
-	} else if (plr[myplr]._pClass == PC_ROGUE) {
+	} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
-	} else if (plr[myplr]._pClass == PC_SORCERER) {
+	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
-	} else if (plr[myplr]._pClass == PC_MONK) {
+	} else if (plr[myplr]._pClass == HeroClass::Monk) {
 		if (!gbIsSpawn)
 			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
 		else
 			pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
-	} else if (plr[myplr]._pClass == PC_BARD) {
+	} else if (plr[myplr]._pClass == HeroClass::Bard) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
-	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
 	}
 
-	invflag = FALSE;
-	drawsbarflag = FALSE;
+	invflag = false;
+	drawsbarflag = false;
 }
 
 static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
@@ -165,7 +165,7 @@ static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 
 void DrawInv(CelOutputBuffer out)
 {
-	BOOL invtest[NUM_INV_GRID_ELEM];
+	bool invtest[NUM_INV_GRID_ELEM];
 	int frame, frame_width, color, screen_x, screen_y, i, j, ii;
 	BYTE *cels;
 
@@ -216,14 +216,13 @@ void DrawInv(CelOutputBuffer out)
 				cels = pCursCels2;
 			}
 
-
 			if (pcursinvitem == slot) {
 				color = ICOL_WHITE;
 				if (plr[myplr].InvBody[slot]._iMagical != ITEM_QUALITY_NORMAL)
 					color = ICOL_BLUE;
 				if (!plr[myplr].InvBody[slot]._iStatFlag)
 					color = ICOL_RED;
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + screen_x, screen_y, cels, frame, frame_width);
+				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + screen_x, screen_y, cels, frame, frame_width, false);
 			}
 
 			if (plr[myplr].InvBody[slot]._iStatFlag) {
@@ -234,18 +233,18 @@ void DrawInv(CelOutputBuffer out)
 
 			if (slot == INVLOC_HAND_LEFT) {
 				if (plr[myplr].InvBody[slot]._iLoc == ILOC_TWOHAND) {
-					if (plr[myplr]._pClass != PC_BARBARIAN
+					if (plr[myplr]._pClass != HeroClass::Barbarian
 					    || (plr[myplr].InvBody[slot]._itype != ITYPE_SWORD
 					        && plr[myplr].InvBody[slot]._itype != ITYPE_MACE)) {
 						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X, slotPos[INVLOC_HAND_RIGHT].Y, slotSize[INVLOC_HAND_RIGHT].X * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].Y * INV_SLOT_SIZE_PX);
 						light_table_index = 0;
-						cel_transparency_active = TRUE;
+						cel_transparency_active = true;
 
 						const int dst_x = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X + (frame_width == INV_SLOT_SIZE_PX ? 13 : -1);
 						const int dst_y = slotPos[INVLOC_HAND_RIGHT].Y;
 						CelClippedBlitLightTransTo(out, dst_x, dst_y, cels, frame, frame_width);
 
-						cel_transparency_active = FALSE;
+						cel_transparency_active = false;
 					}
 				}
 			}
@@ -253,7 +252,7 @@ void DrawInv(CelOutputBuffer out)
 	}
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		invtest[i] = FALSE;
+		invtest[i] = false;
 		if (plr[myplr].InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
@@ -268,7 +267,7 @@ void DrawInv(CelOutputBuffer out)
 		if (plr[myplr].InvGrid[j] > 0) { // first slot of an item
 			ii = plr[myplr].InvGrid[j] - 1;
 
-			invtest[j] = TRUE;
+			invtest[j] = false;
 
 			frame = plr[myplr].InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 			frame_width = InvItemWidth[frame];
@@ -293,7 +292,7 @@ void DrawInv(CelOutputBuffer out)
 				    color,
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-				    cels, frame, frame_width);
+				    cels, frame, frame_width, false);
 			}
 
 			if (plr[myplr].InvList[ii]._iStatFlag) {
@@ -341,9 +340,9 @@ void DrawInvBelt(CelOutputBuffer out)
 				color = ICOL_RED;
 			if (!sgbControllerActive || invflag) {
 				if (frame <= 179)
-					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
+					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, false);
 				else
-					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
+					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width, false);
 			}
 		}
 
@@ -366,6 +365,28 @@ void DrawInvBelt(CelOutputBuffer out)
 			ff = fontframe[gbFontTransTbl[fi]];
 			PrintChar(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X + INV_SLOT_SIZE_PX - fontkern[ff], InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, ff, COL_WHITE);
 		}
+	}
+}
+
+/**
+ * @brief Adds an item to a player's InvGrid array
+ * @param playerNumber Player index
+ * @param invGridIndex Item's position in InvGrid (this should be the item's topleft grid tile)
+ * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
+ * @param sizeX Horizontal size of item
+ * @param sizeY Vertical size of item
+ */
+static void AddItemToInvGrid(int playerNumber, int invGridIndex, int invListIndex, int sizeX, int sizeY)
+{
+	const int pitch = 10;
+	for (int y = 0; y < sizeY; y++) {
+		for (int x = 0; x < sizeX; x++) {
+			if (x == 0 & y == sizeY - 1)
+				plr[playerNumber].InvGrid[invGridIndex + x] = invListIndex;
+			else
+				plr[playerNumber].InvGrid[invGridIndex + x] = -invListIndex;
+		}
+		invGridIndex += pitch;
 	}
 }
 
@@ -419,7 +440,7 @@ bool CanBePlacedOnBelt(const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
-bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false)
+bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	if (!CanBePlacedOnBelt(item)) {
 		return false;
@@ -430,7 +451,7 @@ bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistI
 			if (persistItem) {
 				plr[playerNumber].SpdList[i] = item;
 				CalcPlrScrolls(playerNumber);
-				drawsbarflag = TRUE;
+				drawsbarflag = true;
 			}
 
 			return true;
@@ -481,14 +502,14 @@ bool CanWield(int playerNumber, const ItemStruct &item)
 
 	// Barbarian can wield two handed swords and maces in one hand, so we allow equiping any sword/mace as long as his occupied
 	// hand has a shield (i.e. no dual wielding allowed)
-	if (player._pClass == PC_BARBARIAN) {
+	if (player._pClass == HeroClass::Barbarian) {
 		if (occupiedHand._itype == ITYPE_SHIELD && (item._itype == ITYPE_SWORD || item._itype == ITYPE_MACE))
 			return true;
 	}
 
 	// Bard can dual wield swords and maces, so we allow equiping one-handed weapons in her free slot as long as her occupied
 	// slot is another one-handed weapon.
-	if (player._pClass == PC_BARD) {
+	if (player._pClass == HeroClass::Bard) {
 		bool occupiedHandIsOneHandedSwordOrMace = occupiedHand._iLoc == ILOC_ONEHAND
 		    && (occupiedHand._itype == ITYPE_SWORD || occupiedHand._itype == ITYPE_MACE);
 
@@ -509,11 +530,11 @@ bool CanWield(int playerNumber, const ItemStruct &item)
  * @brief Checks whether the specified item can be equipped in the desired body location on the player.
  * @param playerNumber The player number whose inventory will be checked for compatibility with the item.
  * @param item The item to check.
- * @param bodyLocation The location in the inventory to be checked against. Can be one of 'inv_body_loc' members.
+ * @param bodyLocation The location in the inventory to be checked against.
  * @return 'True' if the player can currently equip the item in the specified body location (i.e. the body location is empty and
  * allows the item), and 'False' otherwise.
  */
-bool CanEquip(int playerNumber, const ItemStruct &item, int bodyLocation)
+bool CanEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation)
 {
 	PlayerStruct &player = plr[playerNumber];
 	if (!CanEquip(item) || player._pmode > PM_WALK3 || !player.InvBody[bodyLocation].isEmpty()) {
@@ -548,21 +569,16 @@ bool CanEquip(int playerNumber, const ItemStruct &item, int bodyLocation)
  * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
  * @param playerNumber The player number whose inventory will be checked for compatibility with the item.
  * @param item The item to equip.
- * @param bodyLocation The location in the inventory where the item should be equipped. Can be one of 'inv_body_loc' members.
+ * @param bodyLocation The location in the inventory where the item should be equipped.
  * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation, bool persistItem)
+bool AutoEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation, bool persistItem)
 {
 	if (!CanEquip(playerNumber, item, bodyLocation)) {
 		return false;
 	}
-
-	// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
-	// annoy players who prefer that playstyle.
-	if (plr[playerNumber]._pClass == PC_MONK && (bodyLocation == INVLOC_HAND_LEFT || bodyLocation == INVLOC_HAND_RIGHT))
-		return false;
 
 	if (persistItem) {
 		plr[playerNumber].InvBody[bodyLocation] = item;
@@ -571,8 +587,8 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, int bodyLocation, bool 
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
 		}
 
-		NetSendCmdChItem(FALSE, bodyLocation);
-		CalcPlrInv(playerNumber, TRUE);
+		NetSendCmdChItem(false, bodyLocation);
+		CalcPlrInv(playerNumber, true);
 	}
 
 	return true;
@@ -594,7 +610,7 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 	}
 
 	for (int bodyLocation = INVLOC_HEAD; bodyLocation < NUM_INVLOC; bodyLocation++) {
-		if (AutoEquip(playerNumber, item, bodyLocation, persistItem)) {
+		if (AutoEquip(playerNumber, item, (inv_body_loc)bodyLocation, persistItem)) {
 			return true;
 		}
 	}
@@ -603,14 +619,17 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 }
 
 /**
- * @brief Checks whether or not auto-equipping behavior is enabled for the given item.
+ * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
+ * @param player The player to check.
  * @param item The item to check.
- * @return 'True' if auto-equipping behavior is enabled for the item and 'False' otherwise.
+ * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
  */
-bool AutoEquipEnabled(const ItemStruct &item)
+bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
 {
 	if (item.isWeapon()) {
-		return sgOptions.Gameplay.bAutoEquipWeapons;
+		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
+		// annoy players who prefer that playstyle.
+		return player._pClass != HeroClass::Monk && sgOptions.Gameplay.bAutoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
@@ -640,142 +659,96 @@ bool AutoEquipEnabled(const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false)
+bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	InvXY itemSize = GetInventorySize(item);
 	bool done = false;
 
 	if (itemSize.X == 1 && itemSize.Y == 1) {
 		for (int i = 30; i <= 39 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 20; i <= 29 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i <= 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 0; i <= 9 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 2) {
 		for (int i = 29; i >= 20 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 9; i >= 0 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 19; i >= 10 && !done; i--) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 3) {
 		for (int i = 0; i < 20 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 2) {
 		for (int i = 0; i < 10 && !done; i++) {
-			done = AutoPlace(playerNumber, AP2x2Tbl[i], itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, AP2x2Tbl[i], item, persistItem);
 		}
 
 		for (int i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 3) {
 		for (int i = 0; i < 9 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlace(playerNumber, i, itemSize.X, itemSize.Y, persistItem);
+			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	return done;
 }
 
-BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
+/**
+ * @brief Checks whether the given item can be placed on the specified player's inventory slot.
+ * If 'persistItem' is 'True', the item is also placed in the inventory slot.
+ * @param playerNumber The player number on whose inventory slot will be checked.
+ * @param slotIndex The 0-based index of the slot to put the item on.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
+ * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
+ */
+bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int i, j, xx, yy;
-	BOOL done;
+	bool done;
 
-	done = TRUE;
-	yy = 10 * (ii / 10);
-	if (yy < 0) {
-		yy = 0;
-	}
-	for (j = 0; j < sy && done; j++) {
-		if (yy >= NUM_INV_GRID_ELEM) {
-			done = FALSE;
-		}
-		xx = ii % 10;
-		if (xx < 0) {
-			xx = 0;
-		}
-		for (i = 0; i < sx && done; i++) {
-			if (xx >= 10) {
-				done = FALSE;
-			} else {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
-			}
-			xx++;
-		}
-		yy += 10;
-	}
-	if (done && saveflag) {
-		plr[pnum].InvList[plr[pnum]._pNumInv] = plr[pnum].HoldItem;
-		plr[pnum]._pNumInv++;
-		yy = 10 * (ii / 10);
-		if (yy < 0) {
-			yy = 0;
-		}
-		for (j = 0; j < sy; j++) {
-			xx = ii % 10;
-			if (xx < 0) {
-				xx = 0;
-			}
-			for (i = 0; i < sx; i++) {
-				if (i != 0 || j != sy - 1) {
-					plr[pnum].InvGrid[xx + yy] = -plr[pnum]._pNumInv;
-				} else {
-					plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
-				}
-				xx++;
-			}
-			yy += 10;
-		}
-		CalcPlrScrolls(pnum);
-	}
-	return done;
-}
-
-BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
-{
-	int i, j, xx, yy;
-	BOOL done;
-
-	done = TRUE;
-	yy = 10 * (ii / 10);
+	done = true;
+	yy = 10 * (slotIndex / 10);
 	if (yy < 0) {
 		yy = 0;
 	}
@@ -783,30 +756,34 @@ BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
 	InvXY itemSize = GetInventorySize(item);
 	for (j = 0; j < itemSize.Y && done; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
-			done = FALSE;
+			done = false;
 		}
-		xx = ii % 10;
+		xx = slotIndex % 10;
 		if (xx < 0) {
 			xx = 0;
 		}
 		for (i = 0; i < itemSize.X && done; i++) {
 			if (xx >= 10) {
-				done = FALSE;
+				done = false;
 			} else {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
+				done = plr[playerNumber].InvGrid[xx + yy] == 0;
 			}
 			xx++;
 		}
 		yy += 10;
 	}
-	if (!done) {
-		done = AutoPlaceItemInBelt(pnum, item);
-	}
+	if (done && persistItem) {
+		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = plr[playerNumber].HoldItem;
+		plr[playerNumber]._pNumInv++;
 
+		AddItemToInvGrid(playerNumber, slotIndex, plr[playerNumber]._pNumInv, itemSize.X, itemSize.Y);
+		CalcPlrScrolls(playerNumber);
+	}
 	return done;
 }
 
-BOOL GoldAutoPlace(int pnum)
+
+bool GoldAutoPlace(int pnum)
 {
 	bool done = false;
 
@@ -851,7 +828,7 @@ BOOL GoldAutoPlace(int pnum)
 				plr[pnum].HoldItem._ivalue = 0;
 				done = true;
 				plr[pnum]._pGold = CalculateGold(pnum);
-				SetCursor_(CURSOR_HAND);
+				NewCursor(CURSOR_HAND);
 			}
 		}
 	}
@@ -859,36 +836,36 @@ BOOL GoldAutoPlace(int pnum)
 	return done;
 }
 
-BOOL WeaponAutoPlace(int pnum)
+bool WeaponAutoPlace(int pnum)
 {
-	if (plr[pnum]._pClass == PC_MONK)
-		return FALSE;
+	if (plr[pnum]._pClass == HeroClass::Monk)
+		return false;
 	if (plr[pnum].HoldItem._iLoc != ILOC_TWOHAND
-	    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))) {
-		if (plr[pnum]._pClass != PC_BARD) {
+	    || (plr[pnum]._pClass == HeroClass::Barbarian && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))) {
+		if (plr[pnum]._pClass != HeroClass::Bard) {
 			if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON)
-				return FALSE;
+				return false;
 			if (!plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON)
-				return FALSE;
+				return false;
 		}
 
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty()) {
-			NetSendCmdChItem(TRUE, INVLOC_HAND_LEFT);
+			NetSendCmdChItem(true, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
-			return TRUE;
+			return true;
 		}
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND) {
-			NetSendCmdChItem(TRUE, INVLOC_HAND_RIGHT);
+			NetSendCmdChItem(true, INVLOC_HAND_RIGHT);
 			plr[pnum].InvBody[INVLOC_HAND_RIGHT] = plr[pnum].HoldItem;
-			return TRUE;
+			return true;
 		}
 	} else if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-		NetSendCmdChItem(TRUE, INVLOC_HAND_LEFT);
+		NetSendCmdChItem(true, INVLOC_HAND_LEFT);
 		plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 int SwapItem(ItemStruct *a, ItemStruct *b)
@@ -906,7 +883,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 {
 	int r, sx, sy;
 	int i, j, xx, yy, ii;
-	BOOL done, done2h;
+	bool done, done2h;
 	int il, cn, it, iv, ig, gt;
 	ItemStruct tempitem;
 
@@ -915,7 +892,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	j = my + (icursH >> 1);
 	sx = icursW28;
 	sy = icursH28;
-	done = FALSE;
+	done = false;
 	for (r = 0; (DWORD)r < NUM_XY_SLOTS && !done; r++) {
 		int xo = RIGHT_PANEL;
 		int yo = 0;
@@ -926,7 +903,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 
 		if (i >= InvRect[r].X + xo && i < InvRect[r].X + xo + INV_SLOT_SIZE_PX) {
 			if (j >= InvRect[r].Y + yo - INV_SLOT_SIZE_PX - 1 && j < InvRect[r].Y + yo) {
-				done = TRUE;
+				done = true;
 				r--;
 			}
 		}
@@ -954,31 +931,31 @@ void CheckInvPaste(int pnum, int mx, int my)
 		il = ILOC_ARMOR;
 	if (r >= SLOTXY_BELT_FIRST && r <= SLOTXY_BELT_LAST)
 		il = ILOC_BELT;
-	done = FALSE;
+	done = false;
 	if (plr[pnum].HoldItem._iLoc == il)
-		done = TRUE;
+		done = true;
 	if (il == ILOC_ONEHAND && plr[pnum].HoldItem._iLoc == ILOC_TWOHAND) {
-		if (plr[pnum]._pClass == PC_BARBARIAN
+		if (plr[pnum]._pClass == HeroClass::Barbarian
 		    && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))
 			il = ILOC_ONEHAND;
 		else
 			il = ILOC_TWOHAND;
-		done = TRUE;
+		done = true;
 	}
 	if (plr[pnum].HoldItem._iLoc == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
 		if (sx == 1 && sy == 1) {
-			done = TRUE;
+			done = true;
 			if (!AllItemsList[plr[pnum].HoldItem.IDidx].iUsable)
-				done = FALSE;
+				done = false;
 			if (!plr[pnum].HoldItem._iStatFlag)
-				done = FALSE;
+				done = false;
 			if (plr[pnum].HoldItem._itype == ITYPE_GOLD)
-				done = FALSE;
+				done = false;
 		}
 	}
 
 	if (il == ILOC_UNEQUIPABLE) {
-		done = TRUE;
+		done = true;
 		it = 0;
 		ii = r - SLOTXY_INV_FIRST;
 		if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
@@ -1000,13 +977,13 @@ void CheckInvPaste(int pnum, int mx, int my)
 				yy = 0;
 			for (j = 0; j < sy && done; j++) {
 				if (yy >= NUM_INV_GRID_ELEM)
-					done = FALSE;
+					done = false;
 				xx = (ii % 10) - ((sx - 1) >> 1);
 				if (xx < 0)
 					xx = 0;
 				for (i = 0; i < sx && done; i++) {
 					if (xx >= 10) {
-						done = FALSE;
+						done = false;
 					} else {
 						if (plr[pnum].InvGrid[xx + yy] != 0) {
 							iv = plr[pnum].InvGrid[xx + yy];
@@ -1014,7 +991,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 								iv = -iv;
 							if (it != 0) {
 								if (it != iv)
-									done = FALSE;
+									done = false;
 							} else
 								it = iv;
 						}
@@ -1030,18 +1007,18 @@ void CheckInvPaste(int pnum, int mx, int my)
 		return;
 
 	if (il != ILOC_UNEQUIPABLE && il != ILOC_BELT && !plr[pnum].HoldItem._iStatFlag) {
-		done = FALSE;
-		if (plr[pnum]._pClass == PC_WARRIOR)
+		done = false;
+		if (plr[pnum]._pClass == HeroClass::Warrior)
 			PlaySFX(PS_WARR13);
-		else if (plr[pnum]._pClass == PC_ROGUE)
+		else if (plr[pnum]._pClass == HeroClass::Rogue)
 			PlaySFX(PS_ROGUE13);
-		else if (plr[pnum]._pClass == PC_SORCERER)
+		else if (plr[pnum]._pClass == HeroClass::Sorcerer)
 			PlaySFX(PS_MAGE13);
-		else if (plr[pnum]._pClass == PC_MONK)
+		else if (plr[pnum]._pClass == HeroClass::Monk)
 			PlaySFX(PS_MONK13);
-		else if (plr[pnum]._pClass == PC_BARD)
+		else if (plr[pnum]._pClass == HeroClass::Bard)
 			PlaySFX(PS_ROGUE13);
-		else if (plr[pnum]._pClass == PC_BARBARIAN)
+		else if (plr[pnum]._pClass == HeroClass::Barbarian)
 			PlaySFX(PS_MAGE13);
 	}
 
@@ -1054,7 +1031,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	cn = CURSOR_HAND;
 	switch (il) {
 	case ILOC_HELM:
-		NetSendCmdChItem(FALSE, INVLOC_HEAD);
+		NetSendCmdChItem(false, INVLOC_HEAD);
 		if (plr[pnum].InvBody[INVLOC_HEAD].isEmpty())
 			plr[pnum].InvBody[INVLOC_HEAD] = plr[pnum].HoldItem;
 		else
@@ -1062,13 +1039,13 @@ void CheckInvPaste(int pnum, int mx, int my)
 		break;
 	case ILOC_RING:
 		if (r == SLOTXY_RING_LEFT) {
-			NetSendCmdChItem(FALSE, INVLOC_RING_LEFT);
+			NetSendCmdChItem(false, INVLOC_RING_LEFT);
 			if (plr[pnum].InvBody[INVLOC_RING_LEFT].isEmpty())
 				plr[pnum].InvBody[INVLOC_RING_LEFT] = plr[pnum].HoldItem;
 			else
 				cn = SwapItem(&plr[pnum].InvBody[INVLOC_RING_LEFT], &plr[pnum].HoldItem);
 		} else {
-			NetSendCmdChItem(FALSE, INVLOC_RING_RIGHT);
+			NetSendCmdChItem(false, INVLOC_RING_RIGHT);
 			if (plr[pnum].InvBody[INVLOC_RING_RIGHT].isEmpty())
 				plr[pnum].InvBody[INVLOC_RING_RIGHT] = plr[pnum].HoldItem;
 			else
@@ -1076,7 +1053,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 		}
 		break;
 	case ILOC_AMULET:
-		NetSendCmdChItem(FALSE, INVLOC_AMULET);
+		NetSendCmdChItem(false, INVLOC_AMULET);
 		if (plr[pnum].InvBody[INVLOC_AMULET].isEmpty())
 			plr[pnum].InvBody[INVLOC_AMULET] = plr[pnum].HoldItem;
 		else
@@ -1086,57 +1063,57 @@ void CheckInvPaste(int pnum, int mx, int my)
 		if (r <= SLOTXY_HAND_LEFT_LAST) {
 			if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty()) {
 				if ((plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass)
-				    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
-					NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
+				    || (plr[pnum]._pClass == HeroClass::Bard && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
+					NetSendCmdChItem(false, INVLOC_HAND_LEFT);
 					plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
 				} else {
-					NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
+					NetSendCmdChItem(false, INVLOC_HAND_RIGHT);
 					cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].HoldItem);
 				}
 				break;
 			}
 			if ((plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty() || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass)
-			    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
-				NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
+			    || (plr[pnum]._pClass == HeroClass::Bard && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
+				NetSendCmdChItem(false, INVLOC_HAND_LEFT);
 				cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
 				break;
 			}
 
-			NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
+			NetSendCmdChItem(false, INVLOC_HAND_RIGHT);
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].HoldItem);
 			break;
 		}
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			if ((plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND)
-			    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
+			    || (plr[pnum]._pClass == HeroClass::Barbarian && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
 				if ((plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass != plr[pnum].HoldItem._iClass)
-				    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
-					NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
+				    || (plr[pnum]._pClass == HeroClass::Bard && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
+					NetSendCmdChItem(false, INVLOC_HAND_RIGHT);
 					plr[pnum].InvBody[INVLOC_HAND_RIGHT] = plr[pnum].HoldItem;
 					break;
 				}
-				NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
+				NetSendCmdChItem(false, INVLOC_HAND_LEFT);
 				cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
 				break;
 			}
-			NetSendCmdDelItem(FALSE, INVLOC_HAND_LEFT);
-			NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
+			NetSendCmdDelItem(false, INVLOC_HAND_LEFT);
+			NetSendCmdChItem(false, INVLOC_HAND_RIGHT);
 			SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].InvBody[INVLOC_HAND_LEFT]);
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].HoldItem);
 			break;
 		}
 
 		if ((!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == plr[pnum].HoldItem._iClass)
-		    && !(plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
-			NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
+		    && !(plr[pnum]._pClass == HeroClass::Bard && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
+			NetSendCmdChItem(false, INVLOC_HAND_LEFT);
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
 			break;
 		}
-		NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
+		NetSendCmdChItem(false, INVLOC_HAND_RIGHT);
 		cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].HoldItem);
 		break;
 	case ILOC_TWOHAND:
-		NetSendCmdDelItem(FALSE, INVLOC_HAND_RIGHT);
+		NetSendCmdDelItem(false, INVLOC_HAND_RIGHT);
 		if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && !plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			tempitem = plr[pnum].HoldItem;
 			if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
@@ -1144,15 +1121,13 @@ void CheckInvPaste(int pnum, int mx, int my)
 			else
 				plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HAND_LEFT];
 			if (pnum == myplr)
-				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+				NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
-			done2h = FALSE;
-			for (i = 0; i < NUM_INV_GRID_ELEM && !done2h; i++)
-				done2h = AutoPlace(pnum, i, icursW28, icursH28, TRUE);
+			done2h = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
 			plr[pnum].HoldItem = tempitem;
 			if (pnum == myplr)
-				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+				NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			if (!done2h)
@@ -1165,12 +1140,12 @@ void CheckInvPaste(int pnum, int mx, int my)
 		}
 
 		if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() || !plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-			NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
+			NetSendCmdChItem(false, INVLOC_HAND_LEFT);
 			if (plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty())
 				SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].InvBody[INVLOC_HAND_RIGHT]);
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
 		} else {
-			NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
+			NetSendCmdChItem(false, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
 		}
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iSpell != SPL_NULL && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
@@ -1180,7 +1155,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 		}
 		break;
 	case ILOC_ARMOR:
-		NetSendCmdChItem(FALSE, INVLOC_CHEST);
+		NetSendCmdChItem(false, INVLOC_CHEST);
 		if (plr[pnum].InvBody[INVLOC_CHEST].isEmpty())
 			plr[pnum].InvBody[INVLOC_CHEST] = plr[pnum].HoldItem;
 		else
@@ -1196,15 +1171,15 @@ void CheckInvPaste(int pnum, int mx, int my)
 				il--;
 				gt = plr[pnum].InvList[il]._ivalue;
 				ig = plr[pnum].HoldItem._ivalue + gt;
-				if (ig <= GOLD_MAX_LIMIT) {
+				if (ig <= MaxGold) {
 					plr[pnum].InvList[il]._ivalue = ig;
 					plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
 					SetPlrHandGoldCurs(&plr[pnum].InvList[il]);
 				} else {
-					ig = GOLD_MAX_LIMIT - gt;
+					ig = MaxGold - gt;
 					plr[pnum]._pGold += ig;
 					plr[pnum].HoldItem._ivalue -= ig;
-					plr[pnum].InvList[il]._ivalue = GOLD_MAX_LIMIT;
+					plr[pnum].InvList[il]._ivalue = MaxGold;
 					plr[pnum].InvList[il]._iCurs = ICURS_GOLD_LARGE;
 					// BUGFIX: incorrect values here are leftover from beta (fixed)
 					cn = GetGoldCursor(plr[pnum].HoldItem._ivalue);
@@ -1238,22 +1213,16 @@ void CheckInvPaste(int pnum, int mx, int my)
 				}
 			}
 			ii = r - SLOTXY_INV_FIRST;
+
+			// Calculate top-left position of item for InvGrid and then add item to InvGrid
+
 			yy = 10 * (ii / 10 - ((sy - 1) >> 1));
+			xx = (ii % 10 - ((sx - 1) >> 1));
 			if (yy < 0)
 				yy = 0;
-			for (j = 0; j < sy; j++) {
-				xx = (ii % 10 - ((sx - 1) >> 1));
-				if (xx < 0)
-					xx = 0;
-				for (i = 0; i < sx; i++) {
-					if (i != 0 || j != sy - 1)
-						plr[pnum].InvGrid[xx + yy] = -it;
-					else
-						plr[pnum].InvGrid[xx + yy] = it;
-					xx++;
-				}
-				yy += 10;
-			}
+			if (xx < 0)
+				xx = 0;
+			AddItemToInvGrid(pnum, xx + yy, it, sx, sy);
 		}
 		break;
 	case ILOC_BELT:
@@ -1262,15 +1231,15 @@ void CheckInvPaste(int pnum, int mx, int my)
 			if (!plr[pnum].SpdList[ii].isEmpty()) {
 				if (plr[pnum].SpdList[ii]._itype == ITYPE_GOLD) {
 					i = plr[pnum].HoldItem._ivalue + plr[pnum].SpdList[ii]._ivalue;
-					if (i <= GOLD_MAX_LIMIT) {
+					if (i <= MaxGold) {
 						plr[pnum].SpdList[ii]._ivalue = i;
 						plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
 						SetPlrHandGoldCurs(&plr[pnum].SpdList[ii]);
 					} else {
-						i = GOLD_MAX_LIMIT - plr[pnum].SpdList[ii]._ivalue;
+						i = MaxGold - plr[pnum].SpdList[ii]._ivalue;
 						plr[pnum]._pGold += i;
 						plr[pnum].HoldItem._ivalue -= i;
-						plr[pnum].SpdList[ii]._ivalue = GOLD_MAX_LIMIT;
+						plr[pnum].SpdList[ii]._ivalue = MaxGold;
 						plr[pnum].SpdList[ii]._iCurs = ICURS_GOLD_LARGE;
 
 						// BUGFIX: incorrect values here are leftover from beta (fixed)
@@ -1292,29 +1261,29 @@ void CheckInvPaste(int pnum, int mx, int my)
 			if (plr[pnum].HoldItem._itype == ITYPE_GOLD)
 				plr[pnum]._pGold = CalculateGold(pnum);
 		}
-		drawsbarflag = TRUE;
+		drawsbarflag = true;
 		break;
 	}
-	CalcPlrInv(pnum, TRUE);
+	CalcPlrInv(pnum, true);
 	if (pnum == myplr) {
 		if (cn == CURSOR_HAND)
 			SetCursorPos(MouseX + (cursW >> 1), MouseY + (cursH >> 1));
-		SetCursor_(cn);
+		NewCursor(cn);
 	}
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId)
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	PlayerStruct *p;
 
-	memset(&item[MAXITEMS], 0, sizeof(*item));
-	RecreateItem(MAXITEMS, idx, wCI, seed, 0);
+	memset(&items[MAXITEMS], 0, sizeof(*items));
+	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	p = &plr[pnum];
-	p->HoldItem = item[MAXITEMS];
+	p->HoldItem = items[MAXITEMS];
 
 	if (bId) {
-		p->HoldItem._iIdentified = TRUE;
+		p->HoldItem._iIdentified = true;
 	}
 
 	if (bLoc < NUM_INVLOC) {
@@ -1327,13 +1296,13 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId)
 		}
 	}
 
-	CalcPlrInv(pnum, TRUE);
+	CalcPlrInv(pnum, true);
 }
 
 void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 {
 	int r;
-	BOOL done;
+	bool done;
 	char ii;
 	int iv, i, j, offs, ig;
 	PlayerStruct &player = plr[pnum];
@@ -1343,11 +1312,11 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = FALSE;
+		dropGoldFlag = false;
 		dropGoldValue = 0;
 	}
 
-	done = FALSE;
+	done = false;
 
 	for (r = 0; (DWORD)r < NUM_XY_SLOTS && !done; r++) {
 		int xo = RIGHT_PANEL;
@@ -1362,7 +1331,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		    && mx < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1)
 		    && my >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1)
 		    && my < InvRect[r].Y + yo) {
-			done = TRUE;
+			done = true;
 			r--;
 		}
 	}
@@ -1388,7 +1357,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		if (!automaticMove || automaticallyMoved) {
-			NetSendCmdDelItem(FALSE, INVLOC_HEAD);
+			NetSendCmdDelItem(false, INVLOC_HEAD);
 			headItem._itype = ITYPE_NONE;
 		}
 	}
@@ -1402,7 +1371,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		if (!automaticMove || automaticallyMoved) {
-			NetSendCmdDelItem(FALSE, INVLOC_RING_LEFT);
+			NetSendCmdDelItem(false, INVLOC_RING_LEFT);
 			leftRingItem._itype = ITYPE_NONE;
 		}
 	}
@@ -1416,7 +1385,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		if (!automaticMove || automaticallyMoved) {
-			NetSendCmdDelItem(FALSE, INVLOC_RING_RIGHT);
+			NetSendCmdDelItem(false, INVLOC_RING_RIGHT);
 			rightRingItem._itype = ITYPE_NONE;
 		}
 	}
@@ -1430,7 +1399,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		if (!automaticMove || automaticallyMoved) {
-			NetSendCmdDelItem(FALSE, INVLOC_AMULET);
+			NetSendCmdDelItem(false, INVLOC_AMULET);
 			amuletItem._itype = ITYPE_NONE;
 		}
 	}
@@ -1444,7 +1413,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		if (!automaticMove || automaticallyMoved) {
-			NetSendCmdDelItem(FALSE, INVLOC_HAND_LEFT);
+			NetSendCmdDelItem(false, INVLOC_HAND_LEFT);
 			leftHandItem._itype = ITYPE_NONE;
 		}
 	}
@@ -1458,7 +1427,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		if (!automaticMove || automaticallyMoved) {
-			NetSendCmdDelItem(FALSE, INVLOC_HAND_RIGHT);
+			NetSendCmdDelItem(false, INVLOC_HAND_RIGHT);
 			rightHandItem._itype = ITYPE_NONE;
 		}
 	}
@@ -1472,7 +1441,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		if (!automaticMove || automaticallyMoved) {
-			NetSendCmdDelItem(FALSE, INVLOC_CHEST);
+			NetSendCmdDelItem(false, INVLOC_CHEST);
 			chestItem._itype = ITYPE_NONE;
 		}
 	}
@@ -1496,28 +1465,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 			}
 
 			if (!automaticMove || automaticallyMoved) {
-				for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-					if (player.InvGrid[i] == iv || player.InvGrid[i] == -iv) {
-						player.InvGrid[i] = 0;
-					}
-				}
-
-				iv--;
-
-				player._pNumInv--;
-
-				if (player._pNumInv > 0 && player._pNumInv != iv) {
-					player.InvList[iv] = player.InvList[player._pNumInv];
-
-					for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-						if (player.InvGrid[j] == player._pNumInv + 1) {
-							player.InvGrid[j] = iv + 1;
-						}
-						if (player.InvGrid[j] == -(player._pNumInv + 1)) {
-							player.InvGrid[j] = -iv - 1;
-						}
-					}
-				}
+				RemoveInvItem(pnum, iv - 1, false);
 			}
 		}
 	}
@@ -1532,7 +1480,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 
 			if (!automaticMove || automaticallyMoved) {
 				beltItem._itype = ITYPE_NONE;
-				drawsbarflag = TRUE;
+				drawsbarflag = true;
 			}
 		}
 	}
@@ -1542,7 +1490,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 			player._pGold = CalculateGold(pnum);
 		}
 
-		CalcPlrInv(pnum, TRUE);
+		CalcPlrInv(pnum, true);
 		CheckItemStats(pnum);
 
 		if (pnum == myplr) {
@@ -1556,40 +1504,36 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 				if (!automaticallyMoved) {
 					if (CanBePlacedOnBelt(holdItem) || automaticallyUnequip) {
 						switch (player._pClass) {
-						case PC_WARRIOR:
-						case PC_BARBARIAN:
+						case HeroClass::Warrior:
+						case HeroClass::Barbarian:
 							PlaySFX(PS_WARR15, false);
 							break;
-						case PC_ROGUE:
-						case PC_BARD:
+						case HeroClass::Rogue:
+						case HeroClass::Bard:
 							PlaySFX(PS_ROGUE15, false);
 							break;
-						case PC_SORCERER:
+						case HeroClass::Sorcerer:
 							PlaySFX(PS_MAGE15, false);
 							break;
-						case PC_MONK:
+						case HeroClass::Monk:
 							PlaySFX(PS_MONK15, false);
-							break;
-						case NUM_CLASSES:
 							break;
 						}
 					} else {
 						switch (player._pClass) {
-						case PC_WARRIOR:
-						case PC_BARBARIAN:
+						case HeroClass::Warrior:
+						case HeroClass::Barbarian:
 							PlaySFX(PS_WARR37, false);
 							break;
-						case PC_ROGUE:
-						case PC_BARD:
+						case HeroClass::Rogue:
+						case HeroClass::Bard:
 							PlaySFX(PS_ROGUE37, false);
 							break;
-						case PC_SORCERER:
+						case HeroClass::Sorcerer:
 							PlaySFX(PS_MAGE37, false);
 							break;
-						case PC_MONK:
+						case HeroClass::Monk:
 							PlaySFX(PS_MONK37, false);
-							break;
-						case NUM_CLASSES:
 							break;
 						}
 					}
@@ -1597,7 +1541,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 
 				holdItem._itype = ITYPE_NONE;
 			} else {
-				SetCursor_(holdItem._iCurs + CURSOR_FIRSTITEM);
+				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
 				SetCursorPos(mx - (cursW >> 1), MouseY - (cursH >> 1));
 			}
 		}
@@ -1611,18 +1555,19 @@ void inv_update_rem_item(int pnum, BYTE iv)
 	}
 
 	if (plr[pnum]._pmode != PM_DEATH) {
-		CalcPlrInv(pnum, TRUE);
+		CalcPlrInv(pnum, true);
 	} else {
-		CalcPlrInv(pnum, FALSE);
+		CalcPlrInv(pnum, false);
 	}
 }
 
-void RemoveInvItem(int pnum, int iv)
+void RemoveInvItem(int pnum, int iv, bool calcPlrScrolls)
 {
 	int i, j;
 
 	iv++;
 
+	//Iterate through invGrid and remove every reference to item
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		if (plr[pnum].InvGrid[i] == iv || plr[pnum].InvGrid[i] == -iv) {
 			plr[pnum].InvGrid[i] = 0;
@@ -1632,6 +1577,7 @@ void RemoveInvItem(int pnum, int iv)
 	iv--;
 	plr[pnum]._pNumInv--;
 
+	//If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (plr[pnum]._pNumInv > 0 && plr[pnum]._pNumInv != iv) {
 		plr[pnum].InvList[iv] = plr[pnum].InvList[plr[pnum]._pNumInv];
 
@@ -1645,7 +1591,8 @@ void RemoveInvItem(int pnum, int iv)
 		}
 	}
 
-	CalcPlrScrolls(pnum);
+	if (calcPlrScrolls)
+		CalcPlrScrolls(pnum);
 }
 
 void RemoveSpdBarItem(int pnum, int iv)
@@ -1680,12 +1627,12 @@ void CheckItemStats(int pnum)
 {
 	PlayerStruct *p = &plr[pnum];
 
-	p->HoldItem._iStatFlag = FALSE;
+	p->HoldItem._iStatFlag = false;
 
 	if (p->_pStrength >= p->HoldItem._iMinStr
 	    && p->_pMagic >= p->HoldItem._iMinMag
 	    && p->_pDexterity >= p->HoldItem._iMinDex) {
-		p->HoldItem._iStatFlag = TRUE;
+		p->HoldItem._iStatFlag = true;
 	}
 }
 
@@ -1713,17 +1660,17 @@ void CheckQuestItem(int pnum)
 		quests[Q_BLIND]._qactive = QUEST_DONE;
 	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		sfxdelay = 10;
-		if (plr[pnum]._pClass == PC_WARRIOR) { // BUGFIX: Voice for this quest might be wrong in MP
+		if (plr[pnum]._pClass == HeroClass::Warrior) { // BUGFIX: Voice for this quest might be wrong in MP
 			sfxdnum = PS_WARR95;
-		} else if (plr[pnum]._pClass == PC_ROGUE) {
+		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE95;
-		} else if (plr[pnum]._pClass == PC_SORCERER) {
+		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE95;
-		} else if (plr[pnum]._pClass == PC_MONK) {
+		} else if (plr[pnum]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK95;
-		} else if (plr[pnum]._pClass == PC_BARD) {
+		} else if (plr[pnum]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE95;
-		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR95;
 		}
 		quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
@@ -1733,36 +1680,36 @@ void CheckQuestItem(int pnum)
 			quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 			quests[Q_ANVIL]._qvar1 = 1;
 		}
-		if (quests[Q_ANVIL]._qlog == TRUE) {
+		if (quests[Q_ANVIL]._qlog) {
 			sfxdelay = 10;
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				sfxdnum = PS_WARR89;
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				sfxdnum = PS_ROGUE89;
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				sfxdnum = PS_MAGE89;
-			} else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == HeroClass::Monk) {
 				sfxdnum = PS_MONK89;
-			} else if (plr[myplr]._pClass == PC_BARD) {
+			} else if (plr[myplr]._pClass == HeroClass::Bard) {
 				sfxdnum = PS_ROGUE89;
-			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 				sfxdnum = PS_WARR89;
 			}
 		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX && quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
 		sfxdelay = 30;
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR88;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE88;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE88;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK88;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE88;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR88;
 		}
 	}
@@ -1771,19 +1718,19 @@ void CheckQuestItem(int pnum)
 			quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 			quests[Q_ROCK]._qvar1 = 1;
 		}
-		if (quests[Q_ROCK]._qlog == TRUE) {
+		if (quests[Q_ROCK]._qlog) {
 			sfxdelay = 10;
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				sfxdnum = PS_WARR87;
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				sfxdnum = PS_ROGUE87;
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				sfxdnum = PS_MAGE87;
-			} else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == HeroClass::Monk) {
 				sfxdnum = PS_MONK87;
-			} else if (plr[myplr]._pClass == PC_BARD) {
+			} else if (plr[myplr]._pClass == HeroClass::Bard) {
 				sfxdnum = PS_ROGUE87;
-			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 				sfxdnum = PS_WARR87;
 			}
 		}
@@ -1791,36 +1738,36 @@ void CheckQuestItem(int pnum)
 	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL && quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
 		quests[Q_BLOOD]._qactive = QUEST_DONE;
 		sfxdelay = 20;
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR91;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE91;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE91;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK91;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE91;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR91;
 		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM) {
-		quests[Q_GRAVE]._qlog = FALSE;
+		quests[Q_GRAVE]._qlog = false;
 		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		quests[Q_GRAVE]._qvar1 = 1;
 		sfxdelay = 10;
-		if (plr[myplr]._pClass == PC_WARRIOR) {
+		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR79;
-		} else if (plr[myplr]._pClass == PC_ROGUE) {
+		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE79;
-		} else if (plr[myplr]._pClass == PC_SORCERER) {
+		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE79;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK79;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		} else if (plr[myplr]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE79;
-		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR79;
 		}
 	}
@@ -1838,17 +1785,17 @@ void CheckQuestItem(int pnum)
 			mask |= 4;
 		if (mask == 7) {
 			sfxdelay = 10;
-			if (plr[myplr]._pClass == PC_WARRIOR) {
+			if (plr[myplr]._pClass == HeroClass::Warrior) {
 				sfxdnum = PS_WARR46;
-			} else if (plr[myplr]._pClass == PC_ROGUE) {
+			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
 				sfxdnum = PS_ROGUE46;
-			} else if (plr[myplr]._pClass == PC_SORCERER) {
+			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
 				sfxdnum = PS_MAGE46;
-			} else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == HeroClass::Monk) {
 				sfxdnum = PS_MONK46;
-			} else if (plr[myplr]._pClass == PC_BARD) {
+			} else if (plr[myplr]._pClass == HeroClass::Bard) {
 				sfxdnum = PS_ROGUE46;
-			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 				sfxdnum = PS_WARR46;
 			}
 			switch (idx) {
@@ -1872,28 +1819,28 @@ void CheckQuestItem(int pnum)
 				break;
 			}
 			item_num = itemactive[0];
-			tmp = item[item_num];
-			memset(&item[item_num], 0, sizeof(*item));
+			tmp = items[item_num];
+			memset(&items[item_num], 0, sizeof(*items));
 			GetItemAttrs(item_num, IDI_FULLNOTE, 16);
 			SetupItem(item_num);
-			plr[pnum].HoldItem = item[item_num];
-			item[item_num] = tmp;
+			plr[pnum].HoldItem = items[item_num];
+			items[item_num] = tmp;
 		}
 	}
 }
 
-void CleanupItems(int ii)
+void CleanupItems(ItemStruct *item, int ii)
 {
-	dItem[item[ii]._ix][item[ii]._iy] = 0;
+	dItem[item->_ix][item->_iy] = 0;
 
-	if (currlevel == 21 & item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
+	if (currlevel == 21 & item->_ix == CornerStone.x && item->_iy == CornerStone.y) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
 		CornerStone.item._iy = 0;
-		CornerStone.item._iAnimFlag = FALSE;
-		CornerStone.item._iIdentified = FALSE;
-		CornerStone.item._iPostDraw = FALSE;
+		CornerStone.item._iAnimFlag = false;
+		CornerStone.item._iIdentified = false;
+		CornerStone.item._iPostDraw = false;
 	}
 
 	int i = 0;
@@ -1908,53 +1855,53 @@ void CleanupItems(int ii)
 	}
 }
 
-void InvGetItem(int pnum, int ii)
+void InvGetItem(int pnum, ItemStruct *item, int ii)
 {
 	if (dropGoldFlag) {
-		dropGoldFlag = FALSE;
+		dropGoldFlag = false;
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item[ii]._ix][item[ii]._iy] == 0)
+	if (dItem[item->_ix][item->_iy] == 0)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
-		NetSendCmdPItem(TRUE, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
+		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
 
-	item[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = item[ii];
+	item->_iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = *item;
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
 	bool cursor_updated = false;
-	if (gbIsHellfire && plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
+	if (plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
 		cursor_updated = true;
-	CleanupItems(ii);
+	CleanupItems(item, ii);
 	pcursitem = -1;
 	if (!cursor_updated)
-		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+		NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void AutoGetItem(int pnum, int ii)
+void AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
 	int i, idx;
 	int w, h;
-	BOOL done;
+	bool done;
 
 	if (pcurs != CURSOR_HAND) {
 		return;
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = FALSE;
+		dropGoldFlag = false;
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item[ii]._ix][item[ii]._iy] == 0)
+	if (dItem[item->_ix][item->_iy] == 0)
 		return;
 
-	item[ii]._iCreateInfo &= ~CF_PREGEN;
-	plr[pnum].HoldItem = item[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
+	item->_iCreateInfo &= ~CF_PREGEN;
+	plr[pnum].HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
@@ -1962,42 +1909,42 @@ void AutoGetItem(int pnum, int ii)
 	if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 		done = GoldAutoPlace(pnum);
 		if (!done) {
-			item[ii]._ivalue = plr[pnum].HoldItem._ivalue;
-			SetPlrHandGoldCurs(&item[ii]);
+			item->_ivalue = plr[pnum].HoldItem._ivalue;
+			SetPlrHandGoldCurs(item);
 		}
 	} else {
-		done = AutoEquipEnabled(plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
+		done = AutoEquipEnabled(plr[pnum], plr[pnum].HoldItem) && AutoEquip(pnum, plr[pnum].HoldItem);
 		if (!done) {
 			done = AutoPlaceItemInBelt(pnum, plr[pnum].HoldItem, true);
 		}
 		if (!done) {
-			done = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, TRUE);
+			done = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
 		}
 	}
 
 	if (done) {
-		CleanupItems(ii);
+		CleanupItems(&plr[pnum].HoldItem, ii);
 		return;
 	}
 
 	if (pnum == myplr) {
-		if (plr[pnum]._pClass == PC_WARRIOR) {
-			PlaySFX(random_(0, 3) + PS_WARR14);
-		} else if (plr[pnum]._pClass == PC_ROGUE) {
-			PlaySFX(random_(0, 3) + PS_ROGUE14);
-		} else if (plr[pnum]._pClass == PC_SORCERER) {
-			PlaySFX(random_(0, 3) + PS_MAGE14);
-		} else if (plr[pnum]._pClass == PC_MONK) {
-			PlaySFX(random_(0, 3) + PS_MONK14);
-		} else if (plr[pnum]._pClass == PC_BARD) {
-			PlaySFX(random_(0, 3) + PS_ROGUE14);
-		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
-			PlaySFX(random_(0, 3) + PS_WARR14);
+		if (plr[pnum]._pClass == HeroClass::Warrior) {
+			PlaySFX(PS_WARR14);
+		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
+			PlaySFX(PS_ROGUE14);
+		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
+			PlaySFX(PS_MAGE14);
+		} else if (plr[pnum]._pClass == HeroClass::Monk) {
+			PlaySFX(PS_MONK14);
+		} else if (plr[pnum]._pClass == HeroClass::Bard) {
+			PlaySFX(PS_ROGUE14);
+		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
+			PlaySFX(PS_WARR14);
 		}
 	}
-	plr[pnum].HoldItem = item[ii];
-	RespawnItem(ii, TRUE);
-	NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, item[ii]._ix, item[ii]._iy);
+	plr[pnum].HoldItem = *item;
+	RespawnItem(item, true);
+	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->_ix, item->_iy);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
@@ -2010,7 +1957,7 @@ int FindGetItem(int idx, WORD ci, int iseed)
 	int i = 0;
 	while (1) {
 		ii = itemactive[i];
-		if (item[ii].IDidx == idx && item[ii]._iSeed == iseed && item[ii]._iCreateInfo == ci)
+		if (items[ii].IDidx == idx && items[ii]._iSeed == iseed && items[ii]._iCreateInfo == ci)
 			break;
 
 		i++;
@@ -2028,9 +1975,9 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 
 	if (dItem[x][y]) {
 		ii = dItem[x][y] - 1;
-		if (item[ii].IDidx == idx
-		    && item[ii]._iSeed == iseed
-		    && item[ii]._iCreateInfo == ci) {
+		if (items[ii].IDidx == idx
+		    && items[ii]._iSeed == iseed
+		    && items[ii]._iCreateInfo == ci) {
 			FindGetItem(idx, ci, iseed);
 		} else {
 			ii = FindGetItem(idx, ci, iseed);
@@ -2042,67 +1989,67 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 	if (ii == -1)
 		return;
 
-	CleanupItems(ii);
+	CleanupItems(&items[ii], ii);
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
-BOOL CanPut(int x, int y)
+bool CanPut(int x, int y)
 {
 	char oi, oi2;
 
 	if (dItem[x][y])
-		return FALSE;
+		return false;
 	if (nSolidTable[dPiece[x][y]])
-		return FALSE;
+		return false;
 
 	if (dObject[x][y] != 0) {
 		if (object[dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1)]._oSolidFlag)
-			return FALSE;
+			return false;
 	}
 
 	oi = dObject[x + 1][y + 1];
 	if (oi > 0 && object[oi - 1]._oSelFlag != 0) {
-		return FALSE;
+		return false;
 	}
 	if (oi < 0 && object[-(oi + 1)]._oSelFlag != 0) {
-		return FALSE;
+		return false;
 	}
 
 	oi = dObject[x + 1][y];
 	if (oi > 0) {
 		oi2 = dObject[x][y + 1];
 		if (oi2 > 0 && object[oi - 1]._oSelFlag != 0 && object[oi2 - 1]._oSelFlag != 0)
-			return FALSE;
+			return false;
 	}
 
 	if (currlevel == 0 && dMonster[x][y] != 0)
-		return FALSE;
+		return false;
 	if (currlevel == 0 && dMonster[x + 1][y + 1] != 0)
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
-BOOL TryInvPut()
+bool TryInvPut()
 {
 	int dir;
 
 	if (numitems >= MAXITEMS)
-		return FALSE;
+		return false;
 
 	dir = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
 	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
-		return TRUE;
+		return true;
 	}
 
 	dir = (dir - 1) & 7;
 	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
-		return TRUE;
+		return true;
 	}
 
 	dir = (dir + 2) & 7;
 	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
-		return TRUE;
+		return true;
 	}
 
 	return CanPut(plr[myplr]._px, plr[myplr]._py);
@@ -2121,7 +2068,7 @@ void DrawInvMsg(const char *msg)
 
 int InvPutItem(int pnum, int x, int y)
 {
-	BOOL done;
+	bool done;
 	int d;
 	int i, j, l;
 	int xx, yy;
@@ -2146,14 +2093,14 @@ int InvPutItem(int pnum, int x, int y)
 			x = plr[pnum]._px + offset_x[d];
 			y = plr[pnum]._py + offset_y[d];
 			if (!CanPut(x, y)) {
-				done = FALSE;
+				done = false;
 				for (l = 1; l < 50 && !done; l++) {
 					for (j = -l; j <= l && !done; j++) {
 						yp = j + plr[pnum]._py;
 						for (i = -l; i <= l && !done; i++) {
 							xp = i + plr[pnum]._px;
 							if (CanPut(xp, yp)) {
-								done = TRUE;
+								done = true;
 								x = xp;
 								y = yp;
 							}
@@ -2171,18 +2118,18 @@ int InvPutItem(int pnum, int x, int y)
 		xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
 			NetSendCmdLocParam2(0, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
-			quests[Q_FARMER]._qactive = 3;
+			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
-				NetSendCmdQuest(TRUE, Q_FARMER);
+				NetSendCmdQuest(true, Q_FARMER);
 				return -1;
 			}
 			return -1;
 		}
 		if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM && xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24) {
-			NetSendCmd(FALSE, CMD_OPENCRYPT);
-			quests[Q_GRAVE]._qactive = 3;
+			NetSendCmd(false, CMD_OPENCRYPT);
+			quests[Q_GRAVE]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
-				NetSendCmdQuest(TRUE, Q_GRAVE);
+				NetSendCmdQuest(true, Q_GRAVE);
 			}
 			return -1;
 		}
@@ -2193,13 +2140,13 @@ int InvPutItem(int pnum, int x, int y)
 	int ii = AllocateItem();
 
 	dItem[x][y] = ii + 1;
-	item[ii] = plr[pnum].HoldItem;
-	item[ii]._ix = x;
-	item[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	items[ii] = plr[pnum].HoldItem;
+	items[ii]._ix = x;
+	items[ii]._iy = y;
+	RespawnItem(&items[ii], true);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
-		CornerStone.item = item[ii];
+		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = 0;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
@@ -2211,7 +2158,7 @@ int InvPutItem(int pnum, int x, int y)
 
 int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
 {
-	BOOL done;
+	bool done;
 	int d;
 	int i, j, l;
 	int xx, yy;
@@ -2236,14 +2183,14 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 			x = plr[pnum]._px + offset_x[d];
 			y = plr[pnum]._py + offset_y[d];
 			if (!CanPut(x, y)) {
-				done = FALSE;
+				done = false;
 				for (l = 1; l < 50 && !done; l++) {
 					for (j = -l; j <= l && !done; j++) {
 						yp = j + plr[pnum]._py;
 						for (i = -l; i <= l && !done; i++) {
 							xp = i + plr[pnum]._px;
 							if (CanPut(xp, yp)) {
-								done = TRUE;
+								done = true;
 								x = xp;
 								y = yp;
 							}
@@ -2265,27 +2212,28 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	if (idx == IDI_EAR) {
 		RecreateEar(ii, icreateinfo, iseed, Id, dur, mdur, ch, mch, ivalue, ibuff);
 	} else {
-		RecreateItem(ii, idx, icreateinfo, iseed, ivalue);
+		RecreateItem(ii, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (Id)
-			item[ii]._iIdentified = TRUE;
-		item[ii]._iDurability = dur;
-		item[ii]._iMaxDur = mdur;
-		item[ii]._iCharges = ch;
-		item[ii]._iMaxCharges = mch;
-		item[ii]._iPLToHit = to_hit;
-		item[ii]._iMaxDam = max_dam;
-		item[ii]._iMinStr = min_str;
-		item[ii]._iMinMag = min_mag;
-		item[ii]._iMinDex = min_dex;
-		item[ii]._iAC = ac;
+			items[ii]._iIdentified = true;
+		items[ii]._iDurability = dur;
+		items[ii]._iMaxDur = mdur;
+		items[ii]._iCharges = ch;
+		items[ii]._iMaxCharges = mch;
+		items[ii]._iPLToHit = to_hit;
+		items[ii]._iMaxDam = max_dam;
+		items[ii]._iMinStr = min_str;
+		items[ii]._iMinMag = min_mag;
+		items[ii]._iMinDex = min_dex;
+		items[ii]._iAC = ac;
+		items[ii].dwBuff = ibuff;
 	}
 
-	item[ii]._ix = x;
-	item[ii]._iy = y;
-	RespawnItem(ii, TRUE);
+	items[ii]._ix = x;
+	items[ii]._iy = y;
+	RespawnItem(&items[ii], true);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
-		CornerStone.item = item[ii];
+		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = 0;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
@@ -2342,7 +2290,7 @@ char CheckInvHLight()
 	} else if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST) {
 		pi = &p->InvBody[INVLOC_HAND_LEFT];
 		if (pi->isEmpty() || pi->_iLoc != ILOC_TWOHAND
-		    || (p->_pClass == PC_BARBARIAN && (p->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || p->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
+		    || (p->_pClass == HeroClass::Barbarian && (p->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || p->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
 			rv = INVLOC_HAND_RIGHT;
 			pi = &p->InvBody[rv];
 		} else {
@@ -2360,7 +2308,7 @@ char CheckInvHLight()
 		pi = &p->InvList[ii];
 	} else if (r >= SLOTXY_BELT_FIRST) {
 		r -= SLOTXY_BELT_FIRST;
-		drawsbarflag = TRUE;
+		drawsbarflag = true;
 		pi = &p->SpdList[r];
 		if (pi->isEmpty())
 			return -1;
@@ -2415,31 +2363,31 @@ void RemoveScroll(int pnum)
 	}
 }
 
-BOOL UseScroll()
+bool UseScroll()
 {
 	int i;
 
 	if (pcurs != CURSOR_HAND)
-		return FALSE;
+		return false;
 	if (leveltype == DTYPE_TOWN && !spelldata[plr[myplr]._pRSpell].sTownSpell)
-		return FALSE;
+		return false;
 
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
 		if (!plr[myplr].InvList[i].isEmpty()
 		    && (plr[myplr].InvList[i]._iMiscId == IMISC_SCROLL || plr[myplr].InvList[i]._iMiscId == IMISC_SCROLLT)
 		    && plr[myplr].InvList[i]._iSpell == plr[myplr]._pRSpell) {
-			return TRUE;
+			return true;
 		}
 	}
 	for (i = 0; i < MAXBELTITEMS; i++) {
 		if (!plr[myplr].SpdList[i].isEmpty()
 		    && (plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLL || plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLLT)
 		    && plr[myplr].SpdList[i]._iSpell == plr[myplr]._pRSpell) {
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void UseStaffCharge(int pnum)
@@ -2455,18 +2403,18 @@ void UseStaffCharge(int pnum)
 	}
 }
 
-BOOL UseStaff()
+bool UseStaff()
 {
 	if (pcurs == CURSOR_HAND) {
 		if (!plr[myplr].InvBody[INVLOC_HAND_LEFT].isEmpty()
 		    && (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF || plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_UNIQUE)
 		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iSpell == plr[myplr]._pRSpell
 		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void StartGoldDrop()
@@ -2476,115 +2424,115 @@ void StartGoldDrop()
 		initialDropGoldValue = plr[myplr].InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
 	else
 		initialDropGoldValue = plr[myplr].SpdList[pcursinvitem - INVITEM_BELT_FIRST]._ivalue;
-	dropGoldFlag = TRUE;
+	dropGoldFlag = true;
 	dropGoldValue = 0;
 	if (talkflag)
 		control_reset_talk();
 }
 
-BOOL UseInvItem(int pnum, int cii)
+bool UseInvItem(int pnum, int cii)
 {
 	int c, idata;
 	ItemStruct *Item;
-	BOOL speedlist;
+	bool speedlist;
 
 	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr)
-		return TRUE;
+		return true;
 	if (pcurs != CURSOR_HAND)
-		return TRUE;
+		return true;
 	if (stextflag != STORE_NONE)
-		return TRUE;
+		return true;
 	if (cii < INVITEM_INV_FIRST)
-		return FALSE;
+		return false;
 
 	if (cii <= INVITEM_INV_LAST) {
 		c = cii - INVITEM_INV_FIRST;
 		Item = &plr[pnum].InvList[c];
-		speedlist = FALSE;
+		speedlist = false;
 	} else {
 		if (talkflag)
-			return TRUE;
+			return true;
 		c = cii - INVITEM_BELT_FIRST;
 		Item = &plr[pnum].SpdList[c];
-		speedlist = TRUE;
+		speedlist = true;
 	}
 
 	switch (Item->IDidx) {
 	case IDI_MUSHROOM:
 		sfxdelay = 10;
-		if (plr[pnum]._pClass == PC_WARRIOR) {
+		if (plr[pnum]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR95;
-		} else if (plr[pnum]._pClass == PC_ROGUE) {
+		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE95;
-		} else if (plr[pnum]._pClass == PC_SORCERER) {
+		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE95;
-		} else if (plr[pnum]._pClass == PC_MONK) {
+		} else if (plr[pnum]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK95;
-		} else if (plr[pnum]._pClass == PC_BARD) {
+		} else if (plr[pnum]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE95;
-		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR95;
 		}
-		return TRUE;
+		return true;
 	case IDI_FUNGALTM:
 		PlaySFX(IS_IBOOK);
 		sfxdelay = 10;
-		if (plr[pnum]._pClass == PC_WARRIOR) {
+		if (plr[pnum]._pClass == HeroClass::Warrior) {
 			sfxdnum = PS_WARR29;
-		} else if (plr[pnum]._pClass == PC_ROGUE) {
+		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 			sfxdnum = PS_ROGUE29;
-		} else if (plr[pnum]._pClass == PC_SORCERER) {
+		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 			sfxdnum = PS_MAGE29;
-		} else if (plr[pnum]._pClass == PC_MONK) {
+		} else if (plr[pnum]._pClass == HeroClass::Monk) {
 			sfxdnum = PS_MONK29;
-		} else if (plr[pnum]._pClass == PC_BARD) {
+		} else if (plr[pnum]._pClass == HeroClass::Bard) {
 			sfxdnum = PS_ROGUE29;
-		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 			sfxdnum = PS_WARR29;
 		}
-		return TRUE;
+		return true;
 	}
 
 	if (!AllItemsList[Item->IDidx].iUsable)
-		return FALSE;
+		return false;
 
 	if (!Item->_iStatFlag) {
-		if (plr[pnum]._pClass == PC_WARRIOR) {
+		if (plr[pnum]._pClass == HeroClass::Warrior) {
 			PlaySFX(PS_WARR13);
-		} else if (plr[pnum]._pClass == PC_ROGUE) {
+		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 			PlaySFX(PS_ROGUE13);
-		} else if (plr[pnum]._pClass == PC_SORCERER) {
+		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 			PlaySFX(PS_MAGE13);
-		} else if (plr[pnum]._pClass == PC_MONK) {
+		} else if (plr[pnum]._pClass == HeroClass::Monk) {
 			PlaySFX(PS_MONK13);
-		} else if (plr[pnum]._pClass == PC_BARD) {
+		} else if (plr[pnum]._pClass == HeroClass::Bard) {
 			PlaySFX(PS_ROGUE13);
-		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 			PlaySFX(PS_WARR13);
 		}
-		return TRUE;
+		return true;
 	}
 
 	if (Item->_iMiscId == IMISC_NONE && Item->_itype == ITYPE_GOLD) {
 		StartGoldDrop();
-		return TRUE;
+		return true;
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = FALSE;
+		dropGoldFlag = false;
 		dropGoldValue = 0;
 	}
 
 	if (Item->_iMiscId == IMISC_SCROLL && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell) {
-		return TRUE;
+		return true;
 	}
 
 	if (Item->_iMiscId == IMISC_SCROLLT && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell) {
-		return TRUE;
+		return true;
 	}
 
 	if (Item->_iMiscId > IMISC_RUNEFIRST && Item->_iMiscId < IMISC_RUNELAST && currlevel == 0) {
-		return TRUE;
+		return true;
 	}
 
 	idata = ItemCAnimTbl[Item->_iCurs];
@@ -2598,32 +2546,32 @@ BOOL UseInvItem(int pnum, int cii)
 	if (speedlist) {
 		if (plr[pnum].SpdList[c]._iMiscId == IMISC_NOTE) {
 			InitQTextMsg(TEXT_BOOK9);
-			invflag = FALSE;
-			return TRUE;
+			invflag = false;
+			return true;
 		}
 		RemoveSpdBarItem(pnum, c);
-		return TRUE;
+		return true;
 	} else {
 		if (plr[pnum].InvList[c]._iMiscId == IMISC_MAPOFDOOM)
-			return TRUE;
+			return true;
 		if (plr[pnum].InvList[c]._iMiscId == IMISC_NOTE) {
 			InitQTextMsg(TEXT_BOOK9);
-			invflag = FALSE;
-			return TRUE;
+			invflag = false;
+			return true;
 		}
 		RemoveInvItem(pnum, c);
 	}
-	return TRUE;
+	return true;
 }
 
 void DoTelekinesis()
 {
 	if (pcursobj != -1)
-		NetSendCmdParam1(TRUE, CMD_OPOBJT, pcursobj);
+		NetSendCmdParam1(true, CMD_OPOBJT, pcursobj);
 	if (pcursitem != -1)
-		NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, myplr, myplr, pcursitem);
+		NetSendCmdGItem(true, CMD_REQUESTAGITEM, myplr, myplr, pcursitem);
 	if (pcursmonst != -1 && !M_Talker(pcursmonst) && monster[pcursmonst].mtalkmsg == 0)
-		NetSendCmdParam1(TRUE, CMD_KNOCKBACK, pcursmonst);
+		NetSendCmdParam1(true, CMD_KNOCKBACK, pcursmonst);
 	NewCursor(CURSOR_HAND);
 }
 
@@ -2646,15 +2594,15 @@ int CalculateGold(int pnum)
 	return gold;
 }
 
-BOOL DropItemBeforeTrig()
+bool DropItemBeforeTrig()
 {
 	if (TryInvPut()) {
-		NetSendCmdPItem(TRUE, CMD_PUTITEM, cursmx, cursmy);
+		NetSendCmdPItem(true, CMD_PUTITEM, cursmx, cursmy);
 		NewCursor(CURSOR_HAND);
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

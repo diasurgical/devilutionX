@@ -3,22 +3,17 @@
  *
  * Interface of functions for compression and decompressing MPQ data.
  */
-#ifndef __ENCRYPT_H__
-#define __ENCRYPT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct TDataInfo {
+struct TDataInfo {
 	Uint8 *srcData;
 	Uint32 srcOffset;
 	Uint8 *destData;
 	Uint32 destOffset;
 	Uint32 size;
-} TDataInfo;
+};
 
 void Decrypt(DWORD *castBlock, DWORD size, DWORD key);
 void Encrypt(DWORD *castBlock, DWORD size, DWORD key);
@@ -27,10 +22,4 @@ void InitHash();
 DWORD PkwareCompress(BYTE *srcData, DWORD size);
 void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ENCRYPT_H__ */

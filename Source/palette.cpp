@@ -8,7 +8,7 @@
 #include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 SDL_Color logical_palette[256];
 SDL_Color system_palette[256];
@@ -18,7 +18,7 @@ Uint8 paletteTransparencyLookup[256][256]; //Lookup table for transparency
 /* data */
 
 /** Specifies whether the palette has max brightness. */
-BOOLEAN sgbFadedIn = TRUE;
+bool sgbFadedIn = true;
 
 void palette_update()
 {
@@ -237,7 +237,7 @@ void PaletteFadeIn(int fr)
 	}
 	SetFadeLevel(256);
 	memcpy(logical_palette, orig_palette, sizeof(orig_palette));
-	sgbFadedIn = TRUE;
+	sgbFadedIn = true;
 }
 
 void PaletteFadeOut(int fr)
@@ -253,7 +253,7 @@ void PaletteFadeOut(int fr)
 			RenderPresent();
 		}
 		SetFadeLevel(0);
-		sgbFadedIn = FALSE;
+		sgbFadedIn = false;
 	}
 }
 
@@ -383,4 +383,4 @@ void palette_update_quest_palette(int n)
 	GenerateBlendedLookupTable(logical_palette, 1, 31, 32 - n); // Possible optimization would be to only update color 0 as only the UI can overlap with transparency in this quest
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -5,15 +5,15 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /**
  * Specifies the current light entry.
  */
 int light_table_index;
 DWORD sgdwCursWdtOld;
-DWORD sgdwCursX;
-DWORD sgdwCursY;
+int sgdwCursX;
+int sgdwCursY;
 /**
  * Lower bound of back buffer.
  */
@@ -26,9 +26,9 @@ DWORD sgdwCursHgt;
  * frameType := block & 0x7000 >> 12
  */
 DWORD level_cel_block;
-DWORD sgdwCursXOld;
-DWORD sgdwCursYOld;
-BOOLEAN AutoMapShowItems;
+int sgdwCursXOld;
+int sgdwCursYOld;
+bool AutoMapShowItems;
 /**
  * Specifies the type of arches to render.
  */
@@ -53,7 +53,7 @@ DWORD sgdwCursHgtOld;
 bool dRendered[MAXDUNX][MAXDUNY];
 
 int frames;
-BOOL frameflag;
+bool frameflag;
 int frameend;
 int framerate;
 int framestart;
@@ -107,8 +107,7 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 
 static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
 {
-	const int h = std::min(sgdwCursY + 1, sgdwCursHgt);
-	for (int i = 0; i < h; ++i, src += src_pitch, dst += dst_pitch) {
+	for (int i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 }
@@ -180,6 +179,15 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
 
+	if (sgdwCursX < 0) {
+		sgdwCursWdt -= sgdwCursX;
+		sgdwCursX = 0;
+	}
+	if (sgdwCursY < 0) {
+		sgdwCursHgt -= sgdwCursY;
+		sgdwCursY = 0;
+	}
+
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
 
 	mx++;
@@ -195,14 +203,14 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 			col = PAL16_RED + 5;
 		}
 		if (pcurs <= 179) {
-			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels, pcurs, cursW);
+			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels, pcurs, cursW, false);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW);
 			} else {
 				CelDrawLightRedSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW, 1);
 			}
 		} else {
-			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
+			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW, false);
 			if (col != PAL16_RED + 5) {
 				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
 			} else {
@@ -222,7 +230,7 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, BOOL pre)
+void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, bool pre)
 {
 	if (m->_miPreFlag != pre || !m->_miDrawFlag)
 		return;
@@ -257,7 +265,7 @@ void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, B
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
+void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
 {
 	int i;
 	MissileStruct *m;
@@ -379,11 +387,17 @@ static void DrawManaShield(CelOutputBuffer out, int pnum, int x, int y, bool lig
  * @param nCel frame
  * @param nWidth width
  */
-static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
+static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py)
 {
 	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
+
+	PlayerStruct *pPlayer = &plr[pnum];
+
+	BYTE *pCelBuff = pPlayer->_pAnimData;
+	int nCel = GetFrameToUseForPlayerRendering(pPlayer);
+	int nWidth = pPlayer->_pAnimWidth;
 
 	if (pCelBuff == NULL) {
 		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
@@ -454,7 +468,7 @@ void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
 			px = sx + p->_pxoff - p->_pAnimWidth2;
 			py = sy + p->_pyoff;
-			DrawPlayer(out, i, x, y, px, py, p->_pAnimData, p->_pAnimFrame, p->_pAnimWidth);
+			DrawPlayer(out, i, x, y, px, py);
 		}
 	}
 }
@@ -468,7 +482,7 @@ void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param oy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, BOOL pre)
+static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool pre)
 {
 	if (dObject[x][y] == 0 || light_table_index >= lightmax)
 		return;
@@ -581,7 +595,7 @@ static void drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre)
+static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
 {
 	char bItem = dItem[x][y];
 
@@ -590,7 +604,7 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre
 	if (bItem > MAXITEMS || bItem <= 0)
 		return;
 
-	ItemStruct *pItem = &item[bItem - 1];
+	ItemStruct *pItem = &items[bItem - 1];
 	if (pItem->_iPostDraw == pre)
 		return;
 
@@ -689,7 +703,7 @@ static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
 	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
 	int py = sy + pPlayer->_pyoff;
 
-	DrawPlayer(out, p, x, y, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	DrawPlayer(out, p, x, y, px, py);
 }
 
 /**
@@ -728,7 +742,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 #endif
 
 	if (MissilePreFlag) {
-		DrawMissile(out, sx, sy, dx, dy, TRUE);
+		DrawMissile(out, sx, sy, dx, dy, true);
 	}
 
 	if (light_table_index < lightmax && bDead != 0) {
@@ -771,7 +785,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	if (dMonster[sx][sy] > 0) {
 		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
 	}
-	DrawMissile(out, sx, sy, dx, dy, FALSE);
+	DrawMissile(out, sx, sy, dx, dy, false);
 	DrawObject(out, sx, sy, dx, dy, 0);
 	DrawItem(out, sx, sy, dx, dy, 0);
 
@@ -1175,6 +1189,8 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 		columns++;
 		rows++;
 		break;
+	case SDIR_NONE:
+		break;
 	}
 
 	scrollrt_drawFloor(out, x, y, sx, sy, rows, columns);
@@ -1276,75 +1292,75 @@ void ClearScreenBuffer()
  */
 void ScrollView()
 {
-	BOOL scroll;
+	bool scroll;
 
 	if (pcurs >= CURSOR_FIRSTITEM)
 		return;
 
-	scroll = FALSE;
+	scroll = false;
 
 	if (MouseX < 20) {
 		if (dmaxy - 1 <= ViewY || dminx >= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminx < ViewX) {
 				ViewX--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewY++;
 			ViewX--;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseX > gnScreenWidth - 20) {
 		if (dmaxx - 1 <= ViewX || dminy >= ViewY) {
 			if (dmaxx - 1 > ViewX) {
 				ViewX++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminy < ViewY) {
 				ViewY--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewY--;
 			ViewX++;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseY < 20) {
 		if (dminy >= ViewY || dminx >= ViewX) {
 			if (dminy < ViewY) {
 				ViewY--;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dminx < ViewX) {
 				ViewX--;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewX--;
 			ViewY--;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 	if (MouseY > gnScreenHeight - 20) {
 		if (dmaxy - 1 <= ViewY || dmaxx - 1 <= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;
-				scroll = TRUE;
+				scroll = true;
 			}
 			if (dmaxx - 1 > ViewX) {
 				ViewX++;
-				scroll = TRUE;
+				scroll = true;
 			}
 		} else {
 			ViewX++;
 			ViewY++;
-			scroll = TRUE;
+			scroll = true;
 		}
 	}
 
@@ -1414,7 +1430,7 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
  * @param draw_sbar Render belt
  * @param draw_btn Render panel buttons
  */
-static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw_sbar, BOOL draw_btn)
+static void DrawMain(int dwHgt, bool draw_desc, bool draw_hp, bool draw_mana, bool draw_sbar, bool draw_btn)
 {
 	if (!gbActive) {
 		return;
@@ -1460,7 +1476,7 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
  * @brief Redraw screen
  * @param draw_cursor
  */
-void scrollrt_draw_game_screen(BOOL draw_cursor)
+void scrollrt_draw_game_screen(bool draw_cursor)
 {
 	int hgt = 0;
 
@@ -1475,7 +1491,7 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 		unlock_buf(0);
 	}
 
-	DrawMain(hgt, FALSE, FALSE, FALSE, FALSE, FALSE);
+	DrawMain(hgt, false, false, false, false, false);
 
 	if (draw_cursor) {
 		lock_buf(0);
@@ -1499,10 +1515,10 @@ void DrawAndBlit()
 	bool ctrlPan = false;
 
 	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255) {
-		drawhpflag = TRUE;
-		drawmanaflag = TRUE;
-		drawbtnflag = TRUE;
-		drawsbarflag = TRUE;
+		drawhpflag = true;
+		drawmanaflag = true;
+		drawbtnflag = true;
+		drawsbarflag = true;
 		ddsdesc = false;
 		ctrlPan = true;
 		hgt = gnScreenHeight;
@@ -1516,6 +1532,8 @@ void DrawAndBlit()
 
 	lock_buf(0);
 	CelOutputBuffer out = GlobalBackBuffer();
+
+	nthread_UpdateProgressToNextGameTick();
 
 	DrawView(out, ViewX, ViewY);
 	if (ctrlPan) {
@@ -1551,10 +1569,10 @@ void DrawAndBlit()
 	unlock_buf(0);
 	RenderPresent();
 
-	drawhpflag = FALSE;
-	drawmanaflag = FALSE;
-	drawbtnflag = FALSE;
-	drawsbarflag = FALSE;
+	drawhpflag = false;
+	drawmanaflag = false;
+	drawbtnflag = false;
+	drawsbarflag = false;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

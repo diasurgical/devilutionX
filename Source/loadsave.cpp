@@ -5,7 +5,7 @@
  */
 #include "all.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 bool gbIsHellfireSaveGame;
 int giNumberOfLevels;
@@ -46,8 +46,8 @@ T SwapBE(T in)
 
 class LoadHelper {
 	Uint8 *m_buffer;
-	Uint32 m_bufferPtr = 0;
-	Uint32 m_bufferLen;
+	Uint32 m_cur = 0;
+	Uint32 m_size;
 
 	template <class T>
 	T next()
@@ -57,8 +57,8 @@ class LoadHelper {
 			return 0;
 
 		T value;
-		memcpy(&value, &m_buffer[m_bufferPtr], size);
-		m_bufferPtr += size;
+		memcpy(&value, &m_buffer[m_cur], size);
+		m_cur += size;
 
 		return value;
 	}
@@ -66,18 +66,18 @@ class LoadHelper {
 public:
 	LoadHelper(const char *szFileName)
 	{
-		m_buffer = pfile_read(szFileName, &m_bufferLen);
+		m_buffer = pfile_read(szFileName, &m_size);
 	}
 
 	bool isValid(Uint32 size = 1)
 	{
 		return m_buffer != nullptr
-		    && m_bufferLen >= (m_bufferPtr + size);
+		    && m_size >= (m_cur + size);
 	}
 
 	void skip(Uint32 size)
 	{
-		m_bufferPtr += size;
+		m_cur += size;
 	}
 
 	void nextBytes(void *bytes, size_t size)
@@ -85,8 +85,8 @@ public:
 		if (!isValid(size))
 			return;
 
-		memcpy(bytes, &m_buffer[m_bufferPtr], size);
-		m_bufferPtr += size;
+		memcpy(bytes, &m_buffer[m_cur], size);
+		m_cur += size;
 	}
 
 	template <class T>
@@ -120,26 +120,26 @@ public:
 class SaveHelper {
 	const char *m_szFileName;
 	Uint8 *m_buffer;
-	Uint32 m_bufferPtr = 0;
-	Uint32 m_bufferLen;
+	Uint32 m_cur = 0;
+	Uint32 m_capacity;
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
 	{
 		m_szFileName = szFileName;
-		m_bufferLen = bufferLen;
-		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_bufferLen));
+		m_capacity = bufferLen;
+		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_capacity));
 	}
 
 	bool isValid(Uint32 len = 1)
 	{
 		return m_buffer != nullptr
-		    && m_bufferLen >= (m_bufferPtr + len);
+		    && m_capacity >= (m_cur + len);
 	}
 
 	void skip(Uint32 len)
 	{
-		m_bufferPtr += len;
+		m_cur += len;
 	}
 
 	void writeBytes(const void *bytes, size_t len)
@@ -147,8 +147,8 @@ public:
 		if (!isValid(len))
 			return;
 
-		memcpy(&m_buffer[m_bufferPtr], bytes, len);
-		m_bufferPtr += len;
+		memcpy(&m_buffer[m_cur], bytes, len);
+		m_cur += len;
 	}
 
 	template <class T>
@@ -165,22 +165,35 @@ public:
 		writeBytes(&value, sizeof(value));
 	}
 
-	void flush()
+	~SaveHelper()
 	{
-		if (m_buffer == nullptr)
-			return;
+		const auto encoded_len = codec_get_encoded_len(m_cur);
+		const char *const password = pfile_get_password();
+		codec_encode(m_buffer, m_cur, encoded_len, password);
+		mpqapi_write_file(m_szFileName, m_buffer, encoded_len);
 
-		pfile_write_save_file(m_szFileName, m_buffer, m_bufferPtr, codec_get_encoded_len(m_bufferPtr));
 		mem_free_dbg(m_buffer);
 		m_buffer = nullptr;
 	}
-
-	~SaveHelper()
-	{
-		flush();
-	}
 };
 
+} // namespace
+
+void RemoveInvalidItem(ItemStruct *pItem)
+{
+	bool isInvalid = !IsItemAvailable(pItem->IDidx) || !IsUniqueAvailable(pItem->_iUid);
+
+	if (!gbIsHellfire) {
+		isInvalid = isInvalid || (pItem->_itype == ITYPE_STAFF && GetSpellStaffLevel(pItem->_iSpell) == -1);
+		isInvalid = isInvalid || (pItem->_iMiscId == IMISC_BOOK && GetSpellBookLevel(pItem->_iSpell) == -1);
+		isInvalid = isInvalid || pItem->_iDamAcFlags != 0;
+		isInvalid = isInvalid || pItem->_iPrePower > IDI_LASTDIABLO;
+		isInvalid = isInvalid || pItem->_iSufPower > IDI_LASTDIABLO;
+	}
+
+	if (isInvalid) {
+		pItem->_itype = ITYPE_NONE;
+	}
 }
 
 static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
@@ -261,16 +274,13 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	if (!gbIsHellfireSaveGame) {
 		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
 	}
-	file->skip(4); // Unused
+	pItem->dwBuff = file->nextLE<Uint32>();
 	if (gbIsHellfireSaveGame)
 		pItem->_iDamAcFlags = file->nextLE<Sint32>();
 	else
 		pItem->_iDamAcFlags = 0;
 
-	if (!IsItemAvailable(pItem->IDidx)) {
-		pItem->IDidx = 0;
-		pItem->_itype = ITYPE_NONE;
-	}
+	RemoveInvalidItem(pItem);
 }
 
 static void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
@@ -357,7 +367,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pLvlChanging = file->nextBool8();
 
 	file->nextBytes(pPlayer->_pName, PLR_NAME_LEN);
-	pPlayer->_pClass = (plr_class)file->nextLE<Sint8>();
+	pPlayer->_pClass = (HeroClass)file->nextLE<Sint8>();
 	file->skip(3); // Alignment
 	pPlayer->_pStrength = file->nextLE<Sint32>();
 	pPlayer->_pBaseStr = file->nextLE<Sint32>();
@@ -371,7 +381,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pDamageMod = file->nextLE<Sint32>();
 	pPlayer->_pBaseToBlk = file->nextLE<Sint32>();
 	if (pPlayer->_pBaseToBlk == 0)
-		pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+		pPlayer->_pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(pPlayer->_pClass)];
 	pPlayer->_pHPBase = file->nextLE<Sint32>();
 	pPlayer->_pMaxHPBase = file->nextLE<Sint32>();
 	pPlayer->_pHitPoints = file->nextLE<Sint32>();
@@ -490,10 +500,10 @@ static void LoadPlayer(LoadHelper *file, int p)
 	file->skip(14); // Available bytes
 
 	pPlayer->pDiabloKillLevel = file->nextLE<Uint32>();
-	pPlayer->pDifficulty = file->nextLE<Uint32>();
+	pPlayer->pDifficulty = (_difficulty)file->nextLE<Uint32>();
 	pPlayer->pDamAcFlags = file->nextLE<Uint32>();
 	file->skip(20); // Available bytes
-	CalcPlrItemVals(p, FALSE);
+	CalcPlrItemVals(p, false);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -515,7 +525,7 @@ static void LoadMonster(LoadHelper *file, int i)
 
 	pMonster->_mMTidx = file->nextLE<Sint32>();
 	pMonster->_mmode = (MON_MODE)file->nextLE<Sint32>();
-	pMonster->_mgoal = file->nextLE<Uint8>();
+	pMonster->_mgoal = (monster_goal)file->nextLE<Uint8>();
 	file->skip(3); // Alignment
 	pMonster->_mgoalvar1 = file->nextLE<Sint32>();
 	pMonster->_mgoalvar2 = file->nextLE<Sint32>();
@@ -579,7 +589,10 @@ static void LoadMonster(LoadHelper *file, int i)
 	file->skip(1); // Alignment
 	pMonster->mExp = file->nextLE<Uint16>();
 
-	file->skip(1); // Skip mHit as it's already initialized
+	if (i < MAX_PLRS) // Don't skip for golems
+		pMonster->mHit = file->nextLE<Uint8>();
+	else
+		file->skip(1); // Skip mHit as it's already initialized
 	pMonster->mMinDamage = file->nextLE<Uint8>();
 	pMonster->mMaxDamage = file->nextLE<Uint8>();
 	file->skip(1); // Skip mHit2 as it's already initialized
@@ -663,7 +676,7 @@ static void LoadObject(LoadHelper *file, int i)
 {
 	ObjectStruct *pObject = &object[i];
 
-	pObject->_otype = file->nextLE<Sint32>();
+	pObject->_otype = (_object_id)file->nextLE<Sint32>();
 	pObject->_ox = file->nextLE<Sint32>();
 	pObject->_oy = file->nextLE<Sint32>();
 	pObject->_oLight = file->nextBool32();
@@ -700,7 +713,7 @@ static void LoadObject(LoadHelper *file, int i)
 
 static void LoadItem(LoadHelper *file, int i)
 {
-	LoadItemData(file, &item[i]);
+	LoadItemData(file, &items[i]);
 	GetItemFrm(i);
 }
 
@@ -715,17 +728,17 @@ static void LoadQuest(LoadHelper *file, int i)
 
 	pQuest->_qlevel = file->nextLE<Uint8>();
 	pQuest->_qtype = file->nextLE<Uint8>();
-	pQuest->_qactive = file->nextLE<Uint8>();
+	pQuest->_qactive = (quest_state)file->nextLE<Uint8>();
 	pQuest->_qlvltype = (dungeon_type)file->nextLE<Uint8>();
 	pQuest->_qtx = file->nextLE<Sint32>();
 	pQuest->_qty = file->nextLE<Sint32>();
-	pQuest->_qslvl = file->nextLE<Uint8>();
+	pQuest->_qslvl = (_setlevels)file->nextLE<Uint8>();
 	pQuest->_qidx = file->nextLE<Uint8>();
 	if (gbIsHellfireSaveGame) {
 		file->skip(2); // Alignment
 		pQuest->_qmsg = file->nextLE<Sint32>();
 	} else {
-		pQuest->_qmsg = file->nextLE<Sint8>();
+		pQuest->_qmsg = file->nextLE<Uint8>();
 	}
 	pQuest->_qvar1 = file->nextLE<Uint8>();
 	pQuest->_qvar2 = file->nextLE<Uint8>();
@@ -824,11 +837,11 @@ bool IsHeaderValid(Uint32 magicNumber)
 	return false;
 }
 
-void ConvertLevels()
+static void ConvertLevels()
 {
 	// Backup current level state
 	bool _setlevel = setlevel;
-	int _setlvlnum = setlvlnum;
+	_setlevels _setlvlnum = setlvlnum;
 	int _currlevel = currlevel;
 	dungeon_type _leveltype = leveltype;
 
@@ -910,11 +923,61 @@ void SaveHotkeys()
 	file.writeLE<Uint8>(plr[myplr]._pRSplType);
 }
 
+static void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
+{
+	ItemStruct tempItem;
+
+	for (int i = 0; i < n; i++) {
+		LoadItemData(file, &tempItem);
+		if (pItem[i].isEmpty() || tempItem.isEmpty())
+			continue;
+		if (pItem[i]._iSeed != tempItem._iSeed)
+			continue;
+		pItem[i] = tempItem;
+	}
+}
+
+void LoadHeroItems(PlayerStruct *pPlayer)
+{
+	LoadHelper file("heroitems");
+	if (!file.isValid())
+		return;
+
+	gbIsHellfireSaveGame = file.nextBool8();
+
+	LoadMatchingItems(&file, NUM_INVLOC, pPlayer->InvBody);
+	LoadMatchingItems(&file, NUM_INV_GRID_ELEM, pPlayer->InvList);
+	LoadMatchingItems(&file, MAXBELTITEMS, pPlayer->SpdList);
+
+	gbIsHellfireSaveGame = gbIsHellfire;
+}
+
+void RemoveEmptyInventory(int pnum)
+{
+	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
+		int idx = plr[pnum].InvGrid[i - 1];
+		if (idx > 0 && plr[pnum].InvList[idx - 1].isEmpty()) {
+			RemoveInvItem(pnum, idx - 1);
+		}
+	};
+}
+
+void RemoveEmptyLevelItems()
+{
+	for (int i = numitems; i > 0; i--) {
+		int ii = itemactive[i];
+		if (items[ii].isEmpty()) {
+			dItem[items[ii]._ix][items[ii]._iy] = 0;
+			DeleteItem(ii, i);
+		}
+	}
+}
+
 /**
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
-void LoadGame(BOOL firstflag)
+void LoadGame(bool firstflag)
 {
 	FreeGameMem();
 	pfile_remove_temp_files();
@@ -938,7 +1001,7 @@ void LoadGame(BOOL firstflag)
 	}
 
 	setlevel = file.nextBool8();
-	setlvlnum = file.nextBE<Uint32>();
+	setlvlnum = (_setlevels)file.nextBE<Uint32>();
 	currlevel = file.nextBE<Uint32>();
 	leveltype = (dungeon_type)file.nextBE<Uint32>();
 	if (!setlevel)
@@ -962,17 +1025,19 @@ void LoadGame(BOOL firstflag)
 
 	LoadPlayer(&file, myplr);
 
-	gnDifficulty = plr[myplr].pDifficulty;
-	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
-		gnDifficulty = DIFF_NORMAL;
+	sgGameInitInfo.nDifficulty = plr[myplr].pDifficulty;
+	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
+		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
 
 	for (int i = 0; i < giNumberQuests; i++)
 		LoadQuest(&file, i);
 	for (int i = 0; i < MAXPORTAL; i++)
 		LoadPortal(&file, i);
 
-	if (gbIsHellfireSaveGame != gbIsHellfire)
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		ConvertLevels();
+		RemoveEmptyInventory(myplr);
+	}
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);
 	SyncInitPlr(myplr);
@@ -1099,11 +1164,13 @@ void LoadGame(BOOL firstflag)
 	ProcessVisionList();
 	missiles_process_charge();
 	ResetPal();
-	SetCursor_(CURSOR_HAND);
-	gbProcessPlayers = TRUE;
+	NewCursor(CURSOR_HAND);
+	gbProcessPlayers = true;
 
-	if (gbIsHellfireSaveGame != gbIsHellfire)
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		RemoveEmptyLevelItems();
 		SaveGame();
+	}
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
@@ -1192,7 +1259,7 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->skip(1); // Alignment
 	file->writeLE<Uint32>(pItem->_iStatFlag);
 	file->writeLE<Sint32>(idx);
-	file->skip(4); // Unused
+	file->writeLE<Uint32>(pItem->dwBuff);
 	if (gbIsHellfire)
 		file->writeLE<Uint32>(pItem->_iDamAcFlags);
 }
@@ -1279,7 +1346,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Uint8>(pPlayer->_pLvlChanging);
 
 	file->writeBytes(pPlayer->_pName, PLR_NAME_LEN);
-	file->writeLE<Sint8>(pPlayer->_pClass);
+	file->writeLE<Sint8>(static_cast<Sint8>(pPlayer->_pClass));
 	file->skip(3); // Alignment
 	file->writeLE<Sint32>(pPlayer->_pStrength);
 	file->writeLE<Sint32>(pPlayer->_pBaseStr);
@@ -1489,10 +1556,10 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(1); // Alignment
 	file->writeLE<Uint16>(pMonster->mExp);
 
-	file->writeLE<Uint8>(pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX); // For backwards compatibility
+	file->writeLE<Uint8>(pMonster->mHit < UCHAR_MAX ? pMonster->mHit : UCHAR_MAX); // For backwards compatibility
 	file->writeLE<Uint8>(pMonster->mMinDamage);
 	file->writeLE<Uint8>(pMonster->mMaxDamage);
-	file->writeLE<Uint8>(pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX); // For backwards compatibility
+	file->writeLE<Uint8>(pMonster->mHit2 < UCHAR_MAX ? pMonster->mHit2 : UCHAR_MAX); // For backwards compatibility
 	file->writeLE<Uint8>(pMonster->mMinDamage2);
 	file->writeLE<Uint8>(pMonster->mMaxDamage2);
 	file->writeLE<Uint8>(pMonster->mArmorClass);
@@ -1622,7 +1689,7 @@ static void SaveQuest(SaveHelper *file, int i)
 		file->skip(2); // Alignment
 		file->writeLE<Sint32>(pQuest->_qmsg);
 	} else {
-		file->writeLE<Sint8>(pQuest->_qmsg);
+		file->writeLE<Uint8>(pQuest->_qmsg);
 	}
 	file->writeLE<Uint8>(pQuest->_qvar1);
 	file->writeLE<Uint8>(pQuest->_qvar2);
@@ -1667,7 +1734,22 @@ static void SavePortal(SaveHelper *file, int i)
 	file->writeLE<Uint32>(pPortal->setlvl);
 }
 
-void SaveGame()
+const int DiabloItemSaveSize = 368;
+const int HellfireItemSaveSize = 372;
+
+void SaveHeroItems(PlayerStruct *pPlayer)
+{
+	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
+	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(Uint8));
+
+	file.writeLE<Uint8>(gbIsHellfire);
+
+	SaveItems(&file, pPlayer->InvBody, NUM_INVLOC);
+	SaveItems(&file, pPlayer->InvList, NUM_INV_GRID_ELEM);
+	SaveItems(&file, pPlayer->SpdList, MAXBELTITEMS);
+}
+
+void SaveGameData()
 {
 	SaveHelper file("game", FILEBUFF);
 
@@ -1710,7 +1792,7 @@ void SaveGame()
 		file.writeBE<Sint32>(gnLevelTypeTbl[i]);
 	}
 
-	plr[myplr].pDifficulty = gnDifficulty;
+	plr[myplr].pDifficulty = sgGameInitInfo.nDifficulty;
 	SavePlayer(&file, myplr);
 
 	for (int i = 0; i < giNumberQuests; i++)
@@ -1757,7 +1839,7 @@ void SaveGame()
 	for (int i = 0; i < MAXITEMS; i++)
 		file.writeLE<Sint8>(itemavail[i]);
 	for (int i = 0; i < numitems; i++)
-		SaveItem(&file, &item[itemactive[i]]);
+		SaveItem(&file, &items[itemactive[i]]);
 	for (int i = 0; i < 128; i++)
 		file.writeLE<Sint8>(UniqueItemFlag[i]);
 
@@ -1818,15 +1900,17 @@ void SaveGame()
 	file.writeLE<Uint8>(automapflag);
 	file.writeBE<Sint32>(AutoMapScale);
 
-	file.flush();
+}
 
-	gbValidSaveFile = TRUE;
-	pfile_rename_temp_to_perm();
-	pfile_write_hero();
+void SaveGame() {
+	gbValidSaveFile = true;
+	pfile_write_hero(/*save_game_data=*/true);
 }
 
 void SaveLevel()
 {
+	PFileScopedArchiveWriter scoped_writer;
+
 	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
@@ -1839,60 +1923,60 @@ void SaveLevel()
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dDead[i][j]);
+				file.writeLE<Sint8>(dDead[i][j]);
 		}
 	}
 
-	file.writeBE<Uint32>(nummonsters);
-	file.writeBE<Uint32>(numitems);
-	file.writeBE<Uint32>(nobjects);
+	file.writeBE<Sint32>(nummonsters);
+	file.writeBE<Sint32>(numitems);
+	file.writeBE<Sint32>(nobjects);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < MAXMONSTERS; i++)
-			file.writeBE<Uint32>(monstactive[i]);
+			file.writeBE<Sint32>(monstactive[i]);
 		for (int i = 0; i < nummonsters; i++)
 			SaveMonster(&file, monstactive[i]);
 		for (int i = 0; i < MAXOBJECTS; i++)
-			file.writeLE<Uint8>(objectactive[i]);
+			file.writeLE<Sint8>(objectactive[i]);
 		for (int i = 0; i < MAXOBJECTS; i++)
-			file.writeLE<Uint8>(objectavail[i]);
+			file.writeLE<Sint8>(objectavail[i]);
 		for (int i = 0; i < nobjects; i++)
 			SaveObject(&file, objectactive[i]);
 	}
 
 	for (int i = 0; i < MAXITEMS; i++)
-		file.writeLE<Uint8>(itemactive[i]);
+		file.writeLE<Sint8>(itemactive[i]);
 	for (int i = 0; i < MAXITEMS; i++)
-		file.writeLE<Uint8>(itemavail[i]);
+		file.writeLE<Sint8>(itemavail[i]);
 
 	for (int i = 0; i < numitems; i++)
-		SaveItem(&file, &item[itemactive[i]]);
+		SaveItem(&file, &items[itemactive[i]]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
-			file.writeLE<Uint8>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
+			file.writeLE<Sint8>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
-			file.writeLE<Uint8>(dItem[i][j]);
+			file.writeLE<Sint8>(dItem[i][j]);
 	}
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeBE<Uint32>(dMonster[i][j]);
+				file.writeBE<Sint32>(dMonster[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dObject[i][j]);
+				file.writeLE<Sint8>(dObject[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dLight[i][j]);
+				file.writeLE<Sint8>(dLight[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dPreLight[i][j]);
+				file.writeLE<Sint8>(dPreLight[i][j]);
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
@@ -1900,14 +1984,14 @@ void SaveLevel()
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				file.writeLE<Uint8>(dMissile[i][j]);
+				file.writeLE<Sint8>(dMissile[i][j]);
 		}
 	}
 
 	if (!setlevel)
-		plr[myplr]._pLvlVisited[currlevel] = TRUE;
+		plr[myplr]._pLvlVisited[currlevel] = true;
 	else
-		plr[myplr]._pSLvlVisited[setlvlnum] = TRUE;
+		plr[myplr]._pSLvlVisited[setlvlnum] = true;
 }
 
 void LoadLevel()
@@ -1921,24 +2005,24 @@ void LoadLevel()
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dDead[i][j] = file.nextLE<Uint8>();
+				dDead[i][j] = file.nextLE<Sint8>();
 		}
 		SetDead();
 	}
 
-	nummonsters = file.nextBE<Uint32>();
-	numitems = file.nextBE<Uint32>();
-	nobjects = file.nextBE<Uint32>();
+	nummonsters = file.nextBE<Sint32>();
+	numitems = file.nextBE<Sint32>();
+	nobjects = file.nextBE<Sint32>();
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < MAXMONSTERS; i++)
-			monstactive[i] = file.nextBE<Uint32>();
+			monstactive[i] = file.nextBE<Sint32>();
 		for (int i = 0; i < nummonsters; i++)
 			LoadMonster(&file, monstactive[i]);
 		for (int i = 0; i < MAXOBJECTS; i++)
-			objectactive[i] = file.nextLE<Uint8>();
+			objectactive[i] = file.nextLE<Sint8>();
 		for (int i = 0; i < MAXOBJECTS; i++)
-			objectavail[i] = file.nextLE<Uint8>();
+			objectavail[i] = file.nextLE<Sint8>();
 		for (int i = 0; i < nobjects; i++)
 			LoadObject(&file, objectactive[i]);
 		if (!gbSkipSync) {
@@ -1948,37 +2032,37 @@ void LoadLevel()
 	}
 
 	for (int i = 0; i < MAXITEMS; i++)
-		itemactive[i] = file.nextLE<Uint8>();
+		itemactive[i] = file.nextLE<Sint8>();
 	for (int i = 0; i < MAXITEMS; i++)
-		itemavail[i] = file.nextLE<Uint8>();
+		itemavail[i] = file.nextLE<Sint8>();
 	for (int i = 0; i < numitems; i++)
 		LoadItem(&file, itemactive[i]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
-			dFlags[i][j] = file.nextLE<Uint8>();
+			dFlags[i][j] = file.nextLE<Sint8>();
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
-			dItem[i][j] = file.nextLE<Uint8>();
+			dItem[i][j] = file.nextLE<Sint8>();
 	}
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dMonster[i][j] = file.nextBE<Uint32>();
+				dMonster[i][j] = file.nextBE<Sint32>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dObject[i][j] = file.nextLE<Uint8>();
+				dObject[i][j] = file.nextLE<Sint8>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dLight[i][j] = file.nextLE<Uint8>();
+				dLight[i][j] = file.nextLE<Sint8>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
-				dPreLight[i][j] = file.nextLE<Uint8>();
+				dPreLight[i][j] = file.nextLE<Sint8>();
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
@@ -1990,17 +2074,21 @@ void LoadLevel()
 		}
 	}
 
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		RemoveEmptyLevelItems();
+	}
+
 	if (!gbSkipSync) {
 		AutomapZoomReset();
 		ResyncQuests();
 		SyncPortals();
-		dolighting = TRUE;
+		dolighting = true;
 	}
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)
-			LightList[plr[i]._plid]._lunflag = TRUE;
+			LightList[plr[i]._plid]._lunflag = true;
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

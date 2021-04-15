@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace dvl {
+namespace devilution {
 
 const std::string &GetBasePath();
 const std::string &GetPrefPath();
@@ -16,4 +16,4 @@ void SetConfigPath(const char *path);
 void SetTtfPath(const char *path);
 void SetTtfName(const char *path);
 
-} // namespace dvl
+} // namespace devilution

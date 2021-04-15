@@ -5,17 +5,14 @@
 #include "DiabloUI/text.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-namespace dvl {
+namespace devilution {
 
 char selconn_MaxPlayers[21];
 char selconn_Description[64];
 char selconn_Gateway[129];
 bool selconn_ReturnValue = false;
 bool selconn_EndMenu = false;
-_SNETPROGRAMDATA *selconn_ClientInfo;
-_SNETPLAYERDATA *selconn_UserInfo;
-_SNETUIDATA *selconn_UiInfo;
-_SNETVERSIONDATA *selconn_FileInfo;
+GameData *selconn_GameData;
 
 int provider;
 
@@ -29,10 +26,8 @@ void selconn_Load()
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
 #ifndef NONET
+	vecConnItems.push_back(new UiListItem("Zerotier", SELCONN_ZT));
 	vecConnItems.push_back(new UiListItem("Client-Server (TCP)", SELCONN_TCP));
-#ifdef BUGGY
-	vecConnItems.push_back(new UiListItem("Peer-to-Peer (UDP)", SELCONN_UDP));
-#endif
 #endif
 	vecConnItems.push_back(new UiListItem("Loopback", SELCONN_LOOPBACK));
 
@@ -106,8 +101,8 @@ void selconn_Focus(int value)
 		strncpy(selconn_Description, "All computers must be connected to a TCP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
-	case SELCONN_UDP:
-		strncpy(selconn_Description, "All computers must be connected to a UDP-compatible network.", sizeof(selconn_Description) - 1);
+	case SELCONN_ZT:
+		strncpy(selconn_Description, "All computers must be connected to the internet.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
 	case SELCONN_LOOPBACK:
@@ -125,22 +120,13 @@ void selconn_Select(int value)
 	provider = vecConnItems[value]->m_value;
 
 	selconn_Free();
-	selconn_EndMenu = SNetInitializeProvider(provider, selconn_ClientInfo, selconn_UserInfo, selconn_UiInfo, selconn_FileInfo);
+	selconn_EndMenu = SNetInitializeProvider(provider, selconn_GameData);
 	selconn_Load();
 }
 
-int UiSelectProvider(
-    int a1,
-    _SNETPROGRAMDATA *client_info,
-    _SNETPLAYERDATA *user_info,
-    _SNETUIDATA *ui_info,
-    _SNETVERSIONDATA *file_info,
-    int *type)
+int UiSelectProvider(GameData *gameData)
 {
-	selconn_ClientInfo = client_info;
-	selconn_UserInfo = user_info;
-	selconn_UiInfo = ui_info;
-	selconn_FileInfo = file_info;
+	selconn_GameData = gameData;
 	selconn_Load();
 
 	selconn_ReturnValue = true;
@@ -154,4 +140,4 @@ int UiSelectProvider(
 	return selconn_ReturnValue;
 }
 
-} // namespace dvl
+} // namespace devilution

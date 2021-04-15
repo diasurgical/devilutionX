@@ -6,7 +6,7 @@
 #include "all.h"
 #include "paths.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 /**
  * @brief Check that we have write access to the game install folder
@@ -24,4 +24,4 @@ void ReadOnlyTest()
 	remove(path.c_str());
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

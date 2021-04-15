@@ -2,8 +2,8 @@
 
 #include "engine.h"
 
-namespace dvl {
+namespace devilution {
 
 void DrawControllerModifierHints(CelOutputBuffer out);
 
-} // namespace dvl
+} // namespace devilution

@@ -10,7 +10,7 @@
 #include "DiabloUI/selhero.h"
 #include "options.h"
 
-namespace dvl {
+namespace devilution {
 
 char selgame_Label[32];
 char selgame_Ip[129] = "";
@@ -20,11 +20,11 @@ bool selgame_enteringGame;
 int selgame_selectedGame;
 bool selgame_endMenu;
 int *gdwPlayerId;
-int nDifficulty;
+_difficulty nDifficulty;
 int nTickRate;
 int heroLevel;
 
-static _SNETPROGRAMDATA *m_client_info;
+static GameData *m_game_data;
 extern int provider;
 
 #define DESCRIPTION_WIDTH 205
@@ -122,7 +122,7 @@ void selgame_GameSelection_Focus(int value)
  * @param pInfo Hero info
  * @return always true
  */
-BOOL UpdateHeroLevel(_uiheroinfo *pInfo)
+bool UpdateHeroLevel(_uiheroinfo *pInfo)
 {
 	if (strcasecmp(pInfo->name, gszHero) == 0)
 		heroLevel = pInfo->level;
@@ -245,7 +245,7 @@ void selgame_Diff_Select(int value)
 		return;
 	}
 
-	nDifficulty = value;
+	nDifficulty = (_difficulty)vecSelGameDlgItems[value]->m_value;
 
 	if (!selhero_isMultiPlayer) {
 		// This is part of a dangerous hack to enable difficulty selection in single-player.
@@ -427,7 +427,7 @@ void selgame_Password_Select(int value)
 	if (selgame_selectedGame) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		if (SNetJoinGame(selgame_selectedGame, selgame_Ip, selgame_Password, NULL, NULL, gdwPlayerId)) {
-			if (!IsGameCompatible(m_client_info->initdata)) {
+			if (!IsGameCompatible(m_game_data)) {
 				selgame_GameSelection_Select(1);
 				return;
 			}
@@ -443,14 +443,13 @@ void selgame_Password_Select(int value)
 		return;
 	}
 
-	GameData *data = m_client_info->initdata;
-	data->nDifficulty = nDifficulty;
-	data->nTickRate = nTickRate;
-	data->bJogInTown = sgOptions.Gameplay.bJogInTown;
-	data->bTheoQuest = sgOptions.Gameplay.bTheoQuest;
-	data->bCowQuest = sgOptions.Gameplay.bCowQuest;
+	m_game_data->nDifficulty = nDifficulty;
+	m_game_data->nTickRate = nTickRate;
+	m_game_data->bRunInTown = sgOptions.Gameplay.bRunInTown;
+	m_game_data->bTheoQuest = sgOptions.Gameplay.bTheoQuest;
+	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest;
 
-	if (SNetCreateGame(NULL, selgame_Password, NULL, 0, (char *)data, sizeof(GameData), MAX_PLRS, NULL, NULL, gdwPlayerId)) {
+	if (SNetCreateGame(NULL, selgame_Password, NULL, 0, (char *)m_game_data, sizeof(GameData), MAX_PLRS, NULL, NULL, gdwPlayerId)) {
 		UiInitList_clear();
 		selgame_endMenu = true;
 	} else {
@@ -469,11 +468,10 @@ void selgame_Password_Esc()
 		selgame_GameSpeedSelection();
 }
 
-int UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info,
-    _SNETVERSIONDATA *file_info, int *playerId)
+int UiSelectGame(GameData *gameData, int *playerId)
 {
 	gdwPlayerId = playerId;
-	m_client_info = client_info;
+	m_game_data = gameData;
 	LoadBackgroundArt("ui_art\\selgame.pcx");
 	selgame_GameSelection_Init();
 
@@ -486,4 +484,4 @@ int UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_in
 
 	return selgame_enteringGame;
 }
-} // namespace dvl
+} // namespace devilution

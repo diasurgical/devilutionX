@@ -3,14 +3,9 @@
  *
  * Interface of debug functions.
  */
-#ifndef __DEBUG_H__
-#define __DEBUG_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 extern BYTE *pSquareCel;
 
@@ -21,15 +16,9 @@ void GiveGoldCheat();
 void TakeGoldCheat();
 void MaxSpellsCheat();
 void SetAllSpellsCheat();
-void PrintDebugPlayer(BOOL bNextPlayer);
+void PrintDebugPlayer(bool bNextPlayer);
 void PrintDebugQuest();
 void GetDebugMonster();
 void NextDebugMonster();
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DEBUG_H__ */

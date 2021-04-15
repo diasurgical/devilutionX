@@ -3,10 +3,12 @@
 #include <cstdint>
 
 #include "all.h"
+#include "sdl_ptrs.h"
+
 #include <SDL.h>
 #include <type_traits>
 
-namespace dvl {
+namespace devilution {
 
 extern int refreshDelay; // Screen refresh rate in nanoseconds
 extern SDL_Window *window;
@@ -38,7 +40,7 @@ bool OutputRequiresScaling();
 void ScaleOutputRect(SDL_Rect *rect);
 
 // If the output requires software scaling, replaces the given surface with a scaled one.
-void ScaleSurfaceToOutput(SDL_Surface **surface);
+SDLSurfaceUniquePtr ScaleSurfaceToOutput(SDLSurfaceUniquePtr surface);
 
 // Convert from output coordinates to logical (resolution-independent) coordinates.
 template <
@@ -93,4 +95,4 @@ void LogicalToOutput(T *x, T *y)
 #endif
 }
 
-} // namespace dvl
+} // namespace devilution

@@ -30,6 +30,8 @@ jobs:
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target test
       - run: bash <(curl -s https://codecov.io/bash)
+    environment:
+      CTEST_OUTPUT_ON_FAILURE: 1
   linux_x86_64_sdl1:
     docker:
       - image: debian:stretch-backports

@@ -6,7 +6,7 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
-namespace dvl {
+namespace devilution {
 
 typedef struct event_emul {
 	SDL_mutex *mutex;
@@ -20,4 +20,4 @@ void ResetEvent(event_emul *e);
 int WaitForEvent(event_emul *e);
 SDL_Thread *CreateThread(unsigned int (*handler)(void *), SDL_threadID *ThreadID);
 
-} // namespace dvl
+} // namespace devilution

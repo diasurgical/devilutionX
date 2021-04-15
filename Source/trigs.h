@@ -3,23 +3,18 @@
  *
  * Interface of functionality for triggering events when the player enters an area.
  */
-#ifndef __TRIGS_H__
-#define __TRIGS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct TriggerStruct {
+struct TriggerStruct {
 	int _tx;
 	int _ty;
-	int _tmsg;
+	interface_mode _tmsg;
 	int _tlvl;
-} TriggerStruct;
+};
 
-extern BOOL trigflag;
+extern bool trigflag;
 extern int numtrigs;
 extern TriggerStruct trigs[MAXTRIGGERS];
 extern int TWarpFrom;
@@ -38,10 +33,4 @@ void Freeupstairs();
 void CheckTrigForce();
 void CheckTriggers();
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TRIGS_H__ */

@@ -6,7 +6,7 @@
 #include "all.h"
 #include "dvlnet/abstract_net.h"
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 class loopback : public abstract_net {
@@ -26,19 +26,20 @@ public:
 	virtual bool SNetReceiveMessage(int *sender, char **data, int *size);
 	virtual bool SNetSendMessage(int dest, void *data, unsigned int size);
 	virtual bool SNetReceiveTurns(char **data, unsigned int *size,
-		DWORD *status);
+	    DWORD *status);
 	virtual bool SNetSendTurn(char *data, unsigned int size);
 	virtual int SNetGetProviderCaps(struct _SNETCAPS *caps);
 	virtual bool SNetRegisterEventHandler(event_type evtype,
-		SEVTHANDLER func);
+	    SEVTHANDLER func);
 	virtual bool SNetUnregisterEventHandler(event_type evtype,
-		SEVTHANDLER func);
+	    SEVTHANDLER func);
 	virtual bool SNetLeaveGame(int type);
 	virtual bool SNetDropPlayer(int playerid, DWORD flags);
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);
 	virtual bool SNetGetTurnsInTransit(DWORD *turns);
 	virtual void setup_gameinfo(buffer_t info);
+	virtual std::string make_default_gamename();
 };
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

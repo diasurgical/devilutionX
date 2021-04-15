@@ -6,7 +6,7 @@
 #include "controls/remap_keyboard.h"
 #include "DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 MenuAction GetMenuHeldUpDownAction()
 {
@@ -112,6 +112,6 @@ MenuAction GetMenuAction(const SDL_Event &event)
 #endif
 
 	return MenuAction_NONE;
-} // namespace dvl
+} // namespace devilution
 
-} // namespace dvl
+} // namespace devilution

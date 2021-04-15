@@ -8,14 +8,14 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 char gszHero[16];
 
 /* data */
 
 /** The active music track id for the main menu. */
-int menu_music_track_id = TMUSIC_INTRO;
+uint8_t menu_music_track_id = TMUSIC_INTRO;
 
 void mainmenu_refresh_music()
 {
@@ -34,12 +34,12 @@ void mainmenu_refresh_music()
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 }
 
-static BOOL mainmenu_init_menu(int type)
+static bool mainmenu_init_menu(_selhero_selections type)
 {
-	BOOL success;
+	bool success;
 
 	if (type == SELHERO_PREVIOUS)
-		return TRUE;
+		return true;
 
 	music_stop();
 
@@ -50,19 +50,13 @@ static BOOL mainmenu_init_menu(int type)
 	return success;
 }
 
-static BOOL mainmenu_single_player()
+static bool mainmenu_single_player()
 {
 	gbIsMultiplayer = false;
-
-	gbJogInTown = sgOptions.Gameplay.bJogInTown;
-	gnTickRate = sgOptions.Gameplay.nTickRate;
-	gbTheoQuest = sgOptions.Gameplay.bTheoQuest;
-	gbCowQuest = sgOptions.Gameplay.bCowQuest;
-
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
-static BOOL mainmenu_multi_player()
+static bool mainmenu_multi_player()
 {
 	gbIsMultiplayer = true;
 	return mainmenu_init_menu(SELHERO_CONNECT);
@@ -72,29 +66,15 @@ static void mainmenu_play_intro()
 {
 	music_stop();
 	if (gbIsHellfire)
-		play_movie("gendata\\Hellfire.smk", TRUE);
+		play_movie("gendata\\Hellfire.smk", true);
 	else
-		play_movie("gendata\\diablo1.smk", TRUE);
+		play_movie("gendata\\diablo1.smk", true);
 	mainmenu_refresh_music();
 }
-void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
-{
-	if (UiValidPlayerName(name_2))
-		pfile_rename_hero(name_1, name_2);
-}
 
-bool mainmenu_select_hero_dialog(
-    const _SNETPROGRAMDATA *client_info,
-    const _SNETPLAYERDATA *user_info,
-    const _SNETUIDATA *ui_info,
-    const _SNETVERSIONDATA *fileinfo,
-    DWORD mode,
-    char *cname, DWORD clen,
-    char *cdesc, DWORD cdlen,
-    bool *multi)
+bool mainmenu_select_hero_dialog(GameData *gameData)
 {
-	BOOL hero_is_created = TRUE;
-	int dlgresult = 0;
+	_selhero_selections dlgresult = SELHERO_NEW_DUNGEON;
 	if (!gbIsMultiplayer) {
 		UiSelHeroSingDialog(
 		    pfile_ui_set_hero_infos,
@@ -103,13 +83,9 @@ bool mainmenu_select_hero_dialog(
 		    pfile_ui_set_class_stats,
 		    &dlgresult,
 		    &gszHero,
-		    &gnDifficulty);
-		client_info->initdata->nDifficulty = gnDifficulty;
+		    &gameData->nDifficulty);
 
-		if (dlgresult == SELHERO_CONTINUE)
-			gbLoadGame = TRUE;
-		else
-			gbLoadGame = FALSE;
+		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
 	} else {
 		UiSelHeroMultDialog(
 		    pfile_ui_set_hero_infos,
@@ -117,50 +93,46 @@ bool mainmenu_select_hero_dialog(
 		    pfile_delete_save,
 		    pfile_ui_set_class_stats,
 		    &dlgresult,
-		    &hero_is_created,
 		    &gszHero);
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);
-		return FALSE;
+		return false;
 	}
 
-	pfile_create_player_description(cdesc, cdlen);
-	if (multi) {
-		*multi = hero_is_created;
-	}
-	if (cname && clen)
-		SStrCopy(cname, gszHero, clen);
+	pfile_create_player_description();
 
-	return TRUE;
+	return true;
 }
 
 void mainmenu_loop()
 {
-	BOOL done;
-	int menu;
+	bool done;
+	_mainmenu_selections menu;
 
 	mainmenu_refresh_music();
-	done = FALSE;
+	done = false;
 
 	do {
-		menu = 0;
+		menu = MAINMENU_NONE;
 		if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
 			app_fatal("Unable to display mainmenu");
 
 		switch (menu) {
+		case MAINMENU_NONE:
+			break;
 		case MAINMENU_SINGLE_PLAYER:
 			if (!mainmenu_single_player())
-				done = TRUE;
+				done = true;
 			break;
 		case MAINMENU_MULTIPLAYER:
 			if (!mainmenu_multi_player())
-				done = TRUE;
+				done = true;
 			break;
 		case MAINMENU_ATTRACT_MODE:
 		case MAINMENU_REPLAY_INTRO:
 			if (gbIsSpawn && !gbIsHellfire)
-				done = FALSE;
+				done = false;
 			else if (gbActive)
 				mainmenu_play_intro();
 			break;
@@ -171,7 +143,7 @@ void mainmenu_loop()
 			UiSupportDialog();
 			break;
 		case MAINMENU_EXIT_DIABLO:
-			done = TRUE;
+			done = true;
 			break;
 		}
 	} while (!done);
@@ -179,4 +151,4 @@ void mainmenu_loop()
 	music_stop();
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

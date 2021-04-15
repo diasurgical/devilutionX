@@ -24,7 +24,7 @@
 #include <cstdio>
 #endif
 
-namespace dvl {
+namespace devilution {
 
 inline bool FileExists(const char *path)
 {
@@ -32,7 +32,8 @@ inline bool FileExists(const char *path)
 	return ::access(path, F_OK) == 0;
 #else
 	FILE *file = std::fopen(path, "rb");
-	if (file == NULL) return false;
+	if (file == NULL)
+		return false;
 	std::fclose(file);
 	return true;
 #endif
@@ -43,7 +44,7 @@ inline bool GetFileSize(const char *path, std::uintmax_t *size)
 #if defined(_WIN64) || defined(_WIN32)
 	WIN32_FILE_ATTRIBUTE_DATA attr;
 	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
-	wchar_t* path_utf16 = new wchar_t[path_utf16_size];
+	wchar_t *path_utf16 = new wchar_t[path_utf16_size];
 	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
 		delete[] path_utf16;
 		return false;
@@ -110,4 +111,4 @@ inline void RemoveFile(const char *lpFileName)
 	}
 }
 
-} // namespace dvl
+} // namespace devilution

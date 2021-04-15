@@ -3,24 +3,13 @@
  *
  * Interface of video playback.
  */
-#ifndef __MOVIE_H__
-#define __MOVIE_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 extern BYTE movie_playing;
-extern BOOL loop_movie;
+extern bool loop_movie;
 
-void play_movie(const char *pszMovie, BOOL user_can_close);
+void play_movie(const char *pszMovie, bool user_can_close);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MOVIE_H__ */

@@ -1,6 +1,6 @@
 #include "DiabloUI/text.h"
 
-namespace dvl {
+namespace devilution {
 
 std::size_t GetArtStrWidth(const char *str, std::size_t size)
 {
@@ -57,4 +57,4 @@ void WordWrapArtStr(char *text, std::size_t width)
 	}
 }
 
-} // namespace dvl
+} // namespace devilution

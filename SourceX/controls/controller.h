@@ -5,7 +5,7 @@
 #include "all.h"
 #include "./controller_buttons.h"
 
-namespace dvl {
+namespace devilution {
 
 struct ControllerButtonEvent {
 	ControllerButton button;
@@ -20,4 +20,4 @@ bool IsControllerButtonPressed(ControllerButton button);
 
 bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event);
 
-} // namespace dvl
+} // namespace devilution

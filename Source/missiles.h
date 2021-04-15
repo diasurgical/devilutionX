@@ -3,46 +3,21 @@
  *
  * Interface of missile functionality.
  */
-#ifndef __MISSILES_H__
-#define __MISSILES_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "misdat.h"
 
-typedef struct MissileData {
-	Uint8 mName;
-	void (*mAddProc)(Sint32, Sint32, Sint32, Sint32, Sint32, Sint32, Sint8, Sint32, Sint32);
-	void (*mProc)(Sint32);
-	bool mDraw;
-	Uint8 mType;
-	Uint8 mResist;
-	Uint8 mFileNum;
-	Sint32 mlSFX;
-	Sint32 miSFX;
-} MissileData;
+namespace devilution {
 
-typedef struct MisFileData {
-	Uint8 mAnimName;
-	Uint8 mAnimFAmt;
-	const char *mName;
-	Sint32 mFlags;
-	Uint8 *mAnimData[16];
-	Uint8 mAnimDelay[16];
-	Uint8 mAnimLen[16];
-	Sint32 mAnimWidth[16];
-	Sint32 mAnimWidth2[16];
-} MisFileData;
-
-typedef struct ChainStruct {
+struct ChainStruct {
 	Sint32 idx;
 	Sint32 _mitype;
 	Sint32 _mirange;
-} ChainStruct;
+};
 
-typedef struct MissileStruct {
+struct MissileStruct {
 	Sint32 _mitype;  // Type of projectile (missile_id)
 	Sint32 _mix;     // Tile X-position of the missile
 	Sint32 _miy;     // Tile Y-position of the missile
@@ -56,7 +31,7 @@ typedef struct MissileStruct {
 	Sint32 _mityoff; // How far the missile has travelled in its lifespan along the Y-axis. mix/miy/mxoff/myoff get updated every game tick based on this
 	Sint32 _mimfnum; // The direction of the missile (direction enum)
 	Sint32 _mispllvl;
-	bool _miDelFlag; // Indicate weather the missile should be deleted
+	bool _miDelFlag; // Indicate whether the missile should be deleted
 	Uint8 _miAnimType;
 	Sint32 _miAnimFlags;
 	Uint8 *_miAnimData;
@@ -73,7 +48,8 @@ typedef struct MissileStruct {
 	Uint32 _miUniqTrans;
 	Sint32 _mirange; // Time to live for the missile in game ticks, oncs 0 the missile will be marked for deletion via _miDelFlag
 	Sint32 _misource;
-	Sint32 _micaster;
+	/** mienemy_type or player id*/
+	Sint8 _micaster;
 	Sint32 _midam;
 	bool _miHitFlag;
 	Sint32 _midist; // Used for arrows to measure distance travelled (increases by 1 each game tick). Higher value is a penalty for accuracy calculation when hitting enemy
@@ -87,7 +63,7 @@ typedef struct MissileStruct {
 	Sint32 _miVar6;
 	Sint32 _miVar7;
 	Sint32 _miVar8;
-} MissileStruct;
+};
 
 extern int missileactive[MAXMISSILES];
 extern int missileavail[MAXMISSILES];
@@ -96,12 +72,12 @@ extern int nummissiles;
 extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
-int GetSpellLevel(int id, int sn);
+int GetSpellLevel(int id, spell_id sn);
 int GetDirection8(int x1, int y1, int x2, int y2);
 int GetDirection16(int x1, int y1, int x2, int y2);
 void DeleteMissile(int mi, int i);
-BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift);
-BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEAN shift, int earflag, BOOLEAN *blocked);
+bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);
+bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked);
 void SetMissAnim(int mi, int animtype);
 void SetMissDir(int mi, int dir);
 void LoadMissileGFX(BYTE mi);
@@ -195,7 +171,7 @@ void AddTelekinesis(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint3
 void AddBoneSpirit(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddRportal(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddDiabApoca(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, char micaster, int id, int midam, int spllvl);
+int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl);
 void MI_Dummy(Sint32 i);
 void MI_Golem(Sint32 i);
 void MI_SetManashield(Sint32 i);
@@ -258,10 +234,4 @@ void ProcessMissiles();
 void missiles_process_charge();
 void ClearMissileSpot(int mi);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MISSILES_H__ */

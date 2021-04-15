@@ -11,7 +11,7 @@
 
 #include <asio/connect.hpp>
 
-namespace dvl {
+namespace devilution {
 namespace net {
 
 int tcp_client::create(std::string addrstr, std::string passwd)
@@ -127,9 +127,14 @@ bool tcp_client::SNetLeaveGame(int type)
 	return ret;
 }
 
+std::string tcp_client::make_default_gamename()
+{
+	return std::string(sgOptions.Network.szBindAddress);
+}
+
 tcp_client::~tcp_client()
 {
 }
 
 } // namespace net
-} // namespace dvl
+} // namespace devilution

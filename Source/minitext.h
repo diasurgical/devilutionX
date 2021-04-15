@@ -3,14 +3,9 @@
  *
  * Interface of scrolling dialog text.
  */
-#ifndef __MINITEXT_H__
-#define __MINITEXT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 extern bool qtextflag;
 
@@ -28,10 +23,4 @@ void DrawQTextBack(CelOutputBuffer out);
  */
 void DrawQText(CelOutputBuffer out);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MINITEXT_H__ */

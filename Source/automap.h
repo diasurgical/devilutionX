@@ -3,16 +3,11 @@
  *
  * Interface of the in-game map overlay.
  */
-#ifndef __AUTOMAP_H__
-#define __AUTOMAP_H__
+#pragma once
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 /** Specifies whether the automap is enabled. */
 extern bool automapflag;
@@ -88,10 +83,4 @@ void SetAutomapView(Sint32 x, Sint32 y);
  */
 void AutomapZoomReset();
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __AUTOMAP_H__ */

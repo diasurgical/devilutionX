@@ -3,24 +3,13 @@
  *
  * Interface of the caves level generation algorithms.
  */
-#ifndef __DRLG_L3_H__
-#define __DRLG_L3_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 void AddFenceDoors();
-void CreateL3Dungeon(DWORD rseed, int entry);
+void CreateL3Dungeon(DWORD rseed, lvl_entry entry);
 void LoadL3Dungeon(const char *sFileName, int vx, int vy);
 void LoadPreL3Dungeon(const char *sFileName, int vx, int vy);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DRLG_L3_H__ */

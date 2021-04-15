@@ -27,8 +27,6 @@
 #ifndef __STORMPORT_H__
 #define __STORMPORT_H__
 
-#define STORMAPI
-
 #ifndef __cplusplus
   #define bool char
   #define true 1
@@ -38,7 +36,7 @@
 //-----------------------------------------------------------------------------
 // Defines for Windows
 
-#if !defined(PLATFORM_DEFINED) && defined(_WIN32)
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(_WIN32)
 
   // In MSVC 8.0, there are some functions declared as deprecated.
   #if _MSC_VER >= 1400
@@ -56,23 +54,25 @@
   #include <windows.h>
 
   #include <wininet.h>
-  #define PLATFORM_LITTLE_ENDIAN
+  #define STORMLIB_LITTLE_ENDIAN
 
   #ifdef _WIN64
-    #define PLATFORM_64BIT
+    #define STORMLIB_64BIT
   #else
-    #define PLATFORM_32BIT
+    #define STORMLIB_32BIT
   #endif
 
-  #define PLATFORM_WINDOWS
-  #define PLATFORM_DEFINED                  // The platform is known now
+  #define STORMLIB_CDECL __cdecl
+
+  #define STORMLIB_WINDOWS
+  #define STORMLIB_PLATFORM_DEFINED                 // The platform is known now
 
 #endif
 
 //-----------------------------------------------------------------------------
 // Defines for Mac
 
-#if !defined(PLATFORM_DEFINED) && defined(__APPLE__)  // Mac BSD API
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__APPLE__)  // Mac BSD API
 
   // Macintosh
   #include <sys/types.h>
@@ -87,7 +87,7 @@
   #include <assert.h>
   #include <errno.h>
 
-  // Support for PowerPC on Mac OS X
+  // Support for PowerPC on Max OS X
   #if (__ppc__ == 1) || (__POWERPC__ == 1) || (_ARCH_PPC == 1)
     #include <stdint.h>
     #include <CoreFoundation/CFByteOrder.h>
@@ -98,138 +98,79 @@
   #define    __SYS_BZLIB
 
   #ifndef __BIG_ENDIAN__
-    #define PLATFORM_LITTLE_ENDIAN
+    #define STORMLIB_LITTLE_ENDIAN
   #endif
 
-  #define PLATFORM_MAC
-  #define PLATFORM_DEFINED                  // The platform is known now
-
-#endif
-
-#if !defined(PLATFORM_DEFINED) && defined(__HAIKU__)
-
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <sys/mman.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-  #include <stdint.h>
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <stdarg.h>
-  #include <string.h>
-  #include <ctype.h>
-  #include <assert.h>
-  #include <errno.h>
-
-  #ifndef __BIG_ENDIAN__
-    #define PLATFORM_LITTLE_ENDIAN
-  #endif
-
-  #define PLATFORM_HAIKU
-  #define PLATFORM_DEFINED                  // The platform is known now
-
-#endif
-
-#if !defined(PLATFORM_DEFINED) && defined(__AMIGA__)
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-#include <ctype.h>
-#include <assert.h>
-#include <errno.h>
-
-#define PLATFORM_AMIGA
-#define PLATFORM_DEFINED
-
-#endif
-
-#if !defined(PLATFORM_DEFINED) && defined(__SWITCH__)
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-  #include <stdint.h>
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <stdarg.h>
-  #include <string.h>
-  #include <strings.h>
-  #include <ctype.h>
-  #include <assert.h>
-  #include <errno.h>
-
-  #ifndef __BIG_ENDIAN__
-    #define PLATFORM_LITTLE_ENDIAN
-  #endif
-
-  #define PLATFORM_SWITCH
-  #define PLATFORM_DEFINED
-
-#endif
-
-#if !defined(PLATFORM_DEFINED) && defined(__3DS__)
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-  #include <stdint.h>
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <stdarg.h>
-  #include <string.h>
-  #include <strings.h>
-  #include <ctype.h>
-  #include <assert.h>
-  #include <errno.h>
-
-  #define PLATFORM_LITTLE_ENDIAN
-
-  #define PLATFORM_CTR
-  #define PLATFORM_DEFINED
-
-#endif
-
-#if !defined(PLATFORM_DEFINED) && defined(__vita__)
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-  #include <stdint.h>
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <stdarg.h>
-  #include <string.h>
-  #include <strings.h>
-  #include <ctype.h>
-  #include <assert.h>
-  #include <errno.h>
-
-  #ifndef __BIG_ENDIAN__
-    #define PLATFORM_LITTLE_ENDIAN
-  #endif
-
-  #define PLATFORM_VITA
-  #define PLATFORM_DEFINED
+  #define STORMLIB_MAC
+  #define STORMLIB_HAS_MMAP                         // Indicate that we have mmap support
+  #define STORMLIB_PLATFORM_DEFINED                 // The platform is known now
 
 #endif
 
 //-----------------------------------------------------------------------------
-// Assumption: we are not on Windows nor Macintosh, so this must be linux *grin*
+// Defines for HAIKU platform
 
-#if !defined(PLATFORM_DEFINED)
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__HAIKU__)
 
   #include <sys/types.h>
   #include <sys/stat.h>
-  #ifndef __vita__
   #include <sys/mman.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #ifndef __BIG_ENDIAN__
+    #define STORMLIB_LITTLE_ENDIAN
   #endif
+
+  #define STORMLIB_MAC                              // Use Mac compatible code
+  #define STORMLIB_HAIKU
+  #define STORMLIB_PLATFORM_DEFINED                 // The platform is known now
+
+#endif
+
+//-----------------------------------------------------------------------------
+// Defines for AMIGA platform
+
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__AMIGA__)
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #ifndef __BIG_ENDIAN__
+    #define STORMLIB_LITTLE_ENDIAN
+  #endif
+
+  #define STORMLIB_MAC                              // Use Mac compatible code
+  #define STORMLIB_AMIGA
+  #define STORMLIB_PLATFORM_DEFINED
+
+#endif
+
+//-----------------------------------------------------------------------------
+// Defines for Switch platform
+
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__SWITCH__)
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
   #include <fcntl.h>
   #include <unistd.h>
   #include <stdint.h>
@@ -243,28 +184,122 @@
   #include <errno.h>
 
   #ifndef __BIG_ENDIAN__
-    #define PLATFORM_LITTLE_ENDIAN
+    #define STORMLIB_LITTLE_ENDIAN
   #endif
 
-  #define PLATFORM_LINUX
-  #define PLATFORM_DEFINED
+  #define STORMLIB_MAC                              // Use Mac compatible code
+  #define STORMLIB_SWITCH
+  #define STORMLIB_PLATFORM_DEFINED
+
+#endif
+
+//-----------------------------------------------------------------------------
+// Defines for 3DS platform
+
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__3DS__)
+
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <strings.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #define STORMLIB_LITTLE_ENDIAN
+
+  #define STORMLIB_MAC                              // Use Mac compatible code
+  #define STORMLIB_CTR
+  #define STORMLIB_PLATFORM_DEFINED
+
+#endif
+
+//-----------------------------------------------------------------------------
+// Defines for Vita platform
+
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__vita__)
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <strings.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #ifndef __BIG_ENDIAN__
+    #define STORMLIB_LITTLE_ENDIAN
+  #endif
+
+  #define STORMLIB_MAC                              // Use Mac compatible code
+  #define STORMLIB_VITA
+  #define STORMLIB_PLATFORM_DEFINED
+
+#endif
+
+//-----------------------------------------------------------------------------
+// Assumption: If the platform is not defined, assume a Linux-like platform
+
+#if !defined(STORMLIB_PLATFORM_DEFINED)
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <strings.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #ifndef __BIG_ENDIAN__
+    #define STORMLIB_LITTLE_ENDIAN
+  #endif
+
+  #define STORMLIB_LINUX
+
+  // Platforms with mmap support
+  #if defined(__linux__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
+    #include <sys/mman.h>
+    #define STORMLIB_HAS_MMAP
+  #endif
+
+  #define STORMLIB_PLATFORM_DEFINED
 
 #endif
 
 //-----------------------------------------------------------------------------
 // Definition of Windows-specific types for non-Windows platforms
 
-#ifndef PLATFORM_WINDOWS
+#ifndef STORMLIB_WINDOWS
   #if __LP64__
-    #define PLATFORM_64BIT
+    #define STORMLIB_64BIT
   #else
-    #define PLATFORM_32BIT
+    #define STORMLIB_32BIT
   #endif
+
+  // __cdecl meand nothing on non-Windows
+  #define STORMLIB_CDECL /* */
 
   // Typedefs for ANSI C
   typedef unsigned char  BYTE;
-  typedef int            LONG;
   typedef unsigned short USHORT;
+  typedef int            LONG;
   typedef unsigned int   DWORD;
   typedef unsigned long  DWORD_PTR;
   typedef long           LONG_PTR;
@@ -283,7 +318,7 @@
   typedef char         * LPTSTR;
   typedef char         * LPSTR;
 
-  #ifdef PLATFORM_32BIT
+  #ifdef STORMLIB_32BIT
     #define _LZMA_UINT32_IS_ULONG
   #endif
 
@@ -292,11 +327,7 @@
     #define MAX_PATH 1024
   #endif
 
-  #ifndef _countof
-    #define _countof(x)  (sizeof(x) / sizeof(x[0]))
-  #endif
-
-  #define WINAPI __attribute__((stdcall))
+  #define WINAPI
 
   #define FILE_BEGIN    SEEK_SET
   #define FILE_CURRENT  SEEK_CUR
@@ -320,10 +351,10 @@
   #define _tcsicmp  strcasecmp
   #define _tcsnicmp strncasecmp
 
-#endif // !PLATFORM_WINDOWS
+#endif // !STORMLIB_WINDOWS
 
 // 64-bit calls are supplied by "normal" calls on Mac
-#if defined(PLATFORM_MAC) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR) || defined(PLATFORM_VITA)
+#if defined(STORMLIB_MAC)
   #define stat64  stat
   #define fstat64 fstat
   #define lseek64 lseek
@@ -333,7 +364,7 @@
 #endif
 
 // Platform-specific error codes for UNIX-based platforms
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR) || defined(PLATFORM_VITA)
+#if defined(STORMLIB_MAC) || defined(STORMLIB_LINUX)
   #define ERROR_SUCCESS                  0
   #define ERROR_FILE_NOT_FOUND           ENOENT
   #define ERROR_ACCESS_DENIED            EPERM
@@ -341,7 +372,7 @@
   #define ERROR_NOT_ENOUGH_MEMORY        ENOMEM
   #define ERROR_NOT_SUPPORTED            ENOTSUP
   #define ERROR_INVALID_PARAMETER        EINVAL
-  #define ERROR_NEGATIVE_SEEK            EINVAL
+  #define ERROR_NEGATIVE_SEEK            ESPIPE
   #define ERROR_DISK_FULL                ENOSPC
   #define ERROR_ALREADY_EXISTS           EEXIST
   #define ERROR_INSUFFICIENT_BUFFER      ENOBUFS
@@ -352,10 +383,14 @@
   #define ERROR_FILE_CORRUPT             1004        // No such error code under Linux
 #endif
 
+#ifndef _countof
+  #define _countof(x)  (sizeof(x) / sizeof(x[0]))
+#endif
+
 //-----------------------------------------------------------------------------
 // Swapping functions
 
-#ifdef PLATFORM_LITTLE_ENDIAN
+#ifdef STORMLIB_LITTLE_ENDIAN
     #define    BSWAP_INT16_UNSIGNED(a)          (a)
     #define    BSWAP_INT16_SIGNED(a)            (a)
     #define    BSWAP_INT32_UNSIGNED(a)          (a)
@@ -399,7 +434,6 @@
     #define    BSWAP_ARRAY64_UNSIGNED(a,b)      ConvertUInt64Buffer((a),(b))
     #define    BSWAP_TMPQHEADER(a,b)            ConvertTMPQHeader((a),(b))
     #define    BSWAP_TMPKHEADER(a)              ConvertTMPKHeader((a))
-
 #endif
 
 //-----------------------------------------------------------------------------
@@ -428,11 +462,5 @@
 #define STORMLIB_DEPRECATED_FLAG(type, oldflag, newflag) static type oldflag = (type)newflag;
 #endif
 */
-
-//
-// MINIWIN changes
-//
-
-#define bool int
 
 #endif // __STORMPORT_H__

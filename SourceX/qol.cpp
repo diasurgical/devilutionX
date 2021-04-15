@@ -7,12 +7,16 @@
 #include "options.h"
 #include "DiabloUI/art_draw.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 namespace {
 
-Art ArtHealthBox;
-Art ArtResistance;
-Art ArtHealth;
+struct QolArt {
+	Art healthBox;
+	Art resistance;
+	Art health;
+};
+
+QolArt *qolArt = nullptr;
 
 int GetTextWidth(const char *s)
 {
@@ -48,19 +52,23 @@ void FillRect(CelOutputBuffer out, int x, int y, int width, int height, BYTE col
 
 void FreeQol()
 {
-	if (sgOptions.Gameplay.bEnemyHealthBar) {
-		ArtHealthBox.Unload();
-		ArtHealth.Unload();
-		ArtResistance.Unload();
-	}
+	delete qolArt;
+	qolArt = nullptr;
 }
 
 void InitQol()
 {
 	if (sgOptions.Gameplay.bEnemyHealthBar) {
-		LoadMaskedArt("data\\healthbox.pcx", &ArtHealthBox, 1, 1);
-		LoadArt("data\\health.pcx", &ArtHealth);
-		LoadMaskedArt("data\\resistance.pcx", &ArtResistance, 6, 1);
+		qolArt = new QolArt();
+		LoadMaskedArt("data\\healthbox.pcx", &qolArt->healthBox, 1, 1);
+		LoadArt("data\\health.pcx", &qolArt->health);
+		LoadMaskedArt("data\\resistance.pcx", &qolArt->resistance, 6, 1);
+
+		if ((qolArt->healthBox.surface == nullptr)
+		    || (qolArt->health.surface == nullptr)
+		    || (qolArt->resistance.surface == nullptr)) {
+			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
+		}
 	}
 }
 
@@ -68,6 +76,10 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 {
 	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;
+	assert(qolArt != nullptr);
+	assert(qolArt->healthBox.surface != nullptr);
+	assert(qolArt->health.surface != nullptr);
+	assert(qolArt->resistance.surface != nullptr);
 	if (currlevel == 0)
 		return;
 	if (pcursmonst == -1)
@@ -75,9 +87,17 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 
 	MonsterStruct *mon = &monster[pcursmonst];
 
-	Sint32 width = ArtHealthBox.w();
-	Sint32 height = ArtHealthBox.h();
+	Sint32 width = qolArt->healthBox.w();
+	Sint32 height = qolArt->healthBox.h();
 	Sint32 xPos = (gnScreenWidth - width) / 2;
+
+	if (PANELS_COVER) {
+		if (invflag || sbookflag)
+			xPos -= SPANEL_WIDTH / 2;
+		if (chrflag || questlog)
+			xPos += SPANEL_WIDTH / 2;
+	}
+
 	Sint32 yPos = 18;
 	Sint32 border = 3;
 
@@ -85,12 +105,15 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	if (mon->_mhitpoints > maxLife)
 		maxLife = mon->_mhitpoints;
 
-	DrawArt(out, xPos, yPos, &ArtHealthBox);
+	DrawArt(out, xPos, yPos, &qolArt->healthBox);
 	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
-	DrawArt(out, xPos + border + 1, yPos + border + 1, &ArtHealth, 0, (width * mon->_mhitpoints) / maxLife, height - (border * 2) - 2);
+	int barProgress = (width * mon->_mhitpoints) / maxLife;
+	if (barProgress) {
+		DrawArt(out, xPos + border + 1, yPos + border + 1, &qolArt->health, 0, barProgress, height - (border * 2) - 2);
+	}
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 172 /*beast*/ };
+		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 150 /*beast*/ };
 		Uint8 borderColor = borderColors[mon->MData->mMonstClass];
 		Sint32 borderWidth = width - (border * 2);
 		FastDrawHorizLine(out, xPos + border, yPos + border, borderWidth, borderColor);
@@ -117,11 +140,11 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 		Sint32 resOffset = 5;
 		for (Sint32 i = 0; i < 3; i++) {
 			if (mon->mMagicRes & immunes[i]) {
-				DrawArt(out, xPos + resOffset, yPos + height - 6, &ArtResistance, i * 2 + 1);
-				resOffset += ArtResistance.w() + 2;
+				DrawArt(out, xPos + resOffset, yPos + height - 6, &qolArt->resistance, i * 2 + 1);
+				resOffset += qolArt->resistance.w() + 2;
 			} else if (mon->mMagicRes & resists[i]) {
-				DrawArt(out, xPos + resOffset, yPos + height - 6, &ArtResistance, i * 2);
-				resOffset += ArtResistance.w() + 2;
+				DrawArt(out, xPos + resOffset, yPos + height - 6, &qolArt->resistance, i * 2);
+				resOffset += qolArt->resistance.w() + 2;
 			}
 		}
 	}
@@ -171,9 +194,19 @@ bool HasRoomForGold()
 {
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		int idx = plr[myplr].InvGrid[i];
-		if (idx == 0 || (idx > 0 && plr[myplr].InvList[idx]._itype == ITYPE_GOLD && plr[myplr].InvList[idx]._ivalue < MaxGold)) {
+
+		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
+		if (idx < 0)
+			continue;
+
+		// Empty cell. 1x1 space available.
+		if (idx == 0)
 			return true;
-		}
+
+		// Main item cell. Potentially a gold pile so check it.
+		auto item = plr[myplr].InvList[idx - 1];
+		if (item._itype == ITYPE_GOLD && item._ivalue < MaxGold)
+			return true;
 	}
 
 	return false;
@@ -195,13 +228,13 @@ void AutoGoldPickup(int pnum)
 		int y = plr[pnum]._py + pathydir[dir];
 		if (dItem[x][y] != 0) {
 			int itemIndex = dItem[x][y] - 1;
-			if (item[itemIndex]._itype == ITYPE_GOLD) {
-				NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-				item[itemIndex]._iRequest = TRUE;
+			if (items[itemIndex]._itype == ITYPE_GOLD) {
+				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+				items[itemIndex]._iRequest = true;
 				PlaySFX(IS_IGRAB);
 			}
 		}
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

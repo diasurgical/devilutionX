@@ -2,13 +2,13 @@
 #include "file_util.h"
 #include "../SourceS/paths.h"
 
-namespace dvl {
+namespace devilution {
 
 TTF_Font *font = NULL;
 BYTE *FontTables[4];
 Art ArtFonts[4][2];
 /** This is so we know ttf has been init when we get to the diablo_deinit() function */
-BOOL was_fonts_init = false;
+bool was_fonts_init = false;
 
 namespace {
 
@@ -53,7 +53,8 @@ void UnloadArtFonts()
 	FontTables[AFT_HUGE] = NULL;
 }
 
-void LoadTtfFont() {
+void LoadTtfFont()
+{
 	if (!TTF_WasInit()) {
 		if (TTF_Init() == -1) {
 			SDL_Log("TTF_Init: %s", TTF_GetError());
@@ -64,8 +65,7 @@ void LoadTtfFont() {
 
 	std::string ttf_font_path = GetTtfPath() + GetTtfName();
 #ifdef __linux__
-	if (!FileExists(ttf_font_path.c_str()))
-	{
+	if (!FileExists(ttf_font_path.c_str())) {
 		ttf_font_path = "/usr/share/fonts/truetype/" + GetTtfName();
 	}
 #endif
@@ -79,14 +79,16 @@ void LoadTtfFont() {
 	TTF_SetFontHinting(font, TTF_HINTING_MONO);
 }
 
-void UnloadTtfFont() {
+void UnloadTtfFont()
+{
 	if (font && TTF_WasInit())
 		TTF_CloseFont(font);
 	font = NULL;
 }
 
-void FontsCleanup() {
-	TTF_Quit();	
+void FontsCleanup()
+{
+	TTF_Quit();
 }
 
-} // namespace dvl
+} // namespace devilution

@@ -10,22 +10,22 @@ aptHookCookie cookie;
 void aptHookFunc(APT_HookType hookType, void *param)
 {
 	switch (hookType) {
-		case APTHOOK_ONSUSPEND:
-			ctr_lcd_backlight_on();
-			break;
-		case APTHOOK_ONSLEEP:
-			break;
-		case APTHOOK_ONRESTORE:
-			ctr_lcd_backlight_off();
-			break;
-		case APTHOOK_ONWAKEUP:
-			ctr_lcd_backlight_off();
-			break;
-		case APTHOOK_ONEXIT:
-			ctr_lcd_backlight_on();
-			break;
-		default:
-			break;
+	case APTHOOK_ONSUSPEND:
+		ctr_lcd_backlight_on();
+		break;
+	case APTHOOK_ONSLEEP:
+		break;
+	case APTHOOK_ONRESTORE:
+		ctr_lcd_backlight_off();
+		break;
+	case APTHOOK_ONWAKEUP:
+		ctr_lcd_backlight_off();
+		break;
+	case APTHOOK_ONEXIT:
+		ctr_lcd_backlight_on();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -62,13 +62,13 @@ bool ctr_check_dsp()
 
 void ctr_sys_init()
 {
-	if( ctr_check_dsp() == false )
+	if (ctr_check_dsp() == false)
 		exit(0);
 
 	aptHook(&cookie, aptHookFunc, NULL);
 
 	APT_CheckNew3DS(&isN3DS);
-	if(isN3DS)
+	if (isN3DS)
 		osSetSpeedupEnable(true);
 
 	ctr_lcd_backlight_off();

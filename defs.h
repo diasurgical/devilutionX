@@ -124,7 +124,7 @@
 
 #define BUFFER_BORDER_LEFT		64
 #define BUFFER_BORDER_TOP		160
-#define BUFFER_BORDER_RIGHT	dvl::borderRight
+#define BUFFER_BORDER_RIGHT	devilution::borderRight
 #define BUFFER_BORDER_BOTTOM	16
 
 #define UI_OFFSET_Y		((Sint16)((gnScreenHeight - 480) / 2))
@@ -202,4 +202,11 @@
 #define DVL_ATTRIBUTE_ALWAYS_INLINE __attribute__((always_inline))
 #else
 #define DVL_ATTRIBUTE_ALWAYS_INLINE
+#endif
+
+#if DVL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
+#define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg) \
+  __attribute__((__format__(__printf__, fmtargnum, firstarg)))
+#else
+#define DVL_PRINTF_ATTRIBUTE(fmtargnum)
 #endif

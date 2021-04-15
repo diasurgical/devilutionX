@@ -3,18 +3,18 @@
  *
  * Interface of the theme room placing algorithms.
  */
-#ifndef __THEMES_H__
-#define __THEMES_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+struct ThemeStruct {
+	theme_id ttype;
+	Sint16 ttval;
+};
 
 extern int numthemes;
-extern BOOL armorFlag;
-extern BOOL weaponFlag;
+extern bool armorFlag;
+extern bool weaponFlag;
 extern int zharlib;
 extern ThemeStruct themes[MAXTHEMES];
 
@@ -22,9 +22,4 @@ void InitThemes();
 void HoldThemeRooms();
 void CreateThemeRooms();
 
-#ifdef __cplusplus
 }
-#endif
-DEVILUTION_END_NAMESPACE
-
-#endif /* __THEMES_H__ */

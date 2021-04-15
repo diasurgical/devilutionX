@@ -3,23 +3,12 @@
  *
  * Interface of functionality for rendering the town, towners and calling other render routines.
  */
-#ifndef __TOWN_H__
-#define __TOWN_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 void TownOpenHive();
 void TownOpenGrave();
-void CreateTown(int entry);
+void CreateTown(lvl_entry entry);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TOWN_H__ */

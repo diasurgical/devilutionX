@@ -3,16 +3,48 @@
  *
  * Interface of monster functionality, AI, actions, spawning, loading, etc.
  */
-#ifndef __MONSTER_H__
-#define __MONSTER_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
-typedef enum MON_MODE {
+enum monster_flag : uint16_t {
+	// clang-format off
+	MFLAG_HIDDEN          = 1 << 0,
+	MFLAG_LOCK_ANIMATION  = 1 << 1,
+	MFLAG_ALLOW_SPECIAL   = 1 << 2,
+	MFLAG_NOHEAL          = 1 << 3,
+	MFLAG_TARGETS_MONSTER = 1 << 4,
+	MFLAG_GOLEM           = 1 << 5,
+	MFLAG_QUEST_COMPLETE  = 1 << 6,
+	MFLAG_KNOCKBACK       = 1 << 7,
+	MFLAG_SEARCH          = 1 << 8,
+	MFLAG_CAN_OPEN_DOOR   = 1 << 9,
+	MFLAG_NO_ENEMY        = 1 << 10,
+	MFLAG_BERSERK         = 1 << 11,
+	MFLAG_NOLIFESTEAL     = 1 << 12,
+	// clang-format on
+};
+
+/** this enum contains indexes from UniqMonst array for special unique monsters (usually quest related) */
+enum : uint8_t {
+	UMT_GARBUD,
+	UMT_SKELKING,
+	UMT_ZHAR,
+	UMT_SNOTSPIL,
+	UMT_LAZURUS,
+	UMT_RED_VEX,
+	UMT_BLACKJADE,
+	UMT_LACHDAN,
+	UMT_WARLORD,
+	UMT_BUTCHER,
+	UMT_HORKDMN,
+	UMT_DEFILER,
+	UMT_NAKRUL,
+};
+
+enum MON_MODE : uint8_t {
 	MM_STAND,
 	/** Movement towards N, NW, or NE */
 	MM_WALK,
@@ -34,9 +66,42 @@ typedef enum MON_MODE {
 	MM_STONE,
 	MM_HEAL,
 	MM_TALK,
-} MON_MODE;
+};
 
-typedef struct CMonster {
+enum {
+	MA_STAND,
+	MA_WALK,
+	MA_ATTACK,
+	MA_GOTHIT,
+	MA_DEATH,
+	MA_SPECIAL,
+};
+
+enum monster_goal : uint8_t {
+	MGOAL_NONE,
+	MGOAL_NORMAL,
+	MGOAL_RETREAT,
+	MGOAL_HEALING,
+	MGOAL_MOVE,
+	MGOAL_ATTACK2,
+	MGOAL_INQUIRING,
+	MGOAL_TALKING,
+};
+
+enum placeflag : uint8_t {
+	PLACE_SCATTER = 1 << 0,
+	PLACE_SPECIAL = 1 << 1,
+	PLACE_UNIQUE  = 1 << 2,
+};
+
+struct AnimStruct {
+	Uint8 *CMem;
+	Uint8 *Data[8];
+	Sint32 Frames;
+	Sint32 Rate;
+};
+
+struct CMonster {
 	_monster_id mtype;
 	/** placeflag enum as a flags*/
 	Uint8 mPlaceFlags;
@@ -44,8 +109,8 @@ typedef struct CMonster {
 	TSnd *Snds[4][2];
 	Sint32 width;
 	Sint32 width2;
-	Uint8 mMinHP;
-	Uint8 mMaxHP;
+	uint16_t mMinHP;
+	uint16_t mMaxHP;
 	bool has_special;
 	Uint8 mAFNum;
 	Sint8 mdeadval;
@@ -55,12 +120,12 @@ typedef struct CMonster {
 	 * as indexes into a palette. (a 256 byte array of palette indices)
 	 */
 	Uint8 *trans_file;
-} CMonster;
+};
 
-typedef struct MonsterStruct { // note: missing field _mAFNum
+struct MonsterStruct { // note: missing field _mAFNum
 	Sint32 _mMTidx;
 	MON_MODE _mmode;
-	Uint8 _mgoal;
+	monster_goal _mgoal;
 	Sint32 _mgoalvar1;
 	Sint32 _mgoalvar2;
 	Sint32 _mgoalvar3;
@@ -146,12 +211,12 @@ typedef struct MonsterStruct { // note: missing field _mAFNum
 	const char *mName;
 	CMonster *MType;
 	const MonsterData *MData;
-} MonsterStruct;
+};
 
 extern int monstkills[MAXMONSTERS];
 extern int monstactive[MAXMONSTERS];
 extern int nummonsters;
-extern BOOLEAN sgbSaveSoundOn;
+extern bool sgbSaveSoundOn;
 extern MonsterStruct monster[MAXMONSTERS];
 extern CMonster Monsters[MAX_LVLMTYPES];
 extern int nummtypes;
@@ -166,9 +231,9 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader);
 void InitMonsters();
 void SetMapMonsters(BYTE *pMap, int startx, int starty);
 void DeleteMonster(int i);
-int AddMonster(int x, int y, int dir, int mtype, BOOL InMap);
+int AddMonster(int x, int y, int dir, int mtype, bool InMap);
 void monster_43C785(int i);
-BOOL M_Talker(int i);
+bool M_Talker(int i);
 void M_StartStand(int i, int md);
 void M_ClearSquares(int i);
 void M_GetKnockback(int i);
@@ -190,9 +255,9 @@ void MAI_Sneak(int i);
 void MAI_Fireman(int i);
 void MAI_Fallen(int i);
 void MAI_Cleaver(int i);
-void MAI_Round(int i, BOOL special);
+void MAI_Round(int i, bool special);
 void MAI_GoatMc(int i);
-void MAI_Ranged(int i, int missile_type, BOOL special);
+void MAI_Ranged(int i, int missile_type, bool special);
 void MAI_GoatBow(int i);
 void MAI_Succ(int i);
 void MAI_Lich(int i);
@@ -204,7 +269,7 @@ void MAI_Firebat(int i);
 void MAI_Torchant(int i);
 void MAI_Scav(int i);
 void MAI_Garg(int i);
-void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int lessmissiles);
+void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int lessmissiles);
 void MAI_Magma(int i);
 void MAI_Storm(int i);
 void MAI_BoneDemon(int i);
@@ -226,30 +291,30 @@ void MAI_Warlord(int i);
 void DeleteMonsterList();
 void ProcessMonsters();
 void FreeMonsters();
-BOOL DirOK(int i, int mdir);
-BOOL PosOkMissile(int x, int y);
-BOOL CheckNoSolid(int x, int y);
-BOOL LineClearF(BOOL (*Clear)(int, int), int x1, int y1, int x2, int y2);
-BOOL LineClear(int x1, int y1, int x2, int y2);
-BOOL LineClearF1(BOOL (*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2);
+bool DirOK(int i, int mdir);
+bool PosOkMissile(int x, int y);
+bool CheckNoSolid(int x, int y);
+bool LineClearF(bool (*Clear)(int, int), int x1, int y1, int x2, int y2);
+bool LineClear(int x1, int y1, int x2, int y2);
+bool LineClearF1(bool (*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2);
 void SyncMonsterAnim(int i);
 void M_FallenFear(int x, int y);
 void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void MissToMonst(int i, int x, int y);
-BOOL PosOkMonst(int i, int x, int y);
-BOOLEAN monster_posok(int i, int x, int y);
-BOOL PosOkMonst2(int i, int x, int y);
-BOOL PosOkMonst3(int i, int x, int y);
-BOOL IsSkel(int mt);
-BOOL IsGoat(int mt);
+bool PosOkMonst(int i, int x, int y);
+bool monster_posok(int i, int x, int y);
+bool PosOkMonst2(int i, int x, int y);
+bool PosOkMonst3(int i, int x, int y);
+bool IsSkel(int mt);
+bool IsGoat(int mt);
 int M_SpawnSkel(int x, int y, int dir);
-BOOL SpawnSkeleton(int ii, int x, int y);
+bool SpawnSkeleton(int ii, int x, int y);
 int PreSpawnSkeleton();
 void TalktoMonster(int i);
 void SpawnGolum(int i, int x, int y, int mi);
-BOOL CanTalkToMonst(int m);
-BOOL CheckMonsterHit(int m, BOOL *ret);
+bool CanTalkToMonst(int m);
+bool CheckMonsterHit(int m, bool *ret);
 int encode_enemy(int m);
 void decode_enemy(int m, int enemy);
 
@@ -259,10 +324,4 @@ extern int opposite[8];
 extern int offset_x[8];
 extern int offset_y[8];
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MONSTER_H__ */

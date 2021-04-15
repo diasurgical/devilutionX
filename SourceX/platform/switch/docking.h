@@ -1,7 +1,7 @@
 #pragma once
 
-namespace dvl {
+namespace devilution {
 
 void HandleDocking();
 
-} // namespace dvl
+} // namespace devilution

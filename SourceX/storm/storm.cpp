@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <cstdint>
 #include <string>
 
 #include "all.h"
@@ -20,7 +21,7 @@
 
 #include "DiabloUI/diabloui.h"
 
-namespace dvl {
+namespace devilution {
 
 DWORD nLastError = 0;
 
@@ -70,7 +71,7 @@ unsigned char AsciiToLowerTable_Path[256] = {
 	0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
 };
 
-BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
+bool SFileOpenFile(const char *filename, HANDLE *phFile)
 {
 	bool result = false;
 
@@ -126,11 +127,11 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	return result;
 }
 
-BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
+bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
 {
 	HANDLE hFile;
 	size_t size;
-	PCXHEADER pcxhdr;
+	PCXHeader pcxhdr;
 	BYTE paldata[256][3];
 	BYTE *dataPtr, *fileBuffer;
 	BYTE byte;
@@ -192,10 +193,13 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
-		SFileSetFilePointer(hFile, 0, 0, DVL_FILE_END);
+		SFileSetFilePointer(hFile, 0, NULL, DVL_FILE_END);
 		fileBuffer = NULL;
 	} else {
-		size = SFileGetFileSize(hFile, 0) - SFileSetFilePointer(hFile, 0, 0, DVL_FILE_CURRENT);
+		const auto pos = SFileGetFilePointer(hFile);
+		const auto end = SFileSetFilePointer(hFile, 0, DVL_FILE_END);
+		const auto begin = SFileSetFilePointer(hFile, pos, DVL_FILE_BEGIN);
+		size = end - begin;
 		fileBuffer = (BYTE *)malloc(size);
 	}
 
@@ -228,8 +232,12 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	}
 
 	if (pPalette && pcxhdr.BitsPerPixel == 8) {
-		SFileSetFilePointer(hFile, -768, 0, 1);
-		SFileReadFile(hFile, paldata, 768, 0, 0);
+		const auto pos = SFileSetFilePointer(hFile, -768, DVL_FILE_CURRENT);
+		if (pos == static_cast<std::uint64_t>(-1)) {
+			SDL_Log("SFileSetFilePointer error: %ud", (unsigned int)SErrGetLastError());
+		}
+		SFileReadFile(hFile, paldata, 768, 0, NULL);
+
 		for (int i = 0; i < 256; i++) {
 			pPalette[i].r = paldata[i][0];
 			pPalette[i].g = paldata[i][1];
@@ -245,19 +253,6 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	return true;
 }
 
-void *SMemAlloc(unsigned int amount, const char *logfilename, int logline, int defaultValue)
-{
-	assert(amount != -1u);
-	return malloc(amount);
-}
-
-BOOL SMemFree(void *location, const char *logfilename, int logline, char defaultValue)
-{
-	assert(location);
-	free(location);
-	return true;
-}
-
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 {
 	char string[2];
@@ -266,6 +261,19 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 		return defaultValue;
 
 	return strtol(string, NULL, 10) != 0;
+}
+
+float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
+{
+    radon::Section *section = getIni().getSection(sectionName);
+    if (!section)
+        return defaultValue;
+
+    radon::Key *key = section->getKey(keyName);
+    if (!key)
+        return defaultValue;
+
+    return key->getFloatValue();
 }
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
@@ -327,6 +335,13 @@ void setIniInt(const char *keyname, const char *valuename, int value)
 {
 	char str[10];
 	sprintf(str, "%d", value);
+	setIniValue(keyname, valuename, str);
+}
+
+void setIniFloat(const char *keyname, const char *valuename, float value)
+{
+	char str[10];
+	sprintf(str, "%.2f", value);
 	setIniValue(keyname, valuename, str);
 }
 
@@ -602,7 +617,7 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 }
 
-BOOL SVidLoadNextFrame()
+bool SVidLoadNextFrame()
 {
 	SVidFrameEnd += SVidFrameLength;
 
@@ -632,7 +647,7 @@ unsigned char *SVidApplyVolume(const unsigned char *raw, unsigned long rawLen)
 	return (unsigned char *)scaled;
 }
 
-BOOL SVidPlayContinue(void)
+bool SVidPlayContinue(void)
 {
 	if (smk_palette_updated(SVidSMK)) {
 		SDL_Color colors[256];
@@ -792,12 +807,7 @@ void SErrSetLastError(DWORD dwErrCode)
 	nLastError = dwErrCode;
 }
 
-void SStrCopy(char *dest, const char *src, int max_length)
-{
-	strncpy(dest, src, max_length);
-}
-
-BOOL SFileSetBasePath(const char *path)
+bool SFileSetBasePath(const char *path)
 {
 	if (SBasePath == NULL)
 		SBasePath = new std::string;
@@ -805,9 +815,9 @@ BOOL SFileSetBasePath(const char *path)
 	return true;
 }
 
-BOOL SFileEnableDirectAccess(BOOL enable)
+bool SFileEnableDirectAccess(bool enable)
 {
 	directFileAccess = enable;
 	return true;
 }
-} // namespace dvl
+} // namespace devilution

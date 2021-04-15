@@ -3,18 +3,16 @@
  *
  * Interface of error dialogs.
  */
-#ifndef __APPFAT_H__
-#define __APPFAT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <SDL.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "../defs.h"
 
-#define TraceLastError SDL_GetError
-[[noreturn]] void app_fatal(const char *pszFmt, ...);
-void DrawDlg(const char *pszFmt, ...);
+namespace devilution {
+
+[[noreturn]] void app_fatal(const char *pszFmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
+void DrawDlg(const char *pszFmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
 #ifdef _DEBUG
 [[noreturn]] void assert_fail(int nLineNo, const char *pszFile, const char *pszFail);
 #endif
@@ -23,10 +21,4 @@ void DrawDlg(const char *pszFmt, ...);
 [[noreturn]] void InsertCDDlg();
 [[noreturn]] void DirErrorDlg(const char *error);
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __APPFAT_H__ */

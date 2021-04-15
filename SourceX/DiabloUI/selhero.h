@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace dvl {
+namespace devilution {
 
 extern bool selhero_isMultiPlayer;
 extern bool selhero_endMenu;
@@ -22,4 +22,4 @@ void selhero_Name_Esc();
 void selhero_Load_Focus(int value);
 void selhero_Load_Select(int value);
 
-} // namespace dvl
+} // namespace devilution

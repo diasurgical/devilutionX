@@ -4,8 +4,9 @@
  * Implementation of functions for placing dead monsters.
  */
 #include "all.h"
+#include "monster.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
 DeadStruct dead[MAXDEAD];
 int stonendx;
@@ -91,4 +92,4 @@ void SetDead()
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

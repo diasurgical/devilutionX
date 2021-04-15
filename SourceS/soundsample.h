@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL_mixer.h>
 
-namespace dvl {
+namespace devilution {
 
 class SoundSample final {
 public:
@@ -17,4 +17,4 @@ private:
 	Mix_Chunk *chunk;
 };
 
-} // namespace dvl
+} // namespace devilution

@@ -3,14 +3,27 @@
  *
  * Interface of cursor tracking functionality.
  */
-#ifndef __CURSOR_H__
-#define __CURSOR_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
+
+enum cursor_id : uint8_t {
+	CURSOR_NONE,
+	CURSOR_HAND,
+	CURSOR_IDENTIFY,
+	CURSOR_REPAIR,
+	CURSOR_RECHARGE,
+	CURSOR_DISARM,
+	CURSOR_OIL,
+	CURSOR_TELEKINESIS,
+	CURSOR_RESURRECT,
+	CURSOR_TELEPORT,
+	CURSOR_HEALOTHER,
+	CURSOR_HOURGLASS,
+	CURSOR_FIRSTITEM,
+};
 
 extern int cursW;
 extern int cursH;
@@ -32,7 +45,6 @@ extern int pcurs;
 void InitCursor();
 void FreeCursor();
 void SetICursor(int i);
-void SetCursor_(int i);
 void NewCursor(int i);
 void InitLevelCursor();
 void CheckRportal();
@@ -43,10 +55,4 @@ void CheckCursMove();
 extern const int InvItemWidth[];
 extern const int InvItemHeight[];
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __CURSOR_H__ */

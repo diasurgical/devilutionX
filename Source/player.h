@@ -3,12 +3,96 @@
  *
  * Interface of player functionality, leveling, actions, creation, loading, etc.
  */
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <stdint.h>
 
-typedef enum PLR_MODE {
+#include "enum_traits.h"
+#include "gendung.h"
+#include "items.h"
+#include "spelldat.h"
+#include "interfac.h"
+
+namespace devilution {
+
+/** Walking directions */
+enum {
+	// clang-format off
+	WALK_NE   =  1,
+	WALK_NW   =  2,
+	WALK_SE   =  3,
+	WALK_SW   =  4,
+	WALK_N    =  5,
+	WALK_E    =  6,
+	WALK_S    =  7,
+	WALK_W    =  8,
+	WALK_NONE = -1,
+	// clang-format on
+};
+
+enum class HeroClass : uint8_t {
+	Warrior,
+	Rogue,
+	Sorcerer,
+	Monk,
+	Bard,
+	Barbarian,
+
+	LAST = Barbarian
+};
+
+enum class CharacterAttribute : uint8_t {
+	Strength,
+	Magic,
+	Dexterity,
+	Vitality,
+
+	FIRST = Strength,
+	LAST = Vitality
+};
+
+// Logical equipment locations
+enum inv_body_loc : uint8_t {
+	INVLOC_HEAD,
+	INVLOC_RING_LEFT,
+	INVLOC_RING_RIGHT,
+	INVLOC_AMULET,
+	INVLOC_HAND_LEFT,
+	INVLOC_HAND_RIGHT,
+	INVLOC_CHEST,
+	NUM_INVLOC,
+};
+
+enum player_graphic : uint16_t {
+	// clang-format off
+	PFILE_STAND     = 1 << 0,
+	PFILE_WALK      = 1 << 1,
+	PFILE_ATTACK    = 1 << 2,
+	PFILE_HIT       = 1 << 3,
+	PFILE_LIGHTNING = 1 << 4,
+	PFILE_FIRE      = 1 << 5,
+	PFILE_MAGIC     = 1 << 6,
+	PFILE_DEATH     = 1 << 7,
+	PFILE_BLOCK     = 1 << 8,
+	// everything except PFILE_DEATH
+	// 0b1_0111_1111
+	PFILE_NONDEATH = 0x17F
+	// clang-format on
+};
+
+enum anim_weapon_id : uint8_t {
+	ANIM_ID_UNARMED,
+	ANIM_ID_UNARMED_SHIELD,
+	ANIM_ID_SWORD,
+	ANIM_ID_SWORD_SHIELD,
+	ANIM_ID_BOW,
+	ANIM_ID_AXE,
+	ANIM_ID_MACE,
+	ANIM_ID_MACE_SHIELD,
+	ANIM_ID_STAFF,
+};
+
+enum PLR_MODE : uint8_t {
 	PM_STAND,
 	PM_WALK,  //Movement towards N, NW, or NE
 	PM_WALK2, //Movement towards S, SW, or SE
@@ -21,9 +105,9 @@ typedef enum PLR_MODE {
 	PM_SPELL,
 	PM_NEWLVL,
 	PM_QUIT,
-} PLR_MODE;
+};
 
-typedef enum action_id {
+enum action_id : int8_t {
 	// clang-format off
 	ACTION_WALK        = -2, // Automatic walk when using gamepad
 	ACTION_NONE        = -1,
@@ -44,14 +128,14 @@ typedef enum action_id {
 	ACTION_SPELLPLR    = 25,
 	ACTION_SPELLWALL   = 26,
 	// clang-format on
-} action_id;
+};
 
-typedef enum player_weapon_type {
+enum player_weapon_type : uint8_t {
 	WT_MELEE,
 	WT_RANGED,
-} player_weapon_type;
+};
 
-typedef struct PlayerStruct {
+struct PlayerStruct {
 	PLR_MODE _pmode;
 	Sint8 walkpath[MAX_PATH_LENGTH];
 	bool plractive;
@@ -84,6 +168,9 @@ typedef struct PlayerStruct {
 	Sint32 _pAnimFrame; // Current frame of animation.
 	Sint32 _pAnimWidth;
 	Sint32 _pAnimWidth2;
+	Sint32 _pAnimNumSkippedFrames; // Number of Frames that will be skipped (for example with modifier "faster attack")
+	Sint32 _pAnimGameTicksSinceSequenceStarted; // Number of GameTicks after the current animation sequence started
+	Sint32 _pAnimStopDistributingAfterFrame; // Distribute the NumSkippedFrames only before this frame
 	Sint32 _plid;
 	Sint32 _pvid;
 	spell_id _pSpell;
@@ -109,7 +196,7 @@ typedef struct PlayerStruct {
 	Sint8 _pLightRad;
 	bool _pLvlChanging; // True when the player is transitioning between levels
 	char _pName[PLR_NAME_LEN];
-	plr_class _pClass;
+	HeroClass _pClass;
 	Sint32 _pStrength;
 	Sint32 _pBaseStr;
 	Sint32 _pMagic;
@@ -214,7 +301,7 @@ typedef struct PlayerStruct {
 	bool pOriginalCathedral;
 	Uint16 wReflections;
 	Uint32 pDiabloKillLevel;
-	Uint32 pDifficulty;
+	_difficulty pDifficulty;
 	Uint32 pDamAcFlags;
 	Uint8 *_pNData;
 	Uint8 *_pWData;
@@ -225,33 +312,62 @@ typedef struct PlayerStruct {
 	Uint8 *_pHData;
 	Uint8 *_pDData;
 	Uint8 *_pBData;
-} PlayerStruct;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+	/**
+	 * @brief Gets the base value of the player's specified attribute.
+	 * @param attribute The attribute to retrieve the base value for
+	 * @return The base value for the requested attribute.
+	*/
+	Sint32 GetBaseAttributeValue(CharacterAttribute attribute) const;
+
+	/**
+	 * @brief Gets the maximum value of the player's specified attribute.
+	 * @param attribute The attribute to retrieve the maximum value for
+	 * @return The maximum value for the requested attribute.
+	*/
+	Sint32 GetMaximumAttributeValue(CharacterAttribute attribute) const;
+};
 
 extern int myplr;
 extern PlayerStruct plr[MAX_PLRS];
-extern BOOL deathflag;
-extern int ToBlkTbl[NUM_CLASSES];
+extern bool deathflag;
+extern int ToBlkTbl[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
+/**
+ * @brief Sets the new Player Animation with all relevant information for rendering
+
+ * @param pnum Player Id
+ * @param Peq Pointer to Animation Data
+ * @param numFrames Number of Frames in Animation
+ * @param Delay Delay after each Animation sequence
+ * @param width Width of sprite
+ * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
+ * @param processAnimationPending true if first ProcessAnimation will be called in same gametick after NewPlrAnim
+ * @param stopDistributingAfterFrame Distribute the NumSkippedFrames only before this frame
+ */
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames = 0, bool processAnimationPending = false, int stopDistributingAfterFrame = 0);
 void SetPlrAnims(int pnum);
-void CreatePlayer(int pnum, plr_class c);
+void ProcessPlayerAnimation(int pnum);
+/**
+ * @brief Calculates the Frame to use for the Animation rendering
+ * @param pPlayer Player
+ * @return The Frame to use for rendering
+ */
+Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer);
+void CreatePlayer(int pnum, HeroClass c);
 int CalcStatDiff(int pnum);
 #ifdef _DEBUG
 void NextPlrLevel(int pnum);
 #endif
 void AddPlrExperience(int pnum, int lvl, int exp);
 void AddPlrMonstExper(int lvl, int exp, char pmask);
-void InitPlayer(int pnum, BOOL FirstTime);
+void InitPlayer(int pnum, bool FirstTime);
 void InitMultiView();
-BOOL SolidLoc(int x, int y);
+bool SolidLoc(int x, int y);
 void PlrClrTrans(int x, int y);
 void PlrDoTrans(int x, int y);
 void SetPlayerOld(int pnum);
@@ -261,19 +377,19 @@ void StartAttack(int pnum, direction d);
 void StartPlrBlock(int pnum, direction dir);
 void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
-void StartPlrHit(int pnum, int dam, BOOL forcehit);
+void StartPlrHit(int pnum, int dam, bool forcehit);
 void StartPlayerKill(int pnum, int earflag);
 void DropHalfPlayersGold(int pnum);
 void StripTopGold(int pnum);
 void SyncPlrKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);
-void StartNewLvl(int pnum, int fom, int lvl);
+void StartNewLvl(int pnum, interface_mode fom, int lvl);
 void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
 void ClrPlrPath(int pnum);
-BOOL PosOkPlayer(int pnum, int x, int y);
-void MakePlrPath(int pnum, int xx, int yy, BOOL endspace);
+bool PosOkPlayer(int pnum, int x, int y);
+void MakePlrPath(int pnum, int xx, int yy, bool endspace);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
@@ -290,9 +406,6 @@ void SetPlrDex(int p, int v);
 void SetPlrVit(int p, int v);
 void InitDungMsgs(int pnum);
 void PlayDungMsgs();
-int get_max_strength(int i);
-int get_max_magic(int i);
-int get_max_dexterity(int i);
 
 /* data */
 
@@ -300,17 +413,10 @@ extern int plrxoff[9];
 extern int plryoff[9];
 extern int plrxoff2[9];
 extern int plryoff2[9];
-extern int StrengthTbl[NUM_CLASSES];
-extern int MagicTbl[NUM_CLASSES];
-extern int DexterityTbl[NUM_CLASSES];
-extern int VitalityTbl[NUM_CLASSES];
-extern int MaxStats[NUM_CLASSES][4];
+extern int StrengthTbl[enum_size<HeroClass>::value];
+extern int MagicTbl[enum_size<HeroClass>::value];
+extern int DexterityTbl[enum_size<HeroClass>::value];
+extern int VitalityTbl[enum_size<HeroClass>::value];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __PLAYER_H__ */

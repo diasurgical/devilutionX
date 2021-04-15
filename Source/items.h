@@ -3,22 +3,113 @@
  *
  * Interface of item functionality.
  */
-#ifndef __ITEMS_H__
-#define __ITEMS_H__
+#pragma once
+
+#include <stdint.h>
 
 #include "itemdat.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef enum item_quality {
+enum item_quality : uint8_t {
 	ITEM_QUALITY_NORMAL,
 	ITEM_QUALITY_MAGIC,
 	ITEM_QUALITY_UNIQUE,
-} item_quality;
+};
+
+enum _unique_items : int8_t {
+	UITEM_CLEAVER,
+	UITEM_SKCROWN,
+	UITEM_INFRARING,
+	UITEM_OPTAMULET,
+	UITEM_TRING,
+	UITEM_HARCREST,
+	UITEM_STEELVEIL,
+	UITEM_ARMOFVAL,
+	UITEM_GRISWOLD,
+	UITEM_BOVINE,
+	UITEM_RIFTBOW,
+	UITEM_NEEDLER,
+	UITEM_CELESTBOW,
+	UITEM_DEADLYHUNT,
+	UITEM_BOWOFDEAD,
+	UITEM_BLKOAKBOW,
+	UITEM_FLAMEDART,
+	UITEM_FLESHSTING,
+	UITEM_WINDFORCE,
+	UITEM_EAGLEHORN,
+	UITEM_GONNAGALDIRK,
+	UITEM_DEFENDER,
+	UITEM_GRYPHONCLAW,
+	UITEM_BLACKRAZOR,
+	UITEM_GIBBOUSMOON,
+	UITEM_ICESHANK,
+	UITEM_EXECUTIONER,
+	UITEM_BONESAW,
+	UITEM_SHADHAWK,
+	UITEM_WIZSPIKE,
+	UITEM_LGTSABRE,
+	UITEM_FALCONTALON,
+	UITEM_INFERNO,
+	UITEM_DOOMBRINGER,
+	UITEM_GRIZZLY,
+	UITEM_GRANDFATHER,
+	UITEM_MANGLER,
+	UITEM_SHARPBEAK,
+	UITEM_BLOODLSLAYER,
+	UITEM_CELESTAXE,
+	UITEM_WICKEDAXE,
+	UITEM_STONECLEAV,
+	UITEM_AGUHATCHET,
+	UITEM_HELLSLAYER,
+	UITEM_MESSERREAVER,
+	UITEM_CRACKRUST,
+	UITEM_JHOLMHAMM,
+	UITEM_CIVERBS,
+	UITEM_CELESTSTAR,
+	UITEM_BARANSTAR,
+	UITEM_GNARLROOT,
+	UITEM_CRANBASH,
+	UITEM_SCHAEFHAMM,
+	UITEM_DREAMFLANGE,
+	UITEM_STAFFOFSHAD,
+	UITEM_IMMOLATOR,
+	UITEM_STORMSPIRE,
+	UITEM_GLEAMSONG,
+	UITEM_THUNDERCALL,
+	UITEM_PROTECTOR,
+	UITEM_NAJPUZZLE,
+	UITEM_MINDCRY,
+	UITEM_RODOFONAN,
+	UITEM_SPIRITSHELM,
+	UITEM_THINKINGCAP,
+	UITEM_OVERLORDHELM,
+	UITEM_FOOLSCREST,
+	UITEM_GOTTERDAM,
+	UITEM_ROYCIRCLET,
+	UITEM_TORNFLESH,
+	UITEM_GLADBANE,
+	UITEM_RAINCLOAK,
+	UITEM_LEATHAUT,
+	UITEM_WISDWRAP,
+	UITEM_SPARKMAIL,
+	UITEM_SCAVCARAP,
+	UITEM_NIGHTSCAPE,
+	UITEM_NAJPLATE,
+	UITEM_DEMONSPIKE,
+	UITEM_DEFLECTOR,
+	UITEM_SKULLSHLD,
+	UITEM_DRAGONBRCH,
+	UITEM_BLKOAKSHLD,
+	UITEM_HOLYDEF,
+	UITEM_STORMSHLD,
+	UITEM_BRAMBLE,
+	UITEM_REGHA,
+	UITEM_BLEEDER,
+	UITEM_CONSTRICT,
+	UITEM_ENGAGE,
+	UITEM_INVALID = -1,
+};
 
 /*
  First 5 bits store level
@@ -36,7 +127,8 @@ typedef enum item_quality {
  combining CF_UPER15 and CF_UPER1 flags (CF_USEFUL) is used to mark potions and town portal scrolls created on the ground
  CF_TOWN is combining all store flags and indicates if item has been bought from a NPC
  */
-typedef enum icreateinfo_flag {
+enum icreateinfo_flag {
+	// clang-format off
 	CF_LEVEL        = (1 << 6) - 1,
 	CF_ONLYGOOD     = 1 << 6,
 	CF_UPER15       = 1 << 7,
@@ -51,18 +143,25 @@ typedef enum icreateinfo_flag {
 
 	CF_USEFUL = CF_UPER15 | CF_UPER1,
 	CF_TOWN   = CF_SMITH | CF_SMITHPREMIUM | CF_BOY | CF_WITCH | CF_HEALER,
-} icreateinfo_flag;
+	// clang-format on
+};
 
-typedef struct ItemStruct {
+enum icreateinfo_flag2 {
+	// clang-format off
+	CF_HELLFIRE = 1,
+	// clang-format on
+};
+
+struct ItemStruct {
 	Sint32 _iSeed;
 	Uint16 _iCreateInfo;
 	enum item_type _itype;
-	Sint32 _ix;
-	Sint32 _iy;
+	Sint16 _ix;
+	Sint16 _iy;
 	bool _iAnimFlag;
 	Uint8 *_iAnimData;  // PSX name -> ItemFrame
-	Sint32 _iAnimLen;   // Number of frames in current animation
-	Sint32 _iAnimFrame; // Current frame of animation.
+	Uint8 _iAnimLen;   // Number of frames in current animation
+	Uint8 _iAnimFrame; // Current frame of animation.
 	Sint32 _iAnimWidth;
 	Sint32 _iAnimWidth2; // width 2?
 	bool _iDelFlag;      // set when item is flagged for deletion, deprecated in 1.02
@@ -74,42 +173,42 @@ typedef struct ItemStruct {
 	char _iIName[64];
 	enum item_equip_type _iLoc;
 	enum item_class _iClass;
-	Sint32 _iCurs;
+	Uint8 _iCurs;
 	Sint32 _ivalue;
 	Sint32 _iIvalue;
-	Sint32 _iMinDam;
-	Sint32 _iMaxDam;
-	Sint32 _iAC;
+	Uint8 _iMinDam;
+	Uint8 _iMaxDam;
+	Sint16 _iAC;
 	Sint32 _iFlags; // item_special_effect
 	enum item_misc_id _iMiscId;
 	enum spell_id _iSpell;
 	Sint32 _iCharges;
 	Sint32 _iMaxCharges;
-	Sint32 _iDurability;
-	Sint32 _iMaxDur;
-	Sint32 _iPLDam;
-	Sint32 _iPLToHit;
-	Sint32 _iPLAC;
-	Sint32 _iPLStr;
-	Sint32 _iPLMag;
-	Sint32 _iPLDex;
-	Sint32 _iPLVit;
-	Sint32 _iPLFR;
-	Sint32 _iPLLR;
-	Sint32 _iPLMR;
-	Sint32 _iPLMana;
-	Sint32 _iPLHP;
-	Sint32 _iPLDamMod;
-	Sint32 _iPLGetHit;
-	Sint32 _iPLLight;
+	Uint8 _iDurability;
+	Uint8 _iMaxDur;
+	Sint16 _iPLDam;
+	Sint16 _iPLToHit;
+	Sint16 _iPLAC;
+	Sint16 _iPLStr;
+	Sint16 _iPLMag;
+	Sint16 _iPLDex;
+	Sint16 _iPLVit;
+	Sint16 _iPLFR;
+	Sint16 _iPLLR;
+	Sint16 _iPLMR;
+	Sint16 _iPLMana;
+	Sint16 _iPLHP;
+	Sint16 _iPLDamMod;
+	Sint16 _iPLGetHit;
+	Sint16 _iPLLight;
 	Sint8 _iSplLvlAdd;
 	Sint8 _iRequest;
 	Sint32 _iUid;
-	Sint32 _iFMinDam;
-	Sint32 _iFMaxDam;
-	Sint32 _iLMinDam;
-	Sint32 _iLMaxDam;
-	Sint32 _iPLEnAc;
+	Sint16 _iFMinDam;
+	Sint16 _iFMaxDam;
+	Sint16 _iLMinDam;
+	Sint16 _iLMaxDam;
+	Sint16 _iPLEnAc;
 	enum item_effect_type _iPrePower;
 	enum item_effect_type _iSufPower;
 	Sint32 _iVAdd1;
@@ -121,6 +220,7 @@ typedef struct ItemStruct {
 	Sint8 _iMinDex;
 	bool _iStatFlag;
 	Sint32 IDidx;
+	Uint32 dwBuff;
 	Sint32 _iDamAcFlags;
 
 	/**
@@ -237,58 +337,58 @@ typedef struct ItemStruct {
 			return false;
 		}
 	}
+};
 
-} ItemStruct;
-
-typedef struct ItemGetRecordStruct {
+struct ItemGetRecordStruct {
 	Sint32 nSeed;
 	Uint16 wCI;
 	Sint32 nIndex;
 	Uint32 dwTimestamp;
-} ItemGetRecordStruct;
+};
 
-typedef struct CornerStoneStruct {
+struct CornerStoneStruct {
 	Sint32 x;
 	Sint32 y;
 	bool activated;
 	ItemStruct item;
-} CornerStoneStruct;
+};
 
 extern int itemactive[MAXITEMS];
-extern BOOL uitemflag;
+extern bool uitemflag;
 extern int itemavail[MAXITEMS];
-extern ItemStruct item[MAXITEMS + 1];
+extern ItemStruct items[MAXITEMS + 1];
 extern CornerStoneStruct CornerStone;
-extern BOOL UniqueItemFlag[128];
+extern bool UniqueItemFlag[128];
 extern int numitems;
 
 bool IsItemAvailable(int i);
+bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
-void CalcPlrItemVals(int p, BOOL Loadgfx);
+void CalcPlrItemVals(int p, bool Loadgfx);
 void CalcPlrScrolls(int p);
 void CalcPlrStaff(int p);
-void CalcPlrInv(int p, BOOL Loadgfx);
+void CalcPlrInv(int p, bool Loadgfx);
 void SetPlrHandItem(ItemStruct *h, int idata);
 void GetPlrHandSeed(ItemStruct *h);
 void GetGoldSeed(int pnum, ItemStruct *h);
 int GetGoldCursor(int value);
 void SetPlrHandGoldCurs(ItemStruct *h);
 void CreatePlrItems(int p);
-BOOL ItemSpaceOk(int i, int j);
+bool ItemSpaceOk(int i, int j);
 int AllocateItem();
 void GetSuperItemLoc(int x, int y, int *xx, int *yy);
 void GetItemAttrs(int i, int idata, int lvl);
 void SaveItemPower(int i, item_effect_type power, int param1, int param2, int minval, int maxval, int multval);
-void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood);
+void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood);
 void SetupItem(int i);
 int RndItem(int m);
-void SpawnUnique(int uid, int x, int y);
-void SpawnItem(int m, int x, int y, BOOL sendmsg);
-void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, BOOL delta);
-void CreateRndUseful(int pnum, int x, int y, BOOL sendmsg);
-void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL sendmsg, BOOL delta);
-void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue);
+void SpawnUnique(_unique_items uid, int x, int y);
+void SpawnItem(int m, int x, int y, bool sendmsg);
+void CreateRndItem(int x, int y, bool onlygood, bool sendmsg, bool delta);
+void CreateRndUseful(int pnum, int x, int y, bool sendmsg);
+void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);
+void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool isHellfire);
 void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void items_427A72();
 void items_427ABA(int x, int y);
@@ -298,7 +398,7 @@ void SpawnRewardItem(int itemid, int xx, int yy);
 void SpawnMapOfDoom(int xx, int yy);
 void SpawnRuneBomb(int xx, int yy);
 void SpawnTheodore(int xx, int yy);
-void RespawnItem(int i, BOOL FlipFlag);
+void RespawnItem(ItemStruct *item, bool FlipFlag);
 void DeleteItem(int ii, int i);
 void ProcessItems();
 void FreeItemGFX();
@@ -313,7 +413,7 @@ void DrawUniqueInfo(CelOutputBuffer out);
 void PrintItemDetails(ItemStruct *x);
 void PrintItemDur(ItemStruct *x);
 void UseItem(int p, item_misc_id Mid, spell_id spl);
-BOOL StoreStatOk(ItemStruct *h);
+bool StoreStatOk(ItemStruct *h);
 void SpawnSmith(int lvl);
 void SpawnPremium(int pnum);
 void WitchBookLevel(int ii);
@@ -324,11 +424,11 @@ void SpawnStoreGold();
 void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue);
 void RecalcStoreStats();
 int ItemNoFlippy();
-void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, BOOL delta);
-void CreateMagicArmor(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta);
-void CreateAmulet(int x, int y, int curlv, BOOL sendmsg, BOOL delta);
-void CreateMagicWeapon(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta);
-BOOL GetItemRecord(int nSeed, WORD wCI, int nIndex);
+void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta);
+void CreateMagicArmor(int x, int y, int imisc, int icurs, bool sendmsg, bool delta);
+void CreateAmulet(int x, int y, int curlv, bool sendmsg, bool delta);
+void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool delta);
+bool GetItemRecord(int nSeed, WORD wCI, int nIndex);
 void SetItemRecord(int nSeed, WORD wCI, int nIndex);
 void PutItemRecord(int nSeed, WORD wCI, int nIndex);
 
@@ -337,12 +437,6 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex);
 extern int MaxGold;
 
 extern BYTE ItemCAnimTbl[];
-extern int ItemInvSnds[];
+extern _sfx_id ItemInvSnds[];
 
-#ifdef __cplusplus
 }
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ITEMS_H__ */

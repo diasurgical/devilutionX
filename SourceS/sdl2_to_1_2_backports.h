@@ -10,6 +10,7 @@
 #include <cstddef>
 
 #include "console.h"
+#include "../defs.h"
 #include "../SourceX/stubs.h"
 
 #define WINDOW_ICON_NAME 0
@@ -54,16 +55,41 @@
 #define SDL_JoystickID Sint32
 #define SDL_JoystickNameForIndex SDL_JoystickName
 
-inline void SDL_Log(const char *fmt, ...)
-{
-	char message[256];
-	va_list ap;
-	va_start(ap, fmt);
-	vsprintf(message, fmt, ap);
-	va_end(ap);
+enum SDL_LogCategory {
+    SDL_LOG_CATEGORY_APPLICATION,
+    SDL_LOG_CATEGORY_ERROR,
+    SDL_LOG_CATEGORY_ASSERT,
+    SDL_LOG_CATEGORY_SYSTEM,
+    SDL_LOG_CATEGORY_AUDIO,
+    SDL_LOG_CATEGORY_VIDEO,
+    SDL_LOG_CATEGORY_RENDER,
+    SDL_LOG_CATEGORY_INPUT,
+    SDL_LOG_CATEGORY_TEST,
+};
 
-	printInConsole("INFO: %s\n", message);
-}
+enum SDL_LogPriority
+{
+    SDL_LOG_PRIORITY_VERBOSE = 1,
+    SDL_LOG_PRIORITY_DEBUG,
+    SDL_LOG_PRIORITY_INFO,
+    SDL_LOG_PRIORITY_WARN,
+    SDL_LOG_PRIORITY_ERROR,
+    SDL_LOG_PRIORITY_CRITICAL,
+    SDL_NUM_LOG_PRIORITIES
+};
+
+void SDL_Log(const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
+void SDL_LogVerbose(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
+void SDL_LogDebug(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
+void SDL_LogInfo(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
+void SDL_LogWarn(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
+void SDL_LogError(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
+void SDL_LogCritical(int category, const char *fmt, ...) DVL_PRINTF_ATTRIBUTE(2, 3);
+void SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va_list ap) DVL_PRINTF_ATTRIBUTE(3, 0);
+
+void SDL_LogSetAllPriority(SDL_LogPriority priority);
+void SDL_LogSetPriority(int category, SDL_LogPriority priority);
+SDL_LogPriority SDL_LogGetPriority(int category);
 
 inline void SDL_StartTextInput()
 {
@@ -96,11 +122,13 @@ inline void SDL_DisableScreenSaver()
 
 //= Messagebox (simply logged to stderr for now)
 
-typedef enum {
-	SDL_MESSAGEBOX_ERROR = 0x00000010,      /**< error dialog */
-	SDL_MESSAGEBOX_WARNING = 0x00000020,    /**< warning dialog */
-	SDL_MESSAGEBOX_INFORMATION = 0x00000040 /**< informational dialog */
-} SDL_MessageBoxFlags;
+enum {
+	// clang-format off
+	SDL_MESSAGEBOX_ERROR       = 1 << 4, /**< error dialog */
+	SDL_MESSAGEBOX_WARNING     = 1 << 5, /**< warning dialog */
+	SDL_MESSAGEBOX_INFORMATION = 1 << 6, /**< informational dialog */
+	// clang-format on
+};
 
 inline int SDL_ShowSimpleMessageBox(Uint32 flags,
     const char *title,

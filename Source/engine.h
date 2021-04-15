@@ -10,11 +10,12 @@
  * - File loading
  * - Video playback
  */
-#ifndef __ENGINE_H__
-#define __ENGINE_H__
+#pragma once
 
 #include <algorithm>
 #include <cstddef>
+#include <cstdlib>
+#include <stdint.h>
 
 #include <SDL.h>
 
@@ -24,7 +25,37 @@
 
 #include "../types.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
+
+enum direction : uint8_t {
+	DIR_S,
+	DIR_SW,
+	DIR_W,
+	DIR_NW,
+	DIR_N,
+	DIR_NE,
+	DIR_E,
+	DIR_SE,
+	DIR_OMNI,
+};
+
+// `malloc` that returns a user-friendly error on OOM.
+//
+// Defined as a macro so that:
+// 1. We provide the correct location for the OOM error.
+// 2. Get better attribution from memory profilers.
+#define DiabloAllocPtr(NUM_BYTES)                                                                                    \
+	[](std::size_t num_bytes) {                                                                                      \
+		BYTE *ptr = static_cast<BYTE *>(std::malloc(num_bytes));                                                     \
+		constexpr char kMesage[] = "System memory exhausted.\n"                                                      \
+		                           "Make sure you have at least 64MB of free system memory before running the game"; \
+		if (ptr == NULL)                                                                                             \
+			ErrDlg("Out of Memory Error", kMesage, __FILE__, __LINE__);                                              \
+		return ptr;                                                                                                  \
+	}(NUM_BYTES)
+
+#define mem_free_dbg(PTR) \
+	std::free(PTR)
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
@@ -105,27 +136,43 @@ struct CelOutputBuffer {
 	 *
 	 * Only use this if the buffer owns its data.
 	 */
-	void Free() {
+	void Free()
+	{
 		SDL_FreeSurface(this->surface);
 		this->surface = NULL;
 	}
 
-	int w() const { return region.w; }
-	int h() const { return region.h; }
+	int w() const
+	{
+		return region.w;
+	}
+	int h() const
+	{
+		return region.h;
+	}
 
 	BYTE *at(int x, int y) const
 	{
 		return static_cast<BYTE *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
 	}
 
-	BYTE *begin() const { return at(0, 0); }
-	BYTE *end() const { return at(0, region.h); }
+	BYTE *begin() const
+	{
+		return at(0, 0);
+	}
+	BYTE *end() const
+	{
+		return at(0, region.h);
+	}
 
 	/**
 	 * @brief Line width of the raw underlying byte buffer.
 	 * May be wider than its logical width (for power-of-2 alignment).
 	 */
-	int pitch() { return surface->pitch; }
+	int pitch()
+	{
+		return surface->pitch;
+	}
 
 	bool in_bounds(Sint16 x, Sint16 y) const
 	{
@@ -303,8 +350,9 @@ void CelDrawLightRedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, 
  * @param pCelBuff CEL buffer
  * @param nCel CEL frame number
  * @param nWidth Width of sprite
+ * @param skipColorIndexZero If true, color in index 0 will be treated as transparent (these are typically used for shadows in sprites)
  */
-void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, bool skipColorIndexZero = true);
 
 /**
  * @brief Set the value of a single pixel in the back buffer, checks bounds
@@ -399,13 +447,9 @@ void SetRndSeed(Sint32 s);
 Sint32 AdvanceRndSeed();
 Sint32 GetRndSeed();
 Sint32 random_(BYTE idx, Sint32 v);
-BYTE *DiabloAllocPtr(DWORD dwBytes);
-void mem_free_dbg(void *p);
 BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ENGINE_H__ */
+}
