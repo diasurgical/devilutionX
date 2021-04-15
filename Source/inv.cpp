@@ -166,7 +166,7 @@ static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 void DrawInv(CelOutputBuffer out)
 {
 	bool invtest[NUM_INV_GRID_ELEM];
-	int frame, frame_width, color, screen_x, screen_y, i, j, ii;
+	int frame, frame_width, screen_x, screen_y, i, j, ii;
 	BYTE *cels;
 
 	CelDrawTo(out, RIGHT_PANEL_X, 351, pInvCels, 1, SPANEL_WIDTH);
@@ -217,12 +217,7 @@ void DrawInv(CelOutputBuffer out)
 			}
 
 			if (pcursinvitem == slot) {
-				color = ICOL_WHITE;
-				if (plr[myplr].InvBody[slot]._iMagical != ITEM_QUALITY_NORMAL)
-					color = ICOL_BLUE;
-				if (!plr[myplr].InvBody[slot]._iStatFlag)
-					color = ICOL_RED;
-				CelBlitOutlineTo(out, color, RIGHT_PANEL_X + screen_x, screen_y, cels, frame, frame_width, false);
+				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].InvBody[slot], true), RIGHT_PANEL_X + screen_x, screen_y, cels, frame, frame_width, false);
 			}
 
 			if (plr[myplr].InvBody[slot]._iStatFlag) {
@@ -280,16 +275,9 @@ void DrawInv(CelOutputBuffer out)
 			}
 
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
-				color = ICOL_WHITE;
-				if (plr[myplr].InvList[ii]._iMagical != ITEM_QUALITY_NORMAL) {
-					color = ICOL_BLUE;
-				}
-				if (!plr[myplr].InvList[ii]._iStatFlag) {
-					color = ICOL_RED;
-				}
 				CelBlitOutlineTo(
 				    out,
-				    color,
+				    GetOutlineColor(plr[myplr].InvList[ii], true),
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
 				    cels, frame, frame_width, false);
@@ -314,8 +302,9 @@ void DrawInv(CelOutputBuffer out)
 
 void DrawInvBelt(CelOutputBuffer out)
 {
-	int i, frame, frame_width, color;
+	int i, frame, frame_width;
 	BYTE fi, ff;
+	BYTE *cels;
 
 	if (talkflag) {
 		return;
@@ -332,30 +321,23 @@ void DrawInvBelt(CelOutputBuffer out)
 		frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 
+		if (frame <= 179) {
+			cels = pCursCels;
+		} else {
+			frame -= 179;
+			cels = pCursCels2;
+		}
+
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
-			color = ICOL_WHITE;
-			if (plr[myplr].SpdList[i]._iMagical)
-				color = ICOL_BLUE;
-			if (!plr[myplr].SpdList[i]._iStatFlag)
-				color = ICOL_RED;
 			if (!sgbControllerActive || invflag) {
-				if (frame <= 179)
-					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, false);
-				else
-					CelBlitOutlineTo(out, color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width, false);
+				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].SpdList[i], true), InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cels, frame, frame_width, false);
 			}
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag) {
-			if (frame <= 179)
-				CelClippedDrawTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
-			else
-				CelClippedDrawTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
+			CelClippedDrawTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cels, frame, frame_width);
 		} else {
-			if (frame <= 179)
-				CelDrawLightRedTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, 1);
-			else
-				CelDrawLightRedTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width, 1);
+			CelDrawLightRedTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cels, frame, frame_width, 1);
 		}
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable

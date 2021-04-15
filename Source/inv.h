@@ -59,9 +59,10 @@ enum inv_xy_slot : uint8_t {
 
 enum item_color : uint8_t {
 	// clang-format off
-	ICOL_WHITE = PAL16_YELLOW + 5,
-	ICOL_BLUE  = PAL16_BLUE + 5,
-	ICOL_RED   = PAL16_RED + 5,
+	ICOL_YELLOW = PAL16_YELLOW,
+	ICOL_WHITE  = PAL16_GRAY + 2,
+	ICOL_BLUE   = PAL16_BLUE + 5,
+	ICOL_RED    = PAL16_RED + 5,
 	// clang-format on
 };
 
