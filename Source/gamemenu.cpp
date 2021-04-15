@@ -1,11 +1,17 @@
-
 /**
  * @file gamemenu.cpp
  *
  * Implementation of the in-game menu functions.
  */
-#include "all.h"
+#include "gamemenu.h"
+
+#include "cursor.h"
+#include "error.h"
+#include "gmenu.h"
+#include "init.h"
+#include "loadsave.h"
 #include "options.h"
+#include "pfile.h"
 #include "sound.h"
 
 namespace devilution {

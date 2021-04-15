@@ -3,7 +3,13 @@
  *
  * Implementation of functionality for rendering the town, towners and calling other render routines.
  */
-#include "all.h"
+#include "town.h"
+
+#include "drlg_l1.h"
+#include "init.h"
+#include "player.h"
+#include "quests.h"
+#include "trigs.h"
 
 namespace devilution {
 

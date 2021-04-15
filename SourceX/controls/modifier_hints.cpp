@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "all.h"
+#include "control.h"
 #include "controls/controller.h"
 #include "controls/game_controls.h"
 #include "options.h"

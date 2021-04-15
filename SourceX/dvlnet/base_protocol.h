@@ -5,8 +5,9 @@
 #include <map>
 #include <memory>
 
-#include "dvlnet/packet.h"
 #include "dvlnet/base.h"
+#include "dvlnet/packet.h"
+#include "player.h"
 
 namespace devilution {
 namespace net {

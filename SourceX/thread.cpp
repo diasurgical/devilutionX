@@ -1,7 +1,10 @@
-#include "all.h"
-#include "stubs.h"
+#include "thread.h"
+
 #include <SDL.h>
 #include <set>
+
+#include "appfat.h"
+#include "stubs.h"
 
 namespace devilution {
 

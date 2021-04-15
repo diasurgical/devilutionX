@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "dead.h"
+#include "engine.h"
+#include "gendung.h"
 
 using namespace devilution;
 

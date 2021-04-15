@@ -3,11 +3,18 @@
  *
  * Implementation of item functionality.
  */
+#include <algorithm>
+#include <limits.h>
 #include <stdint.h>
 
-#include <algorithm>
-#include "all.h"
+#include "cursor.h"
+#include "doom.h"
+#include "dx.h"
+#include "init.h"
+#include "lighting.h"
+#include "missiles.h"
 #include "options.h"
+#include "stores.h"
 
 namespace devilution {
 

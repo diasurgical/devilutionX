@@ -5,9 +5,22 @@
  */
 #include <algorithm>
 
-#include "all.h"
+#include "control.h"
+#include "cursor.h"
+#include "dead.h"
+#include "gamemenu.h"
+#include "init.h"
+#include "lighting.h"
+#include "loadsave.h"
+#include "minitext.h"
+#include "missiles.h"
+#include "nthread.h"
 #include "options.h"
+#include "qol.h"
+#include "spells.h"
+#include "stores.h"
 #include "storm/storm.h"
+#include "towners.h"
 
 namespace devilution {
 

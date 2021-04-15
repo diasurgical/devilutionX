@@ -3,7 +3,10 @@
  *
  * Implementation of all monster data.
  */
-#include "all.h"
+#include "monstdat.h"
+
+#include "monster.h"
+#include "textdat.h"
 
 namespace devilution {
 

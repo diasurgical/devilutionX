@@ -9,7 +9,9 @@
 #include "controls/menu_controls.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
+#include "gmenu.h"
 #include "options.h"
+#include "stores.h"
 
 namespace devilution {
 

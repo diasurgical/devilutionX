@@ -5,6 +5,9 @@
  */
 #pragma once
 
+#include "gendung.h"
+#include "objdat.h"
+
 namespace devilution {
 
 struct ThemeStruct {

@@ -3,7 +3,11 @@
  *
  * Implementation of functionality for syncing game state with other players.
  */
-#include "all.h"
+#include <limits.h>
+
+#include "gendung.h"
+#include "monster.h"
+#include "player.h"
 
 namespace devilution {
 

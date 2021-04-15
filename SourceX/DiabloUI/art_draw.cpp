@@ -2,6 +2,8 @@
 
 #include "DiabloUI/diabloui.h"
 #include "display.h"
+#include "render.h"
+#include "sdl_compat.h"
 
 namespace devilution {
 

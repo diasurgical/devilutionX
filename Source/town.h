@@ -5,6 +5,9 @@
  */
 #pragma once
 
+#include "gendung.h"
+#include "interfac.h"
+
 namespace devilution {
 
 void TownOpenHive();

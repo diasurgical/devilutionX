@@ -1,10 +1,14 @@
-#include <gtest/gtest.h>
-#include "picosha2.h"
-#include <fstream>
-#include <vector>
 #include <cstdio>
-#include "all.h"
+#include <fstream>
+#include <gtest/gtest.h>
+#include <vector>
+
+#include "loadsave.h"
+#include "pack.h"
 #include "paths.h"
+#include "pfile.h"
+
+#include "picosha2.h"
 
 using namespace devilution;
 

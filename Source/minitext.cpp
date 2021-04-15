@@ -3,7 +3,9 @@
  *
  * Implementation of scrolling dialog text.
  */
-#include "all.h"
+
+#include "control.h"
+#include "dx.h"
 
 namespace devilution {
 

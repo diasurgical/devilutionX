@@ -7,7 +7,9 @@
 
 #include <stdint.h>
 
+#include "miniwin.h"
 #include "monstdat.h"
+#include "sound.h"
 
 namespace devilution {
 

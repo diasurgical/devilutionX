@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "items.h"
+#include "player.h"
 #include "quests.h"
 
 namespace devilution {

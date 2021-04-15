@@ -1,9 +1,8 @@
 #pragma once
 
-#include <string>
 #include <queue>
+#include <string>
 
-#include "all.h"
 #include "dvlnet/abstract_net.h"
 
 namespace devilution {

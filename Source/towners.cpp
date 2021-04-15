@@ -3,7 +3,12 @@
  *
  * Implementation of functionality for loading and spawning towners.
  */
-#include "all.h"
+#include "towners.h"
+
+#include "cursor.h"
+#include "inv.h"
+#include "minitext.h"
+#include "stores.h"
 
 namespace devilution {
 

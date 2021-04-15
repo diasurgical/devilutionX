@@ -3,11 +3,28 @@
  *
  * Implementation of function for sending and reciving network messages.
  */
-#include "all.h"
-#include "storm/storm.h"
+#include <limits.h>
+
+#include "automap.h"
+#include "control.h"
+#include "dead.h"
 #include "DiabloUI/diabloui.h"
+#include "drlg_l1.h"
+#include "dthread.h"
+#include "encrypt.h"
+#include "gamemenu.h"
+#include "lighting.h"
+#include "missiles.h"
+#include "nthread.h"
 #include "objects.h"
 #include "options.h"
+#include "pfile.h"
+#include "plrmsg.h"
+#include "spells.h"
+#include "storm/storm.h"
+#include "sync.h"
+#include "town.h"
+#include "trigs.h"
 
 namespace devilution {
 

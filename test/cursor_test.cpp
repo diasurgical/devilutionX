@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "cursor.h"
+#include "itemdat.h"
 
 using namespace devilution;
 

@@ -4,11 +4,11 @@
 #include <thread>
 #endif
 
-#include "all.h"
-#include "options.h"
-#include "stubs.h"
 #include "dvlnet/abstract_net.h"
+#include "mainmenu.h"
+#include "options.h"
 #include "storm/storm_dvlnet.h"
+#include "stubs.h"
 
 namespace devilution {
 

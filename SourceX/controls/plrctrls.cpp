@@ -4,9 +4,20 @@
 #include <algorithm>
 #include <list>
 
+#include "automap.h"
+#include "control.h"
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
+#include "cursor.h"
+#include "gmenu.h"
+#include "help.h"
+#include "inv.h"
+#include "minitext.h"
+#include "missiles.h"
+#include "stores.h"
+#include "towners.h"
+#include "trigs.h"
 
 #define SPLICONLENGTH 56
 

@@ -1,5 +1,6 @@
 #pragma once
-#include "all.h"
+
+#include "gendung.h"
 
 namespace devilution {
 

@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "miniwin.h"
+
 namespace devilution {
 
 int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword);

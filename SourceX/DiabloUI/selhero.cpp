@@ -4,17 +4,18 @@
 #include <chrono>
 #include <random>
 
+#include "control.h"
 #include "DiabloUI/diabloui.h"
-#include "all.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
-#include "DiabloUI/selyesno.h"
-#include "DiabloUI/selok.h"
 #include "DiabloUI/selgame.h"
+#include "DiabloUI/selok.h"
+#include "DiabloUI/selyesno.h"
 #include "options.h"
+#include "pfile.h"
 
 #ifdef __3DS__
-#include "../platform/ctr/keyboard.h"
+#include "platform/ctr/keyboard.h"
 #endif
 
 namespace devilution {

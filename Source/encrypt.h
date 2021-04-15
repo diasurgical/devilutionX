@@ -5,6 +5,10 @@
  */
 #pragma once
 
+#include <SDL.h>
+
+#include "miniwin.h"
+
 namespace devilution {
 
 struct TDataInfo {

@@ -3,7 +3,11 @@
  *
  * Implementation of functions for minifying player data structure.
  */
-#include "all.h"
+#include "pack.h"
+
+#include "init.h"
+#include "loadsave.h"
+#include "stores.h"
 
 namespace devilution {
 

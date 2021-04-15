@@ -3,7 +3,9 @@
  *
  * Implementation of the path finding algorithms.
  */
-#include "all.h"
+#include "path.h"
+
+#include "gendung.h"
 
 namespace devilution {
 

@@ -3,10 +3,13 @@
  *
  * Implementation of the in-game navigation and interaction.
  */
-#include "all.h"
+#include "gmenu.h"
 
-#include "../SourceX/controls/axis_direction.h"
-#include "../SourceX/controls/controller_motion.h"
+#include "control.h"
+#include "controls/axis_direction.h"
+#include "controls/controller_motion.h"
+#include "stores.h"
+#include "ui_fwd.h"
 
 namespace devilution {
 

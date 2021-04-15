@@ -3,7 +3,11 @@
  *
  * Implementation of the hell level generation algorithms.
  */
-#include "all.h"
+
+#include "drlg_l1.h"
+#include "monster.h"
+#include "multi.h"
+#include "objdat.h"
 
 namespace devilution {
 

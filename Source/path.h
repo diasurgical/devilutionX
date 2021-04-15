@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <SDL.h>
+
 namespace devilution {
 
 #define MAX_PATH_LENGTH 25

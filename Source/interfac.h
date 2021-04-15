@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "ui_fwd.h"
+
 namespace devilution {
 
 #define UI_OFFSET_Y ((Sint16)((gnScreenHeight - 480) / 2))

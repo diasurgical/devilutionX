@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "cursor.h"
+#include "inv.h"
+#include "player.h"
 
 using namespace devilution;
 

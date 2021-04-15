@@ -2,8 +2,7 @@
 
 #include <SDL.h>
 
-#include "all.h"
-#include "./controller_buttons.h"
+#include "controller_buttons.h"
 
 namespace devilution {
 

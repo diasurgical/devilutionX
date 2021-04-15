@@ -1,14 +1,15 @@
 #include "selgame.h"
 
-#include "all.h"
-#include "storm/storm.h"
 #include "config.h"
+#include "control.h"
 #include "DiabloUI/diabloui.h"
-#include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"
-#include "DiabloUI/selok.h"
 #include "DiabloUI/selhero.h"
+#include "DiabloUI/selok.h"
+#include "DiabloUI/text.h"
+#include "mainmenu.h"
 #include "options.h"
+#include "storm/storm.h"
 
 namespace devilution {
 

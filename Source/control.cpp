@@ -3,9 +3,23 @@
  *
  * Implementation of the character and main control panels
  */
-#include "all.h"
+#include "control.h"
 
 #include <cstddef>
+
+#include "automap.h"
+#include "cursor.h"
+#include "DiabloUI/diabloui.h"
+#include "error.h"
+#include "gamemenu.h"
+#include "init.h"
+#include "inv.h"
+#include "lighting.h"
+#include "minitext.h"
+#include "missiles.h"
+#include "stores.h"
+#include "towners.h"
+#include "trigs.h"
 
 namespace devilution {
 

@@ -3,7 +3,18 @@
  *
  * Implementation of missile functionality.
  */
-#include "all.h"
+#include "missiles.h"
+
+#include <limits.h>
+
+#include "control.h"
+#include "cursor.h"
+#include "dead.h"
+#include "init.h"
+#include "inv.h"
+#include "lighting.h"
+#include "spells.h"
+#include "trigs.h"
 
 namespace devilution {
 

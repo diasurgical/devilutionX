@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "interfac.h"
+
 namespace devilution {
 
 #define MAXTRIGGERS 7

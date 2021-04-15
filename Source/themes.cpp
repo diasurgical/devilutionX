@@ -3,7 +3,13 @@
  *
  * Implementation of the theme room placing algorithms.
  */
-#include "all.h"
+#include "themes.h"
+
+#include "items.h"
+#include "monster.h"
+#include "objects.h"
+#include "quests.h"
+#include "trigs.h"
 
 namespace devilution {
 

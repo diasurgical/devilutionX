@@ -3,7 +3,10 @@
  *
  * Implementation of functionality for printing the ingame chat messages.
  */
-#include "all.h"
+#include "plrmsg.h"
+
+#include "control.h"
+#include "inv.h"
 
 namespace devilution {
 

@@ -3,7 +3,10 @@
  *
  * Implementation of debug functions.
  */
-#include "all.h"
+
+#include "cursor.h"
+#include "inv.h"
+#include "spells.h"
 
 namespace devilution {
 

@@ -3,10 +3,13 @@
  *
  * Implementation of functions for interacting with the main menu.
  */
-#include "all.h"
-#include "options.h"
-#include "storm/storm.h"
+
 #include "DiabloUI/diabloui.h"
+#include "init.h"
+#include "movie.h"
+#include "options.h"
+#include "pfile.h"
+#include "storm/storm.h"
 
 namespace devilution {
 

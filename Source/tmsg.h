@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <SDL.h>
+
 namespace devilution {
 
 #pragma pack(push, 1)

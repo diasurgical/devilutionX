@@ -3,10 +3,25 @@
  *
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
+#include <limits.h>
 #include <stdint.h>
 
-#include "all.h"
+#include "automap.h"
+#include "control.h"
+#include "cursor.h"
+#include "drlg_l1.h"
+#include "drlg_l4.h"
+#include "error.h"
+#include "init.h"
+#include "lighting.h"
+#include "minitext.h"
+#include "missiles.h"
 #include "options.h"
+#include "setmaps.h"
+#include "stores.h"
+#include "themes.h"
+#include "towners.h"
+#include "track.h"
 
 namespace devilution {
 

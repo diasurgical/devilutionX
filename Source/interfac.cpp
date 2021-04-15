@@ -3,8 +3,15 @@
  *
  * Implementation of load screens.
  */
-#include "all.h"
-#include "../SourceX/DiabloUI/art_draw.h"
+
+#include "control.h"
+#include "DiabloUI/art_draw.h"
+#include "dx.h"
+#include "init.h"
+#include "loadsave.h"
+#include "palette.h"
+#include "pfile.h"
+#include "plrmsg.h"
 
 namespace devilution {
 

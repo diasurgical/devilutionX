@@ -5,6 +5,7 @@
 #include "controls/controller_motion.h"
 #include "controls/remap_keyboard.h"
 #include "DiabloUI/diabloui.h"
+#include "sdl_compat.h"
 
 namespace devilution {
 

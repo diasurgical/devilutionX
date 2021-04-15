@@ -3,9 +3,12 @@
  *
  * Implementation of error dialogs.
  */
-#include "all.h"
-#include "storm/storm.h"
+
 #include <config.h>
+
+#include "diablo.h"
+#include "storm/storm.h"
+#include "ui_fwd.h"
 
 namespace devilution {
 

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include "all.h"
+
+#include "drlg_l2.h"
 
 using namespace devilution;
 

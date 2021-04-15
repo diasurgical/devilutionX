@@ -5,7 +5,10 @@
  */
 #pragma once
 
+#include <SDL.h>
 #include <stdint.h>
+
+#include "miniwin.h"
 
 namespace devilution {
 

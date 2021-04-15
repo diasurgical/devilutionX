@@ -1,4 +1,3 @@
-
 #include "controls/devices/joystick.h"
 
 #include <cstddef>
@@ -6,10 +5,10 @@
 #include "controls/controller_motion.h"
 #include "stubs.h"
 
-// Defined in SourceX/controls/plctrls.cpp
-extern "C" bool sgbControllerActive;
-
 namespace devilution {
+
+// Defined in SourceX/controls/plctrls.cpp
+extern bool sgbControllerActive;
 
 std::vector<Joystick> *const Joystick::joysticks_ = new std::vector<Joystick>;
 

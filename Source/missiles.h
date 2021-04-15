@@ -7,7 +7,9 @@
 
 #include <stdint.h>
 
+#include "miniwin.h"
 #include "misdat.h"
+#include "spelldat.h"
 
 namespace devilution {
 

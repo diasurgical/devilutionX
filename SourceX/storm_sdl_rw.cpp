@@ -3,9 +3,8 @@
 #include <cstdint>
 #include <cstring>
 
-#include "all.h"
+#include "engine.h"
 #include "storm/storm.h"
-#include "../Source/engine.h"
 
 namespace devilution {
 

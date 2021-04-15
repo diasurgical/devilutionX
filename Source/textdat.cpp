@@ -3,7 +3,6 @@
  *
  * Implementation of all dialog texts.
  */
-#include "all.h"
 #include "textdat.h"
 
 namespace devilution {

@@ -3,10 +3,16 @@
  *
  * Implementation of the catacombs level generation algorithms.
  */
+#include "drlg_l2.h"
 
 #include <algorithm>
 
-#include "all.h"
+#include "diablo.h"
+#include "drlg_l1.h"
+#include "objects.h"
+#include "player.h"
+#include "quests.h"
+#include "setmaps.h"
 
 namespace devilution {
 

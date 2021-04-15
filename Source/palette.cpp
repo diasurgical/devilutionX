@@ -3,9 +3,12 @@
  *
  * Implementation of functions for handling the engines color palette.
  */
-#include "all.h"
+
+#include "display.h"
+#include "dx.h"
 #include "options.h"
-#include "../SourceX/display.h"
+#include "render.h"
+#include "sdl_compat.h"
 #include "storm/storm.h"
 
 namespace devilution {

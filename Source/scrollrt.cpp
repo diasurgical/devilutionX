@@ -3,7 +3,30 @@
  *
  * Implementation of functionality for rendering the dungeons, monsters and calling other render routines.
  */
-#include "all.h"
+
+#include "automap.h"
+#include "control.h"
+#include "cursor.h"
+#include "dead.h"
+#ifdef _DEBUG
+#include "debug.h"
+#endif
+#include "doom.h"
+#include "dx.h"
+#include "error.h"
+#include "gmenu.h"
+#include "help.h"
+#include "init.h"
+#include "inv.h"
+#include "lighting.h"
+#include "minitext.h"
+#include "missiles.h"
+#include "nthread.h"
+#include "plrmsg.h"
+#include "qol.h"
+#include "render.h"
+#include "stores.h"
+#include "towners.h"
 
 namespace devilution {
 

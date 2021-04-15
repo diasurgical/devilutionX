@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL.h>
+
 namespace devilution {
 
 extern Uint16 gnScreenWidth;

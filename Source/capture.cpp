@@ -5,10 +5,14 @@
  */
 #include <fstream>
 
-#include "all.h"
-#include "storm/storm.h"
-#include "paths.h"
+#include "DiabloUI/diabloui.h"
+#include "dx.h"
 #include "file_util.h"
+#include "palette.h"
+#include "paths.h"
+#include "render.h"
+#include "storm/storm.h"
+#include "ui_fwd.h"
 
 namespace devilution {
 

@@ -6,7 +6,13 @@
 
 #include <algorithm>
 
-#include "all.h"
+#include "drlg_l1.h"
+#include "lighting.h"
+#include "monster.h"
+#include "objdat.h"
+#include "objects.h"
+#include "quests.h"
+#include "setmaps.h"
 
 namespace devilution {
 

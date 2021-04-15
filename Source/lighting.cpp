@@ -3,7 +3,11 @@
  *
  * Implementation of light and vision.
  */
-#include "all.h"
+#include "lighting.h"
+
+#include "automap.h"
+#include "diablo.h"
+#include "player.h"
 
 namespace devilution {
 

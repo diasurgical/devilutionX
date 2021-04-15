@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../sdl_ptrs.h"
+#include "sdl_ptrs.h"
 #include "storm/storm.h"
 
 namespace devilution {

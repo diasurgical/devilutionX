@@ -1,13 +1,14 @@
 #include "DiabloUI/dialogs.h"
 
+#include "control.h"
 #include "controls/menu_controls.h"
-#include "all.h"
-#include "dx.h"
-#include "DiabloUI/diabloui.h"
 #include "DiabloUI/button.h"
-#include "DiabloUI/fonts.h"
+#include "DiabloUI/diabloui.h"
 #include "DiabloUI/errorart.h"
+#include "DiabloUI/fonts.h"
 #include "display.h"
+#include "dx.h"
+#include "palette.h"
 
 namespace devilution {
 

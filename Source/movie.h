@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "miniwin.h"
+
 namespace devilution {
 
 extern BYTE movie_playing;
