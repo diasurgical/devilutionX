@@ -1075,7 +1075,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		d = plr[p]._pdir;
 
 		assert(plr[p]._pNAnim[d]);
-		NewPlrAnim(p, plr[p]._pNAnim[d], plr[p]._pNFrames, 0, plr[p]._pNWidth);
+		NewPlrAnim(p, plr[p]._pNAnim[d], plr[p]._pNFrames, 3, plr[p]._pNWidth);
 	} else {
 		plr[p]._pgfxnum = g;
 	}
