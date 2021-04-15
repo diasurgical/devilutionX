@@ -37,10 +37,12 @@ static Sint32 AutoMapY;
 #define MAPFLAG_DIRT 0x40
 #define MAPFLAG_STAIRS 0x80
 
+std::map<BYTE, bool> isStairsUp;
+
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
-void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_type)
+void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_type, Sint32 dunx, Sint32 duny)
 {
 	Sint32 x1, y1, x2, y2;
 
@@ -70,6 +72,11 @@ void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_t
 		DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, COLOR_BRIGHT);
 		DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, COLOR_BRIGHT);
 		DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, COLOR_BRIGHT);
+
+		if (isStairsUp[dungeon[dunx][duny]])
+			DrawLineTo(out, sx - AmLine8, sy - AmLine8 - AmLine4, sx + AmLine8 + AmLine16, sy + AmLine4, ICOL_RED);
+		else
+			DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, ICOL_RED);
 	}
 
 	bool do_vert = false;
@@ -466,6 +473,12 @@ Sint32 AmLine16;
 Sint32 AmLine8;
 Sint32 AmLine4;
 
+static void InitStairsUpMap()
+{
+	isStairsUp[66] = true;
+
+}
+
 void InitAutomapOnce()
 {
 	automapflag = false;
@@ -475,6 +488,7 @@ void InitAutomapOnce()
 	AmLine16 = 8;
 	AmLine8 = 4;
 	AmLine4 = 2;
+	InitStairsUpMap();
 }
 
 void InitAutomap()
@@ -655,7 +669,7 @@ void DrawAutomap(CelOutputBuffer out)
 		for (j = 0; j < cells; j++) {
 			WORD maptype = GetAutomapType(mapx + j, mapy - j, true);
 			if (maptype != 0)
-				DrawAutomapTile(out, x, sy, maptype);
+				DrawAutomapTile(out, x, sy, maptype, mapx + j, mapy - j);
 			x += AmLine64;
 		}
 		mapy++;
@@ -664,7 +678,7 @@ void DrawAutomap(CelOutputBuffer out)
 		for (j = 0; j <= cells; j++) {
 			WORD maptype = GetAutomapType(mapx + j, mapy - j, true);
 			if (maptype != 0)
-				DrawAutomapTile(out, x, y, maptype);
+				DrawAutomapTile(out, x, y, maptype, mapx + j, mapy - j);
 			x += AmLine64;
 		}
 		mapx++;
