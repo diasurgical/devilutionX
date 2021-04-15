@@ -5,6 +5,7 @@
  */
 #include "all.h"
 #include "options.h"
+#include "MaxRectsBinPack.h"
 
 namespace devilution {
 
@@ -877,76 +878,68 @@ bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
  */
 bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
 {
+	rbp::MaxRectsBinPack binPack(10, 4, false); // TODO: Cache this
+
 	InvXY itemSize = GetInventorySize(item);
-	bool done = false;
 
-	if (itemSize.X == 1 && itemSize.Y == 1) {
-		for (int i = 30; i <= 39 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+	// Add the new item to the input rects.
+	std::vector<rbp::RectSize> input {
+		rbp::RectSize{itemSize.X, itemSize.Y}
+	};
+
+	// Add all current item to the input rects.
+	for (int i = 0; i < plr[playerNumber]._pNumInv; i++) {
+		const auto &item = plr[playerNumber].InvList[i];
+		auto size =  GetInventorySize(item);
+		input.emplace_back(rbp::RectSize{size.X, size.Y});
+	}
+
+	std::vector<rbp::Rect> output;
+
+	binPack.Insert(input, output, rbp::MaxRectsBinPack::RectBestShortSideFit);
+
+	if(output.size() != plr[playerNumber]._pNumInv+1) {
+		// Unable to place item: inventory is full.
+		return false;
+	}
+
+	if(persistItem) {
+		// Empty the item grid.
+		for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+			plr[playerNumber].InvGrid[i] = 0;
 		}
-
-		for (int i = 20; i <= 29 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+		for (int i = 0; i < plr[playerNumber]._pNumInv; ++i) {
+			auto &item = plr[playerNumber].InvList[i];
+			auto size =  GetInventorySize(item);
+			bool placed = false;
+			// Look for a place to put the item.
+			for (auto it = output.begin(); it != output.end();) {
+				if (it->width == size.X && it->height == size.Y) {
+					item._ix = it->x;
+					item._iy = it->y;
+					int slot = it->x % 10 + it->y * 10;
+					AddItemToInvGrid(playerNumber, slot, i+1, size.X, size.Y);
+					it = output.erase(it);
+					placed = true;
+					break;
+				} else {
+					++it;
+				}
+			}
+			if(!placed) {
+				assert(false && "failed to place item");  // TODO
+			}
 		}
-
-		for (int i = 10; i <= 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 0; i <= 9 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+		assert(output.size() == 1); // TODO
+		
+		int slot = output[0].x % 10 + output[0].y * 10;
+		auto placed = AutoPlaceItemInInventorySlot(playerNumber, slot, plr[playerNumber].HoldItem, persistItem);
+		if(!placed) {
+			assert(placed && "failed to place item"); // TODO
 		}
 	}
 
-	if (itemSize.X == 1 && itemSize.Y == 2) {
-		for (int i = 29; i >= 20 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 9; i >= 0 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 19; i >= 10 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-	}
-
-	if (itemSize.X == 1 && itemSize.Y == 3) {
-		for (int i = 0; i < 20 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-	}
-
-	if (itemSize.X == 2 && itemSize.Y == 2) {
-		for (int i = 0; i < 10 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, AP2x2Tbl[i], item, persistItem);
-		}
-
-		for (int i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-	}
-
-	if (itemSize.X == 2 && itemSize.Y == 3) {
-		for (int i = 0; i < 9 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-	}
-
-	return done;
+	return true;
 }
 
 /**
@@ -989,7 +982,7 @@ bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStr
 		yy += 10;
 	}
 	if (done && persistItem) {
-		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = plr[playerNumber].HoldItem;
+		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = item;//plr[playerNumber].HoldItem;
 		plr[playerNumber]._pNumInv++;
 
 		AddItemToInvGrid(playerNumber, slotIndex, plr[playerNumber]._pNumInv, itemSize.X, itemSize.Y);

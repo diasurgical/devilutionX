@@ -165,6 +165,8 @@ if(NOT NONET)
   endif()
 endif()
 
+add_subdirectory(3rdParty/RectangleBinPack)
+
 if(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
@@ -447,13 +449,14 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
-target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR} ${rectanglebinpack_SOURCE_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
   SourceS
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
-  3rdParty/libsmacker)
+  3rdParty/libsmacker
+  ${rectanglebinpack_SOURCE_DIR})
 
 if(N3DS)
   target_link_libraries(devilution PUBLIC
@@ -470,7 +473,8 @@ target_link_libraries(${BIN_TARGET} PRIVATE
   PKWare
   StormLib
   smacker
-  Radon)
+  Radon
+  RectangleBinPack)
 
 if(NOT NONET)
   target_link_libraries(${BIN_TARGET} PRIVATE sodium)
