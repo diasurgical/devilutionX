@@ -826,6 +826,8 @@ void CheckTrigForce()
 		case SL_POISONWATER:
 			trigflag = ForcePWaterTrig();
 			break;
+		default:
+			break;
 		}
 	}
 

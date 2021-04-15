@@ -144,7 +144,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		}
 		SDL_Surface *tmp = TTF_RenderUTF8_Solid(font, text, fg);
 		if (tmp == NULL) {
-			SDL_Log(TTF_GetError());
+			SDL_Log("%s", TTF_GetError());
 			SDL_FreeSurface(textbuf);
 			SDL_free(strLines);
 			SDL_stack_free(str);

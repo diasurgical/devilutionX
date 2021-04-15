@@ -260,16 +260,16 @@ void UiOkDialog(const char *text, const char *caption, bool error, std::vector<U
 
 	if (!gbActive || inDialog) {
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-			SDL_Log(SDL_GetError());
+			SDL_Log("%s", SDL_GetError());
 		}
 #ifndef RUN_TESTS
 		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, NULL) <= -1) {
-			SDL_Log(SDL_GetError());
+			SDL_Log("%s", SDL_GetError());
 #else
 		{
 #endif
-			SDL_Log(text);
-			SDL_Log(caption);
+			SDL_Log("%s", text);
+			SDL_Log("%s", caption);
 		}
 		return;
 	}

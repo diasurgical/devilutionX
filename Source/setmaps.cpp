@@ -196,6 +196,8 @@ void LoadSetMap()
 		DRLG_SetMapTrans("Levels\\L1Data\\Vile1.DUN");
 		InitNoTriggers();
 		break;
+	case SL_NONE:
+		break;
 	}
 }
 

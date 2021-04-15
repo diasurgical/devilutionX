@@ -60,7 +60,7 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 }
 
 // SELECT + D-Pad to simulate right stick movement.
-bool SimulateRightStickWithDpad(const SDL_Event &event, ControllerButtonEvent ctrl_event)
+bool SimulateRightStickWithDpad(ControllerButtonEvent ctrl_event)
 {
 	if (sgOptions.Controller.bDpadHotkeys)
 		return false;
@@ -144,7 +144,7 @@ bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_
 	if (ProcessKbCtrlAxisMotion(event))
 		return true;
 #endif
-	return SimulateRightStickWithDpad(event, ctrl_event);
+	return SimulateRightStickWithDpad(ctrl_event);
 }
 
 AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad)

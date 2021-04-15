@@ -281,7 +281,7 @@ int getIniInt(const char *keyname, const char *valuename, int defaultValue);
 void setIniInt(const char *keyname, const char *valuename, int value);
 void setIniFloat(const char *keyname, const char *valuename, float value);
 
-void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video);
+void SVidPlayBegin(const char *filename, int flags, HANDLE *video);
 void SVidPlayEnd(HANDLE video);
 
 /*  SErrGetLastError @ 463
