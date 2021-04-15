@@ -205,7 +205,7 @@ void DrawInv(CelOutputBuffer out)
 				screen_x += frame_width == INV_SLOT_SIZE_PX ? 14 : 0;
 				screen_y += InvItemHeight[frame] == (3 * INV_SLOT_SIZE_PX) ? 0 : -14;
 			} else if (slot == INVLOC_HAND_RIGHT) {
-				screen_x = frame_width == INV_SLOT_SIZE_PX ? 13 : 1;
+				screen_x += frame_width == INV_SLOT_SIZE_PX ? 13 : 1;
 				screen_y += InvItemHeight[frame] == 3 * INV_SLOT_SIZE_PX ? 0 : -14;
 			}
 
