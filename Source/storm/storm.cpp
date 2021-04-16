@@ -23,9 +23,19 @@
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
 
-namespace devilution {
+// Include Windows headers for Get/SetLastError.
+#if defined(_WIN32)
+// Suppress definitions of `min` and `max` macros by <windows.h>:
+#define NOMINMAX 1
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else // !defined(_WIN32)
+// On non-Windows, these are defined in 3rdParty/StormLib.
+extern "C" void SetLastError(std::uint32_t dwErrCode);
+extern "C" std::uint32_t GetLastError();
+#endif
 
-uint32_t nLastError = 0;
+namespace devilution {
 
 namespace {
 
@@ -801,12 +811,12 @@ void SVidPlayEnd(HANDLE video)
 
 DWORD SErrGetLastError()
 {
-	return nLastError;
+	return ::GetLastError();
 }
 
 void SErrSetLastError(DWORD dwErrCode)
 {
-	nLastError = dwErrCode;
+	::SetLastError(dwErrCode);
 }
 
 bool SFileSetBasePath(const char *path)

@@ -11,8 +11,6 @@
 #include <string.h>
 #include <time.h>
 
-#include "storm/storm_full.h"
-
 namespace devilution {
 
 #ifndef MAX_PATH
