@@ -5,8 +5,6 @@
  */
 #include "dead.h"
 
-#include <SDL.h>
-
 #include "gendung.h"
 #include "lighting.h"
 #include "misdat.h"
@@ -21,8 +19,8 @@ void InitDead()
 {
 	int mtypes[MAXMONSTERS];
 
-	for (int i = 0; i < MAXMONSTERS; i++)
-		mtypes[i] = 0;
+	for (int &mtype : mtypes)
+		mtype = 0;
 
 	int nd = 0;
 
@@ -40,16 +38,16 @@ void InitDead()
 		}
 	}
 
-	for (int d = 0; d < 8; d++)
-		dead[nd]._deadData[d] = misfiledata[MFILE_BLODBUR].mAnimData[0];
+	for (auto &d : dead[nd]._deadData)
+		d = misfiledata[MFILE_BLODBUR].mAnimData[0];
 	dead[nd]._deadFrame = 8;
 	dead[nd]._deadWidth = 128;
 	dead[nd]._deadWidth2 = 32;
 	dead[nd]._deadtrans = 0;
 	nd++;
 
-	for (int d = 0; d < 8; d++)
-		dead[nd]._deadData[d] = misfiledata[MFILE_SHATTER1].mAnimData[0];
+	for (auto &d : dead[nd]._deadData)
+		d = misfiledata[MFILE_SHATTER1].mAnimData[0];
 	dead[nd]._deadFrame = 12;
 	dead[nd]._deadWidth = 128;
 	dead[nd]._deadWidth2 = 32;
