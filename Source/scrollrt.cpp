@@ -946,38 +946,57 @@ static void scrollrt_draw(CelOutputBuffer out, int x, int y, int sx, int sy, int
 }
 
 /**
- * @brief Scale up the rendered part of the back buffer to take up the full view
+ * @brief Scale up the top left part of the buffer 2x.
  */
 static void Zoom(CelOutputBuffer out)
 {
-	int wdt = gnScreenWidth / 2;
-
-	int src_x = gnScreenWidth / 2 - 1;
-	int dst_x = gnScreenWidth - 1;
-
+	int viewport_width = out.w();
+	int viewport_offset_x = 0;
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
-			wdt >>= 1;
-			src_x -= wdt;
+			viewport_width -= SPANEL_WIDTH;
+			viewport_offset_x = SPANEL_WIDTH;
 		} else if (invflag || sbookflag) {
-			wdt >>= 1;
-			src_x -= wdt;
-			dst_x -= SPANEL_WIDTH;
+			viewport_width -= SPANEL_WIDTH;
 		}
 	}
 
-	BYTE *src = out.at(src_x, gnViewportHeight / 2 - 1);
-	BYTE *dst = out.at(dst_x, gnViewportHeight - 1);
+	// We round to even for the source width and height.
+	// If the width / height was odd, we copy just one extra pixel / row later on.
+	const int src_width = (viewport_width + 1) / 2;
+	const int doubleable_width = viewport_width / 2;
+	const int src_height = (out.h() + 1) / 2;
+	const int doubleable_height = out.h() / 2;
 
-	for (int hgt = 0; hgt < gnViewportHeight / 2; hgt++) {
-		for (int i = 0; i < wdt; i++) {
+	BYTE *src = out.at(src_width - 1, src_height - 1);
+	BYTE *dst = out.at(viewport_offset_x + viewport_width - 1, out.h() - 1);
+	const bool odd_viewport_width = (viewport_width % 2) == 1;
+
+	for (int hgt = 0; hgt < doubleable_height; hgt++) {
+		// Double the pixels in the line.
+		for (int i = 0; i < doubleable_width; i++) {
 			*dst-- = *src;
 			*dst-- = *src;
-			src--;
+			--src;
 		}
-		memcpy(dst - out.pitch(), dst, wdt * 2 + 1);
-		src -= out.pitch() - wdt;
-		dst -= 2 * (out.pitch() - wdt);
+
+		// Copy a single extra pixel if the output width is odd.
+		if (odd_viewport_width) {
+			*dst-- = *src;
+			--src;
+		}
+
+		// Skip the rest of the source line.
+		src -= (out.pitch() - src_width);
+
+		// Double the line.
+		memcpy(dst - out.pitch() + 1, dst + 1, viewport_width);
+
+		// Skip the rest of the destination line.
+		dst -= 2 * out.pitch() - viewport_width;
+	}
+	if ((out.h() % 2) == 1) {
+		memcpy(dst - out.pitch() + 1, dst + 1, viewport_width);
 	}
 }
 
@@ -1132,7 +1151,7 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 	// Limit rendering to the view area
 	CelOutputBuffer out = zoomflag
 	    ? full_out.subregionY(0, gnViewportHeight)
-	    : full_out.subregionY(0, gnViewportHeight / 2);
+	    : full_out.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
 	sx = ScrollInfo._sxoff + tileOffsetX;
@@ -1220,7 +1239,7 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 	scrollrt_draw(out, x, y, sx, sy, rows, columns);
 
 	if (!zoomflag) {
-		Zoom(full_out.subregionY(0, gnScreenHeight));
+		Zoom(full_out.subregionY(0, gnViewportHeight));
 	}
 }
 
