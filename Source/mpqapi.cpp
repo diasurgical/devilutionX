@@ -223,28 +223,32 @@ struct Archive {
 
 	bool Close(bool clear_tables = true)
 	{
-		if (!stream.IsOpen())
-			return true;
+		bool result = true;
+		if (stream.IsOpen()) {
 #ifdef _DEBUG
-		SDL_Log("Closing %s", name.c_str());
+			SDL_Log("Closing %s", name.c_str());
 #endif
 
-		bool result = true;
-		if (modified && !(stream.seekp(0, std::ios::beg) && WriteHeaderAndTables()))
-			result = false;
-		stream.Close();
-		if (modified && result && size != 0) {
+			if (modified && !(stream.seekp(0, std::ios::beg) && WriteHeaderAndTables()))
+				result = false;
+			stream.Close();
+			if (modified && result && size != 0) {
 #ifdef _DEBUG
-			SDL_Log("ResizeFile(\"%s\", %" PRIuMAX ")", name.c_str(), size);
+				SDL_Log("ResizeFile(\"%s\", %" PRIuMAX ")", name.c_str(), size);
 #endif
-			result = ResizeFile(name.c_str(), size);
+				result = ResizeFile(name.c_str(), size);
+			}
+			name.clear();
 		}
-		name.clear();
 		if (clear_tables) {
-			delete[] sgpHashTbl;
-			sgpHashTbl = NULL;
-			delete[] sgpBlockTbl;
-			sgpBlockTbl = NULL;
+			if(sgpHashTbl) {
+				delete[] sgpHashTbl;
+				sgpHashTbl = NULL;
+			}
+			if(sgpBlockTbl) {
+				delete[] sgpBlockTbl;
+				sgpBlockTbl = NULL;
+			}
 		}
 		return result;
 	}
