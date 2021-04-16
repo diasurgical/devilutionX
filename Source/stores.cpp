@@ -68,6 +68,17 @@ const char *const talkname[] = {
 	"Wirt"
 };
 
+text_color GetItemTextColor(ItemStruct &item)
+{
+	if (!item._iStatFlag)
+		return text_color::COL_RED;
+	if (item._iMagical == ITEM_QUALITY_MAGIC)
+		return text_color::COL_BLUE;
+	if (item._iMagical == ITEM_QUALITY_UNIQUE)
+		return text_color::COL_GOLD;
+	return text_color::COL_WHITE;
+}
+
 void DrawSTextBack(CelOutputBuffer out)
 {
 	CelDrawTo(out, PANEL_X + 344, 327 + UI_OFFSET_Y, pSTextBoxCels, 1, 271);
@@ -237,14 +248,7 @@ void S_ScrollSBuy(int idx)
 
 	for (l = 5; l < 20; l += 4) {
 		if (!smithitem[ls].isEmpty()) {
-			text_color iclr = COL_WHITE;
-			if (smithitem[ls]._iMagical) {
-				iclr = COL_BLUE;
-			}
-
-			if (!smithitem[ls]._iStatFlag) {
-				iclr = COL_RED;
-			}
+			text_color iclr = GetItemTextColor(smithitem[ls]);
 
 			if (smithitem[ls]._iMagical) {
 				AddSText(20, l, false, smithitem[ls]._iIName, iclr, true);
@@ -302,11 +306,7 @@ void S_ScrollSPBuy(int idx)
 
 	for (l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
 		if (!premiumitem[idx].isEmpty()) {
-			text_color iclr = COL_WHITE;
-			if (premiumitem[idx]._iMagical)
-				iclr = COL_BLUE;
-			if (!premiumitem[idx]._iStatFlag)
-				iclr = COL_RED;
+			text_color iclr = GetItemTextColor(premiumitem[idx]);
 			AddSText(20, l, false, premiumitem[idx]._iIName, iclr, true);
 			AddSTextVal(l, premiumitem[idx]._iIvalue);
 			PrintStoreItem(&premiumitem[idx], l + 1, iclr);
@@ -396,14 +396,7 @@ void S_ScrollSSell(int idx)
 		if (idx >= storenumh)
 			break;
 		if (!storehold[idx].isEmpty()) {
-			text_color iclr = COL_WHITE;
-			if (storehold[idx]._iMagical) {
-				iclr = COL_BLUE;
-			}
-
-			if (!storehold[idx]._iStatFlag) {
-				iclr = COL_RED;
-			}
+			text_color iclr = GetItemTextColor(storehold[idx]);
 
 			if (storehold[idx]._iMagical && storehold[idx]._iIdentified) {
 				AddSText(20, l, false, storehold[idx]._iIName, iclr, true);
@@ -603,14 +596,7 @@ void S_ScrollWBuy(int idx)
 
 	for (l = 5; l < 20; l += 4) {
 		if (!witchitem[ls].isEmpty()) {
-			text_color iclr = COL_WHITE;
-			if (witchitem[ls]._iMagical) {
-				iclr = COL_BLUE;
-			}
-
-			if (!witchitem[ls]._iStatFlag) {
-				iclr = COL_RED;
-			}
+			text_color iclr = GetItemTextColor(witchitem[ls]);
 
 			if (witchitem[ls]._iMagical) {
 				AddSText(20, l, false, witchitem[ls]._iIName, iclr, true);
@@ -851,12 +837,7 @@ void S_StartConfirm()
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-	text_color iclr = COL_WHITE;
-
-	if (plr[myplr].HoldItem._iMagical != ITEM_QUALITY_NORMAL)
-		iclr = COL_BLUE;
-	if (!plr[myplr].HoldItem._iStatFlag)
-		iclr = COL_RED;
+	text_color iclr = GetItemTextColor(plr[myplr].HoldItem);
 
 	idprint = plr[myplr].HoldItem._iMagical != ITEM_QUALITY_NORMAL;
 
@@ -938,12 +919,8 @@ void S_StartBBoy()
 	AddSText(0, 1, true, tempstr, COL_GOLD, false);
 	AddSLine(3);
 	AddSLine(21);
-	text_color iclr = COL_WHITE;
+	text_color iclr = GetItemTextColor(boyitem);
 
-	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
-		iclr = COL_BLUE;
-	if (!boyitem._iStatFlag)
-		iclr = COL_RED;
 	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
 		AddSText(20, 10, false, boyitem._iIName, iclr, true);
 	else
@@ -991,10 +968,7 @@ void S_ScrollHBuy(int idx)
 	stextup = 5;
 	for (l = 5; l < 20; l += 4) {
 		if (!healitem[idx].isEmpty()) {
-			text_color iclr = COL_WHITE;
-			if (!healitem[idx]._iStatFlag) {
-				iclr = COL_RED;
-			}
+			text_color iclr = GetItemTextColor(healitem[idx]);
 
 			AddSText(20, l, false, healitem[idx]._iName, iclr, true);
 			AddSTextVal(l, healitem[idx]._iIvalue);
@@ -1141,12 +1115,7 @@ void S_StartIdShow()
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-	text_color iclr = COL_WHITE;
-
-	if (plr[myplr].HoldItem._iMagical != ITEM_QUALITY_NORMAL)
-		iclr = COL_BLUE;
-	if (!plr[myplr].HoldItem._iStatFlag)
-		iclr = COL_RED;
+	text_color iclr = GetItemTextColor(plr[myplr].HoldItem);
 
 	AddSText(0, 7, true, "This item is:", COL_WHITE, false);
 	AddSText(20, 11, false, plr[myplr].HoldItem._iIName, iclr, false);
