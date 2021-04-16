@@ -13,17 +13,17 @@ namespace devilution {
 namespace {
 
 namespace xpbar {
-	constexpr int barWidth = 307;
-	constexpr int barHeight = 5;
+constexpr int barWidth = 307;
+constexpr int barHeight = 5;
 
-	constexpr int goldGradient[] = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4, 0xC3, 0xC2, 0xC1, 0xC0 };
-	constexpr int goldGrades = 12;
+constexpr int goldGradient[] = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4 };
+constexpr int goldGrades = SDL_arraysize(goldGradient);
 
-	constexpr int whiteGradient[] = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0xF8, 0xF7, 0xF6, 0xF5, 0xF4, 0xF3, 0xF2, 0xF1, 0xF0, 0xFF };
-	constexpr int whiteGrades = 12;
+constexpr int whiteGradient[] = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0xF8, 0xF7, 0xF6, 0xF5, 0xF4, 0xF3 };
+constexpr int whiteGrades = SDL_arraysize(whiteGradient);
 
-	constexpr int backWidth = 313;
-	constexpr int backHeight = 9;
+constexpr int backWidth = 313;
+constexpr int backHeight = 9;
 } // namespace xpbar
 
 struct QolArt {
@@ -44,15 +44,19 @@ int GetTextWidth(const char *s)
 	return l;
 }
 
-// Fills out with printed number n using ',' thousands separator.
-// Returns pointer to first char after the written number.
-char* PrintWithSeparator(char* out, long long n)
+/**
+ * @brief Prints integer into buffer, using ',' as thousands separator.
+ * @param out Destination buffer
+ * @param n Number to print
+ * @return Address of first character after printed number
+*/
+char *PrintWithSeparator(char *out, long long n)
 {
 	if (n < 1000) {
 		return out + sprintf(out, "%lld", n);
 	}
 
-	char* append = PrintWithSeparator(out, n / 1000);
+	char *append = PrintWithSeparator(out, n / 1000);
 	return append + sprintf(append, ",%03lld", n % 1000);
 }
 
@@ -192,10 +196,10 @@ void DrawXPBar(CelOutputBuffer out)
 	if (!sgOptions.Gameplay.bExperienceBar)
 		return;
 
-	const PlayerStruct& player = plr[myplr];
+	const PlayerStruct &player = plr[myplr];
 
-	const int backX = gnScreenWidth / 2 - 155;
-	const int backY = gnScreenHeight - 11;
+	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
+	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
 
 	const int xPos = backX + 3;
 	const int yPos = backY + 2;
@@ -238,19 +242,18 @@ void DrawXPBar(CelOutputBuffer out)
 	SetPixel(out, xPos + fullBar, yPos + 3, xpbar::whiteGradient[fade / 2]);
 }
 
-bool CheckXPBarInfo(void)
+bool CheckXPBarInfo()
 {
 	if (!sgOptions.Gameplay.bExperienceBar)
 		return false;
 
-	const int backX = (gnScreenWidth / 2) - 155;
-	const int backY = gnScreenHeight - 11;
+	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
+	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
 
-	if (MouseX < backX || MouseX >= backX + xpbar::backWidth ||
-		MouseY < backY || MouseY >= backY + xpbar::backHeight)
+	if (MouseX < backX || MouseX >= backX + xpbar::backWidth || MouseY < backY || MouseY >= backY + xpbar::backHeight)
 		return false;
 
-	const PlayerStruct& player = plr[myplr];
+	const PlayerStruct &player = plr[myplr];
 
 	const int charLevel = player._pLevel;
 
