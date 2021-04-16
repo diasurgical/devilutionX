@@ -1911,7 +1911,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	}
 
 	if (done) {
-		CleanupItems(&plr[pnum].HoldItem, ii);
+		CleanupItems(&items[ii], ii);
 		return;
 	}
 
