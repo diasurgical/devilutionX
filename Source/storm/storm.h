@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cerrno>
 #include <cstdint>
 #include <limits>
 #include <string>
@@ -287,6 +288,17 @@ void setIniFloat(const char *keyname, const char *valuename, float value);
 
 void SVidPlayBegin(const char *filename, int flags, HANDLE *video);
 void SVidPlayEnd(HANDLE video);
+
+// These error codes are used and returned by StormLib.
+// See StormLib/src/StormPort.h
+#if defined(_WIN32)
+// https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-
+#define STORM_ERROR_FILE_NOT_FOUND 2
+#define STORM_ERROR_HANDLE_EOF 38
+#else // !defined(_WIN32)
+#define STORM_ERROR_FILE_NOT_FOUND ENOENT
+#define STORM_ERROR_HANDLE_EOF 1002
+#endif
 
 /*  SErrGetLastError @ 463
  *
