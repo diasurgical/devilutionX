@@ -1924,7 +1924,7 @@ void SaveGameData()
 
 void SaveGame() {
 	gbValidSaveFile = true;
-	pfile_write_hero(/*save_game_data=*/true);
+	pfile_write_hero(/*write_game_data=*/true);
 }
 
 void SaveLevel()
