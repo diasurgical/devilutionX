@@ -563,33 +563,35 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 	plr[pnum]._pAnimGameTickModifier = 0.0f;
 
 	if (numSkippedFrames != 0 || flags != AnimationFlags::None) {
-		int relevantAnimationLength = numFrames;
+		int relevantAnimationFramesForDistribution = numFrames; // Animation Frames that will be adjusted for the skipped Frames/GameTicks
 		if (distributeFramesBeforeFrame != 0) {
 			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
 			// In normal attacks frame skipping always happens before the attack actual hit.
 			// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
 			// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
-			relevantAnimationLength = distributeFramesBeforeFrame - 1;
+			relevantAnimationFramesForDistribution = distributeFramesBeforeFrame - 1;
 		}
 
+		int gameTicksPerFrame = (Delay + 1);                                                                        // How many GameTicks are needed to advance one Animation Frame
+		int relevantAnimationGameTicksForDistribution = relevantAnimationFramesForDistribution * gameTicksPerFrame; // GameTicks that will be adjusted for the skipped Frames/GameTicks
+
+		int relevantAnimationGameTicksWithSkipping = relevantAnimationGameTicksForDistribution - (numSkippedFrames * gameTicksPerFrame); // How many GameTicks will the Animation be really shown (skipped Frames and GameTicks removed)
 		if (flags & AnimationFlags::ProcessAnimationPending) {
 			// If ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim), we increment the Animation-Counter.
 			// If no delay is specified, this will result in complete skipped frame (see ProcessPlayerAnimation).
 			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
 			// Because of that, we only the remove one GameTick from the time the Animation is shown
-			relevantAnimationLength -= 1;
+			relevantAnimationGameTicksWithSkipping -= 1;
 			// The Animation Distribution Logic needs to account how many GameTicks passed since the Animation started.
 			// Because ProcessAnimation will increase this later (in same GameTick as NewPlrAnim), we correct this upfront.
 			// This also means Rendering should never hapen with _pAnimGameTicksSinceSequenceStarted < 0.
 			plr[pnum]._pAnimGameTicksSinceSequenceStarted = -1;
 		}
 
-		int animationMaxGameTickets = relevantAnimationLength;
-		if (Delay > 1)
-			animationMaxGameTickets = (relevantAnimationLength * Delay);
-		float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLength - numSkippedFrames); // if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
+		float gameTickModifier = (float)relevantAnimationGameTicksForDistribution / (float)relevantAnimationGameTicksWithSkipping; // if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
+		gameTickModifier /= gameTicksPerFrame;                                                                                     // gameTickModifier specifies the Animation fraction per GameTick, so we have to remove the delay from the variable
 
-		plr[pnum]._pAnimRelevantAnimationFramesForDistributen = relevantAnimationLength;
+		plr[pnum]._pAnimRelevantAnimationFramesForDistributen = relevantAnimationFramesForDistribution;
 		plr[pnum]._pAnimGameTickModifier = gameTickModifier;
 	}
 }
@@ -3762,21 +3764,25 @@ int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick
 	// or
 	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
-	int relevantAnimationLength = pPlayer->_pAnimRelevantAnimationFramesForDistributen;
-	if (relevantAnimationLength <= 0)
+	int relevantAnimationFrames = pPlayer->_pAnimRelevantAnimationFramesForDistributen;
+	if (relevantAnimationFrames <= 0)
 		return pPlayer->_pAnimFrame;
 
-	if (pPlayer->_pAnimFrame > relevantAnimationLength)
+	if (pPlayer->_pAnimFrame > relevantAnimationFrames)
 		return pPlayer->_pAnimFrame;
+
+	assert(pPlayer->_pAnimGameTicksSinceSequenceStarted >= 0);
 
 	float progressToNextGameTick = gfProgressToNextGameTick;
 	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted; // we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-
-	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * pPlayer->_pAnimGameTickModifier); // 1 added for rounding reasons. float to int cast always truncate.
-	if (absolutAnimationFrame > relevantAnimationLength) // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
-		return relevantAnimationLength;
+	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * pPlayer->_pAnimGameTickModifier);             // 1 added for rounding reasons. float to int cast always truncate.
+	if (absolutAnimationFrame > relevantAnimationFrames) {                                                                          // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
+		if (absolutAnimationFrame > (relevantAnimationFrames + 1))                                                                  // we should never have +2 frames even if next game tick is due
+			SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated %d MaxFrame %d)", absolutAnimationFrame, relevantAnimationFrames);
+		return relevantAnimationFrames;
+	}
 	if (absolutAnimationFrame <= 0) {
-		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame");
+		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated %d)", absolutAnimationFrame);
 		return 1;
 	}
 	return absolutAnimationFrame;
