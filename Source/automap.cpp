@@ -37,7 +37,7 @@ static Sint32 AutoMapY;
 #define MAPFLAG_DIRT 0x40
 #define MAPFLAG_STAIRS 0x80
 
-std::map<BYTE, bool> isStairsUp;
+std::map<BYTE, BYTE> stairsInfoMap;
 
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
@@ -72,11 +72,29 @@ void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_t
 		DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, COLOR_BRIGHT);
 		DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, COLOR_BRIGHT);
 		DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, COLOR_BRIGHT);
-
-		if (isStairsUp[dungeon[dunx][duny]])
+		BYTE stairs = dungeon[dunx][duny];
+		SDL_Log("STAIRS %d", stairs);
+		if (stairs == 48 && currlevel >= 21)
+			stairs = 96; //one crypt and caves stairs have the same ID
+		if (stairsInfoMap.count(stairs) == 0) {
 			DrawLineTo(out, sx - AmLine8, sy - AmLine8 - AmLine4, sx + AmLine8 + AmLine16, sy + AmLine4, ICOL_RED);
-		else
+			DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, ICOL_RED);
+			DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, ICOL_RED);
 			DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, ICOL_RED);
+		} else {
+			switch (stairsInfoMap[stairs]) {
+			case 0:
+				DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, ICOL_RED);
+				break;
+			case 1:
+				DrawLineTo(out, sx - AmLine8, sy - AmLine8 - AmLine4, sx + AmLine8 + AmLine16, sy + AmLine4, ICOL_RED);
+				break;
+			case 2:
+				DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, ICOL_RED);
+				DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, ICOL_RED);
+				break;
+			}
+		}
 	}
 
 	bool do_vert = false;
@@ -473,10 +491,58 @@ Sint32 AmLine16;
 Sint32 AmLine8;
 Sint32 AmLine4;
 
-static void InitStairsUpMap()
+static void InitStairsInfoMap()
 {
-	isStairsUp[66] = true;
+	// 0 = stairs down, 1 = stairs up, 2 = quick entrance, 3 = don't  recolor - used for multipart hell stairs
+	//church
+	stairsInfoMap[57] = 0;
+	stairsInfoMap[66] = 1;
 
+	//crypt
+	stairsInfoMap[96] = 0;//should be 48 but caves stairs have the same ID
+	stairsInfoMap[56] = 1;
+	stairsInfoMap[64] = 1;
+
+	//catacombs
+	stairsInfoMap[77] = 1;
+	stairsInfoMap[78] = 0;
+	stairsInfoMap[160] = 2;
+
+	//caves
+	stairsInfoMap[47] = 0;
+	stairsInfoMap[48] = 3;
+	stairsInfoMap[51] = 1;
+	stairsInfoMap[153] = 2;
+
+	//hive
+	stairsInfoMap[16] = 0;
+	stairsInfoMap[17] = 1;
+	stairsInfoMap[21] = 1;
+
+	//hell
+	//parts of a staircase up
+	stairsInfoMap[33] = 3;
+	stairsInfoMap[34] = 3;
+	stairsInfoMap[35] = 1;
+	stairsInfoMap[36] = 1;
+	stairsInfoMap[37] = 3;
+	stairsInfoMap[38] = 1;
+
+	//parts of a staircase down
+	stairsInfoMap[39] = 0;
+	stairsInfoMap[40] = 3;
+	stairsInfoMap[42] = 0;
+	stairsInfoMap[43] = 3;
+	stairsInfoMap[44] = 3;
+	stairsInfoMap[46] = 0;
+
+	//parts of a staircase to town
+	stairsInfoMap[131] = 2;
+	stairsInfoMap[132] = 2;
+	stairsInfoMap[133] = 2;
+	stairsInfoMap[134] = 2;
+	stairsInfoMap[135] = 2;
+	stairsInfoMap[136] = 2;
 }
 
 void InitAutomapOnce()
@@ -488,7 +554,7 @@ void InitAutomapOnce()
 	AmLine16 = 8;
 	AmLine8 = 4;
 	AmLine4 = 2;
-	InitStairsUpMap();
+	InitStairsInfoMap();
 }
 
 void InitAutomap()
