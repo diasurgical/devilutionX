@@ -220,8 +220,9 @@ static void pfile_SFileCloseArchive(HANDLE *hsArchive)
 	*hsArchive = NULL;
 }
 
-PFileScopedArchiveWriter::PFileScopedArchiveWriter()
+PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clear_tables)
     : save_num_(pfile_get_save_num_from_name(plr[myplr]._pName))
+    , clear_tables_(clear_tables)
 {
 	if (!pfile_open_archive(save_num_))
 		app_fatal("Failed to open player archive for writing.");
@@ -229,12 +230,12 @@ PFileScopedArchiveWriter::PFileScopedArchiveWriter()
 
 PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
 {
-	pfile_flush(!gbIsMultiplayer, save_num_);
+	pfile_flush(clear_tables_, save_num_);
 }
 
-void pfile_write_hero(bool write_game_data)
+void pfile_write_hero(bool write_game_data, bool clear_tables)
 {
-	PFileScopedArchiveWriter scoped_writer;
+	PFileScopedArchiveWriter scoped_writer(clear_tables);
 	if (write_game_data) {
 		SaveGameData();
 		pfile_rename_temp_to_perm();
@@ -276,11 +277,6 @@ bool pfile_create_player_description()
 	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
 
 	return true;
-}
-
-void pfile_flush_W()
-{
-	pfile_flush(true, pfile_get_save_num_from_name(plr[myplr]._pName));
 }
 
 bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))

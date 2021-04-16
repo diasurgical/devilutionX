@@ -17,19 +17,19 @@ extern bool gbValidSaveFile;
 class PFileScopedArchiveWriter {
 public:
 	// Opens the player save file for writing
-	PFileScopedArchiveWriter();
+	PFileScopedArchiveWriter(bool clear_tables = !gbIsMultiplayer);
 
 	// Finishes writing and closes the player save file.
 	~PFileScopedArchiveWriter();
 
 private:
 	DWORD save_num_;
+	bool clear_tables_;
 };
 
 const char *pfile_get_password();
-void pfile_write_hero(bool write_game_data = false);
+void pfile_write_hero(bool write_game_data = false, bool clear_tables = !gbIsMultiplayer);
 bool pfile_create_player_description();
-void pfile_flush_W();
 bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *));
 bool pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num);
 void pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats);
