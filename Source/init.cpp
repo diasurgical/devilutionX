@@ -55,12 +55,19 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 {
 	HANDLE archive;
 	std::string mpq_abspath;
-	for (int i = 0; i < paths.size(); i++) {
-		mpq_abspath = paths[i] + mpq_name;
+	for (const auto &path : paths) {
+		mpq_abspath = path + mpq_name;
 		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_FLAG_READ_ONLY, &archive)) {
-			SFileSetBasePath(paths[i].c_str());
+			SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "  Found: %s in %s", mpq_name, path.c_str());
+			SFileSetBasePath(path.c_str());
 			return archive;
 		}
+		if (SErrGetLastError() != STORM_ERROR_FILE_NOT_FOUND) {
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Open error %u: %s", SErrGetLastError(), mpq_abspath.c_str());
+		}
+	}
+	if (SErrGetLastError() == STORM_ERROR_FILE_NOT_FOUND) {
+		SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "Missing: %s", mpq_name);
 	}
 
 	return NULL;
@@ -155,6 +162,19 @@ void init_archives()
 #endif
 
 	paths.push_back(""); // PWD
+
+	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
+		std::string message;
+		for (std::size_t i = 0; i < paths.size(); ++i) {
+			char prefix[32];
+			std::snprintf(prefix, sizeof(prefix), "\n%6u. '", static_cast<unsigned>(i + 1));
+			message.append(prefix);
+			message.append(paths[i]);
+			message += '\'';
+		}
+		SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION,
+		    "MPQ search paths%s", message.c_str());
+	}
 
 	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ");
 	if (diabdat_mpq == NULL) {
