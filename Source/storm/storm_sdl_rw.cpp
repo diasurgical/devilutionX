@@ -61,7 +61,7 @@ static int SFileRw_read(struct SDL_RWops *context, void *ptr, int size, int maxn
 	DWORD num_read = 0;
 	if (!SFileReadFile(SFileRw_GetHandle(context), ptr, maxnum * size, &num_read, NULL)) {
 		const DWORD err_code = SErrGetLastError();
-		if (err_code != DVL_ERROR_HANDLE_EOF) {
+		if (err_code != STORM_ERROR_HANDLE_EOF) {
 			SDL_Log("SFileRw_read error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)err_code);
 		}
 	}
