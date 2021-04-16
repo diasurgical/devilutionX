@@ -7,9 +7,11 @@
 [![Downloads](https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg)](https://github.com/diasurgical/devilutionX/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/diasurgical/devilutionX.svg)](https://github.com/diasurgical/devilutionX/stargazers)
 [![Codecov](https://codecov.io/gh/diasurgical/devilutionX/branch/master/graph/badge.svg)](https://codecov.io/gh/diasurgical/devilutionX)
+[![BCH compliance](https://bettercodehub.com/edge/badge/diasurgical/devilutionX?branch=master)](https://bettercodehub.com/)
 [![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=shield)](https://circleci.com/gh/diasurgical/devilutionX)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx)
 [![GitHub Actions](https://github.com/diasurgical/devilutionX/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/diasurgical/devilutionX/actions/workflows/cmake.yml)
+
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/YQKCAYQ)
 
