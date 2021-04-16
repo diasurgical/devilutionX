@@ -588,6 +588,26 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 			plr[pnum]._pAnimGameTicksSinceSequenceStarted = -1;
 		}
 
+		if (flags & AnimationFlags::SkipsDelayOfLastFrame) {
+			// The logic for player/monster/... (not ProcessAnimation) only checks the frame not the delay.
+			// That means if a delay is specified, the last-frame is shown less then the other frames
+			// Example:
+			// If we have a animation with 3 frames and with a delay of 1 (gameTicksPerFrame = 2).
+			// The logic checks "if (frame == 3) { start_new_animation(); }"
+			// This will result that frame 4 is the last shown Animation Frame.
+			// GameTick		Frame		Cnt
+			// 1			1			0
+			// 2			1			1
+			// 3			2			0
+			// 3			2			1
+			// 4			3			0
+			// 5			-			-
+			// in GameTick 5 ProcessPlayer sees Frame = 3 and stops the animation.
+			// But Frame 3 is only shown 1 GameTick and all other Frames are shown 2 GameTicks.
+			// Thats why we need to remove the Delay of the last Frame from the time (GameTicks) the Animation is shown
+			relevantAnimationGameTicksWithSkipping -= Delay;
+		}
+
 		float gameTickModifier = (float)relevantAnimationGameTicksForDistribution / (float)relevantAnimationGameTicksWithSkipping; // if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
 		gameTickModifier /= gameTicksPerFrame;                                                                                     // gameTickModifier specifies the Animation fraction per GameTick, so we have to remove the delay from the variable
 
@@ -1619,12 +1639,12 @@ void StartPlrBlock(int pnum, direction dir)
 		LoadPlrGFX(pnum, PFILE_BLOCK);
 	}
 
-	int skippedAnimationFrames = 0; // Block can start with Frame 1 if Player 2 hits Player 1. In this case Player 1 will not call again ProcessPlayerAnimation.
+	int skippedAnimationFrames = 0;
 	if ((plr[pnum]._pIFlags & ISPL_FASTBLOCK) != 0) {
-		skippedAnimationFrames = (plr[pnum]._pBFrames - 1); // ISPL_FASTBLOCK means there is only one AnimationFrame.
+		skippedAnimationFrames = (plr[pnum]._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pBAnim[dir], plr[pnum]._pBFrames, 2, plr[pnum]._pBWidth, AnimationFlags::None, skippedAnimationFrames);
+	NewPlrAnim(pnum, plr[pnum]._pBAnim[dir], plr[pnum]._pBFrames, 2, plr[pnum]._pBWidth, AnimationFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
 	plr[pnum]._pmode = PM_BLOCK;
 	FixPlayerLocation(pnum, dir);

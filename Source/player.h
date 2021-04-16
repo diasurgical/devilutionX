@@ -413,6 +413,7 @@ void FreePlayerGFX(int pnum);
 enum AnimationFlags : uint8_t {
 	None = 0,
 	ProcessAnimationPending = 1 << 0, // ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim)
+	SkipsDelayOfLastFrame = 1 << 1,   // Delay of last Frame is ignored (for example, because only Frame and not delay is checked in game_logic)
 };
 
 /**
