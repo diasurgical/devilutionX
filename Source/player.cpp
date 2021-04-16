@@ -524,7 +524,7 @@ void FreePlayerGFX(int pnum)
 	plr[pnum]._pGFXLoad = 0;
 }
 
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames /*= 0*/, bool processAnimationPending /*= false*/, int stopDistributingAfterFrame /*= 0*/)
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, AnimationFlags flags /*= AnimationFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("NewPlrAnim: illegal player %d", pnum);
@@ -537,19 +537,32 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int nu
 	plr[pnum]._pAnimDelay = Delay;
 	plr[pnum]._pAnimWidth = width;
 	plr[pnum]._pAnimWidth2 = (width - 64) / 2;
-	plr[pnum]._pAnimGameTicksSinceSequenceStarted = processAnimationPending ? -1 : 0;
+	plr[pnum]._pAnimGameTicksSinceSequenceStarted = 0;
 	plr[pnum]._pAnimRelevantAnimationFramesForDistributen = 0;
 	plr[pnum]._pAnimGameTickModifier = 0.0f;
 
-	if (numSkippedFrames != 0) {
+	if (numSkippedFrames != 0 || flags != AnimationFlags::None) {
 		int relevantAnimationLength = numFrames;
-		if (stopDistributingAfterFrame != 0) {
+		if (distributeFramesBeforeFrame != 0) {
 			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
 			// In normal attacks frame skipping always happens before the attack actual hit.
 			// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
 			// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
-			relevantAnimationLength = stopDistributingAfterFrame - 1;
+			relevantAnimationLength = distributeFramesBeforeFrame - 1;
 		}
+
+		if (flags & AnimationFlags::ProcessAnimationPending) {
+			// If ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim), we increment the Animation-Counter.
+			// If no delay is specified, this will result in complete skipped frame (see ProcessPlayerAnimation).
+			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
+			// Because of that, we only the remove one GameTick from the time the Animation is shown
+			relevantAnimationLength -= 1;
+			// The Animation Distribution Logic needs to account how many GameTicks passed since the Animation started.
+			// Because ProcessAnimation will increase this later (in same GameTick as NewPlrAnim), we correct this upfront.
+			// This also means Rendering should never hapen with _pAnimGameTicksSinceSequenceStarted < 0.
+			plr[pnum]._pAnimGameTicksSinceSequenceStarted = -1;
+		}
+
 		int animationMaxGameTickets = relevantAnimationLength;
 		if (Delay > 1)
 			animationMaxGameTickets = (relevantAnimationLength * Delay);
@@ -1486,7 +1499,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 
 	//Start walk animation
 	int numSkippedFrames = (currlevel == 0 && sgGameInitInfo.bRunInTown) ? (plr[pnum]._pWFrames / 2) : 0;
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, numSkippedFrames, true);
+	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, AnimationFlags::None, numSkippedFrames);
 
 	plr[pnum]._pdir = EndDir;
 	plr[pnum]._pVar8 = 0;
@@ -1523,7 +1536,7 @@ void StartAttack(int pnum, direction d)
 		LoadPlrGFX(pnum, PFILE_ATTACK);
 	}
 
-	int skippedAnimationFrames = 1; // Every Attack start with Frame 2. Because ProcessPlayerAnimation is called after StartAttack and its increases the AnimationFrame.
+	int skippedAnimationFrames = 0;
 	if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
 		skippedAnimationFrames += 1;
 	}
@@ -1534,7 +1547,7 @@ void StartAttack(int pnum, direction d)
 		skippedAnimationFrames += 2;
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, skippedAnimationFrames, true, plr[pnum]._pAFNum);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationFlags::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
 	plr[pnum]._pmode = PM_ATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
@@ -1555,14 +1568,14 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 		LoadPlrGFX(pnum, PFILE_ATTACK);
 	}
 
-	int skippedAnimationFrames = 1; // Every Attack start with Frame 2. Because ProcessPlayerAnimation is called after StartRangeAttack and its increases the AnimationFrame.
+	int skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
 		if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
 			skippedAnimationFrames += 1;
 		}
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, skippedAnimationFrames, true, plr[pnum]._pAFNum);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationFlags::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
 
 	plr[pnum]._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
@@ -1593,7 +1606,7 @@ void StartPlrBlock(int pnum, direction dir)
 		skippedAnimationFrames = (plr[pnum]._pBFrames - 1); // ISPL_FASTBLOCK means there is only one AnimationFrame.
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pBAnim[dir], plr[pnum]._pBFrames, 2, plr[pnum]._pBWidth, skippedAnimationFrames);
+	NewPlrAnim(pnum, plr[pnum]._pBAnim[dir], plr[pnum]._pBFrames, 2, plr[pnum]._pBWidth, AnimationFlags::None, skippedAnimationFrames);
 
 	plr[pnum]._pmode = PM_BLOCK;
 	FixPlayerLocation(pnum, dir);
@@ -1616,19 +1629,19 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 			if ((plr[pnum]._pGFXLoad & PFILE_FIRE) == 0) {
 				LoadPlrGFX(pnum, PFILE_FIRE);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
+			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationFlags::ProcessAnimationPending);
 			break;
 		case STYPE_LIGHTNING:
 			if ((plr[pnum]._pGFXLoad & PFILE_LIGHTNING) == 0) {
 				LoadPlrGFX(pnum, PFILE_LIGHTNING);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
+			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationFlags::ProcessAnimationPending);
 			break;
 		case STYPE_MAGIC:
 			if ((plr[pnum]._pGFXLoad & PFILE_MAGIC) == 0) {
 				LoadPlrGFX(pnum, PFILE_MAGIC);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
+			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationFlags::ProcessAnimationPending);
 			break;
 		}
 	}
@@ -1726,7 +1739,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 
-	int skippedAnimationFrames = 0; // GotHit can start with Frame 1. GotHit can for example be called in ProcessMonsters() and this is after ProcessPlayers().
+	int skippedAnimationFrames = 0;
 	const int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
 	if ((plr[pnum]._pIFlags & ZenFlags) == ZenFlags) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
 		skippedAnimationFrames = 4;
@@ -1740,7 +1753,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		skippedAnimationFrames = 0;
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth, skippedAnimationFrames);
+	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth, AnimationFlags::None, skippedAnimationFrames);
 
 	plr[pnum]._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);
