@@ -187,9 +187,9 @@ struct PlayerStruct {
 	int _pAnimFrame; // Current frame of animation.
 	int _pAnimWidth;
 	int _pAnimWidth2;
-	int _pAnimNumSkippedFrames;              // Number of Frames that will be skipped (for example with modifier "faster attack")
-	int _pAnimGameTicksSinceSequenceStarted; // Number of GameTicks after the current animation sequence started
-	int _pAnimStopDistributingAfterFrame;    // Distribute the NumSkippedFrames only before this frame
+	float _pAnimGameTickModifier;                    // specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
+	int _pAnimGameTicksSinceSequenceStarted;         // Number of GameTicks after the current animation sequence started
+	int _pAnimRelevantAnimationFramesForDistributen; // Animation Frames that will be adjusted for the skipped Frames/GameTicks
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
