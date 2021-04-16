@@ -1476,14 +1476,6 @@ static void PressChar(WPARAM vkey)
 		}
 		return;
 #endif
-		//	case 'A':
-		//		plr[myplr].autoRefillBelt = !plr[myplr].autoRefillBelt;
-		//		if (plr[myplr].autoRefillBelt)
-		//			NetSendCmdString(1 << myplr, "Auto-refill belt activated");
-		//		else
-		//			NetSendCmdString(1 << myplr, "Auto-refill belt de-activated");
-		//		PlaySFX(IS_IGRAB);
-		//		return;
 	}
 }
 
