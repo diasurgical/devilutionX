@@ -537,9 +537,27 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int nu
 	plr[pnum]._pAnimDelay = Delay;
 	plr[pnum]._pAnimWidth = width;
 	plr[pnum]._pAnimWidth2 = (width - 64) / 2;
-	plr[pnum]._pAnimNumSkippedFrames = numSkippedFrames;
 	plr[pnum]._pAnimGameTicksSinceSequenceStarted = processAnimationPending ? -1 : 0;
-	plr[pnum]._pAnimStopDistributingAfterFrame = stopDistributingAfterFrame;
+	plr[pnum]._pAnimRelevantAnimationFramesForDistributen = 0;
+	plr[pnum]._pAnimGameTickModifier = 0.0f;
+
+	if (numSkippedFrames != 0) {
+		int relevantAnimationLength = numFrames;
+		if (stopDistributingAfterFrame != 0) {
+			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
+			// In normal attacks frame skipping always happens before the attack actual hit.
+			// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
+			// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
+			relevantAnimationLength = stopDistributingAfterFrame - 1;
+		}
+		int animationMaxGameTickets = relevantAnimationLength;
+		if (Delay > 1)
+			animationMaxGameTickets = (relevantAnimationLength * Delay);
+		float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLength - numSkippedFrames); // if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
+
+		plr[pnum]._pAnimRelevantAnimationFramesForDistributen = relevantAnimationLength;
+		plr[pnum]._pAnimGameTickModifier = gameTickModifier;
+	}
 }
 
 void ClearPlrPVars(int pnum)
@@ -3713,35 +3731,21 @@ void ProcessPlayerAnimation(int pnum)
 int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 {
 	// Normal logic is used,
-	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick (_pAnimUsedNumFrames = 0)
+	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick
 	// or
 	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
-	if (pPlayer->_pAnimNumSkippedFrames <= 0)
+	int relevantAnimationLength = pPlayer->_pAnimRelevantAnimationFramesForDistributen;
+	if (relevantAnimationLength <= 0)
 		return pPlayer->_pAnimFrame;
-	// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
-	// In normal attacks frame skipping always happens before the attack actual hit.
-	// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
-	// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
-	int relevantAnimationLength;
-	if (pPlayer->_pAnimStopDistributingAfterFrame != 0) {
-		if (pPlayer->_pAnimFrame >= pPlayer->_pAnimStopDistributingAfterFrame)
-			return pPlayer->_pAnimFrame;
-		relevantAnimationLength = pPlayer->_pAnimStopDistributingAfterFrame - 1;
-	} else {
-		relevantAnimationLength = pPlayer->_pAnimLen;
-	}
+
+	if (pPlayer->_pAnimFrame > relevantAnimationLength)
+		return pPlayer->_pAnimFrame;
+
 	float progressToNextGameTick = gfProgressToNextGameTick;
-	// we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted;
-	int animationMaxGameTickets = relevantAnimationLength;
-	if (pPlayer->_pAnimDelay > 1)
-		animationMaxGameTickets = (relevantAnimationLength * pPlayer->_pAnimDelay);
-	// if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
-	float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLength - pPlayer->_pAnimNumSkippedFrames);
-	// 1 added for rounding reasons. float to int cast always truncate.
-	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * gameTickModifier);
-	// this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
-	if (absolutAnimationFrame > relevantAnimationLength)
+	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted; // we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
+
+	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * pPlayer->_pAnimGameTickModifier); // 1 added for rounding reasons. float to int cast always truncate.
+	if (absolutAnimationFrame > relevantAnimationLength) // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
 		return relevantAnimationLength;
 	if (absolutAnimationFrame <= 0) {
 		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame");
