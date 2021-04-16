@@ -13,16 +13,16 @@
 namespace devilution {
 
 DeadStruct dead[MAXDEAD];
-int stonendx;
+int8_t stonendx;
 
 void InitDead()
 {
-	int mtypes[MAXMONSTERS];
+	int8_t mtypes[MAXMONSTERS];
 
-	for (int &mtype : mtypes)
+	for (int8_t &mtype : mtypes)
 		mtype = 0;
 
-	int nd = 0;
+	int8_t nd = 0;
 
 	for (int i = 0; i < nummtypes; i++) {
 		if (mtypes[Monsters[i].mtype] == 0) {
@@ -32,9 +32,10 @@ void InitDead()
 			dead[nd]._deadWidth = Monsters[i].width;
 			dead[nd]._deadWidth2 = Monsters[i].width2;
 			dead[nd]._deadtrans = 0;
-			Monsters[i].mdeadval = nd + 1;
-			mtypes[Monsters[i].mtype] = nd + 1;
 			nd++;
+
+			Monsters[i].mdeadval = nd;
+			mtypes[Monsters[i].mtype] = nd;
 		}
 	}
 
@@ -48,12 +49,14 @@ void InitDead()
 
 	for (auto &d : dead[nd]._deadData)
 		d = misfiledata[MFILE_SHATTER1].mAnimData[0];
+
 	dead[nd]._deadFrame = 12;
 	dead[nd]._deadWidth = 128;
 	dead[nd]._deadWidth2 = 32;
 	dead[nd]._deadtrans = 0;
-	stonendx = nd + 1;
 	nd++;
+
+	stonendx = nd;
 
 	for (int i = 0; i < nummonsters; i++) {
 		int mi = monstactive[i];
@@ -64,15 +67,16 @@ void InitDead()
 			dead[nd]._deadWidth = monster[mi].MType->width;
 			dead[nd]._deadWidth2 = monster[mi].MType->width2;
 			dead[nd]._deadtrans = monster[mi]._uniqtrans + 4;
-			monster[mi]._udeadval = nd + 1;
 			nd++;
+
+			monster[mi]._udeadval = nd;
 		}
 	}
 
 	assert(nd <= MAXDEAD);
 }
 
-void AddDead(int dx, int dy, char dv, int ddir)
+void AddDead(int dx, int dy, int8_t dv, int ddir)
 {
 	dDead[dx][dy] = (dv & 0x1F) + (ddir << 5);
 }

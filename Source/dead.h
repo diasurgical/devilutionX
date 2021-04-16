@@ -5,25 +5,27 @@
  */
 #pragma once
 
-#include <SDL.h>
+#include <stdint.h>
+
+#include "engine.h"
 
 namespace devilution {
 
 #define MAXDEAD 31
 
 struct DeadStruct {
-	Uint8 *_deadData[8];
+	uint8_t *_deadData[8];
 	int _deadFrame;
 	int _deadWidth;
 	int _deadWidth2;
-	Uint8 _deadtrans;
+	uint8_t _deadtrans;
 };
 
 extern DeadStruct dead[MAXDEAD];
-extern int stonendx;
+extern int8_t stonendx;
 
 void InitDead();
-void AddDead(int dx, int dy, char dv, int ddir);
+void AddDead(int dx, int dy, int8_t dv, int ddir);
 void SetDead();
 
 }
