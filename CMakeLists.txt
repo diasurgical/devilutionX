@@ -404,7 +404,8 @@ if(RUN_TESTS)
     test/player_test.cpp
     test/scrollrt_test.cpp
     test/stores_test.cpp
-    test/writehero_test.cpp)
+    test/writehero_test.cpp
+    test/animationinformation_test.cpp)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
