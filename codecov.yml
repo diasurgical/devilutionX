@@ -12,4 +12,4 @@ coverage:
     patch: no
 ignore:
   - "3rdParty"
-  - "SourceT"
+  - "test"
