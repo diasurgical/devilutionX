@@ -335,6 +335,18 @@ bool IsItemAvailable(int i)
 	        sgOptions.Gameplay.bTestBard && (i == IDI_BARDSWORD || i == IDI_BARDDAGGER));
 }
 
+BYTE GetOutlineColor(ItemStruct &item, bool checkReq)
+{
+	if (checkReq && !item._iStatFlag)
+		return ICOL_RED;
+	if (item._iMagical == ITEM_QUALITY_MAGIC)
+		return ICOL_BLUE;
+	if (item._iMagical == ITEM_QUALITY_UNIQUE)
+		return ICOL_YELLOW;
+
+	return ICOL_WHITE;
+}
+
 bool IsUniqueAvailable(int i)
 {
 	return gbIsHellfire || i <= 89;
