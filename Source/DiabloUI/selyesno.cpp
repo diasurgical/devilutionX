@@ -5,6 +5,7 @@
 #include "DiabloUI/text.h"
 
 namespace devilution {
+namespace {
 
 bool selyesno_endMenu;
 bool selyesno_value;
@@ -44,6 +45,8 @@ void selyesno_Esc()
 	selyesno_value = false;
 	selyesno_endMenu = true;
 }
+
+} // namespace
 
 bool UiSelHeroYesNoDialog(const char *title, const char *body)
 {
