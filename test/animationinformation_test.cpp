@@ -88,7 +88,8 @@ TEST(AnimationInformation, AttackSwordWarrior) // ProcessAnimationPending should
 {
 	RunAnimationTest(16, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, 9,
 	    {
-	        new GameTickData(2, 0), // ProcessPlayer directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // ProcessPlayer directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        new GameTickData(2, 0),
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
@@ -124,7 +125,8 @@ TEST(AnimationInformation, AttackSwordWarrior) // ProcessAnimationPending should
 	        new RenderingData(0.6f, 8),
 	        new RenderingData(0.8f, 8),
 
-	        new GameTickData(9, 0), // After this GameTick, the Animation Distribution Logic is disabled
+			// After this GameTick, the Animation Distribution Logic is disabled
+	        new GameTickData(9, 0),
 	        new RenderingData(0.1f, 9),
 	        new GameTickData(10, 0),
 	        new RenderingData(0.4f, 10),
@@ -148,7 +150,8 @@ TEST(AnimationInformation, AttackSwordWarriorWithFastestAttack) // Skipped frame
 {
 	RunAnimationTest(16, 0, AnimationDistributionFlags::ProcessAnimationPending, 2, 9,
 	    {
-	        new GameTickData(2, 0), // ProcessPlayer directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // ProcessPlayer directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        new GameTickData(2, 0),
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
@@ -174,7 +177,8 @@ TEST(AnimationInformation, AttackSwordWarriorWithFastestAttack) // Skipped frame
 	        new RenderingData(0.6f, 8),
 	        new RenderingData(0.8f, 8),
 
-	        new GameTickData(9, 0), // After this GameTick, the Animation Distribution Logic is disabled
+			// After this GameTick, the Animation Distribution Logic is disabled
+	        new GameTickData(9, 0),
 	        new RenderingData(0.1f, 9),
 	        new GameTickData(10, 0),
 	        new RenderingData(0.4f, 10),
@@ -367,7 +371,8 @@ TEST(AnimationInformation, Stand) // Distribution Logic shouldn't change anythin
 	        new GameTickData(10, 3),
 	        new RenderingData(0.6f, 10),
 
-	        new GameTickData(1, 0), // Animation starts again
+			// Animation starts again
+	        new GameTickData(1, 0),
 	        new RenderingData(0.1f, 1),
 	        new GameTickData(1, 1),
 	        new RenderingData(0.6f, 1),
