@@ -1,11 +1,12 @@
-#include "selconn.h"
-
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "stores.h"
 #include "storm/storm.h"
 
 namespace devilution {
+
+int provider;
+namespace {
 
 char selconn_MaxPlayers[21];
 char selconn_Description[64];
@@ -14,12 +15,14 @@ bool selconn_ReturnValue = false;
 bool selconn_EndMenu = false;
 GameData *selconn_GameData;
 
-int provider;
-
 std::vector<UiListItem *> vecConnItems;
 std::vector<UiItemBase *> vecSelConnDlg;
 
 #define DESCRIPTION_WIDTH 205
+
+void selconn_Esc();
+void selconn_Focus(int value);
+void selconn_Select(int value);
 
 void selconn_Load()
 {
@@ -123,6 +126,8 @@ void selconn_Select(int value)
 	selconn_EndMenu = SNetInitializeProvider(provider, selconn_GameData);
 	selconn_Load();
 }
+
+} // namespace
 
 int UiSelectProvider(GameData *gameData)
 {
