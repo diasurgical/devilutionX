@@ -21,18 +21,16 @@ declare -r TARGET="$1"
 declare -r BUILD_DIR="build-${TARGET}"
 declare -rA BUILDROOT_REPOS=(
 	[retrofw]=https://github.com/retrofw/buildroot.git
-	[rg350]=https://github.com/tonyjih/RG350_buildroot.git
+	[rg350]=https://github.com/OpenDingux/buildroot.git
+	[gkd350h]=https://github.com/tonyjih/RG350_buildroot.git
 )
 declare -rA BUILDROOT_DEFCONFIGS=(
 	[retrofw]='RetroFW_defconfig BR2_EXTERNAL=retrofw'
-	[rg350]='rg350_defconfig BR2_EXTERNAL=board/opendingux'
+	[rg350]='od_gcw0_defconfig BR2_EXTERNAL=board/opendingux'
+	[gkd350h]='rg350_defconfig BR2_EXTERNAL=board/opendingux'
 )
 
 declare BUILDROOT_TARGET="$TARGET"
-if [[ $TARGET == gkd350h ]]; then
-	# Use the rg350 buildroot for gkd350h because gkd350h buildroot is not open-source.
-	BUILDROOT_TARGET=rg350
-fi
 
 # If a TOOLCHAIN environment variable is set, just use that.
 if [[ -z ${TOOLCHAIN:-} ]]; then
