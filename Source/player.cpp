@@ -524,7 +524,7 @@ void FreePlayerGFX(int pnum)
 	plr[pnum]._pGFXLoad = 0;
 }
 
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, AnimationFlags flags /*= AnimationFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("NewPlrAnim: illegal player %d", pnum);
@@ -541,7 +541,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 	plr[pnum]._pAnimRelevantAnimationFramesForDistributing = 0;
 	plr[pnum]._pAnimGameTickModifier = 0.0f;
 
-	if (numSkippedFrames != 0 || flags != AnimationFlags::None) {
+	if (numSkippedFrames != 0 || flags != AnimationDistributionFlags::None) {
 		int relevantAnimationFramesForDistributing = numFrames; // Animation Frames that will be adjusted for the skipped Frames/GameTicks
 		if (distributeFramesBeforeFrame != 0) {
 			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
@@ -555,7 +555,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 		int relevantAnimationGameTicksForDistribution = relevantAnimationFramesForDistributing * gameTicksPerFrame; // GameTicks that will be adjusted for the skipped Frames/GameTicks
 
 		int relevantAnimationGameTicksWithSkipping = relevantAnimationGameTicksForDistribution - (numSkippedFrames * gameTicksPerFrame); // How many GameTicks will the Animation be really shown (skipped Frames and GameTicks removed)
-		if ((flags & AnimationFlags::ProcessAnimationPending) == AnimationFlags::ProcessAnimationPending) {
+		if ((flags & AnimationDistributionFlags::ProcessAnimationPending) == AnimationDistributionFlags::ProcessAnimationPending) {
 			// If ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim), we increment the Animation-Counter.
 			// If no delay is specified, this will result in complete skipped frame (see ProcessPlayerAnimation).
 			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
@@ -567,7 +567,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 			plr[pnum]._pAnimGameTicksSinceSequenceStarted = -1;
 		}
 
-		if ((flags & AnimationFlags::SkipsDelayOfLastFrame) == AnimationFlags::SkipsDelayOfLastFrame) {
+		if ((flags & AnimationDistributionFlags::SkipsDelayOfLastFrame) == AnimationDistributionFlags::SkipsDelayOfLastFrame) {
 			// The logic for player/monster/... (not ProcessAnimation) only checks the frame not the delay.
 			// That means if a delay is specified, the last-frame is shown less then the other frames
 			// Example:
@@ -1521,7 +1521,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 
 	//Start walk animation
 	int numSkippedFrames = (currlevel == 0 && sgGameInitInfo.bRunInTown) ? (plr[pnum]._pWFrames / 2) : 0;
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, AnimationFlags::None, numSkippedFrames);
+	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, AnimationDistributionFlags::None, numSkippedFrames);
 
 	plr[pnum]._pdir = EndDir;
 	plr[pnum]._pVar8 = 0;
@@ -1569,7 +1569,7 @@ void StartAttack(int pnum, direction d)
 		skippedAnimationFrames += 2;
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationFlags::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationDistributionFlags::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
 	plr[pnum]._pmode = PM_ATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
@@ -1597,7 +1597,7 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 		}
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationFlags::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationDistributionFlags::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
 
 	plr[pnum]._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
@@ -1628,7 +1628,7 @@ void StartPlrBlock(int pnum, direction dir)
 		skippedAnimationFrames = (plr[pnum]._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pBAnim[dir], plr[pnum]._pBFrames, 2, plr[pnum]._pBWidth, AnimationFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
+	NewPlrAnim(pnum, plr[pnum]._pBAnim[dir], plr[pnum]._pBFrames, 2, plr[pnum]._pBWidth, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
 	plr[pnum]._pmode = PM_BLOCK;
 	FixPlayerLocation(pnum, dir);
@@ -1651,19 +1651,19 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 			if ((plr[pnum]._pGFXLoad & PFILE_FIRE) == 0) {
 				LoadPlrGFX(pnum, PFILE_FIRE);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationFlags::ProcessAnimationPending);
+			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionFlags::ProcessAnimationPending);
 			break;
 		case STYPE_LIGHTNING:
 			if ((plr[pnum]._pGFXLoad & PFILE_LIGHTNING) == 0) {
 				LoadPlrGFX(pnum, PFILE_LIGHTNING);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationFlags::ProcessAnimationPending);
+			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionFlags::ProcessAnimationPending);
 			break;
 		case STYPE_MAGIC:
 			if ((plr[pnum]._pGFXLoad & PFILE_MAGIC) == 0) {
 				LoadPlrGFX(pnum, PFILE_MAGIC);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationFlags::ProcessAnimationPending);
+			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionFlags::ProcessAnimationPending);
 			break;
 		}
 	}
@@ -1775,7 +1775,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		skippedAnimationFrames = 0;
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth, AnimationFlags::None, skippedAnimationFrames);
+	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth, AnimationDistributionFlags::None, skippedAnimationFrames);
 
 	plr[pnum]._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);

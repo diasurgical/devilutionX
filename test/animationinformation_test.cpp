@@ -50,7 +50,7 @@ struct RenderingData : TestData {
 * Rendering can happen more often then GameTicks and at any time between two GameTicks.
 * The Animation Distribution Logic must adjust to the Rendering that happens at any give point in time.
 */
-void RunAnimationTest(int numFrames, int delay, AnimationFlags flags, int numSkippedFrames, int distributeFramesBeforeFrame, const std::vector<TestData *> &vecTestData)
+void RunAnimationTest(int numFrames, int delay, AnimationDistributionFlags flags, int numSkippedFrames, int distributeFramesBeforeFrame, const std::vector<TestData *> &vecTestData)
 {
 	const int pnum = 0;
 	PlayerStruct *pPlayer = &plr[pnum];
@@ -86,7 +86,7 @@ void RunAnimationTest(int numFrames, int delay, AnimationFlags flags, int numSki
 
 TEST(AnimationInformation, AttackSwordWarrior) // ProcessAnimationPending should be considered by distribution logic
 {
-	RunAnimationTest(16, 0, AnimationFlags::ProcessAnimationPending, 0, 9,
+	RunAnimationTest(16, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, 9,
 	    {
 	        new GameTickData(2, 0), // ProcessPlayer directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new RenderingData(0.0f, 1),
@@ -146,7 +146,7 @@ TEST(AnimationInformation, AttackSwordWarrior) // ProcessAnimationPending should
 
 TEST(AnimationInformation, AttackSwordWarriorWithFastestAttack) // Skipped frames and ProcessAnimationPending should be considered by distribution logic
 {
-	RunAnimationTest(16, 0, AnimationFlags::ProcessAnimationPending, 2, 9,
+	RunAnimationTest(16, 0, AnimationDistributionFlags::ProcessAnimationPending, 2, 9,
 	    {
 	        new GameTickData(2, 0), // ProcessPlayer directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new RenderingData(0.0f, 1),
@@ -196,7 +196,7 @@ TEST(AnimationInformation, AttackSwordWarriorWithFastestAttack) // Skipped frame
 
 TEST(AnimationInformation, BlockingWarriorNormal) // Ignored delay for last Frame should be considered by distribution logic
 {
-	RunAnimationTest(2, 2, AnimationFlags::SkipsDelayOfLastFrame, 0, 0,
+	RunAnimationTest(2, 2, AnimationDistributionFlags::SkipsDelayOfLastFrame, 0, 0,
 	    {
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
@@ -223,7 +223,7 @@ TEST(AnimationInformation, BlockingWarriorNormal) // Ignored delay for last Fram
 
 TEST(AnimationInformation, BlockingSorcererWithFastBlock) // Skipped frames and ignored delay for last Frame should be considered by distribution logic
 {
-	RunAnimationTest(6, 2, AnimationFlags::SkipsDelayOfLastFrame, 4, 0,
+	RunAnimationTest(6, 2, AnimationDistributionFlags::SkipsDelayOfLastFrame, 4, 0,
 	    {
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
@@ -250,7 +250,7 @@ TEST(AnimationInformation, BlockingSorcererWithFastBlock) // Skipped frames and 
 
 TEST(AnimationInformation, HitRecoverySorcererZenMode) // Skipped frames and ignored delay for last Frame should be considered by distribution logic
 {
-	RunAnimationTest(8, 0, AnimationFlags::None, 4, 0,
+	RunAnimationTest(8, 0, AnimationDistributionFlags::None, 4, 0,
 	    {
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
@@ -276,7 +276,7 @@ TEST(AnimationInformation, HitRecoverySorcererZenMode) // Skipped frames and ign
 }
 TEST(AnimationInformation, Stand) // Distribution Logic shouldn't change anything here
 {
-	RunAnimationTest(10, 3, AnimationFlags::None, 0, 0,
+	RunAnimationTest(10, 3, AnimationDistributionFlags::None, 0, 0,
 	    {
 	        new RenderingData(0.1f, 1),
 	        new GameTickData(1, 1),
