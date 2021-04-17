@@ -4,7 +4,7 @@
 #include "DiabloUI/selok.h"
 
 namespace devilution {
-
+namespace {
 int mainmenu_attract_time_out; //seconds
 DWORD dwAttractTicks;
 
@@ -26,11 +26,6 @@ void mainmenu_Esc()
 	} else {
 		SelectedItem = last;
 	}
-}
-
-void mainmenu_restart_repintro()
-{
-	dwAttractTicks = SDL_GetTicks() + mainmenu_attract_time_out * 1000;
 }
 
 void mainmenu_Load(const char *name, void (*fnSound)(const char *file))
@@ -85,6 +80,13 @@ void mainmenu_Free()
 			delete pUIMenuItem;
 	}
 	vecMenuItems.clear();
+}
+
+} // namespace
+
+void mainmenu_restart_repintro()
+{
+	dwAttractTicks = SDL_GetTicks() + mainmenu_attract_time_out * 1000;
 }
 
 bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut)
