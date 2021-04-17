@@ -3898,7 +3898,7 @@ void CheckPlrSpell()
 	switch (plr[myplr]._pRSplType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_SPELL:
-		addflag = CheckSpell(myplr, rspell, plr[myplr]._pRSplType, false);
+		addflag = CheckSpell(myplr, rspell, plr[myplr]._pRSplType, false, true);
 		break;
 	case RSPLTYPE_SCROLL:
 		addflag = UseScroll();

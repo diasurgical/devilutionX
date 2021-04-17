@@ -163,7 +163,7 @@ void EnsureValidReadiedSpell(PlayerStruct &player)
 	}
 }
 
-bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
+bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly, bool addCostOfSpellInProgress)
 {
 	bool result;
 
@@ -180,7 +180,13 @@ bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 			if (GetSpellLevel(id, sn) <= 0) {
 				result = false;
 			} else {
-				result = plr[id]._pMana >= GetManaAmount(id, sn);
+				int manaCost = GetManaAmount(id, sn);
+
+				//If player is currently casting a spell (but hasn't spent mana on it yet) then add that spell cost as well
+				if (addCostOfSpellInProgress && plr[id]._pmode == PM_SPELL && plr[id]._pVar8 <= plr[id]._pSFNum)
+					manaCost += GetManaAmount(id, plr[id]._pSpell);
+
+				result = plr[id]._pMana >= manaCost;
 			}
 		}
 	}
