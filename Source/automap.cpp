@@ -117,7 +117,7 @@ void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_t
 		DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, COLOR_BRIGHT);
 		int radius = 2;
 		if (leveltype == DTYPE_HELL)
-			radius = 4; //hell stairs are bigger, detect all segments
+			radius = 5; //hell stairs are bigger, detect all segments
 		for (int j = 0; j < numtrigs; j++) {
 			if (abs(trigs[j]._tx - ((dunx << 1) + 16)) <= radius && abs(trigs[j]._ty - ((duny << 1) + 16)) <= radius) {
 				switch (trigs[j]._tmsg) {
