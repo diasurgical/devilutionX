@@ -576,7 +576,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 		int relevantAnimationGameTicksForDistribution = relevantAnimationFramesForDistributing * gameTicksPerFrame; // GameTicks that will be adjusted for the skipped Frames/GameTicks
 
 		int relevantAnimationGameTicksWithSkipping = relevantAnimationGameTicksForDistribution - (numSkippedFrames * gameTicksPerFrame); // How many GameTicks will the Animation be really shown (skipped Frames and GameTicks removed)
-		if (flags & AnimationFlags::ProcessAnimationPending) {
+		if ((flags & AnimationFlags::ProcessAnimationPending) == AnimationFlags::ProcessAnimationPending) {
 			// If ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim), we increment the Animation-Counter.
 			// If no delay is specified, this will result in complete skipped frame (see ProcessPlayerAnimation).
 			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
@@ -588,7 +588,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 			plr[pnum]._pAnimGameTicksSinceSequenceStarted = -1;
 		}
 
-		if (flags & AnimationFlags::SkipsDelayOfLastFrame) {
+		if ((flags & AnimationFlags::SkipsDelayOfLastFrame) == AnimationFlags::SkipsDelayOfLastFrame) {
 			// The logic for player/monster/... (not ProcessAnimation) only checks the frame not the delay.
 			// That means if a delay is specified, the last-frame is shown less then the other frames
 			// Example:
