@@ -896,6 +896,13 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		exp = 0;
 	}
 
+	if (sgOptions.Gameplay.bPlayerExperienceScaling) {
+		float modifier = (float)sgOptions.Gameplay.bPlayerExperienceScalingModifier / 100.f;
+		float adjustment = (float)exp * modifier;
+		int iterations = (int)gbActivePlayers - 1;
+		exp += (adjustment * iterations);
+	}
+
 	// Prevent power leveling
 	if (gbIsMultiplayer && !sgOptions.Gameplay.bPowerLeveling) {
 		powerLvlCap = plr[pnum]._pLevel < 0 ? 0 : plr[pnum]._pLevel;

@@ -179,6 +179,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	Sint32 _mVar7;
 	/** Value used to measure progress for moving from one tile to another */
 	Sint32 _mVar8;
+	Sint32 _mbasemaxhp;
 	Sint32 _mmaxhp;
 	Sint32 _mhitpoints;
 	_mai_id _mAi;

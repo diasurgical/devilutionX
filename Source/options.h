@@ -95,6 +95,14 @@ struct GameplayOptions {
 	bool bReduceEnemyHealth;
 	/** @brief Indicates whether or not experience gains should be capped in multiplayer. */
 	bool bPowerLeveling;
+	/** @brief Indicates whether or not the max HP of monsters should scale based on the player count. */
+	bool bMonsterHealthScaling;
+	/** @brief Percent by which to scale monster HP if monster HP scaling is enabled. */
+	Sint32 bMonsterHealthScalingModifier;
+	/** @brief Indicates whether or not player experience should scale based on the player count. */
+	bool bPlayerExperienceScaling;
+	/** @brief Percent by which to scale player experience gains if player experience scaling is enabled. */
+	Sint32 bPlayerExperienceScalingModifier;
 };
 
 struct ControllerOptions {

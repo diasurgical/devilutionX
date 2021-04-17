@@ -9,6 +9,8 @@
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
+#include <sstream> // TODO: Remove
+
 namespace devilution {
 
 /** Tracks which missile files are already loaded */
@@ -554,6 +556,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i].mArmorClass += HELL_AC_BONUS;
 		monster[i].mMagicRes = monst->MData->mMagicRes2;
 	}
+	monster[i]._mbasemaxhp = monster[i]._mmaxhp;
 }
 
 void ClrAllMonsters()
@@ -1624,6 +1627,13 @@ void M_GetKnockback(int i)
 
 void M_StartHit(int i, int pnum, int dam)
 {
+	std::stringstream ss; // TODO: Remove
+	ss << "Hit monster: " << monster[i].mName << " with " << dam << " points of damage!"
+	   << "\n\tHealth: " << monster[i]._mhitpoints << "/" << monster[i]._mmaxhp
+	   << "\t(base: " << monster[i]._mbasemaxhp << ")";
+	std::string msg = ss.str();
+	SDL_Log(msg.c_str());
+
 	if (pnum >= 0)
 		monster[i].mWhoHit |= 1 << pnum;
 	if (pnum == myplr) {
@@ -4680,6 +4690,26 @@ void ProcessMonsters()
 		}
 		mx = Monst->_mx;
 		my = Monst->_my;
+
+		if (gbIsMultiplayer && sgOptions.Gameplay.bMonsterHealthScaling) {
+			float relativeHealth = (float)Monst->_mhitpoints / (float)Monst->_mmaxhp;
+			float modifier = (float)sgOptions.Gameplay.bMonsterHealthScalingModifier / 100.f;
+			float adjustment = (float)Monst->_mbasemaxhp * modifier;
+			int iterations = (int)gbActivePlayers - 1;
+			int newmaxhp = Monst->_mbasemaxhp + (adjustment * iterations);
+			int newhitpoints = relativeHealth * newmaxhp;
+			if (newmaxhp != Monst->_mmaxhp) {
+				std::stringstream ss; // TODO: Remove
+				ss << "Updated monster HP: " << Monst->mName
+					<< "\n\tfrom: " << Monst->_mhitpoints << "/" << Monst->_mmaxhp
+					<< "\n\tto: " << newhitpoints << "/" << newmaxhp
+					<< "\n\t(base: " << Monst->_mbasemaxhp << ")";
+				std::string msg = ss.str();
+				SDL_Log(msg.c_str());
+				Monst->_mmaxhp = newmaxhp;
+				Monst->_mhitpoints = newhitpoints;
+			}
+		}
 
 		if (dFlags[mx][my] & BFLAG_VISIBLE && Monst->_msquelch == 0) {
 			if (Monst->MType->mtype == MT_CLEAVER) {
