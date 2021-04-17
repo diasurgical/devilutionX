@@ -43,6 +43,10 @@ option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
                        "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
 
+option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" OFF)
+cmake_dependent_option(DEVILUTIONX_STATIC_LIBFMT "Link static libfmt" OFF
+                       "DEVILUTIONX_STATIC_LIBFMT AND NOT DIST" ON)
+
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
   get_git_tag(VERSION_NUM)
@@ -167,6 +171,13 @@ if(NOT NONET)
   else()
     add_subdirectory(3rdParty/libsodium)
   endif()
+endif()
+
+if(DEVILUTIONX_SYSTEM_LIBFMT)
+  set(fmt_USE_STATIC_LIBS ${DEVILUTIONX_STATIC_LIBFMT})
+  find_package(fmt REQUIRED)
+else()
+  add_subdirectory(3rdParty/libfmt)
 endif()
 
 if(USE_SDL1)
@@ -456,6 +467,7 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker
+  ${fmt_SOURCE_DIR}/include
   ${CMAKE_CURRENT_BINARY_DIR})
 
 if(NOT N3DS)
@@ -472,6 +484,8 @@ target_link_libraries(${BIN_TARGET} PRIVATE
 if(NOT NONET)
   target_link_libraries(${BIN_TARGET} PRIVATE sodium)
 endif()
+
+target_link_libraries(${BIN_TARGET} PRIVATE fmt)
 
 genex_for_option(DEBUG)
 target_compile_definitions(${BIN_TARGET} PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
