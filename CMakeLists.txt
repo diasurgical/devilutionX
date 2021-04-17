@@ -296,6 +296,7 @@ set(devilutionx_SRCS
   Source/controls/touch.cpp
   Source/utils/console.cpp
   Source/utils/display.cpp
+  Source/utils/file_util.cpp
   Source/utils/paths.cpp
   Source/utils/soundsample.cpp
   Source/utils/thread.cpp
