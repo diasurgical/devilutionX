@@ -1,6 +1,8 @@
 if(NOT DEVILUTIONX_SYSTEM_LIBFMT)
   include(FetchContent_MakeAvailableExcludeFromAll)
 
+  add_definitions(-D_POSIX_C_SOURCE=200809L)
+
   if(DEVILUTIONX_STATIC_LIBFMT)
     set(BUILD_SHARED_LIBS OFF)
   else()
