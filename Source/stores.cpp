@@ -203,10 +203,6 @@ void PrintStoreItem(ItemStruct *x, int l, text_color iclr)
 		strcat(sstr, tempstr);
 	}
 	AddSText(40, l++, false, sstr, iclr, false);
-	if (x->_iMagical == ITEM_QUALITY_UNIQUE) {
-		if (x->_iIdentified)
-			AddSText(40, l, false, "Unique Item", iclr, false);
-	}
 }
 
 void StoreAutoPlace()
