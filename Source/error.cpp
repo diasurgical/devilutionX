@@ -66,7 +66,7 @@ const char *const MsgStrings[] = {
 	"Give and you shall receive.",
 	"Some experience is gained by touch.",
 	"There's no place like home.",
-	"Spirtual energy is restored.",
+	"Spiritual energy is restored.",
 	"You feel more agile.",
 	"You feel stronger.",
 	"You feel wiser.",
