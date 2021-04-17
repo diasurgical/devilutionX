@@ -198,7 +198,7 @@ struct PlayerStruct {
 	/*
 	* @brief Animation Frames that will be adjusted for the skipped Frames/GameTicks
 	*/
-	int _pAnimRelevantAnimationFramesForDistributen;
+	int _pAnimRelevantAnimationFramesForDistributing;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
