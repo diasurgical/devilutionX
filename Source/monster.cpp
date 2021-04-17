@@ -479,7 +479,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i].mLevel -= 15;
 	}
 
-	if (!gbIsMultiplayer) {
+	if (!gbIsMultiplayer || sgOptions.Gameplay.bReduceEnemyHealth) {
 		monster[i]._mmaxhp >>= 1;
 		if (monster[i]._mmaxhp < 64) {
 			monster[i]._mmaxhp = 64;
