@@ -9,6 +9,8 @@
 #include "DiabloUI/art_draw.h"
 #include "options.h"
 
+#include <array>
+
 namespace devilution {
 namespace {
 
@@ -16,11 +18,8 @@ namespace xpbar {
 constexpr int barWidth = 307;
 constexpr int barHeight = 5;
 
-constexpr int goldGradient[] = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4 };
-constexpr int goldGrades = SDL_arraysize(goldGradient);
-
-constexpr int whiteGradient[] = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0xF8, 0xF7, 0xF6, 0xF5, 0xF4, 0xF3 };
-constexpr int whiteGrades = SDL_arraysize(whiteGradient);
+constexpr std::array<Uint8, 12> goldGradient = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4 };
+constexpr std::array<Uint8, 12> whiteGradient = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0xF8, 0xF7, 0xF6, 0xF5, 0xF4, 0xF3 };
 
 constexpr int backWidth = 313;
 constexpr int backHeight = 9;
@@ -210,9 +209,9 @@ void DrawXPBar(CelOutputBuffer out)
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Draw a nice golden bar for max level characters.
-		FastDrawHorizLine(out, xPos, yPos + 1, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGrades * 3 / 4 - 1]);
-		FastDrawHorizLine(out, xPos, yPos + 2, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGrades - 1]);
-		FastDrawHorizLine(out, xPos, yPos + 3, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGrades / 2 - 1]);
+		FastDrawHorizLine(out, xPos, yPos + 1, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGradient.size() * 3 / 4 - 1]);
+		FastDrawHorizLine(out, xPos, yPos + 2, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGradient.size() - 1]);
+		FastDrawHorizLine(out, xPos, yPos + 3, xpbar::barWidth, xpbar::goldGradient[xpbar::goldGradient.size() / 2 - 1]);
 
 		return;
 	}
@@ -229,12 +228,12 @@ void DrawXPBar(CelOutputBuffer out)
 	Uint64 onePx = prevXpDelta / xpbar::barWidth;
 	Uint64 lastFullPx = fullBar * prevXpDelta / xpbar::barWidth;
 
-	const Uint64 fade = (prevXpDelta_1 - lastFullPx) * (xpbar::whiteGrades - 1) / onePx;
+	const Uint64 fade = (prevXpDelta_1 - lastFullPx) * (xpbar::whiteGradient.size() - 1) / onePx;
 
 	// Draw beginning of bar full brightness
-	FastDrawHorizLine(out, xPos, yPos + 1, fullBar, xpbar::whiteGradient[xpbar::whiteGrades * 3 / 4 - 1]);
-	FastDrawHorizLine(out, xPos, yPos + 2, fullBar, xpbar::whiteGradient[xpbar::whiteGrades - 1]);
-	FastDrawHorizLine(out, xPos, yPos + 3, fullBar, xpbar::whiteGradient[xpbar::whiteGrades / 2 - 1]);
+	FastDrawHorizLine(out, xPos, yPos + 1, fullBar, xpbar::whiteGradient[xpbar::whiteGradient.size() * 3 / 4 - 1]);
+	FastDrawHorizLine(out, xPos, yPos + 2, fullBar, xpbar::whiteGradient[xpbar::whiteGradient.size() - 1]);
+	FastDrawHorizLine(out, xPos, yPos + 3, fullBar, xpbar::whiteGradient[xpbar::whiteGradient.size() / 2 - 1]);
 
 	// End pixels appear gradually
 	SetPixel(out, xPos + fullBar, yPos + 1, xpbar::whiteGradient[fade * 3 / 4]);
