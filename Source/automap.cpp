@@ -12,6 +12,7 @@
 #include "player.h"
 #include "setmaps.h"
 #include "utils/ui_fwd.h"
+#include "trigs.h"
 
 namespace devilution {
 
@@ -46,9 +47,45 @@ static Sint32 AutoMapY;
 #define MAPFLAG_STAIRS 0x80
 
 /**
+ * @brief Renders a shape for entrance to next level at the specified screen coordinates.
+ */
+static void DrawEntranceNext(CelOutputBuffer out, Sint32 sx, Sint32 sy)
+{
+	BYTE color = PAL8_RED;
+	DrawLineTo(out, sx - AmLine8, sy - AmLine8 - AmLine4, sx + AmLine8 + AmLine16, sy + AmLine4, color);
+	DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, color);
+	DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, color);
+	DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, color);
+}
+
+/**
+ * @brief Renders a shape for entrance to previous level at the specified screen coordinates.
+ */
+static void DrawEntrancePrev(CelOutputBuffer out, Sint32 sx, Sint32 sy)
+{
+	BYTE color = PAL8_BLUE;
+	DrawLineTo(out, sx - AmLine8, sy - AmLine8 - AmLine4, sx + AmLine8 + AmLine16, sy + AmLine4, color);
+	DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, color);
+	DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, color);
+	DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, color);
+}
+
+/**
+ * @brief Renders a shape for quick entrance to town at the specified screen coordinates.
+ */
+static void DrawEntranceWarp(CelOutputBuffer out, Sint32 sx, Sint32 sy)
+{
+	BYTE color = PAL16_GRAY;
+	DrawLineTo(out, sx - AmLine8, sy - AmLine8 - AmLine4, sx + AmLine8 + AmLine16, sy + AmLine4, color);
+	DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, color);
+	DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, color);
+	DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, color);
+}
+
+/**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
-void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_type)
+void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_type, Sint32 dunx, Sint32 duny)
 {
 	Sint32 x1, y1, x2, y2;
 
@@ -78,6 +115,27 @@ void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_t
 		DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, COLOR_BRIGHT);
 		DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, COLOR_BRIGHT);
 		DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, COLOR_BRIGHT);
+		int radius = 2;
+		if (leveltype == DTYPE_HELL)
+			radius = 4; //hell stairs are bigger, detect all segments
+		for (int j = 0; j < numtrigs; j++) {
+			if (abs(trigs[j]._tx - ((dunx << 1) + 16)) <= radius && abs(trigs[j]._ty - ((duny << 1) + 16)) <= radius) {
+				switch (trigs[j]._tmsg) {
+				case WM_DIABTWARPUP:
+					DrawEntranceWarp(out, sx, sy);
+					break;
+				case WM_DIABNEXTLVL:
+					DrawEntranceNext(out, sx, sy);
+					break;
+				case WM_DIABPREVLVL:
+					DrawEntrancePrev(out, sx, sy);
+					break;
+				default:
+					SDL_Log("UNKNOWN STAIRS: %d", trigs[j]._tmsg);
+					break;
+				}
+			}
+		}
 	}
 
 	bool do_vert = false;
@@ -663,7 +721,7 @@ void DrawAutomap(CelOutputBuffer out)
 		for (j = 0; j < cells; j++) {
 			WORD maptype = GetAutomapType(mapx + j, mapy - j, true);
 			if (maptype != 0)
-				DrawAutomapTile(out, x, sy, maptype);
+				DrawAutomapTile(out, x, sy, maptype, mapx + j, mapy - j);
 			x += AmLine64;
 		}
 		mapy++;
@@ -672,7 +730,7 @@ void DrawAutomap(CelOutputBuffer out)
 		for (j = 0; j <= cells; j++) {
 			WORD maptype = GetAutomapType(mapx + j, mapy - j, true);
 			if (maptype != 0)
-				DrawAutomapTile(out, x, y, maptype);
+				DrawAutomapTile(out, x, y, maptype, mapx + j, mapy - j);
 			x += AmLine64;
 		}
 		mapx++;
