@@ -6,6 +6,7 @@
 #include "stores.h"
 
 #include <algorithm>
+#include <fmt/format.h>
 
 #include "cursor.h"
 #include "init.h"
@@ -270,8 +271,9 @@ void S_StartSBuy()
 	stextsize = true;
 	stextscrl = true;
 	stextsval = 0;
-	sprintf(tempstr, "I have these items for sale:             Your gold: %i", plr[myplr]._pGold);
-	AddSText(0, 1, true, tempstr, COL_GOLD, false);
+	// An example of a named format insertion.
+	auto str = fmt::format("I have these items for sale:             Your gold: {gold}", fmt::arg("gold", plr[myplr]._pGold));
+	AddSText(0, 1, true, str.c_str(), COL_GOLD, false);
 	AddSLine(3);
 	AddSLine(21);
 	S_ScrollSBuy(stextsval);

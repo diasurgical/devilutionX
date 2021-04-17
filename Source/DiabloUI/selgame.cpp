@@ -11,6 +11,8 @@
 #include "options.h"
 #include "storm/storm.h"
 
+#include <fmt/format.h>
+
 namespace devilution {
 
 char selgame_Label[32];
@@ -410,10 +412,11 @@ static bool IsGameCompatible(GameData *data)
 	if (data->programid != GAME_ID) {
 		UiSelOkDialog(title, "The host is running a different game than you.", false);
 	} else {
-		char msg[64];
-		sprintf(msg, "Your version %s does not match the host %d.%d.%d.", PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH);
-
-		UiSelOkDialog(title, msg, false);
+		// An example of using a format with references. Note the references that allow a localized string to change the order of the inserted parameters.
+		// Note that named insertions would probably be better here, but this is just to provide an example.
+		auto msg = fmt::format("Your version {0} does not match the host {1}.{2}.{3}.", PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH);
+		
+		UiSelOkDialog(title, msg.c_str(), false);
 	}
 
 	LoadBackgroundArt("ui_art\\selgame.pcx");
