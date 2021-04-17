@@ -3,6 +3,7 @@
 #include "DiabloUI/diabloui.h"
 
 namespace devilution {
+namespace {
 
 std::vector<UiItemBase *> vecTitleScreen;
 
@@ -29,6 +30,8 @@ void title_Free()
 	}
 	vecTitleScreen.clear();
 }
+
+} // namespace
 
 void UiTitleDialog()
 {
