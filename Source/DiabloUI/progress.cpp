@@ -9,9 +9,8 @@
 #include "utils/display.h"
 
 namespace devilution {
-
+namespace {
 Art dialogArt;
-char dialogText[256];
 Art progressArt;
 Art ArtPopupSm;
 Art ArtProgBG;
@@ -88,6 +87,8 @@ void progress_Render(BYTE progress)
 		Blit(msgSurface, NULL, &dsc_rect);
 	}
 }
+
+} // namespace
 
 bool UiProgressDialog(const char *msg, int (*fnfunc)(), int rate)
 {
