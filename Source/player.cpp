@@ -3780,17 +3780,17 @@ int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 
 	float progressToNextGameTick = gfProgressToNextGameTick;
 	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted; // we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * pPlayer->_pAnimGameTickModifier);             // 1 added for rounding reasons. float to int cast always truncate.
-	if (absolutAnimationFrame > relevantAnimationFrames) {                                                                          // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
-		if (absolutAnimationFrame > (relevantAnimationFrames + 1))                                                                  // we should never have +2 frames even if next game tick is due
-			SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated %d MaxFrame %d)", absolutAnimationFrame, relevantAnimationFrames);
+	int absoluteAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * pPlayer->_pAnimGameTickModifier);            // 1 added for rounding reasons. float to int cast always truncate.
+	if (absoluteAnimationFrame > relevantAnimationFrames) {                                                                         // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
+		if (absoluteAnimationFrame > (relevantAnimationFrames + 1))                                                                 // we should never have +2 frames even if next game tick is due
+			SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated %d MaxFrame %d)", absoluteAnimationFrame, relevantAnimationFrames);
 		return relevantAnimationFrames;
 	}
-	if (absolutAnimationFrame <= 0) {
-		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated %d)", absolutAnimationFrame);
+	if (absoluteAnimationFrame <= 0) {
+		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated %d)", absoluteAnimationFrame);
 		return 1;
 	}
-	return absolutAnimationFrame;
+	return absoluteAnimationFrame;
 }
 
 void ClrPlrPath(int pnum)
