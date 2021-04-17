@@ -187,9 +187,18 @@ struct PlayerStruct {
 	int _pAnimFrame; // Current frame of animation.
 	int _pAnimWidth;
 	int _pAnimWidth2;
-	float _pAnimGameTickModifier;                    // specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
-	int _pAnimGameTicksSinceSequenceStarted;         // Number of GameTicks after the current animation sequence started
-	int _pAnimRelevantAnimationFramesForDistributen; // Animation Frames that will be adjusted for the skipped Frames/GameTicks
+	/*
+	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
+	*/
+	float _pAnimGameTickModifier;
+	/*
+	* @brief Number of GameTicks after the current animation sequence started
+	*/
+	int _pAnimGameTicksSinceSequenceStarted;
+	/*
+	* @brief Animation Frames that will be adjusted for the skipped Frames/GameTicks
+	*/
+	int _pAnimRelevantAnimationFramesForDistributen;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
@@ -412,8 +421,14 @@ void FreePlayerGFX(int pnum);
  */
 enum AnimationFlags : uint8_t {
 	None = 0,
-	ProcessAnimationPending = 1 << 0, // ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim)
-	SkipsDelayOfLastFrame = 1 << 1,   // Delay of last Frame is ignored (for example, because only Frame and not delay is checked in game_logic)
+	/*
+	* @brief ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim)
+	*/
+	ProcessAnimationPending = 1 << 0,
+	/*
+	* @brief Delay of last Frame is ignored (for example, because only Frame and not delay is checked in game_logic)
+	*/
+	SkipsDelayOfLastFrame = 1 << 1,
 };
 
 /**
