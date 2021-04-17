@@ -15,6 +15,22 @@
 #include "sound.h"
 
 namespace devilution {
+namespace {
+
+// Forward-declare menu handlers, used by the global menu structs below.
+void gamemenu_previous(bool bActivate);
+void gamemenu_new_game(bool bActivate);
+void gamemenu_quit_game(bool bActivate);
+void gamemenu_load_game(bool bActivate);
+void gamemenu_save_game(bool bActivate);
+void gamemenu_restart_town(bool bActivate);
+void gamemenu_options(bool bActivate);
+void gamemenu_music_volume(bool bActivate);
+void gamemenu_sound_volume(bool bActivate);
+void gamemenu_loadjog(bool bActivate);
+void gamemenu_gamma(bool bActivate);
+void gamemenu_speed(bool bActivate);
+void gamemenu_color_cycling(bool bActivate);
 
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
@@ -69,7 +85,7 @@ const char *jogging_toggle_names[] = {
 /** Specifies the menu names for color cycling disabled and enabled. */
 const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
-static void gamemenu_update_single(TMenuItem *pMenuItems)
+void gamemenu_update_single(TMenuItem *pMenuItems)
 {
 	bool enable;
 
@@ -82,32 +98,9 @@ static void gamemenu_update_single(TMenuItem *pMenuItems)
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
 
-static void gamemenu_update_multi(TMenuItem *pMenuItems)
+void gamemenu_update_multi(TMenuItem *pMenuItems)
 {
 	gmenu_enable(&sgMultiMenu[2], deathflag);
-}
-
-void gamemenu_on()
-{
-	if (!gbIsMultiplayer) {
-		gmenu_set_items(sgSingleMenu, gamemenu_update_single);
-	} else {
-		gmenu_set_items(sgMultiMenu, gamemenu_update_multi);
-	}
-	PressEscKey();
-}
-
-void gamemenu_off()
-{
-	gmenu_set_items(NULL, NULL);
-}
-
-void gamemenu_handle_previous()
-{
-	if (gmenu_is_active())
-		gamemenu_off();
-	else
-		gamemenu_on();
 }
 
 void gamemenu_previous(bool bActivate)
@@ -193,7 +186,7 @@ void gamemenu_restart_town(bool bActivate)
 	NetSendCmd(true, CMD_RETOWN);
 }
 
-static void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
+void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
 {
 	if (gbSndInited) {
 		menu_item->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
@@ -212,30 +205,30 @@ static int gamemenu_slider_music_sound(TMenuItem *menu_item)
 	return gmenu_slider_get(menu_item, VOLUME_MIN, VOLUME_MAX);
 }
 
-static void gamemenu_get_music()
+void gamemenu_get_music()
 {
 	gamemenu_sound_music_toggle(music_toggle_names, sgOptionsMenu, sound_get_or_set_music_volume(1));
 }
 
-static void gamemenu_get_sound()
+void gamemenu_get_sound()
 {
 	gamemenu_sound_music_toggle(sound_toggle_names, &sgOptionsMenu[1], sound_get_or_set_sound_volume(1));
 }
 
-static void gamemenu_jogging()
+void gamemenu_jogging()
 {
 	gmenu_slider_steps(&sgOptionsMenu[3], 2);
 	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, sgOptions.Gameplay.bRunInTown);
 	sgOptionsMenu[3].pszStr = jogging_toggle_names[!sgOptions.Gameplay.bRunInTown ? 1 : 0];
 }
 
-static void gamemenu_get_gamma()
+void gamemenu_get_gamma()
 {
 	gmenu_slider_steps(&sgOptionsMenu[2], 15);
 	gmenu_slider_set(&sgOptionsMenu[2], 30, 100, UpdateGamma(0));
 }
 
-static void gamemenu_get_speed()
+void gamemenu_get_speed()
 {
 	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
@@ -257,7 +250,7 @@ static void gamemenu_get_speed()
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 }
 
-static void gamemenu_get_color_cycling()
+void gamemenu_get_color_cycling()
 {
 	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
 }
@@ -399,6 +392,31 @@ void gamemenu_color_cycling(bool bActivate)
 {
 	sgOptions.Graphics.bColorCycling = !sgOptions.Graphics.bColorCycling;
 	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
+}
+
+} // namespace
+
+void gamemenu_on()
+{
+	if (!gbIsMultiplayer) {
+		gmenu_set_items(sgSingleMenu, gamemenu_update_single);
+	} else {
+		gmenu_set_items(sgMultiMenu, gamemenu_update_multi);
+	}
+	PressEscKey();
+}
+
+void gamemenu_off()
+{
+	gmenu_set_items(NULL, NULL);
+}
+
+void gamemenu_handle_previous()
+{
+	if (gmenu_is_active())
+		gamemenu_off();
+	else
+		gamemenu_on();
 }
 
 } // namespace devilution
