@@ -4,7 +4,6 @@
 
 #include <ctype.h>
 #include <math.h>
-#include "utils/stdarg_compat.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
