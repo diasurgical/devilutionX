@@ -93,6 +93,8 @@ struct GameplayOptions {
 	bool bRandomizeQuests;
 	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
+	/** @brief Recolors stairs on automap based on their type - down = red, up = blue, town entrance = white. */
+	bool bRecolorStairs;
 };
 
 struct ControllerOptions {

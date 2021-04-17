@@ -13,6 +13,7 @@
 #include "setmaps.h"
 #include "utils/ui_fwd.h"
 #include "trigs.h"
+#include "options.h"
 
 namespace devilution {
 
@@ -115,24 +116,26 @@ void DrawAutomapTile(CelOutputBuffer out, Sint32 sx, Sint32 sy, Uint16 automap_t
 		DrawLineTo(out, sx - AmLine16, sy - AmLine8, sx + AmLine16, sy + AmLine8, COLOR_BRIGHT);
 		DrawLineTo(out, sx - AmLine16 - AmLine8, sy - AmLine4, sx + AmLine8, sy + AmLine8 + AmLine4, COLOR_BRIGHT);
 		DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, COLOR_BRIGHT);
-		int radius = 2;
-		if (leveltype == DTYPE_HELL)
-			radius = 5; //hell stairs are bigger, detect all segments
-		for (int j = 0; j < numtrigs; j++) {
-			if (abs(trigs[j]._tx - ((dunx << 1) + 16)) <= radius && abs(trigs[j]._ty - ((duny << 1) + 16)) <= radius) {
-				switch (trigs[j]._tmsg) {
-				case WM_DIABTWARPUP:
-					DrawEntranceWarp(out, sx, sy);
-					break;
-				case WM_DIABNEXTLVL:
-					DrawEntranceNext(out, sx, sy);
-					break;
-				case WM_DIABPREVLVL:
-					DrawEntrancePrev(out, sx, sy);
-					break;
-				default:
-					SDL_Log("UNKNOWN STAIRS: %d", trigs[j]._tmsg);
-					break;
+		if(sgOptions.Gameplay.bRecolorStairs){
+			int radius = 2;
+			if (leveltype == DTYPE_HELL)
+				radius = 5; //hell stairs are bigger, detect all segments
+			for (int j = 0; j < numtrigs; j++) {
+				if (abs(trigs[j]._tx - ((dunx << 1) + 16)) <= radius && abs(trigs[j]._ty - ((duny << 1) + 16)) <= radius) {
+					switch (trigs[j]._tmsg) {
+					case WM_DIABTWARPUP:
+						DrawEntranceWarp(out, sx, sy);
+						break;
+					case WM_DIABNEXTLVL:
+						DrawEntranceNext(out, sx, sy);
+						break;
+					case WM_DIABPREVLVL:
+						DrawEntrancePrev(out, sx, sy);
+						break;
+					default:
+						SDL_Log("UNKNOWN STAIRS: %d", trigs[j]._tmsg);
+						break;
+					}
 				}
 			}
 		}
