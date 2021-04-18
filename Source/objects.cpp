@@ -2135,11 +2135,8 @@ void Obj_BCrossDamage(int i)
 	if (plr[myplr]._px != object[i]._ox || plr[myplr]._py != object[i]._oy - 1)
 		return;
 
-	plr[myplr]._pHitPoints -= damage[leveltype - 1];
-	plr[myplr]._pHPBase -= damage[leveltype - 1];
-	if (plr[myplr]._pHitPoints >> 6 <= 0) {
-		SyncPlrKill(myplr, 0);
-	} else {
+	ApplyPlrDamage(myplr, 0, 0, damage[leveltype - 1]);
+	if (plr[myplr]._pHitPoints >> 6 > 0) {
 		if (plr[myplr]._pClass == HeroClass::Warrior) {
 			PlaySfxLoc(PS_WARR68, plr[myplr]._px, plr[myplr]._py);
 		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
@@ -2154,7 +2151,6 @@ void Obj_BCrossDamage(int i)
 			PlaySfxLoc(PS_WARR68, plr[myplr]._px, plr[myplr]._py);
 		}
 	}
-	drawhpflag = true;
 }
 
 void ProcessObjects()
