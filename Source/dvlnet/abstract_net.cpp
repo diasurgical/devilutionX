@@ -16,15 +16,15 @@ namespace net {
 std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 {
 #ifdef NONET
-	return std::unique_ptr<abstract_net>(new loopback);
+	return std::make_unique<loopback>();
 #else
 	switch (provider) {
 	case SELCONN_TCP:
-		return std::unique_ptr<abstract_net>(new cdwrap<tcp_client>);
+		return std::make_unique<cdwrap<tcp_client>>();
 	case SELCONN_ZT:
-		return std::unique_ptr<abstract_net>(new cdwrap<base_protocol<protocol_zt>>);
+		return std::make_unique<cdwrap<base_protocol<protocol_zt>>>();
 	case SELCONN_LOOPBACK:
-		return std::unique_ptr<abstract_net>(new loopback);
+		return std::make_unique<loopback>();
 	default:
 		ABORT();
 	}
