@@ -1356,6 +1356,9 @@ void M_Enemy(int i)
 			continue;
 		if (M_Talker(mi) && monster[mi].mtalkmsg)
 			continue;
+		if ((Monst->_mFlags & MFLAG_GOLEM) && (monster[mi]._mFlags & MFLAG_GOLEM)) // prevent golems from fighting each other
+			continue;
+
 		dist = std::max(abs(monster[mi]._mx - Monst->_mx), abs(monster[mi]._my - Monst->_my));
 		if ((!(Monst->_mFlags & MFLAG_GOLEM)
 		        && !(Monst->_mFlags & MFLAG_BERSERK)
