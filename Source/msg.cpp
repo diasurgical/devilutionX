@@ -2066,16 +2066,7 @@ static DWORD On_PLRDAMAGE(TCmd *pCmd, int pnum)
 
 	if (p->bPlr == myplr && currlevel != 0 && gbBufferMsgs != 1) {
 		if (currlevel == plr[pnum].plrlevel && p->dwDam <= 192000 && plr[myplr]._pHitPoints >> 6 > 0) {
-			drawhpflag = true;
-			plr[myplr]._pHitPoints -= p->dwDam;
-			plr[myplr]._pHPBase -= p->dwDam;
-			if (plr[myplr]._pHitPoints > plr[myplr]._pMaxHP) {
-				plr[myplr]._pHitPoints = plr[myplr]._pMaxHP;
-				plr[myplr]._pHPBase = plr[myplr]._pMaxHPBase;
-			}
-			if (plr[myplr]._pHitPoints >> 6 <= 0) {
-				SyncPlrKill(myplr, 1);
-			}
+			ApplyPlrDamage(myplr, 0, 0, p->dwDam, 1);
 		}
 	}
 

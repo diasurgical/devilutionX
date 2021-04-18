@@ -22,7 +22,6 @@ int missileactive[MAXMISSILES];
 int missileavail[MAXMISSILES];
 MissileStruct missile[MAXMISSILES];
 int nummissiles;
-bool ManashieldFlag;
 ChainStruct chain[MAXMISSILES];
 bool MissilePreFlag;
 int numchains;
@@ -868,17 +867,10 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 
 			dam = dam - dam * resper / 100;
 			if (pnum == myplr) {
-				plr[pnum]._pHitPoints -= dam;
-				plr[pnum]._pHPBase -= dam;
-			}
-			if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
-				plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
-				plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
+				ApplyPlrDamage(pnum, 0, 0, dam, earflag);
 			}
 
-			if (plr[pnum]._pHitPoints >> 6 <= 0) {
-				SyncPlrKill(pnum, earflag);
-			} else {
+			if (plr[pnum]._pHitPoints >> 6 > 0) {
 				if (plr[pnum]._pClass == HeroClass::Warrior) {
 					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == HeroClass::Rogue) {
@@ -892,21 +884,13 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 				} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 				}
-				drawhpflag = true;
 			}
 			return true;
 		}
 		if (pnum == myplr) {
-			plr[pnum]._pHitPoints -= dam;
-			plr[pnum]._pHPBase -= dam;
+			ApplyPlrDamage(pnum, 0, 0, dam, earflag);
 		}
-		if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
-			plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
-			plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
-		}
-		if (plr[pnum]._pHitPoints >> 6 <= 0) {
-			SyncPlrKill(pnum, earflag);
-		} else {
+		if (plr[pnum]._pHitPoints >> 6 > 0) {
 			StartPlrHit(pnum, dam, false);
 		}
 		return true;
@@ -1336,10 +1320,7 @@ void InitMissiles()
 				if (missile[mi]._misource == myplr) {
 					int missingHP = plr[myplr]._pMaxHP - plr[myplr]._pHitPoints;
 					CalcPlrItemVals(myplr, true);
-					plr[myplr]._pHitPoints -= missingHP + missile[mi]._miVar2;
-					if (plr[myplr]._pHitPoints < 64) {
-						plr[myplr]._pHitPoints = 64;
-					}
+					ApplyPlrDamage(myplr, 0, 1, missingHP + missile[mi]._miVar2);
 				}
 			}
 		}
@@ -2556,9 +2537,6 @@ void AddFlash2(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 void AddManashield(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
 	missile[mi]._mirange = 48 * plr[id]._pLevel;
-	missile[mi]._miVar1 = plr[id]._pHitPoints;
-	missile[mi]._miVar2 = plr[id]._pHPBase;
-	missile[mi]._miVar8 = -1;
 	if (mienemy == TARGET_MONSTERS)
 		UseMana(id, SPL_MANASHIELD);
 	if (id == myplr)
@@ -2741,11 +2719,7 @@ void AddFlare(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 	missile[mi]._mlid = AddLight(sx, sy, 8);
 	if (mienemy == TARGET_MONSTERS) {
 		UseMana(id, SPL_FLARE);
-		plr[id]._pHitPoints -= 320;
-		plr[id]._pHPBase -= 320;
-		drawhpflag = true;
-		if (plr[id]._pHitPoints <= 0)
-			SyncPlrKill(id, 0);
+		ApplyPlrDamage(id, 5);
 	} else {
 		if (id > 0) {
 			if (monster[id].MType->mtype == MT_SUCCUBUS)
@@ -3337,11 +3311,7 @@ void AddBoneSpirit(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32
 	missile[mi]._mlid = AddLight(sx, sy, 8);
 	if (mienemy == TARGET_MONSTERS) {
 		UseMana(id, SPL_BONESPIRIT);
-		plr[id]._pHitPoints -= 384;
-		plr[id]._pHPBase -= 384;
-		drawhpflag = true;
-		if (plr[id]._pHitPoints <= 0)
-			SyncPlrKill(id, 0);
+		ApplyPlrDamage(id, 6);
 	}
 }
 
@@ -3494,11 +3464,6 @@ void MI_Golem(Sint32 i)
 		}
 	}
 	missile[i]._miDelFlag = true;
-}
-
-void MI_SetManashield(Sint32 i)
-{
-	ManashieldFlag = true;
 }
 
 void MI_LArrow(Sint32 i)
@@ -4590,7 +4555,7 @@ void MI_Flash2(Sint32 i)
 
 void MI_Manashield(Sint32 i)
 {
-	int id, diff;
+	int id;
 
 	id = missile[i]._misource;
 	missile[i]._mix = plr[id]._px;
@@ -4617,45 +4582,7 @@ void MI_Manashield(Sint32 i)
 	} else {
 		if (plr[id]._pMana <= 0 || !plr[id].plractive)
 			missile[i]._mirange = 0;
-		if (plr[id]._pHitPoints < missile[i]._miVar1) {
-			diff = missile[i]._miVar1 - plr[id]._pHitPoints;
-			if (missile[i]._mispllvl > 0) {
-				diff += diff / -3;
-			}
 
-			if (diff < 0)
-				diff = 0;
-			drawmanaflag = true;
-			drawhpflag = true;
-
-			if (plr[id]._pMana >= diff) {
-				plr[id]._pHitPoints = missile[i]._miVar1;
-				plr[id]._pHPBase = missile[i]._miVar2;
-				plr[id]._pMana -= diff;
-				plr[id]._pManaBase -= diff;
-			} else {
-				plr[id]._pHitPoints = plr[id]._pMana + missile[i]._miVar1 - diff;
-				plr[id]._pHPBase = plr[id]._pMana + missile[i]._miVar2 - diff;
-				plr[id]._pMana = 0;
-				plr[id]._pManaBase = plr[id]._pMaxManaBase - plr[id]._pMaxMana;
-				missile[i]._mirange = 0;
-				missile[i]._miDelFlag = true;
-				if (plr[id]._pHitPoints < 0)
-					SetPlayerHitPoints(id, 0);
-				if ((plr[id]._pHitPoints >> 6) == 0 && id == myplr) {
-					SyncPlrKill(id, missile[i]._miVar8);
-				}
-			}
-		}
-
-		if (id == myplr && plr[id]._pHitPoints == 0 && missile[i]._miVar1 == 0 && plr[id]._pmode != PM_DEATH) {
-			missile[i]._mirange = 0;
-			missile[i]._miDelFlag = true;
-			SyncPlrKill(id, -1);
-		}
-
-		missile[i]._miVar1 = plr[id]._pHitPoints;
-		missile[i]._miVar2 = plr[id]._pHPBase;
 		if (missile[i]._mirange == 0) {
 			missile[i]._miDelFlag = true;
 			NetSendCmd(true, CMD_ENDSHIELD);
@@ -5261,9 +5188,7 @@ void MI_Blodboil(Sint32 i)
 			missile[i]._mirange = lvl + 10 * missile[i]._mispllvl + 245;
 			hpdif = plr[id]._pMaxHP - plr[id]._pHitPoints;
 			CalcPlrItemVals(id, true);
-			plr[id]._pHitPoints -= hpdif;
-			if (plr[id]._pHitPoints < 64)
-				plr[id]._pHitPoints = 64;
+			ApplyPlrDamage(id, 0, 1, hpdif);
 			force_redraw = 255;
 			PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
 		} else {
@@ -5279,9 +5204,7 @@ void MI_Blodboil(Sint32 i)
 			plr[id]._pSpellFlags &= ~0x4;
 			hpdif = plr[id]._pMaxHP - plr[id]._pHitPoints;
 			CalcPlrItemVals(id, true);
-			plr[id]._pHitPoints -= hpdif + missile[i]._miVar2;
-			if (plr[id]._pHitPoints < 64)
-				plr[id]._pHitPoints = 64;
+			ApplyPlrDamage(id, 0, 1, hpdif + missile[i]._miVar2);
 			force_redraw = 255;
 			PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
 		}
@@ -5597,7 +5520,6 @@ void ProcessMissiles()
 	}
 
 	MissilePreFlag = false;
-	ManashieldFlag = false;
 
 	for (i = 0; i < nummissiles; i++) {
 		mi = missileactive[i];
@@ -5611,14 +5533,6 @@ void ProcessMissiles()
 					missile[mi]._miAnimFrame = 1;
 				if (missile[mi]._miAnimFrame < 1)
 					missile[mi]._miAnimFrame = missile[mi]._miAnimLen;
-			}
-		}
-	}
-
-	if (ManashieldFlag) {
-		for (i = 0; i < nummissiles; i++) {
-			if (missile[missileactive[i]]._mitype == MIS_MANASHIELD) {
-				MI_Manashield(missileactive[i]);
 			}
 		}
 	}

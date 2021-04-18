@@ -2260,8 +2260,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			else
 				M_StartHit(i, pnum, mdam);
 		}
-		plr[pnum]._pHitPoints -= dam;
-		plr[pnum]._pHPBase -= dam;
+		ApplyPlrDamage(pnum, 0, 0, dam);
 	}
 	if (plr[pnum]._pIFlags & ISPL_THORNS) {
 		mdam = (random_(99, 3) + 1) << 6;
@@ -2273,12 +2272,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	}
 	if (!(monster[i]._mFlags & MFLAG_NOLIFESTEAL) && monster[i].MType->mtype == MT_SKING && gbIsMultiplayer)
 		monster[i]._mhitpoints += dam;
-	if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
-		plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
-		plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
-	}
 	if (plr[pnum]._pHitPoints >> 6 <= 0) {
-		SyncPlrKill(pnum, 0);
 		if (gbIsHellfire)
 			M_StartStand(i, monster[i]._mdir);
 		return;

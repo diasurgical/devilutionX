@@ -2008,24 +2008,65 @@ void StripTopGold(int pnum)
 	plr[pnum].HoldItem = tmpItem;
 }
 
-void SyncPlrKill(int pnum, int earflag)
+void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int earflag /*= 0*/)
 {
 	int ma, i;
+	int totalDamage;
+	int minHitPoints;
 
+	totalDamage = (dam << 6) + frac;
+	if (totalDamage > 0) {
+		for (i = 0; i < nummissiles; i++) {
+			ma = missileactive[i];
+			if (missile[ma]._mitype == MIS_MANASHIELD && missile[ma]._misource == pnum && !missile[ma]._miDelFlag) {
+				if (missile[ma]._mispllvl > 0) {
+					totalDamage += totalDamage / -3;
+				}
+
+				drawmanaflag = true;
+				if (plr[pnum]._pMana >= totalDamage) {
+					plr[pnum]._pMana -= totalDamage;
+					plr[pnum]._pManaBase -= totalDamage;
+					totalDamage = 0;
+				} else {
+					totalDamage -= plr[pnum]._pMana;
+					if (missile[ma]._mispllvl > 0) {
+						totalDamage += totalDamage / 2;
+					}
+					plr[pnum]._pMana = 0;
+					plr[pnum]._pManaBase = plr[pnum]._pMaxManaBase - plr[pnum]._pMaxMana;
+				}
+
+				break;
+			}
+		}
+	}
+
+	if (totalDamage == 0)
+		return;
+
+	drawhpflag = true;
+	plr[pnum]._pHitPoints -= totalDamage;
+	plr[pnum]._pHPBase -= totalDamage;
+	if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
+		plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
+		plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
+	}
+	minHitPoints = minHP << 6;
+	if (plr[pnum]._pHitPoints < minHitPoints) {
+		plr[pnum]._pHitPoints = minHitPoints;
+		plr[pnum]._pHPBase = minHitPoints + plr[pnum]._pMaxHPBase - plr[pnum]._pMaxHP;
+	}
+	if (plr[pnum]._pHitPoints >> 6 <= 0) {
+		SyncPlrKill(pnum, earflag);
+	}
+}
+
+void SyncPlrKill(int pnum, int earflag)
+{
 	if (plr[pnum]._pHitPoints <= 0 && currlevel == 0) {
 		SetPlayerHitPoints(pnum, 64);
 		return;
-	}
-
-	for (i = 0; i < nummissiles; i++) {
-		ma = missileactive[i];
-		if (missile[ma]._mitype == MIS_MANASHIELD && missile[ma]._misource == pnum && !missile[ma]._miDelFlag) {
-			if (earflag != -1) {
-				missile[ma]._miVar8 = earflag;
-			}
-
-			return;
-		}
 	}
 
 	SetPlayerHitPoints(pnum, 0);
@@ -2518,14 +2559,7 @@ bool PlrHitMonst(int pnum, int m)
 			if (plr[pnum].pDamAcFlags & 0x04) {
 				dam2 += plr[pnum]._pIGetHit << 6;
 				if (dam2 >= 0) {
-					if (plr[pnum]._pHitPoints > dam2) {
-						plr[pnum]._pHitPoints -= dam2;
-						plr[pnum]._pHPBase -= dam2;
-					} else {
-						dam2 = (1 << 6);
-						plr[pnum]._pHPBase -= plr[pnum]._pHitPoints - dam2;
-						plr[pnum]._pHitPoints = dam2;
-					}
+					ApplyPlrDamage(pnum, 0, 1, dam2);
 				}
 				dam <<= 1;
 			}
@@ -3603,12 +3637,7 @@ void ProcessPlayers()
 
 			if (pnum == myplr) {
 				if ((plr[pnum]._pIFlags & ISPL_DRAINLIFE) && currlevel != 0) {
-					plr[pnum]._pHitPoints -= 4;
-					plr[pnum]._pHPBase -= 4;
-					if ((plr[pnum]._pHitPoints >> 6) <= 0) {
-						SyncPlrKill(pnum, 0);
-					}
-					drawhpflag = true;
+					ApplyPlrDamage(pnum, 0, 0, 4);
 				}
 				if (plr[pnum]._pIFlags & ISPL_NOMANA && plr[pnum]._pManaBase > 0) {
 					plr[pnum]._pManaBase -= plr[pnum]._pMana;

@@ -26,7 +26,7 @@ MissileData missiledata[] = {
 	{  &AddTown,                   &MI_Town,           MIS_TOWN,          true,      1, MISR_MAGIC,     MFILE_PORTAL,    LS_SENTINEL, LS_ELEMENTL },
 	{  &AddFlash,                  &MI_Flash,          MIS_FLASH,         true,      1, MISR_MAGIC,     MFILE_BLUEXFR,   LS_NOVA,     LS_ELECIMP1 },
 	{  &AddFlash2,                 &MI_Flash2,         MIS_FLASH2,        true,      1, MISR_MAGIC,     MFILE_BLUEXBK,   SFX_NONE,    SFX_NONE    },
-	{  &AddManashield,             &MI_SetManashield,  MIS_MANASHIELD,    false,     1, MISR_MAGIC,     MFILE_MANASHLD,  LS_MSHIELD,  SFX_NONE    },
+	{  &AddManashield,             &MI_Manashield,     MIS_MANASHIELD,    false,     1, MISR_MAGIC,     MFILE_MANASHLD,  LS_MSHIELD,  SFX_NONE    },
 	{  &AddFiremove,               &MI_Firemove,       MIS_FIREMOVE,      true,      1, MISR_FIRE,      MFILE_FIREWAL,   SFX_NONE,    SFX_NONE    },
 	{  &AddChain,                  &MI_Chain,          MIS_CHAIN,         true,      1, MISR_LIGHTNING, MFILE_LGHNING,   LS_LNING1,   LS_ELECIMP1 },
 	{  NULL,                       NULL,               MIS_SENTINAL,      true,      1, MISR_LIGHTNING, MFILE_LGHNING,   SFX_NONE,    SFX_NONE    },
