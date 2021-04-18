@@ -272,7 +272,6 @@ void LimitFrameRate()
 void RenderPresent()
 {
 	SDL_Surface *surface = GetOutputSurface();
-	assert(!SDL_MUSTLOCK(surface));
 
 	if (!gbActive) {
 		LimitFrameRate();
