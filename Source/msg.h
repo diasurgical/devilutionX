@@ -453,4 +453,4 @@ void NetSendCmdString(int pmask, const char *pszStr);
 void delta_close_portal(int pnum);
 DWORD ParseCmd(int pnum, TCmd *pCmd);
 
-}
+} // namespace devilution

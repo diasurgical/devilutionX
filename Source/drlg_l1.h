@@ -32,4 +32,4 @@ void drlg_l1_crypt_pattern5(int rndper);
 void drlg_l1_crypt_pattern6(int rndper);
 void drlg_l1_crypt_pattern7(int rndper);
 
-}
+} // namespace devilution

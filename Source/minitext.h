@@ -25,4 +25,4 @@ void DrawQTextBack(CelOutputBuffer out);
  */
 void DrawQText(CelOutputBuffer out);
 
-}
+} // namespace devilution

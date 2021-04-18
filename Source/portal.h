@@ -36,4 +36,4 @@ void GetPortalLevel();
 void GetPortalLvlPos();
 bool PosOkPortal(int lvl, int x, int y);
 
-}
+} // namespace devilution

@@ -76,4 +76,4 @@ void InitDiabloMsg(diablo_message e);
 void ClrDiabloMsg();
 void DrawDiabloMsg(CelOutputBuffer out);
 
-}
+} // namespace devilution

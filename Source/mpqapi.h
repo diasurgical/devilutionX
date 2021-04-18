@@ -46,4 +46,4 @@ bool mpqapi_has_file(const char *pszName);
 bool OpenMPQ(const char *pszArchive, DWORD dwChar);
 bool mpqapi_flush_and_close(const char *pszArchive, bool bFree, DWORD dwChar);
 
-}
+} // namespace devilution

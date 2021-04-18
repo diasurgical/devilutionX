@@ -34,4 +34,4 @@ void gmenu_slider_set(TMenuItem *pItem, int min, int max, int gamma);
 int gmenu_slider_get(TMenuItem *pItem, int min, int max);
 void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
 
-}
+} // namespace devilution

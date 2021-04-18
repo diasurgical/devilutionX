@@ -57,8 +57,8 @@ void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 {
 	art->frames = frames;
-	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr{SDL_CreateRGBSurfaceWithFormatFrom(
-	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8)});
+	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormatFrom(
+	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8) });
 	art->logical_width = w;
 	art->frame_height = h / frames;
 }

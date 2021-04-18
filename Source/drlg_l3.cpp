@@ -1983,7 +1983,8 @@ static void DRLG_L3Wood()
 	volatile // visual studio 2019 throws internal compiler error without it, see #708
 
 #endif
-	int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
+	    int i,
+	    j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
 	bool skip;
 
 	for (j = 1; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1' (fixed)

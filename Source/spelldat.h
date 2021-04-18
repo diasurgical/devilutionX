@@ -219,4 +219,4 @@ struct SpellData {
 
 extern SpellData spelldata[];
 
-}
+} // namespace devilution

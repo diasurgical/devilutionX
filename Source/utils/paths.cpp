@@ -27,24 +27,24 @@ std::string *ttfName = NULL;
 void AddTrailingSlash(std::string *path)
 {
 #ifdef _WIN32
-    if (!path->empty() && path->back() != '\\')
-        *path += '\\';
+	if (!path->empty() && path->back() != '\\')
+		*path += '\\';
 #else
-    if (!path->empty() && path->back() != '/')
-        *path += '/';
+	if (!path->empty() && path->back() != '/')
+		*path += '/';
 #endif
 }
 
 std::string *FromSDL(char *s)
 {
-    std::string *result = new std::string(s != NULL ? s : "");
-    if (s != NULL) {
-        SDL_free(s);
-    } else {
-        SDL_Log("%s", SDL_GetError());
-        SDL_ClearError();
-    }
-    return result;
+	std::string *result = new std::string(s != NULL ? s : "");
+	if (s != NULL) {
+		SDL_free(s);
+	} else {
+		SDL_Log("%s", SDL_GetError());
+		SDL_ClearError();
+	}
+	return result;
 }
 
 } // namespace

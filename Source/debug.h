@@ -23,4 +23,4 @@ void PrintDebugQuest();
 void GetDebugMonster();
 void NextDebugMonster();
 
-}
+} // namespace devilution

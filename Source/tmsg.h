@@ -29,4 +29,4 @@ void tmsg_add(Uint8 *pbMsg, Uint8 bLen);
 void tmsg_start();
 void tmsg_cleanup();
 
-}
+} // namespace devilution

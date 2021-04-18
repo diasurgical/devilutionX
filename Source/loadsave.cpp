@@ -1919,10 +1919,10 @@ void SaveGameData()
 
 	file.writeLE<Uint8>(automapflag);
 	file.writeBE<Sint32>(AutoMapScale);
-
 }
 
-void SaveGame() {
+void SaveGame()
+{
 	gbValidSaveFile = true;
 	pfile_write_hero(/*write_game_data=*/true);
 }

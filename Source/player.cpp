@@ -3699,7 +3699,7 @@ void ProcessPlayerAnimation(int pnum)
 	}
 }
 
-Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct* pPlayer)
+Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 {
 	// Normal logic is used,
 	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick (_pAnimUsedNumFrames = 0)
@@ -3720,13 +3720,17 @@ Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct* pPlayer)
 		relevantAnimationLength = pPlayer->_pAnimLen;
 	}
 	float progressToNextGameTick = gfProgressToNextGameTick;
-	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted; // we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
+	// we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
+	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted;
 	int animationMaxGameTickets = relevantAnimationLength;
 	if (pPlayer->_pAnimDelay > 1)
 		animationMaxGameTickets = (relevantAnimationLength * pPlayer->_pAnimDelay);
-	float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLength - pPlayer->_pAnimNumSkippedFrames); // if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
-	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * gameTickModifier); // 1 added for rounding reasons. float to int cast always truncate.
-	if (absolutAnimationFrame > relevantAnimationLength) // this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
+	// if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
+	float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLength - pPlayer->_pAnimNumSkippedFrames);
+	// 1 added for rounding reasons. float to int cast always truncate.
+	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * gameTickModifier);
+	// this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
+	if (absolutAnimationFrame > relevantAnimationLength)
 		return relevantAnimationLength;
 	if (absolutAnimationFrame <= 0) {
 		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame");

@@ -103,10 +103,10 @@ struct CCritSect {
 
 // Game states
 #define GAMESTATE_PRIVATE 0x01
-#define GAMESTATE_FULL    0x02
-#define GAMESTATE_ACTIVE  0x04
+#define GAMESTATE_FULL 0x02
+#define GAMESTATE_ACTIVE 0x04
 #define GAMESTATE_STARTED 0x08
-#define GAMESTATE_REPLAY  0x80
+#define GAMESTATE_REPLAY 0x80
 
 #define PS_CONNECTED 0x10000
 #define PS_TURN_ARRIVED 0x20000
@@ -155,9 +155,8 @@ bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool
-    SNetGetTurnsInTransit(
-        DWORD *turns);
+bool SNetGetTurnsInTransit(
+    DWORD *turns);
 
 // Network provider structures
 typedef struct _client_info {
@@ -202,7 +201,7 @@ bool SNetPerformUpgrade(DWORD *upgradestatus);
 bool SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
 bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
 
-typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
+typedef void (*SEVTHANDLER)(struct _SNETEVENT *);
 
 /*  SNetSendMessage @ 127
  *
@@ -222,7 +221,7 @@ typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
 bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
 
 // Macro values to target specific players
-#define SNPLAYER_ALL    -1
+#define SNPLAYER_ALL -1
 #define SNPLAYER_OTHERS -2
 
 #define MPQ_FLAG_READ_ONLY 1
@@ -250,7 +249,7 @@ bool WINAPI SFileCloseArchive(HANDLE hArchive);
 bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
 bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, LONG *lpDistanceToMoveHigh);
 DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
-DWORD WINAPI SFileSetFilePointer(HANDLE, int, int*, int);
+DWORD WINAPI SFileSetFilePointer(HANDLE, int, int *, int);
 bool WINAPI SFileCloseFile(HANDLE hFile);
 
 /*  SBmpLoadImage @ 323
@@ -267,15 +266,14 @@ bool WINAPI SFileCloseFile(HANDLE hFile);
  *
  *  Returns true if the image was supported and loaded correctly, false otherwise.
  */
-bool
-    SBmpLoadImage(
-        const char *pszFileName,
-        SDL_Color *pPalette,
-        BYTE *pBuffer,
-        DWORD dwBuffersize,
-        DWORD *pdwWidth,
-        DWORD *pdwHeight,
-        DWORD *pdwBpp);
+bool SBmpLoadImage(
+    const char *pszFileName,
+    SDL_Color *pPalette,
+    BYTE *pBuffer,
+    DWORD dwBuffersize,
+    DWORD *pdwWidth,
+    DWORD *pdwHeight,
+    DWORD *pdwBpp);
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue);
@@ -318,11 +316,11 @@ DWORD SErrGetLastError();
 void SErrSetLastError(DWORD dwErrCode);
 
 // Values for dwErrCode
-#define STORM_ERROR_GAME_TERMINATED              0x85100069
-#define STORM_ERROR_INVALID_PLAYER               0x8510006a
-#define STORM_ERROR_NO_MESSAGES_WAITING          0x8510006b
-#define STORM_ERROR_NOT_IN_GAME                  0x85100070
-#define STORM_ERROR_REQUIRES_UPGRADE             0x85100077
+#define STORM_ERROR_GAME_TERMINATED 0x85100069
+#define STORM_ERROR_INVALID_PLAYER 0x8510006a
+#define STORM_ERROR_NO_MESSAGES_WAITING 0x8510006b
+#define STORM_ERROR_NOT_IN_GAME 0x85100070
+#define STORM_ERROR_REQUIRES_UPGRADE 0x85100077
 
 /*  SStrCopy @ 501
  *
@@ -354,18 +352,18 @@ bool SFileEnableDirectAccess(bool enable);
 // Sets the file's 64-bit seek position.
 inline std::uint64_t SFileSetFilePointer(HANDLE hFile, std::int64_t offset, int whence)
 {
-    int high = static_cast<std::uint64_t>(offset) >> 32;
-    int low = static_cast<int>(offset);
-    low = SFileSetFilePointer(hFile, low, &high, whence);
-    return (static_cast<std::uint64_t>(high) << 32) | low;
+	int high = static_cast<std::uint64_t>(offset) >> 32;
+	int low = static_cast<int>(offset);
+	low = SFileSetFilePointer(hFile, low, &high, whence);
+	return (static_cast<std::uint64_t>(high) << 32) | low;
 }
 
 // Returns the current 64-bit file seek position.
 inline std::uint64_t SFileGetFilePointer(HANDLE hFile)
 {
-    // We use `SFileSetFilePointer` with offset 0 to get the current position
-    // because there is no `SFileGetFilePointer`.
-    return SFileSetFilePointer(hFile, 0, DVL_FILE_CURRENT);
+	// We use `SFileSetFilePointer` with offset 0 to get the current position
+	// because there is no `SFileGetFilePointer`.
+	return SFileSetFilePointer(hFile, 0, DVL_FILE_CURRENT);
 }
 
 #endif

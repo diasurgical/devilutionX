@@ -239,4 +239,4 @@ void ProcessMissiles();
 void missiles_process_charge();
 void ClearMissileSpot(int mi);
 
-}
+} // namespace devilution

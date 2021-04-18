@@ -12,4 +12,4 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen);
 void dthread_start();
 void dthread_cleanup();
 
-}
+} // namespace devilution

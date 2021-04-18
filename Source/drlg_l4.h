@@ -22,4 +22,4 @@ bool IsDURWall(char d);
 bool IsDLLWall(char dd);
 void CreateL4Dungeon(DWORD rseed, lvl_entry entry);
 
-}
+} // namespace devilution

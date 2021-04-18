@@ -437,7 +437,8 @@ inline void DoRenderLine(BYTE *dst, BYTE *src, int n, BYTE *tbl, DWORD mask)
 #if DVL_HAVE_ATTRIBUTE(always_inline) || (defined(__GNUC__) && !defined(__clang__))
 __attribute__((always_inline))
 #endif
-inline void RenderLine(BYTE *dst_begin, BYTE *dst_end, BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
+inline void
+RenderLine(BYTE *dst_begin, BYTE *dst_end, BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
 {
 #ifdef NO_OVERDRAW
 	if (*dst >= dst_begin && *dst <= dst_end)
@@ -453,7 +454,8 @@ inline void RenderLine(BYTE *dst_begin, BYTE *dst_end, BYTE **dst, BYTE **src, i
 __attribute__((no_sanitize("shift-base")))
 #endif
 
-void RenderTile(CelOutputBuffer out, int x, int y)
+void
+RenderTile(CelOutputBuffer out, int x, int y)
 {
 	int i, j;
 	char c, v, tile;

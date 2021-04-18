@@ -95,4 +95,4 @@ void SetMultiQuest(int q, quest_state s, int l, int v1);
 /* rdata */
 extern QuestData questlist[];
 
-}
+} // namespace devilution

@@ -4030,7 +4030,7 @@ void MAI_Golum(int i)
 
 	md = left[md];
 	for (j = 0; j < 8 && !ok; j++) {
-        md = right[md];
+		md = right[md];
 		ok = DirOK(i, md);
 	}
 	if (ok)

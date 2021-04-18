@@ -629,7 +629,7 @@ static void UiSelHeroDialog(
 	} while (selhero_navigateYesNo);
 
 	*dlgresult = selhero_result;
-    strncpy(*name, selhero_heroInfo.name, sizeof(*name));
+	strncpy(*name, selhero_heroInfo.name, sizeof(*name));
 }
 
 void UiSelHeroSingDialog(

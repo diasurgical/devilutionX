@@ -116,4 +116,4 @@ void STextEnter();
 void CheckStoreBtn();
 void ReleaseStoreBtn();
 
-}
+} // namespace devilution

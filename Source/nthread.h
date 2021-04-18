@@ -33,4 +33,4 @@ bool nthread_has_500ms_passed();
  */
 void nthread_UpdateProgressToNextGameTick();
 
-}
+} // namespace devilution

@@ -26,4 +26,4 @@ void InitHash();
 DWORD PkwareCompress(BYTE *srcData, DWORD size);
 void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes);
 
-}
+} // namespace devilution

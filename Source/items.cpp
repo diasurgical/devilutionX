@@ -2619,7 +2619,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
-			SpawnUnique((_unique_items)-(idx + 1), x, y);
+			SpawnUnique((_unique_items) - (idx + 1), x, y);
 			return;
 		}
 		onlygood = true;
@@ -2631,7 +2631,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 			idx--;
 			onlygood = false;
 		} else {
-			SpawnUnique((_unique_items)-(idx + 1), x, y);
+			SpawnUnique((_unique_items) - (idx + 1), x, y);
 			return;
 		}
 	} else {
@@ -4497,11 +4497,11 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_MARMOR:
 		case ITYPE_HARMOR: {
 			const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
-				[](const ItemStruct &item) {
-					return item._itype == ITYPE_LARMOR
-						|| item._itype == ITYPE_MARMOR
-						|| item._itype == ITYPE_HARMOR;
-				});
+			    [](const ItemStruct &item) {
+				    return item._itype == ITYPE_LARMOR
+				        || item._itype == ITYPE_MARMOR
+				        || item._itype == ITYPE_HARMOR;
+			    });
 
 			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
 			break;
@@ -4516,7 +4516,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_RING:
 		case ITYPE_AMULET: {
 			const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
-				[](const ItemStruct &item) { return item._itype == items[0]._itype; });
+			    [](const ItemStruct &item) { return item._itype == items[0]._itype; });
 
 			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
@@ -4528,12 +4528,14 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		ivalue *= 0.8;
 
 		count++;
-	} while (keepgoing || ((items[0]._iIvalue > 200000
-	             || items[0]._iMinStr > strength
-	             || items[0]._iMinMag > magic
-	             || items[0]._iMinDex > dexterity
-	             || items[0]._iIvalue < ivalue)
-	    && count < 150));
+	} while (keepgoing
+	    || ((
+	           items[0]._iIvalue > 200000
+	           || items[0]._iMinStr > strength
+	           || items[0]._iMinMag > magic
+	           || items[0]._iMinDex > dexterity
+	           || items[0]._iIvalue < ivalue))
+	        && count < 150);
 	premiumitem[i] = items[0];
 	premiumitem[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumitem[i]._iIdentified = true;
@@ -4819,11 +4821,11 @@ void SpawnBoy(int lvl)
 			case ITYPE_MARMOR:
 			case ITYPE_HARMOR: {
 				const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
-					[](const ItemStruct &item) {
-						return item._itype == ITYPE_LARMOR
-							|| item._itype == ITYPE_MARMOR
-							|| item._itype == ITYPE_HARMOR;
-					});
+				    [](const ItemStruct &item) {
+					    return item._itype == ITYPE_LARMOR
+					        || item._itype == ITYPE_MARMOR
+					        || item._itype == ITYPE_HARMOR;
+				    });
 
 				ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
 				break;
@@ -4838,7 +4840,7 @@ void SpawnBoy(int lvl)
 			case ITYPE_RING:
 			case ITYPE_AMULET: {
 				const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
-					[itemType](const ItemStruct &item) { return item._itype == itemType; });
+				    [itemType](const ItemStruct &item) { return item._itype == itemType; });
 
 				ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 				break;
@@ -4876,12 +4878,14 @@ void SpawnBoy(int lvl)
 					break;
 				}
 			}
-		} while (keepgoing || ((items[0]._iIvalue > 200000
-		             || items[0]._iMinStr > strength
-		             || items[0]._iMinMag > magic
-		             || items[0]._iMinDex > dexterity
-		             || items[0]._iIvalue < ivalue)
-		    && count < 250));
+		} while (keepgoing
+		    || ((
+		            items[0]._iIvalue > 200000
+		            || items[0]._iMinStr > strength
+		            || items[0]._iMinMag > magic
+		            || items[0]._iMinDex > dexterity
+		            || items[0]._iIvalue < ivalue)
+		        && count < 250));
 		boyitem = items[0];
 		boyitem._iCreateInfo = lvl | CF_BOY;
 		boyitem._iIdentified = true;

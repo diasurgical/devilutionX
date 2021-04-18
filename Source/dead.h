@@ -28,4 +28,4 @@ void InitDead();
 void AddDead(int dx, int dy, int8_t dv, direction ddir);
 void SetDead();
 
-}
+} // namespace devilution

@@ -38,7 +38,7 @@ void base::handle_accept(packet &pkt)
 		connected_table[plr_self] = true;
 	}
 	if (game_init_info != pkt.info()) {
-		if(pkt.info().size() != sizeof(GameData)) {
+		if (pkt.info().size() != sizeof(GameData)) {
 			ABORT();
 		}
 		// we joined and did not create

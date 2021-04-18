@@ -63,4 +63,4 @@ bool multi_init_single(GameData *gameData);
 bool multi_init_multi(GameData *gameData, bool *pfExitProgram);
 void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv);
 
-}
+} // namespace devilution

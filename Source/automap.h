@@ -84,4 +84,4 @@ void SetAutomapView(Sint32 x, Sint32 y);
  */
 void AutomapZoomReset();
 
-}
+} // namespace devilution

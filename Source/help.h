@@ -17,4 +17,4 @@ void DisplayHelp();
 void HelpScrollUp();
 void HelpScrollDown();
 
-}
+} // namespace devilution

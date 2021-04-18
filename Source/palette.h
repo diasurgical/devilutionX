@@ -52,4 +52,4 @@ void palette_update_crypt();
 void palette_update_hive();
 void palette_update_quest_palette(int n);
 
-}
+} // namespace devilution

@@ -41,4 +41,4 @@ PATHNODE *path_new_step();
 extern const char pathxdir[8];
 extern const char pathydir[8];
 
-}
+} // namespace devilution

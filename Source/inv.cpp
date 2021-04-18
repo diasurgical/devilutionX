@@ -764,7 +764,6 @@ bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStr
 	return done;
 }
 
-
 bool GoldAutoPlace(int pnum)
 {
 	bool done = false;

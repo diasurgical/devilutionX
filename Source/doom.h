@@ -17,4 +17,4 @@ void doom_init();
 void doom_close();
 void doom_draw(CelOutputBuffer out);
 
-}
+} // namespace devilution

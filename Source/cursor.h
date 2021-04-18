@@ -57,4 +57,4 @@ void CheckCursMove();
 extern const int InvItemWidth[];
 extern const int InvItemHeight[];
 
-}
+} // namespace devilution

@@ -61,4 +61,4 @@ void EnableFrameCount();
 void scrollrt_draw_game_screen(bool draw_cursor);
 void DrawAndBlit();
 
-}
+} // namespace devilution

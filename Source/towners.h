@@ -43,8 +43,8 @@ struct TownerStruct {
 	uint8_t *_tNData;
 	uint8_t *_tAnimData;
 	int16_t _tSeed;
-	int16_t _tx;    // Tile X-position of NPC
-	int16_t _ty;    // Tile Y-position of NPC
+	int16_t _tx; // Tile X-position of NPC
+	int16_t _ty; // Tile Y-position of NPC
 	int16_t _tAnimWidth;
 	int16_t _tAnimWidth2;
 	int16_t _tAnimDelay; // Tick length of each frame in the current animation

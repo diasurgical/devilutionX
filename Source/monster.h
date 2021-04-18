@@ -97,9 +97,11 @@ enum monster_goal : uint8_t {
 };
 
 enum placeflag : uint8_t {
+	// clang-format off
 	PLACE_SCATTER = 1 << 0,
 	PLACE_SPECIAL = 1 << 1,
 	PLACE_UNIQUE  = 1 << 2,
+	// clang-format on
 };
 
 struct AnimStruct {
@@ -334,4 +336,4 @@ extern direction opposite[8];
 extern int offset_x[8];
 extern int offset_y[8];
 
-}
+} // namespace devilution

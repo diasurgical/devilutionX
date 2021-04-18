@@ -23,4 +23,4 @@ void ClearPlrMsg();
 void InitPlrMsg();
 void DrawPlrMsg(CelOutputBuffer out);
 
-}
+} // namespace devilution

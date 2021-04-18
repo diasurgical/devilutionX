@@ -115,4 +115,4 @@ typedef struct MisFileData {
 extern MissileData missiledata[];
 extern MisFileData misfiledata[];
 
-}
+} // namespace devilution

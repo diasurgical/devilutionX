@@ -11,4 +11,4 @@ void track_process();
 void track_repeat_walk(bool rep);
 bool track_isscrolling();
 
-}
+} // namespace devilution

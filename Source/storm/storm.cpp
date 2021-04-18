@@ -277,15 +277,15 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
 {
-    radon::Section *section = getIni().getSection(sectionName);
-    if (!section)
-        return defaultValue;
+	radon::Section *section = getIni().getSection(sectionName);
+	if (!section)
+		return defaultValue;
 
-    radon::Key *key = section->getKey(keyName);
-    if (!key)
-        return defaultValue;
+	radon::Key *key = section->getKey(keyName);
+	if (!key)
+		return defaultValue;
 
-    return key->getFloatValue();
+	return key->getFloatValue();
 }
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)

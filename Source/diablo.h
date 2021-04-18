@@ -80,4 +80,4 @@ extern int debug_mode_key_j;
 #endif
 extern bool gbFriendlyMode;
 
-}
+} // namespace devilution

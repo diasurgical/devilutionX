@@ -161,7 +161,7 @@ bool cdwrap<T>::SNetGetTurnsInTransit(DWORD *turns)
 template <class T>
 std::string cdwrap<T>::make_default_gamename()
 {
-        return dvlnet_wrap->make_default_gamename();
+	return dvlnet_wrap->make_default_gamename();
 }
 
 } // namespace net

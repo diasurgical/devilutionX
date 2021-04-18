@@ -20,4 +20,4 @@ void DoHealOther(int pnum, int rid);
 int GetSpellBookLevel(spell_id s);
 int GetSpellStaffLevel(spell_id s);
 
-}
+} // namespace devilution

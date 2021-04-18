@@ -38,4 +38,4 @@ WNDPROC SetWindowProc(WNDPROC NewProc);
 extern char gszVersionNumber[64];
 extern char gszProductName[64];
 
-}
+} // namespace devilution

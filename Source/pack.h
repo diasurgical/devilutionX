@@ -81,4 +81,4 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync);
 void PackItem(PkItemStruct *id, const ItemStruct *is);
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
 
-}
+} // namespace devilution

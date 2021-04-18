@@ -164,4 +164,4 @@ extern const BYTE gbFontTransTbl[256];
 
 extern RECT32 ChrBtnsRect[4];
 
-}
+} // namespace devilution

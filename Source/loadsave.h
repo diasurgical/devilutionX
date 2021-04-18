@@ -31,4 +31,4 @@ void SaveGame();
 void SaveLevel();
 void LoadLevel();
 
-}
+} // namespace devilution

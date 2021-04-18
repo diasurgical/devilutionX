@@ -14,4 +14,4 @@ extern bool loop_movie;
 
 void play_movie(const char *pszMovie, bool user_can_close);
 
-}
+} // namespace devilution

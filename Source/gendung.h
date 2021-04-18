@@ -184,4 +184,4 @@ void DRLG_HoldThemeRooms();
 bool SkipThemeRoom(int x, int y);
 void InitLevels();
 
-}
+} // namespace devilution

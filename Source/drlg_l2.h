@@ -34,4 +34,4 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy);
 void LoadPreL2Dungeon(const char *sFileName, int vx, int vy);
 void CreateL2Dungeon(DWORD rseed, lvl_entry entry);
 
-}
+} // namespace devilution

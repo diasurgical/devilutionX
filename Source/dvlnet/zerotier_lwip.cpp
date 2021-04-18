@@ -18,10 +18,10 @@
 namespace devilution {
 namespace net {
 
-void print_ip6_addr(void* x)
+void print_ip6_addr(void *x)
 {
 	char ipstr[INET6_ADDRSTRLEN];
-	struct sockaddr_in6 *in = (struct sockaddr_in6*)x;
+	struct sockaddr_in6 *in = (struct sockaddr_in6 *)x;
 	lwip_inet_ntop(AF_INET6, &(in->sin6_addr), ipstr, INET6_ADDRSTRLEN);
 	SDL_Log("ZeroTier: ZTS_EVENT_ADDR_NEW_IP6, addr=%s\n", ipstr);
 }
@@ -36,5 +36,5 @@ void zt_ip6setup()
 	UNLOCK_TCPIP_CORE();
 }
 
-}
-}
+} // namespace net
+} // namespace devilution
