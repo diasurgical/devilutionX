@@ -45,7 +45,8 @@ cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
 
 option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" OFF)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBFMT "Link static libfmt" OFF
-                       "DEVILUTIONX_STATIC_LIBFMT AND NOT DIST" ON)
+                       "DEVILUTIONX_SYSTEM_LIBFMT AND NOT DIST" ON)
+
 
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
