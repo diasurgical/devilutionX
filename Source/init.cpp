@@ -224,7 +224,9 @@ void init_create_window()
 		app_fatal("Unable to create main window");
 	dx_init();
 	gbActive = true;
+#ifndef USE_SDL1
 	SDL_DisableScreenSaver();
+#endif
 }
 
 void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam)
