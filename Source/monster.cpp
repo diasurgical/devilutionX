@@ -9,8 +9,6 @@
 #include "options.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-#include <sstream> // TODO: Remove
-
 namespace devilution {
 
 /** Tracks which missile files are already loaded */
@@ -1627,13 +1625,6 @@ void M_GetKnockback(int i)
 
 void M_StartHit(int i, int pnum, int dam)
 {
-	std::stringstream ss; // TODO: Remove
-	ss << "Hit monster: " << monster[i].mName << " with " << dam << " points of damage!"
-	   << "\n\tHealth: " << monster[i]._mhitpoints << "/" << monster[i]._mmaxhp
-	   << "\t(base: " << monster[i]._mbasemaxhp << ")";
-	std::string msg = ss.str();
-	SDL_Log(msg.c_str());
-
 	if (pnum >= 0)
 		monster[i].mWhoHit |= 1 << pnum;
 	if (pnum == myplr) {
@@ -4699,13 +4690,6 @@ void ProcessMonsters()
 			int newmaxhp = Monst->_mbasemaxhp + (adjustment * iterations);
 			int newhitpoints = relativeHealth * newmaxhp;
 			if (newmaxhp != Monst->_mmaxhp) {
-				std::stringstream ss; // TODO: Remove
-				ss << "Updated monster HP: " << Monst->mName
-					<< "\n\tfrom: " << Monst->_mhitpoints << "/" << Monst->_mmaxhp
-					<< "\n\tto: " << newhitpoints << "/" << newmaxhp
-					<< "\n\t(base: " << Monst->_mbasemaxhp << ")";
-				std::string msg = ss.str();
-				SDL_Log(msg.c_str());
 				Monst->_mmaxhp = newmaxhp;
 				Monst->_mhitpoints = newhitpoints;
 			}
