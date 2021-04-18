@@ -158,7 +158,7 @@ static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
  */
 static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 {
-	int i, mx, my;
+	int mx, my;
 	BYTE col;
 
 	assert(!sgdwCursWdt);

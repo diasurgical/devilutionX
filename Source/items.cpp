@@ -537,7 +537,7 @@ void InitItems()
 
 void CalcPlrItemVals(int p, bool Loadgfx)
 {
-	int pvid, d;
+	int d;
 
 	int mind = 0; // min damage
 	int maxd = 0; // max damage

@@ -185,12 +185,7 @@ int GetActiveTowner(int t)
 
 void SetTownerGPtrs(BYTE *pData, BYTE **pAnim)
 {
-	int i;
-	DWORD *pFrameTable;
-
-	pFrameTable = (DWORD *)pData;
-
-	for (i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; i++) {
 		pAnim[i] = CelGetFrameStart(pData, i);
 	}
 }
@@ -731,7 +726,7 @@ void TownerTalk(int first, int t)
 
 void TalkToTowner(int p, int t)
 {
-	int i, dx, dy, rv1, rv2, rv3;
+	int i, dx, dy;
 	ItemStruct *Item;
 	int qt, t2;
 

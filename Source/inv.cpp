@@ -170,8 +170,7 @@ static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 
 void DrawInv(CelOutputBuffer out)
 {
-	bool invtest[NUM_INV_GRID_ELEM];
-	int frame, frame_width, screen_x, screen_y, i, j, ii;
+	int frame, frame_width, i, j, ii;
 	BYTE *cels;
 
 	CelDrawTo(out, RIGHT_PANEL_X, 351, pInvCels, 1, SPANEL_WIDTH);
@@ -252,7 +251,6 @@ void DrawInv(CelOutputBuffer out)
 	}
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		invtest[i] = false;
 		if (plr[myplr].InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
@@ -266,9 +264,6 @@ void DrawInv(CelOutputBuffer out)
 	for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
 		if (plr[myplr].InvGrid[j] > 0) { // first slot of an item
 			ii = plr[myplr].InvGrid[j] - 1;
-
-			invtest[j] = true;
-
 			frame = plr[myplr].InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 			frame_width = InvItemWidth[frame];
 
@@ -1292,7 +1287,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	int r;
 	bool done;
 	char ii;
-	int iv, i, j, offs, ig;
+	int iv, ig;
 	PlayerStruct &player = plr[pnum];
 
 	if (player._pmode > PM_WALK3) {
@@ -1872,8 +1867,6 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 
 void AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
-	int i, idx;
-	int w, h;
 	bool done;
 
 	if (pcurs != CURSOR_HAND) {
@@ -1959,7 +1952,7 @@ int FindGetItem(int idx, WORD ci, int iseed)
 
 void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 {
-	int i, ii;
+	int ii;
 
 	if (dItem[x][y]) {
 		ii = dItem[x][y] - 1;

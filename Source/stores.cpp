@@ -1259,7 +1259,7 @@ void SmithBuyItem()
 
 void S_SBuyEnter()
 {
-	int idx, i;
+	int idx;
 	bool done;
 
 	if (stextsel == 22) {
@@ -1587,7 +1587,7 @@ void WitchBuyItem()
 
 void S_WBuyEnter()
 {
-	int i, idx;
+	int idx;
 	bool done;
 
 	if (stextsel == 22) {
@@ -1894,7 +1894,7 @@ void S_HealerEnter()
 
 void S_HBuyEnter()
 {
-	int i, idx;
+	int idx;
 	bool done;
 
 	if (stextsel == 22) {

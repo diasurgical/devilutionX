@@ -1643,7 +1643,6 @@ void CheckChrBtns()
 	int x, y;
 
 	if (!chrbtnactive && plr[myplr]._pStatPts) {
-		HeroClass pc = plr[myplr]._pClass;
 		for (auto i : enum_values<CharacterAttribute>()) {
 			int max = plr[myplr].GetMaximumAttributeValue(i);
 			switch (i) {
