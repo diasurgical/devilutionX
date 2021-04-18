@@ -14,7 +14,6 @@
 #include "storm/storm.h"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
-#include "utils/log.hpp"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita
