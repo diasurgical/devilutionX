@@ -2050,8 +2050,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 	}
 	int minHitPoints = minHP << 6;
 	if (plr[pnum]._pHitPoints < minHitPoints) {
-		plr[pnum]._pHitPoints = minHitPoints;
-		plr[pnum]._pHPBase = minHitPoints + plr[pnum]._pMaxHPBase - plr[pnum]._pMaxHP;
+		SetPlayerHitPoints(pnum, minHitPoints);
 	}
 	if (plr[pnum]._pHitPoints >> 6 <= 0) {
 		SyncPlrKill(pnum, earflag);
