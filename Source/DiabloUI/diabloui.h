@@ -80,7 +80,18 @@ extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 
 inline SDL_Surface *DiabloUiSurface()
 {
-	return GetOutputSurface();
+	auto *output_surface = GetOutputSurface();
+
+#ifdef USE_SDL1
+	// When using a non double-buffered hardware surface, render the UI
+	// to an off-screen surface first to avoid flickering / tearing.
+	if ((output_surface->flags & SDL_HWSURFACE) != 0
+	    && (output_surface->flags & SDL_DOUBLEBUF) == 0) {
+		return pal_surface;
+	}
+#endif
+
+	return output_surface;
 }
 
 void UiDestroy();
