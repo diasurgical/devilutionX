@@ -565,9 +565,13 @@ bool ForceL3Trig()
 				sprintf(infostr, "Up to level %i", currlevel - 1);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
-						cursmx = trigs[j]._tx;
-						cursmy = trigs[j]._ty;
-						return true;
+						dx = abs(trigs[j]._tx - cursmx);
+						dy = abs(trigs[j]._ty - cursmy);
+						if (dx < 4 && dy < 4) {
+							cursmx = trigs[j]._tx;
+							cursmy = trigs[j]._ty;
+							return true;
+						}
 					}
 				}
 			}
