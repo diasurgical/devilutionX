@@ -771,7 +771,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	if (light_table_index < lightmax && bDead != 0) {
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
-			direction dd = (direction)((bDead >> 5) & 7);
+			direction dd = static_cast<direction>((bDead >> 5) & 7);
 			int px = dx - pDeadGuy->_deadWidth2;
 			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != NULL);

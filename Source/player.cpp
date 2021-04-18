@@ -2290,7 +2290,7 @@ bool PM_DoWalk(int pnum, int variant)
 		if (plr[pnum].walkpath[0] != WALK_NONE) {
 			StartWalkStand(pnum);
 		} else {
-			StartStand(pnum, (direction)plr[pnum]._pVar3);
+			StartStand(pnum, plr[pnum]._pVar3);
 		}
 
 		ClearPlrPVars(pnum);

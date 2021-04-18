@@ -726,9 +726,9 @@ void DeltaLoadLevel()
 					if (monster[i]._mAi != AI_DIABLO) {
 						if (monster[i]._uniqtype == 0) {
 							assert(monster[i].MType != NULL);
-							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, (direction)monster[i]._mdir);
+							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, monster[i]._mdir);
 						} else {
-							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, (direction)monster[i]._mdir);
+							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, monster[i]._mdir);
 						}
 					}
 					monster[i]._mDelFlag = true;
@@ -1656,7 +1656,7 @@ static DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 			plr[pnum].destAction = ACTION_SPELLWALL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = (direction)p->wParam2;
+			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
 			plr[pnum].destParam4 = p->wParam3;
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
@@ -1679,7 +1679,7 @@ static DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = (direction)p->wParam2;
+			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
@@ -1701,7 +1701,7 @@ static DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = (direction)p->wParam2;
+			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;

@@ -599,7 +599,7 @@ void ClrAllMonsters()
 		Monst->_mfuty = 0;
 		Monst->_moldx = 0;
 		Monst->_moldy = 0;
-		Monst->_mdir = (direction)random_(89, 8);
+		Monst->_mdir = static_cast<direction>(random_(89, 8));
 		Monst->_mxvel = 0;
 		Monst->_myvel = 0;
 		Monst->_mAnimData = NULL;
@@ -670,7 +670,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	}
 	dMonster[x][y] = i + 1;
 
-	direction rd = (direction)random_(90, 8);
+	direction rd = static_cast<direction>(random_(90, 8));
 	InitMonster(i, rd, mtype, x, y);
 }
 
@@ -2719,9 +2719,9 @@ bool M_DoDeath(int i)
 			PrepDoEnding();
 	} else if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
 		if (monster[i]._uniqtype == 0)
-			AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, (direction)monster[i]._mdir);
+			AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, monster[i]._mdir);
 		else
-			AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, (direction)monster[i]._mdir);
+			AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, monster[i]._mdir);
 
 		dMonster[monster[i]._mx][monster[i]._my] = 0;
 		monster[i]._mDelFlag = true;
@@ -2992,7 +2992,7 @@ void MAI_Zombie(int i)
 			if (dist >= 2 * Monst->_mint + 4) {
 				direction md = Monst->_mdir;
 				if (random_(104, 100) < 2 * Monst->_mint + 20) {
-					md = (direction)random_(104, 8);
+					md = static_cast<direction>(random_(104, 8));
 				}
 				M_DumbWalk(i, md);
 			} else {
@@ -5272,7 +5272,7 @@ void MissToMonst(int i, int x, int y)
 	oldx = Miss->_mix;
 	oldy = Miss->_miy;
 	dMonster[x][y] = m + 1;
-	Monst->_mdir = (direction)Miss->_mimfnum;
+	Monst->_mdir = static_cast<direction>(Miss->_mimfnum);
 	Monst->_mx = x;
 	Monst->_my = y;
 	M_StartStand(m, Monst->_mdir);

@@ -3854,7 +3854,7 @@ void MI_HorkSpawn(Sint32 i)
 					dp = dPiece[tx][ty];
 					if (!nSolidTable[dp] && dMonster[tx][ty] == 0 && dPlayer[tx][ty] == 0 && dObject[tx][ty] == 0) {
 						j = 6;
-						direction md = (direction)missile[i]._miVar1;
+						direction md = static_cast<direction>(missile[i]._miVar1);
 						int mon = AddMonster(tx, ty, md, 1, true);
 						M_StartStand(mon, md);
 						break;
@@ -4902,7 +4902,7 @@ void MI_Stone(Sint32 i)
 		if (monster[m]._mhitpoints > 0)
 			monster[m]._mmode = (MON_MODE)missile[i]._miVar1;
 		else
-			AddDead(monster[m]._mx, monster[m]._my, stonendx, (direction)monster[m]._mdir);
+			AddDead(monster[m]._mx, monster[m]._my, stonendx, monster[m]._mdir);
 	}
 	if (missile[i]._miAnimType == MFILE_SHATTER1)
 		PutMissile(i);
