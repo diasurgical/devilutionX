@@ -517,7 +517,7 @@ void PlaceThemeMonsts(int t, int f)
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]] && dItem[xp][yp] == 0 && dObject[xp][yp] == 0) {
 				if (random_(0, f) == 0) {
-					AddMonster(xp, yp, random_(0, 8), mtype, true);
+					AddMonster(xp, yp, (direction)random_(0, 8), mtype, true);
 				}
 			}
 		}

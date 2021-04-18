@@ -25,7 +25,7 @@ extern DeadStruct dead[MAXDEAD];
 extern int8_t stonendx;
 
 void InitDead();
-void AddDead(int dx, int dy, int8_t dv, int ddir);
+void AddDead(int dx, int dy, int8_t dv, direction ddir);
 void SetDead();
 
 }

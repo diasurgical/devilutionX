@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 #include "miniwin/miniwin.h"
+#include "engine.h"
 #include "misdat.h"
 #include "spelldat.h"
 
@@ -77,7 +78,7 @@ extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
 int GetSpellLevel(int id, spell_id sn);
-int GetDirection8(int x1, int y1, int x2, int y2);
+direction GetDirection8(int x1, int y1, int x2, int y2);
 int GetDirection16(int x1, int y1, int x2, int y2);
 void DeleteMissile(int mi, int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);

@@ -76,7 +76,7 @@ void InitDead()
 	assert(nd <= MAXDEAD);
 }
 
-void AddDead(int dx, int dy, int8_t dv, int ddir)
+void AddDead(int dx, int dy, int8_t dv, direction ddir)
 {
 	dDead[dx][dy] = (dv & 0x1F) + (ddir << 5);
 }

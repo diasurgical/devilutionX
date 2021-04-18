@@ -559,7 +559,7 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->_myoff = file->nextLE<Sint32>();
 	pMonster->_mxvel = file->nextLE<Sint32>();
 	pMonster->_myvel = file->nextLE<Sint32>();
-	pMonster->_mdir = file->nextLE<Sint32>();
+	pMonster->_mdir = (direction)file->nextLE<Sint32>();
 	pMonster->_menemy = file->nextLE<Sint32>();
 	pMonster->_menemyx = file->nextLE<Uint8>();
 	pMonster->_menemyy = file->nextLE<Uint8>();
