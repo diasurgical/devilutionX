@@ -927,14 +927,6 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		plr[p]._pgfxnum = g;
 	}
 
-	for (i = 0; i < nummissiles; i++) {
-		mi = missileactive[i];
-		if (missile[mi]._mitype == MIS_MANASHIELD && missile[mi]._misource == p) {
-			missile[mi]._miVar1 = plr[p]._pHitPoints;
-			missile[mi]._miVar2 = plr[p]._pHPBase;
-			break;
-		}
-	}
 	if (plr[p].InvBody[INVLOC_AMULET].isEmpty() || plr[p].InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
 		int half = MaxGold;
 		MaxGold = GOLD_MAX_LIMIT;
