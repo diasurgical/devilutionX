@@ -23,6 +23,8 @@ enum class LogCategory {
 	Test = SDL_LOG_CATEGORY_TEST,
 };
 
+constexpr auto defaultCategory = LogCategory::Application;
+
 enum class LogPriority {
     Verbose = SDL_LOG_PRIORITY_VERBOSE,
     Debug = SDL_LOG_PRIORITY_DEBUG,
@@ -47,10 +49,22 @@ void LogVerbose(LogCategory category, const char *fmt, Args &&... args)
 }
 
 template <typename... Args>
+void LogVerbose(const char *fmt, Args &&... args)
+{
+	LogVerbose(defaultCategory, fmt, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
 void LogDebug(LogCategory category, const char *fmt, Args &&... args)
 {
 	auto str = fmt::format(fmt, std::forward<Args>(args)...);
 	SDL_LogDebug(static_cast<int>(category), "%s", str.c_str());
+}
+
+template <typename... Args>
+void LogDebug(const char *fmt, Args &&... args)
+{
+	LogDebug(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
@@ -61,10 +75,22 @@ void LogInfo(LogCategory category, const char *fmt, Args &&... args)
 }
 
 template <typename... Args>
+void LogInfo(const char *fmt, Args &&... args)
+{
+	LogInfo(defaultCategory, fmt, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
 void LogWarn(LogCategory category, const char *fmt, Args &&... args)
 {
 	auto str = fmt::format(fmt, std::forward<Args>(args)...);
 	SDL_LogWarn(static_cast<int>(category), "%s", str.c_str());
+}
+
+template <typename... Args>
+void LogWarn(const char *fmt, Args &&... args)
+{
+	LogWarn(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
@@ -75,6 +101,12 @@ void LogError(LogCategory category, const char *fmt, Args &&... args)
 }
 
 template <typename... Args>
+void LogError(const char *fmt, Args &&... args)
+{
+	LogError(defaultCategory, fmt, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
 void LogCritical(LogCategory category, const char *fmt, Args &&... args)
 {
 	auto str = fmt::format(fmt, std::forward<Args>(args)...);
@@ -82,10 +114,22 @@ void LogCritical(LogCategory category, const char *fmt, Args &&... args)
 }
 
 template <typename... Args>
+void LogCritical(const char *fmt, Args &&... args)
+{
+	LogCritical(defaultCategory, fmt, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
 void LogMessageV(LogCategory category, LogPriority priority, const char *fmt, Args &&... args)
 {
 	auto str = fmt::format(fmt, std::forward<Args>(args)...);
 	SDL_LogMessageV(static_cast<int>(category), static_cast<SDL_LogPriority>(priority), "%s", str.c_str());
+}
+
+template <typename... Args>
+void LogMessageV(const char *fmt, Args &&... args)
+{
+	LogMessageV(defaultCategory, fmt, std::forward<Args>(args)...);
 }
 
 } // namespace devilution
