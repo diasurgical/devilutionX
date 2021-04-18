@@ -334,9 +334,6 @@ int dword_6E2D58;
 int dword_6E2D54;
 void palette_update_crypt()
 {
-	int i;
-	SDL_Color col;
-
 	if (dword_6E2D58 > 1) {
 		CycleColorsReverse(1, 15);
 		dword_6E2D58 = 0;
@@ -356,9 +353,6 @@ int dword_6E2D5C;
 int dword_6E2D60;
 void palette_update_hive()
 {
-	int i;
-	SDL_Color col;
-
 	if (dword_6E2D60 == 2) {
 		CycleColorsReverse(1, 8);
 		dword_6E2D60 = 0;

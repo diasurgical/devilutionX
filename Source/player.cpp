@@ -645,7 +645,6 @@ void SetPlrAnims(int pnum)
 void CreatePlayer(int pnum, HeroClass c)
 {
 	char val;
-	int hp, mana;
 	int i;
 
 	memset(&plr[pnum], 0, sizeof(PlayerStruct));
@@ -2725,7 +2724,7 @@ bool PlrHitObj(int pnum, int mx, int my)
 
 bool PM_DoAttack(int pnum)
 {
-	int frame, dir, dx, dy, m;
+	int frame, dx, dy, m;
 	bool didhit = false;
 
 	if ((DWORD)pnum >= MAX_PLRS) {

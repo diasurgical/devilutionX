@@ -89,14 +89,12 @@ bool GetTempSaveNames(DWORD dwIndex, char *szTemp)
 void pfile_rename_temp_to_perm()
 {
 	DWORD dwIndex;
-	bool bResult;
 	char szTemp[MAX_PATH];
 	char szPerm[MAX_PATH];
 
 	dwIndex = 0;
 	while (GetTempSaveNames(dwIndex, szTemp)) {
-		bResult = GetPermSaveNames(dwIndex, szPerm);
-		assert(bResult);
+		assert(GetPermSaveNames(dwIndex, szPerm));
 		dwIndex++;
 		if (mpqapi_has_file(szTemp)) {
 			if (mpqapi_has_file(szPerm))
@@ -268,7 +266,6 @@ static void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, bool 
 
 bool pfile_create_player_description()
 {
-	char desc[128];
 	_uiheroinfo uihero;
 
 	myplr = 0;

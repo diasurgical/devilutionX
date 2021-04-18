@@ -2143,7 +2143,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	int blk, blkper;
 	int dam, mdam;
 	int newx, newy;
-	int j, misnum, ms_num, cur_ms_num, new_hp, dir, ac;
+	int j, misnum, cur_ms_num, ac;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance(monster[i].MType != NULL, i);
@@ -2218,7 +2218,6 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		return;
 	}
 	if (monster[i].MType->mtype == MT_YZOMBIE && pnum == myplr) {
-		ms_num = -1;
 		cur_ms_num = -1;
 		for (j = 0; j < nummissiles; j++) {
 			misnum = missileactive[j];
@@ -2226,8 +2225,6 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 				continue;
 			if (missile[misnum]._misource == pnum)
 				cur_ms_num = misnum;
-			else
-				ms_num = misnum;
 		}
 		if (plr[pnum]._pMaxHP > 64) {
 			if (plr[pnum]._pMaxHPBase > 64) {
@@ -5378,8 +5375,8 @@ void MissToMonst(int i, int x, int y)
 
 bool PosOkMonst(int i, int x, int y)
 {
-	int oi, mi, j;
-	bool ret, fire;
+	int oi;
+	bool ret;
 
 	ret = !SolidLoc(x, y) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
 	if (ret && dObject[x][y] != 0) {
@@ -5435,8 +5432,8 @@ bool monster_posok(int i, int x, int y)
 
 bool PosOkMonst2(int i, int x, int y)
 {
-	int oi, mi, j;
-	bool ret, fire;
+	int oi;
+	bool ret;
 
 	ret = !SolidLoc(x, y);
 	if (ret && dObject[x][y] != 0) {
@@ -5452,8 +5449,8 @@ bool PosOkMonst2(int i, int x, int y)
 
 bool PosOkMonst3(int i, int x, int y)
 {
-	int j, oi, objtype, mi;
-	bool ret, fire, isdoor;
+	int oi, objtype;
+	bool ret, isdoor;
 
 	ret = true;
 	isdoor = false;

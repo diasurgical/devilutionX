@@ -1085,7 +1085,6 @@ void stream_stop()
 
 static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 {
-	bool success;
 #ifndef DISABLE_STREAMING_SOUNDS
 	constexpr bool kAllowStreaming = true;
 #else
@@ -1142,12 +1141,11 @@ void InitMonsterSND(int monst)
 
 void FreeMonsterSnd()
 {
-	int mtype, i, j, k;
+	int i, j, k;
 	const char *file;
 	TSnd *pSnd;
 
 	for (i = 0; i < nummtypes; i++) {
-		mtype = Monsters[i].mtype;
 		for (j = 0; j < 4; ++j) {
 			for (k = 0; k < 2; ++k) {
 				pSnd = Monsters[i].Snds[j][k];

@@ -4087,7 +4087,7 @@ void MI_Immolation(Sint32 i)
 
 void MI_LightningArrow(Sint32 i)
 {
-	int pn, dam, mx, my;
+	int pn, mx, my;
 
 	missile[i]._mirange--;
 	missile[i]._mitxoff += missile[i]._mixvel;
