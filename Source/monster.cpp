@@ -3,6 +3,8 @@
  *
  * Implementation of monster functionality, AI, actions, spawning, loading, etc.
  */
+#include "monster.h"
+
 #include <algorithm>
 #include <limits.h>
 
@@ -20,7 +22,6 @@
 #include "missiles.h"
 #include "movie.h"
 #include "options.h"
-#include "sound.h"
 #include "storm/storm.h"
 #include "themes.h"
 #include "towners.h"
@@ -85,11 +86,11 @@ int MWVel[24][3] = {
 /** Maps from monster action to monster animation letter. */
 char animletter[7] = "nwahds";
 /** Maps from direction to a left turn from the direction. */
-int left[8] = { 7, 0, 1, 2, 3, 4, 5, 6 };
+direction left[8] = { DIR_SE, DIR_S, DIR_SW, DIR_W, DIR_NW, DIR_N, DIR_NE, DIR_E };
 /** Maps from direction to a right turn from the direction. */
-int right[8] = { 1, 2, 3, 4, 5, 6, 7, 0 };
+direction right[8] = { DIR_SW, DIR_W, DIR_NW, DIR_N, DIR_NE, DIR_E, DIR_SE, DIR_S };
 /** Maps from direction to the opposite direction. */
-int opposite[8] = { 4, 5, 6, 7, 0, 1, 2, 3 };
+direction opposite[8] = { DIR_N, DIR_NE, DIR_E, DIR_SE, DIR_S, DIR_SW, DIR_W, DIR_NW };
 /** Maps from direction to delta X-offset. */
 int offset_x[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
 /** Maps from direction to delta Y-offset. */
@@ -471,7 +472,7 @@ void ClearMVars(int i)
 	monster[i]._mVar8 = 0;
 }
 
-void InitMonster(int i, int rd, int mtype, int x, int y)
+void InitMonster(int i, direction rd, int mtype, int x, int y)
 {
 	CMonster *monst = &Monsters[mtype];
 
@@ -598,7 +599,7 @@ void ClrAllMonsters()
 		Monst->_mfuty = 0;
 		Monst->_moldx = 0;
 		Monst->_moldy = 0;
-		Monst->_mdir = random_(89, 8);
+		Monst->_mdir = (direction)random_(89, 8);
 		Monst->_mxvel = 0;
 		Monst->_myvel = 0;
 		Monst->_mAnimData = NULL;
@@ -657,8 +658,6 @@ void monster_some_crypt()
 
 void PlaceMonster(int i, int mtype, int x, int y)
 {
-	int rd;
-
 	if (Monsters[mtype].mtype == MT_NAKRUL) {
 		for (int j = 0; j < nummonsters; j++) {
 			if (monster[j]._mMTidx == mtype) {
@@ -671,7 +670,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	}
 	dMonster[x][y] = i + 1;
 
-	rd = random_(90, 8);
+	direction rd = (direction)random_(90, 8);
 	InitMonster(i, rd, mtype, x, y);
 }
 
@@ -1131,10 +1130,10 @@ void InitMonsters()
 		CheckDungeonClear();
 #endif
 	if (!setlevel) {
-		AddMonster(1, 0, 0, 0, false);
-		AddMonster(1, 0, 0, 0, false);
-		AddMonster(1, 0, 0, 0, false);
-		AddMonster(1, 0, 0, 0, false);
+		AddMonster(1, 0, DIR_S, 0, false);
+		AddMonster(1, 0, DIR_S, 0, false);
+		AddMonster(1, 0, DIR_S, 0, false);
+		AddMonster(1, 0, DIR_S, 0, false);
 	}
 
 	if (!gbIsSpawn && !setlevel && currlevel == 16)
@@ -1198,10 +1197,10 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 	int mtype;
 
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
-	AddMonster(1, 0, 0, 0, false);
-	AddMonster(1, 0, 0, 0, false);
-	AddMonster(1, 0, 0, 0, false);
-	AddMonster(1, 0, 0, 0, false);
+	AddMonster(1, 0, DIR_S, 0, false);
+	AddMonster(1, 0, DIR_S, 0, false);
+	AddMonster(1, 0, DIR_S, 0, false);
+	AddMonster(1, 0, DIR_S, 0, false);
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		AddMonsterType(UniqMonst[UMT_LAZURUS].mtype, PLACE_UNIQUE);
 		AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, PLACE_UNIQUE);
@@ -1239,7 +1238,7 @@ void DeleteMonster(int i)
 	monstactive[i] = temp;
 }
 
-int AddMonster(int x, int y, int dir, int mtype, bool InMap)
+int AddMonster(int x, int y, direction dir, int mtype, bool InMap)
 {
 	if (nummonsters < MAXMONSTERS) {
 		int i = monstactive[nummonsters++];
@@ -1254,12 +1253,12 @@ int AddMonster(int x, int y, int dir, int mtype, bool InMap)
 
 void monster_43C785(int i)
 {
-	int x, y, d, j, oi, dir, mx, my;
+	int x, y, d, j, oi, mx, my;
 
 	if (monster[i].MType) {
 		mx = monster[i]._mx;
 		my = monster[i]._my;
-		dir = monster[i]._mdir;
+		direction dir = monster[i]._mdir;
 		for (d = 0; d < 8; d++) {
 			x = mx + offset_x[d];
 			y = my + offset_y[d];
@@ -1284,7 +1283,7 @@ void monster_43C785(int i)
 	}
 }
 
-void NewMonsterAnim(int i, AnimStruct *anim, int md)
+void NewMonsterAnim(int i, AnimStruct *anim, direction md)
 {
 	MonsterStruct *Monst = &monster[i];
 	Monst->_mAnimData = anim->Data[md];
@@ -1389,12 +1388,12 @@ void M_Enemy(int i)
 	}
 }
 
-int M_GetDir(int i)
+direction M_GetDir(int i)
 {
 	return GetDirection(monster[i]._mx, monster[i]._my, monster[i]._menemyx, monster[i]._menemyy);
 }
 
-void M_StartStand(int i, int md)
+void M_StartStand(int i, direction md)
 {
 	ClearMVars(i);
 	if (monster[i].MType->mtype == MT_GOLEM)
@@ -1426,7 +1425,7 @@ void M_StartDelay(int i, int len)
 	}
 }
 
-void M_StartSpStand(int i, int md)
+void M_StartSpStand(int i, direction md)
 {
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_SPECIAL], md);
 	monster[i]._mmode = MM_SPSTAND;
@@ -1439,7 +1438,7 @@ void M_StartSpStand(int i, int md)
 	monster[i]._mdir = md;
 }
 
-void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, int EndDir)
+void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, direction EndDir)
 {
 	int fx = xadd + monster[i]._mx;
 	int fy = yadd + monster[i]._my;
@@ -1462,7 +1461,7 @@ void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, int EndDir)
 	monster[i]._mVar8 = 0;
 }
 
-void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir)
+void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, direction EndDir)
 {
 	int fx = xadd + monster[i]._mx;
 	int fy = yadd + monster[i]._my;
@@ -1492,7 +1491,7 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i]._mVar8 = 0;
 }
 
-void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir)
+void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, direction EndDir)
 {
 	int fx = xadd + monster[i]._mx;
 	int fy = yadd + monster[i]._my;
@@ -1528,7 +1527,7 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 
 void M_StartAttack(int i)
 {
-	int md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_ATTACK], md);
 	monster[i]._mmode = MM_ATTACK;
 	monster[i]._mxoff = 0;
@@ -1542,7 +1541,7 @@ void M_StartAttack(int i)
 
 void M_StartRAttack(int i, int missile_type, int dam)
 {
-	int md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_ATTACK], md);
 	monster[i]._mmode = MM_RATTACK;
 	monster[i]._mVar1 = missile_type;
@@ -1558,7 +1557,7 @@ void M_StartRAttack(int i, int missile_type, int dam)
 
 void M_StartRSpAttack(int i, int missile_type, int dam)
 {
-	int md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_SPECIAL], md);
 	monster[i]._mmode = MM_RSPATTACK;
 	monster[i]._mVar1 = missile_type;
@@ -1575,7 +1574,7 @@ void M_StartRSpAttack(int i, int missile_type, int dam)
 
 void M_StartSpAttack(int i)
 {
-	int md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_SPECIAL], md);
 	monster[i]._mmode = MM_SATTACK;
 	monster[i]._mxoff = 0;
@@ -1625,7 +1624,7 @@ void M_ClearSquares(int i)
 
 void M_GetKnockback(int i)
 {
-	int d = (monster[i]._mdir - 4) & 7;
+	direction d = opposite[monster[i]._mdir];
 	if (DirOK(i, d)) {
 		M_ClearSquares(i);
 		monster[i]._moldx += offset_x[d];
@@ -1777,7 +1776,7 @@ void M2MStartHit(int mid, int i, int dam)
 
 	if ((monster[mid].MType->mtype >= MT_SNEAK && monster[mid].MType->mtype <= MT_ILLWEAV) || dam >> 6 >= monster[mid].mLevel + 3) {
 		if (i >= 0)
-			monster[mid]._mdir = (monster[i]._mdir - 4) & 7;
+			monster[mid]._mdir = opposite[monster[i]._mdir];
 
 		if (monster[mid].MType->mtype == MT_BLINK) {
 			M_Teleport(mid);
@@ -1808,7 +1807,6 @@ void M2MStartHit(int mid, int i, int dam)
 
 void MonstStartKill(int i, int pnum, bool sendmsg)
 {
-	int md;
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -1829,10 +1827,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 	else
 		PlayEffect(i, 2);
 
-	if (pnum >= 0)
-		md = M_GetDir(i);
-	else
-		md = Monst->_mdir;
+	direction md = pnum >= 0 ? M_GetDir(i) : Monst->_mdir;
 	Monst->_mdir = md;
 	NewMonsterAnim(i, &Monst->MType->Anims[MA_DEATH], md);
 	Monst->_mmode = MM_DEATH;
@@ -1854,8 +1849,6 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 
 void M2MStartKill(int i, int mid)
 {
-	int md;
-
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance((DWORD)mid < MAXMONSTERS, mid);
 	assurance(monster[mid].MType != NULL, mid); /// BUGFIX: should check `mid` (fixed)
@@ -1880,9 +1873,9 @@ void M2MStartKill(int i, int mid)
 	else
 		PlayEffect(mid, 2);
 
-	md = (monster[i]._mdir - 4) & 7;
+	direction md = opposite[monster[i]._mdir];
 	if (monster[mid].MType->mtype == MT_GOLEM)
-		md = 0;
+		md = DIR_S;
 
 	monster[mid]._mdir = md;
 	NewMonsterAnim(mid, &monster[mid].MType->Anims[MA_DEATH], md);
@@ -1944,7 +1937,7 @@ void M_SyncStartKill(int i, int x, int y, int pnum)
 	}
 }
 
-void M_StartFadein(int i, int md, bool backwards)
+void M_StartFadein(int i, direction md, bool backwards)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance(monster[i].MType != NULL, i);
@@ -1965,7 +1958,7 @@ void M_StartFadein(int i, int md, bool backwards)
 	}
 }
 
-void M_StartFadeout(int i, int md, bool backwards)
+void M_StartFadeout(int i, direction md, bool backwards)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance(monster[i].MType != NULL, i);
@@ -2789,13 +2782,11 @@ bool M_DoStone(int i)
 	return false;
 }
 
-void M_WalkDir(int i, int md)
+void M_WalkDir(int i, direction md)
 {
-	int mwi;
-
 	assurance((DWORD)i < MAXMONSTERS, i);
 
-	mwi = monster[i].MType->Anims[MA_WALK].Frames - 1;
+	int mwi = monster[i].MType->Anims[MA_WALK].Frames - 1;
 	switch (md) {
 	case DIR_N:
 		M_StartWalk(i, 0, -MWVel[mwi][1], -1, -1, DIR_N);
@@ -2882,13 +2873,10 @@ void GroupUnity(int i)
 	}
 }
 
-bool M_CallWalk(int i, int md)
+bool M_CallWalk(int i, direction md)
 {
-	int mdtemp;
-	bool ok;
-
-	mdtemp = md;
-	ok = DirOK(i, md);
+	direction mdtemp = md;
+	bool ok = DirOK(i, md);
 	if (random_(101, 2) != 0)
 		ok = ok || (md = left[mdtemp], DirOK(i, md)) || (md = right[mdtemp], DirOK(i, md));
 	else
@@ -2912,7 +2900,7 @@ bool M_PathWalk(int i)
 	bool (*Check)(int, int, int);
 
 	/** Maps from walking path step to facing direction. */
-	const Sint8 plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };
+	const direction plr2monst[9] = { DIR_S, DIR_NE, DIR_NW, DIR_SE, DIR_SW, DIR_N, DIR_E, DIR_S, DIR_W };
 
 	commitment((DWORD)i < MAXMONSTERS, i);
 
@@ -2928,13 +2916,10 @@ bool M_PathWalk(int i)
 	return false;
 }
 
-bool M_CallWalk2(int i, int md)
+bool M_CallWalk2(int i, direction md)
 {
-	bool ok;
-	int mdtemp;
-
-	mdtemp = md;
-	ok = DirOK(i, md);          // Can we continue in the same direction
+	direction mdtemp = md;
+	bool ok = DirOK(i, md);     // Can we continue in the same direction
 	if (random_(101, 2) != 0) { // Randomly go left or right
 		ok = ok || (mdtemp = left[md], DirOK(i, left[md])) || (mdtemp = right[md], DirOK(i, right[md]));
 	} else {
@@ -2947,27 +2932,24 @@ bool M_CallWalk2(int i, int md)
 	return ok;
 }
 
-bool M_DumbWalk(int i, int md)
+bool M_DumbWalk(int i, direction md)
 {
-	bool ok;
-	ok = DirOK(i, md);
+	bool ok = DirOK(i, md);
 	if (ok)
 		M_WalkDir(i, md);
 
 	return ok;
 }
 
-bool M_RoundWalk(int i, int md, Sint32 *dir)
+bool M_RoundWalk(int i, direction md, Sint32 *dir)
 {
-	int mdtemp;
-	bool ok;
 	if (*dir)
 		md = left[left[md]];
 	else
 		md = right[right[md]];
 
-	mdtemp = md;
-	ok = DirOK(i, md);
+	direction mdtemp = md;
+	bool ok = DirOK(i, md);
 	if (!ok) {
 		if (*dir) {
 			md = right[mdtemp];
@@ -2989,7 +2971,7 @@ bool M_RoundWalk(int i, int md, Sint32 *dir)
 void MAI_Zombie(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my, md;
+	int mx, my;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -3005,17 +2987,16 @@ void MAI_Zombie(int i)
 	}
 
 	if (random_(103, 100) < 2 * Monst->_mint + 10) {
-		md = std::max(abs(mx - Monst->_menemyx), abs(my - Monst->_menemyy));
-		if (md >= 2) {
-			if (md >= 2 * Monst->_mint + 4) {
-				md = Monst->_mdir;
+		int dist = std::max(abs(mx - Monst->_menemyx), abs(my - Monst->_menemyy));
+		if (dist >= 2) {
+			if (dist >= 2 * Monst->_mint + 4) {
+				direction md = Monst->_mdir;
 				if (random_(104, 100) < 2 * Monst->_mint + 20) {
-					md = random_(104, 8);
+					md = (direction)random_(104, 8);
 				}
 				M_DumbWalk(i, md);
 			} else {
-				md = M_GetDir(i);
-				M_CallWalk(i, md);
+				M_CallWalk(i, M_GetDir(i));
 			}
 		} else {
 			M_StartAttack(i);
@@ -3029,7 +3010,7 @@ void MAI_Zombie(int i)
 void MAI_SkelSd(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my, x, y, md;
+	int mx, my, x, y;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -3042,7 +3023,7 @@ void MAI_SkelSd(int i)
 	my = Monst->_my;
 	x = mx - Monst->_menemyx;
 	y = my - Monst->_menemyy;
-	md = GetDirection(mx, my, Monst->_lastx, Monst->_lasty);
+	direction md = GetDirection(mx, my, Monst->_lastx, Monst->_lasty);
 	Monst->_mdir = md;
 	if (abs(x) >= 2 || abs(y) >= 2) {
 		if (Monst->_mVar1 == MM_DELAY || (random_(106, 100) >= 35 - 4 * Monst->_mint)) {
@@ -3107,9 +3088,8 @@ bool MAI_Path(int i)
 void MAI_Snake(int i)
 {
 	MonsterStruct *Monst;
-	int fx, fy, mx, my, md;
+	int fx, fy, mx, my;
 	int pnum;
-	int tmp;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 	char pattern[6] = { 1, 1, 0, -1, -1, 0 };
@@ -3121,7 +3101,7 @@ void MAI_Snake(int i)
 	fy = Monst->_menemyy;
 	mx = Monst->_mx - fx;
 	my = Monst->_my - fy;
-	md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+	direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 	Monst->_mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
 		if (abs(mx) < 3 && abs(my) < 3 && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
@@ -3131,44 +3111,28 @@ void MAI_Snake(int i)
 				Monst->_mmode = MM_CHARGE;
 			}
 		} else if (Monst->_mVar1 == MM_DELAY || random_(106, 100) >= 35 - 2 * Monst->_mint) {
-			if (md + pattern[Monst->_mgoalvar1] < 0) {
-				tmp = md + pattern[Monst->_mgoalvar1] + 8;
-			} else {
-				tmp = md + pattern[Monst->_mgoalvar1] - 8;
-				if (md + pattern[Monst->_mgoalvar1] < 8)
-					tmp = md + pattern[Monst->_mgoalvar1];
-			}
+			if (pattern[Monst->_mgoalvar1] == -1)
+				md = left[md];
+			else if (pattern[Monst->_mgoalvar1] == 1)
+				md = right[md];
+
 			Monst->_mgoalvar1++;
 			if (Monst->_mgoalvar1 > 5)
 				Monst->_mgoalvar1 = 0;
-			if (tmp - Monst->_mgoalvar2 < 0) {
-				md = tmp - Monst->_mgoalvar2 + 8;
-			} else if (tmp - Monst->_mgoalvar2 >= 8) {
-				md = tmp - Monst->_mgoalvar2 - 8;
-			} else
-				md = tmp - Monst->_mgoalvar2;
-			if (md > 0) {
-				if (md < 4) {
-					if (Monst->_mgoalvar2 + 1 < 0) {
-						md = Monst->_mgoalvar2 + 9;
-					} else if (Monst->_mgoalvar2 + 1 >= 8) {
-						md = Monst->_mgoalvar2 - 7;
-					} else
-						md = Monst->_mgoalvar2 + 1;
-					Monst->_mgoalvar2 = md;
-				} else if (md == 4) {
-					Monst->_mgoalvar2 = tmp;
-				} else {
-					if (Monst->_mgoalvar2 - 1 < 0) {
-						md = Monst->_mgoalvar2 + 7;
-					} else if (Monst->_mgoalvar2 - 1 >= 8) {
-						md = Monst->_mgoalvar2 - 9;
-					} else
-						md = Monst->_mgoalvar2 - 1;
-					Monst->_mgoalvar2 = md;
-				}
+
+			if (md != Monst->_mgoalvar2) {
+				int drift = md - Monst->_mgoalvar2;
+				if (drift < 0)
+					drift += 8;
+
+				if (drift < 4)
+					md = right[Monst->_mgoalvar2];
+				else if (drift > 4)
+					md = left[Monst->_mgoalvar2];
+				Monst->_mgoalvar2 = md;
 			}
-			if (!M_DumbWalk(i, Monst->_mgoalvar2))
+
+			if (!M_DumbWalk(i, md))
 				M_CallWalk2(i, Monst->_mdir);
 		} else {
 			M_StartDelay(i, 15 - Monst->_mint + random_(106, 10));
@@ -3188,7 +3152,7 @@ void MAI_Snake(int i)
 void MAI_Bat(int i)
 {
 	MonsterStruct *Monst;
-	int md, v, pnum;
+	int v, pnum;
 	int fx, fy, xd, yd;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -3201,7 +3165,7 @@ void MAI_Bat(int i)
 
 	xd = Monst->_mx - Monst->_menemyx;
 	yd = Monst->_my - Monst->_menemyy;
-	md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+	direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 	Monst->_mdir = md;
 	v = random_(107, 100);
 	if (Monst->_mgoal == MGOAL_RETREAT) {
@@ -3251,7 +3215,7 @@ void MAI_Bat(int i)
 void MAI_SkelBow(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my, md, v;
+	int mx, my, v;
 	bool walking;
 
 	walking = false;
@@ -3265,7 +3229,7 @@ void MAI_SkelBow(int i)
 	mx = Monst->_mx - Monst->_menemyx;
 	my = Monst->_my - Monst->_menemyy;
 
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	Monst->_mdir = md;
 	v = random_(110, 100);
 
@@ -3294,7 +3258,7 @@ void MAI_SkelBow(int i)
 void MAI_Fat(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my, md, v;
+	int mx, my, v;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -3305,7 +3269,7 @@ void MAI_Fat(int i)
 
 	mx = Monst->_mx - Monst->_menemyx;
 	my = Monst->_my - Monst->_menemyy;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	Monst->_mdir = md;
 	v = random_(111, 100);
 	if (abs(mx) >= 2 || abs(my) >= 2) {
@@ -3328,7 +3292,7 @@ void MAI_Fat(int i)
 void MAI_Sneak(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my, md;
+	int mx, my;
 	int dist, v;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -3341,7 +3305,7 @@ void MAI_Sneak(int i)
 			mx -= Monst->_menemyx;
 			my -= Monst->_menemyy;
 
-			md = M_GetDir(i);
+			direction md = M_GetDir(i);
 			dist = 5 - Monst->_mint;
 			if (Monst->_mVar1 == MM_GOTHIT) {
 				Monst->_mgoal = MGOAL_RETREAT;
@@ -3393,7 +3357,7 @@ void MAI_Sneak(int i)
 void MAI_Fireman(int i)
 {
 	int xd, yd;
-	int md, pnum;
+	int pnum;
 	int fx, fy;
 	MonsterStruct *Monst;
 
@@ -3409,7 +3373,7 @@ void MAI_Fireman(int i)
 	xd = monster[i]._mx - fx;
 	yd = monster[i]._my - fy;
 
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	if (Monst->_mgoal == MGOAL_NORMAL) {
 		if (LineClear(Monst->_mx, Monst->_my, fx, fy)
 		    && AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_FIREMAN, pnum, i, 0, 0) != -1) {
@@ -3520,7 +3484,7 @@ void MAI_Fallen(int i)
 void MAI_Cleaver(int i)
 {
 	MonsterStruct *Monst;
-	int x, y, mx, my, md;
+	int x, y, mx, my;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -3534,7 +3498,7 @@ void MAI_Cleaver(int i)
 	x = mx - Monst->_menemyx;
 	y = my - Monst->_menemyy;
 
-	md = GetDirection(mx, my, Monst->_lastx, Monst->_lasty);
+	direction md = GetDirection(mx, my, Monst->_lastx, Monst->_lasty);
 	Monst->_mdir = md;
 
 	if (abs(x) >= 2 || abs(y) >= 2)
@@ -3550,7 +3514,7 @@ void MAI_Round(int i, bool special)
 {
 	MonsterStruct *Monst;
 	int fx, fy;
-	int mx, my, md;
+	int mx, my;
 	int dist, v;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -3560,7 +3524,7 @@ void MAI_Round(int i, bool special)
 		fx = Monst->_menemyx;
 		mx = Monst->_mx - fx;
 		my = Monst->_my - fy;
-		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+		direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(114, 100);
@@ -3611,7 +3575,6 @@ void MAI_GoatMc(int i)
 
 void MAI_Ranged(int i, int missile_type, bool special)
 {
-	int md;
 	int fx, fy, mx, my;
 	MonsterStruct *Monst;
 
@@ -3627,7 +3590,7 @@ void MAI_Ranged(int i, int missile_type, bool special)
 		fy = Monst->_menemyy;
 		mx = Monst->_mx - fx;
 		my = Monst->_my - fy;
-		md = M_GetDir(i);
+		direction md = M_GetDir(i);
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		Monst->_mdir = md;
@@ -3650,7 +3613,7 @@ void MAI_Ranged(int i, int missile_type, bool special)
 	} else if (Monst->_msquelch != 0) {
 		fx = Monst->_lastx;
 		fy = Monst->_lasty;
-		md = GetDirection(Monst->_mx, Monst->_my, fx, fy);
+		direction md = GetDirection(Monst->_mx, Monst->_my, fx, fy);
 		M_CallWalk(i, md);
 	}
 }
@@ -3801,14 +3764,14 @@ void MAI_Scav(int i)
 void MAI_Garg(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my, dx, dy, md;
+	int mx, my, dx, dy;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 
 	Monst = &monster[i];
 	dx = Monst->_mx - Monst->_lastx;
 	dy = Monst->_my - Monst->_lasty;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	if (Monst->_msquelch != 0 && Monst->_mFlags & MFLAG_ALLOW_SPECIAL) {
 		M_Enemy(i);
 		mx = Monst->_mx - Monst->_menemyx;
@@ -3842,7 +3805,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 	MonsterStruct *Monst;
 	int mx, my;
 	int fx, fy;
-	int md, dist, v;
+	int dist, v;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 	Monst = &monster[i];
@@ -3851,7 +3814,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 		fy = Monst->_menemyy;
 		mx = Monst->_mx - fx;
 		my = Monst->_my - fy;
-		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+		direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (checkdoors && Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(121, 10000);
@@ -3926,7 +3889,7 @@ void MAI_RR2(int i, int mistype, int dam)
 {
 	MonsterStruct *Monst;
 	int mx, my, fx, fy;
-	int dist, v, md;
+	int dist, v;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -3943,7 +3906,7 @@ void MAI_RR2(int i, int mistype, int dam)
 		fy = Monst->_menemyy;
 		mx = Monst->_mx - fx;
 		my = Monst->_my - fy;
-		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+		direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(121, 100);
@@ -4000,7 +3963,7 @@ void MAI_Mega(int i)
 void MAI_Golum(int i)
 {
 	int mx, my, _mex, _mey;
-	int md, j, k, _menemy;
+	int j, k, _menemy;
 	MonsterStruct *Monst;
 	bool have_enemy, ok;
 
@@ -4032,7 +3995,7 @@ void MAI_Golum(int i)
 	my = monster[i]._my;
 	_mex = mx - monster[_menemy]._mfutx;
 	_mey = my - monster[_menemy]._mfuty;
-	md = GetDirection(mx, my, monster[_menemy]._mx, monster[_menemy]._my);
+	direction md = GetDirection(mx, my, monster[_menemy]._mx, monster[_menemy]._my);
 	monster[i]._mdir = md;
 	if (abs(_mex) < 2 && abs(_mey) < 2 && have_enemy) {
 		_menemy = monster[i]._menemy;
@@ -4065,9 +4028,9 @@ void MAI_Golum(int i)
 	if (ok)
 		return;
 
-	md = (md - 1) & 7;
+	md = left[md];
 	for (j = 0; j < 8 && !ok; j++) {
-		md = (md + 1) & 7;
+        md = right[md];
 		ok = DirOK(i, md);
 	}
 	if (ok)
@@ -4078,7 +4041,7 @@ void MAI_SkelKing(int i)
 {
 	MonsterStruct *Monst;
 	int mx, my, fx, fy, nx, ny;
-	int dist, v, md;
+	int dist, v;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 	Monst = &monster[i];
@@ -4087,7 +4050,7 @@ void MAI_SkelKing(int i)
 		fy = Monst->_menemyy;
 		mx = Monst->_mx - fx;
 		my = Monst->_my - fy;
-		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+		direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(126, 100);
@@ -4141,7 +4104,7 @@ void MAI_Rhino(int i)
 {
 	MonsterStruct *Monst;
 	int mx, my, fx, fy;
-	int v, dist, md;
+	int v, dist;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 	Monst = &monster[i];
@@ -4150,7 +4113,7 @@ void MAI_Rhino(int i)
 		fy = Monst->_menemyy;
 		mx = Monst->_mx - fx;
 		my = Monst->_my - fy;
-		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+		direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(131, 100);
@@ -4205,7 +4168,7 @@ void MAI_Rhino(int i)
 void MAI_HorkDemon(int i)
 {
 	MonsterStruct *Monst;
-	int fx, fy, mx, my, md, v, dist;
+	int fx, fy, mx, my, v, dist;
 
 	if ((DWORD)i >= MAXMONSTERS) {
 		return;
@@ -4220,7 +4183,7 @@ void MAI_HorkDemon(int i)
 	fy = Monst->_menemyy;
 	mx = Monst->_mx - fx;
 	my = Monst->_my - fy;
-	md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+	direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 
 	if (Monst->_msquelch < 255) {
 		MonstCheckDoors(i);
@@ -4276,7 +4239,7 @@ void MAI_HorkDemon(int i)
 void MAI_Counselor(int i)
 {
 	int mx, my, fx, fy;
-	int dist, md, v;
+	int dist, v;
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -4287,7 +4250,7 @@ void MAI_Counselor(int i)
 		fy = Monst->_menemyy;
 		mx = Monst->_mx - fx;
 		my = Monst->_my - fy;
-		md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
+		direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(121, 100);
@@ -4344,7 +4307,7 @@ void MAI_Counselor(int i)
 
 void MAI_Garbud(int i)
 {
-	int _mx, _my, md;
+	int _mx, _my;
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -4356,7 +4319,7 @@ void MAI_Garbud(int i)
 
 	_mx = Monst->_mx;
 	_my = Monst->_my;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 
 	if (Monst->mtalkmsg >= TEXT_GARBUD1
 	    && Monst->mtalkmsg <= TEXT_GARBUD3
@@ -4397,7 +4360,7 @@ void MAI_Garbud(int i)
 
 void MAI_Zhar(int i)
 {
-	int mx, my, md;
+	int mx, my;
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -4409,7 +4372,7 @@ void MAI_Zhar(int i)
 
 	mx = Monst->_mx;
 	my = Monst->_my;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	if (Monst->mtalkmsg == TEXT_ZHAR1 && !(dFlags[mx][my] & BFLAG_VISIBLE) && Monst->_mgoal == MGOAL_TALKING) {
 		Monst->mtalkmsg = TEXT_ZHAR2;
 		Monst->_mgoal = MGOAL_INQUIRING;
@@ -4436,7 +4399,7 @@ void MAI_Zhar(int i)
 
 void MAI_SnotSpil(int i)
 {
-	int mx, my, md;
+	int mx, my;
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -4448,7 +4411,7 @@ void MAI_SnotSpil(int i)
 
 	mx = Monst->_mx;
 	my = Monst->_my;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 
 	if (Monst->mtalkmsg == TEXT_BANNER10 && !(dFlags[mx][my] & BFLAG_VISIBLE) && Monst->_mgoal == MGOAL_TALKING) {
 		Monst->mtalkmsg = TEXT_BANNER11;
@@ -4485,7 +4448,7 @@ void MAI_SnotSpil(int i)
 
 void MAI_Lazurus(int i)
 {
-	int mx, my, md;
+	int mx, my;
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -4497,7 +4460,7 @@ void MAI_Lazurus(int i)
 
 	mx = Monst->_mx;
 	my = Monst->_my;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	if (dFlags[mx][my] & BFLAG_VISIBLE) {
 		if (!gbIsMultiplayer) {
 			if (Monst->mtalkmsg == TEXT_VILE13 && Monst->_mgoal == MGOAL_INQUIRING && plr[myplr]._px == 35 && plr[myplr]._py == 46) {
@@ -4540,7 +4503,6 @@ void MAI_Lazurus(int i)
 void MAI_Lazhelp(int i)
 {
 	int _mx, _my;
-	volatile int md; // BUGFIX: very questionable volatile
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -4550,7 +4512,7 @@ void MAI_Lazhelp(int i)
 	Monst = &monster[i];
 	_mx = Monst->_mx;
 	_my = Monst->_my;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 
 	if (dFlags[_mx][_my] & BFLAG_VISIBLE) {
 		if (!gbIsMultiplayer) {
@@ -4572,7 +4534,7 @@ void MAI_Lazhelp(int i)
 
 void MAI_Lachdanan(int i)
 {
-	int _mx, _my, md;
+	int _mx, _my;
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -4584,7 +4546,7 @@ void MAI_Lachdanan(int i)
 
 	_mx = Monst->_mx;
 	_my = Monst->_my;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 
 	if (Monst->mtalkmsg == TEXT_VEIL9 && !(dFlags[_mx][_my] & BFLAG_VISIBLE) && monster[i]._mgoal == MGOAL_TALKING) {
 		Monst->mtalkmsg = TEXT_VEIL10;
@@ -4610,7 +4572,7 @@ void MAI_Lachdanan(int i)
 void MAI_Warlord(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my, md;
+	int mx, my;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -4621,7 +4583,7 @@ void MAI_Warlord(int i)
 
 	mx = Monst->_mx;
 	my = Monst->_my;
-	md = M_GetDir(i);
+	direction md = M_GetDir(i);
 	if (dFlags[mx][my] & BFLAG_VISIBLE) {
 		if (Monst->mtalkmsg == TEXT_WARLRD9 && Monst->_mgoal == MGOAL_INQUIRING)
 			Monst->_mmode = MM_TALK;
@@ -4834,7 +4796,7 @@ void FreeMonsters()
 	FreeMissiles2();
 }
 
-bool DirOK(int i, int mdir)
+bool DirOK(int i, direction mdir)
 {
 	int fx, fy;
 	int x, y;
@@ -5310,7 +5272,7 @@ void MissToMonst(int i, int x, int y)
 	oldx = Miss->_mix;
 	oldy = Miss->_miy;
 	dMonster[x][y] = m + 1;
-	Monst->_mdir = Miss->_mimfnum;
+	Monst->_mdir = (direction)Miss->_mimfnum;
 	Monst->_mx = x;
 	Monst->_my = y;
 	M_StartStand(m, Monst->_mdir);
@@ -5481,7 +5443,7 @@ bool IsGoat(int mt)
 	    || (mt >= MT_NGOATBW && mt <= MT_GGOATBW);
 }
 
-int M_SpawnSkel(int x, int y, int dir)
+int M_SpawnSkel(int x, int y, direction dir)
 {
 	int i, j, skeltypes, skel;
 
@@ -5508,7 +5470,7 @@ int M_SpawnSkel(int x, int y, int dir)
 	return -1;
 }
 
-void ActivateSpawn(int i, int x, int y, int dir)
+void ActivateSpawn(int i, int x, int y, direction dir)
 {
 	dMonster[x][y] = i + 1;
 	monster[i]._mx = x;
@@ -5522,7 +5484,7 @@ void ActivateSpawn(int i, int x, int y, int dir)
 
 bool SpawnSkeleton(int ii, int x, int y)
 {
-	int dx, dy, xx, yy, dir, j, k, rs;
+	int dx, dy, xx, yy, j, k, rs;
 	bool savail;
 	int monstok[3][3];
 
@@ -5530,7 +5492,7 @@ bool SpawnSkeleton(int ii, int x, int y)
 		return false;
 
 	if (PosOkMonst(-1, x, y)) {
-		dir = GetDirection(x, y, x, y);
+		direction dir = GetDirection(x, y, x, y);
 		ActivateSpawn(ii, x, y, dir);
 		return true;
 	}
@@ -5569,7 +5531,7 @@ bool SpawnSkeleton(int ii, int x, int y)
 
 	dx = x - 1 + xx;
 	dy = y - 1 + yy;
-	dir = GetDirection(dx, dy, x, y);
+	direction dir = GetDirection(dx, dy, x, y);
 	ActivateSpawn(ii, dx, dy, dir);
 
 	return true;
@@ -5593,9 +5555,9 @@ int PreSpawnSkeleton()
 			if (IsSkel(Monsters[i].mtype))
 				j++;
 		}
-		skel = AddMonster(0, 0, 0, i - 1, false);
+		skel = AddMonster(0, 0, DIR_S, i - 1, false);
 		if (skel != -1)
-			M_StartStand(skel, 0);
+			M_StartStand(skel, DIR_S);
 
 		return skel;
 	}
@@ -5649,7 +5611,7 @@ void SpawnGolum(int i, int x, int y, int mi)
 	monster[i].mMinDamage = 2 * (missile[mi]._mispllvl + 4);
 	monster[i].mMaxDamage = 2 * (missile[mi]._mispllvl + 8);
 	monster[i]._mFlags |= MFLAG_GOLEM;
-	M_StartSpStand(i, 0);
+	M_StartSpStand(i, DIR_S);
 	M_Enemy(i);
 	if (i == myplr) {
 		NetSendCmdGolem(

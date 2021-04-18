@@ -2067,7 +2067,7 @@ void Obj_FlameTrap(int i)
 
 void Obj_Trap(int i)
 {
-	int oti, dir;
+	int oti;
 	bool otrig;
 	int sx, sy, dx, dy, x, y;
 
@@ -2111,7 +2111,7 @@ void Obj_Trap(int i)
 				}
 			}
 			if (!deltaload) {
-				dir = GetDirection(sx, sy, dx, dy);
+				direction dir = GetDirection(sx, sy, dx, dy);
 				AddMissile(sx, sy, dx, dy, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
 				PlaySfxLoc(IS_TRAP, object[oti]._ox, object[oti]._oy);
 			}
@@ -3089,7 +3089,7 @@ void OperateSChambBk(int pnum, int i)
 
 void OperateChest(int pnum, int i, bool sendmsg)
 {
-	int j, mdir, mtype;
+	int j, mtype;
 
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
@@ -3111,7 +3111,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				}
 			}
 			if (object[i]._oTrapFlag && object[i]._otype >= OBJ_TCHEST1 && object[i]._otype <= OBJ_TCHEST3) {
-				mdir = GetDirection(object[i]._ox, object[i]._oy, plr[pnum]._px, plr[pnum]._py);
+				direction mdir = GetDirection(object[i]._ox, object[i]._oy, plr[pnum]._px, plr[pnum]._py);
 				switch (object[i]._oVar4) {
 				case 0:
 					mtype = MIS_ARROW;

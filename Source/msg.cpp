@@ -863,7 +863,7 @@ void NetSendCmd(bool bHiPri, _cmd_id bCmd)
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGolem(BYTE mx, BYTE my, BYTE dir, BYTE menemy, int hp, BYTE cl)
+void NetSendCmdGolem(BYTE mx, BYTE my, direction dir, BYTE menemy, int hp, BYTE cl)
 {
 	TCmdGolem cmd;
 

@@ -298,39 +298,39 @@ int GetSpellLevel(int id, spell_id sn)
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
 */
-int GetDirection8(int x1, int y1, int x2, int y2)
+direction GetDirection8(int x1, int y1, int x2, int y2)
 {
-	int mx, my, md;
+	direction md = DIR_S;
 
-	mx = x2 - x1;
-	my = y2 - y1;
+	int mx = x2 - x1;
+	int my = y2 - y1;
 	if (mx >= 0) {
 		if (my >= 0) {
 			if (5 * mx <= (my << 1)) // mx/my <= 0.4, approximation of tan(22.5)
-				return 1;            // DIR_SW
-			md = 0;                  // DIR_S
+				return DIR_SW;
+			md = DIR_S;
 		} else {
 			my = -my;
 			if (5 * mx <= (my << 1))
-				return 5; // DIR_NE
-			md = 6;       // DIR_E
+				return DIR_NE;
+			md = DIR_E;
 		}
 		if (5 * my <= (mx << 1)) // my/mx <= 0.4
-			md = 7;              // DIR_SE
+			md = DIR_SE;
 	} else {
 		mx = -mx;
 		if (my >= 0) {
 			if (5 * mx <= (my << 1))
-				return 1; // DIR_SW
-			md = 2;       // DIR_W
+				return DIR_SW;
+			md = DIR_W;
 		} else {
 			my = -my;
 			if (5 * mx <= (my << 1))
-				return 5; // DIR_NE
-			md = 4;       // DIR_N
+				return DIR_NE;
+			md = DIR_N;
 		}
 		if (5 * my <= (mx << 1))
-			md = 3; // DIR_NW
+			md = DIR_NW;
 	}
 	return md;
 }
@@ -3411,12 +3411,10 @@ int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, int8_t mic
 
 int Sentfire(int i, int sx, int sy)
 {
-	int ex, dir;
-
-	ex = 0;
+	int ex = 0;
 	if (LineClear(missile[i]._mix, missile[i]._miy, sx, sy)) {
 		if (dMonster[sx][sy] > 0 && monster[dMonster[sx][sy] - 1]._mhitpoints >> 6 > 0 && dMonster[sx][sy] - 1 > MAX_PLRS - 1) {
-			dir = GetDirection(missile[i]._mix, missile[i]._miy, sx, sy);
+			direction dir = GetDirection(missile[i]._mix, missile[i]._miy, sx, sy);
 			missile[i]._miVar3 = missileavail[0];
 			AddMissile(missile[i]._mix, missile[i]._miy, sx, sy, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile[i]._misource, missile[i]._midam, GetSpellLevel(missile[i]._misource, SPL_FIREBOLT));
 			ex = -1;
@@ -3629,7 +3627,7 @@ void MI_Firebolt(Sint32 i)
 				AddMissile(missile[i]._mix, missile[i]._miy, i, 0, missile[i]._mimfnum, MIS_MISEXP3, missile[i]._micaster, missile[i]._misource, 0, 0);
 				break;
 			case MIS_BONESPIRIT:
-				SetMissDir(i, 8);
+				SetMissDir(i, DIR_OMNI);
 				missile[i]._mirange = 7;
 				missile[i]._miDelFlag = false;
 				PutMissile(i);
@@ -3856,8 +3854,9 @@ void MI_HorkSpawn(Sint32 i)
 					dp = dPiece[tx][ty];
 					if (!nSolidTable[dp] && dMonster[tx][ty] == 0 && dPlayer[tx][ty] == 0 && dObject[tx][ty] == 0) {
 						j = 6;
-						int mon = AddMonster(tx, ty, missile[i]._miVar1, 1, true);
-						M_StartStand(mon, missile[i]._miVar1);
+						direction md = (direction)missile[i]._miVar1;
+						int mon = AddMonster(tx, ty, md, 1, true);
+						M_StartStand(mon, md);
 						break;
 					}
 				}
@@ -3874,7 +3873,8 @@ void MI_HorkSpawn(Sint32 i)
 
 void MI_Rune(Sint32 i)
 {
-	int mid, pid, dir, mx, my;
+	int mid, pid, mx, my;
+	direction dir;
 
 	mx = missile[i]._mix;
 	my = missile[i]._miy;
@@ -3936,9 +3936,7 @@ void MI_Immolation(Sint32 i)
 		int v = 2 * missile[i]._miVar6;
 		missile[i]._miVar6 = v;
 		missile[i]._miVar7 = v;
-		missile[i]._mimfnum--;
-		if (missile[i]._mimfnum < 0)
-			missile[i]._mimfnum = 7;
+		missile[i]._mimfnum = left[missile[i]._mimfnum];
 	} else {
 		missile[i]._miVar7--;
 	}
@@ -4310,7 +4308,7 @@ void MI_FireNova(Sint32 i)
 	int dam = missile[i]._midam;
 	int sx = missile[i]._mix;
 	int sy = missile[i]._miy;
-	int dir = 0;
+	direction dir = DIR_S;
 	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
 		dir = plr[id]._pdir;
@@ -4341,7 +4339,7 @@ void MI_SpecArrow(Sint32 i)
 	int dy = missile[i]._miVar2;
 	int spllvl = missile[i]._miVar3;
 	int mitype = 0;
-	int dir = 0;
+	direction dir = DIR_S;
 	mienemy_type micaster = TARGET_PLAYERS;
 	if (src != -1) {
 		dir = plr[src]._pdir;
@@ -4743,12 +4741,12 @@ void MI_Guardian(Sint32 i)
 
 void MI_Chain(Sint32 i)
 {
-	int sx, sy, id, l, n, m, k, rad, tx, ty, dir;
+	int sx, sy, id, l, n, m, k, rad, tx, ty;
 
 	id = missile[i]._misource;
 	sx = missile[i]._mix;
 	sy = missile[i]._miy;
-	dir = GetDirection(sx, sy, missile[i]._miVar1, missile[i]._miVar2);
+	direction dir = GetDirection(sx, sy, missile[i]._miVar1, missile[i]._miVar2);
 	AddMissile(sx, sy, missile[i]._miVar1, missile[i]._miVar2, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile[i]._mispllvl);
 	rad = missile[i]._mispllvl + 3;
 	if (rad > 19)
@@ -5143,7 +5141,7 @@ void MI_Nova(Sint32 i)
 	int dam = missile[i]._midam;
 	int sx = missile[i]._mix;
 	int sy = missile[i]._miy;
-	int dir = 0;
+	direction dir = DIR_S;
 	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
 		dir = plr[id]._pdir;
@@ -5347,7 +5345,7 @@ void MI_Hbolt(Sint32 i)
 
 void MI_Element(Sint32 i)
 {
-	int mid, sd, dam, cx, cy, px, py, id;
+	int mid, dam, cx, cy, px, py, id;
 
 	missile[i]._mirange--;
 	dam = missile[i]._midam;
@@ -5394,11 +5392,11 @@ void MI_Element(Sint32 i)
 			missile[i]._mirange = 255;
 			mid = FindClosest(cx, cy, 19);
 			if (mid > 0) {
-				sd = GetDirection8(cx, cy, monster[mid]._mx, monster[mid]._my);
+				direction sd = GetDirection8(cx, cy, monster[mid]._mx, monster[mid]._my);
 				SetMissDir(i, sd);
 				GetMissileVel(i, cx, cy, monster[mid]._mx, monster[mid]._my, 16);
 			} else {
-				sd = plr[id]._pdir;
+				direction sd = plr[id]._pdir;
 				SetMissDir(i, sd);
 				GetMissileVel(i, cx, cy, cx + XDirAdd[sd], cy + YDirAdd[sd], 16);
 			}
@@ -5419,13 +5417,13 @@ void MI_Element(Sint32 i)
 
 void MI_Bonespirit(Sint32 i)
 {
-	int id, mid, sd, dam;
+	int id, mid, dam;
 	int cx, cy;
 
 	missile[i]._mirange--;
 	dam = missile[i]._midam;
 	id = missile[i]._misource;
-	if (missile[i]._mimfnum == 8) {
+	if (missile[i]._mimfnum == DIR_OMNI) {
 		ChangeLight(missile[i]._mlid, missile[i]._mix, missile[i]._miy, missile[i]._miAnimFrame);
 		if (missile[i]._mirange == 0) {
 			missile[i]._miDelFlag = true;
@@ -5450,7 +5448,7 @@ void MI_Bonespirit(Sint32 i)
 				SetMissDir(i, GetDirection8(cx, cy, monster[mid]._mx, monster[mid]._my));
 				GetMissileVel(i, cx, cy, monster[mid]._mx, monster[mid]._my, 16);
 			} else {
-				sd = plr[id]._pdir;
+				direction sd = plr[id]._pdir;
 				SetMissDir(i, sd);
 				GetMissileVel(i, cx, cy, cx + XDirAdd[sd], cy + YDirAdd[sd], 16);
 			}
@@ -5461,7 +5459,7 @@ void MI_Bonespirit(Sint32 i)
 			ChangeLight(missile[i]._mlid, cx, cy, 8);
 		}
 		if (missile[i]._mirange == 0) {
-			SetMissDir(i, 8);
+			SetMissDir(i, DIR_OMNI);
 			missile[i]._mirange = 7;
 		}
 		PutMissile(i);
