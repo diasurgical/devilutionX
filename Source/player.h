@@ -156,12 +156,16 @@ struct PlayerStruct {
 	direction destParam3;
 	int destParam4;
 	int plrlevel;
-	int _px;         // Tile X-position of player
-	int _py;         // Tile Y-position of player
-	int _pfutx;      // Future tile X-position of player. Set at start of walking animation
-	int _pfuty;      // Future tile Y-position of player. Set at start of walking animation
-	int _ptargx;     // Target tile X-position for player movment. Set during pathfinding
-	int _ptargy;     // Target tile Y-position for player movment. Set during pathfinding
+	int _px;    // Tile X-position of player
+	int _py;    // Tile Y-position of player
+	int _pfutx; // Future tile X-position of player. Set at start of walking animation
+	int _pfuty;
+	/*
+	* These values store the target position for non-local players during network play.
+	* This is needed because player positions drift over time due to desyncs, so we have
+	* clients try to pathfind non-local players to this position.
+	*/
+	int _ptargx, _ptargy;
 	int _pownerx;    // Tile X-position of player. Set via network on player input
 	int _pownery;    // Tile X-position of player. Set via network on player input
 	int _poldx;      // Most recent X-position in dPlayer.
@@ -357,15 +361,20 @@ struct PlayerStruct {
 	 * @brief Gets the base value of the player's specified attribute.
 	 * @param attribute The attribute to retrieve the base value for
 	 * @return The base value for the requested attribute.
-	*/
+	 */
 	int GetBaseAttributeValue(CharacterAttribute attribute) const;
 
 	/**
 	 * @brief Gets the maximum value of the player's specified attribute.
 	 * @param attribute The attribute to retrieve the maximum value for
 	 * @return The maximum value for the requested attribute.
-	*/
+	 */
 	int GetMaximumAttributeValue(CharacterAttribute attribute) const;
+
+	/**
+	 * @brief Update tile coordinates a player is moving to (if not moving, then it corresponds to current position).
+	 */
+	void UpdateTargetPosition();
 };
 
 extern int myplr;

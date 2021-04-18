@@ -224,6 +224,24 @@ int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
 	return MaxStats[static_cast<std::size_t>(_pClass)][static_cast<std::size_t>(attribute)];
 }
 
+void PlayerStruct::UpdateTargetPosition()
+{
+	// clang-format off
+	int directionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
+	int directionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
+	// clang-format on
+	_ptargx = _pfutx;
+	_ptargy = _pfuty;
+	for (auto step : walkpath) {
+		if (step == WALK_NONE)
+			break;
+		if (step > 0) {
+			_ptargx += directionOffsetX[step - 1];
+			_ptargy += directionOffsetY[step - 1];
+		}
+	}
+}
+
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {
 	int i;
@@ -1182,8 +1200,6 @@ void FixPlayerLocation(int pnum, direction bDir)
 
 	plr[pnum]._pfutx = plr[pnum]._px;
 	plr[pnum]._pfuty = plr[pnum]._py;
-	plr[pnum]._ptargx = plr[pnum]._px;
-	plr[pnum]._ptargy = plr[pnum]._py;
 	plr[pnum]._pxoff = 0;
 	plr[pnum]._pyoff = 0;
 	plr[pnum]._pdir = bDir;
@@ -3805,8 +3821,6 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 		app_fatal("MakePlrPath: illegal player %d", pnum);
 	}
 
-	plr[pnum]._ptargx = xx;
-	plr[pnum]._ptargy = yy;
 	if (plr[pnum]._pfutx == xx && plr[pnum]._pfuty == yy) {
 		return;
 	}
@@ -3849,9 +3863,6 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 			yy--;
 			break;
 		}
-
-		plr[pnum]._ptargx = xx;
-		plr[pnum]._ptargy = yy;
 	}
 
 	plr[pnum].walkpath[path] = WALK_NONE;
