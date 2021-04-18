@@ -24,6 +24,7 @@
 #include "nthread.h"
 #include "plrmsg.h"
 #include "qol.h"
+#include "qol/xpbar.h"
 #include "render.h"
 #include "stores.h"
 #include "towners.h"

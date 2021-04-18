@@ -294,6 +294,8 @@ set(devilutionx_SRCS
   Source/controls/modifier_hints.cpp
   Source/controls/plrctrls.cpp
   Source/controls/touch.cpp
+  Source/qol/common.cpp
+  Source/qol/xpbar.cpp
   Source/utils/console.cpp
   Source/utils/display.cpp
   Source/utils/file_util.cpp
