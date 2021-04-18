@@ -44,6 +44,11 @@ namespace {
 bool directFileAccess = false;
 std::string *SBasePath = NULL;
 
+bool IsLandscapeFit(unsigned long src_w, unsigned long src_h, unsigned long dst_w, unsigned long dst_h)
+{
+	return src_w * dst_h > dst_w * src_h;
+}
+
 #ifdef USE_SDL1
 // Whether we've changed the video mode temporarily for SVid.
 // If true, we must restore it once the video has finished playing.
@@ -57,7 +62,7 @@ void TrySetVideoModeToSVidForSDL1() {
 
 	int w;
 	int h;
-	if (display->w * SVidWidth > display->h * SVidHeight) {
+	if (IsLandscapeFit(SVidWidth, SVidHeight, display->w, display->h)) {
 		w = SVidWidth;
 		h = SVidWidth * display->h / display->w;
 	} else {
@@ -732,36 +737,45 @@ bool SVidPlayContinue(void)
 #endif
 	{
 		SDL_Surface *output_surface = GetOutputSurface();
-		int factor;
-		int wFactor = output_surface->w / SVidWidth;
-		int hFactor = output_surface->h / SVidHeight;
-		if (wFactor > hFactor && (unsigned int)output_surface->h > SVidHeight) {
-			factor = hFactor;
+#ifdef USE_SDL1
+		const bool is_indexed_output_format = SDLBackport_IsPixelFormatIndexed(output_surface->format);
+#else
+		const Uint32 wnd_format = SDL_GetWindowPixelFormat(ghMainWnd);
+		const bool is_indexed_output_format = SDL_ISPIXELFORMAT_INDEXED(wnd_format);
+#endif
+		SDL_Rect output_rect;
+		if (is_indexed_output_format) {
+			// Cannot scale if the output format is indexed (8-bit palette).
+			output_rect.w = static_cast<int>(SVidWidth);
+			output_rect.h = static_cast<int>(SVidHeight);
+		} else if (IsLandscapeFit(SVidWidth, SVidHeight, output_surface->w, output_surface->h)) {
+			output_rect.w = output_surface->w;
+			output_rect.h = SVidHeight * output_surface->w / SVidWidth;
 		} else {
-			factor = wFactor;
+			output_rect.w = SVidWidth * output_surface->h / SVidHeight;
+			output_rect.h = output_surface->h;
 		}
-		const Uint16 scaledW = SVidWidth * factor;
-		const Uint16 scaledH = SVidHeight * factor;
-		const Sint16 scaledX = (output_surface->w - scaledW) / 2;
-		const Sint16 scaledY = (output_surface->h - scaledH) / 2;
+		output_rect.x = (output_surface->w - output_rect.w) / 2;
+		output_rect.y = (output_surface->h - output_rect.h) / 2;
 
-		SDL_Rect pal_surface_offset = { scaledX, scaledY, scaledW, scaledH };
-		if (factor == 1) {
-			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &pal_surface_offset) <= -1) {
+		if (is_indexed_output_format
+		    || output_surface->w == static_cast<int>(SVidWidth)
+		    || output_surface->h == static_cast<int>(SVidHeight)) {
+			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &output_rect) <= -1) {
 				ErrSdl();
 			}
 		} else {
+			// The source surface is always 8-bit, and the output surface is never 8-bit in this branch.
+			// We must convert to the output format before calling SDL_BlitScaled.
 #ifdef USE_SDL1
-			SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, ghMainWnd->format, 0);
+			SDLSurfaceUniquePtr converted { SDL_ConvertSurface(SVidSurface, ghMainWnd->format, 0) };
 #else
-			Uint32 format = SDL_GetWindowPixelFormat(ghMainWnd);
-			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
+			SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(SVidSurface, wnd_format, 0) };
 #endif
-			if (SDL_BlitScaled(tmp, NULL, output_surface, &pal_surface_offset) <= -1) {
+			if (SDL_BlitScaled(converted.get(), NULL, output_surface, &output_rect) <= -1) {
 				SDL_Log("%s", SDL_GetError());
 				return false;
 			}
-			SDL_FreeSurface(tmp);
 		}
 	}
 
