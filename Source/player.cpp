@@ -1939,7 +1939,7 @@ void DropHalfPlayersGold(int pnum)
 					hGold = 0;
 				} else {
 					hGold -= plr[pnum].InvList[i]._ivalue;
-					inventory->RemoveInvItem(pnum, i);
+					inventory->RemoveItem(pnum, i);
 					SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 					GetGoldSeed(pnum, &plr[pnum].HoldItem);
 					SetPlrHandGoldCurs(&plr[pnum].HoldItem);
@@ -1964,7 +1964,7 @@ void DropHalfPlayersGold(int pnum)
 					hGold = 0;
 				} else {
 					hGold -= plr[pnum].InvList[i]._ivalue;
-					inventory->RemoveInvItem(pnum, i);
+					inventory->RemoveItem(pnum, i);
 					SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 					GetGoldSeed(pnum, &plr[pnum].HoldItem);
 					SetPlrHandGoldCurs(&plr[pnum].HoldItem);

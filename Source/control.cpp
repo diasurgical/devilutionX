@@ -1117,7 +1117,7 @@ void CheckPanelInfo()
 		}
 	}
 	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
-		pcursinvitem = CheckInvHLight();
+		pcursinvitem = inventory->CheckHLight();
 }
 
 /**
@@ -2043,7 +2043,7 @@ void control_remove_gold(int pnum, int gold_index)
 		if (plr[pnum].InvList[gi]._ivalue > 0)
 			SetGoldCurs(pnum, gi);
 		else
-			inventory->RemoveInvItem(pnum, gi);
+			inventory->RemoveItem(pnum, gi);
 	} else {
 		gi = gold_index - INVITEM_BELT_FIRST;
 		plr[pnum].SpdList[gi]._ivalue -= dropGoldValue;

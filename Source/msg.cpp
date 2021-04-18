@@ -1420,7 +1420,7 @@ static DWORD On_REQUESTGITEM(TCmd *pCmd, int pnum)
 				if (p->bPnum != myplr)
 					inventory->SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 				else
-					inventory->InvGetItem(myplr, &items[ii], ii);
+					inventory->GetItem(myplr, &items[ii], ii);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, myplr, p->bPnum, p))
 				NetSendCmdExtra(p);
@@ -1444,9 +1444,9 @@ static DWORD On_GETITEM(TCmd *pCmd, int pnum)
 					if (currlevel != p->bLevel) {
 						ii = inventory->SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
-							inventory->InvGetItem(myplr, &items[ii], ii);
+							inventory->GetItem(myplr, &items[ii], ii);
 					} else
-						inventory->InvGetItem(myplr, &items[ii], ii);
+						inventory->GetItem(myplr, &items[ii], ii);
 				} else
 					inventory->SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 			}
@@ -1543,7 +1543,7 @@ static DWORD On_PUTITEM(TCmd *pCmd, int pnum)
 	else if (currlevel == plr[pnum].plrlevel) {
 		int ii;
 		if (pnum == myplr)
-			ii = inventory->InvPutItem(pnum, p->x, p->y);
+			ii = inventory->PutItem(pnum, p->x, p->y);
 		else
 			ii = inventory->SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		if (ii != -1) {
@@ -2153,7 +2153,7 @@ static DWORD On_CHANGEPLRITEMS(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		inventory->CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId, p->dwBuff);
+		inventory->CheckSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId, p->dwBuff);
 
 	return sizeof(*p);
 }
@@ -2165,7 +2165,7 @@ static DWORD On_DELPLRITEMS(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		inventory->inv_update_rem_item(pnum, p->bLoc);
+		inventory->update_rem_item(pnum, p->bLoc);
 
 	return sizeof(*p);
 }

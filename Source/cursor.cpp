@@ -349,7 +349,7 @@ void CheckCursMove()
 		return;
 	}
 	if (invflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
-		pcursinvitem = inventory->CheckInvHLight();
+		pcursinvitem = inventory->CheckHLight();
 		return;
 	}
 	if (sbookflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {

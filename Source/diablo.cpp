@@ -293,7 +293,7 @@ static void free_game()
 
 	FreeQol();
 	FreeControlPan();
-	inventory->FreeInvGFX();
+	inventory->FreeGFX();
 	FreeGMenu();
 	FreeQuestText();
 	FreeStoreMem();
@@ -871,11 +871,11 @@ static bool LeftMouseDown(int wParam)
 				CheckChrBtns();
 			} else if (invflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 				if (!dropGoldFlag)
-					inventory->CheckInvItem(isShiftHeld);
+					inventory->CheckItem(isShiftHeld);
 			} else if (sbookflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
-				if (inventory->TryInvPut()) {
+				if (inventory->TryPut()) {
 					NetSendCmdPItem(true, CMD_PUTITEM, cursmx, cursmy);
 					NewCursor(CURSOR_HAND);
 				}
@@ -888,7 +888,7 @@ static bool LeftMouseDown(int wParam)
 		}
 	} else {
 		if (!talkflag && !dropGoldFlag && !gmenu_is_active())
-			inventory->CheckInvScrn(isShiftHeld);
+			inventory->CheckScrn(isShiftHeld);
 		DoPanBtn();
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
@@ -1827,7 +1827,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 
 	if (firstflag) {
-		inventory->InitInv();
+		inventory->Init();
 		InitItemGFX();
 		InitQuestText();
 		InitStores();

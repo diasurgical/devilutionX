@@ -119,12 +119,12 @@ const InvXY InvRect[] = {
 /** Specifies the starting inventory slots for placement of 2x2 items. */
 int AP2x2Tbl[10] = { 8, 28, 6, 26, 4, 24, 2, 22, 0, 20 };
 
-void Inventory::FreeInvGFX()
+void Inventory::FreeGFX()
 {
 	MemFreeDbg(pInvCels);
 }
 
-void Inventory::InitInv()
+void Inventory::Init()
 {
 	if (plr[myplr]._pClass == HeroClass::Warrior) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
@@ -147,7 +147,7 @@ void Inventory::InitInv()
 	drawsbarflag = false;
 }
 
-void Inventory::InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
+void Inventory::DrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 {
 	BYTE *dst;
 
@@ -201,7 +201,7 @@ void Inventory::DrawInv(CelOutputBuffer out)
 		if (!plr[myplr].InvBody[slot].isEmpty()) {
 			int screen_x = slotPos[slot].X;
 			int screen_y = slotPos[slot].Y;
-			InvDrawSlotBack(out, RIGHT_PANEL_X + screen_x, screen_y, slotSize[slot].X * INV_SLOT_SIZE_PX, slotSize[slot].Y * INV_SLOT_SIZE_PX);
+			DrawSlotBack(out, RIGHT_PANEL_X + screen_x, screen_y, slotSize[slot].X * INV_SLOT_SIZE_PX, slotSize[slot].Y * INV_SLOT_SIZE_PX);
 
 			frame = plr[myplr].InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 			frame_width = InvItemWidth[frame];
@@ -237,7 +237,7 @@ void Inventory::DrawInv(CelOutputBuffer out)
 					if (plr[myplr]._pClass != HeroClass::Barbarian
 					    || (plr[myplr].InvBody[slot]._itype != ITYPE_SWORD
 					        && plr[myplr].InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X, slotPos[INVLOC_HAND_RIGHT].Y, slotSize[INVLOC_HAND_RIGHT].X * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].Y * INV_SLOT_SIZE_PX);
+						DrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X, slotPos[INVLOC_HAND_RIGHT].Y, slotSize[INVLOC_HAND_RIGHT].X * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].Y * INV_SLOT_SIZE_PX);
 						light_table_index = 0;
 						cel_transparency_active = true;
 
@@ -254,7 +254,7 @@ void Inventory::DrawInv(CelOutputBuffer out)
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		if (plr[myplr].InvGrid[i] != 0) {
-			InvDrawSlotBack(
+			DrawSlotBack(
 			    out,
 			    InvRect[i + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 			    InvRect[i + SLOTXY_INV_FIRST].Y - 1,
@@ -319,7 +319,7 @@ void Inventory::DrawInvBelt(CelOutputBuffer out)
 			continue;
 		}
 
-		InvDrawSlotBack(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		DrawSlotBack(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 		frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 
@@ -360,7 +360,7 @@ void Inventory::DrawInvBelt(CelOutputBuffer out)
  * @param sizeX Horizontal size of item
  * @param sizeY Vertical size of item
  */
-void Inventory::AddItemToInvGrid(int playerNumber, int invGridIndex, int invListIndex, int sizeX, int sizeY)
+void Inventory::AddItemToGrid(int playerNumber, int invGridIndex, int invListIndex, int sizeX, int sizeY)
 {
 	const int pitch = 10;
 	for (int y = 0; y < sizeY; y++) {
@@ -643,74 +643,74 @@ bool Inventory::AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &i
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool Inventory::AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
+bool Inventory::AutoPlaceItem(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	InvXY itemSize = GetInventorySize(item);
 	bool done = false;
 
 	if (itemSize.X == 1 && itemSize.Y == 1) {
 		for (int i = 30; i <= 39 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 20; i <= 29 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i <= 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 0; i <= 9 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 2) {
 		for (int i = 29; i >= 20 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 9; i >= 0 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 19; i >= 10 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 3) {
 		for (int i = 0; i < 20 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 2) {
 		for (int i = 0; i < 10 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, AP2x2Tbl[i], item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, AP2x2Tbl[i], item, persistItem);
 		}
 
 		for (int i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 3) {
 		for (int i = 0; i < 9 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInSlot(playerNumber, i, item, persistItem);
 		}
 	}
 
@@ -726,7 +726,7 @@ bool Inventory::AutoPlaceItemInInventory(int playerNumber, const ItemStruct &ite
  * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
  * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
  */
-bool Inventory::AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
+bool Inventory::AutoPlaceItemInSlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int i, j, xx, yy;
 	bool done;
@@ -760,7 +760,7 @@ bool Inventory::AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, co
 		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = plr[playerNumber].HoldItem;
 		plr[playerNumber]._pNumInv++;
 
-		AddItemToInvGrid(playerNumber, slotIndex, plr[playerNumber]._pNumInv, itemSize.X, itemSize.Y);
+		AddItemToGrid(playerNumber, slotIndex, plr[playerNumber]._pNumInv, itemSize.X, itemSize.Y);
 		CalcPlrScrolls(playerNumber);
 	}
 	return done;
@@ -862,7 +862,7 @@ int Inventory::SwapItem(ItemStruct *a, ItemStruct *b)
 	return h._iCurs + CURSOR_FIRSTITEM;
 }
 
-void Inventory::CheckInvPaste(int pnum, int mx, int my)
+void Inventory::CheckPaste(int pnum, int mx, int my)
 {
 	int r, sx, sy;
 	int i, j, xx, yy, ii;
@@ -1106,7 +1106,7 @@ void Inventory::CheckInvPaste(int pnum, int mx, int my)
 				NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
-			done2h = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
+			done2h = AutoPlaceItem(pnum, plr[pnum].HoldItem, true);
 			plr[pnum].HoldItem = tempitem;
 			if (pnum == myplr)
 				NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -1206,7 +1206,7 @@ void Inventory::CheckInvPaste(int pnum, int mx, int my)
 				yy = 0;
 			if (xx < 0)
 				xx = 0;
-			AddItemToInvGrid(pnum, xx + yy, it, sx, sy);
+			AddItemToGrid(pnum, xx + yy, it, sx, sy);
 		}
 		break;
 	case ILOC_BELT:
@@ -1256,7 +1256,7 @@ void Inventory::CheckInvPaste(int pnum, int mx, int my)
 	}
 }
 
-void Inventory::CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff)
+void Inventory::CheckSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	PlayerStruct *p;
 
@@ -1283,7 +1283,7 @@ void Inventory::CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, b
 	CalcPlrInv(pnum, true);
 }
 
-void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
+void Inventory::CheckCut(int pnum, int mx, int my, bool automaticMove)
 {
 	int r;
 	bool done;
@@ -1337,7 +1337,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = headItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItem(pnum, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1351,7 +1351,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = leftRingItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItem(pnum, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1365,7 +1365,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = rightRingItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItem(pnum, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1379,7 +1379,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = amuletItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItem(pnum, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1393,7 +1393,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = leftHandItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItem(pnum, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1407,7 +1407,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = rightHandItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItem(pnum, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1421,7 +1421,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = chestItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItem(pnum, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1449,7 +1449,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 			}
 
 			if (!automaticMove || automaticallyMoved) {
-				RemoveInvItem(pnum, iv - 1, false);
+				RemoveItem(pnum, iv - 1, false);
 			}
 		}
 	}
@@ -1459,7 +1459,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		if (!beltItem.isEmpty()) {
 			holdItem = beltItem;
 			if (automaticMove) {
-				automaticallyMoved = AutoPlaceItemInInventory(pnum, holdItem, true);
+				automaticallyMoved = AutoPlaceItem(pnum, holdItem, true);
 			}
 
 			if (!automaticMove || automaticallyMoved) {
@@ -1532,7 +1532,7 @@ void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	}
 }
 
-void Inventory::inv_update_rem_item(int pnum, BYTE iv)
+void Inventory::update_rem_item(int pnum, BYTE iv)
 {
 	if (iv < NUM_INVLOC) {
 		plr[pnum].InvBody[iv]._itype = ITYPE_NONE;
@@ -1545,7 +1545,7 @@ void Inventory::inv_update_rem_item(int pnum, BYTE iv)
 	}
 }
 
-void Inventory::RemoveInvItem(int pnum, int iv, bool calcPlrScrolls)
+void Inventory::RemoveItem(int pnum, int iv, bool calcPlrScrolls)
 {
 	int i, j;
 
@@ -1587,23 +1587,23 @@ void Inventory::RemoveSpdBarItem(int pnum, int iv)
 	force_redraw = 255;
 }
 
-void Inventory::CheckInvItem(bool isShiftHeld)
+void Inventory::CheckItem(bool isShiftHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		CheckInvPaste(myplr, MouseX, MouseY);
+		CheckPaste(myplr, MouseX, MouseY);
 	} else {
-		CheckInvCut(myplr, MouseX, MouseY, isShiftHeld);
+		CheckCut(myplr, MouseX, MouseY, isShiftHeld);
 	}
 }
 
 /**
  * Check for interactions with belt
  */
-void Inventory::CheckInvScrn(bool isShiftHeld)
+void Inventory::CheckScrn(bool isShiftHeld)
 {
 	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT
 	    && MouseY > PANEL_TOP && MouseY < 33 + PANEL_TOP) {
-		CheckInvItem(isShiftHeld);
+		CheckItem(isShiftHeld);
 	}
 }
 
@@ -1785,21 +1785,21 @@ void Inventory::CheckQuestItem(int pnum)
 			switch (idx) {
 			case IDI_NOTE1:
 				PlrHasItem(pnum, IDI_NOTE2, &n2);
-				RemoveInvItem(pnum, n2);
+				RemoveItem(pnum, n2);
 				PlrHasItem(pnum, IDI_NOTE3, &n3);
-				RemoveInvItem(pnum, n3);
+				RemoveItem(pnum, n3);
 				break;
 			case IDI_NOTE2:
 				PlrHasItem(pnum, IDI_NOTE1, &n1);
-				RemoveInvItem(pnum, n1);
+				RemoveItem(pnum, n1);
 				PlrHasItem(pnum, IDI_NOTE3, &n3);
-				RemoveInvItem(pnum, n3);
+				RemoveItem(pnum, n3);
 				break;
 			case IDI_NOTE3:
 				PlrHasItem(pnum, IDI_NOTE1, &n1);
-				RemoveInvItem(pnum, n1);
+				RemoveItem(pnum, n1);
 				PlrHasItem(pnum, IDI_NOTE2, &n2);
-				RemoveInvItem(pnum, n2);
+				RemoveItem(pnum, n2);
 				break;
 			}
 			item_num = itemactive[0];
@@ -1839,7 +1839,7 @@ void Inventory::CleanupItems(ItemStruct *item, int ii)
 	}
 }
 
-void Inventory::InvGetItem(int pnum, ItemStruct *item, int ii)
+void Inventory::GetItem(int pnum, ItemStruct *item, int ii)
 {
 	if (dropGoldFlag) {
 		dropGoldFlag = false;
@@ -1900,7 +1900,7 @@ void Inventory::AutoGetItem(int pnum, ItemStruct *item, int ii)
 			done = AutoPlaceItemInBelt(pnum, plr[pnum].HoldItem, true);
 		}
 		if (!done) {
-			done = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
+			done = AutoPlaceItem(pnum, plr[pnum].HoldItem, true);
 		}
 	}
 
@@ -2012,7 +2012,7 @@ bool Inventory::CanPut(int x, int y)
 	return true;
 }
 
-bool Inventory::TryInvPut()
+bool Inventory::TryPut()
 {
 	int dir;
 
@@ -2037,7 +2037,7 @@ bool Inventory::TryInvPut()
 	return CanPut(plr[myplr]._px, plr[myplr]._py);
 }
 
-void Inventory::DrawInvMsg(const char *msg)
+void Inventory::DrawMsg(const char *msg)
 {
 	DWORD dwTicks;
 
@@ -2048,7 +2048,7 @@ void Inventory::DrawInvMsg(const char *msg)
 	}
 }
 
-int Inventory::InvPutItem(int pnum, int x, int y)
+int Inventory::PutItem(int pnum, int x, int y)
 {
 	bool done;
 	int d;
@@ -2223,7 +2223,7 @@ int Inventory::SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, in
 	return ii;
 }
 
-char Inventory::CheckInvHLight()
+char Inventory::CheckHLight()
 {
 	int r, ii, nGold;
 	ItemStruct *pi;
@@ -2328,7 +2328,7 @@ void Inventory::RemoveScroll(int pnum)
 		if (!plr[pnum].InvList[i].isEmpty()
 		    && (plr[pnum].InvList[i]._iMiscId == IMISC_SCROLL || plr[pnum].InvList[i]._iMiscId == IMISC_SCROLLT)
 		    && plr[pnum].InvList[i]._iSpell == plr[pnum]._pRSpell) {
-			RemoveInvItem(pnum, i);
+			RemoveItem(pnum, i);
 			CalcPlrScrolls(pnum);
 			return;
 		}
@@ -2540,7 +2540,7 @@ bool Inventory::UseInvItem(int pnum, int cii)
 			invflag = false;
 			return true;
 		}
-		RemoveInvItem(pnum, c);
+		RemoveItem(pnum, c);
 	}
 	return true;
 }
@@ -2577,7 +2577,7 @@ int Inventory::CalculateGold(int pnum)
 
 bool Inventory::DropItemBeforeTrig()
 {
-	if (TryInvPut()) {
+	if (TryPut()) {
 		NetSendCmdPItem(true, CMD_PUTITEM, cursmx, cursmy);
 		NewCursor(CURSOR_HAND);
 		return true;

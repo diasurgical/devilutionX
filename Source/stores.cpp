@@ -213,7 +213,7 @@ void StoreAutoPlace()
 	}
 
 	if (!done) {
-		inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true) || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, true);
+		inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true) || inventory->AutoPlaceItem(myplr, plr[myplr].HoldItem, true);
 	}
 }
 
@@ -1276,7 +1276,7 @@ void S_SBuyEnter()
 				done = true;
 			}
 
-			if (done || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
+			if (done || inventory->AutoPlaceItem(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1341,7 +1341,7 @@ void S_SPBuyEnter()
 				done = true;
 			}
 
-			if (done || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
+			if (done || inventory->AutoPlaceItem(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1423,7 +1423,7 @@ void StoreSellItem()
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 	if (storehidx[idx] >= 0)
-		inventory->RemoveInvItem(myplr, storehidx[idx]);
+		inventory->RemoveItem(myplr, storehidx[idx]);
 	else
 		inventory->RemoveSpdBarItem(myplr, -(storehidx[idx] + 1));
 	cost = storehold[idx]._iIvalue;
@@ -1605,7 +1605,7 @@ void S_WBuyEnter()
 				done = true;
 			}
 
-			if (done || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
+			if (done || inventory->AutoPlaceItem(myplr, plr[myplr].HoldItem, false) || inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1781,7 +1781,7 @@ void S_BBuyEnter()
 	}
 
 	if (!done) {
-		done = inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false);
+		done = inventory->AutoPlaceItem(myplr, plr[myplr].HoldItem, false);
 	}
 
 	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
@@ -1912,7 +1912,7 @@ void S_HBuyEnter()
 				done = true;
 			}
 
-			if (done || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
+			if (done || inventory->AutoPlaceItem(myplr, plr[myplr].HoldItem, false) || inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -2635,7 +2635,7 @@ void TakePlrsMoney(int cost)
 					cost = 0;
 				} else {
 					cost -= plr[myplr].InvList[i]._ivalue;
-					inventory->RemoveInvItem(myplr, i);
+					inventory->RemoveItem(myplr, i);
 					i = -1;
 				}
 			}
@@ -2649,7 +2649,7 @@ void TakePlrsMoney(int cost)
 						cost = 0;
 					} else {
 						cost -= plr[myplr].InvList[i]._ivalue;
-						inventory->RemoveInvItem(myplr, i);
+						inventory->RemoveItem(myplr, i);
 						i = -1;
 					}
 				}

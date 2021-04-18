@@ -5579,14 +5579,14 @@ void TalktoMonster(int i)
 	Monst->_mmode = MM_TALK;
 	if (Monst->_mAi == AI_SNOTSPIL || Monst->_mAi == AI_LACHDAN) {
 		if (QuestStatus(Q_LTBANNER) && quests[Q_LTBANNER]._qvar1 == 2 && PlrHasItem(pnum, IDI_BANNER, &itm)) {
-			inventory->RemoveInvItem(pnum, itm);
+			inventory->RemoveItem(pnum, itm);
 			quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			Monst->mtalkmsg = TEXT_BANNER12;
 			Monst->_mgoal = MGOAL_INQUIRING;
 		}
 		if (QuestStatus(Q_VEIL) && Monst->mtalkmsg >= TEXT_VEIL9) {
 			if (PlrHasItem(pnum, IDI_GLDNELIX, &itm)) {
-				inventory->RemoveInvItem(pnum, itm);
+				inventory->RemoveItem(pnum, itm);
 				Monst->mtalkmsg = TEXT_VEIL11;
 				Monst->_mgoal = MGOAL_INQUIRING;
 			}

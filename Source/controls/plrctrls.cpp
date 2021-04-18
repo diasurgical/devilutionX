@@ -1093,7 +1093,7 @@ void PerformPrimaryAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
-			inventory->CheckInvItem();
+			inventory->CheckItem();
 		}
 		return;
 	}

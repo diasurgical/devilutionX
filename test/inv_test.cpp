@@ -139,7 +139,7 @@ TEST(Inv, GoldAutoPlace)
 }
 
 // Test removing an item from inventory with no other items.
-TEST(Inv, RemoveInvItem)
+TEST(Inv, RemoveItem)
 {
 	clear_inventory();
 	// Put a two-slot misc item into the inventory:
@@ -149,14 +149,14 @@ TEST(Inv, RemoveInvItem)
 	plr[myplr].InvGrid[1] = -1;
 	plr[myplr].InvList[0]._itype = ITYPE_MISC;
 
-	inventory->RemoveInvItem(myplr, 0);
+	inventory->RemoveItem(myplr, 0);
 	EXPECT_EQ(plr[myplr].InvGrid[0], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[1], 0);
 	EXPECT_EQ(plr[myplr]._pNumInv, 0);
 }
 
 // Test removing an item from inventory with other items in it.
-TEST(Inv, RemoveInvItem_other_item)
+TEST(Inv, RemoveItem_other_item)
 {
 	clear_inventory();
 	// Put a two-slot misc item and a ring into the inventory:
@@ -169,7 +169,7 @@ TEST(Inv, RemoveInvItem_other_item)
 	plr[myplr].InvGrid[2] = 2;
 	plr[myplr].InvList[1]._itype = ITYPE_RING;
 
-	inventory->RemoveInvItem(myplr, 0);
+	inventory->RemoveItem(myplr, 0);
 	EXPECT_EQ(plr[myplr].InvGrid[0], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[1], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[2], 1);
