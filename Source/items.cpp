@@ -16,6 +16,7 @@
 #include "options.h"
 #include "stores.h"
 #include "utils/language.h"
+#include "utils/math.h"
 
 namespace devilution {
 
@@ -600,7 +601,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 					tmpac *= itm->_iPLAC;
 					tmpac /= 100;
 					if (tmpac == 0)
-						tmpac = 1;
+						tmpac = math::Sign(itm->_iPLAC);
 					bac += tmpac;
 				}
 				iflgs |= itm->_iFlags;
