@@ -70,15 +70,40 @@ make_buildroot() {
 	cd -
 }
 
+cmake_configure() {
+	cmake -S. -B"$BUILD_DIR" \
+		"-DTARGET_PLATFORM=$TARGET" \
+		-DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}/usr/share/buildroot/toolchainfile.cmake" \
+		"$@"
+}
+
+cmake_build() {
+	cmake --build "$BUILD_DIR" -j "$(getconf _NPROCESSORS_ONLN)"
+}
+
+strip_bin() {
+	"${TOOLCHAIN}/usr/bin/"*-linux-strip "${BUILD_DIR}/devilutionx"
+}
+
+build_debug() {
+	cmake_configure -DCMAKE_BUILD_TYPE=Debug -DASAN=OFF -DUBSAN=OFF -DCMAKE_CXX_FLAGS_DEBUG="-g -fno-omit-frame-pointer"
+	cmake_build
+}
+
+build_relwithdebinfo() {
+	cmake_configure -DCMAKE_BUILD_TYPE=RelWithDebInfo
+	cmake_build
+}
+
+build_release() {
+	cmake_configure -DCMAKE_BUILD_TYPE=Release
+	cmake_build
+	strip_bin
+}
+
 build() {
-	mkdir -p "$BUILD_DIR"
-	cd "$BUILD_DIR"
-	rm -f CMakeCache.txt
-	cmake .. -DBINARY_RELEASE=ON "-DTARGET_PLATFORM=$TARGET" \
-		-DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}/usr/share/buildroot/toolchainfile.cmake"
-	make -j $(getconf _NPROCESSORS_ONLN)
-	"${TOOLCHAIN}/usr/bin/"*-linux-strip devilutionx
-	cd -
+	rm -f "${BUILD_DIR}/CMakeCache.txt"
+	build_release
 }
 
 main
