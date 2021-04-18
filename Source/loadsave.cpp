@@ -973,7 +973,7 @@ void RemoveEmptyInventory(int pnum)
 	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
 		int idx = plr[pnum].InvGrid[i - 1];
 		if (idx > 0 && plr[pnum].InvList[idx - 1].isEmpty()) {
-			RemoveInvItem(pnum, idx - 1);
+			inventory->RemoveInvItem(pnum, idx - 1);
 		}
 	};
 }

@@ -1250,7 +1250,7 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 	if (stextflag && !qtextflag)
 		DrawSText(out);
 	if (invflag) {
-		DrawInv(out);
+		inventory->DrawInv(out);
 	} else if (sbookflag) {
 		DrawSpellBook(out);
 	}
@@ -1584,7 +1584,7 @@ void DrawAndBlit()
 		DrawCtrlBtns(out);
 	}
 	if (drawsbarflag) {
-		DrawInvBelt(out);
+		inventory->DrawInvBelt(out);
 	}
 	if (talkflag) {
 		DrawTalkPan(out);

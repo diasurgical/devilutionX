@@ -208,12 +208,12 @@ void PrintStoreItem(ItemStruct *x, int l, text_color iclr)
 void StoreAutoPlace()
 {
 	bool done = false;
-	if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem)) {
+	if (inventory->AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && inventory->AutoEquip(myplr, plr[myplr].HoldItem)) {
 		done = true;
 	}
 
 	if (!done) {
-		AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true) || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, true);
+		inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true) || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, true);
 	}
 }
 
@@ -1272,11 +1272,11 @@ void S_SBuyEnter()
 			plr[myplr].HoldItem = smithitem[idx];
 			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
-			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+			if (inventory->AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && inventory->AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
+			if (done || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1337,11 +1337,11 @@ void S_SPBuyEnter()
 			plr[myplr].HoldItem = premiumitem[idx];
 			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
-			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+			if (inventory->AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && inventory->AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
+			if (done || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1423,9 +1423,9 @@ void StoreSellItem()
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 	if (storehidx[idx] >= 0)
-		RemoveInvItem(myplr, storehidx[idx]);
+		inventory->RemoveInvItem(myplr, storehidx[idx]);
 	else
-		RemoveSpdBarItem(myplr, -(storehidx[idx] + 1));
+		inventory->RemoveSpdBarItem(myplr, -(storehidx[idx] + 1));
 	cost = storehold[idx]._iIvalue;
 	storenumh--;
 	if (idx != storenumh) {
@@ -1601,11 +1601,11 @@ void S_WBuyEnter()
 			plr[myplr].HoldItem = witchitem[idx];
 			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
-			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+			if (inventory->AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && inventory->AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
+			if (done || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1776,12 +1776,12 @@ void S_BBuyEnter()
 	NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	bool done = false;
-	if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+	if (inventory->AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && inventory->AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 		done = true;
 	}
 
 	if (!done) {
-		done = AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false);
+		done = inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false);
 	}
 
 	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
@@ -1908,11 +1908,11 @@ void S_HBuyEnter()
 			plr[myplr].HoldItem = healitem[idx];
 			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
-			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
+			if (inventory->AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && inventory->AutoEquip(myplr, plr[myplr].HoldItem, false)) {
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
+			if (done || inventory->AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || inventory->AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -2596,7 +2596,7 @@ void TakePlrsMoney(int cost)
 {
 	int i;
 
-	plr[myplr]._pGold = CalculateGold(myplr) - cost;
+	plr[myplr]._pGold = inventory->CalculateGold(myplr) - cost;
 	for (i = 0; i < MAXBELTITEMS && cost > 0; i++) {
 		if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD && plr[myplr].SpdList[i]._ivalue != MaxGold) {
 			if (cost < plr[myplr].SpdList[i]._ivalue) {
@@ -2605,7 +2605,7 @@ void TakePlrsMoney(int cost)
 				cost = 0;
 			} else {
 				cost -= plr[myplr].SpdList[i]._ivalue;
-				RemoveSpdBarItem(myplr, i);
+				inventory->RemoveSpdBarItem(myplr, i);
 				i = -1;
 			}
 		}
@@ -2619,7 +2619,7 @@ void TakePlrsMoney(int cost)
 					cost = 0;
 				} else {
 					cost -= plr[myplr].SpdList[i]._ivalue;
-					RemoveSpdBarItem(myplr, i);
+					inventory->RemoveSpdBarItem(myplr, i);
 					i = -1;
 				}
 			}
@@ -2635,7 +2635,7 @@ void TakePlrsMoney(int cost)
 					cost = 0;
 				} else {
 					cost -= plr[myplr].InvList[i]._ivalue;
-					RemoveInvItem(myplr, i);
+					inventory->RemoveInvItem(myplr, i);
 					i = -1;
 				}
 			}
@@ -2649,7 +2649,7 @@ void TakePlrsMoney(int cost)
 						cost = 0;
 					} else {
 						cost -= plr[myplr].InvList[i]._ivalue;
-						RemoveInvItem(myplr, i);
+						inventory->RemoveInvItem(myplr, i);
 						i = -1;
 					}
 				}

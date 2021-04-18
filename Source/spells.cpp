@@ -71,10 +71,10 @@ void UseMana(int id, spell_id sn)
 		case RSPLTYPE_INVALID:
 			break;
 		case RSPLTYPE_SCROLL:
-			RemoveScroll(id);
+			inventory->RemoveScroll(id);
 			break;
 		case RSPLTYPE_CHARGES:
-			UseStaffCharge(id);
+			inventory->UseStaffCharge(id);
 			break;
 		case RSPLTYPE_SPELL:
 #ifdef _DEBUG

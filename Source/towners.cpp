@@ -798,7 +798,7 @@ void TalkToTowner(int p, int t)
 				if (quests[Q_LTBANNER]._qvar2 == 1 && PlrHasItem(p, IDI_BANNER, &i) != NULL && !towner[t]._tMsgSaid) {
 					quests[Q_LTBANNER]._qactive = QUEST_DONE;
 					quests[Q_LTBANNER]._qvar1 = 3;
-					RemoveInvItem(p, i);
+					inventory->RemoveInvItem(p, i);
 					SpawnUnique(UITEM_HARCREST, towner[t]._tx, towner[t]._ty + 1);
 					towner[t]._tbtcnt = true;
 					towner[t]._tTalkingToPlayer = p;
@@ -867,7 +867,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_ROCK]._qactive = QUEST_DONE;
 					quests[Q_ROCK]._qvar2 = 2;
 					quests[Q_ROCK]._qvar1 = 2;
-					RemoveInvItem(p, i);
+					inventory->RemoveInvItem(p, i);
 					SpawnUnique(UITEM_INFRARING, towner[t]._tx, towner[t]._ty + 1);
 					towner[t]._tbtcnt = true;
 					towner[t]._tTalkingToPlayer = p;
@@ -895,7 +895,7 @@ void TalkToTowner(int p, int t)
 						quests[Q_ANVIL]._qactive = QUEST_DONE;
 						quests[Q_ANVIL]._qvar2 = 2;
 						quests[Q_ANVIL]._qvar1 = 2;
-						RemoveInvItem(p, i);
+						inventory->RemoveInvItem(p, i);
 						SpawnUnique(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
 						towner[t]._tbtcnt = true;
 						towner[t]._tTalkingToPlayer = p;
@@ -913,7 +913,7 @@ void TalkToTowner(int p, int t)
 		}
 	} else if (t == GetActiveTowner(TOWN_WITCH)) {
 		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && PlrHasItem(p, IDI_FUNGALTM, &i) != NULL) {
-			RemoveInvItem(p, i);
+			inventory->RemoveInvItem(p, i);
 			quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
 			quests[Q_MUSHROOM]._qlog = true;
 			quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
@@ -924,7 +924,7 @@ void TalkToTowner(int p, int t)
 		} else if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 			if (quests[Q_MUSHROOM]._qvar1 >= QS_TOMEGIVEN && quests[Q_MUSHROOM]._qvar1 <= QS_MUSHPICKED) {
 				if (PlrHasItem(p, IDI_MUSHROOM, &i) != NULL) {
-					RemoveInvItem(p, i);
+					inventory->RemoveInvItem(p, i);
 					quests[Q_MUSHROOM]._qvar1 = QS_MUSHGIVEN;
 					Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
 					Qtalklist[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
@@ -1009,7 +1009,7 @@ void TalkToTowner(int p, int t)
 				}
 			}
 			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qmsg == TEXT_MUSH10 && PlrHasItem(p, IDI_BRAIN, &i) != NULL) {
-				RemoveInvItem(p, i);
+				inventory->RemoveInvItem(p, i);
 				SpawnQuestItem(IDI_SPECELIX, towner[t]._tx, towner[t]._ty + 1, 0, 0);
 				InitQTextMsg(TEXT_MUSH4);
 				quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
@@ -1032,7 +1032,7 @@ void TalkToTowner(int p, int t)
 	} else if (t == GetActiveTowner(TOWN_STORY)) {
 		if (!gbIsMultiplayer) {
 			if (quests[Q_BETRAYER]._qactive == QUEST_INIT && PlrHasItem(p, IDI_LAZSTAFF, &i) != NULL) {
-				RemoveInvItem(p, i);
+				inventory->RemoveInvItem(p, i);
 				quests[Q_BETRAYER]._qvar1 = 2;
 				towner[t]._tbtcnt = true;
 				towner[t]._tTalkingToPlayer = p;
@@ -1173,10 +1173,10 @@ void TalkToTowner(int p, int t)
 			t2 = 1;
 			if (PlrHasItem(p, IDI_GREYSUIT, &i)) {
 				qt = TEXT_JERSEY7;
-				RemoveInvItem(p, i);
+				inventory->RemoveInvItem(p, i);
 			} else if (PlrHasItem(p, IDI_BROWNSUIT, &i)) {
 				SpawnUnique(UITEM_BOVINE, towner[t]._tx + 1, towner[t]._ty);
-				RemoveInvItem(p, i);
+				inventory->RemoveInvItem(p, i);
 				qt = TEXT_JERSEY8;
 				quests[Q_JERSEY]._qactive = QUEST_DONE;
 			} else if (PlrHasItem(p, IDI_RUNEBOMB, &i)) {
@@ -1284,7 +1284,7 @@ void TalkToTowner(int p, int t)
 				}
 			} else {
 				qt = TEXT_GIRL4;
-				RemoveInvItem(p, i);
+				inventory->RemoveInvItem(p, i);
 				CreateAmulet(towner[t]._tx, towner[t]._ty, 13, 0, 1);
 				quests[Q_GIRL]._qlog = 0;
 				quests[Q_GIRL]._qactive = QUEST_DONE;

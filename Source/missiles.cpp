@@ -1612,7 +1612,7 @@ void AddStealPotions(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint
 								break;
 							case IMISC_HEAL:
 							case IMISC_MANA:
-								RemoveSpdBarItem(pnum, si);
+								inventory->RemoveSpdBarItem(pnum, si);
 								continue;
 							case IMISC_FULLMANA:
 								ii = ItemMiscIdIdx(IMISC_MANA);

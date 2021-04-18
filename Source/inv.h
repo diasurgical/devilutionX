@@ -78,54 +78,80 @@ extern bool invflag;
 extern bool drawsbarflag;
 extern const InvXY InvRect[73];
 
-void FreeInvGFX();
-void InitInv();
+class Inventory {
 
-/**
- * @brief Render the inventory panel to the given buffer.
- */
-void DrawInv(CelOutputBuffer out);
+private:
+	bool AutoEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation, bool persistItem);
+	bool CanEquip(const ItemStruct &item);
+	bool CanEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation);
+	bool CanWield(int playerNumber, const ItemStruct &item);
+	bool CanBePlacedOnBelt(const ItemStruct &item);
+	void CheckBookLevel(int pnum);
+	void CheckInvCut(int pnum, int mx, int my, bool automaticMove);
+	void CheckInvPaste(int pnum, int mx, int my);
+	void CheckQuestItem(int pnum);
+	void CleanupItems(ItemStruct *item, int ii);
+	bool FitsInBeltSlot(const ItemStruct &item);
+	int SwapItem(ItemStruct *a, ItemStruct *b);
+	bool WeaponAutoPlace(int pnum);
 
-void DrawInvBelt(CelOutputBuffer out);
-bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item);
-bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true);
-bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false);
-bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem);
-bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false);
-bool GoldAutoPlace(int pnum);
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff);
-void inv_update_rem_item(int pnum, BYTE iv);
+public:
+	void FreeInvGFX();
+	void InitInv();
 
-/**
- * @brief Remove an item from player inventory
- * @param pnum Player index
- * @param iv invList index of item to be removed
- * @param calcPlrScrolls If true, CalcPlrScrolls() gets called after removing item
- */
-void RemoveInvItem(int pnum, int iv, bool calcPlrScrolls = true);
+	/**
+	 * @brief Render the inventory panel to the given buffer.
+	 */
+	void DrawInv(CelOutputBuffer out);
+	void DrawInvBelt(CelOutputBuffer out);
+	void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H);
 
-void RemoveSpdBarItem(int pnum, int iv);
-void CheckInvItem(bool isShiftHeld = false);
-void CheckInvScrn(bool isShiftHeld);
-void CheckItemStats(int pnum);
-void InvGetItem(int pnum, ItemStruct *item, int ii);
-void AutoGetItem(int pnum, ItemStruct *item, int ii);
-int FindGetItem(int idx, WORD ci, int iseed);
-void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
-bool CanPut(int x, int y);
-bool TryInvPut();
-void DrawInvMsg(const char *msg);
-int InvPutItem(int pnum, int x, int y);
-int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac);
-char CheckInvHLight();
-void RemoveScroll(int pnum);
-bool UseScroll();
-void UseStaffCharge(int pnum);
-bool UseStaff();
-bool UseInvItem(int pnum, int cii);
-void DoTelekinesis();
-int CalculateGold(int pnum);
-bool DropItemBeforeTrig();
+	bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item);
+	bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem = true);
+	bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem = false);
+	bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem);
+	bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false);
+	bool GoldAutoPlace(int pnum);
+	void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff);
+	void inv_update_rem_item(int pnum, BYTE iv);
+
+	void AddItemToInvGrid(int playerNumber, int invGridIndex, int invListIndex, int sizeX, int sizeY);
+	InvXY GetInventorySize(const ItemStruct &item);
+
+	/**
+	 * @brief Remove an item from player inventory
+	 * @param pnum Player index
+	 * @param iv invList index of item to be removed
+	 * @param calcPlrScrolls If true, CalcPlrScrolls() gets called after removing item
+	 */
+	void RemoveInvItem(int pnum, int iv, bool calcPlrScrolls = true);
+
+	void RemoveSpdBarItem(int pnum, int iv);
+	void CheckInvItem(bool isShiftHeld = false);
+	void CheckInvScrn(bool isShiftHeld);
+	void CheckItemStats(int pnum);
+	void InvGetItem(int pnum, ItemStruct *item, int ii);
+	void AutoGetItem(int pnum, ItemStruct *item, int ii);
+	int FindGetItem(int idx, WORD ci, int iseed);
+	void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
+	bool CanPut(int x, int y);
+	bool TryInvPut();
+	void DrawInvMsg(const char *msg);
+	int InvPutItem(int pnum, int x, int y);
+	int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac);
+	char CheckInvHLight();
+	void RemoveScroll(int pnum);
+	void StartGoldDrop();
+	bool UseScroll();
+	void UseStaffCharge(int pnum);
+	bool UseStaff();
+	bool UseInvItem(int pnum, int cii);
+	void DoTelekinesis();
+	int CalculateGold(int pnum);
+	bool DropItemBeforeTrig();
+};
+
+extern Inventory *inventory;
 
 /* data */
 

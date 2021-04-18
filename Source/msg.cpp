@@ -751,7 +751,7 @@ void DeltaLoadLevel()
 	for (i = 0; i < MAXITEMS; i++) {
 		if (sgLevels[currlevel].item[i].bCmd != 0xFF) {
 			if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
-				int ii = FindGetItem(
+				int ii = inventory->FindGetItem(
 				    sgLevels[currlevel].item[i].wIndx,
 				    sgLevels[currlevel].item[i].wCI,
 				    sgLevels[currlevel].item[i].dwSeed);
@@ -800,14 +800,14 @@ void DeltaLoadLevel()
 				}
 				x = sgLevels[currlevel].item[i].x;
 				y = sgLevels[currlevel].item[i].y;
-				if (!CanPut(x, y)) {
+				if (!inventory->CanPut(x, y)) {
 					done = false;
 					for (k = 1; k < 50 && !done; k++) {
 						for (j = -k; j <= k && !done; j++) {
 							yy = y + j;
 							for (l = -k; l <= k && !done; l++) {
 								xx = x + l;
-								if (CanPut(xx, yy)) {
+								if (inventory->CanPut(xx, yy)) {
 									done = true;
 									x = xx;
 									y = yy;
@@ -1414,13 +1414,13 @@ static DWORD On_REQUESTGITEM(TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs != 1 && i_own_level(plr[pnum].plrlevel)) {
 		if (GetItemRecord(p->dwSeed, p->wCI, p->wIndx)) {
-			int ii = FindGetItem(p->wIndx, p->wCI, p->dwSeed);
+			int ii = inventory->FindGetItem(p->wIndx, p->wCI, p->dwSeed);
 			if (ii != -1) {
 				NetSendCmdGItem2(false, CMD_GETITEM, myplr, p->bPnum, p);
 				if (p->bPnum != myplr)
-					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+					inventory->SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 				else
-					InvGetItem(myplr, &items[ii], ii);
+					inventory->InvGetItem(myplr, &items[ii], ii);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, myplr, p->bPnum, p))
 				NetSendCmdExtra(p);
@@ -1437,18 +1437,18 @@ static DWORD On_GETITEM(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
-		int ii = FindGetItem(p->wIndx, p->wCI, p->dwSeed);
+		int ii = inventory->FindGetItem(p->wIndx, p->wCI, p->dwSeed);
 		if (delta_get_item(p, p->bLevel)) {
 			if ((currlevel == p->bLevel || p->bPnum == myplr) && p->bMaster != myplr) {
 				if (p->bPnum == myplr) {
 					if (currlevel != p->bLevel) {
-						ii = SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+						ii = inventory->SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
-							InvGetItem(myplr, &items[ii], ii);
+							inventory->InvGetItem(myplr, &items[ii], ii);
 					} else
-						InvGetItem(myplr, &items[ii], ii);
+						inventory->InvGetItem(myplr, &items[ii], ii);
 				} else
-					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+					inventory->SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 			}
 		} else
 			NetSendCmdGItem2(true, CMD_GETITEM, p->bMaster, p->bPnum, p);
@@ -1476,13 +1476,13 @@ static DWORD On_REQUESTAGITEM(TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs != 1 && i_own_level(plr[pnum].plrlevel)) {
 		if (GetItemRecord(p->dwSeed, p->wCI, p->wIndx)) {
-			int ii = FindGetItem(p->wIndx, p->wCI, p->dwSeed);
+			int ii = inventory->FindGetItem(p->wIndx, p->wCI, p->dwSeed);
 			if (ii != -1) {
 				NetSendCmdGItem2(false, CMD_AGETITEM, myplr, p->bPnum, p);
 				if (p->bPnum != myplr)
-					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+					inventory->SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 				else
-					AutoGetItem(myplr, &items[p->bCursitem], p->bCursitem);
+					inventory->AutoGetItem(myplr, &items[p->bCursitem], p->bCursitem);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, myplr, p->bPnum, p))
 				NetSendCmdExtra(p);
@@ -1499,18 +1499,18 @@ static DWORD On_AGETITEM(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
-		FindGetItem(p->wIndx, p->wCI, p->dwSeed);
+		inventory->FindGetItem(p->wIndx, p->wCI, p->dwSeed);
 		if (delta_get_item(p, p->bLevel)) {
 			if ((currlevel == p->bLevel || p->bPnum == myplr) && p->bMaster != myplr) {
 				if (p->bPnum == myplr) {
 					if (currlevel != p->bLevel) {
-						int ii = SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+						int ii = inventory->SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
-							AutoGetItem(myplr, &items[ii], ii);
+							inventory->AutoGetItem(myplr, &items[ii], ii);
 					} else
-						AutoGetItem(myplr, &items[p->bCursitem], p->bCursitem);
+						inventory->AutoGetItem(myplr, &items[p->bCursitem], p->bCursitem);
 				} else
-					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+					inventory->SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 			}
 		} else
 			NetSendCmdGItem2(true, CMD_AGETITEM, p->bMaster, p->bPnum, p);
@@ -1528,7 +1528,7 @@ static DWORD On_ITEMEXTRA(TCmd *pCmd, int pnum)
 	else {
 		delta_get_item(p, p->bLevel);
 		if (currlevel == plr[pnum].plrlevel)
-			SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+			inventory->SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
 	}
 
 	return sizeof(*p);
@@ -1543,9 +1543,9 @@ static DWORD On_PUTITEM(TCmd *pCmd, int pnum)
 	else if (currlevel == plr[pnum].plrlevel) {
 		int ii;
 		if (pnum == myplr)
-			ii = InvPutItem(pnum, p->x, p->y);
+			ii = inventory->InvPutItem(pnum, p->x, p->y);
 		else
-			ii = SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+			ii = inventory->SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		if (ii != -1) {
 			PutItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			delta_put_item(p, items[ii]._ix, items[ii]._iy, plr[pnum].plrlevel);
@@ -1568,7 +1568,7 @@ static DWORD On_SYNCPUTITEM(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (currlevel == plr[pnum].plrlevel) {
-		int ii = SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+		int ii = inventory->SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		if (ii != -1) {
 			PutItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			delta_put_item(p, items[ii]._ix, items[ii]._iy, plr[pnum].plrlevel);
@@ -1592,7 +1592,7 @@ static DWORD On_RESPAWNITEM(TCmd *pCmd, int pnum)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
 		if (currlevel == plr[pnum].plrlevel && pnum != myplr) {
-			SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+			inventory->SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		}
 		PutItemRecord(p->dwSeed, p->wCI, p->wIndx);
 		delta_put_item(p, p->x, p->y, plr[pnum].plrlevel);
@@ -2153,7 +2153,7 @@ static DWORD On_CHANGEPLRITEMS(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId, p->dwBuff);
+		inventory->CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId, p->dwBuff);
 
 	return sizeof(*p);
 }
@@ -2165,7 +2165,7 @@ static DWORD On_DELPLRITEMS(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		inv_update_rem_item(pnum, p->bLoc);
+		inventory->inv_update_rem_item(pnum, p->bLoc);
 
 	return sizeof(*p);
 }

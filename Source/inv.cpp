@@ -18,6 +18,8 @@ BYTE *pInvCels;
 bool drawsbarflag;
 int sgdwLastTime; // check name
 
+Inventory *inventory = new Inventory();
+
 /**
  * Maps from inventory slot to screen position. The inventory slots are
  * arranged as follows:
@@ -117,12 +119,12 @@ const InvXY InvRect[] = {
 /** Specifies the starting inventory slots for placement of 2x2 items. */
 int AP2x2Tbl[10] = { 8, 28, 6, 26, 4, 24, 2, 22, 0, 20 };
 
-void FreeInvGFX()
+void Inventory::FreeInvGFX()
 {
 	MemFreeDbg(pInvCels);
 }
 
-void InitInv()
+void Inventory::InitInv()
 {
 	if (plr[myplr]._pClass == HeroClass::Warrior) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
@@ -145,7 +147,7 @@ void InitInv()
 	drawsbarflag = false;
 }
 
-static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
+void Inventory::InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 {
 	BYTE *dst;
 
@@ -168,7 +170,7 @@ static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 	}
 }
 
-void DrawInv(CelOutputBuffer out)
+void Inventory::DrawInv(CelOutputBuffer out)
 {
 	int frame, frame_width, i, j, ii;
 	BYTE *cels;
@@ -300,7 +302,7 @@ void DrawInv(CelOutputBuffer out)
 	}
 }
 
-void DrawInvBelt(CelOutputBuffer out)
+void Inventory::DrawInvBelt(CelOutputBuffer out)
 {
 	int i, frame, frame_width;
 	BYTE fi, ff;
@@ -358,7 +360,7 @@ void DrawInvBelt(CelOutputBuffer out)
  * @param sizeX Horizontal size of item
  * @param sizeY Vertical size of item
  */
-static void AddItemToInvGrid(int playerNumber, int invGridIndex, int invListIndex, int sizeX, int sizeY)
+void Inventory::AddItemToInvGrid(int playerNumber, int invGridIndex, int invListIndex, int sizeX, int sizeY)
 {
 	const int pitch = 10;
 	for (int y = 0; y < sizeY; y++) {
@@ -377,7 +379,7 @@ static void AddItemToInvGrid(int playerNumber, int invGridIndex, int invListInde
  * @param item The item whose size is to be determined.
  * @return The size, in inventory cells, of the item.
  */
-InvXY GetInventorySize(const ItemStruct &item)
+InvXY Inventory::GetInventorySize(const ItemStruct &item)
 {
 	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
 
@@ -392,7 +394,7 @@ InvXY GetInventorySize(const ItemStruct &item)
  * @param item The item to be checked.
  * @return 'True' in case the item can fit a belt slot and 'False' otherwise.
  */
-bool FitsInBeltSlot(const ItemStruct &item)
+bool Inventory::FitsInBeltSlot(const ItemStruct &item)
 {
 	InvXY size = GetInventorySize(item);
 
@@ -405,7 +407,7 @@ bool FitsInBeltSlot(const ItemStruct &item)
  * @param item The item to be checked.
  * @return 'True' in case the item can be placed on the belt and 'False' otherwise.
  */
-bool CanBePlacedOnBelt(const ItemStruct &item)
+bool Inventory::CanBePlacedOnBelt(const ItemStruct &item)
 {
 	return FitsInBeltSlot(item)
 	    && item._itype != ITYPE_GOLD
@@ -422,7 +424,7 @@ bool CanBePlacedOnBelt(const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
-bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem)
+bool Inventory::AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	if (!CanBePlacedOnBelt(item)) {
 		return false;
@@ -449,7 +451,7 @@ bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistI
  * @param item The item to check.
  * @return 'True' in case the item could be equipped in a player, and 'False' otherwise.
  */
-bool CanEquip(const ItemStruct &item)
+bool Inventory::CanEquip(const ItemStruct &item)
 {
 	return item.isEquipment()
 	    && item._iStatFlag;
@@ -463,7 +465,7 @@ bool CanEquip(const ItemStruct &item)
  * @return 'True' if the player can currently equip the item in either one of his hands (i.e. the required hands are empty and
  * allow the item), and 'False' otherwise.
  */
-bool CanWield(int playerNumber, const ItemStruct &item)
+bool Inventory::CanWield(int playerNumber, const ItemStruct &item)
 {
 	if (!CanEquip(item) || (item._iLoc != ILOC_ONEHAND && item._iLoc != ILOC_TWOHAND))
 		return false;
@@ -516,7 +518,7 @@ bool CanWield(int playerNumber, const ItemStruct &item)
  * @return 'True' if the player can currently equip the item in the specified body location (i.e. the body location is empty and
  * allows the item), and 'False' otherwise.
  */
-bool CanEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation)
+bool Inventory::CanEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation)
 {
 	PlayerStruct &player = plr[playerNumber];
 	if (!CanEquip(item) || player._pmode > PM_WALK3 || !player.InvBody[bodyLocation].isEmpty()) {
@@ -556,7 +558,7 @@ bool CanEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocatio
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation, bool persistItem)
+bool Inventory::AutoEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation, bool persistItem)
 {
 	if (!CanEquip(playerNumber, item, bodyLocation)) {
 		return false;
@@ -585,7 +587,7 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocati
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
+bool Inventory::AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	if (!CanEquip(item)) {
 		return false;
@@ -606,7 +608,7 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
  * @param item The item to check.
  * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
  */
-bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
+bool Inventory::AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
 {
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
@@ -641,7 +643,7 @@ bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
+bool Inventory::AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
 {
 	InvXY itemSize = GetInventorySize(item);
 	bool done = false;
@@ -724,7 +726,7 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
  * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
  * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
  */
-bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
+bool Inventory::AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int i, j, xx, yy;
 	bool done;
@@ -764,7 +766,7 @@ bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStr
 	return done;
 }
 
-bool GoldAutoPlace(int pnum)
+bool Inventory::GoldAutoPlace(int pnum)
 {
 	bool done = false;
 
@@ -817,7 +819,7 @@ bool GoldAutoPlace(int pnum)
 	return done;
 }
 
-bool WeaponAutoPlace(int pnum)
+bool Inventory::WeaponAutoPlace(int pnum)
 {
 	if (plr[pnum]._pClass == HeroClass::Monk)
 		return false;
@@ -849,7 +851,7 @@ bool WeaponAutoPlace(int pnum)
 	return false;
 }
 
-int SwapItem(ItemStruct *a, ItemStruct *b)
+int Inventory::SwapItem(ItemStruct *a, ItemStruct *b)
 {
 	ItemStruct h;
 
@@ -860,7 +862,7 @@ int SwapItem(ItemStruct *a, ItemStruct *b)
 	return h._iCurs + CURSOR_FIRSTITEM;
 }
 
-void CheckInvPaste(int pnum, int mx, int my)
+void Inventory::CheckInvPaste(int pnum, int mx, int my)
 {
 	int r, sx, sy;
 	int i, j, xx, yy, ii;
@@ -1254,7 +1256,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	}
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff)
+void Inventory::CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	PlayerStruct *p;
 
@@ -1281,7 +1283,7 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, ui
 	CalcPlrInv(pnum, true);
 }
 
-void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
+void Inventory::CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 {
 	int r;
 	bool done;
@@ -1530,7 +1532,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	}
 }
 
-void inv_update_rem_item(int pnum, BYTE iv)
+void Inventory::inv_update_rem_item(int pnum, BYTE iv)
 {
 	if (iv < NUM_INVLOC) {
 		plr[pnum].InvBody[iv]._itype = ITYPE_NONE;
@@ -1543,7 +1545,7 @@ void inv_update_rem_item(int pnum, BYTE iv)
 	}
 }
 
-void RemoveInvItem(int pnum, int iv, bool calcPlrScrolls)
+void Inventory::RemoveInvItem(int pnum, int iv, bool calcPlrScrolls)
 {
 	int i, j;
 
@@ -1577,7 +1579,7 @@ void RemoveInvItem(int pnum, int iv, bool calcPlrScrolls)
 		CalcPlrScrolls(pnum);
 }
 
-void RemoveSpdBarItem(int pnum, int iv)
+void Inventory::RemoveSpdBarItem(int pnum, int iv)
 {
 	plr[pnum].SpdList[iv]._itype = ITYPE_NONE;
 
@@ -1585,7 +1587,7 @@ void RemoveSpdBarItem(int pnum, int iv)
 	force_redraw = 255;
 }
 
-void CheckInvItem(bool isShiftHeld)
+void Inventory::CheckInvItem(bool isShiftHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckInvPaste(myplr, MouseX, MouseY);
@@ -1597,7 +1599,7 @@ void CheckInvItem(bool isShiftHeld)
 /**
  * Check for interactions with belt
  */
-void CheckInvScrn(bool isShiftHeld)
+void Inventory::CheckInvScrn(bool isShiftHeld)
 {
 	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT
 	    && MouseY > PANEL_TOP && MouseY < 33 + PANEL_TOP) {
@@ -1605,7 +1607,7 @@ void CheckInvScrn(bool isShiftHeld)
 	}
 }
 
-void CheckItemStats(int pnum)
+void Inventory::CheckItemStats(int pnum)
 {
 	PlayerStruct *p = &plr[pnum];
 
@@ -1618,7 +1620,7 @@ void CheckItemStats(int pnum)
 	}
 }
 
-void CheckBookLevel(int pnum)
+void Inventory::CheckBookLevel(int pnum)
 {
 	int slvl;
 
@@ -1636,7 +1638,7 @@ void CheckBookLevel(int pnum)
 	}
 }
 
-void CheckQuestItem(int pnum)
+void Inventory::CheckQuestItem(int pnum)
 {
 	if (plr[pnum].HoldItem.IDidx == IDI_OPTAMULET && quests[Q_BLIND]._qactive == QUEST_ACTIVE)
 		quests[Q_BLIND]._qactive = QUEST_DONE;
@@ -1811,7 +1813,7 @@ void CheckQuestItem(int pnum)
 	}
 }
 
-void CleanupItems(ItemStruct *item, int ii)
+void Inventory::CleanupItems(ItemStruct *item, int ii)
 {
 	dItem[item->_ix][item->_iy] = 0;
 
@@ -1837,7 +1839,7 @@ void CleanupItems(ItemStruct *item, int ii)
 	}
 }
 
-void InvGetItem(int pnum, ItemStruct *item, int ii)
+void Inventory::InvGetItem(int pnum, ItemStruct *item, int ii)
 {
 	if (dropGoldFlag) {
 		dropGoldFlag = false;
@@ -1864,7 +1866,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 		NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void AutoGetItem(int pnum, ItemStruct *item, int ii)
+void Inventory::AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
 	bool done;
 
@@ -1928,7 +1930,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
-int FindGetItem(int idx, WORD ci, int iseed)
+int Inventory::FindGetItem(int idx, WORD ci, int iseed)
 {
 	if (numitems <= 0)
 		return -1;
@@ -1949,7 +1951,7 @@ int FindGetItem(int idx, WORD ci, int iseed)
 	return ii;
 }
 
-void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
+void Inventory::SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 {
 	int ii;
 
@@ -1973,7 +1975,7 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
-bool CanPut(int x, int y)
+bool Inventory::CanPut(int x, int y)
 {
 	char oi, oi2;
 
@@ -2010,7 +2012,7 @@ bool CanPut(int x, int y)
 	return true;
 }
 
-bool TryInvPut()
+bool Inventory::TryInvPut()
 {
 	int dir;
 
@@ -2035,7 +2037,7 @@ bool TryInvPut()
 	return CanPut(plr[myplr]._px, plr[myplr]._py);
 }
 
-void DrawInvMsg(const char *msg)
+void Inventory::DrawInvMsg(const char *msg)
 {
 	DWORD dwTicks;
 
@@ -2046,7 +2048,7 @@ void DrawInvMsg(const char *msg)
 	}
 }
 
-int InvPutItem(int pnum, int x, int y)
+int Inventory::InvPutItem(int pnum, int x, int y)
 {
 	bool done;
 	int d;
@@ -2136,7 +2138,7 @@ int InvPutItem(int pnum, int x, int y)
 	return ii;
 }
 
-int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
+int Inventory::SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
 {
 	bool done;
 	int d;
@@ -2221,7 +2223,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	return ii;
 }
 
-char CheckInvHLight()
+char Inventory::CheckInvHLight()
 {
 	int r, ii, nGold;
 	ItemStruct *pi;
@@ -2318,7 +2320,7 @@ char CheckInvHLight()
 	return rv;
 }
 
-void RemoveScroll(int pnum)
+void Inventory::RemoveScroll(int pnum)
 {
 	int i;
 
@@ -2342,7 +2344,7 @@ void RemoveScroll(int pnum)
 	}
 }
 
-bool UseScroll()
+bool Inventory::UseScroll()
 {
 	int i;
 
@@ -2369,7 +2371,7 @@ bool UseScroll()
 	return false;
 }
 
-void UseStaffCharge(int pnum)
+void Inventory::UseStaffCharge(int pnum)
 {
 	if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty()
 	    && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF
@@ -2382,7 +2384,7 @@ void UseStaffCharge(int pnum)
 	}
 }
 
-bool UseStaff()
+bool Inventory::UseStaff()
 {
 	if (pcurs == CURSOR_HAND) {
 		if (!plr[myplr].InvBody[INVLOC_HAND_LEFT].isEmpty()
@@ -2396,7 +2398,7 @@ bool UseStaff()
 	return false;
 }
 
-void StartGoldDrop()
+void Inventory::StartGoldDrop()
 {
 	initialDropGoldIndex = pcursinvitem;
 	if (pcursinvitem <= INVITEM_INV_LAST)
@@ -2409,7 +2411,7 @@ void StartGoldDrop()
 		control_reset_talk();
 }
 
-bool UseInvItem(int pnum, int cii)
+bool Inventory::UseInvItem(int pnum, int cii)
 {
 	int c, idata;
 	ItemStruct *Item;
@@ -2543,7 +2545,7 @@ bool UseInvItem(int pnum, int cii)
 	return true;
 }
 
-void DoTelekinesis()
+void Inventory::DoTelekinesis()
 {
 	if (pcursobj != -1)
 		NetSendCmdParam1(true, CMD_OPOBJT, pcursobj);
@@ -2554,7 +2556,7 @@ void DoTelekinesis()
 	NewCursor(CURSOR_HAND);
 }
 
-int CalculateGold(int pnum)
+int Inventory::CalculateGold(int pnum)
 {
 	int i, gold;
 
@@ -2573,7 +2575,7 @@ int CalculateGold(int pnum)
 	return gold;
 }
 
-bool DropItemBeforeTrig()
+bool Inventory::DropItemBeforeTrig()
 {
 	if (TryInvPut()) {
 		NetSendCmdPItem(true, CMD_PUTITEM, cursmx, cursmy);

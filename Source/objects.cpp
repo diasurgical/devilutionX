@@ -3372,7 +3372,7 @@ void OperatePedistal(int pnum, int i)
 	}
 
 	if (object[i]._oVar6 != 3 && PlrHasItem(pnum, IDI_BLDSTONE, &iv) != NULL) {
-		RemoveInvItem(pnum, iv);
+		inventory->RemoveInvItem(pnum, iv);
 		object[i]._oAnimFrame++;
 		object[i]._oVar6++;
 		if (object[i]._oVar6 == 1) {

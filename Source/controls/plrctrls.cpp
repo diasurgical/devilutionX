@@ -1079,7 +1079,7 @@ void UseBeltItem(int type)
 		    || (type == BLT_MANA && (id == IMISC_MANA || id == IMISC_FULLMANA))
 		    || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
 			if (plr[myplr].SpdList[i]._itype > -1) {
-				UseInvItem(myplr, INVITEM_BELT_FIRST + i);
+				inventory->UseInvItem(myplr, INVITEM_BELT_FIRST + i);
 				break;
 			}
 		}
@@ -1093,7 +1093,7 @@ void PerformPrimaryAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
-			CheckInvItem();
+			inventory->CheckInvItem();
 		}
 		return;
 	}
@@ -1160,11 +1160,11 @@ bool TryDropItem()
 {
 	cursmx = plr[myplr]._pfutx + 1;
 	cursmy = plr[myplr]._pfuty;
-	if (!DropItemBeforeTrig()) {
+	if (!inventory->DropItemBeforeTrig()) {
 		// Try to drop on the other side
 		cursmx = plr[myplr]._pfutx;
 		cursmy = plr[myplr]._pfuty + 1;
-		DropItemBeforeTrig();
+		inventory->DropItemBeforeTrig();
 	}
 
 	return pcurs == CURSOR_HAND;
@@ -1228,7 +1228,7 @@ void CtrlUseInvItem()
 		return;
 	}
 
-	UseInvItem(myplr, pcursinvitem);
+	inventory->UseInvItem(myplr, pcursinvitem);
 }
 
 void PerformSecondaryAction()

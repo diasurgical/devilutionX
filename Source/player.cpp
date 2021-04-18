@@ -1846,7 +1846,7 @@ StartPlayerKill(int pnum, int earflag)
 						ear._iSeed = plr[pnum]._pName[2] << 24 | plr[pnum]._pName[3] << 16 | plr[pnum]._pName[4] << 8 | plr[pnum]._pName[5];
 						ear._ivalue = plr[pnum]._pLevel;
 
-						if (FindGetItem(IDI_EAR, ear._iCreateInfo, ear._iSeed) == -1) {
+						if (inventory->FindGetItem(IDI_EAR, ear._iCreateInfo, ear._iSeed) == -1) {
 							PlrDeadItem(pnum, &ear, 0, 0);
 						}
 					} else {
@@ -1889,7 +1889,7 @@ void DropHalfPlayersGold(int pnum)
 				hGold = 0;
 			} else {
 				hGold -= plr[pnum].SpdList[i]._ivalue;
-				RemoveSpdBarItem(pnum, i);
+				inventory->RemoveSpdBarItem(pnum, i);
 				SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 				GetGoldSeed(pnum, &plr[pnum].HoldItem);
 				SetPlrHandGoldCurs(&plr[pnum].HoldItem);
@@ -1913,7 +1913,7 @@ void DropHalfPlayersGold(int pnum)
 					hGold = 0;
 				} else {
 					hGold -= plr[pnum].SpdList[i]._ivalue;
-					RemoveSpdBarItem(pnum, i);
+					inventory->RemoveSpdBarItem(pnum, i);
 					SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 					GetGoldSeed(pnum, &plr[pnum].HoldItem);
 					SetPlrHandGoldCurs(&plr[pnum].HoldItem);
@@ -1939,7 +1939,7 @@ void DropHalfPlayersGold(int pnum)
 					hGold = 0;
 				} else {
 					hGold -= plr[pnum].InvList[i]._ivalue;
-					RemoveInvItem(pnum, i);
+					inventory->RemoveInvItem(pnum, i);
 					SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 					GetGoldSeed(pnum, &plr[pnum].HoldItem);
 					SetPlrHandGoldCurs(&plr[pnum].HoldItem);
@@ -1964,7 +1964,7 @@ void DropHalfPlayersGold(int pnum)
 					hGold = 0;
 				} else {
 					hGold -= plr[pnum].InvList[i]._ivalue;
-					RemoveInvItem(pnum, i);
+					inventory->RemoveInvItem(pnum, i);
 					SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 					GetGoldSeed(pnum, &plr[pnum].HoldItem);
 					SetPlrHandGoldCurs(&plr[pnum].HoldItem);
@@ -1975,7 +1975,7 @@ void DropHalfPlayersGold(int pnum)
 			}
 		}
 	}
-	plr[pnum]._pGold = CalculateGold(pnum);
+	plr[pnum]._pGold = inventory->CalculateGold(pnum);
 }
 
 void StripTopGold(int pnum)
@@ -1998,12 +1998,12 @@ void StripTopGold(int pnum)
 				GetGoldSeed(pnum, &plr[pnum].HoldItem);
 				plr[pnum].HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(&plr[pnum].HoldItem);
-				if (!GoldAutoPlace(pnum))
+				if (!inventory->GoldAutoPlace(pnum))
 					PlrDeadItem(pnum, &plr[pnum].HoldItem, 0, 0);
 			}
 		}
 	}
-	plr[pnum]._pGold = CalculateGold(pnum);
+	plr[pnum]._pGold = inventory->CalculateGold(pnum);
 	plr[pnum].HoldItem = tmpItem;
 }
 
@@ -3927,10 +3927,10 @@ void CheckPlrSpell()
 		addflag = CheckSpell(myplr, rspell, plr[myplr]._pRSplType, false);
 		break;
 	case RSPLTYPE_SCROLL:
-		addflag = UseScroll();
+		addflag = inventory->UseScroll();
 		break;
 	case RSPLTYPE_CHARGES:
-		addflag = UseStaff();
+		addflag = inventory->UseStaff();
 		break;
 	case RSPLTYPE_INVALID:
 		return;

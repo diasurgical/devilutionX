@@ -293,7 +293,7 @@ static void free_game()
 
 	FreeQol();
 	FreeControlPan();
-	FreeInvGFX();
+	inventory->FreeInvGFX();
 	FreeGMenu();
 	FreeQuestText();
 	FreeStoreMem();
@@ -769,7 +769,7 @@ bool TryIconCurs()
 	}
 
 	if (pcurs == CURSOR_TELEKINESIS) {
-		DoTelekinesis();
+		inventory->DoTelekinesis();
 		return true;
 	}
 
@@ -871,11 +871,11 @@ static bool LeftMouseDown(int wParam)
 				CheckChrBtns();
 			} else if (invflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 				if (!dropGoldFlag)
-					CheckInvItem(isShiftHeld);
+					inventory->CheckInvItem(isShiftHeld);
 			} else if (sbookflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
-				if (TryInvPut()) {
+				if (inventory->TryInvPut()) {
 					NetSendCmdPItem(true, CMD_PUTITEM, cursmx, cursmy);
 					NewCursor(CURSOR_HAND);
 				}
@@ -888,7 +888,7 @@ static bool LeftMouseDown(int wParam)
 		}
 	} else {
 		if (!talkflag && !dropGoldFlag && !gmenu_is_active())
-			CheckInvScrn(isShiftHeld);
+			inventory->CheckInvScrn(isShiftHeld);
 		DoPanBtn();
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
@@ -923,9 +923,9 @@ static void RightMouseDown()
 			} else if (MouseY >= SPANEL_HEIGHT
 			    || ((!sbookflag || MouseX <= RIGHT_PANEL)
 			        && !TryIconCurs()
-			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
+			        && (pcursinvitem == -1 || !inventory->UseInvItem(myplr, pcursinvitem)))) {
 				if (pcurs == CURSOR_HAND) {
-					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
+					if (pcursinvitem == -1 || !inventory->UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();
 				} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 					NewCursor(CURSOR_HAND);
@@ -1401,43 +1401,43 @@ static void PressChar(WPARAM vkey)
 	case '!':
 	case '1':
 		if (!plr[myplr].SpdList[0].isEmpty() && plr[myplr].SpdList[0]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST);
+			inventory->UseInvItem(myplr, INVITEM_BELT_FIRST);
 		}
 		return;
 	case '@':
 	case '2':
 		if (!plr[myplr].SpdList[1].isEmpty() && plr[myplr].SpdList[1]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 1);
+			inventory->UseInvItem(myplr, INVITEM_BELT_FIRST + 1);
 		}
 		return;
 	case '#':
 	case '3':
 		if (!plr[myplr].SpdList[2].isEmpty() && plr[myplr].SpdList[2]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 2);
+			inventory->UseInvItem(myplr, INVITEM_BELT_FIRST + 2);
 		}
 		return;
 	case '$':
 	case '4':
 		if (!plr[myplr].SpdList[3].isEmpty() && plr[myplr].SpdList[3]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 3);
+			inventory->UseInvItem(myplr, INVITEM_BELT_FIRST + 3);
 		}
 		return;
 	case '%':
 	case '5':
 		if (!plr[myplr].SpdList[4].isEmpty() && plr[myplr].SpdList[4]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 4);
+			inventory->UseInvItem(myplr, INVITEM_BELT_FIRST + 4);
 		}
 		return;
 	case '^':
 	case '6':
 		if (!plr[myplr].SpdList[5].isEmpty() && plr[myplr].SpdList[5]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 5);
+			inventory->UseInvItem(myplr, INVITEM_BELT_FIRST + 5);
 		}
 		return;
 	case '&':
 	case '7':
 		if (!plr[myplr].SpdList[6].isEmpty() && plr[myplr].SpdList[6]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 6);
+			inventory->UseInvItem(myplr, INVITEM_BELT_FIRST + 6);
 		}
 		return;
 	case '*':
@@ -1449,7 +1449,7 @@ static void PressChar(WPARAM vkey)
 		}
 #endif
 		if (!plr[myplr].SpdList[7].isEmpty() && plr[myplr].SpdList[7]._itype != ITYPE_GOLD) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 7);
+			inventory->UseInvItem(myplr, INVITEM_BELT_FIRST + 7);
 		}
 		return;
 #ifdef _DEBUG
@@ -1827,7 +1827,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 
 	if (firstflag) {
-		InitInv();
+		inventory->InitInv();
 		InitItemGFX();
 		InitQuestText();
 		InitStores();
