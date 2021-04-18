@@ -37,16 +37,71 @@ extern "C" std::uint32_t GetLastError();
 
 namespace devilution {
 
+unsigned long SVidWidth, SVidHeight;
+
 namespace {
 
 bool directFileAccess = false;
 std::string *SBasePath = NULL;
 
-} // namespace
-
 #ifdef USE_SDL1
-static bool IsSVidVideoMode = false;
+// Whether we've changed the video mode temporarily for SVid.
+// If true, we must restore it once the video has finished playing.
+bool IsSVidVideoMode = false;
+
+// Set the video mode close to the SVid resolution while preserving aspect ratio.
+void TrySetVideoModeToSVidForSDL1() {
+	const SDL_Surface *display = SDL_GetVideoSurface();
+	IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
+	if (!IsSVidVideoMode) return;
+
+	int w;
+	int h;
+	if (display->w * SVidWidth > display->h * SVidHeight) {
+		w = SVidWidth;
+		h = SVidWidth * display->h / display->w;
+	} else {
+		w = SVidHeight * display->w / display->h;
+		h = SVidHeight;
+	}
+
+#ifdef SDL1_FORCE_SVID_VIDEO_MODE
+	const bool video_mode_ok = true;
+#else
+	const bool video_mode_ok = SDL_VideoModeOK(
+	    w, h, /*bpp=*/display->format->BitsPerPixel, display->flags);
 #endif
+
+	if (!video_mode_ok) {
+		IsSVidVideoMode = false;
+
+		// Get available fullscreen/hardware modes
+		SDL_Rect **modes = SDL_ListModes(nullptr, display->flags);
+
+		// Check is there are any modes available.
+		if (modes == reinterpret_cast<SDL_Rect **>(0)
+		    || modes == reinterpret_cast<SDL_Rect **>(-1)) {
+			return;
+		}
+
+		// Search for a usable video mode
+		bool found = false;
+		for (int i = 0; modes[i]; i++) {
+			if (modes[i]->w == w || modes[i]->h == h) {
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+			return;
+		IsSVidVideoMode = true;
+	}
+
+	SetVideoMode(w, h, display->format->BitsPerPixel, display->flags);
+}
+#endif
+
+} // namespace
 
 radon::File &getIni()
 {
@@ -367,7 +422,6 @@ SDL_Color SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
 SDL_Surface *SVidSurface;
 BYTE *SVidBuffer;
-unsigned long SVidWidth, SVidHeight;
 
 #if SDL_VERSION_ATLEAST(2, 0, 4)
 SDL_AudioDeviceID deviceId;
@@ -562,46 +616,7 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 		}
 	}
 #else
-	// Set the video mode close to the SVid resolution while preserving aspect ratio.
-	{
-		const SDL_Surface *display = SDL_GetVideoSurface();
-		IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
-
-		if (IsSVidVideoMode) {
-			/* Get available fullscreen/hardware modes */
-			SDL_Rect **modes = SDL_ListModes(NULL, display->flags);
-
-			/* Check is there are any modes available */
-			if (modes == (SDL_Rect **)0) {
-				IsSVidVideoMode = false;
-			}
-
-			/* Check if our resolution is restricted */
-			if (modes != (SDL_Rect **)-1) {
-				// Search for a usable video mode
-				bool UsableModeFound = false;
-				for (int i = 0; modes[i]; i++) {
-					if (modes[i]->w == SVidWidth || modes[i]->h == SVidHeight) {
-						UsableModeFound = true;
-						break;
-					}
-				}
-				IsSVidVideoMode = UsableModeFound;
-			}
-		}
-
-		if (IsSVidVideoMode) {
-			int w, h;
-			if (display->w * SVidWidth > display->h * SVidHeight) {
-				w = SVidWidth;
-				h = SVidWidth * display->h / display->w;
-			} else {
-				w = SVidHeight * display->w / display->h;
-				h = SVidHeight;
-			}
-			SetVideoMode(w, h, display->format->BitsPerPixel, display->flags);
-		}
-	}
+	TrySetVideoModeToSVidForSDL1();
 #endif
 	memcpy(SVidPreviousPalette, orig_palette, sizeof(SVidPreviousPalette));
 
@@ -804,8 +819,10 @@ void SVidPlayEnd(HANDLE video)
 		}
 	}
 #else
-	if (IsSVidVideoMode)
+	if (IsSVidVideoMode) {
 		SetVideoModeToPrimary(IsFullScreen(), gnScreenWidth, gnScreenHeight);
+		IsSVidVideoMode = false;
+	}
 #endif
 }
 
