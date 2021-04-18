@@ -4310,16 +4310,16 @@ bool OperateShrineSolar(int pnum)
 
 	time_t tm = time(0);
 	int hour = localtime(&tm)->tm_hour;
-	if (hour > 20 || hour < 4) {
+	if (hour >= 20 || hour < 4) {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR4);
 		ModifyPlrVit(myplr, 2);
-	} else if (hour > 18) {
+	} else if (hour >= 18) {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR3);
 		ModifyPlrMag(myplr, 2);
-	} else if (hour > 12) {
+	} else if (hour >= 12) {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR2);
 		ModifyPlrStr(myplr, 2);
-	} else if (hour > 4) {
+	} else /* 4:00 to 11:59 */ {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR1);
 		ModifyPlrDex(myplr, 2);
 	}
