@@ -553,7 +553,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 	// We populate the table of sector offset while we write the data.
 	// We can't pre-populate it because we don't know the compressed sector sizes yet.
 	// First offset is the start of the first sector, last offset is the end of the last sector.
-	std::unique_ptr<uint32_t[]> sectoroffsettable(new uint32_t[num_sectors + 1]);
+	auto sectoroffsettable = std::make_unique<uint32_t[]>(num_sectors + 1);
 
 #ifdef CAN_SEEKP_BEYOND_EOF
 	if (!cur_archive.stream.seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
@@ -566,7 +566,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 	const std::uintmax_t cur_size = stream_end - cur_archive.stream_begin;
 	if (cur_size < pBlk->offset + offset_table_bytesize) {
 		if (cur_size < pBlk->offset) {
-			std::unique_ptr<char[]> filler(new char[pBlk->offset - cur_size]);
+			auto filler = std::make_unique<char[]>(pBlk->offset - cur_size);
 			if (!cur_archive.stream.write(filler.get(), pBlk->offset - cur_size))
 				return false;
 		}
