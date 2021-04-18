@@ -82,8 +82,10 @@ static void dx_create_primary_surface()
 
 void dx_init()
 {
+#ifndef USE_SDL1
 	SDL_RaiseWindow(ghMainWnd);
 	SDL_ShowWindow(ghMainWnd);
+#endif
 
 	dx_create_primary_surface();
 	palette_init();
@@ -139,8 +141,10 @@ CelOutputBuffer GlobalBackBuffer()
 
 void dx_cleanup()
 {
+#ifndef USE_SDL1
 	if (ghMainWnd)
 		SDL_HideWindow(ghMainWnd);
+#endif
 	sgMemCrit.Enter();
 	sgdwLockCount = 0;
 	sgMemCrit.Leave();

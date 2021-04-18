@@ -114,11 +114,6 @@ inline SDL_bool SDL_PointInRect(const SDL_Point *p, const SDL_Rect *r)
 	return ((p->x >= r->x) && (p->x < (r->x + r->w)) && (p->y >= r->y) && (p->y < (r->y + r->h))) ? SDL_TRUE : SDL_FALSE;
 }
 
-inline void SDL_DisableScreenSaver()
-{
-	DUMMY();
-}
-
 //= Messagebox (simply logged to stderr for now)
 
 enum {
@@ -149,31 +144,11 @@ inline void SDL_GetWindowPosition(SDL_Window *window, int *x, int *y)
 	SDL_Log("SDL_GetWindowPosition %d %d", *x, *y);
 }
 
-inline void SDL_SetWindowPosition(SDL_Window *window, int x, int y)
-{
-	DUMMY();
-}
-
 inline void SDL_GetWindowSize(SDL_Window *window, int *w, int *h)
 {
 	*w = window->clip_rect.w;
 	*h = window->clip_rect.h;
 	SDL_Log("SDL_GetWindowSize %d %d", *w, *h);
-}
-
-inline void SDL_ShowWindow(SDL_Window *window)
-{
-	DUMMY();
-}
-
-inline void SDL_HideWindow(SDL_Window *window)
-{
-	DUMMY();
-}
-
-inline void SDL_RaiseWindow(SDL_Window *window)
-{
-	DUMMY();
 }
 
 inline void SDL_DestroyWindow(SDL_Window *window)
