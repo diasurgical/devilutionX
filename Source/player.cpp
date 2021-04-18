@@ -2011,14 +2011,10 @@ void StripTopGold(int pnum)
 
 void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int earflag /*= 0*/)
 {
-	int ma, i;
-	int totalDamage;
-	int minHitPoints;
-
-	totalDamage = (dam << 6) + frac;
+	int totalDamage = (dam << 6) + frac;
 	if (totalDamage > 0) {
-		for (i = 0; i < nummissiles; i++) {
-			ma = missileactive[i];
+		for (int i = 0; i < nummissiles; i++) {
+			int ma = missileactive[i];
 			if (missile[ma]._mitype == MIS_MANASHIELD && missile[ma]._misource == pnum && !missile[ma]._miDelFlag) {
 				if (missile[ma]._mispllvl > 0) {
 					totalDamage += totalDamage / -3;
@@ -2053,7 +2049,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 		plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
 		plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
 	}
-	minHitPoints = minHP << 6;
+	int minHitPoints = minHP << 6;
 	if (plr[pnum]._pHitPoints < minHitPoints) {
 		plr[pnum]._pHitPoints = minHitPoints;
 		plr[pnum]._pHPBase = minHitPoints + plr[pnum]._pMaxHPBase - plr[pnum]._pMaxHP;
