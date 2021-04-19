@@ -2425,7 +2425,7 @@ static DWORD On_CHEAT_SPELL_LEVEL(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-static DWORD On_DEBUG(TCmd *pCmd, int pnum)
+static DWORD On_DEBUG(TCmd *pCmd)
 {
 	return sizeof(*pCmd);
 }
@@ -2478,7 +2478,7 @@ static DWORD On_REFLECT(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-static DWORD On_NAKRUL(TCmd *pCmd, int pnum)
+static DWORD On_NAKRUL(TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		operate_lv24_lever();
@@ -2499,7 +2499,7 @@ static DWORD On_OPENHIVE(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-static DWORD On_OPENCRYPT(TCmd *pCmd, int pnum)
+static DWORD On_OPENCRYPT(TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		TownOpenGrave();
@@ -2594,7 +2594,7 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_TALKXY:
 		return On_TALKXY(pCmd, pnum);
 	case CMD_DEBUG:
-		return On_DEBUG(pCmd, pnum);
+		return On_DEBUG(pCmd);
 	case CMD_NEWLVL:
 		return On_NEWLVL(pCmd, pnum);
 	case CMD_WARP:
@@ -2668,11 +2668,11 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_REFLECT:
 		return On_REFLECT(pCmd, pnum);
 	case CMD_NAKRUL:
-		return On_NAKRUL(pCmd, pnum);
+		return On_NAKRUL(pCmd);
 	case CMD_OPENHIVE:
 		return On_OPENHIVE(pCmd, pnum);
 	case CMD_OPENCRYPT:
-		return On_OPENCRYPT(pCmd, pnum);
+		return On_OPENCRYPT(pCmd);
 	default:
 		break;
 	}
