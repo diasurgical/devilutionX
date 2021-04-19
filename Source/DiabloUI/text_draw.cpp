@@ -36,20 +36,20 @@ int AlignXOffset(int flags, const SDL_Rect &dest, int w)
 
 void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
     const SDL_Color &text_color, const SDL_Color &shadow_color,
-    TtfSurfaceCache **render_cache)
+    TtfSurfaceCache &render_cache)
 {
 	SDL_Rect rect(rectIn);
 	if (font == NULL || text == NULL || *text == '\0')
 		return;
-	if (*render_cache == NULL) {
-		const auto x_align = XAlignmentFromFlags(flags);
-		*render_cache = new TtfSurfaceCache {
-			/*.text=*/ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w, x_align) }),
-			/*.shadow=*/ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w, x_align) }),
-		};
-	}
-	SDL_Surface *text_surface = (*render_cache)->text.get();
-	SDL_Surface *shadow_surface = (*render_cache)->shadow.get();
+
+	const auto x_align = XAlignmentFromFlags(flags);
+	if (render_cache.text == nullptr)
+		render_cache.text = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w, x_align) });
+	if (render_cache.shadow == nullptr)
+		render_cache.shadow = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w, x_align) });
+
+	SDL_Surface *text_surface = render_cache.text.get();
+	SDL_Surface *shadow_surface = render_cache.shadow.get();
 	if (text_surface == NULL)
 		return;
 
