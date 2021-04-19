@@ -3225,36 +3225,6 @@ void CheckNewPath(int pnum)
 			if (plr[pnum]._pmode == PM_STAND) {
 				StartStand(pnum, plr[pnum]._pdir);
 				plr[pnum].destAction = ACTION_NONE;
-			} else if (pnum == myplr) {
-
-				/*
-				* This forces _ptargx and _ptargy (those indicate the end position for a player after following pathfinding)
-				* to be correct while character is moving.
-				*
-				* This fixes a desync which happens if a player queues a move while attacking. When finishing an attack,
-				* the game calls FixPlayerPosition() which resets _ptargx and _ptargy, but they shouldn't be reset if
-				* player is supposed to follow pathfinding immediately after attacking.
-				*/
-
-				int realTargetX = plr[pnum]._pfutx;
-				int realTargetY = plr[pnum]._pfuty;
-				for (i = 0; i < MAX_PATH_LENGTH; i++) {
-					if (plr[pnum].walkpath[i] == WALK_NONE)
-						break;
-
-					if (plr[pnum].walkpath[i] == WALK_N || plr[pnum].walkpath[i] == WALK_NW || plr[pnum].walkpath[i] == WALK_W)
-						realTargetX--;
-					else if (plr[pnum].walkpath[i] == WALK_E || plr[pnum].walkpath[i] == WALK_SE || plr[pnum].walkpath[i] == WALK_S)
-						realTargetX++;
-
-					if (plr[pnum].walkpath[i] == WALK_N || plr[pnum].walkpath[i] == WALK_NE || plr[pnum].walkpath[i] == WALK_E)
-						realTargetY--;
-					else if (plr[pnum].walkpath[i] == WALK_S || plr[pnum].walkpath[i] == WALK_SW || plr[pnum].walkpath[i] == WALK_W)
-						realTargetY++;
-				}
-
-				plr[pnum]._ptargx = realTargetX;
-				plr[pnum]._ptargy = realTargetY;
 			}
 		}
 

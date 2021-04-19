@@ -114,6 +114,33 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
+	/*
+	* We calculate _ptargx and _ptargy here and prepare for it to be sent to other clients.
+	* If px/py and ptarx/ptary don't match on other clients, then they'll move our
+	* local player to that location.
+	*/
+	{
+		int realTargetX = plr[myplr]._pfutx;
+		int realTargetY = plr[myplr]._pfuty;
+		for (int i = 0; i < MAX_PATH_LENGTH; i++) {
+			if (plr[myplr].walkpath[i] == WALK_NONE)
+				break;
+
+			if (plr[myplr].walkpath[i] == WALK_N || plr[myplr].walkpath[i] == WALK_NW || plr[myplr].walkpath[i] == WALK_W)
+				realTargetX--;
+			else if (plr[myplr].walkpath[i] == WALK_E || plr[myplr].walkpath[i] == WALK_SE || plr[myplr].walkpath[i] == WALK_S)
+				realTargetX++;
+
+			if (plr[myplr].walkpath[i] == WALK_N || plr[myplr].walkpath[i] == WALK_NE || plr[myplr].walkpath[i] == WALK_E)
+				realTargetY--;
+			else if (plr[myplr].walkpath[i] == WALK_S || plr[myplr].walkpath[i] == WALK_SW || plr[myplr].walkpath[i] == WALK_W)
+				realTargetY++;
+		}
+
+		plr[myplr]._ptargx = realTargetX;
+		plr[myplr]._ptargy = realTargetY;
+	}
+
 	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
 	pkt->hdr.px = plr[myplr]._px;
 	pkt->hdr.py = plr[myplr]._py;
