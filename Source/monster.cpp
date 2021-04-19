@@ -2665,21 +2665,18 @@ void DoEnding()
 
 void PrepDoEnding()
 {
-	int newKillLevel, i;
-	DWORD *killLevel;
-
 	gbSoundOn = sgbSaveSoundOn;
 	gbRunGame = false;
 	deathflag = false;
 	cineflag = true;
 
-	killLevel = &plr[myplr].pDiabloKillLevel;
-	newKillLevel = sgGameInitInfo.nDifficulty + 1;
+	uint32_t *killLevel = &plr[myplr].pDiabloKillLevel;
+	uint32_t newKillLevel = sgGameInitInfo.nDifficulty + 1;
 	if (*killLevel > newKillLevel)
 		newKillLevel = *killLevel;
 	plr[myplr].pDiabloKillLevel = newKillLevel;
 
-	for (i = 0; i < MAX_PLRS; i++) {
+	for (int i = 0; i < MAX_PLRS; i++) {
 		plr[i]._pmode = PM_QUIT;
 		plr[i]._pInvincible = true;
 		if (gbIsMultiplayer) {
@@ -2811,6 +2808,8 @@ void M_WalkDir(int i, direction md)
 		break;
 	case DIR_NW:
 		M_StartWalk(i, -MWVel[mwi][1], -MWVel[mwi][0], -1, 0, DIR_NW);
+		break;
+	case DIR_OMNI:
 		break;
 	}
 }

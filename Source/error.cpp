@@ -13,7 +13,7 @@ namespace devilution {
 diablo_message msgtable[MAX_SEND_STR_LEN];
 DWORD msgdelay;
 diablo_message msgflag;
-char msgcnt;
+uint8_t msgcnt;
 
 /** Maps from error_id to error message. */
 const char *const MsgStrings[] = {
@@ -95,9 +95,7 @@ void InitDiabloMsg(diablo_message e)
 
 void ClrDiabloMsg()
 {
-	int i;
-
-	for (i = 0; i < sizeof(msgtable); i++)
+	for (unsigned i = 0; i < sizeof(msgtable); i++)
 		msgtable[i] = EMSG_NONE;
 
 	msgflag = EMSG_NONE;

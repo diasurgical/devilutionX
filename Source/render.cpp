@@ -379,7 +379,7 @@ void foreach_set_bit(DWORD mask, const F &f)
 	}
 }
 
-inline void DoRenderLine(BYTE *dst, BYTE *src, int n, BYTE *tbl, DWORD mask)
+inline void DoRenderLine(BYTE *dst, BYTE *src, size_t n, BYTE *tbl, DWORD mask)
 {
 	if (mask == 0xFFFFFFFF) {                // Opaque line
 		if (light_table_index == lightmax) { // Complete darkness
@@ -387,7 +387,7 @@ inline void DoRenderLine(BYTE *dst, BYTE *src, int n, BYTE *tbl, DWORD mask)
 		} else if (light_table_index == 0) { // Fully lit
 			memcpy(dst, src, n);
 		} else { // Partially lit
-			for (int i = 0; i < n; i++) {
+			for (size_t i = 0; i < n; i++) {
 				dst[i] = tbl[src[i]];
 			}
 		}
@@ -401,21 +401,21 @@ inline void DoRenderLine(BYTE *dst, BYTE *src, int n, BYTE *tbl, DWORD mask)
 
 		if (sgOptions.Graphics.bBlendedTransparancy) { // Blended transparancy
 			if (light_table_index == lightmax) {       // Complete darkness
-				for (int i = 0; i < n; i++, mask <<= 1) {
+				for (size_t i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
 						dst[i] = 0;
 					else
 						dst[i] = paletteTransparencyLookup[0][dst[i]];
 				}
 			} else if (light_table_index == 0) { // Fully lit
-				for (int i = 0; i < n; i++, mask <<= 1) {
+				for (size_t i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
 						dst[i] = src[i];
 					else
 						dst[i] = paletteTransparencyLookup[dst[i]][src[i]];
 				}
 			} else { // Partially lit
-				for (int i = 0; i < n; i++, mask <<= 1) {
+				for (size_t i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
 						dst[i] = tbl[src[i]];
 					else

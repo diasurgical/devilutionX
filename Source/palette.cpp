@@ -106,7 +106,7 @@ static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int ski
 				int diffr = palette[k].r - r;
 				int diffg = palette[k].g - g;
 				int diffb = palette[k].b - b;
-				int diff = diffr * diffr + diffg * diffg + diffb * diffb;
+				Uint32 diff = diffr * diffr + diffg * diffg + diffb * diffb;
 
 				if (bestDiff > diff) {
 					best = k;

@@ -10,7 +10,7 @@
 namespace devilution {
 
 extern bool gbIsHellfireSaveGame;
-extern int giNumberOfLevels;
+extern uint8_t giNumberOfLevels;
 
 void RemoveInvalidItem(ItemStruct *pItem);
 int RemapItemIdxFromDiablo(int i);

@@ -363,7 +363,7 @@ static void AddItemToInvGrid(int playerNumber, int invGridIndex, int invListInde
 	const int pitch = 10;
 	for (int y = 0; y < sizeY; y++) {
 		for (int x = 0; x < sizeX; x++) {
-			if (x == 0 & y == sizeY - 1)
+			if (x == 0 && y == sizeY - 1)
 				plr[playerNumber].InvGrid[invGridIndex + x] = invListIndex;
 			else
 				plr[playerNumber].InvGrid[invGridIndex + x] = -invListIndex;
@@ -1815,7 +1815,7 @@ void CleanupItems(ItemStruct *item, int ii)
 {
 	dItem[item->_ix][item->_iy] = 0;
 
-	if (currlevel == 21 & item->_ix == CornerStone.x && item->_iy == CornerStone.y) {
+	if (currlevel == 21 && item->_ix == CornerStone.x && item->_iy == CornerStone.y) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item._ix = 0;
@@ -2226,7 +2226,6 @@ char CheckInvHLight()
 	int r, ii, nGold;
 	ItemStruct *pi;
 	PlayerStruct *p;
-	char rv;
 
 	for (r = 0; (DWORD)r < NUM_XY_SLOTS; r++) {
 		int xo = RIGHT_PANEL;
@@ -2247,7 +2246,7 @@ char CheckInvHLight()
 	if ((DWORD)r >= NUM_XY_SLOTS)
 		return -1;
 
-	rv = -1;
+	int8_t rv = -1;
 	infoclr = COL_WHITE;
 	pi = NULL;
 	p = &plr[myplr];

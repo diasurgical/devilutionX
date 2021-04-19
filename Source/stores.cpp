@@ -2559,7 +2559,6 @@ void STextPrior()
 		if (stextsel == stextup) {
 			if (stextsval)
 				stextsval -= 4;
-			stextsval = stextsval;
 			if (stextsval < 0)
 				stextsval = 0;
 		} else {

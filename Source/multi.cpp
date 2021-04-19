@@ -453,19 +453,19 @@ void multi_process_network_packets()
 	int dx, dy;
 	TPktHdr *pkt;
 	DWORD dwMsgSize;
-	DWORD dwID;
+	int dwID;
 	bool cond;
 	char *data;
 
 	multi_clear_left_tbl();
 	multi_process_tmsgs();
-	while (SNetReceiveMessage((int *)&dwID, &data, (int *)&dwMsgSize)) {
+	while (SNetReceiveMessage(&dwID, &data, (int *)&dwMsgSize)) {
 		dwRecCount++;
 		multi_clear_left_tbl();
 		pkt = (TPktHdr *)data;
 		if (dwMsgSize < sizeof(TPktHdr))
 			continue;
-		if (dwID >= MAX_PLRS)
+		if (dwID < 0 || dwID >= MAX_PLRS)
 			continue;
 		if (pkt->wCheck != LOAD_BE32("\0\0ip"))
 			continue;

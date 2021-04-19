@@ -853,7 +853,7 @@ static void Cl2BlitSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 static void Cl2BlitOutlineSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE col)
 {
 	int w;
-	char width;
+	int8_t width;
 	BYTE *src, *dst;
 
 	src = pRLEBytes;

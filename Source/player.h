@@ -311,7 +311,7 @@ struct PlayerStruct {
 	Uint8 pDungMsgs2;
 	bool pOriginalCathedral;
 	Uint16 wReflections;
-	Uint32 pDiabloKillLevel;
+	uint32_t pDiabloKillLevel;
 	_difficulty pDifficulty;
 	Uint32 pDamAcFlags;
 	Uint8 *_pNData;

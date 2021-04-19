@@ -91,12 +91,12 @@ int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
-char dTransVal[MAXDUNX][MAXDUNY];
+int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
-char dFlags[MAXDUNX][MAXDUNY];
+int8_t dFlags[MAXDUNX][MAXDUNY];
 /** Contains the player numbers (players array indices) of the map. */
-char dPlayer[MAXDUNX][MAXDUNY];
+int8_t dPlayer[MAXDUNX][MAXDUNY];
 /**
  * Contains the NPC numbers of the map. The NPC number represents a
  * towner number (towners array index) in Tristram and a monster number
@@ -109,11 +109,11 @@ int16_t dMonster[MAXDUNX][MAXDUNY];
  * dDead[x][y] & 0x1F - index of dead
  * dDead[x][y] >> 0x5 - direction
  */
-char dDead[MAXDUNX][MAXDUNY];
+int8_t dDead[MAXDUNX][MAXDUNY];
 /** Contains the object numbers (objects array indices) of the map. */
 char dObject[MAXDUNX][MAXDUNY];
 /** Contains the item numbers (items array indices) of the map. */
-char dItem[MAXDUNX][MAXDUNY];
+int8_t dItem[MAXDUNX][MAXDUNY];
 /** Contains the missile numbers (missiles array indices) of the map. */
 char dMissile[MAXDUNX][MAXDUNY];
 /**

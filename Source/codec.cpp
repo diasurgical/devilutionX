@@ -98,14 +98,14 @@ error:
 	return 0;
 }
 
-DWORD codec_get_encoded_len(DWORD dwSrcBytes)
+std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 {
 	if (dwSrcBytes % BLOCKSIZE != 0)
 		dwSrcBytes += BLOCKSIZE - (dwSrcBytes % BLOCKSIZE);
 	return dwSrcBytes + sizeof(CodecSignature);
 }
 
-void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, const char *pszPassword)
+void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword)
 {
 	char buf[128];
 	char tmp[SHA1HashSize];

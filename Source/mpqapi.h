@@ -15,7 +15,7 @@ namespace devilution {
 struct _FILEHEADER {
 	int signature;
 	int headersize;
-	int filesize;
+	uint32_t filesize;
 	Uint16 version;
 	Sint16 sectorsizeid;
 	int hashoffset;
@@ -28,7 +28,7 @@ struct _FILEHEADER {
 struct _HASHENTRY {
 	Uint32 hashcheck[2];
 	Uint32 lcid;
-	Uint32 block;
+	int32_t block;
 };
 
 struct _BLOCKENTRY {
@@ -39,7 +39,7 @@ struct _BLOCKENTRY {
 };
 
 void mpqapi_remove_hash_entry(const char *pszName);
-void mpqapi_remove_hash_entries(bool (*fnGetName)(DWORD, char *));
+void mpqapi_remove_hash_entries(bool (*fnGetName)(uint8_t, char *));
 bool mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen);
 void mpqapi_rename(char *pszOld, char *pszNew);
 bool mpqapi_has_file(const char *pszName);

@@ -21,7 +21,7 @@ struct TDataInfo {
 
 void Decrypt(DWORD *castBlock, DWORD size, DWORD key);
 void Encrypt(DWORD *castBlock, DWORD size, DWORD key);
-DWORD Hash(const char *s, int type);
+uint32_t Hash(const char *s, int type);
 void InitHash();
 DWORD PkwareCompress(BYTE *srcData, DWORD size);
 void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes);

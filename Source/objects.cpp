@@ -671,7 +671,7 @@ void AddL2Torches()
 
 void AddObjTraps()
 {
-	char oi_trap, oi;
+	int8_t oi_trap, oi;
 	int i, j;
 	int xp, yp;
 	int rndv;
@@ -727,7 +727,7 @@ void AddObjTraps()
 void AddChestTraps()
 {
 	int i, j;
-	char oi;
+	int8_t oi;
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
@@ -1042,7 +1042,6 @@ void AddLazStand()
 
 void InitObjects()
 {
-	_speech_id sp_id;
 	BYTE *mem;
 
 	ClrAllObjects();
@@ -1093,18 +1092,26 @@ void InitObjects()
 			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddL2Torches();
 			if (QuestStatus(Q_BLIND)) {
-				if (plr[myplr]._pClass == HeroClass::Warrior) {
+				_speech_id sp_id;
+				switch (plr[myplr]._pClass) {
+				case HeroClass::Warrior:
 					sp_id = TEXT_BLINDING;
-				} else if (plr[myplr]._pClass == HeroClass::Rogue) {
+					break;
+				case HeroClass::Rogue:
 					sp_id = TEXT_RBLINDING;
-				} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
+					break;
+				case HeroClass::Sorcerer:
 					sp_id = TEXT_MBLINDING;
-				} else if (plr[myplr]._pClass == HeroClass::Monk) {
+					break;
+				case HeroClass::Monk:
 					sp_id = TEXT_HBLINDING;
-				} else if (plr[myplr]._pClass == HeroClass::Bard) {
+					break;
+				case HeroClass::Bard:
 					sp_id = TEXT_BBLINDING;
-				} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
+					break;
+				case HeroClass::Barbarian:
 					sp_id = TEXT_BLINDING;
+					break;
 				}
 				quests[Q_BLIND]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, sp_id);
@@ -1113,18 +1120,26 @@ void InitObjects()
 				mem_free_dbg(mem);
 			}
 			if (QuestStatus(Q_BLOOD)) {
-				if (plr[myplr]._pClass == HeroClass::Warrior) {
+				_speech_id sp_id;
+				switch (plr[myplr]._pClass) {
+				case HeroClass::Warrior:
 					sp_id = TEXT_BLOODY;
-				} else if (plr[myplr]._pClass == HeroClass::Rogue) {
+					break;
+				case HeroClass::Rogue:
 					sp_id = TEXT_RBLOODY;
-				} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
+					break;
+				case HeroClass::Sorcerer:
 					sp_id = TEXT_MBLOODY;
-				} else if (plr[myplr]._pClass == HeroClass::Monk) {
+					break;
+				case HeroClass::Monk:
 					sp_id = TEXT_HBLOODY;
-				} else if (plr[myplr]._pClass == HeroClass::Bard) {
+					break;
+				case HeroClass::Bard:
 					sp_id = TEXT_BBLOODY;
-				} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
+					break;
+				case HeroClass::Barbarian:
 					sp_id = TEXT_BLOODY;
+					break;
 				}
 				quests[Q_BLOOD]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, sp_id);
@@ -1138,18 +1153,26 @@ void InitObjects()
 		}
 		if (leveltype == DTYPE_HELL) {
 			if (QuestStatus(Q_WARLORD)) {
-				if (plr[myplr]._pClass == HeroClass::Warrior) {
+				_speech_id sp_id;
+				switch (plr[myplr]._pClass) {
+				case HeroClass::Warrior:
 					sp_id = TEXT_BLOODWAR;
-				} else if (plr[myplr]._pClass == HeroClass::Rogue) {
+					break;
+				case HeroClass::Rogue:
 					sp_id = TEXT_RBLOODWAR;
-				} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
+					break;
+				case HeroClass::Sorcerer:
 					sp_id = TEXT_MBLOODWAR;
-				} else if (plr[myplr]._pClass == HeroClass::Monk) {
+					break;
+				case HeroClass::Monk:
 					sp_id = TEXT_HBLOODWAR;
-				} else if (plr[myplr]._pClass == HeroClass::Bard) {
+					break;
+				case HeroClass::Bard:
 					sp_id = TEXT_BBLOODWAR;
-				} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
+					break;
+				case HeroClass::Barbarian:
 					sp_id = TEXT_BLOODWAR;
+					break;
 				}
 				quests[Q_WARLORD]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, sp_id);
@@ -3056,7 +3079,7 @@ void OperateBookLever(int pnum, int i)
 
 void OperateSChambBk(int pnum, int i)
 {
-	int j, textdef;
+	int j;
 
 	if (object[i]._oSelFlag != 0 && !qtextflag) {
 		if (object[i]._oAnimFrame != object[i]._oVar6) {
@@ -3069,18 +3092,27 @@ void OperateSChambBk(int pnum, int i)
 			quests[Q_SCHAMB]._qactive = QUEST_ACTIVE;
 			quests[Q_SCHAMB]._qlog = true;
 		}
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
+
+		_speech_id textdef;
+		switch (plr[myplr]._pClass) {
+		case HeroClass::Warrior:
 			textdef = TEXT_BONER;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
+			break;
+		case HeroClass::Rogue:
 			textdef = TEXT_RBONER;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
+			break;
+		case HeroClass::Sorcerer:
 			textdef = TEXT_MBONER;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
+			break;
+		case HeroClass::Monk:
 			textdef = TEXT_HBONER;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
+			break;
+		case HeroClass::Bard:
 			textdef = TEXT_BBONER;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
+			break;
+		case HeroClass::Barbarian:
 			textdef = TEXT_BONER;
+			break;
 		}
 		quests[Q_SCHAMB]._qmsg = textdef;
 		InitQTextMsg(textdef);
@@ -4829,7 +4861,7 @@ void OperateStoryBook(int pnum, int i)
 		} else if (currlevel >= 21) {
 			quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
 			quests[Q_NAKRUL]._qlog = 1;
-			quests[Q_NAKRUL]._qmsg = object[i]._oVar2;
+			quests[Q_NAKRUL]._qmsg = static_cast<_speech_id>(object[i]._oVar2);
 		}
 		InitQTextMsg(object[i]._oVar2);
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);

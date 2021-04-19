@@ -786,7 +786,6 @@ void UpdateManaFlask(CelOutputBuffer out)
 
 void InitControlPan()
 {
-	int i;
 	pBtmBuff = CelOutputBuffer::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
 	pManaBuff = CelOutputBuffer::Alloc(88, 88);
 	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
@@ -814,15 +813,15 @@ void InitControlPan()
 		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
 		sgbPlrTalkTbl = 0;
 		sgszTalkMsg[0] = '\0';
-		for (i = 0; i < MAX_PLRS; i++)
+		for (unsigned i = 0; i < MAX_PLRS; i++)
 			whisper[i] = true;
-		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
+		for (unsigned i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
 			talkbtndown[i] = false;
 	}
 	panelflag = false;
 	lvlbtndown = false;
 	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", NULL);
-	for (i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
+	for (unsigned i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
 		panbtn[i] = false;
 	panbtndown = false;
 	if (!gbIsMultiplayer)
@@ -830,7 +829,7 @@ void InitControlPan()
 	else
 		numpanbtns = 8;
 	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", NULL);
-	for (i = 0; i < sizeof(chrbtn) / sizeof(chrbtn[0]); i++)
+	for (unsigned i = 0; i < sizeof(chrbtn) / sizeof(chrbtn[0]); i++)
 		chrbtn[i] = false;
 	chrbtnactive = false;
 	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", NULL);
@@ -2152,8 +2151,6 @@ void DrawTalkPan(CelOutputBuffer out)
 
 bool control_check_talk_btn()
 {
-	int i;
-
 	if (!talkflag)
 		return false;
 
@@ -2166,7 +2163,7 @@ bool control_check_talk_btn()
 	if (MouseY > 123 + PANEL_TOP)
 		return false;
 
-	for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++) {
+	for (unsigned i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++) {
 		talkbtndown[i] = false;
 	}
 
@@ -2177,15 +2174,14 @@ bool control_check_talk_btn()
 
 void control_release_talk_btn()
 {
-	int i, p, off;
-
 	if (talkflag) {
-		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
+		for (unsigned i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
 			talkbtndown[i] = false;
 		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 69 + PANEL_TOP && MouseX <= 233 + PANEL_LEFT && MouseY <= 123 + PANEL_TOP) {
-			off = (MouseY - (69 + PANEL_TOP)) / 18;
+			int off = (MouseY - (69 + PANEL_TOP)) / 18;
 
-			for (p = 0; p < MAX_PLRS && off != -1; p++) {
+			int p = 0;
+			for (; p < MAX_PLRS && off != -1; p++) {
 				if (p != myplr)
 					off--;
 			}

@@ -54,7 +54,7 @@ std::string GetSavePath(DWORD save_num)
 	return path;
 }
 
-bool GetPermSaveNames(DWORD dwIndex, char *szPerm)
+bool GetPermSaveNames(uint8_t dwIndex, char *szPerm)
 {
 	const char *fmt;
 
@@ -70,7 +70,7 @@ bool GetPermSaveNames(DWORD dwIndex, char *szPerm)
 	return true;
 }
 
-bool GetTempSaveNames(DWORD dwIndex, char *szTemp)
+bool GetTempSaveNames(uint8_t dwIndex, char *szTemp)
 {
 	const char *fmt;
 
@@ -365,7 +365,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	return true;
 }
 
-bool pfile_get_file_name(DWORD lvl, char *dst)
+bool pfile_get_file_name(uint8_t lvl, char *dst)
 {
 	const char *fmt;
 

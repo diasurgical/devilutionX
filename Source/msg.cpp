@@ -73,12 +73,10 @@ static void msg_free_packets()
 
 static void msg_pre_packet()
 {
-	int i;
-
-	i = -1;
+	int i = -1;
 	for (TMegaPkt *pkt = sgpMegaPkt; pkt != NULL; pkt = pkt->pNext) {
 		BYTE *data = pkt->data;
-		int spaceLeft = sizeof(pkt->data);
+		size_t spaceLeft = sizeof(pkt->data);
 		while (spaceLeft != pkt->dwSpaceLeft) {
 			if (*data == FAKE_CMD_SETID) {
 				TFakeCmdPlr *cmd = (TFakeCmdPlr *)data;
@@ -2383,21 +2381,6 @@ static DWORD On_SYNCQUEST(TCmd *pCmd, int pnum)
 	}
 
 	return sizeof(*p);
-}
-
-static DWORD On_ENDREFLECT(TCmd *pCmd, int pnum)
-{
-	if (gbBufferMsgs != 1 && pnum != myplr && currlevel == plr[pnum].plrlevel) {
-		for (int i = 0; i < nummissiles; i++) {
-			int mi = missileactive[i];
-			if (missile[mi]._mitype == MIS_REFLECT && missile[mi]._misource == pnum) {
-				ClearMissileSpot(mi);
-				DeleteMissile(mi, i);
-			}
-		}
-	}
-
-	return sizeof(*pCmd);
 }
 
 static DWORD On_ENDSHIELD(TCmd *pCmd, int pnum)

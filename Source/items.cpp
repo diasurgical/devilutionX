@@ -545,7 +545,6 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 
 	int g;
 	int i;
-	int mi;
 
 	int bdam = 0;   // bonus damage
 	int btohit = 0; // bonus chance to hit
@@ -1377,7 +1376,7 @@ bool ItemSpaceOk(int i, int j)
 	return !nSolidTable[dPiece[i][j]];
 }
 
-static bool GetItemSpace(int x, int y, char inum)
+static bool GetItemSpace(int x, int y, int8_t inum)
 {
 	int i, j, rs;
 	int xx, yy;
@@ -1443,7 +1442,7 @@ int AllocateItem()
 	return inum;
 }
 
-static void GetSuperItemSpace(int x, int y, char inum)
+static void GetSuperItemSpace(int x, int y, int8_t inum)
 {
 	if (!GetItemSpace(x, y, inum)) {
 		for (int k = 2; k < 50; k++) {
@@ -1724,12 +1723,17 @@ void GetItemAttrs(int i, int idata, int lvl)
 
 	int rndv;
 	int itemlevel = items_get_currlevel();
-	if (sgGameInitInfo.nDifficulty == DIFF_NORMAL)
+	switch (sgGameInitInfo.nDifficulty) {
+	case DIFF_NORMAL:
 		rndv = 5 * itemlevel + random_(21, 10 * itemlevel);
-	else if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE)
+		break;
+	case DIFF_NIGHTMARE:
 		rndv = 5 * (itemlevel + 16) + random_(21, 10 * (itemlevel + 16));
-	else if (sgGameInitInfo.nDifficulty == DIFF_HELL)
+		break;
+	case DIFF_HELL:
 		rndv = 5 * (itemlevel + 32) + random_(21, 10 * (itemlevel + 32));
+		break;
+	}
 	if (leveltype == DTYPE_HELL)
 		rndv += rndv >> 3;
 	if (rndv > GOLD_MAX_LIMIT)
@@ -1773,7 +1777,7 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		break;
 	case IPL_DOPPELGANGER:
 		items[i]._iDamAcFlags |= 16;
-		// no break
+		[[fallthrough]];
 	case IPL_TOHIT_DAMP:
 		r = RndPL(param1, param2);
 		items[i]._iPLDam += r;
@@ -1928,7 +1932,7 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		break;
 	case IPL_CRYSTALLINE:
 		items[i]._iPLDam += 140 + r * 2;
-		// no break
+		[[fallthrough]];
 	case IPL_DUR_CURSE:
 		items[i]._iMaxDur -= r * items[i]._iMaxDur / 100;
 		if (items[i]._iMaxDur < 1)
@@ -2842,7 +2846,7 @@ void items_427A72()
 		if (!CornerStone.item.isEmpty()) {
 			PackItem(&id, &CornerStone.item);
 			buffer = (BYTE *)&id;
-			for (int i = 0; i < sizeof(PkItemStruct); i++) {
+			for (size_t i = 0; i < sizeof(PkItemStruct); i++) {
 				sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
 			}
 		} else {
@@ -4530,12 +4534,12 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		count++;
 	} while (keepgoing
 	    || ((
-	           items[0]._iIvalue > 200000
-	           || items[0]._iMinStr > strength
-	           || items[0]._iMinMag > magic
-	           || items[0]._iMinDex > dexterity
-	           || items[0]._iIvalue < ivalue))
-	        && count < 150);
+	            items[0]._iIvalue > 200000
+	            || items[0]._iMinStr > strength
+	            || items[0]._iMinMag > magic
+	            || items[0]._iMinDex > dexterity
+	            || items[0]._iIvalue < ivalue)
+	        && count < 150));
 	premiumitem[i] = items[0];
 	premiumitem[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumitem[i]._iIdentified = true;
