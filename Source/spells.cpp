@@ -48,7 +48,7 @@ int GetManaAmount(int id, spell_id sn)
 		ma = 0;
 	ma <<= 6;
 
-	if (plr[id]._pClass == HeroClass::Sorcerer) {
+	if (gbIsHellfire && plr[id]._pClass == HeroClass::Sorcerer) {
 		ma >>= 1;
 	} else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Monk || plr[id]._pClass == HeroClass::Bard) {
 		ma -= ma >> 2;
