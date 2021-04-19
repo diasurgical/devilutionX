@@ -128,8 +128,10 @@ static void NetRecvPlrData(TPkt *pkt)
 		for (int i = 0; i < MAX_PATH_LENGTH; i++) {
 			if (plr[myplr].walkpath[i] == WALK_NONE)
 				break;
-			plr[myplr]._ptargx += directionOffsetX[plr[myplr].walkpath[i] - 1];
-			plr[myplr]._ptargy += directionOffsetY[plr[myplr].walkpath[i] - 1];
+			if (plr[myplr].walkpath[i] > 0) {
+				plr[myplr]._ptargx += directionOffsetX[plr[myplr].walkpath[i] - 1];
+				plr[myplr]._ptargy += directionOffsetY[plr[myplr].walkpath[i] - 1];
+			}
 		}
 	}
 
