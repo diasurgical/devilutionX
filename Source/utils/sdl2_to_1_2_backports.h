@@ -311,49 +311,6 @@ int SDL_SoftStretch(SDL_Surface *src, const SDL_Rect *srcrect,
 int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
     SDL_Surface *dst, SDL_Rect *dstrect);
 
-//= Display handling
-
-typedef struct
-{
-	Uint32 format;    /**< pixel format */
-	int w;            /**< width, in screen coordinates */
-	int h;            /**< height, in screen coordinates */
-	int refresh_rate; /**< refresh rate (or zero for unspecified) */
-	void *driverdata; /**< driver-specific data, initialize to 0 */
-} SDL_DisplayMode;
-
-inline int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode *mode)
-{
-	if (displayIndex != 0)
-		UNIMPLEMENTED();
-
-	const SDL_VideoInfo *info = SDL_GetVideoInfo();
-	if (info == NULL)
-		return 0;
-
-	switch (info->vfmt->BitsPerPixel) {
-	case 8:
-		mode->format = SDL_PIXELFORMAT_INDEX8;
-		break;
-	case 24:
-		mode->format = SDL_PIXELFORMAT_RGB888;
-		break;
-	case 32:
-		mode->format = SDL_PIXELFORMAT_RGBA8888;
-		break;
-	default:
-		mode->format = 0;
-		break;
-	}
-
-	mode->w = info->current_w;
-	mode->h = info->current_h;
-	mode->refresh_rate = 0;
-	mode->driverdata = NULL;
-
-	return 0;
-}
-
 //== Filesystem
 
 #if !defined(__QNXNTO__)
