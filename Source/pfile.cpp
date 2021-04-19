@@ -94,7 +94,8 @@ void pfile_rename_temp_to_perm()
 
 	dwIndex = 0;
 	while (GetTempSaveNames(dwIndex, szTemp)) {
-		assert(GetPermSaveNames(dwIndex, szPerm));
+		bool result = GetPermSaveNames(dwIndex, szPerm); // DO NOT PUT DIRECTLY INTO ASSERT!
+		assert(result);
 		dwIndex++;
 		if (mpqapi_has_file(szTemp)) {
 			if (mpqapi_has_file(szPerm))
