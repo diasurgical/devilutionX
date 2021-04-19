@@ -22,24 +22,6 @@ struct QolArt {
 
 QolArt *qolArt = nullptr;
 
-int GetTextWidth(const char *s)
-{
-	int l = 0;
-	while (*s) {
-		l += fontkern[fontframe[gbFontTransTbl[(BYTE)*s++]]] + 1;
-	}
-	return l;
-}
-
-void FastDrawVertLine(CelOutputBuffer out, int x, int y, int height, BYTE col)
-{
-	BYTE *p = out.at(x, y);
-	for (int j = 0; j < height; j++) {
-		*p = col;
-		p += out.pitch();
-	}
-}
-
 } // namespace
 
 void FreeQol()
@@ -145,8 +127,6 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 		}
 	}
 }
-
-
 
 bool HasRoomForGold()
 {

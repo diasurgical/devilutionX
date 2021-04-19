@@ -15,6 +15,7 @@
 #include "movie.h"
 #include "options.h"
 #include "storm/storm.h"
+#include "qol/itemlabels.h"
 
 namespace devilution {
 
@@ -145,7 +146,10 @@ void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDa
 			if (!(width & 0x80)) {
 				i -= width;
 				if (dst < out.end() && dst >= out.begin()) {
-					memcpy(dst, src, std::min(static_cast<ptrdiff_t>(width), out.end() - dst));
+					// GenerateItemLabelOffsets loops this function for all items, we don't actually want them on screen, just the min and max x position
+					if (!IsGeneratingItemLabels())
+						memcpy(dst, src, std::min(static_cast<ptrdiff_t>(width), out.end() - dst));
+					UpdateItemLabelOffsets(out, dst, width);
 				}
 				src += width;
 				dst += width;

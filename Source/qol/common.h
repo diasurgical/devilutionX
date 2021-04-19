@@ -12,6 +12,9 @@ namespace devilution {
 struct CelOutputBuffer;
 
 void FastDrawHorizLine(const CelOutputBuffer &out, int x, int y, int width, Uint8 col);
+void FastDrawVertLine(const CelOutputBuffer &out, int x, int y, int height, Uint8 col);
+void FillRect(const CelOutputBuffer &out, int x, int y, int width, int height, Uint8 col);
+int GetTextWidth(const char *s);
 /**
  * @brief Prints integer into buffer, using ',' as thousands separator.
  * @param out Destination buffer

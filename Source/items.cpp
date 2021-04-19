@@ -18,8 +18,6 @@
 
 namespace devilution {
 
-#define ITEMTYPES 43
-
 enum anim_armor_id : uint8_t {
 	// clang-format off
 	ANIM_ID_LIGHT_ARMOR  = 0,
