@@ -787,7 +787,6 @@ void UpdateManaFlask(CelOutputBuffer out)
 
 void InitControlPan()
 {
-	int i;
 	pBtmBuff = CelOutputBuffer::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
 	pManaBuff = CelOutputBuffer::Alloc(88, 88);
 	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
@@ -815,15 +814,15 @@ void InitControlPan()
 		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
 		sgbPlrTalkTbl = 0;
 		sgszTalkMsg[0] = '\0';
-		for (i = 0; i < MAX_PLRS; i++)
+		for (unsigned i = 0; i < MAX_PLRS; i++)
 			whisper[i] = true;
-		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
+		for (unsigned i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
 			talkbtndown[i] = false;
 	}
 	panelflag = false;
 	lvlbtndown = false;
 	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", NULL);
-	for (i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
+	for (unsigned i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
 		panbtn[i] = false;
 	panbtndown = false;
 	if (!gbIsMultiplayer)
@@ -831,7 +830,7 @@ void InitControlPan()
 	else
 		numpanbtns = 8;
 	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", NULL);
-	for (i = 0; i < sizeof(chrbtn) / sizeof(chrbtn[0]); i++)
+	for (unsigned i = 0; i < sizeof(chrbtn) / sizeof(chrbtn[0]); i++)
 		chrbtn[i] = false;
 	chrbtnactive = false;
 	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", NULL);
@@ -1118,6 +1117,11 @@ void CheckPanelInfo()
 	}
 	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
 		pcursinvitem = inventory->CheckHLight();
+
+	if (CheckXPBarInfo()) {
+		panelflag = true;
+		pinfoflag = true;
+	}
 }
 
 /**
@@ -1644,7 +1648,6 @@ void CheckChrBtns()
 	int x, y;
 
 	if (!chrbtnactive && plr[myplr]._pStatPts) {
-		HeroClass pc = plr[myplr]._pClass;
 		for (auto i : enum_values<CharacterAttribute>()) {
 			int max = plr[myplr].GetMaximumAttributeValue(i);
 			switch (i) {
