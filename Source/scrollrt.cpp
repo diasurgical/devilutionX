@@ -254,7 +254,7 @@ void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, b
 		return;
 
 	BYTE *pCelBuff = m->_miAnimData;
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
 		return;
 	}
@@ -323,7 +323,7 @@ static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m
 	}
 
 	BYTE *pCelBuff = monster[m]._mAnimData;
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Draw Monster \"%s\": NULL Cel Buffer", monster[m].mName);
 		return;
 	}
@@ -417,7 +417,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 	int nCel = GetFrameToUseForPlayerRendering(pPlayer);
 	int nWidth = pPlayer->_pAnimWidth;
 
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
 		return;
 	}
@@ -526,7 +526,7 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool p
 	assert(bv >= 0 && bv < MAXOBJECTS);
 
 	BYTE *pCelBuff = object[bv]._oAnimData;
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Draw Object type %d: NULL Cel Buffer", object[bv]._otype);
 		return;
 	}
@@ -625,7 +625,7 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre
 		return;
 
 	BYTE *pCelBuff = pItem->_iAnimData;
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
 		return;
 	}
@@ -684,7 +684,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 		return;
 	}
 
-	if (pMonster->MType == NULL) {
+	if (pMonster->MType == nullptr) {
 		SDL_Log("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
 		return;
 	}
@@ -767,8 +767,8 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 			direction dd = static_cast<direction>((bDead >> 5) & 7);
 			int px = dx - pDeadGuy->_deadWidth2;
 			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
-			assert(pCelBuff != NULL);
-			if (pCelBuff == NULL)
+			assert(pCelBuff != nullptr);
+			if (pCelBuff == nullptr)
 				break;
 			int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 			int nCel = pDeadGuy->_deadFrame;
@@ -1308,7 +1308,7 @@ void ClearScreenBuffer()
 {
 	lock_buf(3);
 
-	assert(pal_surface != NULL);
+	assert(pal_surface != nullptr);
 
 	SDL_Rect SrcRect = {
 		BUFFER_BORDER_LEFT,

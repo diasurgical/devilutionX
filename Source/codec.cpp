@@ -49,7 +49,7 @@ static void codec_init_key(const char *pszPassword)
 	memset(digest, 0, sizeof(digest));
 	for (int n = 0; n < 3; ++n) {
 		SHA1Reset(n);
-		SHA1Calculate(n, &key[72], NULL);
+		SHA1Calculate(n, &key[72], nullptr);
 	}
 	memset(key, 0, sizeof(key));
 }
@@ -73,7 +73,7 @@ int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword)
 		for (int j = 0; j < BLOCKSIZE; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}
-		SHA1Calculate(0, buf, NULL);
+		SHA1Calculate(0, buf, nullptr);
 		memset(dst, 0, sizeof(dst));
 		memcpy(pbSrcDst, buf, BLOCKSIZE);
 	}
@@ -125,7 +125,7 @@ void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const c
 		if (chunk < BLOCKSIZE)
 			memset(buf + chunk, 0, BLOCKSIZE - chunk);
 		SHA1Result(0, dst);
-		SHA1Calculate(0, buf, NULL);
+		SHA1Calculate(0, buf, nullptr);
 		for (int j = 0; j < BLOCKSIZE; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}

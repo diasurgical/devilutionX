@@ -103,7 +103,7 @@ void RemoveFile(const char *lpFileName)
 	if (f) {
 		fclose(f);
 		remove(name.c_str());
-		f = NULL;
+		f = nullptr;
 		SDL_Log("Removed file: %s", name.c_str());
 	} else {
 		SDL_Log("Failed to remove file: %s", name.c_str());

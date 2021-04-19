@@ -122,7 +122,7 @@ bool tcp_client::SNetLeaveGame(int type)
 {
 	auto ret = base::SNetLeaveGame(type);
 	poll();
-	if (local_server != NULL)
+	if (local_server != nullptr)
 		local_server->close();
 	return ret;
 }

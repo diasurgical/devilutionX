@@ -7,13 +7,13 @@ namespace devilution {
 
 void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 {
-	if (art == NULL || art->surface != NULL)
+	if (art == nullptr || art->surface != nullptr)
 		return;
 
 	art->frames = frames;
 
 	DWORD width, height, bpp;
-	if (!SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, &bpp)) {
+	if (!SBmpLoadImage(pszFile, nullptr, nullptr, 0, &width, &height, &bpp)) {
 		SDL_Log("Failed to load image meta");
 		return;
 	}
@@ -36,7 +36,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 	SDLSurfaceUniquePtr art_surface { SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format) };
 
 	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(art_surface->pixels),
-	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
+	        art_surface->pitch * art_surface->format->BytesPerPixel * height, nullptr, nullptr, nullptr)) {
 		SDL_Log("Failed to load image");
 		return;
 	}
@@ -50,7 +50,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
-	if (art->surface != NULL)
+	if (art->surface != nullptr)
 		SDLC_SetColorKey(art->surface.get(), mask);
 }
 

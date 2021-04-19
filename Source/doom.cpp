@@ -46,9 +46,9 @@ int doom_get_frame_from_time()
 
 void doom_cleanup()
 {
-	if (pDoomCel != NULL) {
+	if (pDoomCel != nullptr) {
 		MemFreeDbg(pDoomCel);
-		pDoomCel = NULL;
+		pDoomCel = nullptr;
 	}
 }
 
@@ -56,7 +56,7 @@ static bool doom_alloc_cel()
 {
 	doom_cleanup();
 	pDoomCel = DiabloAllocPtr(0x39000);
-	return pDoomCel != NULL;
+	return pDoomCel != nullptr;
 }
 
 static bool doom_load_graphics()

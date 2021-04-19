@@ -249,9 +249,9 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	p = &plr[pnum];
 
 	HeroClass c = p->_pClass;
-	if (c == HeroClass::Bard && hfbard_mpq == NULL) {
+	if (c == HeroClass::Bard && hfbard_mpq == nullptr) {
 		c = HeroClass::Rogue;
-	} else if (c == HeroClass::Barbarian && hfbarb_mpq == NULL) {
+	} else if (c == HeroClass::Barbarian && hfbarb_mpq == nullptr) {
 		c = HeroClass::Warrior;
 	}
 
@@ -402,7 +402,7 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
 			if (SFileOpenFile(pszName, &hsFile)) {
 				assert(hsFile);
-				dwSize = SFileGetFileSize(hsFile, NULL);
+				dwSize = SFileGetFileSize(hsFile, nullptr);
 				SFileCloseFile(hsFile);
 				if (dwMaxSize <= dwSize) {
 					dwMaxSize = dwSize;

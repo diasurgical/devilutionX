@@ -17,7 +17,7 @@ bool dthread_running;
 event_emul *sghWorkToDoEvent;
 
 /* rdata */
-static SDL_Thread *sghThread = NULL;
+static SDL_Thread *sghThread = nullptr;
 
 static unsigned int dthread_handler(void *data)
 {
@@ -79,7 +79,7 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 	}
 
 	pkt = (TMegaPkt *)DiabloAllocPtr(dwLen + 20);
-	pkt->pNext = NULL;
+	pkt->pNext = nullptr;
 	pkt->dwSpaceLeft = pnum;
 	pkt->data[0] = cmd;
 	*(DWORD *)&pkt->data[4] = dwLen;
@@ -104,7 +104,7 @@ void dthread_start()
 	}
 
 	sghWorkToDoEvent = StartEvent();
-	if (sghWorkToDoEvent == NULL) {
+	if (sghWorkToDoEvent == nullptr) {
 		error_buf = SDL_GetError();
 		app_fatal("dthread:1\n%s", error_buf);
 	}
@@ -112,7 +112,7 @@ void dthread_start()
 	dthread_running = true;
 
 	sghThread = CreateThread(dthread_handler, &glpDThreadId);
-	if (sghThread == NULL) {
+	if (sghThread == nullptr) {
 		error_buf = SDL_GetError();
 		app_fatal("dthread2:\n%s", error_buf);
 	}
@@ -122,18 +122,18 @@ void dthread_cleanup()
 {
 	TMegaPkt *tmp;
 
-	if (sghWorkToDoEvent == NULL) {
+	if (sghWorkToDoEvent == nullptr) {
 		return;
 	}
 
 	dthread_running = false;
 	SetEvent(sghWorkToDoEvent);
-	if (sghThread != NULL && glpDThreadId != SDL_GetThreadID(NULL)) {
-		SDL_WaitThread(sghThread, NULL);
-		sghThread = NULL;
+	if (sghThread != nullptr && glpDThreadId != SDL_GetThreadID(nullptr)) {
+		SDL_WaitThread(sghThread, nullptr);
+		sghThread = nullptr;
 	}
 	EndEvent(sghWorkToDoEvent);
-	sghWorkToDoEvent = NULL;
+	sghWorkToDoEvent = nullptr;
 
 	while (sgpInfoHead) {
 		tmp = sgpInfoHead->pNext;
