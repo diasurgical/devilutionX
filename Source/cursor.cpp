@@ -514,7 +514,7 @@ void CheckCursMove()
 			cursmx = mx + 1;
 			cursmy = my + 1;
 		}
-		if (pcursmonst != -1 && !towner[pcursmonst]._tSelFlag) {
+		if (pcursmonst != -1 && !towners[pcursmonst]._tSelFlag) {
 			pcursmonst = -1;
 		}
 	}

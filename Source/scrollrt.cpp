@@ -662,12 +662,12 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		px = sx - towner[mi]._tAnimWidth2;
+		px = sx - towners[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			CelBlitOutlineTo(out, 166, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
 		}
-		assert(towner[mi]._tAnimData);
-		CelClippedDrawTo(out, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+		assert(towners[mi]._tAnimData);
+		CelClippedDrawTo(out, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
 		return;
 	}
 
