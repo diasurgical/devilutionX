@@ -57,7 +57,7 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 	std::string mpq_abspath;
 	for (const auto &path : paths) {
 		mpq_abspath = path + mpq_name;
-		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_FLAG_READ_ONLY, &archive)) {
+		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
 			SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "  Found: %s in %s", mpq_name, path.c_str());
 			SFileSetBasePath(path.c_str());
 			return archive;
