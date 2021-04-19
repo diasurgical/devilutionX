@@ -225,7 +225,7 @@ bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
 #define SNPLAYER_ALL    -1
 #define SNPLAYER_OTHERS -2
 
-#define MPQ_FLAG_READ_ONLY 1
+#define MPQ_OPEN_READ_ONLY 0x00000100
 #define SFILE_OPEN_FROM_MPQ 0
 #define SFILE_OPEN_LOCAL_FILE 0xFFFFFFFF
 
