@@ -6,7 +6,7 @@
 #include "monster.h"
 
 #include <algorithm>
-#include <limits.h>
+#include <climits>
 
 #include "control.h"
 #include "cursor.h"
@@ -647,7 +647,7 @@ void monster_some_crypt()
 	if (currlevel == 24 && UberDiabloMonsterIndex >= 0 && UberDiabloMonsterIndex < nummonsters) {
 		mon = &monster[UberDiabloMonsterIndex];
 		PlayEffect(UberDiabloMonsterIndex, 2);
-		quests[Q_NAKRUL]._qlog = 0;
+		quests[Q_NAKRUL]._qlog = false;
 		mon->mArmorClass -= 50;
 		hp = mon->_mmaxhp / 2;
 		mon->mMagicRes = 0;
@@ -670,7 +670,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	}
 	dMonster[x][y] = i + 1;
 
-	direction rd = static_cast<direction>(random_(90, 8));
+	auto rd = static_cast<direction>(random_(90, 8));
 	InitMonster(i, rd, mtype, x, y);
 }
 
@@ -699,7 +699,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		}
 	}
 
-	while (1) {
+	while (true) {
 		xp = random_(91, 80) + 16;
 		yp = random_(91, 80) + 16;
 		count2 = 0;
@@ -1325,7 +1325,7 @@ void M_Enemy(int i)
 
 	_menemy = -1;
 	best_dist = -1;
-	bestsameroom = 0;
+	bestsameroom = false;
 	Monst = &monster[i];
 	if (Monst->_mFlags & MFLAG_BERSERK || !(Monst->_mFlags & MFLAG_GOLEM)) {
 		for (pnum = 0; pnum < MAX_PLRS; pnum++) {
@@ -1739,7 +1739,7 @@ void SpawnLoot(int i, bool sendmsg)
 	} else if (Monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
-		quests[Q_DEFILER]._qlog = 0;
+		quests[Q_DEFILER]._qlog = false;
 		SpawnMapOfDoom(Monst->_mx, Monst->_my);
 	} else if (Monst->_uniqtype - 1 == UMT_HORKDMN) {
 		if (sgGameInitInfo.bTheoQuest) {
@@ -1754,7 +1754,7 @@ void SpawnLoot(int i, bool sendmsg)
 			nSFX = USFX_NAKRUL6;
 		if (effect_is_playing(nSFX))
 			stream_stop();
-		quests[Q_NAKRUL]._qlog = 0;
+		quests[Q_NAKRUL]._qlog = false;
 		UberDiabloMonsterIndex = -2;
 		CreateMagicWeapon(Monst->_mx, Monst->_my, ITYPE_SWORD, ICURS_GREAT_SWORD, false, true);
 		CreateMagicWeapon(Monst->_mx, Monst->_my, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
@@ -2679,14 +2679,14 @@ void PrepDoEnding()
 		newKillLevel = *killLevel;
 	plr[myplr].pDiabloKillLevel = newKillLevel;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
-		plr[i]._pmode = PM_QUIT;
-		plr[i]._pInvincible = true;
+	for (auto &player : plr) {
+		player._pmode = PM_QUIT;
+		player._pInvincible = true;
 		if (gbIsMultiplayer) {
-			if (plr[i]._pHitPoints >> 6 == 0)
-				plr[i]._pHitPoints = 64;
-			if (plr[i]._pMana >> 6 == 0)
-				plr[i]._pMana = 64;
+			if (player._pHitPoints >> 6 == 0)
+				player._pHitPoints = 64;
+			if (player._pMana >> 6 == 0)
+				player._pMana = 64;
 		}
 	}
 }

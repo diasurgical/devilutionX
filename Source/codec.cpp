@@ -13,12 +13,12 @@
 
 namespace devilution {
 
-typedef struct CodecSignature {
+struct CodecSignature {
 	DWORD checksum;
 	BYTE error;
 	BYTE last_chunk_size;
 	WORD unused;
-} CodecSignature;
+};
 
 #define BLOCKSIZE 64
 
@@ -26,9 +26,9 @@ static void codec_init_key(const char *pszPassword)
 {
 	char key[136]; // last 64 bytes are the SHA1
 	uint32_t rand_state = 0x7058;
-	for (std::size_t i = 0; i < sizeof(key); ++i) {
+	for (char &notch : key) {
 		rand_state = rand_state * 214013 + 2531011;
-		key[i] = rand_state >> 16; // Downcasting to char keeps the 2 least-significant bytes
+		notch = rand_state >> 16; // Downcasting to char keeps the 2 least-significant bytes
 	}
 
 	char pw[64];

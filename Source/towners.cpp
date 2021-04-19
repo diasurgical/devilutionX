@@ -247,8 +247,8 @@ void InitBarOwner()
 	InitTownerInfo(numtowners, 96, true, TOWN_TAVERN, 55, 62, 3);
 	InitQstSnds(numtowners, TOWN_TAVERN);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", nullptr);
-	for (int i = 0; i < 8; i++) {
-		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
+	for (auto &i : towner[numtowners]._tNAnim) {
+		i = towner[numtowners]._tNData;
 	}
 	towner[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SW], towner[numtowners]._tNFrames, 3);
@@ -967,7 +967,7 @@ void TalkToTowner(int p, int t)
 	} else if (t == GetActiveTowner(TOWN_BMAID)) {
 		if (!plr[p]._pLvlVisited[21] && PlrHasItem(p, IDI_MAPOFDOOM, &i)) {
 			quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
-			quests[Q_GRAVE]._qlog = 1;
+			quests[Q_GRAVE]._qlog = true;
 			quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
 			InitQTextMsg(TEXT_GRAVE8);
 			towner[t]._tMsgSaid = true;
@@ -1087,7 +1087,7 @@ void TalkToTowner(int p, int t)
 					qt = TEXT_FARMER2;
 					quests[Q_FARMER]._qactive = QUEST_ACTIVE;
 					quests[Q_FARMER]._qvar1 = 1;
-					quests[Q_FARMER]._qlog = 1;
+					quests[Q_FARMER]._qlog = true;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					break;
 				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
@@ -1102,7 +1102,7 @@ void TalkToTowner(int p, int t)
 					qt = TEXT_FARMER1;
 					quests[Q_FARMER]._qactive = QUEST_ACTIVE;
 					quests[Q_FARMER]._qvar1 = 1;
-					quests[Q_FARMER]._qlog = 1;
+					quests[Q_FARMER]._qlog = true;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					SpawnRuneBomb(towner[t]._tx + 1, towner[t]._ty);
 					t2 = 1;
@@ -1120,7 +1120,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_FARMER]._qactive = QUEST_ACTIVE;
 					quests[Q_FARMER]._qvar1 = 1;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
-					quests[Q_FARMER]._qlog = 1;
+					quests[Q_FARMER]._qlog = true;
 				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
 					qt = TEXT_FARMER8;
 					if (plr[p]._pLvlVisited[2]) {
@@ -1136,7 +1136,7 @@ void TalkToTowner(int p, int t)
 					qt = TEXT_FARMER1;
 					quests[Q_FARMER]._qactive = QUEST_ACTIVE;
 					quests[Q_FARMER]._qvar1 = 1;
-					quests[Q_FARMER]._qlog = 1;
+					quests[Q_FARMER]._qlog = true;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					SpawnRuneBomb(towner[t]._tx + 1, towner[t]._ty);
 					t2 = 1;
@@ -1146,7 +1146,7 @@ void TalkToTowner(int p, int t)
 				qt = TEXT_FARMER4;
 				SpawnRewardItem(IDI_AURIC, towner[t]._tx + 1, towner[t]._ty);
 				quests[Q_FARMER]._qactive = QUEST_HIVE_DONE;
-				quests[Q_FARMER]._qlog = 0;
+				quests[Q_FARMER]._qlog = false;
 				t2 = 1;
 				break;
 			case QUEST_HIVE_DONE:
@@ -1184,7 +1184,7 @@ void TalkToTowner(int p, int t)
 				quests[Q_JERSEY]._qactive = QUEST_ACTIVE;
 				quests[Q_JERSEY]._qvar1 = 1;
 				quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
-				quests[Q_JERSEY]._qlog = 1;
+				quests[Q_JERSEY]._qlog = true;
 			} else {
 				switch (quests[Q_JERSEY]._qactive) {
 				case QUEST_NOTAVAIL:
@@ -1227,7 +1227,7 @@ void TalkToTowner(int p, int t)
 						quests[Q_JERSEY]._qactive = QUEST_ACTIVE;
 						quests[Q_JERSEY]._qvar1 = 1;
 						quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
-						quests[Q_JERSEY]._qlog = 1;
+						quests[Q_JERSEY]._qlog = true;
 						SpawnRuneBomb(towner[t]._tx + 1, towner[t]._ty);
 						t2 = 1;
 					}
@@ -1258,14 +1258,14 @@ void TalkToTowner(int p, int t)
 					qt = TEXT_GIRL2;
 					quests[Q_GIRL]._qactive = QUEST_ACTIVE;
 					quests[Q_GIRL]._qvar1 = 1;
-					quests[Q_GIRL]._qlog = 1;
+					quests[Q_GIRL]._qlog = true;
 					quests[Q_GIRL]._qmsg = TEXT_GIRL2;
 					t2 = 1;
 					break;
 				case 1:
 					qt = TEXT_GIRL2;
 					quests[Q_GIRL]._qvar1 = 1;
-					quests[Q_GIRL]._qlog = 1;
+					quests[Q_GIRL]._qlog = true;
 					quests[Q_GIRL]._qmsg = TEXT_GIRL2;
 					quests[Q_GIRL]._qactive = QUEST_ACTIVE;
 					t2 = 1;
@@ -1285,8 +1285,8 @@ void TalkToTowner(int p, int t)
 			} else {
 				qt = TEXT_GIRL4;
 				RemoveInvItem(p, i);
-				CreateAmulet(towner[t]._tx, towner[t]._ty, 13, 0, 1);
-				quests[Q_GIRL]._qlog = 0;
+				CreateAmulet(towner[t]._tx, towner[t]._ty, 13, false, true);
+				quests[Q_GIRL]._qlog = false;
 				quests[Q_GIRL]._qactive = QUEST_DONE;
 				t2 = 1;
 			}

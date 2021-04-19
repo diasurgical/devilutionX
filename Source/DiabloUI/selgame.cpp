@@ -41,14 +41,12 @@ std::vector<UiItemBase *> vecSelGameDialog;
 
 void selgame_FreeVectors()
 {
-	for (std::size_t i = 0; i < vecSelGameDlgItems.size(); i++) {
-		UiListItem *pUIItem = vecSelGameDlgItems[i];
+	for (auto pUIItem : vecSelGameDlgItems) {
 		delete pUIItem;
 	}
 	vecSelGameDlgItems.clear();
 
-	for (std::size_t i = 0; i < vecSelGameDialog.size(); i++) {
-		UiItemBase *pUIItem = vecSelGameDialog[i];
+	for (auto pUIItem : vecSelGameDialog) {
 		delete pUIItem;
 	}
 	vecSelGameDialog.clear();

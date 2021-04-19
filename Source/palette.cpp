@@ -276,12 +276,12 @@ static void CycleColors(int from, int to)
 	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
-	for (int i = 0; i < 256; i++) {
-		Uint8 col = paletteTransparencyLookup[i][from];
+	for (auto &palette : paletteTransparencyLookup) {
+		Uint8 col = palette[from];
 		for (int j = from; j < to; j++) {
-			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[i][j + 1];
+			palette[j] = palette[j + 1];
 		}
-		paletteTransparencyLookup[i][to] = col;
+		palette[to] = col;
 	}
 
 	Uint8 colRow[256];
@@ -308,12 +308,12 @@ static void CycleColorsReverse(int from, int to)
 	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
-	for (int i = 0; i < 256; i++) {
-		Uint8 col = paletteTransparencyLookup[i][to];
+	for (auto &palette : paletteTransparencyLookup) {
+		Uint8 col = palette[to];
 		for (int j = to; j > from; j--) {
-			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[i][j - 1];
+			palette[j] = palette[j - 1];
 		}
-		paletteTransparencyLookup[i][from] = col;
+		palette[from] = col;
 	}
 
 	Uint8 colRow[256];

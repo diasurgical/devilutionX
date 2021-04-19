@@ -123,7 +123,7 @@ static unsigned int nthread_handler(void *data)
 	bool received;
 
 	if (nthread_should_run) {
-		while (1) {
+		while (true) {
 			sgMemCrit.Enter();
 			if (!nthread_should_run)
 				break;

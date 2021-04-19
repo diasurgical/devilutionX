@@ -80,7 +80,7 @@ extern int numpremium;
 /** Base level of current premium items sold by Griswold */
 extern int premiumlevel;
 /** Premium items sold by Griswold */
-extern ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
+extern ItemStruct premiumitems[SMITH_PREMIUM_ITEMS];
 
 /** Items sold by Pepin */
 extern ItemStruct healitem[20];

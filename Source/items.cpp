@@ -4,8 +4,8 @@
  * Implementation of item functionality.
  */
 #include <algorithm>
-#include <limits.h>
-#include <stdint.h>
+#include <climits>
+#include <cstdint>
 
 #include "cursor.h"
 #include "doom.h"
@@ -38,7 +38,7 @@ ItemStruct items[MAXITEMS + 1];
 bool itemhold[3][3];
 CornerStoneStruct CornerStone;
 BYTE *itemanims[ITEMTYPES];
-bool UniqueItemFlag[128];
+bool UniqueItemFlags[128];
 int numitems;
 int gnNumGetRecords;
 
@@ -409,7 +409,7 @@ void InitItemGFX()
 		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
 		itemanims[i] = LoadFileInMem(arglist, nullptr);
 	}
-	memset(UniqueItemFlag, 0, sizeof(UniqueItemFlag));
+	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 }
 
 bool ItemPlace(int xp, int yp)
@@ -2483,7 +2483,7 @@ _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 			break;
 		if (UniqueItemList[j].UIItemId == AllItemsList[items[i].IDidx].iItemId
 		    && lvl >= UniqueItemList[j].UIMinLvl
-		    && (recreate || !UniqueItemFlag[j] || gbIsMultiplayer)) {
+		    && (recreate || !UniqueItemFlags[j] || gbIsMultiplayer)) {
 			uok[j] = true;
 			numu++;
 		}
@@ -2509,7 +2509,7 @@ _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 
 void GetUniqueItem(int i, _unique_items uid)
 {
-	UniqueItemFlag[uid] = true;
+	UniqueItemFlags[uid] = true;
 	SaveItemPower(i, UniqueItemList[uid].UIPower1, UniqueItemList[uid].UIParam1, UniqueItemList[uid].UIParam2, 0, 0, 1);
 
 	if (UniqueItemList[uid].UINumPL > 1)
@@ -2912,7 +2912,7 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 {
 	if (randarea) {
 		int tries = 0;
-		while (1) {
+		while (true) {
 			tries++;
 			if (tries > 1000 && randarea > 1)
 				randarea--;
@@ -3106,8 +3106,8 @@ void ProcessItems()
 
 void FreeItemGFX()
 {
-	for (int i = 0; i < ITEMTYPES; i++) {
-		MemFreeDbg(itemanims[i]);
+	for (auto &itemanim : itemanims) {
+		MemFreeDbg(itemanim);
 	}
 }
 
@@ -4540,10 +4540,10 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	            || items[0]._iMinDex > dexterity
 	            || items[0]._iIvalue < ivalue)
 	        && count < 150));
-	premiumitem[i] = items[0];
-	premiumitem[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
-	premiumitem[i]._iIdentified = true;
-	premiumitem[i]._iStatFlag = StoreStatOk(&premiumitem[i]);
+	premiumitems[i] = items[0];
+	premiumitems[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
+	premiumitems[i]._iIdentified = true;
+	premiumitems[i]._iStatFlag = StoreStatOk(&premiumitems[i]);
 	items[0] = holditem;
 }
 
@@ -4555,7 +4555,7 @@ void SpawnPremium(int pnum)
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (i = 0; i < maxItems; i++) {
-			if (premiumitem[i].isEmpty()) {
+			if (premiumitems[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
 				SpawnOnePremium(i, plvl, pnum);
 			}
@@ -4565,27 +4565,27 @@ void SpawnPremium(int pnum)
 	while (premiumlevel < lvl) {
 		premiumlevel++;
 		if (gbIsHellfire) {
-			premiumitem[0] = premiumitem[3];
-			premiumitem[1] = premiumitem[4];
-			premiumitem[2] = premiumitem[5];
-			premiumitem[3] = premiumitem[6];
-			premiumitem[4] = premiumitem[7];
-			premiumitem[5] = premiumitem[8];
-			premiumitem[6] = premiumitem[9];
-			premiumitem[7] = premiumitem[10];
-			premiumitem[8] = premiumitem[11];
-			premiumitem[9] = premiumitem[12];
+			premiumitems[0] = premiumitems[3];
+			premiumitems[1] = premiumitems[4];
+			premiumitems[2] = premiumitems[5];
+			premiumitems[3] = premiumitems[6];
+			premiumitems[4] = premiumitems[7];
+			premiumitems[5] = premiumitems[8];
+			premiumitems[6] = premiumitems[9];
+			premiumitems[7] = premiumitems[10];
+			premiumitems[8] = premiumitems[11];
+			premiumitems[9] = premiumitems[12];
 			SpawnOnePremium(10, premiumlevel + premiumLvlAddHellfire[10], pnum);
-			premiumitem[11] = premiumitem[13];
+			premiumitems[11] = premiumitems[13];
 			SpawnOnePremium(12, premiumlevel + premiumLvlAddHellfire[12], pnum);
-			premiumitem[13] = premiumitem[14];
+			premiumitems[13] = premiumitems[14];
 			SpawnOnePremium(14, premiumlevel + premiumLvlAddHellfire[14], pnum);
 		} else {
-			premiumitem[0] = premiumitem[2];
-			premiumitem[1] = premiumitem[3];
-			premiumitem[2] = premiumitem[4];
+			premiumitems[0] = premiumitems[2];
+			premiumitems[1] = premiumitems[3];
+			premiumitems[2] = premiumitems[4];
 			SpawnOnePremium(3, premiumlevel + premiumlvladd[3], pnum);
-			premiumitem[4] = premiumitem[5];
+			premiumitems[4] = premiumitems[5];
 			SpawnOnePremium(5, premiumlevel + premiumlvladd[5], pnum);
 		}
 	}
@@ -5125,8 +5125,8 @@ void RecalcStoreStats()
 		}
 	}
 	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
-		if (!premiumitem[i].isEmpty()) {
-			premiumitem[i]._iStatFlag = StoreStatOk(&premiumitem[i]);
+		if (!premiumitems[i].isEmpty()) {
+			premiumitems[i]._iStatFlag = StoreStatOk(&premiumitems[i]);
 		}
 	}
 	for (i = 0; i < 20; i++) {

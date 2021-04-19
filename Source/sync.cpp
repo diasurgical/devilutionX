@@ -3,7 +3,7 @@
  *
  * Implementation of functionality for syncing game state with other players.
  */
-#include <limits.h>
+#include <climits>
 
 #include "gendung.h"
 #include "monster.h"

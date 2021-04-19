@@ -100,7 +100,7 @@ static void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, cons
 		const char *sstr = str;
 		const char *endstr = sstr;
 
-		while (1) {
+		while (true) {
 			if (*sstr) {
 				c = gbFontTransTbl[(BYTE)*sstr++];
 				c = fontframe[c];

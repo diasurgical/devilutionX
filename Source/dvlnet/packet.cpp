@@ -1,7 +1,6 @@
 #include "dvlnet/packet.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 #ifndef NONET
 static constexpr bool disable_encryption = false;
@@ -234,5 +233,4 @@ packet_factory::packet_factory(std::string pw)
 #endif
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

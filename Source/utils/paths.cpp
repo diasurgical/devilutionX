@@ -37,7 +37,7 @@ void AddTrailingSlash(std::string *path)
 
 std::string *FromSDL(char *s)
 {
-	std::string *result = new std::string(s != nullptr ? s : "");
+	auto *result = new std::string(s != nullptr ? s : "");
 	if (s != nullptr) {
 		SDL_free(s);
 	} else {

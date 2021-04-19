@@ -657,7 +657,7 @@ static bool multi_upgrade(bool *pfExitProgram)
 				DrawDlg("Network upgrade failed");
 			}
 		} else {
-			*pfExitProgram = 1;
+			*pfExitProgram = true;
 		}
 
 		result = false;
@@ -672,7 +672,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 
 	switch (pEvt->eventid) {
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
-		GameData *gameData = (GameData *)pEvt->data;
+		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
 			app_fatal("Invalid size of game data: %d", gameData->size);
 		sgGameInitInfo = *gameData;
@@ -737,7 +737,7 @@ void NetClose()
 
 bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 {
-	while (1) {
+	while (true) {
 		*pfExitProgram = false;
 		SetRndSeed(0);
 		sgGameInitInfo.size = sizeof(sgGameInitInfo);

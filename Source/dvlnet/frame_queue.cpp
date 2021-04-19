@@ -4,8 +4,7 @@
 
 #include "dvlnet/packet.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 framesize_t frame_queue::size()
 {
@@ -78,5 +77,4 @@ buffer_t frame_queue::make_frame(buffer_t packetbuf)
 	return ret;
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

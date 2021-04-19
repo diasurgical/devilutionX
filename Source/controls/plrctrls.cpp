@@ -238,7 +238,7 @@ void FindRangedTarget()
 
 void FindMeleeTarget()
 {
-	bool visited[MAXDUNX][MAXDUNY] = { { 0 } };
+	bool visited[MAXDUNX][MAXDUNY] = { {} };
 	int maxSteps = 25; // Max steps for FindPath is 25
 	int rotations = 0;
 	bool canTalk = false;
@@ -853,7 +853,7 @@ void StoreMove(AxisDirection move_dir)
 		STextDown();
 }
 
-typedef void (*HandleLeftStickOrDPadFn)(devilution::AxisDirection);
+using HandleLeftStickOrDPadFn = void (*)(devilution::AxisDirection);
 
 HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 {
@@ -1110,7 +1110,7 @@ void PerformPrimaryAction()
 			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
 			    && MouseY >= ChrBtnsRect[i].y
 			    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
-				chrbtn[i] = 1;
+				chrbtn[i] = true;
 				chrbtnactive = true;
 				ReleaseChrBtns(false);
 			}

@@ -38,7 +38,7 @@ BYTE *pDurIcons;
 BYTE *pChrButtons;
 bool drawhpflag;
 bool dropGoldFlag;
-bool panbtn[8];
+bool panbtns[8];
 bool chrbtn[4];
 BYTE *pMultiBtns;
 BYTE *pPanelButtons;
@@ -54,14 +54,14 @@ BYTE *pTalkBtns;
 bool pstrjust[4];
 int pnumlines;
 bool pinfoflag;
-bool talkbtndown[3];
+bool talkButtonsDown[3];
 spell_id pSpell;
 text_color infoclr;
 int sgbPlrTalkTbl;
 BYTE *pGBoxBuff;
 BYTE *pSBkBtnCel;
 char tempstr[256];
-bool whisper[MAX_PLRS];
+bool whisperList[MAX_PLRS];
 int sbooktab;
 spell_type pSplType;
 int initialDropGoldIndex;
@@ -814,24 +814,24 @@ void InitControlPan()
 		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", nullptr);
 		sgbPlrTalkTbl = 0;
 		sgszTalkMsg[0] = '\0';
-		for (unsigned i = 0; i < MAX_PLRS; i++)
-			whisper[i] = true;
-		for (unsigned i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
-			talkbtndown[i] = false;
+		for (bool &whisper : whisperList)
+			whisper = true;
+		for (bool &talkButtonDown : talkButtonsDown)
+			talkButtonDown = false;
 	}
 	panelflag = false;
 	lvlbtndown = false;
 	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", nullptr);
-	for (unsigned i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
-		panbtn[i] = false;
+	for (bool &panbtn : panbtns)
+		panbtn = false;
 	panbtndown = false;
 	if (!gbIsMultiplayer)
 		numpanbtns = 6;
 	else
 		numpanbtns = 8;
 	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", nullptr);
-	for (unsigned i = 0; i < sizeof(chrbtn) / sizeof(chrbtn[0]); i++)
-		chrbtn[i] = false;
+	for (bool &buttonEnabled : chrbtn)
+		buttonEnabled = false;
 	chrbtnactive = false;
 	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", nullptr);
 	strcpy(infostr, "");
@@ -877,17 +877,17 @@ void DrawCtrlBtns(CelOutputBuffer out)
 	int i;
 
 	for (i = 0; i < 6; i++) {
-		if (!panbtn[i])
+		if (!panbtns[i])
 			DrawPanelBox(out, PanBtnPos[i][0], PanBtnPos[i][1] + 16, 71, 20, PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + PANEL_Y);
 		else
 			CelDrawTo(out, PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + PANEL_Y + 18, pPanelButtons, i + 1, 71);
 	}
 	if (numpanbtns == 8) {
-		CelDrawTo(out, 87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[6] + 1, 33);
+		CelDrawTo(out, 87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtns[6] + 1, 33);
 		if (gbFriendlyMode)
-			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 3, 33);
+			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtns[7] + 3, 33);
 		else
-			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 5, 33);
+			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtns[7] + 5, 33);
 	}
 }
 
@@ -961,7 +961,7 @@ void DoPanBtn()
 		int y = PanBtnPos[i][1] + PANEL_TOP + PanBtnPos[i][3];
 		if (MouseX >= PanBtnPos[i][0] + PANEL_LEFT && MouseX <= x) {
 			if (MouseY >= PanBtnPos[i][1] + PANEL_TOP && MouseY <= y) {
-				panbtn[i] = true;
+				panbtns[i] = true;
 				drawbtnflag = true;
 				panbtndown = true;
 			}
@@ -981,7 +981,7 @@ void DoPanBtn()
 
 void control_set_button_down(int btn_id)
 {
-	panbtn[btn_id] = true;
+	panbtns[btn_id] = true;
 	drawbtnflag = true;
 	panbtndown = true;
 }
@@ -1138,11 +1138,11 @@ void CheckBtnUp()
 	panbtndown = false;
 
 	for (i = 0; i < 8; i++) {
-		if (!panbtn[i]) {
+		if (!panbtns[i]) {
 			continue;
 		}
 
-		panbtn[i] = false;
+		panbtns[i] = false;
 
 		if (MouseX < PanBtnPos[i][0] + PANEL_LEFT
 		    || MouseX > PanBtnPos[i][0] + PANEL_LEFT + PanBtnPos[i][2]
@@ -1648,9 +1648,9 @@ void CheckChrBtns()
 	int x, y;
 
 	if (!chrbtnactive && plr[myplr]._pStatPts) {
-		for (auto i : enum_values<CharacterAttribute>()) {
-			int max = plr[myplr].GetMaximumAttributeValue(i);
-			switch (i) {
+		for (auto attribute : enum_values<CharacterAttribute>()) {
+			int max = plr[myplr].GetMaximumAttributeValue(attribute);
+			switch (attribute) {
 			case CharacterAttribute::Strength:
 				if (plr[myplr]._pBaseStr >= max)
 					continue;
@@ -1670,13 +1670,14 @@ void CheckChrBtns()
 			default:
 				continue;
 			}
-			x = ChrBtnsRect[static_cast<size_t>(i)].x + ChrBtnsRect[static_cast<size_t>(i)].w;
-			y = ChrBtnsRect[static_cast<size_t>(i)].y + ChrBtnsRect[static_cast<size_t>(i)].h;
-			if (MouseX >= ChrBtnsRect[static_cast<size_t>(i)].x
+			auto buttonId = static_cast<size_t>(attribute);
+			x = ChrBtnsRect[buttonId].x + ChrBtnsRect[buttonId].w;
+			y = ChrBtnsRect[buttonId].y + ChrBtnsRect[buttonId].h;
+			if (MouseX >= ChrBtnsRect[buttonId].x
 			    && MouseX <= x
-			    && MouseY >= ChrBtnsRect[static_cast<size_t>(i)].y
+			    && MouseY >= ChrBtnsRect[buttonId].y
 			    && MouseY <= y) {
-				chrbtn[static_cast<size_t>(i)] = true;
+				chrbtn[buttonId] = true;
 				chrbtnactive = true;
 			}
 		}
@@ -1693,20 +1694,21 @@ int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, Char
 void ReleaseChrBtns(bool addAllStatPoints)
 {
 	chrbtnactive = false;
-	for (auto i : enum_values<CharacterAttribute>()) {
-		if (!chrbtn[static_cast<size_t>(i)])
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		auto buttonId = static_cast<size_t>(attribute);
+		if (!chrbtn[buttonId])
 			continue;
 
-		chrbtn[static_cast<size_t>(i)] = false;
-		if (MouseX >= ChrBtnsRect[static_cast<size_t>(i)].x
-		    && MouseX <= ChrBtnsRect[static_cast<size_t>(i)].x + ChrBtnsRect[static_cast<size_t>(i)].w
-		    && MouseY >= ChrBtnsRect[static_cast<size_t>(i)].y
-		    && MouseY <= ChrBtnsRect[static_cast<size_t>(i)].y + ChrBtnsRect[static_cast<size_t>(i)].h) {
+		chrbtn[buttonId] = false;
+		if (MouseX >= ChrBtnsRect[buttonId].x
+		    && MouseX <= ChrBtnsRect[buttonId].x + ChrBtnsRect[buttonId].w
+		    && MouseY >= ChrBtnsRect[buttonId].y
+		    && MouseY <= ChrBtnsRect[buttonId].y + ChrBtnsRect[buttonId].h) {
 			PlayerStruct &player = plr[myplr];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
-				statPointsToAdd = CapStatPointsToAdd(player._pStatPts, player, i);
-			switch (i) {
+				statPointsToAdd = CapStatPointsToAdd(player._pStatPts, player, attribute);
+			switch (attribute) {
 			case CharacterAttribute::Strength:
 				NetSendCmdParam1(true, CMD_ADDSTR, statPointsToAdd);
 				player._pStatPts -= statPointsToAdd;
@@ -2128,9 +2130,9 @@ void DrawTalkPan(CelOutputBuffer out)
 		if (i == myplr)
 			continue;
 		text_color color = COL_RED;
-		if (whisper[i]) {
+		if (whisperList[i]) {
 			color = COL_GOLD;
-			if (talkbtndown[talk_btn]) {
+			if (talkButtonsDown[talk_btn]) {
 				if (talk_btn != 0)
 					nCel = 4;
 				else
@@ -2142,7 +2144,7 @@ void DrawTalkPan(CelOutputBuffer out)
 				nCel = 2;
 			else
 				nCel = 1;
-			if (talkbtndown[talk_btn])
+			if (talkButtonsDown[talk_btn])
 				nCel += 4;
 			CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
 		}
@@ -2169,11 +2171,11 @@ bool control_check_talk_btn()
 	if (MouseY > 123 + PANEL_TOP)
 		return false;
 
-	for (unsigned i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++) {
-		talkbtndown[i] = false;
+	for (bool &talkButtonDown : talkButtonsDown) {
+		talkButtonDown = false;
 	}
 
-	talkbtndown[(MouseY - (69 + PANEL_TOP)) / 18] = true;
+	talkButtonsDown[(MouseY - (69 + PANEL_TOP)) / 18] = true;
 
 	return true;
 }
@@ -2181,8 +2183,8 @@ bool control_check_talk_btn()
 void control_release_talk_btn()
 {
 	if (talkflag) {
-		for (unsigned i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
-			talkbtndown[i] = false;
+		for (bool &talkButtonDown : talkButtonsDown)
+			talkButtonDown = false;
 		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 69 + PANEL_TOP && MouseX <= 233 + PANEL_LEFT && MouseY <= 123 + PANEL_TOP) {
 			int off = (MouseY - (69 + PANEL_TOP)) / 18;
 
@@ -2192,7 +2194,7 @@ void control_release_talk_btn()
 					off--;
 			}
 			if (p <= MAX_PLRS)
-				whisper[p - 1] = !whisper[p - 1];
+				whisperList[p - 1] = !whisperList[p - 1];
 		}
 	}
 }
@@ -2203,7 +2205,7 @@ void control_reset_talk_msg(char *msg)
 	pmask = 0;
 
 	for (i = 0; i < MAX_PLRS; i++) {
-		if (whisper[i])
+		if (whisperList[i])
 			pmask |= 1 << i;
 	}
 	NetSendCmdString(pmask, sgszTalkMsg);
@@ -2220,7 +2222,7 @@ void control_type_message()
 	talkflag = true;
 	sgszTalkMsg[0] = '\0';
 	for (i = 0; i < 3; i++) {
-		talkbtndown[i] = false;
+		talkButtonsDown[i] = false;
 	}
 	sgbPlrTalkTbl = PANEL_HEIGHT + 16;
 	force_redraw = 255;

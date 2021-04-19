@@ -764,7 +764,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	if (light_table_index < lightmax && bDead != 0) {
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
-			direction dd = static_cast<direction>((bDead >> 5) & 7);
+			auto dd = static_cast<direction>((bDead >> 5) & 7);
 			int px = dx - pDeadGuy->_deadWidth2;
 			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);
@@ -781,10 +781,10 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 			} else {
 				Cl2DrawLight(out, px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth);
 			}
-		} while (0);
+		} while (false);
 	}
-	DrawObject(out, sx, sy, dx, dy, 1);
-	DrawItem(out, sx, sy, dx, dy, 1);
+	DrawObject(out, sx, sy, dx, dy, true);
+	DrawItem(out, sx, sy, dx, dy, true);
 	if (bFlag & BFLAG_PLAYERLR) {
 		assert((DWORD)(sy - 1) < MAXDUNY);
 		DrawPlayerHelper(out, sx, sy - 1, dx, dy);
@@ -802,8 +802,8 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
 	}
 	DrawMissile(out, sx, sy, dx, dy, false);
-	DrawObject(out, sx, sy, dx, dy, 0);
-	DrawItem(out, sx, sy, dx, dy, 0);
+	DrawObject(out, sx, sy, dx, dy, false);
+	DrawItem(out, sx, sy, dx, dy, false);
 
 	if (leveltype != DTYPE_TOWN) {
 		char bArch = dSpecial[sx][sy];

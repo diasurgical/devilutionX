@@ -70,8 +70,8 @@ void InitTownTriggers()
 	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 	numtrigs++;
 
-	for (size_t i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
-		townwarps[i] = gbIsMultiplayer && !gbIsSpawn;
+	for (bool &townwarp : townwarps) {
+		townwarp = gbIsMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {
 		if (gbIsMultiplayer || plr[myplr].pTownWarps & 1 || (gbIsHellfire && plr[myplr]._pLevel >= 10)) {

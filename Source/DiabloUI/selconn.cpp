@@ -76,16 +76,13 @@ void selconn_Free()
 {
 	ArtBackground.Unload();
 
-	for (std::size_t i = 0; i < vecConnItems.size(); i++) {
-		UiListItem *pUIItem = vecConnItems[i];
+	for (auto pUIItem : vecConnItems) {
 		delete pUIItem;
 	}
 	vecConnItems.clear();
 
-	for (std::size_t i = 0; i < vecSelConnDlg.size(); i++) {
-		UiItemBase *pUIMenuItem = vecSelConnDlg[i];
-		if (pUIMenuItem)
-			delete pUIMenuItem;
+	for (auto pUIMenuItem : vecSelConnDlg) {
+		delete pUIMenuItem;
 	}
 	vecSelConnDlg.clear();
 }
