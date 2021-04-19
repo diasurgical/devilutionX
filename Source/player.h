@@ -375,6 +375,22 @@ struct PlayerStruct {
 	 * @brief Update tile coordinates a player is moving to (if not moving, then it corresponds to current position).
 	 */
 	void UpdateTargetPosition();
+
+	/**
+	 * @brief Play a speach file.
+	 * @todo Create enum for speachId
+	 * @todo BUGFIX Prevent more then one speach to be played at a time (reject new requests).
+	 */
+	void PlaySpeach(int speachId) const;
+	/**
+	 * @brief Play a speach file after a given delay.
+	 * @param delay Multiple of 20ms waith before starting the speach
+	 */
+	void PlaySpeach(int speachId, int delay) const;
+	/**
+	 * @brief Play a player speach file, with out random variants.
+	 */
+	void PlaySpecificSpeach(int speachId) const;
 };
 
 extern int myplr;

@@ -871,19 +871,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 			}
 
 			if (plr[pnum]._pHitPoints >> 6 > 0) {
-				if (plr[pnum]._pClass == HeroClass::Warrior) {
-					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-					PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == HeroClass::Monk) {
-					PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == HeroClass::Bard) {
-					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-				} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-				}
+				plr[pnum].PlaySpeach(69);
 			}
 			return true;
 		}
@@ -993,19 +981,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			dam -= (dam * resper) / 100;
 			if (pnum == myplr)
 				NetSendCmdDamage(true, p, dam);
-			if (plr[pnum]._pClass == HeroClass::Warrior) {
-				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-				PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == HeroClass::Monk) {
-				PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == HeroClass::Bard) {
-				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-			}
+			plr[pnum].PlaySpeach(69);
 			return true;
 		} else {
 			if (blkper < blk) {
@@ -3069,14 +3045,6 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
 		missile[mi]._miDelFlag = true;
 	} else {
-		_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
-			PS_WARR70,
-			PS_ROGUE70,
-			PS_MAGE70,
-			PS_MONK70, // BUGFIX: PS_MONK70? (fixed)
-			PS_ROGUE70,
-			PS_WARR70
-		};
 		UseMana(id, SPL_BLODBOIL);
 		missile[mi]._miVar1 = id;
 		int tmp = 3 * plr[id]._pLevel;
@@ -3089,7 +3057,7 @@ void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 		CalcPlrItemVals(id, true);
 		force_redraw = 255;
-		PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
+		plr[id].PlaySpeach(70);
 	}
 }
 
@@ -5170,14 +5138,6 @@ void MI_Blodboil(Sint32 i)
 	if (missile[i]._mirange == 0) {
 		id = missile[i]._miVar1;
 		if ((plr[id]._pSpellFlags & 2) == 2) {
-			_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
-				PS_WARR72,
-				PS_ROGUE72,
-				PS_MAGE72,
-				PS_MAGE72,
-				PS_ROGUE72,
-				PS_WARR72
-			};
 			plr[id]._pSpellFlags &= ~0x2;
 			plr[id]._pSpellFlags |= 4;
 			int lvl = 2;
@@ -5188,23 +5148,15 @@ void MI_Blodboil(Sint32 i)
 			CalcPlrItemVals(id, true);
 			ApplyPlrDamage(id, 0, 1, hpdif);
 			force_redraw = 255;
-			PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
+			plr[id].PlaySpeach(72);
 		} else {
-			_sfx_id blodboilSFX[enum_size<HeroClass>::value] = {
-				PS_WARR72,
-				PS_ROGUE72,
-				PS_MAGE72,
-				PS_MAGE72,
-				PS_ROGUE72,
-				PS_WARR72
-			};
 			missile[i]._miDelFlag = true;
 			plr[id]._pSpellFlags &= ~0x4;
 			hpdif = plr[id]._pMaxHP - plr[id]._pHitPoints;
 			CalcPlrItemVals(id, true);
 			ApplyPlrDamage(id, 0, 1, hpdif + missile[i]._miVar2);
 			force_redraw = 255;
-			PlaySfxLoc(blodboilSFX[static_cast<std::size_t>(plr[id]._pClass)], plr[id]._px, plr[id]._py);
+			plr[id].PlaySpeach(72);
 		}
 	}
 }

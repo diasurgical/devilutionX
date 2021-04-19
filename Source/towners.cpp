@@ -818,19 +818,7 @@ void TalkToTowner(int p, int t)
 			towners[t]._tbtcnt = true;
 			towners[t]._tTalkingToPlayer = p;
 			quests[Q_BUTCHER]._qvar1 = 1;
-			if (plr[p]._pClass == HeroClass::Warrior && !effect_is_playing(PS_WARR8)) {
-				PlaySFX(PS_WARR8);
-			} else if (plr[p]._pClass == HeroClass::Rogue && !effect_is_playing(PS_ROGUE8)) {
-				PlaySFX(PS_ROGUE8);
-			} else if (plr[p]._pClass == HeroClass::Sorcerer && !effect_is_playing(PS_MAGE8)) {
-				PlaySFX(PS_MAGE8);
-			} else if (plr[p]._pClass == HeroClass::Monk && !effect_is_playing(PS_MONK8)) {
-				PlaySFX(PS_MONK8);
-			} else if (plr[p]._pClass == HeroClass::Bard && !effect_is_playing(PS_ROGUE8)) {
-				PlaySFX(PS_ROGUE8);
-			} else if (plr[p]._pClass == HeroClass::Barbarian && !effect_is_playing(PS_WARR8)) {
-				PlaySFX(PS_WARR8);
-			}
+			plr[p].PlaySpecificSpeach(8);
 			towners[t]._tMsgSaid = true;
 		} else if (quests[Q_BUTCHER]._qactive == QUEST_DONE && quests[Q_BUTCHER]._qvar1 == 1) {
 			quests[Q_BUTCHER]._qvar1 = 1;

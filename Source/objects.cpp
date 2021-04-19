@@ -2161,19 +2161,7 @@ void Obj_BCrossDamage(int i)
 
 	ApplyPlrDamage(myplr, 0, 0, damage[leveltype - 1]);
 	if (plr[myplr]._pHitPoints >> 6 > 0) {
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			PlaySfxLoc(PS_WARR68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			PlaySfxLoc(PS_ROGUE68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			PlaySfxLoc(PS_MAGE68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			PlaySfxLoc(PS_MONK68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			PlaySfxLoc(PS_ROGUE68, plr[myplr]._px, plr[myplr]._py);
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			PlaySfxLoc(PS_WARR68, plr[myplr]._px, plr[myplr]._py);
-		}
+		plr[myplr].PlaySpeach(68);
 	}
 }
 
@@ -3187,19 +3175,7 @@ void OperateMushPatch(int pnum, int i)
 
 	if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || quests[Q_MUSHROOM]._qvar1 < QS_TOMEGIVEN) {
 		if (!deltaload && pnum == myplr) {
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
-				PlaySFX(PS_WARR13);
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-				PlaySFX(PS_ROGUE13);
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-				PlaySFX(PS_MAGE13);
-			} else if (plr[myplr]._pClass == HeroClass::Monk) {
-				PlaySFX(PS_MONK13);
-			} else if (plr[myplr]._pClass == HeroClass::Bard) {
-				PlaySFX(PS_ROGUE13);
-			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-				PlaySFX(PS_WARR13);
-			}
+			plr[myplr].PlaySpeach(13);
 		}
 	} else {
 		if (object[i]._oSelFlag != 0) {
@@ -3226,19 +3202,7 @@ void OperateInnSignChest(int pnum, int i)
 
 	if (quests[Q_LTBANNER]._qvar1 != 2) {
 		if (!deltaload && pnum == myplr) {
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
-				PlaySFX(PS_WARR24);
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-				PlaySFX(PS_ROGUE24);
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-				PlaySFX(PS_MAGE24);
-			} else if (plr[myplr]._pClass == HeroClass::Monk) {
-				PlaySFX(PS_MONK24);
-			} else if (plr[myplr]._pClass == HeroClass::Bard) {
-				PlaySFX(PS_ROGUE24);
-			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-				PlaySFX(PS_WARR24);
-			}
+			plr[myplr].PlaySpeach(24);
 		}
 	} else {
 		if (object[i]._oSelFlag != 0) {
@@ -3261,23 +3225,18 @@ void OperateSlainHero(int pnum, int i, bool sendmsg)
 		if (!deltaload) {
 			if (plr[pnum]._pClass == HeroClass::Warrior) {
 				CreateMagicArmor(object[i]._ox, object[i]._oy, ITYPE_HARMOR, ICURS_BREAST_PLATE, false, true);
-				PlaySfxLoc(PS_WARR9, plr[myplr]._px, plr[myplr]._py);
 			} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
-				PlaySfxLoc(PS_ROGUE9, plr[myplr]._px, plr[myplr]._py);
 			} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 				CreateSpellBook(object[i]._ox, object[i]._oy, SPL_LIGHTNING, false, true);
-				PlaySfxLoc(PS_MAGE9, plr[myplr]._px, plr[myplr]._py);
 			} else if (plr[pnum]._pClass == HeroClass::Monk) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
-				PlaySfxLoc(PS_MONK9, plr[myplr]._px, plr[myplr]._py);
 			} else if (plr[pnum]._pClass == HeroClass::Bard) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_SWORD, ICURS_BASTARD_SWORD, false, true);
-				PlaySfxLoc(PS_ROGUE9, plr[myplr]._px, plr[myplr]._py);
 			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
-				PlaySfxLoc(PS_WARR9, plr[myplr]._px, plr[myplr]._py);
 			}
+			plr[myplr].PlaySpeach(9);
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		}
