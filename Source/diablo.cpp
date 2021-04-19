@@ -960,7 +960,7 @@ static void diablo_hotkey_msg(DWORD dwMsg)
 
 	assert(dwMsg < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]));
 
-	NetSendCmdString(-1, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
 }
 
 static bool PressSysKey(int wParam)
