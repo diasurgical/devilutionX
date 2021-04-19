@@ -47,6 +47,10 @@ void InitXPBar()
 {
 	if (sgOptions.Gameplay.bExperienceBar) {
 		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
+
+		if (xpbarArt.surface == nullptr) {
+			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
+		}
 	}
 }
 
