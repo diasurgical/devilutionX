@@ -165,7 +165,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
-	if (!pszFileName || strcasecmp(pszFileName, ".pcx")) {
+	if (!pszFileName || strcasecmp(pszFileName, ".pcx") != 0) {
 		return false;
 	}
 

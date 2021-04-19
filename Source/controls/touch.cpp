@@ -23,7 +23,7 @@ inline T clip(T v, T amin, T amax)
 }
 
 #define TOUCH_PORT_MAX_NUM 1
-#define NO_TOUCH -1 // finger id setting if finger is not touching the screen
+#define NO_TOUCH (-1) // finger id setting if finger is not touching the screen
 
 static void init_touch(void);
 static void preprocess_events(SDL_Event *event);
