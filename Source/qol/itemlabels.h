@@ -4,14 +4,8 @@
 * Adds Item Labels QoL feature
 */
 #pragma once
-#include "items.h"
 
 namespace devilution {
-
-struct CelOutputBuffer;
-
-extern BYTE ItemAnimLs[];
-extern BYTE *itemanims[ITEMTYPES];
 
 void ToggleItemLabelHighlight();
 void AltPressed(bool pressed);

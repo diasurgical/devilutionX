@@ -12,6 +12,7 @@
 #include "minitext.h"
 #include "options.h"
 #include "towners.h"
+#include "qol/common.h"
 
 namespace devilution {
 
@@ -67,17 +68,6 @@ const char *const talkname[] = {
 	"Gillian",
 	"Wirt"
 };
-
-text_color GetItemTextColor(ItemStruct &item)
-{
-	if (!item._iStatFlag)
-		return text_color::COL_RED;
-	if (item._iMagical == ITEM_QUALITY_MAGIC)
-		return text_color::COL_BLUE;
-	if (item._iMagical == ITEM_QUALITY_UNIQUE)
-		return text_color::COL_GOLD;
-	return text_color::COL_WHITE;
-}
 
 void DrawSTextBack(CelOutputBuffer out)
 {
