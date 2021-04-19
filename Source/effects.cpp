@@ -1071,12 +1071,12 @@ _sfx_id herosounds[enum_size<HeroClass>::value][102] = {
 };
 
 
-_sfx_id GetSoundByClass(int playerID, int16_t soundID)
+_sfx_id GetSoundByClass(int playerID, int soundID)
 {
 	return herosounds[static_cast<int>(plr[playerID]._pClass)][soundID - 1];
 }
 
-void PlaySoundByClass(int playerID, int16_t soundID, bool noRepeat /* = false */)
+void PlaySoundByClass(int playerID, int soundID, bool noRepeat /* = false */)
 {
 	_sfx_id soundEffect = GetSoundByClass(playerID, soundID);
 	if (noRepeat && effect_is_playing(soundEffect))
