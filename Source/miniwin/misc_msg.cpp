@@ -279,13 +279,7 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
-				PlaySFX(PS_WARR16); // "Where would I put this?"
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-				PlaySFX(PS_ROGUE16);
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-				PlaySFX(PS_MAGE16);
-			}
+			PlaySoundByClass(myplr, 16); // "Where would I put this?"
 			return false;
 		}
 	}

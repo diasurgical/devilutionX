@@ -1639,19 +1639,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		return;
 	}
 
-	if (plr[pnum]._pClass == HeroClass::Warrior) {
-		PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-	} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-		PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-	} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-		PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-	} else if (plr[pnum]._pClass == HeroClass::Monk) {
-		PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
-	} else if (plr[pnum]._pClass == HeroClass::Bard) {
-		PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
-	} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-		PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-	}
+	PlaySfxLoc(GetSoundByClass(pnum, 69), plr[pnum]._px, plr[pnum]._py);
 
 	drawhpflag = true;
 	if (plr[pnum]._pClass == HeroClass::Barbarian) {
@@ -1772,19 +1760,7 @@ StartPlayerKill(int pnum, int earflag)
 		app_fatal("StartPlayerKill: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pClass == HeroClass::Warrior) {
-		PlaySfxLoc(PS_DEAD, p->_px, p->_py); // BUGFIX: should use `PS_WARR71` like other classes
-	} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-		PlaySfxLoc(PS_ROGUE71, p->_px, p->_py);
-	} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-		PlaySfxLoc(PS_MAGE71, p->_px, p->_py);
-	} else if (plr[pnum]._pClass == HeroClass::Monk) {
-		PlaySfxLoc(PS_MONK71, p->_px, p->_py);
-	} else if (plr[pnum]._pClass == HeroClass::Bard) {
-		PlaySfxLoc(PS_ROGUE71, p->_px, p->_py);
-	} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-		PlaySfxLoc(PS_WARR71, p->_px, p->_py);
-	}
+	PlaySfxLoc(GetSoundByClass(pnum, 71), p->_px, p->_py);
 
 	if (p->_pgfxnum) {
 		p->_pgfxnum = 0;
@@ -3868,36 +3844,12 @@ void CheckPlrSpell()
 
 	spell_id rspell = plr[myplr]._pRSpell;
 	if (rspell == SPL_INVALID) {
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			PlaySFX(PS_WARR34);
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			PlaySFX(PS_ROGUE34);
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			PlaySFX(PS_MAGE34);
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			PlaySFX(PS_MONK34);
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			PlaySFX(PS_ROGUE34);
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			PlaySFX(PS_WARR34);
-		}
+		PlaySoundByClass(myplr, 34);
 		return;
 	}
 
 	if (leveltype == DTYPE_TOWN && !spelldata[rspell].sTownSpell) {
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			PlaySFX(PS_WARR27);
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			PlaySFX(PS_ROGUE27);
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			PlaySFX(PS_MAGE27);
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			PlaySFX(PS_MONK27);
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			PlaySFX(PS_ROGUE27);
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			PlaySFX(PS_WARR27);
-		}
+		PlaySoundByClass(myplr, 27);
 		return;
 	}
 
@@ -3955,19 +3907,7 @@ void CheckPlrSpell()
 	}
 
 	if (plr[myplr]._pRSplType == RSPLTYPE_SPELL) {
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			PlaySFX(PS_WARR35);
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			PlaySFX(PS_ROGUE35);
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			PlaySFX(PS_MAGE35);
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			PlaySFX(PS_MONK35);
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			PlaySFX(PS_ROGUE35);
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			PlaySFX(PS_WARR35);
-		}
+		PlaySoundByClass(myplr, 35);
 	}
 }
 
@@ -4373,67 +4313,19 @@ void PlayDungMsgs()
 
 	if (currlevel == 1 && !plr[myplr]._pLvlVisited[1] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_CATHEDRAL)) {
 		sfxdelay = 40;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR97;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE97;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE97;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK97;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE97;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR97;
-		}
+		sfxdnum = GetSoundByClass(myplr, 97);
 		plr[myplr].pDungMsgs = plr[myplr].pDungMsgs | DMSG_CATHEDRAL;
 	} else if (currlevel == 5 && !plr[myplr]._pLvlVisited[5] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_CATACOMBS)) {
 		sfxdelay = 40;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR96B;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE96;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE96;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK96;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE96;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR96B;
-		}
+		sfxdnum = GetSoundByClass(myplr, 96); 
 		plr[myplr].pDungMsgs |= DMSG_CATACOMBS;
 	} else if (currlevel == 9 && !plr[myplr]._pLvlVisited[9] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_CAVES)) {
 		sfxdelay = 40;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR98;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE98;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE98;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK98;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE98;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR98;
-		}
+		sfxdnum = GetSoundByClass(myplr, 98);
 		plr[myplr].pDungMsgs |= DMSG_CAVES;
 	} else if (currlevel == 13 && !plr[myplr]._pLvlVisited[13] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_HELL)) {
 		sfxdelay = 40;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR99;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE99;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE99;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK99;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE99;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR99;
-		}
+		sfxdnum = GetSoundByClass(myplr, 99);
 		plr[myplr].pDungMsgs |= DMSG_HELL;
 	} else if (currlevel == 16 && !plr[myplr]._pLvlVisited[15] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_DIABLO)) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
@@ -4454,19 +4346,7 @@ void PlayDungMsgs()
 		plr[myplr].pDungMsgs2 |= 4;
 	} else if (currlevel == 21 && !plr[myplr]._pLvlVisited[21] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & 32)) {
 		sfxdelay = 30;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR92;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE92;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE92;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK92;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE92;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR92;
-		}
+		sfxdnum = GetSoundByClass(myplr, 92);
 		plr[myplr].pDungMsgs |= 32;
 	} else {
 		sfxdelay = 0;

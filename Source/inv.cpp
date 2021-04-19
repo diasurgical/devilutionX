@@ -989,18 +989,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 
 	if (il != ILOC_UNEQUIPABLE && il != ILOC_BELT && !plr[pnum].HoldItem._iStatFlag) {
 		done = false;
-		if (plr[pnum]._pClass == HeroClass::Warrior)
-			PlaySFX(PS_WARR13);
-		else if (plr[pnum]._pClass == HeroClass::Rogue)
-			PlaySFX(PS_ROGUE13);
-		else if (plr[pnum]._pClass == HeroClass::Sorcerer)
-			PlaySFX(PS_MAGE13);
-		else if (plr[pnum]._pClass == HeroClass::Monk)
-			PlaySFX(PS_MONK13);
-		else if (plr[pnum]._pClass == HeroClass::Bard)
-			PlaySFX(PS_ROGUE13);
-		else if (plr[pnum]._pClass == HeroClass::Barbarian)
-			PlaySFX(PS_MAGE13);
+		PlaySoundByClass(pnum, 13);
 	}
 
 	if (!done)
@@ -1485,39 +1474,9 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 			if (automaticMove) {
 				if (!automaticallyMoved) {
 					if (CanBePlacedOnBelt(holdItem) || automaticallyUnequip) {
-						switch (player._pClass) {
-						case HeroClass::Warrior:
-						case HeroClass::Barbarian:
-							PlaySFX(PS_WARR15, false);
-							break;
-						case HeroClass::Rogue:
-						case HeroClass::Bard:
-							PlaySFX(PS_ROGUE15, false);
-							break;
-						case HeroClass::Sorcerer:
-							PlaySFX(PS_MAGE15, false);
-							break;
-						case HeroClass::Monk:
-							PlaySFX(PS_MONK15, false);
-							break;
-						}
+						PlaySFX(GetSoundByClass(pnum, 15), false);
 					} else {
-						switch (player._pClass) {
-						case HeroClass::Warrior:
-						case HeroClass::Barbarian:
-							PlaySFX(PS_WARR37, false);
-							break;
-						case HeroClass::Rogue:
-						case HeroClass::Bard:
-							PlaySFX(PS_ROGUE37, false);
-							break;
-						case HeroClass::Sorcerer:
-							PlaySFX(PS_MAGE37, false);
-							break;
-						case HeroClass::Monk:
-							PlaySFX(PS_MONK37, false);
-							break;
-						}
+						PlaySFX(GetSoundByClass(pnum, 37), false);
 					}
 				}
 
@@ -1642,19 +1601,7 @@ void CheckQuestItem(int pnum)
 		quests[Q_BLIND]._qactive = QUEST_DONE;
 	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		sfxdelay = 10;
-		if (plr[pnum]._pClass == HeroClass::Warrior) { // BUGFIX: Voice for this quest might be wrong in MP
-			sfxdnum = PS_WARR95;
-		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE95;
-		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE95;
-		} else if (plr[pnum]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK95;
-		} else if (plr[pnum]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE95;
-		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR95;
-		}
+		sfxdnum = GetSoundByClass(pnum, 95); // BUGFIX: Voice for this quest might be wrong in MP
 		quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
@@ -1664,36 +1611,12 @@ void CheckQuestItem(int pnum)
 		}
 		if (quests[Q_ANVIL]._qlog) {
 			sfxdelay = 10;
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
-				sfxdnum = PS_WARR89;
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-				sfxdnum = PS_ROGUE89;
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-				sfxdnum = PS_MAGE89;
-			} else if (plr[myplr]._pClass == HeroClass::Monk) {
-				sfxdnum = PS_MONK89;
-			} else if (plr[myplr]._pClass == HeroClass::Bard) {
-				sfxdnum = PS_ROGUE89;
-			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-				sfxdnum = PS_WARR89;
-			}
+			sfxdnum = GetSoundByClass(pnum, 89);
 		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX && quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
 		sfxdelay = 30;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR88;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE88;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE88;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK88;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE88;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR88;
-		}
+		sfxdnum = GetSoundByClass(pnum, 88);
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ROCK && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (quests[Q_ROCK]._qactive == QUEST_INIT) {
@@ -1702,56 +1625,20 @@ void CheckQuestItem(int pnum)
 		}
 		if (quests[Q_ROCK]._qlog) {
 			sfxdelay = 10;
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
-				sfxdnum = PS_WARR87;
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-				sfxdnum = PS_ROGUE87;
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-				sfxdnum = PS_MAGE87;
-			} else if (plr[myplr]._pClass == HeroClass::Monk) {
-				sfxdnum = PS_MONK87;
-			} else if (plr[myplr]._pClass == HeroClass::Bard) {
-				sfxdnum = PS_ROGUE87;
-			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-				sfxdnum = PS_WARR87;
-			}
+			sfxdnum = GetSoundByClass(pnum, 87);
 		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL && quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
 		quests[Q_BLOOD]._qactive = QUEST_DONE;
 		sfxdelay = 20;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR91;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE91;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE91;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK91;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE91;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR91;
-		}
+		sfxdnum = GetSoundByClass(pnum, 91);
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM) {
 		quests[Q_GRAVE]._qlog = false;
 		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		quests[Q_GRAVE]._qvar1 = 1;
 		sfxdelay = 10;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR79;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE79;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE79;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK79;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE79;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR79;
-		}
+		sfxdnum = GetSoundByClass(pnum, 79);
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_NOTE1 || plr[pnum].HoldItem.IDidx == IDI_NOTE2 || plr[pnum].HoldItem.IDidx == IDI_NOTE3) {
 		int mask, idx, item_num;
@@ -1767,19 +1654,7 @@ void CheckQuestItem(int pnum)
 			mask |= 4;
 		if (mask == 7) {
 			sfxdelay = 10;
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
-				sfxdnum = PS_WARR46;
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-				sfxdnum = PS_ROGUE46;
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-				sfxdnum = PS_MAGE46;
-			} else if (plr[myplr]._pClass == HeroClass::Monk) {
-				sfxdnum = PS_MONK46;
-			} else if (plr[myplr]._pClass == HeroClass::Bard) {
-				sfxdnum = PS_ROGUE46;
-			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-				sfxdnum = PS_WARR46;
-			}
+			sfxdnum = GetSoundByClass(pnum, 46);
 			switch (idx) {
 			case IDI_NOTE1:
 				PlrHasItem(pnum, IDI_NOTE2, &n2);
@@ -1908,19 +1783,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	}
 
 	if (pnum == myplr) {
-		if (plr[pnum]._pClass == HeroClass::Warrior) {
-			PlaySFX(PS_WARR14);
-		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-			PlaySFX(PS_ROGUE14);
-		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-			PlaySFX(PS_MAGE14);
-		} else if (plr[pnum]._pClass == HeroClass::Monk) {
-			PlaySFX(PS_MONK14);
-		} else if (plr[pnum]._pClass == HeroClass::Bard) {
-			PlaySFX(PS_ROGUE14);
-		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-			PlaySFX(PS_WARR14);
-		}
+		PlaySoundByClass(pnum, 14);
 	}
 	plr[pnum].HoldItem = *item;
 	RespawnItem(item, true);
@@ -2439,36 +2302,12 @@ bool UseInvItem(int pnum, int cii)
 	switch (Item->IDidx) {
 	case IDI_MUSHROOM:
 		sfxdelay = 10;
-		if (plr[pnum]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR95;
-		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE95;
-		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE95;
-		} else if (plr[pnum]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK95;
-		} else if (plr[pnum]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE95;
-		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR95;
-		}
+		sfxdnum = GetSoundByClass(pnum, 95);
 		return true;
 	case IDI_FUNGALTM:
 		PlaySFX(IS_IBOOK);
 		sfxdelay = 10;
-		if (plr[pnum]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR29;
-		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE29;
-		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE29;
-		} else if (plr[pnum]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK29;
-		} else if (plr[pnum]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE29;
-		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR29;
-		}
+		sfxdnum = GetSoundByClass(pnum, 29);
 		return true;
 	}
 
@@ -2476,19 +2315,7 @@ bool UseInvItem(int pnum, int cii)
 		return false;
 
 	if (!Item->_iStatFlag) {
-		if (plr[pnum]._pClass == HeroClass::Warrior) {
-			PlaySFX(PS_WARR13);
-		} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-			PlaySFX(PS_ROGUE13);
-		} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-			PlaySFX(PS_MAGE13);
-		} else if (plr[pnum]._pClass == HeroClass::Monk) {
-			PlaySFX(PS_MONK13);
-		} else if (plr[pnum]._pClass == HeroClass::Bard) {
-			PlaySFX(PS_ROGUE13);
-		} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-			PlaySFX(PS_WARR13);
-		}
+		PlaySoundByClass(pnum, 13);
 		return true;
 	}
 

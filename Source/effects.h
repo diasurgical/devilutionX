@@ -1065,6 +1065,8 @@ struct TSFX {
 extern int sfxdelay;
 extern _sfx_id sfxdnum;
 
+_sfx_id GetSoundByClass(int playerID, int16_t soundID);
+void PlaySoundByClass(int playerID, int16_t soundID, bool noRepeat = false);
 bool effect_is_playing(int nSFX);
 void stream_stop();
 void InitMonsterSND(int monst);
