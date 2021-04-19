@@ -38,11 +38,11 @@ void MsgBox(const char *pszFmt, va_list va)
  */
 void FreeDlg()
 {
-	if (terminating && cleanup_thread_id != SDL_GetThreadID(NULL))
+	if (terminating && cleanup_thread_id != SDL_GetThreadID(nullptr))
 		SDL_Delay(20000);
 
 	terminating = true;
-	cleanup_thread_id = SDL_GetThreadID(NULL);
+	cleanup_thread_id = SDL_GetThreadID(nullptr);
 
 	if (gbIsMultiplayer) {
 		if (SNetLeaveGame(3))
@@ -66,7 +66,7 @@ void app_fatal(const char *pszFmt, ...)
 	va_start(va, pszFmt);
 	FreeDlg();
 
-	if (pszFmt)
+	if (pszFmt != nullptr)
 		MsgBox(pszFmt, va);
 
 	va_end(va);
@@ -116,7 +116,7 @@ void ErrDlg(const char *title, const char *error, const char *log_file_path, int
 	snprintf(text, 1024, "%s\n\nThe error occurred at: %s line %d", error, log_file_path, log_line_nr);
 
 	UiErrorOkDialog(title, text);
-	app_fatal(NULL);
+	app_fatal(nullptr);
 }
 
 /**
@@ -128,7 +128,7 @@ void FileErrDlg(const char *error)
 
 	FreeDlg();
 
-	if (!error)
+	if (error == nullptr)
 		error = "";
 	snprintf(
 	    text,
@@ -143,7 +143,7 @@ void FileErrDlg(const char *error)
 	    error);
 
 	UiErrorOkDialog("Data File Error", text);
-	app_fatal(NULL);
+	app_fatal(nullptr);
 }
 
 /**
@@ -160,7 +160,7 @@ void InsertCDDlg()
 	    "Make sure that it is in the game folder and that the file name is in all lowercase.");
 
 	UiErrorOkDialog("Data File Error", text);
-	app_fatal(NULL);
+	app_fatal(nullptr);
 }
 
 /**
@@ -173,7 +173,7 @@ void DirErrorDlg(const char *error)
 	snprintf(text, 1024, "Unable to write to location:\n%s", error);
 
 	UiErrorOkDialog("Read-Only Directory Error", text);
-	app_fatal(NULL);
+	app_fatal(nullptr);
 }
 
 } // namespace devilution
