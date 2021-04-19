@@ -177,7 +177,7 @@ void NetSendHiPri(int playerId, BYTE *pbMsg, BYTE bLen)
 	}
 }
 
-void multi_send_msg_packet(int pmask, BYTE *src, BYTE len)
+void multi_send_msg_packet(uint32_t pmask, BYTE *src, BYTE len)
 {
 	DWORD v, p, t;
 	TPkt pkt;

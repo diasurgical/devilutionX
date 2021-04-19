@@ -21,10 +21,10 @@ namespace {
  * Maps from tile_id to automap type.
  * BUGFIX: only the first 256 elements are ever read
  */
-uint16_t automaptype[512];
+uint16_t AutomapTypes[512];
 
-static Sint32 AutoMapX;
-static Sint32 AutoMapY;
+int AutoMapX;
+int AutoMapY;
 
 /** color used to draw the player's arrow */
 #define COLOR_PLAYER (PAL8_ORANGE + 1)
@@ -49,9 +49,9 @@ static Sint32 AutoMapY;
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
-void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automap_type)
+void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automapType)
 {
-	uint8_t flags = automap_type >> 8;
+	uint8_t flags = automapType >> 8;
 
 	if ((flags & MAPFLAG_DIRT) != 0) {
 		SetPixel(out, sx, sy, COLOR_DIM);
@@ -79,11 +79,11 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 		DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, COLOR_BRIGHT);
 	}
 
-	bool do_vert = false;
-	bool do_horz = false;
-	bool do_cave_horz = false;
-	bool do_cave_vert = false;
-	switch (automap_type & MAPFLAG_TYPE) {
+	bool doVert = false;
+	bool doHorz = false;
+	bool doCaveHorz = false;
+	bool doCaveVert = false;
+	switch (automapType & MAPFLAG_TYPE) {
 	case 1: { // stand-alone column or other unpassable object
 		int x1 = sx - AmLine16;
 		int y1 = sy - AmLine16;
@@ -97,37 +97,37 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 	} break;
 	case 2:
 	case 5:
-		do_vert = true;
+		doVert = true;
 		break;
 	case 3:
 	case 6:
-		do_horz = true;
+		doHorz = true;
 		break;
 	case 4:
-		do_vert = true;
-		do_horz = true;
+		doVert = true;
+		doHorz = true;
 		break;
 	case 8:
-		do_vert = true;
-		do_cave_horz = true;
+		doVert = true;
+		doCaveHorz = true;
 		break;
 	case 9:
-		do_horz = true;
-		do_cave_vert = true;
+		doHorz = true;
+		doCaveVert = true;
 		break;
 	case 10:
-		do_cave_horz = true;
+		doCaveHorz = true;
 		break;
 	case 11:
-		do_cave_vert = true;
+		doCaveVert = true;
 		break;
 	case 12:
-		do_cave_horz = true;
-		do_cave_vert = true;
+		doCaveHorz = true;
+		doCaveVert = true;
 		break;
 	}
 
-	if (do_vert) {                             // right-facing obstacle
+	if (doVert) {                              // right-facing obstacle
 		if ((flags & MAPFLAG_VERTDOOR) != 0) { // two wall segments with a door in the middle
 			int x1 = sx - AmLine32;
 			int x2 = sx - AmLine16;
@@ -160,7 +160,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 			DrawLineTo(out, sx, sy - AmLine16, sx - AmLine32, sy, COLOR_DIM);
 	}
 
-	if (do_horz) { // left-facing obstacle
+	if (doHorz) { // left-facing obstacle
 		if ((flags & MAPFLAG_HORZDOOR) != 0) {
 			int x1 = sx + AmLine16;
 			int x2 = sx + AmLine32;
@@ -194,7 +194,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 	}
 
 	// for caves the horz/vert flags are switched
-	if (do_cave_horz) {
+	if (doCaveHorz) {
 		if ((flags & MAPFLAG_VERTDOOR) != 0) {
 			int x1 = sx - AmLine32;
 			int x2 = sx - AmLine16;
@@ -211,7 +211,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 			DrawLineTo(out, sx, sy + AmLine16, sx - AmLine32, sy, COLOR_DIM);
 	}
 
-	if (do_cave_vert) {
+	if (doCaveVert) {
 		if ((flags & MAPFLAG_HORZDOOR) != 0) {
 			int x1 = sx + AmLine16;
 			int x2 = sx + AmLine32;
@@ -410,7 +410,7 @@ uint16_t GetAutomapType(int x, int y, bool view)
 		return 0;
 	}
 
-	uint16_t rv = automaptype[(BYTE)dungeon[x][y]];
+	uint16_t rv = AutomapTypes[(BYTE)dungeon[x][y]];
 	if (rv == 7) {
 		if (((GetAutomapType(x - 1, y, false) >> 8) & MAPFLAG_HORZARCH) != 0) {
 			if (((GetAutomapType(x, y - 1, false) >> 8) & MAPFLAG_VERTARCH) != 0) {
@@ -485,7 +485,7 @@ void InitAutomap()
 	DWORD dwTiles;
 	BYTE *pAFile;
 
-	memset(automaptype, 0, sizeof(automaptype));
+	memset(AutomapTypes, 0, sizeof(AutomapTypes));
 
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
@@ -516,7 +516,7 @@ void InitAutomap()
 	for (unsigned i = 1; i <= dwTiles; i++) {
 		uint8_t b1 = *pTmp++;
 		uint8_t b2 = *pTmp++;
-		automaptype[i] = b1 + (b2 << 8);
+		AutomapTypes[i] = b1 + (b2 << 8);
 	}
 
 	mem_free_dbg(pAFile);

@@ -1250,7 +1250,7 @@ void NetSendCmdMonDmg(bool bHiPri, WORD wMon, DWORD dwDam)
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdString(int pmask, const char *pszStr)
+void NetSendCmdString(uint32_t pmask, const char *pszStr)
 {
 	int dwStrLen;
 	TCmdString cmd;
