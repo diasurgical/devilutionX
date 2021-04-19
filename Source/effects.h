@@ -742,120 +742,348 @@ enum _sfx_id : int16_t {
 	PS_ROGUE100,
 	PS_ROGUE101,
 	PS_ROGUE102,
+	// CHAMBER OF BONE intro: Beyond the hall of heroes...
 	PS_WARR1,
+
+	// Then by binding spirit to the crafted rock. This sounds like a spell of some kind.
 	PS_WARR2,
+
+	// Let this tome serve as your warning... this is a forbidden place. return from whence you came and your life will be spar1ed
 	PS_WARR3,
+
+	// The creature of flame, by horazon. Should be interesting reading.
 	PS_WARR4,
+
+	// Morta vespa gaia ilumino...
 	PS_WARR5,
+
+	// The liutenant of belial is known as grimspike
 	PS_WARR6,
+
+	// This looks like some sort of journal. it seems that I may have brought something to this plane that even I cant control
 	PS_WARR7,
+
+	// BUTCHER: Your death will be avenged
 	PS_WARR8,
+
+	// SLAIN HERO: Rest in peace my friend.
 	PS_WARR9,
+
+	// VALOR: And so, locked beyong the gateway of blood and past the hall of fire, valor awaits for the hero of light to awaken.
 	PS_WARR10,
+
+	// HALLS OF THE BLINK: I can see what you see not. Vision milky...
 	PS_WARR11,
+
+	// WARLORD OF BLOOD: The armories of hell is home to the warlord of blood.
 	PS_WARR12,
+
+	// I cant use this yet.
 	PS_WARR13,
+
+	// I cant carry anymore
 	PS_WARR14,
+
+	// I gotta pawn some of this stuff
 	PS_WARR14B,
+
+	// Too much bagage.
 	PS_WARR14C,
+
+	// I have no room
 	PS_WARR15,
+
+	// I have no room for this crap
 	PS_WARR15B,
+
+	// I gotta get rid of some of this crap
 	PS_WARR15C,
+
+	// Where would I put this
 	PS_WARR16,
+
+	// Where you want me to put this
 	PS_WARR16B,
+
+	// What am I? A pack rat?
 	PS_WARR16C,
+
+	// No way
 	PS_WARR17,
+
+	// Not a chance
 	PS_WARR18,
+
+	// I'd never use this
 	PS_WARR19,
+
+	// I'd have to equip that
 	PS_WARR20,
+
+	// I can't move this
 	PS_WARR21,
+
+	// I can't move this, yet
 	PS_WARR22,
+
+	// I can't open this
 	PS_WARR23,
+
+	// I can't open this, yet
 	PS_WARR24,
+
+	// I can't lift this
 	PS_WARR25,
+
+	// I can't lift this, yet
 	PS_WARR26,
+
+	// I can't cast that here.
 	PS_WARR27,
+
+	// I can't cast that, yet
 	PS_WARR28,
+
+	// That didn't do anything
 	PS_WARR29,
+
+	// I can already do that
 	PS_WARR30,
+
+	// I don't need that
 	PS_WARR31,
+
+	// I don't need to do that
 	PS_WARR32,
+
+	// I don't want that
 	PS_WARR33,
+
+	// I don't have a spell ready
 	PS_WARR34,
+
+	// Not enough mana
 	PS_WARR35,
+
+	// That would kill me!
 	PS_WARR36,
+
+	// I can't do that
 	PS_WARR37,
+
+	// No
 	PS_WARR38,
+
+	// Yes
 	PS_WARR39,
+
+	// That won't work.
 	PS_WARR40,
+
+	// That won't work here.
 	PS_WARR41,
+
+	// That won't work, yet
 	PS_WARR42,
+
+	// I can't get there from here
 	PS_WARR43,
+
+	// It's too heavy
 	PS_WARR44,
+
+	// It's too big
 	PS_WARR45,
+
+	// Just what I was looking for
 	PS_WARR46,
+
+	// I've got a bad feeling about this
 	PS_WARR47,
+
+	// COWS: Got milk?
 	PS_WARR48,
+
+	// COWS: I'm not thirsty
 	PS_WARR49,
+
+	// COWS: I'm no milk made
 	PS_WARR50,
+
+	// I could blow up the whole village
 	PS_WARR51,
+
+	// COWS: Yep... that's a cow alright
 	PS_WARR52,
+
+	// Too... ugh... heavy!
 	PS_WARR53,
+
+	// In spiritum sanctum
 	PS_WARR54,
+
+	// Predictum otium
 	PS_WARR55,
+
+	// Eficio obitus inimicus
 	PS_WARR56,
+
+	// The enchantment is gone
 	PS_WARR57,
+
+	// Oh too easy
 	PS_WARR58,
+
+	// Back to the grave!
 	PS_WARR59,
+
+	// Time to die!
 	PS_WARR60,
+
+	// I'm not impressed
 	PS_WARR61,
+
+	// ZHAR THE MAD: I'm sorry, did I break your concentration?
 	PS_WARR62,
+
+	// Vengeance is mine!
 	PS_WARR63,
+
+	// Die!
 	PS_WARR64,
+
+	// Yeah!
 	PS_WARR65,
+
+	// Ahhhhh.
 	PS_WARR66,
+
+	// <whistle>
 	PS_WARR67,
+
+	// <take hit noise>
 	PS_WARR68,
+
+	// <take hit to armor noise 1>
 	PS_WARR69,
+
+	// <take hit to armor noise 2>
 	PS_WARR69B,
+
+	// Ughnnnnnnn
 	PS_WARR70,
+
+	// <dead sound unused>
 	PS_WARR71,
+
+	// <breathing>
 	PS_WARR72,
+
+	// Ohhhhh
 	PS_WARR73,
+
+	// Wow!
 	PS_WARR74,
+
+	// Thank the light
 	PS_WARR75,
+
+	// What was that!
 	PS_WARR76,
+
+	// Uhum
 	PS_WARR77,
+
+	// Mmmm
 	PS_WARR78,
+
+	// Aham
 	PS_WARR79,
+
+	// BUTCHER: The spirits of the dead are now avenged.
 	PS_WARR80,
+
+	// The town is safe from these foul spawn
 	PS_WARR81,
+
+	// KING LEORIC: Rest well Leoric... I'll find your son.
 	PS_WARR82,
+
+	// LAZARUS: Your madness ends here, betrayer!
 	PS_WARR83,
+
+	// LILITH?: You lure no more man to their deaths!
 	PS_WARR84,
+
+	// IZUAL?: Return to heaven warrior of light!
 	PS_WARR85,
+
+	// AZUREWRATH?: I can see why they fear this weapon!
 	PS_WARR86,
+
+	// MAGIC ROCK: This must be what Griswold wanted
 	PS_WARR87,
+
+	// LACHDANAN: I need to get this to Lachdanan
 	PS_WARR88,
+
+	// ANVIL OF FURY: I need to get this to Griswold!
 	PS_WARR89,
+
+	// I've never been here before!
 	PS_WARR90,
+
+	// VALOR: May the spirit of Arcane protect me
 	PS_WARR91,
+
+	// This is a place of great power!
 	PS_WARR92,
+
+	// AZUREWRATH?: This blade must be destroyed!
 	PS_WARR93,
+
+	// LAZARUS: Your reign of pain has ended!
 	PS_WARR94,
+
+	// BLACK MUSHROOM: Now that's one big mushroom
 	PS_WARR95,
+
+	// BLACK MUSHROOM (unused): That's not such a big mushroom
 	PS_WARR95B,
+
+	// BLACK MUSHROOM (unused): I've never seen a mushroom that size
 	PS_WARR95C,
+
+	// BLACK MUSHROOM (unused): That mushroom is the size of a cadillac!
 	PS_WARR95D,
+
+	// BLACK MUSHROOM (unused): Damn! What a mushroom!
 	PS_WARR95E,
+
+	// BLACK MUSHROOM (unused): What a f**** (fucking) mushroom!
 	PS_WARR95F,
+
+	// CATACOMBS INTRO: The smell of death surrounds me.
 	PS_WARR96B,
+
+	// CATHEDRAL INTRO: The sanctity of this place has been fouled.
 	PS_WARR97,
+
+	// CAVES INTRO: It's hot down here
 	PS_WARR98,
+
+	// HELL INTRO: I must be getting close
 	PS_WARR99,
+
+	// Maybe it's locked from the inside
 	PS_WARR100,
+
+	// Looks like it's rusted shut
 	PS_WARR101,
+
+	// Maybe there is another way
 	PS_WARR102,
+
 	PS_MONK1,
 	PS_MONK2,
 	PS_MONK3,
@@ -959,6 +1187,8 @@ enum _sfx_id : int16_t {
 	PS_MONK100,
 	PS_MONK101,
 	PS_MONK102,
+
+	// Take heed and bear witness to the truths that lie herein...
 	PS_NAR1,
 	PS_NAR2,
 	PS_NAR3,
@@ -969,25 +1199,53 @@ enum _sfx_id : int16_t {
 	PS_NAR8,
 	PS_NAR9,
 	PS_DIABLVLINT,
+
+	// BUTCHER: Ahhh fresh meat
 	USFX_CLEAVER,
+
+	// GARBAD THE WEAK Pleeeeease not hurt no kill
 	USFX_GARBUD1,
 	USFX_GARBUD2,
 	USFX_GARBUD3,
 	USFX_GARBUD4,
+
+	// How much suffering mortal does it take before you lose your grace. Let me show you.
 	USFX_IZUAL1,
 	USFX_LACH1,
 	USFX_LACH2,
 	USFX_LACH3,
+
+	// Abandon your foolish quest...
 	USFX_LAZ1,
+
+	// You are too late to save the child. Now you join him, in hell.
 	USFX_LAZ2,
+
+	// The warmth of life has entered my tomb. Prepare yourself mortal, to serve my master for eternit hahaha.
 	USFX_SKING1,
+
+	// Hey! You that one that kill all.
 	USFX_SNOT1,
+
+	// You kill uglies! Get banner, you bring to me. Or else!
 	USFX_SNOT2,
+
+	// You give! Yes, good! Go now. We strong, we kill all with big magic!
 	USFX_SNOT3,
+
+	// My blade seeks for your blood mortal. And by my dark masters, it shall not be denied.
 	USFX_WARLRD1,
+
+	// Mortal, free me from my imprisionment and your reward will be more than you can imagine. Read the book, and I will be released.
 	USFX_WLOCK1,
+
+	// What. Why are you here?...
 	USFX_ZHAR1,
+
+	// Arg... your curiosity will be the death of you.
 	USFX_ZHAR2,
+
+	// <diablo death>
 	USFX_DIABLOD,
 	TSFX_FARMER1,
 	TSFX_FARMER2,
