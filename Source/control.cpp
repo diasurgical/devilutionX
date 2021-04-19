@@ -17,6 +17,7 @@
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "options.h"
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"

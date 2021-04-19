@@ -13,6 +13,7 @@
 #include "player.h"
 #include "setmaps.h"
 #include "utils/ui_fwd.h"
+#include "options.h"
 
 namespace devilution {
 
@@ -451,6 +452,14 @@ void DrawAutomapText(const CelOutputBuffer &out)
 				sprintf(desc, "Level: Crypt %i", currlevel - 20);
 		} else {
 			sprintf(desc, "Level: Nest %i", currlevel - 16);
+		}
+		if (sgOptions.Gameplay.bBlackDeathWarning) {
+			for (auto i = 0; i < nummtypes; ++i) {
+				if (Monsters[i].mtype == MT_YZOMBIE) {
+					sprintf(desc, "%s (Black Death)", desc);
+					break;
+				}
+			}
 		}
 		PrintGameStr(out, 8, nextline, desc, COL_GOLD);
 	}

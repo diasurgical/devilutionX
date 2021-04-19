@@ -95,6 +95,8 @@ struct GameplayOptions {
 	bool bShowMonsterType;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
 	bool bDisableCripplingShrines;
+	/** @brief Warn about Black Death zombies. */
+	bool bBlackDeathWarning;
 };
 
 struct ControllerOptions {
