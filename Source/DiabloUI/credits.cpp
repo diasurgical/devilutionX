@@ -2,14 +2,14 @@
 #include <memory>
 #include <vector>
 
-#include "control.h"
-#include "controls/menu_controls.h"
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/art.h"
+#include "DiabloUI/art_draw.h"
 #include "DiabloUI/credits_lines.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/support_lines.h"
+#include "control.h"
+#include "controls/menu_controls.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
@@ -54,9 +54,9 @@ struct CachedLine {
 SDL_Surface *RenderText(const char *text, SDL_Color color)
 {
 	if (text[0] == '\0')
-		return NULL;
+		return nullptr;
 	SDL_Surface *result = TTF_RenderUTF8_Solid(font, text, color);
-	if (result == NULL)
+	if (result == nullptr)
 		SDL_Log("%s", TTF_GetError());
 	return result;
 }
@@ -84,7 +84,7 @@ CachedLine PrepareLine(std::size_t index)
 
 		// Blit the shadow first:
 		SDL_Rect shadow_rect = { SHADOW_OFFSET_X, SHADOW_OFFSET_Y, 0, 0 };
-		if (SDL_BlitSurface(text.get(), NULL, surface.get(), &shadow_rect) <= -1)
+		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), &shadow_rect) <= -1)
 			ErrSdl();
 
 		// Change the text surface color and blit again:
@@ -93,7 +93,7 @@ CachedLine PrepareLine(std::size_t index)
 			ErrSdl();
 		SDLC_SetColorKey(text.get(), 0);
 
-		if (SDL_BlitSurface(text.get(), NULL, surface.get(), NULL) <= -1)
+		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), nullptr) <= -1)
 			ErrSdl();
 
 		surface = ScaleSurfaceToOutput(std::move(surface));
@@ -141,10 +141,10 @@ void CreditsRenderer::Render()
 		return;
 	prev_offset_y_ = offset_y;
 
-	SDL_FillRect(DiabloUiSurface(), NULL, 0x000000);
+	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	DrawArt(PANEL_LEFT - 320, UI_OFFSET_Y, &ArtBackgroundWidescreen);
 	DrawArt(PANEL_LEFT, UI_OFFSET_Y, &ArtBackground);
-	if (font == NULL)
+	if (font == nullptr)
 		return;
 
 	const std::size_t lines_begin = std::max(offset_y / LINE_H, 0);
@@ -186,10 +186,10 @@ void CreditsRenderer::Render()
 		ScaleOutputRect(&dst_rect);
 		dst_rect.w = line.m_surface->w;
 		dst_rect.h = line.m_surface->h;
-		if (SDL_BlitSurface(line.m_surface.get(), NULL, DiabloUiSurface(), &dst_rect) < 0)
+		if (SDL_BlitSurface(line.m_surface.get(), nullptr, DiabloUiSurface(), &dst_rect) < 0)
 			ErrSdl();
 	}
-	SDL_SetClipRect(DiabloUiSurface(), NULL);
+	SDL_SetClipRect(DiabloUiSurface(), nullptr);
 }
 
 bool TextDialog()

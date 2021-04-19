@@ -9,7 +9,7 @@ namespace devilution {
 
 void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
-	if (screenY >= gnScreenHeight || screenX >= gnScreenWidth || art->surface == NULL)
+	if (screenY >= gnScreenHeight || screenX >= gnScreenWidth || art->surface == nullptr)
 		return;
 
 	SDL_Rect src_rect;
@@ -39,7 +39,7 @@ void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, 
 
 void DrawArt(CelOutputBuffer out, Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
-	if (screenY >= gnScreenHeight || screenX >= gnScreenWidth || art->surface == NULL)
+	if (screenY >= gnScreenHeight || screenX >= gnScreenWidth || art->surface == nullptr)
 		return;
 
 	SDL_Rect src_rect;

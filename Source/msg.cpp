@@ -5,10 +5,10 @@
  */
 #include <limits.h>
 
+#include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "control.h"
 #include "dead.h"
-#include "DiabloUI/diabloui.h"
 #include "drlg_l1.h"
 #include "dthread.h"
 #include "encrypt.h"
@@ -52,7 +52,7 @@ static void msg_get_next_packet()
 	TMegaPkt *result;
 
 	sgpCurrPkt = (TMegaPkt *)DiabloAllocPtr(sizeof(TMegaPkt));
-	sgpCurrPkt->pNext = NULL;
+	sgpCurrPkt->pNext = nullptr;
 	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
 
 	result = (TMegaPkt *)&sgpMegaPkt;
@@ -74,7 +74,7 @@ static void msg_free_packets()
 static void msg_pre_packet()
 {
 	int i = -1;
-	for (TMegaPkt *pkt = sgpMegaPkt; pkt != NULL; pkt = pkt->pNext) {
+	for (TMegaPkt *pkt = sgpMegaPkt; pkt != nullptr; pkt = pkt->pNext) {
 		BYTE *data = pkt->data;
 		size_t spaceLeft = sizeof(pkt->data);
 		while (spaceLeft != pkt->dwSpaceLeft) {
@@ -466,7 +466,7 @@ void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 	if (!gbIsMultiplayer)
 		return;
 
-	assert(pSync != NULL);
+	assert(pSync != nullptr);
 	assert(bLevel < NUMLEVELS);
 	sgbDeltaChanged = true;
 
@@ -723,7 +723,7 @@ void DeltaLoadLevel()
 					M_ClearSquares(i);
 					if (monster[i]._mAi != AI_DIABLO) {
 						if (monster[i]._uniqtype == 0) {
-							assert(monster[i].MType != NULL);
+							assert(monster[i].MType != nullptr);
 							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, monster[i]._mdir);
 						} else {
 							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, monster[i]._mdir);
@@ -2425,7 +2425,7 @@ static DWORD On_CHEAT_SPELL_LEVEL(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-static DWORD On_DEBUG(TCmd *pCmd, int pnum)
+static DWORD On_DEBUG(TCmd *pCmd)
 {
 	return sizeof(*pCmd);
 }
@@ -2478,7 +2478,7 @@ static DWORD On_REFLECT(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-static DWORD On_NAKRUL(TCmd *pCmd, int pnum)
+static DWORD On_NAKRUL(TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		operate_lv24_lever();
@@ -2499,7 +2499,7 @@ static DWORD On_OPENHIVE(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-static DWORD On_OPENCRYPT(TCmd *pCmd, int pnum)
+static DWORD On_OPENCRYPT(TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		TownOpenGrave();
@@ -2594,7 +2594,7 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_TALKXY:
 		return On_TALKXY(pCmd, pnum);
 	case CMD_DEBUG:
-		return On_DEBUG(pCmd, pnum);
+		return On_DEBUG(pCmd);
 	case CMD_NEWLVL:
 		return On_NEWLVL(pCmd, pnum);
 	case CMD_WARP:
@@ -2668,11 +2668,11 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_REFLECT:
 		return On_REFLECT(pCmd, pnum);
 	case CMD_NAKRUL:
-		return On_NAKRUL(pCmd, pnum);
+		return On_NAKRUL(pCmd);
 	case CMD_OPENHIVE:
 		return On_OPENHIVE(pCmd, pnum);
 	case CMD_OPENCRYPT:
-		return On_OPENCRYPT(pCmd, pnum);
+		return On_OPENCRYPT(pCmd);
 	default:
 		break;
 	}

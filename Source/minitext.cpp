@@ -174,7 +174,7 @@ void ScrollQTextContent(const char *pnl)
 /**
  * @brief Draw the current text in the quest dialog window
  */
-static void DrawQTextContent(CelOutputBuffer out)
+static void DrawQTextContent()
 {
 	// TODO: Draw to the given `out` buffer.
 	const char *text, *pnl;
@@ -259,7 +259,7 @@ void DrawQTextBack(CelOutputBuffer out)
 void DrawQText(CelOutputBuffer out)
 {
 	DrawQTextBack(out);
-	DrawQTextContent(out);
+	DrawQTextContent();
 }
 
 } // namespace devilution

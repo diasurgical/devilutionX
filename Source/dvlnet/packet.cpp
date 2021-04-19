@@ -27,7 +27,7 @@ const char *packet_type_to_string(uint8_t packet_type)
 	case PT_INFO_REPLY:
 		return "PT_INFO_REPLY";
 	default:
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -36,7 +36,7 @@ wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<p
 	message_ = "Expected packet of type ";
 	const auto append_packet_type = [this](std::uint8_t t) {
 		const char *type_str = packet_type_to_string(t);
-		if (type_str != NULL)
+		if (type_str != nullptr)
 			message_.append(type_str);
 		else
 			message_.append(std::to_string(t));

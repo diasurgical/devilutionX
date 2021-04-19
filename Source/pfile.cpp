@@ -137,20 +137,20 @@ static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, DWORD *pdwL
 	BYTE *buf;
 
 	if (!SFileOpenFileEx(archive, pszName, 0, &file))
-		return NULL;
+		return nullptr;
 
-	*pdwLen = SFileGetFileSize(file, NULL);
+	*pdwLen = SFileGetFileSize(file, nullptr);
 	if (*pdwLen == 0)
-		return NULL;
+		return nullptr;
 
 	buf = DiabloAllocPtr(*pdwLen);
-	if (!SFileReadFile(file, buf, *pdwLen, &nread, NULL))
-		return NULL;
+	if (!SFileReadFile(file, buf, *pdwLen, &nread, nullptr))
+		return nullptr;
 	SFileCloseFile(file);
 
 	*pdwLen = codec_decode(buf, *pdwLen, pfile_get_password());
 	if (*pdwLen == 0)
-		return NULL;
+		return nullptr;
 
 	return buf;
 }
@@ -161,7 +161,7 @@ static bool pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 	BYTE *buf;
 
 	buf = pfile_read_archive(archive, "hero", &read);
-	if (buf == NULL)
+	if (buf == nullptr)
 		return false;
 
 	bool ret = false;
@@ -206,16 +206,16 @@ static HANDLE pfile_open_save_archive(DWORD save_num)
 
 	if (SFileOpenArchive(GetSavePath(save_num).c_str(), 0, 0, &archive))
 		return archive;
-	return NULL;
+	return nullptr;
 }
 
 static void pfile_SFileCloseArchive(HANDLE *hsArchive)
 {
-	if (*hsArchive == NULL)
+	if (*hsArchive == nullptr)
 		return;
 
 	SFileCloseArchive(*hsArchive);
-	*hsArchive = NULL;
+	*hsArchive = nullptr;
 }
 
 PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clear_tables)
@@ -315,7 +315,7 @@ bool pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
 
 	DWORD dwLen;
 	BYTE *gameData = pfile_read_archive(hsArchive, "game", &dwLen);
-	if (gameData == NULL)
+	if (gameData == nullptr)
 		return false;
 
 	Uint32 hdr = LOAD_LE32(gameData);
@@ -410,7 +410,7 @@ void pfile_read_player_from_save()
 
 	save_num = pfile_get_save_num_from_name(gszHero);
 	archive = pfile_open_save_archive(save_num);
-	if (archive == NULL)
+	if (archive == nullptr)
 		app_fatal("Unable to open archive");
 	if (!pfile_read_hero(archive, &pkplr))
 		app_fatal("Unable to load character");
@@ -503,13 +503,13 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	archive = pfile_open_save_archive(save_num);
-	if (archive == NULL)
-		return NULL;
+	if (archive == nullptr)
+		return nullptr;
 
 	buf = pfile_read_archive(archive, pszName, pdwLen);
 	pfile_SFileCloseArchive(&archive);
-	if (buf == NULL)
-		return NULL;
+	if (buf == nullptr)
+		return nullptr;
 
 	return buf;
 }

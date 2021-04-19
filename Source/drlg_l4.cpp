@@ -202,11 +202,11 @@ void DRLG_LoadL4SP()
 {
 	setloadflag = false;
 	if (QuestStatus(Q_WARLORD)) {
-		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
 		setloadflag = true;
 	}
 	if (currlevel == 15 && gbIsMultiplayer) {
-		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", nullptr);
 		setloadflag = true;
 	}
 }
@@ -1280,16 +1280,16 @@ void DRLG_LoadDiabQuads(bool preflag)
 {
 	BYTE *lpSetPiece;
 
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", NULL);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", nullptr);
 	diabquad1x = 4 + l4holdx;
 	diabquad1y = 4 + l4holdy;
 	DRLG_L4SetRoom(lpSetPiece, diabquad1x, diabquad1y);
 	mem_free_dbg(lpSetPiece);
 
 	if (preflag) {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2b.DUN", NULL);
+		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2b.DUN", nullptr);
 	} else {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", NULL);
+		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", nullptr);
 	}
 	diabquad2x = 27 - l4holdx;
 	diabquad2y = 1 + l4holdy;
@@ -1297,9 +1297,9 @@ void DRLG_LoadDiabQuads(bool preflag)
 	mem_free_dbg(lpSetPiece);
 
 	if (preflag) {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3b.DUN", NULL);
+		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3b.DUN", nullptr);
 	} else {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", NULL);
+		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", nullptr);
 	}
 	diabquad3x = 1 + l4holdx;
 	diabquad3y = 27 - l4holdy;
@@ -1307,9 +1307,9 @@ void DRLG_LoadDiabQuads(bool preflag)
 	mem_free_dbg(lpSetPiece);
 
 	if (preflag) {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4b.DUN", NULL);
+		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4b.DUN", nullptr);
 	} else {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", NULL);
+		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", nullptr);
 	}
 	diabquad4x = 28 - l4holdx;
 	diabquad4y = 28 - l4holdy;
@@ -1831,7 +1831,7 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 
 	DRLG_InitTrans();
 	InitL4Dungeon();
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
 	lm = pLevelMap;
 	rw = *lm;
@@ -1873,7 +1873,7 @@ void LoadPreL4Dungeon(char *sFileName, int vx, int vy)
 
 	InitL4Dungeon();
 
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
 	lm = pLevelMap;
 	rw = *lm;

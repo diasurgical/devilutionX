@@ -4,9 +4,9 @@
  * Quality of life features
  */
 
+#include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "cursor.h"
-#include "DiabloUI/art_draw.h"
 #include "options.h"
 #include "qol/common.h"
 #include "qol/xpbar.h"

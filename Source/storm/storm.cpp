@@ -1,26 +1,18 @@
 #include "storm/storm.h"
 
+#include <SDL.h>
+#include <SDL_endian.h>
+#include <SDL_mixer.h>
 #include <cstddef>
 #include <cstdint>
-#include <SDL_endian.h>
-#include <SDL.h>
-#include <SDL_mixer.h>
-#include <smacker.h>
 #include <stdint.h>
 #include <string>
-
-#if !SDL_VERSION_ATLEAST(2, 0, 4)
-#include <queue>
-#endif
 
 #include "Radon.hpp"
 
 #include "DiabloUI/diabloui.h"
-#include "dx.h"
 #include "options.h"
-#include "utils/display.h"
 #include "utils/paths.h"
-#include "utils/sdl_compat.h"
 #include "utils/stubs.h"
 
 // Include Windows headers for Get/SetLastError.
@@ -36,75 +28,10 @@ extern "C" std::uint32_t GetLastError();
 #endif
 
 namespace devilution {
-
-unsigned long SVidWidth, SVidHeight;
-
 namespace {
 
 bool directFileAccess = false;
-std::string *SBasePath = NULL;
-
-bool IsLandscapeFit(unsigned long src_w, unsigned long src_h, unsigned long dst_w, unsigned long dst_h)
-{
-	return src_w * dst_h > dst_w * src_h;
-}
-
-#ifdef USE_SDL1
-// Whether we've changed the video mode temporarily for SVid.
-// If true, we must restore it once the video has finished playing.
-bool IsSVidVideoMode = false;
-
-// Set the video mode close to the SVid resolution while preserving aspect ratio.
-void TrySetVideoModeToSVidForSDL1() {
-	const SDL_Surface *display = SDL_GetVideoSurface();
-	IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
-	if (!IsSVidVideoMode) return;
-
-	int w;
-	int h;
-	if (IsLandscapeFit(SVidWidth, SVidHeight, display->w, display->h)) {
-		w = SVidWidth;
-		h = SVidWidth * display->h / display->w;
-	} else {
-		w = SVidHeight * display->w / display->h;
-		h = SVidHeight;
-	}
-
-#ifdef SDL1_FORCE_SVID_VIDEO_MODE
-	const bool video_mode_ok = true;
-#else
-	const bool video_mode_ok = SDL_VideoModeOK(
-	    w, h, /*bpp=*/display->format->BitsPerPixel, display->flags);
-#endif
-
-	if (!video_mode_ok) {
-		IsSVidVideoMode = false;
-
-		// Get available fullscreen/hardware modes
-		SDL_Rect **modes = SDL_ListModes(nullptr, display->flags);
-
-		// Check is there are any modes available.
-		if (modes == reinterpret_cast<SDL_Rect **>(0)
-		    || modes == reinterpret_cast<SDL_Rect **>(-1)) {
-			return;
-		}
-
-		// Search for a usable video mode
-		bool found = false;
-		for (int i = 0; modes[i]; i++) {
-			if (modes[i]->w == w || modes[i]->h == h) {
-				found = true;
-				break;
-			}
-		}
-		if (!found)
-			return;
-		IsSVidVideoMode = true;
-	}
-
-	SetVideoMode(w, h, display->format->BitsPerPixel, display->flags);
-}
-#endif
+std::string *SBasePath = nullptr;
 
 } // namespace
 
@@ -147,49 +74,49 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 {
 	bool result = false;
 
-	if (directFileAccess && SBasePath != NULL) {
+	if (directFileAccess && SBasePath != nullptr) {
 		std::string path = *SBasePath + filename;
 		for (std::size_t i = SBasePath->size(); i < path.size(); ++i)
 			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
-		result = SFileOpenFileEx((HANDLE)0, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
+		result = SFileOpenFileEx((HANDLE)nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
 
-	if (!result && devilutionx_mpq != NULL) {
+	if (!result && devilutionx_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)devilutionx_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 	if (gbIsHellfire) {
-		if (!result && hfopt2_mpq != NULL) {
+		if (!result && hfopt2_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfopt1_mpq != NULL) {
+		if (!result && hfopt1_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfopt1_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfvoice_mpq != NULL) {
+		if (!result && hfvoice_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfvoice_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfmusic_mpq != NULL) {
+		if (!result && hfmusic_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfmusic_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfbarb_mpq != NULL) {
+		if (!result && hfbarb_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfbarb_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfbard_mpq != NULL) {
+		if (!result && hfbard_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfbard_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfmonk_mpq != NULL) {
+		if (!result && hfmonk_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfmonk_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 		if (!result) {
 			result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 	}
-	if (!result && patch_rt_mpq != NULL) {
+	if (!result && patch_rt_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
-	if (!result && spawn_mpq != NULL) {
+	if (!result && spawn_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)spawn_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
-	if (!result && diabdat_mpq != NULL) {
+	if (!result && diabdat_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 
@@ -238,11 +165,11 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
-	if (!pszFileName || strcasecmp(pszFileName, ".pcx")) {
+	if (!pszFileName || strcasecmp(pszFileName, ".pcx") != 0) {
 		return false;
 	}
 
-	if (!SFileReadFile(hFile, &pcxhdr, 128, 0, 0)) {
+	if (!SFileReadFile(hFile, &pcxhdr, 128, nullptr, nullptr)) {
 		SFileCloseFile(hFile);
 		return false;
 	}
@@ -265,8 +192,8 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
-		SFileSetFilePointer(hFile, 0, NULL, DVL_FILE_END);
-		fileBuffer = NULL;
+		SFileSetFilePointer(hFile, 0, nullptr, DVL_FILE_END);
+		fileBuffer = nullptr;
 	} else {
 		const auto pos = SFileGetFilePointer(hFile);
 		const auto end = SFileSetFilePointer(hFile, 0, DVL_FILE_END);
@@ -276,7 +203,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	}
 
 	if (fileBuffer) {
-		SFileReadFile(hFile, fileBuffer, size, 0, 0);
+		SFileReadFile(hFile, fileBuffer, size, nullptr, nullptr);
 		dataPtr = fileBuffer;
 
 		for (int j = 0; j < height; j++) {
@@ -308,7 +235,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		if (pos == static_cast<std::uint64_t>(-1)) {
 			SDL_Log("SFileSetFilePointer error: %ud", (unsigned int)SErrGetLastError());
 		}
-		SFileReadFile(hFile, paldata, 768, 0, NULL);
+		SFileReadFile(hFile, paldata, 768, nullptr, nullptr);
 
 		for (int i = 0; i < 256; i++) {
 			pPalette[i].r = paldata[i][0];
@@ -332,7 +259,7 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 	if (!getIniValue(sectionName, keyName, string, 2))
 		return defaultValue;
 
-	return strtol(string, NULL, 10) != 0;
+	return strtol(string, nullptr, 10) != 0;
 }
 
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
@@ -362,7 +289,7 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 
 	std::string value = key->getStringValue();
 
-	if (string != NULL)
+	if (string != nullptr)
 		strncpy(string, value.c_str(), stringSize);
 
 	return true;
@@ -400,7 +327,7 @@ int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 		return defaultValue;
 	}
 
-	return strtol(string, NULL, sizeof(string));
+	return strtol(string, nullptr, sizeof(string));
 }
 
 void setIniInt(const char *keyname, const char *valuename, int value)
@@ -417,429 +344,6 @@ void setIniFloat(const char *keyname, const char *valuename, float value)
 	setIniValue(keyname, valuename, str);
 }
 
-double SVidFrameEnd;
-double SVidFrameLength;
-char SVidAudioDepth;
-double SVidVolume;
-BYTE SVidLoop;
-smk SVidSMK;
-SDL_Color SVidPreviousPalette[256];
-SDL_Palette *SVidPalette;
-SDL_Surface *SVidSurface;
-BYTE *SVidBuffer;
-
-#if SDL_VERSION_ATLEAST(2, 0, 4)
-SDL_AudioDeviceID deviceId;
-static bool HaveAudio()
-{
-	return deviceId != 0;
-}
-#else
-static bool HaveAudio()
-{
-	return SDL_GetAudioStatus() != SDL_AUDIO_STOPPED;
-}
-#endif
-
-void SVidRestartMixer()
-{
-	if (Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024) < 0) {
-		SDL_Log("%s", Mix_GetError());
-	}
-	Mix_AllocateChannels(25);
-	Mix_ReserveChannels(1);
-}
-
-#if !SDL_VERSION_ATLEAST(2, 0, 4)
-struct AudioQueueItem {
-	unsigned char *data;
-	unsigned long len;
-	const unsigned char *pos;
-};
-
-class AudioQueue {
-public:
-	static void Callback(void *userdata, Uint8 *out, int out_len)
-	{
-		static_cast<AudioQueue *>(userdata)->Dequeue(out, out_len);
-	}
-
-	void Subscribe(SDL_AudioSpec *spec)
-	{
-		spec->userdata = this;
-		spec->callback = AudioQueue::Callback;
-	}
-
-	void Enqueue(const unsigned char *data, unsigned long len)
-	{
-#if SDL_VERSION_ATLEAST(2, 0, 4)
-		SDL_LockAudioDevice(deviceId);
-		EnqueueUnsafe(data, len);
-		SDL_UnlockAudioDevice(deviceId);
-#else
-		SDL_LockAudio();
-		EnqueueUnsafe(data, len);
-		SDL_UnlockAudio();
-#endif
-	}
-
-	void Clear()
-	{
-		while (!queue_.empty())
-			Pop();
-	}
-
-private:
-	void EnqueueUnsafe(const unsigned char *data, unsigned long len)
-	{
-		AudioQueueItem item;
-		item.data = new unsigned char[len];
-		memcpy(item.data, data, len * sizeof(item.data[0]));
-		item.len = len;
-		item.pos = item.data;
-		queue_.push(item);
-	}
-
-	void Dequeue(Uint8 *out, int out_len)
-	{
-		SDL_memset(out, 0, sizeof(out[0]) * out_len);
-		AudioQueueItem *item;
-		while ((item = Next()) != NULL) {
-			if (static_cast<unsigned long>(out_len) <= item->len) {
-				SDL_MixAudio(out, item->pos, out_len, SDL_MIX_MAXVOLUME);
-				item->pos += out_len;
-				item->len -= out_len;
-				return;
-			}
-
-			SDL_MixAudio(out, item->pos, item->len, SDL_MIX_MAXVOLUME);
-			out += item->len;
-			out_len -= item->len;
-			Pop();
-		}
-	}
-
-	AudioQueueItem *Next()
-	{
-		while (!queue_.empty() && queue_.front().len == 0)
-			Pop();
-		if (queue_.empty())
-			return NULL;
-		return &queue_.front();
-	}
-
-	void Pop()
-	{
-		delete[] queue_.front().data;
-		queue_.pop();
-	}
-
-	std::queue<AudioQueueItem> queue_;
-};
-
-static AudioQueue *sVidAudioQueue = new AudioQueue();
-#endif
-
-void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
-{
-	if (flags & 0x10000 || flags & 0x20000000) {
-		return;
-	}
-
-	SVidLoop = false;
-	if (flags & 0x40000)
-		SVidLoop = true;
-	bool enableVideo = !(flags & 0x100000);
-	bool enableAudio = !(flags & 0x1000000);
-	//0x8 // Non-interlaced
-	//0x200, 0x800 // Upscale video
-	//0x80000 // Center horizontally
-	//0x800000 // Edge detection
-	//0x200800 // Clear FB
-
-	SFileOpenFile(filename, video);
-
-	int bytestoread = SFileGetFileSize(*video, 0);
-	SVidBuffer = DiabloAllocPtr(bytestoread);
-	SFileReadFile(*video, SVidBuffer, bytestoread, NULL, 0);
-
-	SVidSMK = smk_open_memory(SVidBuffer, bytestoread);
-	if (SVidSMK == NULL) {
-		return;
-	}
-
-	unsigned char channels[7], depth[7];
-	unsigned long rate[7];
-	smk_info_audio(SVidSMK, NULL, channels, depth, rate);
-	if (enableAudio && depth[0] != 0) {
-		smk_enable_audio(SVidSMK, 0, enableAudio);
-		SDL_AudioSpec audioFormat;
-		SDL_zero(audioFormat);
-		audioFormat.freq = rate[0];
-		audioFormat.format = depth[0] == 16 ? AUDIO_S16SYS : AUDIO_U8;
-		SVidAudioDepth = depth[0];
-		audioFormat.channels = channels[0];
-
-		SVidVolume = sgOptions.Audio.nSoundVolume - VOLUME_MIN;
-		SVidVolume /= -VOLUME_MIN;
-
-		Mix_CloseAudio();
-
-#if SDL_VERSION_ATLEAST(2, 0, 4)
-		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
-		if (deviceId == 0) {
-			ErrSdl();
-		}
-
-		SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
-#else
-		sVidAudioQueue->Subscribe(&audioFormat);
-		if (SDL_OpenAudio(&audioFormat, NULL) != 0) {
-			ErrSdl();
-		}
-		SDL_PauseAudio(0);
-#endif
-	}
-
-	unsigned long nFrames;
-	smk_info_all(SVidSMK, NULL, &nFrames, &SVidFrameLength);
-	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
-
-	smk_enable_video(SVidSMK, enableVideo);
-	smk_first(SVidSMK); // Decode first frame
-
-	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
-#ifndef USE_SDL1
-	if (renderer) {
-		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
-		if (texture == NULL) {
-			ErrSdl();
-		}
-		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
-			ErrSdl();
-		}
-	}
-#else
-	TrySetVideoModeToSVidForSDL1();
-#endif
-	memcpy(SVidPreviousPalette, orig_palette, sizeof(SVidPreviousPalette));
-
-	// Copy frame to buffer
-	SVidSurface = SDL_CreateRGBSurfaceWithFormatFrom(
-	    (unsigned char *)smk_get_video(SVidSMK),
-	    SVidWidth,
-	    SVidHeight,
-	    8,
-	    SVidWidth,
-	    SDL_PIXELFORMAT_INDEX8);
-	if (SVidSurface == NULL) {
-		ErrSdl();
-	}
-
-	SVidPalette = SDL_AllocPalette(256);
-	if (SVidPalette == NULL) {
-		ErrSdl();
-	}
-	if (SDLC_SetSurfaceColors(SVidSurface, SVidPalette) <= -1) {
-		ErrSdl();
-	}
-
-	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
-	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
-}
-
-bool SVidLoadNextFrame()
-{
-	SVidFrameEnd += SVidFrameLength;
-
-	if (smk_next(SVidSMK) == SMK_DONE) {
-		if (!SVidLoop) {
-			return false;
-		}
-
-		smk_first(SVidSMK);
-	}
-
-	return true;
-}
-
-unsigned char *SVidApplyVolume(const unsigned char *raw, unsigned long rawLen)
-{
-	unsigned char *scaled = (unsigned char *)malloc(rawLen);
-
-	if (SVidAudioDepth == 16) {
-		for (unsigned long i = 0; i < rawLen / 2; i++)
-			((Sint16 *)scaled)[i] = ((Sint16 *)raw)[i] * SVidVolume;
-	} else {
-		for (unsigned long i = 0; i < rawLen; i++)
-			scaled[i] = raw[i] * SVidVolume;
-	}
-
-	return (unsigned char *)scaled;
-}
-
-bool SVidPlayContinue(void)
-{
-	if (smk_palette_updated(SVidSMK)) {
-		SDL_Color colors[256];
-		const unsigned char *palette_data = smk_get_palette(SVidSMK);
-
-		for (int i = 0; i < 256; i++) {
-			colors[i].r = palette_data[i * 3 + 0];
-			colors[i].g = palette_data[i * 3 + 1];
-			colors[i].b = palette_data[i * 3 + 2];
-#ifndef USE_SDL1
-			colors[i].a = SDL_ALPHA_OPAQUE;
-#endif
-
-			orig_palette[i].r = palette_data[i * 3 + 0];
-			orig_palette[i].g = palette_data[i * 3 + 1];
-			orig_palette[i].b = palette_data[i * 3 + 2];
-		}
-		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
-
-		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface, SVidPalette, colors, 0, 256) <= -1) {
-			SDL_Log("%s", SDL_GetError());
-			return false;
-		}
-	}
-
-	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
-		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
-	}
-
-	if (HaveAudio()) {
-		unsigned long len = smk_get_audio_size(SVidSMK, 0);
-		unsigned char *audio = SVidApplyVolume(smk_get_audio(SVidSMK, 0), len);
-#if SDL_VERSION_ATLEAST(2, 0, 4)
-		if (SDL_QueueAudio(deviceId, audio, len) <= -1) {
-			SDL_Log("%s", SDL_GetError());
-			return false;
-		}
-#else
-		sVidAudioQueue->Enqueue(audio, len);
-#endif
-		free(audio);
-	}
-
-	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
-		return SVidLoadNextFrame(); // Skip video if the system is to slow
-	}
-
-#ifndef USE_SDL1
-	if (renderer) {
-		if (SDL_BlitSurface(SVidSurface, NULL, GetOutputSurface(), NULL) <= -1) {
-			SDL_Log("%s", SDL_GetError());
-			return false;
-		}
-	} else
-#endif
-	{
-		SDL_Surface *output_surface = GetOutputSurface();
-#ifdef USE_SDL1
-		const bool is_indexed_output_format = SDLBackport_IsPixelFormatIndexed(output_surface->format);
-#else
-		const Uint32 wnd_format = SDL_GetWindowPixelFormat(ghMainWnd);
-		const bool is_indexed_output_format = SDL_ISPIXELFORMAT_INDEXED(wnd_format);
-#endif
-		SDL_Rect output_rect;
-		if (is_indexed_output_format) {
-			// Cannot scale if the output format is indexed (8-bit palette).
-			output_rect.w = static_cast<int>(SVidWidth);
-			output_rect.h = static_cast<int>(SVidHeight);
-		} else if (IsLandscapeFit(SVidWidth, SVidHeight, output_surface->w, output_surface->h)) {
-			output_rect.w = output_surface->w;
-			output_rect.h = SVidHeight * output_surface->w / SVidWidth;
-		} else {
-			output_rect.w = SVidWidth * output_surface->h / SVidHeight;
-			output_rect.h = output_surface->h;
-		}
-		output_rect.x = (output_surface->w - output_rect.w) / 2;
-		output_rect.y = (output_surface->h - output_rect.h) / 2;
-
-		if (is_indexed_output_format
-		    || output_surface->w == static_cast<int>(SVidWidth)
-		    || output_surface->h == static_cast<int>(SVidHeight)) {
-			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &output_rect) <= -1) {
-				ErrSdl();
-			}
-		} else {
-			// The source surface is always 8-bit, and the output surface is never 8-bit in this branch.
-			// We must convert to the output format before calling SDL_BlitScaled.
-#ifdef USE_SDL1
-			SDLSurfaceUniquePtr converted { SDL_ConvertSurface(SVidSurface, ghMainWnd->format, 0) };
-#else
-			SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(SVidSurface, wnd_format, 0) };
-#endif
-			if (SDL_BlitScaled(converted.get(), NULL, output_surface, &output_rect) <= -1) {
-				SDL_Log("%s", SDL_GetError());
-				return false;
-			}
-		}
-	}
-
-	RenderPresent();
-
-	double now = SDL_GetTicks() * 1000;
-	if (now < SVidFrameEnd) {
-		SDL_Delay((SVidFrameEnd - now) / 1000); // wait with next frame if the system is too fast
-	}
-
-	return SVidLoadNextFrame();
-}
-
-void SVidPlayEnd(HANDLE video)
-{
-	if (HaveAudio()) {
-#if SDL_VERSION_ATLEAST(2, 0, 4)
-		SDL_ClearQueuedAudio(deviceId);
-		SDL_CloseAudioDevice(deviceId);
-		deviceId = 0;
-#else
-		SDL_CloseAudio();
-		sVidAudioQueue->Clear();
-#endif
-		SVidRestartMixer();
-	}
-
-	if (SVidSMK)
-		smk_close(SVidSMK);
-
-	if (SVidBuffer) {
-		mem_free_dbg(SVidBuffer);
-		SVidBuffer = NULL;
-	}
-
-	SDL_FreePalette(SVidPalette);
-	SVidPalette = NULL;
-
-	SDL_FreeSurface(SVidSurface);
-	SVidSurface = NULL;
-
-	SFileCloseFile(video);
-	video = NULL;
-
-	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
-#ifndef USE_SDL1
-	if (renderer) {
-		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
-		if (texture == NULL) {
-			ErrSdl();
-		}
-		if (renderer && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
-			ErrSdl();
-		}
-	}
-#else
-	if (IsSVidVideoMode) {
-		SetVideoModeToPrimary(IsFullScreen(), gnScreenWidth, gnScreenHeight);
-		IsSVidVideoMode = false;
-	}
-#endif
-}
-
 DWORD SErrGetLastError()
 {
 	return ::GetLastError();
@@ -852,7 +356,7 @@ void SErrSetLastError(DWORD dwErrCode)
 
 bool SFileSetBasePath(const char *path)
 {
-	if (SBasePath == NULL)
+	if (SBasePath == nullptr)
 		SBasePath = new std::string;
 	*SBasePath = path;
 	return true;

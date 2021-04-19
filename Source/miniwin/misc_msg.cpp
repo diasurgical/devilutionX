@@ -1,6 +1,6 @@
+#include <SDL.h>
 #include <cstdint>
 #include <deque>
-#include <SDL.h>
 
 #include "control.h"
 #include "controls/controller.h"
@@ -688,9 +688,9 @@ bool TranslateMessage(const MSG *lpMsg)
 SHORT GetAsyncKeyState(int vKey)
 {
 	if (vKey == DVL_MK_LBUTTON)
-		return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT);
+		return SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT);
 	if (vKey == DVL_MK_RBUTTON)
-		return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT);
+		return SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT);
 	const Uint8 *state = SDLC_GetKeyState();
 	switch (vKey) {
 	case DVL_VK_CONTROL:

@@ -87,5 +87,6 @@ void operate_lv24_lever();
 void objects_454BA8();
 void objects_rnd_454BEA();
 bool objects_lv_24_454B04(int s);
+bool objectIsDisabled(int i);
 
 } // namespace devilution

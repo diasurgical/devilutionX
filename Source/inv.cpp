@@ -127,20 +127,20 @@ void Inventory::FreeGFX()
 void Inventory::Init()
 {
 	if (plr[myplr]._pClass == HeroClass::Warrior) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Monk) {
 		if (!gbIsSpawn)
-			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", nullptr);
 		else
-			pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+			pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Bard) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
 	}
 
 	invflag = false;
@@ -2250,7 +2250,7 @@ char Inventory::CheckHLight()
 
 	int8_t rv = -1;
 	infoclr = COL_WHITE;
-	pi = NULL;
+	pi = nullptr;
 	p = &plr[myplr];
 	ClearPanel();
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST) {

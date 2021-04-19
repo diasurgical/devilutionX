@@ -33,7 +33,7 @@ SDL_Palette *palette;
 unsigned int pal_surface_palette_version = 0;
 
 /** 24-bit renderer texture surface */
-SDL_Surface *renderer_texture_surface = NULL;
+SDL_Surface *renderer_texture_surface = nullptr;
 
 /** 8-bit surface that we render to */
 SDL_Surface *pal_surface;
@@ -46,7 +46,7 @@ static void dx_create_back_buffer()
 	    /*height=*/BUFFER_BORDER_TOP + gnScreenHeight + BUFFER_BORDER_BOTTOM,
 	    /*depth=*/8,
 	    SDL_PIXELFORMAT_INDEX8);
-	if (pal_surface == NULL) {
+	if (pal_surface == nullptr) {
 		ErrSdl();
 	}
 
@@ -70,12 +70,12 @@ static void dx_create_primary_surface()
 		int width, height;
 		SDL_RenderGetLogicalSize(renderer, &width, &height);
 		Uint32 format;
-		if (SDL_QueryTexture(texture, &format, NULL, NULL, NULL) < 0)
+		if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 			ErrSdl();
 		renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 	}
 #endif
-	if (GetOutputSurface() == NULL) {
+	if (GetOutputSurface() == nullptr) {
 		ErrSdl();
 	}
 }
@@ -149,10 +149,10 @@ void dx_cleanup()
 	sgdwLockCount = 0;
 	sgMemCrit.Leave();
 
-	if (pal_surface == NULL)
+	if (pal_surface == nullptr)
 		return;
 	SDL_FreeSurface(pal_surface);
-	pal_surface = NULL;
+	pal_surface = nullptr;
 	SDL_FreePalette(palette);
 	SDL_FreeSurface(renderer_texture_surface);
 	SDL_DestroyTexture(texture);
@@ -186,7 +186,7 @@ void dx_reinit()
 void InitPalette()
 {
 	palette = SDL_AllocPalette(256);
-	if (palette == NULL) {
+	if (palette == nullptr) {
 		ErrSdl();
 	}
 }
@@ -280,7 +280,7 @@ void RenderPresent()
 
 #ifndef USE_SDL1
 	if (renderer) {
-		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
+		if (SDL_UpdateTexture(texture, nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
 			ErrSdl();
 		}
 
@@ -296,7 +296,7 @@ void RenderPresent()
 			ErrSdl();
 		}
 #endif
-		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
+		if (SDL_RenderCopy(renderer, texture, nullptr, nullptr) <= -1) {
 			ErrSdl();
 		}
 		SDL_RenderPresent(renderer);

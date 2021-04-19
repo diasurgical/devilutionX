@@ -284,9 +284,6 @@ int getIniInt(const char *keyname, const char *valuename, int defaultValue);
 void setIniInt(const char *keyname, const char *valuename, int value);
 void setIniFloat(const char *keyname, const char *valuename, float value);
 
-void SVidPlayBegin(const char *filename, int flags, HANDLE *video);
-void SVidPlayEnd(HANDLE video);
-
 // These error codes are used and returned by StormLib.
 // See StormLib/src/StormPort.h
 #if defined(_WIN32)
@@ -335,7 +332,6 @@ void SErrSetLastError(DWORD dwErrCode);
 void SStrCopy(char *dest, const char *src, int max_length);
 
 bool SFileSetBasePath(const char *);
-bool SVidPlayContinue(void);
 bool SNetGetOwnerTurnsWaiting(DWORD *);
 bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);

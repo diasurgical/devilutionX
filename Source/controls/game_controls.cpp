@@ -335,7 +335,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 	// Ignore unhandled joystick events where a GameController is open for this joystick.
 	// This is because SDL sends both game controller and joystick events in this case.
 	const Joystick *const joystick = Joystick::Get(event);
-	if (joystick != NULL && GameController::Get(joystick->instance_id()) != NULL) {
+	if (joystick != nullptr && GameController::Get(joystick->instance_id()) != nullptr) {
 		return true;
 	}
 	if (event.type == SDL_CONTROLLERAXISMOTION) {

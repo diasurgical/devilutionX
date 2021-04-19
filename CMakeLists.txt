@@ -333,6 +333,7 @@ set(devilutionx_SRCS
   Source/storm/storm.cpp
   Source/storm/storm_net.cpp
   Source/storm/storm_sdl_rw.cpp
+  Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp
   Source/devilutionx.exe.manifest
   Packaging/macOS/AppIcon.icns

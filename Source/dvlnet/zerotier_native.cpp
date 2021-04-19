@@ -1,7 +1,7 @@
 #include "dvlnet/zerotier_native.h"
 
-#include <atomic>
 #include <SDL.h>
+#include <atomic>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -9,8 +9,8 @@
 #include "utils/sdl2_backports.h"
 #endif
 
-#include <cstdlib>
 #include <ZeroTierSockets.h>
+#include <cstdlib>
 
 #include "utils/paths.h"
 

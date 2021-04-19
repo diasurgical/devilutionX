@@ -10,10 +10,10 @@
 #include "utils/sdl2_backports.h"
 #endif
 
+#include <lwip/igmp.h>
+#include <lwip/mld6.h>
 #include <lwip/sockets.h>
 #include <lwip/tcpip.h>
-#include <lwip/mld6.h>
-#include <lwip/igmp.h>
 
 #include "dvlnet/zerotier_native.h"
 
