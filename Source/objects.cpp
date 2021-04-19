@@ -2160,7 +2160,7 @@ void Obj_BCrossDamage(int i)
 
 	ApplyPlrDamage(myplr, 0, 0, damage[leveltype - 1]);
 	if (plr[myplr]._pHitPoints >> 6 > 0) {
-		PlaySfxLoc(GetSoundByClass(myplr, 68), plr[myplr]._px, plr[myplr]._py);
+		PlaySfxLoc(GetSoundByClass(myplr, 68), plr[myplr]._px, plr[myplr]._py); // CODEFIX: isn't using PlaySfxLoc on myplr equal to just using PlaySFX?
 	}
 }
 
@@ -3235,7 +3235,7 @@ void OperateSlainHero(int pnum, int i, bool sendmsg)
 			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
 			}
-			PlaySfxLoc(GetSoundByClass(pnum, 9), plr[myplr]._px, plr[myplr]._py); // BUGFIX: check pnum position
+			PlaySfxLoc(GetSoundByClass(pnum, 9), plr[myplr]._px, plr[myplr]._py); // CODEFIX: use pnum instead of myplr or use PlaySFX
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		}
