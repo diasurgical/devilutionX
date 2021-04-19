@@ -2,14 +2,14 @@
 #include <memory>
 #include <vector>
 
-#include "control.h"
-#include "controls/menu_controls.h"
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/art.h"
+#include "DiabloUI/art_draw.h"
 #include "DiabloUI/credits_lines.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/support_lines.h"
+#include "control.h"
+#include "controls/menu_controls.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"

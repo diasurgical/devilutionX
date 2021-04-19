@@ -1,8 +1,8 @@
 #include "DiabloUI/selok.h"
 
-#include "control.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
+#include "control.h"
 
 namespace devilution {
 

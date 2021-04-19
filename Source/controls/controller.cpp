@@ -2,9 +2,9 @@
 
 #include <cmath>
 
-#include "controls/devices/kbcontroller.h"
-#include "controls/devices/joystick.h"
 #include "controls/devices/game_controller.h"
+#include "controls/devices/joystick.h"
+#include "controls/devices/kbcontroller.h"
 
 namespace devilution {
 

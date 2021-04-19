@@ -1,6 +1,6 @@
+#include <SDL.h>
 #include <cstdint>
 #include <deque>
-#include <SDL.h>
 
 #include "control.h"
 #include "controls/controller.h"

@@ -2,10 +2,10 @@
 
 #include <cmath>
 
+#include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
-#include "controls/controller.h"
 #include "controls/game_controls.h"
 #include "options.h"
 

@@ -1,10 +1,10 @@
 #include "controls/menu_controls.h"
 
+#include "DiabloUI/diabloui.h"
 #include "controls/axis_direction.h"
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/remap_keyboard.h"
-#include "DiabloUI/diabloui.h"
 #include "utils/sdl_compat.h"
 
 namespace devilution {

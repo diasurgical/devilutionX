@@ -17,8 +17,8 @@
 #endif
 
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
-#include <unistd.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #else
 #include <cstdio>
 #endif

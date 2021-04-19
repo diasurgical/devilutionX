@@ -1,10 +1,10 @@
 #include "storm/storm.h"
 
+#include <SDL.h>
+#include <SDL_endian.h>
+#include <SDL_mixer.h>
 #include <cstddef>
 #include <cstdint>
-#include <SDL_endian.h>
-#include <SDL.h>
-#include <SDL_mixer.h>
 #include <stdint.h>
 #include <string>
 

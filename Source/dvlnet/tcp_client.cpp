@@ -1,13 +1,13 @@
 #include "dvlnet/tcp_client.h"
 #include "options.h"
 
-#include <functional>
-#include <exception>
-#include <sstream>
-#include <system_error>
-#include <stdexcept>
-#include <sodium.h>
 #include <SDL.h>
+#include <exception>
+#include <functional>
+#include <sodium.h>
+#include <sstream>
+#include <stdexcept>
+#include <system_error>
 
 #include <asio/connect.hpp>
 

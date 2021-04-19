@@ -1,7 +1,7 @@
 #include "dvlnet/tcp_server.h"
 
-#include <functional>
 #include <chrono>
+#include <functional>
 
 #include "dvlnet/base.h"
 

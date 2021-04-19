@@ -5,10 +5,10 @@
  */
 #include <limits.h>
 
+#include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "control.h"
 #include "dead.h"
-#include "DiabloUI/diabloui.h"
 #include "drlg_l1.h"
 #include "dthread.h"
 #include "encrypt.h"

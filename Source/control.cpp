@@ -7,9 +7,9 @@
 
 #include <cstddef>
 
+#include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "cursor.h"
-#include "DiabloUI/diabloui.h"
 #include "error.h"
 #include "gamemenu.h"
 #include "init.h"

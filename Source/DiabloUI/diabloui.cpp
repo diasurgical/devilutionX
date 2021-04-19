@@ -3,14 +3,14 @@
 #include <algorithm>
 #include <string>
 
-#include "controls/controller.h"
-#include "controls/menu_controls.h"
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/text_draw.h"
+#include "controls/controller.h"
+#include "controls/menu_controls.h"
 #include "dx.h"
 #include "palette.h"
 #include "storm/storm.h"

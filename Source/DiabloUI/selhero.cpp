@@ -4,13 +4,13 @@
 #include <chrono>
 #include <random>
 
-#include "control.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/selgame.h"
 #include "DiabloUI/selok.h"
 #include "DiabloUI/selyesno.h"
+#include "control.h"
 #include "options.h"
 #include "pfile.h"
 

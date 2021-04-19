@@ -1,9 +1,9 @@
 #include "dvlnet/zerotier_lwip.h"
 
+#include <lwip/igmp.h>
+#include <lwip/mld6.h>
 #include <lwip/sockets.h>
 #include <lwip/tcpip.h>
-#include <lwip/mld6.h>
-#include <lwip/igmp.h>
 
 #include <SDL.h>
 

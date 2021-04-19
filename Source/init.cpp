@@ -3,8 +3,8 @@
  *
  * Implementation of routines for initializing the environment, disable screen saver, load MPQ.
  */
-#include <config.h>
 #include <SDL.h>
+#include <config.h>
 #include <string>
 #include <vector>
 

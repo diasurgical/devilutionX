@@ -1,7 +1,7 @@
 #include "controls/plrctrls.h"
 
-#include <cstdint>
 #include <algorithm>
+#include <cstdint>
 #include <list>
 
 #include "automap.h"
