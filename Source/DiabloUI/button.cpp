@@ -30,7 +30,7 @@ void RenderButton(UiButton *button)
 	SDL_Color color1 = { 243, 243, 243, 0 };
 	SDL_Color color2 = { 0, 0, 0, 0 };
 	DrawTTF(button->m_text, text_rect, UIS_CENTER,
-	    color1, color2, &button->m_render_cache);
+	    color1, color2, button->m_render_cache);
 }
 
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)

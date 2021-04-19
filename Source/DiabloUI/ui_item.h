@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -210,7 +210,6 @@ public:
 		m_shadow_color = color2;
 
 		m_text = text;
-		m_render_cache = NULL;
 	}
 
 	UiText(const char *text, SDL_Rect rect, int flags = 0)
@@ -225,7 +224,6 @@ public:
 		m_shadow_color = color2;
 
 		m_text = text;
-		m_render_cache = NULL;
 	}
 
 	//private:
@@ -234,13 +232,7 @@ public:
 	const char *m_text;
 
 	// State:
-	TtfSurfaceCache *m_render_cache;
-
-	virtual void FreeCache()
-	{
-		delete m_render_cache;
-		m_render_cache = NULL;
-	}
+	TtfSurfaceCache m_render_cache;
 };
 
 //=============================================================================
@@ -257,7 +249,6 @@ public:
 		m_text = text;
 		m_action = action;
 		m_pressed = false;
-		m_render_cache = NULL;
 	}
 
 	enum FrameKey : uint8_t {
@@ -274,13 +265,7 @@ public:
 
 	// State
 	bool m_pressed;
-	TtfSurfaceCache *m_render_cache;
-
-	virtual void FreeCache()
-	{
-		delete m_render_cache;
-		m_render_cache = NULL;
-	}
+	TtfSurfaceCache m_render_cache;
 };
 
 //=============================================================================
