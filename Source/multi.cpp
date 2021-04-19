@@ -411,12 +411,12 @@ int multi_handle_delta()
 	sgbTimeout = false;
 	if (received) {
 		if (!gbShouldValidatePackage) {
-			NetSendHiPri(myplr, 0, 0);
+			NetSendHiPri(myplr, nullptr, 0);
 			gbShouldValidatePackage = false;
 		} else {
 			gbShouldValidatePackage = false;
 			if (!multi_check_pkt_valid(&sgHiPriBuf))
-				NetSendHiPri(myplr, 0, 0);
+				NetSendHiPri(myplr, nullptr, 0);
 		}
 	}
 	multi_mon_seeds();
@@ -741,7 +741,7 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 		*pfExitProgram = false;
 		SetRndSeed(0);
 		sgGameInitInfo.size = sizeof(sgGameInitInfo);
-		sgGameInitInfo.dwSeed = time(NULL);
+		sgGameInitInfo.dwSeed = time(nullptr);
 		sgGameInitInfo.programid = GAME_ID;
 		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;

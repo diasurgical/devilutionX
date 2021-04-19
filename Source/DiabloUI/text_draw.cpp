@@ -39,7 +39,7 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
     TtfSurfaceCache &render_cache)
 {
 	SDL_Rect rect(rectIn);
-	if (font == NULL || text == NULL || *text == '\0')
+	if (font == nullptr || text == nullptr || *text == '\0')
 		return;
 
 	const auto x_align = XAlignmentFromFlags(flags);
@@ -50,7 +50,7 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 
 	SDL_Surface *text_surface = render_cache.text.get();
 	SDL_Surface *shadow_surface = render_cache.shadow.get();
-	if (text_surface == NULL)
+	if (text_surface == nullptr)
 		return;
 
 	SDL_Rect dest_rect = rect;
@@ -61,9 +61,9 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 	SDL_Rect shadow_rect = dest_rect;
 	++shadow_rect.x;
 	++shadow_rect.y;
-	if (SDL_BlitSurface(shadow_surface, NULL, DiabloUiSurface(), &shadow_rect) < 0)
+	if (SDL_BlitSurface(shadow_surface, nullptr, DiabloUiSurface(), &shadow_rect) < 0)
 		ErrSdl();
-	if (SDL_BlitSurface(text_surface, NULL, DiabloUiSurface(), &dest_rect) < 0)
+	if (SDL_BlitSurface(text_surface, nullptr, DiabloUiSurface(), &dest_rect) < 0)
 		ErrSdl();
 }
 

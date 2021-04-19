@@ -4,9 +4,9 @@
 * Adds XP bar QoL feature
 */
 
+#include "DiabloUI/art_draw.h"
 #include "common.h"
 #include "control.h"
-#include "DiabloUI/art_draw.h"
 #include "options.h"
 
 #include <array>

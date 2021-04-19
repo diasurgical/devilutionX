@@ -1,9 +1,9 @@
-#include "control.h"
-#include "controls/menu_controls.h"
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/fonts.h"
+#include "control.h"
+#include "controls/menu_controls.h"
 #include "dx.h"
 #include "palette.h"
 #include "utils/display.h"
@@ -34,7 +34,7 @@ void progress_Load(const char *msg)
 	LoadSmlButtonArt();
 	LoadTtfFont();
 
-	if (font != NULL) {
+	if (font != nullptr) {
 		SDL_Color color = { 243, 243, 243, 0 };
 		SDL_Color black = { 0, 0, 0, 0 };
 
@@ -53,15 +53,15 @@ void progress_Free()
 	ProgFil.Unload();
 	UnloadSmlButtonArt();
 	SDL_FreeSurface(msgSurface);
-	msgSurface = NULL;
+	msgSurface = nullptr;
 	SDL_FreeSurface(msgShadow);
-	msgShadow = NULL;
+	msgShadow = nullptr;
 	UnloadTtfFont();
 }
 
 void progress_Render(BYTE progress)
 {
-	SDL_FillRect(DiabloUiSurface(), NULL, 0x000000);
+	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	DrawArt(0, 0, &ArtBackground);
 
 	Sint16 x = GetCenterOffset(280);
@@ -81,10 +81,10 @@ void progress_Render(BYTE progress)
 			static_cast<Uint16>(msgSurface->w),
 			static_cast<Uint16>(msgSurface->h)
 		};
-		Blit(msgShadow, NULL, &dsc_rect);
+		Blit(msgShadow, nullptr, &dsc_rect);
 		dsc_rect.x -= 1;
 		dsc_rect.y -= 1;
-		Blit(msgSurface, NULL, &dsc_rect);
+		Blit(msgSurface, nullptr, &dsc_rect);
 	}
 }
 

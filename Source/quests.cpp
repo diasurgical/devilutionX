@@ -477,7 +477,7 @@ void DrawWarLord(int x, int y)
 	BYTE *sp, *setp;
 	int v;
 
-	setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -508,7 +508,7 @@ void DrawSChamber(int q, int x, int y)
 	BYTE *sp, *setp;
 	int v;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -541,7 +541,7 @@ void DrawLTBanner(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -567,7 +567,7 @@ void DrawBlind(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -593,7 +593,7 @@ void DrawBlood(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;

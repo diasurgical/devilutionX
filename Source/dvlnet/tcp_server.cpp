@@ -1,7 +1,7 @@
 #include "dvlnet/tcp_server.h"
 
-#include <functional>
 #include <chrono>
+#include <functional>
 
 #include "dvlnet/base.h"
 
@@ -204,7 +204,7 @@ void tcp_server::drop_connection(scc con)
 	if (con->plr != PLR_BROADCAST) {
 		auto pkt = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
 		    con->plr, LEAVE_DROP);
-		connections[con->plr] = NULL;
+		connections[con->plr] = nullptr;
 		send_packet(*pkt);
 		// TODO: investigate if it is really ok for the server to
 		//       drop a client directly.

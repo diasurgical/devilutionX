@@ -30,7 +30,7 @@ int last_tick;
 float gfProgressToNextGameTick = 0.0f;
 
 /* data */
-static SDL_Thread *sghThread = NULL;
+static SDL_Thread *sghThread = nullptr;
 
 void nthread_terminate_game(const char *pszFcn)
 {
@@ -196,7 +196,7 @@ void nthread_start(bool set_turn_upper_bit)
 		sgMemCrit.Enter();
 		nthread_should_run = true;
 		sghThread = CreateThread(nthread_handler, &glpNThreadId);
-		if (sghThread == NULL) {
+		if (sghThread == nullptr) {
 			err2 = SDL_GetError();
 			app_fatal("nthread2:\n%s", err2);
 		}
@@ -209,17 +209,17 @@ void nthread_cleanup()
 	gdwTurnsInTransit = 0;
 	gdwNormalMsgSize = 0;
 	gdwLargestMsgSize = 0;
-	if (sghThread != NULL && glpNThreadId != SDL_GetThreadID(NULL)) {
+	if (sghThread != nullptr && glpNThreadId != SDL_GetThreadID(nullptr)) {
 		if (!sgbThreadIsRunning)
 			sgMemCrit.Leave();
-		SDL_WaitThread(sghThread, NULL);
-		sghThread = NULL;
+		SDL_WaitThread(sghThread, nullptr);
+		sghThread = nullptr;
 	}
 }
 
 void nthread_ignore_mutex(bool bStart)
 {
-	if (sghThread != NULL) {
+	if (sghThread != nullptr) {
 		if (bStart)
 			sgMemCrit.Leave();
 		else

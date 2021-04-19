@@ -2,10 +2,10 @@
 
 #include "utils/stubs.h"
 #ifndef NONET
-#include "dvlnet/cdwrap.h"
-#include "dvlnet/tcp_client.h"
 #include "dvlnet/base_protocol.h"
+#include "dvlnet/cdwrap.h"
 #include "dvlnet/protocol_zt.h"
+#include "dvlnet/tcp_client.h"
 #endif
 #include "dvlnet/loopback.h"
 #include "storm/storm.h"

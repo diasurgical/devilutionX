@@ -232,7 +232,7 @@ void InitSmith()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_SMITH, 62, 63, 0);
 	InitQstSnds(numtowners, TOWN_SMITH);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -246,7 +246,7 @@ void InitBarOwner()
 {
 	InitTownerInfo(numtowners, 96, true, TOWN_TAVERN, 55, 62, 3);
 	InitQstSnds(numtowners, TOWN_TAVERN);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", nullptr);
 	for (int i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -262,7 +262,7 @@ void InitTownDead()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_DEADGUY, 24, 32, -1);
 	InitQstSnds(numtowners, TOWN_DEADGUY);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -278,7 +278,7 @@ void InitWitch()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_WITCH, 80, 20, 5);
 	InitQstSnds(numtowners, TOWN_WITCH);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -294,7 +294,7 @@ void InitBarmaid()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_BMAID, 43, 66, -1);
 	InitQstSnds(numtowners, TOWN_BMAID);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -310,7 +310,7 @@ void InitBoy()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_PEGBOY, 11, 53, -1);
 	InitQstSnds(numtowners, TOWN_PEGBOY);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -326,7 +326,7 @@ void InitHealer()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_HEALER, 55, 79, 1);
 	InitQstSnds(numtowners, TOWN_HEALER);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -342,7 +342,7 @@ void InitTeller()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_STORY, 62, 71, 2);
 	InitQstSnds(numtowners, TOWN_STORY);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -358,7 +358,7 @@ void InitDrunk()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_DRUNK, 71, 84, 4);
 	InitQstSnds(numtowners, TOWN_DRUNK);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -375,7 +375,7 @@ void InitCows()
 
 	//if ( pCowCels )
 	// assertion_failed(__LINE__, __FILE__, "! pCowCels");
-	pCowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL", NULL);
+	pCowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL", nullptr);
 	for (i = 0; i < 3; i++) {
 		x = TownCowX[i];
 		y = TownCowY[i];
@@ -408,7 +408,7 @@ void InitFarmer()
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_FARMER, 62, 16, -1);
 	InitQstSnds(numtowners, TOWN_FARMER);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\Farmrn2.CEL", NULL);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\Farmrn2.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -425,9 +425,9 @@ void InitCowFarmer()
 	InitTownerInfo(numtowners, 96, 1, TOWN_COWFARM, 61, 22, -1);
 	InitQstSnds(numtowners, TOWN_COWFARM);
 	if (quests[Q_JERSEY]._qactive != QUEST_DONE) {
-		towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\cfrmrn2.CEL", NULL);
+		towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\cfrmrn2.CEL", nullptr);
 	} else {
-		towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\mfrmrn2.CEL", NULL);
+		towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\mfrmrn2.CEL", nullptr);
 	}
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -445,9 +445,9 @@ void InitGirl()
 	InitTownerInfo(numtowners, 96, 1, TOWN_GIRL, 77, 43, -1);
 	InitQstSnds(numtowners, TOWN_GIRL);
 	if (quests[Q_GIRL]._qactive != QUEST_DONE) {
-		towner[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girlw1.CEL", NULL);
+		towner[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girlw1.CEL", nullptr);
 	} else {
-		towner[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girls1.CEL", NULL);
+		towner[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girls1.CEL", nullptr);
 	}
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
@@ -492,7 +492,7 @@ void FreeTownerGFX()
 
 	for (i = 0; i < NUM_TOWNERS; i++) {
 		if (towner[i]._tNData == pCowCels) {
-			towner[i]._tNData = NULL;
+			towner[i]._tNData = nullptr;
 		} else if (towner[i]._tNData) {
 			MemFreeDbg(towner[i]._tNData);
 		}
@@ -713,7 +713,7 @@ ItemStruct *PlrHasItem(int pnum, int item, int *i)
 			return &plr[pnum].InvList[*i];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void TownerTalk(int first, int t)
@@ -795,7 +795,7 @@ void TalkToTowner(int p, int t)
 					InitQTextMsg(TEXT_BANNER2);
 					towner[t]._tMsgSaid = true;
 				}
-				if (quests[Q_LTBANNER]._qvar2 == 1 && PlrHasItem(p, IDI_BANNER, &i) != NULL && !towner[t]._tMsgSaid) {
+				if (quests[Q_LTBANNER]._qvar2 == 1 && PlrHasItem(p, IDI_BANNER, &i) != nullptr && !towner[t]._tMsgSaid) {
 					quests[Q_LTBANNER]._qactive = QUEST_DONE;
 					quests[Q_LTBANNER]._qvar1 = 3;
 					RemoveInvItem(p, i);
@@ -863,7 +863,7 @@ void TalkToTowner(int p, int t)
 					InitQTextMsg(TEXT_INFRA5);
 					towner[t]._tMsgSaid = true;
 				}
-				if (quests[Q_ROCK]._qvar2 == 1 && PlrHasItem(p, IDI_ROCK, &i) != NULL && !towner[t]._tMsgSaid) {
+				if (quests[Q_ROCK]._qvar2 == 1 && PlrHasItem(p, IDI_ROCK, &i) != nullptr && !towner[t]._tMsgSaid) {
 					quests[Q_ROCK]._qactive = QUEST_DONE;
 					quests[Q_ROCK]._qvar2 = 2;
 					quests[Q_ROCK]._qvar1 = 2;
@@ -890,7 +890,7 @@ void TalkToTowner(int p, int t)
 						towner[t]._tMsgSaid = true;
 					}
 				}
-				if (quests[Q_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL) {
+				if (quests[Q_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != nullptr) {
 					if (!towner[t]._tMsgSaid) {
 						quests[Q_ANVIL]._qactive = QUEST_DONE;
 						quests[Q_ANVIL]._qvar2 = 2;
@@ -912,7 +912,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_WITCH)) {
-		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && PlrHasItem(p, IDI_FUNGALTM, &i) != NULL) {
+		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && PlrHasItem(p, IDI_FUNGALTM, &i) != nullptr) {
 			RemoveInvItem(p, i);
 			quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
 			quests[Q_MUSHROOM]._qlog = true;
@@ -923,7 +923,7 @@ void TalkToTowner(int p, int t)
 			towner[t]._tMsgSaid = true;
 		} else if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 			if (quests[Q_MUSHROOM]._qvar1 >= QS_TOMEGIVEN && quests[Q_MUSHROOM]._qvar1 <= QS_MUSHPICKED) {
-				if (PlrHasItem(p, IDI_MUSHROOM, &i) != NULL) {
+				if (PlrHasItem(p, IDI_MUSHROOM, &i) != nullptr) {
 					RemoveInvItem(p, i);
 					quests[Q_MUSHROOM]._qvar1 = QS_MUSHGIVEN;
 					Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
@@ -942,14 +942,14 @@ void TalkToTowner(int p, int t)
 				}
 			} else {
 				Item = PlrHasItem(p, IDI_SPECELIX, &i);
-				if (Item != NULL) {
+				if (Item != nullptr) {
 					towner[t]._tbtcnt = true;
 					towner[t]._tTalkingToPlayer = p;
 					InitQTextMsg(TEXT_MUSH12);
 					quests[Q_MUSHROOM]._qactive = QUEST_DONE;
 					towner[t]._tMsgSaid = true;
 					AllItemsList[Item->IDidx].iUsable = true;
-				} else if (PlrHasItem(p, IDI_BRAIN, &i) != NULL && quests[Q_MUSHROOM]._qvar2 != TEXT_MUSH11) {
+				} else if (PlrHasItem(p, IDI_BRAIN, &i) != nullptr && quests[Q_MUSHROOM]._qvar2 != TEXT_MUSH11) {
 					towner[t]._tbtcnt = true;
 					towner[t]._tTalkingToPlayer = p;
 					quests[Q_MUSHROOM]._qvar2 = TEXT_MUSH11;
@@ -1008,7 +1008,7 @@ void TalkToTowner(int p, int t)
 					}
 				}
 			}
-			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qmsg == TEXT_MUSH10 && PlrHasItem(p, IDI_BRAIN, &i) != NULL) {
+			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qmsg == TEXT_MUSH10 && PlrHasItem(p, IDI_BRAIN, &i) != nullptr) {
 				RemoveInvItem(p, i);
 				SpawnQuestItem(IDI_SPECELIX, towner[t]._tx, towner[t]._ty + 1, 0, 0);
 				InitQTextMsg(TEXT_MUSH4);
@@ -1031,7 +1031,7 @@ void TalkToTowner(int p, int t)
 		}
 	} else if (t == GetActiveTowner(TOWN_STORY)) {
 		if (!gbIsMultiplayer) {
-			if (quests[Q_BETRAYER]._qactive == QUEST_INIT && PlrHasItem(p, IDI_LAZSTAFF, &i) != NULL) {
+			if (quests[Q_BETRAYER]._qactive == QUEST_INIT && PlrHasItem(p, IDI_LAZSTAFF, &i) != nullptr) {
 				RemoveInvItem(p, i);
 				quests[Q_BETRAYER]._qvar1 = 2;
 				towner[t]._tbtcnt = true;

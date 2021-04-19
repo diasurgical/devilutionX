@@ -127,7 +127,7 @@ void LoadPalette(const char *pszFileName)
 	assert(pszFileName);
 
 	SFileOpenFile(pszFileName, &pBuf);
-	SFileReadFile(pBuf, (char *)PalData, sizeof(PalData), NULL, NULL);
+	SFileReadFile(pBuf, (char *)PalData, sizeof(PalData), nullptr, nullptr);
 	SFileCloseFile(pBuf);
 
 	for (i = 0; i < 256; i++) {
@@ -235,7 +235,7 @@ void PaletteFadeIn(int fr)
 	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 		SetFadeLevel(i);
 		SDL_Rect SrcRect = { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
-		BltFast(&SrcRect, NULL);
+		BltFast(&SrcRect, nullptr);
 		RenderPresent();
 	}
 	SetFadeLevel(256);
@@ -252,7 +252,7 @@ void PaletteFadeOut(int fr)
 		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 			SetFadeLevel(i);
 			SDL_Rect SrcRect = { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
-			BltFast(&SrcRect, NULL);
+			BltFast(&SrcRect, nullptr);
 			RenderPresent();
 		}
 		SetFadeLevel(0);

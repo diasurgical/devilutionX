@@ -2675,7 +2675,7 @@ void LoadL3Dungeon(const char *sFileName, int vx, int vy)
 	dmaxx = 96;
 	dmaxy = 96;
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
 	lm = pLevelMap;
 	rw = *lm;
@@ -2732,7 +2732,7 @@ void LoadPreL3Dungeon(const char *sFileName, int vx, int vy)
 
 	InitL3Dungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
 	lm = pLevelMap;
 	rw = *lm;

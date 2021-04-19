@@ -1,10 +1,10 @@
 #include "storm/storm.h"
 
+#include <SDL.h>
+#include <SDL_endian.h>
+#include <SDL_mixer.h>
 #include <cstddef>
 #include <cstdint>
-#include <SDL_endian.h>
-#include <SDL.h>
-#include <SDL_mixer.h>
 #include <stdint.h>
 #include <string>
 
@@ -31,7 +31,7 @@ namespace devilution {
 namespace {
 
 bool directFileAccess = false;
-std::string *SBasePath = NULL;
+std::string *SBasePath = nullptr;
 
 } // namespace
 
@@ -74,49 +74,49 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 {
 	bool result = false;
 
-	if (directFileAccess && SBasePath != NULL) {
+	if (directFileAccess && SBasePath != nullptr) {
 		std::string path = *SBasePath + filename;
 		for (std::size_t i = SBasePath->size(); i < path.size(); ++i)
 			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
-		result = SFileOpenFileEx((HANDLE)0, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
+		result = SFileOpenFileEx((HANDLE)nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
 
-	if (!result && devilutionx_mpq != NULL) {
+	if (!result && devilutionx_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)devilutionx_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 	if (gbIsHellfire) {
-		if (!result && hfopt2_mpq != NULL) {
+		if (!result && hfopt2_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfopt1_mpq != NULL) {
+		if (!result && hfopt1_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfopt1_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfvoice_mpq != NULL) {
+		if (!result && hfvoice_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfvoice_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfmusic_mpq != NULL) {
+		if (!result && hfmusic_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfmusic_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfbarb_mpq != NULL) {
+		if (!result && hfbarb_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfbarb_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfbard_mpq != NULL) {
+		if (!result && hfbard_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfbard_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-		if (!result && hfmonk_mpq != NULL) {
+		if (!result && hfmonk_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfmonk_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 		if (!result) {
 			result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 	}
-	if (!result && patch_rt_mpq != NULL) {
+	if (!result && patch_rt_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
-	if (!result && spawn_mpq != NULL) {
+	if (!result && spawn_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)spawn_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
-	if (!result && diabdat_mpq != NULL) {
+	if (!result && diabdat_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 
@@ -165,11 +165,11 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
-	if (!pszFileName || strcasecmp(pszFileName, ".pcx")) {
+	if (!pszFileName || strcasecmp(pszFileName, ".pcx") != 0) {
 		return false;
 	}
 
-	if (!SFileReadFile(hFile, &pcxhdr, 128, 0, 0)) {
+	if (!SFileReadFile(hFile, &pcxhdr, 128, nullptr, nullptr)) {
 		SFileCloseFile(hFile);
 		return false;
 	}
@@ -192,8 +192,8 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
-		SFileSetFilePointer(hFile, 0, NULL, DVL_FILE_END);
-		fileBuffer = NULL;
+		SFileSetFilePointer(hFile, 0, nullptr, DVL_FILE_END);
+		fileBuffer = nullptr;
 	} else {
 		const auto pos = SFileGetFilePointer(hFile);
 		const auto end = SFileSetFilePointer(hFile, 0, DVL_FILE_END);
@@ -203,7 +203,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	}
 
 	if (fileBuffer) {
-		SFileReadFile(hFile, fileBuffer, size, 0, 0);
+		SFileReadFile(hFile, fileBuffer, size, nullptr, nullptr);
 		dataPtr = fileBuffer;
 
 		for (int j = 0; j < height; j++) {
@@ -235,7 +235,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		if (pos == static_cast<std::uint64_t>(-1)) {
 			SDL_Log("SFileSetFilePointer error: %ud", (unsigned int)SErrGetLastError());
 		}
-		SFileReadFile(hFile, paldata, 768, 0, NULL);
+		SFileReadFile(hFile, paldata, 768, nullptr, nullptr);
 
 		for (int i = 0; i < 256; i++) {
 			pPalette[i].r = paldata[i][0];
@@ -259,7 +259,7 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 	if (!getIniValue(sectionName, keyName, string, 2))
 		return defaultValue;
 
-	return strtol(string, NULL, 10) != 0;
+	return strtol(string, nullptr, 10) != 0;
 }
 
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
@@ -289,7 +289,7 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 
 	std::string value = key->getStringValue();
 
-	if (string != NULL)
+	if (string != nullptr)
 		strncpy(string, value.c_str(), stringSize);
 
 	return true;
@@ -327,7 +327,7 @@ int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 		return defaultValue;
 	}
 
-	return strtol(string, NULL, sizeof(string));
+	return strtol(string, nullptr, sizeof(string));
 }
 
 void setIniInt(const char *keyname, const char *valuename, int value)
@@ -356,7 +356,7 @@ void SErrSetLastError(DWORD dwErrCode)
 
 bool SFileSetBasePath(const char *path)
 {
-	if (SBasePath == NULL)
+	if (SBasePath == nullptr)
 		SBasePath = new std::string;
 	*SBasePath = path;
 	return true;

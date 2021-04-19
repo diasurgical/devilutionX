@@ -4,13 +4,13 @@
 #include <psp2/power.h>
 #endif
 
+#include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
-#include "DiabloUI/diabloui.h"
 #include "options.h"
 
 #ifdef USE_SDL1
@@ -193,7 +193,7 @@ bool SpawnWindow(const char *lpWindowName)
 
 	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 #endif
-	if (ghMainWnd == NULL) {
+	if (ghMainWnd == nullptr) {
 		ErrSdl();
 	}
 
@@ -216,12 +216,12 @@ bool SpawnWindow(const char *lpWindowName)
 		}
 
 		renderer = SDL_CreateRenderer(ghMainWnd, -1, rendererFlags);
-		if (renderer == NULL) {
+		if (renderer == nullptr) {
 			ErrSdl();
 		}
 
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
-		if (texture == NULL) {
+		if (texture == nullptr) {
 			ErrSdl();
 		}
 
@@ -244,7 +244,7 @@ bool SpawnWindow(const char *lpWindowName)
 		AdjustToScreenGeometry(width, height);
 	}
 
-	return ghMainWnd != NULL;
+	return ghMainWnd != nullptr;
 }
 
 SDL_Surface *GetOutputSurface()

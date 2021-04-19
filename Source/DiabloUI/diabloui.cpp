@@ -3,14 +3,14 @@
 #include <algorithm>
 #include <string>
 
-#include "controls/controller.h"
-#include "controls/menu_controls.h"
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/text_draw.h"
+#include "controls/controller.h"
+#include "controls/menu_controls.h"
 #include "dx.h"
 #include "palette.h"
 #include "storm/storm.h"
@@ -33,7 +33,7 @@ namespace devilution {
 
 std::size_t SelectedItemMax;
 std::size_t ListViewportSize = 1;
-const std::size_t *ListOffset = NULL;
+const std::size_t *ListOffset = nullptr;
 
 std::array<Art, 3> ArtLogos;
 std::array<Art, 3> ArtFocus;
@@ -85,7 +85,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	gfnListYesNo = fnYesNo;
 	gUiItems = items;
 	UiItemsWraps = itemsWraps;
-	ListOffset = NULL;
+	ListOffset = nullptr;
 	if (fnFocus)
 		fnFocus(0);
 
@@ -127,10 +127,10 @@ void UiInitList_clear()
 	SelectedItem = 0;
 	SelectedItemMax = 0;
 	ListViewportSize = 1;
-	gfnListFocus = NULL;
-	gfnListSelect = NULL;
-	gfnListEsc = NULL;
-	gfnListYesNo = NULL;
+	gfnListFocus = nullptr;
+	gfnListSelect = nullptr;
+	gfnListEsc = nullptr;
+	gfnListYesNo = nullptr;
 	gUiItems.clear();
 	UiItemsWraps = false;
 }
@@ -182,7 +182,7 @@ void UiFocusDown()
 
 void UiFocusPageUp()
 {
-	if (ListOffset == NULL || *ListOffset == 0) {
+	if (ListOffset == nullptr || *ListOffset == 0) {
 		UiFocus(0);
 	} else {
 		const std::size_t relpos = SelectedItem - *ListOffset;
@@ -198,7 +198,7 @@ void UiFocusPageUp()
 
 void UiFocusPageDown()
 {
-	if (ListOffset == NULL || *ListOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
+	if (ListOffset == nullptr || *ListOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
 		UiFocus(SelectedItemMax);
 	} else {
 		const std::size_t relpos = SelectedItem - *ListOffset;
@@ -306,7 +306,7 @@ void UiFocusNavigation(SDL_Event *event)
 			case SDLK_v:
 				if (SDL_GetModState() & KMOD_CTRL) {
 					char *clipboard = SDL_GetClipboardText();
-					if (clipboard == NULL) {
+					if (clipboard == nullptr) {
 						SDL_Log("%s", SDL_GetError());
 					} else {
 						selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
@@ -404,7 +404,7 @@ void UiFocusNavigationSelect()
 #ifndef __SWITCH__
 		SDL_StopTextInput();
 #endif
-		UiTextInput = NULL;
+		UiTextInput = nullptr;
 		UiTextInputLen = 0;
 	}
 	if (gfnListSelect)
@@ -418,7 +418,7 @@ void UiFocusNavigationEsc()
 #ifndef __SWITCH__
 		SDL_StopTextInput();
 #endif
-		UiTextInput = NULL;
+		UiTextInput = nullptr;
 		UiTextInputLen = 0;
 	}
 	if (gfnListEsc)
@@ -427,7 +427,7 @@ void UiFocusNavigationEsc()
 
 void UiFocusNavigationYesNo()
 {
-	if (gfnListYesNo == NULL)
+	if (gfnListYesNo == nullptr)
 		return;
 
 	if (gfnListYesNo())
@@ -526,7 +526,7 @@ void UiInitialize()
 {
 	LoadUiGFX();
 	LoadArtFonts();
-	if (ArtCursor.surface != NULL) {
+	if (ArtCursor.surface != nullptr) {
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}
@@ -613,7 +613,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 {
 	SDL_Color pPal[256];
 	LoadArt(pszFile, &ArtBackground, frames, pPal);
-	if (ArtBackground.surface == NULL)
+	if (ArtBackground.surface == nullptr)
 		return;
 
 	LoadPalInMem(pPal);
@@ -622,7 +622,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	fadeTc = 0;
 	fadeValue = 0;
 	BlackPalette();
-	SDL_FillRect(DiabloUiSurface(), NULL, 0x000000);
+	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	if (DiabloUiSurface() == pal_surface)
 		BltFast(nullptr, nullptr);
 	RenderPresent();
@@ -630,7 +630,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 void UiAddBackground(std::vector<UiItemBase *> *vecDialog)
 {
-	if (ArtBackgroundWidescreen.surface != NULL) {
+	if (ArtBackgroundWidescreen.surface != nullptr) {
 		SDL_Rect rectw = { 0, UI_OFFSET_Y, 0, 0 };
 		vecDialog->push_back(new UiImage(&ArtBackgroundWidescreen, /*animated=*/false, /*frame=*/0, rectw, UIS_CENTER));
 	}
@@ -681,7 +681,7 @@ void DrawSelector(const SDL_Rect &rect)
 void UiClearScreen()
 {
 	if (gnScreenWidth > 640) // Background size
-		SDL_FillRect(DiabloUiSurface(), NULL, 0x000000);
+		SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 }
 
 void UiPollAndRender()
@@ -717,7 +717,7 @@ void Render(const UiArtText *ui_art_text)
 void Render(const UiImage *ui_image)
 {
 	int x = ui_image->m_rect.x;
-	if ((ui_image->m_iFlags & UIS_CENTER) && ui_image->m_art != NULL) {
+	if ((ui_image->m_iFlags & UIS_CENTER) && ui_image->m_art != nullptr) {
 		const int x_offset = GetCenterOffset(ui_image->m_art->w(), ui_image->m_rect.w);
 		x += x_offset;
 	}
@@ -738,7 +738,7 @@ void Render(const UiList *ui_list)
 	for (std::size_t i = 0; i < ui_list->m_vecItems.size(); ++i) {
 		SDL_Rect rect = ui_list->itemRect(i);
 		const UiListItem *item = ui_list->GetItem(i);
-		if (i + (ListOffset == NULL ? 0 : *ListOffset) == SelectedItem)
+		if (i + (ListOffset == nullptr ? 0 : *ListOffset) == SelectedItem)
 			DrawSelector(rect);
 		DrawArtStr(item->m_text, rect, ui_list->m_iFlags);
 	}
@@ -837,13 +837,13 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *ui_list)
 
 	const std::size_t index = ui_list->indexAt(event.button.y);
 
-	if (gfnListFocus != NULL && SelectedItem != index) {
+	if (gfnListFocus != nullptr && SelectedItem != index) {
 		UiFocus(index);
 #ifdef USE_SDL1
 		dbClickTimer = SDL_GetTicks();
 	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
 #else
-	} else if (gfnListFocus == NULL || event.button.clicks >= 2) {
+	} else if (gfnListFocus == nullptr || event.button.clicks >= 2) {
 #endif
 		SelectedItem = index;
 		UiFocusNavigationSelect();

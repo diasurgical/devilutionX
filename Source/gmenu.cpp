@@ -62,7 +62,7 @@ static void gmenu_print_text(CelOutputBuffer out, int x, int y, const char *pszS
 		c = gbFontTransTbl[(BYTE)*pszStr++];
 		c = lfontframe[c];
 		if (c != 0)
-			CelDrawLightTo(out, x, y, BigTGold_cel, c, 46, NULL);
+			CelDrawLightTo(out, x, y, BigTGold_cel, c, 46, nullptr);
 		x += lfontkern[c] + 2;
 	}
 }
@@ -89,24 +89,24 @@ void FreeGMenu()
 void gmenu_init_menu()
 {
 	LogoAnim_frame = 1;
-	sgpCurrentMenu = NULL;
-	sgpCurrItem = NULL;
-	gmenu_current_option = NULL;
+	sgpCurrentMenu = nullptr;
+	sgpCurrItem = nullptr;
+	gmenu_current_option = nullptr;
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = false;
 	if (gbIsHellfire)
-		sgpLogo = LoadFileInMem("Data\\hf_logo3.CEL", NULL);
+		sgpLogo = LoadFileInMem("Data\\hf_logo3.CEL", nullptr);
 	else
-		sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", NULL);
-	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", NULL);
-	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", NULL);
-	option_cel = LoadFileInMem("Data\\option.CEL", NULL);
-	optbar_cel = LoadFileInMem("Data\\optbar.CEL", NULL);
+		sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", nullptr);
+	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", nullptr);
+	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", nullptr);
+	option_cel = LoadFileInMem("Data\\option.CEL", nullptr);
+	optbar_cel = LoadFileInMem("Data\\optbar.CEL", nullptr);
 }
 
 bool gmenu_is_active()
 {
-	return sgpCurrentMenu != NULL;
+	return sgpCurrentMenu != nullptr;
 }
 
 static void gmenu_up_down(bool isDown)
@@ -181,7 +181,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 		}
 	}
 	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
-	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : NULL;
+	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : nullptr;
 	gmenu_up_down(true);
 }
 
@@ -292,7 +292,7 @@ bool gmenu_presskeys(int vkey)
 		break;
 	case DVL_VK_ESCAPE:
 		PlaySFX(IS_TITLEMOV);
-		gmenu_set_items(NULL, NULL);
+		gmenu_set_items(nullptr, nullptr);
 		break;
 	case DVL_VK_SPACE:
 		return false;

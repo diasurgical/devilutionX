@@ -133,7 +133,7 @@ PATHNODE *GetNextPath()
 	PATHNODE *result;
 
 	result = path_2_nodes->NextNode;
-	if (result == NULL) {
+	if (result == nullptr) {
 		return result;
 	}
 
@@ -213,9 +213,9 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 	// 3 cases to consider
 	// case 1: (dx,dy) is already on the frontier
 	dxdy = path_get_node1(dx, dy);
-	if (dxdy != NULL) {
+	if (dxdy != nullptr) {
 		for (i = 0; i < 8; i++) {
-			if (pPath->Child[i] == NULL)
+			if (pPath->Child[i] == nullptr)
 				break;
 		}
 		pPath->Child[i] = dxdy;
@@ -230,9 +230,9 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 	} else {
 		// case 2: (dx,dy) was already visited
 		dxdy = path_get_node2(dx, dy);
-		if (dxdy != NULL) {
+		if (dxdy != nullptr) {
 			for (i = 0; i < 8; i++) {
-				if (pPath->Child[i] == NULL)
+				if (pPath->Child[i] == nullptr)
 					break;
 			}
 			pPath->Child[i] = dxdy;
@@ -247,7 +247,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 		} else {
 			// case 3: (dx,dy) is totally new
 			dxdy = path_new_step();
-			if (dxdy == NULL)
+			if (dxdy == nullptr)
 				return false;
 			dxdy->Parent = pPath;
 			dxdy->g = next_g;
@@ -259,7 +259,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 			path_next_node(dxdy);
 
 			for (i = 0; i < 8; i++) {
-				if (pPath->Child[i] == NULL)
+				if (pPath->Child[i] == nullptr)
 					break;
 			}
 			pPath->Child[i] = dxdy;
@@ -274,12 +274,12 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 PATHNODE *path_get_node1(int dx, int dy)
 {
 	PATHNODE *result = path_2_nodes->NextNode;
-	while (result != NULL) {
+	while (result != nullptr) {
 		if (result->x == dx && result->y == dy)
 			return result;
 		result = result->NextNode;
 	}
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -288,12 +288,12 @@ PATHNODE *path_get_node1(int dx, int dy)
 PATHNODE *path_get_node2(int dx, int dy)
 {
 	PATHNODE *result = pnode_ptr->NextNode;
-	while (result != NULL) {
+	while (result != nullptr) {
 		if (result->x == dx && result->y == dy)
 			return result;
 		result = result->NextNode;
 	}
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -334,7 +334,7 @@ void path_set_coords(PATHNODE *pPath)
 		PathOld = path_pop_active_step();
 		for (i = 0; i < 8; i++) {
 			PathAct = PathOld->Child[i];
-			if (PathAct == NULL)
+			if (PathAct == nullptr)
 				break;
 
 			if (PathOld->g + path_check_equal(PathOld, PathAct->x, PathAct->y) < PathAct->g) {
@@ -376,7 +376,7 @@ PATHNODE *path_new_step()
 	PATHNODE *new_node;
 
 	if (gdwCurNodes == MAXPATHNODES)
-		return NULL;
+		return nullptr;
 
 	new_node = &path_nodes[gdwCurNodes];
 	gdwCurNodes++;

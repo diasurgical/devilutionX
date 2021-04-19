@@ -2,10 +2,10 @@
 
 #include <cmath>
 
+#include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
-#include "controls/controller.h"
 #include "controls/game_controls.h"
 #include "options.h"
 
@@ -130,13 +130,13 @@ bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_
 {
 #ifndef USE_SDL1
 	GameController *const controller = GameController::Get(event);
-	if (controller != NULL && controller->ProcessAxisMotion(event)) {
+	if (controller != nullptr && controller->ProcessAxisMotion(event)) {
 		ScaleJoysticks();
 		return true;
 	}
 #endif
 	Joystick *const joystick = Joystick::Get(event);
-	if (joystick != NULL && joystick->ProcessAxisMotion(event)) {
+	if (joystick != nullptr && joystick->ProcessAxisMotion(event)) {
 		ScaleJoysticks();
 		return true;
 	}
