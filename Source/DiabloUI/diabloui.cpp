@@ -95,7 +95,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	textInputActive = false;
 	for (std::size_t i = 0; i < items.size(); i++) {
 		if (items[i]->m_type == UI_EDIT) {
-			UiEdit *pItemUIEdit = (UiEdit *)items[i];
+			UiEdit *pItemUIEdit = dynamic_cast<UiEdit *>(items[i]);
 			SDL_SetTextInputRect(&items[i]->m_rect);
 			textInputActive = true;
 #ifdef __SWITCH__
@@ -895,13 +895,13 @@ bool HandleMouseEvent(const SDL_Event &event, UiItemBase *item)
 		return false;
 	switch (item->m_type) {
 	case UI_ART_TEXT_BUTTON:
-		return HandleMouseEventArtTextButton(event, (UiArtTextButton *)item);
+		return HandleMouseEventArtTextButton(event, dynamic_cast<UiArtTextButton *>(item));
 	case UI_BUTTON:
-		return HandleMouseEventButton(event, (UiButton *)item);
+		return HandleMouseEventButton(event, dynamic_cast<UiButton *>(item));
 	case UI_LIST:
-		return HandleMouseEventList(event, (UiList *)item);
+		return HandleMouseEventList(event, dynamic_cast<UiList *>(item));
 	case UI_SCROLLBAR:
-		return HandleMouseEventScrollBar(event, (UiScrollBar *)item);
+		return HandleMouseEventScrollBar(event, dynamic_cast<UiScrollBar *>(item));
 	default:
 		return false;
 	}
@@ -919,7 +919,7 @@ void LoadPalInMem(const SDL_Color *pPal)
 void UiRenderItems(std::vector<UiItemBase *> items)
 {
 	for (std::size_t i = 0; i < items.size(); i++)
-		RenderItem((UiItemBase *)items[i]);
+		RenderItem(items[i]);
 }
 
 bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
@@ -946,7 +946,7 @@ bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
 		for (std::size_t i = 0; i < items.size(); ++i) {
 			UiItemBase *&item = items[i];
 			if (item->m_type == UI_BUTTON)
-				HandleGlobalMouseUpButton((UiButton *)item);
+				HandleGlobalMouseUpButton(dynamic_cast<UiButton *>(item));
 		}
 	}
 
