@@ -1421,7 +1421,7 @@ static void L5firstRoom()
 		VR3 = random_(0, 2);
 
 		if (VR1 + VR3 <= 1)
-			VR2 = 1;
+			VR2 = true;
 		if (VR1)
 			L5drawRoom(15, 1, 10, 10);
 		else
@@ -1491,9 +1491,9 @@ static void L5firstRoom()
 		if (HR3)
 			L5roomGen(29, 15, 10, 10, 1);
 
-		VR3 = 0;
-		VR2 = 0;
-		VR1 = 0;
+		VR3 = false;
+		VR2 = false;
+		VR1 = false;
 	}
 }
 
@@ -2071,21 +2071,21 @@ static void L5FillChambers()
 	int c;
 
 	if (HR1)
-		DRLG_L5GChamber(0, 14, 0, 0, 0, 1);
+		DRLG_L5GChamber(0, 14, false, false, false, true);
 
 	if (HR2) {
 		if (HR1 && !HR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 1, 0);
+			DRLG_L5GChamber(14, 14, false, false, true, false);
 		if (!HR1 && HR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 0, 1);
+			DRLG_L5GChamber(14, 14, false, false, false, true);
 		if (HR1 && HR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 1, 1);
+			DRLG_L5GChamber(14, 14, false, false, true, true);
 		if (!HR1 && !HR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 0, 0);
+			DRLG_L5GChamber(14, 14, false, false, false, false);
 	}
 
 	if (HR3)
-		DRLG_L5GChamber(28, 14, 0, 0, 1, 0);
+		DRLG_L5GChamber(28, 14, false, false, true, false);
 	if (HR1 && HR2)
 		DRLG_L5GHall(12, 18, 14, 18);
 	if (HR2 && HR3)
@@ -2093,21 +2093,21 @@ static void L5FillChambers()
 	if (HR1 && !HR2 && HR3)
 		DRLG_L5GHall(12, 18, 28, 18);
 	if (VR1)
-		DRLG_L5GChamber(14, 0, 0, 1, 0, 0);
+		DRLG_L5GChamber(14, 0, false, true, false, false);
 
 	if (VR2) {
 		if (VR1 && !VR3)
-			DRLG_L5GChamber(14, 14, 1, 0, 0, 0);
+			DRLG_L5GChamber(14, 14, true, false, false, false);
 		if (!VR1 && VR3)
-			DRLG_L5GChamber(14, 14, 0, 1, 0, 0);
+			DRLG_L5GChamber(14, 14, false, true, false, false);
 		if (VR1 && VR3)
-			DRLG_L5GChamber(14, 14, 1, 1, 0, 0);
+			DRLG_L5GChamber(14, 14, true, true, false, false);
 		if (!VR1 && !VR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 0, 0);
+			DRLG_L5GChamber(14, 14, false, false, false, false);
 	}
 
 	if (VR3)
-		DRLG_L5GChamber(14, 28, 1, 0, 0, 0);
+		DRLG_L5GChamber(14, 28, true, false, false, false);
 	if (VR1 && VR2)
 		DRLG_L5GHall(18, 12, 18, 14);
 	if (VR2 && VR3)

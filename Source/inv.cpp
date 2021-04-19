@@ -428,10 +428,10 @@ bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistI
 		return false;
 	}
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if (plr[playerNumber].SpdList[i].isEmpty()) {
+	for (auto &beltItem : plr[playerNumber].SpdList) {
+		if (beltItem.isEmpty()) {
 			if (persistItem) {
-				plr[playerNumber].SpdList[i] = item;
+				beltItem = item;
 				CalcPlrScrolls(playerNumber);
 				drawsbarflag = true;
 			}
@@ -1935,7 +1935,7 @@ int FindGetItem(int idx, WORD ci, int iseed)
 
 	int ii;
 	int i = 0;
-	while (1) {
+	while (true) {
 		ii = itemactive[i];
 		if (items[ii].IDidx == idx && items[ii]._iSeed == iseed && items[ii]._iCreateInfo == ci)
 			break;
@@ -2097,7 +2097,7 @@ int InvPutItem(int pnum, int x, int y)
 		yp = cursmy;
 		xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			NetSendCmdLocParam2(0, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
+			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
@@ -2128,7 +2128,7 @@ int InvPutItem(int pnum, int x, int y)
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
-		quests[Q_CORNSTN]._qlog = 0;
+		quests[Q_CORNSTN]._qlog = false;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 
@@ -2215,7 +2215,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
-		quests[Q_CORNSTN]._qlog = 0;
+		quests[Q_CORNSTN]._qlog = false;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 	return ii;

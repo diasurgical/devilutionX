@@ -20,15 +20,12 @@ void selyesno_Free()
 {
 	ArtBackground.Unload();
 
-	for (std::size_t i = 0; i < vecSelYesNoDialogItems.size(); i++) {
-		UiListItem *pUIListItem = vecSelYesNoDialogItems[i];
-		if (pUIListItem)
-			delete pUIListItem;
+	for (auto pUIListItem : vecSelYesNoDialogItems) {
+		delete pUIListItem;
 	}
 	vecSelYesNoDialogItems.clear();
 
-	for (std::size_t i = 0; i < vecSelYesNoDialog.size(); i++) {
-		UiItemBase *pUIItem = vecSelYesNoDialog[i];
+	for (auto pUIItem : vecSelYesNoDialog) {
 		delete pUIItem;
 	}
 	vecSelYesNoDialog.clear();

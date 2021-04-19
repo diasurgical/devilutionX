@@ -296,16 +296,16 @@ void S_ScrollSPBuy(int idx)
 
 	stextup = 5;
 	for (idx = 0; boughtitems; idx++) {
-		if (!premiumitem[idx].isEmpty())
+		if (!premiumitems[idx].isEmpty())
 			boughtitems--;
 	}
 
 	for (l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
-		if (!premiumitem[idx].isEmpty()) {
-			text_color iclr = GetItemTextColor(premiumitem[idx]);
-			AddSText(20, l, false, premiumitem[idx]._iIName, iclr, true);
-			AddSTextVal(l, premiumitem[idx]._iIvalue);
-			PrintStoreItem(&premiumitem[idx], l + 1, iclr);
+		if (!premiumitems[idx].isEmpty()) {
+			text_color iclr = GetItemTextColor(premiumitems[idx]);
+			AddSText(20, l, false, premiumitems[idx]._iIName, iclr, true);
+			AddSTextVal(l, premiumitems[idx]._iIvalue);
+			PrintStoreItem(&premiumitems[idx], l + 1, iclr);
 			stextdown = l;
 		} else {
 			l -= 4;
@@ -322,7 +322,7 @@ bool S_StartSPBuy()
 
 	storenumh = 0;
 	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
-		if (!premiumitem[i].isEmpty())
+		if (!premiumitems[i].isEmpty())
 			storenumh++;
 	}
 	if (!storenumh) {
@@ -1300,13 +1300,13 @@ void SmithBuyPItem()
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 	xx = 0;
 	for (i = 0; idx >= 0; i++) {
-		if (!premiumitem[i].isEmpty()) {
+		if (!premiumitems[i].isEmpty()) {
 			idx--;
 			xx = i;
 		}
 	}
 
-	premiumitem[xx]._itype = ITYPE_NONE;
+	premiumitems[xx]._itype = ITYPE_NONE;
 	numpremium--;
 	SpawnPremium(myplr);
 }
@@ -1326,15 +1326,15 @@ void S_SPBuyEnter()
 		xx = stextsval + ((stextsel - stextup) >> 2);
 		idx = 0;
 		for (i = 0; xx >= 0; i++) {
-			if (!premiumitem[i].isEmpty()) {
+			if (!premiumitems[i].isEmpty()) {
 				xx--;
 				idx = i;
 			}
 		}
-		if (plr[myplr]._pGold < premiumitem[idx]._iIvalue) {
+		if (plr[myplr]._pGold < premiumitems[idx]._iIvalue) {
 			StartStore(STORE_NOMONEY);
 		} else {
-			plr[myplr].HoldItem = premiumitem[idx];
+			plr[myplr].HoldItem = premiumitems[idx];
 			NewCursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = false;
 			if (AutoEquipEnabled(plr[myplr], plr[myplr].HoldItem) && AutoEquip(myplr, plr[myplr].HoldItem, false)) {
@@ -2070,7 +2070,7 @@ ItemStruct storehold[48];
 ItemStruct smithitem[SMITH_ITEMS];
 int numpremium;
 int premiumlevel;
-ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
+ItemStruct premiumitems[SMITH_PREMIUM_ITEMS];
 
 ItemStruct healitem[20];
 
@@ -2114,8 +2114,8 @@ void InitStores()
 	numpremium = 0;
 	premiumlevel = 1;
 
-	for (int i = 0; i < SMITH_PREMIUM_ITEMS; i++)
-		premiumitem[i]._itype = ITYPE_NONE;
+	for (auto &premiumitem : premiumitems)
+		premiumitem._itype = ITYPE_NONE;
 
 	boyitem._itype = ITYPE_NONE;
 	boylevel = 0;

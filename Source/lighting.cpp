@@ -12,7 +12,7 @@
 namespace devilution {
 
 LightListStruct VisionList[MAXVISION];
-BYTE lightactive[MAXLIGHTS];
+uint8_t lightactive[MAXLIGHTS];
 LightListStruct LightList[MAXLIGHTS];
 int numlights;
 BYTE lightradius[16][128];

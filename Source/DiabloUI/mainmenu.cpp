@@ -68,16 +68,13 @@ void mainmenu_Free()
 	ArtBackgroundWidescreen.Unload();
 	ArtBackground.Unload();
 
-	for (std::size_t i = 0; i < vecMainMenuDialog.size(); i++) {
-		UiItemBase *pUIItem = vecMainMenuDialog[i];
+	for (auto pUIItem : vecMainMenuDialog) {
 		delete pUIItem;
 	}
 	vecMainMenuDialog.clear();
 
-	for (std::size_t i = 0; i < vecMenuItems.size(); i++) {
-		UiListItem *pUIMenuItem = vecMenuItems[i];
-		if (pUIMenuItem)
-			delete pUIMenuItem;
+	for (auto pUIMenuItem : vecMenuItems) {
+		delete pUIMenuItem;
 	}
 	vecMenuItems.clear();
 }

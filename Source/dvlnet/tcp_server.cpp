@@ -2,11 +2,11 @@
 
 #include <chrono>
 #include <functional>
+#include <memory>
 
 #include "dvlnet/base.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 tcp_server::tcp_server(asio::io_context &ioc, std::string bindaddr,
     unsigned short port, std::string pw)
@@ -15,7 +15,7 @@ tcp_server::tcp_server(asio::io_context &ioc, std::string bindaddr,
 {
 	auto addr = asio::ip::address::from_string(bindaddr);
 	auto ep = asio::ip::tcp::endpoint(addr, port);
-	acceptor.reset(new asio::ip::tcp::acceptor(ioc, ep, true));
+	acceptor = std::make_unique<asio::ip::tcp::acceptor>(ioc, ep, true);
 	start_accept();
 }
 
@@ -222,5 +222,4 @@ tcp_server::~tcp_server()
 {
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

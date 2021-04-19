@@ -3,8 +3,8 @@
  *
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
-#include <limits.h>
-#include <stdint.h>
+#include <climits>
+#include <cstdint>
 
 #include "automap.h"
 #include "control.h"
@@ -362,7 +362,7 @@ void InitRndLocObj(int min, int max, _object_id objtype)
 	numobjs = random_(139, max - min) + min;
 
 	for (i = 0; i < numobjs; i++) {
-		while (1) {
+		while (true) {
 			xp = random_(139, 80) + 16;
 			yp = random_(139, 80) + 16;
 			if (RndLocOk(xp - 1, yp - 1)
@@ -387,7 +387,7 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 
 	numobjs = random_(140, max - min) + min;
 	for (i = 0; i < numobjs; i++) {
-		while (1) {
+		while (true) {
 			xp = random_(140, 80) + 16;
 			yp = random_(140, 80) + 16;
 			if (RndLocOk(xp - 1, yp - 2)
@@ -1630,7 +1630,7 @@ void GetRndObjLoc(int randarea, int *xx, int *yy)
 		return;
 
 	tries = 0;
-	while (1) {
+	while (true) {
 		tries++;
 		if (tries > 1000 && randarea > 1)
 			randarea--;
@@ -2948,7 +2948,7 @@ void OperateLever(int pnum, int i)
 		}
 		if (currlevel == 24) {
 			operate_lv24_lever();
-			IsUberLeverActivated = 1;
+			IsUberLeverActivated = true;
 			mapflag = false;
 			quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		}
@@ -3484,27 +3484,27 @@ bool OperateShrineHidden(int pnum)
 		return false;
 
 	int cnt = 0;
-	for (int j = 0; j < NUM_INVLOC; j++) {
-		if (!plr[pnum].InvBody[j].isEmpty())
+	for (const auto &item : plr[pnum].InvBody) {
+		if (!item.isEmpty())
 			cnt++;
 	}
 	if (cnt > 0) {
-		for (int j = 0; j < NUM_INVLOC; j++) {
-			if (!plr[pnum].InvBody[j].isEmpty()
-			    && plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
-			    && plr[pnum].InvBody[j]._iMaxDur != 0) {
-				plr[pnum].InvBody[j]._iDurability += 10;
-				plr[pnum].InvBody[j]._iMaxDur += 10;
-				if (plr[pnum].InvBody[j]._iDurability > plr[pnum].InvBody[j]._iMaxDur)
-					plr[pnum].InvBody[j]._iDurability = plr[pnum].InvBody[j]._iMaxDur;
+		for (auto &item : plr[pnum].InvBody) {
+			if (!item.isEmpty()
+			    && item._iMaxDur != DUR_INDESTRUCTIBLE
+			    && item._iMaxDur != 0) {
+				item._iDurability += 10;
+				item._iMaxDur += 10;
+				if (item._iDurability > item._iMaxDur)
+					item._iDurability = item._iMaxDur;
 			}
 		}
 		while (true) {
 			cnt = 0;
-			for (int j = 0; j < NUM_INVLOC; j++) {
-				if (!plr[pnum].InvBody[j].isEmpty())
-					if (plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
-					    && plr[pnum].InvBody[j]._iMaxDur != 0)
+			for (auto &item : plr[pnum].InvBody) {
+				if (!item.isEmpty())
+					if (item._iMaxDur != DUR_INDESTRUCTIBLE
+					    && item._iMaxDur != 0)
 						cnt++;
 			}
 			if (cnt == 0)
@@ -3649,17 +3649,17 @@ bool OperateShrineStone(int pnum)
 	if (pnum != myplr)
 		return true;
 
-	for (int j = 0; j < NUM_INVLOC; j++) {
-		if (plr[pnum].InvBody[j]._itype == ITYPE_STAFF)
-			plr[pnum].InvBody[j]._iCharges = plr[pnum].InvBody[j]._iMaxCharges;
+	for (auto &item : plr[pnum].InvBody) {
+		if (item._itype == ITYPE_STAFF)
+			item._iCharges = item._iMaxCharges;
 	}
 	for (int j = 0; j < plr[pnum]._pNumInv; j++) {
 		if (plr[pnum].InvList[j]._itype == ITYPE_STAFF)
 			plr[pnum].InvList[j]._iCharges = plr[pnum].InvList[j]._iMaxCharges;
 	}
-	for (int j = 0; j < MAXBELTITEMS; j++) {
-		if (plr[pnum].SpdList[j]._itype == ITYPE_STAFF)
-			plr[pnum].SpdList[j]._iCharges = plr[pnum].SpdList[j]._iMaxCharges; // belt items don't have charges?
+	for (auto &item : plr[pnum].SpdList) {
+		if (item._itype == ITYPE_STAFF)
+			item._iCharges = item._iMaxCharges; // belt items don't have charges?
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_STONE);
@@ -3674,12 +3674,12 @@ bool OperateShrineReligious(int pnum)
 	if (pnum != myplr)
 		return true;
 
-	for (int j = 0; j < NUM_INVLOC; j++)
-		plr[pnum].InvBody[j]._iDurability = plr[pnum].InvBody[j]._iMaxDur;
+	for (auto &item : plr[pnum].InvBody)
+		item._iDurability = item._iMaxDur;
 	for (int j = 0; j < plr[pnum]._pNumInv; j++)
 		plr[pnum].InvList[j]._iDurability = plr[pnum].InvList[j]._iMaxDur;
-	for (int j = 0; j < MAXBELTITEMS; j++)
-		plr[pnum].SpdList[j]._iDurability = plr[pnum].SpdList[j]._iMaxDur; // belt items don't have durability?
+	for (auto &item : plr[pnum].SpdList)
+		item._iDurability = item._iMaxDur; // belt items don't have durability?
 
 	InitDiabloMsg(EMSG_SHRINE_RELIGIOUS);
 
@@ -3841,21 +3841,21 @@ bool OperateShrineEldritch(int pnum)
 			}
 		}
 	}
-	for (int j = 0; j < MAXBELTITEMS; j++) {
-		if (plr[pnum].SpdList[j]._itype == ITYPE_MISC) {
-			if (plr[pnum].SpdList[j]._iMiscId == IMISC_HEAL
-			    || plr[pnum].SpdList[j]._iMiscId == IMISC_MANA) {
+	for (auto &item : plr[pnum].SpdList) {
+		if (item._itype == ITYPE_MISC) {
+			if (item._iMiscId == IMISC_HEAL
+			    || item._iMiscId == IMISC_MANA) {
 				SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_REJUV));
 				GetPlrHandSeed(&plr[pnum].HoldItem);
 				plr[pnum].HoldItem._iStatFlag = true;
-				plr[pnum].SpdList[j] = plr[pnum].HoldItem;
+				item = plr[pnum].HoldItem;
 			}
-			if (plr[pnum].SpdList[j]._iMiscId == IMISC_FULLHEAL
-			    || plr[pnum].SpdList[j]._iMiscId == IMISC_FULLMANA) {
+			if (item._iMiscId == IMISC_FULLHEAL
+			    || item._iMiscId == IMISC_FULLMANA) {
 				SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
 				GetPlrHandSeed(&plr[pnum].HoldItem);
 				plr[pnum].HoldItem._iStatFlag = true;
-				plr[pnum].SpdList[j] = plr[pnum].HoldItem;
+				item = plr[pnum].HoldItem;
 			}
 		}
 	}
@@ -3972,14 +3972,14 @@ bool OperateShrineSpiritual(int pnum)
 	if (pnum != myplr)
 		return false;
 
-	for (int j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (plr[pnum].InvGrid[j] == 0) {
+	for (int8_t &gridItem : plr[pnum].InvGrid) {
+		if (gridItem == 0) {
 			int r = 5 * leveltype + random_(160, 10 * leveltype);
 			DWORD t = plr[pnum]._pNumInv; // check
 			plr[pnum].InvList[t] = golditem;
 			plr[pnum].InvList[t]._iSeed = AdvanceRndSeed();
 			plr[pnum]._pNumInv++;
-			plr[pnum].InvGrid[j] = plr[pnum]._pNumInv;
+			gridItem = plr[pnum]._pNumInv;
 			plr[pnum].InvList[t]._ivalue = r;
 			plr[pnum]._pGold += r;
 			SetGoldCurs(pnum, t);
@@ -4073,8 +4073,8 @@ bool OperateShrineSecluded(int pnum)
 		return true;
 
 	for (int yy = 0; yy < DMAXY; yy++) {
-		for (int xx = 0; xx < DMAXX; xx++) {
-			automapview[xx][yy] = true;
+		for (auto &xx : automapview) {
+			xx[yy] = true;
 		}
 	}
 
@@ -4124,17 +4124,17 @@ bool OperateShrineGlimmering(int pnum)
 	if (pnum != myplr)
 		return false;
 
-	for (int j = 0; j < NUM_INVLOC; j++) {
-		if (plr[pnum].InvBody[j]._iMagical && !plr[pnum].InvBody[j]._iIdentified)
-			plr[pnum].InvBody[j]._iIdentified = true;
+	for (auto &item : plr[pnum].InvBody) {
+		if (item._iMagical && !item._iIdentified)
+			item._iIdentified = true;
 	}
 	for (int j = 0; j < plr[pnum]._pNumInv; j++) {
 		if (plr[pnum].InvList[j]._iMagical && !plr[pnum].InvList[j]._iIdentified)
 			plr[pnum].InvList[j]._iIdentified = true;
 	}
-	for (int j = 0; j < MAXBELTITEMS; j++) {
-		if (plr[pnum].SpdList[j]._iMagical && !plr[pnum].SpdList[j]._iIdentified)
-			plr[pnum].SpdList[j]._iIdentified = true; // belt items can't be magical?
+	for (auto &item : plr[pnum].SpdList) {
+		if (item._iMagical && !item._iIdentified)
+			item._iIdentified = true; // belt items can't be magical?
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_GLIMMERING);
@@ -4369,12 +4369,11 @@ bool OperateShrineMurphys(int pnum)
 		return false;
 
 	bool broke = false;
-	for (int j = 0; j < NUM_INVLOC; j++) {
-		ItemStruct *item = &plr[myplr].InvBody[j];
-		if (!item->isEmpty() && random_(0, 3) == 0) {
-			if (item->_iDurability != DUR_INDESTRUCTIBLE) {
-				if (item->_iDurability) {
-					item->_iDurability /= 2;
+	for (auto &item : plr[myplr].InvBody) {
+		if (!item.isEmpty() && random_(0, 3) == 0) {
+			if (item._iDurability != DUR_INDESTRUCTIBLE) {
+				if (item._iDurability) {
+					item._iDurability /= 2;
 					broke = true;
 					break;
 				}
@@ -4860,7 +4859,7 @@ void OperateStoryBook(int pnum, int i)
 			}
 		} else if (currlevel >= 21) {
 			quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
-			quests[Q_NAKRUL]._qlog = 1;
+			quests[Q_NAKRUL]._qlog = true;
 			quests[Q_NAKRUL]._qmsg = static_cast<_speech_id>(object[i]._oVar2);
 		}
 		InitQTextMsg(object[i]._oVar2);
@@ -4892,9 +4891,9 @@ bool objectIsDisabled(int i)
 		return true;
 	if ((object[i]._otype != OBJ_SHRINEL) && (object[i]._otype != OBJ_SHRINER))
 		return false;
-	if ((object[i]._oVar1 == SHRINE_FASCINATING) ||
-	    (object[i]._oVar1 == SHRINE_ORNATE) ||
-	    (object[i]._oVar1 == SHRINE_SACRED))
+	if ((object[i]._oVar1 == SHRINE_FASCINATING)
+	    || (object[i]._oVar1 == SHRINE_ORNATE)
+	    || (object[i]._oVar1 == SHRINE_SACRED))
 		return true;
 	return false;
 }
@@ -5695,7 +5694,7 @@ void objects_rnd_454BEA()
 {
 	int xp, yp;
 
-	while (1) {
+	while (true) {
 		xp = random_(141, 80) + 16;
 		yp = random_(141, 80) + 16;
 		if (RndLocOk(xp - 1, yp - 1)

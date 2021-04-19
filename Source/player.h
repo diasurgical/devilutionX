@@ -148,7 +148,7 @@ enum player_weapon_type : uint8_t {
 
 struct PlayerStruct {
 	PLR_MODE _pmode;
-	Sint8 walkpath[MAX_PATH_LENGTH];
+	int8_t walkpath[MAX_PATH_LENGTH];
 	bool plractive;
 	action_id destAction;
 	Sint32 destParam1;
@@ -190,11 +190,10 @@ struct PlayerStruct {
 	spell_id _pTSpell;
 	spell_type _pTSplType;
 	spell_id _pRSpell;
-	// enum spell_type
 	spell_type _pRSplType;
 	spell_id _pSBkSpell;
 	spell_type _pSBkSplType;
-	Sint8 _pSplLvl[64];
+	int8_t _pSplLvl[64];
 	Uint64 _pMemSpells;  // Bitmask of learned spells
 	Uint64 _pAblSpells;  // Bitmask of abilities
 	Uint64 _pScrlSpells; // Bitmask of spells available via scrolls
@@ -280,7 +279,7 @@ struct PlayerStruct {
 	ItemStruct InvBody[NUM_INVLOC];
 	ItemStruct InvList[NUM_INV_GRID_ELEM];
 	Sint32 _pNumInv;
-	Sint8 InvGrid[NUM_INV_GRID_ELEM];
+	int8_t InvGrid[NUM_INV_GRID_ELEM];
 	ItemStruct SpdList[MAXBELTITEMS];
 	ItemStruct HoldItem;
 	Sint32 _pIMinDam;

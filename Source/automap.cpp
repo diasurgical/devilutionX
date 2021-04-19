@@ -523,8 +523,8 @@ void InitAutomap()
 	memset(automapview, 0, sizeof(automapview));
 
 	for (int y = 0; y < MAXDUNY; y++) {
-		for (int x = 0; x < MAXDUNX; x++)
-			dFlags[x][y] &= ~BFLAG_EXPLORED;
+		for (auto &dFlag : dFlags)
+			dFlag[y] &= ~BFLAG_EXPLORED;
 	}
 }
 

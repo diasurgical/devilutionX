@@ -23,15 +23,12 @@ void selok_Free()
 {
 	ArtBackground.Unload();
 
-	for (std::size_t i = 0; i < vecSelOkDialogItems.size(); i++) {
-		UiListItem *pUIListItem = vecSelOkDialogItems[i];
-		if (pUIListItem)
-			delete pUIListItem;
+	for (auto pUIListItem : vecSelOkDialogItems) {
+		delete pUIListItem;
 	}
 	vecSelOkDialogItems.clear();
 
-	for (std::size_t i = 0; i < vecSelOkDialog.size(); i++) {
-		UiItemBase *pUIItem = vecSelOkDialog[i];
+	for (auto pUIItem : vecSelOkDialog) {
 		delete pUIItem;
 	}
 	vecSelOkDialog.clear();

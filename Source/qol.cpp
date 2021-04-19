@@ -146,13 +146,9 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	}
 }
 
-
-
 bool HasRoomForGold()
 {
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		int idx = plr[myplr].InvGrid[i];
-
+	for (int idx : plr[myplr].InvGrid) {
 		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
 		if (idx < 0)
 			continue;

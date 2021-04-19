@@ -187,8 +187,7 @@ void GameController::Remove(SDL_JoystickID instance_id)
 
 GameController *GameController::Get(SDL_JoystickID instance_id)
 {
-	for (std::size_t i = 0; i < controllers_->size(); ++i) {
-		GameController &controller = (*controllers_)[i];
+	for (auto &controller : *controllers_) {
 		if (controller.instance_id_ == instance_id)
 			return &controller;
 	}
@@ -215,8 +214,8 @@ const std::vector<GameController> &GameController::All()
 
 bool GameController::IsPressedOnAnyController(ControllerButton button)
 {
-	for (std::size_t i = 0; i < controllers_->size(); ++i)
-		if ((*controllers_)[i].IsPressed(button))
+	for (auto &controller : *controllers_)
+		if (controller.IsPressed(button))
 			return true;
 	return false;
 }

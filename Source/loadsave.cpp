@@ -5,7 +5,7 @@
  */
 #include "loadsave.h"
 
-#include <limits.h>
+#include <climits>
 
 #include "automap.h"
 #include "codec.h"
@@ -312,8 +312,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 
 	pPlayer->_pmode = static_cast<PLR_MODE>(file->nextLE<Sint32>());
 
-	for (int i = 0; i < MAX_PATH_LENGTH; i++) {
-		pPlayer->walkpath[i] = file->nextLE<Sint8>();
+	for (int8_t &step : pPlayer->walkpath) {
+		step = file->nextLE<int8_t>();
 	}
 	pPlayer->plractive = file->nextBool8();
 	file->skip(2); // Alignment
@@ -363,18 +363,18 @@ static void LoadPlayer(LoadHelper *file, int p)
 	file->skip(3); // Alignment
 	pPlayer->_pSBkSpell = static_cast<spell_id>(file->nextLE<Sint32>());
 	pPlayer->_pSBkSplType = static_cast<spell_type>(file->nextLE<Sint8>());
-	for (int i = 0; i < 64; i++)
-		pPlayer->_pSplLvl[i] = file->nextLE<Sint8>();
+	for (int8_t &spellLevel : pPlayer->_pSplLvl)
+		spellLevel = file->nextLE<Sint8>();
 	file->skip(7); // Alignment
 	pPlayer->_pMemSpells = file->nextLE<Uint64>();
 	pPlayer->_pAblSpells = file->nextLE<Uint64>();
 	pPlayer->_pScrlSpells = file->nextLE<Uint64>();
 	pPlayer->_pSpellFlags = file->nextLE<Uint8>();
 	file->skip(3); // Alignment
-	for (int i = 0; i < 4; i++)
-		pPlayer->_pSplHotKey[i] = static_cast<spell_id>(file->nextLE<Sint32>());
-	for (int i = 0; i < 4; i++)
-		pPlayer->_pSplTHotKey[i] = static_cast<spell_type>(file->nextLE<Sint8>());
+	for (auto &spell : pPlayer->_pSplHotKey)
+		spell = static_cast<spell_id>(file->nextLE<Sint32>());
+	for (auto &spellType : pPlayer->_pSplTHotKey)
+		spellType = static_cast<spell_type>(file->nextLE<Sint8>());
 
 	pPlayer->_pwtype = static_cast<player_weapon_type>(file->nextLE<Sint32>());
 	pPlayer->_pBlockFlag = file->nextBool8();
@@ -466,8 +466,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	LoadItems(file, NUM_INVLOC, pPlayer->InvBody);
 	LoadItems(file, NUM_INV_GRID_ELEM, pPlayer->InvList);
 	pPlayer->_pNumInv = file->nextLE<Sint32>();
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
-		pPlayer->InvGrid[i] = file->nextLE<Sint8>();
+	for (int8_t &cell : pPlayer->InvGrid)
+		cell = file->nextLE<int8_t>();
 	LoadItems(file, MAXBELTITEMS, pPlayer->SpdList);
 	LoadItemData(file, &pPlayer->HoldItem);
 
@@ -735,7 +735,7 @@ static void LoadItem(LoadHelper *file, int i)
 
 static void LoadPremium(LoadHelper *file, int i)
 {
-	LoadItemData(file, &premiumitem[i]);
+	LoadItemData(file, &premiumitems[i]);
 }
 
 static void LoadQuest(LoadHelper *file, int i)
@@ -876,17 +876,17 @@ static void ConvertLevels()
 	}
 
 	setlevel = true; // Convert quest levels
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (quests[i]._qactive == QUEST_NOTAVAIL) {
+	for (auto &quest : quests) {
+		if (quest._qactive == QUEST_NOTAVAIL) {
 			continue;
 		}
 
-		leveltype = quests[i]._qlvltype;
+		leveltype = quest._qlvltype;
 		if (leveltype == DTYPE_NONE) {
 			continue;
 		}
 
-		setlvlnum = quests[i]._qslvl;
+		setlvlnum = quest._qslvl;
 		if (!LevelFileExists())
 			continue;
 
@@ -909,14 +909,11 @@ void LoadHotkeys()
 	if (!file.isValid())
 		return;
 
-	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
-	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
-
-	for (size_t i = 0; i < nHotkeyTypes; i++) {
-		plr[myplr]._pSplHotKey[i] = static_cast<spell_id>(file.nextLE<Sint32>());
+	for (auto &spellId : plr[myplr]._pSplHotKey) {
+		spellId = static_cast<spell_id>(file.nextLE<Sint32>());
 	}
-	for (size_t i = 0; i < nHotkeySpells; i++) {
-		plr[myplr]._pSplTHotKey[i] = static_cast<spell_type>(file.nextLE<Sint8>());
+	for (auto &spellType : plr[myplr]._pSplTHotKey) {
+		spellType = static_cast<spell_type>(file.nextLE<Sint8>());
 	}
 	plr[myplr]._pRSpell = static_cast<spell_id>(file.nextLE<Sint32>());
 	plr[myplr]._pRSplType = static_cast<spell_type>(file.nextLE<Sint8>());
@@ -929,11 +926,11 @@ void SaveHotkeys()
 
 	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
 
-	for (size_t i = 0; i < nHotkeyTypes; i++) {
-		file.writeLE<Sint32>(plr[myplr]._pSplHotKey[i]);
+	for (auto &spellId : plr[myplr]._pSplHotKey) {
+		file.writeLE<Sint32>(spellId);
 	}
-	for (size_t i = 0; i < nHotkeySpells; i++) {
-		file.writeLE<Uint8>(plr[myplr]._pSplTHotKey[i]);
+	for (auto &spellType : plr[myplr]._pSplTHotKey) {
+		file.writeLE<Uint8>(spellType);
 	}
 	file.writeLE<Sint32>(plr[myplr]._pRSpell);
 	file.writeLE<Uint8>(plr[myplr]._pRSplType);
@@ -1066,24 +1063,24 @@ void LoadGame(bool firstflag)
 	nummissiles = _nummissiles;
 	nobjects = _nobjects;
 
-	for (int i = 0; i < MAXMONSTERS; i++)
-		monstkills[i] = file.nextBE<Sint32>();
+	for (int &monstkill : monstkills)
+		monstkill = file.nextBE<Sint32>();
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < MAXMONSTERS; i++)
-			monstactive[i] = file.nextBE<Sint32>();
+		for (int &monsterId : monstactive)
+			monsterId = file.nextBE<Sint32>();
 		for (int i = 0; i < nummonsters; i++)
 			LoadMonster(&file, monstactive[i]);
-		for (int i = 0; i < MAXMISSILES; i++)
-			missileactive[i] = file.nextLE<Sint8>();
-		for (int i = 0; i < MAXMISSILES; i++)
-			missileavail[i] = file.nextLE<Sint8>();
+		for (int &missileId : missileactive)
+			missileId = file.nextLE<Sint8>();
+		for (int &missileId : missileavail)
+			missileId = file.nextLE<Sint8>();
 		for (int i = 0; i < nummissiles; i++)
 			LoadMissile(&file, missileactive[i]);
-		for (int i = 0; i < MAXOBJECTS; i++)
-			objectactive[i] = file.nextLE<Sint8>();
-		for (int i = 0; i < MAXOBJECTS; i++)
-			objectavail[i] = file.nextLE<Sint8>();
+		for (int &objectId : objectactive)
+			objectId = file.nextLE<Sint8>();
+		for (int &objectId : objectavail)
+			objectId = file.nextLE<Sint8>();
 		for (int i = 0; i < nobjects; i++)
 			LoadObject(&file, objectactive[i]);
 		for (int i = 0; i < nobjects; i++)
@@ -1091,8 +1088,8 @@ void LoadGame(bool firstflag)
 
 		numlights = file.nextBE<Sint32>();
 
-		for (int i = 0; i < MAXLIGHTS; i++)
-			lightactive[i] = file.nextLE<Uint8>();
+		for (uint8_t &lightId : lightactive)
+			lightId = file.nextLE<Uint8>();
 		for (int i = 0; i < numlights; i++)
 			LoadLighting(&file, &LightList[lightactive[i]]);
 
@@ -1103,14 +1100,14 @@ void LoadGame(bool firstflag)
 			LoadLighting(&file, &VisionList[i]);
 	}
 
-	for (int i = 0; i < MAXITEMS; i++)
-		itemactive[i] = file.nextLE<Sint8>();
-	for (int i = 0; i < MAXITEMS; i++)
-		itemavail[i] = file.nextLE<Sint8>();
+	for (int &itemId : itemactive)
+		itemId = file.nextLE<Sint8>();
+	for (int &itemId : itemavail)
+		itemId = file.nextLE<Sint8>();
 	for (int i = 0; i < numitems; i++)
 		LoadItem(&file, itemactive[i]);
-	for (int i = 0; i < 128; i++)
-		UniqueItemFlag[i] = file.nextBool8();
+	for (bool &UniqueItemFlag : UniqueItemFlags)
+		UniqueItemFlag = file.nextBool8();
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
@@ -1292,8 +1289,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	PlayerStruct *pPlayer = &plr[p];
 
 	file->writeLE<Sint32>(pPlayer->_pmode);
-	for (int i = 0; i < MAX_PATH_LENGTH; i++)
-		file->writeLE<Sint8>(pPlayer->walkpath[i]);
+	for (int8_t step : pPlayer->walkpath)
+		file->writeLE<int8_t>(step);
 	file->writeLE<Uint8>(pPlayer->plractive);
 	file->skip(2); // Alignment
 	file->writeLE<Sint32>(pPlayer->destAction);
@@ -1342,18 +1339,18 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->skip(3); // Alignment
 	file->writeLE<Sint32>(pPlayer->_pSBkSpell);
 	file->writeLE<Sint8>(pPlayer->_pSBkSplType);
-	for (int i = 0; i < 64; i++)
-		file->writeLE<Sint8>(pPlayer->_pSplLvl[i]);
+	for (int8_t spellLevel : pPlayer->_pSplLvl)
+		file->writeLE<Sint8>(spellLevel);
 	file->skip(7); // Alignment
 	file->writeLE<Uint64>(pPlayer->_pMemSpells);
 	file->writeLE<Uint64>(pPlayer->_pAblSpells);
 	file->writeLE<Uint64>(pPlayer->_pScrlSpells);
 	file->writeLE<Uint8>(pPlayer->_pSpellFlags);
 	file->skip(3); // Alignment
-	for (int i = 0; i < 4; i++)
-		file->writeLE<Sint32>(pPlayer->_pSplHotKey[i]);
-	for (int i = 0; i < 4; i++)
-		file->writeLE<Sint8>(pPlayer->_pSplTHotKey[i]);
+	for (auto &spellId : pPlayer->_pSplHotKey)
+		file->writeLE<Sint32>(spellId);
+	for (auto &spellType : pPlayer->_pSplTHotKey)
+		file->writeLE<Sint8>(spellType);
 
 	file->writeLE<Sint32>(pPlayer->_pwtype);
 	file->writeLE<Uint8>(pPlayer->_pBlockFlag);
@@ -1444,8 +1441,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	SaveItems(file, pPlayer->InvBody, NUM_INVLOC);
 	SaveItems(file, pPlayer->InvList, NUM_INV_GRID_ELEM);
 	file->writeLE<Sint32>(pPlayer->_pNumInv);
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
-		file->writeLE<Sint8>(pPlayer->InvGrid[i]);
+	for (int8_t cell : pPlayer->InvGrid)
+		file->writeLE<int8_t>(cell);
 	SaveItems(file, pPlayer->SpdList, MAXBELTITEMS);
 	SaveItem(file, &pPlayer->HoldItem);
 
@@ -1686,7 +1683,7 @@ static void SaveObject(SaveHelper *file, int i)
 
 static void SavePremium(SaveHelper *file, int i)
 {
-	SaveItem(file, &premiumitem[i]);
+	SaveItem(file, &premiumitems[i]);
 }
 
 static void SaveQuest(SaveHelper *file, int i)
@@ -1819,31 +1816,31 @@ void SaveGameData()
 		SaveQuest(&file, i);
 	for (int i = 0; i < MAXPORTAL; i++)
 		SavePortal(&file, i);
-	for (int i = 0; i < MAXMONSTERS; i++)
-		file.writeBE<Sint32>(monstkills[i]);
+	for (int monstkill : monstkills)
+		file.writeBE<Sint32>(monstkill);
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < MAXMONSTERS; i++)
-			file.writeBE<Sint32>(monstactive[i]);
+		for (int monsterId : monstactive)
+			file.writeBE<Sint32>(monsterId);
 		for (int i = 0; i < nummonsters; i++)
 			SaveMonster(&file, monstactive[i]);
-		for (int i = 0; i < MAXMISSILES; i++)
-			file.writeLE<Sint8>(missileactive[i]);
-		for (int i = 0; i < MAXMISSILES; i++)
-			file.writeLE<Sint8>(missileavail[i]);
+		for (int missileId : missileactive)
+			file.writeLE<Sint8>(missileId);
+		for (int missileId : missileavail)
+			file.writeLE<Sint8>(missileId);
 		for (int i = 0; i < nummissiles; i++)
 			SaveMissile(&file, missileactive[i]);
-		for (int i = 0; i < MAXOBJECTS; i++)
-			file.writeLE<Sint8>(objectactive[i]);
-		for (int i = 0; i < MAXOBJECTS; i++)
-			file.writeLE<Sint8>(objectavail[i]);
+		for (int objectId : objectactive)
+			file.writeLE<Sint8>(objectId);
+		for (int objectId : objectavail)
+			file.writeLE<Sint8>(objectId);
 		for (int i = 0; i < nobjects; i++)
 			SaveObject(&file, objectactive[i]);
 
 		file.writeBE<Sint32>(numlights);
 
-		for (int i = 0; i < MAXLIGHTS; i++)
-			file.writeLE<Uint8>(lightactive[i]);
+		for (uint8_t lightId : lightactive)
+			file.writeLE<uint8_t>(lightId);
 		for (int i = 0; i < numlights; i++)
 			SaveLighting(&file, &LightList[lightactive[i]]);
 
@@ -1854,14 +1851,14 @@ void SaveGameData()
 			SaveLighting(&file, &VisionList[i]);
 	}
 
-	for (int i = 0; i < MAXITEMS; i++)
-		file.writeLE<Sint8>(itemactive[i]);
-	for (int i = 0; i < MAXITEMS; i++)
-		file.writeLE<Sint8>(itemavail[i]);
+	for (int itemId : itemactive)
+		file.writeLE<Sint8>(itemId);
+	for (int itemId : itemavail)
+		file.writeLE<Sint8>(itemId);
 	for (int i = 0; i < numitems; i++)
 		SaveItem(&file, &items[itemactive[i]]);
-	for (int i = 0; i < 128; i++)
-		file.writeLE<Sint8>(UniqueItemFlag[i]);
+	for (bool UniqueItemFlag : UniqueItemFlags)
+		file.writeLE<Sint8>(UniqueItemFlag);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
@@ -1952,22 +1949,22 @@ void SaveLevel()
 	file.writeBE<Sint32>(nobjects);
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < MAXMONSTERS; i++)
-			file.writeBE<Sint32>(monstactive[i]);
+		for (int monsterId : monstactive)
+			file.writeBE<Sint32>(monsterId);
 		for (int i = 0; i < nummonsters; i++)
 			SaveMonster(&file, monstactive[i]);
-		for (int i = 0; i < MAXOBJECTS; i++)
-			file.writeLE<Sint8>(objectactive[i]);
-		for (int i = 0; i < MAXOBJECTS; i++)
-			file.writeLE<Sint8>(objectavail[i]);
+		for (int objectId : objectactive)
+			file.writeLE<Sint8>(objectId);
+		for (int objectId : objectavail)
+			file.writeLE<Sint8>(objectId);
 		for (int i = 0; i < nobjects; i++)
 			SaveObject(&file, objectactive[i]);
 	}
 
-	for (int i = 0; i < MAXITEMS; i++)
-		file.writeLE<Sint8>(itemactive[i]);
-	for (int i = 0; i < MAXITEMS; i++)
-		file.writeLE<Sint8>(itemavail[i]);
+	for (int itemId : itemactive)
+		file.writeLE<Sint8>(itemId);
+	for (int itemId : itemavail)
+		file.writeLE<Sint8>(itemId);
 
 	for (int i = 0; i < numitems; i++)
 		SaveItem(&file, &items[itemactive[i]]);
@@ -2035,14 +2032,14 @@ void LoadLevel()
 	nobjects = file.nextBE<Sint32>();
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < MAXMONSTERS; i++)
-			monstactive[i] = file.nextBE<Sint32>();
+		for (int &monsterId : monstactive)
+			monsterId = file.nextBE<Sint32>();
 		for (int i = 0; i < nummonsters; i++)
 			LoadMonster(&file, monstactive[i]);
-		for (int i = 0; i < MAXOBJECTS; i++)
-			objectactive[i] = file.nextLE<Sint8>();
-		for (int i = 0; i < MAXOBJECTS; i++)
-			objectavail[i] = file.nextLE<Sint8>();
+		for (int &objectId : objectactive)
+			objectId = file.nextLE<Sint8>();
+		for (int &objectId : objectavail)
+			objectId = file.nextLE<Sint8>();
 		for (int i = 0; i < nobjects; i++)
 			LoadObject(&file, objectactive[i]);
 		if (!gbSkipSync) {
@@ -2051,10 +2048,10 @@ void LoadLevel()
 		}
 	}
 
-	for (int i = 0; i < MAXITEMS; i++)
-		itemactive[i] = file.nextLE<Sint8>();
-	for (int i = 0; i < MAXITEMS; i++)
-		itemavail[i] = file.nextLE<Sint8>();
+	for (int &itemId : itemactive)
+		itemId = file.nextLE<Sint8>();
+	for (int &itemId : itemavail)
+		itemId = file.nextLE<Sint8>();
 	for (int i = 0; i < numitems; i++)
 		LoadItem(&file, itemactive[i]);
 
@@ -2105,9 +2102,9 @@ void LoadLevel()
 		dolighting = true;
 	}
 
-	for (int i = 0; i < MAX_PLRS; i++) {
-		if (plr[i].plractive && currlevel == plr[i].plrlevel)
-			LightList[plr[i]._plid]._lunflag = true;
+	for (auto &player : plr) {
+		if (player.plractive && currlevel == player.plrlevel)
+			LightList[player._plid]._lunflag = true;
 	}
 }
 

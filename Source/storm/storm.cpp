@@ -5,7 +5,6 @@
 #include <SDL_mixer.h>
 #include <cstddef>
 #include <cstdint>
-#include <stdint.h>
 #include <string>
 
 #include "Radon.hpp"
@@ -78,7 +77,7 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 		std::string path = *SBasePath + filename;
 		for (std::size_t i = SBasePath->size(); i < path.size(); ++i)
 			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
-		result = SFileOpenFileEx((HANDLE)nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
+		result = SFileOpenFileEx((HANDLE) nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
 
 	if (!result && devilutionx_mpq != nullptr) {

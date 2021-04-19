@@ -368,7 +368,7 @@ extern bool uitemflag;
 extern int itemavail[MAXITEMS];
 extern ItemStruct items[MAXITEMS + 1];
 extern CornerStoneStruct CornerStone;
-extern bool UniqueItemFlag[128];
+extern bool UniqueItemFlags[128];
 extern int numitems;
 
 BYTE GetOutlineColor(ItemStruct &item, bool checkReq);

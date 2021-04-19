@@ -15,7 +15,6 @@ namespace devilution {
 
 int numthemes;
 bool armorFlag;
-bool ThemeGoodIn[4];
 bool weaponFlag;
 bool treasureFlag;
 bool mFountainFlag;
@@ -423,9 +422,6 @@ void InitThemes()
 		return;
 
 	if (leveltype == DTYPE_CATHEDRAL) {
-		for (size_t i = 0; i < sizeof(ThemeGoodIn) / sizeof(ThemeGoodIn[0]); i++)
-			ThemeGoodIn[i] = false;
-
 		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes].ttval = i;

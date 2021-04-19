@@ -210,7 +210,7 @@ void SVidRestartMixer()
 
 unsigned char *SVidApplyVolume(const unsigned char *raw, unsigned long rawLen)
 {
-	unsigned char *scaled = (unsigned char *)malloc(rawLen);
+	auto *scaled = (unsigned char *)malloc(rawLen);
 
 	if (SVidAudioDepth == 16) {
 		for (unsigned long i = 0; i < rawLen / 2; i++)
@@ -259,18 +259,18 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 
 	SFileOpenFile(filename, video);
 
-	int bytestoread = SFileGetFileSize(*video, 0);
+	int bytestoread = SFileGetFileSize(*video, nullptr);
 	SVidBuffer = DiabloAllocPtr(bytestoread);
-	SFileReadFile(*video, SVidBuffer, bytestoread, NULL, 0);
+	SFileReadFile(*video, SVidBuffer, bytestoread, nullptr, nullptr);
 
 	SVidSMK = smk_open_memory(SVidBuffer, bytestoread);
-	if (SVidSMK == NULL) {
+	if (SVidSMK == nullptr) {
 		return;
 	}
 
 	unsigned char channels[7], depth[7];
 	unsigned long rate[7];
-	smk_info_audio(SVidSMK, NULL, channels, depth, rate);
+	smk_info_audio(SVidSMK, nullptr, channels, depth, rate);
 	if (enableAudio && depth[0] != 0) {
 		smk_enable_audio(SVidSMK, 0, enableAudio);
 		SDL_AudioSpec audioFormat;
@@ -286,7 +286,7 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 		Mix_CloseAudio();
 
 #if SDL_VERSION_ATLEAST(2, 0, 4)
-		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
+		deviceId = SDL_OpenAudioDevice(nullptr, 0, &audioFormat, nullptr, 0);
 		if (deviceId == 0) {
 			ErrSdl();
 		}
@@ -302,18 +302,18 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	}
 
 	unsigned long nFrames;
-	smk_info_all(SVidSMK, NULL, &nFrames, &SVidFrameLength);
-	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
+	smk_info_all(SVidSMK, nullptr, &nFrames, &SVidFrameLength);
+	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
 
 	smk_enable_video(SVidSMK, enableVideo);
 	smk_first(SVidSMK); // Decode first frame
 
-	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
+	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
-		if (texture == NULL) {
+		if (texture == nullptr) {
 			ErrSdl();
 		}
 		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
@@ -333,12 +333,12 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	    8,
 	    SVidWidth,
 	    SDL_PIXELFORMAT_INDEX8);
-	if (SVidSurface == NULL) {
+	if (SVidSurface == nullptr) {
 		ErrSdl();
 	}
 
 	SVidPalette = SDL_AllocPalette(256);
-	if (SVidPalette == NULL) {
+	if (SVidPalette == nullptr) {
 		ErrSdl();
 	}
 	if (SDLC_SetSurfaceColors(SVidSurface, SVidPalette) <= -1) {
@@ -346,7 +346,7 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	}
 
 	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
-	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	SDL_FillRect(GetOutputSurface(), nullptr, 0x000000);
 }
 
 bool SVidPlayContinue()
@@ -399,7 +399,7 @@ bool SVidPlayContinue()
 
 #ifndef USE_SDL1
 	if (renderer) {
-		if (SDL_BlitSurface(SVidSurface, NULL, GetOutputSurface(), NULL) <= -1) {
+		if (SDL_BlitSurface(SVidSurface, nullptr, GetOutputSurface(), nullptr) <= -1) {
 			SDL_Log("%s", SDL_GetError());
 			return false;
 		}
@@ -431,7 +431,7 @@ bool SVidPlayContinue()
 		if (is_indexed_output_format
 		    || output_surface->w == static_cast<int>(SVidWidth)
 		    || output_surface->h == static_cast<int>(SVidHeight)) {
-			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &output_rect) <= -1) {
+			if (SDL_BlitSurface(SVidSurface, nullptr, output_surface, &output_rect) <= -1) {
 				ErrSdl();
 			}
 		} else {
@@ -442,7 +442,7 @@ bool SVidPlayContinue()
 #else
 			SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(SVidSurface, wnd_format, 0) };
 #endif
-			if (SDL_BlitScaled(converted.get(), NULL, output_surface, &output_rect) <= -1) {
+			if (SDL_BlitScaled(converted.get(), nullptr, output_surface, &output_rect) <= -1) {
 				SDL_Log("%s", SDL_GetError());
 				return false;
 			}
@@ -478,24 +478,24 @@ void SVidPlayEnd(HANDLE video)
 
 	if (SVidBuffer) {
 		mem_free_dbg(SVidBuffer);
-		SVidBuffer = NULL;
+		SVidBuffer = nullptr;
 	}
 
 	SDL_FreePalette(SVidPalette);
-	SVidPalette = NULL;
+	SVidPalette = nullptr;
 
 	SDL_FreeSurface(SVidSurface);
-	SVidSurface = NULL;
+	SVidSurface = nullptr;
 
 	SFileCloseFile(video);
-	video = NULL;
+	video = nullptr;
 
 	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
-		if (texture == NULL) {
+		if (texture == nullptr) {
 			ErrSdl();
 		}
 		if (renderer && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {

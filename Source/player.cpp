@@ -538,7 +538,7 @@ void SetPlrAnims(int pnum)
 	}
 	plr[pnum]._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
 
-	anim_weapon_id gn = static_cast<anim_weapon_id>(plr[pnum]._pgfxnum & 0xF);
+	auto gn = static_cast<anim_weapon_id>(plr[pnum]._pgfxnum & 0xF);
 	if (pc == HeroClass::Warrior) {
 		if (gn == ANIM_ID_BOW) {
 			if (leveltype != DTYPE_TOWN) {
@@ -760,8 +760,8 @@ void CreatePlayer(int pnum, HeroClass c)
 		plr[pnum]._pMemSpells = 0;
 	}
 
-	for (size_t i = 0; i < sizeof(plr[pnum]._pSplLvl) / sizeof(plr[pnum]._pSplLvl[0]); i++) {
-		plr[pnum]._pSplLvl[i] = 0;
+	for (int8_t &spellLevel : plr[pnum]._pSplLvl) {
+		spellLevel = 0;
 	}
 
 	plr[pnum]._pSpellFlags = 0;
@@ -790,8 +790,8 @@ void CreatePlayer(int pnum, HeroClass c)
 		plr[pnum]._pgfxnum = ANIM_ID_SWORD_SHIELD;
 	}
 
-	for (int i = 0; i < NUMLEVELS; i++) {
-		plr[pnum]._pLvlVisited[i] = false;
+	for (bool &levelVisited : plr[pnum]._pLvlVisited) {
+		levelVisited = false;
 	}
 
 	for (int i = 0; i < 10; i++) {
@@ -4093,9 +4093,9 @@ void CheckStats(int p)
 		app_fatal("CheckStats: illegal player %d", p);
 	}
 
-	for (auto i : enum_values<CharacterAttribute>()) {
-		int maxStatPoint = plr[p].GetMaximumAttributeValue(i);
-		switch (i) {
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		int maxStatPoint = plr[p].GetMaximumAttributeValue(attribute);
+		switch (attribute) {
 		case CharacterAttribute::Strength:
 			if (plr[p]._pBaseStr > maxStatPoint) {
 				plr[p]._pBaseStr = maxStatPoint;
@@ -4445,7 +4445,7 @@ void PlayDungMsgs()
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER1;
 		quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
-		quests[Q_DEFILER]._qlog = 1;
+		quests[Q_DEFILER]._qlog = true;
 		quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
 		plr[myplr].pDungMsgs2 |= 1;
 	} else if (currlevel == 19 && !plr[myplr]._pLvlVisited[19] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs2 & 4)) {

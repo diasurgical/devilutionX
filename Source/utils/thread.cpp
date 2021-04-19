@@ -10,7 +10,7 @@ namespace devilution {
 
 static int SDLCALL thread_translate(void *ptr)
 {
-	unsigned int (*handler)(void *) = (unsigned int (*)(void *))ptr;
+	auto handler = (unsigned int (*)(void *))ptr;
 
 	return handler(nullptr);
 }
