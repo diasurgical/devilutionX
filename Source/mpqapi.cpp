@@ -446,7 +446,7 @@ int mpqapi_find_free_block(uint32_t size, uint32_t *block_size)
 	return result;
 }
 
-static int mpqapi_get_hash_index(int index, int hash_a, int hash_b, int locale)
+static int mpqapi_get_hash_index(int index, uint32_t hash_a, uint32_t hash_b)
 {
 	DWORD idx, i;
 
@@ -457,8 +457,6 @@ static int mpqapi_get_hash_index(int index, int hash_a, int hash_b, int locale)
 		if (cur_archive.sgpHashTbl[idx].hashcheck[0] != hash_a)
 			continue;
 		if (cur_archive.sgpHashTbl[idx].hashcheck[1] != hash_b)
-			continue;
-		if (cur_archive.sgpHashTbl[idx].lcid != locale)
 			continue;
 		if (cur_archive.sgpHashTbl[idx].block == -2)
 			continue;
@@ -471,7 +469,7 @@ static int mpqapi_get_hash_index(int index, int hash_a, int hash_b, int locale)
 
 static int FetchHandle(const char *pszName)
 {
-	return mpqapi_get_hash_index(Hash(pszName, 0), Hash(pszName, 1), Hash(pszName, 2), 0);
+	return mpqapi_get_hash_index(Hash(pszName, 0), Hash(pszName, 1), Hash(pszName, 2));
 }
 
 void mpqapi_remove_hash_entry(const char *pszName)
@@ -493,7 +491,7 @@ void mpqapi_remove_hash_entry(const char *pszName)
 	}
 }
 
-void mpqapi_remove_hash_entries(bool (*fnGetName)(DWORD, char *))
+void mpqapi_remove_hash_entries(bool (*fnGetName)(uint8_t, char *))
 {
 	DWORD dwIndex, i;
 	char pszFileName[MAX_PATH];
@@ -512,7 +510,7 @@ static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int 
 	h1 = Hash(pszName, 0);
 	h2 = Hash(pszName, 1);
 	h3 = Hash(pszName, 2);
-	if (mpqapi_get_hash_index(h1, h2, h3, 0) != -1)
+	if (mpqapi_get_hash_index(h1, h2, h3) != -1)
 		app_fatal("Hash collision between \"%s\" and existing file\n", pszName);
 	hIdx = h1 & 0x7FF;
 	i = INDEX_ENTRIES;

@@ -34,7 +34,7 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *));
 bool pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num);
 void pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats);
 bool pfile_ui_save_create(_uiheroinfo *heroinfo);
-bool pfile_get_file_name(DWORD lvl, char *dst);
+bool pfile_get_file_name(uint8_t lvl, char *dst);
 bool pfile_delete_save(_uiheroinfo *hero_info);
 void pfile_read_player_from_save();
 bool LevelFileExists();

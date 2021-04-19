@@ -57,7 +57,7 @@ static unsigned int dthread_handler(void *data)
 	return 0;
 }
 
-void dthread_remove_player(int pnum)
+void dthread_remove_player(uint8_t pnum)
 {
 	TMegaPkt *pkt;
 

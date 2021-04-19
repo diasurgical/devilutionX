@@ -40,7 +40,7 @@ int sgdwCursY;
 /**
  * Lower bound of back buffer.
  */
-DWORD sgdwCursHgt;
+uint32_t sgdwCursHgt;
 
 /**
  * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
@@ -68,10 +68,10 @@ int cel_foliage_active = false;
  * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
  */
 int level_piece_id;
-DWORD sgdwCursWdt;
+uint32_t sgdwCursWdt;
 void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
-DWORD sgdwCursHgtOld;
+uint32_t sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
 
@@ -130,7 +130,7 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 
 static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
 {
-	for (int i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
+	for (uint32_t i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 }
@@ -185,20 +185,14 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	}
 
 	sgdwCursX = mx;
-	sgdwCursWdt = sgdwCursX + cursW + 1;
-	if (sgdwCursWdt > gnScreenWidth - 1) {
-		sgdwCursWdt = gnScreenWidth - 1;
-	}
+	sgdwCursWdt = std::min(sgdwCursX + cursW + 1, gnScreenWidth - 1);
 	sgdwCursX &= ~3;
 	sgdwCursWdt |= 3;
 	sgdwCursWdt -= sgdwCursX;
 	sgdwCursWdt++;
 
 	sgdwCursY = my;
-	sgdwCursHgt = sgdwCursY + cursH + 1;
-	if (sgdwCursHgt > gnScreenHeight - 1) {
-		sgdwCursHgt = gnScreenHeight - 1;
-	}
+	sgdwCursHgt = std::min(sgdwCursY + cursH + 1, gnScreenHeight - 1);
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
 
@@ -511,7 +505,7 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool p
 		return;
 
 	int sx, sy;
-	char bv;
+	int8_t bv;
 	if (dObject[x][y] > 0) {
 		bv = dObject[x][y] - 1;
 		if (object[bv]._oPreFlag != pre)
@@ -620,11 +614,9 @@ static void drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy)
  */
 static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
 {
-	char bItem = dItem[x][y];
+	int8_t bItem = dItem[x][y];
 
-	assert((unsigned char)bItem <= MAXITEMS);
-
-	if (bItem > MAXITEMS || bItem <= 0)
+	if (bItem <= 0)
 		return;
 
 	ItemStruct *pItem = &items[bItem - 1];
@@ -750,9 +742,9 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 
 	drawCell(out, sx, sy, dx, dy);
 
-	char bFlag = dFlags[sx][sy];
-	char bDead = dDead[sx][sy];
-	char bMap = dTransVal[sx][sy];
+	int8_t bFlag = dFlags[sx][sy];
+	int8_t bDead = dDead[sx][sy];
+	int8_t bMap = dTransVal[sx][sy];
 
 	int negMon = 0;
 	if (sy > 0) // check for OOB

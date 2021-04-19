@@ -24,9 +24,9 @@
 namespace devilution {
 
 bool gbIsHellfireSaveGame;
-int giNumberOfLevels;
-int giNumberQuests;
-int giNumberOfSmithPremiumItems;
+uint8_t giNumberOfLevels;
+uint8_t giNumberQuests;
+uint8_t giNumberOfSmithPremiumItems;
 
 namespace {
 
@@ -429,9 +429,9 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pVar6 = file->nextLE<Sint32>();
 	pPlayer->_pVar7 = file->nextLE<Sint32>();
 	pPlayer->_pVar8 = file->nextLE<Sint32>();
-	for (int i = 0; i < giNumberOfLevels; i++)
+	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		pPlayer->_pLvlVisited[i] = file->nextBool8();
-	for (int i = 0; i < giNumberOfLevels; i++)
+	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		pPlayer->_pSLvlVisited[i] = file->nextBool8();
 
 	file->skip(2); // Alignment
@@ -752,9 +752,9 @@ static void LoadQuest(LoadHelper *file, int i)
 	pQuest->_qidx = file->nextLE<Uint8>();
 	if (gbIsHellfireSaveGame) {
 		file->skip(2); // Alignment
-		pQuest->_qmsg = file->nextLE<Sint32>();
+		pQuest->_qmsg = static_cast<_speech_id>(file->nextLE<Sint32>());
 	} else {
-		pQuest->_qmsg = file->nextLE<Uint8>();
+		pQuest->_qmsg = static_cast<_speech_id>(file->nextLE<Uint8>());
 	}
 	pQuest->_qvar1 = file->nextLE<Uint8>();
 	pQuest->_qvar2 = file->nextLE<Uint8>();
@@ -1034,7 +1034,7 @@ void LoadGame(bool firstflag)
 	if (!gbIsHellfire && currlevel > 17)
 		app_fatal("Player is on a Hellfire only level");
 
-	for (int i = 0; i < giNumberOfLevels; i++) {
+	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = file.nextBE<Uint32>();
 		file.skip(4); // Skip loading gnLevelTypeTbl
 	}
@@ -1407,9 +1407,9 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Sint32>(pPlayer->_pVar6);
 	file->writeLE<Sint32>(pPlayer->_pVar7);
 	file->writeLE<Sint32>(pPlayer->_pVar8);
-	for (int i = 0; i < giNumberOfLevels; i++)
+	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		file->writeLE<Uint8>(pPlayer->_pLvlVisited[i]);
-	for (int i = 0; i < giNumberOfLevels; i++)
+	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		file->writeLE<Uint8>(pPlayer->_pSLvlVisited[i]); // only 10 used
 
 	file->skip(2); // Alignment
@@ -1807,7 +1807,7 @@ void SaveGameData()
 	file.writeBE<Sint32>(nummissiles);
 	file.writeBE<Sint32>(nobjects);
 
-	for (int i = 0; i < giNumberOfLevels; i++) {
+	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		file.writeBE<Uint32>(glSeedTbl[i]);
 		file.writeBE<Sint32>(gnLevelTypeTbl[i]);
 	}

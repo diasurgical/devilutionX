@@ -407,8 +407,6 @@ bool CheckThemeRoom(int tv)
 
 void InitThemes()
 {
-	int i;
-
 	zharlib = -1;
 	numthemes = 0;
 	armorFlag = true;
@@ -425,10 +423,10 @@ void InitThemes()
 		return;
 
 	if (leveltype == DTYPE_CATHEDRAL) {
-		for (i = 0; i < sizeof(ThemeGoodIn) / sizeof(ThemeGoodIn[0]); i++)
+		for (size_t i = 0; i < sizeof(ThemeGoodIn) / sizeof(ThemeGoodIn[0]); i++)
 			ThemeGoodIn[i] = false;
 
-		for (i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
+		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes].ttval = i;
 				theme_id j = ThemeGood[random_(0, 4)];
@@ -441,7 +439,7 @@ void InitThemes()
 		}
 	}
 	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
-		for (i = 0; i < themeCount; i++)
+		for (int i = 0; i < themeCount; i++)
 			themes[i].ttype = THEME_NONE;
 		if (QuestStatus(Q_ZHAR)) {
 			for (int j = 0; j < themeCount; j++) {
@@ -453,7 +451,7 @@ void InitThemes()
 				}
 			}
 		}
-		for (i = 0; i < themeCount; i++) {
+		for (int i = 0; i < themeCount; i++) {
 			if (themes[i].ttype == THEME_NONE) {
 				themes[i].ttval = themeLoc[i].ttval;
 				theme_id j = ThemeGood[random_(0, 4)];

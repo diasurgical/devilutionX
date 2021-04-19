@@ -9,6 +9,7 @@
 
 #include "engine.h"
 #include "gendung.h"
+#include "textdat.h"
 
 namespace devilution {
 
@@ -47,7 +48,7 @@ struct QuestStruct {
 	Sint32 _qty;
 	_setlevels _qslvl;
 	Uint8 _qidx;
-	Sint32 _qmsg;
+	_speech_id _qmsg;
 	Uint8 _qvar1;
 	Uint8 _qvar2;
 	bool _qlog;
@@ -61,7 +62,7 @@ struct QuestData {
 	Uint8 _qdrnd;
 	_setlevels _qslvl;
 	bool isSinglePlayerOnly;
-	Sint32 _qdmsg;
+	_speech_id _qdmsg;
 	const char *_qlstr;
 };
 

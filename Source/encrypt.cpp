@@ -30,29 +30,25 @@ void Decrypt(DWORD *castBlock, DWORD size, DWORD key)
 
 void Encrypt(DWORD *castBlock, DWORD size, DWORD key)
 {
-	DWORD seed, i, ch;
-
-	seed = 0xEEEEEEEE;
-	for (i = 0; i < (size >> 2); i++) {
-		DWORD t = ch = *castBlock;
+	uint32_t seed = 0xEEEEEEEE;
+	for (unsigned i = 0; i < (size >> 2); i++) {
+		uint32_t ch = *castBlock;
+		uint32_t t = ch;
 		seed += hashtable[4][(key & 0xFF)];
 		t ^= seed + key;
 		*castBlock = SDL_SwapLE32(t);
 		castBlock++;
 		seed += ch + (seed << 5) + 3;
-		key = ((key << 0x15) ^ 0xFFE00000) + 0x11111111 | (key >> 0x0B);
+		key = (((key << 0x15) ^ 0xFFE00000) + 0x11111111) | (key >> 0x0B);
 	}
 }
 
-DWORD Hash(const char *s, int type)
+uint32_t Hash(const char *s, int type)
 {
-	char ch;
-	DWORD seed1, seed2;
-
-	seed1 = 0x7FED7FED;
-	seed2 = 0xEEEEEEEE;
+	uint32_t seed1 = 0x7FED7FED;
+	uint32_t seed2 = 0xEEEEEEEE;
 	while (s != NULL && *s) {
-		ch = *s++;
+		int8_t ch = *s++;
 		ch = toupper(ch);
 		seed1 = hashtable[type][ch] ^ (seed1 + seed2);
 		seed2 += ch + seed1 + (seed2 << 5) + 3;

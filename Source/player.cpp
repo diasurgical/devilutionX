@@ -645,7 +645,6 @@ void SetPlrAnims(int pnum)
 void CreatePlayer(int pnum, HeroClass c)
 {
 	char val;
-	int i;
 
 	memset(&plr[pnum], 0, sizeof(PlayerStruct));
 	SetRndSeed(SDL_GetTicks());
@@ -761,7 +760,7 @@ void CreatePlayer(int pnum, HeroClass c)
 		plr[pnum]._pMemSpells = 0;
 	}
 
-	for (i = 0; i < sizeof(plr[pnum]._pSplLvl) / sizeof(plr[pnum]._pSplLvl[0]); i++) {
+	for (size_t i = 0; i < sizeof(plr[pnum]._pSplLvl) / sizeof(plr[pnum]._pSplLvl[0]); i++) {
 		plr[pnum]._pSplLvl[i] = 0;
 	}
 
@@ -773,7 +772,7 @@ void CreatePlayer(int pnum, HeroClass c)
 
 	// interestingly, only the first three hotkeys are reset
 	// TODO: BUGFIX: clear all 4 hotkeys instead of 3 (demo leftover)
-	for (i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; i++) {
 		plr[pnum]._pSplHotKey[i] = SPL_INVALID;
 	}
 
@@ -791,11 +790,11 @@ void CreatePlayer(int pnum, HeroClass c)
 		plr[pnum]._pgfxnum = ANIM_ID_SWORD_SHIELD;
 	}
 
-	for (i = 0; i < NUMLEVELS; i++) {
+	for (int i = 0; i < NUMLEVELS; i++) {
 		plr[pnum]._pLvlVisited[i] = false;
 	}
 
-	for (i = 0; i < 10; i++) {
+	for (int i = 0; i < 10; i++) {
 		plr[pnum]._pSLvlVisited[i] = false;
 	}
 
@@ -2639,7 +2638,7 @@ bool PlrHitMonst(int pnum, int m)
 	return rv;
 }
 
-bool PlrHitPlr(int pnum, char p)
+bool PlrHitPlr(int pnum, int8_t p)
 {
 	bool rv;
 	int hit, hper, blk, blkper, mind, maxd, dam, lvl, skdam, tac;
@@ -3750,8 +3749,7 @@ void ClrPlrPath(int pnum)
 
 bool PosOkPlayer(int pnum, int x, int y)
 {
-	DWORD p;
-	char bv;
+	int8_t p, bv;
 
 	if (x < 0 || x >= MAXDUNX || y < 0 || y >= MAXDUNY)
 		return false;
@@ -3766,6 +3764,7 @@ bool PosOkPlayer(int pnum, int x, int y)
 			p = -(dPlayer[x][y] + 1);
 		}
 		if (p != pnum
+		    && p >= 0
 		    && p < MAX_PLRS
 		    && plr[p]._pHitPoints != 0) {
 			return false;

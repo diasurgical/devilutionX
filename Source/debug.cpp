@@ -96,7 +96,7 @@ void MaxSpellsCheat()
 	}
 }
 
-void SetSpellLevelCheat(char spl, int spllvl)
+void SetSpellLevelCheat(spell_id spl, int spllvl)
 {
 	plr[myplr]._pMemSpells |= GetSpellBitmask(spl);
 	plr[myplr]._pSplLvl[spl] = spllvl;

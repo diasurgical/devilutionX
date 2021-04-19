@@ -63,8 +63,6 @@ void InitNoTriggers()
 
 void InitTownTriggers()
 {
-	int i;
-
 	numtrigs = 0;
 
 	trigs[numtrigs]._tx = 25;
@@ -72,7 +70,7 @@ void InitTownTriggers()
 	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 	numtrigs++;
 
-	for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
+	for (size_t i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
 		townwarps[i] = gbIsMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {

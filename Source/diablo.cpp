@@ -506,7 +506,7 @@ static void SaveOptions()
 	setIniInt("Network", "Port", sgOptions.Network.nPort);
 	setIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
 
-	for (int i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
+	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
 		setIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i]);
 
 	setIniValue("Controller", "Mapping", sgOptions.Controller.szMapping);
@@ -580,7 +580,7 @@ static void LoadOptions()
 	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
 	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
-	for (int i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
+	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
 		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, spszMsgTbl[i]);
 
 	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");

@@ -31,17 +31,17 @@ BYTE *pCursCels;
 BYTE *pCursCels2;
 
 /** inv_item value */
-char pcursinvitem;
+int8_t pcursinvitem;
 /** Pixel width of the current cursor image */
 int icursW;
 /** Pixel height of the current cursor image */
 int icursH;
 /** Current highlighted item */
-char pcursitem;
+int8_t pcursitem;
 /** Current highlighted object */
-char pcursobj;
+int8_t pcursobj;
 /** Current highlighted player */
-char pcursplr;
+int8_t pcursplr;
 /** Current highlighted tile row */
 int cursmx;
 /** Current highlighted tile column */
@@ -219,7 +219,7 @@ void CheckRportal()
 void CheckCursMove()
 {
 	int i, sx, sy, fx, fy, mx, my, tx, ty, px, py, xx, yy, mi, columns, rows, xo, yo;
-	char bv;
+	int8_t bv;
 	bool flipflag, flipx, flipy;
 
 	sx = MouseX;
