@@ -57,7 +57,10 @@ int GetManaAmount(int id, spell_id sn)
 	if (spelldata[sn].sMinMana > ma >> 6) {
 		ma = spelldata[sn].sMinMana << 6;
 	}
-
+	if (sn == SPL_GOLEM) { // make unsummoning golem cost 0 mana
+		if ((monster[myplr]._mx != 1 || monster[myplr]._my != 0))
+			ma = 0;
+	}
 	return ma;
 }
 
