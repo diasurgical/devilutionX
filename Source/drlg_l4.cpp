@@ -1004,7 +1004,7 @@ void UShape()
 			}
 			if (dung[i][j] == 1) {
 				// BUGFIX: check that i + 1 < 20 and j + 1 < 20 (fixed)
-				hallok[j] = i == 19 || j == 19 || (dung[i][j + 1] == 1 && dung[i + 1][j + 1] == 0);
+				hallok[j] = j == 19 || (dung[i][j + 1] == 1 && i < 19 && dung[i + 1][j + 1] == 0);
 				i = 0;
 			}
 		}
@@ -1038,7 +1038,7 @@ void UShape()
 			}
 			if (dung[i][j] == 1) {
 				// BUGFIX: check that i + 1 < 20 and j + 1 < 20 (fixed)
-				hallok[i] = i == 19 || j == 19 || (dung[i + 1][j] == 1 && dung[i + 1][j + 1] == 0);
+				hallok[i] = i == 19 || (dung[i + 1][j] == 1 && j < 19 && dung[i + 1][j + 1] == 0);
 				j = 0;
 			}
 		}
