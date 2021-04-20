@@ -522,8 +522,8 @@ void InitAutomap()
 	mem_free_dbg(pAFile);
 	memset(automapview, 0, sizeof(automapview));
 
-	for (auto &row : dFlags)
-		for (auto &dFlag : row)
+	for (auto &column : dFlags)
+		for (auto &dFlag : column)
 			dFlag &= ~BFLAG_EXPLORED;
 }
 
