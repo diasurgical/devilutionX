@@ -2673,11 +2673,7 @@ void PrepDoEnding()
 	deathflag = false;
 	cineflag = true;
 
-	uint32_t *killLevel = &plr[myplr].pDiabloKillLevel;
-	uint32_t newKillLevel = sgGameInitInfo.nDifficulty + 1;
-	if (*killLevel > newKillLevel)
-		newKillLevel = *killLevel;
-	plr[myplr].pDiabloKillLevel = newKillLevel;
+	plr[myplr].pDiabloKillLevel = std::max(plr[myplr].pDiabloKillLevel, static_cast<uint8_t>(sgGameInitInfo.nDifficulty + 1));
 
 	for (auto &player : plr) {
 		player._pmode = PM_QUIT;
