@@ -16,7 +16,6 @@ namespace devilution {
 namespace {
 
 constexpr int BAR_WIDTH = 307;
-constexpr int BAR_HEIGHT = 5;
 
 using ColorGradient = std::array<Uint8, 12>;
 constexpr ColorGradient GOLD_GRADIENT = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4 };
