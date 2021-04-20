@@ -95,7 +95,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	textInputActive = false;
 	for (auto &item : items) {
 		if (item->m_type == UI_EDIT) {
-			auto *pItemUIEdit = dynamic_cast<UiEdit *>(item);
+			auto *pItemUIEdit = static_cast<UiEdit *>(item);
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
 #ifdef __SWITCH__
@@ -895,13 +895,13 @@ bool HandleMouseEvent(const SDL_Event &event, UiItemBase *item)
 		return false;
 	switch (item->m_type) {
 	case UI_ART_TEXT_BUTTON:
-		return HandleMouseEventArtTextButton(event, dynamic_cast<UiArtTextButton *>(item));
+		return HandleMouseEventArtTextButton(event, static_cast<UiArtTextButton *>(item));
 	case UI_BUTTON:
-		return HandleMouseEventButton(event, dynamic_cast<UiButton *>(item));
+		return HandleMouseEventButton(event, static_cast<UiButton *>(item));
 	case UI_LIST:
-		return HandleMouseEventList(event, dynamic_cast<UiList *>(item));
+		return HandleMouseEventList(event, static_cast<UiList *>(item));
 	case UI_SCROLLBAR:
-		return HandleMouseEventScrollBar(event, dynamic_cast<UiScrollBar *>(item));
+		return HandleMouseEventScrollBar(event, static_cast<UiScrollBar *>(item));
 	default:
 		return false;
 	}
@@ -945,7 +945,7 @@ bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
 		for (auto &item : items) {
 			if (item->m_type == UI_BUTTON)
-				HandleGlobalMouseUpButton(dynamic_cast<UiButton *>(item));
+				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
 		}
 	}
 
