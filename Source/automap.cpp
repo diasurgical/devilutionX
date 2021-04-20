@@ -522,10 +522,9 @@ void InitAutomap()
 	mem_free_dbg(pAFile);
 	memset(automapview, 0, sizeof(automapview));
 
-	for (int y = 0; y < MAXDUNY; y++) {
-		for (auto &dFlag : dFlags)
-			dFlag[y] &= ~BFLAG_EXPLORED;
-	}
+	for (auto &row : dFlags)
+		for (auto &dFlag : row)
+			dFlag &= ~BFLAG_EXPLORED;
 }
 
 void StartAutomap()
