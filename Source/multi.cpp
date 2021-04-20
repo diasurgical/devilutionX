@@ -4,6 +4,7 @@
  * Implementation of functions for keeping multiplaye games in sync.
  */
 
+#include <SDL.h>
 #include <config.h>
 
 #include "diablo.h"
@@ -114,13 +115,13 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
-	plr[myplr].UpdateTargetPosition();
+	const SDL_Point target = plr[myplr].GetTargetPosition();
 
 	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
 	pkt->hdr.px = plr[myplr]._px;
 	pkt->hdr.py = plr[myplr]._py;
-	pkt->hdr.targx = plr[myplr]._ptargx;
-	pkt->hdr.targy = plr[myplr]._ptargy;
+	pkt->hdr.targx = target.x;
+	pkt->hdr.targy = target.y;
 	pkt->hdr.php = plr[myplr]._pHitPoints;
 	pkt->hdr.pmhp = plr[myplr]._pMaxHP;
 	pkt->hdr.bstr = plr[myplr]._pBaseStr;
@@ -510,8 +511,6 @@ void multi_process_network_packets()
 					plr[dwID]._py = pkt->py;
 					plr[dwID]._pfutx = pkt->px;
 					plr[dwID]._pfuty = pkt->py;
-					plr[dwID]._ptargx = pkt->targx;
-					plr[dwID]._ptargy = pkt->targy;
 				}
 			}
 		}
@@ -637,8 +636,6 @@ static void SetupLocalCoords()
 	plr[myplr]._py = y;
 	plr[myplr]._pfutx = x;
 	plr[myplr]._pfuty = y;
-	plr[myplr]._ptargx = x;
-	plr[myplr]._ptargy = y;
 	plr[myplr].plrlevel = currlevel;
 	plr[myplr]._pLvlChanging = true;
 	plr[myplr].pLvlLoad = 0;

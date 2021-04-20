@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <SDL.h>
 #include <stdint.h>
 
 #include "diablo.h"
@@ -160,12 +161,6 @@ struct PlayerStruct {
 	int _py;    // Tile Y-position of player
 	int _pfutx; // Future tile X-position of player. Set at start of walking animation
 	int _pfuty;
-	/*
-	* These values store the target position for non-local players during network play.
-	* This is needed because player positions drift over time due to desyncs, so we have
-	* clients try to pathfind non-local players to this position.
-	*/
-	int _ptargx, _ptargy;
 	int _pownerx;    // Tile X-position of player. Set via network on player input
 	int _pownery;    // Tile X-position of player. Set via network on player input
 	int _poldx;      // Most recent X-position in dPlayer.
@@ -372,9 +367,9 @@ struct PlayerStruct {
 	int GetMaximumAttributeValue(CharacterAttribute attribute) const;
 
 	/**
-	 * @brief Update tile coordinates a player is moving to (if not moving, then it corresponds to current position).
+	 * @brief Get the tile coordinates a player is moving to (if not moving, then it corresponds to current position).
 	 */
-	void UpdateTargetPosition();
+	SDL_Point GetTargetPosition() const;
 
 	/**
 	 * @brief Play a speach file.

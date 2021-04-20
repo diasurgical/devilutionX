@@ -3,6 +3,7 @@
  *
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
+#include <SDL.h>
 #include <algorithm>
 
 #include "control.h"
@@ -224,22 +225,22 @@ int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
 	return MaxStats[static_cast<std::size_t>(_pClass)][static_cast<std::size_t>(attribute)];
 }
 
-void PlayerStruct::UpdateTargetPosition()
+SDL_Point PlayerStruct::GetTargetPosition() const
 {
 	// clang-format off
-	int directionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
-	int directionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
+	constexpr int directionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
+	constexpr int directionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
 	// clang-format on
-	_ptargx = _pfutx;
-	_ptargy = _pfuty;
+	SDL_Point target { _pfutx, _pfuty };
 	for (auto step : walkpath) {
 		if (step == WALK_NONE)
 			break;
 		if (step > 0) {
-			_ptargx += directionOffsetX[step - 1];
-			_ptargy += directionOffsetY[step - 1];
+			target.x += directionOffsetX[step - 1];
+			target.y += directionOffsetY[step - 1];
 		}
 	}
+	return target;
 }
 
 _sfx_id herosounds[enum_size<HeroClass>::value][102] = {
@@ -1078,11 +1079,7 @@ void InitPlayer(int pnum, bool FirstTime)
 				plr[pnum]._px = ViewX;
 				plr[pnum]._py = ViewY;
 			}
-			plr[pnum]._ptargx = plr[pnum]._px;
-			plr[pnum]._ptargy = plr[pnum]._py;
 		} else {
-			plr[pnum]._ptargx = plr[pnum]._px;
-			plr[pnum]._ptargy = plr[pnum]._py;
 			for (i = 0; i < 8 && !PosOkPlayer(pnum, plrxoff2[i] + plr[pnum]._px, plryoff2[i] + plr[pnum]._py); i++)
 				;
 			plr[pnum]._px += plrxoff2[i];
@@ -4018,9 +4015,6 @@ void SyncInitPlrPos(int pnum)
 	DWORD i;
 	bool posOk;
 
-	plr[pnum]._ptargx = plr[pnum]._px;
-	plr[pnum]._ptargy = plr[pnum]._py;
-
 	if (!gbIsMultiplayer || plr[pnum].plrlevel != currlevel) {
 		return;
 	}
@@ -4055,8 +4049,6 @@ void SyncInitPlrPos(int pnum)
 	if (pnum == myplr) {
 		plr[pnum]._pfutx = x;
 		plr[pnum]._pfuty = y;
-		plr[pnum]._ptargx = x;
-		plr[pnum]._ptargy = y;
 		ViewX = x;
 		ViewY = y;
 	}

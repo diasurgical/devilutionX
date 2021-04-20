@@ -5,6 +5,7 @@
  */
 #include "loadsave.h"
 
+#include <SDL.h>
 #include <climits>
 
 #include "automap.h"
@@ -327,8 +328,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_py = file->nextLE<Sint32>();
 	pPlayer->_pfutx = file->nextLE<Sint32>();
 	pPlayer->_pfuty = file->nextLE<Sint32>();
-	pPlayer->_ptargx = file->nextLE<Sint32>();
-	pPlayer->_ptargy = file->nextLE<Sint32>();
+	file->skip(8); // Skip _ptargx and _ptargy
 	pPlayer->_pownerx = file->nextLE<Sint32>();
 	pPlayer->_pownery = file->nextLE<Sint32>();
 	pPlayer->_poldx = file->nextLE<Sint32>();
@@ -1303,8 +1303,12 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Sint32>(pPlayer->_py);
 	file->writeLE<Sint32>(pPlayer->_pfutx);
 	file->writeLE<Sint32>(pPlayer->_pfuty);
-	file->writeLE<Sint32>(pPlayer->_ptargx);
-	file->writeLE<Sint32>(pPlayer->_ptargy);
+
+	// For backwards compatibility
+	const SDL_Point target = pPlayer->GetTargetPosition();
+	file->writeLE<Sint32>(target.x);
+	file->writeLE<Sint32>(target.y);
+
 	file->writeLE<Sint32>(pPlayer->_pownerx);
 	file->writeLE<Sint32>(pPlayer->_pownery);
 	file->writeLE<Sint32>(pPlayer->_poldx);

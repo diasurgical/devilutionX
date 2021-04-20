@@ -254,8 +254,6 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(pPlayer->_py, 68);
 	ASSERT_EQ(pPlayer->_pfutx, 75);
 	ASSERT_EQ(pPlayer->_pfuty, 68);
-	ASSERT_EQ(pPlayer->_ptargx, 75);
-	ASSERT_EQ(pPlayer->_ptargy, 68);
 	ASSERT_EQ(pPlayer->plrlevel, 0);
 	ASSERT_EQ(pPlayer->destAction, -1);
 	ASSERT_STREQ(pPlayer->_pName, "TestPlayer");
