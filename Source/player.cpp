@@ -192,7 +192,7 @@ const char *const ClassPathTbl[] = {
 	"Warrior",
 };
 
-Sint32 PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
+int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
 	case CharacterAttribute::Dexterity:
@@ -208,7 +208,7 @@ Sint32 PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 	}
 }
 
-Sint32 PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
+int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
 	static const int MaxStats[enum_size<HeroClass>::value][enum_size<CharacterAttribute>::value] = {
 		// clang-format off
@@ -3698,7 +3698,7 @@ void ProcessPlayerAnimation(int pnum)
 	}
 }
 
-Sint32 GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
+int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 {
 	// Normal logic is used,
 	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick (_pAnimUsedNumFrames = 0)
