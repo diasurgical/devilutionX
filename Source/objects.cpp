@@ -3,6 +3,7 @@
  *
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
+#include <algorithm>
 #include <climits>
 #include <cstdint>
 
@@ -4072,11 +4073,7 @@ bool OperateShrineSecluded(int pnum)
 	if (pnum != myplr)
 		return true;
 
-	for (int yy = 0; yy < DMAXY; yy++) {
-		for (auto &xx : automapview) {
-			xx[yy] = true;
-		}
-	}
+	std::fill(&automapview[0][0], &automapview[DMAXX][DMAXY], true);
 
 	InitDiabloMsg(EMSG_SHRINE_SECLUDED);
 
