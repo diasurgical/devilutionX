@@ -28,7 +28,9 @@ void track_process()
 	if (plr[myplr]._pVar8 <= 6 && plr[myplr]._pmode != PM_STAND)
 		return;
 
-	if (cursmx != plr[myplr]._ptargx || cursmy != plr[myplr]._ptargy) {
+	Sint32 targetX, targetY;
+	GetPlayerTargetPosition(myplr, &targetX, &targetY);
+	if (cursmx != targetX || cursmy != targetY) {
 		Uint32 tick = SDL_GetTicks();
 		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * 6) {
 			sgdwLastWalk = tick;

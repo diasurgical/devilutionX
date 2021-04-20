@@ -114,32 +114,14 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
-	/*
-	* We calculate _ptargx and _ptargy here and prepare for it to be sent to other clients.
-	* If px/py and ptarx/ptary don't match on other clients, then they'll move our local player to that location.
-	*/
-	{
-		// clang-format off
-		int directionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
-		int directionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
-		// clang-format on
-		plr[myplr]._ptargx = plr[myplr]._pfutx;
-		plr[myplr]._ptargy = plr[myplr]._pfuty;
-		for (int i = 0; i < MAX_PATH_LENGTH; i++) {
-			if (plr[myplr].walkpath[i] == WALK_NONE)
-				break;
-			if (plr[myplr].walkpath[i] > 0) {
-				plr[myplr]._ptargx += directionOffsetX[plr[myplr].walkpath[i] - 1];
-				plr[myplr]._ptargy += directionOffsetY[plr[myplr].walkpath[i] - 1];
-			}
-		}
-	}
+	Sint32 targetX, targetY;
+	GetPlayerTargetPosition(myplr, &targetX, &targetY);
 
 	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
 	pkt->hdr.px = plr[myplr]._px;
 	pkt->hdr.py = plr[myplr]._py;
-	pkt->hdr.targx = plr[myplr]._ptargx;
-	pkt->hdr.targy = plr[myplr]._ptargy;
+	pkt->hdr.targx = targetX;
+	pkt->hdr.targy = targetY;
 	pkt->hdr.php = plr[myplr]._pHitPoints;
 	pkt->hdr.pmhp = plr[myplr]._pMaxHP;
 	pkt->hdr.bstr = plr[myplr]._pBaseStr;

@@ -160,8 +160,14 @@ struct PlayerStruct {
 	Sint32 _py;      // Tile Y-position of player
 	Sint32 _pfutx;   // Future tile X-position of player. Set at start of walking animation
 	Sint32 _pfuty;   // Future tile Y-position of player. Set at start of walking animation
-	Sint32 _ptargx;  // Target tile X-position for player movment. Set during pathfinding
-	Sint32 _ptargy;  // Target tile Y-position for player movment. Set during pathfinding
+
+	/*
+	* These values store the target position for non-local players during network play.
+	* This is needed because player positions drift over time due to desyncs, so we have
+	* clients try to pathfind non-local players to this position.
+	*/
+	Sint32 _ptargx, _ptargy;
+
 	Sint32 _pownerx; // Tile X-position of player. Set via network on player input
 	Sint32 _pownery; // Tile X-position of player. Set via network on player input
 	Sint32 _poldx;   // Most recent X-position in dPlayer.
@@ -427,6 +433,15 @@ void RemovePlrMissiles(int pnum);
 void StartNewLvl(int pnum, interface_mode fom, int lvl);
 void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
+
+/*
+* @brief Returns the tile coordinates a player is moving to (if not moving, then it corresponds to current position).
+* @param playerNumber Player index
+* @param x Pointer to variable which will get updated with X tile coordinate
+* @param y Pointer to variable which will get updated with Y tile coordinate
+*/
+void GetPlayerTargetPosition(int playerNumber, Sint32 *x, Sint32 *y);
+
 void ProcessPlayers();
 void ClrPlrPath(int pnum);
 bool PosOkPlayer(int pnum, int x, int y);

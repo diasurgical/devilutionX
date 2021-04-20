@@ -1184,8 +1184,6 @@ void FixPlayerLocation(int pnum, direction bDir)
 
 	plr[pnum]._pfutx = plr[pnum]._px;
 	plr[pnum]._pfuty = plr[pnum]._py;
-	plr[pnum]._ptargx = plr[pnum]._px;
-	plr[pnum]._ptargy = plr[pnum]._py;
 	plr[pnum]._pxoff = 0;
 	plr[pnum]._pyoff = 0;
 	plr[pnum]._pdir = bDir;
@@ -3131,6 +3129,24 @@ bool PM_DoNewLvl(int pnum)
 	return false;
 }
 
+void GetPlayerTargetPosition(int playerNumber, Sint32 *x, Sint32 *y)
+{
+	// clang-format off
+	int directionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
+	int directionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
+	// clang-format on
+	*x = plr[playerNumber]._pfutx;
+	*y = plr[playerNumber]._pfuty;
+	for (int i = 0; i < MAX_PATH_LENGTH; i++) {
+		if (plr[playerNumber].walkpath[i] == WALK_NONE)
+			break;
+		if (plr[playerNumber].walkpath[i] > 0) {
+			*x += directionOffsetX[plr[playerNumber].walkpath[i] - 1];
+			*y += directionOffsetY[plr[playerNumber].walkpath[i] - 1];
+		}
+	}
+}
+
 void CheckNewPath(int pnum)
 {
 	int i, x, y;
@@ -3779,8 +3795,6 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 		app_fatal("MakePlrPath: illegal player %d", pnum);
 	}
 
-	plr[pnum]._ptargx = xx;
-	plr[pnum]._ptargy = yy;
 	if (plr[pnum]._pfutx == xx && plr[pnum]._pfuty == yy) {
 		return;
 	}
@@ -3823,9 +3837,6 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 			yy--;
 			break;
 		}
-
-		plr[pnum]._ptargx = xx;
-		plr[pnum]._ptargy = yy;
 	}
 
 	plr[pnum].walkpath[path] = WALK_NONE;
