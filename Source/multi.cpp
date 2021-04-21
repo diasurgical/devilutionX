@@ -7,8 +7,8 @@
 #include <SDL.h>
 #include <config.h>
 
-#include "diablo.h"
 #include "DiabloUI/diabloui.h"
+#include "diablo.h"
 #include "dthread.h"
 #include "nthread.h"
 #include "options.h"
