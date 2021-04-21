@@ -91,7 +91,7 @@ void DrawXPBar(const CelOutputBuffer &out)
 	Uint64 fullBar = BAR_WIDTH * prevXpDelta_1 / prevXpDelta;
 
 	// Figure out how much to fill the last pixel of the XP bar, to make it gradually appear with gained XP
-	Uint64 onePx = prevXpDelta / BAR_WIDTH;
+	Uint64 onePx = prevXpDelta / BAR_WIDTH + 1;
 	Uint64 lastFullPx = fullBar * prevXpDelta / BAR_WIDTH;
 
 	const Uint64 fade = (prevXpDelta_1 - lastFullPx) * (SILVER_GRADIENT.size() - 1) / onePx;
