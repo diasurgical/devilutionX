@@ -277,7 +277,7 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 	}
 
 	inDialog = true;
-	Init(text, caption, error, renderBehind.size() > 0);
+	Init(text, caption, error, !renderBehind.empty());
 	DialogLoop(vecOkDialog, renderBehind);
 	Deinit();
 	inDialog = false;
