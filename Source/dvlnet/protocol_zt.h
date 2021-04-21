@@ -62,7 +62,7 @@ public:
 	bool send_oob_mc(const buffer_t &data);
 	bool recv(endpoint &peer, buffer_t &data);
 	bool network_online();
-	std::string make_default_gamename();
+	static std::string make_default_gamename();
 
 private:
 	static constexpr uint32_t PKTBUF_LEN = 65536;
@@ -80,12 +80,12 @@ private:
 	int fd_tcp = -1;
 	int fd_udp = -1;
 
-	uint64_t current_ms();
+	static uint64_t current_ms();
 	void close_all();
 
-	void set_nonblock(int fd);
-	void set_nodelay(int fd);
-	void set_reuseaddr(int fd);
+	static void set_nonblock(int fd);
+	static void set_nodelay(int fd);
+	static void set_reuseaddr(int fd);
 
 	bool send_queued_peer(const endpoint &peer);
 	bool recv_peer(const endpoint &peer);
