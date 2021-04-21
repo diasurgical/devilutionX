@@ -156,11 +156,11 @@ void init_archives()
 		paths.pop_back();
 
 #ifdef __linux__
-	paths.push_back("/usr/share/diasurgical/devilutionx/");
-	paths.push_back("/usr/local/share/diasurgical/devilutionx/");
+	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
+	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #endif
 
-	paths.push_back(""); // PWD
+	paths.emplace_back(""); // PWD
 
 	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
 		std::string message;
