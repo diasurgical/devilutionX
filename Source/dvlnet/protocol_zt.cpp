@@ -192,7 +192,7 @@ bool protocol_zt::recv_from_udp()
 	buffer_t data(buf, buf + len);
 	endpoint ep;
 	std::copy(in6.sin6_addr.s6_addr, in6.sin6_addr.s6_addr + 16, ep.addr.begin());
-	oob_recv_queue.push_back(std::make_pair(std::move(ep), std::move(data)));
+	oob_recv_queue.push_back(std::make_pair(ep, std::move(data)));
 	return true;
 }
 
