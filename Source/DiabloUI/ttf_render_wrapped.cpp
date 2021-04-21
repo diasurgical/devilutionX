@@ -29,7 +29,7 @@ SDL_bool CharacterIsDelimiter(char c, const char *delimiters)
 } // namespace
 
 // Based on SDL 2.0.12 TTF_RenderUTF8_Blended_Wrapped
-SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, const int x_align)
+SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, const int xAlign)
 {
 	int width, height;
 	SDL_Surface *textbuf;
@@ -48,21 +48,21 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	if (wrapLength > 0 && *text) {
 		const char *wrapDelims = " \t\r\n";
 		int w, h;
-		char *spot, *tok, *next_tok, *end;
+		char *spot, *tok, *nextTok, *end;
 		char delim;
-		const std::size_t str_len = std::strlen(text);
+		const std::size_t strLen = std::strlen(text);
 
 		numLines = 0;
 
-		str = SDL_stack_alloc(char, str_len + 1);
+		str = SDL_stack_alloc(char, strLen + 1);
 		if (str == nullptr) {
 			TTF_SetError("Out of memory");
 			return nullptr;
 		}
 
-		std::memcpy(str, text, str_len + 1);
+		std::memcpy(str, text, strLen + 1);
 		tok = str;
-		end = str + str_len;
+		end = str + strLen;
 		do {
 			strLines = (char **)SDL_realloc(strLines, (numLines + 1) * sizeof(*strLines));
 			if (!strLines) {
@@ -82,7 +82,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 			} else {
 				spot = end;
 			}
-			next_tok = spot;
+			nextTok = spot;
 
 			/* Get the longest string that will fit in the desired space */
 			for (;;) {
@@ -110,10 +110,10 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 					--spot;
 				}
 				if (spot > tok) {
-					next_tok = spot;
+					nextTok = spot;
 				}
 			}
-			tok = next_tok;
+			tok = nextTok;
 		} while (tok < end);
 	}
 
@@ -162,7 +162,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		dest.w = static_cast<Uint16>(tmp->w);
 		dest.h = static_cast<Uint16>(tmp->h);
 
-		switch (x_align) {
+		switch (xAlign) {
 		case TextAlignment_END:
 			dest.x = textbuf->w - tmp->w;
 			break;

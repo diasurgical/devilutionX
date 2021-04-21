@@ -7,7 +7,7 @@ namespace {
 
 std::vector<UiItemBase *> vecTitleScreen;
 
-void title_Load()
+void TitleLoad()
 {
 	if (gbIsHellfire) {
 		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
@@ -18,7 +18,7 @@ void title_Load()
 	}
 }
 
-void title_Free()
+void TitleFree()
 {
 	ArtBackground.Unload();
 	ArtBackgroundWidescreen.Unload();
@@ -45,7 +45,7 @@ void UiTitleDialog()
 		SDL_Rect rect = { (Sint16)(PANEL_LEFT + 49), (Sint16)(UI_OFFSET_Y + 410), 550, 26 };
 		vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));
 	}
-	title_Load();
+	TitleLoad();
 
 	bool endMenu = false;
 	Uint32 timeOut = SDL_GetTicks() + 7000;
@@ -70,7 +70,7 @@ void UiTitleDialog()
 		}
 	}
 
-	title_Free();
+	TitleFree();
 }
 
 void UiSetSpawned(bool bSpawned)
