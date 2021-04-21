@@ -404,7 +404,8 @@ static DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 		if (p->bCmd == CMD_DLEVEL_END) {
 			sgbDeltaChunks = MAX_CHUNKS - 1;
 			return p->wBytes + sizeof(*p);
-		} else if (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0) {
+		}
+		if (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0) {
 			sgdwRecvOffset = 0;
 			sgbRecvCmd = p->bCmd;
 		} else {
@@ -416,10 +417,9 @@ static DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 			sgbDeltaChunks = MAX_CHUNKS - 1;
 			sgbRecvCmd = CMD_DLEVEL_END;
 			return p->wBytes + sizeof(*p);
-		} else {
-			sgdwRecvOffset = 0;
-			sgbRecvCmd = p->bCmd;
 		}
+		sgdwRecvOffset = 0;
+		sgbRecvCmd = p->bCmd;
 	}
 
 	assert(p->wOffset == sgdwRecvOffset);

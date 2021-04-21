@@ -175,13 +175,15 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	mx = MouseX - 1;
 	if (mx < 0 - cursW - 1) {
 		return;
-	} else if (mx > gnScreenWidth - 1) {
+	}
+	if (mx > gnScreenWidth - 1) {
 		return;
 	}
 	my = MouseY - 1;
 	if (my < 0 - cursH - 1) {
 		return;
-	} else if (my > gnScreenHeight - 1) {
+	}
+	if (my > gnScreenHeight - 1) {
 		return;
 	}
 

@@ -203,11 +203,10 @@ struct Archive {
 			if (GetFileSize(name, &size) == 0) {
 				SDL_Log("GetFileSize(\"%s\") failed with \"%s\"", name, std::strerror(errno));
 				return false;
-#ifdef _DEBUG
-			} else {
-				SDL_Log("GetFileSize(\"%s\") = %" PRIuMAX, name, size);
-#endif
 			}
+#ifdef _DEBUG
+			SDL_Log("GetFileSize(\"%s\") = %" PRIuMAX, name, size);
+#endif
 		} else {
 			mode |= std::ios::trunc;
 		}

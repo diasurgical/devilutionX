@@ -127,7 +127,8 @@ bool protocol_zt::send_queued_peer(const endpoint &peer)
 		if (r < 0) {
 			// handle error
 			return false;
-		} else if (decltype(len)(r) < len) {
+		}
+		if (decltype(len)(r) < len) {
 			// partial send
 			auto it = peer_list[peer].send_queue.front().begin();
 			peer_list[peer].send_queue.front().erase(it, it + r);
@@ -151,9 +152,8 @@ bool protocol_zt::recv_peer(const endpoint &peer)
 		} else {
 			if (errno == EAGAIN || errno == EWOULDBLOCK) {
 				return true;
-			} else {
-				return false;
 			}
+			return false;
 		}
 	}
 }

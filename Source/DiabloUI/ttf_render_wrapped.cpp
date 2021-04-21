@@ -102,10 +102,9 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 				TTF_SizeUTF8(font, tok, &w, &h);
 				if ((Uint32)w <= wrapLength) {
 					break;
-				} else {
-					/* Back up and try again... */
-					*spot = delim;
 				}
+				/* Back up and try again... */
+				*spot = delim;
 
 				while (spot > tok && !CharacterIsDelimiter(spot[-1], wrapDelims)) {
 					--spot;

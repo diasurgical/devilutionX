@@ -859,7 +859,8 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 {
 	if (invflag) {
 		return &InvMove;
-	} else if (chrflag && plr[myplr]._pStatPts > 0) {
+	}
+	if (chrflag && plr[myplr]._pStatPts > 0) {
 		return &AttrIncBtnSnap;
 	} else if (spselflag) {
 		return &HotSpellMove;

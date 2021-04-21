@@ -26,7 +26,8 @@ std::string tcp_server::localhost_self()
 	if (addr.is_unspecified()) {
 		if (addr.is_v4()) {
 			return asio::ip::address_v4::loopback().to_string();
-		} else if (addr.is_v6()) {
+		}
+		if (addr.is_v6()) {
 			return asio::ip::address_v6::loopback().to_string();
 		}
 		ABORT();

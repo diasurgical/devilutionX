@@ -352,8 +352,8 @@ static bool WallTrapLocOkK(int xp, int yp)
 
 	if (nTrapTable[dPiece[xp][yp]])
 		return true;
-	else
-		return false;
+
+	return false;
 }
 
 void InitRndLocObj(int min, int max, _object_id objtype)

@@ -443,7 +443,8 @@ bool FetchMessage(LPMSG lpMsg)
 		}
 		return true;
 #ifndef USE_SDL1
-	} else if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
+	}
+	if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
 #else
 	} else if (e.type < SDL_JOYAXISMOTION) {
 #endif

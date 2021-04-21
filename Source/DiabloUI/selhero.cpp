@@ -352,9 +352,8 @@ void selhero_Name_Select(int value)
 			if (gfnHeroCreate(&selhero_heroInfo)) {
 				selhero_Load_Select(1);
 				return;
-			} else {
-				UiErrorOkDialog("Unable to create character.", vecSelDlgItems);
 			}
+			UiErrorOkDialog("Unable to create character.", vecSelDlgItems);
 		}
 	}
 

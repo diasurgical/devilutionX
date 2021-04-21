@@ -2324,10 +2324,9 @@ bool PM_DoWalk(int pnum, int variant)
 
 		AutoGoldPickup(pnum);
 		return true;
-	} else { //We didn't reach new tile so update player's "sub-tile" position
-		PM_ChangeOffset(pnum);
-		return false;
-	}
+	} //We didn't reach new tile so update player's "sub-tile" position
+	PM_ChangeOffset(pnum);
+	return false;
 }
 
 static bool WeaponDurDecay(int pnum, int ii)
@@ -2880,9 +2879,8 @@ bool PM_DoAttack(int pnum)
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }
 
 bool PM_DoRangeAttack(int pnum)
@@ -2964,9 +2962,8 @@ bool PM_DoRangeAttack(int pnum)
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }
 
 void ShieldDur(int pnum)
@@ -3512,7 +3509,8 @@ bool PlrDeathModeOK(int p)
 
 	if (plr[p]._pmode == PM_DEATH) {
 		return true;
-	} else if (plr[p]._pmode == PM_QUIT) {
+	}
+	if (plr[p]._pmode == PM_QUIT) {
 		return true;
 	} else if (plr[p]._pmode == PM_NEWLVL) {
 		return true;

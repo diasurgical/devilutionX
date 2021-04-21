@@ -1048,8 +1048,8 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 		return 1;
 	if (sx < cx && sy > cy)
 		return 2;
-	else
-		return 3;
+
+	return 3;
 }
 
 static void DRLG_L1Floor()
@@ -1575,8 +1575,8 @@ static int L5HWallOk(int i, int j)
 
 	if (wallok)
 		return x;
-	else
-		return -1;
+
+	return -1;
 }
 
 static int L5VWallOk(int i, int j)
@@ -1601,8 +1601,8 @@ static int L5VWallOk(int i, int j)
 
 	if (wallok)
 		return y;
-	else
-		return -1;
+
+	return -1;
 }
 
 static void L5HorizWall(int i, int j, char p, int dx)

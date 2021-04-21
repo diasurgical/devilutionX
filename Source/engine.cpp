@@ -816,9 +816,8 @@ static void Cl2BlitSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 						dst -= out.pitch() + w;
 					}
 					continue;
-				} else {
-					src += width;
 				}
+				src += width;
 			}
 		}
 		while (width) {
@@ -903,9 +902,8 @@ static void Cl2BlitOutlineSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBy
 						dst -= out.pitch() + w;
 					}
 					continue;
-				} else {
-					src += width;
 				}
+				src += width;
 			}
 		}
 		while (width) {
@@ -985,9 +983,8 @@ static void Cl2BlitLightSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 						dst -= out.pitch() + w;
 					}
 					continue;
-				} else {
-					src += width;
 				}
+				src += width;
 			}
 		}
 		while (width) {

@@ -53,8 +53,8 @@ bool frame_queue::packet_ready()
 	}
 	if (size() >= nextsize)
 		return true;
-	else
-		return false;
+
+	return false;
 }
 
 buffer_t frame_queue::read_packet()

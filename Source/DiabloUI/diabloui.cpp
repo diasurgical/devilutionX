@@ -864,7 +864,8 @@ bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar *ui_sb)
 		if (scrollBarState.upArrowPressed && IsInsideRect(event, UpArrowRect(ui_sb))) {
 			UiFocusUp();
 			return true;
-		} else if (scrollBarState.downArrowPressed && IsInsideRect(event, DownArrowRect(ui_sb))) {
+		}
+		if (scrollBarState.downArrowPressed && IsInsideRect(event, DownArrowRect(ui_sb))) {
 			UiFocusDown();
 			return true;
 		}
@@ -878,7 +879,8 @@ bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar *ui_sb)
 				UiFocusPageDown();
 			}
 			return true;
-		} else if (IsInsideRect(event, UpArrowRect(ui_sb))) {
+		}
+		if (IsInsideRect(event, UpArrowRect(ui_sb))) {
 			scrollBarState.upArrowPressed = true;
 			return true;
 		} else if (IsInsideRect(event, DownArrowRect(ui_sb))) {

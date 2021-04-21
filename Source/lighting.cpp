@@ -488,8 +488,8 @@ char GetLight(int x, int y)
 {
 	if (LoadMapObjsFlag)
 		return dPreLight[x][y];
-	else
-		return dLight[x][y];
+
+	return dLight[x][y];
 }
 
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)

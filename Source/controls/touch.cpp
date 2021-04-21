@@ -16,7 +16,7 @@ inline T clip(T v, T amin, T amax)
 {
 	if (v < amin)
 		return amin;
-	else if (v > amax)
+	if (v > amax)
 		return amax;
 	else
 		return v;

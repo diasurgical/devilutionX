@@ -2116,10 +2116,10 @@ void game_loop(bool bStartup)
 		if (!multi_handle_delta()) {
 			timeout_cursor(true);
 			break;
-		} else {
-			timeout_cursor(false);
-			game_logic();
 		}
+		timeout_cursor(false);
+		game_logic();
+
 		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed())
 			break;
 	}

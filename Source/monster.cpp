@@ -5661,8 +5661,8 @@ int encode_enemy(int m)
 {
 	if (monster[m]._mFlags & MFLAG_TARGETS_MONSTER)
 		return monster[m]._menemy + MAX_PLRS;
-	else
-		return monster[m]._menemy;
+
+	return monster[m]._menemy;
 }
 
 void decode_enemy(int m, int enemy)

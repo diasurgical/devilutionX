@@ -163,16 +163,15 @@ bool base::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
 			}
 		}
 		return true;
-	} else {
-		for (auto i = 0; i < MAX_PLRS; ++i) {
-			if (connected_table[i]) {
-				if (!turn_queue[i].empty()) {
-					status[i] |= PS_ACTIVE;
-				}
+	}
+	for (auto i = 0; i < MAX_PLRS; ++i) {
+		if (connected_table[i]) {
+			if (!turn_queue[i].empty()) {
+				status[i] |= PS_ACTIVE;
 			}
 		}
-		return false;
 	}
+	return false;
 }
 
 bool base::SNetSendTurn(char *data, unsigned int size)

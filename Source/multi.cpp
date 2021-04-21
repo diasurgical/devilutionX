@@ -823,14 +823,13 @@ bool multi_init_multi(GameData *gameData)
 
 	if ((DWORD)playerId >= MAX_PLRS) {
 		return false;
-	} else {
-		myplr = playerId;
-		gbIsMultiplayer = true;
-
-		pfile_read_player_from_save();
-
-		return true;
 	}
+	myplr = playerId;
+	gbIsMultiplayer = true;
+
+	pfile_read_player_from_save();
+
+	return true;
 }
 
 void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)

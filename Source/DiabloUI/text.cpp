@@ -25,7 +25,8 @@ void WordWrapArtStr(char *text, std::size_t width)
 		if (text[i] == '\n') {
 			lineStart = i + 1;
 			continue;
-		} else if (text[i] != ' ' && i != len) {
+		}
+		if (text[i] != ' ' && i != len) {
 			continue;
 		}
 

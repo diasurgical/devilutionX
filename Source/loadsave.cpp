@@ -840,7 +840,8 @@ bool IsHeaderValid(Uint32 magicNumber)
 	gbIsHellfireSaveGame = false;
 	if (magicNumber == LOAD_LE32("SHAR")) {
 		return true;
-	} else if (magicNumber == LOAD_LE32("SHLF")) {
+	}
+	if (magicNumber == LOAD_LE32("SHLF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
 	} else if (!gbIsSpawn && magicNumber == LOAD_LE32("RETL")) {

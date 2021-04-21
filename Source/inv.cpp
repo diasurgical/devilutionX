@@ -2348,16 +2348,16 @@ bool UseInvItem(int pnum, int cii)
 		}
 		RemoveSpdBarItem(pnum, c);
 		return true;
-	} else {
-		if (plr[pnum].InvList[c]._iMiscId == IMISC_MAPOFDOOM)
-			return true;
-		if (plr[pnum].InvList[c]._iMiscId == IMISC_NOTE) {
-			InitQTextMsg(TEXT_BOOK9);
-			invflag = false;
-			return true;
-		}
-		RemoveInvItem(pnum, c);
 	}
+	if (plr[pnum].InvList[c]._iMiscId == IMISC_MAPOFDOOM)
+		return true;
+	if (plr[pnum].InvList[c]._iMiscId == IMISC_NOTE) {
+		InitQTextMsg(TEXT_BOOK9);
+		invflag = false;
+		return true;
+	}
+	RemoveInvItem(pnum, c);
+
 	return true;
 }
 

@@ -353,9 +353,8 @@ bool gmenu_left_mouse(bool isDown)
 		if (mouseNavigation) {
 			mouseNavigation = false;
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	if (!sgpCurrentMenu) {

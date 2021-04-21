@@ -579,7 +579,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 		return ret;
 	}
 #ifdef _DEBUG
-	else if (hit < hper || debug_mode_dollar_sign || debug_mode_key_inverted_v || monster[m]._mmode == MM_STONE) {
+	if (hit < hper || debug_mode_dollar_sign || debug_mode_key_inverted_v || monster[m]._mmode == MM_STONE) {
 #else
 	else if (hit < hper || monster[m]._mmode == MM_STONE) {
 #endif
@@ -983,17 +983,16 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 				NetSendCmdDamage(true, p, dam);
 			plr[pnum].PlaySpeach(69);
 			return true;
-		} else {
-			if (blkper < blk) {
-				StartPlrBlock(p, GetDirection(plr[p]._px, plr[p]._py, plr[pnum]._px, plr[pnum]._py));
-				*blocked = true;
-			} else {
-				if (pnum == myplr)
-					NetSendCmdDamage(true, p, dam);
-				StartPlrHit(p, dam, false);
-			}
-			return true;
 		}
+		if (blkper < blk) {
+			StartPlrBlock(p, GetDirection(plr[p]._px, plr[p]._py, plr[pnum]._px, plr[pnum]._py));
+			*blocked = true;
+		} else {
+			if (pnum == myplr)
+				NetSendCmdDamage(true, p, dam);
+			StartPlrHit(p, dam, false);
+		}
+		return true;
 	}
 	return false;
 }

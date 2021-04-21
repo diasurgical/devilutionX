@@ -306,9 +306,8 @@ static int L4HWallOk(int i, int j)
 
 	if (wallok) {
 		return x;
-	} else {
-		return -1;
 	}
+	return -1;
 }
 
 static int L4VWallOk(int i, int j)
@@ -360,9 +359,8 @@ static int L4VWallOk(int i, int j)
 
 	if (wallok) {
 		return y;
-	} else {
-		return -1;
 	}
+	return -1;
 }
 
 static void L4HorizWall(int i, int j, int dx)
