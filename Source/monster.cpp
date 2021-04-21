@@ -1154,10 +1154,12 @@ void InitMonsters()
 		if (!gbIsSpawn)
 			PlaceUniques();
 		na = 0;
-		for (s = 16; s < 96; s++)
-			for (t = 16; t < 96; t++)
+		for (s = 16; s < 96; s++) {
+			for (t = 16; t < 96; t++) {
 				if (!SolidLoc(s, t))
 					na++;
+			}
+		}
 		numplacemonsters = na / 30;
 		if (gbIsMultiplayer)
 			numplacemonsters += numplacemonsters / 2;
@@ -2879,14 +2881,15 @@ bool M_CallWalk(int i, direction md)
 		ok = ok || (md = left[mdtemp], DirOK(i, md)) || (md = right[mdtemp], DirOK(i, md));
 	else
 		ok = ok || (md = right[mdtemp], DirOK(i, md)) || (md = left[mdtemp], DirOK(i, md));
-	if (GenerateRnd(2) != 0)
+	if (GenerateRnd(2) != 0) {
 		ok = ok
 		    || (md = right[right[mdtemp]], DirOK(i, md))
 		    || (md = left[left[mdtemp]], DirOK(i, md));
-	else
+	} else {
 		ok = ok
 		    || (md = left[left[mdtemp]], DirOK(i, md))
 		    || (md = right[right[mdtemp]], DirOK(i, md));
+	}
 	if (ok)
 		M_WalkDir(i, md);
 	return ok;

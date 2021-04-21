@@ -1663,16 +1663,21 @@ void RemovePlrFromMap(int pnum)
 	pp = pnum + 1;
 	pn = -(pnum + 1);
 
-	for (y = 1; y < MAXDUNY; y++)
-		for (x = 1; x < MAXDUNX; x++)
-			if (dPlayer[x][y - 1] == pn || dPlayer[x - 1][y] == pn)
-				if (dFlags[x][y] & BFLAG_PLAYERLR)
+	for (y = 1; y < MAXDUNY; y++) {
+		for (x = 1; x < MAXDUNX; x++) {
+			if (dPlayer[x][y - 1] == pn || dPlayer[x - 1][y] == pn) {
+				if (dFlags[x][y] & BFLAG_PLAYERLR) {
 					dFlags[x][y] &= ~BFLAG_PLAYERLR;
+				}
+			}
+		}
+	}
 
-	for (y = 0; y < MAXDUNY; y++)
+	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++)
 			if (dPlayer[x][y] == pp || dPlayer[x][y] == pn)
 				dPlayer[x][y] = 0;
+	}
 }
 
 void StartPlrHit(int pnum, int dam, bool forcehit)

@@ -3462,10 +3462,9 @@ bool OperateShrineHidden(int pnum)
 		while (true) {
 			cnt = 0;
 			for (auto &item : plr[pnum].InvBody) {
-				if (!item.isEmpty())
-					if (item._iMaxDur != DUR_INDESTRUCTIBLE
-					    && item._iMaxDur != 0)
-						cnt++;
+				if (!item.isEmpty() && item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
+					cnt++;
+				}
 			}
 			if (cnt == 0)
 				break;
