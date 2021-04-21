@@ -28,8 +28,8 @@ int tcp_client::create(std::string addrstr, std::string passwd)
 
 int tcp_client::join(std::string addrstr, std::string passwd)
 {
-	constexpr int ms_sleep = 10;
-	constexpr int no_sleep = 250;
+	constexpr int MsSleep = 10;
+	constexpr int NoSleep = 250;
 
 	setup_password(passwd);
 	try {
@@ -50,7 +50,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		    PLR_MASTER, cookie_self,
 		    game_init_info);
 		send(*pkt);
-		for (auto i = 0; i < no_sleep; ++i) {
+		for (auto i = 0; i < NoSleep; ++i) {
 			try {
 				poll();
 			} catch (const std::runtime_error &e) {
@@ -59,7 +59,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 			}
 			if (plr_self != PLR_BROADCAST)
 				break; // join successful
-			SDL_Delay(ms_sleep);
+			SDL_Delay(MsSleep);
 		}
 	}
 	if (plr_self == PLR_BROADCAST) {
@@ -75,7 +75,7 @@ void tcp_client::poll()
 	ioc.poll();
 }
 
-void tcp_client::handle_recv(const asio::error_code &error, size_t bytes_read)
+void tcp_client::handle_recv(const asio::error_code &error, size_t bytesRead)
 {
 	if (error) {
 		// error in recv from server
@@ -83,10 +83,10 @@ void tcp_client::handle_recv(const asio::error_code &error, size_t bytes_read)
 		// as if all connections to other clients were lost
 		return;
 	}
-	if (bytes_read == 0) {
+	if (bytesRead == 0) {
 		throw std::runtime_error("error: read 0 bytes from server");
 	}
-	recv_buffer.resize(bytes_read);
+	recv_buffer.resize(bytesRead);
 	recv_queue.write(std::move(recv_buffer));
 	recv_buffer.resize(frame_queue::max_frame_size);
 	while (recv_queue.packet_ready()) {
@@ -103,7 +103,7 @@ void tcp_client::start_recv()
 	        std::placeholders::_1, std::placeholders::_2));
 }
 
-void tcp_client::handle_send(const asio::error_code &error, size_t bytes_sent)
+void tcp_client::handle_send(const asio::error_code &error, size_t bytesSent)
 {
 	// empty for now
 }
@@ -112,8 +112,8 @@ void tcp_client::send(packet &pkt)
 {
 	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
 	auto buf = asio::buffer(*frame);
-	asio::async_write(sock, buf, [this, frame](const asio::error_code &error, size_t bytes_sent) {
-		handle_send(error, bytes_sent);
+	asio::async_write(sock, buf, [this, frame](const asio::error_code &error, size_t bytesSent) {
+		handle_send(error, bytesSent);
 		delete frame;
 	});
 }

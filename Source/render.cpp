@@ -600,29 +600,29 @@ namespace {
 // The tile's bounding box is 64 by 31 px.
 //
 // Heights of the upper and lower triangles of the tile:
-constexpr int kUpperHeight = TILE_HEIGHT / 2 - 1;
-constexpr int kLowerHeight = TILE_HEIGHT / 2;
-constexpr int kHeight = kLowerHeight + kLowerHeight;
-constexpr int kXStep = 2;
+constexpr int UpperHeight = TILE_HEIGHT / 2 - 1;
+constexpr int LowerHeight = TILE_HEIGHT / 2;
+constexpr int Height = LowerHeight + LowerHeight;
+constexpr int XStep = 2;
 
 // Blit with left and vertical clipping.
 void BlitBlackTileClipLeftY(BYTE *dst, int dst_pitch, int sx, int skip_lower_bottom, int skip_lower_top, int skip_upper_bottom, int skip_upper_top)
 {
 	// Lower triangle (drawn bottom to top):
-	for (int i = skip_lower_bottom + 1; i <= kLowerHeight - skip_lower_top; ++i, dst -= dst_pitch + kXStep) {
-		const int w = 2 * kXStep * i;
-		const int cur_x = sx + TILE_WIDTH / 2 - kXStep * i;
+	for (int i = skip_lower_bottom + 1; i <= LowerHeight - skip_lower_top; ++i, dst -= dst_pitch + XStep) {
+		const int w = 2 * XStep * i;
+		const int cur_x = sx + TILE_WIDTH / 2 - XStep * i;
 		if (cur_x >= 0) {
 			memset(dst, 0, w);
 		} else if (-cur_x <= w) {
 			memset(dst - cur_x, 0, w + cur_x);
 		}
 	}
-	dst += 2 * kXStep;
+	dst += 2 * XStep;
 	// Upper triangle (drawn bottom to top):
-	for (int i = skip_upper_bottom, j = kUpperHeight - skip_upper_bottom; i < kUpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - kXStep) {
-		const int w = 2 * kXStep * j;
-		const int cur_x = sx + TILE_WIDTH / 2 - kXStep * j;
+	for (int i = skip_upper_bottom, j = UpperHeight - skip_upper_bottom; i < UpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - XStep) {
+		const int w = 2 * XStep * j;
+		const int cur_x = sx + TILE_WIDTH / 2 - XStep * j;
 		if (cur_x >= 0) {
 			memset(dst, 0, w);
 		} else if (-cur_x <= w) {
@@ -637,18 +637,18 @@ void BlitBlackTileClipLeftY(BYTE *dst, int dst_pitch, int sx, int skip_lower_bot
 void BlitBlackTileClipWidthY(BYTE *dst, int dst_pitch, int max_w, int skip_lower_bottom, int skip_lower_top, int skip_upper_bottom, int skip_upper_top)
 {
 	// Lower triangle (drawn bottom to top):
-	for (int i = skip_lower_bottom + 1; i <= kLowerHeight - skip_lower_top; ++i, dst -= dst_pitch + kXStep) {
+	for (int i = skip_lower_bottom + 1; i <= LowerHeight - skip_lower_top; ++i, dst -= dst_pitch + XStep) {
 		if (max_w > 0)
-			memset(dst, 0, std::min(2 * kXStep * i, max_w));
-		max_w += 2 * kXStep * i;
+			memset(dst, 0, std::min(2 * XStep * i, max_w));
+		max_w += 2 * XStep * i;
 	}
-	dst += 2 * kXStep;
+	dst += 2 * XStep;
 	// Upper triangle (drawn bottom to top):
-	for (int i = skip_upper_bottom, j = kUpperHeight - skip_upper_bottom; i < kUpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - kXStep) {
-		max_w -= 2 * kXStep;
+	for (int i = skip_upper_bottom, j = UpperHeight - skip_upper_bottom; i < UpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - XStep) {
+		max_w -= 2 * XStep;
 		if (max_w <= 0)
 			break;
-		memset(dst, 0, std::min(2 * kXStep * j, max_w));
+		memset(dst, 0, std::min(2 * XStep * j, max_w));
 	}
 }
 
@@ -656,13 +656,13 @@ void BlitBlackTileClipWidthY(BYTE *dst, int dst_pitch, int max_w, int skip_lower
 void BlitBlackTileClipY(BYTE *dst, int dst_pitch, int skip_lower_bottom, int skip_lower_top, int skip_upper_bottom, int skip_upper_top)
 {
 	// Lower triangle (drawn bottom to top):
-	for (int i = skip_lower_bottom + 1; i <= kLowerHeight - skip_lower_top; ++i, dst -= dst_pitch + kXStep) {
-		memset(dst, 0, 2 * kXStep * i);
+	for (int i = skip_lower_bottom + 1; i <= LowerHeight - skip_lower_top; ++i, dst -= dst_pitch + XStep) {
+		memset(dst, 0, 2 * XStep * i);
 	}
-	dst += 2 * kXStep;
+	dst += 2 * XStep;
 	// Upper triangle (drawn bottom to top):
-	for (int i = skip_upper_bottom, j = kUpperHeight - skip_upper_bottom; i < kUpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - kXStep) {
-		memset(dst, 0, 2 * kXStep * j);
+	for (int i = skip_upper_bottom, j = UpperHeight - skip_upper_bottom; i < UpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - XStep) {
+		memset(dst, 0, 2 * XStep * j);
 	}
 }
 
@@ -671,13 +671,13 @@ void BlitBlackTileFull(BYTE *dst, int dst_pitch)
 {
 	// Tile is fully in bounds, can use constant loop boundaries.
 	// Lower triangle (drawn bottom to top):
-	for (int i = 1; i <= kLowerHeight; ++i, dst -= dst_pitch + kXStep) {
-		memset(dst, 0, 2 * kXStep * i);
+	for (int i = 1; i <= LowerHeight; ++i, dst -= dst_pitch + XStep) {
+		memset(dst, 0, 2 * XStep * i);
 	}
-	dst += 2 * kXStep;
+	dst += 2 * XStep;
 	// Upper triangle (drawn bottom to to top):
-	for (int i = 0, j = kUpperHeight; i < kUpperHeight; ++i, --j, dst -= dst_pitch - kXStep) {
-		memset(dst, 0, 2 * kXStep * j);
+	for (int i = 0, j = UpperHeight; i < UpperHeight; ++i, --j, dst -= dst_pitch - XStep) {
+		memset(dst, 0, 2 * XStep * j);
 	}
 }
 
@@ -685,11 +685,11 @@ void BlitBlackTileFull(BYTE *dst, int dst_pitch)
 
 void world_draw_black_tile(CelOutputBuffer out, int sx, int sy)
 {
-	if (sx <= -TILE_WIDTH || sx >= out.region.w || sy < 0 || sy + 1 > out.region.h + kHeight)
+	if (sx <= -TILE_WIDTH || sx >= out.region.w || sy < 0 || sy + 1 > out.region.h + Height)
 		return;
 
 	// Initial out position: the bottom corner of the lower triangle.
-	int out_x = sx + TILE_WIDTH / 2 - kXStep;
+	int out_x = sx + TILE_WIDTH / 2 - XStep;
 	int out_y = sy;
 
 	// How many lines to skip for the lower and upper triangles:
@@ -700,21 +700,21 @@ void world_draw_black_tile(CelOutputBuffer out, int sx, int sy)
 	if (sy >= out.region.h) {
 		skip_lower_bottom = sy - out.region.h + 1;
 		out_y -= skip_lower_bottom;
-		if (skip_lower_bottom > kLowerHeight) {
-			skip_upper_bottom = skip_lower_bottom - kLowerHeight;
-			skip_lower_bottom = kLowerHeight;
+		if (skip_lower_bottom > LowerHeight) {
+			skip_upper_bottom = skip_lower_bottom - LowerHeight;
+			skip_lower_bottom = LowerHeight;
 		}
-		out_x += kXStep * (skip_upper_bottom - skip_lower_bottom);
-	} else if (sy + 1 < kHeight) {
-		skip_upper_top = kHeight - (sy + 1) - 1;
-		if (skip_upper_top > kUpperHeight) {
-			skip_lower_top = skip_upper_top - kUpperHeight;
-			skip_upper_top = kUpperHeight;
+		out_x += XStep * (skip_upper_bottom - skip_lower_bottom);
+	} else if (sy + 1 < Height) {
+		skip_upper_top = Height - (sy + 1) - 1;
+		if (skip_upper_top > UpperHeight) {
+			skip_lower_top = skip_upper_top - UpperHeight;
+			skip_upper_top = UpperHeight;
 		}
 	}
 
 	BYTE *dst = out.at(out_x, out_y);
-	if (out_x < TILE_WIDTH / 2 - kXStep) {
+	if (out_x < TILE_WIDTH / 2 - XStep) {
 		BlitBlackTileClipLeftY(dst, out.pitch(), sx, skip_lower_bottom, skip_lower_top, skip_upper_bottom, skip_upper_top);
 	} else if (sx > out.region.w - TILE_WIDTH) {
 		BlitBlackTileClipWidthY(dst, out.pitch(), out.region.w - out_x, skip_lower_bottom, skip_lower_top, skip_upper_bottom, skip_upper_top);

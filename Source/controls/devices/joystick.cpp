@@ -207,8 +207,8 @@ bool Joystick::IsPressed(ControllerButton button) const
 		return false;
 	if (IsHatButtonPressed(button))
 		return true;
-	const int joy_button = ToSdlJoyButton(button);
-	return joy_button != -1 && SDL_JoystickGetButton(sdl_joystick_, joy_button);
+	const int joyButton = ToSdlJoyButton(button);
+	return joyButton != -1 && SDL_JoystickGetButton(sdl_joystick_, joyButton);
 }
 
 bool Joystick::ProcessAxisMotion(const SDL_Event &event)
@@ -246,14 +246,14 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 	return true;
 }
 
-void Joystick::Add(int device_index)
+void Joystick::Add(int deviceIndex)
 {
-	if (SDL_NumJoysticks() <= device_index)
+	if (SDL_NumJoysticks() <= deviceIndex)
 		return;
 	Joystick result;
-	SDL_Log("Adding joystick %d: %s", device_index,
-	    SDL_JoystickNameForIndex(device_index));
-	result.sdl_joystick_ = SDL_JoystickOpen(device_index);
+	SDL_Log("Adding joystick %d: %s", deviceIndex,
+	    SDL_JoystickNameForIndex(deviceIndex));
+	result.sdl_joystick_ = SDL_JoystickOpen(deviceIndex);
 	if (result.sdl_joystick_ == nullptr) {
 		SDL_Log("%s", SDL_GetError());
 		SDL_ClearError();
@@ -266,19 +266,19 @@ void Joystick::Add(int device_index)
 	sgbControllerActive = true;
 }
 
-void Joystick::Remove(SDL_JoystickID instance_id)
+void Joystick::Remove(SDL_JoystickID instanceId)
 {
 #ifndef USE_SDL1
-	SDL_Log("Removing joystick (instance id: %d)", instance_id);
+	SDL_Log("Removing joystick (instance id: %d)", instanceId);
 	for (std::size_t i = 0; i < joysticks_->size(); ++i) {
 		const Joystick &joystick = (*joysticks_)[i];
-		if (joystick.instance_id_ != instance_id)
+		if (joystick.instance_id_ != instanceId)
 			continue;
 		joysticks_->erase(joysticks_->begin() + i);
 		sgbControllerActive = !joysticks_->empty();
 		return;
 	}
-	SDL_Log("Joystick not found with instance id: %d", instance_id);
+	SDL_Log("Joystick not found with instance id: %d", instanceId);
 #endif
 }
 
@@ -287,10 +287,10 @@ const std::vector<Joystick> &Joystick::All()
 	return *joysticks_;
 }
 
-Joystick *Joystick::Get(SDL_JoystickID instance_id)
+Joystick *Joystick::Get(SDL_JoystickID instanceId)
 {
 	for (auto &joystick : *joysticks_) {
-		if (joystick.instance_id_ == instance_id)
+		if (joystick.instance_id_ == instanceId)
 			return &joystick;
 	}
 	return nullptr;

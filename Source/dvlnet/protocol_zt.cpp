@@ -295,11 +295,11 @@ uint64_t protocol_zt::current_ms()
 std::string protocol_zt::make_default_gamename()
 {
 	std::string ret;
-	std::string allowed_chars = "abcdefghkopqrstuvwxyz";
+	std::string allowedChars = "abcdefghkopqrstuvwxyz";
 	std::random_device rd;
-	std::uniform_int_distribution<int> dist(0, allowed_chars.size() - 1);
+	std::uniform_int_distribution<int> dist(0, allowedChars.size() - 1);
 	for (int i = 0; i < 5; ++i) {
-		ret += allowed_chars.at(dist(rd));
+		ret += allowedChars.at(dist(rd));
 	}
 	return ret;
 }

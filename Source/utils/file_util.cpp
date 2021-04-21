@@ -56,10 +56,10 @@ bool GetFileSize(const char *path, std::uintmax_t *size)
 	*size = (attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
 	return true;
 #else
-	struct ::stat stat_result;
-	if (::stat(path, &stat_result) == -1)
+	struct ::stat statResult;
+	if (::stat(path, &statResult) == -1)
 		return false;
-	*size = static_cast<uintmax_t>(stat_result.st_size);
+	*size = static_cast<uintmax_t>(statResult.st_size);
 	return true;
 #endif
 }

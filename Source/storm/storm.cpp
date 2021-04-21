@@ -181,7 +181,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	//
 	// This is useful because in SDL the pitch size is often slightly larger
 	// than image width for efficiency.
-	const int x_skip = dwBuffersize / height - width;
+	const int xSkip = dwBuffersize / height - width;
 
 	if (pdwWidth)
 		*pdwWidth = width;
@@ -223,7 +223,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 				}
 			}
 			// Skip the pitch padding.
-			pBuffer += x_skip;
+			pBuffer += xSkip;
 		}
 
 		free(fileBuffer);

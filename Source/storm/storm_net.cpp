@@ -149,20 +149,20 @@ int SNetInitializeProvider(Uint32 provider, struct GameData *gameData)
 /**
  * @brief Called by engine for single, called by ui for multi
  */
-bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, char *GameTemplateData, int GameTemplateSize, int *playerID)
+bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, char *gameTemplateData, int gameTemplateSize, int *playerID)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
 #endif
-	if (GameTemplateSize != sizeof(GameData))
+	if (gameTemplateSize != sizeof(GameData))
 		ABORT();
-	net::buffer_t game_init_info(GameTemplateData, GameTemplateData + GameTemplateSize);
-	dvlnet_inst->setup_gameinfo(std::move(game_init_info));
+	net::buffer_t gameInitInfo(gameTemplateData, gameTemplateData + gameTemplateSize);
+	dvlnet_inst->setup_gameinfo(std::move(gameInitInfo));
 
-	std::string default_name;
+	std::string defaultName;
 	if (!pszGameName) {
-		default_name = dvlnet_inst->make_default_gamename();
-		pszGameName = default_name.c_str();
+		defaultName = dvlnet_inst->make_default_gamename();
+		pszGameName = defaultName.c_str();
 	}
 
 	strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);

@@ -65,13 +65,13 @@ void tcp_server::start_recv(const scc &con)
 }
 
 void tcp_server::handle_recv(const scc &con, const asio::error_code &ec,
-    size_t bytes_read)
+    size_t bytesRead)
 {
-	if (ec || bytes_read == 0) {
+	if (ec || bytesRead == 0) {
 		drop_connection(con);
 		return;
 	}
-	con->recv_buffer.resize(bytes_read);
+	con->recv_buffer.resize(bytesRead);
 	con->recv_queue.write(std::move(con->recv_buffer));
 	con->recv_buffer.resize(frame_queue::max_frame_size);
 	while (con->recv_queue.packet_ready()) {
@@ -140,14 +140,14 @@ void tcp_server::start_send(const scc &con, packet &pkt)
 	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
 	auto buf = asio::buffer(*frame);
 	asio::async_write(con->socket, buf,
-	    [this, con, frame](const asio::error_code &ec, size_t bytes_sent) {
-		    handle_send(con, ec, bytes_sent);
+	    [this, con, frame](const asio::error_code &ec, size_t bytesSent) {
+		    handle_send(con, ec, bytesSent);
 		    delete frame;
 	    });
 }
 
 void tcp_server::handle_send(const scc &con, const asio::error_code &ec,
-    size_t bytes_sent)
+    size_t bytesSent)
 {
 	// empty for now
 }

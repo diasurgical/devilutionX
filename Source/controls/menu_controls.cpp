@@ -25,18 +25,18 @@ MenuAction GetMenuHeldUpDownAction()
 
 MenuAction GetMenuAction(const SDL_Event &event)
 {
-	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
+	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
 
-	if (ProcessControllerMotion(event, ctrl_event)) {
+	if (ProcessControllerMotion(event, ctrlEvent)) {
 		sgbControllerActive = true;
 		return GetMenuHeldUpDownAction();
 	}
 
-	if (ctrl_event.button != ControllerButton_NONE)
+	if (ctrlEvent.button != ControllerButton_NONE)
 		sgbControllerActive = true;
 
-	if (!ctrl_event.up) {
-		switch (ctrl_event.button) {
+	if (!ctrlEvent.up) {
+		switch (ctrlEvent.button) {
 		case ControllerButton_IGNORE:
 			return MenuAction_NONE;
 		case ControllerButton_BUTTON_B: // Right button
