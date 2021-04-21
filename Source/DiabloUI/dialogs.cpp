@@ -36,7 +36,7 @@ std::vector<UiItemBase *> vecOkDialog;
 void LoadFallbackPalette()
 {
 	// clang-format off
-	static const SDL_Color FallbackPalette[256] = {
+	static const SDL_Color kFallbackPalette[256] = {
 		{ 0x00, 0x00, 0x00, 0 },
 		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
 		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
@@ -153,7 +153,7 @@ void LoadFallbackPalette()
 		BLANKCOLOR,
 	};
 	// clang-format on
-	ApplyGamma(logical_palette, FallbackPalette, 256);
+	ApplyGamma(logical_palette, kFallbackPalette, 256);
 }
 
 void Init(const char *text, const char *caption, bool error, bool renderBehind)

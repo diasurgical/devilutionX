@@ -19,8 +19,8 @@ namespace devilution {
 namespace {
 
 const SDL_Rect VIEWPORT = { 0, 114, 640, 251 };
-const int ShadowOffsetX = 2;
-const int ShadowOffsetY = 2;
+const int kShadowOffsetX = 2;
+const int kShadowOffsetY = 2;
 const int LINE_H = 22;
 
 char const *const *text;
@@ -74,7 +74,7 @@ CachedLine PrepareLine(std::size_t index)
 	SDLSurfaceUniquePtr surface;
 	if (text != nullptr) {
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
-		surface = SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8) };
+		surface = SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormat(0, text->w + kShadowOffsetX, text->h + kShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8) };
 		const SDL_Color maskColor = { 0, 255, 0, 0 }; // Any color different from both shadow and text
 		const SDL_Color &textColor = palette->colors[224];
 		SDL_Color colors[3] = { maskColor, textColor, shadowColor };
@@ -83,7 +83,7 @@ CachedLine PrepareLine(std::size_t index)
 		SDLC_SetColorKey(surface.get(), 0);
 
 		// Blit the shadow first:
-		SDL_Rect shadowRect = { ShadowOffsetX, ShadowOffsetY, 0, 0 };
+		SDL_Rect shadowRect = { kShadowOffsetX, kShadowOffsetY, 0, 0 };
 		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), &shadowRect) <= -1)
 			ErrSdl();
 

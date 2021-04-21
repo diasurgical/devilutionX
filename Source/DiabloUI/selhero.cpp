@@ -32,7 +32,7 @@ namespace {
 std::size_t selhero_SaveCount = 0;
 _uiheroinfo selhero_heros[MAX_CHARACTERS];
 _uiheroinfo selhero_heroInfo;
-const size_t KMaxViewportItems = 6;
+const size_t kKMaxViewportItems = 6;
 char textStats[5][4];
 char title[32];
 _selhero_selections selhero_result;
@@ -112,13 +112,13 @@ UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON;
 
 void SelheroUpdateViewportItems()
 {
-	const std::size_t numViewportHeroes = std::min(selhero_SaveCount - listOffset, KMaxViewportItems);
+	const std::size_t numViewportHeroes = std::min(selhero_SaveCount - listOffset, kKMaxViewportItems);
 	for (std::size_t i = 0; i < numViewportHeroes; i++) {
 		const std::size_t index = i + listOffset;
 		vecSelHeroDlgItems[i]->m_text = selhero_heros[index].name;
 		vecSelHeroDlgItems[i]->m_value = static_cast<int>(index);
 	}
-	if (numViewportHeroes < KMaxViewportItems) {
+	if (numViewportHeroes < kKMaxViewportItems) {
 		vecSelHeroDlgItems[numViewportHeroes]->m_text = "New Hero";
 		vecSelHeroDlgItems[numViewportHeroes]->m_value = static_cast<int>(selhero_SaveCount);
 	}
@@ -127,8 +127,8 @@ void SelheroUpdateViewportItems()
 void SelheroScrollIntoView(std::size_t index)
 {
 	std::size_t newOffset = listOffset;
-	if (index >= listOffset + KMaxViewportItems)
-		newOffset = index - (KMaxViewportItems - 1);
+	if (index >= listOffset + kKMaxViewportItems)
+		newOffset = index - (kKMaxViewportItems - 1);
 	if (index < listOffset)
 		newOffset = index;
 	if (newOffset != listOffset) {
@@ -399,7 +399,7 @@ void SelheroLoadSelect(int value)
 
 const char *SelheroGenerateName(HeroClass heroClass)
 {
-	static const char *const KNames[6][10] = {
+	static const char *const kKNames[6][10] = {
 		{
 		    // Warrior
 		    "Aidan",
@@ -482,7 +482,7 @@ const char *SelheroGenerateName(HeroClass heroClass)
 
 	int iRand = rand() % 10;
 
-	return KNames[static_cast<std::size_t>(heroClass) % 6][iRand];
+	return kKNames[static_cast<std::size_t>(heroClass) % 6][iRand];
 }
 
 } // namespace
@@ -544,7 +544,7 @@ void selhero_List_Init()
 	vecSelDlgItems.push_back(new UiArtText("Select Hero", rect1, UIS_CENTER | UIS_BIG));
 
 	SelheroFreeListItems();
-	const size_t numViewportHeroes = std::min(selhero_SaveCount + 1, KMaxViewportItems);
+	const size_t numViewportHeroes = std::min(selhero_SaveCount + 1, kKMaxViewportItems);
 	for (std::size_t i = 0; i < numViewportHeroes; i++) {
 		vecSelHeroDlgItems.push_back(new UiListItem("", -1));
 	}
@@ -567,7 +567,7 @@ void selhero_List_Init()
 	vecSelDlgItems.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect5, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	UiInitList(selhero_SaveCount + 1, SelheroListFocus, SelheroListSelect, SelheroListEsc, vecSelDlgItems, false, SelheroListDeleteYesNo);
-	UiInitScrollBar(scrollBar, KMaxViewportItems, &listOffset);
+	UiInitScrollBar(scrollBar, kKMaxViewportItems, &listOffset);
 	if (selhero_isMultiPlayer) {
 		strcpy(title, "Multi Player Characters");
 	} else {
