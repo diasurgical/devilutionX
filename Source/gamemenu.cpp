@@ -75,7 +75,7 @@ const char *const sound_toggle_names[] = {
 	"Sound Disabled",
 };
 
-void gamemenu_update_single(TMenuItem *pMenuItems)
+void gamemenu_update_single()
 {
 	bool enable;
 
@@ -88,7 +88,7 @@ void gamemenu_update_single(TMenuItem *pMenuItems)
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
 
-void gamemenu_update_multi(TMenuItem *pMenuItems)
+void gamemenu_update_multi()
 {
 	gmenu_enable(&sgMultiMenu[2], deathflag);
 }

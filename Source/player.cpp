@@ -2234,11 +2234,6 @@ void StartWarpLvl(int pnum, int pidx)
 	}
 }
 
-bool PM_DoStand(int pnum)
-{
-	return false;
-}
-
 /**
  * @brief Continue movement towards new tile
  */
@@ -3176,11 +3171,6 @@ bool PM_DoDeath(int pnum)
 	return false;
 }
 
-bool PM_DoNewLvl(int pnum)
-{
-	return false;
-}
-
 void CheckNewPath(int pnum)
 {
 	int i, x, y;
@@ -3667,7 +3657,9 @@ void ProcessPlayers()
 			do {
 				switch (plr[pnum]._pmode) {
 				case PM_STAND:
-					tplayer = PM_DoStand(pnum);
+				case PM_NEWLVL:
+				case PM_QUIT:
+					tplayer = false;
 					break;
 				case PM_WALK:
 				case PM_WALK2:
@@ -3691,12 +3683,6 @@ void ProcessPlayers()
 					break;
 				case PM_DEATH:
 					tplayer = PM_DoDeath(pnum);
-					break;
-				case PM_NEWLVL:
-					tplayer = PM_DoNewLvl(pnum);
-					break;
-				case PM_QUIT:
-					tplayer = false;
 					break;
 				}
 				CheckNewPath(pnum);

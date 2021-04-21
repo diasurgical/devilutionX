@@ -1858,21 +1858,6 @@ void AddLightningArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Si
 	missile[mi]._midam <<= 6;
 }
 
-void AddFlashFront(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
-{
-}
-
-void AddFlashBack(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
-{
-	if (mienemy == TARGET_MONSTERS && id != -1) {
-		missile[mi]._midam = 0;
-		int lvl = 2;
-		if (id > -1)
-			lvl = plr[id]._pLevel * 2;
-		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
-	}
-}
-
 void AddMana(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
 	int i, ManaAmount;
@@ -1986,32 +1971,6 @@ void AddCboltArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32
 	missile[mi]._miVar2 = midir;
 	missile[mi]._miVar3 = 0;
 	missile[mi]._mirange = 256;
-}
-
-void AddHboltArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
-{
-	int i;
-
-	if (sx == dx && sy == dy) {
-		dx += XDirAdd[midir];
-		dy += YDirAdd[midir];
-	}
-
-	if (id != -1) {
-		i = 2 * missile[mi]._mispllvl + 16;
-		if (i >= 63) {
-			i = 63;
-		}
-	} else {
-		i = 16;
-	}
-
-	GetMissileVel(mi, sx, sy, dx, dy, i);
-	SetMissDir(mi, GetDirection16(sx, sy, dx, dy));
-	missile[mi]._mirange = 256;
-	missile[mi]._miVar1 = sx;
-	missile[mi]._miVar2 = sy;
-	missile[mi]._mlid = AddLight(sx, sy, 8);
 }
 
 void AddLArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)

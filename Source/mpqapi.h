@@ -43,7 +43,7 @@ void mpqapi_remove_hash_entries(bool (*fnGetName)(uint8_t, char *));
 bool mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen);
 void mpqapi_rename(char *pszOld, char *pszNew);
 bool mpqapi_has_file(const char *pszName);
-bool OpenMPQ(const char *pszArchive, DWORD dwChar);
-bool mpqapi_flush_and_close(const char *pszArchive, bool bFree, DWORD dwChar);
+bool OpenMPQ(const char *pszArchive);
+bool mpqapi_flush_and_close(bool bFree);
 
 } // namespace devilution

@@ -21,7 +21,7 @@ BYTE *BigTGold_cel;
 int LogoAnim_tick;
 BYTE LogoAnim_frame;
 int PentSpin_tick;
-void (*gmenu_current_option)(TMenuItem *);
+void (*gmenu_current_option)();
 TMenuItem *sgpCurrentMenu;
 BYTE *option_cel;
 BYTE *sgpLogo;
@@ -162,7 +162,7 @@ static void gmenu_left_right(bool isRight)
 	sgpCurrItem->fnMenu(false);
 }
 
-void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
+void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 {
 	int i;
 
@@ -171,7 +171,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 	sgpCurrentMenu = pItem;
 	gmenu_current_option = gmFunc;
 	if (gmFunc) {
-		gmenu_current_option(sgpCurrentMenu);
+		gmenu_current_option();
 		pItem = sgpCurrentMenu;
 	}
 	sgCurrentMenuIdx = 0;
@@ -254,7 +254,7 @@ void gmenu_draw(const CelOutputBuffer &out)
 	if (sgpCurrentMenu) {
 		GameMenuMove();
 		if (gmenu_current_option)
-			gmenu_current_option(sgpCurrentMenu);
+			gmenu_current_option();
 		if (gbIsHellfire) {
 			ticks = SDL_GetTicks();
 			if ((int)(ticks - LogoAnim_tick) > 25) {

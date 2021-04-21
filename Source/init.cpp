@@ -229,7 +229,7 @@ void init_create_window()
 #endif
 }
 
-void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam)
+void MainWndProc(UINT Msg)
 {
 	switch (Msg) {
 	case DVL_WM_PAINT:

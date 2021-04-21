@@ -446,7 +446,7 @@ static void multi_process_tmsgs()
 	int cnt;
 	TPkt pkt;
 
-	while ((cnt = tmsg_get((BYTE *)&pkt, 512)) != 0) {
+	while ((cnt = tmsg_get((BYTE *)&pkt)) != 0) {
 		multi_handle_all_packets(myplr, (BYTE *)&pkt, cnt);
 	}
 }
@@ -643,28 +643,6 @@ static void SetupLocalCoords()
 	plr[myplr].destAction = ACTION_NONE;
 }
 
-static bool multi_upgrade(bool *pfExitProgram)
-{
-	bool result;
-	int status;
-
-	SNetPerformUpgrade((LPDWORD)&status);
-	result = true;
-	if (status && status != 1) {
-		if (status != 2) {
-			if (status == -1) {
-				DrawDlg("Network upgrade failed");
-			}
-		} else {
-			*pfExitProgram = true;
-		}
-
-		result = false;
-	}
-
-	return result;
-}
-
 static void multi_handle_events(_SNETEVENT *pEvt)
 {
 	DWORD LeftReason;
@@ -734,10 +712,9 @@ void NetClose()
 		SDL_Delay(2000);
 }
 
-bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
+bool NetInit(bool bSinglePlayer)
 {
 	while (true) {
-		*pfExitProgram = false;
 		SetRndSeed(0);
 		sgGameInitInfo.size = sizeof(sgGameInitInfo);
 		sgGameInitInfo.dwSeed = time(nullptr);
@@ -762,7 +739,7 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 			if (!multi_init_single(&sgGameInitInfo))
 				return false;
 		} else {
-			if (!multi_init_multi(&sgGameInitInfo, pfExitProgram))
+			if (!multi_init_multi(&sgGameInitInfo))
 				return false;
 		}
 		sgbNetInited = true;
@@ -818,7 +795,7 @@ bool multi_init_single(GameData *gameData)
 	}
 
 	unused = 0;
-	if (!SNetCreateGame("local", "local", "local", 0, (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), 1, "local", "local", &unused)) {
+	if (!SNetCreateGame("local", "local", (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), &unused)) {
 		app_fatal("SNetCreateGame1:\n%s", SDL_GetError());
 	}
 
@@ -828,17 +805,13 @@ bool multi_init_single(GameData *gameData)
 	return true;
 }
 
-bool multi_init_multi(GameData *gameData, bool *pfExitProgram)
+bool multi_init_multi(GameData *gameData)
 {
-	bool first;
 	int playerId;
 
-	for (first = true;; first = false) {
-		if (gbSelectProvider) {
-			if (!UiSelectProvider(gameData)
-			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
-				return false;
-			}
+	while (true) {
+		if (gbSelectProvider && !UiSelectProvider(gameData)) {
+			return false;
 		}
 
 		multi_event_handler(true);
