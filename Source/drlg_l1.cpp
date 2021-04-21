@@ -1710,32 +1710,32 @@ static void L5AddWall()
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
 			if (!L5dflags[i][j]) {
-				if (dungeon[i][j] == 3 && GenerateRnd(100) < 100) {
+				if (dungeon[i][j] == 3 && GenerateRnd(100) < WALL_CHANCE) {
 					x = L5HWallOk(i, j);
 					if (x != -1)
 						L5HorizWall(i, j, 2, x);
 				}
-				if (dungeon[i][j] == 3 && GenerateRnd(100) < 100) {
+				if (dungeon[i][j] == 3 && GenerateRnd(100) < WALL_CHANCE) {
 					y = L5VWallOk(i, j);
 					if (y != -1)
 						L5VertWall(i, j, 1, y);
 				}
-				if (dungeon[i][j] == 6 && GenerateRnd(100) < 100) {
+				if (dungeon[i][j] == 6 && GenerateRnd(100) < WALL_CHANCE) {
 					x = L5HWallOk(i, j);
 					if (x != -1)
 						L5HorizWall(i, j, 4, x);
 				}
-				if (dungeon[i][j] == 7 && GenerateRnd(100) < 100) {
+				if (dungeon[i][j] == 7 && GenerateRnd(100) < WALL_CHANCE) {
 					y = L5VWallOk(i, j);
 					if (y != -1)
 						L5VertWall(i, j, 4, y);
 				}
-				if (dungeon[i][j] == 2 && GenerateRnd(100) < 100) {
+				if (dungeon[i][j] == 2 && GenerateRnd(100) < WALL_CHANCE) {
 					x = L5HWallOk(i, j);
 					if (x != -1)
 						L5HorizWall(i, j, 2, x);
 				}
-				if (dungeon[i][j] == 1 && GenerateRnd(100) < 100) {
+				if (dungeon[i][j] == 1 && GenerateRnd(100) < WALL_CHANCE) {
 					y = L5VWallOk(i, j);
 					if (y != -1)
 						L5VertWall(i, j, 1, y);

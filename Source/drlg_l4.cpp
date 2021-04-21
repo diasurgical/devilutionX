@@ -465,91 +465,91 @@ static void L4AddWall()
 			if (dflags[i][j] != 0) {
 				continue;
 			}
-			if (dungeon[i][j] == 10 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 10 && GenerateRnd(100) < WALL_CHANCE) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 12 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 12 && GenerateRnd(100) < WALL_CHANCE) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 13 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 13 && GenerateRnd(100) < WALL_CHANCE) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 15 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 15 && GenerateRnd(100) < WALL_CHANCE) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 16 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 16 && GenerateRnd(100) < WALL_CHANCE) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 21 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 21 && GenerateRnd(100) < WALL_CHANCE) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 22 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 22 && GenerateRnd(100) < WALL_CHANCE) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 8 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 8 && GenerateRnd(100) < WALL_CHANCE) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 9 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 9 && GenerateRnd(100) < WALL_CHANCE) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 11 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 11 && GenerateRnd(100) < WALL_CHANCE) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 14 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 14 && GenerateRnd(100) < WALL_CHANCE) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 15 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 15 && GenerateRnd(100) < WALL_CHANCE) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 16 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 16 && GenerateRnd(100) < WALL_CHANCE) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 21 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 21 && GenerateRnd(100) < WALL_CHANCE) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 23 && GenerateRnd(100) < 100) {
+			if (dungeon[i][j] == 23 && GenerateRnd(100) < WALL_CHANCE) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);

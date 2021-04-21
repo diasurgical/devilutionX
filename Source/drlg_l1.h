@@ -10,6 +10,8 @@
 
 namespace devilution {
 
+#define WALL_CHANCE 100
+
 extern int UberRow;
 extern int UberCol;
 extern bool IsUberRoomOpened;
