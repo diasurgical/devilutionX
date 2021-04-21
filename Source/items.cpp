@@ -3823,13 +3823,13 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	}
 }
 
-static void DrawUTextBack(CelOutputBuffer out)
+static void DrawUTextBack(const CelOutputBuffer &out)
 {
 	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, pSTextBoxCels, 1, 271);
 	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
-void PrintUString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col)
+void PrintUString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col)
 {
 	int len, width, sx, sy, i, k;
 	BYTE c;
@@ -3866,7 +3866,7 @@ static void DrawULine(CelOutputBuffer out, int y)
 		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)
 }
 
-void DrawUniqueInfo(CelOutputBuffer out)
+void DrawUniqueInfo(const CelOutputBuffer &out)
 {
 	int uid, y;
 

@@ -54,7 +54,7 @@ const BYTE lfontkern[] = {
 	11, 10, 12, 11, 21, 23
 };
 
-static void gmenu_print_text(CelOutputBuffer out, int x, int y, const char *pszStr)
+static void gmenu_print_text(const CelOutputBuffer &out, int x, int y, const char *pszStr)
 {
 	BYTE c;
 
@@ -67,7 +67,7 @@ static void gmenu_print_text(CelOutputBuffer out, int x, int y, const char *pszS
 	}
 }
 
-void gmenu_draw_pause(CelOutputBuffer out)
+void gmenu_draw_pause(const CelOutputBuffer &out)
 {
 	if (currlevel != 0)
 		RedBack(out);
@@ -211,7 +211,7 @@ static int gmenu_get_lfont(TMenuItem *pItem)
 	return i - 2;
 }
 
-static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
+static void gmenu_draw_menu_item(const CelOutputBuffer &out, TMenuItem *pItem, int y)
 {
 	DWORD w, x, nSteps, step, pos;
 	w = gmenu_get_lfont(pItem);
@@ -245,7 +245,7 @@ static void GameMenuMove()
 		gmenu_up_down(move_dir.y == AxisDirectionY_DOWN);
 }
 
-void gmenu_draw(CelOutputBuffer out)
+void gmenu_draw(const CelOutputBuffer &out)
 {
 	int y;
 	TMenuItem *i;

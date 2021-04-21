@@ -2,6 +2,7 @@
 #ifndef NONET
 #include <mutex>
 #include <thread>
+#include <utility>
 #endif
 
 #include "dvlnet/abstract_net.h"
@@ -239,7 +240,7 @@ std::vector<std::string> DvlNet_GetGamelist()
 
 void DvlNet_SetPassword(std::string pw)
 {
-	dvlnet_inst->setup_password(pw);
+	dvlnet_inst->setup_password(std::move(pw));
 }
 
 } // namespace devilution

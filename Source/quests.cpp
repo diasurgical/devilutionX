@@ -728,7 +728,7 @@ void ResyncQuests()
 	}
 }
 
-static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col)
+static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col)
 {
 	int len, width, i, k, sx, sy;
 	BYTE c;
@@ -761,7 +761,7 @@ static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, con
 	}
 }
 
-void DrawQuestLog(CelOutputBuffer out)
+void DrawQuestLog(const CelOutputBuffer &out)
 {
 	int y, i;
 

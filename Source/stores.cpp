@@ -79,13 +79,13 @@ text_color GetItemTextColor(ItemStruct &item)
 	return text_color::COL_WHITE;
 }
 
-void DrawSTextBack(CelOutputBuffer out)
+void DrawSTextBack(const CelOutputBuffer &out)
 {
 	CelDrawTo(out, PANEL_X + 344, 327 + UI_OFFSET_Y, pSTextBoxCels, 1, 271);
 	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297);
 }
 
-void DrawSSlider(CelOutputBuffer out, int y1, int y2)
+void DrawSSlider(const CelOutputBuffer &out, int y1, int y2)
 {
 	int yd1, yd2, yd3;
 
@@ -2160,7 +2160,7 @@ void FreeStoreMem()
 	MemFreeDbg(pSTextSlidCels);
 }
 
-void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col, int val)
+void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col, int val)
 {
 	int len, width, sx, sy, i, k, s;
 	int xx, yy;
@@ -2357,7 +2357,7 @@ void StartStore(talk_id s)
 	stextflag = s;
 }
 
-void DrawSText(CelOutputBuffer out)
+void DrawSText(const CelOutputBuffer &out)
 {
 	int i;
 

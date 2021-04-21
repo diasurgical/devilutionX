@@ -88,7 +88,7 @@ void doom_close()
 	doom_cleanup();
 }
 
-void doom_draw(CelOutputBuffer out)
+void doom_draw(const CelOutputBuffer &out)
 {
 	if (!doomflag) {
 		return;

@@ -457,7 +457,7 @@ void InitHelp()
 	helpflag = false;
 }
 
-static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, text_color color)
+static void DrawHelpLine(const CelOutputBuffer &out, int x, int y, char *text, text_color color)
 {
 	int sx, sy, width;
 	BYTE c;
@@ -478,7 +478,7 @@ static void DrawHelpLine(CelOutputBuffer out, int x, int y, char *text, text_col
 	}
 }
 
-void DrawHelp(CelOutputBuffer out)
+void DrawHelp(const CelOutputBuffer &out)
 {
 	int i, c, w;
 	const char *s;
