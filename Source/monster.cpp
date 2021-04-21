@@ -6,7 +6,7 @@
 #include "monster.h"
 
 #include <algorithm>
-#include <limits.h>
+#include <climits>
 
 #include "control.h"
 #include "cursor.h"
@@ -369,7 +369,7 @@ void InitMonsterGFX(int monst)
 	}
 
 	Monsters[monst].width = monsterdata[mtype].width;
-	Monsters[monst].width2 = (monsterdata[mtype].width - 64) >> 1;
+	Monsters[monst].width2 = (monsterdata[mtype].width - 64) / 2;
 	Monsters[monst].mMinHP = monsterdata[mtype].mMinHP;
 	Monsters[monst].mMaxHP = monsterdata[mtype].mMaxHP;
 	if (!gbIsHellfire && mtype == MT_DIABLO) {
@@ -502,7 +502,7 @@ void InitMonster(int i, direction rd, int mtype, int x, int y)
 	}
 
 	if (!gbIsMultiplayer) {
-		monster[i]._mmaxhp >>= 1;
+		monster[i]._mmaxhp /= 2;
 		if (monster[i]._mmaxhp < 64) {
 			monster[i]._mmaxhp = 64;
 		}
@@ -647,7 +647,7 @@ void monster_some_crypt()
 	if (currlevel == 24 && UberDiabloMonsterIndex >= 0 && UberDiabloMonsterIndex < nummonsters) {
 		mon = &monster[UberDiabloMonsterIndex];
 		PlayEffect(UberDiabloMonsterIndex, 2);
-		quests[Q_NAKRUL]._qlog = 0;
+		quests[Q_NAKRUL]._qlog = false;
 		mon->mArmorClass -= 50;
 		hp = mon->_mmaxhp / 2;
 		mon->mMagicRes = 0;
@@ -670,7 +670,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	}
 	dMonster[x][y] = i + 1;
 
-	direction rd = static_cast<direction>(random_(90, 8));
+	auto rd = static_cast<direction>(random_(90, 8));
 	InitMonster(i, rd, mtype, x, y);
 }
 
@@ -689,7 +689,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	count = 0;
 	Uniq = &UniqMonst[uniqindex];
 
-	if ((uniquetrans + 19) << 8 >= LIGHTSIZE) {
+	if ((uniquetrans + 19) * 256 >= LIGHTSIZE) {
 		return;
 	}
 
@@ -699,7 +699,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		}
 	}
 
-	while (1) {
+	while (true) {
 		xp = random_(91, 80) + 16;
 		yp = random_(91, 80) + 16;
 		count2 = 0;
@@ -804,7 +804,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	Monst->_mmaxhp = Uniq->mmaxhp << 6;
 
 	if (!gbIsMultiplayer) {
-		Monst->_mmaxhp = Monst->_mmaxhp >> 1;
+		Monst->_mmaxhp = Monst->_mmaxhp / 2;
 		if (Monst->_mmaxhp < 64) {
 			Monst->_mmaxhp = 64;
 		}
@@ -1160,7 +1160,7 @@ void InitMonsters()
 					na++;
 		numplacemonsters = na / 30;
 		if (gbIsMultiplayer)
-			numplacemonsters += numplacemonsters >> 1;
+			numplacemonsters += numplacemonsters / 2;
 		if (nummonsters + numplacemonsters > MAXMONSTERS - 10)
 			numplacemonsters = MAXMONSTERS - 10 - nummonsters;
 		totalmonsters = nummonsters + numplacemonsters;
@@ -1213,8 +1213,8 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 	rw = SDL_SwapLE16(*lm++);
 	rh = SDL_SwapLE16(*lm++);
 	lm += rw * rh;
-	rw = rw << 1;
-	rh = rh << 1;
+	rw = rw * 2;
+	rh = rh * 2;
 	lm += rw * rh;
 
 	for (j = 0; j < rh; j++) {
@@ -1325,7 +1325,7 @@ void M_Enemy(int i)
 
 	_menemy = -1;
 	best_dist = -1;
-	bestsameroom = 0;
+	bestsameroom = false;
 	Monst = &monster[i];
 	if (Monst->_mFlags & MFLAG_BERSERK || !(Monst->_mFlags & MFLAG_GOLEM)) {
 		for (pnum = 0; pnum < MAX_PLRS; pnum++) {
@@ -1739,7 +1739,7 @@ void SpawnLoot(int i, bool sendmsg)
 	} else if (Monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
-		quests[Q_DEFILER]._qlog = 0;
+		quests[Q_DEFILER]._qlog = false;
 		SpawnMapOfDoom(Monst->_mx, Monst->_my);
 	} else if (Monst->_uniqtype - 1 == UMT_HORKDMN) {
 		if (sgGameInitInfo.bTheoQuest) {
@@ -1754,7 +1754,7 @@ void SpawnLoot(int i, bool sendmsg)
 			nSFX = USFX_NAKRUL6;
 		if (effect_is_playing(nSFX))
 			stream_stop();
-		quests[Q_NAKRUL]._qlog = 0;
+		quests[Q_NAKRUL]._qlog = false;
 		UberDiabloMonsterIndex = -2;
 		CreateMagicWeapon(Monst->_mx, Monst->_my, ITYPE_SWORD, ICURS_GREAT_SWORD, false, true);
 		CreateMagicWeapon(Monst->_mx, Monst->_my, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
@@ -2013,7 +2013,7 @@ void M_ChangeLightOffset(int monst)
 		sign = 1;
 	}
 
-	_mxoff = sign * (lx >> 3);
+	_mxoff = sign * (lx / 8);
 	if (ly < 0) {
 		_myoff = -1;
 		ly = -ly;
@@ -2021,7 +2021,7 @@ void M_ChangeLightOffset(int monst)
 		_myoff = 1;
 	}
 
-	_myoff *= (ly >> 3);
+	_myoff *= (ly / 8);
 	if (monster[monst].mlid != NO_LIGHT)
 		ChangeLightOff(monster[monst].mlid, _mxoff, _myoff);
 }
@@ -2184,8 +2184,8 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	}
 	blk = plr[pnum]._pDexterity
 	    + plr[pnum]._pBaseToBlk
-	    - (monster[i].mLevel << 1)
-	    + (plr[pnum]._pLevel << 1);
+	    - (monster[i].mLevel * 2)
+	    + (plr[pnum]._pLevel * 2);
 	if (blk < 0)
 		blk = 0;
 	if (blk > 100)
@@ -2513,10 +2513,10 @@ bool M_DoTalk(int i)
 	}
 	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {
 		if (monster[i].mtalkmsg == TEXT_BANNER10 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
-			ObjChangeMap(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 2, (setpc_h >> 1) + setpc_y - 2);
+			ObjChangeMap(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
 			tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 4, setpc_y + (setpc_h >> 1));
+			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
 			quests[Q_LTBANNER]._qvar1 = 2;
 			if (quests[Q_LTBANNER]._qactive == QUEST_INIT)
@@ -2673,20 +2673,16 @@ void PrepDoEnding()
 	deathflag = false;
 	cineflag = true;
 
-	uint32_t *killLevel = &plr[myplr].pDiabloKillLevel;
-	uint32_t newKillLevel = sgGameInitInfo.nDifficulty + 1;
-	if (*killLevel > newKillLevel)
-		newKillLevel = *killLevel;
-	plr[myplr].pDiabloKillLevel = newKillLevel;
+	plr[myplr].pDiabloKillLevel = std::max(plr[myplr].pDiabloKillLevel, static_cast<uint8_t>(sgGameInitInfo.nDifficulty + 1));
 
-	for (int i = 0; i < MAX_PLRS; i++) {
-		plr[i]._pmode = PM_QUIT;
-		plr[i]._pInvincible = true;
+	for (auto &player : plr) {
+		player._pmode = PM_QUIT;
+		player._pInvincible = true;
 		if (gbIsMultiplayer) {
-			if (plr[i]._pHitPoints >> 6 == 0)
-				plr[i]._pHitPoints = 64;
-			if (plr[i]._pMana >> 6 == 0)
-				plr[i]._pMana = 64;
+			if (player._pHitPoints >> 6 == 0)
+				player._pHitPoints = 64;
+			if (player._pMana >> 6 == 0)
+				player._pMana = 64;
 		}
 	}
 }
@@ -3559,7 +3555,7 @@ void MAI_Round(int i, bool special)
 				}
 			} else if (v < 2 * Monst->_mint + 23) {
 				Monst->_mdir = md;
-				if (special && Monst->_mhitpoints < (Monst->_mmaxhp >> 1) && random_(117, 2) != 0)
+				if (special && Monst->_mhitpoints < (Monst->_mmaxhp / 2) && random_(117, 2) != 0)
 					M_StartSpAttack(i);
 				else
 					M_StartAttack(i);
@@ -3676,7 +3672,7 @@ void MAI_Scav(int i)
 	done = false;
 	if (monster[i]._mmode != MM_STAND)
 		return;
-	if (Monst->_mhitpoints < (Monst->_mmaxhp >> 1) && Monst->_mgoal != MGOAL_HEALING) {
+	if (Monst->_mhitpoints < (Monst->_mmaxhp / 2) && Monst->_mgoal != MGOAL_HEALING) {
 		if (Monst->leaderflag != 0) {
 			monster[Monst->leader].packsize--;
 			Monst->leaderflag = 0;
@@ -3691,7 +3687,7 @@ void MAI_Scav(int i)
 			if (!(Monst->_mFlags & MFLAG_NOHEAL)) {
 				if (gbIsHellfire) {
 					int mMaxHP = Monst->_mmaxhp; // BUGFIX use _mmaxhp or we loose health when difficulty isn't normal (fixed)
-					Monst->_mhitpoints += mMaxHP >> 3;
+					Monst->_mhitpoints += mMaxHP / 8;
 					if (Monst->_mhitpoints > Monst->_mmaxhp)
 						Monst->_mhitpoints = Monst->_mmaxhp;
 					if (Monst->_mgoalvar3 <= 0 || Monst->_mhitpoints == Monst->_mmaxhp)
@@ -3702,7 +3698,7 @@ void MAI_Scav(int i)
 			}
 			int targetHealth = Monst->_mmaxhp;
 			if (!gbIsHellfire)
-				targetHealth = (Monst->_mmaxhp >> 1) + (Monst->_mmaxhp >> 2);
+				targetHealth = (Monst->_mmaxhp / 2) + (Monst->_mmaxhp / 4);
 			if (Monst->_mhitpoints >= targetHealth) {
 				Monst->_mgoal = MGOAL_NORMAL;
 				Monst->_mgoalvar1 = 0;
@@ -3788,7 +3784,7 @@ void MAI_Garg(int i)
 		return;
 	}
 
-	if (Monst->_mhitpoints < (Monst->_mmaxhp >> 1))
+	if (Monst->_mhitpoints < (Monst->_mmaxhp / 2))
 		if (!(Monst->_mFlags & MFLAG_NOHEAL))
 			Monst->_mgoal = MGOAL_RETREAT;
 	if (Monst->_mgoal == MGOAL_RETREAT) {
@@ -4288,7 +4284,7 @@ void MAI_Counselor(int i)
 					M_StartDelay(i, random_(105, 10) + 2 * (5 - Monst->_mint));
 			} else {
 				Monst->_mdir = md;
-				if (Monst->_mhitpoints < (Monst->_mmaxhp >> 1)) {
+				if (Monst->_mhitpoints < (Monst->_mmaxhp / 2)) {
 					Monst->_mgoal = MGOAL_RETREAT;
 					Monst->_mgoalvar1 = 0;
 					M_StartFadeout(i, md, false);
@@ -4650,7 +4646,7 @@ void ProcessMonsters()
 		}
 		if (!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints >> 6 > 0) {
 			if (Monst->mLevel > 1) {
-				Monst->_mhitpoints += Monst->mLevel >> 1;
+				Monst->_mhitpoints += Monst->mLevel / 2;
 			} else {
 				Monst->_mhitpoints += Monst->mLevel;
 			}
@@ -5164,8 +5160,8 @@ void PrintMonstHistory(int mt)
 			maxHP -= 2000;
 		}
 		if (!gbIsMultiplayer) {
-			minHP >>= 1;
-			maxHP >>= 1;
+			minHP /= 2;
+			maxHP /= 2;
 		}
 		if (minHP < 1)
 			minHP = 1;

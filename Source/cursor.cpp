@@ -249,8 +249,8 @@ void CheckCursMove()
 	}
 
 	if (!zoomflag) {
-		sx >>= 1;
-		sy >>= 1;
+		sx /= 2;
+		sy /= 2;
 	}
 
 	// Adjust by player offset and tile grid alignment
@@ -300,11 +300,11 @@ void CheckCursMove()
 	py = sy % TILE_HEIGHT;
 
 	// Shift position to match diamond grid aligment
-	flipy = py < (px >> 1);
+	flipy = py < (px / 2);
 	if (flipy) {
 		my--;
 	}
-	flipx = py >= TILE_HEIGHT - (px >> 1);
+	flipx = py >= TILE_HEIGHT - (px / 2);
 	if (flipx) {
 		mx++;
 	}
@@ -518,7 +518,7 @@ void CheckCursMove()
 			cursmx = mx + 1;
 			cursmy = my + 1;
 		}
-		if (pcursmonst != -1 && !towner[pcursmonst]._tSelFlag) {
+		if (pcursmonst != -1 && !towners[pcursmonst]._tSelFlag) {
 			pcursmonst = -1;
 		}
 	}

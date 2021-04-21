@@ -63,7 +63,7 @@ struct TownerStruct {
 	_talker_id _ttype;
 };
 
-extern TownerStruct towner[NUM_TOWNERS];
+extern TownerStruct towners[NUM_TOWNERS];
 
 void InitTowners();
 void FreeTownerGFX();

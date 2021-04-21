@@ -946,7 +946,7 @@ TSFX sgSFX[] = {
 	{ sfx_MONK,                  "Sfx\\Monk\\Monk69b.wav",      nullptr },
 	{ sfx_MONK,                  "Sfx\\Monk\\Monk70.wav",       nullptr },
 	{ sfx_MONK,                  "Sfx\\Monk\\Monk71.wav",       nullptr },
-	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        nullptr },
+	{ sfx_MONK,                  "Sfx\\Sorceror\\Mage72.wav",   nullptr },
 	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        nullptr },
 	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        nullptr },
 	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        nullptr },
@@ -1279,20 +1279,20 @@ static _sfx_id RndSFX(_sfx_id psfx)
 	return static_cast<_sfx_id>(psfx + random_(165, nRand));
 }
 
-void PlaySFX(_sfx_id psfx, bool randomizeByCategory)
+void PlaySFX(_sfx_id psfx)
 {
-	if (randomizeByCategory) {
-		psfx = RndSFX(psfx);
-	}
+	psfx = RndSFX(psfx);
 
 	PlaySFX_priv(&sgSFX[psfx], false, 0, 0);
 }
 
-void PlaySfxLoc(_sfx_id psfx, int x, int y)
+void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
 {
 	TSnd *pSnd;
 
-	psfx = RndSFX(psfx);
+	if (randomizeByCategory) {
+		psfx = RndSFX(psfx);
+	}
 
 	if (psfx >= 0 && psfx <= 3) {
 		pSnd = sgSFX[psfx].pSnd;

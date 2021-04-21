@@ -5,7 +5,7 @@
  */
 #include "render.h"
 
-#include <limits.h>
+#include <climits>
 
 #include "lighting.h"
 #include "options.h"

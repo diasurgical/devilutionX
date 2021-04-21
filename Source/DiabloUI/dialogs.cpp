@@ -210,8 +210,7 @@ void Deinit()
 	if (!fontWasLoaded)
 		UnloadTtfFont();
 
-	for (std::size_t i = 0; i < vecOkDialog.size(); i++) {
-		UiItemBase *pUIItem = vecOkDialog[i];
+	for (auto pUIItem : vecOkDialog) {
 		delete pUIItem;
 	}
 	vecOkDialog.clear();

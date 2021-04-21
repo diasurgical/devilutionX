@@ -95,8 +95,8 @@ void InitDiabloMsg(diablo_message e)
 
 void ClrDiabloMsg()
 {
-	for (unsigned i = 0; i < sizeof(msgtable); i++)
-		msgtable[i] = EMSG_NONE;
+	for (auto &msg : msgtable)
+		msg = EMSG_NONE;
 
 	msgflag = EMSG_NONE;
 	msgcnt = 0;
@@ -140,7 +140,7 @@ void DrawDiabloMsg(CelOutputBuffer out)
 	}
 
 	if (width < 442) {
-		sx += (442 - width) >> 1;
+		sx += (442 - width) / 2;
 	}
 
 	for (i = 0; i < len; i++) {

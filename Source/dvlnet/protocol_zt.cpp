@@ -17,8 +17,7 @@
 
 #include "dvlnet/zerotier_native.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 protocol_zt::protocol_zt()
 {
@@ -265,9 +264,9 @@ void protocol_zt::close_all()
 		lwip_close(fd_udp);
 		fd_udp = -1;
 	}
-	for (auto &i : peer_list) {
-		if (i.second.fd != -1)
-			lwip_close(i.second.fd);
+	for (auto &peer : peer_list) {
+		if (peer.second.fd != -1)
+			lwip_close(peer.second.fd);
 	}
 	peer_list.clear();
 }
@@ -284,7 +283,7 @@ void protocol_zt::endpoint::from_string(const std::string &str)
 		return;
 	if (!IP_IS_V6_VAL(a))
 		return;
-	const unsigned char *r = reinterpret_cast<const unsigned char *>(a.u_addr.ip6.addr);
+	const auto *r = reinterpret_cast<const unsigned char *>(a.u_addr.ip6.addr);
 	std::copy(r, r + 16, addr.begin());
 }
 
@@ -305,5 +304,4 @@ std::string protocol_zt::make_default_gamename()
 	return ret;
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

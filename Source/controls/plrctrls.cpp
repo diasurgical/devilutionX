@@ -167,7 +167,7 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		int distance = GetDistance(towner[i]._tx, towner[i]._ty, 2);
+		int distance = GetDistance(towners[i]._tx, towners[i]._ty, 2);
 		if (distance == 0)
 			continue;
 		pcursmonst = i;
@@ -238,7 +238,7 @@ void FindRangedTarget()
 
 void FindMeleeTarget()
 {
-	bool visited[MAXDUNX][MAXDUNY] = { { 0 } };
+	bool visited[MAXDUNX][MAXDUNY] = { {} };
 	int maxSteps = 25; // Max steps for FindPath is 25
 	int rotations = 0;
 	bool canTalk = false;
@@ -443,7 +443,7 @@ void FindTrigger()
 void Interact()
 {
 	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
-		NetSendCmdLocParam1(true, CMD_TALKXY, towner[pcursmonst]._tx, towner[pcursmonst]._ty, pcursmonst);
+		NetSendCmdLocParam1(true, CMD_TALKXY, towners[pcursmonst]._tx, towners[pcursmonst]._ty, pcursmonst);
 	} else if (pcursmonst != -1) {
 		if (plr[myplr]._pwtype != WT_RANGED || CanTalkToMonst(pcursmonst)) {
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -853,7 +853,7 @@ void StoreMove(AxisDirection move_dir)
 		STextDown();
 }
 
-typedef void (*HandleLeftStickOrDPadFn)(devilution::AxisDirection);
+using HandleLeftStickOrDPadFn = void (*)(devilution::AxisDirection);
 
 HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 {
@@ -1110,7 +1110,7 @@ void PerformPrimaryAction()
 			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
 			    && MouseY >= ChrBtnsRect[i].y
 			    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
-				chrbtn[i] = 1;
+				chrbtn[i] = true;
 				chrbtnactive = true;
 				ReleaseChrBtns(false);
 			}
@@ -1198,13 +1198,7 @@ void PerformSpellAction()
 	int spl = plr[myplr]._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
 	    || (pcursobj == -1 && spl == SPL_DISARM)) {
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			PlaySFX(PS_WARR27);
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			PlaySFX(PS_ROGUE27);
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			PlaySFX(PS_MAGE27);
-		}
+		plr[myplr].PlaySpeach(27);
 		return;
 	}
 

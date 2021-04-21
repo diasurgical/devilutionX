@@ -55,7 +55,7 @@ static void SHA1ProcessMessageBlock(SHA1Context *context)
 	DWORD W[80];
 	DWORD A, B, C, D, E;
 
-	DWORD *buf = (DWORD *)context->buffer;
+	auto *buf = (DWORD *)context->buffer;
 	for (i = 0; i < 16; i++)
 		W[i] = SDL_SwapLE32(buf[i]);
 

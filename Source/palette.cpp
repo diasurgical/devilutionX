@@ -214,9 +214,9 @@ void SetFadeLevel(DWORD fadeval)
 	int i;
 
 	for (i = 0; i < 256; i++) { // BUGFIX: should be 256 (fixed)
-		system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
-		system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
-		system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;
+		system_palette[i].r = (fadeval * logical_palette[i].r) / 256;
+		system_palette[i].g = (fadeval * logical_palette[i].g) / 256;
+		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;
 	}
 	palette_update();
 }
@@ -276,12 +276,12 @@ static void CycleColors(int from, int to)
 	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
-	for (int i = 0; i < 256; i++) {
-		Uint8 col = paletteTransparencyLookup[i][from];
+	for (auto &palette : paletteTransparencyLookup) {
+		Uint8 col = palette[from];
 		for (int j = from; j < to; j++) {
-			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[i][j + 1];
+			palette[j] = palette[j + 1];
 		}
-		paletteTransparencyLookup[i][to] = col;
+		palette[to] = col;
 	}
 
 	Uint8 colRow[256];
@@ -308,12 +308,12 @@ static void CycleColorsReverse(int from, int to)
 	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
-	for (int i = 0; i < 256; i++) {
-		Uint8 col = paletteTransparencyLookup[i][to];
+	for (auto &palette : paletteTransparencyLookup) {
+		Uint8 col = palette[to];
 		for (int j = to; j > from; j--) {
-			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[i][j - 1];
+			palette[j] = palette[j - 1];
 		}
-		paletteTransparencyLookup[i][from] = col;
+		palette[from] = col;
 	}
 
 	Uint8 colRow[256];

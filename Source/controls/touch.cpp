@@ -1,5 +1,5 @@
 #ifndef USE_SDL1
-#include <math.h>
+#include <cmath>
 
 #include "options.h"
 #include "touch.h"
@@ -25,7 +25,7 @@ inline T clip(T v, T amin, T amax)
 #define TOUCH_PORT_MAX_NUM 1
 #define NO_TOUCH (-1) // finger id setting if finger is not touching the screen
 
-static void init_touch(void);
+static void init_touch();
 static void preprocess_events(SDL_Event *event);
 static void preprocess_finger_down(SDL_Event *event);
 static void preprocess_finger_up(SDL_Event *event);
@@ -52,26 +52,26 @@ enum {
 	// clang-format on
 };
 
-typedef struct {
+struct Touch {
 	int id; // -1: not touching
 	uint32_t time_last_down;
 	int last_x;        // last known screen coordinates
 	int last_y;        // last known screen coordinates
 	float last_down_x; // SDL touch coordinates when last pressed down
 	float last_down_y; // SDL touch coordinates when last pressed down
-} Touch;
+};
 
 static Touch finger[TOUCH_PORT_MAX_NUM][MAX_NUM_FINGERS]; // keep track of finger status
 
-typedef enum {
+enum DraggingType {
 	DRAG_NONE,
 	DRAG_TWO_FINGER,
 	DRAG_THREE_FINGER,
-} DraggingType;
+};
 
 static DraggingType multi_finger_dragging[TOUCH_PORT_MAX_NUM]; // keep track whether we are currently drag-and-dropping
 
-static void init_touch(void)
+static void init_touch()
 {
 	for (int port = 0; port < TOUCH_PORT_MAX_NUM; port++) {
 		for (int i = 0; i < MAX_NUM_FINGERS; i++) {
@@ -80,9 +80,9 @@ static void init_touch(void)
 		multi_finger_dragging[port] = DRAG_NONE;
 	}
 
-	for (int port = 0; port < TOUCH_PORT_MAX_NUM; port++) {
-		for (int i = 0; i < 2; i++) {
-			simulated_click_start_time[port][i] = 0;
+	for (auto &port : simulated_click_start_time) {
+		for (unsigned int &time : port) {
+			time = 0;
 		}
 	}
 
@@ -250,7 +250,7 @@ static void preprocess_finger_up(SDL_Event *event)
 			// but only if the finger hasn't moved since it was pressed down by more than MAX_TAP_MOTION_DISTANCE pixels
 			float xrel = ((event->tfinger.x * devilution::GetOutputSurface()->w) - (finger[port][i].last_down_x * devilution::GetOutputSurface()->w));
 			float yrel = ((event->tfinger.y * devilution::GetOutputSurface()->h) - (finger[port][i].last_down_y * devilution::GetOutputSurface()->h));
-			float max_r_squared = (float)(MAX_TAP_MOTION_DISTANCE * MAX_TAP_MOTION_DISTANCE);
+			auto max_r_squared = static_cast<float>(MAX_TAP_MOTION_DISTANCE * MAX_TAP_MOTION_DISTANCE);
 			if ((xrel * xrel + yrel * yrel) >= max_r_squared) {
 				continue;
 			}
@@ -440,14 +440,14 @@ void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y)
 	mouse_x = current_mouse_x;
 	mouse_y = current_mouse_y;
 
-	for (int port = 0; port < TOUCH_PORT_MAX_NUM; port++) {
+	for (auto &port : simulated_click_start_time) {
 		for (int i = 0; i < 2; i++) {
-			if (simulated_click_start_time[port][i] == 0) {
+			if (port[i] == 0) {
 				continue;
 			}
 
 			Uint32 current_time = SDL_GetTicks();
-			if (current_time - simulated_click_start_time[port][i] < SIMULATED_CLICK_DURATION) {
+			if (current_time - port[i] < SIMULATED_CLICK_DURATION) {
 				continue;
 			}
 
@@ -461,7 +461,7 @@ void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y)
 			set_mouse_button_event(&ev, SDL_MOUSEBUTTONUP, simulated_button, mouse_x, mouse_y);
 			SDL_PushEvent(&ev);
 
-			simulated_click_start_time[port][i] = 0;
+			port[i] = 0;
 		}
 	}
 }

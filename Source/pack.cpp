@@ -62,8 +62,10 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 	pPack->plrlevel = pPlayer->plrlevel;
 	pPack->px = pPlayer->_px;
 	pPack->py = pPlayer->_py;
-	pPack->targx = pPlayer->_ptargx;
-	pPack->targy = pPlayer->_ptargy;
+	if (gbVanilla) {
+		pPack->targx = pPlayer->_px;
+		pPack->targy = pPlayer->_py;
+	}
 	strcpy(pPack->pName, pPlayer->_pName);
 	pPack->pClass = static_cast<Sint8>(pPlayer->_pClass);
 	pPack->pBaseStr = pPlayer->_pBaseStr;
@@ -215,8 +217,6 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	pPlayer->_py = pPack->py;
 	pPlayer->_pfutx = pPack->px;
 	pPlayer->_pfuty = pPack->py;
-	pPlayer->_ptargx = pPack->targx;
-	pPlayer->_ptargy = pPack->targy;
 	pPlayer->plrlevel = pPack->plrlevel;
 	ClrPlrPath(pnum);
 	pPlayer->destAction = ACTION_NONE;

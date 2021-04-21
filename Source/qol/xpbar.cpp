@@ -16,7 +16,6 @@ namespace devilution {
 namespace {
 
 constexpr int BAR_WIDTH = 307;
-constexpr int BAR_HEIGHT = 5;
 
 using ColorGradient = std::array<Uint8, 12>;
 constexpr ColorGradient GOLD_GRADIENT = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4 };
@@ -92,7 +91,7 @@ void DrawXPBar(const CelOutputBuffer &out)
 	Uint64 fullBar = BAR_WIDTH * prevXpDelta_1 / prevXpDelta;
 
 	// Figure out how much to fill the last pixel of the XP bar, to make it gradually appear with gained XP
-	Uint64 onePx = prevXpDelta / BAR_WIDTH;
+	Uint64 onePx = prevXpDelta / BAR_WIDTH + 1;
 	Uint64 lastFullPx = fullBar * prevXpDelta / BAR_WIDTH;
 
 	const Uint64 fade = (prevXpDelta_1 - lastFullPx) * (SILVER_GRADIENT.size() - 1) / onePx;

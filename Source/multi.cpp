@@ -4,6 +4,7 @@
  * Implementation of functions for keeping multiplaye games in sync.
  */
 
+#include <SDL.h>
 #include <config.h>
 
 #include "diablo.h"
@@ -114,11 +115,13 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
+	const SDL_Point target = plr[myplr].GetTargetPosition();
+
 	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
 	pkt->hdr.px = plr[myplr]._px;
 	pkt->hdr.py = plr[myplr]._py;
-	pkt->hdr.targx = plr[myplr]._ptargx;
-	pkt->hdr.targy = plr[myplr]._ptargy;
+	pkt->hdr.targx = target.x;
+	pkt->hdr.targy = target.y;
 	pkt->hdr.php = plr[myplr]._pHitPoints;
 	pkt->hdr.pmhp = plr[myplr]._pMaxHP;
 	pkt->hdr.bstr = plr[myplr]._pBaseStr;
@@ -177,7 +180,7 @@ void NetSendHiPri(int playerId, BYTE *pbMsg, BYTE bLen)
 	}
 }
 
-void multi_send_msg_packet(int pmask, BYTE *src, BYTE len)
+void multi_send_msg_packet(uint32_t pmask, BYTE *src, BYTE len)
 {
 	DWORD v, p, t;
 	TPkt pkt;
@@ -508,8 +511,6 @@ void multi_process_network_packets()
 					plr[dwID]._py = pkt->py;
 					plr[dwID]._pfutx = pkt->px;
 					plr[dwID]._pfuty = pkt->py;
-					plr[dwID]._ptargx = pkt->targx;
-					plr[dwID]._ptargy = pkt->targy;
 				}
 			}
 		}
@@ -635,8 +636,6 @@ static void SetupLocalCoords()
 	plr[myplr]._py = y;
 	plr[myplr]._pfutx = x;
 	plr[myplr]._pfuty = y;
-	plr[myplr]._ptargx = x;
-	plr[myplr]._ptargy = y;
 	plr[myplr].plrlevel = currlevel;
 	plr[myplr]._pLvlChanging = true;
 	plr[myplr].pLvlLoad = 0;
@@ -657,7 +656,7 @@ static bool multi_upgrade(bool *pfExitProgram)
 				DrawDlg("Network upgrade failed");
 			}
 		} else {
-			*pfExitProgram = 1;
+			*pfExitProgram = true;
 		}
 
 		result = false;
@@ -672,7 +671,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 
 	switch (pEvt->eventid) {
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
-		GameData *gameData = (GameData *)pEvt->data;
+		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
 			app_fatal("Invalid size of game data: %d", gameData->size);
 		sgGameInitInfo = *gameData;
@@ -737,7 +736,7 @@ void NetClose()
 
 bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 {
-	while (1) {
+	while (true) {
 		*pfExitProgram = false;
 		SetRndSeed(0);
 		sgGameInitInfo.size = sizeof(sgGameInitInfo);

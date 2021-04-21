@@ -123,7 +123,7 @@ static unsigned int nthread_handler(void *data)
 	bool received;
 
 	if (nthread_should_run) {
-		while (1) {
+		while (true) {
 			sgMemCrit.Enter();
 			if (!nthread_should_run)
 				break;
@@ -177,7 +177,7 @@ void nthread_start(bool set_turn_upper_bit)
 	largestMsgSize = 512;
 	if (caps.maxmessagesize < 0x200)
 		largestMsgSize = caps.maxmessagesize;
-	gdwDeltaBytesSec = caps.bytessec >> 2;
+	gdwDeltaBytesSec = caps.bytessec / 4;
 	gdwLargestMsgSize = largestMsgSize;
 	gdwNormalMsgSize = caps.bytessec * sgbNetUpdateRate / 20;
 	gdwNormalMsgSize *= 3;

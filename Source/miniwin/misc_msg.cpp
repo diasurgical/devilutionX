@@ -51,9 +51,9 @@ void FocusOnCharInfo()
 
 	// Find the first incrementable stat.
 	int stat = -1;
-	for (auto i : enum_values<CharacterAttribute>()) {
-		int max = plr[myplr].GetMaximumAttributeValue(i);
-		switch (i) {
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		int max = plr[myplr].GetMaximumAttributeValue(attribute);
+		switch (attribute) {
 		case CharacterAttribute::Strength:
 			if (plr[myplr]._pBaseStr >= max)
 				continue;
@@ -71,7 +71,7 @@ void FocusOnCharInfo()
 				continue;
 			break;
 		}
-		stat = static_cast<int>(i);
+		stat = static_cast<int>(attribute);
 	}
 	if (stat == -1)
 		return;
@@ -279,13 +279,7 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
-				PlaySFX(PS_WARR16); // "Where would I put this?"
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-				PlaySFX(PS_ROGUE16);
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-				PlaySFX(PS_MAGE16);
-			}
+			plr[myplr].PlaySpeach(16); // "Where would I put this?"
 			return false;
 		}
 	}

@@ -15,9 +15,9 @@ namespace devilution {
 namespace {
 
 /** Set to true when a fatal error is encountered and the application should shut down. */
-bool terminating = false;
+bool Terminating = false;
 /** Thread id of the last callee to FreeDlg(). */
-SDL_threadID cleanup_thread_id;
+SDL_threadID CleanupThreadId;
 
 /**
  * @brief Displays an error message box based on the given format string and variable argument list.
@@ -38,11 +38,11 @@ void MsgBox(const char *pszFmt, va_list va)
  */
 void FreeDlg()
 {
-	if (terminating && cleanup_thread_id != SDL_GetThreadID(nullptr))
+	if (Terminating && CleanupThreadId != SDL_GetThreadID(nullptr))
 		SDL_Delay(20000);
 
-	terminating = true;
-	cleanup_thread_id = SDL_GetThreadID(nullptr);
+	Terminating = true;
+	CleanupThreadId = SDL_GetThreadID(nullptr);
 
 	if (gbIsMultiplayer) {
 		if (SNetLeaveGame(3))
@@ -107,13 +107,13 @@ void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 /**
  * @brief Terminates the game and displays an error dialog box based on the given dialog_id.
  */
-void ErrDlg(const char *title, const char *error, const char *log_file_path, int log_line_nr)
+void ErrDlg(const char *title, const char *error, const char *logFilePath, int logLineNr)
 {
 	char text[1024];
 
 	FreeDlg();
 
-	snprintf(text, 1024, "%s\n\nThe error occurred at: %s line %d", error, log_file_path, log_line_nr);
+	snprintf(text, 1024, "%s\n\nThe error occurred at: %s line %d", error, logFilePath, logLineNr);
 
 	UiErrorOkDialog(title, text);
 	app_fatal(nullptr);

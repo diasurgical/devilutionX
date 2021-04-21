@@ -50,7 +50,7 @@ extern int player_state[MAX_PLRS];
 void multi_msg_add(BYTE *pbMsg, BYTE bLen);
 void NetSendLoPri(int playerId, BYTE *pbMsg, BYTE bLen);
 void NetSendHiPri(int playerId, BYTE *pbMsg, BYTE bLen);
-void multi_send_msg_packet(int pmask, BYTE *src, BYTE len);
+void multi_send_msg_packet(uint32_t pmask, BYTE *src, BYTE len);
 void multi_msg_countdown();
 void multi_player_left(int pnum, int reason);
 void multi_net_ping();

@@ -93,10 +93,10 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	SDL_StopTextInput(); // input is enabled by default
 #endif
 	textInputActive = false;
-	for (std::size_t i = 0; i < items.size(); i++) {
-		if (items[i]->m_type == UI_EDIT) {
-			UiEdit *pItemUIEdit = (UiEdit *)items[i];
-			SDL_SetTextInputRect(&items[i]->m_rect);
+	for (auto &item : items) {
+		if (item->m_type == UI_EDIT) {
+			auto *pItemUIEdit = static_cast<UiEdit *>(item);
+			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
 #ifdef __SWITCH__
 			switch_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
@@ -576,7 +576,7 @@ bool UiValidPlayerName(const char *name)
 		if (*letter < 0x20 || (*letter > 0x7E && *letter < 0xC0))
 			return false;
 
-	const char *const reserved[] = {
+	const char *const bannedNames[] = {
 		"gvdl",
 		"dvou",
 		"tiju",
@@ -592,8 +592,8 @@ bool UiValidPlayerName(const char *name)
 	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
 		tmpname[i]++;
 
-	for (uint32_t i = 0; i < sizeof(reserved) / sizeof(*reserved); i++) {
-		if (strstr(tmpname, reserved[i]))
+	for (auto bannedName : bannedNames) {
+		if (strstr(tmpname, bannedName))
 			return false;
 	}
 
@@ -895,13 +895,13 @@ bool HandleMouseEvent(const SDL_Event &event, UiItemBase *item)
 		return false;
 	switch (item->m_type) {
 	case UI_ART_TEXT_BUTTON:
-		return HandleMouseEventArtTextButton(event, (UiArtTextButton *)item);
+		return HandleMouseEventArtTextButton(event, static_cast<UiArtTextButton *>(item));
 	case UI_BUTTON:
-		return HandleMouseEventButton(event, (UiButton *)item);
+		return HandleMouseEventButton(event, static_cast<UiButton *>(item));
 	case UI_LIST:
-		return HandleMouseEventList(event, (UiList *)item);
+		return HandleMouseEventList(event, static_cast<UiList *>(item));
 	case UI_SCROLLBAR:
-		return HandleMouseEventScrollBar(event, (UiScrollBar *)item);
+		return HandleMouseEventScrollBar(event, static_cast<UiScrollBar *>(item));
 	default:
 		return false;
 	}
@@ -918,8 +918,8 @@ void LoadPalInMem(const SDL_Color *pPal)
 
 void UiRenderItems(std::vector<UiItemBase *> items)
 {
-	for (std::size_t i = 0; i < items.size(); i++)
-		RenderItem((UiItemBase *)items[i]);
+	for (auto &item : items)
+		RenderItem(item);
 }
 
 bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
@@ -934,8 +934,8 @@ bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
 #endif
 
 	bool handled = false;
-	for (std::size_t i = 0; i < items.size(); i++) {
-		if (HandleMouseEvent(*event, items[i])) {
+	for (auto &item : items) {
+		if (HandleMouseEvent(*event, item)) {
 			handled = true;
 			break;
 		}
@@ -943,10 +943,9 @@ bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
 
 	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
-		for (std::size_t i = 0; i < items.size(); ++i) {
-			UiItemBase *&item = items[i];
+		for (auto &item : items) {
 			if (item->m_type == UI_BUTTON)
-				HandleGlobalMouseUpButton((UiButton *)item);
+				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
 		}
 	}
 

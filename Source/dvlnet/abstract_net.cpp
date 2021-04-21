@@ -10,8 +10,7 @@
 #include "dvlnet/loopback.h"
 #include "storm/storm.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 {
@@ -31,5 +30,4 @@ std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 #endif
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

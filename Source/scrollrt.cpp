@@ -520,8 +520,8 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool p
 			return;
 		int xx = object[bv]._ox - x;
 		int yy = object[bv]._oy - y;
-		sx = (xx << 5) + ox - object[bv]._oAnimWidth2 - (yy << 5);
-		sy = oy + (yy << 4) + (xx << 4);
+		sx = (xx * TILE_WIDTH / 2) + ox - object[bv]._oAnimWidth2 - (yy * TILE_WIDTH / 2);
+		sy = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
 	assert(bv >= 0 && bv < MAXOBJECTS);
@@ -564,7 +564,7 @@ static void drawCell(CelOutputBuffer out, int x, int y, int sx, int sy)
 	level_piece_id = dPiece[x][y];
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 	cel_foliage_active = !nSolidTable[level_piece_id];
-	for (int i = 0; i < (MicroTileLen >> 1); i++) {
+	for (int i = 0; i < (MicroTileLen / 2); i++) {
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
@@ -665,12 +665,12 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		px = sx - towner[mi]._tAnimWidth2;
+		px = sx - towners[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			CelBlitOutlineTo(out, 166, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
 		}
-		assert(towner[mi]._tAnimData);
-		CelClippedDrawTo(out, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+		assert(towners[mi]._tAnimData);
+		CelClippedDrawTo(out, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
 		return;
 	}
 
@@ -769,7 +769,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	if (light_table_index < lightmax && bDead != 0) {
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
-			direction dd = static_cast<direction>((bDead >> 5) & 7);
+			auto dd = static_cast<direction>((bDead >> 5) & 7);
 			int px = dx - pDeadGuy->_deadWidth2;
 			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);
@@ -786,10 +786,10 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 			} else {
 				Cl2DrawLight(out, px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth);
 			}
-		} while (0);
+		} while (false);
 	}
-	DrawObject(out, sx, sy, dx, dy, 1);
-	DrawItem(out, sx, sy, dx, dy, 1);
+	DrawObject(out, sx, sy, dx, dy, true);
+	DrawItem(out, sx, sy, dx, dy, true);
 	if (bFlag & BFLAG_PLAYERLR) {
 		assert((DWORD)(sy - 1) < MAXDUNY);
 		DrawPlayerHelper(out, sx, sy - 1, dx, dy);
@@ -807,8 +807,8 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
 	}
 	DrawMissile(out, sx, sy, dx, dy, false);
-	DrawObject(out, sx, sy, dx, dy, 0);
-	DrawItem(out, sx, sy, dx, dy, 0);
+	DrawObject(out, sx, sy, dx, dy, false);
+	DrawItem(out, sx, sy, dx, dy, false);
 
 	if (leveltype != DTYPE_TOWN) {
 		char bArch = dSpecial[sx][sy];

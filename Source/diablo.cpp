@@ -961,7 +961,7 @@ static void diablo_hotkey_msg(DWORD dwMsg)
 
 	assert(dwMsg < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]));
 
-	NetSendCmdString(-1, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
 }
 
 static bool PressSysKey(int wParam)
@@ -1500,7 +1500,7 @@ static void PressChar(WPARAM vkey)
 		return;
 	case 'a':
 		if (debug_mode_key_inverted_v) {
-			spelldata[SPL_TELEPORT].sTownSpell = 1;
+			spelldata[SPL_TELEPORT].sTownSpell = true;
 			plr[myplr]._pSplLvl[plr[myplr]._pSpell]++;
 		}
 		return;

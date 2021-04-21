@@ -2,9 +2,9 @@
 
 #include <algorithm>
 #include <cstring>
+#include <memory>
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 void base::setup_gameinfo(buffer_t info)
 {
@@ -13,7 +13,7 @@ void base::setup_gameinfo(buffer_t info)
 
 void base::setup_password(std::string pw)
 {
-	pktfty.reset(new packet_factory(pw));
+	pktfty = std::make_unique<packet_factory>(pw);
 }
 
 void base::run_event_handler(_SNETEVENT &ev)
@@ -263,5 +263,4 @@ bool base::SNetGetTurnsInTransit(DWORD *turns)
 	return true;
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

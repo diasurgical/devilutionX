@@ -449,7 +449,7 @@ void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDItem(bool bHiPri, int ii);
 void NetSendCmdDamage(bool bHiPri, BYTE bPlr, DWORD dwDam);
 void NetSendCmdMonDmg(bool bHiPri, WORD bMon, DWORD dwDam);
-void NetSendCmdString(int pmask, const char *pszStr);
+void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
 DWORD ParseCmd(int pnum, TCmd *pCmd);
 

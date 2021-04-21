@@ -289,8 +289,7 @@ const std::vector<Joystick> &Joystick::All()
 
 Joystick *Joystick::Get(SDL_JoystickID instance_id)
 {
-	for (std::size_t i = 0; i < joysticks_->size(); ++i) {
-		Joystick &joystick = (*joysticks_)[i];
+	for (auto &joystick : *joysticks_) {
 		if (joystick.instance_id_ == instance_id)
 			return &joystick;
 	}
@@ -328,8 +327,8 @@ Joystick *Joystick::Get(const SDL_Event &event)
 
 bool Joystick::IsPressedOnAnyJoystick(ControllerButton button)
 {
-	for (std::size_t i = 0; i < joysticks_->size(); ++i)
-		if ((*joysticks_)[i].IsPressed(button))
+	for (auto &joystick : *joysticks_)
+		if (joystick.IsPressed(button))
 			return true;
 	return false;
 }

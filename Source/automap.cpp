@@ -21,10 +21,10 @@ namespace {
  * Maps from tile_id to automap type.
  * BUGFIX: only the first 256 elements are ever read
  */
-uint16_t automaptype[512];
+uint16_t AutomapTypes[512];
 
-static Sint32 AutoMapX;
-static Sint32 AutoMapY;
+int AutoMapX;
+int AutoMapY;
 
 /** color used to draw the player's arrow */
 #define COLOR_PLAYER (PAL8_ORANGE + 1)
@@ -49,9 +49,9 @@ static Sint32 AutoMapY;
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
-void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automap_type)
+void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automapType)
 {
-	uint8_t flags = automap_type >> 8;
+	uint8_t flags = automapType >> 8;
 
 	if ((flags & MAPFLAG_DIRT) != 0) {
 		SetPixel(out, sx, sy, COLOR_DIM);
@@ -79,11 +79,11 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 		DrawLineTo(out, sx - AmLine32, sy, sx, sy + AmLine16, COLOR_BRIGHT);
 	}
 
-	bool do_vert = false;
-	bool do_horz = false;
-	bool do_cave_horz = false;
-	bool do_cave_vert = false;
-	switch (automap_type & MAPFLAG_TYPE) {
+	bool doVert = false;
+	bool doHorz = false;
+	bool doCaveHorz = false;
+	bool doCaveVert = false;
+	switch (automapType & MAPFLAG_TYPE) {
 	case 1: { // stand-alone column or other unpassable object
 		int x1 = sx - AmLine16;
 		int y1 = sy - AmLine16;
@@ -97,37 +97,37 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 	} break;
 	case 2:
 	case 5:
-		do_vert = true;
+		doVert = true;
 		break;
 	case 3:
 	case 6:
-		do_horz = true;
+		doHorz = true;
 		break;
 	case 4:
-		do_vert = true;
-		do_horz = true;
+		doVert = true;
+		doHorz = true;
 		break;
 	case 8:
-		do_vert = true;
-		do_cave_horz = true;
+		doVert = true;
+		doCaveHorz = true;
 		break;
 	case 9:
-		do_horz = true;
-		do_cave_vert = true;
+		doHorz = true;
+		doCaveVert = true;
 		break;
 	case 10:
-		do_cave_horz = true;
+		doCaveHorz = true;
 		break;
 	case 11:
-		do_cave_vert = true;
+		doCaveVert = true;
 		break;
 	case 12:
-		do_cave_horz = true;
-		do_cave_vert = true;
+		doCaveHorz = true;
+		doCaveVert = true;
 		break;
 	}
 
-	if (do_vert) {                             // right-facing obstacle
+	if (doVert) {                              // right-facing obstacle
 		if ((flags & MAPFLAG_VERTDOOR) != 0) { // two wall segments with a door in the middle
 			int x1 = sx - AmLine32;
 			int x2 = sx - AmLine16;
@@ -160,7 +160,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 			DrawLineTo(out, sx, sy - AmLine16, sx - AmLine32, sy, COLOR_DIM);
 	}
 
-	if (do_horz) { // left-facing obstacle
+	if (doHorz) { // left-facing obstacle
 		if ((flags & MAPFLAG_HORZDOOR) != 0) {
 			int x1 = sx + AmLine16;
 			int x2 = sx + AmLine32;
@@ -194,7 +194,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 	}
 
 	// for caves the horz/vert flags are switched
-	if (do_cave_horz) {
+	if (doCaveHorz) {
 		if ((flags & MAPFLAG_VERTDOOR) != 0) {
 			int x1 = sx - AmLine32;
 			int x2 = sx - AmLine16;
@@ -211,7 +211,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, int sx, int sy, uint16_t automa
 			DrawLineTo(out, sx, sy + AmLine16, sx - AmLine32, sy, COLOR_DIM);
 	}
 
-	if (do_cave_vert) {
+	if (doCaveVert) {
 		if ((flags & MAPFLAG_HORZDOOR) != 0) {
 			int x1 = sx + AmLine16;
 			int x2 = sx + AmLine32;
@@ -285,8 +285,8 @@ void SearchAutomapItem(const CelOutputBuffer &out)
 				int px = i - 2 * AutoMapXOfs - ViewX;
 				int py = j - 2 * AutoMapYOfs - ViewY;
 
-				x = (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + gnScreenWidth / 2;
-				y = (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
+				x = (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
+				y = (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
 
 				if (PANELS_COVER) {
 					if (invflag || sbookflag)
@@ -325,8 +325,8 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int pnum)
 	int px = x - 2 * AutoMapXOfs - ViewX;
 	int py = y - 2 * AutoMapYOfs - ViewY;
 
-	x = (plr[pnum]._pxoff * AutoMapScale / 100 >> 1) + (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + gnScreenWidth / 2;
-	y = (plr[pnum]._pyoff * AutoMapScale / 100 >> 1) + (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
+	x = (plr[pnum]._pxoff * AutoMapScale / 100 / 2) + (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
+	y = (plr[pnum]._pyoff * AutoMapScale / 100 / 2) + (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
 
 	if (PANELS_COVER) {
 		if (invflag || sbookflag)
@@ -410,7 +410,7 @@ uint16_t GetAutomapType(int x, int y, bool view)
 		return 0;
 	}
 
-	uint16_t rv = automaptype[(BYTE)dungeon[x][y]];
+	uint16_t rv = AutomapTypes[(BYTE)dungeon[x][y]];
 	if (rv == 7) {
 		if (((GetAutomapType(x - 1, y, false) >> 8) & MAPFLAG_HORZARCH) != 0) {
 			if (((GetAutomapType(x, y - 1, false) >> 8) & MAPFLAG_VERTARCH) != 0) {
@@ -485,7 +485,7 @@ void InitAutomap()
 	DWORD dwTiles;
 	BYTE *pAFile;
 
-	memset(automaptype, 0, sizeof(automaptype));
+	memset(AutomapTypes, 0, sizeof(AutomapTypes));
 
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
@@ -516,16 +516,15 @@ void InitAutomap()
 	for (unsigned i = 1; i <= dwTiles; i++) {
 		uint8_t b1 = *pTmp++;
 		uint8_t b2 = *pTmp++;
-		automaptype[i] = b1 + (b2 << 8);
+		AutomapTypes[i] = b1 + (b2 << 8);
 	}
 
 	mem_free_dbg(pAFile);
 	memset(automapview, 0, sizeof(automapview));
 
-	for (int y = 0; y < MAXDUNY; y++) {
-		for (int x = 0; x < MAXDUNX; x++)
-			dFlags[x][y] &= ~BFLAG_EXPLORED;
-	}
+	for (auto &column : dFlags)
+		for (auto &dFlag : column)
+			dFlag &= ~BFLAG_EXPLORED;
 }
 
 void StartAutomap()
@@ -563,11 +562,11 @@ void AutomapZoomIn()
 {
 	if (AutoMapScale < 200) {
 		AutoMapScale += 5;
-		AmLine64 = (AutoMapScale << 6) / 100;
-		AmLine32 = AmLine64 >> 1;
-		AmLine16 = AmLine32 >> 1;
-		AmLine8 = AmLine16 >> 1;
-		AmLine4 = AmLine8 >> 1;
+		AmLine64 = (AutoMapScale * 64) / 100;
+		AmLine32 = AmLine64 / 2;
+		AmLine16 = AmLine32 / 2;
+		AmLine8 = AmLine16 / 2;
+		AmLine4 = AmLine8 / 2;
 	}
 }
 
@@ -575,11 +574,11 @@ void AutomapZoomOut()
 {
 	if (AutoMapScale > 50) {
 		AutoMapScale -= 5;
-		AmLine64 = (AutoMapScale << 6) / 100;
-		AmLine32 = AmLine64 >> 1;
-		AmLine16 = AmLine32 >> 1;
-		AmLine8 = AmLine16 >> 1;
-		AmLine4 = AmLine8 >> 1;
+		AmLine64 = (AutoMapScale * 64) / 100;
+		AmLine32 = AmLine64 / 2;
+		AmLine16 = AmLine32 / 2;
+		AmLine8 = AmLine16 / 2;
+		AmLine4 = AmLine8 / 2;
 	}
 }
 
@@ -593,25 +592,25 @@ void DrawAutomap(const CelOutputBuffer &out)
 		return;
 	}
 
-	AutoMapX = (ViewX - 16) >> 1;
+	AutoMapX = (ViewX - 16) / 2;
 	while (AutoMapX + AutoMapXOfs < 0)
 		AutoMapXOfs++;
 	while (AutoMapX + AutoMapXOfs >= DMAXX)
 		AutoMapXOfs--;
 	AutoMapX += AutoMapXOfs;
 
-	AutoMapY = (ViewY - 16) >> 1;
+	AutoMapY = (ViewY - 16) / 2;
 	while (AutoMapY + AutoMapYOfs < 0)
 		AutoMapYOfs++;
 	while (AutoMapY + AutoMapYOfs >= DMAXY)
 		AutoMapYOfs--;
 	AutoMapY += AutoMapYOfs;
 
-	int d = (AutoMapScale << 6) / 100;
+	int d = (AutoMapScale * 64) / 100;
 	int cells = 2 * (gnScreenWidth / 2 / d) + 1;
 	if (((gnScreenWidth / 2) % d) != 0)
 		cells++;
-	if ((gnScreenWidth / 2) % d >= (AutoMapScale << 5) / 100)
+	if ((gnScreenWidth / 2) % d >= (AutoMapScale * 32) / 100)
 		cells++;
 
 	if ((ScrollInfo._sxoff + ScrollInfo._syoff) != 0)
@@ -620,11 +619,11 @@ void DrawAutomap(const CelOutputBuffer &out)
 	int mapy = AutoMapY - 1;
 
 	if ((cells & 1) != 0) {
-		sx = gnScreenWidth / 2 - AmLine64 * ((cells - 1) >> 1);
-		sy = (gnScreenHeight - PANEL_HEIGHT) / 2 - AmLine32 * ((cells + 1) >> 1);
+		sx = gnScreenWidth / 2 - AmLine64 * ((cells - 1) / 2);
+		sy = (gnScreenHeight - PANEL_HEIGHT) / 2 - AmLine32 * ((cells + 1) / 2);
 	} else {
-		sx = gnScreenWidth / 2 - AmLine64 * (cells >> 1) + AmLine32;
-		sy = (gnScreenHeight - PANEL_HEIGHT) / 2 - AmLine32 * (cells >> 1) - AmLine16;
+		sx = gnScreenWidth / 2 - AmLine64 * (cells / 2) + AmLine32;
+		sy = (gnScreenHeight - PANEL_HEIGHT) / 2 - AmLine32 * (cells / 2) - AmLine16;
 	}
 	if ((ViewX & 1) != 0) {
 		sx -= AmLine16;
@@ -635,8 +634,8 @@ void DrawAutomap(const CelOutputBuffer &out)
 		sy -= AmLine8;
 	}
 
-	sx += AutoMapScale * ScrollInfo._sxoff / 100 >> 1;
-	sy += AutoMapScale * ScrollInfo._syoff / 100 >> 1;
+	sx += AutoMapScale * ScrollInfo._sxoff / 100 / 2;
+	sy += AutoMapScale * ScrollInfo._syoff / 100 / 2;
 	if (PANELS_COVER) {
 		if (invflag || sbookflag) {
 			sx -= gnScreenWidth / 4;
@@ -681,8 +680,8 @@ void DrawAutomap(const CelOutputBuffer &out)
 
 void SetAutomapView(int x, int y)
 {
-	int xx = (x - 16) >> 1;
-	int yy = (y - 16) >> 1;
+	int xx = (x - 16) / 2;
+	int yy = (y - 16) / 2;
 
 	if (xx < 0 || xx >= DMAXX || yy < 0 || yy >= DMAXY) {
 		return;
@@ -752,11 +751,11 @@ void AutomapZoomReset()
 {
 	AutoMapXOfs = 0;
 	AutoMapYOfs = 0;
-	AmLine64 = (AutoMapScale << 6) / 100;
-	AmLine32 = AmLine64 >> 1;
-	AmLine16 = AmLine32 >> 1;
-	AmLine8 = AmLine16 >> 1;
-	AmLine4 = AmLine8 >> 1;
+	AmLine64 = (AutoMapScale * 64) / 100;
+	AmLine32 = AmLine64 / 2;
+	AmLine16 = AmLine32 / 2;
+	AmLine8 = AmLine16 / 2;
+	AmLine4 = AmLine8 / 2;
 }
 
 } // namespace devilution
