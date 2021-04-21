@@ -3,15 +3,16 @@
 #include <chrono>
 #include <functional>
 #include <memory>
+#include <utility>
 
 #include "dvlnet/base.h"
 
 namespace devilution::net {
 
-tcp_server::tcp_server(asio::io_context &ioc, std::string bindaddr,
+tcp_server::tcp_server(asio::io_context &ioc, const std::string &bindaddr,
     unsigned short port, std::string pw)
     : ioc(ioc)
-    , pktfty(pw)
+    , pktfty(std::move(pw))
 {
 	auto addr = asio::ip::address::from_string(bindaddr);
 	auto ep = asio::ip::tcp::endpoint(addr, port);
@@ -54,7 +55,7 @@ bool tcp_server::empty()
 	return true;
 }
 
-void tcp_server::start_recv(scc con)
+void tcp_server::start_recv(const scc &con)
 {
 	con->socket.async_receive(asio::buffer(con->recv_buffer),
 	    std::bind(&tcp_server::handle_recv, this, con,
@@ -62,7 +63,7 @@ void tcp_server::start_recv(scc con)
 	        std::placeholders::_2));
 }
 
-void tcp_server::handle_recv(scc con, const asio::error_code &ec,
+void tcp_server::handle_recv(const scc &con, const asio::error_code &ec,
     size_t bytes_read)
 {
 	if (ec || bytes_read == 0) {
@@ -90,14 +91,14 @@ void tcp_server::handle_recv(scc con, const asio::error_code &ec,
 	start_recv(con);
 }
 
-void tcp_server::send_connect(scc con)
+void tcp_server::send_connect(const scc &con)
 {
 	auto pkt = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST,
 	    con->plr);
 	send_packet(*pkt);
 }
 
-void tcp_server::handle_recv_newplr(scc con, packet &pkt)
+void tcp_server::handle_recv_newplr(const scc &con, packet &pkt)
 {
 	auto newplr = next_free();
 	if (newplr == PLR_BROADCAST)
@@ -133,7 +134,7 @@ void tcp_server::send_packet(packet &pkt)
 	}
 }
 
-void tcp_server::start_send(scc con, packet &pkt)
+void tcp_server::start_send(const scc &con, packet &pkt)
 {
 	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
 	auto buf = asio::buffer(*frame);
@@ -144,7 +145,7 @@ void tcp_server::start_send(scc con, packet &pkt)
 	    });
 }
 
-void tcp_server::handle_send(scc con, const asio::error_code &ec,
+void tcp_server::handle_send(const scc &con, const asio::error_code &ec,
     size_t bytes_sent)
 {
 	// empty for now
@@ -159,7 +160,7 @@ void tcp_server::start_accept()
 	        std::placeholders::_1));
 }
 
-void tcp_server::handle_accept(scc con, const asio::error_code &ec)
+void tcp_server::handle_accept(const scc &con, const asio::error_code &ec)
 {
 	if (ec)
 		return;
@@ -175,14 +176,14 @@ void tcp_server::handle_accept(scc con, const asio::error_code &ec)
 	start_accept();
 }
 
-void tcp_server::start_timeout(scc con)
+void tcp_server::start_timeout(const scc &con)
 {
 	con->timer.expires_after(std::chrono::seconds(1));
 	con->timer.async_wait(std::bind(&tcp_server::handle_timeout, this, con,
 	    std::placeholders::_1));
 }
 
-void tcp_server::handle_timeout(scc con, const asio::error_code &ec)
+void tcp_server::handle_timeout(const scc &con, const asio::error_code &ec)
 {
 	if (ec) {
 		drop_connection(con);
@@ -199,7 +200,7 @@ void tcp_server::handle_timeout(scc con, const asio::error_code &ec)
 	start_timeout(con);
 }
 
-void tcp_server::drop_connection(scc con)
+void tcp_server::drop_connection(const scc &con)
 {
 	if (con->plr != PLR_BROADCAST) {
 		auto pkt = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,

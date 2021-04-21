@@ -51,7 +51,7 @@ void CalcViewportGeometry();
  * @param StartX Center of view in dPiece coordinate
  * @param StartY Center of view in dPiece coordinate
  */
-void DrawView(CelOutputBuffer out, int StartX, int StartY);
+void DrawView(const CelOutputBuffer &out, int StartX, int StartY);
 
 void ClearScreenBuffer();
 #ifdef _DEBUG

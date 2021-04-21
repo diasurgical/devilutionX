@@ -119,7 +119,7 @@ int UiSelectProvider(GameData *gameData);
 void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type);
 void UiFadeIn();
 void UiHandleEvents(SDL_Event *event);
-bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items);
+bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items);
 Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
@@ -129,11 +129,11 @@ void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size = LOGO_MED, int y 
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<UiItemBase *> &items, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
 void UiClearScreen();
 void UiPollAndRender();
-void UiRenderItems(std::vector<UiItemBase *> items);
+void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiInitList_clear();
 
 void mainmenu_restart_repintro();

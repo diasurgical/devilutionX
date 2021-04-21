@@ -85,7 +85,7 @@ void GetReturnLvlPos();
 void LoadPWaterPalette();
 void ResyncMPQuests();
 void ResyncQuests();
-void DrawQuestLog(CelOutputBuffer out);
+void DrawQuestLog(const CelOutputBuffer &out);
 void StartQuestlog();
 void QuestlogUp();
 void QuestlogDown();

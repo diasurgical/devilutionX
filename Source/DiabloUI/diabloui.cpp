@@ -74,7 +74,7 @@ struct scrollBarState {
 
 } // namespace
 
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool itemsWraps, bool (*fnYesNo)())
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<UiItemBase *> &items, bool itemsWraps, bool (*fnYesNo)())
 {
 	SelectedItem = 0;
 	SelectedItemMax = std::max(count - 1, 0);
@@ -916,13 +916,13 @@ void LoadPalInMem(const SDL_Color *pPal)
 	}
 }
 
-void UiRenderItems(std::vector<UiItemBase *> items)
+void UiRenderItems(const std::vector<UiItemBase *> &items)
 {
 	for (auto &item : items)
 		RenderItem(item);
 }
 
-bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
+bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 {
 	if (items.size() == 0) {
 		return false;

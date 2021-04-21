@@ -68,7 +68,7 @@ void InitQol()
 	InitXPBar();
 }
 
-void DrawMonsterHealthBar(CelOutputBuffer out)
+void DrawMonsterHealthBar(const CelOutputBuffer &out)
 {
 	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;

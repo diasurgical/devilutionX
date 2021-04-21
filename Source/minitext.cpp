@@ -250,13 +250,13 @@ void InitQTextMsg(int m)
 	PlaySFX(alltext[m].sfxnr);
 }
 
-void DrawQTextBack(CelOutputBuffer out)
+void DrawQTextBack(const CelOutputBuffer &out)
 {
 	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
 	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
-void DrawQText(CelOutputBuffer out)
+void DrawQText(const CelOutputBuffer &out)
 {
 	DrawQTextBack(out);
 	DrawQTextContent();

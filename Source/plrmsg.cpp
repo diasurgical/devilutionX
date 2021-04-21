@@ -89,7 +89,7 @@ void InitPlrMsg()
 	plr_msg_slot = 0;
 }
 
-static void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, const char *str, text_color col)
+static void PrintPlrMsg(const CelOutputBuffer &out, DWORD x, DWORD y, DWORD width, const char *str, text_color col)
 {
 	int line = 0;
 
@@ -130,7 +130,7 @@ static void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, cons
 	}
 }
 
-void DrawPlrMsg(CelOutputBuffer out)
+void DrawPlrMsg(const CelOutputBuffer &out)
 {
 	int i;
 	DWORD x = 10;

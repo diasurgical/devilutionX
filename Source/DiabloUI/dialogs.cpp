@@ -1,5 +1,7 @@
 #include "DiabloUI/dialogs.h"
 
+#include <utility>
+
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/errorart.h"
@@ -216,7 +218,7 @@ void Deinit()
 	vecOkDialog.clear();
 }
 
-void DialogLoop(std::vector<UiItemBase *> items, std::vector<UiItemBase *> renderBehind)
+void DialogLoop(const std::vector<UiItemBase *> &items, const std::vector<UiItemBase *> &renderBehind)
 {
 	SDL_Event event;
 	dialogEnd = false;
@@ -254,7 +256,7 @@ void DialogLoop(std::vector<UiItemBase *> items, std::vector<UiItemBase *> rende
 
 } // namespace
 
-void UiOkDialog(const char *text, const char *caption, bool error, std::vector<UiItemBase *> renderBehind)
+void UiOkDialog(const char *text, const char *caption, bool error, const std::vector<UiItemBase *> &renderBehind)
 {
 	static bool inDialog = false;
 
@@ -283,7 +285,7 @@ void UiOkDialog(const char *text, const char *caption, bool error, std::vector<U
 
 void UiErrorOkDialog(const char *text, const char *caption, std::vector<UiItemBase *> renderBehind)
 {
-	UiOkDialog(text, caption, /*error=*/true, renderBehind);
+	UiOkDialog(text, caption, /*error=*/true, std::move(renderBehind));
 }
 
 void UiErrorOkDialog(const char *text, const char *caption, bool error)
@@ -293,7 +295,7 @@ void UiErrorOkDialog(const char *text, const char *caption, bool error)
 
 void UiErrorOkDialog(const char *text, std::vector<UiItemBase *> renderBehind)
 {
-	UiErrorOkDialog(text, nullptr, renderBehind);
+	UiErrorOkDialog(text, nullptr, std::move(renderBehind));
 }
 
 } // namespace devilution

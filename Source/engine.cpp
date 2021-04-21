@@ -33,7 +33,7 @@ const Uint32 RndInc = 1;
  */
 const Uint32 RndMult = 0x015A4E35;
 
-void CelDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;
@@ -43,7 +43,7 @@ void CelDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, in
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelClippedDrawTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
 	int nDataSize;
@@ -55,7 +55,7 @@ void CelClippedDrawTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int n
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelDrawLightTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tbl)
+void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tbl)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;
@@ -70,7 +70,7 @@ void CelDrawLightTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCe
 		CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelClippedDrawLightTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelClippedDrawLightTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;
@@ -158,7 +158,7 @@ void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDa
 	}
 }
 
-void CelClippedDrawSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
 	int nDataSize;
@@ -365,7 +365,7 @@ static void CelBlitLightBlendedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE 
 	}
 }
 
-void CelClippedBlitLightTransTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;
@@ -516,14 +516,14 @@ void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelB
 	}
 }
 
-void SetPixel(CelOutputBuffer out, int sx, int sy, BYTE col)
+void SetPixel(const CelOutputBuffer &out, int sx, int sy, BYTE col)
 {
 	if (!out.in_bounds(sx, sy))
 		return;
 	*out.at(sx, sy) = col;
 }
 
-void DrawLineTo(CelOutputBuffer out, int x0, int y0, int x1, int y1, BYTE color_index)
+void DrawLineTo(const CelOutputBuffer &out, int x0, int y0, int x1, int y1, BYTE color_index)
 {
 	int i, dx, dy, steps;
 	float ix, iy, sx, sy;
@@ -566,7 +566,7 @@ static void DrawHalfTransparentStippledRectTo(CelOutputBuffer out, int sx, int s
 	}
 }
 
-void DrawHalfTransparentRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
 {
 	if (sgOptions.Graphics.bBlendedTransparancy) {
 		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
@@ -1009,7 +1009,7 @@ static void Cl2BlitLightSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
 	}
 }
 
-void Cl2Draw(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
 	int nDataSize;
@@ -1036,7 +1036,7 @@ void Cl2DrawOutline(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuf
 	Cl2BlitOutlineSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, col);
 }
 
-void Cl2DrawLightTbl(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
+void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
 {
 	int nDataSize, idx;
 	BYTE *pRLEBytes;
@@ -1055,7 +1055,7 @@ void Cl2DrawLightTbl(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nC
 	Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, &pLightTbl[idx]);
 }
 
-void Cl2DrawLight(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;

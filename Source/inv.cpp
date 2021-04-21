@@ -168,7 +168,7 @@ static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
 	}
 }
 
-void DrawInv(CelOutputBuffer out)
+void DrawInv(const CelOutputBuffer &out)
 {
 	int frame, frame_width, i, j, ii;
 	BYTE *cels;
@@ -300,7 +300,7 @@ void DrawInv(CelOutputBuffer out)
 	}
 }
 
-void DrawInvBelt(CelOutputBuffer out)
+void DrawInvBelt(const CelOutputBuffer &out)
 {
 	int i, frame, frame_width;
 	BYTE fi, ff;

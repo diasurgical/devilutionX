@@ -93,7 +93,7 @@ text_color CircleMenuHintTextColor(bool active)
 	return active ? COL_BLUE : COL_GOLD;
 }
 
-void DrawCircleMenuHint(CelOutputBuffer out, const CircleMenuHint &hint, int x, int y)
+void DrawCircleMenuHint(const CelOutputBuffer &out, const CircleMenuHint &hint, int x, int y)
 {
 	const int kLineHeight = 25;
 	PrintGameStr(out, x + hint.x_mid - hint.top_w / 2, y, hint.top, CircleMenuHintTextColor(IsTopActive(hint)));
@@ -109,7 +109,7 @@ void DrawCircleMenuHint(CelOutputBuffer out, const CircleMenuHint &hint, int x, 
 const int kCircleMarginX = 16;
 const int kCirclesTop = 76;
 
-void DrawStartModifierMenu(CelOutputBuffer out)
+void DrawStartModifierMenu(const CelOutputBuffer &out)
 {
 	if (!start_modifier_active)
 		return;
@@ -119,7 +119,7 @@ void DrawStartModifierMenu(CelOutputBuffer out)
 	DrawCircleMenuHint(out, kButtons, PANEL_LEFT + PANEL_WIDTH - kButtons.width() - kCircleMarginX, PANEL_TOP - kCirclesTop);
 }
 
-void DrawSelectModifierMenu(CelOutputBuffer out)
+void DrawSelectModifierMenu(const CelOutputBuffer &out)
 {
 	if (!select_modifier_active)
 		return;
@@ -133,7 +133,7 @@ void DrawSelectModifierMenu(CelOutputBuffer out)
 
 } // namespace
 
-void DrawControllerModifierHints(CelOutputBuffer out)
+void DrawControllerModifierHints(const CelOutputBuffer &out)
 {
 	DrawStartModifierMenu(out);
 	DrawSelectModifierMenu(out);
