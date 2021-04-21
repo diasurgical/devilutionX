@@ -451,10 +451,10 @@ void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int w
  */
 direction GetDirection(int x1, int y1, int x2, int y2);
 
-void SetRndSeed(Sint32 s);
-Sint32 AdvanceRndSeed();
-Sint32 GetRndSeed();
-Sint32 random_(BYTE idx, Sint32 v);
+void SetRndSeed(int32_t s);
+int32_t AdvanceRndSeed();
+int32_t GetRndSeed();
+int32_t GenerateRnd(int32_t v);
 BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);

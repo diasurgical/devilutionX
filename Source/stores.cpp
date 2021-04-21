@@ -1987,7 +1987,7 @@ void S_TalkEnter()
 
 	if (stextsel == sn - 2) {
 		SetRndSeed(towners[talker]._tSeed);
-		tq = gossipstart + random_(0, gossipend - gossipstart + 1);
+		tq = gossipstart + GenerateRnd(gossipend - gossipstart + 1);
 		InitQTextMsg(tq);
 		return;
 	}

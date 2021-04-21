@@ -314,14 +314,14 @@ void DoHealOther(int pnum, int rid)
 	}
 
 	if ((char)rid != -1 && (plr[rid]._pHitPoints >> 6) > 0) {
-		hp = (random_(57, 10) + 1) << 6;
+		hp = (GenerateRnd(10) + 1) << 6;
 
 		for (i = 0; i < plr[pnum]._pLevel; i++) {
-			hp += (random_(57, 4) + 1) << 6;
+			hp += (GenerateRnd(4) + 1) << 6;
 		}
 
 		for (j = 0; j < GetSpellLevel(pnum, SPL_HEALOTHER); ++j) {
-			hp += (random_(57, 6) + 1) << 6;
+			hp += (GenerateRnd(6) + 1) << 6;
 		}
 
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {

@@ -1230,7 +1230,7 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	sndIdx = random_(164, 2);
+	sndIdx = GenerateRnd(2);
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
 		return;
 	}
@@ -1276,7 +1276,7 @@ static _sfx_id RndSFX(_sfx_id psfx)
 		return psfx;
 	}
 
-	return static_cast<_sfx_id>(psfx + random_(165, nRand));
+	return static_cast<_sfx_id>(psfx + GenerateRnd(nRand));
 }
 
 void PlaySFX(_sfx_id psfx)

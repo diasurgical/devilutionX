@@ -200,7 +200,7 @@ void T_Pass3()
 		}
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (x = 36; x < 46; x++) {
-				T_FillTile(P3Tiles, x, 78, random_(0, 4) + 1);
+				T_FillTile(P3Tiles, x, 78, GenerateRnd(4) + 1);
 			}
 		}
 	}
