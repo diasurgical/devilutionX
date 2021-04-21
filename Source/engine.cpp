@@ -19,19 +19,19 @@
 namespace devilution {
 
 /** Seed value before the most recent call to SetRndSeed() */
-Sint32 orgseed;
+int32_t orgseed;
 /** Current game seed */
-Sint32 sglGameSeed;
+int32_t sglGameSeed;
 
 /**
  * Specifies the increment used in the Borland C/C++ pseudo-random.
  */
-const Uint32 RndInc = 1;
+const uint32_t RndInc = 1;
 
 /**
  * Specifies the multiplier used in the Borland C/C++ pseudo-random number generator algorithm.
  */
-const Uint32 RndMult = 0x015A4E35;
+const uint32_t RndMult = 0x015A4E35;
 
 void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
@@ -620,7 +620,7 @@ direction GetDirection(int x1, int y1, int x2, int y2)
  * @brief Set the RNG seed
  * @param s RNG seed
  */
-void SetRndSeed(Sint32 s)
+void SetRndSeed(int32_t s)
 {
 	sglGameSeed = s;
 	orgseed = s;
@@ -630,9 +630,9 @@ void SetRndSeed(Sint32 s)
  * @brief Advance the internal RNG seed and return the new value
  * @return RNG seed
  */
-Sint32 AdvanceRndSeed()
+int32_t AdvanceRndSeed()
 {
-	sglGameSeed = (RndMult * static_cast<Uint32>(sglGameSeed)) + RndInc;
+	sglGameSeed = (RndMult * static_cast<uint32_t>(sglGameSeed)) + RndInc;
 	return abs(sglGameSeed);
 }
 
@@ -640,18 +640,17 @@ Sint32 AdvanceRndSeed()
  * @brief Get the current RNG seed
  * @return RNG seed
  */
-Sint32 GetRndSeed()
+int32_t GetRndSeed()
 {
 	return abs(sglGameSeed);
 }
 
 /**
  * @brief Main RNG function
- * @param idx Unused
  * @param v The upper limit for the return value
  * @return A random number from 0 to (v-1)
  */
-Sint32 random_(BYTE idx, Sint32 v)
+int32_t GenerateRnd(int32_t v)
 {
 	if (v <= 0)
 		return 0;

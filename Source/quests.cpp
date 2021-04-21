@@ -157,15 +157,15 @@ void InitQuests()
 
 	if (!gbIsMultiplayer && sgOptions.Gameplay.bRandomizeQuests) {
 		SetRndSeed(glSeedTbl[15]);
-		if (random_(0, 2) != 0)
+		if (GenerateRnd(2) != 0)
 			quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 		else
 			quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
 
-		quests[QuestGroup1[random_(0, sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup2[random_(0, sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup3[random_(0, sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup4[random_(0, sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
 	}
 #ifdef _DEBUG
 	if (questdebug != -1)

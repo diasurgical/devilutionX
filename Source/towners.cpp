@@ -385,7 +385,7 @@ void InitCows()
 		SetTownerGPtrs(towners[numtowners]._tNData, towners[numtowners]._tNAnim);
 		towners[numtowners]._tNFrames = 12;
 		NewTownerAnim(numtowners, towners[numtowners]._tNAnim[dir], towners[numtowners]._tNFrames, 3);
-		towners[numtowners]._tAnimFrame = random_(0, 11) + 1;
+		towners[numtowners]._tAnimFrame = GenerateRnd(11) + 1;
 		towners[numtowners]._tSelFlag = true;
 		strcpy(towners[numtowners]._tName, "Cow");
 
@@ -1196,7 +1196,7 @@ void TalkToTowner(int p, int t)
 					break;
 				case QUEST_HIVE_ACTIVE:
 					if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
-						switch (random_(0, 4)) {
+						switch (GenerateRnd(4)) {
 						case 0:
 							qt = TEXT_JERSEY9;
 							break;
