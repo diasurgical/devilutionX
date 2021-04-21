@@ -2917,7 +2917,7 @@ bool M_PathWalk(int i)
 bool M_CallWalk2(int i, direction md)
 {
 	direction mdtemp = md;
-	bool ok = DirOK(i, md);     // Can we continue in the same direction
+	bool ok = DirOK(i, md);    // Can we continue in the same direction
 	if (GenerateRnd(2) != 0) { // Randomly go left or right
 		ok = ok || (mdtemp = left[md], DirOK(i, left[md])) || (mdtemp = right[md], DirOK(i, right[md]));
 	} else {

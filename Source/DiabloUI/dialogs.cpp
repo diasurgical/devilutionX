@@ -283,9 +283,9 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 	inDialog = false;
 }
 
-void UiErrorOkDialog(const char *text, const char *caption, std::vector<UiItemBase *> renderBehind)
+void UiErrorOkDialog(const char *text, const char *caption, const std::vector<UiItemBase *> &renderBehind)
 {
-	UiOkDialog(text, caption, /*error=*/true, std::move(renderBehind));
+	UiOkDialog(text, caption, /*error=*/true, renderBehind);
 }
 
 void UiErrorOkDialog(const char *text, const char *caption, bool error)
