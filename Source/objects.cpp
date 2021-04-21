@@ -4032,7 +4032,7 @@ bool OperateShrineSecluded(int pnum)
 	if (pnum != myplr)
 		return true;
 
-	std::fill(&automapview[0][0], &automapview[0][0] + sizeof(automapview), true);
+	std::fill(&automapview[0][0], &automapview[DMAXX - 1][DMAXX - 1], true);
 
 	InitDiabloMsg(EMSG_SHRINE_SECLUDED);
 
