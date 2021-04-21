@@ -386,6 +386,10 @@ struct PlayerStruct {
 	 * @brief Play a player speach file, with out random variants.
 	 */
 	void PlaySpecificSpeach(int speachId) const;
+	/**
+	 * @brief Plays a taunt other players can hear.
+	 */
+	void PlayerStruct::SendTaunt() const;
 };
 
 extern int myplr;

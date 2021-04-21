@@ -2510,6 +2510,15 @@ static DWORD On_OPENCRYPT(TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
+static DWORD On_SENDSOUNDEFFECT(TCmd *pCmd, int pnum)
+{
+	auto *p = (TCmdParam1 *)pCmd;
+	if (gbBufferMsgs != 1) {
+		plr[pnum].PlaySpeach(p->wParam1);
+	}
+	return sizeof(*p);
+}
+
 DWORD ParseCmd(int pnum, TCmd *pCmd)
 {
 	sbLastCmd = pCmd->bCmd;
@@ -2673,6 +2682,8 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 		return On_OPENHIVE(pCmd, pnum);
 	case CMD_OPENCRYPT:
 		return On_OPENCRYPT(pCmd);
+	case CMD_SENDSOUNDEFFECT:
+		return On_SENDSOUNDEFFECT(pCmd, pnum);
 	default:
 		break;
 	}

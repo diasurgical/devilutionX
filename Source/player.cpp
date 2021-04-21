@@ -277,6 +277,30 @@ void PlayerStruct::PlaySpeach(int speachId, int delay) const
 	sfxdnum = herosounds[static_cast<size_t>(_pClass)][speachId - 1];
 }
 
+void PlayerStruct::SendTaunt() const
+{
+	int taunts[]
+	    = {
+		      59, // back to the grave
+		      60, // time to die
+		      61, // im not impressed
+		      63, // vengeance is mine
+		      64, // die!
+		      65  // yeah
+	      };
+	for (int taunt : taunts) {
+		if (effect_is_playing(herosounds[static_cast<size_t>(_pClass)][taunt - 1]))
+			return;
+	}
+	static int lastTaunt = -1;
+	int rnd;
+	do {
+		rnd = rand() % (sizeof(taunts) / sizeof(taunts[0]));
+	} while (rnd == lastTaunt);
+	lastTaunt = rnd;
+	NetSendCmdParam1(true, CMD_SENDSOUNDEFFECT, taunts[rnd]);
+}
+
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {
 	int i;
