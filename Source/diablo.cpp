@@ -1398,10 +1398,12 @@ static void PressChar(WPARAM vkey)
 		NetSendCmdString(1 << myplr, pszStr);
 		return;
 	}
+#ifndef _DEBUG
 	case 't':
 	case 'T':
 		plr[myplr].SendTaunt();
 		break;
+#endif
 	case 'V':
 		NetSendCmdString(1 << myplr, gszVersionNumber);
 		return;
