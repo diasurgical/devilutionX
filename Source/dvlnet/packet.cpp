@@ -58,7 +58,7 @@ void CheckPacketTypeOneOf(std::initializer_list<packet_type> expected_types, std
 	for (std::uint8_t packet_type : expected_types)
 		if (actual_type == packet_type)
 			return;
-	throw wrong_packet_type_exception(std::move(expected_types), actual_type);
+	throw wrong_packet_type_exception(expected_types, actual_type);
 }
 
 } // namespace
