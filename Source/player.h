@@ -389,7 +389,7 @@ struct PlayerStruct {
 	/**
 	 * @brief Plays a taunt other players can hear.
 	 */
-	void PlayerStruct::SendTaunt() const;
+	void SendTaunt() const;
 };
 
 extern int myplr;
