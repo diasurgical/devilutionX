@@ -25,9 +25,9 @@ public:
 	static const std::vector<Joystick> &All();
 	static bool IsPressedOnAnyJoystick(ControllerButton button);
 
-	ControllerButton ToControllerButton(const SDL_Event &event) const;
+	static ControllerButton ToControllerButton(const SDL_Event &event);
 	bool IsPressed(ControllerButton button) const;
-	bool ProcessAxisMotion(const SDL_Event &event);
+	static bool ProcessAxisMotion(const SDL_Event &event);
 
 	SDL_JoystickID instance_id() const
 	{
@@ -35,8 +35,8 @@ public:
 	}
 
 private:
-	int ToSdlJoyButton(ControllerButton button) const;
-	bool IsHatButtonPressed(ControllerButton button) const;
+	static int ToSdlJoyButton(ControllerButton button);
+	static bool IsHatButtonPressed(ControllerButton button);
 
 	SDL_Joystick *sdl_joystick_ = NULL;
 	SDL_JoystickID instance_id_ = -1;

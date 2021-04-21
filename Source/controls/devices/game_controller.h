@@ -26,10 +26,10 @@ public:
 	ControllerButton ToControllerButton(const SDL_Event &event);
 
 	bool IsPressed(ControllerButton button) const;
-	bool ProcessAxisMotion(const SDL_Event &event);
+	static bool ProcessAxisMotion(const SDL_Event &event);
 
 private:
-	SDL_GameControllerButton ToSdlGameControllerButton(ControllerButton button) const;
+	static SDL_GameControllerButton ToSdlGameControllerButton(ControllerButton button);
 
 	SDL_GameController *sdl_game_controller_ = NULL;
 	SDL_JoystickID instance_id_ = -1;

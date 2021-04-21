@@ -81,7 +81,7 @@ ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 	return ControllerButton_NONE;
 }
 
-SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerButton button) const
+SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerButton button)
 {
 	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
 		UNIMPLEMENTED();
