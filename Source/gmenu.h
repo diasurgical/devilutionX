@@ -24,7 +24,7 @@ void gmenu_draw_pause(const CelOutputBuffer &out);
 void FreeGMenu();
 void gmenu_init_menu();
 bool gmenu_is_active();
-void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *));
+void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)());
 void gmenu_draw(const CelOutputBuffer &out);
 bool gmenu_presskeys(int vkey);
 bool gmenu_on_mouse_move();

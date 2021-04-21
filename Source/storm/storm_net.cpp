@@ -149,9 +149,7 @@ int SNetInitializeProvider(Uint32 provider, struct GameData *gameData)
 /**
  * @brief Called by engine for single, called by ui for multi
  */
-bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString,
-    DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
-    const char *creatorName, const char *a11, int *playerID)
+bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, char *GameTemplateData, int GameTemplateSize, int *playerID)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -174,7 +172,7 @@ bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
 	return *playerID != -1;
 }
 
-bool SNetJoinGame(int id, char *pszGameName, char *pszGamePassword, char *playerName, char *userStats, int *playerID)
+bool SNetJoinGame(char *pszGameName, char *pszGamePassword, int *playerID)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
@@ -215,17 +213,6 @@ bool SNetSetBasePlayer(int)
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
 #endif
 	return true;
-}
-
-/**
- * @brief since we never signal STORM_ERROR_REQUIRES_UPGRADE the engine will not call this function
- */
-bool SNetPerformUpgrade(DWORD *upgradestatus)
-{
-#ifndef NONET
-	std::lock_guard<std::mutex> lg(storm_net_mutex);
-#endif
-	UNIMPLEMENTED();
 }
 
 void DvlNet_SendInfoRequest()

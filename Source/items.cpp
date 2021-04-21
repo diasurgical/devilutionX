@@ -2263,7 +2263,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		CalcItemValue(i);
 }
 
-void GetItemBonus(int i, int idata, int minlvl, int maxlvl, bool onlygood, bool allowspells)
+void GetItemBonus(int i, int minlvl, int maxlvl, bool onlygood, bool allowspells)
 {
 	if (minlvl > 25)
 		minlvl = 25;
@@ -2600,7 +2600,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 		if (iblvl != -1) {
 			_unique_items uid = CheckUnique(ii, iblvl, uper, recreate);
 			if (uid == UITEM_INVALID) {
-				GetItemBonus(ii, idx, iblvl / 2, iblvl, onlygood, true);
+				GetItemBonus(ii, iblvl / 2, iblvl, onlygood, true);
 			} else {
 				GetUniqueItem(ii, uid);
 			}
@@ -2731,7 +2731,7 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	SetupItem(ii);
 }
 
-void CreateRndUseful(int pnum, int x, int y, bool sendmsg)
+void CreateRndUseful(int x, int y, bool sendmsg)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -2782,7 +2782,7 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool
 
 	if ((icreateinfo & CF_UNIQUE) == 0) {
 		if (icreateinfo & CF_TOWN) {
-			RecreateTownItem(ii, idx, icreateinfo, iseed, ivalue);
+			RecreateTownItem(ii, idx, icreateinfo, iseed);
 			gbIsHellfire = _gbIsHellfire;
 			return;
 		}
@@ -4486,7 +4486,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		SetRndSeed(items[0]._iSeed);
 		int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 		GetItemAttrs(0, itype, plvl);
-		GetItemBonus(0, itype, plvl / 2, plvl, true, !gbIsHellfire);
+		GetItemBonus(0, plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
 			if (items[0]._iIvalue > 140000) {
@@ -4747,7 +4747,7 @@ void SpawnWitch(int lvl)
 			if (maxlvl == -1 && items[0]._iMiscId == IMISC_STAFF)
 				maxlvl = 2 * lvl;
 			if (maxlvl != -1)
-				GetItemBonus(0, idata, maxlvl / 2, maxlvl, true, true);
+				GetItemBonus(0, maxlvl / 2, maxlvl, true, true);
 		} while (items[0]._iIvalue > maxValue);
 		witchitem[i] = items[0];
 		witchitem[i]._iCreateInfo = lvl | CF_WITCH;
@@ -4806,7 +4806,7 @@ void SpawnBoy(int lvl)
 			SetRndSeed(items[0]._iSeed);
 			itype = RndBoyItem(lvl) - 1;
 			GetItemAttrs(0, itype, lvl);
-			GetItemBonus(0, itype, lvl, 2 * lvl, true, true);
+			GetItemBonus(0, lvl, 2 * lvl, true, true);
 
 			if (!gbIsHellfire) {
 				if (items[0]._iIvalue > 90000) {
@@ -5023,7 +5023,7 @@ void SpawnStoreGold()
 	golditem._iStatFlag = true;
 }
 
-void RecreateSmithItem(int ii, int idx, int lvl, int iseed)
+void RecreateSmithItem(int ii, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
 	int itype = RndSmithItem(lvl) - 1;
@@ -5034,24 +5034,24 @@ void RecreateSmithItem(int ii, int idx, int lvl, int iseed)
 	items[ii]._iIdentified = true;
 }
 
-void RecreatePremiumItem(int ii, int idx, int plvl, int iseed)
+void RecreatePremiumItem(int ii, int plvl, int iseed)
 {
 	SetRndSeed(iseed);
 	int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 	GetItemAttrs(ii, itype, plvl);
-	GetItemBonus(ii, itype, plvl / 2, plvl, true, !gbIsHellfire);
+	GetItemBonus(ii, plvl / 2, plvl, true, !gbIsHellfire);
 
 	items[ii]._iSeed = iseed;
 	items[ii]._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	items[ii]._iIdentified = true;
 }
 
-void RecreateBoyItem(int ii, int idx, int lvl, int iseed)
+void RecreateBoyItem(int ii, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
 	int itype = RndBoyItem(lvl) - 1;
 	GetItemAttrs(ii, itype, lvl);
-	GetItemBonus(ii, itype, lvl, 2 * lvl, true, true);
+	GetItemBonus(ii, lvl, 2 * lvl, true, true);
 
 	items[ii]._iSeed = iseed;
 	items[ii]._iCreateInfo = lvl | CF_BOY;
@@ -5076,7 +5076,7 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 		if (iblvl == -1 && items[ii]._iMiscId == IMISC_STAFF)
 			iblvl = 2 * lvl;
 		if (iblvl != -1)
-			GetItemBonus(ii, itype, iblvl / 2, iblvl, true, true);
+			GetItemBonus(ii, iblvl / 2, iblvl, true, true);
 	}
 
 	items[ii]._iSeed = iseed;
@@ -5101,14 +5101,14 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 	items[ii]._iIdentified = true;
 }
 
-void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
+void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed)
 {
 	if (icreateinfo & CF_SMITH)
-		RecreateSmithItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+		RecreateSmithItem(ii, icreateinfo & CF_LEVEL, iseed);
 	else if (icreateinfo & CF_SMITHPREMIUM)
-		RecreatePremiumItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+		RecreatePremiumItem(ii, icreateinfo & CF_LEVEL, iseed);
 	else if (icreateinfo & CF_BOY)
-		RecreateBoyItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+		RecreateBoyItem(ii, icreateinfo & CF_LEVEL, iseed);
 	else if (icreateinfo & CF_WITCH)
 		RecreateWitchItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
 	else if (icreateinfo & CF_HEALER)

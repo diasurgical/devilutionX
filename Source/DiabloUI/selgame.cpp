@@ -425,7 +425,7 @@ void selgame_Password_Select(int value)
 {
 	if (selgame_selectedGame) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
-		if (SNetJoinGame(selgame_selectedGame, selgame_Ip, selgame_Password, nullptr, nullptr, gdwPlayerId)) {
+		if (SNetJoinGame(selgame_Ip, selgame_Password, gdwPlayerId)) {
 			if (!IsGameCompatible(m_game_data)) {
 				selgame_GameSelection_Select(1);
 				return;
@@ -448,7 +448,7 @@ void selgame_Password_Select(int value)
 	m_game_data->bTheoQuest = sgOptions.Gameplay.bTheoQuest;
 	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest;
 
-	if (SNetCreateGame(nullptr, selgame_Password, nullptr, 0, (char *)m_game_data, sizeof(GameData), MAX_PLRS, nullptr, nullptr, gdwPlayerId)) {
+	if (SNetCreateGame(nullptr, selgame_Password, (char *)m_game_data, sizeof(m_game_data), gdwPlayerId)) {
 		UiInitList_clear();
 		selgame_endMenu = true;
 	} else {

@@ -1256,7 +1256,7 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-void LoadPreL1Dungeon(const char *sFileName, int vx, int vy)
+void LoadPreL1Dungeon(const char *sFileName)
 {
 	int i, j, rw, rh;
 	BYTE *pLevelMap, *lm;

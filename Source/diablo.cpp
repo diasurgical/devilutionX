@@ -409,16 +409,13 @@ static void run_game_loop(interface_mode uMsg)
 
 bool StartGame(bool bNewGame, bool bSinglePlayer)
 {
-	bool fExitProgram;
-
 	gbSelectProvider = true;
 
 	do {
-		fExitProgram = false;
 		gbLoadGame = false;
 
-		if (!NetInit(bSinglePlayer, &fExitProgram)) {
-			gbRunGameResult = !fExitProgram;
+		if (!NetInit(bSinglePlayer)) {
+			gbRunGameResult = true;
 			break;
 		}
 
@@ -1584,7 +1581,7 @@ void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return;
 	}
 
-	MainWndProc(uMsg, wParam, lParam);
+	MainWndProc(uMsg);
 }
 
 void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1673,7 +1670,7 @@ void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return;
 	}
 
-	MainWndProc(uMsg, wParam, lParam);
+	MainWndProc(uMsg);
 }
 
 void LoadLvlGFX()

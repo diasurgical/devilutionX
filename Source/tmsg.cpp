@@ -15,7 +15,7 @@ TMsg *sgpTimedMsgHead;
 
 } // namespace
 
-int tmsg_get(Uint8 *pbMsg, Uint32 dwMaxLen)
+int tmsg_get(Uint8 *pbMsg)
 {
 	int len;
 	TMsg *head;

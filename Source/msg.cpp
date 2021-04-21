@@ -167,7 +167,7 @@ bool msg_wait_resync()
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
 	sgdwOwnerWait = SDL_GetTicks();
-	success = UiProgressDialog("Waiting for game data...", msg_wait_for_turns, 20);
+	success = UiProgressDialog("Waiting for game data...", msg_wait_for_turns);
 	gbBufferMsgs = 0;
 	if (!success) {
 		msg_free_packets();

@@ -489,7 +489,7 @@ void AddCandles()
 	AddObject(OBJ_STORYCANDLE, tx + 2, ty + 2);
 }
 
-void AddBookLever(int lx1, int ly1, int lx2, int ly2, int x1, int y1, int x2, int y2, _speech_id msg)
+void AddBookLever(int x1, int y1, int x2, int y2, _speech_id msg)
 {
 	bool exit;
 	int xp, yp, ob, cnt, m, n;
@@ -1115,7 +1115,7 @@ void InitObjects()
 					break;
 				}
 				quests[Q_BLIND]._qmsg = sp_id;
-				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, sp_id);
+				AddBookLever(setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, sp_id);
 				mem = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", nullptr);
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
@@ -1143,7 +1143,7 @@ void InitObjects()
 					break;
 				}
 				quests[Q_BLOOD]._qmsg = sp_id;
-				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, sp_id);
+				AddBookLever(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, sp_id);
 				AddObject(OBJ_PEDISTAL, 2 * setpc_x + 25, 2 * setpc_y + 32);
 			}
 			InitRndBarrels();
@@ -1176,7 +1176,7 @@ void InitObjects()
 					break;
 				}
 				quests[Q_WARLORD]._qmsg = sp_id;
-				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, sp_id);
+				AddBookLever(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, sp_id);
 				mem = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
@@ -1419,7 +1419,7 @@ void AddFlameLvr(int i)
 	object[i]._oVar2 = MIS_FLAMEC;
 }
 
-void AddTrap(int i, int ot)
+void AddTrap(int i)
 {
 	int mt;
 
@@ -1833,7 +1833,7 @@ void AddObject(_object_id ot, int ox, int oy)
 		break;
 	case OBJ_TRAPL:
 	case OBJ_TRAPR:
-		AddTrap(oi, ot);
+		AddTrap(oi);
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
@@ -3066,7 +3066,7 @@ void OperateBookLever(int pnum, int i)
 	}
 }
 
-void OperateSChambBk(int pnum, int i)
+void OperateSChambBk(int i)
 {
 	int j;
 
@@ -3128,7 +3128,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 					if (object[i]._oVar2 != 0)
 						CreateRndItem(object[i]._ox, object[i]._oy, false, sendmsg, false);
 					else
-						CreateRndUseful(pnum, object[i]._ox, object[i]._oy, sendmsg);
+						CreateRndUseful(object[i]._ox, object[i]._oy, sendmsg);
 				}
 			}
 			if (object[i]._oTrapFlag && object[i]._otype >= OBJ_TCHEST1 && object[i]._otype <= OBJ_TCHEST3) {
@@ -3218,7 +3218,7 @@ void OperateInnSignChest(int pnum, int i)
 	}
 }
 
-void OperateSlainHero(int pnum, int i, bool sendmsg)
+void OperateSlainHero(int pnum, int i)
 {
 	if (object[i]._oSelFlag != 0) {
 		object[i]._oSelFlag = 0;
@@ -4598,7 +4598,7 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 	}
 }
 
-int FindValidShrine(int i)
+int FindValidShrine()
 {
 	int rv;
 	bool done;
@@ -4631,7 +4631,7 @@ int FindValidShrine(int i)
 void OperateGoatShrine(int pnum, int i, _sfx_id sType)
 {
 	SetRndSeed(object[i]._oRndSeed);
-	object[i]._oVar1 = FindValidShrine(i);
+	object[i]._oVar1 = FindValidShrine();
 	OperateShrine(pnum, i, sType);
 	object[i]._oAnimDelay = 2;
 	force_redraw = 255;
@@ -4640,7 +4640,7 @@ void OperateGoatShrine(int pnum, int i, _sfx_id sType)
 void OperateCauldron(int pnum, int i, _sfx_id sType)
 {
 	SetRndSeed(object[i]._oRndSeed);
-	object[i]._oVar1 = FindValidShrine(i);
+	object[i]._oVar1 = FindValidShrine();
 	OperateShrine(pnum, i, sType);
 	object[i]._oAnimFrame = 3;
 	object[i]._oAnimFlag = 0;
@@ -4904,7 +4904,7 @@ void OperateObject(int pnum, int i, bool TeleFlag)
 		OperateBook(pnum, i);
 		break;
 	case OBJ_BOOK2R:
-		OperateSChambBk(pnum, i);
+		OperateSChambBk(i);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -4973,7 +4973,7 @@ void OperateObject(int pnum, int i, bool TeleFlag)
 		OperateLazStand(pnum, i);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(pnum, i, sendmsg);
+		OperateSlainHero(pnum, i);
 		break;
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(pnum, i);
@@ -5124,7 +5124,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 		OperateMushPatch(pnum, i);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(pnum, i, false);
+		OperateSlainHero(pnum, i);
 		break;
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(pnum, i);
@@ -5231,7 +5231,7 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 		SetRndSeed(object[i]._oRndSeed);
 		if (object[i]._oVar2 <= 1) {
 			if (object[i]._oVar3 == 0)
-				CreateRndUseful(pnum, object[i]._ox, object[i]._oy, sendmsg);
+				CreateRndUseful(object[i]._ox, object[i]._oy, sendmsg);
 			else
 				CreateRndItem(object[i]._ox, object[i]._oy, false, sendmsg, false);
 		}

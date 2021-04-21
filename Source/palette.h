@@ -45,7 +45,15 @@ void DecreaseGamma();
 int UpdateGamma(int gamma);
 void BlackPalette();
 void SetFadeLevel(DWORD fadeval);
+/**
+ * @brief Fade screen from black
+ * @param fr Steps per 50ms
+ */
 void PaletteFadeIn(int fr);
+/**
+ * @brief Fade screen to black
+ * @param fr Steps per 50ms
+ */
 void PaletteFadeOut(int fr);
 void palette_update_caves();
 void palette_update_crypt();
