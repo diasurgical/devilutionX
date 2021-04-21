@@ -924,7 +924,7 @@ void UiRenderItems(const std::vector<UiItemBase *> &items)
 
 bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 {
-	if (items.size() == 0) {
+	if (items.empty()) {
 		return false;
 	}
 
