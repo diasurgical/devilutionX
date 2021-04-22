@@ -3,6 +3,7 @@ include(FetchContent_MakeAvailableExcludeFromAll)
 if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   # Enable POSIX extensions such as `readlink` and `ftruncate`.
   add_definitions(-D_POSIX_C_SOURCE=200809L)
+  add_compile_options(-U__STRICT_ANSI__)
 endif()
 
 if(DEVILUTIONX_STATIC_LIBFMT)
