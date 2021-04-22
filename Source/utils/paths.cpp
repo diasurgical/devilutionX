@@ -14,6 +14,10 @@
 #define TTF_FONT_NAME "CharisSILB.ttf"
 #endif
 
+#ifndef MO_LANG_DIR
+#define MO_LANG_DIR ""
+#endif
+
 namespace devilution {
 
 namespace {
@@ -21,6 +25,7 @@ namespace {
 std::string *basePath = NULL;
 std::string *prefPath = NULL;
 std::string *configPath = NULL;
+std::string *langPath = NULL;
 std::string *ttfPath = NULL;
 std::string *ttfName = NULL;
 
@@ -82,6 +87,13 @@ const std::string &GetTtfPath()
 	return *ttfPath;
 }
 
+const std::string &GetLangPath()
+{
+	if (langPath == NULL)
+		langPath = new std::string(MO_LANG_DIR);
+	return *langPath;
+}
+  
 const std::string &GetTtfName()
 {
 	if (ttfName == NULL)
@@ -111,6 +123,14 @@ void SetConfigPath(const char *path)
 		configPath = new std::string;
 	*configPath = path;
 	AddTrailingSlash(configPath);
+}
+
+void SetLangPath(const char *path)
+{
+	if (langPath == NULL)
+		langPath = new std::string;
+	*langPath = path;
+	AddTrailingSlash(langPath);
 }
 
 void SetTtfPath(const char *path)

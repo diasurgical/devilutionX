@@ -26,6 +26,7 @@
 #include "gmenu.h"
 #include "help.h"
 #include "init.h"
+#include "language.h"
 #include "lighting.h"
 #include "loadsave.h"
 #include "mainmenu.h"
@@ -188,6 +189,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			SetPrefPath(argv[++i]);
 		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
 			SetConfigPath(argv[++i]);
+		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
+			SetLangPath(argv[++i]);
 		} else if (strcasecmp("--ttf-dir", argv[i]) == 0) {
 			SetTtfPath(argv[++i]);
 		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
@@ -517,6 +520,8 @@ static void SaveOptions()
 	setIniInt("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
 #endif
 
+	setIniValue("Language", "Code", sgOptions.Language.szCode);
+	
 	SaveIni();
 }
 
@@ -591,6 +596,8 @@ static void LoadOptions()
 	sgOptions.Controller.bRearTouch = getIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
+	getIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), "en");
+	
 	sbWasOptionsLoaded = true;
 }
 
@@ -625,6 +632,7 @@ static void diablo_init()
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 
+	LanguageInitialize();
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);
 	was_ui_init = true;

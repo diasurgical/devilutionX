@@ -241,6 +241,7 @@ set(devilutionx_SRCS
   Source/inv.cpp
   Source/itemdat.cpp
   Source/items.cpp
+  Source/language.cpp
   Source/lighting.cpp
   Source/loadsave.cpp
   Source/main.cpp
