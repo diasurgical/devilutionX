@@ -873,7 +873,11 @@ if(CPACK)
 
     # -G DEB
     set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
-    set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+    if(USE_SDL1)
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libsdl-mixer1.2, libsdl-ttf2.0-0")
+    else()
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libsdl2-mixer-2.0-0, libsdl2-ttf-2.0-0")
+    endif()
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
     # -G RPM
