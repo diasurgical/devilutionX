@@ -6,6 +6,7 @@
 #elif __has_include(<experimental/optional>)
 #include <experimental/optional> // IWYU pragma: export
 #define optional experimental::optional
+#define nullopt experimental::nullopt
 #else
 #error "Missing support for <optional> or <experimental/optional>"
 #endif

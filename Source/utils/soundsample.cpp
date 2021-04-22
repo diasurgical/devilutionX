@@ -1,5 +1,10 @@
 #include "utils/soundsample.h"
 
+#include <cmath>
+#include <chrono>
+
+#include <Aulib/DecoderDrwav.h>
+#include <Aulib/ResamplerSpeex.h>
 #include <SDL.h>
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -7,6 +12,7 @@
 #include "utils/sdl2_backports.h"
 #endif
 
+#include "options.h"
 #include "storm/storm_sdl_rw.h"
 #include "utils/stubs.h"
 #include "utils/log.hpp"
@@ -17,8 +23,8 @@ namespace devilution {
 
 void SoundSample::Release()
 {
-	Mix_FreeChunk(chunk);
-	chunk = nullptr;
+	stream_ = std::nullopt;
+	file_data_ = nullptr;
 };
 
 /**
@@ -26,17 +32,7 @@ void SoundSample::Release()
  */
 bool SoundSample::IsPlaying()
 {
-	if (chunk == nullptr)
-		return false;
-
-	int channels = Mix_AllocateChannels(-1);
-	for (int i = 0; i < channels; i++) {
-		if (Mix_GetChunk(i) == chunk && Mix_Playing(i) != 0) {
-			return true;
-		}
-	}
-
-	return false;
+	return stream_ && stream_->isPlaying();
 };
 
 /**
@@ -44,18 +40,21 @@ bool SoundSample::IsPlaying()
  */
 void SoundSample::Play(int lVolume, int lPan, int channel)
 {
-	if (chunk == nullptr)
+	if (!stream_)
 		return;
 
-	channel = Mix_PlayChannel(channel, chunk, 0);
-	if (channel == -1) {
-		Log("Too few channels, skipping sound");
+	constexpr float Base = 10.F;
+	constexpr float Scale = 2000.F;
+	stream_->setVolume(std::pow(Base, static_cast<float>(lVolume) / Scale));
+	stream_->setStereoPosition(
+	    lPan == 0 ? 0
+	              : copysign(1.F - std::pow(Base, static_cast<float>(-std::fabs(lPan) / Scale)),
+	                  static_cast<float>(lPan)));
+
+	if (!stream_->play()) {
+		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
 		return;
 	}
-
-	Mix_Volume(channel, pow((double)10, (double)lVolume / 2000.0) * MIX_MAX_VOLUME);
-	int pan = copysign(pow((double)10, -abs(lPan) / 2000.0) * 255, (double)lPan);
-	Mix_SetPanning(channel, lPan > 0 ? pan : 255, lPan < 0 ? abs(pan) : 255);
 };
 
 /**
@@ -63,44 +62,36 @@ void SoundSample::Play(int lVolume, int lPan, int channel)
  */
 void SoundSample::Stop()
 {
-	if (chunk == nullptr)
-		return;
-
-	int channels = Mix_AllocateChannels(-1);
-	for (int i = 0; i < channels; i++) {
-		if (Mix_GetChunk(i) != chunk) {
-			continue;
-		}
-
-		Mix_HaltChannel(i);
-	}
+	if (stream_)
+		stream_->stop();
 };
 
 int SoundSample::SetChunkStream(HANDLE stormHandle)
 {
-	chunk = Mix_LoadWAV_RW(SFileRw_FromStormHandle(stormHandle), /*freesrc=*/1);
-	if (chunk == nullptr) {
-		Log("Mix_LoadWAV_RW: {}", Mix_GetError());
+	stream_.emplace(SFileRw_FromStormHandle(stormHandle), std::make_unique<Aulib::DecoderDrwav>(),
+	    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
+	if (!stream_->open()) {
+		stream_ = std::nullopt;
+		LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
 		return -1;
 	}
 	return 0;
 }
 
-/**
- * @brief This can load WAVE, AIFF, RIFF, OGG, and VOC formats
- * @param fileData Buffer containing file data
- * @param dwBytes Length of buffer
- * @return 0 on success, -1 otherwise
- */
-int SoundSample::SetChunk(BYTE *fileData, DWORD dwBytes)
+int SoundSample::SetChunk(std::unique_ptr<std::uint8_t[]> fileData, DWORD dwBytes)
 {
-	SDL_RWops *buf1 = SDL_RWFromConstMem(fileData, dwBytes);
-	if (buf1 == nullptr) {
+	file_data_ = std::move(fileData);
+	SDL_RWops *buf = SDL_RWFromConstMem(file_data_.get(), dwBytes);
+	if (buf == nullptr) {
 		return -1;
 	}
 
-	chunk = Mix_LoadWAV_RW(buf1, 1);
-	if (chunk == nullptr) {
+	stream_.emplace(buf, std::make_unique<Aulib::DecoderDrwav>(),
+	    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
+	if (!stream_->open()) {
+		stream_ = std::nullopt;
+		file_data_ = nullptr;
+		LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
 		return -1;
 	}
 
@@ -112,21 +103,9 @@ int SoundSample::SetChunk(BYTE *fileData, DWORD dwBytes)
  */
 int SoundSample::GetLength()
 {
-	if (chunk == nullptr)
+	if (!stream_)
 		return 0;
-
-	int frequency, channels;
-	Uint16 format;
-	Mix_QuerySpec(&frequency, &format, &channels);
-
-	int bytePerSample = 2;
-	if (format == AUDIO_U8 || format == AUDIO_S8) {
-		bytePerSample = 1;
-	}
-
-	uint64_t ms = 1000;                             // milliseconds, 64bit to avoid overflow when multiplied by alen
-	int bps = frequency * channels * bytePerSample; // bytes per second
-	return (int)(chunk->alen * ms / bps);
+	return std::chrono::duration_cast<std::chrono::milliseconds>(stream_->duration()).count();
 };
 
 } // namespace devilution

@@ -2,7 +2,6 @@
 
 #include <SDL.h>
 #include <SDL_endian.h>
-#include <SDL_mixer.h>
 #include <cstddef>
 #include <cstdint>
 #include <string>

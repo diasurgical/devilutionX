@@ -62,6 +62,18 @@ namespace devilution {
 #ifndef DEFAULT_HEIGHT
 #define DEFAULT_HEIGHT 480
 #endif
+#ifndef DEFAULT_AUDIO_SAMPLE_RATE
+#define DEFAULT_AUDIO_SAMPLE_RATE 22050
+#endif
+#ifndef DEFAULT_AUDIO_CHANNELS
+#define DEFAULT_AUDIO_CHANNELS 2
+#endif
+#ifndef DEFAULT_AUDIO_BUFFER_SIZE
+#define DEFAULT_AUDIO_BUFFER_SIZE 2048
+#endif
+#ifndef DEFAULT_AUDIO_RESAMPLING_QUALITY
+#define DEFAULT_AUDIO_RESAMPLING_QUALITY 5
+#endif
 
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
@@ -466,6 +478,10 @@ static void SaveOptions()
 	setIniInt("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
 	setIniInt("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
 
+	setIniInt("Audio", "Sample Rate", sgOptions.Audio.nSampleRate);
+	setIniInt("Audio", "Channels", sgOptions.Audio.nChannels);
+	setIniInt("Audio", "Buffer Size", sgOptions.Audio.nBufferSize);
+	setIniInt("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
 #ifndef __vita__
 	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
 	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
@@ -537,6 +553,11 @@ static void LoadOptions()
 	sgOptions.Audio.nMusicVolume = getIniInt("Audio", "Music Volume", VOLUME_MAX);
 	sgOptions.Audio.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
 	sgOptions.Audio.bAutoEquipSound = getIniBool("Audio", "Auto Equip Sound", false);
+
+	sgOptions.Audio.nSampleRate = getIniInt("Audio", "Sample Rate", DEFAULT_AUDIO_SAMPLE_RATE);
+	sgOptions.Audio.nChannels = getIniInt("Audio", "Channels", DEFAULT_AUDIO_CHANNELS);
+	sgOptions.Audio.nBufferSize = getIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
+	sgOptions.Audio.nResamplingQuality = getIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
 
 #ifndef __vita__
 	sgOptions.Graphics.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
@@ -673,6 +694,7 @@ static void diablo_deinit()
 	if (was_snd_init) {
 		effects_cleanup_sfx();
 	}
+	Aulib::quit();
 	if (was_ui_init)
 		UiDestroy();
 	if (was_archives_init)
