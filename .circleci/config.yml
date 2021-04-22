@@ -2,16 +2,13 @@ version: 2
 jobs:
   linux_x86_64:
     docker:
-      - image: debian:stretch-backports
+      - image: debian:testing
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git rpm wget
-      - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
+      - run: apt-get install -y cmake file g++ git libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev rpm wget 
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
-      - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
       - run: Packaging/nix/LinuxReleasePackaging.sh
@@ -20,12 +17,12 @@ jobs:
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64.tar.xz}
   linux_x86_64_test:
     docker:
-      - image: debian:stable
+      - image: debian:testing
     working_directory: ~/repo
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git cmake libsodium-dev libgtest-dev lcov curl
+      - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
       - run: cmake -S. -Bbuild -DRUN_TESTS=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target test
@@ -34,16 +31,13 @@ jobs:
       CTEST_OUTPUT_ON_FAILURE: 1
   linux_x86_64_sdl1:
     docker:
-      - image: debian:stretch-backports
+      - image: debian:testing
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev git rpm
-      - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
+      - run: apt-get install -y cmake file g++ git libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsodium-dev rpm
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
-      - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
       - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
@@ -51,17 +45,14 @@ jobs:
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64_sdl1.tar.xz}
   linux_x86:
     docker:
-      - image: debian:stretch-backports
+      - image: debian:testing
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: dpkg --add-architecture i386
       - run: apt-get update -y
-      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git rpm wget
-      - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev:i386
+      - run: apt-get install -y cmake file g++-multilib git libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 rpm wget
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
-      - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
       - run: Packaging/nix/LinuxReleasePackaging.sh
@@ -70,7 +61,7 @@ jobs:
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86.tar.xz}
   windows_x86:
     docker:
-      - image: debian:stable
+      - image: debian:testing
     working_directory: ~/repo
     steps:
       - checkout
@@ -78,25 +69,19 @@ jobs:
       - run: apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 wget git sudo
       - run: Packaging/windows/mingw-prep.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
-      - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
       - store_artifacts: {path: ./build/devilutionx.zip, destination: devilutionx_x86.zip}
   windows_x64:
     docker:
-      - image: ubuntu:20.04
-        environment:
-           TZ: "America/Los_Angeles"
+    - image: debian:testing
     working_directory: ~/repo
-    environment:
-      TZ: "America/Los_Angeles"
     steps:
       - checkout
       - run: apt-get update -y
-      - run: DEBIAN_FRONTEND="noninteractive" TZ="America/Los_Angeles" apt-get install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wget git sudo
+      - run: apt-get install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wget git sudo
       - run: Packaging/windows/mingw-prep64.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake
-      - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x64.exe}
       - store_artifacts: {path: ./build/devilutionx.zip, destination: devilutionx_x64.zip}
