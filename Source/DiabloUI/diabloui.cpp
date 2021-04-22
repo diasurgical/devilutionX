@@ -332,7 +332,7 @@ void UiFocusNavigation(SDL_Event *event)
 					char utf8[SDL_TEXTINPUTEVENT_TEXT_SIZE];
 					utf8[0] = (char)unicode;
 					utf8[1] = '\0';
-					selhero_CatToName(utf8, UiTextInput, UiTextInputLen);
+					SelheroCatToName(utf8, UiTextInput, UiTextInputLen);
 				}
 			}
 #endif
