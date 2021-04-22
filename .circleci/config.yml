@@ -40,8 +40,7 @@ jobs:
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
-      - run: mkdir ./build/package && find build/_CPack_Packages/Linux/7Z/ -name 'devilutionx' -exec cp "{}" ./build/package/devilutionx \; && cp ./Packaging/resources/devilutionx.mpq ./build/package/devilutionx.mpq && mv ./build/devilutionx*.deb ./build/package/devilutionx.deb && mv ./build/devilutionx*.rpm ./build/package/devilutionx.rpm && mv ./build/CharisSILB.ttf ./build/package/CharisSILB.ttf && cp ./Packaging/nix/README.txt ./build/package/README.txt && cp ./Packaging/resources/LICENSE.CharisSILB.txt ./build/package/LICENSE.CharisSILB.txt
-      - run: cd ./build/package/ && tar -cavf ../../devilutionx.tar.xz * && cd ../../
+      - run: Packaging/nix/LinuxReleasePackaging.sh
       - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64_sdl1.tar.xz}
   linux_x86:
     docker:
