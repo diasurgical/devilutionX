@@ -188,7 +188,7 @@ struct TCmdGolem {
 	_cmd_id bCmd;
 	Uint8 _mx;
 	Uint8 _my;
-	Uint8 _mdir;
+	direction _mdir;
 	Sint8 _menemy;
 	Sint32 _mhitpoints;
 	Uint8 _currlevel;
@@ -362,7 +362,7 @@ struct TPkt {
 struct DMonsterStr {
 	Uint8 _mx;
 	Uint8 _my;
-	Uint8 _mdir;
+	direction _mdir;
 	Uint8 _menemy;
 	Uint8 _mactive;
 	Sint32 _mhitpoints;
@@ -433,7 +433,7 @@ void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
-void NetSendCmdGolem(BYTE mx, BYTE my, BYTE dir, BYTE menemy, int hp, BYTE cl);
+void NetSendCmdGolem(BYTE mx, BYTE my, direction dir, BYTE menemy, int hp, BYTE cl);
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2);
@@ -449,8 +449,8 @@ void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDItem(bool bHiPri, int ii);
 void NetSendCmdDamage(bool bHiPri, BYTE bPlr, DWORD dwDam);
 void NetSendCmdMonDmg(bool bHiPri, WORD bMon, DWORD dwDam);
-void NetSendCmdString(int pmask, const char *pszStr);
+void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
 DWORD ParseCmd(int pnum, TCmd *pCmd);
 
-}
+} // namespace devilution

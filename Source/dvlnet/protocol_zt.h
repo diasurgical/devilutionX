@@ -15,7 +15,7 @@ namespace devilution {
 namespace net {
 
 class protocol_exception : public std::exception {
- public:
+public:
 	const char *what() const throw() override
 	{
 		return "Protocol error";
@@ -30,11 +30,11 @@ public:
 
 		explicit operator bool() const
 		{
-			auto empty = std::array<unsigned char, 16>{};
+			auto empty = std::array<unsigned char, 16> {};
 			return (addr != empty);
 		}
 
-		bool operator<(const endpoint& rhs) const
+		bool operator<(const endpoint &rhs) const
 		{
 			return addr < rhs.addr;
 		}
@@ -44,25 +44,25 @@ public:
 			return buffer_t(addr.begin(), addr.end());
 		}
 
-		void unserialize(const buffer_t& buf)
+		void unserialize(const buffer_t &buf)
 		{
-			if(buf.size() != 16)
+			if (buf.size() != 16)
 				throw protocol_exception();
 			std::copy(buf.begin(), buf.end(), addr.begin());
 		}
 
-		void from_string(const std::string& str);
+		void from_string(const std::string &str);
 	};
 
 	protocol_zt();
 	~protocol_zt();
-	void disconnect(const endpoint& peer);
-	bool send(const endpoint& peer, const buffer_t& data);
-	bool send_oob(const endpoint& peer, const buffer_t& data);
-	bool send_oob_mc(const buffer_t& data);
-	bool recv(endpoint& peer, buffer_t& data);
+	void disconnect(const endpoint &peer);
+	bool send(const endpoint &peer, const buffer_t &data);
+	bool send_oob(const endpoint &peer, const buffer_t &data);
+	bool send_oob_mc(const buffer_t &data);
+	bool recv(endpoint &peer, buffer_t &data);
 	bool network_online();
-	std::string make_default_gamename();
+	static std::string make_default_gamename();
 
 private:
 	static constexpr uint32_t PKTBUF_LEN = 65536;
@@ -80,15 +80,15 @@ private:
 	int fd_tcp = -1;
 	int fd_udp = -1;
 
-	uint64_t current_ms();
+	static uint64_t current_ms();
 	void close_all();
 
-	void set_nonblock(int fd);
-	void set_nodelay(int fd);
-	void set_reuseaddr(int fd);
+	static void set_nonblock(int fd);
+	static void set_nodelay(int fd);
+	static void set_reuseaddr(int fd);
 
-	bool send_queued_peer(const endpoint& peer);
-	bool recv_peer(const endpoint& peer);
+	bool send_queued_peer(const endpoint &peer);
+	bool recv_peer(const endpoint &peer);
 	bool send_queued_all();
 	bool recv_from_peers();
 	bool recv_from_udp();

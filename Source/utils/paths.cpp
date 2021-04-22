@@ -22,34 +22,34 @@ namespace devilution {
 
 namespace {
 
-std::string *basePath = NULL;
-std::string *prefPath = NULL;
-std::string *configPath = NULL;
-std::string *langPath = NULL;
-std::string *ttfPath = NULL;
-std::string *ttfName = NULL;
+std::string *basePath = nullptr;
+std::string *prefPath = nullptr;
+std::string *configPath = nullptr;
+std::string *langPath = nullptr;
+std::string *ttfPath = nullptr;
+std::string *ttfName = nullptr;
 
 void AddTrailingSlash(std::string *path)
 {
 #ifdef _WIN32
-    if (!path->empty() && path->back() != '\\')
-        *path += '\\';
+	if (!path->empty() && path->back() != '\\')
+		*path += '\\';
 #else
-    if (!path->empty() && path->back() != '/')
-        *path += '/';
+	if (!path->empty() && path->back() != '/')
+		*path += '/';
 #endif
 }
 
 std::string *FromSDL(char *s)
 {
-    std::string *result = new std::string(s != NULL ? s : "");
-    if (s != NULL) {
-        SDL_free(s);
-    } else {
-        SDL_Log("%s", SDL_GetError());
-        SDL_ClearError();
-    }
-    return result;
+	auto *result = new std::string(s != nullptr ? s : "");
+	if (s != nullptr) {
+		SDL_free(s);
+	} else {
+		SDL_Log("%s", SDL_GetError());
+		SDL_ClearError();
+	}
+	return result;
 }
 
 } // namespace
@@ -60,7 +60,7 @@ const std::string &GetBasePath()
 	if (basePath == NULL)
 		basePath = new std::string(GetPrefPath());
 #else
-	if (basePath == NULL)
+	if (basePath == nullptr)
 		basePath = FromSDL(SDL_GetBasePath());
 #endif
 	return *basePath;
@@ -68,21 +68,21 @@ const std::string &GetBasePath()
 
 const std::string &GetPrefPath()
 {
-	if (prefPath == NULL)
+	if (prefPath == nullptr)
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 	return *prefPath;
 }
 
 const std::string &GetConfigPath()
 {
-	if (configPath == NULL)
+	if (configPath == nullptr)
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 	return *configPath;
 }
 
 const std::string &GetTtfPath()
 {
-	if (ttfPath == NULL)
+	if (ttfPath == nullptr)
 		ttfPath = new std::string(TTF_FONT_DIR);
 	return *ttfPath;
 }
@@ -96,14 +96,14 @@ const std::string &GetLangPath()
   
 const std::string &GetTtfName()
 {
-	if (ttfName == NULL)
+	if (ttfName == nullptr)
 		ttfName = new std::string(TTF_FONT_NAME);
 	return *ttfName;
 }
 
 void SetBasePath(const char *path)
 {
-	if (basePath == NULL)
+	if (basePath == nullptr)
 		basePath = new std::string;
 	*basePath = path;
 	AddTrailingSlash(basePath);
@@ -111,7 +111,7 @@ void SetBasePath(const char *path)
 
 void SetPrefPath(const char *path)
 {
-	if (prefPath == NULL)
+	if (prefPath == nullptr)
 		prefPath = new std::string;
 	*prefPath = path;
 	AddTrailingSlash(prefPath);
@@ -119,7 +119,7 @@ void SetPrefPath(const char *path)
 
 void SetConfigPath(const char *path)
 {
-	if (configPath == NULL)
+	if (configPath == nullptr)
 		configPath = new std::string;
 	*configPath = path;
 	AddTrailingSlash(configPath);
@@ -135,7 +135,7 @@ void SetLangPath(const char *path)
 
 void SetTtfPath(const char *path)
 {
-	if (ttfPath == NULL)
+	if (ttfPath == nullptr)
 		ttfPath = new std::string;
 	*ttfPath = path;
 	AddTrailingSlash(ttfPath);
@@ -143,7 +143,7 @@ void SetTtfPath(const char *path)
 
 void SetTtfName(const char *path)
 {
-	if (ttfName == NULL)
+	if (ttfName == nullptr)
 		ttfName = new std::string;
 	*ttfName = path;
 }

@@ -1,11 +1,12 @@
-#include "selconn.h"
-
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "stores.h"
 #include "storm/storm.h"
 
 namespace devilution {
+
+int provider;
+namespace {
 
 char selconn_MaxPlayers[21];
 char selconn_Description[64];
@@ -14,14 +15,16 @@ bool selconn_ReturnValue = false;
 bool selconn_EndMenu = false;
 GameData *selconn_GameData;
 
-int provider;
-
 std::vector<UiListItem *> vecConnItems;
 std::vector<UiItemBase *> vecSelConnDlg;
 
 #define DESCRIPTION_WIDTH 205
 
-void selconn_Load()
+void SelconnEsc();
+void SelconnFocus(int value);
+void SelconnSelect(int value);
+
+void SelconnLoad()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
@@ -56,7 +59,7 @@ void selconn_Load()
 	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect7, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect8 = { (Sint16)(PANEL_LEFT + 16), (Sint16)(UI_OFFSET_Y + 427), 250, 35 };
-	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect8, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
+	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", nullptr, rect8, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
 
 	vecSelConnDlg.push_back(new UiList(vecConnItems, PANEL_LEFT + 305, (UI_OFFSET_Y + 256), 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD));
 
@@ -66,34 +69,31 @@ void selconn_Load()
 	SDL_Rect rect10 = { (Sint16)(PANEL_LEFT + 454), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect10, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(vecConnItems.size(), selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
+	UiInitList(vecConnItems.size(), SelconnFocus, SelconnSelect, SelconnEsc, vecSelConnDlg);
 }
 
-void selconn_Free()
+void SelconnFree()
 {
 	ArtBackground.Unload();
 
-	for (std::size_t i = 0; i < vecConnItems.size(); i++) {
-		UiListItem *pUIItem = vecConnItems[i];
+	for (auto pUIItem : vecConnItems) {
 		delete pUIItem;
 	}
 	vecConnItems.clear();
 
-	for (std::size_t i = 0; i < vecSelConnDlg.size(); i++) {
-		UiItemBase *pUIMenuItem = vecSelConnDlg[i];
-		if (pUIMenuItem)
-			delete pUIMenuItem;
+	for (auto pUIMenuItem : vecSelConnDlg) {
+		delete pUIMenuItem;
 	}
 	vecSelConnDlg.clear();
 }
 
-void selconn_Esc()
+void SelconnEsc()
 {
 	selconn_ReturnValue = false;
 	selconn_EndMenu = true;
 }
 
-void selconn_Focus(int value)
+void SelconnFocus(int value)
 {
 	int players = MAX_PLRS;
 	switch (vecConnItems[value]->m_value) {
@@ -115,19 +115,21 @@ void selconn_Focus(int value)
 	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 
-void selconn_Select(int value)
+void SelconnSelect(int value)
 {
 	provider = vecConnItems[value]->m_value;
 
-	selconn_Free();
+	SelconnFree();
 	selconn_EndMenu = SNetInitializeProvider(provider, selconn_GameData);
-	selconn_Load();
+	SelconnLoad();
 }
 
-int UiSelectProvider(GameData *gameData)
+} // namespace
+
+bool UiSelectProvider(GameData *gameData)
 {
 	selconn_GameData = gameData;
-	selconn_Load();
+	SelconnLoad();
 
 	selconn_ReturnValue = true;
 	selconn_EndMenu = false;
@@ -135,7 +137,7 @@ int UiSelectProvider(GameData *gameData)
 		UiClearScreen();
 		UiPollAndRender();
 	}
-	selconn_Free();
+	SelconnFree();
 
 	return selconn_ReturnValue;
 }

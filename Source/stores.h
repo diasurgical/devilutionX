@@ -80,7 +80,7 @@ extern int numpremium;
 /** Base level of current premium items sold by Griswold */
 extern int premiumlevel;
 /** Premium items sold by Griswold */
-extern ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
+extern ItemStruct premiumitems[SMITH_PREMIUM_ITEMS];
 
 /** Items sold by Pepin */
 extern ItemStruct healitem[20];
@@ -98,12 +98,12 @@ void InitStores();
 int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
-void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col, int val);
+void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col, int val);
 void DrawSLine(CelOutputBuffer out, int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
 void StartStore(talk_id s);
-void DrawSText(CelOutputBuffer out);
+void DrawSText(const CelOutputBuffer &out);
 void STextESC();
 void STextUp();
 void STextDown();
@@ -116,4 +116,4 @@ void STextEnter();
 void CheckStoreBtn();
 void ReleaseStoreBtn();
 
-}
+} // namespace devilution

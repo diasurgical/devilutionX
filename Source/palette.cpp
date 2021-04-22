@@ -106,7 +106,7 @@ static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int ski
 				int diffr = palette[k].r - r;
 				int diffg = palette[k].g - g;
 				int diffb = palette[k].b - b;
-				int diff = diffr * diffr + diffg * diffg + diffb * diffb;
+				Uint32 diff = diffr * diffr + diffg * diffg + diffb * diffb;
 
 				if (bestDiff > diff) {
 					best = k;
@@ -127,7 +127,7 @@ void LoadPalette(const char *pszFileName)
 	assert(pszFileName);
 
 	SFileOpenFile(pszFileName, &pBuf);
-	SFileReadFile(pBuf, (char *)PalData, sizeof(PalData), NULL, NULL);
+	SFileReadFile(pBuf, (char *)PalData, sizeof(PalData), nullptr, nullptr);
 	SFileCloseFile(pBuf);
 
 	for (i = 0; i < 256; i++) {
@@ -158,7 +158,7 @@ void LoadRndLvlPal(int l)
 	if (l == DTYPE_TOWN) {
 		LoadPalette("Levels\\TownData\\Town.pal");
 	} else {
-		rv = random_(0, 4) + 1;
+		rv = GenerateRnd(4) + 1;
 		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
 		if (l == 5) {
 			sprintf(szFileName, "NLevels\\L5Data\\L5Base.PAL");
@@ -214,9 +214,9 @@ void SetFadeLevel(DWORD fadeval)
 	int i;
 
 	for (i = 0; i < 256; i++) { // BUGFIX: should be 256 (fixed)
-		system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
-		system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
-		system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;
+		system_palette[i].r = (fadeval * logical_palette[i].r) / 256;
+		system_palette[i].g = (fadeval * logical_palette[i].g) / 256;
+		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;
 	}
 	palette_update();
 }
@@ -228,36 +228,41 @@ void BlackPalette()
 
 void PaletteFadeIn(int fr)
 {
-	int i;
-
 	ApplyGamma(logical_palette, orig_palette, 256);
-	DWORD tc = SDL_GetTicks();
-	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
+
+	SDL_Rect SrcRect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
+	const uint32_t tc = SDL_GetTicks();
+	fr *= 3;
+
+	for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
 		SetFadeLevel(i);
-		SDL_Rect SrcRect = { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
-		BltFast(&SrcRect, NULL);
+		BltFast(&SrcRect, nullptr);
 		RenderPresent();
 	}
 	SetFadeLevel(256);
+
 	memcpy(logical_palette, orig_palette, sizeof(orig_palette));
+
 	sgbFadedIn = true;
 }
 
 void PaletteFadeOut(int fr)
 {
-	int i;
+	if (!sgbFadedIn)
+		return;
 
-	if (sgbFadedIn) {
-		DWORD tc = SDL_GetTicks();
-		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
-			SetFadeLevel(i);
-			SDL_Rect SrcRect = { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
-			BltFast(&SrcRect, NULL);
-			RenderPresent();
-		}
-		SetFadeLevel(0);
-		sgbFadedIn = false;
+	SDL_Rect SrcRect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
+	const uint32_t tc = SDL_GetTicks();
+	fr *= 3;
+
+	for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
+		SetFadeLevel(256 - i);
+		BltFast(&SrcRect, nullptr);
+		RenderPresent();
 	}
+	SetFadeLevel(0);
+
+	sgbFadedIn = false;
 }
 
 /**
@@ -276,12 +281,12 @@ static void CycleColors(int from, int to)
 	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
-	for (int i = 0; i < 256; i++) {
-		Uint8 col = paletteTransparencyLookup[i][from];
+	for (auto &palette : paletteTransparencyLookup) {
+		Uint8 col = palette[from];
 		for (int j = from; j < to; j++) {
-			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[i][j + 1];
+			palette[j] = palette[j + 1];
 		}
-		paletteTransparencyLookup[i][to] = col;
+		palette[to] = col;
 	}
 
 	Uint8 colRow[256];
@@ -308,12 +313,12 @@ static void CycleColorsReverse(int from, int to)
 	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
 
-	for (int i = 0; i < 256; i++) {
-		Uint8 col = paletteTransparencyLookup[i][to];
+	for (auto &palette : paletteTransparencyLookup) {
+		Uint8 col = palette[to];
 		for (int j = to; j > from; j--) {
-			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[i][j - 1];
+			palette[j] = palette[j - 1];
 		}
-		paletteTransparencyLookup[i][from] = col;
+		palette[from] = col;
 	}
 
 	Uint8 colRow[256];
@@ -334,9 +339,6 @@ int dword_6E2D58;
 int dword_6E2D54;
 void palette_update_crypt()
 {
-	int i;
-	SDL_Color col;
-
 	if (dword_6E2D58 > 1) {
 		CycleColorsReverse(1, 15);
 		dword_6E2D58 = 0;
@@ -356,9 +358,6 @@ int dword_6E2D5C;
 int dword_6E2D60;
 void palette_update_hive()
 {
-	int i;
-	SDL_Color col;
-
 	if (dword_6E2D60 == 2) {
 		CycleColorsReverse(1, 8);
 		dword_6E2D60 = 0;

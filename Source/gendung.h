@@ -77,7 +77,6 @@ enum _difficulty : uint8_t {
 	DIFF_NORMAL,
 	DIFF_NIGHTMARE,
 	DIFF_HELL,
-	NUM_DIFFICULTIES,
 };
 
 struct ScrollStruct {
@@ -154,15 +153,15 @@ extern char TransVal;
 extern bool TransList[256];
 extern int dPiece[MAXDUNX][MAXDUNY];
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-extern char dTransVal[MAXDUNX][MAXDUNY];
+extern int8_t dTransVal[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
-extern char dFlags[MAXDUNX][MAXDUNY];
-extern char dPlayer[MAXDUNX][MAXDUNY];
+extern int8_t dFlags[MAXDUNX][MAXDUNY];
+extern int8_t dPlayer[MAXDUNX][MAXDUNY];
 extern int16_t dMonster[MAXDUNX][MAXDUNY];
-extern char dDead[MAXDUNX][MAXDUNY];
+extern int8_t dDead[MAXDUNX][MAXDUNY];
 extern char dObject[MAXDUNX][MAXDUNY];
-extern char dItem[MAXDUNX][MAXDUNY];
+extern int8_t dItem[MAXDUNX][MAXDUNY];
 extern char dMissile[MAXDUNX][MAXDUNY];
 extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
@@ -184,4 +183,4 @@ void DRLG_HoldThemeRooms();
 bool SkipThemeRoom(int x, int y);
 void InitLevels();
 
-}
+} // namespace devilution

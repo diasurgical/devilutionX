@@ -16,18 +16,18 @@ namespace {
 
 TextAlignment XAlignmentFromFlags(int flags)
 {
-	if (flags & UIS_CENTER)
+	if ((flags & UIS_CENTER) != 0)
 		return TextAlignment_CENTER;
-	if (flags & UIS_RIGHT)
+	if ((flags & UIS_RIGHT) != 0)
 		return TextAlignment_END;
 	return TextAlignment_BEGIN;
 }
 
 int AlignXOffset(int flags, const SDL_Rect &dest, int w)
 {
-	if (flags & UIS_CENTER)
+	if ((flags & UIS_CENTER) != 0)
 		return (dest.w - w) / 2;
-	if (flags & UIS_RIGHT)
+	if ((flags & UIS_RIGHT) != 0)
 		return dest.w - w;
 	return 0;
 }
@@ -35,52 +35,52 @@ int AlignXOffset(int flags, const SDL_Rect &dest, int w)
 } // namespace
 
 void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
-    const SDL_Color &text_color, const SDL_Color &shadow_color,
-    TtfSurfaceCache **render_cache)
+    const SDL_Color &textColor, const SDL_Color &shadowColor,
+    TtfSurfaceCache &renderCache)
 {
 	SDL_Rect rect(rectIn);
-	if (font == NULL || text == NULL || *text == '\0')
-		return;
-	if (*render_cache == NULL) {
-		const auto x_align = XAlignmentFromFlags(flags);
-		*render_cache = new TtfSurfaceCache {
-			/*.text=*/ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w, x_align) }),
-			/*.shadow=*/ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w, x_align) }),
-		};
-	}
-	SDL_Surface *text_surface = (*render_cache)->text.get();
-	SDL_Surface *shadow_surface = (*render_cache)->shadow.get();
-	if (text_surface == NULL)
+	if (font == nullptr || text == nullptr || *text == '\0')
 		return;
 
-	SDL_Rect dest_rect = rect;
-	ScaleOutputRect(&dest_rect);
-	dest_rect.x += AlignXOffset(flags, dest_rect, text_surface->w);
-	dest_rect.y += (flags & UIS_VCENTER) ? (dest_rect.h - text_surface->h) / 2 : 0;
+	const auto xAlign = XAlignmentFromFlags(flags);
+	if (renderCache.text == nullptr)
+		renderCache.text = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, textColor, rect.w, xAlign) });
+	if (renderCache.shadow == nullptr)
+		renderCache.shadow = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, shadowColor, rect.w, xAlign) });
 
-	SDL_Rect shadow_rect = dest_rect;
-	++shadow_rect.x;
-	++shadow_rect.y;
-	if (SDL_BlitSurface(shadow_surface, NULL, DiabloUiSurface(), &shadow_rect) < 0)
+	SDL_Surface *textSurface = renderCache.text.get();
+	SDL_Surface *shadowSurface = renderCache.shadow.get();
+	if (textSurface == nullptr)
+		return;
+
+	SDL_Rect destRect = rect;
+	ScaleOutputRect(&destRect);
+	destRect.x += AlignXOffset(flags, destRect, textSurface->w);
+	destRect.y += (flags & UIS_VCENTER) != 0 ? (destRect.h - textSurface->h) / 2 : 0;
+
+	SDL_Rect shadowRect = destRect;
+	++shadowRect.x;
+	++shadowRect.y;
+	if (SDL_BlitSurface(shadowSurface, nullptr, DiabloUiSurface(), &shadowRect) < 0)
 		ErrSdl();
-	if (SDL_BlitSurface(text_surface, NULL, DiabloUiSurface(), &dest_rect) < 0)
+	if (SDL_BlitSurface(textSurface, nullptr, DiabloUiSurface(), &destRect) < 0)
 		ErrSdl();
 }
 
 void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawTextCursor)
 {
 	_artFontTables size = AFT_SMALL;
-	_artFontColors color = flags & UIS_GOLD ? AFC_GOLD : AFC_SILVER;
+	_artFontColors color = (flags & UIS_GOLD) != 0 ? AFC_GOLD : AFC_SILVER;
 
-	if (flags & UIS_MED)
+	if ((flags & UIS_MED) != 0)
 		size = AFT_MED;
-	else if (flags & UIS_BIG)
+	else if ((flags & UIS_BIG) != 0)
 		size = AFT_BIG;
-	else if (flags & UIS_HUGE)
+	else if ((flags & UIS_HUGE) != 0)
 		size = AFT_HUGE;
 
 	const int x = rect.x + AlignXOffset(flags, rect, GetArtStrWidth(text, size));
-	const int y = rect.y + ((flags & UIS_VCENTER) ? (rect.h - ArtFonts[size][color].h()) / 2 : 0);
+	const int y = rect.y + ((flags & UIS_VCENTER) != 0 ? (rect.h - ArtFonts[size][color].h()) / 2 : 0);
 
 	int sx = x, sy = y;
 	for (size_t i = 0, n = strlen(text); i < n; i++) {
@@ -89,11 +89,11 @@ void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawText
 			sy += ArtFonts[size][color].h();
 			continue;
 		}
-		BYTE w = FontTables[size][*(BYTE *)&text[i] + 2] ? FontTables[size][*(BYTE *)&text[i] + 2] : FontTables[size][0];
+		BYTE w = FontTables[size][*(BYTE *)&text[i] + 2] != 0 ? FontTables[size][*(BYTE *)&text[i] + 2] : FontTables[size][0];
 		DrawArt(sx, sy, &ArtFonts[size][color], *(BYTE *)&text[i], w);
 		sx += w;
 	}
-	if (drawTextCursor && GetAnimationFrame(2, 500)) {
+	if (drawTextCursor && GetAnimationFrame(2, 500) != 0) {
 		DrawArt(sx, sy, &ArtFonts[size][color], '|');
 	}
 }

@@ -24,6 +24,7 @@
 #include "nthread.h"
 #include "plrmsg.h"
 #include "qol.h"
+#include "qol/xpbar.h"
 #include "render.h"
 #include "stores.h"
 #include "towners.h"
@@ -40,7 +41,7 @@ int sgdwCursY;
 /**
  * Lower bound of back buffer.
  */
-DWORD sgdwCursHgt;
+uint32_t sgdwCursHgt;
 
 /**
  * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
@@ -68,10 +69,10 @@ int cel_foliage_active = false;
  * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
  */
 int level_piece_id;
-DWORD sgdwCursWdt;
+uint32_t sgdwCursWdt;
 void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
-DWORD sgdwCursHgtOld;
+uint32_t sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
 
@@ -130,7 +131,7 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 
 static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
 {
-	for (int i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
+	for (uint32_t i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 }
@@ -158,7 +159,7 @@ static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
  */
 static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 {
-	int i, mx, my;
+	int mx, my;
 	BYTE col;
 
 	assert(!sgdwCursWdt);
@@ -174,31 +175,27 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	mx = MouseX - 1;
 	if (mx < 0 - cursW - 1) {
 		return;
-	} else if (mx > gnScreenWidth - 1) {
+	}
+	if (mx > gnScreenWidth - 1) {
 		return;
 	}
 	my = MouseY - 1;
 	if (my < 0 - cursH - 1) {
 		return;
-	} else if (my > gnScreenHeight - 1) {
+	}
+	if (my > gnScreenHeight - 1) {
 		return;
 	}
 
 	sgdwCursX = mx;
-	sgdwCursWdt = sgdwCursX + cursW + 1;
-	if (sgdwCursWdt > gnScreenWidth - 1) {
-		sgdwCursWdt = gnScreenWidth - 1;
-	}
+	sgdwCursWdt = std::min(sgdwCursX + cursW + 1, gnScreenWidth - 1);
 	sgdwCursX &= ~3;
 	sgdwCursWdt |= 3;
 	sgdwCursWdt -= sgdwCursX;
 	sgdwCursWdt++;
 
 	sgdwCursY = my;
-	sgdwCursHgt = sgdwCursY + cursH + 1;
-	if (sgdwCursHgt > gnScreenHeight - 1) {
-		sgdwCursHgt = gnScreenHeight - 1;
-	}
+	sgdwCursHgt = std::min(sgdwCursY + cursH + 1, gnScreenHeight - 1);
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
 
@@ -253,13 +250,13 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, bool pre)
+void DrawMissilePrivate(const CelOutputBuffer &out, MissileStruct *m, int sx, int sy, bool pre)
 {
 	if (m->_miPreFlag != pre || !m->_miDrawFlag)
 		return;
 
 	BYTE *pCelBuff = m->_miAnimData;
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
 		return;
 	}
@@ -288,7 +285,7 @@ void DrawMissilePrivate(CelOutputBuffer out, MissileStruct *m, int sx, int sy, b
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
+void DrawMissile(const CelOutputBuffer &out, int x, int y, int sx, int sy, bool pre)
 {
 	int i;
 	MissileStruct *m;
@@ -320,7 +317,7 @@ void DrawMissile(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
  * @param my Output buffer coordinate
  * @param m Id of monster
  */
-static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m)
+static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my, int m)
 {
 	if (m < 0 || m >= MAXMONSTERS) {
 		SDL_Log("Draw Monster: tried to draw illegal monster %d", m);
@@ -328,7 +325,7 @@ static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m
 	}
 
 	BYTE *pCelBuff = monster[m]._mAnimData;
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Draw Monster \"%s\": NULL Cel Buffer", monster[m].mName);
 		return;
 	}
@@ -375,7 +372,7 @@ static void DrawMonster(CelOutputBuffer out, int x, int y, int mx, int my, int m
  * @param sy Output buffer coordinate
  * @param lighting Should lighting be applied
  */
-static void DrawManaShield(CelOutputBuffer out, int pnum, int x, int y, bool lighting)
+static void DrawManaShield(const CelOutputBuffer &out, int pnum, int x, int y, bool lighting)
 {
 	if (!plr[pnum].pManaShield)
 		return;
@@ -410,7 +407,7 @@ static void DrawManaShield(CelOutputBuffer out, int pnum, int x, int y, bool lig
  * @param nCel frame
  * @param nWidth width
  */
-static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int py)
+static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int px, int py)
 {
 	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
@@ -422,7 +419,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
 	int nCel = GetFrameToUseForPlayerRendering(pPlayer);
 	int nWidth = pPlayer->_pAnimWidth;
 
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
 		return;
 	}
@@ -478,7 +475,7 @@ static void DrawPlayer(CelOutputBuffer out, int pnum, int x, int y, int px, int 
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
  */
-void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
+void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
 	int i, px, py;
 	PlayerStruct *p;
@@ -505,13 +502,13 @@ void DrawDeadPlayer(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param oy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool pre)
+static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy, bool pre)
 {
 	if (dObject[x][y] == 0 || light_table_index >= lightmax)
 		return;
 
 	int sx, sy;
-	char bv;
+	int8_t bv;
 	if (dObject[x][y] > 0) {
 		bv = dObject[x][y] - 1;
 		if (object[bv]._oPreFlag != pre)
@@ -524,14 +521,14 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool p
 			return;
 		int xx = object[bv]._ox - x;
 		int yy = object[bv]._oy - y;
-		sx = (xx << 5) + ox - object[bv]._oAnimWidth2 - (yy << 5);
-		sy = oy + (yy << 4) + (xx << 4);
+		sx = (xx * TILE_WIDTH / 2) + ox - object[bv]._oAnimWidth2 - (yy * TILE_WIDTH / 2);
+		sy = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
 	assert(bv >= 0 && bv < MAXOBJECTS);
 
 	BYTE *pCelBuff = object[bv]._oAnimData;
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Draw Object type %d: NULL Cel Buffer", object[bv]._otype);
 		return;
 	}
@@ -552,7 +549,7 @@ static void DrawObject(CelOutputBuffer out, int x, int y, int ox, int oy, bool p
 	}
 }
 
-static void scrollrt_draw_dungeon(CelOutputBuffer, int, int, int, int);
+static void scrollrt_draw_dungeon(const CelOutputBuffer &, int, int, int, int);
 
 /**
  * @brief Render a cell
@@ -562,13 +559,13 @@ static void scrollrt_draw_dungeon(CelOutputBuffer, int, int, int, int);
  * @param sx Target buffer coordinate
  * @param sy Target buffer coordinate
  */
-static void drawCell(CelOutputBuffer out, int x, int y, int sx, int sy)
+static void drawCell(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
 	MICROS *pMap = &dpiece_defs_map_2[x][y];
 	level_piece_id = dPiece[x][y];
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 	cel_foliage_active = !nSolidTable[level_piece_id];
-	for (int i = 0; i < (MicroTileLen >> 1); i++) {
+	for (int i = 0; i < (MicroTileLen / 2); i++) {
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
@@ -592,7 +589,7 @@ static void drawCell(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param sx Target buffer coordinate
  * @param sy Target buffer coordinate
  */
-static void drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy)
+static void drawFloor(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
 	cel_transparency_active = 0;
 	light_table_index = dLight[x][y];
@@ -618,13 +615,11 @@ static void drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre)
+static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, bool pre)
 {
-	char bItem = dItem[x][y];
+	int8_t bItem = dItem[x][y];
 
-	assert((unsigned char)bItem <= MAXITEMS);
-
-	if (bItem > MAXITEMS || bItem <= 0)
+	if (bItem <= 0)
 		return;
 
 	ItemStruct *pItem = &items[bItem - 1];
@@ -632,7 +627,7 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre
 		return;
 
 	BYTE *pCelBuff = pItem->_iAnimData;
-	if (pCelBuff == NULL) {
+	if (pCelBuff == nullptr) {
 		SDL_Log("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
 		return;
 	}
@@ -660,7 +655,7 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, bool pre
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
  */
-static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx, int sy)
+static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, int sx, int sy)
 {
 	int mi, px, py;
 	MonsterStruct *pMonster;
@@ -669,12 +664,12 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		px = sx - towner[mi]._tAnimWidth2;
+		px = sx - towners[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			CelBlitOutlineTo(out, 166, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
 		}
-		assert(towner[mi]._tAnimData);
-		CelClippedDrawTo(out, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+		assert(towners[mi]._tAnimData);
+		CelClippedDrawTo(out, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
 		return;
 	}
 
@@ -691,7 +686,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
 		return;
 	}
 
-	if (pMonster->MType == NULL) {
+	if (pMonster->MType == nullptr) {
 		SDL_Log("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
 		return;
 	}
@@ -712,7 +707,7 @@ static void DrawMonsterHelper(CelOutputBuffer out, int x, int y, int oy, int sx,
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
  */
-static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
+static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
 	int p = dPlayer[x][y];
 	p = p > 0 ? p - 1 : -(p + 1);
@@ -737,7 +732,7 @@ static void DrawPlayerHelper(CelOutputBuffer out, int x, int y, int sx, int sy)
  * @param dx Target buffer coordinate
  * @param dy Target buffer coordinate
  */
-static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, int dy)
+static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, int dx, int dy)
 {
 	assert((DWORD)sx < MAXDUNX);
 	assert((DWORD)sy < MAXDUNY);
@@ -750,9 +745,9 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 
 	drawCell(out, sx, sy, dx, dy);
 
-	char bFlag = dFlags[sx][sy];
-	char bDead = dDead[sx][sy];
-	char bMap = dTransVal[sx][sy];
+	int8_t bFlag = dFlags[sx][sy];
+	int8_t bDead = dDead[sx][sy];
+	int8_t bMap = dTransVal[sx][sy];
 
 	int negMon = 0;
 	if (sy > 0) // check for OOB
@@ -771,11 +766,11 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	if (light_table_index < lightmax && bDead != 0) {
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
-			char dd = (bDead >> 5) & 7;
+			auto dd = static_cast<direction>((bDead >> 5) & 7);
 			int px = dx - pDeadGuy->_deadWidth2;
 			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
-			assert(pCelBuff != NULL);
-			if (pCelBuff == NULL)
+			assert(pCelBuff != nullptr);
+			if (pCelBuff == nullptr)
 				break;
 			int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 			int nCel = pDeadGuy->_deadFrame;
@@ -788,10 +783,10 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 			} else {
 				Cl2DrawLight(out, px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth);
 			}
-		} while (0);
+		} while (false);
 	}
-	DrawObject(out, sx, sy, dx, dy, 1);
-	DrawItem(out, sx, sy, dx, dy, 1);
+	DrawObject(out, sx, sy, dx, dy, true);
+	DrawItem(out, sx, sy, dx, dy, true);
 	if (bFlag & BFLAG_PLAYERLR) {
 		assert((DWORD)(sy - 1) < MAXDUNY);
 		DrawPlayerHelper(out, sx, sy - 1, dx, dy);
@@ -809,8 +804,8 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
 	}
 	DrawMissile(out, sx, sy, dx, dy, false);
-	DrawObject(out, sx, sy, dx, dy, 0);
-	DrawItem(out, sx, sy, dx, dy, 0);
+	DrawObject(out, sx, sy, dx, dy, false);
+	DrawItem(out, sx, sy, dx, dy, false);
 
 	if (leveltype != DTYPE_TOWN) {
 		char bArch = dSpecial[sx][sy];
@@ -851,7 +846,7 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-static void scrollrt_drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy, int rows, int columns)
+static void scrollrt_drawFloor(const CelOutputBuffer &out, int x, int y, int sx, int sy, int rows, int columns)
 {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
@@ -900,7 +895,7 @@ static void scrollrt_drawFloor(CelOutputBuffer out, int x, int y, int sx, int sy
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-static void scrollrt_draw(CelOutputBuffer out, int x, int y, int sx, int sy, int rows, int columns)
+static void scrollrt_draw(const CelOutputBuffer &out, int x, int y, int sx, int sy, int rows, int columns)
 {
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
@@ -1144,7 +1139,7 @@ void CalcViewportGeometry()
  * @param x Center of view in dPiece coordinate
  * @param y Center of view in dPiece coordinate
  */
-static void DrawGame(CelOutputBuffer full_out, int x, int y)
+static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 {
 	int sx, sy, columns, rows;
 
@@ -1244,9 +1239,9 @@ static void DrawGame(CelOutputBuffer full_out, int x, int y)
 }
 
 // DevilutionX extension.
-extern void DrawControllerModifierHints(CelOutputBuffer out);
+extern void DrawControllerModifierHints(const CelOutputBuffer &out);
 
-void DrawView(CelOutputBuffer out, int StartX, int StartY)
+void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 {
 	DrawGame(out, StartX, StartY);
 	if (automapflag) {
@@ -1254,7 +1249,7 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 	}
 	DrawMonsterHealthBar(out);
 
-	if (stextflag && !qtextflag)
+	if (stextflag != STORE_NONE && !qtextflag)
 		DrawSText(out);
 	if (invflag) {
 		DrawInv(out);
@@ -1315,7 +1310,7 @@ void ClearScreenBuffer()
 {
 	lock_buf(3);
 
-	assert(pal_surface != NULL);
+	assert(pal_surface != nullptr);
 
 	SDL_Rect SrcRect = {
 		BUFFER_BORDER_LEFT,
@@ -1423,7 +1418,7 @@ void EnableFrameCount()
 /**
  * @brief Display the current average FPS over 1 sec
  */
-static void DrawFPS(CelOutputBuffer out)
+static void DrawFPS(const CelOutputBuffer &out)
 {
 	DWORD tc, frames;
 	char String[12];

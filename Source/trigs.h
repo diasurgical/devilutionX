@@ -37,4 +37,4 @@ void Freeupstairs();
 void CheckTrigForce();
 void CheckTriggers();
 
-}
+} // namespace devilution

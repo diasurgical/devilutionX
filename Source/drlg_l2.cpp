@@ -1620,12 +1620,12 @@ static bool DRLG_L2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 	if (tmax - tmin == 0) {
 		numt = 1;
 	} else {
-		numt = random_(0, tmax - tmin) + tmin;
+		numt = GenerateRnd(tmax - tmin) + tmin;
 	}
 
 	for (i = 0; i < numt; i++) {
-		sx = random_(0, DMAXX - sw);
-		sy = random_(0, DMAXY - sh);
+		sx = GenerateRnd(DMAXX - sw);
+		sy = GenerateRnd(DMAXY - sh);
 		found = false;
 		for (bailcnt = 0; !found && bailcnt < 200; bailcnt++) {
 			found = true;
@@ -1633,13 +1633,13 @@ static bool DRLG_L2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 				found = false;
 			}
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = random_(0, DMAXX - sw);
-				sy = random_(0, DMAXY - sh);
+				sx = GenerateRnd(DMAXX - sw);
+				sy = GenerateRnd(DMAXY - sh);
 				found = false;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = random_(0, DMAXX - sw);
-				sy = random_(0, DMAXY - sh);
+				sx = GenerateRnd(DMAXX - sw);
+				sy = GenerateRnd(DMAXY - sh);
 				found = false;
 			}
 			ii = 2;
@@ -1732,7 +1732,7 @@ static void DRLG_L2PlaceRndSet(const BYTE *miniset, int rndper)
 					}
 				}
 			}
-			if (found && random_(0, 100) < rndper) {
+			if (found && GenerateRnd(100) < rndper) {
 				for (yy = 0; yy < sh; yy++) {
 					for (xx = 0; xx < sw; xx++) {
 						if (miniset[kk] != 0) {
@@ -1753,10 +1753,10 @@ static void DRLG_L2Subs()
 
 	for (y = 0; y < DMAXY; y++) {
 		for (x = 0; x < DMAXX; x++) {
-			if ((x < nSx1 || x > nSx2) && (y < nSy1 || y > nSy2) && random_(0, 4) == 0) {
+			if ((x < nSx1 || x > nSx2) && (y < nSy1 || y > nSy2) && GenerateRnd(4) == 0) {
 				c = BTYPESL2[dungeon[x][y]];
 				if (c != 0) {
-					rv = random_(0, 16);
+					rv = GenerateRnd(16);
 					k = -1;
 					while (rv >= 0) {
 						k++;
@@ -1842,15 +1842,15 @@ static void DRLG_LoadL2SP()
 	setloadflag = false;
 
 	if (QuestStatus(Q_BLIND)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
 		pSetPiece[26] = 154;  // Close outer wall
 		pSetPiece[200] = 154; // Close outer wall
 		setloadflag = true;
 	} else if (QuestStatus(Q_BLOOD)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", nullptr);
 		setloadflag = true;
 	} else if (QuestStatus(Q_SCHAMB)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", NULL);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", nullptr);
 		setloadflag = true;
 	}
 }
@@ -1964,14 +1964,14 @@ static void AddHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 {
 	HALLNODE *p1, *p2;
 
-	if (pHallList == NULL) {
+	if (pHallList == nullptr) {
 		pHallList = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
 		pHallList->nHallx1 = nX1;
 		pHallList->nHally1 = nY1;
 		pHallList->nHallx2 = nX2;
 		pHallList->nHally2 = nY2;
 		pHallList->nHalldir = nHd;
-		pHallList->pNext = NULL;
+		pHallList->pNext = nullptr;
 	} else {
 		p1 = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
 		p1->nHallx1 = nX1;
@@ -1979,9 +1979,9 @@ static void AddHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 		p1->nHallx2 = nX2;
 		p1->nHally2 = nY2;
 		p1->nHalldir = nHd;
-		p1->pNext = NULL;
+		p1->pNext = nullptr;
 		p2 = pHallList;
-		while (p2->pNext != NULL) {
+		while (p2->pNext != nullptr) {
 			p2 = p2->pNext;
 		}
 		p2->pNext = p1;
@@ -2015,16 +2015,16 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 	}
 
 	if (nAw > Room_Max) {
-		nRw = random_(0, Room_Max - Room_Min) + Room_Min;
+		nRw = GenerateRnd(Room_Max - Room_Min) + Room_Min;
 	} else if (nAw > Room_Min) {
-		nRw = random_(0, nAw - Room_Min) + Room_Min;
+		nRw = GenerateRnd(nAw - Room_Min) + Room_Min;
 	} else {
 		nRw = nAw;
 	}
 	if (nAh > Room_Max) {
-		nRh = random_(0, Room_Max - Room_Min) + Room_Min;
+		nRh = GenerateRnd(Room_Max - Room_Min) + Room_Min;
 	} else if (nAh > Room_Min) {
-		nRh = random_(0, nAh - Room_Min) + Room_Min;
+		nRh = GenerateRnd(nAh - Room_Min) + Room_Min;
 	} else {
 		nRh = nAh;
 	}
@@ -2034,8 +2034,8 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 		nRh = nH;
 	}
 
-	nRx1 = random_(0, nX2 - nX1) + nX1;
-	nRy1 = random_(0, nY2 - nY1) + nY1;
+	nRx1 = GenerateRnd(nX2 - nX1) + nX1;
+	nRy1 = GenerateRnd(nY2 - nY1) + nY1;
 	nRx2 = nRw + nRx1;
 	nRy2 = nRh + nRy1;
 	if (nRx2 > nX2) {
@@ -2085,46 +2085,46 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 
 	if (nRDest != 0) {
 		if (nHDir == 1) {
-			nHx1 = random_(0, nRx2 - nRx1 - 2) + nRx1 + 1;
+			nHx1 = GenerateRnd(nRx2 - nRx1 - 2) + nRx1 + 1;
 			nHy1 = nRy1;
 			nHw = RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2;
-			nHx2 = random_(0, nHw) + RoomList[nRDest].nRoomx1 + 1;
+			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].nRoomx1 + 1;
 			nHy2 = RoomList[nRDest].nRoomy2;
 		}
 		if (nHDir == 3) {
-			nHx1 = random_(0, nRx2 - nRx1 - 2) + nRx1 + 1;
+			nHx1 = GenerateRnd(nRx2 - nRx1 - 2) + nRx1 + 1;
 			nHy1 = nRy2;
 			nHw = RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2;
-			nHx2 = random_(0, nHw) + RoomList[nRDest].nRoomx1 + 1;
+			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].nRoomx1 + 1;
 			nHy2 = RoomList[nRDest].nRoomy1;
 		}
 		if (nHDir == 2) {
 			nHx1 = nRx2;
-			nHy1 = random_(0, nRy2 - nRy1 - 2) + nRy1 + 1;
+			nHy1 = GenerateRnd(nRy2 - nRy1 - 2) + nRy1 + 1;
 			nHx2 = RoomList[nRDest].nRoomx1;
 			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
-			nHy2 = random_(0, nHh) + RoomList[nRDest].nRoomy1 + 1;
+			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
 		if (nHDir == 4) {
 			nHx1 = nRx1;
-			nHy1 = random_(0, nRy2 - nRy1 - 2) + nRy1 + 1;
+			nHy1 = GenerateRnd(nRy2 - nRy1 - 2) + nRy1 + 1;
 			nHx2 = RoomList[nRDest].nRoomx2;
 			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
-			nHy2 = random_(0, nHh) + RoomList[nRDest].nRoomy1 + 1;
+			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
 		AddHall(nHx1, nHy1, nHx2, nHy2, nHDir);
 	}
 
 	if (nRh > nRw) {
-		CreateRoom(nX1 + 2, nY1 + 2, nRx1 - 2, nRy2 - 2, nRid, 2, 0, 0, 0);
-		CreateRoom(nRx2 + 2, nRy1 + 2, nX2 - 2, nY2 - 2, nRid, 4, 0, 0, 0);
-		CreateRoom(nX1 + 2, nRy2 + 2, nRx2 - 2, nY2 - 2, nRid, 1, 0, 0, 0);
-		CreateRoom(nRx1 + 2, nY1 + 2, nX2 - 2, nRy1 - 2, nRid, 3, 0, 0, 0);
+		CreateRoom(nX1 + 2, nY1 + 2, nRx1 - 2, nRy2 - 2, nRid, 2, false, 0, 0);
+		CreateRoom(nRx2 + 2, nRy1 + 2, nX2 - 2, nY2 - 2, nRid, 4, false, 0, 0);
+		CreateRoom(nX1 + 2, nRy2 + 2, nRx2 - 2, nY2 - 2, nRid, 1, false, 0, 0);
+		CreateRoom(nRx1 + 2, nY1 + 2, nX2 - 2, nRy1 - 2, nRid, 3, false, 0, 0);
 	} else {
-		CreateRoom(nX1 + 2, nY1 + 2, nRx2 - 2, nRy1 - 2, nRid, 3, 0, 0, 0);
-		CreateRoom(nRx1 + 2, nRy2 + 2, nX2 - 2, nY2 - 2, nRid, 1, 0, 0, 0);
-		CreateRoom(nX1 + 2, nRy1 + 2, nRx1 - 2, nY2 - 2, nRid, 2, 0, 0, 0);
-		CreateRoom(nRx2 + 2, nY1 + 2, nX2 - 2, nRy2 - 2, nRid, 4, 0, 0, 0);
+		CreateRoom(nX1 + 2, nY1 + 2, nRx2 - 2, nRy1 - 2, nRid, 3, false, 0, 0);
+		CreateRoom(nRx1 + 2, nRy2 + 2, nX2 - 2, nY2 - 2, nRid, 1, false, 0, 0);
+		CreateRoom(nX1 + 2, nRy1 + 2, nRx1 - 2, nY2 - 2, nRid, 2, false, 0, 0);
+		CreateRoom(nRx2 + 2, nY1 + 2, nX2 - 2, nRy2 - 2, nRid, 4, false, 0, 0);
 	}
 }
 
@@ -2148,8 +2148,8 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 	bool fDoneflag, fInroom;
 
 	fDoneflag = false;
-	fMinusFlag = random_(0, 100);
-	fPlusFlag = random_(0, 100);
+	fMinusFlag = GenerateRnd(100);
+	fPlusFlag = GenerateRnd(100);
 	nOrigX1 = nX1;
 	nOrigY1 = nY1;
 	CreateDoorType(nX1, nY1);
@@ -2223,7 +2223,7 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 			if (nRp > 30) {
 				nRp = 30;
 			}
-			if (random_(0, 100) < nRp) {
+			if (GenerateRnd(100) < nRp) {
 				if (nX2 <= nX1 || nX1 >= DMAXX) {
 					nCurrd = 4;
 				} else {
@@ -2235,7 +2235,7 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 			if (nRp > 80) {
 				nRp = 80;
 			}
-			if (random_(0, 100) < nRp) {
+			if (GenerateRnd(100) < nRp) {
 				if (nY2 <= nY1 || nY1 >= DMAXY) {
 					nCurrd = 1;
 				} else {
@@ -2479,8 +2479,8 @@ static bool DL2_FillVoids()
 
 	to = 0;
 	while (DL2_NumNoChar() > 700 && to < 100) {
-		xx = random_(0, 38) + 1;
-		yy = random_(0, 38) + 1;
+		xx = GenerateRnd(38) + 1;
+		yy = GenerateRnd(38) + 1;
 		if (predungeon[xx][yy] != 35) {
 			continue;
 		}
@@ -2780,7 +2780,7 @@ static bool CreateDungeon()
 
 	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, ForceHW, ForceH, ForceW);
 
-	while (pHallList != NULL) {
+	while (pHallList != nullptr) {
 		GetHall(&nHx1, &nHy1, &nHx2, &nHy2, &nHd);
 		ConnectHall(nHx1, nHy1, nHx2, nHy2, nHd);
 	}
@@ -3030,12 +3030,12 @@ void L2LockoutFix()
 	}
 	for (j = 1; j < DMAXY - 1; j++) {
 		for (i = 1; i < DMAXX - 1; i++) {
-			if (dflags[i][j] & DLRG_PROTECTED) {
+			if ((dflags[i][j] & DLRG_PROTECTED) != 0) {
 				continue;
 			}
 			if ((dungeon[i][j] == 2 || dungeon[i][j] == 5) && dungeon[i][j - 1] == 3 && dungeon[i][j + 1] == 3) {
 				doorok = false;
-				while (1) {
+				while (true) {
 					if (dungeon[i][j] != 2 && dungeon[i][j] != 5) {
 						break;
 					}
@@ -3060,7 +3060,7 @@ void L2LockoutFix()
 			}
 			if ((dungeon[j][i] == 1 || dungeon[j][i] == 4) && dungeon[j - 1][i] == 3 && dungeon[j + 1][i] == 3) {
 				doorok = false;
-				while (1) {
+				while (true) {
 					if (dungeon[j][i] != 1 && dungeon[j][i] != 4) {
 						break;
 					}
@@ -3313,7 +3313,7 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 
 	InitDungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -3390,14 +3390,14 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-void LoadPreL2Dungeon(const char *sFileName, int vx, int vy)
+void LoadPreL2Dungeon(const char *sFileName)
 {
 	int i, j, rw, rh;
 	BYTE *pLevelMap, *lm;
 
 	InitDungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {

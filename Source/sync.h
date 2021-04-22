@@ -11,4 +11,4 @@ Uint32 sync_all_monsters(const Uint8 *pbBuf, Uint32 dwMaxLen);
 Uint32 sync_update(int pnum, const Uint8 *pbBuf);
 void sync_init();
 
-}
+} // namespace devilution

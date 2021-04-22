@@ -1,12 +1,12 @@
 #include "selgame.h"
 
-#include "config.h"
-#include "control.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/selhero.h"
 #include "DiabloUI/selok.h"
 #include "DiabloUI/text.h"
+#include "config.h"
+#include "control.h"
 #include "mainmenu.h"
 #include "options.h"
 #include "storm/storm.h"
@@ -41,14 +41,12 @@ std::vector<UiItemBase *> vecSelGameDialog;
 
 void selgame_FreeVectors()
 {
-	for (std::size_t i = 0; i < vecSelGameDlgItems.size(); i++) {
-		UiListItem *pUIItem = vecSelGameDlgItems[i];
+	for (auto pUIItem : vecSelGameDlgItems) {
 		delete pUIItem;
 	}
 	vecSelGameDlgItems.clear();
 
-	for (std::size_t i = 0; i < vecSelGameDialog.size(); i++) {
-		UiItemBase *pUIItem = vecSelGameDialog[i];
+	for (auto pUIItem : vecSelGameDialog) {
 		delete pUIItem;
 	}
 	vecSelGameDialog.clear();
@@ -189,7 +187,7 @@ void selgame_GameSelection_Select(int value)
 		SDL_Rect rect7 = { (Sint16)(PANEL_LEFT + 449), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 		vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect7, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-		UiInitList(0, NULL, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog);
+		UiInitList(0, nullptr, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog);
 		break;
 	}
 	}
@@ -395,7 +393,7 @@ void selgame_Password_Init(int value)
 	SDL_Rect rect7 = { (Sint16)(PANEL_LEFT + 449), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect7, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, NULL, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
+	UiInitList(0, nullptr, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
 }
 
 static bool IsGameCompatible(GameData *data)
@@ -425,9 +423,9 @@ static bool IsGameCompatible(GameData *data)
 
 void selgame_Password_Select(int value)
 {
-	if (selgame_selectedGame) {
+	if (selgame_selectedGame != 0) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
-		if (SNetJoinGame(selgame_selectedGame, selgame_Ip, selgame_Password, NULL, NULL, gdwPlayerId)) {
+		if (SNetJoinGame(selgame_Ip, selgame_Password, gdwPlayerId)) {
 			if (!IsGameCompatible(m_game_data)) {
 				selgame_GameSelection_Select(1);
 				return;
@@ -450,7 +448,7 @@ void selgame_Password_Select(int value)
 	m_game_data->bTheoQuest = sgOptions.Gameplay.bTheoQuest;
 	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest;
 
-	if (SNetCreateGame(NULL, selgame_Password, NULL, 0, (char *)m_game_data, sizeof(GameData), MAX_PLRS, NULL, NULL, gdwPlayerId)) {
+	if (SNetCreateGame(nullptr, selgame_Password, (char *)m_game_data, sizeof(*m_game_data), gdwPlayerId)) {
 		UiInitList_clear();
 		selgame_endMenu = true;
 	} else {
@@ -469,7 +467,7 @@ void selgame_Password_Esc()
 		selgame_GameSpeedSelection();
 }
 
-int UiSelectGame(GameData *gameData, int *playerId)
+bool UiSelectGame(GameData *gameData, int *playerId)
 {
 	gdwPlayerId = playerId;
 	m_game_data = gameData;

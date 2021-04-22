@@ -46,4 +46,4 @@ void interface_msg_pump();
 bool IncProgress();
 void ShowProgress(interface_mode uMsg);
 
-}
+} // namespace devilution

@@ -599,4 +599,4 @@ extern const PLStruct PL_Prefix[];
 extern const PLStruct PL_Suffix[];
 extern const UItemStruct UniqueItemList[];
 
-}
+} // namespace devilution

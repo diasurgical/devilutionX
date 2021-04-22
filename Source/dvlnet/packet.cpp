@@ -1,15 +1,14 @@
 #include "dvlnet/packet.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 #ifndef NONET
-static constexpr bool disable_encryption = false;
+static constexpr bool DisableEncryption = false;
 #endif
 
-const char *packet_type_to_string(uint8_t packet_type)
+const char *packet_type_to_string(uint8_t packetType)
 {
-	switch (packet_type) {
+	switch (packetType) {
 	case PT_MESSAGE:
 		return "PT_MESSAGE";
 	case PT_TURN:
@@ -27,39 +26,39 @@ const char *packet_type_to_string(uint8_t packet_type)
 	case PT_INFO_REPLY:
 		return "PT_INFO_REPLY";
 	default:
-		return NULL;
+		return nullptr;
 	}
 }
 
-wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<packet_type> expected_types, std::uint8_t actual)
+wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<packet_type> expectedTypes, std::uint8_t actual)
 {
 	message_ = "Expected packet of type ";
-	const auto append_packet_type = [this](std::uint8_t t) {
-		const char *type_str = packet_type_to_string(t);
-		if (type_str != NULL)
-			message_.append(type_str);
+	const auto appendPacketType = [this](std::uint8_t t) {
+		const char *typeStr = packet_type_to_string(t);
+		if (typeStr != nullptr)
+			message_.append(typeStr);
 		else
 			message_.append(std::to_string(t));
 	};
 
-	constexpr char kJoinTypes[] = " or ";
-	for (const packet_type t : expected_types) {
-		append_packet_type(t);
-		message_.append(kJoinTypes);
+	constexpr char KJoinTypes[] = " or ";
+	for (const packet_type t : expectedTypes) {
+		appendPacketType(t);
+		message_.append(KJoinTypes);
 	}
-	message_.resize(message_.size() - (sizeof(kJoinTypes) - 1));
+	message_.resize(message_.size() - (sizeof(KJoinTypes) - 1));
 	message_.append(", got");
-	append_packet_type(actual);
+	appendPacketType(actual);
 }
 
 namespace {
 
-void CheckPacketTypeOneOf(std::initializer_list<packet_type> expected_types, std::uint8_t actual_type)
+void CheckPacketTypeOneOf(std::initializer_list<packet_type> expectedTypes, std::uint8_t actualType)
 {
-	for (std::uint8_t packet_type : expected_types)
-		if (actual_type == packet_type)
+	for (std::uint8_t packetType : expectedTypes)
+		if (actualType == packetType)
 			return;
-	throw wrong_packet_type_exception(std::move(expected_types), actual_type);
+	throw wrong_packet_type_exception(expectedTypes, actualType);
 }
 
 } // namespace
@@ -155,7 +154,7 @@ void packet_in::decrypt()
 	if (have_decrypted)
 		return;
 #ifndef NONET
-	if (!disable_encryption) {
+	if (!DisableEncryption) {
 		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
 		        + crypto_secretbox_MACBYTES
 		        + sizeof(packet_type) + 2 * sizeof(plr_t))
@@ -195,8 +194,8 @@ void packet_out::encrypt()
 	process_data();
 
 #ifndef NONET
-	if (!disable_encryption) {
-		auto len_cleartext = encrypted_buffer.size();
+	if (!DisableEncryption) {
+		auto lenCleartext = encrypted_buffer.size();
 		encrypted_buffer.insert(encrypted_buffer.begin(),
 		    crypto_secretbox_NONCEBYTES, 0);
 		encrypted_buffer.insert(encrypted_buffer.end(),
@@ -206,7 +205,7 @@ void packet_out::encrypt()
 		            + crypto_secretbox_NONCEBYTES,
 		        encrypted_buffer.data()
 		            + crypto_secretbox_NONCEBYTES,
-		        len_cleartext,
+		        lenCleartext,
 		        encrypted_buffer.data(),
 		        key.data()))
 			ABORT();
@@ -234,5 +233,4 @@ packet_factory::packet_factory(std::string pw)
 #endif
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

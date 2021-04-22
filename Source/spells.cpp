@@ -30,7 +30,7 @@ int GetManaAmount(int id, spell_id sn)
 		adj = sl * spelldata[sn].sManaAdj;
 	}
 	if (sn == SPL_FIREBOLT) {
-		adj >>= 1;
+		adj /= 2;
 	}
 	if (sn == SPL_RESURRECT && sl > 0) {
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
@@ -48,10 +48,10 @@ int GetManaAmount(int id, spell_id sn)
 		ma = 0;
 	ma <<= 6;
 
-	if (plr[id]._pClass == HeroClass::Sorcerer) {
-		ma >>= 1;
+	if (gbIsHellfire && plr[id]._pClass == HeroClass::Sorcerer) {
+		ma /= 2;
 	} else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Monk || plr[id]._pClass == HeroClass::Bard) {
-		ma -= ma >> 2;
+		ma -= ma / 4;
 	}
 
 	if (spelldata[sn].sMinMana > ma >> 6) {
@@ -190,7 +190,7 @@ bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 {
-	int dir = plr[id]._pdir;
+	direction dir = plr[id]._pdir;
 	if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
 		dir = plr[id]._pVar3;
 	}
@@ -204,7 +204,7 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 	} else if (spl == SPL_CBOLT) {
 		UseMana(id, SPL_CBOLT);
 
-		for (int i = (spllvl >> 1) + 3; i > 0; i--) {
+		for (int i = (spllvl / 2) + 3; i > 0; i--) {
 			AddMissile(sx, sy, dx, dy, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
 		}
 	}
@@ -314,20 +314,20 @@ void DoHealOther(int pnum, int rid)
 	}
 
 	if ((char)rid != -1 && (plr[rid]._pHitPoints >> 6) > 0) {
-		hp = (random_(57, 10) + 1) << 6;
+		hp = (GenerateRnd(10) + 1) << 6;
 
 		for (i = 0; i < plr[pnum]._pLevel; i++) {
-			hp += (random_(57, 4) + 1) << 6;
+			hp += (GenerateRnd(4) + 1) << 6;
 		}
 
 		for (j = 0; j < GetSpellLevel(pnum, SPL_HEALOTHER); ++j) {
-			hp += (random_(57, 6) + 1) << 6;
+			hp += (GenerateRnd(6) + 1) << 6;
 		}
 
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
-			hp <<= 1;
+			hp *= 2;
 		} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Bard) {
-			hp += hp >> 1;
+			hp += hp / 2;
 		} else if (plr[pnum]._pClass == HeroClass::Monk) {
 			hp *= 3;
 		}

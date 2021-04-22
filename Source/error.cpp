@@ -13,7 +13,7 @@ namespace devilution {
 diablo_message msgtable[MAX_SEND_STR_LEN];
 DWORD msgdelay;
 diablo_message msgflag;
-char msgcnt;
+uint8_t msgcnt;
 
 /** Maps from error_id to error message. */
 const char *const MsgStrings[] = {
@@ -66,7 +66,7 @@ const char *const MsgStrings[] = {
 	"Give and you shall receive.",
 	"Some experience is gained by touch.",
 	"There's no place like home.",
-	"Spirtual energy is restored.",
+	"Spiritual energy is restored.",
 	"You feel more agile.",
 	"You feel stronger.",
 	"You feel wiser.",
@@ -95,10 +95,8 @@ void InitDiabloMsg(diablo_message e)
 
 void ClrDiabloMsg()
 {
-	int i;
-
-	for (i = 0; i < sizeof(msgtable); i++)
-		msgtable[i] = EMSG_NONE;
+	for (auto &msg : msgtable)
+		msg = EMSG_NONE;
 
 	msgflag = EMSG_NONE;
 	msgcnt = 0;
@@ -106,7 +104,7 @@ void ClrDiabloMsg()
 
 #define DIALOG_Y ((gnScreenHeight - PANEL_HEIGHT) / 2 - 18)
 
-void DrawDiabloMsg(CelOutputBuffer out)
+void DrawDiabloMsg(const CelOutputBuffer &out)
 {
 	int i, len, width, sx, sy;
 	BYTE c;
@@ -142,7 +140,7 @@ void DrawDiabloMsg(CelOutputBuffer out)
 	}
 
 	if (width < 442) {
-		sx += (442 - width) >> 1;
+		sx += (442 - width) / 2;
 	}
 
 	for (i = 0; i < len; i++) {

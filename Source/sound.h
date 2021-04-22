@@ -57,4 +57,4 @@ extern bool gbMusicOn;
 extern bool gbSoundOn;
 extern bool gbDupSounds;
 
-}
+} // namespace devilution

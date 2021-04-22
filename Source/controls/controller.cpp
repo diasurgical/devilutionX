@@ -2,9 +2,9 @@
 
 #include <cmath>
 
-#include "controls/devices/kbcontroller.h"
-#include "controls/devices/joystick.h"
 #include "controls/devices/game_controller.h"
+#include "controls/devices/joystick.h"
+#include "controls/devices/kbcontroller.h"
 
 namespace devilution {
 
@@ -29,7 +29,7 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 #endif
 #ifndef USE_SDL1
 	GameController *const controller = GameController::Get(event);
-	if (controller != NULL) {
+	if (controller != nullptr) {
 		result.button = controller->ToControllerButton(event);
 		if (result.button != ControllerButton_NONE)
 			return result;
@@ -37,7 +37,7 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 #endif
 
 	const Joystick *joystick = Joystick::Get(event);
-	if (joystick != NULL)
+	if (joystick != nullptr)
 		result.button = joystick->ToControllerButton(event);
 
 	return result;

@@ -285,4 +285,4 @@ extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
 extern const UniqMonstStruct UniqMonst[];
 
-}
+} // namespace devilution

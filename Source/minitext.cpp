@@ -174,7 +174,7 @@ void ScrollQTextContent(const char *pnl)
 /**
  * @brief Draw the current text in the quest dialog window
  */
-static void DrawQTextContent(CelOutputBuffer out)
+static void DrawQTextContent()
 {
 	// TODO: Draw to the given `out` buffer.
 	const char *text, *pnl;
@@ -250,16 +250,16 @@ void InitQTextMsg(int m)
 	PlaySFX(alltext[m].sfxnr);
 }
 
-void DrawQTextBack(CelOutputBuffer out)
+void DrawQTextBack(const CelOutputBuffer &out)
 {
 	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
 	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
-void DrawQText(CelOutputBuffer out)
+void DrawQText(const CelOutputBuffer &out)
 {
 	DrawQTextBack(out);
-	DrawQTextContent(out);
+	DrawQTextContent();
 }
 
 } // namespace devilution

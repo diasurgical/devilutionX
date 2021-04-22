@@ -249,4 +249,4 @@ extern const char *const ObjMasterLoadList[];
 extern const char *ObjCryptLoadList[];
 extern const char *ObjHiveLoadList[];
 
-}
+} // namespace devilution

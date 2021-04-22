@@ -124,13 +124,13 @@ void DRLG_SetMapTrans(const char *sFileName)
 	BYTE *d;
 	DWORD dwOffset;
 
-	pLevelMap = LoadFileInMem(sFileName, NULL);
+	pLevelMap = LoadFileInMem(sFileName, nullptr);
 	d = pLevelMap + 2;
 	x = pLevelMap[0];
 	y = *d;
 	dwOffset = (x * y + 1) * 2;
-	x <<= 1;
-	y <<= 1;
+	x *= 2;
+	y *= 2;
 	dwOffset += 3 * x * y * 2;
 	d += dwOffset;
 
@@ -154,7 +154,7 @@ void LoadSetMap()
 			quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
 			quests[Q_SKELKING]._qvar1 = 1;
 		}
-		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN", 83, 45);
+		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", 83, 45);
 		LoadPalette("Levels\\L1Data\\L1_2.pal");
 		DRLG_AreaTrans(sizeof(SkelKingTrans1) / 4, &SkelKingTrans1[0]);
@@ -166,7 +166,7 @@ void LoadSetMap()
 		InitSKingTriggers();
 		break;
 	case SL_BONECHAMB:
-		LoadPreL2Dungeon("Levels\\L2Data\\Bonecha2.DUN", 69, 39);
+		LoadPreL2Dungeon("Levels\\L2Data\\Bonecha2.DUN");
 		LoadL2Dungeon("Levels\\L2Data\\Bonecha1.DUN", 69, 39);
 		LoadPalette("Levels\\L2Data\\L2_2.pal");
 		DRLG_ListTrans(sizeof(SkelChamTrans1) / 4, &SkelChamTrans1[0]);
@@ -177,7 +177,7 @@ void LoadSetMap()
 		InitSChambTriggers();
 		break;
 	case SL_MAZE:
-		LoadPreL1Dungeon("Levels\\L1Data\\Lv1MazeA.DUN", 20, 50);
+		LoadPreL1Dungeon("Levels\\L1Data\\Lv1MazeA.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\Lv1MazeB.DUN", 20, 50);
 		LoadPalette("Levels\\L1Data\\L1_5.pal");
 		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
@@ -186,7 +186,7 @@ void LoadSetMap()
 	case SL_POISONWATER:
 		if (quests[Q_PWATER]._qactive == QUEST_INIT)
 			quests[Q_PWATER]._qactive = QUEST_ACTIVE;
-		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 19, 50);
+		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN");
 		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 83);
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();
@@ -197,7 +197,7 @@ void LoadSetMap()
 		} else if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
 			quests[Q_BETRAYER]._qvar2 = 3;
 		}
-		LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN", 35, 36);
+		LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\Vile2.DUN", 35, 36);
 		LoadPalette("Levels\\L1Data\\L1_2.pal");
 		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);

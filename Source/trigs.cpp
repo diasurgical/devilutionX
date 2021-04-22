@@ -63,8 +63,6 @@ void InitNoTriggers()
 
 void InitTownTriggers()
 {
-	int i;
-
 	numtrigs = 0;
 
 	trigs[numtrigs]._tx = 25;
@@ -72,8 +70,8 @@ void InitTownTriggers()
 	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 	numtrigs++;
 
-	for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
-		townwarps[i] = gbIsMultiplayer && !gbIsSpawn;
+	for (bool &townwarp : townwarps) {
+		townwarp = gbIsMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {
 		if (gbIsMultiplayer || plr[myplr].pTownWarps & 1 || (gbIsHellfire && plr[myplr]._pLevel >= 10)) {
@@ -895,19 +893,7 @@ void CheckTriggers()
 				}
 
 				if (abort) {
-					if (plr[myplr]._pClass == HeroClass::Warrior) {
-						PlaySFX(PS_WARR43);
-					} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-						PlaySFX(PS_ROGUE43);
-					} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-						PlaySFX(PS_MAGE43);
-					} else if (plr[myplr]._pClass == HeroClass::Monk) {
-						PlaySFX(PS_MONK43);
-					} else if (plr[myplr]._pClass == HeroClass::Bard) {
-						PlaySFX(PS_ROGUE43);
-					} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-						PlaySFX(PS_WARR43);
-					}
+					plr[myplr].PlaySpeach(43);
 
 					InitDiabloMsg(abortflag);
 					NetSendCmdLoc(myplr, true, CMD_WALKXY, x, y);

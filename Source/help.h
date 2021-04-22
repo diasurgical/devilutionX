@@ -12,9 +12,9 @@ namespace devilution {
 extern bool helpflag;
 
 void InitHelp();
-void DrawHelp(CelOutputBuffer out);
+void DrawHelp(const CelOutputBuffer &out);
 void DisplayHelp();
 void HelpScrollUp();
 void HelpScrollDown();
 
-}
+} // namespace devilution

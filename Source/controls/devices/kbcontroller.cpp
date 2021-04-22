@@ -50,6 +50,14 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 		case KBCTRL_BUTTON_RIGHTSHOULDER:
 			return ControllerButton_BUTTON_RIGHTSHOULDER;
 #endif
+#ifdef KBCTRL_BUTTON_TRIGGERLEFT
+		case KBCTRL_BUTTON_TRIGGERLEFT:
+			return ControllerButton_AXIS_TRIGGERLEFT;
+#endif
+#ifdef KBCTRL_BUTTON_TRIGGERRIGHT
+		case KBCTRL_BUTTON_TRIGGERRIGHT:
+			return ControllerButton_AXIS_TRIGGERRIGHT;
+#endif
 #ifdef KBCTRL_BUTTON_START
 		case KBCTRL_BUTTON_START:
 			return ControllerButton_BUTTON_START;
@@ -86,8 +94,6 @@ namespace {
 
 int ControllerButtonToKbCtrlKeyCode(ControllerButton button)
 {
-	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
-		UNIMPLEMENTED();
 	switch (button) {
 #ifdef KBCTRL_BUTTON_A
 	case ControllerButton_BUTTON_A:
@@ -128,6 +134,14 @@ int ControllerButtonToKbCtrlKeyCode(ControllerButton button)
 #ifdef KBCTRL_BUTTON_RIGHTSHOULDER
 	case ControllerButton_BUTTON_RIGHTSHOULDER:
 		return KBCTRL_BUTTON_RIGHTSHOULDER;
+#endif
+#ifdef KBCTRL_BUTTON_TRIGGERLEFT
+	case ControllerButton_AXIS_TRIGGERLEFT:
+		return KBCTRL_BUTTON_TRIGGERLEFT;
+#endif
+#ifdef KBCTRL_BUTTON_TRIGGERRIGHT
+	case ControllerButton_AXIS_TRIGGERRIGHT:
+		return KBCTRL_BUTTON_TRIGGERRIGHT;
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_UP
 	case ControllerButton_BUTTON_DPAD_UP:

@@ -30,7 +30,7 @@ struct LightListStruct {
 };
 
 extern LightListStruct VisionList[MAXVISION];
-extern BYTE lightactive[MAXLIGHTS];
+extern uint8_t lightactive[MAXLIGHTS];
 extern LightListStruct LightList[MAXLIGHTS];
 extern int numlights;
 extern int numvision;

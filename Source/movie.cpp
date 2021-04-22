@@ -5,7 +5,9 @@
  */
 
 #include "diablo.h"
-#include "storm/storm.h"
+#include "effects.h"
+#include "sound.h"
+#include "storm/storm_svid.h"
 #include "utils/display.h"
 
 namespace devilution {

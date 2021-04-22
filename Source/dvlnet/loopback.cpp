@@ -1,8 +1,7 @@
 #include "dvlnet/loopback.h"
 #include "utils/stubs.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 int loopback::create(std::string addrstr, std::string passwd)
 {
@@ -29,8 +28,8 @@ bool loopback::SNetReceiveMessage(int *sender, char **data, int *size)
 bool loopback::SNetSendMessage(int dest, void *data, unsigned int size)
 {
 	if (dest == plr_single || dest == SNPLAYER_ALL) {
-		unsigned char *raw_message = reinterpret_cast<unsigned char *>(data);
-		buffer_t message(raw_message, raw_message + size);
+		auto *rawMessage = reinterpret_cast<unsigned char *>(data);
+		buffer_t message(rawMessage, rawMessage + size);
 		message_queue.push(message);
 	}
 	return true;
@@ -112,5 +111,4 @@ std::string loopback::make_default_gamename()
 	return std::string("loopback");
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

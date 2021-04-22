@@ -3,7 +3,7 @@
  *
  * Implementation of functionality for syncing game state with other players.
  */
-#include <limits.h>
+#include <climits>
 
 #include "gendung.h"
 #include "monster.h"
@@ -203,7 +203,7 @@ Uint32 sync_all_monsters(const Uint8 *pbBuf, Uint32 dwMaxLen)
 
 static void sync_monster(int pnum, const TSyncMonster *p)
 {
-	int ndx, md, mdx, mdy;
+	int ndx, mdx, mdy;
 	Uint32 delta;
 
 	ndx = p->_mndx;
@@ -231,7 +231,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 	mdy = abs(monster[ndx]._my - p->_my);
 	if (mdx <= 2 && mdy <= 2) {
 		if (monster[ndx]._mmode < MM_WALK || monster[ndx]._mmode > MM_WALK3) {
-			md = GetDirection(monster[ndx]._mx, monster[ndx]._my, p->_mx, p->_my);
+			direction md = GetDirection(monster[ndx]._mx, monster[ndx]._my, p->_mx, p->_my);
 			if (DirOK(ndx, md)) {
 				M_ClearSquares(ndx);
 				dMonster[monster[ndx]._mx][monster[ndx]._my] = ndx + 1;
@@ -245,7 +245,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		monster[ndx]._mx = p->_mx;
 		monster[ndx]._my = p->_my;
 		decode_enemy(ndx, p->_menemy);
-		md = GetDirection(p->_mx, p->_my, monster[ndx]._menemyx, monster[ndx]._menemyy);
+		direction md = GetDirection(p->_mx, p->_my, monster[ndx]._menemyx, monster[ndx]._menemyy);
 		M_StartStand(ndx, md);
 		monster[ndx]._msquelch = UCHAR_MAX;
 	}

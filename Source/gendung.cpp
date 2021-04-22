@@ -91,12 +91,12 @@ int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
-char dTransVal[MAXDUNX][MAXDUNY];
+int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
-char dFlags[MAXDUNX][MAXDUNY];
+int8_t dFlags[MAXDUNX][MAXDUNY];
 /** Contains the player numbers (players array indices) of the map. */
-char dPlayer[MAXDUNX][MAXDUNY];
+int8_t dPlayer[MAXDUNX][MAXDUNY];
 /**
  * Contains the NPC numbers of the map. The NPC number represents a
  * towner number (towners array index) in Tristram and a monster number
@@ -109,11 +109,11 @@ int16_t dMonster[MAXDUNX][MAXDUNY];
  * dDead[x][y] & 0x1F - index of dead
  * dDead[x][y] >> 0x5 - direction
  */
-char dDead[MAXDUNX][MAXDUNY];
+int8_t dDead[MAXDUNX][MAXDUNY];
 /** Contains the object numbers (objects array indices) of the map. */
 char dObject[MAXDUNX][MAXDUNY];
 /** Contains the item numbers (items array indices) of the map. */
-char dItem[MAXDUNX][MAXDUNY];
+int8_t dItem[MAXDUNX][MAXDUNY];
 /** Contains the missile numbers (missiles array indices) of the map. */
 char dMissile[MAXDUNX][MAXDUNY];
 /**
@@ -480,7 +480,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 	}
 
 	if (leveltype == DTYPE_CATACOMBS) {
-		switch (random_(0, 2)) {
+		switch (GenerateRnd(2)) {
 		case 0:
 			dungeon[hx - 1][(ly + hy) / 2] = 4;
 			break;
@@ -490,7 +490,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 		}
 	}
 	if (leveltype == DTYPE_CAVES) {
-		switch (random_(0, 2)) {
+		switch (GenerateRnd(2)) {
 		case 0:
 			dungeon[hx - 1][(ly + hy) / 2] = 147;
 			break;
@@ -500,7 +500,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 		}
 	}
 	if (leveltype == DTYPE_HELL) {
-		switch (random_(0, 2)) {
+		switch (GenerateRnd(2)) {
 		case 0:
 			yy = (ly + hy) / 2;
 			dungeon[hx - 1][yy - 1] = 53;
@@ -530,16 +530,16 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 	memset(themeLoc, 0, sizeof(*themeLoc));
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == floor && !random_(0, freq) && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
+			if (dungeon[i][j] == floor && !GenerateRnd(freq) && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
 				if (rndSize) {
 					min = minSize - 2;
 					max = maxSize - 2;
-					rv2 = min + random_(0, random_(0, themeW - min + 1));
+					rv2 = min + GenerateRnd(GenerateRnd(themeW - min + 1));
 					if (rv2 >= min && rv2 <= max)
 						themeW = rv2;
 					else
 						themeW = min;
-					rv2 = min + random_(0, random_(0, themeH - min + 1));
+					rv2 = min + GenerateRnd(GenerateRnd(themeH - min + 1));
 					if (rv2 >= min && rv2 <= max)
 						themeH = rv2;
 					else

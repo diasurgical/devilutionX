@@ -17,8 +17,8 @@
 #endif
 
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
-#include <unistd.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #else
 #include <cstdio>
 #endif
@@ -56,10 +56,10 @@ bool GetFileSize(const char *path, std::uintmax_t *size)
 	*size = (attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
 	return true;
 #else
-	struct ::stat stat_result;
-	if (::stat(path, &stat_result) == -1)
+	struct ::stat statResult;
+	if (::stat(path, &statResult) == -1)
 		return false;
-	*size = static_cast<uintmax_t>(stat_result.st_size);
+	*size = static_cast<uintmax_t>(statResult.st_size);
 	return true;
 #endif
 }
@@ -100,10 +100,10 @@ void RemoveFile(const char *lpFileName)
 	std::string name = lpFileName;
 	std::replace(name.begin(), name.end(), '\\', '/');
 	FILE *f = fopen(name.c_str(), "r+");
-	if (f) {
+	if (f != nullptr) {
 		fclose(f);
 		remove(name.c_str());
-		f = NULL;
+		f = nullptr;
 		SDL_Log("Removed file: %s", name.c_str());
 	} else {
 		SDL_Log("Failed to remove file: %s", name.c_str());

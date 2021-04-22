@@ -13,12 +13,12 @@
 
 namespace devilution {
 
-typedef struct CodecSignature {
+struct CodecSignature {
 	DWORD checksum;
 	BYTE error;
 	BYTE last_chunk_size;
 	WORD unused;
-} CodecSignature;
+};
 
 #define BLOCKSIZE 64
 
@@ -26,9 +26,9 @@ static void codec_init_key(const char *pszPassword)
 {
 	char key[136]; // last 64 bytes are the SHA1
 	uint32_t rand_state = 0x7058;
-	for (std::size_t i = 0; i < sizeof(key); ++i) {
+	for (char &notch : key) {
 		rand_state = rand_state * 214013 + 2531011;
-		key[i] = rand_state >> 16; // Downcasting to char keeps the 2 least-significant bytes
+		notch = rand_state >> 16; // Downcasting to char keeps the 2 least-significant bytes
 	}
 
 	char pw[64];
@@ -49,7 +49,7 @@ static void codec_init_key(const char *pszPassword)
 	memset(digest, 0, sizeof(digest));
 	for (int n = 0; n < 3; ++n) {
 		SHA1Reset(n);
-		SHA1Calculate(n, &key[72], NULL);
+		SHA1Calculate(n, &key[72], nullptr);
 	}
 	memset(key, 0, sizeof(key));
 }
@@ -73,7 +73,7 @@ int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword)
 		for (int j = 0; j < BLOCKSIZE; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}
-		SHA1Calculate(0, buf, NULL);
+		SHA1Calculate(0, buf, nullptr);
 		memset(dst, 0, sizeof(dst));
 		memcpy(pbSrcDst, buf, BLOCKSIZE);
 	}
@@ -98,14 +98,14 @@ error:
 	return 0;
 }
 
-DWORD codec_get_encoded_len(DWORD dwSrcBytes)
+std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 {
 	if (dwSrcBytes % BLOCKSIZE != 0)
 		dwSrcBytes += BLOCKSIZE - (dwSrcBytes % BLOCKSIZE);
 	return dwSrcBytes + sizeof(CodecSignature);
 }
 
-void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, const char *pszPassword)
+void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword)
 {
 	char buf[128];
 	char tmp[SHA1HashSize];
@@ -125,7 +125,7 @@ void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, const char *pszPasswo
 		if (chunk < BLOCKSIZE)
 			memset(buf + chunk, 0, BLOCKSIZE - chunk);
 		SHA1Result(0, dst);
-		SHA1Calculate(0, buf, NULL);
+		SHA1Calculate(0, buf, nullptr);
 		for (int j = 0; j < BLOCKSIZE; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}

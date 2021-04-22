@@ -157,15 +157,15 @@ void InitQuests()
 
 	if (!gbIsMultiplayer && sgOptions.Gameplay.bRandomizeQuests) {
 		SetRndSeed(glSeedTbl[15]);
-		if (random_(0, 2) != 0)
+		if (GenerateRnd(2) != 0)
 			quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 		else
 			quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
 
-		quests[QuestGroup1[random_(0, sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup2[random_(0, sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup3[random_(0, sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup4[random_(0, sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
 	}
 #ifdef _DEBUG
 	if (questdebug != -1)
@@ -315,77 +315,24 @@ void CheckQuestKill(int m, bool sendmsg)
 
 	if (monster[m].MType->mtype == MT_SKING) {
 		quests[Q_SKELKING]._qactive = QUEST_DONE;
-		sfxdelay = 30;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR82;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE82;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE82;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK82;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE82;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR82;
-		}
+		plr[myplr].PlaySpeach(82, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_SKELKING);
 
 	} else if (monster[m].MType->mtype == MT_CLEAVER) {
 		quests[Q_BUTCHER]._qactive = QUEST_DONE;
-		sfxdelay = 30;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR80;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE80;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE80;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK80;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE80;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR80;
-		}
+		plr[myplr].PlaySpeach(80, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_BUTCHER);
 	} else if (monster[m]._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		quests[Q_GARBUD]._qactive = QUEST_DONE;
-		sfxdelay = 30;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR61;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE61;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE61;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK61;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE61;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR61;
-		}
+		plr[myplr].PlaySpeach(61, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		quests[Q_ZHAR]._qactive = QUEST_DONE;
-		sfxdelay = 30;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR62;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE62;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE62;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK62;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE62;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR62;
-		}
+		plr[myplr].PlaySpeach(62, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		quests[Q_BETRAYER]._qvar1 = 7;
-		sfxdelay = 30;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
 
 		for (j = 0; j < MAXDUNY; j++) {
@@ -398,60 +345,22 @@ void CheckQuestKill(int m, bool sendmsg)
 				}
 			}
 		}
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR83;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE83;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE83;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK83;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE83;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR83;
-		}
+		plr[myplr].PlaySpeach(83, 30);
 		if (sendmsg) {
 			NetSendCmdQuest(true, Q_BETRAYER);
 			NetSendCmdQuest(true, Q_DIABLO);
 		}
 	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
-		sfxdelay = 30;
 		InitVPTriggers();
 		quests[Q_BETRAYER]._qvar1 = 7;
 		quests[Q_BETRAYER]._qvar2 = 4;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
 		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR83;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE83;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE83;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK83;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE83;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR83;
-		}
+		plr[myplr].PlaySpeach(83, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;
-		sfxdelay = 30;
-		if (plr[myplr]._pClass == HeroClass::Warrior) {
-			sfxdnum = PS_WARR94;
-		} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-			sfxdnum = PS_ROGUE94;
-		} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-			sfxdnum = PS_MAGE94;
-		} else if (plr[myplr]._pClass == HeroClass::Monk) {
-			sfxdnum = PS_MONK94;
-		} else if (plr[myplr]._pClass == HeroClass::Bard) {
-			sfxdnum = PS_ROGUE94;
-		} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-			sfxdnum = PS_WARR94;
-		}
+		plr[myplr].PlaySpeach(94, 30);
 	}
 }
 
@@ -477,7 +386,7 @@ void DrawWarLord(int x, int y)
 	BYTE *sp, *setp;
 	int v;
 
-	setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -508,7 +417,7 @@ void DrawSChamber(int q, int x, int y)
 	BYTE *sp, *setp;
 	int v;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -541,7 +450,7 @@ void DrawLTBanner(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -567,7 +476,7 @@ void DrawBlind(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -593,7 +502,7 @@ void DrawBlood(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", NULL);
+	setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -750,24 +659,25 @@ void ResyncQuests()
 		return;
 
 	if (QuestStatus(Q_LTBANNER)) {
-		if (quests[Q_LTBANNER]._qvar1 == 1)
+		if (quests[Q_LTBANNER]._qvar1 == 1) {
 			ObjChangeMapResync(
 			    setpc_w + setpc_x - 2,
 			    setpc_h + setpc_y - 2,
 			    setpc_w + setpc_x + 1,
 			    setpc_h + setpc_y + 1);
+		}
 		if (quests[Q_LTBANNER]._qvar1 == 2) {
 			ObjChangeMapResync(
 			    setpc_w + setpc_x - 2,
 			    setpc_h + setpc_y - 2,
 			    setpc_w + setpc_x + 1,
 			    setpc_h + setpc_y + 1);
-			ObjChangeMapResync(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 2, (setpc_h >> 1) + setpc_y - 2);
+			ObjChangeMapResync(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
 			for (i = 0; i < nobjects; i++)
 				SyncObjectAnim(objectactive[i]);
 			tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 4, setpc_y + (setpc_h >> 1));
+			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
 		}
 		if (quests[Q_LTBANNER]._qvar1 == 3) {
@@ -778,7 +688,7 @@ void ResyncQuests()
 				SyncObjectAnim(objectactive[i]);
 			tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w >> 1) + setpc_x + 4, setpc_y + (setpc_h >> 1));
+			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
 		}
 	}
@@ -819,7 +729,7 @@ void ResyncQuests()
 	}
 }
 
-static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col)
+static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col)
 {
 	int len, width, i, k, sx, sy;
 	BYTE c;
@@ -833,7 +743,7 @@ static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, con
 		for (i = 0; i < len; i++)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < 257)
-			k = (257 - width) >> 1;
+			k = (257 - width) / 2;
 		sx += k;
 	}
 	if (qline == y) {
@@ -852,7 +762,7 @@ static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, con
 	}
 }
 
-void DrawQuestLog(CelOutputBuffer out)
+void DrawQuestLog(const CelOutputBuffer &out)
 {
 	int y, i;
 
@@ -878,7 +788,7 @@ void StartQuestlog()
 		}
 	}
 	if (numqlines > 5) {
-		qtopline = 5 - (numqlines >> 1);
+		qtopline = 5 - (numqlines / 2);
 	} else {
 		qtopline = 8;
 	}
@@ -920,7 +830,7 @@ void QuestlogEnter()
 {
 	PlaySFX(IS_TITLSLCT);
 	if (numqlines && qline != 22)
-		InitQTextMsg(quests[qlist[(qline - qtopline) >> 1]]._qmsg);
+		InitQTextMsg(quests[qlist[(qline - qtopline) / 2]]._qmsg);
 	questlog = false;
 }
 

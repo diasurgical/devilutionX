@@ -3,12 +3,12 @@
  *
  * Implementation of function for sending and reciving network messages.
  */
-#include <limits.h>
+#include <climits>
 
+#include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "control.h"
 #include "dead.h"
-#include "DiabloUI/diabloui.h"
 #include "drlg_l1.h"
 #include "dthread.h"
 #include "encrypt.h"
@@ -52,7 +52,7 @@ static void msg_get_next_packet()
 	TMegaPkt *result;
 
 	sgpCurrPkt = (TMegaPkt *)DiabloAllocPtr(sizeof(TMegaPkt));
-	sgpCurrPkt->pNext = NULL;
+	sgpCurrPkt->pNext = nullptr;
 	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
 
 	result = (TMegaPkt *)&sgpMegaPkt;
@@ -73,20 +73,18 @@ static void msg_free_packets()
 
 static void msg_pre_packet()
 {
-	int i;
-
-	i = -1;
-	for (TMegaPkt *pkt = sgpMegaPkt; pkt != NULL; pkt = pkt->pNext) {
+	int i = -1;
+	for (TMegaPkt *pkt = sgpMegaPkt; pkt != nullptr; pkt = pkt->pNext) {
 		BYTE *data = pkt->data;
-		int spaceLeft = sizeof(pkt->data);
+		size_t spaceLeft = sizeof(pkt->data);
 		while (spaceLeft != pkt->dwSpaceLeft) {
 			if (*data == FAKE_CMD_SETID) {
-				TFakeCmdPlr *cmd = (TFakeCmdPlr *)data;
+				auto *cmd = (TFakeCmdPlr *)data;
 				data += sizeof(*cmd);
 				spaceLeft -= sizeof(*cmd);
 				i = cmd->bPlr;
 			} else if (*data == FAKE_CMD_DROPID) {
-				TFakeDropPlr *cmd = (TFakeDropPlr *)data;
+				auto *cmd = (TFakeDropPlr *)data;
 				data += sizeof(*cmd);
 				spaceLeft -= sizeof(*cmd);
 				multi_player_left(cmd->bPlr, cmd->dwReason);
@@ -169,7 +167,7 @@ bool msg_wait_resync()
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
 	sgdwOwnerWait = SDL_GetTicks();
-	success = UiProgressDialog("Waiting for game data...", msg_wait_for_turns, 20);
+	success = UiProgressDialog("Waiting for game data...", msg_wait_for_turns);
 	gbBufferMsgs = 0;
 	if (!success) {
 		msg_free_packets();
@@ -389,7 +387,7 @@ static void DeltaImportData(BYTE cmd, DWORD recv_offset)
 
 static DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 {
-	TCmdPlrInfoHdr *p = (TCmdPlrInfoHdr *)pCmd;
+	auto *p = (TCmdPlrInfoHdr *)pCmd;
 
 	if (gbDeltaSender != pnum) {
 		if (p->bCmd == CMD_DLEVEL_END) {
@@ -406,7 +404,8 @@ static DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 		if (p->bCmd == CMD_DLEVEL_END) {
 			sgbDeltaChunks = MAX_CHUNKS - 1;
 			return p->wBytes + sizeof(*p);
-		} else if (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0) {
+		}
+		if (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0) {
 			sgdwRecvOffset = 0;
 			sgbRecvCmd = p->bCmd;
 		} else {
@@ -418,10 +417,9 @@ static DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 			sgbDeltaChunks = MAX_CHUNKS - 1;
 			sgbRecvCmd = CMD_DLEVEL_END;
 			return p->wBytes + sizeof(*p);
-		} else {
-			sgdwRecvOffset = 0;
-			sgbRecvCmd = p->bCmd;
 		}
+		sgdwRecvOffset = 0;
+		sgbRecvCmd = p->bCmd;
 	}
 
 	assert(p->wOffset == sgdwRecvOffset);
@@ -468,7 +466,7 @@ void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 	if (!gbIsMultiplayer)
 		return;
 
-	assert(pSync != NULL);
+	assert(pSync != nullptr);
 	assert(bLevel < NUMLEVELS);
 	sgbDeltaChanged = true;
 
@@ -725,10 +723,10 @@ void DeltaLoadLevel()
 					M_ClearSquares(i);
 					if (monster[i]._mAi != AI_DIABLO) {
 						if (monster[i]._uniqtype == 0) {
-							assert(monster[i].MType != NULL);
-							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, (direction)monster[i]._mdir);
+							assert(monster[i].MType != nullptr);
+							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, monster[i]._mdir);
 						} else {
-							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, (direction)monster[i]._mdir);
+							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, monster[i]._mdir);
 						}
 					}
 					monster[i]._mDelFlag = true;
@@ -863,7 +861,7 @@ void NetSendCmd(bool bHiPri, _cmd_id bCmd)
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGolem(BYTE mx, BYTE my, BYTE dir, BYTE menemy, int hp, BYTE cl)
+void NetSendCmdGolem(BYTE mx, BYTE my, direction dir, BYTE menemy, int hp, BYTE cl)
 {
 	TCmdGolem cmd;
 
@@ -1252,7 +1250,7 @@ void NetSendCmdMonDmg(bool bHiPri, WORD wMon, DWORD dwDam)
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdString(int pmask, const char *pszStr)
+void NetSendCmdString(uint32_t pmask, const char *pszStr)
 {
 	int dwStrLen;
 	TCmdString cmd;
@@ -1265,7 +1263,7 @@ void NetSendCmdString(int pmask, const char *pszStr)
 
 static DWORD On_STRING2(int pnum, TCmd *pCmd)
 {
-	TCmdString *p = (TCmdString *)pCmd;
+	auto *p = (TCmdString *)pCmd;
 
 	int len = strlen(p->str);
 	if (!gbBufferMsgs)
@@ -1320,7 +1318,7 @@ static DWORD On_SYNCDATA(TCmd *pCmd, int pnum)
 
 static DWORD On_WALKXY(TCmd *pCmd, int pnum)
 {
-	TCmdLoc *p = (TCmdLoc *)pCmd;
+	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		ClrPlrPath(pnum);
@@ -1333,7 +1331,7 @@ static DWORD On_WALKXY(TCmd *pCmd, int pnum)
 
 static DWORD On_ADDSTR(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1345,7 +1343,7 @@ static DWORD On_ADDSTR(TCmd *pCmd, int pnum)
 
 static DWORD On_ADDMAG(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1357,7 +1355,7 @@ static DWORD On_ADDMAG(TCmd *pCmd, int pnum)
 
 static DWORD On_ADDDEX(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1369,7 +1367,7 @@ static DWORD On_ADDDEX(TCmd *pCmd, int pnum)
 
 static DWORD On_ADDVIT(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1381,10 +1379,10 @@ static DWORD On_ADDVIT(TCmd *pCmd, int pnum)
 
 static DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1) {
-		spell_id spell = (spell_id)p->wParam1;
+		auto spell = static_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pSBkSplType;
@@ -1399,7 +1397,7 @@ static DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 
 static DWORD On_GOTOGETITEM(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam1 *p = (TCmdLocParam1 *)pCmd;
+	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		MakePlrPath(pnum, p->x, p->y, false);
@@ -1412,7 +1410,7 @@ static DWORD On_GOTOGETITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_REQUESTGITEM(TCmd *pCmd, int pnum)
 {
-	TCmdGItem *p = (TCmdGItem *)pCmd;
+	auto *p = (TCmdGItem *)pCmd;
 
 	if (gbBufferMsgs != 1 && i_own_level(plr[pnum].plrlevel)) {
 		if (GetItemRecord(p->dwSeed, p->wCI, p->wIndx)) {
@@ -1434,7 +1432,7 @@ static DWORD On_REQUESTGITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_GETITEM(TCmd *pCmd, int pnum)
 {
-	TCmdGItem *p = (TCmdGItem *)pCmd;
+	auto *p = (TCmdGItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1461,7 +1459,7 @@ static DWORD On_GETITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_GOTOAGETITEM(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam1 *p = (TCmdLocParam1 *)pCmd;
+	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		MakePlrPath(pnum, p->x, p->y, false);
@@ -1474,7 +1472,7 @@ static DWORD On_GOTOAGETITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_REQUESTAGITEM(TCmd *pCmd, int pnum)
 {
-	TCmdGItem *p = (TCmdGItem *)pCmd;
+	auto *p = (TCmdGItem *)pCmd;
 
 	if (gbBufferMsgs != 1 && i_own_level(plr[pnum].plrlevel)) {
 		if (GetItemRecord(p->dwSeed, p->wCI, p->wIndx)) {
@@ -1496,7 +1494,7 @@ static DWORD On_REQUESTAGITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_AGETITEM(TCmd *pCmd, int pnum)
 {
-	TCmdGItem *p = (TCmdGItem *)pCmd;
+	auto *p = (TCmdGItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1523,7 +1521,7 @@ static DWORD On_AGETITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_ITEMEXTRA(TCmd *pCmd, int pnum)
 {
-	TCmdGItem *p = (TCmdGItem *)pCmd;
+	auto *p = (TCmdGItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1538,7 +1536,7 @@ static DWORD On_ITEMEXTRA(TCmd *pCmd, int pnum)
 
 static DWORD On_PUTITEM(TCmd *pCmd, int pnum)
 {
-	TCmdPItem *p = (TCmdPItem *)pCmd;
+	auto *p = (TCmdPItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1565,7 +1563,7 @@ static DWORD On_PUTITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_SYNCPUTITEM(TCmd *pCmd, int pnum)
 {
-	TCmdPItem *p = (TCmdPItem *)pCmd;
+	auto *p = (TCmdPItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1588,7 +1586,7 @@ static DWORD On_SYNCPUTITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_RESPAWNITEM(TCmd *pCmd, int pnum)
 {
-	TCmdPItem *p = (TCmdPItem *)pCmd;
+	auto *p = (TCmdPItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1605,7 +1603,7 @@ static DWORD On_RESPAWNITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_ATTACKXY(TCmd *pCmd, int pnum)
 {
-	TCmdLoc *p = (TCmdLoc *)pCmd;
+	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		MakePlrPath(pnum, p->x, p->y, false);
@@ -1619,7 +1617,7 @@ static DWORD On_ATTACKXY(TCmd *pCmd, int pnum)
 
 static DWORD On_SATTACKXY(TCmd *pCmd, int pnum)
 {
-	TCmdLoc *p = (TCmdLoc *)pCmd;
+	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		ClrPlrPath(pnum);
@@ -1633,7 +1631,7 @@ static DWORD On_SATTACKXY(TCmd *pCmd, int pnum)
 
 static DWORD On_RATTACKXY(TCmd *pCmd, int pnum)
 {
-	TCmdLoc *p = (TCmdLoc *)pCmd;
+	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		ClrPlrPath(pnum);
@@ -1647,16 +1645,16 @@ static DWORD On_RATTACKXY(TCmd *pCmd, int pnum)
 
 static DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam3 *p = (TCmdLocParam3 *)pCmd;
+	auto *p = (TCmdLocParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		spell_id spell = (spell_id)p->wParam1;
+		auto spell = static_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLWALL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = (direction)p->wParam2;
+			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
 			plr[pnum].destParam4 = p->wParam3;
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
@@ -1670,16 +1668,16 @@ static DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 
 static DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam2 *p = (TCmdLocParam2 *)pCmd;
+	auto *p = (TCmdLocParam2 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		spell_id spell = (spell_id)p->wParam1;
+		auto spell = static_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = (direction)p->wParam2;
+			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
@@ -1692,16 +1690,16 @@ static DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 
 static DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam2 *p = (TCmdLocParam2 *)pCmd;
+	auto *p = (TCmdLocParam2 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		spell_id spell = (spell_id)p->wParam1;
+		auto spell = static_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = (direction)p->wParam2;
+			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;
@@ -1714,7 +1712,7 @@ static DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 
 static DWORD On_OPOBJXY(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam1 *p = (TCmdLocParam1 *)pCmd;
+	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		if (object[p->wParam1]._oSolidFlag || object[p->wParam1]._oDoorFlag)
@@ -1730,7 +1728,7 @@ static DWORD On_OPOBJXY(TCmd *pCmd, int pnum)
 
 static DWORD On_DISARMXY(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam1 *p = (TCmdLocParam1 *)pCmd;
+	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		if (object[p->wParam1]._oSolidFlag || object[p->wParam1]._oDoorFlag)
@@ -1746,7 +1744,7 @@ static DWORD On_DISARMXY(TCmd *pCmd, int pnum)
 
 static DWORD On_OPOBJT(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		plr[pnum].destAction = ACTION_OPERATETK;
@@ -1758,7 +1756,7 @@ static DWORD On_OPOBJT(TCmd *pCmd, int pnum)
 
 static DWORD On_ATTACKID(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		int distx = abs(plr[pnum]._px - monster[p->wParam1]._mfutx);
@@ -1774,7 +1772,7 @@ static DWORD On_ATTACKID(TCmd *pCmd, int pnum)
 
 static DWORD On_ATTACKPID(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		MakePlrPath(pnum, plr[p->wParam1]._pfutx, plr[p->wParam1]._pfuty, false);
@@ -1787,7 +1785,7 @@ static DWORD On_ATTACKPID(TCmd *pCmd, int pnum)
 
 static DWORD On_RATTACKID(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		ClrPlrPath(pnum);
@@ -1800,7 +1798,7 @@ static DWORD On_RATTACKID(TCmd *pCmd, int pnum)
 
 static DWORD On_RATTACKPID(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		ClrPlrPath(pnum);
@@ -1813,10 +1811,10 @@ static DWORD On_RATTACKPID(TCmd *pCmd, int pnum)
 
 static DWORD On_SPELLID(TCmd *pCmd, int pnum)
 {
-	TCmdParam3 *p = (TCmdParam3 *)pCmd;
+	auto *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		spell_id spell = (spell_id)p->wParam2;
+		auto spell = static_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLMON;
@@ -1834,10 +1832,10 @@ static DWORD On_SPELLID(TCmd *pCmd, int pnum)
 
 static DWORD On_SPELLPID(TCmd *pCmd, int pnum)
 {
-	TCmdParam3 *p = (TCmdParam3 *)pCmd;
+	auto *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		spell_id spell = (spell_id)p->wParam2;
+		auto spell = static_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLPLR;
@@ -1855,10 +1853,10 @@ static DWORD On_SPELLPID(TCmd *pCmd, int pnum)
 
 static DWORD On_TSPELLID(TCmd *pCmd, int pnum)
 {
-	TCmdParam3 *p = (TCmdParam3 *)pCmd;
+	auto *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		spell_id spell = (spell_id)p->wParam2;
+		auto spell = static_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLMON;
@@ -1876,10 +1874,10 @@ static DWORD On_TSPELLID(TCmd *pCmd, int pnum)
 
 static DWORD On_TSPELLPID(TCmd *pCmd, int pnum)
 {
-	TCmdParam3 *p = (TCmdParam3 *)pCmd;
+	auto *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		spell_id spell = (spell_id)p->wParam2;
+		auto spell = static_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLPLR;
@@ -1897,7 +1895,7 @@ static DWORD On_TSPELLPID(TCmd *pCmd, int pnum)
 
 static DWORD On_KNOCKBACK(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		M_GetKnockback(p->wParam1);
@@ -1909,7 +1907,7 @@ static DWORD On_KNOCKBACK(TCmd *pCmd, int pnum)
 
 static DWORD On_RESURRECT(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1923,7 +1921,7 @@ static DWORD On_RESURRECT(TCmd *pCmd, int pnum)
 
 static DWORD On_HEALOTHER(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel)
 		DoHealOther(pnum, p->wParam1);
@@ -1933,7 +1931,7 @@ static DWORD On_HEALOTHER(TCmd *pCmd, int pnum)
 
 static DWORD On_TALKXY(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam1 *p = (TCmdLocParam1 *)pCmd;
+	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		MakePlrPath(pnum, p->x, p->y, false);
@@ -1946,7 +1944,7 @@ static DWORD On_TALKXY(TCmd *pCmd, int pnum)
 
 static DWORD On_NEWLVL(TCmd *pCmd, int pnum)
 {
-	TCmdParam2 *p = (TCmdParam2 *)pCmd;
+	auto *p = (TCmdParam2 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1958,7 +1956,7 @@ static DWORD On_NEWLVL(TCmd *pCmd, int pnum)
 
 static DWORD On_WARP(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1971,7 +1969,7 @@ static DWORD On_WARP(TCmd *pCmd, int pnum)
 
 static DWORD On_MONSTDEATH(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam1 *p = (TCmdLocParam1 *)pCmd;
+	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -1986,7 +1984,7 @@ static DWORD On_MONSTDEATH(TCmd *pCmd, int pnum)
 
 static DWORD On_KILLGOLEM(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam1 *p = (TCmdLocParam1 *)pCmd;
+	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2001,7 +1999,7 @@ static DWORD On_KILLGOLEM(TCmd *pCmd, int pnum)
 
 static DWORD On_AWAKEGOLEM(TCmd *pCmd, int pnum)
 {
-	TCmdGolem *p = (TCmdGolem *)pCmd;
+	auto *p = (TCmdGolem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2027,7 +2025,7 @@ static DWORD On_AWAKEGOLEM(TCmd *pCmd, int pnum)
 
 static DWORD On_MONSTDAMAGE(TCmd *pCmd, int pnum)
 {
-	TCmdMonDamage *p = (TCmdMonDamage *)pCmd;
+	auto *p = (TCmdMonDamage *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p)); // BUGFIX: change to sizeof(*p) or it still uses TCmdParam2 size for hellfire (fixed)
@@ -2048,7 +2046,7 @@ static DWORD On_MONSTDAMAGE(TCmd *pCmd, int pnum)
 
 static DWORD On_PLRDEAD(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2062,20 +2060,11 @@ static DWORD On_PLRDEAD(TCmd *pCmd, int pnum)
 
 static DWORD On_PLRDAMAGE(TCmd *pCmd, int pnum)
 {
-	TCmdDamage *p = (TCmdDamage *)pCmd;
+	auto *p = (TCmdDamage *)pCmd;
 
 	if (p->bPlr == myplr && currlevel != 0 && gbBufferMsgs != 1) {
 		if (currlevel == plr[pnum].plrlevel && p->dwDam <= 192000 && plr[myplr]._pHitPoints >> 6 > 0) {
-			drawhpflag = true;
-			plr[myplr]._pHitPoints -= p->dwDam;
-			plr[myplr]._pHPBase -= p->dwDam;
-			if (plr[myplr]._pHitPoints > plr[myplr]._pMaxHP) {
-				plr[myplr]._pHitPoints = plr[myplr]._pMaxHP;
-				plr[myplr]._pHPBase = plr[myplr]._pMaxHPBase;
-			}
-			if (plr[myplr]._pHitPoints >> 6 <= 0) {
-				SyncPlrKill(myplr, 1);
-			}
+			ApplyPlrDamage(myplr, 0, 0, p->dwDam, 1);
 		}
 	}
 
@@ -2084,7 +2073,7 @@ static DWORD On_PLRDAMAGE(TCmd *pCmd, int pnum)
 
 static DWORD On_OPENDOOR(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2099,7 +2088,7 @@ static DWORD On_OPENDOOR(TCmd *pCmd, int pnum)
 
 static DWORD On_CLOSEDOOR(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2114,7 +2103,7 @@ static DWORD On_CLOSEDOOR(TCmd *pCmd, int pnum)
 
 static DWORD On_OPERATEOBJ(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2129,7 +2118,7 @@ static DWORD On_OPERATEOBJ(TCmd *pCmd, int pnum)
 
 static DWORD On_PLROPOBJ(TCmd *pCmd, int pnum)
 {
-	TCmdParam2 *p = (TCmdParam2 *)pCmd;
+	auto *p = (TCmdParam2 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2144,7 +2133,7 @@ static DWORD On_PLROPOBJ(TCmd *pCmd, int pnum)
 
 static DWORD On_BREAKOBJ(TCmd *pCmd, int pnum)
 {
-	TCmdParam2 *p = (TCmdParam2 *)pCmd;
+	auto *p = (TCmdParam2 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2159,7 +2148,7 @@ static DWORD On_BREAKOBJ(TCmd *pCmd, int pnum)
 
 static DWORD On_CHANGEPLRITEMS(TCmd *pCmd, int pnum)
 {
-	TCmdChItem *p = (TCmdChItem *)pCmd;
+	auto *p = (TCmdChItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2171,7 +2160,7 @@ static DWORD On_CHANGEPLRITEMS(TCmd *pCmd, int pnum)
 
 static DWORD On_DELPLRITEMS(TCmd *pCmd, int pnum)
 {
-	TCmdDelItem *p = (TCmdDelItem *)pCmd;
+	auto *p = (TCmdDelItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2183,7 +2172,7 @@ static DWORD On_DELPLRITEMS(TCmd *pCmd, int pnum)
 
 static DWORD On_PLRLEVEL(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2195,7 +2184,7 @@ static DWORD On_PLRLEVEL(TCmd *pCmd, int pnum)
 
 static DWORD On_DROPITEM(TCmd *pCmd, int pnum)
 {
-	TCmdPItem *p = (TCmdPItem *)pCmd;
+	auto *p = (TCmdPItem *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2207,7 +2196,7 @@ static DWORD On_DROPITEM(TCmd *pCmd, int pnum)
 
 static DWORD On_SEND_PLRINFO(TCmd *pCmd, int pnum)
 {
-	TCmdPlrInfoHdr *p = (TCmdPlrInfoHdr *)pCmd;
+	auto *p = (TCmdPlrInfoHdr *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, p->wBytes + sizeof(*p));
@@ -2224,7 +2213,7 @@ static DWORD On_ACK_PLRINFO(TCmd *pCmd, int pnum)
 
 static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam1 *p = (TCmdLocParam1 *)pCmd;
+	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2253,7 +2242,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 					plr[pnum]._pmode = PM_DEATH;
 					NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 					plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
-					plr[pnum]._pVar8 = plr[pnum]._pAnimLen << 1;
+					plr[pnum]._pVar8 = plr[pnum]._pAnimLen * 2;
 					dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;
 				}
 
@@ -2268,7 +2257,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 
 static DWORD On_ACTIVATEPORTAL(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam3 *p = (TCmdLocParam3 *)pCmd;
+	auto *p = (TCmdLocParam3 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2328,7 +2317,7 @@ static DWORD On_RETOWN(TCmd *pCmd, int pnum)
 
 static DWORD On_SETSTR(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2340,7 +2329,7 @@ static DWORD On_SETSTR(TCmd *pCmd, int pnum)
 
 static DWORD On_SETDEX(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2352,7 +2341,7 @@ static DWORD On_SETDEX(TCmd *pCmd, int pnum)
 
 static DWORD On_SETMAG(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2364,7 +2353,7 @@ static DWORD On_SETMAG(TCmd *pCmd, int pnum)
 
 static DWORD On_SETVIT(TCmd *pCmd, int pnum)
 {
-	TCmdParam1 *p = (TCmdParam1 *)pCmd;
+	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2381,7 +2370,7 @@ static DWORD On_STRING(TCmd *pCmd, int pnum)
 
 static DWORD On_SYNCQUEST(TCmd *pCmd, int pnum)
 {
-	TCmdQuest *p = (TCmdQuest *)pCmd;
+	auto *p = (TCmdQuest *)pCmd;
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2392,21 +2381,6 @@ static DWORD On_SYNCQUEST(TCmd *pCmd, int pnum)
 	}
 
 	return sizeof(*p);
-}
-
-static DWORD On_ENDREFLECT(TCmd *pCmd, int pnum)
-{
-	if (gbBufferMsgs != 1 && pnum != myplr && currlevel == plr[pnum].plrlevel) {
-		for (int i = 0; i < nummissiles; i++) {
-			int mi = missileactive[i];
-			if (missile[mi]._mitype == MIS_REFLECT && missile[mi]._misource == pnum) {
-				ClearMissileSpot(mi);
-				DeleteMissile(mi, i);
-			}
-		}
-	}
-
-	return sizeof(*pCmd);
 }
 
 static DWORD On_ENDSHIELD(TCmd *pCmd, int pnum)
@@ -2451,14 +2425,14 @@ static DWORD On_CHEAT_SPELL_LEVEL(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-static DWORD On_DEBUG(TCmd *pCmd, int pnum)
+static DWORD On_DEBUG(TCmd *pCmd)
 {
 	return sizeof(*pCmd);
 }
 
 static DWORD On_NOVA(TCmd *pCmd, int pnum)
 {
-	TCmdLoc *p = (TCmdLoc *)pCmd;
+	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel && pnum != myplr) {
 		ClrPlrPath(pnum);
@@ -2504,11 +2478,11 @@ static DWORD On_REFLECT(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-static DWORD On_NAKRUL(TCmd *pCmd, int pnum)
+static DWORD On_NAKRUL(TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		operate_lv24_lever();
-		IsUberRoomOpened = 1;
+		IsUberRoomOpened = true;
 		quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		monster_some_crypt();
 	}
@@ -2517,7 +2491,7 @@ static DWORD On_NAKRUL(TCmd *pCmd, int pnum)
 
 static DWORD On_OPENHIVE(TCmd *pCmd, int pnum)
 {
-	TCmdLocParam2 *p = (TCmdLocParam2 *)pCmd;
+	auto *p = (TCmdLocParam2 *)pCmd;
 	if (gbBufferMsgs != 1) {
 		AddMissile(p->x, p->y, p->wParam1, p->wParam2, 0, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
 		TownOpenHive();
@@ -2525,7 +2499,7 @@ static DWORD On_OPENHIVE(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-static DWORD On_OPENCRYPT(TCmd *pCmd, int pnum)
+static DWORD On_OPENCRYPT(TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		TownOpenGrave();
@@ -2620,7 +2594,7 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_TALKXY:
 		return On_TALKXY(pCmd, pnum);
 	case CMD_DEBUG:
-		return On_DEBUG(pCmd, pnum);
+		return On_DEBUG(pCmd);
 	case CMD_NEWLVL:
 		return On_NEWLVL(pCmd, pnum);
 	case CMD_WARP:
@@ -2694,11 +2668,11 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_REFLECT:
 		return On_REFLECT(pCmd, pnum);
 	case CMD_NAKRUL:
-		return On_NAKRUL(pCmd, pnum);
+		return On_NAKRUL(pCmd);
 	case CMD_OPENHIVE:
 		return On_OPENHIVE(pCmd, pnum);
 	case CMD_OPENCRYPT:
-		return On_OPENCRYPT(pCmd, pnum);
+		return On_OPENCRYPT(pCmd);
 	default:
 		break;
 	}

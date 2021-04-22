@@ -25,7 +25,7 @@ public:
 
 class tcp_server {
 public:
-	tcp_server(asio::io_context &ioc, std::string bindaddr,
+	tcp_server(asio::io_context &ioc, const std::string &bindaddr,
 	    unsigned short port, std::string pw);
 	std::string localhost_self();
 	void close();
@@ -61,18 +61,18 @@ private:
 	plr_t next_free();
 	bool empty();
 	void start_accept();
-	void handle_accept(scc con, const asio::error_code &ec);
-	void start_recv(scc con);
-	void handle_recv(scc con, const asio::error_code &ec, size_t bytes_read);
-	void handle_recv_newplr(scc con, packet &pkt);
+	void handle_accept(const scc &con, const asio::error_code &ec);
+	void start_recv(const scc &con);
+	void handle_recv(const scc &con, const asio::error_code &ec, size_t bytes_read);
+	void handle_recv_newplr(const scc &con, packet &pkt);
 	void handle_recv_packet(packet &pkt);
-	void send_connect(scc con);
+	void send_connect(const scc &con);
 	void send_packet(packet &pkt);
-	void start_send(scc con, packet &pkt);
-	void handle_send(scc con, const asio::error_code &ec, size_t bytes_sent);
-	void start_timeout(scc con);
-	void handle_timeout(scc con, const asio::error_code &ec);
-	void drop_connection(scc con);
+	void start_send(const scc &con, packet &pkt);
+	void handle_send(const scc &con, const asio::error_code &ec, size_t bytes_sent);
+	void start_timeout(const scc &con);
+	void handle_timeout(const scc &con, const asio::error_code &ec);
+	void drop_connection(const scc &con);
 };
 
 } //namespace net

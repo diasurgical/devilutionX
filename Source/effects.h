@@ -1071,8 +1071,8 @@ void InitMonsterSND(int monst);
 void FreeMonsterSnd();
 bool calc_snd_position(int x, int y, int *plVolume, int *plPan);
 void PlayEffect(int i, int mode);
-void PlaySFX(_sfx_id psfx, bool randomizeByCategory = true);
-void PlaySfxLoc(_sfx_id psfx, int x, int y);
+void PlaySFX(_sfx_id psfx);
+void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory = true);
 void sound_stop();
 void sound_update();
 void effects_cleanup_sfx();
@@ -1081,4 +1081,4 @@ void ui_sound_init();
 void effects_play_sound(const char *snd_file);
 int GetSFXLength(int nSFX);
 
-}
+} // namespace devilution

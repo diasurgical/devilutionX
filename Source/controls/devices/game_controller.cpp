@@ -81,7 +81,7 @@ ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 	return ControllerButton_NONE;
 }
 
-SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerButton button) const
+SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerButton button)
 {
 	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
 		UNIMPLEMENTED();
@@ -121,8 +121,8 @@ SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerBut
 
 bool GameController::IsPressed(ControllerButton button) const
 {
-	const SDL_GameControllerButton gc_button = ToSdlGameControllerButton(button);
-	return gc_button != SDL_CONTROLLER_BUTTON_INVALID && SDL_GameControllerGetButton(sdl_game_controller_, gc_button);
+	const SDL_GameControllerButton gcButton = ToSdlGameControllerButton(button);
+	return gcButton != SDL_CONTROLLER_BUTTON_INVALID && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
 }
 
 bool GameController::ProcessAxisMotion(const SDL_Event &event)
@@ -152,47 +152,46 @@ bool GameController::ProcessAxisMotion(const SDL_Event &event)
 	return true;
 }
 
-void GameController::Add(int joystick_index)
+void GameController::Add(int joystickIndex)
 {
-	SDL_Log("Opening game controller for joystick at index %d", joystick_index);
+	SDL_Log("Opening game controller for joystick at index %d", joystickIndex);
 	GameController result;
-	result.sdl_game_controller_ = SDL_GameControllerOpen(joystick_index);
-	if (result.sdl_game_controller_ == NULL) {
+	result.sdl_game_controller_ = SDL_GameControllerOpen(joystickIndex);
+	if (result.sdl_game_controller_ == nullptr) {
 		SDL_Log("%s", SDL_GetError());
 		SDL_ClearError();
 		return;
 	}
-	SDL_Joystick *const sdl_joystick = SDL_GameControllerGetJoystick(result.sdl_game_controller_);
-	result.instance_id_ = SDL_JoystickInstanceID(sdl_joystick);
+	SDL_Joystick *const sdlJoystick = SDL_GameControllerGetJoystick(result.sdl_game_controller_);
+	result.instance_id_ = SDL_JoystickInstanceID(sdlJoystick);
 	controllers_->push_back(result);
 
-	const SDL_JoystickGUID guid = SDL_JoystickGetGUID(sdl_joystick);
-	SDLUniquePtr<char> mapping{SDL_GameControllerMappingForGUID(guid)};
+	const SDL_JoystickGUID guid = SDL_JoystickGetGUID(sdlJoystick);
+	SDLUniquePtr<char> mapping { SDL_GameControllerMappingForGUID(guid) };
 	SDL_Log("Opened game controller with mapping:\n%s", mapping.get());
 }
 
-void GameController::Remove(SDL_JoystickID instance_id)
+void GameController::Remove(SDL_JoystickID instanceId)
 {
-	SDL_Log("Removing game controller with instance id %d", instance_id);
+	SDL_Log("Removing game controller with instance id %d", instanceId);
 	for (std::size_t i = 0; i < controllers_->size(); ++i) {
 		const GameController &controller = (*controllers_)[i];
-		if (controller.instance_id_ != instance_id)
+		if (controller.instance_id_ != instanceId)
 			continue;
 		controllers_->erase(controllers_->begin() + i);
 		sgbControllerActive = !controllers_->empty();
 		return;
 	}
-	SDL_Log("Game controller not found with instance id: %d", instance_id);
+	SDL_Log("Game controller not found with instance id: %d", instanceId);
 }
 
-GameController *GameController::Get(SDL_JoystickID instance_id)
+GameController *GameController::Get(SDL_JoystickID instanceId)
 {
-	for (std::size_t i = 0; i < controllers_->size(); ++i) {
-		GameController &controller = (*controllers_)[i];
-		if (controller.instance_id_ == instance_id)
+	for (auto &controller : *controllers_) {
+		if (controller.instance_id_ == instanceId)
 			return &controller;
 	}
-	return NULL;
+	return nullptr;
 }
 
 GameController *GameController::Get(const SDL_Event &event)
@@ -204,7 +203,7 @@ GameController *GameController::Get(const SDL_Event &event)
 	case SDL_CONTROLLERBUTTONUP:
 		return Get(event.jball.which);
 	default:
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -215,8 +214,8 @@ const std::vector<GameController> &GameController::All()
 
 bool GameController::IsPressedOnAnyController(ControllerButton button)
 {
-	for (std::size_t i = 0; i < controllers_->size(); ++i)
-		if ((*controllers_)[i].IsPressed(button))
+	for (auto &controller : *controllers_)
+		if (controller.IsPressed(button))
 			return true;
 	return false;
 }

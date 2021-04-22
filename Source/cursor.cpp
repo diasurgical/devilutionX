@@ -31,17 +31,17 @@ BYTE *pCursCels;
 BYTE *pCursCels2;
 
 /** inv_item value */
-char pcursinvitem;
+int8_t pcursinvitem;
 /** Pixel width of the current cursor image */
 int icursW;
 /** Pixel height of the current cursor image */
 int icursH;
 /** Current highlighted item */
-char pcursitem;
+int8_t pcursitem;
 /** Current highlighted object */
-char pcursobj;
+int8_t pcursobj;
 /** Current highlighted player */
-char pcursplr;
+int8_t pcursplr;
 /** Current highlighted tile row */
 int cursmx;
 /** Current highlighted tile column */
@@ -119,9 +119,9 @@ const int InvItemHeight[] = {
 void InitCursor()
 {
 	assert(!pCursCels);
-	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", NULL);
+	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", nullptr);
 	if (gbIsHellfire)
-		pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", NULL);
+		pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", nullptr);
 	ClearCursor();
 }
 
@@ -219,7 +219,7 @@ void CheckRportal()
 void CheckCursMove()
 {
 	int i, sx, sy, fx, fy, mx, my, tx, ty, px, py, xx, yy, mi, columns, rows, xo, yo;
-	char bv;
+	int8_t bv;
 	bool flipflag, flipx, flipy;
 
 	sx = MouseX;
@@ -245,8 +245,8 @@ void CheckCursMove()
 	}
 
 	if (!zoomflag) {
-		sx >>= 1;
-		sy >>= 1;
+		sx /= 2;
+		sy /= 2;
 	}
 
 	// Adjust by player offset and tile grid alignment
@@ -296,11 +296,11 @@ void CheckCursMove()
 	py = sy % TILE_HEIGHT;
 
 	// Shift position to match diamond grid aligment
-	flipy = py < (px >> 1);
+	flipy = py < (px / 2);
 	if (flipy) {
 		my--;
 	}
-	flipx = py >= TILE_HEIGHT - (px >> 1);
+	flipx = py >= TILE_HEIGHT - (px / 2);
 	if (flipx) {
 		mx++;
 	}
@@ -514,7 +514,7 @@ void CheckCursMove()
 			cursmx = mx + 1;
 			cursmy = my + 1;
 		}
-		if (pcursmonst != -1 && !towner[pcursmonst]._tSelFlag) {
+		if (pcursmonst != -1 && !towners[pcursmonst]._tSelFlag) {
 			pcursmonst = -1;
 		}
 	}
@@ -544,7 +544,7 @@ void CheckCursMove()
 				pcursplr = bv;
 			}
 		}
-		if (dFlags[mx][my] & BFLAG_DEAD_PLAYER) {
+		if ((dFlags[mx][my] & BFLAG_DEAD_PLAYER) != 0) {
 			for (i = 0; i < MAX_PLRS; i++) {
 				if (plr[i]._px == mx && plr[i]._py == my && i != myplr) {
 					cursmx = mx;

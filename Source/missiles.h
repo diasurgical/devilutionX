@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 #include "miniwin/miniwin.h"
+#include "engine.h"
 #include "misdat.h"
 #include "spelldat.h"
 
@@ -77,7 +78,7 @@ extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
 int GetSpellLevel(int id, spell_id sn);
-int GetDirection8(int x1, int y1, int x2, int y2);
+direction GetDirection8(int x1, int y1, int x2, int y2);
 int GetDirection16(int x1, int y1, int x2, int y2);
 void DeleteMissile(int mi, int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);
@@ -108,14 +109,11 @@ void AddRuneExplosion(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sin
 void AddImmolation(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddFireNova(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddLightningArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlashFront(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlashBack(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddMana(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddMagi(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddRing(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddSearch(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddCboltArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddHboltArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddLArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
 void AddRndTeleport(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
@@ -178,7 +176,7 @@ void AddDiabApoca(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl);
 void MI_Dummy(Sint32 i);
 void MI_Golem(Sint32 i);
-void MI_SetManashield(Sint32 i);
+void MI_Manashield(Sint32 i);
 void MI_LArrow(Sint32 i);
 void MI_Arrow(Sint32 i);
 void MI_Firebolt(Sint32 i);
@@ -193,8 +191,6 @@ void MI_LightningWall(Sint32 i);
 void MI_HiveExplode(Sint32 i);
 void MI_Immolation(Sint32 i);
 void MI_LightningArrow(Sint32 i);
-void MI_FlashFront(Sint32 i);
-void MI_FlashBack(Sint32 i);
 void MI_Reflect(Sint32 i);
 void MI_FireRing(Sint32 i);
 void MI_LightningRing(Sint32 i);
@@ -238,4 +234,4 @@ void ProcessMissiles();
 void missiles_process_charge();
 void ClearMissileSpot(int mi);
 
-}
+} // namespace devilution

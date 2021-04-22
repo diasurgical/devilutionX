@@ -93,6 +93,8 @@ struct GameplayOptions {
 	bool bRandomizeQuests;
 	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
+	/** @brief Locally disable clicking on shrines which permanently cripple character. */
+	bool bDisableCripplingShrines;
 };
 
 struct ControllerOptions {
@@ -102,7 +104,7 @@ struct ControllerOptions {
 	bool bDpadHotkeys;
 	/** @brief Shoulder gamepad shoulder buttons act as potions by default */
 	bool bSwapShoulderButtonMode;
-    /** @brief Configure gamepad joysticks deadzone */
+	/** @brief Configure gamepad joysticks deadzone */
 	float fDeadzone;
 #ifdef __vita__
 	/** @brief Enable input via rear touchpad */
@@ -143,4 +145,4 @@ struct Options {
 
 extern Options sgOptions;
 
-}
+} // namespace devilution

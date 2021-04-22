@@ -3,8 +3,8 @@
  *
  * Implementation of routines for initializing the environment, disable screen saver, load MPQ.
  */
-#include <config.h>
 #include <SDL.h>
+#include <config.h>
 #include <string>
 #include <vector>
 
@@ -23,7 +23,7 @@ int _newlib_heap_size_user = 100 * 1024 * 1024;
 namespace devilution {
 
 /** True if the game is the current active window */
-int gbActive;
+bool gbActive;
 /** A handle to an hellfire.mpq archive. */
 HANDLE hellfire_mpq;
 /** The current input handler function */
@@ -57,7 +57,7 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 	std::string mpq_abspath;
 	for (const auto &path : paths) {
 		mpq_abspath = path + mpq_name;
-		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_FLAG_READ_ONLY, &archive)) {
+		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
 			SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "  Found: %s in %s", mpq_name, path.c_str());
 			SFileSetBasePath(path.c_str());
 			return archive;
@@ -70,7 +70,7 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 		SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "Missing: %s", mpq_name);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 } // namespace
@@ -88,51 +88,51 @@ void init_cleanup()
 
 	if (spawn_mpq) {
 		SFileCloseArchive(spawn_mpq);
-		spawn_mpq = NULL;
+		spawn_mpq = nullptr;
 	}
 	if (diabdat_mpq) {
 		SFileCloseArchive(diabdat_mpq);
-		diabdat_mpq = NULL;
+		diabdat_mpq = nullptr;
 	}
 	if (patch_rt_mpq) {
 		SFileCloseArchive(patch_rt_mpq);
-		patch_rt_mpq = NULL;
+		patch_rt_mpq = nullptr;
 	}
 	if (hellfire_mpq) {
 		SFileCloseArchive(hellfire_mpq);
-		hellfire_mpq = NULL;
+		hellfire_mpq = nullptr;
 	}
 	if (hfmonk_mpq) {
 		SFileCloseArchive(hfmonk_mpq);
-		hfmonk_mpq = NULL;
+		hfmonk_mpq = nullptr;
 	}
 	if (hfbard_mpq) {
 		SFileCloseArchive(hfbard_mpq);
-		hfbard_mpq = NULL;
+		hfbard_mpq = nullptr;
 	}
 	if (hfbarb_mpq) {
 		SFileCloseArchive(hfbarb_mpq);
-		hfbarb_mpq = NULL;
+		hfbarb_mpq = nullptr;
 	}
 	if (hfmusic_mpq) {
 		SFileCloseArchive(hfmusic_mpq);
-		hfmusic_mpq = NULL;
+		hfmusic_mpq = nullptr;
 	}
 	if (hfvoice_mpq) {
 		SFileCloseArchive(hfvoice_mpq);
-		hfvoice_mpq = NULL;
+		hfvoice_mpq = nullptr;
 	}
 	if (hfopt1_mpq) {
 		SFileCloseArchive(hfopt1_mpq);
-		hfopt1_mpq = NULL;
+		hfopt1_mpq = nullptr;
 	}
 	if (hfopt2_mpq) {
 		SFileCloseArchive(hfopt2_mpq);
-		hfopt2_mpq = NULL;
+		hfopt2_mpq = nullptr;
 	}
 	if (devilutionx_mpq) {
 		SFileCloseArchive(patch_rt_mpq);
-		patch_rt_mpq = NULL;
+		patch_rt_mpq = nullptr;
 	}
 
 	NetClose();
@@ -156,11 +156,11 @@ void init_archives()
 		paths.pop_back();
 
 #ifdef __linux__
-	paths.push_back("/usr/share/diasurgical/devilutionx/");
-	paths.push_back("/usr/local/share/diasurgical/devilutionx/");
+	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
+	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #endif
 
-	paths.push_back(""); // PWD
+	paths.emplace_back(""); // PWD
 
 	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
 		std::string message;
@@ -176,43 +176,43 @@ void init_archives()
 	}
 
 	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ");
-	if (diabdat_mpq == NULL) {
+	if (diabdat_mpq == nullptr) {
 		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
 		diabdat_mpq = init_test_access(paths, "diabdat.mpq");
 	}
 
-	if (diabdat_mpq == NULL) {
+	if (diabdat_mpq == nullptr) {
 		spawn_mpq = init_test_access(paths, "spawn.mpq");
-		if (spawn_mpq != NULL)
+		if (spawn_mpq != nullptr)
 			gbIsSpawn = true;
 	}
-	HANDLE fh = NULL;
+	HANDLE fh = nullptr;
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
 	SFileCloseFile(fh);
 
 	patch_rt_mpq = init_test_access(paths, "patch_rt.mpq");
-	if (patch_rt_mpq == NULL)
+	if (patch_rt_mpq == nullptr)
 		patch_rt_mpq = init_test_access(paths, "patch_sh.mpq");
 
 	hellfire_mpq = init_test_access(paths, "hellfire.mpq");
-	if (hellfire_mpq != NULL)
+	if (hellfire_mpq != nullptr)
 		gbIsHellfire = true;
 	hfmonk_mpq = init_test_access(paths, "hfmonk.mpq");
 	hfbard_mpq = init_test_access(paths, "hfbard.mpq");
-	if (hfbard_mpq != NULL)
+	if (hfbard_mpq != nullptr)
 		gbBard = true;
 	hfbarb_mpq = init_test_access(paths, "hfbarb.mpq");
-	if (hfbarb_mpq != NULL)
+	if (hfbarb_mpq != nullptr)
 		gbBarbarian = true;
 	hfmusic_mpq = init_test_access(paths, "hfmusic.mpq");
 	hfvoice_mpq = init_test_access(paths, "hfvoice.mpq");
 	hfopt1_mpq = init_test_access(paths, "hfopt1.mpq");
 	hfopt2_mpq = init_test_access(paths, "hfopt2.mpq");
 
-	if (gbIsHellfire && (hfmonk_mpq == NULL || hfmusic_mpq == NULL || hfvoice_mpq == NULL)) {
+	if (gbIsHellfire && (hfmonk_mpq == nullptr || hfmusic_mpq == nullptr || hfvoice_mpq == nullptr)) {
 		UiErrorOkDialog("Some Hellfire MPQs are missing", "Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files.");
-		app_fatal(NULL);
+		app_fatal(nullptr);
 	}
 
 	devilutionx_mpq = init_test_access(paths, "devilutionx.mpq");
@@ -224,10 +224,12 @@ void init_create_window()
 		app_fatal("Unable to create main window");
 	dx_init();
 	gbActive = true;
+#ifndef USE_SDL1
 	SDL_DisableScreenSaver();
+#endif
 }
 
-void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam)
+void MainWndProc(UINT Msg)
 {
 	switch (Msg) {
 	case DVL_WM_PAINT:

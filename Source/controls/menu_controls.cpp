@@ -1,10 +1,10 @@
 #include "controls/menu_controls.h"
 
+#include "DiabloUI/diabloui.h"
 #include "controls/axis_direction.h"
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/remap_keyboard.h"
-#include "DiabloUI/diabloui.h"
 #include "utils/sdl_compat.h"
 
 namespace devilution {
@@ -25,18 +25,18 @@ MenuAction GetMenuHeldUpDownAction()
 
 MenuAction GetMenuAction(const SDL_Event &event)
 {
-	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
+	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
 
-	if (ProcessControllerMotion(event, ctrl_event)) {
+	if (ProcessControllerMotion(event, ctrlEvent)) {
 		sgbControllerActive = true;
 		return GetMenuHeldUpDownAction();
 	}
 
-	if (ctrl_event.button != ControllerButton_NONE)
+	if (ctrlEvent.button != ControllerButton_NONE)
 		sgbControllerActive = true;
 
-	if (!ctrl_event.up) {
-		switch (ctrl_event.button) {
+	if (!ctrlEvent.up) {
+		switch (ctrlEvent.button) {
 		case ControllerButton_IGNORE:
 			return MenuAction_NONE;
 		case ControllerButton_BUTTON_B: // Right button
@@ -76,7 +76,7 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		case SDLK_DOWN:
 			return MenuAction_DOWN;
 		case SDLK_TAB:
-			if (SDL_GetModState() & KMOD_SHIFT)
+			if ((SDL_GetModState() & KMOD_SHIFT) != 0)
 				return MenuAction_UP;
 			else
 				return MenuAction_DOWN;
@@ -86,7 +86,7 @@ MenuAction GetMenuAction(const SDL_Event &event)
 			return MenuAction_PAGE_DOWN;
 		case SDLK_RETURN: {
 			const Uint8 *state = SDLC_GetKeyState();
-			if (!state[SDLC_KEYSTATE_LALT] && !state[SDLC_KEYSTATE_RALT]) {
+			if (state[SDLC_KEYSTATE_LALT] == 0 && state[SDLC_KEYSTATE_RALT] == 0) {
 				return MenuAction_SELECT;
 			}
 			break;

@@ -3,6 +3,7 @@
  *
  * Implementation of functionality tracking what the mouse cursor is pointing at.
  */
+#include <SDL.h>
 
 #include "cursor.h"
 #include "player.h"
@@ -28,7 +29,8 @@ void track_process()
 	if (plr[myplr]._pVar8 <= 6 && plr[myplr]._pmode != PM_STAND)
 		return;
 
-	if (cursmx != plr[myplr]._ptargx || cursmy != plr[myplr]._ptargy) {
+	const SDL_Point target = plr[myplr].GetTargetPosition();
+	if (cursmx != target.x || cursmy != target.y) {
 		Uint32 tick = SDL_GetTicks();
 		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * 6) {
 			sgdwLastWalk = tick;

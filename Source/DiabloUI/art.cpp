@@ -7,13 +7,13 @@ namespace devilution {
 
 void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 {
-	if (art == NULL || art->surface != NULL)
+	if (art == nullptr || art->surface != nullptr)
 		return;
 
 	art->frames = frames;
 
 	DWORD width, height, bpp;
-	if (!SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, &bpp)) {
+	if (!SBmpLoadImage(pszFile, nullptr, nullptr, 0, &width, &height, &bpp)) {
 		SDL_Log("Failed to load image meta");
 		return;
 	}
@@ -33,32 +33,32 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 		format = 0;
 		break;
 	}
-	SDLSurfaceUniquePtr art_surface { SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format) };
+	SDLSurfaceUniquePtr artSurface { SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format) };
 
-	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(art_surface->pixels),
-	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
+	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(artSurface->pixels),
+	        artSurface->pitch * artSurface->format->BytesPerPixel * height, nullptr, nullptr, nullptr)) {
 		SDL_Log("Failed to load image");
 		return;
 	}
 
-	art->logical_width = art_surface->w;
+	art->logical_width = artSurface->w;
 	art->frame_height = height / frames;
 
-	art->surface = ScaleSurfaceToOutput(std::move(art_surface));
+	art->surface = ScaleSurfaceToOutput(std::move(artSurface));
 }
 
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
-	if (art->surface != NULL)
+	if (art->surface != nullptr)
 		SDLC_SetColorKey(art->surface.get(), mask);
 }
 
 void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 {
 	art->frames = frames;
-	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr{SDL_CreateRGBSurfaceWithFormatFrom(
-	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8)});
+	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormatFrom(
+	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8) });
 	art->logical_width = w;
 	art->frame_height = h / frames;
 }

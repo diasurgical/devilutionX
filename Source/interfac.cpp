@@ -152,7 +152,7 @@ static void InitCutscene(interface_mode uMsg)
 	}
 
 	assert(!sgpBackCel);
-	sgpBackCel = LoadFileInMem(celPath, NULL);
+	sgpBackCel = LoadFileInMem(celPath, nullptr);
 	LoadPalette(palPath);
 
 	sgdwProgress = 0;

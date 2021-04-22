@@ -4,10 +4,11 @@
  * Implementation of functions for keeping multiplaye games in sync.
  */
 
+#include <SDL.h>
 #include <config.h>
 
-#include "diablo.h"
 #include "DiabloUI/diabloui.h"
+#include "diablo.h"
 #include "dthread.h"
 #include "nthread.h"
 #include "options.h"
@@ -114,11 +115,13 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
+	const SDL_Point target = plr[myplr].GetTargetPosition();
+
 	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
 	pkt->hdr.px = plr[myplr]._px;
 	pkt->hdr.py = plr[myplr]._py;
-	pkt->hdr.targx = plr[myplr]._ptargx;
-	pkt->hdr.targy = plr[myplr]._ptargy;
+	pkt->hdr.targx = target.x;
+	pkt->hdr.targy = target.y;
 	pkt->hdr.php = plr[myplr]._pHitPoints;
 	pkt->hdr.pmhp = plr[myplr]._pMaxHP;
 	pkt->hdr.bstr = plr[myplr]._pBaseStr;
@@ -177,7 +180,7 @@ void NetSendHiPri(int playerId, BYTE *pbMsg, BYTE bLen)
 	}
 }
 
-void multi_send_msg_packet(int pmask, BYTE *src, BYTE len)
+void multi_send_msg_packet(uint32_t pmask, BYTE *src, BYTE len)
 {
 	DWORD v, p, t;
 	TPkt pkt;
@@ -411,12 +414,12 @@ int multi_handle_delta()
 	sgbTimeout = false;
 	if (received) {
 		if (!gbShouldValidatePackage) {
-			NetSendHiPri(myplr, 0, 0);
+			NetSendHiPri(myplr, nullptr, 0);
 			gbShouldValidatePackage = false;
 		} else {
 			gbShouldValidatePackage = false;
 			if (!multi_check_pkt_valid(&sgHiPriBuf))
-				NetSendHiPri(myplr, 0, 0);
+				NetSendHiPri(myplr, nullptr, 0);
 		}
 	}
 	multi_mon_seeds();
@@ -443,7 +446,7 @@ static void multi_process_tmsgs()
 	int cnt;
 	TPkt pkt;
 
-	while ((cnt = tmsg_get((BYTE *)&pkt, 512)) != 0) {
+	while ((cnt = tmsg_get((BYTE *)&pkt)) != 0) {
 		multi_handle_all_packets(myplr, (BYTE *)&pkt, cnt);
 	}
 }
@@ -453,19 +456,19 @@ void multi_process_network_packets()
 	int dx, dy;
 	TPktHdr *pkt;
 	DWORD dwMsgSize;
-	DWORD dwID;
+	int dwID;
 	bool cond;
 	char *data;
 
 	multi_clear_left_tbl();
 	multi_process_tmsgs();
-	while (SNetReceiveMessage((int *)&dwID, &data, (int *)&dwMsgSize)) {
+	while (SNetReceiveMessage(&dwID, &data, (int *)&dwMsgSize)) {
 		dwRecCount++;
 		multi_clear_left_tbl();
 		pkt = (TPktHdr *)data;
 		if (dwMsgSize < sizeof(TPktHdr))
 			continue;
-		if (dwID >= MAX_PLRS)
+		if (dwID < 0 || dwID >= MAX_PLRS)
 			continue;
 		if (pkt->wCheck != LOAD_BE32("\0\0ip"))
 			continue;
@@ -508,8 +511,6 @@ void multi_process_network_packets()
 					plr[dwID]._py = pkt->py;
 					plr[dwID]._pfutx = pkt->px;
 					plr[dwID]._pfuty = pkt->py;
-					plr[dwID]._ptargx = pkt->targx;
-					plr[dwID]._ptargy = pkt->targy;
 				}
 			}
 		}
@@ -635,8 +636,6 @@ static void SetupLocalCoords()
 	plr[myplr]._py = y;
 	plr[myplr]._pfutx = x;
 	plr[myplr]._pfuty = y;
-	plr[myplr]._ptargx = x;
-	plr[myplr]._ptargy = y;
 	plr[myplr].plrlevel = currlevel;
 	plr[myplr]._pLvlChanging = true;
 	plr[myplr].pLvlLoad = 0;
@@ -644,36 +643,13 @@ static void SetupLocalCoords()
 	plr[myplr].destAction = ACTION_NONE;
 }
 
-static bool multi_upgrade(bool *pfExitProgram)
-{
-	bool result;
-	int status;
-
-	SNetPerformUpgrade((LPDWORD)&status);
-	result = true;
-	if (status && status != 1) {
-		if (status != 2) {
-			if (status == -1) {
-				DrawDlg("Network upgrade failed");
-			}
-		} else {
-			*pfExitProgram = 1;
-		}
-
-		result = false;
-	}
-
-	return result;
-}
-
 static void multi_handle_events(_SNETEVENT *pEvt)
 {
 	DWORD LeftReason;
-	GameData *gameData;
 
 	switch (pEvt->eventid) {
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
-		GameData *gameData = (GameData *)pEvt->data;
+		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
 			app_fatal("Invalid size of game data: %d", gameData->size);
 		sgGameInitInfo = *gameData;
@@ -736,13 +712,12 @@ void NetClose()
 		SDL_Delay(2000);
 }
 
-bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
+bool NetInit(bool bSinglePlayer)
 {
-	while (1) {
-		*pfExitProgram = false;
+	while (true) {
 		SetRndSeed(0);
 		sgGameInitInfo.size = sizeof(sgGameInitInfo);
-		sgGameInitInfo.dwSeed = time(NULL);
+		sgGameInitInfo.dwSeed = time(nullptr);
 		sgGameInitInfo.programid = GAME_ID;
 		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
@@ -764,7 +739,7 @@ bool NetInit(bool bSinglePlayer, bool *pfExitProgram)
 			if (!multi_init_single(&sgGameInitInfo))
 				return false;
 		} else {
-			if (!multi_init_multi(&sgGameInitInfo, pfExitProgram))
+			if (!multi_init_multi(&sgGameInitInfo))
 				return false;
 		}
 		sgbNetInited = true;
@@ -820,7 +795,7 @@ bool multi_init_single(GameData *gameData)
 	}
 
 	unused = 0;
-	if (!SNetCreateGame("local", "local", "local", 0, (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), 1, "local", "local", &unused)) {
+	if (!SNetCreateGame("local", "local", (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), &unused)) {
 		app_fatal("SNetCreateGame1:\n%s", SDL_GetError());
 	}
 
@@ -830,17 +805,13 @@ bool multi_init_single(GameData *gameData)
 	return true;
 }
 
-bool multi_init_multi(GameData *gameData, bool *pfExitProgram)
+bool multi_init_multi(GameData *gameData)
 {
-	bool first;
 	int playerId;
 
-	for (first = true;; first = false) {
-		if (gbSelectProvider) {
-			if (!UiSelectProvider(gameData)
-			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
-				return false;
-			}
+	while (true) {
+		if (gbSelectProvider && !UiSelectProvider(gameData)) {
+			return false;
 		}
 
 		multi_event_handler(true);
@@ -852,14 +823,13 @@ bool multi_init_multi(GameData *gameData, bool *pfExitProgram)
 
 	if ((DWORD)playerId >= MAX_PLRS) {
 		return false;
-	} else {
-		myplr = playerId;
-		gbIsMultiplayer = true;
-
-		pfile_read_player_from_save();
-
-		return true;
 	}
+	myplr = playerId;
+	gbIsMultiplayer = true;
+
+	pfile_read_player_from_save();
+
+	return true;
 }
 
 void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)

@@ -103,10 +103,10 @@ struct CCritSect {
 
 // Game states
 #define GAMESTATE_PRIVATE 0x01
-#define GAMESTATE_FULL    0x02
-#define GAMESTATE_ACTIVE  0x04
+#define GAMESTATE_FULL 0x02
+#define GAMESTATE_ACTIVE 0x04
 #define GAMESTATE_STARTED 0x08
-#define GAMESTATE_REPLAY  0x80
+#define GAMESTATE_REPLAY 0x80
 
 #define PS_CONNECTED 0x10000
 #define PS_TURN_ARRIVED 0x20000
@@ -119,7 +119,7 @@ struct CCritSect {
 extern "C" {
 #endif
 
-bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, const char *creatorName, const char *a11, int *playerID);
+bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, char *GameTemplateData, int GameTemplateSize, int *playerID);
 bool SNetDestroy();
 
 /*  SNetDropPlayer @ 106
@@ -155,9 +155,8 @@ bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool
-    SNetGetTurnsInTransit(
-        DWORD *turns);
+bool SNetGetTurnsInTransit(
+    DWORD *turns);
 
 // Network provider structures
 typedef struct _client_info {
@@ -185,7 +184,7 @@ typedef struct _user_info {
 	DWORD dwUnknown;
 } user_info;
 
-bool SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, char *userStats, int *playerid);
+bool SNetJoinGame(char *gameName, char *gamePassword, int *playerid);
 
 /*  SNetLeaveGame @ 119
  *
@@ -198,11 +197,10 @@ bool SNetJoinGame(int id, char *gameName, char *gamePassword, char *playerName, 
  */
 bool SNetLeaveGame(int type);
 
-bool SNetPerformUpgrade(DWORD *upgradestatus);
 bool SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
 bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
 
-typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
+typedef void (*SEVTHANDLER)(struct _SNETEVENT *);
 
 /*  SNetSendMessage @ 127
  *
@@ -222,10 +220,10 @@ typedef void(*SEVTHANDLER)(struct _SNETEVENT *);
 bool SNetSendMessage(int playerID, void *data, unsigned int databytes);
 
 // Macro values to target specific players
-#define SNPLAYER_ALL    -1
+#define SNPLAYER_ALL -1
 #define SNPLAYER_OTHERS -2
 
-#define MPQ_FLAG_READ_ONLY 1
+#define MPQ_OPEN_READ_ONLY 0x00000100
 #define SFILE_OPEN_FROM_MPQ 0
 #define SFILE_OPEN_LOCAL_FILE 0xFFFFFFFF
 
@@ -250,7 +248,7 @@ bool WINAPI SFileCloseArchive(HANDLE hArchive);
 bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
 bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, LONG *lpDistanceToMoveHigh);
 DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
-DWORD WINAPI SFileSetFilePointer(HANDLE, int, int*, int);
+DWORD WINAPI SFileSetFilePointer(HANDLE, int, int *, int);
 bool WINAPI SFileCloseFile(HANDLE hFile);
 
 /*  SBmpLoadImage @ 323
@@ -267,15 +265,14 @@ bool WINAPI SFileCloseFile(HANDLE hFile);
  *
  *  Returns true if the image was supported and loaded correctly, false otherwise.
  */
-bool
-    SBmpLoadImage(
-        const char *pszFileName,
-        SDL_Color *pPalette,
-        BYTE *pBuffer,
-        DWORD dwBuffersize,
-        DWORD *pdwWidth,
-        DWORD *pdwHeight,
-        DWORD *pdwBpp);
+bool SBmpLoadImage(
+    const char *pszFileName,
+    SDL_Color *pPalette,
+    BYTE *pBuffer,
+    DWORD dwBuffersize,
+    DWORD *pdwWidth,
+    DWORD *pdwHeight,
+    DWORD *pdwBpp);
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue);
@@ -285,9 +282,6 @@ void SaveIni();
 int getIniInt(const char *keyname, const char *valuename, int defaultValue);
 void setIniInt(const char *keyname, const char *valuename, int value);
 void setIniFloat(const char *keyname, const char *valuename, float value);
-
-void SVidPlayBegin(const char *filename, int flags, HANDLE *video);
-void SVidPlayEnd(HANDLE video);
 
 // These error codes are used and returned by StormLib.
 // See StormLib/src/StormPort.h
@@ -318,11 +312,10 @@ DWORD SErrGetLastError();
 void SErrSetLastError(DWORD dwErrCode);
 
 // Values for dwErrCode
-#define STORM_ERROR_GAME_TERMINATED              0x85100069
-#define STORM_ERROR_INVALID_PLAYER               0x8510006a
-#define STORM_ERROR_NO_MESSAGES_WAITING          0x8510006b
-#define STORM_ERROR_NOT_IN_GAME                  0x85100070
-#define STORM_ERROR_REQUIRES_UPGRADE             0x85100077
+#define STORM_ERROR_GAME_TERMINATED 0x85100069
+#define STORM_ERROR_INVALID_PLAYER 0x8510006a
+#define STORM_ERROR_NO_MESSAGES_WAITING 0x8510006b
+#define STORM_ERROR_NOT_IN_GAME 0x85100070
 
 /*  SStrCopy @ 501
  *
@@ -337,12 +330,11 @@ void SErrSetLastError(DWORD dwErrCode);
 void SStrCopy(char *dest, const char *src, int max_length);
 
 bool SFileSetBasePath(const char *);
-bool SVidPlayContinue(void);
 bool SNetGetOwnerTurnsWaiting(DWORD *);
 bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 bool SNetSetBasePlayer(int);
-int SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
+bool SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
 int SNetGetProviderCaps(struct _SNETCAPS *);
 bool SFileEnableDirectAccess(bool enable);
 
@@ -354,18 +346,18 @@ bool SFileEnableDirectAccess(bool enable);
 // Sets the file's 64-bit seek position.
 inline std::uint64_t SFileSetFilePointer(HANDLE hFile, std::int64_t offset, int whence)
 {
-    int high = static_cast<std::uint64_t>(offset) >> 32;
-    int low = static_cast<int>(offset);
-    low = SFileSetFilePointer(hFile, low, &high, whence);
-    return (static_cast<std::uint64_t>(high) << 32) | low;
+	int high = static_cast<std::uint64_t>(offset) >> 32;
+	int low = static_cast<int>(offset);
+	low = SFileSetFilePointer(hFile, low, &high, whence);
+	return (static_cast<std::uint64_t>(high) << 32) | low;
 }
 
 // Returns the current 64-bit file seek position.
 inline std::uint64_t SFileGetFilePointer(HANDLE hFile)
 {
-    // We use `SFileSetFilePointer` with offset 0 to get the current position
-    // because there is no `SFileGetFilePointer`.
-    return SFileSetFilePointer(hFile, 0, DVL_FILE_CURRENT);
+	// We use `SFileSetFilePointer` with offset 0 to get the current position
+	// because there is no `SFileGetFilePointer`.
+	return SFileSetFilePointer(hFile, 0, DVL_FILE_CURRENT);
 }
 
 #endif

@@ -14,4 +14,4 @@ void TownOpenHive();
 void TownOpenGrave();
 void CreateTown(lvl_entry entry);
 
-}
+} // namespace devilution

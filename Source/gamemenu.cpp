@@ -27,10 +27,8 @@ void gamemenu_restart_town(bool bActivate);
 void gamemenu_options(bool bActivate);
 void gamemenu_music_volume(bool bActivate);
 void gamemenu_sound_volume(bool bActivate);
-void gamemenu_loadjog(bool bActivate);
 void gamemenu_gamma(bool bActivate);
 void gamemenu_speed(bool bActivate);
-void gamemenu_color_cycling(bool bActivate);
 
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
@@ -41,7 +39,7 @@ TMenuItem sgSingleMenu[] = {
 	{ GMENU_ENABLED, "New Game",      &gamemenu_new_game   },
 	{ GMENU_ENABLED, "Load Game",     &gamemenu_load_game  },
 	{ GMENU_ENABLED, "Quit Game",     &gamemenu_quit_game  },
-	{ GMENU_ENABLED, NULL,            NULL }
+	{ GMENU_ENABLED, nullptr,            nullptr }
 	// clang-format on
 };
 /** Contains the game menu items of the multi player menu. */
@@ -52,20 +50,18 @@ TMenuItem sgMultiMenu[] = {
 	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
 	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
 	{ GMENU_ENABLED, "Quit Game",       &gamemenu_quit_game    },
-	{ GMENU_ENABLED, NULL,              NULL                   },
+	{ GMENU_ENABLED, nullptr,              nullptr                   },
 	// clang-format on
 };
 TMenuItem sgOptionsMenu[] = {
 	// clang-format off
 //	  dwFlags,                      pszStr,          fnMenu
-	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
-	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
+	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,            &gamemenu_music_volume  },
+	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,            &gamemenu_sound_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
-//	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
 	{ GMENU_ENABLED | GMENU_SLIDER, "Speed",         &gamemenu_speed         },
-//	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_loadjog       },
 	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous      },
-	{ GMENU_ENABLED               , NULL,            NULL                    },
+	{ GMENU_ENABLED               , nullptr,            nullptr                    },
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
@@ -78,14 +74,8 @@ const char *const sound_toggle_names[] = {
 	"Sound",
 	"Sound Disabled",
 };
-const char *jogging_toggle_names[] = {
-	"Jog",
-	"Walk",
-};
-/** Specifies the menu names for color cycling disabled and enabled. */
-const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
-void gamemenu_update_single(TMenuItem *pMenuItems)
+void gamemenu_update_single()
 {
 	bool enable;
 
@@ -98,7 +88,7 @@ void gamemenu_update_single(TMenuItem *pMenuItems)
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
 
-void gamemenu_update_multi(TMenuItem *pMenuItems)
+void gamemenu_update_multi()
 {
 	gmenu_enable(&sgMultiMenu[2], deathflag);
 }
@@ -215,13 +205,6 @@ void gamemenu_get_sound()
 	gamemenu_sound_music_toggle(sound_toggle_names, &sgOptionsMenu[1], sound_get_or_set_sound_volume(1));
 }
 
-void gamemenu_jogging()
-{
-	gmenu_slider_steps(&sgOptionsMenu[3], 2);
-	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, sgOptions.Gameplay.bRunInTown);
-	sgOptionsMenu[3].pszStr = jogging_toggle_names[!sgOptions.Gameplay.bRunInTown ? 1 : 0];
-}
-
 void gamemenu_get_gamma()
 {
 	gmenu_slider_steps(&sgOptionsMenu[2], 15);
@@ -250,11 +233,6 @@ void gamemenu_get_speed()
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 }
 
-void gamemenu_get_color_cycling()
-{
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
-}
-
 static int gamemenu_slider_gamma()
 {
 	return gmenu_slider_get(&sgOptionsMenu[2], 30, 100);
@@ -264,11 +242,9 @@ void gamemenu_options(bool bActivate)
 {
 	gamemenu_get_music();
 	gamemenu_get_sound();
-	//gamemenu_jogging();
 	gamemenu_get_gamma();
 	gamemenu_get_speed();
-	//gamemenu_get_color_cycling();
-	gmenu_set_items(sgOptionsMenu, NULL);
+	gmenu_set_items(sgOptionsMenu, nullptr);
 }
 
 void gamemenu_music_volume(bool bActivate)
@@ -345,16 +321,6 @@ void gamemenu_sound_volume(bool bActivate)
 	gamemenu_get_sound();
 }
 
-void gamemenu_loadjog(bool bActivate)
-{
-	if (!gbIsMultiplayer) {
-		sgOptions.Gameplay.bRunInTown = !sgOptions.Gameplay.bRunInTown;
-		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown;
-		PlaySFX(IS_TITLEMOV);
-		gamemenu_jogging();
-	}
-}
-
 void gamemenu_gamma(bool bActivate)
 {
 	int gamma;
@@ -388,12 +354,6 @@ void gamemenu_speed(bool bActivate)
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 }
 
-void gamemenu_color_cycling(bool bActivate)
-{
-	sgOptions.Graphics.bColorCycling = !sgOptions.Graphics.bColorCycling;
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[sgOptions.Graphics.bColorCycling ? 1 : 0];
-}
-
 } // namespace
 
 void gamemenu_on()
@@ -408,7 +368,7 @@ void gamemenu_on()
 
 void gamemenu_off()
 {
-	gmenu_set_items(NULL, NULL);
+	gmenu_set_items(nullptr, nullptr);
 }
 
 void gamemenu_handle_previous()

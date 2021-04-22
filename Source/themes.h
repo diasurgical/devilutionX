@@ -25,4 +25,4 @@ void InitThemes();
 void HoldThemeRooms();
 void CreateThemeRooms();
 
-}
+} // namespace devilution

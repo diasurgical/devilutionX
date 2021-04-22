@@ -342,19 +342,19 @@ public:
 
 inline std::unique_ptr<packet> packet_factory::make_packet(buffer_t buf)
 {
-	std::unique_ptr<packet_in> ret(new packet_in(key));
+	auto ret = std::make_unique<packet_in>(key);
 	ret->create(std::move(buf));
 	ret->decrypt();
-	return std::unique_ptr<packet>(std::move(ret));
+	return ret;
 }
 
 template <packet_type t, typename... Args>
 std::unique_ptr<packet> packet_factory::make_packet(Args... args)
 {
-	std::unique_ptr<packet_out> ret(new packet_out(key));
+	auto ret = std::make_unique<packet_out>(key);
 	ret->create<t>(args...);
 	ret->encrypt();
-	return std::unique_ptr<packet>(std::move(ret));
+	return ret;
 }
 
 } // namespace net

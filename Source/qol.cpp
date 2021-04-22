@@ -4,10 +4,12 @@
  * Quality of life features
  */
 
+#include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "cursor.h"
-#include "DiabloUI/art_draw.h"
 #include "options.h"
+#include "qol/common.h"
+#include "qol/xpbar.h"
 
 namespace devilution {
 namespace {
@@ -29,11 +31,6 @@ int GetTextWidth(const char *s)
 	return l;
 }
 
-void FastDrawHorizLine(CelOutputBuffer out, int x, int y, int width, BYTE col)
-{
-	memset(out.at(x, y), col, width);
-}
-
 void FastDrawVertLine(CelOutputBuffer out, int x, int y, int height, BYTE col)
 {
 	BYTE *p = out.at(x, y);
@@ -43,19 +40,14 @@ void FastDrawVertLine(CelOutputBuffer out, int x, int y, int height, BYTE col)
 	}
 }
 
-void FillRect(CelOutputBuffer out, int x, int y, int width, int height, BYTE col)
-{
-	for (int j = 0; j < height; j++) {
-		FastDrawHorizLine(out, x, y + j, width, col);
-	}
-}
-
 } // namespace
 
 void FreeQol()
 {
 	delete qolArt;
 	qolArt = nullptr;
+
+	FreeXPBar();
 }
 
 void InitQol()
@@ -72,9 +64,11 @@ void InitQol()
 			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
 		}
 	}
+
+	InitXPBar();
 }
 
-void DrawMonsterHealthBar(CelOutputBuffer out)
+void DrawMonsterHealthBar(const CelOutputBuffer &out)
 {
 	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;
@@ -152,51 +146,9 @@ void DrawMonsterHealthBar(CelOutputBuffer out)
 	}
 }
 
-void DrawXPBar(CelOutputBuffer out)
-{
-	if (!sgOptions.Gameplay.bExperienceBar)
-		return;
-
-	int barWidth = 306;
-	int barHeight = 5;
-	int yPos = gnScreenHeight - 9;                 // y position of xp bar
-	int xPos = (gnScreenWidth - barWidth) / 2 + 5; // x position of xp bar
-	int dividerHeight = 3;
-	int numDividers = 10;
-	int barColor = 198;
-	int emptyBarColor = 0;
-	int frameColor = 196;
-	bool space = true; // add 1 pixel separator on top/bottom of the bar
-
-	PrintGameStr(out, xPos - 22, yPos + 6, "XP", COL_WHITE);
-	int charLevel = plr[myplr]._pLevel;
-	if (charLevel == MAXCHARLEVEL - 1)
-		return;
-
-	int prevXp = ExpLvlsTbl[charLevel - 1];
-	if (plr[myplr]._pExperience < prevXp)
-		return;
-
-	Uint64 prevXpDelta_1 = plr[myplr]._pExperience - prevXp;
-	int prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
-	int visibleBar = barWidth * prevXpDelta_1 / prevXpDelta;
-
-	FillRect(out, xPos, yPos, barWidth, barHeight, emptyBarColor);
-	FastDrawHorizLine(out, xPos - 1, yPos - 1, barWidth + 2, frameColor);
-	FastDrawHorizLine(out, xPos - 1, yPos + barHeight, barWidth + 2, frameColor);
-	FastDrawVertLine(out, xPos - 1, yPos - 1, barHeight + 2, frameColor);
-	FastDrawVertLine(out, xPos + barWidth, yPos - 1, barHeight + 2, frameColor);
-	for (int i = 1; i < numDividers; i++)
-		FastDrawVertLine(out, xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight + 3, barHeight, 245);
-
-	FillRect(out, xPos, yPos + (space ? 1 : 0), visibleBar, barHeight - (space ? 2 : 0), barColor);
-}
-
 bool HasRoomForGold()
 {
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		int idx = plr[myplr].InvGrid[i];
-
+	for (int idx : plr[myplr].InvGrid) {
 		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
 		if (idx < 0)
 			continue;

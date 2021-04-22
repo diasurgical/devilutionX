@@ -12,7 +12,7 @@
 namespace devilution {
 
 LightListStruct VisionList[MAXVISION];
-BYTE lightactive[MAXLIGHTS];
+uint8_t lightactive[MAXLIGHTS];
 LightListStruct LightList[MAXLIGHTS];
 int numlights;
 BYTE lightradius[16][128];
@@ -488,8 +488,8 @@ char GetLight(int x, int y)
 {
 	if (LoadMapObjsFlag)
 		return dPreLight[x][y];
-	else
-		return dLight[x][y];
+
+	return dLight[x][y];
 }
 
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
@@ -904,13 +904,13 @@ void MakeLightTable()
 		tbl += 240;
 	}
 
-	trn = LoadFileInMem("PlrGFX\\Infra.TRN", NULL);
+	trn = LoadFileInMem("PlrGFX\\Infra.TRN", nullptr);
 	for (i = 0; i < 256; i++) {
 		*tbl++ = trn[i];
 	}
 	mem_free_dbg(trn);
 
-	trn = LoadFileInMem("PlrGFX\\Stone.TRN", NULL);
+	trn = LoadFileInMem("PlrGFX\\Stone.TRN", nullptr);
 	for (i = 0; i < 256; i++) {
 		*tbl++ = trn[i];
 	}

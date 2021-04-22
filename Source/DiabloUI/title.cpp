@@ -1,12 +1,13 @@
+#include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/menu_controls.h"
-#include "DiabloUI/diabloui.h"
 
 namespace devilution {
+namespace {
 
 std::vector<UiItemBase *> vecTitleScreen;
 
-void title_Load()
+void TitleLoad()
 {
 	if (gbIsHellfire) {
 		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
@@ -17,25 +18,26 @@ void title_Load()
 	}
 }
 
-void title_Free()
+void TitleFree()
 {
 	ArtBackground.Unload();
 	ArtBackgroundWidescreen.Unload();
 	ArtLogos[LOGO_BIG].Unload();
 
-	for (std::size_t i = 0; i < vecTitleScreen.size(); i++) {
-		UiItemBase *pUIItem = vecTitleScreen[i];
+	for (auto pUIItem : vecTitleScreen) {
 		delete pUIItem;
 	}
 	vecTitleScreen.clear();
 }
 
+} // namespace
+
 void UiTitleDialog()
 {
 	if (gbIsHellfire) {
 		SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
-		vecTitleScreen.push_back(new UiImage(&ArtBackgroundWidescreen, /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
-		vecTitleScreen.push_back(new UiImage(&ArtBackground, /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+		vecTitleScreen.push_back(new UiImage(&ArtBackgroundWidescreen, /*bAnimated=*/true, /*iFrame=*/0, rect, UIS_CENTER));
+		vecTitleScreen.push_back(new UiImage(&ArtBackground, /*bAnimated=*/true, /*iFrame=*/0, rect, UIS_CENTER));
 	} else {
 		UiAddBackground(&vecTitleScreen);
 		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
@@ -43,7 +45,7 @@ void UiTitleDialog()
 		SDL_Rect rect = { (Sint16)(PANEL_LEFT + 49), (Sint16)(UI_OFFSET_Y + 410), 550, 26 };
 		vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));
 	}
-	title_Load();
+	TitleLoad();
 
 	bool endMenu = false;
 	Uint32 timeOut = SDL_GetTicks() + 7000;
@@ -53,7 +55,7 @@ void UiTitleDialog()
 		UiRenderItems(vecTitleScreen);
 		UiFadeIn();
 
-		while (SDL_PollEvent(&event)) {
+		while (SDL_PollEvent(&event) != 0) {
 			if (GetMenuAction(event) != MenuAction_NONE) {
 				endMenu = true;
 				break;
@@ -68,7 +70,7 @@ void UiTitleDialog()
 		}
 	}
 
-	title_Free();
+	TitleFree();
 }
 
 void UiSetSpawned(bool bSpawned)

@@ -145,7 +145,7 @@ if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
@@ -295,6 +295,8 @@ set(devilutionx_SRCS
   Source/controls/modifier_hints.cpp
   Source/controls/plrctrls.cpp
   Source/controls/touch.cpp
+  Source/qol/common.cpp
+  Source/qol/xpbar.cpp
   Source/utils/console.cpp
   Source/utils/display.cpp
   Source/utils/file_util.cpp
@@ -332,6 +334,7 @@ set(devilutionx_SRCS
   Source/storm/storm.cpp
   Source/storm/storm_net.cpp
   Source/storm/storm_sdl_rw.cpp
+  Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp
   Source/devilutionx.exe.manifest
   Packaging/macOS/AppIcon.icns
@@ -493,6 +496,7 @@ foreach(
   TTF_FONT_NAME
   SDL1_VIDEO_MODE_BPP
   SDL1_VIDEO_MODE_FLAGS
+  SDL1_FORCE_SVID_VIDEO_MODE
   HAS_KBCTRL
   KBCTRL_BUTTON_DPAD_LEFT
   KBCTRL_BUTTON_DPAD_RIGHT
@@ -506,6 +510,8 @@ foreach(
   KBCTRL_BUTTON_RIGHTSTICK
   KBCTRL_BUTTON_RIGHTSHOULDER
   KBCTRL_BUTTON_LEFTSHOULDER
+  KBCTRL_BUTTON_TRIGGERLEFT
+  KBCTRL_BUTTON_TRIGGERRIGHT
   KBCTRL_BUTTON_START
   KBCTRL_BUTTON_BACK
   KBCTRL_IGNORE_1

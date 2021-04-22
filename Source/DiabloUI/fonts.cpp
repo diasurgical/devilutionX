@@ -6,7 +6,7 @@
 
 namespace devilution {
 
-TTF_Font *font = NULL;
+TTF_Font *font = nullptr;
 BYTE *FontTables[4];
 Art ArtFonts[4][2];
 /** This is so we know ttf has been init when we get to the diablo_deinit() function */
@@ -23,10 +23,10 @@ void LoadArtFont(const char *pszFile, int size, int color)
 
 void LoadArtFonts()
 {
-	FontTables[AFT_SMALL] = LoadFileInMem("ui_art\\font16.bin", 0);
-	FontTables[AFT_MED] = LoadFileInMem("ui_art\\font24.bin", 0);
-	FontTables[AFT_BIG] = LoadFileInMem("ui_art\\font30.bin", 0);
-	FontTables[AFT_HUGE] = LoadFileInMem("ui_art\\font42.bin", 0);
+	FontTables[AFT_SMALL] = LoadFileInMem("ui_art\\font16.bin", nullptr);
+	FontTables[AFT_MED] = LoadFileInMem("ui_art\\font24.bin", nullptr);
+	FontTables[AFT_BIG] = LoadFileInMem("ui_art\\font30.bin", nullptr);
+	FontTables[AFT_HUGE] = LoadFileInMem("ui_art\\font42.bin", nullptr);
 	LoadArtFont("ui_art\\font16s.pcx", AFT_SMALL, AFC_SILVER);
 	LoadArtFont("ui_art\\font16g.pcx", AFT_SMALL, AFC_GOLD);
 	LoadArtFont("ui_art\\font24s.pcx", AFT_MED, AFC_SILVER);
@@ -46,18 +46,18 @@ void UnloadArtFonts()
 	ArtFonts[AFT_BIG][AFC_GOLD].Unload();
 	ArtFonts[AFT_HUGE][AFC_GOLD].Unload();
 	mem_free_dbg(FontTables[AFT_SMALL]);
-	FontTables[AFT_SMALL] = NULL;
+	FontTables[AFT_SMALL] = nullptr;
 	mem_free_dbg(FontTables[AFT_MED]);
-	FontTables[AFT_MED] = NULL;
+	FontTables[AFT_MED] = nullptr;
 	mem_free_dbg(FontTables[AFT_BIG]);
-	FontTables[AFT_BIG] = NULL;
+	FontTables[AFT_BIG] = nullptr;
 	mem_free_dbg(FontTables[AFT_HUGE]);
-	FontTables[AFT_HUGE] = NULL;
+	FontTables[AFT_HUGE] = nullptr;
 }
 
 void LoadTtfFont()
 {
-	if (!TTF_WasInit()) {
+	if (TTF_WasInit() == 0) {
 		if (TTF_Init() == -1) {
 			SDL_Log("TTF_Init: %s", TTF_GetError());
 			diablo_quit(1);
@@ -65,27 +65,27 @@ void LoadTtfFont()
 		was_fonts_init = true;
 	}
 
-	std::string ttf_font_path = GetTtfPath() + GetTtfName();
+	std::string ttfFontPath = GetTtfPath() + GetTtfName();
 #ifdef __linux__
-	if (!FileExists(ttf_font_path.c_str())) {
-		ttf_font_path = "/usr/share/fonts/truetype/" + GetTtfName();
+	if (!FileExists(ttfFontPath.c_str())) {
+		ttfFontPath = "/usr/share/fonts/truetype/" + GetTtfName();
 	}
 #endif
-	font = TTF_OpenFont(ttf_font_path.c_str(), 17);
-	if (font == NULL) {
+	font = TTF_OpenFont(ttfFontPath.c_str(), 17);
+	if (font == nullptr) {
 		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
 		return;
 	}
 
-	TTF_SetFontKerning(font, false);
+	TTF_SetFontKerning(font, 0);
 	TTF_SetFontHinting(font, TTF_HINTING_MONO);
 }
 
 void UnloadTtfFont()
 {
-	if (font && TTF_WasInit())
+	if (font != nullptr && TTF_WasInit() != 0)
 		TTF_CloseFont(font);
-	font = NULL;
+	font = nullptr;
 }
 
 void FontsCleanup()

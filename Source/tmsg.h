@@ -24,9 +24,9 @@ struct TMsg {
 };
 #pragma pack(pop)
 
-int tmsg_get(Uint8 *pbMsg, Uint32 dwMaxLen);
+int tmsg_get(Uint8 *pbMsg);
 void tmsg_add(Uint8 *pbMsg, Uint8 bLen);
 void tmsg_start();
 void tmsg_cleanup();
 
-}
+} // namespace devilution

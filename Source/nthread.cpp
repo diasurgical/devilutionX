@@ -30,7 +30,7 @@ int last_tick;
 float gfProgressToNextGameTick = 0.0f;
 
 /* data */
-static SDL_Thread *sghThread = NULL;
+static SDL_Thread *sghThread = nullptr;
 
 void nthread_terminate_game(const char *pszFcn)
 {
@@ -39,7 +39,8 @@ void nthread_terminate_game(const char *pszFcn)
 	sErr = SErrGetLastError();
 	if (sErr == STORM_ERROR_INVALID_PLAYER) {
 		return;
-	} else if (sErr == STORM_ERROR_GAME_TERMINATED) {
+	}
+	if (sErr == STORM_ERROR_GAME_TERMINATED) {
 		gbGameDestroyed = true;
 	} else if (sErr == STORM_ERROR_NOT_IN_GAME) {
 		gbGameDestroyed = true;
@@ -103,17 +104,17 @@ bool nthread_recv_turns(bool *pfSendAsync)
 		sgbSyncCountdown = 1;
 		sgbPacketCountdown = 1;
 		return false;
-	} else {
-		if (!sgbTicsOutOfSync) {
-			sgbTicsOutOfSync = true;
-			last_tick = SDL_GetTicks();
-		}
-		sgbSyncCountdown = 4;
-		multi_msg_countdown();
-		*pfSendAsync = true;
-		last_tick += gnTickDelay;
-		return true;
 	}
+	if (!sgbTicsOutOfSync) {
+		sgbTicsOutOfSync = true;
+		last_tick = SDL_GetTicks();
+	}
+	sgbSyncCountdown = 4;
+	multi_msg_countdown();
+	*pfSendAsync = true;
+	last_tick += gnTickDelay;
+	return true;
+
 #endif
 }
 
@@ -123,7 +124,7 @@ static unsigned int nthread_handler(void *data)
 	bool received;
 
 	if (nthread_should_run) {
-		while (1) {
+		while (true) {
 			sgMemCrit.Enter();
 			if (!nthread_should_run)
 				break;
@@ -177,7 +178,7 @@ void nthread_start(bool set_turn_upper_bit)
 	largestMsgSize = 512;
 	if (caps.maxmessagesize < 0x200)
 		largestMsgSize = caps.maxmessagesize;
-	gdwDeltaBytesSec = caps.bytessec >> 2;
+	gdwDeltaBytesSec = caps.bytessec / 4;
 	gdwLargestMsgSize = largestMsgSize;
 	gdwNormalMsgSize = caps.bytessec * sgbNetUpdateRate / 20;
 	gdwNormalMsgSize *= 3;
@@ -196,7 +197,7 @@ void nthread_start(bool set_turn_upper_bit)
 		sgMemCrit.Enter();
 		nthread_should_run = true;
 		sghThread = CreateThread(nthread_handler, &glpNThreadId);
-		if (sghThread == NULL) {
+		if (sghThread == nullptr) {
 			err2 = SDL_GetError();
 			app_fatal("nthread2:\n%s", err2);
 		}
@@ -209,17 +210,17 @@ void nthread_cleanup()
 	gdwTurnsInTransit = 0;
 	gdwNormalMsgSize = 0;
 	gdwLargestMsgSize = 0;
-	if (sghThread != NULL && glpNThreadId != SDL_GetThreadID(NULL)) {
+	if (sghThread != nullptr && glpNThreadId != SDL_GetThreadID(nullptr)) {
 		if (!sgbThreadIsRunning)
 			sgMemCrit.Leave();
-		SDL_WaitThread(sghThread, NULL);
-		sghThread = NULL;
+		SDL_WaitThread(sghThread, nullptr);
+		sghThread = nullptr;
 	}
 }
 
 void nthread_ignore_mutex(bool bStart)
 {
-	if (sghThread != NULL) {
+	if (sghThread != nullptr) {
 		if (bStart)
 			sgMemCrit.Leave();
 		else

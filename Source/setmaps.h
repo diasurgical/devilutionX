@@ -13,4 +13,4 @@ void LoadSetMap();
 /* rdata */
 extern const char *const quest_level_names[];
 
-}
+} // namespace devilution

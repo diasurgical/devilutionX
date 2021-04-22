@@ -1,8 +1,8 @@
 #include "DiabloUI/selok.h"
 
-#include "control.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
+#include "control.h"
 
 namespace devilution {
 
@@ -12,7 +12,7 @@ char dialogText[256];
 
 } // namespace
 
-int selok_endMenu;
+bool selok_endMenu;
 
 std::vector<UiListItem *> vecSelOkDialogItems;
 std::vector<UiItemBase *> vecSelOkDialog;
@@ -23,15 +23,12 @@ void selok_Free()
 {
 	ArtBackground.Unload();
 
-	for (std::size_t i = 0; i < vecSelOkDialogItems.size(); i++) {
-		UiListItem *pUIListItem = vecSelOkDialogItems[i];
-		if (pUIListItem)
-			delete pUIListItem;
+	for (auto pUIListItem : vecSelOkDialogItems) {
+		delete pUIListItem;
 	}
 	vecSelOkDialogItems.clear();
 
-	for (std::size_t i = 0; i < vecSelOkDialog.size(); i++) {
-		UiItemBase *pUIItem = vecSelOkDialog[i];
+	for (auto pUIItem : vecSelOkDialog) {
 		delete pUIItem;
 	}
 	vecSelOkDialog.clear();
@@ -62,7 +59,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	UiAddBackground(&vecSelOkDialog);
 	UiAddLogo(&vecSelOkDialog);
 
-	if (title != NULL) {
+	if (title != nullptr) {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
 		vecSelOkDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
@@ -79,7 +76,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	strncpy(dialogText, body, sizeof(dialogText) - 1);
 	WordWrapArtStr(dialogText, MESSAGE_WIDTH);
 
-	UiInitList(0, NULL, selok_Select, selok_Esc, vecSelOkDialog, false, NULL);
+	UiInitList(0, nullptr, selok_Select, selok_Esc, vecSelOkDialog, false, nullptr);
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {

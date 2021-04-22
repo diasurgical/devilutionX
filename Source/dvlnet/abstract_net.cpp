@@ -2,34 +2,32 @@
 
 #include "utils/stubs.h"
 #ifndef NONET
-#include "dvlnet/cdwrap.h"
-#include "dvlnet/tcp_client.h"
 #include "dvlnet/base_protocol.h"
+#include "dvlnet/cdwrap.h"
 #include "dvlnet/protocol_zt.h"
+#include "dvlnet/tcp_client.h"
 #endif
 #include "dvlnet/loopback.h"
 #include "storm/storm.h"
 
-namespace devilution {
-namespace net {
+namespace devilution::net {
 
 std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 {
 #ifdef NONET
-	return std::unique_ptr<abstract_net>(new loopback);
+	return std::make_unique<loopback>();
 #else
 	switch (provider) {
 	case SELCONN_TCP:
-		return std::unique_ptr<abstract_net>(new cdwrap<tcp_client>);
+		return std::make_unique<cdwrap<tcp_client>>();
 	case SELCONN_ZT:
-		return std::unique_ptr<abstract_net>(new cdwrap<base_protocol<protocol_zt>>);
+		return std::make_unique<cdwrap<base_protocol<protocol_zt>>>();
 	case SELCONN_LOOPBACK:
-		return std::unique_ptr<abstract_net>(new loopback);
+		return std::make_unique<loopback>();
 	default:
 		ABORT();
 	}
 #endif
 }
 
-} // namespace net
-} // namespace devilution
+} // namespace devilution::net

@@ -55,4 +55,4 @@ typename enum_values<T>::Iterator end(enum_values<T>)
 	return typename enum_values<T>::Iterator(static_cast<typename std::underlying_type<T>::type>(T::LAST) + 1);
 }
 
-}
+} // namespace devilution
