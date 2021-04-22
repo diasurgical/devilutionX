@@ -448,7 +448,7 @@ void selgame_Password_Select(int value)
 	m_game_data->bTheoQuest = sgOptions.Gameplay.bTheoQuest;
 	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest;
 
-	if (SNetCreateGame(nullptr, selgame_Password, (char *)m_game_data, sizeof(m_game_data), gdwPlayerId)) {
+	if (SNetCreateGame(nullptr, selgame_Password, (char *)m_game_data, sizeof(*m_game_data), gdwPlayerId)) {
 		UiInitList_clear();
 		selgame_endMenu = true;
 	} else {
