@@ -53,7 +53,6 @@ struct _uidefaultstats {
 };
 
 struct _uiheroinfo {
-	struct _uiheroinfo *next;
 	char name[16];
 	Uint16 level;
 	HeroClass heroclass;
@@ -62,8 +61,7 @@ struct _uiheroinfo {
 	Uint16 magic;
 	Uint16 dexterity;
 	Uint16 vitality;
-	Sint32 gold;
-	Sint32 hassaved;
+	bool hassaved;
 	bool spawned;
 };
 
@@ -114,9 +112,8 @@ bool UiSoundCallback(int a1, int type, int a3);
 bool UiDrawDescCallback(int game_type, DWORD color, const char *lpString, char *a4, int a5, UINT align, time_t a7, HDC *a8);
 bool UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6);
 bool UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp);
-int UiSelectGame(GameData *gameData, int *playerId);
-int UiSelectProvider(GameData *gameData);
-void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type);
+bool UiSelectGame(GameData *gameData, int *playerId);
+bool UiSelectProvider(GameData *gameData);
 void UiFadeIn();
 void UiHandleEvents(SDL_Event *event);
 bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items);

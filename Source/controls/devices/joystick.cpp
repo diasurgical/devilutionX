@@ -208,7 +208,7 @@ bool Joystick::IsPressed(ControllerButton button) const
 	if (IsHatButtonPressed(button))
 		return true;
 	const int joyButton = ToSdlJoyButton(button);
-	return joyButton != -1 && SDL_JoystickGetButton(sdl_joystick_, joyButton);
+	return joyButton != -1 && SDL_JoystickGetButton(sdl_joystick_, joyButton) != 0;
 }
 
 bool Joystick::ProcessAxisMotion(const SDL_Event &event)

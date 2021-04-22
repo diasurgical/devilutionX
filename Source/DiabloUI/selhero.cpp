@@ -150,7 +150,7 @@ void SelheroListFocus(int value)
 	const auto index = static_cast<std::size_t>(value);
 	SelheroScrollIntoView(index);
 	int baseFlags = UIS_CENTER | UIS_BIG;
-	if (selhero_SaveCount && index < selhero_SaveCount) {
+	if (selhero_SaveCount != 0 && index < selhero_SaveCount) {
 		memcpy(&selhero_heroInfo, &selhero_heros[index], sizeof(selhero_heroInfo));
 		SelheroSetStats();
 		SELLIST_DIALOG_DELETE_BUTTON->m_iFlags = baseFlags | UIS_GOLD;
@@ -281,7 +281,7 @@ bool ShouldPrefillHeroName()
 void SelheroClassSelectorSelect(int value)
 {
 	auto hClass = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
-	if (gbSpawned && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && !hfbard_mpq))) {
+	if (gbSpawned && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && hfbard_mpq == nullptr))) {
 		ArtBackground.Unload();
 		UiSelOkDialog(nullptr, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
@@ -320,7 +320,7 @@ void SelheroClassSelectorEsc()
 	SelheroFreeDlgItems();
 	SelheroFreeListItems();
 
-	if (selhero_SaveCount) {
+	if (selhero_SaveCount != 0) {
 		selhero_List_Init();
 		return;
 	}
@@ -595,7 +595,7 @@ static void UiSelHeroDialog(
 
 		selhero_Init();
 
-		if (selhero_SaveCount) {
+		if (selhero_SaveCount != 0) {
 			selhero_List_Init();
 		} else {
 			SelheroListSelect(selhero_SaveCount);

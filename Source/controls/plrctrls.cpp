@@ -32,7 +32,7 @@ int speedspellcount = 0;
  */
 bool InGameMenu()
 {
-	return stextflag > 0
+	return stextflag != STORE_NONE
 	    || helpflag
 	    || talkflag
 	    || qtextflag
@@ -189,14 +189,14 @@ bool CanTargetMonster(int mi)
 {
 	const MonsterStruct &monst = monster[mi];
 
-	if (monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM))
+	if ((monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
 		return false;
 	if (monst._mhitpoints >> 6 <= 0) // dead
 		return false;
 
 	const int mx = monst._mx;
 	const int my = monst._my;
-	if (!(dFlags[mx][my] & BFLAG_LIT)) // not visible
+	if ((dFlags[mx][my] & BFLAG_LIT) == 0) // not visible
 		return false;
 	if (dMonster[mx][my] == 0)
 		return false;
@@ -336,7 +336,7 @@ void CheckPlayerNearby()
 		const int mx = plr[i]._pfutx;
 		const int my = plr[i]._pfuty;
 		if (dPlayer[mx][my] == 0
-		    || !(dFlags[mx][my] & BFLAG_LIT)
+		    || (dFlags[mx][my] & BFLAG_LIT) == 0
 		    || (plr[i]._pHitPoints == 0 && spl != SPL_RESURRECT))
 			continue;
 
@@ -961,7 +961,7 @@ void StoreSpellCoords()
 		}
 		std::uint64_t spell = 1;
 		for (int j = 1; j < MAX_SPELLS; j++) {
-			if ((spell & spells)) {
+			if ((spell & spells) != 0) {
 				speedspellscoords[speedspellcount] = { xo, yo };
 				++speedspellcount;
 				xo -= SPLICONLENGTH;
@@ -972,7 +972,7 @@ void StoreSpellCoords()
 			}
 			spell <<= 1;
 		}
-		if (spells && xo != endX)
+		if (spells != 0 && xo != endX)
 			xo -= SPLICONLENGTH;
 		if (xo < startX) {
 			xo = endX;

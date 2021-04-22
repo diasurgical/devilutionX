@@ -23,7 +23,7 @@ int _newlib_heap_size_user = 100 * 1024 * 1024;
 namespace devilution {
 
 /** True if the game is the current active window */
-int gbActive;
+bool gbActive;
 /** A handle to an hellfire.mpq archive. */
 HANDLE hellfire_mpq;
 /** The current input handler function */

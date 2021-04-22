@@ -18,7 +18,7 @@ namespace {
 
 SDL_bool CharacterIsDelimiter(char c, const char *delimiters)
 {
-	while (*delimiters) {
+	while (*delimiters != '\0') {
 		if (c == *delimiters)
 			return SDL_TRUE;
 		++delimiters;
@@ -37,7 +37,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	char *str, **strLines;
 
 	/* Get the dimensions of the text surface */
-	if ((TTF_SizeUTF8(font, text, &width, &height) < 0) || !width) {
+	if (TTF_SizeUTF8(font, text, &width, &height) < 0 || width == 0) {
 		TTF_SetError("Text has zero width");
 		return nullptr;
 	}
@@ -45,7 +45,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	std::size_t numLines = 1;
 	str = nullptr;
 	strLines = nullptr;
-	if (wrapLength > 0 && *text) {
+	if (wrapLength > 0 && *text != '\0') {
 		const char *wrapDelims = " \t\r\n";
 		int w, h;
 		char *spot, *tok, *nextTok, *end;
@@ -65,7 +65,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		end = str + strLen;
 		do {
 			strLines = (char **)SDL_realloc(strLines, (numLines + 1) * sizeof(*strLines));
-			if (!strLines) {
+			if (strLines == nullptr) {
 				TTF_SetError("Out of memory");
 				return nullptr;
 			}
@@ -87,11 +87,11 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 			/* Get the longest string that will fit in the desired space */
 			for (;;) {
 				/* Strip trailing whitespace */
-				while (spot > tok && CharacterIsDelimiter(spot[-1], wrapDelims)) {
+				while (spot > tok && CharacterIsDelimiter(spot[-1], wrapDelims) == SDL_TRUE) {
 					--spot;
 				}
 				if (spot == tok) {
-					if (CharacterIsDelimiter(*spot, wrapDelims)) {
+					if (CharacterIsDelimiter(*spot, wrapDelims) == SDL_TRUE) {
 						*spot = '\0';
 					}
 					break;
@@ -106,7 +106,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 				/* Back up and try again... */
 				*spot = delim;
 
-				while (spot > tok && !CharacterIsDelimiter(spot[-1], wrapDelims)) {
+				while (spot > tok && (CharacterIsDelimiter(spot[-1], wrapDelims) == SDL_FALSE)) {
 					--spot;
 				}
 				if (spot > tok) {
@@ -117,7 +117,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		} while (tok < end);
 	}
 
-	if (!strLines) {
+	if (strLines == nullptr) {
 		SDL_stack_free(str);
 		return TTF_RenderUTF8_Solid(font, text, fg);
 	}
@@ -125,7 +125,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	/* Create the target surface */
 	textbuf = SDL_CreateRGBSurface(SDL_SWSURFACE, (numLines > 1) ? wrapLength : width, height * numLines + (lineSpace * (numLines - 1)), 8, 0, 0, 0, 0);
 	if (textbuf == nullptr) {
-		if (strLines)
+		if (strLines != nullptr)
 			SDL_free(strLines);
 		SDL_stack_free(str);
 		return nullptr;
@@ -146,7 +146,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	SDL_Rect dest = { 0, 0, 0, 0 };
 	for (std::size_t line = 0; line < numLines; line++) {
 		text = strLines[line];
-		if (!text || !*text) {
+		if (text == nullptr || *text == '\0') {
 			dest.y += lineskip;
 			continue;
 		}

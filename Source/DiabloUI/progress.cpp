@@ -69,12 +69,12 @@ void ProgressRender(BYTE progress)
 
 	DrawArt(x, y, &ArtPopupSm, 0, 280, 140);
 	DrawArt(GetCenterOffset(227), y + 52, &ArtProgBG, 0, 227);
-	if (progress) {
+	if (progress != 0) {
 		DrawArt(GetCenterOffset(227), y + 52, &ProgFil, 0, 227 * progress / 100);
 	}
 	DrawArt(GetCenterOffset(110), y + 99, &SmlButton, 2, 110);
 
-	if (msgSurface) {
+	if (msgSurface != nullptr) {
 		SDL_Rect dscRect = {
 			static_cast<Sint16>(x + 50 + 1),
 			static_cast<Sint16>(y + 8 + 1),
@@ -106,7 +106,7 @@ bool UiProgressDialog(const char *msg, int (*fnfunc)())
 		DrawMouse();
 		RenderPresent();
 
-		while (SDL_PollEvent(&event)) {
+		while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:

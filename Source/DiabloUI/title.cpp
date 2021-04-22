@@ -55,7 +55,7 @@ void UiTitleDialog()
 		UiRenderItems(vecTitleScreen);
 		UiFadeIn();
 
-		while (SDL_PollEvent(&event)) {
+		while (SDL_PollEvent(&event) != 0) {
 			if (GetMenuAction(event) != MenuAction_NONE) {
 				endMenu = true;
 				break;

@@ -137,7 +137,7 @@ bool SNetLeaveGame(int type)
  * @brief Called by engine for single, called by ui for multi
  * @param provider BNET, IPXN, MODM, SCBL or UDPN
  */
-int SNetInitializeProvider(Uint32 provider, struct GameData *gameData)
+bool SNetInitializeProvider(Uint32 provider, struct GameData *gameData)
 {
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);

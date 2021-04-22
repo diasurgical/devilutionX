@@ -20,9 +20,9 @@ void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, 
 
 	ScaleOutputRect(&srcRect);
 
-	if (srcW && srcW < srcRect.w)
+	if (srcW != 0 && srcW < srcRect.w)
 		srcRect.w = srcW;
-	if (srcH && srcH < srcRect.h)
+	if (srcH != 0 && srcH < srcRect.h)
 		srcRect.h = srcH;
 	SDL_Rect dstRect = { screenX, screenY, srcRect.w, srcRect.h };
 	ScaleOutputRect(&dstRect);
@@ -48,9 +48,9 @@ void DrawArt(const CelOutputBuffer &out, Sint16 screenX, Sint16 screenY, Art *ar
 	srcRect.w = art->w();
 	srcRect.h = art->h();
 
-	if (srcW && srcW < srcRect.w)
+	if (srcW != 0 && srcW < srcRect.w)
 		srcRect.w = srcW;
-	if (srcH && srcH < srcRect.h)
+	if (srcH != 0 && srcH < srcRect.h)
 		srcRect.h = srcH;
 	SDL_Rect dstRect;
 	dstRect.x = BUFFER_BORDER_LEFT + screenX;

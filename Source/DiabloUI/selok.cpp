@@ -12,7 +12,7 @@ char dialogText[256];
 
 } // namespace
 
-int selok_endMenu;
+bool selok_endMenu;
 
 std::vector<UiListItem *> vecSelOkDialogItems;
 std::vector<UiItemBase *> vecSelOkDialog;

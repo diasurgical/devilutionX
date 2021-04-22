@@ -126,7 +126,7 @@ void SelconnSelect(int value)
 
 } // namespace
 
-int UiSelectProvider(GameData *gameData)
+bool UiSelectProvider(GameData *gameData)
 {
 	selconn_GameData = gameData;
 	SelconnLoad();

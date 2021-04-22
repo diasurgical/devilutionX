@@ -30,7 +30,7 @@ bool SoundSample::IsPlaying()
 
 	int channels = Mix_AllocateChannels(-1);
 	for (int i = 0; i < channels; i++) {
-		if (Mix_GetChunk(i) == chunk && Mix_Playing(i)) {
+		if (Mix_GetChunk(i) == chunk && Mix_Playing(i) != 0) {
 			return true;
 		}
 	}

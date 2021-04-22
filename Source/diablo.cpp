@@ -437,7 +437,6 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 		}
 		run_game_loop(uMsg);
 		NetClose();
-		pfile_create_player_description();
 
 		// If the player left the game into the main menu,
 		// initialize main menu resources.
@@ -675,7 +674,7 @@ static void diablo_deinit()
 		dx_cleanup(); // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
 	if (was_fonts_init)
 		FontsCleanup();
-	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC))
+	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) != 0)
 		SDL_Quit();
 }
 
@@ -858,7 +857,7 @@ static bool LeftMouseDown(int wParam)
 		return false;
 	}
 
-	bool isShiftHeld = wParam & DVL_MK_SHIFT;
+	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
 
 	if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
@@ -901,7 +900,7 @@ static void LeftMouseUp(int wParam)
 {
 	gmenu_left_mouse(false);
 	control_release_talk_btn();
-	bool isShiftHeld = wParam & (DVL_MK_SHIFT | DVL_MK_LBUTTON);
+	bool isShiftHeld = (wParam & (DVL_MK_SHIFT | DVL_MK_LBUTTON)) != 0;
 	if (panbtndown)
 		CheckBtnUp();
 	if (chrbtnactive)
@@ -938,7 +937,7 @@ static void RightMouseDown()
 void diablo_pause_game()
 {
 	if (!gbIsMultiplayer) {
-		if (PauseMode) {
+		if (PauseMode != 0) {
 			PauseMode = 0;
 		} else {
 			PauseMode = 2;
@@ -1009,12 +1008,12 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (stextflag) {
+	if (stextflag != STORE_NONE) {
 		STextESC();
 		rv = true;
 	}
 
-	if (msgflag) {
+	if (msgflag != EMSG_NONE) {
 		msgdelay = 0;
 		rv = true;
 	}
@@ -1065,7 +1064,7 @@ static void PressKey(int vkey)
 			diablo_hotkey_msg(3);
 		}
 		if (vkey == DVL_VK_RETURN) {
-			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000)
+			if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0)
 				dx_reinit();
 			else
 				control_type_message();
@@ -1096,9 +1095,9 @@ static void PressKey(int vkey)
 	}
 
 	if (vkey == DVL_VK_RETURN) {
-		if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
+		if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
 			dx_reinit();
-		} else if (stextflag) {
+		} else if (stextflag != STORE_NONE) {
 			STextEnter();
 		} else if (questlog) {
 			QuestlogEnter();
@@ -1191,7 +1190,7 @@ static void PressKey(int vkey)
 	} else if (vkey == DVL_VK_F12) {
 		diablo_hotkey_msg(3);
 	} else if (vkey == DVL_VK_UP) {
-		if (stextflag) {
+		if (stextflag != STORE_NONE) {
 			STextUp();
 		} else if (questlog) {
 			QuestlogUp();
@@ -1201,7 +1200,7 @@ static void PressKey(int vkey)
 			AutomapUp();
 		}
 	} else if (vkey == DVL_VK_DOWN) {
-		if (stextflag) {
+		if (stextflag != STORE_NONE) {
 			STextDown();
 		} else if (questlog) {
 			QuestlogDown();
@@ -1211,11 +1210,11 @@ static void PressKey(int vkey)
 			AutomapDown();
 		}
 	} else if (vkey == DVL_VK_PRIOR) {
-		if (stextflag) {
+		if (stextflag != STORE_NONE) {
 			STextPrior();
 		}
 	} else if (vkey == DVL_VK_NEXT) {
-		if (stextflag) {
+		if (stextflag != STORE_NONE) {
 			STextNext();
 		}
 	} else if (vkey == DVL_VK_LEFT) {
@@ -1813,7 +1812,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	int i, j;
 	bool visited;
 
-	if (setseed)
+	if (setseed != 0)
 		glSeedTbl[currlevel] = setseed;
 
 	music_stop();

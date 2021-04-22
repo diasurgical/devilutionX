@@ -1015,7 +1015,7 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 
 		for (yy = 0; yy < sh; yy++) {
 			for (xx = 0; xx < sw; xx++) {
-				if (miniset[ii])
+				if (miniset[ii] != 0)
 					dungeon[xx + sx][sy + yy] = miniset[ii];
 				ii++;
 			}
@@ -1346,7 +1346,7 @@ static bool L5checkRoom(int x, int y, int width, int height)
 		for (i = 0; i < width; i++) {
 			if (i + x < 0 || i + x >= DMAXX || j + y < 0 || j + y >= DMAXY)
 				return false;
-			if (dungeon[i + x][j + y])
+			if (dungeon[i + x][j + y] != 0)
 				return false;
 		}
 	}
@@ -1416,11 +1416,11 @@ static void L5firstRoom()
 		ys = 1;
 		ye = DMAXY - 1;
 
-		VR1 = GenerateRnd(2);
-		VR2 = GenerateRnd(2);
-		VR3 = GenerateRnd(2);
+		VR1 = (GenerateRnd(2) != 0);
+		VR2 = (GenerateRnd(2) != 0);
+		VR3 = (GenerateRnd(2) != 0);
 
-		if (VR1 + VR3 <= 1)
+		if (!VR1 || !VR3)
 			VR2 = true;
 		if (VR1)
 			L5drawRoom(15, 1, 10, 10);

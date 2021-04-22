@@ -223,7 +223,7 @@ void DialogLoop(const std::vector<UiItemBase *> &items, const std::vector<UiItem
 	SDL_Event event;
 	dialogEnd = false;
 	do {
-		while (SDL_PollEvent(&event)) {
+		while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:

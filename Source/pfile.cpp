@@ -254,22 +254,9 @@ static void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, bool 
 	heroinfo->magic = p->_pMagic;
 	heroinfo->dexterity = p->_pDexterity;
 	heroinfo->vitality = p->_pVitality;
-	heroinfo->gold = p->_pGold;
 	heroinfo->hassaved = bHasSaveFile;
 	heroinfo->herorank = p->pDiabloKillLevel;
 	heroinfo->spawned = gbIsSpawn;
-}
-
-bool pfile_create_player_description()
-{
-	_uiheroinfo uihero;
-
-	myplr = 0;
-	pfile_read_player_from_save();
-	game_2_ui_player(&plr[myplr], &uihero, gbValidSaveFile);
-	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
-
-	return true;
 }
 
 bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
