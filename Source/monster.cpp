@@ -2216,30 +2216,8 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		return;
 	}
 	if (monster[i].MType->mtype == MT_YZOMBIE && pnum == myplr) {
-		cur_ms_num = -1;
-		for (j = 0; j < nummissiles; j++) {
-			misnum = missileactive[j];
-			if (missile[misnum]._mitype != MIS_MANASHIELD)
-				continue;
-			if (missile[misnum]._misource == pnum)
-				cur_ms_num = misnum;
-		}
-		if (plr[pnum]._pMaxHP > 64) {
-			if (plr[pnum]._pMaxHPBase > 64) {
-				plr[pnum]._pMaxHP -= 64;
-				if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
-					plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
-					if (cur_ms_num >= 0)
-						missile[cur_ms_num]._miVar1 = plr[pnum]._pHitPoints;
-				}
-				plr[pnum]._pMaxHPBase -= 64;
-				if (plr[pnum]._pHPBase > plr[pnum]._pMaxHPBase) {
-					plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
-					if (cur_ms_num >= 0)
-						missile[cur_ms_num]._miVar2 = plr[pnum]._pHPBase;
-				}
-			}
-		}
+		if (plr[myplr].GetBaseAttributeValue(CharacterAttribute::Vitality) > 0)
+			ModifyPlrVit(myplr, -1);
 	}
 	dam = (MinDam << 6) + GenerateRnd((MaxDam - MinDam + 1) << 6);
 	dam += (plr[pnum]._pIGetHit << 6);

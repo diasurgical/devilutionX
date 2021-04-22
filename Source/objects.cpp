@@ -3725,21 +3725,9 @@ bool OperateShrineFascinating(int pnum)
 	if (plr[pnum]._pSplLvl[SPL_FIREBOLT] < MAX_SPELL_LEVEL)
 		plr[pnum]._pSplLvl[SPL_FIREBOLT]++;
 
-	DWORD t = plr[pnum]._pMaxManaBase / 10;
-	int v1 = plr[pnum]._pMana - plr[pnum]._pManaBase;
-	int v2 = plr[pnum]._pMaxMana - plr[pnum]._pMaxManaBase;
-	plr[pnum]._pManaBase -= t;
-	plr[pnum]._pMana -= t;
-	plr[pnum]._pMaxMana -= t;
-	plr[pnum]._pMaxManaBase -= t;
-	if (plr[pnum]._pMana >> 6 <= 0) {
-		plr[pnum]._pMana = v1;
-		plr[pnum]._pManaBase = 0;
-	}
-	if (plr[pnum]._pMaxMana >> 6 <= 0) {
-		plr[pnum]._pMaxMana = v2;
-		plr[pnum]._pMaxManaBase = 0;
-	}
+	int magicLoss = plr[pnum].GetBaseAttributeValue(CharacterAttribute::Magic) / 10;
+	if (magicLoss > 0)
+		ModifyPlrMag(pnum, -magicLoss);
 
 	InitDiabloMsg(EMSG_SHRINE_FASCINATING);
 
@@ -3903,21 +3891,10 @@ bool OperateShrineSacred(int pnum)
 	if (plr[pnum]._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
 		plr[pnum]._pSplLvl[SPL_CBOLT]++;
 
-	DWORD t = plr[pnum]._pMaxManaBase / 10;
-	int v1 = plr[pnum]._pMana - plr[pnum]._pManaBase;
-	int v2 = plr[pnum]._pMaxMana - plr[pnum]._pMaxManaBase;
-	plr[pnum]._pManaBase -= t;
-	plr[pnum]._pMana -= t;
-	plr[pnum]._pMaxMana -= t;
-	plr[pnum]._pMaxManaBase -= t;
-	if (plr[pnum]._pMana >> 6 <= 0) {
-		plr[pnum]._pMana = v1;
-		plr[pnum]._pManaBase = 0;
-	}
-	if (plr[pnum]._pMaxMana >> 6 <= 0) {
-		plr[pnum]._pMaxMana = v2;
-		plr[pnum]._pMaxManaBase = 0;
-	}
+	int magicLoss = plr[pnum].GetBaseAttributeValue(CharacterAttribute::Magic) / 10;
+	if (magicLoss > 0)
+		ModifyPlrMag(pnum, -magicLoss);
+
 
 	InitDiabloMsg(EMSG_SHRINE_SACRED);
 
@@ -4051,21 +4028,9 @@ bool OperateShrineOrnate(int pnum)
 	if (plr[pnum]._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
 		plr[pnum]._pSplLvl[SPL_HBOLT]++;
 
-	DWORD t = plr[pnum]._pMaxManaBase / 10;
-	int v1 = plr[pnum]._pMana - plr[pnum]._pManaBase;
-	int v2 = plr[pnum]._pMaxMana - plr[pnum]._pMaxManaBase;
-	plr[pnum]._pManaBase -= t;
-	plr[pnum]._pMana -= t;
-	plr[pnum]._pMaxMana -= t;
-	plr[pnum]._pMaxManaBase -= t;
-	if (plr[pnum]._pMana >> 6 <= 0) {
-		plr[pnum]._pMana = v1;
-		plr[pnum]._pManaBase = 0;
-	}
-	if (plr[pnum]._pMaxMana >> 6 <= 0) {
-		plr[pnum]._pMaxMana = v2;
-		plr[pnum]._pMaxManaBase = 0;
-	}
+	int magicLoss = plr[pnum].GetBaseAttributeValue(CharacterAttribute::Magic) / 10;
+	if (magicLoss > 0)
+		ModifyPlrMag(pnum, -magicLoss);
 
 	InitDiabloMsg(EMSG_SHRINE_ORNATE);
 
