@@ -84,7 +84,7 @@ cmake --build . -j $(sysctl -n hw.ncpuonline)
 Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
 
 ```
-sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
+sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686
 ```
 
 ### 64-bit
@@ -92,7 +92,7 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
 Download and place the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
 
 ```
-sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64
 ```
 ### Compiling
 
@@ -186,7 +186,7 @@ https://devkitpro.org/wiki/Getting_Started
 - Install required packages with (dkp-)pacman:
 ```
 sudo (dkp-)pacman -S devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-	libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-sdl_mixer \
+	libctru citro3d 3ds-sdl 3ds-sdl_ttf \
 	3ds-freetype 3ds-libogg 3ds-libvorbisidec 3ds-mikmod
 ```
 - Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)

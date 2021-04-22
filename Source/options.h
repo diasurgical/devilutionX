@@ -27,6 +27,15 @@ struct AudioOptions {
 	bool bWalkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
 	bool bAutoEquipSound;
+
+	/** @brief Output sample rate (Hz) */
+	std::uint32_t nSampleRate;
+	/** @brief The number of output channels (1 or 2) */
+	std::uint8_t nChannels;
+	/** @brief Buffer size (number of frames per channel) */
+	std::uint32_t nBufferSize;
+	/** @brief Quality of the resampler, from 0 (lowest) to 10 (highest) */
+	std::uint8_t nResamplingQuality;
 };
 
 struct GraphicsOptions {

@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y cmake file g++ git libfmt-dev libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev rpm wget
+      - run: apt-get install -y cmake file g++ git libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev rpm wget
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
@@ -22,7 +22,7 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libfmt-dev libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+      - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev
       - run: cmake -S. -Bbuild -DRUN_TESTS=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target test
@@ -36,7 +36,7 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y cmake file g++ git libfmt-dev libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsodium-dev rpm
+      - run: apt-get install -y cmake file g++ git libfmt-dev libsdl-dev libsdl-ttf2.0-dev libsodium-dev rpm
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
@@ -50,7 +50,7 @@ jobs:
       - checkout
       - run: dpkg --add-architecture i386
       - run: apt-get update -y
-      - run: apt-get install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 rpm wget
+      - run: apt-get install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 rpm wget
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}

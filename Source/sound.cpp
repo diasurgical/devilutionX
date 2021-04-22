@@ -3,15 +3,22 @@
  *
  * Implementation of functions setting up the audio pipeline.
  */
+#include <cstdint>
+#include <memory>
+
+#include <aulib.h>
+#include <Aulib/DecoderDrwav.h>
+#include <Aulib/Stream.h>
+#include <Aulib/ResamplerSpeex.h>
 #include <SDL.h>
-#include <SDL_mixer.h>
 
 #include "init.h"
 #include "options.h"
-#include "storm/storm.h"
 #include "storm/storm_sdl_rw.h"
-#include "utils/stubs.h"
+#include "storm/storm.h"
 #include "utils/log.hpp"
+#include "utils/stdcompat/optional.hpp"
+#include "utils/stubs.h"
 
 namespace devilution {
 
@@ -21,7 +28,7 @@ HANDLE sghMusic;
 
 namespace {
 
-Mix_Music *music;
+std::optional<Aulib::Stream> music;
 
 #ifdef DISABLE_STREAMING_MUSIC
 char *musicBuffer;
@@ -133,11 +140,10 @@ TSnd *sound_file_load(const char *path, bool stream)
 		}
 	} else {
 		DWORD dwBytes = SFileGetFileSize(file, nullptr);
-		BYTE *wave_file = DiabloAllocPtr(dwBytes);
-		SFileReadFile(file, wave_file, dwBytes, nullptr, nullptr);
-		error = pSnd->DSB->SetChunk(wave_file, dwBytes);
+		auto wave_file = std::make_unique<std::uint8_t[]>(dwBytes);
+		SFileReadFile(file, wave_file.get(), dwBytes, nullptr, nullptr);
+		error = pSnd->DSB->SetChunk(std::move(wave_file), dwBytes);
 		SFileCloseFile(file);
-		mem_free_dbg(wave_file);
 	}
 	if (error != 0) {
 		ErrSdl();
@@ -171,22 +177,31 @@ void snd_init()
 	sgOptions.Audio.nMusicVolume = CapVolume(sgOptions.Audio.nMusicVolume);
 	gbMusicOn = sgOptions.Audio.nMusicVolume > VOLUME_MIN;
 
-	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
-	if (result < 0) {
-		Log("{}", Mix_GetError());
+	// Initialize the SDL_audiolib library. Set the output sample rate to
+	// 22kHz, the audio format to 16-bit signed, use 2 output channels
+	// (stereo), and a 2KiB output buffer.
+	if (!Aulib::init(sgOptions.Audio.nSampleRate, AUDIO_S16, sgOptions.Audio.nChannels, sgOptions.Audio.nBufferSize)) {
+		LogError(LogCategory::Audio, "Failed to initialize audio (Aulib::init): {}", SDL_GetError());
+		return;
 	}
-	Mix_AllocateChannels(25);
-	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
+	LogVerbose(LogCategory::Audio, "Aulib sampleRate={} channels={} frameSize={} format={:#x}",
+	    Aulib::sampleRate(), Aulib::channelCount(), Aulib::frameSize(), Aulib::sampleFormat());
 
 	gbSndInited = true;
 }
 
+void snd_deinit() {
+	if (gbSndInited) {
+		Aulib::quit();
+	}
+
+	gbSndInited = false;
+}
+
 void music_stop()
 {
-	if (music != nullptr) {
-		Mix_HaltMusic();
-		Mix_FreeMusic(music);
-		music = nullptr;
+	if (music) {
+		music = std::nullopt;
 #ifndef DISABLE_STREAMING_MUSIC
 		SFileCloseFile(sghMusic);
 		sghMusic = nullptr;
@@ -227,9 +242,11 @@ void music_start(uint8_t nTrack)
 			if (musicRw == nullptr)
 				ErrSdl();
 #endif
-			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, /*freesrc=*/1);
-			if (music == nullptr) {
-				Log("Mix_LoadMUSType_RW: {}", Mix_GetError());
+			music.emplace(musicRw, std::make_unique<Aulib::DecoderDrwav>(),
+			    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
+			if (!music->open()) {
+				LogError(LogCategory::Audio, "Aulib::Stream::open (from music_start): {}", SDL_GetError());
+				music = std::nullopt;
 #ifndef DISABLE_STREAMING_MUSIC
 				SFileCloseFile(sghMusic);
 				sghMusic = nullptr;
@@ -241,11 +258,10 @@ void music_start(uint8_t nTrack)
 				return;
 			}
 
-			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sgOptions.Audio.nMusicVolume / VOLUME_MIN);
-			if (Mix_PlayMusic(music, -1) < 0) {
-				Log("Mix_PlayMusic: {}", Mix_GetError());
-				Mix_FreeMusic(music);
-				music = nullptr;
+			music->setVolume(1.F - static_cast<float>(sgOptions.Audio.nMusicVolume) / VOLUME_MIN);
+			if (!music->play()) {
+				LogError(LogCategory::Audio, "Aulib::Stream::play (from music_start): {}", SDL_GetError());
+				music = std::nullopt;
 #ifndef DISABLE_STREAMING_MUSIC
 				SFileCloseFile(sghMusic);
 				sghMusic = nullptr;
@@ -278,8 +294,8 @@ int sound_get_or_set_music_volume(int volume)
 
 	sgOptions.Audio.nMusicVolume = volume;
 
-	if (music != nullptr)
-		Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * volume / VOLUME_MIN);
+	if (music)
+		music->setVolume(1.F - static_cast<float>(sgOptions.Audio.nMusicVolume) / VOLUME_MIN);
 
 	return sgOptions.Audio.nMusicVolume;
 }

@@ -3,8 +3,6 @@
  *
  * Implementation of functions for loading and playing sounds.
  */
-#include <SDL_mixer.h>
-
 #include "init.h"
 #include "player.h"
 #include "sound.h"
@@ -1306,7 +1304,12 @@ void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
 
 void sound_stop()
 {
-	Mix_HaltChannel(-1);
+	music_stop();
+	for (auto &sfx : sgSFX) {
+		if (sfx.pSnd != nullptr && sfx.pSnd->DSB != nullptr) {
+			sfx.pSnd->DSB->Stop();
+		}
+	}
 }
 
 void sound_update()

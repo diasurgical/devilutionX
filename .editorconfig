@@ -43,3 +43,9 @@ end_of_line = lf
 indent_style = space
 indent_size = 2
 end_of_line = crlf
+
+[control]
+end_of_line = lf
+
+[devilutionx.spec]
+end_of_line = lf

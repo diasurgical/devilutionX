@@ -8,7 +8,6 @@ Build-Depends:
 	git,
 	g++,
 	gettext,
-	libsdl2-mixer-dev,
 	libsdl2-ttf-dev,
 	libsodium-dev
 Standards-Version: 4.3.0
@@ -23,8 +22,8 @@ Depends:
  ${misc:Depends},
  devilutionx-data | diablo-data | game-data-packager (>= 40),
 Description: Diablo build for modern operating systems
- Diablo by Blizzard Entertainment is undoubtedly one of 
- the best games of the 1990s 
+ Diablo by Blizzard Entertainment is undoubtedly one of
+ the best games of the 1990s
 
 Package: diablo-data
 Architecture: all
