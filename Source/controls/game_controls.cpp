@@ -208,7 +208,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 				return true;
 			case ControllerButton_BUTTON_Y: // Top button
 #ifdef __3DS__
-				if (!ctrl_event.up) {
+				if (!ctrlEvent.up) {
 					zoomflag = !zoomflag;
 					CalcViewportGeometry();
 				}

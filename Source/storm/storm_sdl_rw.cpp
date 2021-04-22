@@ -28,7 +28,7 @@ static Sint64 SFileRwSize(struct SDL_RWops *context)
 #ifndef USE_SDL1
 static Sint64 SFileRwSeek(struct SDL_RWops *context, Sint64 offset, int whence)
 #else
-static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
+static int SFileRwSeek(struct SDL_RWops *context, int offset, int whence)
 #endif
 {
 	DWORD swhence;
@@ -47,7 +47,7 @@ static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
 	}
 	const std::uint64_t pos = SFileSetFilePointer(SFileRwGetHandle(context), offset, swhence);
 	if (pos == static_cast<std::uint64_t>(-1)) {
-		SDL_Log("SFileRw_seek error: %ud", (unsigned int)SErrGetLastError());
+		SDL_Log("SFileRwSeek error: %ud", (unsigned int)SErrGetLastError());
 	}
 	return pos;
 }
@@ -55,14 +55,14 @@ static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
 #ifndef USE_SDL1
 static size_t SFileRwRead(struct SDL_RWops *context, void *ptr, size_t size, size_t maxnum)
 #else
-static int SFileRw_read(struct SDL_RWops *context, void *ptr, int size, int maxnum)
+static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnum)
 #endif
 {
 	DWORD numRead = 0;
 	if (!SFileReadFile(SFileRwGetHandle(context), ptr, maxnum * size, &numRead, nullptr)) {
 		const DWORD errCode = SErrGetLastError();
 		if (errCode != STORM_ERROR_HANDLE_EOF) {
-			SDL_Log("SFileRw_read error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)errCode);
+			SDL_Log("SFileRwRead error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)errCode);
 		}
 	}
 	return numRead / size;

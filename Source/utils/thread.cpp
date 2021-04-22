@@ -18,7 +18,7 @@ static int SDLCALL ThreadTranslate(void *ptr)
 SDL_Thread *CreateThread(unsigned int (*handler)(void *), SDL_threadID *threadId)
 {
 #ifdef USE_SDL1
-	SDL_Thread *ret = SDL_CreateThread(thread_translate, (void *)handler);
+	SDL_Thread *ret = SDL_CreateThread(ThreadTranslate, (void *)handler);
 #else
 	SDL_Thread *ret = SDL_CreateThread(ThreadTranslate, nullptr, (void *)handler);
 #endif

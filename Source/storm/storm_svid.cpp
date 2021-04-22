@@ -408,7 +408,7 @@ bool SVidPlayContinue()
 	{
 		SDL_Surface *outputSurface = GetOutputSurface();
 #ifdef USE_SDL1
-		const bool is_indexed_output_format = SDLBackport_IsPixelFormatIndexed(output_surface->format);
+		const bool isIndexedOutputFormat = SDLBackport_IsPixelFormatIndexed(outputSurface->format);
 #else
 		const Uint32 wndFormat = SDL_GetWindowPixelFormat(ghMainWnd);
 		const bool isIndexedOutputFormat = SDL_ISPIXELFORMAT_INDEXED(wndFormat);
