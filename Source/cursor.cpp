@@ -544,7 +544,7 @@ void CheckCursMove()
 				pcursplr = bv;
 			}
 		}
-		if (dFlags[mx][my] & BFLAG_DEAD_PLAYER) {
+		if ((dFlags[mx][my] & BFLAG_DEAD_PLAYER) != 0) {
 			for (i = 0; i < MAX_PLRS; i++) {
 				if (plr[i]._px == mx && plr[i]._py == my && i != myplr) {
 					cursmx = mx;

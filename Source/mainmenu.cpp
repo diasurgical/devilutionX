@@ -103,8 +103,6 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		return false;
 	}
 
-	pfile_create_player_description();
-
 	return true;
 }
 

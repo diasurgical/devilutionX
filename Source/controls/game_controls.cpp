@@ -26,7 +26,7 @@ DWORD TranslateControllerButtonToKey(ControllerButton controllerButton)
 	case ControllerButton_BUTTON_A: // Bottom button
 		return questlog ? DVL_VK_SPACE : DVL_VK_ESCAPE;
 	case ControllerButton_BUTTON_B: // Right button
-		return sgpCurrentMenu || stextflag || questlog ? DVL_VK_RETURN : DVL_VK_SPACE;
+		return (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || questlog) ? DVL_VK_RETURN : DVL_VK_SPACE;
 	case ControllerButton_BUTTON_Y: // Top button
 		return DVL_VK_RETURN;
 	case ControllerButton_BUTTON_LEFTSTICK:
@@ -288,11 +288,11 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 				}
 				return true;
 			case ControllerButton_BUTTON_LEFTSHOULDER:
-				if (!stextflag && !ctrlEvent.up)
+				if (stextflag == STORE_NONE && !ctrlEvent.up)
 					*action = GameAction(GameActionType_USE_HEALTH_POTION);
 				return true;
 			case ControllerButton_BUTTON_RIGHTSHOULDER:
-				if (!stextflag && !ctrlEvent.up)
+				if (stextflag == STORE_NONE && !ctrlEvent.up)
 					*action = GameAction(GameActionType_USE_MANA_POTION);
 				return true;
 			case ControllerButton_BUTTON_DPAD_UP:

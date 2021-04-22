@@ -100,7 +100,7 @@ void RemoveFile(const char *lpFileName)
 	std::string name = lpFileName;
 	std::replace(name.begin(), name.end(), '\\', '/');
 	FILE *f = fopen(name.c_str(), "r+");
-	if (f) {
+	if (f != nullptr) {
 		fclose(f);
 		remove(name.c_str());
 		f = nullptr;

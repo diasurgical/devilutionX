@@ -8,7 +8,7 @@ std::size_t GetArtStrWidth(const char *str, std::size_t size)
 
 	for (size_t i = 0, n = strlen(str); i < n; i++) {
 		BYTE w = FontTables[size][*(BYTE *)&str[i] + 2];
-		if (w)
+		if (w != 0)
 			strWidth += w;
 		else
 			strWidth += FontTables[size][0];

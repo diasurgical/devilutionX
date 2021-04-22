@@ -66,7 +66,7 @@ static void dx_create_back_buffer()
 static void dx_create_primary_surface()
 {
 #ifndef USE_SDL1
-	if (renderer) {
+	if (renderer != nullptr) {
 		int width, height;
 		SDL_RenderGetLogicalSize(renderer, &width, &height);
 		Uint32 format;
@@ -122,7 +122,7 @@ static void unlock_buf_priv()
 void unlock_buf(BYTE idx)
 {
 #ifdef _DEBUG
-	if (!locktbl[idx])
+	if (locktbl[idx] == 0)
 		app_fatal("Draw lock underflow: 0x%x", idx);
 	--locktbl[idx];
 #endif
@@ -142,7 +142,7 @@ CelOutputBuffer GlobalBackBuffer()
 void dx_cleanup()
 {
 #ifndef USE_SDL1
-	if (ghMainWnd)
+	if (ghMainWnd != nullptr)
 		SDL_HideWindow(ghMainWnd);
 #endif
 	sgMemCrit.Enter();
@@ -174,9 +174,9 @@ void dx_reinit()
 #else
 	Uint32 flags = 0;
 	if (!IsFullScreen()) {
-		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+		flags = renderer != nullptr ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
 	}
-	if (SDL_SetWindowFullscreen(ghMainWnd, flags)) {
+	if (SDL_SetWindowFullscreen(ghMainWnd, flags) != 0) {
 		ErrSdl();
 	}
 #endif
@@ -279,7 +279,7 @@ void RenderPresent()
 	}
 
 #ifndef USE_SDL1
-	if (renderer) {
+	if (renderer != nullptr) {
 		if (SDL_UpdateTexture(texture, nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
 			ErrSdl();
 		}

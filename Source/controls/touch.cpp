@@ -39,7 +39,7 @@ static void SetMouseMotionEvent(SDL_Event *event, int32_t x, int32_t y, int32_t 
 
 static bool touch_initialized = false;
 static unsigned int simulated_click_start_time[TOUCH_PORT_MAX_NUM][2]; // initiation time of last simulated left or right click (zero if no click)
-static int direct_touch = 1;                                           // pointer jumps to finger
+static bool direct_touch = true;                                       // pointer jumps to finger
 static int mouse_x = 0;                                                // always reflects current mouse position
 static int mouse_y = 0;
 
@@ -241,7 +241,7 @@ static void PreprocessFingerUp(SDL_Event *event)
 		}
 
 		finger[port][i].id = NO_TOUCH;
-		if (!multi_finger_dragging[port]) {
+		if (multi_finger_dragging[port] == DragNone) {
 			if ((event->tfinger.timestamp - finger[port][i].time_last_down) > MaxTapTime) {
 				continue;
 			}
@@ -342,7 +342,7 @@ static void PreprocessFingerMotion(SDL_Event *event)
 		}
 
 		// If we are starting a multi-finger drag, start holding down the mouse button
-		if (numFingersDown >= 2 && !multi_finger_dragging[port]) {
+		if (numFingersDown >= 2 && multi_finger_dragging[port] == DragNone) {
 			// only start a multi-finger drag if at least two fingers have been down long enough
 			int numFingersDownlong = 0;
 			for (int i = 0; i < MaxNumFingers; i++) {
@@ -388,7 +388,7 @@ static void PreprocessFingerMotion(SDL_Event *event)
 			}
 		}
 
-		if (!xrel && !yrel) {
+		if (xrel == 0 && yrel == 0) {
 			return;
 		}
 

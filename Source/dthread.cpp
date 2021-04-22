@@ -33,13 +33,13 @@ static unsigned int dthread_handler(void *data)
 
 		sgMemCrit.Enter();
 		pkt = sgpInfoHead;
-		if (sgpInfoHead)
+		if (sgpInfoHead != nullptr)
 			sgpInfoHead = sgpInfoHead->pNext;
 		else
 			ResetEvent(sghWorkToDoEvent);
 		sgMemCrit.Leave();
 
-		if (pkt) {
+		if (pkt != nullptr) {
 			if (pkt->dwSpaceLeft != MAX_PLRS)
 				multi_send_zero_packet(pkt->dwSpaceLeft, static_cast<_cmd_id>(pkt->data[0]), &pkt->data[8], *(DWORD *)&pkt->data[4]);
 
@@ -49,7 +49,7 @@ static unsigned int dthread_handler(void *data)
 
 			mem_free_dbg(pkt);
 
-			if (dwMilliseconds)
+			if (dwMilliseconds != 0)
 				SDL_Delay(dwMilliseconds);
 		}
 	}
@@ -86,7 +86,7 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 	memcpy(&pkt->data[8], pbSrc, dwLen);
 	sgMemCrit.Enter();
 	p = (TMegaPkt *)&sgpInfoHead;
-	while (p->pNext) {
+	while (p->pNext != nullptr) {
 		p = p->pNext;
 	}
 	p->pNext = pkt;
@@ -135,7 +135,7 @@ void dthread_cleanup()
 	EndEvent(sghWorkToDoEvent);
 	sghWorkToDoEvent = nullptr;
 
-	while (sgpInfoHead) {
+	while (sgpInfoHead != nullptr) {
 		tmp = sgpInfoHead->pNext;
 		MemFreeDbg(sgpInfoHead);
 		sgpInfoHead = tmp;

@@ -16,18 +16,18 @@ namespace {
 
 TextAlignment XAlignmentFromFlags(int flags)
 {
-	if (flags & UIS_CENTER)
+	if ((flags & UIS_CENTER) != 0)
 		return TextAlignment_CENTER;
-	if (flags & UIS_RIGHT)
+	if ((flags & UIS_RIGHT) != 0)
 		return TextAlignment_END;
 	return TextAlignment_BEGIN;
 }
 
 int AlignXOffset(int flags, const SDL_Rect &dest, int w)
 {
-	if (flags & UIS_CENTER)
+	if ((flags & UIS_CENTER) != 0)
 		return (dest.w - w) / 2;
-	if (flags & UIS_RIGHT)
+	if ((flags & UIS_RIGHT) != 0)
 		return dest.w - w;
 	return 0;
 }
@@ -56,7 +56,7 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 	SDL_Rect destRect = rect;
 	ScaleOutputRect(&destRect);
 	destRect.x += AlignXOffset(flags, destRect, textSurface->w);
-	destRect.y += (flags & UIS_VCENTER) ? (destRect.h - textSurface->h) / 2 : 0;
+	destRect.y += (flags & UIS_VCENTER) != 0 ? (destRect.h - textSurface->h) / 2 : 0;
 
 	SDL_Rect shadowRect = destRect;
 	++shadowRect.x;
@@ -70,17 +70,17 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawTextCursor)
 {
 	_artFontTables size = AFT_SMALL;
-	_artFontColors color = flags & UIS_GOLD ? AFC_GOLD : AFC_SILVER;
+	_artFontColors color = (flags & UIS_GOLD) != 0 ? AFC_GOLD : AFC_SILVER;
 
-	if (flags & UIS_MED)
+	if ((flags & UIS_MED) != 0)
 		size = AFT_MED;
-	else if (flags & UIS_BIG)
+	else if ((flags & UIS_BIG) != 0)
 		size = AFT_BIG;
-	else if (flags & UIS_HUGE)
+	else if ((flags & UIS_HUGE) != 0)
 		size = AFT_HUGE;
 
 	const int x = rect.x + AlignXOffset(flags, rect, GetArtStrWidth(text, size));
-	const int y = rect.y + ((flags & UIS_VCENTER) ? (rect.h - ArtFonts[size][color].h()) / 2 : 0);
+	const int y = rect.y + ((flags & UIS_VCENTER) != 0 ? (rect.h - ArtFonts[size][color].h()) / 2 : 0);
 
 	int sx = x, sy = y;
 	for (size_t i = 0, n = strlen(text); i < n; i++) {
@@ -89,11 +89,11 @@ void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawText
 			sy += ArtFonts[size][color].h();
 			continue;
 		}
-		BYTE w = FontTables[size][*(BYTE *)&text[i] + 2] ? FontTables[size][*(BYTE *)&text[i] + 2] : FontTables[size][0];
+		BYTE w = FontTables[size][*(BYTE *)&text[i] + 2] != 0 ? FontTables[size][*(BYTE *)&text[i] + 2] : FontTables[size][0];
 		DrawArt(sx, sy, &ArtFonts[size][color], *(BYTE *)&text[i], w);
 		sx += w;
 	}
-	if (drawTextCursor && GetAnimationFrame(2, 500)) {
+	if (drawTextCursor && GetAnimationFrame(2, 500) != 0) {
 		DrawArt(sx, sy, &ArtFonts[size][color], '|');
 	}
 }

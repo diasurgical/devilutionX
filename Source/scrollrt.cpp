@@ -1249,7 +1249,7 @@ void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 	}
 	DrawMonsterHealthBar(out);
 
-	if (stextflag && !qtextflag)
+	if (stextflag != STORE_NONE && !qtextflag)
 		DrawSText(out);
 	if (invflag) {
 		DrawInv(out);

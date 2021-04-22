@@ -201,7 +201,7 @@ bool TextDialog()
 	do {
 		creditsRenderer.Render();
 		UiFadeIn();
-		while (SDL_PollEvent(&event)) {
+		while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_KEYDOWN:
 			case SDL_MOUSEBUTTONDOWN:

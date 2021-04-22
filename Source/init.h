@@ -9,7 +9,7 @@
 
 namespace devilution {
 
-extern int gbActive;
+extern bool gbActive;
 extern HANDLE hellfire_mpq;
 extern WNDPROC CurrentProc;
 extern HANDLE spawn_mpq;
