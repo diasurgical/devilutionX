@@ -157,15 +157,15 @@ void InitQuests()
 
 	if (!gbIsMultiplayer && sgOptions.Gameplay.bRandomizeQuests) {
 		SetRndSeed(glSeedTbl[15]);
-		if (random_(0, 2) != 0)
+		if (GenerateRnd(2) != 0)
 			quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 		else
 			quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
 
-		quests[QuestGroup1[random_(0, sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup2[random_(0, sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup3[random_(0, sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		quests[QuestGroup4[random_(0, sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
 	}
 #ifdef _DEBUG
 	if (questdebug != -1)
@@ -659,12 +659,13 @@ void ResyncQuests()
 		return;
 
 	if (QuestStatus(Q_LTBANNER)) {
-		if (quests[Q_LTBANNER]._qvar1 == 1)
+		if (quests[Q_LTBANNER]._qvar1 == 1) {
 			ObjChangeMapResync(
 			    setpc_w + setpc_x - 2,
 			    setpc_h + setpc_y - 2,
 			    setpc_w + setpc_x + 1,
 			    setpc_h + setpc_y + 1);
+		}
 		if (quests[Q_LTBANNER]._qvar1 == 2) {
 			ObjChangeMapResync(
 			    setpc_w + setpc_x - 2,
@@ -728,7 +729,7 @@ void ResyncQuests()
 	}
 }
 
-static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col)
+static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col)
 {
 	int len, width, i, k, sx, sy;
 	BYTE c;
@@ -761,7 +762,7 @@ static void PrintQLString(CelOutputBuffer out, int x, int y, bool cjustflag, con
 	}
 }
 
-void DrawQuestLog(CelOutputBuffer out)
+void DrawQuestLog(const CelOutputBuffer &out)
 {
 	int y, i;
 

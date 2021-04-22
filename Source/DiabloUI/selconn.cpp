@@ -20,11 +20,11 @@ std::vector<UiItemBase *> vecSelConnDlg;
 
 #define DESCRIPTION_WIDTH 205
 
-void selconn_Esc();
-void selconn_Focus(int value);
-void selconn_Select(int value);
+void SelconnEsc();
+void SelconnFocus(int value);
+void SelconnSelect(int value);
 
-void selconn_Load()
+void SelconnLoad()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
@@ -69,10 +69,10 @@ void selconn_Load()
 	SDL_Rect rect10 = { (Sint16)(PANEL_LEFT + 454), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect10, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(vecConnItems.size(), selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
+	UiInitList(vecConnItems.size(), SelconnFocus, SelconnSelect, SelconnEsc, vecSelConnDlg);
 }
 
-void selconn_Free()
+void SelconnFree()
 {
 	ArtBackground.Unload();
 
@@ -87,13 +87,13 @@ void selconn_Free()
 	vecSelConnDlg.clear();
 }
 
-void selconn_Esc()
+void SelconnEsc()
 {
 	selconn_ReturnValue = false;
 	selconn_EndMenu = true;
 }
 
-void selconn_Focus(int value)
+void SelconnFocus(int value)
 {
 	int players = MAX_PLRS;
 	switch (vecConnItems[value]->m_value) {
@@ -115,21 +115,21 @@ void selconn_Focus(int value)
 	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 
-void selconn_Select(int value)
+void SelconnSelect(int value)
 {
 	provider = vecConnItems[value]->m_value;
 
-	selconn_Free();
+	SelconnFree();
 	selconn_EndMenu = SNetInitializeProvider(provider, selconn_GameData);
-	selconn_Load();
+	SelconnLoad();
 }
 
 } // namespace
 
-int UiSelectProvider(GameData *gameData)
+bool UiSelectProvider(GameData *gameData)
 {
 	selconn_GameData = gameData;
-	selconn_Load();
+	SelconnLoad();
 
 	selconn_ReturnValue = true;
 	selconn_EndMenu = false;
@@ -137,7 +137,7 @@ int UiSelectProvider(GameData *gameData)
 		UiClearScreen();
 		UiPollAndRender();
 	}
-	selconn_Free();
+	SelconnFree();
 
 	return selconn_ReturnValue;
 }

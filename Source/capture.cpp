@@ -154,7 +154,7 @@ static void RedPalette()
 		system_palette[i].b = 0;
 	}
 	palette_update();
-	SDL_Rect srcRect = {
+	SDL_Rect srcRect {
 		BUFFER_BORDER_LEFT,
 		BUFFER_BORDER_TOP,
 		gnScreenWidth,

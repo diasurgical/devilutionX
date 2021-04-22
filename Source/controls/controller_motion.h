@@ -19,7 +19,7 @@ extern float leftStickX, leftStickY, rightStickX, rightStickY;
 extern bool leftStickNeedsScaling, rightStickNeedsScaling;
 
 // Updates motion state for mouse and joystick sticks.
-bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_event);
+bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrlEvent);
 
 // Returns direction of the left thumb stick or DPad (if allow_dpad = true).
 AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad = true);

@@ -32,7 +32,7 @@ int speedspellcount = 0;
  */
 bool InGameMenu()
 {
-	return stextflag > 0
+	return stextflag != STORE_NONE
 	    || helpflag
 	    || talkflag
 	    || qtextflag
@@ -189,14 +189,14 @@ bool CanTargetMonster(int mi)
 {
 	const MonsterStruct &monst = monster[mi];
 
-	if (monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM))
+	if ((monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
 		return false;
 	if (monst._mhitpoints >> 6 <= 0) // dead
 		return false;
 
 	const int mx = monst._mx;
 	const int my = monst._my;
-	if (!(dFlags[mx][my] & BFLAG_LIT)) // not visible
+	if ((dFlags[mx][my] & BFLAG_LIT) == 0) // not visible
 		return false;
 	if (dMonster[mx][my] == 0)
 		return false;
@@ -250,10 +250,10 @@ void FindMeleeTarget()
 	std::list<SearchNode> queue;
 
 	{
-		const int start_x = plr[myplr]._pfutx;
-		const int start_y = plr[myplr]._pfuty;
-		visited[start_x][start_y] = true;
-		queue.push_back({ start_x, start_y, 0 });
+		const int startX = plr[myplr]._pfutx;
+		const int startY = plr[myplr]._pfuty;
+		visited[startX][startY] = true;
+		queue.push_back({ startX, startY, 0 });
 	}
 
 	while (!queue.empty()) {
@@ -336,7 +336,7 @@ void CheckPlayerNearby()
 		const int mx = plr[i]._pfutx;
 		const int my = plr[i]._pfuty;
 		if (dPlayer[mx][my] == 0
-		    || !(dFlags[mx][my] & BFLAG_LIT)
+		    || (dFlags[mx][my] & BFLAG_LIT) == 0
 		    || (plr[i]._pHitPoints == 0 && spl != SPL_RESURRECT))
 			continue;
 
@@ -748,13 +748,13 @@ void SpellBookMove(AxisDirection dir)
 	}
 }
 
-static const direction kFaceDir[3][3] = {
+static const direction FaceDir[3][3] = {
 	// NONE      UP      DOWN
 	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
 	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
 	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
 };
-static const int kOffsets[8][2] = {
+static const int Offsets[8][2] = {
 	{ 1, 1 },   // DIR_S
 	{ 0, 1 },   // DIR_SW
 	{ -1, 1 },  // DIR_W
@@ -800,10 +800,10 @@ bool IsPathBlocked(int x, int y, int dir)
 		return false;
 	}
 
-	d1x = x + kOffsets[d1][0];
-	d1y = y + kOffsets[d1][1];
-	d2x = x + kOffsets[d2][0];
-	d2y = y + kOffsets[d2][1];
+	d1x = x + Offsets[d1][0];
+	d1y = y + Offsets[d1][1];
+	d2x = x + Offsets[d2][0];
+	d2y = y + Offsets[d2][1];
 
 	if (!nSolidTable[dPiece[d1x][d1y]] && !nSolidTable[dPiece[d2x][d2y]])
 		return false;
@@ -822,9 +822,9 @@ void WalkInDir(int playerId, AxisDirection dir)
 		return;
 	}
 
-	const direction pdir = kFaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
-	const int dx = x + kOffsets[pdir][0];
-	const int dy = y + kOffsets[pdir][1];
+	const direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
+	const int dx = x + Offsets[pdir][0];
+	const int dy = y + Offsets[pdir][1];
 	plr[playerId]._pdir = pdir;
 
 	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, pdir))
@@ -833,23 +833,23 @@ void WalkInDir(int playerId, AxisDirection dir)
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, dx, dy);
 }
 
-void QuestLogMove(AxisDirection move_dir)
+void QuestLogMove(AxisDirection moveDir)
 {
 	static AxisDirectionRepeater repeater;
-	move_dir = repeater.Get(move_dir);
-	if (move_dir.y == AxisDirectionY_UP)
+	moveDir = repeater.Get(moveDir);
+	if (moveDir.y == AxisDirectionY_UP)
 		QuestlogUp();
-	else if (move_dir.y == AxisDirectionY_DOWN)
+	else if (moveDir.y == AxisDirectionY_DOWN)
 		QuestlogDown();
 }
 
-void StoreMove(AxisDirection move_dir)
+void StoreMove(AxisDirection moveDir)
 {
 	static AxisDirectionRepeater repeater;
-	move_dir = repeater.Get(move_dir);
-	if (move_dir.y == AxisDirectionY_UP)
+	moveDir = repeater.Get(moveDir);
+	if (moveDir.y == AxisDirectionY_UP)
 		STextUp();
-	else if (move_dir.y == AxisDirectionY_DOWN)
+	else if (moveDir.y == AxisDirectionY_DOWN)
 		STextDown();
 }
 
@@ -859,7 +859,8 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 {
 	if (invflag) {
 		return &InvMove;
-	} else if (chrflag && plr[myplr]._pStatPts > 0) {
+	}
+	if (chrflag && plr[myplr]._pStatPts > 0) {
 		return &AttrIncBtnSnap;
 	} else if (spselflag) {
 		return &HotSpellMove;
@@ -887,13 +888,13 @@ void Movement(int playerId)
 	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
 		return;
 
-	AxisDirection move_dir = GetMoveDirection();
-	if (move_dir.x != AxisDirectionX_NONE || move_dir.y != AxisDirectionY_NONE) {
+	AxisDirection moveDir = GetMoveDirection();
+	if (moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE) {
 		sgbControllerActive = true;
 	}
 
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
-		WalkInDir(playerId, move_dir);
+		WalkInDir(playerId, moveDir);
 	}
 }
 
@@ -906,7 +907,7 @@ struct RightStickAccumulator {
 		hiresDY = 0;
 	}
 
-	void pool(int *x, int *y, int slowdown)
+	void Pool(int *x, int *y, int slowdown)
 	{
 		const Uint32 tc = SDL_GetTicks();
 		const int dtc = tc - lastTc;
@@ -922,7 +923,7 @@ struct RightStickAccumulator {
 		hiresDY -= dy * slowdown;
 	}
 
-	void clear()
+	void Clear()
 	{
 		lastTc = SDL_GetTicks();
 	}
@@ -936,12 +937,12 @@ struct RightStickAccumulator {
 
 void StoreSpellCoords()
 {
-	const int START_X = PANEL_LEFT + 12 + SPLICONLENGTH / 2;
-	const int END_X = START_X + SPLICONLENGTH * 10;
-	const int END_Y = PANEL_TOP - 17 - SPLICONLENGTH / 2;
+	const int startX = PANEL_LEFT + 12 + SPLICONLENGTH / 2;
+	const int endX = startX + SPLICONLENGTH * 10;
+	const int endY = PANEL_TOP - 17 - SPLICONLENGTH / 2;
 	speedspellcount = 0;
-	int xo = END_X;
-	int yo = END_Y;
+	int xo = endX;
+	int yo = endY;
 	for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
 		std::uint64_t spells;
 		switch (i) {
@@ -960,21 +961,21 @@ void StoreSpellCoords()
 		}
 		std::uint64_t spell = 1;
 		for (int j = 1; j < MAX_SPELLS; j++) {
-			if ((spell & spells)) {
+			if ((spell & spells) != 0) {
 				speedspellscoords[speedspellcount] = { xo, yo };
 				++speedspellcount;
 				xo -= SPLICONLENGTH;
-				if (xo < START_X) {
-					xo = END_X;
+				if (xo < startX) {
+					xo = endX;
 					yo -= SPLICONLENGTH;
 				}
 			}
 			spell <<= 1;
 		}
-		if (spells && xo != END_X)
+		if (spells != 0 && xo != endX)
 			xo -= SPLICONLENGTH;
-		if (xo < START_X) {
-			xo = END_X;
+		if (xo < startX) {
+			xo = endX;
 			yo -= SPLICONLENGTH;
 		}
 	}
@@ -995,13 +996,13 @@ void HandleRightStickMotion()
 	static RightStickAccumulator acc;
 	// deadzone is handled in ScaleJoystickAxes() already
 	if (rightStickX == 0 && rightStickY == 0) {
-		acc.clear();
+		acc.Clear();
 		return;
 	}
 
 	if (IsAutomapActive()) { // move map
 		int dx = 0, dy = 0;
-		acc.pool(&dx, &dy, 32);
+		acc.Pool(&dx, &dy, 32);
 		AutoMapXOfs += dy + dx;
 		AutoMapYOfs += dy - dx;
 		return;
@@ -1011,7 +1012,7 @@ void HandleRightStickMotion()
 		sgbControllerActive = false;
 		int x = MouseX;
 		int y = MouseY;
-		acc.pool(&x, &y, 2);
+		acc.Pool(&x, &y, 2);
 		x = std::min(std::max(x, 0), gnScreenWidth - 1);
 		y = std::min(std::max(y, 0), gnScreenHeight - 1);
 
@@ -1149,8 +1150,8 @@ void UpdateSpellTarget()
 	if (plr[myplr]._pRSpell == SPL_TELEPORT)
 		range = 4;
 
-	cursmx = player._pfutx + kOffsets[player._pdir][0] * range;
-	cursmy = player._pfuty + kOffsets[player._pdir][1] * range;
+	cursmx = player._pfutx + Offsets[player._pdir][0] * range;
+	cursmy = player._pfuty + Offsets[player._pdir][1] * range;
 }
 
 /**
@@ -1208,17 +1209,17 @@ void PerformSpellAction()
 
 void CtrlUseInvItem()
 {
-	ItemStruct *Item;
+	ItemStruct *item;
 
 	if (pcursinvitem == -1)
 		return;
 
 	if (pcursinvitem <= INVITEM_INV_LAST)
-		Item = &plr[myplr].InvList[pcursinvitem - INVITEM_INV_FIRST];
+		item = &plr[myplr].InvList[pcursinvitem - INVITEM_INV_FIRST];
 	else
-		Item = &plr[myplr].SpdList[pcursinvitem - INVITEM_BELT_FIRST];
+		item = &plr[myplr].SpdList[pcursinvitem - INVITEM_BELT_FIRST];
 
-	if ((Item->_iMiscId == IMISC_SCROLLT || Item->_iMiscId == IMISC_SCROLL) && spelldata[Item->_iSpell].sTargeted) {
+	if ((item->_iMiscId == IMISC_SCROLLT || item->_iMiscId == IMISC_SCROLL) && spelldata[item->_iSpell].sTargeted) {
 		return;
 	}
 

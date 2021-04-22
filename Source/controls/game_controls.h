@@ -70,7 +70,7 @@ struct GameAction {
 	};
 };
 
-bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, GameAction *action);
+bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
 
 AxisDirection GetMoveDirection();
 

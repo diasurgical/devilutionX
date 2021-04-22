@@ -34,13 +34,13 @@ bool mouseWarping = false;
 int mouseWarpingX;
 int mouseWarpingY;
 
-void SetCursorPos(int X, int Y)
+void SetCursorPos(int x, int y)
 {
-	mouseWarpingX = X;
-	mouseWarpingY = Y;
+	mouseWarpingX = x;
+	mouseWarpingY = y;
 	mouseWarping = true;
-	LogicalToOutput(&X, &Y);
-	SDL_WarpMouseInWindow(ghMainWnd, X, Y);
+	LogicalToOutput(&x, &y);
+	SDL_WarpMouseInWindow(ghMainWnd, x, y);
 }
 
 // Moves the mouse to the first attribute "+" button.
@@ -79,7 +79,7 @@ void FocusOnCharInfo()
 	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
 }
 
-static int translate_sdl_key(SDL_Keysym key)
+static int TranslateSdlKey(SDL_Keysym key)
 {
 	// ref: https://wiki.libsdl.org/SDL_Keycode
 	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
@@ -251,19 +251,19 @@ static int translate_sdl_key(SDL_Keysym key)
 
 namespace {
 
-LPARAM position_for_mouse(short x, short y)
+LPARAM PositionForMouse(short x, short y)
 {
 	return (((uint16_t)(y & 0xFFFF)) << 16) | (uint16_t)(x & 0xFFFF);
 }
 
-WPARAM keystate_for_mouse(WPARAM ret)
+WPARAM KeystateForMouse(WPARAM ret)
 {
 	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }
 
-bool false_avail(const char *name, int value)
+bool FalseAvail(const char *name, int value)
 {
 	SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Unhandled SDL event: %s %d", name, value);
 	return true;
@@ -339,12 +339,12 @@ bool FetchMessage(LPMSG lpMsg)
 	if (HandleControllerAddedOrRemovedEvent(e))
 		return true;
 
-	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(e);
-	if (ProcessControllerMotion(e, ctrl_event))
+	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(e);
+	if (ProcessControllerMotion(e, ctrlEvent))
 		return true;
 
 	GameAction action;
-	if (GetGameAction(e, ctrl_event, &action)) {
+	if (GetGameAction(e, ctrlEvent, &action)) {
 		if (action.type != GameActionType_NONE) {
 			sgbControllerActive = true;
 
@@ -438,12 +438,13 @@ bool FetchMessage(LPMSG lpMsg)
 				lpMsg->message = action.send_mouse_click.up ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
 				break;
 			}
-			lpMsg->lParam = position_for_mouse(MouseX, MouseY);
+			lpMsg->lParam = PositionForMouse(MouseX, MouseY);
 			break;
 		}
 		return true;
 #ifndef USE_SDL1
-	} else if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
+	}
+	if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
 #else
 	} else if (e.type < SDL_JOYAXISMOTION) {
 #endif
@@ -459,9 +460,9 @@ bool FetchMessage(LPMSG lpMsg)
 		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP: {
-		int key = translate_sdl_key(e.key.keysym);
+		int key = TranslateSdlKey(e.key.keysym);
 		if (key == -1)
-			return false_avail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
+			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
 		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
 		lpMsg->wParam = (DWORD)key;
 		// HACK: Encode modifier in lParam for TranslateMessage later
@@ -469,31 +470,31 @@ bool FetchMessage(LPMSG lpMsg)
 	} break;
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->lParam = position_for_mouse(e.motion.x, e.motion.y);
-		lpMsg->wParam = keystate_for_mouse(0);
+		lpMsg->lParam = PositionForMouse(e.motion.x, e.motion.y);
+		lpMsg->wParam = KeystateForMouse(0);
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
 			lpMsg->message = DVL_WM_LBUTTONDOWN;
-			lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(DVL_MK_LBUTTON);
 		} else if (button == SDL_BUTTON_RIGHT) {
 			lpMsg->message = DVL_WM_RBUTTONDOWN;
-			lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(DVL_MK_RBUTTON);
 		}
 	} break;
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
 			lpMsg->message = DVL_WM_LBUTTONUP;
-			lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
-			lpMsg->wParam = keystate_for_mouse(0);
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(0);
 		} else if (button == SDL_BUTTON_RIGHT) {
 			lpMsg->message = DVL_WM_RBUTTONUP;
-			lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
-			lpMsg->wParam = keystate_for_mouse(0);
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(0);
 		}
 	} break;
 #ifndef USE_SDL1
@@ -511,16 +512,16 @@ bool FetchMessage(LPMSG lpMsg)
 		break;
 #if SDL_VERSION_ATLEAST(2, 0, 4)
 	case SDL_AUDIODEVICEADDED:
-		return false_avail("SDL_AUDIODEVICEADDED", e.adevice.which);
+		return FalseAvail("SDL_AUDIODEVICEADDED", e.adevice.which);
 	case SDL_AUDIODEVICEREMOVED:
-		return false_avail("SDL_AUDIODEVICEREMOVED", e.adevice.which);
+		return FalseAvail("SDL_AUDIODEVICEREMOVED", e.adevice.which);
 	case SDL_KEYMAPCHANGED:
-		return false_avail("SDL_KEYMAPCHANGED", 0);
+		return FalseAvail("SDL_KEYMAPCHANGED", 0);
 #endif
 	case SDL_TEXTEDITING:
-		return false_avail("SDL_TEXTEDITING", e.edit.length);
+		return FalseAvail("SDL_TEXTEDITING", e.edit.length);
 	case SDL_TEXTINPUT:
-		return false_avail("SDL_TEXTINPUT", e.text.windowID);
+		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);
 	case SDL_WINDOWEVENT:
 		switch (e.window.event) {
 		case SDL_WINDOWEVENT_SHOWN:
@@ -562,13 +563,13 @@ bool FetchMessage(LPMSG lpMsg)
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
 			break;
 		default:
-			return false_avail("SDL_WINDOWEVENT", e.window.event);
+			return FalseAvail("SDL_WINDOWEVENT", e.window.event);
 		}
 
 		break;
 #endif
 	default:
-		return false_avail("unknown", e.type);
+		return FalseAvail("unknown", e.type);
 	}
 	return true;
 }
@@ -582,15 +583,15 @@ bool TranslateMessage(const MSG *lpMsg)
 		bool shift = (mod & KMOD_SHIFT) != 0;
 		bool upper = shift != (mod & KMOD_CAPS);
 
-		bool is_alpha = (key >= 'A' && key <= 'Z');
-		bool is_numeric = (key >= '0' && key <= '9');
-		bool is_control = key == DVL_VK_SPACE || key == DVL_VK_BACK || key == DVL_VK_ESCAPE || key == DVL_VK_TAB || key == DVL_VK_RETURN;
-		bool is_oem = (key >= DVL_VK_OEM_1 && key <= DVL_VK_OEM_7);
+		bool isAlpha = (key >= 'A' && key <= 'Z');
+		bool isNumeric = (key >= '0' && key <= '9');
+		bool isControl = key == DVL_VK_SPACE || key == DVL_VK_BACK || key == DVL_VK_ESCAPE || key == DVL_VK_TAB || key == DVL_VK_RETURN;
+		bool isOem = (key >= DVL_VK_OEM_1 && key <= DVL_VK_OEM_7);
 
-		if (is_control || is_alpha || is_numeric || is_oem) {
-			if (!upper && is_alpha) {
+		if (isControl || isAlpha || isNumeric || isOem) {
+			if (!upper && isAlpha) {
 				key = tolower(key);
-			} else if (shift && is_numeric) {
+			} else if (shift && isNumeric) {
 				switch (key) {
 				case '1':
 					key = '!';
@@ -623,7 +624,7 @@ bool TranslateMessage(const MSG *lpMsg)
 					key = ')';
 					break;
 				}
-			} else if (is_oem) {
+			} else if (isOem) {
 				// XXX: This probably only supports US keyboard layout
 				switch (key) {
 				case DVL_VK_OEM_1:
@@ -713,14 +714,14 @@ void PushMessage(const MSG *lpMsg)
 	CurrentProc(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam)
+bool PostMessage(UINT type, WPARAM wParam, LPARAM lParam)
 {
-	MSG msg;
-	msg.message = Msg;
-	msg.wParam = wParam;
-	msg.lParam = lParam;
+	MSG message;
+	message.message = type;
+	message.wParam = wParam;
+	message.lParam = lParam;
 
-	message_queue.push_back(msg);
+	message_queue.push_back(message);
 
 	return true;
 }

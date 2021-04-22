@@ -11,7 +11,7 @@ namespace devilution {
 
 void FreeQol();
 void InitQol();
-void DrawMonsterHealthBar(CelOutputBuffer out);
+void DrawMonsterHealthBar(const CelOutputBuffer &out);
 void AutoGoldPickup(int pnum);
 
 } // namespace devilution

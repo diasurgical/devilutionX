@@ -29,9 +29,8 @@ uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
 		//moving this part to a separate volatile variable fixes saves in x64-release build in visual studio 2017
 		volatile uint32_t tmp = ((~word) >> (32 - bits));
 		return (word << bits) | (~tmp);
-	} else {
-		return (word << bits) | (word >> (32 - bits));
 	}
+	return (word << bits) | (word >> (32 - bits));
 }
 
 } // namespace

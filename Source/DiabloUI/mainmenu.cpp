@@ -18,7 +18,7 @@ void UiMainMenuSelect(int value)
 	MainMenuResult = (_mainmenu_selections)vecMenuItems[value]->m_value;
 }
 
-void mainmenu_Esc()
+void MainmenuEsc()
 {
 	std::size_t last = vecMenuItems.size() - 1;
 	if (SelectedItem == last) {
@@ -28,7 +28,7 @@ void mainmenu_Esc()
 	}
 }
 
-void mainmenu_Load(const char *name, void (*fnSound)(const char *file))
+void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 {
 	gfnSoundFunction = fnSound;
 
@@ -60,10 +60,10 @@ void mainmenu_Load(const char *name, void (*fnSound)(const char *file))
 	SDL_Rect rect = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
 	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
 
-	UiInitList(vecMenuItems.size(), nullptr, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, true);
+	UiInitList(vecMenuItems.size(), nullptr, UiMainMenuSelect, MainmenuEsc, vecMainMenuDialog, true);
 }
 
-void mainmenu_Free()
+void MainmenuFree()
 {
 	ArtBackgroundWidescreen.Unload();
 	ArtBackground.Unload();
@@ -91,7 +91,7 @@ bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*
 	MainMenuResult = MAINMENU_NONE;
 	while (MainMenuResult == MAINMENU_NONE) {
 		mainmenu_attract_time_out = attractTimeOut;
-		mainmenu_Load(name, fnSound);
+		MainmenuLoad(name, fnSound);
 
 		mainmenu_restart_repintro(); // for automatic starts
 
@@ -103,7 +103,7 @@ bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*
 			}
 		}
 
-		mainmenu_Free();
+		MainmenuFree();
 
 		if (gbSpawned && !gbIsHellfire && MainMenuResult == MAINMENU_REPLAY_INTRO) {
 			UiSelOkDialog(nullptr, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);

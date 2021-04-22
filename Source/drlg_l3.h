@@ -13,6 +13,6 @@ namespace devilution {
 void AddFenceDoors();
 void CreateL3Dungeon(DWORD rseed, lvl_entry entry);
 void LoadL3Dungeon(const char *sFileName, int vx, int vy);
-void LoadPreL3Dungeon(const char *sFileName, int vx, int vy);
+void LoadPreL3Dungeon(const char *sFileName);
 
 } // namespace devilution

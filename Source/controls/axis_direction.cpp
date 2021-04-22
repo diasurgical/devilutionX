@@ -4,14 +4,14 @@
 
 namespace devilution {
 
-AxisDirection AxisDirectionRepeater::Get(AxisDirection axis_direction)
+AxisDirection AxisDirectionRepeater::Get(AxisDirection axisDirection)
 {
 	const int now = SDL_GetTicks();
-	switch (axis_direction.x) {
+	switch (axisDirection.x) {
 	case AxisDirectionX_LEFT:
 		last_right_ = 0;
 		if (now - last_left_ < min_interval_ms_) {
-			axis_direction.x = AxisDirectionX_NONE;
+			axisDirection.x = AxisDirectionX_NONE;
 		} else {
 			last_left_ = now;
 		}
@@ -19,7 +19,7 @@ AxisDirection AxisDirectionRepeater::Get(AxisDirection axis_direction)
 	case AxisDirectionX_RIGHT:
 		last_left_ = 0;
 		if (now - last_right_ < min_interval_ms_) {
-			axis_direction.x = AxisDirectionX_NONE;
+			axisDirection.x = AxisDirectionX_NONE;
 		} else {
 			last_right_ = now;
 		}
@@ -28,11 +28,11 @@ AxisDirection AxisDirectionRepeater::Get(AxisDirection axis_direction)
 		last_left_ = last_right_ = 0;
 		break;
 	}
-	switch (axis_direction.y) {
+	switch (axisDirection.y) {
 	case AxisDirectionY_UP:
 		last_down_ = 0;
 		if (now - last_up_ < min_interval_ms_) {
-			axis_direction.y = AxisDirectionY_NONE;
+			axisDirection.y = AxisDirectionY_NONE;
 		} else {
 			last_up_ = now;
 		}
@@ -40,7 +40,7 @@ AxisDirection AxisDirectionRepeater::Get(AxisDirection axis_direction)
 	case AxisDirectionY_DOWN:
 		last_up_ = 0;
 		if (now - last_down_ < min_interval_ms_) {
-			axis_direction.y = AxisDirectionY_NONE;
+			axisDirection.y = AxisDirectionY_NONE;
 		} else {
 			last_down_ = now;
 		}
@@ -49,7 +49,7 @@ AxisDirection AxisDirectionRepeater::Get(AxisDirection axis_direction)
 		last_up_ = last_down_ = 0;
 		break;
 	}
-	return axis_direction;
+	return axisDirection;
 }
 
 } // namespace devilution

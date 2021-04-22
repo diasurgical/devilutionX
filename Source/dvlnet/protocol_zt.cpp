@@ -127,7 +127,8 @@ bool protocol_zt::send_queued_peer(const endpoint &peer)
 		if (r < 0) {
 			// handle error
 			return false;
-		} else if (decltype(len)(r) < len) {
+		}
+		if (decltype(len)(r) < len) {
 			// partial send
 			auto it = peer_list[peer].send_queue.front().begin();
 			peer_list[peer].send_queue.front().erase(it, it + r);
@@ -151,9 +152,8 @@ bool protocol_zt::recv_peer(const endpoint &peer)
 		} else {
 			if (errno == EAGAIN || errno == EWOULDBLOCK) {
 				return true;
-			} else {
-				return false;
 			}
+			return false;
 		}
 	}
 }
@@ -192,7 +192,7 @@ bool protocol_zt::recv_from_udp()
 	buffer_t data(buf, buf + len);
 	endpoint ep;
 	std::copy(in6.sin6_addr.s6_addr, in6.sin6_addr.s6_addr + 16, ep.addr.begin());
-	oob_recv_queue.push_back(std::make_pair(std::move(ep), std::move(data)));
+	oob_recv_queue.emplace_back(ep, std::move(data));
 	return true;
 }
 
@@ -295,11 +295,11 @@ uint64_t protocol_zt::current_ms()
 std::string protocol_zt::make_default_gamename()
 {
 	std::string ret;
-	std::string allowed_chars = "abcdefghkopqrstuvwxyz";
+	std::string allowedChars = "abcdefghkopqrstuvwxyz";
 	std::random_device rd;
-	std::uniform_int_distribution<int> dist(0, allowed_chars.size() - 1);
+	std::uniform_int_distribution<int> dist(0, allowedChars.size() - 1);
 	for (int i = 0; i < 5; ++i) {
-		ret += allowed_chars.at(dist(rd));
+		ret += allowedChars.at(dist(rd));
 	}
 	return ret;
 }

@@ -57,7 +57,7 @@ void UnloadArtFonts()
 
 void LoadTtfFont()
 {
-	if (!TTF_WasInit()) {
+	if (TTF_WasInit() == 0) {
 		if (TTF_Init() == -1) {
 			SDL_Log("TTF_Init: %s", TTF_GetError());
 			diablo_quit(1);
@@ -65,25 +65,25 @@ void LoadTtfFont()
 		was_fonts_init = true;
 	}
 
-	std::string ttf_font_path = GetTtfPath() + GetTtfName();
+	std::string ttfFontPath = GetTtfPath() + GetTtfName();
 #ifdef __linux__
-	if (!FileExists(ttf_font_path.c_str())) {
-		ttf_font_path = "/usr/share/fonts/truetype/" + GetTtfName();
+	if (!FileExists(ttfFontPath.c_str())) {
+		ttfFontPath = "/usr/share/fonts/truetype/" + GetTtfName();
 	}
 #endif
-	font = TTF_OpenFont(ttf_font_path.c_str(), 17);
+	font = TTF_OpenFont(ttfFontPath.c_str(), 17);
 	if (font == nullptr) {
 		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
 		return;
 	}
 
-	TTF_SetFontKerning(font, false);
+	TTF_SetFontKerning(font, 0);
 	TTF_SetFontHinting(font, TTF_HINTING_MONO);
 }
 
 void UnloadTtfFont()
 {
-	if (font && TTF_WasInit())
+	if (font != nullptr && TTF_WasInit() != 0)
 		TTF_CloseFont(font);
 	font = nullptr;
 }

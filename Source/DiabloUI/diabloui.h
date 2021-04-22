@@ -53,7 +53,6 @@ struct _uidefaultstats {
 };
 
 struct _uiheroinfo {
-	struct _uiheroinfo *next;
 	char name[16];
 	Uint16 level;
 	HeroClass heroclass;
@@ -62,8 +61,7 @@ struct _uiheroinfo {
 	Uint16 magic;
 	Uint16 dexterity;
 	Uint16 vitality;
-	Sint32 gold;
-	Sint32 hassaved;
+	bool hassaved;
 	bool spawned;
 };
 
@@ -104,7 +102,7 @@ void UiSelHeroSingDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool
 bool UiCreditsDialog();
 bool UiSupportDialog();
 bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut);
-bool UiProgressDialog(const char *msg, int (*fnfunc)(), int rate);
+bool UiProgressDialog(const char *msg, int (*fnfunc)());
 void UiProfileCallback();
 void UiProfileDraw();
 bool UiCategoryCallback(int a1, int a2, int a3, int a4, int a5, DWORD *a6, DWORD *a7);
@@ -114,12 +112,11 @@ bool UiSoundCallback(int a1, int type, int a3);
 bool UiDrawDescCallback(int game_type, DWORD color, const char *lpString, char *a4, int a5, UINT align, time_t a7, HDC *a8);
 bool UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6);
 bool UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp);
-int UiSelectGame(GameData *gameData, int *playerId);
-int UiSelectProvider(GameData *gameData);
-void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, Uint32 type);
+bool UiSelectGame(GameData *gameData, int *playerId);
+bool UiSelectProvider(GameData *gameData);
 void UiFadeIn();
 void UiHandleEvents(SDL_Event *event);
-bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items);
+bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items);
 Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
@@ -129,11 +126,11 @@ void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size = LOGO_MED, int y 
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<UiItemBase *> &items, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
 void UiClearScreen();
 void UiPollAndRender();
-void UiRenderItems(std::vector<UiItemBase *> items);
+void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiInitList_clear();
 
 void mainmenu_restart_repintro();

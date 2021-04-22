@@ -65,7 +65,7 @@ static bool doom_load_graphics()
 
 	ret = false;
 	strcpy(tempstr, "Items\\Map\\MapZtown.CEL");
-	if (LoadFileWithMem(tempstr, pDoomCel))
+	if (LoadFileWithMem(tempstr, pDoomCel) != 0)
 		ret = true;
 	return ret;
 }
@@ -88,7 +88,7 @@ void doom_close()
 	doom_cleanup();
 }
 
-void doom_draw(CelOutputBuffer out)
+void doom_draw(const CelOutputBuffer &out)
 {
 	if (!doomflag) {
 		return;

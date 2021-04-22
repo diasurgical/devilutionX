@@ -69,7 +69,7 @@ void base::recv_local(packet &pkt)
 	}
 	switch (pkt.type()) {
 	case PT_MESSAGE:
-		message_queue.push_back(message_t(pkt.src(), pkt.message()));
+		message_queue.emplace_back(pkt.src(), pkt.message());
 		break;
 	case PT_TURN:
 		turn_queue[pkt.src()].push_back(pkt.turn());
@@ -123,10 +123,10 @@ bool base::SNetSendMessage(int playerID, void *data, unsigned int size)
 	if (playerID != SNPLAYER_ALL && playerID != SNPLAYER_OTHERS
 	    && (playerID < 0 || playerID >= MAX_PLRS))
 		abort();
-	auto raw_message = reinterpret_cast<unsigned char *>(data);
-	buffer_t message(raw_message, raw_message + size);
+	auto rawMessage = reinterpret_cast<unsigned char *>(data);
+	buffer_t message(rawMessage, rawMessage + size);
 	if (playerID == plr_self || playerID == SNPLAYER_ALL)
-		message_queue.push_back(message_t(plr_self, message));
+		message_queue.emplace_back(plr_self, message);
 	plr_t dest;
 	if (playerID == SNPLAYER_ALL || playerID == SNPLAYER_OTHERS)
 		dest = PLR_BROADCAST;
@@ -142,16 +142,16 @@ bool base::SNetSendMessage(int playerID, void *data, unsigned int size)
 bool base::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
 {
 	poll();
-	bool all_turns_arrived = true;
+	bool allTurnsArrived = true;
 	for (auto i = 0; i < MAX_PLRS; ++i) {
 		status[i] = 0;
 		if (connected_table[i]) {
 			status[i] |= PS_CONNECTED;
 			if (turn_queue[i].empty())
-				all_turns_arrived = false;
+				allTurnsArrived = false;
 		}
 	}
-	if (all_turns_arrived) {
+	if (allTurnsArrived) {
 		for (auto i = 0; i < MAX_PLRS; ++i) {
 			if (connected_table[i]) {
 				size[i] = sizeof(turn_t);
@@ -163,16 +163,15 @@ bool base::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
 			}
 		}
 		return true;
-	} else {
-		for (auto i = 0; i < MAX_PLRS; ++i) {
-			if (connected_table[i]) {
-				if (!turn_queue[i].empty()) {
-					status[i] |= PS_ACTIVE;
-				}
+	}
+	for (auto i = 0; i < MAX_PLRS; ++i) {
+		if (connected_table[i]) {
+			if (!turn_queue[i].empty()) {
+				status[i] |= PS_ACTIVE;
 			}
 		}
-		return false;
 	}
+	return false;
 }
 
 bool base::SNetSendTurn(char *data, unsigned int size)

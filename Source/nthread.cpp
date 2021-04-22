@@ -39,7 +39,8 @@ void nthread_terminate_game(const char *pszFcn)
 	sErr = SErrGetLastError();
 	if (sErr == STORM_ERROR_INVALID_PLAYER) {
 		return;
-	} else if (sErr == STORM_ERROR_GAME_TERMINATED) {
+	}
+	if (sErr == STORM_ERROR_GAME_TERMINATED) {
 		gbGameDestroyed = true;
 	} else if (sErr == STORM_ERROR_NOT_IN_GAME) {
 		gbGameDestroyed = true;
@@ -103,17 +104,17 @@ bool nthread_recv_turns(bool *pfSendAsync)
 		sgbSyncCountdown = 1;
 		sgbPacketCountdown = 1;
 		return false;
-	} else {
-		if (!sgbTicsOutOfSync) {
-			sgbTicsOutOfSync = true;
-			last_tick = SDL_GetTicks();
-		}
-		sgbSyncCountdown = 4;
-		multi_msg_countdown();
-		*pfSendAsync = true;
-		last_tick += gnTickDelay;
-		return true;
 	}
+	if (!sgbTicsOutOfSync) {
+		sgbTicsOutOfSync = true;
+		last_tick = SDL_GetTicks();
+	}
+	sgbSyncCountdown = 4;
+	multi_msg_countdown();
+	*pfSendAsync = true;
+	last_tick += gnTickDelay;
+	return true;
+
 #endif
 }
 

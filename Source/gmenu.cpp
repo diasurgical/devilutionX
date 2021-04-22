@@ -21,7 +21,7 @@ BYTE *BigTGold_cel;
 int LogoAnim_tick;
 BYTE LogoAnim_frame;
 int PentSpin_tick;
-void (*gmenu_current_option)(TMenuItem *);
+void (*gmenu_current_option)();
 TMenuItem *sgpCurrentMenu;
 BYTE *option_cel;
 BYTE *sgpLogo;
@@ -54,7 +54,7 @@ const BYTE lfontkern[] = {
 	11, 10, 12, 11, 21, 23
 };
 
-static void gmenu_print_text(CelOutputBuffer out, int x, int y, const char *pszStr)
+static void gmenu_print_text(const CelOutputBuffer &out, int x, int y, const char *pszStr)
 {
 	BYTE c;
 
@@ -67,7 +67,7 @@ static void gmenu_print_text(CelOutputBuffer out, int x, int y, const char *pszS
 	}
 }
 
-void gmenu_draw_pause(CelOutputBuffer out)
+void gmenu_draw_pause(const CelOutputBuffer &out)
 {
 	if (currlevel != 0)
 		RedBack(out);
@@ -162,7 +162,7 @@ static void gmenu_left_right(bool isRight)
 	sgpCurrItem->fnMenu(false);
 }
 
-void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
+void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 {
 	int i;
 
@@ -171,7 +171,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 	sgpCurrentMenu = pItem;
 	gmenu_current_option = gmFunc;
 	if (gmFunc) {
-		gmenu_current_option(sgpCurrentMenu);
+		gmenu_current_option();
 		pItem = sgpCurrentMenu;
 	}
 	sgCurrentMenuIdx = 0;
@@ -211,7 +211,7 @@ static int gmenu_get_lfont(TMenuItem *pItem)
 	return i - 2;
 }
 
-static void gmenu_draw_menu_item(CelOutputBuffer out, TMenuItem *pItem, int y)
+static void gmenu_draw_menu_item(const CelOutputBuffer &out, TMenuItem *pItem, int y)
 {
 	DWORD w, x, nSteps, step, pos;
 	w = gmenu_get_lfont(pItem);
@@ -245,7 +245,7 @@ static void GameMenuMove()
 		gmenu_up_down(move_dir.y == AxisDirectionY_DOWN);
 }
 
-void gmenu_draw(CelOutputBuffer out)
+void gmenu_draw(const CelOutputBuffer &out)
 {
 	int y;
 	TMenuItem *i;
@@ -254,7 +254,7 @@ void gmenu_draw(CelOutputBuffer out)
 	if (sgpCurrentMenu) {
 		GameMenuMove();
 		if (gmenu_current_option)
-			gmenu_current_option(sgpCurrentMenu);
+			gmenu_current_option();
 		if (gbIsHellfire) {
 			ticks = SDL_GetTicks();
 			if ((int)(ticks - LogoAnim_tick) > 25) {
@@ -353,9 +353,8 @@ bool gmenu_left_mouse(bool isDown)
 		if (mouseNavigation) {
 			mouseNavigation = false;
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	if (!sgpCurrentMenu) {

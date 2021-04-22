@@ -82,7 +82,7 @@ bool panbtndown;
 bool spselflag;
 
 /** Map of hero class names */
-const char *const kClassStrTbl[] = {
+const char *const ClassStrTbl[] = {
 	"Warrior",
 	"Rogue",
 	"Sorcerer",
@@ -120,7 +120,7 @@ const BYTE fontkern[68] = {
 /**
  * Line start position for info box text when displaying 1, 2, 3, 4 and 5 lines respectivly
  */
-const int kLineOffsets[5][5] = {
+const int LineOffsets[5][5] = {
 	{ 82 },
 	{ 70, 94 },
 	{ 64, 82, 100 },
@@ -237,9 +237,9 @@ SDL_Rect PanBtnPos[8] = {
 	// clang-format on
 };
 /** Maps from panel_button_id to hotkey name. */
-const char *const kPanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", nullptr };
+const char *const PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", nullptr };
 /** Maps from panel_button_id to panel button description. */
-const char *const kPanBtnStr[8] = {
+const char *const PanBtnStr[8] = {
 	"Character Information",
 	"Quests log",
 	"Automap",
@@ -998,15 +998,15 @@ void CheckPanelInfo()
 		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
 		if (MouseX >= PanBtnPos[i].x + PANEL_LEFT && MouseX <= xend && MouseY >= PanBtnPos[i].y + PANEL_TOP && MouseY <= yend) {
 			if (i != 7) {
-				strcpy(infostr, kPanBtnStr[i]);
+				strcpy(infostr, PanBtnStr[i]);
 			} else {
 				if (gbFriendlyMode)
 					strcpy(infostr, "Player friendly");
 				else
 					strcpy(infostr, "Player attack");
 			}
-			if (kPanBtnHotKey[i] != nullptr) {
-				sprintf(tempstr, "Hotkey: %s", kPanBtnHotKey[i]);
+			if (PanBtnHotKey[i] != nullptr) {
+				sprintf(tempstr, "Hotkey: %s", PanBtnHotKey[i]);
 				AddPanelString(tempstr, true);
 			}
 			infoclr = COL_WHITE;
@@ -1201,7 +1201,7 @@ static void CPrintString(const CelOutputBuffer &out, int y, const char *str, boo
 {
 	int lineOffset = 0;
 	int sx = 177 + PANEL_X;
-	int sy = kLineOffsets[lines][y] + PANEL_Y;
+	int sy = LineOffsets[lines][y] + PANEL_Y;
 	if (center) {
 		int strWidth = 0;
 		const char *tmp = str;
@@ -1296,7 +1296,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 			infoclr = COL_GOLD;
 			strcpy(infostr, plr[pcursplr]._pName);
 			ClearPanel();
-			sprintf(tempstr, "%s, Level: %i", kClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)], plr[pcursplr]._pLevel);
+			sprintf(tempstr, "%s, Level: %i", ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)], plr[pcursplr]._pLevel);
 			AddPanelString(tempstr, true);
 			sprintf(tempstr, "Hit Points %i of %i", plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
 			AddPanelString(tempstr, true);
@@ -1362,7 +1362,7 @@ void DrawChr(const CelOutputBuffer &out)
 	CelDrawTo(out, 0, 351, pChrPanel, 1, SPANEL_WIDTH);
 	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
-	ADD_PlrStringXY(out, 168, 32, 299, kClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)], COL_WHITE);
+	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)], COL_WHITE);
 
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
 	ADD_PlrStringXY(out, 66, 69, 109, chrstr, COL_WHITE);

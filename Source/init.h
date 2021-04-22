@@ -9,7 +9,7 @@
 
 namespace devilution {
 
-extern int gbActive;
+extern bool gbActive;
 extern HANDLE hellfire_mpq;
 extern WNDPROC CurrentProc;
 extern HANDLE spawn_mpq;
@@ -30,7 +30,7 @@ extern HANDLE devilutionx_mpq;
 void init_cleanup();
 void init_archives();
 void init_create_window();
-void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam);
+void MainWndProc(UINT Msg);
 WNDPROC SetWindowProc(WNDPROC NewProc);
 
 /* data */

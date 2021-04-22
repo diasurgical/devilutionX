@@ -8,24 +8,24 @@
 
 namespace devilution {
 
-static int SDLCALL thread_translate(void *ptr)
+static int SDLCALL ThreadTranslate(void *ptr)
 {
 	auto handler = (unsigned int (*)(void *))ptr;
 
 	return handler(nullptr);
 }
 
-SDL_Thread *CreateThread(unsigned int (*handler)(void *), SDL_threadID *ThreadID)
+SDL_Thread *CreateThread(unsigned int (*handler)(void *), SDL_threadID *threadId)
 {
 #ifdef USE_SDL1
-	SDL_Thread *ret = SDL_CreateThread(thread_translate, (void *)handler);
+	SDL_Thread *ret = SDL_CreateThread(ThreadTranslate, (void *)handler);
 #else
-	SDL_Thread *ret = SDL_CreateThread(thread_translate, nullptr, (void *)handler);
+	SDL_Thread *ret = SDL_CreateThread(ThreadTranslate, nullptr, (void *)handler);
 #endif
 	if (ret == nullptr) {
 		ErrSdl();
 	}
-	*ThreadID = SDL_GetThreadID(ret);
+	*threadId = SDL_GetThreadID(ret);
 	return ret;
 }
 

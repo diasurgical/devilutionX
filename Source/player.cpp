@@ -1063,8 +1063,8 @@ void InitPlayer(int pnum, bool FirstTime)
 		if (plr[pnum]._pHitPoints >> 6 > 0) {
 			plr[pnum]._pmode = PM_STAND;
 			NewPlrAnim(pnum, plr[pnum]._pNAnim[DIR_S], plr[pnum]._pNFrames, 3, plr[pnum]._pNWidth);
-			plr[pnum]._pAnimFrame = random_(2, plr[pnum]._pNFrames - 1) + 1;
-			plr[pnum]._pAnimCnt = random_(2, 3);
+			plr[pnum]._pAnimFrame = GenerateRnd(plr[pnum]._pNFrames - 1) + 1;
+			plr[pnum]._pAnimCnt = GenerateRnd(3);
 		} else {
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
@@ -1663,16 +1663,21 @@ void RemovePlrFromMap(int pnum)
 	pp = pnum + 1;
 	pn = -(pnum + 1);
 
-	for (y = 1; y < MAXDUNY; y++)
-		for (x = 1; x < MAXDUNX; x++)
-			if (dPlayer[x][y - 1] == pn || dPlayer[x - 1][y] == pn)
-				if (dFlags[x][y] & BFLAG_PLAYERLR)
+	for (y = 1; y < MAXDUNY; y++) {
+		for (x = 1; x < MAXDUNX; x++) {
+			if (dPlayer[x][y - 1] == pn || dPlayer[x - 1][y] == pn) {
+				if (dFlags[x][y] & BFLAG_PLAYERLR) {
 					dFlags[x][y] &= ~BFLAG_PLAYERLR;
+				}
+			}
+		}
+	}
 
-	for (y = 0; y < MAXDUNY; y++)
+	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++)
 			if (dPlayer[x][y] == pp || dPlayer[x][y] == pn)
 				dPlayer[x][y] = 0;
+	}
 }
 
 void StartPlrHit(int pnum, int dam, bool forcehit)
@@ -2234,11 +2239,6 @@ void StartWarpLvl(int pnum, int pidx)
 	}
 }
 
-bool PM_DoStand(int pnum)
-{
-	return false;
-}
-
 /**
  * @brief Continue movement towards new tile
  */
@@ -2324,10 +2324,9 @@ bool PM_DoWalk(int pnum, int variant)
 
 		AutoGoldPickup(pnum);
 		return true;
-	} else { //We didn't reach new tile so update player's "sub-tile" position
-		PM_ChangeOffset(pnum);
-		return false;
-	}
+	} //We didn't reach new tile so update player's "sub-tile" position
+	PM_ChangeOffset(pnum);
+	return false;
 }
 
 static bool WeaponDurDecay(int pnum, int ii)
@@ -2356,7 +2355,7 @@ bool WeaponDur(int pnum, int durrnd)
 	if (WeaponDurDecay(pnum, INVLOC_HAND_RIGHT))
 		return true;
 
-	if (random_(3, durrnd) != 0) {
+	if (GenerateRnd(durrnd) != 0) {
 		return false;
 	}
 
@@ -2462,7 +2461,7 @@ bool PlrHitMonst(int pnum, int m)
 
 	rv = false;
 
-	hit = random_(4, 100);
+	hit = GenerateRnd(100);
 	if (monster[m]._mmode == MM_STONE) {
 		hit = 0;
 	}
@@ -2506,19 +2505,19 @@ bool PlrHitMonst(int pnum, int m)
 	if (hit < hper) {
 #endif
 		if (plr[pnum]._pIFlags & ISPL_FIREDAM && plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
-			int midam = plr[pnum]._pIFMinDam + random_(3, plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
+			int midam = plr[pnum]._pIFMinDam + GenerateRnd(plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
 			AddMissile(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pVar1, plr[pnum]._pVar2, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		}
 		mind = plr[pnum]._pIMinDam;
 		maxd = plr[pnum]._pIMaxDam;
-		dam = random_(5, maxd - mind + 1) + mind;
+		dam = GenerateRnd(maxd - mind + 1) + mind;
 		dam += dam * plr[pnum]._pIBonusDam / 100;
 		dam += plr[pnum]._pIBonusDamMod;
 		int dam2 = dam << 6;
 		dam += plr[pnum]._pDamageMod;
 		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 			ddp = plr[pnum]._pLevel;
-			if (random_(6, 100) < ddp) {
+			if (GenerateRnd(100) < ddp) {
 				dam *= 2;
 			}
 		}
@@ -2553,17 +2552,17 @@ bool PlrHitMonst(int pnum, int m)
 			break;
 		}
 
-		if (plr[pnum].pDamAcFlags & 0x01 && random_(6, 100) < 5) {
+		if (plr[pnum].pDamAcFlags & 0x01 && GenerateRnd(100) < 5) {
 			dam *= 3;
 		}
 
-		if (plr[pnum].pDamAcFlags & 0x10 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && random_(6, 100) < 10) {
+		if (plr[pnum].pDamAcFlags & 0x10 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
 			monster_43C785(m);
 		}
 
 		dam <<= 6;
 		if (plr[pnum].pDamAcFlags & 0x08) {
-			int r = random_(6, 201);
+			int r = GenerateRnd(201);
 			if (r >= 100)
 				r = 100 + (r - 100) * 5;
 			dam = dam * r / 100;
@@ -2584,7 +2583,7 @@ bool PlrHitMonst(int pnum, int m)
 		}
 
 		if (plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) {
-			skdam = random_(7, dam / 8);
+			skdam = GenerateRnd(dam / 8);
 			plr[pnum]._pHitPoints += skdam;
 			if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
 				plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
@@ -2684,7 +2683,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		app_fatal("PlrHitPlr: illegal attacking player %d", pnum);
 	}
 
-	hit = random_(4, 100);
+	hit = GenerateRnd(100);
 
 	hper = (plr[pnum]._pDexterity / 2) + plr[pnum]._pLevel + 50 - (plr[p]._pIBonusAC + plr[p]._pIAC + plr[p]._pDexterity / 5);
 
@@ -2700,7 +2699,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 	}
 
 	if ((plr[p]._pmode == PM_STAND || plr[p]._pmode == PM_ATTACK) && plr[p]._pBlockFlag) {
-		blk = random_(5, 100);
+		blk = GenerateRnd(100);
 	} else {
 		blk = 100;
 	}
@@ -2720,19 +2719,19 @@ bool PlrHitPlr(int pnum, int8_t p)
 		} else {
 			mind = plr[pnum]._pIMinDam;
 			maxd = plr[pnum]._pIMaxDam;
-			dam = random_(5, maxd - mind + 1) + mind;
+			dam = GenerateRnd(maxd - mind + 1) + mind;
 			dam += (dam * plr[pnum]._pIBonusDam) / 100;
 			dam += plr[pnum]._pIBonusDamMod + plr[pnum]._pDamageMod;
 
 			if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
 				lvl = plr[pnum]._pLevel;
-				if (random_(6, 100) < lvl) {
+				if (GenerateRnd(100) < lvl) {
 					dam *= 2;
 				}
 			}
 			skdam = dam << 6;
 			if (plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) {
-				tac = random_(7, skdam / 8);
+				tac = GenerateRnd(skdam / 8);
 				plr[pnum]._pHitPoints += tac;
 				if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
 					plr[pnum]._pHitPoints = plr[pnum]._pMaxHP;
@@ -2880,9 +2879,8 @@ bool PM_DoAttack(int pnum)
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }
 
 bool PM_DoRangeAttack(int pnum)
@@ -2933,7 +2931,7 @@ bool PM_DoRangeAttack(int pnum)
 			mistype = MIS_LARROW;
 		}
 		if ((plr[pnum]._pIFlags & ISPL_FIRE_ARROWS) != 0 && (plr[pnum]._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
-			dmg = plr[pnum]._pIFMinDam + random_(3, plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
+			dmg = plr[pnum]._pIFMinDam + GenerateRnd(plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
 			mistype = MIS_SPECARROW;
 		}
 
@@ -2964,9 +2962,8 @@ bool PM_DoRangeAttack(int pnum)
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }
 
 void ShieldDur(int pnum)
@@ -3018,7 +3015,7 @@ bool PM_DoBlock(int pnum)
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 
-		if (random_(3, 10) == 0) {
+		if (GenerateRnd(10) == 0) {
 			ShieldDur(pnum);
 		}
 		return true;
@@ -3046,7 +3043,7 @@ static void ArmorDur(int pnum)
 		return;
 	}
 
-	a = random_(8, 3);
+	a = GenerateRnd(3);
 	if (!p->InvBody[INVLOC_CHEST].isEmpty() && p->InvBody[INVLOC_HEAD].isEmpty()) {
 		a = 1;
 	}
@@ -3137,7 +3134,7 @@ bool PM_DoGotHit(int pnum)
 	if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
-		if (random_(3, 4) != 0) {
+		if (GenerateRnd(4) != 0) {
 			ArmorDur(pnum);
 		}
 
@@ -3173,11 +3170,6 @@ bool PM_DoDeath(int pnum)
 		plr[pnum]._pVar8++;
 	}
 
-	return false;
-}
-
-bool PM_DoNewLvl(int pnum)
-{
 	return false;
 }
 
@@ -3517,7 +3509,8 @@ bool PlrDeathModeOK(int p)
 
 	if (plr[p]._pmode == PM_DEATH) {
 		return true;
-	} else if (plr[p]._pmode == PM_QUIT) {
+	}
+	if (plr[p]._pmode == PM_QUIT) {
 		return true;
 	} else if (plr[p]._pmode == PM_NEWLVL) {
 		return true;
@@ -3667,7 +3660,9 @@ void ProcessPlayers()
 			do {
 				switch (plr[pnum]._pmode) {
 				case PM_STAND:
-					tplayer = PM_DoStand(pnum);
+				case PM_NEWLVL:
+				case PM_QUIT:
+					tplayer = false;
 					break;
 				case PM_WALK:
 				case PM_WALK2:
@@ -3691,12 +3686,6 @@ void ProcessPlayers()
 					break;
 				case PM_DEATH:
 					tplayer = PM_DoDeath(pnum);
-					break;
-				case PM_NEWLVL:
-					tplayer = PM_DoNewLvl(pnum);
-					break;
-				case PM_QUIT:
-					tplayer = false;
 					break;
 				}
 				CheckNewPath(pnum);

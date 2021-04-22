@@ -34,9 +34,9 @@ SDL_Palette *SVidPalette;
 SDL_Surface *SVidSurface;
 BYTE *SVidBuffer;
 
-bool IsLandscapeFit(unsigned long src_w, unsigned long src_h, unsigned long dst_w, unsigned long dst_h)
+bool IsLandscapeFit(unsigned long srcW, unsigned long srcH, unsigned long dstW, unsigned long dstH)
 {
-	return src_w * dst_h > dst_w * src_h;
+	return srcW * dstH > dstW * srcH;
 }
 
 #ifdef USE_SDL1
@@ -353,19 +353,19 @@ bool SVidPlayContinue()
 {
 	if (smk_palette_updated(SVidSMK)) {
 		SDL_Color colors[256];
-		const unsigned char *palette_data = smk_get_palette(SVidSMK);
+		const unsigned char *paletteData = smk_get_palette(SVidSMK);
 
 		for (int i = 0; i < 256; i++) {
-			colors[i].r = palette_data[i * 3 + 0];
-			colors[i].g = palette_data[i * 3 + 1];
-			colors[i].b = palette_data[i * 3 + 2];
+			colors[i].r = paletteData[i * 3 + 0];
+			colors[i].g = paletteData[i * 3 + 1];
+			colors[i].b = paletteData[i * 3 + 2];
 #ifndef USE_SDL1
 			colors[i].a = SDL_ALPHA_OPAQUE;
 #endif
 
-			orig_palette[i].r = palette_data[i * 3 + 0];
-			orig_palette[i].g = palette_data[i * 3 + 1];
-			orig_palette[i].b = palette_data[i * 3 + 2];
+			orig_palette[i].r = paletteData[i * 3 + 0];
+			orig_palette[i].g = paletteData[i * 3 + 1];
+			orig_palette[i].b = paletteData[i * 3 + 2];
 		}
 		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
 
@@ -406,32 +406,32 @@ bool SVidPlayContinue()
 	} else
 #endif
 	{
-		SDL_Surface *output_surface = GetOutputSurface();
+		SDL_Surface *outputSurface = GetOutputSurface();
 #ifdef USE_SDL1
-		const bool is_indexed_output_format = SDLBackport_IsPixelFormatIndexed(output_surface->format);
+		const bool isIndexedOutputFormat = SDLBackport_IsPixelFormatIndexed(outputSurface->format);
 #else
-		const Uint32 wnd_format = SDL_GetWindowPixelFormat(ghMainWnd);
-		const bool is_indexed_output_format = SDL_ISPIXELFORMAT_INDEXED(wnd_format);
+		const Uint32 wndFormat = SDL_GetWindowPixelFormat(ghMainWnd);
+		const bool isIndexedOutputFormat = SDL_ISPIXELFORMAT_INDEXED(wndFormat);
 #endif
-		SDL_Rect output_rect;
-		if (is_indexed_output_format) {
+		SDL_Rect outputRect;
+		if (isIndexedOutputFormat) {
 			// Cannot scale if the output format is indexed (8-bit palette).
-			output_rect.w = static_cast<int>(SVidWidth);
-			output_rect.h = static_cast<int>(SVidHeight);
-		} else if (IsLandscapeFit(SVidWidth, SVidHeight, output_surface->w, output_surface->h)) {
-			output_rect.w = output_surface->w;
-			output_rect.h = SVidHeight * output_surface->w / SVidWidth;
+			outputRect.w = static_cast<int>(SVidWidth);
+			outputRect.h = static_cast<int>(SVidHeight);
+		} else if (IsLandscapeFit(SVidWidth, SVidHeight, outputSurface->w, outputSurface->h)) {
+			outputRect.w = outputSurface->w;
+			outputRect.h = SVidHeight * outputSurface->w / SVidWidth;
 		} else {
-			output_rect.w = SVidWidth * output_surface->h / SVidHeight;
-			output_rect.h = output_surface->h;
+			outputRect.w = SVidWidth * outputSurface->h / SVidHeight;
+			outputRect.h = outputSurface->h;
 		}
-		output_rect.x = (output_surface->w - output_rect.w) / 2;
-		output_rect.y = (output_surface->h - output_rect.h) / 2;
+		outputRect.x = (outputSurface->w - outputRect.w) / 2;
+		outputRect.y = (outputSurface->h - outputRect.h) / 2;
 
-		if (is_indexed_output_format
-		    || output_surface->w == static_cast<int>(SVidWidth)
-		    || output_surface->h == static_cast<int>(SVidHeight)) {
-			if (SDL_BlitSurface(SVidSurface, nullptr, output_surface, &output_rect) <= -1) {
+		if (isIndexedOutputFormat
+		    || outputSurface->w == static_cast<int>(SVidWidth)
+		    || outputSurface->h == static_cast<int>(SVidHeight)) {
+			if (SDL_BlitSurface(SVidSurface, nullptr, outputSurface, &outputRect) <= -1) {
 				ErrSdl();
 			}
 		} else {
@@ -440,9 +440,9 @@ bool SVidPlayContinue()
 #ifdef USE_SDL1
 			SDLSurfaceUniquePtr converted { SDL_ConvertSurface(SVidSurface, ghMainWnd->format, 0) };
 #else
-			SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(SVidSurface, wnd_format, 0) };
+			SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(SVidSurface, wndFormat, 0) };
 #endif
-			if (SDL_BlitScaled(converted.get(), nullptr, output_surface, &output_rect) <= -1) {
+			if (SDL_BlitScaled(converted.get(), nullptr, outputSurface, &outputRect) <= -1) {
 				SDL_Log("%s", SDL_GetError());
 				return false;
 			}

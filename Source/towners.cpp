@@ -385,7 +385,7 @@ void InitCows()
 		SetTownerGPtrs(towners[numtowners]._tNData, towners[numtowners]._tNAnim);
 		towners[numtowners]._tNFrames = 12;
 		NewTownerAnim(numtowners, towners[numtowners]._tNAnim[dir], towners[numtowners]._tNFrames, 3);
-		towners[numtowners]._tAnimFrame = random_(0, 11) + 1;
+		towners[numtowners]._tAnimFrame = GenerateRnd(11) + 1;
 		towners[numtowners]._tSelFlag = true;
 		strcpy(towners[numtowners]._tName, "Cow");
 
@@ -716,7 +716,7 @@ ItemStruct *PlrHasItem(int pnum, int item, int *i)
 	return nullptr;
 }
 
-void TownerTalk(int first, int t)
+void TownerTalk(int first)
 {
 	sgdwCowClicks = 0;
 	sgnCowMsg = 0;
@@ -808,7 +808,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 		if (!qtextflag) {
-			TownerTalk(TEXT_OGDEN1, t);
+			TownerTalk(TEXT_OGDEN1);
 			if (storeflag) {
 				StartStore(STORE_TAVERN);
 			}
@@ -894,7 +894,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 		if (!qtextflag) {
-			TownerTalk(TEXT_GRISWOLD1, t);
+			TownerTalk(TEXT_GRISWOLD1);
 			if (storeflag) {
 				StartStore(STORE_SMITH);
 			}
@@ -947,7 +947,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 		if (!qtextflag) {
-			TownerTalk(TEXT_ADRIA1, t);
+			TownerTalk(TEXT_ADRIA1);
 			if (storeflag) {
 				StartStore(STORE_WITCH);
 			}
@@ -961,14 +961,14 @@ void TalkToTowner(int p, int t)
 			towners[t]._tMsgSaid = true;
 		}
 		if (!qtextflag) {
-			TownerTalk(TEXT_GILLIAN1, t);
+			TownerTalk(TEXT_GILLIAN1);
 			if (storeflag) {
 				StartStore(STORE_BARMAID);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_DRUNK)) {
 		if (!qtextflag) {
-			TownerTalk(TEXT_FARNHAM1, t);
+			TownerTalk(TEXT_FARNHAM1);
 			if (storeflag) {
 				StartStore(STORE_DRUNK);
 			}
@@ -1005,14 +1005,14 @@ void TalkToTowner(int p, int t)
 			}
 		}
 		if (!qtextflag) {
-			TownerTalk(TEXT_PEPIN1, t);
+			TownerTalk(TEXT_PEPIN1);
 			if (storeflag) {
 				StartStore(STORE_HEALER);
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_PEGBOY)) {
 		if (!qtextflag) {
-			TownerTalk(TEXT_WIRT1, t);
+			TownerTalk(TEXT_WIRT1);
 			if (storeflag) {
 				StartStore(STORE_BOY);
 			}
@@ -1057,7 +1057,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 		if (!qtextflag) {
-			TownerTalk(TEXT_STORY1, t);
+			TownerTalk(TEXT_STORY1);
 			if (storeflag) {
 				StartStore(STORE_STORY);
 			}
@@ -1196,7 +1196,7 @@ void TalkToTowner(int p, int t)
 					break;
 				case QUEST_HIVE_ACTIVE:
 					if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
-						switch (random_(0, 4)) {
+						switch (GenerateRnd(4)) {
 						case 0:
 							qt = TEXT_JERSEY9;
 							break;

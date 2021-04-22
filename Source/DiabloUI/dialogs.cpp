@@ -1,5 +1,7 @@
 #include "DiabloUI/dialogs.h"
 
+#include <utility>
+
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/errorart.h"
@@ -34,7 +36,7 @@ std::vector<UiItemBase *> vecOkDialog;
 void LoadFallbackPalette()
 {
 	// clang-format off
-	static const SDL_Color fallback_palette[256] = {
+	static const SDL_Color FallbackPalette[256] = {
 		{ 0x00, 0x00, 0x00, 0 },
 		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
 		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
@@ -151,7 +153,7 @@ void LoadFallbackPalette()
 		BLANKCOLOR,
 	};
 	// clang-format on
-	ApplyGamma(logical_palette, fallback_palette, 256);
+	ApplyGamma(logical_palette, FallbackPalette, 256);
 }
 
 void Init(const char *text, const char *caption, bool error, bool renderBehind)
@@ -216,12 +218,12 @@ void Deinit()
 	vecOkDialog.clear();
 }
 
-void DialogLoop(std::vector<UiItemBase *> items, std::vector<UiItemBase *> renderBehind)
+void DialogLoop(const std::vector<UiItemBase *> &items, const std::vector<UiItemBase *> &renderBehind)
 {
 	SDL_Event event;
 	dialogEnd = false;
 	do {
-		while (SDL_PollEvent(&event)) {
+		while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
@@ -241,7 +243,7 @@ void DialogLoop(std::vector<UiItemBase *> items, std::vector<UiItemBase *> rende
 			UiHandleEvents(&event);
 		}
 
-		if (renderBehind.size() == 0) {
+		if (renderBehind.empty()) {
 			SDL_FillRect(DiabloUiSurface(), nullptr, 0);
 		} else {
 			UiRenderItems(renderBehind);
@@ -254,7 +256,7 @@ void DialogLoop(std::vector<UiItemBase *> items, std::vector<UiItemBase *> rende
 
 } // namespace
 
-void UiOkDialog(const char *text, const char *caption, bool error, std::vector<UiItemBase *> renderBehind)
+void UiOkDialog(const char *text, const char *caption, bool error, const std::vector<UiItemBase *> &renderBehind)
 {
 	static bool inDialog = false;
 
@@ -275,13 +277,13 @@ void UiOkDialog(const char *text, const char *caption, bool error, std::vector<U
 	}
 
 	inDialog = true;
-	Init(text, caption, error, renderBehind.size() > 0);
+	Init(text, caption, error, !renderBehind.empty());
 	DialogLoop(vecOkDialog, renderBehind);
 	Deinit();
 	inDialog = false;
 }
 
-void UiErrorOkDialog(const char *text, const char *caption, std::vector<UiItemBase *> renderBehind)
+void UiErrorOkDialog(const char *text, const char *caption, const std::vector<UiItemBase *> &renderBehind)
 {
 	UiOkDialog(text, caption, /*error=*/true, renderBehind);
 }
@@ -293,7 +295,7 @@ void UiErrorOkDialog(const char *text, const char *caption, bool error)
 
 void UiErrorOkDialog(const char *text, std::vector<UiItemBase *> renderBehind)
 {
-	UiErrorOkDialog(text, nullptr, renderBehind);
+	UiErrorOkDialog(text, nullptr, std::move(renderBehind));
 }
 
 } // namespace devilution

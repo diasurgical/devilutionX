@@ -107,8 +107,8 @@ bool PortalOnLevel(int i)
 {
 	if (portal[i].level == currlevel)
 		return true;
-	else
-		return currlevel == 0;
+
+	return currlevel == 0;
 }
 
 void RemovePortalMissile(int id)

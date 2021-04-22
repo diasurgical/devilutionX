@@ -10,6 +10,13 @@
 #include "sound.h"
 
 namespace devilution {
+namespace {
+#ifndef DISABLE_STREAMING_SOUNDS
+constexpr bool AllowStreaming = true;
+#else
+constexpr bool AllowStreaming = false;
+#endif
+} // namespace
 
 int sfxdelay;
 _sfx_id sfxdnum = SFX_NONE;
@@ -1085,12 +1092,6 @@ void stream_stop()
 
 static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 {
-#ifndef DISABLE_STREAMING_SOUNDS
-	constexpr bool kAllowStreaming = true;
-#else
-	constexpr bool kAllowStreaming = false;
-#endif
-
 	assert(pSFX);
 	assert(pSFX->bFlags & sfx_STREAM);
 	stream_stop();
@@ -1099,7 +1100,7 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 		if (lVolume > VOLUME_MAX)
 			lVolume = VOLUME_MAX;
 		if (pSFX->pSnd == nullptr)
-			pSFX->pSnd = sound_file_load(pSFX->pszName, kAllowStreaming);
+			pSFX->pSnd = sound_file_load(pSFX->pszName, AllowStreaming);
 		pSFX->pSnd->DSB->Play(lVolume, lPan, 0);
 		sgpStreamSFX = pSFX;
 	}
@@ -1230,7 +1231,7 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	sndIdx = random_(164, 2);
+	sndIdx = GenerateRnd(2);
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
 		return;
 	}
@@ -1276,7 +1277,7 @@ static _sfx_id RndSFX(_sfx_id psfx)
 		return psfx;
 	}
 
-	return static_cast<_sfx_id>(psfx + random_(165, nRand));
+	return static_cast<_sfx_id>(psfx + GenerateRnd(nRand));
 }
 
 void PlaySFX(_sfx_id psfx)
@@ -1414,7 +1415,8 @@ void effects_play_sound(const char *snd_file)
 int GetSFXLength(int nSFX)
 {
 	if (sgSFX[nSFX].pSnd == nullptr)
-		sgSFX[nSFX].pSnd = sound_file_load(sgSFX[nSFX].pszName);
+		sgSFX[nSFX].pSnd = sound_file_load(sgSFX[nSFX].pszName,
+		    /*stream=*/AllowStreaming && (sgSFX[nSFX].bFlags & sfx_STREAM) != 0);
 	return sgSFX[nSFX].pSnd->DSB->GetLength();
 }
 

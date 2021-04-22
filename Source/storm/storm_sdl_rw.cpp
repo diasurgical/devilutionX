@@ -8,27 +8,27 @@
 
 namespace devilution {
 
-static HANDLE SFileRw_GetHandle(struct SDL_RWops *context)
+static HANDLE SFileRwGetHandle(struct SDL_RWops *context)
 {
 	return (HANDLE)context->hidden.unknown.data1;
 }
 
-static void SFileRw_SetHandle(struct SDL_RWops *context, HANDLE handle)
+static void SFileRwSetHandle(struct SDL_RWops *context, HANDLE handle)
 {
 	context->hidden.unknown.data1 = handle;
 }
 
 #ifndef USE_SDL1
-static Sint64 SFileRw_size(struct SDL_RWops *context)
+static Sint64 SFileRwSize(struct SDL_RWops *context)
 {
-	return SFileGetFileSize(SFileRw_GetHandle(context), nullptr);
+	return SFileGetFileSize(SFileRwGetHandle(context), nullptr);
 }
 #endif
 
 #ifndef USE_SDL1
-static Sint64 SFileRw_seek(struct SDL_RWops *context, Sint64 offset, int whence)
+static Sint64 SFileRwSeek(struct SDL_RWops *context, Sint64 offset, int whence)
 #else
-static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
+static int SFileRwSeek(struct SDL_RWops *context, int offset, int whence)
 #endif
 {
 	DWORD swhence;
@@ -45,30 +45,30 @@ static int SFileRw_seek(struct SDL_RWops *context, int offset, int whence)
 	default:
 		return -1;
 	}
-	const std::uint64_t pos = SFileSetFilePointer(SFileRw_GetHandle(context), offset, swhence);
+	const std::uint64_t pos = SFileSetFilePointer(SFileRwGetHandle(context), offset, swhence);
 	if (pos == static_cast<std::uint64_t>(-1)) {
-		SDL_Log("SFileRw_seek error: %ud", (unsigned int)SErrGetLastError());
+		SDL_Log("SFileRwSeek error: %ud", (unsigned int)SErrGetLastError());
 	}
 	return pos;
 }
 
 #ifndef USE_SDL1
-static size_t SFileRw_read(struct SDL_RWops *context, void *ptr, size_t size, size_t maxnum)
+static size_t SFileRwRead(struct SDL_RWops *context, void *ptr, size_t size, size_t maxnum)
 #else
-static int SFileRw_read(struct SDL_RWops *context, void *ptr, int size, int maxnum)
+static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnum)
 #endif
 {
-	DWORD num_read = 0;
-	if (!SFileReadFile(SFileRw_GetHandle(context), ptr, maxnum * size, &num_read, nullptr)) {
-		const DWORD err_code = SErrGetLastError();
-		if (err_code != STORM_ERROR_HANDLE_EOF) {
-			SDL_Log("SFileRw_read error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)err_code);
+	DWORD numRead = 0;
+	if (!SFileReadFile(SFileRwGetHandle(context), ptr, maxnum * size, &numRead, nullptr)) {
+		const DWORD errCode = SErrGetLastError();
+		if (errCode != STORM_ERROR_HANDLE_EOF) {
+			SDL_Log("SFileRwRead error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)errCode);
 		}
 	}
-	return num_read / size;
+	return numRead / size;
 }
 
-static int SFileRw_close(struct SDL_RWops *context)
+static int SFileRwClose(struct SDL_RWops *context)
 {
 	mem_free_dbg(context);
 	return 0;
@@ -80,17 +80,17 @@ SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 	std::memset(result, 0, sizeof(*result));
 
 #ifndef USE_SDL1
-	result->size = &SFileRw_size;
+	result->size = &SFileRwSize;
 	result->type = SDL_RWOPS_UNKNOWN;
 #else
 	result->type = 0;
 #endif
 
-	result->seek = &SFileRw_seek;
-	result->read = &SFileRw_read;
+	result->seek = &SFileRwSeek;
+	result->read = &SFileRwRead;
 	result->write = nullptr;
-	result->close = &SFileRw_close;
-	SFileRw_SetHandle(result, handle);
+	result->close = &SFileRwClose;
+	SFileRwSetHandle(result, handle);
 	return result;
 }
 

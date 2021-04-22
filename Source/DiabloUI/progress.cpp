@@ -25,7 +25,7 @@ void DialogActionCancel()
 	endMenu = true;
 }
 
-void progress_Load(const char *msg)
+void ProgressLoad(const char *msg)
 {
 	LoadBackgroundArt("ui_art\\black.pcx");
 	LoadArt("ui_art\\spopup.pcx", &ArtPopupSm);
@@ -45,7 +45,7 @@ void progress_Load(const char *msg)
 	vecProgress.push_back(new UiButton(&SmlButton, "Cancel", &DialogActionCancel, rect3, 0));
 }
 
-void progress_Free()
+void ProgressFree()
 {
 	ArtBackground.Unload();
 	ArtPopupSm.Unload();
@@ -59,7 +59,7 @@ void progress_Free()
 	UnloadTtfFont();
 }
 
-void progress_Render(BYTE progress)
+void ProgressRender(BYTE progress)
 {
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	DrawArt(0, 0, &ArtBackground);
@@ -69,30 +69,30 @@ void progress_Render(BYTE progress)
 
 	DrawArt(x, y, &ArtPopupSm, 0, 280, 140);
 	DrawArt(GetCenterOffset(227), y + 52, &ArtProgBG, 0, 227);
-	if (progress) {
+	if (progress != 0) {
 		DrawArt(GetCenterOffset(227), y + 52, &ProgFil, 0, 227 * progress / 100);
 	}
 	DrawArt(GetCenterOffset(110), y + 99, &SmlButton, 2, 110);
 
-	if (msgSurface) {
-		SDL_Rect dsc_rect = {
+	if (msgSurface != nullptr) {
+		SDL_Rect dscRect = {
 			static_cast<Sint16>(x + 50 + 1),
 			static_cast<Sint16>(y + 8 + 1),
 			static_cast<Uint16>(msgSurface->w),
 			static_cast<Uint16>(msgSurface->h)
 		};
-		Blit(msgShadow, nullptr, &dsc_rect);
-		dsc_rect.x -= 1;
-		dsc_rect.y -= 1;
-		Blit(msgSurface, nullptr, &dsc_rect);
+		Blit(msgShadow, nullptr, &dscRect);
+		dscRect.x -= 1;
+		dscRect.y -= 1;
+		Blit(msgSurface, nullptr, &dscRect);
 	}
 }
 
 } // namespace
 
-bool UiProgressDialog(const char *msg, int (*fnfunc)(), int rate)
+bool UiProgressDialog(const char *msg, int (*fnfunc)())
 {
-	progress_Load(msg);
+	ProgressLoad(msg);
 	SetFadeLevel(256);
 
 	endMenu = false;
@@ -101,12 +101,12 @@ bool UiProgressDialog(const char *msg, int (*fnfunc)(), int rate)
 	SDL_Event event;
 	while (!endMenu && progress < 100) {
 		progress = fnfunc();
-		progress_Render(progress);
+		ProgressRender(progress);
 		UiRenderItems(vecProgress);
 		DrawMouse();
 		RenderPresent();
 
-		while (SDL_PollEvent(&event)) {
+		while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
@@ -134,7 +134,7 @@ bool UiProgressDialog(const char *msg, int (*fnfunc)(), int rate)
 			UiHandleEvents(&event);
 		}
 	}
-	progress_Free();
+	ProgressFree();
 
 	return progress == 100;
 }

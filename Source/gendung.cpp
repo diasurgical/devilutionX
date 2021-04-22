@@ -480,7 +480,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 	}
 
 	if (leveltype == DTYPE_CATACOMBS) {
-		switch (random_(0, 2)) {
+		switch (GenerateRnd(2)) {
 		case 0:
 			dungeon[hx - 1][(ly + hy) / 2] = 4;
 			break;
@@ -490,7 +490,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 		}
 	}
 	if (leveltype == DTYPE_CAVES) {
-		switch (random_(0, 2)) {
+		switch (GenerateRnd(2)) {
 		case 0:
 			dungeon[hx - 1][(ly + hy) / 2] = 147;
 			break;
@@ -500,7 +500,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 		}
 	}
 	if (leveltype == DTYPE_HELL) {
-		switch (random_(0, 2)) {
+		switch (GenerateRnd(2)) {
 		case 0:
 			yy = (ly + hy) / 2;
 			dungeon[hx - 1][yy - 1] = 53;
@@ -530,16 +530,16 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 	memset(themeLoc, 0, sizeof(*themeLoc));
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == floor && !random_(0, freq) && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
+			if (dungeon[i][j] == floor && !GenerateRnd(freq) && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
 				if (rndSize) {
 					min = minSize - 2;
 					max = maxSize - 2;
-					rv2 = min + random_(0, random_(0, themeW - min + 1));
+					rv2 = min + GenerateRnd(GenerateRnd(themeW - min + 1));
 					if (rv2 >= min && rv2 <= max)
 						themeW = rv2;
 					else
 						themeW = min;
-					rv2 = min + random_(0, random_(0, themeH - min + 1));
+					rv2 = min + GenerateRnd(GenerateRnd(themeH - min + 1));
 					if (rv2 >= min && rv2 <= max)
 						themeH = rv2;
 					else

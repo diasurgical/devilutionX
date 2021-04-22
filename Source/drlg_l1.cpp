@@ -950,11 +950,11 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 	if (tmax - tmin == 0)
 		numt = 1;
 	else
-		numt = random_(0, tmax - tmin) + tmin;
+		numt = GenerateRnd(tmax - tmin) + tmin;
 
 	for (i = 0; i < numt; i++) {
-		sx = random_(0, DMAXX - sw);
-		sy = random_(0, DMAXY - sh);
+		sx = GenerateRnd(DMAXX - sw);
+		sy = GenerateRnd(DMAXY - sh);
 		abort = false;
 		found = 0;
 
@@ -1015,7 +1015,7 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 
 		for (yy = 0; yy < sh; yy++) {
 			for (xx = 0; xx < sw; xx++) {
-				if (miniset[ii])
+				if (miniset[ii] != 0)
 					dungeon[xx + sx][sy + yy] = miniset[ii];
 				ii++;
 			}
@@ -1048,8 +1048,8 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 		return 1;
 	if (sx < cx && sy > cy)
 		return 2;
-	else
-		return 3;
+
+	return 3;
 }
 
 static void DRLG_L1Floor()
@@ -1060,7 +1060,7 @@ static void DRLG_L1Floor()
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
 			if (L5dflags[i][j] == 0 && dungeon[i][j] == 13) {
-				rv = random_(0, 3);
+				rv = GenerateRnd(3);
 
 				if (rv == 1)
 					dungeon[i][j] = 162;
@@ -1256,7 +1256,7 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-void LoadPreL1Dungeon(const char *sFileName, int vx, int vy)
+void LoadPreL1Dungeon(const char *sFileName)
 {
 	int i, j, rw, rh;
 	BYTE *pLevelMap, *lm;
@@ -1346,7 +1346,7 @@ static bool L5checkRoom(int x, int y, int width, int height)
 		for (i = 0; i < width; i++) {
 			if (i + x < 0 || i + x >= DMAXX || j + y < 0 || j + y >= DMAXY)
 				return false;
-			if (dungeon[i + x][j + y])
+			if (dungeon[i + x][j + y] != 0)
 				return false;
 		}
 	}
@@ -1360,13 +1360,13 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 	int width, height, rx, ry, ry2;
 	int cw, ch, cx1, cy1, cx2;
 
-	int dirProb = random_(0, 4);
+	int dirProb = GenerateRnd(4);
 	int num = 0;
 
 	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
 		do {
-			cw = (random_(0, 5) + 2) & ~1;
-			ch = (random_(0, 5) + 2) & ~1;
+			cw = (GenerateRnd(5) + 2) & ~1;
+			ch = (GenerateRnd(5) + 2) & ~1;
 			cy1 = h / 2 + y - ch / 2;
 			cx1 = x - cw;
 			ran = L5checkRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
@@ -1387,8 +1387,8 @@ static void L5roomGen(int x, int y, int w, int h, int dir)
 	}
 
 	do {
-		width = (random_(0, 5) + 2) & ~1;
-		height = (random_(0, 5) + 2) & ~1;
+		width = (GenerateRnd(5) + 2) & ~1;
+		height = (GenerateRnd(5) + 2) & ~1;
 		rx = w / 2 + x - width / 2;
 		ry = y - height;
 		ran = L5checkRoom(rx - 1, ry - 1, width + 2, height + 1);
@@ -1412,15 +1412,15 @@ static void L5firstRoom()
 	int ys, ye, y;
 	int xs, xe, x;
 
-	if (random_(0, 2) == 0) {
+	if (GenerateRnd(2) == 0) {
 		ys = 1;
 		ye = DMAXY - 1;
 
-		VR1 = random_(0, 2);
-		VR2 = random_(0, 2);
-		VR3 = random_(0, 2);
+		VR1 = (GenerateRnd(2) != 0);
+		VR2 = (GenerateRnd(2) != 0);
+		VR3 = (GenerateRnd(2) != 0);
 
-		if (VR1 + VR3 <= 1)
+		if (!VR1 || !VR3)
 			VR2 = true;
 		if (VR1)
 			L5drawRoom(15, 1, 10, 10);
@@ -1457,9 +1457,9 @@ static void L5firstRoom()
 		xs = 1;
 		xe = DMAXX - 1;
 
-		HR1 = random_(0, 2);
-		HR2 = random_(0, 2);
-		HR3 = random_(0, 2);
+		HR1 = GenerateRnd(2);
+		HR2 = GenerateRnd(2);
+		HR3 = GenerateRnd(2);
 
 		if (HR1 + HR3 <= 1)
 			HR2 = 1;
@@ -1575,8 +1575,8 @@ static int L5HWallOk(int i, int j)
 
 	if (wallok)
 		return x;
-	else
-		return -1;
+
+	return -1;
 }
 
 static int L5VWallOk(int i, int j)
@@ -1601,8 +1601,8 @@ static int L5VWallOk(int i, int j)
 
 	if (wallok)
 		return y;
-	else
-		return -1;
+
+	return -1;
 }
 
 static void L5HorizWall(int i, int j, char p, int dx)
@@ -1610,7 +1610,7 @@ static void L5HorizWall(int i, int j, char p, int dx)
 	int xx;
 	char wt, dt;
 
-	switch (random_(0, 4)) {
+	switch (GenerateRnd(4)) {
 	case 0:
 	case 1:
 		dt = 2;
@@ -1631,7 +1631,7 @@ static void L5HorizWall(int i, int j, char p, int dx)
 		break;
 	}
 
-	if (random_(0, 6) == 5)
+	if (GenerateRnd(6) == 5)
 		wt = 12;
 	else
 		wt = 26;
@@ -1644,7 +1644,7 @@ static void L5HorizWall(int i, int j, char p, int dx)
 		dungeon[i + xx][j] = dt;
 	}
 
-	xx = random_(0, dx - 1) + 1;
+	xx = GenerateRnd(dx - 1) + 1;
 
 	if (wt == 12) {
 		dungeon[i + xx][j] = wt;
@@ -1659,7 +1659,7 @@ static void L5VertWall(int i, int j, char p, int dy)
 	int yy;
 	char wt, dt;
 
-	switch (random_(0, 4)) {
+	switch (GenerateRnd(4)) {
 	case 0:
 	case 1:
 		dt = 1;
@@ -1680,7 +1680,7 @@ static void L5VertWall(int i, int j, char p, int dy)
 		break;
 	}
 
-	if (random_(0, 6) == 5)
+	if (GenerateRnd(6) == 5)
 		wt = 11;
 	else
 		wt = 25;
@@ -1693,7 +1693,7 @@ static void L5VertWall(int i, int j, char p, int dy)
 		dungeon[i][j + yy] = dt;
 	}
 
-	yy = random_(0, dy - 1) + 1;
+	yy = GenerateRnd(dy - 1) + 1;
 
 	if (wt == 11) {
 		dungeon[i][j + yy] = wt;
@@ -1710,32 +1710,32 @@ static void L5AddWall()
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
 			if (!L5dflags[i][j]) {
-				if (dungeon[i][j] == 3 && random_(0, 100) < 100) {
+				if (dungeon[i][j] == 3 && GenerateRnd(100) < WALL_CHANCE) {
 					x = L5HWallOk(i, j);
 					if (x != -1)
 						L5HorizWall(i, j, 2, x);
 				}
-				if (dungeon[i][j] == 3 && random_(0, 100) < 100) {
+				if (dungeon[i][j] == 3 && GenerateRnd(100) < WALL_CHANCE) {
 					y = L5VWallOk(i, j);
 					if (y != -1)
 						L5VertWall(i, j, 1, y);
 				}
-				if (dungeon[i][j] == 6 && random_(0, 100) < 100) {
+				if (dungeon[i][j] == 6 && GenerateRnd(100) < WALL_CHANCE) {
 					x = L5HWallOk(i, j);
 					if (x != -1)
 						L5HorizWall(i, j, 4, x);
 				}
-				if (dungeon[i][j] == 7 && random_(0, 100) < 100) {
+				if (dungeon[i][j] == 7 && GenerateRnd(100) < WALL_CHANCE) {
 					y = L5VWallOk(i, j);
 					if (y != -1)
 						L5VertWall(i, j, 4, y);
 				}
-				if (dungeon[i][j] == 2 && random_(0, 100) < 100) {
+				if (dungeon[i][j] == 2 && GenerateRnd(100) < WALL_CHANCE) {
 					x = L5HWallOk(i, j);
 					if (x != -1)
 						L5HorizWall(i, j, 2, x);
 				}
-				if (dungeon[i][j] == 1 && random_(0, 100) < 100) {
+				if (dungeon[i][j] == 1 && GenerateRnd(100) < WALL_CHANCE) {
 					y = L5VWallOk(i, j);
 					if (y != -1)
 						L5VertWall(i, j, 1, y);
@@ -1983,7 +1983,7 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 					found = false;
 				}
 			}
-			if (found && random_(0, 100) < rndper) {
+			if (found && GenerateRnd(100) < rndper) {
 				for (yy = 0; yy < sh; yy++) {
 					for (xx = 0; xx < sw; xx++) {
 						if (miniset[kk] != 0) {
@@ -2003,11 +2003,11 @@ static void DRLG_L5Subs()
 
 	for (y = 0; y < DMAXY; y++) {
 		for (x = 0; x < DMAXX; x++) {
-			if (random_(0, 4) == 0) {
+			if (GenerateRnd(4) == 0) {
 				BYTE c = L5BTYPES[dungeon[x][y]];
 
 				if (c && !L5dflags[x][y]) {
-					rv = random_(0, 16);
+					rv = GenerateRnd(16);
 					i = -1;
 
 					while (rv >= 0) {
@@ -2118,20 +2118,20 @@ static void L5FillChambers()
 	if (currlevel == 24) {
 		if (VR1 || VR2 || VR3) {
 			c = 1;
-			if (!VR1 && VR2 && VR3 && random_(0, 2) != 0)
+			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
 				c = 2;
-			if (VR1 && VR2 && !VR3 && random_(0, 2) != 0)
+			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
 				c = 0;
 
 			if (VR1 && !VR2 && VR3) {
-				if (random_(0, 2) != 0)
+				if (GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (VR1 && VR2 && VR3)
-				c = random_(0, 3);
+				c = GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -2146,20 +2146,20 @@ static void L5FillChambers()
 			}
 		} else {
 			c = 1;
-			if (!HR1 && HR2 && HR3 && random_(0, 2) != 0)
+			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
 				c = 2;
-			if (HR1 && HR2 && !HR3 && random_(0, 2) != 0)
+			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
 				c = 0;
 
 			if (HR1 && !HR2 && HR3) {
-				if (random_(0, 2) != 0)
+				if (GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (HR1 && HR2 && HR3)
-				c = random_(0, 3);
+				c = GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -2177,20 +2177,20 @@ static void L5FillChambers()
 	if (currlevel == 21) {
 		if (VR1 || VR2 || VR3) {
 			c = 1;
-			if (!VR1 && VR2 && VR3 && random_(0, 2) != 0)
+			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
 				c = 2;
-			if (VR1 && VR2 && !VR3 && random_(0, 2) != 0)
+			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
 				c = 0;
 
 			if (VR1 && !VR2 && VR3) {
-				if (random_(0, 2) != 0)
+				if (GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (VR1 && VR2 && VR3)
-				c = random_(0, 3);
+				c = GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -2205,20 +2205,20 @@ static void L5FillChambers()
 			}
 		} else {
 			c = 1;
-			if (!HR1 && HR2 && HR3 && random_(0, 2))
+			if (!HR1 && HR2 && HR3 && GenerateRnd(2))
 				c = 2;
-			if (HR1 && HR2 && !HR3 && random_(0, 2))
+			if (HR1 && HR2 && !HR3 && GenerateRnd(2))
 				c = 0;
 
 			if (HR1 && !HR2 && HR3) {
-				if (random_(0, 2))
+				if (GenerateRnd(2))
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (HR1 && HR2 && HR3)
-				c = random_(0, 3);
+				c = GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -2236,20 +2236,20 @@ static void L5FillChambers()
 	if (L5setloadflag) {
 		if (VR1 || VR2 || VR3) {
 			c = 1;
-			if (!VR1 && VR2 && VR3 && random_(0, 2) != 0)
+			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
 				c = 2;
-			if (VR1 && VR2 && !VR3 && random_(0, 2) != 0)
+			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
 				c = 0;
 
 			if (VR1 && !VR2 && VR3) {
-				if (random_(0, 2) != 0)
+				if (GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (VR1 && VR2 && VR3)
-				c = random_(0, 3);
+				c = GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -2264,20 +2264,20 @@ static void L5FillChambers()
 			}
 		} else {
 			c = 1;
-			if (!HR1 && HR2 && HR3 && random_(0, 2) != 0)
+			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
 				c = 2;
-			if (HR1 && HR2 && !HR3 && random_(0, 2) != 0)
+			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
 				c = 0;
 
 			if (HR1 && !HR2 && HR3) {
-				if (random_(0, 2) != 0)
+				if (GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (HR1 && HR2 && HR3)
-				c = random_(0, 3);
+				c = GenerateRnd(3);
 
 			switch (c) {
 			case 0:

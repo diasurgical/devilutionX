@@ -19,21 +19,21 @@
 namespace devilution::net {
 
 //static constexpr uint64_t zt_earth = 0x8056c2e21c000001;
-static constexpr uint64_t zt_network = 0xaf78bf943649eb12;
+static constexpr uint64_t ZtNetwork = 0xaf78bf943649eb12;
 
 static std::atomic_bool zt_network_ready(false);
 static std::atomic_bool zt_node_online(false);
 static std::atomic_bool zt_started(false);
 static std::atomic_bool zt_joined(false);
 
-static void callback(struct zts_callback_msg *msg)
+static void Callback(struct zts_callback_msg *msg)
 {
 	//printf("callback %i\n", msg->eventCode);
 	if (msg->eventCode == ZTS_EVENT_NODE_ONLINE) {
 		SDL_Log("ZeroTier: ZTS_EVENT_NODE_ONLINE, nodeId=%llx\n", (unsigned long long)msg->node->address);
 		zt_node_online = true;
 		if (!zt_joined) {
-			zts_join(zt_network);
+			zts_join(ZtNetwork);
 			zt_joined = true;
 		}
 	} else if (msg->eventCode == ZTS_EVENT_NODE_OFFLINE) {
@@ -62,7 +62,7 @@ void zerotier_network_start()
 {
 	if (zt_started)
 		return;
-	zts_start(GetPrefPath().c_str(), (void (*)(void *))callback, 0);
+	zts_start(GetPrefPath().c_str(), (void (*)(void *))Callback, 0);
 	std::atexit(zerotier_network_stop);
 }
 

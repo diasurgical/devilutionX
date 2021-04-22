@@ -23,7 +23,7 @@ int _newlib_heap_size_user = 100 * 1024 * 1024;
 namespace devilution {
 
 /** True if the game is the current active window */
-int gbActive;
+bool gbActive;
 /** A handle to an hellfire.mpq archive. */
 HANDLE hellfire_mpq;
 /** The current input handler function */
@@ -156,11 +156,11 @@ void init_archives()
 		paths.pop_back();
 
 #ifdef __linux__
-	paths.push_back("/usr/share/diasurgical/devilutionx/");
-	paths.push_back("/usr/local/share/diasurgical/devilutionx/");
+	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
+	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #endif
 
-	paths.push_back(""); // PWD
+	paths.emplace_back(""); // PWD
 
 	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
 		std::string message;
@@ -229,7 +229,7 @@ void init_create_window()
 #endif
 }
 
-void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam)
+void MainWndProc(UINT Msg)
 {
 	switch (Msg) {
 	case DVL_WM_PAINT:

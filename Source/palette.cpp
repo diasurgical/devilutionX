@@ -158,7 +158,7 @@ void LoadRndLvlPal(int l)
 	if (l == DTYPE_TOWN) {
 		LoadPalette("Levels\\TownData\\Town.pal");
 	} else {
-		rv = random_(0, 4) + 1;
+		rv = GenerateRnd(4) + 1;
 		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
 		if (l == 5) {
 			sprintf(szFileName, "NLevels\\L5Data\\L5Base.PAL");
@@ -228,36 +228,41 @@ void BlackPalette()
 
 void PaletteFadeIn(int fr)
 {
-	int i;
-
 	ApplyGamma(logical_palette, orig_palette, 256);
-	DWORD tc = SDL_GetTicks();
-	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
+
+	SDL_Rect SrcRect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
+	const uint32_t tc = SDL_GetTicks();
+	fr *= 3;
+
+	for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
 		SetFadeLevel(i);
-		SDL_Rect SrcRect = { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
 		BltFast(&SrcRect, nullptr);
 		RenderPresent();
 	}
 	SetFadeLevel(256);
+
 	memcpy(logical_palette, orig_palette, sizeof(orig_palette));
+
 	sgbFadedIn = true;
 }
 
 void PaletteFadeOut(int fr)
 {
-	int i;
+	if (!sgbFadedIn)
+		return;
 
-	if (sgbFadedIn) {
-		DWORD tc = SDL_GetTicks();
-		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
-			SetFadeLevel(i);
-			SDL_Rect SrcRect = { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
-			BltFast(&SrcRect, nullptr);
-			RenderPresent();
-		}
-		SetFadeLevel(0);
-		sgbFadedIn = false;
+	SDL_Rect SrcRect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
+	const uint32_t tc = SDL_GetTicks();
+	fr *= 3;
+
+	for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
+		SetFadeLevel(256 - i);
+		BltFast(&SrcRect, nullptr);
+		RenderPresent();
 	}
+	SetFadeLevel(0);
+
+	sgbFadedIn = false;
 }
 
 /**
