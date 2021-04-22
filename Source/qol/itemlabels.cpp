@@ -159,10 +159,10 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 				pcursitem = t.itemID;
 			}
 		}
-		int bgcolor = 0; // black
-		if (pcursitem == t.itemID)
-			bgcolor = PAL8_BLUE + 6;
-		FillRect(out, t.x, t.y - t.height, t.width + 1, t.height, bgcolor);
+		if (pcursitem == t.itemID) 
+			FillRect(out, t.x, t.y - t.height, t.width + 1, t.height, PAL8_BLUE + 6);
+		else
+			DrawHalfTransparentRectTo(out, t.x, t.y - t.height, t.width + 1, t.height);
 		PrintGameStr(out, t.x, t.y - 1, t.text.c_str(), t.color);
 	}
 	labelQueue.clear();
