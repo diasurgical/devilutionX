@@ -9,13 +9,13 @@
 #include <stdint.h>
 
 #include "diablo.h"
-#include "enum_traits.h"
 #include "gendung.h"
 #include "items.h"
 #include "multi.h"
 #include "spelldat.h"
 #include "path.h"
 #include "interfac.h"
+#include "utils/enum_traits.h"
 
 namespace devilution {
 
