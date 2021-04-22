@@ -284,60 +284,6 @@ int GetSpellLevel(int id, spell_id sn)
 /**
  * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
  *
- *      W    SW     S
- *            ^
- *            |
- *     NW ----+---> SE
- *            |
- *            |
- *      N    NE     E
- *
- * @param x1 the x coordinate of p1
- * @param y1 the y coordinate of p1
- * @param x2 the x coordinate of p2
- * @param y2 the y coordinate of p2
- * @return the direction of the p1->p2 vector
-*/
-direction GetDirection8(int x1, int y1, int x2, int y2)
-{
-	direction md = DIR_S;
-
-	int mx = x2 - x1;
-	int my = y2 - y1;
-	if (mx >= 0) {
-		if (my >= 0) {
-			if (5 * mx <= (my * 2)) // mx/my <= 0.4, approximation of tan(22.5)
-				return DIR_SW;
-			md = DIR_S;
-		} else {
-			my = -my;
-			if (5 * mx <= (my * 2))
-				return DIR_NE;
-			md = DIR_E;
-		}
-		if (5 * my <= (mx * 2)) // my/mx <= 0.4
-			md = DIR_SE;
-	} else {
-		mx = -mx;
-		if (my >= 0) {
-			if (5 * mx <= (my * 2))
-				return DIR_SW;
-			md = DIR_W;
-		} else {
-			my = -my;
-			if (5 * mx <= (my * 2))
-				return DIR_NE;
-			md = DIR_N;
-		}
-		if (5 * my <= (mx * 2))
-			md = DIR_NW;
-	}
-	return md;
-}
-
-/**
- * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
- *
  *      W  sW  SW   Sw  S
  *              ^
  *     nW       |       Se
@@ -2885,7 +2831,7 @@ void AddElement(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mi
 	}
 	missile[mi]._midam /= 2;
 	GetMissileVel(mi, sx, sy, dx, dy, 16);
-	SetMissDir(mi, GetDirection8(sx, sy, dx, dy));
+	SetMissDir(mi, GetDirection(sx, sy, dx, dy));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = sx;
 	missile[mi]._miVar2 = sy;
@@ -3227,7 +3173,7 @@ void AddBoneSpirit(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32
 	}
 	missile[mi]._midam = 0;
 	GetMissileVel(mi, sx, sy, dx, dy, 16);
-	SetMissDir(mi, GetDirection8(sx, sy, dx, dy));
+	SetMissDir(mi, GetDirection(sx, sy, dx, dy));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = sx;
 	missile[mi]._miVar2 = sy;
@@ -5302,7 +5248,7 @@ void MI_Element(Sint32 i)
 			missile[i]._mirange = 255;
 			mid = FindClosest(cx, cy, 19);
 			if (mid > 0) {
-				direction sd = GetDirection8(cx, cy, monster[mid]._mx, monster[mid]._my);
+				direction sd = GetDirection(cx, cy, monster[mid]._mx, monster[mid]._my);
 				SetMissDir(i, sd);
 				GetMissileVel(i, cx, cy, monster[mid]._mx, monster[mid]._my, 16);
 			} else {
@@ -5355,7 +5301,7 @@ void MI_Bonespirit(Sint32 i)
 			mid = FindClosest(cx, cy, 19);
 			if (mid > 0) {
 				missile[i]._midam = monster[mid]._mhitpoints >> 7;
-				SetMissDir(i, GetDirection8(cx, cy, monster[mid]._mx, monster[mid]._my));
+				SetMissDir(i, GetDirection(cx, cy, monster[mid]._mx, monster[mid]._my));
 				GetMissileVel(i, cx, cy, monster[mid]._mx, monster[mid]._my, 16);
 			} else {
 				direction sd = plr[id]._pdir;
