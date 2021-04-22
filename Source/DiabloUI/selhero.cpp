@@ -295,7 +295,7 @@ void SelheroClassSelectorSelect(int value)
 	}
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
 #if defined __3DS__
-	ctr_vkbdInput("Enter Hero name..", selhero_GenerateName(selhero_heroInfo.heroclass), selhero_heroInfo.name);
+	ctr_vkbdInput("Enter Hero name..", SelheroGenerateName(selhero_heroInfo.heroclass), selhero_heroInfo.name);
 #endif
 	if (ShouldPrefillHeroName())
 		strncpy(selhero_heroInfo.name, SelheroGenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name) - 1);
