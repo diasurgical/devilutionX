@@ -1902,24 +1902,19 @@ void DrawInvMsg(const char *msg)
 	}
 }
 
-int InvPutItem(int pnum, int x, int y)
+bool PutItem(int pnum, int x, int y)
 {
-	bool done;
-	int d;
-	int i, j, l;
-	int xx, yy;
-	int xp, yp;
-
 	if (numitems >= MAXITEMS)
-		return -1;
+		return false;
 
-	d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
-	xx = x - plr[pnum]._px;
-	yy = y - plr[pnum]._py;
+	int d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
+	int xx = x - plr[pnum]._px;
+	int yy = y - plr[pnum]._py;
 	if (abs(xx) > 1 || abs(yy) > 1) {
 		x = plr[pnum]._px + offset_x[d];
 		y = plr[pnum]._py + offset_y[d];
 	}
+
 	if (!CanPut(x, y)) {
 		d = (d - 1) & 7;
 		x = plr[pnum]._px + offset_x[d];
@@ -1929,12 +1924,12 @@ int InvPutItem(int pnum, int x, int y)
 			x = plr[pnum]._px + offset_x[d];
 			y = plr[pnum]._py + offset_y[d];
 			if (!CanPut(x, y)) {
-				done = false;
-				for (l = 1; l < 50 && !done; l++) {
-					for (j = -l; j <= l && !done; j++) {
-						yp = j + plr[pnum]._py;
-						for (i = -l; i <= l && !done; i++) {
-							xp = i + plr[pnum]._px;
+				bool done = false;
+				for (int l = 1; l < 50 && !done; l++) {
+					for (int j = -l; j <= l && !done; j++) {
+						int yp = j + plr[pnum]._py;
+						for (int i = -l; i <= l && !done; i++) {
+							int xp = i + plr[pnum]._px;
 							if (CanPut(xp, yp)) {
 								done = true;
 								x = xp;
@@ -1944,15 +1939,25 @@ int InvPutItem(int pnum, int x, int y)
 					}
 				}
 				if (!done)
-					return -1;
+					return false;
 			}
 		}
 	}
 
+	return true;
+}
+
+int InvPutItem(int pnum, int x, int y)
+{
+	if (!PutItem(pnum, x, y))
+		return -1;
+
 	if (currlevel == 0) {
-		yp = cursmy;
-		xp = cursmx;
+		int yp = cursmy;
+		int xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
+			int xx = x - plr[pnum]._px;
+			int yy = y - plr[pnum]._py;
 			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
@@ -1994,50 +1999,8 @@ int InvPutItem(int pnum, int x, int y)
 
 int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
 {
-	bool done;
-	int d;
-	int i, j, l;
-	int xx, yy;
-	int xp, yp;
-
-	if (numitems >= MAXITEMS)
+	if (!PutItem(pnum, x, y))
 		return -1;
-
-	d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
-	xx = x - plr[pnum]._px;
-	yy = y - plr[pnum]._py;
-	if (abs(xx) > 1 || abs(yy) > 1) {
-		x = plr[pnum]._px + offset_x[d];
-		y = plr[pnum]._py + offset_y[d];
-	}
-	if (!CanPut(x, y)) {
-		d = (d - 1) & 7;
-		x = plr[pnum]._px + offset_x[d];
-		y = plr[pnum]._py + offset_y[d];
-		if (!CanPut(x, y)) {
-			d = (d + 2) & 7;
-			x = plr[pnum]._px + offset_x[d];
-			y = plr[pnum]._py + offset_y[d];
-			if (!CanPut(x, y)) {
-				done = false;
-				for (l = 1; l < 50 && !done; l++) {
-					for (j = -l; j <= l && !done; j++) {
-						yp = j + plr[pnum]._py;
-						for (i = -l; i <= l && !done; i++) {
-							xp = i + plr[pnum]._px;
-							if (CanPut(xp, yp)) {
-								done = true;
-								x = xp;
-								y = yp;
-							}
-						}
-					}
-				}
-				if (!done)
-					return -1;
-			}
-		}
-	}
 
 	CanPut(x, y);
 
