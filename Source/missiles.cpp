@@ -5167,9 +5167,9 @@ void MI_Element(Sint32 i)
 		cx = missile[i]._mix;
 		cy = missile[i]._miy;
 		CheckMissileCol(i, dam, dam, false, cx, cy, false);
-		if (missile[i]._miVar3 == 0 && cx == missile[i]._miVar4 && cy == missile[i]._miVar5)
+		if (!missile[i]._miHitFlag && missile[i]._miVar3 == 0 && cx == missile[i]._miVar4 && cy == missile[i]._miVar5)
 			missile[i]._miVar3 = 1;
-		if (missile[i]._miVar3 == 1) {
+		if (missile[i]._miVar3 == 1 && missile[i]._micaster != TARGET_NONE) {
 			missile[i]._miVar3 = 2;
 			missile[i]._mirange = 255;
 			mid = FindClosest(cx, cy, 19);
@@ -5219,9 +5219,9 @@ void MI_Bonespirit(Sint32 i)
 		cx = missile[i]._mix;
 		cy = missile[i]._miy;
 		CheckMissileCol(i, dam, dam, false, cx, cy, false);
-		if (missile[i]._miVar3 == 0 && cx == missile[i]._miVar4 && cy == missile[i]._miVar5)
+		if (!missile[i]._miHitFlag && missile[i]._miVar3 == 0 && cx == missile[i]._miVar4 && cy == missile[i]._miVar5)
 			missile[i]._miVar3 = 1;
-		if (missile[i]._miVar3 == 1) {
+		if (missile[i]._miVar3 == 1 && missile[i]._micaster != TARGET_NONE) {
 			missile[i]._miVar3 = 2;
 			missile[i]._mirange = 255;
 			mid = FindClosest(cx, cy, 19);
