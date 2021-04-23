@@ -3867,7 +3867,7 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 void CheckPlrSpell()
 {
 	bool addflag = false;
-	int sd, sl;
+	int sl;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
 		app_fatal("CheckPlrSpell: illegal player %d", myplr);
@@ -3921,7 +3921,7 @@ void CheckPlrSpell()
 
 	if (addflag) {
 		if (plr[myplr]._pRSpell == SPL_FIREWALL || plr[myplr]._pRSpell == SPL_LIGHTWALL) {
-			sd = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
+			direction sd = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
 			NetSendCmdLocParam3(true, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);
 		} else if (pcursmonst != -1) {

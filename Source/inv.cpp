@@ -1868,23 +1868,21 @@ bool CanPut(int x, int y)
 
 bool TryInvPut()
 {
-	int dir;
-
 	if (numitems >= MAXITEMS)
 		return false;
 
-	dir = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
+	direction dir = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
 	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
 		return true;
 	}
 
-	dir = (dir - 1) & 7;
-	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
+	direction dirLeft = left[dir];
+	if (CanPut(plr[myplr]._px + offset_x[dirLeft], plr[myplr]._py + offset_y[dirLeft])) {
 		return true;
 	}
 
-	dir = (dir + 2) & 7;
-	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
+	direction dirRight = right[dir];
+	if (CanPut(plr[myplr]._px + offset_x[dirRight], plr[myplr]._py + offset_y[dirRight])) {
 		return true;
 	}
 
@@ -1907,44 +1905,46 @@ static int PutItem(int pnum, int &x, int &y)
 	if (numitems >= MAXITEMS)
 		return false;
 
-	int d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
 	int xx = x - plr[pnum]._px;
 	int yy = y - plr[pnum]._py;
+
+	direction d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
+
 	if (abs(xx) > 1 || abs(yy) > 1) {
 		x = plr[pnum]._px + offset_x[d];
 		y = plr[pnum]._py + offset_y[d];
 	}
+	if (CanPut(x, y))
+		return true;
 
-	if (!CanPut(x, y)) {
-		d = (d - 1) & 7;
-		x = plr[pnum]._px + offset_x[d];
-		y = plr[pnum]._py + offset_y[d];
-		if (!CanPut(x, y)) {
-			d = (d + 2) & 7;
-			x = plr[pnum]._px + offset_x[d];
-			y = plr[pnum]._py + offset_y[d];
-			if (!CanPut(x, y)) {
-				bool done = false;
-				for (int l = 1; l < 50 && !done; l++) {
-					for (int j = -l; j <= l && !done; j++) {
-						int yp = j + plr[pnum]._py;
-						for (int i = -l; i <= l && !done; i++) {
-							int xp = i + plr[pnum]._px;
-							if (CanPut(xp, yp)) {
-								done = true;
-								x = xp;
-								y = yp;
-							}
-						}
-					}
-				}
-				if (!done)
-					return false;
+	direction dLeft = left[d];
+	x = plr[pnum]._px + offset_x[dLeft];
+	y = plr[pnum]._py + offset_y[dLeft];
+	if (CanPut(x, y))
+		return true;
+
+	direction dRight = right[d];
+	x = plr[pnum]._px + offset_x[dRight];
+	y = plr[pnum]._py + offset_y[dRight];
+	if (CanPut(x, y))
+		return true;
+
+	for (int l = 1; l < 50; l++) {
+		for (int j = -l; j <= l; j++) {
+			int yp = j + plr[pnum]._py;
+			for (int i = -l; i <= l; i++) {
+				int xp = i + plr[pnum]._px;
+				if (!CanPut(xp, yp))
+					continue;
+
+				x = xp;
+				y = yp;
+				return true;
 			}
 		}
 	}
 
-	return true;
+	return false;
 }
 
 int InvPutItem(int pnum, int x, int y)
@@ -2003,7 +2003,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	if (!PutItem(pnum, x, y))
 		return -1;
 
-	CanPut(x, y);
+	assert(CanPut(x, y));
 
 	int ii = AllocateItem();
 
