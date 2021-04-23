@@ -11,6 +11,7 @@
 #include "gmenu.h"
 #include "cursor.h"
 
+#include <cstring>
 #include <unordered_set>
 #include <vector>
 #include <string>
@@ -83,7 +84,8 @@ void GenerateItemLabelOffsets(const CelOutputBuffer &out)
 	generatingLabelsState = State::STARTED;
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
-		drawMinX = gnScreenWidth;
+		drawMinX = out.w();
+
 		drawMaxX = 0;
 		CelClippedDrawTo(out, out.pitch() / 2 - 16, 351, itemanims[i], ItemAnimLs[i], 96);
 		labelCenterOffsets[i] = drawMinX - out.pitch() / 2 + (drawMaxX - drawMinX) / 2;
@@ -99,9 +101,10 @@ void AddItemToLabelQueue(int x, int y, int id)
 
 	char textOnGround[64];
 	if (it->_itype == ITYPE_GOLD)
-		sprintf(textOnGround, "%i gold", it->_ivalue);
+		std::sprintf(textOnGround, "%i gold", it->_ivalue);
 	else
-		sprintf(textOnGround, "%s", it->_iIdentified ? it->_iIName : it->_iName);
+		std::strcpy(textOnGround, it->_iIdentified ? it->_iIName : it->_iName);
+
 
 	int nameWidth = GetTextWidth((char *)textOnGround);
 	x += labelCenterOffsets[ItemCAnimTbl[it->_iCurs]];
