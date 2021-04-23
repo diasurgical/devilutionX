@@ -22,6 +22,7 @@
 #include "stores.h"
 #include "storm/storm.h"
 #include "towners.h"
+#include <unordered_set>
 
 namespace devilution {
 
@@ -457,16 +458,27 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 	c = GetPlrGFXClass(c);
 	dwMaxSize = 0;
 
+	std::unordered_set<char> canBlock;
+	canBlock.insert('D');
+	canBlock.insert('U');
+	canBlock.insert('H');
+
+	if (c == HeroClass::Monk) {
+		canBlock.insert('S');
+		canBlock.insert('M');
+		canBlock.insert('N');
+		canBlock.insert('T');
+	}
+
 	for (a = &ArmourChar[0]; *a; a++) {
 		if (gbIsSpawn && a != &ArmourChar[0])
 			break;
-		for (w = &WepChar[0]; *w; w++) { // BUGFIX loads non-existing animagions; DT is only for N, BL is only for U, D & H (fixed)
+		for (w = &WepChar[0]; *w; w++) { // BUGFIX loads non-existing animagions; DT is only for N, BL is only for U, D & H (fixed) - for monk BL is for all except B/A
 			if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
 				continue; //Death has no weapon
 			}
-			if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
-				if (c != HeroClass::Monk || (*w == 'B' || *w == 'A')) // monk can always block except while using an axe or a bow
-					continue; //No block without shield
+			if (szCel[0] == 'B' && szCel[1] == 'L' && canBlock.find(*w) == canBlock.end()) {
+					continue; //No block
 			}
 			sprintf(Type, "%c%c%c", CharChar[static_cast<std::size_t>(c)], *a, *w);
 			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
