@@ -228,19 +228,15 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 
 bool CheckBlock(int fx, int fy, int tx, int ty)
 {
-	int pn;
-	bool coll;
-
-	coll = false;
 	while (fx != tx || fy != ty) {
-		pn = GetDirection(fx, fy, tx, ty);
+		direction pn = GetDirection(fx, fy, tx, ty);
 		fx += XDirAdd[pn];
 		fy += YDirAdd[pn];
 		if (nSolidTable[dPiece[fx][fy]])
-			coll = true;
+			return true;
 	}
 
-	return coll;
+	return false;
 }
 
 int FindClosest(int sx, int sy, int rad)
@@ -4865,7 +4861,7 @@ void MI_Apoca(Sint32 i)
 
 void MI_Wave(Sint32 i)
 {
-	int sx, sy, sd, nxa, nxb, nya, nyb, dira, dirb;
+	int sx, sy, nxa, nxb, nya, nyb;
 	int j, id, pn;
 	bool f1, f2;
 	int v1, v2;
@@ -4879,9 +4875,9 @@ void MI_Wave(Sint32 i)
 	sy = missile[i]._miy;
 	v1 = missile[i]._miVar1;
 	v2 = missile[i]._miVar2;
-	sd = GetDirection(sx, sy, v1, v2);
-	dira = (sd - 2) & 7;
-	dirb = (sd + 2) & 7;
+	direction sd = GetDirection(sx, sy, v1, v2);
+	direction dira = left[left[sd]];
+	direction dirb = right[right[sd]];
 	nxa = sx + XDirAdd[sd];
 	nya = sy + YDirAdd[sd];
 	pn = dPiece[nxa][nya];

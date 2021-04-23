@@ -2091,57 +2091,52 @@ void Obj_FlameTrap(int i)
 
 void Obj_Trap(int i)
 {
-	int oti;
-	bool otrig;
-	int sx, sy, dx, dy, x, y;
+	if (object[i]._oVar4 != 0)
+		return;
 
-	otrig = false;
-	if (object[i]._oVar4 == 0) {
-		oti = dObject[object[i]._oVar1][object[i]._oVar2] - 1;
-		switch (object[oti]._otype) {
-		case OBJ_L1LDOOR:
-		case OBJ_L1RDOOR:
-		case OBJ_L2LDOOR:
-		case OBJ_L2RDOOR:
-		case OBJ_L3LDOOR:
-		case OBJ_L3RDOOR:
-			if (object[oti]._oVar4 != 0)
-				otrig = true;
-			break;
-		case OBJ_LEVER:
-		case OBJ_CHEST1:
-		case OBJ_CHEST2:
-		case OBJ_CHEST3:
-		case OBJ_SWITCHSKL:
-		case OBJ_SARC:
-			if (object[oti]._oSelFlag == 0)
-				otrig = true;
-			break;
-		default:
-			break;
-		}
-		if (otrig) {
-			object[i]._oVar4 = 1;
-			sx = object[i]._ox;
-			sy = object[i]._oy;
-			dx = object[oti]._ox;
-			dy = object[oti]._oy;
-			for (y = dy - 1; y <= object[oti]._oy + 1; y++) {
-				for (x = object[oti]._ox - 1; x <= object[oti]._ox + 1; x++) {
-					if (dPlayer[x][y] != 0) {
-						dx = x;
-						dy = y;
-					}
-				}
+	int oti = dObject[object[i]._oVar1][object[i]._oVar2] - 1;
+	switch (object[oti]._otype) {
+	case OBJ_L1LDOOR:
+	case OBJ_L1RDOOR:
+	case OBJ_L2LDOOR:
+	case OBJ_L2RDOOR:
+	case OBJ_L3LDOOR:
+	case OBJ_L3RDOOR:
+		if (object[oti]._oVar4 == 0)
+			return;
+		break;
+	case OBJ_LEVER:
+	case OBJ_CHEST1:
+	case OBJ_CHEST2:
+	case OBJ_CHEST3:
+	case OBJ_SWITCHSKL:
+	case OBJ_SARC:
+		if (object[oti]._oSelFlag != 0)
+			return;
+		break;
+	default:
+		return;
+	}
+
+	object[i]._oVar4 = 1;
+	int sx = object[i]._ox;
+	int sy = object[i]._oy;
+	int dx = object[oti]._ox;
+	int dy = object[oti]._oy;
+	for (int y = dy - 1; y <= object[oti]._oy + 1; y++) {
+		for (int x = object[oti]._ox - 1; x <= object[oti]._ox + 1; x++) {
+			if (dPlayer[x][y] != 0) {
+				dx = x;
+				dy = y;
 			}
-			if (!deltaload) {
-				direction dir = GetDirection(sx, sy, dx, dy);
-				AddMissile(sx, sy, dx, dy, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
-				PlaySfxLoc(IS_TRAP, object[oti]._ox, object[oti]._oy);
-			}
-			object[oti]._oTrapFlag = false;
 		}
 	}
+	if (!deltaload) {
+		direction dir = GetDirection(sx, sy, dx, dy);
+		AddMissile(sx, sy, dx, dy, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
+		PlaySfxLoc(IS_TRAP, object[oti]._ox, object[oti]._oy);
+	}
+	object[oti]._oTrapFlag = false;
 }
 
 void Obj_BCrossDamage(int i)
