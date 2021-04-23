@@ -89,7 +89,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	SoundSample *DSB;
 	DWORD tc;
 
-	if (!pSnd || !gbSoundOn) {
+	if (pSnd == nullptr || !gbSoundOn) {
 		return;
 	}
 
@@ -147,8 +147,8 @@ TSnd *sound_file_load(const char *path, bool stream)
 
 void sound_file_cleanup(TSnd *sound_file)
 {
-	if (sound_file) {
-		if (sound_file->DSB) {
+	if (sound_file != nullptr) {
+		if (sound_file->DSB != nullptr) {
 			sound_file->DSB->Stop();
 			sound_file->DSB->Release();
 			delete sound_file->DSB;
@@ -205,7 +205,7 @@ void music_start(uint8_t nTrack)
 	assert((DWORD)nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
-		if (spawn_mpq)
+		if (spawn_mpq != nullptr)
 			trackPath = sgszSpawnMusicTracks[nTrack];
 		else
 			trackPath = sgszMusicTracks[nTrack];

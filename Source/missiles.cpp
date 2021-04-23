@@ -786,13 +786,13 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 
 				dam = (mind << 6) + GenerateRnd((maxd - mind + 1) << 6);
 				if (m == -1)
-					if (plr[pnum]._pIFlags & ISPL_ABSHALFTRAP)
+					if ((plr[pnum]._pIFlags & ISPL_ABSHALFTRAP) != 0)
 						dam /= 2;
 				dam += (plr[pnum]._pIGetHit << 6);
 			} else {
 				dam = mind + GenerateRnd(maxd - mind + 1);
 				if (m == -1)
-					if (plr[pnum]._pIFlags & ISPL_ABSHALFTRAP)
+					if ((plr[pnum]._pIFlags & ISPL_ABSHALFTRAP) != 0)
 						dam /= 2;
 				dam += plr[pnum]._pIGetHit;
 			}
@@ -998,7 +998,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, int mx, int my, 
 			        shift,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					dir = missile[i]._mimfnum + (GenerateRnd(2) ? 1 : -1);
+					dir = missile[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
 					mAnimFAmt = misfiledata[missile[i]._miAnimType].mAnimFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
@@ -1032,7 +1032,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, int mx, int my, 
 			        0,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					dir = missile[i]._mimfnum + (GenerateRnd(2) ? 1 : -1);
+					dir = missile[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
 					mAnimFAmt = misfiledata[missile[i]._miAnimType].mAnimFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
@@ -1079,7 +1079,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, int mx, int my, 
 			        missile[i]._miAnimType == MFILE_FIREWAL || missile[i]._miAnimType == MFILE_LGHNING,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					dir = missile[i]._mimfnum + (GenerateRnd(2) ? 1 : -1);
+					dir = missile[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
 					mAnimFAmt = misfiledata[missile[i]._miAnimType].mAnimFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
@@ -1145,7 +1145,7 @@ void LoadMissileGFX(BYTE mi)
 		return;
 
 	char pszName[256];
-	if (mfd->mFlags & MFLAG_ALLOW_SPECIAL) {
+	if ((mfd->mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
 		BYTE *file = LoadFileInMem(pszName, nullptr);
 		for (unsigned i = 0; i < mfd->mAnimFAmt; i++)
@@ -1168,7 +1168,7 @@ void InitMissileGFX()
 	for (mi = 0; misfiledata[mi].mAnimFAmt; mi++) {
 		if (!gbIsHellfire && mi > MFILE_SCBSEXPD)
 			break;
-		if (!(misfiledata[mi].mFlags & MFLAG_HIDDEN))
+		if ((misfiledata[mi].mFlags & MFLAG_HIDDEN) == 0)
 			LoadMissileGFX(mi);
 	}
 }
@@ -1189,7 +1189,7 @@ void FreeMissileGFX(int mi)
 	}
 
 	for (i = 0; i < misfiledata[mi].mAnimFAmt; i++) {
-		if (misfiledata[mi].mAnimData[i]) {
+		if (misfiledata[mi].mAnimData[i] != nullptr) {
 			MemFreeDbg(misfiledata[mi].mAnimData[i]);
 		}
 	}
@@ -1518,7 +1518,7 @@ void AddStealPotions(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint
 			ty = sy + CrawlTable[l];
 			if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
 				pnum = dPlayer[tx][ty];
-				if (pnum) {
+				if (pnum != 0) {
 					pnum = pnum > 0 ? pnum - 1 : -(pnum + 1);
 
 					hasPlayedSFX = false;
@@ -1626,13 +1626,13 @@ void AddSpecArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 		else if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 			av += (plr[id]._pLevel - 1) / 8;
 
-		if (plr[id]._pIFlags & ISPL_QUICKATTACK)
+		if ((plr[id]._pIFlags & ISPL_QUICKATTACK) != 0)
 			av++;
-		if (plr[id]._pIFlags & ISPL_FASTATTACK)
+		if ((plr[id]._pIFlags & ISPL_FASTATTACK) != 0)
 			av += 2;
-		if (plr[id]._pIFlags & ISPL_FASTERATTACK)
+		if ((plr[id]._pIFlags & ISPL_FASTERATTACK) != 0)
 			av += 4;
-		if (plr[id]._pIFlags & ISPL_FASTESTATTACK)
+		if ((plr[id]._pIFlags & ISPL_FASTESTATTACK) != 0)
 			av += 8;
 	}
 	missile[mi]._mirange = 1;
@@ -1933,13 +1933,13 @@ void AddLArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 mid
 			av += (plr[id]._pLevel) / 8;
 
 		if (gbIsHellfire) {
-			if (plr[id]._pIFlags & ISPL_QUICKATTACK)
+			if ((plr[id]._pIFlags & ISPL_QUICKATTACK) != 0)
 				av++;
-			if (plr[id]._pIFlags & ISPL_FASTATTACK)
+			if ((plr[id]._pIFlags & ISPL_FASTATTACK) != 0)
 				av += 2;
-			if (plr[id]._pIFlags & ISPL_FASTERATTACK)
+			if ((plr[id]._pIFlags & ISPL_FASTERATTACK) != 0)
 				av += 4;
-			if (plr[id]._pIFlags & ISPL_FASTESTATTACK)
+			if ((plr[id]._pIFlags & ISPL_FASTESTATTACK) != 0)
 				av += 8;
 		} else {
 			if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
@@ -1967,7 +1967,7 @@ void AddArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 	}
 	if (mienemy == TARGET_MONSTERS) {
 		av = 32;
-		if (plr[id]._pIFlags & ISPL_RNDARROWVEL) {
+		if ((plr[id]._pIFlags & ISPL_RNDARROWVEL) != 0) {
 			av = GenerateRnd(32) + 16;
 		}
 		if (plr[id]._pClass == HeroClass::Rogue)
@@ -1975,13 +1975,13 @@ void AddArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midi
 		else if (plr[id]._pClass == HeroClass::Warrior || plr[id]._pClass == HeroClass::Bard)
 			av += (plr[id]._pLevel - 1) / 8;
 		if (gbIsHellfire) {
-			if (plr[id]._pIFlags & ISPL_QUICKATTACK)
+			if ((plr[id]._pIFlags & ISPL_QUICKATTACK) != 0)
 				av++;
-			if (plr[id]._pIFlags & ISPL_FASTATTACK)
+			if ((plr[id]._pIFlags & ISPL_FASTATTACK) != 0)
 				av += 2;
-			if (plr[id]._pIFlags & ISPL_FASTERATTACK)
+			if ((plr[id]._pIFlags & ISPL_FASTERATTACK) != 0)
 				av += 4;
-			if (plr[id]._pIFlags & ISPL_FASTESTATTACK)
+			if ((plr[id]._pIFlags & ISPL_FASTESTATTACK) != 0)
 				av += 8;
 		}
 		GetMissileVel(mi, sx, sy, dx, dy, av);
@@ -3311,7 +3311,7 @@ void MI_Golem(Sint32 i)
 	const char *ct;
 
 	src = missile[i]._misource;
-	if (monster[src]._mx == 1 && !monster[src]._my) {
+	if (monster[src]._mx == 1 && monster[src]._my == 0) {
 		for (l = 0; l < 6; l++) {
 			k = CrawlNum[l];
 			tid = k + 2;
@@ -4552,7 +4552,7 @@ void MI_Guardian(Sint32 i)
 		SetMissDir(i, 1);
 	}
 
-	if (!(missile[i]._mirange % 16)) {
+	if ((missile[i]._mirange % 16) == 0) {
 		ex = 0;
 		for (j = 0; j < 23 && ex != -1; j++) {
 			for (k = 10; k >= 0 && ex != -1 && (vCrawlTable[j][k] != 0 || vCrawlTable[j][k + 1] != 0); k -= 2) {
@@ -4852,7 +4852,7 @@ void MI_Fireman(Sint32 i)
 	bx = missile[i]._mix;
 	by = missile[i]._miy;
 	enemy = monster[src]._menemy;
-	if (!(monster[src]._mFlags & MFLAG_TARGETS_MONSTER)) {
+	if ((monster[src]._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
 		cx = plr[enemy]._px;
 		cy = plr[enemy]._py;
 	} else {
@@ -4862,7 +4862,7 @@ void MI_Fireman(Sint32 i)
 	if ((bx != ax || by != ay) && ((missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4)) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, ax, ay)) {
 		MissToMonst(i, ax, ay);
 		missile[i]._miDelFlag = true;
-	} else if (!(monster[src]._mFlags & MFLAG_TARGETS_MONSTER)) {
+	} else if ((monster[src]._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
 		j = dPlayer[bx][by];
 	} else {
 		j = dMonster[bx][by];
@@ -5378,7 +5378,7 @@ void ProcessMissiles()
 	for (i = 0; i < nummissiles; i++) {
 		mi = missileactive[i];
 		missiledata[missile[mi]._mitype].mProc(missileactive[i]);
-		if (!(missile[mi]._miAnimFlags & MFLAG_LOCK_ANIMATION)) {
+		if ((missile[mi]._miAnimFlags & MFLAG_LOCK_ANIMATION) == 0) {
 			missile[mi]._miAnimCnt++;
 			if (missile[mi]._miAnimCnt >= missile[mi]._miAnimDelay) {
 				missile[mi]._miAnimCnt = 0;

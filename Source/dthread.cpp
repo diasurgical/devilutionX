@@ -26,7 +26,7 @@ static unsigned int dthread_handler(void *data)
 	DWORD dwMilliseconds;
 
 	while (dthread_running) {
-		if (!sgpInfoHead && WaitForEvent(sghWorkToDoEvent) == -1) {
+		if (sgpInfoHead == nullptr && WaitForEvent(sghWorkToDoEvent) == -1) {
 			error_buf = SDL_GetError();
 			app_fatal("dthread4:\n%s", error_buf);
 		}
@@ -62,7 +62,7 @@ void dthread_remove_player(uint8_t pnum)
 	TMegaPkt *pkt;
 
 	sgMemCrit.Enter();
-	for (pkt = sgpInfoHead; pkt; pkt = pkt->pNext) {
+	for (pkt = sgpInfoHead; pkt != nullptr; pkt = pkt->pNext) {
 		if (pkt->dwSpaceLeft == pnum)
 			pkt->dwSpaceLeft = MAX_PLRS;
 	}

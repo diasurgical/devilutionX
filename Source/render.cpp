@@ -402,21 +402,21 @@ inline void DoRenderLine(BYTE *dst, BYTE *src, size_t n, BYTE *tbl, DWORD mask)
 		if (sgOptions.Graphics.bBlendedTransparancy) { // Blended transparancy
 			if (light_table_index == lightmax) {       // Complete darkness
 				for (size_t i = 0; i < n; i++, mask <<= 1) {
-					if (mask & 0x80000000)
+					if ((mask & 0x80000000) != 0)
 						dst[i] = 0;
 					else
 						dst[i] = paletteTransparencyLookup[0][dst[i]];
 				}
 			} else if (light_table_index == 0) { // Fully lit
 				for (size_t i = 0; i < n; i++, mask <<= 1) {
-					if (mask & 0x80000000)
+					if ((mask & 0x80000000) != 0)
 						dst[i] = src[i];
 					else
 						dst[i] = paletteTransparencyLookup[dst[i]][src[i]];
 				}
 			} else { // Partially lit
 				for (size_t i = 0; i < n; i++, mask <<= 1) {
-					if (mask & 0x80000000)
+					if ((mask & 0x80000000) != 0)
 						dst[i] = tbl[src[i]];
 					else
 						dst[i] = paletteTransparencyLookup[dst[i]][tbl[src[i]]];
@@ -518,7 +518,7 @@ RenderTile(CelOutputBuffer out, int x, int y)
 	}
 
 #ifdef _DEBUG
-	if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
+	if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
 		mask = &SolidMask[TILE_HEIGHT - 1];
 	}
 #endif

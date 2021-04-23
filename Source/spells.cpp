@@ -121,10 +121,10 @@ bool IsReadiedSpellValid(const PlayerStruct &player)
 		return true;
 
 	case RSPLTYPE_CHARGES:
-		return player._pISpells & GetSpellBitmask(player._pRSpell);
+		return (player._pISpells & GetSpellBitmask(player._pRSpell)) != 0;
 
 	case RSPLTYPE_SCROLL:
-		return player._pScrlSpells & GetSpellBitmask(player._pRSpell);
+		return (player._pScrlSpells & GetSpellBitmask(player._pRSpell)) != 0;
 
 	default:
 		return false;

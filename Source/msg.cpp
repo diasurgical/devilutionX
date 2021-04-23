@@ -56,7 +56,7 @@ static void msg_get_next_packet()
 	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
 
 	result = (TMegaPkt *)&sgpMegaPkt;
-	while (result->pNext)
+	while (result->pNext != nullptr)
 		result = result->pNext;
 
 	result->pNext = sgpCurrPkt;
@@ -64,7 +64,7 @@ static void msg_get_next_packet()
 
 static void msg_free_packets()
 {
-	while (sgpMegaPkt) {
+	while (sgpMegaPkt != nullptr) {
 		sgpCurrPkt = sgpMegaPkt->pNext;
 		MemFreeDbg(sgpMegaPkt);
 		sgpMegaPkt = sgpCurrPkt;

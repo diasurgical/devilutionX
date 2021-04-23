@@ -336,7 +336,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (dObject[xp][yp] != 0)
 		return false;
-	if (dFlags[xp][yp] & BFLAG_POPULATED)
+	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
@@ -347,7 +347,7 @@ bool RndLocOk(int xp, int yp)
 
 static bool WallTrapLocOkK(int xp, int yp)
 {
-	if (dFlags[xp][yp] & BFLAG_POPULATED)
+	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 
 	if (nTrapTable[dPiece[xp][yp]])
@@ -640,7 +640,7 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 
 bool TorchLocOK(int xp, int yp)
 {
-	if (dFlags[xp][yp] & BFLAG_POPULATED)
+	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 	return true;
 }
@@ -1282,7 +1282,7 @@ void SetupObject(int i, int x, int y, _object_id ot)
 	}
 	object[i]._oAnimData = pObjCels[j];
 	object[i]._oAnimFlag = AllObjects[ot].oAnimFlag;
-	if (AllObjects[ot].oAnimFlag) {
+	if (AllObjects[ot].oAnimFlag != 0) {
 		object[i]._oAnimDelay = AllObjects[ot].oAnimDelay;
 		object[i]._oAnimCnt = GenerateRnd(AllObjects[ot].oAnimDelay);
 		object[i]._oAnimLen = AllObjects[ot].oAnimLen;
@@ -3040,7 +3040,7 @@ void OperateBookLever(int pnum, int i)
 			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			quests[Q_BLOOD]._qlog = true;
 			quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, 1);
+			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, true);
 		}
 		object[i]._otype = object[i]._otype;
 		if (object[i]._otype == OBJ_STEELTOME && quests[Q_WARLORD]._qvar1 == 0) {
@@ -3185,7 +3185,7 @@ void OperateMushPatch(int pnum, int i)
 			object[i]._oAnimFrame++;
 			if (!deltaload) {
 				GetSuperItemLoc(object[i]._ox, object[i]._oy, &x, &y);
-				SpawnQuestItem(IDI_MUSHROOM, x, y, 0, 0);
+				SpawnQuestItem(IDI_MUSHROOM, x, y, 0, false);
 				quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 			}
 		}
@@ -3212,7 +3212,7 @@ void OperateInnSignChest(int pnum, int i)
 			object[i]._oAnimFrame += 2;
 			if (!deltaload) {
 				GetSuperItemLoc(object[i]._ox, object[i]._oy, &x, &y);
-				SpawnQuestItem(IDI_BANNER, x, y, 0, 0);
+				SpawnQuestItem(IDI_BANNER, x, y, 0, false);
 			}
 		}
 	}
@@ -3339,13 +3339,13 @@ void OperatePedistal(int pnum, int i)
 			if (!deltaload)
 				PlaySfxLoc(LS_PUDDLE, object[i]._ox, object[i]._oy);
 			ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, 1);
+			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, true);
 		}
 		if (object[i]._oVar6 == 2) {
 			if (!deltaload)
 				PlaySfxLoc(LS_PUDDLE, object[i]._ox, object[i]._oy);
 			ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, 1);
+			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, true);
 		}
 		if (object[i]._oVar6 == 3) {
 			if (!deltaload)
@@ -3657,14 +3657,14 @@ bool OperateShrineEnchanted(int pnum)
 	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
 	Uint64 spells = plr[pnum]._pMemSpells;
 	for (int j = 0; j < maxSpells; j++) {
-		if (spell & spells)
+		if ((spell & spells) != 0)
 			cnt++;
 		spell *= 2;
 	}
 	if (cnt > 1) {
 		spell = 1;
 		for (int j = SPL_FIREBOLT; j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
-			if (plr[pnum]._pMemSpells & spell) {
+			if ((plr[pnum]._pMemSpells & spell) != 0) {
 				if (plr[pnum]._pSplLvl[j] < MAX_SPELL_LEVEL)
 					plr[pnum]._pSplLvl[j]++;
 			}
@@ -4578,7 +4578,7 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 		object[i]._oAnimFrame++;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			uniqueRnd = GenerateRnd(2);
+			uniqueRnd = (GenerateRnd(2) != 0);
 			if (currlevel <= 5) {
 				CreateTypeItem(object[i]._ox, object[i]._oy, true, ITYPE_LARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 6 && currlevel <= 9) {
@@ -4834,7 +4834,7 @@ void OperateLazStand(int pnum, int i)
 		object[i]._oAnimFrame++;
 		object[i]._oSelFlag = 0;
 		GetSuperItemLoc(object[i]._ox, object[i]._oy, &xx, &yy);
-		SpawnQuestItem(IDI_LAZSTAFF, xx, yy, 0, 0);
+		SpawnQuestItem(IDI_LAZSTAFF, xx, yy, 0, false);
 	}
 }
 

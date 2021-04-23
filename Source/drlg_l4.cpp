@@ -1707,7 +1707,7 @@ static void DRLG_L4(lvl_entry entry)
 	DRLG_L4GeneralFix();
 
 	if (currlevel != 16) {
-		DRLG_PlaceThemeRooms(7, 10, 6, 8, 1);
+		DRLG_PlaceThemeRooms(7, 10, 6, 8, true);
 	}
 
 	DRLG_L4Shadows();

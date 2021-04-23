@@ -247,10 +247,10 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	}
 
 	SVidLoop = false;
-	if (flags & 0x40000)
+	if ((flags & 0x40000) != 0)
 		SVidLoop = true;
-	bool enableVideo = !(flags & 0x100000);
-	bool enableAudio = !(flags & 0x1000000);
+	bool enableVideo = (flags & 0x100000) == 0;
+	bool enableAudio = (flags & 0x1000000) == 0;
 	//0x8 // Non-interlaced
 	//0x200, 0x800 // Upscale video
 	//0x80000 // Center horizontally
@@ -310,7 +310,7 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
 #ifndef USE_SDL1
-	if (renderer) {
+	if (renderer != nullptr) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
 		if (texture == nullptr) {
@@ -398,7 +398,7 @@ bool SVidPlayContinue()
 	}
 
 #ifndef USE_SDL1
-	if (renderer) {
+	if (renderer != nullptr) {
 		if (SDL_BlitSurface(SVidSurface, nullptr, GetOutputSurface(), nullptr) <= -1) {
 			SDL_Log("%s", SDL_GetError());
 			return false;
@@ -473,10 +473,10 @@ void SVidPlayEnd(HANDLE video)
 		SVidRestartMixer();
 	}
 
-	if (SVidSMK)
+	if (SVidSMK != nullptr)
 		smk_close(SVidSMK);
 
-	if (SVidBuffer) {
+	if (SVidBuffer != nullptr) {
 		mem_free_dbg(SVidBuffer);
 		SVidBuffer = nullptr;
 	}
@@ -492,7 +492,7 @@ void SVidPlayEnd(HANDLE video)
 
 	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
 #ifndef USE_SDL1
-	if (renderer) {
+	if (renderer != nullptr) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
 		if (texture == nullptr) {

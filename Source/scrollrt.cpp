@@ -60,11 +60,11 @@ char arch_draw_type;
 /**
  * Specifies whether transparency is active for the current CEL file being decoded.
  */
-int cel_transparency_active;
+bool cel_transparency_active;
 /**
  * Specifies whether foliage (tile has extra content that overlaps previous tile) being rendered.
  */
-int cel_foliage_active = false;
+bool cel_foliage_active = false;
 /**
  * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
  */
@@ -290,7 +290,7 @@ void DrawMissile(const CelOutputBuffer &out, int x, int y, int sx, int sy, bool 
 	int i;
 	MissileStruct *m;
 
-	if (!(dFlags[x][y] & BFLAG_MISSILE))
+	if ((dFlags[x][y] & BFLAG_MISSILE) == 0)
 		return;
 
 	if (dMissile[x][y] != -1) {
@@ -346,7 +346,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		return;
 	}
 
-	if (!(dFlags[x][y] & BFLAG_LIT)) {
+	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
 		Cl2DrawLightTbl(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, 1);
 		return;
 	}
@@ -591,7 +591,7 @@ static void drawCell(const CelOutputBuffer &out, int x, int y, int sx, int sy)
  */
 static void drawFloor(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
-	cel_transparency_active = 0;
+	cel_transparency_active = false;
 	light_table_index = dLight[x][y];
 
 	arch_draw_type = 1; // Left
@@ -682,7 +682,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 	}
 
 	pMonster = &monster[mi];
-	if (pMonster->_mFlags & MFLAG_HIDDEN) {
+	if ((pMonster->_mFlags & MFLAG_HIDDEN) != 0) {
 		return;
 	}
 
@@ -787,14 +787,14 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 	}
 	DrawObject(out, sx, sy, dx, dy, true);
 	DrawItem(out, sx, sy, dx, dy, true);
-	if (bFlag & BFLAG_PLAYERLR) {
+	if ((bFlag & BFLAG_PLAYERLR) != 0) {
 		assert((DWORD)(sy - 1) < MAXDUNY);
 		DrawPlayerHelper(out, sx, sy - 1, dx, dy);
 	}
 	if (bFlag & BFLAG_MONSTLR && negMon < 0) {
 		DrawMonsterHelper(out, sx, sy, -1, dx, dy);
 	}
-	if (bFlag & BFLAG_DEAD_PLAYER) {
+	if ((bFlag & BFLAG_DEAD_PLAYER) != 0) {
 		DrawDeadPlayer(out, sx, sy, dx, dy);
 	}
 	if (dPlayer[sx][sy] > 0) {
@@ -812,13 +812,13 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 		if (bArch != 0) {
 			cel_transparency_active = TransList[bMap];
 #ifdef _DEBUG
-			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
-				cel_transparency_active = 0; // Turn transparency off here for debugging
+			if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
+				cel_transparency_active = false; // Turn transparency off here for debugging
 			}
 #endif
 			CelClippedBlitLightTransTo(out, dx, dy, pSpecialCels, bArch, 64);
 #ifdef _DEBUG
-			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
+			if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
 				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
 			}
 #endif
@@ -870,7 +870,7 @@ static void scrollrt_drawFloor(const CelOutputBuffer &out, int x, int y, int sx,
 
 		// Jump to next row
 		sy += TILE_HEIGHT / 2;
-		if (i & 1) {
+		if ((i & 1) != 0) {
 			x++;
 			columns--;
 			sx += TILE_WIDTH / 2;
@@ -928,7 +928,7 @@ static void scrollrt_draw(const CelOutputBuffer &out, int x, int y, int sx, int 
 
 		// Jump to next row
 		sy += TILE_HEIGHT / 2;
-		if (i & 1) {
+		if ((i & 1) != 0) {
 			x++;
 			columns--;
 			sx += TILE_WIDTH / 2;
@@ -1058,21 +1058,21 @@ void CalcTileOffset(int *offsetX, int *offsetY)
 void TilesInView(int *rcolumns, int *rrows)
 {
 	int columns = gnScreenWidth / TILE_WIDTH;
-	if (gnScreenWidth % TILE_WIDTH) {
+	if ((gnScreenWidth % TILE_WIDTH) != 0) {
 		columns++;
 	}
 	int rows = gnViewportHeight / TILE_HEIGHT;
-	if (gnViewportHeight % TILE_HEIGHT) {
+	if ((gnViewportHeight % TILE_HEIGHT) != 0) {
 		rows++;
 	}
 
 	if (!zoomflag) {
 		// Half the number of tiles, rounded up
-		if (columns & 1) {
+		if ((columns & 1) != 0) {
 			columns++;
 		}
 		columns /= 2;
-		if (rows & 1) {
+		if ((rows & 1) != 0) {
 			rows++;
 		}
 		rows /= 2;
@@ -1116,7 +1116,7 @@ void CalcViewportGeometry()
 			tileRows++;
 			tileOffsetY -= TILE_HEIGHT / 2;
 		}
-	} else if (tileColums & 1 && lrow & 1) {
+	} else if ((tileColums & 1) != 0 && (lrow & 1) != 0) {
 		// Offset tile to vertically align the player when both rows and colums are odd
 		ShiftGrid(&tileShiftX, &tileShiftY, 0, -1);
 		tileRows++;
@@ -1283,7 +1283,7 @@ void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 	if (helpflag) {
 		DrawHelp(out);
 	}
-	if (msgflag) {
+	if (msgflag != EMSG_NONE) {
 		DrawDiabloMsg(out);
 	}
 	if (deathflag) {
@@ -1423,7 +1423,7 @@ static void DrawFPS(const CelOutputBuffer &out)
 	DWORD tc, frames;
 	char String[12];
 
-	if (frameflag && gbActive && pPanelText) {
+	if (frameflag && gbActive && pPanelText != nullptr) {
 		frameend++;
 		tc = SDL_GetTicks();
 		frames = tc - framestart;

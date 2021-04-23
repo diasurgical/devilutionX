@@ -3047,7 +3047,7 @@ void L2LockoutFix()
 					}
 					i++;
 				}
-				if (!doorok && !(dflags[i - 1][j] & DLRG_PROTECTED)) {
+				if (!doorok && (dflags[i - 1][j] & DLRG_PROTECTED) == 0) {
 					dungeon[i - 1][j] = 5;
 				}
 			}
@@ -3055,7 +3055,7 @@ void L2LockoutFix()
 	}
 	for (j = 1; j < DMAXX - 1; j++) { /* check: might be flipped */
 		for (i = 1; i < DMAXY - 1; i++) {
-			if (dflags[j][i] & DLRG_PROTECTED) {
+			if ((dflags[j][i] & DLRG_PROTECTED) != 0) {
 				continue;
 			}
 			if ((dungeon[j][i] == 1 || dungeon[j][i] == 4) && dungeon[j - 1][i] == 3 && dungeon[j + 1][i] == 3) {
@@ -3072,7 +3072,7 @@ void L2LockoutFix()
 					}
 					i++;
 				}
-				if (!doorok && !(dflags[j][i - 1] & DLRG_PROTECTED)) {
+				if (!doorok && (dflags[j][i - 1] & DLRG_PROTECTED) == 0) {
 					dungeon[j][i - 1] = 4;
 				}
 			}
@@ -3149,7 +3149,7 @@ static void DRLG_L2(lvl_entry entry)
 	L2DoorFix();
 	L2DirtFix();
 
-	DRLG_PlaceThemeRooms(6, 10, 3, 0, 0);
+	DRLG_PlaceThemeRooms(6, 10, 3, 0, false);
 	DRLG_L2PlaceRndSet(CTRDOOR1, 100);
 	DRLG_L2PlaceRndSet(CTRDOOR2, 100);
 	DRLG_L2PlaceRndSet(CTRDOOR3, 100);

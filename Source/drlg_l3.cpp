@@ -1439,7 +1439,7 @@ static bool DRLG_L3SpawnEdge(int x, int y, int *totarea)
 	if (x < 0 || y < 0 || x >= DMAXX || y >= DMAXY) {
 		return true;
 	}
-	if (dungeon[x][y] & 0x80) {
+	if ((dungeon[x][y] & 0x80) != 0) {
 		return false;
 	}
 	if (dungeon[x][y] > 15) {
@@ -1489,7 +1489,7 @@ static bool DRLG_L3Spawn(int x, int y, int *totarea)
 	if (x < 0 || y < 0 || x >= DMAXX || y >= DMAXY) {
 		return true;
 	}
-	if (dungeon[x][y] & 0x80) {
+	if ((dungeon[x][y] & 0x80) != 0) {
 		return false;
 	}
 	if (dungeon[x][y] > 15) {
@@ -1575,7 +1575,7 @@ static void DRLG_L3Pool()
 				for (i = std::max(dunx - totarea, 0); i < std::min(dunx + totarea, DMAXX); i++) {
 					// BUGFIX: In the following swap the order to first do the
 					// index checks and only then access dungeon[i][j] (fixed)
-					if (dungeon[i][j] & 0x80) {
+					if ((dungeon[i][j] & 0x80) != 0) {
 						dungeon[i][j] &= ~0x80;
 						if (totarea > 4 && poolchance < 25 && !found) {
 							k = poolsub[dungeon[i][j]];
@@ -2482,7 +2482,7 @@ static void DRLG_L3(lvl_entry entry)
 	}
 
 	if (currlevel < 17)
-		DRLG_PlaceThemeRooms(5, 10, 7, 0, 0);
+		DRLG_PlaceThemeRooms(5, 10, 7, 0, false);
 
 	if (currlevel < 17) {
 		DRLG_L3Wood();

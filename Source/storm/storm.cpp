@@ -119,7 +119,7 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 
-	if (!result || !*phFile) {
+	if (!result || (*phFile == nullptr)) {
 		SDL_Log("%s: Not found: %s", __FUNCTION__, filename);
 	}
 	return result;
@@ -134,11 +134,11 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	BYTE *dataPtr, *fileBuffer;
 	BYTE byte;
 
-	if (pdwWidth)
+	if (pdwWidth != nullptr)
 		*pdwWidth = 0;
-	if (dwHeight)
+	if (dwHeight != nullptr)
 		*dwHeight = 0;
-	if (pdwBpp)
+	if (pdwBpp != nullptr)
 		*pdwBpp = 0;
 
 	if (!pszFileName || !*pszFileName) {
@@ -157,10 +157,10 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		return false;
 	}
 
-	while (strchr(pszFileName, 92))
+	while (strchr(pszFileName, 92) != nullptr)
 		pszFileName = strchr(pszFileName, 92) + 1;
 
-	while (strchr(pszFileName + 1, 46))
+	while (strchr(pszFileName + 1, 46) != nullptr)
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
@@ -183,14 +183,14 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	// than image width for efficiency.
 	const int xSkip = dwBuffersize / height - width;
 
-	if (pdwWidth)
+	if (pdwWidth != nullptr)
 		*pdwWidth = width;
-	if (dwHeight)
+	if (dwHeight != nullptr)
 		*dwHeight = height;
-	if (pdwBpp)
+	if (pdwBpp != nullptr)
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
-	if (!pBuffer) {
+	if (pBuffer == nullptr) {
 		SFileSetFilePointer(hFile, 0, nullptr, DVL_FILE_END);
 		fileBuffer = nullptr;
 	} else {
@@ -201,7 +201,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		fileBuffer = (BYTE *)malloc(size);
 	}
 
-	if (fileBuffer) {
+	if (fileBuffer != nullptr) {
 		SFileReadFile(hFile, fileBuffer, size, nullptr, nullptr);
 		dataPtr = fileBuffer;
 
@@ -264,11 +264,11 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
 {
 	radon::Section *section = getIni().getSection(sectionName);
-	if (!section)
+	if (section == nullptr)
 		return defaultValue;
 
 	radon::Key *key = section->getKey(keyName);
-	if (!key)
+	if (key == nullptr)
 		return defaultValue;
 
 	return key->getFloatValue();
@@ -279,11 +279,11 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 	strncpy(string, defaultString, stringSize);
 
 	radon::Section *section = getIni().getSection(sectionName);
-	if (!section)
+	if (section == nullptr)
 		return false;
 
 	radon::Key *key = section->getKey(keyName);
-	if (!key)
+	if (key == nullptr)
 		return false;
 
 	std::string value = key->getStringValue();
@@ -299,7 +299,7 @@ void setIniValue(const char *sectionName, const char *keyName, const char *value
 	radon::File &ini = getIni();
 
 	radon::Section *section = ini.getSection(sectionName);
-	if (!section) {
+	if (section == nullptr) {
 		ini.addSection(sectionName);
 		section = ini.getSection(sectionName);
 	}
@@ -307,7 +307,7 @@ void setIniValue(const char *sectionName, const char *keyName, const char *value
 	std::string stringValue(value, len ? len : strlen(value));
 
 	radon::Key *key = section->getKey(keyName);
-	if (!key) {
+	if (key == nullptr) {
 		section->addKey(radon::Key(keyName, stringValue));
 	} else {
 		key->setValue(stringValue);

@@ -1089,7 +1089,7 @@ static void PressKey(int vkey)
 		return;
 	}
 	if (PauseMode == 2) {
-		if ((vkey == DVL_VK_RETURN) && (GetAsyncKeyState(DVL_VK_MENU) & 0x8000))
+		if (vkey == DVL_VK_RETURN && (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0)
 			dx_reinit();
 		return;
 	}
@@ -2066,7 +2066,7 @@ static void game_logic()
 	}
 
 #ifdef _DEBUG
-	if (debug_mode_key_inverted_v && GetAsyncKeyState(DVL_VK_SHIFT) & 0x8000) {
+	if (debug_mode_key_inverted_v && (GetAsyncKeyState(DVL_VK_SHIFT) & 0x8000) != 0) {
 		ScrollView();
 	}
 #endif

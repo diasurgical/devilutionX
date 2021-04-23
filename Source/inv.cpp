@@ -1640,11 +1640,11 @@ void CheckQuestItem(int pnum)
 		ItemStruct tmp;
 		mask = 0;
 		idx = plr[pnum].HoldItem.IDidx;
-		if (PlrHasItem(pnum, IDI_NOTE1, &n1) || idx == IDI_NOTE1)
+		if (PlrHasItem(pnum, IDI_NOTE1, &n1) != nullptr || idx == IDI_NOTE1)
 			mask = 1;
-		if (PlrHasItem(pnum, IDI_NOTE2, &n2) || idx == IDI_NOTE2)
+		if (PlrHasItem(pnum, IDI_NOTE2, &n2) != nullptr || idx == IDI_NOTE2)
 			mask |= 2;
-		if (PlrHasItem(pnum, IDI_NOTE3, &n3) || idx == IDI_NOTE3)
+		if (PlrHasItem(pnum, IDI_NOTE3, &n3) != nullptr || idx == IDI_NOTE3)
 			mask |= 4;
 		if (mask == 7) {
 			plr[myplr].PlaySpeach(46, 10);

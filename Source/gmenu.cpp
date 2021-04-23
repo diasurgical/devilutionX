@@ -71,7 +71,7 @@ void gmenu_draw_pause(const CelOutputBuffer &out)
 {
 	if (currlevel != 0)
 		RedBack(out);
-	if (!sgpCurrentMenu) {
+	if (sgpCurrentMenu == nullptr) {
 		light_table_index = 0;
 		gmenu_print_text(out, 252 + PANEL_LEFT, 176, "Pause");
 	}
@@ -113,7 +113,7 @@ static void gmenu_up_down(bool isDown)
 {
 	int i;
 
-	if (!sgpCurrItem) {
+	if (sgpCurrItem == nullptr) {
 		return;
 	}
 	mouseNavigation = false;
@@ -143,7 +143,7 @@ static void gmenu_left_right(bool isRight)
 {
 	int step, steps;
 
-	if (!(sgpCurrItem->dwFlags & GMENU_SLIDER))
+	if ((sgpCurrItem->dwFlags & GMENU_SLIDER) == 0)
 		return;
 
 	step = sgpCurrItem->dwFlags & 0xFFF;
@@ -170,13 +170,13 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 	mouseNavigation = false;
 	sgpCurrentMenu = pItem;
 	gmenu_current_option = gmFunc;
-	if (gmFunc) {
+	if (gmFunc != nullptr) {
 		gmenu_current_option();
 		pItem = sgpCurrentMenu;
 	}
 	sgCurrentMenuIdx = 0;
-	if (sgpCurrentMenu) {
-		for (i = 0; sgpCurrentMenu[i].fnMenu; i++) {
+	if (sgpCurrentMenu != nullptr) {
+		for (i = 0; sgpCurrentMenu[i].fnMenu != nullptr; i++) {
 			sgCurrentMenuIdx++;
 		}
 	}
@@ -200,7 +200,7 @@ static int gmenu_get_lfont(TMenuItem *pItem)
 	int i;
 	BYTE c;
 
-	if (pItem->dwFlags & GMENU_SLIDER)
+	if ((pItem->dwFlags & GMENU_SLIDER) != 0)
 		return 490;
 	text = pItem->pszStr;
 	i = 0;
@@ -215,7 +215,7 @@ static void gmenu_draw_menu_item(const CelOutputBuffer &out, TMenuItem *pItem, i
 {
 	DWORD w, x, nSteps, step, pos;
 	w = gmenu_get_lfont(pItem);
-	if (pItem->dwFlags & GMENU_SLIDER) {
+	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		x = 16 + w / 2;
 		CelDrawTo(out, x + PANEL_LEFT, y - 10, optbar_cel, 1, 287);
 		step = pItem->dwFlags & 0xFFF;
@@ -251,9 +251,9 @@ void gmenu_draw(const CelOutputBuffer &out)
 	TMenuItem *i;
 	DWORD ticks;
 
-	if (sgpCurrentMenu) {
+	if (sgpCurrentMenu != nullptr) {
 		GameMenuMove();
-		if (gmenu_current_option)
+		if (gmenu_current_option != nullptr)
 			gmenu_current_option();
 		if (gbIsHellfire) {
 			ticks = SDL_GetTicks();
@@ -269,8 +269,8 @@ void gmenu_draw(const CelOutputBuffer &out)
 		}
 		y = 160 + UI_OFFSET_Y;
 		i = sgpCurrentMenu;
-		if (sgpCurrentMenu->fnMenu) {
-			while (i->fnMenu) {
+		if (sgpCurrentMenu->fnMenu != nullptr) {
+			while (i->fnMenu != nullptr) {
 				gmenu_draw_menu_item(out, i, y);
 				i++;
 				y += 45;
@@ -281,7 +281,7 @@ void gmenu_draw(const CelOutputBuffer &out)
 
 bool gmenu_presskeys(int vkey)
 {
-	if (!sgpCurrentMenu)
+	if (sgpCurrentMenu == nullptr)
 		return false;
 	switch (vkey) {
 	case DVL_VK_RETURN:
@@ -357,7 +357,7 @@ bool gmenu_left_mouse(bool isDown)
 		return false;
 	}
 
-	if (!sgpCurrentMenu) {
+	if (sgpCurrentMenu == nullptr) {
 		return false;
 	}
 	if (MouseY >= PANEL_TOP) {
@@ -371,7 +371,7 @@ bool gmenu_left_mouse(bool isDown)
 		return true;
 	}
 	pItem = &sgpCurrentMenu[i];
-	if (!(sgpCurrentMenu[i].dwFlags & GMENU_ENABLED)) {
+	if ((sgpCurrentMenu[i].dwFlags & GMENU_ENABLED) == 0) {
 		return true;
 	}
 	w = gmenu_get_lfont(pItem);
@@ -383,7 +383,7 @@ bool gmenu_left_mouse(bool isDown)
 	}
 	sgpCurrItem = pItem;
 	PlaySFX(IS_TITLEMOV);
-	if (pItem->dwFlags & GMENU_SLIDER) {
+	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		mouseNavigation = gmenu_get_mouse_slider(&dummy);
 		gmenu_on_mouse_move();
 	} else {

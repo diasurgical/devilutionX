@@ -171,7 +171,7 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 		memset(&items[MAXITEMS], 0, sizeof(*items));
 		RecreateItem(MAXITEMS, idx, SDL_SwapLE16(is->iCreateInfo), SDL_SwapLE32(is->iSeed), SDL_SwapLE16(is->wValue), isHellfire);
 		items[MAXITEMS]._iMagical = is->bId >> 1;
-		items[MAXITEMS]._iIdentified = is->bId & 1;
+		items[MAXITEMS]._iIdentified = (is->bId & 1) != 0;
 		items[MAXITEMS]._iDurability = is->bDur;
 		items[MAXITEMS]._iMaxDur = is->bMDur;
 		items[MAXITEMS]._iCharges = is->bCh;

@@ -204,7 +204,7 @@ bool IncProgress()
 	sgdwProgress += 23;
 	if (sgdwProgress > 534)
 		sgdwProgress = 534;
-	if (sgpBackCel)
+	if (sgpBackCel != nullptr)
 		DrawCutscene();
 	return sgdwProgress >= 534;
 }

@@ -365,7 +365,7 @@ static _BLOCKENTRY *mpqapi_new_block(int *block_index)
 		if (blockEntry->sizefile != 0)
 			continue;
 
-		if (block_index)
+		if (block_index != nullptr)
 			*block_index = i;
 
 		return blockEntry;
@@ -520,7 +520,7 @@ static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int 
 	}
 	if (i < 0)
 		app_fatal("Out of hash space");
-	if (!pBlk)
+	if (pBlk == nullptr)
 		pBlk = mpqapi_new_block(&block_index);
 
 	cur_archive.sgpHashTbl[hIdx].hashcheck[0] = h2;

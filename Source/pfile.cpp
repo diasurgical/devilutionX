@@ -124,7 +124,7 @@ static DWORD pfile_get_save_num_from_name(const char *name)
 	DWORD i;
 
 	for (i = 0; i < MAX_CHARACTERS; i++) {
-		if (!strcasecmp(hero_names[i], name))
+		if (strcasecmp(hero_names[i], name) == 0)
 			break;
 	}
 
@@ -265,7 +265,7 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 
 	for (DWORD i = 0; i < MAX_CHARACTERS; i++) {
 		HANDLE archive = pfile_open_save_archive(i);
-		if (archive) {
+		if (archive != nullptr) {
 			PkPlayerStruct pkplr;
 			if (pfile_read_hero(archive, &pkplr)) {
 				_uiheroinfo uihero;

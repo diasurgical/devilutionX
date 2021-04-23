@@ -422,7 +422,7 @@ bool ItemPlace(int xp, int yp)
 		return false;
 	if (dObject[xp][yp] != 0)
 		return false;
-	if (dFlags[xp][yp] & BFLAG_POPULATED)
+	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
@@ -765,7 +765,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		lr -= plr[p]._pLevel;
 	}
 
-	if (iflgs & ISPL_ALLRESZERO) {
+	if ((iflgs & ISPL_ALLRESZERO) != 0) {
 		// reset resistances to zero if the respective special effect is active
 		mr = 0;
 		fr = 0;
@@ -829,7 +829,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	plr[p]._pILMinDam = lmin;
 	plr[p]._pILMaxDam = lmax;
 
-	if (iflgs & ISPL_INFRAVISION) {
+	if ((iflgs & ISPL_INFRAVISION) != 0) {
 		plr[p]._pInfraFlag = true;
 	} else {
 		plr[p]._pInfraFlag = false;
@@ -2245,7 +2245,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 	}
 	if (!control_WriteStringToBuffer((BYTE *)items[i]._iIName)) {
 		int aii = items[i].IDidx;
-		if (AllItemsList[aii].iSName)
+		if (AllItemsList[aii].iSName != nullptr)
 			strcpy(items[i]._iIName, AllItemsList[aii].iSName);
 		else
 			items[i]._iName[0] = 0;
@@ -2334,7 +2334,7 @@ int RndItem(int m)
 	if ((monster[m].MData->mTreasure & 0x8000) != 0)
 		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
 
-	if (monster[m].MData->mTreasure & 0x4000)
+	if ((monster[m].MData->mTreasure & 0x4000) != 0)
 		return 0;
 
 	if (GenerateRnd(100) > 40)
@@ -2781,7 +2781,7 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool
 	}
 
 	if ((icreateinfo & CF_UNIQUE) == 0) {
-		if (icreateinfo & CF_TOWN) {
+		if ((icreateinfo & CF_TOWN) != 0) {
 			RecreateTownItem(ii, idx, icreateinfo, iseed);
 			gbIsHellfire = _gbIsHellfire;
 			return;
@@ -2797,9 +2797,9 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool
 	int level = icreateinfo & CF_LEVEL;
 
 	int uper = 0;
-	if (icreateinfo & CF_UPER1)
+	if ((icreateinfo & CF_UPER1) != 0)
 		uper = 1;
-	if (icreateinfo & CF_UPER15)
+	if ((icreateinfo & CF_UPER15) != 0)
 		uper = 15;
 
 	bool onlygood = (icreateinfo & CF_ONLYGOOD) != 0;
@@ -3704,36 +3704,36 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, "hit monster doesn't heal");
 		break;
 	case IPL_STEALMANA:
-		if (x->_iFlags & ISPL_STEALMANA_3)
+		if ((x->_iFlags & ISPL_STEALMANA_3) != 0)
 			strcpy(tempstr, "hit steals 3% mana");
-		if (x->_iFlags & ISPL_STEALMANA_5)
+		if ((x->_iFlags & ISPL_STEALMANA_5) != 0)
 			strcpy(tempstr, "hit steals 5% mana");
 		break;
 	case IPL_STEALLIFE:
-		if (x->_iFlags & ISPL_STEALLIFE_3)
+		if ((x->_iFlags & ISPL_STEALLIFE_3) != 0)
 			strcpy(tempstr, "hit steals 3% life");
-		if (x->_iFlags & ISPL_STEALLIFE_5)
+		if ((x->_iFlags & ISPL_STEALLIFE_5) != 0)
 			strcpy(tempstr, "hit steals 5% life");
 		break;
 	case IPL_TARGAC:
 		strcpy(tempstr, "penetrates target's armor");
 		break;
 	case IPL_FASTATTACK:
-		if (x->_iFlags & ISPL_QUICKATTACK)
+		if ((x->_iFlags & ISPL_QUICKATTACK) != 0)
 			strcpy(tempstr, "quick attack");
-		if (x->_iFlags & ISPL_FASTATTACK)
+		if ((x->_iFlags & ISPL_FASTATTACK) != 0)
 			strcpy(tempstr, "fast attack");
-		if (x->_iFlags & ISPL_FASTERATTACK)
+		if ((x->_iFlags & ISPL_FASTERATTACK) != 0)
 			strcpy(tempstr, "faster attack");
-		if (x->_iFlags & ISPL_FASTESTATTACK)
+		if ((x->_iFlags & ISPL_FASTESTATTACK) != 0)
 			strcpy(tempstr, "fastest attack");
 		break;
 	case IPL_FASTRECOVER:
-		if (x->_iFlags & ISPL_FASTRECOVER)
+		if ((x->_iFlags & ISPL_FASTRECOVER) != 0)
 			strcpy(tempstr, "fast hit recovery");
-		if (x->_iFlags & ISPL_FASTERRECOVER)
+		if ((x->_iFlags & ISPL_FASTERRECOVER) != 0)
 			strcpy(tempstr, "faster hit recovery");
-		if (x->_iFlags & ISPL_FASTESTRECOVER)
+		if ((x->_iFlags & ISPL_FASTESTRECOVER) != 0)
 			strcpy(tempstr, "fastest hit recovery");
 		break;
 	case IPL_FASTBLOCK:
@@ -3992,7 +3992,7 @@ void PrintItemDetails(ItemStruct *x)
 			sprintf(tempstr, "armor: %i  Dur: %i/%i", x->_iAC, x->_iDurability, x->_iMaxDur);
 		AddPanelString(tempstr, true);
 	}
-	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
+	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0) {
 		if (x->_iMinDam == x->_iMaxDam)
 			sprintf(tempstr, "dam: %i  Dur: %i/%i", x->_iMinDam, x->_iDurability, x->_iMaxDur);
 		else
@@ -4089,7 +4089,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
 			l += l / 2;
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 			plr[p]._pMana += l;
 			if (plr[p]._pMana > plr[p]._pMaxMana)
 				plr[p]._pMana = plr[p]._pMaxMana;
@@ -4100,7 +4100,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		}
 		break;
 	case IMISC_FULLMANA:
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 			plr[p]._pMana = plr[p]._pMaxMana;
 			plr[p]._pManaBase = plr[p]._pMaxManaBase;
 			drawmanaflag = true;
@@ -4148,7 +4148,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue)
 			l += l / 2;
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 			plr[p]._pMana += l;
 			if (plr[p]._pMana > plr[p]._pMaxMana)
 				plr[p]._pMana = plr[p]._pMaxMana;
@@ -4162,7 +4162,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		plr[p]._pHitPoints = plr[p]._pMaxHP;
 		plr[p]._pHPBase = plr[p]._pMaxHPBase;
 		drawhpflag = true;
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 			plr[p]._pMana = plr[p]._pMaxMana;
 			plr[p]._pManaBase = plr[p]._pMaxManaBase;
 			drawmanaflag = true;
@@ -4206,7 +4206,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		plr[p]._pMemSpells |= GetSpellBitmask(spl);
 		if (plr[p]._pSplLvl[spl] < MAX_SPELL_LEVEL)
 			plr[p]._pSplLvl[spl]++;
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 			plr[p]._pMana += spelldata[spl].sManaCost << 6;
 			if (plr[p]._pMana > plr[p]._pMaxMana)
 				plr[p]._pMana = plr[p]._pMaxMana;
@@ -5103,15 +5103,15 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 
 void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed)
 {
-	if (icreateinfo & CF_SMITH)
+	if ((icreateinfo & CF_SMITH) != 0)
 		RecreateSmithItem(ii, icreateinfo & CF_LEVEL, iseed);
-	else if (icreateinfo & CF_SMITHPREMIUM)
+	else if ((icreateinfo & CF_SMITHPREMIUM) != 0)
 		RecreatePremiumItem(ii, icreateinfo & CF_LEVEL, iseed);
-	else if (icreateinfo & CF_BOY)
+	else if ((icreateinfo & CF_BOY) != 0)
 		RecreateBoyItem(ii, icreateinfo & CF_LEVEL, iseed);
-	else if (icreateinfo & CF_WITCH)
+	else if ((icreateinfo & CF_WITCH) != 0)
 		RecreateWitchItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
-	else if (icreateinfo & CF_HEALER)
+	else if ((icreateinfo & CF_HEALER) != 0)
 		RecreateHealerItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
 }
 

@@ -12,7 +12,7 @@ namespace devilution {
 
 namespace {
 
-BYTE sgbIsScrolling;
+bool sgbIsScrolling;
 Uint32 sgdwLastWalk;
 bool sgbIsWalking;
 

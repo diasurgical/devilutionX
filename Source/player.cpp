@@ -312,7 +312,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	for (i = 1; i <= PFILE_NONDEATH; i <<= 1) {
-		if (!(i & gfxflag)) {
+		if ((i & gfxflag) == 0) {
 			continue;
 		}
 
@@ -374,7 +374,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			pAnim = (BYTE *)p->_pTAnim;
 			break;
 		case PFILE_DEATH:
-			if (p->_pgfxnum & 0xF) {
+			if ((p->_pgfxnum & 0xF) != 0) {
 				continue;
 			}
 			szCel = "DT";
@@ -923,7 +923,7 @@ void NextPlrLevel(int pnum)
 	plr[pnum]._pMaxMana += mana;
 	plr[pnum]._pMaxManaBase += mana;
 
-	if (!(plr[pnum]._pIFlags & ISPL_NOMANA)) {
+	if ((plr[pnum]._pIFlags & ISPL_NOMANA) == 0) {
 		plr[pnum]._pMana = plr[pnum]._pMaxMana;
 		plr[pnum]._pManaBase = plr[pnum]._pMaxManaBase;
 	}
@@ -1013,14 +1013,14 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 
 	totplrs = 0;
 	for (i = 0; i < MAX_PLRS; i++) {
-		if ((1 << i) & pmask) {
+		if (((1 << i) & pmask) != 0) {
 			totplrs++;
 		}
 	}
 
 	if (totplrs) {
 		e = exp / totplrs;
-		if (pmask & (1 << myplr))
+		if ((pmask & (1 << myplr)) != 0)
 			AddPlrExperience(myplr, lvl, e);
 	}
 }
@@ -1252,7 +1252,7 @@ void StartStand(int pnum, direction dir)
 	}
 
 	if (!plr[pnum]._pInvincible || plr[pnum]._pHitPoints != 0 || pnum != myplr) {
-		if (!(plr[pnum]._pGFXLoad & PFILE_STAND)) {
+		if ((plr[pnum]._pGFXLoad & PFILE_STAND) == 0) {
 			LoadPlrGFX(pnum, PFILE_STAND);
 		}
 
@@ -1462,7 +1462,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	}
 
 	//Load walk animation in case it's not loaded yet
-	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
+	if ((plr[pnum]._pGFXLoad & PFILE_WALK) == 0) {
 		LoadPlrGFX(pnum, PFILE_WALK);
 	}
 
@@ -1501,18 +1501,18 @@ void StartAttack(int pnum, direction d)
 		return;
 	}
 
-	if (!(plr[pnum]._pGFXLoad & PFILE_ATTACK)) {
+	if ((plr[pnum]._pGFXLoad & PFILE_ATTACK) == 0) {
 		LoadPlrGFX(pnum, PFILE_ATTACK);
 	}
 
 	int skippedAnimationFrames = 1; // Every Attack start with Frame 2. Because ProcessPlayerAnimation is called after StartAttack and its increases the AnimationFrame.
-	if (plr[pnum]._pIFlags & ISPL_FASTATTACK) {
+	if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
 		skippedAnimationFrames += 1;
 	}
-	if (plr[pnum]._pIFlags & ISPL_FASTERATTACK) {
+	if ((plr[pnum]._pIFlags & ISPL_FASTERATTACK) != 0) {
 		skippedAnimationFrames += 2;
 	}
-	if (plr[pnum]._pIFlags & ISPL_FASTESTATTACK) {
+	if ((plr[pnum]._pIFlags & ISPL_FASTESTATTACK) != 0) {
 		skippedAnimationFrames += 2;
 	}
 
@@ -1533,13 +1533,13 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 		return;
 	}
 
-	if (!(plr[pnum]._pGFXLoad & PFILE_ATTACK)) {
+	if ((plr[pnum]._pGFXLoad & PFILE_ATTACK) == 0) {
 		LoadPlrGFX(pnum, PFILE_ATTACK);
 	}
 
 	int skippedAnimationFrames = 1; // Every Attack start with Frame 2. Because ProcessPlayerAnimation is called after StartRangeAttack and its increases the AnimationFrame.
 	if (!gbIsHellfire) {
-		if (plr[pnum]._pIFlags & ISPL_FASTATTACK) {
+		if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
 			skippedAnimationFrames += 1;
 		}
 	}
@@ -1566,12 +1566,12 @@ void StartPlrBlock(int pnum, direction dir)
 
 	PlaySfxLoc(IS_ISWORD, plr[pnum]._px, plr[pnum]._py);
 
-	if (!(plr[pnum]._pGFXLoad & PFILE_BLOCK)) {
+	if ((plr[pnum]._pGFXLoad & PFILE_BLOCK) == 0) {
 		LoadPlrGFX(pnum, PFILE_BLOCK);
 	}
 
 	int skippedAnimationFrames = 0; // Block can start with Frame 1 if Player 2 hits Player 1. In this case Player 1 will not call again ProcessPlayerAnimation.
-	if (plr[pnum]._pIFlags & ISPL_FASTBLOCK) {
+	if ((plr[pnum]._pIFlags & ISPL_FASTBLOCK) != 0) {
 		skippedAnimationFrames = (plr[pnum]._pBFrames - 1); // ISPL_FASTBLOCK means there is only one AnimationFrame.
 	}
 
@@ -1595,19 +1595,19 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 	if (leveltype != DTYPE_TOWN) {
 		switch (spelldata[plr[pnum]._pSpell].sType) {
 		case STYPE_FIRE:
-			if (!(plr[pnum]._pGFXLoad & PFILE_FIRE)) {
+			if ((plr[pnum]._pGFXLoad & PFILE_FIRE) == 0) {
 				LoadPlrGFX(pnum, PFILE_FIRE);
 			}
 			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
 			break;
 		case STYPE_LIGHTNING:
-			if (!(plr[pnum]._pGFXLoad & PFILE_LIGHTNING)) {
+			if ((plr[pnum]._pGFXLoad & PFILE_LIGHTNING) == 0) {
 				LoadPlrGFX(pnum, PFILE_LIGHTNING);
 			}
 			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
 			break;
 		case STYPE_MAGIC:
-			if (!(plr[pnum]._pGFXLoad & PFILE_MAGIC)) {
+			if ((plr[pnum]._pGFXLoad & PFILE_MAGIC) == 0) {
 				LoadPlrGFX(pnum, PFILE_MAGIC);
 			}
 			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
@@ -1666,7 +1666,7 @@ void RemovePlrFromMap(int pnum)
 	for (y = 1; y < MAXDUNY; y++) {
 		for (x = 1; x < MAXDUNX; x++) {
 			if (dPlayer[x][y - 1] == pn || dPlayer[x - 1][y] == pn) {
-				if (dFlags[x][y] & BFLAG_PLAYERLR) {
+				if ((dFlags[x][y] & BFLAG_PLAYERLR) != 0) {
 					dFlags[x][y] &= ~BFLAG_PLAYERLR;
 				}
 			}
@@ -1704,7 +1704,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 
 	direction pd = plr[pnum]._pdir;
 
-	if (!(plr[pnum]._pGFXLoad & PFILE_HIT)) {
+	if ((plr[pnum]._pGFXLoad & PFILE_HIT) == 0) {
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 
@@ -1712,11 +1712,11 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	const int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
 	if ((plr[pnum]._pIFlags & ZenFlags) == ZenFlags) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
 		skippedAnimationFrames = 4;
-	} else if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER) {
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTESTRECOVER) != 0) {
 		skippedAnimationFrames = 3;
-	} else if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER) {
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTERRECOVER) != 0) {
 		skippedAnimationFrames = 2;
-	} else if (plr[pnum]._pIFlags & ISPL_FASTRECOVER) {
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTRECOVER) != 0) {
 		skippedAnimationFrames = 1;
 	} else {
 		skippedAnimationFrames = 0;
@@ -1820,7 +1820,7 @@ StartPlayerKill(int pnum, int earflag)
 		SetPlrAnims(pnum);
 	}
 
-	if (!(p->_pGFXLoad & PFILE_DEATH)) {
+	if ((p->_pGFXLoad & PFILE_DEATH) == 0) {
 		LoadPlrGFX(pnum, PFILE_DEATH);
 	}
 
@@ -2546,7 +2546,7 @@ bool PlrHitMonst(int pnum, int m)
 			}
 			break;
 		case MC_DEMON:
-			if (plr[pnum]._pIFlags & ISPL_3XDAMVDEM) {
+			if ((plr[pnum]._pIFlags & ISPL_3XDAMVDEM) != 0) {
 				dam *= 3;
 			}
 			break;
@@ -2561,7 +2561,7 @@ bool PlrHitMonst(int pnum, int m)
 		}
 
 		dam <<= 6;
-		if (plr[pnum].pDamAcFlags & 0x08) {
+		if ((plr[pnum].pDamAcFlags & 0x08) != 0) {
 			int r = GenerateRnd(201);
 			if (r >= 100)
 				r = 100 + (r - 100) * 5;
@@ -2572,7 +2572,7 @@ bool PlrHitMonst(int pnum, int m)
 			dam >>= 2;
 
 		if (pnum == myplr) {
-			if (plr[pnum].pDamAcFlags & 0x04) {
+			if ((plr[pnum].pDamAcFlags & 0x04) != 0) {
 				dam2 += plr[pnum]._pIGetHit << 6;
 				if (dam2 >= 0) {
 					ApplyPlrDamage(pnum, 0, 1, dam2);
@@ -2582,7 +2582,7 @@ bool PlrHitMonst(int pnum, int m)
 			monster[m]._mhitpoints -= dam;
 		}
 
-		if (plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) {
+		if ((plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) != 0) {
 			skdam = GenerateRnd(dam / 8);
 			plr[pnum]._pHitPoints += skdam;
 			if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
@@ -2598,7 +2598,7 @@ bool PlrHitMonst(int pnum, int m)
 			if (plr[pnum]._pIFlags & ISPL_STEALMANA_3) {
 				skdam = 3 * dam / 100;
 			}
-			if (plr[pnum]._pIFlags & ISPL_STEALMANA_5) {
+			if ((plr[pnum]._pIFlags & ISPL_STEALMANA_5) != 0) {
 				skdam = 5 * dam / 100;
 			}
 			plr[pnum]._pMana += skdam;
@@ -2615,7 +2615,7 @@ bool PlrHitMonst(int pnum, int m)
 			if (plr[pnum]._pIFlags & ISPL_STEALLIFE_3) {
 				skdam = 3 * dam / 100;
 			}
-			if (plr[pnum]._pIFlags & ISPL_STEALLIFE_5) {
+			if ((plr[pnum]._pIFlags & ISPL_STEALLIFE_5) != 0) {
 				skdam = 5 * dam / 100;
 			}
 			plr[pnum]._pHitPoints += skdam;
@@ -2628,7 +2628,7 @@ bool PlrHitMonst(int pnum, int m)
 			}
 			drawhpflag = true;
 		}
-		if (plr[pnum]._pIFlags & ISPL_NOHEALPLR) {
+		if ((plr[pnum]._pIFlags & ISPL_NOHEALPLR) != 0) {
 			monster[m]._mFlags |= MFLAG_NOHEAL;
 		}
 #ifdef _DEBUG
@@ -2648,7 +2648,7 @@ bool PlrHitMonst(int pnum, int m)
 				M_StartHit(m, pnum, dam);
 				monster[m]._mmode = MM_STONE;
 			} else {
-				if (plr[pnum]._pIFlags & ISPL_KNOCKBACK) {
+				if ((plr[pnum]._pIFlags & ISPL_KNOCKBACK) != 0) {
 					M_GetKnockback(m);
 				}
 				M_StartHit(m, pnum, dam);
@@ -2675,7 +2675,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		return rv;
 	}
 
-	if (plr[p]._pSpellFlags & 1) {
+	if ((plr[p]._pSpellFlags & 1) != 0) {
 		return rv;
 	}
 
@@ -2730,7 +2730,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 				}
 			}
 			skdam = dam << 6;
-			if (plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) {
+			if ((plr[pnum]._pIFlags & ISPL_RNDSTEALLIFE) != 0) {
 				tac = GenerateRnd(skdam / 8);
 				plr[pnum]._pHitPoints += tac;
 				if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
@@ -2817,7 +2817,7 @@ bool PM_DoAttack(int pnum)
 		if (!(plr[pnum]._pIFlags & ISPL_FIREDAM) || !(plr[pnum]._pIFlags & ISPL_LIGHTDAM)) {
 			if (plr[pnum]._pIFlags & ISPL_FIREDAM) {
 				AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
-			} else if (plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
+			} else if ((plr[pnum]._pIFlags & ISPL_LIGHTDAM) != 0) {
 				AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			}
 		}
@@ -2915,19 +2915,19 @@ bool PM_DoRangeAttack(int pnum)
 		if (arrows != 1) {
 			int angle = arrow == 0 ? -1 : 1;
 			int x = plr[pnum]._pVar1 - plr[pnum]._px;
-			if (x)
+			if (x != 0)
 				yoff = x < 0 ? angle : -angle;
 			int y = plr[pnum]._pVar2 - plr[pnum]._py;
-			if (y)
+			if (y != 0)
 				xoff = y < 0 ? -angle : angle;
 		}
 
 		int dmg = 4;
 		mistype = MIS_ARROW;
-		if (plr[pnum]._pIFlags & ISPL_FIRE_ARROWS) {
+		if ((plr[pnum]._pIFlags & ISPL_FIRE_ARROWS) != 0) {
 			mistype = MIS_FARROW;
 		}
-		if (plr[pnum]._pIFlags & ISPL_LIGHT_ARROWS) {
+		if ((plr[pnum]._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
 			mistype = MIS_LARROW;
 		}
 		if ((plr[pnum]._pIFlags & ISPL_FIRE_ARROWS) != 0 && (plr[pnum]._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
@@ -4144,7 +4144,7 @@ void ModifyPlrMag(int p, int l)
 
 	plr[p]._pMaxManaBase += ms;
 	plr[p]._pMaxMana += ms;
-	if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+	if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 		plr[p]._pManaBase += ms;
 		plr[p]._pMana += ms;
 	}
