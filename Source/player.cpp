@@ -449,7 +449,8 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 				continue; //Death has no weapon
 			}
 			if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
-				continue; //No block without weapon
+				if (c != HeroClass::Monk || (*w != 'T')) // monk can block with a staff
+					continue; //No block without shield
 			}
 			sprintf(Type, "%c%c%c", CharChar[static_cast<std::size_t>(c)], *a, *w);
 			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
