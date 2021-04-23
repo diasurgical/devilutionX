@@ -465,7 +465,7 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 				continue; //Death has no weapon
 			}
 			if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
-				if (c != HeroClass::Monk || (*w != 'T' && *w != 'N')) // monk can block with a staff and unarmed
+				if (c != HeroClass::Monk || (*w == 'B' || *w == 'A')) // monk can always block except while using an axe or a bow
 					continue; //No block without shield
 			}
 			sprintf(Type, "%c%c%c", CharChar[static_cast<std::size_t>(c)], *a, *w);
