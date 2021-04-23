@@ -3631,14 +3631,12 @@ void MI_Firewall(Sint32 i)
 	PutMissile(i);
 }
 
-void MI_Fireball(Sint32 i)
+void FireballUpdate(int i, int xof, int yof, bool alwaysDelete)
 {
-	int dam, id, px, py, mx, my;
-
-	id = missile[i]._misource;
-	dam = missile[i]._midam;
 	missile[i]._mirange--;
 
+	int px, py;
+	int id = missile[i]._misource;
 	if (missile[i]._micaster == TARGET_MONSTERS) {
 		px = plr[id]._px;
 		py = plr[id]._py;
@@ -3653,14 +3651,15 @@ void MI_Fireball(Sint32 i)
 			AddUnLight(missile[i]._mlid);
 		}
 	} else {
-		missile[i]._mitxoff += missile[i]._mixvel;
-		missile[i]._mityoff += missile[i]._miyvel;
+		int dam = missile[i]._midam;
+		missile[i]._mitxoff += xof;
+		missile[i]._mityoff += yof;
 		GetMissilePos(i);
 		if (missile[i]._mix != missile[i]._misx || missile[i]._miy != missile[i]._misy)
 			CheckMissileCol(i, dam, dam, false, missile[i]._mix, missile[i]._miy, false);
 		if (missile[i]._mirange == 0) {
-			mx = missile[i]._mix;
-			my = missile[i]._miy;
+			int mx = missile[i]._mix;
+			int my = missile[i]._miy;
 			ChangeLight(missile[i]._mlid, missile[i]._mix, my, missile[i]._miAnimFrame);
 			if (!CheckBlock(px, py, mx, my))
 				CheckMissileCol(i, dam, dam, false, mx, my, true);
@@ -3704,9 +3703,16 @@ void MI_Fireball(Sint32 i)
 			missile[i]._miVar2 = missile[i]._miy;
 			ChangeLight(missile[i]._mlid, missile[i]._miVar1, missile[i]._miVar2, 8);
 		}
+		if (alwaysDelete)
+			missile[i]._miDelFlag = true;
 	}
 
 	PutMissile(i);
+}
+
+void MI_Fireball(Sint32 i)
+{
+	FireballUpdate(i, missile[i]._mixvel, missile[i]._miyvel, false);
 }
 
 void MI_HorkSpawn(Sint32 i)
@@ -3799,11 +3805,6 @@ void MI_HiveExplode(Sint32 i)
 
 void MI_Immolation(Sint32 i)
 {
-	int dam, id, px, py, mx, my, xof, yof;
-
-	id = missile[i]._misource;
-	dam = missile[i]._midam;
-
 	if (missile[i]._miVar7 < 0) {
 		int v = 2 * missile[i]._miVar6;
 		missile[i]._miVar6 = v;
@@ -3813,111 +3814,23 @@ void MI_Immolation(Sint32 i)
 		missile[i]._miVar7--;
 	}
 
+	int xof = missile[i]._mixvel;
+	int yof = missile[i]._miyvel;
+
 	switch (missile[i]._mimfnum) {
 	case DIR_S:
-		xof = missile[i]._mixvel;
+	case DIR_N:
 		yof = 0;
-		break;
-	case DIR_SW:
-		xof = missile[i]._mixvel;
-		yof = missile[i]._miyvel;
 		break;
 	case DIR_W:
-		xof = 0;
-		yof = missile[i]._miyvel;
-		break;
-	case DIR_NW:
-		xof = missile[i]._mixvel;
-		yof = missile[i]._miyvel;
-		break;
-	case DIR_N:
-		xof = missile[i]._mixvel;
-		yof = 0;
-		break;
-	case DIR_NE:
-		xof = missile[i]._mixvel;
-		yof = missile[i]._miyvel;
-		break;
 	case DIR_E:
 		xof = 0;
-		yof = missile[i]._miyvel;
 		break;
-	case DIR_SE:
-		xof = missile[i]._mixvel;
-		yof = missile[i]._miyvel;
+	default:
 		break;
 	}
-	missile[i]._mirange--;
 
-	if (missile[i]._micaster == TARGET_MONSTERS) {
-		px = plr[id]._px;
-		py = plr[id]._py;
-	} else {
-		px = monster[id]._mx;
-		py = monster[id]._my;
-	}
-
-	if (missile[i]._miAnimType == MFILE_BIGEXP) {
-		if (missile[i]._mirange == 0) {
-			missile[i]._miDelFlag = true;
-			AddUnLight(missile[i]._mlid);
-		}
-	} else {
-		missile[i]._mitxoff += xof;
-		missile[i]._mityoff += yof;
-		GetMissilePos(i);
-		if (missile[i]._mix != missile[i]._misx || missile[i]._miy != missile[i]._misy)
-			CheckMissileCol(i, dam, dam, false, missile[i]._mix, missile[i]._miy, false);
-		if (missile[i]._mirange == 0) {
-			mx = missile[i]._mix;
-			my = missile[i]._miy;
-			ChangeLight(missile[i]._mlid, missile[i]._mix, my, missile[i]._miAnimFrame);
-			if (!CheckBlock(px, py, mx, my))
-				CheckMissileCol(i, dam, dam, false, mx, my, true);
-			if (!CheckBlock(px, py, mx, my + 1))
-				CheckMissileCol(i, dam, dam, false, mx, my + 1, true);
-			if (!CheckBlock(px, py, mx, my - 1))
-				CheckMissileCol(i, dam, dam, false, mx, my - 1, true);
-			if (!CheckBlock(px, py, mx + 1, my))
-				CheckMissileCol(i, dam, dam, false, mx + 1, my, true);
-			if (!CheckBlock(px, py, mx + 1, my - 1))
-				CheckMissileCol(i, dam, dam, false, mx + 1, my - 1, true);
-			if (!CheckBlock(px, py, mx + 1, my + 1))
-				CheckMissileCol(i, dam, dam, false, mx + 1, my + 1, true);
-			if (!CheckBlock(px, py, mx - 1, my))
-				CheckMissileCol(i, dam, dam, false, mx - 1, my, true);
-			if (!CheckBlock(px, py, mx - 1, my + 1))
-				CheckMissileCol(i, dam, dam, false, mx - 1, my + 1, true);
-			if (!CheckBlock(px, py, mx - 1, my - 1))
-				CheckMissileCol(i, dam, dam, false, mx - 1, my - 1, true);
-			if (!TransList[dTransVal[mx][my]]
-			    || (missile[i]._mixvel < 0 && ((TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]]) || (TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]])))) {
-				missile[i]._mix++;
-				missile[i]._miy++;
-				missile[i]._miyoff -= 32;
-			}
-			if (missile[i]._miyvel > 0
-			    && ((TransList[dTransVal[mx + 1][my]] && nSolidTable[dPiece[mx + 1][my]])
-			        || (TransList[dTransVal[mx - 1][my]] && nSolidTable[dPiece[mx - 1][my]]))) {
-				missile[i]._miyoff -= 32;
-			}
-			if (missile[i]._mixvel > 0
-			    && ((TransList[dTransVal[mx][my + 1]] && nSolidTable[dPiece[mx][my + 1]])
-			        || (TransList[dTransVal[mx][my - 1]] && nSolidTable[dPiece[mx][my - 1]]))) {
-				missile[i]._mixoff -= 32;
-			}
-			missile[i]._mimfnum = 0;
-			SetMissAnim(i, MFILE_BIGEXP);
-			missile[i]._mirange = missile[i]._miAnimLen - 1;
-		} else if (missile[i]._mix != missile[i]._miVar1 || missile[i]._miy != missile[i]._miVar2) {
-			missile[i]._miVar1 = missile[i]._mix;
-			missile[i]._miVar2 = missile[i]._miy;
-			ChangeLight(missile[i]._mlid, missile[i]._miVar1, missile[i]._miVar2, 8);
-		}
-		missile[i]._miDelFlag = true;
-	}
-
-	PutMissile(i);
+	FireballUpdate(i, xof, yof, true);
 }
 
 void MI_LightningArrow(Sint32 i)
