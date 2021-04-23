@@ -22,6 +22,7 @@
 #include "stores.h"
 #include "storm/storm.h"
 #include "towners.h"
+#include <unordered_set>
 
 namespace devilution {
 
@@ -31,15 +32,31 @@ bool deathflag;
 int deathdelay;
 
 /** Maps from armor animation to letter used in graphic files. */
-const char ArmourChar[4] = { 'L', 'M', 'H', 0 };
+const char ArmourChar[4] = {
+	'L', // light
+	'M', // medium
+	'H', // heavy
+	0
+};
 /** Maps from weapon animation to letter used in graphic files. */
-const char WepChar[10] = { 'N', 'U', 'S', 'D', 'B', 'A', 'M', 'H', 'T', 0 };
+const char WepChar[10] = {
+	'N', // unarmed
+	'U', // no weapon + shield
+	'S', // sword + no shield
+	'D', // sword + shield
+	'B', // bow
+	'A', // axe
+	'M', // blunt + no shield
+	'H', // blunt + shield
+	'T', // staff
+	0
+};
 /** Maps from player class to letter used in graphic files. */
 const char CharChar[] = {
-	'W',
-	'R',
-	'S',
-	'M',
+	'W', // warrior
+	'R', // rogue
+	'S', // sorcerer
+	'M', // monk
 	'B',
 	'C',
 	0
@@ -441,15 +458,27 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 	c = GetPlrGFXClass(c);
 	dwMaxSize = 0;
 
+	std::unordered_set<char> canBlock;
+	canBlock.insert('D');
+	canBlock.insert('U');
+	canBlock.insert('H');
+
+	if (c == HeroClass::Monk) {
+		canBlock.insert('S');
+		canBlock.insert('M');
+		canBlock.insert('N');
+		canBlock.insert('T');
+	}
+
 	for (a = &ArmourChar[0]; *a; a++) {
 		if (gbIsSpawn && a != &ArmourChar[0])
 			break;
-		for (w = &WepChar[0]; *w; w++) { // BUGFIX loads non-existing animagions; DT is only for N, BT is only for U, D & H (fixed)
+		for (w = &WepChar[0]; *w; w++) {
 			if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
 				continue; //Death has no weapon
 			}
-			if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
-				continue; //No block without weapon
+			if (szCel[0] == 'B' && szCel[1] == 'L' && canBlock.find(*w) == canBlock.end()) {
+				continue; // No block animation
 			}
 			sprintf(Type, "%c%c%c", CharChar[static_cast<std::size_t>(c)], *a, *w);
 			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
