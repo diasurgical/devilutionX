@@ -385,13 +385,13 @@ bool pfile_delete_save(_uiheroinfo *hero_info)
 	return true;
 }
 
-void pfile_read_player_from_save()
+void pfile_read_player_from_save(char name[16], int playerId)
 {
 	HANDLE archive;
 	DWORD save_num;
 	PkPlayerStruct pkplr;
 
-	save_num = pfile_get_save_num_from_name(gszHero);
+	save_num = pfile_get_save_num_from_name(name);
 	archive = pfile_open_save_archive(save_num);
 	if (archive == nullptr)
 		app_fatal("Unable to open archive");
@@ -404,11 +404,11 @@ void pfile_read_player_from_save()
 
 	pfile_SFileCloseArchive(&archive);
 
-	UnPackPlayer(&pkplr, myplr, false);
+	UnPackPlayer(&pkplr, playerId, false);
 
-	LoadHeroItems(&plr[myplr]);
-	RemoveEmptyInventory(myplr);
-	CalcPlrInv(myplr, false);
+	LoadHeroItems(&plr[playerId]);
+	RemoveEmptyInventory(playerId);
+	CalcPlrInv(playerId, false);
 }
 
 bool LevelFileExists()

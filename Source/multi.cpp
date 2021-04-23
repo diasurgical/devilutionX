@@ -10,6 +10,7 @@
 #include "DiabloUI/diabloui.h"
 #include "diablo.h"
 #include "dthread.h"
+#include "mainmenu.h"
 #include "nthread.h"
 #include "options.h"
 #include "pfile.h"
@@ -827,7 +828,7 @@ bool multi_init_multi(GameData *gameData)
 	myplr = playerId;
 	gbIsMultiplayer = true;
 
-	pfile_read_player_from_save();
+	pfile_read_player_from_save(gszHero, myplr);
 
 	return true;
 }
