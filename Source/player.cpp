@@ -478,7 +478,7 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 				continue; //Death has no weapon
 			}
 			if (szCel[0] == 'B' && szCel[1] == 'L' && canBlock.find(*w) == canBlock.end()) {
-					continue; //No block
+				continue; // No block animation
 			}
 			sprintf(Type, "%c%c%c", CharChar[static_cast<std::size_t>(c)], *a, *w);
 			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
