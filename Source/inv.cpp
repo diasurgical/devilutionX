@@ -1902,7 +1902,7 @@ void DrawInvMsg(const char *msg)
 	}
 }
 
-bool PutItem(int pnum, int x, int y)
+static int PutItem(int pnum, int &x, int &y)
 {
 	if (numitems >= MAXITEMS)
 		return false;
@@ -1949,6 +1949,9 @@ bool PutItem(int pnum, int x, int y)
 
 int InvPutItem(int pnum, int x, int y)
 {
+	int xx = x - plr[pnum]._px;
+	int yy = y - plr[pnum]._py;
+
 	if (!PutItem(pnum, x, y))
 		return -1;
 
@@ -1956,8 +1959,6 @@ int InvPutItem(int pnum, int x, int y)
 		int yp = cursmy;
 		int xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			int xx = x - plr[pnum]._px;
-			int yy = y - plr[pnum]._py;
 			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
