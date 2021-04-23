@@ -1141,6 +1141,9 @@ void SetMissAnim(int mi, int animtype)
 
 void SetMissDir(int mi, int dir)
 {
+	if (!misfiledata[missile[mi]._miAnimType].mAnimData[dir]) {
+		return;
+	}
 	missile[mi]._mimfnum = dir;
 	SetMissAnim(mi, missile[mi]._miAnimType);
 }
