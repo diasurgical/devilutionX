@@ -1071,22 +1071,16 @@ static void DRLG_L1Floor()
 	}
 }
 
-static void DRLG_L1Pass3()
+void DRLG_LPass3(int lv)
 {
-	int i, j, xx, yy;
-	long v1, v2, v3, v4, lv;
-	WORD *MegaTiles;
+	WORD *MegaTiles = (WORD *)&pMegaTiles[lv * 8];
+	int v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
+	int v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
+	int v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
+	int v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 
-	lv = 22 - 1;
-
-	MegaTiles = (WORD *)&pMegaTiles[lv * 8];
-	v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
-	v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
-	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
-	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
-
-	for (j = 0; j < MAXDUNY; j += 2) {
-		for (i = 0; i < MAXDUNX; i += 2) {
+	for (int j = 0; j < MAXDUNY; j += 2) {
+		for (int i = 0; i < MAXDUNX; i += 2) {
 			dPiece[i][j] = v1;
 			dPiece[i + 1][j] = v2;
 			dPiece[i][j + 1] = v3;
@@ -1094,17 +1088,23 @@ static void DRLG_L1Pass3()
 		}
 	}
 
-	yy = 16;
-	for (j = 0; j < DMAXY; j++) {
-		xx = 16;
-		for (i = 0; i < DMAXX; i++) {
+	int yy = 16;
+	for (int j = 0; j < DMAXY; j++) {
+		int xx = 16;
+		for (int i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
-			assert(lv >= 0);
-			MegaTiles = (WORD *)&pMegaTiles[lv * 8];
-			v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
-			v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
-			v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
-			v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
+			if (lv >= 0) {
+				MegaTiles = (WORD *)&pMegaTiles[lv * 8];
+				v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
+				v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
+				v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
+				v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
+			} else {
+				v1 = 0;
+				v2 = 0;
+				v3 = 0;
+				v4 = 0;
+			}
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
@@ -1113,6 +1113,11 @@ static void DRLG_L1Pass3()
 		}
 		yy += 2;
 	}
+}
+
+static void DRLG_L1Pass3()
+{
+	DRLG_LPass3(22 - 1);
 }
 
 static void DRLG_LoadL1SP()

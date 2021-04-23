@@ -2575,52 +2575,7 @@ static void DRLG_L3(lvl_entry entry)
 
 static void DRLG_L3Pass3()
 {
-	int i, j, xx, yy;
-	long v1, v2, v3, v4, lv;
-	WORD *MegaTiles;
-
-	lv = 8 - 1;
-
-	MegaTiles = (WORD *)&pMegaTiles[lv * 8];
-	v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
-	v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
-	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
-	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
-
-	for (j = 0; j < MAXDUNY; j += 2) {
-		for (i = 0; i < MAXDUNX; i += 2) {
-			dPiece[i][j] = v1;
-			dPiece[i + 1][j] = v2;
-			dPiece[i][j + 1] = v3;
-			dPiece[i + 1][j + 1] = v4;
-		}
-	}
-
-	yy = 16;
-	for (j = 0; j < DMAXY; j++) {
-		xx = 16;
-		for (i = 0; i < DMAXX; i++) {
-			lv = dungeon[i][j] - 1;
-			if (lv >= 0) {
-				MegaTiles = (WORD *)&pMegaTiles[lv * 8];
-				v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
-				v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
-				v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
-				v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
-			} else {
-				v1 = 0;
-				v2 = 0;
-				v3 = 0;
-				v4 = 0;
-			}
-			dPiece[xx][yy] = v1;
-			dPiece[xx + 1][yy] = v2;
-			dPiece[xx][yy + 1] = v3;
-			dPiece[xx + 1][yy + 1] = v4;
-			xx += 2;
-		}
-		yy += 2;
-	}
+	DRLG_LPass3(8 - 1);
 }
 
 void CreateL3Dungeon(DWORD rseed, lvl_entry entry)
