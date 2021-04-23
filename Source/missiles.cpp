@@ -1310,7 +1310,7 @@ static bool missiles_found_target(Sint32 mi, Sint32 *x, Sint32 *y, Sint32 rad)
 
 void AddFireRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	if (LineClear(sx, sy, dx, dy)) {
+	if (LineClearMissile(sx, sy, dx, dy)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNEFIRE);
 		if (missiles_found_target(mi, &dx, &dy, 10)) {
@@ -1327,7 +1327,7 @@ void AddFireRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 
 void AddLightningRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	if (LineClear(sx, sy, dx, dy)) {
+	if (LineClearMissile(sx, sy, dx, dy)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNELIGHT);
 		if (missiles_found_target(mi, &dx, &dy, 10)) {
@@ -1344,7 +1344,7 @@ void AddLightningRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sin
 
 void AddGreatLightningRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	if (LineClear(sx, sy, dx, dy)) {
+	if (LineClearMissile(sx, sy, dx, dy)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNENOVA);
 		if (missiles_found_target(mi, &dx, &dy, 10)) {
@@ -1361,7 +1361,7 @@ void AddGreatLightningRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy
 
 void AddImmolationRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	if (LineClear(sx, sy, dx, dy)) {
+	if (LineClearMissile(sx, sy, dx, dy)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNEIMMOLAT);
 		if (missiles_found_target(mi, &dx, &dy, 10)) {
@@ -1378,7 +1378,7 @@ void AddImmolationRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Si
 
 void AddStoneRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam)
 {
-	if (LineClear(sx, sy, dx, dy)) {
+	if (LineClearMissile(sx, sy, dx, dy)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNESTONE);
 		if (missiles_found_target(mi, &dx, &dy, 10)) {
@@ -2454,7 +2454,7 @@ void AddGuardian(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 m
 			ty = dy + CrawlTable[k];
 			pn = dPiece[tx][ty];
 			if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
-				if (LineClear(sx, sy, tx, ty)) {
+				if (LineClearMissile(sx, sy, tx, ty)) {
 					if ((dMonster[tx][ty] | nSolidTable[pn] | nMissileTable[pn] | dObject[tx][ty] | dMissile[tx][ty]) == 0) {
 						missile[mi]._mix = tx;
 						missile[mi]._miy = ty;
@@ -2873,7 +2873,7 @@ void AddFirewallC(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 			ty = dy + CrawlTable[pn];
 			if (0 < tx && tx < MAXDUNX && 0 < ty && ty < MAXDUNY) {
 				k = dPiece[tx][ty];
-				if (LineClear(sx, sy, tx, ty)) {
+				if (LineClearMissile(sx, sy, tx, ty)) {
 					if ((sx != tx || sy != ty) && (nSolidTable[k] | dObject[tx][ty]) == 0) {
 						missile[mi]._miVar1 = tx;
 						missile[mi]._miVar2 = ty;
@@ -3206,7 +3206,7 @@ void AddDiabApoca(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 
 	int players = gbIsMultiplayer ? MAX_PLRS : 1;
 	for (pnum = 0; pnum < players; pnum++) {
 		if (plr[pnum].plractive) {
-			if (LineClear(sx, sy, plr[pnum]._pfutx, plr[pnum]._pfuty)) {
+			if (LineClearMissile(sx, sy, plr[pnum]._pfutx, plr[pnum]._pfuty)) {
 				AddMissile(0, 0, plr[pnum]._pfutx, plr[pnum]._pfuty, 0, MIS_BOOM2, mienemy, id, dam, 0);
 			}
 		}
@@ -3284,7 +3284,7 @@ int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, int8_t mic
 int Sentfire(int i, int sx, int sy)
 {
 	int ex = 0;
-	if (LineClear(missile[i]._mix, missile[i]._miy, sx, sy)) {
+	if (LineClearMissile(missile[i]._mix, missile[i]._miy, sx, sy)) {
 		if (dMonster[sx][sy] > 0 && monster[dMonster[sx][sy] - 1]._mhitpoints >> 6 > 0 && dMonster[sx][sy] - 1 > MAX_PLRS - 1) {
 			direction dir = GetDirection(missile[i]._mix, missile[i]._miy, sx, sy);
 			missile[i]._miVar3 = missileavail[0];
@@ -3321,7 +3321,7 @@ void MI_Golem(Sint32 i)
 				ty = missile[i]._miVar5 + *ct;
 				if (0 < tx && tx < MAXDUNX && 0 < ty && ty < MAXDUNY) {
 					dp = dPiece[tx][ty];
-					if (LineClear(missile[i]._miVar1, missile[i]._miVar2, tx, ty)) {
+					if (LineClearMissile(missile[i]._miVar1, missile[i]._miVar2, tx, ty)) {
 						if ((dMonster[tx][ty] | nSolidTable[dp] | dObject[tx][ty]) == 0) {
 							l = 6;
 							SpawnGolum(src, tx, ty, i);
@@ -3997,7 +3997,7 @@ void MI_FireRing(Sint32 i)
 		if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
 			dp = dPiece[tx][ty];
 			if (!nSolidTable[dp] && dObject[tx][ty] == 0) {
-				if (LineClear(missile[i]._mix, missile[i]._miy, tx, ty)) {
+				if (LineClearMissile(missile[i]._mix, missile[i]._miy, tx, ty)) {
 					if (nMissileTable[dp] || missile[i]._miVar8)
 						missile[i]._miVar8 = 1;
 					else
@@ -4028,7 +4028,7 @@ void MI_LightningRing(Sint32 i)
 		if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
 			dp = dPiece[tx][ty];
 			if (!nSolidTable[dp] && dObject[tx][ty] == 0) {
-				if (LineClear(missile[i]._mix, missile[i]._miy, tx, ty)) {
+				if (LineClearMissile(missile[i]._mix, missile[i]._miy, tx, ty)) {
 					if (nMissileTable[dp] || missile[i]._miVar8)
 						missile[i]._miVar8 = 1;
 					else
@@ -4780,7 +4780,7 @@ void MI_Fireman(Sint32 i)
 	} else {
 		j = dMonster[bx][by];
 	}
-	if (!PosOkMissile(bx, by) || (j > 0 && !(missile[i]._miVar1 & 1))) {
+	if (!PosOkMissile(0, bx, by) || (j > 0 && !(missile[i]._miVar1 & 1))) {
 		missile[i]._mixvel *= -1;
 		missile[i]._miyvel *= -1;
 		missile[i]._mimfnum = opposite[missile[i]._mimfnum];
@@ -4844,7 +4844,7 @@ void MI_Apoca(Sint32 i)
 	for (j = missile[i]._miVar2; j < missile[i]._miVar3 && !exit; j++) {
 		for (k = missile[i]._miVar4; k < missile[i]._miVar5 && !exit; k++) {
 			if (dMonster[k][j] > MAX_PLRS - 1 && !nSolidTable[dPiece[k][j]]) {
-				if (!gbIsHellfire || LineClear(missile[i]._mix, missile[i]._miy, k, j)) {
+				if (!gbIsHellfire || LineClearMissile(missile[i]._mix, missile[i]._miy, k, j)) {
 					AddMissile(k, j, k, j, plr[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, missile[i]._midam, 0);
 					exit = true;
 				}

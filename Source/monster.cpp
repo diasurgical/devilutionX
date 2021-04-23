@@ -2824,7 +2824,7 @@ void GroupUnity(int i)
 
 	if (monster[i].leaderflag != 0) {
 		leader = monster[i].leader;
-		clear = LineClearF(CheckNoSolid, monster[i]._mx, monster[i]._my, monster[leader]._mfutx, monster[leader]._mfuty);
+		clear = LineClearSolid(monster[i]._mx, monster[i]._my, monster[leader]._mfutx, monster[leader]._mfuty);
 		if (clear || monster[i].leaderflag != 1) {
 			if (clear
 			    && monster[i].leaderflag == 2
@@ -3063,7 +3063,7 @@ bool MAI_Path(int i)
 			return false;
 	}
 
-	clear = LineClearF1(
+	clear = LineClear(
 	    PosOkMonst2,
 	    i,
 	    Monst->_mx,
@@ -3105,7 +3105,7 @@ void MAI_Snake(int i)
 	direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 	Monst->_mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (abs(mx) < 3 && abs(my) < 3 && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
+		if (abs(mx) < 3 && abs(my) < 3 && LineClear(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
 			if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(i, 0);
 				dMonster[Monst->_mx][Monst->_my] = -(i + 1);
@@ -3188,7 +3188,7 @@ void MAI_Bat(int i)
 	if (Monst->MType->mtype == MT_GLOOM
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * Monst->_mint + 33
-	    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
+	    && LineClear(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
 		if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 			dMonster[Monst->_mx][Monst->_my] = -(i + 1);
 			Monst->_mmode = MM_CHARGE;
@@ -3247,7 +3247,7 @@ void MAI_SkelBow(int i)
 	my = Monst->_menemyy;
 	if (!walking) {
 		if (GenerateRnd(100) < 2 * Monst->_mint + 3) {
-			if (LineClear(Monst->_mx, Monst->_my, mx, my))
+			if (LineClearMissile(Monst->_mx, Monst->_my, mx, my))
 				M_StartRAttack(i, MIS_ARROW, 4);
 		}
 	}
@@ -3376,7 +3376,7 @@ void MAI_Fireman(int i)
 
 	direction md = M_GetDir(i);
 	if (Monst->_mgoal == MGOAL_NORMAL) {
-		if (LineClear(Monst->_mx, Monst->_my, fx, fy)
+		if (LineClearMissile(Monst->_mx, Monst->_my, fx, fy)
 		    && AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_FIREMAN, pnum, i, 0, 0) != -1) {
 			Monst->_mmode = MM_CHARGE;
 			Monst->_mgoal = MGOAL_ATTACK2;
@@ -3386,7 +3386,7 @@ void MAI_Fireman(int i)
 		if (Monst->_mgoalvar1 == 3) {
 			Monst->_mgoal = MGOAL_NORMAL;
 			M_StartFadeout(i, md, true);
-		} else if (LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+		} else if (LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 			M_StartRAttack(i, MIS_KRULL, 4);
 			Monst->_mgoalvar1++;
 		} else {
@@ -3602,7 +3602,7 @@ void MAI_Ranged(int i, int missile_type, bool special)
 				M_CallWalk(i, opposite[md]);
 		}
 		if (Monst->_mmode == MM_STAND) {
-			if (LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			if (LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 				if (special)
 					M_StartRSpAttack(i, missile_type, 4);
 				else
@@ -3716,8 +3716,7 @@ void MAI_Scav(int i)
 							if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 								continue;
 							done = dDead[Monst->_mx + x][Monst->_my + y] != 0
-							    && LineClearF(
-							        CheckNoSolid,
+							    && LineClearSolid(
 							        Monst->_mx,
 							        Monst->_my,
 							        Monst->_mx + x,
@@ -3733,8 +3732,7 @@ void MAI_Scav(int i)
 							if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 								continue;
 							done = dDead[Monst->_mx + x][Monst->_my + y] != 0
-							    && LineClearF(
-							        CheckNoSolid,
+							    && LineClearSolid(
 							        Monst->_mx,
 							        Monst->_my,
 							        Monst->_mx + x,
@@ -3830,7 +3828,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 				if (Monst->_mgoalvar1++ >= 2 * dist && DirOK(i, md)) {
 					Monst->_mgoal = MGOAL_NORMAL;
 				} else if (v < (500 * (Monst->_mint + 1) >> lessmissiles)
-				    && (LineClear(Monst->_mx, Monst->_my, fx, fy))) {
+				    && (LineClearMissile(Monst->_mx, Monst->_my, fx, fy))) {
 					M_StartRSpAttack(i, missile_type, dam);
 				} else {
 					M_RoundWalk(i, md, &Monst->_mgoalvar2);
@@ -3842,7 +3840,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (((dist >= 3 && v < ((500 * (Monst->_mint + 2)) >> lessmissiles))
 			        || v < ((500 * (Monst->_mint + 1)) >> lessmissiles))
-			    && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			    && LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 				M_StartRSpAttack(i, missile_type, dam);
 			} else if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -3929,7 +3927,7 @@ void MAI_RR2(int i, int mistype, int dam)
 		} else
 			Monst->_mgoal = MGOAL_NORMAL;
 		if (Monst->_mgoal == MGOAL_NORMAL) {
-			if (((dist >= 3 && v < 5 * (Monst->_mint + 2)) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			if (((dist >= 3 && v < 5 * (Monst->_mint + 2)) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 				M_StartRSpAttack(i, mistype, dam);
 			} else if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -4074,7 +4072,7 @@ void MAI_SkelKing(int i)
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (!gbIsMultiplayer
 			    && ((dist >= 3 && v < 4 * Monst->_mint + 35) || v < 6)
-			    && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			    && LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 				nx = Monst->_mx + offset_x[md];
 				ny = Monst->_my + offset_y[md];
 				if (PosOkMonst(i, nx, ny) && nummonsters < MAXMONSTERS) {
@@ -4137,7 +4135,7 @@ void MAI_Rhino(int i)
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (dist >= 5
 			    && v < 2 * Monst->_mint + 43
-			    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
+			    && LineClear(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
 				if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
 					if (Monst->MData->snd_special)
 						PlayEffect(i, 3);
@@ -4277,7 +4275,7 @@ void MAI_Counselor(int i)
 			}
 		} else if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (abs(mx) >= 2 || abs(my) >= 2) {
-				if (v < 5 * (Monst->_mint + 10) && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+				if (v < 5 * (Monst->_mint + 10) && LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 					M_StartRAttack(i, counsmiss[Monst->_mint], Monst->mMinDamage + GenerateRnd(Monst->mMaxDamage - Monst->mMinDamage + 1));
 				} else if (GenerateRnd(100) < 30) {
 					Monst->_mgoal = MGOAL_MOVE;
@@ -4851,103 +4849,27 @@ bool DirOK(int i, direction mdir)
 	return mcount == monster[i].packsize;
 }
 
-bool PosOkMissile(int x, int y)
+bool PosOkMissile(int entity, int x, int y)
 {
 	return !nMissileTable[dPiece[x][y]] && !(dFlags[x][y] & BFLAG_MONSTLR);
 }
 
-bool CheckNoSolid(int x, int y)
+bool CheckNoSolid(int entity, int x, int y)
 {
 	return !nSolidTable[dPiece[x][y]];
 }
 
-bool LineClearF(bool (*Clear)(int, int), int x1, int y1, int x2, int y2)
+bool LineClearSolid(int x1, int y1, int x2, int y2)
 {
-	int xorg, yorg;
-	int dx, dy;
-	int d;
-	int xincD, yincD, dincD, dincH;
-	int tmp;
-	bool done = false;
-
-	xorg = x1;
-	yorg = y1;
-	dx = x2 - x1;
-	dy = y2 - y1;
-	if (abs(dx) > abs(dy)) {
-		if (dx < 0) {
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			dx = -dx;
-			dy = -dy;
-		}
-		if (dy > 0) {
-			d = 2 * dy - dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dy - dx);
-			yincD = 1;
-		} else {
-			d = 2 * dy + dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dx + dy);
-			yincD = -1;
-		}
-		while (!done && (x1 != x2 || y1 != y2)) {
-			if ((d <= 0) ^ (yincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				y1 += yincD;
-			}
-			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(x1, y1));
-		}
-	} else {
-		if (dy < 0) {
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			dy = -dy;
-			dx = -dx;
-		}
-		if (dx > 0) {
-			d = 2 * dx - dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dx - dy);
-			xincD = 1;
-		} else {
-			d = 2 * dx + dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dy + dx);
-			xincD = -1;
-		}
-		while (!done && (y1 != y2 || x1 != x2)) {
-			if ((d <= 0) ^ (xincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				x1 += xincD;
-			}
-			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(x1, y1));
-		}
-	}
-	return x1 == x2 && y1 == y2;
+	return LineClear(CheckNoSolid, 0, x1, y1, x2, y2);
 }
 
-bool LineClear(int x1, int y1, int x2, int y2)
+bool LineClearMissile(int x1, int y1, int x2, int y2)
 {
-	return LineClearF(PosOkMissile, x1, y1, x2, y2);
+	return LineClear(PosOkMissile, 0, x1, y1, x2, y2);
 }
 
-bool LineClearF1(bool (*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2)
+bool LineClear(bool (*Clear)(int, int, int), int entity, int x1, int y1, int x2, int y2)
 {
 	int dx, dy;
 	int d;
@@ -4990,7 +4912,7 @@ bool LineClearF1(bool (*Clear)(int, int, int), int monst, int x1, int y1, int x2
 				y1 += yincD;
 			}
 			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(monst, x1, y1));
+			done = ((x1 != xorg || y1 != yorg) && !Clear(entity, x1, y1));
 		}
 	} else {
 		if (dy < 0) {
@@ -5022,7 +4944,7 @@ bool LineClearF1(bool (*Clear)(int, int, int), int monst, int x1, int y1, int x2
 				x1 += xincD;
 			}
 			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(monst, x1, y1));
+			done = ((y1 != yorg || x1 != xorg) && !Clear(entity, x1, y1));
 		}
 	}
 	return x1 == x2 && y1 == y2;
