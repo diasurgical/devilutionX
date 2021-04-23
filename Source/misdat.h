@@ -15,6 +15,7 @@ enum mienemy_type : uint8_t {
 	TARGET_MONSTERS,
 	TARGET_PLAYERS,
 	TARGET_BOTH,
+	TARGET_NONE,
 };
 
 enum missile_resistance : uint8_t {
