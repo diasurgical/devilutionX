@@ -3554,21 +3554,22 @@ void MI_Firebolt(Sint32 i)
 
 void MI_Lightball(Sint32 i)
 {
-	int tx, ty, j, oi;
-	char obj;
-
-	tx = missile[i]._miVar1;
-	ty = missile[i]._miVar2;
+	int tx = missile[i]._miVar1;
+	int ty = missile[i]._miVar2;
 	missile[i]._mirange--;
 	missile[i]._mitxoff += missile[i]._mixvel;
 	missile[i]._mityoff += missile[i]._miyvel;
 	GetMissilePos(i);
-	j = missile[i]._mirange;
+	int j = missile[i]._mirange;
+	char micaster = missile[i]._micaster;
 	CheckMissileCol(i, missile[i]._midam, missile[i]._midam, false, missile[i]._mix, missile[i]._miy, false);
-	if (missile[i]._miHitFlag)
+	if (missile[i]._miHitFlag) {
 		missile[i]._mirange = j;
-	obj = dObject[tx][ty];
+		missile[i]._micaster = micaster;
+	}
+	char obj = dObject[tx][ty];
 	if (obj && tx == missile[i]._mix && ty == missile[i]._miy) {
+		int oi;
 		if (obj > 0) {
 			oi = obj - 1;
 		} else {
@@ -4418,7 +4419,6 @@ void MI_Etherealize(Sint32 i)
 
 void MI_Firemove(Sint32 i)
 {
-	int j;
 	int ExpLight[14] = { 2, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12, 12 };
 
 	missile[i]._mix--;
@@ -4432,10 +4432,13 @@ void MI_Firemove(Sint32 i)
 	missile[i]._mitxoff += missile[i]._mixvel;
 	missile[i]._mityoff += missile[i]._miyvel;
 	GetMissilePos(i);
-	j = missile[i]._mirange;
+	int j = missile[i]._mirange;
+	char micaster = missile[i]._micaster;
 	CheckMissileCol(i, missile[i]._midam, missile[i]._midam, false, missile[i]._mix, missile[i]._miy, false);
-	if (missile[i]._miHitFlag)
+	if (missile[i]._miHitFlag) {
 		missile[i]._mirange = j;
+		missile[i]._micaster = micaster;
+	}
 	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = true;
 		AddUnLight(missile[i]._mlid);
