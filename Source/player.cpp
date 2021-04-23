@@ -473,7 +473,7 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 	for (a = &ArmourChar[0]; *a; a++) {
 		if (gbIsSpawn && a != &ArmourChar[0])
 			break;
-		for (w = &WepChar[0]; *w; w++) { // BUGFIX loads non-existing animagions; DT is only for N, BL is only for U, D & H (fixed) - for monk BL is for all except B/A
+		for (w = &WepChar[0]; *w; w++) {
 			if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
 				continue; //Death has no weapon
 			}
