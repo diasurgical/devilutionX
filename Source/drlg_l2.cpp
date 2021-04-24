@@ -3268,30 +3268,26 @@ static void DRLG_InitL2Vals()
 	}
 }
 
-void LoadL2Dungeon(const char *sFileName, int vx, int vy)
+static void LoadL2DungeonData(BYTE *pLevelMap)
 {
-	int i, j, rw, rh, pc;
-	BYTE *pLevelMap, *lm;
-
 	InitDungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 12;
 			dflags[i][j] = 0;
 		}
 	}
 
-	lm = pLevelMap;
-	rw = *lm;
+	BYTE *lm = pLevelMap;
+	int rw = *lm;
 	lm += 2;
-	rh = *lm;
+	int rh = *lm;
 	lm += 2;
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
+	for (int j = 0; j < rh; j++) {
+		for (int i = 0; i < rw; i++) {
 			if (*lm != 0) {
 				dungeon[i][j] = *lm;
 				dflags[i][j] |= DLRG_PROTECTED;
@@ -3301,20 +3297,28 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 			lm += 2;
 		}
 	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 12;
 			}
 		}
 	}
+}
+
+void LoadL2Dungeon(const char *sFileName, int vx, int vy)
+{
+	BYTE *pLevelMap = LoadFileInMem(sFileName, nullptr);
+
+	LoadL2DungeonData(pLevelMap);
 
 	DRLG_L2Pass3();
 	DRLG_Init_Globals();
 
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++) {
-			pc = 0;
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			int pc = 0;
 			if (dPiece[i][j] == 541) {
 				pc = 5;
 			}
@@ -3333,8 +3337,8 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 			dSpecial[i][j] = pc;
 		}
 	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++) {
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 132) {
 				dSpecial[i][j + 1] = 2;
 				dSpecial[i][j + 2] = 1;
@@ -3354,51 +3358,15 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 
 void LoadPreL2Dungeon(const char *sFileName)
 {
-	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *pLevelMap = LoadFileInMem(sFileName, nullptr);
+	LoadL2DungeonData(pLevelMap);
+	mem_free_dbg(pLevelMap);
 
-	InitDungeon();
-	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 12;
-			dflags[i][j] = 0;
-		}
-	}
-
-	lm = pLevelMap;
-	rw = *lm;
-	lm += 2;
-	rh = *lm;
-	lm += 2;
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
-				dflags[i][j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[i][j] = 3;
-			}
-			lm += 2;
-		}
-	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 0) {
-				dungeon[i][j] = 12;
-			}
-		}
-	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			pdungeon[i][j] = dungeon[i][j];
 		}
 	}
-
-	mem_free_dbg(pLevelMap);
 }
 
 void CreateL2Dungeon(DWORD rseed, lvl_entry entry)
