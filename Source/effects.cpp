@@ -1168,8 +1168,8 @@ bool calc_snd_position(int x, int y, int *plVolume, int *plPan)
 {
 	int pan, volume;
 
-	x -= plr[myplr]._px;
-	y -= plr[myplr]._py;
+	x -= plr[myplr].position.current.x;
+	y -= plr[myplr].position.current.y;
 
 	pan = (x - y) * 256;
 	*plPan = pan;

@@ -116,11 +116,11 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
-	const SDL_Point target = plr[myplr].GetTargetPosition();
+	const Point target = plr[myplr].GetTargetPosition();
 
 	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
-	pkt->hdr.px = plr[myplr]._px;
-	pkt->hdr.py = plr[myplr]._py;
+	pkt->hdr.px = plr[myplr].position.current.x;
+	pkt->hdr.py = plr[myplr].position.current.y;
 	pkt->hdr.targx = target.x;
 	pkt->hdr.targy = target.y;
 	pkt->hdr.php = plr[myplr]._pHitPoints;
@@ -475,8 +475,7 @@ void multi_process_network_packets()
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
-		plr[dwID]._pownerx = pkt->px;
-		plr[dwID]._pownery = pkt->py;
+		plr[dwID].position.owner = { pkt->px, pkt->py };
 		if (dwID != myplr) {
 			assert(gbBufferMsgs != 2);
 			plr[dwID]._pHitPoints = pkt->php;
@@ -487,31 +486,25 @@ void multi_process_network_packets()
 			plr[dwID]._pBaseDex = pkt->bdex;
 			if (!cond && plr[dwID].plractive && plr[dwID]._pHitPoints != 0) {
 				if (currlevel == plr[dwID].plrlevel && !plr[dwID]._pLvlChanging) {
-					dx = abs(plr[dwID]._px - pkt->px);
-					dy = abs(plr[dwID]._py - pkt->py);
+					dx = abs(plr[dwID].position.current.x - pkt->px);
+					dy = abs(plr[dwID].position.current.y - pkt->py);
 					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
 						FixPlrWalkTags(dwID);
-						plr[dwID]._poldx = plr[dwID]._px;
-						plr[dwID]._poldy = plr[dwID]._py;
+						plr[dwID].position.old = plr[dwID].position.current;
 						FixPlrWalkTags(dwID);
-						plr[dwID]._px = pkt->px;
-						plr[dwID]._py = pkt->py;
-						plr[dwID]._pfutx = pkt->px;
-						plr[dwID]._pfuty = pkt->py;
-						dPlayer[plr[dwID]._px][plr[dwID]._py] = dwID + 1;
+						plr[dwID].position.current = { pkt->px, pkt->py };
+						plr[dwID].position.future = { pkt->px, pkt->py };
+						dPlayer[plr[dwID].position.current.x][plr[dwID].position.current.y] = dwID + 1;
 					}
-					dx = abs(plr[dwID]._pfutx - plr[dwID]._px);
-					dy = abs(plr[dwID]._pfuty - plr[dwID]._py);
+					dx = abs(plr[dwID].position.future.x - plr[dwID].position.current.x);
+					dy = abs(plr[dwID].position.future.y - plr[dwID].position.current.y);
 					if (dx > 1 || dy > 1) {
-						plr[dwID]._pfutx = plr[dwID]._px;
-						plr[dwID]._pfuty = plr[dwID]._py;
+						plr[dwID].position.future = plr[dwID].position.current;
 					}
 					MakePlrPath(dwID, pkt->targx, pkt->targy, true);
 				} else {
-					plr[dwID]._px = pkt->px;
-					plr[dwID]._py = pkt->py;
-					plr[dwID]._pfutx = pkt->px;
-					plr[dwID]._pfuty = pkt->py;
+					plr[dwID].position.current = { pkt->px, pkt->py };
+					plr[dwID].position.future = { pkt->px, pkt->py };
 				}
 			}
 		}
@@ -633,10 +626,8 @@ static void SetupLocalCoords()
 #endif
 	x += plrxoff[myplr];
 	y += plryoff[myplr];
-	plr[myplr]._px = x;
-	plr[myplr]._py = y;
-	plr[myplr]._pfutx = x;
-	plr[myplr]._pfuty = y;
+	plr[myplr].position.current = { x, y };
+	plr[myplr].position.future = { x, y };
 	plr[myplr].plrlevel = currlevel;
 	plr[myplr]._pLvlChanging = true;
 	plr[myplr].pLvlLoad = 0;
@@ -890,7 +881,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
 			plr[pnum]._pVar8 = 2 * plr[pnum]._pAnimLen;
-			dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;
+			dFlags[plr[pnum].position.current.x][plr[pnum].position.current.y] |= BFLAG_DEAD_PLAYER;
 		}
 	}
 }

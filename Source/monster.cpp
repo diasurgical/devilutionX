@@ -610,8 +610,8 @@ void ClrAllMonsters()
 		Monst->_mFlags = 0;
 		Monst->_mDelFlag = false;
 		Monst->_menemy = GenerateRnd(gbActivePlayers);
-		Monst->_menemyx = plr[Monst->_menemy]._pfutx;
-		Monst->_menemyy = plr[Monst->_menemy]._pfuty;
+		Monst->_menemyx = plr[Monst->_menemy].position.future.x;
+		Monst->_menemyy = plr[Monst->_menemy].position.future.y;
 	}
 }
 
@@ -1334,15 +1334,15 @@ void M_Enemy(int i)
 			if (!plr[pnum].plractive || currlevel != plr[pnum].plrlevel || plr[pnum]._pLvlChanging
 			    || (((plr[pnum]._pHitPoints >> 6) == 0) && gbIsMultiplayer))
 				continue;
-			sameroom = (dTransVal[Monst->_mx][Monst->_my] == dTransVal[plr[pnum]._px][plr[pnum]._py]);
-			dist = std::max(abs(Monst->_mx - plr[pnum]._px), abs(Monst->_my - plr[pnum]._py));
+			sameroom = (dTransVal[Monst->_mx][Monst->_my] == dTransVal[plr[pnum].position.current.x][plr[pnum].position.current.y]);
+			dist = std::max(abs(Monst->_mx - plr[pnum].position.current.x), abs(Monst->_my - plr[pnum].position.current.y));
 			if ((sameroom && !bestsameroom)
 			    || ((sameroom || !bestsameroom) && dist < best_dist)
 			    || (_menemy == -1)) {
 				Monst->_mFlags &= ~MFLAG_TARGETS_MONSTER;
 				_menemy = pnum;
-				enemyx = plr[pnum]._pfutx;
-				enemyy = plr[pnum]._pfuty;
+				enemyx = plr[pnum].position.future.x;
+				enemyy = plr[pnum].position.future.y;
 				best_dist = dist;
 				bestsameroom = sameroom;
 			}
@@ -1661,8 +1661,8 @@ void M_StartHit(int i, int pnum, int dam)
 	if ((monster[i].MType->mtype >= MT_SNEAK && monster[i].MType->mtype <= MT_ILLWEAV) || dam >> 6 >= monster[i].mLevel + 3) {
 		if (pnum >= 0) {
 			monster[i]._menemy = pnum;
-			monster[i]._menemyx = plr[pnum]._pfutx;
-			monster[i]._menemyy = plr[pnum]._pfuty;
+			monster[i]._menemyx = plr[pnum].position.future.x;
+			monster[i]._menemyy = plr[pnum].position.future.y;
 			monster[i]._mFlags &= ~MFLAG_TARGETS_MONSTER;
 			monster[i]._mdir = M_GetDir(i);
 		}
@@ -2151,8 +2151,8 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	}
 	if (plr[pnum]._pHitPoints >> 6 <= 0 || plr[pnum]._pInvincible || plr[pnum]._pSpellFlags & 1)
 		return;
-	dx = abs(monster[i]._mx - plr[pnum]._px);
-	dy = abs(monster[i]._my - plr[pnum]._py);
+	dx = abs(monster[i]._mx - plr[pnum].position.current.x);
+	dy = abs(monster[i]._my - plr[pnum].position.current.y);
 	if (dx >= 2 || dy >= 2)
 		return;
 
@@ -2195,7 +2195,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (hper >= hit)
 		return;
 	if (blkper < blk) {
-		direction dir = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[i]._mx, monster[i]._my);
+		direction dir = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i]._mx, monster[i]._my);
 		StartPlrBlock(pnum, dir);
 		if (pnum == myplr && plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
@@ -2279,11 +2279,10 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (monster[i]._mFlags & MFLAG_KNOCKBACK) {
 		if (plr[pnum]._pmode != PM_GOTHIT)
 			StartPlrHit(pnum, 0, true);
-		newx = plr[pnum]._px + offset_x[monster[i]._mdir];
-		newy = plr[pnum]._py + offset_y[monster[i]._mdir];
+		newx = plr[pnum].position.current.x + offset_x[monster[i]._mdir];
+		newy = plr[pnum].position.current.y + offset_y[monster[i]._mdir];
 		if (PosOkPlayer(pnum, newx, newy)) {
-			plr[pnum]._px = newx;
-			plr[pnum]._py = newy;
+			plr[pnum].position.current = { newx, newy };
 			FixPlayerLocation(pnum, plr[pnum]._pdir);
 			FixPlrWalkTags(pnum);
 			dPlayer[newx][newy] = pnum + 1;
@@ -3321,7 +3320,7 @@ void MAI_Sneak(int i)
 				if (Monst->_mFlags & MFLAG_TARGETS_MONSTER)
 					md = GetDirection(Monst->_mx, Monst->_my, monster[Monst->_menemy]._mx, monster[Monst->_menemy]._my);
 				else
-					md = GetDirection(Monst->_mx, Monst->_my, plr[Monst->_menemy]._pownerx, plr[Monst->_menemy]._pownery);
+					md = GetDirection(Monst->_mx, Monst->_my, plr[Monst->_menemy].position.owner.x, plr[Monst->_menemy].position.owner.y);
 				md = opposite[md];
 				if (Monst->MType->mtype == MT_UNSEEN) {
 					if (GenerateRnd(2) != 0)
@@ -4462,7 +4461,7 @@ void MAI_Lazurus(int i)
 	direction md = M_GetDir(i);
 	if (dFlags[mx][my] & BFLAG_VISIBLE) {
 		if (!gbIsMultiplayer) {
-			if (Monst->mtalkmsg == TEXT_VILE13 && Monst->_mgoal == MGOAL_INQUIRING && plr[myplr]._px == 35 && plr[myplr]._py == 46) {
+			if (Monst->mtalkmsg == TEXT_VILE13 && Monst->_mgoal == MGOAL_INQUIRING && plr[myplr].position.current.x == 35 && plr[myplr].position.current.y == 46) {
 				PlayInGameMovie("gendata\\fprst3.smk");
 				Monst->_mmode = MM_TALK;
 				quests[Q_BETRAYER]._qvar1 = 5;
@@ -4684,12 +4683,12 @@ void ProcessMonsters()
 		} else {
 			_menemy = Monst->_menemy;
 			assurance((DWORD)_menemy < MAX_PLRS, _menemy);
-			Monst->_menemyx = plr[Monst->_menemy]._pfutx;
-			Monst->_menemyy = plr[Monst->_menemy]._pfuty;
+			Monst->_menemyx = plr[Monst->_menemy].position.future.x;
+			Monst->_menemyy = plr[Monst->_menemy].position.future.y;
 			if (dFlags[mx][my] & BFLAG_VISIBLE) {
 				Monst->_msquelch = UCHAR_MAX;
-				Monst->_lastx = plr[Monst->_menemy]._pfutx;
-				Monst->_lasty = plr[Monst->_menemy]._pfuty;
+				Monst->_lastx = plr[Monst->_menemy].position.future.x;
+				Monst->_lasty = plr[Monst->_menemy].position.future.y;
 			} else if (Monst->_msquelch != 0 && Monst->MType->mtype != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
 				Monst->_msquelch--;
 			}
@@ -5219,8 +5218,7 @@ void MissToMonst(int i, int x, int y)
 					newx = oldx + offset_x[Monst->_mdir];
 					newy = oldy + offset_y[Monst->_mdir];
 					if (PosOkPlayer(pnum, newx, newy)) {
-						plr[pnum]._px = newx;
-						plr[pnum]._py = newy;
+						plr[pnum].position.current = { newx, newy };
 						FixPlayerLocation(pnum, plr[pnum]._pdir);
 						FixPlrWalkTags(pnum);
 						dPlayer[newx][newy] = pnum + 1;
@@ -5592,8 +5590,8 @@ void decode_enemy(int m, int enemy)
 	if (enemy < MAX_PLRS) {
 		monster[m]._mFlags &= ~MFLAG_TARGETS_MONSTER;
 		monster[m]._menemy = enemy;
-		monster[m]._menemyx = plr[enemy]._pfutx;
-		monster[m]._menemyy = plr[enemy]._pfuty;
+		monster[m]._menemyx = plr[enemy].position.future.x;
+		monster[m]._menemyy = plr[enemy].position.future.y;
 	} else {
 		monster[m]._mFlags |= MFLAG_TARGETS_MONSTER;
 		enemy -= MAX_PLRS;

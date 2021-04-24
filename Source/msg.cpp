@@ -1442,7 +1442,7 @@ static DWORD On_GETITEM(TCmd *pCmd, int pnum)
 			if ((currlevel == p->bLevel || p->bPnum == myplr) && p->bMaster != myplr) {
 				if (p->bPnum == myplr) {
 					if (currlevel != p->bLevel) {
-						ii = SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+						ii = SyncPutItem(myplr, plr[myplr].position.current.x, plr[myplr].position.current.y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
 							InvGetItem(myplr, &items[ii], ii);
 					} else
@@ -1504,7 +1504,7 @@ static DWORD On_AGETITEM(TCmd *pCmd, int pnum)
 			if ((currlevel == p->bLevel || p->bPnum == myplr) && p->bMaster != myplr) {
 				if (p->bPnum == myplr) {
 					if (currlevel != p->bLevel) {
-						int ii = SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+						int ii = SyncPutItem(myplr, plr[myplr].position.current.x, plr[myplr].position.current.y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
 							AutoGetItem(myplr, &items[ii], ii);
 					} else
@@ -1759,8 +1759,8 @@ static DWORD On_ATTACKID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int distx = abs(plr[pnum]._px - monster[p->wParam1]._mfutx);
-		int disty = abs(plr[pnum]._py - monster[p->wParam1]._mfuty);
+		int distx = abs(plr[pnum].position.current.x - monster[p->wParam1]._mfutx);
+		int disty = abs(plr[pnum].position.current.y - monster[p->wParam1]._mfuty);
 		if (distx > 1 || disty > 1)
 			MakePlrPath(pnum, monster[p->wParam1]._mfutx, monster[p->wParam1]._mfuty, false);
 		plr[pnum].destAction = ACTION_ATTACKMON;
@@ -1775,7 +1775,7 @@ static DWORD On_ATTACKPID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		MakePlrPath(pnum, plr[p->wParam1]._pfutx, plr[p->wParam1]._pfuty, false);
+		MakePlrPath(pnum, plr[p->wParam1].position.future.x, plr[p->wParam1].position.future.y, false);
 		plr[pnum].destAction = ACTION_ATTACKPLR;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -2017,7 +2017,7 @@ static DWORD On_AWAKEGOLEM(TCmd *pCmd, int pnum)
 			}
 		}
 		if (addGolem)
-			AddMissile(plr[pnum]._px, plr[pnum]._py, p->_mx, p->_my, p->_mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
+			AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, p->_mx, p->_my, p->_mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
 	}
 
 	return sizeof(*p);
@@ -2227,8 +2227,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 		}
 
 		if (plr[pnum].plractive && myplr != pnum) {
-			plr[pnum]._px = p->x;
-			plr[pnum]._py = p->y;
+			plr[pnum].position.current = { p->x, p->y };
 			plr[pnum].plrlevel = p->wParam1;
 			plr[pnum]._pGFXLoad = 0;
 			if (currlevel == plr[pnum].plrlevel) {
@@ -2243,10 +2242,10 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 					NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 					plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
 					plr[pnum]._pVar8 = plr[pnum]._pAnimLen * 2;
-					dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;
+					dFlags[plr[pnum].position.current.x][plr[pnum].position.current.y] |= BFLAG_DEAD_PLAYER;
 				}
 
-				plr[pnum]._pvid = AddVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad, pnum == myplr);
+				plr[pnum]._pvid = AddVision(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum]._pLightRad, pnum == myplr);
 				plr[pnum]._plid = NO_LIGHT;
 			}
 		}

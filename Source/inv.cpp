@@ -1716,7 +1716,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
-		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
+		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr].position.current.x, plr[myplr].position.current.y);
 
 	item->_iCreateInfo &= ~CF_PREGEN;
 	plr[pnum].HoldItem = *item;
@@ -1871,22 +1871,22 @@ bool TryInvPut()
 	if (numitems >= MAXITEMS)
 		return false;
 
-	direction dir = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
-	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
+	direction dir = GetDirection(plr[myplr].position.current.x, plr[myplr].position.current.y, cursmx, cursmy);
+	if (CanPut(plr[myplr].position.current.x + offset_x[dir], plr[myplr].position.current.y + offset_y[dir])) {
 		return true;
 	}
 
 	direction dirLeft = left[dir];
-	if (CanPut(plr[myplr]._px + offset_x[dirLeft], plr[myplr]._py + offset_y[dirLeft])) {
+	if (CanPut(plr[myplr].position.current.x + offset_x[dirLeft], plr[myplr].position.current.y + offset_y[dirLeft])) {
 		return true;
 	}
 
 	direction dirRight = right[dir];
-	if (CanPut(plr[myplr]._px + offset_x[dirRight], plr[myplr]._py + offset_y[dirRight])) {
+	if (CanPut(plr[myplr].position.current.x + offset_x[dirRight], plr[myplr].position.current.y + offset_y[dirRight])) {
 		return true;
 	}
 
-	return CanPut(plr[myplr]._px, plr[myplr]._py);
+	return CanPut(plr[myplr].position.current.x, plr[myplr].position.current.y);
 }
 
 void DrawInvMsg(const char *msg)
@@ -1905,35 +1905,35 @@ static int PutItem(int pnum, int &x, int &y)
 	if (numitems >= MAXITEMS)
 		return false;
 
-	int xx = x - plr[pnum]._px;
-	int yy = y - plr[pnum]._py;
+	int xx = x - plr[pnum].position.current.x;
+	int yy = y - plr[pnum].position.current.y;
 
-	direction d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
+	direction d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, x, y);
 
 	if (abs(xx) > 1 || abs(yy) > 1) {
-		x = plr[pnum]._px + offset_x[d];
-		y = plr[pnum]._py + offset_y[d];
+		x = plr[pnum].position.current.x + offset_x[d];
+		y = plr[pnum].position.current.y + offset_y[d];
 	}
 	if (CanPut(x, y))
 		return true;
 
 	direction dLeft = left[d];
-	x = plr[pnum]._px + offset_x[dLeft];
-	y = plr[pnum]._py + offset_y[dLeft];
+	x = plr[pnum].position.current.x + offset_x[dLeft];
+	y = plr[pnum].position.current.y + offset_y[dLeft];
 	if (CanPut(x, y))
 		return true;
 
 	direction dRight = right[d];
-	x = plr[pnum]._px + offset_x[dRight];
-	y = plr[pnum]._py + offset_y[dRight];
+	x = plr[pnum].position.current.x + offset_x[dRight];
+	y = plr[pnum].position.current.y + offset_y[dRight];
 	if (CanPut(x, y))
 		return true;
 
 	for (int l = 1; l < 50; l++) {
 		for (int j = -l; j <= l; j++) {
-			int yp = j + plr[pnum]._py;
+			int yp = j + plr[pnum].position.current.y;
 			for (int i = -l; i <= l; i++) {
-				int xp = i + plr[pnum]._px;
+				int xp = i + plr[pnum].position.current.x;
 				if (!CanPut(xp, yp))
 					continue;
 
@@ -1949,8 +1949,8 @@ static int PutItem(int pnum, int &x, int &y)
 
 int InvPutItem(int pnum, int x, int y)
 {
-	int xx = x - plr[pnum]._px;
-	int yy = y - plr[pnum]._py;
+	int xx = x - plr[pnum].position.current.x;
+	int yy = y - plr[pnum].position.current.y;
 
 	if (!PutItem(pnum, x, y))
 		return -1;
@@ -1959,7 +1959,7 @@ int InvPutItem(int pnum, int x, int y)
 		int yp = cursmy;
 		int xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
+			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.current.x, plr[pnum].position.current.y, xx, yy);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);

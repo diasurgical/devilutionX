@@ -147,8 +147,8 @@ void PrintDebugPlayer(bool bNextPlayer)
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  Lvl = %i : Change = %i", plr[dbgplr].plrlevel, plr[dbgplr]._pLvlChanging);
 		NetSendCmdString(1 << myplr, dstr);
-		const SDL_Point target = plr[dbgplr].GetTargetPosition();
-		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", plr[dbgplr]._px, plr[dbgplr]._py, target.x, target.y);
+		const Point target = plr[dbgplr].GetTargetPosition();
+		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", plr[dbgplr].position.current.x, plr[dbgplr].position.current.y, target.x, target.y);
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", plr[dbgplr]._pmode, plr[dbgplr].destAction, plr[dbgplr].walkpath[0]);
 		NetSendCmdString(1 << myplr, dstr);

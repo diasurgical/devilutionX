@@ -157,7 +157,7 @@ void CowSFX(int pnum)
 		}
 	} else {
 		if (sgdwCowClicks >= 8) {
-			PlaySfxLoc(TSFX_COW1, plr[pnum]._px, plr[pnum]._py + 5);
+			PlaySfxLoc(TSFX_COW1, plr[pnum].position.current.x, plr[pnum].position.current.y + 5);
 			sgdwCowClicks = 4;
 			CowPlaying = snSFX[sgnCowMsg][static_cast<std::size_t>(plr[pnum]._pClass)]; /* snSFX is local */
 			sgnCowMsg++;
@@ -168,7 +168,7 @@ void CowSFX(int pnum)
 		}
 	}
 
-	PlaySfxLoc(CowPlaying, plr[pnum]._px, plr[pnum]._py);
+	PlaySfxLoc(CowPlaying, plr[pnum].position.current.x, plr[pnum].position.current.y);
 }
 
 int GetActiveTowner(int t)
@@ -511,8 +511,8 @@ void TownCtrlMsg(int i)
 
 	if (towners[i]._tbtcnt) {
 		p = towners[i]._tTalkingToPlayer;
-		dx = abs(towners[i]._tx - plr[p]._px);
-		dy = abs(towners[i]._ty - plr[p]._py);
+		dx = abs(towners[i]._tx - plr[p].position.current.x);
+		dy = abs(towners[i]._ty - plr[p].position.current.y);
 		if (dx >= 2 || dy >= 2) {
 			towners[i]._tbtcnt = false;
 			qtextflag = false;
@@ -731,8 +731,8 @@ void TalkToTowner(int p, int t)
 	int qt;
 	bool t2;
 
-	dx = abs(plr[p]._px - towners[t]._tx);
-	dy = abs(plr[p]._py - towners[t]._ty);
+	dx = abs(plr[p].position.current.x - towners[t]._tx);
+	dy = abs(plr[p].position.current.y - towners[t]._ty);
 #ifdef _DEBUG
 	if (!debug_mode_key_d)
 #endif
