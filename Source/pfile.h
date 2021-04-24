@@ -35,7 +35,7 @@ void pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *cla
 bool pfile_ui_save_create(_uiheroinfo *heroinfo);
 bool pfile_get_file_name(uint8_t lvl, char *dst);
 bool pfile_delete_save(_uiheroinfo *hero_info);
-void pfile_read_player_from_save();
+void pfile_read_player_from_save(char name[16], int playerId);
 bool LevelFileExists();
 void GetTempLevelNames(char *szTemp);
 void GetPermLevelNames(char *szPerm);

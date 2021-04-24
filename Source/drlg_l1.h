@@ -20,6 +20,7 @@ extern int UberLeverCol;
 extern bool IsUberLeverActivated;
 extern int UberDiabloMonsterIndex;
 
+void DRLG_LPass3(int lv);
 void DRLG_Init_Globals();
 void LoadL1Dungeon(const char *sFileName, int vx, int vy);
 void LoadPreL1Dungeon(const char *sFileName);

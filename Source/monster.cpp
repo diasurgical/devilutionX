@@ -610,8 +610,8 @@ void ClrAllMonsters()
 		Monst->_mFlags = 0;
 		Monst->_mDelFlag = false;
 		Monst->_menemy = GenerateRnd(gbActivePlayers);
-		Monst->_menemyx = plr[Monst->_menemy]._pfutx;
-		Monst->_menemyy = plr[Monst->_menemy]._pfuty;
+		Monst->_menemyx = plr[Monst->_menemy].position.future.x;
+		Monst->_menemyy = plr[Monst->_menemy].position.future.y;
 	}
 }
 
@@ -1334,15 +1334,15 @@ void M_Enemy(int i)
 			if (!plr[pnum].plractive || currlevel != plr[pnum].plrlevel || plr[pnum]._pLvlChanging
 			    || (((plr[pnum]._pHitPoints >> 6) == 0) && gbIsMultiplayer))
 				continue;
-			sameroom = (dTransVal[Monst->_mx][Monst->_my] == dTransVal[plr[pnum]._px][plr[pnum]._py]);
-			dist = std::max(abs(Monst->_mx - plr[pnum]._px), abs(Monst->_my - plr[pnum]._py));
+			sameroom = (dTransVal[Monst->_mx][Monst->_my] == dTransVal[plr[pnum].position.current.x][plr[pnum].position.current.y]);
+			dist = std::max(abs(Monst->_mx - plr[pnum].position.current.x), abs(Monst->_my - plr[pnum].position.current.y));
 			if ((sameroom && !bestsameroom)
 			    || ((sameroom || !bestsameroom) && dist < best_dist)
 			    || (_menemy == -1)) {
 				Monst->_mFlags &= ~MFLAG_TARGETS_MONSTER;
 				_menemy = pnum;
-				enemyx = plr[pnum]._pfutx;
-				enemyy = plr[pnum]._pfuty;
+				enemyx = plr[pnum].position.future.x;
+				enemyy = plr[pnum].position.future.y;
 				best_dist = dist;
 				bestsameroom = sameroom;
 			}
@@ -1661,8 +1661,8 @@ void M_StartHit(int i, int pnum, int dam)
 	if ((monster[i].MType->mtype >= MT_SNEAK && monster[i].MType->mtype <= MT_ILLWEAV) || dam >> 6 >= monster[i].mLevel + 3) {
 		if (pnum >= 0) {
 			monster[i]._menemy = pnum;
-			monster[i]._menemyx = plr[pnum]._pfutx;
-			monster[i]._menemyy = plr[pnum]._pfuty;
+			monster[i]._menemyx = plr[pnum].position.future.x;
+			monster[i]._menemyy = plr[pnum].position.future.y;
 			monster[i]._mFlags &= ~MFLAG_TARGETS_MONSTER;
 			monster[i]._mdir = M_GetDir(i);
 		}
@@ -2151,8 +2151,8 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	}
 	if (plr[pnum]._pHitPoints >> 6 <= 0 || plr[pnum]._pInvincible || plr[pnum]._pSpellFlags & 1)
 		return;
-	dx = abs(monster[i]._mx - plr[pnum]._px);
-	dy = abs(monster[i]._my - plr[pnum]._py);
+	dx = abs(monster[i]._mx - plr[pnum].position.current.x);
+	dy = abs(monster[i]._my - plr[pnum].position.current.y);
 	if (dx >= 2 || dy >= 2)
 		return;
 
@@ -2195,7 +2195,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (hper >= hit)
 		return;
 	if (blkper < blk) {
-		direction dir = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[i]._mx, monster[i]._my);
+		direction dir = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i]._mx, monster[i]._my);
 		StartPlrBlock(pnum, dir);
 		if (pnum == myplr && plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
@@ -2279,11 +2279,10 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (monster[i]._mFlags & MFLAG_KNOCKBACK) {
 		if (plr[pnum]._pmode != PM_GOTHIT)
 			StartPlrHit(pnum, 0, true);
-		newx = plr[pnum]._px + offset_x[monster[i]._mdir];
-		newy = plr[pnum]._py + offset_y[monster[i]._mdir];
+		newx = plr[pnum].position.current.x + offset_x[monster[i]._mdir];
+		newy = plr[pnum].position.current.y + offset_y[monster[i]._mdir];
 		if (PosOkPlayer(pnum, newx, newy)) {
-			plr[pnum]._px = newx;
-			plr[pnum]._py = newy;
+			plr[pnum].position.current = { newx, newy };
 			FixPlayerLocation(pnum, plr[pnum]._pdir);
 			FixPlrWalkTags(pnum);
 			dPlayer[newx][newy] = pnum + 1;
@@ -2824,7 +2823,7 @@ void GroupUnity(int i)
 
 	if (monster[i].leaderflag != 0) {
 		leader = monster[i].leader;
-		clear = LineClearF(CheckNoSolid, monster[i]._mx, monster[i]._my, monster[leader]._mfutx, monster[leader]._mfuty);
+		clear = LineClearSolid(monster[i]._mx, monster[i]._my, monster[leader]._mfutx, monster[leader]._mfuty);
 		if (clear || monster[i].leaderflag != 1) {
 			if (clear
 			    && monster[i].leaderflag == 2
@@ -3063,7 +3062,7 @@ bool MAI_Path(int i)
 			return false;
 	}
 
-	clear = LineClearF1(
+	clear = LineClear(
 	    PosOkMonst2,
 	    i,
 	    Monst->_mx,
@@ -3105,7 +3104,7 @@ void MAI_Snake(int i)
 	direction md = GetDirection(Monst->_mx, Monst->_my, Monst->_lastx, Monst->_lasty);
 	Monst->_mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (abs(mx) < 3 && abs(my) < 3 && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
+		if (abs(mx) < 3 && abs(my) < 3 && LineClear(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
 			if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(i, 0);
 				dMonster[Monst->_mx][Monst->_my] = -(i + 1);
@@ -3188,7 +3187,7 @@ void MAI_Bat(int i)
 	if (Monst->MType->mtype == MT_GLOOM
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * Monst->_mint + 33
-	    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
+	    && LineClear(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
 		if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 			dMonster[Monst->_mx][Monst->_my] = -(i + 1);
 			Monst->_mmode = MM_CHARGE;
@@ -3247,7 +3246,7 @@ void MAI_SkelBow(int i)
 	my = Monst->_menemyy;
 	if (!walking) {
 		if (GenerateRnd(100) < 2 * Monst->_mint + 3) {
-			if (LineClear(Monst->_mx, Monst->_my, mx, my))
+			if (LineClearMissile(Monst->_mx, Monst->_my, mx, my))
 				M_StartRAttack(i, MIS_ARROW, 4);
 		}
 	}
@@ -3321,7 +3320,7 @@ void MAI_Sneak(int i)
 				if (Monst->_mFlags & MFLAG_TARGETS_MONSTER)
 					md = GetDirection(Monst->_mx, Monst->_my, monster[Monst->_menemy]._mx, monster[Monst->_menemy]._my);
 				else
-					md = GetDirection(Monst->_mx, Monst->_my, plr[Monst->_menemy]._pownerx, plr[Monst->_menemy]._pownery);
+					md = GetDirection(Monst->_mx, Monst->_my, plr[Monst->_menemy].position.owner.x, plr[Monst->_menemy].position.owner.y);
 				md = opposite[md];
 				if (Monst->MType->mtype == MT_UNSEEN) {
 					if (GenerateRnd(2) != 0)
@@ -3376,7 +3375,7 @@ void MAI_Fireman(int i)
 
 	direction md = M_GetDir(i);
 	if (Monst->_mgoal == MGOAL_NORMAL) {
-		if (LineClear(Monst->_mx, Monst->_my, fx, fy)
+		if (LineClearMissile(Monst->_mx, Monst->_my, fx, fy)
 		    && AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_FIREMAN, pnum, i, 0, 0) != -1) {
 			Monst->_mmode = MM_CHARGE;
 			Monst->_mgoal = MGOAL_ATTACK2;
@@ -3386,7 +3385,7 @@ void MAI_Fireman(int i)
 		if (Monst->_mgoalvar1 == 3) {
 			Monst->_mgoal = MGOAL_NORMAL;
 			M_StartFadeout(i, md, true);
-		} else if (LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+		} else if (LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 			M_StartRAttack(i, MIS_KRULL, 4);
 			Monst->_mgoalvar1++;
 		} else {
@@ -3602,7 +3601,7 @@ void MAI_Ranged(int i, int missile_type, bool special)
 				M_CallWalk(i, opposite[md]);
 		}
 		if (Monst->_mmode == MM_STAND) {
-			if (LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			if (LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 				if (special)
 					M_StartRSpAttack(i, missile_type, 4);
 				else
@@ -3716,8 +3715,7 @@ void MAI_Scav(int i)
 							if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 								continue;
 							done = dDead[Monst->_mx + x][Monst->_my + y] != 0
-							    && LineClearF(
-							        CheckNoSolid,
+							    && LineClearSolid(
 							        Monst->_mx,
 							        Monst->_my,
 							        Monst->_mx + x,
@@ -3733,8 +3731,7 @@ void MAI_Scav(int i)
 							if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 								continue;
 							done = dDead[Monst->_mx + x][Monst->_my + y] != 0
-							    && LineClearF(
-							        CheckNoSolid,
+							    && LineClearSolid(
 							        Monst->_mx,
 							        Monst->_my,
 							        Monst->_mx + x,
@@ -3830,7 +3827,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 				if (Monst->_mgoalvar1++ >= 2 * dist && DirOK(i, md)) {
 					Monst->_mgoal = MGOAL_NORMAL;
 				} else if (v < (500 * (Monst->_mint + 1) >> lessmissiles)
-				    && (LineClear(Monst->_mx, Monst->_my, fx, fy))) {
+				    && (LineClearMissile(Monst->_mx, Monst->_my, fx, fy))) {
 					M_StartRSpAttack(i, missile_type, dam);
 				} else {
 					M_RoundWalk(i, md, &Monst->_mgoalvar2);
@@ -3842,7 +3839,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (((dist >= 3 && v < ((500 * (Monst->_mint + 2)) >> lessmissiles))
 			        || v < ((500 * (Monst->_mint + 1)) >> lessmissiles))
-			    && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			    && LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 				M_StartRSpAttack(i, missile_type, dam);
 			} else if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -3929,7 +3926,7 @@ void MAI_RR2(int i, int mistype, int dam)
 		} else
 			Monst->_mgoal = MGOAL_NORMAL;
 		if (Monst->_mgoal == MGOAL_NORMAL) {
-			if (((dist >= 3 && v < 5 * (Monst->_mint + 2)) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			if (((dist >= 3 && v < 5 * (Monst->_mint + 2)) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 				M_StartRSpAttack(i, mistype, dam);
 			} else if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -4074,7 +4071,7 @@ void MAI_SkelKing(int i)
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (!gbIsMultiplayer
 			    && ((dist >= 3 && v < 4 * Monst->_mint + 35) || v < 6)
-			    && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			    && LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 				nx = Monst->_mx + offset_x[md];
 				ny = Monst->_my + offset_y[md];
 				if (PosOkMonst(i, nx, ny) && nummonsters < MAXMONSTERS) {
@@ -4137,7 +4134,7 @@ void MAI_Rhino(int i)
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (dist >= 5
 			    && v < 2 * Monst->_mint + 43
-			    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
+			    && LineClear(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
 				if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
 					if (Monst->MData->snd_special)
 						PlayEffect(i, 3);
@@ -4277,7 +4274,7 @@ void MAI_Counselor(int i)
 			}
 		} else if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (abs(mx) >= 2 || abs(my) >= 2) {
-				if (v < 5 * (Monst->_mint + 10) && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+				if (v < 5 * (Monst->_mint + 10) && LineClearMissile(Monst->_mx, Monst->_my, fx, fy)) {
 					M_StartRAttack(i, counsmiss[Monst->_mint], Monst->mMinDamage + GenerateRnd(Monst->mMaxDamage - Monst->mMinDamage + 1));
 				} else if (GenerateRnd(100) < 30) {
 					Monst->_mgoal = MGOAL_MOVE;
@@ -4464,7 +4461,7 @@ void MAI_Lazurus(int i)
 	direction md = M_GetDir(i);
 	if (dFlags[mx][my] & BFLAG_VISIBLE) {
 		if (!gbIsMultiplayer) {
-			if (Monst->mtalkmsg == TEXT_VILE13 && Monst->_mgoal == MGOAL_INQUIRING && plr[myplr]._px == 35 && plr[myplr]._py == 46) {
+			if (Monst->mtalkmsg == TEXT_VILE13 && Monst->_mgoal == MGOAL_INQUIRING && plr[myplr].position.current.x == 35 && plr[myplr].position.current.y == 46) {
 				PlayInGameMovie("gendata\\fprst3.smk");
 				Monst->_mmode = MM_TALK;
 				quests[Q_BETRAYER]._qvar1 = 5;
@@ -4686,12 +4683,12 @@ void ProcessMonsters()
 		} else {
 			_menemy = Monst->_menemy;
 			assurance((DWORD)_menemy < MAX_PLRS, _menemy);
-			Monst->_menemyx = plr[Monst->_menemy]._pfutx;
-			Monst->_menemyy = plr[Monst->_menemy]._pfuty;
+			Monst->_menemyx = plr[Monst->_menemy].position.future.x;
+			Monst->_menemyy = plr[Monst->_menemy].position.future.y;
 			if (dFlags[mx][my] & BFLAG_VISIBLE) {
 				Monst->_msquelch = UCHAR_MAX;
-				Monst->_lastx = plr[Monst->_menemy]._pfutx;
-				Monst->_lasty = plr[Monst->_menemy]._pfuty;
+				Monst->_lastx = plr[Monst->_menemy].position.future.x;
+				Monst->_lasty = plr[Monst->_menemy].position.future.y;
 			} else if (Monst->_msquelch != 0 && Monst->MType->mtype != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
 				Monst->_msquelch--;
 			}
@@ -4851,103 +4848,27 @@ bool DirOK(int i, direction mdir)
 	return mcount == monster[i].packsize;
 }
 
-bool PosOkMissile(int x, int y)
+bool PosOkMissile(int entity, int x, int y)
 {
 	return !nMissileTable[dPiece[x][y]] && !(dFlags[x][y] & BFLAG_MONSTLR);
 }
 
-bool CheckNoSolid(int x, int y)
+bool CheckNoSolid(int entity, int x, int y)
 {
 	return !nSolidTable[dPiece[x][y]];
 }
 
-bool LineClearF(bool (*Clear)(int, int), int x1, int y1, int x2, int y2)
+bool LineClearSolid(int x1, int y1, int x2, int y2)
 {
-	int xorg, yorg;
-	int dx, dy;
-	int d;
-	int xincD, yincD, dincD, dincH;
-	int tmp;
-	bool done = false;
-
-	xorg = x1;
-	yorg = y1;
-	dx = x2 - x1;
-	dy = y2 - y1;
-	if (abs(dx) > abs(dy)) {
-		if (dx < 0) {
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			dx = -dx;
-			dy = -dy;
-		}
-		if (dy > 0) {
-			d = 2 * dy - dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dy - dx);
-			yincD = 1;
-		} else {
-			d = 2 * dy + dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dx + dy);
-			yincD = -1;
-		}
-		while (!done && (x1 != x2 || y1 != y2)) {
-			if ((d <= 0) ^ (yincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				y1 += yincD;
-			}
-			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(x1, y1));
-		}
-	} else {
-		if (dy < 0) {
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			dy = -dy;
-			dx = -dx;
-		}
-		if (dx > 0) {
-			d = 2 * dx - dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dx - dy);
-			xincD = 1;
-		} else {
-			d = 2 * dx + dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dy + dx);
-			xincD = -1;
-		}
-		while (!done && (y1 != y2 || x1 != x2)) {
-			if ((d <= 0) ^ (xincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				x1 += xincD;
-			}
-			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(x1, y1));
-		}
-	}
-	return x1 == x2 && y1 == y2;
+	return LineClear(CheckNoSolid, 0, x1, y1, x2, y2);
 }
 
-bool LineClear(int x1, int y1, int x2, int y2)
+bool LineClearMissile(int x1, int y1, int x2, int y2)
 {
-	return LineClearF(PosOkMissile, x1, y1, x2, y2);
+	return LineClear(PosOkMissile, 0, x1, y1, x2, y2);
 }
 
-bool LineClearF1(bool (*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2)
+bool LineClear(bool (*Clear)(int, int, int), int entity, int x1, int y1, int x2, int y2)
 {
 	int dx, dy;
 	int d;
@@ -4990,7 +4911,7 @@ bool LineClearF1(bool (*Clear)(int, int, int), int monst, int x1, int y1, int x2
 				y1 += yincD;
 			}
 			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(monst, x1, y1));
+			done = ((x1 != xorg || y1 != yorg) && !Clear(entity, x1, y1));
 		}
 	} else {
 		if (dy < 0) {
@@ -5022,7 +4943,7 @@ bool LineClearF1(bool (*Clear)(int, int, int), int monst, int x1, int y1, int x2
 				x1 += xincD;
 			}
 			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(monst, x1, y1));
+			done = ((y1 != yorg || x1 != xorg) && !Clear(entity, x1, y1));
 		}
 	}
 	return x1 == x2 && y1 == y2;
@@ -5297,8 +5218,7 @@ void MissToMonst(int i, int x, int y)
 					newx = oldx + offset_x[Monst->_mdir];
 					newy = oldy + offset_y[Monst->_mdir];
 					if (PosOkPlayer(pnum, newx, newy)) {
-						plr[pnum]._px = newx;
-						plr[pnum]._py = newy;
+						plr[pnum].position.current = { newx, newy };
 						FixPlayerLocation(pnum, plr[pnum]._pdir);
 						FixPlrWalkTags(pnum);
 						dPlayer[newx][newy] = pnum + 1;
@@ -5670,8 +5590,8 @@ void decode_enemy(int m, int enemy)
 	if (enemy < MAX_PLRS) {
 		monster[m]._mFlags &= ~MFLAG_TARGETS_MONSTER;
 		monster[m]._menemy = enemy;
-		monster[m]._menemyx = plr[enemy]._pfutx;
-		monster[m]._menemyy = plr[enemy]._pfuty;
+		monster[m]._menemyx = plr[enemy].position.future.x;
+		monster[m]._menemyy = plr[enemy].position.future.y;
 	} else {
 		monster[m]._mFlags |= MFLAG_TARGETS_MONSTER;
 		enemy -= MAX_PLRS;

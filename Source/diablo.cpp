@@ -722,7 +722,7 @@ static bool LeftMouseCmd(bool bShift)
 		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1)
 			return true;
 	} else {
-		bNear = abs(plr[myplr]._px - cursmx) < 2 && abs(plr[myplr]._py - cursmy) < 2;
+		bNear = abs(plr[myplr].position.current.x - cursmx) < 2 && abs(plr[myplr].position.current.y - cursmy) < 2;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 		} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && object[pcursobj]._oBreak == 1))) {
@@ -1097,7 +1097,7 @@ static void PressKey(int vkey)
 		return;
 	}
 	if (PauseMode == 2) {
-		if ((vkey == DVL_VK_RETURN) && (GetAsyncKeyState(DVL_VK_MENU) & 0x8000))
+		if (vkey == DVL_VK_RETURN && (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0)
 			dx_reinit();
 		return;
 	}
@@ -1530,7 +1530,7 @@ static void PressChar(WPARAM vkey)
 	case 'T':
 	case 't':
 		if (debug_mode_key_inverted_v) {
-			sprintf(tempstr, "PX = %i  PY = %i", plr[myplr]._px, plr[myplr]._py);
+			sprintf(tempstr, "PX = %i  PY = %i", plr[myplr].position.current.x, plr[myplr].position.current.y);
 			NetSendCmdString(1 << myplr, tempstr);
 			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursmx, cursmy, dungeon[cursmx][cursmy]);
 			NetSendCmdString(1 << myplr, tempstr);
@@ -2006,11 +2006,11 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (plr[i].plractive && plr[i].plrlevel == currlevel && (!plr[i]._pLvlChanging || i == myplr)) {
 			if (plr[i]._pHitPoints > 0) {
 				if (!gbIsMultiplayer)
-					dPlayer[plr[i]._px][plr[i]._py] = i + 1;
+					dPlayer[plr[i].position.current.x][plr[i].position.current.y] = i + 1;
 				else
 					SyncInitPlrPos(i);
 			} else {
-				dFlags[plr[i]._px][plr[i]._py] |= BFLAG_DEAD_PLAYER;
+				dFlags[plr[i].position.current.x][plr[i].position.current.y] |= BFLAG_DEAD_PLAYER;
 			}
 		}
 	}
@@ -2074,7 +2074,7 @@ static void game_logic()
 	}
 
 #ifdef _DEBUG
-	if (debug_mode_key_inverted_v && GetAsyncKeyState(DVL_VK_SHIFT) & 0x8000) {
+	if (debug_mode_key_inverted_v && (GetAsyncKeyState(DVL_VK_SHIFT) & 0x8000) != 0) {
 		ScrollView();
 	}
 #endif

@@ -5,6 +5,8 @@
  */
 #include "automap.h"
 
+#include <algorithm>
+
 #include "control.h"
 #include "inv.h"
 #include "miniwin/miniwin.h"
@@ -244,43 +246,25 @@ void DrawAutomapItem(const CelOutputBuffer &out, int x, int y, uint8_t color)
 
 void SearchAutomapItem(const CelOutputBuffer &out)
 {
-	int x = plr[myplr]._px;
-	int y = plr[myplr]._py;
+	int x = plr[myplr].position.current.x;
+	int y = plr[myplr].position.current.y;
 	if (plr[myplr]._pmode == PM_WALK3) {
-		x = plr[myplr]._pfutx;
-		y = plr[myplr]._pfuty;
+		x = plr[myplr].position.future.x;
+		y = plr[myplr].position.future.y;
 		if (plr[myplr]._pdir == DIR_W)
 			x++;
 		else
 			y++;
 	}
 
-	int x1 = x - 8;
-	if (x1 < 0)
-		x1 = 0;
-	else if (x1 > MAXDUNX)
-		x1 = MAXDUNX;
+	const int startX = clamp(x - 8, 0, MAXDUNX);
+	const int startY = clamp(y - 8, 0, MAXDUNY);
 
-	int y1 = y - 8;
-	if (y1 < 0)
-		y1 = 0;
-	else if (y1 > MAXDUNY)
-		y1 = MAXDUNY;
+	const int endX = clamp(x + 8, 0, MAXDUNX);
+	const int endY = clamp(y + 8, 0, MAXDUNY);
 
-	int x2 = x + 8;
-	if (x2 < 0)
-		x2 = 0;
-	else if (x2 > MAXDUNX)
-		x2 = MAXDUNX;
-
-	int y2 = y + 8;
-	if (y2 < 0)
-		y2 = 0;
-	else if (y2 > MAXDUNY)
-		y2 = MAXDUNY;
-
-	for (int i = x1; i < x2; i++) {
-		for (int j = y1; j < y2; j++) {
+	for (int i = startX; i < endX; i++) {
+		for (int j = startY; j < endY; j++) {
 			if (dItem[i][j] != 0) {
 				int px = i - 2 * AutoMapXOfs - ViewX;
 				int py = j - 2 * AutoMapYOfs - ViewY;
@@ -312,21 +296,21 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int pnum)
 	int playerColor = COLOR_PLAYER + (8 * pnum) % 128;
 
 	if (plr[pnum]._pmode == PM_WALK3) {
-		x = plr[pnum]._pfutx;
-		y = plr[pnum]._pfuty;
+		x = plr[pnum].position.future.x;
+		y = plr[pnum].position.future.y;
 		if (plr[pnum]._pdir == DIR_W)
 			x++;
 		else
 			y++;
 	} else {
-		x = plr[pnum]._px;
-		y = plr[pnum]._py;
+		x = plr[pnum].position.current.x;
+		y = plr[pnum].position.current.y;
 	}
 	int px = x - 2 * AutoMapXOfs - ViewX;
 	int py = y - 2 * AutoMapYOfs - ViewY;
 
-	x = (plr[pnum]._pxoff * AutoMapScale / 100 / 2) + (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
-	y = (plr[pnum]._pyoff * AutoMapScale / 100 / 2) + (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
+	x = (plr[pnum].position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
+	y = (plr[pnum].position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
 
 	if (PANELS_COVER) {
 		if (invflag || sbookflag)

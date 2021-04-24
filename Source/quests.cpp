@@ -237,7 +237,7 @@ void CheckQuests()
 		    && nummonsters == 4
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, plr[myplr]._px, plr[myplr]._py);
+			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.current.x, plr[myplr].position.current.y);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal");
 			WaterDone = 32;
 		}
@@ -250,8 +250,8 @@ void CheckQuests()
 			if (currlevel == quests[i]._qlevel
 			    && quests[i]._qslvl != 0
 			    && quests[i]._qactive != QUEST_NOTAVAIL
-			    && plr[myplr]._px == quests[i]._qtx
-			    && plr[myplr]._py == quests[i]._qty) {
+			    && plr[myplr].position.current.x == quests[i]._qtx
+			    && plr[myplr].position.current.y == quests[i]._qty) {
 				if (quests[i]._qlvltype != DTYPE_NONE) {
 					setlvltype = quests[i]._qlvltype;
 				}
@@ -694,7 +694,7 @@ void ResyncQuests()
 	}
 	if (currlevel == quests[Q_MUSHROOM]._qlevel) {
 		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && quests[Q_MUSHROOM]._qvar1 == QS_INIT) {
-			SpawnQuestItem(IDI_FUNGALTM, 0, 0, 5, 1);
+			SpawnQuestItem(IDI_FUNGALTM, 0, 0, 5, true);
 			quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
 		} else {
 			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
@@ -709,7 +709,7 @@ void ResyncQuests()
 	}
 	if (currlevel == quests[Q_VEIL]._qlevel + 1 && quests[Q_VEIL]._qactive == QUEST_ACTIVE && quests[Q_VEIL]._qvar1 == 0) {
 		quests[Q_VEIL]._qvar1 = 1;
-		SpawnQuestItem(IDI_GLDNELIX, 0, 0, 5, 1);
+		SpawnQuestItem(IDI_GLDNELIX, 0, 0, 5, true);
 	}
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (quests[Q_BETRAYER]._qvar1 >= 4)

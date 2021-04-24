@@ -33,8 +33,8 @@ extern bool IsMovingMouseCursorWithController();
 extern int light_table_index;
 extern DWORD level_cel_block;
 extern char arch_draw_type;
-extern int cel_transparency_active;
-extern int cel_foliage_active;
+extern bool cel_transparency_active;
+extern bool cel_foliage_active;
 extern int level_piece_id;
 extern bool AutoMapShowItems;
 

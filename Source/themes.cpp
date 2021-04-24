@@ -376,7 +376,7 @@ bool CheckThemeRoom(int tv)
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dTransVal[i][j] != tv)
 				continue;
-			if (dFlags[i][j] & BFLAG_POPULATED)
+			if ((dFlags[i][j] & BFLAG_POPULATED) != 0)
 				return false;
 
 			tarea++;
@@ -501,7 +501,7 @@ void PlaceThemeMonsts(int t, int f)
 
 	numscattypes = 0;
 	for (i = 0; i < nummtypes; i++) {
-		if (Monsters[i].mPlaceFlags & PLACE_SCATTER) {
+		if ((Monsters[i].mPlaceFlags & PLACE_SCATTER) != 0) {
 			scattertypes[numscattypes] = i;
 			numscattypes++;
 		}

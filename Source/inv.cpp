@@ -1640,11 +1640,11 @@ void CheckQuestItem(int pnum)
 		ItemStruct tmp;
 		mask = 0;
 		idx = plr[pnum].HoldItem.IDidx;
-		if (PlrHasItem(pnum, IDI_NOTE1, &n1) || idx == IDI_NOTE1)
+		if (PlrHasItem(pnum, IDI_NOTE1, &n1) != nullptr || idx == IDI_NOTE1)
 			mask = 1;
-		if (PlrHasItem(pnum, IDI_NOTE2, &n2) || idx == IDI_NOTE2)
+		if (PlrHasItem(pnum, IDI_NOTE2, &n2) != nullptr || idx == IDI_NOTE2)
 			mask |= 2;
-		if (PlrHasItem(pnum, IDI_NOTE3, &n3) || idx == IDI_NOTE3)
+		if (PlrHasItem(pnum, IDI_NOTE3, &n3) != nullptr || idx == IDI_NOTE3)
 			mask |= 4;
 		if (mask == 7) {
 			plr[myplr].PlaySpeach(46, 10);
@@ -1716,7 +1716,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
-		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
+		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr].position.current.x, plr[myplr].position.current.y);
 
 	item->_iCreateInfo &= ~CF_PREGEN;
 	plr[pnum].HoldItem = *item;
@@ -1868,27 +1868,25 @@ bool CanPut(int x, int y)
 
 bool TryInvPut()
 {
-	int dir;
-
 	if (numitems >= MAXITEMS)
 		return false;
 
-	dir = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
-	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
+	direction dir = GetDirection(plr[myplr].position.current.x, plr[myplr].position.current.y, cursmx, cursmy);
+	if (CanPut(plr[myplr].position.current.x + offset_x[dir], plr[myplr].position.current.y + offset_y[dir])) {
 		return true;
 	}
 
-	dir = (dir - 1) & 7;
-	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
+	direction dirLeft = left[dir];
+	if (CanPut(plr[myplr].position.current.x + offset_x[dirLeft], plr[myplr].position.current.y + offset_y[dirLeft])) {
 		return true;
 	}
 
-	dir = (dir + 2) & 7;
-	if (CanPut(plr[myplr]._px + offset_x[dir], plr[myplr]._py + offset_y[dir])) {
+	direction dirRight = right[dir];
+	if (CanPut(plr[myplr].position.current.x + offset_x[dirRight], plr[myplr].position.current.y + offset_y[dirRight])) {
 		return true;
 	}
 
-	return CanPut(plr[myplr]._px, plr[myplr]._py);
+	return CanPut(plr[myplr].position.current.x, plr[myplr].position.current.y);
 }
 
 void DrawInvMsg(const char *msg)
@@ -1902,58 +1900,66 @@ void DrawInvMsg(const char *msg)
 	}
 }
 
-int InvPutItem(int pnum, int x, int y)
+static int PutItem(int pnum, int &x, int &y)
 {
-	bool done;
-	int d;
-	int i, j, l;
-	int xx, yy;
-	int xp, yp;
-
 	if (numitems >= MAXITEMS)
-		return -1;
+		return false;
 
-	d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
-	xx = x - plr[pnum]._px;
-	yy = y - plr[pnum]._py;
+	int xx = x - plr[pnum].position.current.x;
+	int yy = y - plr[pnum].position.current.y;
+
+	direction d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, x, y);
+
 	if (abs(xx) > 1 || abs(yy) > 1) {
-		x = plr[pnum]._px + offset_x[d];
-		y = plr[pnum]._py + offset_y[d];
+		x = plr[pnum].position.current.x + offset_x[d];
+		y = plr[pnum].position.current.y + offset_y[d];
 	}
-	if (!CanPut(x, y)) {
-		d = (d - 1) & 7;
-		x = plr[pnum]._px + offset_x[d];
-		y = plr[pnum]._py + offset_y[d];
-		if (!CanPut(x, y)) {
-			d = (d + 2) & 7;
-			x = plr[pnum]._px + offset_x[d];
-			y = plr[pnum]._py + offset_y[d];
-			if (!CanPut(x, y)) {
-				done = false;
-				for (l = 1; l < 50 && !done; l++) {
-					for (j = -l; j <= l && !done; j++) {
-						yp = j + plr[pnum]._py;
-						for (i = -l; i <= l && !done; i++) {
-							xp = i + plr[pnum]._px;
-							if (CanPut(xp, yp)) {
-								done = true;
-								x = xp;
-								y = yp;
-							}
-						}
-					}
-				}
-				if (!done)
-					return -1;
+	if (CanPut(x, y))
+		return true;
+
+	direction dLeft = left[d];
+	x = plr[pnum].position.current.x + offset_x[dLeft];
+	y = plr[pnum].position.current.y + offset_y[dLeft];
+	if (CanPut(x, y))
+		return true;
+
+	direction dRight = right[d];
+	x = plr[pnum].position.current.x + offset_x[dRight];
+	y = plr[pnum].position.current.y + offset_y[dRight];
+	if (CanPut(x, y))
+		return true;
+
+	for (int l = 1; l < 50; l++) {
+		for (int j = -l; j <= l; j++) {
+			int yp = j + plr[pnum].position.current.y;
+			for (int i = -l; i <= l; i++) {
+				int xp = i + plr[pnum].position.current.x;
+				if (!CanPut(xp, yp))
+					continue;
+
+				x = xp;
+				y = yp;
+				return true;
 			}
 		}
 	}
 
+	return false;
+}
+
+int InvPutItem(int pnum, int x, int y)
+{
+	int xx = x - plr[pnum].position.current.x;
+	int yy = y - plr[pnum].position.current.y;
+
+	if (!PutItem(pnum, x, y))
+		return -1;
+
 	if (currlevel == 0) {
-		yp = cursmy;
-		xp = cursmx;
+		int yp = cursmy;
+		int xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
+			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.current.x, plr[pnum].position.current.y, xx, yy);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
@@ -1994,52 +2000,10 @@ int InvPutItem(int pnum, int x, int y)
 
 int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
 {
-	bool done;
-	int d;
-	int i, j, l;
-	int xx, yy;
-	int xp, yp;
-
-	if (numitems >= MAXITEMS)
+	if (!PutItem(pnum, x, y))
 		return -1;
 
-	d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
-	xx = x - plr[pnum]._px;
-	yy = y - plr[pnum]._py;
-	if (abs(xx) > 1 || abs(yy) > 1) {
-		x = plr[pnum]._px + offset_x[d];
-		y = plr[pnum]._py + offset_y[d];
-	}
-	if (!CanPut(x, y)) {
-		d = (d - 1) & 7;
-		x = plr[pnum]._px + offset_x[d];
-		y = plr[pnum]._py + offset_y[d];
-		if (!CanPut(x, y)) {
-			d = (d + 2) & 7;
-			x = plr[pnum]._px + offset_x[d];
-			y = plr[pnum]._py + offset_y[d];
-			if (!CanPut(x, y)) {
-				done = false;
-				for (l = 1; l < 50 && !done; l++) {
-					for (j = -l; j <= l && !done; j++) {
-						yp = j + plr[pnum]._py;
-						for (i = -l; i <= l && !done; i++) {
-							xp = i + plr[pnum]._px;
-							if (CanPut(xp, yp)) {
-								done = true;
-								x = xp;
-								y = yp;
-							}
-						}
-					}
-				}
-				if (!done)
-					return -1;
-			}
-		}
-	}
-
-	CanPut(x, y);
+	assert(CanPut(x, y));
 
 	int ii = AllocateItem();
 

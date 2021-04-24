@@ -10,6 +10,7 @@
 #include "DiabloUI/diabloui.h"
 #include "diablo.h"
 #include "dthread.h"
+#include "mainmenu.h"
 #include "nthread.h"
 #include "options.h"
 #include "pfile.h"
@@ -115,11 +116,11 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
-	const SDL_Point target = plr[myplr].GetTargetPosition();
+	const Point target = plr[myplr].GetTargetPosition();
 
 	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
-	pkt->hdr.px = plr[myplr]._px;
-	pkt->hdr.py = plr[myplr]._py;
+	pkt->hdr.px = plr[myplr].position.current.x;
+	pkt->hdr.py = plr[myplr].position.current.y;
 	pkt->hdr.targx = target.x;
 	pkt->hdr.targy = target.y;
 	pkt->hdr.php = plr[myplr]._pHitPoints;
@@ -190,7 +191,7 @@ void multi_send_msg_packet(uint32_t pmask, BYTE *src, BYTE len)
 	pkt.hdr.wLen = t;
 	memcpy(pkt.body, src, len);
 	for (v = 1, p = 0; p < MAX_PLRS; p++, v <<= 1) {
-		if (v & pmask) {
+		if ((v & pmask) != 0) {
 			if (!SNetSendMessage(p, &pkt.hdr, t) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
 				nthread_terminate_game("SNetSendMessage");
 				return;
@@ -215,7 +216,7 @@ static void multi_handle_turn_upper_bit(int pnum)
 	int i;
 
 	for (i = 0; i < MAX_PLRS; i++) {
-		if (player_state[i] & PS_CONNECTED && i != pnum)
+		if ((player_state[i] & PS_CONNECTED) != 0 && i != pnum)
 			break;
 	}
 
@@ -246,14 +247,14 @@ void multi_msg_countdown()
 	int i;
 
 	for (i = 0; i < MAX_PLRS; i++) {
-		if (player_state[i] & PS_TURN_ARRIVED) {
+		if ((player_state[i] & PS_TURN_ARRIVED) != 0) {
 			if (gdwMsgLenTbl[i] == 4)
 				multi_parse_turn(i, *(DWORD *)glpMsgTbl[i]);
 		}
 	}
 }
 
-static void multi_player_left_msg(int pnum, int left)
+static void multi_player_left_msg(int pnum, bool left)
 {
 	const char *pszFmt;
 
@@ -292,7 +293,7 @@ static void multi_clear_left_tbl()
 			if (gbBufferMsgs == 1)
 				msg_send_drop_pkt(i, sgdwPlayerLeftReasonTbl[i]);
 			else
-				multi_player_left_msg(i, 1);
+				multi_player_left_msg(i, true);
 
 			sgbPlayerLeftGameTbl[i] = false;
 			sgdwPlayerLeftReasonTbl[i] = 0;
@@ -353,11 +354,11 @@ static void multi_begin_timeout()
 	bGroupCount = 0;
 	for (i = 0; i < MAX_PLRS; i++) {
 		nState = player_state[i];
-		if (nState & PS_CONNECTED) {
+		if ((nState & PS_CONNECTED) != 0) {
 			if (nLowestPlayer == -1) {
 				nLowestPlayer = i;
 			}
-			if (nState & PS_ACTIVE) {
+			if ((nState & PS_ACTIVE) != 0) {
 				bGroupPlayers++;
 				if (nLowestActive == -1) {
 					nLowestActive = i;
@@ -388,7 +389,7 @@ static void multi_begin_timeout()
 /**
  * @return Always true for singleplayer
  */
-int multi_handle_delta()
+bool multi_handle_delta()
 {
 	int i;
 	bool received;
@@ -474,8 +475,7 @@ void multi_process_network_packets()
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
-		plr[dwID]._pownerx = pkt->px;
-		plr[dwID]._pownery = pkt->py;
+		plr[dwID].position.owner = { pkt->px, pkt->py };
 		if (dwID != myplr) {
 			assert(gbBufferMsgs != 2);
 			plr[dwID]._pHitPoints = pkt->php;
@@ -486,31 +486,25 @@ void multi_process_network_packets()
 			plr[dwID]._pBaseDex = pkt->bdex;
 			if (!cond && plr[dwID].plractive && plr[dwID]._pHitPoints != 0) {
 				if (currlevel == plr[dwID].plrlevel && !plr[dwID]._pLvlChanging) {
-					dx = abs(plr[dwID]._px - pkt->px);
-					dy = abs(plr[dwID]._py - pkt->py);
+					dx = abs(plr[dwID].position.current.x - pkt->px);
+					dy = abs(plr[dwID].position.current.y - pkt->py);
 					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
 						FixPlrWalkTags(dwID);
-						plr[dwID]._poldx = plr[dwID]._px;
-						plr[dwID]._poldy = plr[dwID]._py;
+						plr[dwID].position.old = plr[dwID].position.current;
 						FixPlrWalkTags(dwID);
-						plr[dwID]._px = pkt->px;
-						plr[dwID]._py = pkt->py;
-						plr[dwID]._pfutx = pkt->px;
-						plr[dwID]._pfuty = pkt->py;
-						dPlayer[plr[dwID]._px][plr[dwID]._py] = dwID + 1;
+						plr[dwID].position.current = { pkt->px, pkt->py };
+						plr[dwID].position.future = { pkt->px, pkt->py };
+						dPlayer[plr[dwID].position.current.x][plr[dwID].position.current.y] = dwID + 1;
 					}
-					dx = abs(plr[dwID]._pfutx - plr[dwID]._px);
-					dy = abs(plr[dwID]._pfuty - plr[dwID]._py);
+					dx = abs(plr[dwID].position.future.x - plr[dwID].position.current.x);
+					dy = abs(plr[dwID].position.future.y - plr[dwID].position.current.y);
 					if (dx > 1 || dy > 1) {
-						plr[dwID]._pfutx = plr[dwID]._px;
-						plr[dwID]._pfuty = plr[dwID]._py;
+						plr[dwID].position.future = plr[dwID].position.current;
 					}
 					MakePlrPath(dwID, pkt->targx, pkt->targy, true);
 				} else {
-					plr[dwID]._px = pkt->px;
-					plr[dwID]._py = pkt->py;
-					plr[dwID]._pfutx = pkt->px;
-					plr[dwID]._pfuty = pkt->py;
+					plr[dwID].position.current = { pkt->px, pkt->py };
+					plr[dwID].position.future = { pkt->px, pkt->py };
 				}
 			}
 		}
@@ -632,10 +626,8 @@ static void SetupLocalCoords()
 #endif
 	x += plrxoff[myplr];
 	y += plryoff[myplr];
-	plr[myplr]._px = x;
-	plr[myplr]._py = y;
-	plr[myplr]._pfutx = x;
-	plr[myplr]._pfuty = y;
+	plr[myplr].position.current = { x, y };
+	plr[myplr].position.future = { x, y };
 	plr[myplr].plrlevel = currlevel;
 	plr[myplr]._pLvlChanging = true;
 	plr[myplr].pLvlLoad = 0;
@@ -827,7 +819,7 @@ bool multi_init_multi(GameData *gameData)
 	myplr = playerId;
 	gbIsMultiplayer = true;
 
-	pfile_read_player_from_save();
+	pfile_read_player_from_save(gszHero, myplr);
 
 	return true;
 }
@@ -858,7 +850,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	}
 
 	sgwPackPlrOffsetTbl[pnum] = 0;
-	multi_player_left_msg(pnum, 0);
+	multi_player_left_msg(pnum, false);
 	UnPackPlayer(&netplr[pnum], pnum, true);
 
 	if (!recv) {
@@ -889,7 +881,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
 			plr[pnum]._pVar8 = 2 * plr[pnum]._pAnimLen;
-			dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;
+			dFlags[plr[pnum].position.current.x][plr[pnum].position.current.y] |= BFLAG_DEAD_PLAYER;
 		}
 	}
 }

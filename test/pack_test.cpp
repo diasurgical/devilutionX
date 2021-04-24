@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <stdint.h>
 
 #include "pack.h"
 
@@ -42,47 +43,47 @@ static void ComparePackedItems(const PkItemStruct *item1, const PkItemStruct *it
 }
 typedef struct TestItemStruct {
 	char _iIName[64];
-	Sint32 _itype;
-	Sint32 _iClass;
-	Sint32 _iCurs;
-	Sint32 _iIvalue;
-	Sint32 _iMinDam;
-	Sint32 _iMaxDam;
-	Sint32 _iAC;
-	Sint32 _iFlags;
-	Sint32 _iMiscId;
-	Sint32 _iSpell;
-	Sint32 _iCharges;
-	Sint32 _iMaxCharges;
-	Sint32 _iDurability;
-	Sint32 _iMaxDur;
-	Sint32 _iPLDam;
-	Sint32 _iPLToHit;
-	Sint32 _iPLAC;
-	Sint32 _iPLStr;
-	Sint32 _iPLMag;
-	Sint32 _iPLDex;
-	Sint32 _iPLVit;
-	Sint32 _iPLFR;
-	Sint32 _iPLLR;
-	Sint32 _iPLMR;
-	Sint32 _iPLMana;
-	Sint32 _iPLHP;
-	Sint32 _iPLDamMod;
-	Sint32 _iPLGetHit;
-	Sint32 _iPLLight;
-	Sint8 _iSplLvlAdd;
-	Sint32 _iUid;
-	Sint32 _iFMinDam;
-	Sint32 _iFMaxDam;
-	Sint32 _iLMinDam;
-	Sint32 _iLMaxDam;
-	Sint8 _iPrePower;
-	Sint8 _iSufPower;
-	Sint8 _iMinStr;
-	Uint8 _iMinMag;
-	Sint8 _iMinDex;
-	Sint32 IDidx;
+	int _itype;
+	int _iClass;
+	int _iCurs;
+	int _iIvalue;
+	int _iMinDam;
+	int _iMaxDam;
+	int _iAC;
+	int _iFlags;
+	int _iMiscId;
+	int _iSpell;
+	int _iCharges;
+	int _iMaxCharges;
+	int _iDurability;
+	int _iMaxDur;
+	int _iPLDam;
+	int _iPLToHit;
+	int _iPLAC;
+	int _iPLStr;
+	int _iPLMag;
+	int _iPLDex;
+	int _iPLVit;
+	int _iPLFR;
+	int _iPLLR;
+	int _iPLMR;
+	int _iPLMana;
+	int _iPLHP;
+	int _iPLDamMod;
+	int _iPLGetHit;
+	int _iPLLight;
+	int8_t _iSplLvlAdd;
+	int _iUid;
+	int _iFMinDam;
+	int _iFMaxDam;
+	int _iLMinDam;
+	int _iLMaxDam;
+	int8_t _iPrePower;
+	int8_t _iSufPower;
+	int8_t _iMinStr;
+	uint8_t _iMinMag;
+	int8_t _iMinDex;
+	int IDidx;
 } TestItemStruct;
 
 static void CompareItems(const ItemStruct *item1, const TestItemStruct *item2)

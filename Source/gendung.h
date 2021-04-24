@@ -80,9 +80,9 @@ enum _difficulty : uint8_t {
 };
 
 struct ScrollStruct {
-	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff */
+	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr].position.offset.x */
 	Sint32 _sxoff;
-	/** @brief Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff */
+	/** @brief Y-offset of camera position. This usually corresponds to a negative version of plr[myplr].position.offset.y */
 	Sint32 _syoff;
 	Sint32 _sdx;
 	Sint32 _sdy;
@@ -178,7 +178,7 @@ void DRLG_AreaTrans(int num, BYTE *List);
 void DRLG_InitSetPC();
 void DRLG_SetPC();
 void Make_SetPC(int x, int y, int w, int h);
-void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rndSize);
+void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
 bool SkipThemeRoom(int x, int y);
 void InitLevels();

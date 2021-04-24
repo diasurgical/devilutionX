@@ -20,7 +20,7 @@ int tmsg_get(Uint8 *pbMsg)
 	int len;
 	TMsg *head;
 
-	if (!sgpTimedMsgHead)
+	if (sgpTimedMsgHead == nullptr)
 		return 0;
 
 	if ((int)(sgpTimedMsgHead->hdr.dwTime - SDL_GetTicks()) >= 0)
@@ -43,7 +43,7 @@ void tmsg_add(Uint8 *pbMsg, Uint8 bLen)
 	msg->hdr.dwTime = SDL_GetTicks() + gnTickDelay * 10;
 	msg->hdr.bLen = bLen;
 	memcpy(msg->body, pbMsg, bLen);
-	for (tail = &sgpTimedMsgHead; *tail; tail = &(*tail)->hdr.pNext) {
+	for (tail = &sgpTimedMsgHead; *tail != nullptr; tail = &(*tail)->hdr.pNext) {
 		;
 	}
 	*tail = msg;
@@ -58,7 +58,7 @@ void tmsg_cleanup()
 {
 	TMsg *next;
 
-	while (sgpTimedMsgHead) {
+	while (sgpTimedMsgHead != nullptr) {
 		next = sgpTimedMsgHead->hdr.pNext;
 		MemFreeDbg(sgpTimedMsgHead);
 		sgpTimedMsgHead = next;

@@ -336,7 +336,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (dObject[xp][yp] != 0)
 		return false;
-	if (dFlags[xp][yp] & BFLAG_POPULATED)
+	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
@@ -347,7 +347,7 @@ bool RndLocOk(int xp, int yp)
 
 static bool WallTrapLocOkK(int xp, int yp)
 {
-	if (dFlags[xp][yp] & BFLAG_POPULATED)
+	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 
 	if (nTrapTable[dPiece[xp][yp]])
@@ -640,7 +640,7 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 
 bool TorchLocOK(int xp, int yp)
 {
-	if (dFlags[xp][yp] & BFLAG_POPULATED)
+	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 	return true;
 }
@@ -1282,7 +1282,7 @@ void SetupObject(int i, int x, int y, _object_id ot)
 	}
 	object[i]._oAnimData = pObjCels[j];
 	object[i]._oAnimFlag = AllObjects[ot].oAnimFlag;
-	if (AllObjects[ot].oAnimFlag) {
+	if (AllObjects[ot].oAnimFlag != 0) {
 		object[i]._oAnimDelay = AllObjects[ot].oAnimDelay;
 		object[i]._oAnimCnt = GenerateRnd(AllObjects[ot].oAnimDelay);
 		object[i]._oAnimLen = AllObjects[ot].oAnimLen;
@@ -1922,8 +1922,8 @@ void Obj_Light(int i, int lr)
 			for (p = 0; p < MAX_PLRS && !turnon; p++) {
 				if (plr[p].plractive) {
 					if (currlevel == plr[p].plrlevel) {
-						dx = abs(plr[p]._px - ox);
-						dy = abs(plr[p]._py - oy);
+						dx = abs(plr[p].position.current.x - ox);
+						dy = abs(plr[p].position.current.y - oy);
 						if (dx < tr && dy < tr)
 							turnon = true;
 					}
@@ -1948,8 +1948,8 @@ void Obj_Circle(int i)
 
 	ox = object[i]._ox;
 	oy = object[i]._oy;
-	wx = plr[myplr]._px;
-	wy = plr[myplr]._py;
+	wx = plr[myplr].position.current.x;
+	wy = plr[myplr].position.current.y;
 	if (wx == ox && wy == oy) {
 		if (object[i]._otype == OBJ_MCIRCLE1)
 			object[i]._oAnimFrame = 2;
@@ -1967,7 +1967,7 @@ void Obj_Circle(int i)
 			ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 				quests[Q_BETRAYER]._qvar1 = 4;
-			AddMissile(plr[myplr]._px, plr[myplr]._py, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
+			AddMissile(plr[myplr].position.current.x, plr[myplr].position.current.y, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
 			track_repeat_walk(false);
 			sgbMouseDown = CLICK_NONE;
 			ClrPlrPath(myplr);
@@ -2091,57 +2091,52 @@ void Obj_FlameTrap(int i)
 
 void Obj_Trap(int i)
 {
-	int oti;
-	bool otrig;
-	int sx, sy, dx, dy, x, y;
+	if (object[i]._oVar4 != 0)
+		return;
 
-	otrig = false;
-	if (object[i]._oVar4 == 0) {
-		oti = dObject[object[i]._oVar1][object[i]._oVar2] - 1;
-		switch (object[oti]._otype) {
-		case OBJ_L1LDOOR:
-		case OBJ_L1RDOOR:
-		case OBJ_L2LDOOR:
-		case OBJ_L2RDOOR:
-		case OBJ_L3LDOOR:
-		case OBJ_L3RDOOR:
-			if (object[oti]._oVar4 != 0)
-				otrig = true;
-			break;
-		case OBJ_LEVER:
-		case OBJ_CHEST1:
-		case OBJ_CHEST2:
-		case OBJ_CHEST3:
-		case OBJ_SWITCHSKL:
-		case OBJ_SARC:
-			if (object[oti]._oSelFlag == 0)
-				otrig = true;
-			break;
-		default:
-			break;
-		}
-		if (otrig) {
-			object[i]._oVar4 = 1;
-			sx = object[i]._ox;
-			sy = object[i]._oy;
-			dx = object[oti]._ox;
-			dy = object[oti]._oy;
-			for (y = dy - 1; y <= object[oti]._oy + 1; y++) {
-				for (x = object[oti]._ox - 1; x <= object[oti]._ox + 1; x++) {
-					if (dPlayer[x][y] != 0) {
-						dx = x;
-						dy = y;
-					}
-				}
+	int oti = dObject[object[i]._oVar1][object[i]._oVar2] - 1;
+	switch (object[oti]._otype) {
+	case OBJ_L1LDOOR:
+	case OBJ_L1RDOOR:
+	case OBJ_L2LDOOR:
+	case OBJ_L2RDOOR:
+	case OBJ_L3LDOOR:
+	case OBJ_L3RDOOR:
+		if (object[oti]._oVar4 == 0)
+			return;
+		break;
+	case OBJ_LEVER:
+	case OBJ_CHEST1:
+	case OBJ_CHEST2:
+	case OBJ_CHEST3:
+	case OBJ_SWITCHSKL:
+	case OBJ_SARC:
+		if (object[oti]._oSelFlag != 0)
+			return;
+		break;
+	default:
+		return;
+	}
+
+	object[i]._oVar4 = 1;
+	int sx = object[i]._ox;
+	int sy = object[i]._oy;
+	int dx = object[oti]._ox;
+	int dy = object[oti]._oy;
+	for (int y = dy - 1; y <= object[oti]._oy + 1; y++) {
+		for (int x = object[oti]._ox - 1; x <= object[oti]._ox + 1; x++) {
+			if (dPlayer[x][y] != 0) {
+				dx = x;
+				dy = y;
 			}
-			if (!deltaload) {
-				direction dir = GetDirection(sx, sy, dx, dy);
-				AddMissile(sx, sy, dx, dy, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
-				PlaySfxLoc(IS_TRAP, object[oti]._ox, object[oti]._oy);
-			}
-			object[oti]._oTrapFlag = false;
 		}
 	}
+	if (!deltaload) {
+		direction dir = GetDirection(sx, sy, dx, dy);
+		AddMissile(sx, sy, dx, dy, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
+		PlaySfxLoc(IS_TRAP, object[oti]._ox, object[oti]._oy);
+	}
+	object[oti]._oTrapFlag = false;
 }
 
 void Obj_BCrossDamage(int i)
@@ -2156,7 +2151,7 @@ void Obj_BCrossDamage(int i)
 	if (fire_resist > 0)
 		damage[leveltype - 1] -= fire_resist * damage[leveltype - 1] / 100;
 
-	if (plr[myplr]._px != object[i]._ox || plr[myplr]._py != object[i]._oy - 1)
+	if (plr[myplr].position.current.x != object[i]._ox || plr[myplr].position.current.y != object[i]._oy - 1)
 		return;
 
 	ApplyPlrDamage(myplr, 0, 0, damage[leveltype - 1]);
@@ -2465,7 +2460,7 @@ void RedoPlayerVision()
 
 	for (p = 0; p < MAX_PLRS; p++) {
 		if (plr[p].plractive && currlevel == plr[p].plrlevel) {
-			ChangeVisionXY(plr[p]._pvid, plr[p]._px, plr[p]._py);
+			ChangeVisionXY(plr[p]._pvid, plr[p].position.current.x, plr[p].position.current.y);
 		}
 	}
 }
@@ -2906,8 +2901,8 @@ void OperateL1Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
-	dpx = abs(object[i]._ox - plr[pnum]._px);
-	dpy = abs(object[i]._oy - plr[pnum]._py);
+	dpx = abs(object[i]._ox - plr[pnum].position.current.x);
+	dpy = abs(object[i]._oy - plr[pnum].position.current.y);
 	if (dpx == 1 && dpy <= 1 && object[i]._otype == OBJ_L1LDOOR)
 		OperateL1LDoor(pnum, i, sendflag);
 	if (dpx <= 1 && dpy == 1 && object[i]._otype == OBJ_L1RDOOR)
@@ -2977,7 +2972,7 @@ void OperateBook(int pnum, int i)
 			}
 			if (do_add_missile) {
 				object[dObject[35][36] - 1]._oVar5++;
-				AddMissile(plr[pnum]._px, plr[pnum]._py, dx, dy, plr[pnum]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, dx, dy, plr[pnum]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
 				missile_added = true;
 				do_add_missile = false;
 			}
@@ -2999,8 +2994,8 @@ void OperateBook(int pnum, int i)
 			PlaySfxLoc(IS_QUESTDN, object[i]._ox, object[i]._oy);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
-		    plr[pnum]._px,
-		    plr[pnum]._py,
+		    plr[pnum].position.current.x,
+		    plr[pnum].position.current.y,
 		    object[i]._ox - 2,
 		    object[i]._oy - 4,
 		    plr[pnum]._pdir,
@@ -3040,7 +3035,7 @@ void OperateBookLever(int pnum, int i)
 			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			quests[Q_BLOOD]._qlog = true;
 			quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, 1);
+			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, true);
 		}
 		object[i]._otype = object[i]._otype;
 		if (object[i]._otype == OBJ_STEELTOME && quests[Q_WARLORD]._qvar1 == 0) {
@@ -3132,7 +3127,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				}
 			}
 			if (object[i]._oTrapFlag && object[i]._otype >= OBJ_TCHEST1 && object[i]._otype <= OBJ_TCHEST3) {
-				direction mdir = GetDirection(object[i]._ox, object[i]._oy, plr[pnum]._px, plr[pnum]._py);
+				direction mdir = GetDirection(object[i]._ox, object[i]._oy, plr[pnum].position.current.x, plr[pnum].position.current.y);
 				switch (object[i]._oVar4) {
 				case 0:
 					mtype = MIS_ARROW;
@@ -3155,7 +3150,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				default:
 					mtype = MIS_ARROW;
 				}
-				AddMissile(object[i]._ox, object[i]._oy, plr[pnum]._px, plr[pnum]._py, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
+				AddMissile(object[i]._ox, object[i]._oy, plr[pnum].position.current.x, plr[pnum].position.current.y, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
 				object[i]._oTrapFlag = false;
 			}
 			if (pnum == myplr)
@@ -3185,7 +3180,7 @@ void OperateMushPatch(int pnum, int i)
 			object[i]._oAnimFrame++;
 			if (!deltaload) {
 				GetSuperItemLoc(object[i]._ox, object[i]._oy, &x, &y);
-				SpawnQuestItem(IDI_MUSHROOM, x, y, 0, 0);
+				SpawnQuestItem(IDI_MUSHROOM, x, y, 0, false);
 				quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 			}
 		}
@@ -3212,7 +3207,7 @@ void OperateInnSignChest(int pnum, int i)
 			object[i]._oAnimFrame += 2;
 			if (!deltaload) {
 				GetSuperItemLoc(object[i]._ox, object[i]._oy, &x, &y);
-				SpawnQuestItem(IDI_BANNER, x, y, 0, 0);
+				SpawnQuestItem(IDI_BANNER, x, y, 0, false);
 			}
 		}
 	}
@@ -3302,8 +3297,8 @@ void OperateL2Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
-	dpx = abs(object[i]._ox - plr[pnum]._px);
-	dpy = abs(object[i]._oy - plr[pnum]._py);
+	dpx = abs(object[i]._ox - plr[pnum].position.current.x);
+	dpy = abs(object[i]._oy - plr[pnum].position.current.y);
 	if (dpx == 1 && dpy <= 1 && object[i]._otype == OBJ_L2LDOOR)
 		OperateL2LDoor(pnum, i, sendflag);
 	if (dpx <= 1 && dpy == 1 && object[i]._otype == OBJ_L2RDOOR)
@@ -3314,8 +3309,8 @@ void OperateL3Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
-	dpx = abs(object[i]._ox - plr[pnum]._px);
-	dpy = abs(object[i]._oy - plr[pnum]._py);
+	dpx = abs(object[i]._ox - plr[pnum].position.current.x);
+	dpy = abs(object[i]._oy - plr[pnum].position.current.y);
 	if (dpx == 1 && dpy <= 1 && object[i]._otype == OBJ_L3RDOOR)
 		OperateL3RDoor(pnum, i, sendflag);
 	if (dpx <= 1 && dpy == 1 && object[i]._otype == OBJ_L3LDOOR)
@@ -3339,13 +3334,13 @@ void OperatePedistal(int pnum, int i)
 			if (!deltaload)
 				PlaySfxLoc(LS_PUDDLE, object[i]._ox, object[i]._oy);
 			ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, 1);
+			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, true);
 		}
 		if (object[i]._oVar6 == 2) {
 			if (!deltaload)
 				PlaySfxLoc(LS_PUDDLE, object[i]._ox, object[i]._oy);
 			ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, 1);
+			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, true);
 		}
 		if (object[i]._oVar6 == 3) {
 			if (!deltaload)
@@ -3582,10 +3577,10 @@ bool OperateShrineMagical(int pnum)
 		return false;
 
 	AddMissile(
-	    plr[pnum]._px,
-	    plr[pnum]._py,
-	    plr[pnum]._px,
-	    plr[pnum]._py,
+	    plr[pnum].position.current.x,
+	    plr[pnum].position.current.y,
+	    plr[pnum].position.current.x,
+	    plr[pnum].position.current.y,
 	    plr[pnum]._pdir,
 	    MIS_MANASHIELD,
 	    -1,
@@ -3657,14 +3652,14 @@ bool OperateShrineEnchanted(int pnum)
 	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
 	Uint64 spells = plr[pnum]._pMemSpells;
 	for (int j = 0; j < maxSpells; j++) {
-		if (spell & spells)
+		if ((spell & spells) != 0)
 			cnt++;
 		spell *= 2;
 	}
 	if (cnt > 1) {
 		spell = 1;
 		for (int j = SPL_FIREBOLT; j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
-			if (plr[pnum]._pMemSpells & spell) {
+			if ((plr[pnum]._pMemSpells & spell) != 0) {
 				if (plr[pnum]._pSplLvl[j] < MAX_SPELL_LEVEL)
 					plr[pnum]._pSplLvl[j]++;
 			}
@@ -3752,10 +3747,10 @@ bool OperateShrineCryptic(int pnum)
 		return false;
 
 	AddMissile(
-	    plr[pnum]._px,
-	    plr[pnum]._py,
-	    plr[pnum]._px,
-	    plr[pnum]._py,
+	    plr[pnum].position.current.x,
+	    plr[pnum].position.current.y,
+	    plr[pnum].position.current.x,
+	    plr[pnum].position.current.y,
 	    plr[pnum]._pdir,
 	    MIS_NOVA,
 	    -1,
@@ -3881,7 +3876,7 @@ bool OperateShrineHoly(int pnum)
 			break;
 	} while (nSolidTable[lv] || dObject[xx][yy] != 0 || dMonster[xx][yy] != 0);
 
-	AddMissile(plr[pnum]._px, plr[pnum]._py, xx, yy, plr[pnum]._pdir, MIS_RNDTELEPORT, -1, pnum, 0, 2 * leveltype);
+	AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, xx, yy, plr[pnum]._pdir, MIS_RNDTELEPORT, -1, pnum, 0, 2 * leveltype);
 
 	if (pnum != myplr)
 		return false;
@@ -4161,8 +4156,8 @@ bool OperateShrineOily(int pnum, int x, int y)
 	AddMissile(
 	    x,
 	    y,
-	    plr[myplr]._px,
-	    plr[myplr]._py,
+	    plr[myplr].position.current.x,
+	    plr[myplr].position.current.y,
 	    plr[myplr]._pdir,
 	    MIS_FIREWALL,
 	    TARGET_PLAYERS,
@@ -4233,8 +4228,8 @@ bool OperateShrineSparkling(int pnum, int x, int y)
 	AddMissile(
 	    x,
 	    y,
-	    plr[myplr]._px,
-	    plr[myplr]._py,
+	    plr[myplr].position.current.x,
+	    plr[myplr].position.current.y,
 	    plr[myplr]._pdir,
 	    MIS_FLASH,
 	    TARGET_PLAYERS,
@@ -4259,8 +4254,8 @@ bool OperateShrineTown(int pnum, int x, int y)
 	AddMissile(
 	    x,
 	    y,
-	    plr[myplr]._px,
-	    plr[myplr]._py,
+	    plr[myplr].position.current.x,
+	    plr[myplr].position.current.y,
 	    plr[myplr]._pdir,
 	    MIS_TOWN,
 	    TARGET_PLAYERS,
@@ -4578,7 +4573,7 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 		object[i]._oAnimFrame++;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			uniqueRnd = GenerateRnd(2);
+			uniqueRnd = (GenerateRnd(2) != 0);
 			if (currlevel <= 5) {
 				CreateTypeItem(object[i]._ox, object[i]._oy, true, ITYPE_LARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 6 && currlevel <= 9) {
@@ -4702,10 +4697,10 @@ bool OperateFountains(int pnum, int i)
 		if (deltaload)
 			return false;
 		AddMissile(
-		    plr[pnum]._px,
-		    plr[pnum]._py,
-		    plr[pnum]._px,
-		    plr[pnum]._py,
+		    plr[pnum].position.current.x,
+		    plr[pnum].position.current.y,
+		    plr[pnum].position.current.x,
+		    plr[pnum].position.current.y,
 		    plr[pnum]._pdir,
 		    MIS_INFRA,
 		    -1,
@@ -4834,7 +4829,7 @@ void OperateLazStand(int pnum, int i)
 		object[i]._oAnimFrame++;
 		object[i]._oSelFlag = 0;
 		GetSuperItemLoc(object[i]._ox, object[i]._oy, &xx, &yy);
-		SpawnQuestItem(IDI_LAZSTAFF, xx, yy, 0, 0);
+		SpawnQuestItem(IDI_LAZSTAFF, xx, yy, 0, false);
 	}
 }
 

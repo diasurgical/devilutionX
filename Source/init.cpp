@@ -86,51 +86,51 @@ void init_cleanup()
 		pfile_write_hero(/*write_game_data=*/false, /*clear_tables=*/true);
 	}
 
-	if (spawn_mpq) {
+	if (spawn_mpq != nullptr) {
 		SFileCloseArchive(spawn_mpq);
 		spawn_mpq = nullptr;
 	}
-	if (diabdat_mpq) {
+	if (diabdat_mpq != nullptr) {
 		SFileCloseArchive(diabdat_mpq);
 		diabdat_mpq = nullptr;
 	}
-	if (patch_rt_mpq) {
+	if (patch_rt_mpq != nullptr) {
 		SFileCloseArchive(patch_rt_mpq);
 		patch_rt_mpq = nullptr;
 	}
-	if (hellfire_mpq) {
+	if (hellfire_mpq != nullptr) {
 		SFileCloseArchive(hellfire_mpq);
 		hellfire_mpq = nullptr;
 	}
-	if (hfmonk_mpq) {
+	if (hfmonk_mpq != nullptr) {
 		SFileCloseArchive(hfmonk_mpq);
 		hfmonk_mpq = nullptr;
 	}
-	if (hfbard_mpq) {
+	if (hfbard_mpq != nullptr) {
 		SFileCloseArchive(hfbard_mpq);
 		hfbard_mpq = nullptr;
 	}
-	if (hfbarb_mpq) {
+	if (hfbarb_mpq != nullptr) {
 		SFileCloseArchive(hfbarb_mpq);
 		hfbarb_mpq = nullptr;
 	}
-	if (hfmusic_mpq) {
+	if (hfmusic_mpq != nullptr) {
 		SFileCloseArchive(hfmusic_mpq);
 		hfmusic_mpq = nullptr;
 	}
-	if (hfvoice_mpq) {
+	if (hfvoice_mpq != nullptr) {
 		SFileCloseArchive(hfvoice_mpq);
 		hfvoice_mpq = nullptr;
 	}
-	if (hfopt1_mpq) {
+	if (hfopt1_mpq != nullptr) {
 		SFileCloseArchive(hfopt1_mpq);
 		hfopt1_mpq = nullptr;
 	}
-	if (hfopt2_mpq) {
+	if (hfopt2_mpq != nullptr) {
 		SFileCloseArchive(hfopt2_mpq);
 		hfopt2_mpq = nullptr;
 	}
-	if (devilutionx_mpq) {
+	if (devilutionx_mpq != nullptr) {
 		SFileCloseArchive(patch_rt_mpq);
 		patch_rt_mpq = nullptr;
 	}

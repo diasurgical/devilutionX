@@ -140,7 +140,7 @@ void SHA1Result(int n, char Message_Digest[SHA1HashSize])
 	int i;
 
 	Message_Digest_Block = (DWORD *)Message_Digest;
-	if (Message_Digest) {
+	if (Message_Digest != nullptr) {
 		for (i = 0; i < 5; i++) {
 			*Message_Digest_Block = SDL_SwapLE32(sgSHA1[n].state[i]);
 			Message_Digest_Block++;
@@ -151,7 +151,7 @@ void SHA1Result(int n, char Message_Digest[SHA1HashSize])
 void SHA1Calculate(int n, const char *data, char Message_Digest[SHA1HashSize])
 {
 	SHA1Input(&sgSHA1[n], data, 64);
-	if (Message_Digest)
+	if (Message_Digest != nullptr)
 		SHA1Result(n, Message_Digest);
 }
 

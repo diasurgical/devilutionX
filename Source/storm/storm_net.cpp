@@ -160,13 +160,13 @@ bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, char *
 	dvlnet_inst->setup_gameinfo(std::move(gameInitInfo));
 
 	std::string defaultName;
-	if (!pszGameName) {
+	if (pszGameName == nullptr) {
 		defaultName = dvlnet_inst->make_default_gamename();
 		pszGameName = defaultName.c_str();
 	}
 
 	strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
-	if (pszGamePassword)
+	if (pszGamePassword != nullptr)
 		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
 	*playerID = dvlnet_inst->create(pszGameName, pszGamePassword);
 	return *playerID != -1;
@@ -177,9 +177,9 @@ bool SNetJoinGame(char *pszGameName, char *pszGamePassword, int *playerID)
 #ifndef NONET
 	std::lock_guard<std::mutex> lg(storm_net_mutex);
 #endif
-	if (pszGameName)
+	if (pszGameName != nullptr)
 		strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
-	if (pszGamePassword)
+	if (pszGamePassword != nullptr)
 		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
 	*playerID = dvlnet_inst->join(pszGameName, pszGamePassword);
 	return *playerID != -1;

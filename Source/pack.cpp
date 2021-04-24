@@ -60,11 +60,11 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 	pPack->destParam1 = pPlayer->destParam1;
 	pPack->destParam2 = pPlayer->destParam2;
 	pPack->plrlevel = pPlayer->plrlevel;
-	pPack->px = pPlayer->_px;
-	pPack->py = pPlayer->_py;
+	pPack->px = pPlayer->position.current.x;
+	pPack->py = pPlayer->position.current.y;
 	if (gbVanilla) {
-		pPack->targx = pPlayer->_px;
-		pPack->targy = pPlayer->_py;
+		pPack->targx = pPlayer->position.current.x;
+		pPack->targy = pPlayer->position.current.y;
 	}
 	strcpy(pPack->pName, pPlayer->_pName);
 	pPack->pClass = static_cast<Sint8>(pPlayer->_pClass);
@@ -171,7 +171,7 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 		memset(&items[MAXITEMS], 0, sizeof(*items));
 		RecreateItem(MAXITEMS, idx, SDL_SwapLE16(is->iCreateInfo), SDL_SwapLE32(is->iSeed), SDL_SwapLE16(is->wValue), isHellfire);
 		items[MAXITEMS]._iMagical = is->bId >> 1;
-		items[MAXITEMS]._iIdentified = is->bId & 1;
+		items[MAXITEMS]._iIdentified = (is->bId & 1) != 0;
 		items[MAXITEMS]._iDurability = is->bDur;
 		items[MAXITEMS]._iMaxDur = is->bMDur;
 		items[MAXITEMS]._iCharges = is->bCh;
@@ -213,10 +213,8 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	PkItemStruct *pki;
 
 	pPlayer = &plr[pnum];
-	pPlayer->_px = pPack->px;
-	pPlayer->_py = pPack->py;
-	pPlayer->_pfutx = pPack->px;
-	pPlayer->_pfuty = pPack->py;
+	pPlayer->position.current = { pPack->px, pPack->py };
+	pPlayer->position.future = { pPack->px, pPack->py };
 	pPlayer->plrlevel = pPack->plrlevel;
 	ClrPlrPath(pnum);
 	pPlayer->destAction = ACTION_NONE;

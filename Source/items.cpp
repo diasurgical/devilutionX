@@ -422,7 +422,7 @@ bool ItemPlace(int xp, int yp)
 		return false;
 	if (dObject[xp][yp] != 0)
 		return false;
-	if (dFlags[xp][yp] & BFLAG_POPULATED)
+	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
@@ -668,12 +668,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	plr[p]._pIBonusDamMod = dmod;
 	plr[p]._pIGetHit = ghit;
 
-	if (lrad < 2) {
-		lrad = 2;
-	}
-	if (lrad > 15) {
-		lrad = 15;
-	}
+	lrad = clamp(lrad, 2, 15);
 
 	if (plr[p]._pLightRad != lrad && p == myplr) {
 		ChangeLightRadius(plr[p]._plid, lrad);
@@ -681,25 +676,10 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		plr[p]._pLightRad = lrad;
 	}
 
-	plr[p]._pStrength = sadd + plr[p]._pBaseStr;
-	if (plr[p]._pStrength < 0) {
-		plr[p]._pStrength = 0;
-	}
-
-	plr[p]._pMagic = madd + plr[p]._pBaseMag;
-	if (plr[p]._pMagic < 0) {
-		plr[p]._pMagic = 0;
-	}
-
-	plr[p]._pDexterity = dadd + plr[p]._pBaseDex;
-	if (plr[p]._pDexterity < 0) {
-		plr[p]._pDexterity = 0;
-	}
-
-	plr[p]._pVitality = vadd + plr[p]._pBaseVit;
-	if (plr[p]._pVitality < 0) {
-		plr[p]._pVitality = 0;
-	}
+	plr[p]._pStrength = std::max(0, sadd + plr[p]._pBaseStr);
+	plr[p]._pMagic = std::max(0, madd + plr[p]._pBaseMag);
+	plr[p]._pDexterity = std::max(0, dadd + plr[p]._pBaseDex);
+	plr[p]._pVitality = std::max(0, vadd + plr[p]._pBaseVit);
 
 	if (plr[p]._pClass == HeroClass::Rogue) {
 		plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
@@ -765,30 +745,16 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		lr -= plr[p]._pLevel;
 	}
 
-	if (iflgs & ISPL_ALLRESZERO) {
+	if ((iflgs & ISPL_ALLRESZERO) != 0) {
 		// reset resistances to zero if the respective special effect is active
 		mr = 0;
 		fr = 0;
 		lr = 0;
 	}
 
-	if (mr > MAXRESIST)
-		mr = MAXRESIST;
-	else if (mr < 0)
-		mr = 0;
-	plr[p]._pMagResist = mr;
-
-	if (fr > MAXRESIST)
-		fr = MAXRESIST;
-	else if (fr < 0)
-		fr = 0;
-	plr[p]._pFireResist = fr;
-
-	if (lr > MAXRESIST)
-		lr = MAXRESIST;
-	else if (lr < 0)
-		lr = 0;
-	plr[p]._pLghtResist = lr;
+	plr[p]._pMagResist = clamp(mr, 0, MAXRESIST);
+	plr[p]._pFireResist = clamp(fr, 0, MAXRESIST);
+	plr[p]._pLghtResist = clamp(lr, 0, MAXRESIST);
 
 	if (plr[p]._pClass == HeroClass::Warrior) {
 		vadd *= 2;
@@ -810,26 +776,22 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	}
 	imana += (madd << 6);
 
-	plr[p]._pHitPoints = ihp + plr[p]._pHPBase;
 	plr[p]._pMaxHP = ihp + plr[p]._pMaxHPBase;
-	if (plr[p]._pHitPoints > plr[p]._pMaxHP)
-		plr[p]._pHitPoints = plr[p]._pMaxHP;
+	plr[p]._pHitPoints = std::min(ihp + plr[p]._pHPBase, plr[p]._pMaxHP);
 
 	if (p == myplr && (plr[p]._pHitPoints >> 6) <= 0) {
 		SetPlayerHitPoints(p, 0);
 	}
 
-	plr[p]._pMana = imana + plr[p]._pManaBase;
 	plr[p]._pMaxMana = imana + plr[p]._pMaxManaBase;
-	if (plr[p]._pMana > plr[p]._pMaxMana)
-		plr[p]._pMana = plr[p]._pMaxMana;
+	plr[p]._pMana = std::min(imana + plr[p]._pManaBase, plr[p]._pMaxMana);
 
 	plr[p]._pIFMinDam = fmin;
 	plr[p]._pIFMaxDam = fmax;
 	plr[p]._pILMinDam = lmin;
 	plr[p]._pILMaxDam = lmax;
 
-	if (iflgs & ISPL_INFRAVISION) {
+	if ((iflgs & ISPL_INFRAVISION) != 0) {
 		plr[p]._pInfraFlag = true;
 	} else {
 		plr[p]._pInfraFlag = false;
@@ -1481,9 +1443,7 @@ void GetSuperItemLoc(int x, int y, int *xx, int *yy)
 
 void CalcItemValue(int i)
 {
-	int v;
-
-	v = items[i]._iVMult1 + items[i]._iVMult2;
+	int v = items[i]._iVMult1 + items[i]._iVMult2;
 	if (v > 0) {
 		v *= items[i]._ivalue;
 	}
@@ -1491,10 +1451,7 @@ void CalcItemValue(int i)
 		v = items[i]._ivalue / v;
 	}
 	v = items[i]._iVAdd1 + items[i]._iVAdd2 + v;
-	if (v <= 0) {
-		v = 1;
-	}
-	items[i]._iIvalue = v;
+	items[i]._iIvalue = std::max(v, 1);
 }
 
 void GetBookSpell(int i, int lvl)
@@ -1736,10 +1693,8 @@ void GetItemAttrs(int i, int idata, int lvl)
 	}
 	if (leveltype == DTYPE_HELL)
 		rndv += rndv / 8;
-	if (rndv > GOLD_MAX_LIMIT)
-		rndv = GOLD_MAX_LIMIT;
 
-	items[i]._ivalue = rndv;
+	items[i]._ivalue = std::min(rndv, GOLD_MAX_LIMIT);
 	SetPlrHandGoldCurs(&items[i]);
 }
 
@@ -1831,15 +1786,9 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		items[i]._iPLMR += r;
 		break;
 	case IPL_ALLRES:
-		items[i]._iPLFR += r;
-		items[i]._iPLLR += r;
-		items[i]._iPLMR += r;
-		if (items[i]._iPLFR < 0)
-			items[i]._iPLFR = 0;
-		if (items[i]._iPLLR < 0)
-			items[i]._iPLLR = 0;
-		if (items[i]._iPLMR < 0)
-			items[i]._iPLMR = 0;
+		items[i]._iPLFR = std::max(items[i]._iPLFR + r, 0);
+		items[i]._iPLLR = std::max(items[i]._iPLLR + r, 0);
+		items[i]._iPLMR = std::max(items[i]._iPLMR + r, 0);
 		break;
 	case IPL_SPLLVLADD:
 		items[i]._iSplLvlAdd = r;
@@ -1935,8 +1884,8 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		[[fallthrough]];
 	case IPL_DUR_CURSE:
 		items[i]._iMaxDur -= r * items[i]._iMaxDur / 100;
-		if (items[i]._iMaxDur < 1)
-			items[i]._iMaxDur = 1;
+		items[i]._iMaxDur = std::max<uint8_t>(items[i]._iMaxDur, 1);
+
 		items[i]._iDurability = items[i]._iMaxDur;
 		break;
 	case IPL_INDESTRUCTIBLE:
@@ -2092,8 +2041,8 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		break;
 	case IPL_FIRERESCLVL:
 		items[i]._iPLFR = 30 - plr[myplr]._pLevel;
-		if (items[i]._iPLFR < 0)
-			items[i]._iPLFR = 0;
+		items[i]._iPLFR = std::max<int16_t>(items[i]._iPLFR, 0);
+
 		break;
 	case IPL_FIRERES_CURSE:
 		items[i]._iPLFR -= r;
@@ -2245,7 +2194,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 	}
 	if (!control_WriteStringToBuffer((BYTE *)items[i]._iIName)) {
 		int aii = items[i].IDidx;
-		if (AllItemsList[aii].iSName)
+		if (AllItemsList[aii].iSName != nullptr)
 			strcpy(items[i]._iIName, AllItemsList[aii].iSName);
 		else
 			items[i]._iName[0] = 0;
@@ -2334,7 +2283,7 @@ int RndItem(int m)
 	if ((monster[m].MData->mTreasure & 0x8000) != 0)
 		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
 
-	if (monster[m].MData->mTreasure & 0x4000)
+	if ((monster[m].MData->mTreasure & 0x4000) != 0)
 		return 0;
 
 	if (GenerateRnd(100) > 40)
@@ -2660,7 +2609,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-static void SetupBaseItem(Sint32 x, Sint32 y, Sint32 idx, bool onlygood, bool sendmsg, bool delta)
+static void SetupBaseItem(int x, int y, int idx, bool onlygood, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -2781,7 +2730,7 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool
 	}
 
 	if ((icreateinfo & CF_UNIQUE) == 0) {
-		if (icreateinfo & CF_TOWN) {
+		if ((icreateinfo & CF_TOWN) != 0) {
 			RecreateTownItem(ii, idx, icreateinfo, iseed);
 			gbIsHellfire = _gbIsHellfire;
 			return;
@@ -2797,9 +2746,9 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool
 	int level = icreateinfo & CF_LEVEL;
 
 	int uper = 0;
-	if (icreateinfo & CF_UPER1)
+	if ((icreateinfo & CF_UPER1) != 0)
 		uper = 1;
-	if (icreateinfo & CF_UPER15)
+	if ((icreateinfo & CF_UPER15) != 0)
 		uper = 15;
 
 	bool onlygood = (icreateinfo & CF_ONLYGOOD) != 0;
@@ -3154,8 +3103,6 @@ void CheckIdentify(int pnum, int cii)
 
 static void RepairItem(ItemStruct *i, int lvl)
 {
-	int rep, d;
-
 	if (i->_iDurability == i->_iMaxDur) {
 		return;
 	}
@@ -3165,22 +3112,17 @@ static void RepairItem(ItemStruct *i, int lvl)
 		return;
 	}
 
-	rep = 0;
+	int rep = 0;
 	do {
 		rep += lvl + GenerateRnd(lvl);
-		d = i->_iMaxDur / (lvl + 9);
-		if (d < 1)
-			d = 1;
-		i->_iMaxDur = i->_iMaxDur - d;
+		i->_iMaxDur -= std::max(i->_iMaxDur / (lvl + 9), 1);
 		if (!i->_iMaxDur) {
 			i->_itype = ITYPE_NONE;
 			return;
 		}
 	} while (rep + i->_iDurability < i->_iMaxDur);
 
-	i->_iDurability += rep;
-	if (i->_iDurability > i->_iMaxDur)
-		i->_iDurability = i->_iMaxDur;
+	i->_iDurability = std::min<int>(i->_iDurability + rep, i->_iMaxDur);
 }
 
 void DoRepair(int pnum, int cii)
@@ -3189,7 +3131,7 @@ void DoRepair(int pnum, int cii)
 	ItemStruct *pi;
 
 	p = &plr[pnum];
-	PlaySfxLoc(IS_REPAIR, p->_px, p->_py);
+	PlaySfxLoc(IS_REPAIR, p->position.current.x, p->position.current.y);
 
 	if (cii >= NUM_INVLOC) {
 		pi = &p->InvList[cii - NUM_INVLOC];
@@ -3206,17 +3148,18 @@ void DoRepair(int pnum, int cii)
 
 static void RechargeItem(ItemStruct *i, int r)
 {
-	if (i->_iCharges != i->_iMaxCharges) {
-		do {
-			i->_iMaxCharges--;
-			if (i->_iMaxCharges == 0) {
-				return;
-			}
-			i->_iCharges += r;
-		} while (i->_iCharges < i->_iMaxCharges);
-		if (i->_iCharges > i->_iMaxCharges)
-			i->_iCharges = i->_iMaxCharges;
-	}
+	if (i->_iCharges == i->_iMaxCharges)
+		return;
+
+	do {
+		i->_iMaxCharges--;
+		if (i->_iMaxCharges == 0) {
+			return;
+		}
+		i->_iCharges += r;
+	} while (i->_iCharges < i->_iMaxCharges);
+
+	i->_iCharges = std::min(i->_iCharges, i->_iMaxCharges);
 }
 
 void DoRecharge(int pnum, int cii)
@@ -3306,29 +3249,15 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 		break;
 	case IMISC_OILSKILL:
 		r = GenerateRnd(6) + 5;
-		if (x->_iMinStr > r) {
-			x->_iMinStr = x->_iMinStr - r;
-		} else {
-			x->_iMinStr = 0;
-		}
-		if (x->_iMinMag > r) {
-			x->_iMinMag = x->_iMinMag - r;
-		} else {
-			x->_iMinMag = 0;
-		}
-		if (x->_iMinDex > r) {
-			x->_iMinDex = x->_iMinDex - r;
-		} else {
-			x->_iMinDex = 0;
-		}
+		x->_iMinStr = std::max(0, x->_iMinStr - r);
+		x->_iMinMag = std::max(0, x->_iMinMag - r);
+		x->_iMinDex = std::max(0, x->_iMinDex - r);
 		break;
 	case IMISC_OILBSMTH:
 		if (x->_iMaxDur != 255) {
 			if (x->_iDurability < x->_iMaxDur) {
 				dur = (x->_iMaxDur + 4) / 5 + x->_iDurability;
-				if (dur > x->_iMaxDur) {
-					dur = x->_iMaxDur;
-				}
+				dur = std::min<int>(dur, x->_iMaxDur);
 			} else {
 				if (x->_iMaxDur >= 100) {
 					return true;
@@ -3704,36 +3633,36 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, "hit monster doesn't heal");
 		break;
 	case IPL_STEALMANA:
-		if (x->_iFlags & ISPL_STEALMANA_3)
+		if ((x->_iFlags & ISPL_STEALMANA_3) != 0)
 			strcpy(tempstr, "hit steals 3% mana");
-		if (x->_iFlags & ISPL_STEALMANA_5)
+		if ((x->_iFlags & ISPL_STEALMANA_5) != 0)
 			strcpy(tempstr, "hit steals 5% mana");
 		break;
 	case IPL_STEALLIFE:
-		if (x->_iFlags & ISPL_STEALLIFE_3)
+		if ((x->_iFlags & ISPL_STEALLIFE_3) != 0)
 			strcpy(tempstr, "hit steals 3% life");
-		if (x->_iFlags & ISPL_STEALLIFE_5)
+		if ((x->_iFlags & ISPL_STEALLIFE_5) != 0)
 			strcpy(tempstr, "hit steals 5% life");
 		break;
 	case IPL_TARGAC:
 		strcpy(tempstr, "penetrates target's armor");
 		break;
 	case IPL_FASTATTACK:
-		if (x->_iFlags & ISPL_QUICKATTACK)
+		if ((x->_iFlags & ISPL_QUICKATTACK) != 0)
 			strcpy(tempstr, "quick attack");
-		if (x->_iFlags & ISPL_FASTATTACK)
+		if ((x->_iFlags & ISPL_FASTATTACK) != 0)
 			strcpy(tempstr, "fast attack");
-		if (x->_iFlags & ISPL_FASTERATTACK)
+		if ((x->_iFlags & ISPL_FASTERATTACK) != 0)
 			strcpy(tempstr, "faster attack");
-		if (x->_iFlags & ISPL_FASTESTATTACK)
+		if ((x->_iFlags & ISPL_FASTESTATTACK) != 0)
 			strcpy(tempstr, "fastest attack");
 		break;
 	case IPL_FASTRECOVER:
-		if (x->_iFlags & ISPL_FASTRECOVER)
+		if ((x->_iFlags & ISPL_FASTRECOVER) != 0)
 			strcpy(tempstr, "fast hit recovery");
-		if (x->_iFlags & ISPL_FASTERRECOVER)
+		if ((x->_iFlags & ISPL_FASTERRECOVER) != 0)
 			strcpy(tempstr, "faster hit recovery");
-		if (x->_iFlags & ISPL_FASTESTRECOVER)
+		if ((x->_iFlags & ISPL_FASTESTRECOVER) != 0)
 			strcpy(tempstr, "fastest hit recovery");
 		break;
 	case IPL_FASTBLOCK:
@@ -3992,7 +3921,7 @@ void PrintItemDetails(ItemStruct *x)
 			sprintf(tempstr, "armor: %i  Dur: %i/%i", x->_iAC, x->_iDurability, x->_iMaxDur);
 		AddPanelString(tempstr, true);
 	}
-	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
+	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0) {
 		if (x->_iMinDam == x->_iMaxDam)
 			sprintf(tempstr, "dam: %i  Dur: %i/%i", x->_iMinDam, x->_iDurability, x->_iMaxDur);
 		else
@@ -4069,12 +3998,8 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
 			l += l / 2;
-		plr[p]._pHitPoints += l;
-		if (plr[p]._pHitPoints > plr[p]._pMaxHP)
-			plr[p]._pHitPoints = plr[p]._pMaxHP;
-		plr[p]._pHPBase += l;
-		if (plr[p]._pHPBase > plr[p]._pMaxHPBase)
-			plr[p]._pHPBase = plr[p]._pMaxHPBase;
+		plr[p]._pHitPoints = std::min(l + plr[p]._pHitPoints, plr[p]._pMaxHP);
+		plr[p]._pHPBase = std::min(l + plr[p]._pHPBase, plr[p]._pMaxHPBase);
 		drawhpflag = true;
 		break;
 	case IMISC_FULLHEAL:
@@ -4089,18 +4014,14 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
 			l += l / 2;
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
-			plr[p]._pMana += l;
-			if (plr[p]._pMana > plr[p]._pMaxMana)
-				plr[p]._pMana = plr[p]._pMaxMana;
-			plr[p]._pManaBase += l;
-			if (plr[p]._pManaBase > plr[p]._pMaxManaBase)
-				plr[p]._pManaBase = plr[p]._pMaxManaBase;
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
+			plr[p]._pMana = std::min(l + plr[p]._pMana, plr[p]._pMaxMana);
+			plr[p]._pManaBase = std::min(l + plr[p]._pManaBase, plr[p]._pMaxManaBase);
 			drawmanaflag = true;
 		}
 		break;
 	case IMISC_FULLMANA:
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 			plr[p]._pMana = plr[p]._pMaxMana;
 			plr[p]._pManaBase = plr[p]._pMaxManaBase;
 			drawmanaflag = true;
@@ -4135,12 +4056,8 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue)
 			l += l / 2;
-		plr[p]._pHitPoints += l;
-		if (plr[p]._pHitPoints > plr[p]._pMaxHP)
-			plr[p]._pHitPoints = plr[p]._pMaxHP;
-		plr[p]._pHPBase += l;
-		if (plr[p]._pHPBase > plr[p]._pMaxHPBase)
-			plr[p]._pHPBase = plr[p]._pMaxHPBase;
+		plr[p]._pHitPoints = std::min(plr[p]._pHitPoints + l, plr[p]._pMaxHP);
+		plr[p]._pHPBase = std::min(plr[p]._pHPBase + l, plr[p]._pMaxHPBase);
 		drawhpflag = true;
 		j = plr[p]._pMaxMana >> 8;
 		l = ((j / 2) + GenerateRnd(j)) << 6;
@@ -4148,13 +4065,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			l *= 2;
 		if (plr[p]._pClass == HeroClass::Rogue)
 			l += l / 2;
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
-			plr[p]._pMana += l;
-			if (plr[p]._pMana > plr[p]._pMaxMana)
-				plr[p]._pMana = plr[p]._pMaxMana;
-			plr[p]._pManaBase += l;
-			if (plr[p]._pManaBase > plr[p]._pMaxManaBase)
-				plr[p]._pManaBase = plr[p]._pMaxManaBase;
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
+			plr[p]._pMana = std::min(plr[p]._pMana + l, plr[p]._pMaxMana);
+			plr[p]._pManaBase = std::min(plr[p]._pManaBase + l, plr[p]._pMaxManaBase);
 			drawmanaflag = true;
 		}
 		break;
@@ -4162,7 +4075,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		plr[p]._pHitPoints = plr[p]._pMaxHP;
 		plr[p]._pHPBase = plr[p]._pMaxHPBase;
 		drawhpflag = true;
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 			plr[p]._pMana = plr[p]._pMaxMana;
 			plr[p]._pManaBase = plr[p]._pMaxManaBase;
 			drawmanaflag = true;
@@ -4206,13 +4119,11 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		plr[p]._pMemSpells |= GetSpellBitmask(spl);
 		if (plr[p]._pSplLvl[spl] < MAX_SPELL_LEVEL)
 			plr[p]._pSplLvl[spl]++;
-		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
 			plr[p]._pMana += spelldata[spl].sManaCost << 6;
-			if (plr[p]._pMana > plr[p]._pMaxMana)
-				plr[p]._pMana = plr[p]._pMaxMana;
+			plr[p]._pMana = std::min(plr[p]._pMana, plr[p]._pMaxMana);
 			plr[p]._pManaBase += spelldata[spl].sManaCost << 6;
-			if (plr[p]._pManaBase > plr[p]._pMaxManaBase)
-				plr[p]._pManaBase = plr[p]._pMaxManaBase;
+			plr[p]._pManaBase = std::min(plr[p]._pManaBase, plr[p]._pMaxManaBase);
 		}
 		if (p == myplr)
 			CalcPlrBookVals(p);
@@ -4472,10 +4383,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	dexterity *= 1.2;
 	magic *= 1.2;
 
-	if (plvl > 30)
-		plvl = 30;
-	if (plvl < 1)
-		plvl = 1;
+	plvl = clamp(plvl, 1, 30);
 
 	int count = 0;
 
@@ -5103,15 +5011,15 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 
 void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed)
 {
-	if (icreateinfo & CF_SMITH)
+	if ((icreateinfo & CF_SMITH) != 0)
 		RecreateSmithItem(ii, icreateinfo & CF_LEVEL, iseed);
-	else if (icreateinfo & CF_SMITHPREMIUM)
+	else if ((icreateinfo & CF_SMITHPREMIUM) != 0)
 		RecreatePremiumItem(ii, icreateinfo & CF_LEVEL, iseed);
-	else if (icreateinfo & CF_BOY)
+	else if ((icreateinfo & CF_BOY) != 0)
 		RecreateBoyItem(ii, icreateinfo & CF_LEVEL, iseed);
-	else if (icreateinfo & CF_WITCH)
+	else if ((icreateinfo & CF_WITCH) != 0)
 		RecreateWitchItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
-	else if (icreateinfo & CF_HEALER)
+	else if ((icreateinfo & CF_HEALER) != 0)
 		RecreateHealerItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
 }
 

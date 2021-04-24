@@ -147,6 +147,26 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
+struct Point {
+	int x;
+	int y;
+};
+
+struct PlayerPosition {
+	/** Tile position */
+	Point current; // 256
+	/** Future tile position. Set at start of walking animation. */
+	Point future;
+	/** Tile position of player. Set via network on player input. */
+	Point owner;
+	/** Most recent position in dPlayer. */
+	Point old;
+	/** Player sprite's pixel offset from tile. */
+	Point offset;
+	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
+	Point velocity;
+};
+
 struct PlayerStruct {
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];
@@ -157,18 +177,7 @@ struct PlayerStruct {
 	direction destParam3;
 	int destParam4;
 	int plrlevel;
-	int _px;    // Tile X-position of player
-	int _py;    // Tile Y-position of player
-	int _pfutx; // Future tile X-position of player. Set at start of walking animation
-	int _pfuty;
-	int _pownerx;    // Tile X-position of player. Set via network on player input
-	int _pownery;    // Tile X-position of player. Set via network on player input
-	int _poldx;      // Most recent X-position in dPlayer.
-	int _poldy;      // Most recent Y-position in dPlayer.
-	int _pxoff;      // Player sprite's pixel X-offset from tile.
-	int _pyoff;      // Player sprite's pixel Y-offset from tile.
-	int _pxvel;      // Pixel X-velocity while walking. Indirectly applied to _pxoff via _pvar6
-	int _pyvel;      // Pixel Y-velocity while walking. Indirectly applied to _pyoff via _pvar7
+	PlayerPosition position;
 	direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
 	uint8_t *_pAnimData;
@@ -178,9 +187,18 @@ struct PlayerStruct {
 	int _pAnimFrame; // Current frame of animation.
 	int _pAnimWidth;
 	int _pAnimWidth2;
-	int _pAnimNumSkippedFrames;              // Number of Frames that will be skipped (for example with modifier "faster attack")
-	int _pAnimGameTicksSinceSequenceStarted; // Number of GameTicks after the current animation sequence started
-	int _pAnimStopDistributingAfterFrame;    // Distribute the NumSkippedFrames only before this frame
+	/*
+	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
+	*/
+	float _pAnimGameTickModifier;
+	/*
+	* @brief Number of GameTicks after the current animation sequence started
+	*/
+	int _pAnimGameTicksSinceSequenceStarted;
+	/*
+	* @brief Animation Frames that will be adjusted for the skipped Frames/GameTicks
+	*/
+	int _pAnimRelevantAnimationFramesForDistributing;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
@@ -243,8 +261,8 @@ struct PlayerStruct {
 	direction _pVar3; // Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL.
 	int _pVar4;       // Used for storing X-position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it)
 	int _pVar5;       // Used for storing Y-position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it)
-	int _pVar6;       // Same as _pxoff but contains the value in a higher range
-	int _pVar7;       // Same as _pyoff but contains the value in a higher range
+	int _pVar6;       // Same as position.offset.x but contains the value in a higher range
+	int _pVar7;       // Same as position.offset.y but contains the value in a higher range
 	int _pVar8;       // Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). Also used for stalling the appearance of the options screen after dying in singleplayer
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
@@ -369,7 +387,7 @@ struct PlayerStruct {
 	/**
 	 * @brief Get the tile coordinates a player is moving to (if not moving, then it corresponds to current position).
 	 */
-	SDL_Point GetTargetPosition() const;
+	Point GetTargetPosition() const;
 
 	/**
 	 * @brief Play a speach file.
@@ -397,6 +415,22 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
+
+/**
+ * @brief Specifies what special logics are applied for a Animation
+ */
+enum class AnimationDistributionParams : uint8_t {
+	None = 0,
+	/*
+	* @brief ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim)
+	*/
+	ProcessAnimationPending,
+	/*
+	* @brief Delay of last Frame is ignored (for example, because only Frame and not delay is checked in game_logic)
+	*/
+	SkipsDelayOfLastFrame,
+};
+
 /**
  * @brief Sets the new Player Animation with all relevant information for rendering
 
@@ -405,11 +439,11 @@ void FreePlayerGFX(int pnum);
  * @param numFrames Number of Frames in Animation
  * @param Delay Delay after each Animation sequence
  * @param width Width of sprite
+ * @param params Specifies what special logics are applied to this Animation
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
- * @param processAnimationPending true if first ProcessAnimation will be called in same gametick after NewPlrAnim
- * @param stopDistributingAfterFrame Distribute the NumSkippedFrames only before this frame
+ * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames = 0, bool processAnimationPending = false, int stopDistributingAfterFrame = 0);
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(int pnum);
 void ProcessPlayerAnimation(int pnum);
 /**

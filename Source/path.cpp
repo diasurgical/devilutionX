@@ -74,7 +74,7 @@ int FindPath(bool (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx,
 		if (next_node->x == dx && next_node->y == dy) {
 			current = next_node;
 			path_length = 0;
-			while (current->Parent) {
+			while (current->Parent != nullptr) {
 				if (path_length >= MAX_PATH_LENGTH)
 					break;
 				pnode_vals[path_length++] = path_directions[3 * (current->y - current->Parent->y) - current->Parent->x + 4 + current->x];
@@ -305,7 +305,7 @@ void path_next_node(PATHNODE *pPath)
 	int f;
 
 	next = path_2_nodes;
-	if (!path_2_nodes->NextNode) {
+	if (path_2_nodes->NextNode == nullptr) {
 		path_2_nodes->NextNode = pPath;
 	} else {
 		current = path_2_nodes;

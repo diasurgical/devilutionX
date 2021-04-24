@@ -170,15 +170,15 @@ void FillSolidBlockTbls()
 
 	for (i = 1; i <= dwTiles; i++) {
 		bv = *pTmp++;
-		if (bv & 1)
+		if ((bv & 0x01) != 0)
 			nSolidTable[i] = true;
-		if (bv & 2)
+		if ((bv & 0x02) != 0)
 			nBlockTable[i] = true;
-		if (bv & 4)
+		if ((bv & 0x04) != 0)
 			nMissileTable[i] = true;
-		if (bv & 8)
+		if ((bv & 0x08) != 0)
 			nTransTable[i] = true;
-		if (bv & 0x80)
+		if ((bv & 0x80) != 0)
 			nTrapTable[i] = true;
 		block_lvid[i] = (bv & 0x70) >> 4; /* beta: (bv >> 4) & 7 */
 	}
@@ -520,7 +520,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 	}
 }
 
-void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rndSize)
+void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize)
 {
 	int i, j;
 	int themeW, themeH;
@@ -530,7 +530,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 	memset(themeLoc, 0, sizeof(*themeLoc));
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == floor && !GenerateRnd(freq) && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
+			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0 && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
 				if (rndSize) {
 					min = minSize - 2;
 					max = maxSize - 2;
