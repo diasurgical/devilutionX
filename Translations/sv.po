@@ -1,0 +1,29 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Content-Type: text/plain; charset=windows-1252\n"
+"X-Poedit-SourceCharset: windows-1252\n"
+
+msgid "Single Player"
+msgstr "Enskild Spelare"
+
+msgid "Multi Player"
+msgstr "Flera Spelare"
+
+msgid "Replay Intro"
+msgstr "Kör om Intro"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Credits"
+msgstr "Spelskapare"
+
+msgid "Exit Hellfire"
+msgstr "Avsluta Hellfire"
+
+msgid "Show Credits"
+msgstr "Visa Spelskapare"
+
+msgid "Exit Diablo"
+msgstr "Avsluta Diablo"
