@@ -7,9 +7,6 @@
 #include "cursor.h"
 #include "inv.h"
 #include "spells.h"
-#include "utils/format.hpp"
-
-#include <fmt/format.h>
 
 namespace devilution {
 

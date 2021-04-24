@@ -43,7 +43,7 @@ option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
                        "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
 
-option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" OFF)
+option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBFMT "Link static libfmt" OFF
                        "DEVILUTIONX_SYSTEM_LIBFMT AND NOT DIST" ON)
 
@@ -176,8 +176,9 @@ endif()
 
 if(DEVILUTIONX_SYSTEM_LIBFMT)
   set(fmt_USE_STATIC_LIBS ${DEVILUTIONX_STATIC_LIBFMT})
-  find_package(fmt REQUIRED)
-else()
+  find_package(fmt 7.0.0 QUIET)
+endif()
+if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
 endif()
 
@@ -468,7 +469,7 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker
-  ${fmt_SOURCE_DIR}/include
+  ${fmt_INCLUDE_DIR}/include
   ${CMAKE_CURRENT_BINARY_DIR})
 
 if(NOT N3DS)
