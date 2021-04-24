@@ -1242,7 +1242,7 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	if (!calc_snd_position(monster[i]._mx, monster[i]._my, &lVolume, &lPan))
+	if (!calc_snd_position(monster[i].position.current.x, monster[i].position.current.y, &lVolume, &lPan))
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);

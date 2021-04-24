@@ -329,8 +329,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->position.future.x = file->nextLE<int32_t>();
 	pPlayer->position.future.y = file->nextLE<int32_t>();
 	file->skip(8); // Skip _ptargx and _ptargy
-	pPlayer->position.owner.x = file->nextLE<int32_t>();
-	pPlayer->position.owner.y = file->nextLE<int32_t>();
+	pPlayer->position.last.x = file->nextLE<int32_t>();
+	pPlayer->position.last.y = file->nextLE<int32_t>();
 	pPlayer->position.old.x = file->nextLE<int32_t>();
 	pPlayer->position.old.y = file->nextLE<int32_t>();
 	pPlayer->position.offset.x = file->nextLE<int32_t>();
@@ -421,8 +421,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pGold = file->nextLE<int32_t>();
 
 	pPlayer->_pInfraFlag = file->nextBool32();
-	pPlayer->tempPoint.x = file->nextLE<int32_t>();
-	pPlayer->tempPoint.y = file->nextLE<int32_t>();
+	pPlayer->position.temp.x = file->nextLE<int32_t>();
+	pPlayer->position.temp.y = file->nextLE<int32_t>();
 	pPlayer->tempDirection = static_cast<direction>(file->nextLE<int32_t>());
 	pPlayer->_pVar4 = file->nextLE<int32_t>();
 	pPlayer->_pVar5 = file->nextLE<int32_t>();
@@ -549,20 +549,20 @@ static void LoadMonster(LoadHelper *file, int i)
 	file->skip(4); // Unused
 	pMonster->_pathcount = file->nextLE<uint8_t>();
 	file->skip(3); // Alignment
-	pMonster->_mx = file->nextLE<int32_t>();
-	pMonster->_my = file->nextLE<int32_t>();
-	pMonster->_mfutx = file->nextLE<int32_t>();
-	pMonster->_mfuty = file->nextLE<int32_t>();
-	pMonster->_moldx = file->nextLE<int32_t>();
-	pMonster->_moldy = file->nextLE<int32_t>();
-	pMonster->_mxoff = file->nextLE<int32_t>();
-	pMonster->_myoff = file->nextLE<int32_t>();
-	pMonster->_mxvel = file->nextLE<int32_t>();
-	pMonster->_myvel = file->nextLE<int32_t>();
+	pMonster->position.current.x = file->nextLE<int32_t>();
+	pMonster->position.current.y = file->nextLE<int32_t>();
+	pMonster->position.future.x = file->nextLE<int32_t>();
+	pMonster->position.future.y = file->nextLE<int32_t>();
+	pMonster->position.old.x = file->nextLE<int32_t>();
+	pMonster->position.old.y = file->nextLE<int32_t>();
+	pMonster->position.offset.x = file->nextLE<int32_t>();
+	pMonster->position.offset.y = file->nextLE<int32_t>();
+	pMonster->position.velocity.x = file->nextLE<int32_t>();
+	pMonster->position.velocity.y = file->nextLE<int32_t>();
 	pMonster->_mdir = static_cast<direction>(file->nextLE<int32_t>());
 	pMonster->_menemy = file->nextLE<int32_t>();
-	pMonster->_menemyx = file->nextLE<uint8_t>();
-	pMonster->_menemyy = file->nextLE<uint8_t>();
+	pMonster->enemyPosition.x = file->nextLE<uint8_t>();
+	pMonster->enemyPosition.y = file->nextLE<uint8_t>();
 	file->skip(2); // Unused
 
 	file->skip(4); // Skip pointer _mAnimData
@@ -575,11 +575,11 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->_mVar1 = file->nextLE<int32_t>();
 	pMonster->_mVar2 = file->nextLE<int32_t>();
 	pMonster->_mVar3 = file->nextLE<int32_t>();
-	pMonster->_mVar4 = file->nextLE<int32_t>();
-	pMonster->_mVar5 = file->nextLE<int32_t>();
-	pMonster->_mVar6 = file->nextLE<int32_t>();
-	pMonster->_mVar7 = file->nextLE<int32_t>();
-	pMonster->_mVar8 = file->nextLE<int32_t>();
+	pMonster->position.temp.x = file->nextLE<int32_t>();
+	pMonster->position.temp.y = file->nextLE<int32_t>();
+	pMonster->position.offset2.x = file->nextLE<int32_t>();
+	pMonster->position.offset2.y = file->nextLE<int32_t>();
+	pMonster->actionFrame = file->nextLE<int32_t>();
 	pMonster->_mmaxhp = file->nextLE<int32_t>();
 	pMonster->_mhitpoints = file->nextLE<int32_t>();
 
@@ -590,8 +590,8 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->_msquelch = file->nextLE<uint8_t>();
 	file->skip(3); // Alignment
 	file->skip(4); // Unused
-	pMonster->_lastx = file->nextLE<int32_t>();
-	pMonster->_lasty = file->nextLE<int32_t>();
+	pMonster->position.last.x = file->nextLE<int32_t>();
+	pMonster->position.last.y = file->nextLE<int32_t>();
 	pMonster->_mRndSeed = file->nextLE<int32_t>();
 	pMonster->_mAISeed = file->nextLE<int32_t>();
 	file->skip(4); // Unused
@@ -1310,8 +1310,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(target.x);
 	file->writeLE<int32_t>(target.y);
 
-	file->writeLE<int32_t>(pPlayer->position.owner.x);
-	file->writeLE<int32_t>(pPlayer->position.owner.y);
+	file->writeLE<int32_t>(pPlayer->position.last.x);
+	file->writeLE<int32_t>(pPlayer->position.last.y);
 	file->writeLE<int32_t>(pPlayer->position.old.x);
 	file->writeLE<int32_t>(pPlayer->position.old.y);
 	file->writeLE<int32_t>(pPlayer->position.offset.x);
@@ -1401,8 +1401,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->_pGold);
 
 	file->writeLE<uint32_t>(pPlayer->_pInfraFlag);
-	file->writeLE<int32_t>(pPlayer->tempPoint.x);
-	file->writeLE<int32_t>(pPlayer->tempPoint.y);
+	file->writeLE<int32_t>(pPlayer->position.temp.x);
+	file->writeLE<int32_t>(pPlayer->position.temp.y);
 	file->writeLE<int32_t>(pPlayer->tempDirection);
 	file->writeLE<int32_t>(pPlayer->_pVar4);
 	file->writeLE<int32_t>(pPlayer->_pVar5);
@@ -1518,20 +1518,20 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(4); // Unused
 	file->writeLE<uint8_t>(pMonster->_pathcount);
 	file->skip(3); // Alignment
-	file->writeLE<int32_t>(pMonster->_mx);
-	file->writeLE<int32_t>(pMonster->_my);
-	file->writeLE<int32_t>(pMonster->_mfutx);
-	file->writeLE<int32_t>(pMonster->_mfuty);
-	file->writeLE<int32_t>(pMonster->_moldx);
-	file->writeLE<int32_t>(pMonster->_moldy);
-	file->writeLE<int32_t>(pMonster->_mxoff);
-	file->writeLE<int32_t>(pMonster->_myoff);
-	file->writeLE<int32_t>(pMonster->_mxvel);
-	file->writeLE<int32_t>(pMonster->_myvel);
+	file->writeLE<int32_t>(pMonster->position.current.x);
+	file->writeLE<int32_t>(pMonster->position.current.y);
+	file->writeLE<int32_t>(pMonster->position.future.x);
+	file->writeLE<int32_t>(pMonster->position.future.y);
+	file->writeLE<int32_t>(pMonster->position.old.x);
+	file->writeLE<int32_t>(pMonster->position.old.y);
+	file->writeLE<int32_t>(pMonster->position.offset.x);
+	file->writeLE<int32_t>(pMonster->position.offset.y);
+	file->writeLE<int32_t>(pMonster->position.velocity.x);
+	file->writeLE<int32_t>(pMonster->position.velocity.y);
 	file->writeLE<int32_t>(pMonster->_mdir);
 	file->writeLE<int32_t>(pMonster->_menemy);
-	file->writeLE<uint8_t>(pMonster->_menemyx);
-	file->writeLE<uint8_t>(pMonster->_menemyy);
+	file->writeLE<uint8_t>(pMonster->enemyPosition.x);
+	file->writeLE<uint8_t>(pMonster->enemyPosition.y);
 	file->skip(2); // Unused
 
 	file->skip(4); // Skip pointer _mAnimData
@@ -1544,11 +1544,11 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMonster->_mVar1);
 	file->writeLE<int32_t>(pMonster->_mVar2);
 	file->writeLE<int32_t>(pMonster->_mVar3);
-	file->writeLE<int32_t>(pMonster->_mVar4);
-	file->writeLE<int32_t>(pMonster->_mVar5);
-	file->writeLE<int32_t>(pMonster->_mVar6);
-	file->writeLE<int32_t>(pMonster->_mVar7);
-	file->writeLE<int32_t>(pMonster->_mVar8);
+	file->writeLE<int32_t>(pMonster->position.temp.x);
+	file->writeLE<int32_t>(pMonster->position.temp.y);
+	file->writeLE<int32_t>(pMonster->position.offset2.x);
+	file->writeLE<int32_t>(pMonster->position.offset2.y);
+	file->writeLE<int32_t>(pMonster->actionFrame);
 	file->writeLE<int32_t>(pMonster->_mmaxhp);
 	file->writeLE<int32_t>(pMonster->_mhitpoints);
 
@@ -1559,8 +1559,8 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->writeLE<uint8_t>(pMonster->_msquelch);
 	file->skip(3); // Alignment
 	file->skip(4); // Unused
-	file->writeLE<int32_t>(pMonster->_lastx);
-	file->writeLE<int32_t>(pMonster->_lasty);
+	file->writeLE<int32_t>(pMonster->position.last.x);
+	file->writeLE<int32_t>(pMonster->position.last.y);
 	file->writeLE<int32_t>(pMonster->_mRndSeed);
 	file->writeLE<int32_t>(pMonster->_mAISeed);
 	file->skip(4); // Unused

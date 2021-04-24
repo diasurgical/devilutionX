@@ -510,8 +510,8 @@ void delta_leave_sync(BYTE bLevel)
 			continue;
 		sgbDeltaChanged = true;
 		DMonsterStr *pD = &sgLevels[bLevel].monster[ma];
-		pD->_mx = monster[ma]._mx;
-		pD->_my = monster[ma]._my;
+		pD->_mx = monster[ma].position.current.x;
+		pD->_my = monster[ma].position.current.y;
 		pD->_mdir = monster[ma]._mdir;
 		pD->_menemy = encode_enemy(ma);
 		pD->_mhitpoints = monster[ma]._mhitpoints;
@@ -709,32 +709,29 @@ void DeltaLoadLevel()
 				M_ClearSquares(i);
 				x = sgLevels[currlevel].monster[i]._mx;
 				y = sgLevels[currlevel].monster[i]._my;
-				monster[i]._mx = x;
-				monster[i]._my = y;
-				monster[i]._moldx = x;
-				monster[i]._moldy = y;
-				monster[i]._mfutx = x;
-				monster[i]._mfuty = y;
+				monster[i].position.current = { x, y };
+				monster[i].position.old = { x, y };
+				monster[i].position.future = { x, y };
 				if (sgLevels[currlevel].monster[i]._mhitpoints != -1)
 					monster[i]._mhitpoints = sgLevels[currlevel].monster[i]._mhitpoints;
 				if (sgLevels[currlevel].monster[i]._mhitpoints == 0) {
-					monster[i]._moldx = sgLevels[currlevel].monster[i]._mx; // CODEFIX: useless assignment
-					monster[i]._moldy = sgLevels[currlevel].monster[i]._my; // CODEFIX: useless assignment
+					monster[i].position.old.x = sgLevels[currlevel].monster[i]._mx; // CODEFIX: useless assignment
+					monster[i].position.old.y = sgLevels[currlevel].monster[i]._my; // CODEFIX: useless assignment
 					M_ClearSquares(i);
 					if (monster[i]._mAi != AI_DIABLO) {
 						if (monster[i]._uniqtype == 0) {
 							assert(monster[i].MType != nullptr);
-							AddDead(monster[i]._mx, monster[i]._my, monster[i].MType->mdeadval, monster[i]._mdir);
+							AddDead(monster[i].position.current.x, monster[i].position.current.y, monster[i].MType->mdeadval, monster[i]._mdir);
 						} else {
-							AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, monster[i]._mdir);
+							AddDead(monster[i].position.current.x, monster[i].position.current.y, monster[i]._udeadval, monster[i]._mdir);
 						}
 					}
 					monster[i]._mDelFlag = true;
 					M_UpdateLeader(i);
 				} else {
 					decode_enemy(i, sgLevels[currlevel].monster[i]._menemy);
-					if ((monster[i]._mx && monster[i]._mx != 1) || monster[i]._my)
-						dMonster[monster[i]._mx][monster[i]._my] = i + 1;
+					if ((monster[i].position.current.x && monster[i].position.current.x != 1) || monster[i].position.current.y)
+						dMonster[monster[i].position.current.x][monster[i].position.current.y] = i + 1;
 					if (i < MAX_PLRS) {
 						MAI_Golum(i);
 						monster[i]._mFlags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
@@ -1759,10 +1756,10 @@ static DWORD On_ATTACKID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int distx = abs(plr[pnum].position.current.x - monster[p->wParam1]._mfutx);
-		int disty = abs(plr[pnum].position.current.y - monster[p->wParam1]._mfuty);
+		int distx = abs(plr[pnum].position.current.x - monster[p->wParam1].position.future.x);
+		int disty = abs(plr[pnum].position.current.y - monster[p->wParam1].position.future.y);
 		if (distx > 1 || disty > 1)
-			MakePlrPath(pnum, monster[p->wParam1]._mfutx, monster[p->wParam1]._mfuty, false);
+			MakePlrPath(pnum, monster[p->wParam1].position.future.x, monster[p->wParam1].position.future.y, false);
 		plr[pnum].destAction = ACTION_ATTACKMON;
 		plr[pnum].destParam1 = p->wParam1;
 	}

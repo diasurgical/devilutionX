@@ -1798,8 +1798,8 @@ static void UpdateMonsterLights()
 			}
 
 			LightListStruct *lid = &LightList[mon->mlid];
-			if (mon->_mx != lid->_lx || mon->_my != lid->_ly) {
-				ChangeLightXY(mon->mlid, mon->_mx, mon->_my);
+			if (mon->position.current.x != lid->_lx || mon->position.current.y != lid->_ly) {
+				ChangeLightXY(mon->mlid, mon->position.current.x, mon->position.current.y);
 			}
 		}
 	}

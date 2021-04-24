@@ -140,34 +140,13 @@ struct MonsterStruct { // note: missing field _mAFNum
 	int _mgoalvar2;
 	int _mgoalvar3;
 	uint8_t _pathcount;
-	/** Tile X-position of monster */
-	int _mx;
-	/** Tile Y-position of monster */
-	int _my;
-	/** Future tile X-position of monster. Set at start of walking animation */
-	int _mfutx;
-	/** Future tile Y-position of monster. Set at start of walking animation */
-	int _mfuty;
-	/** Most recent X-position in dMonster. */
-	int _moldx;
-	/** Most recent Y-position in dMonster. */
-	int _moldy;
-	/** Monster sprite's pixel X-offset from tile. */
-	int _mxoff;
-	/** Monster sprite's pixel Y-offset from tile. */
-	int _myoff;
-	/** Pixel X-velocity while walking. Applied to _mxoff */
-	int _mxvel;
-	/** Pixel Y-velocity while walking. Applied to _myoff */
-	int _myvel;
+	ActorPosition position;
 	/** Direction faced by monster (direction enum) */
 	direction _mdir;
 	/** The current target of the mosnter. An index in to either the plr or monster array based on the _meflag value. */
 	int _menemy;
-	/** X-coordinate of enemy (usually correspond's to the enemy's futx value) */
-	uint8_t _menemyx;
-	/** Y-coordinate of enemy (usually correspond's to the enemy's futy value) */
-	uint8_t _menemyy;
+	/** Usually correspond's to the enemy's future position */
+	Point enemyPosition;
 	uint8_t *_mAnimData;
 	/** Tick length of each frame in the current animation */
 	int _mAnimDelay;
@@ -181,22 +160,14 @@ struct MonsterStruct { // note: missing field _mAFNum
 	int _mVar1;
 	int _mVar2;
 	int _mVar3;
-	int _mVar4;
-	int _mVar5;
-	/** Used as _mxoff but with a higher range so that we can correctly apply velocities of a smaller number */
-	int _mVar6;
-	/** Used as _myoff but with a higher range so that we can correctly apply velocities of a smaller number */
-	int _mVar7;
 	/** Value used to measure progress for moving from one tile to another */
-	int _mVar8;
+	int actionFrame;
 	int _mmaxhp;
 	int _mhitpoints;
 	_mai_id _mAi;
 	uint8_t _mint;
 	uint32_t _mFlags;
 	uint8_t _msquelch;
-	int _lastx;
-	int _lasty;
 	int _mRndSeed;
 	int _mAISeed;
 	uint8_t _uniqtype;

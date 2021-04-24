@@ -2819,8 +2819,8 @@ void MonstCheckDoors(int m)
 	int i, oi;
 	int dpx, dpy, mx, my;
 
-	mx = monster[m]._mx;
-	my = monster[m]._my;
+	mx = monster[m].position.current.x;
+	my = monster[m].position.current.y;
 	if (dObject[mx - 1][my - 1] != 0
 	    || dObject[mx][my - 1] != 0
 	    || dObject[mx + 1][my - 1] != 0

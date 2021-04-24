@@ -691,8 +691,8 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 	}
 
-	px = sx + pMonster->_mxoff - pMonster->MType->width2;
-	py = sy + pMonster->_myoff;
+	px = sx + pMonster->position.offset.x - pMonster->MType->width2;
+	py = sy + pMonster->position.offset.y;
 	if (mi == pcursmonst) {
 		Cl2DrawOutline(out, 233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
 	}

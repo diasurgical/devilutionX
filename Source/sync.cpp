@@ -26,7 +26,7 @@ static void sync_one_monster()
 
 	for (i = 0; i < nummonsters; i++) {
 		m = monstactive[i];
-		sgnMonsterPriority[m] = abs(plr[myplr].position.current.x - monster[m]._mx) + abs(plr[myplr].position.current.y - monster[m]._my);
+		sgnMonsterPriority[m] = abs(plr[myplr].position.current.x - monster[m].position.current.x) + abs(plr[myplr].position.current.y - monster[m].position.current.y);
 		if (monster[m]._msquelch == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
@@ -38,8 +38,8 @@ static void sync_one_monster()
 static void sync_monster_pos(TSyncMonster *p, int ndx)
 {
 	p->_mndx = ndx;
-	p->_mx = monster[ndx]._mx;
-	p->_my = monster[ndx]._my;
+	p->_mx = monster[ndx].position.current.x;
+	p->_my = monster[ndx].position.current.y;
 	p->_menemy = encode_enemy(ndx);
 	p->_mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
 
@@ -213,7 +213,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		return;
 	}
 
-	delta = abs(plr[myplr].position.current.x - monster[ndx]._mx) + abs(plr[myplr].position.current.y - monster[ndx]._my);
+	delta = abs(plr[myplr].position.current.x - monster[ndx].position.current.x) + abs(plr[myplr].position.current.y - monster[ndx].position.current.y);
 	if (delta > 255) {
 		delta = 255;
 	}
@@ -221,21 +221,21 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 	if (delta < p->_mdelta || (delta == p->_mdelta && pnum > myplr)) {
 		return;
 	}
-	if (monster[ndx]._mfutx == p->_mx && monster[ndx]._mfuty == p->_my) {
+	if (monster[ndx].position.future.x == p->_mx && monster[ndx].position.future.y == p->_my) {
 		return;
 	}
 	if (monster[ndx]._mmode == MM_CHARGE || monster[ndx]._mmode == MM_STONE) {
 		return;
 	}
 
-	mdx = abs(monster[ndx]._mx - p->_mx);
-	mdy = abs(monster[ndx]._my - p->_my);
+	mdx = abs(monster[ndx].position.current.x - p->_mx);
+	mdy = abs(monster[ndx].position.current.y - p->_my);
 	if (mdx <= 2 && mdy <= 2) {
 		if (monster[ndx]._mmode < MM_WALK || monster[ndx]._mmode > MM_WALK3) {
-			direction md = GetDirection(monster[ndx]._mx, monster[ndx]._my, p->_mx, p->_my);
+			direction md = GetDirection(monster[ndx].position.current.x, monster[ndx].position.current.y, p->_mx, p->_my);
 			if (DirOK(ndx, md)) {
 				M_ClearSquares(ndx);
-				dMonster[monster[ndx]._mx][monster[ndx]._my] = ndx + 1;
+				dMonster[monster[ndx].position.current.x][monster[ndx].position.current.y] = ndx + 1;
 				M_WalkDir(ndx, md);
 				monster[ndx]._msquelch = UCHAR_MAX;
 			}
@@ -243,10 +243,9 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 	} else if (dMonster[p->_mx][p->_my] == 0) {
 		M_ClearSquares(ndx);
 		dMonster[p->_mx][p->_my] = ndx + 1;
-		monster[ndx]._mx = p->_mx;
-		monster[ndx]._my = p->_my;
+		monster[ndx].position.current = { p->_mx, p->_my };
 		decode_enemy(ndx, p->_menemy);
-		direction md = GetDirection(p->_mx, p->_my, monster[ndx]._menemyx, monster[ndx]._menemyy);
+		direction md = GetDirection(p->_mx, p->_my, monster[ndx].enemyPosition.x, monster[ndx].enemyPosition.y);
 		M_StartStand(ndx, md);
 		monster[ndx]._msquelch = UCHAR_MAX;
 	}

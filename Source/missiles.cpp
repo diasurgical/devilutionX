@@ -678,8 +678,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 
 		if (monster[m]._msquelch == 0) {
 			monster[m]._msquelch = UCHAR_MAX;
-			monster[m]._lastx = plr[pnum].position.current.x;
-			monster[m]._lasty = plr[pnum].position.current.y;
+			monster[m].position.last = plr[pnum].position.current;
 		}
 		return true;
 	}
@@ -799,7 +798,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 		if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
 			direction dir = plr[pnum]._pdir;
 			if (m != -1) {
-				dir = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[m]._mx, monster[m]._my);
+				dir = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[m].position.current.x, monster[m].position.current.y);
 			}
 			*blocked = true;
 			StartPlrBlock(pnum, dir);
@@ -1435,7 +1434,7 @@ void AddBerserk(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienem
 											r = 3;
 										else
 											r = 9;
-										monster[dm].mlid = AddLight(monster[dm]._mx, monster[dm]._my, r);
+										monster[dm].mlid = AddLight(monster[dm].position.current.x, monster[dm].position.current.y, r);
 										UseMana(id, SPL_BERSERK);
 										break;
 									}
@@ -2577,7 +2576,7 @@ void AddFireman(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienem
 	if (monster[id]._uniqtype != 0)
 		missile[mi]._miUniqTrans = monster[id]._uniqtrans + 1;
 	mon = &monster[id];
-	dMonster[mon->_mx][mon->_my] = 0;
+	dMonster[mon->position.current.x][mon->position.current.y] = 0;
 	missile[mi]._mirange = 256;
 	PutMissile(mi);
 }
@@ -2717,7 +2716,7 @@ void AddGolem(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy,
 	missile[mi]._miVar2 = sy;
 	missile[mi]._miVar4 = dx;
 	missile[mi]._miVar5 = dy;
-	if ((monster[id]._mx != 1 || monster[id]._my) && id == myplr)
+	if ((monster[id].position.current.x != 1 || monster[id].position.current.y) && id == myplr)
 		M_StartKill(id, id);
 	UseMana(id, SPL_GOLEM);
 }
@@ -3307,7 +3306,7 @@ void MI_Golem(int i)
 	const char *ct;
 
 	src = missile[i]._misource;
-	if (monster[src]._mx == 1 && monster[src]._my == 0) {
+	if (monster[src].position.current.x == 1 && monster[src].position.current.y == 0) {
 		for (l = 0; l < 6; l++) {
 			k = CrawlNum[l];
 			tid = k + 2;
@@ -3637,8 +3636,8 @@ void FireballUpdate(int i, int xof, int yof, bool alwaysDelete)
 		px = plr[id].position.current.x;
 		py = plr[id].position.current.y;
 	} else {
-		px = monster[id]._mx;
-		py = monster[id]._my;
+		px = monster[id].position.current.x;
+		py = monster[id].position.current.y;
 	}
 
 	if (missile[i]._miAnimType == MFILE_BIGEXP) {
@@ -3760,7 +3759,7 @@ void MI_Rune(int i)
 				mid = mid - 1;
 			else
 				mid = -(mid + 1);
-			dir = GetDirection(missile[i]._mix, missile[i]._miy, monster[mid]._mx, monster[mid]._my);
+			dir = GetDirection(missile[i]._mix, missile[i]._miy, monster[mid].position.current.x, monster[mid].position.current.y);
 		} else {
 			if (pid > 0)
 				pid = pid - 1;
@@ -4680,7 +4679,7 @@ void MI_Stone(int i)
 		if (monster[m]._mhitpoints > 0)
 			monster[m]._mmode = (MON_MODE)missile[i]._miVar1;
 		else
-			AddDead(monster[m]._mx, monster[m]._my, stonendx, monster[m]._mdir);
+			AddDead(monster[m].position.current.x, monster[m].position.current.y, stonendx, monster[m]._mdir);
 	}
 	if (missile[i]._miAnimType == MFILE_SHATTER1)
 		PutMissile(i);
@@ -4731,13 +4730,10 @@ void MI_Rhino(int i)
 		missile[i]._miDelFlag = true;
 		return;
 	}
-	monster[monst]._mfutx = omx;
-	monster[monst]._moldx = omx;
+	monster[monst].position.future = { omx, omy };
+	monster[monst].position.old = { omx, omy };
+	monster[monst].position.current = { omx, omy };
 	dMonster[omx][omy] = -(monst + 1);
-	monster[monst]._mx = omx;
-	monster[monst]._mfuty = omy;
-	monster[monst]._moldy = omy;
-	monster[monst]._my = omy;
 	if (monster[monst]._uniqtype != 0)
 		ChangeLightXY(missile[i]._mlid, omx, omy);
 	MoveMissilePos(i);
@@ -4762,8 +4758,8 @@ void MI_Fireman(int i)
 		cx = plr[enemy].position.current.x;
 		cy = plr[enemy].position.current.y;
 	} else {
-		cx = monster[enemy]._mx;
-		cy = monster[enemy]._my;
+		cx = monster[enemy].position.current.x;
+		cy = monster[enemy].position.current.y;
 	}
 	if ((bx != ax || by != ay) && ((missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4)) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, ax, ay)) {
 		MissToMonst(i, ax, ay);
@@ -5154,9 +5150,9 @@ void MI_Element(int i)
 			missile[i]._mirange = 255;
 			mid = FindClosest(cx, cy, 19);
 			if (mid > 0) {
-				direction sd = GetDirection(cx, cy, monster[mid]._mx, monster[mid]._my);
+				direction sd = GetDirection(cx, cy, monster[mid].position.current.x, monster[mid].position.current.y);
 				SetMissDir(i, sd);
-				GetMissileVel(i, cx, cy, monster[mid]._mx, monster[mid]._my, 16);
+				GetMissileVel(i, cx, cy, monster[mid].position.current.x, monster[mid].position.current.y, 16);
 			} else {
 				direction sd = plr[id]._pdir;
 				SetMissDir(i, sd);
@@ -5207,8 +5203,8 @@ void MI_Bonespirit(int i)
 			mid = FindClosest(cx, cy, 19);
 			if (mid > 0) {
 				missile[i]._midam = monster[mid]._mhitpoints >> 7;
-				SetMissDir(i, GetDirection(cx, cy, monster[mid]._mx, monster[mid]._my));
-				GetMissileVel(i, cx, cy, monster[mid]._mx, monster[mid]._my, 16);
+				SetMissDir(i, GetDirection(cx, cy, monster[mid].position.current.x, monster[mid].position.current.y));
+				GetMissileVel(i, cx, cy, monster[mid].position.current.x, monster[mid].position.current.y, 16);
 			} else {
 				direction sd = plr[id]._pdir;
 				SetMissDir(i, sd);

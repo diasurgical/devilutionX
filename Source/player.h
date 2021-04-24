@@ -147,23 +147,6 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
-struct PlayerPosition {
-	/** Tile position */
-	Point current; // 256
-	/** Future tile position. Set at start of walking animation. */
-	Point future;
-	/** Tile position of player. Set via network on player input. */
-	Point owner;
-	/** Most recent position in dPlayer. */
-	Point old;
-	/** Player sprite's pixel offset from tile. */
-	Point offset;
-	/** Same as offset but contains the value in a higher range */
-	Point offset2;
-	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
-	Point velocity;
-};
-
 struct PlayerStruct {
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];
@@ -174,7 +157,7 @@ struct PlayerStruct {
 	direction destParam3;
 	int destParam4;
 	int plrlevel;
-	PlayerPosition position;
+	ActorPosition position;
 	direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
 	uint8_t *_pAnimData;
@@ -255,8 +238,6 @@ struct PlayerStruct {
 	bool _pInfraFlag;
 	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
 	direction tempDirection;
-	/** Used for referring to position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks) */
-	Point tempPoint;
 	/** Used for spell level, and X component of _pVar5 */
 	int _pVar4;
 	/** Used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it) */

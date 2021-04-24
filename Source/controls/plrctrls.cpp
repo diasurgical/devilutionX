@@ -194,8 +194,8 @@ bool CanTargetMonster(int mi)
 	if (monst._mhitpoints >> 6 <= 0) // dead
 		return false;
 
-	const int mx = monst._mx;
-	const int my = monst._my;
+	const int mx = monst.position.current.x;
+	const int my = monst.position.current.y;
 	if ((dFlags[mx][my] & BFLAG_LIT) == 0) // not visible
 		return false;
 	if (dMonster[mx][my] == 0)
@@ -213,8 +213,8 @@ void FindRangedTarget()
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
 		const MonsterStruct &monst = monster[mi];
-		const int mx = monst._mfutx;
-		const int my = monst._mfuty;
+		const int mx = monst.position.future.x;
+		const int my = monst.position.future.y;
 		if (!CanTargetMonster(mi))
 			continue;
 
@@ -1129,8 +1129,8 @@ bool SpellHasActorTarget()
 		return false;
 
 	if (spl == SPL_FIREWALL && pcursmonst != -1) {
-		cursmx = monster[pcursmonst]._mx;
-		cursmy = monster[pcursmonst]._my;
+		cursmx = monster[pcursmonst].position.current.x;
+		cursmy = monster[pcursmonst].position.current.y;
 	}
 
 	return pcursplr != -1 || pcursmonst != -1;

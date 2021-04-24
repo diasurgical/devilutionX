@@ -631,7 +631,7 @@ void ClearPlrPVars(int pnum)
 		app_fatal("ClearPlrPVars: illegal player %d", pnum);
 	}
 
-	plr[pnum].tempPoint = { 0, 0 };
+	plr[pnum].position.temp = { 0, 0 };
 	plr[pnum].tempDirection = DIR_S;
 	plr[pnum]._pVar4 = 0;
 	plr[pnum]._pVar5 = 0;
@@ -1472,14 +1472,14 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		plr[pnum]._pmode = PM_WALK;
 		plr[pnum].position.velocity = { xvel, yvel };
 		plr[pnum].position.offset = { 0, 0 };
-		plr[pnum].tempPoint = { xadd, yadd };
+		plr[pnum].position.temp = { xadd, yadd };
 		plr[pnum].tempDirection = EndDir;
 
 		plr[pnum].position.offset2 = { 0, 0 };
 		break;
 	case PM_WALK2:
 		dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = -(pnum + 1);
-		plr[pnum].tempPoint = plr[pnum].position.current;
+		plr[pnum].position.temp = plr[pnum].position.current;
 		plr[pnum].position.current = { px, py }; // Move player to the next tile to maintain correct render order
 		dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
 		plr[pnum].position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
@@ -1510,7 +1510,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 
 		plr[pnum]._pmode = PM_WALK3;
 		plr[pnum].position.velocity = { xvel, yvel };
-		plr[pnum].tempPoint = { px, py };
+		plr[pnum].position.temp = { px, py };
 		plr[pnum].position.offset2 = { xoff * 256, yoff * 256 };
 		plr[pnum].tempDirection = EndDir;
 		break;
@@ -1603,7 +1603,7 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 	plr[pnum]._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
-	plr[pnum].tempPoint = { cx, cy };
+	plr[pnum].position.temp = { cx, cy };
 }
 
 void StartPlrBlock(int pnum, direction dir)
@@ -1675,7 +1675,7 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
 
-	plr[pnum].tempPoint = { cx, cy };
+	plr[pnum].position.temp = { cx, cy };
 	plr[pnum]._pVar4 = GetSpellLevel(pnum, plr[pnum]._pSpell);
 	plr[pnum].actionFrame = 1;
 }
@@ -2152,11 +2152,11 @@ void RemovePlrMissiles(int pnum)
 	int i, am;
 	int mx, my;
 
-	if (currlevel != 0 && pnum == myplr && (monster[myplr]._mx != 1 || monster[myplr]._my != 0)) {
+	if (currlevel != 0 && pnum == myplr && (monster[myplr].position.current.x != 1 || monster[myplr].position.current.y != 0)) {
 		M_StartKill(myplr, myplr);
-		AddDead(monster[myplr]._mx, monster[myplr]._my, (monster[myplr].MType)->mdeadval, monster[myplr]._mdir);
-		mx = monster[myplr]._mx;
-		my = monster[myplr]._my;
+		AddDead(monster[myplr].position.current.x, monster[myplr].position.current.y, (monster[myplr].MType)->mdeadval, monster[myplr]._mdir);
+		mx = monster[myplr].position.current.x;
+		my = monster[myplr].position.current.y;
 		dMonster[mx][my] = 0;
 		monster[myplr]._mDelFlag = true;
 		DeleteMonsterList();
@@ -2333,17 +2333,17 @@ bool PM_DoWalk(int pnum, int variant)
 		switch (variant) {
 		case PM_WALK:
 			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = 0;
-			plr[pnum].position.current.x += plr[pnum].tempPoint.x;
-			plr[pnum].position.current.y += plr[pnum].tempPoint.y;
+			plr[pnum].position.current.x += plr[pnum].position.temp.x;
+			plr[pnum].position.current.y += plr[pnum].position.temp.y;
 			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
 			break;
 		case PM_WALK2:
-			dPlayer[plr[pnum].tempPoint.x][plr[pnum].tempPoint.y] = 0;
+			dPlayer[plr[pnum].position.temp.x][plr[pnum].position.temp.y] = 0;
 			break;
 		case PM_WALK3:
 			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = 0;
 			dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
-			plr[pnum].position.current = plr[pnum].tempPoint;
+			plr[pnum].position.current = plr[pnum].position.temp;
 			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
 			break;
 		}
@@ -2557,7 +2557,7 @@ bool PlrHitMonst(int pnum, int m)
 #endif
 		if (plr[pnum]._pIFlags & ISPL_FIREDAM && plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
 			int midam = plr[pnum]._pIFMinDam + GenerateRnd(plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
-			AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum].tempPoint.x, plr[pnum].tempPoint.y, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+			AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum].position.temp.x, plr[pnum].position.temp.y, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		}
 		mind = plr[pnum]._pIMinDam;
 		maxd = plr[pnum]._pIMaxDam;
@@ -2860,7 +2860,7 @@ bool PM_DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			if (CanTalkToMonst(m)) {
-				plr[pnum].tempPoint.x = 0; /** @todo Looks to be irrelevant, probably just remove it */
+				plr[pnum].position.temp.x = 0; /** @todo Looks to be irrelevant, probably just remove it */
 				return false;
 			}
 		}
@@ -2906,14 +2906,14 @@ bool PM_DoAttack(int pnum)
 			dx = plr[pnum].position.current.x + offset_x[(plr[pnum]._pdir + 1) % 8];
 			dy = plr[pnum].position.current.y + offset_y[(plr[pnum]._pdir + 1) % 8];
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m].position.old.x == dx && monster[m].position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
 			dx = plr[pnum].position.current.x + offset_x[(plr[pnum]._pdir + 7) % 8];
 			dy = plr[pnum].position.current.y + offset_y[(plr[pnum]._pdir + 7) % 8];
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m].position.old.x == dx && monster[m].position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
@@ -2965,10 +2965,10 @@ bool PM_DoRangeAttack(int pnum)
 		int yoff = 0;
 		if (arrows != 1) {
 			int angle = arrow == 0 ? -1 : 1;
-			int x = plr[pnum].tempPoint.x - plr[pnum].position.current.x;
+			int x = plr[pnum].position.temp.x - plr[pnum].position.current.x;
 			if (x != 0)
 				yoff = x < 0 ? angle : -angle;
-			int y = plr[pnum].tempPoint.y - plr[pnum].position.current.y;
+			int y = plr[pnum].position.temp.y - plr[pnum].position.current.y;
 			if (y != 0)
 				xoff = y < 0 ? -angle : angle;
 		}
@@ -2989,8 +2989,8 @@ bool PM_DoRangeAttack(int pnum)
 		AddMissile(
 		    plr[pnum].position.current.x,
 		    plr[pnum].position.current.y,
-		    plr[pnum].tempPoint.x + xoff,
-		    plr[pnum].tempPoint.y + yoff,
+		    plr[pnum].position.temp.x + xoff,
+		    plr[pnum].position.temp.y + yoff,
 		    plr[pnum]._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
@@ -3137,8 +3137,8 @@ bool PM_DoSpell(int pnum)
 		    plr[pnum]._pSpell,
 		    plr[pnum].position.current.x,
 		    plr[pnum].position.current.y,
-		    plr[pnum].tempPoint.x,
-		    plr[pnum].tempPoint.y,
+		    plr[pnum].position.temp.x,
+		    plr[pnum].position.temp.y,
 		    plr[pnum]._pVar4);
 
 		if (plr[pnum]._pSplFrom == 0) {
@@ -3235,7 +3235,7 @@ void CheckNewPath(int pnum)
 
 	if (plr[pnum].destAction == ACTION_ATTACKMON) {
 		i = plr[pnum].destParam1;
-		MakePlrPath(pnum, monster[i]._mfutx, monster[i]._mfuty, false);
+		MakePlrPath(pnum, monster[i].position.future.x, monster[i].position.future.y, false);
 	}
 
 	if (plr[pnum].destAction == ACTION_ATTACKPLR) {
@@ -3251,9 +3251,9 @@ void CheckNewPath(int pnum)
 					i = plr[pnum].destParam1;
 
 					if (plr[pnum].destAction == ACTION_ATTACKMON) {
-						x = abs(plr[pnum].position.future.x - monster[i]._mfutx);
-						y = abs(plr[pnum].position.future.y - monster[i]._mfuty);
-						d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i]._mfutx, monster[i]._mfuty);
+						x = abs(plr[pnum].position.future.x - monster[i].position.future.x);
+						y = abs(plr[pnum].position.future.y - monster[i].position.future.y);
+						d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i].position.future.x, monster[i].position.future.y);
 					} else {
 						x = abs(plr[pnum].position.future.x - plr[i].position.future.x);
 						y = abs(plr[pnum].position.future.y - plr[i].position.future.y);
@@ -3335,10 +3335,10 @@ void CheckNewPath(int pnum)
 			break;
 		case ACTION_ATTACKMON:
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - monster[i]._mfutx);
-			y = abs(plr[pnum].position.current.y - monster[i]._mfuty);
+			x = abs(plr[pnum].position.current.x - monster[i].position.future.x);
+			y = abs(plr[pnum].position.current.y - monster[i].position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i]._mfutx, monster[i]._mfuty);
+				d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i].position.future.x, monster[i].position.future.y);
 				if (monster[i].mtalkmsg && monster[i].mtalkmsg != TEXT_VILE14) {
 					TalktoMonster(i);
 				} else {
@@ -3361,11 +3361,11 @@ void CheckNewPath(int pnum)
 			break;
 		case ACTION_RATTACKMON:
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i]._mfutx, monster[i]._mfuty);
+			d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i].position.future.x, monster[i].position.future.y);
 			if (monster[i].mtalkmsg && monster[i].mtalkmsg != TEXT_VILE14) {
 				TalktoMonster(i);
 			} else {
-				StartRangeAttack(pnum, d, monster[i]._mfutx, monster[i]._mfuty);
+				StartRangeAttack(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
 			}
 			break;
 		case ACTION_RATTACKPLR:
@@ -3385,8 +3385,8 @@ void CheckNewPath(int pnum)
 			break;
 		case ACTION_SPELLMON:
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i]._mfutx, monster[i]._mfuty);
-			StartSpell(pnum, d, monster[i]._mfutx, monster[i]._mfuty);
+			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i].position.future.x, monster[i].position.future.y);
+			StartSpell(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
 			plr[pnum]._pVar4 = plr[pnum].destParam2;
 			break;
 		case ACTION_SPELLPLR:
@@ -3477,10 +3477,10 @@ void CheckNewPath(int pnum)
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_ATTACKMON) {
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - monster[i]._mfutx);
-			y = abs(plr[pnum].position.current.y - monster[i]._mfuty);
+			x = abs(plr[pnum].position.current.x - monster[i].position.future.x);
+			y = abs(plr[pnum].position.current.y - monster[i].position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i]._mfutx, monster[i]._mfuty);
+				d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i].position.future.x, monster[i].position.future.y);
 				StartAttack(pnum, d);
 			}
 			plr[pnum].destAction = ACTION_NONE;
@@ -3518,8 +3518,8 @@ void CheckNewPath(int pnum)
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_RATTACKMON) {
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i]._mfutx, monster[i]._mfuty);
-			StartRangeAttack(pnum, d, monster[i]._mfutx, monster[i]._mfuty);
+			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i].position.future.x, monster[i].position.future.y);
+			StartRangeAttack(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_RATTACKPLR) {
 			i = plr[pnum].destParam1;
@@ -3536,8 +3536,8 @@ void CheckNewPath(int pnum)
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_SPELLMON) {
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i]._mfutx, monster[i]._mfuty);
-			StartSpell(pnum, d, monster[i]._mfutx, monster[i]._mfuty);
+			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i].position.future.x, monster[i].position.future.y);
+			StartSpell(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_SPELLPLR) {
 			i = plr[pnum].destParam1;

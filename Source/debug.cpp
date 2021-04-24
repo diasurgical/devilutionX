@@ -177,7 +177,7 @@ void PrintDebugMonster(int m)
 
 	sprintf(dstr, "Monster %i = %s", m, monster[m].mName);
 	NetSendCmdString(1 << myplr, dstr);
-	sprintf(dstr, "X = %i, Y = %i", monster[m]._mx, monster[m]._my);
+	sprintf(dstr, "X = %i, Y = %i", monster[m].position.current.x, monster[m].position.current.y);
 	NetSendCmdString(1 << myplr, dstr);
 	sprintf(dstr, "Enemy = %i, HP = %i", monster[m]._menemy, monster[m]._mhitpoints);
 	NetSendCmdString(1 << myplr, dstr);

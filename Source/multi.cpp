@@ -475,7 +475,7 @@ void multi_process_network_packets()
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
-		plr[dwID].position.owner = { pkt->px, pkt->py };
+		plr[dwID].position.last = { pkt->px, pkt->py };
 		if (dwID != myplr) {
 			assert(gbBufferMsgs != 2);
 			plr[dwID]._pHitPoints = pkt->php;
