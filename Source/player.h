@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "diablo.h"
 #include "engine.h"

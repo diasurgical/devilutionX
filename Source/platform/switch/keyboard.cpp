@@ -1,6 +1,4 @@
-#include <string.h>
-#include <stdbool.h>
-
+#include <cstring>
 #include <switch.h>
 #include <SDL.h>
 #include "platform/switch/keyboard.h"

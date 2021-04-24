@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL_ttf.h>
-#include <stdint.h>
+#include <cstdint>
 
 #include "DiabloUI/art.h"
 

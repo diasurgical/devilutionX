@@ -1,14 +1,14 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
-#include <ctype.h>
-#include <math.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cctype>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
 namespace devilution {
 

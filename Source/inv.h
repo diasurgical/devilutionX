@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "items.h"
 #include "palette.h"

@@ -1,7 +1,7 @@
 #pragma once
 // Controller actions implementation
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace devilution {
 

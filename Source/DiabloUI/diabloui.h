@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <cstddef>
 #include <SDL.h>

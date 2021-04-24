@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"

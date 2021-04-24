@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "miniwin/miniwin.h"
 #include "engine.h"
