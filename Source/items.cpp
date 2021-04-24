@@ -668,7 +668,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	plr[p]._pIBonusDamMod = dmod;
 	plr[p]._pIGetHit = ghit;
 
-	lrad = std::clamp(lrad, 2, 15);
+	lrad = clamp(lrad, 2, 15);
 
 	if (plr[p]._pLightRad != lrad && p == myplr) {
 		ChangeLightRadius(plr[p]._plid, lrad);
@@ -752,9 +752,9 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		lr = 0;
 	}
 
-	plr[p]._pMagResist = std::clamp(mr, 0, MAXRESIST);
-	plr[p]._pFireResist = std::clamp(fr, 0, MAXRESIST);
-	plr[p]._pLghtResist = std::clamp(lr, 0, MAXRESIST);
+	plr[p]._pMagResist = clamp(mr, 0, MAXRESIST);
+	plr[p]._pFireResist = clamp(fr, 0, MAXRESIST);
+	plr[p]._pLghtResist = clamp(lr, 0, MAXRESIST);
 
 	if (plr[p]._pClass == HeroClass::Warrior) {
 		vadd *= 2;
@@ -4383,7 +4383,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	dexterity *= 1.2;
 	magic *= 1.2;
 
-	plvl = std::clamp(plvl, 1, 30);
+	plvl = clamp(plvl, 1, 30);
 
 	int count = 0;
 

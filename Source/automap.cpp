@@ -257,11 +257,11 @@ void SearchAutomapItem(const CelOutputBuffer &out)
 			y++;
 	}
 
-	const int startX = std::clamp(x - 8, 0, MAXDUNX);
-	const int startY = std::clamp(y - 8, 0, MAXDUNY);
+	const int startX = clamp(x - 8, 0, MAXDUNX);
+	const int startY = clamp(y - 8, 0, MAXDUNY);
 
-	const int endX = std::clamp(x + 8, 0, MAXDUNX);
-	const int endY = std::clamp(y + 8, 0, MAXDUNY);
+	const int endX = clamp(x + 8, 0, MAXDUNX);
+	const int endY = clamp(y + 8, 0, MAXDUNY);
 
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {

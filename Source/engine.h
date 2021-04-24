@@ -27,6 +27,16 @@
 
 namespace devilution {
 
+#if defined(__clang__) || !defined(__GNUC__) || __GNUC__ > 7 || (__GNUC__ == 7 && __GNUC_MINOR__ < 0)
+using std::clamp;
+#else
+template <typename T>
+constexpr const T &clamp(const T &x, const T &lower, const T &upper)
+{
+	return std::min(std::max(x, lower), upper);
+}
+#endif
+
 #define MemFreeDbg(p)       \
 	{                       \
 		void *p__p;         \
