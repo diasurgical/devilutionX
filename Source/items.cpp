@@ -2609,7 +2609,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-static void SetupBaseItem(Sint32 x, Sint32 y, Sint32 idx, bool onlygood, bool sendmsg, bool delta)
+static void SetupBaseItem(int x, int y, int idx, bool onlygood, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;

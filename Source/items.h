@@ -163,75 +163,75 @@ enum icreateinfo_flag2 {
 };
 
 struct ItemStruct {
-	Sint32 _iSeed;
-	Uint16 _iCreateInfo;
+	int32_t _iSeed;
+	uint16_t _iCreateInfo;
 	enum item_type _itype;
-	Sint16 _ix;
-	Sint16 _iy;
+	int16_t _ix;
+	int16_t _iy;
 	bool _iAnimFlag;
-	Uint8 *_iAnimData; // PSX name -> ItemFrame
-	Uint8 _iAnimLen;   // Number of frames in current animation
-	Uint8 _iAnimFrame; // Current frame of animation.
-	Sint32 _iAnimWidth;
-	Sint32 _iAnimWidth2; // width 2?
+	uint8_t *_iAnimData; // PSX name -> ItemFrame
+	uint8_t _iAnimLen;   // Number of frames in current animation
+	uint8_t _iAnimFrame; // Current frame of animation.
+	int _iAnimWidth;
+	int _iAnimWidth2; // width 2?
 	bool _iDelFlag;      // set when item is flagged for deletion, deprecated in 1.02
-	Uint8 _iSelFlag;
+	uint8_t _iSelFlag;
 	bool _iPostDraw;
 	bool _iIdentified;
-	Sint8 _iMagical;
+	int8_t _iMagical;
 	char _iName[64];
 	char _iIName[64];
 	enum item_equip_type _iLoc;
 	enum item_class _iClass;
-	Uint8 _iCurs;
-	Sint32 _ivalue;
-	Sint32 _iIvalue;
-	Uint8 _iMinDam;
-	Uint8 _iMaxDam;
-	Sint16 _iAC;
-	Sint32 _iFlags; // item_special_effect
+	uint8_t _iCurs;
+	int _ivalue;
+	int _iIvalue;
+	uint8_t _iMinDam;
+	uint8_t _iMaxDam;
+	int16_t _iAC;
+	uint32_t _iFlags; // item_special_effect
 	enum item_misc_id _iMiscId;
 	enum spell_id _iSpell;
-	Sint32 _iCharges;
-	Sint32 _iMaxCharges;
-	Uint8 _iDurability;
-	Uint8 _iMaxDur;
-	Sint16 _iPLDam;
-	Sint16 _iPLToHit;
-	Sint16 _iPLAC;
-	Sint16 _iPLStr;
-	Sint16 _iPLMag;
-	Sint16 _iPLDex;
-	Sint16 _iPLVit;
-	Sint16 _iPLFR;
-	Sint16 _iPLLR;
-	Sint16 _iPLMR;
-	Sint16 _iPLMana;
-	Sint16 _iPLHP;
-	Sint16 _iPLDamMod;
-	Sint16 _iPLGetHit;
-	Sint16 _iPLLight;
-	Sint8 _iSplLvlAdd;
-	Sint8 _iRequest;
-	Sint32 _iUid;
-	Sint16 _iFMinDam;
-	Sint16 _iFMaxDam;
-	Sint16 _iLMinDam;
-	Sint16 _iLMaxDam;
-	Sint16 _iPLEnAc;
+	int _iCharges;
+	int _iMaxCharges;
+	uint8_t _iDurability;
+	uint8_t _iMaxDur;
+	int16_t _iPLDam;
+	int16_t _iPLToHit;
+	int16_t _iPLAC;
+	int16_t _iPLStr;
+	int16_t _iPLMag;
+	int16_t _iPLDex;
+	int16_t _iPLVit;
+	int16_t _iPLFR;
+	int16_t _iPLLR;
+	int16_t _iPLMR;
+	int16_t _iPLMana;
+	int16_t _iPLHP;
+	int16_t _iPLDamMod;
+	int16_t _iPLGetHit;
+	int16_t _iPLLight;
+	int8_t _iSplLvlAdd;
+	int8_t _iRequest;
+	int _iUid;
+	int16_t _iFMinDam;
+	int16_t _iFMaxDam;
+	int16_t _iLMinDam;
+	int16_t _iLMaxDam;
+	int16_t _iPLEnAc;
 	enum item_effect_type _iPrePower;
 	enum item_effect_type _iSufPower;
-	Sint32 _iVAdd1;
-	Sint32 _iVMult1;
-	Sint32 _iVAdd2;
-	Sint32 _iVMult2;
-	Sint8 _iMinStr;
-	Uint8 _iMinMag;
-	Sint8 _iMinDex;
+	int _iVAdd1;
+	int _iVMult1;
+	int _iVAdd2;
+	int _iVMult2;
+	int8_t _iMinStr;
+	uint8_t _iMinMag;
+	int8_t _iMinDex;
 	bool _iStatFlag;
-	Sint32 IDidx;
-	Uint32 dwBuff;
-	Sint32 _iDamAcFlags;
+	int IDidx;
+	uint32_t dwBuff;
+	uint32_t _iDamAcFlags;
 
 	/**
 	 * @brief Checks whether this item is empty or not.
@@ -350,15 +350,15 @@ struct ItemStruct {
 };
 
 struct ItemGetRecordStruct {
-	Sint32 nSeed;
-	Uint16 wCI;
-	Sint32 nIndex;
-	Uint32 dwTimestamp;
+	int32_t nSeed;
+	uint16_t wCI;
+	int nIndex;
+	uint32_t dwTimestamp;
 };
 
 struct CornerStoneStruct {
-	Sint32 x;
-	Sint32 y;
+	int x;
+	int y;
 	bool activated;
 	ItemStruct item;
 };

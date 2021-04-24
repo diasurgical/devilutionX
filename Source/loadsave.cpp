@@ -293,7 +293,7 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	}
 	pItem->dwBuff = file->nextLE<Uint32>();
 	if (gbIsHellfireSaveGame)
-		pItem->_iDamAcFlags = file->nextLE<Sint32>();
+		pItem->_iDamAcFlags = file->nextLE<Uint32>();
 	else
 		pItem->_iDamAcFlags = 0;
 
