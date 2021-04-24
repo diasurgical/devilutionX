@@ -41,16 +41,16 @@ namespace {
     void *data;
     
     if(fseek(fp, e->offset, SEEK_SET)) {
-      return NULL;
+      return nullptr;
     }
 
     if(!(data = calloc(e->length, sizeof(char)))) {
-      return NULL;
+      return nullptr;
     }
     
     if(fread(data, sizeof(char), e->length, fp) != e->length) {
       free(data);
-      return NULL;
+      return nullptr;
     }
     
     return data;
