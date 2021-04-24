@@ -16,6 +16,7 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
+option(USE_GETTEXT "Build translation files using gettext" OFF)
 
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
@@ -462,6 +463,13 @@ endif()
 
 if(GPERF)
   find_package(Gperftools REQUIRED)
+endif()
+
+if(USE_GETTEXT)
+  find_package(Gettext)
+  foreach(lang sv)
+    GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
+  endforeach(lang)
 endif()
 
 target_include_directories(${BIN_TARGET} PRIVATE
