@@ -67,6 +67,7 @@ const char *LanguageTranslate(const char *key)
 void LanguageInitialize()
 {
 	auto path = GetLangPath() + "./" + sgOptions.Language.szCode + ".gmo";
+	mo_entry *src, *dst;
 	mo_head head;
 	FILE *fp;
 
@@ -88,21 +89,27 @@ void LanguageInitialize()
 	}
 
 	// Read entries of source strings
-	mo_entry src[head.nb_mappings];
+	src = new mo_entry[head.nb_mappings];
 	if (fseek(fp, head.src_offset, SEEK_SET)) {
+		delete[] src;
 		return;
 	}
 	if (fread(src, sizeof(mo_entry), head.nb_mappings, fp) != head.nb_mappings) {
+		delete[] src;
 		return;
 	}
 
 	// Read entries of target strings
-	mo_entry dst[head.nb_mappings];
+	dst = new mo_entry[head.nb_mappings];
 	if (fseek(fp, head.dst_offset, SEEK_SET)) {
+		delete[] dst;
+		delete[] src;
 		return;
 	}
 
 	if (fread(dst, sizeof(mo_entry), head.nb_mappings, fp) != head.nb_mappings) {
+		delete[] dst;
+		delete[] src;
 		return;
 	}
 
@@ -117,4 +124,6 @@ void LanguageInitialize()
 			}
 		}
 	}
+	delete[] dst;
+	delete[] src;
 }
