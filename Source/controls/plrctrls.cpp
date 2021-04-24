@@ -386,8 +386,8 @@ void FindTrigger()
 	for (int i = 0; i < nummissiles; i++) {
 		int mi = missileactive[i];
 		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
-			int mix = missile[mi]._mix;
-			int miy = missile[mi]._miy;
+			int mix = missile[mi].position.current.x;
+			int miy = missile[mi].position.current.y;
 			const int newDdistance = GetDistance(mix, miy, 2);
 			if (newDdistance == 0)
 				continue;
@@ -1243,7 +1243,7 @@ void PerformSecondaryAction()
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 	} else if (pcursmissile != -1) {
-		MakePlrPath(myplr, missile[pcursmissile]._mix, missile[pcursmissile]._miy, true);
+		MakePlrPath(myplr, missile[pcursmissile].position.current.x, missile[pcursmissile].position.current.y, true);
 		plr[myplr].destAction = ACTION_WALK;
 	} else if (pcurstrig != -1) {
 		MakePlrPath(myplr, trigs[pcurstrig]._tx, trigs[pcurstrig]._ty, true);

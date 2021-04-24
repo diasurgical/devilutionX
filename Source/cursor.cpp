@@ -168,20 +168,20 @@ void CheckTown()
 	for (i = 0; i < nummissiles; i++) {
 		mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_TOWN) {
-			if ((cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy)
-			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2)
-			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2)
-			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy)) {
+			if ((cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y)
+			    || (cursmx == missile[mx].position.current.x && cursmy == missile[mx].position.current.y - 1)
+			    || (cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y - 1)
+			    || (cursmx == missile[mx].position.current.x - 2 && cursmy == missile[mx].position.current.y - 1)
+			    || (cursmx == missile[mx].position.current.x - 2 && cursmy == missile[mx].position.current.y - 2)
+			    || (cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y - 2)
+			    || (cursmx == missile[mx].position.current.x && cursmy == missile[mx].position.current.y)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, "Town Portal");
 				sprintf(tempstr, "from %s", plr[missile[mx]._misource]._pName);
 				AddPanelString(tempstr, true);
-				cursmx = missile[mx]._mix;
-				cursmy = missile[mx]._miy;
+				cursmx = missile[mx].position.current.x;
+				cursmy = missile[mx].position.current.y;
 			}
 		}
 	}
@@ -194,13 +194,13 @@ void CheckRportal()
 	for (i = 0; i < nummissiles; i++) {
 		mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_RPORTAL) {
-			if ((cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy)
-			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2)
-			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2)
-			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy)) {
+			if ((cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y)
+			    || (cursmx == missile[mx].position.current.x && cursmy == missile[mx].position.current.y - 1)
+			    || (cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y - 1)
+			    || (cursmx == missile[mx].position.current.x - 2 && cursmy == missile[mx].position.current.y - 1)
+			    || (cursmx == missile[mx].position.current.x - 2 && cursmy == missile[mx].position.current.y - 2)
+			    || (cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y - 2)
+			    || (cursmx == missile[mx].position.current.x && cursmy == missile[mx].position.current.y)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, "Portal to");
@@ -209,8 +209,8 @@ void CheckRportal()
 				else
 					strcpy(tempstr, "level 15");
 				AddPanelString(tempstr, true);
-				cursmx = missile[mx]._mix;
-				cursmy = missile[mx]._miy;
+				cursmx = missile[mx].position.current.x;
+				cursmy = missile[mx].position.current.y;
 			}
 		}
 	}

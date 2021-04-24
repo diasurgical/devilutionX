@@ -22,18 +22,22 @@ struct ChainStruct {
 	int _mirange;
 };
 
+struct MissilePosition {
+	/** Tile position */
+	Point current;
+	/** Sprite's pixel offset from tile. */
+	Point offset;
+	/** Pixel velocity while moving */
+	Point velocity;
+	/** Start position */
+	Point start;
+	/** Start position */
+	Point traveled;
+};
+
 struct MissileStruct {
 	int _mitype;  // Type of projectile (missile_id)
-	int _mix;     // Tile X-position of the missile
-	int _miy;     // Tile Y-position of the missile
-	int _mixoff;  // Sprite pixel X-offset for the missile
-	int _miyoff;  // Sprite pixel Y-offset for the missile
-	int _mixvel;  // Missile tile X-velocity while walking. This gets added onto _mitxoff each game tick
-	int _miyvel;  // Missile tile Y-velocity while walking. This gets added onto _mitxoff each game tick
-	int _misx;    // Initial tile X-position for missile
-	int _misy;    // Initial tile Y-position for missile
-	int _mitxoff; // How far the missile has travelled in its lifespan along the X-axis. mix/miy/mxoff/myoff get updated every game tick based on this
-	int _mityoff; // How far the missile has travelled in its lifespan along the Y-axis. mix/miy/mxoff/myoff get updated every game tick based on this
+	MissilePosition position;
 	int _mimfnum; // The direction of the missile (direction enum)
 	int _mispllvl;
 	bool _miDelFlag; // Indicate whether the missile should be deleted

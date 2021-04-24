@@ -642,16 +642,16 @@ static void LoadMissile(LoadHelper *file, int i)
 	MissileStruct *pMissile = &missile[i];
 
 	pMissile->_mitype = file->nextLE<int32_t>();
-	pMissile->_mix = file->nextLE<int32_t>();
-	pMissile->_miy = file->nextLE<int32_t>();
-	pMissile->_mixoff = file->nextLE<int32_t>();
-	pMissile->_miyoff = file->nextLE<int32_t>();
-	pMissile->_mixvel = file->nextLE<int32_t>();
-	pMissile->_miyvel = file->nextLE<int32_t>();
-	pMissile->_misx = file->nextLE<int32_t>();
-	pMissile->_misy = file->nextLE<int32_t>();
-	pMissile->_mitxoff = file->nextLE<int32_t>();
-	pMissile->_mityoff = file->nextLE<int32_t>();
+	pMissile->position.current.x = file->nextLE<int32_t>();
+	pMissile->position.current.y = file->nextLE<int32_t>();
+	pMissile->position.offset.x = file->nextLE<int32_t>();
+	pMissile->position.offset.y = file->nextLE<int32_t>();
+	pMissile->position.velocity.x = file->nextLE<int32_t>();
+	pMissile->position.velocity.y = file->nextLE<int32_t>();
+	pMissile->position.start.x = file->nextLE<int32_t>();
+	pMissile->position.start.y = file->nextLE<int32_t>();
+	pMissile->position.traveled.x = file->nextLE<int32_t>();
+	pMissile->position.traveled.y = file->nextLE<int32_t>();
 	pMissile->_mimfnum = file->nextLE<int32_t>();
 	pMissile->_mispllvl = file->nextLE<int32_t>();
 	pMissile->_miDelFlag = file->nextBool32();
@@ -685,7 +685,7 @@ static void LoadMissile(LoadHelper *file, int i)
 	pMissile->_miVar5 = file->nextLE<int32_t>();
 	pMissile->_miVar6 = file->nextLE<int32_t>();
 	pMissile->_miVar7 = file->nextLE<int32_t>();
-	pMissile->_miVar8 = file->nextLE<int32_t>();
+	pMissile->_miVar8 = file->nextBool32();
 }
 
 static void LoadObject(LoadHelper *file, int i)
@@ -1601,16 +1601,16 @@ static void SaveMissile(SaveHelper *file, int i)
 	MissileStruct *pMissile = &missile[i];
 
 	file->writeLE<int32_t>(pMissile->_mitype);
-	file->writeLE<int32_t>(pMissile->_mix);
-	file->writeLE<int32_t>(pMissile->_miy);
-	file->writeLE<int32_t>(pMissile->_mixoff);
-	file->writeLE<int32_t>(pMissile->_miyoff);
-	file->writeLE<int32_t>(pMissile->_mixvel);
-	file->writeLE<int32_t>(pMissile->_miyvel);
-	file->writeLE<int32_t>(pMissile->_misx);
-	file->writeLE<int32_t>(pMissile->_misy);
-	file->writeLE<int32_t>(pMissile->_mitxoff);
-	file->writeLE<int32_t>(pMissile->_mityoff);
+	file->writeLE<int32_t>(pMissile->position.current.x);
+	file->writeLE<int32_t>(pMissile->position.current.y);
+	file->writeLE<int32_t>(pMissile->position.offset.x);
+	file->writeLE<int32_t>(pMissile->position.offset.y);
+	file->writeLE<int32_t>(pMissile->position.velocity.x);
+	file->writeLE<int32_t>(pMissile->position.velocity.y);
+	file->writeLE<int32_t>(pMissile->position.start.x);
+	file->writeLE<int32_t>(pMissile->position.start.y);
+	file->writeLE<int32_t>(pMissile->position.traveled.x);
+	file->writeLE<int32_t>(pMissile->position.traveled.y);
 	file->writeLE<int32_t>(pMissile->_mimfnum);
 	file->writeLE<int32_t>(pMissile->_mispllvl);
 	file->writeLE<uint32_t>(pMissile->_miDelFlag);

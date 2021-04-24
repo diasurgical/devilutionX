@@ -5101,8 +5101,8 @@ void MissToMonst(int i, int x, int y)
 	assurance((DWORD)m < MAXMONSTERS, m);
 
 	Monst = &monster[m];
-	oldx = Miss->_mix;
-	oldy = Miss->_miy;
+	oldx = Miss->position.current.x;
+	oldy = Miss->position.current.y;
 	dMonster[x][y] = m + 1;
 	Monst->_mdir = static_cast<direction>(Miss->_mimfnum);
 	Monst->position.current = { x, y };
@@ -5193,7 +5193,7 @@ bool monster_posok(int i, int x, int y)
 		} else {
 			for (j = 0; j < nummissiles; j++) {
 				mi = missileactive[j];
-				if (missile[mi]._mix == x && missile[mi]._miy == y) {
+				if (missile[mi].position.current.x == x && missile[mi].position.current.y == y) {
 					if (missile[mi]._mitype == MIS_FIREWALL) {
 						fire = true;
 						break;

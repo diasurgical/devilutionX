@@ -266,8 +266,8 @@ void DrawMissilePrivate(const CelOutputBuffer &out, MissileStruct *m, int sx, in
 		SDL_Log("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
 		return;
 	}
-	int mx = sx + m->_mixoff - m->_miAnimWidth2;
-	int my = sy + m->_miyoff;
+	int mx = sx + m->position.offset.x - m->_miAnimWidth2;
+	int my = sy + m->position.offset.y;
 	if (m->_miUniqTrans)
 		Cl2DrawLightTbl(out, mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, m->_miUniqTrans + 3);
 	else if (m->_miLightFlag)
@@ -302,7 +302,7 @@ void DrawMissile(const CelOutputBuffer &out, int x, int y, int sx, int sy, bool 
 	for (i = 0; i < nummissiles; i++) {
 		assert(missileactive[i] < MAXMISSILES);
 		m = &missile[missileactive[i]];
-		if (m->_mix != x || m->_miy != y)
+		if (m->position.current.x != x || m->position.current.y != y)
 			continue;
 		DrawMissilePrivate(out, m, sx, sy, pre);
 	}
