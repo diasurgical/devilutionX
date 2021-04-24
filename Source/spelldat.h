@@ -22,7 +22,7 @@ enum spell_type : uint8_t {
 	RSPLTYPE_INVALID,
 };
 
-constexpr std::string_view toString(spell_type value)
+[[maybe_unused]] constexpr std::string_view toString(spell_type value)
 {
 	switch(value) {
 	case RSPLTYPE_SKILL:
@@ -95,7 +95,7 @@ enum spell_id : int8_t {
 	SPL_INVALID = -1,
 };
 
-constexpr std::string_view toString(spell_id value)
+[[maybe_unused]] constexpr std::string_view toString(spell_id value)
 {
 	switch(value) {
 	case SPL_NULL:
@@ -213,7 +213,7 @@ enum magic_type : uint8_t {
 	STYPE_MAGIC,
 };
 
-constexpr std::string_view toString(magic_type value)
+[[maybe_unused]] constexpr std::string_view toString(magic_type value)
 {
 	switch(value) {
 	case STYPE_FIRE:
@@ -337,7 +337,7 @@ enum missile_id : int8_t {
 	MIS_NULL = -1,
 };
 
-constexpr std::string_view toString(missile_id value)
+[[maybe_unused]] constexpr std::string_view toString(missile_id value)
 {
 	switch(value) {
 	case MIS_ARROW:

@@ -40,7 +40,7 @@ enum quest_state : uint8_t {
 	QUEST_INVALID = 0xFF,
 };
 
-constexpr std::string_view toString(quest_state value)
+[[maybe_unused]] constexpr std::string_view toString(quest_state value)
 {
 	switch(value) {
 	case QUEST_NOTAVAIL:

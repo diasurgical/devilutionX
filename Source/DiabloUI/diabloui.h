@@ -22,7 +22,7 @@ enum _artFocus : uint8_t {
 	FOCUS_BIG,
 };
 
-constexpr std::string_view toString(_artFocus value)
+[[maybe_unused]] constexpr std::string_view toString(_artFocus value)
 {
 	switch(value) {
 	case FOCUS_SMALL:
@@ -40,7 +40,7 @@ enum _artLogo : uint8_t {
 	LOGO_BIG,
 };
 
-constexpr std::string_view toString(_artLogo value)
+[[maybe_unused]] constexpr std::string_view toString(_artLogo value)
 {
 	switch(value) {
 	case LOGO_SMALL:
@@ -63,7 +63,7 @@ enum _mainmenu_selections : uint8_t {
 	MAINMENU_ATTRACT_MODE,
 };
 
-constexpr std::string_view toString(_mainmenu_selections value)
+[[maybe_unused]] constexpr std::string_view toString(_mainmenu_selections value)
 {
 	switch(value) {
 	case MAINMENU_NONE:
@@ -92,7 +92,7 @@ enum _selhero_selections : uint8_t {
 	SELHERO_PREVIOUS,
 };
 
-constexpr std::string_view toString(_selhero_selections value)
+[[maybe_unused]] constexpr std::string_view toString(_selhero_selections value)
 {
 	switch(value) {
 	case SELHERO_NEW_DUNGEON:

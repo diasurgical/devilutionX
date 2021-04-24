@@ -68,7 +68,7 @@ enum _item_indexes : uint8_t {
 	IDI_GREYSUIT,
 };
 
-constexpr std::string_view toString(_item_indexes value)
+[[maybe_unused]] constexpr std::string_view toString(_item_indexes value)
 {
 	switch(value) {
 	case IDI_GOLD:
@@ -176,7 +176,7 @@ enum item_drop_rate : uint8_t {
 	IDROP_DOUBLE,
 };
 
-constexpr std::string_view toString(item_drop_rate value)
+[[maybe_unused]] constexpr std::string_view toString(item_drop_rate value)
 {
 	switch(value) {
 	case IDROP_NEVER:
@@ -197,7 +197,7 @@ enum item_class : uint8_t {
 	ICLASS_QUEST,
 };
 
-constexpr std::string_view toString(item_class value)
+[[maybe_unused]] constexpr std::string_view toString(item_class value)
 {
 	switch(value) {
 	case ICLASS_NONE:
@@ -228,7 +228,7 @@ enum item_equip_type : int8_t {
 	ILOC_INVALID = -1,
 };
 
-constexpr std::string_view toString(item_equip_type value)
+[[maybe_unused]] constexpr std::string_view toString(item_equip_type value)
 {
 	switch(value) {
 	case ILOC_NONE:
@@ -381,7 +381,7 @@ enum item_cursor_graphic : uint8_t {
 	// clang-format on
 };
 
-constexpr std::string_view toString(item_cursor_graphic value)
+[[maybe_unused]] constexpr std::string_view toString(item_cursor_graphic value)
 {
 	switch(value) {
 	case ICURS_POTION_OF_FULL_MANA:
@@ -647,7 +647,7 @@ enum item_type : int8_t {
 	ITYPE_NONE = -1,
 };
 
-constexpr std::string_view toString(item_type value)
+[[maybe_unused]] constexpr std::string_view toString(item_type value)
 {
 	switch(value) {
 	case ITYPE_MISC:
@@ -757,7 +757,7 @@ enum unique_base_item : int8_t {
 	UITYPE_INVALID = -1,
 };
 
-constexpr std::string_view toString(unique_base_item value)
+[[maybe_unused]] constexpr std::string_view toString(unique_base_item value)
 {
 	switch(value) {
 	case UITYPE_NONE:
@@ -1002,7 +1002,7 @@ enum item_misc_id : int8_t {
 	IMISC_INVALID = -1,
 };
 
-constexpr std::string_view toString(item_misc_id value)
+[[maybe_unused]] constexpr std::string_view toString(item_misc_id value)
 {
 	switch(value) {
 	case IMISC_NONE:
@@ -1245,7 +1245,7 @@ enum item_effect_type : int8_t {
 	IPL_INVALID = -1,
 };
 
-constexpr std::string_view toString(item_effect_type value)
+[[maybe_unused]] constexpr std::string_view toString(item_effect_type value)
 {
 	switch(value) {
 	case IPL_TOHIT:
@@ -1447,7 +1447,7 @@ enum goodorevil : uint8_t {
 	GOE_GOOD,
 };
 
-constexpr std::string_view toString(goodorevil value)
+[[maybe_unused]] constexpr std::string_view toString(goodorevil value)
 {
 	switch(value) {
 	case GOE_ANY:

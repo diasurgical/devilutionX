@@ -58,7 +58,7 @@ enum direction : uint8_t {
 	DIR_OMNI,
 };
 
-constexpr std::string_view toString(direction value)
+[[maybe_unused]] constexpr std::string_view toString(direction value)
 {
 	switch(value) {
 	case DIR_S:

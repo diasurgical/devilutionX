@@ -33,7 +33,7 @@ enum theme_id : int8_t {
 	THEME_NONE = -1,
 };
 
-constexpr std::string_view toString(theme_id value)
+[[maybe_unused]] constexpr std::string_view toString(theme_id value)
 {
 	switch(value) {
 	case THEME_BARREL:
@@ -135,7 +135,7 @@ enum object_graphic_id : int8_t {
 	OFILE_NULL = -1,
 };
 
-constexpr std::string_view toString(object_graphic_id value)
+[[maybe_unused]] constexpr std::string_view toString(object_graphic_id value)
 {
 	switch(value) {
 	case OFILE_L1BRAZ:
@@ -358,7 +358,7 @@ enum _object_id : int8_t {
 	OBJ_NULL = -1,
 };
 
-constexpr std::string_view toString(_object_id value)
+[[maybe_unused]] constexpr std::string_view toString(_object_id value)
 {
 	switch(value) {
 	case OBJ_L1LIGHT:
@@ -592,7 +592,7 @@ enum quest_id : int8_t {
 	Q_INVALID = -1,
 };
 
-constexpr std::string_view toString(quest_id value)
+[[maybe_unused]] constexpr std::string_view toString(quest_id value)
 {
 	switch(value) {
 	case Q_ROCK:

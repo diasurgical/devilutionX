@@ -54,7 +54,7 @@ enum class HeroClass : uint8_t {
 	LAST = Barbarian
 };
 
-constexpr std::string_view toString(HeroClass value)
+[[maybe_unused]] constexpr std::string_view toString(HeroClass value)
 {
 	switch(value) {
 	case HeroClass::Warrior:
@@ -82,7 +82,7 @@ enum class CharacterAttribute : uint8_t {
 	LAST = Vitality
 };
 
-constexpr std::string_view toString(CharacterAttribute value)
+[[maybe_unused]] constexpr std::string_view toString(CharacterAttribute value)
 {
 	switch(value) {
 	case CharacterAttribute::Strength:
@@ -108,7 +108,7 @@ enum inv_body_loc : uint8_t {
 	NUM_INVLOC,
 };
 
-constexpr std::string_view toString(inv_body_loc value)
+[[maybe_unused]] constexpr std::string_view toString(inv_body_loc value)
 {
 	switch(value) {
 	case INVLOC_HEAD:
@@ -159,7 +159,7 @@ enum anim_weapon_id : uint8_t {
 	ANIM_ID_STAFF,
 };
 
-constexpr std::string_view toString(anim_weapon_id value)
+[[maybe_unused]] constexpr std::string_view toString(anim_weapon_id value)
 {
 	switch(value) {
 	case ANIM_ID_UNARMED:
@@ -198,7 +198,7 @@ enum PLR_MODE : uint8_t {
 	PM_QUIT,
 };
 
-constexpr std::string_view toString(PLR_MODE value)
+[[maybe_unused]] constexpr std::string_view toString(PLR_MODE value)
 {
 	switch(value) {
 	case PM_STAND:
@@ -256,7 +256,7 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
-constexpr std::string_view toString(player_weapon_type value)
+[[maybe_unused]] constexpr std::string_view toString(player_weapon_type value)
 {
 	switch(value) {
 	case WT_MELEE:

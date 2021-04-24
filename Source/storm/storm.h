@@ -16,7 +16,7 @@ enum game_info : uint8_t {
 	GAMEINFO_PASSWORD,
 };
 
-constexpr std::string_view toString(game_info value)
+[[maybe_unused]] constexpr std::string_view toString(game_info value)
 {
 	switch(value) {
 	case GAMEINFO_NAME:
@@ -32,7 +32,7 @@ enum conn_type : uint8_t {
 	SELCONN_LOOPBACK,
 };
 
-constexpr std::string_view toString(conn_type value)
+[[maybe_unused]] constexpr std::string_view toString(conn_type value)
 {
 	switch(value) {
 	case SELCONN_ZT:

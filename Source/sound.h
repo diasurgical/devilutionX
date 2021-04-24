@@ -28,7 +28,7 @@ enum _music_id : uint8_t {
 	NUM_MUSIC,
 };
 
-constexpr std::string_view toString(_music_id value)
+[[maybe_unused]] constexpr std::string_view toString(_music_id value)
 {
 	switch(value) {
 	case TMUSIC_TOWN:

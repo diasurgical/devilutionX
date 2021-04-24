@@ -70,7 +70,7 @@ enum diablo_message : uint8_t {
 	EMSG_SHRINE_MURPHYS,
 };
 
-constexpr std::string_view toString(diablo_message value)
+[[maybe_unused]] constexpr std::string_view toString(diablo_message value)
 {
 	switch(value) {
 	case EMSG_NONE:

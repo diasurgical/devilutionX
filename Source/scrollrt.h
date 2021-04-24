@@ -27,7 +27,7 @@ enum _scroll_direction : uint8_t {
 	SDIR_NW,
 };
 
-constexpr std::string_view toString(_scroll_direction value)
+[[maybe_unused]] constexpr std::string_view toString(_scroll_direction value)
 {
 	switch(value) {
 	case SDIR_NONE:

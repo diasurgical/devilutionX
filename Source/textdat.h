@@ -400,7 +400,7 @@ enum _speech_id : int16_t {
 	TEXT_NONE = -1,
 };
 
-constexpr std::string_view toString(_speech_id value)
+[[maybe_unused]] constexpr std::string_view toString(_speech_id value)
 {
 	switch(value) {
 	case TEXT_KING1:

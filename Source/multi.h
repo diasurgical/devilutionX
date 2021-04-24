@@ -21,7 +21,7 @@ enum event_type : uint8_t {
 	EVENT_TYPE_PLAYER_MESSAGE,
 };
 
-constexpr std::string_view toString(event_type value)
+[[maybe_unused]] constexpr std::string_view toString(event_type value)
 {
 	switch(value) {
 	case EVENT_TYPE_PLAYER_CREATE_GAME:

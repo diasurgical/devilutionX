@@ -28,7 +28,7 @@ enum item_quality : uint8_t {
 	ITEM_QUALITY_UNIQUE,
 };
 
-constexpr std::string_view toString(item_quality value)
+[[maybe_unused]] constexpr std::string_view toString(item_quality value)
 {
 	switch(value) {
 	case ITEM_QUALITY_NORMAL:
@@ -134,7 +134,7 @@ enum _unique_items : int8_t {
 	UITEM_INVALID = -1,
 };
 
-constexpr std::string_view toString(_unique_items value)
+[[maybe_unused]] constexpr std::string_view toString(_unique_items value)
 {
 	switch(value) {
 	case UITEM_CLEAVER:

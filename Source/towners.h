@@ -33,7 +33,7 @@ enum _talker_id : uint8_t {
 	NUM_TOWNER_TYPES,
 };
 
-constexpr std::string_view toString(_talker_id value)
+[[maybe_unused]] constexpr std::string_view toString(_talker_id value)
 {
 	switch(value) {
 	case TOWN_SMITH:

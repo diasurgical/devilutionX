@@ -30,7 +30,7 @@ enum _setlevels : int8_t {
 	SL_VILEBETRAYER,
 };
 
-constexpr std::string_view toString(_setlevels value)
+[[maybe_unused]] constexpr std::string_view toString(_setlevels value)
 {
 	switch(value) {
 	case SL_NONE:
@@ -59,7 +59,7 @@ enum dungeon_type : int8_t {
 	DTYPE_NONE = -1,
 };
 
-constexpr std::string_view toString(dungeon_type value)
+[[maybe_unused]] constexpr std::string_view toString(dungeon_type value)
 {
 	switch(value) {
 	case DTYPE_TOWN:
@@ -92,7 +92,7 @@ enum lvl_entry : uint8_t {
 	ENTRY_TWARPUP,
 };
 
-constexpr std::string_view toString(lvl_entry value)
+[[maybe_unused]] constexpr std::string_view toString(lvl_entry value)
 {
 	switch(value) {
 	case ENTRY_MAIN:
@@ -142,7 +142,7 @@ enum _difficulty : uint8_t {
 	DIFF_HELL,
 };
 
-constexpr std::string_view toString(_difficulty value)
+[[maybe_unused]] constexpr std::string_view toString(_difficulty value)
 {
 	switch(value) {
 	case DIFF_NORMAL:

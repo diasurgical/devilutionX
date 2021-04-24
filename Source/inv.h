@@ -34,7 +34,7 @@ enum inv_item : int8_t {
 	INVITEM_INVALID = -1,
 };
 
-constexpr std::string_view toString(inv_item value)
+[[maybe_unused]] constexpr std::string_view toString(inv_item value)
 {
 	switch(value) {
 	case INVITEM_HEAD:
@@ -93,7 +93,7 @@ enum inv_xy_slot : uint8_t {
 	// clang-format on
 };
 
-constexpr std::string_view toString(inv_xy_slot value)
+[[maybe_unused]] constexpr std::string_view toString(inv_xy_slot value)
 {
 	switch(value) {
 	case SLOTXY_HEAD_FIRST:
@@ -140,7 +140,7 @@ enum item_color : uint8_t {
 	// clang-format on
 };
 
-constexpr std::string_view toString(item_color value)
+[[maybe_unused]] constexpr std::string_view toString(item_color value)
 {
 	switch(value) {
 	case ICOL_YELLOW:

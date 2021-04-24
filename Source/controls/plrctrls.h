@@ -11,7 +11,7 @@ typedef enum belt_item_type : uint8_t {
 	BLT_MANA,
 } belt_item_type;
 
-constexpr std::string_view toString(belt_item_type value)
+[[maybe_unused]] constexpr std::string_view toString(belt_item_type value)
 {
 	switch(value) {
 	case BLT_HEALING:

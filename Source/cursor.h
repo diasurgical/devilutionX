@@ -28,7 +28,7 @@ enum cursor_id : uint8_t {
 	CURSOR_FIRSTITEM,
 };
 
-constexpr std::string_view toString(cursor_id value)
+[[maybe_unused]] constexpr std::string_view toString(cursor_id value)
 {
 	switch(value) {
 	case CURSOR_NONE:

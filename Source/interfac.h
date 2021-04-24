@@ -43,7 +43,7 @@ enum Cutscenes : uint8_t {
 	CutGate,
 };
 
-constexpr std::string_view toString(Cutscenes value)
+[[maybe_unused]] constexpr std::string_view toString(Cutscenes value)
 {
 	switch(value) {
 	case CutStart:

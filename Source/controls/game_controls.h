@@ -26,7 +26,7 @@ enum GameActionType : uint8_t {
 	GameActionType_SEND_MOUSE_CLICK,
 };
 
-constexpr std::string_view toString(GameActionType value)
+[[maybe_unused]] constexpr std::string_view toString(GameActionType value)
 {
 	switch(value) {
 	case GameActionType_NONE:
@@ -72,7 +72,7 @@ struct GameActionSendMouseClick {
 	bool up;
 };
 
-constexpr std::string_view toString(GameActionSendMouseClick::Button value)
+[[maybe_unused]] constexpr std::string_view toString(GameActionSendMouseClick::Button value)
 {
 	switch(value) {
 	case GameActionSendMouseClick::LEFT:

@@ -21,7 +21,7 @@ enum ScrollBarArrowFrame : uint8_t {
 	ScrollBarArrowFrame_DOWN,
 };
 
-constexpr std::string_view toString(ScrollBarArrowFrame value)
+[[maybe_unused]] constexpr std::string_view toString(ScrollBarArrowFrame value)
 {
 	switch(value) {
 	case ScrollBarArrowFrame_UP_ACTIVE:

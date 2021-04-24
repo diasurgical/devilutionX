@@ -18,7 +18,7 @@ enum mienemy_type : uint8_t {
 	TARGET_BOTH,
 };
 
-constexpr std::string_view toString(mienemy_type value)
+[[maybe_unused]] constexpr std::string_view toString(mienemy_type value)
 {
 	switch(value) {
 	case TARGET_MONSTERS:
@@ -38,7 +38,7 @@ enum missile_resistance : uint8_t {
 	MISR_ACID,
 };
 
-constexpr std::string_view toString(missile_resistance value)
+[[maybe_unused]] constexpr std::string_view toString(missile_resistance value)
 {
 	switch(value) {
 	case MISR_NONE:
@@ -117,7 +117,7 @@ typedef enum missile_graphic_id : uint8_t {
 	MFILE_NONE, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata. (fixed)
 } missile_graphic_id;
 
-constexpr std::string_view toString(missile_graphic_id value)
+[[maybe_unused]] constexpr std::string_view toString(missile_graphic_id value)
 {
 	switch(value) {
 	case MFILE_ARROWS:

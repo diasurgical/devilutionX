@@ -132,7 +132,7 @@ enum _cmd_id : uint8_t {
 	CMD_INVALID = 0xFF,
 };
 
-constexpr std::string_view toString(_cmd_id value)
+[[maybe_unused]] constexpr std::string_view toString(_cmd_id value)
 {
 	switch(value) {
 	case CMD_STAND:

@@ -10,7 +10,7 @@ enum AxisDirectionX : uint8_t {
 	AxisDirectionX_RIGHT,
 };
 
-constexpr std::string_view toString(AxisDirectionX value)
+[[maybe_unused]] constexpr std::string_view toString(AxisDirectionX value)
 {
 	switch(value) {
 	case AxisDirectionX_NONE:
@@ -28,7 +28,7 @@ enum AxisDirectionY : uint8_t {
 	AxisDirectionY_DOWN,
 };
 
-constexpr std::string_view toString(AxisDirectionY value)
+[[maybe_unused]] constexpr std::string_view toString(AxisDirectionY value)
 {
 	switch(value) {
 	case AxisDirectionY_NONE:

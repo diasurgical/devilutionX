@@ -223,7 +223,7 @@ enum panel_button_id {
 	PanelButtonFriendly,
 };
 
-constexpr std::string_view toString(panel_button_id value)
+[[maybe_unused]] constexpr std::string_view toString(panel_button_id value)
 {
 	switch(value) {
 	case PanelButtonCharinfo:

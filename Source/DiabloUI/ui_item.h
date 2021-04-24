@@ -23,7 +23,7 @@ enum UiType : uint8_t {
 	UI_EDIT,
 };
 
-constexpr std::string_view toString(UiType value)
+[[maybe_unused]] constexpr std::string_view toString(UiType value)
 {
 	switch(value) {
 	case UI_TEXT:
@@ -291,7 +291,7 @@ public:
 	TtfSurfaceCache m_render_cache;
 };
 
-constexpr std::string_view toString(UiButton::FrameKey value)
+[[maybe_unused]] constexpr std::string_view toString(UiButton::FrameKey value)
 {
 	switch(value) {
 	case UiButton::DEFAULT:

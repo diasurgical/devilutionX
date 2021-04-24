@@ -65,7 +65,7 @@ enum shrine_type : uint8_t {
 	NUM_SHRINETYPE,
 };
 
-constexpr std::string_view toString(shrine_type value)
+[[maybe_unused]] constexpr std::string_view toString(shrine_type value)
 {
 	switch(value) {
 	case SHRINE_MYSTERIOUS:
@@ -287,7 +287,7 @@ enum shrine_gametype : uint8_t {
 	SHRINETYPE_MULTI,
 };
 
-constexpr std::string_view toString(shrine_gametype value)
+[[maybe_unused]] constexpr std::string_view toString(shrine_gametype value)
 {
 	switch(value) {
 	case SHRINETYPE_ANY:

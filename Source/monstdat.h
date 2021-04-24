@@ -55,7 +55,7 @@ enum _mai_id : int8_t {
 	AI_INVALID = -1,
 };
 
-constexpr std::string_view toString(_mai_id value)
+[[maybe_unused]] constexpr std::string_view toString(_mai_id value)
 {
 	switch(value) {
 	case AI_ZOMBIE:
@@ -149,7 +149,7 @@ enum _mc_id : uint8_t {
 	MC_ANIMAL,
 };
 
-constexpr std::string_view toString(_mc_id value)
+[[maybe_unused]] constexpr std::string_view toString(_mc_id value)
 {
 	switch(value) {
 	case MC_UNDEAD:
@@ -357,7 +357,7 @@ enum _monster_id : int16_t {
 	MT_INVALID = -1,
 };
 
-constexpr std::string_view toString(_monster_id value)
+[[maybe_unused]] constexpr std::string_view toString(_monster_id value)
 {
 	switch(value) {
 	case MT_NZOMBIE:
@@ -649,7 +649,7 @@ enum _monster_availability : uint8_t {
 	MAT_RETAIL,
 };
 
-constexpr std::string_view toString(_monster_availability value)
+[[maybe_unused]] constexpr std::string_view toString(_monster_availability value)
 {
 	switch(value) {
 	case MAT_NEVER:

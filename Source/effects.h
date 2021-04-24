@@ -1044,7 +1044,7 @@ enum _sfx_id : int16_t {
 	SFX_NONE = -1,
 };
 
-constexpr std::string_view toString(_sfx_id value)
+[[maybe_unused]] constexpr std::string_view toString(_sfx_id value)
 {
 	switch(value) {
 	case PS_WALK1:

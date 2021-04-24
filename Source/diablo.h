@@ -26,7 +26,7 @@ enum clicktype : int8_t {
 	CLICK_RIGHT,
 };
 
-constexpr std::string_view toString(clicktype value)
+[[maybe_unused]] constexpr std::string_view toString(clicktype value)
 {
 	switch(value) {
 	case CLICK_NONE:

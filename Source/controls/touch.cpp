@@ -70,7 +70,7 @@ enum DraggingType {
 	DragThreeFinger,
 };
 
-constexpr std::string_view toString(DraggingType value)
+[[maybe_unused]] constexpr std::string_view toString(DraggingType value)
 {
 	switch(value) {
 	case DragNone:

@@ -44,7 +44,7 @@ enum talk_id : uint8_t {
 	STORE_BARMAID,
 };
 
-constexpr std::string_view toString(talk_id value)
+[[maybe_unused]] constexpr std::string_view toString(talk_id value)
 {
 	switch(value) {
 	case STORE_NONE:

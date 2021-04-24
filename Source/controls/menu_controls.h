@@ -21,7 +21,7 @@ enum MenuAction : uint8_t {
 	MenuAction_PAGE_DOWN,
 };
 
-constexpr std::string_view toString(MenuAction value)
+[[maybe_unused]] constexpr std::string_view toString(MenuAction value)
 {
 	switch(value) {
 	case MenuAction_NONE:

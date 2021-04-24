@@ -35,7 +35,7 @@ enum text_color : uint8_t {
 	COL_BLACK,
 };
 
-constexpr std::string_view toString(text_color value)
+[[maybe_unused]] constexpr std::string_view toString(text_color value)
 {
 	switch(value) {
 	case COL_WHITE:

@@ -11,7 +11,7 @@ enum TextAlignment : uint8_t {
 	TextAlignment_END,
 };
 
-constexpr std::string_view toString(TextAlignment value)
+[[maybe_unused]] constexpr std::string_view toString(TextAlignment value)
 {
 	switch(value) {
 	case TextAlignment_BEGIN:

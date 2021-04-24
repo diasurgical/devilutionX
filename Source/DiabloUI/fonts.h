@@ -15,7 +15,7 @@ enum _artFontTables : uint8_t {
 	AFT_HUGE,
 };
 
-constexpr std::string_view toString(_artFontTables value)
+[[maybe_unused]] constexpr std::string_view toString(_artFontTables value)
 {
 	switch(value) {
 	case AFT_SMALL:
@@ -34,7 +34,7 @@ enum _artFontColors : uint8_t {
 	AFC_GOLD,
 };
 
-constexpr std::string_view toString(_artFontColors value)
+[[maybe_unused]] constexpr std::string_view toString(_artFontColors value)
 {
 	switch(value) {
 	case AFC_SILVER:

@@ -29,7 +29,7 @@ enum ControllerButton : uint8_t {
 	ControllerButton_BUTTON_DPAD_RIGHT,
 };
 
-constexpr std::string_view toString(ControllerButton value)
+[[maybe_unused]] constexpr std::string_view toString(ControllerButton value)
 {
 	switch(value) {
 	case ControllerButton_NONE:

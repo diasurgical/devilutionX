@@ -77,7 +77,7 @@ enum MON_MODE : uint8_t {
 	MM_TALK,
 };
 
-constexpr std::string_view toString(MON_MODE value)
+[[maybe_unused]] constexpr std::string_view toString(MON_MODE value)
 {
 	switch(value) {
 	case MM_STAND:
@@ -139,7 +139,7 @@ enum monster_goal : uint8_t {
 	MGOAL_TALKING,
 };
 
-constexpr std::string_view toString(monster_goal value)
+[[maybe_unused]] constexpr std::string_view toString(monster_goal value)
 {
 	switch(value) {
 	case MGOAL_NONE:
