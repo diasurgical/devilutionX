@@ -26,7 +26,6 @@
 #include "gmenu.h"
 #include "help.h"
 #include "init.h"
-#include "language.h"
 #include "lighting.h"
 #include "loadsave.h"
 #include "mainmenu.h"
@@ -51,6 +50,7 @@
 #include "track.h"
 #include "trigs.h"
 #include "utils/console.h"
+#include "utils/language.h"
 #include "utils/paths.h"
 
 namespace devilution {

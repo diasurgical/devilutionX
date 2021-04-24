@@ -246,7 +246,6 @@ set(devilutionx_SRCS
   Source/inv.cpp
   Source/itemdat.cpp
   Source/items.cpp
-  Source/language.cpp
   Source/lighting.cpp
   Source/loadsave.cpp
   Source/main.cpp
@@ -305,6 +304,7 @@ set(devilutionx_SRCS
   Source/utils/console.cpp
   Source/utils/display.cpp
   Source/utils/file_util.cpp
+  Source/utils/language.cpp
   Source/utils/paths.cpp
   Source/utils/soundsample.cpp
   Source/utils/thread.cpp

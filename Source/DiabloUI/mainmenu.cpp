@@ -1,8 +1,8 @@
 
 #include "control.h"
-#include "language.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/selok.h"
+#include "utils/language.h"
 
 namespace devilution {
 namespace {
