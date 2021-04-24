@@ -9,6 +9,7 @@
 
 #include "storm/storm_sdl_rw.h"
 #include "utils/stubs.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -48,7 +49,7 @@ void SoundSample::Play(int lVolume, int lPan, int channel)
 
 	channel = Mix_PlayChannel(channel, chunk, 0);
 	if (channel == -1) {
-		SDL_Log("Too few channels, skipping sound");
+		Log("Too few channels, skipping sound");
 		return;
 	}
 
@@ -79,7 +80,7 @@ int SoundSample::SetChunkStream(HANDLE stormHandle)
 {
 	chunk = Mix_LoadWAV_RW(SFileRw_FromStormHandle(stormHandle), /*freesrc=*/1);
 	if (chunk == nullptr) {
-		SDL_Log("Mix_LoadWAV_RW: %s", Mix_GetError());
+		Log("Mix_LoadWAV_RW: {}", Mix_GetError());
 		return -1;
 	}
 	return 0;

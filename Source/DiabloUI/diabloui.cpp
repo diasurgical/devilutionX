@@ -19,6 +19,7 @@
 #include "utils/sdl_ptrs.h"
 #include "utils/stubs.h"
 #include "utils/utf8.h"
+#include "utils/log.hpp"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
@@ -307,7 +308,7 @@ void UiFocusNavigation(SDL_Event *event)
 				if ((SDL_GetModState() & KMOD_CTRL) != 0) {
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == nullptr) {
-						SDL_Log("%s", SDL_GetError());
+						Log("{}", SDL_GetError());
 					} else {
 						SelheroCatToName(clipboard, UiTextInput, UiTextInputLen);
 					}
