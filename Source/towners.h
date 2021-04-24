@@ -46,7 +46,6 @@ struct TownerStruct {
 	/** Tile position of NPC */
 	Point position;
 	int16_t _tAnimWidth;
-	int16_t _tAnimWidth2;
 	int16_t _tAnimDelay; // Tick length of each frame in the current animation
 	int16_t _tAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
 	uint8_t _tAnimLen;   // Number of frames in current animation

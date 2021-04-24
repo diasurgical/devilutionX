@@ -665,7 +665,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		px = sx - towners[mi]._tAnimWidth2;
+		px = sx - CalculateWidth2(towners[mi]._tAnimWidth);
 		if (mi == pcursmonst) {
 			CelBlitOutlineTo(out, 166, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
 		}
