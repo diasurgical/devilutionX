@@ -1043,50 +1043,52 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, int mx, int my, 
 			}
 		}
 	} else {
-		if (dMonster[mx][my] > 0) {
-			if (missile[i]._micaster == TARGET_BOTH) {
-				if (MonsterMHit(
-				        missile[i]._misource,
-				        dMonster[mx][my] - 1,
-				        mindam,
-				        maxdam,
-				        missile[i]._midist,
-				        missile[i]._mitype,
-				        shift)) {
+		if (!missile[i]._miHitFlag) { // traps can hit only once
+			if (dMonster[mx][my] > 0) {
+				if (missile[i]._micaster == TARGET_BOTH) {
+					if (MonsterMHit(
+					        missile[i]._misource,
+					        dMonster[mx][my] - 1,
+					        mindam,
+					        maxdam,
+					        missile[i]._midist,
+					        missile[i]._mitype,
+					        shift)) {
+						if (!nodel)
+							missile[i]._mirange = 0;
+						missile[i]._miHitFlag = true;
+					}
+				} else if (MonsterTrapHit(dMonster[mx][my] - 1, mindam, maxdam, missile[i]._midist, missile[i]._mitype, shift)) {
 					if (!nodel)
 						missile[i]._mirange = 0;
 					missile[i]._miHitFlag = true;
 				}
-			} else if (MonsterTrapHit(dMonster[mx][my] - 1, mindam, maxdam, missile[i]._midist, missile[i]._mitype, shift)) {
-				if (!nodel)
-					missile[i]._mirange = 0;
-				missile[i]._miHitFlag = true;
 			}
-		}
-		if (dPlayer[mx][my] > 0) {
-			if (PlayerMHit(
-			        dPlayer[mx][my] - 1,
-			        -1,
-			        missile[i]._midist,
-			        mindam,
-			        maxdam,
-			        missile[i]._mitype,
-			        shift,
-			        missile[i]._miAnimType == MFILE_FIREWAL || missile[i]._miAnimType == MFILE_LGHNING,
-			        &blocked)) {
-				if (gbIsHellfire && blocked) {
-					dir = missile[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					mAnimFAmt = misfiledata[missile[i]._miAnimType].mAnimFAmt;
-					if (dir < 0)
-						dir = mAnimFAmt - 1;
-					else if (dir > mAnimFAmt)
-						dir = 0;
+			if (dPlayer[mx][my] > 0) {
+				if (PlayerMHit(
+				        dPlayer[mx][my] - 1,
+				        -1,
+				        missile[i]._midist,
+				        mindam,
+				        maxdam,
+				        missile[i]._mitype,
+				        shift,
+				        missile[i]._miAnimType == MFILE_FIREWAL || missile[i]._miAnimType == MFILE_LGHNING,
+				        &blocked)) {
+					if (gbIsHellfire && blocked) {
+						dir = missile[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
+						mAnimFAmt = misfiledata[missile[i]._miAnimType].mAnimFAmt;
+						if (dir < 0)
+							dir = mAnimFAmt - 1;
+						else if (dir > mAnimFAmt)
+							dir = 0;
 
-					SetMissDir(i, dir);
-				} else if (!nodel) {
-					missile[i]._mirange = 0;
+						SetMissDir(i, dir);
+					} else if (!nodel) {
+						missile[i]._mirange = 0;
+					}
+					missile[i]._miHitFlag = true;
 				}
-				missile[i]._miHitFlag = true;
 			}
 		}
 	}
