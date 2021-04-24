@@ -128,6 +128,11 @@ struct ChatOptions {
 	char szHotKeyMsgs[4][MAX_SEND_STR_LEN];
 };
 
+struct LanguageOptions {
+	/** @brief Language code (ISO 639-1) for text. */
+	char szCode[2];
+};
+
 struct Options {
 	DiabloOptions Diablo;
 	HellfireOptions Hellfire;
@@ -137,6 +142,7 @@ struct Options {
 	ControllerOptions Controller;
 	NetworkOptions Network;
 	ChatOptions Chat;
+	LanguageOptions Language;
 };
 
 extern Options sgOptions;

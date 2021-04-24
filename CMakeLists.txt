@@ -316,6 +316,7 @@ set(devilutionx_SRCS
   Source/utils/console.cpp
   Source/utils/display.cpp
   Source/utils/file_util.cpp
+  Source/utils/language.cpp
   Source/utils/paths.cpp
   Source/utils/soundsample.cpp
   Source/utils/thread.cpp
