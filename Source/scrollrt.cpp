@@ -514,7 +514,7 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 		bv = dObject[x][y] - 1;
 		if (object[bv]._oPreFlag != pre)
 			return;
-		sx = ox - object[bv]._oAnimWidth2;
+		sx = ox - CalculateWidth2(object[bv]._oAnimWidth);
 		sy = oy;
 	} else {
 		bv = -(dObject[x][y] + 1);
@@ -522,7 +522,7 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 			return;
 		int xx = object[bv].position.x - x;
 		int yy = object[bv].position.y - y;
-		sx = (xx * TILE_WIDTH / 2) + ox - object[bv]._oAnimWidth2 - (yy * TILE_WIDTH / 2);
+		sx = (xx * TILE_WIDTH / 2) + ox - CalculateWidth2(object[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
 		sy = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 

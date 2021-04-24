@@ -26,7 +26,6 @@ struct ObjectStruct {
 	int _oAnimLen;   // Number of frames in current animation
 	int _oAnimFrame; // Current frame of animation.
 	int _oAnimWidth;
-	int _oAnimWidth2;
 	bool _oDelFlag;
 	int8_t _oBreak;
 	bool _oSolidFlag;

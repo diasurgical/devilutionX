@@ -704,7 +704,8 @@ static void LoadObject(LoadHelper *file, int i)
 	pObject->_oAnimLen = file->nextLE<int32_t>();
 	pObject->_oAnimFrame = file->nextLE<int32_t>();
 	pObject->_oAnimWidth = file->nextLE<int32_t>();
-	pObject->_oAnimWidth2 = file->nextLE<int32_t>();
+	// Skip _oAnimWidth2
+	file->skip(4);
 	pObject->_oDelFlag = file->nextBool32();
 	pObject->_oBreak = file->nextLE<int8_t>();
 	file->skip(3); // Alignment
@@ -1664,7 +1665,8 @@ static void SaveObject(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pObject->_oAnimLen);
 	file->writeLE<int32_t>(pObject->_oAnimFrame);
 	file->writeLE<int32_t>(pObject->_oAnimWidth);
-	file->writeLE<int32_t>(pObject->_oAnimWidth2);
+	file->writeLE<int32_t>(pObject->_oAnimWidth);
+	// Write _oAnimWidth2 for vanilla compatibility
 	file->writeLE<uint32_t>(pObject->_oDelFlag);
 	file->writeLE<int8_t>(pObject->_oBreak);
 	file->skip(3); // Alignment
