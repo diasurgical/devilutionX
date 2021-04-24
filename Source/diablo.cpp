@@ -599,10 +599,8 @@ static void diablo_init_screen()
 	MouseY = gnScreenHeight / 2;
 	if (!sgbControllerActive)
 		SetCursorPos(MouseX, MouseY);
-	ScrollInfo._sdx = 0;
-	ScrollInfo._sdy = 0;
-	ScrollInfo._sxoff = 0;
-	ScrollInfo._syoff = 0;
+	ScrollInfo.tile = { 0, 0 };
+	ScrollInfo.offset = { 0, 0 };
 	ScrollInfo._sdir = SDIR_NONE;
 
 	ClrDiabloMsg();

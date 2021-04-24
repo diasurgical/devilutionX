@@ -57,6 +57,11 @@ enum direction : uint8_t {
 	DIR_OMNI,
 };
 
+struct Point {
+	int x;
+	int y;
+};
+
 // `malloc` that returns a user-friendly error on OOM.
 //
 // Defined as a macro so that:

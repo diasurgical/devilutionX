@@ -4652,8 +4652,8 @@ void MI_Teleport(Sint32 i)
 			ChangeVisionXY(plr[id]._pvid, plr[id].position.current.x, plr[id].position.current.y);
 		}
 		if (id == myplr) {
-			ViewX = plr[id].position.current.x - ScrollInfo._sdx;
-			ViewY = plr[id].position.current.y - ScrollInfo._sdy;
+			ViewX = plr[id].position.current.x - ScrollInfo.tile.x;
+			ViewY = plr[id].position.current.y - ScrollInfo.tile.y;
 		}
 	}
 }

@@ -880,7 +880,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
-			plr[pnum]._pVar8 = 2 * plr[pnum]._pAnimLen;
+			plr[pnum].actionFrame = 2 * plr[pnum]._pAnimLen;
 			dFlags[plr[pnum].position.current.x][plr[pnum].position.current.y] |= BFLAG_DEAD_PLAYER;
 		}
 	}

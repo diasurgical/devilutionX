@@ -26,7 +26,7 @@ void track_process()
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
-	if (plr[myplr]._pVar8 <= 6 && plr[myplr]._pmode != PM_STAND)
+	if (plr[myplr].actionFrame <= 6 && plr[myplr]._pmode != PM_STAND)
 		return;
 
 	const Point target = plr[myplr].GetTargetPosition();

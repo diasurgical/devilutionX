@@ -13,7 +13,7 @@ int RunBlockTest(int frames, int flags)
 	int pnum = 0;
 	plr[pnum]._pAnimFrame = 1;
 	plr[pnum]._pHFrames = frames;
-	plr[pnum]._pVar8 = 1;
+	plr[pnum].actionFrame = 1;
 	plr[pnum]._pIFlags = flags;
 	plr[pnum]._pmode = PM_GOTHIT;
 	plr[pnum]._pGFXLoad = -1;

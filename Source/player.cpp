@@ -631,14 +631,13 @@ void ClearPlrPVars(int pnum)
 		app_fatal("ClearPlrPVars: illegal player %d", pnum);
 	}
 
-	plr[pnum]._pVar1 = 0;
-	plr[pnum]._pVar2 = 0;
-	plr[pnum]._pVar3 = DIR_S;
+	plr[pnum].tempPoint = { 0, 0 };
+	plr[pnum].tempDirection = DIR_S;
 	plr[pnum]._pVar4 = 0;
 	plr[pnum]._pVar5 = 0;
-	plr[pnum]._pVar6 = 0;
-	plr[pnum]._pVar7 = 0;
-	plr[pnum]._pVar8 = 0;
+	plr[pnum].position.offset2 = { 0, 0 };
+	plr[pnum].actionFrame = 0;
+	plr[pnum].deathFrame = 0;
 }
 
 void SetPlrAnims(int pnum)
@@ -1150,7 +1149,7 @@ void InitPlayer(int pnum, bool FirstTime)
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
-			plr[pnum]._pVar8 = 2 * plr[pnum]._pAnimLen;
+			plr[pnum].actionFrame = 2 * plr[pnum]._pAnimLen;
 		}
 
 		plr[pnum]._pdir = DIR_S;
@@ -1166,8 +1165,7 @@ void InitPlayer(int pnum, bool FirstTime)
 			plr[pnum].position.current.y += plryoff2[i];
 		}
 
-		plr[pnum].position.future.x = plr[pnum].position.current.x;
-		plr[pnum].position.future.y = plr[pnum].position.current.y;
+		plr[pnum].position.future = plr[pnum].position.current;
 		plr[pnum].walkpath[0] = WALK_NONE;
 		plr[pnum].destAction = ACTION_NONE;
 
@@ -1212,8 +1210,7 @@ void InitPlayer(int pnum, bool FirstTime)
 	if (pnum == myplr) {
 		deathdelay = 0;
 		deathflag = false;
-		ScrollInfo._sxoff = 0;
-		ScrollInfo._syoff = 0;
+		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = SDIR_NONE;
 	}
 }
@@ -1299,8 +1296,7 @@ void SetPlayerOld(int pnum)
 		app_fatal("SetPlayerOld: illegal player %d", pnum);
 	}
 
-	plr[pnum].position.old.x = plr[pnum].position.current.x;
-	plr[pnum].position.old.y = plr[pnum].position.current.y;
+	plr[pnum].position.old = plr[pnum].position.current;
 }
 
 void FixPlayerLocation(int pnum, direction bDir)
@@ -1309,14 +1305,11 @@ void FixPlayerLocation(int pnum, direction bDir)
 		app_fatal("FixPlayerLocation: illegal player %d", pnum);
 	}
 
-	plr[pnum].position.future.x = plr[pnum].position.current.x;
-	plr[pnum].position.future.y = plr[pnum].position.current.y;
-	plr[pnum].position.offset.x = 0;
-	plr[pnum].position.offset.y = 0;
+	plr[pnum].position.future = plr[pnum].position.current;
+	plr[pnum].position.offset = { 0, 0 };
 	plr[pnum]._pdir = bDir;
 	if (pnum == myplr) {
-		ScrollInfo._sxoff = 0;
-		ScrollInfo._syoff = 0;
+		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = SDIR_NONE;
 		ViewX = plr[pnum].position.current.x;
 		ViewY = plr[pnum].position.current.y;
@@ -1354,14 +1347,11 @@ void StartWalkStand(int pnum)
 	}
 
 	plr[pnum]._pmode = PM_STAND;
-	plr[pnum].position.future.x = plr[pnum].position.current.x;
-	plr[pnum].position.future.y = plr[pnum].position.current.y;
-	plr[pnum].position.offset.x = 0;
-	plr[pnum].position.offset.y = 0;
+	plr[pnum].position.future = plr[pnum].position.current;
+	plr[pnum].position.offset = { 0, 0 };
 
 	if (pnum == myplr) {
-		ScrollInfo._sxoff = 0;
-		ScrollInfo._syoff = 0;
+		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = SDIR_NONE;
 		ViewX = plr[pnum].position.current.x;
 		ViewY = plr[pnum].position.current.y;
@@ -1420,27 +1410,26 @@ void PM_ChangeOffset(int pnum)
 		app_fatal("PM_ChangeOffset: illegal player %d", pnum);
 	}
 
-	plr[pnum]._pVar8++;
-	px = plr[pnum]._pVar6 / 256;
-	py = plr[pnum]._pVar7 / 256;
+	plr[pnum].actionFrame++;
+	px = plr[pnum].position.offset2.x / 256;
+	py = plr[pnum].position.offset2.y / 256;
 
-	plr[pnum]._pVar6 += plr[pnum].position.velocity.x;
-	plr[pnum]._pVar7 += plr[pnum].position.velocity.y;
+	plr[pnum].position.offset2.x += plr[pnum].position.velocity.x;
+	plr[pnum].position.offset2.y += plr[pnum].position.velocity.y;
 
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
-		plr[pnum]._pVar6 += plr[pnum].position.velocity.x;
-		plr[pnum]._pVar7 += plr[pnum].position.velocity.y;
+		plr[pnum].position.offset2.x += plr[pnum].position.velocity.x;
+		plr[pnum].position.offset2.y += plr[pnum].position.velocity.y;
 	}
 
-	plr[pnum].position.offset.x = plr[pnum]._pVar6 >> 8;
-	plr[pnum].position.offset.y = plr[pnum]._pVar7 >> 8;
+	plr[pnum].position.offset = { plr[pnum].position.offset2.x >> 8, plr[pnum].position.offset2.y >> 8 };
 
-	px -= plr[pnum]._pVar6 >> 8;
-	py -= plr[pnum]._pVar7 >> 8;
+	px -= plr[pnum].position.offset2.x >> 8;
+	py -= plr[pnum].position.offset2.y >> 8;
 
 	if (pnum == myplr && ScrollInfo._sdir) {
-		ScrollInfo._sxoff += px;
-		ScrollInfo._syoff += py;
+		ScrollInfo.offset.x += px;
+		ScrollInfo.offset.y += py;
 	}
 
 	PM_ChangeLightOff(pnum);
@@ -1469,34 +1458,28 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	//The player's tile position after finishing this movement action
 	int px = xadd + plr[pnum].position.current.x;
 	int py = yadd + plr[pnum].position.current.y;
-	plr[pnum].position.future.x = px;
-	plr[pnum].position.future.y = py;
+	plr[pnum].position.future = { px, py };
 
 	//If this is the local player then update the camera offset position
 	if (pnum == myplr) {
-		ScrollInfo._sdx = plr[pnum].position.current.x - ViewX;
-		ScrollInfo._sdy = plr[pnum].position.current.y - ViewY;
+		ScrollInfo.tile.x = plr[pnum].position.current.x - ViewX;
+		ScrollInfo.tile.y = plr[pnum].position.current.y - ViewY;
 	}
 
 	switch (variant) {
 	case PM_WALK:
 		dPlayer[px][py] = -(pnum + 1);
 		plr[pnum]._pmode = PM_WALK;
-		plr[pnum].position.velocity.x = xvel;
-		plr[pnum].position.velocity.y = yvel;
-		plr[pnum].position.offset.x = 0;
-		plr[pnum].position.offset.y = 0;
-		plr[pnum]._pVar1 = xadd;
-		plr[pnum]._pVar2 = yadd;
-		plr[pnum]._pVar3 = EndDir;
+		plr[pnum].position.velocity = { xvel, yvel };
+		plr[pnum].position.offset = { 0, 0 };
+		plr[pnum].tempPoint = { xadd, yadd };
+		plr[pnum].tempDirection = EndDir;
 
-		plr[pnum]._pVar6 = 0;
-		plr[pnum]._pVar7 = 0;
+		plr[pnum].position.offset2 = { 0, 0 };
 		break;
 	case PM_WALK2:
 		dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = -(pnum + 1);
-		plr[pnum]._pVar1 = plr[pnum].position.current.x;
-		plr[pnum]._pVar2 = plr[pnum].position.current.y;
+		plr[pnum].tempPoint = plr[pnum].position.current;
 		plr[pnum].position.current = { px, py }; // Move player to the next tile to maintain correct render order
 		dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
 		plr[pnum].position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
@@ -1505,11 +1488,9 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		PM_ChangeLightOff(pnum);
 
 		plr[pnum]._pmode = PM_WALK2;
-		plr[pnum].position.velocity.x = xvel;
-		plr[pnum].position.velocity.y = yvel;
-		plr[pnum]._pVar6 = xoff * 256;
-		plr[pnum]._pVar7 = yoff * 256;
-		plr[pnum]._pVar3 = EndDir;
+		plr[pnum].position.velocity = { xvel, yvel };
+		plr[pnum].position.offset2 = { xoff * 256, yoff * 256 };
+		plr[pnum].tempDirection = EndDir;
 		break;
 	case PM_WALK3:
 		int x = mapx + plr[pnum].position.current.x;
@@ -1520,8 +1501,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		plr[pnum]._pVar4 = x;
 		plr[pnum]._pVar5 = y;
 		dFlags[x][y] |= BFLAG_PLAYERLR;
-		plr[pnum].position.offset.x = xoff; // Offset player sprite to align with their previous tile position
-		plr[pnum].position.offset.y = yoff;
+		plr[pnum].position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
 
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(plr[pnum]._plid, x, y);
@@ -1529,13 +1509,10 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		}
 
 		plr[pnum]._pmode = PM_WALK3;
-		plr[pnum].position.velocity.x = xvel;
-		plr[pnum].position.velocity.y = yvel;
-		plr[pnum]._pVar1 = px;
-		plr[pnum]._pVar2 = py;
-		plr[pnum]._pVar6 = xoff * 256;
-		plr[pnum]._pVar7 = yoff * 256;
-		plr[pnum]._pVar3 = EndDir;
+		plr[pnum].position.velocity = { xvel, yvel };
+		plr[pnum].tempPoint = { px, py };
+		plr[pnum].position.offset2 = { xoff * 256, yoff * 256 };
+		plr[pnum].tempDirection = EndDir;
 		break;
 	}
 
@@ -1548,19 +1525,19 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
 
 	plr[pnum]._pdir = EndDir;
-	plr[pnum]._pVar8 = 0;
+	plr[pnum].actionFrame = 0;
 
 	if (pnum != myplr) {
 		return;
 	}
 
 	if (zoomflag) {
-		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {
+		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
 			ScrollInfo._sdir = SDIR_NONE;
 		} else {
 			ScrollInfo._sdir = sdir;
 		}
-	} else if (abs(ScrollInfo._sdx) >= 2 || abs(ScrollInfo._sdy) >= 2) {
+	} else if (abs(ScrollInfo.tile.x) >= 2 || abs(ScrollInfo.tile.y) >= 2) {
 		ScrollInfo._sdir = SDIR_NONE;
 	} else {
 		ScrollInfo._sdir = sdir;
@@ -1626,8 +1603,7 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 	plr[pnum]._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
-	plr[pnum]._pVar1 = cx;
-	plr[pnum]._pVar2 = cy;
+	plr[pnum].tempPoint = { cx, cy };
 }
 
 void StartPlrBlock(int pnum, direction dir)
@@ -1699,10 +1675,9 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
 
-	plr[pnum]._pVar1 = cx;
-	plr[pnum]._pVar2 = cy;
+	plr[pnum].tempPoint = { cx, cy };
 	plr[pnum]._pVar4 = GetSpellLevel(pnum, plr[pnum]._pSpell);
-	plr[pnum]._pVar8 = 1;
+	plr[pnum].actionFrame = 1;
 }
 
 void FixPlrWalkTags(int pnum)
@@ -1907,7 +1882,7 @@ StartPlayerKill(int pnum, int earflag)
 	p->_pmode = PM_DEATH;
 	p->_pInvincible = true;
 	SetPlayerHitPoints(pnum, 0);
-	p->_pVar8 = 1;
+	p->deathFrame = 1;
 
 	if (pnum != myplr && !earflag && !diablolevel) {
 		for (i = 0; i < NUM_INVLOC; i++) {
@@ -2338,7 +2313,7 @@ bool PM_DoWalk(int pnum, int variant)
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
-			plr[pnum]._pVar8++;
+			plr[pnum].actionFrame++;
 		}
 		if (plr[pnum]._pAnimFrame >= plr[pnum]._pWFrames) {
 			plr[pnum]._pAnimFrame = 0;
@@ -2352,23 +2327,23 @@ bool PM_DoWalk(int pnum, int variant)
 	}
 
 	//Check if we reached new tile
-	if (plr[pnum]._pVar8 >= anim_len) {
+	if (plr[pnum].actionFrame >= anim_len) {
 
 		//Update the player's tile position
 		switch (variant) {
 		case PM_WALK:
 			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = 0;
-			plr[pnum].position.current.x += plr[pnum]._pVar1;
-			plr[pnum].position.current.y += plr[pnum]._pVar2;
+			plr[pnum].position.current.x += plr[pnum].tempPoint.x;
+			plr[pnum].position.current.y += plr[pnum].tempPoint.y;
 			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
 			break;
 		case PM_WALK2:
-			dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
+			dPlayer[plr[pnum].tempPoint.x][plr[pnum].tempPoint.y] = 0;
 			break;
 		case PM_WALK3:
 			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = 0;
 			dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
-			plr[pnum].position.current = { plr[pnum]._pVar1, plr[pnum]._pVar2 };
+			plr[pnum].position.current = plr[pnum].tempPoint;
 			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
 			break;
 		}
@@ -2381,14 +2356,14 @@ bool PM_DoWalk(int pnum, int variant)
 
 		//Update the "camera" tile position
 		if (pnum == myplr && ScrollInfo._sdir) {
-			ViewX = plr[pnum].position.current.x - ScrollInfo._sdx;
-			ViewY = plr[pnum].position.current.y - ScrollInfo._sdy;
+			ViewX = plr[pnum].position.current.x - ScrollInfo.tile.x;
+			ViewY = plr[pnum].position.current.y - ScrollInfo.tile.y;
 		}
 
 		if (plr[pnum].walkpath[0] != WALK_NONE) {
 			StartWalkStand(pnum);
 		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
+			StartStand(pnum, plr[pnum].tempDirection);
 		}
 
 		ClearPlrPVars(pnum);
@@ -2582,7 +2557,7 @@ bool PlrHitMonst(int pnum, int m)
 #endif
 		if (plr[pnum]._pIFlags & ISPL_FIREDAM && plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
 			int midam = plr[pnum]._pIFMinDam + GenerateRnd(plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
-			AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum]._pVar1, plr[pnum]._pVar2, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+			AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum].tempPoint.x, plr[pnum].tempPoint.y, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		}
 		mind = plr[pnum]._pIMinDam;
 		maxd = plr[pnum]._pIMaxDam;
@@ -2885,7 +2860,7 @@ bool PM_DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			if (CanTalkToMonst(m)) {
-				plr[pnum]._pVar1 = 0;
+				plr[pnum].tempPoint.x = 0; /** @todo Looks to be irrelevant, probably just remove it */
 				return false;
 			}
 		}
@@ -2990,10 +2965,10 @@ bool PM_DoRangeAttack(int pnum)
 		int yoff = 0;
 		if (arrows != 1) {
 			int angle = arrow == 0 ? -1 : 1;
-			int x = plr[pnum]._pVar1 - plr[pnum].position.current.x;
+			int x = plr[pnum].tempPoint.x - plr[pnum].position.current.x;
 			if (x != 0)
 				yoff = x < 0 ? angle : -angle;
-			int y = plr[pnum]._pVar2 - plr[pnum].position.current.y;
+			int y = plr[pnum].tempPoint.y - plr[pnum].position.current.y;
 			if (y != 0)
 				xoff = y < 0 ? -angle : angle;
 		}
@@ -3014,8 +2989,8 @@ bool PM_DoRangeAttack(int pnum)
 		AddMissile(
 		    plr[pnum].position.current.x,
 		    plr[pnum].position.current.y,
-		    plr[pnum]._pVar1 + xoff,
-		    plr[pnum]._pVar2 + yoff,
+		    plr[pnum].tempPoint.x + xoff,
+		    plr[pnum].tempPoint.y + yoff,
 		    plr[pnum]._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
@@ -3156,14 +3131,14 @@ bool PM_DoSpell(int pnum)
 		app_fatal("PM_DoSpell: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pVar8 == plr[pnum]._pSFNum) {
+	if (plr[pnum].actionFrame == plr[pnum]._pSFNum) {
 		CastSpell(
 		    pnum,
 		    plr[pnum]._pSpell,
 		    plr[pnum].position.current.x,
 		    plr[pnum].position.current.y,
-		    plr[pnum]._pVar1,
-		    plr[pnum]._pVar2,
+		    plr[pnum].tempPoint.x,
+		    plr[pnum].tempPoint.y,
 		    plr[pnum]._pVar4);
 
 		if (plr[pnum]._pSplFrom == 0) {
@@ -3171,10 +3146,10 @@ bool PM_DoSpell(int pnum)
 		}
 	}
 
-	plr[pnum]._pVar8++;
+	plr[pnum].actionFrame++;
 
 	if (leveltype == DTYPE_TOWN) {
-		if (plr[pnum]._pVar8 > plr[pnum]._pSFrames) {
+		if (plr[pnum].actionFrame > plr[pnum]._pSFrames) {
 			StartWalkStand(pnum);
 			ClearPlrPVars(pnum);
 			return true;
@@ -3226,7 +3201,7 @@ bool PM_DoDeath(int pnum)
 		app_fatal("PM_DoDeath: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pVar8 >= 2 * plr[pnum]._pDFrames) {
+	if (plr[pnum].deathFrame >= 2 * plr[pnum]._pDFrames) {
 		if (deathdelay > 1 && pnum == myplr) {
 			deathdelay--;
 			if (deathdelay == 1) {
@@ -3242,8 +3217,8 @@ bool PM_DoDeath(int pnum)
 		dFlags[plr[pnum].position.current.x][plr[pnum].position.current.y] |= BFLAG_DEAD_PLAYER;
 	}
 
-	if (plr[pnum]._pVar8 < 100) {
-		plr[pnum]._pVar8++;
+	if (plr[pnum].deathFrame < 100) {
+		plr[pnum].deathFrame++;
 	}
 
 	return false;
@@ -3405,7 +3380,7 @@ void CheckNewPath(int pnum)
 			break;
 		case ACTION_SPELLWALL:
 			StartSpell(pnum, plr[pnum].destParam3, plr[pnum].destParam1, plr[pnum].destParam2);
-			plr[pnum]._pVar3 = plr[pnum].destParam3;
+			plr[pnum].tempDirection = plr[pnum].destParam3;
 			plr[pnum]._pVar4 = plr[pnum].destParam4;
 			break;
 		case ACTION_SPELLMON:
