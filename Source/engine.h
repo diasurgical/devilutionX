@@ -27,7 +27,7 @@
 
 namespace devilution {
 
-#if defined(__clang__) || !defined(__GNUC__) || __GNUC__ > 7 || (__GNUC__ == 7 && __GNUC_MINOR__ < 0)
+#if defined(__cpp_lib_clamp)
 using std::clamp;
 #else
 template <typename T>
