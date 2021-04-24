@@ -1149,8 +1149,8 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 	    : full_out.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
-	sx = ScrollInfo._sxoff + tileOffsetX;
-	sy = ScrollInfo._syoff + tileOffsetY;
+	sx = ScrollInfo.offset.x + tileOffsetX;
+	sy = ScrollInfo.offset.y + tileOffsetY;
 
 	columns = tileColums;
 	rows = tileRows;

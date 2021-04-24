@@ -9,6 +9,7 @@
 #include <stdint.h>
 
 #include "diablo.h"
+#include "engine.h"
 #include "gendung.h"
 #include "items.h"
 #include "multi.h"
@@ -147,11 +148,6 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
-struct Point {
-	int x;
-	int y;
-};
-
 struct PlayerPosition {
 	/** Tile position */
 	Point current; // 256
@@ -163,6 +159,8 @@ struct PlayerPosition {
 	Point old;
 	/** Player sprite's pixel offset from tile. */
 	Point offset;
+	/** Same as offset but contains the value in a higher range */
+	Point offset2;
 	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
 	Point velocity;
 };
@@ -247,14 +245,18 @@ struct PlayerStruct {
 	int8_t _pLghtResist;
 	int _pGold;
 	bool _pInfraFlag;
-	int _pVar1;       // Used for referring to X-position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks)
-	int _pVar2;       // Used for referring to Y-position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks)
-	direction _pVar3; // Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL.
-	int _pVar4;       // Used for storing X-position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it)
-	int _pVar5;       // Used for storing Y-position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it)
-	int _pVar6;       // Same as position.offset.x but contains the value in a higher range
-	int _pVar7;       // Same as position.offset.y but contains the value in a higher range
-	int _pVar8;       // Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). Also used for stalling the appearance of the options screen after dying in singleplayer
+	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
+	direction tempDirection;
+	/** Used for referring to position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks) */
+	Point tempPoint;
+	/** Used for spell level, and X component of _pVar5 */
+	int _pVar4;
+	/** Used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it) */
+	int _pVar5;
+	/** Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). */
+	int actionFrame;
+	/** Used for stalling the appearance of the options screen after dying in singleplayer */
+	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 	                               /** Using player_graphic as bitflags */

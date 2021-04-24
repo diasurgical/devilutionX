@@ -269,8 +269,8 @@ void SearchAutomapItem(const CelOutputBuffer &out)
 				int px = i - 2 * AutoMapXOfs - ViewX;
 				int py = j - 2 * AutoMapYOfs - ViewY;
 
-				x = (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
-				y = (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
+				x = (ScrollInfo.offset.x * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
+				y = (ScrollInfo.offset.y * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
 
 				if (PANELS_COVER) {
 					if (invflag || sbookflag)
@@ -309,8 +309,8 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int pnum)
 	int px = x - 2 * AutoMapXOfs - ViewX;
 	int py = y - 2 * AutoMapYOfs - ViewY;
 
-	x = (plr[pnum].position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
-	y = (plr[pnum].position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
+	x = (plr[pnum].position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo.offset.x * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
+	y = (plr[pnum].position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo.offset.y * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
 
 	if (PANELS_COVER) {
 		if (invflag || sbookflag)
@@ -597,7 +597,7 @@ void DrawAutomap(const CelOutputBuffer &out)
 	if ((gnScreenWidth / 2) % d >= (AutoMapScale * 32) / 100)
 		cells++;
 
-	if ((ScrollInfo._sxoff + ScrollInfo._syoff) != 0)
+	if ((ScrollInfo.offset.x + ScrollInfo.offset.y) != 0)
 		cells++;
 	int mapx = AutoMapX - cells;
 	int mapy = AutoMapY - 1;
@@ -618,8 +618,8 @@ void DrawAutomap(const CelOutputBuffer &out)
 		sy -= AmLine8;
 	}
 
-	sx += AutoMapScale * ScrollInfo._sxoff / 100 / 2;
-	sy += AutoMapScale * ScrollInfo._syoff / 100 / 2;
+	sx += AutoMapScale * ScrollInfo.offset.x / 100 / 2;
+	sy += AutoMapScale * ScrollInfo.offset.y / 100 / 2;
 	if (PANELS_COVER) {
 		if (invflag || sbookflag) {
 			sx -= gnScreenWidth / 4;

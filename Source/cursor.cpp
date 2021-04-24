@@ -251,14 +251,14 @@ void CheckCursMove()
 
 	// Adjust by player offset and tile grid alignment
 	CalcTileOffset(&xo, &yo);
-	sx -= ScrollInfo._sxoff - xo;
-	sy -= ScrollInfo._syoff - yo;
+	sx -= ScrollInfo.offset.x - xo;
+	sy -= ScrollInfo.offset.y - yo;
 
 	// Predict the next frame when walking to avoid input jitter
-	fx = plr[myplr]._pVar6 / 256;
-	fy = plr[myplr]._pVar7 / 256;
-	fx -= (plr[myplr]._pVar6 + plr[myplr].position.velocity.x) / 256;
-	fy -= (plr[myplr]._pVar7 + plr[myplr].position.velocity.y) / 256;
+	fx = plr[myplr].position.offset2.x / 256;
+	fy = plr[myplr].position.offset2.y / 256;
+	fx -= (plr[myplr].position.offset2.x + plr[myplr].position.velocity.x) / 256;
+	fy -= (plr[myplr].position.offset2.y + plr[myplr].position.velocity.y) / 256;
 	if (ScrollInfo._sdir != SDIR_NONE) {
 		sx -= fx;
 		sy -= fy;

@@ -192,7 +192,7 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 {
 	direction dir = plr[id]._pdir;
 	if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
-		dir = plr[id]._pVar3;
+		dir = plr[id].tempDirection;
 	}
 
 	for (int i = 0; spelldata[spl].sMissiles[i] != MIS_NULL && i < 3; i++) {

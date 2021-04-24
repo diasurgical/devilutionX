@@ -421,14 +421,14 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pGold = file->nextLE<Sint32>();
 
 	pPlayer->_pInfraFlag = file->nextBool32();
-	pPlayer->_pVar1 = file->nextLE<Sint32>();
-	pPlayer->_pVar2 = file->nextLE<Sint32>();
-	pPlayer->_pVar3 = static_cast<direction>(file->nextLE<Sint32>());
+	pPlayer->tempPoint.x = file->nextLE<Sint32>();
+	pPlayer->tempPoint.y = file->nextLE<Sint32>();
+	pPlayer->tempDirection = static_cast<direction>(file->nextLE<Sint32>());
 	pPlayer->_pVar4 = file->nextLE<Sint32>();
 	pPlayer->_pVar5 = file->nextLE<Sint32>();
-	pPlayer->_pVar6 = file->nextLE<Sint32>();
-	pPlayer->_pVar7 = file->nextLE<Sint32>();
-	pPlayer->_pVar8 = file->nextLE<Sint32>();
+	pPlayer->position.offset2.x = file->nextLE<Sint32>();
+	pPlayer->position.offset2.y = file->nextLE<Sint32>();
+	pPlayer->actionFrame = file->nextLE<Sint32>();
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		pPlayer->_pLvlVisited[i] = file->nextBool8();
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
@@ -1401,14 +1401,14 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Sint32>(pPlayer->_pGold);
 
 	file->writeLE<Uint32>(pPlayer->_pInfraFlag);
-	file->writeLE<Sint32>(pPlayer->_pVar1);
-	file->writeLE<Sint32>(pPlayer->_pVar2);
-	file->writeLE<Sint32>(pPlayer->_pVar3);
+	file->writeLE<Sint32>(pPlayer->tempPoint.x);
+	file->writeLE<Sint32>(pPlayer->tempPoint.y);
+	file->writeLE<Sint32>(pPlayer->tempDirection);
 	file->writeLE<Sint32>(pPlayer->_pVar4);
 	file->writeLE<Sint32>(pPlayer->_pVar5);
-	file->writeLE<Sint32>(pPlayer->_pVar6);
-	file->writeLE<Sint32>(pPlayer->_pVar7);
-	file->writeLE<Sint32>(pPlayer->_pVar8);
+	file->writeLE<Sint32>(pPlayer->position.offset2.x);
+	file->writeLE<Sint32>(pPlayer->position.offset2.y);
+	file->writeLE<Sint32>(pPlayer->actionFrame);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		file->writeLE<Uint8>(pPlayer->_pLvlVisited[i]);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
