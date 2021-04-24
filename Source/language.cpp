@@ -69,7 +69,7 @@ const char* LanguageTranslate(const char* key) {
 
 
 void LanguageInitialize() {
-  std::string path = GetLangPath() + "./" + sgOptions.Language.szCode + ".mo";
+  std::string path = GetLangPath() + "./" + sgOptions.Language.szCode + ".gmo";
   mo_head head;
   FILE *fp;
   
