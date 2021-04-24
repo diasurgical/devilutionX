@@ -4,6 +4,8 @@
  * Quality of life features
  */
 
+#include <algorithm>
+
 #include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "cursor.h"
@@ -97,9 +99,7 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 	Sint32 yPos = 18;
 	Sint32 border = 3;
 
-	Sint32 maxLife = mon->_mmaxhp;
-	if (mon->_mhitpoints > maxLife)
-		maxLife = mon->_mhitpoints;
+	const Sint32 maxLife = std::max(mon->_mmaxhp, mon->_mhitpoints);
 
 	DrawArt(out, xPos, yPos, &qolArt->healthBox);
 	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));

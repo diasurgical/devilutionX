@@ -5,6 +5,8 @@
  */
 #include "automap.h"
 
+#include <algorithm>
+
 #include "control.h"
 #include "inv.h"
 #include "miniwin/miniwin.h"
@@ -255,32 +257,14 @@ void SearchAutomapItem(const CelOutputBuffer &out)
 			y++;
 	}
 
-	int x1 = x - 8;
-	if (x1 < 0)
-		x1 = 0;
-	else if (x1 > MAXDUNX)
-		x1 = MAXDUNX;
+	const int startX = std::clamp(x - 8, 0, MAXDUNX);
+	const int startY = std::clamp(y - 8, 0, MAXDUNY);
 
-	int y1 = y - 8;
-	if (y1 < 0)
-		y1 = 0;
-	else if (y1 > MAXDUNY)
-		y1 = MAXDUNY;
+	const int endX = std::clamp(x + 8, 0, MAXDUNX);
+	const int endY = std::clamp(y + 8, 0, MAXDUNY);
 
-	int x2 = x + 8;
-	if (x2 < 0)
-		x2 = 0;
-	else if (x2 > MAXDUNX)
-		x2 = MAXDUNX;
-
-	int y2 = y + 8;
-	if (y2 < 0)
-		y2 = 0;
-	else if (y2 > MAXDUNY)
-		y2 = MAXDUNY;
-
-	for (int i = x1; i < x2; i++) {
-		for (int j = y1; j < y2; j++) {
+	for (int i = startX; i < endX; i++) {
+		for (int j = startY; j < endY; j++) {
 			if (dItem[i][j] != 0) {
 				int px = i - 2 * AutoMapXOfs - ViewX;
 				int py = j - 2 * AutoMapYOfs - ViewY;
