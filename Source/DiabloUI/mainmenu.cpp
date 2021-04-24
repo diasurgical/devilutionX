@@ -107,7 +107,7 @@ bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*
 		MainmenuFree();
 
 		if (gbSpawned && !gbIsHellfire && MainMenuResult == MAINMENU_REPLAY_INTRO) {
-			UiSelOkDialog(nullptr, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
+			UiSelOkDialog(nullptr, _("The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
 			MainMenuResult = MAINMENU_NONE;
 		}
 	}
