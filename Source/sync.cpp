@@ -6,6 +6,7 @@
 #include <climits>
 
 #include "gendung.h"
+#include "miniwin/miniwin.h"
 #include "monster.h"
 #include "player.h"
 
@@ -13,9 +14,9 @@ namespace devilution {
 
 namespace {
 
-Uint16 sgnMonsterPriority[MAXMONSTERS];
+uint16_t sgnMonsterPriority[MAXMONSTERS];
 int sgnMonsters;
-Uint16 sgwLRU[MAXMONSTERS];
+uint16_t sgwLRU[MAXMONSTERS];
 int sgnSyncItem;
 int sgnSyncPInv;
 
@@ -49,7 +50,7 @@ static void sync_monster_pos(TSyncMonster *p, int ndx)
 static bool sync_monster_active(TSyncMonster *p)
 {
 	int i, m, ndx;
-	Uint32 lru;
+	uint32_t lru;
 
 	ndx = -1;
 	lru = 0xFFFFFFFF;
@@ -73,7 +74,7 @@ static bool sync_monster_active(TSyncMonster *p)
 static bool sync_monster_active2(TSyncMonster *p)
 {
 	int i, m, ndx;
-	Uint32 lru;
+	uint32_t lru;
 
 	ndx = -1;
 	lru = 0xFFFE;
@@ -158,7 +159,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 
 } // namespace
 
-Uint32 sync_all_monsters(const Uint8 *pbBuf, Uint32 dwMaxLen)
+uint32_t sync_all_monsters(const BYTE *pbBuf, uint32_t dwMaxLen)
 {
 	TSyncHeader *pHdr;
 	int i;
@@ -204,7 +205,7 @@ Uint32 sync_all_monsters(const Uint8 *pbBuf, Uint32 dwMaxLen)
 static void sync_monster(int pnum, const TSyncMonster *p)
 {
 	int ndx, mdx, mdy;
-	Uint32 delta;
+	uint32_t delta;
 
 	ndx = p->_mndx;
 
@@ -253,10 +254,10 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 	decode_enemy(ndx, p->_menemy);
 }
 
-Uint32 sync_update(int pnum, const Uint8 *pbBuf)
+uint32_t sync_update(int pnum, const BYTE *pbBuf)
 {
 	TSyncHeader *pHdr;
-	Uint16 wLen;
+	uint16_t wLen;
 
 	pHdr = (TSyncHeader *)pbBuf;
 	pbBuf += sizeof(*pHdr);

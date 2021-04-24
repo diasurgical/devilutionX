@@ -4,6 +4,8 @@
  * Implementation of load screens.
  */
 
+#include <stdint.h>
+
 #include "control.h"
 #include "DiabloUI/art_draw.h"
 #include "dx.h"
@@ -16,7 +18,7 @@
 namespace devilution {
 
 BYTE *sgpBackCel;
-Uint32 sgdwProgress;
+uint32_t sgdwProgress;
 int progress_id;
 
 /** The color used for the progress bar as an index into the palette. */
@@ -173,7 +175,7 @@ static void DrawCutscene()
 	DrawArt(out, PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y, &ArtCutsceneWidescreen);
 	CelDrawTo(out, PANEL_X, 480 - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
 
-	for (Uint32 i = 0; i < sgdwProgress; i++) {
+	for (unsigned i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
 		    out,
 		    BarPos[progress_id][0] + i + PANEL_X,

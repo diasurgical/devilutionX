@@ -1057,7 +1057,7 @@ enum sfx_flag : uint8_t {
 };
 
 struct TSFX {
-	Uint8 bFlags;
+	uint8_t bFlags;
 	const char *pszName;
 	TSnd *pSnd;
 };

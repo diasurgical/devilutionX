@@ -559,7 +559,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	int dadd = 0; // added dexterity
 	int vadd = 0; // added vitality
 
-	Uint64 spl = 0; // bitarray for all enabled/active spells
+	uint64_t spl = 0; // bitarray for all enabled/active spells
 
 	int fr = 0; // fire resistance
 	int lr = 0; // lightning resistance
@@ -3882,9 +3882,9 @@ void PrintItemMisc(ItemStruct *x)
 static void PrintItemInfo(ItemStruct *x)
 {
 	PrintItemMisc(x);
-	Uint8 str = x->_iMinStr;
-	Uint8 dex = x->_iMinDex;
-	Uint8 mag = x->_iMinMag;
+	uint8_t str = x->_iMinStr;
+	uint8_t dex = x->_iMinDex;
+	uint8_t mag = x->_iMinMag;
 	if (str != 0 || mag != 0 || dex != 0) {
 		strcpy(tempstr, "Required:");
 		if (str)

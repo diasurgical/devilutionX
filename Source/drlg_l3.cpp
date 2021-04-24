@@ -19,7 +19,7 @@ namespace devilution {
 namespace {
 
 /** This will be true if a lava pool has been generated for the level */
-Uint8 lavapool;
+uint8_t lavapool;
 int lockoutcnt;
 bool lockout[DMAXX][DMAXY];
 

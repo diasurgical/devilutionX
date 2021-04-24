@@ -13,9 +13,9 @@ namespace devilution {
 
 struct PortalStruct {
 	bool open;
-	Sint32 x;
-	Sint32 y;
-	Sint32 level;
+	int x;
+	int y;
+	int level;
 	dungeon_type ltype;
 	bool setlvl;
 };

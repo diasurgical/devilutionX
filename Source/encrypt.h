@@ -5,18 +5,18 @@
  */
 #pragma once
 
-#include <SDL.h>
+#include <stdint.h>
 
 #include "miniwin/miniwin.h"
 
 namespace devilution {
 
 struct TDataInfo {
-	Uint8 *srcData;
-	Uint32 srcOffset;
-	Uint8 *destData;
-	Uint32 destOffset;
-	Uint32 size;
+	BYTE *srcData;
+	uint32_t srcOffset;
+	BYTE *destData;
+	uint32_t destOffset;
+	uint32_t size;
 };
 
 void Decrypt(DWORD *castBlock, DWORD size, DWORD key);

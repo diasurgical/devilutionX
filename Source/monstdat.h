@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <SDL.h>
 #include <stdint.h>
 
 namespace devilution {
@@ -78,39 +77,39 @@ struct MonsterData {
 	const char *GraphicType;
 	const char *sndfile;
 	const char *TransFile;
-	Uint16 width;
-	Uint16 mImage;
+	uint16_t width;
+	uint16_t mImage;
 	bool has_special;
 	bool snd_special;
 	bool has_trans;
-	Uint8 Frames[6];
-	Uint8 Rate[6];
-	Sint8 mMinDLvl;
-	Sint8 mMaxDLvl;
-	Sint8 mLevel;
-	Uint16 mMinHP;
-	Uint16 mMaxHP;
+	uint8_t Frames[6];
+	uint8_t Rate[6];
+	int8_t mMinDLvl;
+	int8_t mMaxDLvl;
+	int8_t mLevel;
+	uint16_t mMinHP;
+	uint16_t mMaxHP;
 	_mai_id mAi;
 	/** Usign monster_flag as bitflags */
-	Uint16 mFlags;
-	Uint8 mInt;
-	Uint8 mHit;
-	Uint8 mAFNum;
-	Uint8 mMinDamage;
-	Uint8 mMaxDamage;
-	Uint8 mHit2;
-	Uint8 mAFNum2;
-	Uint8 mMinDamage2;
-	Uint8 mMaxDamage2;
-	Uint8 mArmorClass;
+	uint16_t mFlags;
+	uint8_t mInt;
+	uint8_t mHit;
+	uint8_t mAFNum;
+	uint8_t mMinDamage;
+	uint8_t mMaxDamage;
+	uint8_t mHit2;
+	uint8_t mAFNum2;
+	uint8_t mMinDamage2;
+	uint8_t mMaxDamage2;
+	uint8_t mArmorClass;
 	_mc_id mMonstClass;
 	/** Using monster_resistance as bitflags */
-	Uint8 mMagicRes;
+	uint8_t mMagicRes;
 	/** Using monster_resistance as bitflags */
-	Uint8 mMagicRes2;
-	Sint8 mSelFlag;   // TODO Create enum
-	Uint16 mTreasure; // TODO Create enum
-	Uint16 mExp;
+	uint8_t mMagicRes2;
+	int8_t mSelFlag;    // TODO Create enum
+	uint16_t mTreasure; // TODO Create enum
+	uint16_t mExp;
 };
 
 enum _monster_id : int16_t {
@@ -266,18 +265,18 @@ struct UniqMonstStruct {
 	_monster_id mtype;
 	const char *mName;
 	const char *mTrnName;
-	Uint8 mlevel;
-	Uint16 mmaxhp;
+	uint8_t mlevel;
+	uint16_t mmaxhp;
 	_mai_id mAi;
-	Uint8 mint;
-	Uint8 mMinDamage;
-	Uint8 mMaxDamage;
+	uint8_t mint;
+	uint8_t mMinDamage;
+	uint8_t mMaxDamage;
 	/** Using monster_resistance as bitflags */
-	Uint16 mMagicRes;
-	Uint16 mUnqAttr; // TODO create enum
-	Uint8 mUnqVar1;
-	Uint8 mUnqVar2;
-	Sint32 mtalkmsg;
+	uint16_t mMagicRes;
+	uint16_t mUnqAttr; // TODO create enum
+	uint8_t mUnqVar1;
+	uint8_t mUnqVar2;
+	int mtalkmsg;
 };
 
 extern const MonsterData monsterdata[];

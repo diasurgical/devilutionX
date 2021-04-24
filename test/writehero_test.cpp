@@ -2,6 +2,7 @@
 #include <fstream>
 #include <gtest/gtest.h>
 #include <vector>
+#include <stdint.h>
 
 #include "loadsave.h"
 #include "pack.h"
@@ -116,7 +117,7 @@ static void PackItemArmor(PkItemStruct *id)
 
 static void PackItemFullRejuv(PkItemStruct *id, int i)
 {
-	const Uint32 seeds[] = { 0x7C253335, 0x3EEFBFF8, 0x76AFB1A9, 0x38EB45FE, 0x1154E197, 0x5964B644, 0x76B58BEB, 0x002A6E5A };
+	const uint32_t seeds[] = { 0x7C253335, 0x3EEFBFF8, 0x76AFB1A9, 0x38EB45FE, 0x1154E197, 0x5964B644, 0x76B58BEB, 0x002A6E5A };
 	id->idx = ItemMiscIdIdx(IMISC_FULLREJUV);
 	id->iSeed = seeds[i];
 	id->iCreateInfo = 0;
@@ -188,7 +189,7 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	for (auto i = 0; i < 7; i++)
 		pPack->InvBody[i].idx = -1;
 	strcpy(pPack->pName, "TestPlayer");
-	pPack->pClass = static_cast<Sint8>(HeroClass::Rogue);
+	pPack->pClass = static_cast<int8_t>(HeroClass::Rogue);
 	pPack->pBaseStr = 20 + 35;
 	pPack->pBaseMag = 15 + 55;
 	pPack->pBaseDex = 30 + 220;
@@ -221,7 +222,7 @@ static int CountItems(ItemStruct *items, int n)
 	return count;
 }
 
-static int Count8(Sint8 *ints, int n)
+static int Count8(int8_t *ints, int n)
 {
 	int count = n;
 	for (int i = 0; i < n; i++)

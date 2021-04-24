@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 #include "objdat.h"
 #include "textdat.h"
 #include "itemdat.h"
@@ -15,35 +17,35 @@ namespace devilution {
 
 struct ObjectStruct {
 	_object_id _otype;
-	Sint32 _ox;
-	Sint32 _oy;
+	int _ox;
+	int _oy;
 	bool _oLight;
-	Uint32 _oAnimFlag;
+	uint32_t _oAnimFlag;
 	unsigned char *_oAnimData;
-	Sint32 _oAnimDelay; // Tick length of each frame in the current animation
-	Sint32 _oAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
-	Sint32 _oAnimLen;   // Number of frames in current animation
-	Sint32 _oAnimFrame; // Current frame of animation.
-	Sint32 _oAnimWidth;
-	Sint32 _oAnimWidth2;
+	int _oAnimDelay; // Tick length of each frame in the current animation
+	int _oAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
+	int _oAnimLen;   // Number of frames in current animation
+	int _oAnimFrame; // Current frame of animation.
+	int _oAnimWidth;
+	int _oAnimWidth2;
 	bool _oDelFlag;
-	Sint8 _oBreak;
+	int8_t _oBreak;
 	bool _oSolidFlag;
 	bool _oMissFlag;
-	Uint8 _oSelFlag;
+	uint8_t _oSelFlag;
 	bool _oPreFlag;
 	bool _oTrapFlag;
 	bool _oDoorFlag;
-	Sint32 _olid;
-	Sint32 _oRndSeed;
-	Sint32 _oVar1;
-	Sint32 _oVar2;
-	Sint32 _oVar3;
-	Sint32 _oVar4;
-	Sint32 _oVar5;
-	Sint32 _oVar6;
+	int _olid;
+	int _oRndSeed;
+	int _oVar1;
+	int _oVar2;
+	int _oVar3;
+	int _oVar4;
+	int _oVar5;
+	int _oVar6;
 	_speech_id _oVar7;
-	Sint32 _oVar8;
+	int _oVar8;
 };
 
 extern int objectactive[MAXOBJECTS];

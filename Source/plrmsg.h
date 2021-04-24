@@ -5,13 +5,16 @@
  */
 #pragma once
 
+#include "SDL.h"
+#include <stdint.h>
+
 #include "engine.h"
 
 namespace devilution {
 
 struct _plrmsg {
 	Uint32 time;
-	Uint8 player;
+	uint8_t player;
 	char str[144];
 };
 

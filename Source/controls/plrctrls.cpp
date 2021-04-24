@@ -91,7 +91,7 @@ int GetDistance(int dx, int dy, int maxDistance)
 		return 0;
 	}
 
-	Sint8 walkpath[MAX_PATH_LENGTH];
+	int8_t walkpath[MAX_PATH_LENGTH];
 	int steps = FindPath(PosOkPlayer, myplr, plr[myplr].position.future.x, plr[myplr].position.future.y, dx, dy, walkpath);
 	if (steps > maxDistance)
 		return 0;

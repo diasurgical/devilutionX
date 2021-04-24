@@ -86,15 +86,15 @@ void DrawXPBar(const CelOutputBuffer &out)
 	if (player._pExperience < prevXp)
 		return;
 
-	Uint64 prevXpDelta_1 = player._pExperience - prevXp;
-	Uint64 prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
-	Uint64 fullBar = BAR_WIDTH * prevXpDelta_1 / prevXpDelta;
+	uint64_t prevXpDelta_1 = player._pExperience - prevXp;
+	uint64_t prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
+	uint64_t fullBar = BAR_WIDTH * prevXpDelta_1 / prevXpDelta;
 
 	// Figure out how much to fill the last pixel of the XP bar, to make it gradually appear with gained XP
-	Uint64 onePx = prevXpDelta / BAR_WIDTH + 1;
-	Uint64 lastFullPx = fullBar * prevXpDelta / BAR_WIDTH;
+	uint64_t onePx = prevXpDelta / BAR_WIDTH + 1;
+	uint64_t lastFullPx = fullBar * prevXpDelta / BAR_WIDTH;
 
-	const Uint64 fade = (prevXpDelta_1 - lastFullPx) * (SILVER_GRADIENT.size() - 1) / onePx;
+	const uint64_t fade = (prevXpDelta_1 - lastFullPx) * (SILVER_GRADIENT.size() - 1) / onePx;
 
 	// Draw beginning of bar full brightness
 	DrawBar(out, xPos, yPos, fullBar, SILVER_GRADIENT);

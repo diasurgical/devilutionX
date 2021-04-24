@@ -131,7 +131,7 @@ static DWORD pfile_get_save_num_from_name(const char *name)
 	return i;
 }
 
-static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, DWORD *pdwLen)
+static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, uint32_t *pdwLen)
 {
 	DWORD nread;
 	HANDLE file;
@@ -296,12 +296,12 @@ bool pfile_archive_contains_game(HANDLE hsArchive)
 	if (gbIsMultiplayer)
 		return false;
 
-	DWORD dwLen;
+	uint32_t dwLen;
 	BYTE *gameData = pfile_read_archive(hsArchive, "game", &dwLen);
 	if (gameData == nullptr)
 		return false;
 
-	Uint32 hdr = LOAD_LE32(gameData);
+	uint32_t hdr = LOAD_LE32(gameData);
 	mem_free_dbg(gameData);
 
 	return IsHeaderValid(hdr);

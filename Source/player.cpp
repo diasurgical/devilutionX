@@ -3,8 +3,8 @@
  *
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
-#include <SDL.h>
 #include <algorithm>
+#include <stdint.h>
 
 #include "control.h"
 #include "cursor.h"
@@ -3615,7 +3615,7 @@ void ValidatePlayer()
 		plr[myplr]._pBaseVit = plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
-	Uint64 msk = 0;
+	uint64_t msk = 0;
 	for (b = SPL_FIREBOLT; b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel((spell_id)b) != -1) {
 			msk |= GetSpellBitmask(b);

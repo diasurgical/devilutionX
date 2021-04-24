@@ -90,25 +90,25 @@ struct ScrollStruct {
 };
 
 struct THEME_LOC {
-	Sint16 x;
-	Sint16 y;
-	Sint16 ttval;
-	Sint16 width;
-	Sint16 height;
+	int16_t x;
+	int16_t y;
+	int16_t ttval;
+	int16_t width;
+	int16_t height;
 };
 
 struct MICROS {
-	Uint16 mt[16];
+	uint16_t mt[16];
 };
 
 struct ShadowStruct {
-	Uint8 strig;
-	Uint8 s1;
-	Uint8 s2;
-	Uint8 s3;
-	Uint8 nv1;
-	Uint8 nv2;
-	Uint8 nv3;
+	uint8_t strig;
+	uint8_t s1;
+	uint8_t s2;
+	uint8_t s3;
+	uint8_t nv1;
+	uint8_t nv2;
+	uint8_t nv3;
 };
 
 extern BYTE dungeon[DMAXX][DMAXY];

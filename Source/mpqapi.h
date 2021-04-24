@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <SDL.h>
 #include <stdint.h>
 
 #include "miniwin/miniwin.h"
@@ -16,26 +15,26 @@ struct _FILEHEADER {
 	int signature;
 	int headersize;
 	uint32_t filesize;
-	Uint16 version;
-	Sint16 sectorsizeid;
+	uint16_t version;
+	int16_t sectorsizeid;
 	int hashoffset;
 	int blockoffset;
 	int hashcount;
 	int blockcount;
-	Uint8 pad[72];
+	uint8_t pad[72];
 };
 
 struct _HASHENTRY {
-	Uint32 hashcheck[2];
-	Uint32 lcid;
+	uint32_t hashcheck[2];
+	uint32_t lcid;
 	int32_t block;
 };
 
 struct _BLOCKENTRY {
-	Uint32 offset;
-	Uint32 sizealloc;
-	Uint32 sizefile;
-	Uint32 flags;
+	uint32_t offset;
+	uint32_t sizealloc;
+	uint32_t sizefile;
+	uint32_t flags;
 };
 
 void mpqapi_remove_hash_entry(const char *pszName);

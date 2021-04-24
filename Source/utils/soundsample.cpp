@@ -123,9 +123,9 @@ int SoundSample::GetLength()
 		bytePerSample = 1;
 	}
 
-	Uint64 ms = 1000;                                  // milliseconds, 64bit to avoid overflow when multiplied by alen
-	Uint32 bps = frequency * channels * bytePerSample; // bytes per second
-	return (Uint32)(chunk->alen * ms / bps);
+	uint64_t ms = 1000;                             // milliseconds, 64bit to avoid overflow when multiplied by alen
+	int bps = frequency * channels * bytePerSample; // bytes per second
+	return (int)(chunk->alen * ms / bps);
 };
 
 } // namespace devilution
