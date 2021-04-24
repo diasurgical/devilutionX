@@ -579,6 +579,11 @@ direction GetDirection(Point start, Point destination)
 	return md;
 }
 
+int CalculateWidth2(int width)
+{
+	return (width - 64) / 2;
+}
+
 /**
  * @brief Set the RNG seed
  * @param s RNG seed
