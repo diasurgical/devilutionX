@@ -16,7 +16,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <SDL.h>
-#include <stdint.h>
+#include <cstdint>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"

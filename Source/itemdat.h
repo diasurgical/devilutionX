@@ -5,8 +5,8 @@
  */
 #pragma once
 
-#include <stdbool.h>
-#include <stdint.h>
+
+#include <cstdint>
 
 #include "objdat.h"
 #include "spelldat.h"

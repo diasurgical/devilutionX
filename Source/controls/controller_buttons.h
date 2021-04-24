@@ -1,7 +1,7 @@
 #pragma once
 // Unifies joystick, gamepad, and keyboard controller APIs.
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace devilution {
 

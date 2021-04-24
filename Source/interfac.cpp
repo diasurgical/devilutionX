@@ -4,7 +4,7 @@
  * Implementation of load screens.
  */
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "control.h"
 #include "DiabloUI/art_draw.h"

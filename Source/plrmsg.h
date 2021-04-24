@@ -6,7 +6,7 @@
 #pragma once
 
 #include "SDL.h"
-#include <stdint.h>
+#include <cstdint>
 
 #include "engine.h"
 

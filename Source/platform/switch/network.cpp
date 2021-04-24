@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
 #include <switch.h>
 #include "platform/switch/network.h"

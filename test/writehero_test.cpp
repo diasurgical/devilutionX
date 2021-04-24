@@ -2,7 +2,7 @@
 #include <fstream>
 #include <gtest/gtest.h>
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 
 #include "loadsave.h"
 #include "pack.h"

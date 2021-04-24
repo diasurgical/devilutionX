@@ -4,7 +4,7 @@
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
 #include <algorithm>
-#include <stdint.h>
+#include <cstdint>
 
 #include "control.h"
 #include "cursor.h"

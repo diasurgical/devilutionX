@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <limits>
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 
 #include "appfat.h"
 #include "multi.h"
