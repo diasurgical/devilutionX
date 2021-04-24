@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "engine.h"
 #include "miniwin/miniwin.h"
@@ -25,6 +26,30 @@ enum _scroll_direction : uint8_t {
 	SDIR_W,
 	SDIR_NW,
 };
+
+constexpr std::string_view toString(_scroll_direction value)
+{
+	switch(value) {
+	case SDIR_NONE:
+		return "None";
+	case SDIR_N:
+		return "North";
+	case SDIR_NE:
+		return "North East";
+	case SDIR_E:
+		return "East";
+	case SDIR_SE:
+		return "South East";
+	case SDIR_S:
+		return "South";
+	case SDIR_SW:
+		return "South West";
+	case SDIR_W:
+		return "West";
+	case SDIR_NW:
+		return "North West";
+	}
+}
 
 // Defined in SourceX/controls/plctrls.cpp
 extern bool sgbControllerActive;

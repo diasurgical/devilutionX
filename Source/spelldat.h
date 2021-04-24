@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "effects.h"
 
@@ -20,6 +21,22 @@ enum spell_type : uint8_t {
 	RSPLTYPE_CHARGES,
 	RSPLTYPE_INVALID,
 };
+
+constexpr std::string_view toString(spell_type value)
+{
+	switch(value) {
+	case RSPLTYPE_SKILL:
+		return "Skill";
+	case RSPLTYPE_SPELL:
+		return "Spell";
+	case RSPLTYPE_SCROLL:
+		return "Scroll";
+	case RSPLTYPE_CHARGES:
+		return "Charges";
+	case RSPLTYPE_INVALID:
+		return "Invalid";
+	}
+}
 
 enum spell_id : int8_t {
 	SPL_NULL,
@@ -78,11 +95,135 @@ enum spell_id : int8_t {
 	SPL_INVALID = -1,
 };
 
+constexpr std::string_view toString(spell_id value)
+{
+	switch(value) {
+	case SPL_NULL:
+		return "Null";
+	case SPL_FIREBOLT:
+		return "Firebolt";
+	case SPL_HEAL:
+		return "Heal";
+	case SPL_LIGHTNING:
+		return "Lightning";
+	case SPL_FLASH:
+		return "Flash";
+	case SPL_IDENTIFY:
+		return "Identify";
+	case SPL_FIREWALL:
+		return "Firewall";
+	case SPL_TOWN:
+		return "Town";
+	case SPL_STONE:
+		return "Stone";
+	case SPL_INFRA:
+		return "Infra";
+	case SPL_RNDTELEPORT:
+		return "Rndteleport";
+	case SPL_MANASHIELD:
+		return "Manashield";
+	case SPL_FIREBALL:
+		return "Fireball";
+	case SPL_GUARDIAN:
+		return "Guardian";
+	case SPL_CHAIN:
+		return "Chain";
+	case SPL_WAVE:
+		return "Wave";
+	case SPL_DOOMSERP:
+		return "Doomserp";
+	case SPL_BLODRIT:
+		return "Blodrit";
+	case SPL_NOVA:
+		return "Nova";
+	case SPL_INVISIBIL:
+		return "Invisibil";
+	case SPL_FLAME:
+		return "Flame";
+	case SPL_GOLEM:
+		return "Golem";
+	case SPL_BLODBOIL:
+		return "Blodboil";
+	case SPL_TELEPORT:
+		return "Teleport";
+	case SPL_APOCA:
+		return "Apoca";
+	case SPL_ETHEREALIZE:
+		return "Etherealize";
+	case SPL_REPAIR:
+		return "Repair";
+	case SPL_RECHARGE:
+		return "Recharge";
+	case SPL_DISARM:
+		return "Disarm";
+	case SPL_ELEMENT:
+		return "Element";
+	case SPL_CBOLT:
+		return "Cbolt";
+	case SPL_HBOLT:
+		return "Hbolt";
+	case SPL_RESURRECT:
+		return "Resurrect";
+	case SPL_TELEKINESIS:
+		return "Telekinesis";
+	case SPL_HEALOTHER:
+		return "Healother";
+	case SPL_FLARE:
+		return "Flare";
+	case SPL_BONESPIRIT:
+		return "Bonespirit";
+	case SPL_MANA:
+		return "Mana";
+	case SPL_MAGI:
+		return "Magi";
+	case SPL_JESTER:
+		return "Jester";
+	case SPL_LIGHTWALL:
+		return "Lightwall";
+	case SPL_IMMOLAT:
+		return "Immolat";
+	case SPL_WARP:
+		return "Warp";
+	case SPL_REFLECT:
+		return "Reflect";
+	case SPL_BERSERK:
+		return "Berserk";
+	case SPL_FIRERING:
+		return "Firering";
+	case SPL_SEARCH:
+		return "Search";
+	case SPL_RUNEFIRE:
+		return "Runefire";
+	case SPL_RUNELIGHT:
+		return "Runelight";
+	case SPL_RUNENOVA:
+		return "Runenova";
+	case SPL_RUNEIMMOLAT:
+		return "Runeimmolat";
+	case SPL_RUNESTONE:
+		return "Runestone";
+	case SPL_INVALID:
+		return "Invalid";
+	}
+}
+
 enum magic_type : uint8_t {
 	STYPE_FIRE,
 	STYPE_LIGHTNING,
 	STYPE_MAGIC,
 };
+
+constexpr std::string_view toString(magic_type value)
+{
+	switch(value) {
+	case STYPE_FIRE:
+		return "Fire";
+	case STYPE_LIGHTNING:
+		return "Lightning";
+	case STYPE_MAGIC:
+		return "Magic";
+	}
+}
 
 enum missile_id : int8_t {
 	MIS_ARROW,
@@ -195,6 +336,230 @@ enum missile_id : int8_t {
 	MIS_EXORA1,
 	MIS_NULL = -1,
 };
+
+constexpr std::string_view toString(missile_id value)
+{
+	switch(value) {
+	case MIS_ARROW:
+		return "Arrow";
+	case MIS_FIREBOLT:
+		return "Firebolt";
+	case MIS_GUARDIAN:
+		return "Guardian";
+	case MIS_RNDTELEPORT:
+		return "Rndteleport";
+	case MIS_LIGHTBALL:
+		return "Lightball";
+	case MIS_FIREWALL:
+		return "Firewall";
+	case MIS_FIREBALL:
+		return "Fireball";
+	case MIS_LIGHTCTRL:
+		return "Lightctrl";
+	case MIS_LIGHTNING:
+		return "Lightning";
+	case MIS_MISEXP:
+		return "Misexp";
+	case MIS_TOWN:
+		return "Town";
+	case MIS_FLASH:
+		return "Flash";
+	case MIS_FLASH2:
+		return "Flash2";
+	case MIS_MANASHIELD:
+		return "Manashield";
+	case MIS_FIREMOVE:
+		return "Firemove";
+	case MIS_CHAIN:
+		return "Chain";
+	case MIS_SENTINAL:
+		return "Sentinal";
+	case MIS_BLODSTAR:
+		return "Blodstar";
+	case MIS_BONE:
+		return "Bone";
+	case MIS_METLHIT:
+		return "Metlhit";
+	case MIS_RHINO:
+		return "Rhino";
+	case MIS_MAGMABALL:
+		return "Magmaball";
+	case MIS_LIGHTCTRL2:
+		return "Lightctrl2";
+	case MIS_LIGHTNING2:
+		return "Lightning2";
+	case MIS_FLARE:
+		return "Flare";
+	case MIS_MISEXP2:
+		return "Misexp2";
+	case MIS_TELEPORT:
+		return "Teleport";
+	case MIS_FARROW:
+		return "Farrow";
+	case MIS_DOOMSERP:
+		return "Doomserp";
+	case MIS_FIREWALLA:
+		return "Firewalla";
+	case MIS_STONE:
+		return "Stone";
+	case MIS_NULL_1F:
+		return "Null 1f";
+	case MIS_INVISIBL:
+		return "Invisibl";
+	case MIS_GOLEM:
+		return "Golem";
+	case MIS_ETHEREALIZE:
+		return "Etherealize";
+	case MIS_BLODBUR:
+		return "Blodbur";
+	case MIS_BOOM:
+		return "Boom";
+	case MIS_HEAL:
+		return "Heal";
+	case MIS_FIREWALLC:
+		return "Firewallc";
+	case MIS_INFRA:
+		return "Infra";
+	case MIS_IDENTIFY:
+		return "Identify";
+	case MIS_WAVE:
+		return "Wave";
+	case MIS_NOVA:
+		return "Nova";
+	case MIS_BLODBOIL:
+		return "Blodboil";
+	case MIS_APOCA:
+		return "Apoca";
+	case MIS_REPAIR:
+		return "Repair";
+	case MIS_RECHARGE:
+		return "Recharge";
+	case MIS_DISARM:
+		return "Disarm";
+	case MIS_FLAME:
+		return "Flame";
+	case MIS_FLAMEC:
+		return "Flamec";
+	case MIS_FIREMAN:
+		return "Fireman";
+	case MIS_KRULL:
+		return "Krull";
+	case MIS_CBOLT:
+		return "Cbolt";
+	case MIS_HBOLT:
+		return "Hbolt";
+	case MIS_RESURRECT:
+		return "Resurrect";
+	case MIS_TELEKINESIS:
+		return "Telekinesis";
+	case MIS_LARROW:
+		return "Larrow";
+	case MIS_ACID:
+		return "Acid";
+	case MIS_MISEXP3:
+		return "Misexp3";
+	case MIS_ACIDPUD:
+		return "Acidpud";
+	case MIS_HEALOTHER:
+		return "Healother";
+	case MIS_ELEMENT:
+		return "Element";
+	case MIS_RESURRECTBEAM:
+		return "Resurrectbeam";
+	case MIS_BONESPIRIT:
+		return "Bonespirit";
+	case MIS_WEAPEXP:
+		return "Weapexp";
+	case MIS_RPORTAL:
+		return "Rportal";
+	case MIS_BOOM2:
+		return "Boom2";
+	case MIS_DIABAPOCA:
+		return "Diabapoca";
+	case MIS_MANA:
+		return "Mana";
+	case MIS_MAGI:
+		return "Magi";
+	case MIS_LIGHTWALL:
+		return "Lightwall";
+	case MIS_LIGHTNINGWALL:
+		return "Lightningwall";
+	case MIS_IMMOLATION:
+		return "Immolation";
+	case MIS_SPECARROW:
+		return "Specarrow";
+	case MIS_FIRENOVA:
+		return "Firenova";
+	case MIS_LIGHTARROW:
+		return "Lightarrow";
+	case MIS_CBOLTARROW:
+		return "Cboltarrow";
+	case MIS_HBOLTARROW:
+		return "Hboltarrow";
+	case MIS_WARP:
+		return "Warp";
+	case MIS_REFLECT:
+		return "Reflect";
+	case MIS_BERSERK:
+		return "Berserk";
+	case MIS_FIRERING:
+		return "Firering";
+	case MIS_STEALPOTS:
+		return "Stealpots";
+	case MIS_MANATRAP:
+		return "Manatrap";
+	case MIS_LIGHTRING:
+		return "Lightring";
+	case MIS_SEARCH:
+		return "Search";
+	case MIS_FLASHFR:
+		return "Flashfr";
+	case MIS_FLASHBK:
+		return "Flashbk";
+	case MIS_IMMOLATION2:
+		return "Immolation2";
+	case MIS_RUNEFIRE:
+		return "Runefire";
+	case MIS_RUNELIGHT:
+		return "Runelight";
+	case MIS_RUNENOVA:
+		return "Runenova";
+	case MIS_RUNEIMMOLAT:
+		return "Runeimmolat";
+	case MIS_RUNESTONE:
+		return "Runestone";
+	case MIS_HIVEEXP:
+		return "Hiveexp";
+	case MIS_HORKDMN:
+		return "Horkdmn";
+	case MIS_JESTER:
+		return "Jester";
+	case MIS_HIVEEXP2:
+		return "Hiveexp2";
+	case MIS_LICH:
+		return "Lich";
+	case MIS_PSYCHORB:
+		return "Psychorb";
+	case MIS_NECROMORB:
+		return "Necromorb";
+	case MIS_ARCHLICH:
+		return "Archlich";
+	case MIS_BONEDEMON:
+		return "Bonedemon";
+	case MIS_EXYEL2:
+		return "Exyel2";
+	case MIS_EXRED3:
+		return "Exred3";
+	case MIS_EXBL2:
+		return "Exbl2";
+	case MIS_EXBL3:
+		return "Exbl3";
+	case MIS_EXORA1:
+		return "Exora1";
+	case MIS_NULL:
+		return "Null";
+	}
+}
 
 struct SpellData {
 	spell_id sName;

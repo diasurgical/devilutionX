@@ -2,6 +2,7 @@
 
 #include <cerrno>
 #include <cstdint>
+#include <string_view>
 #include <limits>
 #include <string>
 
@@ -15,11 +16,33 @@ enum game_info : uint8_t {
 	GAMEINFO_PASSWORD,
 };
 
+constexpr std::string_view toString(game_info value)
+{
+	switch(value) {
+	case GAMEINFO_NAME:
+		return "Name";
+	case GAMEINFO_PASSWORD:
+		return "Password";
+	}
+}
+
 enum conn_type : uint8_t {
 	SELCONN_ZT,
 	SELCONN_TCP,
 	SELCONN_LOOPBACK,
 };
+
+constexpr std::string_view toString(conn_type value)
+{
+	switch(value) {
+	case SELCONN_ZT:
+		return "Zt";
+	case SELCONN_TCP:
+		return "Tcp";
+	case SELCONN_LOOPBACK:
+		return "Loopback";
+	}
+}
 
 struct PCXHeader {
 	Uint8 Manufacturer;

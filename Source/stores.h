@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <string_view>
+
 #include "control.h"
 #include "engine.h"
 
@@ -41,6 +43,60 @@ enum talk_id : uint8_t {
 	STORE_DRUNK,
 	STORE_BARMAID,
 };
+
+constexpr std::string_view toString(talk_id value)
+{
+	switch(value) {
+	case STORE_NONE:
+		return "None";
+	case STORE_SMITH:
+		return "Smith";
+	case STORE_SBUY:
+		return "Sbuy";
+	case STORE_SSELL:
+		return "Ssell";
+	case STORE_SREPAIR:
+		return "Srepair";
+	case STORE_WITCH:
+		return "Witch";
+	case STORE_WBUY:
+		return "Wbuy";
+	case STORE_WSELL:
+		return "Wsell";
+	case STORE_WRECHARGE:
+		return "Wrecharge";
+	case STORE_NOMONEY:
+		return "Nomoney";
+	case STORE_NOROOM:
+		return "Noroom";
+	case STORE_CONFIRM:
+		return "Confirm";
+	case STORE_BOY:
+		return "Boy";
+	case STORE_BBOY:
+		return "Bboy";
+	case STORE_HEALER:
+		return "Healer";
+	case STORE_STORY:
+		return "Story";
+	case STORE_HBUY:
+		return "Hbuy";
+	case STORE_SIDENTIFY:
+		return "Sidentify";
+	case STORE_SPBUY:
+		return "Spbuy";
+	case STORE_GOSSIP:
+		return "Gossip";
+	case STORE_IDSHOW:
+		return "Idshow";
+	case STORE_TAVERN:
+		return "Tavern";
+	case STORE_DRUNK:
+		return "Drunk";
+	case STORE_BARMAID:
+		return "Barmaid";
+	}
+}
 
 struct STextStruct {
 	int _sx;

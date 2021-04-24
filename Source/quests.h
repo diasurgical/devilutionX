@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "engine.h"
 #include "gendung.h"
@@ -38,6 +39,30 @@ enum quest_state : uint8_t {
 	QUEST_HIVE_DONE,
 	QUEST_INVALID = 0xFF,
 };
+
+constexpr std::string_view toString(quest_state value)
+{
+	switch(value) {
+	case QUEST_NOTAVAIL:
+		return "Notavail";
+	case QUEST_INIT:
+		return "Init";
+	case QUEST_ACTIVE:
+		return "Active";
+	case QUEST_DONE:
+		return "Done";
+	case QUEST_HIVE_TEASE1:
+		return "Hive Tease1";
+	case QUEST_HIVE_TEASE2:
+		return "Hive Tease2";
+	case QUEST_HIVE_ACTIVE:
+		return "Hive Active";
+	case QUEST_HIVE_DONE:
+		return "Hive Done";
+	case QUEST_INVALID:
+		return "Invalid";
+	}
+}
 
 struct QuestStruct {
 	Uint8 _qlevel;

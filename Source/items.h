@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "engine.h"
 #include "itemdat.h"
@@ -26,6 +27,18 @@ enum item_quality : uint8_t {
 	ITEM_QUALITY_MAGIC,
 	ITEM_QUALITY_UNIQUE,
 };
+
+constexpr std::string_view toString(item_quality value)
+{
+	switch(value) {
+	case ITEM_QUALITY_NORMAL:
+		return "Normal";
+	case ITEM_QUALITY_MAGIC:
+		return "Magic";
+	case ITEM_QUALITY_UNIQUE:
+		return "Unique";
+	}
+}
 
 enum _unique_items : int8_t {
 	UITEM_CLEAVER,
@@ -120,6 +133,194 @@ enum _unique_items : int8_t {
 	UITEM_ENGAGE,
 	UITEM_INVALID = -1,
 };
+
+constexpr std::string_view toString(_unique_items value)
+{
+	switch(value) {
+	case UITEM_CLEAVER:
+		return "Cleaver";
+	case UITEM_SKCROWN:
+		return "Skcrown";
+	case UITEM_INFRARING:
+		return "Infraring";
+	case UITEM_OPTAMULET:
+		return "Optamulet";
+	case UITEM_TRING:
+		return "Tring";
+	case UITEM_HARCREST:
+		return "Harcrest";
+	case UITEM_STEELVEIL:
+		return "Steelveil";
+	case UITEM_ARMOFVAL:
+		return "Armofval";
+	case UITEM_GRISWOLD:
+		return "Griswold";
+	case UITEM_BOVINE:
+		return "Bovine";
+	case UITEM_RIFTBOW:
+		return "Riftbow";
+	case UITEM_NEEDLER:
+		return "Needler";
+	case UITEM_CELESTBOW:
+		return "Celestbow";
+	case UITEM_DEADLYHUNT:
+		return "Deadlyhunt";
+	case UITEM_BOWOFDEAD:
+		return "Bowofdead";
+	case UITEM_BLKOAKBOW:
+		return "Blkoakbow";
+	case UITEM_FLAMEDART:
+		return "Flamedart";
+	case UITEM_FLESHSTING:
+		return "Fleshsting";
+	case UITEM_WINDFORCE:
+		return "Windforce";
+	case UITEM_EAGLEHORN:
+		return "Eaglehorn";
+	case UITEM_GONNAGALDIRK:
+		return "Gonnagaldirk";
+	case UITEM_DEFENDER:
+		return "Defender";
+	case UITEM_GRYPHONCLAW:
+		return "Gryphonclaw";
+	case UITEM_BLACKRAZOR:
+		return "Blackrazor";
+	case UITEM_GIBBOUSMOON:
+		return "Gibbousmoon";
+	case UITEM_ICESHANK:
+		return "Iceshank";
+	case UITEM_EXECUTIONER:
+		return "Executioner";
+	case UITEM_BONESAW:
+		return "Bonesaw";
+	case UITEM_SHADHAWK:
+		return "Shadhawk";
+	case UITEM_WIZSPIKE:
+		return "Wizspike";
+	case UITEM_LGTSABRE:
+		return "Lgtsabre";
+	case UITEM_FALCONTALON:
+		return "Falcontalon";
+	case UITEM_INFERNO:
+		return "Inferno";
+	case UITEM_DOOMBRINGER:
+		return "Doombringer";
+	case UITEM_GRIZZLY:
+		return "Grizzly";
+	case UITEM_GRANDFATHER:
+		return "Grandfather";
+	case UITEM_MANGLER:
+		return "Mangler";
+	case UITEM_SHARPBEAK:
+		return "Sharpbeak";
+	case UITEM_BLOODLSLAYER:
+		return "Bloodlslayer";
+	case UITEM_CELESTAXE:
+		return "Celestaxe";
+	case UITEM_WICKEDAXE:
+		return "Wickedaxe";
+	case UITEM_STONECLEAV:
+		return "Stonecleav";
+	case UITEM_AGUHATCHET:
+		return "Aguhatchet";
+	case UITEM_HELLSLAYER:
+		return "Hellslayer";
+	case UITEM_MESSERREAVER:
+		return "Messerreaver";
+	case UITEM_CRACKRUST:
+		return "Crackrust";
+	case UITEM_JHOLMHAMM:
+		return "Jholmhamm";
+	case UITEM_CIVERBS:
+		return "Civerbs";
+	case UITEM_CELESTSTAR:
+		return "Celeststar";
+	case UITEM_BARANSTAR:
+		return "Baranstar";
+	case UITEM_GNARLROOT:
+		return "Gnarlroot";
+	case UITEM_CRANBASH:
+		return "Cranbash";
+	case UITEM_SCHAEFHAMM:
+		return "Schaefhamm";
+	case UITEM_DREAMFLANGE:
+		return "Dreamflange";
+	case UITEM_STAFFOFSHAD:
+		return "Staffofshad";
+	case UITEM_IMMOLATOR:
+		return "Immolator";
+	case UITEM_STORMSPIRE:
+		return "Stormspire";
+	case UITEM_GLEAMSONG:
+		return "Gleamsong";
+	case UITEM_THUNDERCALL:
+		return "Thundercall";
+	case UITEM_PROTECTOR:
+		return "Protector";
+	case UITEM_NAJPUZZLE:
+		return "Najpuzzle";
+	case UITEM_MINDCRY:
+		return "Mindcry";
+	case UITEM_RODOFONAN:
+		return "Rodofonan";
+	case UITEM_SPIRITSHELM:
+		return "Spiritshelm";
+	case UITEM_THINKINGCAP:
+		return "Thinkingcap";
+	case UITEM_OVERLORDHELM:
+		return "Overlordhelm";
+	case UITEM_FOOLSCREST:
+		return "Foolscrest";
+	case UITEM_GOTTERDAM:
+		return "Gotterdam";
+	case UITEM_ROYCIRCLET:
+		return "Roycirclet";
+	case UITEM_TORNFLESH:
+		return "Tornflesh";
+	case UITEM_GLADBANE:
+		return "Gladbane";
+	case UITEM_RAINCLOAK:
+		return "Raincloak";
+	case UITEM_LEATHAUT:
+		return "Leathaut";
+	case UITEM_WISDWRAP:
+		return "Wisdwrap";
+	case UITEM_SPARKMAIL:
+		return "Sparkmail";
+	case UITEM_SCAVCARAP:
+		return "Scavcarap";
+	case UITEM_NIGHTSCAPE:
+		return "Nightscape";
+	case UITEM_NAJPLATE:
+		return "Najplate";
+	case UITEM_DEMONSPIKE:
+		return "Demonspike";
+	case UITEM_DEFLECTOR:
+		return "Deflector";
+	case UITEM_SKULLSHLD:
+		return "Skullshld";
+	case UITEM_DRAGONBRCH:
+		return "Dragonbrch";
+	case UITEM_BLKOAKSHLD:
+		return "Blkoakshld";
+	case UITEM_HOLYDEF:
+		return "Holydef";
+	case UITEM_STORMSHLD:
+		return "Stormshld";
+	case UITEM_BRAMBLE:
+		return "Bramble";
+	case UITEM_REGHA:
+		return "Regha";
+	case UITEM_BLEEDER:
+		return "Bleeder";
+	case UITEM_CONSTRICT:
+		return "Constrict";
+	case UITEM_ENGAGE:
+		return "Engage";
+	case UITEM_INVALID:
+		return "Invalid";
+	}
+}
 
 /*
  First 5 bits store level

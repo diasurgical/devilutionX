@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "items.h"
 #include "player.h"
@@ -31,6 +32,40 @@ enum _talker_id : uint8_t {
 	TOWN_COWFARM,
 	NUM_TOWNER_TYPES,
 };
+
+constexpr std::string_view toString(_talker_id value)
+{
+	switch(value) {
+	case TOWN_SMITH:
+		return "Smith";
+	case TOWN_HEALER:
+		return "Healer";
+	case TOWN_DEADGUY:
+		return "Deadguy";
+	case TOWN_TAVERN:
+		return "Tavern";
+	case TOWN_STORY:
+		return "Story";
+	case TOWN_DRUNK:
+		return "Drunk";
+	case TOWN_WITCH:
+		return "Witch";
+	case TOWN_BMAID:
+		return "Bmaid";
+	case TOWN_PEGBOY:
+		return "Pegboy";
+	case TOWN_COW:
+		return "Cow";
+	case TOWN_FARMER:
+		return "Farmer";
+	case TOWN_GIRL:
+		return "Girl";
+	case TOWN_COWFARM:
+		return "Cowfarm";
+	case NUM_TOWNER_TYPES:
+		return "Num Towner Types";
+	}
+}
 
 struct TNQ {
 	uint8_t _qsttype;

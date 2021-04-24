@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "items.h"
 #include "palette.h"
@@ -33,6 +34,38 @@ enum inv_item : int8_t {
 	INVITEM_INVALID = -1,
 };
 
+constexpr std::string_view toString(inv_item value)
+{
+	switch(value) {
+	case INVITEM_HEAD:
+		return "Head";
+	case INVITEM_RING_LEFT:
+		return "Ring Left";
+	case INVITEM_RING_RIGHT:
+		return "Ring Right";
+	case INVITEM_AMULET:
+		return "Amulet";
+	case INVITEM_HAND_LEFT:
+		return "Hand Left";
+	case INVITEM_HAND_RIGHT:
+		return "Hand Right";
+	case INVITEM_CHEST:
+		return "Chest";
+	case INVITEM_INV_FIRST:
+		return "Inv First";
+	case INVITEM_INV_LAST:
+		return "Inv Last";
+	case INVITEM_BELT_FIRST:
+		return "Belt First";
+	case INVITEM_BELT_LAST:
+		return "Belt Last";
+	case NUM_INVELEM:
+		return "Num Invelem";
+	case INVITEM_INVALID:
+		return "Invalid";
+	}
+}
+
 // identifiers for each of the inventory squares
 // see https://github.com/sanctuary/graphics/blob/master/inventory.png
 enum inv_xy_slot : uint8_t {
@@ -56,9 +89,47 @@ enum inv_xy_slot : uint8_t {
 	// belt items
 	SLOTXY_BELT_FIRST = 65,
 	SLOTXY_BELT_LAST  = 72,
-	NUM_XY_SLOTS      = 73
+	NUM_XY_SLOTS      = 73,
 	// clang-format on
 };
+
+constexpr std::string_view toString(inv_xy_slot value)
+{
+	switch(value) {
+	case SLOTXY_HEAD_FIRST:
+		return "Head First";
+	case SLOTXY_HEAD_LAST:
+		return "Head Last";
+	case SLOTXY_RING_LEFT:
+		return "Ring Left";
+	case SLOTXY_RING_RIGHT:
+		return "Ring Right";
+	case SLOTXY_AMULET:
+		return "Amulet";
+	case SLOTXY_HAND_LEFT_FIRST:
+		return "Hand Left First";
+	case SLOTXY_HAND_LEFT_LAST:
+		return "Hand Left Last";
+	case SLOTXY_HAND_RIGHT_FIRST:
+		return "Hand Right First";
+	case SLOTXY_HAND_RIGHT_LAST:
+		return "Hand Right Last";
+	case SLOTXY_CHEST_FIRST:
+		return "Chest First";
+	case SLOTXY_CHEST_LAST:
+		return "Chest Last";
+	case SLOTXY_INV_FIRST:
+		return "Inv First";
+	case SLOTXY_INV_LAST:
+		return "Inv Last";
+	case SLOTXY_BELT_FIRST:
+		return "Belt First";
+	case SLOTXY_BELT_LAST:
+		return "Belt Last";
+	case NUM_XY_SLOTS:
+		return "Num Slots";
+	}
+}
 
 enum item_color : uint8_t {
 	// clang-format off
@@ -68,6 +139,20 @@ enum item_color : uint8_t {
 	ICOL_RED    = PAL16_RED + 5,
 	// clang-format on
 };
+
+constexpr std::string_view toString(item_color value)
+{
+	switch(value) {
+	case ICOL_YELLOW:
+		return "Yellow";
+	case ICOL_WHITE:
+		return "White";
+	case ICOL_BLUE:
+		return "Blue";
+	case ICOL_RED:
+		return "Red";
+	}
+}
 
 struct InvXY {
 	Sint32 X;

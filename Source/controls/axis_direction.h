@@ -1,19 +1,44 @@
 #pragma once
 
 #include <stdint.h>
-
+#include <string_view>
 namespace devilution {
 
 enum AxisDirectionX : uint8_t {
 	AxisDirectionX_NONE,
 	AxisDirectionX_LEFT,
-	AxisDirectionX_RIGHT
+	AxisDirectionX_RIGHT,
 };
+
+constexpr std::string_view toString(AxisDirectionX value)
+{
+	switch(value) {
+	case AxisDirectionX_NONE:
+		return "None";
+	case AxisDirectionX_LEFT:
+		return "Left";
+	case AxisDirectionX_RIGHT:
+		return "Right";
+	}
+}
+
 enum AxisDirectionY : uint8_t {
 	AxisDirectionY_NONE,
 	AxisDirectionY_UP,
-	AxisDirectionY_DOWN
+	AxisDirectionY_DOWN,
 };
+
+constexpr std::string_view toString(AxisDirectionY value)
+{
+	switch(value) {
+	case AxisDirectionY_NONE:
+		return "None";
+	case AxisDirectionY_UP:
+		return "Up";
+	case AxisDirectionY_DOWN:
+		return "Down";
+	}
+}
 
 /**
  * @brief 8-way direction of a D-Pad or a thumb stick.

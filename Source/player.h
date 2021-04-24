@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 #include <stdint.h>
+#include <string_view>
 
 #include "diablo.h"
 #include "gendung.h"
@@ -53,6 +54,24 @@ enum class HeroClass : uint8_t {
 	LAST = Barbarian
 };
 
+constexpr std::string_view toString(HeroClass value)
+{
+	switch(value) {
+	case HeroClass::Warrior:
+		return "Warrior";
+	case HeroClass::Rogue:
+		return "Rogue";
+	case HeroClass::Sorcerer:
+		return "Sorcerer";
+	case HeroClass::Monk:
+		return "Monk";
+	case HeroClass::Bard:
+		return "Bard";
+	case HeroClass::Barbarian:
+		return "Barbarian";
+	}
+}
+
 enum class CharacterAttribute : uint8_t {
 	Strength,
 	Magic,
@@ -62,6 +81,20 @@ enum class CharacterAttribute : uint8_t {
 	FIRST = Strength,
 	LAST = Vitality
 };
+
+constexpr std::string_view toString(CharacterAttribute value)
+{
+	switch(value) {
+	case CharacterAttribute::Strength:
+		return "Strength";
+	case CharacterAttribute::Magic:
+		return "Magic";
+	case CharacterAttribute::Dexterity:
+		return "Dexterity";
+	case CharacterAttribute::Vitality:
+		return "Vitality";
+	}
+}
 
 // Logical equipment locations
 enum inv_body_loc : uint8_t {
@@ -74,6 +107,28 @@ enum inv_body_loc : uint8_t {
 	INVLOC_CHEST,
 	NUM_INVLOC,
 };
+
+constexpr std::string_view toString(inv_body_loc value)
+{
+	switch(value) {
+	case INVLOC_HEAD:
+		return "Head";
+	case INVLOC_RING_LEFT:
+		return "Ring Left";
+	case INVLOC_RING_RIGHT:
+		return "Ring Right";
+	case INVLOC_AMULET:
+		return "Amulet";
+	case INVLOC_HAND_LEFT:
+		return "Hand Left";
+	case INVLOC_HAND_RIGHT:
+		return "Hand Right";
+	case INVLOC_CHEST:
+		return "Chest";
+	case NUM_INVLOC:
+		return "Num Inventory Locations";
+	}
+}
 
 enum player_graphic : uint16_t {
 	// clang-format off
@@ -104,6 +159,30 @@ enum anim_weapon_id : uint8_t {
 	ANIM_ID_STAFF,
 };
 
+constexpr std::string_view toString(anim_weapon_id value)
+{
+	switch(value) {
+	case ANIM_ID_UNARMED:
+		return "Unarmed";
+	case ANIM_ID_UNARMED_SHIELD:
+		return "Unarmed Shield";
+	case ANIM_ID_SWORD:
+		return "Sword";
+	case ANIM_ID_SWORD_SHIELD:
+		return "Sword Shield";
+	case ANIM_ID_BOW:
+		return "Bow";
+	case ANIM_ID_AXE:
+		return "Axe";
+	case ANIM_ID_MACE:
+		return "Mace";
+	case ANIM_ID_MACE_SHIELD:
+		return "Mace Shield";
+	case ANIM_ID_STAFF:
+		return "Staff";
+	}
+}
+
 enum PLR_MODE : uint8_t {
 	PM_STAND,
 	PM_WALK,  //Movement towards N, NW, or NE
@@ -118,6 +197,36 @@ enum PLR_MODE : uint8_t {
 	PM_NEWLVL,
 	PM_QUIT,
 };
+
+constexpr std::string_view toString(PLR_MODE value)
+{
+	switch(value) {
+	case PM_STAND:
+		return "Stand";
+	case PM_WALK:
+		return "Walk Towards N, NW, or NE";
+	case PM_WALK2:
+		return "Walk Towards S, SW, or SE";
+	case PM_WALK3:
+		return "Walk Towards W or E";
+	case PM_ATTACK:
+		return "Attack";
+	case PM_RATTACK:
+		return "Ranged Attack";
+	case PM_BLOCK:
+		return "Block";
+	case PM_GOTHIT:
+		return "Gothit";
+	case PM_DEATH:
+		return "Death";
+	case PM_SPELL:
+		return "Spell";
+	case PM_NEWLVL:
+		return "Newlvl";
+	case PM_QUIT:
+		return "Quit";
+	}
+}
 
 enum action_id : int8_t {
 	// clang-format off
@@ -147,6 +256,16 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
+constexpr std::string_view toString(player_weapon_type value)
+{
+	switch(value) {
+	case WT_MELEE:
+		return "Melee";
+	case WT_RANGED:
+		return "Ranged";
+	}
+}
+
 struct Point {
 	int x;
 	int y;
@@ -166,7 +285,6 @@ struct PlayerPosition {
 	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
 	Point velocity;
 };
-
 struct PlayerStruct {
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];

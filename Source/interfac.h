@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "utils/ui_fwd.h"
 
@@ -41,6 +42,34 @@ enum Cutscenes : uint8_t {
 	CutPortalRed,
 	CutGate,
 };
+
+constexpr std::string_view toString(Cutscenes value)
+{
+	switch(value) {
+	case CutStart:
+		return "Start";
+	case CutTown:
+		return "Town";
+	case CutLevel1:
+		return "Level1";
+	case CutLevel2:
+		return "Level2";
+	case CutLevel3:
+		return "Level3";
+	case CutLevel4:
+		return "Level4";
+	case CutLevel5:
+		return "Level5";
+	case CutLevel6:
+		return "Level6";
+	case CutPortal:
+		return "Portal";
+	case CutPortalRed:
+		return "Red Portal";
+	case CutGate:
+		return "Gate";
+	}
+}
 
 void interface_msg_pump();
 bool IncProgress();

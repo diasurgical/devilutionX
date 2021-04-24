@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #ifdef _DEBUG
 #include "monstdat.h"
@@ -24,6 +25,18 @@ enum clicktype : int8_t {
 	CLICK_LEFT,
 	CLICK_RIGHT,
 };
+
+constexpr std::string_view toString(clicktype value)
+{
+	switch(value) {
+	case CLICK_NONE:
+		return "None";
+	case CLICK_LEFT:
+		return "Left";
+	case CLICK_RIGHT:
+		return "Right";
+	}
+}
 
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];

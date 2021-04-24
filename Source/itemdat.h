@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string_view>
 
 #include "objdat.h"
 #include "spelldat.h"
@@ -67,11 +68,125 @@ enum _item_indexes : uint8_t {
 	IDI_GREYSUIT,
 };
 
+constexpr std::string_view toString(_item_indexes value)
+{
+	switch(value) {
+	case IDI_GOLD:
+		return "Gold";
+	case IDI_WARRIOR:
+		return "Warrior";
+	case IDI_WARRSHLD:
+		return "Warrshld";
+	case IDI_WARRCLUB:
+		return "Warrclub";
+	case IDI_ROGUE:
+		return "Rogue";
+	case IDI_SORCERER:
+		return "Sorcerer";
+	case IDI_CLEAVER:
+		return "Cleaver";
+	case IDI_SKCROWN:
+		return "Skcrown";
+	case IDI_INFRARING:
+		return "Infraring";
+	case IDI_ROCK:
+		return "Rock";
+	case IDI_OPTAMULET:
+		return "Optamulet";
+	case IDI_TRING:
+		return "Tring";
+	case IDI_BANNER:
+		return "Banner";
+	case IDI_HARCREST:
+		return "Harcrest";
+	case IDI_STEELVEIL:
+		return "Steelveil";
+	case IDI_GLDNELIX:
+		return "Gldnelix";
+	case IDI_ANVIL:
+		return "Anvil";
+	case IDI_MUSHROOM:
+		return "Mushroom";
+	case IDI_BRAIN:
+		return "Brain";
+	case IDI_FUNGALTM:
+		return "Fungaltm";
+	case IDI_SPECELIX:
+		return "Specelix";
+	case IDI_BLDSTONE:
+		return "Bldstone";
+	case IDI_MAPOFDOOM:
+		return "Mapofdoom";
+	case IDI_EAR:
+		return "Ear";
+	case IDI_HEAL:
+		return "Heal";
+	case IDI_MANA:
+		return "Mana";
+	case IDI_IDENTIFY:
+		return "Identify";
+	case IDI_PORTAL:
+		return "Portal";
+	case IDI_ARMOFVAL:
+		return "Armofval";
+	case IDI_FULLHEAL:
+		return "Fullheal";
+	case IDI_FULLMANA:
+		return "Fullmana";
+	case IDI_GRISWOLD:
+		return "Griswold";
+	case IDI_LGTFORGE:
+		return "Lgtforge";
+	case IDI_LAZSTAFF:
+		return "Lazstaff";
+	case IDI_RESURRECT:
+		return "Resurrect";
+	case IDI_OIL:
+		return "Oil";
+	case IDI_SHORTSTAFF:
+		return "Shortstaff";
+	case IDI_BARDSWORD:
+		return "Bardsword";
+	case IDI_BARDDAGGER:
+		return "Barddagger";
+	case IDI_RUNEBOMB:
+		return "Runebomb";
+	case IDI_THEODORE:
+		return "Theodore";
+	case IDI_AURIC:
+		return "Auric";
+	case IDI_NOTE1:
+		return "Note1";
+	case IDI_NOTE2:
+		return "Note2";
+	case IDI_NOTE3:
+		return "Note3";
+	case IDI_FULLNOTE:
+		return "Fullnote";
+	case IDI_BROWNSUIT:
+		return "Brownsuit";
+	case IDI_GREYSUIT:
+		return "Greysuit";
+	}
+}
+
 enum item_drop_rate : uint8_t {
 	IDROP_NEVER,
 	IDROP_REGULAR,
 	IDROP_DOUBLE,
 };
+
+constexpr std::string_view toString(item_drop_rate value)
+{
+	switch(value) {
+	case IDROP_NEVER:
+		return "Never";
+	case IDROP_REGULAR:
+		return "Regular";
+	case IDROP_DOUBLE:
+		return "Double";
+	}
+}
 
 enum item_class : uint8_t {
 	ICLASS_NONE,
@@ -81,6 +196,24 @@ enum item_class : uint8_t {
 	ICLASS_GOLD,
 	ICLASS_QUEST,
 };
+
+constexpr std::string_view toString(item_class value)
+{
+	switch(value) {
+	case ICLASS_NONE:
+		return "None";
+	case ICLASS_WEAPON:
+		return "Weapon";
+	case ICLASS_ARMOR:
+		return "Armor";
+	case ICLASS_MISC:
+		return "Misc";
+	case ICLASS_GOLD:
+		return "Gold";
+	case ICLASS_QUEST:
+		return "Quest";
+	}
+}
 
 enum item_equip_type : int8_t {
 	ILOC_NONE,
@@ -94,6 +227,32 @@ enum item_equip_type : int8_t {
 	ILOC_BELT,
 	ILOC_INVALID = -1,
 };
+
+constexpr std::string_view toString(item_equip_type value)
+{
+	switch(value) {
+	case ILOC_NONE:
+		return "None";
+	case ILOC_ONEHAND:
+		return "Onehand";
+	case ILOC_TWOHAND:
+		return "Twohand";
+	case ILOC_ARMOR:
+		return "Armor";
+	case ILOC_HELM:
+		return "Helm";
+	case ILOC_RING:
+		return "Ring";
+	case ILOC_AMULET:
+		return "Amulet";
+	case ILOC_UNEQUIPABLE:
+		return "Unequipable";
+	case ILOC_BELT:
+		return "Belt";
+	case ILOC_INVALID:
+		return "Invalid";
+	}
+}
 
 /// Item graphic IDs; frame_num-11 of objcurs.cel.
 enum item_cursor_graphic : uint8_t {
@@ -222,6 +381,254 @@ enum item_cursor_graphic : uint8_t {
 	// clang-format on
 };
 
+constexpr std::string_view toString(item_cursor_graphic value)
+{
+	switch(value) {
+	case ICURS_POTION_OF_FULL_MANA:
+		return "Potion of Full Mana";
+	case ICURS_SCROLL_OF:
+		return "Scroll Of";
+	case ICURS_GOLD_SMALL:
+		return "Gold Small";
+	case ICURS_GOLD_MEDIUM:
+		return "Gold Medium";
+	case ICURS_GOLD_LARGE:
+		return "Gold Large";
+	case ICURS_RING_OF_TRUTH:
+		return "Ring of Truth";
+	case ICURS_RING:
+		return "Ring";
+	case ICURS_SPECTRAL_ELIXIR:
+		return "Spectral Elixir";
+	case ICURS_GOLDEN_ELIXIR:
+		return "Golden Elixir";
+	case ICURS_EMPYREAN_BAND:
+		return "Empyrean Band";
+	case ICURS_EAR_SORCERER:
+		return "Ear Sorcerer";
+	case ICURS_EAR_WARRIOR:
+		return "Ear Warrior";
+	case ICURS_EAR_ROGUE:
+		return "Ear Rogue";
+	case ICURS_BLOOD_STONE:
+		return "Blood Stone";
+	case ICURS_OIL:
+		return "Oil";
+	case ICURS_ELIXIR_OF_VITALITY:
+		return "Elixir of Vitality";
+	case ICURS_POTION_OF_HEALING:
+		return "Potion of Healing";
+	case ICURS_POTION_OF_FULL_REJUVENATION:
+		return "Potion of Full Rejuvenation";
+	case ICURS_ELIXIR_OF_MAGIC:
+		return "Elixir of Magic";
+	case ICURS_POTION_OF_FULL_HEALING:
+		return "Potion of Full Healing";
+	case ICURS_ELIXIR_OF_DEXTERITY:
+		return "Elixir of Dexterity";
+	case ICURS_POTION_OF_REJUVENATION:
+		return "Potion of Rejuvenation";
+	case ICURS_ELIXIR_OF_STRENGTH:
+		return "Elixir of Strength";
+	case ICURS_POTION_OF_MANA:
+		return "Potion of Mana";
+	case ICURS_BRAIN:
+		return "Brain";
+	case ICURS_OPTIC_AMULET:
+		return "Optic Amulet";
+	case ICURS_AMULET:
+		return "Amulet";
+	case ICURS_DAGGER:
+		return "Dagger";
+	case ICURS_BLADE:
+		return "Blade";
+	case ICURS_BASTARD_SWORD:
+		return "Bastard Sword";
+	case ICURS_MACE:
+		return "Mace";
+	case ICURS_LONG_SWORD:
+		return "Long Sword";
+	case ICURS_BROAD_SWORD:
+		return "Broad Sword";
+	case ICURS_FALCHION:
+		return "Falchion";
+	case ICURS_MORNING_STAR:
+		return "Morning Star";
+	case ICURS_SHORT_SWORD:
+		return "Short Sword";
+	case ICURS_CLAYMORE:
+		return "Claymore";
+	case ICURS_CLUB:
+		return "Club";
+	case ICURS_SABRE:
+		return "Sabre";
+	case ICURS_SPIKED_CLUB:
+		return "Spiked Club";
+	case ICURS_SCIMITAR:
+		return "Scimitar";
+	case ICURS_FULL_HELM:
+		return "Full Helm";
+	case ICURS_MAGIC_ROCK:
+		return "Magic Rock";
+	case ICURS_THE_UNDEAD_CROWN:
+		return "The Undead Crown";
+	case ICURS_HELM:
+		return "Helm";
+	case ICURS_BUCKLER:
+		return "Buckler";
+	case ICURS_VIEL_OF_STEEL:
+		return "Viel of Steel";
+	case ICURS_BOOK_GREY:
+		return "Book Grey";
+	case ICURS_BOOK_RED:
+		return "Book Red";
+	case ICURS_BOOK_BLUE:
+		return "Book Blue";
+	case ICURS_BLACK_MUSHROOM:
+		return "Black Mushroom";
+	case ICURS_SKULL_CAP:
+		return "Skull Cap";
+	case ICURS_CAP:
+		return "Cap";
+	case ICURS_HARLEQUIN_CREST:
+		return "Harlequin Crest";
+	case ICURS_CROWN:
+		return "Crown";
+	case ICURS_MAP_OF_THE_STARS:
+		return "Map of The Stars";
+	case ICURS_FUNGAL_TOME:
+		return "Fungal Tome";
+	case ICURS_GREAT_HELM:
+		return "Great Helm";
+	case ICURS_BATTLE_AXE:
+		return "Battle Axe";
+	case ICURS_HUNTERS_BOW:
+		return "Hunters Bow";
+	case ICURS_FIELD_PLATE:
+		return "Field Plate";
+	case ICURS_SMALL_SHIELD:
+		return "Small Shield";
+	case ICURS_CLEAVER:
+		return "Cleaver";
+	case ICURS_STUDDED_LEATHER_ARMOR:
+		return "Studded Leather Armor";
+	case ICURS_SHORT_STAFF:
+		return "Short Staff";
+	case ICURS_TWO_HANDED_SWORD:
+		return "Two Handed Sword";
+	case ICURS_CHAIN_MAIL:
+		return "Chain Mail";
+	case ICURS_SMALL_AXE:
+		return "Small Axe";
+	case ICURS_KITE_SHIELD:
+		return "Kite Shield";
+	case ICURS_SCALE_MAIL:
+		return "Scale Mail";
+	case ICURS_SHORT_BOW:
+		return "Short Bow";
+	case ICURS_LONG_WAR_BOW:
+		return "Long War Bow";
+	case ICURS_WAR_HAMMER:
+		return "War Hammer";
+	case ICURS_MAUL:
+		return "Maul";
+	case ICURS_LONG_STAFF:
+		return "Long Staff";
+	case ICURS_WAR_STAFF:
+		return "War Staff";
+	case ICURS_TAVERN_SIGN:
+		return "Tavern Sign";
+	case ICURS_HARD_LEATHER_ARMOR:
+		return "Hard Leather Armor";
+	case ICURS_RAGS:
+		return "Rags";
+	case ICURS_QUILTED_ARMOR:
+		return "Quilted Armor";
+	case ICURS_FLAIL:
+		return "Flail";
+	case ICURS_TOWER_SHIELD:
+		return "Tower Shield";
+	case ICURS_COMPOSITE_BOW:
+		return "Composite Bow";
+	case ICURS_GREAT_SWORD:
+		return "Great Sword";
+	case ICURS_LEATHER_ARMOR:
+		return "Leather Armor";
+	case ICURS_SPLINT_MAIL:
+		return "Splint Mail";
+	case ICURS_ROBE:
+		return "Robe";
+	case ICURS_ANVIL_OF_FURY:
+		return "Anvil of Fury";
+	case ICURS_BROAD_AXE:
+		return "Broad Axe";
+	case ICURS_LARGE_AXE:
+		return "Large Axe";
+	case ICURS_GREAT_AXE:
+		return "Great Axe";
+	case ICURS_AXE:
+		return "Axe";
+	case ICURS_LARGE_SHIELD:
+		return "Large Shield";
+	case ICURS_GOTHIC_SHIELD:
+		return "Gothic Shield";
+	case ICURS_CLOAK:
+		return "Cloak";
+	case ICURS_CAPE:
+		return "Cape";
+	case ICURS_FULL_PLATE_MAIL:
+		return "Full Plate Mail";
+	case ICURS_GOTHIC_PLATE:
+		return "Gothic Plate";
+	case ICURS_BREAST_PLATE:
+		return "Breast Plate";
+	case ICURS_RING_MAIL:
+		return "Ring Mail";
+	case ICURS_STAFF_OF_LAZARUS:
+		return "Staff of Lazarus";
+	case ICURS_ARKAINES_VALOR:
+		return "Arkaines Valor";
+	case ICURS_SHORT_WAR_BOW:
+		return "Short War Bow";
+	case ICURS_COMPOSITE_STAFF:
+		return "Composite Staff";
+	case ICURS_SHORT_BATTLE_BOW:
+		return "Short Battle Bow";
+	case ICURS_GOLD:
+		return "Gold";
+	case ICURS_AURIC_AMULET:
+		return "Auric Amulet";
+	case ICURS_RUNE_BOMB:
+		return "Rune Bomb";
+	case ICURS_THEODORE:
+		return "Theodore";
+	case ICURS_TORN_NOTE_1:
+		return "Torn Note 1";
+	case ICURS_TORN_NOTE_2:
+		return "Torn Note 2";
+	case ICURS_TORN_NOTE_3:
+		return "Torn Note 3";
+	case ICURS_RECONSTRUCTED_NOTE:
+		return "Reconstructed Note";
+	case ICURS_RUNE_OF_FIRE:
+		return "Rune of Fire";
+	case ICURS_GREATER_RUNE_OF_FIRE:
+		return "Greater Rune of Fire";
+	case ICURS_RUNE_OF_LIGHTNING:
+		return "Rune of Lightning";
+	case ICURS_GREATER_RUNE_OF_LIGHTNING:
+		return "Greater Rune of Lightning";
+	case ICURS_RUNE_OF_STONE:
+		return "Rune of Stone";
+	case ICURS_GREY_SUIT:
+		return "Grey Suit";
+	case ICURS_BROWN_SUIT:
+		return "Brown Suit";
+	case ICURS_BOVINE:
+		return "Bovine";
+	}
+}
+
 enum item_type : int8_t {
 	ITYPE_MISC,
 	ITYPE_SWORD,
@@ -239,6 +646,42 @@ enum item_type : int8_t {
 	ITYPE_AMULET,
 	ITYPE_NONE = -1,
 };
+
+constexpr std::string_view toString(item_type value)
+{
+	switch(value) {
+	case ITYPE_MISC:
+		return "Misc";
+	case ITYPE_SWORD:
+		return "Sword";
+	case ITYPE_AXE:
+		return "Axe";
+	case ITYPE_BOW:
+		return "Bow";
+	case ITYPE_MACE:
+		return "Mace";
+	case ITYPE_SHIELD:
+		return "Shield";
+	case ITYPE_LARMOR:
+		return "Light Armor";
+	case ITYPE_HELM:
+		return "Helm";
+	case ITYPE_MARMOR:
+		return "Medium Armor";
+	case ITYPE_HARMOR:
+		return "Heavy Armor";
+	case ITYPE_STAFF:
+		return "Staff";
+	case ITYPE_GOLD:
+		return "Gold";
+	case ITYPE_RING:
+		return "Ring";
+	case ITYPE_AMULET:
+		return "Amulet";
+	case ITYPE_NONE:
+		return "None";
+	}
+}
 
 enum unique_base_item : int8_t {
 	UITYPE_NONE,
@@ -313,6 +756,154 @@ enum unique_base_item : int8_t {
 	UITYPE_BOVINE,
 	UITYPE_INVALID = -1,
 };
+
+constexpr std::string_view toString(unique_base_item value)
+{
+	switch(value) {
+	case UITYPE_NONE:
+		return "None";
+	case UITYPE_SHORTBOW:
+		return "Shortbow";
+	case UITYPE_LONGBOW:
+		return "Longbow";
+	case UITYPE_HUNTBOW:
+		return "Huntbow";
+	case UITYPE_COMPBOW:
+		return "Compbow";
+	case UITYPE_WARBOW:
+		return "Warbow";
+	case UITYPE_BATTLEBOW:
+		return "Battlebow";
+	case UITYPE_DAGGER:
+		return "Dagger";
+	case UITYPE_FALCHION:
+		return "Falchion";
+	case UITYPE_CLAYMORE:
+		return "Claymore";
+	case UITYPE_BROADSWR:
+		return "Broadswr";
+	case UITYPE_SABRE:
+		return "Sabre";
+	case UITYPE_SCIMITAR:
+		return "Scimitar";
+	case UITYPE_LONGSWR:
+		return "Long Sword";
+	case UITYPE_BASTARDSWR:
+		return "Bastard Sword";
+	case UITYPE_TWOHANDSWR:
+		return "Twohanded Sword";
+	case UITYPE_GREATSWR:
+		return "Great Sword";
+	case UITYPE_CLEAVER:
+		return "Cleaver";
+	case UITYPE_LARGEAXE:
+		return "Large Axe";
+	case UITYPE_BROADAXE:
+		return "Broad Axe";
+	case UITYPE_SMALLAXE:
+		return "Small Axe";
+	case UITYPE_BATTLEAXE:
+		return "Battle Axe";
+	case UITYPE_GREATAXE:
+		return "Great Axe";
+	case UITYPE_MACE:
+		return "Mace";
+	case UITYPE_MORNSTAR:
+		return "Morning Star";
+	case UITYPE_SPIKCLUB:
+		return "Spiked Club";
+	case UITYPE_MAUL:
+		return "Maul";
+	case UITYPE_WARHAMMER:
+		return "Warhammer";
+	case UITYPE_FLAIL:
+		return "Flail";
+	case UITYPE_LONGSTAFF:
+		return "Long Staff";
+	case UITYPE_SHORTSTAFF:
+		return "Short Staff";
+	case UITYPE_COMPSTAFF:
+		return "Composite Staff";
+	case UITYPE_QUARSTAFF:
+		return "Quarter Staff";
+	case UITYPE_WARSTAFF:
+		return "War Staff";
+	case UITYPE_SKULLCAP:
+		return "Skull Cap";
+	case UITYPE_HELM:
+		return "Helm";
+	case UITYPE_GREATHELM:
+		return "Greathelm";
+	case UITYPE_CROWN:
+		return "Crown";
+	case UITYPE_38:
+		return "38";
+	case UITYPE_RAGS:
+		return "Rags";
+	case UITYPE_STUDARMOR:
+		return "Studded Armor";
+	case UITYPE_CLOAK:
+		return "Cloak";
+	case UITYPE_ROBE:
+		return "Robe";
+	case UITYPE_CHAINMAIL:
+		return "Chain Mail";
+	case UITYPE_LEATHARMOR:
+		return "Leather Armor";
+	case UITYPE_BREASTPLATE:
+		return "Breast Plate";
+	case UITYPE_CAPE:
+		return "Cape";
+	case UITYPE_PLATEMAIL:
+		return "Mail Plate";
+	case UITYPE_FULLPLATE:
+		return "Full Plate";
+	case UITYPE_BUCKLER:
+		return "Buckler";
+	case UITYPE_SMALLSHIELD:
+		return "Small Shield";
+	case UITYPE_LARGESHIELD:
+		return "Large Shield";
+	case UITYPE_KITESHIELD:
+		return "Kite Shield";
+	case UITYPE_GOTHSHIELD:
+		return "Gothic Shield";
+	case UITYPE_RING:
+		return "Ring";
+	case UITYPE_55:
+		return "55";
+	case UITYPE_AMULET:
+		return "Amulet";
+	case UITYPE_SKCROWN:
+		return "Skeleton Crown";
+	case UITYPE_INFRARING:
+		return "Infravision Ring";
+	case UITYPE_OPTAMULET:
+		return "Optic Amulet";
+	case UITYPE_TRING:
+		return "Tring";
+	case UITYPE_HARCREST:
+		return "Harlequin Crest";
+	case UITYPE_MAPOFDOOM:
+		return "Map of Doom";
+	case UITYPE_ELIXIR:
+		return "Elixir";
+	case UITYPE_ARMOFVAL:
+		return "Arkaine's Valor";
+	case UITYPE_STEELVEIL:
+		return "Veil of Steel";
+	case UITYPE_GRISWOLD:
+		return "Griswold's Edge";
+	case UITYPE_LGTFORGE:
+		return "Lightforge";
+	case UITYPE_LAZSTAFF:
+		return "Lazarus' Staff";
+	case UITYPE_BOVINE:
+		return "Bovine Plate";
+	case UITYPE_INVALID:
+		return "Invalid";
+	}
+}
 
 enum item_special_effect {
 	// clang-format off
@@ -410,6 +1001,124 @@ enum item_misc_id : int8_t {
 	IMISC_NOTE,
 	IMISC_INVALID = -1,
 };
+
+constexpr std::string_view toString(item_misc_id value)
+{
+	switch(value) {
+	case IMISC_NONE:
+		return "None";
+	case IMISC_USEFIRST:
+		return "Usefirst";
+	case IMISC_FULLHEAL:
+		return "Fullheal";
+	case IMISC_HEAL:
+		return "Heal";
+	case IMISC_OLDHEAL:
+		return "Oldheal";
+	case IMISC_DEADHEAL:
+		return "Deadheal";
+	case IMISC_MANA:
+		return "Mana";
+	case IMISC_FULLMANA:
+		return "Fullmana";
+	case IMISC_POTEXP:
+		return "Potexp";
+	case IMISC_POTFORG:
+		return "Potforg";
+	case IMISC_ELIXSTR:
+		return "Elixstr";
+	case IMISC_ELIXMAG:
+		return "Elixmag";
+	case IMISC_ELIXDEX:
+		return "Elixdex";
+	case IMISC_ELIXVIT:
+		return "Elixvit";
+	case IMISC_ELIXWEAK:
+		return "Elixweak";
+	case IMISC_ELIXDIS:
+		return "Elixdis";
+	case IMISC_ELIXCLUM:
+		return "Elixclum";
+	case IMISC_ELIXSICK:
+		return "Elixsick";
+	case IMISC_REJUV:
+		return "Rejuv";
+	case IMISC_FULLREJUV:
+		return "Fullrejuv";
+	case IMISC_USELAST:
+		return "Uselast";
+	case IMISC_SCROLL:
+		return "Scroll";
+	case IMISC_SCROLLT:
+		return "Scrollt";
+	case IMISC_STAFF:
+		return "Staff";
+	case IMISC_BOOK:
+		return "Book";
+	case IMISC_RING:
+		return "Ring";
+	case IMISC_AMULET:
+		return "Amulet";
+	case IMISC_UNIQUE:
+		return "Unique";
+	case IMISC_FOOD:
+		return "Food";
+	case IMISC_OILFIRST:
+		return "Oilfirst";
+	case IMISC_OILOF:
+		return "Oilof";
+	case IMISC_OILACC:
+		return "Oilacc";
+	case IMISC_OILMAST:
+		return "Oilmast";
+	case IMISC_OILSHARP:
+		return "Oilsharp";
+	case IMISC_OILDEATH:
+		return "Oildeath";
+	case IMISC_OILSKILL:
+		return "Oilskill";
+	case IMISC_OILBSMTH:
+		return "Oilbsmth";
+	case IMISC_OILFORT:
+		return "Oilfort";
+	case IMISC_OILPERM:
+		return "Oilperm";
+	case IMISC_OILHARD:
+		return "Oilhard";
+	case IMISC_OILIMP:
+		return "Oilimp";
+	case IMISC_OILLAST:
+		return "Oillast";
+	case IMISC_MAPOFDOOM:
+		return "Mapofdoom";
+	case IMISC_EAR:
+		return "Ear";
+	case IMISC_SPECELIX:
+		return "Specelix";
+	case IMISC_0x2D:
+		return "0x2d";
+	case IMISC_RUNEFIRST:
+		return "Runefirst";
+	case IMISC_RUNEF:
+		return "Runef";
+	case IMISC_RUNEL:
+		return "Runel";
+	case IMISC_GR_RUNEL:
+		return "Gr Runel";
+	case IMISC_GR_RUNEF:
+		return "Gr Runef";
+	case IMISC_RUNES:
+		return "Runes";
+	case IMISC_RUNELAST:
+		return "Runelast";
+	case IMISC_AURIC:
+		return "Auric";
+	case IMISC_NOTE:
+		return "Note";
+	case IMISC_INVALID:
+		return "Invalid";
+	}
+}
 
 struct ItemDataStruct {
 	enum item_drop_rate iRnd;
@@ -536,11 +1245,219 @@ enum item_effect_type : int8_t {
 	IPL_INVALID = -1,
 };
 
+constexpr std::string_view toString(item_effect_type value)
+{
+	switch(value) {
+	case IPL_TOHIT:
+		return "To Hit";
+	case IPL_TOHIT_CURSE:
+		return "To Hit Curse";
+	case IPL_DAMP:
+		return "Damp";
+	case IPL_DAMP_CURSE:
+		return "Damp Curse";
+	case IPL_TOHIT_DAMP:
+		return "To Hit Damp";
+	case IPL_TOHIT_DAMP_CURSE:
+		return "To Hit Damp Curse";
+	case IPL_ACP:
+		return "Acp";
+	case IPL_ACP_CURSE:
+		return "Acp Curse";
+	case IPL_FIRERES:
+		return "Fire Res";
+	case IPL_LIGHTRES:
+		return "Light Res";
+	case IPL_MAGICRES:
+		return "Magic Res";
+	case IPL_ALLRES:
+		return "All Res";
+	case IPL_SPLCOST:
+		return "Spell Cost";
+	case IPL_SPLDUR:
+		return "Spell Duration";
+	case IPL_SPLLVLADD:
+		return "Spell Level Add";
+	case IPL_CHARGES:
+		return "Charges";
+	case IPL_FIREDAM:
+		return "Fire Damage";
+	case IPL_LIGHTDAM:
+		return "Light Damage";
+	case IPL_0x12:
+		return "0x12";
+	case IPL_STR:
+		return "Str";
+	case IPL_STR_CURSE:
+		return "Str Curse";
+	case IPL_MAG:
+		return "Mag";
+	case IPL_MAG_CURSE:
+		return "Mag Curse";
+	case IPL_DEX:
+		return "Dex";
+	case IPL_DEX_CURSE:
+		return "Dex Curse";
+	case IPL_VIT:
+		return "Vit";
+	case IPL_VIT_CURSE:
+		return "Vit Curse";
+	case IPL_ATTRIBS:
+		return "Attribs";
+	case IPL_ATTRIBS_CURSE:
+		return "Attribs Curse";
+	case IPL_GETHIT_CURSE:
+		return "Get Hit Curse";
+	case IPL_GETHIT:
+		return "Get Hit";
+	case IPL_LIFE:
+		return "Life";
+	case IPL_LIFE_CURSE:
+		return "Life Curse";
+	case IPL_MANA:
+		return "Mana";
+	case IPL_MANA_CURSE:
+		return "Mana Curse";
+	case IPL_DUR:
+		return "Dur";
+	case IPL_DUR_CURSE:
+		return "Dur Curse";
+	case IPL_INDESTRUCTIBLE:
+		return "Indestructible";
+	case IPL_LIGHT:
+		return "Light";
+	case IPL_LIGHT_CURSE:
+		return "Light Curse";
+	case IPL_0x28:
+		return "0x28";
+	case IPL_MULT_ARROWS:
+		return "Multiple Arrows";
+	case IPL_FIRE_ARROWS:
+		return "Fire Arrows";
+	case IPL_LIGHT_ARROWS:
+		return "Light Arrows";
+	case IPL_INVCURS:
+		return "Invcurs";
+	case IPL_THORNS:
+		return "Thorns";
+	case IPL_NOMANA:
+		return "Nomana";
+	case IPL_NOHEALPLR:
+		return "Nohealplr";
+	case IPL_0x30:
+		return "0x30";
+	case IPL_0x31:
+		return "0x31";
+	case IPL_FIREBALL:
+		return "Fireball";
+	case IPL_0x33:
+		return "0x33";
+	case IPL_ABSHALFTRAP:
+		return "Abshalftrap";
+	case IPL_KNOCKBACK:
+		return "Knockback";
+	case IPL_NOHEALMON:
+		return "Nohealmon";
+	case IPL_STEALMANA:
+		return "Stealmana";
+	case IPL_STEALLIFE:
+		return "Steallife";
+	case IPL_TARGAC:
+		return "Targac";
+	case IPL_FASTATTACK:
+		return "Fast Attack";
+	case IPL_FASTRECOVER:
+		return "Fast Recover";
+	case IPL_FASTBLOCK:
+		return "Fast Block";
+	case IPL_DAMMOD:
+		return "Dammod";
+	case IPL_RNDARROWVEL:
+		return "Rndarrowvel";
+	case IPL_SETDAM:
+		return "Setdam";
+	case IPL_SETDUR:
+		return "Setdur";
+	case IPL_NOMINSTR:
+		return "Nominstr";
+	case IPL_SPELL:
+		return "Spell";
+	case IPL_FASTSWING:
+		return "Fastswing";
+	case IPL_ONEHAND:
+		return "Onehand";
+	case IPL_3XDAMVDEM:
+		return "3xdamvdem";
+	case IPL_ALLRESZERO:
+		return "Allreszero";
+	case IPL_0x47:
+		return "0x47";
+	case IPL_DRAINLIFE:
+		return "Drainlife";
+	case IPL_RNDSTEALLIFE:
+		return "Rndsteallife";
+	case IPL_INFRAVISION:
+		return "Infravision";
+	case IPL_SETAC:
+		return "Setac";
+	case IPL_ADDACLIFE:
+		return "Addaclife";
+	case IPL_ADDMANAAC:
+		return "Addmanaac";
+	case IPL_FIRERESCLVL:
+		return "Fireresclvl";
+	case IPL_AC_CURSE:
+		return "Ac Curse";
+	case IPL_FIRERES_CURSE:
+		return "Fireres Curse";
+	case IPL_LIGHTRES_CURSE:
+		return "Lightres Curse";
+	case IPL_MAGICRES_CURSE:
+		return "Magicres Curse";
+	case IPL_ALLRES_CURSE:
+		return "Allres Curse";
+	case IPL_DEVASTATION:
+		return "Devastation";
+	case IPL_DECAY:
+		return "Decay";
+	case IPL_PERIL:
+		return "Peril";
+	case IPL_JESTERS:
+		return "Jesters";
+	case IPL_CRYSTALLINE:
+		return "Crystalline";
+	case IPL_DOPPELGANGER:
+		return "Doppelganger";
+	case IPL_ACDEMON:
+		return "Acdemon";
+	case IPL_ACUNDEAD:
+		return "Acundead";
+	case IPL_MANATOLIFE:
+		return "Manatolife";
+	case IPL_LIFETOMANA:
+		return "Lifetomana";
+	case IPL_INVALID:
+		return "Invalid";
+	}
+}
+
 enum goodorevil : uint8_t {
 	GOE_ANY,
 	GOE_EVIL,
 	GOE_GOOD,
 };
+
+constexpr std::string_view toString(goodorevil value)
+{
+	switch(value) {
+	case GOE_ANY:
+		return "Any";
+	case GOE_EVIL:
+		return "Evil";
+	case GOE_GOOD:
+		return "Good";
+	}
+}
 
 enum affix_item_type : uint8_t {
 	// clang-format off

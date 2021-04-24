@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <SDL.h>
 #include <stdint.h>
+#include <string_view>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -56,6 +57,30 @@ enum direction : uint8_t {
 	DIR_SE,
 	DIR_OMNI,
 };
+
+constexpr std::string_view toString(direction value)
+{
+	switch(value) {
+	case DIR_S:
+		return "South";
+	case DIR_SW:
+		return "South West";
+	case DIR_W:
+		return "West";
+	case DIR_NW:
+		return "North West";
+	case DIR_N:
+		return "North";
+	case DIR_NE:
+		return "North East";
+	case DIR_E:
+		return "East";
+	case DIR_SE:
+		return "South East";
+	case DIR_OMNI:
+		return "Omni";
+	}
+}
 
 // `malloc` that returns a user-friendly error on OOM.
 //

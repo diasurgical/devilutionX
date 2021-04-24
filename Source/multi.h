@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "msg.h"
 
@@ -19,6 +20,18 @@ enum event_type : uint8_t {
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
 	EVENT_TYPE_PLAYER_MESSAGE,
 };
+
+constexpr std::string_view toString(event_type value)
+{
+	switch(value) {
+	case EVENT_TYPE_PLAYER_CREATE_GAME:
+		return "Create Game";
+	case EVENT_TYPE_PLAYER_LEAVE_GAME:
+		return "Leave Game";
+	case EVENT_TYPE_PLAYER_MESSAGE:
+		return "Message";
+	}
+}
 
 struct GameData {
 	Sint32 size;

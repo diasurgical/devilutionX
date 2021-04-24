@@ -2,6 +2,7 @@
 
 #include <SDL_ttf.h>
 #include <stdint.h>
+#include <string_view>
 
 #include "DiabloUI/art.h"
 
@@ -14,10 +15,34 @@ enum _artFontTables : uint8_t {
 	AFT_HUGE,
 };
 
+constexpr std::string_view toString(_artFontTables value)
+{
+	switch(value) {
+	case AFT_SMALL:
+		return "Small";
+	case AFT_MED:
+		return "Med";
+	case AFT_BIG:
+		return "Big";
+	case AFT_HUGE:
+		return "Huge";
+	}
+}
+
 enum _artFontColors : uint8_t {
 	AFC_SILVER,
 	AFC_GOLD,
 };
+
+constexpr std::string_view toString(_artFontColors value)
+{
+	switch(value) {
+	case AFC_SILVER:
+		return "Silver";
+	case AFC_GOLD:
+		return "Gold";
+	}
+}
 
 extern TTF_Font *font;
 extern BYTE *FontTables[4];

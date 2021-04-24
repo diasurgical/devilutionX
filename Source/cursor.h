@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "miniwin/miniwin.h"
 
@@ -26,6 +27,38 @@ enum cursor_id : uint8_t {
 	CURSOR_HOURGLASS,
 	CURSOR_FIRSTITEM,
 };
+
+constexpr std::string_view toString(cursor_id value)
+{
+	switch(value) {
+	case CURSOR_NONE:
+		return "None";
+	case CURSOR_HAND:
+		return "Hand";
+	case CURSOR_IDENTIFY:
+		return "Identify";
+	case CURSOR_REPAIR:
+		return "Repair";
+	case CURSOR_RECHARGE:
+		return "Recharge";
+	case CURSOR_DISARM:
+		return "Disarm";
+	case CURSOR_OIL:
+		return "Oil";
+	case CURSOR_TELEKINESIS:
+		return "Telekinesis";
+	case CURSOR_RESURRECT:
+		return "Resurrect";
+	case CURSOR_TELEPORT:
+		return "Teleport";
+	case CURSOR_HEALOTHER:
+		return "Healother";
+	case CURSOR_HOURGLASS:
+		return "Hourglass";
+	case CURSOR_FIRSTITEM:
+		return "Firstitem";
+	}
+}
 
 extern int cursW;
 extern int cursH;

@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "engine.h"
 #include "miniwin/miniwin.h"
@@ -76,6 +77,48 @@ enum MON_MODE : uint8_t {
 	MM_TALK,
 };
 
+constexpr std::string_view toString(MON_MODE value)
+{
+	switch(value) {
+	case MM_STAND:
+		return "Stand";
+	case MM_WALK:
+		return "Walk Towards N, NW, or NE";
+	case MM_WALK2:
+		return "Walk Towards S, SW, or SE";
+	case MM_WALK3:
+		return "Walk Towards W or E";
+	case MM_ATTACK:
+		return "Attack";
+	case MM_GOTHIT:
+		return "Gothit";
+	case MM_DEATH:
+		return "Death";
+	case MM_SATTACK:
+		return "Sattack";
+	case MM_FADEIN:
+		return "Fadein";
+	case MM_FADEOUT:
+		return "Fadeout";
+	case MM_RATTACK:
+		return "Rattack";
+	case MM_SPSTAND:
+		return "Spstand";
+	case MM_RSPATTACK:
+		return "Rspattack";
+	case MM_DELAY:
+		return "Delay";
+	case MM_CHARGE:
+		return "Charge";
+	case MM_STONE:
+		return "Stone";
+	case MM_HEAL:
+		return "Heal";
+	case MM_TALK:
+		return "Talk";
+	}
+}
+
 enum {
 	MA_STAND,
 	MA_WALK,
@@ -95,6 +138,28 @@ enum monster_goal : uint8_t {
 	MGOAL_INQUIRING,
 	MGOAL_TALKING,
 };
+
+constexpr std::string_view toString(monster_goal value)
+{
+	switch(value) {
+	case MGOAL_NONE:
+		return "None";
+	case MGOAL_NORMAL:
+		return "Normal";
+	case MGOAL_RETREAT:
+		return "Retreat";
+	case MGOAL_HEALING:
+		return "Healing";
+	case MGOAL_MOVE:
+		return "Move";
+	case MGOAL_ATTACK2:
+		return "Attack2";
+	case MGOAL_INQUIRING:
+		return "Inquiring";
+	case MGOAL_TALKING:
+		return "Talking";
+	}
+}
 
 enum placeflag : uint8_t {
 	// clang-format off

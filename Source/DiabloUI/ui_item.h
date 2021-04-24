@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string_view>
 #include <string>
 #include <vector>
 
@@ -21,6 +22,28 @@ enum UiType : uint8_t {
 	UI_SCROLLBAR,
 	UI_EDIT,
 };
+
+constexpr std::string_view toString(UiType value)
+{
+	switch(value) {
+	case UI_TEXT:
+		return "Text";
+	case UI_ART_TEXT:
+		return "Art Text";
+	case UI_ART_TEXT_BUTTON:
+		return "Art Text Button";
+	case UI_IMAGE:
+		return "Image";
+	case UI_BUTTON:
+		return "Button";
+	case UI_LIST:
+		return "List";
+	case UI_SCROLLBAR:
+		return "Scrollbar";
+	case UI_EDIT:
+		return "Edit";
+	}
+}
 
 enum UiFlags : uint16_t {
 	// clang-format off
@@ -254,7 +277,7 @@ public:
 	enum FrameKey : uint8_t {
 		DEFAULT,
 		PRESSED,
-		DISABLED
+		DISABLED,
 	};
 
 	//private:
@@ -267,6 +290,18 @@ public:
 	bool m_pressed;
 	TtfSurfaceCache m_render_cache;
 };
+
+constexpr std::string_view toString(UiButton::FrameKey value)
+{
+	switch(value) {
+	case UiButton::DEFAULT:
+		return "Default";
+	case UiButton::PRESSED:
+		return "Pressed";
+	case UiButton::DISABLED:
+		return "Disabled";
+	}
+}
 
 //=============================================================================
 

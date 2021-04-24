@@ -2,6 +2,7 @@
 // Controller actions implementation
 
 #include <stdint.h>
+#include <string_view>
 
 namespace devilution {
 
@@ -9,6 +10,16 @@ typedef enum belt_item_type : uint8_t {
 	BLT_HEALING,
 	BLT_MANA,
 } belt_item_type;
+
+constexpr std::string_view toString(belt_item_type value)
+{
+	switch(value) {
+	case BLT_HEALING:
+		return "Healing";
+	case BLT_MANA:
+		return "Mana";
+	}
+}
 
 // Runs every frame.
 // Handles menu movement.

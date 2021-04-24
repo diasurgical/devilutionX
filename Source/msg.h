@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "quests.h"
 #include "objects.h"
@@ -130,6 +131,232 @@ enum _cmd_id : uint8_t {
 	NUM_CMDS,
 	CMD_INVALID = 0xFF,
 };
+
+constexpr std::string_view toString(_cmd_id value)
+{
+	switch(value) {
+	case CMD_STAND:
+		return "Stand";
+	case CMD_WALKXY:
+		return "Walkxy";
+	case CMD_ACK_PLRINFO:
+		return "Ack Plrinfo";
+	case CMD_ADDSTR:
+		return "Addstr";
+	case CMD_ADDMAG:
+		return "Addmag";
+	case CMD_ADDDEX:
+		return "Adddex";
+	case CMD_ADDVIT:
+		return "Addvit";
+	case CMD_SBSPELL:
+		return "Sbspell";
+	case CMD_GETITEM:
+		return "Getitem";
+	case CMD_AGETITEM:
+		return "Agetitem";
+	case CMD_PUTITEM:
+		return "Putitem";
+	case CMD_RESPAWNITEM:
+		return "Respawnitem";
+	case CMD_ATTACKXY:
+		return "Attackxy";
+	case CMD_RATTACKXY:
+		return "Rattackxy";
+	case CMD_SPELLXY:
+		return "Spellxy";
+	case CMD_TSPELLXY:
+		return "Tspellxy";
+	case CMD_OPOBJXY:
+		return "Opobjxy";
+	case CMD_DISARMXY:
+		return "Disarmxy";
+	case CMD_ATTACKID:
+		return "Attackid";
+	case CMD_ATTACKPID:
+		return "Attackpid";
+	case CMD_RATTACKID:
+		return "Rattackid";
+	case CMD_RATTACKPID:
+		return "Rattackpid";
+	case CMD_SPELLID:
+		return "Spellid";
+	case CMD_SPELLPID:
+		return "Spellpid";
+	case CMD_TSPELLID:
+		return "Tspellid";
+	case CMD_TSPELLPID:
+		return "Tspellpid";
+	case CMD_RESURRECT:
+		return "Resurrect";
+	case CMD_OPOBJT:
+		return "Opobjt";
+	case CMD_KNOCKBACK:
+		return "Knockback";
+	case CMD_TALKXY:
+		return "Talkxy";
+	case CMD_NEWLVL:
+		return "Newlvl";
+	case CMD_WARP:
+		return "Warp";
+	case CMD_CHEAT_EXPERIENCE:
+		return "Cheat Experience";
+	case CMD_CHEAT_SPELL_LEVEL:
+		return "Cheat Spell Level";
+	case CMD_DEBUG:
+		return "Debug";
+	case CMD_SYNCDATA:
+		return "Syncdata";
+	case CMD_MONSTDEATH:
+		return "Monstdeath";
+	case CMD_MONSTDAMAGE:
+		return "Monstdamage";
+	case CMD_PLRDEAD:
+		return "Plrdead";
+	case CMD_REQUESTGITEM:
+		return "Requestgitem";
+	case CMD_REQUESTAGITEM:
+		return "Requestagitem";
+	case CMD_GOTOGETITEM:
+		return "Gotogetitem";
+	case CMD_GOTOAGETITEM:
+		return "Gotoagetitem";
+	case CMD_OPENDOOR:
+		return "Opendoor";
+	case CMD_CLOSEDOOR:
+		return "Closedoor";
+	case CMD_OPERATEOBJ:
+		return "Operateobj";
+	case CMD_PLROPOBJ:
+		return "Plropobj";
+	case CMD_BREAKOBJ:
+		return "Breakobj";
+	case CMD_CHANGEPLRITEMS:
+		return "Changeplritems";
+	case CMD_DELPLRITEMS:
+		return "Delplritems";
+	case CMD_PLRDAMAGE:
+		return "Plrdamage";
+	case CMD_PLRLEVEL:
+		return "Plrlevel";
+	case CMD_DROPITEM:
+		return "Dropitem";
+	case CMD_PLAYER_JOINLEVEL:
+		return "Player Joinlevel";
+	case CMD_SEND_PLRINFO:
+		return "Send Plrinfo";
+	case CMD_SATTACKXY:
+		return "Sattackxy";
+	case CMD_ACTIVATEPORTAL:
+		return "Activateportal";
+	case CMD_DEACTIVATEPORTAL:
+		return "Deactivateportal";
+	case CMD_DLEVEL_0:
+		return "Dlevel 0";
+	case CMD_DLEVEL_1:
+		return "Dlevel 1";
+	case CMD_DLEVEL_2:
+		return "Dlevel 2";
+	case CMD_DLEVEL_3:
+		return "Dlevel 3";
+	case CMD_DLEVEL_4:
+		return "Dlevel 4";
+	case CMD_DLEVEL_5:
+		return "Dlevel 5";
+	case CMD_DLEVEL_6:
+		return "Dlevel 6";
+	case CMD_DLEVEL_7:
+		return "Dlevel 7";
+	case CMD_DLEVEL_8:
+		return "Dlevel 8";
+	case CMD_DLEVEL_9:
+		return "Dlevel 9";
+	case CMD_DLEVEL_10:
+		return "Dlevel 10";
+	case CMD_DLEVEL_11:
+		return "Dlevel 11";
+	case CMD_DLEVEL_12:
+		return "Dlevel 12";
+	case CMD_DLEVEL_13:
+		return "Dlevel 13";
+	case CMD_DLEVEL_14:
+		return "Dlevel 14";
+	case CMD_DLEVEL_15:
+		return "Dlevel 15";
+	case CMD_DLEVEL_16:
+		return "Dlevel 16";
+	case CMD_DLEVEL_17:
+		return "Dlevel 17";
+	case CMD_DLEVEL_18:
+		return "Dlevel 18";
+	case CMD_DLEVEL_19:
+		return "Dlevel 19";
+	case CMD_DLEVEL_20:
+		return "Dlevel 20";
+	case CMD_DLEVEL_21:
+		return "Dlevel 21";
+	case CMD_DLEVEL_22:
+		return "Dlevel 22";
+	case CMD_DLEVEL_23:
+		return "Dlevel 23";
+	case CMD_DLEVEL_24:
+		return "Dlevel 24";
+	case CMD_DLEVEL_JUNK:
+		return "Dlevel Junk";
+	case CMD_DLEVEL_END:
+		return "Dlevel End";
+	case CMD_HEALOTHER:
+		return "Healother";
+	case CMD_STRING:
+		return "String";
+	case CMD_SETSTR:
+		return "Setstr";
+	case CMD_SETMAG:
+		return "Setmag";
+	case CMD_SETDEX:
+		return "Setdex";
+	case CMD_SETVIT:
+		return "Setvit";
+	case CMD_RETOWN:
+		return "Retown";
+	case CMD_SPELLXYD:
+		return "Spellxyd";
+	case CMD_ITEMEXTRA:
+		return "Itemextra";
+	case CMD_SYNCPUTITEM:
+		return "Syncputitem";
+	case CMD_KILLGOLEM:
+		return "Killgolem";
+	case CMD_SYNCQUEST:
+		return "Syncquest";
+	case CMD_ENDSHIELD:
+		return "Endshield";
+	case CMD_AWAKEGOLEM:
+		return "Awakegolem";
+	case CMD_NOVA:
+		return "Nova";
+	case CMD_SETSHIELD:
+		return "Setshield";
+	case CMD_REMSHIELD:
+		return "Remshield";
+	case CMD_REFLECT:
+		return "Reflect";
+	case CMD_NAKRUL:
+		return "Nakrul";
+	case CMD_OPENHIVE:
+		return "Openhive";
+	case CMD_OPENCRYPT:
+		return "Opencrypt";
+	case FAKE_CMD_SETID:
+		return "Fake Cmd Setid";
+	case FAKE_CMD_DROPID:
+		return "Fake Cmd Dropid";
+	case NUM_CMDS:
+		return "Num Cmds";
+	case CMD_INVALID:
+		return "Invalid";
+	}
+}
 
 #pragma pack(push, 1)
 struct TCmd {

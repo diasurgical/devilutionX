@@ -2,7 +2,7 @@
 
 #include <SDL_ttf.h>
 #include <stdint.h>
-
+#include <string_view>
 namespace devilution {
 
 enum TextAlignment : uint8_t {
@@ -10,6 +10,18 @@ enum TextAlignment : uint8_t {
 	TextAlignment_CENTER,
 	TextAlignment_END,
 };
+
+constexpr std::string_view toString(TextAlignment value)
+{
+	switch(value) {
+	case TextAlignment_BEGIN:
+		return "Begin";
+	case TextAlignment_CENTER:
+		return "Center";
+	case TextAlignment_END:
+		return "End";
+	}
+}
 
 /**
  * Renders UTF-8, wrapping lines to avoid exceeding wrapLength, and aligning

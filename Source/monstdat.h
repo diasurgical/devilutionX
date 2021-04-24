@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 #include <stdint.h>
+#include <string_view>
 
 namespace devilution {
 
@@ -54,11 +55,111 @@ enum _mai_id : int8_t {
 	AI_INVALID = -1,
 };
 
+constexpr std::string_view toString(_mai_id value)
+{
+	switch(value) {
+	case AI_ZOMBIE:
+		return "Zombie";
+	case AI_FAT:
+		return "Fat";
+	case AI_SKELSD:
+		return "Skelsd";
+	case AI_SKELBOW:
+		return "Skelbow";
+	case AI_SCAV:
+		return "Scav";
+	case AI_RHINO:
+		return "Rhino";
+	case AI_GOATMC:
+		return "Goatmc";
+	case AI_GOATBOW:
+		return "Goatbow";
+	case AI_FALLEN:
+		return "Fallen";
+	case AI_MAGMA:
+		return "Magma";
+	case AI_SKELKING:
+		return "Skelking";
+	case AI_BAT:
+		return "Bat";
+	case AI_GARG:
+		return "Garg";
+	case AI_CLEAVER:
+		return "Cleaver";
+	case AI_SUCC:
+		return "Succ";
+	case AI_SNEAK:
+		return "Sneak";
+	case AI_STORM:
+		return "Storm";
+	case AI_FIREMAN:
+		return "Fireman";
+	case AI_GARBUD:
+		return "Garbud";
+	case AI_ACID:
+		return "Acid";
+	case AI_ACIDUNIQ:
+		return "Aciduniq";
+	case AI_GOLUM:
+		return "Golum";
+	case AI_ZHAR:
+		return "Zhar";
+	case AI_SNOTSPIL:
+		return "Snotspil";
+	case AI_SNAKE:
+		return "Snake";
+	case AI_COUNSLR:
+		return "Counslr";
+	case AI_MEGA:
+		return "Mega";
+	case AI_DIABLO:
+		return "Diablo";
+	case AI_LAZURUS:
+		return "Lazurus";
+	case AI_LAZHELP:
+		return "Lazhelp";
+	case AI_LACHDAN:
+		return "Lachdan";
+	case AI_WARLORD:
+		return "Warlord";
+	case AI_FIREBAT:
+		return "Firebat";
+	case AI_TORCHANT:
+		return "Torchant";
+	case AI_HORKDMN:
+		return "Horkdmn";
+	case AI_LICH:
+		return "Lich";
+	case AI_ARCHLICH:
+		return "Archlich";
+	case AI_PSYCHORB:
+		return "Psychorb";
+	case AI_NECROMORB:
+		return "Necromorb";
+	case AI_BONEDEMON:
+		return "Bonedemon";
+	case AI_INVALID:
+		return "Invalid";
+	}
+}
+
 enum _mc_id : uint8_t {
 	MC_UNDEAD,
 	MC_DEMON,
 	MC_ANIMAL,
 };
+
+constexpr std::string_view toString(_mc_id value)
+{
+	switch(value) {
+	case MC_UNDEAD:
+		return "Undead";
+	case MC_DEMON:
+		return "Demon";
+	case MC_ANIMAL:
+		return "Animal";
+	}
+}
 
 enum monster_resistance : uint8_t {
 	// clang-format off
@@ -256,11 +357,309 @@ enum _monster_id : int16_t {
 	MT_INVALID = -1,
 };
 
+constexpr std::string_view toString(_monster_id value)
+{
+	switch(value) {
+	case MT_NZOMBIE:
+		return "Nzombie";
+	case MT_BZOMBIE:
+		return "Bzombie";
+	case MT_GZOMBIE:
+		return "Gzombie";
+	case MT_YZOMBIE:
+		return "Yzombie";
+	case MT_RFALLSP:
+		return "Rfallsp";
+	case MT_DFALLSP:
+		return "Dfallsp";
+	case MT_YFALLSP:
+		return "Yfallsp";
+	case MT_BFALLSP:
+		return "Bfallsp";
+	case MT_WSKELAX:
+		return "Wskelax";
+	case MT_TSKELAX:
+		return "Tskelax";
+	case MT_RSKELAX:
+		return "Rskelax";
+	case MT_XSKELAX:
+		return "Xskelax";
+	case MT_RFALLSD:
+		return "Rfallsd";
+	case MT_DFALLSD:
+		return "Dfallsd";
+	case MT_YFALLSD:
+		return "Yfallsd";
+	case MT_BFALLSD:
+		return "Bfallsd";
+	case MT_NSCAV:
+		return "Nscav";
+	case MT_BSCAV:
+		return "Bscav";
+	case MT_WSCAV:
+		return "Wscav";
+	case MT_YSCAV:
+		return "Yscav";
+	case MT_WSKELBW:
+		return "Wskelbw";
+	case MT_TSKELBW:
+		return "Tskelbw";
+	case MT_RSKELBW:
+		return "Rskelbw";
+	case MT_XSKELBW:
+		return "Xskelbw";
+	case MT_WSKELSD:
+		return "Wskelsd";
+	case MT_TSKELSD:
+		return "Tskelsd";
+	case MT_RSKELSD:
+		return "Rskelsd";
+	case MT_XSKELSD:
+		return "Xskelsd";
+	case MT_INVILORD:
+		return "Invilord";
+	case MT_SNEAK:
+		return "Sneak";
+	case MT_STALKER:
+		return "Stalker";
+	case MT_UNSEEN:
+		return "Unseen";
+	case MT_ILLWEAV:
+		return "Illweav";
+	case MT_LRDSAYTR:
+		return "Lrdsaytr";
+	case MT_NGOATMC:
+		return "Ngoatmc";
+	case MT_BGOATMC:
+		return "Bgoatmc";
+	case MT_RGOATMC:
+		return "Rgoatmc";
+	case MT_GGOATMC:
+		return "Ggoatmc";
+	case MT_FIEND:
+		return "Fiend";
+	case MT_BLINK:
+		return "Blink";
+	case MT_GLOOM:
+		return "Gloom";
+	case MT_FAMILIAR:
+		return "Familiar";
+	case MT_NGOATBW:
+		return "Ngoatbw";
+	case MT_BGOATBW:
+		return "Bgoatbw";
+	case MT_RGOATBW:
+		return "Rgoatbw";
+	case MT_GGOATBW:
+		return "Ggoatbw";
+	case MT_NACID:
+		return "Nacid";
+	case MT_RACID:
+		return "Racid";
+	case MT_BACID:
+		return "Bacid";
+	case MT_XACID:
+		return "Xacid";
+	case MT_SKING:
+		return "Sking";
+	case MT_CLEAVER:
+		return "Cleaver";
+	case MT_FAT:
+		return "Fat";
+	case MT_MUDMAN:
+		return "Mudman";
+	case MT_TOAD:
+		return "Toad";
+	case MT_FLAYED:
+		return "Flayed";
+	case MT_WYRM:
+		return "Wyrm";
+	case MT_CAVSLUG:
+		return "Cavslug";
+	case MT_DVLWYRM:
+		return "Dvlwyrm";
+	case MT_DEVOUR:
+		return "Devour";
+	case MT_NMAGMA:
+		return "Nmagma";
+	case MT_YMAGMA:
+		return "Ymagma";
+	case MT_BMAGMA:
+		return "Bmagma";
+	case MT_WMAGMA:
+		return "Wmagma";
+	case MT_HORNED:
+		return "Horned";
+	case MT_MUDRUN:
+		return "Mudrun";
+	case MT_FROSTC:
+		return "Frostc";
+	case MT_OBLORD:
+		return "Oblord";
+	case MT_BONEDMN:
+		return "Bonedmn";
+	case MT_REDDTH:
+		return "Reddth";
+	case MT_LTCHDMN:
+		return "Ltchdmn";
+	case MT_UDEDBLRG:
+		return "Udedblrg";
+	case MT_INCIN:
+		return "Incin";
+	case MT_FLAMLRD:
+		return "Flamlrd";
+	case MT_DOOMFIRE:
+		return "Doomfire";
+	case MT_HELLBURN:
+		return "Hellburn";
+	case MT_STORM:
+		return "Storm";
+	case MT_RSTORM:
+		return "Rstorm";
+	case MT_STORML:
+		return "Storml";
+	case MT_MAEL:
+		return "Mael";
+	case MT_BIGFALL:
+		return "Bigfall";
+	case MT_WINGED:
+		return "Winged";
+	case MT_GARGOYLE:
+		return "Gargoyle";
+	case MT_BLOODCLW:
+		return "Bloodclw";
+	case MT_DEATHW:
+		return "Deathw";
+	case MT_MEGA:
+		return "Mega";
+	case MT_GUARD:
+		return "Guard";
+	case MT_VTEXLRD:
+		return "Vtexlrd";
+	case MT_BALROG:
+		return "Balrog";
+	case MT_NSNAKE:
+		return "Nsnake";
+	case MT_RSNAKE:
+		return "Rsnake";
+	case MT_BSNAKE:
+		return "Bsnake";
+	case MT_GSNAKE:
+		return "Gsnake";
+	case MT_NBLACK:
+		return "Nblack";
+	case MT_RTBLACK:
+		return "Rtblack";
+	case MT_BTBLACK:
+		return "Btblack";
+	case MT_RBLACK:
+		return "Rblack";
+	case MT_UNRAV:
+		return "Unrav";
+	case MT_HOLOWONE:
+		return "Holowone";
+	case MT_PAINMSTR:
+		return "Painmstr";
+	case MT_REALWEAV:
+		return "Realweav";
+	case MT_SUCCUBUS:
+		return "Succubus";
+	case MT_SNOWWICH:
+		return "Snowwich";
+	case MT_HLSPWN:
+		return "Hlspwn";
+	case MT_SOLBRNR:
+		return "Solbrnr";
+	case MT_COUNSLR:
+		return "Counslr";
+	case MT_MAGISTR:
+		return "Magistr";
+	case MT_CABALIST:
+		return "Cabalist";
+	case MT_ADVOCATE:
+		return "Advocate";
+	case MT_GOLEM:
+		return "Golem";
+	case MT_DIABLO:
+		return "Diablo";
+	case MT_DARKMAGE:
+		return "Darkmage";
+	case MT_HELLBOAR:
+		return "Hellboar";
+	case MT_STINGER:
+		return "Stinger";
+	case MT_PSYCHORB:
+		return "Psychorb";
+	case MT_ARACHNON:
+		return "Arachnon";
+	case MT_FELLTWIN:
+		return "Felltwin";
+	case MT_HORKSPWN:
+		return "Horkspwn";
+	case MT_VENMTAIL:
+		return "Venmtail";
+	case MT_NECRMORB:
+		return "Necrmorb";
+	case MT_SPIDLORD:
+		return "Spidlord";
+	case MT_LASHWORM:
+		return "Lashworm";
+	case MT_TORCHANT:
+		return "Torchant";
+	case MT_HORKDMN:
+		return "Horkdmn";
+	case MT_DEFILER:
+		return "Defiler";
+	case MT_GRAVEDIG:
+		return "Gravedig";
+	case MT_TOMBRAT:
+		return "Tombrat";
+	case MT_FIREBAT:
+		return "Firebat";
+	case MT_SKLWING:
+		return "Sklwing";
+	case MT_LICH:
+		return "Lich";
+	case MT_CRYPTDMN:
+		return "Cryptdmn";
+	case MT_HELLBAT:
+		return "Hellbat";
+	case MT_BONEDEMN:
+		return "Bonedemn";
+	case MT_ARCHLICH:
+		return "Archlich";
+	case MT_BICLOPS:
+		return "Biclops";
+	case MT_FLESTHNG:
+		return "Flesthng";
+	case MT_REAPER:
+		return "Reaper";
+	case MT_NAKRUL:
+		return "Nakrul";
+	case NUM_MTYPES:
+		return "Num Monster Types";
+	case MT_INVALID:
+		return "Invalid";
+	}
+}
+
 enum _monster_availability : uint8_t {
 	MAT_NEVER,
 	MAT_ALWAYS,
 	MAT_RETAIL,
 };
+
+constexpr std::string_view toString(_monster_availability value)
+{
+	switch(value) {
+	case MAT_NEVER:
+		return "Never";
+	case MAT_ALWAYS:
+		return "Always";
+	case MAT_RETAIL:
+		return "Retail";
+	}
+}
 
 struct UniqMonstStruct {
 	_monster_id mtype;

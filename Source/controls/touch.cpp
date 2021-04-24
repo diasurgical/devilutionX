@@ -1,5 +1,6 @@
 #ifndef USE_SDL1
 #include <cmath>
+#include <string_view>
 
 #include "options.h"
 #include "touch.h"
@@ -68,6 +69,18 @@ enum DraggingType {
 	DragTwoFinger,
 	DragThreeFinger,
 };
+
+constexpr std::string_view toString(DraggingType value)
+{
+	switch(value) {
+	case DragNone:
+		return "None";
+	case DragTwoFinger:
+		return "Twofinger";
+	case DragThreeFinger:
+		return "Threefinger";
+	}
+}
 
 static DraggingType multi_finger_dragging[TOUCH_PORT_MAX_NUM]; // keep track whether we are currently drag-and-dropping
 

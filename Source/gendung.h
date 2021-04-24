@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "scrollrt.h"
 
@@ -29,6 +30,24 @@ enum _setlevels : int8_t {
 	SL_VILEBETRAYER,
 };
 
+constexpr std::string_view toString(_setlevels value)
+{
+	switch(value) {
+	case SL_NONE:
+		return "None";
+	case SL_SKELKING:
+		return "Skelking";
+	case SL_BONECHAMB:
+		return "Bonechamb";
+	case SL_MAZE:
+		return "Maze";
+	case SL_POISONWATER:
+		return "Poisonwater";
+	case SL_VILEBETRAYER:
+		return "Vilebetrayer";
+	}
+}
+
 enum dungeon_type : int8_t {
 	DTYPE_TOWN,
 	DTYPE_CATHEDRAL,
@@ -40,6 +59,28 @@ enum dungeon_type : int8_t {
 	DTYPE_NONE = -1,
 };
 
+constexpr std::string_view toString(dungeon_type value)
+{
+	switch(value) {
+	case DTYPE_TOWN:
+		return "Town";
+	case DTYPE_CATHEDRAL:
+		return "Cathedral";
+	case DTYPE_CATACOMBS:
+		return "Catacombs";
+	case DTYPE_CAVES:
+		return "Caves";
+	case DTYPE_HELL:
+		return "Hell";
+	case DTYPE_NEST:
+		return "Nest";
+	case DTYPE_CRYPT:
+		return "Crypt";
+	case DTYPE_NONE:
+		return "None";
+	}
+}
+
 enum lvl_entry : uint8_t {
 	ENTRY_MAIN,
 	ENTRY_PREV,
@@ -50,6 +91,28 @@ enum lvl_entry : uint8_t {
 	ENTRY_TWARPDN,
 	ENTRY_TWARPUP,
 };
+
+constexpr std::string_view toString(lvl_entry value)
+{
+	switch(value) {
+	case ENTRY_MAIN:
+		return "Main";
+	case ENTRY_PREV:
+		return "Prev";
+	case ENTRY_SETLVL:
+		return "Set level";
+	case ENTRY_RTNLVL:
+		return "Return to level";
+	case ENTRY_LOAD:
+		return "Load";
+	case ENTRY_WARPLVL:
+		return "Warp to level";
+	case ENTRY_TWARPDN:
+		return "Teleporter warp down";
+	case ENTRY_TWARPUP:
+		return "Teleporter warp up";
+	}
+}
 
 enum {
 	// clang-format off
@@ -78,6 +141,18 @@ enum _difficulty : uint8_t {
 	DIFF_NIGHTMARE,
 	DIFF_HELL,
 };
+
+constexpr std::string_view toString(_difficulty value)
+{
+	switch(value) {
+	case DIFF_NORMAL:
+		return "Normal";
+	case DIFF_NIGHTMARE:
+		return "Nightmare";
+	case DIFF_HELL:
+		return "Hell";
+	}
+}
 
 struct ScrollStruct {
 	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr].position.offset.x */

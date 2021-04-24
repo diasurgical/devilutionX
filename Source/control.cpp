@@ -223,6 +223,28 @@ enum panel_button_id {
 	PanelButtonFriendly,
 };
 
+constexpr std::string_view toString(panel_button_id value)
+{
+	switch(value) {
+	case PanelButtonCharinfo:
+		return "Charinfo";
+	case PanelButtonQlog:
+		return "Qlog";
+	case PanelButtonAutomap:
+		return "Automap";
+	case PanelButtonMainmenu:
+		return "Mainmenu";
+	case PanelButtonInventory:
+		return "Inventory";
+	case PanelButtonSpellbook:
+		return "Spellbook";
+	case PanelButtonSendmsg:
+		return "Sendmsg";
+	case PanelButtonFriendly:
+		return "Friendly";
+	}
+}
+
 /** Positions of panel buttons. */
 SDL_Rect PanBtnPos[8] = {
 	// clang-format off

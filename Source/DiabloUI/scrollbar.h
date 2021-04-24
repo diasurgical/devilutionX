@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
@@ -19,6 +20,20 @@ enum ScrollBarArrowFrame : uint8_t {
 	ScrollBarArrowFrame_DOWN_ACTIVE,
 	ScrollBarArrowFrame_DOWN,
 };
+
+constexpr std::string_view toString(ScrollBarArrowFrame value)
+{
+	switch(value) {
+	case ScrollBarArrowFrame_UP_ACTIVE:
+		return "Up Active";
+	case ScrollBarArrowFrame_UP:
+		return "Up";
+	case ScrollBarArrowFrame_DOWN_ACTIVE:
+		return "Down Active";
+	case ScrollBarArrowFrame_DOWN:
+		return "Down";
+	}
+}
 
 extern Art ArtScrollBarThumb;
 const Uint16 SCROLLBAR_ARROW_WIDTH = 25;

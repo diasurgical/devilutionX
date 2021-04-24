@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "miniwin/miniwin.h"
 #include "utils/soundsample.h"
@@ -26,6 +27,30 @@ enum _music_id : uint8_t {
 	TMUSIC_INTRO,
 	NUM_MUSIC,
 };
+
+constexpr std::string_view toString(_music_id value)
+{
+	switch(value) {
+	case TMUSIC_TOWN:
+		return "Town";
+	case TMUSIC_L1:
+		return "L1";
+	case TMUSIC_L2:
+		return "L2";
+	case TMUSIC_L3:
+		return "L3";
+	case TMUSIC_L4:
+		return "L4";
+	case TMUSIC_L5:
+		return "L5";
+	case TMUSIC_L6:
+		return "L6";
+	case TMUSIC_INTRO:
+		return "Intro";
+	case NUM_MUSIC:
+		return "Num Music";
+	}
+}
 
 struct TSnd {
 	const char *sound_path;

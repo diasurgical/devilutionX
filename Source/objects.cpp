@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <climits>
 #include <cstdint>
+#include <string_view>
 
 #include "automap.h"
 #include "control.h"
@@ -61,8 +62,84 @@ enum shrine_type : uint8_t {
 	SHRINE_SHIMMERING,
 	SHRINE_SOLAR,
 	SHRINE_MURPHYS,
-	NUM_SHRINETYPE
+	NUM_SHRINETYPE,
 };
+
+constexpr std::string_view toString(shrine_type value)
+{
+	switch(value) {
+	case SHRINE_MYSTERIOUS:
+		return "Mysterious";
+	case SHRINE_HIDDEN:
+		return "Hidden";
+	case SHRINE_GLOOMY:
+		return "Gloomy";
+	case SHRINE_WEIRD:
+		return "Weird";
+	case SHRINE_MAGICAL:
+		return "Magical";
+	case SHRINE_STONE:
+		return "Stone";
+	case SHRINE_RELIGIOUS:
+		return "Religious";
+	case SHRINE_ENCHANTED:
+		return "Enchanted";
+	case SHRINE_THAUMATURGIC:
+		return "Thaumaturgic";
+	case SHRINE_FASCINATING:
+		return "Fascinating";
+	case SHRINE_CRYPTIC:
+		return "Cryptic";
+	case SHRINE_MAGICAL2:
+		return "Magical2";
+	case SHRINE_ELDRITCH:
+		return "Eldritch";
+	case SHRINE_EERIE:
+		return "Eerie";
+	case SHRINE_DIVINE:
+		return "Divine";
+	case SHRINE_HOLY:
+		return "Holy";
+	case SHRINE_SACRED:
+		return "Sacred";
+	case SHRINE_SPIRITUAL:
+		return "Spiritual";
+	case SHRINE_SPOOKY:
+		return "Spooky";
+	case SHRINE_ABANDONED:
+		return "Abandoned";
+	case SHRINE_CREEPY:
+		return "Creepy";
+	case SHRINE_QUIET:
+		return "Quiet";
+	case SHRINE_SECLUDED:
+		return "Secluded";
+	case SHRINE_ORNATE:
+		return "Ornate";
+	case SHRINE_GLIMMERING:
+		return "Glimmering";
+	case SHRINE_TAINTED:
+		return "Tainted";
+	case SHRINE_OILY:
+		return "Oily";
+	case SHRINE_GLOWING:
+		return "Glowing";
+	case SHRINE_MENDICANT:
+		return "Mendicant";
+	case SHRINE_SPARKLING:
+		return "Sparkling";
+	case SHRINE_TOWN:
+		return "Town";
+	case SHRINE_SHIMMERING:
+		return "Shimmering";
+	case SHRINE_SOLAR:
+		return "Solar";
+	case SHRINE_MURPHYS:
+		return "Murphys";
+	case NUM_SHRINETYPE:
+		return "Num Shrine Type";
+	}
+}
 
 int trapid;
 int trapdir;
@@ -209,6 +286,18 @@ enum shrine_gametype : uint8_t {
 	SHRINETYPE_SINGLE,
 	SHRINETYPE_MULTI,
 };
+
+constexpr std::string_view toString(shrine_gametype value)
+{
+	switch(value) {
+	case SHRINETYPE_ANY:
+		return "Any";
+	case SHRINETYPE_SINGLE:
+		return "Single";
+	case SHRINETYPE_MULTI:
+		return "Multi";
+	}
+}
 
 shrine_gametype shrineavail[] = {
 	SHRINETYPE_ANY,    // SHRINE_MYSTERIOUS

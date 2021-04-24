@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string_view>
 
 #include "engine.h"
 #include "spelldat.h"
@@ -33,6 +34,22 @@ enum text_color : uint8_t {
 	COL_GOLD,
 	COL_BLACK,
 };
+
+constexpr std::string_view toString(text_color value)
+{
+	switch(value) {
+	case COL_WHITE:
+		return "White";
+	case COL_BLUE:
+		return "Blue";
+	case COL_RED:
+		return "Red";
+	case COL_GOLD:
+		return "Gold";
+	case COL_BLACK:
+		return "Black";
+	}
+}
 
 struct RECT32 {
 	int x;
