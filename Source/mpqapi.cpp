@@ -17,6 +17,7 @@
 #include "encrypt.h"
 #include "engine.h"
 #include "utils/file_util.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -160,10 +161,10 @@ private:
 			const char *error_message = std::strerror(errno);
 			if (error_message == nullptr)
 				error_message = "";
-			SDL_LogError(SDL_LOG_CATEGORY_SYSTEM, fmt_with_error.c_str(), args..., error_message);
+			LogError(LogCategory::System, fmt_with_error.c_str(), args..., error_message);
 #ifdef _DEBUG
 		} else {
-			SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM, fmt, args...);
+			LogVerbose(LogCategory::System, fmt, args...);
 #endif
 		}
 		return !s_->fail();
@@ -195,17 +196,17 @@ struct Archive {
 	{
 		Close();
 #ifdef _DEBUG
-		SDL_Log("Opening %s", name);
+		Log("Opening {}", name);
 #endif
 		exists = FileExists(name);
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
 			if (GetFileSize(name, &size) == 0) {
-				SDL_Log("GetFileSize(\"%s\") failed with \"%s\"", name, std::strerror(errno));
+				Log("GetFileSize(\"{}\") failed with \"{}\"", name, std::strerror(errno));
 				return false;
 			}
 #ifdef _DEBUG
-			SDL_Log("GetFileSize(\"%s\") = %" PRIuMAX, name, size);
+			Log("GetFileSize(\"{}\") = {}", name, size);
 #endif
 		} else {
 			mode |= std::ios::trunc;
@@ -225,7 +226,7 @@ struct Archive {
 		if (!stream.IsOpen())
 			return true;
 #ifdef _DEBUG
-		SDL_Log("Closing %s", name.c_str());
+		Log("Closing {}", name);
 #endif
 
 		bool result = true;
@@ -234,7 +235,7 @@ struct Archive {
 		stream.Close();
 		if (modified && result && size != 0) {
 #ifdef _DEBUG
-			SDL_Log("ResizeFile(\"%s\", %" PRIuMAX ")", name.c_str(), size);
+			Log("ResizeFile(\"{}\", {})", name, size);
 #endif
 			result = ResizeFile(name.c_str(), size);
 		}

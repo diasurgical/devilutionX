@@ -15,6 +15,7 @@
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
+#include "utils/log.hpp"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -244,7 +245,7 @@ static int TranslateSdlKey(SDL_Keysym key)
 		} else if (sym >= SDLK_F1 && sym <= SDLK_F12) {
 			return DVL_VK_F1 + (sym - SDLK_F1);
 		}
-		SDL_Log("unknown key: name=%s sym=0x%X scan=%d mod=0x%X", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
+		Log("unknown key: name={} sym=0x{:X} scan={} mod=0x{:X}", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
 		return -1;
 	}
 }
@@ -265,7 +266,7 @@ WPARAM KeystateForMouse(WPARAM ret)
 
 bool FalseAvail(const char *name, int value)
 {
-	SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Unhandled SDL event: %s %d", name, value);
+	LogDebug("Unhandled SDL event: %s %d", name, value);
 	return true;
 }
 
@@ -668,7 +669,7 @@ bool TranslateMessage(const MSG *lpMsg)
 
 #ifdef _DEBUG
 			if (key >= 32) {
-				SDL_Log("char: %c", key);
+				Log("char: {:c}", key);
 			}
 #endif
 

@@ -3,6 +3,7 @@
 #include "diablo.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -59,7 +60,7 @@ void LoadTtfFont()
 {
 	if (TTF_WasInit() == 0) {
 		if (TTF_Init() == -1) {
-			SDL_Log("TTF_Init: %s", TTF_GetError());
+			Log("TTF_Init: {}", TTF_GetError());
 			diablo_quit(1);
 		}
 		was_fonts_init = true;
@@ -73,7 +74,7 @@ void LoadTtfFont()
 #endif
 	font = TTF_OpenFont(ttfFontPath.c_str(), 17);
 	if (font == nullptr) {
-		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
+		Log("TTF_OpenFont: {}", TTF_GetError());
 		return;
 	}
 

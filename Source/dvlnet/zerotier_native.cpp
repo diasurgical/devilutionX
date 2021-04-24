@@ -13,6 +13,7 @@
 #include <cstdlib>
 
 #include "utils/paths.h"
+#include "utils/log.hpp"
 
 #include "dvlnet/zerotier_lwip.h"
 
@@ -30,17 +31,17 @@ static void Callback(struct zts_callback_msg *msg)
 {
 	//printf("callback %i\n", msg->eventCode);
 	if (msg->eventCode == ZTS_EVENT_NODE_ONLINE) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NODE_ONLINE, nodeId=%llx\n", (unsigned long long)msg->node->address);
+		Log("ZeroTier: ZTS_EVENT_NODE_ONLINE, nodeId={:x}", (unsigned long long)msg->node->address);
 		zt_node_online = true;
 		if (!zt_joined) {
 			zts_join(ZtNetwork);
 			zt_joined = true;
 		}
 	} else if (msg->eventCode == ZTS_EVENT_NODE_OFFLINE) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NODE_OFFLINE\n");
+		Log("ZeroTier: ZTS_EVENT_NODE_OFFLINE");
 		zt_node_online = false;
 	} else if (msg->eventCode == ZTS_EVENT_NETWORK_READY_IP6) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NETWORK_READY_IP6, networkId=%llx\n", (unsigned long long)msg->network->nwid);
+		Log("ZeroTier: ZTS_EVENT_NETWORK_READY_IP6, networkId={:x}", (unsigned long long)msg->network->nwid);
 		zt_ip6setup();
 		zt_network_ready = true;
 	} else if (msg->eventCode == ZTS_EVENT_ADDR_ADDED_IP6) {

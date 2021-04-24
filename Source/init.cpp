@@ -14,6 +14,7 @@
 #include "storm/storm.h"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
+#include "utils/log.hpp"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita
@@ -58,16 +59,16 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 	for (const auto &path : paths) {
 		mpq_abspath = path + mpq_name;
 		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
-			SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "  Found: %s in %s", mpq_name, path.c_str());
+			LogVerbose("  Found: %s in %s", mpq_name, path.c_str());
 			SFileSetBasePath(path.c_str());
 			return archive;
 		}
 		if (SErrGetLastError() != STORM_ERROR_FILE_NOT_FOUND) {
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Open error %u: %s", SErrGetLastError(), mpq_abspath.c_str());
+			LogError("Open error %u: %s", SErrGetLastError(), mpq_abspath.c_str());
 		}
 	}
 	if (SErrGetLastError() == STORM_ERROR_FILE_NOT_FOUND) {
-		SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "Missing: %s", mpq_name);
+		LogVerbose("Missing: %s", mpq_name);
 	}
 
 	return nullptr;
@@ -171,8 +172,7 @@ void init_archives()
 			message.append(paths[i]);
 			message += '\'';
 		}
-		SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION,
-		    "MPQ search paths%s", message.c_str());
+		LogVerbose("MPQ search paths%s", message.c_str());
 	}
 
 	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ");

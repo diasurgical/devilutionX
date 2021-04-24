@@ -2,6 +2,7 @@
 #include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -14,7 +15,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 
 	DWORD width, height, bpp;
 	if (!SBmpLoadImage(pszFile, nullptr, nullptr, 0, &width, &height, &bpp)) {
-		SDL_Log("Failed to load image meta");
+		Log("Failed to load image meta");
 		return;
 	}
 
@@ -37,7 +38,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 
 	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(artSurface->pixels),
 	        artSurface->pitch * artSurface->format->BytesPerPixel * height, nullptr, nullptr, nullptr)) {
-		SDL_Log("Failed to load image");
+		Log("Failed to load image");
 		return;
 	}
 

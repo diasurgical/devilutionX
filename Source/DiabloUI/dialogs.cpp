@@ -11,6 +11,7 @@
 #include "dx.h"
 #include "palette.h"
 #include "utils/display.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -262,16 +263,16 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 
 	if (!gbActive || inDialog) {
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-			SDL_Log("%s", SDL_GetError());
+			Log("{}", SDL_GetError());
 		}
 #ifndef RUN_TESTS
 		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
-			SDL_Log("%s", SDL_GetError());
+			Log("{}", SDL_GetError());
 #else
 		{
 #endif
-			SDL_Log("%s", text);
-			SDL_Log("%s", caption);
+			Log("{}", text);
+			Log("{}", caption);
 		}
 		return;
 	}

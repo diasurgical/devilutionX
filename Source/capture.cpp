@@ -13,6 +13,7 @@
 #include "utils/file_util.h"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -194,10 +195,10 @@ void CaptureScreen()
 	outStream->close();
 
 	if (!success) {
-		SDL_Log("Failed to save screenshot at %s", fileName.c_str());
+		Log("Failed to save screenshot at {}", fileName);
 		RemoveFile(fileName.c_str());
 	} else {
-		SDL_Log("Screenshot saved at %s", fileName.c_str());
+		Log("Screenshot saved at {}", fileName);
 	}
 	SDL_Delay(300);
 	for (int i = 0; i < 256; i++) {

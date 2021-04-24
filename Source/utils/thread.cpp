@@ -5,6 +5,7 @@
 
 #include "appfat.h"
 #include "utils/stubs.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -72,7 +73,7 @@ int WaitForEvent(event_emul *e)
 	}
 	int ret = SDL_CondWait(e->cond, e->mutex);
 	if (ret <= -1 || SDL_CondSignal(e->cond) <= -1 || SDL_UnlockMutex(e->mutex) <= -1) {
-		SDL_Log("%s", SDL_GetError());
+		Log("{}", SDL_GetError());
 		return -1;
 	}
 	return ret;

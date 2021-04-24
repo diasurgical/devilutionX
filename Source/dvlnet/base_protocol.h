@@ -8,6 +8,7 @@
 #include "dvlnet/base.h"
 #include "dvlnet/packet.h"
 #include "player.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 namespace net {
@@ -182,11 +183,11 @@ void base_protocol<P>::recv()
 			} catch (packet_exception &e) {
 				// drop packet
 				proto.disconnect(sender);
-				SDL_Log("%s", e.what());
+				Log("{}", e.what());
 			}
 		}
 	} catch (std::exception &e) {
-		SDL_Log("%s", e.what());
+		Log("{}", e.what());
 		return;
 	}
 }

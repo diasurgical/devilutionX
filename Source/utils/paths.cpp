@@ -1,4 +1,5 @@
 #include "utils/paths.h"
+#include "utils/log.hpp"
 
 #include <SDL.h>
 
@@ -41,7 +42,7 @@ std::string *FromSDL(char *s)
 	if (s != nullptr) {
 		SDL_free(s);
 	} else {
-		SDL_Log("%s", SDL_GetError());
+		Log("{}", SDL_GetError());
 		SDL_ClearError();
 	}
 	return result;

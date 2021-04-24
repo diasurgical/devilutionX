@@ -13,6 +13,7 @@
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -57,7 +58,7 @@ SDL_Surface *RenderText(const char *text, SDL_Color color)
 		return nullptr;
 	SDL_Surface *result = TTF_RenderUTF8_Solid(font, text, color);
 	if (result == nullptr)
-		SDL_Log("%s", TTF_GetError());
+		Log("{}", TTF_GetError());
 	return result;
 }
 
@@ -79,7 +80,7 @@ CachedLine PrepareLine(std::size_t index)
 		const SDL_Color &textColor = palette->colors[224];
 		SDL_Color colors[3] = { maskColor, textColor, shadowColor };
 		if (SDLC_SetSurfaceColors(surface.get(), colors, 0, 3) <= -1)
-			SDL_Log("%s", SDL_GetError());
+			Log("{}", SDL_GetError());
 		SDLC_SetColorKey(surface.get(), 0);
 
 		// Blit the shadow first:

@@ -12,6 +12,7 @@
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
 #include "options.h"
+#include "utils/log.hpp"
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -34,10 +35,10 @@ Uint16 borderRight;
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
 {
-	SDL_Log("Setting video mode %dx%d bpp=%u flags=0x%08X", width, height, bpp, flags);
+	Log("Setting video mode {}x{} bpp={} flags=0x{:08X}", width, height, bpp, flags);
 	SDL_SetVideoMode(width, height, bpp, flags);
 	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
-	SDL_Log("Video mode is now %dx%d bpp=%u flags=0x%08X",
+	Log("Video mode is now {}x{} bpp={} flags=0x{:08X}",
 	    current.current_w, current.current_h, current.vfmt->BitsPerPixel, SDL_GetVideoSurface()->flags);
 	ghMainWnd = SDL_GetVideoSurface();
 }
@@ -49,7 +50,7 @@ void SetVideoModeToPrimary(bool fullscreen, int width, int height)
 		flags |= SDL_FULLSCREEN;
 	SetVideoMode(width, height, SDL1_VIDEO_MODE_BPP, flags);
 	if (OutputRequiresScaling())
-		SDL_Log("Using software scaling");
+		Log("Using software scaling");
 }
 #endif
 
@@ -84,7 +85,7 @@ void CalculatePreferdWindowSize(int &width, int &height)
 {
 #ifdef USE_SDL1
 	const SDL_VideoInfo &best = *SDL_GetVideoInfo();
-	SDL_Log("Best video mode reported as: %dx%d bpp=%d hw_available=%u",
+	Log("Best video mode reported as: {}x{} bpp={} hw_available={}",
 	    best.current_w, best.current_h, best.vfmt->BitsPerPixel, best.hw_available);
 #else
 	SDL_DisplayMode mode;

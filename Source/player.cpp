@@ -22,6 +22,7 @@
 #include "stores.h"
 #include "storm/storm.h"
 #include "towners.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -3787,12 +3788,12 @@ int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 		// this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
 		if (absoluteAnimationFrame > (relevantAnimationFramesForDistributing + 1)) {
 			// we should never have +2 frames even if next game tick is due
-			SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated %d MaxFrame %d)", absoluteAnimationFrame, relevantAnimationFramesForDistributing);
+			Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated {} MaxFrame {})", absoluteAnimationFrame, relevantAnimationFramesForDistributing);
 		}
 		return relevantAnimationFramesForDistributing;
 	}
 	if (absoluteAnimationFrame <= 0) {
-		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated %d)", absoluteAnimationFrame);
+		Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated {})", absoluteAnimationFrame);
 		return 1;
 	}
 	return absoluteAnimationFrame;

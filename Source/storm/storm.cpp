@@ -13,6 +13,7 @@
 #include "options.h"
 #include "utils/paths.h"
 #include "utils/stubs.h"
+#include "utils/log.hpp"
 
 // Include Windows headers for Get/SetLastError.
 #if defined(_WIN32)
@@ -120,7 +121,7 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 
 	if (!result || (*phFile == nullptr)) {
-		SDL_Log("%s: Not found: %s", __FUNCTION__, filename);
+		Log("{}: Not found: {}", __FUNCTION__, filename);
 	}
 	return result;
 }
@@ -232,7 +233,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	if (pPalette && pcxhdr.BitsPerPixel == 8) {
 		const auto pos = SFileSetFilePointer(hFile, -768, DVL_FILE_CURRENT);
 		if (pos == static_cast<std::uint64_t>(-1)) {
-			SDL_Log("SFileSetFilePointer error: %ud", (unsigned int)SErrGetLastError());
+			Log("SFileSetFilePointer error: {}", (unsigned int)SErrGetLastError());
 		}
 		SFileReadFile(hFile, paldata, 768, nullptr, nullptr);
 
