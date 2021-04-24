@@ -369,7 +369,6 @@ void InitMonsterGFX(int monst)
 	}
 
 	Monsters[monst].width = monsterdata[mtype].width;
-	Monsters[monst].width2 = (monsterdata[mtype].width - 64) / 2;
 	Monsters[monst].mMinHP = monsterdata[mtype].mMinHP;
 	Monsters[monst].mMaxHP = monsterdata[mtype].mMaxHP;
 	if (!gbIsHellfire && mtype == MT_DIABLO) {

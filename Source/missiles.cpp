@@ -2513,7 +2513,7 @@ void AddRhino(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy,
 	missile[mi]._miAnimDelay = anim->Rate;
 	missile[mi]._miAnimLen = anim->Frames;
 	missile[mi]._miAnimWidth = monster[id].MType->width;
-	missile[mi]._miAnimWidth2 = monster[id].MType->width2;
+	missile[mi]._miAnimWidth2 = CalculateWidth2(monster[id].MType->width);
 	missile[mi]._miAnimAdd = 1;
 	if (monster[id].MType->mtype >= MT_NSNAKE && monster[id].MType->mtype <= MT_GSNAKE)
 		missile[mi]._miAnimFrame = 7;
@@ -2541,7 +2541,7 @@ void AddFireman(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienem
 	missile[mi]._miAnimDelay = anim->Rate;
 	missile[mi]._miAnimLen = anim->Frames;
 	missile[mi]._miAnimWidth = monster[id].MType->width;
-	missile[mi]._miAnimWidth2 = monster[id].MType->width2;
+	missile[mi]._miAnimWidth2 = CalculateWidth2(monster[id].MType->width);
 	missile[mi]._miAnimAdd = 1;
 	missile[mi]._miVar1 = 0;
 	missile[mi]._miVar2 = 0;

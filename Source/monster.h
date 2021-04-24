@@ -118,7 +118,6 @@ struct CMonster {
 	AnimStruct Anims[6];
 	TSnd *Snds[4][2];
 	int width;
-	int width2;
 	uint16_t mMinHP;
 	uint16_t mMaxHP;
 	bool has_special;
