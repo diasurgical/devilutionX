@@ -70,8 +70,8 @@ enum item_color : uint8_t {
 };
 
 struct InvXY {
-	Sint32 X;
-	Sint32 Y;
+	int X;
+	int Y;
 };
 
 extern bool invflag;

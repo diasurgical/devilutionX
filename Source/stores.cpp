@@ -2057,9 +2057,9 @@ void S_DrunkEnter()
 
 ItemStruct golditem;
 
-Uint8 *pSTextBoxCels;
-Uint8 *pSPentSpn2Cels;
-Uint8 *pSTextSlidCels;
+BYTE *pSTextBoxCels;
+BYTE *pSPentSpn2Cels;
+BYTE *pSTextSlidCels;
 
 talk_id stextflag;
 

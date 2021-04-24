@@ -3648,9 +3648,9 @@ bool OperateShrineEnchanted(int pnum)
 		return false;
 
 	int cnt = 0;
-	Uint64 spell = 1;
+	uint64_t spell = 1;
 	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-	Uint64 spells = plr[pnum]._pMemSpells;
+	uint64_t spells = plr[pnum]._pMemSpells;
 	for (int j = 0; j < maxSpells; j++) {
 		if ((spell & spells) != 0)
 			cnt++;
@@ -4178,8 +4178,8 @@ bool OperateShrineGlowing(int pnum)
 		return false;
 
 	int playerXP = plr[myplr]._pExperience;
-	Sint32 magicGain = playerXP / 1000;
-	Sint32 xpLoss = 0;
+	int magicGain = playerXP / 1000;
+	int xpLoss = 0;
 	if (playerXP > 5000) {
 		magicGain = 5;
 		xpLoss = ((double)playerXP * 0.95);

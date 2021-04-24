@@ -2896,7 +2896,7 @@ bool M_CallWalk(int i, direction md)
 
 bool M_PathWalk(int i)
 {
-	Sint8 path[MAX_PATH_LENGTH];
+	int8_t path[MAX_PATH_LENGTH];
 	bool (*Check)(int, int, int);
 
 	/** Maps from walking path step to facing direction. */
@@ -2941,7 +2941,7 @@ bool M_DumbWalk(int i, direction md)
 	return ok;
 }
 
-bool M_RoundWalk(int i, direction md, Sint32 *dir)
+bool M_RoundWalk(int i, direction md, int *dir)
 {
 	if (*dir)
 		md = left[left[md]];

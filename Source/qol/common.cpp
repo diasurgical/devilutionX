@@ -4,12 +4,14 @@
 * Common functions for QoL features
 */
 
+#include <SDL.h>
+
 #include "common.h"
 #include "engine.h"
 
 namespace devilution {
 
-void FastDrawHorizLine(const CelOutputBuffer &out, int x, int y, int width, BYTE col)
+void FastDrawHorizLine(const CelOutputBuffer &out, int x, int y, int width, Uint8 col)
 {
 	memset(out.at(x, y), col, width);
 }

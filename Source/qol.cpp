@@ -85,9 +85,9 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 
 	MonsterStruct *mon = &monster[pcursmonst];
 
-	Sint32 width = qolArt->healthBox.w();
-	Sint32 height = qolArt->healthBox.h();
-	Sint32 xPos = (gnScreenWidth - width) / 2;
+	int width = qolArt->healthBox.w();
+	int height = qolArt->healthBox.h();
+	int xPos = (gnScreenWidth - width) / 2;
 
 	if (PANELS_COVER) {
 		if (invflag || sbookflag)
@@ -96,10 +96,10 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 			xPos += SPANEL_WIDTH / 2;
 	}
 
-	Sint32 yPos = 18;
-	Sint32 border = 3;
+	int yPos = 18;
+	int border = 3;
 
-	const Sint32 maxLife = std::max(mon->_mmaxhp, mon->_mhitpoints);
+	const int maxLife = std::max(mon->_mmaxhp, mon->_mhitpoints);
 
 	DrawArt(out, xPos, yPos, &qolArt->healthBox);
 	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
@@ -111,16 +111,16 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 	if (sgOptions.Gameplay.bShowMonsterType) {
 		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 150 /*beast*/ };
 		Uint8 borderColor = borderColors[mon->MData->mMonstClass];
-		Sint32 borderWidth = width - (border * 2);
+		int borderWidth = width - (border * 2);
 		FastDrawHorizLine(out, xPos + border, yPos + border, borderWidth, borderColor);
 		FastDrawHorizLine(out, xPos + border, yPos + height - border - 1, borderWidth, borderColor);
-		Sint32 borderHeight = height - (border * 2) - 2;
+		int borderHeight = height - (border * 2) - 2;
 		FastDrawVertLine(out, xPos + border, yPos + border + 1, borderHeight, borderColor);
 		FastDrawVertLine(out, xPos + width - border - 1, yPos + border + 1, borderHeight, borderColor);
 	}
 
-	Sint32 barLableX = xPos + width / 2 - GetTextWidth(mon->mName) / 2;
-	Sint32 barLableY = yPos + 10 + (height - 11) / 2;
+	int barLableX = xPos + width / 2 - GetTextWidth(mon->mName) / 2;
+	int barLableY = yPos + 10 + (height - 11) / 2;
 	PrintGameStr(out, barLableX - 1, barLableY + 1, mon->mName, COL_BLACK);
 	text_color color = COL_WHITE;
 	if (mon->_uniqtype != 0)
@@ -133,8 +133,8 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
 
-		Sint32 resOffset = 5;
-		for (Sint32 i = 0; i < 3; i++) {
+		int resOffset = 5;
+		for (int i = 0; i < 3; i++) {
 			if (mon->mMagicRes & immunes[i]) {
 				DrawArt(out, xPos + resOffset, yPos + height - 6, &qolArt->resistance, i * 2 + 1);
 				resOffset += qolArt->resistance.w() + 2;

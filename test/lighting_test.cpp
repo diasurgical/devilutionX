@@ -16,7 +16,7 @@ TEST(Lighting, CrawlTables)
 		int x = 20;
 		int y = 20;
 		int cr = CrawlNum[j] + 1;
-		for (int i = (Uint8)CrawlTable[cr - 1]; i > 0; i--, cr += 2) {
+		for (unsigned i = (uint8_t)CrawlTable[cr - 1]; i > 0; i--, cr += 2) {
 			int dx = x + CrawlTable[cr];
 			int dy = y + CrawlTable[cr + 1];
 			sprintf(tempstr, "location %d:%d added twice.", dx - 20, dy - 20);

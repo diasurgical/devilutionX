@@ -11,20 +11,20 @@
 namespace devilution {
 
 struct HALLNODE {
-	Sint32 nHallx1;
-	Sint32 nHally1;
-	Sint32 nHallx2;
-	Sint32 nHally2;
-	Sint32 nHalldir;
+	int nHallx1;
+	int nHally1;
+	int nHallx2;
+	int nHally2;
+	int nHalldir;
 	struct HALLNODE *pNext;
 };
 
 struct ROOMNODE {
-	Sint32 nRoomx1;
-	Sint32 nRoomy1;
-	Sint32 nRoomx2;
-	Sint32 nRoomy2;
-	Sint32 nRoomDest;
+	int nRoomx1;
+	int nRoomy1;
+	int nRoomx2;
+	int nRoomy2;
+	int nRoomDest;
 };
 
 extern BYTE predungeon[DMAXX][DMAXY];

@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <SDL.h>
 #include <stdint.h>
 
 #include "diablo.h"

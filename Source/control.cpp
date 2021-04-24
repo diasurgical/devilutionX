@@ -373,7 +373,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 {
 	int c;
 	int s;
-	Uint64 mask;
+	uint64_t mask;
 
 	pSpell = SPL_INVALID;
 	infostr[0] = '\0';
@@ -381,7 +381,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 	int y = PANEL_Y - 17;
 	ClearPanel();
 
-	for (Sint32 i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
+	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
 			SetSpellTrans(RSPLTYPE_SKILL);
@@ -405,7 +405,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 		case RSPLTYPE_INVALID:
 			break;
 		}
-		Sint32 j = SPL_FIREBOLT;
+		int8_t j = SPL_FIREBOLT;
 		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
 			if ((mask & spl) == 0)
 				continue;
@@ -527,7 +527,7 @@ void SetSpeedSpell(int slot)
 
 void ToggleSpell(int slot)
 {
-	Uint64 spells;
+	uint64_t spells;
 
 	if (plr[myplr]._pSplHotKey[slot] == SPL_INVALID) {
 		return;
@@ -876,7 +876,7 @@ void DoSpeedBook()
 
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
-			Uint64 spells;
+			uint64_t spells;
 			switch (i) {
 			case RSPLTYPE_SKILL:
 				spells = plr[myplr]._pAblSpells;
@@ -891,7 +891,7 @@ void DoSpeedBook()
 				spells = plr[myplr]._pISpells;
 				break;
 			}
-			Uint64 spell = 1;
+			uint64_t spell = 1;
 			for (int j = 1; j < MAX_SPELLS; j++) {
 				if ((spell & spells) != 0) {
 					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
@@ -1821,7 +1821,7 @@ void DrawSpellBook(const CelOutputBuffer &out)
 		}
 		CelDrawTo(out, sx, 348, pSBkBtnCel, sbooktab + 1, 76);
 	}
-	Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
+	uint64_t spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
 	int yp = 55;
 	for (int i = 1; i < 8; i++) {
@@ -1877,7 +1877,7 @@ void CheckSBook()
 {
 	if (MouseX >= RIGHT_PANEL + 11 && MouseX < RIGHT_PANEL + 48 && MouseY >= 18 && MouseY < 314) {
 		spell_id sn = SpellPages[sbooktab][(MouseY - 18) / 43];
-		Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
+		uint64_t spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = RSPLTYPE_SPELL;
 			if ((plr[myplr]._pISpells & GetSpellBitmask(sn)) != 0) {

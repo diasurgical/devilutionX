@@ -5,7 +5,7 @@
 */
 #pragma once
 
-#include "SDL_stdinc.h" // for Uint8
+#include <SDL.h>
 
 namespace devilution {
 

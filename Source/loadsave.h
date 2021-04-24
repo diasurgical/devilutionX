@@ -15,7 +15,7 @@ extern uint8_t giNumberOfLevels;
 void RemoveInvalidItem(ItemStruct *pItem);
 int RemapItemIdxFromDiablo(int i);
 int RemapItemIdxToDiablo(int i);
-bool IsHeaderValid(Uint32 magicNumber);
+bool IsHeaderValid(uint32_t magicNumber);
 void LoadHotkeys();
 void LoadHeroItems(PlayerStruct *pPlayer);
 /**

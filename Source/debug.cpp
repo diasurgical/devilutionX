@@ -4,8 +4,6 @@
  * Implementation of debug functions.
  */
 
-#include <SDL.h>
-
 #include "cursor.h"
 #include "inv.h"
 #include "spells.h"

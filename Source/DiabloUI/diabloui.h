@@ -46,21 +46,21 @@ enum _selhero_selections : uint8_t {
 };
 
 struct _uidefaultstats {
-	Uint16 strength;
-	Uint16 magic;
-	Uint16 dexterity;
-	Uint16 vitality;
+	uint16_t strength;
+	uint16_t magic;
+	uint16_t dexterity;
+	uint16_t vitality;
 };
 
 struct _uiheroinfo {
 	char name[16];
-	Uint16 level;
+	uint16_t level;
 	HeroClass heroclass;
-	Uint8 herorank;
-	Uint16 strength;
-	Uint16 magic;
-	Uint16 dexterity;
-	Uint16 vitality;
+	uint8_t herorank;
+	uint16_t strength;
+	uint16_t magic;
+	uint16_t dexterity;
+	uint16_t vitality;
 	bool hassaved;
 	bool spawned;
 };

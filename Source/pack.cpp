@@ -67,7 +67,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 		pPack->targy = pPlayer->position.current.y;
 	}
 	strcpy(pPack->pName, pPlayer->_pName);
-	pPack->pClass = static_cast<Sint8>(pPlayer->_pClass);
+	pPack->pClass = static_cast<int8_t>(pPlayer->_pClass);
 	pPack->pBaseStr = pPlayer->_pBaseStr;
 	pPack->pBaseMag = pPlayer->_pBaseMag;
 	pPack->pBaseDex = pPlayer->_pBaseDex;

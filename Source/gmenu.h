@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <stdint.h>
+
 #include "engine.h"
 
 namespace devilution {
@@ -13,7 +15,7 @@ namespace devilution {
 #define GMENU_ENABLED 0x80000000
 
 struct TMenuItem {
-	Uint32 dwFlags;
+	uint32_t dwFlags;
 	const char *pszStr;
 	void (*fnMenu)(bool);
 };
