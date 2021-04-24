@@ -845,14 +845,14 @@ void CheckTriggers()
 		return;
 
 	for (int i = 0; i < numtrigs; i++) {
-		if (plr[myplr]._px != trigs[i]._tx || plr[myplr]._py != trigs[i]._ty) {
+		if (plr[myplr].position.current.x != trigs[i]._tx || plr[myplr].position.current.y != trigs[i]._ty) {
 			continue;
 		}
 
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
-				NetSendCmdLoc(myplr, true, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
+				NetSendCmdLoc(myplr, true, CMD_WALKXY, plr[myplr].position.current.x, plr[myplr].position.current.y + 1);
 				PlaySFX(PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
@@ -873,22 +873,22 @@ void CheckTriggers()
 
 				if (trigs[i]._tlvl == 5 && plr[myplr]._pLevel < 8) {
 					abort = true;
-					x = plr[myplr]._px;
-					y = plr[myplr]._py + 1;
+					x = plr[myplr].position.current.x;
+					y = plr[myplr].position.current.y + 1;
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
 				if (trigs[i]._tlvl == 9 && plr[myplr]._pLevel < 13) {
 					abort = true;
-					x = plr[myplr]._px + 1;
-					y = plr[myplr]._py;
+					x = plr[myplr].position.current.x + 1;
+					y = plr[myplr].position.current.y;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
 				if (trigs[i]._tlvl == 13 && plr[myplr]._pLevel < 17) {
 					abort = true;
-					x = plr[myplr]._px;
-					y = plr[myplr]._py + 1;
+					x = plr[myplr].position.current.x;
+					y = plr[myplr].position.current.y + 1;
 					abortflag = EMSG_REQUIRES_LVL_17;
 				}
 

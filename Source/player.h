@@ -147,6 +147,26 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
+struct Point {
+	int x;
+	int y;
+};
+
+struct PlayerPosition {
+	/** Tile position */
+	Point current; // 256
+	/** Future tile position. Set at start of walking animation. */
+	Point future;
+	/** Tile position of player. Set via network on player input. */
+	Point owner;
+	/** Most recent position in dPlayer. */
+	Point old;
+	/** Player sprite's pixel offset from tile. */
+	Point offset;
+	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
+	Point velocity;
+};
+
 struct PlayerStruct {
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];
@@ -157,18 +177,7 @@ struct PlayerStruct {
 	direction destParam3;
 	int destParam4;
 	int plrlevel;
-	int _px;    // Tile X-position of player
-	int _py;    // Tile Y-position of player
-	int _pfutx; // Future tile X-position of player. Set at start of walking animation
-	int _pfuty;
-	int _pownerx;    // Tile X-position of player. Set via network on player input
-	int _pownery;    // Tile X-position of player. Set via network on player input
-	int _poldx;      // Most recent X-position in dPlayer.
-	int _poldy;      // Most recent Y-position in dPlayer.
-	int _pxoff;      // Player sprite's pixel X-offset from tile.
-	int _pyoff;      // Player sprite's pixel Y-offset from tile.
-	int _pxvel;      // Pixel X-velocity while walking. Indirectly applied to _pxoff via _pvar6
-	int _pyvel;      // Pixel Y-velocity while walking. Indirectly applied to _pyoff via _pvar7
+	PlayerPosition position;
 	direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
 	uint8_t *_pAnimData;
@@ -243,8 +252,8 @@ struct PlayerStruct {
 	direction _pVar3; // Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL.
 	int _pVar4;       // Used for storing X-position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it)
 	int _pVar5;       // Used for storing Y-position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it)
-	int _pVar6;       // Same as _pxoff but contains the value in a higher range
-	int _pVar7;       // Same as _pyoff but contains the value in a higher range
+	int _pVar6;       // Same as position.offset.x but contains the value in a higher range
+	int _pVar7;       // Same as position.offset.y but contains the value in a higher range
 	int _pVar8;       // Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). Also used for stalling the appearance of the options screen after dying in singleplayer
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
@@ -369,7 +378,7 @@ struct PlayerStruct {
 	/**
 	 * @brief Get the tile coordinates a player is moving to (if not moving, then it corresponds to current position).
 	 */
-	SDL_Point GetTargetPosition() const;
+	Point GetTargetPosition() const;
 
 	/**
 	 * @brief Play a speach file.

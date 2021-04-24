@@ -80,9 +80,9 @@ enum _difficulty : uint8_t {
 };
 
 struct ScrollStruct {
-	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff */
+	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr].position.offset.x */
 	Sint32 _sxoff;
-	/** @brief Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff */
+	/** @brief Y-offset of camera position. This usually corresponds to a negative version of plr[myplr].position.offset.y */
 	Sint32 _syoff;
 	Sint32 _sdx;
 	Sint32 _sdy;

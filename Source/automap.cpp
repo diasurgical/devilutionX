@@ -244,11 +244,11 @@ void DrawAutomapItem(const CelOutputBuffer &out, int x, int y, uint8_t color)
 
 void SearchAutomapItem(const CelOutputBuffer &out)
 {
-	int x = plr[myplr]._px;
-	int y = plr[myplr]._py;
+	int x = plr[myplr].position.current.x;
+	int y = plr[myplr].position.current.y;
 	if (plr[myplr]._pmode == PM_WALK3) {
-		x = plr[myplr]._pfutx;
-		y = plr[myplr]._pfuty;
+		x = plr[myplr].position.future.x;
+		y = plr[myplr].position.future.y;
 		if (plr[myplr]._pdir == DIR_W)
 			x++;
 		else
@@ -312,21 +312,21 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int pnum)
 	int playerColor = COLOR_PLAYER + (8 * pnum) % 128;
 
 	if (plr[pnum]._pmode == PM_WALK3) {
-		x = plr[pnum]._pfutx;
-		y = plr[pnum]._pfuty;
+		x = plr[pnum].position.future.x;
+		y = plr[pnum].position.future.y;
 		if (plr[pnum]._pdir == DIR_W)
 			x++;
 		else
 			y++;
 	} else {
-		x = plr[pnum]._px;
-		y = plr[pnum]._py;
+		x = plr[pnum].position.current.x;
+		y = plr[pnum].position.current.y;
 	}
 	int px = x - 2 * AutoMapXOfs - ViewX;
 	int py = y - 2 * AutoMapYOfs - ViewY;
 
-	x = (plr[pnum]._pxoff * AutoMapScale / 100 / 2) + (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
-	y = (plr[pnum]._pyoff * AutoMapScale / 100 / 2) + (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
+	x = (plr[pnum].position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
+	y = (plr[pnum].position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
 
 	if (PANELS_COVER) {
 		if (invflag || sbookflag)

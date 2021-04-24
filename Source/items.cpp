@@ -3189,7 +3189,7 @@ void DoRepair(int pnum, int cii)
 	ItemStruct *pi;
 
 	p = &plr[pnum];
-	PlaySfxLoc(IS_REPAIR, p->_px, p->_py);
+	PlaySfxLoc(IS_REPAIR, p->position.current.x, p->position.current.y);
 
 	if (cii >= NUM_INVLOC) {
 		pi = &p->InvList[cii - NUM_INVLOC];

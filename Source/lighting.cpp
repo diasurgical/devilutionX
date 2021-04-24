@@ -994,7 +994,7 @@ void ToggleLighting()
 		memcpy(dLight, dPreLight, sizeof(dLight));
 		for (i = 0; i < MAX_PLRS; i++) {
 			if (plr[i].plractive && plr[i].plrlevel == currlevel) {
-				DoLighting(plr[i]._px, plr[i]._py, plr[i]._pLightRad, -1);
+				DoLighting(plr[i].position.current.x, plr[i].position.current.y, plr[i]._pLightRad, -1);
 			}
 		}
 	}

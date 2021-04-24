@@ -324,19 +324,19 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->destParam3 = static_cast<direction>(file->nextLE<Sint32>());
 	pPlayer->destParam4 = file->nextLE<Sint32>();
 	pPlayer->plrlevel = file->nextLE<Sint32>();
-	pPlayer->_px = file->nextLE<Sint32>();
-	pPlayer->_py = file->nextLE<Sint32>();
-	pPlayer->_pfutx = file->nextLE<Sint32>();
-	pPlayer->_pfuty = file->nextLE<Sint32>();
+	pPlayer->position.current.x = file->nextLE<Sint32>();
+	pPlayer->position.current.y = file->nextLE<Sint32>();
+	pPlayer->position.future.x = file->nextLE<Sint32>();
+	pPlayer->position.future.y = file->nextLE<Sint32>();
 	file->skip(8); // Skip _ptargx and _ptargy
-	pPlayer->_pownerx = file->nextLE<Sint32>();
-	pPlayer->_pownery = file->nextLE<Sint32>();
-	pPlayer->_poldx = file->nextLE<Sint32>();
-	pPlayer->_poldy = file->nextLE<Sint32>();
-	pPlayer->_pxoff = file->nextLE<Sint32>();
-	pPlayer->_pyoff = file->nextLE<Sint32>();
-	pPlayer->_pxvel = file->nextLE<Sint32>();
-	pPlayer->_pyvel = file->nextLE<Sint32>();
+	pPlayer->position.owner.x = file->nextLE<Sint32>();
+	pPlayer->position.owner.y = file->nextLE<Sint32>();
+	pPlayer->position.old.x = file->nextLE<Sint32>();
+	pPlayer->position.old.y = file->nextLE<Sint32>();
+	pPlayer->position.offset.x = file->nextLE<Sint32>();
+	pPlayer->position.offset.y = file->nextLE<Sint32>();
+	pPlayer->position.velocity.x = file->nextLE<Sint32>();
+	pPlayer->position.velocity.y = file->nextLE<Sint32>();
 	pPlayer->_pdir = static_cast<direction>(file->nextLE<Sint32>());
 	file->skip(4); // Unused
 	pPlayer->_pgfxnum = file->nextLE<Sint32>();
@@ -1300,24 +1300,24 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<Sint32>(pPlayer->destParam3);
 	file->writeLE<Sint32>(pPlayer->destParam4);
 	file->writeLE<Sint32>(pPlayer->plrlevel);
-	file->writeLE<Sint32>(pPlayer->_px);
-	file->writeLE<Sint32>(pPlayer->_py);
-	file->writeLE<Sint32>(pPlayer->_pfutx);
-	file->writeLE<Sint32>(pPlayer->_pfuty);
+	file->writeLE<Sint32>(pPlayer->position.current.x);
+	file->writeLE<Sint32>(pPlayer->position.current.y);
+	file->writeLE<Sint32>(pPlayer->position.future.x);
+	file->writeLE<Sint32>(pPlayer->position.future.y);
 
 	// For backwards compatibility
-	const SDL_Point target = pPlayer->GetTargetPosition();
+	const Point target = pPlayer->GetTargetPosition();
 	file->writeLE<Sint32>(target.x);
 	file->writeLE<Sint32>(target.y);
 
-	file->writeLE<Sint32>(pPlayer->_pownerx);
-	file->writeLE<Sint32>(pPlayer->_pownery);
-	file->writeLE<Sint32>(pPlayer->_poldx);
-	file->writeLE<Sint32>(pPlayer->_poldy);
-	file->writeLE<Sint32>(pPlayer->_pxoff);
-	file->writeLE<Sint32>(pPlayer->_pyoff);
-	file->writeLE<Sint32>(pPlayer->_pxvel);
-	file->writeLE<Sint32>(pPlayer->_pyvel);
+	file->writeLE<Sint32>(pPlayer->position.owner.x);
+	file->writeLE<Sint32>(pPlayer->position.owner.y);
+	file->writeLE<Sint32>(pPlayer->position.old.x);
+	file->writeLE<Sint32>(pPlayer->position.old.y);
+	file->writeLE<Sint32>(pPlayer->position.offset.x);
+	file->writeLE<Sint32>(pPlayer->position.offset.y);
+	file->writeLE<Sint32>(pPlayer->position.velocity.x);
+	file->writeLE<Sint32>(pPlayer->position.velocity.y);
 	file->writeLE<Sint32>(pPlayer->_pdir);
 	file->skip(4); // Unused
 	file->writeLE<Sint32>(pPlayer->_pgfxnum);
@@ -1933,7 +1933,7 @@ void SaveLevel()
 {
 	PFileScopedArchiveWriter scoped_writer;
 
-	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
+	DoUnVision(plr[myplr].position.current.x, plr[myplr].position.current.y, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
 		glSeedTbl[0] = AdvanceRndSeed();

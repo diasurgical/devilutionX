@@ -484,10 +484,10 @@ void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		p = &plr[i];
-		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->_px == x && p->_py == y) {
+		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.current.x == x && p->position.current.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
-			px = sx + p->_pxoff - p->_pAnimWidth2;
-			py = sy + p->_pyoff;
+			px = sx + p->position.offset.x - p->_pAnimWidth2;
+			py = sy + p->position.offset.y;
 			DrawPlayer(out, i, x, y, px, py);
 		}
 	}
@@ -718,8 +718,8 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	}
 
 	PlayerStruct *pPlayer = &plr[p];
-	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
-	int py = sy + pPlayer->_pyoff;
+	int px = sx + pPlayer->position.offset.x - pPlayer->_pAnimWidth2;
+	int py = sy + pPlayer->position.offset.y;
 
 	DrawPlayer(out, p, x, y, px, py);
 }

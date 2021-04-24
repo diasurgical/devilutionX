@@ -1922,8 +1922,8 @@ void Obj_Light(int i, int lr)
 			for (p = 0; p < MAX_PLRS && !turnon; p++) {
 				if (plr[p].plractive) {
 					if (currlevel == plr[p].plrlevel) {
-						dx = abs(plr[p]._px - ox);
-						dy = abs(plr[p]._py - oy);
+						dx = abs(plr[p].position.current.x - ox);
+						dy = abs(plr[p].position.current.y - oy);
 						if (dx < tr && dy < tr)
 							turnon = true;
 					}
@@ -1948,8 +1948,8 @@ void Obj_Circle(int i)
 
 	ox = object[i]._ox;
 	oy = object[i]._oy;
-	wx = plr[myplr]._px;
-	wy = plr[myplr]._py;
+	wx = plr[myplr].position.current.x;
+	wy = plr[myplr].position.current.y;
 	if (wx == ox && wy == oy) {
 		if (object[i]._otype == OBJ_MCIRCLE1)
 			object[i]._oAnimFrame = 2;
@@ -1967,7 +1967,7 @@ void Obj_Circle(int i)
 			ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 				quests[Q_BETRAYER]._qvar1 = 4;
-			AddMissile(plr[myplr]._px, plr[myplr]._py, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
+			AddMissile(plr[myplr].position.current.x, plr[myplr].position.current.y, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
 			track_repeat_walk(false);
 			sgbMouseDown = CLICK_NONE;
 			ClrPlrPath(myplr);
@@ -2151,7 +2151,7 @@ void Obj_BCrossDamage(int i)
 	if (fire_resist > 0)
 		damage[leveltype - 1] -= fire_resist * damage[leveltype - 1] / 100;
 
-	if (plr[myplr]._px != object[i]._ox || plr[myplr]._py != object[i]._oy - 1)
+	if (plr[myplr].position.current.x != object[i]._ox || plr[myplr].position.current.y != object[i]._oy - 1)
 		return;
 
 	ApplyPlrDamage(myplr, 0, 0, damage[leveltype - 1]);
@@ -2460,7 +2460,7 @@ void RedoPlayerVision()
 
 	for (p = 0; p < MAX_PLRS; p++) {
 		if (plr[p].plractive && currlevel == plr[p].plrlevel) {
-			ChangeVisionXY(plr[p]._pvid, plr[p]._px, plr[p]._py);
+			ChangeVisionXY(plr[p]._pvid, plr[p].position.current.x, plr[p].position.current.y);
 		}
 	}
 }
@@ -2901,8 +2901,8 @@ void OperateL1Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
-	dpx = abs(object[i]._ox - plr[pnum]._px);
-	dpy = abs(object[i]._oy - plr[pnum]._py);
+	dpx = abs(object[i]._ox - plr[pnum].position.current.x);
+	dpy = abs(object[i]._oy - plr[pnum].position.current.y);
 	if (dpx == 1 && dpy <= 1 && object[i]._otype == OBJ_L1LDOOR)
 		OperateL1LDoor(pnum, i, sendflag);
 	if (dpx <= 1 && dpy == 1 && object[i]._otype == OBJ_L1RDOOR)
@@ -2972,7 +2972,7 @@ void OperateBook(int pnum, int i)
 			}
 			if (do_add_missile) {
 				object[dObject[35][36] - 1]._oVar5++;
-				AddMissile(plr[pnum]._px, plr[pnum]._py, dx, dy, plr[pnum]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, dx, dy, plr[pnum]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
 				missile_added = true;
 				do_add_missile = false;
 			}
@@ -2994,8 +2994,8 @@ void OperateBook(int pnum, int i)
 			PlaySfxLoc(IS_QUESTDN, object[i]._ox, object[i]._oy);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
-		    plr[pnum]._px,
-		    plr[pnum]._py,
+		    plr[pnum].position.current.x,
+		    plr[pnum].position.current.y,
 		    object[i]._ox - 2,
 		    object[i]._oy - 4,
 		    plr[pnum]._pdir,
@@ -3127,7 +3127,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				}
 			}
 			if (object[i]._oTrapFlag && object[i]._otype >= OBJ_TCHEST1 && object[i]._otype <= OBJ_TCHEST3) {
-				direction mdir = GetDirection(object[i]._ox, object[i]._oy, plr[pnum]._px, plr[pnum]._py);
+				direction mdir = GetDirection(object[i]._ox, object[i]._oy, plr[pnum].position.current.x, plr[pnum].position.current.y);
 				switch (object[i]._oVar4) {
 				case 0:
 					mtype = MIS_ARROW;
@@ -3150,7 +3150,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				default:
 					mtype = MIS_ARROW;
 				}
-				AddMissile(object[i]._ox, object[i]._oy, plr[pnum]._px, plr[pnum]._py, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
+				AddMissile(object[i]._ox, object[i]._oy, plr[pnum].position.current.x, plr[pnum].position.current.y, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
 				object[i]._oTrapFlag = false;
 			}
 			if (pnum == myplr)
@@ -3297,8 +3297,8 @@ void OperateL2Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
-	dpx = abs(object[i]._ox - plr[pnum]._px);
-	dpy = abs(object[i]._oy - plr[pnum]._py);
+	dpx = abs(object[i]._ox - plr[pnum].position.current.x);
+	dpy = abs(object[i]._oy - plr[pnum].position.current.y);
 	if (dpx == 1 && dpy <= 1 && object[i]._otype == OBJ_L2LDOOR)
 		OperateL2LDoor(pnum, i, sendflag);
 	if (dpx <= 1 && dpy == 1 && object[i]._otype == OBJ_L2RDOOR)
@@ -3309,8 +3309,8 @@ void OperateL3Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
-	dpx = abs(object[i]._ox - plr[pnum]._px);
-	dpy = abs(object[i]._oy - plr[pnum]._py);
+	dpx = abs(object[i]._ox - plr[pnum].position.current.x);
+	dpy = abs(object[i]._oy - plr[pnum].position.current.y);
 	if (dpx == 1 && dpy <= 1 && object[i]._otype == OBJ_L3RDOOR)
 		OperateL3RDoor(pnum, i, sendflag);
 	if (dpx <= 1 && dpy == 1 && object[i]._otype == OBJ_L3LDOOR)
@@ -3577,10 +3577,10 @@ bool OperateShrineMagical(int pnum)
 		return false;
 
 	AddMissile(
-	    plr[pnum]._px,
-	    plr[pnum]._py,
-	    plr[pnum]._px,
-	    plr[pnum]._py,
+	    plr[pnum].position.current.x,
+	    plr[pnum].position.current.y,
+	    plr[pnum].position.current.x,
+	    plr[pnum].position.current.y,
 	    plr[pnum]._pdir,
 	    MIS_MANASHIELD,
 	    -1,
@@ -3747,10 +3747,10 @@ bool OperateShrineCryptic(int pnum)
 		return false;
 
 	AddMissile(
-	    plr[pnum]._px,
-	    plr[pnum]._py,
-	    plr[pnum]._px,
-	    plr[pnum]._py,
+	    plr[pnum].position.current.x,
+	    plr[pnum].position.current.y,
+	    plr[pnum].position.current.x,
+	    plr[pnum].position.current.y,
 	    plr[pnum]._pdir,
 	    MIS_NOVA,
 	    -1,
@@ -3876,7 +3876,7 @@ bool OperateShrineHoly(int pnum)
 			break;
 	} while (nSolidTable[lv] || dObject[xx][yy] != 0 || dMonster[xx][yy] != 0);
 
-	AddMissile(plr[pnum]._px, plr[pnum]._py, xx, yy, plr[pnum]._pdir, MIS_RNDTELEPORT, -1, pnum, 0, 2 * leveltype);
+	AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, xx, yy, plr[pnum]._pdir, MIS_RNDTELEPORT, -1, pnum, 0, 2 * leveltype);
 
 	if (pnum != myplr)
 		return false;
@@ -4156,8 +4156,8 @@ bool OperateShrineOily(int pnum, int x, int y)
 	AddMissile(
 	    x,
 	    y,
-	    plr[myplr]._px,
-	    plr[myplr]._py,
+	    plr[myplr].position.current.x,
+	    plr[myplr].position.current.y,
 	    plr[myplr]._pdir,
 	    MIS_FIREWALL,
 	    TARGET_PLAYERS,
@@ -4228,8 +4228,8 @@ bool OperateShrineSparkling(int pnum, int x, int y)
 	AddMissile(
 	    x,
 	    y,
-	    plr[myplr]._px,
-	    plr[myplr]._py,
+	    plr[myplr].position.current.x,
+	    plr[myplr].position.current.y,
 	    plr[myplr]._pdir,
 	    MIS_FLASH,
 	    TARGET_PLAYERS,
@@ -4254,8 +4254,8 @@ bool OperateShrineTown(int pnum, int x, int y)
 	AddMissile(
 	    x,
 	    y,
-	    plr[myplr]._px,
-	    plr[myplr]._py,
+	    plr[myplr].position.current.x,
+	    plr[myplr].position.current.y,
 	    plr[myplr]._pdir,
 	    MIS_TOWN,
 	    TARGET_PLAYERS,
@@ -4697,10 +4697,10 @@ bool OperateFountains(int pnum, int i)
 		if (deltaload)
 			return false;
 		AddMissile(
-		    plr[pnum]._px,
-		    plr[pnum]._py,
-		    plr[pnum]._px,
-		    plr[pnum]._py,
+		    plr[pnum].position.current.x,
+		    plr[pnum].position.current.y,
+		    plr[pnum].position.current.x,
+		    plr[pnum].position.current.y,
 		    plr[pnum]._pdir,
 		    MIS_INFRA,
 		    -1,

@@ -257,8 +257,8 @@ void CheckCursMove()
 	// Predict the next frame when walking to avoid input jitter
 	fx = plr[myplr]._pVar6 / 256;
 	fy = plr[myplr]._pVar7 / 256;
-	fx -= (plr[myplr]._pVar6 + plr[myplr]._pxvel) / 256;
-	fy -= (plr[myplr]._pVar7 + plr[myplr]._pyvel) / 256;
+	fx -= (plr[myplr]._pVar6 + plr[myplr].position.velocity.x) / 256;
+	fy -= (plr[myplr]._pVar7 + plr[myplr].position.velocity.y) / 256;
 	if (ScrollInfo._sdir != SDIR_NONE) {
 		sx -= fx;
 		sy -= fy;
@@ -546,7 +546,7 @@ void CheckCursMove()
 		}
 		if ((dFlags[mx][my] & BFLAG_DEAD_PLAYER) != 0) {
 			for (i = 0; i < MAX_PLRS; i++) {
-				if (plr[i]._px == mx && plr[i]._py == my && i != myplr) {
+				if (plr[i].position.current.x == mx && plr[i].position.current.y == my && i != myplr) {
 					cursmx = mx;
 					cursmy = my;
 					pcursplr = i;
@@ -558,7 +558,7 @@ void CheckCursMove()
 				for (yy = -1; yy < 2; yy++) {
 					if (mx + xx < MAXDUNX && my + yy < MAXDUNY && dFlags[mx + xx][my + yy] & BFLAG_DEAD_PLAYER) {
 						for (i = 0; i < MAX_PLRS; i++) {
-							if (plr[i]._px == mx + xx && plr[i]._py == my + yy && i != myplr) {
+							if (plr[i].position.current.x == mx + xx && plr[i].position.current.y == my + yy && i != myplr) {
 								cursmx = mx + xx;
 								cursmy = my + yy;
 								pcursplr = i;

@@ -383,7 +383,7 @@ void ShowProgress(interface_mode uMsg)
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == DisableInputWndProc);
 
-	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, plr[myplr]._px, plr[myplr]._py, plr[myplr].plrlevel);
+	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, plr[myplr].position.current.x, plr[myplr].position.current.y, plr[myplr].plrlevel);
 	plrmsg_delay(false);
 	ResetPal();
 

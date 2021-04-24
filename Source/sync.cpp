@@ -25,7 +25,7 @@ static void sync_one_monster()
 
 	for (i = 0; i < nummonsters; i++) {
 		m = monstactive[i];
-		sgnMonsterPriority[m] = abs(plr[myplr]._px - monster[m]._mx) + abs(plr[myplr]._py - monster[m]._my);
+		sgnMonsterPriority[m] = abs(plr[myplr].position.current.x - monster[m]._mx) + abs(plr[myplr].position.current.y - monster[m]._my);
 		if (monster[m]._msquelch == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
@@ -212,7 +212,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		return;
 	}
 
-	delta = abs(plr[myplr]._px - monster[ndx]._mx) + abs(plr[myplr]._py - monster[ndx]._my);
+	delta = abs(plr[myplr].position.current.x - monster[ndx]._mx) + abs(plr[myplr].position.current.y - monster[ndx]._my);
 	if (delta > 255) {
 		delta = 255;
 	}
