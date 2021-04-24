@@ -113,7 +113,7 @@ void LanguageInitialize() {
   for(uint32_t i=0; i<head.nb_mappings; i++) {
     char *key, *val;
     if((key = read_entry(fp, src+i))) {
-      if((val = read_entry(fp, dst+i))) {
+      if((val = read_entry(fp, dst+i)) && *key) {
 	map[key] = val;
       } else {
 	free(key);
