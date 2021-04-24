@@ -172,7 +172,6 @@ struct ItemStruct {
 	uint8_t _iAnimLen;   // Number of frames in current animation
 	uint8_t _iAnimFrame; // Current frame of animation.
 	int _iAnimWidth;
-	int _iAnimWidth2; // width 2?
 	bool _iDelFlag;   // set when item is flagged for deletion, deprecated in 1.02
 	uint8_t _iSelFlag;
 	bool _iPostDraw;

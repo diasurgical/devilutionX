@@ -640,7 +640,7 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 		return;
 	}
 
-	int px = sx - pItem->_iAnimWidth2;
+	int px = sx - CalculateWidth2(pItem->_iAnimWidth);
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
 		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
 	}

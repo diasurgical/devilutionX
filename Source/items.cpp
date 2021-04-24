@@ -2256,7 +2256,6 @@ void SetupItem(int i)
 	items[i]._iAnimData = itemanims[it];
 	items[i]._iAnimLen = ItemAnimLs[it];
 	items[i]._iAnimWidth = 96;
-	items[i]._iAnimWidth2 = 16;
 	items[i]._iIdentified = false;
 	items[i]._iPostDraw = false;
 
@@ -2967,7 +2966,6 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 	item->_iAnimData = itemanims[it];
 	item->_iAnimLen = ItemAnimLs[it];
 	item->_iAnimWidth = 96;
-	item->_iAnimWidth2 = 16;
 	item->_iPostDraw = false;
 	item->_iRequest = false;
 	if (FlipFlag) {
