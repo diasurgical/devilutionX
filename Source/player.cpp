@@ -558,7 +558,6 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 	plr[pnum]._pAnimCnt = 0;
 	plr[pnum]._pAnimDelay = Delay;
 	plr[pnum]._pAnimWidth = width;
-	plr[pnum]._pAnimWidth2 = (width - 64) / 2;
 	plr[pnum]._pAnimGameTicksSinceSequenceStarted = 0;
 	plr[pnum]._pAnimRelevantAnimationFramesForDistributing = 0;
 	plr[pnum]._pAnimGameTickModifier = 0.0f;

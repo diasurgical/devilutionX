@@ -378,7 +378,7 @@ static void DrawManaShield(const CelOutputBuffer &out, int pnum, int x, int y, b
 	if (!plr[pnum].pManaShield)
 		return;
 
-	x += plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
+	x += CalculateWidth2(plr[pnum]._pAnimWidth) - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
 
 	int width = misfiledata[MFILE_MANASHLD].mAnimWidth[0];
 	BYTE *pCelBuff = misfiledata[MFILE_MANASHLD].mAnimData[0];
@@ -487,7 +487,7 @@ void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 		p = &plr[i];
 		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.tile.x == x && p->position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
-			px = sx + p->position.offset.x - p->_pAnimWidth2;
+			px = sx + p->position.offset.x - CalculateWidth2(p->_pAnimWidth);
 			py = sy + p->position.offset.y;
 			DrawPlayer(out, i, x, y, px, py);
 		}
@@ -719,7 +719,7 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	}
 
 	PlayerStruct *pPlayer = &plr[p];
-	int px = sx + pPlayer->position.offset.x - pPlayer->_pAnimWidth2;
+	int px = sx + pPlayer->position.offset.x - CalculateWidth2(pPlayer->_pAnimWidth);
 	int py = sy + pPlayer->position.offset.y;
 
 	DrawPlayer(out, p, x, y, px, py);

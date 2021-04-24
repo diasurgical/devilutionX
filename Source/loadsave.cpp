@@ -346,7 +346,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pAnimLen = file->nextLE<int32_t>();
 	pPlayer->_pAnimFrame = file->nextLE<int32_t>();
 	pPlayer->_pAnimWidth = file->nextLE<int32_t>();
-	pPlayer->_pAnimWidth2 = file->nextLE<int32_t>();
+	// Skip _pAnimWidth2
+	file->skip(4);
 	file->skip(4); // Skip _peflag
 	pPlayer->_plid = file->nextLE<int32_t>();
 	pPlayer->_pvid = file->nextLE<int32_t>();
@@ -1327,7 +1328,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->_pAnimLen);
 	file->writeLE<int32_t>(pPlayer->_pAnimFrame);
 	file->writeLE<int32_t>(pPlayer->_pAnimWidth);
-	file->writeLE<int32_t>(pPlayer->_pAnimWidth2);
+	// write _pAnimWidth2 for vanilla compatibility
+	file->writeLE<int32_t>(CalculateWidth2(pPlayer->_pAnimWidth));
 	file->skip(4); // Skip _peflag
 	file->writeLE<int32_t>(pPlayer->_plid);
 	file->writeLE<int32_t>(pPlayer->_pvid);
