@@ -673,7 +673,7 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  target_compile_options(${BIN_TARGET} PRIVATE "/Wall")
+  target_compile_options(${BIN_TARGET} PRIVATE "/W4")
 endif()
 
 if(APPLE)
