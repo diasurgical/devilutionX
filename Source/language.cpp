@@ -37,7 +37,7 @@ namespace {
   };
 
 
-  void* read_entry(FILE *fp, mo_entry* e) {
+  char* read_entry(FILE *fp, mo_entry* e) {
     void *data;
     
     if(fseek(fp, e->offset, SEEK_SET)) {
@@ -52,8 +52,8 @@ namespace {
       free(data);
       return nullptr;
     }
-    
-    return data;
+
+    return static_cast<char*>(data);
   }
 }
 
@@ -111,10 +111,10 @@ void LanguageInitialize() {
 
   // Read strings described by entries
   for(uint32_t i=0; i<head.nb_mappings; i++) {
-    void *key, *val;
+    char *key, *val;
     if((key = read_entry(fp, src+i))) {
       if((val = read_entry(fp, dst+i))) {
-	map[static_cast<const char*>(key)] = static_cast<const char*>(val);
+	map[key] = val;
       } else {
 	free(key);
       }
