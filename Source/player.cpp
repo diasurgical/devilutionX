@@ -22,7 +22,6 @@
 #include "stores.h"
 #include "storm/storm.h"
 #include "towners.h"
-#include <unordered_set>
 
 namespace devilution {
 
@@ -458,17 +457,10 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 	c = GetPlrGFXClass(c);
 	dwMaxSize = 0;
 
-	std::unordered_set<char> canBlock;
-	canBlock.insert('D');
-	canBlock.insert('U');
-	canBlock.insert('H');
-
-	if (c == HeroClass::Monk) {
-		canBlock.insert('S');
-		canBlock.insert('M');
-		canBlock.insert('N');
-		canBlock.insert('T');
-	}
+	const auto hasBlockAnimation = [c](char w) {
+		return w == 'D' || w == 'U' || w == 'H'
+		    || (c == HeroClass::Monk && (w == 'S' || w == 'M' || w == 'N' || w == 'T'));
+	};
 
 	for (a = &ArmourChar[0]; *a; a++) {
 		if (gbIsSpawn && a != &ArmourChar[0])
@@ -477,7 +469,7 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 			if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
 				continue; //Death has no weapon
 			}
-			if (szCel[0] == 'B' && szCel[1] == 'L' && canBlock.find(*w) == canBlock.end()) {
+			if (szCel[0] == 'B' && szCel[1] == 'L' && !hasBlockAnimation(*w)) {
 				continue; // No block animation
 			}
 			sprintf(Type, "%c%c%c", CharChar[static_cast<std::size_t>(c)], *a, *w);
