@@ -219,8 +219,8 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	pItem->_iCreateInfo = file->nextLE<uint16_t>();
 	file->skip(2); // Alignment
 	pItem->_itype = static_cast<item_type>(file->nextLE<uint32_t>());
-	pItem->_ix = file->nextLE<int32_t>();
-	pItem->_iy = file->nextLE<int32_t>();
+	pItem->position.x = file->nextLE<int32_t>();
+	pItem->position.y = file->nextLE<int32_t>();
 	pItem->_iAnimFlag = file->nextBool32();
 	file->skip(4); // Skip pointer _iAnimData
 	pItem->_iAnimLen = file->nextLE<int32_t>();
@@ -324,8 +324,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->destParam3 = static_cast<direction>(file->nextLE<int32_t>());
 	pPlayer->destParam4 = file->nextLE<int32_t>();
 	pPlayer->plrlevel = file->nextLE<int32_t>();
-	pPlayer->position.current.x = file->nextLE<int32_t>();
-	pPlayer->position.current.y = file->nextLE<int32_t>();
+	pPlayer->position.tile.x = file->nextLE<int32_t>();
+	pPlayer->position.tile.y = file->nextLE<int32_t>();
 	pPlayer->position.future.x = file->nextLE<int32_t>();
 	pPlayer->position.future.y = file->nextLE<int32_t>();
 	file->skip(8); // Skip _ptargx and _ptargy
@@ -549,8 +549,8 @@ static void LoadMonster(LoadHelper *file, int i)
 	file->skip(4); // Unused
 	pMonster->_pathcount = file->nextLE<uint8_t>();
 	file->skip(3); // Alignment
-	pMonster->position.current.x = file->nextLE<int32_t>();
-	pMonster->position.current.y = file->nextLE<int32_t>();
+	pMonster->position.tile.x = file->nextLE<int32_t>();
+	pMonster->position.tile.y = file->nextLE<int32_t>();
 	pMonster->position.future.x = file->nextLE<int32_t>();
 	pMonster->position.future.y = file->nextLE<int32_t>();
 	pMonster->position.old.x = file->nextLE<int32_t>();
@@ -642,8 +642,8 @@ static void LoadMissile(LoadHelper *file, int i)
 	MissileStruct *pMissile = &missile[i];
 
 	pMissile->_mitype = file->nextLE<int32_t>();
-	pMissile->position.current.x = file->nextLE<int32_t>();
-	pMissile->position.current.y = file->nextLE<int32_t>();
+	pMissile->position.tile.x = file->nextLE<int32_t>();
+	pMissile->position.tile.y = file->nextLE<int32_t>();
 	pMissile->position.offset.x = file->nextLE<int32_t>();
 	pMissile->position.offset.y = file->nextLE<int32_t>();
 	pMissile->position.velocity.x = file->nextLE<int32_t>();
@@ -693,8 +693,8 @@ static void LoadObject(LoadHelper *file, int i)
 	ObjectStruct *pObject = &object[i];
 
 	pObject->_otype = static_cast<_object_id>(file->nextLE<int32_t>());
-	pObject->_ox = file->nextLE<int32_t>();
-	pObject->_oy = file->nextLE<int32_t>();
+	pObject->position.x = file->nextLE<int32_t>();
+	pObject->position.y = file->nextLE<int32_t>();
 	pObject->_oLight = file->nextBool32();
 	pObject->_oAnimFlag = file->nextLE<uint32_t>();
 	file->skip(4); // Skip pointer _oAnimData
@@ -746,8 +746,8 @@ static void LoadQuest(LoadHelper *file, int i)
 	pQuest->_qtype = file->nextLE<uint8_t>();
 	pQuest->_qactive = static_cast<quest_state>(file->nextLE<uint8_t>());
 	pQuest->_qlvltype = static_cast<dungeon_type>(file->nextLE<uint8_t>());
-	pQuest->_qtx = file->nextLE<int32_t>();
-	pQuest->_qty = file->nextLE<int32_t>();
+	pQuest->position.x = file->nextLE<int32_t>();
+	pQuest->position.y = file->nextLE<int32_t>();
 	pQuest->_qslvl = static_cast<_setlevels>(file->nextLE<uint8_t>());
 	pQuest->_qidx = file->nextLE<uint8_t>();
 	if (gbIsHellfireSaveGame) {
@@ -772,18 +772,18 @@ static void LoadQuest(LoadHelper *file, int i)
 
 static void LoadLighting(LoadHelper *file, LightListStruct *pLight)
 {
-	pLight->_lx = file->nextLE<int32_t>();
-	pLight->_ly = file->nextLE<int32_t>();
+	pLight->position.tile.x = file->nextLE<int32_t>();
+	pLight->position.tile.y = file->nextLE<int32_t>();
 	pLight->_lradius = file->nextLE<int32_t>();
 	pLight->_lid = file->nextLE<int32_t>();
 	pLight->_ldel = file->nextBool32();
 	pLight->_lunflag = file->nextBool32();
 	file->skip(4); // Unused
-	pLight->_lunx = file->nextLE<int32_t>();
-	pLight->_luny = file->nextLE<int32_t>();
-	pLight->_lunr = file->nextLE<int32_t>();
-	pLight->_xoff = file->nextLE<int32_t>();
-	pLight->_yoff = file->nextLE<int32_t>();
+	pLight->position.old.x = file->nextLE<int32_t>();
+	pLight->position.old.y = file->nextLE<int32_t>();
+	pLight->oldRadious = file->nextLE<int32_t>();
+	pLight->position.offset.x = file->nextLE<int32_t>();
+	pLight->position.offset.y = file->nextLE<int32_t>();
 	pLight->_lflags = file->nextBool32();
 }
 
@@ -792,8 +792,8 @@ static void LoadPortal(LoadHelper *file, int i)
 	PortalStruct *pPortal = &portal[i];
 
 	pPortal->open = file->nextBool32();
-	pPortal->x = file->nextLE<int32_t>();
-	pPortal->y = file->nextLE<int32_t>();
+	pPortal->position.x = file->nextLE<int32_t>();
+	pPortal->position.y = file->nextLE<int32_t>();
 	pPortal->level = file->nextLE<int32_t>();
 	pPortal->ltype = static_cast<dungeon_type>(file->nextLE<int32_t>());
 	pPortal->setlvl = file->nextBool32();
@@ -981,7 +981,7 @@ void RemoveEmptyLevelItems()
 	for (int i = numitems; i > 0; i--) {
 		int ii = itemactive[i];
 		if (items[ii].isEmpty()) {
-			dItem[items[ii]._ix][items[ii]._iy] = 0;
+			dItem[items[ii].position.x][items[ii].position.y] = 0;
 			DeleteItem(ii, i);
 		}
 	}
@@ -1204,8 +1204,8 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->writeLE<int16_t>(pItem->_iCreateInfo);
 	file->skip(2); // Alignment
 	file->writeLE<int32_t>(iType);
-	file->writeLE<int32_t>(pItem->_ix);
-	file->writeLE<int32_t>(pItem->_iy);
+	file->writeLE<int32_t>(pItem->position.x);
+	file->writeLE<int32_t>(pItem->position.y);
 	file->writeLE<uint32_t>(pItem->_iAnimFlag);
 	file->skip(4); // Skip pointer _iAnimData
 	file->writeLE<int32_t>(pItem->_iAnimLen);
@@ -1300,8 +1300,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->destParam3);
 	file->writeLE<int32_t>(pPlayer->destParam4);
 	file->writeLE<int32_t>(pPlayer->plrlevel);
-	file->writeLE<int32_t>(pPlayer->position.current.x);
-	file->writeLE<int32_t>(pPlayer->position.current.y);
+	file->writeLE<int32_t>(pPlayer->position.tile.x);
+	file->writeLE<int32_t>(pPlayer->position.tile.y);
 	file->writeLE<int32_t>(pPlayer->position.future.x);
 	file->writeLE<int32_t>(pPlayer->position.future.y);
 
@@ -1518,8 +1518,8 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(4); // Unused
 	file->writeLE<uint8_t>(pMonster->_pathcount);
 	file->skip(3); // Alignment
-	file->writeLE<int32_t>(pMonster->position.current.x);
-	file->writeLE<int32_t>(pMonster->position.current.y);
+	file->writeLE<int32_t>(pMonster->position.tile.x);
+	file->writeLE<int32_t>(pMonster->position.tile.y);
 	file->writeLE<int32_t>(pMonster->position.future.x);
 	file->writeLE<int32_t>(pMonster->position.future.y);
 	file->writeLE<int32_t>(pMonster->position.old.x);
@@ -1601,8 +1601,8 @@ static void SaveMissile(SaveHelper *file, int i)
 	MissileStruct *pMissile = &missile[i];
 
 	file->writeLE<int32_t>(pMissile->_mitype);
-	file->writeLE<int32_t>(pMissile->position.current.x);
-	file->writeLE<int32_t>(pMissile->position.current.y);
+	file->writeLE<int32_t>(pMissile->position.tile.x);
+	file->writeLE<int32_t>(pMissile->position.tile.y);
 	file->writeLE<int32_t>(pMissile->position.offset.x);
 	file->writeLE<int32_t>(pMissile->position.offset.y);
 	file->writeLE<int32_t>(pMissile->position.velocity.x);
@@ -1652,8 +1652,8 @@ static void SaveObject(SaveHelper *file, int i)
 	ObjectStruct *pObject = &object[i];
 
 	file->writeLE<int32_t>(pObject->_otype);
-	file->writeLE<int32_t>(pObject->_ox);
-	file->writeLE<int32_t>(pObject->_oy);
+	file->writeLE<int32_t>(pObject->position.x);
+	file->writeLE<int32_t>(pObject->position.y);
 	file->writeLE<uint32_t>(pObject->_oLight);
 	file->writeLE<uint32_t>(pObject->_oAnimFlag);
 	file->skip(4); // Skip pointer _oAnimData
@@ -1699,8 +1699,8 @@ static void SaveQuest(SaveHelper *file, int i)
 	file->writeLE<uint8_t>(pQuest->_qtype);
 	file->writeLE<uint8_t>(pQuest->_qactive);
 	file->writeLE<uint8_t>(pQuest->_qlvltype);
-	file->writeLE<int32_t>(pQuest->_qtx);
-	file->writeLE<int32_t>(pQuest->_qty);
+	file->writeLE<int32_t>(pQuest->position.x);
+	file->writeLE<int32_t>(pQuest->position.y);
 	file->writeLE<uint8_t>(pQuest->_qslvl);
 	file->writeLE<uint8_t>(pQuest->_qidx);
 	if (gbIsHellfire) {
@@ -1725,18 +1725,18 @@ static void SaveQuest(SaveHelper *file, int i)
 
 static void SaveLighting(SaveHelper *file, LightListStruct *pLight)
 {
-	file->writeLE<int32_t>(pLight->_lx);
-	file->writeLE<int32_t>(pLight->_ly);
+	file->writeLE<int32_t>(pLight->position.tile.x);
+	file->writeLE<int32_t>(pLight->position.tile.y);
 	file->writeLE<int32_t>(pLight->_lradius);
 	file->writeLE<int32_t>(pLight->_lid);
 	file->writeLE<uint32_t>(pLight->_ldel);
 	file->writeLE<uint32_t>(pLight->_lunflag);
 	file->skip(4); // Unused
-	file->writeLE<int32_t>(pLight->_lunx);
-	file->writeLE<int32_t>(pLight->_luny);
-	file->writeLE<int32_t>(pLight->_lunr);
-	file->writeLE<int32_t>(pLight->_xoff);
-	file->writeLE<int32_t>(pLight->_yoff);
+	file->writeLE<int32_t>(pLight->position.old.x);
+	file->writeLE<int32_t>(pLight->position.old.y);
+	file->writeLE<int32_t>(pLight->oldRadious);
+	file->writeLE<int32_t>(pLight->position.offset.x);
+	file->writeLE<int32_t>(pLight->position.offset.y);
 	file->writeLE<uint32_t>(pLight->_lflags);
 }
 
@@ -1745,8 +1745,8 @@ static void SavePortal(SaveHelper *file, int i)
 	PortalStruct *pPortal = &portal[i];
 
 	file->writeLE<uint32_t>(pPortal->open);
-	file->writeLE<int32_t>(pPortal->x);
-	file->writeLE<int32_t>(pPortal->y);
+	file->writeLE<int32_t>(pPortal->position.x);
+	file->writeLE<int32_t>(pPortal->position.y);
 	file->writeLE<int32_t>(pPortal->level);
 	file->writeLE<int32_t>(pPortal->ltype);
 	file->writeLE<uint32_t>(pPortal->setlvl);
@@ -1933,7 +1933,7 @@ void SaveLevel()
 {
 	PFileScopedArchiveWriter scoped_writer;
 
-	DoUnVision(plr[myplr].position.current.x, plr[myplr].position.current.y, plr[myplr]._pLightRad); // fix for vision staying on the level
+	DoUnVision(plr[myplr].position.tile.x, plr[myplr].position.tile.y, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
 		glSeedTbl[0] = AdvanceRndSeed();

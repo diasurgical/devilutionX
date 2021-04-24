@@ -44,8 +44,7 @@ struct QuestStruct {
 	uint8_t _qtype;
 	quest_state _qactive;
 	dungeon_type _qlvltype;
-	int _qtx;
-	int _qty;
+	Point position;
 	_setlevels _qslvl;
 	uint8_t _qidx;
 	_speech_id _qmsg;

@@ -1168,8 +1168,8 @@ bool calc_snd_position(int x, int y, int *plVolume, int *plPan)
 {
 	int pan, volume;
 
-	x -= plr[myplr].position.current.x;
-	y -= plr[myplr].position.current.y;
+	x -= plr[myplr].position.tile.x;
+	y -= plr[myplr].position.tile.y;
 
 	pan = (x - y) * 256;
 	*plPan = pan;
@@ -1242,7 +1242,7 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	if (!calc_snd_position(monster[i].position.current.x, monster[i].position.current.y, &lVolume, &lPan))
+	if (!calc_snd_position(monster[i].position.tile.x, monster[i].position.tile.y, &lVolume, &lPan))
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);

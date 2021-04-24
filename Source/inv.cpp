@@ -1681,13 +1681,12 @@ void CheckQuestItem(int pnum)
 
 void CleanupItems(ItemStruct *item, int ii)
 {
-	dItem[item->_ix][item->_iy] = 0;
+	dItem[item->position.x][item->position.y] = 0;
 
-	if (currlevel == 21 && item->_ix == CornerStone.x && item->_iy == CornerStone.y) {
+	if (currlevel == 21 && item->position.x == CornerStone.x && item->position.y == CornerStone.y) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
-		CornerStone.item._ix = 0;
-		CornerStone.item._iy = 0;
+		CornerStone.item.position = { 0, 0 };
 		CornerStone.item._iAnimFlag = false;
 		CornerStone.item._iIdentified = false;
 		CornerStone.item._iPostDraw = false;
@@ -1712,11 +1711,11 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item->_ix][item->_iy] == 0)
+	if (dItem[item->position.x][item->position.y] == 0)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
-		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr].position.current.x, plr[myplr].position.current.y);
+		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr].position.tile.x, plr[myplr].position.tile.y);
 
 	item->_iCreateInfo &= ~CF_PREGEN;
 	plr[pnum].HoldItem = *item;
@@ -1745,7 +1744,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item->_ix][item->_iy] == 0)
+	if (dItem[item->position.x][item->position.y] == 0)
 		return;
 
 	item->_iCreateInfo &= ~CF_PREGEN;
@@ -1780,7 +1779,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	}
 	plr[pnum].HoldItem = *item;
 	RespawnItem(item, true);
-	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->_ix, item->_iy);
+	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position.x, item->position.y);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
@@ -1871,22 +1870,22 @@ bool TryInvPut()
 	if (numitems >= MAXITEMS)
 		return false;
 
-	direction dir = GetDirection(plr[myplr].position.current.x, plr[myplr].position.current.y, cursmx, cursmy);
-	if (CanPut(plr[myplr].position.current.x + offset_x[dir], plr[myplr].position.current.y + offset_y[dir])) {
+	direction dir = GetDirection(plr[myplr].position.tile.x, plr[myplr].position.tile.y, cursmx, cursmy);
+	if (CanPut(plr[myplr].position.tile.x + offset_x[dir], plr[myplr].position.tile.y + offset_y[dir])) {
 		return true;
 	}
 
 	direction dirLeft = left[dir];
-	if (CanPut(plr[myplr].position.current.x + offset_x[dirLeft], plr[myplr].position.current.y + offset_y[dirLeft])) {
+	if (CanPut(plr[myplr].position.tile.x + offset_x[dirLeft], plr[myplr].position.tile.y + offset_y[dirLeft])) {
 		return true;
 	}
 
 	direction dirRight = right[dir];
-	if (CanPut(plr[myplr].position.current.x + offset_x[dirRight], plr[myplr].position.current.y + offset_y[dirRight])) {
+	if (CanPut(plr[myplr].position.tile.x + offset_x[dirRight], plr[myplr].position.tile.y + offset_y[dirRight])) {
 		return true;
 	}
 
-	return CanPut(plr[myplr].position.current.x, plr[myplr].position.current.y);
+	return CanPut(plr[myplr].position.tile.x, plr[myplr].position.tile.y);
 }
 
 void DrawInvMsg(const char *msg)
@@ -1905,35 +1904,35 @@ static int PutItem(int pnum, int &x, int &y)
 	if (numitems >= MAXITEMS)
 		return false;
 
-	int xx = x - plr[pnum].position.current.x;
-	int yy = y - plr[pnum].position.current.y;
+	int xx = x - plr[pnum].position.tile.x;
+	int yy = y - plr[pnum].position.tile.y;
 
-	direction d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, x, y);
+	direction d = GetDirection(plr[pnum].position.tile.x, plr[pnum].position.tile.y, x, y);
 
 	if (abs(xx) > 1 || abs(yy) > 1) {
-		x = plr[pnum].position.current.x + offset_x[d];
-		y = plr[pnum].position.current.y + offset_y[d];
+		x = plr[pnum].position.tile.x + offset_x[d];
+		y = plr[pnum].position.tile.y + offset_y[d];
 	}
 	if (CanPut(x, y))
 		return true;
 
 	direction dLeft = left[d];
-	x = plr[pnum].position.current.x + offset_x[dLeft];
-	y = plr[pnum].position.current.y + offset_y[dLeft];
+	x = plr[pnum].position.tile.x + offset_x[dLeft];
+	y = plr[pnum].position.tile.y + offset_y[dLeft];
 	if (CanPut(x, y))
 		return true;
 
 	direction dRight = right[d];
-	x = plr[pnum].position.current.x + offset_x[dRight];
-	y = plr[pnum].position.current.y + offset_y[dRight];
+	x = plr[pnum].position.tile.x + offset_x[dRight];
+	y = plr[pnum].position.tile.y + offset_y[dRight];
 	if (CanPut(x, y))
 		return true;
 
 	for (int l = 1; l < 50; l++) {
 		for (int j = -l; j <= l; j++) {
-			int yp = j + plr[pnum].position.current.y;
+			int yp = j + plr[pnum].position.tile.y;
 			for (int i = -l; i <= l; i++) {
-				int xp = i + plr[pnum].position.current.x;
+				int xp = i + plr[pnum].position.tile.x;
 				if (!CanPut(xp, yp))
 					continue;
 
@@ -1949,8 +1948,8 @@ static int PutItem(int pnum, int &x, int &y)
 
 int InvPutItem(int pnum, int x, int y)
 {
-	int xx = x - plr[pnum].position.current.x;
-	int yy = y - plr[pnum].position.current.y;
+	int xx = x - plr[pnum].position.tile.x;
+	int yy = y - plr[pnum].position.tile.y;
 
 	if (!PutItem(pnum, x, y))
 		return -1;
@@ -1959,7 +1958,7 @@ int InvPutItem(int pnum, int x, int y)
 		int yp = cursmy;
 		int xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.current.x, plr[pnum].position.current.y, xx, yy);
+			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.tile.x, plr[pnum].position.tile.y, xx, yy);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
@@ -1983,8 +1982,7 @@ int InvPutItem(int pnum, int x, int y)
 
 	dItem[x][y] = ii + 1;
 	items[ii] = plr[pnum].HoldItem;
-	items[ii]._ix = x;
-	items[ii]._iy = y;
+	items[ii].position = { x, y };
 	RespawnItem(&items[ii], true);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
@@ -2028,8 +2026,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 		items[ii].dwBuff = ibuff;
 	}
 
-	items[ii]._ix = x;
-	items[ii]._iy = y;
+	items[ii].position = { x, y };
 	RespawnItem(&items[ii], true);
 
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {

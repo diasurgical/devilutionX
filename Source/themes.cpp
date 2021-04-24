@@ -367,7 +367,7 @@ bool CheckThemeRoom(int tv)
 	int i, j, tarea;
 
 	for (i = 0; i < numtrigs; i++) {
-		if (dTransVal[trigs[i]._tx][trigs[i]._ty] == tv)
+		if (dTransVal[trigs[i].position.x][trigs[i].position.y] == tv)
 			return false;
 	}
 

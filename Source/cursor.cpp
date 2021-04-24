@@ -168,20 +168,20 @@ void CheckTown()
 	for (i = 0; i < nummissiles; i++) {
 		mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_TOWN) {
-			if ((cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y)
-			    || (cursmx == missile[mx].position.current.x && cursmy == missile[mx].position.current.y - 1)
-			    || (cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y - 1)
-			    || (cursmx == missile[mx].position.current.x - 2 && cursmy == missile[mx].position.current.y - 1)
-			    || (cursmx == missile[mx].position.current.x - 2 && cursmy == missile[mx].position.current.y - 2)
-			    || (cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y - 2)
-			    || (cursmx == missile[mx].position.current.x && cursmy == missile[mx].position.current.y)) {
+			if ((cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y)
+			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 2)
+			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 2)
+			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, "Town Portal");
 				sprintf(tempstr, "from %s", plr[missile[mx]._misource]._pName);
 				AddPanelString(tempstr, true);
-				cursmx = missile[mx].position.current.x;
-				cursmy = missile[mx].position.current.y;
+				cursmx = missile[mx].position.tile.x;
+				cursmy = missile[mx].position.tile.y;
 			}
 		}
 	}
@@ -194,13 +194,13 @@ void CheckRportal()
 	for (i = 0; i < nummissiles; i++) {
 		mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_RPORTAL) {
-			if ((cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y)
-			    || (cursmx == missile[mx].position.current.x && cursmy == missile[mx].position.current.y - 1)
-			    || (cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y - 1)
-			    || (cursmx == missile[mx].position.current.x - 2 && cursmy == missile[mx].position.current.y - 1)
-			    || (cursmx == missile[mx].position.current.x - 2 && cursmy == missile[mx].position.current.y - 2)
-			    || (cursmx == missile[mx].position.current.x - 1 && cursmy == missile[mx].position.current.y - 2)
-			    || (cursmx == missile[mx].position.current.x && cursmy == missile[mx].position.current.y)) {
+			if ((cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y)
+			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 2)
+			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 2)
+			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, "Portal to");
@@ -209,8 +209,8 @@ void CheckRportal()
 				else
 					strcpy(tempstr, "level 15");
 				AddPanelString(tempstr, true);
-				cursmx = missile[mx].position.current.x;
-				cursmy = missile[mx].position.current.y;
+				cursmx = missile[mx].position.tile.x;
+				cursmy = missile[mx].position.tile.y;
 			}
 		}
 	}
@@ -546,7 +546,7 @@ void CheckCursMove()
 		}
 		if ((dFlags[mx][my] & BFLAG_DEAD_PLAYER) != 0) {
 			for (i = 0; i < MAX_PLRS; i++) {
-				if (plr[i].position.current.x == mx && plr[i].position.current.y == my && i != myplr) {
+				if (plr[i].position.tile.x == mx && plr[i].position.tile.y == my && i != myplr) {
 					cursmx = mx;
 					cursmy = my;
 					pcursplr = i;
@@ -558,7 +558,7 @@ void CheckCursMove()
 				for (yy = -1; yy < 2; yy++) {
 					if (mx + xx < MAXDUNX && my + yy < MAXDUNY && dFlags[mx + xx][my + yy] & BFLAG_DEAD_PLAYER) {
 						for (i = 0; i < MAX_PLRS; i++) {
-							if (plr[i].position.current.x == mx + xx && plr[i].position.current.y == my + yy && i != myplr) {
+							if (plr[i].position.tile.x == mx + xx && plr[i].position.tile.y == my + yy && i != myplr) {
 								cursmx = mx + xx;
 								cursmy = my + yy;
 								pcursplr = i;

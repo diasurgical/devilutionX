@@ -251,8 +251,8 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(CountItems(pPlayer->SpdList, MAXBELTITEMS), 8);
 	ASSERT_EQ(CountItems(&pPlayer->HoldItem, 1), 1);
 
-	ASSERT_EQ(pPlayer->position.current.x, 75);
-	ASSERT_EQ(pPlayer->position.current.y, 68);
+	ASSERT_EQ(pPlayer->position.tile.x, 75);
+	ASSERT_EQ(pPlayer->position.tile.y, 68);
 	ASSERT_EQ(pPlayer->position.future.x, 75);
 	ASSERT_EQ(pPlayer->position.future.y, 68);
 	ASSERT_EQ(pPlayer->plrlevel, 0);

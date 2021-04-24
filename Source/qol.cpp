@@ -178,8 +178,8 @@ void AutoGoldPickup(int pnum)
 		return;
 
 	for (int dir = 0; dir < 8; dir++) {
-		int x = plr[pnum].position.current.x + pathxdir[dir];
-		int y = plr[pnum].position.current.y + pathydir[dir];
+		int x = plr[pnum].position.tile.x + pathxdir[dir];
+		int y = plr[pnum].position.tile.y + pathydir[dir];
 		if (dItem[x][y] != 0) {
 			int itemIndex = dItem[x][y] - 1;
 			if (items[itemIndex]._itype == ITYPE_GOLD) {

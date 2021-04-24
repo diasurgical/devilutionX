@@ -60,11 +60,11 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 	pPack->destParam1 = pPlayer->destParam1;
 	pPack->destParam2 = pPlayer->destParam2;
 	pPack->plrlevel = pPlayer->plrlevel;
-	pPack->px = pPlayer->position.current.x;
-	pPack->py = pPlayer->position.current.y;
+	pPack->px = pPlayer->position.tile.x;
+	pPack->py = pPlayer->position.tile.y;
 	if (gbVanilla) {
-		pPack->targx = pPlayer->position.current.x;
-		pPack->targy = pPlayer->position.current.y;
+		pPack->targx = pPlayer->position.tile.x;
+		pPack->targy = pPlayer->position.tile.y;
 	}
 	strcpy(pPack->pName, pPlayer->_pName);
 	pPack->pClass = static_cast<int8_t>(pPlayer->_pClass);
@@ -213,7 +213,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	PkItemStruct *pki;
 
 	pPlayer = &plr[pnum];
-	pPlayer->position.current = { pPack->px, pPack->py };
+	pPlayer->position.tile = { pPack->px, pPack->py };
 	pPlayer->position.future = { pPack->px, pPack->py };
 	pPlayer->plrlevel = pPack->plrlevel;
 	ClrPlrPath(pnum);

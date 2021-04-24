@@ -17,8 +17,7 @@ namespace devilution {
 
 struct ObjectStruct {
 	_object_id _otype;
-	int _ox;
-	int _oy;
+	Point position;
 	bool _oLight;
 	uint32_t _oAnimFlag;
 	unsigned char *_oAnimData;

@@ -445,8 +445,7 @@ void AddInitItems()
 			x = GenerateRnd(80) + 16;
 			y = GenerateRnd(80) + 16;
 		}
-		items[ii]._ix = x;
-		items[ii]._iy = y;
+		items[ii].position = { x, y };
 
 		dItem[x][y] = ii + 1;
 
@@ -503,8 +502,7 @@ void InitItems()
 
 	for (i = 0; i < MAXITEMS; i++) {
 		items[i]._itype = ITYPE_NONE;
-		items[i]._ix = 0;
-		items[i]._iy = 0;
+		items[i].position = { 0, 0 };
 		items[i]._iAnimFlag = false;
 		items[i]._iSelFlag = 0;
 		items[i]._iIdentified = false;
@@ -1385,8 +1383,7 @@ static bool GetItemSpace(int x, int y, int8_t inum)
 
 	xx += x - 1;
 	yy += y - 1;
-	items[inum]._ix = xx;
-	items[inum]._iy = yy;
+	items[inum].position = { xx, yy };
 	dItem[xx][yy] = inum + 1;
 
 	return true;
@@ -1413,8 +1410,7 @@ static void GetSuperItemSpace(int x, int y, int8_t inum)
 				for (int i = -k; i <= k; i++) {
 					int xx = i + x;
 					if (ItemSpaceOk(xx, yy)) {
-						items[inum]._ix = xx;
-						items[inum]._iy = yy;
+						items[inum].position = { xx, yy };
 						dItem[xx][yy] = inum + 1;
 						return;
 					}
@@ -2851,8 +2847,7 @@ void items_427ABA(int x, int y)
 	dItem[x][y] = ii + 1;
 
 	UnPackItem(&PkSItem, &items[ii], (PkSItem.dwBuff & CF_HELLFIRE) != 0);
-	items[ii]._ix = x;
-	items[ii]._iy = y;
+	items[ii].position = { x, y };
 	RespawnItem(&items[ii], false);
 	CornerStone.item = items[ii];
 }
@@ -2885,8 +2880,7 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 
 	int ii = AllocateItem();
 
-	items[ii]._ix = x;
-	items[ii]._iy = y;
+	items[ii].position = { x, y };
 
 	dItem[x][y] = ii + 1;
 
@@ -2919,11 +2913,10 @@ void SpawnRock()
 
 	int ii = AllocateItem();
 
-	int xx = object[oi]._ox;
-	int yy = object[oi]._oy;
-	items[ii]._ix = xx;
-	items[ii]._iy = yy;
-	dItem[xx][items[ii]._iy] = ii + 1;
+	int xx = object[oi].position.x;
+	int yy = object[oi].position.y;
+	items[ii].position = { xx, yy };
+	dItem[xx][items[ii].position.y] = ii + 1;
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, IDI_ROCK, curlv);
 	SetupItem(ii);
@@ -2939,8 +2932,7 @@ void SpawnRewardItem(int itemid, int xx, int yy)
 
 	int ii = AllocateItem();
 
-	items[ii]._ix = xx;
-	items[ii]._iy = yy;
+	items[ii].position = { xx, yy };
 	dItem[xx][yy] = ii + 1;
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, itemid, curlv);
@@ -2990,7 +2982,7 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 
 	if (item->_iCurs == ICURS_MAGIC_ROCK) {
 		item->_iSelFlag = 1;
-		PlaySfxLoc(ItemDropSnds[it], item->_ix, item->_iy);
+		PlaySfxLoc(ItemDropSnds[it], item->position.x, item->position.y);
 	}
 	if (item->_iCurs == ICURS_TAVERN_SIGN)
 		item->_iSelFlag = 1;
@@ -3015,7 +3007,7 @@ void ItemDoppel()
 		for (idoppelx = 16; idoppelx < 96; idoppelx++) {
 			if (dItem[idoppelx][idoppely]) {
 				i = &items[dItem[idoppelx][idoppely] - 1];
-				if (i->_ix != idoppelx || i->_iy != idoppely)
+				if (i->position.x != idoppelx || i->position.y != idoppely)
 					dItem[idoppelx][idoppely] = 0;
 			}
 		}
@@ -3040,7 +3032,7 @@ void ProcessItems()
 					items[ii]._iAnimFrame = 11;
 			} else {
 				if (items[ii]._iAnimFrame == items[ii]._iAnimLen / 2)
-					PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii]._ix, items[ii]._iy);
+					PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii].position.x, items[ii].position.y);
 
 				if (items[ii]._iAnimFrame >= items[ii]._iAnimLen) {
 					items[ii]._iAnimFrame = items[ii]._iAnimLen;
@@ -3131,7 +3123,7 @@ void DoRepair(int pnum, int cii)
 	ItemStruct *pi;
 
 	p = &plr[pnum];
-	PlaySfxLoc(IS_REPAIR, p->position.current.x, p->position.current.y);
+	PlaySfxLoc(IS_REPAIR, p->position.tile.x, p->position.tile.y);
 
 	if (cii >= NUM_INVLOC) {
 		pi = &p->InvList[cii - NUM_INVLOC];

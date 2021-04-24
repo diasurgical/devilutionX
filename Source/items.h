@@ -166,15 +166,14 @@ struct ItemStruct {
 	int32_t _iSeed;
 	uint16_t _iCreateInfo;
 	enum item_type _itype;
-	int16_t _ix;
-	int16_t _iy;
+	Point position;
 	bool _iAnimFlag;
 	uint8_t *_iAnimData; // PSX name -> ItemFrame
 	uint8_t _iAnimLen;   // Number of frames in current animation
 	uint8_t _iAnimFrame; // Current frame of animation.
 	int _iAnimWidth;
 	int _iAnimWidth2; // width 2?
-	bool _iDelFlag;      // set when item is flagged for deletion, deprecated in 1.02
+	bool _iDelFlag;   // set when item is flagged for deletion, deprecated in 1.02
 	uint8_t _iSelFlag;
 	bool _iPostDraw;
 	bool _iIdentified;

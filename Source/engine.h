@@ -63,15 +63,14 @@ struct Point {
 };
 
 struct ActorPosition {
-	/** Tile position */
-	Point current;
+	Point tile;
 	/** Future tile position. Set at start of walking animation. */
 	Point future;
 	/** Tile position of player. Set via network on player input. */
 	Point last;
 	/** Most recent position in dPlayer. */
 	Point old;
-	/** Player sprite's pixel offset from tile. */
+	/** Pixel offset from tile. */
 	Point offset;
 	/** Same as offset but contains the value in a higher range */
 	Point offset2;

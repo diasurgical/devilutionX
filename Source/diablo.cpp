@@ -712,7 +712,7 @@ static bool LeftMouseCmd(bool bShift)
 		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1)
 			return true;
 	} else {
-		bNear = abs(plr[myplr].position.current.x - cursmx) < 2 && abs(plr[myplr].position.current.y - cursmy) < 2;
+		bNear = abs(plr[myplr].position.tile.x - cursmx) < 2 && abs(plr[myplr].position.tile.y - cursmy) < 2;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 		} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && object[pcursobj]._oBreak == 1))) {
@@ -1520,7 +1520,7 @@ static void PressChar(WPARAM vkey)
 	case 'T':
 	case 't':
 		if (debug_mode_key_inverted_v) {
-			sprintf(tempstr, "PX = %i  PY = %i", plr[myplr].position.current.x, plr[myplr].position.current.y);
+			sprintf(tempstr, "PX = %i  PY = %i", plr[myplr].position.tile.x, plr[myplr].position.tile.y);
 			NetSendCmdString(1 << myplr, tempstr);
 			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursmx, cursmy, dungeon[cursmx][cursmy]);
 			NetSendCmdString(1 << myplr, tempstr);
@@ -1798,8 +1798,8 @@ static void UpdateMonsterLights()
 			}
 
 			LightListStruct *lid = &LightList[mon->mlid];
-			if (mon->position.current.x != lid->_lx || mon->position.current.y != lid->_ly) {
-				ChangeLightXY(mon->mlid, mon->position.current.x, mon->position.current.y);
+			if (mon->position.tile.x != lid->position.tile.x || mon->position.tile.y != lid->position.tile.y) {
+				ChangeLightXY(mon->mlid, mon->position.tile.x, mon->position.tile.y);
 			}
 		}
 	}
@@ -1996,11 +1996,11 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (plr[i].plractive && plr[i].plrlevel == currlevel && (!plr[i]._pLvlChanging || i == myplr)) {
 			if (plr[i]._pHitPoints > 0) {
 				if (!gbIsMultiplayer)
-					dPlayer[plr[i].position.current.x][plr[i].position.current.y] = i + 1;
+					dPlayer[plr[i].position.tile.x][plr[i].position.tile.y] = i + 1;
 				else
 					SyncInitPlrPos(i);
 			} else {
-				dFlags[plr[i].position.current.x][plr[i].position.current.y] |= BFLAG_DEAD_PLAYER;
+				dFlags[plr[i].position.tile.x][plr[i].position.tile.y] |= BFLAG_DEAD_PLAYER;
 			}
 		}
 	}

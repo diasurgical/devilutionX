@@ -246,8 +246,8 @@ void DrawAutomapItem(const CelOutputBuffer &out, int x, int y, uint8_t color)
 
 void SearchAutomapItem(const CelOutputBuffer &out)
 {
-	int x = plr[myplr].position.current.x;
-	int y = plr[myplr].position.current.y;
+	int x = plr[myplr].position.tile.x;
+	int y = plr[myplr].position.tile.y;
 	if (plr[myplr]._pmode == PM_WALK3) {
 		x = plr[myplr].position.future.x;
 		y = plr[myplr].position.future.y;
@@ -303,8 +303,8 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int pnum)
 		else
 			y++;
 	} else {
-		x = plr[pnum].position.current.x;
-		y = plr[pnum].position.current.y;
+		x = plr[pnum].position.tile.x;
+		y = plr[pnum].position.tile.y;
 	}
 	int px = x - 2 * AutoMapXOfs - ViewX;
 	int py = y - 2 * AutoMapYOfs - ViewY;

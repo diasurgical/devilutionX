@@ -13,8 +13,7 @@ namespace devilution {
 
 struct PortalStruct {
 	bool open;
-	int x;
-	int y;
+	Point position;
 	int level;
 	dungeon_type ltype;
 	bool setlvl;

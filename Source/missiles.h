@@ -23,8 +23,7 @@ struct ChainStruct {
 };
 
 struct MissilePosition {
-	/** Tile position */
-	Point current;
+	Point tile;
 	/** Sprite's pixel offset from tile. */
 	Point offset;
 	/** Pixel velocity while moving */
@@ -36,7 +35,7 @@ struct MissilePosition {
 };
 
 struct MissileStruct {
-	int _mitype;  // Type of projectile (missile_id)
+	int _mitype; // Type of projectile (missile_id)
 	MissilePosition position;
 	int _mimfnum; // The direction of the missile (direction enum)
 	int _mispllvl;

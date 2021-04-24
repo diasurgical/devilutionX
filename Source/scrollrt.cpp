@@ -302,7 +302,7 @@ void DrawMissile(const CelOutputBuffer &out, int x, int y, int sx, int sy, bool 
 	for (i = 0; i < nummissiles; i++) {
 		assert(missileactive[i] < MAXMISSILES);
 		m = &missile[missileactive[i]];
-		if (m->position.current.x != x || m->position.current.y != y)
+		if (m->position.tile.x != x || m->position.tile.y != y)
 			continue;
 		DrawMissilePrivate(out, m, sx, sy, pre);
 	}
@@ -484,7 +484,7 @@ void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		p = &plr[i];
-		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.current.x == x && p->position.current.y == y) {
+		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.tile.x == x && p->position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
 			px = sx + p->position.offset.x - p->_pAnimWidth2;
 			py = sy + p->position.offset.y;
@@ -519,8 +519,8 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 		bv = -(dObject[x][y] + 1);
 		if (object[bv]._oPreFlag != pre)
 			return;
-		int xx = object[bv]._ox - x;
-		int yy = object[bv]._oy - y;
+		int xx = object[bv].position.x - x;
+		int yy = object[bv].position.y - y;
 		sx = (xx * TILE_WIDTH / 2) + ox - object[bv]._oAnimWidth2 - (yy * TILE_WIDTH / 2);
 		sy = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}

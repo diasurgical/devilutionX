@@ -1387,8 +1387,7 @@ static bool DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 	}
 
 	if (currlevel == 15 && quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
-		quests[Q_BETRAYER]._qtx = sx + 1;
-		quests[Q_BETRAYER]._qty = sy + 1;
+		quests[Q_BETRAYER].position = { sx + 1, sy + 1 };
 	}
 	if (setview) {
 		ViewX = 2 * sx + 21;

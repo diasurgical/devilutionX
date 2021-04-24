@@ -7,6 +7,8 @@
 
 #include <SDL.h>
 
+#include "engine.h"
+
 namespace devilution {
 
 #define MAX_PATH_LENGTH 25
@@ -15,8 +17,7 @@ struct PATHNODE {
 	uint8_t f;
 	uint8_t h;
 	uint8_t g;
-	int x;
-	int y;
+	Point position;
 	struct PATHNODE *Parent;
 	struct PATHNODE *Child[8];
 	struct PATHNODE *NextNode;

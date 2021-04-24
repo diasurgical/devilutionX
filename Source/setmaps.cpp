@@ -87,7 +87,7 @@ int ObjIndex(int x, int y)
 
 	for (i = 0; i < nobjects; i++) {
 		oi = objectactive[i];
-		if (object[oi]._ox == x && object[oi]._oy == y)
+		if (object[oi].position.x == x && object[oi].position.y == y)
 			return oi;
 	}
 	app_fatal("ObjIndex: Active object not found at (%d,%d)", x, y);

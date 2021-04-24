@@ -167,7 +167,7 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		int distance = GetDistance(towners[i]._tx, towners[i]._ty, 2);
+		int distance = GetDistance(towners[i].position.x, towners[i].position.y, 2);
 		if (distance == 0)
 			continue;
 		pcursmonst = i;
@@ -194,8 +194,8 @@ bool CanTargetMonster(int mi)
 	if (monst._mhitpoints >> 6 <= 0) // dead
 		return false;
 
-	const int mx = monst.position.current.x;
-	const int my = monst.position.current.y;
+	const int mx = monst.position.tile.x;
+	const int my = monst.position.tile.y;
 	if ((dFlags[mx][my] & BFLAG_LIT) == 0) // not visible
 		return false;
 	if (dMonster[mx][my] == 0)
@@ -296,8 +296,7 @@ void FindMeleeTarget()
 			}
 
 			PATHNODE pPath;
-			pPath.x = node.x;
-			pPath.y = node.y;
+			pPath.position = { node.x, node.y };
 
 			if (path_solid_pieces(&pPath, dx, dy)) {
 				queue.push_back({ dx, dy, node.steps + 1 });
@@ -386,8 +385,8 @@ void FindTrigger()
 	for (int i = 0; i < nummissiles; i++) {
 		int mi = missileactive[i];
 		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
-			int mix = missile[mi].position.current.x;
-			int miy = missile[mi].position.current.y;
+			int mix = missile[mi].position.tile.x;
+			int miy = missile[mi].position.tile.y;
 			const int newDdistance = GetDistance(mix, miy, 2);
 			if (newDdistance == 0)
 				continue;
@@ -406,8 +405,8 @@ void FindTrigger()
 
 	if (pcursmissile == -1) {
 		for (int i = 0; i < numtrigs; i++) {
-			int tx = trigs[i]._tx;
-			int ty = trigs[i]._ty;
+			int tx = trigs[i].position.x;
+			int ty = trigs[i].position.y;
 			if (trigs[i]._tlvl == 13)
 				ty -= 1;
 			const int newDdistance = GetDistance(tx, ty, 2);
@@ -422,11 +421,11 @@ void FindTrigger()
 			for (int i = 0; i < MAXQUESTS; i++) {
 				if (i == Q_BETRAYER || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
 					continue;
-				const int newDdistance = GetDistance(quests[i]._qtx, quests[i]._qty, 2);
+				const int newDdistance = GetDistance(quests[i].position.x, quests[i].position.y, 2);
 				if (newDdistance == 0)
 					continue;
-				cursmx = quests[i]._qtx;
-				cursmy = quests[i]._qty;
+				cursmx = quests[i].position.x;
+				cursmy = quests[i].position.y;
 				pcursquest = i;
 			}
 		}
@@ -443,7 +442,7 @@ void FindTrigger()
 void Interact()
 {
 	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
-		NetSendCmdLocParam1(true, CMD_TALKXY, towners[pcursmonst]._tx, towners[pcursmonst]._ty, pcursmonst);
+		NetSendCmdLocParam1(true, CMD_TALKXY, towners[pcursmonst].position.x, towners[pcursmonst].position.y, pcursmonst);
 	} else if (pcursmonst != -1) {
 		if (plr[myplr]._pwtype != WT_RANGED || CanTalkToMonst(pcursmonst)) {
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -1129,8 +1128,8 @@ bool SpellHasActorTarget()
 		return false;
 
 	if (spl == SPL_FIREWALL && pcursmonst != -1) {
-		cursmx = monster[pcursmonst].position.current.x;
-		cursmy = monster[pcursmonst].position.current.y;
+		cursmx = monster[pcursmonst].position.tile.x;
+		cursmy = monster[pcursmonst].position.tile.y;
 	}
 
 	return pcursplr != -1 || pcursmonst != -1;
@@ -1243,13 +1242,13 @@ void PerformSecondaryAction()
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 	} else if (pcursmissile != -1) {
-		MakePlrPath(myplr, missile[pcursmissile].position.current.x, missile[pcursmissile].position.current.y, true);
+		MakePlrPath(myplr, missile[pcursmissile].position.tile.x, missile[pcursmissile].position.tile.y, true);
 		plr[myplr].destAction = ACTION_WALK;
 	} else if (pcurstrig != -1) {
-		MakePlrPath(myplr, trigs[pcurstrig]._tx, trigs[pcurstrig]._ty, true);
+		MakePlrPath(myplr, trigs[pcurstrig].position.x, trigs[pcurstrig].position.y, true);
 		plr[myplr].destAction = ACTION_WALK;
 	} else if (pcursquest != -1) {
-		MakePlrPath(myplr, quests[pcursquest]._qtx, quests[pcursquest]._qty, true);
+		MakePlrPath(myplr, quests[pcursquest].position.x, quests[pcursquest].position.y, true);
 		plr[myplr].destAction = ACTION_WALK;
 	}
 }

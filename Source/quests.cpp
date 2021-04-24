@@ -147,8 +147,7 @@ void InitQuests()
 		}
 
 		quests[z]._qslvl = questlist[z]._qslvl;
-		quests[z]._qtx = 0;
-		quests[z]._qty = 0;
+		quests[z].position = { 0, 0 };
 		quests[z]._qidx = z;
 		quests[z]._qlvltype = questlist[z]._qlvlt;
 		quests[z]._qvar2 = 0;
@@ -209,10 +208,10 @@ void CheckQuests()
 	    && quests[Q_BETRAYER]._qvar1 >= 2
 	    && (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE || quests[Q_BETRAYER]._qactive == QUEST_DONE)
 	    && (quests[Q_BETRAYER]._qvar2 == 0 || quests[Q_BETRAYER]._qvar2 == 2)) {
-		quests[Q_BETRAYER]._qtx = 2 * quests[Q_BETRAYER]._qtx + 16;
-		quests[Q_BETRAYER]._qty = 2 * quests[Q_BETRAYER]._qty + 16;
-		rportx = quests[Q_BETRAYER]._qtx;
-		rporty = quests[Q_BETRAYER]._qty;
+		quests[Q_BETRAYER].position.x = 2 * quests[Q_BETRAYER].position.x + 16;
+		quests[Q_BETRAYER].position.y = 2 * quests[Q_BETRAYER].position.y + 16;
+		rportx = quests[Q_BETRAYER].position.x;
+		rporty = quests[Q_BETRAYER].position.y;
 		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 1;
 		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
@@ -237,7 +236,7 @@ void CheckQuests()
 		    && nummonsters == 4
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.current.x, plr[myplr].position.current.y);
+			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile.x, plr[myplr].position.tile.y);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal");
 			WaterDone = 32;
 		}
@@ -250,8 +249,8 @@ void CheckQuests()
 			if (currlevel == quests[i]._qlevel
 			    && quests[i]._qslvl != 0
 			    && quests[i]._qactive != QUEST_NOTAVAIL
-			    && plr[myplr].position.current.x == quests[i]._qtx
-			    && plr[myplr].position.current.y == quests[i]._qty) {
+			    && plr[myplr].position.tile.x == quests[i].position.x
+			    && plr[myplr].position.tile.y == quests[i].position.y) {
 				if (quests[i]._qlvltype != DTYPE_NONE) {
 					setlvltype = quests[i]._qlvltype;
 				}
@@ -276,8 +275,8 @@ bool ForceQuests()
 
 		if (i != Q_BETRAYER && currlevel == quests[i]._qlevel && quests[i]._qslvl != 0) {
 			ql = quests[quests[i]._qidx]._qslvl - 1;
-			qx = quests[i]._qtx;
-			qy = quests[i]._qty;
+			qx = quests[i].position.x;
+			qy = quests[i].position.y;
 
 			for (j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
@@ -338,8 +337,7 @@ void CheckQuestKill(int m, bool sendmsg)
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
 				if (dPiece[i][j] == 370) {
-					trigs[numtrigs]._tx = i;
-					trigs[numtrigs]._ty = j;
+					trigs[numtrigs].position = { i, j };
 					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 					numtrigs++;
 				}
@@ -375,8 +373,7 @@ void DrawButcher()
 
 void DrawSkelKing(int q, int x, int y)
 {
-	quests[q]._qtx = 2 * x + 28;
-	quests[q]._qty = 2 * y + 23;
+	quests[q].position = { 2 * x + 28, 2 * y + 23 };
 }
 
 void DrawWarLord(int x, int y)
@@ -439,8 +436,7 @@ void DrawSChamber(int q, int x, int y)
 	}
 	xx = 2 * x + 22;
 	yy = 2 * y + 23;
-	quests[q]._qtx = xx;
-	quests[q]._qty = yy;
+	quests[q].position = { xx, yy };
 	mem_free_dbg(setp);
 }
 
@@ -559,28 +555,28 @@ void SetReturnLvlPos()
 {
 	switch (setlvlnum) {
 	case SL_SKELKING:
-		ReturnLvlX = quests[Q_SKELKING]._qtx + 1;
-		ReturnLvlY = quests[Q_SKELKING]._qty;
+		ReturnLvlX = quests[Q_SKELKING].position.x + 1;
+		ReturnLvlY = quests[Q_SKELKING].position.y;
 		ReturnLvl = quests[Q_SKELKING]._qlevel;
 		ReturnLvlT = DTYPE_CATHEDRAL;
 		break;
 	case SL_BONECHAMB:
-		ReturnLvlX = quests[Q_SCHAMB]._qtx + 1;
-		ReturnLvlY = quests[Q_SCHAMB]._qty;
+		ReturnLvlX = quests[Q_SCHAMB].position.x + 1;
+		ReturnLvlY = quests[Q_SCHAMB].position.y;
 		ReturnLvl = quests[Q_SCHAMB]._qlevel;
 		ReturnLvlT = DTYPE_CATACOMBS;
 		break;
 	case SL_MAZE:
 		break;
 	case SL_POISONWATER:
-		ReturnLvlX = quests[Q_PWATER]._qtx;
-		ReturnLvlY = quests[Q_PWATER]._qty + 1;
+		ReturnLvlX = quests[Q_PWATER].position.x;
+		ReturnLvlY = quests[Q_PWATER].position.y + 1;
 		ReturnLvl = quests[Q_PWATER]._qlevel;
 		ReturnLvlT = DTYPE_CATHEDRAL;
 		break;
 	case SL_VILEBETRAYER:
-		ReturnLvlX = quests[Q_BETRAYER]._qtx + 1;
-		ReturnLvlY = quests[Q_BETRAYER]._qty - 1;
+		ReturnLvlX = quests[Q_BETRAYER].position.x + 1;
+		ReturnLvlY = quests[Q_BETRAYER].position.y - 1;
 		ReturnLvl = quests[Q_BETRAYER]._qlevel;
 		ReturnLvlT = DTYPE_HELL;
 		break;

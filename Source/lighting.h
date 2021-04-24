@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "engine.h"
 #include "miniwin/miniwin.h"
 
 namespace devilution {
@@ -14,18 +15,21 @@ namespace devilution {
 #define LIGHTSIZE (27 * 256)
 #define NO_LIGHT -1
 
+struct LightPosition {
+	Point tile;
+	/** Pixel offset from tile. */
+	Point offset;
+	/** Prevous position. */
+	Point old;
+};
+
 struct LightListStruct {
-	int _lx;
-	int _ly;
+	LightPosition position;
 	int _lradius;
 	int _lid;
 	bool _ldel;
 	bool _lunflag;
-	int _lunx;
-	int _luny;
-	int _lunr;
-	int _xoff;
-	int _yoff;
+	int oldRadious;
 	bool _lflags;
 };
 
