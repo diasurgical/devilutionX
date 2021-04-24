@@ -13,3 +13,7 @@ wget https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libs
 tar -xzf libsodium-1.0.18-mingw.tar.gz --no-same-owner
 sudo cp -r libsodium-win64/* /usr/x86_64-w64-mingw32
 sudo cp -r SDL2*/x86_64-w64-mingw32 /usr
+
+# Fixup pkgconfig prefix:
+find "/usr/x86_64-w64-mingw32/lib/pkgconfig/" -name '*.pc' -exec \
+  sed -i "s|^prefix=.*|prefix=/usr/x86_64-w64-mingw32|" '{}' \;
