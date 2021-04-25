@@ -5,7 +5,7 @@
 using namespace devilution;
 
 namespace devilution {
-extern int PM_DoGotHit(int pnum);
+extern bool PM_DoGotHit(int pnum);
 }
 
 int RunBlockTest(int frames, int flags)
