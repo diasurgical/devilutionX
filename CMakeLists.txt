@@ -1,4 +1,11 @@
-cmake_minimum_required(VERSION 3.13) # CMP0083 NEW
+cmake_minimum_required(VERSION 3.13)
+
+if(POLICY CMP0083)
+  cmake_policy(SET CMP0083 NEW)
+endif()
+if(POLICY CMP0111)
+  cmake_policy(SET CMP0111 NEW)
+endif()
 
 include(CMakeDependentOption)
 include(CMake/out_of_tree.cmake)
