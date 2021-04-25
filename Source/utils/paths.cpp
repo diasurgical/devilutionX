@@ -1,7 +1,9 @@
 #include "utils/paths.h"
-#include "utils/log.hpp"
 
 #include <SDL.h>
+
+#include "utils/stdcompat/optional.hpp"
+#include "utils/log.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
