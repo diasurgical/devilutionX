@@ -684,9 +684,50 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	return false;
 }
 
+bool PlayerBlocks(int playerID, int missileSourceID, int missileTargets, int missileType)
+{
+	int chanceToBlock = 0;
+	if (missileTargets == TARGET_MONSTERS) {
+		chanceToBlock = plr[playerID]._pBaseToBlk
+		    + plr[playerID]._pLevel * 2
+		    + plr[playerID]._pDexterity
+		    - (plr[missileSourceID]._pLevel * 2);
+	}
+	if (missileTargets == TARGET_PLAYERS) {
+		chanceToBlock = plr[playerID]._pBaseToBlk
+		    + plr[playerID]._pLevel * 2
+		    + plr[playerID]._pDexterity
+		    - monster[missileSourceID].mLevel * 2;
+	}
+	if (missileTargets == TARGET_BOTH) {
+		chanceToBlock = plr[playerID]._pBaseToBlk
+		    + plr[playerID]._pDexterity;
+	}
+	if (chanceToBlock < 0)
+		chanceToBlock = 0;
+	if (chanceToBlock > 100)
+		chanceToBlock = 100;
+
+	int block = 100;
+	if ((plr[playerID]._pmode == PM_STAND || plr[playerID]._pmode == PM_ATTACK) && plr[playerID]._pBlockFlag)
+		block = GenerateRnd(100);
+	if (!gbIsHellfire) {
+		int resistType = missiledata[missileType].mResist;
+		if (resistType == MISR_FIRE && plr[playerID]._pFireResist > 0)
+			block = 100;
+		if (resistType == MISR_LIGHTNING && plr[playerID]._pLghtResist > 0)
+			block = 100;
+		if (resistType == MISR_MAGIC && plr[playerID]._pMagResist > 0)
+			block = 100;
+		if (resistType == MISR_ACID && plr[playerID]._pMagResist > 0)
+			block = 100;
+	}
+	return block < chanceToBlock;
+}
+
 bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
 {
-	int hit, hper, tac, dam, blk, blkper, resper;
+	int hit, hper, tac, dam, resper;
 	*blocked = false;
 
 	if (plr[pnum]._pHitPoints >> 6 <= 0) {
@@ -737,45 +778,13 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 	}
 
 	if (hit < hper) {
-		if ((plr[pnum]._pmode == PM_STAND || plr[pnum]._pmode == PM_ATTACK) && plr[pnum]._pBlockFlag) {
-			blk = GenerateRnd(100);
-		} else {
-			blk = 100;
-		}
-
-		if (shift)
-			blk = 100;
-		if (mtype == MIS_ACIDPUD)
-			blk = 100;
-		if (m != -1)
-			blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity - ((monster[m].mLevel - plr[pnum]._pLevel) * 2);
-		else
-			blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity;
-		if (blkper < 0)
-			blkper = 0;
-		if (blkper > 100)
-			blkper = 100;
-		switch (missiledata[mtype].mResist) {
-		case MISR_FIRE:
-			resper = plr[pnum]._pFireResist;
-			break;
-		case MISR_LIGHTNING:
-			resper = plr[pnum]._pLghtResist;
-			break;
-		case MISR_MAGIC:
-		case MISR_ACID:
-			resper = plr[pnum]._pMagResist;
-			break;
-		default:
-			resper = 0;
-			break;
-		}
-		if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
+		int missileTargets = (m != -1) ? TARGET_PLAYERS : TARGET_BOTH;
+		*blocked = !shift && mtype != MIS_ACIDPUD && PlayerBlocks(pnum, m, missileTargets, mtype);
+		if (*blocked) {
 			direction dir = plr[pnum]._pdir;
 			if (m != -1) {
 				dir = GetDirection(plr[pnum].position.tile, monster[m].position.tile);
 			}
-			*blocked = true;
 			StartPlrBlock(pnum, dir);
 			return true;
 		}
@@ -802,6 +811,21 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 				dam = 64;
 		}
 
+		switch (missiledata[mtype].mResist) {
+		case MISR_FIRE:
+			resper = plr[pnum]._pFireResist;
+			break;
+		case MISR_LIGHTNING:
+			resper = plr[pnum]._pLghtResist;
+			break;
+		case MISR_MAGIC:
+		case MISR_ACID:
+			resper = plr[pnum]._pMagResist;
+			break;
+		default:
+			resper = 0;
+			break;
+		}
 		if (resper > 0) {
 			dam = dam - dam * resper / 100;
 			if (pnum == myplr) {
@@ -826,7 +850,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 
 bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, bool shift, bool *blocked)
 {
-	int dam, blk, blkper, hper, hit, resper;
+	int dam, hper, hit, resper;
 
 	if (!sgGameInitInfo.bFriendlyFire && gbFriendlyMode)
 		return false;
@@ -873,21 +897,6 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 	if (hit > 95)
 		hit = 95;
 	if (hper < hit) {
-		if ((plr[p]._pmode == PM_STAND || plr[p]._pmode == PM_ATTACK) && plr[p]._pBlockFlag) {
-			blkper = GenerateRnd(100);
-		} else {
-			blkper = 100;
-		}
-		if (shift)
-			blkper = 100;
-		blk = plr[p]._pDexterity + plr[p]._pBaseToBlk + (plr[p]._pLevel * 2) - (plr[pnum]._pLevel * 2);
-
-		if (blk < 0) {
-			blk = 0;
-		}
-		if (blk > 100) {
-			blk = 100;
-		}
 		switch (missiledata[mtype].mResist) {
 		case MISR_FIRE:
 			resper = plr[p]._pFireResist;
@@ -903,9 +912,9 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			resper = 0;
 			break;
 		}
-		if (resper <= 0 && blkper < blk) {
+		*blocked = !shift && resper <= 0 && PlayerBlocks(p, pnum, TARGET_MONSTERS, mtype);
+		if (*blocked) {
 			StartPlrBlock(p, GetDirection(plr[p].position.tile, plr[pnum].position.tile));
-			*blocked = true;
 			return true;
 		}
 
