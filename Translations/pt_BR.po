@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2021-04-25 12:11-0300\n"
-"PO-Revision-Date: 2021-04-25 13:00-0300\n"
+"PO-Revision-Date: 2021-04-25 13:16-0300\n"
 "Last-Translator: Cyro Dubeux <xorycx@gmail.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -219,11 +219,11 @@ msgstr "Agradecimentos muito especiais a"
 
 #: Source/DiabloUI/credits_lines.cpp:212
 msgid "General Manager"
-msgstr ""
+msgstr "Gerente geral"
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr ""
+msgstr "Engenharia de software"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
@@ -231,7 +231,7 @@ msgstr "Diretores de arte"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
-msgstr ""
+msgstr "Artistas"
 
 #: Source/DiabloUI/credits_lines.cpp:228
 msgid "Design"
@@ -239,15 +239,15 @@ msgstr "Pojeto"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr ""
+msgstr "Projeto de som, efeitos sonoros  e engenharia de áudio"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
-msgstr ""
+msgstr "Líder do controle de qualidade"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
-msgstr ""
+msgstr "Testadores"
 
 #: Source/DiabloUI/credits_lines.cpp:246
 msgid "Manual"
@@ -259,7 +259,7 @@ msgstr "\tArte adicional"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
-msgstr ""
+msgstr "Escritor dos textos das missões"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
@@ -267,43 +267,39 @@ msgstr "Agradecimentos a"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
-msgstr ""
+msgstr "\t\t\tAgradecimentos especiais à Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
-msgstr ""
+msgstr "\t\t\tSierra On-Line Inc. Northwest"
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr ""
+msgstr "Gerente do controle de qualidade"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
-msgstr ""
+msgstr "Líder de teste do controle de qualidade"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
-msgstr ""
+msgstr "Testadores principais"
 
 #: Source/DiabloUI/credits_lines.cpp:281
-#, fuzzy
-#| msgid "Additional Design"
 msgid "Additional Testers"
-msgstr "Design adicional"
+msgstr "Testadores adicionais"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
-msgstr ""
+msgstr "Gerente de marketing de produto"
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
 msgstr "Gerente de relações públicas"
 
 #: Source/DiabloUI/credits_lines.cpp:292
-#, fuzzy
-#| msgid "Associate Producer"
 msgid "Associate Product Manager"
-msgstr "Produtor associado"
+msgstr "Gerente de produto associado"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
@@ -1065,7 +1061,7 @@ msgstr "mas lhe custará 50 de ouro"
 
 #: Source/stores.cpp:902
 msgid "just to take a look. "
-msgstr "só para dar uma olhada."
+msgstr "só para dar uma olhada. "
 
 #: Source/stores.cpp:903
 msgid "What have you got?"
@@ -1223,4 +1219,4 @@ msgstr ""
 
 #: Source/towners.cpp:552
 msgid "Slain Townsman"
-msgstr "Aldeão Assassinado"
+msgstr "Aldeão assassinado"
