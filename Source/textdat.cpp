@@ -655,8 +655,8 @@ const TextDataStruct alltext[] = {
 	{ N_("Praedictum Otium. |"), true, PS_ROGUE55 },
 	{ N_("Efficio Obitus Ut Inimicus. |"), true, PS_ROGUE56 },
 	/**
-	{ "Please help....! I barely escaped from....... The Butcher...! He killed.... My wife... My children! I beg of you...... In the name of God......... Avenge them......... |", true, TSFX_DEADGUY },
-	{ "*retching* Listen, listen. I don't even like worms. Don't tell me about yer worms! I don't want yer worms! Nope, no thanks! *slight hiccup/gag* No worms for me.", true, TSFX_DRUNK5 },
+	{ N_"Please help....! I barely escaped from....... The Butcher...! He killed.... My wife... My children! I beg of you...... In the name of God......... Avenge them......... |"), true, TSFX_DEADGUY },
+	{ N_("*retching* Listen, listen. I don't even like worms. Don't tell me about yer worms! I don't want yer worms! Nope, no thanks! *slight hiccup/gag* No worms for me."), true, TSFX_DRUNK5 },
 	{ "*SNORE*", true, TSFX_DRUNK6 },
 	{ "Sounds like a good idea to me. Ya better get started right awaaay.", true, TSFX_DRUNK8 },
 	{ "*laugh* Did you ever hear I love that King tale? I love that one.", true, TSFX_DRUNK9 },
