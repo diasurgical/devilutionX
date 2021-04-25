@@ -26,7 +26,7 @@ namespace {
 std::string *basePath = nullptr;
 std::string *prefPath = nullptr;
 std::string *configPath = nullptr;
-std::string *langPath = NULL;
+std::string *langPath = nullptr;
 std::string *ttfPath = nullptr;
 std::string *ttfName = nullptr;
 
@@ -94,7 +94,7 @@ const std::string &GetLangPath()
 		langPath = new std::string(MO_LANG_DIR);
 	return *langPath;
 }
-  
+
 const std::string &GetTtfName()
 {
 	if (ttfName == nullptr)
