@@ -71,7 +71,7 @@ void RunAnimationTest(int numFrames, int delay, AnimationDistributionParams para
 		auto renderingData = dynamic_cast<RenderingData *>(x);
 		if (renderingData != nullptr) {
 			gfProgressToNextGameTick = renderingData->_fProgressToNextGameTick;
-			EXPECT_EQ(GetFrameToUseForPlayerRendering(pPlayer), renderingData->_ExpectedRenderingFrame)
+			EXPECT_EQ(pPlayer->AnimInfo.GetFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
 			    << std::fixed << std::setprecision(2)
 			    << "ProgressToNextGameTick: " << renderingData->_fProgressToNextGameTick
 			    << " CurrentFrame: " << pPlayer->AnimInfo.CurrentFrame
