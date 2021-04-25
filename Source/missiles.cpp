@@ -912,22 +912,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 	}
 
 	if (HitsPlayer(p, pnum, TARGET_MONSTERS, mtype, dist)) {
-		switch (missiledata[mtype].mResist) {
-		case MISR_FIRE:
-			resper = plr[p]._pFireResist;
-			break;
-		case MISR_LIGHTNING:
-			resper = plr[p]._pLghtResist;
-			break;
-		case MISR_MAGIC:
-		case MISR_ACID:
-			resper = plr[p]._pMagResist;
-			break;
-		default:
-			resper = 0;
-			break;
-		}
-		*blocked = !shift && resper <= 0 && PlayerBlocks(p, pnum, TARGET_MONSTERS, mtype);
+		*blocked = !shift && PlayerBlocks(p, pnum, TARGET_MONSTERS, mtype);
 		if (*blocked) {
 			StartPlrBlock(p, GetDirection(plr[p].position.tile, plr[pnum].position.tile));
 			return true;
@@ -944,6 +929,21 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		}
 		if (missiledata[mtype].mType != 0)
 			dam /= 2;
+		switch (missiledata[mtype].mResist) {
+		case MISR_FIRE:
+			resper = plr[p]._pFireResist;
+			break;
+		case MISR_LIGHTNING:
+			resper = plr[p]._pLghtResist;
+			break;
+		case MISR_MAGIC:
+		case MISR_ACID:
+			resper = plr[p]._pMagResist;
+			break;
+		default:
+			resper = 0;
+			break;
+		}
 		if (resper > 0) {
 			dam -= (dam * resper) / 100;
 			if (pnum == myplr)
