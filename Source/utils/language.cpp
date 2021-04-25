@@ -15,6 +15,7 @@ struct cstring_cmp {
 };
 
 std::map<const char *, const char *, cstring_cmp> map;
+std::map<const char *, const char *, cstring_cmp> meta;
 
 struct mo_head {
 	uint32_t magic;
@@ -32,6 +33,28 @@ struct mo_entry {
 	uint32_t length;
 	uint32_t offset;
 };
+
+void parse_metadata(char *data)
+{
+	char *key, *delim, *val;
+	char *ptr = data;
+
+	while (ptr) {
+		if (!(delim = strstr(ptr, ":"))) {
+			return;
+		}
+		key = data;
+		val = delim + 1;
+
+		// add null termination to key and val
+		*delim = '\0';
+		if ((ptr = strstr(ptr, "\n"))) {
+			*ptr = '\0';
+			ptr++;
+		}
+		meta[key] = val;
+	}
+}
 
 char *read_entry(FILE *fp, mo_entry *e)
 {
@@ -59,6 +82,16 @@ const char *LanguageTranslate(const char *key)
 	auto it = map.find(key);
 	if (it == map.end()) {
 		return key;
+	}
+
+	return it->second;
+}
+
+const char *LanguageMetadata(const char *key)
+{
+	auto it = meta.find(key);
+	if (it == meta.end()) {
+		return nullptr;
 	}
 
 	return it->second;
@@ -120,8 +153,12 @@ void LanguageInitialize()
 	for (uint32_t i = 0; i < head.nb_mappings; i++) {
 		char *key, *val;
 		if ((key = read_entry(fp, src + i))) {
-			if (*key && (val = read_entry(fp, dst + i))) {
-				map[key] = val;
+			if ((val = read_entry(fp, dst + i))) {
+				if (!*key) {
+					parse_metadata(val);
+				} else {
+					map[key] = val;
+				}
 			} else {
 				free(key);
 			}

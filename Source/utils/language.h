@@ -5,4 +5,4 @@
 
 void LanguageInitialize();
 const char* LanguageTranslate(const char* key);
-
+const char* LanguageMetadata(const char *key);
