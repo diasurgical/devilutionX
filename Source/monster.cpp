@@ -26,6 +26,7 @@
 #include "themes.h"
 #include "towners.h"
 #include "trigs.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -4952,11 +4953,11 @@ const char *GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.mMonstClass) {
 	case MC_ANIMAL:
-		return "Animal";
+		return _("Animal");
 	case MC_DEMON:
-		return "Demon";
+		return _("Demon");
 	case MC_UNDEAD:
-		return "Undead";
+		return _("Undead");
 	}
 
 	app_fatal("Unknown mMonstClass %d", monsterData.mMonstClass);
@@ -4967,9 +4968,9 @@ void PrintMonstHistory(int mt)
 	int minHP, maxHP, res;
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		sprintf(tempstr, "Type: %s  Kills: %i", GetMonsterTypeText(monsterdata[mt]), monstkills[mt]);
+		sprintf(tempstr, _("Type: %s  Kills: %i"), GetMonsterTypeText(monsterdata[mt]), monstkills[mt]);
 	} else {
-		sprintf(tempstr, "Total kills: %i", monstkills[mt]);
+		sprintf(tempstr, _("Total kills: %i"), monstkills[mt]);
 	}
 
 	AddPanelString(tempstr, true);
@@ -5002,7 +5003,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		sprintf(tempstr, "Hit Points: %i-%i", minHP, maxHP);
+		sprintf(tempstr, _("Hit Points: %i-%i"), minHP, maxHP);
 		AddPanelString(tempstr, true);
 	}
 	if (monstkills[mt] >= 15) {
@@ -5012,28 +5013,28 @@ void PrintMonstHistory(int mt)
 			res = monsterdata[mt].mMagicRes2;
 		res = res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 		if (!res) {
-			strcpy(tempstr, "No magic resistance");
+			strcpy(tempstr, _("No magic resistance"));
 			AddPanelString(tempstr, true);
 		} else {
 			if (res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) {
-				strcpy(tempstr, "Resists: ");
+				strcpy(tempstr, _("Resists: "));
 				if (res & RESIST_MAGIC)
-					strcat(tempstr, "Magic ");
+					strcat(tempstr, _("Magic "));
 				if (res & RESIST_FIRE)
-					strcat(tempstr, "Fire ");
+					strcat(tempstr, _("Fire "));
 				if (res & RESIST_LIGHTNING)
-					strcat(tempstr, "Lightning ");
+					strcat(tempstr, _("Lightning "));
 				tempstr[strlen(tempstr) - 1] = '\0';
 				AddPanelString(tempstr, true);
 			}
 			if (res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) {
-				strcpy(tempstr, "Immune: ");
+				strcpy(tempstr, _("Immune: "));
 				if (res & IMMUNE_MAGIC)
-					strcat(tempstr, "Magic ");
+					strcat(tempstr, _("Magic "));
 				if (res & IMMUNE_FIRE)
-					strcat(tempstr, "Fire ");
+					strcat(tempstr, _("Fire "));
 				if (res & IMMUNE_LIGHTNING)
-					strcat(tempstr, "Lightning ");
+					strcat(tempstr, _("Lightning "));
 				tempstr[strlen(tempstr) - 1] = '\0';
 				AddPanelString(tempstr, true);
 			}
@@ -5047,25 +5048,25 @@ void PrintUniqueHistory()
 	int res;
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		sprintf(tempstr, "Type: %s", GetMonsterTypeText(*monster[pcursmonst].MData));
+		sprintf(tempstr, _("Type: %s"), GetMonsterTypeText(*monster[pcursmonst].MData));
 		AddPanelString(tempstr, true);
 	}
 
 	res = monster[pcursmonst].mMagicRes & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (!res) {
-		strcpy(tempstr, "No resistances");
+		strcpy(tempstr, _("No resistances"));
 		AddPanelString(tempstr, true);
-		strcpy(tempstr, "No Immunities");
+		strcpy(tempstr, _("No Immunities"));
 	} else {
 		if (res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING))
-			strcpy(tempstr, "Some Magic Resistances");
+			strcpy(tempstr, _("Some Magic Resistances"));
 		else
-			strcpy(tempstr, "No resistances");
+			strcpy(tempstr, _("No resistances"));
 		AddPanelString(tempstr, true);
 		if (res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) {
-			strcpy(tempstr, "Some Magic Immunities");
+			strcpy(tempstr, _("Some Magic Immunities"));
 		} else {
-			strcpy(tempstr, "No Immunities");
+			strcpy(tempstr, _("No Immunities"));
 		}
 	}
 	AddPanelString(tempstr, true);

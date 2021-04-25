@@ -25,6 +25,7 @@
 #include "sync.h"
 #include "town.h"
 #include "trigs.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -167,7 +168,7 @@ bool msg_wait_resync()
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
 	sgdwOwnerWait = SDL_GetTicks();
-	success = UiProgressDialog("Waiting for game data...", msg_wait_for_turns);
+	success = UiProgressDialog(_("Waiting for game data..."), msg_wait_for_turns);
 	gbBufferMsgs = 0;
 	if (!success) {
 		msg_free_packets();
@@ -175,13 +176,13 @@ bool msg_wait_resync()
 	}
 
 	if (gbGameDestroyed) {
-		DrawDlg("The game ended");
+		DrawDlg(_("The game ended"));
 		msg_free_packets();
 		return false;
 	}
 
 	if (sgbDeltaChunks != MAX_CHUNKS) {
-		DrawDlg("Unable to get level data");
+		DrawDlg(_("Unable to get level data"));
 		msg_free_packets();
 		return false;
 	}

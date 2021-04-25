@@ -1182,7 +1182,7 @@ void S_StartBarMaid()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, true, "Gillian", COL_GOLD, false);
+	AddSText(0, 2, true, _("Gillian"), COL_GOLD, false);
 	AddSText(0, 9, true, _("Would you like to:"), COL_GOLD, false);
 	AddSText(0, 12, true, _("Talk to Gillian"), COL_BLUE, true);
 	AddSText(0, 18, true, _("Say goodbye"), COL_WHITE, true);

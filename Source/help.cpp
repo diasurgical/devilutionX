@@ -8,6 +8,7 @@
 #include "init.h"
 #include "minitext.h"
 #include "stores.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -486,9 +487,9 @@ void DrawHelp(const CelOutputBuffer &out)
 	DrawSTextHelp();
 	DrawQTextBack(out);
 	if (gbIsHellfire)
-		PrintSString(out, 0, 2, true, "Hellfire Help", COL_GOLD, 0);
+		PrintSString(out, 0, 2, true, _("Hellfire Help"), COL_GOLD, 0);
 	else
-		PrintSString(out, 0, 2, true, "Diablo Help", COL_GOLD, 0);
+		PrintSString(out, 0, 2, true, _("Diablo Help"), COL_GOLD, 0);
 	DrawSLine(out, 5);
 
 	s = &gszHelpText[0];
@@ -568,7 +569,7 @@ void DrawHelp(const CelOutputBuffer &out)
 		}
 	}
 
-	PrintSString(out, 0, 23, true, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
+	PrintSString(out, 0, 23, true, _("Press ESC to end or the arrow keys to scroll."), COL_GOLD, 0);
 }
 
 void DisplayHelp()

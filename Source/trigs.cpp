@@ -9,6 +9,7 @@
 #include "cursor.h"
 #include "error.h"
 #include "init.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -322,7 +323,7 @@ bool ForceTownTrig()
 
 	for (i = 0; TownDownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == TownDownList[i]) {
-			strcpy(infostr, "Down to dungeon");
+			strcpy(infostr, _("Down to dungeon"));
 			cursmx = 25;
 			cursmy = 29;
 			return true;
@@ -332,7 +333,7 @@ bool ForceTownTrig()
 	if (townwarps[0]) {
 		for (j = 0; TownWarp1List[j] != -1; j++) {
 			if (dPiece[cursmx][cursmy] == TownWarp1List[j]) {
-				strcpy(infostr, "Down to catacombs");
+				strcpy(infostr, _("Down to catacombs"));
 				cursmx = 49;
 				cursmy = 21;
 				return true;
@@ -343,7 +344,7 @@ bool ForceTownTrig()
 	if (townwarps[1]) {
 		for (k = 1199; k <= 1220; k++) {
 			if (dPiece[cursmx][cursmy] == k) {
-				strcpy(infostr, "Down to caves");
+				strcpy(infostr, _("Down to caves"));
 				cursmx = 17;
 				cursmy = 69;
 				return true;
@@ -354,7 +355,7 @@ bool ForceTownTrig()
 	if (townwarps[2]) {
 		for (l = 1240; l <= 1255; l++) {
 			if (dPiece[cursmx][cursmy] == l) {
-				strcpy(infostr, "Down to hell");
+				strcpy(infostr, _("Down to hell"));
 				cursmx = 41;
 				cursmy = 80;
 				return true;
@@ -365,7 +366,7 @@ bool ForceTownTrig()
 	if (gbIsHellfire) {
 		for (i = 0; TownCryptList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == TownCryptList[i]) {
-				strcpy(infostr, "Down to Crypt");
+				strcpy(infostr, _("Down to Crypt"));
 				cursmx = 36;
 				cursmy = 24;
 				return true;
@@ -373,7 +374,7 @@ bool ForceTownTrig()
 		}
 		for (i = 0; TownHiveList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == TownHiveList[i]) {
-				strcpy(infostr, "Down to Hive");
+				strcpy(infostr, _("Down to Hive"));
 				cursmx = 80;
 				cursmy = 62;
 				return true;
@@ -393,9 +394,9 @@ bool ForceL1Trig()
 		for (i = 0; L1UpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L1UpList[i]) {
 				if (currlevel > 1)
-					sprintf(infostr, "Up to level %i", currlevel - 1);
+					sprintf(infostr, _("Up to level %i"), currlevel - 1);
 				else
-					strcpy(infostr, "Up to town");
+					strcpy(infostr, _("Up to town"));
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j].position.x;
@@ -407,7 +408,7 @@ bool ForceL1Trig()
 		}
 		for (i = 0; L1DownList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L1DownList[i]) {
-				sprintf(infostr, "Down to level %i", currlevel + 1);
+				sprintf(infostr, _("Down to level %i"), currlevel + 1);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -420,7 +421,7 @@ bool ForceL1Trig()
 	} else {
 		for (i = 0; L5UpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L5UpList[i]) {
-				sprintf(infostr, "Up to Crypt level %i", currlevel - 21);
+				sprintf(infostr, _("Up to Crypt level %i"), currlevel - 21);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j].position.x;
@@ -431,12 +432,12 @@ bool ForceL1Trig()
 			}
 		}
 		if (dPiece[cursmx][cursmy] == 317) {
-			strcpy(infostr, "Cornerstone of the World");
+			strcpy(infostr, _("Cornerstone of the World"));
 			return true;
 		}
 		for (i = 0; L5DownList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L5DownList[i]) {
-				sprintf(infostr, "Down to Crypt level %i", currlevel - 19);
+				sprintf(infostr, _("Down to Crypt level %i"), currlevel - 19);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -454,7 +455,7 @@ bool ForceL1Trig()
 							dx = abs(trigs[j].position.x - cursmx);
 							dy = abs(trigs[j].position.y - cursmy);
 							if (dx < 4 && dy < 4) {
-								strcpy(infostr, "Up to town");
+								strcpy(infostr, _("Up to town"));
 								cursmx = trigs[j].position.x;
 								cursmy = trigs[j].position.y;
 								return true;
@@ -480,7 +481,7 @@ bool ForceL2Trig()
 					dx = abs(trigs[j].position.x - cursmx);
 					dy = abs(trigs[j].position.y - cursmy);
 					if (dx < 4 && dy < 4) {
-						sprintf(infostr, "Up to level %i", currlevel - 1);
+						sprintf(infostr, _("Up to level %i"), currlevel - 1);
 						cursmx = trigs[j].position.x;
 						cursmy = trigs[j].position.y;
 						return true;
@@ -492,7 +493,7 @@ bool ForceL2Trig()
 
 	for (i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			sprintf(infostr, "Down to level %i", currlevel + 1);
+			sprintf(infostr, _("Down to level %i"), currlevel + 1);
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursmx = trigs[j].position.x;
@@ -511,7 +512,7 @@ bool ForceL2Trig()
 						dx = abs(trigs[j].position.x - cursmx);
 						dy = abs(trigs[j].position.y - cursmy);
 						if (dx < 4 && dy < 4) {
-							strcpy(infostr, "Up to town");
+							strcpy(infostr, _("Up to town"));
 							cursmx = trigs[j].position.x;
 							cursmy = trigs[j].position.y;
 							return true;
@@ -532,7 +533,7 @@ bool ForceL3Trig()
 	if (currlevel < 17) {
 		for (i = 0; L3UpList[i] != -1; ++i) {
 			if (dPiece[cursmx][cursmy] == L3UpList[i]) {
-				sprintf(infostr, "Up to level %i", currlevel - 1);
+				sprintf(infostr, _("Up to level %i"), currlevel - 1);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j].position.x;
@@ -546,7 +547,7 @@ bool ForceL3Trig()
 			if (dPiece[cursmx][cursmy] == L3DownList[i]
 			    || dPiece[cursmx + 1][cursmy] == L3DownList[i]
 			    || dPiece[cursmx + 2][cursmy] == L3DownList[i]) {
-				sprintf(infostr, "Down to level %i", currlevel + 1);
+				sprintf(infostr, _("Down to level %i"), currlevel + 1);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -559,7 +560,7 @@ bool ForceL3Trig()
 	} else {
 		for (i = 0; L6UpList[i] != -1; ++i) {
 			if (dPiece[cursmx][cursmy] == L6UpList[i]) {
-				sprintf(infostr, "Up to Nest level %i", currlevel - 17);
+				sprintf(infostr, _("Up to Nest level %i"), currlevel - 17);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j].position.x;
@@ -573,7 +574,7 @@ bool ForceL3Trig()
 			if (dPiece[cursmx][cursmy] == L6DownList[i]
 			    || dPiece[cursmx + 1][cursmy] == L6DownList[i]
 			    || dPiece[cursmx + 2][cursmy] == L6DownList[i]) {
-				sprintf(infostr, "Down to level %i", currlevel - 15);
+				sprintf(infostr, _("Down to level %i"), currlevel - 15);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -593,7 +594,7 @@ bool ForceL3Trig()
 						dx = abs(trigs[j].position.x - cursmx);
 						dy = abs(trigs[j].position.y - cursmy);
 						if (dx < 4 && dy < 4) {
-							strcpy(infostr, "Up to town");
+							strcpy(infostr, _("Up to town"));
 							cursmx = trigs[j].position.x;
 							cursmy = trigs[j].position.y;
 							return true;
@@ -611,7 +612,7 @@ bool ForceL3Trig()
 						dx = abs(trigs[j].position.x - cursmx);
 						dy = abs(trigs[j].position.y - cursmy);
 						if (dx < 4 && dy < 4) {
-							strcpy(infostr, "Up to town");
+							strcpy(infostr, _("Up to town"));
 							cursmx = trigs[j].position.x;
 							cursmy = trigs[j].position.y;
 							return true;
@@ -631,7 +632,7 @@ bool ForceL4Trig()
 
 	for (i = 0; L4UpList[i] != -1; ++i) {
 		if (dPiece[cursmx][cursmy] == L4UpList[i]) {
-			sprintf(infostr, "Up to level %i", currlevel - 1);
+			sprintf(infostr, _("Up to level %i"), currlevel - 1);
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					cursmx = trigs[j].position.x;
@@ -644,7 +645,7 @@ bool ForceL4Trig()
 
 	for (i = 0; L4DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L4DownList[i]) {
-			sprintf(infostr, "Down to level %i", currlevel + 1);
+			sprintf(infostr, _("Down to level %i"), currlevel + 1);
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursmx = trigs[j].position.x;
@@ -663,7 +664,7 @@ bool ForceL4Trig()
 						dx = abs(trigs[j].position.x - cursmx);
 						dy = abs(trigs[j].position.y - cursmy);
 						if (dx < 4 && dy < 4) {
-							strcpy(infostr, "Up to town");
+							strcpy(infostr, _("Up to town"));
 							cursmx = trigs[j].position.x;
 							cursmy = trigs[j].position.y;
 							return true;
@@ -677,7 +678,7 @@ bool ForceL4Trig()
 	if (currlevel == 15) {
 		for (i = 0; L4PentaList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L4PentaList[i]) {
-				strcpy(infostr, "Down to Diablo");
+				strcpy(infostr, _("Down to Diablo"));
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -714,7 +715,7 @@ bool ForceSKingTrig()
 
 	for (i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L1UpList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[Q_SKELKING]._qlevel);
+			sprintf(infostr, _("Back to Level %i"), quests[Q_SKELKING]._qlevel);
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -731,7 +732,7 @@ bool ForceSChambTrig()
 
 	for (i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[Q_SCHAMB]._qlevel);
+			sprintf(infostr, _("Back to Level %i"), quests[Q_SCHAMB]._qlevel);
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -748,7 +749,7 @@ bool ForcePWaterTrig()
 
 	for (i = 0; L3DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L3DownList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[Q_PWATER]._qlevel);
+			sprintf(infostr, _("Back to Level %i"), quests[Q_PWATER]._qlevel);
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
