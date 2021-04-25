@@ -14,6 +14,7 @@
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -35,30 +36,30 @@ int ReturnLvl;
 QuestData questlist[] = {
 	// clang-format off
 	// _qdlvl,  _qdmultlvl, _qlvlt,          _qdtype,     _qdrnd, _qslvl,          isSinglePlayerOnly, _qdmsg,        _qlstr
-	{       5,          -1, DTYPE_NONE,      Q_ROCK,      100,    SL_NONE,         true,               TEXT_INFRA5,   "The Magic Rock"           },
-	{       9,          -1, DTYPE_NONE,      Q_MUSHROOM,  100,    SL_NONE,         true,               TEXT_MUSH8,    "Black Mushroom"           },
-	{       4,          -1, DTYPE_NONE,      Q_GARBUD,    100,    SL_NONE,         true,               TEXT_GARBUD1,  "Gharbad The Weak"         },
-	{       8,          -1, DTYPE_NONE,      Q_ZHAR,      100,    SL_NONE,         true,               TEXT_ZHAR1,    "Zhar the Mad"             },
-	{      14,          -1, DTYPE_NONE,      Q_VEIL,      100,    SL_NONE,         true,               TEXT_VEIL9,    "Lachdanan"                },
-	{      15,          -1, DTYPE_NONE,      Q_DIABLO,    100,    SL_NONE,         false,              TEXT_VILE3,    "Diablo"                   },
-	{       2,           2, DTYPE_NONE,      Q_BUTCHER,   100,    SL_NONE,         false,              TEXT_BUTCH9,   "The Butcher"              },
-	{       4,          -1, DTYPE_NONE,      Q_LTBANNER,  100,    SL_NONE,         true,               TEXT_BANNER2,  "Ogden's Sign"             },
-	{       7,          -1, DTYPE_NONE,      Q_BLIND,     100,    SL_NONE,         true,               TEXT_BLINDING, "Halls of the Blind"       },
-	{       5,          -1, DTYPE_NONE,      Q_BLOOD,     100,    SL_NONE,         true,               TEXT_BLOODY,   "Valor"                    },
-	{      10,          -1, DTYPE_NONE,      Q_ANVIL,     100,    SL_NONE,         true,               TEXT_ANVIL5,   "Anvil of Fury"            },
-	{      13,          -1, DTYPE_NONE,      Q_WARLORD,   100,    SL_NONE,         true,               TEXT_BLOODWAR, "Warlord of Blood"         },
-	{       3,           3, DTYPE_CATHEDRAL, Q_SKELKING,  100,    SL_SKELKING,     false,              TEXT_KING2,    "The Curse of King Leoric" },
-	{       2,          -1, DTYPE_CAVES,     Q_PWATER,    100,    SL_POISONWATER,  true,               TEXT_POISON3,  "Poisoned Water Supply"    },
-	{       6,          -1, DTYPE_CATACOMBS, Q_SCHAMB,    100,    SL_BONECHAMB,    true,               TEXT_BONER,    "The Chamber of Bone"      },
-	{      15,          15, DTYPE_CATHEDRAL, Q_BETRAYER,  100,    SL_VILEBETRAYER, false,              TEXT_VILE1,    "Archbishop Lazarus"       },
-	{      17,          17, DTYPE_NONE,      Q_GRAVE,     100,    SL_NONE,         false,              TEXT_GRAVE7,   "Grave Matters"            },
-	{      9,            9, DTYPE_NONE,      Q_FARMER,    100,    SL_NONE,         false,              TEXT_FARMER1,  "Farmer's Orchard"         },
-	{      17,          -1, DTYPE_NONE,      Q_GIRL,      100,    SL_NONE,         true,               TEXT_GIRL2,    "Little Girl"              },
-	{      19,          -1, DTYPE_NONE,      Q_TRADER,    100,    SL_NONE,         true,               TEXT_TRADER,   "Wandering Trader"         },
-	{      17,          17, DTYPE_NONE,      Q_DEFILER,   100,    SL_NONE,         false,              TEXT_DEFILER1, "The Defiler"              },
-	{      21,          21, DTYPE_NONE,      Q_NAKRUL,    100,    SL_NONE,         false,              TEXT_NAKRUL1,  "Na-Krul"                  },
-	{      21,          -1, DTYPE_NONE,      Q_CORNSTN,   100,    SL_NONE,         true,               TEXT_CORNSTN,  "Cornerstone of the World" },
-	{       9,           9, DTYPE_NONE,      Q_JERSEY,    100,    SL_NONE,         false,              TEXT_JERSEY4,  "The Jersey's Jersey"      },
+	{       5,          -1, DTYPE_NONE,      Q_ROCK,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_("The Magic Rock")           },
+	{       9,          -1, DTYPE_NONE,      Q_MUSHROOM,  100,    SL_NONE,         true,               TEXT_MUSH8,    N_("Black Mushroom")           },
+	{       4,          -1, DTYPE_NONE,      Q_GARBUD,    100,    SL_NONE,         true,               TEXT_GARBUD1,  N_("Gharbad The Weak")         },
+	{       8,          -1, DTYPE_NONE,      Q_ZHAR,      100,    SL_NONE,         true,               TEXT_ZHAR1,    N_("Zhar the Mad")             },
+	{      14,          -1, DTYPE_NONE,      Q_VEIL,      100,    SL_NONE,         true,               TEXT_VEIL9,    N_("Lachdanan")                },
+	{      15,          -1, DTYPE_NONE,      Q_DIABLO,    100,    SL_NONE,         false,              TEXT_VILE3,    N_("Diablo")                   },
+	{       2,           2, DTYPE_NONE,      Q_BUTCHER,   100,    SL_NONE,         false,              TEXT_BUTCH9,   N_("The Butcher")              },
+	{       4,          -1, DTYPE_NONE,      Q_LTBANNER,  100,    SL_NONE,         true,               TEXT_BANNER2,  N_("Ogden's Sign")             },
+	{       7,          -1, DTYPE_NONE,      Q_BLIND,     100,    SL_NONE,         true,               TEXT_BLINDING, N_("Halls of the Blind")       },
+	{       5,          -1, DTYPE_NONE,      Q_BLOOD,     100,    SL_NONE,         true,               TEXT_BLOODY,   N_("Valor")                    },
+	{      10,          -1, DTYPE_NONE,      Q_ANVIL,     100,    SL_NONE,         true,               TEXT_ANVIL5,   N_("Anvil of Fury")            },
+	{      13,          -1, DTYPE_NONE,      Q_WARLORD,   100,    SL_NONE,         true,               TEXT_BLOODWAR, N_("Warlord of Blood")         },
+	{       3,           3, DTYPE_CATHEDRAL, Q_SKELKING,  100,    SL_SKELKING,     false,              TEXT_KING2,    N_("The Curse of King Leoric") },
+	{       2,          -1, DTYPE_CAVES,     Q_PWATER,    100,    SL_POISONWATER,  true,               TEXT_POISON3,  N_("Poisoned Water Supply")    },
+	{       6,          -1, DTYPE_CATACOMBS, Q_SCHAMB,    100,    SL_BONECHAMB,    true,               TEXT_BONER,    N_("The Chamber of Bone")      },
+	{      15,          15, DTYPE_CATHEDRAL, Q_BETRAYER,  100,    SL_VILEBETRAYER, false,              TEXT_VILE1,    N_("Archbishop Lazarus")       },
+	{      17,          17, DTYPE_NONE,      Q_GRAVE,     100,    SL_NONE,         false,              TEXT_GRAVE7,   N_("Grave Matters")            },
+	{      9,            9, DTYPE_NONE,      Q_FARMER,    100,    SL_NONE,         false,              TEXT_FARMER1,  N_("Farmer's Orchard")         },
+	{      17,          -1, DTYPE_NONE,      Q_GIRL,      100,    SL_NONE,         true,               TEXT_GIRL2,    N_("Little Girl")              },
+	{      19,          -1, DTYPE_NONE,      Q_TRADER,    100,    SL_NONE,         true,               TEXT_TRADER,   N_("Wandering Trader")         },
+	{      17,          17, DTYPE_NONE,      Q_DEFILER,   100,    SL_NONE,         false,              TEXT_DEFILER1, N_("The Defiler")              },
+	{      21,          21, DTYPE_NONE,      Q_NAKRUL,    100,    SL_NONE,         false,              TEXT_NAKRUL1,  N_("Na-Krul")                  },
+	{      21,          -1, DTYPE_NONE,      Q_CORNSTN,   100,    SL_NONE,         true,               TEXT_CORNSTN,  N_("Cornerstone of the World") },
+	{       9,           9, DTYPE_NONE,      Q_JERSEY,    100,    SL_NONE,         false,              TEXT_JERSEY4,  N_("The Jersey's Jersey")      },
 	// clang-format on
 };
 /**
@@ -72,11 +73,11 @@ char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
  */
 char questyoff[7] = { 0, 0, -1, -1, -1, -2, -2 };
 const char *const questtrigstr[5] = {
-	"King Leoric's Tomb",
-	"The Chamber of Bone",
-	"Maze",
-	"A Dark Passage",
-	"Unholy Altar"
+	N_("King Leoric's Tomb"),
+	N_("The Chamber of Bone"),
+	N_("Maze"),
+	N_("A Dark Passage"),
+	N_("Unholy Altar")
 };
 /**
  * A quest group containing the three quests the Butcher,
@@ -280,7 +281,7 @@ bool ForceQuests()
 
 			for (j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
-					sprintf(infostr, "To %s", questtrigstr[ql]);
+					sprintf(infostr, _("To %s"), questtrigstr[ql]);
 					cursmx = qx;
 					cursmy = qy;
 					return true;
@@ -762,14 +763,14 @@ void DrawQuestLog(const CelOutputBuffer &out)
 {
 	int y, i;
 
-	PrintQLString(out, 0, 2, true, "Quest Log", COL_GOLD);
+	PrintQLString(out, 0, 2, true, _("Quest Log"), COL_GOLD);
 	CelDrawTo(out, 0, 351, pQLogCel, 1, SPANEL_WIDTH);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
 		PrintQLString(out, 0, y, true, questlist[qlist[i]]._qlstr, COL_WHITE);
 		y += 2;
 	}
-	PrintQLString(out, 0, 22, true, "Close Quest Log", COL_WHITE);
+	PrintQLString(out, 0, 22, true, _("Close Quest Log"), COL_WHITE);
 }
 
 void StartQuestlog()

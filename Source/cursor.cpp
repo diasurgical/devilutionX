@@ -13,6 +13,7 @@
 #include "towners.h"
 #include "track.h"
 #include "trigs.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -177,8 +178,8 @@ void CheckTown()
 			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, "Town Portal");
-				sprintf(tempstr, "from %s", plr[missile[mx]._misource]._pName);
+				strcpy(infostr, _("Town Portal"));
+				sprintf(tempstr, _("from %s"), plr[missile[mx]._misource]._pName);
 				AddPanelString(tempstr, true);
 				cursmx = missile[mx].position.tile.x;
 				cursmy = missile[mx].position.tile.y;
@@ -203,11 +204,11 @@ void CheckRportal()
 			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, "Portal to");
+				strcpy(infostr, _("Portal to"));
 				if (!setlevel)
-					strcpy(tempstr, "The Unholy Altar");
+					strcpy(tempstr, _("The Unholy Altar"));
 				else
-					strcpy(tempstr, "level 15");
+					strcpy(tempstr, _("level 15"));
 				AddPanelString(tempstr, true);
 				cursmx = missile[mx].position.tile.x;
 				cursmy = missile[mx].position.tile.y;

@@ -10,6 +10,7 @@
 #include "plrmsg.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -2116,7 +2117,7 @@ char CheckInvHLight()
 
 	if (pi->_itype == ITYPE_GOLD) {
 		nGold = pi->_ivalue;
-		sprintf(infostr, "%i gold %s", nGold, get_pieces_str(nGold));
+		sprintf(infostr, _("%i gold %s"), nGold, get_pieces_str(nGold));
 	} else {
 		if (pi->_iMagical == ITEM_QUALITY_MAGIC) {
 			infoclr = COL_BLUE;

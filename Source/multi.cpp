@@ -18,6 +18,7 @@
 #include "storm/storm.h"
 #include "sync.h"
 #include "tmsg.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -265,14 +266,14 @@ static void multi_player_left_msg(int pnum, bool left)
 		delta_close_portal(pnum);
 		RemovePlrMissiles(pnum);
 		if (left) {
-			pszFmt = "Player '%s' just left the game";
+			pszFmt = _("Player '%s' just left the game");
 			switch (sgdwPlayerLeftReasonTbl[pnum]) {
 			case LEAVE_ENDING:
-				pszFmt = "Player '%s' killed Diablo and left the game!";
+				pszFmt = _("Player '%s' killed Diablo and left the game!");
 				gbSomebodyWonGameKludge = true;
 				break;
 			case LEAVE_DROP:
-				pszFmt = "Player '%s' dropped due to timeout";
+				pszFmt = _("Player '%s' dropped due to timeout");
 				break;
 			}
 			EventPlrMsg(pszFmt, plr[pnum]._pName);
@@ -862,9 +863,9 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	gbActivePlayers++;
 
 	if (sgbPlayerTurnBitTbl[pnum]) {
-		szEvent = "Player '%s' (level %d) just joined the game";
+		szEvent = _("Player '%s' (level %d) just joined the game");
 	} else {
-		szEvent = "Player '%s' (level %d) is already in the game";
+		szEvent = _("Player '%s' (level %d) is already in the game");
 	}
 	EventPlrMsg(szEvent, plr[pnum]._pName, plr[pnum]._pLevel);
 

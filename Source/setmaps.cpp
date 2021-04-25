@@ -13,6 +13,7 @@
 #include "palette.h"
 #include "quests.h"
 #include "trigs.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -73,11 +74,11 @@ BYTE SkelChamTrans3[] = {
 /** Maps from quest level to quest level names. */
 const char *const quest_level_names[] = {
 	"",
-	"Skeleton King's Lair",
-	"Chamber of Bone",
-	"Maze",
-	"Poisoned Water Supply",
-	"Archbishop Lazarus' Lair",
+	N_("Skeleton King's Lair"),
+	N_("Chamber of Bone"),
+	N_("Maze"),
+	N_("Poisoned Water Supply"),
+	N_("Archbishop Lazarus' Lair"),
 };
 
 int ObjIndex(int x, int y)

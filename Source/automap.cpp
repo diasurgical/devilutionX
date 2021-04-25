@@ -14,6 +14,7 @@
 #include "palette.h"
 #include "player.h"
 #include "setmaps.h"
+#include "utils/language.h"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -430,11 +431,11 @@ void DrawAutomapText(const CelOutputBuffer &out)
 	} else if (currlevel != 0) {
 		if (currlevel < 17 || currlevel > 20) {
 			if (currlevel < 21 || currlevel > 24)
-				sprintf(desc, "Level: %i", currlevel);
+				sprintf(desc, _("Level: %i"), currlevel);
 			else
-				sprintf(desc, "Level: Crypt %i", currlevel - 20);
+				sprintf(desc, _("Level: Crypt %i"), currlevel - 20);
 		} else {
-			sprintf(desc, "Level: Nest %i", currlevel - 16);
+			sprintf(desc, _("Level: Nest %i"), currlevel - 16);
 		}
 		PrintGameStr(out, 8, nextline, desc, COL_GOLD);
 	}

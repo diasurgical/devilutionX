@@ -22,6 +22,7 @@
 #include "stores.h"
 #include "storm/storm.h"
 #include "towners.h"
+#include "utils/language.h"
 #include "utils/log.hpp"
 
 namespace devilution {
@@ -1892,7 +1893,7 @@ StartPlayerKill(int pnum, int earflag)
 				if (earflag != -1) {
 					if (earflag != 0) {
 						SetPlrHandItem(&ear, IDI_EAR);
-						sprintf(ear._iName, "Ear of %s", plr[pnum]._pName);
+						sprintf(ear._iName, _("Ear of %s"), plr[pnum]._pName);
 						if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 							ear._iCurs = ICURS_EAR_SORCERER;
 						} else if (plr[pnum]._pClass == HeroClass::Warrior) {
