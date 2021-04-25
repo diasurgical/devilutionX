@@ -50,22 +50,22 @@ enum inv_xy_slot : uint8_t {
 	SLOTXY_CHEST_LAST       = 24,
 
 	// regular inventory
-	SLOTXY_INV_FIRST = 25,
-	SLOTXY_INV_LAST  = 64,
+	SLOTXY_INV_FIRST        = 25,
+	SLOTXY_INV_LAST         = 64,
 
 	// belt items
-	SLOTXY_BELT_FIRST = 65,
-	SLOTXY_BELT_LAST  = 72,
-	NUM_XY_SLOTS      = 73
+	SLOTXY_BELT_FIRST       = 65,
+	SLOTXY_BELT_LAST        = 72,
+	NUM_XY_SLOTS            = 73
 	// clang-format on
 };
 
 enum item_color : uint8_t {
 	// clang-format off
 	ICOL_YELLOW = PAL16_YELLOW + 5,
-	ICOL_WHITE  = PAL16_GRAY + 5,
-	ICOL_BLUE   = PAL16_BLUE + 5,
-	ICOL_RED    = PAL16_RED + 5,
+	ICOL_WHITE  = PAL16_GRAY   + 5,
+	ICOL_BLUE   = PAL16_BLUE   + 5,
+	ICOL_RED    = PAL16_RED    + 5,
 	// clang-format on
 };
 

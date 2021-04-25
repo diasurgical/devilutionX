@@ -88,7 +88,7 @@ enum player_graphic : uint16_t {
 	PFILE_BLOCK     = 1 << 8,
 	// everything except PFILE_DEATH
 	// 0b1_0111_1111
-	PFILE_NONDEATH = 0x17F
+	PFILE_NONDEATH  = 0x17F
 	// clang-format on
 };
 
