@@ -90,8 +90,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      # Work around https://github.com/devkitPro/docker/issues/16
-      - run: ln -s /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-pkg-config /opt/devkitpro/devkitA64/bin/
       - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update && apt-get install -y -t 'stretch-backports*' cmake
