@@ -205,7 +205,7 @@ const TextDataStruct alltext[] = {
 	    true, TSFX_BMAID13 },
 	{ N_("The armor known as Valor could be what tips the scales in your favor. I will tell you that many have looked for it - including myself. Arkaine hid it well, my friend, and it will take more than a bit of luck to unlock the secrets that have kept it concealed oh, lo these many years. |"),
 	    true, TSFX_SMITH14 },
-	{ N_("Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz... |"), true, TSFX_DRUNK15 },
+	{ "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz... |", true, TSFX_DRUNK15 },
 	{ N_("Should you find these Stones of Blood, use them carefully. \n \nThe way is fraught with danger and your only hope rests within your self trust. |"),
 	    true, TSFX_WITCH15 },
 	{ N_("You intend to find the armor known as Valor? \n \nNo one has ever figured out where Arkaine stashed the stuff, and if my contacts couldn't find it, I seriously doubt you ever will either. |"),
