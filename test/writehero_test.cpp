@@ -292,10 +292,10 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(pPlayer->_pmode, 0);
 	ASSERT_EQ(Count8(pPlayer->walkpath, MAX_PATH_LENGTH), 25);
 	ASSERT_EQ(pPlayer->_pgfxnum, 36);
-	ASSERT_EQ(pPlayer->AnimInfo._pAnimDelay, 3);
-	ASSERT_EQ(pPlayer->AnimInfo._pAnimCnt, 1);
-	ASSERT_EQ(pPlayer->AnimInfo._pAnimLen, 20);
-	ASSERT_EQ(pPlayer->AnimInfo._pAnimFrame, 1);
+	ASSERT_EQ(pPlayer->AnimInfo.DelayLen, 3);
+	ASSERT_EQ(pPlayer->AnimInfo.DelayCounter, 1);
+	ASSERT_EQ(pPlayer->AnimInfo.FrameLen, 20);
+	ASSERT_EQ(pPlayer->AnimInfo.CurrentFrame, 1);
 	ASSERT_EQ(pPlayer->_pAnimWidth, 96);
 	ASSERT_EQ(pPlayer->_pSpell, -1);
 	ASSERT_EQ(pPlayer->_pSplType, 4);

@@ -17,35 +17,35 @@ public:
 	/*
 	* @brief Pointer to Animation Data
 	*/
-	uint8_t *_pAnimData;
+	uint8_t *pData;
 	/*
 	* @brief Additional delay of each animation in the current animation
 	*/
-	int _pAnimDelay;
+	int DelayLen;
 	/*
-	* @brief Increases by one each game tick, counting how close we are to _pAnimDelay
+	* @brief Increases by one each game tick, counting how close we are to DelayLen
 	*/
-	int _pAnimCnt;
+	int DelayCounter;
 	/*
 	* @brief Number of frames in current animation
 	*/
-	int _pAnimLen;
+	int FrameLen;
 	/*
 	* @brief Current frame of animation
 	*/
-	int _pAnimFrame;
+	int CurrentFrame;
 	/*
 	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
 	*/
-	float _pAnimGameTickModifier;
+	float GameTickModifier;
 	/*
 	* @brief Number of GameTicks after the current animation sequence started
 	*/
-	int _pAnimGameTicksSinceSequenceStarted;
+	int GameTicksSinceSequenceStarted;
 	/*
 	* @brief Animation Frames that will be adjusted for the skipped Frames/GameTicks
 	*/
-	int _pAnimRelevantAnimationFramesForDistributing;
+	int RelevantFramesForDistributing;
 };
 
 } // namespace devilution

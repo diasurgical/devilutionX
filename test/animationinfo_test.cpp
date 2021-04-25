@@ -62,10 +62,10 @@ void RunAnimationTest(int numFrames, int delay, AnimationDistributionParams para
 		if (gameTickData != nullptr) {
 			currentGameTick += 1;
 			if (gameTickData->_FramesToSkip != 0)
-				pPlayer->AnimInfo._pAnimFrame += gameTickData->_FramesToSkip;
+				pPlayer->AnimInfo.CurrentFrame += gameTickData->_FramesToSkip;
 			ProcessPlayerAnimation(pnum);
-			EXPECT_EQ(pPlayer->AnimInfo._pAnimFrame, gameTickData->_ExpectedAnimationFrame);
-			EXPECT_EQ(pPlayer->AnimInfo._pAnimCnt, gameTickData->_ExpectedAnimationCnt);
+			EXPECT_EQ(pPlayer->AnimInfo.CurrentFrame, gameTickData->_ExpectedAnimationFrame);
+			EXPECT_EQ(pPlayer->AnimInfo.DelayCounter, gameTickData->_ExpectedAnimationCnt);
 		}
 
 		auto renderingData = dynamic_cast<RenderingData *>(x);
@@ -74,8 +74,8 @@ void RunAnimationTest(int numFrames, int delay, AnimationDistributionParams para
 			EXPECT_EQ(GetFrameToUseForPlayerRendering(pPlayer), renderingData->_ExpectedRenderingFrame)
 			    << std::fixed << std::setprecision(2)
 			    << "ProgressToNextGameTick: " << renderingData->_fProgressToNextGameTick
-			    << " AnimFrame: " << pPlayer->AnimInfo._pAnimFrame
-			    << " AnimCnt: " << pPlayer->AnimInfo._pAnimCnt
+			    << " CurrentFrame: " << pPlayer->AnimInfo.CurrentFrame
+			    << " DelayCounter: " << pPlayer->AnimInfo.DelayCounter
 			    << " GameTick: " << currentGameTick;
 		}
 	}
@@ -142,7 +142,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	        new RenderingData(0.6f, 15),
 	        new GameTickData(16, 0),
 	        new RenderingData(0.6f, 16),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum]._pAnimFrame == plr[pnum]._pAFrames) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames) {"
 	    });
 }
 
@@ -194,7 +194,7 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 	        new RenderingData(0.6f, 15),
 	        new GameTickData(16, 0),
 	        new RenderingData(0.6f, 16),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum]._pAnimFrame == plr[pnum]._pAFrames) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames) {"
 	    });
 }
 
@@ -221,7 +221,7 @@ TEST(AnimationInfo, BlockingWarriorNormal) // Ignored delay for last Frame shoul
 	        new RenderingData(0.3f, 2),
 	        new RenderingData(0.6f, 2),
 	        new RenderingData(0.8f, 2),
-	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum]._pAnimFrame >= plr[pnum]._pBFrames) {"
+	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pBFrames) {"
 	    });
 }
 
@@ -248,7 +248,7 @@ TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored
 	        new RenderingData(0.3f, 5),
 	        new RenderingData(0.6f, 6),
 	        new RenderingData(0.8f, 6),
-	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum]._pAnimFrame >= plr[pnum]._pBFrames) {"
+	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pBFrames) {"
 	    });
 }
 
@@ -275,7 +275,7 @@ TEST(AnimationInfo, HitRecoverySorcererZenMode) // Skipped frames and ignored de
 	        new RenderingData(0.3f, 7),
 	        new RenderingData(0.6f, 8),
 	        new RenderingData(0.8f, 8),
-	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {"
+	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pHFrames) {"
 	    });
 }
 TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here
