@@ -13,6 +13,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "sound.h"
+#include "utils/language.h"
 
 namespace devilution {
 namespace {
@@ -34,11 +35,11 @@ void gamemenu_speed(bool bActivate);
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
 //	  dwFlags,       pszStr,         fnMenu
-	{ GMENU_ENABLED, "Save Game",     &gamemenu_save_game  },
-	{ GMENU_ENABLED, "Options",       &gamemenu_options    },
-	{ GMENU_ENABLED, "New Game",      &gamemenu_new_game   },
-	{ GMENU_ENABLED, "Load Game",     &gamemenu_load_game  },
-	{ GMENU_ENABLED, "Quit Game",     &gamemenu_quit_game  },
+	{ GMENU_ENABLED, N_("Save Game"),     &gamemenu_save_game  },
+	{ GMENU_ENABLED, N_("Options"),       &gamemenu_options    },
+	{ GMENU_ENABLED, N_("New Game"),      &gamemenu_new_game   },
+	{ GMENU_ENABLED, N_("Load Game"),     &gamemenu_load_game  },
+	{ GMENU_ENABLED, N_("Quit Game"),     &gamemenu_quit_game  },
 	{ GMENU_ENABLED, nullptr,            nullptr }
 	// clang-format on
 };
@@ -46,10 +47,10 @@ TMenuItem sgSingleMenu[] = {
 TMenuItem sgMultiMenu[] = {
 	// clang-format off
 //	  dwFlags,       pszStr,            fnMenu
-	{ GMENU_ENABLED, "Options",         &gamemenu_options      },
-	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
-	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
-	{ GMENU_ENABLED, "Quit Game",       &gamemenu_quit_game    },
+	{ GMENU_ENABLED, N_("Options"),         &gamemenu_options      },
+	{ GMENU_ENABLED, N_("New Game"),        &gamemenu_new_game     },
+	{ GMENU_ENABLED, N_("Restart In Town"), &gamemenu_restart_town },
+	{ GMENU_ENABLED, N_("Quit Game"),       &gamemenu_quit_game    },
 	{ GMENU_ENABLED, nullptr,              nullptr                   },
 	// clang-format on
 };
@@ -58,21 +59,21 @@ TMenuItem sgOptionsMenu[] = {
 //	  dwFlags,                      pszStr,          fnMenu
 	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,            &gamemenu_music_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,            &gamemenu_sound_volume  },
-	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
-	{ GMENU_ENABLED | GMENU_SLIDER, "Speed",         &gamemenu_speed         },
-	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous      },
+	{ GMENU_ENABLED | GMENU_SLIDER, N_("Gamma"),         &gamemenu_gamma         },
+	{ GMENU_ENABLED | GMENU_SLIDER, N_("Speed"),         &gamemenu_speed         },
+	{ GMENU_ENABLED               , N_("Previous Menu"), &gamemenu_previous      },
 	{ GMENU_ENABLED               , nullptr,            nullptr                    },
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
 const char *const music_toggle_names[] = {
-	"Music",
-	"Music Disabled",
+	N_("Music"),
+	N_("Music Disabled"),
 };
 /** Specifies the menu names for sound enabled and disabled. */
 const char *const sound_toggle_names[] = {
-	"Sound",
-	"Sound Disabled",
+	N_("Sound"),
+	N_("Sound Disabled"),
 };
 
 void gamemenu_update_single()
@@ -180,14 +181,14 @@ void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item,
 {
 	if (gbSndInited) {
 		menu_item->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
-		menu_item->pszStr = *names;
+		menu_item->pszStr = _(names[0]);
 		gmenu_slider_steps(menu_item, 17);
 		gmenu_slider_set(menu_item, VOLUME_MIN, VOLUME_MAX, volume);
 		return;
 	}
 
 	menu_item->dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
-	menu_item->pszStr = names[1];
+	menu_item->pszStr = _(names[1]);
 }
 
 static int gamemenu_slider_music_sound(TMenuItem *menu_item)
@@ -216,19 +217,19 @@ void gamemenu_get_speed()
 	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 		if (sgGameInitInfo.nTickRate >= 50)
-			sgOptionsMenu[3].pszStr = "Speed: Fastest";
+			sgOptionsMenu[3].pszStr = _("Speed: Fastest");
 		else if (sgGameInitInfo.nTickRate >= 40)
-			sgOptionsMenu[3].pszStr = "Speed: Faster";
+			sgOptionsMenu[3].pszStr = _("Speed: Faster");
 		else if (sgGameInitInfo.nTickRate >= 30)
-			sgOptionsMenu[3].pszStr = "Speed: Fast";
+			sgOptionsMenu[3].pszStr = _("Speed: Fast");
 		else if (sgGameInitInfo.nTickRate == 20)
-			sgOptionsMenu[3].pszStr = "Speed: Normal";
+			sgOptionsMenu[3].pszStr = _("Speed: Normal");
 		return;
 	}
 
 	sgOptionsMenu[3].dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
 
-	sgOptionsMenu[3].pszStr = "Speed";
+	sgOptionsMenu[3].pszStr = _("Speed");
 	gmenu_slider_steps(&sgOptionsMenu[3], 46);
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 }

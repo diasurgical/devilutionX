@@ -10,6 +10,7 @@
 #include "controls/controller_motion.h"
 #include "stores.h"
 #include "utils/ui_fwd.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -73,7 +74,7 @@ void gmenu_draw_pause(const CelOutputBuffer &out)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		light_table_index = 0;
-		gmenu_print_text(out, 252 + PANEL_LEFT, 176, "Pause");
+		gmenu_print_text(out, 252 + PANEL_LEFT, 176, _("Pause"));
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "dx.h"
 #include "palette.h"
 #include "utils/display.h"
+#include "utils/language.h"
 
 namespace devilution {
 namespace {
@@ -42,7 +43,7 @@ void ProgressLoad(const char *msg)
 		msgShadow = TTF_RenderUTF8_Solid(font, msg, black);
 	}
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-	vecProgress.push_back(new UiButton(&SmlButton, "Cancel", &DialogActionCancel, rect3, 0));
+	vecProgress.push_back(new UiButton(&SmlButton, _("Cancel"), &DialogActionCancel, rect3, 0));
 }
 
 void ProgressFree()

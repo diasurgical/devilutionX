@@ -12,6 +12,7 @@
 #include "minitext.h"
 #include "options.h"
 #include "towners.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -160,14 +161,14 @@ void PrintStoreItem(ItemStruct *x, int l, text_color iclr)
 		if (x->_iSufPower != -1) {
 			PrintItemPower(x->_iSufPower, x);
 			if (sstr[0])
-				strcat(sstr, ",  ");
+				strcat(sstr, _(",  "));
 			strcat(sstr, tempstr);
 		}
 	}
 	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
-		sprintf(tempstr, "Charges: %i/%i", x->_iCharges, x->_iMaxCharges);
+		sprintf(tempstr, _("Charges: %i/%i"), x->_iCharges, x->_iMaxCharges);
 		if (sstr[0])
-			strcat(sstr, ",  ");
+			strcat(sstr, _(",  "));
 		strcat(sstr, tempstr);
 	}
 	if (sstr[0]) {
@@ -176,14 +177,14 @@ void PrintStoreItem(ItemStruct *x, int l, text_color iclr)
 	}
 	sstr[0] = '\0';
 	if (x->_iClass == ICLASS_WEAPON)
-		sprintf(sstr, "Damage: %i-%i  ", x->_iMinDam, x->_iMaxDam);
+		sprintf(sstr, _("Damage: %i-%i  "), x->_iMinDam, x->_iMaxDam);
 	if (x->_iClass == ICLASS_ARMOR)
-		sprintf(sstr, "Armor: %i  ", x->_iAC);
+		sprintf(sstr, _("Armor: %i  "), x->_iAC);
 	if (x->_iMaxDur != DUR_INDESTRUCTIBLE && x->_iMaxDur) {
-		sprintf(tempstr, "Dur: %i/%i,  ", x->_iDurability, x->_iMaxDur);
+		sprintf(tempstr, _("Dur: %i/%i,  "), x->_iDurability, x->_iMaxDur);
 		strcat(sstr, tempstr);
 	} else {
-		strcat(sstr, "Indestructible,  ");
+		strcat(sstr, _("Indestructible,  "));
 	}
 	if (x->_itype == ITYPE_MISC)
 		sstr[0] = '\0';
@@ -191,15 +192,15 @@ void PrintStoreItem(ItemStruct *x, int l, text_color iclr)
 	mag = x->_iMinMag;
 	dex = x->_iMinDex;
 	if (str == 0 && mag == 0 && dex == 0) {
-		strcat(sstr, "No required attributes");
+		strcat(sstr, _("No required attributes"));
 	} else {
-		strcpy(tempstr, "Required:");
+		strcpy(tempstr, _("Required:"));
 		if (str)
-			sprintf(tempstr + strlen(tempstr), " %i Str", str);
+			sprintf(tempstr + strlen(tempstr), _(" %i Str"), str);
 		if (mag)
-			sprintf(tempstr + strlen(tempstr), " %i Mag", mag);
+			sprintf(tempstr + strlen(tempstr), _(" %i Mag"), mag);
 		if (dex)
-			sprintf(tempstr + strlen(tempstr), " %i Dex", dex);
+			sprintf(tempstr + strlen(tempstr), _(" %i Dex"), dex);
 		strcat(sstr, tempstr);
 	}
 	AddSText(40, l++, false, sstr, iclr, false);
@@ -221,15 +222,15 @@ void S_StartSmith()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 1, true, "Welcome to the", COL_GOLD, false);
-	AddSText(0, 3, true, "Blacksmith's shop", COL_GOLD, false);
-	AddSText(0, 7, true, "Would you like to:", COL_GOLD, false);
-	AddSText(0, 10, true, "Talk to Griswold", COL_BLUE, true);
-	AddSText(0, 12, true, "Buy basic items", COL_WHITE, true);
-	AddSText(0, 14, true, "Buy premium items", COL_WHITE, true);
-	AddSText(0, 16, true, "Sell items", COL_WHITE, true);
-	AddSText(0, 18, true, "Repair items", COL_WHITE, true);
-	AddSText(0, 20, true, "Leave the shop", COL_WHITE, true);
+	AddSText(0, 1, true, _("Welcome to the"), COL_GOLD, false);
+	AddSText(0, 3, true, _("Blacksmith's shop"), COL_GOLD, false);
+	AddSText(0, 7, true, _("Would you like to:"), COL_GOLD, false);
+	AddSText(0, 10, true, _("Talk to Griswold"), COL_BLUE, true);
+	AddSText(0, 12, true, _("Buy basic items"), COL_WHITE, true);
+	AddSText(0, 14, true, _("Buy premium items"), COL_WHITE, true);
+	AddSText(0, 16, true, _("Sell items"), COL_WHITE, true);
+	AddSText(0, 18, true, _("Repair items"), COL_WHITE, true);
+	AddSText(0, 20, true, _("Leave the shop"), COL_WHITE, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -270,12 +271,12 @@ void S_StartSBuy()
 	stextsize = true;
 	stextscrl = true;
 	stextsval = 0;
-	sprintf(tempstr, "I have these items for sale:             Your gold: %i", plr[myplr]._pGold);
+	sprintf(tempstr, _("I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, true, tempstr, COL_GOLD, false);
 	AddSLine(3);
 	AddSLine(21);
 	S_ScrollSBuy(stextsval);
-	AddSText(0, 22, true, "Back", COL_WHITE, false);
+	AddSText(0, 22, true, _("Back"), COL_WHITE, false);
 	OffsetSTextY(22, 6);
 	storenumh = 0;
 	for (i = 0; !smithitem[i].isEmpty(); i++) {
@@ -335,11 +336,11 @@ bool S_StartSPBuy()
 	stextscrl = true;
 	stextsval = 0;
 
-	sprintf(tempstr, "I have these premium items for sale:     Your gold: %i", plr[myplr]._pGold);
+	sprintf(tempstr, _("I have these premium items for sale:     Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, true, tempstr, COL_GOLD, false);
 	AddSLine(3);
 	AddSLine(21);
-	AddSText(0, 22, true, "Back", COL_WHITE, false);
+	AddSText(0, 22, true, _("Back"), COL_WHITE, false);
 	OffsetSTextY(22, 6);
 
 	stextsmax = storenumh - 4;
@@ -463,22 +464,22 @@ void S_StartSSell()
 
 	if (!sellok) {
 		stextscrl = false;
-		sprintf(tempstr, "You have nothing I want.             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("You have nothing I want.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 	} else {
 		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
-		sprintf(tempstr, "Which item is for sale?             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("Which item is for sale?             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
 		S_ScrollSSell(stextsval);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 	}
 }
@@ -533,11 +534,11 @@ void S_StartSRepair()
 	}
 	if (!repairok) {
 		stextscrl = false;
-		sprintf(tempstr, "You have nothing to repair.             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("You have nothing to repair.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 		return;
 	}
@@ -545,12 +546,12 @@ void S_StartSRepair()
 	stextscrl = true;
 	stextsval = 0;
 	stextsmax = plr[myplr]._pNumInv;
-	sprintf(tempstr, "Repair which item?             Your gold: %i", plr[myplr]._pGold);
+	sprintf(tempstr, _("Repair which item?             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, true, tempstr, COL_GOLD, false);
 	AddSLine(3);
 	AddSLine(21);
 	S_ScrollSSell(stextsval);
-	AddSText(0, 22, true, "Back", COL_WHITE, true);
+	AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 	OffsetSTextY(22, 6);
 }
 
@@ -571,13 +572,13 @@ void S_StartWitch()
 	FillManaPlayer();
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, true, "Witch's shack", COL_GOLD, false);
-	AddSText(0, 9, true, "Would you like to:", COL_GOLD, false);
-	AddSText(0, 12, true, "Talk to Adria", COL_BLUE, true);
-	AddSText(0, 14, true, "Buy items", COL_WHITE, true);
-	AddSText(0, 16, true, "Sell items", COL_WHITE, true);
-	AddSText(0, 18, true, "Recharge staves", COL_WHITE, true);
-	AddSText(0, 20, true, "Leave the shack", COL_WHITE, true);
+	AddSText(0, 2, true, _("Witch's shack"), COL_GOLD, false);
+	AddSText(0, 9, true, _("Would you like to:"), COL_GOLD, false);
+	AddSText(0, 12, true, _("Talk to Adria"), COL_BLUE, true);
+	AddSText(0, 14, true, _("Buy items"), COL_WHITE, true);
+	AddSText(0, 16, true, _("Sell items"), COL_WHITE, true);
+	AddSText(0, 18, true, _("Recharge staves"), COL_WHITE, true);
+	AddSText(0, 20, true, _("Leave the shack"), COL_WHITE, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -619,12 +620,12 @@ void S_StartWBuy()
 	stextscrl = true;
 	stextsval = 0;
 	stextsmax = 20;
-	sprintf(tempstr, "I have these items for sale:             Your gold: %i", plr[myplr]._pGold);
+	sprintf(tempstr, _("I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, true, tempstr, COL_GOLD, false);
 	AddSLine(3);
 	AddSLine(21);
 	S_ScrollWBuy(stextsval);
-	AddSText(0, 22, true, "Back", COL_WHITE, false);
+	AddSText(0, 22, true, _("Back"), COL_WHITE, false);
 	OffsetSTextY(22, 6);
 
 	storenumh = 0;
@@ -713,22 +714,22 @@ void S_StartWSell()
 
 	if (!sellok) {
 		stextscrl = false;
-		sprintf(tempstr, "You have nothing I want.             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("You have nothing I want.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 	} else {
 		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
-		sprintf(tempstr, "Which item is for sale?             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("Which item is for sale?             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
 		S_ScrollSSell(stextsval);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 	}
 }
@@ -789,22 +790,22 @@ void S_StartWRecharge()
 
 	if (!rechargeok) {
 		stextscrl = false;
-		sprintf(tempstr, "You have nothing to recharge.             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("You have nothing to recharge.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 	} else {
 		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
-		sprintf(tempstr, "Recharge which item?             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("Recharge which item?             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
 		S_ScrollSSell(stextsval);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 	}
 }
@@ -815,7 +816,7 @@ void S_StartNoMoney()
 	stextscrl = false;
 	stextsize = true;
 	ClearSText(5, 23);
-	AddSText(0, 14, true, "You do not have enough gold", COL_WHITE, true);
+	AddSText(0, 14, true, _("You do not have enough gold"), COL_WHITE, true);
 }
 
 void S_StartNoRoom()
@@ -823,7 +824,7 @@ void S_StartNoRoom()
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-	AddSText(0, 14, true, "You do not have enough room in inventory", COL_WHITE, true);
+	AddSText(0, 14, true, _("You do not have enough room in inventory"), COL_WHITE, true);
 }
 
 void S_StartConfirm()
@@ -859,51 +860,51 @@ void S_StartConfirm()
 
 	switch (stextshold) {
 	case STORE_BBOY:
-		strcpy(tempstr, "Do we have a deal?");
+		strcpy(tempstr, _("Do we have a deal?"));
 		break;
 	case STORE_SIDENTIFY:
-		strcpy(tempstr, "Are you sure you want to identify this item?");
+		strcpy(tempstr, _("Are you sure you want to identify this item?"));
 		break;
 	case STORE_HBUY:
 	case STORE_SPBUY:
 	case STORE_WBUY:
 	case STORE_SBUY:
-		strcpy(tempstr, "Are you sure you want to buy this item?");
+		strcpy(tempstr, _("Are you sure you want to buy this item?"));
 		break;
 	case STORE_WRECHARGE:
-		strcpy(tempstr, "Are you sure you want to recharge this item?");
+		strcpy(tempstr, _("Are you sure you want to recharge this item?"));
 		break;
 	case STORE_SSELL:
 	case STORE_WSELL:
-		strcpy(tempstr, "Are you sure you want to sell this item?");
+		strcpy(tempstr, _("Are you sure you want to sell this item?"));
 		break;
 	case STORE_SREPAIR:
-		strcpy(tempstr, "Are you sure you want to repair this item?");
+		strcpy(tempstr, _("Are you sure you want to repair this item?"));
 		break;
 	default:
 		app_fatal("Unknown store dialog %d", stextshold);
 	}
 	AddSText(0, 15, true, tempstr, COL_WHITE, false);
-	AddSText(0, 18, true, "Yes", COL_WHITE, true);
-	AddSText(0, 20, true, "No", COL_WHITE, true);
+	AddSText(0, 18, true, _("Yes"), COL_WHITE, true);
+	AddSText(0, 20, true, _("No"), COL_WHITE, true);
 }
 
 void S_StartBoy()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, true, "Wirt the Peg-legged boy", COL_GOLD, false);
+	AddSText(0, 2, true, _("Wirt the Peg-legged boy"), COL_GOLD, false);
 	AddSLine(5);
 	if (!boyitem.isEmpty()) {
-		AddSText(0, 8, true, "Talk to Wirt", COL_BLUE, true);
-		AddSText(0, 12, true, "I have something for sale,", COL_GOLD, false);
-		AddSText(0, 14, true, "but it will cost 50 gold", COL_GOLD, false);
-		AddSText(0, 16, true, "just to take a look. ", COL_GOLD, false);
-		AddSText(0, 18, true, "What have you got?", COL_WHITE, true);
-		AddSText(0, 20, true, "Say goodbye", COL_WHITE, true);
+		AddSText(0, 8, true, _("Talk to Wirt"), COL_BLUE, true);
+		AddSText(0, 12, true, _("I have something for sale,"), COL_GOLD, false);
+		AddSText(0, 14, true, _("but it will cost 50 gold"), COL_GOLD, false);
+		AddSText(0, 16, true, _("just to take a look. "), COL_GOLD, false);
+		AddSText(0, 18, true, _("What have you got?"), COL_WHITE, true);
+		AddSText(0, 20, true, _("Say goodbye"), COL_WHITE, true);
 	} else {
-		AddSText(0, 12, true, "Talk to Wirt", COL_BLUE, true);
-		AddSText(0, 18, true, "Say goodbye", COL_WHITE, true);
+		AddSText(0, 12, true, _("Talk to Wirt"), COL_BLUE, true);
+		AddSText(0, 18, true, _("Say goodbye"), COL_WHITE, true);
 	}
 }
 
@@ -911,7 +912,7 @@ void S_StartBBoy()
 {
 	stextsize = true;
 	stextscrl = false;
-	sprintf(tempstr, "I have this item for sale:             Your gold: %i", plr[myplr]._pGold);
+	sprintf(tempstr, _("I have this item for sale:             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, true, tempstr, COL_GOLD, false);
 	AddSLine(3);
 	AddSLine(21);
@@ -927,7 +928,7 @@ void S_StartBBoy()
 	else
 		AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue / 2));
 	PrintStoreItem(&boyitem, 11, iclr);
-	AddSText(0, 22, true, "Leave", COL_WHITE, true);
+	AddSText(0, 22, true, _("Leave"), COL_WHITE, true);
 	OffsetSTextY(22, 6);
 }
 
@@ -946,12 +947,12 @@ void S_StartHealer()
 	HealPlayer();
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 1, true, "Welcome to the", COL_GOLD, false);
-	AddSText(0, 3, true, "Healer's home", COL_GOLD, false);
-	AddSText(0, 9, true, "Would you like to:", COL_GOLD, false);
-	AddSText(0, 12, true, "Talk to Pepin", COL_BLUE, true);
-	AddSText(0, 14, true, "Buy items", COL_WHITE, true);
-	AddSText(0, 16, true, "Leave Healer's home", COL_WHITE, true);
+	AddSText(0, 1, true, _("Welcome to the"), COL_GOLD, false);
+	AddSText(0, 3, true, _("Healer's home"), COL_GOLD, false);
+	AddSText(0, 9, true, _("Would you like to:"), COL_GOLD, false);
+	AddSText(0, 12, true, _("Talk to Pepin"), COL_BLUE, true);
+	AddSText(0, 14, true, _("Buy items"), COL_WHITE, true);
+	AddSText(0, 16, true, _("Leave Healer's home"), COL_WHITE, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -985,12 +986,12 @@ void S_StartHBuy()
 	stextsize = true;
 	stextscrl = true;
 	stextsval = 0;
-	sprintf(tempstr, "I have these items for sale:             Your gold: %i", plr[myplr]._pGold);
+	sprintf(tempstr, _("I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, true, tempstr, COL_GOLD, false);
 	AddSLine(3);
 	AddSLine(21);
 	S_ScrollHBuy(stextsval);
-	AddSText(0, 22, true, "Back", COL_WHITE, false);
+	AddSText(0, 22, true, _("Back"), COL_WHITE, false);
 	OffsetSTextY(22, 6);
 
 	storenumh = 0;
@@ -1006,11 +1007,11 @@ void S_StartStory()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, true, "The Town Elder", COL_GOLD, false);
-	AddSText(0, 9, true, "Would you like to:", COL_GOLD, false);
-	AddSText(0, 12, true, "Talk to Cain", COL_BLUE, true);
-	AddSText(0, 14, true, "Identify an item", COL_WHITE, true);
-	AddSText(0, 18, true, "Say goodbye", COL_WHITE, true);
+	AddSText(0, 2, true, _("The Town Elder"), COL_GOLD, false);
+	AddSText(0, 9, true, _("Would you like to:"), COL_GOLD, false);
+	AddSText(0, 12, true, _("Talk to Cain"), COL_BLUE, true);
+	AddSText(0, 14, true, _("Identify an item"), COL_WHITE, true);
+	AddSText(0, 18, true, _("Say goodbye"), COL_WHITE, true);
 	AddSLine(5);
 }
 
@@ -1086,22 +1087,22 @@ void S_StartSIdentify()
 
 	if (!idok) {
 		stextscrl = false;
-		sprintf(tempstr, "You have nothing to identify.             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("You have nothing to identify.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 	} else {
 		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
-		sprintf(tempstr, "Identify which item?             Your gold: %i", plr[myplr]._pGold);
+		sprintf(tempstr, _("Identify which item?             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, true, tempstr, COL_GOLD, false);
 		AddSLine(3);
 		AddSLine(21);
 		S_ScrollSSell(stextsval);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		OffsetSTextY(22, 6);
 	}
 }
@@ -1113,10 +1114,10 @@ void S_StartIdShow()
 	ClearSText(5, 23);
 	text_color iclr = GetItemTextColor(plr[myplr].HoldItem);
 
-	AddSText(0, 7, true, "This item is:", COL_WHITE, false);
+	AddSText(0, 7, true, _("This item is:"), COL_WHITE, false);
 	AddSText(20, 11, false, plr[myplr].HoldItem._iIName, iclr, false);
 	PrintStoreItem(&plr[myplr].HoldItem, 12, iclr);
-	AddSText(0, 18, true, "Done", COL_WHITE, true);
+	AddSText(0, 18, true, _("Done"), COL_WHITE, true);
 }
 
 void S_StartTalk()
@@ -1125,16 +1126,16 @@ void S_StartTalk()
 
 	stextsize = false;
 	stextscrl = false;
-	sprintf(tempstr, "Talk to %s", talkname[talker]);
+	sprintf(tempstr, _("Talk to %s"), talkname[talker]);
 	AddSText(0, 2, true, tempstr, COL_GOLD, false);
 	AddSLine(5);
 	if (gbIsSpawn) {
-		sprintf(tempstr, "Talking to %s", talkname[talker]);
+		sprintf(tempstr, _("Talking to %s"), talkname[talker]);
 		AddSText(0, 10, true, tempstr, COL_WHITE, false);
-		AddSText(0, 12, true, "is not available", COL_WHITE, false);
-		AddSText(0, 14, true, "in the shareware", COL_WHITE, false);
-		AddSText(0, 16, true, "version", COL_WHITE, false);
-		AddSText(0, 22, true, "Back", COL_WHITE, true);
+		AddSText(0, 12, true, _("is not available"), COL_WHITE, false);
+		AddSText(0, 14, true, _("in the shareware"), COL_WHITE, false);
+		AddSText(0, 16, true, _("version"), COL_WHITE, false);
+		AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 		return;
 	}
 
@@ -1160,19 +1161,19 @@ void S_StartTalk()
 			sn += la;
 		}
 	}
-	AddSText(0, sn2, true, "Gossip", COL_BLUE, true);
-	AddSText(0, 22, true, "Back", COL_WHITE, true);
+	AddSText(0, sn2, true, _("Gossip"), COL_BLUE, true);
+	AddSText(0, 22, true, _("Back"), COL_WHITE, true);
 }
 
 void S_StartTavern()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 1, true, "Welcome to the", COL_GOLD, false);
-	AddSText(0, 3, true, "Rising Sun", COL_GOLD, false);
-	AddSText(0, 9, true, "Would you like to:", COL_GOLD, false);
-	AddSText(0, 12, true, "Talk to Ogden", COL_BLUE, true);
-	AddSText(0, 18, true, "Leave the tavern", COL_WHITE, true);
+	AddSText(0, 1, true, _("Welcome to the"), COL_GOLD, false);
+	AddSText(0, 3, true, _("Rising Sun"), COL_GOLD, false);
+	AddSText(0, 9, true, _("Would you like to:"), COL_GOLD, false);
+	AddSText(0, 12, true, _("Talk to Ogden"), COL_BLUE, true);
+	AddSText(0, 18, true, _("Leave the tavern"), COL_WHITE, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -1182,9 +1183,9 @@ void S_StartBarMaid()
 	stextsize = false;
 	stextscrl = false;
 	AddSText(0, 2, true, "Gillian", COL_GOLD, false);
-	AddSText(0, 9, true, "Would you like to:", COL_GOLD, false);
-	AddSText(0, 12, true, "Talk to Gillian", COL_BLUE, true);
-	AddSText(0, 18, true, "Say goodbye", COL_WHITE, true);
+	AddSText(0, 9, true, _("Would you like to:"), COL_GOLD, false);
+	AddSText(0, 12, true, _("Talk to Gillian"), COL_BLUE, true);
+	AddSText(0, 18, true, _("Say goodbye"), COL_WHITE, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -1193,10 +1194,10 @@ void S_StartDrunk()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, true, "Farnham the Drunk", COL_GOLD, false);
-	AddSText(0, 9, true, "Would you like to:", COL_GOLD, false);
-	AddSText(0, 12, true, "Talk to Farnham", COL_BLUE, true);
-	AddSText(0, 18, true, "Say Goodbye", COL_WHITE, true);
+	AddSText(0, 2, true, _("Farnham the Drunk"), COL_GOLD, false);
+	AddSText(0, 9, true, _("Would you like to:"), COL_GOLD, false);
+	AddSText(0, 12, true, _("Talk to Farnham"), COL_BLUE, true);
+	AddSText(0, 18, true, _("Say Goodbye"), COL_WHITE, true);
 	AddSLine(5);
 	storenumh = 20;
 }

@@ -9,6 +9,7 @@
 #include "diablo.h"
 #include "storm/storm.h"
 #include "utils/ui_fwd.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -30,7 +31,7 @@ void MsgBox(const char *pszFmt, va_list va)
 
 	vsnprintf(text, 256, pszFmt, va);
 
-	UiErrorOkDialog("Error", text);
+	UiErrorOkDialog(_("Error"), text);
 }
 
 /**
@@ -113,7 +114,7 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 
 	FreeDlg();
 
-	snprintf(text, 1024, "%s\n\nThe error occurred at: %s line %d", error, logFilePath, logLineNr);
+	snprintf(text, 1024, _("%s\n\nThe error occurred at: %s line %d"), error, logFilePath, logLineNr);
 
 	UiErrorOkDialog(title, text);
 	app_fatal(nullptr);
@@ -133,13 +134,13 @@ void FileErrDlg(const char *error)
 	snprintf(
 	    text,
 	    1024,
-	    "Unable to open a required file.\n"
+	    _("Unable to open a required file.\n"
 	    "\n"
 	    "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
 	    "011bc6518e6166206231080a4440b373\n"
 	    "68f049866b44688a7af65ba766bef75a\n"
 	    "\n"
-	    "The problem occurred when loading:\n%s",
+	    "The problem occurred when loading:\n%s"),
 	    error);
 
 	UiErrorOkDialog("Data File Error", text);
@@ -155,9 +156,9 @@ void InsertCDDlg()
 	snprintf(
 	    text,
 	    1024,
-	    "Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+	    _("Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 	    "\n"
-	    "Make sure that it is in the game folder and that the file name is in all lowercase.");
+	    "Make sure that it is in the game folder and that the file name is in all lowercase."));
 
 	UiErrorOkDialog("Data File Error", text);
 	app_fatal(nullptr);
@@ -170,9 +171,9 @@ void DirErrorDlg(const char *error)
 {
 	char text[1024];
 
-	snprintf(text, 1024, "Unable to write to location:\n%s", error);
+	snprintf(text, 1024, _("Unable to write to location:\n%s"), error);
 
-	UiErrorOkDialog("Read-Only Directory Error", text);
+	UiErrorOkDialog(_("Read-Only Directory Error"), text);
 	app_fatal(nullptr);
 }
 

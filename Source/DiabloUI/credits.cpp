@@ -14,6 +14,7 @@
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
 #include "utils/log.hpp"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -64,7 +65,7 @@ SDL_Surface *RenderText(const char *text, SDL_Color color)
 
 CachedLine PrepareLine(std::size_t index)
 {
-	const char *contents = text[index];
+	const char *contents = _(text[index]);
 	while (contents[0] == '\t')
 		++contents;
 

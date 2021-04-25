@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-04-25 04:40+0200\n"
-"PO-Revision-Date: 2021-04-25 04:47+0200\n"
+"POT-Creation-Date: 2021-04-25 06:53+0200\n"
+"PO-Revision-Date: 2021-04-25 06:53+0200\n"
 "Last-Translator: Anders Jenbo <anders@jenbo.dk>\n"
 "Language-Team: \n"
 "Language: da\n"
@@ -20,6 +20,328 @@ msgstr ""
 "X-Poedit-KeywordsList: _;N_\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: Source\n"
+
+#: Source/DiabloUI/credits_lines.cpp:7
+msgid "Game Design"
+msgstr "Spildesign"
+
+#: Source/DiabloUI/credits_lines.cpp:10
+msgid "Senior Designers"
+msgstr "Senior designere"
+
+#: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
+msgid "Additional Design"
+msgstr "Yderligere design"
+
+#: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
+msgid "Lead Programmer"
+msgstr "Ledende programmør"
+
+#: Source/DiabloUI/credits_lines.cpp:19
+msgid "Senior Programmers"
+msgstr "Senior programmører"
+
+#: Source/DiabloUI/credits_lines.cpp:23
+msgid "Programming"
+msgstr "Programmering"
+
+#: Source/DiabloUI/credits_lines.cpp:26
+msgid "Special Guest Programmers"
+msgstr "Særlige gæsteprogrammører"
+
+#: Source/DiabloUI/credits_lines.cpp:29
+msgid "Battle.net Programming"
+msgstr "Battle.net-programmering"
+
+#: Source/DiabloUI/credits_lines.cpp:32
+msgid "Serial Communications Programming"
+msgstr "Seriel kommunikationsprogrammering"
+
+#: Source/DiabloUI/credits_lines.cpp:35
+msgid "Installer Programming"
+msgstr "Installationsprogrammering"
+
+#: Source/DiabloUI/credits_lines.cpp:38
+msgid "Art Directors"
+msgstr "Kunst instruktører"
+
+#: Source/DiabloUI/credits_lines.cpp:41
+msgid "Artwork"
+msgstr "Kunst"
+
+#: Source/DiabloUI/credits_lines.cpp:48
+msgid "Technical Artwork"
+msgstr "Teknisk kunst"
+
+#: Source/DiabloUI/credits_lines.cpp:52
+msgid "Cinematic Art Directors"
+msgstr "Filmregissører"
+
+#: Source/DiabloUI/credits_lines.cpp:55
+msgid "3D Cinematic Artwork"
+msgstr "3D filmisk kunst"
+
+#: Source/DiabloUI/credits_lines.cpp:61
+msgid "Cinematic Technical Artwork"
+msgstr "Filmisk teknisk kunst"
+
+#: Source/DiabloUI/credits_lines.cpp:64
+msgid "Executive Producer"
+msgstr "Overordnet instruktør"
+
+#: Source/DiabloUI/credits_lines.cpp:67
+msgid "Producer"
+msgstr "Instruktør"
+
+#: Source/DiabloUI/credits_lines.cpp:70
+msgid "Associate Producer"
+msgstr "Associeret producent"
+
+#: Source/DiabloUI/credits_lines.cpp:73
+msgid "Diablo Strike Team"
+msgstr "Diablo Strike Team"
+
+#: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:70
+msgid "Music"
+msgstr "Musik"
+
+#: Source/DiabloUI/credits_lines.cpp:80
+msgid "Sound Design"
+msgstr "Lyddesign"
+
+#: Source/DiabloUI/credits_lines.cpp:83
+msgid "Cinematic Music & Sound"
+msgstr "Filmisk musik og lyd"
+
+#: Source/DiabloUI/credits_lines.cpp:86
+msgid "Voice Production, Direction & Casting"
+msgstr "Stemmeproduktion, retning og casting"
+
+#: Source/DiabloUI/credits_lines.cpp:89
+msgid "Script & Story"
+msgstr "Manuskript og historie"
+
+#: Source/DiabloUI/credits_lines.cpp:93
+msgid "Voice Editing"
+msgstr "Stemmeredigering"
+
+#: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
+msgid "Voices"
+msgstr "Stemmer"
+
+#: Source/DiabloUI/credits_lines.cpp:101
+msgid "Recording Engineer"
+msgstr "Optagelsesingeniør"
+
+#: Source/DiabloUI/credits_lines.cpp:104
+msgid "Manual Design & Layout"
+msgstr "Design af manual og layout"
+
+#: Source/DiabloUI/credits_lines.cpp:108
+msgid "Manual Artwork"
+msgstr "Manualkunst"
+
+#: Source/DiabloUI/credits_lines.cpp:112
+msgid "Provisional Director of QA (Lead Tester)"
+msgstr "Foreløbig direktør for QA (Lead tester)"
+
+#: Source/DiabloUI/credits_lines.cpp:115
+msgid "QA Assault Team (Testers)"
+msgstr "QA-angrebsteam (testere)"
+
+#: Source/DiabloUI/credits_lines.cpp:120
+msgid "QA Special Ops Team (Compatibility Testers)"
+msgstr "QA-frømandskorps (kompatibilitetstestere)"
+
+#: Source/DiabloUI/credits_lines.cpp:123
+msgid "QA Artillery Support (Additional Testers) "
+msgstr "QA-artilleristøtte (ekstra testere) "
+
+#: Source/DiabloUI/credits_lines.cpp:127
+msgid "QA Counterintelligence"
+msgstr "QA-modintelligens"
+
+#: Source/DiabloUI/credits_lines.cpp:130
+msgid "Order of Network Information Services"
+msgstr "Bestilling af netværksinformationstjenester"
+
+#: Source/DiabloUI/credits_lines.cpp:134
+#, fuzzy
+#| msgid "Support"
+msgid "Customer Support"
+msgstr "Support"
+
+#: Source/DiabloUI/credits_lines.cpp:139
+msgid "Sales"
+msgstr "Salg"
+
+#: Source/DiabloUI/credits_lines.cpp:142
+msgid "Dunsel"
+msgstr "Drønnert"
+
+#: Source/DiabloUI/credits_lines.cpp:145
+msgid "Mr. Dabiri's Background Vocalists"
+msgstr "Hr. Dabiris baggrundsvokalister"
+
+#: Source/DiabloUI/credits_lines.cpp:149
+msgid "Public Relations"
+msgstr "PR"
+
+#: Source/DiabloUI/credits_lines.cpp:152
+msgid "Marketing"
+msgstr "Marketing"
+
+#: Source/DiabloUI/credits_lines.cpp:155
+msgid "International Sales"
+msgstr "Internationalt salg"
+
+#: Source/DiabloUI/credits_lines.cpp:158
+msgid "U.S. Sales"
+msgstr "U.S.-salg"
+
+#: Source/DiabloUI/credits_lines.cpp:161
+msgid "Manufacturing"
+msgstr "Produktion"
+
+#: Source/DiabloUI/credits_lines.cpp:164
+msgid "Legal & Business"
+msgstr "Juridisk & forretning"
+
+#: Source/DiabloUI/credits_lines.cpp:167
+msgid "Special Thanks To"
+msgstr "Særlig tak til"
+
+#: Source/DiabloUI/credits_lines.cpp:171
+msgid "Thanks To"
+msgstr "Tak til"
+
+#: Source/DiabloUI/credits_lines.cpp:200
+msgid "In memory of"
+msgstr "Til minde om"
+
+#: Source/DiabloUI/credits_lines.cpp:206
+msgid "Very Special Thanks to"
+msgstr "Meget Særlig tak til"
+
+#: Source/DiabloUI/credits_lines.cpp:212
+msgid "General Manager"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:218
+msgid "Software Engineering"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:221
+#, fuzzy
+#| msgid "Art Directors"
+msgid "Art Director"
+msgstr "Kunst instruktører"
+
+#: Source/DiabloUI/credits_lines.cpp:224
+msgid "Artists"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:228
+#, fuzzy
+#| msgid "Game Design"
+msgid "Design"
+msgstr "Spildesign"
+
+#: Source/DiabloUI/credits_lines.cpp:235
+msgid "Sound Design, SFX & Audio Engineering"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:238
+msgid "Quality Assurance Lead"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:241
+msgid "Testers"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:246
+#, fuzzy
+#| msgid "Manual Artwork"
+msgid "Manual"
+msgstr "Manualkunst"
+
+#: Source/DiabloUI/credits_lines.cpp:255
+#, fuzzy
+#| msgid "Additional Design"
+msgid "\tAdditional Work"
+msgstr "Yderligere design"
+
+#: Source/DiabloUI/credits_lines.cpp:257
+msgid "Quest Text Writing"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
+#, fuzzy
+#| msgid "Thanks To"
+msgid "Thanks to"
+msgstr "Tak til"
+
+#: Source/DiabloUI/credits_lines.cpp:265
+#, fuzzy
+#| msgid "Copyright © 1996-2001 Blizzard Entertainment"
+msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
+msgstr "Copyright © 1996-2001 Blizzard Entertainment2"
+
+#: Source/DiabloUI/credits_lines.cpp:270
+msgid "\t\t\tSierra On-Line Inc. Northwest"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:272
+msgid "Quality Assurance Manager"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:275
+msgid "Quality Assurance Lead Tester"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:278
+msgid "Main Testers"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:281
+#, fuzzy
+#| msgid "Additional Design"
+msgid "Additional Testers"
+msgstr "Yderligere design"
+
+#: Source/DiabloUI/credits_lines.cpp:286
+msgid "Product Marketing Manager"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:289
+#, fuzzy
+#| msgid "Public Relations"
+msgid "Public Relations Manager"
+msgstr "PR"
+
+#: Source/DiabloUI/credits_lines.cpp:292
+#, fuzzy
+#| msgid "Associate Producer"
+msgid "Associate Product Manager"
+msgstr "Associeret producent"
+
+#: Source/DiabloUI/credits_lines.cpp:301
+msgid "The Ring of One Thousand"
+msgstr "Ringen af et tusinde"
+
+#: Source/DiabloUI/credits_lines.cpp:547
+msgid "\tNo souls were sold in the making of this game."
+msgstr "\tIngen sjæle blev solgt i fremstillingen af dette spil."
+
+#: Source/DiabloUI/dialogs.cpp:171 Source/DiabloUI/dialogs.cpp:184
+#: Source/DiabloUI/selconn.cpp:68 Source/DiabloUI/selgame.cpp:99
+#: Source/DiabloUI/selgame.cpp:168 Source/DiabloUI/selgame.cpp:186
+#: Source/DiabloUI/selgame.cpp:319 Source/DiabloUI/selgame.cpp:392
+#: Source/DiabloUI/selhero.cpp:207 Source/DiabloUI/selhero.cpp:233
+#: Source/DiabloUI/selhero.cpp:311 Source/DiabloUI/selhero.cpp:561
+#: Source/DiabloUI/selok.cpp:74
+msgid "OK"
+msgstr "OK"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -62,483 +384,939 @@ msgstr ""
 "detailversion af Diablo. Besøg https://www.gog.com/game/diablo for at købe "
 "den."
 
-#~ msgid "Error"
-#~ msgstr "Fejl"
-
-#~ msgid ""
-#~ "assertion failed (%d:%s)\n"
-#~ "%s"
-#~ msgstr ""
-#~ "påstand mislykkedes (%d:%s)\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "%s\n"
-#~ "\n"
-#~ "The error occurred at: %s line %d"
-#~ msgstr ""
-#~ "%s\n"
-#~ "\n"
-#~ "Fejlen opstod ved: %s linje %d"
-
-#~ msgid ""
-#~ "Unable to open a required file.\n"
-#~ "\n"
-#~ "Verify that the MD5 of diabdat.mpq matches on of the following values\n"
-#~ "011bc6518e6166206231080a4440b373\n"
-#~ "68f049866b44688a7af65ba766bef75a\n"
-#~ "\n"
-#~ "The problem occurred when loading:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Kan ikke åbne en påkrævet fil.\n"
-#~ "\n"
-#~ "Kontroller, at MD5 af diabdat.mpq stemmer overens med en af følgende "
-#~ "værdier\n"
-#~ "011bc6518e6166206231080a4440b373\n"
-#~ "68f049866b44688a7af65ba766bef75a\n"
-#~ "\n"
-#~ "Problemet opstod ved indlæsning af:\n"
-#~ "% s"
-
-#~ msgid ""
-#~ "Unable to open %s.\n"
-#~ "\n"
-#~ "Make sure that it is in the game folder and that the file name is in all "
-#~ "lowercase."
-#~ msgstr ""
-#~ "Kan ikke åbne %s.\n"
-#~ "\n"
-#~ "Sørg for, at den findes i spilmappen, og at filnavnet er med små "
-#~ "bogstaver."
-
-#~ msgid ""
-#~ "Unable to write to location:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Kan ikke skrive til lokation:\n"
-#~ "%s"
-
-#~ msgid "Read-Only Directory Error"
-#~ msgstr "Skrivebeskyttet mappe fejl"
-
-#~ msgid "Save Game"
-#~ msgstr "Gem spil"
-
-#~ msgid "Options"
-#~ msgstr "Indstillinger"
-
-#~ msgid "New Game"
-#~ msgstr "Nyt spil"
-
-#~ msgid "Load Game"
-#~ msgstr "Indlæs spil"
-
-#~ msgid "Quit Diablo"
-#~ msgstr "Afslut Diablo"
-
-#~ msgid "Restart In Town"
-#~ msgstr "Genstart i byen"
-
-#~ msgid "Gamma"
-#~ msgstr "Gamma"
-
-#~ msgid "Previous Menu"
-#~ msgstr "Forrige menu"
-
-#~ msgid "Music"
-#~ msgstr "Musik"
-
-#~ msgid "Music Disabled"
-#~ msgstr "Musik deaktiveret"
-
-#~ msgid "Sound"
-#~ msgstr "Lyd"
-
-#~ msgid "Sound Disabled"
-#~ msgstr "Lyd deaktiveret"
-
-#~ msgid "Color Cycling Off"
-#~ msgstr "Farvecykling fra"
-
-#~ msgid "Color Cycling On"
-#~ msgstr "Farvecykling til"
-
-#~ msgid "Pause"
-#~ msgstr "Pause"
-
-#~ msgid "Failed to load image"
-#~ msgstr "Indlæsning af billede fejlede"
-
-#~ msgid "Game Design"
-#~ msgstr "Spildesign"
-
-#~ msgid "Senior Designers"
-#~ msgstr "Senior designere"
-
-#~ msgid "Additional Design"
-#~ msgstr "Yderligere design"
-
-#~ msgid "Lead Programmer"
-#~ msgstr "Ledende programmør"
-
-#~ msgid "Senior Programmers"
-#~ msgstr "Senior programmører"
-
-#~ msgid "Programming"
-#~ msgstr "Programmering"
-
-#~ msgid "Special Guest Programmers"
-#~ msgstr "Særlige gæsteprogrammører"
-
-#~ msgid "Battle.net Programming"
-#~ msgstr "Battle.net-programmering"
-
-#~ msgid "Serial Communications Programming"
-#~ msgstr "Seriel kommunikationsprogrammering"
-
-#~ msgid "Installer Programming"
-#~ msgstr "Installationsprogrammering"
-
-#~ msgid "Art Directors"
-#~ msgstr "Kunst instruktører"
-
-#~ msgid "Artwork"
-#~ msgstr "Kunst"
-
-#~ msgid "Technical Artwork"
-#~ msgstr "Teknisk kunst"
-
-#~ msgid "Cinematic Art Directors"
-#~ msgstr "Filmregissører"
-
-#~ msgid "3D Cinematic Artwork"
-#~ msgstr "3D filmisk kunst"
-
-#~ msgid "Cinematic Technical Artwork"
-#~ msgstr "Filmisk teknisk kunst"
-
-#~ msgid "Executive Producer"
-#~ msgstr "Overordnet instruktør"
-
-#~ msgid "Producer"
-#~ msgstr "Instruktør"
-
-#~ msgid "Associate Producer"
-#~ msgstr "Associeret producent"
-
-#~ msgid "Diablo Strike Team"
-#~ msgstr "Diablo Strike Team"
-
-#~ msgid "Sound Design"
-#~ msgstr "Lyddesign"
-
-#~ msgid "Cinematic Music & Sound"
-#~ msgstr "Filmisk musik og lyd"
-
-#~ msgid "Voice Production, Direction & Casting"
-#~ msgstr "Stemmeproduktion, retning og casting"
-
-#~ msgid "Script & Story"
-#~ msgstr "Manuskript og historie"
-
-#~ msgid "Voice Editing"
-#~ msgstr "Stemmeredigering"
-
-#~ msgid "Voices"
-#~ msgstr "Stemmer"
-
-#~ msgid "Recording Engineer"
-#~ msgstr "Optagelsesingeniør"
-
-#~ msgid "Manual Design & Layout"
-#~ msgstr "Design af manual og layout"
-
-#~ msgid "Manual Artwork"
-#~ msgstr "Manualkunst"
-
-#~ msgid "Provisional Director of QA (Lead Tester)"
-#~ msgstr "Foreløbig direktør for QA (Lead tester)"
-
-#~ msgid "QA Assault Team (Testers)"
-#~ msgstr "QA-angrebsteam (testere)"
-
-#~ msgid "QA Special Ops Team (Compatibility Testers)"
-#~ msgstr "QA-frømandskorps (kompatibilitetstestere)"
-
-#~ msgid "QA Artillery Support (Additional Testers) "
-#~ msgstr "QA-artilleristøtte (ekstra testere) "
-
-#~ msgid "QA Counterintelligence"
-#~ msgstr "QA-modintelligens"
-
-#~ msgid "Order of Network Information Services"
-#~ msgstr "Bestilling af netværksinformationstjenester"
-
-#~ msgid "Sales"
-#~ msgstr "Salg"
-
-#~ msgid "Dunsel"
-#~ msgstr "Drønnert"
-
-#~ msgid "Mr. Dabiri's Background Vocalists"
-#~ msgstr "Hr. Dabiris baggrundsvokalister"
-
-#~ msgid "Public Relations"
-#~ msgstr "PR"
-
-#~ msgid "Marketing"
-#~ msgstr "Marketing"
-
-#~ msgid "International Sales"
-#~ msgstr "Internationalt salg"
-
-#~ msgid "U.S. Sales"
-#~ msgstr "U.S.-salg"
-
-#~ msgid "Manufacturing"
-#~ msgstr "Produktion"
-
-#~ msgid "Legal & Business"
-#~ msgstr "Juridisk & forretning"
-
-#~ msgid "Special Thanks To"
-#~ msgstr "Særlig tak til"
-
-#~ msgid "Thanks To"
-#~ msgstr "Tak til"
-
-#~ msgid "In memory of"
-#~ msgstr "Til minde om"
-
-#~ msgid "Very Special Thanks to"
-#~ msgstr "Meget Særlig tak til"
-
-#~ msgid "The Ring of One Thousand"
-#~ msgstr "Ringen af et tusinde"
-
-#~ msgid "\tNo souls were sold in the making of this game."
-#~ msgstr "\tIngen sjæle blev solgt i fremstillingen af dette spil."
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "TTF_Init: %s\n"
-#~ msgstr "TTF_Init: %s\n"
-
-#~ msgid "TTF_OpenFont: %s\n"
-#~ msgstr "TTF_OpenFont: %s\n"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuller"
-
-#~ msgid "Client-Server (TCP)"
-#~ msgstr "Klient-server (TCP)"
-
-#~ msgid "Peer-to-Peer (UDP)"
-#~ msgstr "Peer-to-Peer (UDP)"
-
-#~ msgid "Loopback"
-#~ msgstr "Loopback"
-
-#~ msgid "Multi Player Game"
-#~ msgstr "Multiplayer-spil"
-
-#~ msgid "Requirements:"
-#~ msgstr "Krav:"
-
-#~ msgid "no gateway needed"
-#~ msgstr "ingen gateway"
-
-#~ msgid "Select Connection"
-#~ msgstr "Vælg forbindelse"
-
-#~ msgid "Change Gateway"
-#~ msgstr "Skift gateway"
-
-#~ msgid "All computers must be connected to a TCP-compatible network."
-#~ msgstr "Alle computere skal være tilsluttet et TCP-kompatibelt netværk."
-
-#~ msgid "All computers must be connected to a UDP-compatible network."
-#~ msgstr "Alle computere skal være tilsluttet et UDP-kompatibelt netværk."
-
-#~ msgid "Play by yourself with no network exposure."
-#~ msgstr "Spil alene uden nogen netværkseksponering."
-
-#~ msgid "Players Supported: %d"
-#~ msgstr "Understøttede spillere: %d"
-
-#~ msgid "CANCEL"
-#~ msgstr "ANNULLER"
-
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgid "Nightmare"
-#~ msgstr "Mareridt"
-
-#~ msgid "Hell"
-#~ msgstr "Helvede"
-
-#~ msgid "Select Difficulty"
-#~ msgstr "Vælg sværhedsgrad"
-
-#~ msgid "Create Game"
-#~ msgstr "Opret spil"
-
-#~ msgid "Enter IP"
-#~ msgstr "Indtast IP"
-
-#~ msgid "Select Action"
-#~ msgstr "Vælg handling"
-
-#~ msgid "Enter Password"
-#~ msgstr "Indtast adgangskode"
-
-#~ msgid "Create a new game with a difficulty setting of your choice."
-#~ msgstr "Opret et nyt spil med sværhedsgrad efter eget valg."
-
-#~ msgid "Enter an IP and join a game already in progress at that address."
-#~ msgstr ""
-#~ "Indtast en IP og deltag i et spil, der allerede er i gang på den adresse."
-
-#~ msgid "Join TCP Games"
-#~ msgstr "Deltag i et TCP-spil"
-
-#~ msgid ""
-#~ "Normal Difficulty\n"
-#~ "This is where a starting character should begin the quest to defeat "
-#~ "Diablo."
-#~ msgstr ""
-#~ "Normal sværhedsgrad\n"
-#~ "Det er her en nybegynder skal starte sin stræben efter at besejre Diablo."
-
-#~ msgid ""
-#~ "Nightmare Difficulty\n"
-#~ "The denizens of the Labyrinth have been bolstered and will prove to be a "
-#~ "greater challenge. This is recommended for experienced characters only."
-#~ msgstr ""
-#~ "Mareridt sværhedsgrad\n"
-#~ "Borgerne i labyrinten er styrket og vil vise sig at være en større "
-#~ "udfordring. Dette anbefales kun til erfarne helte."
-
-#~ msgid ""
-#~ "Hell Difficulty\n"
-#~ "The most powerful of the underworld's creatures lurk at the gateway into "
-#~ "Hell. Only the most experienced characters should venture in this realm."
-#~ msgstr ""
-#~ "Helvede sværhedsgrad\n"
-#~ "De mest magtfulde af underverdenens væsener lurer ved indgangen til "
-#~ "helvede. Kun de mest erfarne helte skal vove sig ind i denne verden."
-
-#~ msgid ""
-#~ "Your character must reach level 20 before you can enter a multiplayer "
-#~ "game of Nightmare difficulty."
-#~ msgstr ""
-#~ "Din karakter skal nå niveau 20, før du kan deltage i et multiplayer-spil "
-#~ "med mareridt-sværhedsgrad."
-
-#~ msgid ""
-#~ "Your character must reach level 30 before you can enter a multiplayer "
-#~ "game of Hell difficulty."
-#~ msgstr ""
-#~ "Din karakter skal nå niveau 30, før du kan deltage i et multiplayer-spil "
-#~ "med helvede-sværhedsgrad."
-
-#~ msgid "Level:"
-#~ msgstr "Niveau:"
-
-#~ msgid "Strength:"
-#~ msgstr "Styrke:"
-
-#~ msgid "Magic:"
-#~ msgstr "Magi:"
-
-#~ msgid "Dexterity:"
-#~ msgstr "Smidighed:"
-
-#~ msgid "Vitality:"
-#~ msgstr "Vitalitet:"
-
-#~ msgid "Select Hero"
-#~ msgstr "Vælg helt"
-
-#~ msgid "Delete"
-#~ msgstr "Slet"
-
-#~ msgid "Warrior"
-#~ msgstr "Kriger"
-
-#~ msgid "Rogue"
-#~ msgstr "Skytte"
-
-#~ msgid "Sorcerer"
-#~ msgstr "Troldmand"
-
-#~ msgid "Choose Class"
-#~ msgstr "Vælg klasse"
-
-#~ msgid "Enter Name"
-#~ msgstr "Indtast navn"
-
-#~ msgid "Save File Exists"
-#~ msgstr "Gem filen findes"
-
-#~ msgid "New Hero"
-#~ msgstr "Ny helt"
-
-#~ msgid "Multi Player Characters"
-#~ msgstr "Multiplayer-karakteren"
-
-#~ msgid "Single Player Characters"
-#~ msgstr "Singleplayer-karakterer"
-
-#~ msgid "New Multi Player Hero"
-#~ msgstr "Ny multiplayer-helt"
-
-#~ msgid "New Single Player Hero"
-#~ msgstr "Ny singleplayer-helt"
-
-#~ msgid ""
-#~ "The Rogue and Sorcerer are only available in the full retail version of "
-#~ "Diablo. Visit https://www.gog.com/game/diablo to purchase."
-#~ msgstr ""
-#~ "Skytten og Troldmanden er kun tilgængelige i den fulde detailversion af "
-#~ "Diablo. Besøg https://www.gog.com/game/diablo for at købe den."
-
-#~ msgid ""
-#~ "Invalid name. A name cannot contain spaces, reserved characters, or "
-#~ "reserved words.\n"
-#~ msgstr ""
-#~ "Ugyldigt navn. Et navn kan ikke indeholde mellemrum, reserverede tegn "
-#~ "eller reserverede ord.\n"
-
-#~ msgid "Character already exists. Do you want to overwrite \"%s\"?"
-#~ msgstr "Karakteren findes allerede. Vil du overskrive \"%s\"?"
-
-#~ msgid "Unable to create character."
-#~ msgstr "Kunne ikke oprette karakter."
-
-#~ msgid "Delete Multi Player Hero"
-#~ msgstr "Slet multiplayer-helt"
-
-#~ msgid "Delete Single Player Hero"
-#~ msgstr "Slet singleplayer-helt"
-
-#~ msgid "Are you sure you want to delete the character \"%s\"?"
-#~ msgstr "Er du sikker på, at du vil slette karakteren \"%s\"?"
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "No"
-#~ msgstr "Nej"
-
-#~ msgid "Copyright © 1996-2001 Blizzard Entertainment"
-#~ msgstr "Copyright © 1996-2001 Blizzard Entertainment2"
-
-#~ msgid "Text has zero width"
-#~ msgstr "Teksten har ingen bredde"
-
-#~ msgid "Out of memory"
-#~ msgstr "Ikke mere hukommelse"
+#: Source/DiabloUI/progress.cpp:46 Source/DiabloUI/selconn.cpp:71
+#: Source/DiabloUI/selhero.cpp:210 Source/DiabloUI/selhero.cpp:236
+#: Source/DiabloUI/selhero.cpp:314 Source/DiabloUI/selhero.cpp:568
+msgid "Cancel"
+msgstr "Annuller"
+
+#: Source/DiabloUI/selconn.cpp:34 Source/DiabloUI/selgame.cpp:82
+#: Source/DiabloUI/selgame.cpp:377
+msgid "Client-Server (TCP)"
+msgstr "Klient-server (TCP)"
+
+#: Source/DiabloUI/selconn.cpp:36
+msgid "Loopback"
+msgstr "Loopback"
+
+#: Source/DiabloUI/selconn.cpp:42 Source/DiabloUI/selgame.cpp:439
+#: Source/DiabloUI/selgame.cpp:457
+msgid "Multi Player Game"
+msgstr "Multiplayer-spil"
+
+#: Source/DiabloUI/selconn.cpp:48
+#, fuzzy
+#| msgid "Requirements:"
+msgid "Requirements:"
+msgstr "Krav:"
+
+#: Source/DiabloUI/selconn.cpp:54
+msgid "no gateway needed"
+msgstr "ingen gateway"
+
+#: Source/DiabloUI/selconn.cpp:60
+msgid "Select Connection"
+msgstr "Vælg forbindelse"
+
+#: Source/DiabloUI/selconn.cpp:63
+msgid "Change Gateway"
+msgstr "Skift gateway"
+
+#: Source/DiabloUI/selconn.cpp:102
+msgid "All computers must be connected to a TCP-compatible network."
+msgstr "Alle computere skal være tilsluttet et TCP-kompatibelt netværk."
+
+#: Source/DiabloUI/selconn.cpp:106
+#, fuzzy
+#| msgid "All computers must be connected to a TCP-compatible network."
+msgid "All computers must be connected to the internet."
+msgstr "Alle computere skal være tilsluttet et TCP-kompatibelt netværk."
+
+#: Source/DiabloUI/selconn.cpp:110
+msgid "Play by yourself with no network exposure."
+msgstr "Spil alene uden nogen netværkseksponering."
+
+#: Source/DiabloUI/selconn.cpp:115
+#, c-format
+msgid "Players Supported: %d"
+msgstr "Understøttede spillere: %d"
+
+#: Source/DiabloUI/selgame.cpp:85 Source/DiabloUI/selgame.cpp:380
+msgid "Description:"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:91
+msgid "Select Action"
+msgstr "Vælg handling"
+
+#: Source/DiabloUI/selgame.cpp:93 Source/DiabloUI/selgame.cpp:156
+#: Source/DiabloUI/selgame.cpp:300
+msgid "Create Game"
+msgstr "Opret spil"
+
+#: Source/DiabloUI/selgame.cpp:94
+#, fuzzy
+#| msgid "Join TCP Games"
+msgid "Join Game"
+msgstr "Deltag i et TCP-spil"
+
+#: Source/DiabloUI/selgame.cpp:102 Source/DiabloUI/selgame.cpp:171
+#: Source/DiabloUI/selgame.cpp:189 Source/DiabloUI/selgame.cpp:322
+#: Source/DiabloUI/selgame.cpp:395
+msgid "CANCEL"
+msgstr "ANNULLER"
+
+#: Source/DiabloUI/selgame.cpp:111
+msgid "Create a new game with a difficulty setting of your choice."
+msgstr "Opret et nyt spil med sværhedsgrad efter eget valg."
+
+#: Source/DiabloUI/selgame.cpp:114
+#, fuzzy
+#| msgid "Enter an IP and join a game already in progress at that address."
+msgid ""
+"Enter an IP or a hostname and join a game already in progress at that "
+"address."
+msgstr ""
+"Indtast en IP og deltag i et spil, der allerede er i gang på den adresse."
+
+#: Source/DiabloUI/selgame.cpp:159
+msgid "Select Difficulty"
+msgstr "Vælg sværhedsgrad"
+
+#: Source/DiabloUI/selgame.cpp:161 Source/DiabloUI/selgame.cpp:208
+#: Source/DiabloUI/selgame.cpp:311 Source/DiabloUI/selgame.cpp:331
+msgid "Normal"
+msgstr "Normal"
+
+#: Source/DiabloUI/selgame.cpp:162 Source/DiabloUI/selgame.cpp:212
+msgid "Nightmare"
+msgstr "Mareridt"
+
+#: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:216
+msgid "Hell"
+msgstr "Helvede"
+
+#: Source/DiabloUI/selgame.cpp:177
+msgid "Join TCP Games"
+msgstr "Deltag i et TCP-spil"
+
+#: Source/DiabloUI/selgame.cpp:180
+#, fuzzy
+#| msgid "Enter Name"
+msgid "Enter address"
+msgstr "Indtast navn"
+
+#: Source/DiabloUI/selgame.cpp:209
+msgid ""
+"Normal Difficulty\n"
+"This is where a starting character should begin the quest to defeat Diablo."
+msgstr ""
+"Normal sværhedsgrad\n"
+"Det er her en nybegynder skal starte sin stræben efter at besejre Diablo."
+
+#: Source/DiabloUI/selgame.cpp:213
+msgid ""
+"Nightmare Difficulty\n"
+"The denizens of the Labyrinth have been bolstered and will prove to be a "
+"greater challenge. This is recommended for experienced characters only."
+msgstr ""
+"Mareridt sværhedsgrad\n"
+"Borgerne i labyrinten er styrket og vil vise sig at være en større "
+"udfordring. Dette anbefales kun til erfarne helte."
+
+#: Source/DiabloUI/selgame.cpp:217
+msgid ""
+"Hell Difficulty\n"
+"The most powerful of the underworld's creatures lurk at the gateway into "
+"Hell. Only the most experienced characters should venture in this realm."
+msgstr ""
+"Helvede sværhedsgrad\n"
+"De mest magtfulde af underverdenens væsener lurer ved indgangen til helvede. "
+"Kun de mest erfarne helte skal vove sig ind i denne verden."
+
+#: Source/DiabloUI/selgame.cpp:232
+msgid ""
+"Your character must reach level 20 before you can enter a multiplayer game "
+"of Nightmare difficulty."
+msgstr ""
+"Din karakter skal nå niveau 20, før du kan deltage i et multiplayer-spil med "
+"mareridt-sværhedsgrad."
+
+#: Source/DiabloUI/selgame.cpp:234
+msgid ""
+"Your character must reach level 30 before you can enter a multiplayer game "
+"of Hell difficulty."
+msgstr ""
+"Din karakter skal nå niveau 30, før du kan deltage i et multiplayer-spil med "
+"helvede-sværhedsgrad."
+
+#: Source/DiabloUI/selgame.cpp:309
+msgid "Select Game Speed"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:312 Source/DiabloUI/selgame.cpp:335
+msgid "Fast"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:313 Source/DiabloUI/selgame.cpp:339
+msgid "Faster"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:314 Source/DiabloUI/selgame.cpp:343
+msgid "Fastest"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:332
+#, fuzzy
+#| msgid ""
+#| "Normal Difficulty\n"
+#| "This is where a starting character should begin the quest to defeat "
+#| "Diablo."
+msgid ""
+"Normal Speed\n"
+"This is where a starting character should begin the quest to defeat Diablo."
+msgstr ""
+"Normal sværhedsgrad\n"
+"Det er her en nybegynder skal starte sin stræben efter at besejre Diablo."
+
+#: Source/DiabloUI/selgame.cpp:336
+#, fuzzy
+#| msgid ""
+#| "Nightmare Difficulty\n"
+#| "The denizens of the Labyrinth have been bolstered and will prove to be a "
+#| "greater challenge. This is recommended for experienced characters only."
+msgid ""
+"Fast Speed\n"
+"The denizens of the Labyrinth have been hastened and will prove to be a "
+"greater challenge. This is recommended for experienced characters only."
+msgstr ""
+"Mareridt sværhedsgrad\n"
+"Borgerne i labyrinten er styrket og vil vise sig at være en større "
+"udfordring. Dette anbefales kun til erfarne helte."
+
+#: Source/DiabloUI/selgame.cpp:340
+msgid ""
+"Faster Speed\n"
+"Most monsters of the dungeon will seek you out quicker than ever before. "
+"Only an experienced champion should try their luck at this speed."
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:344
+msgid ""
+"Fastest Speed\n"
+"The minions of the underworld will rush to attack without hesitation. Only a "
+"true speed demon should enter at this pace."
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:386
+msgid "Enter Password"
+msgstr "Indtast adgangskode"
+
+#: Source/DiabloUI/selgame.cpp:412
+msgid "The host is running a different game than you."
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:415
+#, c-format
+msgid "Your version %s does not match the host %d.%d.%d."
+msgstr ""
+
+#: Source/DiabloUI/selhero.cpp:123
+msgid "New Hero"
+msgstr "Ny helt"
+
+#: Source/DiabloUI/selhero.cpp:185
+msgid "Choose Class"
+msgstr "Vælg klasse"
+
+#: Source/DiabloUI/selhero.cpp:189
+msgid "Warrior"
+msgstr "Kriger"
+
+#: Source/DiabloUI/selhero.cpp:190
+msgid "Rogue"
+msgstr "Skytte"
+
+#: Source/DiabloUI/selhero.cpp:191
+msgid "Sorcerer"
+msgstr "Troldmand"
+
+#: Source/DiabloUI/selhero.cpp:193
+msgid "Monk"
+msgstr ""
+
+#: Source/DiabloUI/selhero.cpp:196
+msgid "Bard"
+msgstr ""
+
+#: Source/DiabloUI/selhero.cpp:199
+msgid "Barbarian"
+msgstr ""
+
+#: Source/DiabloUI/selhero.cpp:214 Source/DiabloUI/selhero.cpp:293
+msgid "New Single Player Hero"
+msgstr "Ny singleplayer-helt"
+
+#: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:295
+msgid "New Multi Player Hero"
+msgstr "Ny multiplayer-helt"
+
+#: Source/DiabloUI/selhero.cpp:225
+msgid "Save File Exists"
+msgstr "Gem filen findes"
+
+#: Source/DiabloUI/selhero.cpp:228 Source/gamemenu.cpp:41
+msgid "Load Game"
+msgstr "Indlæs spil"
+
+#: Source/DiabloUI/selhero.cpp:229 Source/gamemenu.cpp:40
+#: Source/gamemenu.cpp:51
+msgid "New Game"
+msgstr "Nyt spil"
+
+#: Source/DiabloUI/selhero.cpp:239 Source/DiabloUI/selhero.cpp:575
+msgid "Single Player Characters"
+msgstr "Singleplayer-karakterer"
+
+#: Source/DiabloUI/selhero.cpp:287
+msgid ""
+"The Rogue and Sorcerer are only available in the full retail version of "
+"Diablo. Visit https://www.gog.com/game/diablo to purchase."
+msgstr ""
+"Skytten og Troldmanden er kun tilgængelige i den fulde detailversion af "
+"Diablo. Besøg https://www.gog.com/game/diablo for at købe den."
+
+#: Source/DiabloUI/selhero.cpp:299
+#, fuzzy
+#| msgid "Enter Name"
+msgid "Enter Hero name.."
+msgstr "Indtast navn"
+
+#: Source/DiabloUI/selhero.cpp:305
+msgid "Enter Name"
+msgstr "Indtast navn"
+
+#: Source/DiabloUI/selhero.cpp:337
+msgid ""
+"Invalid name. A name cannot contain spaces, reserved characters, or reserved "
+"words.\n"
+msgstr ""
+"Ugyldigt navn. Et navn kan ikke indeholde mellemrum, reserverede tegn eller "
+"reserverede ord.\n"
+
+#: Source/DiabloUI/selhero.cpp:345
+#, c-format
+msgid "Character already exists. Do you want to overwrite \"%s\"?"
+msgstr "Karakteren findes allerede. Vil du overskrive \"%s\"?"
+
+#: Source/DiabloUI/selhero.cpp:357
+msgid "Unable to create character."
+msgstr "Kunne ikke oprette karakter."
+
+#: Source/DiabloUI/selhero.cpp:511 Source/DiabloUI/selhero.cpp:514
+msgid "Level:"
+msgstr "Niveau:"
+
+#: Source/DiabloUI/selhero.cpp:519
+msgid "Strength:"
+msgstr "Styrke:"
+
+#: Source/DiabloUI/selhero.cpp:524
+msgid "Magic:"
+msgstr "Magi:"
+
+#: Source/DiabloUI/selhero.cpp:529
+msgid "Dexterity:"
+msgstr "Smidighed:"
+
+#: Source/DiabloUI/selhero.cpp:534
+msgid "Vitality:"
+msgstr "Vitalitet:"
+
+#: Source/DiabloUI/selhero.cpp:545
+msgid "Select Hero"
+msgstr "Vælg helt"
+
+#: Source/DiabloUI/selhero.cpp:564
+msgid "Delete"
+msgstr "Slet"
+
+#: Source/DiabloUI/selhero.cpp:573
+msgid "Multi Player Characters"
+msgstr "Multiplayer-karakteren"
+
+#: Source/DiabloUI/selhero.cpp:617
+msgid "Delete Multi Player Hero"
+msgstr "Slet multiplayer-helt"
+
+#: Source/DiabloUI/selhero.cpp:619
+msgid "Delete Single Player Hero"
+msgstr "Slet singleplayer-helt"
+
+#: Source/DiabloUI/selhero.cpp:621
+#, fuzzy, c-format
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to delete the character \"%s\"?"
+msgstr "Er du sikker på, at du vil slette karakteren \"%s\"?"
+
+#: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:888
+msgid "Yes"
+msgstr "Ja"
+
+#: Source/DiabloUI/selyesno.cpp:62 Source/stores.cpp:889
+msgid "No"
+msgstr "Nej"
+
+#: Source/DiabloUI/title.cpp:47
+#, fuzzy
+#| msgid "Copyright © 1996-2001 Blizzard Entertainment"
+msgid "Copyright  1996-2001 Blizzard Entertainment"
+msgstr "Copyright © 1996-2001 Blizzard Entertainment2"
+
+#: Source/appfat.cpp:34
+msgid "Error"
+msgstr "Fejl"
+
+#: Source/appfat.cpp:117
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"The error occurred at: %s line %d"
+msgstr ""
+"%s\n"
+"\n"
+"Fejlen opstod ved: %s linje %d"
+
+#: Source/appfat.cpp:137
+#, fuzzy, c-format
+#| msgid ""
+#| "Unable to open a required file.\n"
+#| "\n"
+#| "Verify that the MD5 of diabdat.mpq matches on of the following values\n"
+#| "011bc6518e6166206231080a4440b373\n"
+#| "68f049866b44688a7af65ba766bef75a\n"
+#| "\n"
+#| "The problem occurred when loading:\n"
+#| "%s"
+msgid ""
+"Unable to open a required file.\n"
+"\n"
+"Verify that the MD5 of diabdat.mpq matches one of the following values\n"
+"011bc6518e6166206231080a4440b373\n"
+"68f049866b44688a7af65ba766bef75a\n"
+"\n"
+"The problem occurred when loading:\n"
+"%s"
+msgstr ""
+"Kan ikke åbne en påkrævet fil.\n"
+"\n"
+"Kontroller, at MD5 af diabdat.mpq stemmer overens med en af følgende "
+"værdier\n"
+"011bc6518e6166206231080a4440b373\n"
+"68f049866b44688a7af65ba766bef75a\n"
+"\n"
+"Problemet opstod ved indlæsning af:\n"
+"% s"
+
+#: Source/appfat.cpp:159
+#, fuzzy, c-format
+#| msgid ""
+#| "Unable to open %s.\n"
+#| "\n"
+#| "Make sure that it is in the game folder and that the file name is in all "
+#| "lowercase."
+msgid ""
+"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+"\n"
+"Make sure that it is in the game folder and that the file name is in all "
+"lowercase."
+msgstr ""
+"Kan ikke åbne %s.\n"
+"\n"
+"Sørg for, at den findes i spilmappen, og at filnavnet er med små bogstaver."
+
+#: Source/appfat.cpp:174
+#, c-format
+msgid ""
+"Unable to write to location:\n"
+"%s"
+msgstr ""
+"Kan ikke skrive til lokation:\n"
+"%s"
+
+#: Source/appfat.cpp:176
+msgid "Read-Only Directory Error"
+msgstr "Skrivebeskyttet mappe fejl"
+
+#: Source/gamemenu.cpp:38
+msgid "Save Game"
+msgstr "Gem spil"
+
+#: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
+msgid "Options"
+msgstr "Indstillinger"
+
+#: Source/gamemenu.cpp:42 Source/gamemenu.cpp:53
+#, fuzzy
+#| msgid "Quit Diablo"
+msgid "Quit Game"
+msgstr "Afslut Diablo"
+
+#: Source/gamemenu.cpp:52
+msgid "Restart In Town"
+msgstr "Genstart i byen"
+
+#: Source/gamemenu.cpp:62
+msgid "Gamma"
+msgstr "Gamma"
+
+#: Source/gamemenu.cpp:63 Source/gamemenu.cpp:232
+msgid "Speed"
+msgstr ""
+
+#: Source/gamemenu.cpp:64
+msgid "Previous Menu"
+msgstr "Forrige menu"
+
+#: Source/gamemenu.cpp:71
+msgid "Music Disabled"
+msgstr "Musik deaktiveret"
+
+#: Source/gamemenu.cpp:75
+msgid "Sound"
+msgstr "Lyd"
+
+#: Source/gamemenu.cpp:76
+msgid "Sound Disabled"
+msgstr "Lyd deaktiveret"
+
+#: Source/gamemenu.cpp:220
+msgid "Speed: Fastest"
+msgstr ""
+
+#: Source/gamemenu.cpp:222
+msgid "Speed: Faster"
+msgstr ""
+
+#: Source/gamemenu.cpp:224
+msgid "Speed: Fast"
+msgstr ""
+
+#: Source/gamemenu.cpp:226
+#, fuzzy
+#| msgid "Normal"
+msgid "Speed: Normal"
+msgstr "Normal"
+
+#: Source/gmenu.cpp:77
+msgid "Pause"
+msgstr "Pause"
+
+#: Source/stores.cpp:164 Source/stores.cpp:171
+msgid ",  "
+msgstr ""
+
+#: Source/stores.cpp:169
+#, c-format
+msgid "Charges: %i/%i"
+msgstr ""
+
+#: Source/stores.cpp:180
+#, c-format
+msgid "Damage: %i-%i  "
+msgstr ""
+
+#: Source/stores.cpp:182
+#, c-format
+msgid "Armor: %i  "
+msgstr ""
+
+#: Source/stores.cpp:184
+#, c-format
+msgid "Dur: %i/%i,  "
+msgstr ""
+
+#: Source/stores.cpp:187
+msgid "Indestructible,  "
+msgstr ""
+
+#: Source/stores.cpp:195
+msgid "No required attributes"
+msgstr ""
+
+#: Source/stores.cpp:197
+#, fuzzy
+#| msgid "Requirements:"
+msgid "Required:"
+msgstr "Krav:"
+
+#: Source/stores.cpp:199
+#, c-format
+msgid " %i Str"
+msgstr ""
+
+#: Source/stores.cpp:201
+#, c-format
+msgid " %i Mag"
+msgstr ""
+
+#: Source/stores.cpp:203
+#, c-format
+msgid " %i Dex"
+msgstr ""
+
+#: Source/stores.cpp:225 Source/stores.cpp:950 Source/stores.cpp:1172
+msgid "Welcome to the"
+msgstr "Velkommen til"
+
+#: Source/stores.cpp:226
+msgid "Blacksmith's shop"
+msgstr ""
+
+#: Source/stores.cpp:227 Source/stores.cpp:576 Source/stores.cpp:952
+#: Source/stores.cpp:1011 Source/stores.cpp:1174 Source/stores.cpp:1186
+#: Source/stores.cpp:1198
+msgid "Would you like to:"
+msgstr "Har du lyst til:"
+
+#: Source/stores.cpp:228
+#, fuzzy
+#| msgid "Talk to Pepin"
+msgid "Talk to Griswold"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:229
+#, fuzzy
+#| msgid "Buy items"
+msgid "Buy basic items"
+msgstr "Køb varer"
+
+#: Source/stores.cpp:230
+#, fuzzy
+#| msgid "Buy items"
+msgid "Buy premium items"
+msgstr "Køb varer"
+
+#: Source/stores.cpp:231 Source/stores.cpp:579
+#, fuzzy
+#| msgid "Buy items"
+msgid "Sell items"
+msgstr "Køb varer"
+
+#: Source/stores.cpp:232
+msgid "Repair items"
+msgstr ""
+
+#: Source/stores.cpp:233
+#, fuzzy
+#| msgid "Leave Healer's home"
+msgid "Leave the shop"
+msgstr "Forlad healers hjem"
+
+#: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
+#, c-format
+msgid "I have these items for sale:             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:279 Source/stores.cpp:343 Source/stores.cpp:471
+#: Source/stores.cpp:482 Source/stores.cpp:541 Source/stores.cpp:554
+#: Source/stores.cpp:628 Source/stores.cpp:721 Source/stores.cpp:732
+#: Source/stores.cpp:797 Source/stores.cpp:808 Source/stores.cpp:994
+#: Source/stores.cpp:1094 Source/stores.cpp:1105 Source/stores.cpp:1138
+#: Source/stores.cpp:1165
+msgid "Back"
+msgstr ""
+
+#: Source/stores.cpp:339
+#, c-format
+msgid "I have these premium items for sale:     Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:467 Source/stores.cpp:717
+#, c-format
+msgid "You have nothing I want.             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:477 Source/stores.cpp:727
+#, c-format
+msgid "Which item is for sale?             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:537
+#, c-format
+msgid "You have nothing to repair.             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:549
+#, c-format
+msgid "Repair which item?             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:575
+msgid "Witch's shack"
+msgstr ""
+
+#: Source/stores.cpp:577
+#, fuzzy
+#| msgid "Talk to Pepin"
+msgid "Talk to Adria"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:578 Source/stores.cpp:954
+msgid "Buy items"
+msgstr "Køb varer"
+
+#: Source/stores.cpp:580
+msgid "Recharge staves"
+msgstr ""
+
+#: Source/stores.cpp:581
+msgid "Leave the shack"
+msgstr ""
+
+#: Source/stores.cpp:793
+#, c-format
+msgid "You have nothing to recharge.             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:803
+#, c-format
+msgid "Recharge which item?             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:819
+msgid "You do not have enough gold"
+msgstr ""
+
+#: Source/stores.cpp:827
+msgid "You do not have enough room in inventory"
+msgstr ""
+
+#: Source/stores.cpp:863
+msgid "Do we have a deal?"
+msgstr ""
+
+#: Source/stores.cpp:866
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to identify this item?"
+msgstr "Er du sikker på, at du vil slette karakteren \"%s\"?"
+
+#: Source/stores.cpp:872
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to buy this item?"
+msgstr "Er du sikker på, at du vil slette karakteren \"%s\"?"
+
+#: Source/stores.cpp:875
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to recharge this item?"
+msgstr "Er du sikker på, at du vil slette karakteren \"%s\"?"
+
+#: Source/stores.cpp:879
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to sell this item?"
+msgstr "Er du sikker på, at du vil slette karakteren \"%s\"?"
+
+#: Source/stores.cpp:882
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to repair this item?"
+msgstr "Er du sikker på, at du vil slette karakteren \"%s\"?"
+
+#: Source/stores.cpp:896 Source/towners.cpp:319
+msgid "Wirt the Peg-legged boy"
+msgstr ""
+
+#: Source/stores.cpp:899 Source/stores.cpp:906
+#, fuzzy
+#| msgid "Talk to Pepin"
+msgid "Talk to Wirt"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:900
+msgid "I have something for sale,"
+msgstr ""
+
+#: Source/stores.cpp:901
+msgid "but it will cost 50 gold"
+msgstr ""
+
+#: Source/stores.cpp:902
+msgid "just to take a look. "
+msgstr ""
+
+#: Source/stores.cpp:903
+msgid "What have you got?"
+msgstr ""
+
+#: Source/stores.cpp:904 Source/stores.cpp:907 Source/stores.cpp:1014
+#: Source/stores.cpp:1188
+msgid "Say goodbye"
+msgstr ""
+
+#: Source/stores.cpp:915
+#, c-format
+msgid "I have this item for sale:             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:931
+msgid "Leave"
+msgstr ""
+
+#: Source/stores.cpp:951
+msgid "Healer's home"
+msgstr "Healers hjem"
+
+#: Source/stores.cpp:953
+msgid "Talk to Pepin"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:955
+msgid "Leave Healer's home"
+msgstr "Forlad healers hjem"
+
+#: Source/stores.cpp:1010
+msgid "The Town Elder"
+msgstr ""
+
+#: Source/stores.cpp:1012
+#, fuzzy
+#| msgid "Talk to Pepin"
+msgid "Talk to Cain"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:1013
+msgid "Identify an item"
+msgstr ""
+
+#: Source/stores.cpp:1090
+#, c-format
+msgid "You have nothing to identify.             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:1100
+#, c-format
+msgid "Identify which item?             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:1117
+msgid "This item is:"
+msgstr ""
+
+#: Source/stores.cpp:1120
+msgid "Done"
+msgstr ""
+
+#: Source/stores.cpp:1129
+#, fuzzy, c-format
+#| msgid "Talk to Pepin"
+msgid "Talk to %s"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:1133
+#, fuzzy, c-format
+#| msgid "Talk to Pepin"
+msgid "Talking to %s"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:1135
+msgid "is not available"
+msgstr ""
+
+#: Source/stores.cpp:1136
+#, fuzzy
+#| msgid "Pepin the Healer"
+msgid "in the shareware"
+msgstr "Healeren Pepin"
+
+#: Source/stores.cpp:1137
+msgid "version"
+msgstr ""
+
+#: Source/stores.cpp:1164
+msgid "Gossip"
+msgstr ""
+
+#: Source/stores.cpp:1173
+msgid "Rising Sun"
+msgstr ""
+
+#: Source/stores.cpp:1175
+#, fuzzy
+#| msgid "Talk to Pepin"
+msgid "Talk to Ogden"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:1176
+msgid "Leave the tavern"
+msgstr ""
+
+#: Source/stores.cpp:1187
+#, fuzzy
+#| msgid "Talk to Pepin"
+msgid "Talk to Gillian"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:1197 Source/towners.cpp:367
+msgid "Farnham the Drunk"
+msgstr ""
+
+#: Source/stores.cpp:1199
+#, fuzzy
+#| msgid "Talk to Pepin"
+msgid "Talk to Farnham"
+msgstr "Tal med Pepin"
+
+#: Source/stores.cpp:1200
+msgid "Say Goodbye"
+msgstr ""
+
+#: Source/towners.cpp:241
+msgid "Griswold the Blacksmith"
+msgstr ""
+
+#: Source/towners.cpp:255
+msgid "Ogden the Tavern owner"
+msgstr ""
+
+#: Source/towners.cpp:271
+msgid "Wounded Townsman"
+msgstr ""
+
+#: Source/towners.cpp:287
+msgid "Adria the Witch"
+msgstr ""
+
+#: Source/towners.cpp:303
+msgid "Gillian the Barmaid"
+msgstr ""
+
+#: Source/towners.cpp:335
+msgid "Pepin the Healer"
+msgstr "Healeren Pepin"
+
+#: Source/towners.cpp:351
+#, fuzzy
+#| msgid "Pepin the Healer"
+msgid "Cain the Elder"
+msgstr "Healeren Pepin"
+
+#: Source/towners.cpp:390
+msgid "Cow"
+msgstr ""
+
+#: Source/towners.cpp:417
+msgid "Lester the farmer"
+msgstr ""
+
+#: Source/towners.cpp:437
+msgid "Complete Nut"
+msgstr ""
+
+#: Source/towners.cpp:553
+msgid "Slain Townsman"
+msgstr ""

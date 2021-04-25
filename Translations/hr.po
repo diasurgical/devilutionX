@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-04-25 04:50+0200\n"
-"PO-Revision-Date: 2021-04-25 04:50+0200\n"
+"POT-Creation-Date: 2021-04-25 06:53+0200\n"
+"PO-Revision-Date: 2021-04-25 06:53+0200\n"
 "Last-Translator: gogo <linux.hr@protonmail.com>\n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -20,6 +20,330 @@ msgstr ""
 "X-Poedit-KeywordsList: _;N_\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: Source\n"
+
+#: Source/DiabloUI/credits_lines.cpp:7
+msgid "Game Design"
+msgstr "Dizajn igre"
+
+#: Source/DiabloUI/credits_lines.cpp:10
+msgid "Senior Designers"
+msgstr "Stariji dizajneri"
+
+#: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
+msgid "Additional Design"
+msgstr "Dodatni dizajn"
+
+#: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
+msgid "Lead Programmer"
+msgstr "Vodeći programer"
+
+#: Source/DiabloUI/credits_lines.cpp:19
+msgid "Senior Programmers"
+msgstr "Stariji programeri"
+
+#: Source/DiabloUI/credits_lines.cpp:23
+msgid "Programming"
+msgstr "Programiranje"
+
+#: Source/DiabloUI/credits_lines.cpp:26
+msgid "Special Guest Programmers"
+msgstr "Posebni gostujući programeri"
+
+#: Source/DiabloUI/credits_lines.cpp:29
+msgid "Battle.net Programming"
+msgstr "Battle.net programiranje"
+
+#: Source/DiabloUI/credits_lines.cpp:32
+msgid "Serial Communications Programming"
+msgstr "Programiranje serijske komunikacije"
+
+#: Source/DiabloUI/credits_lines.cpp:35
+msgid "Installer Programming"
+msgstr "Programiranje instalacijskog programa"
+
+#: Source/DiabloUI/credits_lines.cpp:38
+msgid "Art Directors"
+msgstr "Grafički redatelji"
+
+#: Source/DiabloUI/credits_lines.cpp:41
+msgid "Artwork"
+msgstr "Grafika"
+
+#: Source/DiabloUI/credits_lines.cpp:48
+msgid "Technical Artwork"
+msgstr "Tehnička grafika"
+
+#: Source/DiabloUI/credits_lines.cpp:52
+msgid "Cinematic Art Directors"
+msgstr "Filmski redatelji"
+
+#: Source/DiabloUI/credits_lines.cpp:55
+msgid "3D Cinematic Artwork"
+msgstr "3D filmski redatelji"
+
+#: Source/DiabloUI/credits_lines.cpp:61
+msgid "Cinematic Technical Artwork"
+msgstr "Filmska tehnička grafika"
+
+#: Source/DiabloUI/credits_lines.cpp:64
+msgid "Executive Producer"
+msgstr "Izvršni producent"
+
+#: Source/DiabloUI/credits_lines.cpp:67
+msgid "Producer"
+msgstr "Producent"
+
+#: Source/DiabloUI/credits_lines.cpp:70
+msgid "Associate Producer"
+msgstr "Pomoćni producent"
+
+#: Source/DiabloUI/credits_lines.cpp:73
+msgid "Diablo Strike Team"
+msgstr "Diablo udarni tim"
+
+#: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:70
+msgid "Music"
+msgstr "Glazba"
+
+#: Source/DiabloUI/credits_lines.cpp:80
+msgid "Sound Design"
+msgstr "Dizajn zvuka"
+
+#: Source/DiabloUI/credits_lines.cpp:83
+msgid "Cinematic Music & Sound"
+msgstr "Filmska glazba i zvuk"
+
+#: Source/DiabloUI/credits_lines.cpp:86
+msgid "Voice Production, Direction & Casting"
+msgstr "Produkcija glasova, režija i raspoređivanje uloga"
+
+#: Source/DiabloUI/credits_lines.cpp:89
+msgid "Script & Story"
+msgstr "Scenarij i priča"
+
+#: Source/DiabloUI/credits_lines.cpp:93
+msgid "Voice Editing"
+msgstr "Montaža glasova"
+
+#: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
+msgid "Voices"
+msgstr "Glasovi dali"
+
+#: Source/DiabloUI/credits_lines.cpp:101
+msgid "Recording Engineer"
+msgstr "Inženjer snimanja"
+
+#: Source/DiabloUI/credits_lines.cpp:104
+msgid "Manual Design & Layout"
+msgstr "Dizajn priručnika i omota"
+
+#: Source/DiabloUI/credits_lines.cpp:108
+msgid "Manual Artwork"
+msgstr "Grafika priručnika"
+
+#: Source/DiabloUI/credits_lines.cpp:112
+msgid "Provisional Director of QA (Lead Tester)"
+msgstr "Privremeni upravitelj kvalitete (Vodeći testiratelj)"
+
+#: Source/DiabloUI/credits_lines.cpp:115
+msgid "QA Assault Team (Testers)"
+msgstr "Ispitivanje kvalitete - napadački tim (Testiratelji)"
+
+#: Source/DiabloUI/credits_lines.cpp:120
+msgid "QA Special Ops Team (Compatibility Testers)"
+msgstr ""
+"Ispitivanje kvalitete - tim za posebne operacije (Testiratelji "
+"kompatibilnosti)"
+
+#: Source/DiabloUI/credits_lines.cpp:123
+msgid "QA Artillery Support (Additional Testers) "
+msgstr "Ispitivanje kvalitete - podrška artiljerije (Dodatni testiratelji) "
+
+#: Source/DiabloUI/credits_lines.cpp:127
+msgid "QA Counterintelligence"
+msgstr "Ispitivanje kvalitete - kontraobavještajna služba"
+
+#: Source/DiabloUI/credits_lines.cpp:130
+msgid "Order of Network Information Services"
+msgstr "Naručivanje mrežnih informacijskih usluga"
+
+#: Source/DiabloUI/credits_lines.cpp:134
+#, fuzzy
+#| msgid "Customer Support"
+msgid "Customer Support"
+msgstr "Korisnička podrška"
+
+#: Source/DiabloUI/credits_lines.cpp:139
+msgid "Sales"
+msgstr "Prodaja"
+
+#: Source/DiabloUI/credits_lines.cpp:142
+msgid "Dunsel"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:145
+msgid "Mr. Dabiri's Background Vocalists"
+msgstr "Prateći vokali gospodina Dabiria"
+
+#: Source/DiabloUI/credits_lines.cpp:149
+msgid "Public Relations"
+msgstr "Odnosi s javnošću"
+
+#: Source/DiabloUI/credits_lines.cpp:152
+msgid "Marketing"
+msgstr "Marketing"
+
+#: Source/DiabloUI/credits_lines.cpp:155
+msgid "International Sales"
+msgstr "Međunarodna prodaja"
+
+#: Source/DiabloUI/credits_lines.cpp:158
+msgid "U.S. Sales"
+msgstr "SAD prodaja"
+
+#: Source/DiabloUI/credits_lines.cpp:161
+msgid "Manufacturing"
+msgstr "Proizvodnja"
+
+#: Source/DiabloUI/credits_lines.cpp:164
+msgid "Legal & Business"
+msgstr "Pravne i poslovne djelatnosti"
+
+#: Source/DiabloUI/credits_lines.cpp:167
+msgid "Special Thanks To"
+msgstr "Posebne zahvale"
+
+#: Source/DiabloUI/credits_lines.cpp:171
+msgid "Thanks To"
+msgstr "Zahvale"
+
+#: Source/DiabloUI/credits_lines.cpp:200
+msgid "In memory of"
+msgstr "U sjećanje na"
+
+#: Source/DiabloUI/credits_lines.cpp:206
+msgid "Very Special Thanks to"
+msgstr "Veoma posebna zahvala"
+
+#: Source/DiabloUI/credits_lines.cpp:212
+msgid "General Manager"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:218
+msgid "Software Engineering"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:221
+#, fuzzy
+#| msgid "Art Directors"
+msgid "Art Director"
+msgstr "Grafički redatelji"
+
+#: Source/DiabloUI/credits_lines.cpp:224
+msgid "Artists"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:228
+#, fuzzy
+#| msgid "Game Design"
+msgid "Design"
+msgstr "Dizajn igre"
+
+#: Source/DiabloUI/credits_lines.cpp:235
+msgid "Sound Design, SFX & Audio Engineering"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:238
+msgid "Quality Assurance Lead"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:241
+msgid "Testers"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:246
+#, fuzzy
+#| msgid "Manual Artwork"
+msgid "Manual"
+msgstr "Grafika priručnika"
+
+#: Source/DiabloUI/credits_lines.cpp:255
+#, fuzzy
+#| msgid "Additional Design"
+msgid "\tAdditional Work"
+msgstr "Dodatni dizajn"
+
+#: Source/DiabloUI/credits_lines.cpp:257
+msgid "Quest Text Writing"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
+#, fuzzy
+#| msgid "Thanks To"
+msgid "Thanks to"
+msgstr "Zahvale"
+
+#: Source/DiabloUI/credits_lines.cpp:265
+#, fuzzy
+#| msgid "Copyright © 1996-2001 Blizzard Entertainment"
+msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
+msgstr "Autorsko pravo © 1996-2001 Blizzard Entertainment"
+
+#: Source/DiabloUI/credits_lines.cpp:270
+msgid "\t\t\tSierra On-Line Inc. Northwest"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:272
+msgid "Quality Assurance Manager"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:275
+msgid "Quality Assurance Lead Tester"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:278
+msgid "Main Testers"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:281
+#, fuzzy
+#| msgid "Additional Design"
+msgid "Additional Testers"
+msgstr "Dodatni dizajn"
+
+#: Source/DiabloUI/credits_lines.cpp:286
+msgid "Product Marketing Manager"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:289
+#, fuzzy
+#| msgid "Public Relations"
+msgid "Public Relations Manager"
+msgstr "Odnosi s javnošću"
+
+#: Source/DiabloUI/credits_lines.cpp:292
+#, fuzzy
+#| msgid "Associate Producer"
+msgid "Associate Product Manager"
+msgstr "Pomoćni producent"
+
+#: Source/DiabloUI/credits_lines.cpp:301
+msgid "The Ring of One Thousand"
+msgstr "Prsten od tisuće"
+
+#: Source/DiabloUI/credits_lines.cpp:547
+msgid "\tNo souls were sold in the making of this game."
+msgstr "\tTijekom izrade ove igre nije bilo prodanih duša."
+
+#: Source/DiabloUI/dialogs.cpp:171 Source/DiabloUI/dialogs.cpp:184
+#: Source/DiabloUI/selconn.cpp:68 Source/DiabloUI/selgame.cpp:99
+#: Source/DiabloUI/selgame.cpp:168 Source/DiabloUI/selgame.cpp:186
+#: Source/DiabloUI/selgame.cpp:319 Source/DiabloUI/selgame.cpp:392
+#: Source/DiabloUI/selhero.cpp:207 Source/DiabloUI/selhero.cpp:233
+#: Source/DiabloUI/selhero.cpp:311 Source/DiabloUI/selhero.cpp:561
+#: Source/DiabloUI/selok.cpp:74
+msgid "OK"
+msgstr "U redu"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -65,476 +389,911 @@ msgstr ""
 "Diablo uvodni film je samo dostupan u cjelovitom maloprodajnom izdanju "
 "Diabla. Posjetite https://www.gog.com/game/diablo kako bi ga kupili."
 
-#~ msgid "Error"
-#~ msgstr "Greška"
-
-#~ msgid ""
-#~ "assertion failed (%d:%s)\n"
-#~ "%s"
-#~ msgstr ""
-#~ "neuspjeli navod (%d:%s)\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "%s\n"
-#~ "\n"
-#~ "The error occurred at: %s line %d"
-#~ msgstr ""
-#~ "%s\n"
-#~ "\n"
-#~ "Greška se dogodila na: %s redak %d"
-
-#~ msgid ""
-#~ "Unable to open a required file.\n"
-#~ "\n"
-#~ "Verify that the MD5 of diabdat.mpq matches on of the following values\n"
-#~ "011bc6518e6166206231080a4440b373\n"
-#~ "68f049866b44688a7af65ba766bef75a\n"
-#~ "\n"
-#~ "The problem occurred when loading:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Nemoguće otvaranje potrebne datoteke.\n"
-#~ "\n"
-#~ "Provjerite poklapa li se MD5 diabdat.mpq datoteke sa sljedećim "
-#~ "vrijednostima\n"
-#~ "011bc6518e6166206231080a4440b373\n"
-#~ "68f049866b44688a7af65ba766bef75a\n"
-#~ "\n"
-#~ "Došlo je do problema učitavanja:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "Unable to open %s.\n"
-#~ "\n"
-#~ "Make sure that it is in the game folder and that the file name is in all "
-#~ "lowercase."
-#~ msgstr ""
-#~ "Nemoguće je otvoriti %s.\n"
-#~ "\n"
-#~ "Provjerite nalazi li se u mapi igre i je li naziv datoteke u malim "
-#~ "slovima."
-
-#~ msgid ""
-#~ "Unable to write to location:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Nemoguće zapisivanje lokacije:\n"
-#~ "%s"
-
-#~ msgid "Read-Only Directory Error"
-#~ msgstr "Greška, direktorij ima samo dozvolu čitanja"
-
-#~ msgid "Save Game"
-#~ msgstr "Spremi igru"
-
-#~ msgid "Options"
-#~ msgstr "Mogućnosti"
-
-#~ msgid "New Game"
-#~ msgstr "Nova igra"
-
-#~ msgid "Load Game"
-#~ msgstr "Učitaj igru"
-
-#~ msgid "Quit Diablo"
-#~ msgstr "Zatvori Diablo"
-
-#~ msgid "Restart In Town"
-#~ msgstr "Ponovno pokreni u gradu"
-
-#~ msgid "Gamma"
-#~ msgstr "Gama"
-
-#~ msgid "Previous Menu"
-#~ msgstr "Prijašnji izbornik"
-
-#~ msgid "Music"
-#~ msgstr "Glazba"
-
-#~ msgid "Music Disabled"
-#~ msgstr "Glazba isključena"
-
-#~ msgid "Sound"
-#~ msgstr "Zvuk"
-
-#~ msgid "Sound Disabled"
-#~ msgstr "Zvuk isključen"
-
-#~ msgid "Color Cycling Off"
-#~ msgstr "Kruženje boja isključeno"
-
-#~ msgid "Color Cycling On"
-#~ msgstr "Kruženje boja uključeno"
-
-#~ msgid "Pause"
-#~ msgstr "Pauziraj"
-
-#~ msgid "Failed to load image"
-#~ msgstr "Neuspjelo učitavanje slike"
-
-#~ msgid "Game Design"
-#~ msgstr "Dizajn igre"
-
-#~ msgid "Senior Designers"
-#~ msgstr "Stariji dizajneri"
-
-#~ msgid "Additional Design"
-#~ msgstr "Dodatni dizajn"
-
-#~ msgid "Lead Programmer"
-#~ msgstr "Vodeći programer"
-
-#~ msgid "Senior Programmers"
-#~ msgstr "Stariji programeri"
-
-#~ msgid "Programming"
-#~ msgstr "Programiranje"
-
-#~ msgid "Special Guest Programmers"
-#~ msgstr "Posebni gostujući programeri"
-
-#~ msgid "Battle.net Programming"
-#~ msgstr "Battle.net programiranje"
-
-#~ msgid "Serial Communications Programming"
-#~ msgstr "Programiranje serijske komunikacije"
-
-#~ msgid "Installer Programming"
-#~ msgstr "Programiranje instalacijskog programa"
-
-#~ msgid "Art Directors"
-#~ msgstr "Grafički redatelji"
-
-#~ msgid "Artwork"
-#~ msgstr "Grafika"
-
-#~ msgid "Technical Artwork"
-#~ msgstr "Tehnička grafika"
-
-#~ msgid "Cinematic Art Directors"
-#~ msgstr "Filmski redatelji"
-
-#~ msgid "3D Cinematic Artwork"
-#~ msgstr "3D filmski redatelji"
-
-#~ msgid "Cinematic Technical Artwork"
-#~ msgstr "Filmska tehnička grafika"
-
-#~ msgid "Executive Producer"
-#~ msgstr "Izvršni producent"
-
-#~ msgid "Producer"
-#~ msgstr "Producent"
-
-#~ msgid "Associate Producer"
-#~ msgstr "Pomoćni producent"
-
-#~ msgid "Diablo Strike Team"
-#~ msgstr "Diablo udarni tim"
-
-#~ msgid "Sound Design"
-#~ msgstr "Dizajn zvuka"
-
-#~ msgid "Cinematic Music & Sound"
-#~ msgstr "Filmska glazba i zvuk"
-
-#~ msgid "Voice Production, Direction & Casting"
-#~ msgstr "Produkcija glasova, režija i raspoređivanje uloga"
-
-#~ msgid "Script & Story"
-#~ msgstr "Scenarij i priča"
-
-#~ msgid "Voice Editing"
-#~ msgstr "Montaža glasova"
-
-#~ msgid "Voices"
-#~ msgstr "Glasovi dali"
-
-#~ msgid "Recording Engineer"
-#~ msgstr "Inženjer snimanja"
-
-#~ msgid "Manual Design & Layout"
-#~ msgstr "Dizajn priručnika i omota"
-
-#~ msgid "Manual Artwork"
-#~ msgstr "Grafika priručnika"
-
-#~ msgid "Provisional Director of QA (Lead Tester)"
-#~ msgstr "Privremeni upravitelj kvalitete (Vodeći testiratelj)"
-
-#~ msgid "QA Assault Team (Testers)"
-#~ msgstr "Ispitivanje kvalitete - napadački tim (Testiratelji)"
-
-#~ msgid "QA Special Ops Team (Compatibility Testers)"
-#~ msgstr ""
-#~ "Ispitivanje kvalitete - tim za posebne operacije (Testiratelji "
-#~ "kompatibilnosti)"
-
-#~ msgid "QA Artillery Support (Additional Testers) "
-#~ msgstr "Ispitivanje kvalitete - podrška artiljerije (Dodatni testiratelji) "
-
-#~ msgid "QA Counterintelligence"
-#~ msgstr "Ispitivanje kvalitete - kontraobavještajna služba"
-
-#~ msgid "Order of Network Information Services"
-#~ msgstr "Naručivanje mrežnih informacijskih usluga"
-
-#~ msgid "Sales"
-#~ msgstr "Prodaja"
-
-#~ msgid "Mr. Dabiri's Background Vocalists"
-#~ msgstr "Prateći vokali gospodina Dabiria"
-
-#~ msgid "Public Relations"
-#~ msgstr "Odnosi s javnošću"
-
-#~ msgid "Marketing"
-#~ msgstr "Marketing"
-
-#~ msgid "International Sales"
-#~ msgstr "Međunarodna prodaja"
-
-#~ msgid "U.S. Sales"
-#~ msgstr "SAD prodaja"
-
-#~ msgid "Manufacturing"
-#~ msgstr "Proizvodnja"
-
-#~ msgid "Legal & Business"
-#~ msgstr "Pravne i poslovne djelatnosti"
-
-#~ msgid "Special Thanks To"
-#~ msgstr "Posebne zahvale"
-
-#~ msgid "Thanks To"
-#~ msgstr "Zahvale"
-
-#~ msgid "In memory of"
-#~ msgstr "U sjećanje na"
-
-#~ msgid "Very Special Thanks to"
-#~ msgstr "Veoma posebna zahvala"
-
-#~ msgid "The Ring of One Thousand"
-#~ msgstr "Prsten od tisuće"
-
-#~ msgid "\tNo souls were sold in the making of this game."
-#~ msgstr "\tTijekom izrade ove igre nije bilo prodanih duša."
-
-#~ msgid "OK"
-#~ msgstr "U redu"
-
-#~ msgid "Cancel"
-#~ msgstr "Odustani"
-
-#~ msgid "Client-Server (TCP)"
-#~ msgstr "Klijent-Poslužitelj (TCP)"
-
-#~ msgid "Peer-to-Peer (UDP)"
-#~ msgstr "Točka-u-Točka (UDP)"
-
-#~ msgid "Loopback"
-#~ msgstr "Izvanmrežno"
-
-#~ msgid "Multi Player Game"
-#~ msgstr "Igra za više igrača"
-
-#~ msgid "Requirements:"
-#~ msgstr "Zahtjevi:"
-
-#~ msgid "no gateway needed"
-#~ msgstr "pristupnik nije potreban"
-
-#~ msgid "Select Connection"
-#~ msgstr "Odaberi povezivanje"
-
-#~ msgid "Change Gateway"
-#~ msgstr "Promijeni pristupnika"
-
-#~ msgid "All computers must be connected to a TCP-compatible network."
-#~ msgstr "Sva računala moraju biti povezana u TCP kompatibilnu mrežu."
-
-#~ msgid "All computers must be connected to a UDP-compatible network."
-#~ msgstr "Sva računala moraju biti povezana u UDP kompatibilnu mrežu."
-
-#~ msgid "Play by yourself with no network exposure."
-#~ msgstr "Igrajte sami sa sobom bez pristupa mreži."
-
-#~ msgid "Players Supported: %d"
-#~ msgstr "Podržano igrača: %d"
-
-#~ msgid "CANCEL"
-#~ msgstr "Odustani"
-
-#~ msgid "Normal"
-#~ msgstr "Normalna"
-
-#~ msgid "Nightmare"
-#~ msgstr "Noćna mora"
-
-#~ msgid "Hell"
-#~ msgstr "Pakao"
-
-#~ msgid "Select Difficulty"
-#~ msgstr "Odaberi razinu"
-
-#~ msgid "Create Game"
-#~ msgstr "Stvori igru"
-
-#~ msgid "Enter IP"
-#~ msgstr "Upiši IP adresu"
-
-#~ msgid "Select Action"
-#~ msgstr "Odaberi radnju"
-
-#~ msgid "Enter Password"
-#~ msgstr "Upiši lozinku"
-
-#~ msgid "Create a new game with a difficulty setting of your choice."
-#~ msgstr "Stvorite novu igru s razinom po vašem izboru."
-
-#~ msgid "Enter an IP and join a game already in progress at that address."
-#~ msgstr ""
-#~ "Upišite IP adresu i pridružite se već pokrenutoj igri na dotičnoj adresi."
-
-#~ msgid "Join TCP Games"
-#~ msgstr "Pridruži se TCP igrama"
-
-#~ msgid ""
-#~ "Normal Difficulty\n"
-#~ "This is where a starting character should begin the quest to defeat "
-#~ "Diablo."
-#~ msgstr ""
-#~ "Normalna razina\n"
-#~ "Ovdje bi novi lik trebao započeti potragu za porazom Diabla."
-
-#~ msgid ""
-#~ "Nightmare Difficulty\n"
-#~ "The denizens of the Labyrinth have been bolstered and will prove to be a "
-#~ "greater challenge. This is recommended for experienced characters only."
-#~ msgstr ""
-#~ "Razina noćne more\n"
-#~ "Stanovnici Labirinta su ojačali i pokazat će se kao veći izazov. Ovo je "
-#~ "preporučljivo samo za iskusne likove."
-
-#~ msgid ""
-#~ "Hell Difficulty\n"
-#~ "The most powerful of the underworld's creatures lurk at the gateway into "
-#~ "Hell. Only the most experienced characters should venture in this realm."
-#~ msgstr ""
-#~ "Paklena razina\n"
-#~ "Najmoćnija bića iz podzemlja vrebaju na ulazu u Pakao. U ovo bi carstvo "
-#~ "trebali ući samo najiskusniji likovi."
-
-#~ msgid ""
-#~ "Your character must reach level 20 before you can enter a multiplayer "
-#~ "game of Nightmare difficulty."
-#~ msgstr ""
-#~ "Vaš lik mora prije dostići razinu 20 kako bi mogao ući u igru s više "
-#~ "igrača ili u razinu noćne more."
-
-#~ msgid ""
-#~ "Your character must reach level 30 before you can enter a multiplayer "
-#~ "game of Hell difficulty."
-#~ msgstr ""
-#~ "Vaš lik mora prije dostići razinu 30 kako bi mogao ući u igru s više "
-#~ "igrača ili u paklenu razinu."
-
-#~ msgid "Level:"
-#~ msgstr "Razina:"
-
-#~ msgid "Strength:"
-#~ msgstr "Snaga:"
-
-#~ msgid "Magic:"
-#~ msgstr "Magija:"
-
-#~ msgid "Dexterity:"
-#~ msgstr "Vještina:"
-
-#~ msgid "Vitality:"
-#~ msgstr "Vitalnost:"
-
-#~ msgid "Select Hero"
-#~ msgstr "Odaberi heroja"
-
-#~ msgid "Delete"
-#~ msgstr "Obriši"
-
-#~ msgid "Warrior"
-#~ msgstr "Ratnik"
-
-#~ msgid "Rogue"
-#~ msgstr "Lutalica"
-
-#~ msgid "Sorcerer"
-#~ msgstr "Čarobnjak"
-
-#~ msgid "Choose Class"
-#~ msgstr "Odaberi klasu"
-
-#~ msgid "Enter Name"
-#~ msgstr "Upiši ime"
-
-#~ msgid "Save File Exists"
-#~ msgstr "Datoteka spremanja postoji"
-
-#~ msgid "New Hero"
-#~ msgstr "Novi heroj"
-
-#~ msgid "Multi Player Characters"
-#~ msgstr "Lik među više igrača"
-
-#~ msgid "Single Player Characters"
-#~ msgstr "Lik jednog igrača"
-
-#~ msgid "New Multi Player Hero"
-#~ msgstr "Novi heroj među više igrača"
-
-#~ msgid "New Single Player Hero"
-#~ msgstr "Novi heroj jednog igrača"
-
-#~ msgid ""
-#~ "The Rogue and Sorcerer are only available in the full retail version of "
-#~ "Diablo. Visit https://www.gog.com/game/diablo to purchase."
-#~ msgstr ""
-#~ "Čarobnjak i Lutalica samo su dostupni u cjelovitom maloprodajnom izdanju "
-#~ "Diabla. Posjetite https://www.gog.com/game/diablo kako bi ga kupili."
-
-#~ msgid ""
-#~ "Invalid name. A name cannot contain spaces, reserved characters, or "
-#~ "reserved words.\n"
-#~ msgstr ""
-#~ "Neispravno ime. Ime ne može sadržavati razmake, rezervirane znakove ili "
-#~ "rezervirane riječi.\n"
-
-#~ msgid "Character already exists. Do you want to overwrite \"%s\"?"
-#~ msgstr "Lik već postoji. Želite li prebrisati \"%s\"?"
-
-#~ msgid "Unable to create character."
-#~ msgstr "Nemoguće stvaranje lika."
-
-#~ msgid "Delete Multi Player Hero"
-#~ msgstr "Obriši heroja s više igrača"
-
-#~ msgid "Delete Single Player Hero"
-#~ msgstr "Obriši heroja jednog igrača"
-
-#~ msgid "Are you sure you want to delete the character \"%s\"?"
-#~ msgstr "Sigurno želite obrisati \"%s\" lik?"
-
-#~ msgid "Yes"
-#~ msgstr "Da"
-
-#~ msgid "No"
-#~ msgstr "Ne"
-
-#~ msgid "Copyright © 1996-2001 Blizzard Entertainment"
-#~ msgstr "Autorsko pravo © 1996-2001 Blizzard Entertainment"
-
-#~ msgid "Text has zero width"
-#~ msgstr "Tekst ima nultu širinu"
-
-#~ msgid "Out of memory"
-#~ msgstr "Premalo memorije"
+#: Source/DiabloUI/progress.cpp:46 Source/DiabloUI/selconn.cpp:71
+#: Source/DiabloUI/selhero.cpp:210 Source/DiabloUI/selhero.cpp:236
+#: Source/DiabloUI/selhero.cpp:314 Source/DiabloUI/selhero.cpp:568
+msgid "Cancel"
+msgstr "Odustani"
+
+#: Source/DiabloUI/selconn.cpp:34 Source/DiabloUI/selgame.cpp:82
+#: Source/DiabloUI/selgame.cpp:377
+msgid "Client-Server (TCP)"
+msgstr "Klijent-Poslužitelj (TCP)"
+
+#: Source/DiabloUI/selconn.cpp:36
+msgid "Loopback"
+msgstr "Izvanmrežno"
+
+#: Source/DiabloUI/selconn.cpp:42 Source/DiabloUI/selgame.cpp:439
+#: Source/DiabloUI/selgame.cpp:457
+msgid "Multi Player Game"
+msgstr "Igra za više igrača"
+
+#: Source/DiabloUI/selconn.cpp:48
+#, fuzzy
+#| msgid "Requirements:"
+msgid "Requirements:"
+msgstr "Zahtjevi:"
+
+#: Source/DiabloUI/selconn.cpp:54
+msgid "no gateway needed"
+msgstr "pristupnik nije potreban"
+
+#: Source/DiabloUI/selconn.cpp:60
+msgid "Select Connection"
+msgstr "Odaberi povezivanje"
+
+#: Source/DiabloUI/selconn.cpp:63
+msgid "Change Gateway"
+msgstr "Promijeni pristupnika"
+
+#: Source/DiabloUI/selconn.cpp:102
+msgid "All computers must be connected to a TCP-compatible network."
+msgstr "Sva računala moraju biti povezana u TCP kompatibilnu mrežu."
+
+#: Source/DiabloUI/selconn.cpp:106
+#, fuzzy
+#| msgid "All computers must be connected to a TCP-compatible network."
+msgid "All computers must be connected to the internet."
+msgstr "Sva računala moraju biti povezana u TCP kompatibilnu mrežu."
+
+#: Source/DiabloUI/selconn.cpp:110
+msgid "Play by yourself with no network exposure."
+msgstr "Igrajte sami sa sobom bez pristupa mreži."
+
+#: Source/DiabloUI/selconn.cpp:115
+#, c-format
+msgid "Players Supported: %d"
+msgstr "Podržano igrača: %d"
+
+#: Source/DiabloUI/selgame.cpp:85 Source/DiabloUI/selgame.cpp:380
+msgid "Description:"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:91
+msgid "Select Action"
+msgstr "Odaberi radnju"
+
+#: Source/DiabloUI/selgame.cpp:93 Source/DiabloUI/selgame.cpp:156
+#: Source/DiabloUI/selgame.cpp:300
+msgid "Create Game"
+msgstr "Stvori igru"
+
+#: Source/DiabloUI/selgame.cpp:94
+#, fuzzy
+#| msgid "Join TCP Games"
+msgid "Join Game"
+msgstr "Pridruži se TCP igrama"
+
+#: Source/DiabloUI/selgame.cpp:102 Source/DiabloUI/selgame.cpp:171
+#: Source/DiabloUI/selgame.cpp:189 Source/DiabloUI/selgame.cpp:322
+#: Source/DiabloUI/selgame.cpp:395
+msgid "CANCEL"
+msgstr "Odustani"
+
+#: Source/DiabloUI/selgame.cpp:111
+msgid "Create a new game with a difficulty setting of your choice."
+msgstr "Stvorite novu igru s razinom po vašem izboru."
+
+#: Source/DiabloUI/selgame.cpp:114
+#, fuzzy
+#| msgid "Enter an IP and join a game already in progress at that address."
+msgid ""
+"Enter an IP or a hostname and join a game already in progress at that "
+"address."
+msgstr ""
+"Upišite IP adresu i pridružite se već pokrenutoj igri na dotičnoj adresi."
+
+#: Source/DiabloUI/selgame.cpp:159
+msgid "Select Difficulty"
+msgstr "Odaberi razinu"
+
+#: Source/DiabloUI/selgame.cpp:161 Source/DiabloUI/selgame.cpp:208
+#: Source/DiabloUI/selgame.cpp:311 Source/DiabloUI/selgame.cpp:331
+msgid "Normal"
+msgstr "Normalna"
+
+#: Source/DiabloUI/selgame.cpp:162 Source/DiabloUI/selgame.cpp:212
+msgid "Nightmare"
+msgstr "Noćna mora"
+
+#: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:216
+msgid "Hell"
+msgstr "Pakao"
+
+#: Source/DiabloUI/selgame.cpp:177
+msgid "Join TCP Games"
+msgstr "Pridruži se TCP igrama"
+
+#: Source/DiabloUI/selgame.cpp:180
+#, fuzzy
+#| msgid "Enter Name"
+msgid "Enter address"
+msgstr "Upiši ime"
+
+#: Source/DiabloUI/selgame.cpp:209
+msgid ""
+"Normal Difficulty\n"
+"This is where a starting character should begin the quest to defeat Diablo."
+msgstr ""
+"Normalna razina\n"
+"Ovdje bi novi lik trebao započeti potragu za porazom Diabla."
+
+#: Source/DiabloUI/selgame.cpp:213
+msgid ""
+"Nightmare Difficulty\n"
+"The denizens of the Labyrinth have been bolstered and will prove to be a "
+"greater challenge. This is recommended for experienced characters only."
+msgstr ""
+"Razina noćne more\n"
+"Stanovnici Labirinta su ojačali i pokazat će se kao veći izazov. Ovo je "
+"preporučljivo samo za iskusne likove."
+
+#: Source/DiabloUI/selgame.cpp:217
+msgid ""
+"Hell Difficulty\n"
+"The most powerful of the underworld's creatures lurk at the gateway into "
+"Hell. Only the most experienced characters should venture in this realm."
+msgstr ""
+"Paklena razina\n"
+"Najmoćnija bića iz podzemlja vrebaju na ulazu u Pakao. U ovo bi carstvo "
+"trebali ući samo najiskusniji likovi."
+
+#: Source/DiabloUI/selgame.cpp:232
+msgid ""
+"Your character must reach level 20 before you can enter a multiplayer game "
+"of Nightmare difficulty."
+msgstr ""
+"Vaš lik mora prije dostići razinu 20 kako bi mogao ući u igru s više igrača "
+"ili u razinu noćne more."
+
+#: Source/DiabloUI/selgame.cpp:234
+msgid ""
+"Your character must reach level 30 before you can enter a multiplayer game "
+"of Hell difficulty."
+msgstr ""
+"Vaš lik mora prije dostići razinu 30 kako bi mogao ući u igru s više igrača "
+"ili u paklenu razinu."
+
+#: Source/DiabloUI/selgame.cpp:309
+msgid "Select Game Speed"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:312 Source/DiabloUI/selgame.cpp:335
+msgid "Fast"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:313 Source/DiabloUI/selgame.cpp:339
+msgid "Faster"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:314 Source/DiabloUI/selgame.cpp:343
+msgid "Fastest"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:332
+#, fuzzy
+#| msgid ""
+#| "Normal Difficulty\n"
+#| "This is where a starting character should begin the quest to defeat "
+#| "Diablo."
+msgid ""
+"Normal Speed\n"
+"This is where a starting character should begin the quest to defeat Diablo."
+msgstr ""
+"Normalna razina\n"
+"Ovdje bi novi lik trebao započeti potragu za porazom Diabla."
+
+#: Source/DiabloUI/selgame.cpp:336
+#, fuzzy
+#| msgid ""
+#| "Nightmare Difficulty\n"
+#| "The denizens of the Labyrinth have been bolstered and will prove to be a "
+#| "greater challenge. This is recommended for experienced characters only."
+msgid ""
+"Fast Speed\n"
+"The denizens of the Labyrinth have been hastened and will prove to be a "
+"greater challenge. This is recommended for experienced characters only."
+msgstr ""
+"Razina noćne more\n"
+"Stanovnici Labirinta su ojačali i pokazat će se kao veći izazov. Ovo je "
+"preporučljivo samo za iskusne likove."
+
+#: Source/DiabloUI/selgame.cpp:340
+msgid ""
+"Faster Speed\n"
+"Most monsters of the dungeon will seek you out quicker than ever before. "
+"Only an experienced champion should try their luck at this speed."
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:344
+msgid ""
+"Fastest Speed\n"
+"The minions of the underworld will rush to attack without hesitation. Only a "
+"true speed demon should enter at this pace."
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:386
+msgid "Enter Password"
+msgstr "Upiši lozinku"
+
+#: Source/DiabloUI/selgame.cpp:412
+msgid "The host is running a different game than you."
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:415
+#, c-format
+msgid "Your version %s does not match the host %d.%d.%d."
+msgstr ""
+
+#: Source/DiabloUI/selhero.cpp:123
+msgid "New Hero"
+msgstr "Novi heroj"
+
+#: Source/DiabloUI/selhero.cpp:185
+msgid "Choose Class"
+msgstr "Odaberi klasu"
+
+#: Source/DiabloUI/selhero.cpp:189
+msgid "Warrior"
+msgstr "Ratnik"
+
+#: Source/DiabloUI/selhero.cpp:190
+msgid "Rogue"
+msgstr "Lutalica"
+
+#: Source/DiabloUI/selhero.cpp:191
+msgid "Sorcerer"
+msgstr "Čarobnjak"
+
+#: Source/DiabloUI/selhero.cpp:193
+msgid "Monk"
+msgstr ""
+
+#: Source/DiabloUI/selhero.cpp:196
+msgid "Bard"
+msgstr ""
+
+#: Source/DiabloUI/selhero.cpp:199
+msgid "Barbarian"
+msgstr ""
+
+#: Source/DiabloUI/selhero.cpp:214 Source/DiabloUI/selhero.cpp:293
+msgid "New Single Player Hero"
+msgstr "Novi heroj jednog igrača"
+
+#: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:295
+msgid "New Multi Player Hero"
+msgstr "Novi heroj među više igrača"
+
+#: Source/DiabloUI/selhero.cpp:225
+msgid "Save File Exists"
+msgstr "Datoteka spremanja postoji"
+
+#: Source/DiabloUI/selhero.cpp:228 Source/gamemenu.cpp:41
+msgid "Load Game"
+msgstr "Učitaj igru"
+
+#: Source/DiabloUI/selhero.cpp:229 Source/gamemenu.cpp:40
+#: Source/gamemenu.cpp:51
+msgid "New Game"
+msgstr "Nova igra"
+
+#: Source/DiabloUI/selhero.cpp:239 Source/DiabloUI/selhero.cpp:575
+msgid "Single Player Characters"
+msgstr "Lik jednog igrača"
+
+#: Source/DiabloUI/selhero.cpp:287
+msgid ""
+"The Rogue and Sorcerer are only available in the full retail version of "
+"Diablo. Visit https://www.gog.com/game/diablo to purchase."
+msgstr ""
+"Čarobnjak i Lutalica samo su dostupni u cjelovitom maloprodajnom izdanju "
+"Diabla. Posjetite https://www.gog.com/game/diablo kako bi ga kupili."
+
+#: Source/DiabloUI/selhero.cpp:299
+#, fuzzy
+#| msgid "Enter Name"
+msgid "Enter Hero name.."
+msgstr "Upiši ime"
+
+#: Source/DiabloUI/selhero.cpp:305
+msgid "Enter Name"
+msgstr "Upiši ime"
+
+#: Source/DiabloUI/selhero.cpp:337
+msgid ""
+"Invalid name. A name cannot contain spaces, reserved characters, or reserved "
+"words.\n"
+msgstr ""
+"Neispravno ime. Ime ne može sadržavati razmake, rezervirane znakove ili "
+"rezervirane riječi.\n"
+
+#: Source/DiabloUI/selhero.cpp:345
+#, c-format
+msgid "Character already exists. Do you want to overwrite \"%s\"?"
+msgstr "Lik već postoji. Želite li prebrisati \"%s\"?"
+
+#: Source/DiabloUI/selhero.cpp:357
+msgid "Unable to create character."
+msgstr "Nemoguće stvaranje lika."
+
+#: Source/DiabloUI/selhero.cpp:511 Source/DiabloUI/selhero.cpp:514
+msgid "Level:"
+msgstr "Razina:"
+
+#: Source/DiabloUI/selhero.cpp:519
+msgid "Strength:"
+msgstr "Snaga:"
+
+#: Source/DiabloUI/selhero.cpp:524
+msgid "Magic:"
+msgstr "Magija:"
+
+#: Source/DiabloUI/selhero.cpp:529
+msgid "Dexterity:"
+msgstr "Vještina:"
+
+#: Source/DiabloUI/selhero.cpp:534
+msgid "Vitality:"
+msgstr "Vitalnost:"
+
+#: Source/DiabloUI/selhero.cpp:545
+msgid "Select Hero"
+msgstr "Odaberi heroja"
+
+#: Source/DiabloUI/selhero.cpp:564
+msgid "Delete"
+msgstr "Obriši"
+
+#: Source/DiabloUI/selhero.cpp:573
+msgid "Multi Player Characters"
+msgstr "Lik među više igrača"
+
+#: Source/DiabloUI/selhero.cpp:617
+msgid "Delete Multi Player Hero"
+msgstr "Obriši heroja s više igrača"
+
+#: Source/DiabloUI/selhero.cpp:619
+msgid "Delete Single Player Hero"
+msgstr "Obriši heroja jednog igrača"
+
+#: Source/DiabloUI/selhero.cpp:621
+#, fuzzy, c-format
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to delete the character \"%s\"?"
+msgstr "Sigurno želite obrisati \"%s\" lik?"
+
+#: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:888
+msgid "Yes"
+msgstr "Da"
+
+#: Source/DiabloUI/selyesno.cpp:62 Source/stores.cpp:889
+msgid "No"
+msgstr "Ne"
+
+#: Source/DiabloUI/title.cpp:47
+#, fuzzy
+#| msgid "Copyright © 1996-2001 Blizzard Entertainment"
+msgid "Copyright  1996-2001 Blizzard Entertainment"
+msgstr "Autorsko pravo © 1996-2001 Blizzard Entertainment"
+
+#: Source/appfat.cpp:34
+msgid "Error"
+msgstr "Greška"
+
+#: Source/appfat.cpp:117
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"The error occurred at: %s line %d"
+msgstr ""
+"%s\n"
+"\n"
+"Greška se dogodila na: %s redak %d"
+
+#: Source/appfat.cpp:137
+#, fuzzy, c-format
+#| msgid ""
+#| "Unable to open a required file.\n"
+#| "\n"
+#| "Verify that the MD5 of diabdat.mpq matches on of the following values\n"
+#| "011bc6518e6166206231080a4440b373\n"
+#| "68f049866b44688a7af65ba766bef75a\n"
+#| "\n"
+#| "The problem occurred when loading:\n"
+#| "%s"
+msgid ""
+"Unable to open a required file.\n"
+"\n"
+"Verify that the MD5 of diabdat.mpq matches one of the following values\n"
+"011bc6518e6166206231080a4440b373\n"
+"68f049866b44688a7af65ba766bef75a\n"
+"\n"
+"The problem occurred when loading:\n"
+"%s"
+msgstr ""
+"Nemoguće otvaranje potrebne datoteke.\n"
+"\n"
+"Provjerite poklapa li se MD5 diabdat.mpq datoteke sa sljedećim "
+"vrijednostima\n"
+"011bc6518e6166206231080a4440b373\n"
+"68f049866b44688a7af65ba766bef75a\n"
+"\n"
+"Došlo je do problema učitavanja:\n"
+"%s"
+
+#: Source/appfat.cpp:159
+#, fuzzy, c-format
+#| msgid ""
+#| "Unable to open %s.\n"
+#| "\n"
+#| "Make sure that it is in the game folder and that the file name is in all "
+#| "lowercase."
+msgid ""
+"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+"\n"
+"Make sure that it is in the game folder and that the file name is in all "
+"lowercase."
+msgstr ""
+"Nemoguće je otvoriti %s.\n"
+"\n"
+"Provjerite nalazi li se u mapi igre i je li naziv datoteke u malim slovima."
+
+#: Source/appfat.cpp:174
+#, c-format
+msgid ""
+"Unable to write to location:\n"
+"%s"
+msgstr ""
+"Nemoguće zapisivanje lokacije:\n"
+"%s"
+
+#: Source/appfat.cpp:176
+msgid "Read-Only Directory Error"
+msgstr "Greška, direktorij ima samo dozvolu čitanja"
+
+#: Source/gamemenu.cpp:38
+msgid "Save Game"
+msgstr "Spremi igru"
+
+#: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
+msgid "Options"
+msgstr "Mogućnosti"
+
+#: Source/gamemenu.cpp:42 Source/gamemenu.cpp:53
+#, fuzzy
+#| msgid "Quit Diablo"
+msgid "Quit Game"
+msgstr "Zatvori Diablo"
+
+#: Source/gamemenu.cpp:52
+msgid "Restart In Town"
+msgstr "Ponovno pokreni u gradu"
+
+#: Source/gamemenu.cpp:62
+msgid "Gamma"
+msgstr "Gama"
+
+#: Source/gamemenu.cpp:63 Source/gamemenu.cpp:232
+msgid "Speed"
+msgstr ""
+
+#: Source/gamemenu.cpp:64
+msgid "Previous Menu"
+msgstr "Prijašnji izbornik"
+
+#: Source/gamemenu.cpp:71
+msgid "Music Disabled"
+msgstr "Glazba isključena"
+
+#: Source/gamemenu.cpp:75
+msgid "Sound"
+msgstr "Zvuk"
+
+#: Source/gamemenu.cpp:76
+msgid "Sound Disabled"
+msgstr "Zvuk isključen"
+
+#: Source/gamemenu.cpp:220
+msgid "Speed: Fastest"
+msgstr ""
+
+#: Source/gamemenu.cpp:222
+msgid "Speed: Faster"
+msgstr ""
+
+#: Source/gamemenu.cpp:224
+msgid "Speed: Fast"
+msgstr ""
+
+#: Source/gamemenu.cpp:226
+#, fuzzy
+#| msgid "Normal"
+msgid "Speed: Normal"
+msgstr "Normalna"
+
+#: Source/gmenu.cpp:77
+msgid "Pause"
+msgstr "Pauziraj"
+
+#: Source/stores.cpp:164 Source/stores.cpp:171
+msgid ",  "
+msgstr ""
+
+#: Source/stores.cpp:169
+#, c-format
+msgid "Charges: %i/%i"
+msgstr ""
+
+#: Source/stores.cpp:180
+#, c-format
+msgid "Damage: %i-%i  "
+msgstr ""
+
+#: Source/stores.cpp:182
+#, c-format
+msgid "Armor: %i  "
+msgstr ""
+
+#: Source/stores.cpp:184
+#, c-format
+msgid "Dur: %i/%i,  "
+msgstr ""
+
+#: Source/stores.cpp:187
+msgid "Indestructible,  "
+msgstr ""
+
+#: Source/stores.cpp:195
+msgid "No required attributes"
+msgstr ""
+
+#: Source/stores.cpp:197
+#, fuzzy
+#| msgid "Requirements:"
+msgid "Required:"
+msgstr "Zahtjevi:"
+
+#: Source/stores.cpp:199
+#, c-format
+msgid " %i Str"
+msgstr ""
+
+#: Source/stores.cpp:201
+#, c-format
+msgid " %i Mag"
+msgstr ""
+
+#: Source/stores.cpp:203
+#, c-format
+msgid " %i Dex"
+msgstr ""
+
+#: Source/stores.cpp:225 Source/stores.cpp:950 Source/stores.cpp:1172
+msgid "Welcome to the"
+msgstr ""
+
+#: Source/stores.cpp:226
+msgid "Blacksmith's shop"
+msgstr ""
+
+#: Source/stores.cpp:227 Source/stores.cpp:576 Source/stores.cpp:952
+#: Source/stores.cpp:1011 Source/stores.cpp:1174 Source/stores.cpp:1186
+#: Source/stores.cpp:1198
+msgid "Would you like to:"
+msgstr ""
+
+#: Source/stores.cpp:228
+msgid "Talk to Griswold"
+msgstr ""
+
+#: Source/stores.cpp:229
+msgid "Buy basic items"
+msgstr ""
+
+#: Source/stores.cpp:230
+msgid "Buy premium items"
+msgstr ""
+
+#: Source/stores.cpp:231 Source/stores.cpp:579
+msgid "Sell items"
+msgstr ""
+
+#: Source/stores.cpp:232
+msgid "Repair items"
+msgstr ""
+
+#: Source/stores.cpp:233
+msgid "Leave the shop"
+msgstr ""
+
+#: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
+#, c-format
+msgid "I have these items for sale:             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:279 Source/stores.cpp:343 Source/stores.cpp:471
+#: Source/stores.cpp:482 Source/stores.cpp:541 Source/stores.cpp:554
+#: Source/stores.cpp:628 Source/stores.cpp:721 Source/stores.cpp:732
+#: Source/stores.cpp:797 Source/stores.cpp:808 Source/stores.cpp:994
+#: Source/stores.cpp:1094 Source/stores.cpp:1105 Source/stores.cpp:1138
+#: Source/stores.cpp:1165
+msgid "Back"
+msgstr ""
+
+#: Source/stores.cpp:339
+#, c-format
+msgid "I have these premium items for sale:     Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:467 Source/stores.cpp:717
+#, c-format
+msgid "You have nothing I want.             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:477 Source/stores.cpp:727
+#, c-format
+msgid "Which item is for sale?             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:537
+#, c-format
+msgid "You have nothing to repair.             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:549
+#, c-format
+msgid "Repair which item?             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:575
+msgid "Witch's shack"
+msgstr ""
+
+#: Source/stores.cpp:577
+msgid "Talk to Adria"
+msgstr ""
+
+#: Source/stores.cpp:578 Source/stores.cpp:954
+msgid "Buy items"
+msgstr ""
+
+#: Source/stores.cpp:580
+msgid "Recharge staves"
+msgstr ""
+
+#: Source/stores.cpp:581
+msgid "Leave the shack"
+msgstr ""
+
+#: Source/stores.cpp:793
+#, c-format
+msgid "You have nothing to recharge.             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:803
+#, c-format
+msgid "Recharge which item?             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:819
+msgid "You do not have enough gold"
+msgstr ""
+
+#: Source/stores.cpp:827
+msgid "You do not have enough room in inventory"
+msgstr ""
+
+#: Source/stores.cpp:863
+msgid "Do we have a deal?"
+msgstr ""
+
+#: Source/stores.cpp:866
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to identify this item?"
+msgstr "Sigurno želite obrisati \"%s\" lik?"
+
+#: Source/stores.cpp:872
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to buy this item?"
+msgstr "Sigurno želite obrisati \"%s\" lik?"
+
+#: Source/stores.cpp:875
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to recharge this item?"
+msgstr "Sigurno želite obrisati \"%s\" lik?"
+
+#: Source/stores.cpp:879
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to sell this item?"
+msgstr "Sigurno želite obrisati \"%s\" lik?"
+
+#: Source/stores.cpp:882
+#, fuzzy
+#| msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to repair this item?"
+msgstr "Sigurno želite obrisati \"%s\" lik?"
+
+#: Source/stores.cpp:896 Source/towners.cpp:319
+msgid "Wirt the Peg-legged boy"
+msgstr ""
+
+#: Source/stores.cpp:899 Source/stores.cpp:906
+msgid "Talk to Wirt"
+msgstr ""
+
+#: Source/stores.cpp:900
+msgid "I have something for sale,"
+msgstr ""
+
+#: Source/stores.cpp:901
+msgid "but it will cost 50 gold"
+msgstr ""
+
+#: Source/stores.cpp:902
+msgid "just to take a look. "
+msgstr ""
+
+#: Source/stores.cpp:903
+msgid "What have you got?"
+msgstr ""
+
+#: Source/stores.cpp:904 Source/stores.cpp:907 Source/stores.cpp:1014
+#: Source/stores.cpp:1188
+msgid "Say goodbye"
+msgstr ""
+
+#: Source/stores.cpp:915
+#, c-format
+msgid "I have this item for sale:             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:931
+msgid "Leave"
+msgstr ""
+
+#: Source/stores.cpp:951
+msgid "Healer's home"
+msgstr ""
+
+#: Source/stores.cpp:953
+msgid "Talk to Pepin"
+msgstr ""
+
+#: Source/stores.cpp:955
+msgid "Leave Healer's home"
+msgstr ""
+
+#: Source/stores.cpp:1010
+msgid "The Town Elder"
+msgstr ""
+
+#: Source/stores.cpp:1012
+msgid "Talk to Cain"
+msgstr ""
+
+#: Source/stores.cpp:1013
+msgid "Identify an item"
+msgstr ""
+
+#: Source/stores.cpp:1090
+#, c-format
+msgid "You have nothing to identify.             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:1100
+#, c-format
+msgid "Identify which item?             Your gold: %i"
+msgstr ""
+
+#: Source/stores.cpp:1117
+msgid "This item is:"
+msgstr ""
+
+#: Source/stores.cpp:1120
+msgid "Done"
+msgstr ""
+
+#: Source/stores.cpp:1129
+#, c-format
+msgid "Talk to %s"
+msgstr ""
+
+#: Source/stores.cpp:1133
+#, c-format
+msgid "Talking to %s"
+msgstr ""
+
+#: Source/stores.cpp:1135
+msgid "is not available"
+msgstr ""
+
+#: Source/stores.cpp:1136
+msgid "in the shareware"
+msgstr ""
+
+#: Source/stores.cpp:1137
+msgid "version"
+msgstr ""
+
+#: Source/stores.cpp:1164
+msgid "Gossip"
+msgstr ""
+
+#: Source/stores.cpp:1173
+msgid "Rising Sun"
+msgstr ""
+
+#: Source/stores.cpp:1175
+msgid "Talk to Ogden"
+msgstr ""
+
+#: Source/stores.cpp:1176
+msgid "Leave the tavern"
+msgstr ""
+
+#: Source/stores.cpp:1187
+msgid "Talk to Gillian"
+msgstr ""
+
+#: Source/stores.cpp:1197 Source/towners.cpp:367
+msgid "Farnham the Drunk"
+msgstr ""
+
+#: Source/stores.cpp:1199
+msgid "Talk to Farnham"
+msgstr ""
+
+#: Source/stores.cpp:1200
+msgid "Say Goodbye"
+msgstr ""
+
+#: Source/towners.cpp:241
+msgid "Griswold the Blacksmith"
+msgstr ""
+
+#: Source/towners.cpp:255
+msgid "Ogden the Tavern owner"
+msgstr ""
+
+#: Source/towners.cpp:271
+msgid "Wounded Townsman"
+msgstr ""
+
+#: Source/towners.cpp:287
+msgid "Adria the Witch"
+msgstr ""
+
+#: Source/towners.cpp:303
+msgid "Gillian the Barmaid"
+msgstr ""
+
+#: Source/towners.cpp:335
+msgid "Pepin the Healer"
+msgstr ""
+
+#: Source/towners.cpp:351
+msgid "Cain the Elder"
+msgstr ""
+
+#: Source/towners.cpp:390
+msgid "Cow"
+msgstr ""
+
+#: Source/towners.cpp:417
+msgid "Lester the farmer"
+msgstr ""
+
+#: Source/towners.cpp:437
+msgid "Complete Nut"
+msgstr ""
+
+#: Source/towners.cpp:553
+msgid "Slain Townsman"
+msgstr ""
