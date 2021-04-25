@@ -755,7 +755,8 @@ const TextDataStruct alltext[] = {
 	{ "Ah, you speak of an ancient and evil weapon. Tread lightly in this area, for the legends of Shadowfang are as black as a moonless winter night. Crafted within the Hellforge, Shadowfang can rend the very soul from whoever it strikes. I do not envy you if is in your mind to defeat the one who wields it. May light protect you, brave hero. |",
 
 	    true, TSFX_SMITH16 },
-	{ "Oh man, look! A caravan stopped just outside of the village and it's taking supplies to the lands of east. Certain items will bring a special prize, if you can get them for me. |",
+	{ "I'm in luck! A caravan has stopped just outside of the village and is taking supplies to the lands of the East. Certain items will bring a special price... if you can get them for me. |",
+
 	    true, TSFX_SMITH27 },
 	{ "We can both turn a nice profit if you can deliver the right goods to me. What do you say? |",
 
