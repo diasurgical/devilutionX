@@ -736,7 +736,6 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 		hper = 30;
 	}
 
-
 	if (hit < hper) {
 		if ((plr[pnum]._pmode == PM_STAND || plr[pnum]._pmode == PM_ATTACK) && plr[pnum]._pBlockFlag) {
 			blk = GenerateRnd(100);
@@ -846,21 +845,6 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		return false;
 	}
 
-	switch (missiledata[mtype].mResist) {
-	case MISR_FIRE:
-		resper = plr[p]._pFireResist;
-		break;
-	case MISR_LIGHTNING:
-		resper = plr[p]._pLghtResist;
-		break;
-	case MISR_MAGIC:
-	case MISR_ACID:
-		resper = plr[p]._pMagResist;
-		break;
-	default:
-		resper = 0;
-		break;
-	}
 	hper = GenerateRnd(100);
 	if (missiledata[mtype].mType == 0) {
 		hit = plr[pnum]._pIBonusToHit
@@ -904,6 +888,26 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		if (blk > 100) {
 			blk = 100;
 		}
+		switch (missiledata[mtype].mResist) {
+		case MISR_FIRE:
+			resper = plr[p]._pFireResist;
+			break;
+		case MISR_LIGHTNING:
+			resper = plr[p]._pLghtResist;
+			break;
+		case MISR_MAGIC:
+		case MISR_ACID:
+			resper = plr[p]._pMagResist;
+			break;
+		default:
+			resper = 0;
+			break;
+		}
+		if (resper <= 0 && blkper < blk) {
+			StartPlrBlock(p, GetDirection(plr[p].position.tile, plr[pnum].position.tile));
+			*blocked = true;
+			return true;
+		}
 
 		if (mtype == MIS_BONESPIRIT) {
 			dam = plr[p]._pHitPoints / 3;
@@ -923,14 +927,9 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			plr[pnum].PlaySpeach(69);
 			return true;
 		}
-		if (blkper < blk) {
-			StartPlrBlock(p, GetDirection(plr[p].position.tile, plr[pnum].position.tile));
-			*blocked = true;
-		} else {
-			if (pnum == myplr)
-				NetSendCmdDamage(true, p, dam);
-			StartPlrHit(p, dam, false);
-		}
+		if (pnum == myplr)
+			NetSendCmdDamage(true, p, dam);
+		StartPlrHit(p, dam, false);
 		return true;
 	}
 	return false;
