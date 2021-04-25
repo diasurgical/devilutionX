@@ -229,7 +229,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 bool CheckBlock(int fx, int fy, int tx, int ty)
 {
 	while (fx != tx || fy != ty) {
-		direction pn = GetDirection(fx, fy, tx, ty);
+		direction pn = GetDirection({ fx, fy }, { tx, ty });
 		fx += XDirAdd[pn];
 		fy += YDirAdd[pn];
 		if (nSolidTable[dPiece[fx][fy]])
@@ -796,7 +796,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 		if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
 			direction dir = plr[pnum]._pdir;
 			if (m != -1) {
-				dir = GetDirection(plr[pnum].position.tile.x, plr[pnum].position.tile.y, monster[m].position.tile.x, monster[m].position.tile.y);
+				dir = GetDirection(plr[pnum].position.tile, monster[m].position.tile);
 			}
 			*blocked = true;
 			StartPlrBlock(pnum, dir);
@@ -924,7 +924,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			return true;
 		}
 		if (blkper < blk) {
-			StartPlrBlock(p, GetDirection(plr[p].position.tile.x, plr[p].position.tile.y, plr[pnum].position.tile.x, plr[pnum].position.tile.y));
+			StartPlrBlock(p, GetDirection(plr[p].position.tile, plr[pnum].position.tile));
 			*blocked = true;
 		} else {
 			if (pnum == myplr)
@@ -2789,7 +2789,7 @@ void AddElement(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienem
 	}
 	missile[mi]._midam /= 2;
 	GetMissileVel(mi, sx, sy, dx, dy, 16);
-	SetMissDir(mi, GetDirection(sx, sy, dx, dy));
+	SetMissDir(mi, GetDirection({ sx, sy }, { dx, dy }));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = sx;
 	missile[mi]._miVar2 = sy;
@@ -3125,7 +3125,7 @@ void AddBoneSpirit(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mie
 	}
 	missile[mi]._midam = 0;
 	GetMissileVel(mi, sx, sy, dx, dy, 16);
-	SetMissDir(mi, GetDirection(sx, sy, dx, dy));
+	SetMissDir(mi, GetDirection({ sx, sy }, { dx, dy }));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = sx;
 	missile[mi]._miVar2 = sy;
@@ -3232,7 +3232,7 @@ int Sentfire(int i, int sx, int sy)
 	int ex = 0;
 	if (LineClearMissile(missile[i].position.tile.x, missile[i].position.tile.y, sx, sy)) {
 		if (dMonster[sx][sy] > 0 && monster[dMonster[sx][sy] - 1]._mhitpoints >> 6 > 0 && dMonster[sx][sy] - 1 > MAX_PLRS - 1) {
-			direction dir = GetDirection(missile[i].position.tile.x, missile[i].position.tile.y, sx, sy);
+			direction dir = GetDirection(missile[i].position.tile, { sx, sy });
 			missile[i]._miVar3 = missileavail[0];
 			AddMissile(missile[i].position.tile.x, missile[i].position.tile.y, sx, sy, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile[i]._misource, missile[i]._midam, GetSpellLevel(missile[i]._misource, SPL_FIREBOLT));
 			ex = -1;
@@ -3709,13 +3709,13 @@ void MI_Rune(int i)
 				mid = mid - 1;
 			else
 				mid = -(mid + 1);
-			dir = GetDirection(missile[i].position.tile.x, missile[i].position.tile.y, monster[mid].position.tile.x, monster[mid].position.tile.y);
+			dir = GetDirection(missile[i].position.tile, monster[mid].position.tile);
 		} else {
 			if (pid > 0)
 				pid = pid - 1;
 			else
 				pid = -(pid + 1);
-			dir = GetDirection(missile[i].position.tile.x, missile[i].position.tile.y, plr[pid].position.tile.x, plr[pid].position.tile.y);
+			dir = GetDirection(missile[i].position.tile, plr[pid].position.tile);
 		}
 		missile[i]._miDelFlag = true;
 		AddUnLight(missile[i]._mlid);
@@ -4466,7 +4466,7 @@ void MI_Chain(int i)
 	id = missile[i]._misource;
 	sx = missile[i].position.tile.x;
 	sy = missile[i].position.tile.y;
-	direction dir = GetDirection(sx, sy, missile[i]._miVar1, missile[i]._miVar2);
+	direction dir = GetDirection({ sx, sy }, { missile[i]._miVar1, missile[i]._miVar2 });
 	AddMissile(sx, sy, missile[i]._miVar1, missile[i]._miVar2, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile[i]._mispllvl);
 	rad = missile[i]._mispllvl + 3;
 	if (rad > 19)
@@ -4478,7 +4478,7 @@ void MI_Chain(int i)
 			tx = sx + CrawlTable[l - 1];
 			ty = sy + CrawlTable[l];
 			if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY && dMonster[tx][ty] > 0) {
-				dir = GetDirection(sx, sy, tx, ty);
+				dir = GetDirection({ sx, sy }, { tx, ty });
 				AddMissile(sx, sy, tx, ty, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile[i]._mispllvl);
 			}
 			l += 2;
@@ -4808,7 +4808,7 @@ void MI_Wave(int i)
 	sy = missile[i].position.tile.y;
 	v1 = missile[i]._miVar1;
 	v2 = missile[i]._miVar2;
-	direction sd = GetDirection(sx, sy, v1, v2);
+	direction sd = GetDirection({ sx, sy }, { v1, v2 });
 	direction dira = left[left[sd]];
 	direction dirb = right[right[sd]];
 	nxa = sx + XDirAdd[sd];
@@ -5089,7 +5089,7 @@ void MI_Element(int i)
 			missile[i]._mirange = 255;
 			mid = FindClosest(cx, cy, 19);
 			if (mid > 0) {
-				direction sd = GetDirection(cx, cy, monster[mid].position.tile.x, monster[mid].position.tile.y);
+				direction sd = GetDirection({ cx, cy }, monster[mid].position.tile);
 				SetMissDir(i, sd);
 				GetMissileVel(i, cx, cy, monster[mid].position.tile.x, monster[mid].position.tile.y, 16);
 			} else {
@@ -5142,7 +5142,7 @@ void MI_Bonespirit(int i)
 			mid = FindClosest(cx, cy, 19);
 			if (mid > 0) {
 				missile[i]._midam = monster[mid]._mhitpoints >> 7;
-				SetMissDir(i, GetDirection(cx, cy, monster[mid].position.tile.x, monster[mid].position.tile.y));
+				SetMissDir(i, GetDirection({ cx, cy }, monster[mid].position.tile));
 				GetMissileVel(i, cx, cy, monster[mid].position.tile.x, monster[mid].position.tile.y, 16);
 			} else {
 				direction sd = plr[id]._pdir;

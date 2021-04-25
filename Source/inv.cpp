@@ -1870,7 +1870,7 @@ bool TryInvPut()
 	if (numitems >= MAXITEMS)
 		return false;
 
-	direction dir = GetDirection(plr[myplr].position.tile.x, plr[myplr].position.tile.y, cursmx, cursmy);
+	direction dir = GetDirection(plr[myplr].position.tile, { cursmx, cursmy });
 	if (CanPut(plr[myplr].position.tile.x + offset_x[dir], plr[myplr].position.tile.y + offset_y[dir])) {
 		return true;
 	}
@@ -1907,7 +1907,7 @@ static int PutItem(int pnum, int &x, int &y)
 	int xx = x - plr[pnum].position.tile.x;
 	int yy = y - plr[pnum].position.tile.y;
 
-	direction d = GetDirection(plr[pnum].position.tile.x, plr[pnum].position.tile.y, x, y);
+	direction d = GetDirection(plr[pnum].position.tile, { x, y });
 
 	if (abs(xx) > 1 || abs(yy) > 1) {
 		x = plr[pnum].position.tile.x + offset_x[d];

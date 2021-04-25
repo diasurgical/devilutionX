@@ -2118,8 +2118,6 @@ void Obj_Trap(int i)
 	}
 
 	object[i]._oVar4 = 1;
-	int sx = object[i].position.x;
-	int sy = object[i].position.y;
 	int dx = object[oti].position.x;
 	int dy = object[oti].position.y;
 	for (int y = dy - 1; y <= object[oti].position.y + 1; y++) {
@@ -2131,7 +2129,9 @@ void Obj_Trap(int i)
 		}
 	}
 	if (!deltaload) {
-		direction dir = GetDirection(sx, sy, dx, dy);
+		direction dir = GetDirection(object[i].position, object[oti].position);
+		int sx = object[i].position.x;
+		int sy = object[i].position.y;
 		AddMissile(sx, sy, dx, dy, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
 		PlaySfxLoc(IS_TRAP, object[oti].position.x, object[oti].position.y);
 	}
@@ -3126,7 +3126,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				}
 			}
 			if (object[i]._oTrapFlag && object[i]._otype >= OBJ_TCHEST1 && object[i]._otype <= OBJ_TCHEST3) {
-				direction mdir = GetDirection(object[i].position.x, object[i].position.y, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
+				direction mdir = GetDirection(object[i].position, plr[pnum].position.tile);
 				switch (object[i]._oVar4) {
 				case 0:
 					mtype = MIS_ARROW;

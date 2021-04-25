@@ -59,7 +59,7 @@ int GetRotaryDistance(int x, int y)
 		return -1;
 
 	d1 = plr[myplr]._pdir;
-	d2 = GetDirection(plr[myplr].position.future.x, plr[myplr].position.future.y, x, y);
+	d2 = GetDirection(plr[myplr].position.future, { x, y });
 
 	d = abs(d1 - d2);
 	if (d > 4)

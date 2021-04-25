@@ -542,12 +542,12 @@ void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int w
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
 */
-direction GetDirection(int x1, int y1, int x2, int y2)
+direction GetDirection(Point start, Point destination)
 {
 	direction md = DIR_S;
 
-	int mx = x2 - x1;
-	int my = y2 - y1;
+	int mx = destination.x - start.x;
+	int my = destination.y - start.y;
 	if (mx >= 0) {
 		if (my >= 0) {
 			if (5 * mx <= (my * 2)) // mx/my <= 0.4, approximation of tan(22.5)

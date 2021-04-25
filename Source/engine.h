@@ -476,13 +476,11 @@ void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int w
 
 /**
  * @brief Calculate the best fit direction between two points
- * @param x1 Tile coordinate
- * @param y1 Tile coordinate
- * @param x2 Tile coordinate
- * @param y2 Tile coordinate
+ * @param start Tile coordinate
+ * @param destination Tile coordinate
  * @return A value from the direction enum
  */
-direction GetDirection(int x1, int y1, int x2, int y2);
+direction GetDirection(Point start, Point destination);
 
 void SetRndSeed(int32_t s);
 int32_t AdvanceRndSeed();
