@@ -17,7 +17,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr ""
+msgstr "Speldesign"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
@@ -29,7 +29,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr ""
+msgstr "Huvudprogrammerare"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
@@ -57,7 +57,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr ""
+msgstr "Konstnärliga ledare"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
@@ -81,7 +81,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
-msgstr ""
+msgstr "Exekutiv producent"
 
 #: Source/DiabloUI/credits_lines.cpp:67
 msgid "Producer"
@@ -201,7 +201,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
-msgstr ""
+msgstr "Speciellt tack till"
 
 #: Source/DiabloUI/credits_lines.cpp:171
 msgid "Thanks To"
@@ -225,7 +225,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr ""
+msgstr "Konstnärlig ledning"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
@@ -261,7 +261,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
-msgstr ""
+msgstr "Tack till"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
@@ -315,7 +315,7 @@ msgstr ""
 #: Source/DiabloUI/selhero.cpp:311 Source/DiabloUI/selhero.cpp:561
 #: Source/DiabloUI/selok.cpp:74
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -361,7 +361,7 @@ msgstr ""
 #: Source/DiabloUI/selhero.cpp:210 Source/DiabloUI/selhero.cpp:236
 #: Source/DiabloUI/selhero.cpp:314 Source/DiabloUI/selhero.cpp:568
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #: Source/DiabloUI/selconn.cpp:34 Source/DiabloUI/selgame.cpp:82
 #: Source/DiabloUI/selgame.cpp:377
@@ -379,7 +379,7 @@ msgstr ""
 
 #: Source/DiabloUI/selconn.cpp:48
 msgid "Requirements:"
-msgstr ""
+msgstr "Krav:"
 
 #: Source/DiabloUI/selconn.cpp:54
 msgid "no gateway needed"
@@ -445,7 +445,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:159
 msgid "Select Difficulty"
-msgstr ""
+msgstr "Välj svårighetsgrad"
 
 #: Source/DiabloUI/selgame.cpp:161 Source/DiabloUI/selgame.cpp:208
 #: Source/DiabloUI/selgame.cpp:311 Source/DiabloUI/selgame.cpp:331
@@ -502,19 +502,19 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:309
 msgid "Select Game Speed"
-msgstr ""
+msgstr "Välj spelhastighet"
 
 #: Source/DiabloUI/selgame.cpp:312 Source/DiabloUI/selgame.cpp:335
 msgid "Fast"
-msgstr ""
+msgstr "Snabb"
 
 #: Source/DiabloUI/selgame.cpp:313 Source/DiabloUI/selgame.cpp:339
 msgid "Faster"
-msgstr ""
+msgstr "Snabbare"
 
 #: Source/DiabloUI/selgame.cpp:314 Source/DiabloUI/selgame.cpp:343
 msgid "Fastest"
-msgstr ""
+msgstr "Snabbast"
 
 #: Source/DiabloUI/selgame.cpp:332
 msgid ""
@@ -558,27 +558,27 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:123
 msgid "New Hero"
-msgstr ""
+msgstr "Ny Hjälte"
 
 #: Source/DiabloUI/selhero.cpp:185
 msgid "Choose Class"
-msgstr ""
+msgstr "Välj klass"
 
 #: Source/DiabloUI/selhero.cpp:189
 msgid "Warrior"
-msgstr ""
+msgstr "Krigare"
 
 #: Source/DiabloUI/selhero.cpp:190
 msgid "Rogue"
-msgstr ""
+msgstr "Landstryrkare"
 
 #: Source/DiabloUI/selhero.cpp:191
 msgid "Sorcerer"
-msgstr "TROLLKARL"
+msgstr "Trollkarl"
 
 #: Source/DiabloUI/selhero.cpp:193
 msgid "Monk"
-msgstr ""
+msgstr "Munk"
 
 #: Source/DiabloUI/selhero.cpp:196
 msgid "Bard"
@@ -602,7 +602,7 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:228 Source/gamemenu.cpp:41
 msgid "Load Game"
-msgstr ""
+msgstr "Ladda Spel"
 
 #: Source/DiabloUI/selhero.cpp:229 Source/gamemenu.cpp:40
 #: Source/gamemenu.cpp:51
@@ -644,27 +644,27 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:511 Source/DiabloUI/selhero.cpp:514
 msgid "Level:"
-msgstr ""
+msgstr "Nivå:"
 
 #: Source/DiabloUI/selhero.cpp:519
 msgid "Strength:"
-msgstr ""
+msgstr "Styrka:"
 
 #: Source/DiabloUI/selhero.cpp:524
 msgid "Magic:"
-msgstr ""
+msgstr "Magi:"
 
 #: Source/DiabloUI/selhero.cpp:529
 msgid "Dexterity:"
-msgstr ""
+msgstr "Smidighet:"
 
 #: Source/DiabloUI/selhero.cpp:534
 msgid "Vitality:"
-msgstr ""
+msgstr "Vitalitet:"
 
 #: Source/DiabloUI/selhero.cpp:545
 msgid "Select Hero"
-msgstr ""
+msgstr "Välj hjälte"
 
 #: Source/DiabloUI/selhero.cpp:564
 msgid "Delete"
@@ -693,7 +693,7 @@ msgstr "Ja"
 
 #: Source/DiabloUI/selyesno.cpp:62 Source/stores.cpp:889
 msgid "No"
-msgstr ""
+msgstr "Nej"
 
 #: Source/DiabloUI/title.cpp:47
 msgid "Copyright  1996-2001 Blizzard Entertainment"
@@ -701,7 +701,7 @@ msgstr ""
 
 #: Source/appfat.cpp:34
 msgid "Error"
-msgstr ""
+msgstr "Fel"
 
 #: Source/appfat.cpp:117
 #, c-format
@@ -750,11 +750,11 @@ msgstr "Spara Spel"
 
 #: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
 msgid "Options"
-msgstr ""
+msgstr "Alternativ"
 
 #: Source/gamemenu.cpp:42 Source/gamemenu.cpp:53
 msgid "Quit Game"
-msgstr ""
+msgstr "Avsluta spel"
 
 #: Source/gamemenu.cpp:52
 msgid "Restart In Town"
@@ -766,43 +766,43 @@ msgstr ""
 
 #: Source/gamemenu.cpp:63 Source/gamemenu.cpp:232
 msgid "Speed"
-msgstr ""
+msgstr "Hastighet"
 
 #: Source/gamemenu.cpp:64
 msgid "Previous Menu"
-msgstr ""
+msgstr "Föregående meny"
 
 #: Source/gamemenu.cpp:71
 msgid "Music Disabled"
-msgstr ""
+msgstr "Musik avaktiverad"
 
 #: Source/gamemenu.cpp:75
 msgid "Sound"
-msgstr "Effektljud"
+msgstr "Ljud"
 
 #: Source/gamemenu.cpp:76
 msgid "Sound Disabled"
-msgstr ""
+msgstr "Ljud avaktiverad"
 
 #: Source/gamemenu.cpp:220
 msgid "Speed: Fastest"
-msgstr ""
+msgstr "Hastighet: Snabbast"
 
 #: Source/gamemenu.cpp:222
 msgid "Speed: Faster"
-msgstr ""
+msgstr "Hastighet: Snabbare"
 
 #: Source/gamemenu.cpp:224
 msgid "Speed: Fast"
-msgstr ""
+msgstr "Hastighet: Snabb"
 
 #: Source/gamemenu.cpp:226
 msgid "Speed: Normal"
-msgstr ""
+msgstr "Hastighet: Normal"
 
 #: Source/gmenu.cpp:77
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: Source/stores.cpp:164 Source/stores.cpp:171
 msgid ",  "
@@ -830,7 +830,7 @@ msgstr "Hållf: %i/%i, "
 
 #: Source/stores.cpp:187
 msgid "Indestructible,  "
-msgstr ""
+msgstr "Oförstörbar,  "
 
 #: Source/stores.cpp:195
 msgid "No required attributes"
@@ -843,17 +843,17 @@ msgstr "Krav:"
 #: Source/stores.cpp:199
 #, c-format
 msgid " %i Str"
-msgstr ""
+msgstr " %i Sty"
 
 #: Source/stores.cpp:201
 #, c-format
 msgid " %i Mag"
-msgstr ""
+msgstr " %i Mag"
 
 #: Source/stores.cpp:203
 #, c-format
 msgid " %i Dex"
-msgstr ""
+msgstr " %i Smi"
 
 #: Source/stores.cpp:225 Source/stores.cpp:950 Source/stores.cpp:1172
 msgid "Welcome to the"
@@ -896,7 +896,7 @@ msgstr "Lämna affären"
 #: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
 #, c-format
 msgid "I have these items for sale:             Your gold: %i"
-msgstr ""
+msgstr "Jag har dessa föremål till salu:         Ditt guld: %i"
 
 #: Source/stores.cpp:279 Source/stores.cpp:343 Source/stores.cpp:471
 #: Source/stores.cpp:482 Source/stores.cpp:541 Source/stores.cpp:554
@@ -905,32 +905,32 @@ msgstr ""
 #: Source/stores.cpp:1094 Source/stores.cpp:1105 Source/stores.cpp:1138
 #: Source/stores.cpp:1165
 msgid "Back"
-msgstr ""
+msgstr "Tillbaka"
 
 #: Source/stores.cpp:339
 #, c-format
 msgid "I have these premium items for sale:     Your gold: %i"
-msgstr ""
+msgstr "Jag har kvalitetsföremål till salu:      Ditt guld: %i"
 
 #: Source/stores.cpp:467 Source/stores.cpp:717
 #, c-format
 msgid "You have nothing I want.             Your gold: %i"
-msgstr ""
+msgstr "Du har inget som jag vill ha.        Ditt guld: %i"
 
 #: Source/stores.cpp:477 Source/stores.cpp:727
 #, c-format
 msgid "Which item is for sale?             Your gold: %i"
-msgstr ""
+msgstr "Vilket föremål är till salu?         Ditt guld: %i"
 
 #: Source/stores.cpp:537
 #, c-format
 msgid "You have nothing to repair.             Your gold: %i"
-msgstr ""
+msgstr "Du har inget att reparera.              Ditt guld: %i"
 
 #: Source/stores.cpp:549
 #, c-format
 msgid "Repair which item?             Your gold: %i"
-msgstr ""
+msgstr "Vilket föremål ska repareras? Ditt guld: %i"
 
 #: Source/stores.cpp:575
 msgid "Witch's shack"
@@ -955,12 +955,12 @@ msgstr "Lämna stugan"
 #: Source/stores.cpp:793
 #, c-format
 msgid "You have nothing to recharge.             Your gold: %i"
-msgstr ""
+msgstr "Du har inget att ladda upp.               Ditt guld: %i"
 
 #: Source/stores.cpp:803
 #, c-format
 msgid "Recharge which item?             Your gold: %i"
-msgstr ""
+msgstr "Vilket föremål ska laddas?       Ditt guld: %i"
 
 #: Source/stores.cpp:819
 msgid "You do not have enough gold"
@@ -996,7 +996,7 @@ msgstr "Är du säker på att du vill reparera detta föremål?"
 
 #: Source/stores.cpp:896 Source/towners.cpp:319
 msgid "Wirt the Peg-legged boy"
-msgstr ""
+msgstr "Wirt Pojken med Träbenet"
 
 #: Source/stores.cpp:899 Source/stores.cpp:906
 msgid "Talk to Wirt"
@@ -1021,16 +1021,16 @@ msgstr "Vad har du att erbjuda?"
 #: Source/stores.cpp:904 Source/stores.cpp:907 Source/stores.cpp:1014
 #: Source/stores.cpp:1188
 msgid "Say goodbye"
-msgstr ""
+msgstr "Säg Adjö"
 
 #: Source/stores.cpp:915
 #, c-format
 msgid "I have this item for sale:             Your gold: %i"
-msgstr ""
+msgstr "Jag har detta föremål till salu:       Ditt Guld: %i"
 
 #: Source/stores.cpp:931
 msgid "Leave"
-msgstr ""
+msgstr "Lämna"
 
 #: Source/stores.cpp:951
 msgid "Healer's home"
@@ -1059,12 +1059,12 @@ msgstr "Identifiera ett föremål"
 #: Source/stores.cpp:1090
 #, c-format
 msgid "You have nothing to identify.             Your gold: %i"
-msgstr ""
+msgstr "Du har inget att identifiera.             Ditt guld: %i"
 
 #: Source/stores.cpp:1100
 #, c-format
 msgid "Identify which item?             Your gold: %i"
-msgstr ""
+msgstr "Vilket föremål vill du identifiera? Ditt guld: %i"
 
 #: Source/stores.cpp:1117
 msgid "This item is:"
@@ -1134,7 +1134,7 @@ msgstr "Smeden Griswold"
 
 #: Source/towners.cpp:255
 msgid "Ogden the Tavern owner"
-msgstr ""
+msgstr "Värdshusvärden Ogden"
 
 #: Source/towners.cpp:271
 msgid "Wounded Townsman"
