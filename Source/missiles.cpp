@@ -736,42 +736,51 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 		hper = 30;
 	}
 
-	if ((plr[pnum]._pmode == PM_STAND || plr[pnum]._pmode == PM_ATTACK) && plr[pnum]._pBlockFlag) {
-		blk = GenerateRnd(100);
-	} else {
-		blk = 100;
-	}
-
-	if (shift)
-		blk = 100;
-	if (mtype == MIS_ACIDPUD)
-		blk = 100;
-	if (m != -1)
-		blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity - ((monster[m].mLevel - plr[pnum]._pLevel) * 2);
-	else
-		blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity;
-	if (blkper < 0)
-		blkper = 0;
-	if (blkper > 100)
-		blkper = 100;
-
-	switch (missiledata[mtype].mResist) {
-	case MISR_FIRE:
-		resper = plr[pnum]._pFireResist;
-		break;
-	case MISR_LIGHTNING:
-		resper = plr[pnum]._pLghtResist;
-		break;
-	case MISR_MAGIC:
-	case MISR_ACID:
-		resper = plr[pnum]._pMagResist;
-		break;
-	default:
-		resper = 0;
-		break;
-	}
 
 	if (hit < hper) {
+		if ((plr[pnum]._pmode == PM_STAND || plr[pnum]._pmode == PM_ATTACK) && plr[pnum]._pBlockFlag) {
+			blk = GenerateRnd(100);
+		} else {
+			blk = 100;
+		}
+
+		if (shift)
+			blk = 100;
+		if (mtype == MIS_ACIDPUD)
+			blk = 100;
+		if (m != -1)
+			blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity - ((monster[m].mLevel - plr[pnum]._pLevel) * 2);
+		else
+			blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity;
+		if (blkper < 0)
+			blkper = 0;
+		if (blkper > 100)
+			blkper = 100;
+		switch (missiledata[mtype].mResist) {
+		case MISR_FIRE:
+			resper = plr[pnum]._pFireResist;
+			break;
+		case MISR_LIGHTNING:
+			resper = plr[pnum]._pLghtResist;
+			break;
+		case MISR_MAGIC:
+		case MISR_ACID:
+			resper = plr[pnum]._pMagResist;
+			break;
+		default:
+			resper = 0;
+			break;
+		}
+		if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
+			direction dir = plr[pnum]._pdir;
+			if (m != -1) {
+				dir = GetDirection(plr[pnum].position.tile, monster[m].position.tile);
+			}
+			*blocked = true;
+			StartPlrBlock(pnum, dir);
+			return true;
+		}
+
 		if (mtype == MIS_BONESPIRIT) {
 			dam = plr[pnum]._pHitPoints / 3;
 		} else {
@@ -793,17 +802,8 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 			if (dam < 64)
 				dam = 64;
 		}
-		if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
-			direction dir = plr[pnum]._pdir;
-			if (m != -1) {
-				dir = GetDirection(plr[pnum].position.tile, monster[m].position.tile);
-			}
-			*blocked = true;
-			StartPlrBlock(pnum, dir);
-			return true;
-		}
-		if (resper > 0) {
 
+		if (resper > 0) {
 			dam = dam - dam * resper / 100;
 			if (pnum == myplr) {
 				ApplyPlrDamage(pnum, 0, 0, dam, earflag);
