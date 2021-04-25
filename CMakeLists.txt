@@ -400,11 +400,6 @@ if(VITA)
     Source/platform/vita/keyboard.cpp)
 endif()
 
-if(VITA)
-  list(APPEND devilutionx_SRCS
-    Source/platform/vita/keyboard.cpp)
-endif()
-
 if(N3DS)
   list(APPEND devilutionx_SRCS
     Source/platform/ctr/system.cpp
