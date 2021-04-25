@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-04-25 06:53+0200\n"
-"PO-Revision-Date: 2021-04-25 06:53+0200\n"
+"POT-Creation-Date: 2021-04-25 12:11-0300\n"
+"PO-Revision-Date: 2021-04-25 13:00-0300\n"
 "Last-Translator: Cyro Dubeux <xorycx@gmail.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
@@ -18,15 +18,15 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr "Design de jogo"
+msgstr "Projeto de jogo"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
-msgstr "Designers senior"
+msgstr "Projetistas sêniores"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
-msgstr "Design adicional"
+msgstr "Projeto adicional"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
@@ -34,7 +34,7 @@ msgstr "Programador líder"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
-msgstr "Programadores senior"
+msgstr "Programadores sêniores"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
@@ -102,7 +102,7 @@ msgstr "Música"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
-msgstr "Design de som"
+msgstr "Projeto de som"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
@@ -151,8 +151,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr ""
-"Suporte de artilharia do controle de qualidade (Testadores adicionais) "
+msgstr "Suporte de artilharia do controle de qualidade (Testadores adicionais) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
@@ -163,8 +162,6 @@ msgid "Order of Network Information Services"
 msgstr "Ordem dos serviços de informações de rede"
 
 #: Source/DiabloUI/credits_lines.cpp:134
-#, fuzzy
-#| msgid "Customer Support"
 msgid "Customer Support"
 msgstr "Suporte ao cliente"
 
@@ -229,8 +226,6 @@ msgid "Software Engineering"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:221
-#, fuzzy
-#| msgid "Art Directors"
 msgid "Art Director"
 msgstr "Diretores de arte"
 
@@ -239,10 +234,8 @@ msgid "Artists"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:228
-#, fuzzy
-#| msgid "Game Design"
 msgid "Design"
-msgstr "Design de jogo"
+msgstr "Pojeto"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
@@ -257,24 +250,18 @@ msgid "Testers"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:246
-#, fuzzy
-#| msgid "Manual Artwork"
 msgid "Manual"
-msgstr "Arte manual"
+msgstr "Manual"
 
 #: Source/DiabloUI/credits_lines.cpp:255
-#, fuzzy
-#| msgid "Additional Design"
 msgid "\tAdditional Work"
-msgstr "Design adicional"
+msgstr "\tArte adicional"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
-#, fuzzy
-#| msgid "Thanks To"
 msgid "Thanks to"
 msgstr "Agradecimentos a"
 
@@ -309,10 +296,8 @@ msgid "Product Marketing Manager"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:289
-#, fuzzy
-#| msgid "Public Relations"
 msgid "Public Relations Manager"
-msgstr "Relações públicas"
+msgstr "Gerente de relações públicas"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 #, fuzzy
@@ -322,7 +307,7 @@ msgstr "Produtor associado"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
-msgstr "O anel de mil"
+msgstr "O anel dos mil"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
@@ -348,23 +333,19 @@ msgstr "Multijogador"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Replay Intro"
-msgstr "Repetir intro"
+msgstr "Repetir introdução"
 
 #: Source/DiabloUI/mainmenu.cpp:39
-#, fuzzy
-#| msgid "Customer Support"
 msgid "Support"
-msgstr "Suporte ao cliente"
+msgstr "Suporte"
 
 #: Source/DiabloUI/mainmenu.cpp:41
-#, fuzzy
-#| msgid "Show Credits"
 msgid "Credits"
-msgstr "Exibir créditos"
+msgstr "Créditos"
 
 #: Source/DiabloUI/mainmenu.cpp:42
 msgid "Exit Hellfire"
-msgstr ""
+msgstr "Sair do Hellfire"
 
 #: Source/DiabloUI/mainmenu.cpp:44
 msgid "Show Credits"
@@ -376,8 +357,8 @@ msgstr "Sair do Diablo"
 
 #: Source/DiabloUI/mainmenu.cpp:110
 msgid ""
-"The Diablo introduction cinematic is only available in the full retail "
-"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
+"The Diablo introduction cinematic is only available in the full retail version "
+"of Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
 "A introdução cinematográfica da Diablo está disponível apenas na versão "
 "comercial completa do Diablo. Visite https://www.gog.com/game/diablo para "
@@ -401,17 +382,15 @@ msgstr "Loopback"
 #: Source/DiabloUI/selconn.cpp:42 Source/DiabloUI/selgame.cpp:439
 #: Source/DiabloUI/selgame.cpp:457
 msgid "Multi Player Game"
-msgstr "Jogo Multijogador"
+msgstr "Jogo multijogador"
 
 #: Source/DiabloUI/selconn.cpp:48
-#, fuzzy
-#| msgid "Requirements:"
 msgid "Requirements:"
 msgstr "Requisitos:"
 
 #: Source/DiabloUI/selconn.cpp:54
 msgid "no gateway needed"
-msgstr "nenhum gateway necessário"
+msgstr "sem gateway"
 
 #: Source/DiabloUI/selconn.cpp:60
 msgid "Select Connection"
@@ -423,15 +402,11 @@ msgstr "Mudar gateway"
 
 #: Source/DiabloUI/selconn.cpp:102
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr ""
-"Todos os computadores devem estar conectados a uma rede TCP compatível."
+msgstr "Todos os computadores devem estar conectados a uma rede TCP compatível."
 
 #: Source/DiabloUI/selconn.cpp:106
-#, fuzzy
-#| msgid "All computers must be connected to a TCP-compatible network."
 msgid "All computers must be connected to the internet."
-msgstr ""
-"Todos os computadores devem estar conectados a uma rede TCP compatível."
+msgstr "Todos os computadores devem estar conectados à internet."
 
 #: Source/DiabloUI/selconn.cpp:110
 msgid "Play by yourself with no network exposure."
@@ -440,11 +415,11 @@ msgstr "Jogue sozinho sem exposição na rede."
 #: Source/DiabloUI/selconn.cpp:115
 #, c-format
 msgid "Players Supported: %d"
-msgstr "Jogadores suportados: %d"
+msgstr "Jogadores suport.: %d"
 
 #: Source/DiabloUI/selgame.cpp:85 Source/DiabloUI/selgame.cpp:380
 msgid "Description:"
-msgstr ""
+msgstr "Descrição:"
 
 #: Source/DiabloUI/selgame.cpp:91
 msgid "Select Action"
@@ -456,10 +431,8 @@ msgid "Create Game"
 msgstr "Criar jogo"
 
 #: Source/DiabloUI/selgame.cpp:94
-#, fuzzy
-#| msgid "Join TCP Games"
 msgid "Join Game"
-msgstr "Entrar em jogos TCP"
+msgstr "Entrar no jogo"
 
 #: Source/DiabloUI/selgame.cpp:102 Source/DiabloUI/selgame.cpp:171
 #: Source/DiabloUI/selgame.cpp:189 Source/DiabloUI/selgame.cpp:322
@@ -472,12 +445,11 @@ msgid "Create a new game with a difficulty setting of your choice."
 msgstr "Crie um novo jogo com uma dificuldade de sua escolha."
 
 #: Source/DiabloUI/selgame.cpp:114
-#, fuzzy
-#| msgid "Enter an IP and join a game already in progress at that address."
 msgid ""
-"Enter an IP or a hostname and join a game already in progress at that "
-"address."
-msgstr "Insira um IP e participe de um jogo já em andamento nesse endereço."
+"Enter an IP or a hostname and join a game already in progress at that address."
+msgstr ""
+"Insira um IP ou nome do servidor e entre em um jogo já em andamento nesse "
+"endereço."
 
 #: Source/DiabloUI/selgame.cpp:159
 msgid "Select Difficulty"
@@ -501,10 +473,8 @@ msgid "Join TCP Games"
 msgstr "Entrar em jogos TCP"
 
 #: Source/DiabloUI/selgame.cpp:180
-#, fuzzy
-#| msgid "Enter Name"
 msgid "Enter address"
-msgstr "Insira o nome"
+msgstr "Inserir endereço"
 
 #: Source/DiabloUI/selgame.cpp:209
 msgid ""
@@ -521,14 +491,14 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "Dificuldade Pesadelo\n"
-"Os habitantes do labirinto foram reforçados e provarão ser um grande "
-"desafio. Recomendado apenas para personagens experientes."
+"Os habitantes do labirinto foram reforçados e provarão ser um grande desafio. "
+"Recomendado apenas para personagens experientes."
 
 #: Source/DiabloUI/selgame.cpp:217
 msgid ""
 "Hell Difficulty\n"
-"The most powerful of the underworld's creatures lurk at the gateway into "
-"Hell. Only the most experienced characters should venture in this realm."
+"The most powerful of the underworld's creatures lurk at the gateway into Hell. "
+"Only the most experienced characters should venture in this realm."
 msgstr ""
 "Dificuldade Inferno\n"
 "A mais poderosa das criaturas do submundo se esconde na porta de entrada do "
@@ -537,70 +507,63 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:232
 msgid ""
-"Your character must reach level 20 before you can enter a multiplayer game "
-"of Nightmare difficulty."
+"Your character must reach level 20 before you can enter a multiplayer game of "
+"Nightmare difficulty."
 msgstr ""
 "Seu personagem deve atingir o nível 20 antes de poder entrar em um jogo "
 "multijogador da dificuldade Pesadelo."
 
 #: Source/DiabloUI/selgame.cpp:234
 msgid ""
-"Your character must reach level 30 before you can enter a multiplayer game "
-"of Hell difficulty."
+"Your character must reach level 30 before you can enter a multiplayer game of "
+"Hell difficulty."
 msgstr ""
 "Seu personagem deve atingir o nível 30 antes de poder entrar em um jogo "
 "multijogador da dificuldade Inferno."
 
 #: Source/DiabloUI/selgame.cpp:309
 msgid "Select Game Speed"
-msgstr ""
+msgstr "Velocidade do jogo"
 
 #: Source/DiabloUI/selgame.cpp:312 Source/DiabloUI/selgame.cpp:335
 msgid "Fast"
-msgstr ""
+msgstr "Rápido"
 
 #: Source/DiabloUI/selgame.cpp:313 Source/DiabloUI/selgame.cpp:339
 msgid "Faster"
-msgstr ""
+msgstr "Muito rápido"
 
 #: Source/DiabloUI/selgame.cpp:314 Source/DiabloUI/selgame.cpp:343
 msgid "Fastest"
-msgstr ""
+msgstr "Super rápido"
 
 #: Source/DiabloUI/selgame.cpp:332
-#, fuzzy
-#| msgid ""
-#| "Normal Difficulty\n"
-#| "This is where a starting character should begin the quest to defeat "
-#| "Diablo."
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
-"Dificuldade Normal\n"
-"É aqui que um personagem inicial deve começar a busca para derrotar Diablo."
+"Velocidade: Normal\n"
+"É aqui que um personagem iniciante deve começar a missão para derrotar Diablo."
 
 #: Source/DiabloUI/selgame.cpp:336
-#, fuzzy
-#| msgid ""
-#| "Nightmare Difficulty\n"
-#| "The denizens of the Labyrinth have been bolstered and will prove to be a "
-#| "greater challenge. This is recommended for experienced characters only."
 msgid ""
 "Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
-"Dificuldade Pesadelo\n"
-"Os habitantes do labirinto foram reforçados e provarão ser um grande "
-"desafio. Recomendado apenas para personagens experientes."
+"Velocidade: Rápido\n"
+"Os habitantes do Labirinto foram apressados ​​e provarão ser um desafio maior. "
+"Isso é recomendado apenas para personagens experientes."
 
 #: Source/DiabloUI/selgame.cpp:340
 msgid ""
 "Faster Speed\n"
-"Most monsters of the dungeon will seek you out quicker than ever before. "
-"Only an experienced champion should try their luck at this speed."
+"Most monsters of the dungeon will seek you out quicker than ever before. Only "
+"an experienced champion should try their luck at this speed."
 msgstr ""
+"Velocidade: Muito rápido\n"
+"A maioria dos monstros da masmorra irá procurá-lo mais rápido do que nunca. "
+"Apenas um campeão experiente deve tentar a sorte nesta velocidade."
 
 #: Source/DiabloUI/selgame.cpp:344
 msgid ""
@@ -608,19 +571,22 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
+"Velocidade: Super rápido\n"
+"Os asseclas do submundo correrão para atacar sem hesitação. Apenas um "
+"verdadeiro demônio da velocidade deve entrar neste ritmo."
 
 #: Source/DiabloUI/selgame.cpp:386
 msgid "Enter Password"
-msgstr "Insira a senha"
+msgstr "Inserir senha"
 
 #: Source/DiabloUI/selgame.cpp:412
 msgid "The host is running a different game than you."
-msgstr ""
+msgstr "O anfitrião está executando um jogo diferente de você."
 
 #: Source/DiabloUI/selgame.cpp:415
 #, c-format
 msgid "Your version %s does not match the host %d.%d.%d."
-msgstr ""
+msgstr "Sua versão %s não corresponde com a do anfitrião %d.%d.%d."
 
 #: Source/DiabloUI/selhero.cpp:123
 msgid "New Hero"
@@ -636,7 +602,7 @@ msgstr "Guerreiro"
 
 #: Source/DiabloUI/selhero.cpp:190
 msgid "Rogue"
-msgstr "Ladino"
+msgstr "Ladina"
 
 #: Source/DiabloUI/selhero.cpp:191
 msgid "Sorcerer"
@@ -644,15 +610,15 @@ msgstr "Feiticeiro"
 
 #: Source/DiabloUI/selhero.cpp:193
 msgid "Monk"
-msgstr ""
+msgstr "Monge"
 
 #: Source/DiabloUI/selhero.cpp:196
 msgid "Bard"
-msgstr ""
+msgstr "Bardo"
 
 #: Source/DiabloUI/selhero.cpp:199
 msgid "Barbarian"
-msgstr ""
+msgstr "Bárbaro"
 
 #: Source/DiabloUI/selhero.cpp:214 Source/DiabloUI/selhero.cpp:293
 msgid "New Single Player Hero"
@@ -664,14 +630,13 @@ msgstr "Novo herói multijogador"
 
 #: Source/DiabloUI/selhero.cpp:225
 msgid "Save File Exists"
-msgstr "O save já existe"
+msgstr "Jogo salvo existente"
 
 #: Source/DiabloUI/selhero.cpp:228 Source/gamemenu.cpp:41
 msgid "Load Game"
 msgstr "Carregar jogo"
 
-#: Source/DiabloUI/selhero.cpp:229 Source/gamemenu.cpp:40
-#: Source/gamemenu.cpp:51
+#: Source/DiabloUI/selhero.cpp:229 Source/gamemenu.cpp:40 Source/gamemenu.cpp:51
 msgid "New Game"
 msgstr "Novo jogo"
 
@@ -684,18 +649,16 @@ msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"O Ladino e o Feiticeiro estão disponíveis apenas na versão comercial "
-"completa do Diablo. Visite https://www.gog.com/game/diablo para comprar."
+"O Ladino e o Feiticeiro estão disponíveis apenas na versão comercial completa "
+"do Diablo. Visite https://www.gog.com/game/diablo para comprar."
 
 #: Source/DiabloUI/selhero.cpp:299
-#, fuzzy
-#| msgid "Enter Name"
 msgid "Enter Hero name.."
-msgstr "Insira o nome"
+msgstr "Inserir nome"
 
 #: Source/DiabloUI/selhero.cpp:305
 msgid "Enter Name"
-msgstr "Insira o nome"
+msgstr "Inserir nome"
 
 #: Source/DiabloUI/selhero.cpp:337
 msgid ""
@@ -740,7 +703,7 @@ msgstr "Selecione um herói"
 
 #: Source/DiabloUI/selhero.cpp:564
 msgid "Delete"
-msgstr "Deletar"
+msgstr "Apagar"
 
 #: Source/DiabloUI/selhero.cpp:573
 msgid "Multi Player Characters"
@@ -748,17 +711,16 @@ msgstr "Personagens multijogador"
 
 #: Source/DiabloUI/selhero.cpp:617
 msgid "Delete Multi Player Hero"
-msgstr "Deletar herói multijogador"
+msgstr "Apagar herói multijogador"
 
 #: Source/DiabloUI/selhero.cpp:619
 msgid "Delete Single Player Hero"
-msgstr "Deletar herói"
+msgstr "Apagar herói"
 
 #: Source/DiabloUI/selhero.cpp:621
-#, fuzzy, c-format
-#| msgid "Are you sure you want to delete the character \"%s\"?"
+#, c-format
 msgid "Are you sure you want to delete the character \"%s\"?"
-msgstr "Tem certeza de que deseja deletar o personagem \"%s\"?"
+msgstr "Tem certeza de que deseja apagar o personagem \"%s\"?"
 
 #: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:888
 msgid "Yes"
@@ -788,16 +750,7 @@ msgstr ""
 "O erro ocorreu em: %s linha %d"
 
 #: Source/appfat.cpp:137
-#, fuzzy, c-format
-#| msgid ""
-#| "Unable to open a required file.\n"
-#| "\n"
-#| "Verify that the MD5 of diabdat.mpq matches on of the following values\n"
-#| "011bc6518e6166206231080a4440b373\n"
-#| "68f049866b44688a7af65ba766bef75a\n"
-#| "\n"
-#| "The problem occurred when loading:\n"
-#| "%s"
+#, c-format
 msgid ""
 "Unable to open a required file.\n"
 "\n"
@@ -815,25 +768,21 @@ msgstr ""
 "68f049866b44688a7af65ba766bef75a\n"
 "\n"
 "O problema ocorreu ao carregar:\n"
-"% s"
+"%s"
 
 #: Source/appfat.cpp:159
-#, fuzzy, c-format
-#| msgid ""
-#| "Unable to open %s.\n"
-#| "\n"
-#| "Make sure that it is in the game folder and that the file name is in all "
-#| "lowercase."
+#, c-format
 msgid ""
 "Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 "\n"
 "Make sure that it is in the game folder and that the file name is in all "
 "lowercase."
 msgstr ""
-"Não foi possível abrir %s.\n"
+"Não foi possível abrir o arquivo de dados principal (diabdat.mpq ou spawn."
+"mpq).\n"
 "\n"
-"Verifique se ele está na pasta do jogo e se o nome do arquivo está todo "
-"minúsculo."
+"Certifique-se de que está na pasta do jogo e que o nome do arquivo está todo "
+"em minúsculas."
 
 #: Source/appfat.cpp:174
 #, c-format
@@ -857,10 +806,8 @@ msgid "Options"
 msgstr "Opções"
 
 #: Source/gamemenu.cpp:42 Source/gamemenu.cpp:53
-#, fuzzy
-#| msgid "Quit Diablo"
 msgid "Quit Game"
-msgstr "Sair do Diablo"
+msgstr "Sair do jogo"
 
 #: Source/gamemenu.cpp:52
 msgid "Restart In Town"
@@ -868,11 +815,11 @@ msgstr "Reiniciar na cidade"
 
 #: Source/gamemenu.cpp:62
 msgid "Gamma"
-msgstr "Gamma"
+msgstr "Gama"
 
 #: Source/gamemenu.cpp:63 Source/gamemenu.cpp:232
 msgid "Speed"
-msgstr ""
+msgstr "Veloc."
 
 #: Source/gamemenu.cpp:64
 msgid "Previous Menu"
@@ -892,121 +839,117 @@ msgstr "Desativar som"
 
 #: Source/gamemenu.cpp:220
 msgid "Speed: Fastest"
-msgstr ""
+msgstr "Velocidade: Super rápido"
 
 #: Source/gamemenu.cpp:222
 msgid "Speed: Faster"
-msgstr ""
+msgstr "Velocidade: Muito rápido"
 
 #: Source/gamemenu.cpp:224
 msgid "Speed: Fast"
-msgstr ""
+msgstr "Velocidade: Rápido"
 
 #: Source/gamemenu.cpp:226
-#, fuzzy
-#| msgid "Normal"
 msgid "Speed: Normal"
-msgstr "Normal"
+msgstr "Velocidade: Normal"
 
 #: Source/gmenu.cpp:77
 msgid "Pause"
-msgstr "Pausar"
+msgstr "Pausa"
 
 #: Source/stores.cpp:164 Source/stores.cpp:171
 msgid ",  "
-msgstr ""
+msgstr ",  "
 
 #: Source/stores.cpp:169
 #, c-format
 msgid "Charges: %i/%i"
-msgstr ""
+msgstr "Cargas: %i/%i"
 
 #: Source/stores.cpp:180
 #, c-format
 msgid "Damage: %i-%i  "
-msgstr ""
+msgstr "Dano: %i-%i  "
 
 #: Source/stores.cpp:182
 #, c-format
 msgid "Armor: %i  "
-msgstr ""
+msgstr "Armadura: %i  "
 
 #: Source/stores.cpp:184
 #, c-format
 msgid "Dur: %i/%i,  "
-msgstr ""
+msgstr "Dur: %i/%i,  "
 
 #: Source/stores.cpp:187
 msgid "Indestructible,  "
-msgstr ""
+msgstr "Indestrutível,  "
 
 #: Source/stores.cpp:195
 msgid "No required attributes"
-msgstr ""
+msgstr "Nenhum atributo requerido"
 
 #: Source/stores.cpp:197
-#, fuzzy
-#| msgid "Requirements:"
 msgid "Required:"
-msgstr "Requisitos:"
+msgstr "Requerido:"
 
 #: Source/stores.cpp:199
 #, c-format
 msgid " %i Str"
-msgstr ""
+msgstr " %i For."
 
 #: Source/stores.cpp:201
 #, c-format
 msgid " %i Mag"
-msgstr ""
+msgstr " %i Mag."
 
 #: Source/stores.cpp:203
 #, c-format
 msgid " %i Dex"
-msgstr ""
+msgstr " %i Des."
 
 #: Source/stores.cpp:225 Source/stores.cpp:950 Source/stores.cpp:1172
 msgid "Welcome to the"
-msgstr ""
+msgstr "Boas-vindas à"
 
 #: Source/stores.cpp:226
 msgid "Blacksmith's shop"
-msgstr ""
+msgstr "Loja do Ferreiro"
 
 #: Source/stores.cpp:227 Source/stores.cpp:576 Source/stores.cpp:952
 #: Source/stores.cpp:1011 Source/stores.cpp:1174 Source/stores.cpp:1186
 #: Source/stores.cpp:1198
 msgid "Would you like to:"
-msgstr ""
+msgstr "Você gostaria de:"
 
 #: Source/stores.cpp:228
 msgid "Talk to Griswold"
-msgstr ""
+msgstr "Falar com Griswold"
 
 #: Source/stores.cpp:229
 msgid "Buy basic items"
-msgstr ""
+msgstr "Comprar itens básicos"
 
 #: Source/stores.cpp:230
 msgid "Buy premium items"
-msgstr ""
+msgstr "Comprar itens especiais"
 
 #: Source/stores.cpp:231 Source/stores.cpp:579
 msgid "Sell items"
-msgstr ""
+msgstr "Vender itens"
 
 #: Source/stores.cpp:232
 msgid "Repair items"
-msgstr ""
+msgstr "Reparar itens"
 
 #: Source/stores.cpp:233
 msgid "Leave the shop"
-msgstr ""
+msgstr "Sair da loja"
 
 #: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
 #, c-format
 msgid "I have these items for sale:             Your gold: %i"
-msgstr ""
+msgstr "Eu tenho estes itens para vender:             Seu ouro: %i"
 
 #: Source/stores.cpp:279 Source/stores.cpp:343 Source/stores.cpp:471
 #: Source/stores.cpp:482 Source/stores.cpp:541 Source/stores.cpp:554
@@ -1015,279 +958,269 @@ msgstr ""
 #: Source/stores.cpp:1094 Source/stores.cpp:1105 Source/stores.cpp:1138
 #: Source/stores.cpp:1165
 msgid "Back"
-msgstr ""
+msgstr "Voltar"
 
 #: Source/stores.cpp:339
 #, c-format
 msgid "I have these premium items for sale:     Your gold: %i"
-msgstr ""
+msgstr "Eu tenho estes itens especiais para vender:     Seu ouro: %i"
 
 #: Source/stores.cpp:467 Source/stores.cpp:717
 #, c-format
 msgid "You have nothing I want.             Your gold: %i"
-msgstr ""
+msgstr "Você não tem nada que eu queira.             Seu ouro: %i"
 
 #: Source/stores.cpp:477 Source/stores.cpp:727
 #, c-format
 msgid "Which item is for sale?             Your gold: %i"
-msgstr ""
+msgstr "Qual item está à venda?             Seu ouro: %i"
 
 #: Source/stores.cpp:537
 #, c-format
 msgid "You have nothing to repair.             Your gold: %i"
-msgstr ""
+msgstr "Você não tem nada para reparar.             Seu ouro: %i"
 
 #: Source/stores.cpp:549
 #, c-format
 msgid "Repair which item?             Your gold: %i"
-msgstr ""
+msgstr "Reparar qual item?             Seu ouro: %i"
 
 #: Source/stores.cpp:575
 msgid "Witch's shack"
-msgstr ""
+msgstr "Cabana da Bruxa"
 
 #: Source/stores.cpp:577
 msgid "Talk to Adria"
-msgstr ""
+msgstr "Falar com Ádria"
 
 #: Source/stores.cpp:578 Source/stores.cpp:954
 msgid "Buy items"
-msgstr ""
+msgstr "Comprar itens"
 
 #: Source/stores.cpp:580
 msgid "Recharge staves"
-msgstr ""
+msgstr "Recarregar cajados"
 
 #: Source/stores.cpp:581
 msgid "Leave the shack"
-msgstr ""
+msgstr "Sair da cabana"
 
 #: Source/stores.cpp:793
 #, c-format
 msgid "You have nothing to recharge.             Your gold: %i"
-msgstr ""
+msgstr "Você não tem nada para recarregar.             Seu ouro: %i"
 
 #: Source/stores.cpp:803
 #, c-format
 msgid "Recharge which item?             Your gold: %i"
-msgstr ""
+msgstr "Recarregar qual item?             Seu ouro: %i"
 
 #: Source/stores.cpp:819
 msgid "You do not have enough gold"
-msgstr ""
+msgstr "Você não tem ouro o suficiente"
 
 #: Source/stores.cpp:827
 msgid "You do not have enough room in inventory"
-msgstr ""
+msgstr "Você não tem espaço o suficiente em seu inventário"
 
 #: Source/stores.cpp:863
 msgid "Do we have a deal?"
-msgstr ""
+msgstr "Negócio fechado?"
 
 #: Source/stores.cpp:866
-#, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
 msgid "Are you sure you want to identify this item?"
-msgstr "Tem certeza de que deseja deletar o personagem \"%s\"?"
+msgstr "Tem certeza de que quer identificar este item?"
 
 #: Source/stores.cpp:872
-#, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
 msgid "Are you sure you want to buy this item?"
-msgstr "Tem certeza de que deseja deletar o personagem \"%s\"?"
+msgstr "Tem certeza de que quer comprar este item?"
 
 #: Source/stores.cpp:875
-#, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
 msgid "Are you sure you want to recharge this item?"
-msgstr "Tem certeza de que deseja deletar o personagem \"%s\"?"
+msgstr "Tem certeza de que quer recarregar este item?"
 
 #: Source/stores.cpp:879
-#, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
 msgid "Are you sure you want to sell this item?"
-msgstr "Tem certeza de que deseja deletar o personagem \"%s\"?"
+msgstr "Tem certeza de que quer vender este item?"
 
 #: Source/stores.cpp:882
-#, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
 msgid "Are you sure you want to repair this item?"
-msgstr "Tem certeza de que deseja deletar o personagem \"%s\"?"
+msgstr "Tem certeza de que quer reparar este item?"
 
-#: Source/stores.cpp:896 Source/towners.cpp:319
+#: Source/stores.cpp:896 Source/towners.cpp:318
 msgid "Wirt the Peg-legged boy"
-msgstr ""
+msgstr "Wirt, garoto da Perna-de-Pau"
 
 #: Source/stores.cpp:899 Source/stores.cpp:906
 msgid "Talk to Wirt"
-msgstr ""
+msgstr "Falar com Wirt"
 
 #: Source/stores.cpp:900
 msgid "I have something for sale,"
-msgstr ""
+msgstr "Eu tenho algo para vender,"
 
 #: Source/stores.cpp:901
 msgid "but it will cost 50 gold"
-msgstr ""
+msgstr "mas lhe custará 50 de ouro"
 
 #: Source/stores.cpp:902
 msgid "just to take a look. "
-msgstr ""
+msgstr "só para dar uma olhada."
 
 #: Source/stores.cpp:903
 msgid "What have you got?"
-msgstr ""
+msgstr "O que você tem aí?"
 
 #: Source/stores.cpp:904 Source/stores.cpp:907 Source/stores.cpp:1014
 #: Source/stores.cpp:1188
 msgid "Say goodbye"
-msgstr ""
+msgstr "Dizer adeus"
 
 #: Source/stores.cpp:915
 #, c-format
 msgid "I have this item for sale:             Your gold: %i"
-msgstr ""
+msgstr "Eu tenho este item para vender:             Seu ouro: %i"
 
 #: Source/stores.cpp:931
 msgid "Leave"
-msgstr ""
+msgstr "Sair"
 
 #: Source/stores.cpp:951
 msgid "Healer's home"
-msgstr ""
+msgstr "Casa do Curandeiro"
 
 #: Source/stores.cpp:953
 msgid "Talk to Pepin"
-msgstr ""
+msgstr "Falar com Pepin"
 
 #: Source/stores.cpp:955
 msgid "Leave Healer's home"
-msgstr ""
+msgstr "Sair da casa do Curandeiro"
 
 #: Source/stores.cpp:1010
 msgid "The Town Elder"
-msgstr ""
+msgstr "O Ancião da Cidade"
 
 #: Source/stores.cpp:1012
 msgid "Talk to Cain"
-msgstr ""
+msgstr "Falar com Cain"
 
 #: Source/stores.cpp:1013
 msgid "Identify an item"
-msgstr ""
+msgstr "Identificar um item"
 
 #: Source/stores.cpp:1090
 #, c-format
 msgid "You have nothing to identify.             Your gold: %i"
-msgstr ""
+msgstr "Você não tem nada para identificar.             Seu ouro: %i"
 
 #: Source/stores.cpp:1100
 #, c-format
 msgid "Identify which item?             Your gold: %i"
-msgstr ""
+msgstr "Identificar qual item?             Seu ouro: %i"
 
 #: Source/stores.cpp:1117
 msgid "This item is:"
-msgstr ""
+msgstr "Este item é:"
 
 #: Source/stores.cpp:1120
 msgid "Done"
-msgstr ""
+msgstr "Pronto"
 
 #: Source/stores.cpp:1129
 #, c-format
 msgid "Talk to %s"
-msgstr ""
+msgstr "Falar com %s"
 
 #: Source/stores.cpp:1133
 #, c-format
 msgid "Talking to %s"
-msgstr ""
+msgstr "Falar com %s"
 
 #: Source/stores.cpp:1135
 msgid "is not available"
-msgstr ""
+msgstr "não está disponível"
 
 #: Source/stores.cpp:1136
 msgid "in the shareware"
-msgstr ""
+msgstr "na versão"
 
 #: Source/stores.cpp:1137
 msgid "version"
-msgstr ""
+msgstr "shareware"
 
 #: Source/stores.cpp:1164
 msgid "Gossip"
-msgstr ""
+msgstr "Boatos"
 
 #: Source/stores.cpp:1173
 msgid "Rising Sun"
-msgstr ""
+msgstr "Sol Nascente"
 
 #: Source/stores.cpp:1175
 msgid "Talk to Ogden"
-msgstr ""
+msgstr "Falar com Ogden"
 
 #: Source/stores.cpp:1176
 msgid "Leave the tavern"
-msgstr ""
+msgstr "Sair da taverna"
 
 #: Source/stores.cpp:1187
 msgid "Talk to Gillian"
-msgstr ""
+msgstr "Falar com Gillian"
 
-#: Source/stores.cpp:1197 Source/towners.cpp:367
+#: Source/stores.cpp:1197 Source/towners.cpp:366
 msgid "Farnham the Drunk"
-msgstr ""
+msgstr "Farnham, o Bêbado"
 
 #: Source/stores.cpp:1199
 msgid "Talk to Farnham"
-msgstr ""
+msgstr "Falar com Farnham"
 
 #: Source/stores.cpp:1200
 msgid "Say Goodbye"
-msgstr ""
+msgstr "Dizer adeus"
 
-#: Source/towners.cpp:241
+#: Source/towners.cpp:240
 msgid "Griswold the Blacksmith"
-msgstr ""
+msgstr "Griswold, o Ferreiro"
 
-#: Source/towners.cpp:255
+#: Source/towners.cpp:254
 msgid "Ogden the Tavern owner"
-msgstr ""
+msgstr "Ogden, o dono da Taverna"
 
-#: Source/towners.cpp:271
+#: Source/towners.cpp:270
 msgid "Wounded Townsman"
-msgstr ""
+msgstr "Aldeão Ferido"
 
-#: Source/towners.cpp:287
+#: Source/towners.cpp:286
 msgid "Adria the Witch"
-msgstr ""
+msgstr "Ádria, a Bruxa"
 
-#: Source/towners.cpp:303
+#: Source/towners.cpp:302
 msgid "Gillian the Barmaid"
-msgstr ""
+msgstr "Gillian, a Atendente"
 
-#: Source/towners.cpp:335
+#: Source/towners.cpp:334
 msgid "Pepin the Healer"
-msgstr ""
+msgstr "Pepin, o Curandeiro"
 
-#: Source/towners.cpp:351
+#: Source/towners.cpp:350
 msgid "Cain the Elder"
-msgstr ""
+msgstr "Cain, o Ancião"
 
-#: Source/towners.cpp:390
+#: Source/towners.cpp:389
 msgid "Cow"
-msgstr ""
+msgstr "Vaca"
 
-#: Source/towners.cpp:417
+#: Source/towners.cpp:416
 msgid "Lester the farmer"
-msgstr ""
+msgstr "Lester, o Fazendeiro"
 
-#: Source/towners.cpp:437
+#: Source/towners.cpp:436
 msgid "Complete Nut"
 msgstr ""
 
-#: Source/towners.cpp:553
+#: Source/towners.cpp:552
 msgid "Slain Townsman"
-msgstr ""
+msgstr "Aldeão Assassinado"
