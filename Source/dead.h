@@ -17,7 +17,6 @@ struct DeadStruct {
 	uint8_t *_deadData[8];
 	int _deadFrame;
 	int _deadWidth;
-	int _deadWidth2;
 	uint8_t _deadtrans;
 };
 

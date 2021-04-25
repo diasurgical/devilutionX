@@ -166,7 +166,6 @@ struct PlayerStruct {
 	int _pAnimLen;   // Number of frames in current animation
 	int _pAnimFrame; // Current frame of animation.
 	int _pAnimWidth;
-	int _pAnimWidth2;
 	/*
 	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
 	*/

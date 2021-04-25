@@ -378,7 +378,7 @@ static void DrawManaShield(const CelOutputBuffer &out, int pnum, int x, int y, b
 	if (!plr[pnum].pManaShield)
 		return;
 
-	x += plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
+	x += CalculateWidth2(plr[pnum]._pAnimWidth) - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
 
 	int width = misfiledata[MFILE_MANASHLD].mAnimWidth[0];
 	BYTE *pCelBuff = misfiledata[MFILE_MANASHLD].mAnimData[0];
@@ -487,7 +487,7 @@ void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 		p = &plr[i];
 		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.tile.x == x && p->position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
-			px = sx + p->position.offset.x - p->_pAnimWidth2;
+			px = sx + p->position.offset.x - CalculateWidth2(p->_pAnimWidth);
 			py = sy + p->position.offset.y;
 			DrawPlayer(out, i, x, y, px, py);
 		}
@@ -514,7 +514,7 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 		bv = dObject[x][y] - 1;
 		if (object[bv]._oPreFlag != pre)
 			return;
-		sx = ox - object[bv]._oAnimWidth2;
+		sx = ox - CalculateWidth2(object[bv]._oAnimWidth);
 		sy = oy;
 	} else {
 		bv = -(dObject[x][y] + 1);
@@ -522,7 +522,7 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 			return;
 		int xx = object[bv].position.x - x;
 		int yy = object[bv].position.y - y;
-		sx = (xx * TILE_WIDTH / 2) + ox - object[bv]._oAnimWidth2 - (yy * TILE_WIDTH / 2);
+		sx = (xx * TILE_WIDTH / 2) + ox - CalculateWidth2(object[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
 		sy = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
@@ -640,7 +640,7 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 		return;
 	}
 
-	int px = sx - pItem->_iAnimWidth2;
+	int px = sx - CalculateWidth2(pItem->_iAnimWidth);
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
 		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
 	}
@@ -665,7 +665,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		px = sx - towners[mi]._tAnimWidth2;
+		px = sx - CalculateWidth2(towners[mi]._tAnimWidth);
 		if (mi == pcursmonst) {
 			CelBlitOutlineTo(out, 166, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
 		}
@@ -692,7 +692,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 	}
 
-	px = sx + pMonster->position.offset.x - pMonster->MType->width2;
+	px = sx + pMonster->position.offset.x - CalculateWidth2(pMonster->MType->width);
 	py = sy + pMonster->position.offset.y;
 	if (mi == pcursmonst) {
 		Cl2DrawOutline(out, 233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
@@ -719,7 +719,7 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	}
 
 	PlayerStruct *pPlayer = &plr[p];
-	int px = sx + pPlayer->position.offset.x - pPlayer->_pAnimWidth2;
+	int px = sx + pPlayer->position.offset.x - CalculateWidth2(pPlayer->_pAnimWidth);
 	int py = sy + pPlayer->position.offset.y;
 
 	DrawPlayer(out, p, x, y, px, py);
@@ -768,7 +768,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<direction>((bDead >> 5) & 7);
-			int px = dx - pDeadGuy->_deadWidth2;
+			int px = dx - CalculateWidth2(pDeadGuy->_deadWidth);
 			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);
 			if (pCelBuff == nullptr)

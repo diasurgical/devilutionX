@@ -30,7 +30,6 @@ void InitDead()
 				dead[nd]._deadData[d] = Monsters[i].Anims[MA_DEATH].Data[d];
 			dead[nd]._deadFrame = Monsters[i].Anims[MA_DEATH].Frames;
 			dead[nd]._deadWidth = Monsters[i].width;
-			dead[nd]._deadWidth2 = Monsters[i].width2;
 			dead[nd]._deadtrans = 0;
 			nd++;
 
@@ -43,7 +42,6 @@ void InitDead()
 		d = misfiledata[MFILE_BLODBUR].mAnimData[0];
 	dead[nd]._deadFrame = 8;
 	dead[nd]._deadWidth = 128;
-	dead[nd]._deadWidth2 = 32;
 	dead[nd]._deadtrans = 0;
 	nd++;
 
@@ -52,7 +50,6 @@ void InitDead()
 
 	dead[nd]._deadFrame = 12;
 	dead[nd]._deadWidth = 128;
-	dead[nd]._deadWidth2 = 32;
 	dead[nd]._deadtrans = 0;
 	nd++;
 
@@ -65,7 +62,6 @@ void InitDead()
 				dead[nd]._deadData[d] = monster[mi].MType->Anims[MA_DEATH].Data[d];
 			dead[nd]._deadFrame = monster[mi].MType->Anims[MA_DEATH].Frames;
 			dead[nd]._deadWidth = monster[mi].MType->width;
-			dead[nd]._deadWidth2 = monster[mi].MType->width2;
 			dead[nd]._deadtrans = monster[mi]._uniqtrans + 4;
 			nd++;
 

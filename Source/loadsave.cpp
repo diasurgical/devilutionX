@@ -226,7 +226,8 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	pItem->_iAnimLen = file->nextLE<int32_t>();
 	pItem->_iAnimFrame = file->nextLE<int32_t>();
 	pItem->_iAnimWidth = file->nextLE<int32_t>();
-	pItem->_iAnimWidth2 = file->nextLE<int32_t>();
+	// Skip _iAnimWidth2
+	file->skip(4);
 	file->skip(4); // Unused since 1.02
 	pItem->_iSelFlag = file->nextLE<uint8_t>();
 	file->skip(3); // Alignment
@@ -346,7 +347,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pAnimLen = file->nextLE<int32_t>();
 	pPlayer->_pAnimFrame = file->nextLE<int32_t>();
 	pPlayer->_pAnimWidth = file->nextLE<int32_t>();
-	pPlayer->_pAnimWidth2 = file->nextLE<int32_t>();
+	// Skip _pAnimWidth2
+	file->skip(4);
 	file->skip(4); // Skip _peflag
 	pPlayer->_plid = file->nextLE<int32_t>();
 	pPlayer->_pvid = file->nextLE<int32_t>();
@@ -703,7 +705,8 @@ static void LoadObject(LoadHelper *file, int i)
 	pObject->_oAnimLen = file->nextLE<int32_t>();
 	pObject->_oAnimFrame = file->nextLE<int32_t>();
 	pObject->_oAnimWidth = file->nextLE<int32_t>();
-	pObject->_oAnimWidth2 = file->nextLE<int32_t>();
+	// Skip _oAnimWidth2
+	file->skip(4);
 	pObject->_oDelFlag = file->nextBool32();
 	pObject->_oBreak = file->nextLE<int8_t>();
 	file->skip(3); // Alignment
@@ -1211,7 +1214,8 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->writeLE<int32_t>(pItem->_iAnimLen);
 	file->writeLE<int32_t>(pItem->_iAnimFrame);
 	file->writeLE<int32_t>(pItem->_iAnimWidth);
-	file->writeLE<int32_t>(pItem->_iAnimWidth2);
+	// write _iAnimWidth2 for vanilla compatibility
+	file->writeLE<int32_t>(CalculateWidth2(pItem->_iAnimWidth));
 	file->skip(4); // Unused since 1.02
 	file->writeLE<uint8_t>(pItem->_iSelFlag);
 	file->skip(3); // Alignment
@@ -1327,7 +1331,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->_pAnimLen);
 	file->writeLE<int32_t>(pPlayer->_pAnimFrame);
 	file->writeLE<int32_t>(pPlayer->_pAnimWidth);
-	file->writeLE<int32_t>(pPlayer->_pAnimWidth2);
+	// write _pAnimWidth2 for vanilla compatibility
+	file->writeLE<int32_t>(CalculateWidth2(pPlayer->_pAnimWidth));
 	file->skip(4); // Skip _peflag
 	file->writeLE<int32_t>(pPlayer->_plid);
 	file->writeLE<int32_t>(pPlayer->_pvid);
@@ -1662,7 +1667,8 @@ static void SaveObject(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pObject->_oAnimLen);
 	file->writeLE<int32_t>(pObject->_oAnimFrame);
 	file->writeLE<int32_t>(pObject->_oAnimWidth);
-	file->writeLE<int32_t>(pObject->_oAnimWidth2);
+	file->writeLE<int32_t>(pObject->_oAnimWidth);
+	// Write _oAnimWidth2 for vanilla compatibility
 	file->writeLE<uint32_t>(pObject->_oDelFlag);
 	file->writeLE<int8_t>(pObject->_oBreak);
 	file->skip(3); // Alignment

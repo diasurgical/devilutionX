@@ -482,6 +482,13 @@ void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int w
  */
 direction GetDirection(Point start, Point destination);
 
+/**
+ * @brief Calculate Width2 from the orginal Width
+ * Width2 is needed for savegame compatiblity and to render animations centered
+ * @return Returns Width2
+ */
+int CalculateWidth2(int width);
+
 void SetRndSeed(int32_t s);
 int32_t AdvanceRndSeed();
 int32_t GetRndSeed();
