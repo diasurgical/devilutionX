@@ -684,6 +684,104 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	return false;
 }
 
+bool HitsPlayer(int playerID, int missileSourceID, int missileTargets, int missileType, int distanceTraveled)
+{
+	if (plr[playerID]._pHitPoints >> 6 <= 0) {
+		return false;
+	}
+
+	if (plr[playerID]._pInvincible) {
+		return false;
+	}
+
+	bool isPhysicalAttack = missiledata[missileType].mType == 0;
+	if (plr[playerID]._pSpellFlags & 1 && isPhysicalAttack) {
+		return false;
+	}
+
+	int chanceToHit = 0;
+	if (isPhysicalAttack) {
+		int totalArmorClass = plr[playerID]._pIAC + plr[playerID]._pIBonusAC + plr[playerID]._pDexterity / 5;
+		if (missileTargets == TARGET_MONSTERS) {
+			int classBonus = 0;
+			if (plr[missileSourceID]._pClass == HeroClass::Rogue)
+				classBonus = 20;
+			if (plr[missileSourceID]._pClass == HeroClass::Warrior)
+				classBonus = 10;
+			if (plr[missileSourceID]._pClass == HeroClass::Bard)
+				classBonus = 10;
+
+			chanceToHit = 50
+			    + plr[missileSourceID]._pLevel
+			    + plr[missileSourceID]._pDexterity
+			    + plr[missileSourceID]._pIBonusToHit
+			    + classBonus
+			    - totalArmorClass
+			    - distanceTraveled * distanceTraveled * 2;
+		}
+		if (missileTargets == TARGET_PLAYERS) {
+			chanceToHit = 30
+			    + monster[missileSourceID].mHit
+			    + monster[missileSourceID].mLevel * 2
+			    - plr[playerID]._pLevel * 2
+			    - totalArmorClass
+			    - distanceTraveled * 2;
+		}
+		if (missileTargets == TARGET_BOTH) {
+			chanceToHit = 100
+			    - totalArmorClass
+			    - distanceTraveled * 2;
+		}
+	} else {
+		if (missileTargets == TARGET_MONSTERS) {
+			int classBonus = 0;
+			if (plr[missileSourceID]._pClass == HeroClass::Sorcerer)
+				classBonus = 20;
+			if (plr[missileSourceID]._pClass == HeroClass::Bard)
+				classBonus = 10;
+
+			chanceToHit = 50
+			    + plr[missileSourceID]._pMagic
+			    + classBonus
+			    - plr[playerID]._pLevel * 2
+			    - distanceTraveled;
+		}
+		if (missileTargets == TARGET_PLAYERS) {
+			chanceToHit = 40
+			    + monster[missileSourceID].mLevel * 2
+			    - plr[playerID]._pLevel * 2
+			    - distanceTraveled * 2;
+		}
+		if (missileTargets == TARGET_BOTH) {
+			chanceToHit = 40;
+		}
+	}
+
+	if (missileTargets == TARGET_MONSTERS) {
+		if (chanceToHit < 5)
+			chanceToHit = 5;
+		if (chanceToHit > 95)
+			chanceToHit = 95;
+	}
+	if (missileTargets != TARGET_MONSTERS) {
+		if (chanceToHit < 10)
+			chanceToHit = 10;
+		if (currlevel == 14 && chanceToHit < 20)
+			chanceToHit = 20;
+		if (currlevel == 15 && chanceToHit < 25)
+			chanceToHit = 25;
+		if (currlevel == 16 && chanceToHit < 30)
+			chanceToHit = 30;
+	}
+
+	int hit = GenerateRnd(100);
+#ifdef _DEBUG
+	if (debug_mode_dollar_sign || debug_mode_key_inverted_v)
+		hit = 1000;
+#endif
+	return hit < chanceToHit;
+}
+
 bool PlayerBlocks(int playerID, int missileSourceID, int missileTargets, int missileType)
 {
 	int chanceToBlock = 0;
@@ -727,58 +825,11 @@ bool PlayerBlocks(int playerID, int missileSourceID, int missileTargets, int mis
 
 bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
 {
-	int hit, hper, tac, dam, resper;
+	int dam, resper;
 	*blocked = false;
 
-	if (plr[pnum]._pHitPoints >> 6 <= 0) {
-		return false;
-	}
-
-	if (plr[pnum]._pInvincible) {
-		return false;
-	}
-
-	if (plr[pnum]._pSpellFlags & 1 && missiledata[mtype].mType == 0) {
-		return false;
-	}
-
-	hit = GenerateRnd(100);
-#ifdef _DEBUG
-	if (debug_mode_dollar_sign || debug_mode_key_inverted_v)
-		hit = 1000;
-#endif
-	if (missiledata[mtype].mType == 0) {
-		tac = plr[pnum]._pIAC + plr[pnum]._pIBonusAC + plr[pnum]._pDexterity / 5;
-		if (m != -1) {
-			hper = monster[m].mHit
-			    + ((monster[m].mLevel - plr[pnum]._pLevel) * 2)
-			    + 30
-			    - (dist * 2) - tac;
-		} else {
-			hper = 100 - (tac / 2) - (dist * 2);
-		}
-	} else {
-		if (m != -1) {
-			hper = +40 - (plr[pnum]._pLevel * 2) - (dist * 2) + (monster[m].mLevel * 2);
-		} else {
-			hper = 40;
-		}
-	}
-
-	if (hper < 10)
-		hper = 10;
-	if (currlevel == 14 && hper < 20) {
-		hper = 20;
-	}
-	if (currlevel == 15 && hper < 25) {
-		hper = 25;
-	}
-	if (currlevel == 16 && hper < 30) {
-		hper = 30;
-	}
-
-	if (hit < hper) {
-		int missileTargets = (m != -1) ? TARGET_PLAYERS : TARGET_BOTH;
+	int missileTargets = (m != -1) ? TARGET_PLAYERS : TARGET_BOTH;
+	if (HitsPlayer(pnum, m, missileTargets, mtype, dist)) {
 		*blocked = !shift && mtype != MIS_ACIDPUD && PlayerBlocks(pnum, m, missileTargets, mtype);
 		if (*blocked) {
 			direction dir = plr[pnum]._pdir;
@@ -850,53 +901,17 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 
 bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, bool shift, bool *blocked)
 {
-	int dam, hper, hit, resper;
+	int dam, resper;
+	*blocked = false;
 
 	if (!sgGameInitInfo.bFriendlyFire && gbFriendlyMode)
 		return false;
-
-	*blocked = false;
-
-	if (plr[p]._pInvincible) {
-		return false;
-	}
 
 	if (mtype == MIS_HBOLT) {
 		return false;
 	}
 
-	if (plr[p]._pSpellFlags & 1 && missiledata[mtype].mType == 0) {
-		return false;
-	}
-
-	hper = GenerateRnd(100);
-	if (missiledata[mtype].mType == 0) {
-		hit = plr[pnum]._pIBonusToHit
-		    + plr[pnum]._pLevel
-		    - (dist * dist / 2)
-		    - plr[p]._pDexterity / 5
-		    - plr[p]._pIBonusAC
-		    - plr[p]._pIAC
-		    + plr[pnum]._pDexterity + 50;
-		if (plr[pnum]._pClass == HeroClass::Rogue)
-			hit += 20;
-		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Bard)
-			hit += 10;
-	} else {
-		hit = plr[pnum]._pMagic
-		    - (plr[p]._pLevel * 2)
-		    - dist
-		    + 50;
-		if (plr[pnum]._pClass == HeroClass::Sorcerer)
-			hit += 20;
-		else if (plr[pnum]._pClass == HeroClass::Bard)
-			hit += 10;
-	}
-	if (hit < 5)
-		hit = 5;
-	if (hit > 95)
-		hit = 95;
-	if (hper < hit) {
+	if (HitsPlayer(p, pnum, TARGET_MONSTERS, mtype, dist)) {
 		switch (missiledata[mtype].mResist) {
 		case MISR_FIRE:
 			resper = plr[p]._pFireResist;
