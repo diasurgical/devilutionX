@@ -34,24 +34,48 @@ struct mo_entry {
 	uint32_t offset;
 };
 
+char *strtrim_left(char *s)
+{
+	while (*s && isblank(*s)) {
+		s++;
+	}
+	return s;
+}
+
+char *strtrim_right(char *s)
+{
+	size_t length = strlen(s);
+
+	while (length) {
+		length--;
+		if (isblank(s[length])) {
+			s[length] = '\0';
+		} else {
+			break;
+		}
+	}
+	return s;
+}
+
 void parse_metadata(char *data)
 {
 	char *key, *delim, *val;
 	char *ptr = data;
 
-	while (ptr) {
-		if (!(delim = strstr(ptr, ":"))) {
-			return;
-		}
-		key = data;
-		val = delim + 1;
+	while (ptr && (delim = strstr(ptr, ":"))) {
+		key = strtrim_left(ptr);
+		val = strtrim_left(delim + 1);
 
-		// add null termination to key and val
+		// null-terminate key
 		*delim = '\0';
-		if ((ptr = strstr(ptr, "\n"))) {
+
+		// progress to next line (if any)
+		if ((ptr = strstr(val, "\n"))) {
 			*ptr = '\0';
 			ptr++;
 		}
+
+		val = strtrim_right(val);
 		meta[key] = val;
 	}
 }
