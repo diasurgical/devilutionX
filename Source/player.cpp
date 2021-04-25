@@ -3637,21 +3637,7 @@ void ProcessPlayers()
 				CheckNewPath(pnum);
 			} while (tplayer);
 
-			ProcessPlayerAnimation(pnum);
-		}
-	}
-}
-
-void ProcessPlayerAnimation(int pnum)
-{
-	plr[pnum].AnimInfo.DelayCounter++;
-	plr[pnum].AnimInfo.GameTicksSinceSequenceStarted++;
-	if (plr[pnum].AnimInfo.DelayCounter > plr[pnum].AnimInfo.DelayLen) {
-		plr[pnum].AnimInfo.DelayCounter = 0;
-		plr[pnum].AnimInfo.CurrentFrame++;
-		if (plr[pnum].AnimInfo.CurrentFrame > plr[pnum].AnimInfo.FrameLen) {
-			plr[pnum].AnimInfo.CurrentFrame = 1;
-			plr[pnum].AnimInfo.GameTicksSinceSequenceStarted = 0;
+			plr[pnum].AnimInfo.ProcessAnimation();
 		}
 	}
 }

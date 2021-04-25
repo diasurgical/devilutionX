@@ -68,6 +68,12 @@ public:
 	void SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 
 	/*
+	* @brief Process the Animation for a GameTick (for example advances the frame)
+	*/
+	void ProcessAnimation();
+
+private:
+	/*
 	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
 	*/
 	float GameTickModifier;
