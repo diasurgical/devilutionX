@@ -193,13 +193,14 @@ if(USE_SDL1)
   find_package(SDL_mixer REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
 else()
-  if(SWITCH)
-    find_package(SDL2_STATIC CONFIG QUIET)
+  find_package(SDL2 REQUIRED)
+  if(TARGET SDL2::SDL2)
+    set(SDL2_TARGET SDL2::SDL2)
   else()
-    find_package(SDL2 MODULE QUIET)
-  endif()
-  if (NOT SDL2_FOUND)
-    find_package(SDL2 REQUIRED)
+    # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
+    set(SDL2_TARGET SDL2::SDL2-static)
+    # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
+    add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
   endif()
   find_package(SDL2_ttf REQUIRED)
   find_package(SDL2_mixer REQUIRED)
@@ -600,7 +601,7 @@ if(USE_SDL1)
   target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
 else()
   target_link_libraries(${BIN_TARGET} PRIVATE
-    SDL2::SDL2
+    ${SDL2_TARGET}
     SDL2::SDL2main
     SDL2::SDL2_ttf
     SDL2::SDL2_mixer)
