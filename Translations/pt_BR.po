@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2021-04-25 18:27+0200\n"
-"PO-Revision-Date: 2021-04-25 19:01-0300\n"
+"PO-Revision-Date: 2021-04-25 19:21-0300\n"
 "Last-Translator: Cyro Dubeux <xorycx@gmail.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -4109,7 +4109,7 @@ msgstr "Mágico"
 
 #: Source/objects.cpp:94
 msgid "Stone"
-msgstr "de Pedra"
+msgstr "de pedra"
 
 #: Source/objects.cpp:95
 msgid "Religious"
