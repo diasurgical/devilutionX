@@ -41,7 +41,7 @@ char *read_entry(FILE *fp, mo_entry *e)
 		return nullptr;
 	}
 
-	if (!(data = calloc(e->length, sizeof(char)))) {
+	if (!(data = calloc(e->length + 1, sizeof(char)))) {
 		return nullptr;
 	}
 
