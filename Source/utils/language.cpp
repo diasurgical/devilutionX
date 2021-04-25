@@ -1,5 +1,6 @@
 #include "options.h"
 #include "utils/paths.h"
+#include "utils/utf8.h"
 #include <map>
 
 using namespace devilution;
@@ -57,10 +58,11 @@ char *strtrim_right(char *s)
 	return s;
 }
 
-void parse_metadata(char *data)
+bool parse_metadata(char *data)
 {
 	char *key, *delim, *val;
 	char *ptr = data;
+	bool utf8 = false;
 
 	while (ptr && (delim = strstr(ptr, ":"))) {
 		key = strtrim_left(ptr);
@@ -77,7 +79,14 @@ void parse_metadata(char *data)
 
 		val = strtrim_right(val);
 		meta[key] = val;
+
+		// Match "Content-Type: text/plain; charset=UTF-8"
+		if (!strcmp("Content-Type", key) && (delim = strstr(val, "="))) {
+			utf8 = !strcasecmp(delim + 1, "utf-8");
+		}
 	}
+
+	return utf8;
 }
 
 char *read_entry(FILE *fp, mo_entry *e)
@@ -126,6 +135,7 @@ void LanguageInitialize()
 	mo_entry *src, *dst;
 	mo_head head;
 	FILE *fp;
+	bool utf8;
 
 	auto path = GetLangPath() + "./" + sgOptions.Language.szCode + ".gmo";
 	if (!(fp = fopen(path.c_str(), "rb"))) {
@@ -179,8 +189,15 @@ void LanguageInitialize()
 		if ((key = read_entry(fp, src + i))) {
 			if ((val = read_entry(fp, dst + i))) {
 				if (!*key) {
-					parse_metadata(val);
+					utf8 = parse_metadata(val);
 				} else {
+					if (utf8) {
+						std::string latin1 = utf8_to_latin1(key);
+						strcpy(key, latin1.c_str());
+
+						latin1 = utf8_to_latin1(val);
+						strcpy(val, latin1.c_str());
+					}
 					map[key] = val;
 				}
 			} else {
