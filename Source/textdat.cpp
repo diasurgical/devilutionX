@@ -136,7 +136,7 @@ const TextDataStruct alltext[] = {
 	    true, TSFX_PEGBOY10 },
 	{ N_("Please, listen to me. The Archbishop Lazarus, he led us down here to find the lost prince. The bastard led us into a trap! Now everyone is dead... killed by a demon he called the Butcher. Avenge us! Find this Butcher and slay him so that our souls may finally rest... |"),
 	    true, TSFX_WOUND },
-	{ N_(" |"), true, USFX_CLEAVER },
+	{ " |", true, USFX_CLEAVER },
 	{ N_("You recite an interesting rhyme written in a style that reminds me of other works. Let me think now - what was it?\n \n...Darkness shrouds the Hidden. Eyes glowing unseen with only the sounds of razor claws briefly scraping to torment those poor souls who have been made sightless for all eternity. The prison for those so damned is named the Halls of the Blind... |"),
 	    true, TSFX_STORY12 },
 	{ N_("I never much cared for poetry. Occasionally, I had cause to hire minstrels when the inn was doing well, but that seems like such a long time ago now. \n \nWhat? Oh, yes... uh, well, I suppose you could see what someone else knows. |"),
