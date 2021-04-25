@@ -47,7 +47,7 @@ enum {
 	// clang-format off
 	MaxNumFingers          =   3, // number of fingers to track per panel
 	MaxTapTime             = 250, // taps longer than this will not result in mouse click events
-	MaxTapMotionDistance  =  10, // max distance finger motion in Vita screen pixels to be considered a tap
+	MaxTapMotionDistance   =  10, // max distance finger motion in Vita screen pixels to be considered a tap
 	SimulatedClickDuration =  50, // time in ms how long simulated mouse clicks should be
 	// clang-format on
 };
