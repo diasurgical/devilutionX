@@ -492,8 +492,8 @@ const TextDataStruct alltext[] = {
 	    true, PS_ROGUE11 },
 	{ N_("The armories of Hell are home to the Warlord of Blood. In his wake lay the mutilated bodies of thousands. Angels and men alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood. |"),
 	    true, PS_ROGUE12 },
-	{ N_(" |"), false, TSFX_COW1 },
-	{ N_(" |"), false, TSFX_COW2 },
+	{ " |", false, TSFX_COW1 },
+	{ " |", false, TSFX_COW2 },
 	/*
 	{ " |", false, TSFX_COW3 },
 	{ " |", false, TSFX_COW4 },
