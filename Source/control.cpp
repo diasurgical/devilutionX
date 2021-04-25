@@ -1913,7 +1913,7 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	ADD_PlrStringXY(out, 366, 87, 600, tempstr, COL_GOLD);
 	sprintf(tempstr, _("%s.  How many do"), get_pieces_str(initialDropGoldValue));
 	ADD_PlrStringXY(out, 366, 103, 600, tempstr, COL_GOLD);
-	ADD_PlrStringXY(out, 366, 121, 600, "you want to remove?", COL_GOLD);
+	ADD_PlrStringXY(out, 366, 121, 600, _("you want to remove?"), COL_GOLD);
 	if (amount > 0) {
 		sprintf(tempstr, "%u", amount);
 		PrintGameStr(out, 388, 140, tempstr, COL_WHITE);
