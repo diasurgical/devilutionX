@@ -17,7 +17,7 @@ bool helpflag;
 int HelpTop;
 
 const char gszSpawnHelpText[] = {
-	"Shareware Diablo Help|"
+	N_("Shareware Diablo Help|"
 	"|"
 	"$Keyboard Shortcuts:|"
 	"Diablo can be played exclusively by using the mouse controls.  "
@@ -377,11 +377,11 @@ const char gszSpawnHelpText[] = {
 	"Information Bar.  You can also press TAB on your keyboard to activate "
 	"the auto-map. Zooming in and out of the map is done with the + and - "
 	"keys while scrolling the map uses the arrow keys.|"
-	"&"
+	"&")
 };
 
 const char gszHelpText[] = {
-	"$Keyboard Shortcuts:|"
+	N_("$Keyboard Shortcuts:|"
 	"F1:    Open Help Screen|"
 	"Esc:   Display Main Menu|"
 	"Tab:   Display Auto-map|"
@@ -450,7 +450,7 @@ const char gszHelpText[] = {
 	"$Spell Books|"
 	"Reading more than one book increases your knowledge of that "
 	"spell, allowing you to cast the spell more effectively.|"
-	"&"
+	"&")
 };
 
 void InitHelp()
@@ -492,9 +492,9 @@ void DrawHelp(const CelOutputBuffer &out)
 		PrintSString(out, 0, 2, true, _("Diablo Help"), COL_GOLD, 0);
 	DrawSLine(out, 5);
 
-	s = &gszHelpText[0];
+	s = _(&gszHelpText[0]);
 	if (gbIsSpawn)
-		s = &gszSpawnHelpText[0];
+		s = _(&gszSpawnHelpText[0]);
 
 	for (i = 0; i < help_select_line; i++) {
 		c = 0;

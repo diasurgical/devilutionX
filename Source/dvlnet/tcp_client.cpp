@@ -1,5 +1,6 @@
 #include "dvlnet/tcp_client.h"
 #include "options.h"
+#include "utils/language.h"
 
 #include <SDL.h>
 #include <exception>
@@ -63,7 +64,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		}
 	}
 	if (plr_self == PLR_BROADCAST) {
-		SDL_SetError("Unable to connect");
+		SDL_SetError(_("Unable to connect"));
 		return -1;
 	}
 
@@ -84,7 +85,7 @@ void tcp_client::handle_recv(const asio::error_code &error, size_t bytesRead)
 		return;
 	}
 	if (bytesRead == 0) {
-		throw std::runtime_error("error: read 0 bytes from server");
+		throw std::runtime_error(_("error: read 0 bytes from server"));
 	}
 	recv_buffer.resize(bytesRead);
 	recv_queue.write(std::move(recv_buffer));

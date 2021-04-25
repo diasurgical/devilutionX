@@ -12,6 +12,7 @@
 #include "options.h"
 #include "qol/common.h"
 #include "qol/xpbar.h"
+#include "utils/language.h"
 
 namespace devilution {
 namespace {
@@ -63,7 +64,7 @@ void InitQol()
 		if ((qolArt->healthBox.surface == nullptr)
 		    || (qolArt->health.surface == nullptr)
 		    || (qolArt->resistance.surface == nullptr)) {
-			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
+			app_fatal(_("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
 		}
 	}
 

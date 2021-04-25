@@ -143,7 +143,7 @@ void FileErrDlg(const char *error)
 	    "The problem occurred when loading:\n%s"),
 	    error);
 
-	UiErrorOkDialog("Data File Error", text);
+	UiErrorOkDialog(_("Data File Error"), text);
 	app_fatal(nullptr);
 }
 
@@ -160,7 +160,7 @@ void InsertCDDlg()
 	    "\n"
 	    "Make sure that it is in the game folder and that the file name is in all lowercase."));
 
-	UiErrorOkDialog("Data File Error", text);
+	UiErrorOkDialog(_("Data File Error"), text);
 	app_fatal(nullptr);
 }
 

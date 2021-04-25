@@ -52,6 +52,7 @@
 #include "utils/console.h"
 #include "utils/language.h"
 #include "utils/paths.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -119,10 +120,10 @@ int arrowdebug = 0;
 bool gbFriendlyMode = true;
 /** Default quick messages */
 const char *const spszMsgTbl[] = {
-	"I need help! Come Here!",
-	"Follow me.",
-	"Here's something for you.",
-	"Now you DIE!"
+	N_("I need help! Come Here!"),
+	N_("Follow me."),
+	N_("Here's something for you."),
+	N_("Now you DIE!")
 };
 /** INI files variable names for quick message keys */
 const char *const spszMsgHotKeyTbl[] = { "F9", "F10", "F11", "F12" };
@@ -141,22 +142,22 @@ extern void plrctrls_after_game_logic();
 
 [[noreturn]] static void print_help_and_exit()
 {
-	printInConsole("Options:\n");
-	printInConsole("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
-	printInConsole("    %-20s %-30s\n", "--version", "Print the version and exit");
-	printInConsole("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
-	printInConsole("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
-	printInConsole("    %-20s %-30s\n", "--config-dir", "Specify the location of diablo.ini");
-	printInConsole("    %-20s %-30s\n", "--ttf-dir", "Specify the location of the .ttf font");
-	printInConsole("    %-20s %-30s\n", "--ttf-name", "Specify the name of a custom .ttf font");
-	printInConsole("    %-20s %-30s\n", "-n", "Skip startup videos");
-	printInConsole("    %-20s %-30s\n", "-f", "Display frames per second");
-	printInConsole("    %-20s %-30s\n", "-x", "Run in windowed mode");
-	printInConsole("    %-20s %-30s\n", "--verbose", "Enable verbose logging");
-	printInConsole("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
-	printInConsole("\nHellfire options:\n");
-	printInConsole("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
-	printInConsole("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
+	printInConsole(_("Options:\n"));
+	printInConsole("    %-20s %-30s\n", "-h, --help", _("Print this message and exit"));
+	printInConsole("    %-20s %-30s\n", "--version", _("Print the version and exit"));
+	printInConsole("    %-20s %-30s\n", "--data-dir", _("Specify the folder of diabdat.mpq"));
+	printInConsole("    %-20s %-30s\n", "--save-dir", _("Specify the folder of save files"));
+	printInConsole("    %-20s %-30s\n", "--config-dir", _("Specify the location of diablo.ini"));
+	printInConsole("    %-20s %-30s\n", "--ttf-dir", _("Specify the location of the .ttf font"));
+	printInConsole("    %-20s %-30s\n", "--ttf-name", _("Specify the name of a custom .ttf font"));
+	printInConsole("    %-20s %-30s\n", "-n", _("Skip startup videos"));
+	printInConsole("    %-20s %-30s\n", "-f", _("Display frames per second"));
+	printInConsole("    %-20s %-30s\n", "-x", _("Run in windowed mode"));
+	printInConsole("    %-20s %-30s\n", "--verbose", _("Enable verbose logging"));
+	printInConsole("    %-20s %-30s\n", "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
+	printInConsole(_("\nHellfire options:\n"));
+	printInConsole("    %-20s %-30s\n", "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
+	printInConsole("    %-20s %-30s\n", "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-d", "Increaased item drops");
@@ -172,7 +173,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
-	printInConsole("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
+	printInConsole(_("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
 }
 
@@ -248,7 +249,7 @@ static void diablo_parse_flags(int argc, char **argv)
 			debug_mode_key_w = true;
 #endif
 		} else {
-			printInConsole("unrecognized option '%s'\n", argv[i]);
+			printInConsole(_("unrecognized option '%s'\n"), argv[i]);
 			print_help_and_exit();
 		}
 	}
@@ -519,7 +520,7 @@ static void SaveOptions()
 #endif
 
 	setIniValue("Language", "Code", sgOptions.Language.szCode);
-	
+
 	SaveIni();
 }
 
@@ -585,7 +586,7 @@ static void LoadOptions()
 	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
 	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, spszMsgTbl[i]);
+		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, _(spszMsgTbl[i]));
 
 	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
 	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
@@ -596,7 +597,7 @@ static void LoadOptions()
 #endif
 
 	getIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), "en");
-	
+
 	sbWasOptionsLoaded = true;
 }
 
@@ -1115,8 +1116,8 @@ static void PressKey(int vkey)
 			helpflag = false;
 		} else if (stextflag != STORE_NONE) {
 			ClearPanel();
-			AddPanelString("No help available", true); /// BUGFIX: message isn't displayed
-			AddPanelString("while in stores", true);
+			AddPanelString(_("No help available"), true); /// BUGFIX: message isn't displayed
+			AddPanelString(_("while in stores"), true);
 			track_repeat_walk(false);
 		} else {
 			invflag = false;
@@ -1392,11 +1393,11 @@ static void PressChar(WPARAM vkey)
 	case 'v': {
 		char pszStr[120];
 		const char *difficulties[3] = {
-			"Normal",
-			"Nightmare",
-			"Hell",
+			_("Normal"),
+			_("Nightmare"),
+			_("Hell"),
 		};
-		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[sgGameInitInfo.nDifficulty]);
+		sprintf(pszStr, _("%s, mode = %s"), gszProductName, difficulties[sgGameInitInfo.nDifficulty]);
 		NetSendCmdString(1 << myplr, pszStr);
 		return;
 	}
@@ -2094,8 +2095,8 @@ static void timeout_cursor(bool bTimeout)
 			sgnTimeoutCurs = pcurs;
 			multi_net_ping();
 			ClearPanel();
-			AddPanelString("-- Network timeout --", true);
-			AddPanelString("-- Waiting for players --", true);
+			AddPanelString(_("-- Network timeout --"), true);
+			AddPanelString(_("-- Waiting for players --"), true);
 			NewCursor(CURSOR_HOURGLASS);
 			force_redraw = 255;
 		}

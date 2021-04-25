@@ -417,11 +417,11 @@ void DrawAutomapText(const CelOutputBuffer &out)
 	int nextline = 20;
 
 	if (gbIsMultiplayer) {
-		strcat(strcpy(desc, "game: "), szPlayerName);
+		strcat(strcpy(desc, _("game: ")), szPlayerName);
 		PrintGameStr(out, 8, 20, desc, COL_GOLD);
 		nextline = 35;
 		if (szPlayerDescript[0] != 0) {
-			strcat(strcpy(desc, "password: "), szPlayerDescript);
+			strcat(strcpy(desc, _("password: ")), szPlayerDescript);
 			PrintGameStr(out, 8, 35, desc, COL_GOLD);
 			nextline = 50;
 		}
