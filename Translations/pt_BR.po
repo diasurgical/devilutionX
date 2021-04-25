@@ -3707,12 +3707,12 @@ msgstr " %i Des."
 #: Source/items.cpp:3897 Source/items.cpp:3944
 #, c-format
 msgid "damage: %i  Indestructible"
-msgstr "Dano:%i  Indestrutível"
+msgstr "dano: %i  Indestrutível"
 
 #: Source/items.cpp:3899 Source/items.cpp:3946
 #, c-format
 msgid "damage: %i  Dur: %i/%i"
-msgstr "Dano:%i  Dur:%i/%i"
+msgstr "dano: %i  Dur: %i/%i"
 
 #: Source/items.cpp:3902 Source/items.cpp:3949
 #, c-format
@@ -3722,27 +3722,27 @@ msgstr "Dano:%i-%i  Indestrutível"
 #: Source/items.cpp:3904 Source/items.cpp:3951
 #, c-format
 msgid "damage: %i-%i  Dur: %i/%i"
-msgstr "Dano:%i-%i  Dur:%i/%i"
+msgstr "dano: %i-%i  Dur: %i/%i"
 
 #: Source/items.cpp:3910 Source/items.cpp:3963
 #, c-format
 msgid "armor: %i  Indestructible"
-msgstr "Armadura:%i  Indestrutível"
+msgstr "armadura: %i  Indestrutível"
 
 #: Source/items.cpp:3912 Source/items.cpp:3965
 #, c-format
 msgid "armor: %i  Dur: %i/%i"
-msgstr "Armadura:%i  Dur:%i/%i"
+msgstr "armadura: %i  Dur: %i/%i"
 
 #: Source/items.cpp:3917
 #, c-format
 msgid "dam: %i  Dur: %i/%i"
-msgstr "Dano:%i  Dur:%i/%i"
+msgstr "dano: %i  Dur: %i/%i"
 
 #: Source/items.cpp:3919
 #, c-format
 msgid "dam: %i-%i  Dur: %i/%i"
-msgstr "Dano:%i-%i  Dur:%i/%i"
+msgstr "dano: %i-%i  Dur: %i/%i"
 
 #: Source/items.cpp:3920 Source/items.cpp:3955 Source/items.cpp:3970
 #: Source/stores.cpp:169
@@ -3752,7 +3752,7 @@ msgstr "Cargas: %i/%i"
 
 #: Source/items.cpp:3932
 msgid "unique item"
-msgstr "Item único"
+msgstr "item único"
 
 #: Source/items.cpp:3959 Source/items.cpp:3968 Source/items.cpp:3975
 msgid "Not Identified"
@@ -4015,7 +4015,7 @@ msgstr "Nenhuma resistência a magia"
 
 #: Source/monster.cpp:5020
 msgid "Resists: "
-msgstr "Resiste a:"
+msgstr "Resiste a: "
 
 #: Source/monster.cpp:5022 Source/monster.cpp:5033
 msgid "Magic "
@@ -4031,7 +4031,7 @@ msgstr "Raios "
 
 #: Source/monster.cpp:5031
 msgid "Immune: "
-msgstr "Imune a:"
+msgstr "Imune a: "
 
 #: Source/monster.cpp:5051
 #, c-format
