@@ -655,85 +655,85 @@ const TextDataStruct alltext[] = {
 	{ N_("Praedictum Otium. |"), true, PS_ROGUE55 },
 	{ N_("Efficio Obitus Ut Inimicus. |"), true, PS_ROGUE56 },
 	/**
-	{ N_"Please help....! I barely escaped from....... The Butcher...! He killed.... My wife... My children! I beg of you...... In the name of God......... Avenge them......... |"), true, TSFX_DEADGUY },
+	{ N_("Please help....! I barely escaped from....... The Butcher...! He killed.... My wife... My children! I beg of you...... In the name of God......... Avenge them......... |"), true, TSFX_DEADGUY },
 	{ N_("*retching* Listen, listen. I don't even like worms. Don't tell me about yer worms! I don't want yer worms! Nope, no thanks! *slight hiccup/gag* No worms for me."), true, TSFX_DRUNK5 },
-	{ _("*SNORE*"), true, TSFX_DRUNK6 },
-	{ "Sounds like a good idea to me. Ya better get started right awaaay.", true, TSFX_DRUNK8 },
-	{ "*laugh* Did you ever hear I love that King tale? I love that one.", true, TSFX_DRUNK9 },
-	{ "(Crying) No, you can't make me go back there. I won't let you take me. Too much pain, too many dead. Can't... get the blood out of my eyes... my mouth... *wails*", true, TSFX_DRUNK11 },
-	{ "You're gonna hunt down a demon? Is that what you said? I know I didn't hear that 'cuz nobody hunts down a demon, no! Nobody! ", true, TSFX_DRUNK16 },
-	{ "Hey, lemme see that. *blows nose* Thanks!", true, TSFX_DRUNK18 },
-	{ "Hey you there, come here, listen up. You know about the island where angels watch? Pick the right rocks, but you better shield your eyes; shield everything! I know, 'cause I been there and... Mmmm, ale.", true, TSFX_DRUNK22 },
-	{ "I haven't ever see a priest around here. If I did I'd kick him right in the *BBBBUUURRRPPP* Can't even keep a church free of those Hell spawn - bastards. What good are they, those holy men? Liars! Liars!", true, TSFX_DRUNK33 },
-	{ "Wait, before you say anything, my grandmother had a dream with giant, slithering creatures in it. She also saw Pepin running from a house in the town. Do you think this means anything?",
+	{ N_("*SNORE*"), true, TSFX_DRUNK6 },
+	{ N_("Sounds like a good idea to me. Ya better get started right awaaay."), true, TSFX_DRUNK8 },
+	{ N_("*laugh* Did you ever hear I love that King tale? I love that one."), true, TSFX_DRUNK9 },
+	{ N_("(Crying) No, you can't make me go back there. I won't let you take me. Too much pain, too many dead. Can't... get the blood out of my eyes... my mouth... *wails*"), true, TSFX_DRUNK11 },
+	{ N_("You're gonna hunt down a demon? Is that what you said? I know I didn't hear that 'cuz nobody hunts down a demon, no! Nobody! "), true, TSFX_DRUNK16 },
+	{ N_("Hey, lemme see that. *blows nose* Thanks!"), true, TSFX_DRUNK18 },
+	{ N_("Hey you there, come here, listen up. You know about the island where angels watch? Pick the right rocks, but you better shield your eyes; shield everything! I know, 'cause I been there and... Mmmm, ale."), true, TSFX_DRUNK22 },
+	{ N_("I haven't ever see a priest around here. If I did I'd kick him right in the *BBBBUUURRRPPP* Can't even keep a church free of those Hell spawn - bastards. What good are they, those holy men? Liars! Liars!"), true, TSFX_DRUNK33 },
+	{ N_("Wait, before you say anything, my grandmother had a dream with giant, slithering creatures in it. She also saw Pepin running from a house in the town. Do you think this means anything?"),
 	    true, TSFX_BMAID5 },
-	{ "This is something that is far beyond anything I have ever learned. I can only think of one person in all of Tristram who could help you. Cain, of course.",
+	{ N_("This is something that is far beyond anything I have ever learned. I can only think of one person in all of Tristram who could help you. Cain, of course."),
 	    true, TSFX_BMAID7 },
-	{ "How could you even think of going back to that place? What could be so important?",
+	{ N_("How could you even think of going back to that place? What could be so important?"),
 	    true, TSFX_BMAID9 },
-	{ "Those are the words of a drunkard. I don't see how they could be true.",
+	{ N_("Those are the words of a drunkard. I don't see how they could be true."),
 	    true, TSFX_BMAID14 },
-	{ "I heard that the priest Tremain was going to perform an exorcism, but I didn't go. I don't see why we all have to spend every moment captive to what is lurking underneath our town. I know that many have died at the hands of these monsters, but we need to try to go on. I know that you have come here to free Tristram from the clutches of darkness, and I hope that one day we can live in peace again.",
+	{ N_("I heard that the priest Tremain was going to perform an exorcism, but I didn't go. I don't see why we all have to spend every moment captive to what is lurking underneath our town. I know that many have died at the hands of these monsters, but we need to try to go on. I know that you have come here to free Tristram from the clutches of darkness, and I hope that one day we can live in peace again."),
 	    true, TSFX_BMAID15 },
-	{ "A treasure map? Do you have it with you? Let me see. Hmm, it looks like this is pretty old, and some of the buildings in the town are not on this map. Oh, I wish I could go and look for the treasure with you, but I have to start work soon."
+	{ N_("A treasure map? Do you have it with you? Let me see. Hmm, it looks like this is pretty old, and some of the buildings in the town are not on this map. Oh, I wish I could go and look for the treasure with you, but I have to start work soon."),
 	    true, TSFX_BMAID17 },
-	{ "Beg pardon, but have you heard what has been happening? Some of the men have vanished from the village. Dica's sons, Inaius and Roof, claim to have seen strange lights(= blood stars) glowing deep within the woods a few days ago, but no one has heard from them since. I, too, have seen a crimson shimmering from beyond the ash groves, but I've been too afraid to approach it. I fear that Ogden or our healer Pepin may be next. Won't you please find out what has happened?"
+	{ N_("Beg pardon, but have you heard what has been happening? Some of the men have vanished from the village. Dica's sons, Inaius and Roof, claim to have seen strange lights(= blood stars) glowing deep within the woods a few days ago, but no one has heard from them since. I, too, have seen a crimson shimmering from beyond the ash groves, but I've been too afraid to approach it. I fear that Ogden or our healer Pepin may be next. Won't you please find out what has happened?"),
 	    true, TSFX_BMAID21 },
-	{ "Have you looked into what has caused the strange lights yet? There are more men missing since last we spoke, and I'm beginning to fear that soon we may all vanish."
+	{ N_("Have you looked into what has caused the strange lights yet? There are more men missing since last we spoke, and I'm beginning to fear that soon we may all vanish."),
 	    true, TSFX_BMAID22 },
-	{ "Demons that assume the form of beautiful women, you say? That's horrible! Thank the light that you solved this mystery before any more of our men were lured to their deaths. Thank you for keeping us safe from the powers of darkness once again."
+	{ N_("Demons that assume the form of beautiful women, you say? That's horrible! Thank the light that you solved this mystery before any more of our men were lured to their deaths. Thank you for keeping us safe from the powers of darkness once again."),
 	    true, TSFX_BMAID23 },
-	{ "Pray your pardon, but I've something to tell you that you may find interesting. It was the strangest thing. While drinking at the tavern, Farnham was rambling about something called Azurewrath. He also said something about a fallen angel. It was hard to understand him because he was very drunk and disoriented, but I seem to remember something about a key in a barrel. He also kept covering his face and repeating the word 'Izual' over and over again."
+	{ N_("Pray your pardon, but I've something to tell you that you may find interesting. It was the strangest thing. While drinking at the tavern, Farnham was rambling about something called Azurewrath. He also said something about a fallen angel. It was hard to understand him because he was very drunk and disoriented, but I seem to remember something about a key in a barrel. He also kept covering his face and repeating the word 'Izual' over and over again."),
 	    true, TSFX_BMAID24 },
-	{ "You know, now that I think about it, maybe it wasn't the key a in a barrel, but the barrel that was the key. Does that make any more sense?"
+	{ N_("You know, now that I think about it, maybe it wasn't the key a in a barrel, but the barrel that was the key. Does that make any more sense?"),
 	    true, TSFX_BMAID25 },
-	{ "Azurewrath and Izual. I don't know why I didn't remember that story earlier. I've heard it often enough from my grandmother and Cain the storyteller. Well, I hope that my information was still more of a help than a hindrance. May light guide you, my friend."
+	{ N_("Azurewrath and Izual. I don't know why I didn't remember that story earlier. I've heard it often enough from my grandmother and Cain the storyteller. Well, I hope that my information was still more of a help than a hindrance. May light guide you, my friend."),
 	    true, TSFX_BMAID26 },
-	{ "I know that my grandmother’s story seems strange but the graveyard does have many mysteries surrounding it. It couldn’t hurt you to put something there see what happens, could it? Maybe you will find out something that will help us all."
-	    true, TSFX_BMAID28 },
-	{ "My grandmother had a dream about you last night, she said that in her dream you used your bare hands to defeat one of those fallen monsters that lurk under the church. When it died it exploded into a fabulous treasure! Although she was a bit frightened by her dream, she was able to describe the beast quite clearly to me."
+	{ N_("I know that my grandmother’s story seems strange but the graveyard does have many mysteries surrounding it. It couldn’t hurt you to put something there see what happens, could it? Maybe you will find out something that will help us all.",
+	    true, TSFX)_BMAID28 },
+	{ N_("My grandmother had a dream about you last night, she said that in her dream you used your bare hands to defeat one of those fallen monsters that lurk under the church. When it died it exploded into a fabulous treasure! Although she was a bit frightened by her dream, she was able to describe the beast quite clearly to me."),
 	    true, TSFX_BMAID29 },
-	{ "My grandmother had that exact same dream again. She said you are quite brave and seemed very pleased with your prize."
+	{ N_("My grandmother had that exact same dream again. She said you are quite brave and seemed very pleased with your prize."),
 	    true, TSFX_BMAID30 },
-	{ "I really don't know much about the priest Tremain. He never visits the tavern, preferring to keep to the company of Pepin and Cain. Perhaps it is because they, too, have more scholarly pursuits."
+	{ N_("I really don't know much about the priest Tremain. He never visits the tavern, preferring to keep to the company of Pepin and Cain. Perhaps it is because they, too, have more scholarly pursuits."),
 	    true, TSFX_BMAID38 },
-	{ "Roof and Inaius are missing? Light protect us! Is there no place that is safe? Our only hope of returning to a peaceful life rests in you. Please, you must find those boys and bring them home to their family. |"
+	{ N_("Roof and Inaius are missing? Light protect us! Is there no place that is safe? Our only hope of returning to a peaceful life rests in you. Please, you must find those boys and bring them home to their family. |"),
 	    true, TSFX_HEALER4 },
-	{ "Horazon was insane. There are forces with which one does not interfere. It would not surprise me if you found only the charred remains of this damned fool. |"
+	{ N_("Horazon was insane. There are forces with which one does not interfere. It would not surprise me if you found only the charred remains of this damned fool. |"),
 	    true, TSFX_HEALER6 },
-	{ "Farnham is often confused, but he speaks a powerful name when the word Izual passes his lips. Cain would be able to tell you in much greater detail the legend of this warrior. |"
+	{ N_("Farnham is often confused, but he speaks a powerful name when the word Izual passes his lips. Cain would be able to tell you in much greater detail the legend of this warrior. |"),
 	    true, TSFX_HEALER7 },
-	{ "I suppose it isn't beyond the realm of possibility if you could bear being in that room again. Your description of the atrocities committed there would be enough to keep me far from it. |"
+	{ N_("I suppose it isn't beyond the realm of possibility if you could bear being in that room again. Your description of the atrocities committed there would be enough to keep me far from it. |"),
 	    true, TSFX_HEALER9 },
-	{ "For once I can vouch for Farnham's extraordinary claim. There are many mentions in the books that I have been reading about a place of great healing where warriors of light would go to mend the wounds sustained in the Sin War. If you could find this place it would most assuredly be to the benefit of us all. |"
+	{ N_("For once I can vouch for Farnham's extraordinary claim. There are many mentions in the books that I have been reading about a place of great healing where warriors of light would go to mend the wounds sustained in the Sin War. If you could find this place it would most assuredly be to the benefit of us all. |"),
 	    true, TSFX_HEALER14 },
-	{ "I was asked to assist in the exorcism. My skills were able to ease the poor man's suffering as Tremain drove the demon from his body. While I was treating him for an exceptionally high fever, he spoke of a place of searing heat. The tortured fellow cried out about Hell and falling into a pit of flame. I could not make any sense of it, and thankfully he soon recovered. |"
+	{ N_("I was asked to assist in the exorcism. My skills were able to ease the poor man's suffering as Tremain drove the demon from his body. While I was treating him for an exceptionally high fever, he spoke of a place of searing heat. The tortured fellow cried out about Hell and falling into a pit of flame. I could not make any sense of it, and thankfully he soon recovered. |"),
 	    true, TSFX_HEALER15 },
-	{ "Good hero, a moment of your time please. While attending one of the townsfolk who had taken quite ill, I noticed something odd about his home. There were strange sounds and a sickly sweet smell rising from the cellar. Thinking perhaps these fumes had something to do with his sickness. In his cellar were monstrous worms shifting and squirming up from the underground. I beg of you, slay these creatures before they can make their way into the town. I left the door to his house open for you. It is the one opposite of mine. |"
+	{ N_("Good hero, a moment of your time please. While attending one of the townsfolk who had taken quite ill, I noticed something odd about his home. There were strange sounds and a sickly sweet smell rising from the cellar. Thinking perhaps these fumes had something to do with his sickness. In his cellar were monstrous worms shifting and squirming up from the underground. I beg of you, slay these creatures before they can make their way into the town. I left the door to his house open for you. It is the one opposite of mine. |"),
 	    true, TSFX_HEALER23 },
-	{ "I fear that the worms could soon overrun the village. I know that they are coming up from under the house that is opposite mine. Just the thought of those slimy beasts oozing into my house makes me want to be ill. Please, rid us of them.|"
+	{ N_("I fear that the worms could soon overrun the village. I know that they are coming up from under the house that is opposite mine. Just the thought of those slimy beasts oozing into my house makes me want to be ill. Please, rid us of them.|"),
 	    true, TSFX_HEALER24 },
-	{ "Once again you have saved this humble town from the encroaching evil. We are, as always, forever in your debt.|"
+	{ N_("Once again you have saved this humble town from the encroaching evil. We are, as always, forever in your debt.|"),
 	    true, TSFX_HEALER25 },
-	{ "My friend, I must speak with you. While going to help a sick villager I came upon a demon in the town. I fled from the house and accidentally left the door open in my haste. I pray that the vial creature is still in there. Please help us before it comes for us all.|"
+	{ N_("My friend, I must speak with you. While going to help a sick villager I came upon a demon in the town. I fled from the house and accidentally left the door open in my haste. I pray that the vial creature is still in there. Please help us before it comes for us all.|"),
 	    true, TSFX_HEALER28 },
-	{ "These creatures must be banished from our town. To my shame I left the door open, but that should make all the easier for you to find the house.|"
+	{ N_("These creatures must be banished from our town. To my shame I left the door open, but that should make all the easier for you to find the house.|"),
 	    true, TSFX_HEALER29 },
-	{ "Once again the town is in your debt. It is only your strength and force of will that can leads us out of this evil time.|"
+	{ N_("Once again the town is in your debt. It is only your strength and force of will that can leads us out of this evil time.|"),
 	    true, TSFX_HEALER30 },
-	{ "Once again I require your strong arm and quick quirks to aid the people of this town. I am in need of certain reagents to help fight the plagues that the demons have unleashed on the land by their very presence. If you could gather these few items, it will save many lives!|"
+	{ N_("Once again I require your strong arm and quick quirks to aid the people of this town. I am in need of certain reagents to help fight the plagues that the demons have unleashed on the land by their very presence. If you could gather these few items, it will save many lives!|"),
 	    true, TSFX_HEALER31 },
-	{ "The diseases spread quickly and many are dying. Please, help me by finding the reagents so that I can use it to make an antidote.|"
+	{ N_("The diseases spread quickly and many are dying. Please, help me by finding the reagents so that I can use it to make an antidote.|"),
 	    true, TSFX_HEALER32 },
-	{ "Thank you so much! You bring hope and light to this dark and troubled times. I wish for you to have this in the hopes that will aid you in your battle against the darkness.|"
+	{ N_("Thank you so much! You bring hope and light to this dark and troubled times. I wish for you to have this in the hopes that will aid you in your battle against the darkness.|"),
 	    true, TSFX_HEALER33 },
-	{ "I know that I ask much of you, but I must now ask that you find a pool of clear water. Take these containers, fill them and return them me as soon as you can. With the clear water I can create an elixir of wondrous power that will benefit us all.|"
+	{ N_("I know that I ask much of you, but I must now ask that you find a pool of clear water. Take these containers, fill them and return them me as soon as you can. With the clear water I can create an elixir of wondrous power that will benefit us all.|"),
 	    true, TSFX_HEALER34 },
-	{ "Have you brought what I need? The clear water will allow me to create a very power elixir, fill the containers that I gave you and return with them.|"
+	{ N_("Have you brought what I need? The clear water will allow me to create a very power elixir, fill the containers that I gave you and return with them.|"),
 	    true, TSFX_HEALER35 },
-	{ "Very good, my friend! Very good! Just give a minute to mix these ingredients... Perfect! Here is some of the elixir as promised. |"
+	{ N_("Very good, my friend! Very good! Just give a minute to mix these ingredients... Perfect! Here is some of the elixir as promised. |"),
 	    true, TSFX_HEALER36 },
-	{ "His Holiness is a wondrous man of great knowledge and understanding. He has shown me many cures for rare and deadly diseases. He brings me books and reagents for my work whenever he can. But I fear that he may some day take on a task that is too great even for him. |"
+	{ N_("His Holiness is a wondrous man of great knowledge and understanding. He has shown me many cures for rare and deadly diseases. He brings me books and reagents for my work whenever he can. But I fear that he may some day take on a task that is too great even for him. |"),
 	    true, TSFX_HEALER44 },
 */
 };
