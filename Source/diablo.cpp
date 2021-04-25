@@ -185,17 +185,17 @@ static void diablo_parse_flags(int argc, char **argv)
 			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
 			diablo_quit(0);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
-			SetBasePath(argv[++i]);
+			paths::SetBasePath(argv[++i]);
 		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
-			SetPrefPath(argv[++i]);
+			paths::SetPrefPath(argv[++i]);
 		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
-			SetConfigPath(argv[++i]);
+			paths::SetConfigPath(argv[++i]);
 		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
-			SetLangPath(argv[++i]);
+			paths::SetLangPath(argv[++i]);
 		} else if (strcasecmp("--ttf-dir", argv[i]) == 0) {
-			SetTtfPath(argv[++i]);
+			paths::SetTtfPath(argv[++i]);
 		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
-			SetTtfName(argv[++i]);
+			paths::SetTtfName(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			gbShowIntro = false;
 		} else if (strcasecmp("-f", argv[i]) == 0) {

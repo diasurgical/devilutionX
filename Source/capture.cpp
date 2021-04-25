@@ -137,7 +137,7 @@ static std::ofstream *CaptureFile(std::string *dstPath)
 	char filename[sizeof("screen00.PCX") / sizeof(char)];
 	for (int i = 0; i <= 99; ++i) {
 		snprintf(filename, sizeof(filename) / sizeof(char), "screen%02d.PCX", i);
-		*dstPath = GetPrefPath() + filename;
+		*dstPath = paths::PrefPath() + filename;
 		if (!FileExists(dstPath->c_str())) {
 			return new std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
 		}

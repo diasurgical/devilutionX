@@ -362,7 +362,7 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 
 TEST(Writehero, pfile_write_hero)
 {
-	SetPrefPath(".");
+	paths::SetPrefPath(".");
 	std::remove("multi_0.sv");
 
 	gbVanilla = true;

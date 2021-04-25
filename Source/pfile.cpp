@@ -28,7 +28,7 @@ namespace {
 
 std::string GetSavePath(DWORD save_num)
 {
-	std::string path = GetPrefPath();
+	std::string path = paths::PrefPath();
 	const char *ext = ".sv";
 	if (gbIsHellfire)
 		ext = ".hsv";
