@@ -152,8 +152,8 @@ void init_archives()
 
 	std::vector<std::string> paths;
 	paths.reserve(5);
-	paths.push_back(GetBasePath());
-	paths.push_back(GetPrefPath());
+	paths.push_back(paths::BasePath());
+	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
 		paths.pop_back();
 

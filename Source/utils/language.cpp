@@ -137,9 +137,9 @@ void LanguageInitialize()
 	FILE *fp;
 	bool utf8;
 
-	auto path = GetLangPath() + "./" + sgOptions.Language.szCode + ".gmo";
+	auto path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".gmo";
 	if (!(fp = fopen(path.c_str(), "rb"))) {
-		path = GetLangPath() + "./" + sgOptions.Language.szCode + ".mo";
+		path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".mo";
 		if (!(fp = fopen(path.c_str(), "rb"))) {
 			perror(path.c_str());
 			return;

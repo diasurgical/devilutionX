@@ -66,10 +66,10 @@ void LoadTtfFont()
 		was_fonts_init = true;
 	}
 
-	std::string ttfFontPath = GetTtfPath() + GetTtfName();
+	std::string ttfFontPath = paths::TtfPath() + paths::TtfName();
 #ifdef __linux__
 	if (!FileExists(ttfFontPath.c_str())) {
-		ttfFontPath = "/usr/share/fonts/truetype/" + GetTtfName();
+		ttfFontPath = "/usr/share/fonts/truetype/" + paths::TtfName();
 	}
 #endif
 	font = TTF_OpenFont(ttfFontPath.c_str(), 17);
