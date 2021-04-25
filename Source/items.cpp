@@ -3703,7 +3703,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_FIRERESCLVL:
 		if (x->_iPLFR <= 0)
-			sprintf(tempstr, _(" "));
+			sprintf(tempstr, " ");
 		else if (x->_iPLFR >= 1)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		break;
