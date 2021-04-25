@@ -880,8 +880,8 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 			LoadPlrGFX(pnum, PFILE_DEATH);
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
-			plr[pnum].AnimInfo._pAnimFrame = plr[pnum].AnimInfo._pAnimLen - 1;
-			plr[pnum].actionFrame = 2 * plr[pnum].AnimInfo._pAnimLen;
+			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.FrameLen - 1;
+			plr[pnum].actionFrame = 2 * plr[pnum].AnimInfo.FrameLen;
 			dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 		}
 	}
