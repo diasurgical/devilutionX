@@ -20,4 +20,4 @@ FetchContent_Declare(fmt
 )
 FetchContent_MakeAvailableExcludeFromAll(fmt)
 
-set(fmt_INCLUDE_DIR ${fmt_SOURCE_DIR} PARENT_SCOPE) 
+set(fmt_INCLUDE_DIR ${fmt_SOURCE_DIR} PARENT_SCOPE)
