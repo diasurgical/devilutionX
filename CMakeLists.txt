@@ -706,6 +706,7 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(${BIN_TARGET} PRIVATE "/W0")
+  target_compile_options(${BIN_TARGET} PRIVATE "/Zc:__cplusplus")
 endif()
 
 if(APPLE)
