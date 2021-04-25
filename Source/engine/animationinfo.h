@@ -34,6 +34,13 @@ public:
 	* @brief Current frame of animation
 	*/
 	int CurrentFrame;
+
+	/**
+	 * @brief Calculates the Frame to use for the Animation rendering
+	 * @return The Frame to use for rendering
+	 */
+	int GetFrameToUseForRendering();
+
 	/*
 	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
 	*/

@@ -15,7 +15,6 @@
 #include "loadsave.h"
 #include "minitext.h"
 #include "missiles.h"
-#include "nthread.h"
 #include "options.h"
 #include "qol/autopickup.h"
 #include "spells.h"
@@ -3724,43 +3723,6 @@ void ProcessPlayerAnimation(int pnum)
 			plr[pnum].AnimInfo.GameTicksSinceSequenceStarted = 0;
 		}
 	}
-}
-
-int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
-{
-	// Normal logic is used,
-	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick
-	// or
-	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
-	int relevantAnimationFramesForDistributing = pPlayer->AnimInfo.RelevantFramesForDistributing;
-	if (relevantAnimationFramesForDistributing <= 0)
-		return pPlayer->AnimInfo.CurrentFrame;
-
-	if (pPlayer->AnimInfo.CurrentFrame > relevantAnimationFramesForDistributing)
-		return pPlayer->AnimInfo.CurrentFrame;
-
-	assert(pPlayer->AnimInfo.GameTicksSinceSequenceStarted >= 0);
-
-	float progressToNextGameTick = gfProgressToNextGameTick;
-
-	// we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->AnimInfo.GameTicksSinceSequenceStarted;
-
-	// 1 added for rounding reasons. float to int cast always truncate.
-	int absoluteAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * pPlayer->AnimInfo.GameTickModifier);
-	if (absoluteAnimationFrame > relevantAnimationFramesForDistributing) {
-		// this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
-		if (absoluteAnimationFrame > (relevantAnimationFramesForDistributing + 1)) {
-			// we should never have +2 frames even if next game tick is due
-			Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated {} MaxFrame {})", absoluteAnimationFrame, relevantAnimationFramesForDistributing);
-		}
-		return relevantAnimationFramesForDistributing;
-	}
-	if (absoluteAnimationFrame <= 0) {
-		Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated {})", absoluteAnimationFrame);
-		return 1;
-	}
-	return absoluteAnimationFrame;
 }
 
 void ClrPlrPath(int pnum)

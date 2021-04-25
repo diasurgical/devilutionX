@@ -415,12 +415,6 @@ enum class AnimationDistributionParams : uint8_t {
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(int pnum);
 void ProcessPlayerAnimation(int pnum);
-/**
- * @brief Calculates the Frame to use for the Animation rendering
- * @param pPlayer Player
- * @return The Frame to use for rendering
- */
-int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer);
 void CreatePlayer(int pnum, HeroClass c);
 int CalcStatDiff(int pnum);
 #ifdef _DEBUG

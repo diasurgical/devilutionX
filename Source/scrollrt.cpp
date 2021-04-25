@@ -417,7 +417,7 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 	PlayerStruct *pPlayer = &plr[pnum];
 
 	BYTE *pCelBuff = pPlayer->AnimInfo.pData;
-	int nCel = GetFrameToUseForPlayerRendering(pPlayer);
+	int nCel = pPlayer->AnimInfo.GetFrameToUseForRendering();
 	int nWidth = pPlayer->_pAnimWidth;
 
 	if (pCelBuff == nullptr) {
