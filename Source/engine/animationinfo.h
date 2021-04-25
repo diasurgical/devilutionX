@@ -54,7 +54,7 @@ public:
 	 * @brief Calculates the Frame to use for the Animation rendering
 	 * @return The Frame to use for rendering
 	 */
-	int GetFrameToUseForRendering();
+	int GetFrameToUseForRendering() const;
 
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
