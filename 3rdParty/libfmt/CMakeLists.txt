@@ -19,5 +19,3 @@ FetchContent_Declare(fmt
   URL_HASH MD5=70e0a0beda4bdac7debe60d380e1d802
 )
 FetchContent_MakeAvailableExcludeFromAll(fmt)
-
-set(fmt_INCLUDE_DIR ${fmt_SOURCE_DIR} PARENT_SCOPE)
