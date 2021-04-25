@@ -657,7 +657,7 @@ const TextDataStruct alltext[] = {
 	/**
 	{ N_"Please help....! I barely escaped from....... The Butcher...! He killed.... My wife... My children! I beg of you...... In the name of God......... Avenge them......... |"), true, TSFX_DEADGUY },
 	{ N_("*retching* Listen, listen. I don't even like worms. Don't tell me about yer worms! I don't want yer worms! Nope, no thanks! *slight hiccup/gag* No worms for me."), true, TSFX_DRUNK5 },
-	{ "*SNORE*", true, TSFX_DRUNK6 },
+	{ _("*SNORE*"), true, TSFX_DRUNK6 },
 	{ "Sounds like a good idea to me. Ya better get started right awaaay.", true, TSFX_DRUNK8 },
 	{ "*laugh* Did you ever hear I love that King tale? I love that one.", true, TSFX_DRUNK9 },
 	{ "(Crying) No, you can't make me go back there. I won't let you take me. Too much pain, too many dead. Can't... get the blood out of my eyes... my mouth... *wails*", true, TSFX_DRUNK11 },
