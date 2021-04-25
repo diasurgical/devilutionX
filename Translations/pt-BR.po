@@ -1,16 +1,11 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-04-25 04:50+0200\n"
-"PO-Revision-Date: 2021-04-25 04:50+0200\n"
-"Last-Translator: gogo <linux.hr@protonmail.com>\n"
+"POT-Creation-Date: 2021-04-25 04:52+0200\n"
+"PO-Revision-Date: 2021-04-25 04:53+0200\n"
+"Last-Translator: Cyro Dubeux <xorycx@gmail.com>\n"
 "Language-Team: \n"
-"Language: hr\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,27 +18,27 @@ msgstr ""
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
-msgstr "Jedan igrač"
+msgstr "Um jogador"
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
-msgstr "Više igrača"
+msgstr "Multijogador"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Replay Intro"
-msgstr "Pogledaj uvod"
+msgstr "Repetir intro"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 #, fuzzy
 #| msgid "Customer Support"
 msgid "Support"
-msgstr "Korisnička podrška"
+msgstr "Suporte ao cliente"
 
 #: Source/DiabloUI/mainmenu.cpp:41
 #, fuzzy
 #| msgid "Show Credits"
 msgid "Credits"
-msgstr "Pogledaj zasluge"
+msgstr "Exibir créditos"
 
 #: Source/DiabloUI/mainmenu.cpp:42
 msgid "Exit Hellfire"
@@ -51,28 +46,29 @@ msgstr ""
 
 #: Source/DiabloUI/mainmenu.cpp:44
 msgid "Show Credits"
-msgstr "Pogledaj zasluge"
+msgstr "Exibir créditos"
 
 #: Source/DiabloUI/mainmenu.cpp:45
 msgid "Exit Diablo"
-msgstr "Zatvori Diablo"
+msgstr "Sair do Diablo"
 
 #: Source/DiabloUI/mainmenu.cpp:110
 msgid ""
 "The Diablo introduction cinematic is only available in the full retail "
 "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"Diablo uvodni film je samo dostupan u cjelovitom maloprodajnom izdanju "
-"Diabla. Posjetite https://www.gog.com/game/diablo kako bi ga kupili."
+"A introdução cinematográfica da Diablo está disponível apenas na versão "
+"comercial completa do Diablo. Visite https://www.gog.com/game/diablo para "
+"comprar."
 
 #~ msgid "Error"
-#~ msgstr "Greška"
+#~ msgstr "Erro"
 
 #~ msgid ""
 #~ "assertion failed (%d:%s)\n"
 #~ "%s"
 #~ msgstr ""
-#~ "neuspjeli navod (%d:%s)\n"
+#~ "falha na asserção (%d:%s)\n"
 #~ "%s"
 
 #~ msgid ""
@@ -82,7 +78,7 @@ msgstr ""
 #~ msgstr ""
 #~ "%s\n"
 #~ "\n"
-#~ "Greška se dogodila na: %s redak %d"
+#~ "O erro ocorreu em: %s linha %d"
 
 #~ msgid ""
 #~ "Unable to open a required file.\n"
@@ -94,15 +90,14 @@ msgstr ""
 #~ "The problem occurred when loading:\n"
 #~ "%s"
 #~ msgstr ""
-#~ "Nemoguće otvaranje potrebne datoteke.\n"
+#~ "Não foi possível abrir um arquivo necessário.\n"
 #~ "\n"
-#~ "Provjerite poklapa li se MD5 diabdat.mpq datoteke sa sljedećim "
-#~ "vrijednostima\n"
+#~ "Verifique se o MD5 do diabdat.mpq corresponde aos seguintes valores\n"
 #~ "011bc6518e6166206231080a4440b373\n"
 #~ "68f049866b44688a7af65ba766bef75a\n"
 #~ "\n"
-#~ "Došlo je do problema učitavanja:\n"
-#~ "%s"
+#~ "O problema ocorreu ao carregar:\n"
+#~ "% s"
 
 #~ msgid ""
 #~ "Unable to open %s.\n"
@@ -110,431 +105,443 @@ msgstr ""
 #~ "Make sure that it is in the game folder and that the file name is in all "
 #~ "lowercase."
 #~ msgstr ""
-#~ "Nemoguće je otvoriti %s.\n"
+#~ "Não foi possível abrir %s.\n"
 #~ "\n"
-#~ "Provjerite nalazi li se u mapi igre i je li naziv datoteke u malim "
-#~ "slovima."
+#~ "Verifique se ele está na pasta do jogo e se o nome do arquivo está todo "
+#~ "minúsculo."
 
 #~ msgid ""
 #~ "Unable to write to location:\n"
 #~ "%s"
 #~ msgstr ""
-#~ "Nemoguće zapisivanje lokacije:\n"
+#~ "Não foi possível gravar no local:\n"
 #~ "%s"
 
 #~ msgid "Read-Only Directory Error"
-#~ msgstr "Greška, direktorij ima samo dozvolu čitanja"
+#~ msgstr "Erro de diretório, somente leitura"
 
 #~ msgid "Save Game"
-#~ msgstr "Spremi igru"
+#~ msgstr "Salvar jogo"
 
 #~ msgid "Options"
-#~ msgstr "Mogućnosti"
+#~ msgstr "Opções"
 
 #~ msgid "New Game"
-#~ msgstr "Nova igra"
+#~ msgstr "Novo jogo"
 
 #~ msgid "Load Game"
-#~ msgstr "Učitaj igru"
+#~ msgstr "Carregar jogo"
 
 #~ msgid "Quit Diablo"
-#~ msgstr "Zatvori Diablo"
+#~ msgstr "Sair do Diablo"
 
 #~ msgid "Restart In Town"
-#~ msgstr "Ponovno pokreni u gradu"
+#~ msgstr "Reiniciar na cidade"
 
 #~ msgid "Gamma"
-#~ msgstr "Gama"
+#~ msgstr "Gamma"
 
 #~ msgid "Previous Menu"
-#~ msgstr "Prijašnji izbornik"
+#~ msgstr "Menu anterior"
 
 #~ msgid "Music"
-#~ msgstr "Glazba"
+#~ msgstr "Música"
 
 #~ msgid "Music Disabled"
-#~ msgstr "Glazba isključena"
+#~ msgstr "Desativar música"
 
 #~ msgid "Sound"
-#~ msgstr "Zvuk"
+#~ msgstr "Som"
 
 #~ msgid "Sound Disabled"
-#~ msgstr "Zvuk isključen"
+#~ msgstr "Desativar som"
 
 #~ msgid "Color Cycling Off"
-#~ msgstr "Kruženje boja isključeno"
+#~ msgstr "Desativar ciclo de cores"
 
 #~ msgid "Color Cycling On"
-#~ msgstr "Kruženje boja uključeno"
+#~ msgstr "Ativar ciclo de cores"
 
 #~ msgid "Pause"
-#~ msgstr "Pauziraj"
+#~ msgstr "Pausar"
 
 #~ msgid "Failed to load image"
-#~ msgstr "Neuspjelo učitavanje slike"
+#~ msgstr "Falha ao carregar a imagem"
 
 #~ msgid "Game Design"
-#~ msgstr "Dizajn igre"
+#~ msgstr "Design de jogo"
 
 #~ msgid "Senior Designers"
-#~ msgstr "Stariji dizajneri"
+#~ msgstr "Designers senior"
 
 #~ msgid "Additional Design"
-#~ msgstr "Dodatni dizajn"
+#~ msgstr "Design adicional"
 
 #~ msgid "Lead Programmer"
-#~ msgstr "Vodeći programer"
+#~ msgstr "Programador líder"
 
 #~ msgid "Senior Programmers"
-#~ msgstr "Stariji programeri"
+#~ msgstr "Programadores senior"
 
 #~ msgid "Programming"
-#~ msgstr "Programiranje"
+#~ msgstr "Programação"
 
 #~ msgid "Special Guest Programmers"
-#~ msgstr "Posebni gostujući programeri"
+#~ msgstr "Programadores convidados especiais"
 
 #~ msgid "Battle.net Programming"
-#~ msgstr "Battle.net programiranje"
+#~ msgstr "Programação Battle.net"
 
 #~ msgid "Serial Communications Programming"
-#~ msgstr "Programiranje serijske komunikacije"
+#~ msgstr "Programação de comunicação serial"
 
 #~ msgid "Installer Programming"
-#~ msgstr "Programiranje instalacijskog programa"
+#~ msgstr "Programação do instalador"
 
 #~ msgid "Art Directors"
-#~ msgstr "Grafički redatelji"
+#~ msgstr "Diretores de arte"
 
 #~ msgid "Artwork"
-#~ msgstr "Grafika"
+#~ msgstr "Arte"
 
 #~ msgid "Technical Artwork"
-#~ msgstr "Tehnička grafika"
+#~ msgstr "Arte técnica"
 
 #~ msgid "Cinematic Art Directors"
-#~ msgstr "Filmski redatelji"
+#~ msgstr "Diretores de arte cinematográfica"
 
 #~ msgid "3D Cinematic Artwork"
-#~ msgstr "3D filmski redatelji"
+#~ msgstr "Arte cinematográfica 3D"
 
 #~ msgid "Cinematic Technical Artwork"
-#~ msgstr "Filmska tehnička grafika"
+#~ msgstr "Arte técnica cinematográfica"
 
 #~ msgid "Executive Producer"
-#~ msgstr "Izvršni producent"
+#~ msgstr "Produtor executivo"
 
 #~ msgid "Producer"
-#~ msgstr "Producent"
+#~ msgstr "Produtor"
 
 #~ msgid "Associate Producer"
-#~ msgstr "Pomoćni producent"
+#~ msgstr "Produtor associado"
 
 #~ msgid "Diablo Strike Team"
-#~ msgstr "Diablo udarni tim"
+#~ msgstr "Diablo Strike Team"
 
 #~ msgid "Sound Design"
-#~ msgstr "Dizajn zvuka"
+#~ msgstr "Design de som"
 
 #~ msgid "Cinematic Music & Sound"
-#~ msgstr "Filmska glazba i zvuk"
+#~ msgstr "Música cinematográfica e som"
 
 #~ msgid "Voice Production, Direction & Casting"
-#~ msgstr "Produkcija glasova, režija i raspoređivanje uloga"
+#~ msgstr "Produção de voz, direção e elenco"
 
 #~ msgid "Script & Story"
-#~ msgstr "Scenarij i priča"
+#~ msgstr "Roteiro e história"
 
 #~ msgid "Voice Editing"
-#~ msgstr "Montaža glasova"
+#~ msgstr "Edição de voz"
 
 #~ msgid "Voices"
-#~ msgstr "Glasovi dali"
+#~ msgstr "Vozes"
 
 #~ msgid "Recording Engineer"
-#~ msgstr "Inženjer snimanja"
+#~ msgstr "Engenheiro de gravação"
 
 #~ msgid "Manual Design & Layout"
-#~ msgstr "Dizajn priručnika i omota"
+#~ msgstr "Design manual e layout"
 
 #~ msgid "Manual Artwork"
-#~ msgstr "Grafika priručnika"
+#~ msgstr "Arte manual"
 
 #~ msgid "Provisional Director of QA (Lead Tester)"
-#~ msgstr "Privremeni upravitelj kvalitete (Vodeći testiratelj)"
+#~ msgstr "Diretor provisório de controle de qualidade (Testador principal)"
 
 #~ msgid "QA Assault Team (Testers)"
-#~ msgstr "Ispitivanje kvalitete - napadački tim (Testiratelji)"
+#~ msgstr "Equipe de assalto do controle de qualidade (Testadores)"
 
 #~ msgid "QA Special Ops Team (Compatibility Testers)"
 #~ msgstr ""
-#~ "Ispitivanje kvalitete - tim za posebne operacije (Testiratelji "
-#~ "kompatibilnosti)"
+#~ "Forças especiais do controle de qualidade (Testadores de compatibilidade)"
 
 #~ msgid "QA Artillery Support (Additional Testers) "
-#~ msgstr "Ispitivanje kvalitete - podrška artiljerije (Dodatni testiratelji) "
+#~ msgstr ""
+#~ "Suporte de artilharia do controle de qualidade (Testadores adicionais) "
 
 #~ msgid "QA Counterintelligence"
-#~ msgstr "Ispitivanje kvalitete - kontraobavještajna služba"
+#~ msgstr "Contrainteligência do controle de qualidade"
 
 #~ msgid "Order of Network Information Services"
-#~ msgstr "Naručivanje mrežnih informacijskih usluga"
+#~ msgstr "Ordem dos serviços de informações de rede"
 
 #~ msgid "Sales"
-#~ msgstr "Prodaja"
+#~ msgstr "Vendas"
+
+#~ msgid "Dunsel"
+#~ msgstr "Dunsel"
 
 #~ msgid "Mr. Dabiri's Background Vocalists"
-#~ msgstr "Prateći vokali gospodina Dabiria"
+#~ msgstr "Vocal de apoio do senhor Dabiri"
 
 #~ msgid "Public Relations"
-#~ msgstr "Odnosi s javnošću"
+#~ msgstr "Relações públicas"
 
 #~ msgid "Marketing"
 #~ msgstr "Marketing"
 
 #~ msgid "International Sales"
-#~ msgstr "Međunarodna prodaja"
+#~ msgstr "Vendas internacionais"
 
 #~ msgid "U.S. Sales"
-#~ msgstr "SAD prodaja"
+#~ msgstr "Vendas EUA"
 
 #~ msgid "Manufacturing"
-#~ msgstr "Proizvodnja"
+#~ msgstr "Produção"
 
 #~ msgid "Legal & Business"
-#~ msgstr "Pravne i poslovne djelatnosti"
+#~ msgstr "Jurídico e negócios"
 
 #~ msgid "Special Thanks To"
-#~ msgstr "Posebne zahvale"
+#~ msgstr "Agradecimentos especiais para"
 
 #~ msgid "Thanks To"
-#~ msgstr "Zahvale"
+#~ msgstr "Agradecimentos a"
 
 #~ msgid "In memory of"
-#~ msgstr "U sjećanje na"
+#~ msgstr "Em memória de"
 
 #~ msgid "Very Special Thanks to"
-#~ msgstr "Veoma posebna zahvala"
+#~ msgstr "Agradecimentos muito especiais a"
 
 #~ msgid "The Ring of One Thousand"
-#~ msgstr "Prsten od tisuće"
+#~ msgstr "O anel de mil"
 
 #~ msgid "\tNo souls were sold in the making of this game."
-#~ msgstr "\tTijekom izrade ove igre nije bilo prodanih duša."
+#~ msgstr "\tNenhuma alma foi vendida na criação deste jogo."
 
 #~ msgid "OK"
-#~ msgstr "U redu"
+#~ msgstr "OK"
+
+#~ msgid "TTF_Init: %s\n"
+#~ msgstr "TTF_Init: %s\n"
+
+#~ msgid "TTF_OpenFont: %s\n"
+#~ msgstr "TTF_OpenFont: %s\n"
 
 #~ msgid "Cancel"
-#~ msgstr "Odustani"
+#~ msgstr "Cancelar"
 
 #~ msgid "Client-Server (TCP)"
-#~ msgstr "Klijent-Poslužitelj (TCP)"
+#~ msgstr "Cliente-servidor (TCP)"
 
 #~ msgid "Peer-to-Peer (UDP)"
-#~ msgstr "Točka-u-Točka (UDP)"
+#~ msgstr "Ponto-a-Ponto (UDP)"
 
 #~ msgid "Loopback"
-#~ msgstr "Izvanmrežno"
+#~ msgstr "Loopback"
 
 #~ msgid "Multi Player Game"
-#~ msgstr "Igra za više igrača"
+#~ msgstr "Jogo Multijogador"
 
 #~ msgid "Requirements:"
-#~ msgstr "Zahtjevi:"
+#~ msgstr "Requisitos:"
 
 #~ msgid "no gateway needed"
-#~ msgstr "pristupnik nije potreban"
+#~ msgstr "nenhum gateway necessário"
 
 #~ msgid "Select Connection"
-#~ msgstr "Odaberi povezivanje"
+#~ msgstr "Selecione uma conexão"
 
 #~ msgid "Change Gateway"
-#~ msgstr "Promijeni pristupnika"
+#~ msgstr "Mudar gateway"
 
 #~ msgid "All computers must be connected to a TCP-compatible network."
-#~ msgstr "Sva računala moraju biti povezana u TCP kompatibilnu mrežu."
+#~ msgstr ""
+#~ "Todos os computadores devem estar conectados a uma rede TCP compatível."
 
 #~ msgid "All computers must be connected to a UDP-compatible network."
-#~ msgstr "Sva računala moraju biti povezana u UDP kompatibilnu mrežu."
+#~ msgstr ""
+#~ "Todos os computadores devem estar conectados a uma rede UDP compatível."
 
 #~ msgid "Play by yourself with no network exposure."
-#~ msgstr "Igrajte sami sa sobom bez pristupa mreži."
+#~ msgstr "Jogue sozinho sem exposição na rede."
 
 #~ msgid "Players Supported: %d"
-#~ msgstr "Podržano igrača: %d"
+#~ msgstr "Jogadores suportados: %d"
 
 #~ msgid "CANCEL"
-#~ msgstr "Odustani"
+#~ msgstr "CANCELAR"
 
 #~ msgid "Normal"
-#~ msgstr "Normalna"
+#~ msgstr "Normal"
 
 #~ msgid "Nightmare"
-#~ msgstr "Noćna mora"
+#~ msgstr "Pesadelo"
 
 #~ msgid "Hell"
-#~ msgstr "Pakao"
+#~ msgstr "Inferno"
 
 #~ msgid "Select Difficulty"
-#~ msgstr "Odaberi razinu"
+#~ msgstr "Selecionar dificuldade"
 
 #~ msgid "Create Game"
-#~ msgstr "Stvori igru"
+#~ msgstr "Criar jogo"
 
 #~ msgid "Enter IP"
-#~ msgstr "Upiši IP adresu"
+#~ msgstr "Insira o IP"
 
 #~ msgid "Select Action"
-#~ msgstr "Odaberi radnju"
+#~ msgstr "Selecionar ação"
 
 #~ msgid "Enter Password"
-#~ msgstr "Upiši lozinku"
+#~ msgstr "Insira a senha"
 
 #~ msgid "Create a new game with a difficulty setting of your choice."
-#~ msgstr "Stvorite novu igru s razinom po vašem izboru."
+#~ msgstr "Crie um novo jogo com uma dificuldade de sua escolha."
 
 #~ msgid "Enter an IP and join a game already in progress at that address."
-#~ msgstr ""
-#~ "Upišite IP adresu i pridružite se već pokrenutoj igri na dotičnoj adresi."
+#~ msgstr "Insira um IP e participe de um jogo já em andamento nesse endereço."
 
 #~ msgid "Join TCP Games"
-#~ msgstr "Pridruži se TCP igrama"
+#~ msgstr "Entrar em jogos TCP"
 
 #~ msgid ""
 #~ "Normal Difficulty\n"
 #~ "This is where a starting character should begin the quest to defeat "
 #~ "Diablo."
 #~ msgstr ""
-#~ "Normalna razina\n"
-#~ "Ovdje bi novi lik trebao započeti potragu za porazom Diabla."
+#~ "Dificuldade Normal\n"
+#~ "É aqui que um personagem inicial deve começar a busca para derrotar "
+#~ "Diablo."
 
 #~ msgid ""
 #~ "Nightmare Difficulty\n"
 #~ "The denizens of the Labyrinth have been bolstered and will prove to be a "
 #~ "greater challenge. This is recommended for experienced characters only."
 #~ msgstr ""
-#~ "Razina noćne more\n"
-#~ "Stanovnici Labirinta su ojačali i pokazat će se kao veći izazov. Ovo je "
-#~ "preporučljivo samo za iskusne likove."
+#~ "Dificuldade Pesadelo\n"
+#~ "Os habitantes do labirinto foram reforçados e provarão ser um grande "
+#~ "desafio. Recomendado apenas para personagens experientes."
 
 #~ msgid ""
 #~ "Hell Difficulty\n"
 #~ "The most powerful of the underworld's creatures lurk at the gateway into "
 #~ "Hell. Only the most experienced characters should venture in this realm."
 #~ msgstr ""
-#~ "Paklena razina\n"
-#~ "Najmoćnija bića iz podzemlja vrebaju na ulazu u Pakao. U ovo bi carstvo "
-#~ "trebali ući samo najiskusniji likovi."
+#~ "Dificuldade Inferno\n"
+#~ "A mais poderosa das criaturas do submundo se esconde na porta de entrada "
+#~ "do Inferno. Somente os personagens mais experientes devem se aventurar "
+#~ "nesse reino."
 
 #~ msgid ""
 #~ "Your character must reach level 20 before you can enter a multiplayer "
 #~ "game of Nightmare difficulty."
 #~ msgstr ""
-#~ "Vaš lik mora prije dostići razinu 20 kako bi mogao ući u igru s više "
-#~ "igrača ili u razinu noćne more."
+#~ "Seu personagem deve atingir o nível 20 antes de poder entrar em um jogo "
+#~ "multijogador da dificuldade Pesadelo."
 
 #~ msgid ""
 #~ "Your character must reach level 30 before you can enter a multiplayer "
 #~ "game of Hell difficulty."
 #~ msgstr ""
-#~ "Vaš lik mora prije dostići razinu 30 kako bi mogao ući u igru s više "
-#~ "igrača ili u paklenu razinu."
+#~ "Seu personagem deve atingir o nível 30 antes de poder entrar em um jogo "
+#~ "multijogador da dificuldade Inferno."
 
 #~ msgid "Level:"
-#~ msgstr "Razina:"
+#~ msgstr "Nível:"
 
 #~ msgid "Strength:"
-#~ msgstr "Snaga:"
+#~ msgstr "Força:"
 
 #~ msgid "Magic:"
-#~ msgstr "Magija:"
+#~ msgstr "Magia:"
 
 #~ msgid "Dexterity:"
-#~ msgstr "Vještina:"
+#~ msgstr "Destreza:"
 
 #~ msgid "Vitality:"
-#~ msgstr "Vitalnost:"
+#~ msgstr "Vitalidade:"
 
 #~ msgid "Select Hero"
-#~ msgstr "Odaberi heroja"
+#~ msgstr "Selecione um herói"
 
 #~ msgid "Delete"
-#~ msgstr "Obriši"
+#~ msgstr "Deletar"
 
 #~ msgid "Warrior"
-#~ msgstr "Ratnik"
+#~ msgstr "Guerreiro"
 
 #~ msgid "Rogue"
-#~ msgstr "Lutalica"
+#~ msgstr "Ladino"
 
 #~ msgid "Sorcerer"
-#~ msgstr "Čarobnjak"
+#~ msgstr "Feiticeiro"
 
 #~ msgid "Choose Class"
-#~ msgstr "Odaberi klasu"
+#~ msgstr "Escolha uma classe"
 
 #~ msgid "Enter Name"
-#~ msgstr "Upiši ime"
+#~ msgstr "Insira o nome"
 
 #~ msgid "Save File Exists"
-#~ msgstr "Datoteka spremanja postoji"
+#~ msgstr "O save já existe"
 
 #~ msgid "New Hero"
-#~ msgstr "Novi heroj"
+#~ msgstr "Novo herói"
 
 #~ msgid "Multi Player Characters"
-#~ msgstr "Lik među više igrača"
+#~ msgstr "Personagens multijogador"
 
 #~ msgid "Single Player Characters"
-#~ msgstr "Lik jednog igrača"
+#~ msgstr "Personagens"
 
 #~ msgid "New Multi Player Hero"
-#~ msgstr "Novi heroj među više igrača"
+#~ msgstr "Novo herói multijogador"
 
 #~ msgid "New Single Player Hero"
-#~ msgstr "Novi heroj jednog igrača"
+#~ msgstr "Novo herói"
 
 #~ msgid ""
 #~ "The Rogue and Sorcerer are only available in the full retail version of "
 #~ "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 #~ msgstr ""
-#~ "Čarobnjak i Lutalica samo su dostupni u cjelovitom maloprodajnom izdanju "
-#~ "Diabla. Posjetite https://www.gog.com/game/diablo kako bi ga kupili."
+#~ "O Ladino e o Feiticeiro estão disponíveis apenas na versão comercial "
+#~ "completa do Diablo. Visite https://www.gog.com/game/diablo para comprar."
 
 #~ msgid ""
 #~ "Invalid name. A name cannot contain spaces, reserved characters, or "
 #~ "reserved words.\n"
 #~ msgstr ""
-#~ "Neispravno ime. Ime ne može sadržavati razmake, rezervirane znakove ili "
-#~ "rezervirane riječi.\n"
+#~ "Nome inválido. Um nome não pode conter espaços, caracteres reservados ou "
+#~ "palavras.\n"
 
 #~ msgid "Character already exists. Do you want to overwrite \"%s\"?"
-#~ msgstr "Lik već postoji. Želite li prebrisati \"%s\"?"
+#~ msgstr "O personagem já existe. Você deseja substituir \"%s\"?"
 
 #~ msgid "Unable to create character."
-#~ msgstr "Nemoguće stvaranje lika."
+#~ msgstr "Não foi possível criar o personagem."
 
 #~ msgid "Delete Multi Player Hero"
-#~ msgstr "Obriši heroja s više igrača"
+#~ msgstr "Deletar herói multijogador"
 
 #~ msgid "Delete Single Player Hero"
-#~ msgstr "Obriši heroja jednog igrača"
+#~ msgstr "Deletar herói"
 
 #~ msgid "Are you sure you want to delete the character \"%s\"?"
-#~ msgstr "Sigurno želite obrisati \"%s\" lik?"
+#~ msgstr "Tem certeza de que deseja deletar o personagem \"%s\"?"
 
 #~ msgid "Yes"
-#~ msgstr "Da"
+#~ msgstr "Sim"
 
 #~ msgid "No"
-#~ msgstr "Ne"
+#~ msgstr "Não"
 
 #~ msgid "Copyright © 1996-2001 Blizzard Entertainment"
-#~ msgstr "Autorsko pravo © 1996-2001 Blizzard Entertainment"
+#~ msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
 #~ msgid "Text has zero width"
-#~ msgstr "Tekst ima nultu širinu"
+#~ msgstr "O texto tem largura zero"
 
 #~ msgid "Out of memory"
-#~ msgstr "Premalo memorije"
+#~ msgstr "Memória insuficiente"

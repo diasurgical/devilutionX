@@ -66,14 +66,17 @@ const char *LanguageTranslate(const char *key)
 
 void LanguageInitialize()
 {
-	auto path = GetLangPath() + "./" + sgOptions.Language.szCode + ".gmo";
 	mo_entry *src, *dst;
 	mo_head head;
 	FILE *fp;
 
+	auto path = GetLangPath() + "./" + sgOptions.Language.szCode + ".gmo";
 	if (!(fp = fopen(path.c_str(), "rb"))) {
-		perror(path.c_str());
-		return;
+		path = GetLangPath() + "./" + sgOptions.Language.szCode + ".mo";
+		if (!(fp = fopen(path.c_str(), "rb"))) {
+			perror(path.c_str());
+			return;
+		}
 	}
 	// Read header and do sanity checks
 	if (fread(&head, sizeof(mo_head), 1, fp) != 1) {

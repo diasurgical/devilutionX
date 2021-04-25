@@ -1,7 +1,7 @@
 #pragma once
 
 #define _(x) LanguageTranslate(x)
-#define _F(x) (x)
+#define N_(x) (x)
 
 void LanguageInitialize();
 const char* LanguageTranslate(const char* key);
