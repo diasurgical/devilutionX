@@ -453,7 +453,7 @@ void InitGirl()
 	}
 	towners[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 6);
-	strcpy(towners[numtowners]._tName, _("Celia"));
+	strcpy(towners[numtowners]._tName, "Celia");
 	numtowners++;
 }
 
