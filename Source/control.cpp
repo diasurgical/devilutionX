@@ -238,7 +238,7 @@ SDL_Rect PanBtnPos[8] = {
 	// clang-format on
 };
 /** Maps from panel_button_id to hotkey name. */
-const char *const PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", nullptr };
+const char *const PanBtnHotKey[8] = { N_("'c'"), N_("'q'"), N_("Tab"), N_("Esc"), N_("'i'"), N_("'b'"), N_("Enter"), nullptr };
 /** Maps from panel_button_id to panel button description. */
 const char *const PanBtnStr[8] = {
 	N_("Character Information"),
@@ -765,27 +765,27 @@ void InitControlPan()
 	pManaBuff = CelOutputBuffer::Alloc(88, 88);
 	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
 
-	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", nullptr);
-	pChrPanel = LoadFileInMem("Data\\Char.CEL", nullptr);
+	pPanelText = LoadFileInMem(_("CtrlPan\\SmalText.CEL"), nullptr);
+	pChrPanel = LoadFileInMem(_("Data\\Char.CEL"), nullptr);
 	if (!gbIsHellfire)
-		pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", nullptr);
+		pSpellCels = LoadFileInMem(_("CtrlPan\\SpelIcon.CEL"), nullptr);
 	else
-		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", nullptr);
+		pSpellCels = LoadFileInMem(_("Data\\SpelIcon.CEL"), nullptr);
 	SetSpellTrans(RSPLTYPE_SKILL);
-	BYTE *pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", nullptr);
+	BYTE *pStatusPanel = LoadFileInMem(_("CtrlPan\\Panel8.CEL"), nullptr);
 	CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, pStatusPanel, 1, PANEL_WIDTH);
 	MemFreeDbg(pStatusPanel);
-	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", nullptr);
+	pStatusPanel = LoadFileInMem(_("CtrlPan\\P8Bulbs.CEL"), nullptr);
 	CelDrawUnsafeTo(pLifeBuff, 0, 87, pStatusPanel, 1, 88);
 	CelDrawUnsafeTo(pManaBuff, 0, 87, pStatusPanel, 2, 88);
 	MemFreeDbg(pStatusPanel);
 	talkflag = false;
 	if (gbIsMultiplayer) {
-		BYTE *pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", nullptr);
+		BYTE *pTalkPanel = LoadFileInMem(_("CtrlPan\\TalkPanl.CEL"), nullptr);
 		CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, pTalkPanel, 1, PANEL_WIDTH);
 		MemFreeDbg(pTalkPanel);
-		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", nullptr);
-		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", nullptr);
+		pMultiBtns = LoadFileInMem(_("CtrlPan\\P8But2.CEL"), nullptr);
+		pTalkBtns = LoadFileInMem(_("CtrlPan\\TalkButt.CEL"), nullptr);
 		sgbPlrTalkTbl = 0;
 		sgszTalkMsg[0] = '\0';
 		for (bool &whisper : whisperList)
@@ -795,7 +795,7 @@ void InitControlPan()
 	}
 	panelflag = false;
 	lvlbtndown = false;
-	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", nullptr);
+	pPanelButtons = LoadFileInMem(_("CtrlPan\\Panel8bu.CEL"), nullptr);
 	for (bool &panbtn : panbtns)
 		panbtn = false;
 	panbtndown = false;
@@ -803,20 +803,20 @@ void InitControlPan()
 		numpanbtns = 6;
 	else
 		numpanbtns = 8;
-	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", nullptr);
+	pChrButtons = LoadFileInMem(_("Data\\CharBut.CEL"), nullptr);
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
-	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", nullptr);
-	strcpy(infostr, "");
+	pDurIcons = LoadFileInMem(_("Items\\DurIcons.CEL"), nullptr);
+	strcpy(infostr, _(""));
 	ClearPanel();
 	drawhpflag = true;
 	drawmanaflag = true;
 	chrflag = false;
 	spselflag = false;
-	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", nullptr);
-	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", nullptr);
-	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", nullptr);
+	pSpellBkCel = LoadFileInMem(_("Data\\SpellBk.CEL"), nullptr);
+	pSBkBtnCel = LoadFileInMem(_("Data\\SpellBkB.CEL"), nullptr);
+	pSBkIconCels = LoadFileInMem(_("Data\\SpellI2.CEL"), nullptr);
 	sbooktab = 0;
 	sbookflag = false;
 	if (plr[myplr]._pClass == HeroClass::Warrior) {
@@ -832,8 +832,8 @@ void InitControlPan()
 	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 		SpellPages[0][0] = SPL_BLODBOIL;
 	}
-	pQLogCel = LoadFileInMem("Data\\Quest.CEL", nullptr);
-	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", nullptr);
+	pQLogCel = LoadFileInMem(_("Data\\Quest.CEL"), nullptr);
+	pGBoxBuff = LoadFileInMem(_("CtrlPan\\Golddrop.cel"), nullptr);
 	dropGoldFlag = false;
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
@@ -1365,22 +1365,22 @@ void DrawChr(const CelOutputBuffer &out)
 
 	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)], COL_WHITE);
 
-	sprintf(chrstr, "%i", plr[myplr]._pLevel);
+	sprintf(chrstr, _("%i"), plr[myplr]._pLevel);
 	ADD_PlrStringXY(out, 66, 69, 109, chrstr, COL_WHITE);
 
-	sprintf(chrstr, "%i", plr[myplr]._pExperience);
+	sprintf(chrstr, _("%i"), plr[myplr]._pExperience);
 	ADD_PlrStringXY(out, 216, 69, 300, chrstr, COL_WHITE);
 
 	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
 		strcpy(chrstr, _("None"));
 		col = COL_GOLD;
 	} else {
-		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
+		sprintf(chrstr, _("%i"), plr[myplr]._pNextExper);
 		col = COL_WHITE;
 	}
 	ADD_PlrStringXY(out, 216, 97, 300, chrstr, col);
 
-	sprintf(chrstr, "%i", plr[myplr]._pGold);
+	sprintf(chrstr, _("%i"), plr[myplr]._pGold);
 	ADD_PlrStringXY(out, 216, 146, 300, chrstr, COL_WHITE);
 
 	col = COL_WHITE;
@@ -1388,7 +1388,7 @@ void DrawChr(const CelOutputBuffer &out)
 		col = COL_BLUE;
 	if (plr[myplr]._pIBonusAC < 0)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pIBonusAC + plr[myplr]._pIAC + plr[myplr]._pDexterity / 5);
+	sprintf(chrstr, _("%i"), plr[myplr]._pIBonusAC + plr[myplr]._pIAC + plr[myplr]._pDexterity / 5);
 	ADD_PlrStringXY(out, 258, 183, 301, chrstr, col);
 
 	col = COL_WHITE;
@@ -1396,7 +1396,7 @@ void DrawChr(const CelOutputBuffer &out)
 		col = COL_BLUE;
 	if (plr[myplr]._pIBonusToHit < 0)
 		col = COL_RED;
-	sprintf(chrstr, "%i%%", (plr[myplr]._pDexterity / 2) + plr[myplr]._pIBonusToHit + 50);
+	sprintf(chrstr, _("%i%%"), (plr[myplr]._pDexterity / 2) + plr[myplr]._pIBonusToHit + 50);
 	ADD_PlrStringXY(out, 258, 211, 301, chrstr, col);
 
 	col = COL_WHITE;
@@ -1426,7 +1426,7 @@ void DrawChr(const CelOutputBuffer &out)
 	} else {
 		maxdam += plr[myplr]._pDamageMod;
 	}
-	sprintf(chrstr, "%i-%i", mindam, maxdam);
+	sprintf(chrstr, _("%i-%i"), mindam, maxdam);
 	if (mindam >= 100 || maxdam >= 100)
 		MY_PlrStringXY(out, 254, 239, 305, chrstr, col, -1);
 	else
@@ -1437,7 +1437,7 @@ void DrawChr(const CelOutputBuffer &out)
 	else
 		col = COL_BLUE;
 	if (plr[myplr]._pMagResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
+		sprintf(chrstr, _("%i%%"), plr[myplr]._pMagResist);
 	} else {
 		col = COL_GOLD;
 		sprintf(chrstr, _("MAX"));
@@ -1449,7 +1449,7 @@ void DrawChr(const CelOutputBuffer &out)
 	else
 		col = COL_BLUE;
 	if (plr[myplr]._pFireResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pFireResist);
+		sprintf(chrstr, _("%i%%"), plr[myplr]._pFireResist);
 	} else {
 		col = COL_GOLD;
 		sprintf(chrstr, _("MAX"));
@@ -1461,7 +1461,7 @@ void DrawChr(const CelOutputBuffer &out)
 	else
 		col = COL_BLUE;
 	if (plr[myplr]._pLghtResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pLghtResist);
+		sprintf(chrstr, _("%i%%"), plr[myplr]._pLghtResist);
 	} else {
 		col = COL_GOLD;
 		sprintf(chrstr, _("MAX"));
@@ -1469,25 +1469,25 @@ void DrawChr(const CelOutputBuffer &out)
 	ADD_PlrStringXY(out, 257, 332, 300, chrstr, col);
 
 	col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pBaseStr);
+	sprintf(chrstr, _("%i"), plr[myplr]._pBaseStr);
 	if (plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength) == plr[myplr]._pBaseStr)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 155, 126, chrstr, col);
 
 	col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pBaseMag);
+	sprintf(chrstr, _("%i"), plr[myplr]._pBaseMag);
 	if (plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic) == plr[myplr]._pBaseMag)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 183, 126, chrstr, col);
 
 	col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pBaseDex);
+	sprintf(chrstr, _("%i"), plr[myplr]._pBaseDex);
 	if (plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity) == plr[myplr]._pBaseDex)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 211, 126, chrstr, col);
 
 	col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pBaseVit);
+	sprintf(chrstr, _("%i"), plr[myplr]._pBaseVit);
 	if (plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality) == plr[myplr]._pBaseVit)
 		col = COL_GOLD;
 	ADD_PlrStringXY(out, 95, 239, 126, chrstr, col);
@@ -1497,7 +1497,7 @@ void DrawChr(const CelOutputBuffer &out)
 		col = COL_BLUE;
 	if (plr[myplr]._pStrength < plr[myplr]._pBaseStr)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pStrength);
+	sprintf(chrstr, _("%i"), plr[myplr]._pStrength);
 	ADD_PlrStringXY(out, 143, 155, 173, chrstr, col);
 
 	col = COL_WHITE;
@@ -1505,7 +1505,7 @@ void DrawChr(const CelOutputBuffer &out)
 		col = COL_BLUE;
 	if (plr[myplr]._pMagic < plr[myplr]._pBaseMag)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pMagic);
+	sprintf(chrstr, _("%i"), plr[myplr]._pMagic);
 	ADD_PlrStringXY(out, 143, 183, 173, chrstr, col);
 
 	col = COL_WHITE;
@@ -1513,7 +1513,7 @@ void DrawChr(const CelOutputBuffer &out)
 		col = COL_BLUE;
 	if (plr[myplr]._pDexterity < plr[myplr]._pBaseDex)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pDexterity);
+	sprintf(chrstr, _("%i"), plr[myplr]._pDexterity);
 	ADD_PlrStringXY(out, 143, 211, 173, chrstr, col);
 
 	col = COL_WHITE;
@@ -1521,7 +1521,7 @@ void DrawChr(const CelOutputBuffer &out)
 		col = COL_BLUE;
 	if (plr[myplr]._pVitality < plr[myplr]._pBaseVit)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pVitality);
+	sprintf(chrstr, _("%i"), plr[myplr]._pVitality);
 	ADD_PlrStringXY(out, 143, 239, 173, chrstr, col);
 
 	if (plr[myplr]._pStatPts > 0) {
@@ -1530,7 +1530,7 @@ void DrawChr(const CelOutputBuffer &out)
 		}
 	}
 	if (plr[myplr]._pStatPts > 0) {
-		sprintf(chrstr, "%i", plr[myplr]._pStatPts);
+		sprintf(chrstr, _("%i"), plr[myplr]._pStatPts);
 		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
 		if (plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength))
 			CelDrawTo(out, 137, 159, pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 3 : 2, 41);
@@ -1546,22 +1546,22 @@ void DrawChr(const CelOutputBuffer &out)
 		col = COL_BLUE;
 	else
 		col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pMaxHP >> 6);
+	sprintf(chrstr, _("%i"), plr[myplr]._pMaxHP >> 6);
 	ADD_PlrStringXY(out, 95, 304, 126, chrstr, col);
 	if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pHitPoints >> 6);
+	sprintf(chrstr, _("%i"), plr[myplr]._pHitPoints >> 6);
 	ADD_PlrStringXY(out, 143, 304, 174, chrstr, col);
 
 	if (plr[myplr]._pMaxMana > plr[myplr]._pMaxManaBase)
 		col = COL_BLUE;
 	else
 		col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pMaxMana >> 6);
+	sprintf(chrstr, _("%i"), plr[myplr]._pMaxMana >> 6);
 	ADD_PlrStringXY(out, 95, 332, 126, chrstr, col);
 	if (plr[myplr]._pMana != plr[myplr]._pMaxMana)
 		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pMana >> 6);
+	sprintf(chrstr, _("%i"), plr[myplr]._pMana >> 6);
 	ADD_PlrStringXY(out, 143, 332, 174, chrstr, col);
 }
 
@@ -1915,7 +1915,7 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	ADD_PlrStringXY(out, 366, 103, 600, tempstr, COL_GOLD);
 	ADD_PlrStringXY(out, 366, 121, 600, "you want to remove?", COL_GOLD);
 	if (amount > 0) {
-		sprintf(tempstr, "%u", amount);
+		sprintf(tempstr, _("%u"), amount);
 		PrintGameStr(out, 388, 140, tempstr, COL_WHITE);
 	}
 	if (amount > 0) {
@@ -1941,7 +1941,7 @@ void control_drop_gold(char vkey)
 	}
 
 	memset(input, 0, sizeof(input));
-	snprintf(input, sizeof(input), "%d", dropGoldValue);
+	snprintf(input, sizeof(input), _("%d"), dropGoldValue);
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
 			control_remove_gold(myplr, initialDropGoldIndex);

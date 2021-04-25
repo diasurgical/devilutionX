@@ -909,7 +909,7 @@ static void ConvertLevels()
 
 void LoadHotkeys()
 {
-	LoadHelper file("hotkeys");
+	LoadHelper file(_("hotkeys"));
 	if (!file.isValid())
 		return;
 
@@ -928,7 +928,7 @@ void SaveHotkeys()
 	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
 	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
 
-	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
+	SaveHelper file(_("hotkeys"), (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
 
 	for (auto &spellId : plr[myplr]._pSplHotKey) {
 		file.writeLE<int32_t>(spellId);
@@ -956,7 +956,7 @@ static void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
 
 void LoadHeroItems(PlayerStruct *pPlayer)
 {
-	LoadHelper file("heroitems");
+	LoadHelper file(_("heroitems"));
 	if (!file.isValid())
 		return;
 
@@ -999,12 +999,12 @@ void LoadGame(bool firstflag)
 	FreeGameMem();
 	pfile_remove_temp_files();
 
-	LoadHelper file("game");
+	LoadHelper file(_("game"));
 	if (!file.isValid())
-		app_fatal("Unable to open save file archive");
+		app_fatal(_("Unable to open save file archive"));
 
 	if (!IsHeaderValid(file.nextLE<uint32_t>()))
-		app_fatal("Invalid save file");
+		app_fatal(_("Invalid save file"));
 
 	if (gbIsHellfireSaveGame) {
 		giNumberOfLevels = 25;
@@ -1033,7 +1033,7 @@ void LoadGame(bool firstflag)
 	int _nobjects = file.nextBE<int32_t>();
 
 	if (!gbIsHellfire && currlevel > 17)
-		app_fatal("Player is on a Hellfire only level");
+		app_fatal(_("Player is on a Hellfire only level"));
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = file.nextBE<uint32_t>();
@@ -1764,7 +1764,7 @@ const int HellfireItemSaveSize = 372;
 void SaveHeroItems(PlayerStruct *pPlayer)
 {
 	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
+	SaveHelper file(_("heroitems"), items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
 
 	file.writeLE<uint8_t>(gbIsHellfire);
 
@@ -1779,7 +1779,7 @@ void SaveHeroItems(PlayerStruct *pPlayer)
 
 void SaveGameData()
 {
-	SaveHelper file("game", FILEBUFF);
+	SaveHelper file(_("game"), FILEBUFF);
 
 	if (gbIsSpawn && !gbIsHellfire)
 		file.writeLE<uint32_t>(LOAD_LE32("SHAR"));
@@ -1790,7 +1790,7 @@ void SaveGameData()
 	else if (!gbIsSpawn && !gbIsHellfire)
 		file.writeLE<uint32_t>(LOAD_LE32("RETL"));
 	else
-		app_fatal("Invalid game state");
+		app_fatal(_("Invalid game state"));
 
 	if (gbIsHellfire) {
 		giNumberOfLevels = 25;
@@ -2028,7 +2028,7 @@ void LoadLevel()
 	GetPermLevelNames(szName);
 	LoadHelper file(szName);
 	if (!file.isValid())
-		app_fatal("Unable to open save file archive");
+		app_fatal(_("Unable to open save file archive"));
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {

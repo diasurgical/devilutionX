@@ -85,7 +85,7 @@ void tcp_server::handle_recv(const scc &con, const asio::error_code &ec,
 				handle_recv_packet(*pkt);
 			}
 		} catch (dvlnet_exception &e) {
-			Log("Network error: {}", e.what());
+			Log(_("Network error: {}"), e.what());
 			drop_connection(con);
 			return;
 		}

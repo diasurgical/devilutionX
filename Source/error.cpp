@@ -18,7 +18,7 @@ uint8_t msgcnt;
 
 /** Maps from error_id to error message. */
 const char *const MsgStrings[] = {
-	"",
+	N_(""),
 	N_("No automap available in town"),
 	N_("No multiplayer functions in demo"),
 	N_("Direct Sound Creation Failed"),

@@ -19,11 +19,11 @@ void FastDrawHorizLine(const CelOutputBuffer &out, int x, int y, int width, Uint
 char *PrintWithSeparator(char *out, long long n)
 {
 	if (n < 1000) {
-		return out + sprintf(out, "%lld", n);
+		return out + sprintf(out, _("%lld"), n);
 	}
 
 	char *append = PrintWithSeparator(out, n / 1000);
-	return append + sprintf(append, ",%03lld", n % 1000);
+	return append + sprintf(append, _(",%03lld"), n % 1000);
 }
 
 } // namespace devilution

@@ -86,39 +86,39 @@ int framestart;
 /* data */
 
 const char *const szMonModeAssert[] = {
-	"standing",
-	"walking (1)",
-	"walking (2)",
-	"walking (3)",
-	"attacking",
-	"getting hit",
-	"dying",
-	"attacking (special)",
-	"fading in",
-	"fading out",
-	"attacking (ranged)",
-	"standing (special)",
-	"attacking (special ranged)",
-	"delaying",
-	"charging",
-	"stoned",
-	"healing",
-	"talking"
+	N_("standing"),
+	N_("walking (1)"),
+	N_("walking (2)"),
+	N_("walking (3)"),
+	N_("attacking"),
+	N_("getting hit"),
+	N_("dying"),
+	N_("attacking (special)"),
+	N_("fading in"),
+	N_("fading out"),
+	N_("attacking (ranged)"),
+	N_("standing (special)"),
+	N_("attacking (special ranged)"),
+	N_("delaying"),
+	N_("charging"),
+	N_("stoned"),
+	N_("healing"),
+	N_("talking")
 };
 
 const char *const szPlrModeAssert[] = {
-	"standing",
-	"walking (1)",
-	"walking (2)",
-	"walking (3)",
-	"attacking (melee)",
-	"attacking (ranged)",
-	"blocking",
-	"getting hit",
-	"dying",
-	"casting a spell",
-	"changing levels",
-	"quitting"
+	N_("standing"),
+	N_("walking (1)"),
+	N_("walking (2)"),
+	N_("walking (3)"),
+	N_("attacking (melee)"),
+	N_("attacking (ranged)"),
+	N_("blocking"),
+	N_("getting hit"),
+	N_("dying"),
+	N_("casting a spell"),
+	N_("changing levels"),
+	N_("quitting")
 };
 
 /**
@@ -258,13 +258,13 @@ void DrawMissilePrivate(const CelOutputBuffer &out, MissileStruct *m, int sx, in
 
 	BYTE *pCelBuff = m->_miAnimData;
 	if (pCelBuff == nullptr) {
-		Log("Draw Missile 2 type {}: NULL Cel Buffer", m->_mitype);
+		Log(_("Draw Missile 2 type {}: NULL Cel Buffer"), m->_mitype);
 		return;
 	}
 	int nCel = m->_miAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
+		Log(_("Draw Missile 2: frame {} of {}, missile type=={}"), nCel, frames, m->_mitype);
 		return;
 	}
 	int mx = sx + m->position.offset.x - m->_miAnimWidth2;
@@ -321,24 +321,24 @@ void DrawMissile(const CelOutputBuffer &out, int x, int y, int sx, int sy, bool 
 static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my, int m)
 {
 	if (m < 0 || m >= MAXMONSTERS) {
-		Log("Draw Monster: tried to draw illegal monster {}", m);
+		Log(_("Draw Monster: tried to draw illegal monster {}"), m);
 		return;
 	}
 
 	BYTE *pCelBuff = monster[m]._mAnimData;
 	if (pCelBuff == nullptr) {
-		Log("Draw Monster \"{}\": NULL Cel Buffer", monster[m].mName);
+		Log(_("Draw Monster \"{}\": NULL Cel Buffer"), monster[m].mName);
 		return;
 	}
 
 	int nCel = monster[m]._mAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		const char *szMode = "unknown action";
+		const char *szMode = _("unknown action");
 		if (monster[m]._mmode <= 17)
 			szMode = szMonModeAssert[monster[m]._mmode];
 		Log(
-		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
+		    _("Draw Monster \"{}\" {}: facing {}, frame {} of {}"),
 		    monster[m].mName,
 		    szMode,
 		    monster[m]._mdir,
@@ -421,17 +421,17 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 	int nWidth = pPlayer->_pAnimWidth;
 
 	if (pCelBuff == nullptr) {
-		Log("Drawing player {} \"{}\": NULL Cel Buffer", pnum, plr[pnum]._pName);
+		Log(_("Drawing player {} \"{}\": NULL Cel Buffer"), pnum, plr[pnum]._pName);
 		return;
 	}
 
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		const char *szMode = "unknown action";
+		const char *szMode = _("unknown action");
 		if (plr[pnum]._pmode <= PM_QUIT)
 			szMode = szPlrModeAssert[plr[pnum]._pmode];
 		Log(
-		    "Drawing player {} \"{}\" {}: facing {}, frame {} of {}",
+		    _("Drawing player {} \"{}\" {}: facing {}, frame {} of {}"),
 		    pnum,
 		    plr[pnum]._pName,
 		    szMode,
@@ -530,14 +530,14 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 
 	BYTE *pCelBuff = object[bv]._oAnimData;
 	if (pCelBuff == nullptr) {
-		Log("Draw Object type {}: NULL Cel Buffer", object[bv]._otype);
+		Log(_("Draw Object type {}: NULL Cel Buffer"), object[bv]._otype);
 		return;
 	}
 
 	int nCel = object[bv]._oAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, object[bv]._otype);
+		Log(_("Draw Object: frame {} of {}, object type=={}"), nCel, frames, object[bv]._otype);
 		return;
 	}
 
@@ -629,14 +629,14 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 
 	BYTE *pCelBuff = pItem->_iAnimData;
 	if (pCelBuff == nullptr) {
-		Log("Draw Item \"{}\" 1: NULL Cel Buffer", pItem->_iIName);
+		Log(_("Draw Item \"{}\" 1: NULL Cel Buffer"), pItem->_iIName);
 		return;
 	}
 
 	int nCel = pItem->_iAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", pItem->_iIName, nCel, frames, pItem->_itype);
+		Log(_("Draw \"{}\" Item 1: frame {} of {}, item type=={}"), pItem->_iIName, nCel, frames, pItem->_itype);
 		return;
 	}
 
@@ -678,7 +678,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
-		Log("Draw Monster: tried to draw illegal monster {}", mi);
+		Log(_("Draw Monster: tried to draw illegal monster {}"), mi);
 		return;
 	}
 
@@ -688,7 +688,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 	}
 
 	if (pMonster->MType == nullptr) {
-		Log("Draw Monster \"{}\": uninitialized monster", pMonster->mName);
+		Log(_("Draw Monster \"{}\": uninitialized monster"), pMonster->mName);
 		return;
 	}
 
@@ -714,7 +714,7 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	p = p > 0 ? p - 1 : -(p + 1);
 
 	if (p < 0 || p >= MAX_PLRS) {
-		Log("draw player: tried to draw illegal player {}", p);
+		Log(_("draw player: tried to draw illegal player {}"), p);
 		return;
 	}
 
@@ -776,7 +776,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 			int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 			int nCel = pDeadGuy->_deadFrame;
 			if (nCel < 1 || frames > 50 || nCel > frames) {
-				Log("Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);
+				Log(_("Unclipped dead: frame {} of {}, deadnum=={}"), nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}
 			if (pDeadGuy->_deadtrans != 0) {
@@ -1433,7 +1433,7 @@ static void DrawFPS(const CelOutputBuffer &out)
 			framerate = 1000 * frameend / frames;
 			frameend = 0;
 		}
-		snprintf(String, 12, "%d FPS", framerate);
+		snprintf(String, 12, _("%d FPS"), framerate);
 		PrintGameStr(out, 8, 65, String, COL_RED);
 	}
 }

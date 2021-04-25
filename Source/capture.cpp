@@ -134,9 +134,9 @@ static bool CapturePix(CelOutputBuffer buf, std::ofstream *out)
  */
 static std::ofstream *CaptureFile(std::string *dstPath)
 {
-	char filename[sizeof("screen00.PCX") / sizeof(char)];
+	char filename[sizeof(_("screen00.PCX")) / sizeof(char)];
 	for (int i = 0; i <= 99; ++i) {
-		snprintf(filename, sizeof(filename) / sizeof(char), "screen%02d.PCX", i);
+		snprintf(filename, sizeof(filename) / sizeof(char), _("screen%02d.PCX"), i);
 		*dstPath = GetPrefPath() + filename;
 		if (!FileExists(dstPath->c_str())) {
 			return new std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
@@ -195,10 +195,10 @@ void CaptureScreen()
 	outStream->close();
 
 	if (!success) {
-		Log("Failed to save screenshot at {}", fileName);
+		Log(_("Failed to save screenshot at {}"), fileName);
 		RemoveFile(fileName.c_str());
 	} else {
-		Log("Screenshot saved at {}", fileName);
+		Log(_("Screenshot saved at {}"), fileName);
 	}
 	SDL_Delay(300);
 	for (int i = 0; i < 256; i++) {

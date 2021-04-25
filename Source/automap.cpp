@@ -417,11 +417,11 @@ void DrawAutomapText(const CelOutputBuffer &out)
 	int nextline = 20;
 
 	if (gbIsMultiplayer) {
-		strcat(strcpy(desc, "game: "), szPlayerName);
+		strcat(strcpy(desc, _("game: ")), szPlayerName);
 		PrintGameStr(out, 8, 20, desc, COL_GOLD);
 		nextline = 35;
 		if (szPlayerDescript[0] != 0) {
-			strcat(strcpy(desc, "password: "), szPlayerDescript);
+			strcat(strcpy(desc, _("password: ")), szPlayerDescript);
 			PrintGameStr(out, 8, 35, desc, COL_GOLD);
 			nextline = 50;
 		}
@@ -475,21 +475,21 @@ void InitAutomap()
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 21)
-			pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
+			pAFile = LoadFileInMem(_("Levels\\L1Data\\L1.AMP"), &dwTiles);
 		else
-			pAFile = LoadFileInMem("NLevels\\L5Data\\L5.AMP", &dwTiles);
+			pAFile = LoadFileInMem(_("NLevels\\L5Data\\L5.AMP"), &dwTiles);
 		break;
 	case DTYPE_CATACOMBS:
-		pAFile = LoadFileInMem("Levels\\L2Data\\L2.AMP", &dwTiles);
+		pAFile = LoadFileInMem(_("Levels\\L2Data\\L2.AMP"), &dwTiles);
 		break;
 	case DTYPE_CAVES:
 		if (currlevel < 17)
-			pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
+			pAFile = LoadFileInMem(_("Levels\\L3Data\\L3.AMP"), &dwTiles);
 		else
-			pAFile = LoadFileInMem("NLevels\\L6Data\\L6.AMP", &dwTiles);
+			pAFile = LoadFileInMem(_("NLevels\\L6Data\\L6.AMP"), &dwTiles);
 		break;
 	case DTYPE_HELL:
-		pAFile = LoadFileInMem("Levels\\L4Data\\L4.AMP", &dwTiles);
+		pAFile = LoadFileInMem(_("Levels\\L4Data\\L4.AMP"), &dwTiles);
 		break;
 	default:
 		return;

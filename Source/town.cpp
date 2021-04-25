@@ -176,17 +176,17 @@ void T_Pass3()
 		}
 	}
 
-	P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", nullptr);
+	P3Tiles = LoadFileInMem(_("Levels\\TownData\\Town.TIL"), nullptr);
+	pSector = LoadFileInMem(_("Levels\\TownData\\Sector1s.DUN"), nullptr);
 	T_FillSector(P3Tiles, pSector, 46, 46, 25, 25);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", nullptr);
+	pSector = LoadFileInMem(_("Levels\\TownData\\Sector2s.DUN"), nullptr);
 	T_FillSector(P3Tiles, pSector, 46, 0, 25, 23);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", nullptr);
+	pSector = LoadFileInMem(_("Levels\\TownData\\Sector3s.DUN"), nullptr);
 	T_FillSector(P3Tiles, pSector, 0, 46, 23, 25);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", nullptr);
+	pSector = LoadFileInMem(_("Levels\\TownData\\Sector4s.DUN"), nullptr);
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 

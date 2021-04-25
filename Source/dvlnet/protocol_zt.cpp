@@ -27,7 +27,7 @@ protocol_zt::protocol_zt()
 
 void protocol_zt::set_nonblock(int fd)
 {
-	static_assert(O_NONBLOCK == 1, "O_NONBLOCK == 1 not satisfied");
+	static_assert(O_NONBLOCK == 1, _("O_NONBLOCK == 1 not satisfied"));
 	auto mode = lwip_fcntl(fd, F_GETFL, 0);
 	mode |= O_NONBLOCK;
 	lwip_fcntl(fd, F_SETFL, mode);
@@ -61,7 +61,7 @@ bool protocol_zt::network_online()
 		set_reuseaddr(fd_udp);
 		auto ret = lwip_bind(fd_udp, (struct sockaddr *)&in6, sizeof(in6));
 		if (ret < 0) {
-			Log("lwip, (udp) bind: {}", strerror(errno));
+			Log(_("lwip, (udp) bind: {}"), strerror(errno));
 			throw protocol_exception();
 		}
 		set_nonblock(fd_udp);
@@ -71,12 +71,12 @@ bool protocol_zt::network_online()
 		set_reuseaddr(fd_tcp);
 		auto r1 = lwip_bind(fd_tcp, (struct sockaddr *)&in6, sizeof(in6));
 		if (r1 < 0) {
-			Log("lwip, (tcp) bind: {}", strerror(errno));
+			Log(_("lwip, (tcp) bind: {}"), strerror(errno));
 			throw protocol_exception();
 		}
 		auto r2 = lwip_listen(fd_tcp, 10);
 		if (r2 < 0) {
-			Log("lwip, listen: {}", strerror(errno));
+			Log(_("lwip, listen: {}"), strerror(errno));
 			throw protocol_exception();
 		}
 		set_nonblock(fd_tcp);
@@ -209,7 +209,7 @@ bool protocol_zt::accept_all()
 		endpoint ep;
 		std::copy(in6.sin6_addr.s6_addr, in6.sin6_addr.s6_addr + 16, ep.addr.begin());
 		if (peer_list[ep].fd != -1) {
-			Log("protocol_zt::accept_all: WARNING: overwriting connection");
+			Log(_("protocol_zt::accept_all: WARNING: overwriting connection"));
 			lwip_close(peer_list[ep].fd);
 		}
 		set_nonblock(newfd);
@@ -248,7 +248,7 @@ void protocol_zt::disconnect(const endpoint &peer)
 	if (peer_list.count(peer)) {
 		if (peer_list[peer].fd != -1) {
 			if (lwip_close(peer_list[peer].fd) < 0) {
-				Log("lwip_close: {}", strerror(errno));
+				Log(_("lwip_close: {}"), strerror(errno));
 			}
 		}
 		peer_list.erase(peer);
@@ -296,7 +296,7 @@ uint64_t protocol_zt::current_ms()
 std::string protocol_zt::make_default_gamename()
 {
 	std::string ret;
-	std::string allowedChars = "abcdefghkopqrstuvwxyz";
+	std::string allowedChars = _("abcdefghkopqrstuvwxyz");
 	std::random_device rd;
 	std::uniform_int_distribution<int> dist(0, allowedChars.size() - 1);
 	for (int i = 0; i < 5; ++i) {

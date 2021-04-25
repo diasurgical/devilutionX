@@ -96,13 +96,13 @@ void gmenu_init_menu()
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = false;
 	if (gbIsHellfire)
-		sgpLogo = LoadFileInMem("Data\\hf_logo3.CEL", nullptr);
+		sgpLogo = LoadFileInMem(_("Data\\hf_logo3.CEL"), nullptr);
 	else
-		sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", nullptr);
-	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", nullptr);
-	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", nullptr);
-	option_cel = LoadFileInMem("Data\\option.CEL", nullptr);
-	optbar_cel = LoadFileInMem("Data\\optbar.CEL", nullptr);
+		sgpLogo = LoadFileInMem(_("Data\\Diabsmal.CEL"), nullptr);
+	BigTGold_cel = LoadFileInMem(_("Data\\BigTGold.CEL"), nullptr);
+	PentSpin_cel = LoadFileInMem(_("Data\\PentSpin.CEL"), nullptr);
+	option_cel = LoadFileInMem(_("Data\\option.CEL"), nullptr);
+	optbar_cel = LoadFileInMem(_("Data\\optbar.CEL"), nullptr);
 }
 
 bool gmenu_is_active()

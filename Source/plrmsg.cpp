@@ -68,7 +68,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	pMsg->time = SDL_GetTicks();
 	assert(strlen(plr[pnum]._pName) < PLR_NAME_LEN);
 	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
-	sprintf(pMsg->str, "%s (lvl %d): %s", plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
+	sprintf(pMsg->str, _("%s (lvl %d): %s"), plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
 }
 
 void ClearPlrMsg()

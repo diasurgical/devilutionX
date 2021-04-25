@@ -238,7 +238,7 @@ void CheckQuests()
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
 			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile.x, plr[myplr].position.tile.y);
-			LoadPalette("Levels\\L3Data\\L3pwater.pal");
+			LoadPalette(_("Levels\\L3Data\\L3pwater.pal"));
 			WaterDone = 32;
 		}
 		if (WaterDone > 0) {
@@ -384,7 +384,7 @@ void DrawWarLord(int x, int y)
 	BYTE *sp, *setp;
 	int v;
 
-	setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN", nullptr);
+	setp = LoadFileInMem(_("Levels\\L4Data\\Warlord2.DUN"), nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -415,7 +415,7 @@ void DrawSChamber(int q, int x, int y)
 	BYTE *sp, *setp;
 	int v;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN", nullptr);
+	setp = LoadFileInMem(_("Levels\\L2Data\\Bonestr1.DUN"), nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -447,7 +447,7 @@ void DrawLTBanner(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
+	setp = LoadFileInMem(_("Levels\\L1Data\\Banner1.DUN"), nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -473,7 +473,7 @@ void DrawBlind(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
+	setp = LoadFileInMem(_("Levels\\L2Data\\Blind1.DUN"), nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -499,7 +499,7 @@ void DrawBlood(int x, int y)
 	int i, j;
 	BYTE *sp, *setp;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
+	setp = LoadFileInMem(_("Levels\\L2Data\\Blood2.DUN"), nullptr);
 	rw = *setp;
 	sp = setp + 2;
 	rh = *sp;
@@ -602,9 +602,9 @@ void LoadPWaterPalette()
 		return;
 
 	if (quests[Q_PWATER]._qactive == QUEST_DONE)
-		LoadPalette("Levels\\L3Data\\L3pwater.pal");
+		LoadPalette(_("Levels\\L3Data\\L3pwater.pal"));
 	else
-		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
+		LoadPalette(_("Levels\\L3Data\\L3pfoul.pal"));
 }
 
 void ResyncMPQuests()

@@ -43,11 +43,11 @@ void AddTrailingSlash(std::string *path)
 
 std::string *FromSDL(char *s)
 {
-	auto *result = new std::string(s != nullptr ? s : "");
+	auto *result = new std::string(s != nullptr ? s : _(""));
 	if (s != nullptr) {
 		SDL_free(s);
 	} else {
-		Log("{}", SDL_GetError());
+		Log(_("{}"), SDL_GetError());
 		SDL_ClearError();
 	}
 	return result;
@@ -70,14 +70,14 @@ const std::string &GetBasePath()
 const std::string &GetPrefPath()
 {
 	if (prefPath == nullptr)
-		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+		prefPath = FromSDL(SDL_GetPrefPath(_("diasurgical"), _("devilution")));
 	return *prefPath;
 }
 
 const std::string &GetConfigPath()
 {
 	if (configPath == nullptr)
-		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+		configPath = FromSDL(SDL_GetPrefPath(_("diasurgical"), _("devilution")));
 	return *configPath;
 }
 

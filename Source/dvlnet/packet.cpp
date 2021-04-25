@@ -10,21 +10,21 @@ const char *packet_type_to_string(uint8_t packetType)
 {
 	switch (packetType) {
 	case PT_MESSAGE:
-		return "PT_MESSAGE";
+		return _("PT_MESSAGE");
 	case PT_TURN:
-		return "PT_TURN";
+		return _("PT_TURN");
 	case PT_JOIN_REQUEST:
-		return "PT_JOIN_REQUEST";
+		return _("PT_JOIN_REQUEST");
 	case PT_JOIN_ACCEPT:
-		return "PT_JOIN_ACCEPT";
+		return _("PT_JOIN_ACCEPT");
 	case PT_CONNECT:
-		return "PT_CONNECT";
+		return _("PT_CONNECT");
 	case PT_DISCONNECT:
-		return "PT_DISCONNECT";
+		return _("PT_DISCONNECT");
 	case PT_INFO_REQUEST:
-		return "PT_INFO_REQUEST";
+		return _("PT_INFO_REQUEST");
 	case PT_INFO_REPLY:
-		return "PT_INFO_REPLY";
+		return _("PT_INFO_REPLY");
 	default:
 		return nullptr;
 	}
@@ -32,7 +32,7 @@ const char *packet_type_to_string(uint8_t packetType)
 
 wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<packet_type> expectedTypes, std::uint8_t actual)
 {
-	message_ = "Expected packet of type ";
+	message_ = _("Expected packet of type ");
 	const auto appendPacketType = [this](std::uint8_t t) {
 		const char *typeStr = packet_type_to_string(t);
 		if (typeStr != nullptr)
@@ -41,13 +41,13 @@ wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<p
 			message_.append(std::to_string(t));
 	};
 
-	constexpr char KJoinTypes[] = " or ";
+	constexpr char KJoinTypes[] = _(" or ");
 	for (const packet_type t : expectedTypes) {
 		appendPacketType(t);
 		message_.append(KJoinTypes);
 	}
 	message_.resize(message_.size() - (sizeof(KJoinTypes) - 1));
-	message_.append(", got");
+	message_.append(_(", got"));
 	appendPacketType(actual);
 }
 
@@ -221,7 +221,7 @@ packet_factory::packet_factory(std::string pw)
 		ABORT();
 	pw.resize(std::min<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MAX));
 	pw.resize(std::max<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MIN), 0);
-	std::string salt("W9bE9dQgVaeybwr2");
+	std::string salt(_("W9bE9dQgVaeybwr2"));
 	salt.resize(crypto_pwhash_argon2id_SALTBYTES, 0);
 	if (crypto_pwhash(key.data(), crypto_secretbox_KEYBYTES,
 	        pw.data(), pw.size(),

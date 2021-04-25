@@ -58,15 +58,15 @@ _speech_id gossipend;
 
 /** Maps from towner IDs to NPC names. */
 const char *const talkname[] = {
-	"Griswold",
-	"Pepin",
-	"",
-	"Ogden",
-	"Cain",
-	"Farnham",
-	"Adria",
-	"Gillian",
-	"Wirt"
+	N_("Griswold"),
+	N_("Pepin"),
+	N_(""),
+	N_("Ogden"),
+	N_("Cain"),
+	N_("Farnham"),
+	N_("Adria"),
+	N_("Gillian"),
+	N_("Wirt")
 };
 
 text_color GetItemTextColor(ItemStruct &item)
@@ -882,7 +882,7 @@ void S_StartConfirm()
 		strcpy(tempstr, _("Are you sure you want to repair this item?"));
 		break;
 	default:
-		app_fatal("Unknown store dialog %d", stextshold);
+		app_fatal(_("Unknown store dialog %d"), stextshold);
 	}
 	AddSText(0, 15, true, tempstr, COL_WHITE, false);
 	AddSText(0, 18, true, _("Yes"), COL_WHITE, true);
@@ -1182,7 +1182,7 @@ void S_StartBarMaid()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, true, "Gillian", COL_GOLD, false);
+	AddSText(0, 2, true, _("Gillian"), COL_GOLD, false);
 	AddSText(0, 9, true, _("Would you like to:"), COL_GOLD, false);
 	AddSText(0, 12, true, _("Talk to Gillian"), COL_BLUE, true);
 	AddSText(0, 18, true, _("Say goodbye"), COL_WHITE, true);
@@ -2105,9 +2105,9 @@ void AddStoreHoldRepair(ItemStruct *itm, int i)
 
 void InitStores()
 {
-	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", nullptr);
-	pSPentSpn2Cels = LoadFileInMem("Data\\PentSpn2.CEL", nullptr);
-	pSTextSlidCels = LoadFileInMem("Data\\TextSlid.CEL", nullptr);
+	pSTextBoxCels = LoadFileInMem(_("Data\\TextBox2.CEL"), nullptr);
+	pSPentSpn2Cels = LoadFileInMem(_("Data\\PentSpn2.CEL"), nullptr);
+	pSTextSlidCels = LoadFileInMem(_("Data\\TextSlid.CEL"), nullptr);
 	ClearSText(0, STORE_LINES);
 	stextflag = STORE_NONE;
 	stextsize = false;
@@ -2201,7 +2201,7 @@ void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, cons
 		sx += fontkern[c] + 1;
 	}
 	if (!cjustflag && val >= 0) {
-		sprintf(valstr, "%i", val);
+		sprintf(valstr, _("%i"), val);
 		sx = PANEL_X + 592 - x;
 		len = strlen(valstr);
 		for (i = len - 1; i >= 0; i--) {

@@ -139,13 +139,13 @@ void UiInitList_clear()
 void UiPlayMoveSound()
 {
 	if (gfnSoundFunction != nullptr)
-		gfnSoundFunction("sfx\\items\\titlemov.wav");
+		gfnSoundFunction(_("sfx\\items\\titlemov.wav"));
 }
 
 void UiPlaySelectSound()
 {
 	if (gfnSoundFunction != nullptr)
-		gfnSoundFunction("sfx\\items\\titlslct.wav");
+		gfnSoundFunction(_("sfx\\items\\titlslct.wav"));
 }
 
 namespace {
@@ -308,7 +308,7 @@ void UiFocusNavigation(SDL_Event *event)
 				if ((SDL_GetModState() & KMOD_CTRL) != 0) {
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == nullptr) {
-						Log("{}", SDL_GetError());
+						Log(_("{}"), SDL_GetError());
 					} else {
 						SelheroCatToName(clipboard, UiTextInput, UiTextInputLen);
 					}
@@ -454,7 +454,7 @@ inline SDL_Rect MakeRect(int x, int y, int w, int h)
 
 void LoadHeros()
 {
-	LoadArt("ui_art\\heros.pcx", &ArtHero);
+	LoadArt(_("ui_art\\heros.pcx"), &ArtHero);
 
 	const int portraitHeight = 76;
 	int portraitOrder[enum_size<HeroClass>::value + 1] = { 0, 1, 2, 2, 1, 0, 3 };
@@ -482,7 +482,7 @@ void LoadHeros()
 	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
 		Art portrait;
 		char portraitPath[18];
-		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
+		sprintf(portraitPath, _("ui_art\\hero%i.pcx"), i);
 		LoadArt(portraitPath, &portrait);
 		if (portrait.surface == nullptr)
 			continue;
@@ -499,14 +499,14 @@ void LoadHeros()
 void LoadUiGFX()
 {
 	if (gbIsHellfire) {
-		LoadMaskedArt("ui_art\\hf_logo2.pcx", &ArtLogos[LOGO_MED], 16);
+		LoadMaskedArt(_("ui_art\\hf_logo2.pcx"), &ArtLogos[LOGO_MED], 16);
 	} else {
-		LoadMaskedArt("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
+		LoadMaskedArt(_("ui_art\\smlogo.pcx"), &ArtLogos[LOGO_MED], 15);
 	}
-	LoadMaskedArt("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
-	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
-	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
-	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
+	LoadMaskedArt(_("ui_art\\focus16.pcx"), &ArtFocus[FOCUS_SMALL], 8);
+	LoadMaskedArt(_("ui_art\\focus.pcx"), &ArtFocus[FOCUS_MED], 8);
+	LoadMaskedArt(_("ui_art\\focus42.pcx"), &ArtFocus[FOCUS_BIG], 8);
+	LoadMaskedArt(_("ui_art\\cursor.pcx"), &ArtCursor, 1, 0);
 
 	LoadHeros();
 }
@@ -546,7 +546,7 @@ bool UiValidPlayerName(const char *name)
 	if (strlen(name) == 0)
 		return false;
 
-	if (strpbrk(name, ",<>%&\\\"?*#/:") != nullptr || strpbrk(name, " ") != nullptr)
+	if (strpbrk(name, _(",<>%&\\\"?*#/:")) != nullptr || strpbrk(name, _(" ")) != nullptr)
 		return false;
 
 	for (BYTE *letter = (BYTE *)name; *letter != '\0'; letter++)
@@ -554,14 +554,14 @@ bool UiValidPlayerName(const char *name)
 			return false;
 
 	const char *const bannedNames[] = {
-		"gvdl",
-		"dvou",
-		"tiju",
-		"cjudi",
-		"bttipmf",
-		"ojhhfs",
-		"cmj{{bse",
-		"benjo",
+		_("gvdl"),
+		_("dvou"),
+		_("tiju"),
+		_("cjudi"),
+		_("bttipmf"),
+		_("ojhhfs"),
+		_("cmj{{bse"),
+		_("benjo"),
 	};
 
 	char tmpname[PLR_NAME_LEN];

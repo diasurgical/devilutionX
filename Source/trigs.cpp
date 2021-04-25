@@ -881,7 +881,7 @@ void CheckTriggers()
 			StartNewLvl(myplr, trigs[i]._tmsg, 0);
 			break;
 		default:
-			app_fatal("Unknown trigger msg");
+			app_fatal(_("Unknown trigger msg"));
 		}
 	}
 }

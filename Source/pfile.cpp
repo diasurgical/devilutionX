@@ -29,26 +29,26 @@ namespace {
 std::string GetSavePath(DWORD save_num)
 {
 	std::string path = GetPrefPath();
-	const char *ext = ".sv";
+	const char *ext = _(".sv");
 	if (gbIsHellfire)
-		ext = ".hsv";
+		ext = _(".hsv");
 
 	if (gbIsSpawn) {
 		if (!gbIsMultiplayer) {
-			path.append("spawn");
+			path.append(_("spawn"));
 		} else {
-			path.append("share_");
+			path.append(_("share_"));
 		}
 	} else {
 		if (!gbIsMultiplayer) {
-			path.append("single_");
+			path.append(_("single_"));
 		} else {
-			path.append("multi_");
+			path.append(_("multi_"));
 		}
 	}
 
 	char save_num_str[21];
-	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), "%d", save_num);
+	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), _("%d"), save_num);
 	path.append(save_num_str);
 	path.append(ext);
 	return path;
@@ -59,10 +59,10 @@ bool GetPermSaveNames(uint8_t dwIndex, char *szPerm)
 	const char *fmt;
 
 	if (dwIndex < giNumberOfLevels)
-		fmt = "perml%02d";
+		fmt = _("perml%02d");
 	else if (dwIndex < giNumberOfLevels * 2) {
 		dwIndex -= giNumberOfLevels;
-		fmt = "perms%02d";
+		fmt = _("perms%02d");
 	} else
 		return false;
 
@@ -75,10 +75,10 @@ bool GetTempSaveNames(uint8_t dwIndex, char *szTemp)
 	const char *fmt;
 
 	if (dwIndex < giNumberOfLevels)
-		fmt = "templ%02d";
+		fmt = _("templ%02d");
 	else if (dwIndex < giNumberOfLevels * 2) {
 		dwIndex -= giNumberOfLevels;
-		fmt = "temps%02d";
+		fmt = _("temps%02d");
 	} else
 		return false;
 
@@ -161,7 +161,7 @@ static bool pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 	DWORD read;
 	BYTE *buf;
 
-	buf = pfile_read_archive(archive, "hero", &read);
+	buf = pfile_read_archive(archive, _("hero"), &read);
 	if (buf == nullptr)
 		return false;
 
@@ -184,7 +184,7 @@ static void pfile_encode_hero(const PkPlayerStruct *pPack)
 	packed = (BYTE *)DiabloAllocPtr(packed_len);
 	memcpy(packed, pPack, sizeof(*pPack));
 	codec_encode(packed, sizeof(*pPack), packed_len, pfile_get_password());
-	mpqapi_write_file("hero", packed, packed_len);
+	mpqapi_write_file(_("hero"), packed, packed_len);
 	mem_free_dbg(packed);
 }
 
@@ -219,7 +219,7 @@ PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clear_tables)
     , clear_tables_(clear_tables)
 {
 	if (!pfile_open_archive(save_num_))
-		app_fatal("Failed to open player archive for writing.");
+		app_fatal(_("Failed to open player archive for writing."));
 }
 
 PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
@@ -297,7 +297,7 @@ bool pfile_archive_contains_game(HANDLE hsArchive)
 		return false;
 
 	uint32_t dwLen;
-	BYTE *gameData = pfile_read_archive(hsArchive, "game", &dwLen);
+	BYTE *gameData = pfile_read_archive(hsArchive, _("game"), &dwLen);
 	if (gameData == nullptr)
 		return false;
 
@@ -355,17 +355,17 @@ bool pfile_get_file_name(uint8_t lvl, char *dst)
 	if (gbIsMultiplayer) {
 		if (lvl)
 			return false;
-		fmt = "hero";
+		fmt = _("hero");
 	} else {
 		if (lvl < giNumberOfLevels)
-			fmt = "perml%02d";
+			fmt = _("perml%02d");
 		else if (lvl < giNumberOfLevels * 2) {
 			lvl -= giNumberOfLevels;
-			fmt = "perms%02d";
+			fmt = _("perms%02d");
 		} else if (lvl == giNumberOfLevels * 2)
-			fmt = "game";
+			fmt = _("game");
 		else if (lvl == giNumberOfLevels * 2 + 1)
-			fmt = "hero";
+			fmt = _("hero");
 		else
 			return false;
 	}
@@ -394,9 +394,9 @@ void pfile_read_player_from_save(char name[16], int playerId)
 	save_num = pfile_get_save_num_from_name(name);
 	archive = pfile_open_save_archive(save_num);
 	if (archive == nullptr)
-		app_fatal("Unable to open archive");
+		app_fatal(_("Unable to open archive"));
 	if (!pfile_read_hero(archive, &pkplr))
-		app_fatal("Unable to load character");
+		app_fatal(_("Unable to load character"));
 
 	gbValidSaveFile = pfile_archive_contains_game(archive);
 	if (gbValidSaveFile)
@@ -419,7 +419,7 @@ bool LevelFileExists()
 
 	DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	if (!pfile_open_archive(save_num))
-		app_fatal("Unable to read to save file archive");
+		app_fatal(_("Unable to read to save file archive"));
 
 	bool has_file = mpqapi_has_file(szName);
 	mpqapi_flush_and_close(true);
@@ -429,9 +429,9 @@ bool LevelFileExists()
 void GetTempLevelNames(char *szTemp)
 {
 	if (setlevel)
-		sprintf(szTemp, "temps%02d", setlvlnum);
+		sprintf(szTemp, _("temps%02d"), setlvlnum);
 	else
-		sprintf(szTemp, "templ%02d", currlevel);
+		sprintf(szTemp, _("templ%02d"), currlevel);
 }
 
 void GetPermLevelNames(char *szPerm)
@@ -442,15 +442,15 @@ void GetPermLevelNames(char *szPerm)
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	GetTempLevelNames(szPerm);
 	if (!pfile_open_archive(save_num))
-		app_fatal("Unable to read to save file archive");
+		app_fatal(_("Unable to read to save file archive"));
 
 	has_file = mpqapi_has_file(szPerm);
 	mpqapi_flush_and_close(true);
 	if (!has_file) {
 		if (setlevel)
-			sprintf(szPerm, "perms%02d", setlvlnum);
+			sprintf(szPerm, _("perms%02d"), setlvlnum);
 		else
-			sprintf(szPerm, "perml%02d", currlevel);
+			sprintf(szPerm, _("perml%02d"), currlevel);
 	}
 }
 
@@ -461,7 +461,7 @@ void pfile_remove_temp_files()
 
 	DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	if (!pfile_open_archive(save_num))
-		app_fatal("Unable to write to save file archive");
+		app_fatal(_("Unable to write to save file archive"));
 	mpqapi_remove_hash_entries(GetTempSaveNames);
 	mpqapi_flush_and_close(true);
 }
@@ -473,7 +473,7 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	codec_encode(pbData, dwLen, qwLen, pfile_get_password());
 	if (!pfile_open_archive(save_num))
-		app_fatal("Unable to write to save file archive");
+		app_fatal(_("Unable to write to save file archive"));
 	mpqapi_write_file(pszName, pbData, qwLen);
 	mpqapi_flush_and_close(true);
 }

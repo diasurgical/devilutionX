@@ -203,12 +203,12 @@ int ExpLvlsTbl[MAXCHARLEVEL] = {
 	1583495809
 };
 const char *const ClassPathTbl[] = {
-	"Warrior",
-	"Rogue",
-	"Sorceror",
-	"Monk",
-	"Rogue",
-	"Warrior",
+	N_("Warrior"),
+	N_("Rogue"),
+	N_("Sorceror"),
+	N_("Monk"),
+	N_("Rogue"),
+	N_("Warrior"),
 };
 
 int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
@@ -223,7 +223,7 @@ int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 	case CharacterAttribute::Vitality:
 		return this->_pBaseVit;
 	default:
-		app_fatal("Unsupported attribute");
+		app_fatal(_("Unsupported attribute"));
 	}
 }
 
@@ -314,7 +314,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	DWORD i;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("LoadPlrGFX: illegal player %d", pnum);
+		app_fatal(_("LoadPlrGFX: illegal player %d"), pnum);
 	}
 
 	p = &plr[pnum];
@@ -326,7 +326,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 		c = HeroClass::Warrior;
 	}
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
+	sprintf(prefix, _("%c%c%c"), CharChar[static_cast<std::size_t>(c)], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	for (i = 1; i <= PFILE_NONDEATH; i <<= 1) {
@@ -336,17 +336,17 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 
 		switch (i) {
 		case PFILE_STAND:
-			szCel = "AS";
+			szCel = _("AS");
 			if (leveltype == DTYPE_TOWN) {
-				szCel = "ST";
+				szCel = _("ST");
 			}
 			pData = p->_pNData;
 			pAnim = (BYTE *)p->_pNAnim;
 			break;
 		case PFILE_WALK:
-			szCel = "AW";
+			szCel = _("AW");
 			if (leveltype == DTYPE_TOWN) {
-				szCel = "WL";
+				szCel = _("WL");
 			}
 			pData = p->_pWData;
 			pAnim = (BYTE *)p->_pWAnim;
@@ -355,7 +355,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
-			szCel = "AT";
+			szCel = _("AT");
 			pData = p->_pAData;
 			pAnim = (BYTE *)p->_pAAnim;
 			break;
@@ -363,7 +363,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
-			szCel = "HT";
+			szCel = _("HT");
 			pData = p->_pHData;
 			pAnim = (BYTE *)p->_pHAnim;
 			break;
@@ -371,7 +371,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
-			szCel = "LM";
+			szCel = _("LM");
 			pData = p->_pLData;
 			pAnim = (BYTE *)p->_pLAnim;
 			break;
@@ -379,7 +379,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
-			szCel = "FM";
+			szCel = _("FM");
 			pData = p->_pFData;
 			pAnim = (BYTE *)p->_pFAnim;
 			break;
@@ -387,7 +387,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
-			szCel = "QM";
+			szCel = _("QM");
 			pData = p->_pTData;
 			pAnim = (BYTE *)p->_pTAnim;
 			break;
@@ -395,7 +395,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			if ((p->_pgfxnum & 0xF) != 0) {
 				continue;
 			}
-			szCel = "DT";
+			szCel = _("DT");
 			pData = p->_pDData;
 			pAnim = (BYTE *)p->_pDAnim;
 			break;
@@ -407,15 +407,15 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 				continue;
 			}
 
-			szCel = "BL";
+			szCel = _("BL");
 			pData = p->_pBData;
 			pAnim = (BYTE *)p->_pBAnim;
 			break;
 		default:
-			app_fatal("PLR:2");
+			app_fatal(_("PLR:2"));
 		}
 
-		sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", cs, prefix, prefix, szCel);
+		sprintf(pszName, _("PlrGFX\\%s\\%s\\%s%s.CL2"), cs, prefix, prefix, szCel);
 		LoadFileWithMem(pszName, pData);
 		SetPlayerGPtrs((BYTE *)pData, (BYTE **)pAnim);
 		p->_pGFXLoad |= i;
@@ -425,7 +425,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 void InitPlayerGFX(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("InitPlayerGFX: illegal player %d", pnum);
+		app_fatal(_("InitPlayerGFX: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum]._pHitPoints >> 6 == 0) {
@@ -474,8 +474,8 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 			if (szCel[0] == 'B' && szCel[1] == 'L' && !hasBlockAnimation(*w)) {
 				continue; // No block animation
 			}
-			sprintf(Type, "%c%c%c", CharChar[static_cast<std::size_t>(c)], *a, *w);
-			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
+			sprintf(Type, _("%c%c%c"), CharChar[static_cast<std::size_t>(c)], *a, *w);
+			sprintf(pszName, _("PlrGFX\\%s\\%s\\%s%s.CL2"), ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
 			if (SFileOpenFile(pszName, &hsFile)) {
 				assert(hsFile);
 				dwSize = SFileGetFileSize(hsFile, nullptr);
@@ -493,7 +493,7 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 void InitPlrGFXMem(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("InitPlrGFXMem: illegal player %d", pnum);
+		app_fatal(_("InitPlrGFXMem: illegal player %d"), pnum);
 	}
 
 	auto &player = plr[pnum];
@@ -532,7 +532,7 @@ void InitPlrGFXMem(int pnum)
 void FreePlayerGFX(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("FreePlayerGFX: illegal player %d", pnum);
+		app_fatal(_("FreePlayerGFX: illegal player %d"), pnum);
 	}
 
 	MemFreeDbg(plr[pnum]._pNData);
@@ -550,7 +550,7 @@ void FreePlayerGFX(int pnum)
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, AnimationDistributionParams params /*= AnimationDistributionParams::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("NewPlrAnim: illegal player %d", pnum);
+		app_fatal(_("NewPlrAnim: illegal player %d"), pnum);
 	}
 
 	plr[pnum]._pAnimData = Peq;
@@ -629,7 +629,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 void ClearPlrPVars(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("ClearPlrPVars: illegal player %d", pnum);
+		app_fatal(_("ClearPlrPVars: illegal player %d"), pnum);
 	}
 
 	plr[pnum].position.temp = { 0, 0 };
@@ -644,7 +644,7 @@ void ClearPlrPVars(int pnum)
 void SetPlrAnims(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("SetPlrAnims: illegal player %d", pnum);
+		app_fatal(_("SetPlrAnims: illegal player %d"), pnum);
 	}
 
 	plr[pnum]._pNWidth = 96;
@@ -786,7 +786,7 @@ void CreatePlayer(int pnum, HeroClass c)
 	SetRndSeed(SDL_GetTicks());
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("CreatePlayer: illegal player %d", pnum);
+		app_fatal(_("CreatePlayer: illegal player %d"), pnum);
 	}
 	plr[pnum]._pClass = c;
 
@@ -964,7 +964,7 @@ void NextPlrLevel(int pnum)
 	int hp, mana;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("NextPlrLevel: illegal player %d", pnum);
+		app_fatal(_("NextPlrLevel: illegal player %d"), pnum);
 	}
 
 	plr[pnum]._pLevel++;
@@ -1032,7 +1032,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	}
 
 	if ((DWORD)myplr >= MAX_PLRS) {
-		app_fatal("AddPlrExperience: illegal player %d", myplr);
+		app_fatal(_("AddPlrExperience: illegal player %d"), myplr);
 	}
 
 	if (plr[myplr]._pHitPoints <= 0) {
@@ -1113,7 +1113,7 @@ void InitPlayer(int pnum, bool FirstTime)
 	DWORD i;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("InitPlayer: illegal player %d", pnum);
+		app_fatal(_("InitPlayer: illegal player %d"), pnum);
 	}
 
 	if (FirstTime) {
@@ -1219,7 +1219,7 @@ void InitPlayer(int pnum, bool FirstTime)
 void InitMultiView()
 {
 	if ((DWORD)myplr >= MAX_PLRS) {
-		app_fatal("InitPlayer: illegal player %d", myplr);
+		app_fatal(_("InitPlayer: illegal player %d"), myplr);
 	}
 
 	ViewX = plr[myplr].position.tile.x;
@@ -1241,7 +1241,7 @@ bool PlrDirOK(int pnum, int dir)
 	bool isOk;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrDirOK: illegal player %d", pnum);
+		app_fatal(_("PlrDirOK: illegal player %d"), pnum);
 	}
 
 	px = plr[pnum].position.tile.x + offset_x[dir];
@@ -1294,7 +1294,7 @@ void PlrDoTrans(int x, int y)
 void SetPlayerOld(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("SetPlayerOld: illegal player %d", pnum);
+		app_fatal(_("SetPlayerOld: illegal player %d"), pnum);
 	}
 
 	plr[pnum].position.old = plr[pnum].position.tile;
@@ -1303,7 +1303,7 @@ void SetPlayerOld(int pnum)
 void FixPlayerLocation(int pnum, direction bDir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("FixPlayerLocation: illegal player %d", pnum);
+		app_fatal(_("FixPlayerLocation: illegal player %d"), pnum);
 	}
 
 	plr[pnum].position.future = plr[pnum].position.tile;
@@ -1322,7 +1322,7 @@ void FixPlayerLocation(int pnum, direction bDir)
 void StartStand(int pnum, direction dir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartStand: illegal player %d", pnum);
+		app_fatal(_("StartStand: illegal player %d"), pnum);
 	}
 
 	if (!plr[pnum]._pInvincible || plr[pnum]._pHitPoints != 0 || pnum != myplr) {
@@ -1344,7 +1344,7 @@ void StartStand(int pnum, direction dir)
 void StartWalkStand(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalkStand: illegal player %d", pnum);
+		app_fatal(_("StartWalkStand: illegal player %d"), pnum);
 	}
 
 	plr[pnum]._pmode = PM_STAND;
@@ -1362,7 +1362,7 @@ void StartWalkStand(int pnum)
 void PM_ChangeLightOff(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_ChangeLightOff: illegal player %d", pnum);
+		app_fatal(_("PM_ChangeLightOff: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum]._plid == NO_LIGHT)
@@ -1390,7 +1390,7 @@ void PM_ChangeOffset(int pnum)
 	int px, py;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_ChangeOffset: illegal player %d", pnum);
+		app_fatal(_("PM_ChangeOffset: illegal player %d"), pnum);
 	}
 
 	plr[pnum].actionFrame++;
@@ -1424,7 +1424,7 @@ void PM_ChangeOffset(int pnum)
 void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, direction EndDir, _scroll_direction sdir, int variant)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalk: illegal player %d", pnum);
+		app_fatal(_("StartWalk: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
@@ -1530,7 +1530,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 void StartAttack(int pnum, direction d)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartAttack: illegal player %d", pnum);
+		app_fatal(_("StartAttack: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
@@ -1562,7 +1562,7 @@ void StartAttack(int pnum, direction d)
 void StartRangeAttack(int pnum, direction d, int cx, int cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartRangeAttack: illegal player %d", pnum);
+		app_fatal(_("StartRangeAttack: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
@@ -1592,7 +1592,7 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 void StartPlrBlock(int pnum, direction dir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartPlrBlock: illegal player %d", pnum);
+		app_fatal(_("StartPlrBlock: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
@@ -1621,7 +1621,7 @@ void StartPlrBlock(int pnum, direction dir)
 void StartSpell(int pnum, direction d, int cx, int cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS)
-		app_fatal("StartSpell: illegal player %d", pnum);
+		app_fatal(_("StartSpell: illegal player %d"), pnum);
 
 	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
 		SyncPlrKill(pnum, -1);
@@ -1669,7 +1669,7 @@ void FixPlrWalkTags(int pnum)
 	int dx, dy, y, x;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("FixPlrWalkTags: illegal player %d", pnum);
+		app_fatal(_("FixPlrWalkTags: illegal player %d"), pnum);
 	}
 
 	pp = pnum + 1;
@@ -1718,7 +1718,7 @@ void RemovePlrFromMap(int pnum)
 void StartPlrHit(int pnum, int dam, bool forcehit)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartPlrHit: illegal player %d", pnum);
+		app_fatal(_("StartPlrHit: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
@@ -1791,7 +1791,7 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 		return;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrDeadItem: illegal player %d", pnum);
+		app_fatal(_("PlrDeadItem: illegal player %d"), pnum);
 	}
 
 	x = xx + plr[pnum].position.tile.x;
@@ -1843,7 +1843,7 @@ StartPlayerKill(int pnum, int earflag)
 	diablolevel = gbIsMultiplayer && plr[pnum].plrlevel == 16;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartPlayerKill: illegal player %d", pnum);
+		app_fatal(_("StartPlayerKill: illegal player %d"), pnum);
 	}
 
 	plr[pnum].PlaySpeach(71);
@@ -1934,7 +1934,7 @@ void DropHalfPlayersGold(int pnum)
 	int i, hGold;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("DropHalfPlayersGold: illegal player %d", pnum);
+		app_fatal(_("DropHalfPlayersGold: illegal player %d"), pnum);
 	}
 
 	hGold = plr[pnum]._pGold / 2;
@@ -2046,7 +2046,7 @@ void StripTopGold(int pnum)
 	int i, val;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StripTopGold: illegal player %d", pnum);
+		app_fatal(_("StripTopGold: illegal player %d"), pnum);
 	}
 	tmpItem = plr[pnum].HoldItem;
 
@@ -2194,7 +2194,7 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 	InitLevelChange(pnum);
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartNewLvl: illegal player %d", pnum);
+		app_fatal(_("StartNewLvl: illegal player %d"), pnum);
 	}
 
 	switch (fom) {
@@ -2216,7 +2216,7 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 	case WM_DIABRETOWN:
 		break;
 	default:
-		app_fatal("StartNewLvl");
+		app_fatal(_("StartNewLvl"));
 	}
 
 	if (pnum == myplr) {
@@ -2233,7 +2233,7 @@ void RestartTownLvl(int pnum)
 {
 	InitLevelChange(pnum);
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("RestartTownLvl: illegal player %d", pnum);
+		app_fatal(_("RestartTownLvl: illegal player %d"), pnum);
 	}
 
 	plr[pnum].plrlevel = 0;
@@ -2279,7 +2279,7 @@ void StartWarpLvl(int pnum, int pidx)
 bool PM_DoWalk(int pnum, int variant)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoWalk: illegal player %d", pnum);
+		app_fatal(_("PM_DoWalk: illegal player %d"), pnum);
 	}
 
 	//Play walking sound effect on certain animation frames
@@ -2393,7 +2393,7 @@ bool WeaponDur(int pnum, int durrnd)
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("WeaponDur: illegal player %d", pnum);
+		app_fatal(_("WeaponDur: illegal player %d"), pnum);
 	}
 
 	if (!plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
@@ -2464,7 +2464,7 @@ bool PlrHitMonst(int pnum, int m)
 	bool adjacentDamage = false;
 
 	if ((DWORD)m >= MAXMONSTERS) {
-		app_fatal("PlrHitMonst: illegal monster %d", m);
+		app_fatal(_("PlrHitMonst: illegal monster %d"), m);
 	}
 
 	if ((monster[m]._mhitpoints >> 6) <= 0) {
@@ -2489,7 +2489,7 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrHitMonst: illegal player %d", pnum);
+		app_fatal(_("PlrHitMonst: illegal player %d"), pnum);
 	}
 
 	rv = false;
@@ -2699,7 +2699,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 	int hit, hper, blk, blkper, mind, maxd, dam, lvl, skdam, tac;
 
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("PlrHitPlr: illegal target player %d", p);
+		app_fatal(_("PlrHitPlr: illegal target player %d"), p);
 	}
 
 	rv = false;
@@ -2713,7 +2713,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrHitPlr: illegal attacking player %d", pnum);
+		app_fatal(_("PlrHitPlr: illegal attacking player %d"), pnum);
 	}
 
 	hit = GenerateRnd(100);
@@ -2811,7 +2811,7 @@ bool PM_DoAttack(int pnum)
 	bool didhit = false;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoAttack: illegal player %d", pnum);
+		app_fatal(_("PM_DoAttack: illegal player %d"), pnum);
 	}
 
 	frame = plr[pnum]._pAnimFrame;
@@ -2921,7 +2921,7 @@ bool PM_DoRangeAttack(int pnum)
 	int origFrame, mistype;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoRangeAttack: illegal player %d", pnum);
+		app_fatal(_("PM_DoRangeAttack: illegal player %d"), pnum);
 	}
 
 	if (!gbIsHellfire) {
@@ -3006,7 +3006,7 @@ void ShieldDur(int pnum)
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("ShieldDur: illegal player %d", pnum);
+		app_fatal(_("ShieldDur: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD) {
@@ -3037,7 +3037,7 @@ void ShieldDur(int pnum)
 bool PM_DoBlock(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoBlock: illegal player %d", pnum);
+		app_fatal(_("PM_DoBlock: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum]._pIFlags & ISPL_FASTBLOCK && plr[pnum]._pAnimFrame != 1) {
@@ -3068,7 +3068,7 @@ static void ArmorDur(int pnum)
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("ArmorDur: illegal player %d", pnum);
+		app_fatal(_("ArmorDur: illegal player %d"), pnum);
 	}
 
 	p = &plr[pnum];
@@ -3110,7 +3110,7 @@ static void ArmorDur(int pnum)
 bool PM_DoSpell(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoSpell: illegal player %d", pnum);
+		app_fatal(_("PM_DoSpell: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum].actionFrame == plr[pnum]._pSFNum) {
@@ -3150,7 +3150,7 @@ bool PM_DoGotHit(int pnum)
 	int frame;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoGotHit: illegal player %d", pnum);
+		app_fatal(_("PM_DoGotHit: illegal player %d"), pnum);
 	}
 
 	frame = plr[pnum]._pAnimFrame;
@@ -3180,7 +3180,7 @@ bool PM_DoGotHit(int pnum)
 bool PM_DoDeath(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoDeath: illegal player %d", pnum);
+		app_fatal(_("PM_DoDeath: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum].deathFrame >= 2 * plr[pnum]._pDFrames) {
@@ -3212,7 +3212,7 @@ void CheckNewPath(int pnum)
 	int xvel3, xvel, yvel;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("CheckNewPath: illegal player %d", pnum);
+		app_fatal(_("CheckNewPath: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum].destAction == ACTION_ATTACKMON) {
@@ -3537,7 +3537,7 @@ bool PlrDeathModeOK(int p)
 	}
 
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("PlrDeathModeOK: illegal player %d", p);
+		app_fatal(_("PlrDeathModeOK: illegal player %d"), p);
 	}
 
 	if (plr[p]._pmode == PM_DEATH) {
@@ -3557,7 +3557,7 @@ void ValidatePlayer()
 	int gt, i, b;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
-		app_fatal("ValidatePlayer: illegal player %d", myplr);
+		app_fatal(_("ValidatePlayer: illegal player %d"), myplr);
 	}
 	if (plr[myplr]._pLevel > MAXCHARLEVEL - 1)
 		plr[myplr]._pLevel = MAXCHARLEVEL - 1;
@@ -3639,7 +3639,7 @@ static void CheckCheatStats(int pnum)
 void ProcessPlayers()
 {
 	if ((DWORD)myplr >= MAX_PLRS) {
-		app_fatal("ProcessPlayers: illegal player %d", myplr);
+		app_fatal(_("ProcessPlayers: illegal player %d"), myplr);
 	}
 
 	if (plr[myplr].pLvlLoad > 0) {
@@ -3769,12 +3769,12 @@ int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 		// this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
 		if (absoluteAnimationFrame > (relevantAnimationFramesForDistributing + 1)) {
 			// we should never have +2 frames even if next game tick is due
-			Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated {} MaxFrame {})", absoluteAnimationFrame, relevantAnimationFramesForDistributing);
+			Log(_("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated {} MaxFrame {})"), absoluteAnimationFrame, relevantAnimationFramesForDistributing);
 		}
 		return relevantAnimationFramesForDistributing;
 	}
 	if (absoluteAnimationFrame <= 0) {
-		Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated {})", absoluteAnimationFrame);
+		Log(_("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame (Calculated {})"), absoluteAnimationFrame);
 		return 1;
 	}
 	return absoluteAnimationFrame;
@@ -3783,7 +3783,7 @@ int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 void ClrPlrPath(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("ClrPlrPath: illegal player %d", pnum);
+		app_fatal(_("ClrPlrPath: illegal player %d"), pnum);
 	}
 
 	memset(plr[pnum].walkpath, WALK_NONE, sizeof(plr[pnum].walkpath));
@@ -3844,7 +3844,7 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 	int path;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("MakePlrPath: illegal player %d", pnum);
+		app_fatal(_("MakePlrPath: illegal player %d"), pnum);
 	}
 
 	if (plr[pnum].position.future.x == xx && plr[pnum].position.future.y == yy) {
@@ -3900,7 +3900,7 @@ void CheckPlrSpell()
 	int sl;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
-		app_fatal("CheckPlrSpell: illegal player %d", myplr);
+		app_fatal(_("CheckPlrSpell: illegal player %d"), myplr);
 	}
 
 	spell_id rspell = plr[myplr]._pRSpell;
@@ -3977,7 +3977,7 @@ void SyncPlrAnim(int pnum)
 	int dir, sType;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("SyncPlrAnim: illegal player %d", pnum);
+		app_fatal(_("SyncPlrAnim: illegal player %d"), pnum);
 	}
 
 	dir = plr[pnum]._pdir;
@@ -4024,7 +4024,7 @@ void SyncPlrAnim(int pnum)
 		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
 		break;
 	default:
-		app_fatal("SyncPlrAnim");
+		app_fatal(_("SyncPlrAnim"));
 	}
 }
 
@@ -4074,7 +4074,7 @@ void SyncInitPlrPos(int pnum)
 void SyncInitPlr(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("SyncInitPlr: illegal player %d", pnum);
+		app_fatal(_("SyncInitPlr: illegal player %d"), pnum);
 	}
 
 	SetPlrAnims(pnum);
@@ -4084,7 +4084,7 @@ void SyncInitPlr(int pnum)
 void CheckStats(int p)
 {
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("CheckStats: illegal player %d", p);
+		app_fatal(_("CheckStats: illegal player %d"), p);
 	}
 
 	for (auto attribute : enum_values<CharacterAttribute>()) {
@@ -4125,7 +4125,7 @@ void CheckStats(int p)
 void ModifyPlrStr(int p, int l)
 {
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("ModifyPlrStr: illegal player %d", p);
+		app_fatal(_("ModifyPlrStr: illegal player %d"), p);
 	}
 
 	int max = plr[p].GetMaximumAttributeValue(CharacterAttribute::Strength);
@@ -4152,7 +4152,7 @@ void ModifyPlrStr(int p, int l)
 void ModifyPlrMag(int p, int l)
 {
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("ModifyPlrMag: illegal player %d", p);
+		app_fatal(_("ModifyPlrMag: illegal player %d"), p);
 	}
 
 	int max = plr[p].GetMaximumAttributeValue(CharacterAttribute::Magic);
@@ -4187,7 +4187,7 @@ void ModifyPlrMag(int p, int l)
 void ModifyPlrDex(int p, int l)
 {
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("ModifyPlrDex: illegal player %d", p);
+		app_fatal(_("ModifyPlrDex: illegal player %d"), p);
 	}
 
 	int max = plr[p].GetMaximumAttributeValue(CharacterAttribute::Dexterity);
@@ -4211,7 +4211,7 @@ void ModifyPlrDex(int p, int l)
 void ModifyPlrVit(int p, int l)
 {
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("ModifyPlrVit: illegal player %d", p);
+		app_fatal(_("ModifyPlrVit: illegal player %d"), p);
 	}
 
 	int max = plr[p].GetMaximumAttributeValue(CharacterAttribute::Vitality);
@@ -4244,7 +4244,7 @@ void ModifyPlrVit(int p, int l)
 void SetPlayerHitPoints(int pnum, int val)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("SetPlayerHitPoints: illegal player %d", pnum);
+		app_fatal(_("SetPlayerHitPoints: illegal player %d"), pnum);
 	}
 
 	plr[pnum]._pHitPoints = val;
@@ -4260,7 +4260,7 @@ void SetPlrStr(int p, int v)
 	int dm;
 
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrStr: illegal player %d", p);
+		app_fatal(_("SetPlrStr: illegal player %d"), p);
 	}
 
 	plr[p]._pBaseStr = v;
@@ -4280,7 +4280,7 @@ void SetPlrMag(int p, int v)
 	int m;
 
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrMag: illegal player %d", p);
+		app_fatal(_("SetPlrMag: illegal player %d"), p);
 	}
 
 	plr[p]._pBaseMag = v;
@@ -4302,7 +4302,7 @@ void SetPlrDex(int p, int v)
 	int dm;
 
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrDex: illegal player %d", p);
+		app_fatal(_("SetPlrDex: illegal player %d"), p);
 	}
 
 	plr[p]._pBaseDex = v;
@@ -4322,7 +4322,7 @@ void SetPlrVit(int p, int v)
 	int hp;
 
 	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrVit: illegal player %d", p);
+		app_fatal(_("SetPlrVit: illegal player %d"), p);
 	}
 
 	plr[p]._pBaseVit = v;
@@ -4342,7 +4342,7 @@ void SetPlrVit(int p, int v)
 void InitDungMsgs(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("InitDungMsgs: illegal player %d", pnum);
+		app_fatal(_("InitDungMsgs: illegal player %d"), pnum);
 	}
 
 	plr[pnum].pDungMsgs = 0;
@@ -4362,7 +4362,7 @@ enum {
 void PlayDungMsgs()
 {
 	if ((DWORD)myplr >= MAX_PLRS) {
-		app_fatal("PlayDungMsgs: illegal player %d", myplr);
+		app_fatal(_("PlayDungMsgs: illegal player %d"), myplr);
 	}
 
 	if (currlevel == 1 && !plr[myplr]._pLvlVisited[1] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_CATHEDRAL)) {

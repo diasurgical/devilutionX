@@ -69,9 +69,9 @@ static void mainmenu_play_intro()
 {
 	music_stop();
 	if (gbIsHellfire)
-		play_movie("gendata\\Hellfire.smk", true);
+		play_movie(_("gendata\\Hellfire.smk"), true);
 	else
-		play_movie("gendata\\diablo1.smk", true);
+		play_movie(_("gendata\\diablo1.smk"), true);
 	mainmenu_refresh_music();
 }
 
@@ -119,7 +119,7 @@ void mainmenu_loop()
 	do {
 		menu = MAINMENU_NONE;
 		if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
-			app_fatal("Unable to display mainmenu");
+			app_fatal(_("Unable to display mainmenu"));
 
 		switch (menu) {
 		case MAINMENU_NONE:

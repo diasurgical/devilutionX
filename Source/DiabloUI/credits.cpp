@@ -59,7 +59,7 @@ SDL_Surface *RenderText(const char *text, SDL_Color color)
 		return nullptr;
 	SDL_Surface *result = TTF_RenderUTF8_Solid(font, text, color);
 	if (result == nullptr)
-		Log("{}", TTF_GetError());
+		Log(_("{}"), TTF_GetError());
 	return result;
 }
 
@@ -81,7 +81,7 @@ CachedLine PrepareLine(std::size_t index)
 		const SDL_Color &textColor = palette->colors[224];
 		SDL_Color colors[3] = { maskColor, textColor, shadowColor };
 		if (SDLC_SetSurfaceColors(surface.get(), colors, 0, 3) <= -1)
-			Log("{}", SDL_GetError());
+			Log(_("{}"), SDL_GetError());
 		SDLC_SetColorKey(surface.get(), 0);
 
 		// Blit the shadow first:
@@ -233,8 +233,8 @@ bool UiCreditsDialog()
 	text = CREDITS_LINES;
 	textLines = CREDITS_LINES_SIZE;
 
-	LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
-	LoadBackgroundArt("ui_art\\credits.pcx");
+	LoadArt(_("ui_art\\creditsw.pcx"), &ArtBackgroundWidescreen);
+	LoadBackgroundArt(_("ui_art\\credits.pcx"));
 
 	return TextDialog();
 }
@@ -245,11 +245,11 @@ bool UiSupportDialog()
 	textLines = SUPPORT_LINES_SIZE;
 
 	if (gbIsHellfire) {
-		LoadArt("ui_art\\supportw.pcx", &ArtBackgroundWidescreen);
-		LoadBackgroundArt("ui_art\\support.pcx");
+		LoadArt(_("ui_art\\supportw.pcx"), &ArtBackgroundWidescreen);
+		LoadBackgroundArt(_("ui_art\\support.pcx"));
 	} else {
-		LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
-		LoadBackgroundArt("ui_art\\credits.pcx");
+		LoadArt(_("ui_art\\creditsw.pcx"), &ArtBackgroundWidescreen);
+		LoadBackgroundArt(_("ui_art\\credits.pcx"));
 	}
 
 	return TextDialog();

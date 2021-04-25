@@ -245,7 +245,7 @@ static int TranslateSdlKey(SDL_Keysym key)
 		} else if (sym >= SDLK_F1 && sym <= SDLK_F12) {
 			return DVL_VK_F1 + (sym - SDLK_F1);
 		}
-		Log("unknown key: name={} sym=0x{:X} scan={} mod=0x{:X}", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
+		Log(_("unknown key: name={} sym=0x{:X} scan={} mod=0x{:X}"), SDL_GetKeyName(sym), sym, key.scancode, key.mod);
 		return -1;
 	}
 }
@@ -266,7 +266,7 @@ WPARAM KeystateForMouse(WPARAM ret)
 
 bool FalseAvail(const char *name, int value)
 {
-	LogDebug("Unhandled SDL event: %s %d", name, value);
+	LogDebug(_("Unhandled SDL event: %s %d"), name, value);
 	return true;
 }
 
@@ -463,7 +463,7 @@ bool FetchMessage(LPMSG lpMsg)
 	case SDL_KEYUP: {
 		int key = TranslateSdlKey(e.key.keysym);
 		if (key == -1)
-			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
+			return FalseAvail(e.type == SDL_KEYDOWN ? _("SDL_KEYDOWN") : _("SDL_KEYUP"), e.key.keysym.sym);
 		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
 		lpMsg->wParam = (DWORD)key;
 		// HACK: Encode modifier in lParam for TranslateMessage later
@@ -513,16 +513,16 @@ bool FetchMessage(LPMSG lpMsg)
 		break;
 #if SDL_VERSION_ATLEAST(2, 0, 4)
 	case SDL_AUDIODEVICEADDED:
-		return FalseAvail("SDL_AUDIODEVICEADDED", e.adevice.which);
+		return FalseAvail(_("SDL_AUDIODEVICEADDED"), e.adevice.which);
 	case SDL_AUDIODEVICEREMOVED:
-		return FalseAvail("SDL_AUDIODEVICEREMOVED", e.adevice.which);
+		return FalseAvail(_("SDL_AUDIODEVICEREMOVED"), e.adevice.which);
 	case SDL_KEYMAPCHANGED:
-		return FalseAvail("SDL_KEYMAPCHANGED", 0);
+		return FalseAvail(_("SDL_KEYMAPCHANGED"), 0);
 #endif
 	case SDL_TEXTEDITING:
-		return FalseAvail("SDL_TEXTEDITING", e.edit.length);
+		return FalseAvail(_("SDL_TEXTEDITING"), e.edit.length);
 	case SDL_TEXTINPUT:
-		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);
+		return FalseAvail(_("SDL_TEXTINPUT"), e.text.windowID);
 	case SDL_WINDOWEVENT:
 		switch (e.window.event) {
 		case SDL_WINDOWEVENT_SHOWN:
@@ -564,13 +564,13 @@ bool FetchMessage(LPMSG lpMsg)
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
 			break;
 		default:
-			return FalseAvail("SDL_WINDOWEVENT", e.window.event);
+			return FalseAvail(_("SDL_WINDOWEVENT"), e.window.event);
 		}
 
 		break;
 #endif
 	default:
-		return FalseAvail("unknown", e.type);
+		return FalseAvail(_("unknown"), e.type);
 	}
 	return true;
 }

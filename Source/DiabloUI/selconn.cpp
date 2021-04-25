@@ -27,10 +27,10 @@ void SelconnSelect(int value);
 
 void SelconnLoad()
 {
-	LoadBackgroundArt("ui_art\\selconn.pcx");
+	LoadBackgroundArt(_("ui_art\\selconn.pcx"));
 
 #ifndef NONET
-	vecConnItems.push_back(new UiListItem("Zerotier", SELCONN_ZT));
+	vecConnItems.push_back(new UiListItem(_("Zerotier"), SELCONN_ZT));
 	vecConnItems.push_back(new UiListItem(_("Client-Server (TCP)"), SELCONN_TCP));
 #endif
 	vecConnItems.push_back(new UiListItem(_("Loopback"), SELCONN_LOOPBACK));

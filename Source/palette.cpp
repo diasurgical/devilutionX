@@ -156,18 +156,18 @@ void LoadRndLvlPal(int l)
 	char szFileName[MAX_PATH];
 
 	if (l == DTYPE_TOWN) {
-		LoadPalette("Levels\\TownData\\Town.pal");
+		LoadPalette(_("Levels\\TownData\\Town.pal"));
 	} else {
 		rv = GenerateRnd(4) + 1;
-		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
+		sprintf(szFileName, _("Levels\\L%iData\\L%i_%i.PAL"), l, l, rv);
 		if (l == 5) {
-			sprintf(szFileName, "NLevels\\L5Data\\L5Base.PAL");
+			sprintf(szFileName, _("NLevels\\L5Data\\L5Base.PAL"));
 		}
 		if (l == 6) {
 			if (!gbNestArt) {
 				rv++;
 			}
-			sprintf(szFileName, "NLevels\\L%iData\\L%iBase%i.PAL", 6, 6, rv);
+			sprintf(szFileName, _("NLevels\\L%iData\\L%iBase%i.PAL"), 6, 6, rv);
 		}
 		LoadPalette(szFileName);
 	}

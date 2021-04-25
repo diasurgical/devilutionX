@@ -29,7 +29,7 @@ void play_movie(const char *pszMovie, bool user_can_close)
 	movie_playing = true;
 	sound_disable_music(true);
 	stream_stop();
-	effects_play_sound("Sfx\\Misc\\blank.wav");
+	effects_play_sound(_("Sfx\\Misc\\blank.wav"));
 
 	SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808, &video_stream);
 	MSG Msg;

@@ -185,19 +185,19 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 	}
 
 	if (!renderBehind) {
-		LoadBackgroundArt("ui_art\\black.pcx");
+		LoadBackgroundArt(_("ui_art\\black.pcx"));
 		if (ArtBackground.surface == nullptr) {
 			LoadFallbackPalette();
 		}
 	}
 	SetFadeLevel(256);
 	if (caption == nullptr) {
-		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
+		LoadMaskedArt(error ? _("ui_art\\srpopup.pcx") : _("ui_art\\spopup.pcx"), &dialogArt);
 	} else {
 		if (error) {
 			LoadArt(&dialogArt, popupData, 385, 280);
 		} else {
-			LoadMaskedArt("ui_art\\lpopup.pcx", &dialogArt);
+			LoadMaskedArt(_("ui_art\\lpopup.pcx"), &dialogArt);
 		}
 	}
 	LoadSmlButtonArt();
@@ -264,16 +264,16 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 
 	if (!gbActive || inDialog) {
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-			Log("{}", SDL_GetError());
+			Log(_("{}"), SDL_GetError());
 		}
 #ifndef RUN_TESTS
 		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
-			Log("{}", SDL_GetError());
+			Log(_("{}"), SDL_GetError());
 #else
 		{
 #endif
-			Log("{}", text);
-			Log("{}", caption);
+			Log(_("{}"), text);
+			Log(_("{}"), caption);
 		}
 		return;
 	}

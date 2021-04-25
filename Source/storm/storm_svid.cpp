@@ -203,7 +203,7 @@ bool HaveAudio()
 void SVidRestartMixer()
 {
 	if (Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024) < 0) {
-		Log("{}", Mix_GetError());
+		Log(_("{}"), Mix_GetError());
 	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1);
@@ -371,7 +371,7 @@ bool SVidPlayContinue()
 		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
 
 		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface, SVidPalette, colors, 0, 256) <= -1) {
-			Log("{}", SDL_GetError());
+			Log(_("{}"), SDL_GetError());
 			return false;
 		}
 	}
@@ -385,7 +385,7 @@ bool SVidPlayContinue()
 		unsigned char *audio = SVidApplyVolume(smk_get_audio(SVidSMK, 0), len);
 #if SDL_VERSION_ATLEAST(2, 0, 4)
 		if (SDL_QueueAudio(deviceId, audio, len) <= -1) {
-			Log("{}", SDL_GetError());
+			Log(_("{}"), SDL_GetError());
 			return false;
 		}
 #else
@@ -401,7 +401,7 @@ bool SVidPlayContinue()
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
 		if (SDL_BlitSurface(SVidSurface, nullptr, GetOutputSurface(), nullptr) <= -1) {
-			Log("{}", SDL_GetError());
+			Log(_("{}"), SDL_GetError());
 			return false;
 		}
 	} else
@@ -444,7 +444,7 @@ bool SVidPlayContinue()
 			SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(SVidSurface, wndFormat, 0) };
 #endif
 			if (SDL_BlitScaled(converted.get(), nullptr, outputSurface, &outputRect) <= -1) {
-				Log("{}", SDL_GetError());
+				Log(_("{}"), SDL_GetError());
 				return false;
 			}
 		}

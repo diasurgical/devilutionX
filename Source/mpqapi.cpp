@@ -55,13 +55,13 @@ const char *DirToString(std::ios::seekdir dir)
 {
 	switch (dir) {
 	case std::ios::beg:
-		return "std::ios::beg";
+		return _("std::ios::beg");
 	case std::ios::end:
-		return "std::ios::end";
+		return _("std::ios::end");
 	case std::ios::cur:
-		return "std::ios::cur";
+		return _("std::ios::cur");
 	default:
-		return "invalid";
+		return _("invalid");
 	}
 }
 
@@ -69,17 +69,17 @@ std::string OpenModeToString(std::ios::openmode mode)
 {
 	std::string result;
 	if ((mode & std::ios::app) != 0)
-		result.append("std::ios::app | ");
+		result.append(_("std::ios::app | "));
 	if ((mode & std::ios::ate) != 0)
-		result.append("std::ios::ate | ");
+		result.append(_("std::ios::ate | "));
 	if ((mode & std::ios::binary) != 0)
-		result.append("std::ios::binary | ");
+		result.append(_("std::ios::binary | "));
 	if ((mode & std::ios::in) != 0)
-		result.append("std::ios::in | ");
+		result.append(_("std::ios::in | "));
 	if ((mode & std::ios::out) != 0)
-		result.append("std::ios::out | ");
+		result.append(_("std::ios::out | "));
 	if ((mode & std::ios::trunc) != 0)
-		result.append("std::ios::trunc | ");
+		result.append(_("std::ios::trunc | "));
 	if (!result.empty())
 		result.resize(result.size() - 3);
 	return result;
@@ -90,7 +90,7 @@ public:
 	bool Open(const char *path, std::ios::openmode mode)
 	{
 		s_ = std::make_unique<std::fstream>(path, mode);
-		return CheckError("new std::fstream(\"%s\", %s)", path, OpenModeToString(mode).c_str());
+		return CheckError(_("new std::fstream(\"%s\", %s)"), path, OpenModeToString(mode).c_str());
 	}
 
 	void Close()
@@ -106,49 +106,49 @@ public:
 	bool seekg(std::streampos pos)
 	{
 		s_->seekg(pos);
-		return CheckError("seekg(%" PRIuMAX ")", static_cast<std::uintmax_t>(pos));
+		return CheckError(_("seekg(%" PR)IuMAX ")", static_cast<std::uintmax_t>(pos));
 	}
 
 	bool seekg(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekg(pos, dir);
-		return CheckError("seekg(%" PRIdMAX ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
+		return CheckError(_("seekg(%" PRIdMA)X ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
 	}
 
 	bool seekp(std::streampos pos)
 	{
 		s_->seekp(pos);
-		return CheckError("seekp(%" PRIuMAX ")", static_cast<std::uintmax_t>(pos));
+		return CheckError(_("seekp(%" PR)IuMAX ")", static_cast<std::uintmax_t>(pos));
 	}
 
 	bool seekp(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekp(pos, dir);
-		return CheckError("seekp(%" PRIdMAX ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
+		return CheckError(_("seekp(%" PRIdMA)X ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
 	}
 
 	bool tellg(std::streampos *result)
 	{
 		*result = s_->tellg();
-		return CheckError("tellg() = %" PRIuMAX, static_cast<std::uintmax_t>(*result));
+		return CheckError(_("tellg() = %" P)RIuMAX, static_cast<std::uintmax_t>(*result));
 	}
 
 	bool tellp(std::streampos *result)
 	{
 		*result = s_->tellp();
-		return CheckError("tellp() = %" PRIuMAX, static_cast<std::uintmax_t>(*result));
+		return CheckError(_("tellp() = %" P)RIuMAX, static_cast<std::uintmax_t>(*result));
 	}
 
 	bool write(const char *data, std::streamsize size)
 	{
 		s_->write(data, size);
-		return CheckError("write(data, %" PRIuMAX ")", static_cast<std::uintmax_t>(size));
+		return CheckError(_("write(data, %" PR)IuMAX ")", static_cast<std::uintmax_t>(size));
 	}
 
 	bool read(char *out, std::streamsize size)
 	{
 		s_->read(out, size);
-		return CheckError("read(out, %" PRIuMAX ")", static_cast<std::uintmax_t>(size));
+		return CheckError(_("read(out, %" PR)IuMAX ")", static_cast<std::uintmax_t>(size));
 	}
 
 private:
@@ -157,10 +157,10 @@ private:
 	{
 		if (s_->fail()) {
 			std::string fmt_with_error = fmt;
-			fmt_with_error.append(": failed with \"%s\"");
+			fmt_with_error.append(N_(": failed with \"%s\""));
 			const char *error_message = std::strerror(errno);
 			if (error_message == nullptr)
-				error_message = "";
+				error_message = N_("");
 			LogError(LogCategory::System, fmt_with_error.c_str(), args..., error_message);
 #ifdef _DEBUG
 		} else {
@@ -202,7 +202,7 @@ struct Archive {
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
 			if (GetFileSize(name, &size) == 0) {
-				Log("GetFileSize(\"{}\") failed with \"{}\"", name, std::strerror(errno));
+				Log(_("GetFileSize(\"{}\") failed with \"{}\""), name, std::strerror(errno));
 				return false;
 			}
 #ifdef _DEBUG
@@ -282,17 +282,17 @@ private:
 
 	bool WriteBlockTable()
 	{
-		Encrypt((DWORD *)sgpBlockTbl, BlockEntrySize, Hash("(block table)", 3));
+		Encrypt((DWORD *)sgpBlockTbl, BlockEntrySize, Hash(_("(block table)"), 3));
 		const bool success = stream.write(reinterpret_cast<const char *>(sgpBlockTbl), BlockEntrySize);
-		Decrypt((DWORD *)sgpBlockTbl, BlockEntrySize, Hash("(block table)", 3));
+		Decrypt((DWORD *)sgpBlockTbl, BlockEntrySize, Hash(_("(block table)"), 3));
 		return success;
 	}
 
 	bool WriteHashTable()
 	{
-		Encrypt((DWORD *)sgpHashTbl, HashEntrySize, Hash("(hash table)", 3));
+		Encrypt((DWORD *)sgpHashTbl, HashEntrySize, Hash(_("(hash table)"), 3));
 		const bool success = stream.write(reinterpret_cast<const char *>(sgpHashTbl), HashEntrySize);
-		Decrypt((DWORD *)sgpHashTbl, HashEntrySize, Hash("(hash table)", 3));
+		Decrypt((DWORD *)sgpHashTbl, HashEntrySize, Hash(_("(hash table)"), 3));
 		return success;
 	}
 };
@@ -372,7 +372,7 @@ static _BLOCKENTRY *mpqapi_new_block(int *block_index)
 		return blockEntry;
 	}
 
-	app_fatal("Out of free block entries");
+	app_fatal(_("Out of free block entries"));
 }
 
 void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
@@ -401,7 +401,7 @@ void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
 		block++;
 	}
 	if (block_offset + block_size > cur_archive.size) {
-		app_fatal("MPQ free list error");
+		app_fatal(_("MPQ free list error"));
 	}
 	if (block_offset + block_size == cur_archive.size) {
 		cur_archive.size = block_offset;
@@ -511,7 +511,7 @@ static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int 
 	h2 = Hash(pszName, 1);
 	h3 = Hash(pszName, 2);
 	if (mpqapi_get_hash_index(h1, h2, h3) != -1)
-		app_fatal("Hash collision between \"%s\" and existing file\n", pszName);
+		app_fatal(_("Hash collision between \"%s\" and existing file\n"), pszName);
 	hIdx = h1 & 0x7FF;
 	i = INDEX_ENTRIES;
 	while (i--) {
@@ -520,7 +520,7 @@ static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int 
 		hIdx = (hIdx + 1) & 0x7FF;
 	}
 	if (i < 0)
-		app_fatal("Out of hash space");
+		app_fatal(_("Out of hash space"));
 	if (pBlk == nullptr)
 		pBlk = mpqapi_new_block(&block_index);
 
@@ -669,7 +669,7 @@ bool OpenMPQ(const char *pszArchive)
 		if (fhdr.blockcount) {
 			if (!cur_archive.stream.read(reinterpret_cast<char *>(cur_archive.sgpBlockTbl), BlockEntrySize))
 				goto on_error;
-			key = Hash("(block table)", 3);
+			key = Hash(_("(block table)"), 3);
 			Decrypt((DWORD *)cur_archive.sgpBlockTbl, BlockEntrySize, key);
 		}
 		cur_archive.sgpHashTbl = new _HASHENTRY[HashEntrySize / sizeof(_HASHENTRY)];
@@ -677,7 +677,7 @@ bool OpenMPQ(const char *pszArchive)
 		if (fhdr.hashcount) {
 			if (!cur_archive.stream.read(reinterpret_cast<char *>(cur_archive.sgpHashTbl), HashEntrySize))
 				goto on_error;
-			key = Hash("(hash table)", 3);
+			key = Hash(_("(hash table)"), 3);
 			Decrypt((DWORD *)cur_archive.sgpHashTbl, HashEntrySize, key);
 		}
 

@@ -64,7 +64,7 @@ bool parse_metadata(char *data)
 	char *ptr = data;
 	bool utf8 = false;
 
-	while (ptr && (delim = strstr(ptr, ":"))) {
+	while (ptr && (delim = strstr(ptr, _(":")))) {
 		key = strtrim_left(ptr);
 		val = strtrim_left(delim + 1);
 
@@ -72,7 +72,7 @@ bool parse_metadata(char *data)
 		*delim = '\0';
 
 		// progress to next line (if any)
-		if ((ptr = strstr(val, "\n"))) {
+		if ((ptr = strstr(val, _("\n")))) {
 			*ptr = '\0';
 			ptr++;
 		}
@@ -81,8 +81,8 @@ bool parse_metadata(char *data)
 		meta[key] = val;
 
 		// Match "Content-Type: text/plain; charset=UTF-8"
-		if (!strcmp("Content-Type", key) && (delim = strstr(val, "="))) {
-			utf8 = !strcasecmp(delim + 1, "utf-8");
+		if (!strcmp(_("Content-Type"), key) && (delim = strstr(val, _("=")))) {
+			utf8 = !strcasecmp(delim + 1, _("utf-8"));
 		}
 	}
 
@@ -137,10 +137,10 @@ void LanguageInitialize()
 	FILE *fp;
 	bool utf8;
 
-	auto path = GetLangPath() + "./" + sgOptions.Language.szCode + ".gmo";
-	if (!(fp = fopen(path.c_str(), "rb"))) {
-		path = GetLangPath() + "./" + sgOptions.Language.szCode + ".mo";
-		if (!(fp = fopen(path.c_str(), "rb"))) {
+	auto path = GetLangPath() + _("./") + sgOptions.Language.szCode + _(".gmo");
+	if (!(fp = fopen(path.c_str(), _("rb")))) {
+		path = GetLangPath() + _("./") + sgOptions.Language.szCode + _(".mo");
+		if (!(fp = fopen(path.c_str(), _("rb")))) {
 			perror(path.c_str());
 			return;
 		}

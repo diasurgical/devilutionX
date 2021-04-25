@@ -114,7 +114,7 @@ void lock_buf(BYTE idx)
 static void unlock_buf_priv()
 {
 	if (sgdwLockCount == 0)
-		app_fatal("draw main unlock error");
+		app_fatal(_("draw main unlock error"));
 
 	sgdwLockCount--;
 	sgMemCrit.Leave();
@@ -133,7 +133,7 @@ void unlock_buf(BYTE idx)
 CelOutputBuffer GlobalBackBuffer()
 {
 	if (sgdwLockCount == 0) {
-		Log("WARNING: Trying to obtain GlobalBackBuffer() without holding a lock");
+		Log(_("WARNING: Trying to obtain GlobalBackBuffer() without holding a lock"));
 		return CelOutputBuffer();
 	}
 

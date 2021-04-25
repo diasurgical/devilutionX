@@ -1842,15 +1842,15 @@ static void DRLG_LoadL2SP()
 	setloadflag = false;
 
 	if (QuestStatus(Q_BLIND)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
+		pSetPiece = LoadFileInMem(_("Levels\\L2Data\\Blind1.DUN"), nullptr);
 		pSetPiece[26] = 154;  // Close outer wall
 		pSetPiece[200] = 154; // Close outer wall
 		setloadflag = true;
 	} else if (QuestStatus(Q_BLOOD)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", nullptr);
+		pSetPiece = LoadFileInMem(_("Levels\\L2Data\\Blood1.DUN"), nullptr);
 		setloadflag = true;
 	} else if (QuestStatus(Q_SCHAMB)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", nullptr);
+		pSetPiece = LoadFileInMem(_("Levels\\L2Data\\Bonestr2.DUN"), nullptr);
 		setloadflag = true;
 	}
 }

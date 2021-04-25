@@ -125,7 +125,7 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 
 #if SDL_VERSION_ATLEAST(2, 0, 6)
-	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, _("0"));
 #endif
 
 #ifdef _WIN32

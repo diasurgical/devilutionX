@@ -119,13 +119,13 @@ int arrowdebug = 0;
 bool gbFriendlyMode = true;
 /** Default quick messages */
 const char *const spszMsgTbl[] = {
-	"I need help! Come Here!",
-	"Follow me.",
-	"Here's something for you.",
-	"Now you DIE!"
+	N_("I need help! Come Here!"),
+	N_("Follow me."),
+	N_("Here's something for you."),
+	N_("Now you DIE!")
 };
 /** INI files variable names for quick message keys */
-const char *const spszMsgHotKeyTbl[] = { "F9", "F10", "F11", "F12" };
+const char *const spszMsgHotKeyTbl[] = { N_("F9"), N_("F10"), N_("F11"), N_("F12") };
 
 /** To know if these things have been done when we get to the diablo_deinit() function */
 bool was_archives_init = false;
@@ -141,22 +141,22 @@ extern void plrctrls_after_game_logic();
 
 [[noreturn]] static void print_help_and_exit()
 {
-	printInConsole("Options:\n");
-	printInConsole("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
-	printInConsole("    %-20s %-30s\n", "--version", "Print the version and exit");
-	printInConsole("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
-	printInConsole("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
-	printInConsole("    %-20s %-30s\n", "--config-dir", "Specify the location of diablo.ini");
-	printInConsole("    %-20s %-30s\n", "--ttf-dir", "Specify the location of the .ttf font");
-	printInConsole("    %-20s %-30s\n", "--ttf-name", "Specify the name of a custom .ttf font");
-	printInConsole("    %-20s %-30s\n", "-n", "Skip startup videos");
-	printInConsole("    %-20s %-30s\n", "-f", "Display frames per second");
-	printInConsole("    %-20s %-30s\n", "-x", "Run in windowed mode");
-	printInConsole("    %-20s %-30s\n", "--verbose", "Enable verbose logging");
-	printInConsole("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
-	printInConsole("\nHellfire options:\n");
-	printInConsole("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
-	printInConsole("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
+	printInConsole(_("Options:\n"));
+	printInConsole(_("    %-20s %-30s\n"), _("-h, --help"), _("Print this message and exit"));
+	printInConsole(_("    %-20s %-30s\n"), _("--version"), _("Print the version and exit"));
+	printInConsole(_("    %-20s %-30s\n"), _("--data-dir"), _("Specify the folder of diabdat.mpq"));
+	printInConsole(_("    %-20s %-30s\n"), _("--save-dir"), _("Specify the folder of save files"));
+	printInConsole(_("    %-20s %-30s\n"), _("--config-dir"), _("Specify the location of diablo.ini"));
+	printInConsole(_("    %-20s %-30s\n"), _("--ttf-dir"), _("Specify the location of the .ttf font"));
+	printInConsole(_("    %-20s %-30s\n"), _("--ttf-name"), _("Specify the name of a custom .ttf font"));
+	printInConsole(_("    %-20s %-30s\n"), _("-n"), _("Skip startup videos"));
+	printInConsole(_("    %-20s %-30s\n"), _("-f"), _("Display frames per second"));
+	printInConsole(_("    %-20s %-30s\n"), _("-x"), _("Run in windowed mode"));
+	printInConsole(_("    %-20s %-30s\n"), _("--verbose"), _("Enable verbose logging"));
+	printInConsole(_("    %-20s %-30s\n"), _("--spawn"), _("Force spawn mode even if diabdat.mpq is found"));
+	printInConsole(_("\nHellfire options:\n"));
+	printInConsole(_("    %-20s %-30s\n"), _("--diablo"), _("Force diablo mode even if hellfire.mpq is found"));
+	printInConsole(_("    %-20s %-30s\n"), _("--nestart"), _("Use alternate nest palette"));
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-d", "Increaased item drops");
@@ -172,45 +172,45 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
-	printInConsole("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
+	printInConsole(_("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
 }
 
 static void diablo_parse_flags(int argc, char **argv)
 {
 	for (int i = 1; i < argc; i++) {
-		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
+		if (strcasecmp(_("-h"), argv[i]) == 0 || strcasecmp(_("--help"), argv[i]) == 0) {
 			print_help_and_exit();
-		} else if (strcasecmp("--version", argv[i]) == 0) {
-			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
+		} else if (strcasecmp(_("--version"), argv[i]) == 0) {
+			printInConsole(_("%s v%s\n"), PROJECT_NAME, PROJECT_VERSION);
 			diablo_quit(0);
-		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
+		} else if (strcasecmp(_("--data-dir"), argv[i]) == 0) {
 			SetBasePath(argv[++i]);
-		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
+		} else if (strcasecmp(_("--save-dir"), argv[i]) == 0) {
 			SetPrefPath(argv[++i]);
-		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
+		} else if (strcasecmp(_("--config-dir"), argv[i]) == 0) {
 			SetConfigPath(argv[++i]);
-		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
+		} else if (strcasecmp(_("--lang-dir"), argv[i]) == 0) {
 			SetLangPath(argv[++i]);
-		} else if (strcasecmp("--ttf-dir", argv[i]) == 0) {
+		} else if (strcasecmp(_("--ttf-dir"), argv[i]) == 0) {
 			SetTtfPath(argv[++i]);
-		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
+		} else if (strcasecmp(_("--ttf-name"), argv[i]) == 0) {
 			SetTtfName(argv[++i]);
-		} else if (strcasecmp("-n", argv[i]) == 0) {
+		} else if (strcasecmp(_("-n"), argv[i]) == 0) {
 			gbShowIntro = false;
-		} else if (strcasecmp("-f", argv[i]) == 0) {
+		} else if (strcasecmp(_("-f"), argv[i]) == 0) {
 			EnableFrameCount();
-		} else if (strcasecmp("-x", argv[i]) == 0) {
+		} else if (strcasecmp(_("-x"), argv[i]) == 0) {
 			gbForceWindowed = true;
-		} else if (strcasecmp("--spawn", argv[i]) == 0) {
+		} else if (strcasecmp(_("--spawn"), argv[i]) == 0) {
 			forceSpawn = true;
-		} else if (strcasecmp("--diablo", argv[i]) == 0) {
+		} else if (strcasecmp(_("--diablo"), argv[i]) == 0) {
 			forceDiablo = true;
-		} else if (strcasecmp("--nestart", argv[i]) == 0) {
+		} else if (strcasecmp(_("--nestart"), argv[i]) == 0) {
 			gbNestArt = true;
-		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
+		} else if (strcasecmp(_("--vanilla"), argv[i]) == 0) {
 			gbVanilla = true;
-		} else if (strcasecmp("--verbose", argv[i]) == 0) {
+		} else if (strcasecmp(_("--verbose"), argv[i]) == 0) {
 			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
@@ -248,7 +248,7 @@ static void diablo_parse_flags(int argc, char **argv)
 			debug_mode_key_w = true;
 #endif
 		} else {
-			printInConsole("unrecognized option '%s'\n", argv[i]);
+			printInConsole(_("unrecognized option '%s'\n"), argv[i]);
 			print_help_and_exit();
 		}
 	}
@@ -456,69 +456,69 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
  */
 static void SaveOptions()
 {
-	setIniInt("Diablo", "Intro", sgOptions.Diablo.bIntro);
-	setIniInt("Hellfire", "Intro", sgOptions.Hellfire.bIntro);
-	setIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
+	setIniInt(_("Diablo"), _("Intro"), sgOptions.Diablo.bIntro);
+	setIniInt(_("Hellfire"), _("Intro"), sgOptions.Hellfire.bIntro);
+	setIniValue(_("Hellfire"), _("SItem"), sgOptions.Hellfire.szItem);
 
-	setIniInt("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
-	setIniInt("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
-	setIniInt("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
-	setIniInt("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
+	setIniInt(_("Audio"), _("Sound Volume"), sgOptions.Audio.nSoundVolume);
+	setIniInt(_("Audio"), _("Music Volume"), sgOptions.Audio.nMusicVolume);
+	setIniInt(_("Audio"), _("Walking Sound"), sgOptions.Audio.bWalkingSound);
+	setIniInt(_("Audio"), _("Auto Equip Sound"), sgOptions.Audio.bAutoEquipSound);
 
 #ifndef __vita__
-	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
-	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
+	setIniInt(_("Graphics"), _("Width"), sgOptions.Graphics.nWidth);
+	setIniInt(_("Graphics"), _("Height"), sgOptions.Graphics.nHeight);
 #endif
-	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
+	setIniInt(_("Graphics"), _("Fullscreen"), sgOptions.Graphics.bFullscreen);
 #ifndef __vita__
-	setIniInt("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
+	setIniInt(_("Graphics"), _("Upscale"), sgOptions.Graphics.bUpscale);
 #endif
-	setIniInt("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
-	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
-	setIniInt("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
-	setIniInt("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
-	setIniInt("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
-	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
-	setIniInt("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
-	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
+	setIniInt(_("Graphics"), _("Fit to Screen"), sgOptions.Graphics.bFitToScreen);
+	setIniValue(_("Graphics"), _("Scaling Quality"), sgOptions.Graphics.szScaleQuality);
+	setIniInt(_("Graphics"), _("Integer Scaling"), sgOptions.Graphics.bIntegerScaling);
+	setIniInt(_("Graphics"), _("Vertical Sync"), sgOptions.Graphics.bVSync);
+	setIniInt(_("Graphics"), _("Blended Transparency"), sgOptions.Graphics.bBlendedTransparancy);
+	setIniInt(_("Graphics"), _("Gamma Correction"), sgOptions.Graphics.nGammaCorrection);
+	setIniInt(_("Graphics"), _("Color Cycling"), sgOptions.Graphics.bColorCycling);
+	setIniInt(_("Graphics"), _("FPS Limiter"), sgOptions.Graphics.bFPSLimit);
 
-	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	setIniInt("Game", "Run in Town", sgOptions.Gameplay.bRunInTown);
-	setIniInt("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
-	setIniInt("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
-	setIniInt("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
-	setIniInt("Game", "Friendly Fire", sgOptions.Gameplay.bFriendlyFire);
-	setIniInt("Game", "Test Bard", sgOptions.Gameplay.bTestBard);
-	setIniInt("Game", "Test Barbarian", sgOptions.Gameplay.bTestBarbarian);
-	setIniInt("Game", "Experience Bar", sgOptions.Gameplay.bExperienceBar);
-	setIniInt("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
-	setIniInt("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
-	setIniInt("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
-	setIniInt("Game", "Auto Equip Weapons", sgOptions.Gameplay.bAutoEquipWeapons);
-	setIniInt("Game", "Auto Equip Armor", sgOptions.Gameplay.bAutoEquipArmor);
-	setIniInt("Game", "Auto Equip Helms", sgOptions.Gameplay.bAutoEquipHelms);
-	setIniInt("Game", "Auto Equip Shields", sgOptions.Gameplay.bAutoEquipShields);
-	setIniInt("Game", "Auto Equip Jewelry", sgOptions.Gameplay.bAutoEquipJewelry);
-	setIniInt("Game", "Randomize Quests", sgOptions.Gameplay.bRandomizeQuests);
-	setIniInt("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
-	setIniInt("Game", "Disable Crippling Shrines", sgOptions.Gameplay.bDisableCripplingShrines);
+	setIniInt(_("Game"), _("Speed"), sgOptions.Gameplay.nTickRate);
+	setIniInt(_("Game"), _("Run in Town"), sgOptions.Gameplay.bRunInTown);
+	setIniInt(_("Game"), _("Grab Input"), sgOptions.Gameplay.bGrabInput);
+	setIniInt(_("Game"), _("Theo Quest"), sgOptions.Gameplay.bTheoQuest);
+	setIniInt(_("Game"), _("Cow Quest"), sgOptions.Gameplay.bCowQuest);
+	setIniInt(_("Game"), _("Friendly Fire"), sgOptions.Gameplay.bFriendlyFire);
+	setIniInt(_("Game"), _("Test Bard"), sgOptions.Gameplay.bTestBard);
+	setIniInt(_("Game"), _("Test Barbarian"), sgOptions.Gameplay.bTestBarbarian);
+	setIniInt(_("Game"), _("Experience Bar"), sgOptions.Gameplay.bExperienceBar);
+	setIniInt(_("Game"), _("Enemy Health Bar"), sgOptions.Gameplay.bEnemyHealthBar);
+	setIniInt(_("Game"), _("Auto Gold Pickup"), sgOptions.Gameplay.bAutoGoldPickup);
+	setIniInt(_("Game"), _("Adria Refills Mana"), sgOptions.Gameplay.bAdriaRefillsMana);
+	setIniInt(_("Game"), _("Auto Equip Weapons"), sgOptions.Gameplay.bAutoEquipWeapons);
+	setIniInt(_("Game"), _("Auto Equip Armor"), sgOptions.Gameplay.bAutoEquipArmor);
+	setIniInt(_("Game"), _("Auto Equip Helms"), sgOptions.Gameplay.bAutoEquipHelms);
+	setIniInt(_("Game"), _("Auto Equip Shields"), sgOptions.Gameplay.bAutoEquipShields);
+	setIniInt(_("Game"), _("Auto Equip Jewelry"), sgOptions.Gameplay.bAutoEquipJewelry);
+	setIniInt(_("Game"), _("Randomize Quests"), sgOptions.Gameplay.bRandomizeQuests);
+	setIniInt(_("Game"), _("Show Monster Type"), sgOptions.Gameplay.bShowMonsterType);
+	setIniInt(_("Game"), _("Disable Crippling Shrines"), sgOptions.Gameplay.bDisableCripplingShrines);
 
-	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
-	setIniInt("Network", "Port", sgOptions.Network.nPort);
-	setIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
+	setIniValue(_("Network"), _("Bind Address"), sgOptions.Network.szBindAddress);
+	setIniInt(_("Network"), _("Port"), sgOptions.Network.nPort);
+	setIniValue(_("Network"), _("Previous Host"), sgOptions.Network.szPreviousHost);
 
 	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		setIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i]);
+		setIniValue(_("NetMsg"), spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i]);
 
-	setIniValue("Controller", "Mapping", sgOptions.Controller.szMapping);
-	setIniInt("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
-	setIniInt("Controller", "Dpad Hotkeys", sgOptions.Controller.bDpadHotkeys);
-	setIniFloat("Controller", "deadzone", sgOptions.Controller.fDeadzone);
+	setIniValue(_("Controller"), _("Mapping"), sgOptions.Controller.szMapping);
+	setIniInt(_("Controller"), _("Swap Shoulder Button Mode"), sgOptions.Controller.bSwapShoulderButtonMode);
+	setIniInt(_("Controller"), _("Dpad Hotkeys"), sgOptions.Controller.bDpadHotkeys);
+	setIniFloat(_("Controller"), _("deadzone"), sgOptions.Controller.fDeadzone);
 #ifdef __vita__
 	setIniInt("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
 #endif
 
-	setIniValue("Language", "Code", sgOptions.Language.szCode);
+	setIniValue(_("Language"), _("Code"), sgOptions.Language.szCode);
 	
 	SaveIni();
 }
@@ -528,74 +528,74 @@ static void SaveOptions()
  */
 static void LoadOptions()
 {
-	sgOptions.Diablo.bIntro = getIniBool("Diablo", "Intro", true);
-	sgOptions.Hellfire.bIntro = getIniBool("Hellfire", "Intro", true);
-	getIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
+	sgOptions.Diablo.bIntro = getIniBool(_("Diablo"), _("Intro"), true);
+	sgOptions.Hellfire.bIntro = getIniBool(_("Hellfire"), _("Intro"), true);
+	getIniValue(_("Hellfire"), _("SItem"), sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), _(""));
 
-	sgOptions.Audio.nSoundVolume = getIniInt("Audio", "Sound Volume", VOLUME_MAX);
-	sgOptions.Audio.nMusicVolume = getIniInt("Audio", "Music Volume", VOLUME_MAX);
-	sgOptions.Audio.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
-	sgOptions.Audio.bAutoEquipSound = getIniBool("Audio", "Auto Equip Sound", false);
+	sgOptions.Audio.nSoundVolume = getIniInt(_("Audio"), _("Sound Volume"), VOLUME_MAX);
+	sgOptions.Audio.nMusicVolume = getIniInt(_("Audio"), _("Music Volume"), VOLUME_MAX);
+	sgOptions.Audio.bWalkingSound = getIniBool(_("Audio"), _("Walking Sound"), true);
+	sgOptions.Audio.bAutoEquipSound = getIniBool(_("Audio"), _("Auto Equip Sound"), false);
 
 #ifndef __vita__
-	sgOptions.Graphics.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
-	sgOptions.Graphics.nHeight = getIniInt("Graphics", "Height", DEFAULT_HEIGHT);
+	sgOptions.Graphics.nWidth = getIniInt(_("Graphics"), _("Width"), DEFAULT_WIDTH);
+	sgOptions.Graphics.nHeight = getIniInt(_("Graphics"), _("Height"), DEFAULT_HEIGHT);
 #else
 	sgOptions.Graphics.nWidth = DEFAULT_WIDTH;
 	sgOptions.Graphics.nHeight = DEFAULT_HEIGHT;
 #endif
-	sgOptions.Graphics.bFullscreen = getIniBool("Graphics", "Fullscreen", true);
+	sgOptions.Graphics.bFullscreen = getIniBool(_("Graphics"), _("Fullscreen"), true);
 #if !defined(USE_SDL1) && !defined(__vita__)
-	sgOptions.Graphics.bUpscale = getIniBool("Graphics", "Upscale", true);
+	sgOptions.Graphics.bUpscale = getIniBool(_("Graphics"), _("Upscale"), true);
 #else
 	sgOptions.Graphics.bUpscale = false;
 #endif
-	sgOptions.Graphics.bFitToScreen = getIniBool("Graphics", "Fit to Screen", true);
-	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
-	sgOptions.Graphics.bIntegerScaling = getIniBool("Graphics", "Integer Scaling", false);
-	sgOptions.Graphics.bVSync = getIniBool("Graphics", "Vertical Sync", true);
-	sgOptions.Graphics.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", true);
-	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
-	sgOptions.Graphics.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
-	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
+	sgOptions.Graphics.bFitToScreen = getIniBool(_("Graphics"), _("Fit to Screen"), true);
+	getIniValue(_("Graphics"), _("Scaling Quality"), sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), _("2"));
+	sgOptions.Graphics.bIntegerScaling = getIniBool(_("Graphics"), _("Integer Scaling"), false);
+	sgOptions.Graphics.bVSync = getIniBool(_("Graphics"), _("Vertical Sync"), true);
+	sgOptions.Graphics.bBlendedTransparancy = getIniBool(_("Graphics"), _("Blended Transparency"), true);
+	sgOptions.Graphics.nGammaCorrection = getIniInt(_("Graphics"), _("Gamma Correction"), 100);
+	sgOptions.Graphics.bColorCycling = getIniBool(_("Graphics"), _("Color Cycling"), true);
+	sgOptions.Graphics.bFPSLimit = getIniBool(_("Graphics"), _("FPS Limiter"), true);
 
-	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bRunInTown = getIniBool("Game", "Run in Town", false);
-	sgOptions.Gameplay.bGrabInput = getIniBool("Game", "Grab Input", false);
-	sgOptions.Gameplay.bTheoQuest = getIniBool("Game", "Theo Quest", false);
-	sgOptions.Gameplay.bCowQuest = getIniBool("Game", "Cow Quest", false);
-	sgOptions.Gameplay.bFriendlyFire = getIniBool("Game", "Friendly Fire", true);
-	sgOptions.Gameplay.bTestBard = getIniBool("Game", "Test Bard", false);
-	sgOptions.Gameplay.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
-	sgOptions.Gameplay.bExperienceBar = getIniBool("Game", "Experience Bar", false);
-	sgOptions.Gameplay.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
-	sgOptions.Gameplay.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
-	sgOptions.Gameplay.bAdriaRefillsMana = getIniBool("Game", "Adria Refills Mana", false);
-	sgOptions.Gameplay.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons", true);
-	sgOptions.Gameplay.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor", false);
-	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms", false);
-	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields", false);
-	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry", false);
-	sgOptions.Gameplay.bRandomizeQuests = getIniBool("Game", "Randomize Quests", true);
-	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
-	sgOptions.Gameplay.bDisableCripplingShrines = getIniBool("Game", "Disable Crippling Shrines", false);
+	sgOptions.Gameplay.nTickRate = getIniInt(_("Game"), _("Speed"), 20);
+	sgOptions.Gameplay.bRunInTown = getIniBool(_("Game"), _("Run in Town"), false);
+	sgOptions.Gameplay.bGrabInput = getIniBool(_("Game"), _("Grab Input"), false);
+	sgOptions.Gameplay.bTheoQuest = getIniBool(_("Game"), _("Theo Quest"), false);
+	sgOptions.Gameplay.bCowQuest = getIniBool(_("Game"), _("Cow Quest"), false);
+	sgOptions.Gameplay.bFriendlyFire = getIniBool(_("Game"), _("Friendly Fire"), true);
+	sgOptions.Gameplay.bTestBard = getIniBool(_("Game"), _("Test Bard"), false);
+	sgOptions.Gameplay.bTestBarbarian = getIniBool(_("Game"), _("Test Barbarian"), false);
+	sgOptions.Gameplay.bExperienceBar = getIniBool(_("Game"), _("Experience Bar"), false);
+	sgOptions.Gameplay.bEnemyHealthBar = getIniBool(_("Game"), _("Enemy Health Bar"), false);
+	sgOptions.Gameplay.bAutoGoldPickup = getIniBool(_("Game"), _("Auto Gold Pickup"), false);
+	sgOptions.Gameplay.bAdriaRefillsMana = getIniBool(_("Game"), _("Adria Refills Mana"), false);
+	sgOptions.Gameplay.bAutoEquipWeapons = getIniBool(_("Game"), _("Auto Equip Weapons"), true);
+	sgOptions.Gameplay.bAutoEquipArmor = getIniBool(_("Game"), _("Auto Equip Armor"), false);
+	sgOptions.Gameplay.bAutoEquipHelms = getIniBool(_("Game"), _("Auto Equip Helms"), false);
+	sgOptions.Gameplay.bAutoEquipShields = getIniBool(_("Game"), _("Auto Equip Shields"), false);
+	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool(_("Game"), _("Auto Equip Jewelry"), false);
+	sgOptions.Gameplay.bRandomizeQuests = getIniBool(_("Game"), _("Randomize Quests"), true);
+	sgOptions.Gameplay.bShowMonsterType = getIniBool(_("Game"), _("Show Monster Type"), false);
+	sgOptions.Gameplay.bDisableCripplingShrines = getIniBool(_("Game"), _("Disable Crippling Shrines"), false);
 
-	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
-	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
-	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
+	getIniValue(_("Network"), _("Bind Address"), sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), _("0.0.0.0"));
+	sgOptions.Network.nPort = getIniInt(_("Network"), _("Port"), 6112);
+	getIniValue(_("Network"), _("Previous Host"), sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), _(""));
 
 	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, spszMsgTbl[i]);
+		getIniValue(_("NetMsg"), spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, spszMsgTbl[i]);
 
-	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
-	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
-	sgOptions.Controller.bDpadHotkeys = getIniBool("Controller", "Dpad Hotkeys", false);
-	sgOptions.Controller.fDeadzone = getIniFloat("Controller", "deadzone", 0.07);
+	getIniValue(_("Controller"), _("Mapping"), sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), _(""));
+	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool(_("Controller"), _("Swap Shoulder Button Mode"), false);
+	sgOptions.Controller.bDpadHotkeys = getIniBool(_("Controller"), _("Dpad Hotkeys"), false);
+	sgOptions.Controller.fDeadzone = getIniFloat(_("Controller"), _("deadzone"), 0.07);
 #ifdef __vita__
 	sgOptions.Controller.bRearTouch = getIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
-	getIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), "en");
+	getIniValue(_("Language"), _("Code"), sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), _("en"));
 	
 	sbWasOptionsLoaded = true;
 }
@@ -651,14 +651,14 @@ static void diablo_splash()
 	if (!gbShowIntro)
 		return;
 
-	play_movie("gendata\\logo.smk", true);
+	play_movie(_("gendata\\logo.smk"), true);
 
 	if (gbIsHellfire && sgOptions.Hellfire.bIntro) {
-		play_movie("gendata\\Hellfire.smk", true);
+		play_movie(_("gendata\\Hellfire.smk"), true);
 		sgOptions.Hellfire.bIntro = false;
 	}
 	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bIntro) {
-		play_movie("gendata\\diablo1.smk", true);
+		play_movie(_("gendata\\diablo1.smk"), true);
 		sgOptions.Diablo.bIntro = false;
 	}
 
@@ -1115,8 +1115,8 @@ static void PressKey(int vkey)
 			helpflag = false;
 		} else if (stextflag != STORE_NONE) {
 			ClearPanel();
-			AddPanelString("No help available", true); /// BUGFIX: message isn't displayed
-			AddPanelString("while in stores", true);
+			AddPanelString(_("No help available"), true); /// BUGFIX: message isn't displayed
+			AddPanelString(_("while in stores"), true);
 			track_repeat_walk(false);
 		} else {
 			invflag = false;
@@ -1392,11 +1392,11 @@ static void PressChar(WPARAM vkey)
 	case 'v': {
 		char pszStr[120];
 		const char *difficulties[3] = {
-			"Normal",
-			"Nightmare",
-			"Hell",
+			_("Normal"),
+			_("Nightmare"),
+			_("Hell"),
 		};
-		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[sgGameInitInfo.nDifficulty]);
+		sprintf(pszStr, _("%s, mode = %s"), gszProductName, difficulties[sgGameInitInfo.nDifficulty]);
 		NetSendCmdString(1 << myplr, pszStr);
 		return;
 	}
@@ -1685,55 +1685,55 @@ void LoadLvlGFX()
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire) {
-			pDungeonCels = LoadFileInMem("NLevels\\TownData\\Town.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("NLevels\\TownData\\Town.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("NLevels\\TownData\\Town.MIN", nullptr);
+			pDungeonCels = LoadFileInMem(_("NLevels\\TownData\\Town.CEL"), nullptr);
+			pMegaTiles = LoadFileInMem(_("NLevels\\TownData\\Town.TIL"), nullptr);
+			pLevelPieces = LoadFileInMem(_("NLevels\\TownData\\Town.MIN"), nullptr);
 		} else {
-			pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", nullptr);
+			pDungeonCels = LoadFileInMem(_("Levels\\TownData\\Town.CEL"), nullptr);
+			pMegaTiles = LoadFileInMem(_("Levels\\TownData\\Town.TIL"), nullptr);
+			pLevelPieces = LoadFileInMem(_("Levels\\TownData\\Town.MIN"), nullptr);
 		}
-		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", nullptr);
+		pSpecialCels = LoadFileInMem(_("Levels\\TownData\\TownS.CEL"), nullptr);
 		break;
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 21) {
-			pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", nullptr);
-			pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", nullptr);
+			pDungeonCels = LoadFileInMem(_("Levels\\L1Data\\L1.CEL"), nullptr);
+			pMegaTiles = LoadFileInMem(_("Levels\\L1Data\\L1.TIL"), nullptr);
+			pLevelPieces = LoadFileInMem(_("Levels\\L1Data\\L1.MIN"), nullptr);
+			pSpecialCels = LoadFileInMem(_("Levels\\L1Data\\L1S.CEL"), nullptr);
 		} else {
-			pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("NLevels\\L5Data\\L5.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("NLevels\\L5Data\\L5.MIN", nullptr);
-			pSpecialCels = LoadFileInMem("NLevels\\L5Data\\L5S.CEL", nullptr);
+			pDungeonCels = LoadFileInMem(_("NLevels\\L5Data\\L5.CEL"), nullptr);
+			pMegaTiles = LoadFileInMem(_("NLevels\\L5Data\\L5.TIL"), nullptr);
+			pLevelPieces = LoadFileInMem(_("NLevels\\L5Data\\L5.MIN"), nullptr);
+			pSpecialCels = LoadFileInMem(_("NLevels\\L5Data\\L5S.CEL"), nullptr);
 		}
 		break;
 	case DTYPE_CATACOMBS:
-		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL", nullptr);
-		pMegaTiles = LoadFileInMem("Levels\\L2Data\\L2.TIL", nullptr);
-		pLevelPieces = LoadFileInMem("Levels\\L2Data\\L2.MIN", nullptr);
-		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", nullptr);
+		pDungeonCels = LoadFileInMem(_("Levels\\L2Data\\L2.CEL"), nullptr);
+		pMegaTiles = LoadFileInMem(_("Levels\\L2Data\\L2.TIL"), nullptr);
+		pLevelPieces = LoadFileInMem(_("Levels\\L2Data\\L2.MIN"), nullptr);
+		pSpecialCels = LoadFileInMem(_("Levels\\L2Data\\L2S.CEL"), nullptr);
 		break;
 	case DTYPE_CAVES:
 		if (currlevel < 17) {
-			pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", nullptr);
+			pDungeonCels = LoadFileInMem(_("Levels\\L3Data\\L3.CEL"), nullptr);
+			pMegaTiles = LoadFileInMem(_("Levels\\L3Data\\L3.TIL"), nullptr);
+			pLevelPieces = LoadFileInMem(_("Levels\\L3Data\\L3.MIN"), nullptr);
 		} else {
-			pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("NLevels\\L6Data\\L6.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("NLevels\\L6Data\\L6.MIN", nullptr);
+			pDungeonCels = LoadFileInMem(_("NLevels\\L6Data\\L6.CEL"), nullptr);
+			pMegaTiles = LoadFileInMem(_("NLevels\\L6Data\\L6.TIL"), nullptr);
+			pLevelPieces = LoadFileInMem(_("NLevels\\L6Data\\L6.MIN"), nullptr);
 		}
-		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", nullptr);
+		pSpecialCels = LoadFileInMem(_("Levels\\L1Data\\L1S.CEL"), nullptr);
 		break;
 	case DTYPE_HELL:
-		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL", nullptr);
-		pMegaTiles = LoadFileInMem("Levels\\L4Data\\L4.TIL", nullptr);
-		pLevelPieces = LoadFileInMem("Levels\\L4Data\\L4.MIN", nullptr);
-		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", nullptr);
+		pDungeonCels = LoadFileInMem(_("Levels\\L4Data\\L4.CEL"), nullptr);
+		pMegaTiles = LoadFileInMem(_("Levels\\L4Data\\L4.TIL"), nullptr);
+		pLevelPieces = LoadFileInMem(_("Levels\\L4Data\\L4.MIN"), nullptr);
+		pSpecialCels = LoadFileInMem(_("Levels\\L2Data\\L2S.CEL"), nullptr);
 		break;
 	default:
-		app_fatal("LoadLvlGFX");
+		app_fatal(_("LoadLvlGFX"));
 	}
 }
 
@@ -1791,7 +1791,7 @@ void CreateLevel(lvl_entry lvldir)
 		LoadRndLvlPal(4);
 		break;
 	default:
-		app_fatal("CreateLevel");
+		app_fatal(_("CreateLevel"));
 	}
 }
 
@@ -2094,8 +2094,8 @@ static void timeout_cursor(bool bTimeout)
 			sgnTimeoutCurs = pcurs;
 			multi_net_ping();
 			ClearPanel();
-			AddPanelString("-- Network timeout --", true);
-			AddPanelString("-- Waiting for players --", true);
+			AddPanelString(_("-- Network timeout --"), true);
+			AddPanelString(_("-- Waiting for players --"), true);
 			NewCursor(CURSOR_HOURGLASS);
 			force_redraw = 255;
 		}

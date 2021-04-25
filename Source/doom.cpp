@@ -64,7 +64,7 @@ static bool doom_load_graphics()
 	bool ret;
 
 	ret = false;
-	strcpy(tempstr, "Items\\Map\\MapZtown.CEL");
+	strcpy(tempstr, _("Items\\Map\\MapZtown.CEL"));
 	if (LoadFileWithMem(tempstr, pDoomCel) != 0)
 		ret = true;
 	return ret;

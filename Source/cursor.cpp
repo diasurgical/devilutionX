@@ -120,9 +120,9 @@ const int InvItemHeight[] = {
 void InitCursor()
 {
 	assert(!pCursCels);
-	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", nullptr);
+	pCursCels = LoadFileInMem(_("Data\\Inv\\Objcurs.CEL"), nullptr);
 	if (gbIsHellfire)
-		pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", nullptr);
+		pCursCels2 = LoadFileInMem(_("Data\\Inv\\Objcurs2.CEL"), nullptr);
 	ClearCursor();
 }
 

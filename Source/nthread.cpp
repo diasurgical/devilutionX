@@ -45,7 +45,7 @@ void nthread_terminate_game(const char *pszFcn)
 	} else if (sErr == STORM_ERROR_NOT_IN_GAME) {
 		gbGameDestroyed = true;
 	} else {
-		app_fatal("%s:\n%s", pszFcn, SDL_GetError());
+		app_fatal(_("%s:\n%s"), pszFcn, SDL_GetError());
 	}
 }
 
@@ -57,7 +57,7 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 
 	new_cur_turn = cur_turn;
 	if (!SNetGetTurnsInTransit(&curTurnsInTransit)) {
-		nthread_terminate_game("SNetGetTurnsInTransit");
+		nthread_terminate_game(_("SNetGetTurnsInTransit"));
 		return 0;
 	}
 	while (curTurnsInTransit++ < gdwTurnsInTransit) {
@@ -67,7 +67,7 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 		turn = turn_tmp;
 
 		if (!SNetSendTurn((char *)&turn, sizeof(turn))) {
-			nthread_terminate_game("SNetSendTurn");
+			nthread_terminate_game(_("SNetSendTurn"));
 			return 0;
 		}
 
@@ -99,7 +99,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 #else
 	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
-			nthread_terminate_game("SNetReceiveTurns");
+			nthread_terminate_game(_("SNetReceiveTurns"));
 		sgbTicsOutOfSync = false;
 		sgbSyncCountdown = 1;
 		sgbPacketCountdown = 1;
@@ -166,7 +166,7 @@ void nthread_start(bool set_turn_upper_bit)
 	caps.size = 36;
 	if (!SNetGetProviderCaps(&caps)) {
 		err = SDL_GetError();
-		app_fatal("SNetGetProviderCaps:\n%s", err);
+		app_fatal(_("SNetGetProviderCaps:\n%s"), err);
 	}
 	gdwTurnsInTransit = caps.defaultturnsintransit;
 	if (!caps.defaultturnsintransit)
@@ -199,7 +199,7 @@ void nthread_start(bool set_turn_upper_bit)
 		sghThread = CreateThread(nthread_handler, &glpNThreadId);
 		if (sghThread == nullptr) {
 			err2 = SDL_GetError();
-			app_fatal("nthread2:\n%s", err2);
+			app_fatal(_("nthread2:\n%s"), err2);
 		}
 	}
 }

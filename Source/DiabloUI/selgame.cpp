@@ -15,8 +15,8 @@
 namespace devilution {
 
 char selgame_Label[32];
-char selgame_Ip[129] = "";
-char selgame_Password[16] = "";
+char selgame_Ip[129] = N_("");
+char selgame_Password[16] = N_("");
 char selgame_Description[256];
 bool selgame_enteringGame;
 int selgame_selectedGame;
@@ -233,7 +233,7 @@ bool IsDifficultyAllowed(int value)
 	if (value == 2)
 		UiSelOkDialog(title, _("Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty."), false);
 
-	LoadBackgroundArt("ui_art\\selgame.pcx");
+	LoadBackgroundArt(_("ui_art\\selgame.pcx"));
 
 	return false;
 }
@@ -417,7 +417,7 @@ static bool IsGameCompatible(GameData *data)
 		UiSelOkDialog(title, msg, false);
 	}
 
-	LoadBackgroundArt("ui_art\\selgame.pcx");
+	LoadBackgroundArt(_("ui_art\\selgame.pcx"));
 
 	return false;
 }
@@ -437,7 +437,7 @@ void selgame_Password_Select(int value)
 		} else {
 			selgame_Free();
 			UiSelOkDialog(_("Multi Player Game"), SDL_GetError(), false);
-			LoadBackgroundArt("ui_art\\selgame.pcx");
+			LoadBackgroundArt(_("ui_art\\selgame.pcx"));
 			selgame_Password_Init(selgame_selectedGame);
 		}
 		return;
@@ -455,7 +455,7 @@ void selgame_Password_Select(int value)
 	} else {
 		selgame_Free();
 		UiSelOkDialog(_("Multi Player Game"), SDL_GetError(), false);
-		LoadBackgroundArt("ui_art\\selgame.pcx");
+		LoadBackgroundArt(_("ui_art\\selgame.pcx"));
 		selgame_Password_Init(0);
 	}
 }
@@ -472,7 +472,7 @@ bool UiSelectGame(GameData *gameData, int *playerId)
 {
 	gdwPlayerId = playerId;
 	m_game_data = gameData;
-	LoadBackgroundArt("ui_art\\selgame.pcx");
+	LoadBackgroundArt(_("ui_art\\selgame.pcx"));
 	selgame_GameSelection_Init();
 
 	selgame_endMenu = false;

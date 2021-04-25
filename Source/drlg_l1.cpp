@@ -1123,15 +1123,15 @@ static void DRLG_LoadL1SP()
 {
 	L5setloadflag = false;
 	if (QuestStatus(Q_BUTCHER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem(_("Levels\\L1Data\\rnd6.DUN"), nullptr);
 		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem(_("Levels\\L1Data\\SKngDO.DUN"), nullptr);
 		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_LTBANNER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem(_("Levels\\L1Data\\Banner2.DUN"), nullptr);
 		L5setloadflag = true;
 	}
 }

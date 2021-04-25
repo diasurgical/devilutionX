@@ -48,7 +48,7 @@ void SelyesnoEsc()
 
 bool UiSelHeroYesNoDialog(const char *title, const char *body)
 {
-	LoadBackgroundArt("ui_art\\black.pcx");
+	LoadBackgroundArt(_("ui_art\\black.pcx"));
 	UiAddBackground(&vecSelYesNoDialog);
 	UiAddLogo(&vecSelYesNoDialog);
 

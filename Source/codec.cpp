@@ -115,7 +115,7 @@ void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const c
 	CodecSignature *sig;
 
 	if (size_64 != codec_get_encoded_len(size))
-		app_fatal("Invalid encode parameters");
+		app_fatal(_("Invalid encode parameters"));
 	codec_init_key(pszPassword);
 
 	last_chunk = 0;

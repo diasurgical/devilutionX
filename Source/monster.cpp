@@ -85,7 +85,7 @@ int MWVel[24][3] = {
 	{ 10, 21, 42 }
 };
 /** Maps from monster action to monster animation letter. */
-char animletter[7] = "nwahds";
+char animletter[7] = N_("nwahds");
 /** Maps from direction to a left turn from the direction. */
 direction left[8] = { DIR_SE, DIR_S, DIR_SW, DIR_W, DIR_NW, DIR_N, DIR_NE, DIR_E };
 /** Maps from direction to a right turn from the direction. */
@@ -583,7 +583,7 @@ void ClrAllMonsters()
 	for (i = 0; i < MAXMONSTERS; i++) {
 		Monst = &monster[i];
 		ClearMVars(i);
-		Monst->mName = "Invalid Monster";
+		Monst->mName = _("Invalid Monster");
 		Monst->_mgoal = MGOAL_NONE;
 		Monst->_mmode = MM_STAND;
 		Monst->_mVar1 = 0;
@@ -854,7 +854,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		Monst->mMaxDamage2 = 4 * Monst->mMaxDamage2 + 6;
 	}
 
-	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", Uniq->mTrnName);
+	sprintf(filestr, _("Monsters\\Monsters\\%s.TRN"), Uniq->mTrnName);
 	LoadFileWithMem(filestr, &pLightTbl[256 * (uniquetrans + 19)]);
 
 	Monst->_uniqtrans = uniquetrans++;
@@ -948,27 +948,27 @@ void PlaceQuestMonsters()
 		}
 
 		if (QuestStatus(Q_LTBANNER)) {
-			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
+			setp = LoadFileInMem(_("Levels\\L1Data\\Banner1.DUN"), nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(Q_BLOOD)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
+			setp = LoadFileInMem(_("Levels\\L2Data\\Blood2.DUN"), nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(Q_BLIND)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", nullptr);
+			setp = LoadFileInMem(_("Levels\\L2Data\\Blind2.DUN"), nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(Q_ANVIL)) {
-			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", nullptr);
+			setp = LoadFileInMem(_("Levels\\L3Data\\Anvil.DUN"), nullptr);
 			SetMapMonsters(setp, 2 * setpc_x + 2, 2 * setpc_y + 2);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(Q_WARLORD)) {
-			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
+			setp = LoadFileInMem(_("Levels\\L4Data\\Warlord.DUN"), nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_SCATTER);
@@ -986,7 +986,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_LAZURUS, 0, 0);
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
-			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", nullptr);
+			setp = LoadFileInMem(_("Levels\\L4Data\\Vile1.DUN"), nullptr);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
@@ -1091,16 +1091,16 @@ void LoadDiabMonsts()
 {
 	BYTE *lpSetPiece;
 
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", nullptr);
+	lpSetPiece = LoadFileInMem(_("Levels\\L4Data\\diab1.DUN"), nullptr);
 	SetMapMonsters(lpSetPiece, 2 * diabquad1x, 2 * diabquad1y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", nullptr);
+	lpSetPiece = LoadFileInMem(_("Levels\\L4Data\\diab2a.DUN"), nullptr);
 	SetMapMonsters(lpSetPiece, 2 * diabquad2x, 2 * diabquad2y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", nullptr);
+	lpSetPiece = LoadFileInMem(_("Levels\\L4Data\\diab3a.DUN"), nullptr);
 	SetMapMonsters(lpSetPiece, 2 * diabquad3x, 2 * diabquad3y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", nullptr);
+	lpSetPiece = LoadFileInMem(_("Levels\\L4Data\\diab4a.DUN"), nullptr);
 	SetMapMonsters(lpSetPiece, 2 * diabquad4x, 2 * diabquad4y);
 	mem_free_dbg(lpSetPiece);
 }
@@ -2447,7 +2447,7 @@ bool M_DoTalk(int i)
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 		if (quests[Q_LTBANNER]._qvar1 < 2) {
-			app_fatal("SS Talk = %i, Flags = %i", monster[i].mtalkmsg, monster[i]._mFlags);
+			app_fatal(_("SS Talk = %i, Flags = %i"), monster[i].mtalkmsg, monster[i]._mFlags);
 		}
 	}
 	if (monster[i]._uniqtype - 1 == UMT_LACHDAN) {
@@ -2562,15 +2562,15 @@ void DoEnding()
 		return;
 
 	if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Barbarian) {
-		play_movie("gendata\\DiabVic2.smk", false);
+		play_movie(_("gendata\\DiabVic2.smk"), false);
 	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-		play_movie("gendata\\DiabVic1.smk", false);
+		play_movie(_("gendata\\DiabVic1.smk"), false);
 	} else if (plr[myplr]._pClass == HeroClass::Monk) {
-		play_movie("gendata\\DiabVic1.smk", false);
+		play_movie(_("gendata\\DiabVic1.smk"), false);
 	} else {
-		play_movie("gendata\\DiabVic3.smk", false);
+		play_movie(_("gendata\\DiabVic3.smk"), false);
 	}
-	play_movie("gendata\\Diabend.smk", false);
+	play_movie(_("gendata\\Diabend.smk"), false);
 
 	bMusicOn = gbMusicOn;
 	gbMusicOn = true;
@@ -2580,7 +2580,7 @@ void DoEnding()
 
 	music_start(TMUSIC_L2);
 	loop_movie = true;
-	play_movie("gendata\\loopdend.smk", true);
+	play_movie(_("gendata\\loopdend.smk"), true);
 	loop_movie = false;
 	music_stop();
 
@@ -4367,7 +4367,7 @@ void MAI_Lazurus(int i)
 	if (dFlags[mx][my] & BFLAG_VISIBLE) {
 		if (!gbIsMultiplayer) {
 			if (Monst->mtalkmsg == TEXT_VILE13 && Monst->_mgoal == MGOAL_INQUIRING && plr[myplr].position.tile.x == 35 && plr[myplr].position.tile.y == 46) {
-				PlayInGameMovie("gendata\\fprst3.smk");
+				PlayInGameMovie(_("gendata\\fprst3.smk"));
 				Monst->_mmode = MM_TALK;
 				quests[Q_BETRAYER]._qvar1 = 5;
 			}
@@ -4960,7 +4960,7 @@ const char *GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Undead");
 	}
 
-	app_fatal("Unknown mMonstClass %d", monsterData.mMonstClass);
+	app_fatal(_("Unknown mMonstClass %d"), monsterData.mMonstClass);
 }
 
 void PrintMonstHistory(int mt)

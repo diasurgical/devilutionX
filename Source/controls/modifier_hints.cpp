@@ -22,7 +22,7 @@ int CalculateTextWidth(const char *s)
 
 int SpaceWidth()
 {
-	static const int spaceWidth = CalculateTextWidth(" ");
+	static const int spaceWidth = CalculateTextWidth(_(" "));
 	return spaceWidth;
 }
 
@@ -113,8 +113,8 @@ void DrawStartModifierMenu(const CelOutputBuffer &out)
 {
 	if (!start_modifier_active)
 		return;
-	static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/"Menu", /*right=*/"Inv", /*bottom=*/"Map", /*left=*/"Char");
-	static const CircleMenuHint buttons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/"Spells", /*left=*/"Quests");
+	static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
+	static const CircleMenuHint buttons(/*is_dpad=*/false, /*top=*/_(""), /*right=*/_(""), /*bottom=*/_("Spells"), /*left=*/_("Quests"));
 	DrawCircleMenuHint(out, dPad, PANEL_LEFT + CircleMarginX, PANEL_TOP - CirclesTop);
 	DrawCircleMenuHint(out, buttons, PANEL_LEFT + PANEL_WIDTH - buttons.Width() - CircleMarginX, PANEL_TOP - CirclesTop);
 }
@@ -124,10 +124,10 @@ void DrawSelectModifierMenu(const CelOutputBuffer &out)
 	if (!select_modifier_active)
 		return;
 	if (sgOptions.Controller.bDpadHotkeys) {
-		static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
+		static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/_("F6"), /*right=*/_("F8"), /*bottom=*/_("F7"), /*left=*/_("F5"));
 		DrawCircleMenuHint(out, dPad, PANEL_LEFT + CircleMarginX, PANEL_TOP - CirclesTop);
 	}
-	static const CircleMenuHint spells(/*is_dpad=*/false, "F6", "F8", "F7", "F5");
+	static const CircleMenuHint spells(/*is_dpad=*/false, _("F6"), _("F8"), _("F7"), _("F5"));
 	DrawCircleMenuHint(out, spells, PANEL_LEFT + PANEL_WIDTH - spells.Width() - CircleMarginX, PANEL_TOP - CirclesTop);
 }
 

@@ -262,7 +262,7 @@ uint32_t sync_update(int pnum, const BYTE *pbBuf)
 	pbBuf += sizeof(*pHdr);
 
 	if (pHdr->bCmd != CMD_SYNCDATA) {
-		app_fatal("bad sync command");
+		app_fatal(_("bad sync command"));
 	}
 
 	assert(gbBufferMsgs != 2);

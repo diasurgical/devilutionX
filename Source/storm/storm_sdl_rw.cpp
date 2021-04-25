@@ -48,7 +48,7 @@ static int SFileRwSeek(struct SDL_RWops *context, int offset, int whence)
 	}
 	const std::uint64_t pos = SFileSetFilePointer(SFileRwGetHandle(context), offset, swhence);
 	if (pos == static_cast<std::uint64_t>(-1)) {
-		Log("SFileRwSeek error: {}", (unsigned int)SErrGetLastError());
+		Log(_("SFileRwSeek error: {}"), (unsigned int)SErrGetLastError());
 	}
 	return pos;
 }
@@ -63,7 +63,7 @@ static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnu
 	if (!SFileReadFile(SFileRwGetHandle(context), ptr, maxnum * size, &numRead, nullptr)) {
 		const DWORD errCode = SErrGetLastError();
 		if (errCode != STORM_ERROR_HANDLE_EOF) {
-			Log("SFileRwRead error: {} {} ERROR CODE {}", (unsigned int)size, (unsigned int)maxnum, (unsigned int)errCode);
+			Log(_("SFileRwRead error: {} {} ERROR CODE {}"), (unsigned int)size, (unsigned int)maxnum, (unsigned int)errCode);
 		}
 	}
 	return numRead / size;

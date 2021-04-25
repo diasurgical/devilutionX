@@ -347,7 +347,7 @@ inline int count_leading_zeros(DWORD mask)
 	// which means there is at least one bit set.
 	static_assert(
 	    sizeof(DWORD) == sizeof(uint32_t),
-	    "count_leading_zeros: DWORD must be 32bits");
+	    _("count_leading_zeros: DWORD must be 32bits"));
 #if defined(__GNUC__) || defined(__clang__)
 	return __builtin_clz(mask);
 #else

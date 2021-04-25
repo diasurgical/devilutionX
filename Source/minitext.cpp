@@ -229,8 +229,8 @@ void FreeQuestText()
  */
 void InitQuestText()
 {
-	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", nullptr);
-	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", nullptr);
+	pMedTextCels = LoadFileInMem(_("Data\\MedTextS.CEL"), nullptr);
+	pTextBoxCels = LoadFileInMem(_("Data\\TextBox.CEL"), nullptr);
 	qtextflag = false;
 }
 

@@ -24,17 +24,17 @@ void LoadArtFont(const char *pszFile, int size, int color)
 
 void LoadArtFonts()
 {
-	FontTables[AFT_SMALL] = LoadFileInMem("ui_art\\font16.bin", nullptr);
-	FontTables[AFT_MED] = LoadFileInMem("ui_art\\font24.bin", nullptr);
-	FontTables[AFT_BIG] = LoadFileInMem("ui_art\\font30.bin", nullptr);
-	FontTables[AFT_HUGE] = LoadFileInMem("ui_art\\font42.bin", nullptr);
-	LoadArtFont("ui_art\\font16s.pcx", AFT_SMALL, AFC_SILVER);
-	LoadArtFont("ui_art\\font16g.pcx", AFT_SMALL, AFC_GOLD);
-	LoadArtFont("ui_art\\font24s.pcx", AFT_MED, AFC_SILVER);
-	LoadArtFont("ui_art\\font24g.pcx", AFT_MED, AFC_GOLD);
-	LoadArtFont("ui_art\\font30s.pcx", AFT_BIG, AFC_SILVER);
-	LoadArtFont("ui_art\\font30g.pcx", AFT_BIG, AFC_GOLD);
-	LoadArtFont("ui_art\\font42g.pcx", AFT_HUGE, AFC_GOLD);
+	FontTables[AFT_SMALL] = LoadFileInMem(_("ui_art\\font16.bin"), nullptr);
+	FontTables[AFT_MED] = LoadFileInMem(_("ui_art\\font24.bin"), nullptr);
+	FontTables[AFT_BIG] = LoadFileInMem(_("ui_art\\font30.bin"), nullptr);
+	FontTables[AFT_HUGE] = LoadFileInMem(_("ui_art\\font42.bin"), nullptr);
+	LoadArtFont(_("ui_art\\font16s.pcx"), AFT_SMALL, AFC_SILVER);
+	LoadArtFont(_("ui_art\\font16g.pcx"), AFT_SMALL, AFC_GOLD);
+	LoadArtFont(_("ui_art\\font24s.pcx"), AFT_MED, AFC_SILVER);
+	LoadArtFont(_("ui_art\\font24g.pcx"), AFT_MED, AFC_GOLD);
+	LoadArtFont(_("ui_art\\font30s.pcx"), AFT_BIG, AFC_SILVER);
+	LoadArtFont(_("ui_art\\font30g.pcx"), AFT_BIG, AFC_GOLD);
+	LoadArtFont(_("ui_art\\font42g.pcx"), AFT_HUGE, AFC_GOLD);
 }
 
 void UnloadArtFonts()
@@ -60,7 +60,7 @@ void LoadTtfFont()
 {
 	if (TTF_WasInit() == 0) {
 		if (TTF_Init() == -1) {
-			Log("TTF_Init: {}", TTF_GetError());
+			Log(_("TTF_Init: {}"), TTF_GetError());
 			diablo_quit(1);
 		}
 		was_fonts_init = true;
@@ -69,12 +69,12 @@ void LoadTtfFont()
 	std::string ttfFontPath = GetTtfPath() + GetTtfName();
 #ifdef __linux__
 	if (!FileExists(ttfFontPath.c_str())) {
-		ttfFontPath = "/usr/share/fonts/truetype/" + GetTtfName();
+		ttfFontPath = _("/usr/share/fonts/truetype/") + GetTtfName();
 	}
 #endif
 	font = TTF_OpenFont(ttfFontPath.c_str(), 17);
 	if (font == nullptr) {
-		Log("TTF_OpenFont: {}", TTF_GetError());
+		Log(_("TTF_OpenFont: {}"), TTF_GetError());
 		return;
 	}
 

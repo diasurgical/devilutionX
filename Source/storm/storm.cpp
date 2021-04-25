@@ -37,7 +37,7 @@ std::string *SBasePath = nullptr;
 
 radon::File &getIni()
 {
-	static radon::File ini(GetConfigPath() + "diablo.ini");
+	static radon::File ini(GetConfigPath() + _("diablo.ini"));
 	return ini;
 }
 
@@ -121,7 +121,7 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 
 	if (!result || (*phFile == nullptr)) {
-		Log("{}: Not found: {}", __FUNCTION__, filename);
+		Log(_("{}: Not found: {}"), __FUNCTION__, filename);
 	}
 	return result;
 }
@@ -165,7 +165,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
-	if (!pszFileName || strcasecmp(pszFileName, ".pcx") != 0) {
+	if (!pszFileName || strcasecmp(pszFileName, _(".pcx")) != 0) {
 		return false;
 	}
 
@@ -233,7 +233,7 @@ bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	if (pPalette && pcxhdr.BitsPerPixel == 8) {
 		const auto pos = SFileSetFilePointer(hFile, -768, DVL_FILE_CURRENT);
 		if (pos == static_cast<std::uint64_t>(-1)) {
-			Log("SFileSetFilePointer error: {}", (unsigned int)SErrGetLastError());
+			Log(_("SFileSetFilePointer error: {}"), (unsigned int)SErrGetLastError());
 		}
 		SFileReadFile(hFile, paldata, 768, nullptr, nullptr);
 
@@ -333,14 +333,14 @@ int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 void setIniInt(const char *keyname, const char *valuename, int value)
 {
 	char str[10];
-	sprintf(str, "%d", value);
+	sprintf(str, _("%d"), value);
 	setIniValue(keyname, valuename, str);
 }
 
 void setIniFloat(const char *keyname, const char *valuename, float value)
 {
 	char str[10];
-	sprintf(str, "%.2f", value);
+	sprintf(str, _("%.2f"), value);
 	setIniValue(keyname, valuename, str);
 }
 

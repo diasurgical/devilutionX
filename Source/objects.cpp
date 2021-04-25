@@ -308,11 +308,11 @@ void InitObjectGFX()
 	for (int i = OFILE_L1BRAZ; i <= OFILE_LZSTAND; i++) {
 		if (fileload[i]) {
 			ObjFileList[numobjfiles] = (object_graphic_id)i;
-			sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
+			sprintf(filestr, _("Objects\\%s.CEL"), ObjMasterLoadList[i]);
 			if (currlevel >= 17 && currlevel < 21)
-				sprintf(filestr, "Objects\\%s.CEL", ObjHiveLoadList[i]);
+				sprintf(filestr, _("Objects\\%s.CEL"), ObjHiveLoadList[i]);
 			else if (currlevel >= 21)
-				sprintf(filestr, "Objects\\%s.CEL", ObjCryptLoadList[i]);
+				sprintf(filestr, _("Objects\\%s.CEL"), ObjCryptLoadList[i]);
 			pObjCels[numobjfiles] = LoadFileInMem(filestr, nullptr);
 			numobjfiles++;
 		}
@@ -830,13 +830,13 @@ void AddDiabObjs()
 {
 	BYTE *lpSetPiece;
 
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", nullptr);
+	lpSetPiece = LoadFileInMem(_("Levels\\L4Data\\diab1.DUN"), nullptr);
 	LoadMapObjects(lpSetPiece, 2 * diabquad1x, 2 * diabquad1y, diabquad2x, diabquad2y, 11, 12, 1);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", nullptr);
+	lpSetPiece = LoadFileInMem(_("Levels\\L4Data\\diab2a.DUN"), nullptr);
 	LoadMapObjects(lpSetPiece, 2 * diabquad2x, 2 * diabquad2y, diabquad3x, diabquad3y, 11, 11, 2);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", nullptr);
+	lpSetPiece = LoadFileInMem(_("Levels\\L4Data\\diab3a.DUN"), nullptr);
 	LoadMapObjects(lpSetPiece, 2 * diabquad3x, 2 * diabquad3y, diabquad4x, diabquad4y, 9, 9, 3);
 	mem_free_dbg(lpSetPiece);
 }
@@ -1117,7 +1117,7 @@ void InitObjects()
 				}
 				quests[Q_BLIND]._qmsg = sp_id;
 				AddBookLever(setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, sp_id);
-				mem = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", nullptr);
+				mem = LoadFileInMem(_("Levels\\L2Data\\Blind2.DUN"), nullptr);
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
 			}
@@ -1178,7 +1178,7 @@ void InitObjects()
 				}
 				quests[Q_WARLORD]._qmsg = sp_id;
 				AddBookLever(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, sp_id);
-				mem = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
+				mem = LoadFileInMem(_("Levels\\L4Data\\Warlord.DUN"), nullptr);
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
 			}
@@ -1242,7 +1242,7 @@ void SetMapObjects(BYTE *pMap, int startx, int starty)
 			continue;
 
 		ObjFileList[numobjfiles] = (object_graphic_id)i;
-		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
+		sprintf(filestr, _("Objects\\%s.CEL"), ObjMasterLoadList[i]);
 		pObjCels[numobjfiles] = LoadFileInMem(filestr, nullptr);
 		numobjfiles++;
 	}
@@ -3344,7 +3344,7 @@ void OperatePedistal(int pnum, int i)
 			if (!deltaload)
 				PlaySfxLoc(LS_BLODSTAR, object[i].position.x, object[i].position.y);
 			ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-			mem = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
+			mem = LoadFileInMem(_("Levels\\L2Data\\Blood2.DUN"), nullptr);
 			LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(mem);
 			SpawnUnique(UITEM_ARMOFVAL, 2 * setpc_x + 25, 2 * setpc_y + 19);
@@ -5364,7 +5364,7 @@ void SyncPedistal(int i)
 	}
 	if (object[i]._oVar6 == 3) {
 		ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-		setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
+		setp = LoadFileInMem(_("Levels\\L2Data\\Blood2.DUN"), nullptr);
 		LoadMapObjs(setp, 2 * setpc_x, 2 * setpc_y);
 		mem_free_dbg(setp);
 	}

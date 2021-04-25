@@ -56,14 +56,14 @@ void InitQol()
 {
 	if (sgOptions.Gameplay.bEnemyHealthBar) {
 		qolArt = new QolArt();
-		LoadMaskedArt("data\\healthbox.pcx", &qolArt->healthBox, 1, 1);
-		LoadArt("data\\health.pcx", &qolArt->health);
-		LoadMaskedArt("data\\resistance.pcx", &qolArt->resistance, 6, 1);
+		LoadMaskedArt(_("data\\healthbox.pcx"), &qolArt->healthBox, 1, 1);
+		LoadArt(_("data\\health.pcx"), &qolArt->health);
+		LoadMaskedArt(_("data\\resistance.pcx"), &qolArt->resistance, 6, 1);
 
 		if ((qolArt->healthBox.surface == nullptr)
 		    || (qolArt->health.surface == nullptr)
 		    || (qolArt->resistance.surface == nullptr)) {
-			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
+			app_fatal(_("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
 		}
 	}
 

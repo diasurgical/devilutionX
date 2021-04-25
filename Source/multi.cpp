@@ -146,7 +146,7 @@ static void multi_send_packet(int playerId, void *packet, BYTE dwSize)
 	pkt.hdr.wLen = dwSize + sizeof(pkt.hdr);
 	memcpy(pkt.body, packet, dwSize);
 	if (!SNetSendMessage(playerId, &pkt.hdr, pkt.hdr.wLen))
-		nthread_terminate_game("SNetSendMessage0");
+		nthread_terminate_game(_("SNetSendMessage0"));
 }
 
 void NetSendLoPri(int playerId, BYTE *pbMsg, BYTE bLen)
@@ -178,7 +178,7 @@ void NetSendHiPri(int playerId, BYTE *pbMsg, BYTE bLen)
 		len = gdwNormalMsgSize - size;
 		pkt.hdr.wLen = len;
 		if (!SNetSendMessage(-2, &pkt.hdr, len))
-			nthread_terminate_game("SNetSendMessage");
+			nthread_terminate_game(_("SNetSendMessage"));
 	}
 }
 
@@ -194,7 +194,7 @@ void multi_send_msg_packet(uint32_t pmask, BYTE *src, BYTE len)
 	for (v = 1, p = 0; p < MAX_PLRS; p++, v <<= 1) {
 		if ((v & pmask) != 0) {
 			if (!SNetSendMessage(p, &pkt.hdr, t) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
-				nthread_terminate_game("SNetSendMessage");
+				nthread_terminate_game(_("SNetSendMessage"));
 				return;
 			}
 		}
@@ -512,7 +512,7 @@ void multi_process_network_packets()
 		multi_handle_all_packets(dwID, (BYTE *)(pkt + 1), dwMsgSize - sizeof(TPktHdr));
 	}
 	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
-		nthread_terminate_game("SNetReceiveMsg");
+		nthread_terminate_game(_("SNetReceiveMsg"));
 }
 
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen)
@@ -553,7 +553,7 @@ void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen)
 		dwMsg += p->wBytes;
 		pkt.hdr.wLen = dwMsg;
 		if (!SNetSendMessage(pnum, &pkt, dwMsg)) {
-			nthread_terminate_game("SNetSendMessage2");
+			nthread_terminate_game(_("SNetSendMessage2"));
 			return;
 		}
 #if 0
@@ -644,7 +644,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
 		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
-			app_fatal("Invalid size of game data: %d", gameData->size);
+			app_fatal(_("Invalid size of game data: %d"), gameData->size);
 		sgGameInitInfo = *gameData;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
 		break;
@@ -684,7 +684,7 @@ static void multi_event_handler(bool add)
 
 	for (i = 0; i < 3; i++) {
 		if (!fn(event_types[i], multi_handle_events) && add) {
-			app_fatal("SNetRegisterEventHandler:\n%s", SDL_GetError());
+			app_fatal(_("SNetRegisterEventHandler:\n%s"), SDL_GetError());
 		}
 	}
 }
@@ -771,9 +771,9 @@ bool NetInit(bool bSinglePlayer)
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
 	if (!SNetGetGameInfo(GAMEINFO_NAME, szPlayerName, 128))
-		nthread_terminate_game("SNetGetGameInfo1");
+		nthread_terminate_game(_("SNetGetGameInfo1"));
 	if (!SNetGetGameInfo(GAMEINFO_PASSWORD, szPlayerDescript, 128))
-		nthread_terminate_game("SNetGetGameInfo2");
+		nthread_terminate_game(_("SNetGetGameInfo2"));
 
 	return true;
 }
@@ -788,8 +788,8 @@ bool multi_init_single(GameData *gameData)
 	}
 
 	unused = 0;
-	if (!SNetCreateGame("local", "local", (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), &unused)) {
-		app_fatal("SNetCreateGame1:\n%s", SDL_GetError());
+	if (!SNetCreateGame(_("local"), _("local"), (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), &unused)) {
+		app_fatal(_("SNetCreateGame1:\n%s"), SDL_GetError());
 	}
 
 	myplr = 0;

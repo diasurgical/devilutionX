@@ -28,7 +28,7 @@ static unsigned int dthread_handler(void *data)
 	while (dthread_running) {
 		if (sgpInfoHead == nullptr && WaitForEvent(sghWorkToDoEvent) == -1) {
 			error_buf = SDL_GetError();
-			app_fatal("dthread4:\n%s", error_buf);
+			app_fatal(_("dthread4:\n%s"), error_buf);
 		}
 
 		sgMemCrit.Enter();
@@ -106,7 +106,7 @@ void dthread_start()
 	sghWorkToDoEvent = StartEvent();
 	if (sghWorkToDoEvent == nullptr) {
 		error_buf = SDL_GetError();
-		app_fatal("dthread:1\n%s", error_buf);
+		app_fatal(_("dthread:1\n%s"), error_buf);
 	}
 
 	dthread_running = true;
@@ -114,7 +114,7 @@ void dthread_start()
 	sghThread = CreateThread(dthread_handler, &glpDThreadId);
 	if (sghThread == nullptr) {
 		error_buf = SDL_GetError();
-		app_fatal("dthread2:\n%s", error_buf);
+		app_fatal(_("dthread2:\n%s"), error_buf);
 	}
 }
 

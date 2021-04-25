@@ -46,25 +46,25 @@ bool gbSoundOn = true;
 _music_id sgnMusicTrack = NUM_MUSIC;
 /** Maps from track ID to track name in spawn. */
 const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
-	"Music\\sTowne.wav",
-	"Music\\sLvlA.wav",
-	"Music\\sLvlA.wav",
-	"Music\\sLvlA.wav",
-	"Music\\sLvlA.wav",
-	"Music\\DLvlE.wav",
-	"Music\\DLvlF.wav",
-	"Music\\sintro.wav",
+	N_("Music\\sTowne.wav"),
+	N_("Music\\sLvlA.wav"),
+	N_("Music\\sLvlA.wav"),
+	N_("Music\\sLvlA.wav"),
+	N_("Music\\sLvlA.wav"),
+	N_("Music\\DLvlE.wav"),
+	N_("Music\\DLvlF.wav"),
+	N_("Music\\sintro.wav"),
 };
 /** Maps from track ID to track name. */
 const char *const sgszMusicTracks[NUM_MUSIC] = {
-	"Music\\DTowne.wav",
-	"Music\\DLvlA.wav",
-	"Music\\DLvlB.wav",
-	"Music\\DLvlC.wav",
-	"Music\\DLvlD.wav",
-	"Music\\DLvlE.wav",
-	"Music\\DLvlF.wav",
-	"Music\\Dintro.wav",
+	N_("Music\\DTowne.wav"),
+	N_("Music\\DLvlA.wav"),
+	N_("Music\\DLvlB.wav"),
+	N_("Music\\DLvlC.wav"),
+	N_("Music\\DLvlD.wav"),
+	N_("Music\\DLvlE.wav"),
+	N_("Music\\DLvlF.wav"),
+	N_("Music\\Dintro.wav"),
 };
 
 static int CapVolume(int volume)
@@ -116,7 +116,7 @@ TSnd *sound_file_load(const char *path, bool stream)
 	int error = 0;
 
 	if (!SFileOpenFile(path, &file)) {
-		ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
+		ErrDlg(_("SFileOpenFile failed"), path, __FILE__, __LINE__);
 	}
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
@@ -173,7 +173,7 @@ void snd_init()
 
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
 	if (result < 0) {
-		Log("{}", Mix_GetError());
+		Log(_("{}"), Mix_GetError());
 	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
@@ -229,7 +229,7 @@ void music_start(uint8_t nTrack)
 #endif
 			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, /*freesrc=*/1);
 			if (music == nullptr) {
-				Log("Mix_LoadMUSType_RW: {}", Mix_GetError());
+				Log(_("Mix_LoadMUSType_RW: {}"), Mix_GetError());
 #ifndef DISABLE_STREAMING_MUSIC
 				SFileCloseFile(sghMusic);
 				sghMusic = nullptr;
@@ -243,7 +243,7 @@ void music_start(uint8_t nTrack)
 
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sgOptions.Audio.nMusicVolume / VOLUME_MIN);
 			if (Mix_PlayMusic(music, -1) < 0) {
-				Log("Mix_PlayMusic: {}", Mix_GetError());
+				Log(_("Mix_PlayMusic: {}"), Mix_GetError());
 				Mix_FreeMusic(music);
 				music = nullptr;
 #ifndef DISABLE_STREAMING_MUSIC

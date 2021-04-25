@@ -39,7 +39,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 
 	/* Get the dimensions of the text surface */
 	if (TTF_SizeUTF8(font, text, &width, &height) < 0 || width == 0) {
-		TTF_SetError("Text has zero width");
+		TTF_SetError(_("Text has zero width"));
 		return nullptr;
 	}
 
@@ -47,7 +47,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	str = nullptr;
 	strLines = nullptr;
 	if (wrapLength > 0 && *text != '\0') {
-		const char *wrapDelims = " \t\r\n";
+		const char *wrapDelims = _(" \t\r\n");
 		int w, h;
 		char *spot, *tok, *nextTok, *end;
 		char delim;
@@ -57,7 +57,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 
 		str = SDL_stack_alloc(char, strLen + 1);
 		if (str == nullptr) {
-			TTF_SetError("Out of memory");
+			TTF_SetError(_("Out of memory"));
 			return nullptr;
 		}
 
@@ -67,7 +67,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		do {
 			strLines = (char **)SDL_realloc(strLines, (numLines + 1) * sizeof(*strLines));
 			if (strLines == nullptr) {
-				TTF_SetError("Out of memory");
+				TTF_SetError(_("Out of memory"));
 				return nullptr;
 			}
 			strLines[numLines++] = tok;
@@ -153,7 +153,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		}
 		SDL_Surface *tmp = TTF_RenderUTF8_Solid(font, text, fg);
 		if (tmp == nullptr) {
-			Log("{}", TTF_GetError());
+			Log(_("{}"), TTF_GetError());
 			SDL_FreeSurface(textbuf);
 			SDL_free(strLines);
 			SDL_stack_free(str);

@@ -101,11 +101,11 @@ void SelheroFree()
 void SelheroSetStats()
 {
 	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(selhero_heroInfo.heroclass);
-	snprintf(textStats[0], sizeof(textStats[0]), "%d", selhero_heroInfo.level);
-	snprintf(textStats[1], sizeof(textStats[1]), "%d", selhero_heroInfo.strength);
-	snprintf(textStats[2], sizeof(textStats[2]), "%d", selhero_heroInfo.magic);
-	snprintf(textStats[3], sizeof(textStats[3]), "%d", selhero_heroInfo.dexterity);
-	snprintf(textStats[4], sizeof(textStats[4]), "%d", selhero_heroInfo.vitality);
+	snprintf(textStats[0], sizeof(textStats[0]), _("%d"), selhero_heroInfo.level);
+	snprintf(textStats[1], sizeof(textStats[1]), _("%d"), selhero_heroInfo.strength);
+	snprintf(textStats[2], sizeof(textStats[2]), _("%d"), selhero_heroInfo.magic);
+	snprintf(textStats[3], sizeof(textStats[3]), _("%d"), selhero_heroInfo.dexterity);
+	snprintf(textStats[4], sizeof(textStats[4]), _("%d"), selhero_heroInfo.vitality);
 }
 
 std::size_t listOffset = 0;
@@ -160,11 +160,11 @@ void SelheroListFocus(int value)
 	}
 
 	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(enum_size<HeroClass>::value);
-	strncpy(textStats[0], "--", sizeof(textStats[0]) - 1);
-	strncpy(textStats[1], "--", sizeof(textStats[1]) - 1);
-	strncpy(textStats[2], "--", sizeof(textStats[2]) - 1);
-	strncpy(textStats[3], "--", sizeof(textStats[3]) - 1);
-	strncpy(textStats[4], "--", sizeof(textStats[4]) - 1);
+	strncpy(textStats[0], _("--"), sizeof(textStats[0]) - 1);
+	strncpy(textStats[1], _("--"), sizeof(textStats[1]) - 1);
+	strncpy(textStats[2], _("--"), sizeof(textStats[2]) - 1);
+	strncpy(textStats[3], _("--"), sizeof(textStats[3]) - 1);
+	strncpy(textStats[4], _("--"), sizeof(textStats[4]) - 1);
 	SELLIST_DIALOG_DELETE_BUTTON->m_iFlags = baseFlags | UIS_DISABLED;
 	selhero_deleteEnabled = false;
 }
@@ -285,7 +285,7 @@ void SelheroClassSelectorSelect(int value)
 	if (gbSpawned && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && hfbard_mpq == nullptr))) {
 		ArtBackground.Unload();
 		UiSelOkDialog(nullptr, _("The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), false);
-		LoadBackgroundArt("ui_art\\selhero.pcx");
+		LoadBackgroundArt(_("ui_art\\selhero.pcx"));
 		SelheroListSelect(selhero_SaveCount);
 		return;
 	}
@@ -335,7 +335,7 @@ void SelheroNameSelect(int value)
 	if (!UiValidPlayerName(selhero_heroInfo.name)) {
 		ArtBackground.Unload();
 		UiSelOkDialog(title, _("Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n"), false);
-		LoadBackgroundArt("ui_art\\selhero.pcx");
+		LoadBackgroundArt(_("ui_art\\selhero.pcx"));
 	} else {
 		bool overwrite = true;
 		for (std::size_t i = 0; i < selhero_SaveCount; i++) {
@@ -344,7 +344,7 @@ void SelheroNameSelect(int value)
 				char dialogText[256];
 				snprintf(dialogText, sizeof(dialogText), _("Character already exists. Do you want to overwrite \"%s\"?"), selhero_heroInfo.name);
 				overwrite = UiSelHeroYesNoDialog(title, dialogText);
-				LoadBackgroundArt("ui_art\\selhero.pcx");
+				LoadBackgroundArt(_("ui_art\\selhero.pcx"));
 				break;
 			}
 		}
@@ -391,7 +391,7 @@ void SelheroLoadSelect(int value)
 		// which happens to work because the render loops are similar.
 		selhero_endMenu = false;
 		SelheroFree();
-		LoadBackgroundArt("ui_art\\selgame.pcx");
+		LoadBackgroundArt(_("ui_art\\selgame.pcx"));
 		selgame_GameSelection_Select(0);
 	}
 
@@ -403,81 +403,81 @@ const char *SelheroGenerateName(HeroClass heroClass)
 	static const char *const names[6][10] = {
 		{
 		    // Warrior
-		    "Aidan",
-		    "Qarak",
-		    "Born",
-		    "Cathan",
-		    "Halbu",
-		    "Lenalas",
-		    "Maximus",
-		    "Vane",
-		    "Myrdgar",
-		    "Rothat",
+		    _("Aidan"),
+		    _("Qarak"),
+		    _("Born"),
+		    _("Cathan"),
+		    _("Halbu"),
+		    _("Lenalas"),
+		    _("Maximus"),
+		    _("Vane"),
+		    _("Myrdgar"),
+		    _("Rothat"),
 		},
 		{
 		    // Rogue
-		    "Moreina",
-		    "Akara",
-		    "Kashya",
-		    "Flavie",
-		    "Divo",
-		    "Oriana",
-		    "Iantha",
-		    "Shikha",
-		    "Basanti",
-		    "Elexa",
+		    _("Moreina"),
+		    _("Akara"),
+		    _("Kashya"),
+		    _("Flavie"),
+		    _("Divo"),
+		    _("Oriana"),
+		    _("Iantha"),
+		    _("Shikha"),
+		    _("Basanti"),
+		    _("Elexa"),
 		},
 		{
 		    // Sorcerer
-		    "Jazreth",
-		    "Drognan",
-		    "Armin",
-		    "Fauztin",
-		    "Jere",
-		    "Kazzulk",
-		    "Ranslor",
-		    "Sarnakyle",
-		    "Valthek",
-		    "Horazon",
+		    _("Jazreth"),
+		    _("Drognan"),
+		    _("Armin"),
+		    _("Fauztin"),
+		    _("Jere"),
+		    _("Kazzulk"),
+		    _("Ranslor"),
+		    _("Sarnakyle"),
+		    _("Valthek"),
+		    _("Horazon"),
 		},
 		{
 		    // Monk
-		    "Akyev",
-		    "Dvorak",
-		    "Kekegi",
-		    "Kharazim",
-		    "Mikulov",
-		    "Shenlong",
-		    "Vedenin",
-		    "Vhalit",
-		    "Vylnas",
-		    "Zhota",
+		    _("Akyev"),
+		    _("Dvorak"),
+		    _("Kekegi"),
+		    _("Kharazim"),
+		    _("Mikulov"),
+		    _("Shenlong"),
+		    _("Vedenin"),
+		    _("Vhalit"),
+		    _("Vylnas"),
+		    _("Zhota"),
 		},
 		{
 		    // Bard (uses Rogue names)
-		    "Moreina",
-		    "Akara",
-		    "Kashya",
-		    "Flavie",
-		    "Divo",
-		    "Oriana",
-		    "Iantha",
-		    "Shikha",
-		    "Basanti",
-		    "Elexa",
+		    _("Moreina"),
+		    _("Akara"),
+		    _("Kashya"),
+		    _("Flavie"),
+		    _("Divo"),
+		    _("Oriana"),
+		    _("Iantha"),
+		    _("Shikha"),
+		    _("Basanti"),
+		    _("Elexa"),
 		},
 		{
 		    // Barbarian
-		    "Alaric",
-		    "Barloc",
-		    "Egtheow",
-		    "Guthlaf",
-		    "Heorogar",
-		    "Hrothgar",
-		    "Oslaf",
-		    "Qual-Kehk",
-		    "Ragnar",
-		    "Ulf",
+		    _("Alaric"),
+		    _("Barloc"),
+		    _("Egtheow"),
+		    _("Guthlaf"),
+		    _("Heorogar"),
+		    _("Hrothgar"),
+		    _("Oslaf"),
+		    _("Qual-Kehk"),
+		    _("Ragnar"),
+		    _("Ulf"),
 		},
 	};
 
@@ -490,7 +490,7 @@ const char *SelheroGenerateName(HeroClass heroClass)
 
 void selhero_Init()
 {
-	LoadBackgroundArt("ui_art\\selhero.pcx");
+	LoadBackgroundArt(_("ui_art\\selhero.pcx"));
 	UiAddBackground(&vecSelHeroDialog);
 	UiAddLogo(&vecSelHeroDialog);
 	LoadScrollBar();
@@ -547,7 +547,7 @@ void selhero_List_Init()
 	SelheroFreeListItems();
 	const size_t numViewportHeroes = std::min(selhero_SaveCount + 1, MaxViewportItems);
 	for (std::size_t i = 0; i < numViewportHeroes; i++) {
-		vecSelHeroDlgItems.push_back(new UiListItem("", -1));
+		vecSelHeroDlgItems.push_back(new UiListItem(_(""), -1));
 	}
 	SelheroUpdateViewportItems();
 

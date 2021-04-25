@@ -17,7 +17,7 @@ bool helpflag;
 int HelpTop;
 
 const char gszSpawnHelpText[] = {
-	"Shareware Diablo Help|"
+	N_("Shareware Diablo Help|"
 	"|"
 	"$Keyboard Shortcuts:|"
 	"Diablo can be played exclusively by using the mouse controls.  "
@@ -337,7 +337,7 @@ const char gszSpawnHelpText[] = {
 	"|"
 	"$Character Info:|"
 	"Toggle the Character Statistics Screen on and off by clicking the "
-	"<CHAR button on the Information Bar.  This screen shows the "
+	"<CHAR button on the Information Bar.  )This screen shows the "
 	"'nuts and bolts' of your character.  There are four major attributes "
 	"that dictate how your character progresses in the game.|"
 	"|"
@@ -381,7 +381,7 @@ const char gszSpawnHelpText[] = {
 };
 
 const char gszHelpText[] = {
-	"$Keyboard Shortcuts:|"
+	N_("$Keyboard Shortcuts:|"
 	"F1:    Open Help Screen|"
 	"Esc:   Display Main Menu|"
 	"Tab:   Display Auto-map|"
@@ -442,7 +442,7 @@ const char gszHelpText[] = {
 	"Shift + Left-clicking on the 'select current spell' button will clear the readied spell|"
 	"|"
 	"$Setting Spell Hotkeys|"
-	"You can assign up to four Hotkeys for skills, spells or scrolls.  "
+	"You can assign up to four Hotkeys for skil)ls, spells or scrolls.  "
 	"Start by opening the 'speedbook' as described in the section above. "
 	"Press the F5, F6, F7 or F8 keys after highlighting the spell you "
 	"wish to assign.|"

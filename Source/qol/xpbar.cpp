@@ -46,10 +46,10 @@ void DrawEndCap(const CelOutputBuffer &out, int x, int y, int idx, const ColorGr
 void InitXPBar()
 {
 	if (sgOptions.Gameplay.bExperienceBar) {
-		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
+		LoadMaskedArt(_("data\\xpbar.pcx"), &xpbarArt, 1, 1);
 
 		if (xpbarArt.surface == nullptr) {
-			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
+			app_fatal(_("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
 		}
 	}
 }

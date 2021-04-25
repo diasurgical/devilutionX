@@ -15,7 +15,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 
 	DWORD width, height, bpp;
 	if (!SBmpLoadImage(pszFile, nullptr, nullptr, 0, &width, &height, &bpp)) {
-		Log("Failed to load image meta");
+		Log(_("Failed to load image meta"));
 		return;
 	}
 
@@ -38,7 +38,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 
 	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(artSurface->pixels),
 	        artSurface->pitch * artSurface->format->BytesPerPixel * height, nullptr, nullptr, nullptr)) {
-		Log("Failed to load image");
+		Log(_("Failed to load image"));
 		return;
 	}
 

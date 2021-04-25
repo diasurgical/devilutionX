@@ -21,7 +21,7 @@ int tcp_client::create(std::string addrstr, std::string passwd)
 		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, passwd);
 		return join(local_server->localhost_self(), passwd);
 	} catch (std::system_error &e) {
-		SDL_SetError("%s", e.what());
+		SDL_SetError(_("%s"), e.what());
 		return -1;
 	}
 }
@@ -39,7 +39,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);
 	} catch (std::exception &e) {
-		SDL_SetError("%s", e.what());
+		SDL_SetError(_("%s"), e.what());
 		return -1;
 	}
 	start_recv();
@@ -54,7 +54,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 			try {
 				poll();
 			} catch (const std::runtime_error &e) {
-				SDL_SetError("%s", e.what());
+				SDL_SetError(_("%s"), e.what());
 				return -1;
 			}
 			if (plr_self != PLR_BROADCAST)
@@ -63,7 +63,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		}
 	}
 	if (plr_self == PLR_BROADCAST) {
-		SDL_SetError("Unable to connect");
+		SDL_SetError(_("Unable to connect"));
 		return -1;
 	}
 
@@ -84,7 +84,7 @@ void tcp_client::handle_recv(const asio::error_code &error, size_t bytesRead)
 		return;
 	}
 	if (bytesRead == 0) {
-		throw std::runtime_error("error: read 0 bytes from server");
+		throw std::runtime_error(_("error: read 0 bytes from server"));
 	}
 	recv_buffer.resize(bytesRead);
 	recv_queue.write(std::move(recv_buffer));

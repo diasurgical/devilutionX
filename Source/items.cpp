@@ -101,49 +101,49 @@ BYTE ItemCAnimTbl[] = {
 };
 /** Map of item type .cel file names. */
 const char *const ItemDropNames[] = {
-	"Armor2",
-	"Axe",
-	"FBttle",
-	"Bow",
-	"GoldFlip",
-	"Helmut",
-	"Mace",
-	"Shield",
-	"SwrdFlip",
-	"Rock",
-	"Cleaver",
-	"Staff",
-	"Ring",
-	"CrownF",
-	"LArmor",
-	"WShield",
-	"Scroll",
-	"FPlateAr",
-	"FBook",
-	"Food",
-	"FBttleBB",
-	"FBttleDY",
-	"FBttleOR",
-	"FBttleBR",
-	"FBttleBL",
-	"FBttleBY",
-	"FBttleWH",
-	"FBttleDB",
-	"FEar",
-	"FBrain",
-	"FMush",
-	"Innsign",
-	"Bldstn",
-	"Fanvil",
-	"FLazStaf",
-	"bombs1",
-	"halfps1",
-	"wholeps1",
-	"runes1",
-	"teddys1",
-	"cows1",
-	"donkys1",
-	"mooses1",
+	N_("Armor2"),
+	N_("Axe"),
+	N_("FBttle"),
+	N_("Bow"),
+	N_("GoldFlip"),
+	N_("Helmut"),
+	N_("Mace"),
+	N_("Shield"),
+	N_("SwrdFlip"),
+	N_("Rock"),
+	N_("Cleaver"),
+	N_("Staff"),
+	N_("Ring"),
+	N_("CrownF"),
+	N_("LArmor"),
+	N_("WShield"),
+	N_("Scroll"),
+	N_("FPlateAr"),
+	N_("FBook"),
+	N_("Food"),
+	N_("FBttleBB"),
+	N_("FBttleDY"),
+	N_("FBttleOR"),
+	N_("FBttleBR"),
+	N_("FBttleBL"),
+	N_("FBttleBY"),
+	N_("FBttleWH"),
+	N_("FBttleDB"),
+	N_("FEar"),
+	N_("FBrain"),
+	N_("FMush"),
+	N_("Innsign"),
+	N_("Bldstn"),
+	N_("Fanvil"),
+	N_("FLazStaf"),
+	N_("bombs1"),
+	N_("halfps1"),
+	N_("wholeps1"),
+	N_("runes1"),
+	N_("teddys1"),
+	N_("cows1"),
+	N_("donkys1"),
+	N_("mooses1"),
 };
 /** Maps of item drop animation length. */
 BYTE ItemAnimLs[] = {
@@ -407,7 +407,7 @@ void InitItemGFX()
 
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
-		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
+		sprintf(arglist, _("Items\\%s.CEL"), ItemDropNames[i]);
 		itemanims[i] = LoadFileInMem(arglist, nullptr);
 	}
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
@@ -1528,7 +1528,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 		}
 		if (nl != 0) {
 			preidx = l[GenerateRnd(nl)];
-			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, items[i]._iIName);
+			sprintf(istr, _("%s %s"), PL_Prefix[preidx].PLName, items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 			items[i]._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemPower(
@@ -1545,7 +1545,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 	if (!control_WriteStringToBuffer((BYTE *)items[i]._iIName)) {
 		strcpy(items[i]._iIName, AllItemsList[items[i].IDidx].iSName);
 		if (preidx != -1) {
-			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, items[i]._iIName);
+			sprintf(istr, _("%s %s"), PL_Prefix[preidx].PLName, items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 		}
 		sprintf(istr, _("%s of %s"), items[i]._iIName, spelldata[bs].sNameText);
@@ -2154,7 +2154,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		}
 		if (nt != 0) {
 			preidx = l[GenerateRnd(nt)];
-			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, items[i]._iIName);
+			sprintf(istr, _("%s %s"), PL_Prefix[preidx].PLName, items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 			items[i]._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemPower(
@@ -2197,7 +2197,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			items[i]._iName[0] = 0;
 
 		if (preidx != -1) {
-			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, items[i]._iIName);
+			sprintf(istr, _("%s %s"), PL_Prefix[preidx].PLName, items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 		}
 		if (sufidx != -1) {
@@ -2792,7 +2792,7 @@ void items_427A72()
 			PackItem(&id, &CornerStone.item);
 			buffer = (BYTE *)&id;
 			for (size_t i = 0; i < sizeof(PkItemStruct); i++) {
-				sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
+				sprintf(&sgOptions.Hellfire.szItem[i * 2], _("%02X"), buffer[i]);
 			}
 		} else {
 			sgOptions.Hellfire.szItem[0] = '\0';
@@ -3703,7 +3703,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_FIRERESCLVL:
 		if (x->_iPLFR <= 0)
-			sprintf(tempstr, " ");
+			sprintf(tempstr, _(" "));
 		else if (x->_iPLFR >= 1)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		break;

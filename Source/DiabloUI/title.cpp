@@ -11,11 +11,11 @@ std::vector<UiItemBase *> vecTitleScreen;
 void TitleLoad()
 {
 	if (gbIsHellfire) {
-		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
-		LoadArt("ui_art\\hf_titlew.pcx", &ArtBackgroundWidescreen);
+		LoadBackgroundArt(_("ui_art\\hf_logo1.pcx"), 16);
+		LoadArt(_("ui_art\\hf_titlew.pcx"), &ArtBackgroundWidescreen);
 	} else {
-		LoadBackgroundArt("ui_art\\title.pcx");
-		LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
+		LoadBackgroundArt(_("ui_art\\title.pcx"));
+		LoadMaskedArt(_("ui_art\\logo.pcx"), &ArtLogos[LOGO_BIG], 15);
 	}
 }
 

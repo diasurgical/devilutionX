@@ -1063,7 +1063,7 @@ void CreateThemeRooms()
 			Theme_WeaponRack(i);
 			break;
 		case THEME_NONE:
-			app_fatal("Unknown theme type: %d", themes[i].ttype);
+			app_fatal(_("Unknown theme type: %d"), themes[i].ttype);
 		}
 	}
 	InitObjFlag = false;

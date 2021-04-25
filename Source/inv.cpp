@@ -126,20 +126,20 @@ void FreeInvGFX()
 void InitInv()
 {
 	if (plr[myplr]._pClass == HeroClass::Warrior) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
+		pInvCels = LoadFileInMem(_("Data\\Inv\\Inv.CEL"), nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", nullptr);
+		pInvCels = LoadFileInMem(_("Data\\Inv\\Inv_rog.CEL"), nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", nullptr);
+		pInvCels = LoadFileInMem(_("Data\\Inv\\Inv_Sor.CEL"), nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Monk) {
 		if (!gbIsSpawn)
-			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", nullptr);
+			pInvCels = LoadFileInMem(_("Data\\Inv\\Inv_Sor.CEL"), nullptr);
 		else
-			pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
+			pInvCels = LoadFileInMem(_("Data\\Inv\\Inv.CEL"), nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Bard) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", nullptr);
+		pInvCels = LoadFileInMem(_("Data\\Inv\\Inv_rog.CEL"), nullptr);
 	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
+		pInvCels = LoadFileInMem(_("Data\\Inv\\Inv.CEL"), nullptr);
 	}
 
 	invflag = false;

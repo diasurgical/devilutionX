@@ -140,30 +140,30 @@ void FillSolidBlockTbls()
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire)
-			pSBFile = LoadFileInMem("NLevels\\TownData\\Town.SOL", &dwTiles);
+			pSBFile = LoadFileInMem(_("NLevels\\TownData\\Town.SOL"), &dwTiles);
 		else
-			pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
+			pSBFile = LoadFileInMem(_("Levels\\TownData\\Town.SOL"), &dwTiles);
 		break;
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 17)
-			pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
+			pSBFile = LoadFileInMem(_("Levels\\L1Data\\L1.SOL"), &dwTiles);
 		else
-			pSBFile = LoadFileInMem("NLevels\\L5Data\\L5.SOL", &dwTiles);
+			pSBFile = LoadFileInMem(_("NLevels\\L5Data\\L5.SOL"), &dwTiles);
 		break;
 	case DTYPE_CATACOMBS:
-		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", &dwTiles);
+		pSBFile = LoadFileInMem(_("Levels\\L2Data\\L2.SOL"), &dwTiles);
 		break;
 	case DTYPE_CAVES:
 		if (currlevel < 17)
-			pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
+			pSBFile = LoadFileInMem(_("Levels\\L3Data\\L3.SOL"), &dwTiles);
 		else
-			pSBFile = LoadFileInMem("NLevels\\L6Data\\L6.SOL", &dwTiles);
+			pSBFile = LoadFileInMem(_("NLevels\\L6Data\\L6.SOL"), &dwTiles);
 		break;
 	case DTYPE_HELL:
-		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", &dwTiles);
+		pSBFile = LoadFileInMem(_("Levels\\L4Data\\L4.SOL"), &dwTiles);
 		break;
 	default:
-		app_fatal("FillSolidBlockTbls");
+		app_fatal(_("FillSolidBlockTbls"));
 	}
 
 	pTmp = pSBFile;
