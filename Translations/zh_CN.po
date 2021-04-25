@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DeviltutionX\n"
-"POT-Creation-Date: 2021-04-25 18:32+0200\n"
+"POT-Creation-Date: 2021-04-25 21:59+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: muziling <pieceking@qq.com>\n"
 "Language-Team: Emiliano Augusto Gonzalez\n"
@@ -101,10 +101,8 @@ msgid "Music"
 msgstr "音 乐"
 
 #: Source/DiabloUI/credits_lines.cpp:80
-#, fuzzy
-#| msgid "Sound Disabled"
 msgid "Sound Design"
-msgstr "音 效 关 闭"
+msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
@@ -210,6 +208,18 @@ msgstr ""
 msgid "Thanks To"
 msgstr ""
 
+#: Source/DiabloUI/credits_lines.cpp:173
+msgid "\tSchafer, Richard and Sandra Schaefer, Rick Bowles, Greg Bogden, "
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:190
+msgid "\tThe Strike Team Deflectors, Tony Levin, Big Jim and the Twins, "
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:198
+msgid "\tSaag and all the folks at Davidson"
+msgstr ""
+
 #: Source/DiabloUI/credits_lines.cpp:200
 msgid "In memory of"
 msgstr ""
@@ -303,10 +313,8 @@ msgid "Associate Product Manager"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:301
-#, fuzzy
-#| msgid "The Binding of the Three"
 msgid "The Ring of One Thousand"
-msgstr "三 神 之 约"
+msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
@@ -323,10 +331,8 @@ msgid "OK"
 msgstr ""
 
 #: Source/DiabloUI/mainmenu.cpp:36
-#, fuzzy
-#| msgid "The Flayer"
 msgid "Single Player"
-msgstr "剥 皮 怪"
+msgstr ""
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
@@ -353,10 +359,8 @@ msgid "Show Credits"
 msgstr ""
 
 #: Source/DiabloUI/mainmenu.cpp:45
-#, fuzzy
-#| msgid "Quit Diablo"
 msgid "Exit Diablo"
-msgstr "   退   出  "
+msgstr ""
 
 #: Source/DiabloUI/mainmenu.cpp:110
 msgid ""
@@ -385,10 +389,8 @@ msgid "Multi Player Game"
 msgstr ""
 
 #: Source/DiabloUI/selconn.cpp:48
-#, fuzzy
-#| msgid "Requirements not met"
 msgid "Requirements:"
-msgstr "需 要 的 等 级 没 有 达 到"
+msgstr ""
 
 #: Source/DiabloUI/selconn.cpp:54
 msgid "no gateway needed"
@@ -429,16 +431,12 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:93 Source/DiabloUI/selgame.cpp:156
 #: Source/DiabloUI/selgame.cpp:300
-#, fuzzy
-#| msgid "Save Game"
 msgid "Create Game"
-msgstr "保 存 游 戏"
+msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:94
-#, fuzzy
-#| msgid "Load Game"
 msgid "Join Game"
-msgstr " 取  进  度"
+msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:102 Source/DiabloUI/selgame.cpp:171
 #: Source/DiabloUI/selgame.cpp:189 Source/DiabloUI/selgame.cpp:322
@@ -462,16 +460,17 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:161 Source/DiabloUI/selgame.cpp:208
 #: Source/DiabloUI/selgame.cpp:311 Source/DiabloUI/selgame.cpp:331
+#: Source/diablo.cpp:1396
 msgid "Normal"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:162 Source/DiabloUI/selgame.cpp:212
-#, fuzzy
-#| msgid "Nightscape"
+#: Source/diablo.cpp:1397
 msgid "Nightmare"
-msgstr "夜景"
+msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:216
+#: Source/diablo.cpp:1398
 msgid "Hell"
 msgstr ""
 
@@ -572,10 +571,8 @@ msgid "Your version %s does not match the host %d.%d.%d."
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:123
-#, fuzzy
-#| msgid "New Game"
 msgid "New Hero"
-msgstr " 新  游  戏"
+msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:185
 msgid "Choose Class"
@@ -583,15 +580,13 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:189 Source/control.cpp:87
 msgid "Warrior"
-msgstr " 武    士"
+msgstr "武 士"
 
 #: Source/DiabloUI/selhero.cpp:190 Source/control.cpp:88
 msgid "Rogue"
 msgstr "女 箭 手"
 
 #: Source/DiabloUI/selhero.cpp:191 Source/control.cpp:89
-#, fuzzy
-#| msgid "Sorceror"
 msgid "Sorcerer"
 msgstr "巫 师"
 
@@ -621,12 +616,12 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:228 Source/gamemenu.cpp:41
 msgid "Load Game"
-msgstr " 取  进  度"
+msgstr "取  进  度"
 
 #: Source/DiabloUI/selhero.cpp:229 Source/gamemenu.cpp:40
 #: Source/gamemenu.cpp:51
 msgid "New Game"
-msgstr " 新  游  戏"
+msgstr "新  游  戏"
 
 #: Source/DiabloUI/selhero.cpp:239 Source/DiabloUI/selhero.cpp:575
 msgid "Single Player Characters"
@@ -662,36 +657,28 @@ msgid "Unable to create character."
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:511 Source/DiabloUI/selhero.cpp:514
-#, fuzzy
-#| msgid "Level: %i"
 msgid "Level:"
-msgstr "等 级 ：%i"
+msgstr "等 级 ："
 
 #: Source/DiabloUI/selhero.cpp:519
 msgid "Strength:"
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:524
-#, fuzzy
-#| msgid "Magic Rock"
 msgid "Magic:"
-msgstr "魔 法 岩 石"
+msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:529
-#, fuzzy
-#| msgid "Elixir of Dexterity"
 msgid "Dexterity:"
-msgstr "灵 敏 药 水"
+msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:534
 msgid "Vitality:"
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:545
-#, fuzzy
-#| msgid "Slain Hero"
 msgid "Select Hero"
-msgstr "被 杀 死 的 英 雄"
+msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:564
 msgid "Delete"
@@ -710,30 +697,81 @@ msgid "Delete Single Player Hero"
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:621
-#, fuzzy, c-format
-#| msgid "Are you sure you want to sell this item?"
+#, c-format
 msgid "Are you sure you want to delete the character \"%s\"?"
-msgstr "你 确 定 你 要 卖 这 个 东 西 吗 ？"
+msgstr ""
 
 #: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:888
 msgid "Yes"
 msgstr ""
 
 #: Source/DiabloUI/selyesno.cpp:62 Source/stores.cpp:889
-#, fuzzy
-#| msgid "None"
 msgid "No"
-msgstr "无"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:8
+msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:9
+msgid "Follow the links to visit the discussion boards associated with Diablo."
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:10
+msgid "and the Hellfire expansion."
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:12
+msgid ""
+"DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:13
+msgid "at this address: https://github.com/diasurgical/devilutionX"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:14
+msgid ""
+"To help us better serve you, please be sure to include the version number,"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:15
+msgid "operating system, and the nature of the problem."
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:18
+msgid "Disclaimer:"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:19
+msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:20
+msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:21
+msgid ""
+"  or certified the quality or compatibility of DevilutionX. All inquiries"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:22
+msgid ""
+"  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:23
+msgid "  Entertainment or GOG.com."
+msgstr ""
 
 #: Source/DiabloUI/title.cpp:47
 msgid "Copyright  1996-2001 Blizzard Entertainment"
 msgstr ""
 
 #: Source/appfat.cpp:34
-#, fuzzy
-#| msgid "Horror"
 msgid "Error"
-msgstr "影 子 骷 髅"
+msgstr ""
 
 #: Source/appfat.cpp:117
 #, c-format
@@ -756,6 +794,10 @@ msgid ""
 "%s"
 msgstr ""
 
+#: Source/appfat.cpp:146 Source/appfat.cpp:163
+msgid "Data File Error"
+msgstr ""
+
 #: Source/appfat.cpp:159
 #, c-format
 msgid ""
@@ -776,23 +818,28 @@ msgstr ""
 msgid "Read-Only Directory Error"
 msgstr ""
 
+#: Source/automap.cpp:420
+msgid "game: "
+msgstr ""
+
+#: Source/automap.cpp:424
+msgid "password: "
+msgstr ""
+
 #: Source/automap.cpp:434 Source/items.cpp:3864
-#, fuzzy, c-format
-#| msgid "Level : %i"
+#, c-format
 msgid "Level: %i"
 msgstr "等 级： %i"
 
 #: Source/automap.cpp:436
-#, fuzzy, c-format
-#| msgid "Level : %i"
+#, c-format
 msgid "Level: Crypt %i"
-msgstr "等 级： %i"
+msgstr ""
 
 #: Source/automap.cpp:438
-#, fuzzy, c-format
-#| msgid "Level : %i"
+#, c-format
 msgid "Level: Nest %i"
-msgstr "等 级： %i"
+msgstr ""
 
 #: Source/control.cpp:244
 msgid "Character Information"
@@ -880,8 +927,7 @@ msgid "%i Charges"
 msgstr "%i 回复"
 
 #: Source/control.cpp:486
-#, fuzzy, c-format
-#| msgid "Spell Hot Key #F%i"
+#, c-format
 msgid "Spell Hotkey #F%i"
 msgstr "魔 法 快 捷 键 #F%i"
 
@@ -894,8 +940,7 @@ msgid "Player attack"
 msgstr "玩 家 互 攻"
 
 #: Source/control.cpp:1010
-#, fuzzy, c-format
-#| msgid "Hotkey : %s"
+#, c-format
 msgid "Hotkey: %s"
 msgstr "热 键 ：%s"
 
@@ -904,8 +949,6 @@ msgid "Select current spell button"
 msgstr "选 择 当 前 可 用 的 魔 法"
 
 #: Source/control.cpp:1023
-#, fuzzy
-#| msgid "Hotkey : 's'"
 msgid "Hotkey: 's'"
 msgstr "热 键 ：'s'"
 
@@ -915,16 +958,13 @@ msgid "%i gold %s"
 msgstr "%i 金 币 %s"
 
 #: Source/control.cpp:1264
-#, fuzzy
-#| msgid "Requirements not met"
 msgid "Requirements not met"
 msgstr "需 要 的 等 级 没 有 达 到"
 
 #: Source/control.cpp:1300
-#, fuzzy, c-format
-#| msgid "Level : %i"
+#, c-format
 msgid "%s, Level: %i"
-msgstr "等 级： %i"
+msgstr ""
 
 #: Source/control.cpp:1302
 #, c-format
@@ -950,20 +990,17 @@ msgid "Staff (%i charges)"
 msgstr "法 杖（%i 回复 ）"
 
 #: Source/control.cpp:1852
-#, fuzzy, c-format
-#| msgid "Mana: %i Dam: %i - %i"
+#, c-format
 msgid "Mana: %i  Dam: %i - %i"
 msgstr "法 力 ： %i 伤 害 ： %i - %i"
 
 #: Source/control.cpp:1854
-#, fuzzy, c-format
-#| msgid "Mana: %i Dam: n/a"
+#, c-format
 msgid "Mana: %i   Dam: n/a"
 msgstr "法 力 ： %i 伤 害 ：n/a"
 
 #: Source/control.cpp:1857
-#, fuzzy, c-format
-#| msgid "Mana: %i Dam: 1/3 tgt hp"
+#, c-format
 msgid "Mana: %i  Dam: 1/3 tgt hp"
 msgstr "法 力 ： %i 伤 害 ：1/3  tgt hp"
 
@@ -983,6 +1020,30 @@ msgstr "你拥有 %u 金币"
 #: Source/control.cpp:1914
 #, c-format
 msgid "%s.  How many do"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:117
+msgid "Menu"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:117
+msgid "Inv"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:117
+msgid "Map"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:117
+msgid "Char"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:118
+msgid "Spells"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:118
+msgid "Quests"
 msgstr ""
 
 #: Source/cursor.cpp:181 Source/spelldat.cpp:22
@@ -1005,6 +1066,132 @@ msgstr "邪 恶 祭 坛"
 #: Source/cursor.cpp:211
 msgid "level 15"
 msgstr "15 层"
+
+#: Source/diablo.cpp:123
+msgid "I need help! Come Here!"
+msgstr ""
+
+#: Source/diablo.cpp:124
+msgid "Follow me."
+msgstr ""
+
+#: Source/diablo.cpp:125
+msgid "Here's something for you."
+msgstr ""
+
+#: Source/diablo.cpp:126
+msgid "Now you DIE!"
+msgstr ""
+
+#: Source/diablo.cpp:145
+msgid "Options:\n"
+msgstr "选 项：\n"
+
+#: Source/diablo.cpp:146
+msgid "Print this message and exit"
+msgstr ""
+
+#: Source/diablo.cpp:147
+msgid "Print the version and exit"
+msgstr ""
+
+#: Source/diablo.cpp:148
+msgid "Specify the folder of diabdat.mpq"
+msgstr ""
+
+#: Source/diablo.cpp:149
+msgid "Specify the folder of save files"
+msgstr ""
+
+#: Source/diablo.cpp:150
+msgid "Specify the location of diablo.ini"
+msgstr ""
+
+#: Source/diablo.cpp:151
+msgid "Specify the location of the .ttf font"
+msgstr ""
+
+#: Source/diablo.cpp:152
+msgid "Specify the name of a custom .ttf font"
+msgstr ""
+
+#: Source/diablo.cpp:153
+msgid "Skip startup videos"
+msgstr ""
+
+#: Source/diablo.cpp:154
+msgid "Display frames per second"
+msgstr ""
+
+#: Source/diablo.cpp:155
+msgid "Run in windowed mode"
+msgstr ""
+
+#: Source/diablo.cpp:156
+msgid "Enable verbose logging"
+msgstr ""
+
+#: Source/diablo.cpp:157
+msgid "Force spawn mode even if diabdat.mpq is found"
+msgstr ""
+
+#: Source/diablo.cpp:158
+msgid ""
+"\n"
+"Hellfire options:\n"
+msgstr ""
+
+#: Source/diablo.cpp:159
+msgid "Force diablo mode even if hellfire.mpq is found"
+msgstr ""
+
+#: Source/diablo.cpp:160
+msgid "Use alternate nest palette"
+msgstr ""
+
+#: Source/diablo.cpp:176
+msgid ""
+"\n"
+"Report bugs at https://github.com/diasurgical/devilutionX/\n"
+msgstr ""
+
+#: Source/diablo.cpp:252
+#, c-format
+msgid "unrecognized option '%s'\n"
+msgstr ""
+
+#: Source/diablo.cpp:1119
+msgid "No help available"
+msgstr ""
+
+#: Source/diablo.cpp:1120
+msgid "while in stores"
+msgstr ""
+
+#: Source/diablo.cpp:1400
+#, c-format
+msgid "%s, mode = %s"
+msgstr ""
+
+#: Source/diablo.cpp:2098
+msgid "-- Network timeout --"
+msgstr ""
+
+#: Source/diablo.cpp:2099
+msgid "-- Waiting for players --"
+msgstr ""
+
+#: Source/dvlnet/loopback.cpp:112
+msgid "loopback"
+msgstr ""
+
+#: Source/dvlnet/tcp_client.cpp:67
+msgid "Unable to connect"
+msgstr ""
+
+#: Source/dvlnet/tcp_client.cpp:88
+msgid "error: read 0 bytes from server"
+msgstr ""
 
 #: Source/error.cpp:22
 msgid "No automap available in town"
@@ -1231,10 +1418,8 @@ msgid "Options"
 msgstr "选 项"
 
 #: Source/gamemenu.cpp:42 Source/gamemenu.cpp:53
-#, fuzzy
-#| msgid "Quit Diablo"
 msgid "Quit Game"
-msgstr "   退   出  "
+msgstr ""
 
 #: Source/gamemenu.cpp:52
 msgid "Restart In Town"
@@ -1284,6 +1469,267 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
+#: Source/help.cpp:20
+msgid ""
+"Shareware Diablo Help||$Keyboard Shortcuts:|Diablo can be played exclusively "
+"by using the mouse controls.  There are times, however, when you may want to "
+"use shortcuts to some commands by using the keyboard.  These shortcuts are "
+"listed below:||F1:    Open the Help Screen|Esc:    Displays the main menu|"
+"Tab:    Displays the Auto-map|Space:  Removes any pop-up menus or maps from "
+"the play area|S:  Open Speedbook|B:  Open Spellbook|I:  Opens the Inventory "
+"screen|C:  Opens the Character screen|Z:  Zooms the game screen in and out|"
+"F:  Reduces the brightness of the screen|G:  Increases the brightness of the "
+"screen|Q:  Opens the Quest log (non-functional in the Shareware version)|1 - "
+"8:  Use that item from your Belt|F5, F6, F7, F8:  Sets a hotkey for a "
+"selected skill or spell|Shift + Left Mouse Button: Use any weapon without "
+"moving|Shift + Left Mouse Button (on character screen): Assign all stat "
+"points|Shift + Left Mouse Button (on inventory): Move item to belt or equip/"
+"unequip item|Shift + Left Mouse Button (on belt): Move item to inventory|||"
+"$Movement:|Movement is controlled by the mouse.  The gauntlet on the screen "
+"is your cursor.  Use this to indicate the destination of your character and "
+"then left-click to move to that area. If you hold the mouse button down "
+"while moving, the character will continue to move in that direction.||"
+"$Selecting Items:|What you can interact with within the game is easily "
+"identifiable. Move the cursor over any object or creature. If the object can "
+"be picked up, attacked, activated or used in any way, it will be immediately "
+"outlined. A description of the highlighted object appears in the text area "
+"on the control panel.||Example: If you select a door and then left-click the "
+"character will walk to the door and open it. If you left-click on a "
+"highlighted weapon, the character will walk over to it and put it in his "
+"inventory. If you left-click on a highlighted creature...||$Combat:|Combat "
+"is initiated by left-clicking on a creature that has been highlighted. If "
+"your character is equipped with a melee weapon (Sword, Mace, Ax, etc.) your "
+"character will move to range and attack. If your character is equipped with "
+"a bow, left-clicking will fire an arrow at the highlighted creature. Holding "
+"down the shift key and then left-clicking allows the character to attack "
+"without moving.||$Picking up Objects:|If you left-click on an item - such as "
+"a weapon, shield, armor or book - your character will move to that item and "
+"add it to his inventory automatically.||Useable items that are small in size "
+"- such as a potion or scroll - are automatically placed in your 'belt', "
+"located at the top of the Interface bar . When an item is placed in the "
+"belt, a small number appears in that box. Items may be used by either right-"
+"clicking on the item or pressing the corresponding number on the keyboard.||"
+"If you do not have enough room in your inventory or belt for an item that "
+"you try to pick up, it will fall from your grasp. Open your inventory screen "
+"and try re-arranging or removing items to carry what you really want or "
+"need.||$Inventory:|You can toggle the Inventory screen on and off by "
+"clicking the INV> button on the control panel.  Items may be moved around in "
+"your inventory by selecting them and then left-clicking to pick them up.  "
+"When you pick up an item while in the inventory screen, your cursor changes "
+"into the item. You can then place this item into empty spaces in your "
+"inventory, swap them with other items in your inventory or equip them.||If "
+"you have an item that you no longer wish to carry, simply grab the item from "
+"your inventory and then left-click in the play area to drop it.||$Equipping "
+"Items:|To equip an item, open the inventory screen and pick up the desired "
+"item, either from play or from your inventory, placing it in the appropriate "
+"box on the figure in the inventory screen. Weapons and shields go into the "
+"large spaces to the  right or left of the figure. Two-handed weapons such as "
+"bows and axes preclude the use of a shield and will take up both of these "
+"large spaces.||Cloaks, robes, capes and all other armor must go in the "
+"central torso slot of the figure. ||Helmets and caps go in the box over the "
+"head of the character.||Rings go into the small boxes at the hands of the "
+"figure.||Amulets go into the small box at the next to the neck of the "
+"figure.||To change items that your character has equipped, pick up a new "
+"item and place it on top of the item you wish to remove.  Your character "
+"will automatically swap the items and the cursor will now change into the "
+"item that was in that box.||$Usable Items:|Potions, elixirs and books are "
+"classified as usable items.  These items can be used by right-clicking on "
+"them in the inventory screen.  Books are too large to be placed in the belt, "
+"but any potions or scrolls that are put there can also be used by pressing "
+"the corresponding number on the keyboard.||$Gold:|You can select a specific "
+"amount of gold to drop by right-clicking on a pile of gold in your "
+"inventory. A dialog will appear that allows you to select a specific amount "
+"of gold to take. When you have entered that number, your cursor will change "
+"into that amount of gold.||$Item Information:|Many items in Diablo share "
+"certain common attributes.  These are damage, durability, charges and "
+"minimum requirements..||Damage: This is represented by a range that "
+"indicates the minimum and maximum damage that item can inflict. A short "
+"sword has a (2-6) after its name, meaning it inflicts a minimum of two "
+"damage and a maximum of six when it hits. Damage can be modified by the "
+"quality of the weapon, the character's strength and magical effects.||"
+"Durability: This is the amount of damage that an item can take before it is "
+"rendered useless. Durability is represented by a ratio of current durability "
+"to maximum durability. A shield that has a durability of 15/20 would still "
+"have 15 points of damage it could take from use before it was rendered "
+"useless. Maximum durability can be affected by the quality of the item, "
+"enchantments or repairs made upon the item. The minimum durability can be "
+"raised by repairing an item.||Charges: Some items have charges associated "
+"with them. Charges indicate how many times that item can be used to cast the "
+"spell or affect indicated in its description.  Charges are represented by a "
+"ratio of charges left to maximum charges. A staff that has charges listed as "
+"2/5 could be used to cast 2 more spells before it was rendered powerless. It "
+"could still be used to attack with as a physical weapon, however. Maximum "
+"charges can be affected by the magic or recharges cast upon the item. "
+"Minimum charges can be raised by recharging the item.||Minimum Requirements: "
+"These are the minimum requirements that a character must meet to wield the "
+"item. The more powerful an item is, the higher the minimum requirements will "
+"be.  If a character does not meet these requirements, he will be unable to "
+"equip the item and its name and information will be displayed in red.  The "
+"item artwork will also have a red tint in the Inventory screen.||$Items "
+"Classes:|There are three classes of items in Diablo - Mundane, Magic and "
+"Unique:||Mundane items have no special attributes. Their information is "
+"displayed in white text.||Magic Items are represented by blue names and text "
+"descriptions. Use the Identify spell or speak to Cain in town to determine "
+"their exact properties and attributes.||Unique items are represented by gold "
+"names and text descriptions. Use the Identify spell or speak to Cain in town "
+"to determine their exact properties and attributes.||$Skills & Spells:|You "
+"can access your list of skills and spells by left-clicking on the SPELLS "
+"button in the interface bar. This 'Spellbook' contains all of the skills and "
+"spells that your character knows. Spells available through staffs are also "
+"listed here. Left-clicking on the Icon of the spell you wish to ready will "
+"place it in the 'select current spell' icon/area and set it as the current "
+"readied spell. A readied spell may be cast by simply right-clicking in the "
+"play area.||Left-clicking on the 'select current spell' button will also "
+"open a 'Speedbook' menu that also allows you to ready a skill or spell for "
+"use.  To use a readied skill or spell, simply right-click in the main play "
+"area.|Shift + Left-clicking on the 'select current spell' button will clear "
+"the readied spell||Skills are the innate abilities of your character. These "
+"skills are different depending on what class you choose and require no mana "
+"to use.||Warrior:|The Warrior has the skill of Repair Items. This allows him "
+"to fix an item that has been worn by use or is damaged in combat. To "
+"accomplish this, select the Repair Skill through the Spellbook or Speedbook "
+"and right-click the mouse as if you were casting a spell. Your cursor will "
+"change into a Hammer Icon that you will use to select the item to be "
+"repaired.  Although Repairing an item in this way will decrease the maximum "
+"durability of that item, it can be done without leaving the labyrinth.||The "
+"Blacksmith can also repair items for a price. When the Blacksmith performs "
+"this service, it does decrease the maximum durability of the item.||Rogue:|"
+"The Rogue has the skill of Disarm Traps. This allows her to not only remove "
+"traps, but also acts as a 'sixth sense' that warns her of where these "
+"trapped items are located. To accomplish this, select the Disarm Trap skill "
+"through the Spellbook or Speedbook and right-click the mouse as if you were "
+"casting a spell.  Your cursor will change into a Targeting Cursor that you "
+"will use to select the item to be disarmed.  The success of this attempt is "
+"based on the level of the Rogue and the expertise of whomever set the trap.||"
+"Sorcerer:|The Sorcerer has the skill of Recharge Staffs. This allows him to "
+"focus his mana into an staff that has been drained of its magical energies.  "
+"To accomplish this, select the Recharge Staffs skill through the Spellbook "
+"or Speedbook and right-click the mouse as if you were casting a spell.  Your "
+"cursor will change into a Staff Icon that you will use to select the item to "
+"be recharged.  Although Recharging a staff in this way will decrease its "
+"maximum charges, it can be done without leaving the labyrinth.||The Witch "
+"can also recharge staffs for a price. When the Witch performs this service, "
+"it does decrease the maximum charges of the item.||Spells are magical "
+"effects that can be cast from a scroll, a staff or memorized from a book. "
+"Spells may or may not require mana to use and are available to all classes.||"
+"Spells cast from a scroll cost no mana to use, but are limited to only one "
+"charge. Casting a spell from a scroll is accomplished by either right-"
+"clicking on the scroll or, if it is located in our belt, pressing the "
+"corresponding number on the keyboard. Scrolls can also be readied in the "
+"Speedbook and are represented by a red icon/button in the 'select current "
+"spell' area.||Spells cast from staffs cost no mana to use, but are limited "
+"by the number of charges available. To cast spells from a staff, it must "
+"first be equipped. The 'select current spell' icon/button will change to "
+"indicate that the spell on the staff is currently ready to cast. Scrolls can "
+"also be readied in the Spellbook or Speedbook and are represented by an "
+"orange icon/button in the 'select current spell' area.||Spells that are "
+"memorized cost mana to cast, but they can be used as long as the character "
+"has mana to power them. The Warrior and Rogue start the game with no "
+"memorized spells while the sorcerer begins with Firebolt.  If the character "
+"finds a book in the labyrinth, he can memorize the spell written in that "
+"book by opening the Inventory screen and right-clicking on the book.  This "
+"will make that spell always available to the character for casting. "
+"Memorized spells can be readied through either the Spellbook or Speedbook "
+"and are represented by a blue icon/button in the 'select current spell' "
+"area.||$Important note on books:|Reading more than one book increases your "
+"knowledge of that spell and gives you the spell at a higher level. The "
+"higher the level of a spell the more effective it is.||While some spells "
+"affect the caster, other spells require a target. These targeted spells are "
+"cast in the direction that you indicate with your cursor on the play area.  "
+"If you highlight a creature, you will cast that spell at that creature.  Not "
+"all items within the labyrinth can be targeted.||Example: A fireball spell "
+"will travel at the creature or to the location you right-click on.  A "
+"Healing spell will simply add health to your character while diminishing his "
+"available mana and requires no targeting.||You can also set a spell or "
+"scroll as a Hotkey position for instant selection.  Start by opening the pop-"
+"up menu as described in the skill section above.  Assign Hotkeys by hitting "
+"the F5, F6, F7 or F8 keys on your keyboard after scrolling through the "
+"available spells and highlighting the one you wish to assign. ||$Health and "
+"Mana:|The two orbs in the Information Bar display your life and mana. The "
+"red sphere of fluid on the left side of the control panel represents the "
+"overall health of your character. When the fluid is gone - your character is "
+"dead.||The blue fluid on the right side of the control panel represents your "
+"character's available mana. Mana is the magical force used by your character "
+"to cast spells.  When the liquid in the sphere is low or depleted, you may "
+"be unable to cast some (or all) of your spells.||$Information Bar:|The "
+"Information Bar is where you receive detailed information in Diablo and "
+"interact with much of your surroundings.  Here is a quick run-down of the "
+"control panel areas and their use:||CHAR: This button is used to access your "
+"Character Statistics screen|INV:  This button is used to access your "
+"Inventory screen|Quest: This button displays your Quest Log (inactive in "
+"Shareware version)|Automap: This button activates the mapping overlay|Menu: "
+"This button activates the game menu screen|Spells: This button is used to "
+"access your Spellbook|Current Spell: This is the spell that has been readied "
+"for immediate casting|Life Orb: This is the amount of health your character "
+"currently has|Mana Orb: This is the amount of mana your character currently "
+"has|Multiplayer Message: This activates the Message Area|Description Area: "
+"This is where any important information about creatures or items you can "
+"interact with is displayed. This is also where you will enter the text you "
+"wish to send when sending multiplayer messages.||$Character Info:|Toggle the "
+"Character Statistics Screen on and off by clicking the <CHAR button on the "
+"Information Bar.  This screen shows the 'nuts and bolts' of your character.  "
+"There are four major attributes that dictate how your character progresses "
+"in the game.||STRENGTH: This is how physically powerful your character is. "
+"This statistic plays a large part in  determining how much damage you can do "
+"when attacking creatures.||MAGIC: This is how attuned your character is with "
+"the arcane powers of the world. This statistic plays a large part in  "
+"determining how much mana you have available for casting spells.||DEXTERITY: "
+"This is how quick of foot and hand your character is. This statistic plays a "
+"large part in  determining the chance you have to hit creatures in combat.||"
+"VITALITY: This is how physically fit your character is. This statistic plays "
+"a large part in  determining how much health your character has when he is "
+"undamaged.||$In Game Menu:|To activate the Game Menu, click the MENU button "
+"on the Information Bar.  You have three options in this menu:||New Game: "
+"This exits you from your current game and returns you to the Main Menu.||"
+"Options: This opens the options menu that allows you to adjust your music "
+"and sound effects settings as well as the gamma level of the screen.||Quit "
+"Game: This exits the program. Please note that this automatically saves your "
+"character.||$Auto-map:|Your character automatically maps where he has been "
+"in the labyrinth.  To access the auto-map, click the MAP button on the "
+"Information Bar.  You can also press TAB on your keyboard to activate the "
+"auto-map. Zooming in and out of the map is done with the + and - keys while "
+"scrolling the map uses the arrow keys.|&"
+msgstr ""
+
+#: Source/help.cpp:384
+msgid ""
+"$Keyboard Shortcuts:|F1:    Open Help Screen|Esc:   Display Main Menu|Tab:   "
+"Display Auto-map|Space: Hide all info screens|S: Open Speedbook|B: Open "
+"Spellbook|I: Open Inventory screen|C: Open Character screen|Q: Open Quest "
+"log|F: Reduce screen brightness|G: Increase screen brightness|Z: Zoom Game "
+"Screen|+ / -: Zoom Automap|1 - 8: Use Belt item|F5, F6, F7, F8:     Set "
+"hotkey for skill or spell|Shift + Left Mouse Button: Attack without moving|"
+"Shift + Left Mouse Button (on character screen): Assign all stat points|"
+"Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip "
+"item|Shift + Left Mouse Button (on belt): Move item to inventory||$Movement:|"
+"If you hold the mouse button down while moving, the character will continue "
+"to move in that direction.||$Combat:|Holding down the shift key and then "
+"left-clicking allows the character to attack without moving.||$Auto-map:|To "
+"access the auto-map, click the 'MAP' button on the Information Bar or press "
+"'TAB' on the keyboard. Zooming in and out of the map is done with the + and "
+"- keys. Scrolling the map uses the arrow keys.||$Picking up Objects:|Useable "
+"items that are small in size, such as potions or scrolls, are automatically "
+"placed in your 'belt' located at the top of the Interface bar . When an item "
+"is placed in the belt, a small number appears in that box. Items may be used "
+"by either pressing the corresponding number or right-clicking on the item.||"
+"$Gold|You can select a specific amount of gold to drop byright-clicking on a "
+"pile of gold in your inventory.||$Skills & Spells:|You can access your list "
+"of skills and spells by left-clicking on the 'SPELLS' button in the "
+"interface bar. Memorized spells and those available through staffs are "
+"listed here. Left-clicking on the spell you wish to cast will ready the "
+"spell. A readied spell may be cast by simply right-clicking in the play "
+"area.||$Using the Speedbook for Spells|Left-clicking on the 'readied spell' "
+"button will open the 'Speedbook' which allows you to select a skill or spell "
+"for immediate use.  To use a readied skill or spell, simply right-click in "
+"the main play area.|Shift + Left-clicking on the 'select current spell' "
+"button will clear the readied spell||$Setting Spell Hotkeys|You can assign "
+"up to four Hotkeys for skills, spells or scrolls.  Start by opening the "
+"'speedbook' as described in the section above. Press the F5, F6, F7 or F8 "
+"keys after highlighting the spell you wish to assign.||$Spell Books|Reading "
+"more than one book increases your knowledge of that spell, allowing you to "
+"cast the spell more effectively.|&"
+msgstr ""
+
 #: Source/help.cpp:490
 msgid "Hellfire Help"
 msgstr ""
@@ -1294,7 +1740,26 @@ msgstr "游 戏 帮 助"
 
 #: Source/help.cpp:572
 msgid "Press ESC to end or the arrow keys to scroll."
-msgstr "按 ESC 键 结 束 或 方 向 键 滚 动 选 择"
+msgstr "按 ESC 键 结 束 或 方 向 键 滚 动 选 择。"
+
+#: Source/init.cpp:146
+#, c-format
+msgid "version %s"
+msgstr ""
+
+#: Source/init.cpp:215
+msgid "Some Hellfire MPQs are missing"
+msgstr ""
+
+#: Source/init.cpp:215
+msgid ""
+"Not all Hellfire MPQs were found.\n"
+"Please copy all the hf*.mpq files."
+msgstr ""
+
+#: Source/init.cpp:225
+msgid "Unable to create main window"
+msgstr ""
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:197
 msgid "Gold"
@@ -1317,10 +1782,8 @@ msgid "Short Bow"
 msgstr "短 弓"
 
 #: Source/itemdat.cpp:21
-#, fuzzy
-#| msgid "Short Staff"
 msgid "Short Staff of Mana"
-msgstr "短 杖"
+msgstr ""
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
@@ -1335,10 +1798,8 @@ msgid "Empyrean Band"
 msgstr "太 空 指 环"
 
 #: Source/itemdat.cpp:25
-#, fuzzy
-#| msgid "The Magic Rock"
 msgid "Magic Rock"
-msgstr "魔 岩"
+msgstr ""
 
 #: Source/itemdat.cpp:26 Source/itemdat.cpp:394
 msgid "Optic Amulet"
@@ -1384,7 +1845,7 @@ msgstr "真 菌 卷 帙"
 msgid "Spectral Elixir"
 msgstr "万 应 灵 药"
 
-#: Source/itemdat.cpp:37
+#: Source/itemdat.cpp:37 Source/monstdat.cpp:79
 msgid "Blood Stone"
 msgstr "血 石"
 
@@ -1414,7 +1875,7 @@ msgstr "时 空 之 门 卷 轴"
 
 #: Source/itemdat.cpp:44 Source/itemdat.cpp:398
 msgid "Arkaine's Valor"
-msgstr "Arkaine 的 魔 法 铠 甲 Valor "
+msgstr "Arkaine 的 魔 法 铠 甲 Valor"
 
 #: Source/itemdat.cpp:45 Source/itemdat.cpp:94
 msgid "Potion of Full Healing"
@@ -1429,10 +1890,8 @@ msgid "Griswold's Edge"
 msgstr "Griswold 的 利 刃"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:400
-#, fuzzy
-#| msgid "Field Plate"
 msgid "Bovine Plate"
-msgstr "战 斗 铠"
+msgstr ""
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
@@ -1443,10 +1902,8 @@ msgid "Scroll of Resurrect"
 msgstr "复 活 魔 法 卷 轴"
 
 #: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:68
-#, fuzzy
-#| msgid "Blacksmith's shop"
 msgid "Blacksmith Oil"
-msgstr "铁 匠 铺"
+msgstr ""
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
@@ -1472,10 +1929,8 @@ msgid "Theodore"
 msgstr ""
 
 #: Source/itemdat.cpp:57
-#, fuzzy
-#| msgid "Optic Amulet"
 msgid "Auric Amulet"
-msgstr "视 觉 护 身 符"
+msgstr ""
 
 #: Source/itemdat.cpp:58
 msgid "Torn Note 1"
@@ -1502,10 +1957,8 @@ msgid "Grey Suit"
 msgstr ""
 
 #: Source/itemdat.cpp:64 Source/itemdat.cpp:65
-#, fuzzy
-#| msgid "Cape"
 msgid "Cap"
-msgstr "披 风"
+msgstr ""
 
 #: Source/itemdat.cpp:65
 msgid "Skull Cap"
@@ -1549,8 +2002,6 @@ msgstr "棉 布 盔 甲"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
 #: Source/itemdat.cpp:77 Source/objects.cpp:5563
-#, fuzzy
-#| msgid "Armor"
 msgid "Armor"
 msgstr "防 御"
 
@@ -1646,10 +2097,8 @@ msgid "Potion of Full Rejuvenation"
 msgstr "完 全 生 命 值 恢 复 药 水"
 
 #: Source/itemdat.cpp:100 Source/items.cpp:63
-#, fuzzy
-#| msgid "Anvil of Fury"
 msgid "Oil of Accuracy"
-msgstr "暴 怒 的 铁 砧"
+msgstr ""
 
 #: Source/itemdat.cpp:101 Source/items.cpp:65
 msgid "Oil of Sharpness"
@@ -1668,10 +2117,8 @@ msgid "Elixir of Magic"
 msgstr "魔 法 力 药 水"
 
 #: Source/itemdat.cpp:105
-#, fuzzy
-#| msgid "Elixir of Vitality"
 msgid "Elixir of Dexterity"
-msgstr "活 力 药 水"
+msgstr ""
 
 #: Source/itemdat.cpp:106
 msgid "Elixir of Vitality"
@@ -1682,10 +2129,8 @@ msgid "Scroll of Healing"
 msgstr "治 愈 魔 法"
 
 #: Source/itemdat.cpp:108
-#, fuzzy
-#| msgid "Scroll of Flash"
 msgid "Scroll of Search"
-msgstr "电 光 魔 法 卷 轴"
+msgstr ""
 
 #: Source/itemdat.cpp:109
 msgid "Scroll of Lightning"
@@ -1736,10 +2181,8 @@ msgid "Scroll of Guardian"
 msgstr "守 护 魔 法 卷 轴"
 
 #: Source/itemdat.cpp:124
-#, fuzzy
-#| msgid "Unique Item"
 msgid "Non Item"
-msgstr "独 一 无 二 的 宝 物"
+msgstr ""
 
 #: Source/itemdat.cpp:125
 msgid "Scroll of Nova"
@@ -1750,10 +2193,8 @@ msgid "Scroll of Golem"
 msgstr "人 偶 卷 轴"
 
 #: Source/itemdat.cpp:127
-#, fuzzy
-#| msgid "Scroll of Nova"
 msgid "Scroll of None"
-msgstr "新 星 卷 轴"
+msgstr ""
 
 #: Source/itemdat.cpp:128
 msgid "Scroll of Teleport"
@@ -1766,7 +2207,7 @@ msgstr "基 督 启 示 卷 轴"
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
 msgid "Book of "
-msgstr "书"
+msgstr "书 "
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
@@ -1864,10 +2305,8 @@ msgstr "大 槌"
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
 #: Source/itemdat.cpp:165 Source/itemdat.cpp:166
-#, fuzzy
-#| msgid "Crown"
 msgid "Bow"
-msgstr "王 冠"
+msgstr ""
 
 #: Source/itemdat.cpp:160
 msgid "Hunter's Bow"
@@ -1936,26 +2375,20 @@ msgid "Rune"
 msgstr ""
 
 #: Source/itemdat.cpp:178
-#, fuzzy
-#| msgid "Scroll of Lightning"
 msgid "Rune of Lightning"
-msgstr "闪 电 卷 轴"
+msgstr ""
 
 #: Source/itemdat.cpp:179
 msgid "Greater Rune of Fire"
 msgstr ""
 
 #: Source/itemdat.cpp:180
-#, fuzzy
-#| msgid "Scroll of Lightning"
 msgid "Greater Rune of Lightning"
-msgstr "闪 电 卷 轴"
+msgstr ""
 
 #: Source/itemdat.cpp:181 Source/spelldat.cpp:66
-#, fuzzy
-#| msgid "Veil of Steel"
 msgid "Rune of Stone"
-msgstr "钢 质 面 罩"
+msgstr ""
 
 #: Source/itemdat.cpp:182
 msgid "Short Staff of Charged Bolt"
@@ -1978,20 +2411,16 @@ msgid "Iron"
 msgstr ""
 
 #: Source/itemdat.cpp:195
-#, fuzzy
-#| msgid "Steel Lord"
 msgid "Steel"
-msgstr "钢 铁 主 人"
+msgstr ""
 
 #: Source/itemdat.cpp:196
 msgid "Silver"
 msgstr ""
 
 #: Source/itemdat.cpp:198
-#, fuzzy
-#| msgid "Plate"
 msgid "Platinum"
-msgstr "铠 甲"
+msgstr ""
 
 #: Source/itemdat.cpp:199
 msgid "Mithril"
@@ -2022,16 +2451,12 @@ msgid "Weak"
 msgstr ""
 
 #: Source/itemdat.cpp:206
-#, fuzzy
-#| msgid "Dagger"
 msgid "Jagged"
-msgstr "匕 首"
+msgstr ""
 
 #: Source/itemdat.cpp:207
-#, fuzzy
-#| msgid "Deadeye"
 msgid "Deadly"
-msgstr "死 亡 之 眼"
+msgstr ""
 
 #: Source/itemdat.cpp:208
 msgid "Heavy"
@@ -2078,10 +2503,8 @@ msgid "Fine"
 msgstr ""
 
 #: Source/itemdat.cpp:219
-#, fuzzy
-#| msgid "Warrior"
 msgid "Warrior's"
-msgstr " 武    士"
+msgstr ""
 
 #: Source/itemdat.cpp:220
 msgid "Soldier's"
@@ -2092,10 +2515,8 @@ msgid "Lord's"
 msgstr ""
 
 #: Source/itemdat.cpp:222
-#, fuzzy
-#| msgid "Blood Knight"
 msgid "Knight's"
-msgstr "嗜 血 骑 士"
+msgstr ""
 
 #: Source/itemdat.cpp:223
 msgid "Master's"
@@ -2145,21 +2566,17 @@ msgstr ""
 msgid "Awesome"
 msgstr ""
 
-#: Source/itemdat.cpp:236 Source/misdat.cpp:159 Source/objects.cpp:104
-#, fuzzy
-#| msgid "Holy Bolt"
+#: Source/itemdat.cpp:236 Source/objects.cpp:104
 msgid "Holy"
-msgstr "神 圣 之 箭"
+msgstr ""
 
 #: Source/itemdat.cpp:237
 msgid "Godly"
 msgstr ""
 
 #: Source/itemdat.cpp:238
-#, fuzzy
-#| msgid "Red Vex"
 msgid "Red"
-msgstr "红 色 烦 恼"
+msgstr ""
 
 #: Source/itemdat.cpp:239 Source/itemdat.cpp:240
 msgid "Crimson"
@@ -2178,10 +2595,8 @@ msgid "Blue"
 msgstr ""
 
 #: Source/itemdat.cpp:244
-#, fuzzy
-#| msgid "Azure Drake"
 msgid "Azure"
-msgstr "蓝 鸭"
+msgstr ""
 
 #: Source/itemdat.cpp:245
 msgid "Lapis"
@@ -2224,16 +2639,12 @@ msgid "Amber"
 msgstr ""
 
 #: Source/itemdat.cpp:255
-#, fuzzy
-#| msgid "BlackJade"
 msgid "Jade"
-msgstr "黑 泼 妇"
+msgstr ""
 
 #: Source/itemdat.cpp:256
-#, fuzzy
-#| msgid "Obsidian Lord"
 msgid "Obsidian"
-msgstr "黑 曜 石 主"
+msgstr ""
 
 #: Source/itemdat.cpp:257
 msgid "Emerald"
@@ -2268,10 +2679,8 @@ msgid "Drake's"
 msgstr ""
 
 #: Source/itemdat.cpp:265
-#, fuzzy
-#| msgid "Dragon's Breach"
 msgid "Dragon's"
-msgstr "龙的缺口"
+msgstr ""
 
 #: Source/itemdat.cpp:266
 msgid "Wyrm's"
@@ -2334,10 +2743,8 @@ msgid "gore"
 msgstr ""
 
 #: Source/itemdat.cpp:289
-#, fuzzy
-#| msgid "Rotcarnage"
 msgid "carnage"
-msgstr "腐 尸  "
+msgstr ""
 
 #: Source/itemdat.cpp:290
 msgid "slaughter"
@@ -2380,10 +2787,8 @@ msgid "weakness"
 msgstr ""
 
 #: Source/itemdat.cpp:300
-#, fuzzy
-#| msgid "decrease strength"
 msgid "strength"
-msgstr "降低体 力"
+msgstr ""
 
 #: Source/itemdat.cpp:301
 msgid "might"
@@ -2410,14 +2815,10 @@ msgid "atrophy"
 msgstr ""
 
 #: Source/itemdat.cpp:307
-#, fuzzy
-#| msgid "Elixir of Dexterity"
 msgid "dexterity"
-msgstr "灵 敏 药 水"
+msgstr ""
 
 #: Source/itemdat.cpp:308
-#, fuzzy
-#| msgid "Skill"
 msgid "skill"
 msgstr "技 巧"
 
@@ -2442,26 +2843,20 @@ msgid "dyslexia"
 msgstr ""
 
 #: Source/itemdat.cpp:314
-#, fuzzy
-#| msgid "Magic Rock"
 msgid "magic"
-msgstr "魔 法 岩 石"
+msgstr ""
 
 #: Source/itemdat.cpp:315
 msgid "the mind"
 msgstr ""
 
 #: Source/itemdat.cpp:316
-#, fuzzy
-#| msgid "Gillian"
 msgid "brilliance"
-msgstr " Gillian "
+msgstr ""
 
 #: Source/itemdat.cpp:317
-#, fuzzy
-#| msgid "Sorceror"
 msgid "sorcery"
-msgstr "巫 师"
+msgstr ""
 
 #: Source/itemdat.cpp:318
 msgid "wizardry"
@@ -2476,10 +2871,8 @@ msgid "disease"
 msgstr ""
 
 #: Source/itemdat.cpp:321
-#, fuzzy
-#| msgid "decrease vitality"
 msgid "vitality"
-msgstr "降低 活 力"
+msgstr ""
 
 #: Source/itemdat.cpp:322
 msgid "zest"
@@ -2510,10 +2903,8 @@ msgid "the sky"
 msgstr ""
 
 #: Source/itemdat.cpp:329
-#, fuzzy
-#| msgid "Witchmoon"
 msgid "the moon"
-msgstr "月 亮 巫 婆"
+msgstr ""
 
 #: Source/itemdat.cpp:330
 msgid "the stars"
@@ -2544,10 +2935,8 @@ msgid "the jaguar"
 msgstr ""
 
 #: Source/itemdat.cpp:337
-#, fuzzy
-#| msgid "Pepin the Healer"
 msgid "the eagle"
-msgstr " Pepin 大 夫"
+msgstr ""
 
 #: Source/itemdat.cpp:338
 msgid "the wolf"
@@ -2586,10 +2975,8 @@ msgid "craftsmanship"
 msgstr ""
 
 #: Source/itemdat.cpp:347
-#, fuzzy
-#| msgid "indestructible"
 msgid "structure"
-msgstr "不 可 毁 坏 的"
+msgstr ""
 
 #: Source/itemdat.cpp:348
 msgid "the ages"
@@ -2608,36 +2995,26 @@ msgid "light"
 msgstr ""
 
 #: Source/itemdat.cpp:352
-#, fuzzy
-#| msgid "Guardian"
 msgid "radiance"
-msgstr "守 卫"
+msgstr ""
 
 #: Source/itemdat.cpp:353
-#, fuzzy
-#| msgid "Viperflame"
 msgid "flame"
-msgstr "火 焰 蝰 蛇"
+msgstr ""
 
 #: Source/itemdat.cpp:354
-#, fuzzy
-#| msgid "Skullfire"
 msgid "fire"
-msgstr "火 骷 髅"
+msgstr ""
 
 #: Source/itemdat.cpp:355
-#, fuzzy
-#| msgid "Burning Dead"
 msgid "burning"
-msgstr "燃 烧 骷 髅"
+msgstr ""
 
 #: Source/itemdat.cpp:356
 msgid "shock"
 msgstr ""
 
 #: Source/itemdat.cpp:357
-#, fuzzy
-#| msgid "Lightning"
 msgid "lightning"
 msgstr "闪 电"
 
@@ -2698,10 +3075,8 @@ msgid "bashing"
 msgstr ""
 
 #: Source/itemdat.cpp:372
-#, fuzzy
-#| msgid "Telekinesis"
 msgid "readiness"
-msgstr "劈 空 取 物 "
+msgstr ""
 
 #: Source/itemdat.cpp:373
 msgid "swiftness"
@@ -2752,40 +3127,28 @@ msgid "The Rift Bow"
 msgstr ""
 
 #: Source/itemdat.cpp:402
-#, fuzzy
-#| msgid "The Bleeder"
 msgid "The Needler"
-msgstr "放血者"
+msgstr ""
 
 #: Source/itemdat.cpp:403
-#, fuzzy
-#| msgid "The Celestial Star"
 msgid "The Celestial Bow"
-msgstr "天 星"
+msgstr ""
 
 #: Source/itemdat.cpp:404
-#, fuzzy
-#| msgid "Deadeye"
 msgid "Deadly Hunter"
-msgstr "死 亡 之 眼"
+msgstr ""
 
 #: Source/itemdat.cpp:405
-#, fuzzy
-#| msgid "Book of the Blind"
 msgid "Bow of the Dead"
-msgstr "深 奥 之 书"
+msgstr ""
 
 #: Source/itemdat.cpp:406
-#, fuzzy
-#| msgid "The Black King"
 msgid "The Blackoak Bow"
-msgstr "黑 暗 之 王"
+msgstr ""
 
 #: Source/itemdat.cpp:407
-#, fuzzy
-#| msgid "Flame Wave"
 msgid "Flamedart"
-msgstr "热 浪"
+msgstr ""
 
 #: Source/itemdat.cpp:408
 msgid "Fleshstinger"
@@ -2804,20 +3167,16 @@ msgid "Gonnagal's Dirk"
 msgstr ""
 
 #: Source/itemdat.cpp:412
-#, fuzzy
-#| msgid "The Bleeder"
 msgid "The Defender"
-msgstr "放血者"
+msgstr ""
 
 #: Source/itemdat.cpp:413
 msgid "Gryphons Claw"
 msgstr ""
 
 #: Source/itemdat.cpp:414
-#, fuzzy
-#| msgid "Blackstorm"
 msgid "Black Razor"
-msgstr "黑 暗 风 暴"
+msgstr ""
 
 #: Source/itemdat.cpp:415
 msgid "Gibbous Moon"
@@ -2828,36 +3187,30 @@ msgid "Ice Shank"
 msgstr ""
 
 #: Source/itemdat.cpp:417
-#, fuzzy
-#| msgid "The Butcher's Cleaver"
 msgid "The Executioner's Blade"
-msgstr "屠 夫 的 砍 肉 刀"
+msgstr ""
 
 #: Source/itemdat.cpp:418
 msgid "The Bonesaw"
 msgstr ""
 
 #: Source/itemdat.cpp:419
-#, fuzzy
-#| msgid "Shadowcrow"
 msgid "Shadowhawk"
-msgstr "影 子 乌 鸦"
+msgstr ""
 
 #: Source/itemdat.cpp:420
 msgid "Wizardspike"
 msgstr ""
 
 #: Source/itemdat.cpp:421
-#, fuzzy
-#| msgid "Nightscape"
 msgid "Lightsabre"
-msgstr "夜景"
+msgstr ""
 
 #: Source/itemdat.cpp:422
 msgid "The Falcon's Talon"
 msgstr ""
 
-#: Source/itemdat.cpp:423 Source/misdat.cpp:152 Source/spelldat.cpp:35
+#: Source/itemdat.cpp:423 Source/spelldat.cpp:35
 msgid "Inferno"
 msgstr "地 狱 火"
 
@@ -2870,44 +3223,32 @@ msgid "The Grizzly"
 msgstr ""
 
 #: Source/itemdat.cpp:426
-#, fuzzy
-#| msgid "The Butcher"
 msgid "The Grandfather"
-msgstr "屠 夫 恶 魔"
+msgstr ""
 
 #: Source/itemdat.cpp:427
-#, fuzzy
-#| msgid "The Town Elder"
 msgid "The Mangler"
-msgstr "城 中 的 长 者"
+msgstr ""
 
 #: Source/itemdat.cpp:428
-#, fuzzy
-#| msgid "Shadow Beast"
 msgid "Sharp Beak"
-msgstr "影 子 怪 "
+msgstr ""
 
 #: Source/itemdat.cpp:429
-#, fuzzy
-#| msgid "Blood Star"
 msgid "BloodSlayer"
-msgstr "血 星"
+msgstr ""
 
 #: Source/itemdat.cpp:430
-#, fuzzy
-#| msgid "The Celestial Star"
 msgid "The Celestial Axe"
-msgstr "天 星"
+msgstr ""
 
 #: Source/itemdat.cpp:431
 msgid "Wicked Axe"
 msgstr ""
 
 #: Source/itemdat.cpp:432
-#, fuzzy
-#| msgid "Stone Clan"
 msgid "Stonecleaver"
-msgstr "石 头 怪"
+msgstr ""
 
 #: Source/itemdat.cpp:433
 msgid "Aguinara's Hatchet"
@@ -2950,30 +3291,24 @@ msgid "The Cranium Basher"
 msgstr ""
 
 #: Source/itemdat.cpp:443
-#, fuzzy
-#| msgid "War Hammer"
 msgid "Schaefer's Hammer"
-msgstr "战 斗 锤"
+msgstr ""
 
 #: Source/itemdat.cpp:444
 msgid "Dreamflange"
 msgstr ""
 
 #: Source/itemdat.cpp:445
-#, fuzzy
-#| msgid "Staff of %s"
 msgid "Staff of Shadows"
-msgstr "%s 法 杖"
+msgstr ""
 
 #: Source/itemdat.cpp:446
 msgid "Immolator"
 msgstr ""
 
 #: Source/itemdat.cpp:447
-#, fuzzy
-#| msgid "Storm Rider"
 msgid "Storm Spire"
-msgstr "风 暴 骑 士"
+msgstr ""
 
 #: Source/itemdat.cpp:448
 msgid "Gleamsong"
@@ -2988,10 +3323,8 @@ msgid "The Protector"
 msgstr ""
 
 #: Source/itemdat.cpp:451
-#, fuzzy
-#| msgid "Naj's Light Plate"
 msgid "Naj's Puzzler"
-msgstr "Naj的发光铠甲"
+msgstr ""
 
 #: Source/itemdat.cpp:452
 msgid "Mindcry"
@@ -3010,10 +3343,8 @@ msgid "Thinking Cap"
 msgstr ""
 
 #: Source/itemdat.cpp:456
-#, fuzzy
-#| msgid "Overlord"
 msgid "OverLord's Helm"
-msgstr "霸 王"
+msgstr ""
 
 #: Source/itemdat.cpp:457
 msgid "Fool's Crest"
@@ -3056,8 +3387,6 @@ msgid "Scavenger Carapace"
 msgstr "清道夫甲壳"
 
 #: Source/itemdat.cpp:467
-#, fuzzy
-#| msgid "Nightscape"
 msgid "Nightscape"
 msgstr "夜景"
 
@@ -3130,44 +3459,32 @@ msgid "Karik's Ring"
 msgstr ""
 
 #: Source/itemdat.cpp:485
-#, fuzzy
-#| msgid "Ring of Regha"
 msgid "Ring of Magma"
-msgstr "雷哈之戒"
+msgstr ""
 
 #: Source/itemdat.cpp:486
-#, fuzzy
-#| msgid "Ring of Truth"
 msgid "Ring of the Mystics"
-msgstr "真 实 戒 指"
+msgstr ""
 
 #: Source/itemdat.cpp:487
-#, fuzzy
-#| msgid "Ring of Truth"
 msgid "Ring of Thunder"
-msgstr "真 实 戒 指"
+msgstr ""
 
 #: Source/itemdat.cpp:488
 msgid "Amulet of Warding"
 msgstr ""
 
 #: Source/itemdat.cpp:489
-#, fuzzy
-#| msgid "Goat Shrine"
 msgid "Gnat Sting"
-msgstr "Goat 神 龛"
+msgstr ""
 
 #: Source/itemdat.cpp:490
-#, fuzzy
-#| msgid "Flame Wave"
 msgid "Flambeau"
-msgstr "热 浪"
+msgstr ""
 
 #: Source/itemdat.cpp:491
-#, fuzzy
-#| msgid "Warlord of Blood"
 msgid "Armor of Gloom"
-msgstr "血 液 军 阀"
+msgstr ""
 
 #: Source/itemdat.cpp:492
 msgid "Blitzen"
@@ -3182,10 +3499,8 @@ msgid "Shirotachi"
 msgstr ""
 
 #: Source/itemdat.cpp:495
-#, fuzzy
-#| msgid "Leather of Aut"
 msgid "Eater of Souls"
-msgstr "Aut 的 皮 革"
+msgstr ""
 
 #: Source/itemdat.cpp:496
 msgid "Diamondedge"
@@ -3196,10 +3511,8 @@ msgid "Bone Chain Armor"
 msgstr ""
 
 #: Source/itemdat.cpp:498
-#, fuzzy
-#| msgid "Leather Armor"
 msgid "Demon Plate Armor"
-msgstr "皮 革 盔 甲"
+msgstr ""
 
 #: Source/itemdat.cpp:499
 msgid "Acolyte's Amulet"
@@ -3214,16 +3527,12 @@ msgid "Oil of Mastery"
 msgstr ""
 
 #: Source/items.cpp:66
-#, fuzzy
-#| msgid "Black Death"
 msgid "Oil of Death"
-msgstr "黑 暗 僵 尸"
+msgstr ""
 
 #: Source/items.cpp:67
-#, fuzzy
-#| msgid "Veil of Steel"
 msgid "Oil of Skill"
-msgstr "钢 质 面 罩"
+msgstr ""
 
 #: Source/items.cpp:69
 msgid "Oil of Fortitude"
@@ -3234,10 +3543,8 @@ msgid "Oil of Permanence"
 msgstr ""
 
 #: Source/items.cpp:71
-#, fuzzy
-#| msgid "Scroll of Healing"
 msgid "Oil of Hardening"
-msgstr "治 愈 魔 法"
+msgstr ""
 
 #: Source/items.cpp:72
 msgid "Oil of Imperviousness"
@@ -3250,10 +3557,9 @@ msgid "%s of %s"
 msgstr "%s / %s"
 
 #: Source/items.cpp:2778 Source/player.cpp:1896
-#, fuzzy, c-format
-#| msgid "%s of %s"
+#, c-format
 msgid "Ear of %s"
-msgstr "%s / %s"
+msgstr ""
 
 #: Source/items.cpp:3307 Source/items.cpp:3319
 msgid "increases a weapon's"
@@ -3264,10 +3570,8 @@ msgid "chance to hit"
 msgstr ""
 
 #: Source/items.cpp:3313
-#, fuzzy
-#| msgid "increase magic"
 msgid "greatly increases a"
-msgstr "提 升 法 力 值"
+msgstr ""
 
 #: Source/items.cpp:3315
 msgid "weapon's chance to hit"
@@ -3286,10 +3590,8 @@ msgid "damage potential - not bows"
 msgstr ""
 
 #: Source/items.cpp:3331
-#, fuzzy
-#| msgid "No required attributes"
 msgid "reduces attributes needed"
-msgstr "不 需 要 任 何 属 性"
+msgstr ""
 
 #: Source/items.cpp:3333
 msgid "to use armor or weapons"
@@ -3301,26 +3603,20 @@ msgid "restores 20% of an"
 msgstr ""
 
 #: Source/items.cpp:3339
-#, fuzzy
-#| msgid "high durability"
 msgid "item's durability"
-msgstr "较 高 的 耐 久 度"
+msgstr ""
 
 #: Source/items.cpp:3343
-#, fuzzy
-#| msgid "increase vitality"
 msgid "increases an item's"
-msgstr "提 升 活 力"
+msgstr ""
 
 #: Source/items.cpp:3345
 msgid "current and max durability"
 msgstr ""
 
 #: Source/items.cpp:3349
-#, fuzzy
-#| msgid "indestructible"
 msgid "makes an item indestructible"
-msgstr "不 可 毁 坏 的"
+msgstr ""
 
 #: Source/items.cpp:3353
 msgid "increases the armor class"
@@ -3431,10 +3727,9 @@ msgid "%+i%% armor"
 msgstr ""
 
 #: Source/items.cpp:3471 Source/items.cpp:3474
-#, fuzzy, c-format
-#| msgid "Armor"
+#, c-format
 msgid "armor class: %i"
-msgstr "防 御"
+msgstr ""
 
 #: Source/items.cpp:3479 Source/items.cpp:3708
 #, c-format
@@ -3481,20 +3776,18 @@ msgid "spells are increased 1 level"
 msgstr "魔 法 提 升 一 个 等 级"
 
 #: Source/items.cpp:3508
-#, fuzzy, c-format
-#| msgid "spells are increased 2 levels"
+#, c-format
 msgid "spells are increased %i levels"
-msgstr "魔 法 等 级 提 升 二 级"
+msgstr ""
 
 #: Source/items.cpp:3510
 msgid "spells are decreased 1 level"
 msgstr "魔 法 降 低 一 个 等 级"
 
 #: Source/items.cpp:3512
-#, fuzzy, c-format
-#| msgid "spells are decreased 1 level"
+#, c-format
 msgid "spells are decreased %i levels"
-msgstr "魔 法 降 低 一 个 等 级"
+msgstr ""
 
 #: Source/items.cpp:3514
 msgid "spell levels unchanged (?)"
@@ -3515,10 +3808,9 @@ msgid "Fire hit damage: %i"
 msgstr ""
 
 #: Source/items.cpp:3526
-#, fuzzy, c-format
-#| msgid "Charges: %i/%i"
+#, c-format
 msgid "Fire hit damage: %i-%i"
-msgstr "回复: %i/%i"
+msgstr ""
 
 #: Source/items.cpp:3530
 #, c-format
@@ -3531,10 +3823,9 @@ msgid "Lightning hit damage: %i-%i"
 msgstr ""
 
 #: Source/items.cpp:3536
-#, fuzzy, c-format
-#| msgid "Elixir of Strength"
+#, c-format
 msgid "%+i to strength"
-msgstr "强 身 散"
+msgstr ""
 
 #: Source/items.cpp:3540
 #, c-format
@@ -3542,22 +3833,19 @@ msgid "%+i to magic"
 msgstr ""
 
 #: Source/items.cpp:3544
-#, fuzzy, c-format
-#| msgid "increase dexterity"
+#, c-format
 msgid "%+i to dexterity"
-msgstr "提 升 灵 敏 度"
+msgstr ""
 
 #: Source/items.cpp:3548
-#, fuzzy, c-format
-#| msgid "Elixir of Vitality"
+#, c-format
 msgid "%+i to vitality"
-msgstr "活 力 药 水"
+msgstr ""
 
 #: Source/items.cpp:3552
-#, fuzzy, c-format
-#| msgid "No required attributes"
+#, c-format
 msgid "%+i to all attributes"
-msgstr "不 需 要 任 何 属 性"
+msgstr ""
 
 #: Source/items.cpp:3556
 #, c-format
@@ -3565,14 +3853,12 @@ msgid "%+i damage from enemies"
 msgstr ""
 
 #: Source/items.cpp:3560
-#, fuzzy, c-format
-#| msgid "Hit Points %i of %i"
+#, c-format
 msgid "Hit Points: %+i"
-msgstr "攻 击 点 数  %i / %i"
+msgstr ""
 
 #: Source/items.cpp:3564
-#, fuzzy, c-format
-#| msgid "Mana : %+i"
+#, c-format
 msgid "Mana: %+i"
 msgstr "魔法: %+i"
 
@@ -3581,10 +3867,8 @@ msgid "high durability"
 msgstr "较 高 的 耐 久 度"
 
 #: Source/items.cpp:3570
-#, fuzzy
-#| msgid "decrease vitality"
 msgid "decreased durability"
-msgstr "降低 活 力"
+msgstr ""
 
 #: Source/items.cpp:3573
 msgid "indestructible"
@@ -3611,10 +3895,9 @@ msgid "fire arrows damage: %i"
 msgstr ""
 
 #: Source/items.cpp:3588
-#, fuzzy, c-format
-#| msgid "Charges: %i/%i"
+#, c-format
 msgid "fire arrows damage: %i-%i"
-msgstr "回复: %i/%i"
+msgstr ""
 
 #: Source/items.cpp:3592
 #, c-format
@@ -3632,10 +3915,9 @@ msgid "fireball damage: %i"
 msgstr ""
 
 #: Source/items.cpp:3600
-#, fuzzy, c-format
-#| msgid "Charges: %i/%i"
+#, c-format
 msgid "fireball damage: %i-%i"
-msgstr "回复: %i/%i"
+msgstr ""
 
 #: Source/items.cpp:3603
 msgid "attacker takes 1-3 damage"
@@ -3671,34 +3953,28 @@ msgid "hit monster doesn't heal"
 msgstr "攻 击 怪物时不偷 取"
 
 #: Source/items.cpp:3628
-#, fuzzy, c-format
-#| msgid "hit steals 3% mana"
+#, c-format
 msgid "hit steals 3% mana"
 msgstr "攻 击 时 偷 取 3% 的 魔 法 值"
 
 #: Source/items.cpp:3630
-#, fuzzy, c-format
-#| msgid "hit steals 5% mana"
+#, c-format
 msgid "hit steals 5% mana"
 msgstr "攻 击 时 偷 取 5% 的 魔 法 值"
 
 #: Source/items.cpp:3634
-#, fuzzy, c-format
-#| msgid "hit steals 3% life"
+#, c-format
 msgid "hit steals 3% life"
 msgstr "一 次 打 击 偷 取 3% 的 生 命"
 
 #: Source/items.cpp:3636
-#, fuzzy, c-format
-#| msgid "hit steals 5% life"
+#, c-format
 msgid "hit steals 5% life"
 msgstr "攻 击 时 偷 取 5% 的 生 命 值"
 
 #: Source/items.cpp:3639
-#, fuzzy
-#| msgid "damages target's armor"
 msgid "penetrates target's armor"
-msgstr "击 破 对 方 的 盔 甲"
+msgstr ""
 
 #: Source/items.cpp:3643
 msgid "quick attack"
@@ -3729,10 +4005,8 @@ msgid "fastest hit recovery"
 msgstr "最 快 伤 害 恢 复"
 
 #: Source/items.cpp:3660
-#, fuzzy
-#| msgid "fast attack"
 msgid "fast block"
-msgstr "快 速 攻 击"
+msgstr ""
 
 #: Source/items.cpp:3663
 #, c-format
@@ -3749,32 +4023,24 @@ msgid "unusual item damage"
 msgstr ""
 
 #: Source/items.cpp:3672
-#, fuzzy
-#| msgid "high durability"
 msgid "altered durability"
-msgstr "较 高 的 耐 久 度"
+msgstr ""
 
 #: Source/items.cpp:3675
-#, fuzzy
-#| msgid "faster attack"
 msgid "Faster attack swing"
-msgstr "快 速 进 攻"
+msgstr ""
 
 #: Source/items.cpp:3678
-#, fuzzy
-#| msgid "Two-Handed Sword"
 msgid "one handed sword"
-msgstr "双 刃 剑"
+msgstr ""
 
 #: Source/items.cpp:3681
 msgid "constantly lose hit points"
 msgstr ""
 
 #: Source/items.cpp:3684
-#, fuzzy
-#| msgid "Receive healing"
 msgid "life stealing"
-msgstr "治 愈"
+msgstr ""
 
 #: Source/items.cpp:3687
 msgid "no strength requirement"
@@ -3784,7 +4050,7 @@ msgstr ""
 msgid "see with infravision"
 msgstr ""
 
-#: Source/items.cpp:3693 Source/misdat.cpp:147
+#: Source/items.cpp:3693
 msgid " "
 msgstr ""
 
@@ -3794,22 +4060,17 @@ msgid "lightning damage: %i"
 msgstr ""
 
 #: Source/items.cpp:3699
-#, fuzzy, c-format
-#| msgid "Charges: %i/%i"
+#, c-format
 msgid "lightning damage: %i-%i"
-msgstr "回复: %i/%i"
+msgstr ""
 
 #: Source/items.cpp:3702
-#, fuzzy
-#| msgid "Charged Bolt"
 msgid "charged bolts on hits"
-msgstr "闪 光 焰"
+msgstr ""
 
 #: Source/items.cpp:3711
-#, fuzzy
-#| msgid "absorbs half of trap damage"
 msgid "occasional triple damage"
-msgstr "抵 消 陷 阱 伤 害 的 一 半"
+msgstr ""
 
 #: Source/items.cpp:3714
 #, c-format
@@ -3867,8 +4128,6 @@ msgid "left-click to target"
 msgstr "左 键 点 击 来 选 择 目 标"
 
 #: Source/items.cpp:3838
-#, fuzzy
-#| msgid "Right click to use"
 msgid "Right-click to use"
 msgstr "右 键 点 击 使 用"
 
@@ -3881,8 +4140,6 @@ msgid "Right click to read"
 msgstr "右 键 点 击 可 阅 读"
 
 #: Source/items.cpp:3860
-#, fuzzy
-#| msgid "Right click to view"
 msgid "Right-click to view"
 msgstr "右 键 点 击 查 看"
 
@@ -3911,52 +4168,44 @@ msgid " %i Dex"
 msgstr ""
 
 #: Source/items.cpp:3897 Source/items.cpp:3944
-#, fuzzy, c-format
-#| msgid "indestructible"
+#, c-format
 msgid "damage: %i  Indestructible"
-msgstr "不 可 毁 坏 的"
+msgstr ""
 
 #: Source/items.cpp:3899 Source/items.cpp:3946
-#, fuzzy, c-format
-#| msgid "Mana: %i Dam: %i - %i"
+#, c-format
 msgid "damage: %i  Dur: %i/%i"
-msgstr "法 力 ： %i 伤 害 ： %i - %i"
+msgstr ""
 
 #: Source/items.cpp:3902 Source/items.cpp:3949
-#, fuzzy, c-format
-#| msgid "indestructible"
+#, c-format
 msgid "damage: %i-%i  Indestructible"
-msgstr "不 可 毁 坏 的"
+msgstr ""
 
 #: Source/items.cpp:3904 Source/items.cpp:3951
-#, fuzzy, c-format
-#| msgid "Charges: %i/%i"
+#, c-format
 msgid "damage: %i-%i  Dur: %i/%i"
-msgstr "回复: %i/%i"
+msgstr ""
 
 #: Source/items.cpp:3910 Source/items.cpp:3963
-#, fuzzy, c-format
-#| msgid "indestructible"
+#, c-format
 msgid "armor: %i  Indestructible"
-msgstr "不 可 毁 坏 的"
+msgstr ""
 
 #: Source/items.cpp:3912 Source/items.cpp:3965
-#, fuzzy, c-format
-#| msgid "Armor"
+#, c-format
 msgid "armor: %i  Dur: %i/%i"
-msgstr "防 御"
+msgstr ""
 
 #: Source/items.cpp:3917
-#, fuzzy, c-format
-#| msgid "Mana: %i Dam: %i - %i"
+#, c-format
 msgid "dam: %i  Dur: %i/%i"
-msgstr "法 力 ： %i 伤 害 ： %i - %i"
+msgstr ""
 
 #: Source/items.cpp:3919
-#, fuzzy, c-format
-#| msgid "Mana: %i Dam: %i - %i"
+#, c-format
 msgid "dam: %i-%i  Dur: %i/%i"
-msgstr "法 力 ： %i 伤 害 ： %i - %i"
+msgstr ""
 
 #: Source/items.cpp:3920 Source/items.cpp:3955 Source/items.cpp:3970
 #: Source/stores.cpp:169
@@ -3972,228 +4221,892 @@ msgstr "独 一 无 二 的 宝 物"
 msgid "Not Identified"
 msgstr "没 有 鉴 定"
 
-#: Source/misdat.cpp:132
-msgid "Arrows"
+#: Source/loadsave.cpp:1005 Source/loadsave.cpp:2032
+msgid "Unable to open save file archive"
 msgstr ""
 
-#: Source/misdat.cpp:133
-msgid "Fireba"
+#: Source/loadsave.cpp:1008
+msgid "Invalid save file"
 msgstr ""
 
-#: Source/misdat.cpp:134
-msgid "Guard"
+#: Source/loadsave.cpp:1037
+msgid "Player is on a Hellfire only level"
 msgstr ""
 
-#: Source/misdat.cpp:135
-msgid "Lghning"
+#: Source/loadsave.cpp:1794
+msgid "Invalid game state"
 msgstr ""
 
-#: Source/misdat.cpp:136
-msgid "Firewal"
+#: Source/mainmenu.cpp:123
+msgid "Unable to display mainmenu"
 msgstr ""
 
-#: Source/misdat.cpp:137
-msgid "MagBlos"
+#: Source/monstdat.cpp:18
+msgid "Zombie"
 msgstr ""
 
-#: Source/misdat.cpp:138
-msgid "Portal"
+#: Source/monstdat.cpp:19
+msgid "Ghoul"
 msgstr ""
 
-#: Source/misdat.cpp:139
-msgid "Bluexfr"
+#: Source/monstdat.cpp:20
+msgid "Rotting Carcass"
 msgstr ""
 
-#: Source/misdat.cpp:140
-msgid "Bluexbk"
+#: Source/monstdat.cpp:21
+msgid "Black Death"
 msgstr ""
 
-#: Source/misdat.cpp:141
-msgid "Manashld"
-msgstr "魔 法 防 护"
-
-#: Source/misdat.cpp:142
-msgid "Blood"
+#: Source/monstdat.cpp:22 Source/monstdat.cpp:30
+msgid "Fallen One"
 msgstr ""
 
-#: Source/misdat.cpp:143
-msgid "Bone"
+#: Source/monstdat.cpp:23 Source/monstdat.cpp:31
+msgid "Carver"
 msgstr ""
 
-#: Source/misdat.cpp:144
-msgid "Metlhit"
+#: Source/monstdat.cpp:24 Source/monstdat.cpp:32
+msgid "Devil Kin"
 msgstr ""
 
-#: Source/misdat.cpp:145
-msgid "Farrow"
+#: Source/monstdat.cpp:25 Source/monstdat.cpp:33
+msgid "Dark One"
 msgstr ""
 
-#: Source/misdat.cpp:146
-msgid "Doom"
+#: Source/monstdat.cpp:26 Source/monstdat.cpp:38
+msgid "Skeleton"
 msgstr ""
 
-#: Source/misdat.cpp:148
-msgid "Blodbur"
+#: Source/monstdat.cpp:27
+msgid "Corpse Axe"
 msgstr ""
 
-#: Source/misdat.cpp:149
-msgid "Newexp"
+#: Source/monstdat.cpp:28 Source/monstdat.cpp:40
+msgid "Burning Dead"
+msgstr "燃 烧 骷 髅"
+
+#: Source/monstdat.cpp:29 Source/monstdat.cpp:41
+msgid "Horror"
+msgstr "影 子 骷 髅"
+
+#: Source/monstdat.cpp:34
+msgid "Scavenger"
 msgstr ""
 
-#: Source/misdat.cpp:150
-msgid "Shatter1"
+#: Source/monstdat.cpp:35
+msgid "Plague Eater"
 msgstr ""
 
-#: Source/misdat.cpp:151
-msgid "Bigexp"
+#: Source/monstdat.cpp:36
+msgid "Shadow Beast"
 msgstr ""
 
-#: Source/misdat.cpp:153
-msgid "Thinlght"
+#: Source/monstdat.cpp:37
+msgid "Bone Gasher"
 msgstr ""
 
-#: Source/misdat.cpp:154
-msgid "Flare"
+#: Source/monstdat.cpp:39
+msgid "Corpse Bow"
 msgstr ""
 
-#: Source/misdat.cpp:155
-msgid "Flareexp"
+#: Source/monstdat.cpp:42
+msgid "Skeleton Captain"
 msgstr ""
 
-#: Source/misdat.cpp:156
-msgid "Magball"
+#: Source/monstdat.cpp:43
+msgid "Corpse Captain"
 msgstr ""
 
-#: Source/misdat.cpp:157
-msgid "Krull"
+#: Source/monstdat.cpp:44
+msgid "Burning Dead Captain"
 msgstr ""
 
-#: Source/misdat.cpp:158
-msgid "Miniltng"
+#: Source/monstdat.cpp:45
+msgid "Horror Captain"
 msgstr ""
 
-#: Source/misdat.cpp:160
-msgid "Holyexpl"
+#: Source/monstdat.cpp:46
+msgid "Invisible Lord"
 msgstr ""
 
-#: Source/misdat.cpp:161
-msgid "Larrow"
+#: Source/monstdat.cpp:47 Source/objects.cpp:90
+msgid "Hidden"
+msgstr "神 秘 怪 兽"
+
+#: Source/monstdat.cpp:48
+msgid "Stalker"
 msgstr ""
 
-#: Source/misdat.cpp:162
-msgid "Firarwex"
+#: Source/monstdat.cpp:49
+msgid "Unseen"
 msgstr ""
 
-#: Source/misdat.cpp:163
-msgid "Acidbf"
+#: Source/monstdat.cpp:50
+msgid "Illusion Weaver"
 msgstr ""
 
-#: Source/misdat.cpp:164
-msgid "Acidspla"
+#: Source/monstdat.cpp:51
+msgid "Satyr Lord"
 msgstr ""
 
-#: Source/misdat.cpp:165
-msgid "Acidpud"
+#: Source/monstdat.cpp:52 Source/monstdat.cpp:60
+msgid "Flesh Clan"
 msgstr ""
 
-#: Source/misdat.cpp:166
-msgid "Ethrshld"
+#: Source/monstdat.cpp:53 Source/monstdat.cpp:61
+msgid "Stone Clan"
 msgstr ""
 
-#: Source/misdat.cpp:167
-msgid "Firerun"
+#: Source/monstdat.cpp:54 Source/monstdat.cpp:62
+msgid "Fire Clan"
 msgstr ""
 
-#: Source/misdat.cpp:168
-msgid "Ressur1"
+#: Source/monstdat.cpp:55 Source/monstdat.cpp:63
+msgid "Night Clan"
 msgstr ""
 
-#: Source/misdat.cpp:169
-msgid "Sklball"
+#: Source/monstdat.cpp:56
+msgid "Fiend"
 msgstr ""
 
-#: Source/misdat.cpp:170
-msgid "Rportal"
+#: Source/monstdat.cpp:57
+msgid "Blink"
 msgstr ""
 
-#: Source/misdat.cpp:171
-msgid "Fireplar"
+#: Source/monstdat.cpp:58
+msgid "Gloom"
 msgstr ""
 
-#: Source/misdat.cpp:172
-msgid "Scubmisb"
+#: Source/monstdat.cpp:59
+msgid "Familiar"
 msgstr ""
 
-#: Source/misdat.cpp:173
-msgid "Scbsexpb"
+#: Source/monstdat.cpp:64
+msgid "Acid Beast"
 msgstr ""
 
-#: Source/misdat.cpp:174
-msgid "Scubmisc"
+#: Source/monstdat.cpp:65
+msgid "Poison Spitter"
 msgstr ""
 
-#: Source/misdat.cpp:175
-msgid "Scbsexpc"
+#: Source/monstdat.cpp:66
+msgid "Pit Beast"
 msgstr ""
 
-#: Source/misdat.cpp:176
-msgid "Scubmisd"
+#: Source/monstdat.cpp:67
+msgid "Lava Maw"
 msgstr ""
 
-#: Source/misdat.cpp:177
-msgid "Scbsexpd"
+#: Source/monstdat.cpp:68 Source/monstdat.cpp:470
+msgid "Skeleton King"
 msgstr ""
 
-#: Source/misdat.cpp:178
-msgid "spawns"
+#: Source/monstdat.cpp:69 Source/monstdat.cpp:478 Source/quests.cpp:45
+msgid "The Butcher"
+msgstr "屠 夫 恶 魔"
+
+#: Source/monstdat.cpp:70
+msgid "Overlord"
+msgstr "霸 王"
+
+#: Source/monstdat.cpp:71
+msgid "Mud Man"
 msgstr ""
 
-#: Source/misdat.cpp:179
-msgid "reflect"
+#: Source/monstdat.cpp:72
+msgid "Toad Demon"
 msgstr ""
 
-#: Source/misdat.cpp:180
-msgid "ms_ora"
+#: Source/monstdat.cpp:73
+msgid "Flayed One"
 msgstr ""
 
-#: Source/misdat.cpp:181
-msgid "ms_bla"
+#: Source/monstdat.cpp:74
+msgid "Wyrm"
 msgstr ""
 
-#: Source/misdat.cpp:182
-msgid "ms_reb"
+#: Source/monstdat.cpp:75
+msgid "Cave Slug"
 msgstr ""
 
-#: Source/misdat.cpp:183
-msgid "ms_yeb"
+#: Source/monstdat.cpp:76
+msgid "Devil Wyrm"
 msgstr ""
 
-#: Source/misdat.cpp:184
-msgid "rglows1"
+#: Source/monstdat.cpp:77
+msgid "Devourer"
 msgstr ""
 
-#: Source/misdat.cpp:185
-msgid "ex_yel2"
+#: Source/monstdat.cpp:78
+msgid "Magma Demon"
 msgstr ""
 
-#: Source/misdat.cpp:186
-msgid "ex_blu2"
+#: Source/monstdat.cpp:80
+msgid "Hell Stone"
 msgstr ""
 
-#: Source/misdat.cpp:187
-msgid "ex_red3"
+#: Source/monstdat.cpp:81
+msgid "Lava Lord"
 msgstr ""
 
-#: Source/misdat.cpp:188
-msgid "ms_blb"
+#: Source/monstdat.cpp:82
+msgid "Horned Demon"
 msgstr ""
 
-#: Source/misdat.cpp:189
-msgid "ex_ora1"
+#: Source/monstdat.cpp:83
+msgid "Mud Runner"
 msgstr ""
 
-#: Source/misdat.cpp:190
-msgid "ex_blu3"
+#: Source/monstdat.cpp:84
+msgid "Frost Charger"
+msgstr ""
+
+#: Source/monstdat.cpp:85
+msgid "Obsidian Lord"
+msgstr "黑 曜 石 主"
+
+#: Source/monstdat.cpp:86
+msgid "oldboned"
+msgstr ""
+
+#: Source/monstdat.cpp:87
+msgid "Red Death"
+msgstr ""
+
+#: Source/monstdat.cpp:88
+msgid "Litch Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:89
+msgid "Undead Balrog"
+msgstr ""
+
+#: Source/monstdat.cpp:90
+msgid "Incinerator"
+msgstr ""
+
+#: Source/monstdat.cpp:91
+msgid "Flame Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:92
+msgid "Doom Fire"
+msgstr ""
+
+#: Source/monstdat.cpp:93
+msgid "Hell Burner"
+msgstr ""
+
+#: Source/monstdat.cpp:94
+msgid "Red Storm"
+msgstr ""
+
+#: Source/monstdat.cpp:95
+msgid "Storm Rider"
+msgstr "风 暴 骑 士"
+
+#: Source/monstdat.cpp:96
+msgid "Storm Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:97
+msgid "Maelstorm"
+msgstr ""
+
+#: Source/monstdat.cpp:98
+msgid "Devil Kin Brute"
+msgstr ""
+
+#: Source/monstdat.cpp:99
+msgid "Winged-Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:100
+msgid "Gargoyle"
+msgstr ""
+
+#: Source/monstdat.cpp:101
+msgid "Blood Claw"
+msgstr ""
+
+#: Source/monstdat.cpp:102
+msgid "Death Wing"
+msgstr ""
+
+#: Source/monstdat.cpp:103
+msgid "Slayer"
+msgstr ""
+
+#: Source/monstdat.cpp:104 Source/spelldat.cpp:28
+msgid "Guardian"
+msgstr "守 卫"
+
+#: Source/monstdat.cpp:105
+msgid "Vortex Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:106
+msgid "Balrog"
+msgstr ""
+
+#: Source/monstdat.cpp:107
+msgid "Cave Viper"
+msgstr ""
+
+#: Source/monstdat.cpp:108
+msgid "Fire Drake"
+msgstr ""
+
+#: Source/monstdat.cpp:109
+msgid "Gold Viper"
+msgstr ""
+
+#: Source/monstdat.cpp:110
+msgid "Azure Drake"
+msgstr "蓝 鸭"
+
+#: Source/monstdat.cpp:111
+msgid "Black Knight"
+msgstr ""
+
+#: Source/monstdat.cpp:112
+msgid "Doom Guard"
+msgstr ""
+
+#: Source/monstdat.cpp:113
+msgid "Steel Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:114
+msgid "Blood Knight"
+msgstr ""
+
+#: Source/monstdat.cpp:115
+msgid "The Shredded"
+msgstr ""
+
+#: Source/monstdat.cpp:116
+msgid "Hollow One"
+msgstr ""
+
+#: Source/monstdat.cpp:117
+msgid "Pain Master"
+msgstr ""
+
+#: Source/monstdat.cpp:118
+msgid "Reality Weaver"
+msgstr ""
+
+#: Source/monstdat.cpp:119
+msgid "Succubus"
+msgstr ""
+
+#: Source/monstdat.cpp:120
+msgid "Snow Witch"
+msgstr ""
+
+#: Source/monstdat.cpp:121
+msgid "Hell Spawn"
+msgstr ""
+
+#: Source/monstdat.cpp:122
+msgid "Soul Burner"
+msgstr ""
+
+#: Source/monstdat.cpp:123
+msgid "Counselor"
+msgstr ""
+
+#: Source/monstdat.cpp:124
+msgid "Magistrate"
+msgstr ""
+
+#: Source/monstdat.cpp:125
+msgid "Cabalist"
+msgstr ""
+
+#: Source/monstdat.cpp:126
+msgid "Advocate"
+msgstr ""
+
+#: Source/monstdat.cpp:127 Source/spelldat.cpp:36
+msgid "Golem"
+msgstr "人 偶"
+
+#: Source/monstdat.cpp:128
+msgid "The Dark Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:129
+msgid "The Arch-Litch Malignus"
+msgstr ""
+
+#: Source/monstdat.cpp:130
+msgid "Hellboar"
+msgstr ""
+
+#: Source/monstdat.cpp:131
+msgid "Stinger"
+msgstr ""
+
+#: Source/monstdat.cpp:132
+msgid "Psychorb"
+msgstr ""
+
+#: Source/monstdat.cpp:133
+msgid "Arachnon"
+msgstr ""
+
+#: Source/monstdat.cpp:134
+msgid "Felltwin"
+msgstr ""
+
+#: Source/monstdat.cpp:135
+msgid "Hork Spawn"
+msgstr ""
+
+#: Source/monstdat.cpp:136
+msgid "Venomtail"
+msgstr ""
+
+#: Source/monstdat.cpp:137
+msgid "Necromorb"
+msgstr ""
+
+#: Source/monstdat.cpp:138
+msgid "Spider Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:139
+msgid "Lashworm"
+msgstr ""
+
+#: Source/monstdat.cpp:140
+msgid "Torchant"
+msgstr ""
+
+#: Source/monstdat.cpp:141 Source/monstdat.cpp:479
+msgid "Hork Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:142
+msgid "Hell Bug"
+msgstr ""
+
+#: Source/monstdat.cpp:143
+msgid "Gravedigger"
+msgstr ""
+
+#: Source/monstdat.cpp:144
+msgid "Tomb Rat"
+msgstr ""
+
+#: Source/monstdat.cpp:145
+msgid "Firebat"
+msgstr ""
+
+#: Source/monstdat.cpp:146
+msgid "Skullwing"
+msgstr ""
+
+#: Source/monstdat.cpp:147
+msgid "Lich"
+msgstr ""
+
+#: Source/monstdat.cpp:148
+msgid "Crypt Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:149
+msgid "Hellbat"
+msgstr ""
+
+#: Source/monstdat.cpp:150
+msgid "Bone Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:151
+msgid "Arch Lich"
+msgstr ""
+
+#: Source/monstdat.cpp:152
+msgid "Biclops"
+msgstr ""
+
+#: Source/monstdat.cpp:153
+msgid "Flesh Thing"
+msgstr ""
+
+#: Source/monstdat.cpp:154
+msgid "Reaper"
+msgstr ""
+
+#: Source/monstdat.cpp:469
+msgid "Gharbad the Weak"
+msgstr "虚 弱 的 Gharbad"
+
+#: Source/monstdat.cpp:471 Source/quests.cpp:42
+msgid "Zhar the Mad"
+msgstr ""
+
+#: Source/monstdat.cpp:472
+msgid "Snotspill"
+msgstr ""
+
+#: Source/monstdat.cpp:473
+msgid "Arch-Bishop Lazarus"
+msgstr "大 主 教 Lazarus"
+
+#: Source/monstdat.cpp:474
+msgid "Red Vex"
+msgstr ""
+
+#: Source/monstdat.cpp:475
+msgid "BlackJade"
+msgstr "黑 泼 妇"
+
+#: Source/monstdat.cpp:476 Source/quests.cpp:43
+msgid "Lachdanan"
+msgstr ""
+
+#: Source/monstdat.cpp:477 Source/quests.cpp:50
+msgid "Warlord of Blood"
+msgstr "血 液 军 阀"
+
+#: Source/monstdat.cpp:480 Source/quests.cpp:59
+msgid "The Defiler"
+msgstr ""
+
+#: Source/monstdat.cpp:482
+msgid "Bonehead Keenaxe"
+msgstr ""
+
+#: Source/monstdat.cpp:483
+msgid "Bladeskin the Slasher"
+msgstr ""
+
+#: Source/monstdat.cpp:484
+msgid "Soulpus"
+msgstr ""
+
+#: Source/monstdat.cpp:485
+msgid "Pukerat the Unclean"
+msgstr ""
+
+#: Source/monstdat.cpp:486
+msgid "Boneripper"
+msgstr ""
+
+#: Source/monstdat.cpp:487
+msgid "Rotfeast the Hungry"
+msgstr ""
+
+#: Source/monstdat.cpp:488
+msgid "Gutshank the Quick"
+msgstr ""
+
+#: Source/monstdat.cpp:489
+msgid "Brokenhead Bangshield"
+msgstr ""
+
+#: Source/monstdat.cpp:491
+msgid "Rotcarnage"
+msgstr "腐 尸"
+
+#: Source/monstdat.cpp:492
+msgid "Shadowbite"
+msgstr ""
+
+#: Source/monstdat.cpp:493
+msgid "Deadeye"
+msgstr "死 亡 之 眼"
+
+#: Source/monstdat.cpp:494
+msgid "Madeye the Dead"
+msgstr ""
+
+#: Source/monstdat.cpp:496
+msgid "Skullfire"
+msgstr "火 骷 髅"
+
+#: Source/monstdat.cpp:497
+msgid "Warpskull"
+msgstr ""
+
+#: Source/monstdat.cpp:498
+msgid "Goretongue"
+msgstr ""
+
+#: Source/monstdat.cpp:499
+msgid "Pulsecrawler"
+msgstr ""
+
+#: Source/monstdat.cpp:500
+msgid "Moonbender"
+msgstr ""
+
+#: Source/monstdat.cpp:501
+msgid "Wrathraven"
+msgstr ""
+
+#: Source/monstdat.cpp:502
+msgid "Spineeater"
+msgstr ""
+
+#: Source/monstdat.cpp:503
+msgid "Blackash the Burning"
+msgstr ""
+
+#: Source/monstdat.cpp:504
+msgid "Shadowcrow"
+msgstr "影 子 乌 鸦"
+
+#: Source/monstdat.cpp:505
+msgid "Blightstone the Weak"
+msgstr ""
+
+#: Source/monstdat.cpp:506
+msgid "Bilefroth the Pit Master"
+msgstr ""
+
+#: Source/monstdat.cpp:507
+msgid "Bloodskin Darkbow"
+msgstr ""
+
+#: Source/monstdat.cpp:508
+msgid "Foulwing"
+msgstr ""
+
+#: Source/monstdat.cpp:509
+msgid "Shadowdrinker"
+msgstr ""
+
+#: Source/monstdat.cpp:510
+msgid "Hazeshifter"
+msgstr ""
+
+#: Source/monstdat.cpp:511
+msgid "Deathspit"
+msgstr ""
+
+#: Source/monstdat.cpp:512
+msgid "Bloodgutter"
+msgstr ""
+
+#: Source/monstdat.cpp:513
+msgid "Deathshade Fleshmaul"
+msgstr ""
+
+#: Source/monstdat.cpp:514
+msgid "Warmaggot the Mad"
+msgstr ""
+
+#: Source/monstdat.cpp:515
+msgid "Glasskull the Jagged"
+msgstr ""
+
+#: Source/monstdat.cpp:516
+msgid "Blightfire"
+msgstr ""
+
+#: Source/monstdat.cpp:517
+msgid "Nightwing the Cold"
+msgstr ""
+
+#: Source/monstdat.cpp:518
+msgid "Gorestone"
+msgstr ""
+
+#: Source/monstdat.cpp:519
+msgid "Bronzefist Firestone"
+msgstr ""
+
+#: Source/monstdat.cpp:520
+msgid "Wrathfire the Doomed"
+msgstr ""
+
+#: Source/monstdat.cpp:521
+msgid "Firewound the Grim"
+msgstr ""
+
+#: Source/monstdat.cpp:522
+msgid "Baron Sludge"
+msgstr ""
+
+#: Source/monstdat.cpp:523
+msgid "Blighthorn Steelmace"
+msgstr ""
+
+#: Source/monstdat.cpp:524
+msgid "Chaoshowler"
+msgstr ""
+
+#: Source/monstdat.cpp:525
+msgid "Doomgrin the Rotting"
+msgstr ""
+
+#: Source/monstdat.cpp:526
+msgid "Madburner"
+msgstr ""
+
+#: Source/monstdat.cpp:527
+msgid "Bonesaw the Litch"
+msgstr ""
+
+#: Source/monstdat.cpp:528
+msgid "Breakspine"
+msgstr ""
+
+#: Source/monstdat.cpp:529
+msgid "Devilskull Sharpbone"
+msgstr ""
+
+#: Source/monstdat.cpp:530
+msgid "Brokenstorm"
+msgstr ""
+
+#: Source/monstdat.cpp:531
+msgid "Stormbane"
+msgstr ""
+
+#: Source/monstdat.cpp:532
+msgid "Oozedrool"
+msgstr ""
+
+#: Source/monstdat.cpp:533
+msgid "Goldblight of the Flame"
+msgstr ""
+
+#: Source/monstdat.cpp:534
+msgid "Blackstorm"
+msgstr ""
+
+#: Source/monstdat.cpp:535
+msgid "Plaguewrath"
+msgstr ""
+
+#: Source/monstdat.cpp:536
+msgid "The Flayer"
+msgstr ""
+
+#: Source/monstdat.cpp:537
+msgid "Bluehorn"
+msgstr ""
+
+#: Source/monstdat.cpp:538
+msgid "Warpfire Hellspawn"
+msgstr ""
+
+#: Source/monstdat.cpp:539
+msgid "Fangspeir"
+msgstr ""
+
+#: Source/monstdat.cpp:540
+msgid "Festerskull"
+msgstr ""
+
+#: Source/monstdat.cpp:541
+msgid "Lionskull the Bent"
+msgstr ""
+
+#: Source/monstdat.cpp:542
+msgid "Blacktongue"
+msgstr ""
+
+#: Source/monstdat.cpp:543
+msgid "Viletouch"
+msgstr ""
+
+#: Source/monstdat.cpp:544
+msgid "Viperflame"
+msgstr "火 焰 蝰 蛇"
+
+#: Source/monstdat.cpp:545
+msgid "Fangskin"
+msgstr ""
+
+#: Source/monstdat.cpp:546
+msgid "Witchfire the Unholy"
+msgstr ""
+
+#: Source/monstdat.cpp:547
+msgid "Blackskull"
+msgstr ""
+
+#: Source/monstdat.cpp:548
+msgid "Soulslash"
+msgstr ""
+
+#: Source/monstdat.cpp:549
+msgid "Windspawn"
+msgstr ""
+
+#: Source/monstdat.cpp:550
+msgid "Lord of the Pit"
+msgstr ""
+
+#: Source/monstdat.cpp:551
+msgid "Rustweaver"
+msgstr ""
+
+#: Source/monstdat.cpp:552
+msgid "Howlingire the Shade"
+msgstr ""
+
+#: Source/monstdat.cpp:553
+msgid "Doomcloud"
+msgstr ""
+
+#: Source/monstdat.cpp:554
+msgid "Bloodmoon Soulfire"
+msgstr ""
+
+#: Source/monstdat.cpp:555
+msgid "Witchmoon"
+msgstr "月 亮 巫 婆"
+
+#: Source/monstdat.cpp:556
+msgid "Gorefeast"
+msgstr ""
+
+#: Source/monstdat.cpp:557
+msgid "Graywar the Slayer"
+msgstr ""
+
+#: Source/monstdat.cpp:558
+msgid "Dreadjudge"
+msgstr ""
+
+#: Source/monstdat.cpp:559
+msgid "Stareye the Witch"
+msgstr ""
+
+#: Source/monstdat.cpp:560
+msgid "Steelskull the Hunter"
+msgstr ""
+
+#: Source/monstdat.cpp:561
+msgid "Sir Gorash"
+msgstr ""
+
+#: Source/monstdat.cpp:562
+msgid "The Vizier"
+msgstr ""
+
+#: Source/monstdat.cpp:564
+msgid "Bloodlust"
+msgstr ""
+
+#: Source/monstdat.cpp:566
+msgid "Fleshdancer"
+msgstr ""
+
+#: Source/monstdat.cpp:567
+msgid "Grimspike"
+msgstr ""
+
+#: Source/monstdat.cpp:568
+msgid "Doomlock"
 msgstr ""
 
 #: Source/monster.cpp:4956
@@ -4280,6 +5193,22 @@ msgstr ""
 msgid "Unable to get level data"
 msgstr ""
 
+#: Source/msg.cpp:610
+msgid "Trying to drop a floor item?"
+msgstr ""
+
+#: Source/msg.cpp:1387 Source/msg.cpp:1658 Source/msg.cpp:1680
+#: Source/msg.cpp:1702 Source/msg.cpp:1822 Source/msg.cpp:1843
+#: Source/msg.cpp:1864 Source/msg.cpp:1885
+#, c-format
+msgid "%s has cast an illegal spell."
+msgstr ""
+
+#: Source/msg.cpp:2221 Source/multi.cpp:866
+#, c-format
+msgid "Player '%s' (level %d) just joined the game"
+msgstr ""
+
 #: Source/multi.cpp:269
 #, c-format
 msgid "Player '%s' just left the game"
@@ -4295,11 +5224,6 @@ msgstr ""
 msgid "Player '%s' dropped due to timeout"
 msgstr ""
 
-#: Source/multi.cpp:866
-#, c-format
-msgid "Player '%s' (level %d) just joined the game"
-msgstr ""
-
 #: Source/multi.cpp:868
 #, c-format
 msgid "Player '%s' (level %d) is already in the game"
@@ -4308,10 +5232,6 @@ msgstr ""
 #: Source/objects.cpp:89
 msgid "Mysterious"
 msgstr ""
-
-#: Source/objects.cpp:90
-msgid "Hidden"
-msgstr "神 秘 怪 兽"
 
 #: Source/objects.cpp:91
 msgid "Gloomy"
@@ -4455,7 +5375,7 @@ msgstr ""
 
 #: Source/objects.cpp:258
 msgid "The Realms Beyond"
-msgstr "远 处 地 域 "
+msgstr "远 处 地 域"
 
 #: Source/objects.cpp:259
 msgid "Tale of the Three"
@@ -4632,7 +5552,7 @@ msgstr "蘑 菇 地"
 
 #: Source/objects.cpp:5596
 msgid "Vile Stand"
-msgstr "讨 厌 "
+msgstr "讨 厌"
 
 #: Source/objects.cpp:5599
 msgid "Slain Hero"
@@ -4646,6 +5566,36 @@ msgstr ""
 #: Source/objects.cpp:5612
 #, c-format
 msgid "%s (disabled)"
+msgstr ""
+
+#: Source/pfile.cpp:223
+msgid "Failed to open player archive for writing."
+msgstr ""
+
+#: Source/pfile.cpp:398
+msgid "Unable to open archive"
+msgstr ""
+
+#: Source/pfile.cpp:400
+msgid "Unable to load character"
+msgstr ""
+
+#: Source/pfile.cpp:423 Source/pfile.cpp:446
+msgid "Unable to read to save file archive"
+msgstr ""
+
+#: Source/pfile.cpp:465 Source/pfile.cpp:477
+msgid "Unable to write to save file archive"
+msgstr ""
+
+#: Source/plrmsg.cpp:72
+#, c-format
+msgid "%s (lvl %d): %s"
+msgstr ""
+
+#: Source/qol.cpp:67 Source/qol/xpbar.cpp:52
+msgid ""
+"Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"
 msgstr ""
 
 #: Source/qol/xpbar.cpp:122
@@ -4680,25 +5630,13 @@ msgstr "魔 岩"
 msgid "Gharbad The Weak"
 msgstr "虚 弱 的 Gharbad"
 
-#: Source/quests.cpp:42
-msgid "Zhar the Mad"
-msgstr ""
-
-#: Source/quests.cpp:43
-msgid "Lachdanan"
-msgstr ""
-
 #: Source/quests.cpp:44
 msgid "Diablo"
 msgstr ""
 
-#: Source/quests.cpp:45
-msgid "The Butcher"
-msgstr "屠 夫 恶 魔"
-
 #: Source/quests.cpp:46
 msgid "Ogden's Sign"
-msgstr " Ogden 的 招 牌"
+msgstr "Ogden 的 招 牌"
 
 #: Source/quests.cpp:47
 msgid "Halls of the Blind"
@@ -4707,10 +5645,6 @@ msgstr ""
 #: Source/quests.cpp:48
 msgid "Valor"
 msgstr ""
-
-#: Source/quests.cpp:50
-msgid "Warlord of Blood"
-msgstr "血 液 军 阀"
 
 #: Source/quests.cpp:51
 msgid "The Curse of King Leoric"
@@ -4742,10 +5676,6 @@ msgstr ""
 
 #: Source/quests.cpp:58
 msgid "Wandering Trader"
-msgstr ""
-
-#: Source/quests.cpp:59
-msgid "The Defiler"
 msgstr ""
 
 #: Source/quests.cpp:60
@@ -4846,10 +5776,6 @@ msgstr "魔 法 防 护"
 msgid "Fireball"
 msgstr "火 球"
 
-#: Source/spelldat.cpp:28
-msgid "Guardian"
-msgstr "守 卫"
-
 #: Source/spelldat.cpp:29
 msgid "Chain Lightning"
 msgstr "连 环 闪 电"
@@ -4873,10 +5799,6 @@ msgstr ""
 #: Source/spelldat.cpp:34
 msgid "Invisibility"
 msgstr ""
-
-#: Source/spelldat.cpp:36
-msgid "Golem"
-msgstr "人 偶"
 
 #: Source/spelldat.cpp:37
 msgid "Rage"
@@ -4924,7 +5846,7 @@ msgstr ""
 
 #: Source/spelldat.cpp:48
 msgid "Telekinesis"
-msgstr "劈 空 取 物 "
+msgstr "劈 空 取 物"
 
 #: Source/spelldat.cpp:49
 msgid "Heal Other"
@@ -5126,11 +6048,11 @@ msgstr "回购哪个物品？             你的金币：%i"
 
 #: Source/stores.cpp:819
 msgid "You do not have enough gold"
-msgstr "您 没 有 足 够 的 金 子 "
+msgstr "您 没 有 足 够 的 金 子"
 
 #: Source/stores.cpp:827
 msgid "You do not have enough room in inventory"
-msgstr "在 你 的 行 囊 中 已 经 没 有 足 够 的 空 间 存 放 物 品 了 "
+msgstr "在 你 的 行 囊 中 已 经 没 有 足 够 的 空 间 存 放 物 品 了"
 
 #: Source/stores.cpp:863
 msgid "Do we have a deal?"
@@ -5158,7 +6080,7 @@ msgstr "你 确 定 要 修 补 这 个 吗 ？"
 
 #: Source/stores.cpp:896 Source/towners.cpp:318
 msgid "Wirt the Peg-legged boy"
-msgstr "装 假 腿 的 男 孩 Wirt "
+msgstr "装 假 腿 的 男 孩 Wirt"
 
 #: Source/stores.cpp:899 Source/stores.cpp:906
 msgid "Talk to Wirt"
@@ -5166,15 +6088,15 @@ msgstr "与 Wirt 交 谈"
 
 #: Source/stores.cpp:900
 msgid "I have something for sale,"
-msgstr "我 有 些 东 西 要 卖 ，"
+msgstr "我 有 些 东 西 要 卖,"
 
 #: Source/stores.cpp:901
 msgid "but it will cost 50 gold"
-msgstr "看 一 下 花 50 个 金 币 ，"
+msgstr "看 一 下 花 50 个 金 币"
 
 #: Source/stores.cpp:902
 msgid "just to take a look. "
-msgstr "要 看 看 吗 ？"
+msgstr "要 看 看 吗 ？ "
 
 #: Source/stores.cpp:903
 msgid "What have you got?"
@@ -5280,7 +6202,7 @@ msgstr "与 Gillian 交 谈"
 
 #: Source/stores.cpp:1197 Source/towners.cpp:366
 msgid "Farnham the Drunk"
-msgstr "醉 鬼 Farnham "
+msgstr "醉 鬼 Farnham"
 
 #: Source/stores.cpp:1199
 msgid "Talk to Farnham"
@@ -5333,7 +6255,7 @@ msgid ""
 "land... |"
 msgstr ""
 "我 告 诉 过 你 的 ， 英 雄 ， 国 王 安 葬 在 下 面 第 三 层 。 他 在 那 随 "
-"落 的 黑 暗 中 等 待 机 会 毁 灭 这 个 国 家 。"
+"落 的 黑 暗 中 等 待 机 会 毁 灭 这 个 国 家 。 |"
 
 #: Source/textdat.cpp:21
 msgid ""
@@ -5345,7 +6267,7 @@ msgstr ""
 "我 们 国 王 的 咒 语 已 过 去 了 ， 但 是 我 担 心 它 仅 仅 是 一 个 大 罪 "
 "恶 的 一 部 分 。 然 而 我 们 也 许 还 可 以 从 毁 灭 我 们 国 家 的 黑 暗 "
 "救 出 我 们 自 己 因 为 你 的 胜 利 是 一 个 吉 兆 。 希 望 光 明 指 引 你 "
-"的 前 程 ， 我 的 英 雄 。"
+"的 前 程 ， 我 的 英 雄 。 |"
 
 #: Source/textdat.cpp:23
 msgid ""
@@ -5357,7 +6279,7 @@ msgstr ""
 "国 王 Leoric 对 儿 子 失 踪 这 件 事 一 筹 莫 展 。 我 做 了 一 切 我 能 做 "
 "的 来 缓 和 他 的 疯 狂 ， 但 是 最 终 他 被 压 垮 了 。 从 那 天 ， 可 怕 "
 "的 咒 语 已 降 临 到 了 这 个 王 国 。 但 是 如 果 你 从 他 的 尘 世 监 狱 "
-"中 解 放 他 的 精 神 ， 咒 语 也 许 将 被 解 除 。"
+"中 解 放 他 的 精 神 ， 咒 语 也 许 将 被 解 除 。 |"
 
 #: Source/textdat.cpp:25
 msgid ""
@@ -5366,7 +6288,7 @@ msgid ""
 "wrong, somehow. |"
 msgstr ""
 "我 不 愿 意 想 到 国 王 是 怎 样 死 的 ， 我 只 想 记 住 他 曾 经 仁 慈 地 "
-"统 治 过 我 们 。 他 的 死 太 凄 惨 了 ， 是 不 应 该 发 生 的 事 。"
+"统 治 过 我 们 。 他 的 死 太 凄 惨 了 ， 是 不 应 该 发 生 的 事 。 |"
 
 #: Source/textdat.cpp:27
 msgid ""
@@ -5388,7 +6310,7 @@ msgid ""
 "King. King, so you hear me? HAIL TO THE KING! |"
 msgstr ""
 "我 不 关 心 那 个 。 听 着 ， 不 会 有 骷 髅 能 成 为 我 的 国 王 。Leoric "
-"是 国 王 。 国 王 ， 你 听 见 我 说 的 吗 ？ 国 王 万 岁 ！"
+"是 国 王 。 国 王 ， 你 听 见 我 说 的 吗 ？ 国 王 万 岁 ！ |"
 
 #: Source/textdat.cpp:31
 msgid ""
@@ -5400,7 +6322,7 @@ msgstr ""
 "在 活 人 间 活 动 的 死 者 是 跟 随 该 死 的 国 王 的 。 他 拥 有 培 养 更 "
 "多 战 士 的 力 量 ， 组 成 日 益 壮 大 的 不 死 军 队 。 如 果 你 不 停 止 "
 "他 的 统 治 ， 他 肯 定 将 踏 遍 这 片 陆 地 ， 杀 害 仍 然 居 住 在 这 里 "
-"的 所 有 人 。"
+"的 所 有 人 。 |"
 
 #: Source/textdat.cpp:33
 msgid ""
@@ -5411,7 +6333,7 @@ msgid ""
 msgstr ""
 "瞧 ， 我 不 过 是 在 这 儿 作 生 意 。 我 不 出 售 信 息 ， 我 也 不 关 心 "
 "那 些 在 我 之 前 已 经 死 了 的 国 王 。 如 果 你 需 要 用 来 反 对 还 没 "
-"死 的 国 王 东 西 ， 我 倒 是 能 帮 你 找 到 。"
+"死 的 国 王 东 西 ， 我 倒 是 能 帮 你 找 到 。 |"
 
 #: Source/textdat.cpp:35
 msgid ""
@@ -5449,7 +6371,7 @@ msgstr ""
 "往 外 看 的 时 候, 在 小 旅 馆 庭 院 中 看 见 了 像 恶 魔 一 样 形 状 的 生 "
 "物. 一 会 儿 ， 他 们 离 开 了 ， 但 是 窃 取 走 了 我 小 旅 馆 的 招 牌. 我 "
 "不 知 道 为 什 么 恶 魔 窃 取 我 的 招 牌 而 不 攻 击 我 的 家... 很 奇 "
-"怪 ， 不 是 吗? "
+"怪 ， 不 是 吗? |"
 
 #: Source/textdat.cpp:41
 msgid ""
@@ -5463,7 +6385,7 @@ msgstr ""
 "另 外 再 做 一 个 的 开 支 。 好 ， 让 我 看 看 我 能 给 你 什 么 作 为 找 "
 "回 它 的 报 酬 呢 ？ 嗯 ， 这 里 有 什 么 ？ 啊 ， 是 的 ！ 不 久 以 前 一 "
 "个 经 过 这 里 的 魔 术 师 把 这 顶 帽 子 遗 留 在 房 间 里 。 也 许 它 对 "
-"你 有 一 些 用 处 。 "
+"你 有 一 些 用 处 。 |"
 
 #: Source/textdat.cpp:43
 msgid ""
@@ -5483,7 +6405,7 @@ msgid ""
 msgstr ""
 "哦 ， 我 的 天 啊 ！ 招 牌 就 是 在 那 儿 丢 的 吗 ？ 我 的 奶 奶 和 我 肯 "
 "定 在 整 个 过 程 中 一 直 睡 觉 。 那 些 鬼 怪 没 有 攻 击 小 旅 馆 ， 感 "
-"谢 上 帝 ！"
+"谢 上 帝 ！ |"
 
 #: Source/textdat.cpp:47
 #, fuzzy
@@ -5509,7 +6431,7 @@ msgstr ""
 "你 知 道 我 考 虑 什 么 吗 ？ 某 人 取 去 那 个 招 牌 ， 他 们 想 利 用 它 "
 "要 许 多 钱 。 如 果 我 是 Ogden ...， 虽 然 我 不 是 ， 但 是 如 果 我 "
 "是... 我 将 买 一 个 有 漂 亮 图 画 的 新 招 牌 。 或 许 一 杯 好 的 大 杯 "
-"麦 芽 酒 或 者 一 片 干 酪.."
+"麦 芽 酒 或 者 一 片 干 酪.. |"
 
 #: Source/textdat.cpp:51
 #, fuzzy
@@ -5547,7 +6469,7 @@ msgid ""
 msgstr ""
 "嗨 -- 你, 杀 死 所 有 的 ！ 给 我 魔 法 旗 否 则 我 们 进 攻 ！ 你 不 能 活 "
 "着 离 开 ！ 你 要 杀 了 那 个 丑 八 怪 而 且 要 找 回 魔 力 。 到 门 后 和 "
-"角 落 找 到 那 个 丑 八 怪 。 给 你 ， 去 吧 ！"
+"角 落 找 到 那 个 丑 八 怪 。 给 你 ， 去 吧 ！ |"
 
 #: Source/textdat.cpp:57
 msgid "You kill uglies, get banner. You bring to me, or else... |"
@@ -5741,7 +6663,8 @@ msgstr ""
 "我 很 高 兴 及 时 找 到 了 你 ！ 我 们 的 井 水 已 变 得 微 咸 而 死 寂 ， "
 "某 些 镇 民 已 因 为 饮 用 它 们 而 生 病 。 我 们 预 备 的 新 鲜 水 很 快 "
 "就 用 完 了 。 我 相 信 有 一 条 路 可 以 进 入 我 们 城 镇 泉 水 的 源 "
-"头 。 请 找 到 引 起 这 场 灾 难 的 原 因 ， 否 则 我 们 大 家 都 会 死 亡 。"
+"头 。 请 找 到 引 起 这 场 灾 难 的 原 因 ， 否 则 我 们 大 家 都 会 死 "
+"亡 。 |"
 
 #: Source/textdat.cpp:92
 #, fuzzy
@@ -5766,7 +6689,7 @@ msgstr ""
 "你 说 什 么 ？ 仅 仅 是 恶 魔 的 存 在 已 经 使 水 受 污 染 ？ 哎 ， 确 实 "
 "一 个 极 大 恶 魔 隐 藏 在 我 们 的 城 镇 下 ， 但 是 你 的 毅 力 和 勇 气 "
 "给 我 们 希 望 。 请 收 下 这 个 戒 指 -- 也 许 它 将 在 你 摧 毁 这 恶 魔 "
-"的 过 程 中 帮 助 你."
+"的 过 程 中 帮 助 你. |"
 
 #: Source/textdat.cpp:96
 msgid ""
@@ -5868,7 +6791,7 @@ msgid ""
 msgstr ""
 "没 问 题,那 么 听 着.你 看 ， 那 儿 有 个 木 头 房 间.他 的 妻 子 ， 你 知 "
 "道 -- 她 -- 告 诉 树...因 此 你 得 等 着.然 后 我 说 ， 那 个 可 能 不 利 于 "
-"他,但 是 如 果 你 认 为,我 将 要 去 为 这 个 付 你...嘿 薪 水."
+"他,但 是 如 果 你 认 为,我 将 要 去 为 这 个 付 你...嘿 薪 水. |"
 
 #: Source/textdat.cpp:117
 #, fuzzy
@@ -5891,7 +6814,7 @@ msgid ""
 msgstr ""
 "你 说 有 大 量 神 秘 宝 藏 吗?或 许 我 对 从 你 那 儿 获 取 什 么 有 一 丝 "
 "兴 趣 … … 或 者 更 好 些,你 不 需 要 一 些 非 常 昂 贵 的 物 品 使 你 通 过 "
-"这 痛 苦 的 经 历 吗?"
+"这 痛 苦 的 经 历 吗? |"
 
 #: Source/textdat.cpp:121
 msgid ""
@@ -5905,7 +6828,7 @@ msgstr ""
 "王 失 踪 的 儿 子. 他 利 用 他 们 的 恐 惧 ， 使 他 们 迅 速 变 成 一 群 狂 "
 "乱 的 暴 民. 没 有 人 对 那 片 寒 冷 的 地 狱 有 一 点 儿 准 备... Lazarus  "
 "把 他 们 遗 弃 在 那 儿 ， 让 他 们 被 无 可 名 状 的 恐 惧 占 领 ， 直 到 "
-"死 去 。"
+"死 去 。 |"
 
 #: Source/textdat.cpp:123
 msgid ""
@@ -5913,7 +6836,7 @@ msgid ""
 "fierce weapon. I believe he called him a butcher. |"
 msgstr ""
 "是 的 ，Farnham 喃 喃 自 语 过 关 于 一 只 挥 舞 凶 猛 武 器 的 庞 大 笨 重 "
-"的 野 兽 之 类 的 东 西 。 我 相 信 他 认 为 他 是 一 个 屠 夫."
+"的 野 兽 之 类 的 东 西 。 我 相 信 他 认 为 他 是 一 个 屠 夫. |"
 
 #: Source/textdat.cpp:125
 msgid ""
@@ -5937,7 +6860,7 @@ msgid ""
 "discounted it. But since you brought it up, maybe it is true. |"
 msgstr ""
 "当 Farnham 谈 到 一 个 屠 夫 杀 人 的 时 候 ， 我 立 即 对 它 的 真 实 性 打 "
-"折 扣 。 但 是 自 你 提 出 它 以 来 ， 我 认 为 或 许 它 是 真 实 的."
+"折 扣 。 但 是 自 你 提 出 它 以 来 ， 我 认 为 或 许 它 是 真 实 的. |"
 
 #: Source/textdat.cpp:129
 msgid ""
@@ -5953,7 +6876,7 @@ msgstr ""
 "刀 ， 切 下 那 些 勇 敢 的 人 的 四 肢 和 头 颅 。 我 被 一 大 群 尖 叫 着 "
 "的 小 鬼 围 攻 并 远 离 了 那 个 “ 屠 宰 场 ” ， 也 不 知 怎 么 搞 的 发 现 "
 "了 出 去 的 楼 梯 。 我 再 也 没 有 看 到 那 个 令 人 呕 吐 的 野 兽 ， 但 "
-"是 它 那 血 污 的 面 孔 常 在 我 眼 前 出 现 。"
+"是 它 那 血 污 的 面 孔 常 在 我 眼 前 出 现 。 |"
 
 #: Source/textdat.cpp:131
 msgid ""
@@ -5973,7 +6896,7 @@ msgid ""
 msgstr ""
 "屠 夫 是 一 个 喜 欢 折 磨 别 人 让 别 人 痛 苦 的 有 施 虐 狂 的 怪 物 。 "
 "你 已 在 酒 鬼 Farnham 身 上 看 到 了 他 的 手 段 。 消 灭 他 将 保 证 这 村 "
-"落 的 安 全 。"
+"落 的 安 全 。 |"
 
 #: Source/textdat.cpp:135
 #, fuzzy
@@ -6002,7 +6925,7 @@ msgstr ""
 "求 求 你 ， 听 我 说 。Lazarus 大 主 教 让 我 们 下 去 找 寻 迷 失 的 王 "
 "子 ， 可 这 是 个 圈 套 ！ 现 在 每 个 人 都 死 了 。 。 。 被 一 个 叫 做 "
 "屠 夫 的 恶 魔 杀 死 了 。 为 我 们 报 仇 ！ 找 到 那 个 家 伙 并 干 掉 它 "
-"这 样 我 们 的 灵 魂 才 会 安 息 。 。 。"
+"这 样 我 们 的 灵 魂 才 会 安 息 。 。 。 |"
 
 #: Source/textdat.cpp:140
 msgid ""
@@ -6130,7 +7053,7 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know! |"
 msgstr ""
-"Lachdanan 已 经 死 了 。 每 个 人 都 知 道 ， 你 不 能 骗 我 相 信 其 它 的 "
+" Lachdanan 已 经 死 了 。 每 个 人 都 知 道 ， 你 不 能 骗 我 相 信 其 它 的 "
 "可 能 。 你 不 能 和 死 人 说 话 。 我 知 道 ！|"
 
 #: Source/textdat.cpp:168
@@ -6216,12 +7139,12 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be... |"
 msgstr ""
-" Griswold 谈 到 暴 怒 铁 砧 -- 传 说 中 人 工 制 品 的 砧 ， 但 是 从 未 发 "
+"Griswold 谈 到 暴 怒 铁 砧 -- 传 说 中 人 工 制 品 的 砧 ， 但 是 从 未 发 "
 "现 它 。 用 地 狱 剃 刀 恶 魔 的 金 属 骨 头 制 作 ， 暴 怒 铁 砧 在 地 下 "
 "世 界 的 五 个 最 强 大 星 术 学 家 的 颅 骨 周 围 被 找 到 。 雕 刻 着 力 "
 "量 和 混 沌 的 如 尼 字 母 ， 任 何 在 这 砧 上 锻 造 的 武 器 或 者 装 甲 "
 "都 将 嵌 入 魔 力 。 据 说 混 乱 的 不 可 预 测 的 本 质 使 得 制 成 品 具 "
-"有 什 么 魔 力 变 得 不 可 预 知 。"
+"有 什 么 魔 力 变 得 不 可 预 知 。 |"
 
 #: Source/textdat.cpp:180
 msgid ""
@@ -6291,7 +7214,7 @@ msgid ""
 "proportions. |"
 msgstr ""
 "没 有 什 么 吗?好,继 续 搜 寻.在 砧 上 锻 造 一 武 器 可 能 是 你 最 好 的 "
-"希 望,我 确 信 我 能 使 你 们 成 为 传 说 中 的 一 个."
+"希 望,我 确 信 我 能 使 你 们 成 为 传 说 中 的 一 个. |"
 
 #: Source/textdat.cpp:190
 msgid ""
@@ -6320,7 +7243,7 @@ msgid ""
 msgstr ""
 "在 迷 宫 里 的 很 多 制 品 都 有 超 出 凡 人 想 象 之 外 的 力 量 。 其 中 "
 "有 一 些 拥 有 了 不 起 的 能 被 光 明 或 者 黑 暗 运 用 的 力 量 。 要 确 "
-"保 来 自 地 狱 的 铁 砧 能 使 罪 恶 战 争 走 向 光 明 。"
+"保 来 自 地 狱 的 铁 砧 能 使 罪 恶 战 争 走 向 光 明 。 |"
 
 #: Source/textdat.cpp:196
 msgid ""
@@ -6368,7 +7291,7 @@ msgid ""
 "Sorry... |"
 msgstr ""
 "唔 … … 听 起 来 好 是 我 应 该 记 得 的 事 ， 不 过 我 一 定 是 忙 于 研 究 "
-"治 愈 术 和 制 作 炼 金 药 ， 所 以 忘 记 了 。"
+"治 愈 术 和 制 作 炼 金 药 ， 所 以 忘 记 了 。 |"
 
 #: Source/textdat.cpp:204
 msgid ""
@@ -6388,6 +7311,10 @@ msgstr ""
 "圣 铠 Valor 能 以 你 喜 欢 的 形 式 穿 着 。 我 告 诉 你 很 多 人 都 找 过 "
 "它 包 括 我 自 已 。Arkaine 把 它 藏 得 很 好 ， 我 的 朋 友 ， 需 要 一 点 "
 "儿 运 气 才 能 找 到 它 的 隐 藏 地 ， 噢 ， 过 了 这 么 多 年 了 。|"
+
+#: Source/textdat.cpp:208
+msgid "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz... |"
+msgstr ""
 
 #: Source/textdat.cpp:209
 #, fuzzy
@@ -6579,7 +7506,7 @@ msgid ""
 msgstr ""
 "我 过 去 有 一 个 精 致 的 戒 指 ： 它 确 实 是 很 昂 贵 的 ， 有 蓝 色 、 "
 "绿 色 、 红 色 和 银 色 。 尽 管 不 记 得 它 到 那 儿 去 了 ， 我 确 实 很 "
-"想 念 那 个 戒 指 "
+"想 念 那 个 戒 指 |"
 
 #: Source/textdat.cpp:247
 msgid ""
@@ -6589,7 +7516,7 @@ msgid ""
 msgstr ""
 "天 堂 石 头 非 常 强 大 ， 但 是 如 果 不 是 Griswold 命 令 你 找 出 它 ， "
 "我 将 阻 碍 它 。 他 将 利 用 它 的 力 量 ， 使 用 它 将 有 助 于 我 们 所 "
-"有 人 。"
+"有 人 。 |"
 
 #: Source/textdat.cpp:249
 msgid ""
@@ -6644,7 +7571,7 @@ msgid ""
 msgstr ""
 "太 好 了 ， 这 个 就 是 我 想 要 的 。 没 有 这 个 我 也 能 完 成 炼 金 "
 "药 ， 但 是 研 究 它 没 有 危 害 。 请 你 把 这 个 带 给 女 巫 好 吗 ？ 我 "
-"相 信 她 想 找 到 它."
+"相 信 她 想 找 到 它. |"
 
 #: Source/textdat.cpp:259
 msgid ""
@@ -6680,7 +7607,7 @@ msgid ""
 msgstr ""
 "这 是 什 么 啊 ？ 有 意 思 ， 看 起 来 是 一 本 关 于 试 剂 的 书 。 留 心 "
 "找 一 个 黑 蘑 菇 。 它 应 该 是 相 当 大 ， 很 容 易 识 别 的 。 如 果 你 "
-"找 出 它 ， 拿 来 给 我 ， 可 以 吗 ？"
+"找 出 它 ， 拿 来 给 我 ， 可 以 吗 ？ |"
 
 #: Source/textdat.cpp:267
 msgid ""
@@ -6688,7 +7615,7 @@ msgid ""
 "that I can use it for a special concoction that I am working on. |"
 msgstr ""
 "我 需 要 一 个 大 而 黑 的 蘑 菇 。 现 在 去 为 我 弄 来 这 个 东 西 ， 我 "
-"就 可 以 在 正 试 验 的 特 殊 调 剂 使 用 它 了 。"
+"就 可 以 在 正 试 验 的 特 殊 调 剂 使 用 它 了 。 |"
 
 #: Source/textdat.cpp:269
 msgid ""
@@ -6701,7 +7628,7 @@ msgstr ""
 "是 的 ， 这 将 让 我 的 计 划 更 加 完 美 。 顺 便 说 一 句 ， 医 生 正 在 "
 "找 某 种 魔 鬼 的 大 脑 用 来 治 疗 那 些 被 它 们 的 毒 液 折 磨 的 人 "
 "们 。 我 相 信 他 是 要 用 它 们 配 炼 金 药 。 如 果 你 能 帮 他 找 到 他 "
-"要 的 东 西 ， 那 就 看 看 能 不 能 帮 我 要 一 些 炼 金 药 的 样 品 来 。"
+"要 的 东 西 ， 那 就 看 看 能 不 能 帮 我 要 一 些 炼 金 药 的 样 品 来 。 |"
 
 #: Source/textdat.cpp:271
 msgid ""
@@ -6846,7 +7773,7 @@ msgstr ""
 
 #: Source/textdat.cpp:303
 msgid "This too good for you. Very Powerful! You want - you take! |"
-msgstr "你 太 好 了 。 非 常 有 力 ！ 你 要 的 -- 给 你 ！"
+msgstr "你 太 好 了 。 非 常 有 力 ！ 你 要 的 -- 给 你 ！ |"
 
 #: Source/textdat.cpp:305
 msgid ""
@@ -6885,7 +7812,7 @@ msgid ""
 msgstr ""
 "我 听 说 过 很 多 神 话 和 传 说, 里 面 也 许 有 些 东 西 可 以 回 答 你 在 "
 "迷 宫 内 可 能 碰 到 的 问 题. 如 果 你 遇 到 挑 战 和 问 题, 来 找 我 ， 我 "
-"将 告 诉 你 我 所 知 道 的 。"
+"将 告 诉 你 我 所 知 道 的 。 |"
 
 #: Source/textdat.cpp:313
 msgid ""
@@ -6895,10 +7822,10 @@ msgid ""
 "is a skilled craftsman, and if he claims to be able to help you in any way, "
 "you can count on his honesty and his skill. |"
 msgstr ""
-" Griswold -- 一 个 敢 作 敢 为 的 人 。 我 打 赌 他 从 没 有 告 诉 你 他 进 "
+"Griswold -- 一 个 敢 作 敢 为 的 人 。 我 打 赌 他 从 没 有 告 诉 你 他 进 "
 "入 迷 宫 去 救 Wirt 的 事 ， 是 不 是 ？ 他 知 道 那 里 的 危 险 ， 不 过 -- "
 "你 也 是 啊 。 他 是 一 个 出 色 的 手 艺 人 ， 如 果 他 说 能 以 某 种 方 "
-"式 帮 助 你 ， 那 你 就 可 以 依 靠 他 的 诚 实 和 他 的 技 能 了."
+"式 帮 助 你 ， 那 你 就 可 以 依 靠 他 的 诚 实 和 他 的 技 能 了. |"
 
 #: Source/textdat.cpp:315
 msgid ""
@@ -6923,7 +7850,7 @@ msgstr ""
 "可 怜 的 Farnham。 那 天 夜 里 他 跟 着 Lazarus 进 入 了 迷 宫 。 他 活 着 "
 "跑 出 来 了 ， 但 是 他 的 大 部 分 勇 气 和 心 智 都 留 在 了 那 个 深 渊 "
 "中 。 现 在 他 在 酒 杯 中 找 到 了 安 逸 的 生 活 ， 不 过 有 时 仍 会 有 "
-"一 些 记 忆 浮 现 上 来 。"
+"一 些 记 忆 浮 现 上 来 。 |"
 
 #: Source/textdat.cpp:319
 msgid ""
@@ -6937,7 +7864,7 @@ msgstr ""
 "不 久 来 到 这 儿, 那 个 时 候 绝 大 部 分 人 都 逃 跑 了 。 她 在 城 镇 的 "
 "边 缘 有 一 间 小 屋 ， 似 乎 是 在 一 夜 间 建 造 的 。 里 面 有 很 多 奇 "
 "怪 和 神 秘 的 人 工 制 品 和 书 册 ， 她 的 某 些 知 识 甚 至 连 我 也 不 "
-"知 道 ！"
+"知 道 ！ |"
 
 #: Source/textdat.cpp:321
 msgid ""
@@ -6948,11 +7875,11 @@ msgid ""
 "never returned. The Blacksmith found the boy, but only after the foul beasts "
 "had begun to torture him for their sadistic pleasures. |"
 msgstr ""
-" Wirt的 故 事 是 令 人 惊 恐 和 悲 剧 性 的.小 时 候 就 从 他 的 母 亲 怀 里 "
+"Wirt的 故 事 是 令 人 惊 恐 和 悲 剧 性 的.小 时 候 就 从 他 的 母 亲 怀 里 "
 "被 那 个 矮 小 ， 肮 脏 的 恶 魔 夺 走 ， 被 带 入 迷 宫 。 那 天 ， 很 多 "
 "其 它 孩 子 包 括 国 王 Leoric 的 儿 子 也 被 夺 走 了 。 王 宫 的 骑 士 下 "
 "去 了 ， 但 是 再 没 有 回 来 。 铁 匠 发 现 了 男 孩 ， 可 是 也 只 是 在 "
-"野 兽 开 始 折 磨 他 以 后."
+"野 兽 开 始 折 磨 他 以 后. |"
 
 #: Source/textdat.cpp:323
 msgid ""
@@ -6964,7 +7891,7 @@ msgstr ""
 "啊 ，Pepin。 我 把 他 当 作 是 一 个 真 正 的 朋 友 -- 可 能 是 在 这 儿 最 "
 "亲 近 的 了 。 他 有 时 有 点 糊 涂 ， 但 是 更 多 的 是 他 从 不 在 乎 或 "
 "是 认 为 灵 魂 的 存 在 。 他 的 知 识 和 技 艺 是 无 可 比 拟 的 ， 并 且 "
-"他 总 是 乐 于 接 待 别 人 。| "
+"他 总 是 乐 于 接 待 别 人 。|"
 
 #: Source/textdat.cpp:325
 msgid ""
@@ -6974,12 +7901,11 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed. |"
 msgstr ""
-" Gillian 是 个 好 女 孩 。 她 的 旺 盛 的 精 力 和 轻 快 笑 声 令 人 难 "
-"忘 。 她 在 我 的 心 目 中 占 有 特 殊 的 地 位 。 她 留 下 来 在 酒 馆 里 "
-"工 作 是 为 了 赡 养 年 老 的 奶 奶, 她 的 奶 奶 太 虚 弱 了 没 法 离 开 这 "
-"儿 。 我 有 时 担 心 Gillian 的 生 命 安 全 ， 但 是 我 知 道 这 个 城 镇 上 "
-"的 男 人 都 宁 愿 为 她 而 死 也 不 愿 意 看 到 Gillian 受 到 任 何 的 伤 "
-"害 。"
+"Gillian 是 个 好 女 孩 。 她 的 旺 盛 的 精 力 和 轻 快 笑 声 令 人 难 忘 。 "
+"她 在 我 的 心 目 中 占 有 特 殊 的 地 位 。 她 留 下 来 在 酒 馆 里 工 作 "
+"是 为 了 赡 养 年 老 的 奶 奶, 她 的 奶 奶 太 虚 弱 了 没 法 离 开 这 儿 。 "
+"我 有 时 担 心 Gillian 的 生 命 安 全 ， 但 是 我 知 道 这 个 城 镇 上 的 男 "
+"人 都 宁 愿 为 她 而 死 也 不 愿 意 看 到 Gillian 受 到 任 何 的 伤 害 。 |"
 
 #: Source/textdat.cpp:327
 msgid "Greetings, good master. Welcome to the Tavern of the Rising Sun! |"
@@ -6994,7 +7920,7 @@ msgid ""
 msgstr ""
 "很 多 冒 险 家 都 曾 坐 在 我 酒 馆 的 桌 边 ， 喝 着 啤 酒 讲 述 了 无 数 "
 "的 故 事 。 唯 一 曾 经 听 见 他 们 取 得 一 致 意 见 的 事 情 就 是 这 个 "
-"老 格 言 。 也 许 它 将 有 助 于 你 。 那 就 是 \"斩 草 必 须 除 根\"。"
+"老 格 言 。 也 许 它 将 有 助 于 你 。 那 就 是 \"斩 草 必 须 除 根\"。 |"
 
 #: Source/textdat.cpp:331
 msgid ""
@@ -7010,8 +7936,8 @@ msgid ""
 "would make him leave, but he did suffer so during his time in the Labyrinth. "
 "|"
 msgstr ""
-" Farnham 在 这 里 度 过 很 多 的 时 间 ， 借 便 宜 的 麦 芽 酒 浇 愁.我 想 "
-"使 他 离 开,但 是 在 他 在 迷 宫 中 的 时 候 ， 确 实 受 了 很 大 的 折 磨."
+"Farnham 在 这 里 度 过 很 多 的 时 间 ， 借 便 宜 的 麦 芽 酒 浇 愁.我 想 使 "
+"他 离 开,但 是 在 他 在 迷 宫 中 的 时 候 ， 确 实 受 了 很 大 的 折 磨. |"
 
 #: Source/textdat.cpp:335
 #, fuzzy
@@ -7088,7 +8014,7 @@ msgid ""
 msgstr ""
 "我 有 个 非 常 有 趣 的 发 现, 迷 宫 中 的 怪 物 和 我 们 不 一 样, 他 们 没 "
 "有 饮 剂 或 者 魔 术 的 帮 助 也 能 治 愈 自 己. 如 果 你 打 倒 了 一 个 怪 "
-"物, 一 定 要 确 认 它 已 经 死 了 ， 不 然 他 会 自 己 恢 复 的 。"
+"物, 一 定 要 确 认 它 已 经 死 了 ， 不 然 他 会 自 己 恢 复 的 。 |"
 
 #: Source/textdat.cpp:348
 msgid ""
@@ -7143,7 +8069,7 @@ msgstr ""
 "金 药 ， 但 是 Adria 是 一 个 真 正 的 女 巫 。 她 似 乎 从 不 睡 觉 ， 她 "
 "总 是 可 以 使 用 很 多 秘 籍 和 人 工 制 品 。 我 相 信 她 的 小 屋 远 远 "
 "不 止 是 一 个 看 上 去 的 简 陋 的 小 屋 ， 可 是 我 好 象 永 远 不 能 进 "
-"去 。"
+"去 。 |"
 
 #: Source/textdat.cpp:358
 msgid ""
@@ -7169,7 +8095,7 @@ msgstr ""
 "点 神 经 质 ， 但 是 他 是 一 个 聪 明 和 勤 奋 的 人 ， 不 管 到 哪 里 都 "
 "会 干 得 很 出 色 。 我 猜 想 可 能 是 因 为 害 怕 有 很 多 人 被 杀 死 在 "
 "城 镇 外 围 的 缘 故 或 者 可 能 是 他 的 妻 子 的 希 望 支 持 着 他 留 下 "
-"来 和 他 的 家 庭 在 一 起 。"
+"来 和 他 的 家 庭 在 一 起 。 |"
 
 #: Source/textdat.cpp:362
 #, fuzzy
@@ -7222,7 +8148,7 @@ msgid ""
 msgstr ""
 "我 们 铁 匠 是 特 里 斯 特 拉 姆 人 民 的 骄 傲 。 他 不 仅 是 一 个 出 色 "
 "的 手 艺 人 ， 而 且 还 曾 受 到 国 王 Leoric -- 愿 他 的 灵 魂 安 息 -- 赞 "
-"誉 。Griswold 也 是 一 个 大 英 雄 ， 不 信 去 问 Cain 吧 。"
+"誉 。Griswold 也 是 一 个 大 英 雄 ， 不 信 去 问 Cain 吧 。 |"
 
 #: Source/textdat.cpp:371
 msgid ""
@@ -7230,9 +8156,9 @@ msgid ""
 "knows so much, and can tell you just about anything about almost everything. "
 "|"
 msgstr ""
-" Cain 在 我 能 记 事 的 很 久 以 前 已 是 特 里 斯 特 拉 姆 的 讲 故 事 的 "
+"Cain 在 我 能 记 事 的 很 久 以 前 已 是 特 里 斯 特 拉 姆 的 讲 故 事 的 "
 "人 。 他 知 道 这 么 多 ， 几 乎 能 告 诉 你 关 于 一 切 的 差 不 多 任 何 "
-"事 情.|"
+"事 情. |"
 
 #: Source/textdat.cpp:373
 #, fuzzy
@@ -7260,7 +8186,7 @@ msgid ""
 msgstr ""
 "Pepin 救 过 我 奶 奶 的 生 命 ， 我 知 道 我 永 远 没 有 办 法 回 报 他 。 "
 "他 的 治 愈 任 何 疾 病 的 才 能 比 最 强 大 的 剑 更 强 大 ， 比 你 能 想 "
-"象 的 任 何 东 西 都 更 神 秘 。 如 果 你 需 要 治 愈 ， Pepin 能 帮 你 ！"
+"象 的 任 何 东 西 都 更 神 秘 。 如 果 你 需 要 治 愈 ， Pepin 能 帮 你 ！ |"
 
 #: Source/textdat.cpp:377
 msgid ""
@@ -7275,7 +8201,7 @@ msgstr ""
 "生 物 窃 取 他 的 时 候 ， 她 仅 仅 略 微 被 伤 害 ， 但 她 从 都 没 有 恢 "
 "复 。 我 认 为 她 是 死 于 伤 心 。Wirt 已 成 为 一 个 吝 啬 的 小 伙 子 ， "
 "仅 从 其 他 人 的 汗 水 中 盈 利 。 我 知 道 他 遭 受 过 和 看 到 的 是 我 "
-"不 能 想 象 恐 怖 ， 但 是 某 些 黑 暗 的 东 西 仍 然 威 胁 他."
+"不 能 想 象 恐 怖 ， 但 是 某 些 黑 暗 的 东 西 仍 然 威 胁 他. |"
 
 #: Source/textdat.cpp:379
 msgid ""
@@ -7286,7 +8212,7 @@ msgid ""
 msgstr ""
 "Ogden 和 他 的 妻 子 把 我 和 我 奶 奶 带 到 他 们 家 ， 甚 至 让 我 在 小 "
 "旅 馆 工 作 挣 得 了 几 个 金 币.我 欠 他 们 这 么 多 ， 只 有 希 望 有 一 "
-"天 离 开 这 里 ， 并 帮 助 他 们 在 东 方 开 一 个 大 饭 店."
+"天 离 开 这 里 ， 并 帮 助 他 们 在 东 方 开 一 个 大 饭 店. |"
 
 #: Source/textdat.cpp:381
 msgid "Well, what can I do for ya? |"
@@ -7301,7 +8227,7 @@ msgid ""
 msgstr ""
 "如 果 你 寻 找 一 好 武 器 ， 看 看 这 个 。 一 根 狼 牙 棒 作 为 基 本 武 "
 "器 ， 对 付 绝 大 部 分 不 死 的 小 鬼 ， 打 碎 它 们 皮 包 骨 身 架 是 没 "
-"有 什 么 问 题 的!"
+"有 什 么 问 题 的! |"
 
 #: Source/textdat.cpp:384
 msgid ""
@@ -7313,7 +8239,7 @@ msgstr ""
 "一 把 斧 头 ？ 啊 ， 那 是 一 件 很 好 的 武 器 ， 可 以 和 任 何 敌 人 抗 "
 "衡 。 看 看 它 是 如 何 的 劈 空 而 去 ， 将 一 个 肥 胖 的 怪 兽 的 脑 袋 "
 "砍 落 在 地 。 记 住 ， 它 挥 动 起 来 比 较 费 力 - 但 是 那 重 重 的 一 击 "
-"还 是 值 得 一 提 的 。"
+"还 是 值 得 一 提 的 。 |"
 
 #: Source/textdat.cpp:386
 msgid ""
@@ -7324,7 +8250,7 @@ msgid ""
 msgstr ""
 "看 看 这 剑 锋 。 宝 剑 是 所 有 的 武 器 之 王 ， 它 锋 利 的 剑 刃 不 能 "
 "劈 倒 或 刺 杀 不 死 系 的 怪 物 ， 但 是 对 于 活 着 的 有 呼 吸 的 敌 "
-"人 ， 宝 剑 能 将 它 切 成 碎 片 。"
+"人 ， 宝 剑 能 将 它 切 成 碎 片 。 |"
 
 #: Source/textdat.cpp:388
 msgid ""
@@ -7355,7 +8281,7 @@ msgid ""
 "caravans. |"
 msgstr ""
 "Gillian 是 一 个 善 良 的 女 孩. 可 惜 她 奶 奶 的 健 康 状 况 很 不 好 ， "
-"否 则 我 会 安 排 她 们 跟 着 商 队 离 开 这 里."
+"否 则 我 会 安 排 她 们 跟 着 商 队 离 开 这 里. |"
 
 #: Source/textdat.cpp:394
 msgid ""
@@ -7365,7 +8291,7 @@ msgid ""
 msgstr ""
 "有 时 我 想Cain 谈 得 太 多 了 ， 但 是 我 猜 那 可 能 也 是 他 生 命 中 一 "
 "部 分 。 如 果 我 能 够 象 他 拧 你 的 耳 朵 一 样 弯 曲 钢 铁 ， 我 就 能 "
-"够 为 国 王 做 一 套 足 够 好 的 金 属 餐 具 ！"
+"够 为 国 王 做 一 套 足 够 好 的 金 属 餐 具 ！ |"
 
 #: Source/textdat.cpp:396
 msgid ""
@@ -7402,7 +8328,7 @@ msgstr ""
 "他 对 这 儿 的 工 作 感 兴 趣 ， 学 习 一 种 诚 实 的 交 易 。 但 是 他 更 "
 "愿 要 交 易 那 些 来 源 可 疑 的 货 物 以 得 到 高 利 润 。 我 不 能 因 为 "
 "他 那 样 做 而 认 为 他 不 好 ， 因 为 他 曾 遭 遇 到 很 残 酷 的 事 ， 但 "
-"是 我 真 的 希 望 他 至 少 应 该 小 心 一 点."
+"是 我 真 的 希 望 他 至 少 应 该 小 心 一 点. |"
 
 #: Source/textdat.cpp:402
 msgid ""
@@ -7447,9 +8373,9 @@ msgid ""
 "'em are real scary or funny... but I think he knows more than he knows he "
 "knows. |"
 msgstr ""
-" Cain不 是 他 所 说 的 那 样.肯 定,肯 定,他 讲 了 一 个 好 故 事...某 些 是 "
+"Cain不 是 他 所 说 的 那 样.肯 定,肯 定,他 讲 了 一 个 好 故 事...某 些 是 "
 "真 正 能 引 起 惊 慌 或 者 可 笑 的 。 但 是 我 认 为 他 知 道 得 比 他 知 "
-"道 他 知 道 的 更 多."
+"道 他 知 道 的 更 多.  |"
 
 #: Source/textdat.cpp:411
 msgid ""
@@ -7490,7 +8416,7 @@ msgid ""
 msgstr ""
 "Ogden 是 城 镇 中 最 好 的 人.我 不 认 为 他 的 妻 子 非 常 喜 欢 我,但 是 "
 "只 要 她 保 留 她 的 意 见,我 将 一 样 喜 欢 她.看 来 好 像 我 绝 大 部 分 "
-"时 间 都 是 和 Ogden 一 起,而 他 对 我 也 非 常 好 ！"
+"时 间 都 是 和 Ogden 一 起,而 他 对 我 也 非 常 好 ！ |"
 
 #: Source/textdat.cpp:419
 msgid ""
@@ -7521,7 +8447,7 @@ msgstr ""
 "我 知 道 你 有 你 自 己 的 想 法 ， 我 知 道 你 将 不 相 信 这 个 ， 但 是 "
 "你 得 到 的 武 器 对 那 些 大 野 兽 一 点 用 处 都 没 有 。 我 不 在 乎 "
 "Griswold 说 什 么 ， 他 们 不 能 使 任 何 事 情 都 象 他 们 过 去 习 惯 的 "
-"那 样 "
+"那 样  |"
 
 #: Source/textdat.cpp:425
 msgid ""
@@ -7584,7 +8510,7 @@ msgid ""
 msgstr ""
 "我 们 所 有 的 知 识 都 在 人 群 中 。 如 果 你 找 到 一 本 书 或 者 卷 "
 "轴 ， 你 不 能 译 解 出 其 意 思 ， 你 应 该 毫 不 犹 豫 的 找 到 我 。 如 "
-"果 我 能 辨 认 出 它 ， 我 将 告 诉 你 我 所 知 道 的 。"
+"果 我 能 辨 认 出 它 ， 我 将 告 诉 你 我 所 知 道 的 。 |"
 
 #: Source/textdat.cpp:436
 msgid ""
@@ -7594,7 +8520,7 @@ msgid ""
 msgstr ""
 "对 一 个 只 知 道 铁 的 人 来 说 ， 事 实 上 没 有 比 钢 铁 更 强 大 的 魔 "
 "术 。 铁 匠 Griswold 从 他 知 道 的 来 看 ， 更 象 一 个 男 巫 。 他 锻 化 "
-"火 和 金 属 的 才 能 在 这 陆 地 中 是 无 与 伦 比 的 。"
+"火 和 金 属 的 才 能 在 这 陆 地 中 是 无 与 伦 比 的 。 |"
 
 #: Source/textdat.cpp:438
 msgid ""
@@ -7605,7 +8531,7 @@ msgid ""
 msgstr ""
 "腐 败 有 欺 骗 的 力 量 ， 但 是 无 辜 拥 有 纯 洁 的 力 量 。 女 孩 Gillian "
 "有 一 颗 纯 洁 的 心 ， 把 她 奶 奶 的 需 要 放 在 她 自 已 之 上 。 她 害 "
-"怕 我 ， 仅 因 为 她 不 懂 得 我 。"
+"怕 我 ， 仅 因 为 她 不 懂 得 我 。 |"
 
 #: Source/textdat.cpp:440
 msgid ""
@@ -7659,7 +8585,7 @@ msgstr ""
 "方 ， 但 他 对 这 个 城 镇 和 这 里 的 人 民 还 是 很 友 好 的 。 他 偷 偷 "
 "地 同 邻 近 城 镇 的 淘 气 鬼 们 和 地 下 行 会 做 买 卖 ， 得 到 了 许 多 "
 "在 Tristram 找 不 到 的 装 备 。 尽 管 他 的 行 为 是 应 该 受 到 谴 责 "
-"的 ， 但 是 在 你 与 黑 暗 对 抗 的 时 候 他 能 给 你 提 供 帮 助 。"
+"的 ， 但 是 在 你 与 黑 暗 对 抗 的 时 候 他 能 给 你 提 供 帮 助 。 |"
 
 #: Source/textdat.cpp:448
 msgid ""
@@ -7702,7 +8628,7 @@ msgid ""
 "and his good sense. |"
 msgstr ""
 "不 要 信 任 醉 汉 说 的 一 切 。 太 多 麦 芽 酒 已 模 糊 了 他 的 视 力 和 "
-"他 的 正 确 的 判 断 力. "
+"他 的 正 确 的 判 断 力. |"
 
 #: Source/textdat.cpp:455
 msgid ""
@@ -7714,7 +8640,7 @@ msgstr ""
 "你 还 没 有 注 意 到 我 不 从 特 里 斯 特 拉 姆 买 任 何 东 西.我 是 一 个 "
 "进 口 有 品 质 的 货 物 的 商 人.如 果 你 想 要 买 东 西 ， 你 最 好 去 找 "
 "Griswold,Pepin 或 者 那 个 女 巫 Adria.我 确 信 不 管 你 能 给 他 们 带 去 "
-"什 么 ， 他 们 都 将 立 即 接 受 。"
+"什 么 ， 他 们 都 将 立 即 接 受 。 |"
 
 #: Source/textdat.cpp:457
 msgid ""
@@ -7818,7 +8744,7 @@ msgid ""
 "Valor awaits for the Hero of Light to awaken... |"
 msgstr ""
 "...然 后 ， 封 闭 着 的 血 之 通 道 和 火 之 大 厅 的 后 面 ，Valor 等 待 着 "
-"光 之 英 雄 的 到 来..."
+"光 之 英 雄 的 到 来... |"
 
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
 #: Source/textdat.cpp:529 Source/textdat.cpp:537
@@ -7874,7 +8800,7 @@ msgstr ""
 "遗 物 。 在 田 野 里 ， 天 堂 和 燃 烧 地 狱 之 间 的 永 恒 的 战 争 叫 做 "
 "罪 恶 战 争 。 天 使 和 恶 魔 伪 装 成 人 类 ， 避 开 凡 人 的 眼 睛 秘 密 "
 "战 斗 。 一 些 勇 敢 强 大 的 凡 人 甚 至 和 某 一 方 结 盟 ， 以 帮 助 罪 "
-"恶 战 争 的 进 行 。|  "
+"恶 战 争 的 进 行 。 |"
 
 #: Source/textdat.cpp:509
 #, fuzzy
@@ -7982,7 +8908,8 @@ msgstr ""
 "当 他 从 他 的 沉 睡 中 醒 来 的 时 候 ， 我 的 勋 爵 和 主 人 对 我 谈 及 "
 "凡 人 很 少 知 道 的 密 秘 。 他 告 诉 我 天 堂 王 国 和 燃 烧 的 地 狱 卷 "
 "入 了 一 场 永 恒 的 战 争 。 他 揭 示 了 把 不 合 谐 带 到 人 间 的 力 "
-"量 。 我 的 主 人 已 为 这 全 世 界 所 有 人 的 战 斗 取 名 为 罪 恶 战 争 。"
+"量 。 我 的 主 人 已 为 这 全 世 界 所 有 人 的 战 斗 取 名 为 罪 恶 战 "
+"争 。 |"
 
 #: Source/textdat.cpp:519
 msgid ""
@@ -7998,7 +8925,7 @@ msgstr ""
 "Baal。 我 的 主 人 在 等 待 时 机 ， 希 望 能 利 用 他 惊 人 的 力 量 从 东 "
 "方 沙 漠 下 的 坟 墓 中 解 救 他 的 被 俘 虏 的 兄 弟 。 我 的 主 人 一 旦 "
 "释 放 他 的 兄 弟 ， 罪 恶 战 争 就 将 再 一 次 开 始 ， 让 人 们 知 道 他 "
-"们 三 个 的 愤 怒 。"
+"们 三 个 的 愤 怒 。 |"
 
 #: Source/textdat.cpp:521
 msgid ""
@@ -8020,7 +8947,7 @@ msgstr ""
 "经 过 Diablo 的 不 成 功 入 侵 而 疯 狂 的 国 王 Leoric 同 时 ， 我 绑 架 了 "
 "他 的 儿 子 Albrecht， 并 把 他 带 到 我 的 主 人 前 面 。 当 他 终 于 作 为 "
 "这 世 界 的 基 督 出 现 的 时 候 ， 我 等 待 Diablo 的 呼 唤 ， 并 祈 祷 我 "
-"将 被 酬 谢."
+"将 被 酬 谢. |"
 
 #: Source/textdat.cpp:523
 #, fuzzy
@@ -8477,15 +9404,15 @@ msgstr "一 个 受 伤 的 村 民"
 
 #: Source/towners.cpp:286
 msgid "Adria the Witch"
-msgstr " Adria 女 巫"
+msgstr "Adria 女 巫"
 
 #: Source/towners.cpp:302
 msgid "Gillian the Barmaid"
-msgstr "女 侍 Gillian "
+msgstr "女 侍 Gillian"
 
 #: Source/towners.cpp:334
 msgid "Pepin the Healer"
-msgstr " Pepin 大 夫"
+msgstr "Pepin 大 夫"
 
 #: Source/towners.cpp:350
 msgid "Cain the Elder"
