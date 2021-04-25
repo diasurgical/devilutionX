@@ -81,7 +81,7 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 
 		if (params == AnimationDistributionParams::ProcessAnimationPending) {
 			// If ProcessAnimation will be called after SetNewAnimation (in same GameTick as NewPlrAnim), we increment the Animation-Counter.
-			// If no delay is specified, this will result in complete skipped frame (see ProcessPlayerAnimation).
+			// If no delay is specified, this will result in complete skipped frame (see ProcessAnimation).
 			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
 			// Because of that, we only the remove one GameTick from the time the Animation is shown
 			relevantAnimationGameTicksWithSkipping -= 1;
@@ -119,6 +119,20 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 
 		RelevantFramesForDistributing = relevantAnimationFramesForDistributing;
 		GameTickModifier = gameTickModifier;
+	}
+}
+
+void AnimationInfo::ProcessAnimation()
+{
+	DelayCounter++;
+	GameTicksSinceSequenceStarted++;
+	if (DelayCounter > DelayLen) {
+		DelayCounter = 0;
+		CurrentFrame++;
+		if (CurrentFrame > NumberOfFrames) {
+			CurrentFrame = 1;
+			GameTicksSinceSequenceStarted = 0;
+		}
 	}
 }
 

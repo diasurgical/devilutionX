@@ -398,7 +398,6 @@ void FreePlayerGFX(int pnum);
  */
 void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(int pnum);
-void ProcessPlayerAnimation(int pnum);
 void CreatePlayer(int pnum, HeroClass c);
 int CalcStatDiff(int pnum);
 #ifdef _DEBUG

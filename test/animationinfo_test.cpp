@@ -63,7 +63,7 @@ void RunAnimationTest(int numFrames, int delay, AnimationDistributionParams para
 			currentGameTick += 1;
 			if (gameTickData->_FramesToSkip != 0)
 				pPlayer->AnimInfo.CurrentFrame += gameTickData->_FramesToSkip;
-			ProcessPlayerAnimation(pnum);
+			pPlayer->AnimInfo.ProcessAnimation();
 			EXPECT_EQ(pPlayer->AnimInfo.CurrentFrame, gameTickData->_ExpectedAnimationFrame);
 			EXPECT_EQ(pPlayer->AnimInfo.DelayCounter, gameTickData->_ExpectedAnimationCnt);
 		}
