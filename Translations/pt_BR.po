@@ -1080,7 +1080,7 @@ msgstr "Os poderes do mana refocalizado se renovam"
 
 #: Source/error.cpp:39
 msgid "Time cannot diminish the power of steel"
-msgstr "O tempo não pode diminuir o poder do aç"
+msgstr "O tempo não pode diminuir o poder do aço"
 
 #: Source/error.cpp:40
 msgid "Magic is not always what it seems to be"
