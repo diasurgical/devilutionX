@@ -17,7 +17,7 @@
 #include "missiles.h"
 #include "nthread.h"
 #include "options.h"
-#include "qol.h"
+#include "qol/autopickup.h"
 #include "spells.h"
 #include "stores.h"
 #include "storm/storm.h"
