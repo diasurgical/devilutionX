@@ -987,7 +987,7 @@ msgstr "Você tem %u de ouro"
 #: Source/control.cpp:1914
 #, c-format
 msgid "%s.  How many do"
-msgstr "%s.  Quanto quer"
+msgstr "%s.  Quantos quer"
 
 #: Source/cursor.cpp:181 Source/spelldat.cpp:22
 msgid "Town Portal"
