@@ -844,9 +844,43 @@ int CalculatePlayerDamageResistance(int playerID, int missileType)
 	return damageResistance;
 }
 
+int CalculatePlayerDamage(int playerID, int missileSourceID, int minDamage, int maxDamage, int damageAdjustment, int damageResistance, int missileTargets, int missileType)
+{
+	int damage = minDamage + GenerateRnd(maxDamage - minDamage + 1);
+	bool isPhysicalAttack = missiledata[missileType].mType == 0;
+	if (missileTargets == TARGET_MONSTERS) {
+		if (isPhysicalAttack) {
+			damage += plr[missileSourceID]._pIBonusDamMod
+				+ plr[missileSourceID]._pDamageMod
+				+ damage * plr[missileSourceID]._pIBonusDam / 100;
+		}
+	}
+	if (missileTargets == TARGET_BOTH) {
+		if ((plr[playerID]._pIFlags & ISPL_ABSHALFTRAP) != 0)
+			damage /= 2;
+	}
+	if (missileTargets != TARGET_MONSTERS) {
+		damage += damageAdjustment;
+
+		int oneHP = 1 << 6;
+		if (damage < oneHP)
+			damage = oneHP;
+	}
+
+	if (missileType == MIS_BONESPIRIT)
+		damage = plr[playerID]._pHitPoints / 3;
+
+	if (!isPhysicalAttack)
+		damage /= 2;
+
+	if (damageResistance > 0)
+		damage -= damage * damageResistance / 100;
+
+	return damage;
+}
+
 bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
 {
-	int dam;
 	*blocked = false;
 
 	int missileTargets = (m != -1) ? TARGET_PLAYERS : TARGET_BOTH;
@@ -861,54 +895,30 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 			return true;
 		}
 
-		if (mtype == MIS_BONESPIRIT) {
-			dam = plr[pnum]._pHitPoints / 3;
-		} else {
-			if (!shift) {
-
-				dam = (mind << 6) + GenerateRnd((maxd - mind + 1) << 6);
-				if (m == -1)
-					if ((plr[pnum]._pIFlags & ISPL_ABSHALFTRAP) != 0)
-						dam /= 2;
-				dam += (plr[pnum]._pIGetHit << 6);
-			} else {
-				dam = mind + GenerateRnd(maxd - mind + 1);
-				if (m == -1)
-					if ((plr[pnum]._pIFlags & ISPL_ABSHALFTRAP) != 0)
-						dam /= 2;
-				dam += plr[pnum]._pIGetHit;
-			}
-
-			if (dam < 64)
-				dam = 64;
-		}
-
+		int minDamage = shift ? mind : (mind << 6);
+		int maxDamage = shift ? maxd : (maxd << 6);
+		int damageAdjustment = shift ? plr[pnum]._pIGetHit : (plr[pnum]._pIGetHit << 6);
 		int damageResistance = CalculatePlayerDamageResistance(pnum, mtype);
-		if (damageResistance > 0) {
-			dam = dam - dam * damageResistance / 100;
-			if (pnum == myplr) {
-				ApplyPlrDamage(pnum, 0, 0, dam, earflag);
-			}
+		int damage = CalculatePlayerDamage(pnum, m, minDamage, maxDamage, damageAdjustment, damageResistance, missileTargets, mtype);
 
-			if (plr[pnum]._pHitPoints >> 6 > 0) {
-				plr[pnum].PlaySpeach(69);
-			}
-			return true;
-		}
 		if (pnum == myplr) {
-			ApplyPlrDamage(pnum, 0, 0, dam, earflag);
+			ApplyPlrDamage(pnum, 0, 0, damage, earflag);
 		}
 		if (plr[pnum]._pHitPoints >> 6 > 0) {
-			StartPlrHit(pnum, dam, false);
+			if (damageResistance <= 0)
+				StartPlrHit(pnum, damage, false);
+			else
+				plr[pnum].PlaySpeach(69);
 		}
+
 		return true;
 	}
+
 	return false;
 }
 
 bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, bool shift, bool *blocked)
 {
-	int dam;
 	*blocked = false;
 
 	if (!sgGameInitInfo.bFriendlyFire && gbFriendlyMode)
@@ -925,28 +935,18 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			return true;
 		}
 
-		if (mtype == MIS_BONESPIRIT) {
-			dam = plr[p]._pHitPoints / 3;
-		} else {
-			dam = mindam + GenerateRnd(maxdam - mindam + 1);
-			if (missiledata[mtype].mType == 0)
-				dam += plr[pnum]._pIBonusDamMod + plr[pnum]._pDamageMod + dam * plr[pnum]._pIBonusDam / 100;
-			if (!shift)
-				dam <<= 6;
-		}
-		if (missiledata[mtype].mType != 0)
-			dam /= 2;
+		int minDamage = shift ? mindam : (mindam << 6);
+		int maxDamage = shift ? maxdam : (maxdam << 6);
 		int damageResistance = CalculatePlayerDamageResistance(pnum, mtype);
-		if (damageResistance > 0) {
-			dam -= (dam * damageResistance) / 100;
-			if (pnum == myplr)
-				NetSendCmdDamage(true, p, dam);
-			plr[pnum].PlaySpeach(69);
-			return true;
-		}
+		int damage = CalculatePlayerDamage(pnum, p, minDamage, maxDamage, 0, damageResistance, TARGET_MONSTERS, mtype);
+
 		if (pnum == myplr)
-			NetSendCmdDamage(true, p, dam);
-		StartPlrHit(p, dam, false);
+			NetSendCmdDamage(true, p, damage);
+		if (damageResistance <= 0)
+			StartPlrHit(p, damage, false);
+		else
+			plr[pnum].PlaySpeach(69);
+
 		return true;
 	}
 	return false;
