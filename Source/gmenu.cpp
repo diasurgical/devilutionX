@@ -186,7 +186,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 	gmenu_up_down(true);
 }
 
-static void gmenu_clear_buffer(CelOutputBuffer out, int x, int y, int width, int height)
+static void gmenu_clear_buffer(const CelOutputBuffer &out, int x, int y, int width, int height)
 {
 	BYTE *i = out.at(x, y);
 	while (height--) {

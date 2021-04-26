@@ -683,7 +683,7 @@ void BlitBlackTileFull(BYTE *dst, int dst_pitch)
 
 } // namespace
 
-void world_draw_black_tile(CelOutputBuffer out, int sx, int sy)
+void world_draw_black_tile(const CelOutputBuffer &out, int sx, int sy)
 {
 	if (sx <= -TILE_WIDTH || sx >= out.region.w || sy < 0 || sy + 1 > out.region.h + Height)
 		return;

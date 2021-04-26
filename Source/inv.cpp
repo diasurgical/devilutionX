@@ -146,7 +146,7 @@ void InitInv()
 	drawsbarflag = false;
 }
 
-static void InvDrawSlotBack(CelOutputBuffer out, int X, int Y, int W, int H)
+static void InvDrawSlotBack(const CelOutputBuffer &out, int X, int Y, int W, int H)
 {
 	BYTE *dst;
 

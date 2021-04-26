@@ -3777,7 +3777,7 @@ void PrintUString(const CelOutputBuffer &out, int x, int y, bool cjustflag, cons
 	}
 }
 
-static void DrawULine(CelOutputBuffer out, int y)
+static void DrawULine(const CelOutputBuffer &out, int y)
 {
 	BYTE *src = out.at(26 + RIGHT_PANEL - SPANEL_WIDTH, 25);
 	BYTE *dst = out.at(26 + RIGHT_PANEL_X - SPANEL_WIDTH, y * 12 + 38);

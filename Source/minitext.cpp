@@ -147,9 +147,8 @@ int CalcTextSpeed(int nSFX)
  */
 void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 {
-	CelOutputBuffer buf = GlobalBackBuffer();
 	const int start_y = 49 + UI_OFFSET_Y;
-	buf = buf.subregionY(start_y, 260);
+	const CelOutputBuffer &buf = GlobalBackBuffer().subregionY(start_y, 260);
 	CelDrawTo(buf, sx, sy - start_y, pCelBuff, nCel, 22);
 }
 
