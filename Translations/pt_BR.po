@@ -810,7 +810,7 @@ msgstr "Nível: Enxame %i"
 
 #: Source/control.cpp:244
 msgid "Character Information"
-msgstr "Informação do personagem"
+msgstr "Informações do personagem"
 
 #: Source/control.cpp:245
 msgid "Quests log"
