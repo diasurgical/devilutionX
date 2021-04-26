@@ -1973,7 +1973,7 @@ msgstr "esquisito(a)"
 
 #: Source/itemdat.cpp:202
 msgid "Strange"
-msgstr "bizarro(a)"
+msgstr "estranho(a)"
 
 #: Source/itemdat.cpp:203
 msgid "Useless"
