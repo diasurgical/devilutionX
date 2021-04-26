@@ -1068,7 +1068,7 @@ msgstr "Quem defende raramente ataca"
 
 #: Source/error.cpp:36
 msgid "The sword of justice is swift and sharp"
-msgstr "A espada da justiça é veloz e afiado"
+msgstr "A espada da justiça é veloz e afiada"
 
 #: Source/error.cpp:37
 msgid "While the spirit is vigilant the body thrives"
