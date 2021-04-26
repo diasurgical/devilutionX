@@ -1132,7 +1132,7 @@ msgstr "Onde falha a avareza, a paciência é recompensada"
 
 #: Source/error.cpp:52
 msgid "Blessed by a benevolent companion!"
-msgstr "Abençoado por um companheiro benevolente!"
+msgstr "Abençoado por uma companhia benevolente!"
 
 #: Source/error.cpp:53
 msgid "The hands of men may be guided by fate"
