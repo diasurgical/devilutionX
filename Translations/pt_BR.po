@@ -858,7 +858,7 @@ msgstr "Danos apenas em mortos-vivos"
 #: Source/control.cpp:444 Source/control.cpp:1039 Source/control.cpp:1865
 #, c-format
 msgid "Spell Level 0 - Unusable"
-msgstr "Nível do feitiço 0 - Inusável"
+msgstr "Nível do feitiço 0 - Inutilizável"
 
 #: Source/control.cpp:446 Source/control.cpp:1041 Source/control.cpp:1867
 #, c-format
