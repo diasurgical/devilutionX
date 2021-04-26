@@ -157,7 +157,7 @@ private:
 	{
 		if (s_->fail()) {
 			std::string fmt_with_error = fmt;
-			fmt_with_error.append(": failed with \"%s\"");
+			fmt_with_error.append(": failed with \"{}\"");
 			const char *error_message = std::strerror(errno);
 			if (error_message == nullptr)
 				error_message = "";
