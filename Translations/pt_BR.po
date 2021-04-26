@@ -1388,7 +1388,7 @@ msgstr "Pedra sanguínea"
 
 #: Source/itemdat.cpp:38
 msgid "Cathedral Map"
-msgstr "Mapa das estrelas"
+msgstr "Mapa da catedral"
 
 #: Source/itemdat.cpp:39
 msgid "Heart"
