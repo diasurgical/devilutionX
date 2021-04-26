@@ -202,14 +202,20 @@ if(USE_SDL1)
 else()
   find_package(SDL2 REQUIRED)
   if(TARGET SDL2::SDL2)
-    set(SDL2_TARGET SDL2::SDL2)
+    set(SDL2_MAIN SDL2::SDL2main)
   elseif(TARGET SDL2::SDL2-static)
     # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
-    set(SDL2_TARGET SDL2::SDL2-static)
     # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
     add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
+    set(SDL2_MAIN SDL2::SDL2main)
   else()
-    message(FATAL_ERROR "SDL2 cmake config found but it does not define SDL2::SDL2 nor SDL2::SDL2-static")
+    # Assume an older Debian derivate that comes with an sdl2-config.cmake
+    # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
+    add_library(SDL2_lib INTERFACE)
+    target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
+    target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
+    # Can't define an INTERFACE target with ::, so alias instead
+    add_library(SDL2::SDL2 ALIAS SDL2_lib)
   endif()
   find_package(SDL2_ttf REQUIRED)
   find_package(SDL2_mixer REQUIRED)
@@ -606,8 +612,8 @@ if(USE_SDL1)
   target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
 else()
   target_link_libraries(${BIN_TARGET} PRIVATE
-    ${SDL2_TARGET}
-    SDL2::SDL2main
+    SDL2::SDL2
+    ${SDL2_MAIN}
     SDL2::SDL2_ttf
     SDL2::SDL2_mixer)
 endif()
