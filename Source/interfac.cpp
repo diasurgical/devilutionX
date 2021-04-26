@@ -160,7 +160,7 @@ static void InitCutscene(interface_mode uMsg)
 	sgdwProgress = 0;
 }
 
-static void DrawProgress(CelOutputBuffer out, int x, int y, int progress_id)
+static void DrawProgress(const CelOutputBuffer &out, int x, int y, int progress_id)
 {
 	BYTE *dst = out.at(x, y);
 	for (int i = 0; i < 22; ++i, dst += out.pitch()) {
@@ -171,7 +171,7 @@ static void DrawProgress(CelOutputBuffer out, int x, int y, int progress_id)
 static void DrawCutscene()
 {
 	lock_buf(1);
-	CelOutputBuffer out = GlobalBackBuffer();
+	const CelOutputBuffer &out = GlobalBackBuffer();
 	DrawArt(out, PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y, &ArtCutsceneWidescreen);
 	CelDrawTo(out, PANEL_X, 480 - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
 

@@ -78,7 +78,7 @@ void CelClippedDrawLightTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCe
 		CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelDrawLightRedTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
+void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
 {
 	assert(pCelBuff != nullptr);
 
@@ -114,7 +114,7 @@ void CelDrawLightRedTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int 
 	}
 }
 
-void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
+void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	assert(pRLEBytes != nullptr);
 
@@ -149,7 +149,7 @@ void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCel
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
+void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
 {
 	assert(pRLEBytes != nullptr);
 
@@ -199,7 +199,7 @@ void CelBlitLightSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
 	}
 }
 
-void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
+void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	assert(pRLEBytes != nullptr);
 
@@ -279,7 +279,7 @@ void CelBlitLightTransSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEByte
  * @param nWidth Width of sprite
  * @param tbl Palette translation table
  */
-static void CelBlitLightBlendedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
+static void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
 {
 	assert(pRLEBytes != nullptr);
 
@@ -346,7 +346,7 @@ void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, BYTE
 		CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void CelDrawLightRedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
+void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
 {
 	assert(pCelBuff != nullptr);
 
@@ -388,7 +388,7 @@ void CelDrawLightRedSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pCelBuff, 
 	}
 }
 
-void CelDrawUnsafeTo(CelOutputBuffer out, int x, int y, BYTE *pCelBuff, int nCel, int nWidth)
+void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	assert(pCelBuff != nullptr);
 
@@ -414,7 +414,7 @@ void CelDrawUnsafeTo(CelOutputBuffer out, int x, int y, BYTE *pCelBuff, int nCel
 	}
 }
 
-void CelBlitOutlineTo(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, bool skipColorIndexZero)
+void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, bool skipColorIndexZero)
 {
 	assert(pCelBuff != nullptr);
 
@@ -489,7 +489,7 @@ void DrawLineTo(const CelOutputBuffer &out, int x0, int y0, int x1, int y1, BYTE
 	}
 }
 
-static void DrawHalfTransparentBlendedRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+static void DrawHalfTransparentBlendedRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
 {
 	BYTE *pix = out.at(sx, sy);
 
@@ -502,7 +502,7 @@ static void DrawHalfTransparentBlendedRectTo(CelOutputBuffer out, int sx, int sy
 	}
 }
 
-static void DrawHalfTransparentStippledRectTo(CelOutputBuffer out, int sx, int sy, int width, int height)
+static void DrawHalfTransparentStippledRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
 {
 	BYTE *pix = out.at(sx, sy);
 
@@ -728,7 +728,7 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
  * @param nDataSize Size of CL2 in bytes
  * @param nWidth Width of sprite
  */
-static void Cl2BlitSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
+static void Cl2BlitSafe(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	BYTE *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
@@ -803,7 +803,7 @@ static void Cl2BlitSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, in
  * @param nWidth Width of sprite
  * @param col Color index from current palette
  */
-static void Cl2BlitOutlineSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE col)
+static void Cl2BlitOutlineSafe(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE col)
 {
 	BYTE *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
@@ -886,7 +886,7 @@ static void Cl2BlitOutlineSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBy
  * @param nWidth With of CL2 sprite
  * @param pTable Light color table
  */
-static void Cl2BlitLightSafe(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *pTable)
+static void Cl2BlitLightSafe(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *pTable)
 {
 	BYTE *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
@@ -962,7 +962,7 @@ void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCe
 	Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }
 
-void Cl2DrawOutline(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void Cl2DrawOutline(const CelOutputBuffer &out, BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	assert(pCelBuff != nullptr);
 	assert(nCel > 0);
@@ -970,8 +970,8 @@ void Cl2DrawOutline(CelOutputBuffer out, BYTE col, int sx, int sy, BYTE *pCelBuf
 	int nDataSize;
 	BYTE *pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
-	out = out.subregionY(0, out.h() - 1);
-	Cl2BlitOutlineSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, col);
+	const CelOutputBuffer &sub = out.subregionY(0, out.h() - 1);
+	Cl2BlitOutlineSafe(sub, sx, sy, pRLEBytes, nDataSize, nWidth, col);
 }
 
 void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)

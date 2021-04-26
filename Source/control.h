@@ -84,7 +84,7 @@ void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color 
 
 void AddPanelString(const char *str, bool just);
 void ClearPanel();
-void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int sy);
+void DrawPanelBox(const CelOutputBuffer &out, int x, int y, int w, int h, int sx, int sy);
 
 /**
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
@@ -139,7 +139,7 @@ void DrawLevelUpIcon(const CelOutputBuffer &out);
 void CheckChrBtns();
 void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(const CelOutputBuffer &out);
-void RedBack(CelOutputBuffer out);
+void RedBack(const CelOutputBuffer &out);
 void DrawSpellBook(const CelOutputBuffer &out);
 void CheckSBook();
 const char *get_pieces_str(int nGold);

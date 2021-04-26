@@ -36,7 +36,7 @@ void FastDrawHorizLine(const CelOutputBuffer &out, int x, int y, int width, Uint
  * @param height Number of pixels to fill
  * @param col Color index to use for filling
 */
-void FastDrawVertLine(CelOutputBuffer out, int x, int y, int height, Uint8 col);
+void FastDrawVertLine(const CelOutputBuffer &out, int x, int y, int height, Uint8 col);
 
 /**
  * @brief Prints integer into buffer, using ',' as thousands separator.
