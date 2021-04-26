@@ -91,15 +91,6 @@ int PWVel[enum_size<HeroClass>::value][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
 };
-/** Total number of frames in walk animation. */
-int AnimLenFromClass[enum_size<HeroClass>::value] = {
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-};
 /** Maps from player_class to starting stat in strength. */
 int StrengthTbl[enum_size<HeroClass>::value] = {
 	30,
@@ -2302,14 +2293,8 @@ bool PM_DoWalk(int pnum, int variant)
 		}
 	}
 
-	//Acquire length of walk animation length (this is 8 for every class, so the AnimLenFromClass array is redundant right now)
-	int anim_len = 8;
-	if (currlevel != 0) {
-		anim_len = AnimLenFromClass[static_cast<std::size_t>(plr[pnum]._pClass)];
-	}
-
 	//Check if we reached new tile
-	if (plr[pnum].actionFrame >= anim_len) {
+	if (plr[pnum].actionFrame >= plr[pnum]._pWFrames) {
 
 		//Update the player's tile position
 		switch (variant) {
