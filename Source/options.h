@@ -54,6 +54,8 @@ struct GraphicsOptions {
 	bool bColorCycling;
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
+	/** @brief Show FPS, even without the -f command line flag. */
+	bool bShowFPS;
 };
 
 struct GameplayOptions {
