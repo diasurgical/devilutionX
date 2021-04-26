@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-04-25 18:32+0200\n"
+"POT-Creation-Date: 2021-04-26 02:07+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -205,6 +205,18 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:171
 msgid "Thanks To"
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:173
+msgid "\tSchafer, Richard and Sandra Schaefer, Rick Bowles, Greg Bogden, "
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:190
+msgid "\tThe Strike Team Deflectors, Tony Levin, Big Jim and the Twins, "
+msgstr ""
+
+#: Source/DiabloUI/credits_lines.cpp:198
+msgid "\tSaag and all the folks at Davidson"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:200
@@ -443,14 +455,17 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:161 Source/DiabloUI/selgame.cpp:208
 #: Source/DiabloUI/selgame.cpp:311 Source/DiabloUI/selgame.cpp:331
+#: Source/diablo.cpp:1396
 msgid "Normal"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:162 Source/DiabloUI/selgame.cpp:212
+#: Source/diablo.cpp:1397
 msgid "Nightmare"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:216
+#: Source/diablo.cpp:1398
 msgid "Hell"
 msgstr ""
 
@@ -676,6 +691,58 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: Source/DiabloUI/support_lines.cpp:8
+msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:9
+msgid "Follow the links to visit the discussion boards associated with Diablo."
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:10
+msgid "and the Hellfire expansion."
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:12
+msgid "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:13
+msgid "at this address: https://github.com/diasurgical/devilutionX"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:14
+msgid "To help us better serve you, please be sure to include the version number,"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:15
+msgid "operating system, and the nature of the problem."
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:18
+msgid "Disclaimer:"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:19
+msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:20
+msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:21
+msgid "  or certified the quality or compatibility of DevilutionX. All inquiries"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:22
+msgid "  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
+msgstr ""
+
+#: Source/DiabloUI/support_lines.cpp:23
+msgid "  Entertainment or GOG.com."
+msgstr ""
+
 #: Source/DiabloUI/title.cpp:47
 msgid "Copyright  1996-2001 Blizzard Entertainment"
 msgstr ""
@@ -705,6 +772,10 @@ msgid ""
 "%s"
 msgstr ""
 
+#: Source/appfat.cpp:146 Source/appfat.cpp:163
+msgid "Data File Error"
+msgstr ""
+
 #: Source/appfat.cpp:159
 #, c-format
 msgid ""
@@ -722,6 +793,14 @@ msgstr ""
 
 #: Source/appfat.cpp:176
 msgid "Read-Only Directory Error"
+msgstr ""
+
+#: Source/automap.cpp:420
+msgid "game: "
+msgstr ""
+
+#: Source/automap.cpp:424
+msgid "password: "
 msgstr ""
 
 #: Source/automap.cpp:434 Source/items.cpp:3864
@@ -920,6 +999,34 @@ msgstr ""
 msgid "%s.  How many do"
 msgstr ""
 
+#: Source/control.cpp:1916
+msgid "you want to remove?"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:117
+msgid "Menu"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:117
+msgid "Inv"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:117
+msgid "Map"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:117
+msgid "Char"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:118
+msgid "Spells"
+msgstr ""
+
+#: Source/controls/modifier_hints.cpp:118
+msgid "Quests"
+msgstr ""
+
 #: Source/cursor.cpp:181 Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr ""
@@ -939,6 +1046,132 @@ msgstr ""
 
 #: Source/cursor.cpp:211
 msgid "level 15"
+msgstr ""
+
+#: Source/diablo.cpp:123
+msgid "I need help! Come Here!"
+msgstr ""
+
+#: Source/diablo.cpp:124
+msgid "Follow me."
+msgstr ""
+
+#: Source/diablo.cpp:125
+msgid "Here's something for you."
+msgstr ""
+
+#: Source/diablo.cpp:126
+msgid "Now you DIE!"
+msgstr ""
+
+#: Source/diablo.cpp:145
+msgid "Options:\n"
+msgstr ""
+
+#: Source/diablo.cpp:146
+msgid "Print this message and exit"
+msgstr ""
+
+#: Source/diablo.cpp:147
+msgid "Print the version and exit"
+msgstr ""
+
+#: Source/diablo.cpp:148
+msgid "Specify the folder of diabdat.mpq"
+msgstr ""
+
+#: Source/diablo.cpp:149
+msgid "Specify the folder of save files"
+msgstr ""
+
+#: Source/diablo.cpp:150
+msgid "Specify the location of diablo.ini"
+msgstr ""
+
+#: Source/diablo.cpp:151
+msgid "Specify the location of the .ttf font"
+msgstr ""
+
+#: Source/diablo.cpp:152
+msgid "Specify the name of a custom .ttf font"
+msgstr ""
+
+#: Source/diablo.cpp:153
+msgid "Skip startup videos"
+msgstr ""
+
+#: Source/diablo.cpp:154
+msgid "Display frames per second"
+msgstr ""
+
+#: Source/diablo.cpp:155
+msgid "Run in windowed mode"
+msgstr ""
+
+#: Source/diablo.cpp:156
+msgid "Enable verbose logging"
+msgstr ""
+
+#: Source/diablo.cpp:157
+msgid "Force spawn mode even if diabdat.mpq is found"
+msgstr ""
+
+#: Source/diablo.cpp:158
+msgid ""
+"\n"
+"Hellfire options:\n"
+msgstr ""
+
+#: Source/diablo.cpp:159
+msgid "Force diablo mode even if hellfire.mpq is found"
+msgstr ""
+
+#: Source/diablo.cpp:160
+msgid "Use alternate nest palette"
+msgstr ""
+
+#: Source/diablo.cpp:176
+msgid ""
+"\n"
+"Report bugs at https://github.com/diasurgical/devilutionX/\n"
+msgstr ""
+
+#: Source/diablo.cpp:252
+#, c-format
+msgid "unrecognized option '%s'\n"
+msgstr ""
+
+#: Source/diablo.cpp:1119
+msgid "No help available"
+msgstr ""
+
+#: Source/diablo.cpp:1120
+msgid "while in stores"
+msgstr ""
+
+#: Source/diablo.cpp:1400
+#, c-format
+msgid "%s, mode = %s"
+msgstr ""
+
+#: Source/diablo.cpp:2098
+msgid "-- Network timeout --"
+msgstr ""
+
+#: Source/diablo.cpp:2099
+msgid "-- Waiting for players --"
+msgstr ""
+
+#: Source/dvlnet/loopback.cpp:112
+msgid "loopback"
+msgstr ""
+
+#: Source/dvlnet/tcp_client.cpp:67
+msgid "Unable to connect"
+msgstr ""
+
+#: Source/dvlnet/tcp_client.cpp:88
+msgid "error: read 0 bytes from server"
 msgstr ""
 
 #: Source/error.cpp:22
@@ -1217,6 +1450,14 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
+#: Source/help.cpp:20
+msgid "Shareware Diablo Help||$Keyboard Shortcuts:|Diablo can be played exclusively by using the mouse controls.  There are times, however, when you may want to use shortcuts to some commands by using the keyboard.  These shortcuts are listed below:||F1:    Open the Help Screen|Esc:    Displays the main menu|Tab:    Displays the Auto-map|Space:  Removes any pop-up menus or maps from the play area|S:  Open Speedbook|B:  Open Spellbook|I:  Opens the Inventory screen|C:  Opens the Character screen|Z:  Zooms the game screen in and out|F:  Reduces the brightness of the screen|G:  Increases the brightness of the screen|Q:  Opens the Quest log (non-functional in the Shareware version)|1 - 8:  Use that item from your Belt|F5, F6, F7, F8:  Sets a hotkey for a selected skill or spell|Shift + Left Mouse Button: Use any weapon without moving|Shift + Left Mouse Button (on character screen): Assign all stat points|Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip item|Shift + Left Mouse Button (on belt): Move item to inventory|||$Movement:|Movement is controlled by the mouse.  The gauntlet on the screen is your cursor.  Use this to indicate the destination of your character and then left-click to move to that area. If you hold the mouse button down while moving, the character will continue to move in that direction.||$Selecting Items:|What you can interact with within the game is easily identifiable. Move the cursor over any object or creature. If the object can be picked up, attacked, activated or used in any way, it will be immediately outlined. A description of the highlighted object appears in the text area on the control panel.||Example: If you select a door and then left-click the character will walk to the door and open it. If you left-click on a highlighted weapon, the character will walk over to it and put it in his inventory. If you left-click on a highlighted creature...||$Combat:|Combat is initiated by left-clicking on a creature that has been highlighted. If your character is equipped with a melee weapon (Sword, Mace, Ax, etc.) your character will move to range and attack. If your character is equipped with a bow, left-clicking will fire an arrow at the highlighted creature. Holding down the shift key and then left-clicking allows the character to attack without moving.||$Picking up Objects:|If you left-click on an item - such as a weapon, shield, armor or book - your character will move to that item and add it to his inventory automatically.||Useable items that are small in size - such as a potion or scroll - are automatically placed in your 'belt', located at the top of the Interface bar . When an item is placed in the belt, a small number appears in that box. Items may be used by either right-clicking on the item or pressing the corresponding number on the keyboard.||If you do not have enough room in your inventory or belt for an item that you try to pick up, it will fall from your grasp. Open your inventory screen and try re-arranging or removing items to carry what you really want or need.||$Inventory:|You can toggle the Inventory screen on and off by clicking the INV> button on the control panel.  Items may be moved around in your inventory by selecting them and then left-clicking to pick them up.  When you pick up an item while in the inventory screen, your cursor changes into the item. You can then place this item into empty spaces in your inventory, swap them with other items in your inventory or equip them.||If you have an item that you no longer wish to carry, simply grab the item from your inventory and then left-click in the play area to drop it.||$Equipping Items:|To equip an item, open the inventory screen and pick up the desired item, either from play or from your inventory, placing it in the appropriate box on the figure in the inventory screen. Weapons and shields go into the large spaces to the  right or left of the figure. Two-handed weapons such as bows and axes preclude the use of a shield and will take up both of these large spaces.||Cloaks, robes, capes and all other armor must go in the central torso slot of the figure. ||Helmets and caps go in the box over the head of the character.||Rings go into the small boxes at the hands of the figure.||Amulets go into the small box at the next to the neck of the figure.||To change items that your character has equipped, pick up a new item and place it on top of the item you wish to remove.  Your character will automatically swap the items and the cursor will now change into the item that was in that box.||$Usable Items:|Potions, elixirs and books are classified as usable items.  These items can be used by right-clicking on them in the inventory screen.  Books are too large to be placed in the belt, but any potions or scrolls that are put there can also be used by pressing the corresponding number on the keyboard.||$Gold:|You can select a specific amount of gold to drop by right-clicking on a pile of gold in your inventory. A dialog will appear that allows you to select a specific amount of gold to take. When you have entered that number, your cursor will change into that amount of gold.||$Item Information:|Many items in Diablo share certain common attributes.  These are damage, durability, charges and minimum requirements..||Damage: This is represented by a range that indicates the minimum and maximum damage that item can inflict. A short sword has a (2-6) after its name, meaning it inflicts a minimum of two damage and a maximum of six when it hits. Damage can be modified by the quality of the weapon, the character's strength and magical effects.||Durability: This is the amount of damage that an item can take before it is rendered useless. Durability is represented by a ratio of current durability to maximum durability. A shield that has a durability of 15/20 would still have 15 points of damage it could take from use before it was rendered useless. Maximum durability can be affected by the quality of the item, enchantments or repairs made upon the item. The minimum durability can be raised by repairing an item.||Charges: Some items have charges associated with them. Charges indicate how many times that item can be used to cast the spell or affect indicated in its description.  Charges are represented by a ratio of charges left to maximum charges. A staff that has charges listed as 2/5 could be used to cast 2 more spells before it was rendered powerless. It could still be used to attack with as a physical weapon, however. Maximum charges can be affected by the magic or recharges cast upon the item. Minimum charges can be raised by recharging the item.||Minimum Requirements: These are the minimum requirements that a character must meet to wield the item. The more powerful an item is, the higher the minimum requirements will be.  If a character does not meet these requirements, he will be unable to equip the item and its name and information will be displayed in red.  The item artwork will also have a red tint in the Inventory screen.||$Items Classes:|There are three classes of items in Diablo - Mundane, Magic and Unique:||Mundane items have no special attributes. Their information is displayed in white text.||Magic Items are represented by blue names and text descriptions. Use the Identify spell or speak to Cain in town to determine their exact properties and attributes.||Unique items are represented by gold names and text descriptions. Use the Identify spell or speak to Cain in town to determine their exact properties and attributes.||$Skills & Spells:|You can access your list of skills and spells by left-clicking on the SPELLS button in the interface bar. This 'Spellbook' contains all of the skills and spells that your character knows. Spells available through staffs are also listed here. Left-clicking on the Icon of the spell you wish to ready will place it in the 'select current spell' icon/area and set it as the current readied spell. A readied spell may be cast by simply right-clicking in the play area.||Left-clicking on the 'select current spell' button will also open a 'Speedbook' menu that also allows you to ready a skill or spell for use.  To use a readied skill or spell, simply right-click in the main play area.|Shift + Left-clicking on the 'select current spell' button will clear the readied spell||Skills are the innate abilities of your character. These skills are different depending on what class you choose and require no mana to use.||Warrior:|The Warrior has the skill of Repair Items. This allows him to fix an item that has been worn by use or is damaged in combat. To accomplish this, select the Repair Skill through the Spellbook or Speedbook and right-click the mouse as if you were casting a spell. Your cursor will change into a Hammer Icon that you will use to select the item to be repaired.  Although Repairing an item in this way will decrease the maximum durability of that item, it can be done without leaving the labyrinth.||The Blacksmith can also repair items for a price. When the Blacksmith performs this service, it does decrease the maximum durability of the item.||Rogue:|The Rogue has the skill of Disarm Traps. This allows her to not only remove traps, but also acts as a 'sixth sense' that warns her of where these trapped items are located. To accomplish this, select the Disarm Trap skill through the Spellbook or Speedbook and right-click the mouse as if you were casting a spell.  Your cursor will change into a Targeting Cursor that you will use to select the item to be disarmed.  The success of this attempt is based on the level of the Rogue and the expertise of whomever set the trap.||Sorcerer:|The Sorcerer has the skill of Recharge Staffs. This allows him to focus his mana into an staff that has been drained of its magical energies.  To accomplish this, select the Recharge Staffs skill through the Spellbook or Speedbook and right-click the mouse as if you were casting a spell.  Your cursor will change into a Staff Icon that you will use to select the item to be recharged.  Although Recharging a staff in this way will decrease its maximum charges, it can be done without leaving the labyrinth.||The Witch can also recharge staffs for a price. When the Witch performs this service, it does decrease the maximum charges of the item.||Spells are magical effects that can be cast from a scroll, a staff or memorized from a book. Spells may or may not require mana to use and are available to all classes.||Spells cast from a scroll cost no mana to use, but are limited to only one charge. Casting a spell from a scroll is accomplished by either right-clicking on the scroll or, if it is located in our belt, pressing the corresponding number on the keyboard. Scrolls can also be readied in the Speedbook and are represented by a red icon/button in the 'select current spell' area.||Spells cast from staffs cost no mana to use, but are limited by the number of charges available. To cast spells from a staff, it must first be equipped. The 'select current spell' icon/button will change to indicate that the spell on the staff is currently ready to cast. Scrolls can also be readied in the Spellbook or Speedbook and are represented by an orange icon/button in the 'select current spell' area.||Spells that are memorized cost mana to cast, but they can be used as long as the character has mana to power them. The Warrior and Rogue start the game with no memorized spells while the sorcerer begins with Firebolt.  If the character finds a book in the labyrinth, he can memorize the spell written in that book by opening the Inventory screen and right-clicking on the book.  This will make that spell always available to the character for casting. Memorized spells can be readied through either the Spellbook or Speedbook and are represented by a blue icon/button in the 'select current spell' area.||$Important note on books:|Reading more than one book increases your knowledge of that spell and gives you the spell at a higher level. The higher the level of a spell the more effective it is.||While some spells affect the caster, other spells require a target. These targeted spells are cast in the direction that you indicate with your cursor on the play area.  If you highlight a creature, you will cast that spell at that creature.  Not all items within the labyrinth can be targeted.||Example: A fireball spell will travel at the creature or to the location you right-click on.  A Healing spell will simply add health to your character while diminishing his available mana and requires no targeting.||You can also set a spell or scroll as a Hotkey position for instant selection.  Start by opening the pop-up menu as described in the skill section above.  Assign Hotkeys by hitting the F5, F6, F7 or F8 keys on your keyboard after scrolling through the available spells and highlighting the one you wish to assign. ||$Health and Mana:|The two orbs in the Information Bar display your life and mana. The red sphere of fluid on the left side of the control panel represents the overall health of your character. When the fluid is gone - your character is dead.||The blue fluid on the right side of the control panel represents your character's available mana. Mana is the magical force used by your character to cast spells.  When the liquid in the sphere is low or depleted, you may be unable to cast some (or all) of your spells.||$Information Bar:|The Information Bar is where you receive detailed information in Diablo and interact with much of your surroundings.  Here is a quick run-down of the control panel areas and their use:||CHAR: This button is used to access your Character Statistics screen|INV:  This button is used to access your Inventory screen|Quest: This button displays your Quest Log (inactive in Shareware version)|Automap: This button activates the mapping overlay|Menu: This button activates the game menu screen|Spells: This button is used to access your Spellbook|Current Spell: This is the spell that has been readied for immediate casting|Life Orb: This is the amount of health your character currently has|Mana Orb: This is the amount of mana your character currently has|Multiplayer Message: This activates the Message Area|Description Area: This is where any important information about creatures or items you can interact with is displayed. This is also where you will enter the text you wish to send when sending multiplayer messages.||$Character Info:|Toggle the Character Statistics Screen on and off by clicking the <CHAR button on the Information Bar.  This screen shows the 'nuts and bolts' of your character.  There are four major attributes that dictate how your character progresses in the game.||STRENGTH: This is how physically powerful your character is. This statistic plays a large part in  determining how much damage you can do when attacking creatures.||MAGIC: This is how attuned your character is with the arcane powers of the world. This statistic plays a large part in  determining how much mana you have available for casting spells.||DEXTERITY: This is how quick of foot and hand your character is. This statistic plays a large part in  determining the chance you have to hit creatures in combat.||VITALITY: This is how physically fit your character is. This statistic plays a large part in  determining how much health your character has when he is undamaged.||$In Game Menu:|To activate the Game Menu, click the MENU button on the Information Bar.  You have three options in this menu:||New Game: This exits you from your current game and returns you to the Main Menu.||Options: This opens the options menu that allows you to adjust your music and sound effects settings as well as the gamma level of the screen.||Quit Game: This exits the program. Please note that this automatically saves your character.||$Auto-map:|Your character automatically maps where he has been in the labyrinth.  To access the auto-map, click the MAP button on the Information Bar.  You can also press TAB on your keyboard to activate the auto-map. Zooming in and out of the map is done with the + and - keys while scrolling the map uses the arrow keys.|&"
+msgstr ""
+
+#: Source/help.cpp:384
+msgid "$Keyboard Shortcuts:|F1:    Open Help Screen|Esc:   Display Main Menu|Tab:   Display Auto-map|Space: Hide all info screens|S: Open Speedbook|B: Open Spellbook|I: Open Inventory screen|C: Open Character screen|Q: Open Quest log|F: Reduce screen brightness|G: Increase screen brightness|Z: Zoom Game Screen|+ / -: Zoom Automap|1 - 8: Use Belt item|F5, F6, F7, F8:     Set hotkey for skill or spell|Shift + Left Mouse Button: Attack without moving|Shift + Left Mouse Button (on character screen): Assign all stat points|Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip item|Shift + Left Mouse Button (on belt): Move item to inventory||$Movement:|If you hold the mouse button down while moving, the character will continue to move in that direction.||$Combat:|Holding down the shift key and then left-clicking allows the character to attack without moving.||$Auto-map:|To access the auto-map, click the 'MAP' button on the Information Bar or press 'TAB' on the keyboard. Zooming in and out of the map is done with the + and - keys. Scrolling the map uses the arrow keys.||$Picking up Objects:|Useable items that are small in size, such as potions or scrolls, are automatically placed in your 'belt' located at the top of the Interface bar . When an item is placed in the belt, a small number appears in that box. Items may be used by either pressing the corresponding number or right-clicking on the item.||$Gold|You can select a specific amount of gold to drop byright-clicking on a pile of gold in your inventory.||$Skills & Spells:|You can access your list of skills and spells by left-clicking on the 'SPELLS' button in the interface bar. Memorized spells and those available through staffs are listed here. Left-clicking on the spell you wish to cast will ready the spell. A readied spell may be cast by simply right-clicking in the play area.||$Using the Speedbook for Spells|Left-clicking on the 'readied spell' button will open the 'Speedbook' which allows you to select a skill or spell for immediate use.  To use a readied skill or spell, simply right-click in the main play area.|Shift + Left-clicking on the 'select current spell' button will clear the readied spell||$Setting Spell Hotkeys|You can assign up to four Hotkeys for skills, spells or scrolls.  Start by opening the 'speedbook' as described in the section above. Press the F5, F6, F7 or F8 keys after highlighting the spell you wish to assign.||$Spell Books|Reading more than one book increases your knowledge of that spell, allowing you to cast the spell more effectively.|&"
+msgstr ""
+
 #: Source/help.cpp:490
 msgid "Hellfire Help"
 msgstr ""
@@ -1227,6 +1468,25 @@ msgstr ""
 
 #: Source/help.cpp:572
 msgid "Press ESC to end or the arrow keys to scroll."
+msgstr ""
+
+#: Source/init.cpp:146
+#, c-format
+msgid "version %s"
+msgstr ""
+
+#: Source/init.cpp:215
+msgid "Some Hellfire MPQs are missing"
+msgstr ""
+
+#: Source/init.cpp:215
+msgid ""
+"Not all Hellfire MPQs were found.\n"
+"Please copy all the hf*.mpq files."
+msgstr ""
+
+#: Source/init.cpp:225
+msgid "Unable to create main window"
 msgstr ""
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:197
@@ -1313,7 +1573,7 @@ msgstr ""
 msgid "Spectral Elixir"
 msgstr ""
 
-#: Source/itemdat.cpp:37
+#: Source/itemdat.cpp:37 Source/monstdat.cpp:79
 msgid "Blood Stone"
 msgstr ""
 
@@ -2034,7 +2294,7 @@ msgstr ""
 msgid "Awesome"
 msgstr ""
 
-#: Source/itemdat.cpp:236 Source/misdat.cpp:159 Source/objects.cpp:104
+#: Source/itemdat.cpp:236 Source/objects.cpp:104
 msgid "Holy"
 msgstr ""
 
@@ -2678,7 +2938,7 @@ msgstr ""
 msgid "The Falcon's Talon"
 msgstr ""
 
-#: Source/itemdat.cpp:423 Source/misdat.cpp:152 Source/spelldat.cpp:35
+#: Source/itemdat.cpp:423 Source/spelldat.cpp:35
 msgid "Inferno"
 msgstr ""
 
@@ -3518,7 +3778,7 @@ msgstr ""
 msgid "see with infravision"
 msgstr ""
 
-#: Source/items.cpp:3693 Source/misdat.cpp:147
+#: Source/items.cpp:3693
 msgid " "
 msgstr ""
 
@@ -3689,228 +3949,892 @@ msgstr ""
 msgid "Not Identified"
 msgstr ""
 
-#: Source/misdat.cpp:132
-msgid "Arrows"
+#: Source/loadsave.cpp:1005 Source/loadsave.cpp:2032
+msgid "Unable to open save file archive"
 msgstr ""
 
-#: Source/misdat.cpp:133
-msgid "Fireba"
+#: Source/loadsave.cpp:1008
+msgid "Invalid save file"
 msgstr ""
 
-#: Source/misdat.cpp:134
-msgid "Guard"
+#: Source/loadsave.cpp:1037
+msgid "Player is on a Hellfire only level"
 msgstr ""
 
-#: Source/misdat.cpp:135
-msgid "Lghning"
+#: Source/loadsave.cpp:1794
+msgid "Invalid game state"
 msgstr ""
 
-#: Source/misdat.cpp:136
-msgid "Firewal"
+#: Source/mainmenu.cpp:123
+msgid "Unable to display mainmenu"
 msgstr ""
 
-#: Source/misdat.cpp:137
-msgid "MagBlos"
+#: Source/monstdat.cpp:18
+msgid "Zombie"
 msgstr ""
 
-#: Source/misdat.cpp:138
-msgid "Portal"
+#: Source/monstdat.cpp:19
+msgid "Ghoul"
 msgstr ""
 
-#: Source/misdat.cpp:139
-msgid "Bluexfr"
+#: Source/monstdat.cpp:20
+msgid "Rotting Carcass"
 msgstr ""
 
-#: Source/misdat.cpp:140
-msgid "Bluexbk"
+#: Source/monstdat.cpp:21
+msgid "Black Death"
 msgstr ""
 
-#: Source/misdat.cpp:141
-msgid "Manashld"
+#: Source/monstdat.cpp:22 Source/monstdat.cpp:30
+msgid "Fallen One"
 msgstr ""
 
-#: Source/misdat.cpp:142
-msgid "Blood"
+#: Source/monstdat.cpp:23 Source/monstdat.cpp:31
+msgid "Carver"
 msgstr ""
 
-#: Source/misdat.cpp:143
-msgid "Bone"
+#: Source/monstdat.cpp:24 Source/monstdat.cpp:32
+msgid "Devil Kin"
 msgstr ""
 
-#: Source/misdat.cpp:144
-msgid "Metlhit"
+#: Source/monstdat.cpp:25 Source/monstdat.cpp:33
+msgid "Dark One"
 msgstr ""
 
-#: Source/misdat.cpp:145
-msgid "Farrow"
+#: Source/monstdat.cpp:26 Source/monstdat.cpp:38
+msgid "Skeleton"
 msgstr ""
 
-#: Source/misdat.cpp:146
-msgid "Doom"
+#: Source/monstdat.cpp:27
+msgid "Corpse Axe"
 msgstr ""
 
-#: Source/misdat.cpp:148
-msgid "Blodbur"
+#: Source/monstdat.cpp:28 Source/monstdat.cpp:40
+msgid "Burning Dead"
 msgstr ""
 
-#: Source/misdat.cpp:149
-msgid "Newexp"
+#: Source/monstdat.cpp:29 Source/monstdat.cpp:41
+msgid "Horror"
 msgstr ""
 
-#: Source/misdat.cpp:150
-msgid "Shatter1"
+#: Source/monstdat.cpp:34
+msgid "Scavenger"
 msgstr ""
 
-#: Source/misdat.cpp:151
-msgid "Bigexp"
+#: Source/monstdat.cpp:35
+msgid "Plague Eater"
 msgstr ""
 
-#: Source/misdat.cpp:153
-msgid "Thinlght"
+#: Source/monstdat.cpp:36
+msgid "Shadow Beast"
 msgstr ""
 
-#: Source/misdat.cpp:154
-msgid "Flare"
+#: Source/monstdat.cpp:37
+msgid "Bone Gasher"
 msgstr ""
 
-#: Source/misdat.cpp:155
-msgid "Flareexp"
+#: Source/monstdat.cpp:39
+msgid "Corpse Bow"
 msgstr ""
 
-#: Source/misdat.cpp:156
-msgid "Magball"
+#: Source/monstdat.cpp:42
+msgid "Skeleton Captain"
 msgstr ""
 
-#: Source/misdat.cpp:157
-msgid "Krull"
+#: Source/monstdat.cpp:43
+msgid "Corpse Captain"
 msgstr ""
 
-#: Source/misdat.cpp:158
-msgid "Miniltng"
+#: Source/monstdat.cpp:44
+msgid "Burning Dead Captain"
 msgstr ""
 
-#: Source/misdat.cpp:160
-msgid "Holyexpl"
+#: Source/monstdat.cpp:45
+msgid "Horror Captain"
 msgstr ""
 
-#: Source/misdat.cpp:161
-msgid "Larrow"
+#: Source/monstdat.cpp:46
+msgid "Invisible Lord"
 msgstr ""
 
-#: Source/misdat.cpp:162
-msgid "Firarwex"
+#: Source/monstdat.cpp:47 Source/objects.cpp:90
+msgid "Hidden"
 msgstr ""
 
-#: Source/misdat.cpp:163
-msgid "Acidbf"
+#: Source/monstdat.cpp:48
+msgid "Stalker"
 msgstr ""
 
-#: Source/misdat.cpp:164
-msgid "Acidspla"
+#: Source/monstdat.cpp:49
+msgid "Unseen"
 msgstr ""
 
-#: Source/misdat.cpp:165
-msgid "Acidpud"
+#: Source/monstdat.cpp:50
+msgid "Illusion Weaver"
 msgstr ""
 
-#: Source/misdat.cpp:166
-msgid "Ethrshld"
+#: Source/monstdat.cpp:51
+msgid "Satyr Lord"
 msgstr ""
 
-#: Source/misdat.cpp:167
-msgid "Firerun"
+#: Source/monstdat.cpp:52 Source/monstdat.cpp:60
+msgid "Flesh Clan"
 msgstr ""
 
-#: Source/misdat.cpp:168
-msgid "Ressur1"
+#: Source/monstdat.cpp:53 Source/monstdat.cpp:61
+msgid "Stone Clan"
 msgstr ""
 
-#: Source/misdat.cpp:169
-msgid "Sklball"
+#: Source/monstdat.cpp:54 Source/monstdat.cpp:62
+msgid "Fire Clan"
 msgstr ""
 
-#: Source/misdat.cpp:170
-msgid "Rportal"
+#: Source/monstdat.cpp:55 Source/monstdat.cpp:63
+msgid "Night Clan"
 msgstr ""
 
-#: Source/misdat.cpp:171
-msgid "Fireplar"
+#: Source/monstdat.cpp:56
+msgid "Fiend"
 msgstr ""
 
-#: Source/misdat.cpp:172
-msgid "Scubmisb"
+#: Source/monstdat.cpp:57
+msgid "Blink"
 msgstr ""
 
-#: Source/misdat.cpp:173
-msgid "Scbsexpb"
+#: Source/monstdat.cpp:58
+msgid "Gloom"
 msgstr ""
 
-#: Source/misdat.cpp:174
-msgid "Scubmisc"
+#: Source/monstdat.cpp:59
+msgid "Familiar"
 msgstr ""
 
-#: Source/misdat.cpp:175
-msgid "Scbsexpc"
+#: Source/monstdat.cpp:64
+msgid "Acid Beast"
 msgstr ""
 
-#: Source/misdat.cpp:176
-msgid "Scubmisd"
+#: Source/monstdat.cpp:65
+msgid "Poison Spitter"
 msgstr ""
 
-#: Source/misdat.cpp:177
-msgid "Scbsexpd"
+#: Source/monstdat.cpp:66
+msgid "Pit Beast"
 msgstr ""
 
-#: Source/misdat.cpp:178
-msgid "spawns"
+#: Source/monstdat.cpp:67
+msgid "Lava Maw"
 msgstr ""
 
-#: Source/misdat.cpp:179
-msgid "reflect"
+#: Source/monstdat.cpp:68 Source/monstdat.cpp:470
+msgid "Skeleton King"
 msgstr ""
 
-#: Source/misdat.cpp:180
-msgid "ms_ora"
+#: Source/monstdat.cpp:69 Source/monstdat.cpp:478 Source/quests.cpp:45
+msgid "The Butcher"
 msgstr ""
 
-#: Source/misdat.cpp:181
-msgid "ms_bla"
+#: Source/monstdat.cpp:70
+msgid "Overlord"
 msgstr ""
 
-#: Source/misdat.cpp:182
-msgid "ms_reb"
+#: Source/monstdat.cpp:71
+msgid "Mud Man"
 msgstr ""
 
-#: Source/misdat.cpp:183
-msgid "ms_yeb"
+#: Source/monstdat.cpp:72
+msgid "Toad Demon"
 msgstr ""
 
-#: Source/misdat.cpp:184
-msgid "rglows1"
+#: Source/monstdat.cpp:73
+msgid "Flayed One"
 msgstr ""
 
-#: Source/misdat.cpp:185
-msgid "ex_yel2"
+#: Source/monstdat.cpp:74
+msgid "Wyrm"
 msgstr ""
 
-#: Source/misdat.cpp:186
-msgid "ex_blu2"
+#: Source/monstdat.cpp:75
+msgid "Cave Slug"
 msgstr ""
 
-#: Source/misdat.cpp:187
-msgid "ex_red3"
+#: Source/monstdat.cpp:76
+msgid "Devil Wyrm"
 msgstr ""
 
-#: Source/misdat.cpp:188
-msgid "ms_blb"
+#: Source/monstdat.cpp:77
+msgid "Devourer"
 msgstr ""
 
-#: Source/misdat.cpp:189
-msgid "ex_ora1"
+#: Source/monstdat.cpp:78
+msgid "Magma Demon"
 msgstr ""
 
-#: Source/misdat.cpp:190
-msgid "ex_blu3"
+#: Source/monstdat.cpp:80
+msgid "Hell Stone"
+msgstr ""
+
+#: Source/monstdat.cpp:81
+msgid "Lava Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:82
+msgid "Horned Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:83
+msgid "Mud Runner"
+msgstr ""
+
+#: Source/monstdat.cpp:84
+msgid "Frost Charger"
+msgstr ""
+
+#: Source/monstdat.cpp:85
+msgid "Obsidian Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:86
+msgid "oldboned"
+msgstr ""
+
+#: Source/monstdat.cpp:87
+msgid "Red Death"
+msgstr ""
+
+#: Source/monstdat.cpp:88
+msgid "Litch Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:89
+msgid "Undead Balrog"
+msgstr ""
+
+#: Source/monstdat.cpp:90
+msgid "Incinerator"
+msgstr ""
+
+#: Source/monstdat.cpp:91
+msgid "Flame Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:92
+msgid "Doom Fire"
+msgstr ""
+
+#: Source/monstdat.cpp:93
+msgid "Hell Burner"
+msgstr ""
+
+#: Source/monstdat.cpp:94
+msgid "Red Storm"
+msgstr ""
+
+#: Source/monstdat.cpp:95
+msgid "Storm Rider"
+msgstr ""
+
+#: Source/monstdat.cpp:96
+msgid "Storm Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:97
+msgid "Maelstorm"
+msgstr ""
+
+#: Source/monstdat.cpp:98
+msgid "Devil Kin Brute"
+msgstr ""
+
+#: Source/monstdat.cpp:99
+msgid "Winged-Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:100
+msgid "Gargoyle"
+msgstr ""
+
+#: Source/monstdat.cpp:101
+msgid "Blood Claw"
+msgstr ""
+
+#: Source/monstdat.cpp:102
+msgid "Death Wing"
+msgstr ""
+
+#: Source/monstdat.cpp:103
+msgid "Slayer"
+msgstr ""
+
+#: Source/monstdat.cpp:104 Source/spelldat.cpp:28
+msgid "Guardian"
+msgstr ""
+
+#: Source/monstdat.cpp:105
+msgid "Vortex Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:106
+msgid "Balrog"
+msgstr ""
+
+#: Source/monstdat.cpp:107
+msgid "Cave Viper"
+msgstr ""
+
+#: Source/monstdat.cpp:108
+msgid "Fire Drake"
+msgstr ""
+
+#: Source/monstdat.cpp:109
+msgid "Gold Viper"
+msgstr ""
+
+#: Source/monstdat.cpp:110
+msgid "Azure Drake"
+msgstr ""
+
+#: Source/monstdat.cpp:111
+msgid "Black Knight"
+msgstr ""
+
+#: Source/monstdat.cpp:112
+msgid "Doom Guard"
+msgstr ""
+
+#: Source/monstdat.cpp:113
+msgid "Steel Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:114
+msgid "Blood Knight"
+msgstr ""
+
+#: Source/monstdat.cpp:115
+msgid "The Shredded"
+msgstr ""
+
+#: Source/monstdat.cpp:116
+msgid "Hollow One"
+msgstr ""
+
+#: Source/monstdat.cpp:117
+msgid "Pain Master"
+msgstr ""
+
+#: Source/monstdat.cpp:118
+msgid "Reality Weaver"
+msgstr ""
+
+#: Source/monstdat.cpp:119
+msgid "Succubus"
+msgstr ""
+
+#: Source/monstdat.cpp:120
+msgid "Snow Witch"
+msgstr ""
+
+#: Source/monstdat.cpp:121
+msgid "Hell Spawn"
+msgstr ""
+
+#: Source/monstdat.cpp:122
+msgid "Soul Burner"
+msgstr ""
+
+#: Source/monstdat.cpp:123
+msgid "Counselor"
+msgstr ""
+
+#: Source/monstdat.cpp:124
+msgid "Magistrate"
+msgstr ""
+
+#: Source/monstdat.cpp:125
+msgid "Cabalist"
+msgstr ""
+
+#: Source/monstdat.cpp:126
+msgid "Advocate"
+msgstr ""
+
+#: Source/monstdat.cpp:127 Source/spelldat.cpp:36
+msgid "Golem"
+msgstr ""
+
+#: Source/monstdat.cpp:128
+msgid "The Dark Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:129
+msgid "The Arch-Litch Malignus"
+msgstr ""
+
+#: Source/monstdat.cpp:130
+msgid "Hellboar"
+msgstr ""
+
+#: Source/monstdat.cpp:131
+msgid "Stinger"
+msgstr ""
+
+#: Source/monstdat.cpp:132
+msgid "Psychorb"
+msgstr ""
+
+#: Source/monstdat.cpp:133
+msgid "Arachnon"
+msgstr ""
+
+#: Source/monstdat.cpp:134
+msgid "Felltwin"
+msgstr ""
+
+#: Source/monstdat.cpp:135
+msgid "Hork Spawn"
+msgstr ""
+
+#: Source/monstdat.cpp:136
+msgid "Venomtail"
+msgstr ""
+
+#: Source/monstdat.cpp:137
+msgid "Necromorb"
+msgstr ""
+
+#: Source/monstdat.cpp:138
+msgid "Spider Lord"
+msgstr ""
+
+#: Source/monstdat.cpp:139
+msgid "Lashworm"
+msgstr ""
+
+#: Source/monstdat.cpp:140
+msgid "Torchant"
+msgstr ""
+
+#: Source/monstdat.cpp:141 Source/monstdat.cpp:479
+msgid "Hork Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:142
+msgid "Hell Bug"
+msgstr ""
+
+#: Source/monstdat.cpp:143
+msgid "Gravedigger"
+msgstr ""
+
+#: Source/monstdat.cpp:144
+msgid "Tomb Rat"
+msgstr ""
+
+#: Source/monstdat.cpp:145
+msgid "Firebat"
+msgstr ""
+
+#: Source/monstdat.cpp:146
+msgid "Skullwing"
+msgstr ""
+
+#: Source/monstdat.cpp:147
+msgid "Lich"
+msgstr ""
+
+#: Source/monstdat.cpp:148
+msgid "Crypt Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:149
+msgid "Hellbat"
+msgstr ""
+
+#: Source/monstdat.cpp:150
+msgid "Bone Demon"
+msgstr ""
+
+#: Source/monstdat.cpp:151
+msgid "Arch Lich"
+msgstr ""
+
+#: Source/monstdat.cpp:152
+msgid "Biclops"
+msgstr ""
+
+#: Source/monstdat.cpp:153
+msgid "Flesh Thing"
+msgstr ""
+
+#: Source/monstdat.cpp:154
+msgid "Reaper"
+msgstr ""
+
+#: Source/monstdat.cpp:469
+msgid "Gharbad the Weak"
+msgstr ""
+
+#: Source/monstdat.cpp:471 Source/quests.cpp:42
+msgid "Zhar the Mad"
+msgstr ""
+
+#: Source/monstdat.cpp:472
+msgid "Snotspill"
+msgstr ""
+
+#: Source/monstdat.cpp:473
+msgid "Arch-Bishop Lazarus"
+msgstr ""
+
+#: Source/monstdat.cpp:474
+msgid "Red Vex"
+msgstr ""
+
+#: Source/monstdat.cpp:475
+msgid "BlackJade"
+msgstr ""
+
+#: Source/monstdat.cpp:476 Source/quests.cpp:43
+msgid "Lachdanan"
+msgstr ""
+
+#: Source/monstdat.cpp:477 Source/quests.cpp:50
+msgid "Warlord of Blood"
+msgstr ""
+
+#: Source/monstdat.cpp:480 Source/quests.cpp:59
+msgid "The Defiler"
+msgstr ""
+
+#: Source/monstdat.cpp:482
+msgid "Bonehead Keenaxe"
+msgstr ""
+
+#: Source/monstdat.cpp:483
+msgid "Bladeskin the Slasher"
+msgstr ""
+
+#: Source/monstdat.cpp:484
+msgid "Soulpus"
+msgstr ""
+
+#: Source/monstdat.cpp:485
+msgid "Pukerat the Unclean"
+msgstr ""
+
+#: Source/monstdat.cpp:486
+msgid "Boneripper"
+msgstr ""
+
+#: Source/monstdat.cpp:487
+msgid "Rotfeast the Hungry"
+msgstr ""
+
+#: Source/monstdat.cpp:488
+msgid "Gutshank the Quick"
+msgstr ""
+
+#: Source/monstdat.cpp:489
+msgid "Brokenhead Bangshield"
+msgstr ""
+
+#: Source/monstdat.cpp:491
+msgid "Rotcarnage"
+msgstr ""
+
+#: Source/monstdat.cpp:492
+msgid "Shadowbite"
+msgstr ""
+
+#: Source/monstdat.cpp:493
+msgid "Deadeye"
+msgstr ""
+
+#: Source/monstdat.cpp:494
+msgid "Madeye the Dead"
+msgstr ""
+
+#: Source/monstdat.cpp:496
+msgid "Skullfire"
+msgstr ""
+
+#: Source/monstdat.cpp:497
+msgid "Warpskull"
+msgstr ""
+
+#: Source/monstdat.cpp:498
+msgid "Goretongue"
+msgstr ""
+
+#: Source/monstdat.cpp:499
+msgid "Pulsecrawler"
+msgstr ""
+
+#: Source/monstdat.cpp:500
+msgid "Moonbender"
+msgstr ""
+
+#: Source/monstdat.cpp:501
+msgid "Wrathraven"
+msgstr ""
+
+#: Source/monstdat.cpp:502
+msgid "Spineeater"
+msgstr ""
+
+#: Source/monstdat.cpp:503
+msgid "Blackash the Burning"
+msgstr ""
+
+#: Source/monstdat.cpp:504
+msgid "Shadowcrow"
+msgstr ""
+
+#: Source/monstdat.cpp:505
+msgid "Blightstone the Weak"
+msgstr ""
+
+#: Source/monstdat.cpp:506
+msgid "Bilefroth the Pit Master"
+msgstr ""
+
+#: Source/monstdat.cpp:507
+msgid "Bloodskin Darkbow"
+msgstr ""
+
+#: Source/monstdat.cpp:508
+msgid "Foulwing"
+msgstr ""
+
+#: Source/monstdat.cpp:509
+msgid "Shadowdrinker"
+msgstr ""
+
+#: Source/monstdat.cpp:510
+msgid "Hazeshifter"
+msgstr ""
+
+#: Source/monstdat.cpp:511
+msgid "Deathspit"
+msgstr ""
+
+#: Source/monstdat.cpp:512
+msgid "Bloodgutter"
+msgstr ""
+
+#: Source/monstdat.cpp:513
+msgid "Deathshade Fleshmaul"
+msgstr ""
+
+#: Source/monstdat.cpp:514
+msgid "Warmaggot the Mad"
+msgstr ""
+
+#: Source/monstdat.cpp:515
+msgid "Glasskull the Jagged"
+msgstr ""
+
+#: Source/monstdat.cpp:516
+msgid "Blightfire"
+msgstr ""
+
+#: Source/monstdat.cpp:517
+msgid "Nightwing the Cold"
+msgstr ""
+
+#: Source/monstdat.cpp:518
+msgid "Gorestone"
+msgstr ""
+
+#: Source/monstdat.cpp:519
+msgid "Bronzefist Firestone"
+msgstr ""
+
+#: Source/monstdat.cpp:520
+msgid "Wrathfire the Doomed"
+msgstr ""
+
+#: Source/monstdat.cpp:521
+msgid "Firewound the Grim"
+msgstr ""
+
+#: Source/monstdat.cpp:522
+msgid "Baron Sludge"
+msgstr ""
+
+#: Source/monstdat.cpp:523
+msgid "Blighthorn Steelmace"
+msgstr ""
+
+#: Source/monstdat.cpp:524
+msgid "Chaoshowler"
+msgstr ""
+
+#: Source/monstdat.cpp:525
+msgid "Doomgrin the Rotting"
+msgstr ""
+
+#: Source/monstdat.cpp:526
+msgid "Madburner"
+msgstr ""
+
+#: Source/monstdat.cpp:527
+msgid "Bonesaw the Litch"
+msgstr ""
+
+#: Source/monstdat.cpp:528
+msgid "Breakspine"
+msgstr ""
+
+#: Source/monstdat.cpp:529
+msgid "Devilskull Sharpbone"
+msgstr ""
+
+#: Source/monstdat.cpp:530
+msgid "Brokenstorm"
+msgstr ""
+
+#: Source/monstdat.cpp:531
+msgid "Stormbane"
+msgstr ""
+
+#: Source/monstdat.cpp:532
+msgid "Oozedrool"
+msgstr ""
+
+#: Source/monstdat.cpp:533
+msgid "Goldblight of the Flame"
+msgstr ""
+
+#: Source/monstdat.cpp:534
+msgid "Blackstorm"
+msgstr ""
+
+#: Source/monstdat.cpp:535
+msgid "Plaguewrath"
+msgstr ""
+
+#: Source/monstdat.cpp:536
+msgid "The Flayer"
+msgstr ""
+
+#: Source/monstdat.cpp:537
+msgid "Bluehorn"
+msgstr ""
+
+#: Source/monstdat.cpp:538
+msgid "Warpfire Hellspawn"
+msgstr ""
+
+#: Source/monstdat.cpp:539
+msgid "Fangspeir"
+msgstr ""
+
+#: Source/monstdat.cpp:540
+msgid "Festerskull"
+msgstr ""
+
+#: Source/monstdat.cpp:541
+msgid "Lionskull the Bent"
+msgstr ""
+
+#: Source/monstdat.cpp:542
+msgid "Blacktongue"
+msgstr ""
+
+#: Source/monstdat.cpp:543
+msgid "Viletouch"
+msgstr ""
+
+#: Source/monstdat.cpp:544
+msgid "Viperflame"
+msgstr ""
+
+#: Source/monstdat.cpp:545
+msgid "Fangskin"
+msgstr ""
+
+#: Source/monstdat.cpp:546
+msgid "Witchfire the Unholy"
+msgstr ""
+
+#: Source/monstdat.cpp:547
+msgid "Blackskull"
+msgstr ""
+
+#: Source/monstdat.cpp:548
+msgid "Soulslash"
+msgstr ""
+
+#: Source/monstdat.cpp:549
+msgid "Windspawn"
+msgstr ""
+
+#: Source/monstdat.cpp:550
+msgid "Lord of the Pit"
+msgstr ""
+
+#: Source/monstdat.cpp:551
+msgid "Rustweaver"
+msgstr ""
+
+#: Source/monstdat.cpp:552
+msgid "Howlingire the Shade"
+msgstr ""
+
+#: Source/monstdat.cpp:553
+msgid "Doomcloud"
+msgstr ""
+
+#: Source/monstdat.cpp:554
+msgid "Bloodmoon Soulfire"
+msgstr ""
+
+#: Source/monstdat.cpp:555
+msgid "Witchmoon"
+msgstr ""
+
+#: Source/monstdat.cpp:556
+msgid "Gorefeast"
+msgstr ""
+
+#: Source/monstdat.cpp:557
+msgid "Graywar the Slayer"
+msgstr ""
+
+#: Source/monstdat.cpp:558
+msgid "Dreadjudge"
+msgstr ""
+
+#: Source/monstdat.cpp:559
+msgid "Stareye the Witch"
+msgstr ""
+
+#: Source/monstdat.cpp:560
+msgid "Steelskull the Hunter"
+msgstr ""
+
+#: Source/monstdat.cpp:561
+msgid "Sir Gorash"
+msgstr ""
+
+#: Source/monstdat.cpp:562
+msgid "The Vizier"
+msgstr ""
+
+#: Source/monstdat.cpp:564
+msgid "Bloodlust"
+msgstr ""
+
+#: Source/monstdat.cpp:566
+msgid "Fleshdancer"
+msgstr ""
+
+#: Source/monstdat.cpp:567
+msgid "Grimspike"
+msgstr ""
+
+#: Source/monstdat.cpp:568
+msgid "Doomlock"
 msgstr ""
 
 #: Source/monster.cpp:4956
@@ -3997,6 +4921,22 @@ msgstr ""
 msgid "Unable to get level data"
 msgstr ""
 
+#: Source/msg.cpp:610
+msgid "Trying to drop a floor item?"
+msgstr ""
+
+#: Source/msg.cpp:1387 Source/msg.cpp:1658 Source/msg.cpp:1680
+#: Source/msg.cpp:1702 Source/msg.cpp:1822 Source/msg.cpp:1843
+#: Source/msg.cpp:1864 Source/msg.cpp:1885
+#, c-format
+msgid "%s has cast an illegal spell."
+msgstr ""
+
+#: Source/msg.cpp:2221 Source/multi.cpp:866
+#, c-format
+msgid "Player '%s' (level %d) just joined the game"
+msgstr ""
+
 #: Source/multi.cpp:269
 #, c-format
 msgid "Player '%s' just left the game"
@@ -4012,11 +4952,6 @@ msgstr ""
 msgid "Player '%s' dropped due to timeout"
 msgstr ""
 
-#: Source/multi.cpp:866
-#, c-format
-msgid "Player '%s' (level %d) just joined the game"
-msgstr ""
-
 #: Source/multi.cpp:868
 #, c-format
 msgid "Player '%s' (level %d) is already in the game"
@@ -4024,10 +4959,6 @@ msgstr ""
 
 #: Source/objects.cpp:89
 msgid "Mysterious"
-msgstr ""
-
-#: Source/objects.cpp:90
-msgid "Hidden"
 msgstr ""
 
 #: Source/objects.cpp:91
@@ -4365,6 +5296,35 @@ msgstr ""
 msgid "%s (disabled)"
 msgstr ""
 
+#: Source/pfile.cpp:223
+msgid "Failed to open player archive for writing."
+msgstr ""
+
+#: Source/pfile.cpp:398
+msgid "Unable to open archive"
+msgstr ""
+
+#: Source/pfile.cpp:400
+msgid "Unable to load character"
+msgstr ""
+
+#: Source/pfile.cpp:423 Source/pfile.cpp:446
+msgid "Unable to read to save file archive"
+msgstr ""
+
+#: Source/pfile.cpp:465 Source/pfile.cpp:477
+msgid "Unable to write to save file archive"
+msgstr ""
+
+#: Source/plrmsg.cpp:72
+#, c-format
+msgid "%s (lvl %d): %s"
+msgstr ""
+
+#: Source/qol.cpp:67 Source/qol/xpbar.cpp:52
+msgid "Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"
+msgstr ""
+
 #: Source/qol/xpbar.cpp:122
 #, c-format
 msgid "Level %d"
@@ -4397,20 +5357,8 @@ msgstr ""
 msgid "Gharbad The Weak"
 msgstr ""
 
-#: Source/quests.cpp:42
-msgid "Zhar the Mad"
-msgstr ""
-
-#: Source/quests.cpp:43
-msgid "Lachdanan"
-msgstr ""
-
 #: Source/quests.cpp:44
 msgid "Diablo"
-msgstr ""
-
-#: Source/quests.cpp:45
-msgid "The Butcher"
 msgstr ""
 
 #: Source/quests.cpp:46
@@ -4423,10 +5371,6 @@ msgstr ""
 
 #: Source/quests.cpp:48
 msgid "Valor"
-msgstr ""
-
-#: Source/quests.cpp:50
-msgid "Warlord of Blood"
 msgstr ""
 
 #: Source/quests.cpp:51
@@ -4459,10 +5403,6 @@ msgstr ""
 
 #: Source/quests.cpp:58
 msgid "Wandering Trader"
-msgstr ""
-
-#: Source/quests.cpp:59
-msgid "The Defiler"
 msgstr ""
 
 #: Source/quests.cpp:60
@@ -4558,10 +5498,6 @@ msgstr ""
 msgid "Fireball"
 msgstr ""
 
-#: Source/spelldat.cpp:28
-msgid "Guardian"
-msgstr ""
-
 #: Source/spelldat.cpp:29
 msgid "Chain Lightning"
 msgstr ""
@@ -4584,10 +5520,6 @@ msgstr ""
 
 #: Source/spelldat.cpp:34
 msgid "Invisibility"
-msgstr ""
-
-#: Source/spelldat.cpp:36
-msgid "Golem"
 msgstr ""
 
 #: Source/spelldat.cpp:37
@@ -5453,6 +6385,10 @@ msgstr ""
 
 #: Source/textdat.cpp:206
 msgid "The armor known as Valor could be what tips the scales in your favor. I will tell you that many have looked for it - including myself. Arkaine hid it well, my friend, and it will take more than a bit of luck to unlock the secrets that have kept it concealed oh, lo these many years. |"
+msgstr ""
+
+#: Source/textdat.cpp:208
+msgid "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz... |"
 msgstr ""
 
 #: Source/textdat.cpp:209
