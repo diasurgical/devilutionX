@@ -266,7 +266,7 @@ WPARAM KeystateForMouse(WPARAM ret)
 
 bool FalseAvail(const char *name, int value)
 {
-	LogDebug("Unhandled SDL event: %s %d", name, value);
+	LogDebug("Unhandled SDL event: {} {}", name, value);
 	return true;
 }
 

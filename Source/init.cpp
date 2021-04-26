@@ -60,16 +60,16 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 	for (const auto &path : paths) {
 		mpq_abspath = path + mpq_name;
 		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
-			LogVerbose("  Found: %s in %s", mpq_name, path.c_str());
+			LogVerbose("  Found: {} in {}", mpq_name, path);
 			SFileSetBasePath(path.c_str());
 			return archive;
 		}
 		if (SErrGetLastError() != STORM_ERROR_FILE_NOT_FOUND) {
-			LogError("Open error %u: %s", SErrGetLastError(), mpq_abspath.c_str());
+			LogError("Open error {}: {}", SErrGetLastError(), mpq_abspath);
 		}
 	}
 	if (SErrGetLastError() == STORM_ERROR_FILE_NOT_FOUND) {
-		LogVerbose("Missing: %s", mpq_name);
+		LogVerbose("Missing: {}", mpq_name);
 	}
 
 	return nullptr;
@@ -173,7 +173,7 @@ void init_archives()
 			message.append(paths[i]);
 			message += '\'';
 		}
-		LogVerbose("MPQ search paths%s", message.c_str());
+		LogVerbose("MPQ search paths:{}", message);
 	}
 
 	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ");
