@@ -1104,7 +1104,7 @@ msgstr "O que não pode ser pego não pode ser ferido"
 
 #: Source/error.cpp:45
 msgid "Crimson and Azure become as the sun"
-msgstr "O Carmesim e Lazúli se tornam como o sol"
+msgstr "O Rubro e Anil se tornam como o sol"
 
 #: Source/error.cpp:46
 msgid "Knowledge and wisdom at the cost of self"
