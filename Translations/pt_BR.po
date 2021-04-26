@@ -1136,7 +1136,7 @@ msgstr "Abençoado por uma companhia benevolente!"
 
 #: Source/error.cpp:53
 msgid "The hands of men may be guided by fate"
-msgstr "As mãos dos homens podem ser guiadas por destino"
+msgstr "As mãos dos homens podem ser guiadas pelo destino"
 
 #: Source/error.cpp:54
 msgid "Strength is bolstered by heavenly faith"
