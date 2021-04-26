@@ -37,12 +37,10 @@ struct SetNewAnimationData : TestData {
 struct GameTickData : TestData {
 	int _ExpectedAnimationFrame;
 	int _ExpectedAnimationCnt;
-	int _FramesToSkip;
-	GameTickData(int expectedAnimationFrame, int expectedAnimationCnt, int framesToSkip = 0)
+	GameTickData(int expectedAnimationFrame, int expectedAnimationCnt)
 	{
 		_ExpectedAnimationFrame = expectedAnimationFrame;
 		_ExpectedAnimationCnt = expectedAnimationCnt;
-		_FramesToSkip = framesToSkip;
 	}
 };
 
@@ -84,8 +82,6 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 		auto gameTickData = dynamic_cast<GameTickData *>(x);
 		if (gameTickData != nullptr) {
 			currentGameTick += 1;
-			if (gameTickData->_FramesToSkip != 0)
-				animInfo.CurrentFrame += gameTickData->_FramesToSkip;
 			animInfo.ProcessAnimation();
 			EXPECT_EQ(animInfo.CurrentFrame, gameTickData->_ExpectedAnimationFrame);
 			EXPECT_EQ(animInfo.DelayCounter, gameTickData->_ExpectedAnimationCnt);
@@ -176,22 +172,22 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 	    {
 	        new SetNewAnimationData(16, 0, AnimationDistributionFlags::ProcessAnimationPending, 2, 9),
 	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
-	        new GameTickData(2, 0),
+	        new GameTickData(4, 0),
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
 	        new RenderingData(0.8f, 2),
-	        new GameTickData(3, 0),
+	        new GameTickData(5, 0),
 	        new RenderingData(0.0f, 2),
 	        new RenderingData(0.3f, 3),
 	        new RenderingData(0.6f, 3),
 	        new RenderingData(0.8f, 3),
-	        new GameTickData(4, 0),
+	        new GameTickData(6, 0),
 	        new RenderingData(0.0f, 4),
 	        new RenderingData(0.3f, 4),
 	        new RenderingData(0.6f, 5),
 	        new RenderingData(0.8f, 5),
-	        new GameTickData(7, 0, 2),
+	        new GameTickData(7, 0),
 	        new RenderingData(0.0f, 5),
 	        new RenderingData(0.3f, 6),
 	        new RenderingData(0.6f, 6),
@@ -371,17 +367,17 @@ TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
 	        new RenderingData(0.8f, 2),
-	        new GameTickData(1, 1),
+	        new GameTickData(5, 1),
 	        new RenderingData(0.0f, 2),
 	        new RenderingData(0.3f, 2),
 	        new RenderingData(0.6f, 3),
 	        new RenderingData(0.8f, 3),
-	        new GameTickData(1, 2),
+	        new GameTickData(5, 2),
 	        new RenderingData(0.0f, 4),
 	        new RenderingData(0.3f, 4),
 	        new RenderingData(0.6f, 4),
 	        new RenderingData(0.8f, 5),
-	        new GameTickData(2, 0),
+	        new GameTickData(6, 0),
 	        new RenderingData(0.0f, 5),
 	        new RenderingData(0.3f, 5),
 	        new RenderingData(0.6f, 6),
@@ -399,12 +395,12 @@ TEST(AnimationInfo, HitRecoverySorcererZenMode) // Skipped frames and ignored de
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 2),
 	        new RenderingData(0.8f, 2),
-	        new GameTickData(3, 0, 1),
+	        new GameTickData(6, 0),
 	        new RenderingData(0.0f, 3),
 	        new RenderingData(0.3f, 3),
 	        new RenderingData(0.6f, 4),
 	        new RenderingData(0.8f, 4),
-	        new GameTickData(7, 0, 3),
+	        new GameTickData(7, 0),
 	        new RenderingData(0.0f, 5),
 	        new RenderingData(0.3f, 5),
 	        new RenderingData(0.6f, 6),
