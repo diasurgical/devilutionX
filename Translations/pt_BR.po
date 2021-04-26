@@ -1440,7 +1440,7 @@ msgstr "Pergaminho de ressuscitar"
 
 #: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:68
 msgid "Blacksmith Oil"
-msgstr ""
+msgstr "Óleo do ferreiro"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
