@@ -23,7 +23,7 @@
 #include "missiles.h"
 #include "nthread.h"
 #include "plrmsg.h"
-#include "qol.h"
+#include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
 #include "render.h"
 #include "stores.h"

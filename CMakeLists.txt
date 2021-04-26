@@ -296,7 +296,6 @@ set(devilutionx_SRCS
   Source/player.cpp
   Source/plrmsg.cpp
   Source/portal.cpp
-  Source/qol.cpp
   Source/quests.cpp
   Source/render.cpp
   Source/restrict.cpp
@@ -326,7 +325,9 @@ set(devilutionx_SRCS
   Source/controls/modifier_hints.cpp
   Source/controls/plrctrls.cpp
   Source/controls/touch.cpp
+  Source/qol/autopickup.cpp
   Source/qol/common.cpp
+  Source/qol/monhealthbar.cpp
   Source/qol/xpbar.cpp
   Source/utils/console.cpp
   Source/utils/display.cpp

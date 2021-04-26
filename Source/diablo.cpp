@@ -38,7 +38,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "plrmsg.h"
-#include "qol.h"
+#include "qol/common.h"
 #include "restrict.h"
 #include "setmaps.h"
 #include "sound.h"
