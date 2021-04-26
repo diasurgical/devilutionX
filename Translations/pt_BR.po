@@ -806,7 +806,7 @@ msgstr "Nível: Cripta %i"
 #: Source/automap.cpp:438
 #, c-format
 msgid "Level: Nest %i"
-msgstr "Nível: Ninho %i"
+msgstr "Nível: Enxame %i"
 
 #: Source/control.cpp:244
 msgid "Character Information"
