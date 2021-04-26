@@ -1424,7 +1424,7 @@ msgstr "Poção de mana completo"
 
 #: Source/itemdat.cpp:47 Source/itemdat.cpp:399
 msgid "Griswold's Edge"
-msgstr "Lâmina de Griswold"
+msgstr "Gume de Griswold"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:400
 msgid "Bovine Plate"
