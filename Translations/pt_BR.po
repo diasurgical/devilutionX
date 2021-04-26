@@ -1320,7 +1320,7 @@ msgstr "Arco curto"
 
 #: Source/itemdat.cpp:21
 msgid "Short Staff of Mana"
-msgstr "Cajado curto de raio carregado"
+msgstr "Cajado curto de mana"
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
