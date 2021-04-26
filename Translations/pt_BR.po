@@ -3717,7 +3717,7 @@ msgstr "dano: %i  Dur: %i/%i"
 #: Source/items.cpp:3902 Source/items.cpp:3949
 #, c-format
 msgid "damage: %i-%i  Indestructible"
-msgstr "Dano:%i-%i  Indestrutível"
+msgstr "dano:%i-%i  Indestrutível"
 
 #: Source/items.cpp:3904 Source/items.cpp:3951
 #, c-format
