@@ -823,9 +823,30 @@ bool PlayerBlocks(int playerID, int missileSourceID, int missileTargets, int mis
 	return block < chanceToBlock;
 }
 
+int CalculatePlayerDamageResistance(int playerID, int missileType)
+{
+	int damageResistance;
+	switch (missiledata[missileType].mResist) {
+	case MISR_FIRE:
+		damageResistance = plr[playerID]._pFireResist;
+		break;
+	case MISR_LIGHTNING:
+		damageResistance = plr[playerID]._pLghtResist;
+		break;
+	case MISR_MAGIC:
+	case MISR_ACID:
+		damageResistance = plr[playerID]._pMagResist;
+		break;
+	default:
+		damageResistance = 0;
+		break;
+	}
+	return damageResistance;
+}
+
 bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
 {
-	int dam, resper;
+	int dam;
 	*blocked = false;
 
 	int missileTargets = (m != -1) ? TARGET_PLAYERS : TARGET_BOTH;
@@ -862,23 +883,9 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 				dam = 64;
 		}
 
-		switch (missiledata[mtype].mResist) {
-		case MISR_FIRE:
-			resper = plr[pnum]._pFireResist;
-			break;
-		case MISR_LIGHTNING:
-			resper = plr[pnum]._pLghtResist;
-			break;
-		case MISR_MAGIC:
-		case MISR_ACID:
-			resper = plr[pnum]._pMagResist;
-			break;
-		default:
-			resper = 0;
-			break;
-		}
-		if (resper > 0) {
-			dam = dam - dam * resper / 100;
+		int damageResistance = CalculatePlayerDamageResistance(pnum, mtype);
+		if (damageResistance > 0) {
+			dam = dam - dam * damageResistance / 100;
 			if (pnum == myplr) {
 				ApplyPlrDamage(pnum, 0, 0, dam, earflag);
 			}
@@ -901,7 +908,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 
 bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, bool shift, bool *blocked)
 {
-	int dam, resper;
+	int dam;
 	*blocked = false;
 
 	if (!sgGameInitInfo.bFriendlyFire && gbFriendlyMode)
@@ -929,23 +936,9 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		}
 		if (missiledata[mtype].mType != 0)
 			dam /= 2;
-		switch (missiledata[mtype].mResist) {
-		case MISR_FIRE:
-			resper = plr[p]._pFireResist;
-			break;
-		case MISR_LIGHTNING:
-			resper = plr[p]._pLghtResist;
-			break;
-		case MISR_MAGIC:
-		case MISR_ACID:
-			resper = plr[p]._pMagResist;
-			break;
-		default:
-			resper = 0;
-			break;
-		}
-		if (resper > 0) {
-			dam -= (dam * resper) / 100;
+		int damageResistance = CalculatePlayerDamageResistance(pnum, mtype);
+		if (damageResistance > 0) {
+			dam -= (dam * damageResistance) / 100;
 			if (pnum == myplr)
 				NetSendCmdDamage(true, p, dam);
 			plr[pnum].PlaySpeach(69);
