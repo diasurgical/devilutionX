@@ -1164,7 +1164,7 @@ msgstr "Os últimos ainda podem ser os primeiros"
 
 #: Source/error.cpp:60
 msgid "Generosity brings its own rewards"
-msgstr "Generosidade traz suas próprias recompensas"
+msgstr "A generosidade traz suas próprias recompensas"
 
 #: Source/error.cpp:61
 msgid "You must be at least level 8 to use this."
