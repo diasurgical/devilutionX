@@ -497,7 +497,7 @@ msgid ""
 "Only the most experienced characters should venture in this realm."
 msgstr ""
 "Dificuldade inferno\n"
-"A mais poderosa das criaturas do submundo se esconde na porta de entrada do "
+"As mais poderosas criaturas do submundo se escondem na porta de entrada do "
 "Inferno. Somente os personagens mais experientes devem se aventurar nesse "
 "reino."
 
