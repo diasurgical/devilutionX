@@ -2065,7 +2065,7 @@ msgstr "de campeão"
 
 #: Source/itemdat.cpp:225
 msgid "King's"
-msgstr "régio(a)"
+msgstr "de rei"
 
 #: Source/itemdat.cpp:226
 msgid "Vulnerable"
