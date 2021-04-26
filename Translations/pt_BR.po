@@ -1675,7 +1675,7 @@ msgstr "Pergaminho de relâmpago"
 
 #: Source/itemdat.cpp:112
 msgid "Scroll of Fire Wall"
-msgstr "Perg. de parede de fogo"
+msgstr "Pergaminho de parede de fogo"
 
 #: Source/itemdat.cpp:113
 msgid "Scroll of Inferno"
