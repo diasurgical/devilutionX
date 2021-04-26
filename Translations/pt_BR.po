@@ -1128,7 +1128,7 @@ msgstr "As riquezas abundam quando menos se espera"
 
 #: Source/error.cpp:51
 msgid "Where avarice fails, patience gains reward"
-msgstr "Se falha a avareza, paciência é recompensada"
+msgstr "Onde falha a avareza, a paciência é recompensada"
 
 #: Source/error.cpp:52
 msgid "Blessed by a benevolent companion!"
