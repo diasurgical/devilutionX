@@ -1969,7 +1969,7 @@ msgstr "meteórico(a)"
 
 #: Source/itemdat.cpp:201 Source/objects.cpp:92
 msgid "Weird"
-msgstr "bizarro(a)"
+msgstr "esquisito(a)"
 
 #: Source/itemdat.cpp:202
 msgid "Strange"
