@@ -1428,7 +1428,7 @@ msgstr "Lâmina de Griswold"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:400
 msgid "Bovine Plate"
-msgstr ""
+msgstr "Placa bovina"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
