@@ -1084,7 +1084,7 @@ msgstr "O tempo não pode diminuir o poder do aç"
 
 #: Source/error.cpp:40
 msgid "Magic is not always what it seems to be"
-msgstr "A magia nem sempre é o que parece ser"
+msgstr "A mágica nem sempre é o que parece ser"
 
 #: Source/error.cpp:41
 msgid "What once was opened now is closed"
