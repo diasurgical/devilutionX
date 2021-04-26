@@ -498,6 +498,7 @@ static void SaveOptions()
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 	setIniInt("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
 	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
+	setIniInt("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
 	setIniInt("Game", "Run in Town", sgOptions.Gameplay.bRunInTown);
@@ -580,6 +581,7 @@ static void LoadOptions()
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
 	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
+	sgOptions.Graphics.bShowFPS = getIniInt("Graphics", "Show FPS", false);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
 	sgOptions.Gameplay.bRunInTown = getIniBool("Game", "Run in Town", false);
@@ -637,6 +639,9 @@ static void diablo_init_screen()
 
 static void diablo_init()
 {
+	if (sgOptions.Graphics.bShowFPS)
+		EnableFrameCount();
+
 	init_create_window();
 	was_window_init = true;
 
