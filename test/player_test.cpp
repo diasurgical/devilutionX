@@ -11,12 +11,10 @@ extern bool PM_DoGotHit(int pnum);
 int RunBlockTest(int frames, int flags)
 {
 	int pnum = 0;
-	plr[pnum].AnimInfo.CurrentFrame = 1;
 	plr[pnum]._pHFrames = frames;
-	plr[pnum].actionFrame = 1;
 	plr[pnum]._pIFlags = flags;
-	plr[pnum]._pmode = PM_GOTHIT;
 	plr[pnum]._pGFXLoad = -1;
+	StartPlrHit(pnum, 5, direction::DIR_S);
 
 	int i = 1;
 	for (; i < 100; i++) {

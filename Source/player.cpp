@@ -2808,26 +2808,13 @@ bool PlrHitObj(int pnum, int mx, int my)
 
 bool PM_DoAttack(int pnum)
 {
-	int frame, dx, dy, m;
+	int dx, dy, m;
 	bool didhit = false;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoAttack: illegal player %d", pnum);
 	}
 
-	frame = plr[pnum].AnimInfo.CurrentFrame;
-	if (plr[pnum]._pIFlags & ISPL_QUICKATTACK && frame == 1) {
-		plr[pnum].AnimInfo.CurrentFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTATTACK && (frame == 1 || frame == 3)) {
-		plr[pnum].AnimInfo.CurrentFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTERATTACK && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum].AnimInfo.CurrentFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTESTATTACK && (frame == 1 || frame == 4)) {
-		plr[pnum].AnimInfo.CurrentFrame += 2;
-	}
 	if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFNum - 1) {
 		PlaySfxLoc(PS_SWING, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 	}
@@ -2919,20 +2906,10 @@ bool PM_DoAttack(int pnum)
 
 bool PM_DoRangeAttack(int pnum)
 {
-	int origFrame, mistype;
+	int mistype;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoRangeAttack: illegal player %d", pnum);
-	}
-
-	if (!gbIsHellfire) {
-		origFrame = plr[pnum].AnimInfo.CurrentFrame;
-		if (plr[pnum]._pIFlags & ISPL_QUICKATTACK && origFrame == 1) {
-			plr[pnum].AnimInfo.CurrentFrame++;
-		}
-		if (plr[pnum]._pIFlags & ISPL_FASTATTACK && (origFrame == 1 || origFrame == 3)) {
-			plr[pnum].AnimInfo.CurrentFrame++;
-		}
 	}
 
 	int arrows = 0;
@@ -3041,10 +3018,6 @@ bool PM_DoBlock(int pnum)
 		app_fatal("PM_DoBlock: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pIFlags & ISPL_FASTBLOCK && plr[pnum].AnimInfo.CurrentFrame != 1) {
-		plr[pnum].AnimInfo.CurrentFrame = plr[pnum]._pBFrames;
-	}
-
 	if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pBFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
@@ -3148,21 +3121,8 @@ bool PM_DoSpell(int pnum)
 
 bool PM_DoGotHit(int pnum)
 {
-	int frame;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoGotHit: illegal player %d", pnum);
-	}
-
-	frame = plr[pnum].AnimInfo.CurrentFrame;
-	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
-		plr[pnum].AnimInfo.CurrentFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
-		plr[pnum].AnimInfo.CurrentFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum].AnimInfo.CurrentFrame++;
 	}
 
 	if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pHFrames) {

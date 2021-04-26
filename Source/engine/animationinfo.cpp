@@ -64,7 +64,7 @@ void AnimationInfo::SetNewAnimation(byte *pData, int numberOfFrames, int delayLe
 
 	this->pData = pData;
 	NumberOfFrames = numberOfFrames;
-	CurrentFrame = 1;
+	CurrentFrame = 1 + numSkippedFrames;
 	DelayCounter = 0;
 	DelayLen = delayLen;
 	TicksSinceSequenceStarted = 0;
