@@ -1735,7 +1735,7 @@ msgstr "Pergaminho de nada"
 
 #: Source/itemdat.cpp:128
 msgid "Scroll of Teleport"
-msgstr "Pergaminho de teleporte"
+msgstr "Pergaminho de teletransporte"
 
 #: Source/itemdat.cpp:129
 msgid "Scroll of Apocalypse"
