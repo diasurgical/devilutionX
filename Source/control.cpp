@@ -248,7 +248,7 @@ const char *const PanBtnStr[8] = {
 	N_("Inventory"),
 	N_("Spell book"),
 	N_("Send Message"),
-	N_("Player Attack")
+	"" // Player attack
 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 RECT32 ChrBtnsRect[4] = {
