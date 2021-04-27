@@ -17,7 +17,8 @@
 
 #include "dvlnet/zerotier_lwip.h"
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 //static constexpr uint64_t zt_earth = 0x8056c2e21c000001;
 static constexpr uint64_t ZtNetwork = 0xaf78bf943649eb12;
@@ -67,4 +68,5 @@ void zerotier_network_start()
 	std::atexit(zerotier_network_stop);
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution

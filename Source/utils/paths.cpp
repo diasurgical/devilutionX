@@ -88,21 +88,21 @@ const std::string &ConfigPath()
 const std::string &LangPath()
 {
 	if (!langPath)
-		langPath = MO_LANG_DIR;
+		langPath.emplace(MO_LANG_DIR);
 	return *langPath;
 }
 
 const std::string &TtfPath()
 {
 	if (!ttfPath)
-		ttfPath = TTF_FONT_DIR;
+		ttfPath.emplace(TTF_FONT_DIR);
 	return *ttfPath;
 }
 
 const std::string &TtfName()
 {
 	if (!ttfName)
-		ttfName = TTF_FONT_NAME;
+		ttfName.emplace(TTF_FONT_NAME);
 	return *ttfName;
 }
 
