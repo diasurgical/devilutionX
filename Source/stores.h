@@ -99,7 +99,7 @@ int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
 void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col, int val);
-void DrawSLine(CelOutputBuffer out, int y);
+void DrawSLine(const CelOutputBuffer &out, int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
 void StartStore(talk_id s);

@@ -66,7 +66,7 @@ prepare_buildroot() {
 
 make_buildroot() {
 	cd "$BUILDROOT"
-	BR2_JLEVEL=0 make toolchain libzip sdl sdl_mixer sdl_ttf fmt
+	BR2_JLEVEL=0 make toolchain libzip sdl sdl_ttf
 	cd -
 }
 

@@ -186,7 +186,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 	gmenu_up_down(true);
 }
 
-static void gmenu_clear_buffer(CelOutputBuffer out, int x, int y, int width, int height)
+static void gmenu_clear_buffer(const CelOutputBuffer &out, int x, int y, int width, int height)
 {
 	BYTE *i = out.at(x, y);
 	while (height--) {
@@ -203,7 +203,7 @@ static int gmenu_get_lfont(TMenuItem *pItem)
 
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0)
 		return 490;
-	text = pItem->pszStr;
+	text = _(pItem->pszStr);
 	i = 0;
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text++];
@@ -229,7 +229,7 @@ static void gmenu_draw_menu_item(const CelOutputBuffer &out, TMenuItem *pItem, i
 	}
 	x = gnScreenWidth / 2 - w / 2;
 	light_table_index = (pItem->dwFlags & GMENU_ENABLED) ? 0 : 15;
-	gmenu_print_text(out, x, y, pItem->pszStr);
+	gmenu_print_text(out, x, y, _(pItem->pszStr));
 	if (pItem == sgpCurrItem) {
 		CelDrawTo(out, x - 54, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
 		CelDrawTo(out, x + 4 + w, y + 1, PentSpin_cel, PentSpn2Spin(), 48);

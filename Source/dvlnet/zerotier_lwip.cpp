@@ -17,7 +17,8 @@
 
 #include "dvlnet/zerotier_native.h"
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 void print_ip6_addr(void *x)
 {
@@ -37,4 +38,5 @@ void zt_ip6setup()
 	UNLOCK_TCPIP_CORE();
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution

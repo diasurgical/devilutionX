@@ -38,7 +38,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "plrmsg.h"
-#include "qol.h"
+#include "qol/common.h"
 #include "restrict.h"
 #include "setmaps.h"
 #include "sound.h"
@@ -61,6 +61,18 @@ namespace devilution {
 #endif
 #ifndef DEFAULT_HEIGHT
 #define DEFAULT_HEIGHT 480
+#endif
+#ifndef DEFAULT_AUDIO_SAMPLE_RATE
+#define DEFAULT_AUDIO_SAMPLE_RATE 22050
+#endif
+#ifndef DEFAULT_AUDIO_CHANNELS
+#define DEFAULT_AUDIO_CHANNELS 2
+#endif
+#ifndef DEFAULT_AUDIO_BUFFER_SIZE
+#define DEFAULT_AUDIO_BUFFER_SIZE 2048
+#endif
+#ifndef DEFAULT_AUDIO_RESAMPLING_QUALITY
+#define DEFAULT_AUDIO_RESAMPLING_QUALITY 5
 #endif
 
 SDL_Window *ghMainWnd;
@@ -466,6 +478,10 @@ static void SaveOptions()
 	setIniInt("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
 	setIniInt("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
 
+	setIniInt("Audio", "Sample Rate", sgOptions.Audio.nSampleRate);
+	setIniInt("Audio", "Channels", sgOptions.Audio.nChannels);
+	setIniInt("Audio", "Buffer Size", sgOptions.Audio.nBufferSize);
+	setIniInt("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
 #ifndef __vita__
 	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
 	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
@@ -482,6 +498,7 @@ static void SaveOptions()
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 	setIniInt("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
 	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
+	setIniInt("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
 	setIniInt("Game", "Run in Town", sgOptions.Gameplay.bRunInTown);
@@ -538,6 +555,11 @@ static void LoadOptions()
 	sgOptions.Audio.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
 	sgOptions.Audio.bAutoEquipSound = getIniBool("Audio", "Auto Equip Sound", false);
 
+	sgOptions.Audio.nSampleRate = getIniInt("Audio", "Sample Rate", DEFAULT_AUDIO_SAMPLE_RATE);
+	sgOptions.Audio.nChannels = getIniInt("Audio", "Channels", DEFAULT_AUDIO_CHANNELS);
+	sgOptions.Audio.nBufferSize = getIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
+	sgOptions.Audio.nResamplingQuality = getIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
+
 #ifndef __vita__
 	sgOptions.Graphics.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
 	sgOptions.Graphics.nHeight = getIniInt("Graphics", "Height", DEFAULT_HEIGHT);
@@ -559,6 +581,7 @@ static void LoadOptions()
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
 	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
+	sgOptions.Graphics.bShowFPS = getIniInt("Graphics", "Show FPS", false);
 
 	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
 	sgOptions.Gameplay.bRunInTown = getIniBool("Game", "Run in Town", false);
@@ -616,6 +639,9 @@ static void diablo_init_screen()
 
 static void diablo_init()
 {
+	if (sgOptions.Graphics.bShowFPS)
+		EnableFrameCount();
+
 	init_create_window();
 	was_window_init = true;
 
@@ -673,6 +699,7 @@ static void diablo_deinit()
 	if (was_snd_init) {
 		effects_cleanup_sfx();
 	}
+	Aulib::quit();
 	if (was_ui_init)
 		UiDestroy();
 	if (was_archives_init)

@@ -2,7 +2,7 @@
 
 Note: If you do not use git to manage the source you must provide the verion to CMake manually:
 ```bash
-cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF
+cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
 ```
 
 <details><summary>Linux</summary>
@@ -18,7 +18,7 @@ sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel li
 ### Compiling
 ```
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 </details>
@@ -30,7 +30,7 @@ Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 ```
 brew bundle install
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(sysctl -n hw.physicalcpu)
 ```
 </details>
@@ -43,7 +43,7 @@ pkg install cmake sdl2_mixer sdl2_ttf libsodium
 ### Compiling
 ```
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
@@ -56,7 +56,7 @@ pkgin install cmake SDL2_mixer SDL2_ttf libsodium
 ### Compiling
 ```
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
@@ -70,7 +70,7 @@ pkg_add cmake sdl2-mixer sdl2-ttf libsodium gmake
 ### Compiling
 ```
 cd build
-cmake -DCMAKE_MAKE_PROGRAM=gmake ..
+cmake .. -DCMAKE_MAKE_PROGRAM=gmake -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(sysctl -n hw.ncpuonline)
 ```
 </details>
@@ -84,7 +84,7 @@ cmake --build . -j $(sysctl -n hw.ncpuonline)
 Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
 
 ```
-sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
+sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686
 ```
 
 ### 64-bit
@@ -92,7 +92,7 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
 Download and place the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
 
 ```
-sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64
 ```
 ### Compiling
 
@@ -100,7 +100,7 @@ sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
 
 ```
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 
@@ -108,9 +108,13 @@ make -j$(nproc)
 
 ```
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
+
+Note: If your `(i686|x86_64)-w64-mingw32` directory is not in `/usr` (e.g. when on Debian), the mingw-prep scripts and the CMake
+command won't work. You need adjust the mingw-prep scripts and pass `-DCROSS_PREFIX=/path` to CMake to set the path to the parent
+of the `(i686|x86_64)-w64-mingw32` directory.
 </details>
 <details><summary>Windows via Visual Studio</summary>
 
@@ -186,7 +190,7 @@ https://devkitpro.org/wiki/Getting_Started
 - Install required packages with (dkp-)pacman:
 ```
 sudo (dkp-)pacman -S devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-	libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-sdl_mixer \
+	libctru citro3d 3ds-sdl 3ds-sdl_ttf \
 	3ds-freetype 3ds-libogg 3ds-libvorbisidec 3ds-mikmod
 ```
 - Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
@@ -195,7 +199,7 @@ sudo (dkp-)pacman -S devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers
 ### Compiling
 ```
 cd build
-cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
+cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 The output-files will be generated in the build folder.
@@ -208,7 +212,7 @@ The output-files will be generated in the build folder.
 ### Compiling
 ```
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 make
 ```
 [PlayStation Vita manual](docs/manual/platforms/vita.md)
@@ -229,14 +233,14 @@ pkgman install cmake devel:libsdl2 devel:libsdl2_mixer devel:libsdl2_ttf devel:l
 ```
 cd build
 setarch x86 #Switch to secondary compiler toolchain (GCC8+)
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(nproc)
 ```
 ### Compiling on 64 bit Haiku
 No setarch required, as there is no secondary toolchain on x86_64, and the primary is GCC8+
 ```
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(nproc)
 ```
 </details>
@@ -325,11 +329,10 @@ select Icons -> Information in the top menu.
 <details><summary><b>CMake build options</b></summary>
 
 ### General
-- `-DBINARY_RELEASE=ON` changed build type to release and optimize for distribution.
+- `-DCMAKE_BUILD_TYPE=Release` changed build type to release and optimize for distribution.
 - `-DNONET=ON` disable network support, this also removes the need for the ASIO and Sodium.
 - `-DUSE_SDL1=ON` build for SDL v1 instead of v2, not all features are supported under SDL v1, notably upscaling.
 - `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
-- `-DCROSS_PREFIX=/path/to/prefix` set the path to the `i686-w64-mingw32` directory.
 
 ### Debug builds
 - `-DDEBUG=OFF` disable debug mode of the Diablo engine.

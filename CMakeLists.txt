@@ -47,6 +47,10 @@ if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set(CPACK ON)
 endif()
 
+option(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB "Use system-provided SDL_audiolib" OFF)
+cmake_dependent_option(DEVILUTIONX_STATIC_SDL_AUDIOLIB "Link static SDL_audiolib" OFF
+                       "DEVILUTIONX_SYSTEM_SDL_AUDIOLIB AND NOT DIST" ON)
+
 option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
                        "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
@@ -169,6 +173,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
+  find_package(SDL_audiolib REQUIRED)
+else()
+  add_subdirectory(3rdParty/SDL_audiolib)
+endif()
+
 if(NOT N3DS)
   find_package(Threads REQUIRED)
 endif()
@@ -197,20 +207,27 @@ endif()
 if(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
-  find_package(SDL_mixer REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
 else()
   find_package(SDL2 REQUIRED)
   if(TARGET SDL2::SDL2)
-    set(SDL2_TARGET SDL2::SDL2)
-  else()
+    set(SDL2_MAIN SDL2::SDL2main)
+  elseif(TARGET SDL2::SDL2-static)
     # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
-    set(SDL2_TARGET SDL2::SDL2-static)
     # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
+    set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
     add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
+    set(SDL2_MAIN SDL2::SDL2main)
+  else()
+    # Assume an older Debian derivate that comes with an sdl2-config.cmake
+    # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
+    add_library(SDL2_lib INTERFACE)
+    target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
+    target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
+    # Can't define an INTERFACE target with ::, so alias instead
+    add_library(SDL2::SDL2 ALIAS SDL2_lib)
   endif()
   find_package(SDL2_ttf REQUIRED)
-  find_package(SDL2_mixer REQUIRED)
 endif()
 
 add_library(smacker STATIC
@@ -294,7 +311,6 @@ set(devilutionx_SRCS
   Source/player.cpp
   Source/plrmsg.cpp
   Source/portal.cpp
-  Source/qol.cpp
   Source/quests.cpp
   Source/render.cpp
   Source/restrict.cpp
@@ -324,13 +340,16 @@ set(devilutionx_SRCS
   Source/controls/modifier_hints.cpp
   Source/controls/plrctrls.cpp
   Source/controls/touch.cpp
+  Source/qol/autopickup.cpp
   Source/qol/common.cpp
+  Source/qol/monhealthbar.cpp
   Source/qol/xpbar.cpp
   Source/utils/console.cpp
   Source/utils/display.cpp
   Source/utils/file_util.cpp
   Source/utils/language.cpp
   Source/utils/paths.cpp
+  Source/utils/push_aulib_decoder.cpp
   Source/utils/soundsample.cpp
   Source/utils/thread.cpp
   Source/DiabloUI/art.cpp
@@ -530,6 +549,10 @@ foreach(
   def_name
   DEFAULT_WIDTH
   DEFAULT_HEIGHT
+  DEFAULT_AUDIO_SAMPLE_RATE
+  DEFAULT_AUDIO_CHANNELS
+  DEFAULT_AUDIO_BUFFER_SIZE
+  DEFAULT_AUDIO_RESAMPLING_QUALITY
   TTF_FONT_DIR
   TTF_FONT_NAME
   SDL1_VIDEO_MODE_BPP
@@ -598,16 +621,16 @@ target_link_libraries(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined
 if(USE_SDL1)
   target_link_libraries(${BIN_TARGET} PRIVATE
     ${SDL_TTF_LIBRARY}
-    ${SDL_MIXER_LIBRARY}
     ${SDL_LIBRARY})
   target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
 else()
   target_link_libraries(${BIN_TARGET} PRIVATE
-    ${SDL2_TARGET}
-    SDL2::SDL2main
-    SDL2::SDL2_ttf
-    SDL2::SDL2_mixer)
+    SDL2::SDL2
+    ${SDL2_MAIN}
+    SDL2::SDL2_ttf)
 endif()
+
+target_link_libraries(${BIN_TARGET} PRIVATE SDL_audiolib)
 
 if(SWITCH)
   target_link_libraries(${BIN_TARGET} PRIVATE switch::libnx
@@ -625,18 +648,7 @@ endif()
 
 if (VITA)
   target_link_libraries(${BIN_TARGET} PRIVATE
-        SceAppMgr_stub
-        SceAudio_stub
-        SceCommonDialog_stub
-        SceCtrl_stub
-        SceDisplay_stub
-        SceGxm_stub
-        SceHid_stub
-        SceIofilemgr_stub
-        SceMotion_stub
         ScePower_stub
-        SceSysmodule_stub
-        SceTouch_stub
         freetype
         png
         m
@@ -710,6 +722,7 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(${BIN_TARGET} PRIVATE "/W0")
   target_compile_options(${BIN_TARGET} PRIVATE "/Zc:__cplusplus")
+  target_compile_options(${BIN_TARGET} PRIVATE "/permissive-")
 endif()
 
 if(APPLE)
@@ -810,9 +823,6 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/i686-w64-mingw32/bin/SDL2.dll"
       DESTINATION "."
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_mixer-2.0.4/i686-w64-mingw32/bin/SDL2_mixer.dll"
-      DESTINATION "."
-    )
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/SDL2_ttf.dll"
       DESTINATION "."
     )
@@ -848,9 +858,6 @@ if(CPACK)
       DESTINATION "."
     )
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/x86_64-w64-mingw32/bin/SDL2.dll"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_mixer-2.0.4/x86_64-w64-mingw32/bin/SDL2_mixer.dll"
       DESTINATION "."
     )
     install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/SDL2_ttf.dll"
@@ -914,9 +921,9 @@ if(CPACK)
     # -G DEB
     set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
     if(USE_SDL1)
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libsdl-mixer1.2, libsdl-ttf2.0-0")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libsdl-ttf2.0-0")
     else()
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libsdl2-mixer-2.0-0, libsdl2-ttf-2.0-0")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libsdl2-ttf-2.0-0")
     endif()
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 

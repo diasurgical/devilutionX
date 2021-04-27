@@ -2,7 +2,8 @@
 #include "utils/stubs.h"
 #include "utils/language.h"
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 int loopback::create(std::string addrstr, std::string passwd)
 {
@@ -112,4 +113,5 @@ std::string loopback::make_default_gamename()
 	return std::string(_("loopback"));
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution

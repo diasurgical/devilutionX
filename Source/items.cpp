@@ -16,6 +16,7 @@
 #include "options.h"
 #include "stores.h"
 #include "utils/language.h"
+#include "utils/math.h"
 
 namespace devilution {
 
@@ -600,7 +601,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 					tmpac *= itm->_iPLAC;
 					tmpac /= 100;
 					if (tmpac == 0)
-						tmpac = 1;
+						tmpac = math::Sign(itm->_iPLAC);
 					bac += tmpac;
 				}
 				iflgs |= itm->_iFlags;
@@ -3777,7 +3778,7 @@ void PrintUString(const CelOutputBuffer &out, int x, int y, bool cjustflag, cons
 	}
 }
 
-static void DrawULine(CelOutputBuffer out, int y)
+static void DrawULine(const CelOutputBuffer &out, int y)
 {
 	BYTE *src = out.at(26 + RIGHT_PANEL - SPANEL_WIDTH, 25);
 	BYTE *dst = out.at(26 + RIGHT_PANEL_X - SPANEL_WIDTH, y * 12 + 38);

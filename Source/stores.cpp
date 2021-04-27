@@ -2217,7 +2217,7 @@ void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, cons
 	}
 }
 
-void DrawSLine(CelOutputBuffer out, int y)
+void DrawSLine(const CelOutputBuffer &out, int y)
 {
 	const int sy = y * 12;
 	BYTE *src, *dst;

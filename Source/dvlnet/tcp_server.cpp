@@ -8,7 +8,8 @@
 #include "dvlnet/base.h"
 #include "utils/log.hpp"
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 tcp_server::tcp_server(asio::io_context &ioc, const std::string &bindaddr,
     unsigned short port, std::string pw)
@@ -225,4 +226,5 @@ tcp_server::~tcp_server()
 {
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution

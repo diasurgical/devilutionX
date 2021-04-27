@@ -621,7 +621,7 @@ void ClearPanel()
 	pinfoflag = false;
 }
 
-void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int sy)
+void DrawPanelBox(const CelOutputBuffer &out, int x, int y, int w, int h, int sx, int sy)
 {
 	const BYTE *src = pBtmBuff.at(x, y);
 	BYTE *dst = out.at(sx, sy);
@@ -642,7 +642,7 @@ void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int s
  * @param y0 Top of the flask cel section to draw.
  * @param y1 Bottom of the flask cel section to draw.
  */
-static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, CelOutputBuffer celBuf, int y0, int y1)
+static void DrawFlaskTop(const CelOutputBuffer &out, int sx, int sy, CelOutputBuffer celBuf, int y0, int y1)
 {
 	const BYTE *src = celBuf.at(0, y0);
 	BYTE *dst = out.at(sx, sy);
@@ -663,7 +663,7 @@ static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, CelOutputBuffer ce
  * @param sy Target buffer coordinate.
  * @param h How many lines of the source buffer that will be copied.
  */
-static void DrawFlask(CelOutputBuffer out, CelOutputBuffer celBuf, int celX, int celY, int x, int y, int h)
+static void DrawFlask(const CelOutputBuffer &out, const CelOutputBuffer &celBuf, int celX, int celY, int x, int y, int h)
 {
 	const BYTE *src = celBuf.at(celX, celY);
 	BYTE *dst = out.at(x, y);
@@ -999,7 +999,7 @@ void CheckPanelInfo()
 		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
 		if (MouseX >= PanBtnPos[i].x + PANEL_LEFT && MouseX <= xend && MouseY >= PanBtnPos[i].y + PANEL_TOP && MouseY <= yend) {
 			if (i != 7) {
-				strcpy(infostr, PanBtnStr[i]);
+				strcpy(infostr, _(PanBtnStr[i]));
 			} else {
 				if (gbFriendlyMode)
 					strcpy(infostr, _("Player friendly"));
@@ -1730,7 +1730,7 @@ void DrawDurIcon(const CelOutputBuffer &out)
 	DrawDurIcon4Item(out, &p->InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
-void RedBack(CelOutputBuffer out)
+void RedBack(const CelOutputBuffer &out)
 {
 	int idx = light4flag ? 1536 : 4608;
 

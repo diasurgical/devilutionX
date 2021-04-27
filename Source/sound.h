@@ -44,7 +44,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
 TSnd *sound_file_load(const char *path, bool stream = false);
 void sound_file_cleanup(TSnd *sound_file);
 void snd_init();
-void sound_cleanup();
+void snd_deinit();
 void music_stop();
 void music_start(uint8_t nTrack);
 void sound_disable_music(bool disable);
