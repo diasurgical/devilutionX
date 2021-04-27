@@ -30,6 +30,9 @@
 #
 # -modernize-use-trailing-return-type
 #   A purely stylistic change that we do not want.
+#
+# -modernize-concat-nested-namespaces
+#   Compatibility with older compilers.
 Checks: >
   -*,
   bugprone-*,
@@ -44,6 +47,7 @@ Checks: >
   readability-*,
   -modernize-avoid-c-arrays,
   -modernize-use-trailing-return-type,
+  -modernize-concat-nested-namespaces
 
 HeaderFilterRegex: "^(Source|test)\\.h$"
 

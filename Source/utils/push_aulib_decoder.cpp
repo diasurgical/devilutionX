@@ -36,7 +36,7 @@ void PushAulibDecoder::PushSamples(const std::uint8_t *data, unsigned size) noex
 void PushAulibDecoder::DiscardPendingSamples() noexcept
 {
 	SDLMutexLockGuard lock(queue_mutex_.get());
-	queue_ = {};
+	queue_ = std::queue<AudioQueueItem>();
 }
 
 bool PushAulibDecoder::open([[maybe_unused]] SDL_RWops *rwops)

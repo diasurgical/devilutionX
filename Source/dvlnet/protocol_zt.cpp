@@ -18,7 +18,8 @@
 #include "dvlnet/zerotier_native.h"
 #include "utils/log.hpp"
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 protocol_zt::protocol_zt()
 {
@@ -305,4 +306,5 @@ std::string protocol_zt::make_default_gamename()
 	return ret;
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution
