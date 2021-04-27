@@ -215,7 +215,9 @@ else()
   elseif(TARGET SDL2::SDL2-static)
     # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
     # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
-    set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
+    if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
+      set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
+    endif()
     add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
     set(SDL2_MAIN SDL2::SDL2main)
   else()
