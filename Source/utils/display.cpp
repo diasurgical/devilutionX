@@ -134,7 +134,10 @@ bool SpawnWindow(const char *lpWindowName)
 	SDL_setenv("SDL_AUDIODRIVER", "winmm", /*overwrite=*/false);
 #endif
 
-	int initFlags = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+	int initFlags = SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+#ifndef NOSOUND
+	initFlags |= SDL_INIT_AUDIO;
+#endif
 #ifndef USE_SDL1
 	initFlags |= SDL_INIT_GAMECONTROLLER;
 #endif

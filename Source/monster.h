@@ -10,7 +10,10 @@
 #include "engine.h"
 #include "miniwin/miniwin.h"
 #include "monstdat.h"
+
+#ifndef NOSOUND
 #include "sound.h"
+#endif
 
 namespace devilution {
 
@@ -116,7 +119,9 @@ struct CMonster {
 	/** placeflag enum as a flags*/
 	uint8_t mPlaceFlags;
 	AnimStruct Anims[6];
+#ifndef NOSOUND
 	TSnd *Snds[4][2];
+#endif
 	int width;
 	uint16_t mMinHP;
 	uint16_t mMaxHP;
