@@ -647,18 +647,7 @@ endif()
 
 if (VITA)
   target_link_libraries(${BIN_TARGET} PRIVATE
-        SceAppMgr_stub
-        SceAudio_stub
-        SceCommonDialog_stub
-        SceCtrl_stub
-        SceDisplay_stub
-        SceGxm_stub
-        SceHid_stub
-        SceIofilemgr_stub
-        SceMotion_stub
         ScePower_stub
-        SceSysmodule_stub
-        SceTouch_stub
         freetype
         png
         m
