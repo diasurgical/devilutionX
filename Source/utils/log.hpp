@@ -25,25 +25,40 @@ enum class LogCategory {
 constexpr auto defaultCategory = LogCategory::Application;
 
 enum class LogPriority {
-    Verbose = SDL_LOG_PRIORITY_VERBOSE,
-    Debug = SDL_LOG_PRIORITY_DEBUG,
-    Info = SDL_LOG_PRIORITY_INFO,
-    Warn = SDL_LOG_PRIORITY_WARN,
-    Error = SDL_LOG_PRIORITY_ERROR,
-    Critical = SDL_LOG_PRIORITY_CRITICAL,
+	Verbose = SDL_LOG_PRIORITY_VERBOSE,
+	Debug = SDL_LOG_PRIORITY_DEBUG,
+	Info = SDL_LOG_PRIORITY_INFO,
+	Warn = SDL_LOG_PRIORITY_WARN,
+	Error = SDL_LOG_PRIORITY_ERROR,
+	Critical = SDL_LOG_PRIORITY_CRITICAL,
 };
+
+namespace detail {
+
+template <typename... Args>
+std::string format(const char *fmt, Args &&... args)
+{
+	try {
+		return fmt::format(fmt, std::forward<Args>(args)...);
+	} catch (const fmt::format_error &e) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Format error, fmt: %s, error: %s", fmt ? fmt : "nullptr", e.what());
+		return "error";
+	}
+}
+
+} // namespace detail
 
 template <typename... Args>
 void Log(const char *fmt, Args &&... args)
 {
-	auto str = fmt::format(fmt, std::forward<Args>(args)...);
+	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_Log("%s", str.c_str());
 }
 
 template <typename... Args>
 void LogVerbose(LogCategory category, const char *fmt, Args &&... args)
 {
-	auto str = fmt::format(fmt, std::forward<Args>(args)...);
+	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogVerbose(static_cast<int>(category), "%s", str.c_str());
 }
 
@@ -56,7 +71,7 @@ void LogVerbose(const char *fmt, Args &&... args)
 template <typename... Args>
 void LogDebug(LogCategory category, const char *fmt, Args &&... args)
 {
-	auto str = fmt::format(fmt, std::forward<Args>(args)...);
+	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogDebug(static_cast<int>(category), "%s", str.c_str());
 }
 
@@ -69,7 +84,7 @@ void LogDebug(const char *fmt, Args &&... args)
 template <typename... Args>
 void LogInfo(LogCategory category, const char *fmt, Args &&... args)
 {
-	auto str = fmt::format(fmt, std::forward<Args>(args)...);
+	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogInfo(static_cast<int>(category), "%s", str.c_str());
 }
 
@@ -82,7 +97,7 @@ void LogInfo(const char *fmt, Args &&... args)
 template <typename... Args>
 void LogWarn(LogCategory category, const char *fmt, Args &&... args)
 {
-	auto str = fmt::format(fmt, std::forward<Args>(args)...);
+	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogWarn(static_cast<int>(category), "%s", str.c_str());
 }
 
@@ -95,7 +110,7 @@ void LogWarn(const char *fmt, Args &&... args)
 template <typename... Args>
 void LogError(LogCategory category, const char *fmt, Args &&... args)
 {
-	auto str = fmt::format(fmt, std::forward<Args>(args)...);
+	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogError(static_cast<int>(category), "%s", str.c_str());
 }
 
@@ -108,7 +123,7 @@ void LogError(const char *fmt, Args &&... args)
 template <typename... Args>
 void LogCritical(LogCategory category, const char *fmt, Args &&... args)
 {
-	auto str = fmt::format(fmt, std::forward<Args>(args)...);
+	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogCritical(static_cast<int>(category), "%s", str.c_str());
 }
 
@@ -121,7 +136,7 @@ void LogCritical(const char *fmt, Args &&... args)
 template <typename... Args>
 void LogMessageV(LogCategory category, LogPriority priority, const char *fmt, Args &&... args)
 {
-	auto str = fmt::format(fmt, std::forward<Args>(args)...);
+	auto str = detail::format(fmt, std::forward<Args>(args)...);
 	SDL_LogMessageV(static_cast<int>(category), static_cast<SDL_LogPriority>(priority), "%s", str.c_str());
 }
 
