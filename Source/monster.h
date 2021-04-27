@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
 
 #include "engine.h"
 #include "miniwin/miniwin.h"
@@ -106,7 +107,7 @@ enum placeflag : uint8_t {
 
 struct AnimStruct {
 	uint8_t *CMem;
-	uint8_t *Data[8];
+	std::array<uint8_t *, 8> Data;
 	int Frames;
 	int Rate;
 };

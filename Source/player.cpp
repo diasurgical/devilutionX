@@ -2127,7 +2127,7 @@ void RemovePlrMissiles(int pnum)
 
 	if (currlevel != 0 && pnum == myplr && (monster[myplr].position.tile.x != 1 || monster[myplr].position.tile.y != 0)) {
 		M_StartKill(myplr, myplr);
-		AddDead(monster[myplr].position.tile.x, monster[myplr].position.tile.y, (monster[myplr].MType)->mdeadval, monster[myplr]._mdir);
+		AddDead(monster[myplr].position.tile, (monster[myplr].MType)->mdeadval, monster[myplr]._mdir);
 		mx = monster[myplr].position.tile.x;
 		my = monster[myplr].position.tile.y;
 		dMonster[mx][my] = 0;

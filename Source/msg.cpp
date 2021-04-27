@@ -720,9 +720,9 @@ void DeltaLoadLevel()
 					if (monster[i]._mAi != AI_DIABLO) {
 						if (monster[i]._uniqtype == 0) {
 							assert(monster[i].MType != nullptr);
-							AddDead(monster[i].position.tile.x, monster[i].position.tile.y, monster[i].MType->mdeadval, monster[i]._mdir);
+							AddDead(monster[i].position.tile, monster[i].MType->mdeadval, monster[i]._mdir);
 						} else {
-							AddDead(monster[i].position.tile.x, monster[i].position.tile.y, monster[i]._udeadval, monster[i]._mdir);
+							AddDead(monster[i].position.tile, monster[i]._udeadval, monster[i]._mdir);
 						}
 					}
 					monster[i]._mDelFlag = true;
