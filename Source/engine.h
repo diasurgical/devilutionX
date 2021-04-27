@@ -60,6 +60,26 @@ enum direction : uint8_t {
 struct Point {
 	int x;
 	int y;
+
+	Point operator +(const Point &other)
+	{
+		return {x + other.x, y + other.y};
+	}
+
+	Point operator -(const Point &other)
+	{
+		return {x - other.x, y - other.y};
+	}
+
+	void operator +=(const Point &other)
+	{
+		*this = *this + other;
+	}
+
+	void operator -=(const Point &other)
+	{
+		*this = *this - other;
+	}
 };
 
 struct ActorPosition {
