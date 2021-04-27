@@ -181,14 +181,14 @@ void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item,
 {
 	if (gbSndInited) {
 		menu_item->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
-		menu_item->pszStr = _(names[0]);
+		menu_item->pszStr = names[0];
 		gmenu_slider_steps(menu_item, 17);
 		gmenu_slider_set(menu_item, VOLUME_MIN, VOLUME_MAX, volume);
 		return;
 	}
 
 	menu_item->dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
-	menu_item->pszStr = _(names[1]);
+	menu_item->pszStr = names[1];
 }
 
 static int gamemenu_slider_music_sound(TMenuItem *menu_item)

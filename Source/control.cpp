@@ -999,7 +999,7 @@ void CheckPanelInfo()
 		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
 		if (MouseX >= PanBtnPos[i].x + PANEL_LEFT && MouseX <= xend && MouseY >= PanBtnPos[i].y + PANEL_TOP && MouseY <= yend) {
 			if (i != 7) {
-				strcpy(infostr, PanBtnStr[i]);
+				strcpy(infostr, _(PanBtnStr[i]));
 			} else {
 				if (gbFriendlyMode)
 					strcpy(infostr, _("Player friendly"));
