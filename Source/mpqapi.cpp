@@ -7,6 +7,7 @@
 
 #include <cerrno>
 #include <cinttypes>
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -35,11 +36,11 @@ namespace {
 // Done with templates so that error messages include actual size.
 template <std::size_t A, std::size_t B>
 struct assert_eq : std::true_type {
-	static_assert(A == B);
+	static_assert(A == B, "A == B not satisfied");
 };
 template <std::size_t A, std::size_t B>
 struct assert_lte : std::true_type {
-	static_assert(A <= B);
+	static_assert(A <= B, "A <= B not satisfied");
 };
 template <typename T, std::size_t S>
 struct check_size : assert_eq<sizeof(T), S>, assert_lte<alignof(T), sizeof(T)> {
@@ -48,8 +49,8 @@ struct check_size : assert_eq<sizeof(T), S>, assert_lte<alignof(T), sizeof(T)> {
 // Check sizes and alignments of the structs that we decrypt and encrypt.
 // The decryption algorithm treats them as a stream of 32-bit uints, so the
 // sizes must be exact as there cannot be any padding.
-static_assert(check_size<_HASHENTRY, 4 * 4>::value);
-static_assert(check_size<_BLOCKENTRY, 4 * 4>::value);
+static_assert(check_size<_HASHENTRY, 4 * 4>::value, "sizeof(_HASHENTRY) == 4 * 4 && alignof(_HASHENTRY) <= 4 * 4 not satisfied");
+static_assert(check_size<_BLOCKENTRY, 4 * 4>::value, "sizeof(_BLOCKENTRY) == 4 * 4 && alignof(_BLOCKENTRY) <= 4 * 4 not satisfied");
 
 const char *DirToString(std::ios::seekdir dir)
 {
