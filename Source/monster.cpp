@@ -2637,9 +2637,9 @@ bool M_DoDeath(int i)
 			PrepDoEnding();
 	} else if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
 		if (monster[i]._uniqtype == 0)
-			AddDead(monster[i].position.tile.x, monster[i].position.tile.y, monster[i].MType->mdeadval, monster[i]._mdir);
+			AddDead(monster[i].position.tile, monster[i].MType->mdeadval, monster[i]._mdir);
 		else
-			AddDead(monster[i].position.tile.x, monster[i].position.tile.y, monster[i]._udeadval, monster[i]._mdir);
+			AddDead(monster[i].position.tile, monster[i]._udeadval, monster[i]._mdir);
 
 		dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = 0;
 		monster[i]._mDelFlag = true;

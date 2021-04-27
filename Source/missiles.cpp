@@ -4619,7 +4619,7 @@ void MI_Stone(int i)
 		if (monster[m]._mhitpoints > 0)
 			monster[m]._mmode = (MON_MODE)missile[i]._miVar1;
 		else
-			AddDead(monster[m].position.tile.x, monster[m].position.tile.y, stonendx, monster[m]._mdir);
+			AddDead(monster[m].position.tile, stonendx, monster[m]._mdir);
 	}
 	if (missile[i]._miAnimType == MFILE_SHATTER1)
 		PutMissile(i);
