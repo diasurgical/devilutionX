@@ -2,7 +2,7 @@
 
 Note: If you do not use git to manage the source you must provide the verion to CMake manually:
 ```bash
-cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF
+cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
 ```
 
 <details><summary>Linux</summary>
@@ -18,7 +18,7 @@ sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel li
 ### Compiling
 ```
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 </details>
@@ -30,7 +30,7 @@ Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 ```
 brew bundle install
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(sysctl -n hw.physicalcpu)
 ```
 </details>
@@ -43,7 +43,7 @@ pkg install cmake sdl2_mixer sdl2_ttf libsodium
 ### Compiling
 ```
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
@@ -56,7 +56,7 @@ pkgin install cmake SDL2_mixer SDL2_ttf libsodium
 ### Compiling
 ```
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
@@ -70,7 +70,7 @@ pkg_add cmake sdl2-mixer sdl2-ttf libsodium gmake
 ### Compiling
 ```
 cd build
-cmake -DCMAKE_MAKE_PROGRAM=gmake ..
+cmake .. -DCMAKE_MAKE_PROGRAM=gmake -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(sysctl -n hw.ncpuonline)
 ```
 </details>
@@ -100,7 +100,7 @@ sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-
 
 ```
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 
@@ -108,7 +108,7 @@ make -j$(nproc)
 
 ```
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 
@@ -199,7 +199,7 @@ sudo (dkp-)pacman -S devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers
 ### Compiling
 ```
 cd build
-cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
+cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 The output-files will be generated in the build folder.
@@ -212,7 +212,7 @@ The output-files will be generated in the build folder.
 ### Compiling
 ```
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 make
 ```
 [PlayStation Vita manual](docs/manual/platforms/vita.md)
@@ -233,14 +233,14 @@ pkgman install cmake devel:libsdl2 devel:libsdl2_mixer devel:libsdl2_ttf devel:l
 ```
 cd build
 setarch x86 #Switch to secondary compiler toolchain (GCC8+)
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(nproc)
 ```
 ### Compiling on 64 bit Haiku
 No setarch required, as there is no secondary toolchain on x86_64, and the primary is GCC8+
 ```
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j $(nproc)
 ```
 </details>
