@@ -1,4 +1,5 @@
 #include "storm/storm.h"
+#include "utils/file_util.h"
 
 #include <SDL.h>
 #include <SDL_endian.h>
@@ -36,8 +37,13 @@ std::string *SBasePath = nullptr;
 
 radon::File &getIni()
 {
-	static radon::File ini(paths::ConfigPath() + "diablo.ini");
-	return ini;
+	if (FileExists("portable.txt")) {
+		static radon::File ini("diablo.ini");
+		return ini;
+	} else {
+		static radon::File ini(paths::ConfigPath() + "diablo.ini");
+		return ini;
+	}
 }
 
 // Converts ASCII characters to lowercase

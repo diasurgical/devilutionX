@@ -1,4 +1,5 @@
 #include "utils/paths.h"
+#include "utils/file_util.h"
 
 #include <SDL.h>
 
@@ -73,8 +74,12 @@ const std::string &BasePath()
 
 const std::string &PrefPath()
 {
-	if (!prefPath)
+	if (!prefPath){
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+		if (FileExists("portable.txt")){
+			prefPath = "./";
+		}
+	}
 	return *prefPath;
 }
 
