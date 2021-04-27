@@ -111,6 +111,10 @@ cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake ..
 make -j$(nproc)
 ```
+
+Note: If your `(i686|x86_64)-w64-mingw32` directory is not in `/usr` (e.g. when on Debian), the mingw-prep scripts and the CMake
+command won't work. You need adjust the mingw-prep scripts and pass `-DCROSS_PREFIX=/path` to CMake to set the path to the parent
+of the `(i686|x86_64)-w64-mingw32` directory.
 </details>
 <details><summary>Windows via Visual Studio</summary>
 
@@ -329,7 +333,6 @@ select Icons -> Information in the top menu.
 - `-DNONET=ON` disable network support, this also removes the need for the ASIO and Sodium.
 - `-DUSE_SDL1=ON` build for SDL v1 instead of v2, not all features are supported under SDL v1, notably upscaling.
 - `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
-- `-DCROSS_PREFIX=/path/to/prefix` set the path to the `i686-w64-mingw32` directory.
 
 ### Debug builds
 - `-DDEBUG=OFF` disable debug mode of the Diablo engine.
