@@ -62,6 +62,9 @@ namespace devilution {
 #ifndef DEFAULT_HEIGHT
 #define DEFAULT_HEIGHT 480
 #endif
+#ifndef DEFAULT_BLENDED_TRANSPARENCY
+#define DEFAULT_BLENDED_TRANSPARENCY true
+#endif
 #ifndef DEFAULT_AUDIO_SAMPLE_RATE
 #define DEFAULT_AUDIO_SAMPLE_RATE 22050
 #endif
@@ -577,7 +580,7 @@ static void LoadOptions()
 	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
 	sgOptions.Graphics.bIntegerScaling = getIniBool("Graphics", "Integer Scaling", false);
 	sgOptions.Graphics.bVSync = getIniBool("Graphics", "Vertical Sync", true);
-	sgOptions.Graphics.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", true);
+	sgOptions.Graphics.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", DEFAULT_BLENDED_TRANSPARENCY);
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
 	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
