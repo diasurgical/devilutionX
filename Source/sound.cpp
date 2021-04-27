@@ -259,7 +259,7 @@ void music_start(uint8_t nTrack)
 			}
 
 			music->setVolume(1.F - static_cast<float>(sgOptions.Audio.nMusicVolume) / VOLUME_MIN);
-			if (!music->play()) {
+			if (!music->play(/*iterations=*/0)) {
 				LogError(LogCategory::Audio, "Aulib::Stream::play (from music_start): {}", SDL_GetError());
 				music = std::nullopt;
 #ifndef DISABLE_STREAMING_MUSIC
