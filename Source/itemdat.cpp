@@ -274,7 +274,7 @@ const PLStruct PL_Prefix[] = {
 	{ N_("Jester's"),       IPL_JESTERS,            1,        1,        7,                       PLT_WEAP                                 ,  GOE_ANY,  false,    true,      1200,     1200,         3 },
 	{ N_("Crystalline"),    IPL_CRYSTALLINE,       30,       70,        5,                       PLT_WEAP                                 ,  GOE_ANY,  false,    true,      1000,     3000,         3 },
 	{ N_("Doppelganger's"), IPL_DOPPELGANGER,      81,       95,       11,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  false,    true,      2000,     2400,        10 },
-	{ N_(""),               IPL_INVALID,            0,        0,        0, 0                                                              ,  GOE_ANY,  false,    false,        0,        0,         0 },
+	{ "",                   IPL_INVALID,            0,        0,        0, 0                                                              ,  GOE_ANY,  false,    false,        0,        0,         0 },
 	// clang-format on
 };
 
@@ -380,7 +380,7 @@ const PLStruct PL_Suffix[] = {
 	{  N_("devastation"),   IPL_DEVASTATION,      1,        1,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,      1200,     1200,         3 },
 	{  N_("decay"),         IPL_DECAY,          150,      250,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,       200,      200,         2 },
 	{  N_("peril"),         IPL_PERIL,            1,        1,        5,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,       500,      500,         1 },
-	{  N_(""),              IPL_INVALID,          0,        0,        0, 0                                                              ,     GOE_ANY,  false,    false,        0,        0,         0 },
+	{  "",                  IPL_INVALID,          0,        0,        0, 0                                                              ,     GOE_ANY,  false,    false,        0,        0,         0 },
 	// clang-format on
 };
 
@@ -498,7 +498,7 @@ const UItemStruct UniqueItemList[] = {
 	{  N_("Demon Plate Armor"),       UITYPE_FULLPLATE,   25,       3,   80000, IPL_SETAC,          80,       80, IPL_ACDEMON,          0,        0, IPL_INVCURS,        225,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  N_("Acolyte's Amulet"),        UITYPE_AMULET,      10,       2,   10000, IPL_MANATOLIFE,     50,       50, IPL_INVCURS,        183,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  N_("Gladiator's Ring"),        UITYPE_RING,        10,       2,   10000, IPL_LIFETOMANA,     40,       40, IPL_INVCURS,        186,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
-	{  N_(""),                        UITYPE_INVALID,      0,       0,       0, IPL_TOHIT,           0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
+	{  "",                            UITYPE_INVALID,      0,       0,       0, IPL_TOHIT,           0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	// clang-format on
 };
 
