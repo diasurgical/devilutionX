@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-04-26 02:07+0200\n"
+"POT-Creation-Date: 2021-04-26 07:05+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -617,11 +617,7 @@ msgstr ""
 msgid "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
 
-#: Source/DiabloUI/selhero.cpp:299
-msgid "Enter Hero name.."
-msgstr ""
-
-#: Source/DiabloUI/selhero.cpp:305
+#: Source/DiabloUI/selhero.cpp:299 Source/DiabloUI/selhero.cpp:305
 msgid "Enter Name"
 msgstr ""
 
@@ -744,7 +740,7 @@ msgid "  Entertainment or GOG.com."
 msgstr ""
 
 #: Source/DiabloUI/title.cpp:47
-msgid "Copyright  1996-2001 Blizzard Entertainment"
+msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr ""
 
 #: Source/appfat.cpp:34
@@ -844,10 +840,6 @@ msgstr ""
 
 #: Source/control.cpp:250
 msgid "Send Message"
-msgstr ""
-
-#: Source/control.cpp:251
-msgid "Player Attack"
 msgstr ""
 
 #: Source/control.cpp:435 Source/control.cpp:1029
@@ -1908,20 +1900,12 @@ msgstr ""
 msgid "Scroll of Guardian"
 msgstr ""
 
-#: Source/itemdat.cpp:124
-msgid "Non Item"
-msgstr ""
-
 #: Source/itemdat.cpp:125
 msgid "Scroll of Nova"
 msgstr ""
 
 #: Source/itemdat.cpp:126
 msgid "Scroll of Golem"
-msgstr ""
-
-#: Source/itemdat.cpp:127
-msgid "Scroll of None"
 msgstr ""
 
 #: Source/itemdat.cpp:128
@@ -4493,7 +4477,7 @@ msgstr ""
 msgid "BlackJade"
 msgstr ""
 
-#: Source/monstdat.cpp:476 Source/quests.cpp:43
+#: Source/monstdat.cpp:476
 msgid "Lachdanan"
 msgstr ""
 
@@ -5357,10 +5341,6 @@ msgstr ""
 msgid "Gharbad The Weak"
 msgstr ""
 
-#: Source/quests.cpp:44
-msgid "Diablo"
-msgstr ""
-
 #: Source/quests.cpp:46
 msgid "Ogden's Sign"
 msgstr ""
@@ -5403,10 +5383,6 @@ msgstr ""
 
 #: Source/quests.cpp:58
 msgid "Wandering Trader"
-msgstr ""
-
-#: Source/quests.cpp:60
-msgid "Na-Krul"
 msgstr ""
 
 #: Source/quests.cpp:61 Source/trigs.cpp:435
