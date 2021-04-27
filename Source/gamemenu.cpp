@@ -12,8 +12,11 @@
 #include "loadsave.h"
 #include "options.h"
 #include "pfile.h"
-#include "sound.h"
 #include "utils/language.h"
+
+#ifndef NOSOUND
+#include "sound.h"
+#endif
 
 namespace devilution {
 namespace {
@@ -179,6 +182,7 @@ void gamemenu_restart_town(bool bActivate)
 
 void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
 {
+#ifndef NOSOUND
 	if (gbSndInited) {
 		menu_item->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
 		menu_item->pszStr = names[0];
@@ -186,6 +190,7 @@ void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item,
 		gmenu_slider_set(menu_item, VOLUME_MIN, VOLUME_MAX, volume);
 		return;
 	}
+#endif
 
 	menu_item->dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 	menu_item->pszStr = names[1];
@@ -252,6 +257,7 @@ void gamemenu_music_volume(bool bActivate)
 {
 	int volume;
 
+#ifndef NOSOUND
 	if (bActivate) {
 		if (gbMusicOn) {
 			gbMusicOn = false;
@@ -291,11 +297,13 @@ void gamemenu_music_volume(bool bActivate)
 			music_start(lt);
 		}
 	}
+#endif
 	gamemenu_get_music();
 }
 
 void gamemenu_sound_volume(bool bActivate)
 {
+#ifndef NOSOUND
 	int volume;
 	if (bActivate) {
 		if (gbSoundOn) {
@@ -320,6 +328,7 @@ void gamemenu_sound_volume(bool bActivate)
 	}
 	PlaySFX(IS_TITLEMOV);
 	gamemenu_get_sound();
+#endif
 }
 
 void gamemenu_gamma(bool bActivate)

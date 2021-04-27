@@ -8,7 +8,10 @@
 #include <cstdint>
 
 #include "miniwin/miniwin.h"
+
+#ifndef NOSOUND
 #include "utils/soundsample.h"
+#endif
 
 namespace devilution {
 
@@ -28,11 +31,13 @@ enum _music_id : uint8_t {
 };
 
 struct TSnd {
+#ifndef NOSOUND
 	const char *sound_path;
 	/** Used for streamed audio */
 	HANDLE file_handle;
 	SoundSample *DSB;
 	Uint32 start_tc;
+#endif
 };
 
 extern bool gbSndInited;
@@ -55,6 +60,5 @@ int sound_get_or_set_sound_volume(int volume);
 
 extern bool gbMusicOn;
 extern bool gbSoundOn;
-extern bool gbDupSounds;
 
 } // namespace devilution

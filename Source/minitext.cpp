@@ -130,10 +130,17 @@ int CalcTextSpeed(int nSFX)
 	int TextHeight;
 	Uint32 SfxFrames;
 
+	const int numLines = GetLinesInText(qtextptr);
+
+#ifndef NOSOUND
 	SfxFrames = GetSFXLength(nSFX);
 	assert(SfxFrames != 0);
+#else
+	// Sound is disabled -- estimate length from the number of lines.
+	SfxFrames = numLines * 3000;
+#endif
 
-	TextHeight = lineHeight * GetLinesInText(qtextptr);
+	TextHeight = lineHeight * numLines;
 	TextHeight += lineHeight * 5; // adjust so when speaker is done two line are left
 
 	return SfxFrames / TextHeight;

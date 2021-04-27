@@ -41,7 +41,6 @@
 #include "qol/common.h"
 #include "restrict.h"
 #include "setmaps.h"
-#include "sound.h"
 #include "stores.h"
 #include "storm/storm.h"
 #include "themes.h"
@@ -53,6 +52,10 @@
 #include "utils/language.h"
 #include "utils/paths.h"
 #include "utils/language.h"
+
+#ifndef NOSOUND
+#include "sound.h"
+#endif
 
 namespace devilution {
 
@@ -667,8 +670,10 @@ static void diablo_init()
 
 	diablo_init_screen();
 
+#ifndef NOSOUND
 	snd_init();
 	was_snd_init = true;
+#endif
 
 	ui_sound_init();
 }
@@ -699,7 +704,9 @@ static void diablo_deinit()
 	if (was_snd_init) {
 		effects_cleanup_sfx();
 	}
+#ifndef NOSOUND
 	Aulib::quit();
+#endif
 	if (was_ui_init)
 		UiDestroy();
 	if (was_archives_init)
