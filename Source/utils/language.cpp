@@ -114,7 +114,14 @@ const char *LanguageTranslate(const char *key)
 {
 	auto it = map.find(key);
 	if (it == map.end()) {
-		return key;
+		char *val;
+		if (!(val = (char *)calloc(strlen(key) + 1, sizeof(char)))) {
+			return key;
+		}
+		std::string latin1 = utf8_to_latin1(key);
+		strcpy(val, latin1.c_str());
+		map[key] = val;
+		return val;
 	}
 
 	return it->second;
