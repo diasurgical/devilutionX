@@ -11,7 +11,7 @@ extern bool PM_DoGotHit(int pnum);
 int RunBlockTest(int frames, int flags)
 {
 	int pnum = 0;
-	plr[pnum]._pAnimFrame = 1;
+	plr[pnum].AnimInfo._pAnimFrame = 1;
 	plr[pnum]._pHFrames = frames;
 	plr[pnum].actionFrame = 1;
 	plr[pnum]._pIFlags = flags;
@@ -23,7 +23,7 @@ int RunBlockTest(int frames, int flags)
 		PM_DoGotHit(pnum);
 		if (plr[pnum]._pmode != PM_GOTHIT)
 			break;
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo._pAnimFrame++;
 	}
 
 	return i;
