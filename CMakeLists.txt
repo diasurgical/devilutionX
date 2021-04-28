@@ -403,7 +403,6 @@ if(NOT NONET)
     Source/dvlnet/tcp_client.cpp
     Source/dvlnet/tcp_server.cpp
     Source/dvlnet/protocol_zt.cpp
-    Source/dvlnet/base_protocol.cpp
     Source/dvlnet/zerotier_native.cpp
     Source/dvlnet/zerotier_lwip.cpp)
 endif()
