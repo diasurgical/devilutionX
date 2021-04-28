@@ -39,6 +39,11 @@ public:
 			return addr == rhs.addr;
 		}
 
+		bool operator!=(const endpoint &rhs) const
+		{
+			return !(*this == rhs);
+		}
+
 		bool operator<(const endpoint &rhs) const
 		{
 			return addr < rhs.addr;
