@@ -119,7 +119,7 @@ static void NetRecvPlrData(TPkt *pkt)
 {
 	const Point target = plr[myplr].GetTargetPosition();
 
-	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
+	pkt->hdr.wCheck = LoadBE32("\0\0ip");
 	pkt->hdr.px = plr[myplr].position.tile.x;
 	pkt->hdr.py = plr[myplr].position.tile.y;
 	pkt->hdr.targx = target.x;
@@ -472,7 +472,7 @@ void multi_process_network_packets()
 			continue;
 		if (dwID < 0 || dwID >= MAX_PLRS)
 			continue;
-		if (pkt->wCheck != LOAD_BE32("\0\0ip"))
+		if (pkt->wCheck != LoadBE32("\0\0ip"))
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
@@ -528,7 +528,7 @@ void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen)
 	dwOffset = 0;
 
 	while (dwLen != 0) {
-		pkt.hdr.wCheck = LOAD_BE32("\0\0ip");
+		pkt.hdr.wCheck = LoadBE32("\0\0ip");
 		pkt.hdr.px = 0;
 		pkt.hdr.py = 0;
 		pkt.hdr.targx = 0;
