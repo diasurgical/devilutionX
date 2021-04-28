@@ -15,7 +15,7 @@ namespace devilution {
 enum class AnimationDistributionParams : uint8_t {
 	None,
 	/*
-	* @brief ProcessAnimation will be called after SetNewAnimation (in same GameTick as NewPlrAnim)
+	* @brief ProcessAnimation will be called after SetNewAnimation (in same game tick as NewPlrAnim)
 	*/
 	ProcessAnimationPending,
 	/*
@@ -68,21 +68,21 @@ public:
 	void SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 
 	/*
-	* @brief Process the Animation for a GameTick (for example advances the frame)
+	* @brief Process the Animation for a game tick (for example advances the frame)
 	*/
 	void ProcessAnimation();
 
 private:
 	/*
-	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
+	* @brief Specifies how many animations-fractions are displayed between two game ticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
 	*/
-	float GameTickModifier;
+	float TickModifier;
 	/*
-	* @brief Number of GameTicks after the current animation sequence started
+	* @brief Number of game ticks after the current animation sequence started
 	*/
-	int GameTicksSinceSequenceStarted;
+	int TicksSinceSequenceStarted;
 	/*
-	* @brief Animation Frames that will be adjusted for the skipped Frames/GameTicks
+	* @brief Animation Frames that will be adjusted for the skipped Frames/game ticks
 	*/
 	int RelevantFramesForDistributing;
 };
