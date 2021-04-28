@@ -8,9 +8,10 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
-#include "appfat.h"
-
 namespace devilution {
+
+// Local definition to fix compilation issue due to header conflict.
+void app_fatal(const char *pszFmt, ...);
 
 enum class LogCategory {
 	Application = SDL_LOG_CATEGORY_APPLICATION,
