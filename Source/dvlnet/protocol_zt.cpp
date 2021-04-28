@@ -164,7 +164,7 @@ bool protocol_zt::send_queued_all()
 {
 	for (auto &peer : peer_list) {
 		if (!send_queued_peer(peer.first)) {
-			// disconnect this peer
+			// handle error?
 		}
 	}
 	return true;
@@ -175,7 +175,7 @@ bool protocol_zt::recv_from_peers()
 	for (auto &peer : peer_list) {
 		if (peer.second.fd != -1) {
 			if (!recv_peer(peer.first)) {
-				// error, disconnect?
+				disconnect_queue.push_back(peer.first);
 			}
 		}
 	}
@@ -240,6 +240,16 @@ bool protocol_zt::recv(endpoint &peer, buffer_t &data)
 			data = p.second.recv_queue.read_packet();
 			return true;
 		}
+	}
+	return false;
+}
+
+bool protocol_zt::get_disconnected(endpoint &peer)
+{
+	if (!disconnect_queue.empty()) {
+		peer = disconnect_queue.front();
+		disconnect_queue.pop_front();
+		return true;
 	}
 	return false;
 }

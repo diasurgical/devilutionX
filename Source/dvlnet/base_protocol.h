@@ -186,6 +186,13 @@ void base_protocol<P>::recv()
 				Log("{}", e.what());
 			}
 		}
+		while (proto.get_disconnected(sender)) {
+			for (plr_t i = 0; i < MAX_PLRS; ++i) {
+				if (peers[i] == sender) {
+					disconnect_net(i);
+				}
+			}
+		}
 	} catch (std::exception &e) {
 		Log("{}", e.what());
 		return;
@@ -210,7 +217,6 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 		if ((j != plr_self) && (j != i) && peers[j]) {
 			auto infopkt = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, j, peers[j].serialize());
 			proto.send(sender, infopkt->data());
-			break;
 		}
 	}
 	auto reply = pktfty->make_packet<PT_JOIN_ACCEPT>(plr_self, PLR_BROADCAST,
