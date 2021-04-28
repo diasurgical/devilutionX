@@ -12,7 +12,7 @@
 
 namespace devilution {
 
-DeadStruct dead[MAXDEAD];
+DeadStruct dead[MaxDead];
 int8_t stonendx;
 
 void InitDead()
@@ -65,12 +65,12 @@ void InitDead()
 		}
 	}
 
-	assert(nd <= MAXDEAD);
+	assert(nd <= MaxDead);
 }
 
-void AddDead(Point loc, int8_t dv, direction ddir)
+void AddDead(Point tilePosition, int8_t dv, direction ddir)
 {
-	dDead[loc.x][loc.y] = (dv & 0x1F) + (ddir << 5);
+	dDead[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (ddir << 5);
 }
 
 void SetDead()
