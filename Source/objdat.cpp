@@ -241,7 +241,7 @@ const ObjDataStruct AllObjects[] = {
 	{      1, OFILE_MCIRL,     0,       0, DTYPE_CATHEDRAL, THEME_NONE,              Q_BETRAYER,         0,          1,        0,         96, false,      true,      true,            0,        0, false     },
 	{      1, OFILE_MCIRL,     0,       0, DTYPE_CATHEDRAL, THEME_NONE,              Q_BETRAYER,         0,          1,        0,         96, false,      true,      true,            0,        0, false     },
 	{      1, OFILE_BKSLBRNT,  1,      12, DTYPE_NONE,      THEME_NONE,              Q_INVALID,          0,          1,        0,         96, true,       true,      true,            0,        3, false     }, // BUGFIX should only be loaded on level 1-12 (crypt masks as 1-4) (fixed)
-	{      1, OFILE_CANDLE2,   2,      12, DTYPE_NONE,      THEME_NONE,              Q_BETRAYER,         1,          2,        4,         96, true,       true,      true,            0,        0, false     },
+	{      1, OFILE_CANDLE2,   1,      12, DTYPE_NONE,      THEME_NONE,              Q_BETRAYER,         1,          2,        4,         96, true,       true,      true,            0,        0, false     },
 	{      1, OFILE_BOOK1,    13,      13, DTYPE_HELL,      THEME_NONE,              Q_WARLORD,          0,          4,        0,         96, true,       true,      true,            0,        3, false     },
 	{      1, OFILE_ARMSTAND, 13,      13, DTYPE_NONE,      THEME_NONE,              Q_WARLORD,          0,          1,        0,         96, true,       false,     true,            0,        3, false     },
 	{      2, OFILE_WEAPSTND, 13,      13, DTYPE_NONE,      THEME_NONE,              Q_WARLORD,          0,          1,        0,         96, true,       false,     true,            0,        3, false     },

@@ -24,6 +24,7 @@
 #include "towners.h"
 #include "track.h"
 #include "utils/language.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -1276,10 +1277,15 @@ void SetupObject(int i, int x, int y, _object_id ot)
 	object[i]._otype = ot;
 	object_graphic_id ofi = AllObjects[ot].ofindex;
 	object[i].position = { x, y };
-	int j = 0;
-	while (ObjFileList[j] != ofi) {
-		j++;
+
+	const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), ofi);
+	if (found == std::end(ObjFileList)) {
+		LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", ofi);
+		return;
 	}
+
+	const int j = std::distance(std::begin(ObjFileList), found);
+
 	object[i]._oAnimData = pObjCels[j];
 	object[i]._oAnimFlag = AllObjects[ot].oAnimFlag;
 	if (AllObjects[ot].oAnimFlag != 0) {
@@ -5418,10 +5424,14 @@ void SyncL3Doors(int i)
 void SyncObjectAnim(int o)
 {
 	object_graphic_id index = AllObjects[object[o]._otype].ofindex;
-	int i = 0;
-	while (ObjFileList[i] != index) {
-		i++;
+
+	const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), index);
+	if (found == std::end(ObjFileList)) {
+		LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", index);
+		return;
 	}
+
+	const int i = std::distance(std::begin(ObjFileList), found);
 
 	object[o]._oAnimData = pObjCels[i];
 	switch (object[o]._otype) {
@@ -5526,9 +5536,9 @@ void GetObjectStr(int i)
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
 		if (currlevel >= 17 && currlevel <= 20)      // for hive levels
-			strcpy(infostr, _("Pod"));                  //Then a barrel is called a pod
+			strcpy(infostr, _("Pod"));               //Then a barrel is called a pod
 		else if (currlevel >= 21 && currlevel <= 24) // for crypt levels
-			strcpy(infostr, _("Urn"));                  //Then a barrel is called an urn
+			strcpy(infostr, _("Urn"));               //Then a barrel is called an urn
 		else
 			strcpy(infostr, _("Barrel"));
 		break;
