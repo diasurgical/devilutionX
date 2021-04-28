@@ -8,6 +8,8 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#include "appfat.h"
+
 namespace devilution {
 
 enum class LogCategory {
@@ -38,11 +40,15 @@ namespace detail {
 template <typename... Args>
 std::string format(const char *fmt, Args &&... args)
 {
-	try {
+	FMT_TRY
+	{
 		return fmt::format(fmt, std::forward<Args>(args)...);
-	} catch (const fmt::format_error &e) {
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Format error, fmt: %s, error: %s", fmt ? fmt : "nullptr", e.what());
-		return "error";
+	}
+	FMT_CATCH(const fmt::format_error &e)
+	{
+		auto error = fmt::format("Format error, fmt: {}, error: {}", fmt ? fmt : "nullptr", e.what());
+		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "%s", error.c_str());
+		app_fatal("%s", error.c_str());
 	}
 }
 
