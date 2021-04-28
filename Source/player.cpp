@@ -544,15 +544,15 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 		app_fatal("NewPlrAnim: illegal player %d", pnum);
 	}
 
-	plr[pnum]._pAnimData = Peq;
-	plr[pnum]._pAnimLen = numFrames;
-	plr[pnum]._pAnimFrame = 1;
-	plr[pnum]._pAnimCnt = 0;
-	plr[pnum]._pAnimDelay = Delay;
+	plr[pnum].AnimInfo._pAnimData = Peq;
+	plr[pnum].AnimInfo._pAnimLen = numFrames;
+	plr[pnum].AnimInfo._pAnimFrame = 1;
+	plr[pnum].AnimInfo._pAnimCnt = 0;
+	plr[pnum].AnimInfo._pAnimDelay = Delay;
 	plr[pnum]._pAnimWidth = width;
-	plr[pnum]._pAnimGameTicksSinceSequenceStarted = 0;
-	plr[pnum]._pAnimRelevantAnimationFramesForDistributing = 0;
-	plr[pnum]._pAnimGameTickModifier = 0.0f;
+	plr[pnum].AnimInfo._pAnimGameTicksSinceSequenceStarted = 0;
+	plr[pnum].AnimInfo._pAnimRelevantAnimationFramesForDistributing = 0;
+	plr[pnum].AnimInfo._pAnimGameTickModifier = 0.0f;
 
 	if (numSkippedFrames != 0 || params != AnimationDistributionParams::None) {
 		// Animation Frames that will be adjusted for the skipped Frames/GameTicks
@@ -583,7 +583,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 			// The Animation Distribution Logic needs to account how many GameTicks passed since the Animation started.
 			// Because ProcessAnimation will increase this later (in same GameTick as NewPlrAnim), we correct this upfront.
 			// This also means Rendering should never hapen with _pAnimGameTicksSinceSequenceStarted < 0.
-			plr[pnum]._pAnimGameTicksSinceSequenceStarted = -1;
+			plr[pnum].AnimInfo._pAnimGameTicksSinceSequenceStarted = -1;
 		}
 
 		if (params == AnimationDistributionParams::SkipsDelayOfLastFrame) {
@@ -612,8 +612,8 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, Animat
 		// gameTickModifier specifies the Animation fraction per GameTick, so we have to remove the delay from the variable
 		gameTickModifier /= gameTicksPerFrame;
 
-		plr[pnum]._pAnimRelevantAnimationFramesForDistributing = relevantAnimationFramesForDistributing;
-		plr[pnum]._pAnimGameTickModifier = gameTickModifier;
+		plr[pnum].AnimInfo._pAnimRelevantAnimationFramesForDistributing = relevantAnimationFramesForDistributing;
+		plr[pnum].AnimInfo._pAnimGameTickModifier = gameTickModifier;
 	}
 }
 
@@ -1135,13 +1135,13 @@ void InitPlayer(int pnum, bool FirstTime)
 		if (plr[pnum]._pHitPoints >> 6 > 0) {
 			plr[pnum]._pmode = PM_STAND;
 			NewPlrAnim(pnum, plr[pnum]._pNAnim[DIR_S], plr[pnum]._pNFrames, 3, plr[pnum]._pNWidth);
-			plr[pnum]._pAnimFrame = GenerateRnd(plr[pnum]._pNFrames - 1) + 1;
-			plr[pnum]._pAnimCnt = GenerateRnd(3);
+			plr[pnum].AnimInfo._pAnimFrame = GenerateRnd(plr[pnum]._pNFrames - 1) + 1;
+			plr[pnum].AnimInfo._pAnimCnt = GenerateRnd(3);
 		} else {
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
-			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
-			plr[pnum].actionFrame = 2 * plr[pnum]._pAnimLen;
+			plr[pnum].AnimInfo._pAnimFrame = plr[pnum].AnimInfo._pAnimLen - 1;
+			plr[pnum].actionFrame = 2 * plr[pnum].AnimInfo._pAnimLen;
 		}
 
 		plr[pnum]._pdir = DIR_S;
@@ -2275,21 +2275,21 @@ bool PM_DoWalk(int pnum, int variant)
 
 	//Play walking sound effect on certain animation frames
 	if (sgOptions.Audio.bWalkingSound) {
-		if (plr[pnum]._pAnimFrame == 3
-		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
+		if (plr[pnum].AnimInfo._pAnimFrame == 3
+		    || (plr[pnum]._pWFrames == 8 && plr[pnum].AnimInfo._pAnimFrame == 7)
+		    || (plr[pnum]._pWFrames != 8 && plr[pnum].AnimInfo._pAnimFrame == 4)) {
 			PlaySfxLoc(PS_WALK1, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 		}
 	}
 
 	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
-		if (plr[pnum]._pAnimFrame % 2 == 0) {
-			plr[pnum]._pAnimFrame++;
+		if (plr[pnum].AnimInfo._pAnimFrame % 2 == 0) {
+			plr[pnum].AnimInfo._pAnimFrame++;
 			plr[pnum].actionFrame++;
 		}
-		if (plr[pnum]._pAnimFrame >= plr[pnum]._pWFrames) {
-			plr[pnum]._pAnimFrame = 0;
+		if (plr[pnum].AnimInfo._pAnimFrame >= plr[pnum]._pWFrames) {
+			plr[pnum].AnimInfo._pAnimFrame = 0;
 		}
 	}
 
@@ -2799,24 +2799,24 @@ bool PM_DoAttack(int pnum)
 		app_fatal("PM_DoAttack: illegal player %d", pnum);
 	}
 
-	frame = plr[pnum]._pAnimFrame;
+	frame = plr[pnum].AnimInfo._pAnimFrame;
 	if (plr[pnum]._pIFlags & ISPL_QUICKATTACK && frame == 1) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTATTACK && (frame == 1 || frame == 3)) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTERATTACK && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTESTATTACK && (frame == 1 || frame == 4)) {
-		plr[pnum]._pAnimFrame += 2;
+		plr[pnum].AnimInfo._pAnimFrame += 2;
 	}
-	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum - 1) {
+	if (plr[pnum].AnimInfo._pAnimFrame == plr[pnum]._pAFNum - 1) {
 		PlaySfxLoc(PS_SWING, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 	}
 
-	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum) {
+	if (plr[pnum].AnimInfo._pAnimFrame == plr[pnum]._pAFNum) {
 		dx = plr[pnum].position.tile.x + offset_x[plr[pnum]._pdir];
 		dy = plr[pnum].position.tile.y + offset_y[plr[pnum]._pdir];
 
@@ -2893,7 +2893,7 @@ bool PM_DoAttack(int pnum)
 		}
 	}
 
-	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFrames) {
+	if (plr[pnum].AnimInfo._pAnimFrame == plr[pnum]._pAFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
@@ -2910,20 +2910,20 @@ bool PM_DoRangeAttack(int pnum)
 	}
 
 	if (!gbIsHellfire) {
-		origFrame = plr[pnum]._pAnimFrame;
+		origFrame = plr[pnum].AnimInfo._pAnimFrame;
 		if (plr[pnum]._pIFlags & ISPL_QUICKATTACK && origFrame == 1) {
-			plr[pnum]._pAnimFrame++;
+			plr[pnum].AnimInfo._pAnimFrame++;
 		}
 		if (plr[pnum]._pIFlags & ISPL_FASTATTACK && (origFrame == 1 || origFrame == 3)) {
-			plr[pnum]._pAnimFrame++;
+			plr[pnum].AnimInfo._pAnimFrame++;
 		}
 	}
 
 	int arrows = 0;
-	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum) {
+	if (plr[pnum].AnimInfo._pAnimFrame == plr[pnum]._pAFNum) {
 		arrows = 1;
 	}
-	if ((plr[pnum]._pIFlags & ISPL_MULT_ARROWS) != 0 && plr[pnum]._pAnimFrame == plr[pnum]._pAFNum + 2) {
+	if ((plr[pnum]._pIFlags & ISPL_MULT_ARROWS) != 0 && plr[pnum].AnimInfo._pAnimFrame == plr[pnum]._pAFNum + 2) {
 		arrows = 2;
 	}
 
@@ -2976,7 +2976,7 @@ bool PM_DoRangeAttack(int pnum)
 		}
 	}
 
-	if (plr[pnum]._pAnimFrame >= plr[pnum]._pAFrames) {
+	if (plr[pnum].AnimInfo._pAnimFrame >= plr[pnum]._pAFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
@@ -3025,11 +3025,11 @@ bool PM_DoBlock(int pnum)
 		app_fatal("PM_DoBlock: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pIFlags & ISPL_FASTBLOCK && plr[pnum]._pAnimFrame != 1) {
-		plr[pnum]._pAnimFrame = plr[pnum]._pBFrames;
+	if (plr[pnum]._pIFlags & ISPL_FASTBLOCK && plr[pnum].AnimInfo._pAnimFrame != 1) {
+		plr[pnum].AnimInfo._pAnimFrame = plr[pnum]._pBFrames;
 	}
 
-	if (plr[pnum]._pAnimFrame >= plr[pnum]._pBFrames) {
+	if (plr[pnum].AnimInfo._pAnimFrame >= plr[pnum]._pBFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 
@@ -3121,7 +3121,7 @@ bool PM_DoSpell(int pnum)
 			ClearPlrPVars(pnum);
 			return true;
 		}
-	} else if (plr[pnum]._pAnimFrame == plr[pnum]._pSFrames) {
+	} else if (plr[pnum].AnimInfo._pAnimFrame == plr[pnum]._pSFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
@@ -3138,18 +3138,18 @@ bool PM_DoGotHit(int pnum)
 		app_fatal("PM_DoGotHit: illegal player %d", pnum);
 	}
 
-	frame = plr[pnum]._pAnimFrame;
+	frame = plr[pnum].AnimInfo._pAnimFrame;
 	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo._pAnimFrame++;
 	}
 
-	if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {
+	if (plr[pnum].AnimInfo._pAnimFrame >= plr[pnum]._pHFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		if (GenerateRnd(4) != 0) {
@@ -3179,8 +3179,8 @@ bool PM_DoDeath(int pnum)
 			}
 		}
 
-		plr[pnum]._pAnimDelay = 10000;
-		plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen;
+		plr[pnum].AnimInfo._pAnimDelay = 10000;
+		plr[pnum].AnimInfo._pAnimFrame = plr[pnum].AnimInfo._pAnimLen;
 		dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 	}
 
@@ -3437,7 +3437,7 @@ void CheckNewPath(int pnum)
 		return;
 	}
 
-	if (plr[pnum]._pmode == PM_ATTACK && plr[pnum]._pAnimFrame > plr[myplr]._pAFNum) {
+	if (plr[pnum]._pmode == PM_ATTACK && plr[pnum].AnimInfo._pAnimFrame > plr[myplr]._pAFNum) {
 		if (plr[pnum].destAction == ACTION_ATTACK) {
 			d = GetDirection(plr[pnum].position.future, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartAttack(pnum, d);
@@ -3476,7 +3476,7 @@ void CheckNewPath(int pnum)
 		}
 	}
 
-	if (plr[pnum]._pmode == PM_RATTACK && plr[pnum]._pAnimFrame > plr[myplr]._pAFNum) {
+	if (plr[pnum]._pmode == PM_RATTACK && plr[pnum].AnimInfo._pAnimFrame > plr[myplr]._pAFNum) {
 		if (plr[pnum].destAction == ACTION_RATTACK) {
 			d = GetDirection(plr[pnum].position.tile, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartRangeAttack(pnum, d, plr[pnum].destParam1, plr[pnum].destParam2);
@@ -3494,7 +3494,7 @@ void CheckNewPath(int pnum)
 		}
 	}
 
-	if (plr[pnum]._pmode == PM_SPELL && plr[pnum]._pAnimFrame > plr[pnum]._pSFNum) {
+	if (plr[pnum]._pmode == PM_SPELL && plr[pnum].AnimInfo._pAnimFrame > plr[pnum]._pSFNum) {
 		if (plr[pnum].destAction == ACTION_SPELL) {
 			d = GetDirection(plr[pnum].position.tile, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartSpell(pnum, d, plr[pnum].destParam1, plr[pnum].destParam2);
@@ -3714,14 +3714,14 @@ void ProcessPlayers()
 
 void ProcessPlayerAnimation(int pnum)
 {
-	plr[pnum]._pAnimCnt++;
-	plr[pnum]._pAnimGameTicksSinceSequenceStarted++;
-	if (plr[pnum]._pAnimCnt > plr[pnum]._pAnimDelay) {
-		plr[pnum]._pAnimCnt = 0;
-		plr[pnum]._pAnimFrame++;
-		if (plr[pnum]._pAnimFrame > plr[pnum]._pAnimLen) {
-			plr[pnum]._pAnimFrame = 1;
-			plr[pnum]._pAnimGameTicksSinceSequenceStarted = 0;
+	plr[pnum].AnimInfo._pAnimCnt++;
+	plr[pnum].AnimInfo._pAnimGameTicksSinceSequenceStarted++;
+	if (plr[pnum].AnimInfo._pAnimCnt > plr[pnum].AnimInfo._pAnimDelay) {
+		plr[pnum].AnimInfo._pAnimCnt = 0;
+		plr[pnum].AnimInfo._pAnimFrame++;
+		if (plr[pnum].AnimInfo._pAnimFrame > plr[pnum].AnimInfo._pAnimLen) {
+			plr[pnum].AnimInfo._pAnimFrame = 1;
+			plr[pnum].AnimInfo._pAnimGameTicksSinceSequenceStarted = 0;
 		}
 	}
 }
@@ -3732,22 +3732,22 @@ int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
 	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick
 	// or
 	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
-	int relevantAnimationFramesForDistributing = pPlayer->_pAnimRelevantAnimationFramesForDistributing;
+	int relevantAnimationFramesForDistributing = pPlayer->AnimInfo._pAnimRelevantAnimationFramesForDistributing;
 	if (relevantAnimationFramesForDistributing <= 0)
-		return pPlayer->_pAnimFrame;
+		return pPlayer->AnimInfo._pAnimFrame;
 
-	if (pPlayer->_pAnimFrame > relevantAnimationFramesForDistributing)
-		return pPlayer->_pAnimFrame;
+	if (pPlayer->AnimInfo._pAnimFrame > relevantAnimationFramesForDistributing)
+		return pPlayer->AnimInfo._pAnimFrame;
 
-	assert(pPlayer->_pAnimGameTicksSinceSequenceStarted >= 0);
+	assert(pPlayer->AnimInfo._pAnimGameTicksSinceSequenceStarted >= 0);
 
 	float progressToNextGameTick = gfProgressToNextGameTick;
 
 	// we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted;
+	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->AnimInfo._pAnimGameTicksSinceSequenceStarted;
 
 	// 1 added for rounding reasons. float to int cast always truncate.
-	int absoluteAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * pPlayer->_pAnimGameTickModifier);
+	int absoluteAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * pPlayer->AnimInfo._pAnimGameTickModifier);
 	if (absoluteAnimationFrame > relevantAnimationFramesForDistributing) {
 		// this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
 		if (absoluteAnimationFrame > (relevantAnimationFramesForDistributing + 1)) {
@@ -3966,21 +3966,21 @@ void SyncPlrAnim(int pnum)
 	dir = plr[pnum]._pdir;
 	switch (plr[pnum]._pmode) {
 	case PM_STAND:
-		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pNAnim[dir];
 		break;
 	case PM_WALK:
 	case PM_WALK2:
 	case PM_WALK3:
-		plr[pnum]._pAnimData = plr[pnum]._pWAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pWAnim[dir];
 		break;
 	case PM_ATTACK:
-		plr[pnum]._pAnimData = plr[pnum]._pAAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pAAnim[dir];
 		break;
 	case PM_RATTACK:
-		plr[pnum]._pAnimData = plr[pnum]._pAAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pAAnim[dir];
 		break;
 	case PM_BLOCK:
-		plr[pnum]._pAnimData = plr[pnum]._pBAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pBAnim[dir];
 		break;
 	case PM_SPELL:
 		if (pnum == myplr)
@@ -3988,23 +3988,23 @@ void SyncPlrAnim(int pnum)
 		else
 			sType = STYPE_FIRE;
 		if (sType == STYPE_FIRE)
-			plr[pnum]._pAnimData = plr[pnum]._pFAnim[dir];
+			plr[pnum].AnimInfo._pAnimData = plr[pnum]._pFAnim[dir];
 		if (sType == STYPE_LIGHTNING)
-			plr[pnum]._pAnimData = plr[pnum]._pLAnim[dir];
+			plr[pnum].AnimInfo._pAnimData = plr[pnum]._pLAnim[dir];
 		if (sType == STYPE_MAGIC)
-			plr[pnum]._pAnimData = plr[pnum]._pTAnim[dir];
+			plr[pnum].AnimInfo._pAnimData = plr[pnum]._pTAnim[dir];
 		break;
 	case PM_GOTHIT:
-		plr[pnum]._pAnimData = plr[pnum]._pHAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pHAnim[dir];
 		break;
 	case PM_NEWLVL:
-		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pNAnim[dir];
 		break;
 	case PM_DEATH:
-		plr[pnum]._pAnimData = plr[pnum]._pDAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pDAnim[dir];
 		break;
 	case PM_QUIT:
-		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
+		plr[pnum].AnimInfo._pAnimData = plr[pnum]._pNAnim[dir];
 		break;
 	default:
 		app_fatal("SyncPlrAnim");

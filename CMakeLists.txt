@@ -343,6 +343,7 @@ set(devilutionx_SRCS
   Source/controls/modifier_hints.cpp
   Source/controls/plrctrls.cpp
   Source/controls/touch.cpp
+  Source/engine/animationinfo.cpp
   Source/qol/autopickup.cpp
   Source/qol/common.cpp
   Source/qol/monhealthbar.cpp
@@ -453,7 +454,7 @@ if(RUN_TESTS)
     test/scrollrt_test.cpp
     test/stores_test.cpp
     test/writehero_test.cpp
-    test/animationinformation_test.cpp)
+    test/animationinfo_test.cpp)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})

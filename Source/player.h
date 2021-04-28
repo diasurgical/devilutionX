@@ -16,6 +16,7 @@
 #include "path.h"
 #include "interfac.h"
 #include "utils/enum_traits.h"
+#include "engine/animationinfo.h"
 
 namespace devilution {
 
@@ -160,24 +161,11 @@ struct PlayerStruct {
 	ActorPosition position;
 	direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
-	uint8_t *_pAnimData;
-	int _pAnimDelay; // Tick length of each frame in the current animation
-	int _pAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
-	int _pAnimLen;   // Number of frames in current animation
-	int _pAnimFrame; // Current frame of animation.
+	/*
+	* @brief Contains Information for current Animation
+	*/
+	AnimationInfo AnimInfo;
 	int _pAnimWidth;
-	/*
-	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
-	*/
-	float _pAnimGameTickModifier;
-	/*
-	* @brief Number of GameTicks after the current animation sequence started
-	*/
-	int _pAnimGameTicksSinceSequenceStarted;
-	/*
-	* @brief Animation Frames that will be adjusted for the skipped Frames/GameTicks
-	*/
-	int _pAnimRelevantAnimationFramesForDistributing;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
