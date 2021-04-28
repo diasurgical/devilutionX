@@ -782,6 +782,7 @@ if(VITA)
     FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
     FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
     FILE Packaging/resources/CharisSILB.ttf CharisSILB.ttf
+    FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
   )
 endif()
 
