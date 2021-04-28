@@ -386,33 +386,17 @@ void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
 
 /**
- * @brief Specifies what special logics are applied for a Animation
- */
-enum class AnimationDistributionParams : uint8_t {
-	None = 0,
-	/*
-	* @brief ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim)
-	*/
-	ProcessAnimationPending,
-	/*
-	* @brief Delay of last Frame is ignored (for example, because only Frame and not delay is checked in game_logic)
-	*/
-	SkipsDelayOfLastFrame,
-};
-
-/**
  * @brief Sets the new Player Animation with all relevant information for rendering
-
  * @param pnum Player Id
- * @param Peq Pointer to Animation Data
- * @param numFrames Number of Frames in Animation
- * @param Delay Delay after each Animation sequence
+ * @param pData Pointer to Animation Data
+ * @param numberOfFrames Number of Frames in Animation
+ * @param delayLen Delay after each Animation sequence
  * @param width Width of sprite
  * @param params Specifies what special logics are applied to this Animation
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(int pnum);
 void ProcessPlayerAnimation(int pnum);
 void CreatePlayer(int pnum, HeroClass c);

@@ -537,83 +537,14 @@ void FreePlayerGFX(int pnum)
 	plr[pnum]._pGFXLoad = 0;
 }
 
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, AnimationDistributionParams params /*= AnimationDistributionParams::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionParams params /*= AnimationDistributionParams::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("NewPlrAnim: illegal player %d", pnum);
 	}
 
-	plr[pnum].AnimInfo.pData = Peq;
-	plr[pnum].AnimInfo.FrameLen = numFrames;
-	plr[pnum].AnimInfo.CurrentFrame = 1;
-	plr[pnum].AnimInfo.DelayCounter = 0;
-	plr[pnum].AnimInfo.DelayLen = Delay;
 	plr[pnum]._pAnimWidth = width;
-	plr[pnum].AnimInfo.GameTicksSinceSequenceStarted = 0;
-	plr[pnum].AnimInfo.RelevantFramesForDistributing = 0;
-	plr[pnum].AnimInfo.GameTickModifier = 0.0f;
-
-	if (numSkippedFrames != 0 || params != AnimationDistributionParams::None) {
-		// Animation Frames that will be adjusted for the skipped Frames/GameTicks
-		int relevantAnimationFramesForDistributing = numFrames;
-		if (distributeFramesBeforeFrame != 0) {
-			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
-			// In normal attacks frame skipping always happens before the attack actual hit.
-			// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
-			// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
-			relevantAnimationFramesForDistributing = distributeFramesBeforeFrame - 1;
-		}
-
-		// How many GameTicks are needed to advance one Animation Frame
-		int gameTicksPerFrame = (Delay + 1);
-
-		// GameTicks that will be adjusted for the skipped Frames/GameTicks
-		int relevantAnimationGameTicksForDistribution = relevantAnimationFramesForDistributing * gameTicksPerFrame;
-
-		// How many GameTicks will the Animation be really shown (skipped Frames and GameTicks removed)
-		int relevantAnimationGameTicksWithSkipping = relevantAnimationGameTicksForDistribution - (numSkippedFrames * gameTicksPerFrame);
-
-		if (params == AnimationDistributionParams::ProcessAnimationPending) {
-			// If ProcessAnimation will be called after NewPlrAnim (in same GameTick as NewPlrAnim), we increment the Animation-Counter.
-			// If no delay is specified, this will result in complete skipped frame (see ProcessPlayerAnimation).
-			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
-			// Because of that, we only the remove one GameTick from the time the Animation is shown
-			relevantAnimationGameTicksWithSkipping -= 1;
-			// The Animation Distribution Logic needs to account how many GameTicks passed since the Animation started.
-			// Because ProcessAnimation will increase this later (in same GameTick as NewPlrAnim), we correct this upfront.
-			// This also means Rendering should never hapen with GameTicksSinceSequenceStarted < 0.
-			plr[pnum].AnimInfo.GameTicksSinceSequenceStarted = -1;
-		}
-
-		if (params == AnimationDistributionParams::SkipsDelayOfLastFrame) {
-			// The logic for player/monster/... (not ProcessAnimation) only checks the frame not the delay.
-			// That means if a delay is specified, the last-frame is shown less then the other frames
-			// Example:
-			// If we have a animation with 3 frames and with a delay of 1 (gameTicksPerFrame = 2).
-			// The logic checks "if (frame == 3) { start_new_animation(); }"
-			// This will result that frame 4 is the last shown Animation Frame.
-			// GameTick		Frame		Cnt
-			// 1			1			0
-			// 2			1			1
-			// 3			2			0
-			// 3			2			1
-			// 4			3			0
-			// 5			-			-
-			// in GameTick 5 ProcessPlayer sees Frame = 3 and stops the animation.
-			// But Frame 3 is only shown 1 GameTick and all other Frames are shown 2 GameTicks.
-			// Thats why we need to remove the Delay of the last Frame from the time (GameTicks) the Animation is shown
-			relevantAnimationGameTicksWithSkipping -= Delay;
-		}
-
-		// if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
-		float gameTickModifier = (float)relevantAnimationGameTicksForDistribution / (float)relevantAnimationGameTicksWithSkipping;
-
-		// gameTickModifier specifies the Animation fraction per GameTick, so we have to remove the delay from the variable
-		gameTickModifier /= gameTicksPerFrame;
-
-		plr[pnum].AnimInfo.RelevantFramesForDistributing = relevantAnimationFramesForDistributing;
-		plr[pnum].AnimInfo.GameTickModifier = gameTickModifier;
-	}
+	plr[pnum].AnimInfo.SetNewAnimation(pData, numberOfFrames, delayLen, params, numSkippedFrames, distributeFramesBeforeFrame);
 }
 
 void ClearPlrPVars(int pnum)
@@ -1139,8 +1070,8 @@ void InitPlayer(int pnum, bool FirstTime)
 		} else {
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
-			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.FrameLen - 1;
-			plr[pnum].actionFrame = 2 * plr[pnum].AnimInfo.FrameLen;
+			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
+			plr[pnum].actionFrame = 2 * plr[pnum].AnimInfo.NumberOfFrames;
 		}
 
 		plr[pnum]._pdir = DIR_S;
@@ -3179,7 +3110,7 @@ bool PM_DoDeath(int pnum)
 		}
 
 		plr[pnum].AnimInfo.DelayLen = 10000;
-		plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.FrameLen;
+		plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames;
 		dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 	}
 

@@ -9,6 +9,21 @@
 
 namespace devilution {
 
+/**
+ * @brief Specifies what special logics are applied for a Animation
+ */
+enum class AnimationDistributionParams : uint8_t {
+	None,
+	/*
+	* @brief ProcessAnimation will be called after SetNewAnimation (in same GameTick as NewPlrAnim)
+	*/
+	ProcessAnimationPending,
+	/*
+	* @brief Delay of last Frame is ignored (for example, because only Frame and not delay is checked in game_logic)
+	*/
+	SkipsDelayOfLastFrame,
+};
+
 /*
 * @brief Contains the core animation information and related logic
 */
@@ -29,7 +44,7 @@ public:
 	/*
 	* @brief Number of frames in current animation
 	*/
-	int FrameLen;
+	int NumberOfFrames;
 	/*
 	* @brief Current frame of animation
 	*/
@@ -40,6 +55,17 @@ public:
 	 * @return The Frame to use for rendering
 	 */
 	int GetFrameToUseForRendering();
+
+	/**
+	 * @brief Sets the new Animation with all relevant information for rendering
+	 * @param pData Pointer to Animation Data
+	 * @param numberOfFrames Number of Frames in Animation
+	 * @param delayLen Delay after each Animation sequence
+	 * @param params Specifies what special logics are applied to this Animation
+	 * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
+	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
+	 */
+	void SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 
 	/*
 	* @brief Specifies how many animations-fractions are displayed between two gameticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
