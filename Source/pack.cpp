@@ -24,14 +24,14 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 		id->idx = SDL_SwapLE16(idx);
 		if (is->IDidx == IDI_EAR) {
 			id->iCreateInfo = is->_iName[8] | (is->_iName[7] << 8);
-			id->iSeed = LOAD_BE32(&is->_iName[9]);
+			id->iSeed = LoadBE32(&is->_iName[9]);
 			id->bId = is->_iName[13];
 			id->bDur = is->_iName[14];
 			id->bMDur = is->_iName[15];
 			id->bCh = is->_iName[16];
 			id->bMCh = is->_iName[17];
 			id->wValue = SDL_SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCERER) << 6));
-			id->dwBuff = LOAD_BE32(&is->_iName[19]);
+			id->dwBuff = LoadBE32(&is->_iName[19]);
 		} else {
 			id->iSeed = SDL_SwapLE32(is->_iSeed);
 			id->iCreateInfo = SDL_SwapLE16(is->_iCreateInfo);

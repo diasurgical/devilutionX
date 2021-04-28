@@ -302,7 +302,7 @@ bool pfile_archive_contains_game(HANDLE hsArchive)
 	if (gameData == nullptr)
 		return false;
 
-	uint32_t hdr = LOAD_LE32(gameData);
+	uint32_t hdr = LoadLE32(gameData);
 	mem_free_dbg(gameData);
 
 	return IsHeaderValid(hdr);

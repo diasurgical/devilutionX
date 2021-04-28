@@ -842,15 +842,15 @@ int RemapItemIdxToDiablo(int i)
 bool IsHeaderValid(uint32_t magicNumber)
 {
 	gbIsHellfireSaveGame = false;
-	if (magicNumber == LOAD_LE32("SHAR")) {
+	if (magicNumber == LoadLE32("SHAR")) {
 		return true;
 	}
-	if (magicNumber == LOAD_LE32("SHLF")) {
+	if (magicNumber == LoadLE32("SHLF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
-	} else if (!gbIsSpawn && magicNumber == LOAD_LE32("RETL")) {
+	} else if (!gbIsSpawn && magicNumber == LoadLE32("RETL")) {
 		return true;
-	} else if (!gbIsSpawn && magicNumber == LOAD_LE32("HELF")) {
+	} else if (!gbIsSpawn && magicNumber == LoadLE32("HELF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
 	}
@@ -1783,13 +1783,13 @@ void SaveGameData()
 	SaveHelper file("game", FILEBUFF);
 
 	if (gbIsSpawn && !gbIsHellfire)
-		file.writeLE<uint32_t>(LOAD_LE32("SHAR"));
+		file.writeLE<uint32_t>(LoadLE32("SHAR"));
 	else if (gbIsSpawn && gbIsHellfire)
-		file.writeLE<uint32_t>(LOAD_LE32("SHLF"));
+		file.writeLE<uint32_t>(LoadLE32("SHLF"));
 	else if (!gbIsSpawn && gbIsHellfire)
-		file.writeLE<uint32_t>(LOAD_LE32("HELF"));
+		file.writeLE<uint32_t>(LoadLE32("HELF"));
 	else if (!gbIsSpawn && !gbIsHellfire)
-		file.writeLE<uint32_t>(LOAD_LE32("RETL"));
+		file.writeLE<uint32_t>(LoadLE32("RETL"));
 	else
 		app_fatal(_("Invalid game state"));
 
