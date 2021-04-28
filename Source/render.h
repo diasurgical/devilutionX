@@ -23,10 +23,10 @@ namespace devilution {
  * @param x Target buffer coordinate
  * @param y Target buffer coordinate
  */
-void RenderTile(CelOutputBuffer out, int x, int y);
+void RenderTile(const CelOutputBuffer &out, int x, int y);
 
 /**
- * @brief Render a black tile
+ * @brief Render a black 64x31 tile ◆
  * @param out Target buffer
  * @param sx Target buffer coordinate (left corner of the tile)
  * @param sy Target buffer coordinate (bottom corner of the tile)
