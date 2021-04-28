@@ -62,20 +62,20 @@ void RunAnimationTest(int numFrames, int delay, AnimationDistributionParams para
 		if (gameTickData != nullptr) {
 			currentGameTick += 1;
 			if (gameTickData->_FramesToSkip != 0)
-				pPlayer->AnimInfo.CurrentFrame += gameTickData->_FramesToSkip;
-			pPlayer->AnimInfo.ProcessAnimation();
-			EXPECT_EQ(pPlayer->AnimInfo.CurrentFrame, gameTickData->_ExpectedAnimationFrame);
-			EXPECT_EQ(pPlayer->AnimInfo.DelayCounter, gameTickData->_ExpectedAnimationCnt);
+				animInfo.CurrentFrame += gameTickData->_FramesToSkip;
+			animInfo.ProcessAnimation();
+			EXPECT_EQ(animInfo.CurrentFrame, gameTickData->_ExpectedAnimationFrame);
+			EXPECT_EQ(animInfo.DelayCounter, gameTickData->_ExpectedAnimationCnt);
 		}
 
 		auto renderingData = dynamic_cast<RenderingData *>(x);
 		if (renderingData != nullptr) {
 			gfProgressToNextGameTick = renderingData->_fProgressToNextGameTick;
-			EXPECT_EQ(pPlayer->AnimInfo.GetFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
+			EXPECT_EQ(animInfo.GetFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
 			    << std::fixed << std::setprecision(2)
 			    << "ProgressToNextGameTick: " << renderingData->_fProgressToNextGameTick
-			    << " CurrentFrame: " << pPlayer->AnimInfo.CurrentFrame
-			    << " DelayCounter: " << pPlayer->AnimInfo.DelayCounter
+			    << " CurrentFrame: " << animInfo.CurrentFrame
+			    << " DelayCounter: " << animInfo.DelayCounter
 			    << " GameTick: " << currentGameTick;
 		}
 	}
@@ -125,7 +125,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	        new RenderingData(0.6f, 8),
 	        new RenderingData(0.8f, 8),
 
-			// After this GameTick, the Animation Distribution Logic is disabled
+	        // After this GameTick, the Animation Distribution Logic is disabled
 	        new GameTickData(9, 0),
 	        new RenderingData(0.1f, 9),
 	        new GameTickData(10, 0),
@@ -177,7 +177,7 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 	        new RenderingData(0.6f, 8),
 	        new RenderingData(0.8f, 8),
 
-			// After this GameTick, the Animation Distribution Logic is disabled
+	        // After this GameTick, the Animation Distribution Logic is disabled
 	        new GameTickData(9, 0),
 	        new RenderingData(0.1f, 9),
 	        new GameTickData(10, 0),
@@ -371,7 +371,7 @@ TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here
 	        new GameTickData(10, 3),
 	        new RenderingData(0.6f, 10),
 
-			// Animation starts again
+	        // Animation starts again
 	        new GameTickData(1, 0),
 	        new RenderingData(0.1f, 1),
 	        new GameTickData(1, 1),
