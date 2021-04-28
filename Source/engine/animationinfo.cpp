@@ -14,7 +14,7 @@ namespace devilution {
 int AnimationInfo::GetFrameToUseForRendering() const
 {
 	// Normal logic is used,
-	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick
+	// - if no frame-skipping is required and so we have exactly one Animationframe per game tick
 	// or
 	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
 	if (RelevantFramesForDistributing <= 0)
@@ -23,15 +23,15 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	if (CurrentFrame > RelevantFramesForDistributing)
 		return CurrentFrame;
 
-	assert(GameTicksSinceSequenceStarted >= 0);
+	assert(TicksSinceSequenceStarted >= 0);
 
 	// we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	float totalGameTicksForCurrentAnimationSequence = gfProgressToNextGameTick + (float)GameTicksSinceSequenceStarted;
+	float totalTicksForCurrentAnimationSequence = gfProgressToNextGameTick + (float)TicksSinceSequenceStarted;
 
 	// 1 added for rounding reasons. float to int cast always truncate.
-	int absoluteAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * GameTickModifier);
+	int absoluteAnimationFrame = 1 + (int)(totalTicksForCurrentAnimationSequence * TickModifier);
 	if (absoluteAnimationFrame > RelevantFramesForDistributing) {
-		// this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
+		// this can happen if we are at the last frame and the next game tick is due (gfProgressToNextGameTick >= 1.0f)
 		if (absoluteAnimationFrame > (RelevantFramesForDistributing + 1)) {
 			// we should never have +2 frames even if next game tick is due
 			Log("GetFrameToUseForRendering: Calculated an invalid Animation Frame (Calculated {} MaxFrame {})", absoluteAnimationFrame, RelevantFramesForDistributing);
@@ -52,12 +52,12 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 	CurrentFrame = 1;
 	DelayCounter = 0;
 	DelayLen = delayLen;
-	GameTicksSinceSequenceStarted = 0;
+	TicksSinceSequenceStarted = 0;
 	RelevantFramesForDistributing = 0;
-	GameTickModifier = 0.0f;
+	TickModifier = 0.0f;
 
 	if (numSkippedFrames != 0 || params != AnimationDistributionParams::None) {
-		// Animation Frames that will be adjusted for the skipped Frames/GameTicks
+		// Animation Frames that will be adjusted for the skipped Frames/game ticks
 		int relevantAnimationFramesForDistributing = numberOfFrames;
 		if (distributeFramesBeforeFrame != 0) {
 			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
@@ -67,32 +67,32 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 			relevantAnimationFramesForDistributing = distributeFramesBeforeFrame - 1;
 		}
 
-		// How many GameTicks are needed to advance one Animation Frame
-		int gameTicksPerFrame = (delayLen + 1);
+		// How many game ticks are needed to advance one Animation Frame
+		int ticksPerFrame = (delayLen + 1);
 
-		// GameTicks that will be adjusted for the skipped Frames/GameTicks
-		int relevantAnimationGameTicksForDistribution = relevantAnimationFramesForDistributing * gameTicksPerFrame;
+		// Game ticks that will be adjusted for the skipped Frames/game ticks
+		int relevantAnimationTicksForDistribution = relevantAnimationFramesForDistributing * ticksPerFrame;
 
-		// How many GameTicks will the Animation be really shown (skipped Frames and GameTicks removed)
-		int relevantAnimationGameTicksWithSkipping = relevantAnimationGameTicksForDistribution - (numSkippedFrames * gameTicksPerFrame);
+		// How many game ticks will the Animation be really shown (skipped Frames and game ticks removed)
+		int relevantAnimationTicksWithSkipping = relevantAnimationTicksForDistribution - (numSkippedFrames * ticksPerFrame);
 
 		if (params == AnimationDistributionParams::ProcessAnimationPending) {
-			// If ProcessAnimation will be called after SetNewAnimation (in same GameTick as NewPlrAnim), we increment the Animation-Counter.
+			// If ProcessAnimation will be called after SetNewAnimation (in same game tick as SetNewAnimation), we increment the Animation-Counter.
 			// If no delay is specified, this will result in complete skipped frame (see ProcessAnimation).
 			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
-			// Because of that, we only the remove one GameTick from the time the Animation is shown
-			relevantAnimationGameTicksWithSkipping -= 1;
-			// The Animation Distribution Logic needs to account how many GameTicks passed since the Animation started.
-			// Because ProcessAnimation will increase this later (in same GameTick as SetNewAnimation), we correct this upfront.
-			// This also means Rendering should never hapen with GameTicksSinceSequenceStarted < 0.
-			GameTicksSinceSequenceStarted = -1;
+			// Because of that, we only the remove one game tick from the time the Animation is shown
+			relevantAnimationTicksWithSkipping -= 1;
+			// The Animation Distribution Logic needs to account how many game ticks passed since the Animation started.
+			// Because ProcessAnimation will increase this later (in same game tick as SetNewAnimation), we correct this upfront.
+			// This also means Rendering should never hapen with TicksSinceSequenceStarted < 0.
+			TicksSinceSequenceStarted = -1;
 		}
 
 		if (params == AnimationDistributionParams::SkipsDelayOfLastFrame) {
 			// The logic for player/monster/... (not ProcessAnimation) only checks the frame not the delay.
 			// That means if a delay is specified, the last-frame is shown less then the other frames
 			// Example:
-			// If we have a animation with 3 frames and with a delay of 1 (gameTicksPerFrame = 2).
+			// If we have a animation with 3 frames and with a delay of 1 (ticksPerFrame = 2).
 			// The logic checks "if (frame == 3) { start_new_animation(); }"
 			// This will result that frame 4 is the last shown Animation Frame.
 			// GameTick		Frame		Cnt
@@ -102,33 +102,33 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 			// 3			2			1
 			// 4			3			0
 			// 5			-			-
-			// in GameTick 5 ProcessPlayer sees Frame = 3 and stops the animation.
-			// But Frame 3 is only shown 1 GameTick and all other Frames are shown 2 GameTicks.
-			// Thats why we need to remove the Delay of the last Frame from the time (GameTicks) the Animation is shown
-			relevantAnimationGameTicksWithSkipping -= delayLen;
+			// in game tick 5 ProcessPlayer sees Frame = 3 and stops the animation.
+			// But Frame 3 is only shown 1 game tick and all other Frames are shown 2 game ticks.
+			// Thats why we need to remove the Delay of the last Frame from the time (game ticks) the Animation is shown
+			relevantAnimationTicksWithSkipping -= delayLen;
 		}
 
-		// if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
-		float gameTickModifier = (float)relevantAnimationGameTicksForDistribution / (float)relevantAnimationGameTicksWithSkipping;
+		// if we skipped Frames we need to expand the game ticks to make one game tick for this Animation "faster"
+		float tickModifier = (float)relevantAnimationTicksForDistribution / (float)relevantAnimationTicksWithSkipping;
 
-		// gameTickModifier specifies the Animation fraction per GameTick, so we have to remove the delay from the variable
-		gameTickModifier /= gameTicksPerFrame;
+		// tickModifier specifies the Animation fraction per game tick, so we have to remove the delay from the variable
+		tickModifier /= ticksPerFrame;
 
 		RelevantFramesForDistributing = relevantAnimationFramesForDistributing;
-		GameTickModifier = gameTickModifier;
+		TickModifier = tickModifier;
 	}
 }
 
 void AnimationInfo::ProcessAnimation()
 {
 	DelayCounter++;
-	GameTicksSinceSequenceStarted++;
+	TicksSinceSequenceStarted++;
 	if (DelayCounter > DelayLen) {
 		DelayCounter = 0;
 		CurrentFrame++;
 		if (CurrentFrame > NumberOfFrames) {
 			CurrentFrame = 1;
-			GameTicksSinceSequenceStarted = 0;
+			TicksSinceSequenceStarted = 0;
 		}
 	}
 }
