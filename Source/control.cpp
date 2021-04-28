@@ -1366,17 +1366,27 @@ void DrawChr(const CelOutputBuffer &out)
 	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)], COL_WHITE);
 
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
-	ADD_PlrStringXY(out, 66, 69, 109, chrstr, COL_WHITE);
-
-	sprintf(chrstr, "%i", plr[myplr]._pExperience);
-	ADD_PlrStringXY(out, 216, 69, 300, chrstr, COL_WHITE);
-
 	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
-		strcpy(chrstr, _("None"));
 		col = COL_GOLD;
 	} else {
-		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
 		col = COL_WHITE;
+	}
+	ADD_PlrStringXY(out, 66, 69, 109, chrstr, col);
+
+	sprintf(chrstr, "%i", plr[myplr]._pExperience);
+	if (plr[myplr]._pExperience == ExpLvlsTbl[MAXCHARLEVEL - 1]) {
+		col = COL_GOLD;
+	} else {
+		col = COL_WHITE;
+	}
+	ADD_PlrStringXY(out, 216, 69, 300, chrstr, col);
+
+	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
+		col = COL_GOLD;
+		strcpy(chrstr, _("None"));
+	} else {
+		col = COL_WHITE;
+		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
 	}
 	ADD_PlrStringXY(out, 216, 97, 300, chrstr, col);
 
@@ -1436,36 +1446,27 @@ void DrawChr(const CelOutputBuffer &out)
 		col = COL_WHITE;
 	else
 		col = COL_BLUE;
-	if (plr[myplr]._pMagResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
-	} else {
+	if (plr[myplr]._pMagResist == MAXRESIST)
 		col = COL_GOLD;
-		sprintf(chrstr, _("MAX"));
-	}
+	sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
 	ADD_PlrStringXY(out, 257, 276, 300, chrstr, col);
 
 	if (plr[myplr]._pFireResist == 0)
 		col = COL_WHITE;
 	else
 		col = COL_BLUE;
-	if (plr[myplr]._pFireResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pFireResist);
-	} else {
+	if (plr[myplr]._pFireResist == MAXRESIST)
 		col = COL_GOLD;
-		sprintf(chrstr, _("MAX"));
-	}
+	sprintf(chrstr, "%i%%", plr[myplr]._pFireResist);
 	ADD_PlrStringXY(out, 257, 304, 300, chrstr, col);
 
 	if (plr[myplr]._pLghtResist == 0)
 		col = COL_WHITE;
 	else
 		col = COL_BLUE;
-	if (plr[myplr]._pLghtResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pLghtResist);
-	} else {
+	if (plr[myplr]._pLghtResist == MAXRESIST)
 		col = COL_GOLD;
-		sprintf(chrstr, _("MAX"));
-	}
+	sprintf(chrstr, "%i%%", plr[myplr]._pLghtResist);
 	ADD_PlrStringXY(out, 257, 332, 300, chrstr, col);
 
 	col = COL_WHITE;
