@@ -3471,8 +3471,6 @@ void CheckNewPath(int pnum)
 				if (object[i]._oBreak == 1) {
 					d = GetDirection(plr[pnum].position.tile, object[i].position);
 					StartAttack(pnum, d);
-				} else {
-					OperateObject(pnum, i, false);
 				}
 			}
 		}
