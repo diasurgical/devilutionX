@@ -32,36 +32,6 @@ uint8_t giNumberOfSmithPremiumItems;
 
 namespace {
 
-template <class T>
-T SwapLE(T in)
-{
-	switch (sizeof(T)) {
-	case 2:
-		return SDL_SwapLE16(in);
-	case 4:
-		return SDL_SwapLE32(in);
-	case 8:
-		return SDL_SwapLE64(in);
-	default:
-		return in;
-	}
-}
-
-template <class T>
-T SwapBE(T in)
-{
-	switch (sizeof(T)) {
-	case 2:
-		return SDL_SwapBE16(in);
-	case 4:
-		return SDL_SwapBE32(in);
-	case 8:
-		return SDL_SwapBE64(in);
-	default:
-		return in;
-	}
-}
-
 class LoadHelper {
 	uint8_t *m_buffer;
 	uint32_t m_cur = 0;

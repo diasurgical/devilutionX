@@ -644,7 +644,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
 		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
-			app_fatal("Invalid size of game data: %d", gameData->size);
+			app_fatal("Invalid size of game data: %d", endian_cast<int>(gameData->size));
 		sgGameInitInfo = *gameData;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
 		break;
