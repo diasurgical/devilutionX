@@ -187,20 +187,20 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 	*id = items[MAXITEMS];
 }
 
-void VerifyGoldSeeds(PlayerStruct *pPlayer)
+static void VerifyGoldSeeds(PlayerStruct *player)
 {
-	int i, j;
-
-	for (i = 0; i < pPlayer->_pNumInv; i++) {
-		if (pPlayer->InvList[i].IDidx == IDI_GOLD) {
-			for (j = 0; j < pPlayer->_pNumInv; j++) {
-				if (i != j) {
-					if (pPlayer->InvList[j].IDidx == IDI_GOLD && pPlayer->InvList[i]._iSeed == pPlayer->InvList[j]._iSeed) {
-						pPlayer->InvList[i]._iSeed = AdvanceRndSeed();
-						j = -1;
-					}
-				}
-			}
+	for (int i = 0; i < player->_pNumInv; i++) {
+		if (player->InvList[i].IDidx != IDI_GOLD)
+			continue;
+		for (int j = 0; j < player->_pNumInv; j++) {
+			if (i == j)
+				continue;
+			if (player->InvList[j].IDidx != IDI_GOLD)
+				continue;
+			if (player->InvList[i]._iSeed != player->InvList[j]._iSeed)
+				continue;
+			player->InvList[i]._iSeed = AdvanceRndSeed();
+			j = -1;
 		}
 	}
 }
