@@ -91,7 +91,7 @@ int SoundSample::SetChunk(std::unique_ptr<std::uint8_t[]> fileData, DWORD dwByte
 	if (!stream_->open()) {
 		stream_ = std::nullopt;
 		file_data_ = nullptr;
-		LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
+		LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunk): {}", SDL_GetError());
 		return -1;
 	}
 
