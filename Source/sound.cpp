@@ -23,8 +23,10 @@
 namespace devilution {
 
 bool gbSndInited;
-/** Specifies whether background music is enabled. */
+/** Handle to the music Storm file. */
 HANDLE sghMusic;
+/** The active background music track id. */
+_music_id sgnMusicTrack = NUM_MUSIC;
 
 namespace {
 
@@ -32,15 +34,39 @@ std::optional<Aulib::Stream> music;
 
 #ifdef DISABLE_STREAMING_MUSIC
 char *musicBuffer;
+#endif
 
-void FreeMusicBuffer()
+void LoadMusic()
 {
+#ifndef DISABLE_STREAMING_MUSIC
+	SDL_RWops *musicRw = SFileRw_FromStormHandle(sghMusic);
+#else
+	int bytestoread = SFileGetFileSize(sghMusic, 0);
+	musicBuffer = (char *)DiabloAllocPtr(bytestoread);
+	SFileReadFile(sghMusic, musicBuffer, bytestoread, NULL, 0);
+	SFileCloseFile(sghMusic);
+	sghMusic = NULL;
+
+	SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
+#endif
+	music.emplace(musicRw, std::make_unique<Aulib::DecoderDrwav>(),
+			std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
+}
+
+void CleanupMusic()
+{
+		music = std::nullopt;
+		sgnMusicTrack = NUM_MUSIC;
+#ifndef DISABLE_STREAMING_MUSIC
+		SFileCloseFile(sghMusic);
+		sghMusic = nullptr;
+#else
 	if (musicBuffer != nullptr) {
 		mem_free_dbg(musicBuffer);
 		musicBuffer = nullptr;
 	}
+#endif
 }
-#endif // DISABLE_STREAMING_MUSIC
 
 } // namespace
 
@@ -49,8 +75,7 @@ void FreeMusicBuffer()
 bool gbMusicOn = true;
 /** Specifies whether sound effects are enabled. */
 bool gbSoundOn = true;
-/** Specifies the active background music track id. */
-_music_id sgnMusicTrack = NUM_MUSIC;
+
 /** Maps from track ID to track name in spawn. */
 const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sTowne.wav",
@@ -200,17 +225,8 @@ void snd_deinit() {
 
 void music_stop()
 {
-	if (music) {
-		music = std::nullopt;
-#ifndef DISABLE_STREAMING_MUSIC
-		SFileCloseFile(sghMusic);
-		sghMusic = nullptr;
-#endif
-		sgnMusicTrack = NUM_MUSIC;
-#ifdef DISABLE_STREAMING_MUSIC
-		FreeMusicBuffer();
-#endif
-	}
+	if (music)
+		CleanupMusic();
 }
 
 void music_start(uint8_t nTrack)
@@ -229,47 +245,17 @@ void music_start(uint8_t nTrack)
 		if (!success) {
 			sghMusic = nullptr;
 		} else {
-#ifndef DISABLE_STREAMING_MUSIC
-			SDL_RWops *musicRw = SFileRw_FromStormHandle(sghMusic);
-#else
-			int bytestoread = SFileGetFileSize(sghMusic, 0);
-			musicBuffer = (char *)DiabloAllocPtr(bytestoread);
-			SFileReadFile(sghMusic, musicBuffer, bytestoread, NULL, 0);
-			SFileCloseFile(sghMusic);
-			sghMusic = NULL;
-
-			SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
-			if (musicRw == nullptr)
-				ErrSdl();
-#endif
-			music.emplace(musicRw, std::make_unique<Aulib::DecoderDrwav>(),
-			    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
+			LoadMusic();
 			if (!music->open()) {
 				LogError(LogCategory::Audio, "Aulib::Stream::open (from music_start): {}", SDL_GetError());
-				music = std::nullopt;
-#ifndef DISABLE_STREAMING_MUSIC
-				SFileCloseFile(sghMusic);
-				sghMusic = nullptr;
-#endif
-				sgnMusicTrack = NUM_MUSIC;
-#ifdef DISABLE_STREAMING_MUSIC
-				FreeMusicBuffer();
-#endif
+				CleanupMusic();
 				return;
 			}
 
 			music->setVolume(1.F - static_cast<float>(sgOptions.Audio.nMusicVolume) / VOLUME_MIN);
 			if (!music->play(/*iterations=*/0)) {
 				LogError(LogCategory::Audio, "Aulib::Stream::play (from music_start): {}", SDL_GetError());
-				music = std::nullopt;
-#ifndef DISABLE_STREAMING_MUSIC
-				SFileCloseFile(sghMusic);
-				sghMusic = nullptr;
-#endif
-				sgnMusicTrack = NUM_MUSIC;
-#ifdef DISABLE_STREAMING_MUSIC
-				FreeMusicBuffer();
-#endif
+				CleanupMusic();
 				return;
 			}
 
