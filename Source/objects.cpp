@@ -5534,7 +5534,7 @@ void GetObjectStr(int i)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		sprintf(tempstr, _("%s Shrine"), shrinestrs[object[i]._oVar1]);
+		sprintf(tempstr, _("%s Shrine"), _(shrinestrs[object[i]._oVar1]));
 		strcpy(infostr, tempstr);
 		break;
 	case OBJ_SKELBOOK:
@@ -5584,7 +5584,7 @@ void GetObjectStr(int i)
 		strcpy(infostr, _("Pedestal of Blood"));
 		break;
 	case OBJ_STORYBOOK:
-		strcpy(infostr, StoryBookName[object[i]._oVar3]);
+		strcpy(infostr, _(StoryBookName[object[i]._oVar3]));
 		break;
 	case OBJ_WEAPONRACK:
 		strcpy(infostr, _("Weapon Rack"));

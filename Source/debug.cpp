@@ -7,6 +7,7 @@
 #include "cursor.h"
 #include "inv.h"
 #include "spells.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -175,7 +176,7 @@ void PrintDebugMonster(int m)
 	int i;
 	char dstr[128];
 
-	sprintf(dstr, "Monster %i = %s", m, monster[m].mName);
+	sprintf(dstr, "Monster %i = %s", m, _(monster[m].mName));
 	NetSendCmdString(1 << myplr, dstr);
 	sprintf(dstr, "X = %i, Y = %i", monster[m].position.tile.x, monster[m].position.tile.y);
 	NetSendCmdString(1 << myplr, dstr);

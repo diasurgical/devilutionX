@@ -427,7 +427,7 @@ void DrawAutomapText(const CelOutputBuffer &out)
 		}
 	}
 	if (setlevel) {
-		PrintGameStr(out, 8, nextline, quest_level_names[(BYTE)setlvlnum], COL_GOLD);
+		PrintGameStr(out, 8, nextline, _(quest_level_names[(BYTE)setlvlnum]), COL_GOLD);
 	} else if (currlevel != 0) {
 		if (currlevel < 17 || currlevel > 20) {
 			if (currlevel < 21 || currlevel > 24)

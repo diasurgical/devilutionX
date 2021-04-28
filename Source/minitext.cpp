@@ -6,6 +6,7 @@
 
 #include "control.h"
 #include "dx.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -241,7 +242,7 @@ void InitQTextMsg(int m)
 {
 	if (alltext[m].scrlltxt) {
 		questlog = false;
-		qtextptr = alltext[m].txtstr;
+		qtextptr = _(alltext[m].txtstr);
 		qtextflag = true;
 		qtexty = 340 + UI_OFFSET_Y;
 		qtextSpd = CalcTextSpeed(alltext[m].sfxnr);

@@ -281,7 +281,7 @@ bool ForceQuests()
 
 			for (j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
-					sprintf(infostr, _("To %s"), questtrigstr[ql]);
+					sprintf(infostr, _("To %s"), _(questtrigstr[ql]));
 					cursmx = qx;
 					cursmy = qy;
 					return true;
@@ -767,7 +767,7 @@ void DrawQuestLog(const CelOutputBuffer &out)
 	CelDrawTo(out, 0, 351, pQLogCel, 1, SPANEL_WIDTH);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
-		PrintQLString(out, 0, y, true, questlist[qlist[i]]._qlstr, COL_WHITE);
+		PrintQLString(out, 0, y, true, _(questlist[qlist[i]]._qlstr), COL_WHITE);
 		y += 2;
 	}
 	PrintQLString(out, 0, 22, true, _("Close Quest Log"), COL_WHITE);

@@ -480,7 +480,7 @@ void InitMonster(int i, direction rd, int mtype, int x, int y)
 	monster[i].position.old = { x, y };
 	monster[i]._mMTidx = mtype;
 	monster[i]._mmode = MM_STAND;
-	monster[i].mName = monst->MData->mName;
+	monster[i].mName = _(monst->MData->mName);
 	monster[i].MType = monst;
 	monster[i].MData = monst->MData;
 	monster[i]._mAnimData = monst->Anims[MA_STAND].Data[rd];
@@ -790,7 +790,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	Monst->mExp *= 2;
-	Monst->mName = Uniq->mName;
+	Monst->mName = _(Uniq->mName);
 	Monst->_mmaxhp = Uniq->mmaxhp << 6;
 
 	if (!gbIsMultiplayer) {
@@ -4855,9 +4855,9 @@ void SyncMonsterAnim(int i)
 	monster[i].MType = &Monsters[monster[i]._mMTidx];
 	monster[i].MData = Monsters[monster[i]._mMTidx].MData;
 	if (monster[i]._uniqtype != 0)
-		monster[i].mName = UniqMonst[monster[i]._uniqtype - 1].mName;
+		monster[i].mName = _(UniqMonst[monster[i]._uniqtype - 1].mName);
 	else
-		monster[i].mName = monster[i].MData->mName;
+		monster[i].mName = _(monster[i].MData->mName);
 	_mdir = monster[i]._mdir;
 
 	switch (monster[i]._mmode) {

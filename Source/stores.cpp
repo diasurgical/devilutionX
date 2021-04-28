@@ -1157,7 +1157,7 @@ void S_StartTalk()
 
 	for (i = 0; i < MAXQUESTS; i++) {
 		if (quests[i]._qactive == QUEST_ACTIVE && Qtalklist[talker][i] != TEXT_NONE && quests[i]._qlog) {
-			AddSText(0, sn, true, questlist[i]._qlstr, COL_WHITE, true);
+			AddSText(0, sn, true, _(questlist[i]._qlstr), COL_WHITE, true);
 			sn += la;
 		}
 	}

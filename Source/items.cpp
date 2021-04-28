@@ -1076,8 +1076,8 @@ void SetPlrHandItem(ItemStruct *h, int idata)
 
 	h->_itype = pAllItem->itype;
 	h->_iCurs = pAllItem->iCurs;
-	strcpy(h->_iName, pAllItem->iName);
-	strcpy(h->_iIName, pAllItem->iName);
+	strcpy(h->_iName, _(pAllItem->iName));
+	strcpy(h->_iIName, _(pAllItem->iName));
 	h->_iLoc = pAllItem->iLoc;
 	h->_iClass = pAllItem->iClass;
 	h->_iMinDam = pAllItem->iMinDam;
@@ -1486,8 +1486,8 @@ void GetBookSpell(int i, int lvl)
 		if (s == maxSpells)
 			s = 1;
 	}
-	strcat(items[i]._iName, spelldata[bs].sNameText);
-	strcat(items[i]._iIName, spelldata[bs].sNameText);
+	strcat(items[i]._iName, _(spelldata[bs].sNameText));
+	strcat(items[i]._iIName, _(spelldata[bs].sNameText));
 	items[i]._iSpell = bs;
 	items[i]._iMinMag = spelldata[bs].sMinInt;
 	items[i]._ivalue += spelldata[bs].sBookCost;
@@ -1529,7 +1529,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 		}
 		if (nl != 0) {
 			preidx = l[GenerateRnd(nl)];
-			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, items[i]._iIName);
+			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 			items[i]._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemPower(
@@ -1544,12 +1544,12 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 		}
 	}
 	if (!control_WriteStringToBuffer((BYTE *)items[i]._iIName)) {
-		strcpy(items[i]._iIName, AllItemsList[items[i].IDidx].iSName);
+		strcpy(items[i]._iIName, _(AllItemsList[items[i].IDidx].iSName));
 		if (preidx != -1) {
-			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, items[i]._iIName);
+			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 		}
-		sprintf(istr, _("%s of %s"), items[i]._iIName, spelldata[bs].sNameText);
+		sprintf(istr, _("%s of %s"), items[i]._iIName, _(spelldata[bs].sNameText));
 		strcpy(items[i]._iIName, istr);
 		if (items[i]._iMagical == ITEM_QUALITY_NORMAL)
 			strcpy(items[i]._iName, items[i]._iIName);
@@ -1590,9 +1590,9 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 			if (s == maxSpells)
 				s = SPL_FIREBOLT;
 		}
-		sprintf(istr, _("%s of %s"), items[i]._iName, spelldata[bs].sNameText);
+		sprintf(istr, _("%s of %s"), items[i]._iName, _(spelldata[bs].sNameText));
 		if (!control_WriteStringToBuffer((BYTE *)istr))
-			sprintf(istr, _("Staff of %s"), spelldata[bs].sNameText);
+			sprintf(istr, _("Staff of %s"), _(spelldata[bs].sNameText));
 		strcpy(items[i]._iName, istr);
 		strcpy(items[i]._iIName, istr);
 
@@ -1632,8 +1632,8 @@ void GetOilType(int i, int max_lvl)
 		r = GenerateRnd(2);
 		t = (r != 0 ? 6 : 5);
 	}
-	strcpy(items[i]._iName, OilNames[t]);
-	strcpy(items[i]._iIName, OilNames[t]);
+	strcpy(items[i]._iName, _(OilNames[t]));
+	strcpy(items[i]._iIName, _(OilNames[t]));
 	items[i]._iMiscId = OilMagic[t];
 	items[i]._ivalue = OilValues[t];
 	items[i]._iIvalue = OilValues[t];
@@ -1643,8 +1643,8 @@ void GetItemAttrs(int i, int idata, int lvl)
 {
 	items[i]._itype = AllItemsList[idata].itype;
 	items[i]._iCurs = AllItemsList[idata].iCurs;
-	strcpy(items[i]._iName, AllItemsList[idata].iName);
-	strcpy(items[i]._iIName, AllItemsList[idata].iName);
+	strcpy(items[i]._iName, _(AllItemsList[idata].iName));
+	strcpy(items[i]._iIName, _(AllItemsList[idata].iName));
 	items[i]._iLoc = AllItemsList[idata].iLoc;
 	items[i]._iClass = AllItemsList[idata].iClass;
 	items[i]._iMinDam = AllItemsList[idata].iMinDam;
@@ -2155,7 +2155,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		}
 		if (nt != 0) {
 			preidx = l[GenerateRnd(nt)];
-			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, items[i]._iIName);
+			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 			items[i]._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemPower(
@@ -2183,7 +2183,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		}
 		if (nl != 0) {
 			sufidx = l[GenerateRnd(nl)];
-			sprintf(istr, _("%s of %s"), items[i]._iIName, PL_Suffix[sufidx].PLName);
+			sprintf(istr, _("%s of %s"), items[i]._iIName, _(PL_Suffix[sufidx].PLName));
 			strcpy(items[i]._iIName, istr);
 			items[i]._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemSuffix(i, sufidx);
@@ -2193,16 +2193,16 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 	if (!control_WriteStringToBuffer((BYTE *)items[i]._iIName)) {
 		int aii = items[i].IDidx;
 		if (AllItemsList[aii].iSName != nullptr)
-			strcpy(items[i]._iIName, AllItemsList[aii].iSName);
+			strcpy(items[i]._iIName, _(AllItemsList[aii].iSName));
 		else
 			items[i]._iName[0] = 0;
 
 		if (preidx != -1) {
-			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, items[i]._iIName);
+			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 		}
 		if (sufidx != -1) {
-			sprintf(istr, _("%s of %s"), items[i]._iIName, PL_Suffix[sufidx].PLName);
+			sprintf(istr, _("%s of %s"), items[i]._iIName, _(PL_Suffix[sufidx].PLName));
 			strcpy(items[i]._iIName, istr);
 		}
 	}
@@ -2469,7 +2469,7 @@ void GetUniqueItem(int i, _unique_items uid)
 	if (UniqueItemList[uid].UINumPL > 5)
 		SaveItemPower(i, UniqueItemList[uid].UIPower6, UniqueItemList[uid].UIParam11, UniqueItemList[uid].UIParam12, 0, 0, 1);
 
-	strcpy(items[i]._iIName, UniqueItemList[uid].UIName);
+	strcpy(items[i]._iIName, _(UniqueItemList[uid].UIName));
 	items[i]._iIvalue = UniqueItemList[uid].UIValue;
 
 	if (items[i]._iMiscId == IMISC_UNIQUE)
@@ -3518,7 +3518,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("Extra charges"));
 		break;
 	case IPL_SPELL:
-		sprintf(tempstr, _("%i %s charges"), x->_iMaxCharges, spelldata[x->_iSpell].sNameText);
+		sprintf(tempstr, _("%i %s charges"), x->_iMaxCharges, _(spelldata[x->_iSpell].sNameText));
 		break;
 	case IPL_FIREDAM:
 		if (x->_iFMinDam == x->_iFMaxDam)
@@ -3794,7 +3794,7 @@ void DrawUniqueInfo(const CelOutputBuffer &out)
 	if ((!chrflag && !questlog) || gnScreenWidth >= SPANEL_WIDTH * 3) {
 		uid = curruitem._iUid;
 		DrawUTextBack(GlobalBackBuffer());
-		PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, 2, true, UniqueItemList[uid].UIName, COL_GOLD);
+		PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, 2, true, _(UniqueItemList[uid].UIName), COL_GOLD);
 		DrawULine(out, 5);
 		PrintItemPower(UniqueItemList[uid].UIPower1, &curruitem);
 		y = 6 - UniqueItemList[uid].UINumPL + 8;
