@@ -5,28 +5,136 @@
  */
 #include "render.h"
 
+#include <algorithm>
 #include <climits>
+#include <cstdint>
 
 #include "lighting.h"
 #include "options.h"
 
 namespace devilution {
 
-#define NO_OVERDRAW
-
 namespace {
 
-enum {
-	RT_SQUARE,
-	RT_TRANSPARENT,
-	RT_LTRIANGLE,
-	RT_RTRIANGLE,
-	RT_LTRAPEZOID,
-	RT_RTRAPEZOID
+/**
+ * Tile type.
+ *
+ * The tile type determines data encoding and the shape.
+ *
+ * Each tile type has its own encoding but they all encode data in the order
+ * of bottom-to-top (bottom row first).
+ */
+enum class TileType {
+	/**
+	 * 🮆 A 32x32 square. Stored as an array of pixels.
+	 */
+	Square,
+
+	/**
+	 * 🮆 A 32x32 square with transparency. RLE encoded.
+	 *
+	 * Each run starts with an int8_t value.
+	 * If positive, it is followed by this many pixels.
+	 * If negative, it indicates `-value` fully transparent pixels, which are omitted.
+	 *
+	 * Runs do not cross row boundaries.
+	 */
+	TransparentSquare,
+
+	/**
+	 *🭮 Left-pointing 32x31 triangle. Encoded as 31 varying-width rows with 2 padding bytes before every even row.
+	 *
+	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
+	 *
+	 * Encoding:
+	 * for i in [0, 30]:
+	 * - 2 unused bytes if i is even
+	 * - row (only the pixels within the triangle)
+	 */
+	LeftTriangle,
+
+	/**
+	 * 🭬Right-pointing 32x31 triangle.  Encoded as 31 varying-width rows with 2 padding bytes after every even row.
+	 *
+	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
+	 *
+	 * Encoding:
+	 * for i in [0, 30]:
+	 * - row (only the pixels within the triangle)
+	 * - 2 unused bytes if i is even
+	 */
+	RightTriangle,
+
+	/**
+	 * 🭓 Left-pointing 32x32 trapezoid: a 32x16 rectangle and the 16x16 bottom part of `LeftTriangle`.
+	 *
+	 * Begins with triangle part, which uses the `LeftTriangle` encoding,
+	 * and is followed by a flat array of pixels for the top rectangle part.
+	 */
+	LeftTrapezoid,
+
+	/**
+	 * 🭞 Right-pointing 32x32 trapezoid: 32x16 rectangle and the 16x16 bottom part of `RightTriangle`.
+	 *
+	 * Begins with the triangle part, which uses the `RightTriangle` encoding,
+	 * and is followed by a flat array of pixels for the top rectangle part.
+	 */
+	RightTrapezoid,
 };
 
+/** Width of a tile rendering primitive. */
+constexpr std::int_fast16_t Width = TILE_WIDTH / 2;
+
+/** Height of a tile rendering primitive (except triangles). */
+constexpr std::int_fast16_t Height = TILE_HEIGHT;
+
+/** Height of the lower triangle of a triangular or a trapezoid tile. */
+constexpr std::int_fast16_t LowerHeight = TILE_HEIGHT / 2;
+
+/** Height of the upper triangle of a triangular tile. */
+constexpr std::int_fast16_t TriangleUpperHeight = TILE_HEIGHT / 2 - 1;
+
+/** Height of the upper rectangle of a trapezoid tile. */
+constexpr std::int_fast16_t TrapezoidUpperHeight = TILE_HEIGHT / 2;
+
+constexpr std::int_fast16_t TriangleHeight = LowerHeight + TriangleUpperHeight;
+
+/** For triangles, for each pixel drawn vertically, this many pixels are drawn horizontally. */
+constexpr std::int_fast16_t XStep = 2;
+
+std::int_fast16_t GetTileHeight(TileType tile)
+{
+	if (tile == TileType::LeftTriangle || tile == TileType::RightTriangle)
+		return TriangleHeight;
+	return Height;
+}
+
+// Debugging variables
+// #define DEBUG_RENDER_COLOR
+// #define DEBUG_RENDER_OFFSET_X 5
+// #define DEBUG_RENDER_OFFSET_Y 5
+
+#ifdef DEBUG_RENDER_COLOR
+int DBGCOLOR = 0;
+
+int GetTileDebugColor(TileType tile)
+{
+	// clang-format off
+	switch (tile) {
+		case TileType::Square: return PAL16_YELLOW + 5;
+		case TileType::TransparentSquare: return PAL16_ORANGE + 5;
+		case TileType::LeftTriangle: return PAL16_GRAY + 5;
+		case TileType::RightTriangle: return PAL16_BEIGE;
+		case TileType::LeftTrapezoid: return PAL16_RED + 5;
+		case TileType::RightTrapezoid: return PAL16_BLUE + 5;
+		default: return 0;
+	}
+	// clang-format on
+}
+#endif // DEBUG_RENDER_COLOR
+
 /** Fully transparent variant of WallMask. */
-const DWORD WallMask_FullyTrasparent[TILE_HEIGHT] = {
+const std::uint32_t WallMask_FullyTrasparent[TILE_HEIGHT] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -61,7 +169,7 @@ const DWORD WallMask_FullyTrasparent[TILE_HEIGHT] = {
 	0x00000000
 };
 /** Transparent variant of RightMask. */
-const DWORD RightMask_Transparent[TILE_HEIGHT] = {
+const std::uint32_t RightMask_Transparent[TILE_HEIGHT] = {
 	0xC0000000,
 	0xF0000000,
 	0xFC000000,
@@ -96,7 +204,7 @@ const DWORD RightMask_Transparent[TILE_HEIGHT] = {
 	0xFFFFFFFF
 };
 /** Transparent variant of LeftMask. */
-const DWORD LeftMask_Transparent[TILE_HEIGHT] = {
+const std::uint32_t LeftMask_Transparent[TILE_HEIGHT] = {
 	0x00000003,
 	0x0000000F,
 	0x0000003F,
@@ -131,7 +239,7 @@ const DWORD LeftMask_Transparent[TILE_HEIGHT] = {
 	0xFFFFFFFF
 };
 /** Specifies the draw masks used to render transparency of the right side of tiles. */
-const DWORD RightMask[TILE_HEIGHT] = {
+const std::uint32_t RightMask[TILE_HEIGHT] = {
 	0xEAAAAAAA,
 	0xF5555555,
 	0xFEAAAAAA,
@@ -166,7 +274,7 @@ const DWORD RightMask[TILE_HEIGHT] = {
 	0xFFFFFFFF
 };
 /** Specifies the draw masks used to render transparency of the left side of tiles. */
-const DWORD LeftMask[TILE_HEIGHT] = {
+const std::uint32_t LeftMask[TILE_HEIGHT] = {
 	0xAAAAAAAB,
 	0x5555555F,
 	0xAAAAAABF,
@@ -201,7 +309,7 @@ const DWORD LeftMask[TILE_HEIGHT] = {
 	0xFFFFFFFF
 };
 /** Specifies the draw masks used to render transparency of wall tiles. */
-const DWORD WallMask[TILE_HEIGHT] = {
+const std::uint32_t WallMask[TILE_HEIGHT] = {
 	0xAAAAAAAA,
 	0x55555555,
 	0xAAAAAAAA,
@@ -236,7 +344,7 @@ const DWORD WallMask[TILE_HEIGHT] = {
 	0x55555555
 };
 /** Fully opaque mask */
-const DWORD SolidMask[TILE_HEIGHT] = {
+const std::uint32_t SolidMask[TILE_HEIGHT] = {
 	0xFFFFFFFF,
 	0xFFFFFFFF,
 	0xFFFFFFFF,
@@ -271,7 +379,7 @@ const DWORD SolidMask[TILE_HEIGHT] = {
 	0xFFFFFFFF
 };
 /** Used to mask out the left half of the tile diamond and only render additional content */
-const DWORD RightFoliageMask[TILE_HEIGHT] = {
+const std::uint32_t RightFoliageMask[TILE_HEIGHT] = {
 	0xFFFFFFFF,
 	0x3FFFFFFF,
 	0x0FFFFFFF,
@@ -306,7 +414,7 @@ const DWORD RightFoliageMask[TILE_HEIGHT] = {
 	0x00000000,
 };
 /** Used to mask out the left half of the tile diamond and only render additional content */
-const DWORD LeftFoliageMask[TILE_HEIGHT] = {
+const std::uint32_t LeftFoliageMask[TILE_HEIGHT] = {
 	0xFFFFFFFF,
 	0xFFFFFFFC,
 	0xFFFFFFF0,
@@ -341,13 +449,13 @@ const DWORD LeftFoliageMask[TILE_HEIGHT] = {
 	0x00000000,
 };
 
-inline int count_leading_zeros(DWORD mask)
+inline int CountLeadingZeros(std::uint32_t mask)
 {
 	// Note: This function assumes that the argument is not zero,
 	// which means there is at least one bit set.
 	static_assert(
-	    sizeof(DWORD) == sizeof(uint32_t),
-	    "count_leading_zeros: DWORD must be 32bits");
+	    sizeof(std::uint32_t) == sizeof(uint32_t),
+	    "CountLeadingZeros: std::uint32_t must be 32bits");
 #if defined(__GNUC__) || defined(__clang__)
 	return __builtin_clz(mask);
 #else
@@ -368,39 +476,49 @@ inline int count_leading_zeros(DWORD mask)
 }
 
 template <typename F>
-void foreach_set_bit(DWORD mask, const F &f)
+void ForEachSetBit(std::uint32_t mask, const F &f)
 {
 	int i = 0;
 	while (mask != 0) {
-		int z = count_leading_zeros(mask);
+		int z = CountLeadingZeros(mask);
 		i += z, mask <<= z;
 		for (; mask & 0x80000000; i++, mask <<= 1)
 			f(i);
 	}
 }
 
-inline void DoRenderLine(BYTE *dst, BYTE *src, size_t n, BYTE *tbl, DWORD mask)
+inline void RenderLine(std::uint8_t *dst, const std::uint8_t *src, size_t n, const std::uint8_t *tbl, std::uint32_t mask)
 {
-	if (mask == 0xFFFFFFFF) {                // Opaque line
+	// The number of iterations is limited by the size of the mask.
+	// So we can limit it by ANDing the mask with another mask that only keeps
+	// iterations that are lower than n. We can now avoid testing if i < n
+	// at every loop iteration.
+	assert(n != 0 && n <= sizeof(std::uint32_t) * CHAR_BIT);
+	const std::uint32_t firstNOnes = std::uint32_t(-1) << ((sizeof(std::uint32_t) * CHAR_BIT) - n);
+	mask &= firstNOnes;
+
+	if (mask == firstNOnes) {                // Opaque line
 		if (light_table_index == lightmax) { // Complete darkness
 			memset(dst, 0, n);
 		} else if (light_table_index == 0) { // Fully lit
+#ifndef DEBUG_RENDER_COLOR
 			memcpy(dst, src, n);
+#else
+			memset(dst, DBGCOLOR, n);
+#endif
 		} else { // Partially lit
+#ifndef DEBUG_RENDER_COLOR
 			for (size_t i = 0; i < n; i++) {
 				dst[i] = tbl[src[i]];
 			}
+#else
+			memset(dst, tbl[DBGCOLOR], n);
+#endif
 		}
 	} else {
-		// The number of iterations is anyway limited by the size of the mask.
-		// So we can limit it by ANDing the mask with another mask that only keeps
-		// iterations that are lower than n. We can now avoid testing if i < n
-		// at every loop iteration.
-		assert(n != 0 && n <= sizeof(DWORD) * CHAR_BIT);
-		mask &= DWORD(-1) << ((sizeof(DWORD) * CHAR_BIT) - n);
-
 		if (sgOptions.Graphics.bBlendedTransparancy) { // Blended transparancy
-			if (light_table_index == lightmax) {       // Complete darkness
+#ifndef DEBUG_RENDER_COLOR
+			if (light_table_index == lightmax) { // Complete darkness
 				for (size_t i = 0; i < n; i++, mask <<= 1) {
 					if ((mask & 0x80000000) != 0)
 						dst[i] = 0;
@@ -422,211 +540,690 @@ inline void DoRenderLine(BYTE *dst, BYTE *src, size_t n, BYTE *tbl, DWORD mask)
 						dst[i] = paletteTransparencyLookup[dst[i]][tbl[src[i]]];
 				}
 			}
+#else
+			for (size_t i = 0; i < n; i++, mask <<= 1) {
+				if ((mask & 0x80000000) != 0)
+					dst[i] = tbl[DBGCOLOR];
+				else
+					dst[i] = paletteTransparencyLookup[dst[i]][tbl[DBGCOLOR]];
+			}
+#endif
 		} else {                                 // Stippled transparancy
 			if (light_table_index == lightmax) { // Complete darkness
-				foreach_set_bit(mask, [=](int i) { dst[i] = 0; });
+				ForEachSetBit(mask, [=](int i) { dst[i] = 0; });
 			} else if (light_table_index == 0) { // Fully lit
-				foreach_set_bit(mask, [=](int i) { dst[i] = src[i]; });
+#ifndef DEBUG_RENDER_COLOR
+				ForEachSetBit(mask, [=](int i) { dst[i] = src[i]; });
+#else
+				ForEachSetBit(mask, [=](int i) { dst[i] = DBGCOLOR; });
+#endif
 			} else { // Partially lit
-				foreach_set_bit(mask, [=](int i) { dst[i] = tbl[src[i]]; });
+				ForEachSetBit(mask, [=](int i) { dst[i] = tbl[src[i]]; });
 			}
 		}
 	}
 }
 
-#if DVL_HAVE_ATTRIBUTE(always_inline) || (defined(__GNUC__) && !defined(__clang__))
-__attribute__((always_inline))
-#endif
-inline void
-RenderLine(BYTE *dst_begin, BYTE *dst_end, BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
+struct Clip {
+	std::int_fast16_t top;
+	std::int_fast16_t bottom;
+	std::int_fast16_t left;
+	std::int_fast16_t right;
+	std::int_fast16_t width;
+	std::int_fast16_t height;
+};
+
+Clip CalculateClip(std::int_fast16_t x, std::int_fast16_t y, std::int_fast16_t w, std::int_fast16_t h, const CelOutputBuffer &out)
 {
-#ifdef NO_OVERDRAW
-	if (*dst >= dst_begin && *dst <= dst_end)
-#endif
-		DoRenderLine(*dst, *src, n, tbl, mask);
-	(*src) += n;
-	(*dst) += n;
+	Clip clip;
+	clip.top = y + 1 < h ? h - (y + 1) : 0;
+	clip.bottom = y + 1 > out.h() ? (y + 1) - out.h() : 0;
+	clip.left = x < 0 ? -x : 0;
+	clip.right = x + w > out.w() ? x + w - out.w() : 0;
+	clip.width = w - clip.left - clip.right;
+	clip.height = h - clip.top - clip.bottom;
+	return clip;
 }
 
-} // namespace
-
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
-
-void
-RenderTile(CelOutputBuffer out, int x, int y)
+void RenderSquareFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
 {
-	int i, j;
-	char c, v, tile;
-	BYTE *src, *tbl;
-	DWORD m, *pFrameTable;
-	const DWORD *mask;
+	for (auto i = 0; i < Height; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, Width, tbl, *mask);
+		src += Width;
+	}
+}
 
-	// TODO: Get rid of overdraw by rendering edge tiles separately.
-	out.region.x -= BUFFER_BORDER_LEFT;
-	out.region.y -= BUFFER_BORDER_TOP;
-	out.region.w += BUFFER_BORDER_LEFT;
-	out.region.h += BUFFER_BORDER_TOP;
-	x += BUFFER_BORDER_LEFT;
-	y += BUFFER_BORDER_TOP;
+void RenderSquareClipped(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	src += clip.bottom * Height + clip.left;
+	for (auto i = 0; i < clip.height; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, clip.width, tbl, (*mask) << clip.left);
+		src += Width;
+	}
+}
 
-	pFrameTable = reinterpret_cast<DWORD *>(pDungeonCels.get());
+void RenderSquare(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	if (clip.width == Width && clip.height == Height) {
+		RenderSquareFull(dst, dstPitch, src, mask, tbl);
+	} else {
+		RenderSquareClipped(dst, dstPitch, src, mask, tbl, clip);
+	}
+}
 
-	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
-	tile = (level_cel_block & 0x7000) >> 12;
-	tbl = &pLightTbl[256 * light_table_index];
+void RenderTransparentSquareFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+{
+	for (auto i = 0; i < Height; ++i, dst -= dstPitch + Width, --mask) {
+		constexpr unsigned MaxMaskShift = 32;
+		std::uint_fast8_t drawWidth = Width;
+		std::uint32_t m = *mask;
+		while (drawWidth > 0) {
+			auto v = static_cast<std::int8_t>(*src++);
+			if (v > 0) {
+				RenderLine(dst, src, v, tbl, m);
+				src += v;
+			} else {
+				v = -v;
+			}
+			dst += v;
+			drawWidth -= v;
+			m = (v == MaxMaskShift) ? 0 : (m << v);
+		}
+	}
+}
 
-	// The mask defines what parts of the tile is opaque
-	mask = &SolidMask[TILE_HEIGHT - 1];
+// NOLINTNEXTLINE(readability-function-cognitive-complexity): Actually complex and has to be fast.
+void RenderTransparentSquareClipped(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto skipRestOfTheLine = [&src](std::int_fast16_t remainingWidth) {
+		while (remainingWidth > 0) {
+			const auto v = static_cast<std::int8_t>(*src++);
+			if (v > 0) {
+				src += v;
+				remainingWidth -= v;
+			} else {
+				remainingWidth -= -v;
+			}
+		}
+		assert(remainingWidth == 0);
+	};
+
+	// Skip the bottom clipped lines.
+	for (auto i = 0; i < clip.bottom; ++i) {
+		skipRestOfTheLine(Width);
+	}
+
+	for (auto i = 0; i < clip.height; ++i, dst -= dstPitch + clip.width, --mask) {
+		constexpr unsigned MaxMaskShift = 32;
+		auto drawWidth = clip.width;
+		std::uint32_t m = *mask;
+
+		// Skip initial src if clipping on the left.
+		// Handles overshoot, i.e. when the RLE segment goes into the unclipped area.
+		auto remainingLeftClip = clip.left;
+		while (remainingLeftClip > 0) {
+			auto v = static_cast<std::int8_t>(*src++);
+			if (v > 0) {
+				if (v > remainingLeftClip) {
+					const auto overshoot = v - remainingLeftClip;
+					RenderLine(dst, src + remainingLeftClip, overshoot, tbl, m);
+					dst += overshoot;
+					drawWidth -= overshoot;
+				}
+				src += v;
+			} else {
+				v = -v;
+				if (v > remainingLeftClip) {
+					const auto overshoot = v - remainingLeftClip;
+					dst += overshoot;
+					drawWidth -= overshoot;
+				}
+			}
+			remainingLeftClip -= v;
+			m = (v == MaxMaskShift) ? 0 : (m << v);
+		}
+
+		// Draw the non-clipped segment
+		while (drawWidth > 0) {
+			auto v = static_cast<std::int8_t>(*src++);
+			if (v > 0) {
+				if (v > drawWidth) {
+					RenderLine(dst, src, drawWidth, tbl, m);
+					src += v;
+					dst += drawWidth;
+					drawWidth -= v;
+					break;
+				}
+				RenderLine(dst, src, v, tbl, m);
+				src += v;
+			} else {
+				v = -v;
+				if (v > drawWidth) {
+					dst += drawWidth;
+					drawWidth -= v;
+					break;
+				}
+			}
+			dst += v;
+			drawWidth -= v;
+			m = (v == MaxMaskShift) ? 0 : (m << v);
+		}
+
+		// Skip the rest of src line if clipping on the right
+		assert(drawWidth <= 0);
+		skipRestOfTheLine(clip.right + drawWidth);
+	}
+}
+
+void RenderTransparentSquare(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	if (clip.width == Width && clip.height == Height) {
+		RenderTransparentSquareFull(dst, dstPitch, src, mask, tbl);
+	} else {
+		RenderTransparentSquareClipped(dst, dstPitch, src, mask, tbl, clip);
+	}
+}
+
+/** Vertical clip for the lower and upper triangles of a diamond tile (L/RTRIANGLE).*/
+struct DiamondClipY {
+	std::int_fast16_t lowerBottom;
+	std::int_fast16_t lowerTop;
+	std::int_fast16_t upperBottom;
+	std::int_fast16_t upperTop;
+};
+
+template <std::int_fast16_t UpperHeight = TriangleUpperHeight>
+DiamondClipY CalculateDiamondClipY(const Clip &clip)
+{
+	DiamondClipY result;
+	if (clip.bottom > LowerHeight) {
+		result.lowerBottom = LowerHeight;
+		result.upperBottom = clip.bottom - LowerHeight;
+		result.lowerTop = result.upperTop = 0;
+	} else if (clip.top > UpperHeight) {
+		result.upperTop = UpperHeight;
+		result.lowerTop = clip.top - UpperHeight;
+		result.upperBottom = result.lowerBottom = 0;
+	} else {
+		result.upperTop = clip.top;
+		result.lowerBottom = clip.bottom;
+		result.lowerTop = result.upperBottom = 0;
+	}
+	return result;
+}
+
+std::size_t CalculateTriangleSourceSkipLowerBottom(std::int_fast16_t numLines)
+{
+	return XStep * numLines * (numLines + 1) / 2 + 2 * ((numLines + 1) / 2);
+}
+
+std::size_t CalculateTriangleSourceSkipUpperBottom(std::int_fast16_t numLines)
+{
+	return 2 * TriangleUpperHeight * numLines - numLines * (numLines - 1) + 2 * ((numLines + 1) / 2);
+}
+
+void RenderLeftTriangleFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+{
+	dst += XStep * (LowerHeight - 1);
+	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch + XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width;
+	}
+	dst += 2 * XStep;
+	for (auto i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch - XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = Width - XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width;
+	}
+}
+
+void RenderLeftTriangleClipVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY(clip);
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width;
+	}
+	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
+	dst += 2 * XStep + XStep * clipY.upperBottom;
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = Width - XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width;
+	}
+}
+
+void RenderLeftTriangleClipLeftAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY(clip);
+	const auto clipLeft = clip.left;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1) - clipLeft;
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		const auto startX = Width - XStep * i;
+		const auto skip = startX < clipLeft ? clipLeft - startX : 0;
+		if (width > skip)
+			RenderLine(dst + skip, src + skip, width - skip, tbl, (*mask) << skip);
+		src += width;
+	}
+	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
+	dst += 2 * XStep + XStep * clipY.upperBottom;
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = Width - XStep * i;
+		const auto startX = XStep * i;
+		const auto skip = startX < clipLeft ? clipLeft - startX : 0;
+		if (width > skip)
+			RenderLine(dst + skip, src + skip, width - skip, tbl, (*mask) << skip);
+		src += width;
+	}
+}
+
+void RenderLeftTriangleClipRightAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY(clip);
+	const auto clipRight = clip.right;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		if (width > clipRight)
+			RenderLine(dst, src, width - clipRight, tbl, *mask);
+		src += width;
+	}
+	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
+	dst += 2 * XStep + XStep * clipY.upperBottom;
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = Width - XStep * i;
+		if (width <= clipRight)
+			break;
+		RenderLine(dst, src, width - clipRight, tbl, *mask);
+		src += width;
+	}
+}
+
+void RenderLeftTriangle(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	if (clip.width == Width) {
+		if (clip.height == TriangleHeight) {
+			RenderLeftTriangleFull(dst, dstPitch, src, mask, tbl);
+		} else {
+			RenderLeftTriangleClipVertical(dst, dstPitch, src, mask, tbl, clip);
+		}
+	} else if (clip.right == 0) {
+		RenderLeftTriangleClipLeftAndVertical(dst, dstPitch, src, mask, tbl, clip);
+	} else {
+		RenderLeftTriangleClipRightAndVertical(dst, dstPitch, src, mask, tbl, clip);
+	}
+}
+
+void RenderRightTriangleFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+{
+	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch, --mask) {
+		const auto width = XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+	for (auto i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch, --mask) {
+		const auto width = Width - XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+}
+
+void RenderRightTriangleClipVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY(clip);
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = Width - XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+}
+
+void RenderRightTriangleClipLeftAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY(clip);
+	const auto clipLeft = clip.left;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = XStep * i;
+		if (width > clipLeft)
+			RenderLine(dst, src + clipLeft, width - clipLeft, tbl, (*mask) << clipLeft);
+		src += width + 2 * (i % 2);
+	}
+	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = Width - XStep * i;
+		if (width <= clipLeft)
+			break;
+		RenderLine(dst, src + clipLeft, width - clipLeft, tbl, (*mask) << clipLeft);
+		src += width + 2 * (i % 2);
+	}
+}
+
+void RenderRightTriangleClipRightAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY(clip);
+	const auto clipRight = clip.right;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = XStep * i;
+		const auto skip = Width - width < clipRight ? clipRight - (Width - width) : 0;
+		if (width > skip)
+			RenderLine(dst, src, width - skip, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+	src += CalculateTriangleSourceSkipUpperBottom(clipY.upperBottom);
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = Width - XStep * i;
+		const auto skip = Width - width < clipRight ? clipRight - (Width - width) : 0;
+		if (width > skip)
+			RenderLine(dst, src, width - skip, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+}
+
+void RenderRightTriangle(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	if (clip.width == Width) {
+		if (clip.height == TriangleHeight) {
+			RenderRightTriangleFull(dst, dstPitch, src, mask, tbl);
+		} else {
+			RenderRightTriangleClipVertical(dst, dstPitch, src, mask, tbl, clip);
+		}
+	} else if (clip.right == 0) {
+		RenderRightTriangleClipLeftAndVertical(dst, dstPitch, src, mask, tbl, clip);
+	} else {
+		RenderRightTriangleClipRightAndVertical(dst, dstPitch, src, mask, tbl, clip);
+	}
+}
+
+void RenderLeftTrapezoidFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+{
+	dst += XStep * (LowerHeight - 1);
+	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch + XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width;
+	}
+	dst += XStep;
+	for (auto i = 1; i <= TrapezoidUpperHeight; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, Width, tbl, *mask);
+		src += Width;
+	}
+}
+
+void RenderLeftTrapezoidClipVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width;
+	}
+	src += clipY.upperBottom * Width;
+	dst += XStep;
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, Width, tbl, *mask);
+		src += Width;
+	}
+}
+
+void RenderLeftTrapezoidClipLeftAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	const auto clipLeft = clip.left;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1) - clipLeft;
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		const auto startX = Width - XStep * i;
+		const auto skip = startX < clipLeft ? clipLeft - startX : 0;
+		if (width > skip)
+			RenderLine(dst + skip, src + skip, width - skip, tbl, (*mask) << skip);
+		src += width;
+	}
+	src += clipY.upperBottom * Width + clipLeft;
+	dst += XStep + clipLeft;
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, clip.width, tbl, (*mask) << clipLeft);
+		src += Width;
+	}
+}
+
+void RenderLeftTrapezoidClipRightAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	const auto clipRight = clip.right;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep, --mask) {
+		src += 2 * (i % 2);
+		const auto width = XStep * i;
+		if (width > clipRight)
+			RenderLine(dst, src, width - clipRight, tbl, *mask);
+		src += width;
+	}
+	src += clipY.upperBottom * Width;
+	dst += XStep;
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, clip.width, tbl, *mask);
+		src += Width;
+	}
+}
+
+void RenderLeftTrapezoid(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	if (clip.width == Width) {
+		if (clip.height == Height) {
+			RenderLeftTrapezoidFull(dst, dstPitch, src, mask, tbl);
+		} else {
+			RenderLeftTrapezoidClipVertical(dst, dstPitch, src, mask, tbl, clip);
+		}
+	} else if (clip.right == 0) {
+		RenderLeftTrapezoidClipLeftAndVertical(dst, dstPitch, src, mask, tbl, clip);
+	} else {
+		RenderLeftTrapezoidClipRightAndVertical(dst, dstPitch, src, mask, tbl, clip);
+	}
+}
+
+void RenderRightTrapezoidFull(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl)
+{
+	for (auto i = 1; i <= LowerHeight; ++i, dst -= dstPitch, --mask) {
+		const auto width = XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+	for (auto i = 1; i <= TrapezoidUpperHeight; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, Width, tbl, *mask);
+		src += Width;
+	}
+}
+
+void RenderRightTrapezoidClipVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = XStep * i;
+		RenderLine(dst, src, width, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+	src += clipY.upperBottom * Width;
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, Width, tbl, *mask);
+		src += Width;
+	}
+}
+
+void RenderRightTrapezoidClipLeftAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	const auto clipLeft = clip.left;
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = XStep * i;
+		if (width > clipLeft)
+			RenderLine(dst, src + clipLeft, width - clipLeft, tbl, (*mask) << clipLeft);
+		src += width + 2 * (i % 2);
+	}
+	src += clipY.upperBottom * Width + clipLeft;
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, clip.width, tbl, (*mask) << clipLeft);
+		src += Width;
+	}
+}
+
+void RenderRightTrapezoidClipRightAndVertical(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	const auto clipY = CalculateDiamondClipY<TrapezoidUpperHeight>(clip);
+	const auto clipRight = clip.right;
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	src += CalculateTriangleSourceSkipLowerBottom(clipY.lowerBottom);
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch, --mask) {
+		const auto width = XStep * i;
+		const auto skip = Width - width < clipRight ? clipRight - (Width - width) : 0;
+		if (width > skip)
+			RenderLine(dst, src, width - skip, tbl, *mask);
+		src += width + 2 * (i % 2);
+	}
+	src += clipY.upperBottom * Width;
+	const auto upperMax = TrapezoidUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch, --mask) {
+		RenderLine(dst, src, clip.width, tbl, *mask);
+		src += Width;
+	}
+}
+
+void RenderRightTrapezoid(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, const std::uint32_t *mask, const std::uint8_t *tbl, Clip clip)
+{
+	if (clip.width == Width) {
+		if (clip.height == Height) {
+			RenderRightTrapezoidFull(dst, dstPitch, src, mask, tbl);
+		} else {
+			RenderRightTrapezoidClipVertical(dst, dstPitch, src, mask, tbl, clip);
+		}
+	} else if (clip.right == 0) {
+		RenderRightTrapezoidClipLeftAndVertical(dst, dstPitch, src, mask, tbl, clip);
+	} else {
+		RenderRightTrapezoidClipRightAndVertical(dst, dstPitch, src, mask, tbl, clip);
+	}
+}
+
+/** Returns the mask that defines what parts of the tile are opaque. */
+const std::uint32_t *GetMask(TileType tile)
+{
+#ifdef _DEBUG
+	if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
+		return &SolidMask[TILE_HEIGHT - 1];
+	}
+#endif
 
 	if (cel_transparency_active) {
 		if (arch_draw_type == 0) {
 			if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
-				mask = &WallMask_FullyTrasparent[TILE_HEIGHT - 1];
-			else
-				mask = &WallMask[TILE_HEIGHT - 1];
+				return &WallMask_FullyTrasparent[TILE_HEIGHT - 1];
+			return &WallMask[TILE_HEIGHT - 1];
 		}
-		if (arch_draw_type == 1 && tile != RT_LTRIANGLE) {
-			c = block_lvid[level_piece_id];
+		if (arch_draw_type == 1 && tile != TileType::LeftTriangle) {
+			const auto c = block_lvid[level_piece_id];
 			if (c == 1 || c == 3) {
 				if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
-					mask = &LeftMask_Transparent[TILE_HEIGHT - 1];
-				else
-					mask = &LeftMask[TILE_HEIGHT - 1];
+					return &LeftMask_Transparent[TILE_HEIGHT - 1];
+				return &LeftMask[TILE_HEIGHT - 1];
 			}
 		}
-		if (arch_draw_type == 2 && tile != RT_RTRIANGLE) {
-			c = block_lvid[level_piece_id];
+		if (arch_draw_type == 2 && tile != TileType::RightTriangle) {
+			const auto c = block_lvid[level_piece_id];
 			if (c == 2 || c == 3) {
 				if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
-					mask = &RightMask_Transparent[TILE_HEIGHT - 1];
-				else
-					mask = &RightMask[TILE_HEIGHT - 1];
+					return &RightMask_Transparent[TILE_HEIGHT - 1];
+				return &RightMask[TILE_HEIGHT - 1];
 			}
 		}
-	} else if (arch_draw_type && cel_foliage_active) {
-		if (tile != RT_TRANSPARENT) {
-			return;
-		}
-		if (arch_draw_type == 1) {
-			mask = &LeftFoliageMask[TILE_HEIGHT - 1];
-		}
-		if (arch_draw_type == 2) {
-			mask = &RightFoliageMask[TILE_HEIGHT - 1];
-		}
+	} else if (arch_draw_type != 0 && cel_foliage_active) {
+		if (tile != TileType::TransparentSquare)
+			return nullptr;
+		if (arch_draw_type == 1)
+			return &LeftFoliageMask[TILE_HEIGHT - 1];
+		if (arch_draw_type == 2)
+			return &RightFoliageMask[TILE_HEIGHT - 1];
 	}
-
-#ifdef _DEBUG
-	if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
-		mask = &SolidMask[TILE_HEIGHT - 1];
-	}
-#endif
-
-	BYTE *dst_begin = out.at(0, BUFFER_BORDER_TOP);
-	BYTE *dst_end = out.end();
-	BYTE *dst = out.at(x, y);
-	const int dst_pitch = out.pitch();
-	switch (tile) {
-	case RT_SQUARE:
-		for (i = TILE_HEIGHT; i != 0; i--, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2, tbl, *mask);
-		}
-		break;
-	case RT_TRANSPARENT:
-		for (i = TILE_HEIGHT; i != 0; i--, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			m = *mask;
-			for (j = TILE_WIDTH / 2; j != 0; j -= v, v == TILE_WIDTH / 2 ? m = 0 : m <<= v) {
-				v = *src++;
-				if (v >= 0) {
-					RenderLine(dst_begin, dst_end, &dst, &src, v, tbl, m);
-				} else {
-					v = -v;
-					dst += v;
-				}
-			}
-		}
-		break;
-	case RT_LTRIANGLE:
-		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			src += i & 2;
-			dst += i;
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
-		}
-		for (i = 2; i != TILE_WIDTH / 2; i += 2, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			src += i & 2;
-			dst += i;
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
-		}
-		break;
-	case RT_RTRIANGLE:
-		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
-			src += i & 2;
-			dst += i;
-		}
-		for (i = 2; i != TILE_HEIGHT; i += 2, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
-			src += i & 2;
-			dst += i;
-		}
-		break;
-	case RT_LTRAPEZOID:
-		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			src += i & 2;
-			dst += i;
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
-		}
-		for (i = TILE_HEIGHT / 2; i != 0; i--, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2, tbl, *mask);
-		}
-		break;
-	case RT_RTRAPEZOID:
-		for (i = TILE_HEIGHT - 2; i >= 0; i -= 2, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2 - i, tbl, *mask);
-			src += i & 2;
-			dst += i;
-		}
-		for (i = TILE_HEIGHT / 2; i != 0; i--, dst -= dst_pitch + TILE_WIDTH / 2, mask--) {
-			RenderLine(dst_begin, dst_end, &dst, &src, TILE_WIDTH / 2, tbl, *mask);
-		}
-		break;
-	}
+	return &SolidMask[TILE_HEIGHT - 1];
 }
 
-namespace {
-
-// A tile is a diamond shape consisting of 2 triangles, upper and lower.
-// The tile's bounding box is 64 by 31 px.
-//
-// Heights of the upper and lower triangles of the tile:
-constexpr int UpperHeight = TILE_HEIGHT / 2 - 1;
-constexpr int LowerHeight = TILE_HEIGHT / 2;
-constexpr int Height = LowerHeight + LowerHeight;
-constexpr int XStep = 2;
-
 // Blit with left and vertical clipping.
-void BlitBlackTileClipLeftY(BYTE *dst, int dst_pitch, int sx, int skip_lower_bottom, int skip_lower_top, int skip_upper_bottom, int skip_upper_top)
+void RenderBlackTileClipLeftAndVertical(std::uint8_t *dst, int dstPitch, int sx, DiamondClipY clipY)
 {
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
 	// Lower triangle (drawn bottom to top):
-	for (int i = skip_lower_bottom + 1; i <= LowerHeight - skip_lower_top; ++i, dst -= dst_pitch + XStep) {
-		const int w = 2 * XStep * i;
-		const int cur_x = sx + TILE_WIDTH / 2 - XStep * i;
-		if (cur_x >= 0) {
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = clipY.lowerBottom + 1; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
+		const auto w = 2 * XStep * i;
+		const auto curX = sx + TILE_WIDTH / 2 - XStep * i;
+		if (curX >= 0) {
 			memset(dst, 0, w);
-		} else if (-cur_x <= w) {
-			memset(dst - cur_x, 0, w + cur_x);
+		} else if (-curX <= w) {
+			memset(dst - curX, 0, w + curX);
 		}
 	}
-	dst += 2 * XStep;
+	dst += 2 * XStep + XStep * clipY.upperBottom;
 	// Upper triangle (drawn bottom to top):
-	for (int i = skip_upper_bottom, j = UpperHeight - skip_upper_bottom; i < UpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - XStep) {
-		const int w = 2 * XStep * j;
-		const int cur_x = sx + TILE_WIDTH / 2 - XStep * j;
-		if (cur_x >= 0) {
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = clipY.upperBottom; i < upperMax; ++i, dst -= dstPitch - XStep) {
+		const auto w = 2 * XStep * (TriangleUpperHeight - i);
+		const auto curX = sx + TILE_WIDTH / 2 - XStep * (TriangleUpperHeight - i);
+		if (curX >= 0) {
 			memset(dst, 0, w);
-		} else if (-cur_x <= w) {
-			memset(dst - cur_x, 0, w + cur_x);
+		} else if (-curX <= w) {
+			memset(dst - curX, 0, w + curX);
 		} else {
 			break;
 		}
@@ -634,94 +1231,142 @@ void BlitBlackTileClipLeftY(BYTE *dst, int dst_pitch, int sx, int skip_lower_bot
 }
 
 // Blit with right and vertical clipping.
-void BlitBlackTileClipWidthY(BYTE *dst, int dst_pitch, int max_w, int skip_lower_bottom, int skip_lower_top, int skip_upper_bottom, int skip_upper_top)
+void RenderBlackTileClipRightAndVertical(std::uint8_t *dst, int dstPitch, std::int_fast16_t maxWidth, DiamondClipY clipY)
 {
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
 	// Lower triangle (drawn bottom to top):
-	for (int i = skip_lower_bottom + 1; i <= LowerHeight - skip_lower_top; ++i, dst -= dst_pitch + XStep) {
-		if (max_w > 0)
-			memset(dst, 0, std::min(2 * XStep * i, max_w));
-		max_w += 2 * XStep * i;
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = clipY.lowerBottom + 1; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
+		const auto width = 2 * XStep * i;
+		const auto endX = TILE_WIDTH / 2 + XStep * i;
+		const auto skip = endX > maxWidth ? endX - maxWidth : 0;
+		if (width > skip)
+			memset(dst, 0, width - skip);
 	}
-	dst += 2 * XStep;
+	dst += 2 * XStep + XStep * clipY.upperBottom;
 	// Upper triangle (drawn bottom to top):
-	for (int i = skip_upper_bottom, j = UpperHeight - skip_upper_bottom; i < UpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - XStep) {
-		max_w -= 2 * XStep;
-		if (max_w <= 0)
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep) {
+		const auto width = TILE_WIDTH - 2 * XStep * i;
+		const auto endX = TILE_WIDTH / 2 + XStep * (TriangleUpperHeight - i + 1);
+		const auto skip = endX > maxWidth ? endX - maxWidth : 0;
+		if (width <= skip)
 			break;
-		memset(dst, 0, std::min(2 * XStep * j, max_w));
+		memset(dst, 0, width - skip);
 	}
 }
 
 // Blit with vertical clipping only.
-void BlitBlackTileClipY(BYTE *dst, int dst_pitch, int skip_lower_bottom, int skip_lower_top, int skip_upper_bottom, int skip_upper_top)
+void RenderBlackTileClipY(std::uint8_t *dst, int dstPitch, DiamondClipY clipY)
 {
+	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
 	// Lower triangle (drawn bottom to top):
-	for (int i = skip_lower_bottom + 1; i <= LowerHeight - skip_lower_top; ++i, dst -= dst_pitch + XStep) {
+	const auto lowerMax = LowerHeight - clipY.lowerTop;
+	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
 		memset(dst, 0, 2 * XStep * i);
 	}
-	dst += 2 * XStep;
+	dst += 2 * XStep + XStep * clipY.upperBottom;
 	// Upper triangle (drawn bottom to top):
-	for (int i = skip_upper_bottom, j = UpperHeight - skip_upper_bottom; i < UpperHeight - skip_upper_top; ++i, --j, dst -= dst_pitch - XStep) {
-		memset(dst, 0, 2 * XStep * j);
+	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
+	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep) {
+		memset(dst, 0, TILE_WIDTH - 2 * XStep * i);
 	}
 }
 
 // Blit a black tile without clipping (must be fully in bounds).
-void BlitBlackTileFull(BYTE *dst, int dst_pitch)
+void RenderBlackTileFull(std::uint8_t *dst, int dstPitch)
 {
+	dst += XStep * (LowerHeight - 1);
 	// Tile is fully in bounds, can use constant loop boundaries.
 	// Lower triangle (drawn bottom to top):
-	for (int i = 1; i <= LowerHeight; ++i, dst -= dst_pitch + XStep) {
+	for (unsigned i = 1; i <= LowerHeight; ++i, dst -= dstPitch + XStep) {
 		memset(dst, 0, 2 * XStep * i);
 	}
 	dst += 2 * XStep;
 	// Upper triangle (drawn bottom to to top):
-	for (int i = 0, j = UpperHeight; i < UpperHeight; ++i, --j, dst -= dst_pitch - XStep) {
-		memset(dst, 0, 2 * XStep * j);
+	for (unsigned i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch - XStep) {
+		memset(dst, 0, TILE_WIDTH - 2 * XStep * i);
 	}
 }
 
 } // namespace
 
-void world_draw_black_tile(const CelOutputBuffer &out, int sx, int sy)
+void RenderTile(const CelOutputBuffer &out, int x, int y)
 {
-	if (sx <= -TILE_WIDTH || sx >= out.region.w || sy < 0 || sy + 1 > out.region.h + Height)
+	const auto tile = static_cast<TileType>((level_cel_block & 0x7000) >> 12);
+	const auto *mask = GetMask(tile);
+	if (mask == nullptr)
 		return;
 
-	// Initial out position: the bottom corner of the lower triangle.
-	int out_x = sx + TILE_WIDTH / 2 - XStep;
-	int out_y = sy;
+#ifdef DEBUG_RENDER_OFFSET_X
+	x += DEBUG_RENDER_OFFSET_X;
+#endif
+#ifdef DEBUG_RENDER_OFFSET_Y
+	y += DEBUG_RENDER_OFFSET_Y;
+#endif
+#ifdef DEBUG_RENDER_COLOR
+	DBGCOLOR = GetTileDebugColor(tile);
+#endif
 
-	// How many lines to skip for the lower and upper triangles:
-	int skip_lower_bottom = 0;
-	int skip_lower_top = 0;
-	int skip_upper_bottom = 0;
-	int skip_upper_top = 0;
-	if (sy >= out.region.h) {
-		skip_lower_bottom = sy - out.region.h + 1;
-		out_y -= skip_lower_bottom;
-		if (skip_lower_bottom > LowerHeight) {
-			skip_upper_bottom = skip_lower_bottom - LowerHeight;
-			skip_lower_bottom = LowerHeight;
-		}
-		out_x += XStep * (skip_upper_bottom - skip_lower_bottom);
-	} else if (sy + 1 < Height) {
-		skip_upper_top = Height - (sy + 1) - 1;
-		if (skip_upper_top > UpperHeight) {
-			skip_lower_top = skip_upper_top - UpperHeight;
-			skip_upper_top = UpperHeight;
-		}
+	Clip clip = CalculateClip(x, y, Width, GetTileHeight(tile), out);
+	if (clip.width <= 0 || clip.height <= 0)
+		return;
+
+	const std::uint8_t *tbl = &pLightTbl[256 * light_table_index];
+	const auto *pFrameTable = reinterpret_cast<const std::uint32_t *>(pDungeonCels.get());
+	const std::uint8_t *src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
+	std::uint8_t *dst = out.at(static_cast<int>(x + clip.left), static_cast<int>(y - clip.bottom));
+	const auto dstPitch = out.pitch();
+	mask -= clip.bottom;
+
+	switch (tile) {
+	case TileType::Square:
+		RenderSquare(dst, dstPitch, src, mask, tbl, clip);
+		break;
+	case TileType::TransparentSquare:
+		RenderTransparentSquare(dst, dstPitch, src, mask, tbl, clip);
+		break;
+	case TileType::LeftTriangle:
+		RenderLeftTriangle(dst, dstPitch, src, mask, tbl, clip);
+		break;
+	case TileType::RightTriangle:
+		RenderRightTriangle(dst, dstPitch, src, mask, tbl, clip);
+		break;
+	case TileType::LeftTrapezoid:
+		RenderLeftTrapezoid(dst, dstPitch, src, mask, tbl, clip);
+		break;
+	case TileType::RightTrapezoid:
+		RenderRightTrapezoid(dst, dstPitch, src, mask, tbl, clip);
+		break;
 	}
+}
 
-	BYTE *dst = out.at(out_x, out_y);
-	if (out_x < TILE_WIDTH / 2 - XStep) {
-		BlitBlackTileClipLeftY(dst, out.pitch(), sx, skip_lower_bottom, skip_lower_top, skip_upper_bottom, skip_upper_top);
-	} else if (sx > out.region.w - TILE_WIDTH) {
-		BlitBlackTileClipWidthY(dst, out.pitch(), out.region.w - out_x, skip_lower_bottom, skip_lower_top, skip_upper_bottom, skip_upper_top);
-	} else if (skip_upper_top != 0 || skip_lower_bottom != 0) {
-		BlitBlackTileClipY(dst, out.pitch(), skip_lower_bottom, skip_lower_top, skip_upper_bottom, skip_upper_top);
+void world_draw_black_tile(const CelOutputBuffer &out, int sx, int sy)
+{
+#ifdef DEBUG_RENDER_OFFSET_X
+	sx += DEBUG_RENDER_OFFSET_X;
+#endif
+#ifdef DEBUG_RENDER_OFFSET_Y
+	sy += DEBUG_RENDER_OFFSET_Y;
+#endif
+	auto clip = CalculateClip(sx, sy, TILE_WIDTH, TriangleHeight, out);
+	if (clip.width <= 0 || clip.height <= 0)
+		return;
+
+	auto clipY = CalculateDiamondClipY(clip);
+	std::uint8_t *dst = out.at(sx, static_cast<int>(sy - clip.bottom));
+	if (clip.width == TILE_WIDTH) {
+		if (clip.height == TriangleHeight) {
+			RenderBlackTileFull(dst, out.pitch());
+		} else {
+			RenderBlackTileClipY(dst, out.pitch(), clipY);
+		}
 	} else {
-		BlitBlackTileFull(dst, out.pitch());
+		if (clip.right == 0) {
+			RenderBlackTileClipLeftAndVertical(dst, out.pitch(), sx, clipY);
+		} else {
+			RenderBlackTileClipRightAndVertical(dst, out.pitch(), clip.width, clipY);
+		}
 	}
 }
 
