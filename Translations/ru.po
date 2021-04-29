@@ -175,15 +175,15 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr ""
+msgstr "Фоновый вокал Mr. Dabiri"
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr ""
+msgstr "ПР"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
-msgstr ""
+msgstr "Маркетинг"
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
@@ -315,7 +315,7 @@ msgstr "АП Менеджер"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
-msgstr ""
+msgstr "The Ring of One Thousand"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
@@ -384,7 +384,7 @@ msgstr "Клиент-сервер (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:36
 msgid "Loopback"
-msgstr ""
+msgstr "Петля"
 
 #: Source/DiabloUI/selconn.cpp:42 Source/DiabloUI/selgame.cpp:439
 #: Source/DiabloUI/selgame.cpp:457
@@ -552,6 +552,8 @@ msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
+"Нормальная скорость\n"
+"Данная скорость рекомендуется для начальных персонажей."
 
 #: Source/DiabloUI/selgame.cpp:336
 msgid ""
@@ -559,6 +561,9 @@ msgid ""
 "The denizens of the Labyrinth have been hastened and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
+"Быстрая скорость\n"
+"Теперь обитатели лабиринта стали быстрее. Эта скорость рекомендуется для "
+"опытных персонажей."
 
 #: Source/DiabloUI/selgame.cpp:340
 msgid ""
@@ -566,6 +571,9 @@ msgid ""
 "Most monsters of the dungeon will seek you out quicker than ever before. "
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
+"Очень быстрая скорость\n"
+"Большинство монстров найдут вас быстрее чем вы найдете пульт от телевизора. "
+"Только опытные чемпионы смогут испытать свои навыки в скорости."
 
 #: Source/DiabloUI/selgame.cpp:344
 msgid ""
@@ -573,6 +581,9 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
+"Сверхбыстрая скорость\n"
+"Миньоны преисподней тут же бросаются в атаку. Только настоящие демоны "
+"скорости смогут испытать себя на этой скорости."
 
 #: Source/DiabloUI/selgame.cpp:386
 msgid "Enter Password"
@@ -580,7 +591,7 @@ msgstr "Введите пароль"
 
 #: Source/DiabloUI/selgame.cpp:412
 msgid "The host is running a different game than you."
-msgstr ""
+msgstr "На сервере запущена другая игра."
 
 #: Source/DiabloUI/selgame.cpp:415
 #, c-format
@@ -598,27 +609,27 @@ msgstr "Выберете класс"
 
 #: Source/DiabloUI/selhero.cpp:189 Source/control.cpp:87
 msgid "Warrior"
-msgstr ""
+msgstr "Воин"
 
 #: Source/DiabloUI/selhero.cpp:190 Source/control.cpp:88
 msgid "Rogue"
-msgstr ""
+msgstr "Разбойник"
 
 #: Source/DiabloUI/selhero.cpp:191 Source/control.cpp:89
 msgid "Sorcerer"
-msgstr ""
+msgstr "Маг"
 
 #: Source/DiabloUI/selhero.cpp:193 Source/control.cpp:90
 msgid "Monk"
-msgstr ""
+msgstr "Монах"
 
 #: Source/DiabloUI/selhero.cpp:196 Source/control.cpp:91
 msgid "Bard"
-msgstr ""
+msgstr "Бард"
 
 #: Source/DiabloUI/selhero.cpp:199 Source/control.cpp:92
 msgid "Barbarian"
-msgstr ""
+msgstr "Варвар"
 
 #: Source/DiabloUI/selhero.cpp:214 Source/DiabloUI/selhero.cpp:293
 msgid "New Single Player Hero"
@@ -630,7 +641,7 @@ msgstr "Новый герой для мультплеерной игры"
 
 #: Source/DiabloUI/selhero.cpp:225
 msgid "Save File Exists"
-msgstr ""
+msgstr "Файл сохранения уже существует"
 
 #: Source/DiabloUI/selhero.cpp:228 Source/gamemenu.cpp:41
 msgid "Load Game"
@@ -643,13 +654,15 @@ msgstr "Новая игра"
 
 #: Source/DiabloUI/selhero.cpp:239 Source/DiabloUI/selhero.cpp:575
 msgid "Single Player Characters"
-msgstr ""
+msgstr "Персонаж для одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:287
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
+"Разбойник и колдун доступны только в полной версии. Перейдите на https://www."
+"gog.com/game/diablo чтобы ее приобрести."
 
 #: Source/DiabloUI/selhero.cpp:299 Source/DiabloUI/selhero.cpp:305
 msgid "Enter Name"
@@ -660,15 +673,17 @@ msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
 msgstr ""
+"Неправильное имя. Имя не должно содержать пробелы, специальные символы или "
+"специальные слова.\n"
 
 #: Source/DiabloUI/selhero.cpp:345
 #, c-format
 msgid "Character already exists. Do you want to overwrite \"%s\"?"
-msgstr ""
+msgstr "Персонаж уже существует. Хотите его перезаписать \"%s\"?"
 
 #: Source/DiabloUI/selhero.cpp:357
 msgid "Unable to create character."
-msgstr ""
+msgstr "Невозможно создать персонажа."
 
 #: Source/DiabloUI/selhero.cpp:511 Source/DiabloUI/selhero.cpp:514
 msgid "Level:"
@@ -684,11 +699,11 @@ msgstr "Магия:"
 
 #: Source/DiabloUI/selhero.cpp:529
 msgid "Dexterity:"
-msgstr ""
+msgstr "Ловкость:"
 
 #: Source/DiabloUI/selhero.cpp:534
 msgid "Vitality:"
-msgstr ""
+msgstr "Жизнеспособность:"
 
 #: Source/DiabloUI/selhero.cpp:545
 msgid "Select Hero"
@@ -725,67 +740,70 @@ msgstr "Нет"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr ""
+msgstr "GOG.com поддерживает веб-сайт https://www.gog.com/forum/diablo"
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr ""
+msgstr "Перейдите по ссылке, чтобы войти на форум, связанный с Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid "and the Hellfire expansion."
-msgstr ""
+msgstr "и Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:12
 msgid ""
 "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
 msgstr ""
+"DevilutionX поддерживается Diasurgical, вы можете отправить отчет об ошибке "
+"или баге"
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr ""
+msgstr "по адресу https://github.com/diasurgical/devilutionX"
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
 "To help us better serve you, please be sure to include the version number,"
-msgstr ""
+msgstr "Чтобы мы смогли вам помочь, прикрепите так же номер версии,"
 
 #: Source/DiabloUI/support_lines.cpp:15
 msgid "operating system, and the nature of the problem."
-msgstr ""
+msgstr "версию операционной системы, и опишите проблему подробнее."
 
 #: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
-msgstr ""
+msgstr "Дисклеймер:"
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
 msgstr ""
+" DevilutionX не поддерживается и никак не связан с Blizzard Entertainment,"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
-msgstr ""
+msgstr " или GOG.com. Ни Blizzard Entertainment, ни GOG.com не тестировали"
 
 #: Source/DiabloUI/support_lines.cpp:21
 msgid ""
 "  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr ""
+msgstr " и не сертифицировали DevilutionX. Все запросы"
 
 #: Source/DiabloUI/support_lines.cpp:22
 msgid ""
 "  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
-msgstr ""
+msgstr " по поводу DevilutionX нужно направлять в Diasurgical, а не в Blizzard"
 
 #: Source/DiabloUI/support_lines.cpp:23
 msgid "  Entertainment or GOG.com."
-msgstr ""
+msgstr " Entertainment или GOG.com."
 
 #: Source/DiabloUI/title.cpp:47
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
-msgstr ""
+msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:34
 msgid "Error"
-msgstr ""
+msgstr "Ошибка"
 
 #: Source/appfat.cpp:117
 #, c-format
@@ -794,6 +812,9 @@ msgid ""
 "\n"
 "The error occurred at: %s line %d"
 msgstr ""
+"%s\n"
+"\n"
+"Ошибка: в %s в строке %d"
 
 #: Source/appfat.cpp:137
 #, c-format
@@ -807,10 +828,18 @@ msgid ""
 "The problem occurred when loading:\n"
 "%s"
 msgstr ""
+"Невозможно открыть нужный файл.\n"
+"\n"
+"Убедитесь что MD5 хеш файла diabdat.mpq соответствует со значением ниже\n"
+"011bc6518e6166206231080a4440b373\n"
+"68f049866b44688a7af65ba766bef75a\n"
+"\n"
+"Ошибка произошла во время загрузки:\n"
+"%s"
 
 #: Source/appfat.cpp:146 Source/appfat.cpp:163
 msgid "Data File Error"
-msgstr ""
+msgstr "Ошибка файла данных"
 
 #: Source/appfat.cpp:159
 #, c-format
@@ -820,6 +849,10 @@ msgid ""
 "Make sure that it is in the game folder and that the file name is in all "
 "lowercase."
 msgstr ""
+"Невозможно открыть основной архив (diabdat.mpq или spawn.mpq).\n"
+"\n"
+"Убедитесь что файлы находятся в папке игры, и все названия не имеют "
+"заглавных букв"
 
 #: Source/appfat.cpp:174
 #, c-format
@@ -827,100 +860,102 @@ msgid ""
 "Unable to write to location:\n"
 "%s"
 msgstr ""
+"Невозможно записать файл:\n"
+"%s"
 
 #: Source/appfat.cpp:176
 msgid "Read-Only Directory Error"
-msgstr ""
+msgstr "Папка только для чтения"
 
 #: Source/automap.cpp:420
 msgid "game: "
-msgstr ""
+msgstr "игра:"
 
 #: Source/automap.cpp:424
 msgid "password: "
-msgstr ""
+msgstr "пароль:"
 
 #: Source/automap.cpp:434 Source/items.cpp:3865
 #, c-format
 msgid "Level: %i"
-msgstr ""
+msgstr "Уровень: %i"
 
 #: Source/automap.cpp:436
 #, c-format
 msgid "Level: Crypt %i"
-msgstr ""
+msgstr "Уровень: Crypt %i"
 
 #: Source/automap.cpp:438
 #, c-format
 msgid "Level: Nest %i"
-msgstr ""
+msgstr "Уровень: Nest %i"
 
 #: Source/control.cpp:244
 msgid "Character Information"
-msgstr ""
+msgstr "Информация о персонаже"
 
 #: Source/control.cpp:245
 msgid "Quests log"
-msgstr ""
+msgstr "Логи квестов"
 
 #: Source/control.cpp:246
 msgid "Automap"
-msgstr ""
+msgstr "Автоматическая карта"
 
 #: Source/control.cpp:247
 msgid "Main Menu"
-msgstr ""
+msgstr "Основное меню"
 
 #: Source/control.cpp:248
 msgid "Inventory"
-msgstr ""
+msgstr "Инвентарь"
 
 #: Source/control.cpp:249
 msgid "Spell book"
-msgstr ""
+msgstr "Книга заклинаний"
 
 #: Source/control.cpp:250
 msgid "Send Message"
-msgstr ""
+msgstr "Отправить сообщение"
 
 #: Source/control.cpp:435 Source/control.cpp:1029
 #, c-format
 msgid "%s Skill"
-msgstr ""
+msgstr "%s навык"
 
 #: Source/control.cpp:438 Source/control.cpp:1033
 #, c-format
 msgid "%s Spell"
-msgstr ""
+msgstr "Заклинание %s"
 
 #: Source/control.cpp:440
 #, c-format
 msgid "Damages undead only"
-msgstr ""
+msgstr "Наносит урон по нежити"
 
 #: Source/control.cpp:444 Source/control.cpp:1039 Source/control.cpp:1865
 #, c-format
 msgid "Spell Level 0 - Unusable"
-msgstr ""
+msgstr "Уровень заклинаний 0 - Не используется"
 
 #: Source/control.cpp:446 Source/control.cpp:1041 Source/control.cpp:1867
 #, c-format
 msgid "Spell Level %i"
-msgstr ""
+msgstr "Уровень заклинаний %i"
 
 #: Source/control.cpp:450 Source/control.cpp:1045
 #, c-format
 msgid "Scroll of %s"
-msgstr ""
+msgstr "Свиток о %s"
 
 #: Source/control.cpp:467 Source/control.cpp:1063
 msgid "1 Scroll"
-msgstr ""
+msgstr "1 свиток"
 
 #: Source/control.cpp:469 Source/control.cpp:1065
 #, c-format
 msgid "%i Scrolls"
-msgstr ""
+msgstr "%i свитков"
 
 #: Source/control.cpp:473 Source/control.cpp:1069 Source/items.cpp:1595
 #, c-format
