@@ -2594,13 +2594,13 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(x, y, ii);
-	int upper = monster[m]._uniqtype ? 15 : 1;
+	int uper = monster[m]._uniqtype ? 15 : 1;
 
 	int mLevel = monster[m].MData->mLevel;
 	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
-	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, upper, onlygood, false, false);
+	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
