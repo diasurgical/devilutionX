@@ -230,7 +230,7 @@ void init_create_window()
 #endif
 }
 
-void MainWndProc(UINT Msg)
+void MainWndProc(uint32_t Msg)
 {
 	switch (Msg) {
 	case DVL_WM_PAINT:

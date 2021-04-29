@@ -1580,10 +1580,10 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(1); // Alignment
 	file->writeLE<uint16_t>(pMonster->mExp);
 
-	file->writeLE<uint8_t>(pMonster->mHit < UCHAR_MAX ? pMonster->mHit : UCHAR_MAX); // For backwards compatibility
+	file->writeLE<uint8_t>(pMonster->mHit < UINT8_MAX ? pMonster->mHit : UINT8_MAX); // For backwards compatibility
 	file->writeLE<uint8_t>(pMonster->mMinDamage);
 	file->writeLE<uint8_t>(pMonster->mMaxDamage);
-	file->writeLE<uint8_t>(pMonster->mHit2 < UCHAR_MAX ? pMonster->mHit2 : UCHAR_MAX); // For backwards compatibility
+	file->writeLE<uint8_t>(pMonster->mHit2 < UINT8_MAX ? pMonster->mHit2 : UINT8_MAX); // For backwards compatibility
 	file->writeLE<uint8_t>(pMonster->mMinDamage2);
 	file->writeLE<uint8_t>(pMonster->mMaxDamage2);
 	file->writeLE<uint8_t>(pMonster->mArmorClass);

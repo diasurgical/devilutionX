@@ -4542,7 +4542,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 			if (QuestStatus(Q_ZHAR)
 			    && monster[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 			    && monster[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
-			    && monster[MAX_PLRS]._msquelch == UCHAR_MAX
+			    && monster[MAX_PLRS]._msquelch == UINT8_MAX
 			    && monster[MAX_PLRS]._mhitpoints) {
 				monster[MAX_PLRS].mtalkmsg = TEXT_ZHAR2;
 				M_StartStand(0, monster[MAX_PLRS]._mdir);
