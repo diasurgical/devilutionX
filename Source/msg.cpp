@@ -438,15 +438,15 @@ void delta_init()
 	deltaload = false;
 }
 
-void delta_kill_monster(int mi, BYTE x, BYTE y, BYTE bLevel)
+void delta_kill_monster(int mi, Point position, BYTE bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
 	DMonsterStr *pD = &sgLevels[bLevel].monster[mi];
-	pD->_mx = x;
-	pD->_my = y;
+	pD->_mx = position.x;
+	pD->_my = position.y;
 	pD->_mdir = monster[mi]._mdir;
 	pD->_mhitpoints = 0;
 }
@@ -870,26 +870,26 @@ void NetSendCmdGolem(BYTE mx, BYTE my, direction dir, BYTE menemy, int hp, BYTE 
 	NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
+void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
 {
 	TCmdLoc cmd;
 
 	cmd.bCmd = bCmd;
-	cmd.x = x;
-	cmd.y = y;
+	cmd.x = position.x;
+	cmd.y = position.y;
 	if (bHiPri)
 		NetSendHiPri(playerId, (BYTE *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(playerId, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1)
+void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1)
 {
 	TCmdLocParam1 cmd;
 
 	cmd.bCmd = bCmd;
-	cmd.x = x;
-	cmd.y = y;
+	cmd.x = position.x;
+	cmd.y = position.y;
 	cmd.wParam1 = wParam1;
 	if (bHiPri)
 		NetSendHiPri(myplr, (BYTE *)&cmd, sizeof(cmd));
@@ -897,13 +897,13 @@ void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2)
+void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1, WORD wParam2)
 {
 	TCmdLocParam2 cmd;
 
 	cmd.bCmd = bCmd;
-	cmd.x = x;
-	cmd.y = y;
+	cmd.x = position.x;
+	cmd.y = position.y;
 	cmd.wParam1 = wParam1;
 	cmd.wParam2 = wParam2;
 	if (bHiPri)
@@ -912,13 +912,13 @@ void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2, WORD wParam3)
+void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1, WORD wParam2, WORD wParam3)
 {
 	TCmdLocParam3 cmd;
 
 	cmd.bCmd = bCmd;
-	cmd.x = x;
-	cmd.y = y;
+	cmd.x = position.x;
+	cmd.y = position.y;
 	cmd.wParam1 = wParam1;
 	cmd.wParam2 = wParam2;
 	cmd.wParam3 = wParam3;
@@ -1085,13 +1085,13 @@ void NetSendCmdExtra(TCmdGItem *p)
 	NetSendHiPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y)
+void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position)
 {
 	TCmdPItem cmd;
 
 	cmd.bCmd = bCmd;
-	cmd.x = x;
-	cmd.y = y;
+	cmd.x = position.x;
+	cmd.y = position.y;
 	cmd.wIndx = plr[myplr].HoldItem.IDidx;
 
 	if (plr[myplr].HoldItem.IDidx == IDI_EAR) {
@@ -1971,7 +1971,7 @@ static DWORD On_MONSTDEATH(TCmd *pCmd, int pnum)
 	else if (pnum != myplr) {
 		if (currlevel == plr[pnum].plrlevel)
 			M_SyncStartKill(p->wParam1, p->x, p->y, pnum);
-		delta_kill_monster(p->wParam1, p->x, p->y, plr[pnum].plrlevel);
+		delta_kill_monster(p->wParam1, { p->x, p->y }, plr[pnum].plrlevel);
 	}
 
 	return sizeof(*p);
@@ -1986,7 +1986,7 @@ static DWORD On_KILLGOLEM(TCmd *pCmd, int pnum)
 	else if (pnum != myplr) {
 		if (currlevel == p->wParam1)
 			M_SyncStartKill(pnum, p->x, p->y, pnum);
-		delta_kill_monster(pnum, p->x, p->y, plr[pnum].plrlevel);
+		delta_kill_monster(pnum, { p->x, p->y }, plr[pnum].plrlevel);
 	}
 
 	return sizeof(*p);
