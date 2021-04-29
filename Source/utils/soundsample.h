@@ -24,7 +24,7 @@ public:
 	 * @param dwBytes Length of buffer
 	 * @return 0 on success, -1 otherwise
 	 */
-	int SetChunk(std::unique_ptr<std::uint8_t[]> file_data, DWORD dwBytes);
+	int SetChunk(std::unique_ptr<std::uint8_t[]> file_data, size_t dwBytes);
 
 	int GetLength();
 

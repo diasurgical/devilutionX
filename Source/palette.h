@@ -5,8 +5,6 @@
  */
 #pragma once
 
-#include "miniwin/miniwin.h"
-
 namespace devilution {
 
 // Diablo uses a 256 color palette
@@ -44,7 +42,7 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n);
 void DecreaseGamma();
 int UpdateGamma(int gamma);
 void BlackPalette();
-void SetFadeLevel(DWORD fadeval);
+void SetFadeLevel(int fadeval);
 /**
  * @brief Fade screen from black
  * @param fr Steps per 50ms

@@ -883,7 +883,7 @@ void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
 		NetSendLoPri(playerId, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1)
+void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1)
 {
 	TCmdLocParam1 cmd;
 
@@ -897,7 +897,7 @@ void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1, WORD wParam2)
+void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2)
 {
 	TCmdLocParam2 cmd;
 
@@ -912,7 +912,7 @@ void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1, WORD wParam2, WORD wParam3)
+void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3)
 {
 	TCmdLocParam3 cmd;
 
@@ -928,7 +928,7 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, WORD wParam1
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, WORD wParam1)
+void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1)
 {
 	TCmdParam1 cmd;
 
@@ -940,7 +940,7 @@ void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, WORD wParam1)
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2)
+void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2)
 {
 	TCmdParam2 cmd;
 
@@ -953,7 +953,7 @@ void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2)
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2, WORD wParam3)
+void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3)
 {
 	TCmdParam3 cmd;
 
@@ -1232,7 +1232,7 @@ void NetSendCmdDamage(bool bHiPri, BYTE bPlr, DWORD dwDam)
 		NetSendLoPri(myplr, (BYTE *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdMonDmg(bool bHiPri, WORD wMon, DWORD dwDam)
+void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, DWORD dwDam)
 {
 	TCmdMonDamage cmd;
 

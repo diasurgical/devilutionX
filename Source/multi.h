@@ -37,7 +37,7 @@ struct GameData {
 
 extern bool gbSomebodyWonGameKludge;
 extern char szPlayerDescript[128];
-extern WORD sgwPackPlrOffsetTbl[MAX_PLRS];
+extern uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 extern BYTE gbActivePlayers;
 extern bool gbGameDestroyed;
 extern GameData sgGameInitInfo;

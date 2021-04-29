@@ -17,7 +17,7 @@ struct CodecSignature {
 	DWORD checksum;
 	BYTE error;
 	BYTE last_chunk_size;
-	WORD unused;
+	uint16_t unused;
 };
 
 #define BLOCKSIZE 64
@@ -111,7 +111,7 @@ void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const c
 	char tmp[SHA1HashSize];
 	char dst[SHA1HashSize];
 	DWORD chunk;
-	WORD last_chunk;
+	uint16_t last_chunk;
 	CodecSignature *sig;
 
 	if (size_64 != codec_get_encoded_len(size))

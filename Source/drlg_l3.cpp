@@ -2578,7 +2578,7 @@ static void DRLG_L3Pass3()
 	DRLG_LPass3(8 - 1);
 }
 
-void CreateL3Dungeon(DWORD rseed, lvl_entry entry)
+void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	int i, j;
 

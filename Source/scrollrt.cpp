@@ -36,7 +36,7 @@ namespace devilution {
  * Specifies the current light entry.
  */
 int light_table_index;
-DWORD sgdwCursWdtOld;
+uint32_t sgdwCursWdtOld;
 int sgdwCursX;
 int sgdwCursY;
 /**
@@ -50,7 +50,7 @@ uint32_t sgdwCursHgt;
  * frameNum  := block & 0x0FFF
  * frameType := block & 0x7000 >> 12
  */
-DWORD level_cel_block;
+uint32_t level_cel_block;
 int sgdwCursXOld;
 int sgdwCursYOld;
 bool AutoMapShowItems;

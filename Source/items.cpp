@@ -2702,7 +2702,7 @@ void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool send
 	SetupBaseItem(x, y, idx, onlygood, sendmsg, delta);
 }
 
-void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool isHellfire)
+void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
 {
 	bool _gbIsHellfire = gbIsHellfire;
 	gbIsHellfire = isHellfire;
@@ -2754,7 +2754,7 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool
 	gbIsHellfire = _gbIsHellfire;
 }
 
-void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
+void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
 {
 	SetPlrHandItem(&items[ii], IDI_EAR);
 	tempstr[0] = (ic >> 8) & 0x7F;
@@ -5000,7 +5000,7 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 	items[ii]._iIdentified = true;
 }
 
-void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed)
+void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed)
 {
 	if ((icreateinfo & CF_SMITH) != 0)
 		RecreateSmithItem(ii, icreateinfo & CF_LEVEL, iseed);
@@ -5142,7 +5142,7 @@ static void NextItemRecord(int i)
 	itemrecord[i].nIndex = itemrecord[gnNumGetRecords].nIndex;
 }
 
-bool GetItemRecord(int nSeed, WORD wCI, int nIndex)
+bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
 	int i;
 	DWORD dwTicks;
@@ -5161,7 +5161,7 @@ bool GetItemRecord(int nSeed, WORD wCI, int nIndex)
 	return true;
 }
 
-void SetItemRecord(int nSeed, WORD wCI, int nIndex)
+void SetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
 	DWORD dwTicks;
 
@@ -5178,7 +5178,7 @@ void SetItemRecord(int nSeed, WORD wCI, int nIndex)
 	gnNumGetRecords++;
 }
 
-void PutItemRecord(int nSeed, WORD wCI, int nIndex)
+void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
 	int i;
 	DWORD dwTicks;

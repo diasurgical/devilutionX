@@ -6,12 +6,11 @@
 #pragma once
 
 #include "gendung.h"
-#include "miniwin/miniwin.h"
 
 namespace devilution {
 
 void AddFenceDoors();
-void CreateL3Dungeon(DWORD rseed, lvl_entry entry);
+void CreateL3Dungeon(uint32_t rseed, lvl_entry entry);
 void LoadL3Dungeon(const char *sFileName, int vx, int vy);
 void LoadPreL3Dungeon(const char *sFileName);
 

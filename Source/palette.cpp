@@ -209,11 +209,9 @@ int UpdateGamma(int gamma)
 	return 130 - sgOptions.Graphics.nGammaCorrection;
 }
 
-void SetFadeLevel(DWORD fadeval)
+void SetFadeLevel(int fadeval)
 {
-	int i;
-
-	for (i = 0; i < 256; i++) { // BUGFIX: should be 256 (fixed)
+	for (int i = 0; i < 256; i++) {
 		system_palette[i].r = (fadeval * logical_palette[i].r) / 256;
 		system_palette[i].g = (fadeval * logical_palette[i].g) / 256;
 		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;

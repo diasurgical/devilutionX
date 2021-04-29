@@ -1183,8 +1183,8 @@ void InitMonsters()
 
 void SetMapMonsters(BYTE *pMap, int startx, int starty)
 {
-	WORD rw, rh;
-	WORD *lm;
+	uint16_t rw, rh;
+	uint16_t *lm;
 	int i, j;
 	int mtype;
 
@@ -1201,7 +1201,7 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 		PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 		PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
 	}
-	lm = (WORD *)pMap;
+	lm = (uint16_t *)pMap;
 	rw = SDL_SwapLE16(*lm++);
 	rh = SDL_SwapLE16(*lm++);
 	lm += rw * rh;
