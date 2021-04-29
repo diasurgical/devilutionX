@@ -116,7 +116,7 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 static bool CapturePix(const CelOutputBuffer &buf, std::ofstream *out)
 {
 	int width = buf.w();
-	std::unique_ptr<BYTE, DiabloDeleter> pBuffer {(BYTE *)DiabloAllocPtr(2 * width)};
+	DiabloUniqPtr<BYTE> pBuffer = DiabloMakeUnique<BYTE>(2 * width);
 	BYTE *pixels = buf.begin();
 	for (int height = buf.h(); height > 0; height--) {
 		const BYTE *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);

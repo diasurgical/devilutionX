@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <SDL.h>
 #include <cstdint>
+#include <memory>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -141,6 +142,15 @@ struct DiabloDeleter
 		mem_free_dbg(ptr);
 	}
 };
+
+template <typename T>
+using DiabloUniqPtr = std::unique_ptr<T, DiabloDeleter>;
+
+template <typename T>
+DiabloUniqPtr<T> DiabloMakeUnique(size_t size)
+{
+	return DiabloUniqPtr<T>{reinterpret_cast<T *>(DiabloAllocPtr(size))};
+}
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
