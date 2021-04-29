@@ -1275,14 +1275,7 @@ void ClearScreenBuffer()
 	lock_buf(3);
 
 	assert(pal_surface != nullptr);
-
-	SDL_Rect SrcRect = {
-		BUFFER_BORDER_LEFT,
-		BUFFER_BORDER_TOP,
-		gnScreenWidth,
-		gnScreenHeight,
-	};
-	SDL_FillRect(pal_surface, &SrcRect, 0);
+	SDL_FillRect(pal_surface, nullptr, 0);
 
 	unlock_buf(3);
 }
@@ -1413,8 +1406,8 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
 	using CoordType = decltype(SDL_Rect {}.x);
 	SDL_Rect src_rect {
-		static_cast<CoordType>(BUFFER_BORDER_LEFT + dwX),
-		static_cast<CoordType>(BUFFER_BORDER_TOP + dwY),
+		static_cast<CoordType>(dwX),
+		static_cast<CoordType>(dwY),
 		dwWdt, dwHgt
 	};
 	SDL_Rect dst_rect { dwX, dwY, dwWdt, dwHgt };

@@ -52,8 +52,8 @@ void DrawArt(const CelOutputBuffer &out, Sint16 screenX, Sint16 screenY, Art *ar
 	if (srcH != 0 && srcH < srcRect.h)
 		srcRect.h = srcH;
 	SDL_Rect dstRect;
-	dstRect.x = BUFFER_BORDER_LEFT + screenX;
-	dstRect.y = BUFFER_BORDER_TOP + screenY;
+	dstRect.x = screenX;
+	dstRect.y = screenY;
 	dstRect.w = srcRect.w;
 	dstRect.h = srcRect.h;
 
