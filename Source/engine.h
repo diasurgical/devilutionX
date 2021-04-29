@@ -146,11 +146,8 @@ struct DiabloDeleter
 template <typename T>
 using DiabloUniqPtr = std::unique_ptr<T, DiabloDeleter>;
 
-template <typename T>
-DiabloUniqPtr<T> DiabloMakeUnique(size_t size)
-{
-	return DiabloUniqPtr<T>{reinterpret_cast<T *>(DiabloAllocPtr(size))};
-}
+#define DiabloMakeUnique(T, size) \
+	DiabloUniqPtr<T>{reinterpret_cast<T *>(DiabloAllocPtr(size))}
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
