@@ -818,7 +818,7 @@ void CheckTriggers()
 		return;
 
 	for (int i = 0; i < numtrigs; i++) {
-		if (plr[myplr].position.tile.x != trigs[i].position.x || plr[myplr].position.tile.y != trigs[i].position.y) {
+		if (plr[myplr].position.tile != trigs[i].position) {
 			continue;
 		}
 
