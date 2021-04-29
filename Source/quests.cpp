@@ -250,8 +250,7 @@ void CheckQuests()
 			if (currlevel == quests[i]._qlevel
 			    && quests[i]._qslvl != 0
 			    && quests[i]._qactive != QUEST_NOTAVAIL
-			    && plr[myplr].position.tile.x == quests[i].position.x
-			    && plr[myplr].position.tile.y == quests[i].position.y) {
+			    && plr[myplr].position.tile == quests[i].position) {
 				if (quests[i]._qlvltype != DTYPE_NONE) {
 					setlvltype = quests[i]._qlvltype;
 				}

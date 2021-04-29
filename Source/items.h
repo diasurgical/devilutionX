@@ -355,8 +355,7 @@ struct ItemGetRecordStruct {
 };
 
 struct CornerStoneStruct {
-	int x;
-	int y;
+	Point position;
 	bool activated;
 	ItemStruct item;
 };
@@ -400,7 +399,7 @@ void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool send
 void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool isHellfire);
 void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void items_427A72();
-void items_427ABA(int x, int y);
+void items_427ABA(Point position);
 void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag);
 void SpawnRock();
 void SpawnRewardItem(int itemid, int xx, int yy);

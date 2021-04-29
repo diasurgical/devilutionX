@@ -61,27 +61,37 @@ struct Point {
 	int x;
 	int y;
 
-	Point &operator +=(const Point &other)
+	bool operator==(const Point &other)
+	{
+		return x == other.x && y == other.y;
+	}
+
+	bool operator!=(const Point &other)
+	{
+		return !(*this == other);
+	}
+
+	Point &operator+=(const Point &other)
 	{
 		x += other.x;
 		y += other.y;
 		return *this;
 	}
 
-	Point &operator -=(const Point &other)
+	Point &operator-=(const Point &other)
 	{
 		x -= other.x;
 		y -= other.y;
 		return *this;
 	}
 
-	friend Point operator +(Point a, const Point &b)
+	friend Point operator+(Point a, const Point &b)
 	{
 		a += b;
 		return a;
 	}
 
-	friend Point operator -(Point a, const Point &b)
+	friend Point operator-(Point a, const Point &b)
 	{
 		a -= b;
 		return a;

@@ -1684,7 +1684,7 @@ void CleanupItems(ItemStruct *item, int ii)
 {
 	dItem[item->position.x][item->position.y] = 0;
 
-	if (currlevel == 21 && item->position.x == CornerStone.x && item->position.y == CornerStone.y) {
+	if (currlevel == 21 && item->position == CornerStone.position) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item.position = { 0, 0 };
@@ -1986,7 +1986,7 @@ int InvPutItem(int pnum, int x, int y)
 	items[ii].position = { x, y };
 	RespawnItem(&items[ii], true);
 
-	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
+	if (currlevel == 21 && x == CornerStone.position.x && y == CornerStone.position.y) {
 		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = false;
@@ -2030,7 +2030,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	items[ii].position = { x, y };
 	RespawnItem(&items[ii], true);
 
-	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
+	if (currlevel == 21 && x == CornerStone.position.x && y == CornerStone.position.y) {
 		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = false;

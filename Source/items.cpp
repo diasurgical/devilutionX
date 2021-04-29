@@ -2817,25 +2817,25 @@ void hex2bin(const char *src, int bytes, char *target)
 	}
 }
 
-void items_427ABA(int x, int y)
+void items_427ABA(Point position)
 {
 	PkItemStruct PkSItem;
 
-	if (CornerStone.activated || x == 0 || y == 0) {
+	if (CornerStone.activated || position.x == 0 || position.y == 0) {
 		return;
 	}
 
 	CornerStone.item._itype = ITYPE_NONE;
 	CornerStone.activated = true;
-	if (dItem[x][y]) {
-		int ii = dItem[x][y] - 1;
+	if (dItem[position.x][position.y]) {
+		int ii = dItem[position.x][position.y] - 1;
 		for (int i = 0; i < numitems; i++) {
 			if (itemactive[i] == ii) {
 				DeleteItem(ii, i);
 				break;
 			}
 		}
-		dItem[x][y] = 0;
+		dItem[position.x][position.y] = 0;
 	}
 
 	if (strlen(sgOptions.Hellfire.szItem) < sizeof(PkItemStruct) * 2)
@@ -2845,10 +2845,10 @@ void items_427ABA(int x, int y)
 
 	int ii = AllocateItem();
 
-	dItem[x][y] = ii + 1;
+	dItem[position.x][position.y] = ii + 1;
 
 	UnPackItem(&PkSItem, &items[ii], (PkSItem.dwBuff & CF_HELLFIRE) != 0);
-	items[ii].position = { x, y };
+	items[ii].position = position;
 	RespawnItem(&items[ii], false);
 	CornerStone.item = items[ii];
 }

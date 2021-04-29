@@ -2782,8 +2782,7 @@ void CreateL5Dungeon(DWORD rseed, lvl_entry entry)
 				UberCol = j;
 			}
 			if (dPiece[i][j] == 317) {
-				CornerStone.x = i;
-				CornerStone.y = j;
+				CornerStone.position = { i, j };
 			}
 		}
 	}

@@ -1834,7 +1834,7 @@ static void UpdateMonsterLights()
 			}
 
 			LightListStruct *lid = &LightList[mon->mlid];
-			if (mon->position.tile.x != lid->position.tile.x || mon->position.tile.y != lid->position.tile.y) {
+			if (mon->position.tile != lid->position.tile) {
 				ChangeLightXY(mon->mlid, mon->position.tile.x, mon->position.tile.y);
 			}
 		}
@@ -2059,7 +2059,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	if (currlevel >= 21) {
 		if (currlevel == 21) {
-			items_427ABA(CornerStone.x, CornerStone.y);
+			items_427ABA(CornerStone.position);
 		}
 		if (quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24) {
 			objects_454BA8();
