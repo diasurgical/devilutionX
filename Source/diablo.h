@@ -46,7 +46,7 @@ extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
 extern clicktype sgbMouseDown;
-extern WORD gnTickDelay;
+extern uint16_t gnTickDelay;
 
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);

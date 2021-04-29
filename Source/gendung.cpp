@@ -189,7 +189,7 @@ void FillSolidBlockTbls()
 void SetDungeonMicros()
 {
 	int i, x, y, lv, blocks;
-	WORD *pPiece;
+	uint16_t *pPiece;
 	MICROS *pMap;
 
 	if (leveltype == DTYPE_TOWN) {
@@ -210,9 +210,9 @@ void SetDungeonMicros()
 			if (lv != 0) {
 				lv--;
 				if (leveltype != DTYPE_HELL && leveltype != DTYPE_TOWN)
-					pPiece = (WORD *)&pLevelPieces[20 * lv];
+					pPiece = (uint16_t *)&pLevelPieces[20 * lv];
 				else
-					pPiece = (WORD *)&pLevelPieces[32 * lv];
+					pPiece = (uint16_t *)&pLevelPieces[32 * lv];
 				for (i = 0; i < blocks; i++)
 					pMap->mt[i] = SDL_SwapLE16(pPiece[(i & 1) + blocks - 2 - (i & 0xE)]);
 			} else {

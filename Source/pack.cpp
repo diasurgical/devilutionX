@@ -140,7 +140,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
  */
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 {
-	WORD idx = SDL_SwapLE16(is->idx);
+	uint16_t idx = SDL_SwapLE16(is->idx);
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
 		return;

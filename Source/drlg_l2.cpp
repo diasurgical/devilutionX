@@ -3369,7 +3369,7 @@ void LoadPreL2Dungeon(const char *sFileName)
 	}
 }
 
-void CreateL2Dungeon(DWORD rseed, lvl_entry entry)
+void CreateL2Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	if (!gbIsMultiplayer) {
 		if (currlevel == 7 && quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {

@@ -79,7 +79,7 @@ int SoundSample::SetChunkStream(HANDLE stormHandle)
 	return 0;
 }
 
-int SoundSample::SetChunk(std::unique_ptr<std::uint8_t[]> fileData, DWORD dwBytes)
+int SoundSample::SetChunk(std::unique_ptr<std::uint8_t[]> fileData, size_t dwBytes)
 {
 	file_data_ = std::move(fileData);
 	SDL_RWops *buf = SDL_RWFromConstMem(file_data_.get(), dwBytes);

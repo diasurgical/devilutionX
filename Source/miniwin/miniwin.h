@@ -29,11 +29,8 @@ namespace devilution {
 #define DVL_PRINTF_ATTRIBUTE(fmtargnum)
 #endif
 
-typedef int32_t LONG;
-
 typedef uint32_t DWORD;
 typedef unsigned char BYTE;
-typedef unsigned short WORD;
 
 //
 // Handles
@@ -42,7 +39,7 @@ typedef void *HANDLE;
 
 typedef void (*WNDPROC)(uint32_t, int32_t, int32_t);
 
-typedef struct tagMSG {
+struct tagMSG {
 	uint32_t message;
 	int32_t wParam;
 	int32_t lParam;

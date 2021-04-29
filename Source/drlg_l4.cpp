@@ -1751,7 +1751,7 @@ static void DRLG_L4Pass3()
 	DRLG_LPass3(30 - 1);
 }
 
-void CreateL4Dungeon(DWORD rseed, lvl_entry entry)
+void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	SetRndSeed(rseed);
 

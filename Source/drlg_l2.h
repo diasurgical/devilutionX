@@ -6,7 +6,6 @@
 #pragma once
 
 #include "gendung.h"
-#include "miniwin/miniwin.h"
 
 namespace devilution {
 
@@ -32,6 +31,6 @@ extern BYTE predungeon[DMAXX][DMAXY];
 void InitDungeon();
 void LoadL2Dungeon(const char *sFileName, int vx, int vy);
 void LoadPreL2Dungeon(const char *sFileName);
-void CreateL2Dungeon(DWORD rseed, lvl_entry entry);
+void CreateL2Dungeon(uint32_t rseed, lvl_entry entry);
 
 } // namespace devilution

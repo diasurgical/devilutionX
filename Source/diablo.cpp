@@ -107,7 +107,7 @@ bool gbBarbarian;
 int sgnTimeoutCurs;
 clicktype sgbMouseDown;
 int color_cycle_timer;
-WORD gnTickDelay = 50;
+uint16_t gnTickDelay = 50;
 /** Game options */
 Options sgOptions;
 

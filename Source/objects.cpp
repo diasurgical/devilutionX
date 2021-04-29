@@ -2255,7 +2255,7 @@ void ProcessObjects()
 
 void ObjSetMicro(int dx, int dy, int pn)
 {
-	WORD *v;
+	uint16_t *v;
 	MICROS *defs;
 	int i;
 
@@ -2263,12 +2263,12 @@ void ObjSetMicro(int dx, int dy, int pn)
 	pn--;
 	defs = &dpiece_defs_map_2[dx][dy];
 	if (leveltype != DTYPE_HELL) {
-		v = (WORD *)pLevelPieces + 10 * pn;
+		v = (uint16_t *)pLevelPieces + 10 * pn;
 		for (i = 0; i < 10; i++) {
 			defs->mt[i] = SDL_SwapLE16(v[(i & 1) - (i & 0xE) + 8]);
 		}
 	} else {
-		v = (WORD *)pLevelPieces + 16 * pn;
+		v = (uint16_t *)pLevelPieces + 16 * pn;
 		for (i = 0; i < 16; i++) {
 			defs->mt[i] = SDL_SwapLE16(v[(i & 1) - (i & 0xE) + 14]);
 		}
@@ -2282,8 +2282,8 @@ void objects_set_door_piece(int x, int y)
 
 	pn = dPiece[x][y] - 1;
 
-	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
-	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
+	v1 = *((uint16_t *)pLevelPieces + 10 * pn + 8);
+	v2 = *((uint16_t *)pLevelPieces + 10 * pn + 9);
 	dpiece_defs_map_2[x][y].mt[0] = SDL_SwapLE16(v1);
 	dpiece_defs_map_2[x][y].mt[1] = SDL_SwapLE16(v2);
 }
@@ -2292,9 +2292,8 @@ void ObjSetMini(int x, int y, int v)
 {
 	int xx, yy;
 	long v1, v2, v3, v4;
-	WORD *MegaTiles;
 
-	MegaTiles = (WORD *)&pMegaTiles[((WORD)v - 1) * 8];
+	uint16_t *MegaTiles = (uint16_t *)&pMegaTiles[((uint16_t)v - 1) * 8];
 	v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
 	v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
 	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;

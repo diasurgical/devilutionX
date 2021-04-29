@@ -8,7 +8,6 @@
 #include <cstdint>
 
 #include "engine.h"
-#include "miniwin/miniwin.h"
 
 namespace devilution {
 
@@ -31,7 +30,7 @@ extern bool sgbControllerActive;
 extern bool IsMovingMouseCursorWithController();
 
 extern int light_table_index;
-extern DWORD level_cel_block;
+extern uint32_t level_cel_block;
 extern char arch_draw_type;
 extern bool cel_transparency_active;
 extern bool cel_foliage_active;

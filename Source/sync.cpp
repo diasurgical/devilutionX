@@ -6,7 +6,6 @@
 #include <climits>
 
 #include "gendung.h"
-#include "miniwin/miniwin.h"
 #include "monster.h"
 #include "player.h"
 

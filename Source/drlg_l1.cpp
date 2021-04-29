@@ -1053,13 +1053,10 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 
 static void DRLG_L1Floor()
 {
-	int i, j;
-	LONG rv;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (L5dflags[i][j] == 0 && dungeon[i][j] == 13) {
-				rv = GenerateRnd(3);
+				int rv = GenerateRnd(3);
 
 				if (rv == 1)
 					dungeon[i][j] = 162;
@@ -1072,7 +1069,7 @@ static void DRLG_L1Floor()
 
 void DRLG_LPass3(int lv)
 {
-	WORD *MegaTiles = (WORD *)&pMegaTiles[lv * 8];
+	auto *MegaTiles = (uint16_t *)&pMegaTiles[lv * 8];
 	int v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
 	int v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
 	int v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
@@ -1093,7 +1090,7 @@ void DRLG_LPass3(int lv)
 		for (int i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
 			if (lv >= 0) {
-				MegaTiles = (WORD *)&pMegaTiles[lv * 8];
+				MegaTiles = (uint16_t *)&pMegaTiles[lv * 8];
 				v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
 				v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
 				v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
@@ -2516,8 +2513,7 @@ static void DRLG_L5CornerFix()
 
 static void DRLG_L5(lvl_entry entry)
 {
-	int i, j;
-	LONG minarea;
+	int i, j, minarea;
 	bool doneflag;
 
 	switch (currlevel) {
@@ -2742,7 +2738,7 @@ static void DRLG_L5(lvl_entry entry)
 	DRLG_CheckQuests(setpc_x, setpc_y);
 }
 
-void CreateL5Dungeon(DWORD rseed, lvl_entry entry)
+void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	int i, j;
 
