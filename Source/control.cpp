@@ -1290,7 +1290,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 					PrintMonstHistory(monster[pcursmonst].MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				strcpy(infostr, towners[pcursmonst]._tName);
+				strcpy(infostr, towners[pcursmonst]._tName.data());
 			}
 		}
 		if (pcursplr != -1) {
