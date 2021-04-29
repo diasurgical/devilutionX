@@ -2331,9 +2331,9 @@ void AddTown(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, 
 	PutMissile(mi);
 	if (id == myplr && !missile[mi]._miDelFlag && currlevel != 0) {
 		if (!setlevel) {
-			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, tx, ty, currlevel, leveltype, 0);
+			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, { tx, ty }, currlevel, leveltype, 0);
 		} else {
-			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, tx, ty, setlvlnum, leveltype, 1);
+			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, { tx, ty }, setlvlnum, leveltype, 1);
 		}
 	}
 }
@@ -2963,7 +2963,7 @@ void AddDisarm(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy
 		NewCursor(CURSOR_DISARM);
 		if (sgbControllerActive) {
 			if (pcursobj != -1)
-				NetSendCmdLocParam1(true, CMD_DISARMXY, cursmx, cursmy, pcursobj);
+				NetSendCmdLocParam1(true, CMD_DISARMXY, { cursmx, cursmy }, pcursobj);
 			else
 				NewCursor(CURSOR_HAND);
 		}

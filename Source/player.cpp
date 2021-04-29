@@ -1720,7 +1720,7 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 	if ((xx || yy) && ItemSpaceOk(x, y)) {
 		RespawnDeadItem(itm, x, y);
 		plr[pnum].HoldItem = *itm;
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, x, y);
+		NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
 		return;
 	}
 
@@ -1732,7 +1732,7 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 				if (ItemSpaceOk(x, y)) {
 					RespawnDeadItem(itm, x, y);
 					plr[pnum].HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, x, y);
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
 					return;
 				}
 			}
@@ -3815,7 +3815,7 @@ void CheckPlrSpell()
 		if (plr[myplr]._pRSpell == SPL_FIREWALL || plr[myplr]._pRSpell == SPL_LIGHTWALL) {
 			direction sd = GetDirection(plr[myplr].position.tile, { cursmx, cursmy });
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam3(true, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);
+			NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, plr[myplr]._pRSpell, sd, sl);
 		} else if (pcursmonst != -1) {
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
 			NetSendCmdParam3(true, CMD_SPELLID, pcursmonst, plr[myplr]._pRSpell, sl);
@@ -3824,7 +3824,7 @@ void CheckPlrSpell()
 			NetSendCmdParam3(true, CMD_SPELLPID, pcursplr, plr[myplr]._pRSpell, sl);
 		} else { //145
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam2(true, CMD_SPELLXY, cursmx, cursmy, plr[myplr]._pRSpell, sl);
+			NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, plr[myplr]._pRSpell, sl);
 		}
 		return;
 	}

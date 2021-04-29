@@ -1792,8 +1792,8 @@ void M2MStartKill(int i, int mid)
 	assurance((DWORD)mid < MAXMONSTERS, mid);
 	assurance(monster[mid].MType != nullptr, mid); /// BUGFIX: should check `mid` (fixed)
 
-	delta_kill_monster(mid, monster[mid].position.tile.x, monster[mid].position.tile.y, currlevel);
-	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[mid].position.tile.x, monster[mid].position.tile.y, mid);
+	delta_kill_monster(mid, monster[mid].position.tile, currlevel);
+	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[mid].position.tile, mid);
 
 	if (i < MAX_PLRS) {
 		monster[mid].mWhoHit |= 1 << i;
@@ -1838,11 +1838,11 @@ void M_StartKill(int i, int pnum)
 	assurance((DWORD)i < MAXMONSTERS, i);
 
 	if (myplr == pnum) {
-		delta_kill_monster(i, monster[i].position.tile.x, monster[i].position.tile.y, currlevel);
+		delta_kill_monster(i, monster[i].position.tile, currlevel);
 		if (i != pnum) {
-			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[i].position.tile.x, monster[i].position.tile.y, i);
+			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[i].position.tile, i);
 		} else {
-			NetSendCmdLocParam1(false, CMD_KILLGOLEM, monster[i].position.tile.x, monster[i].position.tile.y, currlevel);
+			NetSendCmdLocParam1(false, CMD_KILLGOLEM, monster[i].position.tile, currlevel);
 		}
 	}
 

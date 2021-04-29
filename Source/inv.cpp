@@ -1716,7 +1716,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
-		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr].position.tile.x, plr[myplr].position.tile.y);
+		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr].position.tile);
 
 	item->_iCreateInfo &= ~CF_PREGEN;
 	plr[pnum].HoldItem = *item;
@@ -1780,7 +1780,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	}
 	plr[pnum].HoldItem = *item;
 	RespawnItem(item, true);
-	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position.x, item->position.y);
+	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
@@ -1959,7 +1959,7 @@ int InvPutItem(int pnum, int x, int y)
 		int yp = cursmy;
 		int xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.tile.x, plr[pnum].position.tile.y, xx, yy);
+			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.tile, xx, yy);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
@@ -2356,7 +2356,7 @@ int CalculateGold(int pnum)
 bool DropItemBeforeTrig()
 {
 	if (TryInvPut()) {
-		NetSendCmdPItem(true, CMD_PUTITEM, cursmx, cursmy);
+		NetSendCmdPItem(true, CMD_PUTITEM, { cursmx, cursmy });
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
