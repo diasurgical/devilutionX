@@ -1900,33 +1900,32 @@ void DrawInvMsg(const char *msg)
 	}
 }
 
-static int PutItem(int pnum, int &x, int &y)
+static bool PutItem(int pnum, Point &position)
 {
 	if (numitems >= MAXITEMS)
 		return false;
 
-	int xx = x - plr[pnum].position.tile.x;
-	int yy = y - plr[pnum].position.tile.y;
+	auto relativePosition = position - plr[pnum].position.tile;
 
-	direction d = GetDirection(plr[pnum].position.tile, { x, y });
+	direction d = GetDirection(plr[pnum].position.tile, position);
 
-	if (abs(xx) > 1 || abs(yy) > 1) {
-		x = plr[pnum].position.tile.x + offset_x[d];
-		y = plr[pnum].position.tile.y + offset_y[d];
+	if (abs(relativePosition.x) > 1 || abs(relativePosition.y) > 1) {
+		position.x = plr[pnum].position.tile.x + offset_x[d];
+		position.y = plr[pnum].position.tile.y + offset_y[d];
 	}
-	if (CanPut(x, y))
+	if (CanPut(position.x, position.y))
 		return true;
 
 	direction dLeft = left[d];
-	x = plr[pnum].position.tile.x + offset_x[dLeft];
-	y = plr[pnum].position.tile.y + offset_y[dLeft];
-	if (CanPut(x, y))
+	position.x = plr[pnum].position.tile.x + offset_x[dLeft];
+	position.y = plr[pnum].position.tile.y + offset_y[dLeft];
+	if (CanPut(position.x, position.y))
 		return true;
 
 	direction dRight = right[d];
-	x = plr[pnum].position.tile.x + offset_x[dRight];
-	y = plr[pnum].position.tile.y + offset_y[dRight];
-	if (CanPut(x, y))
+	position.x = plr[pnum].position.tile.x + offset_x[dRight];
+	position.y = plr[pnum].position.tile.y + offset_y[dRight];
+	if (CanPut(position.x, position.y))
 		return true;
 
 	for (int l = 1; l < 50; l++) {
@@ -1937,8 +1936,7 @@ static int PutItem(int pnum, int &x, int &y)
 				if (!CanPut(xp, yp))
 					continue;
 
-				x = xp;
-				y = yp;
+				position = {xp,yp};
 				return true;
 			}
 		}
@@ -1947,19 +1945,17 @@ static int PutItem(int pnum, int &x, int &y)
 	return false;
 }
 
-int InvPutItem(int pnum, int x, int y)
+int InvPutItem(int pnum, Point position)
 {
-	int xx = x - plr[pnum].position.tile.x;
-	int yy = y - plr[pnum].position.tile.y;
-
-	if (!PutItem(pnum, x, y))
+	if (!PutItem(pnum, position))
 		return -1;
 
 	if (currlevel == 0) {
 		int yp = cursmy;
 		int xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.tile, xx, yy);
+			Point relativePosition = position - plr[pnum].position.tile;
+			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.tile, relativePosition.x, relativePosition.y);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
@@ -1977,16 +1973,16 @@ int InvPutItem(int pnum, int x, int y)
 		}
 	}
 
-	assert(CanPut(x, y));
+	assert(CanPut(position.x, position.y));
 
 	int ii = AllocateItem();
 
-	dItem[x][y] = ii + 1;
+	dItem[position.x][position.y] = ii + 1;
 	items[ii] = plr[pnum].HoldItem;
-	items[ii].position = { x, y };
+	items[ii].position = position;
 	RespawnItem(&items[ii], true);
 
-	if (currlevel == 21 && x == CornerStone.position.x && y == CornerStone.position.y) {
+	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = false;
@@ -1997,16 +1993,16 @@ int InvPutItem(int pnum, int x, int y)
 	return ii;
 }
 
-int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
+int SyncPutItem(int pnum, Point position, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
 {
-	if (!PutItem(pnum, x, y))
+	if (!PutItem(pnum, position))
 		return -1;
 
-	assert(CanPut(x, y));
+	assert(CanPut(position.x, position.y));
 
 	int ii = AllocateItem();
 
-	dItem[x][y] = ii + 1;
+	dItem[position.x][position.y] = ii + 1;
 
 	if (idx == IDI_EAR) {
 		RecreateEar(ii, icreateinfo, iseed, Id, dur, mdur, ch, mch, ivalue, ibuff);
@@ -2027,10 +2023,10 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 		items[ii].dwBuff = ibuff;
 	}
 
-	items[ii].position = { x, y };
+	items[ii].position = position;
 	RespawnItem(&items[ii], true);
 
-	if (currlevel == 21 && x == CornerStone.position.x && y == CornerStone.position.y) {
+	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = false;
