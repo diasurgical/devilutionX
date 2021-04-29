@@ -30,11 +30,6 @@
 #include "appfat.h"
 #include "miniwin/miniwin.h"
 
-#define BUFFER_BORDER_LEFT 64
-#define BUFFER_BORDER_TOP 160
-#define BUFFER_BORDER_RIGHT devilution::borderRight
-#define BUFFER_BORDER_BOTTOM 16
-
 #define TILE_WIDTH 64
 #define TILE_HEIGHT 32
 

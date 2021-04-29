@@ -231,13 +231,12 @@ void PaletteFadeIn(int fr)
 {
 	ApplyGamma(logical_palette, orig_palette, 256);
 
-	SDL_Rect SrcRect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
 	const uint32_t tc = SDL_GetTicks();
 	fr *= 3;
 
 	for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
 		SetFadeLevel(i);
-		BltFast(&SrcRect, nullptr);
+		BltFast(nullptr, nullptr);
 		RenderPresent();
 	}
 	SetFadeLevel(256);
@@ -252,13 +251,12 @@ void PaletteFadeOut(int fr)
 	if (!sgbFadedIn)
 		return;
 
-	SDL_Rect SrcRect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight };
 	const uint32_t tc = SDL_GetTicks();
 	fr *= 3;
 
 	for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
 		SetFadeLevel(256 - i);
-		BltFast(&SrcRect, nullptr);
+		BltFast(nullptr, nullptr);
 		RenderPresent();
 	}
 	SetFadeLevel(0);
