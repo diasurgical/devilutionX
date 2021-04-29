@@ -284,8 +284,6 @@ _sfx_id ItemInvSnds[] = {
 	IS_ILARM,
 	IS_ILARM,
 };
-/** Specifies the current Y-coordinate used for validation of items on ground. */
-int idoppely = 16;
 /** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
 int premiumlvladd[] = {
 	// clang-format off
@@ -3000,21 +2998,22 @@ void DeleteItem(int ii, int i)
 
 void ItemDoppel()
 {
-	int idoppelx;
-	ItemStruct *i;
+	if (!gbIsMultiplayer)
+		return;
 
-	if (gbIsMultiplayer) {
-		for (idoppelx = 16; idoppelx < 96; idoppelx++) {
-			if (dItem[idoppelx][idoppely]) {
-				i = &items[dItem[idoppelx][idoppely] - 1];
-				if (i->position.x != idoppelx || i->position.y != idoppely)
-					dItem[idoppelx][idoppely] = 0;
-			}
+	static int idoppely = 16;
+
+	for (int idoppelx = 16; idoppelx < 96; idoppelx++) {
+		if (dItem[idoppelx][idoppely]) {
+			ItemStruct *i = &items[dItem[idoppelx][idoppely] - 1];
+			if (i->position.x != idoppelx || i->position.y != idoppely)
+				dItem[idoppelx][idoppely] = 0;
 		}
-		idoppely++;
-		if (idoppely == 96)
-			idoppely = 16;
 	}
+
+	idoppely++;
+	if (idoppely == 96)
+		idoppely = 16;
 }
 
 void ProcessItems()
