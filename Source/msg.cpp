@@ -1437,7 +1437,7 @@ static DWORD On_GETITEM(TCmd *pCmd, int pnum)
 			if ((currlevel == p->bLevel || p->bPnum == myplr) && p->bMaster != myplr) {
 				if (p->bPnum == myplr) {
 					if (currlevel != p->bLevel) {
-						ii = SyncPutItem(myplr, plr[myplr].position.tile.x, plr[myplr].position.tile.y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+						ii = SyncPutItem(myplr, plr[myplr].position.tile, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
 							InvGetItem(myplr, &items[ii], ii);
 					} else
@@ -1499,7 +1499,7 @@ static DWORD On_AGETITEM(TCmd *pCmd, int pnum)
 			if ((currlevel == p->bLevel || p->bPnum == myplr) && p->bMaster != myplr) {
 				if (p->bPnum == myplr) {
 					if (currlevel != p->bLevel) {
-						int ii = SyncPutItem(myplr, plr[myplr].position.tile.x, plr[myplr].position.tile.y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+						int ii = SyncPutItem(myplr, plr[myplr].position.tile, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
 							AutoGetItem(myplr, &items[ii], ii);
 					} else
@@ -1538,9 +1538,9 @@ static DWORD On_PUTITEM(TCmd *pCmd, int pnum)
 	else if (currlevel == plr[pnum].plrlevel) {
 		int ii;
 		if (pnum == myplr)
-			ii = InvPutItem(pnum, p->x, p->y);
+			ii = InvPutItem(pnum, { p->x, p->y });
 		else
-			ii = SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+			ii = SyncPutItem(pnum, { p->x, p->y }, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		if (ii != -1) {
 			PutItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			delta_put_item(p, items[ii].position.x, items[ii].position.y, plr[pnum].plrlevel);
@@ -1563,7 +1563,7 @@ static DWORD On_SYNCPUTITEM(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (currlevel == plr[pnum].plrlevel) {
-		int ii = SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+		int ii = SyncPutItem(pnum, { p->x, p->y }, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		if (ii != -1) {
 			PutItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			delta_put_item(p, items[ii].position.x, items[ii].position.y, plr[pnum].plrlevel);
@@ -1587,7 +1587,7 @@ static DWORD On_RESPAWNITEM(TCmd *pCmd, int pnum)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
 		if (currlevel == plr[pnum].plrlevel && pnum != myplr) {
-			SyncPutItem(pnum, p->x, p->y, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
+			SyncPutItem(pnum, { p->x, p->y }, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		}
 		PutItemRecord(p->dwSeed, p->wCI, p->wIndx);
 		delta_put_item(p, p->x, p->y, plr[pnum].plrlevel);
