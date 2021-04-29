@@ -134,6 +134,14 @@ struct ActorPosition {
 #define mem_free_dbg(PTR) \
 	std::free(PTR)
 
+struct DiabloDeleter
+{
+	void operator ()(void *ptr)
+	{
+		mem_free_dbg(ptr);
+	}
+};
+
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
 	DWORD *pFrameTable;
