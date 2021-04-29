@@ -51,6 +51,7 @@ void SoundSample::Play(int lVolume, int lPan, int channel)
 	              : copysign(1.F - std::pow(Base, static_cast<float>(-std::fabs(lPan) / Scale)),
 	                  static_cast<float>(lPan)));
 
+	stream_->rewind();
 	if (!stream_->play()) {
 		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
 		return;
