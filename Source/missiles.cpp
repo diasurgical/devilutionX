@@ -675,7 +675,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 		}
 
 		if (monster[m]._msquelch == 0) {
-			monster[m]._msquelch = UCHAR_MAX;
+			monster[m]._msquelch = UINT8_MAX;
 			monster[m].position.last = plr[pnum].position.tile;
 		}
 		return true;

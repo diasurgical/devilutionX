@@ -38,7 +38,7 @@ void play_movie(const char *pszMovie, bool user_can_close)
 #endif
 
 	SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808, &video_stream);
-	MSG Msg;
+	tagMSG Msg;
 	while (video_stream != nullptr && movie_playing) {
 		while (movie_playing && FetchMessage(&Msg)) {
 			switch (Msg.message) {

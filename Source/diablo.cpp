@@ -363,7 +363,7 @@ static bool ProcessInput()
 static void run_game_loop(interface_mode uMsg)
 {
 	WNDPROC saveProc;
-	MSG msg;
+	tagMSG msg;
 
 	nthread_ignore_mutex(true);
 	start_game(uMsg);
@@ -1286,7 +1286,7 @@ static void PressKey(int vkey)
 /**
  * @internal `return` must be used instead of `break` to be bin exact as C++
  */
-static void PressChar(WPARAM vkey)
+static void PressChar(int32_t vkey)
 {
 	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != CURSOR_NONE || deathflag) {
 		return;
@@ -1578,13 +1578,13 @@ static void PressChar(WPARAM vkey)
 	}
 }
 
-static void GetMousePos(LPARAM lParam)
+static void GetMousePos(int32_t lParam)
 {
 	MouseX = (short)(lParam & 0xffff);
 	MouseY = (short)((lParam >> 16) & 0xffff);
 }
 
-void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+void DisableInputWndProc(uint32_t uMsg, int32_t wParam, int32_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
@@ -1624,7 +1624,7 @@ void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	MainWndProc(uMsg);
 }
 
-void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam)
+void GM_Game(uint32_t uMsg, int32_t wParam, int32_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:

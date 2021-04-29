@@ -45,7 +45,7 @@ extern bool gbSelectProvider;
 extern bool gbIsMultiplayer;
 extern char szPlayerName[128];
 extern BYTE gbDeltaSender;
-extern int player_state[MAX_PLRS];
+extern uint32_t player_state[MAX_PLRS];
 
 void multi_msg_add(BYTE *pbMsg, BYTE bLen);
 void NetSendLoPri(int playerId, BYTE *pbMsg, BYTE bLen);

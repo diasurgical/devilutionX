@@ -190,7 +190,7 @@ static void DrawCutscene()
 
 void interface_msg_pump()
 {
-	MSG Msg;
+	tagMSG Msg;
 
 	while (FetchMessage(&Msg)) {
 		if (Msg.message != DVL_WM_QUIT) {

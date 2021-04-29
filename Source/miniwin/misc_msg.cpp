@@ -16,6 +16,8 @@
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
 #include "utils/log.hpp"
+#include "miniwin/miniwin.h"
+
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -29,7 +31,7 @@
 
 namespace devilution {
 
-static std::deque<MSG> message_queue;
+static std::deque<tagMSG> message_queue;
 
 bool mouseWarping = false;
 int mouseWarpingX;
@@ -252,12 +254,12 @@ static int TranslateSdlKey(SDL_Keysym key)
 
 namespace {
 
-LPARAM PositionForMouse(short x, short y)
+int32_t PositionForMouse(short x, short y)
 {
 	return (((uint16_t)(y & 0xFFFF)) << 16) | (uint16_t)(x & 0xFFFF);
 }
 
-WPARAM KeystateForMouse(WPARAM ret)
+int32_t KeystateForMouse(int32_t ret)
 {
 	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
@@ -294,7 +296,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool FetchMessage(LPMSG lpMsg)
+bool FetchMessage(tagMSG *lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -575,7 +577,7 @@ bool FetchMessage(LPMSG lpMsg)
 	return true;
 }
 
-bool TranslateMessage(const MSG *lpMsg)
+bool TranslateMessage(const tagMSG *lpMsg)
 {
 	if (lpMsg->message == DVL_WM_KEYDOWN) {
 		int key = lpMsg->wParam;
@@ -681,7 +683,7 @@ bool TranslateMessage(const MSG *lpMsg)
 	return true;
 }
 
-SHORT GetAsyncKeyState(int vKey)
+uint16_t GetAsyncKeyState(int vKey)
 {
 	if (vKey == DVL_MK_LBUTTON)
 		return SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT);
@@ -708,21 +710,16 @@ SHORT GetAsyncKeyState(int vKey)
 	}
 }
 
-void PushMessage(const MSG *lpMsg)
+void PushMessage(const tagMSG *lpMsg)
 {
 	assert(CurrentProc);
 
 	CurrentProc(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-bool PostMessage(UINT type, WPARAM wParam, LPARAM lParam)
+bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam)
 {
-	MSG message;
-	message.message = type;
-	message.wParam = wParam;
-	message.lParam = lParam;
-
-	message_queue.push_back(message);
+	message_queue.push_back({type, wParam, lParam});
 
 	return true;
 }
