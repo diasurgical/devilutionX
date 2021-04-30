@@ -39,7 +39,7 @@ smk SVidSMK;
 SDL_Color SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
 SDL_Surface *SVidSurface;
-BYTE *SVidBuffer;
+std::unique_ptr<uint8_t[]> SVidBuffer;
 
 bool IsLandscapeFit(unsigned long srcW, unsigned long srcH, unsigned long dstW, unsigned long dstH)
 {
@@ -148,10 +148,10 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	SFileOpenFile(filename, video);
 
 	int bytestoread = SFileGetFileSize(*video, nullptr);
-	SVidBuffer = DiabloAllocPtr(bytestoread);
-	SFileReadFile(*video, SVidBuffer, bytestoread, nullptr, nullptr);
+	SVidBuffer = std::make_unique<uint8_t[]>(bytestoread);
+	SFileReadFile(*video, SVidBuffer.get(), bytestoread, nullptr, nullptr);
 
-	SVidSMK = smk_open_memory(SVidBuffer, bytestoread);
+	SVidSMK = smk_open_memory(SVidBuffer.get(), bytestoread);
 	if (SVidSMK == nullptr) {
 		return;
 	}
@@ -358,10 +358,7 @@ void SVidPlayEnd(HANDLE video)
 	if (SVidSMK != nullptr)
 		smk_close(SVidSMK);
 
-	if (SVidBuffer != nullptr) {
-		mem_free_dbg(SVidBuffer);
-		SVidBuffer = nullptr;
-	}
+	SVidBuffer = nullptr;
 
 	SDL_FreePalette(SVidPalette);
 	SVidPalette = nullptr;
