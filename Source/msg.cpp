@@ -36,12 +36,12 @@ static DWORD sgdwRecvOffset;
 static int sgnCurrMegaPlayer;
 static DLevel sgLevels[NUMLEVELS];
 static BYTE sbLastCmd;
-static TMegaPkt *sgpCurrPkt;
+static std::shared_ptr<TMegaPkt> sgpCurrPkt;
 static BYTE sgRecvBuf[sizeof(DLevel) + 1];
 static BYTE sgbRecvCmd;
 static LocalLevel sgLocals[NUMLEVELS];
 static DJunk sgJunk;
-static TMegaPkt *sgpMegaPkt;
+static std::shared_ptr<TMegaPkt> sgpMegaPkt;
 static bool sgbDeltaChanged;
 static BYTE sgbDeltaChunks;
 bool deltaload;
@@ -50,35 +50,28 @@ int dwRecCount;
 
 static void msg_get_next_packet()
 {
-	TMegaPkt *result;
+	sgpCurrPkt = TMegaPkt::make();
 
-	sgpCurrPkt = (TMegaPkt *)DiabloAllocPtr(sizeof(TMegaPkt));
-	sgpCurrPkt->pNext = nullptr;
-	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
+	TMegaPkt *result = sgpMegaPkt.get();
+	while (result->next != nullptr)
+		result = result->next.get();
 
-	result = (TMegaPkt *)&sgpMegaPkt;
-	while (result->pNext != nullptr)
-		result = result->pNext;
-
-	result->pNext = sgpCurrPkt;
+	result->next = sgpCurrPkt;
 }
 
 static void msg_free_packets()
 {
-	while (sgpMegaPkt != nullptr) {
-		sgpCurrPkt = sgpMegaPkt->pNext;
-		MemFreeDbg(sgpMegaPkt);
-		sgpMegaPkt = sgpCurrPkt;
-	}
+	while (sgpMegaPkt != nullptr)
+		sgpMegaPkt = sgpMegaPkt->next;
 }
 
 static void msg_pre_packet()
 {
 	int i = -1;
-	for (TMegaPkt *pkt = sgpMegaPkt; pkt != nullptr; pkt = pkt->pNext) {
+	for (TMegaPkt *pkt = sgpMegaPkt.get(); pkt != nullptr; pkt = pkt->next.get()) {
 		BYTE *data = pkt->data;
 		size_t spaceLeft = sizeof(pkt->data);
-		while (spaceLeft != pkt->dwSpaceLeft) {
+		while (spaceLeft != pkt->spaceLeft) {
 			if (*data == FAKE_CMD_SETID) {
 				auto *cmd = (TFakeCmdPlr *)data;
 				data += sizeof(*cmd);
@@ -108,11 +101,11 @@ static void msg_send_packet(int pnum, const void *packet, DWORD dwSize)
 		cmd.bPlr = pnum;
 		msg_send_packet(pnum, &cmd, sizeof(cmd));
 	}
-	if (sgpCurrPkt->dwSpaceLeft < dwSize)
+	if (sgpCurrPkt->spaceLeft < dwSize)
 		msg_get_next_packet();
 
-	memcpy(sgpCurrPkt->data + sizeof(sgpCurrPkt->data) - sgpCurrPkt->dwSpaceLeft, packet, dwSize);
-	sgpCurrPkt->dwSpaceLeft -= dwSize;
+	memcpy(sgpCurrPkt->data + sizeof(sgpCurrPkt->data) - sgpCurrPkt->spaceLeft, packet, dwSize);
+	sgpCurrPkt->spaceLeft -= dwSize;
 }
 
 void msg_send_drop_pkt(int pnum, int reason)

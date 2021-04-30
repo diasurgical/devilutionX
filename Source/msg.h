@@ -404,9 +404,20 @@ struct DJunk {
 
 #pragma pack(push, 1)
 struct TMegaPkt {
-	struct TMegaPkt *pNext;
-	uint32_t dwSpaceLeft;
-	uint8_t data[32000];
+	std::shared_ptr<TMegaPkt> next;
+	uint32_t spaceLeft;
+	uint8_t data[0];
+
+	TMegaPkt(uint32_t spaceLeft)
+		: spaceLeft(spaceLeft)
+	{
+	}
+
+	static std::unique_ptr<TMegaPkt> make(size_t payloadSize = 32000)
+	{
+		auto mem = new uint8_t[sizeof(TMegaPkt) + payloadSize];
+		return std::unique_ptr<TMegaPkt>(new(mem)TMegaPkt(payloadSize));
+	}
 };
 #pragma pack(pop)
 
