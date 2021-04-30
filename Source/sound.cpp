@@ -109,25 +109,11 @@ static int CapVolume(int volume)
 	return volume - volume % 100;
 }
 
-bool snd_playing(TSnd *pSnd)
-{
-	if (pSnd == nullptr || pSnd->DSB == nullptr)
-		return false;
-
-	return pSnd->DSB->IsPlaying();
-}
-
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
-	SoundSample *DSB;
 	DWORD tc;
 
 	if (pSnd == nullptr || !gbSoundOn) {
-		return;
-	}
-
-	DSB = pSnd->DSB;
-	if (DSB == nullptr) {
 		return;
 	}
 
@@ -137,28 +123,25 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	}
 
 	lVolume = CapVolume(lVolume + sgOptions.Audio.nSoundVolume);
-	DSB->Play(lVolume, lPan);
+	pSnd->DSB.Play(lVolume, lPan);
 	pSnd->start_tc = tc;
 }
 
-TSnd *sound_file_load(const char *path, bool stream)
+std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 {
 	HANDLE file;
-	TSnd *pSnd;
 	int error = 0;
 
 	if (!SFileOpenFile(path, &file)) {
 		ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
 	}
-	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
-	memset(pSnd, 0, sizeof(TSnd));
-	pSnd->sound_path = path;
-	pSnd->start_tc = SDL_GetTicks() - 80 - 1;
-	pSnd->DSB = new SoundSample();
+	auto snd = std::make_unique<TSnd>();
+	snd->sound_path = std::string(path);
+	snd->start_tc = SDL_GetTicks() - 80 - 1;
 
 	if (stream) {
-		pSnd->file_handle = file;
-		error = pSnd->DSB->SetChunkStream(file);
+		snd->file_handle = file;
+		error = snd->DSB.SetChunkStream(file);
 		if (error != 0) {
 			SFileCloseFile(file);
 			ErrSdl();
@@ -167,31 +150,25 @@ TSnd *sound_file_load(const char *path, bool stream)
 		DWORD dwBytes = SFileGetFileSize(file, nullptr);
 		auto wave_file = std::make_unique<std::uint8_t[]>(dwBytes);
 		SFileReadFile(file, wave_file.get(), dwBytes, nullptr, nullptr);
-		error = pSnd->DSB->SetChunk(std::move(wave_file), dwBytes);
+		error = snd->DSB.SetChunk(std::move(wave_file), dwBytes);
 		SFileCloseFile(file);
 	}
 	if (error != 0) {
 		ErrSdl();
 	}
 
-	return pSnd;
+	return snd;
 }
 
-void sound_file_cleanup(TSnd *sound_file)
+#ifndef NOSOUND
+TSnd::~TSnd()
 {
-	if (sound_file != nullptr) {
-		if (sound_file->DSB != nullptr) {
-			sound_file->DSB->Stop();
-			sound_file->DSB->Release();
-			delete sound_file->DSB;
-			sound_file->DSB = nullptr;
-		}
-		if (sound_file->file_handle != nullptr)
-			SFileCloseFile(sound_file->file_handle);
-
-		mem_free_dbg(sound_file);
-	}
+	DSB.Stop();
+	DSB.Release();
+	if (file_handle != nullptr)
+		SFileCloseFile(file_handle);
 }
+#endif
 
 void snd_init()
 {
