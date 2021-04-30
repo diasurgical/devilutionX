@@ -137,7 +137,7 @@ struct ActorPosition {
 
 #define DiabloMakeUnique(T, NUM_BYTES) \
 	[](size_t size) {\
-		assert(sizeof(T) >= size); \
+		assert(sizeof(T) <= size); \
 		auto ret = std::unique_ptr<T>{reinterpret_cast<T *>(new uint8_t[size])}; \
 		new(ret.get())T(); \
 		return ret; \
