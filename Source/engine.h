@@ -135,21 +135,10 @@ struct ActorPosition {
 #define mem_free_dbg(PTR) \
 	std::free(PTR)
 
-struct DiabloDeleter
-{
-	void operator ()(void *ptr)
-	{
-		mem_free_dbg(ptr);
-	}
-};
-
-template <typename T>
-using DiabloUniqPtr = std::unique_ptr<T, DiabloDeleter>;
-
 #define DiabloMakeUnique(T, NUM_BYTES) \
 	[](size_t size) {\
 		assert(sizeof(T) >= size); \
-		auto ret = DiabloUniqPtr<T>{reinterpret_cast<T *>(DiabloAllocPtr(size))}; \
+		auto ret = std::unique_ptr<T>{reinterpret_cast<T *>(new uint8_t[size])}; \
 		new(ret.get())T(); \
 		return ret; \
 	}(NUM_BYTES)
