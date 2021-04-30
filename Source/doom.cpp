@@ -9,10 +9,9 @@
 
 namespace devilution {
 
-int doom_quest_time;
-int doom_stars_drawn;
-std::unique_ptr<uint8_t[]> doomCel;
-bool doomflag;
+int DoomQuestTime;
+std::unique_ptr<uint8_t[]> DoomCel;
+bool DoomFlag;
 int DoomQuestState;
 
 /*
@@ -48,17 +47,17 @@ static bool doom_load_graphics()
 
 	ret = false;
 	strcpy(tempstr, "Items\\Map\\MapZtown.CEL");
-	if (LoadFileWithMem(tempstr, doomCel.get()) != 0)
+	if (LoadFileWithMem(tempstr, DoomCel.get()) != 0)
 		ret = true;
 	return ret;
 }
 
 void doom_init()
 {
-	doomCel = std::make_unique<uint8_t[]>(0x39000);
-	doom_quest_time = doom_get_frame_from_time() == 31 ? 31 : 0;
+	DoomCel = std::make_unique<uint8_t[]>(0x39000);
+	DoomQuestTime = doom_get_frame_from_time() == 31 ? 31 : 0;
 	if (doom_load_graphics()) {
-		doomflag = true;
+		DoomFlag = true;
 	} else {
 		doom_close();
 	}
@@ -66,17 +65,17 @@ void doom_init()
 
 void doom_close()
 {
-	doomflag = false;
-	doomCel.reset();
+	DoomFlag = false;
+	DoomCel.reset();
 }
 
 void doom_draw(const CelOutputBuffer &out)
 {
-	if (!doomflag) {
+	if (!DoomFlag) {
 		return;
 	}
 
-	CelDrawTo(out, PANEL_X, PANEL_Y - 1, doomCel.get(), 1, 640);
+	CelDrawTo(out, PANEL_X, PANEL_Y - 1, DoomCel.get(), 1, 640);
 }
 
 } // namespace devilution

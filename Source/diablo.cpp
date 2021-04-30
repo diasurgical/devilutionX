@@ -883,7 +883,7 @@ static bool LeftMouseDown(int wParam)
 	if (PauseMode == 2) {
 		return false;
 	}
-	if (doomflag) {
+	if (DoomFlag) {
 		doom_close();
 		return false;
 	}
@@ -955,7 +955,7 @@ static void LeftMouseUp(int wParam)
 static void RightMouseDown()
 {
 	if (!gmenu_is_active() && sgnTimeoutCurs == CURSOR_NONE && PauseMode != 2 && !plr[myplr]._pInvincible) {
-		if (doomflag) {
+		if (DoomFlag) {
 			doom_close();
 		} else if (stextflag == STORE_NONE) {
 			if (spselflag) {
@@ -1033,7 +1033,7 @@ bool PressEscKey()
 {
 	bool rv = false;
 
-	if (doomflag) {
+	if (DoomFlag) {
 		doom_close();
 		rv = true;
 	}
@@ -1298,7 +1298,7 @@ static void PressChar(WPARAM vkey)
 	if (PauseMode == 2) {
 		return;
 	}
-	if (doomflag) {
+	if (DoomFlag) {
 		doom_close();
 		return;
 	}
