@@ -2103,9 +2103,14 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 
 static void ConnectHall(const HALLNODE &node)
 {
-	auto [nX1, nY1, nX2, nY2, nHd] = node;
 	int nCurrd, nDx, nDy, nRp, nOrigX1, nOrigY1, fMinusFlag, fPlusFlag;
 	bool fDoneflag, fInroom;
+
+	int nX1 = node.nHallx1;
+	int nY1 = node.nHally1;
+	int nX2 = node.nHallx2;
+	int nY2 = node.nHally2;
+	int nHd = node.nHalldir;
 
 	fDoneflag = false;
 	fMinusFlag = GenerateRnd(100);
