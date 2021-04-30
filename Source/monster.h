@@ -121,7 +121,7 @@ struct CMonster {
 	uint8_t mPlaceFlags;
 	AnimStruct Anims[6];
 #ifndef NOSOUND
-	TSnd *Snds[4][2];
+	std::unique_ptr<TSnd> Snds[4][2];
 #endif
 	int width;
 	uint16_t mMinHP;

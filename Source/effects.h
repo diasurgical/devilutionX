@@ -1059,7 +1059,7 @@ enum sfx_flag : uint8_t {
 struct TSFX {
 	uint8_t bFlags;
 	const char *pszName;
-	TSnd *pSnd;
+	std::unique_ptr<TSnd> pSnd;
 };
 
 extern int sfxdelay;
