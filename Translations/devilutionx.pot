@@ -3665,22 +3665,22 @@ msgid "hit monster doesn't heal"
 msgstr ""
 
 #: Source/items.cpp:3629
-#, c-format
+#, no-c-format
 msgid "hit steals 3% mana"
 msgstr ""
 
 #: Source/items.cpp:3631
-#, c-format
+#, no-c-format
 msgid "hit steals 5% mana"
 msgstr ""
 
 #: Source/items.cpp:3635
-#, c-format
+#, no-c-format
 msgid "hit steals 3% life"
 msgstr ""
 
 #: Source/items.cpp:3637
-#, c-format
+#, no-c-format
 msgid "hit steals 5% life"
 msgstr ""
 
@@ -3794,7 +3794,7 @@ msgid "2x dmg to monst, 1x to you"
 msgstr ""
 
 #: Source/items.cpp:3721
-#, c-format
+#, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr ""
 
