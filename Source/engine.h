@@ -17,7 +17,6 @@
 #include <cstdlib>
 #include <SDL.h>
 #include <cstdint>
-#include <memory>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
