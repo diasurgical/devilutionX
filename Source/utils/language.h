@@ -1,8 +1,10 @@
 #pragma once
 
-#define _(x) LanguageTranslate(x)
+#include <string>
+
+#define _(x) LanguageTranslate(x).c_str()
 #define N_(x) (x)
 
 void LanguageInitialize();
-const char* LanguageTranslate(const char* key);
-const char* LanguageMetadata(const char *key);
+const std::string &LanguageTranslate(const char* key);
+const char *LanguageMetadata(const char *key);

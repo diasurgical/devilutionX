@@ -1,7 +1,12 @@
+#include "utils/language.h"
+
+#include <map>
+#include <memory>
+#include <vector>
+
 #include "options.h"
 #include "utils/paths.h"
 #include "utils/utf8.h"
-#include <map>
 
 using namespace devilution;
 #define MO_MAGIC 0x950412de
@@ -15,7 +20,7 @@ struct cstring_cmp {
 	}
 };
 
-std::map<const char *, const char *, cstring_cmp> map;
+std::map<std::string, std::string, std::less<>> map;
 std::map<const char *, const char *, cstring_cmp> meta;
 
 struct mo_head {
@@ -89,41 +94,23 @@ bool parse_metadata(char *data)
 	return utf8;
 }
 
-char *read_entry(FILE *fp, mo_entry *e)
+bool read_entry(FILE *fp, mo_entry *e, std::vector<char> &result)
 {
-	void *data;
-
-	if (fseek(fp, e->offset, SEEK_SET)) {
-		return nullptr;
-	}
-
-	if (!(data = calloc(e->length + 1, sizeof(char)))) {
-		return nullptr;
-	}
-
-	if (fread(data, sizeof(char), e->length, fp) != e->length) {
-		free(data);
-		return nullptr;
-	}
-
-	return static_cast<char *>(data);
+	if (fseek(fp, e->offset, SEEK_SET) != 0)
+		return false;
+	result.resize(e->length + 1);
+	result.back() = '\0';
+	return (fread(result.data(), sizeof(char), e->length, fp) == e->length);
 }
+
 } // namespace
 
-const char *LanguageTranslate(const char *key)
+const std::string &LanguageTranslate(const char *key)
 {
 	auto it = map.find(key);
 	if (it == map.end()) {
-		char *val;
-		if (!(val = (char *)calloc(strlen(key) + 1, sizeof(char)))) {
-			return key;
-		}
-		std::string latin1 = utf8_to_latin1(key);
-		strcpy(val, latin1.c_str());
-		map[key] = val;
-		return val;
+		return map.insert({key, utf8_to_latin1(key)}).first->second;
 	}
-
 	return it->second;
 }
 
@@ -139,7 +126,6 @@ const char *LanguageMetadata(const char *key)
 
 void LanguageInitialize()
 {
-	mo_entry *src, *dst;
 	mo_head head;
 	FILE *fp;
 	bool utf8;
@@ -153,6 +139,7 @@ void LanguageInitialize()
 		}
 	}
 	// Read header and do sanity checks
+	// FIXME: Endianness.
 	if (fread(&head, sizeof(mo_head), 1, fp) != 1) {
 		return;
 	}
@@ -166,52 +153,35 @@ void LanguageInitialize()
 	}
 
 	// Read entries of source strings
-	src = new mo_entry[head.nb_mappings];
-	if (fseek(fp, head.src_offset, SEEK_SET)) {
-		delete[] src;
+	auto src = std::make_unique<mo_entry[]>(head.nb_mappings);
+	if (fseek(fp, head.src_offset, SEEK_SET) != 0)
 		return;
-	}
-	if (fread(src, sizeof(mo_entry), head.nb_mappings, fp) != head.nb_mappings) {
-		delete[] src;
+	// FIXME: Endianness.
+	if (fread(src.get(), sizeof(mo_entry), head.nb_mappings, fp) != head.nb_mappings)
 		return;
-	}
 
 	// Read entries of target strings
-	dst = new mo_entry[head.nb_mappings];
-	if (fseek(fp, head.dst_offset, SEEK_SET)) {
-		delete[] dst;
-		delete[] src;
+	auto dst = std::make_unique<mo_entry[]>(head.nb_mappings);
+	if (fseek(fp, head.dst_offset, SEEK_SET) != 0)
 		return;
-	}
-
-	if (fread(dst, sizeof(mo_entry), head.nb_mappings, fp) != head.nb_mappings) {
-		delete[] dst;
-		delete[] src;
+	// FIXME: Endianness.
+	if (fread(dst.get(), sizeof(mo_entry), head.nb_mappings, fp) != head.nb_mappings)
 		return;
-	}
 
 	// Read strings described by entries
 	for (uint32_t i = 0; i < head.nb_mappings; i++) {
-		char *key, *val;
-		if ((key = read_entry(fp, src + i))) {
-			if ((val = read_entry(fp, dst + i))) {
-				if (!*key) {
-					utf8 = parse_metadata(val);
-				} else {
-					if (utf8) {
-						std::string latin1 = utf8_to_latin1(key);
-						strcpy(key, latin1.c_str());
-
-						latin1 = utf8_to_latin1(val);
-						strcpy(val, latin1.c_str());
-					}
-					map[key] = val;
-				}
+		std::vector<char> key;
+		std::vector<char> value;
+		if (read_entry(fp, &src[i], key) && read_entry(fp, &dst[i], value)) {
+			if (key.empty()) {
+				utf8 = parse_metadata(value.data());
 			} else {
-				free(key);
+				if (utf8) {
+					map.emplace(key.data(), utf8_to_latin1(value.data()));
+				} else {
+					map.emplace(key.data(), value.data());
+				}
 			}
 		}
 	}
-	delete[] dst;
-	delete[] src;
 }
