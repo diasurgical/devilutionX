@@ -66,7 +66,7 @@ void doom_init()
 void doom_close()
 {
 	DoomFlag = false;
-	DoomCel.reset();
+	DoomCel = nullptr;
 }
 
 void doom_draw(const CelOutputBuffer &out)
