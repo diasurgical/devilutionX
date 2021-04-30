@@ -1301,9 +1301,8 @@ void effects_cleanup_sfx()
 {
 	sound_stop();
 
-	for (uint32_t i = 0; i < sizeof(sgSFX) / sizeof(TSFX); i++) {
-		sgSFX[i].pSnd = nullptr;
-	}
+	for (auto &sfx : sgSFX)
+		sfx.pSnd = nullptr;
 }
 
 static void priv_sound_init(BYTE bLoadMask)
