@@ -132,11 +132,10 @@ static DWORD pfile_get_save_num_from_name(const char *name)
 	return i;
 }
 
-static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, uint32_t *pdwLen)
+static std::unique_ptr<uint8_t[]> pfile_read_archive(HANDLE archive, const char *pszName, uint32_t *pdwLen)
 {
 	DWORD nread;
 	HANDLE file;
-	BYTE *buf;
 
 	if (!SFileOpenFileEx(archive, pszName, 0, &file))
 		return nullptr;
@@ -145,12 +144,12 @@ static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, uint32_t *p
 	if (*pdwLen == 0)
 		return nullptr;
 
-	buf = DiabloAllocPtr(*pdwLen);
-	if (!SFileReadFile(file, buf, *pdwLen, &nread, nullptr))
+	auto buf = std::make_unique<uint8_t[]>(*pdwLen);
+	if (!SFileReadFile(file, buf.get(), *pdwLen, &nread, nullptr))
 		return nullptr;
 	SFileCloseFile(file);
 
-	*pdwLen = codec_decode(buf, *pdwLen, pfile_get_password());
+	*pdwLen = codec_decode(buf.get(), *pdwLen, pfile_get_password());
 	if (*pdwLen == 0)
 		return nullptr;
 
@@ -160,19 +159,17 @@ static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, uint32_t *p
 static bool pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 {
 	DWORD read;
-	BYTE *buf;
 
-	buf = pfile_read_archive(archive, "hero", &read);
+	auto buf = pfile_read_archive(archive, "hero", &read);
 	if (buf == nullptr)
 		return false;
 
 	bool ret = false;
 	if (read == sizeof(*pPack)) {
-		memcpy(pPack, buf, sizeof(*pPack));
+		memcpy(pPack, buf.get(), sizeof(*pPack));
 		ret = true;
 	}
 
-	mem_free_dbg(buf);
 	return ret;
 }
 
@@ -298,12 +295,11 @@ bool pfile_archive_contains_game(HANDLE hsArchive)
 		return false;
 
 	uint32_t dwLen;
-	BYTE *gameData = pfile_read_archive(hsArchive, "game", &dwLen);
+	auto gameData = pfile_read_archive(hsArchive, "game", &dwLen);
 	if (gameData == nullptr)
 		return false;
 
-	uint32_t hdr = LoadLE32(gameData);
-	mem_free_dbg(gameData);
+	uint32_t hdr = LoadLE32(gameData.get());
 
 	return IsHeaderValid(hdr);
 }
@@ -479,18 +475,17 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 	mpqapi_flush_and_close(true);
 }
 
-BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
+std::unique_ptr<uint8_t[]> pfile_read(const char *pszName, DWORD *pdwLen)
 {
 	DWORD save_num;
 	HANDLE archive;
-	BYTE *buf;
 
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	archive = pfile_open_save_archive(save_num);
 	if (archive == nullptr)
 		return nullptr;
 
-	buf = pfile_read_archive(archive, pszName, pdwLen);
+	auto buf = pfile_read_archive(archive, pszName, pdwLen);
 	pfile_SFileCloseArchive(&archive);
 	if (buf == nullptr)
 		return nullptr;

@@ -63,7 +63,7 @@ T SwapBE(T in)
 }
 
 class LoadHelper {
-	uint8_t *m_buffer;
+	std::unique_ptr<uint8_t[]> m_buffer;
 	uint32_t m_cur = 0;
 	uint32_t m_size;
 
@@ -128,25 +128,20 @@ public:
 	{
 		return next<uint32_t>() != 0;
 	}
-
-	~LoadHelper()
-	{
-		mem_free_dbg(m_buffer);
-	}
 };
 
 class SaveHelper {
 	const char *m_szFileName;
-	uint8_t *m_buffer;
+	std::unique_ptr<uint8_t[]> m_buffer;
 	uint32_t m_cur = 0;
 	uint32_t m_capacity;
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
+		: m_szFileName(szFileName)
+		, m_buffer(std::make_unique<uint8_t[]>(codec_get_encoded_len(bufferLen)))
+		, m_capacity(bufferLen)
 	{
-		m_szFileName = szFileName;
-		m_capacity = bufferLen;
-		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_capacity));
 	}
 
 	bool isValid(uint32_t len = 1)
@@ -187,11 +182,8 @@ public:
 	{
 		const auto encoded_len = codec_get_encoded_len(m_cur);
 		const char *const password = pfile_get_password();
-		codec_encode(m_buffer, m_cur, encoded_len, password);
-		mpqapi_write_file(m_szFileName, m_buffer, encoded_len);
-
-		mem_free_dbg(m_buffer);
-		m_buffer = nullptr;
+		codec_encode(m_buffer.get(), m_cur, encoded_len, password);
+		mpqapi_write_file(m_szFileName, m_buffer.get(), encoded_len);
 	}
 };
 
