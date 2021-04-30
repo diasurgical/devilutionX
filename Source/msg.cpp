@@ -69,7 +69,7 @@ static void msg_pre_packet()
 	int i = -1;
 	for (TMegaPkt *pkt = sgpMegaPkt.get(); pkt != nullptr; pkt = pkt->next.get()) {
 		BYTE *data = pkt->data;
-		size_t spaceLeft = sizeof(pkt->data);
+		size_t spaceLeft = TMegaPkt::DefaultPayloadSize;
 		while (spaceLeft != pkt->spaceLeft) {
 			if (*data == FAKE_CMD_SETID) {
 				auto *cmd = (TFakeCmdPlr *)data;
@@ -103,7 +103,7 @@ static void msg_send_packet(int pnum, const void *packet, DWORD dwSize)
 	if (sgpCurrPkt->spaceLeft < dwSize)
 		msg_get_next_packet();
 
-	memcpy(sgpCurrPkt->data + sizeof(sgpCurrPkt->data) - sgpCurrPkt->spaceLeft, packet, dwSize);
+	memcpy(sgpCurrPkt->data + TMegaPkt::DefaultPayloadSize - sgpCurrPkt->spaceLeft, packet, dwSize);
 	sgpCurrPkt->spaceLeft -= dwSize;
 }
 

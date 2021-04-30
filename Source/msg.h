@@ -404,9 +404,11 @@ struct DJunk {
 
 #pragma pack(push, 1)
 struct TMegaPkt {
+	static constexpr size_t DefaultPayloadSize = 32000;
+
 	std::unique_ptr<TMegaPkt> next;
 	uint32_t spaceLeft;
-	uint8_t data[0];
+	uint8_t data[];
 
 private:
 	TMegaPkt(uint32_t spaceLeft)
@@ -415,7 +417,7 @@ private:
 	}
 
 public:
-	static std::unique_ptr<TMegaPkt> make(size_t payloadSize = 32000)
+	static std::unique_ptr<TMegaPkt> make(size_t payloadSize = DefaultPayloadSize)
 	{
 		auto mem = new uint8_t[sizeof(TMegaPkt) + payloadSize];
 		return std::unique_ptr<TMegaPkt>(new(mem)TMegaPkt(payloadSize));
