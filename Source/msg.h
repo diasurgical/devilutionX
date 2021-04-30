@@ -408,11 +408,13 @@ struct TMegaPkt {
 	uint32_t spaceLeft;
 	uint8_t data[0];
 
+private:
 	TMegaPkt(uint32_t spaceLeft)
 		: spaceLeft(spaceLeft)
 	{
 	}
 
+public:
 	static std::unique_ptr<TMegaPkt> make(size_t payloadSize = 32000)
 	{
 		auto mem = new uint8_t[sizeof(TMegaPkt) + payloadSize];
