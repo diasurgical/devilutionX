@@ -144,7 +144,7 @@ static std::unique_ptr<uint8_t[]> pfile_read_archive(HANDLE archive, const char 
 	if (*pdwLen == 0)
 		return nullptr;
 
-	std::unique_ptr<uint8_t[]> buf = std::make_unique<uint8_t[]>(*pdwLen);
+	auto buf = std::make_unique<uint8_t[]>(*pdwLen);
 	if (!SFileReadFile(file, buf.get(), *pdwLen, &nread, nullptr))
 		return nullptr;
 	SFileCloseFile(file);
@@ -160,7 +160,7 @@ static bool pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 {
 	DWORD read;
 
-	std::unique_ptr<uint8_t[]> buf = pfile_read_archive(archive, "hero", &read);
+	auto buf = pfile_read_archive(archive, "hero", &read);
 	if (buf == nullptr)
 		return false;
 
@@ -295,7 +295,7 @@ bool pfile_archive_contains_game(HANDLE hsArchive)
 		return false;
 
 	uint32_t dwLen;
-	std::unique_ptr<uint8_t[]> gameData = pfile_read_archive(hsArchive, "game", &dwLen);
+	auto gameData = pfile_read_archive(hsArchive, "game", &dwLen);
 	if (gameData == nullptr)
 		return false;
 
@@ -485,7 +485,7 @@ std::unique_ptr<uint8_t[]> pfile_read(const char *pszName, DWORD *pdwLen)
 	if (archive == nullptr)
 		return nullptr;
 
-	std::unique_ptr<uint8_t[]> buf = pfile_read_archive(archive, pszName, pdwLen);
+	auto buf = pfile_read_archive(archive, pszName, pdwLen);
 	pfile_SFileCloseArchive(&archive);
 	if (buf == nullptr)
 		return nullptr;
