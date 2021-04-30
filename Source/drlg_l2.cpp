@@ -1961,11 +1961,6 @@ static void PlaceHallExt(int nX, int nY)
 	}
 }
 
-static void AddHall(int nX1, int nY1, int nX2, int nY2, int nHd)
-{
-	HallList.push_back({nX1, nY1, nX2, nY2, nHd});
-}
-
 /**
  * Draws a random room rectangle, and then subdivides the rest of the passed in rectangle into 4 and recurses.
  * @param nX1 Lower X boundary of the area to draw into.
@@ -2090,7 +2085,7 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
 			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
-		AddHall(nHx1, nHy1, nHx2, nHy2, nHDir);
+		HallList.push_back({nHx1, nHy1, nHx2, nHy2, nHDir});
 	}
 
 	if (nRh > nRw) {
