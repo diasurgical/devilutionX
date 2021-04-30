@@ -173,17 +173,14 @@ static bool pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 	return ret;
 }
 
-static void pfile_encode_hero(const PkPlayerStruct *pPack)
+static void pfile_encode_hero(const PkPlayerStruct *pack)
 {
-	BYTE *packed;
-	DWORD packed_len;
+	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
+	auto packed = std::make_unique<uint8_t[]>(packedLen);
 
-	packed_len = codec_get_encoded_len(sizeof(*pPack));
-	packed = (BYTE *)DiabloAllocPtr(packed_len);
-	memcpy(packed, pPack, sizeof(*pPack));
-	codec_encode(packed, sizeof(*pPack), packed_len, pfile_get_password());
-	mpqapi_write_file("hero", packed, packed_len);
-	mem_free_dbg(packed);
+	memcpy(packed.get(), pack, sizeof(*pack));
+	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
+	mpqapi_write_file("hero", packed.get(), packedLen);
 }
 
 static bool pfile_open_archive(DWORD save_num)
