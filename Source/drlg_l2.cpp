@@ -6,6 +6,7 @@
 #include "drlg_l2.h"
 
 #include <algorithm>
+#include <list>
 
 #include "diablo.h"
 #include "drlg_l1.h"
@@ -26,7 +27,7 @@ int nSx2;
 int nSy2;
 int nRoomCnt;
 ROOMNODE RoomList[81];
-HALLNODE *pHallList;
+std::list<HALLNODE> HallList;
 
 int Area_Min = 2;
 int Room_Max = 10;
@@ -1960,34 +1961,6 @@ static void PlaceHallExt(int nX, int nY)
 	}
 }
 
-static void AddHall(int nX1, int nY1, int nX2, int nY2, int nHd)
-{
-	HALLNODE *p1, *p2;
-
-	if (pHallList == nullptr) {
-		pHallList = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
-		pHallList->nHallx1 = nX1;
-		pHallList->nHally1 = nY1;
-		pHallList->nHallx2 = nX2;
-		pHallList->nHally2 = nY2;
-		pHallList->nHalldir = nHd;
-		pHallList->pNext = nullptr;
-	} else {
-		p1 = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
-		p1->nHallx1 = nX1;
-		p1->nHally1 = nY1;
-		p1->nHallx2 = nX2;
-		p1->nHally2 = nY2;
-		p1->nHalldir = nHd;
-		p1->pNext = nullptr;
-		p2 = pHallList;
-		while (p2->pNext != nullptr) {
-			p2 = p2->pNext;
-		}
-		p2->pNext = p1;
-	}
-}
-
 /**
  * Draws a random room rectangle, and then subdivides the rest of the passed in rectangle into 4 and recurses.
  * @param nX1 Lower X boundary of the area to draw into.
@@ -2112,7 +2085,7 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
 			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
-		AddHall(nHx1, nHy1, nHx2, nHy2, nHDir);
+		HallList.push_back({nHx1, nHy1, nHx2, nHy2, nHDir});
 	}
 
 	if (nRh > nRw) {
@@ -2128,24 +2101,16 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 	}
 }
 
-static void GetHall(int *nX1, int *nY1, int *nX2, int *nY2, int *nHd)
-{
-	HALLNODE *p1;
-
-	p1 = pHallList->pNext;
-	*nX1 = pHallList->nHallx1;
-	*nY1 = pHallList->nHally1;
-	*nX2 = pHallList->nHallx2;
-	*nY2 = pHallList->nHally2;
-	*nHd = pHallList->nHalldir;
-	MemFreeDbg(pHallList);
-	pHallList = p1;
-}
-
-static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
+static void ConnectHall(const HALLNODE &node)
 {
 	int nCurrd, nDx, nDy, nRp, nOrigX1, nOrigY1, fMinusFlag, fPlusFlag;
 	bool fDoneflag, fInroom;
+
+	int nX1 = node.nHallx1;
+	int nY1 = node.nHally1;
+	int nX2 = node.nHallx2;
+	int nY2 = node.nHally2;
+	int nHd = node.nHalldir;
 
 	fDoneflag = false;
 	fMinusFlag = GenerateRnd(100);
@@ -2745,7 +2710,7 @@ static bool DL2_FillVoids()
 
 static bool CreateDungeon()
 {
-	int i, j, nHx1, nHy1, nHx2, nHy2, nHd, ForceH, ForceW;
+	int i, j, ForceH, ForceW;
 	bool ForceHW;
 
 	ForceW = 0;
@@ -2780,9 +2745,9 @@ static bool CreateDungeon()
 
 	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, ForceHW, ForceH, ForceW);
 
-	while (pHallList != nullptr) {
-		GetHall(&nHx1, &nHy1, &nHx2, &nHy2, &nHd);
-		ConnectHall(nHx1, nHy1, nHx2, nHy2, nHd);
+	while (!HallList.empty()) {
+		ConnectHall(HallList.front());
+		HallList.pop_front();
 	}
 
 	for (j = 0; j < DMAXY; j++) {     /// BUGFIX: change '<=' to '<' (fixed)
