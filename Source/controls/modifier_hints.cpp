@@ -30,14 +30,14 @@ int SpaceWidth()
 struct CircleMenuHint {
 	CircleMenuHint(bool isDpad, const char *top, const char *right, const char *bottom, const char *left)
 	    : is_dpad(isDpad)
-	    , top(_(top))
-	    , top_w(CalculateTextWidth(_(top)))
-	    , right(_(right))
-	    , right_w(CalculateTextWidth(_(right)))
-	    , bottom(_(bottom))
-	    , bottom_w(CalculateTextWidth(_(bottom)))
-	    , left(_(left))
-	    , left_w(CalculateTextWidth(_(left)))
+	    , top(top)
+	    , top_w(CalculateTextWidth(top))
+	    , right(right)
+	    , right_w(CalculateTextWidth(right))
+	    , bottom(bottom)
+	    , bottom_w(CalculateTextWidth(bottom))
+	    , left(left)
+	    , left_w(CalculateTextWidth(left))
 	    , x_mid(left_w + SpaceWidth() * 2.5)
 	{
 	}
@@ -114,8 +114,8 @@ void DrawStartModifierMenu(const CelOutputBuffer &out)
 {
 	if (!start_modifier_active)
 		return;
-	static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/N_("Menu"), /*right=*/N_("Inv"), /*bottom=*/N_("Map"), /*left=*/N_("Char"));
-	static const CircleMenuHint buttons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/N_("Spells"), /*left=*/N_("Quests"));
+	static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
+	static const CircleMenuHint buttons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
 	DrawCircleMenuHint(out, dPad, PANEL_LEFT + CircleMarginX, PANEL_TOP - CirclesTop);
 	DrawCircleMenuHint(out, buttons, PANEL_LEFT + PANEL_WIDTH - buttons.Width() - CircleMarginX, PANEL_TOP - CirclesTop);
 }
