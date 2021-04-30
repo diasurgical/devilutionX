@@ -1736,7 +1736,7 @@ void RedBack(const CelOutputBuffer &out)
 
 	if (leveltype != DTYPE_HELL) {
 		BYTE *dst = out.begin();
-		BYTE *tbl = &pLightTbl[idx];
+		BYTE *tbl = &LightTbl[idx];
 		for (int h = gnViewportHeight; h != 0; h--, dst += out.pitch() - gnScreenWidth) {
 			for (int w = gnScreenWidth; w != 0; w--) {
 				*dst = tbl[*dst];
@@ -1745,7 +1745,7 @@ void RedBack(const CelOutputBuffer &out)
 		}
 	} else {
 		BYTE *dst = out.begin();
-		BYTE *tbl = &pLightTbl[idx];
+		BYTE *tbl = &LightTbl[idx];
 		for (int h = gnViewportHeight; h != 0; h--, dst += out.pitch() - gnScreenWidth) {
 			for (int w = gnScreenWidth; w != 0; w--) {
 				if (*dst >= 32)

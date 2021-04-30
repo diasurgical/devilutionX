@@ -22,7 +22,7 @@ char lightmax;
 bool dolighting;
 BYTE lightblock[64][16][16];
 int visionid;
-BYTE *pLightTbl;
+uint8_t LightTbl[LIGHTSIZE];
 bool lightflag;
 
 /**
@@ -764,17 +764,6 @@ void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
 	}
 }
 
-void FreeLightTable()
-{
-	MemFreeDbg(pLightTbl);
-}
-
-void InitLightTable()
-{
-	assert(!pLightTbl);
-	pLightTbl = DiabloAllocPtr(LIGHTSIZE);
-}
-
 void MakeLightTable()
 {
 	int i, j, k, l, lights, shade, l1, l2, cnt, rem, div;
@@ -783,7 +772,7 @@ void MakeLightTable()
 	BYTE *tbl, *trn;
 	BYTE blood[16];
 
-	tbl = pLightTbl;
+	tbl = LightTbl;
 	shade = 0;
 
 	if (light4flag) {
@@ -851,7 +840,7 @@ void MakeLightTable()
 	}
 
 	if (leveltype == DTYPE_HELL) {
-		tbl = pLightTbl;
+		tbl = LightTbl;
 		for (i = 0; i < lights; i++) {
 			l1 = lights - i;
 			l2 = l1;
@@ -891,7 +880,7 @@ void MakeLightTable()
 		tbl += 224;
 	}
 	if (currlevel >= 17) {
-		tbl = pLightTbl;
+		tbl = LightTbl;
 		for (i = 0; i < lights; i++) {
 			*tbl++ = 0;
 			for (j = 1; j < 16; j++)
@@ -1275,7 +1264,7 @@ void lighting_color_cycling()
 		return;
 	}
 
-	tbl = pLightTbl;
+	tbl = LightTbl;
 
 	for (j = 0; j < l; j++) {
 		tbl++;

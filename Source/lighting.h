@@ -41,14 +41,12 @@ extern int numvision;
 extern char lightmax;
 extern bool dolighting;
 extern int visionid;
-extern BYTE *pLightTbl;
+extern uint8_t LightTbl[LIGHTSIZE];
 extern bool lightflag;
 
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible);
-void FreeLightTable();
-void InitLightTable();
 void MakeLightTable();
 #ifdef _DEBUG
 void ToggleLighting();

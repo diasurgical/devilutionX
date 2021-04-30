@@ -44,7 +44,7 @@ BYTE *GetLightTable(char light) {
 		idx += 256; // gray colors
 	if (light >= 4)
 		idx += (light - 1) << 8;
-	return &pLightTbl[idx];
+	return &LightTbl[idx];
 }
 
 } // namespace
@@ -166,7 +166,7 @@ void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBy
 	BYTE *dst = out.at(sx, sy);
 
 	if (tbl == nullptr)
-		tbl = &pLightTbl[light_table_index * 256];
+		tbl = &LightTbl[light_table_index * 256];
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
@@ -214,7 +214,7 @@ void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *p
 
 	BYTE *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
-	BYTE *tbl = &pLightTbl[light_table_index * 256];
+	BYTE *tbl = &LightTbl[light_table_index * 256];
 	bool shift = ((size_t)dst % 2) != 0;
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth, shift = !shift) {
@@ -295,7 +295,7 @@ static void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy
 	BYTE *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
 	if (tbl == nullptr)
-		tbl = &pLightTbl[light_table_index * 256];
+		tbl = &LightTbl[light_table_index * 256];
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
@@ -996,7 +996,7 @@ void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, in
 	BYTE *pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
 	if (light_table_index != 0)
-		Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, &pLightTbl[light_table_index * 256]);
+		Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth, &LightTbl[light_table_index * 256]);
 	else
 		Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, nWidth);
 }

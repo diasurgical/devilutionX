@@ -292,7 +292,6 @@ static void start_game(interface_mode uMsg)
 	CalcViewportGeometry();
 	cineflag = false;
 	InitCursor();
-	InitLightTable();
 #ifdef _DEBUG
 	LoadDebugGFX();
 #endif
@@ -323,7 +322,6 @@ static void free_game()
 
 	FreeItemGFX();
 	FreeCursor();
-	FreeLightTable();
 #ifdef _DEBUG
 	FreeDebugGFX();
 #endif
