@@ -1464,14 +1464,14 @@ void StartAttack(int pnum, direction d)
 	}
 
 	int skippedAnimationFrames = 0;
-	if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
-		skippedAnimationFrames += 1;
-	}
 	if ((plr[pnum]._pIFlags & ISPL_FASTERATTACK) != 0) {
-		skippedAnimationFrames += 2;
-	}
-	if ((plr[pnum]._pIFlags & ISPL_FASTESTATTACK) != 0) {
-		skippedAnimationFrames += 2;
+		// The combination of Faster and Fast Attack doesn't result in more skipped skipped frames, cause the secound frame skip of Faster Attack is not triggered.
+		skippedAnimationFrames = 2;
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
+		skippedAnimationFrames = 1;
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTESTATTACK) != 0) {
+		// Fastest Attack is skipped if Fast or Faster Attack is also specified, cause both skip the frame that triggers fastest attack skipping
+		skippedAnimationFrames = 2;
 	}
 
 	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationDistributionParams::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
