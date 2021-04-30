@@ -63,7 +63,7 @@ T SwapBE(T in)
 }
 
 class LoadHelper {
-	uint8_t *m_buffer;
+	std::unique_ptr<uint8_t[]> m_buffer;
 	uint32_t m_cur = 0;
 	uint32_t m_size;
 
@@ -127,11 +127,6 @@ public:
 	bool nextBool32()
 	{
 		return next<uint32_t>() != 0;
-	}
-
-	~LoadHelper()
-	{
-		mem_free_dbg(m_buffer);
 	}
 };
 
