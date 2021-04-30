@@ -36,12 +36,12 @@ static DWORD sgdwRecvOffset;
 static int sgnCurrMegaPlayer;
 static DLevel sgLevels[NUMLEVELS];
 static BYTE sbLastCmd;
-static std::shared_ptr<TMegaPkt> sgpCurrPkt;
+static TMegaPkt *sgpCurrPkt;
 static BYTE sgRecvBuf[sizeof(DLevel) + 1];
 static BYTE sgbRecvCmd;
 static LocalLevel sgLocals[NUMLEVELS];
 static DJunk sgJunk;
-static std::shared_ptr<TMegaPkt> sgpMegaPkt;
+static std::unique_ptr<TMegaPkt> sgpMegaPkt;
 static bool sgbDeltaChanged;
 static BYTE sgbDeltaChunks;
 bool deltaload;
@@ -50,19 +50,18 @@ int dwRecCount;
 
 static void msg_get_next_packet()
 {
-	sgpCurrPkt = TMegaPkt::make();
+	TMegaPkt *last = sgpMegaPkt.get();
+	while (last->next != nullptr)
+		last = last->next.get();
 
-	TMegaPkt *result = sgpMegaPkt.get();
-	while (result->next != nullptr)
-		result = result->next.get();
-
-	result->next = sgpCurrPkt;
+	last->next = TMegaPkt::make();
+	sgpCurrPkt = last->next.get();
 }
 
 static void msg_free_packets()
 {
 	while (sgpMegaPkt != nullptr)
-		sgpMegaPkt = sgpMegaPkt->next;
+		sgpMegaPkt = std::move(sgpMegaPkt->next);
 }
 
 static void msg_pre_packet()

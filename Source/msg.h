@@ -404,7 +404,7 @@ struct DJunk {
 
 #pragma pack(push, 1)
 struct TMegaPkt {
-	std::shared_ptr<TMegaPkt> next;
+	std::unique_ptr<TMegaPkt> next;
 	uint32_t spaceLeft;
 	uint8_t data[0];
 

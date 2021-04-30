@@ -12,7 +12,7 @@ namespace devilution {
 
 static CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
-std::shared_ptr<TMegaPkt> sgpInfoHead; /* may not be right struct */
+std::unique_ptr<TMegaPkt> sgpInfoHead; /* may not be right struct */
 bool dthread_running;
 event_emul *sghWorkToDoEvent;
 
@@ -22,7 +22,7 @@ static SDL_Thread *sghThread = nullptr;
 static unsigned int dthread_handler(void *data)
 {
 	const char *error_buf;
-	std::shared_ptr<TMegaPkt> pkt;
+
 	DWORD dwMilliseconds;
 
 	while (dthread_running) {
@@ -32,9 +32,9 @@ static unsigned int dthread_handler(void *data)
 		}
 
 		sgMemCrit.Enter();
-		pkt = sgpInfoHead;
-		if (sgpInfoHead != nullptr)
-			sgpInfoHead = sgpInfoHead->next;
+		std::unique_ptr<TMegaPkt> pkt = std::move(sgpInfoHead);
+		if (pkt != nullptr)
+			sgpInfoHead = std::move(pkt->next);
 		else
 			ResetEvent(sghWorkToDoEvent);
 		sgMemCrit.Leave();
@@ -71,7 +71,7 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 		return;
 	}
 
-	std::shared_ptr<TMegaPkt> pkt = TMegaPkt::make(dwLen + 20);
+	std::unique_ptr<TMegaPkt> pkt = TMegaPkt::make(dwLen + 20);
 	pkt->data[0] = cmd;
 	pkt->spaceLeft = pnum;
 	*(DWORD *)&pkt->data[4] = dwLen;
@@ -81,7 +81,7 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 	while (p->next != nullptr) {
 		p = p->next.get();
 	}
-	p->next = pkt;
+	p->next = std::move(pkt);
 
 	SetEvent(sghWorkToDoEvent);
 	sgMemCrit.Leave();
@@ -126,7 +126,7 @@ void dthread_cleanup()
 	sghWorkToDoEvent = nullptr;
 
 	while (sgpInfoHead != nullptr)
-		sgpInfoHead = sgpInfoHead->next;
+		sgpInfoHead = std::move(sgpInfoHead->next);
 }
 
 } // namespace devilution
