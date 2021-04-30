@@ -3690,7 +3690,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("see with infravision"));
 		break;
 	case IPL_INVCURS:
-		strcpy(tempstr, _(" "));
+		strcpy(tempstr, " ");
 		break;
 	case IPL_ADDACLIFE:
 		if (x->_iFMinDam == x->_iFMaxDam)
