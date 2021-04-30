@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include <memory>
 
 #include "miniwin/miniwin.h"
 

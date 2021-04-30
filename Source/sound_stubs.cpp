@@ -14,7 +14,7 @@ void snd_update(bool bStopAll) { }
 void snd_stop_snd(TSnd *pSnd) { }
 bool snd_playing(TSnd *pSnd) { return false; }
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan) { }
-TSnd *sound_file_load(const char *path, bool stream) { return nullptr; }
+std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream) { return nullptr; }
 void sound_file_cleanup(TSnd *sound_file) { }
 void snd_init() { }
 void snd_deinit() { }
