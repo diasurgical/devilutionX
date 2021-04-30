@@ -57,7 +57,7 @@ SDL_Surface *RenderText(const char *text, SDL_Color color)
 {
 	if (text[0] == '\0')
 		return nullptr;
-	SDL_Surface *result = TTF_RenderUTF8_Solid(font, text, color);
+	SDL_Surface *result = TTF_RenderText_Solid(font, text, color);
 	if (result == nullptr)
 		Log("{}", TTF_GetError());
 	return result;
