@@ -2106,21 +2106,9 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 	}
 }
 
-static void GetHall(int *nX1, int *nY1, int *nX2, int *nY2, int *nHd)
+static void ConnectHall(const HALLNODE &node)
 {
-	HALLNODE node = HallList.front();
-
-	*nX1 = node.nHallx1;
-	*nY1 = node.nHally1;
-	*nX2 = node.nHallx2;
-	*nY2 = node.nHally2;
-	*nHd = node.nHalldir;
-
-	HallList.pop_front();
-}
-
-static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
-{
+	auto [nX1, nY1, nX2, nY2, nHd] = node;
 	int nCurrd, nDx, nDy, nRp, nOrigX1, nOrigY1, fMinusFlag, fPlusFlag;
 	bool fDoneflag, fInroom;
 
@@ -2722,7 +2710,7 @@ static bool DL2_FillVoids()
 
 static bool CreateDungeon()
 {
-	int i, j, nHx1, nHy1, nHx2, nHy2, nHd, ForceH, ForceW;
+	int i, j, ForceH, ForceW;
 	bool ForceHW;
 
 	ForceW = 0;
@@ -2758,8 +2746,8 @@ static bool CreateDungeon()
 	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, ForceHW, ForceH, ForceW);
 
 	while (!HallList.empty()) {
-		GetHall(&nHx1, &nHy1, &nHx2, &nHy2, &nHd);
-		ConnectHall(nHx1, nHy1, nHx2, nHy2, nHd);
+		ConnectHall(HallList.front());
+		HallList.pop_front();
 	}
 
 	for (j = 0; j < DMAXY; j++) {     /// BUGFIX: change '<=' to '<' (fixed)
