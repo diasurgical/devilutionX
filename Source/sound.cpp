@@ -117,17 +117,13 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 		return;
 	}
 
-	if (pSnd->DSB == nullptr) {
-		return;
-	}
-
 	tc = SDL_GetTicks();
 	if (tc - pSnd->start_tc < 80) {
 		return;
 	}
 
 	lVolume = CapVolume(lVolume + sgOptions.Audio.nSoundVolume);
-	pSnd->DSB->Play(lVolume, lPan);
+	pSnd->DSB.Play(lVolume, lPan);
 	pSnd->start_tc = tc;
 }
 
@@ -145,7 +141,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 
 	if (stream) {
 		snd->file_handle = file;
-		error = snd->DSB->SetChunkStream(file);
+		error = snd->DSB.SetChunkStream(file);
 		if (error != 0) {
 			SFileCloseFile(file);
 			ErrSdl();
@@ -154,7 +150,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		DWORD dwBytes = SFileGetFileSize(file, nullptr);
 		auto wave_file = std::make_unique<std::uint8_t[]>(dwBytes);
 		SFileReadFile(file, wave_file.get(), dwBytes, nullptr, nullptr);
-		error = snd->DSB->SetChunk(std::move(wave_file), dwBytes);
+		error = snd->DSB.SetChunk(std::move(wave_file), dwBytes);
 		SFileCloseFile(file);
 	}
 	if (error != 0) {
@@ -167,8 +163,8 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 #ifndef NOSOUND
 TSnd::~TSnd()
 {
-	DSB->Stop();
-	DSB->Release();
+	DSB.Stop();
+	DSB.Release();
 	if (file_handle != nullptr)
 		SFileCloseFile(file_handle);
 }

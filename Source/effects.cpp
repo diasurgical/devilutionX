@@ -1081,7 +1081,6 @@ bool effect_is_playing(int nSFX)
 void stream_stop()
 {
 	if (sgpStreamSFX != nullptr) {
-		sgpStreamSFX->pSnd->DSB->Stop();
 		sgpStreamSFX->pSnd = nullptr;
 		sgpStreamSFX = nullptr;
 	}
@@ -1098,14 +1097,14 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 			lVolume = VOLUME_MAX;
 		if (pSFX->pSnd == nullptr)
 			pSFX->pSnd = sound_file_load(pSFX->pszName, AllowStreaming);
-		pSFX->pSnd->DSB->Play(lVolume, lPan, 0);
+		pSFX->pSnd->DSB.Play(lVolume, lPan, 0);
 		sgpStreamSFX = pSFX;
 	}
 }
 
 static void stream_update()
 {
-	if (sgpStreamSFX != nullptr && !sgpStreamSFX->pSnd->DSB->IsPlaying()) {
+	if (sgpStreamSFX != nullptr && !sgpStreamSFX->pSnd->isPlaying()) {
 		stream_stop();
 	}
 }
@@ -1283,8 +1282,8 @@ void sound_stop()
 {
 	music_stop();
 	for (auto &sfx : sgSFX) {
-		if (sfx.pSnd != nullptr && sfx.pSnd->DSB != nullptr) {
-			sfx.pSnd->DSB->Stop();
+		if (sfx.pSnd != nullptr) {
+			sfx.pSnd->DSB.Stop();
 		}
 	}
 }
@@ -1390,7 +1389,7 @@ int GetSFXLength(int nSFX)
 	if (sgSFX[nSFX].pSnd == nullptr)
 		sgSFX[nSFX].pSnd = sound_file_load(sgSFX[nSFX].pszName,
 		    /*stream=*/AllowStreaming && (sgSFX[nSFX].bFlags & sfx_STREAM) != 0);
-	return sgSFX[nSFX].pSnd->DSB->GetLength();
+	return sgSFX[nSFX].pSnd->DSB.GetLength();
 }
 
 } // namespace devilution

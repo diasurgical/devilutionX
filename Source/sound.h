@@ -36,12 +36,12 @@ struct TSnd {
 	std::string sound_path;
 	/** Used for streamed audio */
 	HANDLE file_handle = nullptr;
-	std::unique_ptr<SoundSample> DSB = std::make_unique<SoundSample>();
+	SoundSample DSB;
 	Uint32 start_tc;
 
 	bool isPlaying()
 	{
-		return DSB->IsPlaying();
+		return DSB.IsPlaying();
 	}
 
 	~TSnd();
