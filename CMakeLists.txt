@@ -388,6 +388,7 @@ set(devilutionx_SRCS
   Source/dvlnet/loopback.cpp
   Source/dvlnet/packet.cpp
   Source/storm/storm.cpp
+  Source/storm/storm_file_wrapper.cpp
   Source/storm/storm_net.cpp
   Source/storm/storm_sdl_rw.cpp
   Source/storm/storm_svid.cpp
