@@ -148,6 +148,7 @@ using DiabloUniqPtr = std::unique_ptr<T, DiabloDeleter>;
 
 #define DiabloMakeUnique(T, NUM_BYTES) \
 	[](size_t size) {\
+		assert(sizeof(T) >= size); \
 		auto ret = DiabloUniqPtr<T>{reinterpret_cast<T *>(DiabloAllocPtr(size))}; \
 		new(ret.get())T(); \
 		return ret; \
