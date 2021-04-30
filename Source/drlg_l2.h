@@ -15,7 +15,6 @@ struct HALLNODE {
 	int nHallx2;
 	int nHally2;
 	int nHalldir;
-	struct HALLNODE *pNext;
 };
 
 struct ROOMNODE {

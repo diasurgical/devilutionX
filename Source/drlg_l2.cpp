@@ -6,6 +6,7 @@
 #include "drlg_l2.h"
 
 #include <algorithm>
+#include <list>
 
 #include "diablo.h"
 #include "drlg_l1.h"
@@ -26,7 +27,7 @@ int nSx2;
 int nSy2;
 int nRoomCnt;
 ROOMNODE RoomList[81];
-HALLNODE *pHallList;
+std::list<HALLNODE> HallList;
 
 int Area_Min = 2;
 int Room_Max = 10;
@@ -1962,30 +1963,7 @@ static void PlaceHallExt(int nX, int nY)
 
 static void AddHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 {
-	HALLNODE *p1, *p2;
-
-	if (pHallList == nullptr) {
-		pHallList = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
-		pHallList->nHallx1 = nX1;
-		pHallList->nHally1 = nY1;
-		pHallList->nHallx2 = nX2;
-		pHallList->nHally2 = nY2;
-		pHallList->nHalldir = nHd;
-		pHallList->pNext = nullptr;
-	} else {
-		p1 = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
-		p1->nHallx1 = nX1;
-		p1->nHally1 = nY1;
-		p1->nHallx2 = nX2;
-		p1->nHally2 = nY2;
-		p1->nHalldir = nHd;
-		p1->pNext = nullptr;
-		p2 = pHallList;
-		while (p2->pNext != nullptr) {
-			p2 = p2->pNext;
-		}
-		p2->pNext = p1;
-	}
+	HallList.push_back({nX1, nY1, nX2, nY2, nHd});
 }
 
 /**
@@ -2130,16 +2108,15 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 
 static void GetHall(int *nX1, int *nY1, int *nX2, int *nY2, int *nHd)
 {
-	HALLNODE *p1;
+	HALLNODE node = HallList.front();
 
-	p1 = pHallList->pNext;
-	*nX1 = pHallList->nHallx1;
-	*nY1 = pHallList->nHally1;
-	*nX2 = pHallList->nHallx2;
-	*nY2 = pHallList->nHally2;
-	*nHd = pHallList->nHalldir;
-	MemFreeDbg(pHallList);
-	pHallList = p1;
+	*nX1 = node.nHallx1;
+	*nY1 = node.nHally1;
+	*nX2 = node.nHallx2;
+	*nY2 = node.nHally2;
+	*nHd = node.nHalldir;
+
+	HallList.pop_front();
 }
 
 static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
@@ -2780,7 +2757,7 @@ static bool CreateDungeon()
 
 	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, ForceHW, ForceH, ForceW);
 
-	while (pHallList != nullptr) {
+	while (!HallList.empty()) {
 		GetHall(&nHx1, &nHy1, &nHx2, &nHy2, &nHd);
 		ConnectHall(nHx1, nHy1, nHx2, nHy2, nHd);
 	}
