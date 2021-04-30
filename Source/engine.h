@@ -135,18 +135,6 @@ struct ActorPosition {
 #define mem_free_dbg(PTR) \
 	std::free(PTR)
 
-template <typename T>
-std::unique_ptr<T> DiabloMakeUnique(size_t size)
-{
-	assert(sizeof(T) <= size);
-
-	uint8_t *mem = new uint8_t[size];
-	auto ret = std::unique_ptr<T>{reinterpret_cast<T *>(mem)};
-
-	new(mem)T();
-	return ret;
-}
-
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
 	DWORD *pFrameTable;
