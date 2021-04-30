@@ -3615,7 +3615,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("knocks target back"));
 		break;
 	case IPL_3XDAMVDEM:
-		strcpy(tempstr, _("+200% damage vs. demons"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("+200% damage vs. demons"));
 		break;
 	case IPL_ALLRESZERO:
 		strcpy(tempstr, _("All Resistance equals 0"));
@@ -3625,15 +3625,15 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_STEALMANA:
 		if ((x->_iFlags & ISPL_STEALMANA_3) != 0)
-			strcpy(tempstr, _("hit steals 3% mana"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 3% mana"));
 		if ((x->_iFlags & ISPL_STEALMANA_5) != 0)
-			strcpy(tempstr, _("hit steals 5% mana"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 5% mana"));
 		break;
 	case IPL_STEALLIFE:
 		if ((x->_iFlags & ISPL_STEALLIFE_3) != 0)
-			strcpy(tempstr, _("hit steals 3% life"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 3% life"));
 		if ((x->_iFlags & ISPL_STEALLIFE_5) != 0)
-			strcpy(tempstr, _("hit steals 5% life"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 5% life"));
 		break;
 	case IPL_TARGAC:
 		strcpy(tempstr, _("penetrates target's armor"));
@@ -3717,7 +3717,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("2x dmg to monst, 1x to you"));
 		break;
 	case IPL_JESTERS:
-		strcpy(tempstr, _("Random 0 - 500% damage"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("Random 0 - 500% damage"));
 		break;
 	case IPL_CRYSTALLINE:
 		sprintf(tempstr, _("low dur, %+i%% damage"), x->_iPLDam);
