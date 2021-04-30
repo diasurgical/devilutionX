@@ -306,6 +306,11 @@ struct CelOutputBuffer {
 };
 
 /**
+ * @brief Measures the width of the given CEL buffer.
+ */
+std::uint_fast16_t MeasureCelWidth(BYTE *pCelBuf);
+
+/**
  * @brief Blit CEL sprite to the back buffer at the given coordinates
  * @param out Target buffer
  * @param sx Target buffer coordinate

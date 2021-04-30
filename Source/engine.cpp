@@ -35,7 +35,40 @@ const uint32_t RndMult = 0x015A4E35;
 
 namespace {
 
-constexpr std::uint8_t CelEol = 0x80;
+/**
+ * Cel frame data encoding bytes.
+ * See https://github.com/savagesteel/d1-file-formats/blob/master/PC-Mac/CEL.md#42-cel-frame-data
+ */
+
+/** [0, 0x7E]: followed by this many pixels. Ends the line. */
+constexpr std::uint8_t CelPixelsEolMax = 0x7E;
+
+/** 0x7F: followed by 128 (0x7F) pixels. Does not end the line. */
+constexpr std::uint8_t CelPixelsContinue = 0x7F;
+
+/** 0x80: followed by 128 (256 - 0x80) pixels. Does not end the line. */
+constexpr std::uint8_t CelTransparentContinue = 0x80;
+
+/** [0x81, 0xFF]: followed by 256 - this many pixels. Ends the line. */
+constexpr std::uint8_t CelTransparentEolMin = 0x81;
+
+constexpr bool IsCelPixelsEol(std::uint8_t control) {
+	return control <= CelPixelsEolMax;
+}
+
+constexpr bool IsCelTransparent(std::uint8_t control) {
+	constexpr std::uint8_t CelTransparentMask = 0x80;
+	return (control & CelTransparentMask) != 0;
+}
+
+constexpr bool IsCelTransparentEol(std::uint8_t control) {
+	return control != CelTransparentContinue;
+}
+
+constexpr std::uint8_t GetCelTransparentWidth(std::uint8_t control) {
+	return -static_cast<std::int8_t>(control);
+}
+
 constexpr std::uint8_t MaxCl2Width = 65;
 
 BYTE *GetLightTable(char light) {
@@ -48,6 +81,32 @@ BYTE *GetLightTable(char light) {
 }
 
 } // namespace
+
+std::uint_fast16_t MeasureCelWidth(BYTE *pCelBuf) {
+	// For CEL files with multiple frames, this could be optimized
+	// to get the result from the header instead.
+	//
+	// See https://github.com/savagesteel/d1-file-formats/blob/master/PC-Mac/CEL.md#42-cel-frame-data
+	std::uint_fast16_t width = 0;
+	int nDataSize;
+	BYTE *src = CelGetFrame(pCelBuf, 0, &nDataSize);
+	while (true) {
+		const auto val = static_cast<std::uint8_t>(*src++);
+		if (IsCelTransparent(val)) {
+			width += GetCelTransparentWidth(val);
+			if (IsCelTransparentEol(val)) {
+				return width;
+			}
+		} else {
+			width += val;
+			if (IsCelPixelsEol(val)) {
+				return width;
+			}
+			src += val;
+		}
+	}
+	return width;
+}
 
 void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
@@ -106,7 +165,7 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCelBuf
 	for (BYTE *end = &pRLEBytes[nDataSize]; pRLEBytes != end; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
 			BYTE width = *pRLEBytes++;
-			if ((width & CelEol) == 0) {
+			if (!IsCelTransparent(width)) {
 				w -= width;
 				while (width > 0) {
 					*dst = tbl[*pRLEBytes];
@@ -133,7 +192,7 @@ void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBytes, 
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
 			BYTE width = *src++;
-			if ((width & CelEol) == 0) {
+			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst >= out.begin()) {
 					memcpy(dst, src, std::min(static_cast<ptrdiff_t>(width), out.end() - dst));
@@ -171,7 +230,7 @@ void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pRLEBy
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
 			BYTE width = *src++;
-			if ((width & CelEol) == 0) {
+			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
 					if ((width & 1) != 0) {
@@ -220,7 +279,7 @@ void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *p
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth, shift = !shift) {
 		for (int w = nWidth; w > 0;) {
 			BYTE width = *src++;
-			if ((width & CelEol) == 0) {
+			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
 					if (((size_t)dst % 2) == shift) {
@@ -300,7 +359,7 @@ static void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
 			BYTE width = *src++;
-			if ((width & CelEol) == 0) {
+			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
 					if ((width & 1) != 0) {
@@ -369,7 +428,7 @@ void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, BYTE *pCe
 	for (; pRLEBytes != end; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
 			BYTE width = *pRLEBytes++;
-			if ((width & CelEol) == 0) {
+			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
 					while (width > 0) {
@@ -403,7 +462,7 @@ void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, BYTE *pCelBuff, i
 	for (; pRLEBytes != end; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
 			BYTE width = *pRLEBytes++;
-			if ((width & CelEol) == 0) {
+			if (!IsCelTransparent(width)) {
 				w -= width;
 				memcpy(dst, pRLEBytes, width);
 				dst += width;
@@ -429,7 +488,7 @@ void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, BYTE
 	for (; src != end; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
 			BYTE width = *src++;
-			if ((width & CelEol) == 0) {
+			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
 					if (dst >= out.end() - out.pitch()) {
