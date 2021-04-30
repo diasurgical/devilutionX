@@ -173,7 +173,7 @@ void LanguageInitialize()
 		std::vector<char> key;
 		std::vector<char> value;
 		if (read_entry(fp, &src[i], key) && read_entry(fp, &dst[i], value)) {
-			if (key.empty()) {
+			if (key.data()[0] == '\0') {
 				utf8 = parse_metadata(value.data());
 			} else {
 				if (utf8) {
