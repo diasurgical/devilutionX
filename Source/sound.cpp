@@ -129,7 +129,7 @@ void ClearDuplicateSounds() {
 void CleanupFinishedDuplicateSounds()
 {
 	duplicateSounds.erase(
-	    std::remove_if(duplicateSounds.begin(), duplicateSounds.end(), [](const std::unique_ptr<SoundSample> &sound) {
+	    std::remove_if(duplicateSounds.begin(), duplicateSounds.end(), [](const auto &sound) {
 		    return !sound->IsPlaying();
 	    }),
 	    duplicateSounds.end());
