@@ -7,6 +7,7 @@
 
 #include "control.h"
 #include "engine.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -54,11 +55,11 @@ struct STextStruct {
 };
 
 /** Shop frame graphics */
-extern BYTE *pSTextBoxCels;
+extern std::optional<CelSprite> pSTextBoxCels;
 /** Small text selection cursor */
-extern BYTE *pSPentSpn2Cels;
+extern std::optional<CelSprite> pSPentSpn2Cels;
 /** Scrollbar graphics */
-extern BYTE *pSTextSlidCels;
+extern std::optional<CelSprite> pSTextSlidCels;
 
 /** Currently active store */
 extern talk_id stextflag;

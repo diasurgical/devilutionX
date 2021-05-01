@@ -18,9 +18,14 @@
 #include "utils/language.h"
 #include "utils/math.h"
 
-namespace devilution {
-
 #define ITEMTYPES 43
+
+namespace devilution {
+namespace {
+std::optional<CelSprite> itemanims[ITEMTYPES];
+constexpr int ItemAnimWidth = 96;
+
+} // namespace
 
 enum anim_armor_id : uint8_t {
 	// clang-format off
@@ -39,7 +44,6 @@ ItemGetRecordStruct itemrecord[MAXITEMS];
 ItemStruct items[MAXITEMS + 1];
 bool itemhold[3][3];
 CornerStoneStruct CornerStone;
-BYTE *itemanims[ITEMTYPES];
 bool UniqueItemFlags[128];
 int numitems;
 int gnNumGetRecords;
@@ -407,7 +411,7 @@ void InitItemGFX()
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
 		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
-		itemanims[i] = LoadFileInMem(arglist, nullptr);
+		itemanims[i] = LoadCel(arglist, ItemAnimWidth);
 	}
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 }
@@ -2253,9 +2257,9 @@ void SetupItem(int i)
 	int it;
 
 	it = ItemCAnimTbl[items[i]._iCurs];
-	items[i]._iAnimData = itemanims[it];
+	items[i]._iAnimData = &*itemanims[it];
 	items[i]._iAnimLen = ItemAnimLs[it];
-	items[i]._iAnimWidth = 96;
+	items[i]._iAnimWidth = ItemAnimWidth;
 	items[i]._iIdentified = false;
 	items[i]._iPostDraw = false;
 
@@ -2963,9 +2967,9 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 	int it;
 
 	it = ItemCAnimTbl[item->_iCurs];
-	item->_iAnimData = itemanims[it];
+	item->_iAnimData = &*itemanims[it];
 	item->_iAnimLen = ItemAnimLs[it];
-	item->_iAnimWidth = 96;
+	item->_iAnimWidth = ItemAnimWidth;
 	item->_iPostDraw = false;
 	item->_iRequest = false;
 	if (FlipFlag) {
@@ -3047,13 +3051,13 @@ void ProcessItems()
 void FreeItemGFX()
 {
 	for (auto &itemanim : itemanims) {
-		MemFreeDbg(itemanim);
+		itemanim = std::nullopt;
 	}
 }
 
 void GetItemFrm(int i)
 {
-	items[i]._iAnimData = itemanims[ItemCAnimTbl[items[i]._iCurs]];
+	items[i]._iAnimData = &*itemanims[ItemCAnimTbl[items[i]._iCurs]];
 }
 
 void GetItemStr(int i)
@@ -3478,28 +3482,28 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		else
-			sprintf(tempstr, _("Resist Fire: 75%% MAX"));
+			strcpy(tempstr, _("Resist Fire: 75% MAX"));
 		break;
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
 		if (x->_iPLLR < 75)
 			sprintf(tempstr, _("Resist Lightning: %+i%%"), x->_iPLLR);
 		else
-			sprintf(tempstr, _("Resist Lightning: 75%% MAX"));
+			strcpy(tempstr, _("Resist Lightning: 75% MAX"));
 		break;
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
 		if (x->_iPLMR < 75)
 			sprintf(tempstr, _("Resist Magic: %+i%%"), x->_iPLMR);
 		else
-			sprintf(tempstr, _("Resist Magic: 75%% MAX"));
+			strcpy(tempstr, _("Resist Magic: 75% MAX"));
 		break;
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, _("Resist All: %+i%%"), x->_iPLFR);
 		if (x->_iPLFR >= 75)
-			sprintf(tempstr, _("Resist All: 75%% MAX"));
+			strcpy(tempstr, _("Resist All: 75% MAX"));
 		break;
 	case IPL_SPLLVLADD:
 		if (x->_iSplLvlAdd == 1)
@@ -3579,7 +3583,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		sprintf(tempstr, _("-%i%% light radius"), -10 * x->_iPLLight);
 		break;
 	case IPL_MULT_ARROWS:
-		sprintf(tempstr, _("multiple arrows per shot"));
+		strcpy(tempstr, _("multiple arrows per shot"));
 		break;
 	case IPL_FIRE_ARROWS:
 		if (x->_iFMinDam == x->_iFMaxDam)
@@ -3615,7 +3619,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("knocks target back"));
 		break;
 	case IPL_3XDAMVDEM:
-		strcpy(tempstr, _("+200% damage vs. demons"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("+200% damage vs. demons"));
 		break;
 	case IPL_ALLRESZERO:
 		strcpy(tempstr, _("All Resistance equals 0"));
@@ -3625,15 +3629,15 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_STEALMANA:
 		if ((x->_iFlags & ISPL_STEALMANA_3) != 0)
-			strcpy(tempstr, _("hit steals 3% mana"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 3% mana"));
 		if ((x->_iFlags & ISPL_STEALMANA_5) != 0)
-			strcpy(tempstr, _("hit steals 5% mana"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 5% mana"));
 		break;
 	case IPL_STEALLIFE:
 		if ((x->_iFlags & ISPL_STEALLIFE_3) != 0)
-			strcpy(tempstr, _("hit steals 3% life"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 3% life"));
 		if ((x->_iFlags & ISPL_STEALLIFE_5) != 0)
-			strcpy(tempstr, _("hit steals 5% life"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 5% life"));
 		break;
 	case IPL_TARGAC:
 		strcpy(tempstr, _("penetrates target's armor"));
@@ -3666,7 +3670,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("fires random speed arrows"));
 		break;
 	case IPL_SETDAM:
-		sprintf(tempstr, _("unusual item damage"));
+		strcpy(tempstr, _("unusual item damage"));
 		break;
 	case IPL_SETDUR:
 		strcpy(tempstr, _("altered durability"));
@@ -3690,7 +3694,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("see with infravision"));
 		break;
 	case IPL_INVCURS:
-		strcpy(tempstr, _(" "));
+		strcpy(tempstr, " ");
 		break;
 	case IPL_ADDACLIFE:
 		if (x->_iFMinDam == x->_iFMaxDam)
@@ -3703,7 +3707,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_FIRERESCLVL:
 		if (x->_iPLFR <= 0)
-			sprintf(tempstr, " ");
+			strcpy(tempstr, " ");
 		else if (x->_iPLFR >= 1)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		break;
@@ -3717,7 +3721,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("2x dmg to monst, 1x to you"));
 		break;
 	case IPL_JESTERS:
-		strcpy(tempstr, _("Random 0 - 500% damage"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("Random 0 - 500% damage"));
 		break;
 	case IPL_CRYSTALLINE:
 		sprintf(tempstr, _("low dur, %+i%% damage"), x->_iPLDam);
@@ -3726,16 +3730,16 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		sprintf(tempstr, _("to hit: %+i%%, %+i%% damage"), x->_iPLToHit, x->_iPLDam);
 		break;
 	case IPL_ACDEMON:
-		sprintf(tempstr, _("extra AC vs demons"));
+		strcpy(tempstr, _("extra AC vs demons"));
 		break;
 	case IPL_ACUNDEAD:
-		sprintf(tempstr, _("extra AC vs undead"));
+		strcpy(tempstr, _("extra AC vs undead"));
 		break;
 	case IPL_MANATOLIFE:
-		sprintf(tempstr, _("50%% Mana moved to Health"));
+		strcpy(tempstr, _("50% Mana moved to Health"));
 		break;
 	case IPL_LIFETOMANA:
-		sprintf(tempstr, _("40%% Health moved to Mana"));
+		strcpy(tempstr, _("40% Health moved to Mana"));
 		break;
 	default:
 		strcpy(tempstr, _("Another ability (NW)"));
@@ -3745,7 +3749,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 
 static void DrawUTextBack(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, pSTextBoxCels, 1, 271);
+	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, *pSTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
@@ -3865,7 +3869,7 @@ void PrintItemMisc(ItemStruct *x)
 		AddPanelString(tempstr, true);
 	}
 	if (x->_iMiscId == IMISC_AURIC) {
-		sprintf(tempstr, _("Doubles gold capacity"));
+		strcpy(tempstr, _("Doubles gold capacity"));
 		AddPanelString(tempstr, true);
 	}
 }

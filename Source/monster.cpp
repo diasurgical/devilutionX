@@ -338,7 +338,6 @@ void InitMonsterGFX(int monst)
 {
 	int mtype, anim, i;
 	char strBuff[256];
-	BYTE *celBuf;
 
 	mtype = Monsters[monst].mtype;
 
@@ -350,8 +349,12 @@ void InitMonsterGFX(int monst)
 		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && frames > 0) {
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
 
-			celBuf = LoadFileInMem(strBuff, nullptr);
-			Monsters[monst].Anims[anim].CMem = celBuf;
+			BYTE *celBuf;
+			{
+				auto celData = LoadFileInMem(strBuff);
+				celBuf = celData.get();
+				Monsters[monst].Anims[anim].CMem = std::move(celData);
+			}
 
 			if (Monsters[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
 
@@ -381,9 +384,9 @@ void InitMonsterGFX(int monst)
 	Monsters[monst].MData = &monsterdata[mtype];
 
 	if (monsterdata[mtype].has_trans) {
-		Monsters[monst].trans_file = LoadFileInMem(monsterdata[mtype].TransFile, nullptr);
+		Monsters[monst].trans_file = LoadFileInMem(monsterdata[mtype].TransFile, nullptr).release();
 		InitMonsterTRN(monst, monsterdata[mtype].has_special);
-		MemFreeDbg(Monsters[monst].trans_file);
+		delete[] Monsters[monst].trans_file;
 	}
 
 	if (mtype >= MT_NMAGMA && mtype <= MT_WMAGMA && !(MissileFileFlag & 1)) {
@@ -928,7 +931,6 @@ static void PlaceUniques()
 void PlaceQuestMonsters()
 {
 	int skeltype;
-	BYTE *setp;
 
 	if (!setlevel) {
 		if (QuestStatus(Q_BUTCHER)) {
@@ -948,29 +950,24 @@ void PlaceQuestMonsters()
 		}
 
 		if (QuestStatus(Q_LTBANNER)) {
-			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_BLOOD)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_BLIND)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_ANVIL)) {
-			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x + 2, 2 * setpc_y + 2);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x + 2, 2 * setpc_y + 2);
 		}
 		if (QuestStatus(Q_WARLORD)) {
-			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_SCATTER);
 		}
 		if (QuestStatus(Q_VEIL)) {
@@ -986,9 +983,8 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_LAZURUS, 0, 0);
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
-			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 
 		if (currlevel == 24) {
@@ -1089,20 +1085,22 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 
 void LoadDiabMonsts()
 {
-	BYTE *lpSetPiece;
-
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", nullptr);
-	SetMapMonsters(lpSetPiece, 2 * diabquad1x, 2 * diabquad1y);
-	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", nullptr);
-	SetMapMonsters(lpSetPiece, 2 * diabquad2x, 2 * diabquad2y);
-	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", nullptr);
-	SetMapMonsters(lpSetPiece, 2 * diabquad3x, 2 * diabquad3y);
-	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", nullptr);
-	SetMapMonsters(lpSetPiece, 2 * diabquad4x, 2 * diabquad4y);
-	mem_free_dbg(lpSetPiece);
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
+		SetMapMonsters(lpSetPiece.get(), 2 * diabquad1x, 2 * diabquad1y);
+	}
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN");
+		SetMapMonsters(lpSetPiece.get(), 2 * diabquad2x, 2 * diabquad2y);
+	}
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN");
+		SetMapMonsters(lpSetPiece.get(), 2 * diabquad3x, 2 * diabquad3y);
+	}
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN");
+		SetMapMonsters(lpSetPiece.get(), 2 * diabquad4x, 2 * diabquad4y);
+	}
 }
 
 void InitMonsters()
@@ -4684,7 +4682,7 @@ void FreeMonsters()
 		mtype = Monsters[i].mtype;
 		for (j = 0; j < 6; j++) {
 			if (animletter[j] != 's' || monsterdata[mtype].has_special) {
-				MemFreeDbg(Monsters[i].Anims[j].CMem);
+				Monsters[i].Anims[j].CMem = nullptr;
 			}
 		}
 	}

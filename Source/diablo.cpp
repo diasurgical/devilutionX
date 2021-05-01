@@ -157,7 +157,7 @@ extern void plrctrls_after_game_logic();
 
 [[noreturn]] static void print_help_and_exit()
 {
-	printInConsole(_("Options:\n"));
+	printInConsole("%s", _("Options:\n"));
 	printInConsole("    %-20s %-30s\n", "-h, --help", _("Print this message and exit"));
 	printInConsole("    %-20s %-30s\n", "--version", _("Print the version and exit"));
 	printInConsole("    %-20s %-30s\n", "--data-dir", _("Specify the folder of diabdat.mpq"));
@@ -170,7 +170,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "-x", _("Run in windowed mode"));
 	printInConsole("    %-20s %-30s\n", "--verbose", _("Enable verbose logging"));
 	printInConsole("    %-20s %-30s\n", "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
-	printInConsole(_("\nHellfire options:\n"));
+	printInConsole("%s", _("\nHellfire options:\n"));
 	printInConsole("    %-20s %-30s\n", "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
 	printInConsole("    %-20s %-30s\n", "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
@@ -188,7 +188,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
-	printInConsole(_("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
+	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
 }
 
@@ -274,10 +274,10 @@ void FreeGameMem()
 {
 	music_stop();
 
-	MemFreeDbg(pDungeonCels);
-	MemFreeDbg(pMegaTiles);
-	MemFreeDbg(pLevelPieces);
-	MemFreeDbg(pSpecialCels);
+	pDungeonCels = nullptr;
+	pMegaTiles = nullptr;
+	pLevelPieces = nullptr;
+	pSpecialCels = std::nullopt;
 
 	FreeMissiles();
 	FreeMonsters();
@@ -612,7 +612,7 @@ static void LoadOptions()
 	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
 	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, _(spszMsgTbl[i]));
+		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, "");
 
 	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
 	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
@@ -640,6 +640,15 @@ static void diablo_init_screen()
 	ClrDiabloMsg();
 }
 
+char gszVersionNumber[64] = "internal version unknown";
+char gszProductName[64] = "DevilutionX vUnknown";
+
+static void SetApplicationVersions()
+{
+	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
+	snprintf(gszVersionNumber, sizeof(gszVersionNumber) / sizeof(char), _("version %s"), PROJECT_VERSION);
+}
+
 static void diablo_init()
 {
 	if (sgOptions.Graphics.bShowFPS)
@@ -660,6 +669,16 @@ static void diablo_init()
 	gbIsHellfireSaveGame = gbIsHellfire;
 
 	LanguageInitialize();
+
+	SetApplicationVersions();
+
+	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++) {
+		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
+			continue;
+		}
+		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(spszMsgTbl[i]), MAX_SEND_STR_LEN);
+	}
+
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);
 	was_ui_init = true;
@@ -1715,57 +1734,58 @@ void GM_Game(uint32_t uMsg, int32_t wParam, int32_t lParam)
 
 void LoadLvlGFX()
 {
-	assert(!pDungeonCels);
+	assert(pDungeonCels == nullptr);
+	constexpr int SpecialCelWidth = 64;
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire) {
-			pDungeonCels = LoadFileInMem("NLevels\\TownData\\Town.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("NLevels\\TownData\\Town.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("NLevels\\TownData\\Town.MIN", nullptr);
+			pDungeonCels = LoadFileInMem("NLevels\\TownData\\Town.CEL");
+			pMegaTiles = LoadFileInMem("NLevels\\TownData\\Town.TIL");
+			pLevelPieces = LoadFileInMem("NLevels\\TownData\\Town.MIN");
 		} else {
-			pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", nullptr);
+			pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL");
+			pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL");
+			pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN");
 		}
-		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", nullptr);
+		pSpecialCels = LoadCel("Levels\\TownData\\TownS.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 21) {
-			pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", nullptr);
-			pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", nullptr);
+			pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL");
+			pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL");
+			pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN");
+			pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		} else {
-			pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("NLevels\\L5Data\\L5.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("NLevels\\L5Data\\L5.MIN", nullptr);
-			pSpecialCels = LoadFileInMem("NLevels\\L5Data\\L5S.CEL", nullptr);
+			pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL");
+			pMegaTiles = LoadFileInMem("NLevels\\L5Data\\L5.TIL");
+			pLevelPieces = LoadFileInMem("NLevels\\L5Data\\L5.MIN");
+			pSpecialCels = LoadCel("NLevels\\L5Data\\L5S.CEL", SpecialCelWidth);
 		}
 		break;
 	case DTYPE_CATACOMBS:
-		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL", nullptr);
-		pMegaTiles = LoadFileInMem("Levels\\L2Data\\L2.TIL", nullptr);
-		pLevelPieces = LoadFileInMem("Levels\\L2Data\\L2.MIN", nullptr);
-		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", nullptr);
+		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL");
+		pMegaTiles = LoadFileInMem("Levels\\L2Data\\L2.TIL");
+		pLevelPieces = LoadFileInMem("Levels\\L2Data\\L2.MIN");
+		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CAVES:
 		if (currlevel < 17) {
-			pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", nullptr);
+			pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL");
+			pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL");
+			pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN");
 		} else {
-			pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL", nullptr);
-			pMegaTiles = LoadFileInMem("NLevels\\L6Data\\L6.TIL", nullptr);
-			pLevelPieces = LoadFileInMem("NLevels\\L6Data\\L6.MIN", nullptr);
+			pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL");
+			pMegaTiles = LoadFileInMem("NLevels\\L6Data\\L6.TIL");
+			pLevelPieces = LoadFileInMem("NLevels\\L6Data\\L6.MIN");
 		}
-		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", nullptr);
+		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_HELL:
-		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL", nullptr);
-		pMegaTiles = LoadFileInMem("Levels\\L4Data\\L4.TIL", nullptr);
-		pLevelPieces = LoadFileInMem("Levels\\L4Data\\L4.MIN", nullptr);
-		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", nullptr);
+		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL");
+		pMegaTiles = LoadFileInMem("Levels\\L4Data\\L4.TIL");
+		pLevelPieces = LoadFileInMem("Levels\\L4Data\\L4.MIN");
+		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	default:
 		app_fatal("LoadLvlGFX");

@@ -2622,7 +2622,7 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 void LoadL3Dungeon(const char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *lm;
 
 	InitL3Dungeon();
 	dminx = 16;
@@ -2630,9 +2630,9 @@ void LoadL3Dungeon(const char *sFileName, int vx, int vy)
 	dmaxx = 96;
 	dmaxy = 96;
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
-	lm = pLevelMap;
+	lm = pLevelMap.get();
 	rw = *lm;
 	lm += 2;
 	rh = *lm;
@@ -2660,8 +2660,8 @@ void LoadL3Dungeon(const char *sFileName, int vx, int vy)
 	DRLG_Init_Globals();
 	ViewX = vx;
 	ViewY = vy;
-	SetMapMonsters(pLevelMap, 0, 0);
-	SetMapObjects(pLevelMap, 0, 0);
+	SetMapMonsters(pLevelMap.get(), 0, 0);
+	SetMapObjects(pLevelMap.get(), 0, 0);
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
@@ -2676,20 +2676,18 @@ void LoadL3Dungeon(const char *sFileName, int vx, int vy)
 			}
 		}
 	}
-
-	mem_free_dbg(pLevelMap);
 }
 
 void LoadPreL3Dungeon(const char *sFileName)
 {
 	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *lm;
 
 	InitL3Dungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
-	lm = pLevelMap;
+	lm = pLevelMap.get();
 	rw = *lm;
 	lm += 2;
 	rh = *lm;
@@ -2714,7 +2712,6 @@ void LoadPreL3Dungeon(const char *sFileName)
 	}
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
-	mem_free_dbg(pLevelMap);
 }
 
 } // namespace devilution

@@ -77,11 +77,6 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 
 } // namespace
 
-/* data */
-
-char gszVersionNumber[64] = "internal version unknown";
-char gszProductName[64] = "DevilutionX vUnknown";
-
 void init_cleanup()
 {
 	if (gbIsMultiplayer && gbRunGame) {
@@ -140,16 +135,8 @@ void init_cleanup()
 	NetClose();
 }
 
-static void init_get_file_info()
-{
-	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	snprintf(gszVersionNumber, sizeof(gszVersionNumber) / sizeof(char), _("version %s"), PROJECT_VERSION);
-}
-
 void init_archives()
 {
-	init_get_file_info();
-
 	std::vector<std::string> paths;
 	paths.reserve(5);
 	paths.push_back(paths::BasePath());
@@ -222,7 +209,7 @@ void init_archives()
 void init_create_window()
 {
 	if (!SpawnWindow(PROJECT_NAME))
-		app_fatal(_("Unable to create main window"));
+		app_fatal("%s", _("Unable to create main window"));
 	dx_init();
 	gbActive = true;
 #ifndef USE_SDL1

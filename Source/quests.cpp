@@ -20,7 +20,7 @@ namespace devilution {
 
 int qtopline;
 bool questlog;
-BYTE *pQLogCel;
+std::optional<CelSprite> pQLogCel;
 /** Contains the quests of the current game. */
 QuestStruct quests[MAXQUESTS];
 int qline;
@@ -380,12 +380,12 @@ void DrawWarLord(int x, int y)
 {
 	int rw, rh;
 	int i, j;
-	BYTE *sp, *setp;
+	BYTE *sp;
 	int v;
 
-	setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN", nullptr);
-	rw = *setp;
-	sp = setp + 2;
+	auto setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN");
+	rw = setp[0];
+	sp = &setp[2];
 	rh = *sp;
 	sp += 2;
 	setpc_w = rw;
@@ -403,7 +403,6 @@ void DrawWarLord(int x, int y)
 			sp += 2;
 		}
 	}
-	mem_free_dbg(setp);
 }
 
 void DrawSChamber(int q, int x, int y)
@@ -411,12 +410,12 @@ void DrawSChamber(int q, int x, int y)
 	int i, j;
 	int rw, rh;
 	int xx, yy;
-	BYTE *sp, *setp;
+	BYTE *sp;
 	int v;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN", nullptr);
-	rw = *setp;
-	sp = setp + 2;
+	auto setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN");
+	rw = setp[0];
+	sp = &setp[2];
 	rh = *sp;
 	sp += 2;
 	setpc_w = rw;
@@ -437,18 +436,17 @@ void DrawSChamber(int q, int x, int y)
 	xx = 2 * x + 22;
 	yy = 2 * y + 23;
 	quests[q].position = { xx, yy };
-	mem_free_dbg(setp);
 }
 
 void DrawLTBanner(int x, int y)
 {
 	int rw, rh;
 	int i, j;
-	BYTE *sp, *setp;
+	BYTE *sp;
 
-	setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
-	rw = *setp;
-	sp = setp + 2;
+	auto setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
+	rw = setp[0];
+	sp = &setp[2];
 	rh = *sp;
 	sp += 2;
 	setpc_w = rw;
@@ -463,18 +461,17 @@ void DrawLTBanner(int x, int y)
 			sp += 2;
 		}
 	}
-	mem_free_dbg(setp);
 }
 
 void DrawBlind(int x, int y)
 {
 	int rw, rh;
 	int i, j;
-	BYTE *sp, *setp;
+	BYTE *sp;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
-	rw = *setp;
-	sp = setp + 2;
+	auto setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
+	rw = setp[0];
+	sp = &setp[2];
 	rh = *sp;
 	sp += 2;
 	setpc_x = x;
@@ -489,18 +486,17 @@ void DrawBlind(int x, int y)
 			sp += 2;
 		}
 	}
-	mem_free_dbg(setp);
 }
 
 void DrawBlood(int x, int y)
 {
 	int rw, rh;
 	int i, j;
-	BYTE *sp, *setp;
+	BYTE *sp;
 
-	setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
-	rw = *setp;
-	sp = setp + 2;
+	auto setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");
+	rw = setp[0];
+	sp = &setp[2];
 	rh = *sp;
 	sp += 2;
 	setpc_x = x;
@@ -515,7 +511,6 @@ void DrawBlood(int x, int y)
 			sp += 2;
 		}
 	}
-	mem_free_dbg(setp);
 }
 
 void DRLG_CheckQuests(int x, int y)
@@ -743,7 +738,7 @@ static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustfl
 		sx += k;
 	}
 	if (qline == y) {
-		CelDrawTo(out, cjustflag ? x + k + 12 : x + 12, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? x + k + 12 : x + 12, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -754,7 +749,7 @@ static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustfl
 		sx += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		CelDrawTo(out, cjustflag ? x + k + 36 : 276 - x, sy + 1, pSPentSpn2Cels, PentSpn2Spin(), 12);
+		CelDrawTo(out, cjustflag ? x + k + 36 : 276 - x, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 }
 
@@ -763,7 +758,7 @@ void DrawQuestLog(const CelOutputBuffer &out)
 	int y, i;
 
 	PrintQLString(out, 0, 2, true, _("Quest Log"), COL_GOLD);
-	CelDrawTo(out, 0, 351, pQLogCel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, 0, 351, *pQLogCel, 1);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
 		PrintQLString(out, 0, y, true, _(questlist[qlist[i]]._qlstr), COL_WHITE);

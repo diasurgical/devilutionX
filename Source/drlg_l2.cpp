@@ -1843,22 +1843,22 @@ static void DRLG_LoadL2SP()
 	setloadflag = false;
 
 	if (QuestStatus(Q_BLIND)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
 		pSetPiece[26] = 154;  // Close outer wall
 		pSetPiece[200] = 154; // Close outer wall
 		setloadflag = true;
 	} else if (QuestStatus(Q_BLOOD)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN");
 		setloadflag = true;
 	} else if (QuestStatus(Q_SCHAMB)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN");
 		setloadflag = true;
 	}
 }
 
 static void DRLG_FreeL2SP()
 {
-	MemFreeDbg(pSetPiece);
+	pSetPiece = nullptr;
 }
 
 static void DRLG_L2SetRoom(int rx1, int ry1)
@@ -3274,9 +3274,9 @@ static void LoadL2DungeonData(BYTE *pLevelMap)
 
 void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 {
-	BYTE *pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
-	LoadL2DungeonData(pLevelMap);
+	LoadL2DungeonData(pLevelMap.get());
 
 	DRLG_L2Pass3();
 	DRLG_Init_Globals();
@@ -3316,16 +3316,16 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 
 	ViewX = vx;
 	ViewY = vy;
-	SetMapMonsters(pLevelMap, 0, 0);
-	SetMapObjects(pLevelMap, 0, 0);
-	mem_free_dbg(pLevelMap);
+	SetMapMonsters(pLevelMap.get(), 0, 0);
+	SetMapObjects(pLevelMap.get(), 0, 0);
 }
 
 void LoadPreL2Dungeon(const char *sFileName)
 {
-	BYTE *pLevelMap = LoadFileInMem(sFileName, nullptr);
-	LoadL2DungeonData(pLevelMap);
-	mem_free_dbg(pLevelMap);
+	{
+		auto pLevelMap = LoadFileInMem(sFileName);
+		LoadL2DungeonData(pLevelMap.get());
+	}
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {

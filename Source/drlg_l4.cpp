@@ -202,18 +202,18 @@ void DRLG_LoadL4SP()
 {
 	setloadflag = false;
 	if (QuestStatus(Q_WARLORD)) {
-		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
 		setloadflag = true;
 	}
 	if (currlevel == 15 && gbIsMultiplayer) {
-		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 		setloadflag = true;
 	}
 }
 
 void DRLG_FreeL4SP()
 {
-	MemFreeDbg(pSetPiece);
+	pSetPiece = nullptr;
 }
 
 void DRLG_L4SetSPRoom(int rx1, int ry1)
@@ -1276,43 +1276,30 @@ void DRLG_L4SetRoom(BYTE *pSetPiece, int rx1, int ry1)
 
 void DRLG_LoadDiabQuads(bool preflag)
 {
-	BYTE *lpSetPiece;
-
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", nullptr);
-	diabquad1x = 4 + l4holdx;
-	diabquad1y = 4 + l4holdy;
-	DRLG_L4SetRoom(lpSetPiece, diabquad1x, diabquad1y);
-	mem_free_dbg(lpSetPiece);
-
-	if (preflag) {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2b.DUN", nullptr);
-	} else {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", nullptr);
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
+		diabquad1x = 4 + l4holdx;
+		diabquad1y = 4 + l4holdy;
+		DRLG_L4SetRoom(lpSetPiece.get(), diabquad1x, diabquad1y);
 	}
-	diabquad2x = 27 - l4holdx;
-	diabquad2y = 1 + l4holdy;
-	DRLG_L4SetRoom(lpSetPiece, diabquad2x, diabquad2y);
-	mem_free_dbg(lpSetPiece);
-
-	if (preflag) {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3b.DUN", nullptr);
-	} else {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", nullptr);
+	{
+		auto lpSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
+		diabquad2x = 27 - l4holdx;
+		diabquad2y = 1 + l4holdy;
+		DRLG_L4SetRoom(lpSetPiece.get(), diabquad2x, diabquad2y);
 	}
-	diabquad3x = 1 + l4holdx;
-	diabquad3y = 27 - l4holdy;
-	DRLG_L4SetRoom(lpSetPiece, diabquad3x, diabquad3y);
-	mem_free_dbg(lpSetPiece);
-
-	if (preflag) {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4b.DUN", nullptr);
-	} else {
-		lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", nullptr);
+	{
+		auto lpSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
+		diabquad3x = 1 + l4holdx;
+		diabquad3y = 27 - l4holdy;
+		DRLG_L4SetRoom(lpSetPiece.get(), diabquad3x, diabquad3y);
 	}
-	diabquad4x = 28 - l4holdx;
-	diabquad4y = 28 - l4holdy;
-	DRLG_L4SetRoom(lpSetPiece, diabquad4x, diabquad4y);
-	mem_free_dbg(lpSetPiece);
+	{
+		auto lpSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
+		diabquad4x = 28 - l4holdx;
+		diabquad4y = 28 - l4holdy;
+		DRLG_L4SetRoom(lpSetPiece.get(), diabquad4x, diabquad4y);
+	}
 }
 
 static bool DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
@@ -1774,7 +1761,7 @@ void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 void LoadL4Dungeon(char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *lm;
 
 	dminx = 16;
 	dminy = 16;
@@ -1783,9 +1770,9 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 
 	DRLG_InitTrans();
 	InitL4Dungeon();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
-	lm = pLevelMap;
+	lm = pLevelMap.get();
 	rw = *lm;
 	lm += 2;
 	rh = *lm;
@@ -1808,15 +1795,14 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 	DRLG_L4Pass3();
 	DRLG_Init_Globals();
 
-	SetMapMonsters(pLevelMap, 0, 0);
-	SetMapObjects(pLevelMap, 0, 0);
-	mem_free_dbg(pLevelMap);
+	SetMapMonsters(pLevelMap.get(), 0, 0);
+	SetMapObjects(pLevelMap.get(), 0, 0);
 }
 
 void LoadPreL4Dungeon(char *sFileName)
 {
 	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *lm;
 
 	dminx = 16;
 	dminy = 16;
@@ -1825,9 +1811,9 @@ void LoadPreL4Dungeon(char *sFileName)
 
 	InitL4Dungeon();
 
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
-	lm = pLevelMap;
+	lm = pLevelMap.get();
 	rw = *lm;
 	lm += 2;
 	rh = *lm;
@@ -1844,7 +1830,6 @@ void LoadPreL4Dungeon(char *sFileName)
 			lm += 2;
 		}
 	}
-	mem_free_dbg(pLevelMap);
 }
 
 } // namespace devilution

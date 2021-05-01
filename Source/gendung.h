@@ -6,9 +6,11 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 #include "engine.h"
 #include "scrollrt.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -118,12 +120,12 @@ extern int setpc_x;
 extern int setpc_y;
 extern int setpc_w;
 extern int setpc_h;
-extern BYTE *pSetPiece;
+extern std::unique_ptr<BYTE[]> pSetPiece;
 extern bool setloadflag;
-extern BYTE *pSpecialCels;
-extern BYTE *pMegaTiles;
-extern BYTE *pLevelPieces;
-extern BYTE *pDungeonCels;
+extern std::optional<CelSprite> pSpecialCels;
+extern std::unique_ptr<BYTE[]> pMegaTiles;
+extern std::unique_ptr<BYTE[]> pLevelPieces;
+extern std::unique_ptr<BYTE[]> pDungeonCels;
 extern char block_lvid[MAXTILES + 1];
 extern bool nBlockTable[MAXTILES + 1];
 extern bool nSolidTable[MAXTILES + 1];

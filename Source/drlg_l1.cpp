@@ -40,7 +40,7 @@ bool VR2;
 /** Specifies whether to generate a vertical room at position 3 in the Cathedral. */
 bool VR3;
 /** Contains the contents of the single player quest DUN file. */
-BYTE *L5pSetPiece;
+std::unique_ptr<BYTE[]> L5pSetPiece;
 
 /** Contains shadows for 2x2 blocks of base tile IDs in the Cathedral. */
 const ShadowStruct SPATS[37] = {
@@ -1120,22 +1120,22 @@ static void DRLG_LoadL1SP()
 {
 	L5setloadflag = false;
 	if (QuestStatus(Q_BUTCHER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN");
 		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN");
 		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_LTBANNER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN");
 		L5setloadflag = true;
 	}
 }
 
 static void DRLG_FreeL1SP()
 {
-	MemFreeDbg(L5pSetPiece);
+	L5pSetPiece = nullptr;
 }
 
 void DRLG_Init_Globals()
@@ -1210,7 +1210,7 @@ static void DRLG_InitL1Vals()
 void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *lm;
 
 	dminx = 16;
 	dminy = 16;
@@ -1218,7 +1218,7 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 	dmaxy = 96;
 
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -1227,7 +1227,7 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 		}
 	}
 
-	lm = pLevelMap;
+	lm = pLevelMap.get();
 	rw = *lm;
 	lm += 2;
 	rh = *lm;
@@ -1252,22 +1252,21 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 	DRLG_Init_Globals();
 	if (currlevel < 17)
 		DRLG_InitL1Vals();
-	SetMapMonsters(pLevelMap, 0, 0);
-	SetMapObjects(pLevelMap, 0, 0);
-	mem_free_dbg(pLevelMap);
+	SetMapMonsters(pLevelMap.get(), 0, 0);
+	SetMapObjects(pLevelMap.get(), 0, 0);
 }
 
 void LoadPreL1Dungeon(const char *sFileName)
 {
 	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *lm;
 
 	dminx = 16;
 	dminy = 16;
 	dmaxx = 96;
 	dmaxy = 96;
 
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -1276,7 +1275,7 @@ void LoadPreL1Dungeon(const char *sFileName)
 		}
 	}
 
-	lm = pLevelMap;
+	lm = pLevelMap.get();
 	rw = *lm;
 	lm += 2;
 	rh = *lm;
@@ -1301,8 +1300,6 @@ void LoadPreL1Dungeon(const char *sFileName)
 			pdungeon[i][j] = dungeon[i][j];
 		}
 	}
-
-	mem_free_dbg(pLevelMap);
 }
 
 static void InitL5Dungeon()
@@ -2044,15 +2041,15 @@ static void DRLG_L5SetRoom(int rx1, int ry1)
 	int rw, rh, i, j;
 	BYTE *sp;
 
-	rw = *L5pSetPiece;
-	rh = *(L5pSetPiece + 2);
+	rw = L5pSetPiece[0];
+	rh = L5pSetPiece[2];
 
 	setpc_x = rx1;
 	setpc_y = ry1;
 	setpc_w = rw;
 	setpc_h = rh;
 
-	sp = L5pSetPiece + 4;
+	sp = &L5pSetPiece[4];
 
 	for (j = 0; j < rh; j++) {
 		for (i = 0; i < rw; i++) {

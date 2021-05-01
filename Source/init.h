@@ -33,9 +33,4 @@ void init_create_window();
 void MainWndProc(uint32_t Msg);
 WNDPROC SetWindowProc(WNDPROC NewProc);
 
-/* data */
-
-extern char gszVersionNumber[64];
-extern char gszProductName[64];
-
 } // namespace devilution

@@ -109,7 +109,7 @@ enum placeflag : uint8_t {
 };
 
 struct AnimStruct {
-	uint8_t *CMem;
+	std::unique_ptr<uint8_t[]> CMem;
 	std::array<uint8_t *, 8> Data;
 	int Frames;
 	int Rate;

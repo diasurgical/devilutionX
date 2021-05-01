@@ -49,7 +49,7 @@ void InitXPBar()
 		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
 
 		if (xpbarArt.surface == nullptr) {
-			app_fatal(_("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
+			app_fatal("%s", _("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
 		}
 	}
 }
@@ -126,7 +126,7 @@ bool CheckXPBarInfo()
 		// Show a maximum level indicator for max level players.
 		infoclr = COL_GOLD;
 
-		sprintf(tempstr, _("Experience: "));
+		strcpy(tempstr, _("Experience: "));
 		PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, ExpLvlsTbl[charLevel - 1]);
 		AddPanelString(tempstr, true);
 
@@ -137,11 +137,11 @@ bool CheckXPBarInfo()
 
 	infoclr = COL_WHITE;
 
-	sprintf(tempstr, _("Experience: "));
+	strcpy(tempstr, _("Experience: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, player._pExperience);
 	AddPanelString(tempstr, true);
 
-	sprintf(tempstr, _("Next Level: "));
+	strcpy(tempstr, _("Next Level: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
 	AddPanelString(tempstr, true);
 
