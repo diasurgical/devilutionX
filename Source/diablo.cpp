@@ -612,7 +612,7 @@ static void LoadOptions()
 	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
 	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, _(spszMsgTbl[i]));
+		getIniValue("NetMsg", spszMsgHotKeyTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, "");
 
 	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
 	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
@@ -640,6 +640,15 @@ static void diablo_init_screen()
 	ClrDiabloMsg();
 }
 
+char gszVersionNumber[64] = "internal version unknown";
+char gszProductName[64] = "DevilutionX vUnknown";
+
+static void SetApplicationVersions()
+{
+	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
+	snprintf(gszVersionNumber, sizeof(gszVersionNumber) / sizeof(char), _("version %s"), PROJECT_VERSION);
+}
+
 static void diablo_init()
 {
 	if (sgOptions.Graphics.bShowFPS)
@@ -660,6 +669,16 @@ static void diablo_init()
 	gbIsHellfireSaveGame = gbIsHellfire;
 
 	LanguageInitialize();
+
+	SetApplicationVersions();
+
+	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++) {
+		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
+			continue;
+		}
+		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(spszMsgTbl[i]), MAX_SEND_STR_LEN);
+	}
+
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);
 	was_ui_init = true;

@@ -47,6 +47,7 @@ extern bool gbBard;
 extern bool gbBarbarian;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
+extern char gszProductName[64];
 
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
