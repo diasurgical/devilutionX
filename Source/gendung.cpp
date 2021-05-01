@@ -23,14 +23,14 @@ int setpc_w;
 /** Specifies the height of the active set level of the map. */
 int setpc_h;
 /** Contains the contents of the single player quest DUN file. */
-BYTE *pSetPiece;
+std::unique_ptr<BYTE[]> pSetPiece;
 /** Specifies whether a single player quest DUN has been loaded. */
 bool setloadflag;
-BYTE *pSpecialCels;
+std::optional<CelSprite> pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
-BYTE *pMegaTiles;
-BYTE *pLevelPieces;
-BYTE *pDungeonCels;
+std::unique_ptr<BYTE[]> pMegaTiles;
+std::unique_ptr<BYTE[]> pLevelPieces;
+std::unique_ptr<BYTE[]> pDungeonCels;
 /**
  * List of transparancy masks to use for dPieces
  */
@@ -129,7 +129,6 @@ void FillSolidBlockTbls()
 {
 	BYTE bv;
 	DWORD i, dwTiles;
-	BYTE *pSBFile, *pTmp;
 
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
@@ -137,6 +136,7 @@ void FillSolidBlockTbls()
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	memset(nTrapTable, 0, sizeof(nTrapTable));
 
+	std::unique_ptr<BYTE[]> pSBFile;
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire)
@@ -166,7 +166,7 @@ void FillSolidBlockTbls()
 		app_fatal("FillSolidBlockTbls");
 	}
 
-	pTmp = pSBFile;
+	const BYTE *pTmp = pSBFile.get();
 
 	for (i = 1; i <= dwTiles; i++) {
 		bv = *pTmp++;
@@ -182,8 +182,6 @@ void FillSolidBlockTbls()
 			nTrapTable[i] = true;
 		block_lvid[i] = (bv & 0x70) >> 4; /* beta: (bv >> 4) & 7 */
 	}
-
-	mem_free_dbg(pSBFile);
 }
 
 void SetDungeonMicros()

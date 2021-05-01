@@ -1,7 +1,9 @@
 #pragma once
 
-#include <SDL_ttf.h>
 #include <cstdint>
+#include <memory>
+
+#include <SDL_ttf.h>
 
 #include "DiabloUI/art.h"
 
@@ -20,7 +22,7 @@ enum _artFontColors : uint8_t {
 };
 
 extern TTF_Font *font;
-extern BYTE *FontTables[4];
+extern std::unique_ptr<BYTE[]> FontTables[4];
 extern Art ArtFonts[4][2];
 
 void LoadArtFonts();

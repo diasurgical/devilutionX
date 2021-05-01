@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "gendung.h"
 #include "textdat.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -66,7 +67,7 @@ struct QuestData {
 };
 
 extern bool questlog;
-extern BYTE *pQLogCel;
+extern std::optional<CelSprite> pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
 extern int ReturnLvlX;
 extern int ReturnLvlY;

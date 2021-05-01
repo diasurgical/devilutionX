@@ -1140,16 +1140,16 @@ void LoadMissileGFX(BYTE mi)
 	char pszName[256];
 	if ((mfd->mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
-		BYTE *file = LoadFileInMem(pszName, nullptr);
+		BYTE *file = LoadFileInMem(pszName, nullptr).release();
 		for (unsigned i = 0; i < mfd->mAnimFAmt; i++)
 			mfd->mAnimData[i] = CelGetFrameStart(file, i);
 	} else if (mfd->mAnimFAmt == 1) {
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
-		mfd->mAnimData[0] = LoadFileInMem(pszName, nullptr);
+		mfd->mAnimData[0] = LoadFileInMem(pszName, nullptr).release();
 	} else {
 		for (unsigned i = 0; i < mfd->mAnimFAmt; i++) {
 			sprintf(pszName, "Missiles\\%s%u.CL2", mfd->mName, i + 1);
-			mfd->mAnimData[i] = LoadFileInMem(pszName, nullptr);
+			mfd->mAnimData[i] = LoadFileInMem(pszName, nullptr).release();
 		}
 	}
 }
@@ -1175,7 +1175,7 @@ void FreeMissileGFX(int mi)
 		if (misfiledata[mi].mAnimData[0]) {
 			p = (DWORD *)misfiledata[mi].mAnimData[0];
 			p -= misfiledata[mi].mAnimFAmt;
-			MemFreeDbg(p);
+			delete[] p;
 			misfiledata[mi].mAnimData[0] = nullptr;
 		}
 		return;
@@ -1183,7 +1183,8 @@ void FreeMissileGFX(int mi)
 
 	for (i = 0; i < misfiledata[mi].mAnimFAmt; i++) {
 		if (misfiledata[mi].mAnimData[i] != nullptr) {
-			MemFreeDbg(misfiledata[mi].mAnimData[i]);
+			delete[] misfiledata[mi].mAnimData[i];
+			misfiledata[mi].mAnimData[i] = nullptr;
 		}
 	}
 }

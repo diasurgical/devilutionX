@@ -780,7 +780,7 @@ void MakeLightTable()
 	int i, j, k, l, lights, shade, l1, l2, cnt, rem, div;
 	double fs, fa;
 	BYTE col, max;
-	BYTE *tbl, *trn;
+	BYTE *tbl;
 	BYTE blood[16];
 
 	tbl = pLightTbl;
@@ -904,17 +904,19 @@ void MakeLightTable()
 		tbl += 240;
 	}
 
-	trn = LoadFileInMem("PlrGFX\\Infra.TRN", nullptr);
-	for (i = 0; i < 256; i++) {
-		*tbl++ = trn[i];
+	{
+		auto trn = LoadFileInMem("PlrGFX\\Infra.TRN", nullptr);
+		for (i = 0; i < 256; i++) {
+			*tbl++ = trn[i];
+		}
 	}
-	mem_free_dbg(trn);
 
-	trn = LoadFileInMem("PlrGFX\\Stone.TRN", nullptr);
-	for (i = 0; i < 256; i++) {
-		*tbl++ = trn[i];
+	{
+		auto trn = LoadFileInMem("PlrGFX\\Stone.TRN", nullptr);
+		for (i = 0; i < 256; i++) {
+			*tbl++ = trn[i];
+		}
 	}
-	mem_free_dbg(trn);
 
 	for (i = 0; i < 8; i++) {
 		for (col = 226; col < 239; col++) {

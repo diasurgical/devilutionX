@@ -18,9 +18,14 @@
 #include "utils/language.h"
 #include "utils/math.h"
 
-namespace devilution {
-
 #define ITEMTYPES 43
+
+namespace devilution {
+namespace {
+std::optional<CelSprite> itemanims[ITEMTYPES];
+constexpr int ItemAnimWidth = 96;
+
+} // namespace
 
 enum anim_armor_id : uint8_t {
 	// clang-format off
@@ -39,7 +44,6 @@ ItemGetRecordStruct itemrecord[MAXITEMS];
 ItemStruct items[MAXITEMS + 1];
 bool itemhold[3][3];
 CornerStoneStruct CornerStone;
-BYTE *itemanims[ITEMTYPES];
 bool UniqueItemFlags[128];
 int numitems;
 int gnNumGetRecords;
@@ -407,7 +411,7 @@ void InitItemGFX()
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
 		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
-		itemanims[i] = LoadFileInMem(arglist, nullptr);
+		itemanims[i] = LoadCel(arglist, ItemAnimWidth);
 	}
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 }
@@ -2253,9 +2257,9 @@ void SetupItem(int i)
 	int it;
 
 	it = ItemCAnimTbl[items[i]._iCurs];
-	items[i]._iAnimData = itemanims[it];
+	items[i]._iAnimData = &*itemanims[it];
 	items[i]._iAnimLen = ItemAnimLs[it];
-	items[i]._iAnimWidth = 96;
+	items[i]._iAnimWidth = ItemAnimWidth;
 	items[i]._iIdentified = false;
 	items[i]._iPostDraw = false;
 
@@ -2963,9 +2967,9 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 	int it;
 
 	it = ItemCAnimTbl[item->_iCurs];
-	item->_iAnimData = itemanims[it];
+	item->_iAnimData = &*itemanims[it];
 	item->_iAnimLen = ItemAnimLs[it];
-	item->_iAnimWidth = 96;
+	item->_iAnimWidth = ItemAnimWidth;
 	item->_iPostDraw = false;
 	item->_iRequest = false;
 	if (FlipFlag) {
@@ -3047,13 +3051,13 @@ void ProcessItems()
 void FreeItemGFX()
 {
 	for (auto &itemanim : itemanims) {
-		MemFreeDbg(itemanim);
+		itemanim = std::nullopt;
 	}
 }
 
 void GetItemFrm(int i)
 {
-	items[i]._iAnimData = itemanims[ItemCAnimTbl[items[i]._iCurs]];
+	items[i]._iAnimData = &*itemanims[ItemCAnimTbl[items[i]._iCurs]];
 }
 
 void GetItemStr(int i)
@@ -3745,7 +3749,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 
 static void DrawUTextBack(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, pSTextBoxCels, 1, 271);
+	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, *pSTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 

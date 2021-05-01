@@ -471,7 +471,7 @@ RenderTile(CelOutputBuffer out, int x, int y)
 	x += BUFFER_BORDER_LEFT;
 	y += BUFFER_BORDER_TOP;
 
-	pFrameTable = (DWORD *)pDungeonCels;
+	pFrameTable = reinterpret_cast<DWORD *>(pDungeonCels.get());
 
 	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
 	tile = (level_cel_block & 0x7000) >> 12;
