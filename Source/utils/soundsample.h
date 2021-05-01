@@ -11,6 +11,15 @@
 
 namespace devilution {
 
+/**
+ * @brief Converts log volume passed in into linear volume.
+ * @param logVolume Logarithmic volume in the range [logMin..logMax]
+ * @param logMin Volume range minimum (usually ATTENUATION_MIN for game sounds and VOLUME_MIN for volume sliders)
+ * @param logMax Volume range maximum (usually 0)
+ * @return Linear volume in the range [0..1]
+*/
+float VolumeLogToLinear(int logVolume, int logMin, int logMax);
+
 class SoundSample final {
 public:
 	SoundSample() = default;
@@ -19,7 +28,7 @@ public:
 
 	void Release();
 	bool IsPlaying();
-	void Play(int lVolume, int lPan, int channel = -1);
+	void Play(int logSoundVolume, int logUserVolume, int logPan, int channel = -1);
 	void Stop();
 	int SetChunkStream(std::string filePath);
 

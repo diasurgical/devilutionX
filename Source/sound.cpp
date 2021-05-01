@@ -20,6 +20,7 @@
 #include "storm/storm_sdl_rw.h"
 #include "storm/storm.h"
 #include "utils/log.hpp"
+#include "utils/math.h"
 #include "utils/sdl_mutex.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
@@ -121,12 +122,7 @@ const char *const sgszMusicTracks[NUM_MUSIC] = {
 
 static int CapVolume(int volume)
 {
-	if (volume < VOLUME_MIN) {
-		volume = VOLUME_MIN;
-	} else if (volume > VOLUME_MAX) {
-		volume = VOLUME_MAX;
-	}
-	return volume - volume % 100;
+	return clamp(volume, VOLUME_MIN, VOLUME_MAX);
 }
 
 void ClearDuplicateSounds() {
@@ -154,8 +150,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 			return;
 	}
 
-	lVolume = CapVolume(lVolume + sgOptions.Audio.nSoundVolume);
-	sound->Play(lVolume, lPan);
+	sound->Play(lVolume, sgOptions.Audio.nSoundVolume, lPan);
 	pSnd->start_tc = tc;
 }
 
@@ -259,7 +254,7 @@ void music_start(uint8_t nTrack)
 				return;
 			}
 
-			music->setVolume(1.F - static_cast<float>(sgOptions.Audio.nMusicVolume) / VOLUME_MIN);
+			music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
 			if (!music->play(/*iterations=*/0)) {
 				LogError(LogCategory::Audio, "Aulib::Stream::play (from music_start): {}", SDL_GetError());
 				CleanupMusic();
@@ -288,7 +283,7 @@ int sound_get_or_set_music_volume(int volume)
 	sgOptions.Audio.nMusicVolume = volume;
 
 	if (music)
-		music->setVolume(1.F - static_cast<float>(sgOptions.Audio.nMusicVolume) / VOLUME_MIN);
+		music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
 
 	return sgOptions.Audio.nMusicVolume;
 }

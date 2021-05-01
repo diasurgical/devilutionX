@@ -6,6 +6,11 @@
 #include "init.h"
 #include "player.h"
 #include "sound.h"
+#include "utils/math.h"
+
+#ifndef NOSOUND
+#include "utils/soundsample.h"
+#endif
 
 namespace devilution {
 namespace {
@@ -1091,13 +1096,13 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 	assert(pSFX);
 	assert(pSFX->bFlags & sfx_STREAM);
 	stream_stop();
-	lVolume += sound_get_or_set_sound_volume(1);
+	
 	if (lVolume >= VOLUME_MIN) {
 		if (lVolume > VOLUME_MAX)
 			lVolume = VOLUME_MAX;
 		if (pSFX->pSnd == nullptr)
 			pSFX->pSnd = sound_file_load(pSFX->pszName, AllowStreaming);
-		pSFX->pSnd->DSB.Play(lVolume, lPan, 0);
+		pSFX->pSnd->DSB.Play(lVolume, sound_get_or_set_sound_volume(1), lPan, 0);
 		sgpStreamSFX = pSFX;
 	}
 }
@@ -1144,23 +1149,21 @@ bool calc_snd_position(int x, int y, int *plVolume, int *plPan)
 {
 	int pan, volume;
 
-	x -= plr[myplr].position.tile.x;
-	y -= plr[myplr].position.tile.y;
+	const auto &playerPosition = plr[myplr].position.tile;
 
-	pan = (x - y) * 256;
-	*plPan = pan;
+	const int dx = x - playerPosition.x;
+	const int dy = y - playerPosition.y;
 
-	if (abs(pan) > 6400)
+	pan = (dx - dy) * 256;
+	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
+
+	volume = playerPosition.ApproxDistance({ x, y });
+	volume *= -64;
+
+	if (volume <= ATTENUATION_MIN)
 		return false;
 
-	volume = abs(x) > abs(y) ? abs(x) : abs(y);
-	volume *= 64;
 	*plVolume = volume;
-
-	if (volume >= 6400)
-		return false;
-
-	*plVolume = -volume;
 
 	return true;
 }

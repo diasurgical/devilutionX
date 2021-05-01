@@ -16,9 +16,47 @@
 #include "storm/storm_sdl_rw.h"
 #include "storm/storm.h"
 #include "utils/log.hpp"
+#include "utils/math.h"
 #include "utils/stubs.h"
 
 namespace devilution {
+
+namespace {
+
+constexpr float LogBase = 10.0f;
+
+// Scaling factor for attenuating volume.
+// Picked so that a volume change of -10 dB results in half perceived loudness.
+// VolumeScale = -1000 / log(0.5)
+constexpr float VolumeScale = 3321.9281f;
+
+// Min and max volume range, in millibel.
+// -100 dB (muted) to 0 dB (max. loudness).
+constexpr float MillibelMin = -10000.0f;
+constexpr float MillibelMax = 0.0f;
+
+// Stereo separation factor for left/right speaker panning. Lower values increase separation, moving sounds further left/right, while higher values will pull sounds more towards the middle, reducing separation.
+// Current value is tuned to have ~2:1 mix for sounds that happen on the edge of a 640x480 screen.
+constexpr float StereoSeparation = 6000.0f;
+
+float PanLogToLinear(int logPan)
+{
+	if (logPan == 0)
+		return 0;
+
+	return copysign(1.0f - std::pow(LogBase, static_cast<float>(-std::abs(logPan)) / StereoSeparation), static_cast<float>(logPan));
+}
+
+} // namespace
+
+float VolumeLogToLinear(int logVolume, int logMin, int logMax)
+{
+	const float logScaled = math::Remap<float>(logMin, logMax, MillibelMin, MillibelMax, logVolume);
+	const auto linVolume = std::pow(LogBase, static_cast<float>(logScaled) / VolumeScale);
+	return linVolume;
+}
+
+///// SoundSample /////
 
 void SoundSample::Release()
 {
@@ -38,18 +76,17 @@ bool SoundSample::IsPlaying()
 /**
  * @brief Start playing the sound
  */
-void SoundSample::Play(int lVolume, int lPan, int channel)
+void SoundSample::Play(int logSoundVolume, int logUserVolume, int logPan, int channel)
 {
 	if (!stream_)
 		return;
 
-	constexpr float Base = 10.F;
-	constexpr float Scale = 2000.F;
-	stream_->setVolume(std::pow(Base, static_cast<float>(lVolume) / Scale));
-	stream_->setStereoPosition(
-	    lPan == 0 ? 0
-	              : copysign(1.F - std::pow(Base, static_cast<float>(-std::fabs(lPan) / Scale)),
-	                  static_cast<float>(lPan)));
+	const int combinedLogVolume = logSoundVolume + logUserVolume * (ATTENUATION_MIN / VOLUME_MIN);
+	const float linearVolume = VolumeLogToLinear(combinedLogVolume, ATTENUATION_MIN, 0);
+	stream_->setVolume(linearVolume);
+
+	const float linearPan = PanLogToLinear(logPan);
+	stream_->setStereoPosition(linearPan);
 
 	if (!stream_->play()) {
 		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
