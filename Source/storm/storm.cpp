@@ -120,135 +120,14 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 
 	if (!result || (*phFile == nullptr)) {
-		Log("{}: Not found: {}", __FUNCTION__, filename);
+		const auto error = SErrGetLastError();
+		if (error == STORM_ERROR_FILE_NOT_FOUND) {
+			LogVerbose("{}(\"{}\") File not found", __FUNCTION__, filename);
+		} else {
+			LogError("{}(\"{}\") Failed with error code {}", __FUNCTION__, filename, error);
+		}
 	}
 	return result;
-}
-
-bool SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
-{
-	HANDLE hFile;
-	size_t size;
-	PCXHeader pcxhdr;
-	BYTE paldata[256][3];
-	BYTE *dataPtr, *fileBuffer;
-	BYTE byte;
-
-	if (pdwWidth != nullptr)
-		*pdwWidth = 0;
-	if (dwHeight != nullptr)
-		*dwHeight = 0;
-	if (pdwBpp != nullptr)
-		*pdwBpp = 0;
-
-	if (!pszFileName || !*pszFileName) {
-		return false;
-	}
-
-	if (pBuffer && !dwBuffersize) {
-		return false;
-	}
-
-	if (!pPalette && !pBuffer && !pdwWidth && !dwHeight) {
-		return false;
-	}
-
-	if (!SFileOpenFile(pszFileName, &hFile)) {
-		return false;
-	}
-
-	while (strchr(pszFileName, 92) != nullptr)
-		pszFileName = strchr(pszFileName, 92) + 1;
-
-	while (strchr(pszFileName + 1, 46) != nullptr)
-		pszFileName = strchr(pszFileName, 46);
-
-	// omit all types except PCX
-	if (!pszFileName || strcasecmp(pszFileName, ".pcx") != 0) {
-		return false;
-	}
-
-	if (!SFileReadFile(hFile, &pcxhdr, 128, nullptr, nullptr)) {
-		SFileCloseFile(hFile);
-		return false;
-	}
-
-	int width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
-	int height = SDL_SwapLE16(pcxhdr.Ymax) - SDL_SwapLE16(pcxhdr.Ymin) + 1;
-
-	// If the given buffer is larger than width * height, assume the extra data
-	// is scanline padding.
-	//
-	// This is useful because in SDL the pitch size is often slightly larger
-	// than image width for efficiency.
-	const int xSkip = dwBuffersize / height - width;
-
-	if (pdwWidth != nullptr)
-		*pdwWidth = width;
-	if (dwHeight != nullptr)
-		*dwHeight = height;
-	if (pdwBpp != nullptr)
-		*pdwBpp = pcxhdr.BitsPerPixel;
-
-	if (pBuffer == nullptr) {
-		SFileSetFilePointer(hFile, 0, nullptr, DVL_FILE_END);
-		fileBuffer = nullptr;
-	} else {
-		const auto pos = SFileGetFilePointer(hFile);
-		const auto end = SFileSetFilePointer(hFile, 0, DVL_FILE_END);
-		const auto begin = SFileSetFilePointer(hFile, pos, DVL_FILE_BEGIN);
-		size = end - begin;
-		fileBuffer = (BYTE *)malloc(size);
-	}
-
-	if (fileBuffer != nullptr) {
-		SFileReadFile(hFile, fileBuffer, size, nullptr, nullptr);
-		dataPtr = fileBuffer;
-
-		for (int j = 0; j < height; j++) {
-			for (int x = 0; x < width; dataPtr++) {
-				byte = *dataPtr;
-				if (byte < 0xC0) {
-					*pBuffer = byte;
-					pBuffer++;
-					x++;
-					continue;
-				}
-				dataPtr++;
-
-				for (int i = 0; i < (byte & 0x3F); i++) {
-					*pBuffer = *dataPtr;
-					pBuffer++;
-					x++;
-				}
-			}
-			// Skip the pitch padding.
-			pBuffer += xSkip;
-		}
-
-		free(fileBuffer);
-	}
-
-	if (pPalette && pcxhdr.BitsPerPixel == 8) {
-		const auto pos = SFileSetFilePointer(hFile, -768, DVL_FILE_CURRENT);
-		if (pos == static_cast<std::uint64_t>(-1)) {
-			Log("SFileSetFilePointer error: {}", (unsigned int)SErrGetLastError());
-		}
-		SFileReadFile(hFile, paldata, 768, nullptr, nullptr);
-
-		for (int i = 0; i < 256; i++) {
-			pPalette[i].r = paldata[i][0];
-			pPalette[i].g = paldata[i][1];
-			pPalette[i].b = paldata[i][2];
-#ifndef USE_SDL1
-			pPalette[i].a = SDL_ALPHA_OPAQUE;
-#endif
-		}
-	}
-
-	SFileCloseFile(hFile);
-
-	return true;
 }
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
