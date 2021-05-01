@@ -3076,7 +3076,7 @@ void GetItemStr(int i)
 			infoclr = COL_GOLD;
 	} else {
 		nGold = items[i]._ivalue;
-		sprintf(infostr, _("%i gold %s"), nGold, get_pieces_str(nGold));
+		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 	}
 }
 
@@ -3338,7 +3338,7 @@ void PrintItemOil(char IDidx)
 		AddPanelString(tempstr, true);
 		break;
 	case IMISC_OILBSMTH:
-		strcpy(tempstr, _("restores 20% of an"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("restores 20% of an"));
 		AddPanelString(tempstr, true);
 		strcpy(tempstr, _("item's durability"));
 		AddPanelString(tempstr, true);
@@ -3482,28 +3482,28 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		else
-			strcpy(tempstr, _("Resist Fire: 75% MAX"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Fire: 75% MAX"));
 		break;
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
 		if (x->_iPLLR < 75)
 			sprintf(tempstr, _("Resist Lightning: %+i%%"), x->_iPLLR);
 		else
-			strcpy(tempstr, _("Resist Lightning: 75% MAX"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Lightning: 75% MAX"));
 		break;
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
 		if (x->_iPLMR < 75)
 			sprintf(tempstr, _("Resist Magic: %+i%%"), x->_iPLMR);
 		else
-			strcpy(tempstr, _("Resist Magic: 75% MAX"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Magic: 75% MAX"));
 		break;
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, _("Resist All: %+i%%"), x->_iPLFR);
 		if (x->_iPLFR >= 75)
-			strcpy(tempstr, _("Resist All: 75% MAX"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist All: 75% MAX"));
 		break;
 	case IPL_SPLLVLADD:
 		if (x->_iSplLvlAdd == 1)
@@ -3736,10 +3736,10 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("extra AC vs undead"));
 		break;
 	case IPL_MANATOLIFE:
-		strcpy(tempstr, _("50% Mana moved to Health"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("50% Mana moved to Health"));
 		break;
 	case IPL_LIFETOMANA:
-		strcpy(tempstr, _("40% Health moved to Mana"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("40% Health moved to Mana"));
 		break;
 	default:
 		strcpy(tempstr, _("Another ability (NW)"));

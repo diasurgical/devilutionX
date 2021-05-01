@@ -17,6 +17,7 @@
 #include "dx.h"
 #include "options.h"
 #include "palette.h"
+#include "storm/storm_file_wrapper.h"
 #include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
@@ -40,7 +41,10 @@ smk SVidSMK;
 SDL_Color SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
 SDL_Surface *SVidSurface;
+
+#ifndef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
 std::unique_ptr<uint8_t[]> SVidBuffer;
+#endif
 
 bool IsLandscapeFit(unsigned long srcW, unsigned long srcH, unsigned long dstW, unsigned long dstH)
 {
@@ -130,10 +134,10 @@ bool SVidLoadNextFrame()
 
 } // namespace
 
-void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
+bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 {
 	if (flags & 0x10000 || flags & 0x20000000) {
-		return;
+		return false;
 	}
 
 	SVidLoop = false;
@@ -147,14 +151,19 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	//0x200800 // Clear FB
 
 	SFileOpenFile(filename, video);
-
+#ifdef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
+	FILE *file = FILE_FromStormHandle(*video);
+	SVidSMK = smk_open_filepointer(file, SMK_MODE_DISK);
+#else
 	int bytestoread = SFileGetFileSize(*video, nullptr);
 	SVidBuffer = std::make_unique<uint8_t[]>(bytestoread);
 	SFileReadFile(*video, SVidBuffer.get(), bytestoread, nullptr, nullptr);
-
+	SFileCloseFile(*video);
+	*video = nullptr;
 	SVidSMK = smk_open_memory(SVidBuffer.get(), bytestoread);
+#endif
 	if (SVidSMK == nullptr) {
-		return;
+		return false;
 	}
 
 #ifndef NOSOUND
@@ -237,6 +246,7 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 
 	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
 	SDL_FillRect(GetOutputSurface(), nullptr, 0x000000);
+	return true;
 }
 
 bool SVidPlayContinue()
@@ -359,16 +369,15 @@ void SVidPlayEnd(HANDLE video)
 	if (SVidSMK != nullptr)
 		smk_close(SVidSMK);
 
+#ifndef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
 	SVidBuffer = nullptr;
+#endif
 
 	SDL_FreePalette(SVidPalette);
 	SVidPalette = nullptr;
 
 	SDL_FreeSurface(SVidSurface);
 	SVidSurface = nullptr;
-
-	SFileCloseFile(video);
-	video = nullptr;
 
 	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
 #ifndef USE_SDL1

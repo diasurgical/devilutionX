@@ -1258,7 +1258,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 	} else if (pcurs >= CURSOR_FIRSTITEM) {
 		if (plr[myplr].HoldItem._itype == ITYPE_GOLD) {
 			int nGold = plr[myplr].HoldItem._ivalue;
-			sprintf(infostr, _("%i gold %s"), nGold, get_pieces_str(nGold));
+			sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 		} else if (!plr[myplr].HoldItem._iStatFlag) {
 			ClearPanel();
 			AddPanelString(_("Requirements not met"), true);
@@ -1897,21 +1897,13 @@ void CheckSBook()
 	}
 }
 
-const char *get_pieces_str(int nGold)
-{
-	const char *result = _("piece");
-	if (nGold != 1)
-		result = _("pieces");
-	return result;
-}
-
 void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 {
 	int screenX = 0;
 	CelDrawTo(out, 351, 178, *pGBoxBuff, 1);
 	sprintf(tempstr, _("You have %u gold"), initialDropGoldValue);
 	ADD_PlrStringXY(out, 366, 87, 600, tempstr, COL_GOLD);
-	sprintf(tempstr, _("%s.  How many do"), get_pieces_str(initialDropGoldValue));
+	sprintf(tempstr, ngettext("piece.  How many do", "pieces.  How many do", initialDropGoldValue), initialDropGoldValue);
 	ADD_PlrStringXY(out, 366, 103, 600, tempstr, COL_GOLD);
 	ADD_PlrStringXY(out, 366, 121, 600, _("you want to remove?"), COL_GOLD);
 	if (amount > 0) {
