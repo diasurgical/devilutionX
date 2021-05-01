@@ -37,28 +37,28 @@ void play_movie(const char *pszMovie, bool user_can_close)
 	effects_play_sound("Sfx\\Misc\\blank.wav");
 #endif
 
-	SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808, &video_stream);
-	tagMSG Msg;
-	while (video_stream != nullptr && movie_playing) {
-		while (movie_playing && FetchMessage(&Msg)) {
-			switch (Msg.message) {
-			case DVL_WM_KEYDOWN:
-			case DVL_WM_LBUTTONDOWN:
-			case DVL_WM_RBUTTONDOWN:
-				if (user_can_close || (Msg.message == DVL_WM_KEYDOWN && Msg.wParam == DVL_VK_ESCAPE))
-					movie_playing = false;
-				break;
-			case DVL_WM_QUIT:
-				SVidPlayEnd(video_stream);
-				diablo_quit(0);
-				break;
+	if (SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808, &video_stream)) {
+		tagMSG Msg;
+		while (movie_playing) {
+			while (movie_playing && FetchMessage(&Msg)) {
+				switch (Msg.message) {
+				case DVL_WM_KEYDOWN:
+				case DVL_WM_LBUTTONDOWN:
+				case DVL_WM_RBUTTONDOWN:
+					if (user_can_close || (Msg.message == DVL_WM_KEYDOWN && Msg.wParam == DVL_VK_ESCAPE))
+						movie_playing = false;
+					break;
+				case DVL_WM_QUIT:
+					SVidPlayEnd(video_stream);
+					diablo_quit(0);
+					break;
+				}
 			}
+			if (!SVidPlayContinue())
+				break;
 		}
-		if (!SVidPlayContinue())
-			break;
-	}
-	if (video_stream != nullptr)
 		SVidPlayEnd(video_stream);
+	}
 
 #ifndef NOSOUND
 	sound_disable_music(false);

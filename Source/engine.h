@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
+#include <utility>
 
 #include <SDL.h>
 
@@ -369,6 +370,12 @@ private:
  */
 CelSprite LoadCel(const char *pszName, int width);
 CelSprite LoadCel(const char *pszName, const int *widths);
+
+/**
+ * Returns a pair of X coordinates containing the start (inclusive) and end (exclusive)
+ * of fully transparent columns in the sprite.
+ */
+std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame = 1);
 
 /**
  * @brief Blit CEL sprite to the back buffer at the given coordinates
