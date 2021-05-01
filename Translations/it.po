@@ -333,7 +333,7 @@ msgstr "OK"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
-msgstr "Giocatore Singolo "
+msgstr "Giocatore Singolo"
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
@@ -772,13 +772,11 @@ msgstr "Avvertenze:"
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr " DevilutionX non è supportato o gestito da Blizzard Entertainment"
+msgstr " DevilutionX non è supportato o gestito da Blizzard Entertainment,"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
-msgstr ""
-"\n"
-"o da GOG.com. Né Blizzard Entertainment né GOG.com hanno testato"
+msgstr " o da GOG.com. Né Blizzard Entertainment né GOG.com hanno testato"
 
 #: Source/DiabloUI/support_lines.cpp:21
 msgid ""
@@ -1003,7 +1001,7 @@ msgstr "Seleziona Abilità Magiche"
 msgid "Hotkey: 's'"
 msgstr "Tasto : 's'"
 
-#: Source/control.cpp:1261
+#: Source/control.cpp:1261 Source/inv.cpp:2117 Source/items.cpp:3079
 #, fuzzy, c-format
 #| msgid "%i gold %s"
 msgid "%i gold piece"
@@ -1853,11 +1851,6 @@ msgstr ""
 #: Source/init.cpp:212
 msgid "Unable to create main window"
 msgstr ""
-
-#: Source/inv.cpp:2117 Source/items.cpp:3079
-#, c-format
-msgid "%i gold %s"
-msgstr "%i Pz. %s"
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:197
 msgid "Gold"
@@ -3694,7 +3687,7 @@ msgid "to use armor or weapons"
 msgstr ""
 
 #: Source/items.cpp:3341
-#, c-format
+#, no-c-format
 msgid "restores 20% of an"
 msgstr ""
 
@@ -3833,6 +3826,7 @@ msgid "Resist Fire: %+i%%"
 msgstr "Res.al Fuoco: %+i%%"
 
 #: Source/items.cpp:3485
+#, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "Res.al Fuoco: 75% MAX"
 
@@ -3842,6 +3836,7 @@ msgid "Resist Lightning: %+i%%"
 msgstr "Res. al Fulmine : %+i%%"
 
 #: Source/items.cpp:3492
+#, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "Res. al Fulmine : 75% MAX"
 
@@ -3851,6 +3846,7 @@ msgid "Resist Magic: %+i%%"
 msgstr "Res. a Magia : %+i%%"
 
 #: Source/items.cpp:3499
+#, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "Res. a Magia : 75% MAX"
 
@@ -3860,6 +3856,7 @@ msgid "Resist All: %+i%%"
 msgstr "Res.a Tutto: %+i%%"
 
 #: Source/items.cpp:3506
+#, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "Res.a Tutto: 75% MAX"
 
@@ -4186,10 +4183,12 @@ msgid "extra AC vs undead"
 msgstr ""
 
 #: Source/items.cpp:3739
+#, no-c-format
 msgid "50% Mana moved to Health"
 msgstr ""
 
 #: Source/items.cpp:3742
+#, no-c-format
 msgid "40% Health moved to Mana"
 msgstr ""
 
@@ -5697,7 +5696,7 @@ msgstr "Livello Successivo: "
 #: Source/qol/xpbar.cpp:148
 #, c-format
 msgid " to Level %d"
-msgstr "al Livello %d"
+msgstr " al Livello %d"
 
 #: Source/quests.cpp:39
 msgid "The Magic Rock"
@@ -6142,7 +6141,7 @@ msgstr "Sei sicuro di voler vendere l'oggetto?"
 msgid "Are you sure you want to repair this item?"
 msgstr "Sei sicuro di voler riparare l'oggetto?"
 
-#: Source/stores.cpp:896 Source/towners.cpp:320
+#: Source/stores.cpp:896 Source/towners.cpp:319
 msgid "Wirt the Peg-legged boy"
 msgstr "Wirt - Gamba di Legno"
 
@@ -6264,7 +6263,7 @@ msgstr "Lascia Taverna"
 msgid "Talk to Gillian"
 msgstr "Parla a Gillian"
 
-#: Source/stores.cpp:1197 Source/towners.cpp:368
+#: Source/stores.cpp:1197 Source/towners.cpp:367
 msgid "Farnham the Drunk"
 msgstr "Farnham l'Ubriaco"
 
@@ -9699,47 +9698,47 @@ msgstr ""
 msgid "Efficio Obitus Ut Inimicus. |"
 msgstr ""
 
-#: Source/towners.cpp:242
+#: Source/towners.cpp:241
 msgid "Griswold the Blacksmith"
 msgstr "Griswold il Fabbro"
 
-#: Source/towners.cpp:256
+#: Source/towners.cpp:255
 msgid "Ogden the Tavern owner"
 msgstr "Ogden il Taverniere"
 
-#: Source/towners.cpp:272
+#: Source/towners.cpp:271
 msgid "Wounded Townsman"
 msgstr "Cittadino Ferito"
 
-#: Source/towners.cpp:288
+#: Source/towners.cpp:287
 msgid "Adria the Witch"
 msgstr "Adria la Strega"
 
-#: Source/towners.cpp:304
+#: Source/towners.cpp:303
 msgid "Gillian the Barmaid"
 msgstr "La Graziosa Gillian"
 
-#: Source/towners.cpp:336
+#: Source/towners.cpp:335
 msgid "Pepin the Healer"
 msgstr "Pepin il Guaritore"
 
-#: Source/towners.cpp:352
+#: Source/towners.cpp:351
 msgid "Cain the Elder"
 msgstr "Cain il Saggio"
 
-#: Source/towners.cpp:391
+#: Source/towners.cpp:390
 msgid "Cow"
 msgstr "Mucca"
 
-#: Source/towners.cpp:418
+#: Source/towners.cpp:417
 msgid "Lester the farmer"
 msgstr "Lester il contadino"
 
-#: Source/towners.cpp:438
+#: Source/towners.cpp:437
 msgid "Complete Nut"
 msgstr "Dado completo"
 
-#: Source/towners.cpp:550
+#: Source/towners.cpp:549
 msgid "Slain Townsman"
 msgstr "Cittadino Morto"
 
@@ -9807,12 +9806,3 @@ msgstr "Giù da Diablo"
 #, c-format
 msgid "Back to Level %i"
 msgstr "Torna al Livello %i"
-
-#~ msgid "piece"
-#~ msgstr "pezzo"
-
-#~ msgid "pieces"
-#~ msgstr "pezzi"
-
-#~ msgid "Lachdanan"
-#~ msgstr "Lachdanan"
