@@ -4004,25 +4004,25 @@ msgid "hit monster doesn't heal"
 msgstr "le monstre touché ne guérit pas"
 
 #: Source/items.cpp:3629
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "hit steals 3% mana"
 msgid "hit steals 3% mana"
 msgstr "frapper vole 3% de mana"
 
 #: Source/items.cpp:3631
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "hit steals 5% mana"
 msgid "hit steals 5% mana"
 msgstr "frapper vole 5% de mana"
 
 #: Source/items.cpp:3635
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "hit steals 3% life"
 msgid "hit steals 3% life"
 msgstr "frapper vole 3% de vie"
 
 #: Source/items.cpp:3637
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "hit steals 5% life"
 msgid "hit steals 5% life"
 msgstr "frapper vole 5% de mana"
@@ -4137,7 +4137,7 @@ msgid "2x dmg to monst, 1x to you"
 msgstr "2x dgt au monstre, 1x à vous"
 
 #: Source/items.cpp:3721
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "Random 0 - 500% damage"
 msgid "Random 0 - 500% damage"
 msgstr "Dégâts 0-500% aléatoire"
