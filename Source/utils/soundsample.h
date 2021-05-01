@@ -30,7 +30,7 @@ public:
 	 * @param dwBytes Length of buffer
 	 * @return 0 on success, -1 otherwise
 	 */
-	int SetChunk(SharedPtrArray<std::uint8_t> file_data, std::size_t dwBytes);
+	int SetChunk(ArraySharedPtr<std::uint8_t> file_data, std::size_t dwBytes);
 
 	[[nodiscard]] bool IsStreaming() const
 	{
@@ -48,7 +48,7 @@ public:
 
 private:
 	// Non-streaming audio fields:
-	SharedPtrArray<std::uint8_t> file_data_;
+	ArraySharedPtr<std::uint8_t> file_data_;
 	std::size_t file_data_size_;
 
 	// Streaming audio fields:

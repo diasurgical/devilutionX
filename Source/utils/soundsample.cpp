@@ -95,7 +95,7 @@ int SoundSample::SetChunkStream(std::string filePath)
 	return 0;
 }
 
-int SoundSample::SetChunk(SharedPtrArray<std::uint8_t> fileData, std::size_t dwBytes)
+int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes)
 {
 	file_data_ = fileData;
 	file_data_size_ = dwBytes;
