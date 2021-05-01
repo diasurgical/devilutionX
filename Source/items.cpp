@@ -3076,7 +3076,7 @@ void GetItemStr(int i)
 			infoclr = COL_GOLD;
 	} else {
 		nGold = items[i]._ivalue;
-		sprintf(infostr, _("%i gold %s"), nGold, get_pieces_str(nGold));
+		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 	}
 }
 

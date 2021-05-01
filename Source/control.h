@@ -143,7 +143,6 @@ void DrawDurIcon(const CelOutputBuffer &out);
 void RedBack(const CelOutputBuffer &out);
 void DrawSpellBook(const CelOutputBuffer &out);
 void CheckSBook();
-const char *get_pieces_str(int nGold);
 void DrawGoldSplit(const CelOutputBuffer &out, int amount);
 void control_drop_gold(char vkey);
 void control_remove_gold(int pnum, int goldIndex);
