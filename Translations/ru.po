@@ -869,11 +869,11 @@ msgstr "Папка только для чтения"
 
 #: Source/automap.cpp:420
 msgid "game: "
-msgstr "игра:"
+msgstr "игра: "
 
 #: Source/automap.cpp:424
 msgid "password: "
-msgstr "пароль:"
+msgstr "пароль: "
 
 #: Source/automap.cpp:434 Source/items.cpp:3865
 #, c-format
@@ -1150,19 +1150,19 @@ msgstr ""
 
 #: Source/diablo.cpp:161
 msgid "Specify the folder of save files"
-msgstr ""
+msgstr "Укажите папку с сохранениями"
 
 #: Source/diablo.cpp:162
 msgid "Specify the location of diablo.ini"
-msgstr ""
+msgstr "Укажите путь к diablo.ini"
 
 #: Source/diablo.cpp:163
 msgid "Specify the location of the .ttf font"
-msgstr ""
+msgstr "Укажите путь к .ttf шрифту"
 
 #: Source/diablo.cpp:164
 msgid "Specify the name of a custom .ttf font"
-msgstr ""
+msgstr "Укажите имя собственного .ttf шрифта"
 
 #: Source/diablo.cpp:165
 msgid "Skip startup videos"
@@ -1170,11 +1170,11 @@ msgstr ""
 
 #: Source/diablo.cpp:166
 msgid "Display frames per second"
-msgstr ""
+msgstr "Отображать кадры в секунду"
 
 #: Source/diablo.cpp:167
 msgid "Run in windowed mode"
-msgstr ""
+msgstr "Запустить в оконном режиме"
 
 #: Source/diablo.cpp:168
 msgid "Enable verbose logging"
@@ -6080,27 +6080,27 @@ msgstr ""
 
 #: Source/stores.cpp:863
 msgid "Do we have a deal?"
-msgstr ""
+msgstr "По рукам?"
 
 #: Source/stores.cpp:866
 msgid "Are you sure you want to identify this item?"
-msgstr ""
+msgstr "Вы уверены, что хотите идентифицировать эти предметы?"
 
 #: Source/stores.cpp:872
 msgid "Are you sure you want to buy this item?"
-msgstr ""
+msgstr "Вы уверены, что хотите купить этот предмет?"
 
 #: Source/stores.cpp:875
 msgid "Are you sure you want to recharge this item?"
-msgstr ""
+msgstr "Вы уверены что хотите перезарядить этот предмет?"
 
 #: Source/stores.cpp:879
 msgid "Are you sure you want to sell this item?"
-msgstr ""
+msgstr "Вы уверены, что хотите продать этот предмет?"
 
 #: Source/stores.cpp:882
 msgid "Are you sure you want to repair this item?"
-msgstr ""
+msgstr "Вы уверены, что хотите починить эту вещь?"
 
 #: Source/stores.cpp:896 Source/towners.cpp:318
 msgid "Wirt the Peg-legged boy"
@@ -6108,7 +6108,7 @@ msgstr ""
 
 #: Source/stores.cpp:899 Source/stores.cpp:906
 msgid "Talk to Wirt"
-msgstr ""
+msgstr "Поговорить с Виртом"
 
 #: Source/stores.cpp:900
 msgid "I have something for sale,"
@@ -6120,14 +6120,13 @@ msgstr "но это будет стоить 50 золотых"
 
 #: Source/stores.cpp:902
 msgid "just to take a look. "
-msgstr ""
+msgstr "просто взгляни. "
 
 #: Source/stores.cpp:903
 msgid "What have you got?"
-msgstr ""
+msgstr "Что у вас есть?"
 
-#: Source/stores.cpp:904 Source/stores.cpp:907 Source/stores.cpp:1014
-#: Source/stores.cpp:1188
+#: Source/stores.cpp:904 Source/stores.cpp:907 Source/stores.cpp:1014 Source/stores.cpp:1188
 msgid "Say goodbye"
 msgstr "Попрощаться"
 
@@ -6144,7 +6143,7 @@ msgstr "Покинуть"
 
 #: Source/stores.cpp:951
 msgid "Healer's home"
-msgstr ""
+msgstr "Дом целителя"
 
 #: Source/stores.cpp:953
 msgid "Talk to Pepin"
@@ -6152,7 +6151,7 @@ msgstr ""
 
 #: Source/stores.cpp:955
 msgid "Leave Healer's home"
-msgstr ""
+msgstr "Покинуть дом целителя"
 
 #: Source/stores.cpp:1010
 msgid "The Town Elder"
@@ -6160,34 +6159,34 @@ msgstr ""
 
 #: Source/stores.cpp:1012
 msgid "Talk to Cain"
-msgstr ""
+msgstr "Поговорить с Каином"
 
 #: Source/stores.cpp:1013
 msgid "Identify an item"
-msgstr ""
+msgstr "Идентифицировать предмет"
 
 #: Source/stores.cpp:1090
 #, c-format
 msgid "You have nothing to identify.             Your gold: %i"
-msgstr ""
+msgstr "Вам нечего идентифицировать.             Ваше золото: %i"
 
 #: Source/stores.cpp:1100
 #, c-format
 msgid "Identify which item?             Your gold: %i"
-msgstr ""
+msgstr "Какой предмет идентифицировать?             Ваше золото: %i"
 
 #: Source/stores.cpp:1117
 msgid "This item is:"
-msgstr ""
+msgstr "Этот предмет:"
 
 #: Source/stores.cpp:1120
 msgid "Done"
-msgstr ""
+msgstr "Готово"
 
 #: Source/stores.cpp:1129
 #, c-format
 msgid "Talk to %s"
-msgstr ""
+msgstr "Поговорить с %s"
 
 #: Source/stores.cpp:1133
 #, c-format
@@ -6220,7 +6219,7 @@ msgstr ""
 
 #: Source/stores.cpp:1176
 msgid "Leave the tavern"
-msgstr ""
+msgstr "Покинуть таверну"
 
 #: Source/stores.cpp:1187
 msgid "Talk to Gillian"
@@ -6236,7 +6235,7 @@ msgstr ""
 
 #: Source/stores.cpp:1200
 msgid "Say Goodbye"
-msgstr ""
+msgstr "Сказать До свидания"
 
 #: Source/textdat.cpp:15
 msgid ""
@@ -9112,131 +9111,102 @@ msgid "|"
 msgstr ""
 
 #: Source/textdat.cpp:610
-msgid ""
-"It must truly be a fearsome task I've set before you. If there was just some "
-"way that I could... would a flagon of some nice, fresh milk help?|"
+msgid "It must truly be a fearsome task I've set before you. If there was just some way that I could... would a flagon of some nice, fresh milk help?|"
 msgstr ""
 
 #: Source/textdat.cpp:612
-msgid ""
-"Oh, I could use your help, but perhaps after you've saved the catacombs from "
-"the desecration of those beasts.|"
+msgid "Oh, I could use your help, but perhaps after you've saved the catacombs from the desecration of those beasts.|"
 msgstr ""
 
 #: Source/textdat.cpp:614
-msgid ""
-"I need something done, but I couldn't impose on a perfect stranger. Perhaps "
-"after you've been here a while I might feel more comfortable asking a favor.|"
+msgid "I need something done, but I couldn't impose on a perfect stranger. Perhaps after you've been here a while I might feel more comfortable asking a favor.|"
 msgstr ""
 
 #: Source/textdat.cpp:616
-msgid ""
-"I see in you the potential for greatness.  Perhaps sometime while you are "
-"fulfilling your destiny, you could stop by and do a little favor for me?|"
-msgstr ""
+msgid "I see in you the potential for greatness.  Perhaps sometime while you are fulfilling your destiny, you could stop by and do a little favor for me?|"
+msgstr "Я вижу в тебе потенциал величия. Возможно когда-нибудь, пока вы выполняете свое предназначение, вы сможете оказать мне маленькую услугу?|"
 
 #: Source/textdat.cpp:618
-msgid ""
-"I think you could probably help me, but perhaps after you've gotten a little "
-"more powerful. I wouldn't want to injure the village's only chance to "
-"destroy the menace in the church!|"
-msgstr ""
+msgid "I think you could probably help me, but perhaps after you've gotten a little more powerful. I wouldn't want to injure the village's only chance to destroy the menace in the church!|"
+msgstr "Думаю, вы могли бы мне помочь, но возможно после того, как станете немного сильнее. Я бы не хотел лишить деревню единственного шанса уничтожить угрозу в церкви!|"
 
 #: Source/textdat.cpp:620
-msgid ""
-"Me, I'm a self-made cow.  Make something of yourself, and... then we'll "
-"talk.|"
-msgstr ""
+msgid "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk.|"
+msgstr "Я - обязанная за все самой себе корова. Стань кем-нибудь и… тогда мы поговорим.|"
 
 #: Source/textdat.cpp:622
-msgid ""
-"I don't have to explain myself to every tourist that walks by!  Don't you "
-"have some monsters to kill?  Maybe we'll talk later.  If you live...|"
-msgstr ""
+msgid "I don't have to explain myself to every tourist that walks by!  Don't you have some monsters to kill?  Maybe we'll talk later.  If you live...|"
+msgstr "Мне не нужно представлять себя каждому проходящему мимо туристу! Разве у вас нет монстров, которых нужно убить? Возможно, мы поговорим позже. Если останетесь живы…|"
 
 #: Source/textdat.cpp:624
-msgid ""
-"Quit bugging me.  I'm looking for someone really heroic.  And you're not "
-"it.  I can't trust you, you're going to get eaten by monsters any day now... "
-"I need someone who's an experienced hero.|"
-msgstr ""
+msgid "Quit bugging me.  I'm looking for someone really heroic.  And you're not it.  I can't trust you, you're going to get eaten by monsters any day now... I need someone who's an experienced hero.|"
+msgstr "Хватит приставать ко мне. Я ищу кого-то действительно героического. И это не ты. Я не могу доверять тебе, тебя со дня на день сожрут монстры… Мне нужен опытный герой.|"
 
 #: Source/textdat.cpp:626
 msgid ""
-"All right, I'll cut the bull.  I didn't mean to steer you wrong.  I was "
-"sitting at home, feeling moo-dy, when things got really un-stable; a whole "
-"stampede of monsters came out of the floor!  I just cowed.  I just happened "
-"to be wearing this Jersey when I ran out the door, and now I look udderly "
-"ridiculous.  If only I had something normal to wear, it wouldn't be so bad.  "
-"Hey!  Can you go back to my place and get my suit for me?  The brown one, "
-"not the gray one, that's for evening wear.  I'd do it myself, but I don't "
-"want anyone seeing me like this.  Here, take this, you might need it... to "
-"kill those things that have overgrown everything.  You can't miss my house, "
-"it's just south of the fork in the river... you know... the one with the "
-"overgrown vegetable garden.|"
+"All right, I'll cut the bull.  I didn't mean to steer you wrong.  I was sitting at home, feeling moo-dy, when things got really un-stable; a whole stampede of monsters came out of the floor!  I just cowed.  I just happened to be wearing this Jersey when I "
+"ran out the door, and now I look udderly ridiculous.  If only I had something normal to wear, it wouldn't be so bad.  Hey!  Can you go back to my place and get my suit for me?  The brown one, not the gray one, that's for evening wear.  I'd do it myself, but "
+"I don't want anyone seeing me like this.  Here, take this, you might need it... to kill those things that have overgrown everything.  You can't miss my house, it's just south of the fork in the river... you know... the one with the overgrown vegetable "
+"garden.|"
 msgstr ""
+"Хорошо, я  перестану нести чушь. Я не хотел тебя обмануть. Я сидел дома, чувствуя себя плохо, когда все стало реально нестабильно;  целое полчище монстров вылетело из под пола. Я просто испугался. Я случайно надел этот джерси, когда выбежал за дверь и теперь "
+"выгляжу до смешного нелепо. Если бы у меня было что-нибудь нормальное, это было бы не так уж плохо. Привет! Можешь вернуться ко мне и забрать мой костюм? Коричневый, а не серый, этот для вечерних нарядов. Я бы сделал это сам, но я не хочу, чтобы кто-то видел "
+"меня таким. Вот, возьми, может это тебе понадобится, чтобы убить тех тварей, которые заполонили все. Ты не пропустишь мой дом, он к югу от развилки реки… ну, знаешь… той, где есть заросший огород.|"
 
 #: Source/textdat.cpp:628
-msgid ""
-"Cloudy and cooler today.  Casting the nets of necromancy across the void "
-"landed two new subspecies of flying horror; a good day's work.  Must "
-"remember to order some more bat guano and black candles from Adria; I'm "
-"running a bit low.|"
-msgstr ""
+msgid "Cloudy and cooler today.  Casting the nets of necromancy across the void landed two new subspecies of flying horror; a good day's work.  Must remember to order some more bat guano and black candles from Adria; I'm running a bit low.|"
+msgstr "Сегодня пасмурно и прохладнее. Забросив сети некромантии через пустоту, мы получили два новых подвида летающего ужаса; хороший рабочий день. Надо не забыть заказать заказать еще гуано летучих мышей и черные свечи в Адрии; я немного на исходе.|"
 
 #: Source/textdat.cpp:630
-msgid ""
-"I have tried spells, threats, abjuration and bargaining with this foul "
-"creature -- to no avail.  My methods of enslaving lesser demons seem to have "
-"no effect on this fearsome beast.|"
-msgstr ""
+msgid "I have tried spells, threats, abjuration and bargaining with this foul creature -- to no avail.  My methods of enslaving lesser demons seem to have no effect on this fearsome beast.|"
+msgstr "Я пробовал заклинания, угрозы, отречение и торги с этим скверным существом — безрезультатно. Мои методы порабощения низших демонов, похоже, не действуют на этого грозного зверя.|"
 
 #: Source/textdat.cpp:632
 msgid ""
-"My home is slowly becoming corrupted by the vileness of this unwanted "
-"prisoner.  The crypts are\tfull of shadows that move just beyond the corners "
-"of my vision.  The faint scrabble of claws dances at the edges of my "
-"hearing. They are searching, I think, for this journal.|"
-msgstr ""
+"My home is slowly becoming corrupted by the vileness of this unwanted prisoner.  The crypts are\tfull of shadows that move just beyond the corners of my vision.  The faint scrabble of claws dances at the edges of my hearing. They are searching, I think, for "
+"this journal.|"
+msgstr "Мой дом постепенно портится из-за мерзости этого нежеланного заключенного. Склепы\tполны теней, которые выходят за пределы моего восприятия. Слабый скрежет когтей пляшет на краю моего слуха. Они ищут, я думаю, этот журнал.|"
 
 #: Source/textdat.cpp:634
 msgid ""
-"In its ranting, the creature has let slip its name -- Na-Krul.  I have "
-"attempted to research the name, but the smaller demons have somehow "
-"destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
-"prefer to think of it only as The Creature rather than ponder its true name.|"
+"In its ranting, the creature has let slip its name -- Na-Krul.  I have attempted to research the name, but the smaller demons have somehow destroyed my library.  Na-Krul... The name fills me with a cold dread.  I prefer to think of it only as The Creature "
+"rather than ponder its true name.|"
 msgstr ""
+"В своих разговорах существо обмолвилось своим именем — На-Крул. Я хотел изучить его имя, но более мелкие демоны каким-то образом разрушили мою библиотеку. На-Крул… Это имя наполняет меня холодным ужасом. Я предпочитаю думать о нем только как о Существе, а не "
+"обдумывать его настоящее имя.|"
 
 #: Source/textdat.cpp:636
 msgid ""
-"The entrapped creature's howls of fury keep me from gaining much needed "
-"sleep.  It rages against the one who sent it to the Void, and it calls foul "
-"curses upon me for trapping it here.  Its words fill my heart with terror, "
-"and yet I cannot block out its voice.|"
-msgstr ""
+"The entrapped creature's howls of fury keep me from gaining much needed sleep.  It rages against the one who sent it to the Void, and it calls foul curses upon me for trapping it here.  Its words fill my heart with terror, and yet I cannot block out its "
+"voice.|"
+msgstr "Яростный вой пойманного существа не дает мне как следует выспаться. Оно злится на того, кто послал его в Пустоту, и проклинает меня за то, что я поймал его здесь. Его слова наполняют мое сердце ужасом, но я не могу заглушить его голос.|"
 
 #: Source/textdat.cpp:638
-msgid ""
-"My time is quickly running out.  I must record the ways to weaken the demon, "
-"and then conceal that text, lest his minions find some way to use my "
-"knowledge to free their lord.  I hope that whoever finds this journal will "
-"seek the knowledge.|"
-msgstr ""
+msgid "My time is quickly running out.  I must record the ways to weaken the demon, and then conceal that text, lest his minions find some way to use my knowledge to free their lord.  I hope that whoever finds this journal will seek the knowledge.|"
+msgstr "Мое время быстро уходит. Я должен записать способы ослабить демона, а затем скрыть этот текст, чтобы его приспешники не нашли способ использовать мое знание, чтобы освободить своего господина. Я надеюсь что тот, кто найдет этот дневник, найдет знания.|"
 
 #: Source/textdat.cpp:640
 msgid ""
-"Whoever finds this scroll is charged with stopping the demonic creature that "
-"lies within these walls.  My time is over. Even now, its hellish minions "
-"claw at the frail door behind which I hide.  \n"
+"Whoever finds this scroll is charged with stopping the demonic creature that lies within these walls.  My time is over. Even now, its hellish minions claw at the frail door behind which I hide.  \n"
 " \n"
-"I have hobbled the demon with arcane magic and encased it within great "
-"walls, but I fear that will not be enough. \n"
+"I have hobbled the demon with arcane magic and encased it within great walls, but I fear that will not be enough. \n"
 " \n"
-"The spells found in my three grimoires will provide you protected entrance "
-"to his domain, but only if cast in their proper sequence.  The levers at the "
-"entryway will remove the barriers and free the demon; touch them not!  Use "
-"only these spells to gain entry or his power may be too great for you to "
-"defeat.|"
+"The spells found in my three grimoires will provide you protected entrance to his domain, but only if cast in their proper sequence.  The levers at the entryway will remove the barriers and free the demon; touch them not!  Use only these spells to gain entry "
+"or his power may be too great for you to defeat.|"
+msgstr ""
+"Тот кто найдет этот свитое должен остановить демоническое существо, запретом в этих стенах. Мое время кончилось. Даже сейчас его адские приспешники царапают хлипкую дверь, за которой я прячусь. \n"
+"\n"
+"Я поймал демона с помощью тайной магии и заключил его в огромные стены, но, боюсь, этого будет недостаточно.\n"
+"\n"
+"Заклинания из трех моих гримуаров обеспечат вам безопасный вход в его владения, но только если оно будут накастованы в правильной последовательности. Рычаги у входа снимут барьеры и освободят демона; не трогай их! Используй только эти заклинания, чтобы "
+"войти, иначе его сила будет слишком велика для вас.|"
+
+#: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648 Source/textdat.cpp:651 Source/textdat.cpp:654
+msgid "In Spiritu Sanctum. |"
+msgstr ""
+
+#: Source/textdat.cpp:643 Source/textdat.cpp:646 Source/textdat.cpp:649 Source/textdat.cpp:652 Source/textdat.cpp:655
+msgid "Praedictum Otium. |"
 msgstr ""
 
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
