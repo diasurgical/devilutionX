@@ -371,6 +371,12 @@ struct ItemStruct {
 			return UIS_RED;
 		return getTextColor();
 	}
+
+	/**
+	 * @brief Sets the current Animation for the Item
+	 * @param showAnimation Definies if the Animation (Flipping) is shown or if only the final Frame (item on the ground) is shown
+	 */
+	void SetNewAnimation(bool showAnimation);
 };
 
 struct ItemGetRecordStruct {
