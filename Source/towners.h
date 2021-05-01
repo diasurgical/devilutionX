@@ -15,6 +15,7 @@
 namespace devilution {
 
 #define NUM_TOWNERS 16
+#define MAX_TOWNER_NAME_LEN 48
 
 enum _talker_id : uint8_t {
 	TOWN_SMITH,
@@ -53,7 +54,7 @@ struct TownerStruct {
 	uint8_t _tAnimFrame; // Current frame of animation.
 	uint8_t _tAnimFrameCnt;
 	uint8_t _tNFrames;
-	char _tName[PLR_NAME_LEN];
+	char _tName[MAX_TOWNER_NAME_LEN];
 	TNQ qsts[MAXQUESTS];
 	bool _tSelFlag;
 	bool _tMsgSaid;
