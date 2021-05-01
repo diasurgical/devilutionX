@@ -7452,7 +7452,7 @@ msgstr "Думаю, вы могли бы мне помочь, но возмож�
 
 #: Source/textdat.cpp:620
 msgid "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk.|"
-msgstr "Я - обязанная за все самому себе корова. Стань кем-нибудь и… тогда мы поговорим.|"
+msgstr "Я - обязанная за все самой себе корова. Стань кем-нибудь и… тогда мы поговорим.|"
 
 #: Source/textdat.cpp:622
 msgid "I don't have to explain myself to every tourist that walks by!  Don't you have some monsters to kill?  Maybe we'll talk later.  If you live...|"
