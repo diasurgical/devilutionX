@@ -240,9 +240,9 @@ void LanguageInitialize()
 	mo_head head;
 	FILE *fp;
 
-	auto path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".gmo";
+	auto path = paths::LangPath() + sgOptions.Language.szCode + ".gmo";
 	if (!(fp = fopen(path.c_str(), "rb"))) {
-		path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".mo";
+		path = paths::LangPath() + sgOptions.Language.szCode + ".mo";
 		if (!(fp = fopen(path.c_str(), "rb"))) {
 			perror(path.c_str());
 			return;

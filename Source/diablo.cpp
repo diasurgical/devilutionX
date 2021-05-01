@@ -163,6 +163,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "--data-dir", _("Specify the folder of diabdat.mpq"));
 	printInConsole("    %-20s %-30s\n", "--save-dir", _("Specify the folder of save files"));
 	printInConsole("    %-20s %-30s\n", "--config-dir", _("Specify the location of diablo.ini"));
+	printInConsole("    %-20s %-30s\n", "--lang-dir", _("Specify the location of localization files"));
 	printInConsole("    %-20s %-30s\n", "--ttf-dir", _("Specify the location of the .ttf font"));
 	printInConsole("    %-20s %-30s\n", "--ttf-name", _("Specify the name of a custom .ttf font"));
 	printInConsole("    %-20s %-30s\n", "-n", _("Skip startup videos"));
