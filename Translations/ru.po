@@ -8496,7 +8496,7 @@ msgstr ""
 msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?|"
-msgstr ""
+msgstr "Я вижу в тебе потенциал величия. Возможно когда-нибудь, пока вы выполняете свое предназначение, вы сможете оказать мне маленькую услугу?"
 
 #: Source/textdat.cpp:618
 msgid ""
