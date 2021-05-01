@@ -7,7 +7,7 @@
 
 #include <cstdint>
 #include <memory>
-#include <string_view>
+#include "utils/stdcompat/string_view.hpp"
 
 #include "items.h"
 #include "player.h"
