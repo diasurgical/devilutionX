@@ -52,6 +52,8 @@
 #include "utils/language.h"
 #include "utils/paths.h"
 #include "utils/language.h"
+#include "utils/recorder.hpp"
+#include "utils/log.hpp"
 
 #ifndef NOSOUND
 #include "sound.h"
@@ -110,6 +112,7 @@ int color_cycle_timer;
 uint16_t gnTickDelay = 50;
 /** Game options */
 Options sgOptions;
+Recorder recorder;
 
 /* rdata */
 
@@ -381,9 +384,19 @@ static void run_game_loop(interface_mode uMsg)
 	force_redraw = 255;
 	gbGameLoopStartup = true;
 	nthread_ignore_mutex(false);
+	std::uint64_t frameCount = 0;
 
 	while (gbRunGame) {
-		while (FetchMessage(&msg)) {
+		while (true) {
+			if (recorder.getStatus() == Recorder::Status::Replaying) {
+				if (!recorder.replay(msg, frameCount))
+					break;
+			} else {
+				if (!FetchMessage(&msg))
+					break;
+			}
+
+			recorder.onMessage(msg, frameCount);
 			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = false;
 				gbRunGame = false;
@@ -405,6 +418,7 @@ static void run_game_loop(interface_mode uMsg)
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = false;
 		DrawAndBlit();
+		++frameCount;
 	}
 
 	if (gbIsMultiplayer) {
@@ -1280,6 +1294,28 @@ static void PressKey(int vkey)
 		msgdelay = 0;
 		gamemenu_off();
 		doom_close();
+	} else if (vkey == DVL_VK_RCONTROL) {
+		switch (recorder.getStatus()) {
+		case Recorder::Status::Stopped:
+			recorder.setStatus(Recorder::Status::Recording);
+			Log("Recording...");
+			break;
+		case Recorder::Status::Recording:
+			recorder.setStatus(Recorder::Status::Stopped);
+			Log("Stopping record");
+			break;
+		}
+	} else if (vkey == DVL_VK_RSHIFT) {
+		switch (recorder.getStatus()) {
+		case Recorder::Status::Stopped:
+			recorder.setStatus(Recorder::Status::Replaying);
+			Log("Replaying...");
+			break;
+		case Recorder::Status::Recording:
+			recorder.setStatus(Recorder::Status::Stopped);
+			Log("Stopping replay");
+			break;
+		}
 	}
 }
 

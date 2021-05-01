@@ -359,6 +359,7 @@ set(devilutionx_SRCS
   Source/utils/language.cpp
   Source/utils/paths.cpp
   Source/utils/thread.cpp
+  Source/utils/recorder.cpp
   Source/DiabloUI/art.cpp
   Source/DiabloUI/art_draw.cpp
   Source/DiabloUI/button.cpp
