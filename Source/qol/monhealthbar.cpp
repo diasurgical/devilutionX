@@ -1,6 +1,6 @@
 /**
 * @file monhealthbar.cpp
-* 
+*
 * Adds monster health bar QoL feature
 */
 
