@@ -1,6 +1,6 @@
 /**
 * @file monhealthbar.h
-* 
+*
 * Adds monster health bar QoL feature
 */
 #pragma once
