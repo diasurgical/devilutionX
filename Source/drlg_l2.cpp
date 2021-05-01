@@ -1843,15 +1843,15 @@ static void DRLG_LoadL2SP()
 	setloadflag = false;
 
 	if (QuestStatus(Q_BLIND)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
 		pSetPiece[26] = 154;  // Close outer wall
 		pSetPiece[200] = 154; // Close outer wall
 		setloadflag = true;
 	} else if (QuestStatus(Q_BLOOD)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN");
 		setloadflag = true;
 	} else if (QuestStatus(Q_SCHAMB)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN");
 		setloadflag = true;
 	}
 }
@@ -3274,7 +3274,7 @@ static void LoadL2DungeonData(BYTE *pLevelMap)
 
 void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 {
-	auto pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	LoadL2DungeonData(pLevelMap.get());
 
@@ -3323,7 +3323,7 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 void LoadPreL2Dungeon(const char *sFileName)
 {
 	{
-		auto pLevelMap = LoadFileInMem(sFileName, nullptr);
+		auto pLevelMap = LoadFileInMem(sFileName);
 		LoadL2DungeonData(pLevelMap.get());
 	}
 

@@ -905,14 +905,14 @@ void MakeLightTable()
 	}
 
 	{
-		auto trn = LoadFileInMem("PlrGFX\\Infra.TRN", nullptr);
+		auto trn = LoadFileInMem("PlrGFX\\Infra.TRN");
 		for (i = 0; i < 256; i++) {
 			*tbl++ = trn[i];
 		}
 	}
 
 	{
-		auto trn = LoadFileInMem("PlrGFX\\Stone.TRN", nullptr);
+		auto trn = LoadFileInMem("PlrGFX\\Stone.TRN");
 		for (i = 0; i < 256; i++) {
 			*tbl++ = trn[i];
 		}

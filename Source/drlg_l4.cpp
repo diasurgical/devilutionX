@@ -202,11 +202,11 @@ void DRLG_LoadL4SP()
 {
 	setloadflag = false;
 	if (QuestStatus(Q_WARLORD)) {
-		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
 		setloadflag = true;
 	}
 	if (currlevel == 15 && gbIsMultiplayer) {
-		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 		setloadflag = true;
 	}
 }
@@ -1770,7 +1770,7 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 
 	DRLG_InitTrans();
 	InitL4Dungeon();
-	auto pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	lm = pLevelMap.get();
 	rw = *lm;
@@ -1811,7 +1811,7 @@ void LoadPreL4Dungeon(char *sFileName)
 
 	InitL4Dungeon();
 
-	auto pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	lm = pLevelMap.get();
 	rw = *lm;
