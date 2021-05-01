@@ -209,7 +209,7 @@ void init_archives()
 void init_create_window()
 {
 	if (!SpawnWindow(PROJECT_NAME))
-		app_fatal(_("Unable to create main window"));
+		app_fatal("%s", _("Unable to create main window"));
 	dx_init();
 	gbActive = true;
 #ifndef USE_SDL1

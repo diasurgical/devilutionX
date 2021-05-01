@@ -157,7 +157,7 @@ extern void plrctrls_after_game_logic();
 
 [[noreturn]] static void print_help_and_exit()
 {
-	printInConsole(_("Options:\n"));
+	printInConsole("%s", _("Options:\n"));
 	printInConsole("    %-20s %-30s\n", "-h, --help", _("Print this message and exit"));
 	printInConsole("    %-20s %-30s\n", "--version", _("Print the version and exit"));
 	printInConsole("    %-20s %-30s\n", "--data-dir", _("Specify the folder of diabdat.mpq"));
@@ -170,7 +170,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "-x", _("Run in windowed mode"));
 	printInConsole("    %-20s %-30s\n", "--verbose", _("Enable verbose logging"));
 	printInConsole("    %-20s %-30s\n", "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
-	printInConsole(_("\nHellfire options:\n"));
+	printInConsole("%s", _("\nHellfire options:\n"));
 	printInConsole("    %-20s %-30s\n", "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
 	printInConsole("    %-20s %-30s\n", "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
@@ -188,7 +188,7 @@ extern void plrctrls_after_game_logic();
 	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
-	printInConsole(_("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
+	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
 }
 

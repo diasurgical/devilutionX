@@ -176,13 +176,13 @@ bool msg_wait_resync()
 	}
 
 	if (gbGameDestroyed) {
-		DrawDlg(_("The game ended"));
+		DrawDlg("%s", _("The game ended"));
 		msg_free_packets();
 		return false;
 	}
 
 	if (sgbDeltaChunks != MAX_CHUNKS) {
-		DrawDlg(_("Unable to get level data"));
+		DrawDlg("%s", _("Unable to get level data"));
 		msg_free_packets();
 		return false;
 	}
@@ -607,7 +607,7 @@ static void delta_put_item(TCmdPItem *pI, int x, int y, BYTE bLevel)
 		    && pD->dwSeed == pI->dwSeed) {
 			if (pD->bCmd == CMD_ACK_PLRINFO)
 				return;
-			app_fatal(_("Trying to drop a floor item?"));
+			app_fatal("%s", _("Trying to drop a floor item?"));
 		}
 	}
 
