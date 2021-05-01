@@ -6,11 +6,6 @@
 #include "init.h"
 #include "player.h"
 #include "sound.h"
-#include "utils/math.h"
-
-#ifndef NOSOUND
-#include "utils/soundsample.h"
-#endif
 
 namespace devilution {
 namespace {
