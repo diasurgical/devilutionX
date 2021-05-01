@@ -752,8 +752,6 @@ void SetPlrAnims(int pnum)
 		} else if (gn == ANIM_ID_STAFF) {
 			plr[pnum]._pAFrames = 16;
 			plr[pnum]._pAFNum = 11;
-		} else if (gn == ANIM_ID_SWORD_SHIELD || gn == ANIM_ID_SWORD) {
-			plr[pnum]._pAFrames = 10;
 		}
 	} else if (pc == HeroClass::Barbarian) {
 		if (gn == ANIM_ID_AXE) {
