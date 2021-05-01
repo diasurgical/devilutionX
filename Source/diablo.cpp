@@ -274,10 +274,10 @@ void FreeGameMem()
 {
 	music_stop();
 
-	MemFreeDbg(pDungeonCels);
-	MemFreeDbg(pMegaTiles);
-	MemFreeDbg(pLevelPieces);
-	MemFreeDbg(pSpecialCels);
+	pDungeonCels = nullptr;
+	pMegaTiles = nullptr;
+	pLevelPieces = nullptr;
+	pSpecialCels = std::nullopt;
 
 	FreeMissiles();
 	FreeMonsters();
@@ -1715,7 +1715,8 @@ void GM_Game(uint32_t uMsg, int32_t wParam, int32_t lParam)
 
 void LoadLvlGFX()
 {
-	assert(!pDungeonCels);
+	assert(pDungeonCels == nullptr);
+	constexpr int SpecialCelWidth = 64;
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
@@ -1728,26 +1729,26 @@ void LoadLvlGFX()
 			pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
 			pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", nullptr);
 		}
-		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", nullptr);
+		pSpecialCels = LoadCel("Levels\\TownData\\TownS.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 21) {
 			pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", nullptr);
 			pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", nullptr);
 			pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", nullptr);
-			pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", nullptr);
+			pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		} else {
 			pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL", nullptr);
 			pMegaTiles = LoadFileInMem("NLevels\\L5Data\\L5.TIL", nullptr);
 			pLevelPieces = LoadFileInMem("NLevels\\L5Data\\L5.MIN", nullptr);
-			pSpecialCels = LoadFileInMem("NLevels\\L5Data\\L5S.CEL", nullptr);
+			pSpecialCels = LoadCel("NLevels\\L5Data\\L5S.CEL", SpecialCelWidth);
 		}
 		break;
 	case DTYPE_CATACOMBS:
 		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL", nullptr);
 		pMegaTiles = LoadFileInMem("Levels\\L2Data\\L2.TIL", nullptr);
 		pLevelPieces = LoadFileInMem("Levels\\L2Data\\L2.MIN", nullptr);
-		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", nullptr);
+		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CAVES:
 		if (currlevel < 17) {
@@ -1759,13 +1760,13 @@ void LoadLvlGFX()
 			pMegaTiles = LoadFileInMem("NLevels\\L6Data\\L6.TIL", nullptr);
 			pLevelPieces = LoadFileInMem("NLevels\\L6Data\\L6.MIN", nullptr);
 		}
-		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", nullptr);
+		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_HELL:
 		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL", nullptr);
 		pMegaTiles = LoadFileInMem("Levels\\L4Data\\L4.TIL", nullptr);
 		pLevelPieces = LoadFileInMem("Levels\\L4Data\\L4.MIN", nullptr);
-		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", nullptr);
+		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	default:
 		app_fatal("LoadLvlGFX");

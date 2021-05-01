@@ -468,7 +468,7 @@ void InitAutomapOnce()
 void InitAutomap()
 {
 	DWORD dwTiles;
-	BYTE *pAFile;
+	std::unique_ptr<BYTE[]> pAFile;
 
 	memset(AutomapTypes, 0, sizeof(AutomapTypes));
 
@@ -496,7 +496,7 @@ void InitAutomap()
 	}
 
 	dwTiles /= 2;
-	BYTE *pTmp = pAFile;
+	BYTE *pTmp = pAFile.get();
 
 	for (unsigned i = 1; i <= dwTiles; i++) {
 		uint8_t b1 = *pTmp++;
@@ -504,7 +504,7 @@ void InitAutomap()
 		AutomapTypes[i] = b1 + (b2 << 8);
 	}
 
-	mem_free_dbg(pAFile);
+	pAFile = nullptr;
 	memset(automapview, 0, sizeof(automapview));
 
 	for (auto &column : dFlags)

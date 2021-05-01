@@ -9,6 +9,7 @@
 
 #include "engine.h"
 #include "itemdat.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -168,7 +169,7 @@ struct ItemStruct {
 	enum item_type _itype;
 	Point position;
 	bool _iAnimFlag;
-	uint8_t *_iAnimData; // PSX name -> ItemFrame
+	CelSprite *_iAnimData; // PSX name -> ItemFrame
 	uint8_t _iAnimLen;   // Number of frames in current animation
 	uint8_t _iAnimFrame; // Current frame of animation.
 	int _iAnimWidth;

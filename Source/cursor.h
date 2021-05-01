@@ -7,7 +7,9 @@
 
 #include <cstdint>
 
+#include "engine.h"
 #include "miniwin/miniwin.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -32,8 +34,8 @@ extern int cursH;
 extern int pcursmonst;
 extern int icursW28;
 extern int icursH28;
-extern BYTE *pCursCels;
-extern BYTE *pCursCels2;
+extern std::optional<CelSprite> pCursCels;
+extern std::optional<CelSprite> pCursCels2;
 extern int icursH;
 extern int8_t pcursinvitem;
 extern int icursW;

@@ -19,19 +19,19 @@ int seed_index;
 int level_seeds[NUMLEVELS + 1];
 int seed_table[DEBUGSEEDS];
 
-BYTE *pSquareCel;
+std::optional<CelSprite> pSquareCel;
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 
 void LoadDebugGFX()
 {
 	if (visiondebug)
-		pSquareCel = LoadFileInMem("Data\\Square.CEL", nullptr);
+		pSquareCel = LoadCel("Data\\Square.CEL", 64);
 }
 
 void FreeDebugGFX()
 {
-	MemFreeDbg(pSquareCel);
+	pSquareCel = std::nullopt;
 }
 
 void CheckDungeonClear()

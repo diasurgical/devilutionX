@@ -11,6 +11,7 @@
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/ui_fwd.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -48,7 +49,7 @@ extern bool lvlbtndown;
 extern int dropGoldValue;
 extern bool drawmanaflag;
 extern bool chrbtnactive;
-extern BYTE *pPanelText;
+extern std::optional<CelSprite> pPanelText;
 extern int pnumlines;
 extern bool pinfoflag;
 extern spell_id pSpell;

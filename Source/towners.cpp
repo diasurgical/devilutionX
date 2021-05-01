@@ -12,12 +12,14 @@
 #include "utils/language.h"
 
 namespace devilution {
+namespace {
+std::unique_ptr<BYTE[]> pCowCels;
+} // namespace
 
 bool storeflag;
 int sgnCowMsg;
 int numtowners;
 DWORD sgdwCowClicks;
-BYTE *pCowCels;
 TownerStruct towners[NUM_TOWNERS];
 
 /**
@@ -233,7 +235,7 @@ void InitSmith()
 	InitQstSnds(numtowners, TOWN_SMITH);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_SW], towners[numtowners]._tNFrames, 3);
@@ -247,7 +249,7 @@ void InitBarOwner()
 	InitQstSnds(numtowners, TOWN_TAVERN);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", nullptr);
 	for (auto &towner : towners[numtowners]._tNAnim) {
-		towner = towners[numtowners]._tNData;
+		towner = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_SW], towners[numtowners]._tNFrames, 3);
@@ -263,7 +265,7 @@ void InitTownDead()
 	InitQstSnds(numtowners, TOWN_DEADGUY);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 8;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_N], towners[numtowners]._tNFrames, 6);
@@ -279,7 +281,7 @@ void InitWitch()
 	InitQstSnds(numtowners, TOWN_WITCH);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 19;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 6);
@@ -295,7 +297,7 @@ void InitBarmaid()
 	InitQstSnds(numtowners, TOWN_BMAID);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 18;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 6);
@@ -311,7 +313,7 @@ void InitBoy()
 	InitQstSnds(numtowners, TOWN_PEGBOY);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 6);
@@ -327,7 +329,7 @@ void InitHealer()
 	InitQstSnds(numtowners, TOWN_HEALER);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_SE], towners[numtowners]._tNFrames, 6);
@@ -343,7 +345,7 @@ void InitTeller()
 	InitQstSnds(numtowners, TOWN_STORY);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 25;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 3);
@@ -359,7 +361,7 @@ void InitDrunk()
 	InitQstSnds(numtowners, TOWN_DRUNK);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 18;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 3);
@@ -380,8 +382,8 @@ void InitCows()
 		y = TownCowY[i];
 		dir = TownCowDir[i];
 		InitTownerInfo(numtowners, 128, false, TOWN_COW, x, y, -1);
-		towners[numtowners]._tNData = pCowCels;
-		SetTownerGPtrs(towners[numtowners]._tNData, towners[numtowners]._tNAnim);
+		towners[numtowners]._tNData = nullptr;
+		SetTownerGPtrs(pCowCels.get(), towners[numtowners]._tNAnim);
 		towners[numtowners]._tNFrames = 12;
 		NewTownerAnim(numtowners, towners[numtowners]._tNAnim[dir], towners[numtowners]._tNFrames, 3);
 		towners[numtowners]._tAnimFrame = GenerateRnd(11) + 1;
@@ -409,7 +411,7 @@ void InitFarmer()
 	InitQstSnds(numtowners, TOWN_FARMER);
 	towners[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\Farmrn2.CEL", nullptr);
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 15;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 3);
@@ -429,7 +431,7 @@ void InitCowFarmer()
 		towners[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\mfrmrn2.CEL", nullptr);
 	}
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 15;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_SW], towners[numtowners]._tNFrames, 3);
@@ -449,7 +451,7 @@ void InitGirl()
 		towners[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girls1.CEL", nullptr);
 	}
 	for (i = 0; i < 8; i++) {
-		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData;
+		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
 	towners[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 6);
@@ -490,14 +492,10 @@ void FreeTownerGFX()
 	int i;
 
 	for (i = 0; i < NUM_TOWNERS; i++) {
-		if (towners[i]._tNData == pCowCels) {
-			towners[i]._tNData = nullptr;
-		} else if (towners[i]._tNData != nullptr) {
-			MemFreeDbg(towners[i]._tNData);
-		}
+		towners[i]._tNData = nullptr;
 	}
 
-	MemFreeDbg(pCowCels);
+	pCowCels = nullptr;
 }
 
 void TownCtrlMsg(int i)

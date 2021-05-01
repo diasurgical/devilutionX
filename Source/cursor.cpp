@@ -28,8 +28,8 @@ int icursW28;
 /** Height of current cursor in inventory cells */
 int icursH28;
 /** Cursor images CEL */
-BYTE *pCursCels;
-BYTE *pCursCels2;
+std::optional<CelSprite> pCursCels;
+std::optional<CelSprite> pCursCels2;
 
 /** inv_item value */
 int8_t pcursinvitem;
@@ -120,16 +120,16 @@ const int InvItemHeight[] = {
 void InitCursor()
 {
 	assert(!pCursCels);
-	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", nullptr);
+	pCursCels = LoadCel("Data\\Inv\\Objcurs.CEL", InvItemWidth);
 	if (gbIsHellfire)
-		pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", nullptr);
+		pCursCels2 = LoadCel("Data\\Inv\\Objcurs2.CEL", InvItemWidth);
 	ClearCursor();
 }
 
 void FreeCursor()
 {
-	MemFreeDbg(pCursCels);
-	MemFreeDbg(pCursCels2);
+	pCursCels = std::nullopt;
+	pCursCels2 = std::nullopt;
 	ClearCursor();
 }
 

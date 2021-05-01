@@ -8,7 +8,7 @@
 namespace devilution {
 
 TTF_Font *font = nullptr;
-BYTE *FontTables[4];
+std::unique_ptr<BYTE[]> FontTables[4];
 Art ArtFonts[4][2];
 /** This is so we know ttf has been init when we get to the diablo_deinit() function */
 bool was_fonts_init = false;
@@ -46,13 +46,9 @@ void UnloadArtFonts()
 	ArtFonts[AFT_BIG][AFC_SILVER].Unload();
 	ArtFonts[AFT_BIG][AFC_GOLD].Unload();
 	ArtFonts[AFT_HUGE][AFC_GOLD].Unload();
-	mem_free_dbg(FontTables[AFT_SMALL]);
 	FontTables[AFT_SMALL] = nullptr;
-	mem_free_dbg(FontTables[AFT_MED]);
 	FontTables[AFT_MED] = nullptr;
-	mem_free_dbg(FontTables[AFT_BIG]);
 	FontTables[AFT_BIG] = nullptr;
-	mem_free_dbg(FontTables[AFT_HUGE]);
 	FontTables[AFT_HUGE] = nullptr;
 }
 
