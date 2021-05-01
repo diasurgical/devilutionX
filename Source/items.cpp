@@ -2240,13 +2240,16 @@ void SetupItem(int i)
 	int it;
 
 	it = ItemCAnimTbl[items[i]._iCurs];
-	items[i].AnimInfo.pCelSprite = itemanims[it] ? &*itemanims[it] : nullptr;
-	items[i].AnimInfo.NumberOfFrames = ItemAnimLs[it];
+	int numberOfFrames = ItemAnimLs[it];
+	auto *pCelSprite = itemanims[it] ? &*itemanims[it] : nullptr;
+	if (items[i]._iCurs != ICURS_MAGIC_ROCK)
+		items[i].AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+	else
+		items[i].AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0);
 	items[i]._iIdentified = false;
 	items[i]._iPostDraw = false;
 
 	if (!plr[myplr].pLvlLoad) {
-		items[i].AnimInfo.CurrentFrame = 1;
 		items[i]._iAnimFlag = true;
 		items[i]._iSelFlag = 0;
 	} else {
@@ -2937,12 +2940,15 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 	int it;
 
 	it = ItemCAnimTbl[item->_iCurs];
-	item->AnimInfo.pCelSprite = &*itemanims[it];
-	item->AnimInfo.NumberOfFrames = ItemAnimLs[it];
+	int numberOfFrames = ItemAnimLs[it];
+	auto *pCelSprite = &*itemanims[it];
+	if (item->_iCurs != ICURS_MAGIC_ROCK)
+		item->AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+	else
+		item->AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0);
 	item->_iPostDraw = false;
 	item->_iRequest = false;
 	if (FlipFlag) {
-		item->AnimInfo.CurrentFrame = 1;
 		item->_iAnimFlag = true;
 		item->_iSelFlag = 0;
 	} else {
@@ -2995,7 +3001,7 @@ void ProcessItems()
 		int ii = itemactive[i];
 		if (!items[ii]._iAnimFlag)
 			continue;
-		items[ii].AnimInfo.CurrentFrame++;
+		items[ii].AnimInfo.ProcessAnimation();
 		if (items[ii]._iCurs == ICURS_MAGIC_ROCK) {
 			if (items[ii]._iSelFlag == 1 && items[ii].AnimInfo.CurrentFrame == 11)
 				items[ii].AnimInfo.CurrentFrame = 1;
