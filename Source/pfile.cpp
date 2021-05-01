@@ -214,7 +214,7 @@ PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clear_tables)
     , clear_tables_(clear_tables)
 {
 	if (!pfile_open_archive(save_num_))
-		app_fatal(_("Failed to open player archive for writing."));
+		app_fatal("%s", _("Failed to open player archive for writing."));
 }
 
 PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
@@ -388,9 +388,9 @@ void pfile_read_player_from_save(char name[16], int playerId)
 	save_num = pfile_get_save_num_from_name(name);
 	archive = pfile_open_save_archive(save_num);
 	if (archive == nullptr)
-		app_fatal(_("Unable to open archive"));
+		app_fatal("%s", _("Unable to open archive"));
 	if (!pfile_read_hero(archive, &pkplr))
-		app_fatal(_("Unable to load character"));
+		app_fatal("%s", _("Unable to load character"));
 
 	gbValidSaveFile = pfile_archive_contains_game(archive);
 	if (gbValidSaveFile)
@@ -413,7 +413,7 @@ bool LevelFileExists()
 
 	DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	if (!pfile_open_archive(save_num))
-		app_fatal(_("Unable to read to save file archive"));
+		app_fatal("%s", _("Unable to read to save file archive"));
 
 	bool has_file = mpqapi_has_file(szName);
 	mpqapi_flush_and_close(true);
@@ -436,7 +436,7 @@ void GetPermLevelNames(char *szPerm)
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	GetTempLevelNames(szPerm);
 	if (!pfile_open_archive(save_num))
-		app_fatal(_("Unable to read to save file archive"));
+		app_fatal("%s", _("Unable to read to save file archive"));
 
 	has_file = mpqapi_has_file(szPerm);
 	mpqapi_flush_and_close(true);
@@ -455,7 +455,7 @@ void pfile_remove_temp_files()
 
 	DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	if (!pfile_open_archive(save_num))
-		app_fatal(_("Unable to write to save file archive"));
+		app_fatal("%s", _("Unable to write to save file archive"));
 	mpqapi_remove_hash_entries(GetTempSaveNames);
 	mpqapi_flush_and_close(true);
 }
@@ -467,7 +467,7 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	codec_encode(pbData, dwLen, qwLen, pfile_get_password());
 	if (!pfile_open_archive(save_num))
-		app_fatal(_("Unable to write to save file archive"));
+		app_fatal("%s", _("Unable to write to save file archive"));
 	mpqapi_write_file(pszName, pbData, qwLen);
 	mpqapi_flush_and_close(true);
 }
