@@ -1,5 +1,6 @@
 #include "utils/language.h"
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <vector>
@@ -20,7 +21,7 @@ struct cstring_cmp {
 	}
 };
 
-std::map<std::string, std::string, std::less<>> map;
+std::vector<std::map<std::string, std::string, std::less<>>> translation = { {}, {} };
 std::map<const char *, const char *, cstring_cmp> meta;
 
 struct mo_head {
@@ -63,11 +64,101 @@ char *strtrim_right(char *s)
 	return s;
 }
 
-bool parse_metadata(char *data)
+bool IsUTF8 = true;
+
+// English, Danish, Spanish, Italian, Swedish
+int PluralForms = 2;
+std::function<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
+
+/**
+ * Match plural=(n != 1);"
+ */
+void SetPluralForm(char *string)
+{
+	char *expression = strstr(string, "plural");
+	if (expression == nullptr)
+		return;
+
+	expression = strstr(expression, "=");
+	if (expression == nullptr)
+		return;
+	expression += 1;
+
+	for (unsigned i = 0; i < strlen(expression); i++) {
+		if (expression[i] == ';') {
+			expression[i] = '\0';
+			break;
+		}
+	}
+
+	expression = strtrim_right(expression);
+	expression = strtrim_left(expression);
+
+	// Chinese
+	if (strcmp(expression, "0") == 0) {
+		GetLocalPluralId = [](int n) -> int { return 0; };
+		return;
+	}
+
+	// Portuguese
+	if (strcmp(expression, "(n > 1)") == 0) {
+		GetLocalPluralId = [](int n) -> int { return n > 1 ? 1 : 0; };
+		return;
+	}
+
+	// Russian, Croatian
+	if (strcmp(expression, "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") == 0) {
+		GetLocalPluralId = [](int n) -> int {
+			if (n % 10 == 1 && n % 100 != 11)
+				return 0;
+			if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14))
+				return 1;
+			return 2;
+		};
+		return;
+	}
+
+	// Polish
+	if (strcmp(expression, "(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)") == 0) {
+		GetLocalPluralId = [](int n) -> int {
+			if (n == 1)
+				return 0;
+			if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20))
+				return 1;
+			return 2;
+		};
+		return;
+	}
+}
+
+/**
+ * Parse "nplurals=2;"
+ */
+void ParsePluralForms(char *string)
+{
+	char *value = strstr(string, "nplurals");
+	if (value == nullptr)
+		return;
+
+	value = strstr(value, "=");
+	if (value == nullptr)
+		return;
+
+	value += 1;
+
+	int nplurals = SDL_atoi(value);
+	if (nplurals == 0)
+		return;
+
+	PluralForms = nplurals;
+
+	SetPluralForm(value);
+}
+
+void parse_metadata(char *data)
 {
 	char *key, *delim, *val;
 	char *ptr = data;
-	bool utf8 = false;
 
 	while (ptr && (delim = strstr(ptr, ":"))) {
 		key = strtrim_left(ptr);
@@ -87,11 +178,16 @@ bool parse_metadata(char *data)
 
 		// Match "Content-Type: text/plain; charset=UTF-8"
 		if (!strcmp("Content-Type", key) && (delim = strstr(val, "="))) {
-			utf8 = !strcasecmp(delim + 1, "utf-8");
+			IsUTF8 = !strcasecmp(delim + 1, "utf-8");
+			continue;
+		}
+
+		// Match "Plural-Forms: nplurals=2; plural=(n != 1);"
+		if (!strcmp("Plural-Forms", key)) {
+			ParsePluralForms(val);
+			continue;
 		}
 	}
-
-	return utf8;
 }
 
 bool read_entry(FILE *fp, mo_entry *e, std::vector<char> &result)
@@ -105,12 +201,27 @@ bool read_entry(FILE *fp, mo_entry *e, std::vector<char> &result)
 
 } // namespace
 
+const std::string &LanguagePluralTranslate(const char *key, const char *key2, int count)
+{
+	int n = GetLocalPluralId(count);
+
+	auto it = translation[n].find(key);
+	if (it == translation[n].end()) {
+		if (count != 1)
+			it = translation[1].insert({ key, utf8_to_latin1(key2) }).first;
+		else
+			it = translation[0].insert({ key, utf8_to_latin1(key) }).first;
+	}
+
+	return it->second;
+}
 const std::string &LanguageTranslate(const char *key)
 {
-	auto it = map.find(key);
-	if (it == map.end()) {
-		return map.insert({key, utf8_to_latin1(key)}).first->second;
+	auto it = translation[0].find(key);
+	if (it == translation[0].end()) {
+		it = translation[0].insert({ key, utf8_to_latin1(key) }).first;
 	}
+
 	return it->second;
 }
 
@@ -128,7 +239,6 @@ void LanguageInitialize()
 {
 	mo_head head;
 	FILE *fp;
-	bool utf8;
 
 	auto path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".gmo";
 	if (!(fp = fopen(path.c_str(), "rb"))) {
@@ -168,19 +278,34 @@ void LanguageInitialize()
 	if (fread(dst.get(), sizeof(mo_entry), head.nb_mappings, fp) != head.nb_mappings)
 		return;
 
+	std::vector<char> key;
+	std::vector<char> value;
+
+	// MO header
+	if (!read_entry(fp, &src[0], key) && read_entry(fp, &dst[0], value))
+		return;
+
+	if (key.data()[0] != '\0')
+		return;
+
+	parse_metadata(value.data());
+
+	translation.resize(PluralForms);
+	for (int i = 0; i < PluralForms; i++)
+		translation[i] = {};
+
 	// Read strings described by entries
-	for (uint32_t i = 0; i < head.nb_mappings; i++) {
-		std::vector<char> key;
-		std::vector<char> value;
+	for (uint32_t i = 1; i < head.nb_mappings; i++) {
 		if (read_entry(fp, &src[i], key) && read_entry(fp, &dst[i], value)) {
-			if (key.data()[0] == '\0') {
-				utf8 = parse_metadata(value.data());
-			} else {
-				if (utf8) {
-					map.emplace(key.data(), utf8_to_latin1(value.data()));
-				} else {
-					map.emplace(key.data(), value.data());
-				}
+			int offset = 0;
+			for (int j = 0; j < PluralForms; j++) {
+				const char *text = value.data() + offset;
+				translation[j].emplace(key.data(), IsUTF8 ? utf8_to_latin1(text) : text);
+
+				if (dst[i].length <= offset + strlen(value.data()))
+					break;
+
+				offset += strlen(text) + 1;
 			}
 		}
 	}
