@@ -233,7 +233,7 @@ void InitSmith()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_SMITH, 62, 63, 0);
 	InitQstSnds(numtowners, TOWN_SMITH);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -247,7 +247,7 @@ void InitBarOwner()
 {
 	InitTownerInfo(numtowners, 96, true, TOWN_TAVERN, 55, 62, 3);
 	InitQstSnds(numtowners, TOWN_TAVERN);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL");
 	for (auto &towner : towners[numtowners]._tNAnim) {
 		towner = towners[numtowners]._tNData.get();
 	}
@@ -263,7 +263,7 @@ void InitTownDead()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_DEADGUY, 24, 32, -1);
 	InitQstSnds(numtowners, TOWN_DEADGUY);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -279,7 +279,7 @@ void InitWitch()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_WITCH, 80, 20, 5);
 	InitQstSnds(numtowners, TOWN_WITCH);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -295,7 +295,7 @@ void InitBarmaid()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_BMAID, 43, 66, -1);
 	InitQstSnds(numtowners, TOWN_BMAID);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -311,7 +311,7 @@ void InitBoy()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_PEGBOY, 11, 53, -1);
 	InitQstSnds(numtowners, TOWN_PEGBOY);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -327,7 +327,7 @@ void InitHealer()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_HEALER, 55, 79, 1);
 	InitQstSnds(numtowners, TOWN_HEALER);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -343,7 +343,7 @@ void InitTeller()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_STORY, 62, 71, 2);
 	InitQstSnds(numtowners, TOWN_STORY);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -359,7 +359,7 @@ void InitDrunk()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_DRUNK, 71, 84, 4);
 	InitQstSnds(numtowners, TOWN_DRUNK);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -376,7 +376,7 @@ void InitCows()
 
 	//if ( pCowCels )
 	// assertion_failed(__LINE__, __FILE__, "! pCowCels");
-	pCowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL", nullptr);
+	pCowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL");
 	for (i = 0; i < 3; i++) {
 		x = TownCowX[i];
 		y = TownCowY[i];
@@ -409,7 +409,7 @@ void InitFarmer()
 
 	InitTownerInfo(numtowners, 96, true, TOWN_FARMER, 62, 16, -1);
 	InitQstSnds(numtowners, TOWN_FARMER);
-	towners[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\Farmrn2.CEL", nullptr);
+	towners[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\Farmrn2.CEL");
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
 	}
@@ -426,9 +426,9 @@ void InitCowFarmer()
 	InitTownerInfo(numtowners, 96, true, TOWN_COWFARM, 61, 22, -1);
 	InitQstSnds(numtowners, TOWN_COWFARM);
 	if (quests[Q_JERSEY]._qactive != QUEST_DONE) {
-		towners[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\cfrmrn2.CEL", nullptr);
+		towners[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\cfrmrn2.CEL");
 	} else {
-		towners[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\mfrmrn2.CEL", nullptr);
+		towners[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\mfrmrn2.CEL");
 	}
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();
@@ -446,9 +446,9 @@ void InitGirl()
 	InitTownerInfo(numtowners, 96, true, TOWN_GIRL, 77, 43, -1);
 	InitQstSnds(numtowners, TOWN_GIRL);
 	if (quests[Q_GIRL]._qactive != QUEST_DONE) {
-		towners[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girlw1.CEL", nullptr);
+		towners[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girlw1.CEL");
 	} else {
-		towners[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girls1.CEL", nullptr);
+		towners[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girls1.CEL");
 	}
 	for (i = 0; i < 8; i++) {
 		towners[numtowners]._tNAnim[i] = towners[numtowners]._tNData.get();

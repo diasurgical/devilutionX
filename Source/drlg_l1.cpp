@@ -1120,15 +1120,15 @@ static void DRLG_LoadL1SP()
 {
 	L5setloadflag = false;
 	if (QuestStatus(Q_BUTCHER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN");
 		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN");
 		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_LTBANNER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN");
 		L5setloadflag = true;
 	}
 }
@@ -1218,7 +1218,7 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 	dmaxy = 96;
 
 	DRLG_InitTrans();
-	auto pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -1266,7 +1266,7 @@ void LoadPreL1Dungeon(const char *sFileName)
 	dmaxx = 96;
 	dmaxy = 96;
 
-	auto pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {

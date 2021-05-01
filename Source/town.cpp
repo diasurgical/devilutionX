@@ -175,21 +175,21 @@ void T_Pass3()
 		}
 	}
 
-	auto P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
+	auto P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL");
 	{
-		auto pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", nullptr);
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN");
 		T_FillSector(P3Tiles.get(), pSector.get(), 46, 46, 25, 25);
 	}
 	{
-		auto pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", nullptr);
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN");
 		T_FillSector(P3Tiles.get(), pSector.get(), 46, 0, 25, 23);
 	}
 	{
-		auto pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", nullptr);
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN");
 		T_FillSector(P3Tiles.get(), pSector.get(), 0, 46, 23, 25);
 	}
 	{
-		auto pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", nullptr);
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN");
 		T_FillSector(P3Tiles.get(), pSector.get(), 0, 0, 23, 23);
 	}
 

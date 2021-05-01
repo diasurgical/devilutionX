@@ -351,7 +351,7 @@ void InitMonsterGFX(int monst)
 
 			BYTE *celBuf;
 			{
-				auto celData = LoadFileInMem(strBuff, nullptr);
+				auto celData = LoadFileInMem(strBuff);
 				celBuf = celData.get();
 				Monsters[monst].Anims[anim].CMem = std::move(celData);
 			}
@@ -950,23 +950,23 @@ void PlaceQuestMonsters()
 		}
 
 		if (QuestStatus(Q_LTBANNER)) {
-			auto setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
+			auto setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
 			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_BLOOD)) {
-			auto setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
+			auto setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");
 			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_BLIND)) {
-			auto setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", nullptr);
+			auto setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN");
 			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_ANVIL)) {
-			auto setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", nullptr);
+			auto setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
 			SetMapMonsters(setp.get(), 2 * setpc_x + 2, 2 * setpc_y + 2);
 		}
 		if (QuestStatus(Q_WARLORD)) {
-			auto setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
+			auto setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
 			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_SCATTER);
 		}
@@ -983,7 +983,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_LAZURUS, 0, 0);
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
-			auto setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", nullptr);
+			auto setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 
@@ -1090,15 +1090,15 @@ void LoadDiabMonsts()
 		SetMapMonsters(lpSetPiece.get(), 2 * diabquad1x, 2 * diabquad1y);
 	}
 	{
-		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", nullptr);
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN");
 		SetMapMonsters(lpSetPiece.get(), 2 * diabquad2x, 2 * diabquad2y);
 	}
 	{
-		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", nullptr);
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN");
 		SetMapMonsters(lpSetPiece.get(), 2 * diabquad3x, 2 * diabquad3y);
 	}
 	{
-		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", nullptr);
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN");
 		SetMapMonsters(lpSetPiece.get(), 2 * diabquad4x, 2 * diabquad4y);
 	}
 }
