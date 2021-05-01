@@ -1280,7 +1280,6 @@ void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
 
 void sound_stop()
 {
-	music_stop();
 	ClearDuplicateSounds();
 	for (auto &sfx : sgSFX) {
 		if (sfx.pSnd != nullptr) {
