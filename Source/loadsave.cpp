@@ -218,9 +218,7 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	file->skip(4); // Skip pointer _iAnimData
 	pItem->_iAnimLen = file->nextLE<int32_t>();
 	pItem->_iAnimFrame = file->nextLE<int32_t>();
-	pItem->_iAnimWidth = file->nextLE<int32_t>();
-	// Skip _iAnimWidth2
-	file->skip(4);
+	file->skip(8); // Skip _iAnimWidth and _iAnimWidth2
 	file->skip(4); // Unused since 1.02
 	pItem->_iSelFlag = file->nextLE<uint8_t>();
 	file->skip(3); // Alignment
@@ -1206,9 +1204,10 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->skip(4); // Skip pointer _iAnimData
 	file->writeLE<int32_t>(pItem->_iAnimLen);
 	file->writeLE<int32_t>(pItem->_iAnimFrame);
-	file->writeLE<int32_t>(pItem->_iAnimWidth);
+	// write _iAnimWidth for vanilla compatibility
+	file->writeLE<int32_t>(ItemAnimWidth);
 	// write _iAnimWidth2 for vanilla compatibility
-	file->writeLE<int32_t>(CalculateWidth2(pItem->_iAnimWidth));
+	file->writeLE<int32_t>(CalculateWidth2(ItemAnimWidth));
 	file->skip(4); // Unused since 1.02
 	file->writeLE<uint8_t>(pItem->_iSelFlag);
 	file->skip(3); // Alignment

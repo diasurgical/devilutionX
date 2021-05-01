@@ -163,6 +163,9 @@ enum icreateinfo_flag2 {
 	// clang-format on
 };
 
+// All item animation frames have this width.
+constexpr int ItemAnimWidth = 96;
+
 struct ItemStruct {
 	int32_t _iSeed;
 	uint16_t _iCreateInfo;
@@ -172,7 +175,6 @@ struct ItemStruct {
 	CelSprite *_iAnimData; // PSX name -> ItemFrame
 	uint8_t _iAnimLen;   // Number of frames in current animation
 	uint8_t _iAnimFrame; // Current frame of animation.
-	int _iAnimWidth;
 	bool _iDelFlag;   // set when item is flagged for deletion, deprecated in 1.02
 	uint8_t _iSelFlag;
 	bool _iPostDraw;
