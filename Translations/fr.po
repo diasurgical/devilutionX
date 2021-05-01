@@ -801,10 +801,8 @@ msgid "  Entertainment or GOG.com."
 msgstr " Blizzard Entertainment ou GOG.com."
 
 #: Source/DiabloUI/title.cpp:47
-#, fuzzy
-#| msgid "Copyright  1996-2001 Blizzard Entertainment"
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
-msgstr "Droits d'auteur 1996-2001 Blizzard Entertainment"
+msgstr "Droits d'auteur © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:34
 msgid "Error"
