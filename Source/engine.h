@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <SDL.h>
 #include <cstdint>
+#include <memory>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -552,6 +553,8 @@ int32_t AdvanceRndSeed();
 int32_t GetRndSeed();
 int32_t GenerateRnd(int32_t v);
 BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen);
+std::unique_ptr<uint8_t[]> LoadFileInMemSafe(const char *pszName, uint32_t *pdwFileLen);
+const uint8_t *CacheFile(const char *name, uint32_t *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);

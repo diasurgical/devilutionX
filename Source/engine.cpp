@@ -11,6 +11,7 @@
  * - Video playback
  */
 
+#include <unordered_map>
 #include "lighting.h"
 #include "movie.h"
 #include "options.h"
@@ -654,6 +655,56 @@ BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen)
 	SFileCloseFile(file);
 
 	return buf;
+}
+
+/**
+ * @brief Load a file in to a buffer
+ * @param pszName Path of file
+ * @param pdwFileLen Will be set to file size if non-NULL
+ * @return Buffer with content of file
+ */
+std::unique_ptr<uint8_t[]> LoadFileInMemSafe(const char *pszName, uint32_t *pdwFileLen)
+{
+	HANDLE file;
+	SFileOpenFile(pszName, &file);
+	int fileLen = SFileGetFileSize(file, nullptr);
+
+	if (pdwFileLen != nullptr)
+		*pdwFileLen = fileLen;
+
+	if (fileLen == 0)
+		app_fatal("Zero length SFILE:\n%s", pszName);
+
+	auto buf = std::make_unique<uint8_t[]>(fileLen);
+
+	SFileReadFile(file, buf.get(), fileLen, nullptr, nullptr);
+	SFileCloseFile(file);
+
+	return buf;
+}
+
+const uint8_t *CacheFile(const char *name, uint32_t *pdwFileLen)
+{
+	using Key = std::string;
+	using Value = std::pair<std::unique_ptr<uint8_t[]>, uint32_t>;
+
+	static std::unordered_map<Key, Value> cachedFiles;
+
+	auto it = cachedFiles.find(name);
+
+	if (it != cachedFiles.end()) {
+		uint32_t size;
+		auto buf = LoadFileInMemSafe(name, &size);
+
+		Key key = std::string(name);
+		Value value = {std::move(buf), size};
+
+		it = cachedFiles.insert(std::make_pair<Key, Value>(std::move(key), std::move(value))).first;
+	}
+
+	if (pdwFileLen != nullptr)
+		*pdwFileLen = it->second.second;
+	return it->second.first.get();
 }
 
 /**
