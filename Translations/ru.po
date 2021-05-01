@@ -7440,7 +7440,7 @@ msgstr ""
 
 #: Source/textdat.cpp:208
 msgid "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz... |"
-msgstr "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz... |">>>>>>> 47c93c2f9c318807dc715cf87abff256ea49bc35
+msgstr "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz... |"
 
 #: Source/textdat.cpp:209
 msgid ""
