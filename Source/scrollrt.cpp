@@ -621,13 +621,13 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 	if (pItem->_iPostDraw == pre)
 		return;
 
-	auto *cel = pItem->_iAnimData;
+	auto *cel = pItem->AnimInfo.pCelSprite;
 	if (cel == nullptr) {
 		Log("Draw Item \"{}\" 1: NULL CelSprite", pItem->_iIName);
 		return;
 	}
 
-	int nCel = pItem->_iAnimFrame;
+	int nCel = pItem->AnimInfo.CurrentFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)cel->Data());
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", pItem->_iIName, nCel, frames, pItem->_itype);
@@ -640,7 +640,7 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), position, *cel, nCel);
 	}
 	CelClippedDrawLightTo(out, position, *cel, nCel);
-	if (pItem->_iAnimFrame == pItem->_iAnimLen || pItem->_iCurs == ICURS_MAGIC_ROCK)
+	if (pItem->AnimInfo.CurrentFrame == pItem->AnimInfo.NumberOfFrames || pItem->_iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(bItem - 1, px, sy);
 }
 

@@ -479,7 +479,7 @@ void AddInitItems()
 
 		items[ii]._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(ii);
-		items[ii]._iAnimFrame = items[ii]._iAnimLen;
+		items[ii].AnimInfo.CurrentFrame = items[ii].AnimInfo.NumberOfFrames;
 		items[ii]._iAnimFlag = false;
 		items[ii]._iSelFlag = 1;
 		DeltaAddItem(ii);
@@ -2240,17 +2240,17 @@ void SetupItem(int i)
 	int it;
 
 	it = ItemCAnimTbl[items[i]._iCurs];
-	items[i]._iAnimData = itemanims[it] ? &*itemanims[it] : nullptr;
-	items[i]._iAnimLen = ItemAnimLs[it];
+	items[i].AnimInfo.pCelSprite = itemanims[it] ? &*itemanims[it] : nullptr;
+	items[i].AnimInfo.NumberOfFrames = ItemAnimLs[it];
 	items[i]._iIdentified = false;
 	items[i]._iPostDraw = false;
 
 	if (!plr[myplr].pLvlLoad) {
-		items[i]._iAnimFrame = 1;
+		items[i].AnimInfo.CurrentFrame = 1;
 		items[i]._iAnimFlag = true;
 		items[i]._iSelFlag = 0;
 	} else {
-		items[i]._iAnimFrame = items[i]._iAnimLen;
+		items[i].AnimInfo.CurrentFrame = items[i].AnimInfo.NumberOfFrames;
 		items[i]._iAnimFlag = false;
 		items[i]._iSelFlag = 1;
 	}
@@ -2866,7 +2866,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	items[ii]._iPostDraw = true;
 	if (selflag) {
 		items[ii]._iSelFlag = selflag;
-		items[ii]._iAnimFrame = items[ii]._iAnimLen;
+		items[ii].AnimInfo.CurrentFrame = items[ii].AnimInfo.NumberOfFrames;
 		items[ii]._iAnimFlag = false;
 	}
 }
@@ -2895,7 +2895,7 @@ void SpawnRock()
 	SetupItem(ii);
 	items[ii]._iSelFlag = 2;
 	items[ii]._iPostDraw = true;
-	items[ii]._iAnimFrame = 11;
+	items[ii].AnimInfo.CurrentFrame = 11;
 }
 
 void SpawnRewardItem(int itemid, Point position)
@@ -2912,7 +2912,7 @@ void SpawnRewardItem(int itemid, Point position)
 	SetupItem(ii);
 	items[ii]._iSelFlag = 2;
 	items[ii]._iPostDraw = true;
-	items[ii]._iAnimFrame = 1;
+	items[ii].AnimInfo.CurrentFrame = 1;
 	items[ii]._iAnimFlag = true;
 	items[ii]._iIdentified = true;
 }
@@ -2937,16 +2937,16 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 	int it;
 
 	it = ItemCAnimTbl[item->_iCurs];
-	item->_iAnimData = &*itemanims[it];
-	item->_iAnimLen = ItemAnimLs[it];
+	item->AnimInfo.pCelSprite = &*itemanims[it];
+	item->AnimInfo.NumberOfFrames = ItemAnimLs[it];
 	item->_iPostDraw = false;
 	item->_iRequest = false;
 	if (FlipFlag) {
-		item->_iAnimFrame = 1;
+		item->AnimInfo.CurrentFrame = 1;
 		item->_iAnimFlag = true;
 		item->_iSelFlag = 0;
 	} else {
-		item->_iAnimFrame = item->_iAnimLen;
+		item->AnimInfo.CurrentFrame = item->AnimInfo.NumberOfFrames;
 		item->_iAnimFlag = false;
 		item->_iSelFlag = 1;
 	}
@@ -2995,18 +2995,18 @@ void ProcessItems()
 		int ii = itemactive[i];
 		if (!items[ii]._iAnimFlag)
 			continue;
-		items[ii]._iAnimFrame++;
+		items[ii].AnimInfo.CurrentFrame++;
 		if (items[ii]._iCurs == ICURS_MAGIC_ROCK) {
-			if (items[ii]._iSelFlag == 1 && items[ii]._iAnimFrame == 11)
-				items[ii]._iAnimFrame = 1;
-			if (items[ii]._iSelFlag == 2 && items[ii]._iAnimFrame == 21)
-				items[ii]._iAnimFrame = 11;
+			if (items[ii]._iSelFlag == 1 && items[ii].AnimInfo.CurrentFrame == 11)
+				items[ii].AnimInfo.CurrentFrame = 1;
+			if (items[ii]._iSelFlag == 2 && items[ii].AnimInfo.CurrentFrame == 21)
+				items[ii].AnimInfo.CurrentFrame = 11;
 		} else {
-			if (items[ii]._iAnimFrame == items[ii]._iAnimLen / 2)
+			if (items[ii].AnimInfo.CurrentFrame == items[ii].AnimInfo.NumberOfFrames / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii].position.x, items[ii].position.y);
 
-			if (items[ii]._iAnimFrame >= items[ii]._iAnimLen) {
-				items[ii]._iAnimFrame = items[ii]._iAnimLen;
+			if (items[ii].AnimInfo.CurrentFrame >= items[ii].AnimInfo.NumberOfFrames) {
+				items[ii].AnimInfo.CurrentFrame = items[ii].AnimInfo.NumberOfFrames;
 				items[ii]._iAnimFlag = false;
 				items[ii]._iSelFlag = 1;
 			}
@@ -3024,7 +3024,7 @@ void FreeItemGFX()
 
 void GetItemFrm(int i)
 {
-	items[i]._iAnimData = &*itemanims[ItemCAnimTbl[items[i]._iCurs]];
+	items[i].AnimInfo.pCelSprite = &*itemanims[ItemCAnimTbl[items[i]._iCurs]];
 }
 
 void GetItemStr(int i)
@@ -4845,7 +4845,7 @@ void RecalcStoreStats()
 int ItemNoFlippy()
 {
 	int r = itemactive[numitems - 1];
-	items[r]._iAnimFrame = items[r]._iAnimLen;
+	items[r].AnimInfo.CurrentFrame = items[r].AnimInfo.NumberOfFrames;
 	items[r]._iAnimFlag = false;
 	items[r]._iSelFlag = 1;
 
