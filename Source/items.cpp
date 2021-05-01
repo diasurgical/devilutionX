@@ -18,9 +18,14 @@
 #include "utils/language.h"
 #include "utils/math.h"
 
-namespace devilution {
-
 #define ITEMTYPES 43
+
+namespace devilution {
+namespace {
+std::optional<CelSprite> itemanims[ITEMTYPES];
+constexpr int ItemAnimWidth = 96;
+
+} // namespace
 
 enum anim_armor_id : uint8_t {
 	// clang-format off
@@ -39,7 +44,6 @@ ItemGetRecordStruct itemrecord[MAXITEMS];
 ItemStruct items[MAXITEMS + 1];
 bool itemhold[3][3];
 CornerStoneStruct CornerStone;
-BYTE *itemanims[ITEMTYPES];
 bool UniqueItemFlags[128];
 int numitems;
 int gnNumGetRecords;
@@ -284,8 +288,6 @@ _sfx_id ItemInvSnds[] = {
 	IS_ILARM,
 	IS_ILARM,
 };
-/** Specifies the current Y-coordinate used for validation of items on ground. */
-int idoppely = 16;
 /** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
 int premiumlvladd[] = {
 	// clang-format off
@@ -409,7 +411,7 @@ void InitItemGFX()
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
 		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
-		itemanims[i] = LoadFileInMem(arglist, nullptr);
+		itemanims[i] = LoadCel(arglist, ItemAnimWidth);
 	}
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 }
@@ -2255,9 +2257,9 @@ void SetupItem(int i)
 	int it;
 
 	it = ItemCAnimTbl[items[i]._iCurs];
-	items[i]._iAnimData = itemanims[it];
+	items[i]._iAnimData = &*itemanims[it];
 	items[i]._iAnimLen = ItemAnimLs[it];
-	items[i]._iAnimWidth = 96;
+	items[i]._iAnimWidth = ItemAnimWidth;
 	items[i]._iIdentified = false;
 	items[i]._iPostDraw = false;
 
@@ -2594,13 +2596,13 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(x, y, ii);
-	int upper = monster[m]._uniqtype ? 15 : 1;
+	int uper = monster[m]._uniqtype ? 15 : 1;
 
 	int mLevel = monster[m].MData->mLevel;
 	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
-	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, upper, onlygood, false, false);
+	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -2704,7 +2706,7 @@ void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool send
 	SetupBaseItem(x, y, idx, onlygood, sendmsg, delta);
 }
 
-void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool isHellfire)
+void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
 {
 	bool _gbIsHellfire = gbIsHellfire;
 	gbIsHellfire = isHellfire;
@@ -2756,7 +2758,7 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool
 	gbIsHellfire = _gbIsHellfire;
 }
 
-void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
+void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
 {
 	SetPlrHandItem(&items[ii], IDI_EAR);
 	tempstr[0] = (ic >> 8) & 0x7F;
@@ -2817,25 +2819,25 @@ void hex2bin(const char *src, int bytes, char *target)
 	}
 }
 
-void items_427ABA(int x, int y)
+void items_427ABA(Point position)
 {
 	PkItemStruct PkSItem;
 
-	if (CornerStone.activated || x == 0 || y == 0) {
+	if (CornerStone.activated || position.x == 0 || position.y == 0) {
 		return;
 	}
 
 	CornerStone.item._itype = ITYPE_NONE;
 	CornerStone.activated = true;
-	if (dItem[x][y]) {
-		int ii = dItem[x][y] - 1;
+	if (dItem[position.x][position.y]) {
+		int ii = dItem[position.x][position.y] - 1;
 		for (int i = 0; i < numitems; i++) {
 			if (itemactive[i] == ii) {
 				DeleteItem(ii, i);
 				break;
 			}
 		}
-		dItem[x][y] = 0;
+		dItem[position.x][position.y] = 0;
 	}
 
 	if (strlen(sgOptions.Hellfire.szItem) < sizeof(PkItemStruct) * 2)
@@ -2845,10 +2847,10 @@ void items_427ABA(int x, int y)
 
 	int ii = AllocateItem();
 
-	dItem[x][y] = ii + 1;
+	dItem[position.x][position.y] = ii + 1;
 
 	UnPackItem(&PkSItem, &items[ii], (PkSItem.dwBuff & CF_HELLFIRE) != 0);
-	items[ii].position = { x, y };
+	items[ii].position = position;
 	RespawnItem(&items[ii], false);
 	CornerStone.item = items[ii];
 }
@@ -2965,9 +2967,9 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 	int it;
 
 	it = ItemCAnimTbl[item->_iCurs];
-	item->_iAnimData = itemanims[it];
+	item->_iAnimData = &*itemanims[it];
 	item->_iAnimLen = ItemAnimLs[it];
-	item->_iAnimWidth = 96;
+	item->_iAnimWidth = ItemAnimWidth;
 	item->_iPostDraw = false;
 	item->_iRequest = false;
 	if (FlipFlag) {
@@ -3000,21 +3002,22 @@ void DeleteItem(int ii, int i)
 
 void ItemDoppel()
 {
-	int idoppelx;
-	ItemStruct *i;
+	if (!gbIsMultiplayer)
+		return;
 
-	if (gbIsMultiplayer) {
-		for (idoppelx = 16; idoppelx < 96; idoppelx++) {
-			if (dItem[idoppelx][idoppely]) {
-				i = &items[dItem[idoppelx][idoppely] - 1];
-				if (i->position.x != idoppelx || i->position.y != idoppely)
-					dItem[idoppelx][idoppely] = 0;
-			}
+	static int idoppely = 16;
+
+	for (int idoppelx = 16; idoppelx < 96; idoppelx++) {
+		if (dItem[idoppelx][idoppely]) {
+			ItemStruct *i = &items[dItem[idoppelx][idoppely] - 1];
+			if (i->position.x != idoppelx || i->position.y != idoppely)
+				dItem[idoppelx][idoppely] = 0;
 		}
-		idoppely++;
-		if (idoppely == 96)
-			idoppely = 16;
 	}
+
+	idoppely++;
+	if (idoppely == 96)
+		idoppely = 16;
 }
 
 void ProcessItems()
@@ -3048,13 +3051,13 @@ void ProcessItems()
 void FreeItemGFX()
 {
 	for (auto &itemanim : itemanims) {
-		MemFreeDbg(itemanim);
+		itemanim = std::nullopt;
 	}
 }
 
 void GetItemFrm(int i)
 {
-	items[i]._iAnimData = itemanims[ItemCAnimTbl[items[i]._iCurs]];
+	items[i]._iAnimData = &*itemanims[ItemCAnimTbl[items[i]._iCurs]];
 }
 
 void GetItemStr(int i)
@@ -3479,28 +3482,28 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		else
-			sprintf(tempstr, _("Resist Fire: 75%% MAX"));
+			strcpy(tempstr, _("Resist Fire: 75% MAX"));
 		break;
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
 		if (x->_iPLLR < 75)
 			sprintf(tempstr, _("Resist Lightning: %+i%%"), x->_iPLLR);
 		else
-			sprintf(tempstr, _("Resist Lightning: 75%% MAX"));
+			strcpy(tempstr, _("Resist Lightning: 75% MAX"));
 		break;
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
 		if (x->_iPLMR < 75)
 			sprintf(tempstr, _("Resist Magic: %+i%%"), x->_iPLMR);
 		else
-			sprintf(tempstr, _("Resist Magic: 75%% MAX"));
+			strcpy(tempstr, _("Resist Magic: 75% MAX"));
 		break;
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, _("Resist All: %+i%%"), x->_iPLFR);
 		if (x->_iPLFR >= 75)
-			sprintf(tempstr, _("Resist All: 75%% MAX"));
+			strcpy(tempstr, _("Resist All: 75% MAX"));
 		break;
 	case IPL_SPLLVLADD:
 		if (x->_iSplLvlAdd == 1)
@@ -3580,7 +3583,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		sprintf(tempstr, _("-%i%% light radius"), -10 * x->_iPLLight);
 		break;
 	case IPL_MULT_ARROWS:
-		sprintf(tempstr, _("multiple arrows per shot"));
+		strcpy(tempstr, _("multiple arrows per shot"));
 		break;
 	case IPL_FIRE_ARROWS:
 		if (x->_iFMinDam == x->_iFMaxDam)
@@ -3616,7 +3619,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("knocks target back"));
 		break;
 	case IPL_3XDAMVDEM:
-		strcpy(tempstr, _("+200% damage vs. demons"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("+200% damage vs. demons"));
 		break;
 	case IPL_ALLRESZERO:
 		strcpy(tempstr, _("All Resistance equals 0"));
@@ -3626,15 +3629,15 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_STEALMANA:
 		if ((x->_iFlags & ISPL_STEALMANA_3) != 0)
-			strcpy(tempstr, _("hit steals 3% mana"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 3% mana"));
 		if ((x->_iFlags & ISPL_STEALMANA_5) != 0)
-			strcpy(tempstr, _("hit steals 5% mana"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 5% mana"));
 		break;
 	case IPL_STEALLIFE:
 		if ((x->_iFlags & ISPL_STEALLIFE_3) != 0)
-			strcpy(tempstr, _("hit steals 3% life"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 3% life"));
 		if ((x->_iFlags & ISPL_STEALLIFE_5) != 0)
-			strcpy(tempstr, _("hit steals 5% life"));
+			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 5% life"));
 		break;
 	case IPL_TARGAC:
 		strcpy(tempstr, _("penetrates target's armor"));
@@ -3667,7 +3670,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("fires random speed arrows"));
 		break;
 	case IPL_SETDAM:
-		sprintf(tempstr, _("unusual item damage"));
+		strcpy(tempstr, _("unusual item damage"));
 		break;
 	case IPL_SETDUR:
 		strcpy(tempstr, _("altered durability"));
@@ -3691,7 +3694,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("see with infravision"));
 		break;
 	case IPL_INVCURS:
-		strcpy(tempstr, _(" "));
+		strcpy(tempstr, " ");
 		break;
 	case IPL_ADDACLIFE:
 		if (x->_iFMinDam == x->_iFMaxDam)
@@ -3704,7 +3707,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_FIRERESCLVL:
 		if (x->_iPLFR <= 0)
-			sprintf(tempstr, " ");
+			strcpy(tempstr, " ");
 		else if (x->_iPLFR >= 1)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		break;
@@ -3718,7 +3721,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("2x dmg to monst, 1x to you"));
 		break;
 	case IPL_JESTERS:
-		strcpy(tempstr, _("Random 0 - 500% damage"));
+		/*xgettext:no-c-format*/ strcpy(tempstr, _("Random 0 - 500% damage"));
 		break;
 	case IPL_CRYSTALLINE:
 		sprintf(tempstr, _("low dur, %+i%% damage"), x->_iPLDam);
@@ -3727,16 +3730,16 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		sprintf(tempstr, _("to hit: %+i%%, %+i%% damage"), x->_iPLToHit, x->_iPLDam);
 		break;
 	case IPL_ACDEMON:
-		sprintf(tempstr, _("extra AC vs demons"));
+		strcpy(tempstr, _("extra AC vs demons"));
 		break;
 	case IPL_ACUNDEAD:
-		sprintf(tempstr, _("extra AC vs undead"));
+		strcpy(tempstr, _("extra AC vs undead"));
 		break;
 	case IPL_MANATOLIFE:
-		sprintf(tempstr, _("50%% Mana moved to Health"));
+		strcpy(tempstr, _("50% Mana moved to Health"));
 		break;
 	case IPL_LIFETOMANA:
-		sprintf(tempstr, _("40%% Health moved to Mana"));
+		strcpy(tempstr, _("40% Health moved to Mana"));
 		break;
 	default:
 		strcpy(tempstr, _("Another ability (NW)"));
@@ -3746,7 +3749,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 
 static void DrawUTextBack(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, pSTextBoxCels, 1, 271);
+	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, *pSTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
@@ -3866,7 +3869,7 @@ void PrintItemMisc(ItemStruct *x)
 		AddPanelString(tempstr, true);
 	}
 	if (x->_iMiscId == IMISC_AURIC) {
-		sprintf(tempstr, _("Doubles gold capacity"));
+		strcpy(tempstr, _("Doubles gold capacity"));
 		AddPanelString(tempstr, true);
 	}
 }
@@ -4088,7 +4091,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			plr[p].destParam1 = cursmx;
 			plr[p].destParam2 = cursmy;
 			if (p == myplr && spl == SPL_NOVA)
-				NetSendCmdLoc(myplr, true, CMD_NOVA, cursmx, cursmy);
+				NetSendCmdLoc(myplr, true, CMD_NOVA, { cursmx, cursmy });
 		}
 		break;
 	case IMISC_SCROLLT:
@@ -5001,7 +5004,7 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 	items[ii]._iIdentified = true;
 }
 
-void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed)
+void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed)
 {
 	if ((icreateinfo & CF_SMITH) != 0)
 		RecreateSmithItem(ii, icreateinfo & CF_LEVEL, iseed);
@@ -5143,7 +5146,7 @@ static void NextItemRecord(int i)
 	itemrecord[i].nIndex = itemrecord[gnNumGetRecords].nIndex;
 }
 
-bool GetItemRecord(int nSeed, WORD wCI, int nIndex)
+bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
 	int i;
 	DWORD dwTicks;
@@ -5162,7 +5165,7 @@ bool GetItemRecord(int nSeed, WORD wCI, int nIndex)
 	return true;
 }
 
-void SetItemRecord(int nSeed, WORD wCI, int nIndex)
+void SetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
 	DWORD dwTicks;
 
@@ -5179,7 +5182,7 @@ void SetItemRecord(int nSeed, WORD wCI, int nIndex)
 	gnNumGetRecords++;
 }
 
-void PutItemRecord(int nSeed, WORD wCI, int nIndex)
+void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
 	int i;
 	DWORD dwTicks;

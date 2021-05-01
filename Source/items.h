@@ -9,6 +9,7 @@
 
 #include "engine.h"
 #include "itemdat.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -168,7 +169,7 @@ struct ItemStruct {
 	enum item_type _itype;
 	Point position;
 	bool _iAnimFlag;
-	uint8_t *_iAnimData; // PSX name -> ItemFrame
+	CelSprite *_iAnimData; // PSX name -> ItemFrame
 	uint8_t _iAnimLen;   // Number of frames in current animation
 	uint8_t _iAnimFrame; // Current frame of animation.
 	int _iAnimWidth;
@@ -355,8 +356,7 @@ struct ItemGetRecordStruct {
 };
 
 struct CornerStoneStruct {
-	int x;
-	int y;
+	Point position;
 	bool activated;
 	ItemStruct item;
 };
@@ -397,10 +397,10 @@ void SpawnItem(int m, int x, int y, bool sendmsg);
 void CreateRndItem(int x, int y, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(int x, int y, bool sendmsg);
 void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);
-void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue, bool isHellfire);
-void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
+void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
+void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void items_427A72();
-void items_427ABA(int x, int y);
+void items_427ABA(Point position);
 void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag);
 void SpawnRock();
 void SpawnRewardItem(int itemid, int xx, int yy);
@@ -430,16 +430,16 @@ void SpawnWitch(int lvl);
 void SpawnBoy(int lvl);
 void SpawnHealer(int lvl);
 void SpawnStoreGold();
-void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed);
+void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed);
 void RecalcStoreStats();
 int ItemNoFlippy();
 void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(int x, int y, int imisc, int icurs, bool sendmsg, bool delta);
 void CreateAmulet(int x, int y, int curlv, bool sendmsg, bool delta);
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool delta);
-bool GetItemRecord(int nSeed, WORD wCI, int nIndex);
-void SetItemRecord(int nSeed, WORD wCI, int nIndex);
-void PutItemRecord(int nSeed, WORD wCI, int nIndex);
+bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex);
+void SetItemRecord(int nSeed, uint16_t wCI, int nIndex);
+void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
 
 /* data */
 

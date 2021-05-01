@@ -1,6 +1,6 @@
 /**
 * @file monhealthbar.cpp
-* 
+*
 * Adds monster health bar QoL feature
 */
 
@@ -32,7 +32,7 @@ void InitMonsterHealthBar()
 	if ((healthBox.surface == nullptr)
 	    || (health.surface == nullptr)
 	    || (resistance.surface == nullptr)) {
-		app_fatal(_("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
+		app_fatal("%s", _("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
 	}
 }
 

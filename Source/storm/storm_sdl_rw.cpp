@@ -71,13 +71,13 @@ static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnu
 
 static int SFileRwClose(struct SDL_RWops *context)
 {
-	mem_free_dbg(context);
+	delete context;
 	return 0;
 }
 
 SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 {
-	SDL_RWops *result = (SDL_RWops *)DiabloAllocPtr(sizeof(SDL_RWops));
+	SDL_RWops *result = new SDL_RWops();
 	std::memset(result, 0, sizeof(*result));
 
 #ifndef USE_SDL1

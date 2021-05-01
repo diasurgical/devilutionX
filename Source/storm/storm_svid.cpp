@@ -6,34 +6,40 @@
 
 #include <SDL.h>
 #include <smacker.h>
+
+#ifndef NOSOUND
 #include <Aulib/Stream.h>
 #include <Aulib/ResamplerSpeex.h>
+
+#include "utils/push_aulib_decoder.h"
+#endif
 
 #include "dx.h"
 #include "options.h"
 #include "palette.h"
 #include "storm/storm.h"
 #include "utils/display.h"
-#include "utils/push_aulib_decoder.h"
 #include "utils/sdl_compat.h"
 #include "utils/log.hpp"
 
 namespace devilution {
 namespace {
 
+#ifndef NOSOUND
 std::optional<Aulib::Stream> SVidAudioStream;
 PushAulibDecoder *SVidAudioDecoder;
+std::uint8_t SVidAudioDepth;
+#endif
 
 unsigned long SVidWidth, SVidHeight;
 double SVidFrameEnd;
 double SVidFrameLength;
-std::uint8_t SVidAudioDepth;
 BYTE SVidLoop;
 smk SVidSMK;
 SDL_Color SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
 SDL_Surface *SVidSurface;
-BYTE *SVidBuffer;
+std::unique_ptr<uint8_t[]> SVidBuffer;
 
 bool IsLandscapeFit(unsigned long srcW, unsigned long srcH, unsigned long dstW, unsigned long dstH)
 {
@@ -99,10 +105,12 @@ void TrySetVideoModeToSVidForSDL1()
 }
 #endif
 
+#ifndef NOSOUND
 bool HaveAudio()
 {
 	return SVidAudioStream && SVidAudioStream->isPlaying();
 }
+#endif
 
 bool SVidLoadNextFrame()
 {
@@ -131,7 +139,6 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	if ((flags & 0x40000) != 0)
 		SVidLoop = true;
 	bool enableVideo = (flags & 0x100000) == 0;
-	bool enableAudio = (flags & 0x1000000) == 0;
 	//0x8 // Non-interlaced
 	//0x200, 0x800 // Upscale video
 	//0x80000 // Center horizontally
@@ -141,13 +148,16 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	SFileOpenFile(filename, video);
 
 	int bytestoread = SFileGetFileSize(*video, nullptr);
-	SVidBuffer = DiabloAllocPtr(bytestoread);
-	SFileReadFile(*video, SVidBuffer, bytestoread, nullptr, nullptr);
+	SVidBuffer = std::make_unique<uint8_t[]>(bytestoread);
+	SFileReadFile(*video, SVidBuffer.get(), bytestoread, nullptr, nullptr);
 
-	SVidSMK = smk_open_memory(SVidBuffer, bytestoread);
+	SVidSMK = smk_open_memory(SVidBuffer.get(), bytestoread);
 	if (SVidSMK == nullptr) {
 		return;
 	}
+
+#ifndef NOSOUND
+	const bool enableAudio = (flags & 0x1000000) == 0;
 
 	constexpr std::size_t MaxSmkChannels = 7;
 	unsigned char channels[MaxSmkChannels];
@@ -178,6 +188,7 @@ void SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 				SVidAudioDecoder = nullptr;
 		}
 	}
+#endif
 
 	unsigned long nFrames;
 	smk_info_all(SVidSMK, nullptr, &nFrames, &SVidFrameLength);
@@ -257,6 +268,7 @@ bool SVidPlayContinue()
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
+#ifndef NOSOUND
 	if (HaveAudio()) {
 		const auto len = smk_get_audio_size(SVidSMK, 0);
 		const unsigned char *buf = smk_get_audio(SVidSMK, 0);
@@ -266,6 +278,7 @@ bool SVidPlayContinue()
 			SVidAudioDecoder->PushSamples(reinterpret_cast<const std::uint8_t *>(buf), len);
 		}
 	}
+#endif
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
@@ -335,18 +348,17 @@ bool SVidPlayContinue()
 
 void SVidPlayEnd(HANDLE video)
 {
+#ifndef NOSOUND
 	if (HaveAudio()) {
 		SVidAudioStream = std::nullopt;
 		SVidAudioDecoder = nullptr;
 	}
+#endif
 
 	if (SVidSMK != nullptr)
 		smk_close(SVidSMK);
 
-	if (SVidBuffer != nullptr) {
-		mem_free_dbg(SVidBuffer);
-		SVidBuffer = nullptr;
-	}
+	SVidBuffer = nullptr;
 
 	SDL_FreePalette(SVidPalette);
 	SVidPalette = nullptr;

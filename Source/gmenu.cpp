@@ -8,24 +8,28 @@
 #include "control.h"
 #include "controls/axis_direction.h"
 #include "controls/controller_motion.h"
+#include "engine.h"
 #include "stores.h"
-#include "utils/ui_fwd.h"
 #include "utils/language.h"
+#include "utils/stdcompat/optional.hpp"
+#include "utils/ui_fwd.h"
 
 namespace devilution {
+namespace {
+std::optional<CelSprite> optbar_cel;
+std::optional<CelSprite> PentSpin_cel;
+std::optional<CelSprite> BigTGold_cel;
+std::optional<CelSprite> option_cel;
+std::optional<CelSprite> sgpLogo;
+} // namespace
 
-BYTE *optbar_cel;
 bool mouseNavigation;
-BYTE *PentSpin_cel;
 TMenuItem *sgpCurrItem;
-BYTE *BigTGold_cel;
 int LogoAnim_tick;
 BYTE LogoAnim_frame;
 int PentSpin_tick;
 void (*gmenu_current_option)();
 TMenuItem *sgpCurrentMenu;
-BYTE *option_cel;
-BYTE *sgpLogo;
 int sgCurrentMenuIdx;
 
 /** Maps from font index to bigtgold.cel frame number. */
@@ -63,7 +67,7 @@ static void gmenu_print_text(const CelOutputBuffer &out, int x, int y, const cha
 		c = gbFontTransTbl[(BYTE)*pszStr++];
 		c = lfontframe[c];
 		if (c != 0)
-			CelDrawLightTo(out, x, y, BigTGold_cel, c, 46, nullptr);
+			CelDrawLightTo(out, x, y, *BigTGold_cel, c, nullptr);
 		x += lfontkern[c] + 2;
 	}
 }
@@ -80,11 +84,11 @@ void gmenu_draw_pause(const CelOutputBuffer &out)
 
 void FreeGMenu()
 {
-	MemFreeDbg(sgpLogo);
-	MemFreeDbg(BigTGold_cel);
-	MemFreeDbg(PentSpin_cel);
-	MemFreeDbg(option_cel);
-	MemFreeDbg(optbar_cel);
+	sgpLogo = std::nullopt;
+	BigTGold_cel = std::nullopt;
+	PentSpin_cel = std::nullopt;
+	option_cel = std::nullopt;
+	optbar_cel = std::nullopt;
 }
 
 void gmenu_init_menu()
@@ -96,13 +100,13 @@ void gmenu_init_menu()
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = false;
 	if (gbIsHellfire)
-		sgpLogo = LoadFileInMem("Data\\hf_logo3.CEL", nullptr);
+		sgpLogo = LoadCel("Data\\hf_logo3.CEL", 430);
 	else
-		sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", nullptr);
-	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", nullptr);
-	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", nullptr);
-	option_cel = LoadFileInMem("Data\\option.CEL", nullptr);
-	optbar_cel = LoadFileInMem("Data\\optbar.CEL", nullptr);
+		sgpLogo = LoadCel("Data\\Diabsmal.CEL", 296);
+	BigTGold_cel = LoadCel("Data\\BigTGold.CEL", 46);
+	PentSpin_cel = LoadCel("Data\\PentSpin.CEL", 48);
+	option_cel = LoadCel("Data\\option.CEL", 27);
+	optbar_cel = LoadCel("Data\\optbar.CEL", 287);
 }
 
 bool gmenu_is_active()
@@ -218,21 +222,21 @@ static void gmenu_draw_menu_item(const CelOutputBuffer &out, TMenuItem *pItem, i
 	w = gmenu_get_lfont(pItem);
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		x = 16 + w / 2;
-		CelDrawTo(out, x + PANEL_LEFT, y - 10, optbar_cel, 1, 287);
+		CelDrawTo(out, x + PANEL_LEFT, y - 10, *optbar_cel, 1);
 		step = pItem->dwFlags & 0xFFF;
 		nSteps = (pItem->dwFlags & 0xFFF000) >> 12;
 		if (nSteps < 2)
 			nSteps = 2;
 		pos = step * 256 / nSteps;
 		gmenu_clear_buffer(out, x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
-		CelDrawTo(out, x + 2 + pos + PANEL_LEFT, y - 12, option_cel, 1, 27);
+		CelDrawTo(out, x + 2 + pos + PANEL_LEFT, y - 12, *option_cel, 1);
 	}
 	x = gnScreenWidth / 2 - w / 2;
 	light_table_index = (pItem->dwFlags & GMENU_ENABLED) ? 0 : 15;
 	gmenu_print_text(out, x, y, _(pItem->pszStr));
 	if (pItem == sgpCurrItem) {
-		CelDrawTo(out, x - 54, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
-		CelDrawTo(out, x + 4 + w, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
+		CelDrawTo(out, x - 54, y + 1, *PentSpin_cel, PentSpn2Spin());
+		CelDrawTo(out, x + 4 + w, y + 1, *PentSpin_cel, PentSpn2Spin());
 	}
 }
 
@@ -250,24 +254,21 @@ void gmenu_draw(const CelOutputBuffer &out)
 {
 	int y;
 	TMenuItem *i;
-	DWORD ticks;
 
 	if (sgpCurrentMenu != nullptr) {
 		GameMenuMove();
 		if (gmenu_current_option != nullptr)
 			gmenu_current_option();
 		if (gbIsHellfire) {
-			ticks = SDL_GetTicks();
+			const DWORD ticks = SDL_GetTicks();
 			if ((int)(ticks - LogoAnim_tick) > 25) {
 				LogoAnim_frame++;
 				if (LogoAnim_frame > 16)
 					LogoAnim_frame = 1;
 				LogoAnim_tick = ticks;
 			}
-			CelDrawTo(out, (gnScreenWidth - 430) / 2, 102 + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
-		} else {
-			CelDrawTo(out, (gnScreenWidth - 296) / 2, 102 + UI_OFFSET_Y, sgpLogo, 1, 296);
 		}
+		CelDrawTo(out, (gnScreenWidth - sgpLogo->Width()) / 2, 102 + UI_OFFSET_Y, *sgpLogo, LogoAnim_frame);
 		y = 160 + UI_OFFSET_Y;
 		i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu != nullptr) {

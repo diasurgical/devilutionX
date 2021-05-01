@@ -8,7 +8,7 @@
 namespace devilution {
 
 TTF_Font *font = nullptr;
-BYTE *FontTables[4];
+std::unique_ptr<BYTE[]> FontTables[4];
 Art ArtFonts[4][2];
 /** This is so we know ttf has been init when we get to the diablo_deinit() function */
 bool was_fonts_init = false;
@@ -24,10 +24,10 @@ void LoadArtFont(const char *pszFile, int size, int color)
 
 void LoadArtFonts()
 {
-	FontTables[AFT_SMALL] = LoadFileInMem("ui_art\\font16.bin", nullptr);
-	FontTables[AFT_MED] = LoadFileInMem("ui_art\\font24.bin", nullptr);
-	FontTables[AFT_BIG] = LoadFileInMem("ui_art\\font30.bin", nullptr);
-	FontTables[AFT_HUGE] = LoadFileInMem("ui_art\\font42.bin", nullptr);
+	FontTables[AFT_SMALL] = LoadFileInMem("ui_art\\font16.bin");
+	FontTables[AFT_MED] = LoadFileInMem("ui_art\\font24.bin");
+	FontTables[AFT_BIG] = LoadFileInMem("ui_art\\font30.bin");
+	FontTables[AFT_HUGE] = LoadFileInMem("ui_art\\font42.bin");
 	LoadArtFont("ui_art\\font16s.pcx", AFT_SMALL, AFC_SILVER);
 	LoadArtFont("ui_art\\font16g.pcx", AFT_SMALL, AFC_GOLD);
 	LoadArtFont("ui_art\\font24s.pcx", AFT_MED, AFC_SILVER);
@@ -46,13 +46,9 @@ void UnloadArtFonts()
 	ArtFonts[AFT_BIG][AFC_SILVER].Unload();
 	ArtFonts[AFT_BIG][AFC_GOLD].Unload();
 	ArtFonts[AFT_HUGE][AFC_GOLD].Unload();
-	mem_free_dbg(FontTables[AFT_SMALL]);
 	FontTables[AFT_SMALL] = nullptr;
-	mem_free_dbg(FontTables[AFT_MED]);
 	FontTables[AFT_MED] = nullptr;
-	mem_free_dbg(FontTables[AFT_BIG]);
 	FontTables[AFT_BIG] = nullptr;
-	mem_free_dbg(FontTables[AFT_HUGE]);
 	FontTables[AFT_HUGE] = nullptr;
 }
 

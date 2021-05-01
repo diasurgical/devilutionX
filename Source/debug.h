@@ -5,11 +5,13 @@
  */
 #pragma once
 
+#include "engine.h"
 #include "miniwin/miniwin.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
-extern BYTE *pSquareCel;
+extern std::optional<CelSprite> pSquareCel;
 
 void FreeDebugGFX();
 void CheckDungeonClear();

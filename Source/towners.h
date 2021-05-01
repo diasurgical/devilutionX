@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 #include "items.h"
 #include "player.h"
@@ -40,7 +41,7 @@ struct TNQ {
 
 struct TownerStruct {
 	uint8_t *_tNAnim[8];
-	uint8_t *_tNData;
+	std::unique_ptr<BYTE[]> _tNData;
 	uint8_t *_tAnimData;
 	int16_t _tSeed;
 	/** Tile position of NPC */

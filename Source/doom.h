@@ -9,7 +9,7 @@
 
 namespace devilution {
 
-extern bool doomflag;
+extern bool DoomFlag;
 extern int DoomQuestState;
 
 int doom_get_frame_from_time();

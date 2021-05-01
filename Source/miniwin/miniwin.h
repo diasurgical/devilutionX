@@ -15,6 +15,7 @@ namespace devilution {
 #ifndef MAX_PATH
 #define MAX_PATH 260
 #endif
+
 #ifdef __has_attribute
 #define DVL_HAVE_ATTRIBUTE(x) __has_attribute(x)
 #else
@@ -28,37 +29,21 @@ namespace devilution {
 #define DVL_PRINTF_ATTRIBUTE(fmtargnum)
 #endif
 
-typedef uint16_t SHORT;
-typedef int32_t LONG;
-
-typedef unsigned char UCHAR;
-
 typedef uint32_t DWORD;
 typedef unsigned char BYTE;
-typedef unsigned short WORD;
-typedef DWORD *LPDWORD;
-typedef void *LPVOID;
-typedef void *PVOID;
-
-typedef unsigned int UINT;
-
-typedef int32_t WPARAM;
-typedef int32_t LPARAM;
 
 //
 // Handles
 //
 typedef void *HANDLE;
 
-typedef HANDLE HMODULE, HDC, HINSTANCE;
+typedef void (*WNDPROC)(uint32_t, int32_t, int32_t);
 
-typedef void (*WNDPROC)(UINT, WPARAM, LPARAM);
-
-typedef struct tagMSG {
-	UINT message;
-	WPARAM wParam;
-	LPARAM lParam;
-} MSG, *LPMSG;
+struct tagMSG {
+	uint32_t message;
+	int32_t wParam;
+	int32_t lParam;
+};
 
 //
 // Everything else
@@ -67,13 +52,13 @@ typedef struct tagMSG {
 void SetCursorPos(int X, int Y);
 void FocusOnCharInfo();
 
-SHORT GetAsyncKeyState(int vKey);
+uint16_t GetAsyncKeyState(int vKey);
 
-bool FetchMessage(LPMSG lpMsg);
+bool FetchMessage(tagMSG *lpMsg);
 
-bool TranslateMessage(const MSG *lpMsg);
-void PushMessage(const MSG *lpMsg);
-bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
+bool TranslateMessage(const tagMSG *lpMsg);
+void PushMessage(const tagMSG *lpMsg);
+bool PostMessage(uint32_t Msg, int32_t wParam, int32_t lParam);
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp

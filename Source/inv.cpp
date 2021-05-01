@@ -11,11 +11,14 @@
 #include "stores.h"
 #include "towners.h"
 #include "utils/language.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
+namespace {
+std::optional<CelSprite> pInvCels;
+} // namespace
 
 bool invflag;
-BYTE *pInvCels;
 bool drawsbarflag;
 int sgdwLastTime; // check name
 
@@ -120,26 +123,26 @@ int AP2x2Tbl[10] = { 8, 28, 6, 26, 4, 24, 2, 22, 0, 20 };
 
 void FreeInvGFX()
 {
-	MemFreeDbg(pInvCels);
+	pInvCels = std::nullopt;
 }
 
 void InitInv()
 {
 	if (plr[myplr]._pClass == HeroClass::Warrior) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
+		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
 	} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", nullptr);
+		pInvCels = LoadCel("Data\\Inv\\Inv_rog.CEL", SPANEL_WIDTH);
 	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", nullptr);
+		pInvCels = LoadCel("Data\\Inv\\Inv_Sor.CEL", SPANEL_WIDTH);
 	} else if (plr[myplr]._pClass == HeroClass::Monk) {
 		if (!gbIsSpawn)
-			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", nullptr);
+			pInvCels = LoadCel("Data\\Inv\\Inv_Sor.CEL", SPANEL_WIDTH);
 		else
-			pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
+			pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
 	} else if (plr[myplr]._pClass == HeroClass::Bard) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", nullptr);
+		pInvCels = LoadCel("Data\\Inv\\Inv_rog.CEL", SPANEL_WIDTH);
 	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", nullptr);
+		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
 	}
 
 	invflag = false;
@@ -172,9 +175,7 @@ static void InvDrawSlotBack(const CelOutputBuffer &out, int X, int Y, int W, int
 void DrawInv(const CelOutputBuffer &out)
 {
 	int frame, frame_width, i, j, ii;
-	BYTE *cels;
-
-	CelDrawTo(out, RIGHT_PANEL_X, 351, pInvCels, 1, SPANEL_WIDTH);
+	CelDrawTo(out, RIGHT_PANEL_X, 351, *pInvCels, 1);
 
 	InvXY slotSize[] = {
 		{ 2, 2 }, //head
@@ -214,21 +215,22 @@ void DrawInv(const CelOutputBuffer &out)
 				screen_y += InvItemHeight[frame] == 3 * INV_SLOT_SIZE_PX ? 0 : -14;
 			}
 
+			const CelSprite *cels;
 			if (frame <= 179) {
-				cels = pCursCels;
+				cels = &*pCursCels;
 			} else {
 				frame -= 179;
-				cels = pCursCels2;
+				cels = &*pCursCels2;
 			}
 
 			if (pcursinvitem == slot) {
-				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].InvBody[slot], true), RIGHT_PANEL_X + screen_x, screen_y, cels, frame, frame_width, false);
+				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].InvBody[slot], true), RIGHT_PANEL_X + screen_x, screen_y, *cels, frame, false);
 			}
 
 			if (plr[myplr].InvBody[slot]._iStatFlag) {
-				CelClippedDrawTo(out, RIGHT_PANEL_X + screen_x, screen_y, cels, frame, frame_width);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + screen_x, screen_y, *cels, frame);
 			} else {
-				CelDrawLightRedTo(out, RIGHT_PANEL_X + screen_x, screen_y, cels, frame, frame_width, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + screen_x, screen_y, *cels, frame, 1);
 			}
 
 			if (slot == INVLOC_HAND_LEFT) {
@@ -242,7 +244,7 @@ void DrawInv(const CelOutputBuffer &out)
 
 						const int dst_x = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X + (frame_width == INV_SLOT_SIZE_PX ? 13 : -1);
 						const int dst_y = slotPos[INVLOC_HAND_RIGHT].Y;
-						CelClippedBlitLightTransTo(out, dst_x, dst_y, cels, frame, frame_width);
+						CelClippedBlitLightTransTo(out, dst_x, dst_y, *cels, frame);
 
 						cel_transparency_active = false;
 					}
@@ -268,11 +270,12 @@ void DrawInv(const CelOutputBuffer &out)
 			frame = plr[myplr].InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 			frame_width = InvItemWidth[frame];
 
+			const CelSprite *cels;
 			if (frame <= 179) {
-				cels = pCursCels;
+				cels = &*pCursCels;
 			} else {
 				frame -= 179;
-				cels = pCursCels2;
+				cels = &*pCursCels2;
 			}
 
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
@@ -281,7 +284,7 @@ void DrawInv(const CelOutputBuffer &out)
 				    GetOutlineColor(plr[myplr].InvList[ii], true),
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-				    cels, frame, frame_width, false);
+				    *cels, frame, false);
 			}
 
 			if (plr[myplr].InvList[ii]._iStatFlag) {
@@ -289,13 +292,13 @@ void DrawInv(const CelOutputBuffer &out)
 				    out,
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-				    cels, frame, frame_width);
+				    *cels, frame);
 			} else {
 				CelDrawLightRedTo(
 				    out,
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-				    cels, frame, frame_width, 1);
+				    *cels, frame, 1);
 			}
 		}
 	}
@@ -303,9 +306,7 @@ void DrawInv(const CelOutputBuffer &out)
 
 void DrawInvBelt(const CelOutputBuffer &out)
 {
-	int i, frame, frame_width;
 	BYTE fi, ff;
-	BYTE *cels;
 
 	if (talkflag) {
 		return;
@@ -313,32 +314,32 @@ void DrawInvBelt(const CelOutputBuffer &out)
 
 	DrawPanelBox(out, 205, 21, 232, 28, PANEL_X + 205, PANEL_Y + 5);
 
-	for (i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MAXBELTITEMS; i++) {
 		if (plr[myplr].SpdList[i].isEmpty()) {
 			continue;
 		}
 
 		InvDrawSlotBack(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
-		frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
-		frame_width = InvItemWidth[frame];
+		int frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
+		const CelSprite *cels;
 		if (frame <= 179) {
-			cels = pCursCels;
+			cels = &*pCursCels;
 		} else {
 			frame -= 179;
-			cels = pCursCels2;
+			cels = &*pCursCels2;
 		}
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 			if (!sgbControllerActive || invflag) {
-				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].SpdList[i], true), InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cels, frame, frame_width, false);
+				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].SpdList[i], true), InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, *cels, frame, false);
 			}
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag) {
-			CelClippedDrawTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cels, frame, frame_width);
+			CelClippedDrawTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, *cels, frame);
 		} else {
-			CelDrawLightRedTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cels, frame, frame_width, 1);
+			CelDrawLightRedTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, *cels, frame, 1);
 		}
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
@@ -1244,7 +1245,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	}
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff)
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	PlayerStruct *p;
 
@@ -1684,7 +1685,7 @@ void CleanupItems(ItemStruct *item, int ii)
 {
 	dItem[item->position.x][item->position.y] = 0;
 
-	if (currlevel == 21 && item->position.x == CornerStone.x && item->position.y == CornerStone.y) {
+	if (currlevel == 21 && item->position == CornerStone.position) {
 		CornerStone.item._itype = ITYPE_NONE;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item.position = { 0, 0 };
@@ -1716,7 +1717,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 		return;
 
 	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
-		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr].position.tile.x, plr[myplr].position.tile.y);
+		NetSendCmdPItem(true, CMD_SYNCPUTITEM, plr[myplr].position.tile);
 
 	item->_iCreateInfo &= ~CF_PREGEN;
 	plr[pnum].HoldItem = *item;
@@ -1780,11 +1781,11 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	}
 	plr[pnum].HoldItem = *item;
 	RespawnItem(item, true);
-	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position.x, item->position.y);
+	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position);
 	plr[pnum].HoldItem._itype = ITYPE_NONE;
 }
 
-int FindGetItem(int idx, WORD ci, int iseed)
+int FindGetItem(int idx, uint16_t ci, int iseed)
 {
 	if (numitems <= 0)
 		return -1;
@@ -1805,7 +1806,7 @@ int FindGetItem(int idx, WORD ci, int iseed)
 	return ii;
 }
 
-void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
+void SyncGetItem(int x, int y, int idx, uint16_t ci, int iseed)
 {
 	int ii;
 
@@ -1900,33 +1901,32 @@ void DrawInvMsg(const char *msg)
 	}
 }
 
-static int PutItem(int pnum, int &x, int &y)
+static bool PutItem(int pnum, Point &position)
 {
 	if (numitems >= MAXITEMS)
 		return false;
 
-	int xx = x - plr[pnum].position.tile.x;
-	int yy = y - plr[pnum].position.tile.y;
+	auto relativePosition = position - plr[pnum].position.tile;
 
-	direction d = GetDirection(plr[pnum].position.tile, { x, y });
+	direction d = GetDirection(plr[pnum].position.tile, position);
 
-	if (abs(xx) > 1 || abs(yy) > 1) {
-		x = plr[pnum].position.tile.x + offset_x[d];
-		y = plr[pnum].position.tile.y + offset_y[d];
+	if (abs(relativePosition.x) > 1 || abs(relativePosition.y) > 1) {
+		position.x = plr[pnum].position.tile.x + offset_x[d];
+		position.y = plr[pnum].position.tile.y + offset_y[d];
 	}
-	if (CanPut(x, y))
+	if (CanPut(position.x, position.y))
 		return true;
 
 	direction dLeft = left[d];
-	x = plr[pnum].position.tile.x + offset_x[dLeft];
-	y = plr[pnum].position.tile.y + offset_y[dLeft];
-	if (CanPut(x, y))
+	position.x = plr[pnum].position.tile.x + offset_x[dLeft];
+	position.y = plr[pnum].position.tile.y + offset_y[dLeft];
+	if (CanPut(position.x, position.y))
 		return true;
 
 	direction dRight = right[d];
-	x = plr[pnum].position.tile.x + offset_x[dRight];
-	y = plr[pnum].position.tile.y + offset_y[dRight];
-	if (CanPut(x, y))
+	position.x = plr[pnum].position.tile.x + offset_x[dRight];
+	position.y = plr[pnum].position.tile.y + offset_y[dRight];
+	if (CanPut(position.x, position.y))
 		return true;
 
 	for (int l = 1; l < 50; l++) {
@@ -1937,8 +1937,7 @@ static int PutItem(int pnum, int &x, int &y)
 				if (!CanPut(xp, yp))
 					continue;
 
-				x = xp;
-				y = yp;
+				position = {xp,yp};
 				return true;
 			}
 		}
@@ -1947,19 +1946,17 @@ static int PutItem(int pnum, int &x, int &y)
 	return false;
 }
 
-int InvPutItem(int pnum, int x, int y)
+int InvPutItem(int pnum, Point position)
 {
-	int xx = x - plr[pnum].position.tile.x;
-	int yy = y - plr[pnum].position.tile.y;
-
-	if (!PutItem(pnum, x, y))
+	if (!PutItem(pnum, position))
 		return -1;
 
 	if (currlevel == 0) {
 		int yp = cursmy;
 		int xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.tile.x, plr[pnum].position.tile.y, xx, yy);
+			Point relativePosition = position - plr[pnum].position.tile;
+			NetSendCmdLocParam2(false, CMD_OPENHIVE, plr[pnum].position.tile, relativePosition.x, relativePosition.y);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
@@ -1977,16 +1974,16 @@ int InvPutItem(int pnum, int x, int y)
 		}
 	}
 
-	assert(CanPut(x, y));
+	assert(CanPut(position.x, position.y));
 
 	int ii = AllocateItem();
 
-	dItem[x][y] = ii + 1;
+	dItem[position.x][position.y] = ii + 1;
 	items[ii] = plr[pnum].HoldItem;
-	items[ii].position = { x, y };
+	items[ii].position = position;
 	RespawnItem(&items[ii], true);
 
-	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
+	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = false;
@@ -1997,16 +1994,16 @@ int InvPutItem(int pnum, int x, int y)
 	return ii;
 }
 
-int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
+int SyncPutItem(int pnum, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac)
 {
-	if (!PutItem(pnum, x, y))
+	if (!PutItem(pnum, position))
 		return -1;
 
-	assert(CanPut(x, y));
+	assert(CanPut(position.x, position.y));
 
 	int ii = AllocateItem();
 
-	dItem[x][y] = ii + 1;
+	dItem[position.x][position.y] = ii + 1;
 
 	if (idx == IDI_EAR) {
 		RecreateEar(ii, icreateinfo, iseed, Id, dur, mdur, ch, mch, ivalue, ibuff);
@@ -2027,10 +2024,10 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 		items[ii].dwBuff = ibuff;
 	}
 
-	items[ii].position = { x, y };
+	items[ii].position = position;
 	RespawnItem(&items[ii], true);
 
-	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
+	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = false;
@@ -2124,11 +2121,11 @@ char CheckInvHLight()
 		} else if (pi->_iMagical == ITEM_QUALITY_UNIQUE) {
 			infoclr = COL_GOLD;
 		}
-		strcpy(infostr, pi->_iName);
 		if (pi->_iIdentified) {
 			strcpy(infostr, pi->_iIName);
 			PrintItemDetails(pi);
 		} else {
+			strcpy(infostr, pi->_iName);
 			PrintItemDur(pi);
 		}
 	}
@@ -2356,7 +2353,7 @@ int CalculateGold(int pnum)
 bool DropItemBeforeTrig()
 {
 	if (TryInvPut()) {
-		NetSendCmdPItem(true, CMD_PUTITEM, cursmx, cursmy);
+		NetSendCmdPItem(true, CMD_PUTITEM, { cursmx, cursmy });
 		NewCursor(CURSOR_HAND);
 		return true;
 	}

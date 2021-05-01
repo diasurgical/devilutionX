@@ -1464,14 +1464,14 @@ void StartAttack(int pnum, direction d)
 	}
 
 	int skippedAnimationFrames = 0;
-	if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
-		skippedAnimationFrames += 1;
-	}
 	if ((plr[pnum]._pIFlags & ISPL_FASTERATTACK) != 0) {
-		skippedAnimationFrames += 2;
-	}
-	if ((plr[pnum]._pIFlags & ISPL_FASTESTATTACK) != 0) {
-		skippedAnimationFrames += 2;
+		// The combination of Faster and Fast Attack doesn't result in more skipped skipped frames, cause the secound frame skip of Faster Attack is not triggered.
+		skippedAnimationFrames = 2;
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
+		skippedAnimationFrames = 1;
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTESTATTACK) != 0) {
+		// Fastest Attack is skipped if Fast or Faster Attack is also specified, cause both skip the frame that triggers fastest attack skipping
+		skippedAnimationFrames = 2;
 	}
 
 	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationDistributionParams::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
@@ -1720,7 +1720,7 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 	if ((xx || yy) && ItemSpaceOk(x, y)) {
 		RespawnDeadItem(itm, x, y);
 		plr[pnum].HoldItem = *itm;
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, x, y);
+		NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
 		return;
 	}
 
@@ -1732,7 +1732,7 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 				if (ItemSpaceOk(x, y)) {
 					RespawnDeadItem(itm, x, y);
 					plr[pnum].HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, x, y);
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
 					return;
 				}
 			}
@@ -3815,7 +3815,7 @@ void CheckPlrSpell()
 		if (plr[myplr]._pRSpell == SPL_FIREWALL || plr[myplr]._pRSpell == SPL_LIGHTWALL) {
 			direction sd = GetDirection(plr[myplr].position.tile, { cursmx, cursmy });
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam3(true, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);
+			NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, plr[myplr]._pRSpell, sd, sl);
 		} else if (pcursmonst != -1) {
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
 			NetSendCmdParam3(true, CMD_SPELLID, pcursmonst, plr[myplr]._pRSpell, sl);
@@ -3824,7 +3824,7 @@ void CheckPlrSpell()
 			NetSendCmdParam3(true, CMD_SPELLPID, pcursplr, plr[myplr]._pRSpell, sl);
 		} else { //145
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam2(true, CMD_SPELLXY, cursmx, cursmy, plr[myplr]._pRSpell, sl);
+			NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, plr[myplr]._pRSpell, sl);
 		}
 		return;
 	}

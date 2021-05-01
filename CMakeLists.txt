@@ -21,7 +21,8 @@ option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
-option(NONET "Disable network" OFF)
+option(NONET "Disable network support" OFF)
+option(NOSOUND "Disable sound support" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
 option(USE_GETTEXT "Build translation files using gettext" OFF)
 
@@ -47,13 +48,17 @@ if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set(CPACK ON)
 endif()
 
-option(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB "Use system-provided SDL_audiolib" OFF)
-cmake_dependent_option(DEVILUTIONX_STATIC_SDL_AUDIOLIB "Link static SDL_audiolib" OFF
-                       "DEVILUTIONX_SYSTEM_SDL_AUDIOLIB AND NOT DIST" ON)
+if(NOT NOSOUND)
+  option(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB "Use system-provided SDL_audiolib" OFF)
+  cmake_dependent_option(DEVILUTIONX_STATIC_SDL_AUDIOLIB "Link static SDL_audiolib" OFF
+                        "DEVILUTIONX_SYSTEM_SDL_AUDIOLIB AND NOT DIST" ON)
+endif()
 
-option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
-cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
-                       "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
+if(NOT NONET)
+  option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
+  cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
+                        "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
+endif()
 
 option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBFMT "Link static libfmt" OFF
@@ -173,10 +178,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
-  find_package(SDL_audiolib REQUIRED)
-else()
-  add_subdirectory(3rdParty/SDL_audiolib)
+if(NOT NOSOUND)
+  if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
+    find_package(SDL_audiolib REQUIRED)
+  else()
+    add_subdirectory(3rdParty/SDL_audiolib)
+  endif()
 endif()
 
 if(NOT N3DS)
@@ -278,7 +285,6 @@ set(devilutionx_SRCS
   Source/drlg_l4.cpp
   Source/dthread.cpp
   Source/dx.cpp
-  Source/effects.cpp
   Source/encrypt.cpp
   Source/engine.cpp
   Source/error.cpp
@@ -320,7 +326,6 @@ set(devilutionx_SRCS
   Source/scrollrt.cpp
   Source/setmaps.cpp
   Source/sha.cpp
-  Source/sound.cpp
   Source/spelldat.cpp
   Source/spells.cpp
   Source/stores.cpp
@@ -353,8 +358,6 @@ set(devilutionx_SRCS
   Source/utils/file_util.cpp
   Source/utils/language.cpp
   Source/utils/paths.cpp
-  Source/utils/push_aulib_decoder.cpp
-  Source/utils/soundsample.cpp
   Source/utils/thread.cpp
   Source/DiabloUI/art.cpp
   Source/DiabloUI/art_draw.cpp
@@ -398,12 +401,23 @@ if(USE_SDL1)
   list(APPEND devilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
 endif()
 
+if(NOSOUND)
+  list(APPEND devilutionx_SRCS
+    Source/effects_stubs.cpp
+    Source/sound_stubs.cpp)
+else()
+  list(APPEND devilutionx_SRCS
+    Source/effects.cpp
+    Source/sound.cpp
+    Source/utils/push_aulib_decoder.cpp
+    Source/utils/soundsample.cpp)
+endif()
+
 if(NOT NONET)
   list(APPEND devilutionx_SRCS
     Source/dvlnet/tcp_client.cpp
     Source/dvlnet/tcp_server.cpp
     Source/dvlnet/protocol_zt.cpp
-    Source/dvlnet/base_protocol.cpp
     Source/dvlnet/zerotier_native.cpp
     Source/dvlnet/zerotier_lwip.cpp)
 endif()
@@ -500,7 +514,7 @@ endif()
 
 if(USE_GETTEXT)
   find_package(Gettext)
-  foreach(lang da es hr it pt_BR sv zh_CN)
+  foreach(lang da es fr hr it pt_BR sv zh_CN)
     GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
   endforeach(lang)
 endif()
@@ -537,6 +551,7 @@ target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
 # Defines without value
 foreach(
   def_name
+  NOSOUND
   NONET
   PREFILL_PLAYER_NAME
   DISABLE_STREAMING_MUSIC
@@ -634,7 +649,9 @@ else()
     SDL2::SDL2_ttf)
 endif()
 
-target_link_libraries(${BIN_TARGET} PRIVATE SDL_audiolib)
+if(NOT NOSOUND)
+  target_link_libraries(${BIN_TARGET} PRIVATE SDL_audiolib)
+endif()
 
 if(SWITCH)
   target_link_libraries(${BIN_TARGET} PRIVATE switch::libnx

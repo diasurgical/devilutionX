@@ -121,12 +121,11 @@ void DRLG_SetMapTrans(const char *sFileName)
 {
 	int x, y;
 	int i, j;
-	BYTE *pLevelMap;
 	BYTE *d;
 	DWORD dwOffset;
 
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
-	d = pLevelMap + 2;
+	auto pLevelMap = LoadFileInMem(sFileName);
+	d = &pLevelMap[2];
 	x = pLevelMap[0];
 	y = *d;
 	dwOffset = (x * y + 1) * 2;
@@ -141,7 +140,6 @@ void DRLG_SetMapTrans(const char *sFileName)
 			d += 2;
 		}
 	}
-	mem_free_dbg(pLevelMap);
 }
 
 /**

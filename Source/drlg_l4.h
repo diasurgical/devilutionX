@@ -6,7 +6,6 @@
 #pragma once
 
 #include "gendung.h"
-#include "miniwin/miniwin.h"
 
 namespace devilution {
 
@@ -20,6 +19,6 @@ extern int diabquad4x;
 extern int diabquad4y;
 bool IsDURWall(char d);
 bool IsDLLWall(char dd);
-void CreateL4Dungeon(DWORD rseed, lvl_entry entry);
+void CreateL4Dungeon(uint32_t rseed, lvl_entry entry);
 
 } // namespace devilution

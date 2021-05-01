@@ -63,7 +63,7 @@ T SwapBE(T in)
 }
 
 class LoadHelper {
-	uint8_t *m_buffer;
+	std::unique_ptr<uint8_t[]> m_buffer;
 	uint32_t m_cur = 0;
 	uint32_t m_size;
 
@@ -128,25 +128,20 @@ public:
 	{
 		return next<uint32_t>() != 0;
 	}
-
-	~LoadHelper()
-	{
-		mem_free_dbg(m_buffer);
-	}
 };
 
 class SaveHelper {
 	const char *m_szFileName;
-	uint8_t *m_buffer;
+	std::unique_ptr<uint8_t[]> m_buffer;
 	uint32_t m_cur = 0;
 	uint32_t m_capacity;
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
+		: m_szFileName(szFileName)
+		, m_buffer(std::make_unique<uint8_t[]>(codec_get_encoded_len(bufferLen)))
+		, m_capacity(bufferLen)
 	{
-		m_szFileName = szFileName;
-		m_capacity = bufferLen;
-		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_capacity));
 	}
 
 	bool isValid(uint32_t len = 1)
@@ -187,11 +182,8 @@ public:
 	{
 		const auto encoded_len = codec_get_encoded_len(m_cur);
 		const char *const password = pfile_get_password();
-		codec_encode(m_buffer, m_cur, encoded_len, password);
-		mpqapi_write_file(m_szFileName, m_buffer, encoded_len);
-
-		mem_free_dbg(m_buffer);
-		m_buffer = nullptr;
+		codec_encode(m_buffer.get(), m_cur, encoded_len, password);
+		mpqapi_write_file(m_szFileName, m_buffer.get(), encoded_len);
 	}
 };
 
@@ -1002,10 +994,10 @@ void LoadGame(bool firstflag)
 
 	LoadHelper file("game");
 	if (!file.isValid())
-		app_fatal(_("Unable to open save file archive"));
+		app_fatal("%s", _("Unable to open save file archive"));
 
 	if (!IsHeaderValid(file.nextLE<uint32_t>()))
-		app_fatal(_("Invalid save file"));
+		app_fatal("%s", _("Invalid save file"));
 
 	if (gbIsHellfireSaveGame) {
 		giNumberOfLevels = 25;
@@ -1034,7 +1026,7 @@ void LoadGame(bool firstflag)
 	int _nobjects = file.nextBE<int32_t>();
 
 	if (!gbIsHellfire && currlevel > 17)
-		app_fatal(_("Player is on a Hellfire only level"));
+		app_fatal("%s", _("Player is on a Hellfire only level"));
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = file.nextBE<uint32_t>();
@@ -1580,10 +1572,10 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(1); // Alignment
 	file->writeLE<uint16_t>(pMonster->mExp);
 
-	file->writeLE<uint8_t>(pMonster->mHit < UCHAR_MAX ? pMonster->mHit : UCHAR_MAX); // For backwards compatibility
+	file->writeLE<uint8_t>(pMonster->mHit < UINT8_MAX ? pMonster->mHit : UINT8_MAX); // For backwards compatibility
 	file->writeLE<uint8_t>(pMonster->mMinDamage);
 	file->writeLE<uint8_t>(pMonster->mMaxDamage);
-	file->writeLE<uint8_t>(pMonster->mHit2 < UCHAR_MAX ? pMonster->mHit2 : UCHAR_MAX); // For backwards compatibility
+	file->writeLE<uint8_t>(pMonster->mHit2 < UINT8_MAX ? pMonster->mHit2 : UINT8_MAX); // For backwards compatibility
 	file->writeLE<uint8_t>(pMonster->mMinDamage2);
 	file->writeLE<uint8_t>(pMonster->mMaxDamage2);
 	file->writeLE<uint8_t>(pMonster->mArmorClass);
@@ -1791,7 +1783,7 @@ void SaveGameData()
 	else if (!gbIsSpawn && !gbIsHellfire)
 		file.writeLE<uint32_t>(LoadLE32("RETL"));
 	else
-		app_fatal(_("Invalid game state"));
+		app_fatal("%s", _("Invalid game state"));
 
 	if (gbIsHellfire) {
 		giNumberOfLevels = 25;
@@ -2029,7 +2021,7 @@ void LoadLevel()
 	GetPermLevelNames(szName);
 	LoadHelper file(szName);
 	if (!file.isValid())
-		app_fatal(_("Unable to open save file archive"));
+		app_fatal("%s", _("Unable to open save file archive"));
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {

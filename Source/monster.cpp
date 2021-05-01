@@ -338,7 +338,6 @@ void InitMonsterGFX(int monst)
 {
 	int mtype, anim, i;
 	char strBuff[256];
-	BYTE *celBuf;
 
 	mtype = Monsters[monst].mtype;
 
@@ -350,8 +349,12 @@ void InitMonsterGFX(int monst)
 		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && frames > 0) {
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
 
-			celBuf = LoadFileInMem(strBuff, nullptr);
-			Monsters[monst].Anims[anim].CMem = celBuf;
+			BYTE *celBuf;
+			{
+				auto celData = LoadFileInMem(strBuff);
+				celBuf = celData.get();
+				Monsters[monst].Anims[anim].CMem = std::move(celData);
+			}
 
 			if (Monsters[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
 
@@ -381,9 +384,9 @@ void InitMonsterGFX(int monst)
 	Monsters[monst].MData = &monsterdata[mtype];
 
 	if (monsterdata[mtype].has_trans) {
-		Monsters[monst].trans_file = LoadFileInMem(monsterdata[mtype].TransFile, nullptr);
+		Monsters[monst].trans_file = LoadFileInMem(monsterdata[mtype].TransFile, nullptr).release();
 		InitMonsterTRN(monst, monsterdata[mtype].has_special);
-		MemFreeDbg(Monsters[monst].trans_file);
+		delete[] Monsters[monst].trans_file;
 	}
 
 	if (mtype >= MT_NMAGMA && mtype <= MT_WMAGMA && !(MissileFileFlag & 1)) {
@@ -928,7 +931,6 @@ static void PlaceUniques()
 void PlaceQuestMonsters()
 {
 	int skeltype;
-	BYTE *setp;
 
 	if (!setlevel) {
 		if (QuestStatus(Q_BUTCHER)) {
@@ -948,29 +950,24 @@ void PlaceQuestMonsters()
 		}
 
 		if (QuestStatus(Q_LTBANNER)) {
-			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_BLOOD)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_BLIND)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 		if (QuestStatus(Q_ANVIL)) {
-			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x + 2, 2 * setpc_y + 2);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x + 2, 2 * setpc_y + 2);
 		}
 		if (QuestStatus(Q_WARLORD)) {
-			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_SCATTER);
 		}
 		if (QuestStatus(Q_VEIL)) {
@@ -986,9 +983,8 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_LAZURUS, 0, 0);
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
-			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", nullptr);
-			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
-			mem_free_dbg(setp);
+			auto setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
+			SetMapMonsters(setp.get(), 2 * setpc_x, 2 * setpc_y);
 		}
 
 		if (currlevel == 24) {
@@ -1089,20 +1085,22 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 
 void LoadDiabMonsts()
 {
-	BYTE *lpSetPiece;
-
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", nullptr);
-	SetMapMonsters(lpSetPiece, 2 * diabquad1x, 2 * diabquad1y);
-	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", nullptr);
-	SetMapMonsters(lpSetPiece, 2 * diabquad2x, 2 * diabquad2y);
-	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", nullptr);
-	SetMapMonsters(lpSetPiece, 2 * diabquad3x, 2 * diabquad3y);
-	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", nullptr);
-	SetMapMonsters(lpSetPiece, 2 * diabquad4x, 2 * diabquad4y);
-	mem_free_dbg(lpSetPiece);
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
+		SetMapMonsters(lpSetPiece.get(), 2 * diabquad1x, 2 * diabquad1y);
+	}
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN");
+		SetMapMonsters(lpSetPiece.get(), 2 * diabquad2x, 2 * diabquad2y);
+	}
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN");
+		SetMapMonsters(lpSetPiece.get(), 2 * diabquad3x, 2 * diabquad3y);
+	}
+	{
+		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN");
+		SetMapMonsters(lpSetPiece.get(), 2 * diabquad4x, 2 * diabquad4y);
+	}
 }
 
 void InitMonsters()
@@ -1183,8 +1181,8 @@ void InitMonsters()
 
 void SetMapMonsters(BYTE *pMap, int startx, int starty)
 {
-	WORD rw, rh;
-	WORD *lm;
+	uint16_t rw, rh;
+	uint16_t *lm;
 	int i, j;
 	int mtype;
 
@@ -1201,7 +1199,7 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 		PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 		PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
 	}
-	lm = (WORD *)pMap;
+	lm = (uint16_t *)pMap;
 	rw = SDL_SwapLE16(*lm++);
 	rh = SDL_SwapLE16(*lm++);
 	lm += rw * rh;
@@ -1792,8 +1790,8 @@ void M2MStartKill(int i, int mid)
 	assurance((DWORD)mid < MAXMONSTERS, mid);
 	assurance(monster[mid].MType != nullptr, mid); /// BUGFIX: should check `mid` (fixed)
 
-	delta_kill_monster(mid, monster[mid].position.tile.x, monster[mid].position.tile.y, currlevel);
-	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[mid].position.tile.x, monster[mid].position.tile.y, mid);
+	delta_kill_monster(mid, monster[mid].position.tile, currlevel);
+	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[mid].position.tile, mid);
 
 	if (i < MAX_PLRS) {
 		monster[mid].mWhoHit |= 1 << i;
@@ -1838,11 +1836,11 @@ void M_StartKill(int i, int pnum)
 	assurance((DWORD)i < MAXMONSTERS, i);
 
 	if (myplr == pnum) {
-		delta_kill_monster(i, monster[i].position.tile.x, monster[i].position.tile.y, currlevel);
+		delta_kill_monster(i, monster[i].position.tile, currlevel);
 		if (i != pnum) {
-			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[i].position.tile.x, monster[i].position.tile.y, i);
+			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster[i].position.tile, i);
 		} else {
-			NetSendCmdLocParam1(false, CMD_KILLGOLEM, monster[i].position.tile.x, monster[i].position.tile.y, currlevel);
+			NetSendCmdLocParam1(false, CMD_KILLGOLEM, monster[i].position.tile, currlevel);
 		}
 	}
 
@@ -2465,7 +2463,7 @@ bool M_DoTalk(int i)
 	if (monster[i]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) {
 		quests[Q_BETRAYER]._qvar1 = 6;
 		monster[i]._mgoal = MGOAL_NORMAL;
-		monster[i]._msquelch = UCHAR_MAX;
+		monster[i]._msquelch = UINT8_MAX;
 		monster[i].mtalkmsg = 0;
 	}
 	return false;
@@ -3439,10 +3437,10 @@ void MAI_Round(int i, bool special)
 		mx = Monst->position.tile.x - fx;
 		my = Monst->position.tile.y - fy;
 		direction md = GetDirection(Monst->position.tile, Monst->position.last);
-		if (Monst->_msquelch < UCHAR_MAX)
+		if (Monst->_msquelch < UINT8_MAX)
 			MonstCheckDoors(i);
 		v = GenerateRnd(100);
-		if ((abs(mx) >= 2 || abs(my) >= 2) && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
+		if ((abs(mx) >= 2 || abs(my) >= 2) && Monst->_msquelch == UINT8_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
 			if (Monst->_mgoal == MGOAL_MOVE || ((abs(mx) >= 4 || abs(my) >= 4) && GenerateRnd(4) == 0)) {
 				if (Monst->_mgoal != MGOAL_MOVE) {
 					Monst->_mgoalvar1 = 0;
@@ -3499,13 +3497,13 @@ void MAI_Ranged(int i, int missile_type, bool special)
 	}
 
 	Monst = &monster[i];
-	if (Monst->_msquelch == UCHAR_MAX || Monst->_mFlags & MFLAG_TARGETS_MONSTER) {
+	if (Monst->_msquelch == UINT8_MAX || Monst->_mFlags & MFLAG_TARGETS_MONSTER) {
 		fx = Monst->enemyPosition.x;
 		fy = Monst->enemyPosition.y;
 		mx = Monst->position.tile.x - fx;
 		my = Monst->position.tile.y - fy;
 		direction md = M_GetDir(i);
-		if (Monst->_msquelch < UCHAR_MAX)
+		if (Monst->_msquelch < UINT8_MAX)
 			MonstCheckDoors(i);
 		Monst->_mdir = md;
 		if (Monst->_mVar1 == MM_RATTACK) {
@@ -3727,11 +3725,11 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 		mx = Monst->position.tile.x - fx;
 		my = Monst->position.tile.y - fy;
 		direction md = GetDirection(Monst->position.tile, Monst->position.last);
-		if (checkdoors && Monst->_msquelch < UCHAR_MAX)
+		if (checkdoors && Monst->_msquelch < UINT8_MAX)
 			MonstCheckDoors(i);
 		v = GenerateRnd(10000);
 		dist = std::max(abs(mx), abs(my));
-		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
+		if (dist >= 2 && Monst->_msquelch == UINT8_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
 			if (Monst->_mgoal == MGOAL_MOVE || (dist >= 3 && GenerateRnd(4 << lessmissiles) == 0)) {
 				if (Monst->_mgoal != MGOAL_MOVE) {
 					Monst->_mgoalvar1 = 0;
@@ -3819,11 +3817,11 @@ void MAI_RR2(int i, int mistype, int dam)
 		mx = Monst->position.tile.x - fx;
 		my = Monst->position.tile.y - fy;
 		direction md = GetDirection(Monst->position.tile, Monst->position.last);
-		if (Monst->_msquelch < UCHAR_MAX)
+		if (Monst->_msquelch < UINT8_MAX)
 			MonstCheckDoors(i);
 		v = GenerateRnd(100);
 		dist = std::max(abs(mx), abs(my));
-		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
+		if (dist >= 2 && Monst->_msquelch == UINT8_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
 			if (Monst->_mgoal == MGOAL_MOVE || dist >= 3) {
 				if (Monst->_mgoal != MGOAL_MOVE) {
 					Monst->_mgoalvar1 = 0;
@@ -3906,13 +3904,13 @@ void MAI_Golum(int i)
 		_menemy = monster[i]._menemy;
 		monster[i].enemyPosition = monster[_menemy].position.tile;
 		if (monster[_menemy]._msquelch == 0) {
-			monster[_menemy]._msquelch = UCHAR_MAX;
+			monster[_menemy]._msquelch = UINT8_MAX;
 			monster[monster[i]._menemy].position.last = monster[i].position.tile;
 			for (int j = 0; j < 5; j++) {
 				for (int k = 0; k < 5; k++) {
 					_menemy = dMonster[monster[i].position.tile.x + k - 2][monster[i].position.tile.y + j - 2];
 					if (_menemy > 0)
-						monster[_menemy - 1]._msquelch = UCHAR_MAX; // BUGFIX: should be `monster[_menemy-1]`, not monster[_menemy]. (fixed)
+						monster[_menemy - 1]._msquelch = UINT8_MAX; // BUGFIX: should be `monster[_menemy-1]`, not monster[_menemy]. (fixed)
 				}
 			}
 		}
@@ -3954,11 +3952,11 @@ void MAI_SkelKing(int i)
 		mx = Monst->position.tile.x - fx;
 		my = Monst->position.tile.y - fy;
 		direction md = GetDirection(Monst->position.tile, Monst->position.last);
-		if (Monst->_msquelch < UCHAR_MAX)
+		if (Monst->_msquelch < UINT8_MAX)
 			MonstCheckDoors(i);
 		v = GenerateRnd(100);
 		dist = std::max(abs(mx), abs(my));
-		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
+		if (dist >= 2 && Monst->_msquelch == UINT8_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
 			if (Monst->_mgoal == MGOAL_MOVE || ((abs(mx) >= 3 || abs(my) >= 3) && GenerateRnd(4) == 0)) {
 				if (Monst->_mgoal != MGOAL_MOVE) {
 					Monst->_mgoalvar1 = 0;
@@ -4017,7 +4015,7 @@ void MAI_Rhino(int i)
 		mx = Monst->position.tile.x - fx;
 		my = Monst->position.tile.y - fy;
 		direction md = GetDirection(Monst->position.tile, Monst->position.last);
-		if (Monst->_msquelch < UCHAR_MAX)
+		if (Monst->_msquelch < UINT8_MAX)
 			MonstCheckDoors(i);
 		v = GenerateRnd(100);
 		dist = std::max(abs(mx), abs(my));
@@ -4154,7 +4152,7 @@ void MAI_Counselor(int i)
 		mx = Monst->position.tile.x - fx;
 		my = Monst->position.tile.y - fy;
 		direction md = GetDirection(Monst->position.tile, Monst->position.last);
-		if (Monst->_msquelch < UCHAR_MAX)
+		if (Monst->_msquelch < UINT8_MAX)
 			MonstCheckDoors(i);
 		v = GenerateRnd(100);
 		if (Monst->_mgoal == MGOAL_RETREAT) {
@@ -4166,7 +4164,7 @@ void MAI_Counselor(int i)
 			}
 		} else if (Monst->_mgoal == MGOAL_MOVE) {
 			dist = std::max(abs(mx), abs(my));
-			if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
+			if (dist >= 2 && Monst->_msquelch == UINT8_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
 				if (Monst->_mgoalvar1++ < 2 * dist || !DirOK(i, md)) {
 					M_RoundWalk(i, md, &Monst->_mgoalvar2);
 				} else {
@@ -4246,7 +4244,7 @@ void MAI_Garbud(int i)
 		if (Monst->mtalkmsg == TEXT_GARBUD4) {
 			if (!effect_is_playing(USFX_GARBUD4) && Monst->_mgoal == MGOAL_TALKING) {
 				Monst->_mgoal = MGOAL_NORMAL;
-				Monst->_msquelch = UCHAR_MAX;
+				Monst->_msquelch = UINT8_MAX;
 				Monst->mtalkmsg = 0;
 			}
 		}
@@ -4284,7 +4282,7 @@ void MAI_Zhar(int i)
 	if (dFlags[mx][my] & BFLAG_VISIBLE) {
 		if (Monst->mtalkmsg == TEXT_ZHAR2) {
 			if (!effect_is_playing(USFX_ZHAR2) && Monst->_mgoal == MGOAL_TALKING) {
-				Monst->_msquelch = UCHAR_MAX;
+				Monst->_msquelch = UINT8_MAX;
 				Monst->mtalkmsg = 0;
 				Monst->_mgoal = MGOAL_NORMAL;
 			}
@@ -4332,7 +4330,7 @@ void MAI_SnotSpil(int i)
 				ObjChangeMap(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
 				quests[Q_LTBANNER]._qvar1 = 3;
 				RedoPlayerVision();
-				Monst->_msquelch = UCHAR_MAX;
+				Monst->_msquelch = UINT8_MAX;
 				Monst->mtalkmsg = 0;
 				Monst->_mgoal = MGOAL_NORMAL;
 			}
@@ -4377,7 +4375,7 @@ void MAI_Lazurus(int i)
 				RedoPlayerVision();
 				quests[Q_BETRAYER]._qvar1 = 6;
 				Monst->_mgoal = MGOAL_NORMAL;
-				Monst->_msquelch = UCHAR_MAX;
+				Monst->_msquelch = UINT8_MAX;
 				Monst->mtalkmsg = 0;
 			}
 		}
@@ -4491,7 +4489,7 @@ void MAI_Warlord(int i)
 		if (Monst->mtalkmsg == TEXT_WARLRD9 && Monst->_mgoal == MGOAL_INQUIRING)
 			Monst->_mmode = MM_TALK;
 		if (Monst->mtalkmsg == TEXT_WARLRD9 && !effect_is_playing(USFX_WARLRD1) && Monst->_mgoal == MGOAL_TALKING) {
-			Monst->_msquelch = UCHAR_MAX;
+			Monst->_msquelch = UINT8_MAX;
 			Monst->mtalkmsg = 0;
 			Monst->_mgoal = MGOAL_NORMAL;
 		}
@@ -4585,7 +4583,7 @@ void ProcessMonsters()
 			assurance((DWORD)_menemy < MAX_PLRS, _menemy);
 			Monst->enemyPosition = plr[Monst->_menemy].position.future;
 			if (dFlags[mx][my] & BFLAG_VISIBLE) {
-				Monst->_msquelch = UCHAR_MAX;
+				Monst->_msquelch = UINT8_MAX;
 				Monst->position.last = plr[Monst->_menemy].position.future;
 			} else if (Monst->_msquelch != 0 && Monst->MType->mtype != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
 				Monst->_msquelch--;
@@ -4684,7 +4682,7 @@ void FreeMonsters()
 		mtype = Monsters[i].mtype;
 		for (j = 0; j < 6; j++) {
 			if (animletter[j] != 's' || monsterdata[mtype].has_special) {
-				MemFreeDbg(Monsters[i].Anims[j].CMem);
+				Monsters[i].Anims[j].CMem = nullptr;
 			}
 		}
 	}

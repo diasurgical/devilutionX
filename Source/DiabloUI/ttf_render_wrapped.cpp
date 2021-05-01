@@ -120,7 +120,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 
 	if (strLines == nullptr) {
 		SDL_stack_free(str);
-		return TTF_RenderUTF8_Solid(font, text, fg);
+		return TTF_RenderText_Solid(font, text, fg);
 	}
 
 	/* Create the target surface */
@@ -151,7 +151,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 			dest.y += lineskip;
 			continue;
 		}
-		SDL_Surface *tmp = TTF_RenderUTF8_Solid(font, text, fg);
+		SDL_Surface *tmp = TTF_RenderText_Solid(font, text, fg);
 		if (tmp == nullptr) {
 			Log("{}", TTF_GetError());
 			SDL_FreeSurface(textbuf);

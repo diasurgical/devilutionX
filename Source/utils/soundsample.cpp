@@ -51,6 +51,7 @@ void SoundSample::Play(int lVolume, int lPan, int channel)
 	              : copysign(1.F - std::pow(Base, static_cast<float>(-std::fabs(lPan) / Scale)),
 	                  static_cast<float>(lPan)));
 
+	stream_->rewind();
 	if (!stream_->play()) {
 		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
 		return;
@@ -78,7 +79,7 @@ int SoundSample::SetChunkStream(HANDLE stormHandle)
 	return 0;
 }
 
-int SoundSample::SetChunk(std::unique_ptr<std::uint8_t[]> fileData, DWORD dwBytes)
+int SoundSample::SetChunk(std::unique_ptr<std::uint8_t[]> fileData, size_t dwBytes)
 {
 	file_data_ = std::move(fileData);
 	SDL_RWops *buf = SDL_RWFromConstMem(file_data_.get(), dwBytes);

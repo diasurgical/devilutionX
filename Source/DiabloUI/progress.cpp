@@ -39,8 +39,8 @@ void ProgressLoad(const char *msg)
 		SDL_Color color = { 243, 243, 243, 0 };
 		SDL_Color black = { 0, 0, 0, 0 };
 
-		msgSurface = TTF_RenderUTF8_Solid(font, msg, color);
-		msgShadow = TTF_RenderUTF8_Solid(font, msg, black);
+		msgSurface = TTF_RenderText_Solid(font, msg, color);
+		msgShadow = TTF_RenderText_Solid(font, msg, black);
 	}
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 	vecProgress.push_back(new UiButton(&SmlButton, _("Cancel"), &DialogActionCancel, rect3, 0));

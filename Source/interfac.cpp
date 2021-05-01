@@ -9,15 +9,19 @@
 #include "control.h"
 #include "DiabloUI/art_draw.h"
 #include "dx.h"
+#include "engine.h"
 #include "init.h"
 #include "loadsave.h"
 #include "palette.h"
 #include "pfile.h"
 #include "plrmsg.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
+namespace {
+std::optional<CelSprite> sgpBackCel;
+} // namespace
 
-BYTE *sgpBackCel;
 uint32_t sgdwProgress;
 int progress_id;
 
@@ -30,7 +34,7 @@ Art ArtCutsceneWidescreen;
 
 static void FreeInterface()
 {
-	MemFreeDbg(sgpBackCel);
+	sgpBackCel = std::nullopt;
 	ArtCutsceneWidescreen.Unload();
 }
 
@@ -154,7 +158,7 @@ static void InitCutscene(interface_mode uMsg)
 	}
 
 	assert(!sgpBackCel);
-	sgpBackCel = LoadFileInMem(celPath, nullptr);
+	sgpBackCel = LoadCel(celPath, 640);
 	LoadPalette(palPath);
 
 	sgdwProgress = 0;
@@ -173,7 +177,7 @@ static void DrawCutscene()
 	lock_buf(1);
 	const CelOutputBuffer &out = GlobalBackBuffer();
 	DrawArt(out, PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y, &ArtCutsceneWidescreen);
-	CelDrawTo(out, PANEL_X, 480 - 1 + UI_OFFSET_Y, sgpBackCel, 1, 640);
+	CelDrawTo(out, PANEL_X, 480 - 1 + UI_OFFSET_Y, *sgpBackCel, 1);
 
 	for (unsigned i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
@@ -190,7 +194,7 @@ static void DrawCutscene()
 
 void interface_msg_pump()
 {
-	MSG Msg;
+	tagMSG Msg;
 
 	while (FetchMessage(&Msg)) {
 		if (Msg.message != DVL_WM_QUIT) {
@@ -206,7 +210,7 @@ bool IncProgress()
 	sgdwProgress += 23;
 	if (sgdwProgress > 534)
 		sgdwProgress = 534;
-	if (sgpBackCel != nullptr)
+	if (sgpBackCel)
 		DrawCutscene();
 	return sgdwProgress >= 534;
 }
@@ -385,7 +389,7 @@ void ShowProgress(interface_mode uMsg)
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == DisableInputWndProc);
 
-	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, plr[myplr].position.tile.x, plr[myplr].position.tile.y, plr[myplr].plrlevel);
+	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, plr[myplr].position.tile, plr[myplr].plrlevel);
 	plrmsg_delay(false);
 	ResetPal();
 

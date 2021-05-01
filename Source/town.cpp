@@ -165,7 +165,6 @@ void TownCloseGrave()
 void T_Pass3()
 {
 	int xx, yy, x;
-	BYTE *P3Tiles, *pSector;
 
 	for (yy = 0; yy < MAXDUNY; yy += 2) {
 		for (xx = 0; xx < MAXDUNX; xx += 2) {
@@ -176,31 +175,35 @@ void T_Pass3()
 		}
 	}
 
-	P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 46, 46, 25, 25);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 46, 0, 25, 23);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 0, 46, 23, 25);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
-	mem_free_dbg(pSector);
+	auto P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL");
+	{
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN");
+		T_FillSector(P3Tiles.get(), pSector.get(), 46, 46, 25, 25);
+	}
+	{
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN");
+		T_FillSector(P3Tiles.get(), pSector.get(), 46, 0, 25, 23);
+	}
+	{
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN");
+		T_FillSector(P3Tiles.get(), pSector.get(), 0, 46, 23, 25);
+	}
+	{
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN");
+		T_FillSector(P3Tiles.get(), pSector.get(), 0, 0, 23, 23);
+	}
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
-			T_FillTile(P3Tiles, 48, 20, 320);
+			T_FillTile(P3Tiles.get(), 48, 20, 320);
 		}
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 2) && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
-			T_FillTile(P3Tiles, 16, 68, 332);
-			T_FillTile(P3Tiles, 16, 70, 331);
+			T_FillTile(P3Tiles.get(), 16, 68, 332);
+			T_FillTile(P3Tiles.get(), 16, 70, 331);
 		}
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (x = 36; x < 46; x++) {
-				T_FillTile(P3Tiles, x, 78, GenerateRnd(4) + 1);
+				T_FillTile(P3Tiles.get(), x, 78, GenerateRnd(4) + 1);
 			}
 		}
 	}
@@ -218,12 +221,10 @@ void T_Pass3()
 	}
 
 	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
-		T_FillTile(P3Tiles, 60, 70, 342);
+		T_FillTile(P3Tiles.get(), 60, 70, 342);
 	} else {
-		T_FillTile(P3Tiles, 60, 70, 71);
+		T_FillTile(P3Tiles.get(), 60, 70, 71);
 	}
-
-	mem_free_dbg(P3Tiles);
 }
 
 } // namespace

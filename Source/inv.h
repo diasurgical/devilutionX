@@ -93,7 +93,7 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem);
 bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false);
 bool GoldAutoPlace(int pnum);
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff);
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(int pnum, BYTE iv);
 
 /**
@@ -110,13 +110,13 @@ void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(int pnum);
 void InvGetItem(int pnum, ItemStruct *item, int ii);
 void AutoGetItem(int pnum, ItemStruct *item, int ii);
-int FindGetItem(int idx, WORD ci, int iseed);
-void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
+int FindGetItem(int idx, uint16_t ci, int iseed);
+void SyncGetItem(int x, int y, int idx, uint16_t ci, int iseed);
 bool CanPut(int x, int y);
 bool TryInvPut();
 void DrawInvMsg(const char *msg);
-int InvPutItem(int pnum, int x, int y);
-int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac);
+int InvPutItem(int pnum, Point position);
+int SyncPutItem(int pnum, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac);
 char CheckInvHLight();
 void RemoveScroll(int pnum);
 bool UseScroll();

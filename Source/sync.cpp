@@ -6,7 +6,6 @@
 #include <climits>
 
 #include "gendung.h"
-#include "miniwin/miniwin.h"
 #include "monster.h"
 #include "player.h"
 
@@ -237,7 +236,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 				M_ClearSquares(ndx);
 				dMonster[monster[ndx].position.tile.x][monster[ndx].position.tile.y] = ndx + 1;
 				M_WalkDir(ndx, md);
-				monster[ndx]._msquelch = UCHAR_MAX;
+				monster[ndx]._msquelch = UINT8_MAX;
 			}
 		}
 	} else if (dMonster[p->_mx][p->_my] == 0) {
@@ -247,7 +246,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		decode_enemy(ndx, p->_menemy);
 		direction md = GetDirection({ p->_mx, p->_my }, monster[ndx].enemyPosition);
 		M_StartStand(ndx, md);
-		monster[ndx]._msquelch = UCHAR_MAX;
+		monster[ndx]._msquelch = UINT8_MAX;
 	}
 
 	decode_enemy(ndx, p->_menemy);

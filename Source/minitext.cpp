@@ -6,7 +6,9 @@
 
 #include "control.h"
 #include "dx.h"
+#include "engine.h"
 #include "utils/language.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -24,9 +26,9 @@ int qtextSpd;
 /** Time of last rendering of the text */
 Uint32 sgLastScroll;
 /** Graphics for the medium size font */
-BYTE *pMedTextCels;
+std::optional<CelSprite> pMedTextCels;
 /** Graphics for the window border */
-BYTE *pTextBoxCels;
+std::optional<CelSprite> pTextBoxCels;
 
 /** Maps from font index to medtexts.cel frame number. */
 const uint8_t mfontframe[128] = {
@@ -130,10 +132,17 @@ int CalcTextSpeed(int nSFX)
 	int TextHeight;
 	Uint32 SfxFrames;
 
+	const int numLines = GetLinesInText(qtextptr);
+
+#ifndef NOSOUND
 	SfxFrames = GetSFXLength(nSFX);
 	assert(SfxFrames != 0);
+#else
+	// Sound is disabled -- estimate length from the number of lines.
+	SfxFrames = numLines * 3000;
+#endif
 
-	TextHeight = lineHeight * GetLinesInText(qtextptr);
+	TextHeight = lineHeight * numLines;
 	TextHeight += lineHeight * 5; // adjust so when speaker is done two line are left
 
 	return SfxFrames / TextHeight;
@@ -143,14 +152,14 @@ int CalcTextSpeed(int nSFX)
  * @brief Print a character
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
- * @param pCelBuff Cel data
+ * @param cel CEL sprite
  * @param nCel CEL frame number
  */
-void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
+void PrintQTextChr(int sx, int sy, const CelSprite &cel, int nCel)
 {
 	const int start_y = 49 + UI_OFFSET_Y;
 	const CelOutputBuffer &buf = GlobalBackBuffer().subregionY(start_y, 260);
-	CelDrawTo(buf, sx, sy - start_y, pCelBuff, nCel, 22);
+	CelDrawTo(buf, sx, sy - start_y, cel, nCel);
 }
 
 /**
@@ -196,7 +205,7 @@ static void DrawQTextContent()
 				text++;
 			}
 			if (c != 0) {
-				PrintQTextChr(tx, ty, pMedTextCels, c);
+				PrintQTextChr(tx, ty, *pMedTextCels, c);
 			}
 			tx += mfontkern[c] + 2;
 		}
@@ -220,8 +229,8 @@ static void DrawQTextContent()
  */
 void FreeQuestText()
 {
-	MemFreeDbg(pMedTextCels);
-	MemFreeDbg(pTextBoxCels);
+	pMedTextCels = std::nullopt;
+	pTextBoxCels = std::nullopt;
 }
 
 /**
@@ -229,8 +238,8 @@ void FreeQuestText()
  */
 void InitQuestText()
 {
-	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", nullptr);
-	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", nullptr);
+	pMedTextCels = LoadCel("Data\\MedTextS.CEL", 22);
+	pTextBoxCels = LoadCel("Data\\TextBox.CEL", 591);
 	qtextflag = false;
 }
 
@@ -253,7 +262,7 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
+	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, *pTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 

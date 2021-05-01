@@ -6,9 +6,14 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+#include <memory>
 
 #include "miniwin/miniwin.h"
+
+#ifndef NOSOUND
 #include "utils/soundsample.h"
+#endif
 
 namespace devilution {
 
@@ -28,21 +33,28 @@ enum _music_id : uint8_t {
 };
 
 struct TSnd {
-	const char *sound_path;
+#ifndef NOSOUND
+	std::string sound_path;
 	/** Used for streamed audio */
-	HANDLE file_handle;
-	SoundSample *DSB;
+	HANDLE file_handle = nullptr;
+	SoundSample DSB;
 	Uint32 start_tc;
+
+	bool isPlaying()
+	{
+		return DSB.IsPlaying();
+	}
+
+	~TSnd();
+#endif
 };
 
 extern bool gbSndInited;
 
 void snd_update(bool bStopAll);
 void snd_stop_snd(TSnd *pSnd);
-bool snd_playing(TSnd *pSnd);
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
-TSnd *sound_file_load(const char *path, bool stream = false);
-void sound_file_cleanup(TSnd *sound_file);
+std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream = false);
 void snd_init();
 void snd_deinit();
 void music_stop();
@@ -55,6 +67,5 @@ int sound_get_or_set_sound_volume(int volume);
 
 extern bool gbMusicOn;
 extern bool gbSoundOn;
-extern bool gbDupSounds;
 
 } // namespace devilution

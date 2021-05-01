@@ -25,7 +25,7 @@ namespace devilution {
 bool gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
-WORD sgwPackPlrOffsetTbl[MAX_PLRS];
+uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 PkPlayerStruct netplr[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
@@ -49,7 +49,7 @@ bool sgbTimeout;
 char szPlayerName[128];
 BYTE gbDeltaSender;
 bool sgbNetInited;
-int player_state[MAX_PLRS];
+uint32_t player_state[MAX_PLRS];
 
 /**
  * Contains the set of supported event types supported by the multiplayer
@@ -328,7 +328,7 @@ static void multi_check_drop_player()
 
 static void multi_begin_timeout()
 {
-	int i, nTicks, nState, nLowestActive, nLowestPlayer;
+	int i, nTicks, nLowestActive, nLowestPlayer;
 	BYTE bGroupPlayers, bGroupCount;
 
 	if (!sgbTimeout) {
@@ -354,7 +354,7 @@ static void multi_begin_timeout()
 	bGroupPlayers = 0;
 	bGroupCount = 0;
 	for (i = 0; i < MAX_PLRS; i++) {
-		nState = player_state[i];
+		uint32_t nState = player_state[i];
 		if ((nState & PS_CONNECTED) != 0) {
 			if (nLowestPlayer == -1) {
 				nLowestPlayer = i;

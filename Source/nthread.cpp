@@ -49,20 +49,18 @@ void nthread_terminate_game(const char *pszFcn)
 	}
 }
 
-DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
+uint32_t nthread_send_and_recv_turn(uint32_t cur_turn, int turn_delta)
 {
-	DWORD new_cur_turn;
 	int turn, turn_tmp;
 	DWORD curTurnsInTransit;
 
-	new_cur_turn = cur_turn;
 	if (!SNetGetTurnsInTransit(&curTurnsInTransit)) {
 		nthread_terminate_game("SNetGetTurnsInTransit");
 		return 0;
 	}
 	while (curTurnsInTransit++ < gdwTurnsInTransit) {
 
-		turn_tmp = turn_upper_bit | (new_cur_turn & 0x7FFFFFFF);
+		turn_tmp = turn_upper_bit | (cur_turn & 0x7FFFFFFF);
 		turn_upper_bit = 0;
 		turn = turn_tmp;
 
@@ -71,11 +69,11 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 			return 0;
 		}
 
-		new_cur_turn += turn_delta;
-		if (new_cur_turn >= 0x7FFFFFFF)
-			new_cur_turn &= 0xFFFF;
+		cur_turn += turn_delta;
+		if (cur_turn >= 0x7FFFFFFF)
+			cur_turn &= 0xFFFF;
 	}
-	return new_cur_turn;
+	return cur_turn;
 }
 
 bool nthread_recv_turns(bool *pfSendAsync)
@@ -97,7 +95,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 #ifdef __3DS__
 	return false;
 #else
-	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
+	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, &player_state[0])) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 			nthread_terminate_game("SNetReceiveTurns");
 		sgbTicsOutOfSync = false;
