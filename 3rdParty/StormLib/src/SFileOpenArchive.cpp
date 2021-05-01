@@ -164,7 +164,8 @@ bool WINAPI SFileSetArchiveMarkers(PSFILE_MARKERS pMarkers)
     InitializeMpqCryptography();
 
     // Remember the marker for MPQ header
-    g_dwMpqSignature = pMarkers->dwSignature;
+    if(pMarkers->dwSignature != 0)
+        g_dwMpqSignature = pMarkers->dwSignature;
 
     // Remember the encryption key for hash table
     if(pMarkers->szHashTableKey != NULL)
