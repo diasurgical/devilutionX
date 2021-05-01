@@ -982,7 +982,6 @@ void diablo_pause_game()
 			PauseMode = 0;
 		} else {
 			PauseMode = 2;
-			sound_stop();
 			track_repeat_walk(false);
 		}
 		force_redraw = 255;
