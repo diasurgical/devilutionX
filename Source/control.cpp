@@ -434,11 +434,11 @@ void DrawSpellList(const CelOutputBuffer &out)
 				case RSPLTYPE_SPELL:
 					sprintf(infostr, _("%s Spell"), _(spelldata[pSpell].sNameText));
 					if (pSpell == SPL_HBOLT) {
-						sprintf(tempstr, _("Damages undead only"));
+						strcpy(tempstr, _("Damages undead only"));
 						AddPanelString(tempstr, true);
 					}
 					if (s == 0)
-						sprintf(tempstr, _("Spell Level 0 - Unusable"));
+						strcpy(tempstr, _("Spell Level 0 - Unusable"));
 					else
 						sprintf(tempstr, _("Spell Level %i"), s);
 					AddPanelString(tempstr, true);
@@ -1036,7 +1036,7 @@ void CheckPanelInfo()
 				if (c < 0)
 					c = 0;
 				if (c == 0)
-					sprintf(tempstr, _("Spell Level 0 - Unusable"));
+					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				else
 					sprintf(tempstr, _("Spell Level %i"), c);
 				AddPanelString(tempstr, true);
@@ -1440,7 +1440,7 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
 	} else {
 		col = COL_GOLD;
-		sprintf(chrstr, _("MAX"));
+		strcpy(chrstr, _("MAX"));
 	}
 	ADD_PlrStringXY(out, 257, 276, 300, chrstr, col);
 
@@ -1452,7 +1452,7 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i%%", plr[myplr]._pFireResist);
 	} else {
 		col = COL_GOLD;
-		sprintf(chrstr, _("MAX"));
+		strcpy(chrstr, _("MAX"));
 	}
 	ADD_PlrStringXY(out, 257, 304, 300, chrstr, col);
 
@@ -1464,7 +1464,7 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i%%", plr[myplr]._pLghtResist);
 	} else {
 		col = COL_GOLD;
-		sprintf(chrstr, _("MAX"));
+		strcpy(chrstr, _("MAX"));
 	}
 	ADD_PlrStringXY(out, 257, 332, 300, chrstr, col);
 
@@ -1862,7 +1862,7 @@ void DrawSpellBook(const CelOutputBuffer &out)
 					lvl = 0;
 				}
 				if (lvl == 0) {
-					sprintf(tempstr, _("Spell Level 0 - Unusable"));
+					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				} else {
 					sprintf(tempstr, _("Spell Level %i"), lvl);
 				}

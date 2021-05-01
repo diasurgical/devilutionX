@@ -943,12 +943,12 @@ msgid "%s Spell"
 msgstr "%s Sort"
 
 #: Source/control.cpp:440
-#, c-format
+#, no-c-format
 msgid "Damages undead only"
 msgstr "Dommages aux morts-vivants uniquement"
 
 #: Source/control.cpp:444 Source/control.cpp:1039 Source/control.cpp:1865
-#, c-format
+#, no-c-format
 msgid "Spell Level 0 - Unusable"
 msgstr "Sort Niveau 0 - Inutilisable"
 
@@ -1035,7 +1035,7 @@ msgid "None"
 msgstr "Rien"
 
 #: Source/control.cpp:1443 Source/control.cpp:1455 Source/control.cpp:1467
-#, c-format
+#, no-c-format
 msgid "MAX"
 msgstr "MAX"
 
@@ -3798,9 +3798,9 @@ msgid "Resist Fire: %+i%%"
 msgstr "Résistance au Feu: %+i%%"
 
 #: Source/items.cpp:3482
-#, c-format
-msgid "Resist Fire: 75%% MAX"
-msgstr "Résistance au Feu: 75%% MAX"
+#, no-c-format
+msgid "Resist Fire: 75% MAX"
+msgstr "Résistance au Feu: 75% MAX"
 
 #: Source/items.cpp:3487
 #, c-format
@@ -3808,9 +3808,9 @@ msgid "Resist Lightning: %+i%%"
 msgstr "Résistance à la Foudre: %+i%%"
 
 #: Source/items.cpp:3489
-#, c-format
-msgid "Resist Lightning: 75%% MAX"
-msgstr "Résistance à la Foudre: 75%% MAX"
+#, no-c-format
+msgid "Resist Lightning: 75% MAX"
+msgstr "Résistance à la Foudre: 75% MAX"
 
 #: Source/items.cpp:3494
 #, c-format
@@ -3818,9 +3818,9 @@ msgid "Resist Magic: %+i%%"
 msgstr "Résistance à la Magie: %+i%%"
 
 #: Source/items.cpp:3496
-#, c-format
-msgid "Resist Magic: 75%% MAX"
-msgstr "Résistance à la Magie: 75%% MAX"
+#, no-c-format
+msgid "Resist Magic: 75% MAX"
+msgstr "Résistance à la Magie: 75% MAX"
 
 #: Source/items.cpp:3501
 #, c-format
@@ -3828,9 +3828,9 @@ msgid "Resist All: %+i%%"
 msgstr "Résistance à tout: %+i%%"
 
 #: Source/items.cpp:3503
-#, c-format
-msgid "Resist All: 75%% MAX"
-msgstr "Résistance à tout: 75%% MAX"
+#, no-c-format
+msgid "Resist All: 75% MAX"
+msgstr "Résistance à tout: 75% MAX"
 
 #: Source/items.cpp:3507
 msgid "spells are increased 1 level"
@@ -3946,7 +3946,7 @@ msgid "-%i%% light radius"
 msgstr ""
 
 #: Source/items.cpp:3583
-#, c-format
+#, no-c-format
 msgid "multiple arrows per shot"
 msgstr "plusieurs flèches par tir"
 
@@ -4083,7 +4083,7 @@ msgid "fires random speed arrows"
 msgstr "tire des flèches de vitesse aléatoires"
 
 #: Source/items.cpp:3670
-#, c-format
+#, no-c-format
 msgid "unusual item damage"
 msgstr "dommages inhabituels aux objets"
 
@@ -4158,24 +4158,24 @@ msgid "low dur, %+i%% damage"
 msgstr ""
 
 #: Source/items.cpp:3730
-#, c-format
+#, no-c-format
 msgid "extra AC vs demons"
 msgstr ""
 
 #: Source/items.cpp:3733
-#, c-format
+#, no-c-format
 msgid "extra AC vs undead"
 msgstr ""
 
 #: Source/items.cpp:3736
-#, c-format
-msgid "50%% Mana moved to Health"
-msgstr "50%% de mana transféré à la santé"
+#, no-c-format
+msgid "50% Mana moved to Health"
+msgstr "50% de mana transféré à la santé"
 
 #: Source/items.cpp:3739
-#, c-format
-msgid "40%% Health moved to Mana"
-msgstr "40%% de santé transféré au Mana"
+#, no-c-format
+msgid "40% Health moved to Mana"
+msgstr "40% de santé transféré au Mana"
 
 #: Source/items.cpp:3742
 msgid "Another ability (NW)"
@@ -4210,7 +4210,7 @@ msgid "Right-click to view"
 msgstr "Clic-droit pour voir"
 
 #: Source/items.cpp:3869
-#, c-format
+#, no-c-format
 msgid "Doubles gold capacity"
 msgstr "Double la capacité en Or"
 
@@ -5668,7 +5668,7 @@ msgid "Level %d"
 msgstr ""
 
 #: Source/qol/xpbar.cpp:129 Source/qol/xpbar.cpp:140
-#, c-format
+#, no-c-format
 msgid "Experience: "
 msgstr ""
 
@@ -5677,7 +5677,7 @@ msgid "Maximum Level"
 msgstr ""
 
 #: Source/qol/xpbar.cpp:144
-#, c-format
+#, no-c-format
 msgid "Next Level: "
 msgstr ""
 
