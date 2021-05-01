@@ -3482,28 +3482,28 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		else
-			sprintf(tempstr, _("Resist Fire: 75%% MAX"));
+			strcpy(tempstr, _("Resist Fire: 75% MAX"));
 		break;
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
 		if (x->_iPLLR < 75)
 			sprintf(tempstr, _("Resist Lightning: %+i%%"), x->_iPLLR);
 		else
-			sprintf(tempstr, _("Resist Lightning: 75%% MAX"));
+			strcpy(tempstr, _("Resist Lightning: 75% MAX"));
 		break;
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
 		if (x->_iPLMR < 75)
 			sprintf(tempstr, _("Resist Magic: %+i%%"), x->_iPLMR);
 		else
-			sprintf(tempstr, _("Resist Magic: 75%% MAX"));
+			strcpy(tempstr, _("Resist Magic: 75% MAX"));
 		break;
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, _("Resist All: %+i%%"), x->_iPLFR);
 		if (x->_iPLFR >= 75)
-			sprintf(tempstr, _("Resist All: 75%% MAX"));
+			strcpy(tempstr, _("Resist All: 75% MAX"));
 		break;
 	case IPL_SPLLVLADD:
 		if (x->_iSplLvlAdd == 1)
@@ -3583,7 +3583,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		sprintf(tempstr, _("-%i%% light radius"), -10 * x->_iPLLight);
 		break;
 	case IPL_MULT_ARROWS:
-		sprintf(tempstr, _("multiple arrows per shot"));
+		strcpy(tempstr, _("multiple arrows per shot"));
 		break;
 	case IPL_FIRE_ARROWS:
 		if (x->_iFMinDam == x->_iFMaxDam)
@@ -3670,7 +3670,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("fires random speed arrows"));
 		break;
 	case IPL_SETDAM:
-		sprintf(tempstr, _("unusual item damage"));
+		strcpy(tempstr, _("unusual item damage"));
 		break;
 	case IPL_SETDUR:
 		strcpy(tempstr, _("altered durability"));
@@ -3707,7 +3707,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_FIRERESCLVL:
 		if (x->_iPLFR <= 0)
-			sprintf(tempstr, " ");
+			strcpy(tempstr, " ");
 		else if (x->_iPLFR >= 1)
 			sprintf(tempstr, _("Resist Fire: %+i%%"), x->_iPLFR);
 		break;
@@ -3730,16 +3730,16 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		sprintf(tempstr, _("to hit: %+i%%, %+i%% damage"), x->_iPLToHit, x->_iPLDam);
 		break;
 	case IPL_ACDEMON:
-		sprintf(tempstr, _("extra AC vs demons"));
+		strcpy(tempstr, _("extra AC vs demons"));
 		break;
 	case IPL_ACUNDEAD:
-		sprintf(tempstr, _("extra AC vs undead"));
+		strcpy(tempstr, _("extra AC vs undead"));
 		break;
 	case IPL_MANATOLIFE:
-		sprintf(tempstr, _("50%% Mana moved to Health"));
+		strcpy(tempstr, _("50% Mana moved to Health"));
 		break;
 	case IPL_LIFETOMANA:
-		sprintf(tempstr, _("40%% Health moved to Mana"));
+		strcpy(tempstr, _("40% Health moved to Mana"));
 		break;
 	default:
 		strcpy(tempstr, _("Another ability (NW)"));
@@ -3869,7 +3869,7 @@ void PrintItemMisc(ItemStruct *x)
 		AddPanelString(tempstr, true);
 	}
 	if (x->_iMiscId == IMISC_AURIC) {
-		sprintf(tempstr, _("Doubles gold capacity"));
+		strcpy(tempstr, _("Doubles gold capacity"));
 		AddPanelString(tempstr, true);
 	}
 }
