@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "DiabloUI/ui_item.h"
+#include "engine/animationinfo.h"
 #include "engine.h"
 #include "itemdat.h"
 #include "utils/stdcompat/optional.hpp"
@@ -174,10 +175,11 @@ struct ItemStruct {
 	enum item_type _itype;
 	Point position;
 	bool _iAnimFlag;
-	CelSprite *_iAnimData; // PSX name -> ItemFrame
-	uint8_t _iAnimLen;     // Number of frames in current animation
-	uint8_t _iAnimFrame;   // Current frame of animation.
-	bool _iDelFlag;        // set when item is flagged for deletion, deprecated in 1.02
+	/*
+	 * @brief Contains Information for current Animation
+	 */
+	AnimationInfo AnimInfo;
+	bool _iDelFlag; // set when item is flagged for deletion, deprecated in 1.02
 	uint8_t _iSelFlag;
 	bool _iPostDraw;
 	bool _iIdentified;
