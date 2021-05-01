@@ -627,7 +627,7 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 		return;
 	}
 
-	int nCel = pItem->AnimInfo.CurrentFrame;
+	int nCel = pItem->AnimInfo.GetFrameToUseForRendering();
 	int frames = SDL_SwapLE32(*(DWORD *)cel->Data());
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", pItem->_iIName, nCel, frames, pItem->_itype);
