@@ -2237,26 +2237,8 @@ void GetItemBonus(int i, int minlvl, int maxlvl, bool onlygood, bool allowspells
 
 void SetupItem(int i)
 {
-	int it;
-
-	it = ItemCAnimTbl[items[i]._iCurs];
-	int numberOfFrames = ItemAnimLs[it];
-	auto *pCelSprite = itemanims[it] ? &*itemanims[it] : nullptr;
-	if (items[i]._iCurs != ICURS_MAGIC_ROCK)
-		items[i].AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
-	else
-		items[i].AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0);
+	items[i].SetNewAnimation(!plr[myplr].pLvlLoad);
 	items[i]._iIdentified = false;
-	items[i]._iPostDraw = false;
-
-	if (!plr[myplr].pLvlLoad) {
-		items[i]._iAnimFlag = true;
-		items[i]._iSelFlag = 0;
-	} else {
-		items[i].AnimInfo.CurrentFrame = items[i].AnimInfo.NumberOfFrames;
-		items[i]._iAnimFlag = false;
-		items[i]._iSelFlag = 1;
-	}
 }
 
 int RndItem(int m)
@@ -2912,11 +2894,9 @@ void SpawnRewardItem(int itemid, Point position)
 	dItem[position.x][position.y] = ii + 1;
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, itemid, curlv);
-	SetupItem(ii);
+	items[ii].SetNewAnimation(true);
 	items[ii]._iSelFlag = 2;
 	items[ii]._iPostDraw = true;
-	items[ii].AnimInfo.CurrentFrame = 1;
-	items[ii]._iAnimFlag = true;
 	items[ii]._iIdentified = true;
 }
 
@@ -2937,25 +2917,9 @@ void SpawnTheodore(Point position)
 
 void RespawnItem(ItemStruct *item, bool FlipFlag)
 {
-	int it;
-
-	it = ItemCAnimTbl[item->_iCurs];
-	int numberOfFrames = ItemAnimLs[it];
-	auto *pCelSprite = &*itemanims[it];
-	if (item->_iCurs != ICURS_MAGIC_ROCK)
-		item->AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
-	else
-		item->AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0);
-	item->_iPostDraw = false;
+	int it = ItemCAnimTbl[item->_iCurs];
+	item->SetNewAnimation(FlipFlag);
 	item->_iRequest = false;
-	if (FlipFlag) {
-		item->_iAnimFlag = true;
-		item->_iSelFlag = 0;
-	} else {
-		item->AnimInfo.CurrentFrame = item->AnimInfo.NumberOfFrames;
-		item->_iAnimFlag = false;
-		item->_iSelFlag = 1;
-	}
 
 	if (item->_iCurs == ICURS_MAGIC_ROCK) {
 		item->_iSelFlag = 1;
@@ -4992,6 +4956,27 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 			NextItemRecord(i);
 			break;
 		}
+	}
+}
+
+void ItemStruct::SetNewAnimation(bool showAnimation)
+{
+	int it = ItemCAnimTbl[_iCurs];
+	int numberOfFrames = ItemAnimLs[it];
+	auto *pCelSprite = itemanims[it] ? &*itemanims[it] : nullptr;
+	if (_iCurs != ICURS_MAGIC_ROCK)
+		AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+	else
+		AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0);
+	_iPostDraw = false;
+	_iRequest = false;
+	if (showAnimation) {
+		_iAnimFlag = true;
+		_iSelFlag = 0;
+	} else {
+		AnimInfo.CurrentFrame = AnimInfo.NumberOfFrames;
+		_iAnimFlag = false;
+		_iSelFlag = 1;
 	}
 }
 
