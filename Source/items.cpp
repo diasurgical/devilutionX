@@ -23,7 +23,6 @@
 namespace devilution {
 namespace {
 std::optional<CelSprite> itemanims[ITEMTYPES];
-constexpr int ItemAnimWidth = 96;
 
 } // namespace
 
@@ -2259,7 +2258,6 @@ void SetupItem(int i)
 	it = ItemCAnimTbl[items[i]._iCurs];
 	items[i]._iAnimData = itemanims[it] ? &*itemanims[it] : nullptr;
 	items[i]._iAnimLen = ItemAnimLs[it];
-	items[i]._iAnimWidth = ItemAnimWidth;
 	items[i]._iIdentified = false;
 	items[i]._iPostDraw = false;
 
@@ -2969,7 +2967,6 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 	it = ItemCAnimTbl[item->_iCurs];
 	item->_iAnimData = &*itemanims[it];
 	item->_iAnimLen = ItemAnimLs[it];
-	item->_iAnimWidth = ItemAnimWidth;
 	item->_iPostDraw = false;
 	item->_iRequest = false;
 	if (FlipFlag) {
