@@ -204,7 +204,6 @@ void NewTownerAnim(int tnum, BYTE *pAnim, uint8_t numFrames, int Delay)
 
 void InitTownerInfo(int i, int w, bool sel, _talker_id t, int x, int y, int ao)
 {
-	memset(&towners[i], 0, sizeof(TownerStruct));
 	towners[i]._tSelFlag = sel;
 	towners[i]._tAnimWidth = w;
 	towners[i]._tMsgSaid = false;

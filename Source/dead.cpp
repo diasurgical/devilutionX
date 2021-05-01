@@ -65,7 +65,7 @@ void InitDead()
 		}
 	}
 
-	assert(nd <= MaxDead);
+	assert(static_cast<unsigned>(nd) <= MaxDead);
 }
 
 void AddDead(Point tilePosition, int8_t dv, direction ddir)
