@@ -19,8 +19,9 @@
 #include "palette.h"
 #include "storm/storm.h"
 #include "utils/display.h"
-#include "utils/sdl_compat.h"
 #include "utils/log.hpp"
+#include "utils/sdl_compat.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 namespace {

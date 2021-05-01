@@ -34,9 +34,6 @@ enum _music_id : uint8_t {
 
 struct TSnd {
 #ifndef NOSOUND
-	std::string sound_path;
-	/** Used for streamed audio */
-	HANDLE file_handle = nullptr;
 	SoundSample DSB;
 	Uint32 start_tc;
 
@@ -50,8 +47,8 @@ struct TSnd {
 };
 
 extern bool gbSndInited;
-
-void snd_update(bool bStopAll);
+void ClearDuplicateSounds();
+void CleanupFinishedDuplicateSounds();
 void snd_stop_snd(TSnd *pSnd);
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream = false);

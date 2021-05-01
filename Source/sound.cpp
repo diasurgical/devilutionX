@@ -3,6 +3,8 @@
  *
  * Implementation of functions setting up the audio pipeline.
  */
+#include "sound.h"
+
 #include <cstdint>
 #include <memory>
 
@@ -18,6 +20,7 @@
 #include "storm/storm.h"
 #include "utils/log.hpp"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/stdcompat/shared_ptr_array.hpp"
 #include "utils/stubs.h"
 
 namespace devilution {
@@ -68,6 +71,16 @@ void CleanupMusic()
 #endif
 }
 
+std::vector<std::unique_ptr<SoundSample>> duplicateSounds;
+SoundSample *DuplicateSound(const SoundSample &sound) {
+	auto duplicate = std::make_unique<SoundSample>();
+	if (duplicate->DuplicateFrom(sound) != 0)
+		return nullptr;
+	auto *result = duplicate.get();
+	duplicateSounds.push_back(std::move(duplicate));
+	return result;
+}
+
 } // namespace
 
 /* data */
@@ -109,6 +122,19 @@ static int CapVolume(int volume)
 	return volume - volume % 100;
 }
 
+void ClearDuplicateSounds() {
+	duplicateSounds.clear();
+}
+
+void CleanupFinishedDuplicateSounds()
+{
+	duplicateSounds.erase(
+	    std::remove_if(duplicateSounds.begin(), duplicateSounds.end(), [](const std::unique_ptr<SoundSample> &sound) {
+		    return !sound->IsPlaying();
+	    }),
+	    duplicateSounds.end());
+}
+
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
 	DWORD tc;
@@ -122,35 +148,39 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 		return;
 	}
 
+	SoundSample *sound = &pSnd->DSB;
+	if (pSnd->DSB.IsPlaying()) {
+		sound = DuplicateSound(pSnd->DSB);
+		if (sound == nullptr)
+			return;
+	}
+
 	lVolume = CapVolume(lVolume + sgOptions.Audio.nSoundVolume);
-	pSnd->DSB.Play(lVolume, lPan);
+	sound->Play(lVolume, lPan);
 	pSnd->start_tc = tc;
 }
 
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 {
-	HANDLE file;
 	int error = 0;
 
-	if (!SFileOpenFile(path, &file)) {
-		ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
-	}
 	auto snd = std::make_unique<TSnd>();
-	snd->sound_path = std::string(path);
 	snd->start_tc = SDL_GetTicks() - 80 - 1;
 
 	if (stream) {
-		snd->file_handle = file;
-		error = snd->DSB.SetChunkStream(file);
+		error = snd->DSB.SetChunkStream(path);
 		if (error != 0) {
-			SFileCloseFile(file);
 			ErrSdl();
 		}
 	} else {
+		HANDLE file;
+		if (!SFileOpenFile(path, &file)) {
+			ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
+		}
 		DWORD dwBytes = SFileGetFileSize(file, nullptr);
-		auto wave_file = std::make_unique<std::uint8_t[]>(dwBytes);
+		auto wave_file = MakeSharedPtrArray<std::uint8_t>(dwBytes);
 		SFileReadFile(file, wave_file.get(), dwBytes, nullptr, nullptr);
-		error = snd->DSB.SetChunk(std::move(wave_file), dwBytes);
+		error = snd->DSB.SetChunk(wave_file, dwBytes);
 		SFileCloseFile(file);
 	}
 	if (error != 0) {
@@ -165,8 +195,6 @@ TSnd::~TSnd()
 {
 	DSB.Stop();
 	DSB.Release();
-	if (file_handle != nullptr)
-		SFileCloseFile(file_handle);
 }
 #endif
 
