@@ -2,11 +2,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-05-02 04:34+0200\n"
+"POT-Creation-Date: 2021-05-02 23:31+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
 "X-Poedit-Basepath: ..\n"
@@ -455,17 +455,17 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:161 Source/DiabloUI/selgame.cpp:208
 #: Source/DiabloUI/selgame.cpp:311 Source/DiabloUI/selgame.cpp:331
-#: Source/diablo.cpp:1449
+#: Source/diablo.cpp:1451
 msgid "Normal"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:162 Source/DiabloUI/selgame.cpp:212
-#: Source/diablo.cpp:1450
+#: Source/diablo.cpp:1452
 msgid "Nightmare"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:216
-#: Source/diablo.cpp:1451
+#: Source/diablo.cpp:1453
 msgid "Hell"
 msgstr ""
 
@@ -768,47 +768,47 @@ msgid ""
 "%s"
 msgstr ""
 
-#: Source/appfat.cpp:146 Source/appfat.cpp:164
+#: Source/appfat.cpp:146 Source/appfat.cpp:165
 msgid "Data File Error"
 msgstr ""
 
-#: Source/appfat.cpp:160
+#: Source/appfat.cpp:161
 msgid ""
 "Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 "\n"
 "Make sure that it is in the game folder and that the file name is in all lowercase."
 msgstr ""
 
-#: Source/appfat.cpp:175
+#: Source/appfat.cpp:176
 #, c-format
 msgid ""
 "Unable to write to location:\n"
 "%s"
 msgstr ""
 
-#: Source/appfat.cpp:177
+#: Source/appfat.cpp:178
 msgid "Read-Only Directory Error"
 msgstr ""
 
-#: Source/automap.cpp:420
+#: Source/automap.cpp:388
 msgid "game: "
 msgstr ""
 
-#: Source/automap.cpp:424
+#: Source/automap.cpp:392
 msgid "password: "
 msgstr ""
 
-#: Source/automap.cpp:434 Source/items.cpp:3861
+#: Source/automap.cpp:402 Source/items.cpp:3861
 #, c-format
 msgid "Level: %i"
 msgstr ""
 
-#: Source/automap.cpp:436
+#: Source/automap.cpp:404
 #, c-format
 msgid "Level: Crypt %i"
 msgstr ""
 
-#: Source/automap.cpp:438
+#: Source/automap.cpp:406
 #, c-format
 msgid "Level: Nest %i"
 msgstr ""
@@ -867,11 +867,11 @@ msgstr ""
 msgid "Damages undead only"
 msgstr ""
 
-#: Source/control.cpp:441 Source/control.cpp:1034 Source/control.cpp:1861
+#: Source/control.cpp:441 Source/control.cpp:1034 Source/control.cpp:1857
 msgid "Spell Level 0 - Unusable"
 msgstr ""
 
-#: Source/control.cpp:443 Source/control.cpp:1036 Source/control.cpp:1863
+#: Source/control.cpp:443 Source/control.cpp:1036 Source/control.cpp:1859
 #, c-format
 msgid "Spell Level %i"
 msgstr ""
@@ -888,12 +888,12 @@ msgid_plural "%i Scrolls"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/control.cpp:467 Source/control.cpp:1064 Source/items.cpp:1596
+#: Source/control.cpp:467 Source/control.cpp:1061 Source/items.cpp:1596
 #, c-format
 msgid "Staff of %s"
 msgstr ""
 
-#: Source/control.cpp:469
+#: Source/control.cpp:469 Source/control.cpp:1063
 #, c-format
 msgid "%i Charge"
 msgid_plural "%i Charges"
@@ -926,96 +926,85 @@ msgstr ""
 msgid "Hotkey: 's'"
 msgstr ""
 
-#: Source/control.cpp:1058
-msgid "1 Scroll"
-msgstr ""
-
-#: Source/control.cpp:1060
+#: Source/control.cpp:1057
 #, c-format
-msgid "%i Scrolls"
-msgstr ""
+msgid "%s Scroll"
+msgid_plural "%i Scrolls"
+msgstr[0] ""
+msgstr[1] ""
 
-#: Source/control.cpp:1067
-msgid "1 Charge"
-msgstr ""
-
-#: Source/control.cpp:1069
-#, c-format
-msgid "%i Charges"
-msgstr ""
-
-#: Source/control.cpp:1256 Source/inv.cpp:2117 Source/items.cpp:3076
+#: Source/control.cpp:1250 Source/inv.cpp:2104 Source/items.cpp:3076
 #, c-format
 msgid "%i gold piece"
 msgid_plural "%i gold pieces"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/control.cpp:1259
+#: Source/control.cpp:1253
 msgid "Requirements not met"
 msgstr ""
 
-#: Source/control.cpp:1295
+#: Source/control.cpp:1291
 #, c-format
 msgid "%s, Level: %i"
 msgstr ""
 
-#: Source/control.cpp:1297
+#: Source/control.cpp:1293
 #, c-format
 msgid "Hit Points %i of %i"
 msgstr ""
 
-#: Source/control.cpp:1370
+#: Source/control.cpp:1366
 msgid "None"
 msgstr ""
 
-#: Source/control.cpp:1438 Source/control.cpp:1450 Source/control.cpp:1462
+#: Source/control.cpp:1434 Source/control.cpp:1446 Source/control.cpp:1458
 msgid "MAX"
 msgstr ""
 
-#: Source/control.cpp:1580
+#: Source/control.cpp:1576
 msgid "Level Up"
 msgstr ""
 
-#: Source/control.cpp:1836
+#: Source/control.cpp:1832
 msgid "Skill"
 msgstr ""
 
-#: Source/control.cpp:1840
+#: Source/control.cpp:1836
 #, c-format
 msgid "Staff (%i charge)"
 msgid_plural "Staff (%i charges)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/control.cpp:1848
+#: Source/control.cpp:1844
 #, c-format
 msgid "Mana: %i  Dam: %i - %i"
 msgstr ""
 
-#: Source/control.cpp:1850
+#: Source/control.cpp:1846
 #, c-format
 msgid "Mana: %i   Dam: n/a"
 msgstr ""
 
-#: Source/control.cpp:1853
+#: Source/control.cpp:1849
 #, c-format
 msgid "Mana: %i  Dam: 1/3 tgt hp"
 msgstr ""
 
-#: Source/control.cpp:1900
+#: Source/control.cpp:1896
 #, c-format
 msgid "You have %u gold"
 msgstr ""
 
-#: Source/control.cpp:1902
+#: Source/control.cpp:1898
 #, c-format
 msgid "piece.  How many do"
 msgid_plural "pieces.  How many do"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/control.cpp:1904
+#: Source/control.cpp:1900
 msgid "you want to remove?"
 msgstr ""
 
@@ -1043,24 +1032,24 @@ msgstr ""
 msgid "Quests"
 msgstr ""
 
-#: Source/cursor.cpp:181 Source/spelldat.cpp:22
+#: Source/cursor.cpp:205 Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr ""
 
-#: Source/cursor.cpp:182
+#: Source/cursor.cpp:206
 #, c-format
 msgid "from %s"
 msgstr ""
 
-#: Source/cursor.cpp:207
+#: Source/cursor.cpp:231
 msgid "Portal to"
 msgstr ""
 
-#: Source/cursor.cpp:209
+#: Source/cursor.cpp:233
 msgid "The Unholy Altar"
 msgstr ""
 
-#: Source/cursor.cpp:211
+#: Source/cursor.cpp:235
 msgid "level 15"
 msgstr ""
 
@@ -1157,29 +1146,29 @@ msgstr ""
 msgid "unrecognized option '%s'\n"
 msgstr ""
 
-#: Source/diablo.cpp:649
+#: Source/diablo.cpp:646
 #, c-format
 msgid "version %s"
 msgstr ""
 
-#: Source/diablo.cpp:1172
+#: Source/diablo.cpp:1174
 msgid "No help available"
 msgstr ""
 
-#: Source/diablo.cpp:1173
+#: Source/diablo.cpp:1175
 msgid "while in stores"
 msgstr ""
 
-#: Source/diablo.cpp:1453
+#: Source/diablo.cpp:1455
 #, c-format
 msgid "%s, mode = %s"
 msgstr ""
 
-#: Source/diablo.cpp:2152
+#: Source/diablo.cpp:2153
 msgid "-- Network timeout --"
 msgstr ""
 
-#: Source/diablo.cpp:2153
+#: Source/diablo.cpp:2154
 msgid "-- Waiting for players --"
 msgstr ""
 
@@ -3292,7 +3281,7 @@ msgstr ""
 msgid "%s of %s"
 msgstr ""
 
-#: Source/items.cpp:2779 Source/player.cpp:1817
+#: Source/items.cpp:2779 Source/player.cpp:1826
 #, c-format
 msgid "Ear of %s"
 msgstr ""
@@ -4904,30 +4893,30 @@ msgstr ""
 msgid "Some Magic Immunities"
 msgstr ""
 
-#: Source/msg.cpp:171
+#: Source/msg.cpp:172
 msgid "Waiting for game data..."
 msgstr ""
 
-#: Source/msg.cpp:179
+#: Source/msg.cpp:180
 msgid "The game ended"
 msgstr ""
 
-#: Source/msg.cpp:185
+#: Source/msg.cpp:186
 msgid "Unable to get level data"
 msgstr ""
 
-#: Source/msg.cpp:610
+#: Source/msg.cpp:611
 msgid "Trying to drop a floor item?"
 msgstr ""
 
-#: Source/msg.cpp:1387 Source/msg.cpp:1658 Source/msg.cpp:1680
-#: Source/msg.cpp:1702 Source/msg.cpp:1822 Source/msg.cpp:1843
-#: Source/msg.cpp:1864 Source/msg.cpp:1885
+#: Source/msg.cpp:1388 Source/msg.cpp:1659 Source/msg.cpp:1681
+#: Source/msg.cpp:1703 Source/msg.cpp:1823 Source/msg.cpp:1844
+#: Source/msg.cpp:1865 Source/msg.cpp:1886
 #, c-format
 msgid "%s has cast an illegal spell."
 msgstr ""
 
-#: Source/msg.cpp:2221 Source/multi.cpp:866
+#: Source/msg.cpp:2222 Source/multi.cpp:866
 #, c-format
 msgid "Player '%s' (level %d) just joined the game"
 msgstr ""

@@ -1054,19 +1054,13 @@ void CheckPanelInfo()
 						s++;
 					}
 				}
-				if (s == 1)
-					strcpy(tempstr, _("1 Scroll"));
-				else
-					sprintf(tempstr, _("%i Scrolls"), s);
+				sprintf(tempstr, ngettext("%s Scroll", "%i Scrolls", s), s);
 				AddPanelString(tempstr, true);
 			} break;
 			case RSPLTYPE_CHARGES:
 				sprintf(tempstr, _("Staff of %s"), _(spelldata[v].sNameText));
 				AddPanelString(tempstr, true);
-				if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges == 1)
-					strcpy(tempstr, _("1 Charge"));
-				else
-					sprintf(tempstr, _("%i Charges"), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
+				sprintf(tempstr, ngettext("%i Charge", "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
 				AddPanelString(tempstr, true);
 				break;
 			case RSPLTYPE_INVALID:

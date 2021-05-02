@@ -100,7 +100,7 @@ void SetPluralForm(char *string)
 		return;
 	}
 
-	// Portuguese
+	// Portuguese, French
 	if (strcmp(expression, "(n > 1)") == 0) {
 		GetLocalPluralId = [](int n) -> int { return n > 1 ? 1 : 0; };
 		return;
