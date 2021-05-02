@@ -1295,7 +1295,6 @@ void sound_update()
 	}
 
 	stream_update();
-	CleanupFinishedDuplicateSounds();
 }
 
 void effects_cleanup_sfx()
