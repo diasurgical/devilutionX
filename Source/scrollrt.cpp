@@ -215,6 +215,8 @@ static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
 	my++;
 
 	const CelOutputBuffer &sub = out.subregion(0, 0, out.w() - 2, out.h());
+	const auto &sprite = GetInvItemSprite(pcurs);
+	const int frame = GetInvItemFrame(pcurs);
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
 		if (plr[myplr].HoldItem._iMagical != 0) {
@@ -223,23 +225,14 @@ static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
 		if (!plr[myplr].HoldItem._iStatFlag) {
 			col = PAL16_RED + 5;
 		}
-		if (pcurs <= 179) {
-			CelBlitOutlineTo(sub, col, mx, my + cursH - 1, *pCursCels, pcurs, false);
-			if (col != PAL16_RED + 5) {
-				CelClippedDrawSafeTo(sub, mx, my + cursH - 1, *pCursCels, pcurs);
-			} else {
-				CelDrawLightRedSafeTo(sub, mx, my + cursH - 1, *pCursCels, pcurs, 1);
-			}
+		CelBlitOutlineTo(sub, col, mx, my + cursH - 1, sprite, frame, false);
+		if (col != PAL16_RED + 5) {
+			CelClippedDrawSafeTo(sub, mx, my + cursH - 1, sprite, frame);
 		} else {
-			CelBlitOutlineTo(sub, col, mx, my + cursH - 1, *pCursCels2, pcurs - 179, false);
-			if (col != PAL16_RED + 5) {
-				CelClippedDrawSafeTo(sub, mx, my + cursH - 1, *pCursCels2, pcurs - 179);
-			} else {
-				CelDrawLightRedSafeTo(sub, mx, my + cursH - 1, *pCursCels2, pcurs - 179, 0);
-			}
+			CelDrawLightRedSafeTo(sub, mx, my + cursH - 1, sprite, frame, 1);
 		}
 	} else {
-		CelClippedDrawSafeTo(sub, mx, my + cursH - 1, *pCursCels, pcurs);
+		CelClippedDrawSafeTo(sub, mx, my + cursH - 1, sprite, frame);
 	}
 }
 
