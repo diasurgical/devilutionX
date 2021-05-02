@@ -97,13 +97,13 @@ static void PkwareBufferWrite(char *buf, unsigned int *size, void *param)
 
 uint32_t PkwareCompress(uint8_t *srcData, uint32_t size)
 {
-	auto ptr = std::make_unique<char[]>(CMP_BUFFER_SIZE);
+	std::unique_ptr<char[]> ptr { new char[CMP_BUFFER_SIZE] };
 
 	unsigned destSize = 2 * size;
 	if (destSize < 2 * 4096)
 		destSize = 2 * 4096;
 
-	auto destData = std::make_unique<uint8_t[]>(destSize);
+	std::unique_ptr<uint8_t[]> destData { new uint8_t[destSize] };
 
 	TDataInfo param;
 	param.srcData = srcData;
@@ -128,8 +128,8 @@ void PkwareDecompress(uint8_t *inBuff, int recvSize, int maxBytes)
 {
 	TDataInfo info;
 
-	auto ptr = std::make_unique<char[]>(CMP_BUFFER_SIZE);
-	auto outBuff = std::make_unique<uint8_t[]>(maxBytes);
+	std::unique_ptr<char[]> ptr { new char[CMP_BUFFER_SIZE] };
+	std::unique_ptr<uint8_t[]> outBuff { new uint8_t[maxBytes] };
 
 	info.srcData = inBuff;
 	info.srcOffset = 0;

@@ -727,7 +727,7 @@ std::unique_ptr<BYTE[]> LoadFileInMem(const char *pszName, DWORD *pdwFileLen)
 	if (fileLen == 0)
 		app_fatal("Zero length SFILE:\n%s", pszName);
 
-	auto buf = std::make_unique<BYTE[]>(fileLen);
+	std::unique_ptr<BYTE[]> buf { new BYTE[fileLen] };
 
 	SFileReadFile(file, buf.get(), fileLen, nullptr, nullptr);
 	SFileCloseFile(file);

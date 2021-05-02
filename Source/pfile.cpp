@@ -144,7 +144,7 @@ static std::unique_ptr<uint8_t[]> pfile_read_archive(HANDLE archive, const char 
 	if (*pdwLen == 0)
 		return nullptr;
 
-	auto buf = std::make_unique<uint8_t[]>(*pdwLen);
+	std::unique_ptr<uint8_t[]> buf { new uint8_t[*pdwLen] };
 	if (!SFileReadFile(file, buf.get(), *pdwLen, &nread, nullptr))
 		return nullptr;
 	SFileCloseFile(file);
@@ -176,7 +176,7 @@ static bool pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 static void pfile_encode_hero(const PkPlayerStruct *pack)
 {
 	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
-	auto packed = std::make_unique<uint8_t[]>(packedLen);
+	std::unique_ptr<uint8_t[]> packed { new uint8_t[packedLen] };
 
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
