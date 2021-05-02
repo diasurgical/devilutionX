@@ -85,6 +85,10 @@ private:
 	* @brief Animation Frames that will be adjusted for the skipped Frames/game ticks
 	*/
 	int RelevantFramesForDistributing;
+	/**
+	 * @brief Animation Frames that wasn't shown from previous Animation
+	 */
+	int SkippedFramesFromPreviousAnimation;
 };
 
 } // namespace devilution
