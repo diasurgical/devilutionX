@@ -2203,15 +2203,8 @@ void initKeymapActions()
 	for (int i = 0; i < 8; ++i) {
 		keymapper.addAction({
 		    std::string("BeltItem") + std::to_string(i + 1),
-
 		    '1' + i,
 		    [i] {
-#ifdef _DEBUG
-			    if (i == 7 && (debug_mode_key_inverted_v || debug_mode_key_w)) {
-				    NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
-				    return;
-			    }
-#endif
 			    if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
 				    UseInvItem(myplr, INVITEM_BELT_FIRST + i);
 			    }
@@ -2235,6 +2228,18 @@ void initKeymapActions()
 	    [] { gamemenu_quit_game(false); },
 	    Keymapper::Action::IfDead::Allow,
 	});
+#ifdef _DEBUG
+	keymapper.addAction({
+	    "CheatExperience",
+	    DVL_VK_INVALID,
+	    [] {
+		    if (debug_mode_key_inverted_v || debug_mode_key_w) {
+			    NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
+			    return;
+		    }
+	    },
+	});
+#endif
 }
 
 } // namespace devilution
