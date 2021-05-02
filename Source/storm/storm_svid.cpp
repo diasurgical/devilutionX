@@ -157,7 +157,7 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 #else
 	int bytestoread = SFileGetFileSize(*video, nullptr);
 	SVidBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[bytestoread] };
-	SFileReadFile(*video, SVidBuffer.get(), bytestoread, nullptr, nullptr);
+	SFileReadFileThreadSafe(*video, SVidBuffer.get(), bytestoread);
 	SFileCloseFile(*video);
 	*video = nullptr;
 	SVidSMK = smk_open_memory(SVidBuffer.get(), bytestoread);

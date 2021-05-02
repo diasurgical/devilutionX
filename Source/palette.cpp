@@ -127,7 +127,7 @@ void LoadPalette(const char *pszFileName)
 	assert(pszFileName);
 
 	SFileOpenFile(pszFileName, &pBuf);
-	SFileReadFile(pBuf, (char *)PalData, sizeof(PalData), nullptr, nullptr);
+	SFileReadFileThreadSafe(pBuf, (char *)PalData, sizeof(PalData));
 	SFileCloseFile(pBuf);
 
 	for (i = 0; i < 256; i++) {

@@ -47,7 +47,7 @@ void LoadMusic(HANDLE handle)
 #else
 	int bytestoread = SFileGetFileSize(handle, 0);
 	musicBuffer = new char[bytestoread];
-	SFileReadFile(handle, musicBuffer, bytestoread, NULL, 0);
+	SFileReadFileThreadSafe(handle, musicBuffer, bytestoread);
 	SFileCloseFile(handle);
 
 	SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
@@ -173,7 +173,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		}
 		DWORD dwBytes = SFileGetFileSize(file, nullptr);
 		auto wave_file = MakeArraySharedPtr<std::uint8_t>(dwBytes);
-		SFileReadFile(file, wave_file.get(), dwBytes, nullptr, nullptr);
+		SFileReadFileThreadSafe(file, wave_file.get(), dwBytes);
 		error = snd->DSB.SetChunk(wave_file, dwBytes);
 		SFileCloseFile(file);
 	}
