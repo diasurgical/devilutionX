@@ -2257,7 +2257,7 @@ void SetupItem(int i)
 	int it;
 
 	it = ItemCAnimTbl[items[i]._iCurs];
-	items[i]._iAnimData = itemanims[it] ? &*itemanims[it] : nullptr;
+	items[i]._iAnimData = &*itemanims[it];
 	items[i]._iAnimLen = ItemAnimLs[it];
 	items[i]._iAnimWidth = ItemAnimWidth;
 	items[i]._iIdentified = false;

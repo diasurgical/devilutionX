@@ -321,7 +321,6 @@ static void free_game()
 	for (i = 0; i < MAX_PLRS; i++)
 		FreePlayerGFX(i);
 
-	FreeItemGFX();
 	FreeCursor();
 	FreeLightTable();
 #ifdef _DEBUG
@@ -695,6 +694,9 @@ static void diablo_init()
 #endif
 
 	ui_sound_init();
+
+	// Item graphics are loaded early, they already get touched during hero selection.
+	InitItemGFX();
 }
 
 static void diablo_splash()
@@ -718,6 +720,8 @@ static void diablo_splash()
 
 static void diablo_deinit()
 {
+	FreeItemGFX();
+
 	if (sbWasOptionsLoaded)
 		SaveOptions();
 	if (was_snd_init) {
@@ -1888,7 +1892,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	if (firstflag) {
 		InitInv();
-		InitItemGFX();
 		InitQuestText();
 		InitStores();
 		InitAutomapOnce();
