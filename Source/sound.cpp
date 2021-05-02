@@ -130,6 +130,7 @@ static int CapVolume(int volume)
 }
 
 void ClearDuplicateSounds() {
+	SDLMutexLockGuard lock(duplicateSoundsMutex.get());
 	duplicateSounds.clear();
 }
 
