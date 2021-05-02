@@ -47,7 +47,7 @@ static unsigned int dthread_handler(void *data)
 			if (dwMilliseconds >= 1)
 				dwMilliseconds = 1;
 
-			mem_free_dbg(pkt);
+			std::free(pkt);
 
 			if (dwMilliseconds != 0)
 				SDL_Delay(dwMilliseconds);
@@ -78,7 +78,7 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 		return;
 	}
 
-	pkt = (TMegaPkt *)DiabloAllocPtr(dwLen + 20);
+	pkt = static_cast<TMegaPkt *>(std::malloc(dwLen + 20));
 	pkt->pNext = nullptr;
 	pkt->dwSpaceLeft = pnum;
 	pkt->data[0] = cmd;
@@ -137,7 +137,7 @@ void dthread_cleanup()
 
 	while (sgpInfoHead != nullptr) {
 		tmp = sgpInfoHead->pNext;
-		MemFreeDbg(sgpInfoHead);
+		std::free(sgpInfoHead);
 		sgpInfoHead = tmp;
 	}
 }

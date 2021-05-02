@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <array>
+
 #include "engine.h"
 #include "miniwin/miniwin.h"
 
@@ -41,7 +43,7 @@ extern int numvision;
 extern char lightmax;
 extern bool dolighting;
 extern int visionid;
-extern BYTE *pLightTbl;
+extern std::array<BYTE, LIGHTSIZE> pLightTbl;
 extern bool lightflag;
 
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum);

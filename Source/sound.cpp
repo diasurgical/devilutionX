@@ -43,7 +43,7 @@ void LoadMusic(HANDLE handle)
 	SDL_RWops *musicRw = SFileRw_FromStormHandle(handle);
 #else
 	int bytestoread = SFileGetFileSize(handle, 0);
-	musicBuffer = (char *)DiabloAllocPtr(bytestoread);
+	musicBuffer = new char[bytestoread];
 	SFileReadFile(handle, musicBuffer, bytestoread, NULL, 0);
 	SFileCloseFile(handle);
 
@@ -59,7 +59,7 @@ void CleanupMusic()
 		sgnMusicTrack = NUM_MUSIC;
 #ifdef DISABLE_STREAMING_MUSIC
 	if (musicBuffer != nullptr) {
-		mem_free_dbg(musicBuffer);
+		delete[] musicBuffer;
 		musicBuffer = nullptr;
 	}
 #endif
