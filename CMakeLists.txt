@@ -687,9 +687,7 @@ if (VITA)
 endif()
 
 if(N3DS)
-  target_link_libraries(${BIN_TARGET} PRIVATE ${TREMOR_LIBRARIES})
-  target_include_directories(${BIN_TARGET} PRIVATE ${TREMOR_INCLUDE_DIRS})
-  target_link_libraries(${BIN_TARGET} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
+  target_link_libraries(${BIN_TARGET} PRIVATE 3ds::freetype 3ds::bzip2 3ds::png)
   target_link_libraries(${BIN_TARGET} PRIVATE 3ds::citro3d 3ds::ctrulib)
 endif()
 
