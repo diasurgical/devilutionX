@@ -40,14 +40,6 @@ constexpr const T &clamp(const T &x, const T &lower, const T &upper)
 }
 #endif
 
-#define MemFreeDbg(p)       \
-	{                       \
-		void *p__p;         \
-		p__p = p;           \
-		p = NULL;           \
-		mem_free_dbg(p__p); \
-	}
-
 enum direction : uint8_t {
 	DIR_S,
 	DIR_SW,
@@ -118,24 +110,6 @@ struct ActorPosition {
 	/** Used for referring to position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks) */
 	Point temp;
 };
-
-// `malloc` that returns a user-friendly error on OOM.
-//
-// Defined as a macro so that:
-// 1. We provide the correct location for the OOM error.
-// 2. Get better attribution from memory profilers.
-#define DiabloAllocPtr(NUM_BYTES)                                                                                    \
-	[](std::size_t num_bytes) {                                                                                      \
-		BYTE *ptr = static_cast<BYTE *>(std::malloc(num_bytes));                                                     \
-		constexpr char kMesage[] = "System memory exhausted.\n"                                                      \
-		                           "Make sure you have at least 64MB of free system memory before running the game"; \
-		if (ptr == NULL)                                                                                             \
-			ErrDlg("Out of Memory Error", kMesage, __FILE__, __LINE__);                                              \
-		return ptr;                                                                                                  \
-	}(NUM_BYTES)
-
-#define mem_free_dbg(PTR) \
-	std::free(PTR)
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
