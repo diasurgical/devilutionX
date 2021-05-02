@@ -6,6 +6,7 @@
 #include "control.h"
 
 #include <cstddef>
+#include <array>
 
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
@@ -22,6 +23,7 @@
 #include "towners.h"
 #include "trigs.h"
 #include "utils/language.h"
+#include "controls/keymapper.hpp"
 
 namespace devilution {
 namespace {
@@ -79,6 +81,8 @@ BYTE SplTransTbl[256];
 int initialDropGoldValue;
 bool panbtndown;
 bool spselflag;
+extern Keymapper keymapper;
+extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 /** Map of hero class names */
 const char *const ClassStrTbl[] = {
@@ -367,6 +371,23 @@ static void DrawSpell(const CelOutputBuffer &out)
 		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, *pSpellCels, 27);
 }
 
+static void PrintSBookHotkey(CelOutputBuffer out, int x, int y, const std::string &text, text_color col)
+{
+	x += SPLICONLENGTH;
+	y -= SPLICONLENGTH;
+
+	int totalWidth = 0;
+
+	for (const char txtChar : text) {
+		auto c = gbFontTransTbl[static_cast<BYTE>(txtChar)];
+		c = fontframe[c];
+
+		totalWidth += fontkern[c] + 1;
+	}
+
+	PrintGameStr(out, x - totalWidth - 4, y + 17, text.c_str(), col);
+}
+
 void DrawSpellList(const CelOutputBuffer &out)
 {
 	int c;
@@ -474,8 +495,10 @@ void DrawSpellList(const CelOutputBuffer &out)
 				}
 				for (int t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
-						DrawSpellCel(out, x, y, *pSpellCels, t + SPLICONLAST + 5);
-						sprintf(tempstr, _("Spell Hotkey #F%i"), t + 5);
+						auto hotkeyName = keymapper.keyNameForAction(quickSpellActionIndexes[t]);
+						PrintSBookHotkey(out, x - 1, y + 1, hotkeyName, COL_BLACK);
+						PrintSBookHotkey(out, x, y, hotkeyName, COL_WHITE);
+						sprintf(tempstr, _("Spell Hotkey %s"), hotkeyName.c_str());
 						AddPanelString(tempstr, true);
 					}
 				}

@@ -101,6 +101,7 @@ bool PostMessage(uint32_t Msg, int32_t wParam, int32_t lParam);
 // Virtual key codes.
 //
 // ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+#define DVL_VK_INVALID 0     // Invalid key
 #define DVL_VK_BACK 0x08     // BACKSPACE key
 #define DVL_VK_TAB 0x09      // TAB key
 #define DVL_VK_RETURN 0x0D   // ENTER key

@@ -24,9 +24,6 @@ namespace {
 // Forward-declare menu handlers, used by the global menu structs below.
 void gamemenu_previous(bool bActivate);
 void gamemenu_new_game(bool bActivate);
-void gamemenu_quit_game(bool bActivate);
-void gamemenu_load_game(bool bActivate);
-void gamemenu_save_game(bool bActivate);
 void gamemenu_restart_town(bool bActivate);
 void gamemenu_options(bool bActivate);
 void gamemenu_music_volume(bool bActivate);
@@ -117,62 +114,6 @@ void gamemenu_new_game(bool bActivate)
 	CornerStone.activated = false;
 	gbRunGame = false;
 	gamemenu_off();
-}
-
-void gamemenu_quit_game(bool bActivate)
-{
-	gamemenu_new_game(bActivate);
-	gbRunGameResult = false;
-}
-
-void gamemenu_load_game(bool bActivate)
-{
-	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
-	gamemenu_off();
-	NewCursor(CURSOR_NONE);
-	InitDiabloMsg(EMSG_LOADING);
-	force_redraw = 255;
-	DrawAndBlit();
-	LoadGame(false);
-	ClrDiabloMsg();
-	CornerStone.activated = false;
-	PaletteFadeOut(8);
-	deathflag = false;
-	force_redraw = 255;
-	DrawAndBlit();
-	LoadPWaterPalette();
-	PaletteFadeIn(8);
-	NewCursor(CURSOR_HAND);
-	interface_msg_pump();
-	SetWindowProc(saveProc);
-}
-
-void gamemenu_save_game(bool bActivate)
-{
-	if (pcurs != CURSOR_HAND) {
-		return;
-	}
-
-	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
-		gamemenu_off();
-		return;
-	}
-
-	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
-	NewCursor(CURSOR_NONE);
-	gamemenu_off();
-	InitDiabloMsg(EMSG_SAVING);
-	force_redraw = 255;
-	DrawAndBlit();
-	SaveGame();
-	ClrDiabloMsg();
-	force_redraw = 255;
-	NewCursor(CURSOR_HAND);
-	if (CornerStone.activated) {
-		items_427A72();
-	}
-	interface_msg_pump();
-	SetWindowProc(saveProc);
 }
 
 void gamemenu_restart_town(bool bActivate)
@@ -365,6 +306,62 @@ void gamemenu_speed(bool bActivate)
 }
 
 } // namespace
+
+void gamemenu_quit_game(bool bActivate)
+{
+	gamemenu_new_game(bActivate);
+	gbRunGameResult = false;
+}
+
+void gamemenu_load_game(bool bActivate)
+{
+	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
+	gamemenu_off();
+	NewCursor(CURSOR_NONE);
+	InitDiabloMsg(EMSG_LOADING);
+	force_redraw = 255;
+	DrawAndBlit();
+	LoadGame(false);
+	ClrDiabloMsg();
+	CornerStone.activated = false;
+	PaletteFadeOut(8);
+	deathflag = false;
+	force_redraw = 255;
+	DrawAndBlit();
+	LoadPWaterPalette();
+	PaletteFadeIn(8);
+	NewCursor(CURSOR_HAND);
+	interface_msg_pump();
+	SetWindowProc(saveProc);
+}
+
+void gamemenu_save_game(bool bActivate)
+{
+	if (pcurs != CURSOR_HAND) {
+		return;
+	}
+
+	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
+		gamemenu_off();
+		return;
+	}
+
+	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
+	NewCursor(CURSOR_NONE);
+	gamemenu_off();
+	InitDiabloMsg(EMSG_SAVING);
+	force_redraw = 255;
+	DrawAndBlit();
+	SaveGame();
+	ClrDiabloMsg();
+	force_redraw = 255;
+	NewCursor(CURSOR_HAND);
+	if (CornerStone.activated) {
+		items_427A72();
+	}
+	interface_msg_pump();
+	SetWindowProc(saveProc);
+}
 
 void gamemenu_on()
 {
