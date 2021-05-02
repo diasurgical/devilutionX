@@ -663,7 +663,7 @@ endif()
 
 if(SWITCH)
   target_link_libraries(${BIN_TARGET} PRIVATE switch::libnx
-    -lfreetype -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+    -lEGL -lglapi -ldrm_nouveau -lbz2 -lz -lnx)
 endif()
 
 if(AMIGA)
