@@ -54,7 +54,7 @@ struct TownerStruct {
 	uint8_t _tAnimFrame; // Current frame of animation.
 	uint8_t _tAnimFrameCnt;
 	uint8_t _tNFrames;
-	std::string_view _tName;
+	string_view _tName;
 	TNQ qsts[MAXQUESTS];
 	bool _tSelFlag;
 	bool _tMsgSaid;
