@@ -73,6 +73,20 @@ bool FileExists(const char *path)
 #endif
 }
 
+bool FileExistsAndIsWriteable(const char *path)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return false;
+	}
+	return ::GetFileAttributesW(&pathUtf16[0]) != INVALID_FILE_ATTRIBUTES && (::GetFileAttributesW(&pathUtf16[0]) & FILE_ATTRIBUTE_READONLY) == 0;
+#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+	return ::access(path, W_OK) == 0;
+#endif
+}
+
 bool GetFileSize(const char *path, std::uintmax_t *size)
 {
 #if defined(_WIN64) || defined(_WIN32)
