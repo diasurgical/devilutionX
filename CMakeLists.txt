@@ -349,6 +349,7 @@ set(devilutionx_SRCS
   Source/controls/modifier_hints.cpp
   Source/controls/plrctrls.cpp
   Source/controls/touch.cpp
+  Source/controls/keymapper.cpp
   Source/engine/animationinfo.cpp
   Source/qol/autopickup.cpp
   Source/qol/common.cpp
