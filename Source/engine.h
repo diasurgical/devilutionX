@@ -94,11 +94,11 @@ struct Point {
 	}
 
 	/**
-	 * @brief Computes fast approximate distance between this and other, using only integer arithmetic, with less than ~5% error
+	 * @brief Fast approximate distance between two point, using only integer arithmetic, with less than ~5% error
 	 * @param other Pointer to which we want the distance
 	 * @return Magnitude of vector this -> other
 	*/
-	int ApproxDistance(const Point &other) const
+	int ApproxDistance(Point other) const
 	{
 		int min;
 		int max;
