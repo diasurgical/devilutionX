@@ -1001,19 +1001,21 @@ static void RightMouseDown()
 	if (!gmenu_is_active() && sgnTimeoutCurs == CURSOR_NONE && PauseMode != 2 && !plr[myplr]._pInvincible) {
 		if (DoomFlag) {
 			doom_close();
-		} else if (stextflag == STORE_NONE) {
-			if (spselflag) {
-				SetSpell();
-			} else if (MouseY >= SPANEL_HEIGHT
-			    || ((!sbookflag || MouseX <= RIGHT_PANEL)
-			        && !TryIconCurs()
-			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
-				if (pcurs == CURSOR_HAND) {
-					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
-						CheckPlrSpell();
-				} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
-					NewCursor(CURSOR_HAND);
-				}
+			return;
+		}
+		if (stextflag != STORE_NONE)
+			return;
+		if (spselflag) {
+			SetSpell();
+		} else if (MouseY >= SPANEL_HEIGHT
+		    || ((!sbookflag || MouseX <= RIGHT_PANEL)
+		        && !TryIconCurs()
+		        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
+			if (pcurs == CURSOR_HAND) {
+				if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
+					CheckPlrSpell();
+			} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
+				NewCursor(CURSOR_HAND);
 			}
 		}
 	}
@@ -2007,98 +2009,98 @@ void itemInfoKeyPressed()
 
 void inventoryKeyPressed()
 {
-	if (stextflag == STORE_NONE) {
-		invflag = !invflag;
-		if (!chrflag && !questlog && CanPanelsCoverView()) {
-			if (!invflag) { // We closed the invetory
-				if (MouseX < 480 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX + 160, MouseY);
-				}
-			} else if (!sbookflag) { // We opened the invetory
-				if (MouseX > 160 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX - 160, MouseY);
-				}
+	if (stextflag != STORE_NONE)
+		return;
+	invflag = !invflag;
+	if (!chrflag && !questlog && CanPanelsCoverView()) {
+		if (!invflag) { // We closed the invetory
+			if (MouseX < 480 && MouseY < PANEL_TOP) {
+				SetCursorPos(MouseX + 160, MouseY);
+			}
+		} else if (!sbookflag) { // We opened the invetory
+			if (MouseX > 160 && MouseY < PANEL_TOP) {
+				SetCursorPos(MouseX - 160, MouseY);
 			}
 		}
-		sbookflag = false;
 	}
+	sbookflag = false;
 }
 
 void characterSheetKeyPressed()
 {
-	if (stextflag == STORE_NONE) {
-		chrflag = !chrflag;
-		if (!invflag && !sbookflag && CanPanelsCoverView()) {
-			if (!chrflag) { // We closed the character sheet
-				if (MouseX > 160 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX - 160, MouseY);
-				}
-			} else if (!questlog) { // We opened the character sheet
-				if (MouseX < 480 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX + 160, MouseY);
-				}
+	if (stextflag != STORE_NONE)
+		return;
+	chrflag = !chrflag;
+	if (!invflag && !sbookflag && CanPanelsCoverView()) {
+		if (!chrflag) { // We closed the character sheet
+			if (MouseX > 160 && MouseY < PANEL_TOP) {
+				SetCursorPos(MouseX - 160, MouseY);
+			}
+		} else if (!questlog) { // We opened the character sheet
+			if (MouseX < 480 && MouseY < PANEL_TOP) {
+				SetCursorPos(MouseX + 160, MouseY);
 			}
 		}
-		questlog = false;
 	}
+	questlog = false;
 }
 
 void questLogKeyPressed()
 {
-	if (stextflag == STORE_NONE) {
-		if (!questlog) {
-			StartQuestlog();
-		} else {
-			questlog = false;
-		}
-		if (!invflag && !sbookflag && CanPanelsCoverView()) {
-			if (!questlog) { // We closed the quest log
-				if (MouseX > 160 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX - 160, MouseY);
-				}
-			} else if (!chrflag) { // We opened the character quest log
-				if (MouseX < 480 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX + 160, MouseY);
-				}
+	if (stextflag != STORE_NONE)
+		return;
+	if (!questlog) {
+		StartQuestlog();
+	} else {
+		questlog = false;
+	}
+	if (!invflag && !sbookflag && CanPanelsCoverView()) {
+		if (!questlog) { // We closed the quest log
+			if (MouseX > 160 && MouseY < PANEL_TOP) {
+				SetCursorPos(MouseX - 160, MouseY);
+			}
+		} else if (!chrflag) { // We opened the character quest log
+			if (MouseX < 480 && MouseY < PANEL_TOP) {
+				SetCursorPos(MouseX + 160, MouseY);
 			}
 		}
-		chrflag = false;
 	}
+	chrflag = false;
 }
 
 void displaySpellsKeyPressed()
 {
-	if (stextflag == STORE_NONE) {
-		chrflag = false;
-		questlog = false;
-		invflag = false;
-		sbookflag = false;
-		if (!spselflag) {
-			DoSpeedBook();
-		} else {
-			spselflag = false;
-		}
-		track_repeat_walk(false);
+	if (stextflag != STORE_NONE)
+		return;
+	chrflag = false;
+	questlog = false;
+	invflag = false;
+	sbookflag = false;
+	if (!spselflag) {
+		DoSpeedBook();
+	} else {
+		spselflag = false;
 	}
+	track_repeat_walk(false);
 }
 
 void spellBookKeyPressed()
 {
-	if (stextflag == STORE_NONE) {
-		sbookflag = !sbookflag;
-		if (!chrflag && !questlog && CanPanelsCoverView()) {
-			if (!sbookflag) { // We closed the invetory
-				if (MouseX < 480 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX + 160, MouseY);
-				}
-			} else if (!invflag) { // We opened the invetory
-				if (MouseX > 160 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX - 160, MouseY);
-				}
+	if (stextflag != STORE_NONE)
+		return;
+	sbookflag = !sbookflag;
+	if (!chrflag && !questlog && CanPanelsCoverView()) {
+		if (!sbookflag) { // We closed the invetory
+			if (MouseX < 480 && MouseY < PANEL_TOP) {
+				SetCursorPos(MouseX + 160, MouseY);
+			}
+		} else if (!invflag) { // We opened the invetory
+			if (MouseX > 160 && MouseY < PANEL_TOP) {
+				SetCursorPos(MouseX - 160, MouseY);
 			}
 		}
-		invflag = false;
 	}
+	invflag = false;
 }
 
 void initKeymapActions()
