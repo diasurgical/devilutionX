@@ -1244,7 +1244,7 @@ extern void DrawControllerModifierHints(const CelOutputBuffer &out);
 void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 {
 	DrawGame(out, StartX, StartY);
-	if (automapflag) {
+	if (AutomapActive) {
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
 	DrawMonsterHealthBar(out);

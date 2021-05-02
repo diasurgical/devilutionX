@@ -1184,7 +1184,7 @@ static void PressKey(int vkey)
 				stream_stop();
 			}
 			questlog = false;
-			automapflag = false;
+			AutomapActive = false;
 			msgdelay = 0;
 			gamemenu_off();
 			DisplayHelp();
@@ -1258,7 +1258,7 @@ static void PressKey(int vkey)
 			QuestlogUp();
 		} else if (helpflag) {
 			HelpScrollUp();
-		} else if (automapflag) {
+		} else if (AutomapActive) {
 			AutomapUp();
 		}
 	} else if (vkey == DVL_VK_DOWN) {
@@ -1268,7 +1268,7 @@ static void PressKey(int vkey)
 			QuestlogDown();
 		} else if (helpflag) {
 			HelpScrollDown();
-		} else if (automapflag) {
+		} else if (AutomapActive) {
 			AutomapDown();
 		}
 	} else if (vkey == DVL_VK_PRIOR) {
@@ -1280,11 +1280,11 @@ static void PressKey(int vkey)
 			STextNext();
 		}
 	} else if (vkey == DVL_VK_LEFT) {
-		if (automapflag && !talkflag) {
+		if (AutomapActive && !talkflag) {
 			AutomapLeft();
 		}
 	} else if (vkey == DVL_VK_RIGHT) {
-		if (automapflag && !talkflag) {
+		if (AutomapActive && !talkflag) {
 			AutomapRight();
 		}
 	} else if (vkey == DVL_VK_TAB) {
@@ -1297,7 +1297,7 @@ static void PressKey(int vkey)
 			qtextflag = false;
 			stream_stop();
 		}
-		automapflag = false;
+		AutomapActive = false;
 		msgdelay = 0;
 		gamemenu_off();
 		doom_close();
@@ -1435,13 +1435,13 @@ static void PressChar(int32_t vkey)
 		return;
 	case '+':
 	case '=':
-		if (automapflag) {
+		if (AutomapActive) {
 			AutomapZoomIn();
 		}
 		return;
 	case '-':
 	case '_':
-		if (automapflag) {
+		if (AutomapActive) {
 			AutomapZoomOut();
 		}
 		return;

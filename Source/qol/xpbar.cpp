@@ -34,11 +34,11 @@ void DrawBar(const CelOutputBuffer &out, int x, int y, int width, const ColorGra
 	FastDrawHorizLine(out, x, y + 3, width, gradient[gradient.size() / 2 - 1]);
 }
 
-void DrawEndCap(const CelOutputBuffer &out, int x, int y, int idx, const ColorGradient &gradient)
+void DrawEndCap(const CelOutputBuffer &out, Point point, int idx, const ColorGradient &gradient)
 {
-	SetPixel(out, x, y + 1, gradient[idx * 3 / 4]);
-	SetPixel(out, x, y + 2, gradient[idx]);
-	SetPixel(out, x, y + 3, gradient[idx / 2]);
+	SetPixel(out, { point.x, point.y + 1 }, gradient[idx * 3 / 4]);
+	SetPixel(out, { point.x, point.y + 2 }, gradient[idx]);
+	SetPixel(out, { point.x, point.y + 3 }, gradient[idx / 2]);
 }
 
 } // namespace
@@ -101,7 +101,7 @@ void DrawXPBar(const CelOutputBuffer &out)
 	DrawBar(out, xPos, yPos, fullBar, SILVER_GRADIENT);
 
 	// End pixels appear gradually
-	DrawEndCap(out, xPos + fullBar, yPos, fade, SILVER_GRADIENT);
+	DrawEndCap(out, { xPos + static_cast<int>(fullBar), yPos }, fade, SILVER_GRADIENT);
 }
 
 bool CheckXPBarInfo()

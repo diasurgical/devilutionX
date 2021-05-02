@@ -75,7 +75,8 @@ constexpr std::uint8_t GetCelTransparentWidth(std::uint8_t control)
 
 constexpr std::uint8_t MaxCl2Width = 65;
 
-BYTE *GetLightTable(char light) {
+BYTE *GetLightTable(char light)
+{
 	int idx = light4flag ? 1024 : 4096;
 	if (light == 2)
 		idx += 256; // gray colors
@@ -548,26 +549,26 @@ void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, cons
 	}
 }
 
-void SetPixel(const CelOutputBuffer &out, int sx, int sy, BYTE col)
+void SetPixel(const CelOutputBuffer &out, Point position, BYTE col)
 {
-	if (!out.in_bounds(sx, sy))
+	if (!out.in_bounds(position))
 		return;
 
-	*out.at(sx, sy) = col;
+	*out.at(position.x, position.y) = col;
 }
 
-void DrawLineTo(const CelOutputBuffer &out, int x0, int y0, int x1, int y1, BYTE color_index)
+void DrawLineTo(const CelOutputBuffer &out, Point a, Point b, BYTE color_index)
 {
-	int dx = x1 - x0;
-	int dy = y1 - y0;
+	int dx = b.x - a.x;
+	int dy = b.y - a.y;
 	int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
 	float ix = dx / (float)steps;
 	float iy = dy / (float)steps;
-	float sx = x0;
-	float sy = y0;
+	float sx = a.x;
+	float sy = a.y;
 
 	for (int i = 0; i <= steps; i++, sx += ix, sy += iy) {
-		SetPixel(out, sx, sy, color_index);
+		SetPixel(out, { static_cast<int>(sx), static_cast<int>(sy) }, color_index);
 	}
 }
 

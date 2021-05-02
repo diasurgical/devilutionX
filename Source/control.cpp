@@ -972,10 +972,10 @@ void control_check_btn_press()
 void DoAutoMap()
 {
 	if (currlevel != 0 || gbIsMultiplayer) {
-		if (!automapflag)
+		if (!AutomapActive)
 			StartAutomap();
 		else
-			automapflag = false;
+			AutomapActive = false;
 	} else {
 		InitDiabloMsg(EMSG_NO_AUTOMAP_IN_TOWN);
 	}
