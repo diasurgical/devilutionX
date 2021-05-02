@@ -1,20 +1,5 @@
 version: 2
 jobs:
-  linux_x86_64:
-    docker:
-      - image: debian:testing
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: apt-get update -y
-      - run: apt-get install -y cmake file g++ git libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev rpm wget
-      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
-      - run: cmake --build build -j 2 --target package
-      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
-      - run: Packaging/nix/LinuxReleasePackaging.sh
-      - run: Packaging/nix/AppImage.sh
-      - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86_64.appimage}
-      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64.tar.xz}
   linux_x86_64_test:
     docker:
       - image: debian:testing
@@ -29,35 +14,6 @@ jobs:
       - run: bash <(curl -s https://codecov.io/bash)
     environment:
       CTEST_OUTPUT_ON_FAILURE: 1
-  linux_x86_64_sdl1:
-    docker:
-      - image: debian:testing
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: apt-get update -y
-      - run: apt-get install -y cmake file g++ git libfmt-dev libsdl-dev libsdl-ttf2.0-dev libsodium-dev rpm
-      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
-      - run: cmake --build build -j 2 --target package
-      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
-      - run: Packaging/nix/LinuxReleasePackaging.sh
-      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64_sdl1.tar.xz}
-  linux_x86:
-    docker:
-      - image: debian:testing
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: dpkg --add-architecture i386
-      - run: apt-get update -y
-      - run: apt-get install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 rpm wget
-      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
-      - run: cmake --build build -j 2 --target package
-      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
-      - run: Packaging/nix/LinuxReleasePackaging.sh
-      - run: Packaging/nix/AppImage.sh
-      - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86.appimage}
-      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86.tar.xz}
   windows_x86:
     docker:
       - image: debian:testing
@@ -146,12 +102,9 @@ workflows:
   version: 2
   testflow:
     jobs:
-      - linux_x86_64
       - linux_x86_64_test
-      - linux_x86
       - windows_x86
       - windows_x64
-      - linux_x86_64_sdl1
       - switch
       - 3ds
       - amigaos-m68k
