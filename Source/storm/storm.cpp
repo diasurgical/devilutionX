@@ -13,6 +13,7 @@
 #include "utils/paths.h"
 #include "utils/stubs.h"
 #include "utils/log.hpp"
+#include "utils/sdl_mutex.h"
 
 // Include Windows headers for Get/SetLastError.
 #if defined(_WIN32)
@@ -33,6 +34,13 @@ bool directFileAccess = false;
 std::string *SBasePath = nullptr;
 
 } // namespace
+
+bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh)
+{
+	static SDL_mutex *Mutex = SDL_CreateMutex();
+	SDLMutexLockGuard lock(Mutex);
+	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, read, lpDistanceToMoveHigh);
+}
 
 radon::File &getIni()
 {

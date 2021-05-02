@@ -145,7 +145,7 @@ static std::unique_ptr<uint8_t[]> pfile_read_archive(HANDLE archive, const char 
 		return nullptr;
 
 	std::unique_ptr<uint8_t[]> buf { new uint8_t[*pdwLen] };
-	if (!SFileReadFile(file, buf.get(), *pdwLen, &nread, nullptr))
+	if (!SFileReadFileThreadSafe(file, buf.get(), *pdwLen, &nread))
 		return nullptr;
 	SFileCloseFile(file);
 

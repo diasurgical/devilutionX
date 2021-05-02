@@ -730,7 +730,7 @@ std::unique_ptr<BYTE[]> LoadFileInMem(const char *pszName, DWORD *pdwFileLen)
 
 	std::unique_ptr<BYTE[]> buf { new BYTE[fileLen] };
 
-	SFileReadFile(file, buf.get(), fileLen, nullptr, nullptr);
+	SFileReadFileThreadSafe(file, buf.get(), fileLen);
 	SFileCloseFile(file);
 
 	return buf;
@@ -757,7 +757,7 @@ DWORD LoadFileWithMem(const char *pszName, BYTE *p)
 		app_fatal("Zero length SFILE:\n%s", pszName);
 	}
 
-	SFileReadFile(hsFile, p, dwFileLen, nullptr, nullptr);
+	SFileReadFileThreadSafe(hsFile, p, dwFileLen);
 	SFileCloseFile(hsFile);
 
 	return dwFileLen;
