@@ -29,7 +29,7 @@ void MsgBox(const char *pszFmt, va_list va)
 {
 	char text[256];
 
-	vsnprintf(text, 256, pszFmt, va);
+	vsnprintf(text, sizeof(text), pszFmt, va);
 
 	UiErrorOkDialog(_("Error"), text);
 }
@@ -86,7 +86,7 @@ void DrawDlg(const char *pszFmt, ...)
 	va_list va;
 
 	va_start(va, pszFmt);
-	vsnprintf(text, 256, pszFmt, va);
+	vsnprintf(text, sizeof(text), pszFmt, va);
 	va_end(va);
 
 	UiErrorOkDialog(PROJECT_NAME, text, false);
@@ -114,7 +114,7 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 
 	FreeDlg();
 
-	snprintf(text, 1024, _("%s\n\nThe error occurred at: %s line %d"), error, logFilePath, logLineNr);
+	snprintf(text, sizeof(text), _("%s\n\nThe error occurred at: %s line %d"), error, logFilePath, logLineNr);
 
 	UiErrorOkDialog(title, text);
 	app_fatal(nullptr);
@@ -133,14 +133,14 @@ void FileErrDlg(const char *error)
 		error = "";
 	snprintf(
 	    text,
-	    1024,
+	    sizeof(text),
 	    _("Unable to open a required file.\n"
-	    "\n"
-	    "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
-	    "011bc6518e6166206231080a4440b373\n"
-	    "68f049866b44688a7af65ba766bef75a\n"
-	    "\n"
-	    "The problem occurred when loading:\n%s"),
+	      "\n"
+	      "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
+	      "011bc6518e6166206231080a4440b373\n"
+	      "68f049866b44688a7af65ba766bef75a\n"
+	      "\n"
+	      "The problem occurred when loading:\n%s"),
 	    error);
 
 	UiErrorOkDialog(_("Data File Error"), text);
@@ -153,9 +153,10 @@ void FileErrDlg(const char *error)
 void InsertCDDlg()
 {
 	char text[1024];
+
 	snprintf(
 	    text,
-	    1024,
+	    sizeof(text),
 	    "%s",
 	    _("Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 	      "\n"
@@ -172,7 +173,7 @@ void DirErrorDlg(const char *error)
 {
 	char text[1024];
 
-	snprintf(text, 1024, _("Unable to write to location:\n%s"), error);
+	snprintf(text, sizeof(text), _("Unable to write to location:\n%s"), error);
 
 	UiErrorOkDialog(_("Read-Only Directory Error"), text);
 	app_fatal(nullptr);
