@@ -117,7 +117,7 @@ static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 
 static void NetRecvPlrData(TPkt *pkt)
 {
-	Point target = plr[myplr].GetTargetPosition();
+	const Point target = plr[myplr].GetTargetPosition();
 
 	pkt->hdr.wCheck = LoadBE32("\0\0ip");
 	pkt->hdr.px = plr[myplr].position.tile.x;

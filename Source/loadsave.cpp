@@ -1302,7 +1302,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->position.future.y);
 
 	// For backwards compatibility
-	Point target = pPlayer->GetTargetPosition();
+	const Point target = pPlayer->GetTargetPosition();
 	file->writeLE<int32_t>(target.x);
 	file->writeLE<int32_t>(target.y);
 
