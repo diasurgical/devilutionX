@@ -460,20 +460,15 @@ void DrawSpellList(const CelOutputBuffer &out)
 							v++;
 						}
 					}
-					if (v == 1)
-						strcpy(tempstr, _("1 Scroll"));
-					else
-						sprintf(tempstr, _("%i Scrolls"), v);
+					sprintf(tempstr, ngettext("%i Scroll", "%i Scrolls", v), v);
 					AddPanelString(tempstr, true);
 				} break;
-				case RSPLTYPE_CHARGES:
+				case RSPLTYPE_CHARGES: {
 					sprintf(infostr, _("Staff of %s"), _(spelldata[pSpell].sNameText));
-					if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges == 1)
-						strcpy(tempstr, _("1 Charge"));
-					else
-						sprintf(tempstr, _("%i Charges"), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
+					int charges = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges;
+					sprintf(tempstr, ngettext("%i Charge", "%i Charges", charges), charges);
 					AddPanelString(tempstr, true);
-					break;
+				} break;
 				case RSPLTYPE_INVALID:
 					break;
 				}
@@ -1840,9 +1835,10 @@ void DrawSpellBook(const CelOutputBuffer &out)
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, _("Skill"));
 				break;
-			case RSPLTYPE_CHARGES:
-				sprintf(tempstr, _("Staff (%i charges)"), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
-				break;
+			case RSPLTYPE_CHARGES: {
+				int charges = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges;
+				sprintf(tempstr, ngettext("Staff (%i charge)", "Staff (%i charges)", charges), charges);
+			} break;
 			default: {
 				int mana = GetManaAmount(myplr, sn) >> 6;
 				int min;

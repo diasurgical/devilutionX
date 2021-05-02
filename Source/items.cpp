@@ -3503,14 +3503,10 @@ void PrintItemPower(char plidx, ItemStruct *x)
 			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist All: 75% MAX"));
 		break;
 	case IPL_SPLLVLADD:
-		if (x->_iSplLvlAdd == 1)
-			strcpy(tempstr, _("spells are increased 1 level"));
-		else if (x->_iSplLvlAdd > 1)
-			sprintf(tempstr, _("spells are increased %i levels"), x->_iSplLvlAdd);
-		else if (x->_iSplLvlAdd == -1)
-			strcpy(tempstr, _("spells are decreased 1 level"));
-		else if (x->_iSplLvlAdd < -1)
-			sprintf(tempstr, _("spells are decreased %i levels"), -x->_iSplLvlAdd);
+		if (x->_iSplLvlAdd > 0)
+			sprintf(tempstr, ngettext("spells are increased %i level", "spells are increased %i levels", x->_iSplLvlAdd), x->_iSplLvlAdd);
+		else if (x->_iSplLvlAdd < 0)
+			sprintf(tempstr, ngettext("spells are decreased %i level", "spells are decreased %i levels", -x->_iSplLvlAdd), -x->_iSplLvlAdd);
 		else if (x->_iSplLvlAdd == 0)
 			strcpy(tempstr, _("spell levels unchanged (?)"));
 		break;
@@ -3518,7 +3514,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("Extra charges"));
 		break;
 	case IPL_SPELL:
-		sprintf(tempstr, _("%i %s charges"), x->_iMaxCharges, _(spelldata[x->_iSpell].sNameText));
+		sprintf(tempstr, ngettext("%i %s charge", "%i %s charges", x->_iMaxCharges), x->_iMaxCharges, _(spelldata[x->_iSpell].sNameText));
 		break;
 	case IPL_FIREDAM:
 		if (x->_iFMinDam == x->_iFMaxDam)
@@ -3661,7 +3657,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("fast block"));
 		break;
 	case IPL_DAMMOD:
-		sprintf(tempstr, _("adds %i points to damage"), x->_iPLDamMod);
+		sprintf(tempstr, ngettext("adds %i point to damage", "adds %i points to damage", x->_iPLDamMod), x->_iPLDamMod);
 		break;
 	case IPL_RNDARROWVEL:
 		strcpy(tempstr, _("fires random speed arrows"));
