@@ -13,6 +13,7 @@ include(CMake/genex.cmake)
 
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
+option(TSAN "Enable thread sanitizer (not compatible with ASAN=ON)" OFF)
 DEBUG_OPTION(DEBUG "Enable debug mode in engine")
 option(GPERF "Build with GPerfTools profiler" OFF)
 option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
@@ -631,12 +632,18 @@ foreach(
   endif()
 endforeach(def_name)
 
-genex_for_option(ASAN)
 genex_for_option(UBSAN)
-target_compile_options(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-target_link_libraries(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
 target_compile_options(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
 target_link_libraries(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+
+if(TSAN)
+  target_compile_options(${BIN_TARGET} PUBLIC -fsanitize=thread)
+  target_link_libraries(${BIN_TARGET} PUBLIC -fsanitize=thread)
+else()
+  genex_for_option(ASAN)
+  target_compile_options(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+  target_link_libraries(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+endif()
 
 if(USE_SDL1)
   target_link_libraries(${BIN_TARGET} PRIVATE
