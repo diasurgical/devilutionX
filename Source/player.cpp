@@ -490,31 +490,31 @@ void InitPlrGFXMem(int pnum)
 	const HeroClass c = player._pClass;
 
 	// STAND (ST: TOWN, AS: DUNGEON)
-	player._pNData = DiabloAllocPtr(std::max(GetPlrGFXSize(c, "ST"), GetPlrGFXSize(c, "AS")));
+	player._pNData = new std::uint8_t[std::max(GetPlrGFXSize(c, "ST"), GetPlrGFXSize(c, "AS"))];
 
 	// WALK (WL: TOWN, AW: DUNGEON)
-	player._pWData = DiabloAllocPtr(std::max(GetPlrGFXSize(c, "WL"), GetPlrGFXSize(c, "AW")));
+	player._pWData = new std::uint8_t[std::max(GetPlrGFXSize(c, "WL"), GetPlrGFXSize(c, "AW"))];
 
 	// ATTACK
-	player._pAData = DiabloAllocPtr(GetPlrGFXSize(c, "AT"));
+	player._pAData = new std::uint8_t[GetPlrGFXSize(c, "AT")];
 
 	// HIT
-	player._pHData = DiabloAllocPtr(GetPlrGFXSize(c, "HT"));
+	player._pHData = new std::uint8_t[GetPlrGFXSize(c, "HT")];
 
 	// LIGHTNING
-	player._pLData = DiabloAllocPtr(GetPlrGFXSize(c, "LM"));
+	player._pLData = new std::uint8_t[GetPlrGFXSize(c, "LM")];
 
 	// FIRE
-	player._pFData = DiabloAllocPtr(GetPlrGFXSize(c, "FM"));
+	player._pFData = new std::uint8_t[GetPlrGFXSize(c, "FM")];
 
 	// MAGIC
-	player._pTData = DiabloAllocPtr(GetPlrGFXSize(c, "QM"));
+	player._pTData = new std::uint8_t[GetPlrGFXSize(c, "QM")];
 
 	// DEATH
-	player._pDData = DiabloAllocPtr(GetPlrGFXSize(c, "DT"));
+	player._pDData = new std::uint8_t[GetPlrGFXSize(c, "DT")];
 
 	// BLOCK
-	player._pBData = DiabloAllocPtr(GetPlrGFXSize(c, "BL"));
+	player._pBData = new std::uint8_t[GetPlrGFXSize(c, "BL")];
 
 	player._pGFXLoad = 0;
 }
@@ -525,15 +525,24 @@ void FreePlayerGFX(int pnum)
 		app_fatal("FreePlayerGFX: illegal player %d", pnum);
 	}
 
-	MemFreeDbg(plr[pnum]._pNData);
-	MemFreeDbg(plr[pnum]._pWData);
-	MemFreeDbg(plr[pnum]._pAData);
-	MemFreeDbg(plr[pnum]._pHData);
-	MemFreeDbg(plr[pnum]._pLData);
-	MemFreeDbg(plr[pnum]._pFData);
-	MemFreeDbg(plr[pnum]._pTData);
-	MemFreeDbg(plr[pnum]._pDData);
-	MemFreeDbg(plr[pnum]._pBData);
+	delete[] plr[pnum]._pNData;
+	plr[pnum]._pNData = nullptr;
+	delete[] plr[pnum]._pWData;
+	plr[pnum]._pWData = nullptr;
+	delete[] plr[pnum]._pAData;
+	plr[pnum]._pAData = nullptr;
+	delete[] plr[pnum]._pHData;
+	plr[pnum]._pHData = nullptr;
+	delete[] plr[pnum]._pLData;
+	plr[pnum]._pLData = nullptr;
+	delete[] plr[pnum]._pFData;
+	plr[pnum]._pFData = nullptr;
+	delete[] plr[pnum]._pTData;
+	plr[pnum]._pTData = nullptr;
+	delete[] plr[pnum]._pDData;
+	plr[pnum]._pDData = nullptr;
+	delete[] plr[pnum]._pBData;
+	plr[pnum]._pBData = nullptr;
 	plr[pnum]._pGFXLoad = 0;
 }
 
