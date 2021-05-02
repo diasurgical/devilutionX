@@ -94,7 +94,8 @@ struct Point {
 	}
 
 	/**
-	 * @brief Fast approximate distance between two point, using only integer arithmetic, with less than ~5% error
+	 * @brief Fast approximate distance between two points, using only integer arithmetic, with less than ~5% error
+
 	 * @param other Pointer to which we want the distance
 	 * @return Magnitude of vector this -> other
 	*/
