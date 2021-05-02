@@ -17,6 +17,7 @@ void PushAulibDecoder::PushSamples(const std::int16_t *data, unsigned size) noex
 	std::memcpy(item.data.get(), data, size * sizeof(data[0]));
 	item.len = size;
 	item.pos = item.data.get();
+	SDLMutexLockGuard lock(queue_mutex_.get());
 	queue_.push(std::move(item));
 }
 
@@ -30,6 +31,7 @@ void PushAulibDecoder::PushSamples(const std::uint8_t *data, unsigned size) noex
 		item.data[i] = static_cast<std::int16_t>((data[i] - Center) * Scale);
 	item.len = size;
 	item.pos = item.data.get();
+	SDLMutexLockGuard lock(queue_mutex_.get());
 	queue_.push(std::move(item));
 }
 
