@@ -982,7 +982,7 @@ void StoreSpellCoords()
 
 bool IsAutomapActive()
 {
-	return automapflag && leveltype != DTYPE_TOWN;
+	return AutomapActive && leveltype != DTYPE_TOWN;
 }
 
 bool IsMovingMouseCursorWithController()
@@ -1002,8 +1002,8 @@ void HandleRightStickMotion()
 	if (IsAutomapActive()) { // move map
 		int dx = 0, dy = 0;
 		acc.Pool(&dx, &dy, 32);
-		AutoMapXOfs += dy + dx;
-		AutoMapYOfs += dy - dx;
+		AutomapOffset.x += dy + dx;
+		AutomapOffset.y += dy - dx;
 		return;
 	}
 

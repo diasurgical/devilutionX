@@ -255,9 +255,9 @@ struct CelOutputBuffer {
 		return surface->pitch;
 	}
 
-	bool in_bounds(Sint16 x, Sint16 y) const
+	bool in_bounds(Point position) const
 	{
-		return x >= 0 && y >= 0 && x < region.w && y < region.h;
+		return position.x >= 0 && position.y >= 0 && position.x < region.w && position.y < region.h;
 	}
 
 	/**
@@ -489,11 +489,10 @@ void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, cons
 /**
  * @brief Set the value of a single pixel in the back buffer, checks bounds
  * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
+ * @param point Target buffer coordinate
  * @param col Color index from current palette
  */
-void SetPixel(const CelOutputBuffer &out, int sx, int sy, BYTE col);
+void SetPixel(const CelOutputBuffer &out, Point position, BYTE col);
 
 /**
  * @brief Blit CL2 sprite, to the back buffer at the given coordianates
@@ -540,13 +539,11 @@ void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, const CelSprite &c
 /**
  * @brief Draw a line in the target buffer
  * @param out Target buffer
- * @param x0 Back buffer coordinate
- * @param y0 Back buffer coordinate
- * @param x1 Back buffer coordinate
- * @param y1 Back buffer coordinate
+ * @param a Back buffer coordinate
+ * @param b Back buffer coordinate
  * @param color_index Color index from current palette
  */
-void DrawLineTo(const CelOutputBuffer &out, int x0, int y0, int x1, int y1, BYTE color_index);
+void DrawLineTo(const CelOutputBuffer &out, Point a, Point b, BYTE color_index);
 
 /**
  * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,

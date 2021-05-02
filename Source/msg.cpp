@@ -519,7 +519,7 @@ void delta_leave_sync(BYTE bLevel)
 		pD->_mhitpoints = monster[ma]._mhitpoints;
 		pD->_mactive = monster[ma]._msquelch;
 	}
-	memcpy(&sgLocals[bLevel].automapsv, automapview, sizeof(automapview));
+	memcpy(&sgLocals[bLevel].automapsv, AutomapView, sizeof(AutomapView));
 }
 
 static void delta_sync_object(int oi, _cmd_id bCmd, BYTE bLevel)
@@ -742,7 +742,7 @@ void DeltaLoadLevel()
 				}
 			}
 		}
-		memcpy(automapview, &sgLocals[currlevel], sizeof(automapview));
+		memcpy(AutomapView, &sgLocals[currlevel], sizeof(AutomapView));
 	}
 
 	for (i = 0; i < MAXITEMS; i++) {

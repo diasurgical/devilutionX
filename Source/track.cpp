@@ -29,7 +29,7 @@ void track_process()
 	if (plr[myplr].actionFrame <= 6 && plr[myplr]._pmode != PM_STAND)
 		return;
 
-	const Point target = plr[myplr].GetTargetPosition();
+	Point target = plr[myplr].GetTargetPosition();
 	if (cursmx != target.x || cursmy != target.y) {
 		Uint32 tick = SDL_GetTicks();
 		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * 6) {

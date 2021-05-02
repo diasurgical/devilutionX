@@ -146,7 +146,7 @@ void PrintDebugPlayer(bool bNextPlayer)
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  Lvl = %i : Change = %i", plr[dbgplr].plrlevel, plr[dbgplr]._pLvlChanging);
 		NetSendCmdString(1 << myplr, dstr);
-		const Point target = plr[dbgplr].GetTargetPosition();
+		Point target = plr[dbgplr].GetTargetPosition();
 		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", plr[dbgplr].position.tile.x, plr[dbgplr].position.tile.y, target.x, target.y);
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", plr[dbgplr]._pmode, plr[dbgplr].destAction, plr[dbgplr].walkpath[0]);

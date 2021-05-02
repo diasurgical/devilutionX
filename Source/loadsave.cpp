@@ -1144,7 +1144,7 @@ void LoadGame(bool firstflag)
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
-				automapview[i][j] = file.nextBool8();
+				AutomapView[i][j] = file.nextBool8();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
@@ -1160,7 +1160,7 @@ void LoadGame(bool firstflag)
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
 		SpawnPremium(myplr);
 
-	automapflag = file.nextBool8();
+	AutomapActive = file.nextBool8();
 	AutoMapScale = file.nextBE<int32_t>();
 	AutomapZoomReset();
 	ResyncQuests();
@@ -1302,7 +1302,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->position.future.y);
 
 	// For backwards compatibility
-	const Point target = pPlayer->GetTargetPosition();
+	Point target = pPlayer->GetTargetPosition();
 	file->writeLE<int32_t>(target.x);
 	file->writeLE<int32_t>(target.y);
 
@@ -1903,7 +1903,7 @@ void SaveGameData()
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
-				file.writeLE<uint8_t>(automapview[i][j]);
+				file.writeLE<uint8_t>(AutomapView[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
@@ -1917,7 +1917,7 @@ void SaveGameData()
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
 		SavePremium(&file, i);
 
-	file.writeLE<uint8_t>(automapflag);
+	file.writeLE<uint8_t>(AutomapActive);
 	file.writeBE<int32_t>(AutoMapScale);
 }
 
@@ -2000,7 +2000,7 @@ void SaveLevel()
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
-				file.writeLE<uint8_t>(automapview[i][j]);
+				file.writeLE<uint8_t>(AutomapView[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
@@ -2086,7 +2086,7 @@ void LoadLevel()
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
-				automapview[i][j] = file.nextBool8();
+				AutomapView[i][j] = file.nextBool8();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
