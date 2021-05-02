@@ -238,7 +238,7 @@ void InitSmith()
 	}
 	towners[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_SW], towners[numtowners]._tNFrames, 3);
-	towners[numtowners]._tName = {_("Griswold the Blacksmith")};
+	towners[numtowners]._tName = _("Griswold the Blacksmith");
 	numtowners++;
 }
 
@@ -252,7 +252,7 @@ void InitBarOwner()
 	}
 	towners[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_SW], towners[numtowners]._tNFrames, 3);
-	towners[numtowners]._tName = {_("Ogden the Tavern owner")};
+	towners[numtowners]._tName = _("Ogden the Tavern owner");
 	numtowners++;
 }
 
@@ -268,7 +268,7 @@ void InitTownDead()
 	}
 	towners[numtowners]._tNFrames = 8;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_N], towners[numtowners]._tNFrames, 6);
-	towners[numtowners]._tName = {_("Wounded Townsman")};
+	towners[numtowners]._tName = _("Wounded Townsman");
 	numtowners++;
 }
 
@@ -284,7 +284,7 @@ void InitWitch()
 	}
 	towners[numtowners]._tNFrames = 19;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 6);
-	towners[numtowners]._tName =  {_("Adria the Witch")};
+	towners[numtowners]._tName =  _("Adria the Witch");
 	numtowners++;
 }
 
@@ -300,7 +300,7 @@ void InitBarmaid()
 	}
 	towners[numtowners]._tNFrames = 18;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 6);
-	towners[numtowners]._tName = {_("Gillian the Barmaid")};
+	towners[numtowners]._tName = _("Gillian the Barmaid");
 	numtowners++;
 }
 
@@ -316,7 +316,7 @@ void InitBoy()
 	}
 	towners[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 6);
-	towners[numtowners]._tName = {_("Wirt the Peg-legged boy")};
+	towners[numtowners]._tName = _("Wirt the Peg-legged boy");
 	numtowners++;
 }
 
@@ -332,7 +332,7 @@ void InitHealer()
 	}
 	towners[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_SE], towners[numtowners]._tNFrames, 6);
-	towners[numtowners]._tName = {_("Pepin the Healer")};
+	towners[numtowners]._tName = _("Pepin the Healer");
 	numtowners++;
 }
 
@@ -348,7 +348,7 @@ void InitTeller()
 	}
 	towners[numtowners]._tNFrames = 25;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 3);
-	towners[numtowners]._tName = {_("Cain the Elder")};
+	towners[numtowners]._tName = _("Cain the Elder");
 	numtowners++;
 }
 
@@ -364,7 +364,7 @@ void InitDrunk()
 	}
 	towners[numtowners]._tNFrames = 18;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 3);
-	towners[numtowners]._tName = {_("Farnham the Drunk")};
+	towners[numtowners]._tName = _("Farnham the Drunk");
 	numtowners++;
 }
 
@@ -387,7 +387,7 @@ void InitCows()
 		NewTownerAnim(numtowners, towners[numtowners]._tNAnim[dir], towners[numtowners]._tNFrames, 3);
 		towners[numtowners]._tAnimFrame = GenerateRnd(11) + 1;
 		towners[numtowners]._tSelFlag = true;
-		towners[numtowners]._tName = {_("Cow")};
+		towners[numtowners]._tName = _("Cow");
 
 		xo = x + cowoffx[dir];
 		yo = y + cowoffy[dir];
@@ -414,7 +414,7 @@ void InitFarmer()
 	}
 	towners[numtowners]._tNFrames = 15;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_S], towners[numtowners]._tNFrames, 3);
-	towners[numtowners]._tName = {_("Lester the farmer")};
+	towners[numtowners]._tName = _("Lester the farmer");
 	numtowners++;
 }
 
@@ -434,7 +434,7 @@ void InitCowFarmer()
 	}
 	towners[numtowners]._tNFrames = 15;
 	NewTownerAnim(numtowners, towners[numtowners]._tNAnim[DIR_SW], towners[numtowners]._tNFrames, 3);
-	towners[numtowners]._tName = {_("Complete Nut")};
+	towners[numtowners]._tName = _("Complete Nut");
 	numtowners++;
 }
 
@@ -546,7 +546,7 @@ void TownDead()
 		if (quests[Q_BUTCHER]._qactive != QUEST_INIT) {
 			towners[tidx]._tAnimDelay = 1000;
 			towners[tidx]._tAnimFrame = 1;
-			towners[tidx]._tName = {_("Slain Townsman")};
+			towners[tidx]._tName = _("Slain Townsman");
 		}
 	}
 	if (quests[Q_BUTCHER]._qactive != QUEST_INIT)
