@@ -663,7 +663,7 @@ endif()
 
 if(SWITCH)
   target_link_libraries(${BIN_TARGET} PRIVATE switch::libnx
-    -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+    -lfreetype -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
 endif()
 
 if(AMIGA)
@@ -682,12 +682,6 @@ if (VITA)
         png
         m
         z
-        FLAC
-        vorbisfile
-        vorbis
-        ogg
-        mikmod
-        mpg123
   )
   target_compile_definitions(${BIN_TARGET} PRIVATE VITA)
 endif()
