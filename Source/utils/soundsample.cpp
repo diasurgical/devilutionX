@@ -20,20 +20,11 @@
 
 namespace devilution {
 
-SoundSample::~SoundSample()
-{
-	if (file_handle_ != nullptr)
-		SFileCloseFile(file_handle_);
-}
-
 void SoundSample::Release()
 {
 	stream_ = nullptr;
 	file_data_ = nullptr;
 	file_data_size_ = 0;
-	if (file_handle_ != nullptr)
-		SFileCloseFile(file_handle_);
-	file_handle_ = nullptr;
 };
 
 /**
@@ -78,17 +69,16 @@ void SoundSample::Stop()
 int SoundSample::SetChunkStream(std::string filePath)
 {
 	file_path_ = std::move(filePath);
-	if (!SFileOpenFile(file_path_.c_str(), &file_handle_)) {
+	HANDLE handle;
+	if (!SFileOpenFile(file_path_.c_str(), &handle)) {
 		LogError(LogCategory::Audio, "SFileOpenFile failed (from SoundSample::SetChunkStream): {}", SErrGetLastError());
 		return -1;
 	}
 
-	stream_ = std::make_unique<Aulib::Stream>(SFileRw_FromStormHandle(file_handle_), std::make_unique<Aulib::DecoderDrwav>(),
+	stream_ = std::make_unique<Aulib::Stream>(SFileRw_FromStormHandle(handle), std::make_unique<Aulib::DecoderDrwav>(),
 	    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
 	if (!stream_->open()) {
 		stream_ = nullptr;
-		SFileCloseFile(file_handle_);
-		file_handle_ = nullptr;
 		LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
 		return -1;
 	}
