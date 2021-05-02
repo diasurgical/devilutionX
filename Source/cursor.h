@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <utility>
 
 #include "engine.h"
 #include "miniwin/miniwin.h"
@@ -34,8 +35,6 @@ extern int cursH;
 extern int pcursmonst;
 extern int icursW28;
 extern int icursH28;
-extern std::optional<CelSprite> pCursCels;
-extern std::optional<CelSprite> pCursCels2;
 extern int icursH;
 extern int8_t pcursinvitem;
 extern int icursW;
@@ -55,8 +54,13 @@ void CheckRportal();
 void CheckTown();
 void CheckCursMove();
 
-/* rdata */
-extern const int InvItemWidth[];
-extern const int InvItemHeight[];
+/** Returns the sprite for the given inventory index. */
+const CelSprite &GetInvItemSprite(int i);
+
+/** Returns the CEL frame index for the given inventory index. */
+int GetInvItemFrame(int i);
+
+/** Returns the width and height for an inventory index. */
+std::pair<int, int> GetInvItemSize(int i);
 
 } // namespace devilution

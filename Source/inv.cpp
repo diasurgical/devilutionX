@@ -3,6 +3,7 @@
  *
  * Implementation of player inventory.
  */
+#include <utility>
 
 #include "cursor.h"
 #include "minitext.h"
@@ -174,7 +175,7 @@ static void InvDrawSlotBack(const CelOutputBuffer &out, int X, int Y, int W, int
 
 void DrawInv(const CelOutputBuffer &out)
 {
-	int frame, frame_width, i, j, ii;
+	int frame, i, j, ii;
 	CelDrawTo(out, RIGHT_PANEL_X, 351, *pInvCels, 1);
 
 	InvXY slotSize[] = {
@@ -204,33 +205,31 @@ void DrawInv(const CelOutputBuffer &out)
 			InvDrawSlotBack(out, RIGHT_PANEL_X + screen_x, screen_y, slotSize[slot].X * INV_SLOT_SIZE_PX, slotSize[slot].Y * INV_SLOT_SIZE_PX);
 
 			frame = plr[myplr].InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
-			frame_width = InvItemWidth[frame];
+
+			int frameW;
+			int frameH;
+			std::tie(frameW, frameH) = GetInvItemSize(frame);
 
 			// calc item offsets for weapons smaller than 2x3 slots
 			if (slot == INVLOC_HAND_LEFT) {
-				screen_x += frame_width == INV_SLOT_SIZE_PX ? 14 : 0;
-				screen_y += InvItemHeight[frame] == (3 * INV_SLOT_SIZE_PX) ? 0 : -14;
+				screen_x += frameW == INV_SLOT_SIZE_PX ? 14 : 0;
+				screen_y += frameH == (3 * INV_SLOT_SIZE_PX) ? 0 : -14;
 			} else if (slot == INVLOC_HAND_RIGHT) {
-				screen_x += frame_width == INV_SLOT_SIZE_PX ? 13 : 1;
-				screen_y += InvItemHeight[frame] == 3 * INV_SLOT_SIZE_PX ? 0 : -14;
+				screen_x += frameW == INV_SLOT_SIZE_PX ? 13 : 1;
+				screen_y += frameH == 3 * INV_SLOT_SIZE_PX ? 0 : -14;
 			}
 
-			const CelSprite *cels;
-			if (frame <= 179) {
-				cels = &*pCursCels;
-			} else {
-				frame -= 179;
-				cels = &*pCursCels2;
-			}
+			const auto &cel = GetInvItemSprite(frame);
+			const int celFrame = GetInvItemFrame(frame);
 
 			if (pcursinvitem == slot) {
-				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].InvBody[slot], true), RIGHT_PANEL_X + screen_x, screen_y, *cels, frame, false);
+				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].InvBody[slot], true), RIGHT_PANEL_X + screen_x, screen_y, cel, celFrame, false);
 			}
 
 			if (plr[myplr].InvBody[slot]._iStatFlag) {
-				CelClippedDrawTo(out, RIGHT_PANEL_X + screen_x, screen_y, *cels, frame);
+				CelClippedDrawTo(out, RIGHT_PANEL_X + screen_x, screen_y, cel, celFrame);
 			} else {
-				CelDrawLightRedTo(out, RIGHT_PANEL_X + screen_x, screen_y, *cels, frame, 1);
+				CelDrawLightRedTo(out, RIGHT_PANEL_X + screen_x, screen_y, cel, celFrame, 1);
 			}
 
 			if (slot == INVLOC_HAND_LEFT) {
@@ -242,9 +241,9 @@ void DrawInv(const CelOutputBuffer &out)
 						light_table_index = 0;
 						cel_transparency_active = true;
 
-						const int dst_x = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X + (frame_width == INV_SLOT_SIZE_PX ? 13 : -1);
+						const int dst_x = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X + (frameW == INV_SLOT_SIZE_PX ? 13 : -1);
 						const int dst_y = slotPos[INVLOC_HAND_RIGHT].Y;
-						CelClippedBlitLightTransTo(out, dst_x, dst_y, *cels, frame);
+						CelClippedBlitLightTransTo(out, dst_x, dst_y, cel, celFrame);
 
 						cel_transparency_active = false;
 					}
@@ -268,15 +267,9 @@ void DrawInv(const CelOutputBuffer &out)
 		if (plr[myplr].InvGrid[j] > 0) { // first slot of an item
 			ii = plr[myplr].InvGrid[j] - 1;
 			frame = plr[myplr].InvList[ii]._iCurs + CURSOR_FIRSTITEM;
-			frame_width = InvItemWidth[frame];
 
-			const CelSprite *cels;
-			if (frame <= 179) {
-				cels = &*pCursCels;
-			} else {
-				frame -= 179;
-				cels = &*pCursCels2;
-			}
+			const auto &cel = GetInvItemSprite(frame);
+			const int celFrame = GetInvItemFrame(frame);
 
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
 				CelBlitOutlineTo(
@@ -284,7 +277,7 @@ void DrawInv(const CelOutputBuffer &out)
 				    GetOutlineColor(plr[myplr].InvList[ii], true),
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-				    *cels, frame, false);
+				    cel, celFrame, false);
 			}
 
 			if (plr[myplr].InvList[ii]._iStatFlag) {
@@ -292,13 +285,13 @@ void DrawInv(const CelOutputBuffer &out)
 				    out,
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-				    *cels, frame);
+				    cel, celFrame);
 			} else {
 				CelDrawLightRedTo(
 				    out,
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
-				    *cels, frame, 1);
+				    cel, celFrame, 1);
 			}
 		}
 	}
@@ -322,24 +315,19 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		InvDrawSlotBack(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 		int frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
-		const CelSprite *cels;
-		if (frame <= 179) {
-			cels = &*pCursCels;
-		} else {
-			frame -= 179;
-			cels = &*pCursCels2;
-		}
+		const auto &cel = GetInvItemSprite(frame);
+		const int celFrame = GetInvItemFrame(frame);
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 			if (!sgbControllerActive || invflag) {
-				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].SpdList[i], true), InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, *cels, frame, false);
+				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].SpdList[i], true), InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cel, celFrame, false);
 			}
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag) {
-			CelClippedDrawTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, *cels, frame);
+			CelClippedDrawTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cel, celFrame);
 		} else {
-			CelDrawLightRedTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, *cels, frame, 1);
+			CelDrawLightRedTo(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cel, celFrame, 1);
 		}
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
@@ -382,11 +370,10 @@ static void AddItemToInvGrid(int playerNumber, int invGridIndex, int invListInde
 InvXY GetInventorySize(const ItemStruct &item)
 {
 	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
-
-	return {
-		InvItemWidth[itemSizeIndex] / INV_SLOT_SIZE_PX,
-		InvItemHeight[itemSizeIndex] / INV_SLOT_SIZE_PX,
-	};
+	int w;
+	int h;
+	std::tie(w, h) = GetInvItemSize(itemSizeIndex);
+	return { w / INV_SLOT_SIZE_PX, h / INV_SLOT_SIZE_PX };
 }
 
 /**
