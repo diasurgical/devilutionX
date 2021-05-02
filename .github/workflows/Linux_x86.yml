@@ -12,7 +12,10 @@ jobs:
         fetch-depth: 0
 
     - name: Create Build Environment
-      run: sudo dpkg --add-architecture i386 && sudo apt-get update -y && sudo apt-get install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 rpm wget
+      run: >
+        sudo dpkg --add-architecture i386 && 
+        sudo apt update -y &&
+        sudo apt install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 rpm wget
 
     - name: Configure CMake
       shell: bash
