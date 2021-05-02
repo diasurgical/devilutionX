@@ -30,7 +30,14 @@ int AnimationInfo::GetFrameToUseForRendering() const
 
 	// 1 added for rounding reasons. float to int cast always truncate.
 	int absoluteAnimationFrame = 1 + (int)(totalTicksForCurrentAnimationSequence * TickModifier);
-	if (absoluteAnimationFrame > RelevantFramesForDistributing) {
+	if (SkippedFramesFromPreviousAnimation > 0) {
+		// absoluteAnimationFrames contains also the Frames from the previous Animation, so if we want to get the current Frame we have to remove them
+		absoluteAnimationFrame -= SkippedFramesFromPreviousAnimation;
+		if (absoluteAnimationFrame <= 0) {
+			// We still display the remains of the previous Animation
+			absoluteAnimationFrame = NumberOfFrames + absoluteAnimationFrame;
+		}
+	} else if (absoluteAnimationFrame > RelevantFramesForDistributing) {
 		// this can happen if we are at the last frame and the next game tick is due (gfProgressToNextGameTick >= 1.0f)
 		if (absoluteAnimationFrame > (RelevantFramesForDistributing + 1)) {
 			// we should never have +2 frames even if next game tick is due
@@ -47,6 +54,14 @@ int AnimationInfo::GetFrameToUseForRendering() const
 
 void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionParams params /*= AnimationDistributionParams::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
+	if (pData == this->pData && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
+		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
+		// So now we should add them back to the new Animation. This increases the speed of the current Animation but the game logic/ticks isn't affected.
+		SkippedFramesFromPreviousAnimation = NumberOfFrames - CurrentFrame;
+	} else {
+		SkippedFramesFromPreviousAnimation = 0;
+	}
+
 	this->pData = pData;
 	NumberOfFrames = numberOfFrames;
 	CurrentFrame = 1;
@@ -107,6 +122,9 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 			// Thats why we need to remove the Delay of the last Frame from the time (game ticks) the Animation is shown
 			relevantAnimationTicksWithSkipping -= delayLen;
 		}
+
+		// The truncated Frames from previous Animation will also be shown, so we also have to distribute them for the given time (game ticks)
+		relevantAnimationTicksForDistribution += (SkippedFramesFromPreviousAnimation * ticksPerFrame);
 
 		// if we skipped Frames we need to expand the game ticks to make one game tick for this Animation "faster"
 		float tickModifier = (float)relevantAnimationTicksForDistribution / (float)relevantAnimationTicksWithSkipping;
