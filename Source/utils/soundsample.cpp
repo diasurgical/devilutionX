@@ -39,8 +39,11 @@ constexpr float VolumeScale = 3321.9281f;
 constexpr float MillibelMin = -10000.0f;
 constexpr float MillibelMax = 0.0f;
 
-// Stereo separation factor for left/right speaker panning. Lower values increase separation, moving sounds further left/right, while higher values will pull sounds more towards the middle, reducing separation.
-// Current value is tuned to have ~2:1 mix for sounds that happen on the edge of a 640x480 screen.
+/**
+ * Stereo separation factor for left/right speaker panning. Lower values increase separation, moving
+ * sounds further left/right, while higher values will pull sounds more towards the middle, reducing separation.
+ * Current value is tuned to have ~2:1 mix for sounds that happen on the edge of a 640x480 screen.
+ */
 constexpr float StereoSeparation = 6000.0f;
 
 float PanLogToLinear(int logPan)
