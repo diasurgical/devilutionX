@@ -1292,6 +1292,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 			} else if (pcursitem == -1) {
 				std::string_view townerName = towners[pcursmonst]._tName;
 				strncpy(infostr, townerName.data(), townerName.length());
+				infostr[townerName.length()] = '\0';
 			}
 		}
 		if (pcursplr != -1) {
