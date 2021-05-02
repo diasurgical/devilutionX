@@ -12,10 +12,6 @@ list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
 find_package(CITRO3D REQUIRED)
 find_package(FREETYPE REQUIRED)
 find_package(BZIP2 REQUIRED)
-find_package(Tremor REQUIRED)
-find_package(OGG REQUIRED)
-find_package(MIKMOD REQUIRED)
-find_package(MAD REQUIRED)
 find_package(PNG REQUIRED)
 
 #additional compilation definitions
