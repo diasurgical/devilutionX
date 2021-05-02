@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include "utils/stdcompat/string_view.hpp"
 
 #include "items.h"
 #include "player.h"
@@ -53,7 +54,7 @@ struct TownerStruct {
 	uint8_t _tAnimFrame; // Current frame of animation.
 	uint8_t _tAnimFrameCnt;
 	uint8_t _tNFrames;
-	char _tName[PLR_NAME_LEN];
+	string_view _tName;
 	TNQ qsts[MAXQUESTS];
 	bool _tSelFlag;
 	bool _tMsgSaid;
