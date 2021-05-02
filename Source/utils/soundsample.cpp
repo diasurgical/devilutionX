@@ -25,9 +25,11 @@ namespace {
 
 constexpr float LogBase = 10.0f;
 
-// Scaling factor for attenuating volume.
-// Picked so that a volume change of -10 dB results in half perceived loudness.
-// VolumeScale = -1000 / log(0.5)
+/**
+ * Scaling factor for attenuating volume.
+ * Picked so that a volume change of -10 dB results in half perceived loudness.
+ * VolumeScale = -1000 / log(0.5)
+ */
 constexpr float VolumeScale = 3321.9281f;
 
 // Min and max volume range, in millibel.
