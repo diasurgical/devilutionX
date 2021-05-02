@@ -7,8 +7,8 @@
 namespace devilution {
 
 struct TtfSurfaceCache {
-	SDLSurfaceUniquePtr text;
-	SDLSurfaceUniquePtr shadow;
+	SDLUniquePtr<SDL_Surface> text;
+	SDLUniquePtr<SDL_Surface> shadow;
 };
 
 void DrawTTF(const char *text, const SDL_Rect &rect, int flags,

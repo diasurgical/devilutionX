@@ -491,7 +491,7 @@ void LoadHeros()
 		SDL_BlitSurface(portrait.surface.get(), nullptr, heros, &dstRect);
 	}
 
-	ArtHero.surface = SDLSurfaceUniquePtr { heros };
+	ArtHero.surface = SDLUniquePtr<SDL_Surface> { heros };
 	ArtHero.frame_height = portraitHeight;
 	ArtHero.frames = static_cast<int>(enum_size<HeroClass>::value);
 }
