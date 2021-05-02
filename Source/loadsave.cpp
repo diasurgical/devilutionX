@@ -138,9 +138,9 @@ class SaveHelper {
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
-		: m_szFileName(szFileName)
-		, m_buffer(std::make_unique<uint8_t[]>(codec_get_encoded_len(bufferLen)))
-		, m_capacity(bufferLen)
+	    : m_szFileName(szFileName)
+	    , m_buffer(new uint8_t[codec_get_encoded_len(bufferLen)])
+	    , m_capacity(bufferLen)
 	{
 	}
 

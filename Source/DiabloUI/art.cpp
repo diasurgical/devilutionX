@@ -40,7 +40,7 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
 
 	// We read 1 extra byte because it delimits the palette.
 	const unsigned readSize = pixelDataSize + (has256ColorPalette ? PcxPaletteSize : 0);
-	std::unique_ptr<BYTE[]> fileBuffer = std::make_unique<BYTE[]>(readSize);
+	std::unique_ptr<BYTE[]> fileBuffer { new BYTE[readSize] };
 	if (!SFileReadFile(handle, fileBuffer.get(), readSize, nullptr, nullptr)) {
 		return false;
 	}

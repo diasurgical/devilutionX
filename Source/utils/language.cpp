@@ -262,7 +262,7 @@ void LanguageInitialize()
 	}
 
 	// Read entries of source strings
-	auto src = std::make_unique<MoEntry[]>(head.nb_mappings);
+	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nb_mappings] };
 	if (fseek(fp, head.src_offset, SEEK_SET) != 0)
 		return;
 	// FIXME: Endianness.
@@ -270,7 +270,7 @@ void LanguageInitialize()
 		return;
 
 	// Read entries of target strings
-	auto dst = std::make_unique<MoEntry[]>(head.nb_mappings);
+	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nb_mappings] };
 	if (fseek(fp, head.dst_offset, SEEK_SET) != 0)
 		return;
 	// FIXME: Endianness.
