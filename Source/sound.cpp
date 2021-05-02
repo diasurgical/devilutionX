@@ -6,6 +6,7 @@
 #include "sound.h"
 
 #include <cstdint>
+#include <list>
 #include <memory>
 
 #include <aulib.h>
@@ -19,6 +20,7 @@
 #include "storm/storm_sdl_rw.h"
 #include "storm/storm.h"
 #include "utils/log.hpp"
+#include "utils/sdl_mutex.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
 #include "utils/stubs.h"
@@ -65,13 +67,24 @@ void CleanupMusic()
 #endif
 }
 
-std::vector<std::unique_ptr<SoundSample>> duplicateSounds;
+std::list<std::unique_ptr<SoundSample>> duplicateSounds;
+SDLMutexUniquePtr duplicateSoundsMutex;
+
 SoundSample *DuplicateSound(const SoundSample &sound) {
 	auto duplicate = std::make_unique<SoundSample>();
 	if (duplicate->DuplicateFrom(sound) != 0)
 		return nullptr;
 	auto *result = duplicate.get();
-	duplicateSounds.push_back(std::move(duplicate));
+	{
+		SDLMutexLockGuard lock(duplicateSoundsMutex.get());
+		duplicateSounds.push_back(std::move(duplicate));
+		auto it = duplicateSounds.end();
+		--it;
+		result->SetFinishCallback([it](Aulib::Stream &stream) {
+			SDLMutexLockGuard lock(duplicateSoundsMutex.get());
+			duplicateSounds.erase(it);
+		});
+	}
 	return result;
 }
 
@@ -118,15 +131,6 @@ static int CapVolume(int volume)
 
 void ClearDuplicateSounds() {
 	duplicateSounds.clear();
-}
-
-void CleanupFinishedDuplicateSounds()
-{
-	duplicateSounds.erase(
-	    std::remove_if(duplicateSounds.begin(), duplicateSounds.end(), [](const auto &sound) {
-		    return !sound->IsPlaying();
-	    }),
-	    duplicateSounds.end());
 }
 
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
@@ -211,12 +215,14 @@ void snd_init()
 	LogVerbose(LogCategory::Audio, "Aulib sampleRate={} channels={} frameSize={} format={:#x}",
 	    Aulib::sampleRate(), Aulib::channelCount(), Aulib::frameSize(), Aulib::sampleFormat());
 
+	duplicateSoundsMutex = SDLMutexUniquePtr { SDL_CreateMutex() };
 	gbSndInited = true;
 }
 
 void snd_deinit() {
 	if (gbSndInited) {
 		Aulib::quit();
+		duplicateSoundsMutex = nullptr;
 	}
 
 	gbSndInited = false;

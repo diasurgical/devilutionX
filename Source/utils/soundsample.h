@@ -23,6 +23,11 @@ public:
 	void Stop();
 	int SetChunkStream(std::string filePath);
 
+	void SetFinishCallback(Aulib::Stream::Callback &&callback)
+	{
+		stream_->setFinishCallback(std::forward<Aulib::Stream::Callback>(callback));
+	}
+
 	/**
 	 * @brief Sets the sample's WAV, FLAC, or Ogg/Vorbis data.
 	 * @param fileData Buffer containing the data
