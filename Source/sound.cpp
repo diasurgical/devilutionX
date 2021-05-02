@@ -26,8 +26,6 @@
 namespace devilution {
 
 bool gbSndInited;
-/** Handle to the music Storm file. */
-HANDLE sghMusic;
 /** The active background music track id. */
 _music_id sgnMusicTrack = NUM_MUSIC;
 
@@ -39,16 +37,15 @@ std::optional<Aulib::Stream> music;
 char *musicBuffer;
 #endif
 
-void LoadMusic()
+void LoadMusic(HANDLE handle)
 {
 #ifndef DISABLE_STREAMING_MUSIC
-	SDL_RWops *musicRw = SFileRw_FromStormHandle(sghMusic);
+	SDL_RWops *musicRw = SFileRw_FromStormHandle(handle);
 #else
-	int bytestoread = SFileGetFileSize(sghMusic, 0);
+	int bytestoread = SFileGetFileSize(handle, 0);
 	musicBuffer = (char *)DiabloAllocPtr(bytestoread);
-	SFileReadFile(sghMusic, musicBuffer, bytestoread, NULL, 0);
-	SFileCloseFile(sghMusic);
-	sghMusic = NULL;
+	SFileReadFile(handle, musicBuffer, bytestoread, NULL, 0);
+	SFileCloseFile(handle);
 
 	SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 #endif
@@ -60,10 +57,7 @@ void CleanupMusic()
 {
 		music = std::nullopt;
 		sgnMusicTrack = NUM_MUSIC;
-#ifndef DISABLE_STREAMING_MUSIC
-		SFileCloseFile(sghMusic);
-		sghMusic = nullptr;
-#else
+#ifdef DISABLE_STREAMING_MUSIC
 	if (musicBuffer != nullptr) {
 		mem_free_dbg(musicBuffer);
 		musicBuffer = nullptr;
@@ -246,11 +240,12 @@ void music_start(uint8_t nTrack)
 			trackPath = sgszSpawnMusicTracks[nTrack];
 		else
 			trackPath = sgszMusicTracks[nTrack];
-		success = SFileOpenFile(trackPath, &sghMusic);
+		HANDLE handle;
+		success = SFileOpenFile(trackPath, &handle);
 		if (!success) {
-			sghMusic = nullptr;
+			handle = nullptr;
 		} else {
-			LoadMusic();
+			LoadMusic(handle);
 			if (!music->open()) {
 				LogError(LogCategory::Audio, "Aulib::Stream::open (from music_start): {}", SDL_GetError());
 				CleanupMusic();

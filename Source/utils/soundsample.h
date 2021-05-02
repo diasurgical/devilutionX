@@ -16,7 +16,6 @@ public:
 	SoundSample() = default;
 	SoundSample(SoundSample &&) noexcept = default;
 	SoundSample &operator=(SoundSample &&) noexcept = default;
-	~SoundSample();
 
 	void Release();
 	bool IsPlaying();
@@ -51,8 +50,7 @@ private:
 	ArraySharedPtr<std::uint8_t> file_data_;
 	std::size_t file_data_size_;
 
-	// Streaming audio fields:
-	HANDLE file_handle_ = nullptr;
+	// Set for streaming audio to allow for duplicating it:
 	std::string file_path_;
 
 	std::unique_ptr<Aulib::Stream> stream_;

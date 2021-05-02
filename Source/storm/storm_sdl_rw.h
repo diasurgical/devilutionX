@@ -9,7 +9,7 @@ namespace devilution {
 /**
  * @brief Creates a read-only SDL_RWops from a Storm file handle.
  *
- * Does not close the handle when it gets closed.
+ * Closes the handle when it gets closed.
  */
 SDL_RWops *SFileRw_FromStormHandle(HANDLE handle);
 
