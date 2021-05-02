@@ -26,7 +26,7 @@ void track_process()
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
-	if (plr[myplr]._pVar8 <= 6 && plr[myplr]._pmode != PM_STAND)
+	if (plr[myplr].actionFrame <= 6 && plr[myplr]._pmode != PM_STAND)
 		return;
 
 	const Point target = plr[myplr].GetTargetPosition();
@@ -34,7 +34,7 @@ void track_process()
 		Uint32 tick = SDL_GetTicks();
 		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * 6) {
 			sgdwLastWalk = tick;
-			NetSendCmdLoc(myplr, true, CMD_WALKXY, cursmx, cursmy);
+			NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
 			if (!sgbIsScrolling)
 				sgbIsScrolling = true;
 		}
@@ -50,7 +50,7 @@ void track_repeat_walk(bool rep)
 	if (rep) {
 		sgbIsScrolling = false;
 		sgdwLastWalk = SDL_GetTicks() - gnTickDelay;
-		NetSendCmdLoc(myplr, true, CMD_WALKXY, cursmx, cursmy);
+		NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
 	} else if (sgbIsScrolling) {
 		sgbIsScrolling = false;
 	}

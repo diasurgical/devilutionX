@@ -24,14 +24,14 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 		id->idx = SDL_SwapLE16(idx);
 		if (is->IDidx == IDI_EAR) {
 			id->iCreateInfo = is->_iName[8] | (is->_iName[7] << 8);
-			id->iSeed = LOAD_BE32(&is->_iName[9]);
+			id->iSeed = LoadBE32(&is->_iName[9]);
 			id->bId = is->_iName[13];
 			id->bDur = is->_iName[14];
 			id->bMDur = is->_iName[15];
 			id->bCh = is->_iName[16];
 			id->bMCh = is->_iName[17];
 			id->wValue = SDL_SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCERER) << 6));
-			id->dwBuff = LOAD_BE32(&is->_iName[19]);
+			id->dwBuff = LoadBE32(&is->_iName[19]);
 		} else {
 			id->iSeed = SDL_SwapLE32(is->_iSeed);
 			id->iCreateInfo = SDL_SwapLE16(is->_iCreateInfo);
@@ -60,14 +60,14 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
 	pPack->destParam1 = pPlayer->destParam1;
 	pPack->destParam2 = pPlayer->destParam2;
 	pPack->plrlevel = pPlayer->plrlevel;
-	pPack->px = pPlayer->position.current.x;
-	pPack->py = pPlayer->position.current.y;
+	pPack->px = pPlayer->position.tile.x;
+	pPack->py = pPlayer->position.tile.y;
 	if (gbVanilla) {
-		pPack->targx = pPlayer->position.current.x;
-		pPack->targy = pPlayer->position.current.y;
+		pPack->targx = pPlayer->position.tile.x;
+		pPack->targy = pPlayer->position.tile.y;
 	}
 	strcpy(pPack->pName, pPlayer->_pName);
-	pPack->pClass = static_cast<Sint8>(pPlayer->_pClass);
+	pPack->pClass = static_cast<int8_t>(pPlayer->_pClass);
 	pPack->pBaseStr = pPlayer->_pBaseStr;
 	pPack->pBaseMag = pPlayer->_pBaseMag;
 	pPack->pBaseDex = pPlayer->_pBaseDex;
@@ -140,7 +140,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield)
  */
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 {
-	WORD idx = SDL_SwapLE16(is->idx);
+	uint16_t idx = SDL_SwapLE16(is->idx);
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
 		return;
@@ -187,20 +187,20 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 	*id = items[MAXITEMS];
 }
 
-void VerifyGoldSeeds(PlayerStruct *pPlayer)
+static void VerifyGoldSeeds(PlayerStruct *player)
 {
-	int i, j;
-
-	for (i = 0; i < pPlayer->_pNumInv; i++) {
-		if (pPlayer->InvList[i].IDidx == IDI_GOLD) {
-			for (j = 0; j < pPlayer->_pNumInv; j++) {
-				if (i != j) {
-					if (pPlayer->InvList[j].IDidx == IDI_GOLD && pPlayer->InvList[i]._iSeed == pPlayer->InvList[j]._iSeed) {
-						pPlayer->InvList[i]._iSeed = AdvanceRndSeed();
-						j = -1;
-					}
-				}
-			}
+	for (int i = 0; i < player->_pNumInv; i++) {
+		if (player->InvList[i].IDidx != IDI_GOLD)
+			continue;
+		for (int j = 0; j < player->_pNumInv; j++) {
+			if (i == j)
+				continue;
+			if (player->InvList[j].IDidx != IDI_GOLD)
+				continue;
+			if (player->InvList[i]._iSeed != player->InvList[j]._iSeed)
+				continue;
+			player->InvList[i]._iSeed = AdvanceRndSeed();
+			j = -1;
 		}
 	}
 }
@@ -213,7 +213,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync)
 	PkItemStruct *pki;
 
 	pPlayer = &plr[pnum];
-	pPlayer->position.current = { pPack->px, pPack->py };
+	pPlayer->position.tile = { pPack->px, pPack->py };
 	pPlayer->position.future = { pPack->px, pPack->py };
 	pPlayer->plrlevel = pPack->plrlevel;
 	ClrPlrPath(pnum);

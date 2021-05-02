@@ -5,9 +5,12 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
+#include <memory>
 
+#include "engine.h"
 #include "scrollrt.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -80,35 +83,34 @@ enum _difficulty : uint8_t {
 };
 
 struct ScrollStruct {
-	/** @brief X-offset of camera position. This usually corresponds to a negative version of plr[myplr].position.offset.x */
-	Sint32 _sxoff;
-	/** @brief Y-offset of camera position. This usually corresponds to a negative version of plr[myplr].position.offset.y */
-	Sint32 _syoff;
-	Sint32 _sdx;
-	Sint32 _sdy;
+	/** @brief Tile offset of camera. */
+	Point tile;
+	/** @brief Pixel offset of camera. */
+	Point offset;
+	/** @brief Move direction of camera. */
 	_scroll_direction _sdir;
 };
 
 struct THEME_LOC {
-	Sint16 x;
-	Sint16 y;
-	Sint16 ttval;
-	Sint16 width;
-	Sint16 height;
+	int16_t x;
+	int16_t y;
+	int16_t ttval;
+	int16_t width;
+	int16_t height;
 };
 
 struct MICROS {
-	Uint16 mt[16];
+	uint16_t mt[16];
 };
 
 struct ShadowStruct {
-	Uint8 strig;
-	Uint8 s1;
-	Uint8 s2;
-	Uint8 s3;
-	Uint8 nv1;
-	Uint8 nv2;
-	Uint8 nv3;
+	uint8_t strig;
+	uint8_t s1;
+	uint8_t s2;
+	uint8_t s3;
+	uint8_t nv1;
+	uint8_t nv2;
+	uint8_t nv3;
 };
 
 extern BYTE dungeon[DMAXX][DMAXY];
@@ -118,12 +120,12 @@ extern int setpc_x;
 extern int setpc_y;
 extern int setpc_w;
 extern int setpc_h;
-extern BYTE *pSetPiece;
+extern std::unique_ptr<BYTE[]> pSetPiece;
 extern bool setloadflag;
-extern BYTE *pSpecialCels;
-extern BYTE *pMegaTiles;
-extern BYTE *pLevelPieces;
-extern BYTE *pDungeonCels;
+extern std::optional<CelSprite> pSpecialCels;
+extern std::unique_ptr<BYTE[]> pMegaTiles;
+extern std::unique_ptr<BYTE[]> pLevelPieces;
+extern std::unique_ptr<BYTE[]> pDungeonCels;
 extern char block_lvid[MAXTILES + 1];
 extern bool nBlockTable[MAXTILES + 1];
 extern bool nSolidTable[MAXTILES + 1];

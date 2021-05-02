@@ -24,23 +24,23 @@ namespace {
  * @param w width of sector
  * @param h height of sector
  */
-void T_FillSector(Uint8 *P3Tiles, Uint8 *pSector, int xi, int yi, int w, int h)
+void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 {
 	int i, j, xx, yy, nMap;
-	Sint16 v1, v2, v3, v4, ii;
-	Uint16 *Sector;
+	int16_t v1, v2, v3, v4, ii;
+	uint16_t *Sector;
 
 	ii = 4;
 	yy = yi;
 	for (j = 0; j < h; j++) {
 		xx = xi;
 		for (i = 0; i < w; i++) {
-			Uint16 *Map;
+			uint16_t *Map;
 
-			Map = (Uint16 *)&pSector[ii];
+			Map = (uint16_t *)&pSector[ii];
 			nMap = SDL_SwapLE16(*Map);
 			if (nMap) {
-				Sector = (((Uint16 *)&P3Tiles[(nMap - 1) * 8]));
+				Sector = (((uint16_t *)&P3Tiles[(nMap - 1) * 8]));
 				v1 = SDL_SwapLE16(*(Sector + 0)) + 1;
 				v2 = SDL_SwapLE16(*(Sector + 1)) + 1;
 				v3 = SDL_SwapLE16(*(Sector + 2)) + 1;
@@ -70,12 +70,12 @@ void T_FillSector(Uint8 *P3Tiles, Uint8 *pSector, int xi, int yi, int w, int h)
  * @param yy upper left destination
  * @param t tile id
  */
-void T_FillTile(Uint8 *P3Tiles, int xx, int yy, int t)
+void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 {
 	long v1, v2, v3, v4;
-	Uint16 *Tiles;
+	uint16_t *Tiles;
 
-	Tiles = ((Uint16 *)&P3Tiles[(t - 1) * 8]);
+	Tiles = ((uint16_t *)&P3Tiles[(t - 1) * 8]);
 	v1 = SDL_SwapLE16(*(Tiles + 0)) + 1;
 	v2 = SDL_SwapLE16(*(Tiles + 1)) + 1;
 	v3 = SDL_SwapLE16(*(Tiles + 2)) + 1;
@@ -165,7 +165,6 @@ void TownCloseGrave()
 void T_Pass3()
 {
 	int xx, yy, x;
-	Uint8 *P3Tiles, *pSector;
 
 	for (yy = 0; yy < MAXDUNY; yy += 2) {
 		for (xx = 0; xx < MAXDUNX; xx += 2) {
@@ -176,31 +175,35 @@ void T_Pass3()
 		}
 	}
 
-	P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 46, 46, 25, 25);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 46, 0, 25, 23);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 0, 46, 23, 25);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
-	mem_free_dbg(pSector);
+	auto P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL");
+	{
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN");
+		T_FillSector(P3Tiles.get(), pSector.get(), 46, 46, 25, 25);
+	}
+	{
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN");
+		T_FillSector(P3Tiles.get(), pSector.get(), 46, 0, 25, 23);
+	}
+	{
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN");
+		T_FillSector(P3Tiles.get(), pSector.get(), 0, 46, 23, 25);
+	}
+	{
+		auto pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN");
+		T_FillSector(P3Tiles.get(), pSector.get(), 0, 0, 23, 23);
+	}
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
-			T_FillTile(P3Tiles, 48, 20, 320);
+			T_FillTile(P3Tiles.get(), 48, 20, 320);
 		}
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 2) && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
-			T_FillTile(P3Tiles, 16, 68, 332);
-			T_FillTile(P3Tiles, 16, 70, 331);
+			T_FillTile(P3Tiles.get(), 16, 68, 332);
+			T_FillTile(P3Tiles.get(), 16, 70, 331);
 		}
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (x = 36; x < 46; x++) {
-				T_FillTile(P3Tiles, x, 78, GenerateRnd(4) + 1);
+				T_FillTile(P3Tiles.get(), x, 78, GenerateRnd(4) + 1);
 			}
 		}
 	}
@@ -218,12 +221,10 @@ void T_Pass3()
 	}
 
 	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
-		T_FillTile(P3Tiles, 60, 70, 342);
+		T_FillTile(P3Tiles.get(), 60, 70, 342);
 	} else {
-		T_FillTile(P3Tiles, 60, 70, 71);
+		T_FillTile(P3Tiles.get(), 60, 70, 71);
 	}
-
-	mem_free_dbg(P3Tiles);
 }
 
 } // namespace

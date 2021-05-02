@@ -10,6 +10,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "storm/storm.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -119,7 +120,7 @@ void mainmenu_loop()
 	do {
 		menu = MAINMENU_NONE;
 		if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
-			app_fatal("Unable to display mainmenu");
+			app_fatal("%s", _("Unable to display mainmenu"));
 
 		switch (menu) {
 		case MAINMENU_NONE:

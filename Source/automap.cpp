@@ -14,6 +14,7 @@
 #include "palette.h"
 #include "player.h"
 #include "setmaps.h"
+#include "utils/language.h"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -246,8 +247,8 @@ void DrawAutomapItem(const CelOutputBuffer &out, int x, int y, uint8_t color)
 
 void SearchAutomapItem(const CelOutputBuffer &out)
 {
-	int x = plr[myplr].position.current.x;
-	int y = plr[myplr].position.current.y;
+	int x = plr[myplr].position.tile.x;
+	int y = plr[myplr].position.tile.y;
 	if (plr[myplr]._pmode == PM_WALK3) {
 		x = plr[myplr].position.future.x;
 		y = plr[myplr].position.future.y;
@@ -257,11 +258,11 @@ void SearchAutomapItem(const CelOutputBuffer &out)
 			y++;
 	}
 
-	const int startX = std::clamp(x - 8, 0, MAXDUNX);
-	const int startY = std::clamp(y - 8, 0, MAXDUNY);
+	const int startX = clamp(x - 8, 0, MAXDUNX);
+	const int startY = clamp(y - 8, 0, MAXDUNY);
 
-	const int endX = std::clamp(x + 8, 0, MAXDUNX);
-	const int endY = std::clamp(y + 8, 0, MAXDUNY);
+	const int endX = clamp(x + 8, 0, MAXDUNX);
+	const int endY = clamp(y + 8, 0, MAXDUNY);
 
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
@@ -269,8 +270,8 @@ void SearchAutomapItem(const CelOutputBuffer &out)
 				int px = i - 2 * AutoMapXOfs - ViewX;
 				int py = j - 2 * AutoMapYOfs - ViewY;
 
-				x = (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
-				y = (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
+				x = (ScrollInfo.offset.x * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
+				y = (ScrollInfo.offset.y * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
 
 				if (PANELS_COVER) {
 					if (invflag || sbookflag)
@@ -303,14 +304,14 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int pnum)
 		else
 			y++;
 	} else {
-		x = plr[pnum].position.current.x;
-		y = plr[pnum].position.current.y;
+		x = plr[pnum].position.tile.x;
+		y = plr[pnum].position.tile.y;
 	}
 	int px = x - 2 * AutoMapXOfs - ViewX;
 	int py = y - 2 * AutoMapYOfs - ViewY;
 
-	x = (plr[pnum].position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo._sxoff * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
-	y = (plr[pnum].position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo._syoff * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
+	x = (plr[pnum].position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo.offset.x * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2;
+	y = (plr[pnum].position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo.offset.y * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2;
 
 	if (PANELS_COVER) {
 		if (invflag || sbookflag)
@@ -416,25 +417,25 @@ void DrawAutomapText(const CelOutputBuffer &out)
 	int nextline = 20;
 
 	if (gbIsMultiplayer) {
-		strcat(strcpy(desc, "game: "), szPlayerName);
+		strcat(strcpy(desc, _("game: ")), szPlayerName);
 		PrintGameStr(out, 8, 20, desc, COL_GOLD);
 		nextline = 35;
 		if (szPlayerDescript[0] != 0) {
-			strcat(strcpy(desc, "password: "), szPlayerDescript);
+			strcat(strcpy(desc, _("password: ")), szPlayerDescript);
 			PrintGameStr(out, 8, 35, desc, COL_GOLD);
 			nextline = 50;
 		}
 	}
 	if (setlevel) {
-		PrintGameStr(out, 8, nextline, quest_level_names[(BYTE)setlvlnum], COL_GOLD);
+		PrintGameStr(out, 8, nextline, _(quest_level_names[(BYTE)setlvlnum]), COL_GOLD);
 	} else if (currlevel != 0) {
 		if (currlevel < 17 || currlevel > 20) {
 			if (currlevel < 21 || currlevel > 24)
-				sprintf(desc, "Level: %i", currlevel);
+				sprintf(desc, _("Level: %i"), currlevel);
 			else
-				sprintf(desc, "Level: Crypt %i", currlevel - 20);
+				sprintf(desc, _("Level: Crypt %i"), currlevel - 20);
 		} else {
-			sprintf(desc, "Level: Nest %i", currlevel - 16);
+			sprintf(desc, _("Level: Nest %i"), currlevel - 16);
 		}
 		PrintGameStr(out, 8, nextline, desc, COL_GOLD);
 	}
@@ -467,7 +468,7 @@ void InitAutomapOnce()
 void InitAutomap()
 {
 	DWORD dwTiles;
-	BYTE *pAFile;
+	std::unique_ptr<BYTE[]> pAFile;
 
 	memset(AutomapTypes, 0, sizeof(AutomapTypes));
 
@@ -495,7 +496,7 @@ void InitAutomap()
 	}
 
 	dwTiles /= 2;
-	BYTE *pTmp = pAFile;
+	BYTE *pTmp = pAFile.get();
 
 	for (unsigned i = 1; i <= dwTiles; i++) {
 		uint8_t b1 = *pTmp++;
@@ -503,7 +504,7 @@ void InitAutomap()
 		AutomapTypes[i] = b1 + (b2 << 8);
 	}
 
-	mem_free_dbg(pAFile);
+	pAFile = nullptr;
 	memset(automapview, 0, sizeof(automapview));
 
 	for (auto &column : dFlags)
@@ -597,7 +598,7 @@ void DrawAutomap(const CelOutputBuffer &out)
 	if ((gnScreenWidth / 2) % d >= (AutoMapScale * 32) / 100)
 		cells++;
 
-	if ((ScrollInfo._sxoff + ScrollInfo._syoff) != 0)
+	if ((ScrollInfo.offset.x + ScrollInfo.offset.y) != 0)
 		cells++;
 	int mapx = AutoMapX - cells;
 	int mapy = AutoMapY - 1;
@@ -618,8 +619,8 @@ void DrawAutomap(const CelOutputBuffer &out)
 		sy -= AmLine8;
 	}
 
-	sx += AutoMapScale * ScrollInfo._sxoff / 100 / 2;
-	sy += AutoMapScale * ScrollInfo._syoff / 100 / 2;
+	sx += AutoMapScale * ScrollInfo.offset.x / 100 / 2;
+	sy += AutoMapScale * ScrollInfo.offset.y / 100 / 2;
 	if (PANELS_COVER) {
 		if (invflag || sbookflag) {
 			sx -= gnScreenWidth / 4;

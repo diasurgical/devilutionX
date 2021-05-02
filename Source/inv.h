@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "items.h"
 #include "palette.h"
@@ -50,28 +50,28 @@ enum inv_xy_slot : uint8_t {
 	SLOTXY_CHEST_LAST       = 24,
 
 	// regular inventory
-	SLOTXY_INV_FIRST = 25,
-	SLOTXY_INV_LAST  = 64,
+	SLOTXY_INV_FIRST        = 25,
+	SLOTXY_INV_LAST         = 64,
 
 	// belt items
-	SLOTXY_BELT_FIRST = 65,
-	SLOTXY_BELT_LAST  = 72,
-	NUM_XY_SLOTS      = 73
+	SLOTXY_BELT_FIRST       = 65,
+	SLOTXY_BELT_LAST        = 72,
+	NUM_XY_SLOTS            = 73
 	// clang-format on
 };
 
 enum item_color : uint8_t {
 	// clang-format off
 	ICOL_YELLOW = PAL16_YELLOW + 5,
-	ICOL_WHITE  = PAL16_GRAY + 5,
-	ICOL_BLUE   = PAL16_BLUE + 5,
-	ICOL_RED    = PAL16_RED + 5,
+	ICOL_WHITE  = PAL16_GRAY   + 5,
+	ICOL_BLUE   = PAL16_BLUE   + 5,
+	ICOL_RED    = PAL16_RED    + 5,
 	// clang-format on
 };
 
 struct InvXY {
-	Sint32 X;
-	Sint32 Y;
+	int X;
+	int Y;
 };
 
 extern bool invflag;
@@ -93,7 +93,7 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem);
 bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false);
 bool GoldAutoPlace(int pnum);
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, bool bId, uint32_t dwBuff);
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(int pnum, BYTE iv);
 
 /**
@@ -110,13 +110,13 @@ void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(int pnum);
 void InvGetItem(int pnum, ItemStruct *item, int ii);
 void AutoGetItem(int pnum, ItemStruct *item, int ii);
-int FindGetItem(int idx, WORD ci, int iseed);
-void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
+int FindGetItem(int idx, uint16_t ci, int iseed);
+void SyncGetItem(int x, int y, int idx, uint16_t ci, int iseed);
 bool CanPut(int x, int y);
 bool TryInvPut();
 void DrawInvMsg(const char *msg);
-int InvPutItem(int pnum, int x, int y);
-int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac);
+int InvPutItem(int pnum, Point position);
+int SyncPutItem(int pnum, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac);
 char CheckInvHLight();
 void RemoveScroll(int pnum);
 bool UseScroll();

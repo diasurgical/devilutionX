@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <cstddef>
 #include <SDL.h>
@@ -46,21 +46,21 @@ enum _selhero_selections : uint8_t {
 };
 
 struct _uidefaultstats {
-	Uint16 strength;
-	Uint16 magic;
-	Uint16 dexterity;
-	Uint16 vitality;
+	uint16_t strength;
+	uint16_t magic;
+	uint16_t dexterity;
+	uint16_t vitality;
 };
 
 struct _uiheroinfo {
 	char name[16];
-	Uint16 level;
+	uint16_t level;
 	HeroClass heroclass;
-	Uint8 herorank;
-	Uint16 strength;
-	Uint16 magic;
-	Uint16 dexterity;
-	Uint16 vitality;
+	uint8_t herorank;
+	uint16_t strength;
+	uint16_t magic;
+	uint16_t dexterity;
+	uint16_t vitality;
 	bool hassaved;
 	bool spawned;
 };
@@ -103,15 +103,6 @@ bool UiCreditsDialog();
 bool UiSupportDialog();
 bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut);
 bool UiProgressDialog(const char *msg, int (*fnfunc)());
-void UiProfileCallback();
-void UiProfileDraw();
-bool UiCategoryCallback(int a1, int a2, int a3, int a4, int a5, DWORD *a6, DWORD *a7);
-bool UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5);
-bool UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, char *lpBuffer, int cchBufferMax);
-bool UiSoundCallback(int a1, int type, int a3);
-bool UiDrawDescCallback(int game_type, DWORD color, const char *lpString, char *a4, int a5, UINT align, time_t a7, HDC *a8);
-bool UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6);
-bool UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp);
 bool UiSelectGame(GameData *gameData, int *playerId);
 bool UiSelectProvider(GameData *gameData);
 void UiFadeIn();

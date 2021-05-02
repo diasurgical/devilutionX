@@ -4,7 +4,8 @@
 #include <cstring>
 #include <memory>
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 void base::setup_gameinfo(buffer_t info)
 {
@@ -262,4 +263,5 @@ bool base::SNetGetTurnsInTransit(DWORD *turns)
 	return true;
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution

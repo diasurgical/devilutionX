@@ -7,22 +7,23 @@
 
 #include <SDL.h>
 
+#include "engine.h"
+
 namespace devilution {
 
 #define MAX_PATH_LENGTH 25
 
 struct PATHNODE {
-	Uint8 f;
-	Uint8 h;
-	Uint8 g;
-	int x;
-	int y;
+	uint8_t f;
+	uint8_t h;
+	uint8_t g;
+	Point position;
 	struct PATHNODE *Parent;
 	struct PATHNODE *Child[8];
 	struct PATHNODE *NextNode;
 };
 
-int FindPath(bool (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, Sint8 path[MAX_PATH_LENGTH]);
+int FindPath(bool (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH]);
 int path_get_h_cost(int sx, int sy, int dx, int dy);
 PATHNODE *GetNextPath();
 bool path_solid_pieces(PATHNODE *pPath, int dx, int dy);

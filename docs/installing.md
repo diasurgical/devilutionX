@@ -17,9 +17,9 @@ Download the latest [DevilutionX release](https://github.com/diasurgical/devilut
 <details><summary>Linux</summary>
 
 - Copy the MPQ files to the folder containing the DevilutionX executable, or to the data folder. The data folder path may differ depending on distro, version, and security settings, but will normally be `~/.local/share/diasurgical/devilution/`
-- Install [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/):
- - Ubuntu/Debian/Rasbian `sudo apt install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0`
- - Fedora `sudo dnf install SDL2 SDL2_ttf SDL2_mixer`
+- Install [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/):
+ - Ubuntu/Debian/Rasbian `sudo apt install libsdl2-2.0-0 libsdl2-ttf-2.0-0`
+ - Fedora `sudo dnf install SDL2 SDL2_ttf`
 - Run `./devilutionx`
 
 </details>
@@ -117,7 +117,7 @@ sudo apt install devilutionx
 
 - Copy [devilutionx-rg350.opk](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-rg350.opk) to `/media/sdcard/APPS/`.
 - Copy the MPQ files to `/media/home/.local/share/diasurgical/devilution/`
-- 
+-
  **NOTE:** You can copy the MPQ files to sdcard instead and create a symlink at the expected location. To do this, SSH into your RG350 and run:
 
  ~~~bash

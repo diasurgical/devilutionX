@@ -13,10 +13,12 @@
 #include <cstdlib>
 
 #include "utils/paths.h"
+#include "utils/log.hpp"
 
 #include "dvlnet/zerotier_lwip.h"
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 //static constexpr uint64_t zt_earth = 0x8056c2e21c000001;
 static constexpr uint64_t ZtNetwork = 0xaf78bf943649eb12;
@@ -30,17 +32,17 @@ static void Callback(struct zts_callback_msg *msg)
 {
 	//printf("callback %i\n", msg->eventCode);
 	if (msg->eventCode == ZTS_EVENT_NODE_ONLINE) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NODE_ONLINE, nodeId=%llx\n", (unsigned long long)msg->node->address);
+		Log("ZeroTier: ZTS_EVENT_NODE_ONLINE, nodeId={:x}", (unsigned long long)msg->node->address);
 		zt_node_online = true;
 		if (!zt_joined) {
 			zts_join(ZtNetwork);
 			zt_joined = true;
 		}
 	} else if (msg->eventCode == ZTS_EVENT_NODE_OFFLINE) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NODE_OFFLINE\n");
+		Log("ZeroTier: ZTS_EVENT_NODE_OFFLINE");
 		zt_node_online = false;
 	} else if (msg->eventCode == ZTS_EVENT_NETWORK_READY_IP6) {
-		SDL_Log("ZeroTier: ZTS_EVENT_NETWORK_READY_IP6, networkId=%llx\n", (unsigned long long)msg->network->nwid);
+		Log("ZeroTier: ZTS_EVENT_NETWORK_READY_IP6, networkId={:x}", (unsigned long long)msg->network->nwid);
 		zt_ip6setup();
 		zt_network_ready = true;
 	} else if (msg->eventCode == ZTS_EVENT_ADDR_ADDED_IP6) {
@@ -62,8 +64,9 @@ void zerotier_network_start()
 {
 	if (zt_started)
 		return;
-	zts_start(GetPrefPath().c_str(), (void (*)(void *))Callback, 0);
+	zts_start(paths::PrefPath().c_str(), (void (*)(void *))Callback, 0);
 	std::atexit(zerotier_network_stop);
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution

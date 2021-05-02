@@ -11,6 +11,12 @@ insert_final_newline = true
 # Visual C++ Code Style settings
 cpp_generate_documentation_comments = doxygen_slash_star
 
+[*.pot]
+end_of_line = lf
+
+[*.po]
+end_of_line = lf
+
 [*.yml]
 indent_style = space
 end_of_line = lf
@@ -34,7 +40,7 @@ indent_size = 2
 end_of_line = lf
 
 [*.txt]
-end_of_line = lf
+end_of_line = crlf
 
 [AppRun]
 end_of_line = lf
@@ -43,3 +49,9 @@ end_of_line = lf
 indent_style = space
 indent_size = 2
 end_of_line = crlf
+
+[control]
+end_of_line = lf
+
+[devilutionx.spec]
+end_of_line = lf

@@ -36,8 +36,7 @@ void InitPortals()
 void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
 {
 	portal[i].open = o;
-	portal[i].x = x;
-	portal[i].y = y;
+	portal[i].position = { x, y };
 	portal[i].level = lvl;
 	portal[i].ltype = lvltype;
 	portal[i].setlvl = false;
@@ -55,7 +54,7 @@ void AddWarpMissile(int i, int x, int y)
 		SetMissDir(mi, 1);
 
 		if (currlevel != 0)
-			missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 15);
+			missile[mi]._mlid = AddLight(missile[mi].position.tile.x, missile[mi].position.tile.y, 15);
 
 		missiledata[MIS_TOWN].mlSFX = LS_SENTINEL;
 	}
@@ -75,7 +74,7 @@ void SyncPortals()
 			if (setlevel)
 				lvl = setlvlnum;
 			if (portal[i].level == lvl && portal[i].setlvl == setlevel)
-				AddWarpMissile(i, portal[i].x, portal[i].y);
+				AddWarpMissile(i, portal[i].position.x, portal[i].position.y);
 		}
 	}
 }
@@ -90,8 +89,7 @@ void ActivatePortal(int i, int x, int y, int lvl, dungeon_type lvltype, bool sp)
 	portal[i].open = true;
 
 	if (lvl != 0) {
-		portal[i].x = x;
-		portal[i].y = y;
+		portal[i].position = { x, y };
 		portal[i].level = lvl;
 		portal[i].ltype = lvltype;
 		portal[i].setlvl = sp;
@@ -119,8 +117,8 @@ void RemovePortalMissile(int id)
 	for (i = 0; i < nummissiles; i++) {
 		mi = missileactive[i];
 		if (missile[mi]._mitype == MIS_TOWN && missile[mi]._misource == id) {
-			dFlags[missile[mi]._mix][missile[mi]._miy] &= ~BFLAG_MISSILE;
-			dMissile[missile[mi]._mix][missile[mi]._miy] = 0;
+			dFlags[missile[mi].position.tile.x][missile[mi].position.tile.y] &= ~BFLAG_MISSILE;
+			dMissile[missile[mi].position.tile.x][missile[mi].position.tile.y] = 0;
 
 			if (portal[id].level != 0)
 				AddUnLight(missile[mi]._mlid);
@@ -168,8 +166,8 @@ void GetPortalLvlPos()
 		ViewX = WarpDropX[portalindex] + 1;
 		ViewY = WarpDropY[portalindex] + 1;
 	} else {
-		ViewX = portal[portalindex].x;
-		ViewY = portal[portalindex].y;
+		ViewX = portal[portalindex].position.x;
+		ViewY = portal[portalindex].position.y;
 
 		if (portalindex != myplr) {
 			ViewX++;
@@ -183,7 +181,7 @@ bool PosOkPortal(int lvl, int x, int y)
 	int i;
 
 	for (i = 0; i < MAXPORTAL; i++) {
-		if (portal[i].open && portal[i].level == lvl && ((portal[i].x == x && portal[i].y == y) || (portal[i].x == x - 1 && portal[i].y == y - 1)))
+		if (portal[i].open && portal[i].level == lvl && ((portal[i].position.x == x && portal[i].position.y == y) || (portal[i].position.x == x - 1 && portal[i].position.y == y - 1)))
 			return true;
 	}
 	return false;

@@ -12,8 +12,8 @@ Source1:	devilutionx.desktop
 Source2:	deviltutionx-hellfire.desktop
 
 BuildRequires:	cmake gcc gcc-c++ libstdc++-static glibc desktop-file-utils
-BuildRequires:	glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel libsodium-devel libasan
-Requires:	SDL2_ttf SDL2_mixer libsodium
+BuildRequires:	glibc-devel SDL2-devel SDL2_ttf-devel libsodium-devel libasan
+Requires:	SDL2_ttf libsodium
 
 %description
 Diablo I devolved - magic behind the 1996 computer game

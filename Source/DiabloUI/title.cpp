@@ -1,6 +1,7 @@
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/menu_controls.h"
+#include "utils/language.h"
 
 namespace devilution {
 namespace {
@@ -43,7 +44,7 @@ void UiTitleDialog()
 		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
 		SDL_Rect rect = { (Sint16)(PANEL_LEFT + 49), (Sint16)(UI_OFFSET_Y + 410), 550, 26 };
-		vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));
+		vecTitleScreen.push_back(new UiArtText(_("Copyright © 1996-2001 Blizzard Entertainment"), rect, UIS_MED | UIS_CENTER));
 	}
 	TitleLoad();
 

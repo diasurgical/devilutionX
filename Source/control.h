@@ -5,12 +5,13 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "engine.h"
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/ui_fwd.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -48,7 +49,7 @@ extern bool lvlbtndown;
 extern int dropGoldValue;
 extern bool drawmanaflag;
 extern bool chrbtnactive;
-extern BYTE *pPanelText;
+extern std::optional<CelSprite> pPanelText;
 extern int pnumlines;
 extern bool pinfoflag;
 extern spell_id pSpell;
@@ -84,7 +85,7 @@ void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color 
 
 void AddPanelString(const char *str, bool just);
 void ClearPanel();
-void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int sy);
+void DrawPanelBox(const CelOutputBuffer &out, int x, int y, int w, int h, int sx, int sy);
 
 /**
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
@@ -139,10 +140,9 @@ void DrawLevelUpIcon(const CelOutputBuffer &out);
 void CheckChrBtns();
 void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(const CelOutputBuffer &out);
-void RedBack(CelOutputBuffer out);
+void RedBack(const CelOutputBuffer &out);
 void DrawSpellBook(const CelOutputBuffer &out);
 void CheckSBook();
-const char *get_pieces_str(int nGold);
 void DrawGoldSplit(const CelOutputBuffer &out, int amount);
 void control_drop_gold(char vkey);
 void control_remove_gold(int pnum, int goldIndex);

@@ -3,8 +3,8 @@
  *
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
-#include <SDL.h>
 #include <algorithm>
+#include <cstdint>
 
 #include "control.h"
 #include "cursor.h"
@@ -15,13 +15,14 @@
 #include "loadsave.h"
 #include "minitext.h"
 #include "missiles.h"
-#include "nthread.h"
 #include "options.h"
-#include "qol.h"
+#include "qol/autopickup.h"
 #include "spells.h"
 #include "stores.h"
 #include "storm/storm.h"
 #include "towners.h"
+#include "utils/language.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -88,15 +89,6 @@ int PWVel[enum_size<HeroClass>::value][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
-};
-/** Total number of frames in walk animation. */
-int AnimLenFromClass[enum_size<HeroClass>::value] = {
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
 };
 /** Maps from player_class to starting stat in strength. */
 int StrengthTbl[enum_size<HeroClass>::value] = {
@@ -274,7 +266,7 @@ void PlayerStruct::PlaySpeach(int speachId) const
 {
 	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][speachId - 1];
 
-	PlaySfxLoc(soundEffect, position.current.x, position.current.y);
+	PlaySfxLoc(soundEffect, position.tile.x, position.tile.y);
 }
 
 void PlayerStruct::PlaySpecificSpeach(int speachId) const
@@ -284,7 +276,7 @@ void PlayerStruct::PlaySpecificSpeach(int speachId) const
 	if (effect_is_playing(soundEffect))
 		return;
 
-	PlaySfxLoc(soundEffect, position.current.x, position.current.y, false);
+	PlaySfxLoc(soundEffect, position.tile.x, position.tile.y, false);
 }
 
 void PlayerStruct::PlaySpeach(int speachId, int delay) const
@@ -545,22 +537,14 @@ void FreePlayerGFX(int pnum)
 	plr[pnum]._pGFXLoad = 0;
 }
 
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames /*= 0*/, bool processAnimationPending /*= false*/, int stopDistributingAfterFrame /*= 0*/)
+void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionParams params /*= AnimationDistributionParams::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("NewPlrAnim: illegal player %d", pnum);
 	}
 
-	plr[pnum]._pAnimData = Peq;
-	plr[pnum]._pAnimLen = numFrames;
-	plr[pnum]._pAnimFrame = 1;
-	plr[pnum]._pAnimCnt = 0;
-	plr[pnum]._pAnimDelay = Delay;
 	plr[pnum]._pAnimWidth = width;
-	plr[pnum]._pAnimWidth2 = (width - 64) / 2;
-	plr[pnum]._pAnimNumSkippedFrames = numSkippedFrames;
-	plr[pnum]._pAnimGameTicksSinceSequenceStarted = processAnimationPending ? -1 : 0;
-	plr[pnum]._pAnimStopDistributingAfterFrame = stopDistributingAfterFrame;
+	plr[pnum].AnimInfo.SetNewAnimation(pData, numberOfFrames, delayLen, params, numSkippedFrames, distributeFramesBeforeFrame);
 }
 
 void ClearPlrPVars(int pnum)
@@ -569,14 +553,13 @@ void ClearPlrPVars(int pnum)
 		app_fatal("ClearPlrPVars: illegal player %d", pnum);
 	}
 
-	plr[pnum]._pVar1 = 0;
-	plr[pnum]._pVar2 = 0;
-	plr[pnum]._pVar3 = DIR_S;
+	plr[pnum].position.temp = { 0, 0 };
+	plr[pnum].tempDirection = DIR_S;
 	plr[pnum]._pVar4 = 0;
 	plr[pnum]._pVar5 = 0;
-	plr[pnum]._pVar6 = 0;
-	plr[pnum]._pVar7 = 0;
-	plr[pnum]._pVar8 = 0;
+	plr[pnum].position.offset2 = { 0, 0 };
+	plr[pnum].actionFrame = 0;
+	plr[pnum].deathFrame = 0;
 }
 
 void SetPlrAnims(int pnum)
@@ -1082,40 +1065,39 @@ void InitPlayer(int pnum, bool FirstTime)
 		if (plr[pnum]._pHitPoints >> 6 > 0) {
 			plr[pnum]._pmode = PM_STAND;
 			NewPlrAnim(pnum, plr[pnum]._pNAnim[DIR_S], plr[pnum]._pNFrames, 3, plr[pnum]._pNWidth);
-			plr[pnum]._pAnimFrame = GenerateRnd(plr[pnum]._pNFrames - 1) + 1;
-			plr[pnum]._pAnimCnt = GenerateRnd(3);
+			plr[pnum].AnimInfo.CurrentFrame = GenerateRnd(plr[pnum]._pNFrames - 1) + 1;
+			plr[pnum].AnimInfo.DelayCounter = GenerateRnd(3);
 		} else {
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
-			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
-			plr[pnum]._pVar8 = 2 * plr[pnum]._pAnimLen;
+			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
+			plr[pnum].actionFrame = 2 * plr[pnum].AnimInfo.NumberOfFrames;
 		}
 
 		plr[pnum]._pdir = DIR_S;
 
 		if (pnum == myplr) {
 			if (!FirstTime || currlevel != 0) {
-				plr[pnum].position.current = { ViewX, ViewY };
+				plr[pnum].position.tile = { ViewX, ViewY };
 			}
 		} else {
-			for (i = 0; i < 8 && !PosOkPlayer(pnum, plrxoff2[i] + plr[pnum].position.current.x, plryoff2[i] + plr[pnum].position.current.y); i++)
+			for (i = 0; i < 8 && !PosOkPlayer(pnum, plrxoff2[i] + plr[pnum].position.tile.x, plryoff2[i] + plr[pnum].position.tile.y); i++)
 				;
-			plr[pnum].position.current.x += plrxoff2[i];
-			plr[pnum].position.current.y += plryoff2[i];
+			plr[pnum].position.tile.x += plrxoff2[i];
+			plr[pnum].position.tile.y += plryoff2[i];
 		}
 
-		plr[pnum].position.future.x = plr[pnum].position.current.x;
-		plr[pnum].position.future.y = plr[pnum].position.current.y;
+		plr[pnum].position.future = plr[pnum].position.tile;
 		plr[pnum].walkpath[0] = WALK_NONE;
 		plr[pnum].destAction = ACTION_NONE;
 
 		if (pnum == myplr) {
-			plr[pnum]._plid = AddLight(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum]._pLightRad);
-			ChangeLightXY(plr[myplr]._plid, plr[myplr].position.current.x, plr[myplr].position.current.y); // fix for a bug where old light is still visible at the entrance after reentering level
+			plr[pnum]._plid = AddLight(plr[pnum].position.tile.x, plr[pnum].position.tile.y, plr[pnum]._pLightRad);
+			ChangeLightXY(plr[myplr]._plid, plr[myplr].position.tile.x, plr[myplr].position.tile.y); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			plr[pnum]._plid = NO_LIGHT;
 		}
-		plr[pnum]._pvid = AddVision(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum]._pLightRad, pnum == myplr);
+		plr[pnum]._pvid = AddVision(plr[pnum].position.tile.x, plr[pnum].position.tile.y, plr[pnum]._pLightRad, pnum == myplr);
 	}
 
 	if (plr[pnum]._pClass == HeroClass::Warrior) {
@@ -1150,8 +1132,7 @@ void InitPlayer(int pnum, bool FirstTime)
 	if (pnum == myplr) {
 		deathdelay = 0;
 		deathflag = false;
-		ScrollInfo._sxoff = 0;
-		ScrollInfo._syoff = 0;
+		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = SDIR_NONE;
 	}
 }
@@ -1162,8 +1143,8 @@ void InitMultiView()
 		app_fatal("InitPlayer: illegal player %d", myplr);
 	}
 
-	ViewX = plr[myplr].position.current.x;
-	ViewY = plr[myplr].position.current.y;
+	ViewX = plr[myplr].position.tile.x;
+	ViewY = plr[myplr].position.tile.y;
 }
 
 bool SolidLoc(int x, int y)
@@ -1184,8 +1165,8 @@ bool PlrDirOK(int pnum, int dir)
 		app_fatal("PlrDirOK: illegal player %d", pnum);
 	}
 
-	px = plr[pnum].position.current.x + offset_x[dir];
-	py = plr[pnum].position.current.y + offset_y[dir];
+	px = plr[pnum].position.tile.x + offset_x[dir];
+	py = plr[pnum].position.tile.y + offset_y[dir];
 
 	if (px < 0 || !dPiece[px][py] || !PosOkPlayer(pnum, px, py)) {
 		return false;
@@ -1237,8 +1218,7 @@ void SetPlayerOld(int pnum)
 		app_fatal("SetPlayerOld: illegal player %d", pnum);
 	}
 
-	plr[pnum].position.old.x = plr[pnum].position.current.x;
-	plr[pnum].position.old.y = plr[pnum].position.current.y;
+	plr[pnum].position.old = plr[pnum].position.tile;
 }
 
 void FixPlayerLocation(int pnum, direction bDir)
@@ -1247,20 +1227,17 @@ void FixPlayerLocation(int pnum, direction bDir)
 		app_fatal("FixPlayerLocation: illegal player %d", pnum);
 	}
 
-	plr[pnum].position.future.x = plr[pnum].position.current.x;
-	plr[pnum].position.future.y = plr[pnum].position.current.y;
-	plr[pnum].position.offset.x = 0;
-	plr[pnum].position.offset.y = 0;
+	plr[pnum].position.future = plr[pnum].position.tile;
+	plr[pnum].position.offset = { 0, 0 };
 	plr[pnum]._pdir = bDir;
 	if (pnum == myplr) {
-		ScrollInfo._sxoff = 0;
-		ScrollInfo._syoff = 0;
+		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = SDIR_NONE;
-		ViewX = plr[pnum].position.current.x;
-		ViewY = plr[pnum].position.current.y;
+		ViewX = plr[pnum].position.tile.x;
+		ViewY = plr[pnum].position.tile.y;
 	}
-	ChangeLightXY(plr[pnum]._plid, plr[pnum].position.current.x, plr[pnum].position.current.y);
-	ChangeVisionXY(plr[pnum]._pvid, plr[pnum].position.current.x, plr[pnum].position.current.y);
+	ChangeLightXY(plr[pnum]._plid, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
+	ChangeVisionXY(plr[pnum]._pvid, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 }
 
 void StartStand(int pnum, direction dir)
@@ -1278,7 +1255,7 @@ void StartStand(int pnum, direction dir)
 		plr[pnum]._pmode = PM_STAND;
 		FixPlayerLocation(pnum, dir);
 		FixPlrWalkTags(pnum);
-		dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
+		dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = pnum + 1;
 		SetPlayerOld(pnum);
 	} else {
 		SyncPlrKill(pnum, -1);
@@ -1292,28 +1269,19 @@ void StartWalkStand(int pnum)
 	}
 
 	plr[pnum]._pmode = PM_STAND;
-	plr[pnum].position.future.x = plr[pnum].position.current.x;
-	plr[pnum].position.future.y = plr[pnum].position.current.y;
-	plr[pnum].position.offset.x = 0;
-	plr[pnum].position.offset.y = 0;
+	plr[pnum].position.future = plr[pnum].position.tile;
+	plr[pnum].position.offset = { 0, 0 };
 
 	if (pnum == myplr) {
-		ScrollInfo._sxoff = 0;
-		ScrollInfo._syoff = 0;
+		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = SDIR_NONE;
-		ViewX = plr[pnum].position.current.x;
-		ViewY = plr[pnum].position.current.y;
+		ViewX = plr[pnum].position.tile.x;
+		ViewY = plr[pnum].position.tile.y;
 	}
 }
 
 void PM_ChangeLightOff(int pnum)
 {
-	int x, y;
-	int xmul, ymul;
-	int lx, ly;
-	int offx, offy;
-	const LightListStruct *l;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_ChangeLightOff: illegal player %d", pnum);
 	}
@@ -1321,28 +1289,16 @@ void PM_ChangeLightOff(int pnum)
 	if (plr[pnum]._plid == NO_LIGHT)
 		return;
 
-	l = &LightList[plr[pnum]._plid];
-	x = 2 * plr[pnum].position.offset.y + plr[pnum].position.offset.x;
-	y = 2 * plr[pnum].position.offset.y - plr[pnum].position.offset.x;
-	if (x < 0) {
-		xmul = -1;
-		x = -x;
-	} else {
-		xmul = 1;
-	}
-	if (y < 0) {
-		ymul = -1;
-		y = -y;
-	} else {
-		ymul = 1;
-	}
+	const LightListStruct *l = &LightList[plr[pnum]._plid];
+	int x = 2 * plr[pnum].position.offset.y + plr[pnum].position.offset.x;
+	int y = 2 * plr[pnum].position.offset.y - plr[pnum].position.offset.x;
 
-	x = (x / 8) * xmul;
-	y = (y / 8) * ymul;
-	lx = x + (l->_lx * 8);
-	ly = y + (l->_ly * 8);
-	offx = l->_xoff + (l->_lx * 8);
-	offy = l->_yoff + (l->_ly * 8);
+	x = (x / 8) * (x < 0 ? 1 : -1);
+	y = (y / 8) * (y < 0 ? 1 : -1);
+	int lx = x + (l->position.tile.x * 8);
+	int ly = y + (l->position.tile.y * 8);
+	int offx = l->position.offset.x + (l->position.tile.x * 8);
+	int offy = l->position.offset.y + (l->position.tile.y * 8);
 
 	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
 		return;
@@ -1358,27 +1314,26 @@ void PM_ChangeOffset(int pnum)
 		app_fatal("PM_ChangeOffset: illegal player %d", pnum);
 	}
 
-	plr[pnum]._pVar8++;
-	px = plr[pnum]._pVar6 / 256;
-	py = plr[pnum]._pVar7 / 256;
+	plr[pnum].actionFrame++;
+	px = plr[pnum].position.offset2.x / 256;
+	py = plr[pnum].position.offset2.y / 256;
 
-	plr[pnum]._pVar6 += plr[pnum].position.velocity.x;
-	plr[pnum]._pVar7 += plr[pnum].position.velocity.y;
+	plr[pnum].position.offset2.x += plr[pnum].position.velocity.x;
+	plr[pnum].position.offset2.y += plr[pnum].position.velocity.y;
 
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
-		plr[pnum]._pVar6 += plr[pnum].position.velocity.x;
-		plr[pnum]._pVar7 += plr[pnum].position.velocity.y;
+		plr[pnum].position.offset2.x += plr[pnum].position.velocity.x;
+		plr[pnum].position.offset2.y += plr[pnum].position.velocity.y;
 	}
 
-	plr[pnum].position.offset.x = plr[pnum]._pVar6 >> 8;
-	plr[pnum].position.offset.y = plr[pnum]._pVar7 >> 8;
+	plr[pnum].position.offset = { plr[pnum].position.offset2.x >> 8, plr[pnum].position.offset2.y >> 8 };
 
-	px -= plr[pnum]._pVar6 >> 8;
-	py -= plr[pnum]._pVar7 >> 8;
+	px -= plr[pnum].position.offset2.x >> 8;
+	py -= plr[pnum].position.offset2.y >> 8;
 
 	if (pnum == myplr && ScrollInfo._sdir) {
-		ScrollInfo._sxoff += px;
-		ScrollInfo._syoff += py;
+		ScrollInfo.offset.x += px;
+		ScrollInfo.offset.y += py;
 	}
 
 	PM_ChangeLightOff(pnum);
@@ -1405,61 +1360,52 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	}
 
 	//The player's tile position after finishing this movement action
-	int px = xadd + plr[pnum].position.current.x;
-	int py = yadd + plr[pnum].position.current.y;
-	plr[pnum].position.future.x = px;
-	plr[pnum].position.future.y = py;
+	int px = xadd + plr[pnum].position.tile.x;
+	int py = yadd + plr[pnum].position.tile.y;
+	plr[pnum].position.future = { px, py };
 
 	//If this is the local player then update the camera offset position
 	if (pnum == myplr) {
-		ScrollInfo._sdx = plr[pnum].position.current.x - ViewX;
-		ScrollInfo._sdy = plr[pnum].position.current.y - ViewY;
+		ScrollInfo.tile.x = plr[pnum].position.tile.x - ViewX;
+		ScrollInfo.tile.y = plr[pnum].position.tile.y - ViewY;
 	}
 
 	switch (variant) {
 	case PM_WALK:
 		dPlayer[px][py] = -(pnum + 1);
 		plr[pnum]._pmode = PM_WALK;
-		plr[pnum].position.velocity.x = xvel;
-		plr[pnum].position.velocity.y = yvel;
-		plr[pnum].position.offset.x = 0;
-		plr[pnum].position.offset.y = 0;
-		plr[pnum]._pVar1 = xadd;
-		plr[pnum]._pVar2 = yadd;
-		plr[pnum]._pVar3 = EndDir;
+		plr[pnum].position.velocity = { xvel, yvel };
+		plr[pnum].position.offset = { 0, 0 };
+		plr[pnum].position.temp = { xadd, yadd };
+		plr[pnum].tempDirection = EndDir;
 
-		plr[pnum]._pVar6 = 0;
-		plr[pnum]._pVar7 = 0;
+		plr[pnum].position.offset2 = { 0, 0 };
 		break;
 	case PM_WALK2:
-		dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = -(pnum + 1);
-		plr[pnum]._pVar1 = plr[pnum].position.current.x;
-		plr[pnum]._pVar2 = plr[pnum].position.current.y;
-		plr[pnum].position.current = { px, py }; // Move player to the next tile to maintain correct render order
-		dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
+		dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = -(pnum + 1);
+		plr[pnum].position.temp = plr[pnum].position.tile;
+		plr[pnum].position.tile = { px, py }; // Move player to the next tile to maintain correct render order
+		dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = pnum + 1;
 		plr[pnum].position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
 
-		ChangeLightXY(plr[pnum]._plid, plr[pnum].position.current.x, plr[pnum].position.current.y);
+		ChangeLightXY(plr[pnum]._plid, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 		PM_ChangeLightOff(pnum);
 
 		plr[pnum]._pmode = PM_WALK2;
-		plr[pnum].position.velocity.x = xvel;
-		plr[pnum].position.velocity.y = yvel;
-		plr[pnum]._pVar6 = xoff * 256;
-		plr[pnum]._pVar7 = yoff * 256;
-		plr[pnum]._pVar3 = EndDir;
+		plr[pnum].position.velocity = { xvel, yvel };
+		plr[pnum].position.offset2 = { xoff * 256, yoff * 256 };
+		plr[pnum].tempDirection = EndDir;
 		break;
 	case PM_WALK3:
-		int x = mapx + plr[pnum].position.current.x;
-		int y = mapy + plr[pnum].position.current.y;
+		int x = mapx + plr[pnum].position.tile.x;
+		int y = mapy + plr[pnum].position.tile.y;
 
-		dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = -(pnum + 1);
+		dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = -(pnum + 1);
 		dPlayer[px][py] = -(pnum + 1);
 		plr[pnum]._pVar4 = x;
 		plr[pnum]._pVar5 = y;
 		dFlags[x][y] |= BFLAG_PLAYERLR;
-		plr[pnum].position.offset.x = xoff; // Offset player sprite to align with their previous tile position
-		plr[pnum].position.offset.y = yoff;
+		plr[pnum].position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
 
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(plr[pnum]._plid, x, y);
@@ -1467,13 +1413,10 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		}
 
 		plr[pnum]._pmode = PM_WALK3;
-		plr[pnum].position.velocity.x = xvel;
-		plr[pnum].position.velocity.y = yvel;
-		plr[pnum]._pVar1 = px;
-		plr[pnum]._pVar2 = py;
-		plr[pnum]._pVar6 = xoff * 256;
-		plr[pnum]._pVar7 = yoff * 256;
-		plr[pnum]._pVar3 = EndDir;
+		plr[pnum].position.velocity = { xvel, yvel };
+		plr[pnum].position.temp = { px, py };
+		plr[pnum].position.offset2 = { xoff * 256, yoff * 256 };
+		plr[pnum].tempDirection = EndDir;
 		break;
 	}
 
@@ -1483,23 +1426,22 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	}
 
 	//Start walk animation
-	int numSkippedFrames = (currlevel == 0 && sgGameInitInfo.bRunInTown) ? (plr[pnum]._pWFrames / 2) : 0;
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, numSkippedFrames, true);
+	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
 
 	plr[pnum]._pdir = EndDir;
-	plr[pnum]._pVar8 = 0;
+	plr[pnum].actionFrame = 0;
 
 	if (pnum != myplr) {
 		return;
 	}
 
 	if (zoomflag) {
-		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {
+		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
 			ScrollInfo._sdir = SDIR_NONE;
 		} else {
 			ScrollInfo._sdir = sdir;
 		}
-	} else if (abs(ScrollInfo._sdx) >= 2 || abs(ScrollInfo._sdy) >= 2) {
+	} else if (abs(ScrollInfo.tile.x) >= 2 || abs(ScrollInfo.tile.y) >= 2) {
 		ScrollInfo._sdir = SDIR_NONE;
 	} else {
 		ScrollInfo._sdir = sdir;
@@ -1521,18 +1463,18 @@ void StartAttack(int pnum, direction d)
 		LoadPlrGFX(pnum, PFILE_ATTACK);
 	}
 
-	int skippedAnimationFrames = 1; // Every Attack start with Frame 2. Because ProcessPlayerAnimation is called after StartAttack and its increases the AnimationFrame.
-	if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
-		skippedAnimationFrames += 1;
-	}
+	int skippedAnimationFrames = 0;
 	if ((plr[pnum]._pIFlags & ISPL_FASTERATTACK) != 0) {
-		skippedAnimationFrames += 2;
-	}
-	if ((plr[pnum]._pIFlags & ISPL_FASTESTATTACK) != 0) {
-		skippedAnimationFrames += 2;
+		// The combination of Faster and Fast Attack doesn't result in more skipped skipped frames, cause the secound frame skip of Faster Attack is not triggered.
+		skippedAnimationFrames = 2;
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
+		skippedAnimationFrames = 1;
+	} else if ((plr[pnum]._pIFlags & ISPL_FASTESTATTACK) != 0) {
+		// Fastest Attack is skipped if Fast or Faster Attack is also specified, cause both skip the frame that triggers fastest attack skipping
+		skippedAnimationFrames = 2;
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, skippedAnimationFrames, true, plr[pnum]._pAFNum);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationDistributionParams::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
 	plr[pnum]._pmode = PM_ATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
@@ -1553,20 +1495,19 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 		LoadPlrGFX(pnum, PFILE_ATTACK);
 	}
 
-	int skippedAnimationFrames = 1; // Every Attack start with Frame 2. Because ProcessPlayerAnimation is called after StartRangeAttack and its increases the AnimationFrame.
+	int skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
 		if ((plr[pnum]._pIFlags & ISPL_FASTATTACK) != 0) {
 			skippedAnimationFrames += 1;
 		}
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, skippedAnimationFrames, true, plr[pnum]._pAFNum);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationDistributionParams::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
 
 	plr[pnum]._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
-	plr[pnum]._pVar1 = cx;
-	plr[pnum]._pVar2 = cy;
+	plr[pnum].position.temp = { cx, cy };
 }
 
 void StartPlrBlock(int pnum, direction dir)
@@ -1580,18 +1521,18 @@ void StartPlrBlock(int pnum, direction dir)
 		return;
 	}
 
-	PlaySfxLoc(IS_ISWORD, plr[pnum].position.current.x, plr[pnum].position.current.y);
+	PlaySfxLoc(IS_ISWORD, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 
 	if ((plr[pnum]._pGFXLoad & PFILE_BLOCK) == 0) {
 		LoadPlrGFX(pnum, PFILE_BLOCK);
 	}
 
-	int skippedAnimationFrames = 0; // Block can start with Frame 1 if Player 2 hits Player 1. In this case Player 1 will not call again ProcessPlayerAnimation.
+	int skippedAnimationFrames = 0;
 	if ((plr[pnum]._pIFlags & ISPL_FASTBLOCK) != 0) {
-		skippedAnimationFrames = (plr[pnum]._pBFrames - 1); // ISPL_FASTBLOCK means there is only one AnimationFrame.
+		skippedAnimationFrames = (plr[pnum]._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pBAnim[dir], plr[pnum]._pBFrames, 2, plr[pnum]._pBWidth, skippedAnimationFrames);
+	NewPlrAnim(pnum, plr[pnum]._pBAnim[dir], plr[pnum]._pBFrames, 2, plr[pnum]._pBWidth, AnimationDistributionParams::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
 	plr[pnum]._pmode = PM_BLOCK;
 	FixPlayerLocation(pnum, dir);
@@ -1614,34 +1555,33 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 			if ((plr[pnum]._pGFXLoad & PFILE_FIRE) == 0) {
 				LoadPlrGFX(pnum, PFILE_FIRE);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
+			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionParams::ProcessAnimationPending);
 			break;
 		case STYPE_LIGHTNING:
 			if ((plr[pnum]._pGFXLoad & PFILE_LIGHTNING) == 0) {
 				LoadPlrGFX(pnum, PFILE_LIGHTNING);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
+			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionParams::ProcessAnimationPending);
 			break;
 		case STYPE_MAGIC:
 			if ((plr[pnum]._pGFXLoad & PFILE_MAGIC) == 0) {
 				LoadPlrGFX(pnum, PFILE_MAGIC);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, 1, true);
+			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionParams::ProcessAnimationPending);
 			break;
 		}
 	}
 
-	PlaySfxLoc(spelldata[plr[pnum]._pSpell].sSFX, plr[pnum].position.current.x, plr[pnum].position.current.y);
+	PlaySfxLoc(spelldata[plr[pnum]._pSpell].sSFX, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 
 	plr[pnum]._pmode = PM_SPELL;
 
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
 
-	plr[pnum]._pVar1 = cx;
-	plr[pnum]._pVar2 = cy;
+	plr[pnum].position.temp = { cx, cy };
 	plr[pnum]._pVar4 = GetSpellLevel(pnum, plr[pnum]._pSpell);
-	plr[pnum]._pVar8 = 1;
+	plr[pnum].actionFrame = 1;
 }
 
 void FixPlrWalkTags(int pnum)
@@ -1724,7 +1664,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		LoadPlrGFX(pnum, PFILE_HIT);
 	}
 
-	int skippedAnimationFrames = 0; // GotHit can start with Frame 1. GotHit can for example be called in ProcessMonsters() and this is after ProcessPlayers().
+	int skippedAnimationFrames = 0;
 	const int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
 	if ((plr[pnum]._pIFlags & ZenFlags) == ZenFlags) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
 		skippedAnimationFrames = 4;
@@ -1738,12 +1678,12 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		skippedAnimationFrames = 0;
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth, skippedAnimationFrames);
+	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth, AnimationDistributionParams::None, skippedAnimationFrames);
 
 	plr[pnum]._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);
 	FixPlrWalkTags(pnum);
-	dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
+	dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = pnum + 1;
 	SetPlayerOld(pnum);
 }
 
@@ -1757,8 +1697,7 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y)
 	dItem[x][y] = ii + 1;
 
 	items[ii] = *itm;
-	items[ii]._ix = x;
-	items[ii]._iy = y;
+	items[ii].position = { x, y };
 	RespawnItem(&items[ii], true);
 
 	itm->_itype = ITYPE_NONE;
@@ -1776,24 +1715,24 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 		app_fatal("PlrDeadItem: illegal player %d", pnum);
 	}
 
-	x = xx + plr[pnum].position.current.x;
-	y = yy + plr[pnum].position.current.y;
+	x = xx + plr[pnum].position.tile.x;
+	y = yy + plr[pnum].position.tile.y;
 	if ((xx || yy) && ItemSpaceOk(x, y)) {
 		RespawnDeadItem(itm, x, y);
 		plr[pnum].HoldItem = *itm;
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, x, y);
+		NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
 		return;
 	}
 
 	for (k = 1; k < 50; k++) {
 		for (j = -k; j <= k; j++) {
-			y = j + plr[pnum].position.current.y;
+			y = j + plr[pnum].position.tile.y;
 			for (i = -k; i <= k; i++) {
-				x = i + plr[pnum].position.current.x;
+				x = i + plr[pnum].position.tile.x;
 				if (ItemSpaceOk(x, y)) {
 					RespawnDeadItem(itm, x, y);
 					plr[pnum].HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, x, y);
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
 					return;
 				}
 			}
@@ -1846,7 +1785,7 @@ StartPlayerKill(int pnum, int earflag)
 	p->_pmode = PM_DEATH;
 	p->_pInvincible = true;
 	SetPlayerHitPoints(pnum, 0);
-	p->_pVar8 = 1;
+	p->deathFrame = 1;
 
 	if (pnum != myplr && !earflag && !diablolevel) {
 		for (i = 0; i < NUM_INVLOC; i++) {
@@ -1858,7 +1797,7 @@ StartPlayerKill(int pnum, int earflag)
 	if (plr[pnum].plrlevel == currlevel) {
 		FixPlayerLocation(pnum, p->_pdir);
 		RemovePlrFromMap(pnum);
-		dFlags[p->position.current.x][p->position.current.y] |= BFLAG_DEAD_PLAYER;
+		dFlags[p->position.tile.x][p->position.tile.y] |= BFLAG_DEAD_PLAYER;
 		SetPlayerOld(pnum);
 
 		if (pnum == myplr) {
@@ -1875,7 +1814,7 @@ StartPlayerKill(int pnum, int earflag)
 				if (earflag != -1) {
 					if (earflag != 0) {
 						SetPlrHandItem(&ear, IDI_EAR);
-						sprintf(ear._iName, "Ear of %s", plr[pnum]._pName);
+						sprintf(ear._iName, _("Ear of %s"), plr[pnum]._pName);
 						if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 							ear._iCurs = ICURS_EAR_SORCERER;
 						} else if (plr[pnum]._pClass == HeroClass::Warrior) {
@@ -2116,11 +2055,11 @@ void RemovePlrMissiles(int pnum)
 	int i, am;
 	int mx, my;
 
-	if (currlevel != 0 && pnum == myplr && (monster[myplr]._mx != 1 || monster[myplr]._my != 0)) {
+	if (currlevel != 0 && pnum == myplr && (monster[myplr].position.tile.x != 1 || monster[myplr].position.tile.y != 0)) {
 		M_StartKill(myplr, myplr);
-		AddDead(monster[myplr]._mx, monster[myplr]._my, (monster[myplr].MType)->mdeadval, monster[myplr]._mdir);
-		mx = monster[myplr]._mx;
-		my = monster[myplr]._my;
+		AddDead(monster[myplr].position.tile, (monster[myplr].MType)->mdeadval, monster[myplr]._mdir);
+		mx = monster[myplr].position.tile.x;
+		my = monster[myplr].position.tile.y;
 		dMonster[mx][my] = 0;
 		monster[myplr]._mDelFlag = true;
 		DeleteMonsterList();
@@ -2153,7 +2092,7 @@ void InitLevelChange(int pnum)
 	RemovePlrFromMap(pnum);
 	SetPlayerOld(pnum);
 	if (pnum == myplr) {
-		dPlayer[plr[myplr].position.current.x][plr[myplr].position.current.y] = myplr + 1;
+		dPlayer[plr[myplr].position.tile.x][plr[myplr].position.tile.y] = myplr + 1;
 	} else {
 		plr[pnum]._pLvlVisited[plr[pnum].plrlevel] = true;
 	}
@@ -2266,68 +2205,62 @@ bool PM_DoWalk(int pnum, int variant)
 
 	//Play walking sound effect on certain animation frames
 	if (sgOptions.Audio.bWalkingSound) {
-		if (plr[pnum]._pAnimFrame == 3
-		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-			PlaySfxLoc(PS_WALK1, plr[pnum].position.current.x, plr[pnum].position.current.y);
+		if (plr[pnum].AnimInfo.CurrentFrame == 3
+		    || (plr[pnum]._pWFrames == 8 && plr[pnum].AnimInfo.CurrentFrame == 7)
+		    || (plr[pnum]._pWFrames != 8 && plr[pnum].AnimInfo.CurrentFrame == 4)) {
+			PlaySfxLoc(PS_WALK1, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 		}
 	}
 
 	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
-		if (plr[pnum]._pAnimFrame % 2 == 0) {
-			plr[pnum]._pAnimFrame++;
-			plr[pnum]._pVar8++;
+		if (plr[pnum].AnimInfo.CurrentFrame % 2 == 0) {
+			plr[pnum].AnimInfo.CurrentFrame++;
+			plr[pnum].actionFrame++;
 		}
-		if (plr[pnum]._pAnimFrame >= plr[pnum]._pWFrames) {
-			plr[pnum]._pAnimFrame = 0;
+		if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pWFrames) {
+			plr[pnum].AnimInfo.CurrentFrame = 0;
 		}
-	}
-
-	//Acquire length of walk animation length (this is 8 for every class, so the AnimLenFromClass array is redundant right now)
-	int anim_len = 8;
-	if (currlevel != 0) {
-		anim_len = AnimLenFromClass[static_cast<std::size_t>(plr[pnum]._pClass)];
 	}
 
 	//Check if we reached new tile
-	if (plr[pnum]._pVar8 >= anim_len) {
+	if (plr[pnum].actionFrame >= plr[pnum]._pWFrames) {
 
 		//Update the player's tile position
 		switch (variant) {
 		case PM_WALK:
-			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = 0;
-			plr[pnum].position.current.x += plr[pnum]._pVar1;
-			plr[pnum].position.current.y += plr[pnum]._pVar2;
-			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
+			dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = 0;
+			plr[pnum].position.tile.x += plr[pnum].position.temp.x;
+			plr[pnum].position.tile.y += plr[pnum].position.temp.y;
+			dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = pnum + 1;
 			break;
 		case PM_WALK2:
-			dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
+			dPlayer[plr[pnum].position.temp.x][plr[pnum].position.temp.y] = 0;
 			break;
 		case PM_WALK3:
-			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = 0;
+			dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = 0;
 			dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
-			plr[pnum].position.current = { plr[pnum]._pVar1, plr[pnum]._pVar2 };
-			dPlayer[plr[pnum].position.current.x][plr[pnum].position.current.y] = pnum + 1;
+			plr[pnum].position.tile = plr[pnum].position.temp;
+			dPlayer[plr[pnum].position.tile.x][plr[pnum].position.tile.y] = pnum + 1;
 			break;
 		}
 
 		//Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(plr[pnum]._plid, plr[pnum].position.current.x, plr[pnum].position.current.y);
-			ChangeVisionXY(plr[pnum]._pvid, plr[pnum].position.current.x, plr[pnum].position.current.y);
+			ChangeLightXY(plr[pnum]._plid, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
+			ChangeVisionXY(plr[pnum]._pvid, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 		}
 
 		//Update the "camera" tile position
 		if (pnum == myplr && ScrollInfo._sdir) {
-			ViewX = plr[pnum].position.current.x - ScrollInfo._sdx;
-			ViewY = plr[pnum].position.current.y - ScrollInfo._sdy;
+			ViewX = plr[pnum].position.tile.x - ScrollInfo.tile.x;
+			ViewY = plr[pnum].position.tile.y - ScrollInfo.tile.y;
 		}
 
 		if (plr[pnum].walkpath[0] != WALK_NONE) {
 			StartWalkStand(pnum);
 		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
+			StartStand(pnum, plr[pnum].tempDirection);
 		}
 
 		ClearPlrPVars(pnum);
@@ -2521,7 +2454,7 @@ bool PlrHitMonst(int pnum, int m)
 #endif
 		if (plr[pnum]._pIFlags & ISPL_FIREDAM && plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
 			int midam = plr[pnum]._pIFMinDam + GenerateRnd(plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
-			AddMissile(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum]._pVar1, plr[pnum]._pVar2, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+			AddMissile(plr[pnum].position.tile.x, plr[pnum].position.tile.y, plr[pnum].position.temp.x, plr[pnum].position.temp.y, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		}
 		mind = plr[pnum]._pIMinDam;
 		maxd = plr[pnum]._pIMaxDam;
@@ -2729,7 +2662,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 
 	if (hit < hper) {
 		if (blk < blkper) {
-			direction dir = GetDirection(plr[p].position.current.x, plr[p].position.current.y, plr[pnum].position.current.x, plr[pnum].position.current.y);
+			direction dir = GetDirection(plr[p].position.tile, plr[pnum].position.tile);
 			StartPlrBlock(p, dir);
 		} else {
 			mind = plr[pnum]._pIMinDam;
@@ -2796,26 +2729,26 @@ bool PM_DoAttack(int pnum)
 		app_fatal("PM_DoAttack: illegal player %d", pnum);
 	}
 
-	frame = plr[pnum]._pAnimFrame;
+	frame = plr[pnum].AnimInfo.CurrentFrame;
 	if (plr[pnum]._pIFlags & ISPL_QUICKATTACK && frame == 1) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo.CurrentFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTATTACK && (frame == 1 || frame == 3)) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo.CurrentFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTERATTACK && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo.CurrentFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTESTATTACK && (frame == 1 || frame == 4)) {
-		plr[pnum]._pAnimFrame += 2;
+		plr[pnum].AnimInfo.CurrentFrame += 2;
 	}
-	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum - 1) {
-		PlaySfxLoc(PS_SWING, plr[pnum].position.current.x, plr[pnum].position.current.y);
+	if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFNum - 1) {
+		PlaySfxLoc(PS_SWING, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 	}
 
-	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum) {
-		dx = plr[pnum].position.current.x + offset_x[plr[pnum]._pdir];
-		dy = plr[pnum].position.current.y + offset_y[plr[pnum]._pdir];
+	if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFNum) {
+		dx = plr[pnum].position.tile.x + offset_x[plr[pnum]._pdir];
+		dy = plr[pnum].position.tile.y + offset_y[plr[pnum]._pdir];
 
 		if (dMonster[dx][dy] != 0) {
 			if (dMonster[dx][dy] > 0) {
@@ -2824,7 +2757,7 @@ bool PM_DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			if (CanTalkToMonst(m)) {
-				plr[pnum]._pVar1 = 0;
+				plr[pnum].position.temp.x = 0; /** @todo Looks to be irrelevant, probably just remove it */
 				return false;
 			}
 		}
@@ -2867,17 +2800,17 @@ bool PM_DoAttack(int pnum)
 		                    || (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
 		                    || (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND))
 		                && !(plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD))))) {
-			dx = plr[pnum].position.current.x + offset_x[(plr[pnum]._pdir + 1) % 8];
-			dy = plr[pnum].position.current.y + offset_y[(plr[pnum]._pdir + 1) % 8];
+			dx = plr[pnum].position.tile.x + offset_x[(plr[pnum]._pdir + 1) % 8];
+			dy = plr[pnum].position.tile.y + offset_y[(plr[pnum]._pdir + 1) % 8];
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m].position.old.x == dx && monster[m].position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
-			dx = plr[pnum].position.current.x + offset_x[(plr[pnum]._pdir + 7) % 8];
-			dy = plr[pnum].position.current.y + offset_y[(plr[pnum]._pdir + 7) % 8];
+			dx = plr[pnum].position.tile.x + offset_x[(plr[pnum]._pdir + 7) % 8];
+			dy = plr[pnum].position.tile.y + offset_y[(plr[pnum]._pdir + 7) % 8];
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m].position.old.x == dx && monster[m].position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
@@ -2890,7 +2823,7 @@ bool PM_DoAttack(int pnum)
 		}
 	}
 
-	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFrames) {
+	if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
@@ -2907,20 +2840,20 @@ bool PM_DoRangeAttack(int pnum)
 	}
 
 	if (!gbIsHellfire) {
-		origFrame = plr[pnum]._pAnimFrame;
+		origFrame = plr[pnum].AnimInfo.CurrentFrame;
 		if (plr[pnum]._pIFlags & ISPL_QUICKATTACK && origFrame == 1) {
-			plr[pnum]._pAnimFrame++;
+			plr[pnum].AnimInfo.CurrentFrame++;
 		}
 		if (plr[pnum]._pIFlags & ISPL_FASTATTACK && (origFrame == 1 || origFrame == 3)) {
-			plr[pnum]._pAnimFrame++;
+			plr[pnum].AnimInfo.CurrentFrame++;
 		}
 	}
 
 	int arrows = 0;
-	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum) {
+	if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFNum) {
 		arrows = 1;
 	}
-	if ((plr[pnum]._pIFlags & ISPL_MULT_ARROWS) != 0 && plr[pnum]._pAnimFrame == plr[pnum]._pAFNum + 2) {
+	if ((plr[pnum]._pIFlags & ISPL_MULT_ARROWS) != 0 && plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFNum + 2) {
 		arrows = 2;
 	}
 
@@ -2929,10 +2862,10 @@ bool PM_DoRangeAttack(int pnum)
 		int yoff = 0;
 		if (arrows != 1) {
 			int angle = arrow == 0 ? -1 : 1;
-			int x = plr[pnum]._pVar1 - plr[pnum].position.current.x;
+			int x = plr[pnum].position.temp.x - plr[pnum].position.tile.x;
 			if (x != 0)
 				yoff = x < 0 ? angle : -angle;
-			int y = plr[pnum]._pVar2 - plr[pnum].position.current.y;
+			int y = plr[pnum].position.temp.y - plr[pnum].position.tile.y;
 			if (y != 0)
 				xoff = y < 0 ? -angle : angle;
 		}
@@ -2951,10 +2884,10 @@ bool PM_DoRangeAttack(int pnum)
 		}
 
 		AddMissile(
-		    plr[pnum].position.current.x,
-		    plr[pnum].position.current.y,
-		    plr[pnum]._pVar1 + xoff,
-		    plr[pnum]._pVar2 + yoff,
+		    plr[pnum].position.tile.x,
+		    plr[pnum].position.tile.y,
+		    plr[pnum].position.temp.x + xoff,
+		    plr[pnum].position.temp.y + yoff,
 		    plr[pnum]._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
@@ -2963,7 +2896,7 @@ bool PM_DoRangeAttack(int pnum)
 		    0);
 
 		if (arrow == 0 && mistype != MIS_SPECARROW) {
-			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, plr[pnum].position.current.x, plr[pnum].position.current.y);
+			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 		}
 
 		if (WeaponDur(pnum, 40)) {
@@ -2973,7 +2906,7 @@ bool PM_DoRangeAttack(int pnum)
 		}
 	}
 
-	if (plr[pnum]._pAnimFrame >= plr[pnum]._pAFrames) {
+	if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pAFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
@@ -3022,11 +2955,11 @@ bool PM_DoBlock(int pnum)
 		app_fatal("PM_DoBlock: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pIFlags & ISPL_FASTBLOCK && plr[pnum]._pAnimFrame != 1) {
-		plr[pnum]._pAnimFrame = plr[pnum]._pBFrames;
+	if (plr[pnum]._pIFlags & ISPL_FASTBLOCK && plr[pnum].AnimInfo.CurrentFrame != 1) {
+		plr[pnum].AnimInfo.CurrentFrame = plr[pnum]._pBFrames;
 	}
 
-	if (plr[pnum]._pAnimFrame >= plr[pnum]._pBFrames) {
+	if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pBFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 
@@ -3095,14 +3028,14 @@ bool PM_DoSpell(int pnum)
 		app_fatal("PM_DoSpell: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pVar8 == plr[pnum]._pSFNum) {
+	if (plr[pnum].actionFrame == plr[pnum]._pSFNum) {
 		CastSpell(
 		    pnum,
 		    plr[pnum]._pSpell,
-		    plr[pnum].position.current.x,
-		    plr[pnum].position.current.y,
-		    plr[pnum]._pVar1,
-		    plr[pnum]._pVar2,
+		    plr[pnum].position.tile.x,
+		    plr[pnum].position.tile.y,
+		    plr[pnum].position.temp.x,
+		    plr[pnum].position.temp.y,
 		    plr[pnum]._pVar4);
 
 		if (plr[pnum]._pSplFrom == 0) {
@@ -3110,15 +3043,15 @@ bool PM_DoSpell(int pnum)
 		}
 	}
 
-	plr[pnum]._pVar8++;
+	plr[pnum].actionFrame++;
 
 	if (leveltype == DTYPE_TOWN) {
-		if (plr[pnum]._pVar8 > plr[pnum]._pSFrames) {
+		if (plr[pnum].actionFrame > plr[pnum]._pSFrames) {
 			StartWalkStand(pnum);
 			ClearPlrPVars(pnum);
 			return true;
 		}
-	} else if (plr[pnum]._pAnimFrame == plr[pnum]._pSFrames) {
+	} else if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pSFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		return true;
@@ -3135,18 +3068,18 @@ bool PM_DoGotHit(int pnum)
 		app_fatal("PM_DoGotHit: illegal player %d", pnum);
 	}
 
-	frame = plr[pnum]._pAnimFrame;
+	frame = plr[pnum].AnimInfo.CurrentFrame;
 	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo.CurrentFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo.CurrentFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
+		plr[pnum].AnimInfo.CurrentFrame++;
 	}
 
-	if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {
+	if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pHFrames) {
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		if (GenerateRnd(4) != 0) {
@@ -3165,7 +3098,7 @@ bool PM_DoDeath(int pnum)
 		app_fatal("PM_DoDeath: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pVar8 >= 2 * plr[pnum]._pDFrames) {
+	if (plr[pnum].deathFrame >= 2 * plr[pnum]._pDFrames) {
 		if (deathdelay > 1 && pnum == myplr) {
 			deathdelay--;
 			if (deathdelay == 1) {
@@ -3176,13 +3109,13 @@ bool PM_DoDeath(int pnum)
 			}
 		}
 
-		plr[pnum]._pAnimDelay = 10000;
-		plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen;
-		dFlags[plr[pnum].position.current.x][plr[pnum].position.current.y] |= BFLAG_DEAD_PLAYER;
+		plr[pnum].AnimInfo.DelayLen = 10000;
+		plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames;
+		dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 	}
 
-	if (plr[pnum]._pVar8 < 100) {
-		plr[pnum]._pVar8++;
+	if (plr[pnum].deathFrame < 100) {
+		plr[pnum].deathFrame++;
 	}
 
 	return false;
@@ -3199,7 +3132,7 @@ void CheckNewPath(int pnum)
 
 	if (plr[pnum].destAction == ACTION_ATTACKMON) {
 		i = plr[pnum].destParam1;
-		MakePlrPath(pnum, monster[i]._mfutx, monster[i]._mfuty, false);
+		MakePlrPath(pnum, monster[i].position.future.x, monster[i].position.future.y, false);
 	}
 
 	if (plr[pnum].destAction == ACTION_ATTACKPLR) {
@@ -3215,13 +3148,13 @@ void CheckNewPath(int pnum)
 					i = plr[pnum].destParam1;
 
 					if (plr[pnum].destAction == ACTION_ATTACKMON) {
-						x = abs(plr[pnum].position.future.x - monster[i]._mfutx);
-						y = abs(plr[pnum].position.future.y - monster[i]._mfuty);
-						d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i]._mfutx, monster[i]._mfuty);
+						x = abs(plr[pnum].position.future.x - monster[i].position.future.x);
+						y = abs(plr[pnum].position.future.y - monster[i].position.future.y);
+						d = GetDirection(plr[pnum].position.future, monster[i].position.future);
 					} else {
 						x = abs(plr[pnum].position.future.x - plr[i].position.future.x);
 						y = abs(plr[pnum].position.future.y - plr[i].position.future.y);
-						d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, plr[i].position.future.x, plr[i].position.future.y);
+						d = GetDirection(plr[pnum].position.future, plr[i].position.future);
 					}
 
 					if (x < 2 && y < 2) {
@@ -3294,15 +3227,15 @@ void CheckNewPath(int pnum)
 	if (plr[pnum]._pmode == PM_STAND) {
 		switch (plr[pnum].destAction) {
 		case ACTION_ATTACK:
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum].destParam1, plr[pnum].destParam2);
+			d = GetDirection(plr[pnum].position.tile, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartAttack(pnum, d);
 			break;
 		case ACTION_ATTACKMON:
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - monster[i]._mfutx);
-			y = abs(plr[pnum].position.current.y - monster[i]._mfuty);
+			x = abs(plr[pnum].position.tile.x - monster[i].position.future.x);
+			y = abs(plr[pnum].position.tile.y - monster[i].position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i]._mfutx, monster[i]._mfuty);
+				d = GetDirection(plr[pnum].position.future, monster[i].position.future);
 				if (monster[i].mtalkmsg && monster[i].mtalkmsg != TEXT_VILE14) {
 					TalktoMonster(i);
 				} else {
@@ -3312,63 +3245,63 @@ void CheckNewPath(int pnum)
 			break;
 		case ACTION_ATTACKPLR:
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - plr[i].position.future.x);
-			y = abs(plr[pnum].position.current.y - plr[i].position.future.y);
+			x = abs(plr[pnum].position.tile.x - plr[i].position.future.x);
+			y = abs(plr[pnum].position.tile.y - plr[i].position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, plr[i].position.future.x, plr[i].position.future.y);
+				d = GetDirection(plr[pnum].position.future, plr[i].position.future);
 				StartAttack(pnum, d);
 			}
 			break;
 		case ACTION_RATTACK:
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum].destParam1, plr[pnum].destParam2);
+			d = GetDirection(plr[pnum].position.tile, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartRangeAttack(pnum, d, plr[pnum].destParam1, plr[pnum].destParam2);
 			break;
 		case ACTION_RATTACKMON:
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i]._mfutx, monster[i]._mfuty);
+			d = GetDirection(plr[pnum].position.future, monster[i].position.future);
 			if (monster[i].mtalkmsg && monster[i].mtalkmsg != TEXT_VILE14) {
 				TalktoMonster(i);
 			} else {
-				StartRangeAttack(pnum, d, monster[i]._mfutx, monster[i]._mfuty);
+				StartRangeAttack(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
 			}
 			break;
 		case ACTION_RATTACKPLR:
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, plr[i].position.future.x, plr[i].position.future.y);
+			d = GetDirection(plr[pnum].position.future, plr[i].position.future);
 			StartRangeAttack(pnum, d, plr[i].position.future.x, plr[i].position.future.y);
 			break;
 		case ACTION_SPELL:
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum].destParam1, plr[pnum].destParam2);
+			d = GetDirection(plr[pnum].position.tile, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartSpell(pnum, d, plr[pnum].destParam1, plr[pnum].destParam2);
 			plr[pnum]._pVar4 = plr[pnum].destParam3;
 			break;
 		case ACTION_SPELLWALL:
 			StartSpell(pnum, plr[pnum].destParam3, plr[pnum].destParam1, plr[pnum].destParam2);
-			plr[pnum]._pVar3 = plr[pnum].destParam3;
+			plr[pnum].tempDirection = plr[pnum].destParam3;
 			plr[pnum]._pVar4 = plr[pnum].destParam4;
 			break;
 		case ACTION_SPELLMON:
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i]._mfutx, monster[i]._mfuty);
-			StartSpell(pnum, d, monster[i]._mfutx, monster[i]._mfuty);
+			d = GetDirection(plr[pnum].position.tile, monster[i].position.future);
+			StartSpell(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
 			plr[pnum]._pVar4 = plr[pnum].destParam2;
 			break;
 		case ACTION_SPELLPLR:
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[i].position.future.x, plr[i].position.future.y);
+			d = GetDirection(plr[pnum].position.tile, plr[i].position.future);
 			StartSpell(pnum, d, plr[i].position.future.x, plr[i].position.future.y);
 			plr[pnum]._pVar4 = plr[pnum].destParam2;
 			break;
 		case ACTION_OPERATE:
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - object[i]._ox);
-			y = abs(plr[pnum].position.current.y - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
-				y = abs(plr[pnum].position.current.y - object[i]._oy + 1);
+			x = abs(plr[pnum].position.tile.x - object[i].position.x);
+			y = abs(plr[pnum].position.tile.y - object[i].position.y);
+			if (y > 1 && dObject[object[i].position.x][object[i].position.y - 1] == -(i + 1)) {
+				y = abs(plr[pnum].position.tile.y - object[i].position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
 				if (object[i]._oBreak == 1) {
-					d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, object[i]._ox, object[i]._oy);
+					d = GetDirection(plr[pnum].position.tile, object[i].position);
 					StartAttack(pnum, d);
 				} else {
 					OperateObject(pnum, i, false);
@@ -3377,14 +3310,14 @@ void CheckNewPath(int pnum)
 			break;
 		case ACTION_DISARM:
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - object[i]._ox);
-			y = abs(plr[pnum].position.current.y - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
-				y = abs(plr[pnum].position.current.y - object[i]._oy + 1);
+			x = abs(plr[pnum].position.tile.x - object[i].position.x);
+			y = abs(plr[pnum].position.tile.y - object[i].position.y);
+			if (y > 1 && dObject[object[i].position.x][object[i].position.y - 1] == -(i + 1)) {
+				y = abs(plr[pnum].position.tile.y - object[i].position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
 				if (object[i]._oBreak == 1) {
-					d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, object[i]._ox, object[i]._oy);
+					d = GetDirection(plr[pnum].position.tile, object[i].position);
 					StartAttack(pnum, d);
 				} else {
 					TryDisarm(pnum, i);
@@ -3401,8 +3334,8 @@ void CheckNewPath(int pnum)
 		case ACTION_PICKUPITEM:
 			if (pnum == myplr) {
 				i = plr[pnum].destParam1;
-				x = abs(plr[pnum].position.current.x - items[i]._ix);
-				y = abs(plr[pnum].position.current.y - items[i]._iy);
+				x = abs(plr[pnum].position.tile.x - items[i].position.x);
+				y = abs(plr[pnum].position.tile.y - items[i].position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !items[i]._iRequest) {
 					NetSendCmdGItem(true, CMD_REQUESTGITEM, myplr, myplr, i);
 					items[i]._iRequest = true;
@@ -3412,8 +3345,8 @@ void CheckNewPath(int pnum)
 		case ACTION_PICKUPAITEM:
 			if (pnum == myplr) {
 				i = plr[pnum].destParam1;
-				x = abs(plr[pnum].position.current.x - items[i]._ix);
-				y = abs(plr[pnum].position.current.y - items[i]._iy);
+				x = abs(plr[pnum].position.tile.x - items[i].position.x);
+				y = abs(plr[pnum].position.tile.y - items[i].position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
 					NetSendCmdGItem(true, CMD_REQUESTAGITEM, myplr, myplr, i);
 				}
@@ -3434,78 +3367,76 @@ void CheckNewPath(int pnum)
 		return;
 	}
 
-	if (plr[pnum]._pmode == PM_ATTACK && plr[pnum]._pAnimFrame > plr[myplr]._pAFNum) {
+	if (plr[pnum]._pmode == PM_ATTACK && plr[pnum].AnimInfo.CurrentFrame > plr[myplr]._pAFNum) {
 		if (plr[pnum].destAction == ACTION_ATTACK) {
-			d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, plr[pnum].destParam1, plr[pnum].destParam2);
+			d = GetDirection(plr[pnum].position.future, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartAttack(pnum, d);
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_ATTACKMON) {
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - monster[i]._mfutx);
-			y = abs(plr[pnum].position.current.y - monster[i]._mfuty);
+			x = abs(plr[pnum].position.tile.x - monster[i].position.future.x);
+			y = abs(plr[pnum].position.tile.y - monster[i].position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, monster[i]._mfutx, monster[i]._mfuty);
+				d = GetDirection(plr[pnum].position.future, monster[i].position.future);
 				StartAttack(pnum, d);
 			}
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_ATTACKPLR) {
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - plr[i].position.future.x);
-			y = abs(plr[pnum].position.current.y - plr[i].position.future.y);
+			x = abs(plr[pnum].position.tile.x - plr[i].position.future.x);
+			y = abs(plr[pnum].position.tile.y - plr[i].position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(plr[pnum].position.future.x, plr[pnum].position.future.y, plr[i].position.future.x, plr[i].position.future.y);
+				d = GetDirection(plr[pnum].position.future, plr[i].position.future);
 				StartAttack(pnum, d);
 			}
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_OPERATE) {
 			i = plr[pnum].destParam1;
-			x = abs(plr[pnum].position.current.x - object[i]._ox);
-			y = abs(plr[pnum].position.current.y - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
-				y = abs(plr[pnum].position.current.y - object[i]._oy + 1);
+			x = abs(plr[pnum].position.tile.x - object[i].position.x);
+			y = abs(plr[pnum].position.tile.y - object[i].position.y);
+			if (y > 1 && dObject[object[i].position.x][object[i].position.y - 1] == -(i + 1)) {
+				y = abs(plr[pnum].position.tile.y - object[i].position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
 				if (object[i]._oBreak == 1) {
-					d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, object[i]._ox, object[i]._oy);
+					d = GetDirection(plr[pnum].position.tile, object[i].position);
 					StartAttack(pnum, d);
-				} else {
-					OperateObject(pnum, i, false);
 				}
 			}
 		}
 	}
 
-	if (plr[pnum]._pmode == PM_RATTACK && plr[pnum]._pAnimFrame > plr[myplr]._pAFNum) {
+	if (plr[pnum]._pmode == PM_RATTACK && plr[pnum].AnimInfo.CurrentFrame > plr[myplr]._pAFNum) {
 		if (plr[pnum].destAction == ACTION_RATTACK) {
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum].destParam1, plr[pnum].destParam2);
+			d = GetDirection(plr[pnum].position.tile, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartRangeAttack(pnum, d, plr[pnum].destParam1, plr[pnum].destParam2);
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_RATTACKMON) {
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i]._mfutx, monster[i]._mfuty);
-			StartRangeAttack(pnum, d, monster[i]._mfutx, monster[i]._mfuty);
+			d = GetDirection(plr[pnum].position.tile, monster[i].position.future);
+			StartRangeAttack(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_RATTACKPLR) {
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[i].position.future.x, plr[i].position.future.y);
+			d = GetDirection(plr[pnum].position.tile, plr[i].position.future);
 			StartRangeAttack(pnum, d, plr[i].position.future.x, plr[i].position.future.y);
 			plr[pnum].destAction = ACTION_NONE;
 		}
 	}
 
-	if (plr[pnum]._pmode == PM_SPELL && plr[pnum]._pAnimFrame > plr[pnum]._pSFNum) {
+	if (plr[pnum]._pmode == PM_SPELL && plr[pnum].AnimInfo.CurrentFrame > plr[pnum]._pSFNum) {
 		if (plr[pnum].destAction == ACTION_SPELL) {
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[pnum].destParam1, plr[pnum].destParam2);
+			d = GetDirection(plr[pnum].position.tile, { plr[pnum].destParam1, plr[pnum].destParam2 });
 			StartSpell(pnum, d, plr[pnum].destParam1, plr[pnum].destParam2);
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_SPELLMON) {
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, monster[i]._mfutx, monster[i]._mfuty);
-			StartSpell(pnum, d, monster[i]._mfutx, monster[i]._mfuty);
+			d = GetDirection(plr[pnum].position.tile, monster[i].position.future);
+			StartSpell(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
 			plr[pnum].destAction = ACTION_NONE;
 		} else if (plr[pnum].destAction == ACTION_SPELLPLR) {
 			i = plr[pnum].destParam1;
-			d = GetDirection(plr[pnum].position.current.x, plr[pnum].position.current.y, plr[i].position.future.x, plr[i].position.future.y);
+			d = GetDirection(plr[pnum].position.tile, plr[i].position.future);
 			StartSpell(pnum, d, plr[i].position.future.x, plr[i].position.future.y);
 			plr[pnum].destAction = ACTION_NONE;
 		}
@@ -3579,7 +3510,7 @@ void ValidatePlayer()
 		plr[myplr]._pBaseVit = plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
-	Uint64 msk = 0;
+	uint64_t msk = 0;
 	for (b = SPL_FIREBOLT; b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel((spell_id)b) != -1) {
 			msk |= GetSpellBitmask(b);
@@ -3706,63 +3637,9 @@ void ProcessPlayers()
 				CheckNewPath(pnum);
 			} while (tplayer);
 
-			ProcessPlayerAnimation(pnum);
+			plr[pnum].AnimInfo.ProcessAnimation();
 		}
 	}
-}
-
-void ProcessPlayerAnimation(int pnum)
-{
-	plr[pnum]._pAnimCnt++;
-	plr[pnum]._pAnimGameTicksSinceSequenceStarted++;
-	if (plr[pnum]._pAnimCnt > plr[pnum]._pAnimDelay) {
-		plr[pnum]._pAnimCnt = 0;
-		plr[pnum]._pAnimFrame++;
-		if (plr[pnum]._pAnimFrame > plr[pnum]._pAnimLen) {
-			plr[pnum]._pAnimFrame = 1;
-			plr[pnum]._pAnimGameTicksSinceSequenceStarted = 0;
-		}
-	}
-}
-
-int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer)
-{
-	// Normal logic is used,
-	// - if no frame-skipping is required and so we have exactly one Animationframe per GameTick (_pAnimUsedNumFrames = 0)
-	// or
-	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
-	if (pPlayer->_pAnimNumSkippedFrames <= 0)
-		return pPlayer->_pAnimFrame;
-	// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
-	// In normal attacks frame skipping always happens before the attack actual hit.
-	// This has the advantage that the sword or bow always points to the enemy when the hit happens (_pAFNum or _pSFNum).
-	// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
-	int relevantAnimationLength;
-	if (pPlayer->_pAnimStopDistributingAfterFrame != 0) {
-		if (pPlayer->_pAnimFrame >= pPlayer->_pAnimStopDistributingAfterFrame)
-			return pPlayer->_pAnimFrame;
-		relevantAnimationLength = pPlayer->_pAnimStopDistributingAfterFrame - 1;
-	} else {
-		relevantAnimationLength = pPlayer->_pAnimLen;
-	}
-	float progressToNextGameTick = gfProgressToNextGameTick;
-	// we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	float totalGameTicksForCurrentAnimationSequence = progressToNextGameTick + (float)pPlayer->_pAnimGameTicksSinceSequenceStarted;
-	int animationMaxGameTickets = relevantAnimationLength;
-	if (pPlayer->_pAnimDelay > 1)
-		animationMaxGameTickets = (relevantAnimationLength * pPlayer->_pAnimDelay);
-	// if we skipped Frames we need to expand the GameTicks to make one GameTick for this Animation "faster"
-	float gameTickModifier = (float)animationMaxGameTickets / (float)(relevantAnimationLength - pPlayer->_pAnimNumSkippedFrames);
-	// 1 added for rounding reasons. float to int cast always truncate.
-	int absolutAnimationFrame = 1 + (int)(totalGameTicksForCurrentAnimationSequence * gameTickModifier);
-	// this can happen if we are at the last frame and the next game tick is due (nthread_GetProgressToNextGameTick returns 1.0f)
-	if (absolutAnimationFrame > relevantAnimationLength)
-		return relevantAnimationLength;
-	if (absolutAnimationFrame <= 0) {
-		SDL_Log("GetFrameToUseForPlayerRendering: Calculated an invalid Animation Frame");
-		return 1;
-	}
-	return absolutAnimationFrame;
 }
 
 void ClrPlrPath(int pnum)
@@ -3936,9 +3813,9 @@ void CheckPlrSpell()
 
 	if (addflag) {
 		if (plr[myplr]._pRSpell == SPL_FIREWALL || plr[myplr]._pRSpell == SPL_LIGHTWALL) {
-			direction sd = GetDirection(plr[myplr].position.current.x, plr[myplr].position.current.y, cursmx, cursmy);
+			direction sd = GetDirection(plr[myplr].position.tile, { cursmx, cursmy });
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam3(true, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);
+			NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, plr[myplr]._pRSpell, sd, sl);
 		} else if (pcursmonst != -1) {
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
 			NetSendCmdParam3(true, CMD_SPELLID, pcursmonst, plr[myplr]._pRSpell, sl);
@@ -3947,7 +3824,7 @@ void CheckPlrSpell()
 			NetSendCmdParam3(true, CMD_SPELLPID, pcursplr, plr[myplr]._pRSpell, sl);
 		} else { //145
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
-			NetSendCmdLocParam2(true, CMD_SPELLXY, cursmx, cursmy, plr[myplr]._pRSpell, sl);
+			NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, plr[myplr]._pRSpell, sl);
 		}
 		return;
 	}
@@ -3968,21 +3845,21 @@ void SyncPlrAnim(int pnum)
 	dir = plr[pnum]._pdir;
 	switch (plr[pnum]._pmode) {
 	case PM_STAND:
-		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pNAnim[dir];
 		break;
 	case PM_WALK:
 	case PM_WALK2:
 	case PM_WALK3:
-		plr[pnum]._pAnimData = plr[pnum]._pWAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pWAnim[dir];
 		break;
 	case PM_ATTACK:
-		plr[pnum]._pAnimData = plr[pnum]._pAAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pAAnim[dir];
 		break;
 	case PM_RATTACK:
-		plr[pnum]._pAnimData = plr[pnum]._pAAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pAAnim[dir];
 		break;
 	case PM_BLOCK:
-		plr[pnum]._pAnimData = plr[pnum]._pBAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pBAnim[dir];
 		break;
 	case PM_SPELL:
 		if (pnum == myplr)
@@ -3990,23 +3867,23 @@ void SyncPlrAnim(int pnum)
 		else
 			sType = STYPE_FIRE;
 		if (sType == STYPE_FIRE)
-			plr[pnum]._pAnimData = plr[pnum]._pFAnim[dir];
+			plr[pnum].AnimInfo.pData = plr[pnum]._pFAnim[dir];
 		if (sType == STYPE_LIGHTNING)
-			plr[pnum]._pAnimData = plr[pnum]._pLAnim[dir];
+			plr[pnum].AnimInfo.pData = plr[pnum]._pLAnim[dir];
 		if (sType == STYPE_MAGIC)
-			plr[pnum]._pAnimData = plr[pnum]._pTAnim[dir];
+			plr[pnum].AnimInfo.pData = plr[pnum]._pTAnim[dir];
 		break;
 	case PM_GOTHIT:
-		plr[pnum]._pAnimData = plr[pnum]._pHAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pHAnim[dir];
 		break;
 	case PM_NEWLVL:
-		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pNAnim[dir];
 		break;
 	case PM_DEATH:
-		plr[pnum]._pAnimData = plr[pnum]._pDAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pDAnim[dir];
 		break;
 	case PM_QUIT:
-		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
+		plr[pnum].AnimInfo.pData = plr[pnum]._pNAnim[dir];
 		break;
 	default:
 		app_fatal("SyncPlrAnim");
@@ -4024,8 +3901,8 @@ void SyncInitPlrPos(int pnum)
 	}
 
 	for (i = 0; i < 8; i++) {
-		x = plr[pnum].position.current.x + plrxoff2[i];
-		y = plr[pnum].position.current.y + plryoff2[i];
+		x = plr[pnum].position.tile.x + plrxoff2[i];
+		y = plr[pnum].position.tile.y + plryoff2[i];
 		if (PosOkPlayer(pnum, x, y)) {
 			break;
 		}
@@ -4035,9 +3912,9 @@ void SyncInitPlrPos(int pnum)
 		posOk = false;
 		for (range = 1; range < 50 && !posOk; range++) {
 			for (yy = -range; yy <= range && !posOk; yy++) {
-				y = yy + plr[pnum].position.current.y;
+				y = yy + plr[pnum].position.tile.y;
 				for (xx = -range; xx <= range && !posOk; xx++) {
-					x = xx + plr[pnum].position.current.x;
+					x = xx + plr[pnum].position.tile.x;
 					if (PosOkPlayer(pnum, x, y) && !PosOkPortal(currlevel, x, y)) {
 						posOk = true;
 					}
@@ -4046,7 +3923,7 @@ void SyncInitPlrPos(int pnum)
 		}
 	}
 
-	plr[pnum].position.current = { x, y };
+	plr[pnum].position.tile = { x, y };
 	dPlayer[x][y] = pnum + 1;
 
 	if (pnum == myplr) {

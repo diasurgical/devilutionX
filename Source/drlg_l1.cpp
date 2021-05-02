@@ -40,7 +40,7 @@ bool VR2;
 /** Specifies whether to generate a vertical room at position 3 in the Cathedral. */
 bool VR3;
 /** Contains the contents of the single player quest DUN file. */
-BYTE *L5pSetPiece;
+std::unique_ptr<BYTE[]> L5pSetPiece;
 
 /** Contains shadows for 2x2 blocks of base tile IDs in the Cathedral. */
 const ShadowStruct SPATS[37] = {
@@ -1028,8 +1028,7 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 		DRLG_MRectTrans(sx, sy + 2, sx + 5, sy + 4);
 		TransVal = t;
 
-		quests[Q_PWATER]._qtx = 2 * sx + 21;
-		quests[Q_PWATER]._qty = 2 * sy + 22;
+		quests[Q_PWATER].position = { 2 * sx + 21, 2 * sy + 22 };
 	}
 
 	if (setview) {
@@ -1054,13 +1053,10 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 
 static void DRLG_L1Floor()
 {
-	int i, j;
-	LONG rv;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (L5dflags[i][j] == 0 && dungeon[i][j] == 13) {
-				rv = GenerateRnd(3);
+				int rv = GenerateRnd(3);
 
 				if (rv == 1)
 					dungeon[i][j] = 162;
@@ -1073,7 +1069,7 @@ static void DRLG_L1Floor()
 
 void DRLG_LPass3(int lv)
 {
-	WORD *MegaTiles = (WORD *)&pMegaTiles[lv * 8];
+	auto *MegaTiles = (uint16_t *)&pMegaTiles[lv * 8];
 	int v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
 	int v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
 	int v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
@@ -1094,7 +1090,7 @@ void DRLG_LPass3(int lv)
 		for (int i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
 			if (lv >= 0) {
-				MegaTiles = (WORD *)&pMegaTiles[lv * 8];
+				MegaTiles = (uint16_t *)&pMegaTiles[lv * 8];
 				v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
 				v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
 				v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
@@ -1124,22 +1120,22 @@ static void DRLG_LoadL1SP()
 {
 	L5setloadflag = false;
 	if (QuestStatus(Q_BUTCHER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN");
 		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN");
 		L5setloadflag = true;
 	}
 	if (QuestStatus(Q_LTBANNER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", nullptr);
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN");
 		L5setloadflag = true;
 	}
 }
 
 static void DRLG_FreeL1SP()
 {
-	MemFreeDbg(L5pSetPiece);
+	L5pSetPiece = nullptr;
 }
 
 void DRLG_Init_Globals()
@@ -1214,7 +1210,7 @@ static void DRLG_InitL1Vals()
 void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *lm;
 
 	dminx = 16;
 	dminy = 16;
@@ -1222,7 +1218,7 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 	dmaxy = 96;
 
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -1231,7 +1227,7 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 		}
 	}
 
-	lm = pLevelMap;
+	lm = pLevelMap.get();
 	rw = *lm;
 	lm += 2;
 	rh = *lm;
@@ -1256,22 +1252,21 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 	DRLG_Init_Globals();
 	if (currlevel < 17)
 		DRLG_InitL1Vals();
-	SetMapMonsters(pLevelMap, 0, 0);
-	SetMapObjects(pLevelMap, 0, 0);
-	mem_free_dbg(pLevelMap);
+	SetMapMonsters(pLevelMap.get(), 0, 0);
+	SetMapObjects(pLevelMap.get(), 0, 0);
 }
 
 void LoadPreL1Dungeon(const char *sFileName)
 {
 	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
+	BYTE *lm;
 
 	dminx = 16;
 	dminy = 16;
 	dmaxx = 96;
 	dmaxy = 96;
 
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
+	auto pLevelMap = LoadFileInMem(sFileName);
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -1280,7 +1275,7 @@ void LoadPreL1Dungeon(const char *sFileName)
 		}
 	}
 
-	lm = pLevelMap;
+	lm = pLevelMap.get();
 	rw = *lm;
 	lm += 2;
 	rh = *lm;
@@ -1305,8 +1300,6 @@ void LoadPreL1Dungeon(const char *sFileName)
 			pdungeon[i][j] = dungeon[i][j];
 		}
 	}
-
-	mem_free_dbg(pLevelMap);
 }
 
 static void InitL5Dungeon()
@@ -2048,15 +2041,15 @@ static void DRLG_L5SetRoom(int rx1, int ry1)
 	int rw, rh, i, j;
 	BYTE *sp;
 
-	rw = *L5pSetPiece;
-	rh = *(L5pSetPiece + 2);
+	rw = L5pSetPiece[0];
+	rh = L5pSetPiece[2];
 
 	setpc_x = rx1;
 	setpc_y = ry1;
 	setpc_w = rw;
 	setpc_h = rh;
 
-	sp = L5pSetPiece + 4;
+	sp = &L5pSetPiece[4];
 
 	for (j = 0; j < rh; j++) {
 		for (i = 0; i < rw; i++) {
@@ -2517,8 +2510,7 @@ static void DRLG_L5CornerFix()
 
 static void DRLG_L5(lvl_entry entry)
 {
-	int i, j;
-	LONG minarea;
+	int i, j, minarea;
 	bool doneflag;
 
 	switch (currlevel) {
@@ -2743,7 +2735,7 @@ static void DRLG_L5(lvl_entry entry)
 	DRLG_CheckQuests(setpc_x, setpc_y);
 }
 
-void CreateL5Dungeon(DWORD rseed, lvl_entry entry)
+void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	int i, j;
 
@@ -2783,8 +2775,7 @@ void CreateL5Dungeon(DWORD rseed, lvl_entry entry)
 				UberCol = j;
 			}
 			if (dPiece[i][j] == 317) {
-				CornerStone.x = i;
-				CornerStone.y = j;
+				CornerStone.position = { i, j };
 			}
 		}
 	}

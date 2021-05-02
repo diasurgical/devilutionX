@@ -5,7 +5,9 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
+#include <memory>
+#include "utils/stdcompat/string_view.hpp"
 
 #include "items.h"
 #include "player.h"
@@ -40,20 +42,19 @@ struct TNQ {
 
 struct TownerStruct {
 	uint8_t *_tNAnim[8];
-	uint8_t *_tNData;
+	std::unique_ptr<BYTE[]> _tNData;
 	uint8_t *_tAnimData;
 	int16_t _tSeed;
-	int16_t _tx; // Tile X-position of NPC
-	int16_t _ty; // Tile Y-position of NPC
+	/** Tile position of NPC */
+	Point position;
 	int16_t _tAnimWidth;
-	int16_t _tAnimWidth2;
 	int16_t _tAnimDelay; // Tick length of each frame in the current animation
 	int16_t _tAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
 	uint8_t _tAnimLen;   // Number of frames in current animation
 	uint8_t _tAnimFrame; // Current frame of animation.
 	uint8_t _tAnimFrameCnt;
 	uint8_t _tNFrames;
-	char _tName[PLR_NAME_LEN];
+	string_view _tName;
 	TNQ qsts[MAXQUESTS];
 	bool _tSelFlag;
 	bool _tMsgSaid;

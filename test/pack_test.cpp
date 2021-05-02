@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <stdint.h>
+#include <cstdint>
 
 #include "pack.h"
 

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <gtest/gtest.h>
 #include <vector>
+#include <cstdint>
 
 #include "loadsave.h"
 #include "pack.h"
@@ -116,7 +117,7 @@ static void PackItemArmor(PkItemStruct *id)
 
 static void PackItemFullRejuv(PkItemStruct *id, int i)
 {
-	const Uint32 seeds[] = { 0x7C253335, 0x3EEFBFF8, 0x76AFB1A9, 0x38EB45FE, 0x1154E197, 0x5964B644, 0x76B58BEB, 0x002A6E5A };
+	const uint32_t seeds[] = { 0x7C253335, 0x3EEFBFF8, 0x76AFB1A9, 0x38EB45FE, 0x1154E197, 0x5964B644, 0x76B58BEB, 0x002A6E5A };
 	id->idx = ItemMiscIdIdx(IMISC_FULLREJUV);
 	id->iSeed = seeds[i];
 	id->iCreateInfo = 0;
@@ -188,7 +189,7 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	for (auto i = 0; i < 7; i++)
 		pPack->InvBody[i].idx = -1;
 	strcpy(pPack->pName, "TestPlayer");
-	pPack->pClass = static_cast<Sint8>(HeroClass::Rogue);
+	pPack->pClass = static_cast<int8_t>(HeroClass::Rogue);
 	pPack->pBaseStr = 20 + 35;
 	pPack->pBaseMag = 15 + 55;
 	pPack->pBaseDex = 30 + 220;
@@ -221,7 +222,7 @@ static int CountItems(ItemStruct *items, int n)
 	return count;
 }
 
-static int Count8(Sint8 *ints, int n)
+static int Count8(int8_t *ints, int n)
 {
 	int count = n;
 	for (int i = 0; i < n; i++)
@@ -250,8 +251,8 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(CountItems(pPlayer->SpdList, MAXBELTITEMS), 8);
 	ASSERT_EQ(CountItems(&pPlayer->HoldItem, 1), 1);
 
-	ASSERT_EQ(pPlayer->position.current.x, 75);
-	ASSERT_EQ(pPlayer->position.current.y, 68);
+	ASSERT_EQ(pPlayer->position.tile.x, 75);
+	ASSERT_EQ(pPlayer->position.tile.y, 68);
 	ASSERT_EQ(pPlayer->position.future.x, 75);
 	ASSERT_EQ(pPlayer->position.future.y, 68);
 	ASSERT_EQ(pPlayer->plrlevel, 0);
@@ -291,12 +292,11 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(pPlayer->_pmode, 0);
 	ASSERT_EQ(Count8(pPlayer->walkpath, MAX_PATH_LENGTH), 25);
 	ASSERT_EQ(pPlayer->_pgfxnum, 36);
-	ASSERT_EQ(pPlayer->_pAnimDelay, 3);
-	ASSERT_EQ(pPlayer->_pAnimCnt, 1);
-	ASSERT_EQ(pPlayer->_pAnimLen, 20);
-	ASSERT_EQ(pPlayer->_pAnimFrame, 1);
+	ASSERT_EQ(pPlayer->AnimInfo.DelayLen, 3);
+	ASSERT_EQ(pPlayer->AnimInfo.DelayCounter, 1);
+	ASSERT_EQ(pPlayer->AnimInfo.NumberOfFrames, 20);
+	ASSERT_EQ(pPlayer->AnimInfo.CurrentFrame, 1);
 	ASSERT_EQ(pPlayer->_pAnimWidth, 96);
-	ASSERT_EQ(pPlayer->_pAnimWidth2, 16);
 	ASSERT_EQ(pPlayer->_pSpell, -1);
 	ASSERT_EQ(pPlayer->_pSplType, 4);
 	ASSERT_EQ(pPlayer->_pSplFrom, 0);
@@ -361,7 +361,7 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 
 TEST(Writehero, pfile_write_hero)
 {
-	SetPrefPath(".");
+	paths::SetPrefPath(".");
 	std::remove("multi_0.sv");
 
 	gbVanilla = true;

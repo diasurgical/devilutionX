@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "effects.h"
 
@@ -89,27 +89,27 @@ typedef enum missile_graphic_id : uint8_t {
 } missile_graphic_id;
 
 typedef struct MissileData {
-	void (*mAddProc)(Sint32, Sint32, Sint32, Sint32, Sint32, Sint32, Sint8, Sint32, Sint32);
-	void (*mProc)(Sint32);
-	Uint8 mName;
+	void (*mAddProc)(int, int, int, int, int, int, int8_t, int, int);
+	void (*mProc)(int);
+	uint8_t mName;
 	bool mDraw;
-	Uint8 mType;
+	uint8_t mType;
 	missile_resistance mResist;
-	Uint8 mFileNum;
+	uint8_t mFileNum;
 	_sfx_id mlSFX;
 	_sfx_id miSFX;
 } MissileData;
 
 typedef struct MisFileData {
 	const char *mName;
-	Uint8 mAnimName;
-	Uint8 mAnimFAmt;
-	Sint32 mFlags;
-	Uint8 *mAnimData[16];
-	Uint8 mAnimDelay[16];
-	Uint8 mAnimLen[16];
-	Sint16 mAnimWidth[16];
-	Sint16 mAnimWidth2[16];
+	uint8_t mAnimName;
+	uint8_t mAnimFAmt;
+	uint32_t mFlags;
+	BYTE *mAnimData[16];
+	uint8_t mAnimDelay[16];
+	uint8_t mAnimLen[16];
+	int16_t mAnimWidth[16];
+	int16_t mAnimWidth2[16];
 } MisFileData;
 
 extern MissileData missiledata[];

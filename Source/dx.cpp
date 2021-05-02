@@ -11,6 +11,7 @@
 #include "render.h"
 #include "storm/storm.h"
 #include "utils/display.h"
+#include "utils/log.hpp"
 
 #ifdef __3DS__
 #include <3ds.h>
@@ -132,7 +133,7 @@ void unlock_buf(BYTE idx)
 CelOutputBuffer GlobalBackBuffer()
 {
 	if (sgdwLockCount == 0) {
-		SDL_Log("WARNING: Trying to obtain GlobalBackBuffer() without holding a lock\n");
+		Log("WARNING: Trying to obtain GlobalBackBuffer() without holding a lock");
 		return CelOutputBuffer();
 	}
 

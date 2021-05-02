@@ -5,27 +5,27 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <array>
+#include <cstdint>
 
 #include "engine.h"
 
 namespace devilution {
 
-#define MAXDEAD 31
+static constexpr unsigned MaxDead = 31;
 
 struct DeadStruct {
-	uint8_t *_deadData[8];
+	std::array<uint8_t *, 8> _deadData;
 	int _deadFrame;
 	int _deadWidth;
-	int _deadWidth2;
 	uint8_t _deadtrans;
 };
 
-extern DeadStruct dead[MAXDEAD];
+extern DeadStruct dead[MaxDead];
 extern int8_t stonendx;
 
 void InitDead();
-void AddDead(int dx, int dy, int8_t dv, direction ddir);
+void AddDead(Point tilePosition, int8_t dv, direction ddir);
 void SetDead();
 
 } // namespace devilution

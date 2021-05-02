@@ -21,36 +21,40 @@
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
+#include "utils/language.h"
 
 namespace devilution {
-
 namespace {
-
 CelOutputBuffer pBtmBuff;
 CelOutputBuffer pLifeBuff;
 CelOutputBuffer pManaBuff;
-
+std::optional<CelSprite> pTalkBtns;
+std::optional<CelSprite> pDurIcons;
+std::optional<CelSprite> pChrButtons;
+std::optional<CelSprite> pMultiBtns;
+std::optional<CelSprite> pPanelButtons;
+std::optional<CelSprite> pChrPanel;
+std::optional<CelSprite> pGBoxBuff;
+std::optional<CelSprite> pSBkBtnCel;
+std::optional<CelSprite> pSBkIconCels;
+std::optional<CelSprite> pSpellBkCel;
+std::optional<CelSprite> pSpellCels;
 } // namespace
 
 BYTE sgbNextTalkSave;
 BYTE sgbTalkSavePos;
-BYTE *pDurIcons;
-BYTE *pChrButtons;
+
 bool drawhpflag;
 bool dropGoldFlag;
 bool panbtns[8];
 bool chrbtn[4];
-BYTE *pMultiBtns;
-BYTE *pPanelButtons;
-BYTE *pChrPanel;
 bool lvlbtndown;
 char sgszTalkSave[8][80];
 int dropGoldValue;
 bool drawmanaflag;
 bool chrbtnactive;
 char sgszTalkMsg[MAX_SEND_STR_LEN];
-BYTE *pPanelText;
-BYTE *pTalkBtns;
+std::optional<CelSprite> pPanelText;
 bool pstrjust[4];
 int pnumlines;
 bool pinfoflag;
@@ -58,37 +62,32 @@ bool talkButtonsDown[3];
 spell_id pSpell;
 text_color infoclr;
 int sgbPlrTalkTbl;
-BYTE *pGBoxBuff;
-BYTE *pSBkBtnCel;
 char tempstr[256];
 bool whisperList[MAX_PLRS];
 int sbooktab;
 spell_type pSplType;
 int initialDropGoldIndex;
 bool talkflag;
-BYTE *pSBkIconCels;
 bool sbookflag;
 bool chrflag;
 bool drawbtnflag;
-BYTE *pSpellBkCel;
 char infostr[64];
 int numpanbtns;
 char panelstr[4][64];
 bool panelflag;
 BYTE SplTransTbl[256];
 int initialDropGoldValue;
-BYTE *pSpellCels;
 bool panbtndown;
 bool spselflag;
 
 /** Map of hero class names */
 const char *const ClassStrTbl[] = {
-	"Warrior",
-	"Rogue",
-	"Sorcerer",
-	"Monk",
-	"Bard",
-	"Barbarian",
+	N_("Warrior"),
+	N_("Rogue"),
+	N_("Sorcerer"),
+	N_("Monk"),
+	N_("Bard"),
+	N_("Barbarian"),
 };
 
 /** Maps from font index to smaltext.cel frame number. */
@@ -237,17 +236,17 @@ SDL_Rect PanBtnPos[8] = {
 	// clang-format on
 };
 /** Maps from panel_button_id to hotkey name. */
-const char *const PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", nullptr };
+const char *const PanBtnHotKey[8] = { "'c'", "'q'", N_("Tab"), N_("Esc"), "'i'", "'b'", N_("Enter"), nullptr };
 /** Maps from panel_button_id to panel button description. */
 const char *const PanBtnStr[8] = {
-	"Character Information",
-	"Quests log",
-	"Automap",
-	"Main Menu",
-	"Inventory",
-	"Spell book",
-	"Send Message",
-	"Player Attack"
+	N_("Character Information"),
+	N_("Quests log"),
+	N_("Automap"),
+	N_("Main Menu"),
+	N_("Inventory"),
+	N_("Spell book"),
+	N_("Send Message"),
+	"" // Player attack
 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 RECT32 ChrBtnsRect[4] = {
@@ -276,13 +275,12 @@ spell_id SpellPages[6][7] = {
  * @param out Output buffer
  * @param xp Buffer coordinate
  * @param yp Buffer coordinate
- * @param Trans Pointer to the cel buffer.
+ * @param cel The CEL sprite
  * @param nCel Index of the cel frame to draw. 0 based.
- * @param w Width of the frame.
  */
-static void DrawSpellCel(const CelOutputBuffer &out, int xp, int yp, BYTE *trans, int nCel, int w)
+static void DrawSpellCel(const CelOutputBuffer &out, int xp, int yp, const CelSprite &cel, int nCel)
 {
-	CelDrawLightTo(out, xp, yp, trans, nCel, w, SplTransTbl);
+	CelDrawLightTo(out, xp, yp, cel, nCel, SplTransTbl);
 }
 
 void SetSpellTrans(spell_type t)
@@ -364,16 +362,16 @@ static void DrawSpell(const CelOutputBuffer &out)
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
 	if (spl != SPL_INVALID)
-		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], SPLICONLENGTH);
+		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, *pSpellCels, SpellITbl[spl]);
 	else
-		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, SPLICONLENGTH);
+		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, *pSpellCels, 27);
 }
 
 void DrawSpellList(const CelOutputBuffer &out)
 {
 	int c;
 	int s;
-	Uint64 mask;
+	uint64_t mask;
 
 	pSpell = SPL_INVALID;
 	infostr[0] = '\0';
@@ -381,7 +379,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 	int y = PANEL_Y - 17;
 	ClearPanel();
 
-	for (Sint32 i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
+	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
 			SetSpellTrans(RSPLTYPE_SKILL);
@@ -405,7 +403,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 		case RSPLTYPE_INVALID:
 			break;
 		}
-		Sint32 j = SPL_FIREBOLT;
+		int8_t j = SPL_FIREBOLT;
 		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
 			if ((mask & spl) == 0)
 				continue;
@@ -420,7 +418,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 			}
 			if (currlevel == 0 && !spelldata[j].sTownSpell)
 				SetSpellTrans(RSPLTYPE_INVALID);
-			DrawSpellCel(out, x, y, pSpellCels, SpellITbl[j], SPLICONLENGTH);
+			DrawSpellCel(out, x, y, *pSpellCels, SpellITbl[j]);
 			int lx = x;
 			int ly = y - SPLICONLENGTH;
 			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
@@ -428,25 +426,25 @@ void DrawSpellList(const CelOutputBuffer &out)
 				pSplType = (spell_type)i;
 				if (plr[myplr]._pClass == HeroClass::Monk && j == SPL_SEARCH)
 					pSplType = RSPLTYPE_SKILL;
-				DrawSpellCel(out, x, y, pSpellCels, c, SPLICONLENGTH);
+				DrawSpellCel(out, x, y, *pSpellCels, c);
 				switch (pSplType) {
 				case RSPLTYPE_SKILL:
-					sprintf(infostr, "%s Skill", spelldata[pSpell].sSkillText);
+					sprintf(infostr, _("%s Skill"), _(spelldata[pSpell].sSkillText));
 					break;
 				case RSPLTYPE_SPELL:
-					sprintf(infostr, "%s Spell", spelldata[pSpell].sNameText);
+					sprintf(infostr, _("%s Spell"), _(spelldata[pSpell].sNameText));
 					if (pSpell == SPL_HBOLT) {
-						sprintf(tempstr, "Damages undead only");
+						strcpy(tempstr, _("Damages undead only"));
 						AddPanelString(tempstr, true);
 					}
 					if (s == 0)
-						sprintf(tempstr, "Spell Level 0 - Unusable");
+						strcpy(tempstr, _("Spell Level 0 - Unusable"));
 					else
-						sprintf(tempstr, "Spell Level %i", s);
+						sprintf(tempstr, _("Spell Level %i"), s);
 					AddPanelString(tempstr, true);
 					break;
 				case RSPLTYPE_SCROLL: {
-					sprintf(infostr, "Scroll of %s", spelldata[pSpell].sNameText);
+					sprintf(infostr, _("Scroll of %s"), _(spelldata[pSpell].sNameText));
 					int v = 0;
 					for (int t = 0; t < plr[myplr]._pNumInv; t++) {
 						if (!plr[myplr].InvList[t].isEmpty()
@@ -462,27 +460,22 @@ void DrawSpellList(const CelOutputBuffer &out)
 							v++;
 						}
 					}
-					if (v == 1)
-						strcpy(tempstr, "1 Scroll");
-					else
-						sprintf(tempstr, "%i Scrolls", v);
+					sprintf(tempstr, ngettext("%i Scroll", "%i Scrolls", v), v);
 					AddPanelString(tempstr, true);
 				} break;
-				case RSPLTYPE_CHARGES:
-					sprintf(infostr, "Staff of %s", spelldata[pSpell].sNameText);
-					if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges == 1)
-						strcpy(tempstr, "1 Charge");
-					else
-						sprintf(tempstr, "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
+				case RSPLTYPE_CHARGES: {
+					sprintf(infostr, _("Staff of %s"), _(spelldata[pSpell].sNameText));
+					int charges = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges;
+					sprintf(tempstr, ngettext("%i Charge", "%i Charges", charges), charges);
 					AddPanelString(tempstr, true);
-					break;
+				} break;
 				case RSPLTYPE_INVALID:
 					break;
 				}
 				for (int t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
-						DrawSpellCel(out, x, y, pSpellCels, t + SPLICONLAST + 5, SPLICONLENGTH);
-						sprintf(tempstr, "Spell Hotkey #F%i", t + 5);
+						DrawSpellCel(out, x, y, *pSpellCels, t + SPLICONLAST + 5);
+						sprintf(tempstr, _("Spell Hotkey #F%i"), t + 5);
 						AddPanelString(tempstr, true);
 					}
 				}
@@ -527,7 +520,7 @@ void SetSpeedSpell(int slot)
 
 void ToggleSpell(int slot)
 {
-	Uint64 spells;
+	uint64_t spells;
 
 	if (plr[myplr]._pSplHotKey[slot] == SPL_INVALID) {
 		return;
@@ -565,7 +558,7 @@ void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color 
 
 	switch (col) {
 	case COL_WHITE:
-		CelDrawTo(out, sx, sy, pPanelText, nCel, 13);
+		CelDrawTo(out, sx, sy, *pPanelText, nCel);
 		return;
 	case COL_BLUE:
 		for (i = 0; i < 256; i++) {
@@ -599,10 +592,10 @@ void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color 
 		break;
 	case COL_BLACK:
 		light_table_index = 15;
-		CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, nullptr);
+		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, nullptr);
 		return;
 	}
-	CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, tbl);
+	CelDrawLightTo(out, sx, sy, *pPanelText, nCel, tbl);
 }
 
 void AddPanelString(const char *str, bool just)
@@ -620,7 +613,7 @@ void ClearPanel()
 	pinfoflag = false;
 }
 
-void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int sy)
+void DrawPanelBox(const CelOutputBuffer &out, int x, int y, int w, int h, int sx, int sy)
 {
 	const BYTE *src = pBtmBuff.at(x, y);
 	BYTE *dst = out.at(sx, sy);
@@ -641,7 +634,7 @@ void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int s
  * @param y0 Top of the flask cel section to draw.
  * @param y1 Bottom of the flask cel section to draw.
  */
-static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, CelOutputBuffer celBuf, int y0, int y1)
+static void DrawFlaskTop(const CelOutputBuffer &out, int sx, int sy, CelOutputBuffer celBuf, int y0, int y1)
 {
 	const BYTE *src = celBuf.at(0, y0);
 	BYTE *dst = out.at(sx, sy);
@@ -662,7 +655,7 @@ static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, CelOutputBuffer ce
  * @param sy Target buffer coordinate.
  * @param h How many lines of the source buffer that will be copied.
  */
-static void DrawFlask(CelOutputBuffer out, CelOutputBuffer celBuf, int celX, int celY, int x, int y, int h)
+static void DrawFlask(const CelOutputBuffer &out, const CelOutputBuffer &celBuf, int celX, int celY, int x, int y, int h)
 {
 	const BYTE *src = celBuf.at(celX, celY);
 	BYTE *dst = out.at(x, y);
@@ -764,27 +757,24 @@ void InitControlPan()
 	pManaBuff = CelOutputBuffer::Alloc(88, 88);
 	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
 
-	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", nullptr);
-	pChrPanel = LoadFileInMem("Data\\Char.CEL", nullptr);
+	pPanelText = LoadCel("CtrlPan\\SmalText.CEL", 13);
+	pChrPanel = LoadCel("Data\\Char.CEL", SPANEL_WIDTH);
 	if (!gbIsHellfire)
-		pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", nullptr);
+		pSpellCels = LoadCel("CtrlPan\\SpelIcon.CEL", SPLICONLENGTH);
 	else
-		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", nullptr);
+		pSpellCels = LoadCel("Data\\SpelIcon.CEL", SPLICONLENGTH);
 	SetSpellTrans(RSPLTYPE_SKILL);
-	BYTE *pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", nullptr);
-	CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, pStatusPanel, 1, PANEL_WIDTH);
-	MemFreeDbg(pStatusPanel);
-	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", nullptr);
-	CelDrawUnsafeTo(pLifeBuff, 0, 87, pStatusPanel, 1, 88);
-	CelDrawUnsafeTo(pManaBuff, 0, 87, pStatusPanel, 2, 88);
-	MemFreeDbg(pStatusPanel);
+	CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 1);
+	{
+		const CelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
+		CelDrawUnsafeTo(pLifeBuff, 0, 87, statusPanel, 1);
+		CelDrawUnsafeTo(pManaBuff, 0, 87, statusPanel, 2);
+	}
 	talkflag = false;
 	if (gbIsMultiplayer) {
-		BYTE *pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", nullptr);
-		CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, pTalkPanel, 1, PANEL_WIDTH);
-		MemFreeDbg(pTalkPanel);
-		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", nullptr);
-		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", nullptr);
+		CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
+		pMultiBtns = LoadCel("CtrlPan\\P8But2.CEL", 33);
+		pTalkBtns = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
 		sgszTalkMsg[0] = '\0';
 		for (bool &whisper : whisperList)
@@ -794,7 +784,7 @@ void InitControlPan()
 	}
 	panelflag = false;
 	lvlbtndown = false;
-	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", nullptr);
+	pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
 	for (bool &panbtn : panbtns)
 		panbtn = false;
 	panbtndown = false;
@@ -802,20 +792,26 @@ void InitControlPan()
 		numpanbtns = 6;
 	else
 		numpanbtns = 8;
-	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", nullptr);
+	pChrButtons = LoadCel("Data\\CharBut.CEL", 41);
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
-	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", nullptr);
+	pDurIcons = LoadCel("Items\\DurIcons.CEL", 32);
 	strcpy(infostr, "");
 	ClearPanel();
 	drawhpflag = true;
 	drawmanaflag = true;
 	chrflag = false;
 	spselflag = false;
-	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", nullptr);
-	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", nullptr);
-	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", nullptr);
+	pSpellBkCel = LoadCel("Data\\SpellBk.CEL", SPANEL_WIDTH);
+
+	if (gbIsHellfire) {
+		static const int SBkBtnHellfireWidths[] = { 61, 61, 61, 61, 76 };
+		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", SBkBtnHellfireWidths);
+	} else {
+		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", 76);
+	}
+	pSBkIconCels = LoadCel("Data\\SpellI2.CEL", 37);
 	sbooktab = 0;
 	sbookflag = false;
 	if (plr[myplr]._pClass == HeroClass::Warrior) {
@@ -831,8 +827,8 @@ void InitControlPan()
 	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
 		SpellPages[0][0] = SPL_BLODBOIL;
 	}
-	pQLogCel = LoadFileInMem("Data\\Quest.CEL", nullptr);
-	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", nullptr);
+	pQLogCel = LoadCel("Data\\Quest.CEL", SPANEL_WIDTH);
+	pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
 	dropGoldFlag = false;
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
@@ -851,14 +847,14 @@ void DrawCtrlBtns(const CelOutputBuffer &out)
 		if (!panbtns[i])
 			DrawPanelBox(out, PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20, PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y);
 		else
-			CelDrawTo(out, PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18, pPanelButtons, i + 1, 71);
+			CelDrawTo(out, PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18, *pPanelButtons, i + 1);
 	}
 	if (numpanbtns == 8) {
-		CelDrawTo(out, 87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtns[6] ? 2 : 1, 33);
+		CelDrawTo(out, 87 + PANEL_X, 122 + PANEL_Y, *pMultiBtns, panbtns[6] ? 2 : 1);
 		if (gbFriendlyMode)
-			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtns[7] ? 4 : 3, 33);
+			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, *pMultiBtns, panbtns[7] ? 4 : 3);
 		else
-			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtns[7] ? 6 : 5, 33);
+			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, *pMultiBtns, panbtns[7] ? 6 : 5);
 	}
 }
 
@@ -876,7 +872,7 @@ void DoSpeedBook()
 
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
-			Uint64 spells;
+			uint64_t spells;
 			switch (i) {
 			case RSPLTYPE_SKILL:
 				spells = plr[myplr]._pAblSpells;
@@ -891,7 +887,7 @@ void DoSpeedBook()
 				spells = plr[myplr]._pISpells;
 				break;
 			}
-			Uint64 spell = 1;
+			uint64_t spell = 1;
 			for (int j = 1; j < MAX_SPELLS; j++) {
 				if ((spell & spells) != 0) {
 					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
@@ -998,15 +994,15 @@ void CheckPanelInfo()
 		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
 		if (MouseX >= PanBtnPos[i].x + PANEL_LEFT && MouseX <= xend && MouseY >= PanBtnPos[i].y + PANEL_TOP && MouseY <= yend) {
 			if (i != 7) {
-				strcpy(infostr, PanBtnStr[i]);
+				strcpy(infostr, _(PanBtnStr[i]));
 			} else {
 				if (gbFriendlyMode)
-					strcpy(infostr, "Player friendly");
+					strcpy(infostr, _("Player friendly"));
 				else
-					strcpy(infostr, "Player attack");
+					strcpy(infostr, _("Player attack"));
 			}
 			if (PanBtnHotKey[i] != nullptr) {
-				sprintf(tempstr, "Hotkey: %s", PanBtnHotKey[i]);
+				sprintf(tempstr, _("Hotkey: %s"), _(PanBtnHotKey[i]));
 				AddPanelString(tempstr, true);
 			}
 			infoclr = COL_WHITE;
@@ -1015,33 +1011,33 @@ void CheckPanelInfo()
 		}
 	}
 	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
-		strcpy(infostr, "Select current spell button");
+		strcpy(infostr, _("Select current spell button"));
 		infoclr = COL_WHITE;
 		panelflag = true;
 		pinfoflag = true;
-		strcpy(tempstr, "Hotkey: 's'");
+		strcpy(tempstr, _("Hotkey: 's'"));
 		AddPanelString(tempstr, true);
 		spell_id v = plr[myplr]._pRSpell;
 		if (v != SPL_INVALID) {
 			switch (plr[myplr]._pRSplType) {
 			case RSPLTYPE_SKILL:
-				sprintf(tempstr, "%s Skill", spelldata[v].sSkillText);
+				sprintf(tempstr, _("%s Skill"), _(spelldata[v].sSkillText));
 				AddPanelString(tempstr, true);
 				break;
 			case RSPLTYPE_SPELL: {
-				sprintf(tempstr, "%s Spell", spelldata[v].sNameText);
+				sprintf(tempstr, _("%s Spell"), _(spelldata[v].sNameText));
 				AddPanelString(tempstr, true);
 				int c = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[v];
 				if (c < 0)
 					c = 0;
 				if (c == 0)
-					sprintf(tempstr, "Spell Level 0 - Unusable");
+					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				else
-					sprintf(tempstr, "Spell Level %i", c);
+					sprintf(tempstr, _("Spell Level %i"), c);
 				AddPanelString(tempstr, true);
 			} break;
 			case RSPLTYPE_SCROLL: {
-				sprintf(tempstr, "Scroll of %s", spelldata[v].sNameText);
+				sprintf(tempstr, _("Scroll of %s"), _(spelldata[v].sNameText));
 				AddPanelString(tempstr, true);
 				int s = 0;
 				for (int i = 0; i < plr[myplr]._pNumInv; i++) {
@@ -1059,18 +1055,18 @@ void CheckPanelInfo()
 					}
 				}
 				if (s == 1)
-					strcpy(tempstr, "1 Scroll");
+					strcpy(tempstr, _("1 Scroll"));
 				else
-					sprintf(tempstr, "%i Scrolls", s);
+					sprintf(tempstr, _("%i Scrolls"), s);
 				AddPanelString(tempstr, true);
 			} break;
 			case RSPLTYPE_CHARGES:
-				sprintf(tempstr, "Staff of %s", spelldata[v].sNameText);
+				sprintf(tempstr, _("Staff of %s"), _(spelldata[v].sNameText));
 				AddPanelString(tempstr, true);
 				if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges == 1)
-					strcpy(tempstr, "1 Charge");
+					strcpy(tempstr, _("1 Charge"));
 				else
-					sprintf(tempstr, "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
+					sprintf(tempstr, _("%i Charges"), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
 				AddPanelString(tempstr, true);
 				break;
 			case RSPLTYPE_INVALID:
@@ -1168,19 +1164,19 @@ void FreeControlPan()
 	pBtmBuff.Free();
 	pManaBuff.Free();
 	pLifeBuff.Free();
-	MemFreeDbg(pPanelText);
-	MemFreeDbg(pChrPanel);
-	MemFreeDbg(pSpellCels);
-	MemFreeDbg(pPanelButtons);
-	MemFreeDbg(pMultiBtns);
-	MemFreeDbg(pTalkBtns);
-	MemFreeDbg(pChrButtons);
-	MemFreeDbg(pDurIcons);
-	MemFreeDbg(pQLogCel);
-	MemFreeDbg(pSpellBkCel);
-	MemFreeDbg(pSBkBtnCel);
-	MemFreeDbg(pSBkIconCels);
-	MemFreeDbg(pGBoxBuff);
+	pPanelText = std::nullopt;
+	pChrPanel = std::nullopt;
+	pSpellCels = std::nullopt;
+	pPanelButtons = std::nullopt;
+	pMultiBtns = std::nullopt;
+	pTalkBtns = std::nullopt;
+	pChrButtons = std::nullopt;
+	pDurIcons = std::nullopt;
+	pQLogCel = std::nullopt;
+	pSpellBkCel = std::nullopt;
+	pSBkBtnCel = std::nullopt;
+	pSBkIconCels = std::nullopt;
+	pGBoxBuff = std::nullopt;
 }
 
 bool control_WriteStringToBuffer(BYTE *str)
@@ -1257,10 +1253,10 @@ void DrawInfoBox(const CelOutputBuffer &out)
 	} else if (pcurs >= CURSOR_FIRSTITEM) {
 		if (plr[myplr].HoldItem._itype == ITYPE_GOLD) {
 			int nGold = plr[myplr].HoldItem._ivalue;
-			sprintf(infostr, "%i gold %s", nGold, get_pieces_str(nGold));
+			sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 		} else if (!plr[myplr].HoldItem._iStatFlag) {
 			ClearPanel();
-			AddPanelString("Requirements not met", true);
+			AddPanelString(_("Requirements not met"), true);
 			pinfoflag = true;
 		} else {
 			if (plr[myplr].HoldItem._iIdentified)
@@ -1280,7 +1276,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 		if (pcursmonst != -1) {
 			if (leveltype != DTYPE_TOWN) {
 				infoclr = COL_WHITE;
-				strcpy(infostr, monster[pcursmonst].mName);
+				strcpy(infostr, _(monster[pcursmonst].mName));
 				ClearPanel();
 				if (monster[pcursmonst]._uniqtype != 0) {
 					infoclr = COL_GOLD;
@@ -1289,16 +1285,18 @@ void DrawInfoBox(const CelOutputBuffer &out)
 					PrintMonstHistory(monster[pcursmonst].MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				strcpy(infostr, towners[pcursmonst]._tName);
+				string_view townerName = towners[pcursmonst]._tName;
+				strncpy(infostr, townerName.data(), townerName.length());
+				infostr[townerName.length()] = '\0';
 			}
 		}
 		if (pcursplr != -1) {
 			infoclr = COL_GOLD;
 			strcpy(infostr, plr[pcursplr]._pName);
 			ClearPanel();
-			sprintf(tempstr, "%s, Level: %i", ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)], plr[pcursplr]._pLevel);
+			sprintf(tempstr, _("%s, Level: %i"), _(ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)]), plr[pcursplr]._pLevel);
 			AddPanelString(tempstr, true);
-			sprintf(tempstr, "Hit Points %i of %i", plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
+			sprintf(tempstr, _("Hit Points %i of %i"), plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
 			AddPanelString(tempstr, true);
 		}
 	}
@@ -1359,10 +1357,10 @@ void DrawChr(const CelOutputBuffer &out)
 	text_color col = COL_WHITE;
 	char chrstr[64];
 
-	CelDrawTo(out, 0, 351, pChrPanel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, 0, 351, *pChrPanel, 1);
 	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
-	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)], COL_WHITE);
+	ADD_PlrStringXY(out, 168, 32, 299, _(ClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)]), COL_WHITE);
 
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
 	ADD_PlrStringXY(out, 66, 69, 109, chrstr, COL_WHITE);
@@ -1371,7 +1369,7 @@ void DrawChr(const CelOutputBuffer &out)
 	ADD_PlrStringXY(out, 216, 69, 300, chrstr, COL_WHITE);
 
 	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
-		strcpy(chrstr, "None");
+		strcpy(chrstr, _("None"));
 		col = COL_GOLD;
 	} else {
 		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
@@ -1439,7 +1437,7 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
 	} else {
 		col = COL_GOLD;
-		sprintf(chrstr, "MAX");
+		strcpy(chrstr, _("MAX"));
 	}
 	ADD_PlrStringXY(out, 257, 276, 300, chrstr, col);
 
@@ -1451,7 +1449,7 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i%%", plr[myplr]._pFireResist);
 	} else {
 		col = COL_GOLD;
-		sprintf(chrstr, "MAX");
+		strcpy(chrstr, _("MAX"));
 	}
 	ADD_PlrStringXY(out, 257, 304, 300, chrstr, col);
 
@@ -1463,7 +1461,7 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i%%", plr[myplr]._pLghtResist);
 	} else {
 		col = COL_GOLD;
-		sprintf(chrstr, "MAX");
+		strcpy(chrstr, _("MAX"));
 	}
 	ADD_PlrStringXY(out, 257, 332, 300, chrstr, col);
 
@@ -1532,13 +1530,13 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i", plr[myplr]._pStatPts);
 		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
 		if (plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength))
-			CelDrawTo(out, 137, 159, pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 3 : 2, 41);
+			CelDrawTo(out, 137, 159, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 3 : 2);
 		if (plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic))
-			CelDrawTo(out, 137, 187, pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 5 : 4, 41);
+			CelDrawTo(out, 137, 187, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 5 : 4);
 		if (plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity))
-			CelDrawTo(out, 137, 216, pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 7 : 6, 41);
+			CelDrawTo(out, 137, 216, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 7 : 6);
 		if (plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality))
-			CelDrawTo(out, 137, 244, pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 9 : 8, 41);
+			CelDrawTo(out, 137, 244, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 9 : 8);
 	}
 
 	if (plr[myplr]._pMaxHP > plr[myplr]._pMaxHPBase)
@@ -1581,8 +1579,8 @@ void DrawLevelUpIcon(const CelOutputBuffer &out)
 {
 	if (stextflag == STORE_NONE) {
 		int nCel = lvlbtndown ? 3 : 2;
-		ADD_PlrStringXY(out, PANEL_LEFT + 0, PANEL_TOP - 49, PANEL_LEFT + 120, "Level Up", COL_WHITE);
-		CelDrawTo(out, 40 + PANEL_X, -17 + PANEL_Y, pChrButtons, nCel, 41);
+		ADD_PlrStringXY(out, PANEL_LEFT + 0, PANEL_TOP - 49, PANEL_LEFT + 120, _("Level Up"), COL_WHITE);
+		CelDrawTo(out, 40 + PANEL_X, -17 + PANEL_Y, *pChrButtons, nCel);
 	}
 }
 
@@ -1702,7 +1700,7 @@ static int DrawDurIcon4Item(const CelOutputBuffer &out, ItemStruct *pItem, int x
 	}
 	if (pItem->_iDurability > 2)
 		c += 8;
-	CelDrawTo(out, x, -17 + PANEL_Y, pDurIcons, c, 32);
+	CelDrawTo(out, x, -17 + PANEL_Y, *pDurIcons, c);
 	return x - 32 - 8;
 }
 
@@ -1729,7 +1727,7 @@ void DrawDurIcon(const CelOutputBuffer &out)
 	DrawDurIcon4Item(out, &p->InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
-void RedBack(CelOutputBuffer out)
+void RedBack(const CelOutputBuffer &out)
 {
 	int idx = light4flag ? 1536 : 4608;
 
@@ -1810,18 +1808,18 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 
 void DrawSpellBook(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, RIGHT_PANEL_X, 351, pSpellBkCel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, RIGHT_PANEL_X, 351, *pSpellBkCel, 1);
 	if (gbIsHellfire && sbooktab < 5) {
-		CelDrawTo(out, RIGHT_PANEL_X + 61 * sbooktab + 7, 348, pSBkBtnCel, sbooktab + 1, 61);
+		CelDrawTo(out, RIGHT_PANEL_X + 61 * sbooktab + 7, 348, *pSBkBtnCel, sbooktab + 1);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
 		int sx = RIGHT_PANEL_X + 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		CelDrawTo(out, sx, 348, pSBkBtnCel, sbooktab + 1, 76);
+		CelDrawTo(out, sx, 348, *pSBkBtnCel, sbooktab + 1);
 	}
-	Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
+	uint64_t spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
 	int yp = 55;
 	for (int i = 1; i < 8; i++) {
@@ -1829,31 +1827,32 @@ void DrawSpellBook(const CelOutputBuffer &out)
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
-			DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, pSBkIconCels, SpellITbl[sn], 37);
+			DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, *pSBkIconCels, SpellITbl[sn]);
 			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, pSBkIconCels, SPLICONLAST, 37);
+				DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, *pSBkIconCels, SPLICONLAST);
 			}
-			PrintSBookStr(out, 10, yp - 23, false, spelldata[sn].sNameText, COL_WHITE);
+			PrintSBookStr(out, 10, yp - 23, false, _(spelldata[sn].sNameText), COL_WHITE);
 			switch (GetSBookTrans(sn, false)) {
 			case RSPLTYPE_SKILL:
-				strcpy(tempstr, "Skill");
+				strcpy(tempstr, _("Skill"));
 				break;
-			case RSPLTYPE_CHARGES:
-				sprintf(tempstr, "Staff (%i charges)", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
-				break;
+			case RSPLTYPE_CHARGES: {
+				int charges = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges;
+				sprintf(tempstr, ngettext("Staff (%i charge)", "Staff (%i charges)", charges), charges);
+			} break;
 			default: {
 				int mana = GetManaAmount(myplr, sn) >> 6;
 				int min;
 				int max;
 				GetDamageAmt(sn, &min, &max);
 				if (min != -1) {
-					sprintf(tempstr, "Mana: %i  Dam: %i - %i", mana, min, max);
+					sprintf(tempstr, _("Mana: %i  Dam: %i - %i"), mana, min, max);
 				} else {
-					sprintf(tempstr, "Mana: %i   Dam: n/a", mana);
+					sprintf(tempstr, _("Mana: %i   Dam: n/a"), mana);
 				}
 				if (sn == SPL_BONESPIRIT) {
-					sprintf(tempstr, "Mana: %i  Dam: 1/3 tgt hp", mana);
+					sprintf(tempstr, _("Mana: %i  Dam: 1/3 tgt hp"), mana);
 				}
 				PrintSBookStr(out, 10, yp - 1, false, tempstr, COL_WHITE);
 				int lvl = plr[myplr]._pSplLvl[sn] + plr[myplr]._pISplLvlAdd;
@@ -1861,9 +1860,9 @@ void DrawSpellBook(const CelOutputBuffer &out)
 					lvl = 0;
 				}
 				if (lvl == 0) {
-					sprintf(tempstr, "Spell Level 0 - Unusable");
+					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				} else {
-					sprintf(tempstr, "Spell Level %i", lvl);
+					sprintf(tempstr, _("Spell Level %i"), lvl);
 				}
 			} break;
 			}
@@ -1877,7 +1876,7 @@ void CheckSBook()
 {
 	if (MouseX >= RIGHT_PANEL + 11 && MouseX < RIGHT_PANEL + 48 && MouseY >= 18 && MouseY < 314) {
 		spell_id sn = SpellPages[sbooktab][(MouseY - 18) / 43];
-		Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
+		uint64_t spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = RSPLTYPE_SPELL;
 			if ((plr[myplr]._pISpells & GetSpellBitmask(sn)) != 0) {
@@ -1896,23 +1895,15 @@ void CheckSBook()
 	}
 }
 
-const char *get_pieces_str(int nGold)
-{
-	const char *result = "piece";
-	if (nGold != 1)
-		result = "pieces";
-	return result;
-}
-
 void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 {
 	int screenX = 0;
-	CelDrawTo(out, 351, 178, pGBoxBuff, 1, 261);
-	sprintf(tempstr, "You have %u gold", initialDropGoldValue);
+	CelDrawTo(out, 351, 178, *pGBoxBuff, 1);
+	sprintf(tempstr, _("You have %u gold"), initialDropGoldValue);
 	ADD_PlrStringXY(out, 366, 87, 600, tempstr, COL_GOLD);
-	sprintf(tempstr, "%s.  How many do", get_pieces_str(initialDropGoldValue));
+	sprintf(tempstr, ngettext("piece.  How many do", "pieces.  How many do", initialDropGoldValue), initialDropGoldValue);
 	ADD_PlrStringXY(out, 366, 103, 600, tempstr, COL_GOLD);
-	ADD_PlrStringXY(out, 366, 121, 600, "you want to remove?", COL_GOLD);
+	ADD_PlrStringXY(out, 366, 121, 600, _("you want to remove?"), COL_GOLD);
 	if (amount > 0) {
 		sprintf(tempstr, "%u", amount);
 		PrintGameStr(out, 388, 140, tempstr, COL_WHITE);
@@ -1926,7 +1917,7 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	} else {
 		screenX = 386;
 	}
-	CelDrawTo(out, screenX, 140, pSPentSpn2Cels, PentSpn2Spin(), 12);
+	CelDrawTo(out, screenX, 140, *pSPentSpn2Cels, PentSpn2Spin());
 }
 
 void control_drop_gold(char vkey)
@@ -2044,7 +2035,7 @@ void DrawTalkPan(const CelOutputBuffer &out)
 	}
 	if (msg != nullptr)
 		*msg = '\0';
-	CelDrawTo(out, x, i + 22 + PANEL_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
+	CelDrawTo(out, x, i + 22 + PANEL_Y, *pSPentSpn2Cels, PentSpn2Spin());
 	int talkBtn = 0;
 	for (int i = 0; i < 4; i++) {
 		if (i == myplr)
@@ -2054,13 +2045,13 @@ void DrawTalkPan(const CelOutputBuffer &out)
 			color = COL_GOLD;
 			if (talkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 4 : 3;
-				CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y, pTalkBtns, nCel, 61);
+				CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y, *pTalkBtns, nCel);
 			}
 		} else {
 			int nCel = talkBtn != 0 ? 2 : 1;
 			if (talkButtonsDown[talkBtn])
 				nCel += 4;
-			CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y, pTalkBtns, nCel, 61);
+			CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y, *pTalkBtns, nCel);
 		}
 		if (plr[i].plractive) {
 			int x = 46 + PANEL_LEFT;

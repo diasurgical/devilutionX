@@ -11,6 +11,8 @@
 #include "dx.h"
 #include "palette.h"
 #include "utils/display.h"
+#include "utils/log.hpp"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -166,7 +168,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		vecOkDialog.push_back(new UiText(text, rect2, UIS_CENTER));
 
 		SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 265), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect3, 0));
+		vecOkDialog.push_back(new UiButton(&SmlButton, _("OK"), &DialogActionOK, rect3, 0));
 	} else {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 127), (Sint16)(UI_OFFSET_Y + 100), 385, 280 };
 		vecOkDialog.push_back(new UiImage(&dialogArt, rect1));
@@ -179,7 +181,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		vecOkDialog.push_back(new UiText(caption, rect3, UIS_CENTER));
 
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 264), (Sint16)(UI_OFFSET_Y + 335), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect4, 0));
+		vecOkDialog.push_back(new UiButton(&SmlButton, _("OK"), &DialogActionOK, rect4, 0));
 	}
 
 	if (!renderBehind) {
@@ -262,16 +264,16 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 
 	if (!gbActive || inDialog) {
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-			SDL_Log("%s", SDL_GetError());
+			Log("{}", SDL_GetError());
 		}
 #ifndef RUN_TESTS
 		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
-			SDL_Log("%s", SDL_GetError());
+			Log("{}", SDL_GetError());
 #else
 		{
 #endif
-			SDL_Log("%s", text);
-			SDL_Log("%s", caption);
+			Log("{}", text);
+			Log("{}", caption);
 		}
 		return;
 	}

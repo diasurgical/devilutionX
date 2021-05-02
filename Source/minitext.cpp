@@ -6,6 +6,9 @@
 
 #include "control.h"
 #include "dx.h"
+#include "engine.h"
+#include "utils/language.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -23,12 +26,12 @@ int qtextSpd;
 /** Time of last rendering of the text */
 Uint32 sgLastScroll;
 /** Graphics for the medium size font */
-Uint8 *pMedTextCels;
+std::optional<CelSprite> pMedTextCels;
 /** Graphics for the window border */
-Uint8 *pTextBoxCels;
+std::optional<CelSprite> pTextBoxCels;
 
 /** Maps from font index to medtexts.cel frame number. */
-const Uint8 mfontframe[128] = {
+const uint8_t mfontframe[128] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -48,7 +51,7 @@ const Uint8 mfontframe[128] = {
  * character width may be distinct from the frame width, which is 22 for every
  * medtexts.cel frame.
  */
-const Uint8 mfontkern[56] = {
+const uint8_t mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
 	14, 17, 17, 22, 17, 16, 11, 5, 11, 11,
@@ -72,7 +75,7 @@ bool BuildLine(const char *text, char line[128])
 	int l = 0;
 
 	while (*text != '\n' && *text != '|' && lineWidth < 543) {
-		Uint8 c = gbFontTransTbl[(Uint8)*text];
+		uint8_t c = gbFontTransTbl[(uint8_t)*text];
 		text++;
 		if (c != '\0') {
 			line[l] = c;
@@ -126,12 +129,20 @@ int GetLinesInText(const char *text)
  */
 int CalcTextSpeed(int nSFX)
 {
-	Uint32 SfxFrames, TextHeight;
+	int TextHeight;
+	Uint32 SfxFrames;
 
+	const int numLines = GetLinesInText(qtextptr);
+
+#ifndef NOSOUND
 	SfxFrames = GetSFXLength(nSFX);
 	assert(SfxFrames != 0);
+#else
+	// Sound is disabled -- estimate length from the number of lines.
+	SfxFrames = numLines * 3000;
+#endif
 
-	TextHeight = lineHeight * GetLinesInText(qtextptr);
+	TextHeight = lineHeight * numLines;
 	TextHeight += lineHeight * 5; // adjust so when speaker is done two line are left
 
 	return SfxFrames / TextHeight;
@@ -141,15 +152,14 @@ int CalcTextSpeed(int nSFX)
  * @brief Print a character
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
- * @param pCelBuff Cel data
+ * @param cel CEL sprite
  * @param nCel CEL frame number
  */
-void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
+void PrintQTextChr(int sx, int sy, const CelSprite &cel, int nCel)
 {
-	CelOutputBuffer buf = GlobalBackBuffer();
 	const int start_y = 49 + UI_OFFSET_Y;
-	buf = buf.subregionY(start_y, 260);
-	CelDrawTo(buf, sx, sy - start_y, pCelBuff, nCel, 22);
+	const CelOutputBuffer &buf = GlobalBackBuffer().subregionY(start_y, 260);
+	CelDrawTo(buf, sx, sy - start_y, cel, nCel);
 }
 
 /**
@@ -190,12 +200,12 @@ static void DrawQTextContent()
 		doneflag = BuildLine(text, line);
 		for (int i = 0; line[i]; i++) {
 			text++;
-			Uint8 c = mfontframe[gbFontTransTbl[(Uint8)line[i]]];
+			uint8_t c = mfontframe[gbFontTransTbl[(uint8_t)line[i]]];
 			if (*text == '\n') {
 				text++;
 			}
 			if (c != 0) {
-				PrintQTextChr(tx, ty, pMedTextCels, c);
+				PrintQTextChr(tx, ty, *pMedTextCels, c);
 			}
 			tx += mfontkern[c] + 2;
 		}
@@ -219,8 +229,8 @@ static void DrawQTextContent()
  */
 void FreeQuestText()
 {
-	MemFreeDbg(pMedTextCels);
-	MemFreeDbg(pTextBoxCels);
+	pMedTextCels = std::nullopt;
+	pTextBoxCels = std::nullopt;
 }
 
 /**
@@ -228,8 +238,8 @@ void FreeQuestText()
  */
 void InitQuestText()
 {
-	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", nullptr);
-	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", nullptr);
+	pMedTextCels = LoadCel("Data\\MedTextS.CEL", 22);
+	pTextBoxCels = LoadCel("Data\\TextBox.CEL", 591);
 	qtextflag = false;
 }
 
@@ -241,7 +251,7 @@ void InitQTextMsg(int m)
 {
 	if (alltext[m].scrlltxt) {
 		questlog = false;
-		qtextptr = alltext[m].txtstr;
+		qtextptr = _(alltext[m].txtstr);
 		qtextflag = true;
 		qtexty = 340 + UI_OFFSET_Y;
 		qtextSpd = CalcTextSpeed(alltext[m].sfxnr);
@@ -252,7 +262,7 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
+	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, *pTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 

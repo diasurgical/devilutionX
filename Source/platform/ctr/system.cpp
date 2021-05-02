@@ -1,5 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <3ds.h>
 #include "platform/ctr/system.h"
 

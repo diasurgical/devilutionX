@@ -5,10 +5,10 @@
  */
 #pragma once
 
-#include <SDL.h>
-#include <stdint.h>
+#include <cstdint>
 
 #include "diablo.h"
+#include "engine.h"
 #include "gendung.h"
 #include "items.h"
 #include "multi.h"
@@ -16,6 +16,7 @@
 #include "path.h"
 #include "interfac.h"
 #include "utils/enum_traits.h"
+#include "engine/animationinfo.h"
 
 namespace devilution {
 
@@ -88,7 +89,7 @@ enum player_graphic : uint16_t {
 	PFILE_BLOCK     = 1 << 8,
 	// everything except PFILE_DEATH
 	// 0b1_0111_1111
-	PFILE_NONDEATH = 0x17F
+	PFILE_NONDEATH  = 0x17F
 	// clang-format on
 };
 
@@ -147,26 +148,6 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
-struct Point {
-	int x;
-	int y;
-};
-
-struct PlayerPosition {
-	/** Tile position */
-	Point current; // 256
-	/** Future tile position. Set at start of walking animation. */
-	Point future;
-	/** Tile position of player. Set via network on player input. */
-	Point owner;
-	/** Most recent position in dPlayer. */
-	Point old;
-	/** Player sprite's pixel offset from tile. */
-	Point offset;
-	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
-	Point velocity;
-};
-
 struct PlayerStruct {
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];
@@ -177,19 +158,14 @@ struct PlayerStruct {
 	direction destParam3;
 	int destParam4;
 	int plrlevel;
-	PlayerPosition position;
+	ActorPosition position;
 	direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
-	uint8_t *_pAnimData;
-	int _pAnimDelay; // Tick length of each frame in the current animation
-	int _pAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
-	int _pAnimLen;   // Number of frames in current animation
-	int _pAnimFrame; // Current frame of animation.
+	/*
+	* @brief Contains Information for current Animation
+	*/
+	AnimationInfo AnimInfo;
 	int _pAnimWidth;
-	int _pAnimWidth2;
-	int _pAnimNumSkippedFrames;              // Number of Frames that will be skipped (for example with modifier "faster attack")
-	int _pAnimGameTicksSinceSequenceStarted; // Number of GameTicks after the current animation sequence started
-	int _pAnimStopDistributingAfterFrame;    // Distribute the NumSkippedFrames only before this frame
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
@@ -247,14 +223,16 @@ struct PlayerStruct {
 	int8_t _pLghtResist;
 	int _pGold;
 	bool _pInfraFlag;
-	int _pVar1;       // Used for referring to X-position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks)
-	int _pVar2;       // Used for referring to Y-position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks)
-	direction _pVar3; // Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL.
-	int _pVar4;       // Used for storing X-position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it)
-	int _pVar5;       // Used for storing Y-position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it)
-	int _pVar6;       // Same as position.offset.x but contains the value in a higher range
-	int _pVar7;       // Same as position.offset.y but contains the value in a higher range
-	int _pVar8;       // Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). Also used for stalling the appearance of the options screen after dying in singleplayer
+	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
+	direction tempDirection;
+	/** Used for spell level, and X component of _pVar5 */
+	int _pVar4;
+	/** Used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it) */
+	int _pVar5;
+	/** Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). */
+	int actionFrame;
+	/** Used for stalling the appearance of the options screen after dying in singleplayer */
+	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 	                               /** Using player_graphic as bitflags */
@@ -406,27 +384,20 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
+
 /**
  * @brief Sets the new Player Animation with all relevant information for rendering
-
  * @param pnum Player Id
- * @param Peq Pointer to Animation Data
- * @param numFrames Number of Frames in Animation
- * @param Delay Delay after each Animation sequence
+ * @param pData Pointer to Animation Data
+ * @param numberOfFrames Number of Frames in Animation
+ * @param delayLen Delay after each Animation sequence
  * @param width Width of sprite
+ * @param params Specifies what special logics are applied to this Animation
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
- * @param processAnimationPending true if first ProcessAnimation will be called in same gametick after NewPlrAnim
- * @param stopDistributingAfterFrame Distribute the NumSkippedFrames only before this frame
+ * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width, int numSkippedFrames = 0, bool processAnimationPending = false, int stopDistributingAfterFrame = 0);
+void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(int pnum);
-void ProcessPlayerAnimation(int pnum);
-/**
- * @brief Calculates the Frame to use for the Animation rendering
- * @param pPlayer Player
- * @return The Frame to use for rendering
- */
-int GetFrameToUseForPlayerRendering(const PlayerStruct *pPlayer);
 void CreatePlayer(int pnum, HeroClass c);
 int CalcStatDiff(int pnum);
 #ifdef _DEBUG

@@ -6,6 +6,7 @@
 #include "controls/controller.h"
 #include "controls/game_controls.h"
 #include "options.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -113,8 +114,8 @@ void DrawStartModifierMenu(const CelOutputBuffer &out)
 {
 	if (!start_modifier_active)
 		return;
-	static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/"Menu", /*right=*/"Inv", /*bottom=*/"Map", /*left=*/"Char");
-	static const CircleMenuHint buttons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/"Spells", /*left=*/"Quests");
+	static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
+	static const CircleMenuHint buttons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
 	DrawCircleMenuHint(out, dPad, PANEL_LEFT + CircleMarginX, PANEL_TOP - CirclesTop);
 	DrawCircleMenuHint(out, buttons, PANEL_LEFT + PANEL_WIDTH - buttons.Width() - CircleMarginX, PANEL_TOP - CirclesTop);
 }

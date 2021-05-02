@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "quests.h"
 #include "objects.h"
@@ -138,150 +138,150 @@ struct TCmd {
 
 struct TCmdLoc {
 	_cmd_id bCmd;
-	Uint8 x;
-	Uint8 y;
+	uint8_t x;
+	uint8_t y;
 };
 
 struct TCmdLocParam1 {
 	_cmd_id bCmd;
-	Uint8 x;
-	Uint8 y;
-	Uint16 wParam1;
+	uint8_t x;
+	uint8_t y;
+	uint16_t wParam1;
 };
 
 struct TCmdLocParam2 {
 	_cmd_id bCmd;
-	Uint8 x;
-	Uint8 y;
-	Uint16 wParam1;
-	Uint16 wParam2;
+	uint8_t x;
+	uint8_t y;
+	uint16_t wParam1;
+	uint16_t wParam2;
 };
 
 struct TCmdLocParam3 {
 	_cmd_id bCmd;
-	Uint8 x;
-	Uint8 y;
-	Uint16 wParam1;
-	Uint16 wParam2;
-	Uint16 wParam3;
+	uint8_t x;
+	uint8_t y;
+	uint16_t wParam1;
+	uint16_t wParam2;
+	uint16_t wParam3;
 };
 
 struct TCmdParam1 {
 	_cmd_id bCmd;
-	Uint16 wParam1;
+	uint16_t wParam1;
 };
 
 struct TCmdParam2 {
 	_cmd_id bCmd;
-	Uint16 wParam1;
-	Uint16 wParam2;
+	uint16_t wParam1;
+	uint16_t wParam2;
 };
 
 struct TCmdParam3 {
 	_cmd_id bCmd;
-	Uint16 wParam1;
-	Uint16 wParam2;
-	Uint16 wParam3;
+	uint16_t wParam1;
+	uint16_t wParam2;
+	uint16_t wParam3;
 };
 
 struct TCmdGolem {
 	_cmd_id bCmd;
-	Uint8 _mx;
-	Uint8 _my;
+	uint8_t _mx;
+	uint8_t _my;
 	direction _mdir;
-	Sint8 _menemy;
-	Sint32 _mhitpoints;
-	Uint8 _currlevel;
+	int8_t _menemy;
+	int32_t _mhitpoints;
+	uint8_t _currlevel;
 };
 
 struct TCmdQuest {
 	_cmd_id bCmd;
-	Uint8 q;
+	uint8_t q;
 	quest_state qstate;
-	Uint8 qlog;
-	Uint8 qvar1;
+	uint8_t qlog;
+	uint8_t qvar1;
 };
 
 struct TCmdGItem {
 	_cmd_id bCmd;
-	Uint8 bMaster;
-	Uint8 bPnum;
-	Uint8 bCursitem;
-	Uint8 bLevel;
-	Uint8 x;
-	Uint8 y;
-	Uint16 wIndx;
-	Uint16 wCI;
-	Sint32 dwSeed;
-	Uint8 bId;
-	Uint8 bDur;
-	Uint8 bMDur;
-	Uint8 bCh;
-	Uint8 bMCh;
-	Uint16 wValue;
-	Uint32 dwBuff;
-	Sint32 dwTime;
-	Uint16 wToHit;
-	Uint16 wMaxDam;
-	Uint8 bMinStr;
-	Uint8 bMinMag;
-	Uint8 bMinDex;
-	Sint16 bAC;
+	uint8_t bMaster;
+	uint8_t bPnum;
+	uint8_t bCursitem;
+	uint8_t bLevel;
+	uint8_t x;
+	uint8_t y;
+	uint16_t wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+	uint8_t bId;
+	uint8_t bDur;
+	uint8_t bMDur;
+	uint8_t bCh;
+	uint8_t bMCh;
+	uint16_t wValue;
+	uint32_t dwBuff;
+	int32_t dwTime;
+	uint16_t wToHit;
+	uint16_t wMaxDam;
+	uint8_t bMinStr;
+	uint8_t bMinMag;
+	uint8_t bMinDex;
+	int16_t bAC;
 };
 
 struct TCmdPItem {
 	_cmd_id bCmd;
-	Uint8 x;
-	Uint8 y;
-	Uint16 wIndx;
-	Uint16 wCI;
-	Sint32 dwSeed;
-	Uint8 bId;
-	Uint8 bDur;
-	Uint8 bMDur;
-	Uint8 bCh;
-	Uint8 bMCh;
-	Uint16 wValue;
-	Uint32 dwBuff;
-	Uint16 wToHit;
-	Uint16 wMaxDam;
-	Uint8 bMinStr;
-	Uint8 bMinMag;
-	Uint8 bMinDex;
-	Sint16 bAC;
+	uint8_t x;
+	uint8_t y;
+	uint16_t wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+	uint8_t bId;
+	uint8_t bDur;
+	uint8_t bMDur;
+	uint8_t bCh;
+	uint8_t bMCh;
+	uint16_t wValue;
+	uint32_t dwBuff;
+	uint16_t wToHit;
+	uint16_t wMaxDam;
+	uint8_t bMinStr;
+	uint8_t bMinMag;
+	uint8_t bMinDex;
+	int16_t bAC;
 };
 
 struct TCmdChItem {
 	_cmd_id bCmd;
-	Uint8 bLoc;
-	Uint16 wIndx;
-	Uint16 wCI;
-	Sint32 dwSeed;
-	Uint8 bId;
-	Uint32 dwBuff;
+	uint8_t bLoc;
+	uint16_t wIndx;
+	uint16_t wCI;
+	int32_t dwSeed;
+	uint8_t bId;
+	uint32_t dwBuff;
 };
 
 struct TCmdDelItem {
 	_cmd_id bCmd;
-	Uint8 bLoc;
+	uint8_t bLoc;
 };
 
 struct TCmdDamage {
 	_cmd_id bCmd;
-	Uint8 bPlr;
-	Uint32 dwDam;
+	uint8_t bPlr;
+	uint32_t dwDam;
 };
 
 struct TCmdMonDamage {
 	_cmd_id bCmd;
-	Uint16 wMon;
-	Uint32 dwDam;
+	uint16_t wMon;
+	uint32_t dwDam;
 };
 
 struct TCmdPlrInfoHdr {
 	_cmd_id bCmd;
-	Uint16 wOffset;
-	Uint16 wBytes;
+	uint16_t wOffset;
+	uint16_t wBytes;
 };
 
 struct TCmdString {
@@ -291,81 +291,81 @@ struct TCmdString {
 
 struct TFakeCmdPlr {
 	_cmd_id bCmd;
-	Uint8 bPlr;
+	uint8_t bPlr;
 };
 
 struct TFakeDropPlr {
 	_cmd_id bCmd;
-	Uint8 bPlr;
-	Uint32 dwReason;
+	uint8_t bPlr;
+	uint32_t dwReason;
 };
 
 struct TSyncHeader {
 	_cmd_id bCmd;
-	Uint8 bLevel;
-	Uint16 wLen;
-	Uint8 bObjId;
-	Uint8 bObjCmd;
-	Uint8 bItemI;
-	Uint8 bItemX;
-	Uint8 bItemY;
-	Uint16 wItemIndx;
-	Uint16 wItemCI;
-	Uint32 dwItemSeed;
-	Uint8 bItemId;
-	Uint8 bItemDur;
-	Uint8 bItemMDur;
-	Uint8 bItemCh;
-	Uint8 bItemMCh;
-	Uint16 wItemVal;
-	Uint32 dwItemBuff;
-	Uint8 bPInvLoc;
-	Uint16 wPInvIndx;
-	Uint16 wPInvCI;
-	Uint32 dwPInvSeed;
-	Uint8 bPInvId;
-	Uint16 wToHit;
-	Uint16 wMaxDam;
-	Uint8 bMinStr;
-	Uint8 bMinMag;
-	Uint8 bMinDex;
-	Uint8 bAC;
+	uint8_t bLevel;
+	uint16_t wLen;
+	uint8_t bObjId;
+	uint8_t bObjCmd;
+	uint8_t bItemI;
+	uint8_t bItemX;
+	uint8_t bItemY;
+	uint16_t wItemIndx;
+	uint16_t wItemCI;
+	uint32_t dwItemSeed;
+	uint8_t bItemId;
+	uint8_t bItemDur;
+	uint8_t bItemMDur;
+	uint8_t bItemCh;
+	uint8_t bItemMCh;
+	uint16_t wItemVal;
+	uint32_t dwItemBuff;
+	uint8_t bPInvLoc;
+	uint16_t wPInvIndx;
+	uint16_t wPInvCI;
+	uint32_t dwPInvSeed;
+	uint8_t bPInvId;
+	uint16_t wToHit;
+	uint16_t wMaxDam;
+	uint8_t bMinStr;
+	uint8_t bMinMag;
+	uint8_t bMinDex;
+	uint8_t bAC;
 };
 
 struct TSyncMonster {
-	Uint8 _mndx;
-	Uint8 _mx;
-	Uint8 _my;
-	Uint8 _menemy;
-	Uint8 _mdelta;
+	uint8_t _mndx;
+	uint8_t _mx;
+	uint8_t _my;
+	uint8_t _menemy;
+	uint8_t _mdelta;
 };
 
 struct TPktHdr {
-	Uint8 px;
-	Uint8 py;
-	Uint8 targx;
-	Uint8 targy;
-	Sint32 php;
-	Sint32 pmhp;
-	Uint8 bstr;
-	Uint8 bmag;
-	Uint8 bdex;
-	Uint16 wCheck;
-	Uint16 wLen;
+	uint8_t px;
+	uint8_t py;
+	uint8_t targx;
+	uint8_t targy;
+	int32_t php;
+	int32_t pmhp;
+	uint8_t bstr;
+	uint8_t bmag;
+	uint8_t bdex;
+	uint16_t wCheck;
+	uint16_t wLen;
 };
 
 struct TPkt {
 	TPktHdr hdr;
-	Uint8 body[493];
+	uint8_t body[493];
 };
 
 struct DMonsterStr {
-	Uint8 _mx;
-	Uint8 _my;
+	uint8_t _mx;
+	uint8_t _my;
 	direction _mdir;
-	Uint8 _menemy;
-	Uint8 _mactive;
-	Sint32 _mhitpoints;
+	uint8_t _menemy;
+	uint8_t _mactive;
+	int32_t _mhitpoints;
 };
 
 struct DObjectStr {
@@ -379,21 +379,21 @@ struct DLevel {
 };
 
 struct LocalLevel {
-	Uint8 automapsv[DMAXX][DMAXY];
+	uint8_t automapsv[DMAXX][DMAXY];
 };
 
 struct DPortal {
-	Uint8 x;
-	Uint8 y;
-	Uint8 level;
-	Uint8 ltype;
-	Uint8 setlvl;
+	uint8_t x;
+	uint8_t y;
+	uint8_t level;
+	uint8_t ltype;
+	uint8_t setlvl;
 };
 
 struct MultiQuests {
 	quest_state qstate;
-	Uint8 qlog;
-	Uint8 qvar1;
+	uint8_t qlog;
+	uint8_t qvar1;
 };
 
 struct DJunk {
@@ -405,14 +405,14 @@ struct DJunk {
 #pragma pack(push, 1)
 struct TMegaPkt {
 	struct TMegaPkt *pNext;
-	Uint32 dwSpaceLeft;
-	Uint8 data[32000];
+	uint32_t dwSpaceLeft;
+	uint8_t data[32000];
 };
 #pragma pack(pop)
 
 struct TBuffer {
-	Uint32 dwNextWriteOffset;
-	Uint8 bData[4096];
+	uint32_t dwNextWriteOffset;
+	uint8_t bData[4096];
 };
 
 extern bool deltaload;
@@ -424,7 +424,7 @@ bool msg_wait_resync();
 void run_delta_info();
 void DeltaExportData(int pnum);
 void delta_init();
-void delta_kill_monster(int mi, BYTE x, BYTE y, BYTE bLevel);
+void delta_kill_monster(int mi, Point position, BYTE bLevel);
 void delta_monster_hp(int mi, int hp, BYTE bLevel);
 void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel);
 bool delta_portal_inited(int i);
@@ -434,21 +434,21 @@ void DeltaSaveLevel();
 void DeltaLoadLevel();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
 void NetSendCmdGolem(BYTE mx, BYTE my, direction dir, BYTE menemy, int hp, BYTE cl);
-void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y);
-void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1);
-void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2);
-void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y, WORD wParam1, WORD wParam2, WORD wParam3);
-void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, WORD wParam1);
-void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2);
-void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, WORD wParam1, WORD wParam2, WORD wParam3);
+void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position);
+void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1);
+void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);
+void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
+void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1);
+void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2);
+void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
 void NetSendCmdQuest(bool bHiPri, BYTE q);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii);
-void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, BYTE x, BYTE y);
+void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdChItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDItem(bool bHiPri, int ii);
 void NetSendCmdDamage(bool bHiPri, BYTE bPlr, DWORD dwDam);
-void NetSendCmdMonDmg(bool bHiPri, WORD bMon, DWORD dwDam);
+void NetSendCmdMonDmg(bool bHiPri, uint16_t bMon, DWORD dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
 DWORD ParseCmd(int pnum, TCmd *pCmd);

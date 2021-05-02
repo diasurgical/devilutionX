@@ -13,6 +13,7 @@
 #include "palette.h"
 #include "quests.h"
 #include "trigs.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -73,11 +74,11 @@ BYTE SkelChamTrans3[] = {
 /** Maps from quest level to quest level names. */
 const char *const quest_level_names[] = {
 	"",
-	"Skeleton King's Lair",
-	"Chamber of Bone",
-	"Maze",
-	"Poisoned Water Supply",
-	"Archbishop Lazarus' Lair",
+	N_("Skeleton King's Lair"),
+	N_("Chamber of Bone"),
+	N_("Maze"),
+	N_("Poisoned Water Supply"),
+	N_("Archbishop Lazarus' Lair"),
 };
 
 int ObjIndex(int x, int y)
@@ -87,7 +88,7 @@ int ObjIndex(int x, int y)
 
 	for (i = 0; i < nobjects; i++) {
 		oi = objectactive[i];
-		if (object[oi]._ox == x && object[oi]._oy == y)
+		if (object[oi].position.x == x && object[oi].position.y == y)
 			return oi;
 	}
 	app_fatal("ObjIndex: Active object not found at (%d,%d)", x, y);
@@ -120,12 +121,11 @@ void DRLG_SetMapTrans(const char *sFileName)
 {
 	int x, y;
 	int i, j;
-	BYTE *pLevelMap;
 	BYTE *d;
 	DWORD dwOffset;
 
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
-	d = pLevelMap + 2;
+	auto pLevelMap = LoadFileInMem(sFileName);
+	d = &pLevelMap[2];
 	x = pLevelMap[0];
 	y = *d;
 	dwOffset = (x * y + 1) * 2;
@@ -140,7 +140,6 @@ void DRLG_SetMapTrans(const char *sFileName)
 			d += 2;
 		}
 	}
-	mem_free_dbg(pLevelMap);
 }
 
 /**

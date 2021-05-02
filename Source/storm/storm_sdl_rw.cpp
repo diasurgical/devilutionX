@@ -5,6 +5,7 @@
 
 #include "engine.h"
 #include "storm/storm.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -47,7 +48,7 @@ static int SFileRwSeek(struct SDL_RWops *context, int offset, int whence)
 	}
 	const std::uint64_t pos = SFileSetFilePointer(SFileRwGetHandle(context), offset, swhence);
 	if (pos == static_cast<std::uint64_t>(-1)) {
-		SDL_Log("SFileRwSeek error: %ud", (unsigned int)SErrGetLastError());
+		Log("SFileRwSeek error: {}", (unsigned int)SErrGetLastError());
 	}
 	return pos;
 }
@@ -62,7 +63,7 @@ static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnu
 	if (!SFileReadFile(SFileRwGetHandle(context), ptr, maxnum * size, &numRead, nullptr)) {
 		const DWORD errCode = SErrGetLastError();
 		if (errCode != STORM_ERROR_HANDLE_EOF) {
-			SDL_Log("SFileRwRead error: %u %u ERROR CODE %u", (unsigned int)size, (unsigned int)maxnum, (unsigned int)errCode);
+			Log("SFileRwRead error: {} {} ERROR CODE {}", (unsigned int)size, (unsigned int)maxnum, (unsigned int)errCode);
 		}
 	}
 	return numRead / size;
@@ -70,13 +71,14 @@ static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnu
 
 static int SFileRwClose(struct SDL_RWops *context)
 {
-	mem_free_dbg(context);
+	SFileCloseFile(SFileRwGetHandle(context));
+	delete context;
 	return 0;
 }
 
 SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 {
-	SDL_RWops *result = (SDL_RWops *)DiabloAllocPtr(sizeof(SDL_RWops));
+	SDL_RWops *result = new SDL_RWops();
 	std::memset(result, 0, sizeof(*result));
 
 #ifndef USE_SDL1

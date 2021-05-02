@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "msg.h"
 
@@ -21,23 +21,23 @@ enum event_type : uint8_t {
 };
 
 struct GameData {
-	Sint32 size;
-	Sint32 dwSeed;
-	Uint32 programid;
-	Uint8 versionMajor;
-	Uint8 versionMinor;
-	Uint8 versionPatch;
+	int32_t size;
+	int32_t dwSeed;
+	uint32_t programid;
+	uint8_t versionMajor;
+	uint8_t versionMinor;
+	uint8_t versionPatch;
 	_difficulty nDifficulty;
-	Uint8 nTickRate;
-	Uint8 bRunInTown;
-	Uint8 bTheoQuest;
-	Uint8 bCowQuest;
-	Uint8 bFriendlyFire;
+	uint8_t nTickRate;
+	uint8_t bRunInTown;
+	uint8_t bTheoQuest;
+	uint8_t bCowQuest;
+	uint8_t bFriendlyFire;
 };
 
 extern bool gbSomebodyWonGameKludge;
 extern char szPlayerDescript[128];
-extern WORD sgwPackPlrOffsetTbl[MAX_PLRS];
+extern uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 extern BYTE gbActivePlayers;
 extern bool gbGameDestroyed;
 extern GameData sgGameInitInfo;
@@ -45,7 +45,7 @@ extern bool gbSelectProvider;
 extern bool gbIsMultiplayer;
 extern char szPlayerName[128];
 extern BYTE gbDeltaSender;
-extern int player_state[MAX_PLRS];
+extern uint32_t player_state[MAX_PLRS];
 
 void multi_msg_add(BYTE *pbMsg, BYTE bLen);
 void NetSendLoPri(int playerId, BYTE *pbMsg, BYTE bLen);

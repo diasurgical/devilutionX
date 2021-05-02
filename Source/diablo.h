@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #ifdef _DEBUG
 #include "monstdat.h"
@@ -15,7 +15,7 @@
 
 namespace devilution {
 
-#define GAME_ID (gbIsHellfire ? (gbIsSpawn ? LOAD_BE32("HSHR") : LOAD_BE32("HRTL")) : (gbIsSpawn ? LOAD_BE32("DSHR") : LOAD_BE32("DRTL")))
+#define GAME_ID (gbIsHellfire ? (gbIsSpawn ? LoadBE32("HSHR") : LoadBE32("HRTL")) : (gbIsSpawn ? LoadBE32("DSHR") : LoadBE32("DRTL")))
 
 #define NUMLEVELS 25
 
@@ -46,7 +46,8 @@ extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
 extern clicktype sgbMouseDown;
-extern WORD gnTickDelay;
+extern uint16_t gnTickDelay;
+extern char gszProductName[64];
 
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
@@ -55,8 +56,8 @@ int DiabloMain(int argc, char **argv);
 bool TryIconCurs();
 void diablo_pause_game();
 bool PressEscKey();
-void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam);
+void DisableInputWndProc(uint32_t uMsg, int32_t wParam, int32_t lParam);
+void GM_Game(uint32_t uMsg, int32_t wParam, int32_t lParam);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
 void game_loop(bool bStartup);
 void diablo_color_cyc_logic();

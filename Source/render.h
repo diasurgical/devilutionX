@@ -31,6 +31,6 @@ void RenderTile(CelOutputBuffer out, int x, int y);
  * @param sx Target buffer coordinate (left corner of the tile)
  * @param sy Target buffer coordinate (bottom corner of the tile)
  */
-void world_draw_black_tile(CelOutputBuffer out, int sx, int sy);
+void world_draw_black_tile(const CelOutputBuffer &out, int sx, int sy);
 
 } // namespace devilution

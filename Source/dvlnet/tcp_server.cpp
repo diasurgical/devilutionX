@@ -6,8 +6,10 @@
 #include <utility>
 
 #include "dvlnet/base.h"
+#include "utils/log.hpp"
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 tcp_server::tcp_server(asio::io_context &ioc, const std::string &bindaddr,
     unsigned short port, std::string pw)
@@ -84,7 +86,7 @@ void tcp_server::handle_recv(const scc &con, const asio::error_code &ec,
 				handle_recv_packet(*pkt);
 			}
 		} catch (dvlnet_exception &e) {
-			SDL_Log("Network error: %s", e.what());
+			Log("Network error: {}", e.what());
 			drop_connection(con);
 			return;
 		}
@@ -224,4 +226,5 @@ tcp_server::~tcp_server()
 {
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution

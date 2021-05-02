@@ -100,7 +100,7 @@ void UseMana(int id, spell_id sn)
  * @param spellId The id of the spell to get a bitmask for.
  * @return A 64bit bitmask representation for the specified spell.
  */
-Uint64 GetSpellBitmask(int spellId)
+uint64_t GetSpellBitmask(int spellId)
 {
 	return 1ULL << (spellId - 1);
 }
@@ -192,7 +192,7 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 {
 	direction dir = plr[id]._pdir;
 	if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
-		dir = plr[id]._pVar3;
+		dir = plr[id].tempDirection;
 	}
 
 	for (int i = 0; spelldata[spl].sMissiles[i] != MIS_NULL && i < 3; i++) {
@@ -218,8 +218,8 @@ static void PlacePlayer(int pnum)
 
 	if (plr[pnum].plrlevel == currlevel) {
 		for (i = 0; i < 8; i++) {
-			nx = plr[pnum].position.current.x + plrxoff2[i];
-			ny = plr[pnum].position.current.y + plryoff2[i];
+			nx = plr[pnum].position.tile.x + plrxoff2[i];
+			ny = plr[pnum].position.tile.y + plryoff2[i];
 
 			if (PosOkPlayer(pnum, nx, ny)) {
 				break;
@@ -231,10 +231,10 @@ static void PlacePlayer(int pnum)
 
 			for (max = 1, min = -1; min > -50 && !done; max++, min--) {
 				for (y = min; y <= max && !done; y++) {
-					ny = plr[pnum].position.current.y + y;
+					ny = plr[pnum].position.tile.y + y;
 
 					for (x = min; x <= max && !done; x++) {
-						nx = plr[pnum].position.current.x + x;
+						nx = plr[pnum].position.tile.x + x;
 
 						if (PosOkPlayer(pnum, nx, ny)) {
 							done = true;
@@ -244,7 +244,7 @@ static void PlacePlayer(int pnum)
 			}
 		}
 
-		plr[pnum].position.current = { nx, ny };
+		plr[pnum].position.tile = { nx, ny };
 
 		dPlayer[nx][ny] = pnum + 1;
 
@@ -264,7 +264,7 @@ void DoResurrect(int pnum, int rid)
 	int hp;
 
 	if ((char)rid != -1) {
-		AddMissile(plr[rid].position.current.x, plr[rid].position.current.y, plr[rid].position.current.x, plr[rid].position.current.y, 0, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
+		AddMissile(plr[rid].position.tile.x, plr[rid].position.tile.y, plr[rid].position.tile.x, plr[rid].position.tile.y, 0, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
 	}
 
 	if (pnum == myplr) {

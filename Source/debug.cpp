@@ -4,11 +4,10 @@
  * Implementation of debug functions.
  */
 
-#include <SDL.h>
-
 #include "cursor.h"
 #include "inv.h"
 #include "spells.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -20,19 +19,19 @@ int seed_index;
 int level_seeds[NUMLEVELS + 1];
 int seed_table[DEBUGSEEDS];
 
-BYTE *pSquareCel;
+std::optional<CelSprite> pSquareCel;
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 
 void LoadDebugGFX()
 {
 	if (visiondebug)
-		pSquareCel = LoadFileInMem("Data\\Square.CEL", nullptr);
+		pSquareCel = LoadCel("Data\\Square.CEL", 64);
 }
 
 void FreeDebugGFX()
 {
-	MemFreeDbg(pSquareCel);
+	pSquareCel = std::nullopt;
 }
 
 void CheckDungeonClear()
@@ -148,7 +147,7 @@ void PrintDebugPlayer(bool bNextPlayer)
 		sprintf(dstr, "  Lvl = %i : Change = %i", plr[dbgplr].plrlevel, plr[dbgplr]._pLvlChanging);
 		NetSendCmdString(1 << myplr, dstr);
 		const Point target = plr[dbgplr].GetTargetPosition();
-		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", plr[dbgplr].position.current.x, plr[dbgplr].position.current.y, target.x, target.y);
+		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", plr[dbgplr].position.tile.x, plr[dbgplr].position.tile.y, target.x, target.y);
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", plr[dbgplr]._pmode, plr[dbgplr].destAction, plr[dbgplr].walkpath[0]);
 		NetSendCmdString(1 << myplr, dstr);
@@ -177,9 +176,9 @@ void PrintDebugMonster(int m)
 	int i;
 	char dstr[128];
 
-	sprintf(dstr, "Monster %i = %s", m, monster[m].mName);
+	sprintf(dstr, "Monster %i = %s", m, _(monster[m].mName));
 	NetSendCmdString(1 << myplr, dstr);
-	sprintf(dstr, "X = %i, Y = %i", monster[m]._mx, monster[m]._my);
+	sprintf(dstr, "X = %i, Y = %i", monster[m].position.tile.x, monster[m].position.tile.y);
 	NetSendCmdString(1 << myplr, dstr);
 	sprintf(dstr, "Enemy = %i, HP = %i", monster[m]._menemy, monster[m]._mhitpoints);
 	NetSendCmdString(1 << myplr, dstr);

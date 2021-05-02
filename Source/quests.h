@@ -5,11 +5,12 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "engine.h"
 #include "gendung.h"
 #include "textdat.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -40,26 +41,25 @@ enum quest_state : uint8_t {
 };
 
 struct QuestStruct {
-	Uint8 _qlevel;
-	Uint8 _qtype;
+	uint8_t _qlevel;
+	uint8_t _qtype;
 	quest_state _qactive;
 	dungeon_type _qlvltype;
-	Sint32 _qtx;
-	Sint32 _qty;
+	Point position;
 	_setlevels _qslvl;
-	Uint8 _qidx;
+	uint8_t _qidx;
 	_speech_id _qmsg;
-	Uint8 _qvar1;
-	Uint8 _qvar2;
+	uint8_t _qvar1;
+	uint8_t _qvar2;
 	bool _qlog;
 };
 
 struct QuestData {
-	Uint8 _qdlvl;
-	Sint8 _qdmultlvl;
+	uint8_t _qdlvl;
+	int8_t _qdmultlvl;
 	dungeon_type _qlvlt;
-	Uint8 _qdtype;
-	Uint8 _qdrnd;
+	uint8_t _qdtype;
+	uint8_t _qdrnd;
 	_setlevels _qslvl;
 	bool isSinglePlayerOnly;
 	_speech_id _qdmsg;
@@ -67,7 +67,7 @@ struct QuestData {
 };
 
 extern bool questlog;
-extern BYTE *pQLogCel;
+extern std::optional<CelSprite> pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
 extern int ReturnLvlX;
 extern int ReturnLvlY;

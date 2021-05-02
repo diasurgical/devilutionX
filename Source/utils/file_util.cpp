@@ -1,4 +1,5 @@
 #include "utils/file_util.h"
+#include "utils/log.hpp"
 
 #include <algorithm>
 #include <string>
@@ -104,9 +105,9 @@ void RemoveFile(const char *lpFileName)
 		fclose(f);
 		remove(name.c_str());
 		f = nullptr;
-		SDL_Log("Removed file: %s", name.c_str());
+		Log("Removed file: {}", name);
 	} else {
-		SDL_Log("Failed to remove file: %s", name.c_str());
+		Log("Failed to remove file: {}", name);
 	}
 }
 

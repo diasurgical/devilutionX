@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <limits>
 #include <string>
+#include <cstdint>
 
 #include "appfat.h"
 #include "multi.h"
@@ -22,43 +23,43 @@ enum conn_type : uint8_t {
 };
 
 struct PCXHeader {
-	Uint8 Manufacturer;
-	Uint8 Version;
-	Uint8 Encoding;
-	Uint8 BitsPerPixel;
-	Uint16 Xmin;
-	Uint16 Ymin;
-	Uint16 Xmax;
-	Uint16 Ymax;
-	Uint16 HDpi;
-	Uint16 VDpi;
-	Uint8 Colormap[48];
-	Uint8 Reserved;
-	Uint8 NPlanes;
-	Uint16 BytesPerLine;
-	Uint16 PaletteInfo;
-	Uint16 HscreenSize;
-	Uint16 VscreenSize;
-	Uint8 Filler[54];
+	uint8_t Manufacturer;
+	uint8_t Version;
+	uint8_t Encoding;
+	uint8_t BitsPerPixel;
+	uint16_t Xmin;
+	uint16_t Ymin;
+	uint16_t Xmax;
+	uint16_t Ymax;
+	uint16_t HDpi;
+	uint16_t VDpi;
+	uint8_t Colormap[48];
+	uint8_t Reserved;
+	uint8_t NPlanes;
+	uint16_t BytesPerLine;
+	uint16_t PaletteInfo;
+	uint16_t HscreenSize;
+	uint16_t VscreenSize;
+	uint8_t Filler[54];
 };
 
 struct _SNETCAPS {
-	Uint32 size;
-	Uint32 flags;
-	Uint32 maxmessagesize;
-	Uint32 maxqueuesize;
-	Uint32 maxplayers;
-	Uint32 bytessec;
-	Uint32 latencyms;
-	Uint32 defaultturnssec;
-	Uint32 defaultturnsintransit;
+	uint32_t size;
+	uint32_t flags;
+	uint32_t maxmessagesize;
+	uint32_t maxqueuesize;
+	uint32_t maxplayers;
+	uint32_t bytessec;
+	uint32_t latencyms;
+	uint32_t defaultturnssec;
+	uint32_t defaultturnsintransit;
 };
 
 struct _SNETEVENT {
-	Uint32 eventid;
-	Uint32 playerid;
+	uint32_t eventid;
+	uint32_t playerid;
 	void *data;
-	Uint32 databytes;
+	uint32_t databytes;
 };
 
 // Note to self: Linker error => forgot a return value in cpp
@@ -246,33 +247,10 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile);
 bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
 bool WINAPI SFileCloseArchive(HANDLE hArchive);
 bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
-bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, LONG *lpDistanceToMoveHigh);
-DWORD WINAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
+bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh);
+DWORD WINAPI SFileGetFileSize(HANDLE hFile, uint32_t *lpFileSizeHigh);
 DWORD WINAPI SFileSetFilePointer(HANDLE, int, int *, int);
 bool WINAPI SFileCloseFile(HANDLE hFile);
-
-/*  SBmpLoadImage @ 323
- *
- *  Load an image from an available archive into a buffer.
- *
- *  pszFileName:  The name of the graphic in an active archive.
- *  pPalette:     An optional buffer that receives the image palette.
- *  pBuffer:      A buffer that receives the image data.
- *  dwBuffersize: The size of the specified image buffer.
- *  pdwWidth:     An optional variable that receives the image width.
- *  pdwHeight:    An optional variable that receives the image height.
- *  pdwBpp:       An optional variable that receives the image bits per pixel.
- *
- *  Returns true if the image was supported and loaded correctly, false otherwise.
- */
-bool SBmpLoadImage(
-    const char *pszFileName,
-    SDL_Color *pPalette,
-    BYTE *pBuffer,
-    DWORD dwBuffersize,
-    DWORD *pdwWidth,
-    DWORD *pdwHeight,
-    DWORD *pdwBpp);
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue);
@@ -334,7 +312,7 @@ bool SNetGetOwnerTurnsWaiting(DWORD *);
 bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 bool SNetSetBasePlayer(int);
-bool SNetInitializeProvider(Uint32 provider, struct GameData *gameData);
+bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData);
 int SNetGetProviderCaps(struct _SNETCAPS *);
 bool SFileEnableDirectAccess(bool enable);
 

@@ -1,5 +1,4 @@
-#include <string.h>
-#include <stdbool.h>
+#include <cstring>
 
 #include <SDL.h>
 #include <psp2/types.h>

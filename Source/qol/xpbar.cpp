@@ -8,6 +8,7 @@
 #include "common.h"
 #include "control.h"
 #include "options.h"
+#include "utils/language.h"
 
 #include <array>
 
@@ -48,7 +49,7 @@ void InitXPBar()
 		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
 
 		if (xpbarArt.surface == nullptr) {
-			app_fatal("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?");
+			app_fatal("%s", _("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
 		}
 	}
 }
@@ -86,15 +87,15 @@ void DrawXPBar(const CelOutputBuffer &out)
 	if (player._pExperience < prevXp)
 		return;
 
-	Uint64 prevXpDelta_1 = player._pExperience - prevXp;
-	Uint64 prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
-	Uint64 fullBar = BAR_WIDTH * prevXpDelta_1 / prevXpDelta;
+	uint64_t prevXpDelta_1 = player._pExperience - prevXp;
+	uint64_t prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
+	uint64_t fullBar = BAR_WIDTH * prevXpDelta_1 / prevXpDelta;
 
 	// Figure out how much to fill the last pixel of the XP bar, to make it gradually appear with gained XP
-	Uint64 onePx = prevXpDelta / BAR_WIDTH + 1;
-	Uint64 lastFullPx = fullBar * prevXpDelta / BAR_WIDTH;
+	uint64_t onePx = prevXpDelta / BAR_WIDTH + 1;
+	uint64_t lastFullPx = fullBar * prevXpDelta / BAR_WIDTH;
 
-	const Uint64 fade = (prevXpDelta_1 - lastFullPx) * (SILVER_GRADIENT.size() - 1) / onePx;
+	const uint64_t fade = (prevXpDelta_1 - lastFullPx) * (SILVER_GRADIENT.size() - 1) / onePx;
 
 	// Draw beginning of bar full brightness
 	DrawBar(out, xPos, yPos, fullBar, SILVER_GRADIENT);
@@ -118,33 +119,33 @@ bool CheckXPBarInfo()
 
 	const int charLevel = player._pLevel;
 
-	sprintf(tempstr, "Level %d", charLevel);
+	sprintf(tempstr, _("Level %d"), charLevel);
 	AddPanelString(tempstr, true);
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Show a maximum level indicator for max level players.
 		infoclr = COL_GOLD;
 
-		sprintf(tempstr, "Experience: ");
+		strcpy(tempstr, _("Experience: "));
 		PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, ExpLvlsTbl[charLevel - 1]);
 		AddPanelString(tempstr, true);
 
-		AddPanelString("Maximum Level", true);
+		AddPanelString(_("Maximum Level"), true);
 
 		return true;
 	}
 
 	infoclr = COL_WHITE;
 
-	sprintf(tempstr, "Experience: ");
+	strcpy(tempstr, _("Experience: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, player._pExperience);
 	AddPanelString(tempstr, true);
 
-	sprintf(tempstr, "Next Level: ");
+	strcpy(tempstr, _("Next Level: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
 	AddPanelString(tempstr, true);
 
-	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), " to Level %d", charLevel + 1);
+	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), _(" to Level %d"), charLevel + 1);
 	AddPanelString(tempstr, true);
 
 	return true;

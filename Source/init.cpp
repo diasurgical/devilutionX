@@ -14,6 +14,8 @@
 #include "storm/storm.h"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
+#include "utils/log.hpp"
+#include "utils/language.h"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita
@@ -58,27 +60,22 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 	for (const auto &path : paths) {
 		mpq_abspath = path + mpq_name;
 		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
-			SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "  Found: %s in %s", mpq_name, path.c_str());
+			LogVerbose("  Found: {} in {}", mpq_name, path);
 			SFileSetBasePath(path.c_str());
 			return archive;
 		}
 		if (SErrGetLastError() != STORM_ERROR_FILE_NOT_FOUND) {
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Open error %u: %s", SErrGetLastError(), mpq_abspath.c_str());
+			LogError("Open error {}: {}", SErrGetLastError(), mpq_abspath);
 		}
 	}
 	if (SErrGetLastError() == STORM_ERROR_FILE_NOT_FOUND) {
-		SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "Missing: %s", mpq_name);
+		LogVerbose("Missing: {}", mpq_name);
 	}
 
 	return nullptr;
 }
 
 } // namespace
-
-/* data */
-
-char gszVersionNumber[64] = "internal version unknown";
-char gszProductName[64] = "DevilutionX vUnknown";
 
 void init_cleanup()
 {
@@ -138,20 +135,12 @@ void init_cleanup()
 	NetClose();
 }
 
-static void init_get_file_info()
-{
-	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	snprintf(gszVersionNumber, sizeof(gszVersionNumber) / sizeof(char), "version %s", PROJECT_VERSION);
-}
-
 void init_archives()
 {
-	init_get_file_info();
-
 	std::vector<std::string> paths;
 	paths.reserve(5);
-	paths.push_back(GetBasePath());
-	paths.push_back(GetPrefPath());
+	paths.push_back(paths::BasePath());
+	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
 		paths.pop_back();
 
@@ -171,8 +160,7 @@ void init_archives()
 			message.append(paths[i]);
 			message += '\'';
 		}
-		SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION,
-		    "MPQ search paths%s", message.c_str());
+		LogVerbose("MPQ search paths:{}", message);
 	}
 
 	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ");
@@ -211,7 +199,7 @@ void init_archives()
 	hfopt2_mpq = init_test_access(paths, "hfopt2.mpq");
 
 	if (gbIsHellfire && (hfmonk_mpq == nullptr || hfmusic_mpq == nullptr || hfvoice_mpq == nullptr)) {
-		UiErrorOkDialog("Some Hellfire MPQs are missing", "Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files.");
+		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
 		app_fatal(nullptr);
 	}
 
@@ -221,7 +209,7 @@ void init_archives()
 void init_create_window()
 {
 	if (!SpawnWindow(PROJECT_NAME))
-		app_fatal("Unable to create main window");
+		app_fatal("%s", _("Unable to create main window"));
 	dx_init();
 	gbActive = true;
 #ifndef USE_SDL1
@@ -229,7 +217,7 @@ void init_create_window()
 #endif
 }
 
-void MainWndProc(UINT Msg)
+void MainWndProc(uint32_t Msg)
 {
 	switch (Msg) {
 	case DVL_WM_PAINT:

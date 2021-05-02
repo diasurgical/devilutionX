@@ -5,8 +5,6 @@
  */
 #pragma once
 
-#include "miniwin/miniwin.h"
-
 namespace devilution {
 
 extern bool movie_playing;

@@ -8,6 +8,7 @@
 #include "dvlnet/base.h"
 #include "dvlnet/packet.h"
 #include "player.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 namespace net {
@@ -182,11 +183,19 @@ void base_protocol<P>::recv()
 			} catch (packet_exception &e) {
 				// drop packet
 				proto.disconnect(sender);
-				SDL_Log("%s", e.what());
+				Log("{}", e.what());
+			}
+		}
+		while (proto.get_disconnected(sender)) {
+			for (plr_t i = 0; i < MAX_PLRS; ++i) {
+				if (peers[i] == sender) {
+					disconnect_net(i);
+					break;
+				}
 			}
 		}
 	} catch (std::exception &e) {
-		SDL_Log("%s", e.what());
+		Log("{}", e.what());
 		return;
 	}
 }
@@ -209,7 +218,6 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 		if ((j != plr_self) && (j != i) && peers[j]) {
 			auto infopkt = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, j, peers[j].serialize());
 			proto.send(sender, infopkt->data());
-			break;
 		}
 	}
 	auto reply = pktfty->make_packet<PT_JOIN_ACCEPT>(plr_self, PLR_BROADCAST,

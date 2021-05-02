@@ -23,11 +23,12 @@
 #include "missiles.h"
 #include "nthread.h"
 #include "plrmsg.h"
-#include "qol.h"
+#include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
 #include "render.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -35,7 +36,7 @@ namespace devilution {
  * Specifies the current light entry.
  */
 int light_table_index;
-DWORD sgdwCursWdtOld;
+uint32_t sgdwCursWdtOld;
 int sgdwCursX;
 int sgdwCursY;
 /**
@@ -49,7 +50,7 @@ uint32_t sgdwCursHgt;
  * frameNum  := block & 0x0FFF
  * frameType := block & 0x7000 >> 12
  */
-DWORD level_cel_block;
+uint32_t level_cel_block;
 int sgdwCursXOld;
 int sgdwCursYOld;
 bool AutoMapShowItems;
@@ -139,7 +140,7 @@ static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
 /**
  * @brief Remove the cursor from the buffer
  */
-static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
+static void scrollrt_draw_cursor_back_buffer(const CelOutputBuffer &out)
 {
 	if (sgdwCursWdt == 0) {
 		return;
@@ -157,7 +158,7 @@ static void scrollrt_draw_cursor_back_buffer(CelOutputBuffer out)
 /**
  * @brief Draw the cursor on the given buffer
  */
-static void scrollrt_draw_cursor_item(CelOutputBuffer out)
+static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
 {
 	int mx, my;
 	BYTE col;
@@ -213,7 +214,9 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 	mx++;
 	my++;
 
-	out = out.subregion(0, 0, out.w() - 2, out.h());
+	const CelOutputBuffer &sub = out.subregion(0, 0, out.w() - 2, out.h());
+	const auto &sprite = GetInvItemSprite(pcurs);
+	const int frame = GetInvItemFrame(pcurs);
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
 		if (plr[myplr].HoldItem._iMagical != 0) {
@@ -222,23 +225,14 @@ static void scrollrt_draw_cursor_item(CelOutputBuffer out)
 		if (!plr[myplr].HoldItem._iStatFlag) {
 			col = PAL16_RED + 5;
 		}
-		if (pcurs <= 179) {
-			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels, pcurs, cursW, false);
-			if (col != PAL16_RED + 5) {
-				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW);
-			} else {
-				CelDrawLightRedSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW, 1);
-			}
+		CelBlitOutlineTo(sub, col, mx, my + cursH - 1, sprite, frame, false);
+		if (col != PAL16_RED + 5) {
+			CelClippedDrawSafeTo(sub, mx, my + cursH - 1, sprite, frame);
 		} else {
-			CelBlitOutlineTo(out, col, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW, false);
-			if (col != PAL16_RED + 5) {
-				CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW);
-			} else {
-				CelDrawLightRedSafeTo(out, mx, my + cursH - 1, pCursCels2, pcurs - 179, cursW, 0);
-			}
+			CelDrawLightRedSafeTo(sub, mx, my + cursH - 1, sprite, frame, 1);
 		}
 	} else {
-		CelClippedDrawSafeTo(out, mx, my + cursH - 1, pCursCels, pcurs, cursW);
+		CelClippedDrawSafeTo(sub, mx, my + cursH - 1, sprite, frame);
 	}
 }
 
@@ -257,23 +251,24 @@ void DrawMissilePrivate(const CelOutputBuffer &out, MissileStruct *m, int sx, in
 
 	BYTE *pCelBuff = m->_miAnimData;
 	if (pCelBuff == nullptr) {
-		SDL_Log("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
+		Log("Draw Missile 2 type {}: NULL Cel Buffer", m->_mitype);
 		return;
 	}
 	int nCel = m->_miAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		SDL_Log("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
+		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
 		return;
 	}
-	int mx = sx + m->_mixoff - m->_miAnimWidth2;
-	int my = sy + m->_miyoff;
+	int mx = sx + m->position.offset.x - m->_miAnimWidth2;
+	int my = sy + m->position.offset.y;
+	CelSprite cel { m->_miAnimData, m->_miAnimWidth };
 	if (m->_miUniqTrans)
-		Cl2DrawLightTbl(out, mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, m->_miUniqTrans + 3);
+		Cl2DrawLightTbl(out, mx, my, cel, m->_miAnimFrame, m->_miUniqTrans + 3);
 	else if (m->_miLightFlag)
-		Cl2DrawLight(out, mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
+		Cl2DrawLight(out, mx, my, cel, m->_miAnimFrame);
 	else
-		Cl2Draw(out, mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
+		Cl2Draw(out, mx, my, cel, m->_miAnimFrame);
 }
 
 /**
@@ -302,7 +297,7 @@ void DrawMissile(const CelOutputBuffer &out, int x, int y, int sx, int sy, bool 
 	for (i = 0; i < nummissiles; i++) {
 		assert(missileactive[i] < MAXMISSILES);
 		m = &missile[missileactive[i]];
-		if (m->_mix != x || m->_miy != y)
+		if (m->position.tile.x != x || m->position.tile.y != y)
 			continue;
 		DrawMissilePrivate(out, m, sx, sy, pre);
 	}
@@ -320,13 +315,13 @@ void DrawMissile(const CelOutputBuffer &out, int x, int y, int sx, int sy, bool 
 static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my, int m)
 {
 	if (m < 0 || m >= MAXMONSTERS) {
-		SDL_Log("Draw Monster: tried to draw illegal monster %d", m);
+		Log("Draw Monster: tried to draw illegal monster {}", m);
 		return;
 	}
 
 	BYTE *pCelBuff = monster[m]._mAnimData;
 	if (pCelBuff == nullptr) {
-		SDL_Log("Draw Monster \"%s\": NULL Cel Buffer", monster[m].mName);
+		Log("Draw Monster \"{}\": NULL Cel Buffer", monster[m].mName);
 		return;
 	}
 
@@ -336,8 +331,8 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		const char *szMode = "unknown action";
 		if (monster[m]._mmode <= 17)
 			szMode = szMonModeAssert[monster[m]._mmode];
-		SDL_Log(
-		    "Draw Monster \"%s\" %s: facing %d, frame %d of %d",
+		Log(
+		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster[m].mName,
 		    szMode,
 		    monster[m]._mdir,
@@ -346,8 +341,10 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		return;
 	}
 
+	CelSprite cel { monster[m]._mAnimData, monster[m].MType->width };
+
 	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
-		Cl2DrawLightTbl(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, 1);
+		Cl2DrawLightTbl(out, mx, my, cel, monster[m]._mAnimFrame, 1);
 		return;
 	}
 
@@ -359,9 +356,9 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 	if (plr[myplr]._pInfraFlag && light_table_index > 8)
 		trans = 1;
 	if (trans)
-		Cl2DrawLightTbl(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, trans);
+		Cl2DrawLightTbl(out, mx, my, cel, monster[m]._mAnimFrame, trans);
 	else
-		Cl2DrawLight(out, mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width);
+		Cl2DrawLight(out, mx, my, cel, monster[m]._mAnimFrame);
 }
 
 /**
@@ -377,22 +374,24 @@ static void DrawManaShield(const CelOutputBuffer &out, int pnum, int x, int y, b
 	if (!plr[pnum].pManaShield)
 		return;
 
-	x += plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
+	x += CalculateWidth2(plr[pnum]._pAnimWidth) - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
 
 	int width = misfiledata[MFILE_MANASHLD].mAnimWidth[0];
 	BYTE *pCelBuff = misfiledata[MFILE_MANASHLD].mAnimData[0];
 
+	CelSprite cel { pCelBuff, width };
+
 	if (pnum == myplr) {
-		Cl2Draw(out, x, y, pCelBuff, 1, width);
+		Cl2Draw(out, x, y, cel, 1);
 		return;
 	}
 
 	if (lighting) {
-		Cl2DrawLightTbl(out, x, y, pCelBuff, 1, width, 1);
+		Cl2DrawLightTbl(out, x, y, cel, 1, 1);
 		return;
 	}
 
-	Cl2DrawLight(out, x, y, pCelBuff, 1, width);
+	Cl2DrawLight(out, x, y, cel, 1);
 }
 
 /**
@@ -415,22 +414,22 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 
 	PlayerStruct *pPlayer = &plr[pnum];
 
-	BYTE *pCelBuff = pPlayer->_pAnimData;
-	int nCel = GetFrameToUseForPlayerRendering(pPlayer);
-	int nWidth = pPlayer->_pAnimWidth;
+	BYTE *pCelBuff = pPlayer->AnimInfo.pData;
+	int nCel = pPlayer->AnimInfo.GetFrameToUseForRendering();
 
 	if (pCelBuff == nullptr) {
-		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
+		Log("Drawing player {} \"{}\": NULL Cel Buffer", pnum, plr[pnum]._pName);
 		return;
 	}
+	CelSprite cel { pCelBuff, pPlayer->_pAnimWidth };
 
-	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(cel.Data()));
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (plr[pnum]._pmode <= PM_QUIT)
 			szMode = szPlrModeAssert[plr[pnum]._pmode];
-		SDL_Log(
-		    "Drawing player %d \"%s\" %s: facing %d, frame %d of %d",
+		Log(
+		    "Drawing player {} \"{}\" {}: facing {}, frame {} of {}",
 		    pnum,
 		    plr[pnum]._pName,
 		    szMode,
@@ -441,16 +440,16 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 	}
 
 	if (pnum == pcursplr)
-		Cl2DrawOutline(out, 165, px, py, pCelBuff, nCel, nWidth);
+		Cl2DrawOutline(out, 165, px, py, cel, nCel);
 
 	if (pnum == myplr) {
-		Cl2Draw(out, px, py, pCelBuff, nCel, nWidth);
+		Cl2Draw(out, px, py, cel, nCel);
 		DrawManaShield(out, pnum, px, py, true);
 		return;
 	}
 
 	if (!(dFlags[x][y] & BFLAG_LIT) || (plr[myplr]._pInfraFlag && light_table_index > 8)) {
-		Cl2DrawLightTbl(out, px, py, pCelBuff, nCel, nWidth, 1);
+		Cl2DrawLightTbl(out, px, py, cel, nCel, 1);
 		DrawManaShield(out, pnum, px, py, true);
 		return;
 	}
@@ -461,7 +460,7 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 	else
 		light_table_index -= 5;
 
-	Cl2DrawLight(out, px, py, pCelBuff, nCel, nWidth);
+	Cl2DrawLight(out, px, py, cel, nCel);
 	DrawManaShield(out, pnum, px, py, false);
 
 	light_table_index = l;
@@ -484,9 +483,9 @@ void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		p = &plr[i];
-		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.current.x == x && p->position.current.y == y) {
+		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.tile.x == x && p->position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
-			px = sx + p->position.offset.x - p->_pAnimWidth2;
+			px = sx + p->position.offset.x - CalculateWidth2(p->_pAnimWidth);
 			py = sy + p->position.offset.y;
 			DrawPlayer(out, i, x, y, px, py);
 		}
@@ -513,15 +512,15 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 		bv = dObject[x][y] - 1;
 		if (object[bv]._oPreFlag != pre)
 			return;
-		sx = ox - object[bv]._oAnimWidth2;
+		sx = ox - CalculateWidth2(object[bv]._oAnimWidth);
 		sy = oy;
 	} else {
 		bv = -(dObject[x][y] + 1);
 		if (object[bv]._oPreFlag != pre)
 			return;
-		int xx = object[bv]._ox - x;
-		int yy = object[bv]._oy - y;
-		sx = (xx * TILE_WIDTH / 2) + ox - object[bv]._oAnimWidth2 - (yy * TILE_WIDTH / 2);
+		int xx = object[bv].position.x - x;
+		int yy = object[bv].position.y - y;
+		sx = (xx * TILE_WIDTH / 2) + ox - CalculateWidth2(object[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
 		sy = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
@@ -529,23 +528,24 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 
 	BYTE *pCelBuff = object[bv]._oAnimData;
 	if (pCelBuff == nullptr) {
-		SDL_Log("Draw Object type %d: NULL Cel Buffer", object[bv]._otype);
+		Log("Draw Object type {}: NULL Cel Buffer", object[bv]._otype);
 		return;
 	}
 
 	int nCel = object[bv]._oAnimFrame;
 	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		SDL_Log("Draw Object: frame %d of %d, object type==%d", nCel, frames, object[bv]._otype);
+		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, object[bv]._otype);
 		return;
 	}
 
+	CelSprite cel { object[bv]._oAnimData, object[bv]._oAnimWidth };
 	if (bv == pcursobj)
-		CelBlitOutlineTo(out, 194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		CelBlitOutlineTo(out, 194, sx, sy, cel, object[bv]._oAnimFrame);
 	if (object[bv]._oLight) {
-		CelClippedDrawLightTo(out, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		CelClippedDrawLightTo(out, sx, sy, cel, object[bv]._oAnimFrame);
 	} else {
-		CelClippedDrawTo(out, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		CelClippedDrawTo(out, sx, sy, cel, object[bv]._oAnimFrame);
 	}
 }
 
@@ -626,24 +626,24 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 	if (pItem->_iPostDraw == pre)
 		return;
 
-	BYTE *pCelBuff = pItem->_iAnimData;
-	if (pCelBuff == nullptr) {
-		SDL_Log("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
+	auto *cel = pItem->_iAnimData;
+	if (cel == nullptr) {
+		Log("Draw Item \"{}\" 1: NULL CelSprite", pItem->_iIName);
 		return;
 	}
 
 	int nCel = pItem->_iAnimFrame;
-	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	int frames = SDL_SwapLE32(*(DWORD *)cel->Data());
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		SDL_Log("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, frames, pItem->_itype);
+		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", pItem->_iIName, nCel, frames, pItem->_itype);
 		return;
 	}
 
-	int px = sx - pItem->_iAnimWidth2;
+	int px = sx - CalculateWidth2(cel->Width());
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
-		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
+		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), px, sy, *cel, nCel);
 	}
-	CelClippedDrawLightTo(out, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
+	CelClippedDrawLightTo(out, px, sy, *cel, nCel);
 }
 
 /**
@@ -664,12 +664,12 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		px = sx - towners[mi]._tAnimWidth2;
+		px = sx - CalculateWidth2(towners[mi]._tAnimWidth);
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
+			CelBlitOutlineTo(out, 166, px, sy, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
 		}
 		assert(towners[mi]._tAnimData);
-		CelClippedDrawTo(out, px, sy, towners[mi]._tAnimData, towners[mi]._tAnimFrame, towners[mi]._tAnimWidth);
+		CelClippedDrawTo(out, px, sy, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
 		return;
 	}
 
@@ -677,7 +677,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
-		SDL_Log("Draw Monster: tried to draw illegal monster %d", mi);
+		Log("Draw Monster: tried to draw illegal monster {}", mi);
 		return;
 	}
 
@@ -687,14 +687,14 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 	}
 
 	if (pMonster->MType == nullptr) {
-		SDL_Log("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
+		Log("Draw Monster \"{}\": uninitialized monster", pMonster->mName);
 		return;
 	}
 
-	px = sx + pMonster->_mxoff - pMonster->MType->width2;
-	py = sy + pMonster->_myoff;
+	px = sx + pMonster->position.offset.x - CalculateWidth2(pMonster->MType->width);
+	py = sy + pMonster->position.offset.y;
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
+		Cl2DrawOutline(out, 233, px, py, CelSprite(pMonster->_mAnimData, pMonster->MType->width), pMonster->_mAnimFrame);
 	}
 	DrawMonster(out, x, y, px, py, mi);
 }
@@ -713,12 +713,12 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	p = p > 0 ? p - 1 : -(p + 1);
 
 	if (p < 0 || p >= MAX_PLRS) {
-		SDL_Log("draw player: tried to draw illegal player %d", p);
+		Log("draw player: tried to draw illegal player {}", p);
 		return;
 	}
 
 	PlayerStruct *pPlayer = &plr[p];
-	int px = sx + pPlayer->position.offset.x - pPlayer->_pAnimWidth2;
+	int px = sx + pPlayer->position.offset.x - CalculateWidth2(pPlayer->_pAnimWidth);
 	int py = sy + pPlayer->position.offset.y;
 
 	DrawPlayer(out, p, x, y, px, py);
@@ -755,7 +755,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 
 #ifdef _DEBUG
 	if (visiondebug && bFlag & BFLAG_LIT) {
-		CelClippedDrawTo(out, dx, dy, pSquareCel, 1, 64);
+		CelClippedDrawTo(out, dx, dy, *pSquareCel, 1);
 	}
 #endif
 
@@ -767,7 +767,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<direction>((bDead >> 5) & 7);
-			int px = dx - pDeadGuy->_deadWidth2;
+			int px = dx - CalculateWidth2(pDeadGuy->_deadWidth);
 			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);
 			if (pCelBuff == nullptr)
@@ -775,13 +775,13 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 			int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 			int nCel = pDeadGuy->_deadFrame;
 			if (nCel < 1 || frames > 50 || nCel > frames) {
-				SDL_Log("Unclipped dead: frame %d of %d, deadnum==%d", nCel, frames, (bDead & 0x1F) - 1);
+				Log("Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}
 			if (pDeadGuy->_deadtrans != 0) {
-				Cl2DrawLightTbl(out, px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, pDeadGuy->_deadtrans);
+				Cl2DrawLightTbl(out, px, dy, CelSprite(pCelBuff, pDeadGuy->_deadWidth), nCel, pDeadGuy->_deadtrans);
 			} else {
-				Cl2DrawLight(out, px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth);
+				Cl2DrawLight(out, px, dy, CelSprite(pCelBuff, pDeadGuy->_deadWidth), nCel);
 			}
 		} while (false);
 	}
@@ -816,7 +816,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 				cel_transparency_active = false; // Turn transparency off here for debugging
 			}
 #endif
-			CelClippedBlitLightTransTo(out, dx, dy, pSpecialCels, bArch, 64);
+			CelClippedBlitLightTransTo(out, dx, dy, *pSpecialCels, bArch);
 #ifdef _DEBUG
 			if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
 				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
@@ -830,7 +830,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT) {
 			char bArch = dSpecial[sx - 1][sy - 1];
 			if (bArch != 0) {
-				CelDrawTo(out, dx, dy - TILE_HEIGHT, pSpecialCels, bArch, 64);
+				CelDrawTo(out, dx, dy - TILE_HEIGHT, *pSpecialCels, bArch);
 			}
 		}
 	}
@@ -943,7 +943,7 @@ static void scrollrt_draw(const CelOutputBuffer &out, int x, int y, int sx, int 
 /**
  * @brief Scale up the top left part of the buffer 2x.
  */
-static void Zoom(CelOutputBuffer out)
+static void Zoom(const CelOutputBuffer &out)
 {
 	int viewport_width = out.w();
 	int viewport_offset_x = 0;
@@ -1144,13 +1144,13 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 	int sx, sy, columns, rows;
 
 	// Limit rendering to the view area
-	CelOutputBuffer out = zoomflag
+	const CelOutputBuffer &out = zoomflag
 	    ? full_out.subregionY(0, gnViewportHeight)
 	    : full_out.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
-	sx = ScrollInfo._sxoff + tileOffsetX;
-	sy = ScrollInfo._syoff + tileOffsetY;
+	sx = ScrollInfo.offset.x + tileOffsetX;
+	sy = ScrollInfo.offset.y + tileOffsetY;
 
 	columns = tileColums;
 	rows = tileRows;
@@ -1423,7 +1423,7 @@ static void DrawFPS(const CelOutputBuffer &out)
 	DWORD tc, frames;
 	char String[12];
 
-	if (frameflag && gbActive && pPanelText != nullptr) {
+	if (frameflag && gbActive && pPanelText) {
 		frameend++;
 		tc = SDL_GetTicks();
 		frames = tc - framestart;
@@ -1568,7 +1568,7 @@ void DrawAndBlit()
 	force_redraw = 0;
 
 	lock_buf(0);
-	CelOutputBuffer out = GlobalBackBuffer();
+	const CelOutputBuffer &out = GlobalBackBuffer();
 
 	nthread_UpdateProgressToNextGameTick();
 

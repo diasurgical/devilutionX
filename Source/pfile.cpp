@@ -16,6 +16,7 @@
 #include "storm/storm.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -28,7 +29,7 @@ namespace {
 
 std::string GetSavePath(DWORD save_num)
 {
-	std::string path = GetPrefPath();
+	std::string path = paths::PrefPath();
 	const char *ext = ".sv";
 	if (gbIsHellfire)
 		ext = ".hsv";
@@ -94,7 +95,7 @@ void pfile_rename_temp_to_perm()
 
 	dwIndex = 0;
 	while (GetTempSaveNames(dwIndex, szTemp)) {
-		bool result = GetPermSaveNames(dwIndex, szPerm); // DO NOT PUT DIRECTLY INTO ASSERT!
+		[[maybe_unused]] bool result = GetPermSaveNames(dwIndex, szPerm); // DO NOT PUT DIRECTLY INTO ASSERT!
 		assert(result);
 		dwIndex++;
 		if (mpqapi_has_file(szTemp)) {
@@ -131,11 +132,10 @@ static DWORD pfile_get_save_num_from_name(const char *name)
 	return i;
 }
 
-static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, DWORD *pdwLen)
+static std::unique_ptr<uint8_t[]> pfile_read_archive(HANDLE archive, const char *pszName, uint32_t *pdwLen)
 {
 	DWORD nread;
 	HANDLE file;
-	BYTE *buf;
 
 	if (!SFileOpenFileEx(archive, pszName, 0, &file))
 		return nullptr;
@@ -144,12 +144,12 @@ static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, DWORD *pdwL
 	if (*pdwLen == 0)
 		return nullptr;
 
-	buf = DiabloAllocPtr(*pdwLen);
-	if (!SFileReadFile(file, buf, *pdwLen, &nread, nullptr))
+	std::unique_ptr<uint8_t[]> buf { new uint8_t[*pdwLen] };
+	if (!SFileReadFile(file, buf.get(), *pdwLen, &nread, nullptr))
 		return nullptr;
 	SFileCloseFile(file);
 
-	*pdwLen = codec_decode(buf, *pdwLen, pfile_get_password());
+	*pdwLen = codec_decode(buf.get(), *pdwLen, pfile_get_password());
 	if (*pdwLen == 0)
 		return nullptr;
 
@@ -159,33 +159,28 @@ static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, DWORD *pdwL
 static bool pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 {
 	DWORD read;
-	BYTE *buf;
 
-	buf = pfile_read_archive(archive, "hero", &read);
+	auto buf = pfile_read_archive(archive, "hero", &read);
 	if (buf == nullptr)
 		return false;
 
 	bool ret = false;
 	if (read == sizeof(*pPack)) {
-		memcpy(pPack, buf, sizeof(*pPack));
+		memcpy(pPack, buf.get(), sizeof(*pPack));
 		ret = true;
 	}
 
-	mem_free_dbg(buf);
 	return ret;
 }
 
-static void pfile_encode_hero(const PkPlayerStruct *pPack)
+static void pfile_encode_hero(const PkPlayerStruct *pack)
 {
-	BYTE *packed;
-	DWORD packed_len;
+	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
+	std::unique_ptr<uint8_t[]> packed { new uint8_t[packedLen] };
 
-	packed_len = codec_get_encoded_len(sizeof(*pPack));
-	packed = (BYTE *)DiabloAllocPtr(packed_len);
-	memcpy(packed, pPack, sizeof(*pPack));
-	codec_encode(packed, sizeof(*pPack), packed_len, pfile_get_password());
-	mpqapi_write_file("hero", packed, packed_len);
-	mem_free_dbg(packed);
+	memcpy(packed.get(), pack, sizeof(*pack));
+	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
+	mpqapi_write_file("hero", packed.get(), packedLen);
 }
 
 static bool pfile_open_archive(DWORD save_num)
@@ -219,7 +214,7 @@ PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clear_tables)
     , clear_tables_(clear_tables)
 {
 	if (!pfile_open_archive(save_num_))
-		app_fatal("Failed to open player archive for writing.");
+		app_fatal("%s", _("Failed to open player archive for writing."));
 }
 
 PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
@@ -296,13 +291,12 @@ bool pfile_archive_contains_game(HANDLE hsArchive)
 	if (gbIsMultiplayer)
 		return false;
 
-	DWORD dwLen;
-	BYTE *gameData = pfile_read_archive(hsArchive, "game", &dwLen);
+	uint32_t dwLen;
+	auto gameData = pfile_read_archive(hsArchive, "game", &dwLen);
 	if (gameData == nullptr)
 		return false;
 
-	Uint32 hdr = LOAD_LE32(gameData);
-	mem_free_dbg(gameData);
+	uint32_t hdr = LoadLE32(gameData.get());
 
 	return IsHeaderValid(hdr);
 }
@@ -394,9 +388,9 @@ void pfile_read_player_from_save(char name[16], int playerId)
 	save_num = pfile_get_save_num_from_name(name);
 	archive = pfile_open_save_archive(save_num);
 	if (archive == nullptr)
-		app_fatal("Unable to open archive");
+		app_fatal("%s", _("Unable to open archive"));
 	if (!pfile_read_hero(archive, &pkplr))
-		app_fatal("Unable to load character");
+		app_fatal("%s", _("Unable to load character"));
 
 	gbValidSaveFile = pfile_archive_contains_game(archive);
 	if (gbValidSaveFile)
@@ -419,7 +413,7 @@ bool LevelFileExists()
 
 	DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	if (!pfile_open_archive(save_num))
-		app_fatal("Unable to read to save file archive");
+		app_fatal("%s", _("Unable to read to save file archive"));
 
 	bool has_file = mpqapi_has_file(szName);
 	mpqapi_flush_and_close(true);
@@ -442,7 +436,7 @@ void GetPermLevelNames(char *szPerm)
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	GetTempLevelNames(szPerm);
 	if (!pfile_open_archive(save_num))
-		app_fatal("Unable to read to save file archive");
+		app_fatal("%s", _("Unable to read to save file archive"));
 
 	has_file = mpqapi_has_file(szPerm);
 	mpqapi_flush_and_close(true);
@@ -461,7 +455,7 @@ void pfile_remove_temp_files()
 
 	DWORD save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	if (!pfile_open_archive(save_num))
-		app_fatal("Unable to write to save file archive");
+		app_fatal("%s", _("Unable to write to save file archive"));
 	mpqapi_remove_hash_entries(GetTempSaveNames);
 	mpqapi_flush_and_close(true);
 }
@@ -473,23 +467,22 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	codec_encode(pbData, dwLen, qwLen, pfile_get_password());
 	if (!pfile_open_archive(save_num))
-		app_fatal("Unable to write to save file archive");
+		app_fatal("%s", _("Unable to write to save file archive"));
 	mpqapi_write_file(pszName, pbData, qwLen);
 	mpqapi_flush_and_close(true);
 }
 
-BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
+std::unique_ptr<uint8_t[]> pfile_read(const char *pszName, DWORD *pdwLen)
 {
 	DWORD save_num;
 	HANDLE archive;
-	BYTE *buf;
 
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	archive = pfile_open_save_archive(save_num);
 	if (archive == nullptr)
 		return nullptr;
 
-	buf = pfile_read_archive(archive, pszName, pdwLen);
+	auto buf = pfile_read_archive(archive, pszName, pdwLen);
 	pfile_SFileCloseArchive(&archive);
 	if (buf == nullptr)
 		return nullptr;

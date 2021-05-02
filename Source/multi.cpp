@@ -18,13 +18,14 @@
 #include "storm/storm.h"
 #include "sync.h"
 #include "tmsg.h"
+#include "utils/language.h"
 
 namespace devilution {
 
 bool gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
-WORD sgwPackPlrOffsetTbl[MAX_PLRS];
+uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 PkPlayerStruct netplr[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
@@ -48,7 +49,7 @@ bool sgbTimeout;
 char szPlayerName[128];
 BYTE gbDeltaSender;
 bool sgbNetInited;
-int player_state[MAX_PLRS];
+uint32_t player_state[MAX_PLRS];
 
 /**
  * Contains the set of supported event types supported by the multiplayer
@@ -118,9 +119,9 @@ static void NetRecvPlrData(TPkt *pkt)
 {
 	const Point target = plr[myplr].GetTargetPosition();
 
-	pkt->hdr.wCheck = LOAD_BE32("\0\0ip");
-	pkt->hdr.px = plr[myplr].position.current.x;
-	pkt->hdr.py = plr[myplr].position.current.y;
+	pkt->hdr.wCheck = LoadBE32("\0\0ip");
+	pkt->hdr.px = plr[myplr].position.tile.x;
+	pkt->hdr.py = plr[myplr].position.tile.y;
 	pkt->hdr.targx = target.x;
 	pkt->hdr.targy = target.y;
 	pkt->hdr.php = plr[myplr]._pHitPoints;
@@ -265,14 +266,14 @@ static void multi_player_left_msg(int pnum, bool left)
 		delta_close_portal(pnum);
 		RemovePlrMissiles(pnum);
 		if (left) {
-			pszFmt = "Player '%s' just left the game";
+			pszFmt = _("Player '%s' just left the game");
 			switch (sgdwPlayerLeftReasonTbl[pnum]) {
 			case LEAVE_ENDING:
-				pszFmt = "Player '%s' killed Diablo and left the game!";
+				pszFmt = _("Player '%s' killed Diablo and left the game!");
 				gbSomebodyWonGameKludge = true;
 				break;
 			case LEAVE_DROP:
-				pszFmt = "Player '%s' dropped due to timeout";
+				pszFmt = _("Player '%s' dropped due to timeout");
 				break;
 			}
 			EventPlrMsg(pszFmt, plr[pnum]._pName);
@@ -327,7 +328,7 @@ static void multi_check_drop_player()
 
 static void multi_begin_timeout()
 {
-	int i, nTicks, nState, nLowestActive, nLowestPlayer;
+	int i, nTicks, nLowestActive, nLowestPlayer;
 	BYTE bGroupPlayers, bGroupCount;
 
 	if (!sgbTimeout) {
@@ -353,7 +354,7 @@ static void multi_begin_timeout()
 	bGroupPlayers = 0;
 	bGroupCount = 0;
 	for (i = 0; i < MAX_PLRS; i++) {
-		nState = player_state[i];
+		uint32_t nState = player_state[i];
 		if ((nState & PS_CONNECTED) != 0) {
 			if (nLowestPlayer == -1) {
 				nLowestPlayer = i;
@@ -471,11 +472,11 @@ void multi_process_network_packets()
 			continue;
 		if (dwID < 0 || dwID >= MAX_PLRS)
 			continue;
-		if (pkt->wCheck != LOAD_BE32("\0\0ip"))
+		if (pkt->wCheck != LoadBE32("\0\0ip"))
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
-		plr[dwID].position.owner = { pkt->px, pkt->py };
+		plr[dwID].position.last = { pkt->px, pkt->py };
 		if (dwID != myplr) {
 			assert(gbBufferMsgs != 2);
 			plr[dwID]._pHitPoints = pkt->php;
@@ -486,24 +487,24 @@ void multi_process_network_packets()
 			plr[dwID]._pBaseDex = pkt->bdex;
 			if (!cond && plr[dwID].plractive && plr[dwID]._pHitPoints != 0) {
 				if (currlevel == plr[dwID].plrlevel && !plr[dwID]._pLvlChanging) {
-					dx = abs(plr[dwID].position.current.x - pkt->px);
-					dy = abs(plr[dwID].position.current.y - pkt->py);
+					dx = abs(plr[dwID].position.tile.x - pkt->px);
+					dy = abs(plr[dwID].position.tile.y - pkt->py);
 					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
 						FixPlrWalkTags(dwID);
-						plr[dwID].position.old = plr[dwID].position.current;
+						plr[dwID].position.old = plr[dwID].position.tile;
 						FixPlrWalkTags(dwID);
-						plr[dwID].position.current = { pkt->px, pkt->py };
+						plr[dwID].position.tile = { pkt->px, pkt->py };
 						plr[dwID].position.future = { pkt->px, pkt->py };
-						dPlayer[plr[dwID].position.current.x][plr[dwID].position.current.y] = dwID + 1;
+						dPlayer[plr[dwID].position.tile.x][plr[dwID].position.tile.y] = dwID + 1;
 					}
-					dx = abs(plr[dwID].position.future.x - plr[dwID].position.current.x);
-					dy = abs(plr[dwID].position.future.y - plr[dwID].position.current.y);
+					dx = abs(plr[dwID].position.future.x - plr[dwID].position.tile.x);
+					dy = abs(plr[dwID].position.future.y - plr[dwID].position.tile.y);
 					if (dx > 1 || dy > 1) {
-						plr[dwID].position.future = plr[dwID].position.current;
+						plr[dwID].position.future = plr[dwID].position.tile;
 					}
 					MakePlrPath(dwID, pkt->targx, pkt->targy, true);
 				} else {
-					plr[dwID].position.current = { pkt->px, pkt->py };
+					plr[dwID].position.tile = { pkt->px, pkt->py };
 					plr[dwID].position.future = { pkt->px, pkt->py };
 				}
 			}
@@ -527,7 +528,7 @@ void multi_send_zero_packet(int pnum, _cmd_id bCmd, BYTE *pbSrc, DWORD dwLen)
 	dwOffset = 0;
 
 	while (dwLen != 0) {
-		pkt.hdr.wCheck = LOAD_BE32("\0\0ip");
+		pkt.hdr.wCheck = LoadBE32("\0\0ip");
 		pkt.hdr.px = 0;
 		pkt.hdr.py = 0;
 		pkt.hdr.targx = 0;
@@ -626,7 +627,7 @@ static void SetupLocalCoords()
 #endif
 	x += plrxoff[myplr];
 	y += plryoff[myplr];
-	plr[myplr].position.current = { x, y };
+	plr[myplr].position.tile = { x, y };
 	plr[myplr].position.future = { x, y };
 	plr[myplr].plrlevel = currlevel;
 	plr[myplr]._pLvlChanging = true;
@@ -862,9 +863,9 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	gbActivePlayers++;
 
 	if (sgbPlayerTurnBitTbl[pnum]) {
-		szEvent = "Player '%s' (level %d) just joined the game";
+		szEvent = _("Player '%s' (level %d) just joined the game");
 	} else {
-		szEvent = "Player '%s' (level %d) is already in the game";
+		szEvent = _("Player '%s' (level %d) is already in the game");
 	}
 	EventPlrMsg(szEvent, plr[pnum]._pName, plr[pnum]._pLevel);
 
@@ -879,9 +880,9 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 			LoadPlrGFX(pnum, PFILE_DEATH);
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
-			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
-			plr[pnum]._pVar8 = 2 * plr[pnum]._pAnimLen;
-			dFlags[plr[pnum].position.current.x][plr[pnum].position.current.y] |= BFLAG_DEAD_PLAYER;
+			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
+			plr[pnum].actionFrame = 2 * plr[pnum].AnimInfo.NumberOfFrames;
+			dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 		}
 	}
 }

@@ -2,11 +2,11 @@
 
 #include <SDL.h>
 #include <unistd.h>
-#include <errno.h>
-#include <stdio.h>
+#include <cerrno>
+#include <cstdio>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <math.h>
+#include <cmath>
 #include <cstddef>
 
 #include "utils/console.h"

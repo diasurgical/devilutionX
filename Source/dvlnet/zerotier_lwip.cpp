@@ -13,16 +13,19 @@
 #include "utils/sdl2_backports.h"
 #endif
 
+#include "utils/log.hpp"
+
 #include "dvlnet/zerotier_native.h"
 
-namespace devilution::net {
+namespace devilution {
+namespace net {
 
 void print_ip6_addr(void *x)
 {
 	char ipstr[INET6_ADDRSTRLEN];
 	auto *in = static_cast<sockaddr_in6 *>(x);
 	lwip_inet_ntop(AF_INET6, &(in->sin6_addr), ipstr, INET6_ADDRSTRLEN);
-	SDL_Log("ZeroTier: ZTS_EVENT_ADDR_NEW_IP6, addr=%s\n", ipstr);
+	Log("ZeroTier: ZTS_EVENT_ADDR_NEW_IP6, addr={}", ipstr);
 }
 
 void zt_ip6setup()
@@ -35,4 +38,5 @@ void zt_ip6setup()
 	UNLOCK_TCPIP_CORE();
 }
 
-} // namespace devilution::net
+} // namespace net
+} // namespace devilution

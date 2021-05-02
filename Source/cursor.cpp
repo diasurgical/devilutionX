@@ -13,8 +13,86 @@
 #include "towners.h"
 #include "track.h"
 #include "trigs.h"
+#include "utils/language.h"
 
 namespace devilution {
+namespace {
+/** Cursor images CEL */
+std::optional<CelSprite> pCursCels;
+std::optional<CelSprite> pCursCels2;
+constexpr int InvItems1Size = 180;
+
+/** Maps from objcurs.cel frame number to frame width. */
+const int InvItemWidth1[] = {
+	// clang-format off
+	// Cursors
+	0, 33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
+	// Items
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+};
+const int InvItemWidth2[] = {
+	0,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	2 * 28, 2 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
+	// clang-format on
+};
+
+/** Maps from objcurs.cel frame number to frame height. */
+const int InvItemHeight1[] = {
+	// clang-format off
+	// Cursors
+	0, 29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
+	// Items
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+};
+const int InvItemHeight2[] = {
+	0,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28
+	// clang-format on
+};
+
+} // namespace
 
 /** Pixel width of the current cursor image */
 int cursW;
@@ -26,9 +104,6 @@ int pcursmonst = -1;
 int icursW28;
 /** Height of current cursor in inventory cells */
 int icursH28;
-/** Cursor images CEL */
-BYTE *pCursCels;
-BYTE *pCursCels2;
 
 /** inv_item value */
 int8_t pcursinvitem;
@@ -51,91 +126,42 @@ int pcurstemp;
 /** Index of current cursor image */
 int pcurs;
 
-/* rdata */
-/** Maps from objcurs.cel frame number to frame width. */
-const int InvItemWidth[] = {
-	// clang-format off
-	// Cursors
-	0, 33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
-	// Items
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	2 * 28, 2 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
-	// clang-format on
-};
-
-/** Maps from objcurs.cel frame number to frame height. */
-const int InvItemHeight[] = {
-	// clang-format off
-	// Cursors
-	0, 29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
-	// Items
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
-	2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28
-	// clang-format on
-};
-
 void InitCursor()
 {
 	assert(!pCursCels);
-	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", nullptr);
+	pCursCels = LoadCel("Data\\Inv\\Objcurs.CEL", InvItemWidth1);
 	if (gbIsHellfire)
-		pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", nullptr);
+		pCursCels2 = LoadCel("Data\\Inv\\Objcurs2.CEL", InvItemWidth2);
 	ClearCursor();
 }
 
 void FreeCursor()
 {
-	MemFreeDbg(pCursCels);
-	MemFreeDbg(pCursCels2);
+	pCursCels = std::nullopt;
+	pCursCels2 = std::nullopt;
 	ClearCursor();
+}
+
+const CelSprite &GetInvItemSprite(int i)
+{
+	return i < InvItems1Size ? *pCursCels : *pCursCels2;
+}
+
+int GetInvItemFrame(int i)
+{
+	return i < InvItems1Size ? i : i - (InvItems1Size - 1);
+}
+
+std::pair<int, int> GetInvItemSize(int i)
+{
+	if (i >= InvItems1Size)
+		return { InvItemWidth2[i - (InvItems1Size - 1)], InvItemHeight2[i - (InvItems1Size - 1)] };
+	return { InvItemWidth1[i], InvItemHeight1[i] };
 }
 
 void SetICursor(int i)
 {
-	icursW = InvItemWidth[i];
-	icursH = InvItemHeight[i];
+	std::tie(icursW, icursH) = GetInvItemSize(i);
 	icursW28 = icursW / 28;
 	icursH28 = icursH / 28;
 }
@@ -143,8 +169,7 @@ void SetICursor(int i)
 void NewCursor(int i)
 {
 	pcurs = i;
-	cursW = InvItemWidth[i];
-	cursH = InvItemHeight[i];
+	std::tie(cursW, cursH) = GetInvItemSize(i);
 	SetICursor(i);
 }
 
@@ -168,20 +193,20 @@ void CheckTown()
 	for (i = 0; i < nummissiles; i++) {
 		mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_TOWN) {
-			if ((cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy)
-			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2)
-			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2)
-			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy)) {
+			if ((cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y)
+			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 2)
+			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 2)
+			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, "Town Portal");
-				sprintf(tempstr, "from %s", plr[missile[mx]._misource]._pName);
+				strcpy(infostr, _("Town Portal"));
+				sprintf(tempstr, _("from %s"), plr[missile[mx]._misource]._pName);
 				AddPanelString(tempstr, true);
-				cursmx = missile[mx]._mix;
-				cursmy = missile[mx]._miy;
+				cursmx = missile[mx].position.tile.x;
+				cursmy = missile[mx].position.tile.y;
 			}
 		}
 	}
@@ -194,23 +219,23 @@ void CheckRportal()
 	for (i = 0; i < nummissiles; i++) {
 		mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_RPORTAL) {
-			if ((cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy)
-			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 1)
-			    || (cursmx == missile[mx]._mix - 2 && cursmy == missile[mx]._miy - 2)
-			    || (cursmx == missile[mx]._mix - 1 && cursmy == missile[mx]._miy - 2)
-			    || (cursmx == missile[mx]._mix && cursmy == missile[mx]._miy)) {
+			if ((cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y)
+			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 1)
+			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 2)
+			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 2)
+			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, "Portal to");
+				strcpy(infostr, _("Portal to"));
 				if (!setlevel)
-					strcpy(tempstr, "The Unholy Altar");
+					strcpy(tempstr, _("The Unholy Altar"));
 				else
-					strcpy(tempstr, "level 15");
+					strcpy(tempstr, _("level 15"));
 				AddPanelString(tempstr, true);
-				cursmx = missile[mx]._mix;
-				cursmy = missile[mx]._miy;
+				cursmx = missile[mx].position.tile.x;
+				cursmy = missile[mx].position.tile.y;
 			}
 		}
 	}
@@ -251,14 +276,14 @@ void CheckCursMove()
 
 	// Adjust by player offset and tile grid alignment
 	CalcTileOffset(&xo, &yo);
-	sx -= ScrollInfo._sxoff - xo;
-	sy -= ScrollInfo._syoff - yo;
+	sx -= ScrollInfo.offset.x - xo;
+	sy -= ScrollInfo.offset.y - yo;
 
 	// Predict the next frame when walking to avoid input jitter
-	fx = plr[myplr]._pVar6 / 256;
-	fy = plr[myplr]._pVar7 / 256;
-	fx -= (plr[myplr]._pVar6 + plr[myplr].position.velocity.x) / 256;
-	fy -= (plr[myplr]._pVar7 + plr[myplr].position.velocity.y) / 256;
+	fx = plr[myplr].position.offset2.x / 256;
+	fy = plr[myplr].position.offset2.y / 256;
+	fx -= (plr[myplr].position.offset2.x + plr[myplr].position.velocity.x) / 256;
+	fy -= (plr[myplr].position.offset2.y + plr[myplr].position.velocity.y) / 256;
 	if (ScrollInfo._sdir != SDIR_NONE) {
 		sx -= fx;
 		sy -= fy;
@@ -345,7 +370,7 @@ void CheckCursMove()
 		CheckPanelInfo();
 		return;
 	}
-	if (doomflag) {
+	if (DoomFlag) {
 		return;
 	}
 	if (invflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
@@ -546,7 +571,7 @@ void CheckCursMove()
 		}
 		if ((dFlags[mx][my] & BFLAG_DEAD_PLAYER) != 0) {
 			for (i = 0; i < MAX_PLRS; i++) {
-				if (plr[i].position.current.x == mx && plr[i].position.current.y == my && i != myplr) {
+				if (plr[i].position.tile.x == mx && plr[i].position.tile.y == my && i != myplr) {
 					cursmx = mx;
 					cursmy = my;
 					pcursplr = i;
@@ -558,7 +583,7 @@ void CheckCursMove()
 				for (yy = -1; yy < 2; yy++) {
 					if (mx + xx < MAXDUNX && my + yy < MAXDUNY && dFlags[mx + xx][my + yy] & BFLAG_DEAD_PLAYER) {
 						for (i = 0; i < MAX_PLRS; i++) {
-							if (plr[i].position.current.x == mx + xx && plr[i].position.current.y == my + yy && i != myplr) {
+							if (plr[i].position.tile.x == mx + xx && plr[i].position.tile.y == my + yy && i != myplr) {
 								cursmx = mx + xx;
 								cursmy = my + yy;
 								pcursplr = i;

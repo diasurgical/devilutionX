@@ -6,6 +6,7 @@
 #include "drlg_l2.h"
 
 #include <algorithm>
+#include <list>
 
 #include "diablo.h"
 #include "drlg_l1.h"
@@ -26,7 +27,7 @@ int nSx2;
 int nSy2;
 int nRoomCnt;
 ROOMNODE RoomList[81];
-HALLNODE *pHallList;
+std::list<HALLNODE> HallList;
 
 int Area_Min = 2;
 int Room_Max = 10;
@@ -1842,22 +1843,22 @@ static void DRLG_LoadL2SP()
 	setloadflag = false;
 
 	if (QuestStatus(Q_BLIND)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
 		pSetPiece[26] = 154;  // Close outer wall
 		pSetPiece[200] = 154; // Close outer wall
 		setloadflag = true;
 	} else if (QuestStatus(Q_BLOOD)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN");
 		setloadflag = true;
 	} else if (QuestStatus(Q_SCHAMB)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", nullptr);
+		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN");
 		setloadflag = true;
 	}
 }
 
 static void DRLG_FreeL2SP()
 {
-	MemFreeDbg(pSetPiece);
+	pSetPiece = nullptr;
 }
 
 static void DRLG_L2SetRoom(int rx1, int ry1)
@@ -1957,34 +1958,6 @@ static void PlaceHallExt(int nX, int nY)
 {
 	if (predungeon[nX][nY] == 32) {
 		predungeon[nX][nY] = 44;
-	}
-}
-
-static void AddHall(int nX1, int nY1, int nX2, int nY2, int nHd)
-{
-	HALLNODE *p1, *p2;
-
-	if (pHallList == nullptr) {
-		pHallList = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
-		pHallList->nHallx1 = nX1;
-		pHallList->nHally1 = nY1;
-		pHallList->nHallx2 = nX2;
-		pHallList->nHally2 = nY2;
-		pHallList->nHalldir = nHd;
-		pHallList->pNext = nullptr;
-	} else {
-		p1 = (HALLNODE *)DiabloAllocPtr(sizeof(*pHallList));
-		p1->nHallx1 = nX1;
-		p1->nHally1 = nY1;
-		p1->nHallx2 = nX2;
-		p1->nHally2 = nY2;
-		p1->nHalldir = nHd;
-		p1->pNext = nullptr;
-		p2 = pHallList;
-		while (p2->pNext != nullptr) {
-			p2 = p2->pNext;
-		}
-		p2->pNext = p1;
 	}
 }
 
@@ -2112,7 +2085,7 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
 			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
-		AddHall(nHx1, nHy1, nHx2, nHy2, nHDir);
+		HallList.push_back({nHx1, nHy1, nHx2, nHy2, nHDir});
 	}
 
 	if (nRh > nRw) {
@@ -2128,24 +2101,16 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 	}
 }
 
-static void GetHall(int *nX1, int *nY1, int *nX2, int *nY2, int *nHd)
-{
-	HALLNODE *p1;
-
-	p1 = pHallList->pNext;
-	*nX1 = pHallList->nHallx1;
-	*nY1 = pHallList->nHally1;
-	*nX2 = pHallList->nHallx2;
-	*nY2 = pHallList->nHally2;
-	*nHd = pHallList->nHalldir;
-	MemFreeDbg(pHallList);
-	pHallList = p1;
-}
-
-static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
+static void ConnectHall(const HALLNODE &node)
 {
 	int nCurrd, nDx, nDy, nRp, nOrigX1, nOrigY1, fMinusFlag, fPlusFlag;
 	bool fDoneflag, fInroom;
+
+	int nX1 = node.nHallx1;
+	int nY1 = node.nHally1;
+	int nX2 = node.nHallx2;
+	int nY2 = node.nHally2;
+	int nHd = node.nHalldir;
 
 	fDoneflag = false;
 	fMinusFlag = GenerateRnd(100);
@@ -2745,7 +2710,7 @@ static bool DL2_FillVoids()
 
 static bool CreateDungeon()
 {
-	int i, j, nHx1, nHy1, nHx2, nHy2, nHd, ForceH, ForceW;
+	int i, j, ForceH, ForceW;
 	bool ForceHW;
 
 	ForceW = 0;
@@ -2780,9 +2745,9 @@ static bool CreateDungeon()
 
 	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, ForceHW, ForceH, ForceW);
 
-	while (pHallList != nullptr) {
-		GetHall(&nHx1, &nHy1, &nHx2, &nHy2, &nHd);
-		ConnectHall(nHx1, nHy1, nHx2, nHy2, nHd);
+	while (!HallList.empty()) {
+		ConnectHall(HallList.front());
+		HallList.pop_front();
 	}
 
 	for (j = 0; j < DMAXY; j++) {     /// BUGFIX: change '<=' to '<' (fixed)
@@ -3268,30 +3233,26 @@ static void DRLG_InitL2Vals()
 	}
 }
 
-void LoadL2Dungeon(const char *sFileName, int vx, int vy)
+static void LoadL2DungeonData(BYTE *pLevelMap)
 {
-	int i, j, rw, rh, pc;
-	BYTE *pLevelMap, *lm;
-
 	InitDungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 12;
 			dflags[i][j] = 0;
 		}
 	}
 
-	lm = pLevelMap;
-	rw = *lm;
+	BYTE *lm = pLevelMap;
+	int rw = *lm;
 	lm += 2;
-	rh = *lm;
+	int rh = *lm;
 	lm += 2;
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
+	for (int j = 0; j < rh; j++) {
+		for (int i = 0; i < rw; i++) {
 			if (*lm != 0) {
 				dungeon[i][j] = *lm;
 				dflags[i][j] |= DLRG_PROTECTED;
@@ -3301,20 +3262,28 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 			lm += 2;
 		}
 	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 12;
 			}
 		}
 	}
+}
+
+void LoadL2Dungeon(const char *sFileName, int vx, int vy)
+{
+	auto pLevelMap = LoadFileInMem(sFileName);
+
+	LoadL2DungeonData(pLevelMap.get());
 
 	DRLG_L2Pass3();
 	DRLG_Init_Globals();
 
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++) {
-			pc = 0;
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			int pc = 0;
 			if (dPiece[i][j] == 541) {
 				pc = 5;
 			}
@@ -3333,8 +3302,8 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 			dSpecial[i][j] = pc;
 		}
 	}
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++) {
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 132) {
 				dSpecial[i][j + 1] = 2;
 				dSpecial[i][j + 2] = 1;
@@ -3347,61 +3316,25 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 
 	ViewX = vx;
 	ViewY = vy;
-	SetMapMonsters(pLevelMap, 0, 0);
-	SetMapObjects(pLevelMap, 0, 0);
-	mem_free_dbg(pLevelMap);
+	SetMapMonsters(pLevelMap.get(), 0, 0);
+	SetMapObjects(pLevelMap.get(), 0, 0);
 }
 
 void LoadPreL2Dungeon(const char *sFileName)
 {
-	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
-
-	InitDungeon();
-	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, nullptr);
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 12;
-			dflags[i][j] = 0;
-		}
+	{
+		auto pLevelMap = LoadFileInMem(sFileName);
+		LoadL2DungeonData(pLevelMap.get());
 	}
 
-	lm = pLevelMap;
-	rw = *lm;
-	lm += 2;
-	rh = *lm;
-	lm += 2;
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
-				dflags[i][j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[i][j] = 3;
-			}
-			lm += 2;
-		}
-	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 0) {
-				dungeon[i][j] = 12;
-			}
-		}
-	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			pdungeon[i][j] = dungeon[i][j];
 		}
 	}
-
-	mem_free_dbg(pLevelMap);
 }
 
-void CreateL2Dungeon(DWORD rseed, lvl_entry entry)
+void CreateL2Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	if (!gbIsMultiplayer) {
 		if (currlevel == 7 && quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {

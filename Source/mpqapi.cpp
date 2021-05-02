@@ -7,6 +7,7 @@
 
 #include <cerrno>
 #include <cinttypes>
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -17,6 +18,7 @@
 #include "encrypt.h"
 #include "engine.h"
 #include "utils/file_util.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -34,11 +36,11 @@ namespace {
 // Done with templates so that error messages include actual size.
 template <std::size_t A, std::size_t B>
 struct assert_eq : std::true_type {
-	static_assert(A == B);
+	static_assert(A == B, "A == B not satisfied");
 };
 template <std::size_t A, std::size_t B>
 struct assert_lte : std::true_type {
-	static_assert(A <= B);
+	static_assert(A <= B, "A <= B not satisfied");
 };
 template <typename T, std::size_t S>
 struct check_size : assert_eq<sizeof(T), S>, assert_lte<alignof(T), sizeof(T)> {
@@ -47,8 +49,8 @@ struct check_size : assert_eq<sizeof(T), S>, assert_lte<alignof(T), sizeof(T)> {
 // Check sizes and alignments of the structs that we decrypt and encrypt.
 // The decryption algorithm treats them as a stream of 32-bit uints, so the
 // sizes must be exact as there cannot be any padding.
-static_assert(check_size<_HASHENTRY, 4 * 4>::value);
-static_assert(check_size<_BLOCKENTRY, 4 * 4>::value);
+static_assert(check_size<_HASHENTRY, 4 * 4>::value, "sizeof(_HASHENTRY) == 4 * 4 && alignof(_HASHENTRY) <= 4 * 4 not satisfied");
+static_assert(check_size<_BLOCKENTRY, 4 * 4>::value, "sizeof(_BLOCKENTRY) == 4 * 4 && alignof(_BLOCKENTRY) <= 4 * 4 not satisfied");
 
 const char *DirToString(std::ios::seekdir dir)
 {
@@ -156,14 +158,14 @@ private:
 	{
 		if (s_->fail()) {
 			std::string fmt_with_error = fmt;
-			fmt_with_error.append(": failed with \"%s\"");
+			fmt_with_error.append(": failed with \"{}\"");
 			const char *error_message = std::strerror(errno);
 			if (error_message == nullptr)
 				error_message = "";
-			SDL_LogError(SDL_LOG_CATEGORY_SYSTEM, fmt_with_error.c_str(), args..., error_message);
+			LogError(LogCategory::System, fmt_with_error.c_str(), args..., error_message);
 #ifdef _DEBUG
 		} else {
-			SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM, fmt, args...);
+			LogVerbose(LogCategory::System, fmt, args...);
 #endif
 		}
 		return !s_->fail();
@@ -195,17 +197,17 @@ struct Archive {
 	{
 		Close();
 #ifdef _DEBUG
-		SDL_Log("Opening %s", name);
+		Log("Opening {}", name);
 #endif
 		exists = FileExists(name);
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
 			if (GetFileSize(name, &size) == 0) {
-				SDL_Log("GetFileSize(\"%s\") failed with \"%s\"", name, std::strerror(errno));
+				Log("GetFileSize(\"{}\") failed with \"{}\"", name, std::strerror(errno));
 				return false;
 			}
 #ifdef _DEBUG
-			SDL_Log("GetFileSize(\"%s\") = %" PRIuMAX, name, size);
+			Log("GetFileSize(\"{}\") = {}", name, size);
 #endif
 		} else {
 			mode |= std::ios::trunc;
@@ -225,7 +227,7 @@ struct Archive {
 		if (!stream.IsOpen())
 			return true;
 #ifdef _DEBUG
-		SDL_Log("Closing %s", name.c_str());
+		Log("Closing {}", name);
 #endif
 
 		bool result = true;
@@ -234,7 +236,7 @@ struct Archive {
 		stream.Close();
 		if (modified && result && size != 0) {
 #ifdef _DEBUG
-			SDL_Log("ResizeFile(\"%s\", %" PRIuMAX ")", name.c_str(), size);
+			Log("ResizeFile(\"{}\", {})", name, size);
 #endif
 			result = ResizeFile(name.c_str(), size);
 		}
@@ -264,7 +266,7 @@ private:
 		_FILEHEADER fhdr;
 
 		memset(&fhdr, 0, sizeof(fhdr));
-		fhdr.signature = SDL_SwapLE32(LOAD_LE32("MPQ\x1A"));
+		fhdr.signature = SDL_SwapLE32(LoadLE32("MPQ\x1A"));
 		fhdr.headersize = SDL_SwapLE32(32);
 		fhdr.filesize = SDL_SwapLE32(static_cast<uint32_t>(size));
 		fhdr.version = SDL_SwapLE16(0);
@@ -314,7 +316,7 @@ void ByteSwapHdr(_FILEHEADER *hdr)
 void InitDefaultMpqHeader(Archive *archive, _FILEHEADER *hdr)
 {
 	std::memset(hdr, 0, sizeof(*hdr));
-	hdr->signature = LOAD_LE32("MPQ\x1A");
+	hdr->signature = LoadLE32("MPQ\x1A");
 	hdr->headersize = 32;
 	hdr->sectorsizeid = 3;
 	hdr->version = 0;
@@ -324,7 +326,7 @@ void InitDefaultMpqHeader(Archive *archive, _FILEHEADER *hdr)
 
 bool IsValidMPQHeader(const Archive &archive, _FILEHEADER *hdr)
 {
-	return hdr->signature == LOAD_LE32("MPQ\x1A")
+	return hdr->signature == LoadLE32("MPQ\x1A")
 	    && hdr->headersize == 32
 	    && hdr->version <= 0
 	    && hdr->sectorsizeid == 3
@@ -550,7 +552,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 	// We populate the table of sector offset while we write the data.
 	// We can't pre-populate it because we don't know the compressed sector sizes yet.
 	// First offset is the start of the first sector, last offset is the end of the last sector.
-	auto sectoroffsettable = std::make_unique<uint32_t[]>(num_sectors + 1);
+	std::unique_ptr<uint32_t[]> sectoroffsettable { new uint32_t[num_sectors + 1] };
 
 #ifdef CAN_SEEKP_BEYOND_EOF
 	if (!cur_archive.stream.seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
@@ -563,7 +565,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 	const std::uintmax_t cur_size = stream_end - cur_archive.stream_begin;
 	if (cur_size < pBlk->offset + offset_table_bytesize) {
 		if (cur_size < pBlk->offset) {
-			auto filler = std::make_unique<char[]>(pBlk->offset - cur_size);
+			std::unique_ptr<char[]> filler { new char[pBlk->offset - cur_size] };
 			if (!cur_archive.stream.write(filler.get(), pBlk->offset - cur_size))
 				return false;
 		}

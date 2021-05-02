@@ -4,6 +4,7 @@
 
 #include "controls/controller_motion.h"
 #include "utils/stubs.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -177,7 +178,7 @@ int Joystick::ToSdlJoyButton(ControllerButton button)
 	}
 }
 
-bool Joystick::IsHatButtonPressed(ControllerButton button)
+bool Joystick::IsHatButtonPressed(ControllerButton button) const
 {
 	switch (button) {
 #if defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)
@@ -251,11 +252,11 @@ void Joystick::Add(int deviceIndex)
 	if (SDL_NumJoysticks() <= deviceIndex)
 		return;
 	Joystick result;
-	SDL_Log("Adding joystick %d: %s", deviceIndex,
+	Log("Adding joystick {}: {}", deviceIndex,
 	    SDL_JoystickNameForIndex(deviceIndex));
 	result.sdl_joystick_ = SDL_JoystickOpen(deviceIndex);
 	if (result.sdl_joystick_ == nullptr) {
-		SDL_Log("%s", SDL_GetError());
+		Log("{}", SDL_GetError());
 		SDL_ClearError();
 		return;
 	}
@@ -269,7 +270,7 @@ void Joystick::Add(int deviceIndex)
 void Joystick::Remove(SDL_JoystickID instanceId)
 {
 #ifndef USE_SDL1
-	SDL_Log("Removing joystick (instance id: %d)", instanceId);
+	Log("Removing joystick (instance id: {})", instanceId);
 	for (std::size_t i = 0; i < joysticks_->size(); ++i) {
 		const Joystick &joystick = (*joysticks_)[i];
 		if (joystick.instance_id_ != instanceId)
@@ -278,7 +279,7 @@ void Joystick::Remove(SDL_JoystickID instanceId)
 		sgbControllerActive = !joysticks_->empty();
 		return;
 	}
-	SDL_Log("Joystick not found with instance id: %d", instanceId);
+	Log("Joystick not found with instance id: {}", instanceId);
 #endif
 }
 
