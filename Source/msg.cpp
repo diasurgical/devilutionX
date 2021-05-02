@@ -52,7 +52,7 @@ static void msg_get_next_packet()
 {
 	TMegaPkt *result;
 
-	sgpCurrPkt = (TMegaPkt *)DiabloAllocPtr(sizeof(TMegaPkt));
+	sgpCurrPkt = static_cast<TMegaPkt *>(std::malloc(sizeof(TMegaPkt)));
 	sgpCurrPkt->pNext = nullptr;
 	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
 
@@ -67,7 +67,7 @@ static void msg_free_packets()
 {
 	while (sgpMegaPkt != nullptr) {
 		sgpCurrPkt = sgpMegaPkt->pNext;
-		MemFreeDbg(sgpMegaPkt);
+		std::free(sgpMegaPkt);
 		sgpMegaPkt = sgpCurrPkt;
 	}
 }
