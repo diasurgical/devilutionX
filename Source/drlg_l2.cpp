@@ -1929,29 +1929,23 @@ static void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool ForceHW)
 
 static void CreateDoorType(int nX, int nY)
 {
-	bool fDoneflag;
-
-	fDoneflag = false;
-
 	if (predungeon[nX - 1][nY] == 68) {
-		fDoneflag = true;
+		return;
 	}
 	if (predungeon[nX + 1][nY] == 68) {
-		fDoneflag = true;
+		return;
 	}
 	if (predungeon[nX][nY - 1] == 68) {
-		fDoneflag = true;
+		return;
 	}
 	if (predungeon[nX][nY + 1] == 68) {
-		fDoneflag = true;
+		return;
 	}
 	if (predungeon[nX][nY] == 66 || predungeon[nX][nY] == 67 || predungeon[nX][nY] == 65 || predungeon[nX][nY] == 69) {
-		fDoneflag = true;
+		return;
 	}
 
-	if (!fDoneflag) {
-		predungeon[nX][nY] = 68;
-	}
+	predungeon[nX][nY] = 68;
 }
 
 static void PlaceHallExt(int nX, int nY)
@@ -2085,7 +2079,7 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
 			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
-		HallList.push_back({nHx1, nHy1, nHx2, nHy2, nHDir});
+		HallList.push_back({ nHx1, nHy1, nHx2, nHy2, nHDir });
 	}
 
 	if (nRh > nRw) {
