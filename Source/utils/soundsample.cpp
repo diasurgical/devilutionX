@@ -51,7 +51,9 @@ float PanLogToLinear(int logPan)
 	if (logPan == 0)
 		return 0;
 
-	return copysign(1.0f - std::pow(LogBase, static_cast<float>(-std::abs(logPan)) / StereoSeparation), static_cast<float>(logPan));
+	auto factor = std::pow(LogBase, static_cast<float>(-std::abs(logPan)) / StereoSeparation);
+	
+	return copysign(1.0f - factor, static_cast<float>(logPan));
 }
 
 } // namespace
