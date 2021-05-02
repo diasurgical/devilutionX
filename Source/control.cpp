@@ -1290,7 +1290,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 					PrintMonstHistory(monster[pcursmonst].MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				std::string_view townerName = towners[pcursmonst]._tName;
+				string_view townerName = towners[pcursmonst]._tName;
 				strncpy(infostr, townerName.data(), townerName.length());
 				infostr[townerName.length()] = '\0';
 			}
