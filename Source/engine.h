@@ -98,7 +98,8 @@ struct Point {
 
 	 * @param other Pointer to which we want the distance
 	 * @return Magnitude of vector this -> other
-	*/
+	 */
+
 	int ApproxDistance(Point other) const
 	{
 		int min;
