@@ -26,7 +26,7 @@ namespace devilution {
 #define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg) \
 	__attribute__((__format__(__printf__, fmtargnum, firstarg)))
 #else
-#define DVL_PRINTF_ATTRIBUTE(fmtargnum)
+#define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg)
 #endif
 
 typedef uint32_t DWORD;
