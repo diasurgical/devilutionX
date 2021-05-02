@@ -4,6 +4,7 @@
  * Implementation of function for sending and reciving network messages.
  */
 #include <climits>
+#include <memory>
 
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
@@ -346,20 +347,20 @@ void DeltaExportData(int pnum)
 {
 	if (sgbDeltaChanged) {
 		int size;
-		BYTE *dstEnd, *dst = (BYTE *)DiabloAllocPtr(sizeof(DLevel) + 1);
+		std::unique_ptr<BYTE[]> dst { new BYTE[sizeof(DLevel) + 1] };
+		BYTE *dstEnd;
 		for (int i = 0; i < NUMLEVELS; i++) {
-			dstEnd = dst + 1;
+			dstEnd = &dst[1];
 			dstEnd = DeltaExportItem(dstEnd, sgLevels[i].item);
 			dstEnd = DeltaExportObject(dstEnd, sgLevels[i].object);
 			dstEnd = DeltaExportMonster(dstEnd, sgLevels[i].monster);
-			size = msg_comp_level(dst, dstEnd);
-			dthread_send_delta(pnum, i + CMD_DLEVEL_0, dst, size);
+			size = msg_comp_level(dst.get(), dstEnd);
+			dthread_send_delta(pnum, i + CMD_DLEVEL_0, dst.get(), size);
 		}
-		dstEnd = dst + 1;
+		dstEnd = &dst[1];
 		dstEnd = DeltaExportJunk(dstEnd);
-		size = msg_comp_level(dst, dstEnd);
-		dthread_send_delta(pnum, CMD_DLEVEL_JUNK, dst, size);
-		mem_free_dbg(dst);
+		size = msg_comp_level(dst.get(), dstEnd);
+		dthread_send_delta(pnum, CMD_DLEVEL_JUNK, dst.get(), size);
 	}
 	char src = 0;
 	dthread_send_delta(pnum, CMD_DLEVEL_END, &src, 1);
