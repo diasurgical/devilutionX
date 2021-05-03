@@ -559,18 +559,44 @@ void SetPixel(const CelOutputBuffer &out, Point position, BYTE col)
 	*out.at(position.x, position.y) = col;
 }
 
-void DrawLineTo(const CelOutputBuffer &out, Point a, Point b, BYTE color_index)
+void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
-	int dx = b.x - a.x;
-	int dy = b.y - a.y;
-	int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-	float ix = dx / (float)steps;
-	float iy = dy / (float)steps;
-	float sx = a.x;
-	float sy = a.y;
+	if (from.y < 0 || from.y >= out.h() || from.x >= out.w() || width <= 0 || from.x + width <= 0)
+		return;
+	if (from.x < 0) {
+		width += from.x;
+		from.x = 0;
+	}
+	if (from.x + width > out.w())
+		width = (from.x + width) - out.w();
+	return UnsafeDrawHorizontalLine(out, from, width, colorIndex);
+}
 
-	for (int i = 0; i <= steps; i++, sx += ix, sy += iy) {
-		SetPixel(out, { static_cast<int>(sx), static_cast<int>(sy) }, color_index);
+void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+{
+	std::memset(out.at(from.x, from.y), colorIndex, width);
+}
+
+void DrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+{
+	if (from.x < 0 || from.x >= out.w() || from.y >= out.h() || height <= 0 || from.y + height <= 0)
+		return;
+	if (from.y < 0) {
+		height += from.y;
+		from.y = 0;
+	}
+	if (from.y + height > out.h())
+		height = (from.y + height) - out.h();
+	return UnsafeDrawVerticalLine(out, from, height, colorIndex);
+}
+
+void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+{
+	auto *dst = out.at(from.x, from.y);
+	const auto pitch = out.pitch();
+	while (height-- > 0) {
+		*dst = colorIndex;
+		dst += pitch;
 	}
 }
 

@@ -272,6 +272,7 @@ add_library(PKWare STATIC
 set(devilutionx_SRCS
   Source/appfat.cpp
   Source/automap.cpp
+  Source/automap_render.cpp
   Source/capture.cpp
   Source/codec.cpp
   Source/control.cpp
