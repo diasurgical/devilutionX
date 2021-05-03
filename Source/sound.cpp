@@ -76,16 +76,17 @@ SoundSample *DuplicateSound(const SoundSample &sound) {
 	if (duplicate->DuplicateFrom(sound) != 0)
 		return nullptr;
 	auto *result = duplicate.get();
+	decltype(duplicateSounds.begin()) it;
 	{
 		SDLMutexLockGuard lock(duplicateSoundsMutex.get());
 		duplicateSounds.push_back(std::move(duplicate));
-		auto it = duplicateSounds.end();
+		it = duplicateSounds.end();
 		--it;
-		result->SetFinishCallback([it](Aulib::Stream &stream) {
-			SDLMutexLockGuard lock(duplicateSoundsMutex.get());
-			duplicateSounds.erase(it);
-		});
 	}
+	result->SetFinishCallback([it]([[maybe_unused]] Aulib::Stream &stream) {
+		SDLMutexLockGuard lock(duplicateSoundsMutex.get());
+		duplicateSounds.erase(it);
+	});
 	return result;
 }
 
@@ -144,8 +145,8 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	}
 
 	SoundSample *sound = &pSnd->DSB;
-	if (pSnd->DSB.IsPlaying()) {
-		sound = DuplicateSound(pSnd->DSB);
+	if (sound->IsPlaying()) {
+		sound = DuplicateSound(*sound);
 		if (sound == nullptr)
 			return;
 	}
