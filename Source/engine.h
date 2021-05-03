@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
+#include <tuple>
 #include <utility>
 
 #include <SDL.h>
@@ -90,6 +91,26 @@ struct Point {
 	{
 		a -= b;
 		return a;
+	}
+
+	/**
+	 * @brief Fast approximate distance between two points, using only integer arithmetic, with less than ~5% error
+	 * @param other Pointer to which we want the distance
+	 * @return Magnitude of vector this -> other
+	 */
+
+	int ApproxDistance(Point other) const
+	{
+		int min;
+		int max;
+
+		std::tie(min, max) = std::minmax(std::abs(other.x - x), std::abs(other.y - y));
+
+		int approx = max * 1007 + min * 441;
+		if (max < (min * 16))
+			approx -= max * 40;
+
+		return (approx + 512) / 1024;
 	}
 };
 
