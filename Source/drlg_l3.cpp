@@ -2619,37 +2619,32 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 	DRLG_SetPC();
 }
 
-void LoadL3Dungeon(const char *sFileName, int vx, int vy)
+void LoadL3Dungeon(const char *path, int vx, int vy)
 {
-	int i, j, rw, rh;
-	BYTE *lm;
-
-	InitL3Dungeon();
 	dminx = 16;
 	dminy = 16;
 	dmaxx = 96;
 	dmaxy = 96;
+
+	InitL3Dungeon();
 	DRLG_InitTrans();
-	auto pLevelMap = LoadFileInMem(sFileName);
 
-	lm = pLevelMap.get();
-	rw = *lm;
-	lm += 2;
-	rh = *lm;
-	lm += 2;
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
-			} else {
-				dungeon[i][j] = 7;
-			}
-			lm += 2;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			dungeon[i][j] = (tileId != 0) ? tileId : 7;
 		}
 	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 8;
 			}
@@ -2658,13 +2653,15 @@ void LoadL3Dungeon(const char *sFileName, int vx, int vy)
 
 	DRLG_L3Pass3();
 	DRLG_Init_Globals();
+
 	ViewX = vx;
 	ViewY = vy;
-	SetMapMonsters(pLevelMap.get(), 0, 0);
-	SetMapObjects(pLevelMap.get(), 0, 0);
 
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++) {
+	SetMapMonsters(dunData.get(), 0, 0);
+	SetMapObjects(dunData.get(), 0, 0);
+
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
 				DoLighting(i, j, 7, -1);
 			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
@@ -2678,33 +2675,27 @@ void LoadL3Dungeon(const char *sFileName, int vx, int vy)
 	}
 }
 
-void LoadPreL3Dungeon(const char *sFileName)
+void LoadPreL3Dungeon(const char *path)
 {
-	int i, j, rw, rh;
-	BYTE *lm;
-
 	InitL3Dungeon();
 	DRLG_InitTrans();
-	auto pLevelMap = LoadFileInMem(sFileName);
 
-	lm = pLevelMap.get();
-	rw = *lm;
-	lm += 2;
-	rh = *lm;
-	lm += 2;
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
-			} else {
-				dungeon[i][j] = 7;
-			}
-			lm += 2;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			dungeon[i][j] = (tileId != 0) ? tileId : 7;
 		}
 	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 8;
 			}

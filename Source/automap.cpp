@@ -124,7 +124,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, Point center, uint16_t automapT
 	switch (automapType & MapFlagsType) {
 	case 1: // stand-alone column or other unpassable object
 		DrawSquare(out, { center.x, center.y - AmLine8 }, MapColorsDim);
-	break;
+		break;
 	case 2:
 	case 5:
 		drawVertical = true;
@@ -415,21 +415,21 @@ void DrawAutomapText(const CelOutputBuffer &out)
 	}
 }
 
-std::unique_ptr<BYTE[]> LoadAutomapData(uint32_t &dwTiles)
+std::unique_ptr<uint16_t[]> LoadAutomapData(size_t &tileCount)
 {
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 21)
-			return LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
-		return LoadFileInMem("NLevels\\L5Data\\L5.AMP", &dwTiles);
+			return LoadFileInMem<uint16_t>("Levels\\L1Data\\L1.AMP", &tileCount);
+		return LoadFileInMem<uint16_t>("NLevels\\L5Data\\L5.AMP", &tileCount);
 	case DTYPE_CATACOMBS:
-		return LoadFileInMem("Levels\\L2Data\\L2.AMP", &dwTiles);
+		return LoadFileInMem<uint16_t>("Levels\\L2Data\\L2.AMP", &tileCount);
 	case DTYPE_CAVES:
 		if (currlevel < 17)
-			return LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
-		return LoadFileInMem("NLevels\\L6Data\\L6.AMP", &dwTiles);
+			return LoadFileInMem<uint16_t>("Levels\\L3Data\\L3.AMP", &tileCount);
+		return LoadFileInMem<uint16_t>("NLevels\\L6Data\\L6.AMP", &tileCount);
 	case DTYPE_HELL:
-		return LoadFileInMem("Levels\\L4Data\\L4.AMP", &dwTiles);
+		return LoadFileInMem<uint16_t>("Levels\\L4Data\\L4.AMP", &tileCount);
 	default:
 		return nullptr;
 	}
@@ -460,17 +460,12 @@ void InitAutomapOnce()
 
 void InitAutomap()
 {
-	uint32_t tileCount = 0;
-	std::unique_ptr<BYTE[]> pAFile = LoadAutomapData(tileCount);
-
-	tileCount /= 2;
-	auto tileTypes = reinterpret_cast<uint16_t *>(pAFile.get());
-
+	size_t tileCount = 0;
+	std::unique_ptr<uint16_t[]> tileTypes = LoadAutomapData(tileCount);
 	for (unsigned i = 0; i < tileCount; i++) {
 		AutomapTypes[i + 1] = tileTypes[i];
 	}
-
-	pAFile = nullptr;
+	tileTypes = nullptr;
 
 	memset(AutomapView, 0, sizeof(AutomapView));
 

@@ -117,27 +117,25 @@ void AddVileObjs()
 	SetObjMapRange(ObjIndex(35, 36), 7, 11, 13, 18, 3);
 }
 
-void DRLG_SetMapTrans(const char *sFileName)
+void DRLG_SetMapTrans(const char *path)
 {
-	int x, y;
-	int i, j;
-	BYTE *d;
-	DWORD dwOffset;
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	auto pLevelMap = LoadFileInMem(sFileName);
-	d = &pLevelMap[2];
-	x = pLevelMap[0];
-	y = *d;
-	dwOffset = (x * y + 1) * 2;
-	x *= 2;
-	y *= 2;
-	dwOffset += 3 * x * y * 2;
-	d += dwOffset;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
 
-	for (j = 0; j < y; j++) {
-		for (i = 0; i < x; i++) {
-			dTransVal[16 + i][16 + j] = *d;
-			d += 2;
+	int layer2Offset = 2 + width * height;
+
+	// The rest of the layers are at dPiece scale
+	width *= 2;
+	height *= 2;
+
+	const uint16_t *transparantLayer = &dunData[layer2Offset + width * height * 3];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			dTransVal[16 + i][16 + j] = SDL_SwapLE16(*transparantLayer);
+			transparantLayer++;
 		}
 	}
 }

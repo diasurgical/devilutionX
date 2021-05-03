@@ -215,7 +215,7 @@ void ClrAllMonsters();
 void monster_some_crypt();
 void PlaceGroup(int mtype, int num, int leaderf, int leader);
 void InitMonsters();
-void SetMapMonsters(BYTE *pMap, int startx, int starty);
+void SetMapMonsters(const uint16_t *dunData, int startx, int starty);
 void DeleteMonster(int i);
 int AddMonster(int x, int y, direction dir, int mtype, bool InMap);
 void monster_43C785(int i);

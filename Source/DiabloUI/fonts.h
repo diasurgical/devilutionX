@@ -22,7 +22,7 @@ enum _artFontColors : uint8_t {
 };
 
 extern TTF_Font *font;
-extern std::unique_ptr<BYTE[]> FontTables[4];
+extern std::unique_ptr<uint8_t[]> FontTables[4];
 extern Art ArtFonts[4][2];
 
 void LoadArtFonts();
