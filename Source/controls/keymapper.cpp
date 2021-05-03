@@ -19,11 +19,7 @@ Keymapper::Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction g
     , getKeyFunction(getKeyFunction)
 {
 	// Insert all supported keys: a-z, 0-9 and F1-F12.
-#ifndef __vita__
-	// HACK: Disable reserving on Vita because it triggers a linking error:
-	// "multiple definition of `ceill'".
 	keyIDToKeyName.reserve(('Z' - 'A' + 1) + ('9' - '0' + 1) + 12);
-#endif
 	for (char c = 'A'; c <= 'Z'; ++c) {
 		keyIDToKeyName.emplace(c, std::string(1, c));
 	}
@@ -34,11 +30,7 @@ Keymapper::Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction g
 		keyIDToKeyName.emplace(DVL_VK_F1 + i, fmt::format("F{}", i + 1));
 	}
 
-#ifndef __vita__
-	// HACK: Disable reserving on Vita because it triggers a linking error:
-	// "multiple definition of `ceill'".
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
-#endif
 	for (const auto &kv : keyIDToKeyName) {
 		keyNameToKeyID.emplace(kv.second, kv.first);
 	}
