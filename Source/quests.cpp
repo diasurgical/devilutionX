@@ -378,137 +378,118 @@ void DrawSkelKing(int q, int x, int y)
 
 void DrawWarLord(int x, int y)
 {
-	int rw, rh;
-	int i, j;
-	BYTE *sp;
-	int v;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord2.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
-	setpc_w = rw;
-	setpc_h = rh;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	for (j = y; j < y + rh; j++) {
-		for (i = x; i < x + rw; i++) {
-			if (*sp != 0) {
-				v = *sp;
-			} else {
-				v = 6;
-			}
-			dungeon[i][j] = v;
-			sp += 2;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 6;
 		}
 	}
 }
 
 void DrawSChamber(int q, int x, int y)
 {
-	int i, j;
-	int rw, rh;
-	int xx, yy;
-	BYTE *sp;
-	int v;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr1.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
-	setpc_w = rw;
-	setpc_h = rh;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	for (j = y; j < y + rh; j++) {
-		for (i = x; i < x + rw; i++) {
-			if (*sp != 0) {
-				v = *sp;
-			} else {
-				v = 3;
-			}
-			dungeon[i][j] = v;
-			sp += 2;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 3;
 		}
 	}
-	xx = 2 * x + 22;
-	yy = 2 * y + 23;
-	quests[q].position = { xx, yy };
+
+	quests[q].position = { 2 * x + 22, 2 * y + 23 };
 }
 
 void DrawLTBanner(int x, int y)
 {
-	int rw, rh;
-	int i, j;
-	BYTE *sp;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
-	setpc_w = rw;
-	setpc_h = rh;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				pdungeon[x + i][y + j] = *sp;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				pdungeon[x + i][y + j] = tileId;
 			}
-			sp += 2;
 		}
 	}
 }
 
 void DrawBlind(int x, int y)
 {
-	int rw, rh;
-	int i, j;
-	BYTE *sp;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	setpc_w = rw;
-	setpc_h = rh;
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				pdungeon[x + i][y + j] = *sp;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				pdungeon[x + i][y + j] = tileId;
 			}
-			sp += 2;
 		}
 	}
 }
 
 void DrawBlood(int x, int y)
 {
-	int rw, rh;
-	int i, j;
-	BYTE *sp;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	setpc_w = rw;
-	setpc_h = rh;
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				dungeon[x + i][y + j] = *sp;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				dungeon[x + i][y + j] = tileId;
 			}
-			sp += 2;
 		}
 	}
 }

@@ -89,7 +89,7 @@ void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawText
 			sy += ArtFonts[size][color].h();
 			continue;
 		}
-		BYTE w = FontTables[size][*(BYTE *)&text[i] + 2] != 0 ? FontTables[size][*(BYTE *)&text[i] + 2] : FontTables[size][0];
+		uint8_t w = FontTables[size][*(BYTE *)&text[i] + 2] != 0 ? FontTables[size][*(BYTE *)&text[i] + 2] : FontTables[size][0];
 		DrawArt(sx, sy, &ArtFonts[size][color], *(BYTE *)&text[i], w);
 		sx += w;
 	}

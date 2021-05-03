@@ -21,7 +21,7 @@ extern int UberDiabloMonsterIndex;
 
 void DRLG_LPass3(int lv);
 void DRLG_Init_Globals();
-void LoadL1Dungeon(const char *sFileName, int vx, int vy);
+void LoadL1Dungeon(const char *path, int vx, int vy);
 void LoadPreL1Dungeon(const char *sFileName);
 void CreateL5Dungeon(uint32_t rseed, lvl_entry entry);
 void drlg_l1_set_crypt_room(int rx1, int ry1);

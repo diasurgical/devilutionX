@@ -41,7 +41,7 @@ struct TNQ {
 };
 
 struct TownerStruct {
-	uint8_t *_tNAnim[8];
+	byte *_tNAnim[8];
 	std::unique_ptr<BYTE[]> _tNData;
 	uint8_t *_tAnimData;
 	int16_t _tSeed;

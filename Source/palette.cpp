@@ -120,20 +120,22 @@ static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int ski
 
 void LoadPalette(const char *pszFileName)
 {
-	int i;
-	void *pBuf;
-	BYTE PalData[256][3];
-
 	assert(pszFileName);
 
-	SFileOpenFile(pszFileName, &pBuf);
-	SFileReadFileThreadSafe(pBuf, (char *)PalData, sizeof(PalData));
-	SFileCloseFile(pBuf);
+	struct Color {
+		uint8_t r;
+		uint8_t g;
+		uint8_t b;
+	};
 
-	for (i = 0; i < 256; i++) {
-		orig_palette[i].r = PalData[i][0];
-		orig_palette[i].g = PalData[i][1];
-		orig_palette[i].b = PalData[i][2];
+	std::array<Color, 256> PalData;
+
+	LoadFileInMem(pszFileName, PalData);
+
+	for (int i = 0; i < PalData.size(); i++) {
+		orig_palette[i].r = PalData[i].r;
+		orig_palette[i].g = PalData[i].g;
+		orig_palette[i].b = PalData[i].b;
 #ifndef USE_SDL1
 		orig_palette[i].a = SDL_ALPHA_OPAQUE;
 #endif

@@ -10,9 +10,9 @@
 namespace devilution {
 
 /** Contains the tile IDs of the map. */
-BYTE dungeon[DMAXX][DMAXY];
+uint8_t dungeon[DMAXX][DMAXY];
 /** Contains a backup of the tile IDs of the map. */
-BYTE pdungeon[DMAXX][DMAXY];
+uint8_t pdungeon[DMAXX][DMAXY];
 char dflags[DMAXX][DMAXY];
 /** Specifies the active set level X-coordinate of the map. */
 int setpc_x;
@@ -23,35 +23,20 @@ int setpc_w;
 /** Specifies the height of the active set level of the map. */
 int setpc_h;
 /** Contains the contents of the single player quest DUN file. */
-std::unique_ptr<BYTE[]> pSetPiece;
+std::unique_ptr<uint16_t[]> pSetPiece;
 /** Specifies whether a single player quest DUN has been loaded. */
 bool setloadflag;
 std::optional<CelSprite> pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
-std::unique_ptr<BYTE[]> pMegaTiles;
+std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<BYTE[]> pLevelPieces;
 std::unique_ptr<BYTE[]> pDungeonCels;
-/**
- * List of transparancy masks to use for dPieces
- */
-char block_lvid[MAXTILES + 1];
-/**
- * List of light blocking dPieces
- */
-bool nBlockTable[MAXTILES + 1];
-/**
- * List of path blocking dPieces
- */
-bool nSolidTable[MAXTILES + 1];
-/**
- * List of transparent dPieces
- */
-bool nTransTable[MAXTILES + 1];
-/**
- * List of missile blocking dPieces
- */
-bool nMissileTable[MAXTILES + 1];
-bool nTrapTable[MAXTILES + 1];
+std::array<uint8_t, MAXTILES + 1> block_lvid;
+std::array<bool, MAXTILES + 1> nBlockTable;
+std::array<bool, MAXTILES + 1> nSolidTable;
+std::array<bool, MAXTILES + 1> nTransTable;
+std::array<bool, MAXTILES + 1> nMissileTable;
+std::array<bool, MAXTILES + 1> nTrapTable;
 /** Specifies the minimum X-coordinate of the map. */
 int dminx;
 /** Specifies the minimum Y-coordinate of the map. */
@@ -125,62 +110,43 @@ char dSpecial[MAXDUNX][MAXDUNY];
 int themeCount;
 THEME_LOC themeLoc[MAXTHEMES];
 
-void FillSolidBlockTbls()
+std::unique_ptr<uint8_t[]> LoadLevelSOLData(size_t &tileCount)
 {
-	BYTE bv;
-	DWORD i, dwTiles;
-
-	memset(nBlockTable, 0, sizeof(nBlockTable));
-	memset(nSolidTable, 0, sizeof(nSolidTable));
-	memset(nTransTable, 0, sizeof(nTransTable));
-	memset(nMissileTable, 0, sizeof(nMissileTable));
-	memset(nTrapTable, 0, sizeof(nTrapTable));
-
-	std::unique_ptr<BYTE[]> pSBFile;
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire)
-			pSBFile = LoadFileInMem("NLevels\\TownData\\Town.SOL", &dwTiles);
-		else
-			pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
-		break;
+			return LoadFileInMem<uint8_t>("NLevels\\TownData\\Town.SOL", &tileCount);
+		return LoadFileInMem<uint8_t>("Levels\\TownData\\Town.SOL", &tileCount);
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 17)
-			pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
-		else
-			pSBFile = LoadFileInMem("NLevels\\L5Data\\L5.SOL", &dwTiles);
-		break;
+			return LoadFileInMem<uint8_t>("Levels\\L1Data\\L1.SOL", &tileCount);
+		return LoadFileInMem<uint8_t>("NLevels\\L5Data\\L5.SOL", &tileCount);
 	case DTYPE_CATACOMBS:
-		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", &dwTiles);
-		break;
+		return LoadFileInMem<uint8_t>("Levels\\L2Data\\L2.SOL", &tileCount);
 	case DTYPE_CAVES:
 		if (currlevel < 17)
-			pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
-		else
-			pSBFile = LoadFileInMem("NLevels\\L6Data\\L6.SOL", &dwTiles);
-		break;
+			return LoadFileInMem<uint8_t>("Levels\\L3Data\\L3.SOL", &tileCount);
+		return LoadFileInMem<uint8_t>("NLevels\\L6Data\\L6.SOL", &tileCount);
 	case DTYPE_HELL:
-		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", &dwTiles);
-		break;
+		return LoadFileInMem<uint8_t>("Levels\\L4Data\\L4.SOL", &tileCount);
 	default:
 		app_fatal("FillSolidBlockTbls");
 	}
+}
 
-	const BYTE *pTmp = pSBFile.get();
+void FillSolidBlockTbls()
+{
+	size_t tileCount;
+	auto pSBFile = LoadLevelSOLData(tileCount);
 
-	for (i = 1; i <= dwTiles; i++) {
-		bv = *pTmp++;
-		if ((bv & 0x01) != 0)
-			nSolidTable[i] = true;
-		if ((bv & 0x02) != 0)
-			nBlockTable[i] = true;
-		if ((bv & 0x04) != 0)
-			nMissileTable[i] = true;
-		if ((bv & 0x08) != 0)
-			nTransTable[i] = true;
-		if ((bv & 0x80) != 0)
-			nTrapTable[i] = true;
-		block_lvid[i] = (bv & 0x70) >> 4; /* beta: (bv >> 4) & 7 */
+	for (unsigned i = 0; i < tileCount; i++) {
+		uint8_t bv = pSBFile[i];
+		nSolidTable[i + 1] = (bv & 0x01) != 0;
+		nBlockTable[i + 1] = (bv & 0x02) != 0;
+		nMissileTable[i + 1] = (bv & 0x04) != 0;
+		nTransTable[i + 1] = (bv & 0x08) != 0;
+		nTrapTable[i + 1] = (bv & 0x80) != 0 ;
+		block_lvid[i + 1] = (bv & 0x70) >> 4;
 	}
 }
 

@@ -89,12 +89,12 @@ BYTE *GetLightTable(char light)
 
 CelSprite LoadCel(const char *pszName, int width)
 {
-	return CelSprite(LoadFileInMem(pszName), width);
+	return CelSprite(LoadFileInMem<BYTE>(pszName), width);
 }
 
 CelSprite LoadCel(const char *pszName, const int *widths)
 {
-	return CelSprite(LoadFileInMem(pszName), widths);
+	return CelSprite(LoadFileInMem<BYTE>(pszName), widths);
 }
 
 std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame)
@@ -710,30 +710,26 @@ int32_t GenerateRnd(int32_t v)
 	return AdvanceRndSeed() % v;
 }
 
-/**
- * @brief Load a file in to a buffer
- * @param pszName Path of file
- * @param pdwFileLen Will be set to file size if non-NULL
- * @return Buffer with content of file
- */
-std::unique_ptr<BYTE[]> LoadFileInMem(const char *pszName, DWORD *pdwFileLen)
+size_t GetFileSize(const char *pszName)
 {
 	HANDLE file;
 	SFileOpenFile(pszName, &file);
-	const DWORD fileLen = SFileGetFileSize(file, nullptr);
+	const size_t fileLen = SFileGetFileSize(file, nullptr);
+	SFileCloseFile(file);
 
-	if (pdwFileLen != nullptr)
-		*pdwFileLen = fileLen;
+	return fileLen;
+}
+
+void LoadFileData(const char *pszName, byte *buffer, size_t fileLen)
+{
+	HANDLE file;
+	SFileOpenFile(pszName, &file);
 
 	if (fileLen == 0)
 		app_fatal("Zero length SFILE:\n%s", pszName);
 
-	std::unique_ptr<BYTE[]> buf { new BYTE[fileLen] };
-
-	SFileReadFileThreadSafe(file, buf.get(), fileLen);
+	SFileReadFileThreadSafe(file, buffer, fileLen);
 	SFileCloseFile(file);
-
-	return buf;
 }
 
 /**

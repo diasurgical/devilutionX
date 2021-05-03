@@ -13,6 +13,7 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
@@ -30,6 +31,12 @@
 #include "miniwin/miniwin.h"
 
 namespace devilution {
+
+#if __cplusplus >= 201703L
+using byte = std::byte;
+#else
+using byte = uint8_t;
+#endif
 
 #if defined(__cpp_lib_clamp)
 using std::clamp;
@@ -598,7 +605,40 @@ void SetRndSeed(int32_t s);
 int32_t AdvanceRndSeed();
 int32_t GetRndSeed();
 int32_t GenerateRnd(int32_t v);
-std::unique_ptr<BYTE[]> LoadFileInMem(const char *pszName, DWORD *pdwFileLen = nullptr);
+
+size_t GetFileSize(const char *pszName);
+void LoadFileData(const char *pszName, byte *buffer, size_t bufferSize);
+
+template <typename T, std::size_t N>
+void LoadFileInMem(const char *path, std::array<T, N> &data)
+{
+	LoadFileData(path, reinterpret_cast<byte *>(&data), N * sizeof(T));
+}
+
+/**
+ * @brief Load a file in to a buffer
+ * @param path Path of file
+ * @param elements Number of T elements read
+ * @return Buffer with content of file
+ */
+template <typename T = byte>
+std::unique_ptr<T[]> LoadFileInMem(const char *path, size_t *elements = nullptr)
+{
+	const size_t fileLen = GetFileSize(path);
+
+	if ((fileLen % sizeof(T)) != 0)
+		app_fatal("File size does not align with type\n%s", path);
+
+	if (elements != nullptr)
+		*elements = fileLen / sizeof(T);
+
+	std::unique_ptr<T[]> buf { new T[fileLen / sizeof(T)] };
+
+	LoadFileData(path, reinterpret_cast<byte *>(buf.get()), fileLen);
+
+	return buf;
+}
+
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
