@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
 "X-Poedit-Basepath: ..\n"
@@ -9235,12 +9235,16 @@ msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed...|"
 msgstr ""
+"Мы долго спали, и настало время пробудиться. После долгого сна мы испытываем "
+"сильный голод. Скоро, сейчас, мы насытимся…|"
 
 #: Source/textdat.cpp:580
 msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all.|"
 msgstr ""
+"Тебе понравилось, маленькое млекопитающее? Как жалко. Твой маленький мир "
+"вообще не будет проблемой.|"
 
 #: Source/textdat.cpp:582
 msgid ""
@@ -9248,12 +9252,17 @@ msgid ""
 "men call home.  Our tendrils shall envelop this world, and we will feast on "
 "the flesh of its denizens.  Man shall become our chattel and sustenance.|"
 msgstr ""
+"Эти земли будут осквернены, и наш выводок заполонит области, которые люди "
+"называют домой. Наши щупальца охватят этот мир, и мы будем есть плоть его "
+"обитателей. Человек должен стать нашим движимым имуществом и пропитанием.|"
 
 #: Source/textdat.cpp:584
 msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing...|"
 msgstr ""
+"Ах, я чувствую твой запах… ты близко! Близко! Шссс… запах крови и страха… "
+"как соблазнительно…|"
 
 #: Source/textdat.cpp:592
 msgid ""
@@ -9271,18 +9280,31 @@ msgid ""
 "within all things and beyond all things. Light and unity are the products of "
 "this holy foundation, a unity of purpose and a unity of possession.|"
 msgstr ""
+"И в год Золотого Света было постановлено воздвигнуть великий Собор. "
+"Краеугольный камень этого святого места должен был быть вырезан из "
+"прозрачного камня Антюраэль, названного в честь Ангела, который поделился "
+"своей силой с Хорадримом. \n"
+"\n"
+"В Год Рисующих Теней земля содрогнулась, и Собор разрушился и рухнул. Когда "
+"началось строительство катакомб и замков, и человек устоял перед "
+"опустошительной войной Грехов, руины были убраны для кладки. Так "
+"краеугольный камень исчез с глаз человека. \n"
+"\n"
+"Камень был из этого мира — и от всех миров — будто Свет как внутри всех "
+"вещей, так и за их пределами. Свет и единство - продукты это святого "
+"основания, единство цели и единство владения.|"
 
 #: Source/textdat.cpp:594
 msgid "Moo.|"
-msgstr ""
+msgstr "Му-у.|"
 
 #: Source/textdat.cpp:595
 msgid "I said, Moo.|"
-msgstr ""
+msgstr "Я говорю, Му-у.|"
 
 #: Source/textdat.cpp:596
 msgid "Look I'm just a cow, OK?|"
-msgstr ""
+msgstr "Посмотрите я просто корова, ОК?|"
 
 #: Source/textdat.cpp:597
 msgid ""
@@ -9297,18 +9319,31 @@ msgid ""
 "my house, it's just south of the fork in the river... you know... the one "
 "with the overgrown vegetable garden.|"
 msgstr ""
+"Хорошо, хорошо. Я не совсем корова. Я обычно так не хожу, но я сидел дома, "
+"занимался своими делами, и внезапно эти жуки, лозы, луковицы и прочие начали "
+"вылезать из под пола… это было ужасно! Если бы только у меня было что-нибудь "
+"нормальное, чтобы носить, это было бы не так уж плохо. Привет! Не могли бы "
+"вы вернуться ко мне и принести мой костюм? Коричневый, а не серый, для "
+"вечерних нарядов. Я бы сделал это сам, но я бы не хотел, чтобы кто-то увидел "
+"меня таким. Вот, возьми, это может пригодиться… чтобы убить тех тварей, "
+"которые все заполонили. Вы не сможете пропустить мой дом, он к югу от "
+"развилки реки… ну, знаете, тот, где есть заросший огород.|"
 
 #: Source/textdat.cpp:599
 msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me! |"
 msgstr ""
+"На что ты тратишь время? Принеси мой костюм! И побыстрее! Этот Гольштейн вот "
+"там мне подмигивает! |"
 
 #: Source/textdat.cpp:601
 msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!|"
 msgstr ""
+"Эй, у тебя там мой костюм? Пропустите, быстро! Уши так чешутся, ты не "
+"поверишь!|"
 
 #: Source/textdat.cpp:603
 msgid ""
@@ -9316,6 +9351,9 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit.|"
 msgstr ""
+"Нет нет нет нет! Это мой СЕРЫЙ костюм! Это для вечернего наряда! Официальные "
+"мероприятия! Я не могу носить ЭТО. Ты что, чудак какой-то? Мне нужен "
+"КОРИЧНЕВЫЙ костюм.|"
 
 #: Source/textdat.cpp:605
 msgid ""
@@ -9325,34 +9363,48 @@ msgid ""
 "you could use a new... yknowwhatImean?  The whole adventurer motif is just "
 "so... retro.  Just a word of advice, eh?  Ciao.|"
 msgstr ""
+"Ах, так НАМНОГО лучше, Ух! Как минимум, немного достоинства! Мои рога "
+"прямые? Хорошо. Слушайте, большое спасибо за помощь. Вот, примите это как "
+"подарок, и, знаете, небольшой совет по моде… вы могли бы использовать "
+"немного… вы могли бы использовать новый… понимаете, о чем я? Весь внешний "
+"вид авантюриста такой… ретро. Просто совет, а? Чао. |"
 
 #: Source/textdat.cpp:607
 msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk...|"
 msgstr ""
+"Посмотри. Я корова. А ты, ты -  приманка для монстров. Заимей немного опыта "
+"за спиной! И поговорим… |"
 
 #: Source/textdat.cpp:609
 msgid "|"
-msgstr ""
+msgstr "|"
 
 #: Source/textdat.cpp:610
 msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?|"
 msgstr ""
+"Должно быть, я поставил перед вами действительно ужасную задачу. Если бы у "
+"меня был какой-то способ… Помогла бы флаг свежего молока?|"
 
 #: Source/textdat.cpp:612
 msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts.|"
 msgstr ""
+"О, мне бы пригодилась ваша помощь, но, возможно, после того, как вы спасете "
+"катакомбы от осквернения этими зверьми.|"
 
 #: Source/textdat.cpp:614
 msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor.|"
 msgstr ""
+"Мне нужно кое что сделать, но я не могу навязывать это совершенно "
+"незнакомому человеку. Возможно, после того, как вы пробудете здесь какое-то "
+"время, мне будет удобнее попросить об одолжении.|"
 
 #: Source/textdat.cpp:616
 msgid ""
