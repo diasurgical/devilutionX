@@ -947,7 +947,7 @@ static void Zoom(const CelOutputBuffer &out)
 {
 	int viewport_width = out.w();
 	int viewport_offset_x = 0;
-	if (PANELS_COVER) {
+	if (CanPanelsCoverView()) {
 		if (chrflag || questlog) {
 			viewport_width -= SPANEL_WIDTH;
 			viewport_offset_x = SPANEL_WIDTH;
@@ -1159,7 +1159,7 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 	y += tileShiftY;
 
 	// Skip rendering parts covered by the panels
-	if (PANELS_COVER) {
+	if (CanPanelsCoverView()) {
 		if (zoomflag) {
 			if (chrflag || questlog) {
 				ShiftGrid(&x, &y, 2, 0);
