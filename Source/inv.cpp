@@ -780,26 +780,35 @@ bool GoldAutoPlace(int pnum)
 	}
 
 	for (int i = 39; i >= 0 && !done; i--) {
-		int yy = 10 * (i / 10);
-		int xx = i % 10;
-		if (plr[pnum].InvGrid[xx + yy] == 0) {
-			int ii = plr[pnum]._pNumInv;
-			plr[pnum].InvList[ii] = plr[pnum].HoldItem;
-			plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
-			plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
-			GetPlrHandSeed(&plr[pnum].InvList[ii]);
-			int gold = plr[pnum].HoldItem._ivalue;
-			if (gold > MaxGold) {
-				gold -= MaxGold;
-				plr[pnum].HoldItem._ivalue = gold;
-				GetPlrHandSeed(&plr[pnum].HoldItem);
-				plr[pnum].InvList[ii]._ivalue = MaxGold;
-			} else {
-				plr[pnum].HoldItem._ivalue = 0;
-				done = true;
-				plr[pnum]._pGold = CalculateGold(pnum);
-				NewCursor(CURSOR_HAND);
-			}
+		done = GoldAutoPlaceInInventorySlot(pnum, i);
+	}
+
+	return done;
+}
+
+bool GoldAutoPlaceInInventorySlot(int pnum, int slotIndex)
+{
+	bool done = false;
+
+	int yy = 10 * (slotIndex / 10);
+	int xx = slotIndex % 10;
+	if (plr[pnum].InvGrid[xx + yy] == 0) {
+		int ii = plr[pnum]._pNumInv;
+		plr[pnum].InvList[ii] = plr[pnum].HoldItem;
+		plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
+		plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
+		GetPlrHandSeed(&plr[pnum].InvList[ii]);
+		int gold = plr[pnum].HoldItem._ivalue;
+		if (gold > MaxGold) {
+			gold -= MaxGold;
+			plr[pnum].HoldItem._ivalue = gold;
+			GetPlrHandSeed(&plr[pnum].HoldItem);
+			plr[pnum].InvList[ii]._ivalue = MaxGold;
+		} else {
+			plr[pnum].HoldItem._ivalue = 0;
+			done = true;
+			plr[pnum]._pGold = CalculateGold(pnum);
+			NewCursor(CURSOR_HAND);
 		}
 	}
 
