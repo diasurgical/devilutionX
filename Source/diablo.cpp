@@ -1813,39 +1813,39 @@ void CreateLevel(lvl_entry lvldir)
 	case DTYPE_TOWN:
 		CreateTown(lvldir);
 		InitTownTriggers();
-		LoadRndLvlPal(0);
+		LoadRndLvlPal(DTYPE_TOWN);
 		break;
 	case DTYPE_CATHEDRAL:
 		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL1Triggers();
 		Freeupstairs();
 		if (currlevel < 21) {
-			LoadRndLvlPal(1);
+			LoadRndLvlPal(DTYPE_CATHEDRAL);
 		} else {
-			LoadRndLvlPal(5);
+			LoadRndLvlPal(DTYPE_CRYPT);
 		}
 		break;
 	case DTYPE_CATACOMBS:
 		CreateL2Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL2Triggers();
 		Freeupstairs();
-		LoadRndLvlPal(2);
+		LoadRndLvlPal(DTYPE_CATACOMBS);
 		break;
 	case DTYPE_CAVES:
 		CreateL3Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL3Triggers();
 		Freeupstairs();
 		if (currlevel < 17) {
-			LoadRndLvlPal(3);
+			LoadRndLvlPal(DTYPE_CAVES);
 		} else {
-			LoadRndLvlPal(6);
+			LoadRndLvlPal(DTYPE_NEST);
 		}
 		break;
 	case DTYPE_HELL:
 		CreateL4Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL4Triggers();
 		Freeupstairs();
-		LoadRndLvlPal(4);
+		LoadRndLvlPal(DTYPE_HELL);
 		break;
 	default:
 		app_fatal("CreateLevel");

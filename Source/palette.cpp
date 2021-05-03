@@ -150,7 +150,7 @@ void LoadPalette(const char *pszFileName)
 	}
 }
 
-void LoadRndLvlPal(int l)
+void LoadRndLvlPal(dungeon_type l)
 {
 	if (l == DTYPE_TOWN) {
 		LoadPalette("Levels\\TownData\\Town.pal");
@@ -158,13 +158,13 @@ void LoadRndLvlPal(int l)
 	}
 
 	int rv = GenerateRnd(4) + 1;
-	if (l == 5) {
+	if (l == DTYPE_CRYPT) {
 		LoadPalette("NLevels\\L5Data\\L5Base.PAL");
 		return;
 	}
 
 	char szFileName[27];
-	if (l == 6) {
+	if (l == DTYPE_NEST) {
 		if (!gbNestArt) {
 			rv++;
 		}
