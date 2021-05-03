@@ -681,7 +681,6 @@ if (VITA)
         ScePower_stub
         freetype
         png
-        m
         z
   )
   target_compile_definitions(${BIN_TARGET} PRIVATE VITA)
