@@ -30,6 +30,6 @@ set(USE_DEC_ADLMIDI OFF)
 
 include(FetchContent)
 FetchContent_Declare(SDL_audiolib
-  URL https://github.com/realnc/SDL_audiolib/archive/0fa26cf4e48ed21e696e60ffc88a586ced9fd6fe.zip
-  URL_HASH MD5=1e16b0c49e16ef1a31b60051520b534e)
+  URL https://github.com/realnc/SDL_audiolib/archive/489cb289a283a7fe07a09bf88c64696caa375f14.zip
+  URL_HASH MD5=d7b97302d52d772cca6383573423bf51)
 FetchContent_MakeAvailableExcludeFromAll(SDL_audiolib)
