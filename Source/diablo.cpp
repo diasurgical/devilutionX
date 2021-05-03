@@ -1037,7 +1037,7 @@ static void ReleaseKey(int vkey)
 
 static void ClosePanels()
 {
-	if (PANELS_COVER) {
+	if (CanPanelsCoverView()) {
 		if (!chrflag && !questlog && (invflag || sbookflag) && MouseX < 480 && MouseY < PANEL_TOP) {
 			SetCursorPos(MouseX + 160, MouseY);
 		} else if (!invflag && !sbookflag && (chrflag || questlog) && MouseX > 160 && MouseY < PANEL_TOP) {
@@ -1341,7 +1341,7 @@ static void PressChar(int32_t vkey)
 	case 'i':
 		if (stextflag == STORE_NONE) {
 			invflag = !invflag;
-			if (!chrflag && !questlog && PANELS_COVER) {
+			if (!chrflag && !questlog && CanPanelsCoverView()) {
 				if (!invflag) { // We closed the invetory
 					if (MouseX < 480 && MouseY < PANEL_TOP) {
 						SetCursorPos(MouseX + 160, MouseY);
@@ -1359,7 +1359,7 @@ static void PressChar(int32_t vkey)
 	case 'c':
 		if (stextflag == STORE_NONE) {
 			chrflag = !chrflag;
-			if (!invflag && !sbookflag && PANELS_COVER) {
+			if (!invflag && !sbookflag && CanPanelsCoverView()) {
 				if (!chrflag) { // We closed the character sheet
 					if (MouseX > 160 && MouseY < PANEL_TOP) {
 						SetCursorPos(MouseX - 160, MouseY);
@@ -1381,7 +1381,7 @@ static void PressChar(int32_t vkey)
 			} else {
 				questlog = false;
 			}
-			if (!invflag && !sbookflag && PANELS_COVER) {
+			if (!invflag && !sbookflag && CanPanelsCoverView()) {
 				if (!questlog) { // We closed the quest log
 					if (MouseX > 160 && MouseY < PANEL_TOP) {
 						SetCursorPos(MouseX - 160, MouseY);
@@ -1419,7 +1419,7 @@ static void PressChar(int32_t vkey)
 	case 'b':
 		if (stextflag == STORE_NONE) {
 			sbookflag = !sbookflag;
-			if (!chrflag && !questlog && PANELS_COVER) {
+			if (!chrflag && !questlog && CanPanelsCoverView()) {
 				if (!sbookflag) { // We closed the invetory
 					if (MouseX < 480 && MouseY < PANEL_TOP) {
 						SetCursorPos(MouseX + 160, MouseY);

@@ -68,6 +68,14 @@ extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
 
+/**
+ * @brief Check if the UI can cover the game area entierly
+ */
+inline bool CanPanelsCoverView()
+{
+	return gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT;
+}
+
 void DrawSpellList(const CelOutputBuffer &out);
 void SetSpell();
 void SetSpeedSpell(int slot);

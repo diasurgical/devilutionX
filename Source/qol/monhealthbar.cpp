@@ -63,7 +63,7 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 	const int height = healthBox.h();
 	int xPos = (gnScreenWidth - width) / 2;
 
-	if (PANELS_COVER) {
+	if (CanPanelsCoverView()) {
 		if (invflag || sbookflag)
 			xPos -= SPANEL_WIDTH / 2;
 		if (chrflag || questlog)

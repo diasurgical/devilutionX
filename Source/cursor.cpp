@@ -250,7 +250,7 @@ void CheckCursMove()
 	sx = MouseX;
 	sy = MouseY;
 
-	if (PANELS_COVER) {
+	if (CanPanelsCoverView()) {
 		if (chrflag || questlog) {
 			if (sx >= gnScreenWidth / 2) { /// BUGFIX: (sx >= gnScreenWidth / 2) (fixed)
 				sx -= gnScreenWidth / 4;
