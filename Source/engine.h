@@ -565,13 +565,28 @@ void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite
 void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
- * @brief Draw a line in the target buffer
+ * @brief Draw a horizontal line segment in the target buffer (left to right)
  * @param out Target buffer
- * @param a Back buffer coordinate
- * @param b Back buffer coordinate
- * @param color_index Color index from current palette
+ * @param from Start of the line segment
+ * @param width
+ * @param colorIndex Color index from current palette
  */
-void DrawLineTo(const CelOutputBuffer &out, Point a, Point b, BYTE color_index);
+void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+
+/** Same as DrawHorizontalLine but without bounds clipping. */
+void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+
+/**
+ * @brief Draw a vertical line segment in the target buffer (top to bottom)
+ * @param out Target buffer
+ * @param from Start of the line segment
+ * @param height
+ * @param colorIndex Color index from current palette
+ */
+void DrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+
+/** Same as DrawVerticalLine but without bounds clipping. */
+void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
 
 /**
  * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
