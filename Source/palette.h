@@ -35,7 +35,7 @@ extern Uint8 paletteTransparencyLookup[256][256];
 void palette_update();
 void palette_init();
 void LoadPalette(const char *pszFileName);
-void LoadRndLvlPal(int l);
+void LoadRndLvlPal(dungeon_type l);
 void ResetPal();
 void IncreaseGamma();
 void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n);
