@@ -33,6 +33,9 @@ static const direction FaceDir[3][3] = {
 	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
 	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
 };
+static const AxisDirection AxisDir[2][2] = {
+	{  }
+};
 static const int Offsets[8][2] = {
 	{ 1, 1 },   // DIR_S
 	{ 0, 1 },   // DIR_SW
@@ -830,6 +833,67 @@ bool IsPathBlocked(int x, int y, int dir)
 	return !PosOkPlayer(myplr, d1x, d1y) && !PosOkPlayer(myplr, d2x, d2y);
 }
 
+direction GetPathNotBlocked(int x, int y, int dir)
+{
+	int d1, d2, d1x, d1y, d2x, d2y;
+
+	switch (dir) {
+	case DIR_N:
+		d1 = DIR_NW;
+		d2 = DIR_NE;
+		break;
+	case DIR_E:
+		d1 = DIR_NE;
+		d2 = DIR_SE;
+		break;
+	case DIR_S:
+		d1 = DIR_SE;
+		d2 = DIR_SW;
+		break;
+	case DIR_W:
+		d1 = DIR_SW;
+		d2 = DIR_NW;
+		break;
+	default:
+		return DIR_OMNI;
+	}
+
+	d1x = x + Offsets[d1][0];
+	d1y = y + Offsets[d1][1];
+	d2x = x + Offsets[d2][0];
+	d2y = y + Offsets[d2][1];
+
+	if (!nSolidTable[dPiece[d1x][d1y]])
+		return (direction)d1;
+	if (!nSolidTable[dPiece[d2x][d2y]])
+		return (direction)d2;
+
+	return DIR_OMNI;
+}
+
+void MoveInDirection(int playerId, const direction dir) {
+	const int x = plr[playerId].position.future.x;
+	const int y = plr[playerId].position.future.y;
+	
+	const int dx = x + Offsets[dir][0];
+	const int dy = y + Offsets[dir][1];
+	plr[playerId]._pdir = dir;
+
+	if (nSolidTable[dPiece[dx][dy]]) {
+		const direction new_dir = GetPathNotBlocked(x, y, dir);
+		if (new_dir != DIR_OMNI) {
+			MoveInDirection(playerId, new_dir);
+			return;
+		}
+	}
+
+	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, dir)) {
+		return; // Don't start backtrack around obstacles
+	}
+
+	NetSendCmdLoc(playerId, true, CMD_WALKXY, { dx, dy });
+}
+
 void WalkInDir(int playerId, AxisDirection dir)
 {
 	const int x = plr[playerId].position.future.x;
@@ -842,14 +906,8 @@ void WalkInDir(int playerId, AxisDirection dir)
 	}
 
 	const direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
-	const int dx = x + Offsets[pdir][0];
-	const int dy = y + Offsets[pdir][1];
-	plr[playerId]._pdir = pdir;
 
-	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, pdir))
-		return; // Don't start backtrack around obstacles
-
-	NetSendCmdLoc(playerId, true, CMD_WALKXY, { dx, dy });
+	MoveInDirection(playerId, pdir);
 }
 
 void QuestLogMove(AxisDirection moveDir)
