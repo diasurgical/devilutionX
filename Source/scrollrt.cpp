@@ -161,7 +161,6 @@ static void scrollrt_draw_cursor_back_buffer(const CelOutputBuffer &out)
 static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
 {
 	int mx, my;
-	BYTE col;
 
 	assert(!sgdwCursWdt);
 
@@ -218,15 +217,9 @@ static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
 	const auto &sprite = GetInvItemSprite(pcurs);
 	const int frame = GetInvItemFrame(pcurs);
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		col = PAL16_YELLOW + 5;
-		if (plr[myplr].HoldItem._iMagical != 0) {
-			col = PAL16_BLUE + 5;
-		}
-		if (!plr[myplr].HoldItem._iStatFlag) {
-			col = PAL16_RED + 5;
-		}
-		CelBlitOutlineTo(sub, col, mx, my + cursH - 1, sprite, frame, false);
-		if (col != PAL16_RED + 5) {
+		const auto &heldItem = plr[myplr].HoldItem;
+		CelBlitOutlineTo(sub, GetOutlineColor(heldItem, true), mx, my + cursH - 1, sprite, frame, false);
+		if (heldItem._iStatFlag) {
 			CelClippedDrawSafeTo(sub, mx, my + cursH - 1, sprite, frame);
 		} else {
 			CelDrawLightRedSafeTo(sub, mx, my + cursH - 1, sprite, frame, 1);
