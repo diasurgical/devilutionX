@@ -1077,7 +1077,7 @@ void CheckPanelInfo()
 						s++;
 					}
 				}
-				sprintf(tempstr, ngettext("%s Scroll", "%i Scrolls", s), s);
+				sprintf(tempstr, ngettext("%i Scroll", "%i Scrolls", s), s);
 				AddPanelString(tempstr, true);
 			} break;
 			case RSPLTYPE_CHARGES:
