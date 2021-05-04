@@ -52,7 +52,7 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	return absoluteAnimationFrame;
 }
 
-void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionParams params /*= AnimationDistributionParams::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if (pData == this->pData && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -71,7 +71,7 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 	RelevantFramesForDistributing = 0;
 	TickModifier = 0.0f;
 
-	if (numSkippedFrames != 0 || params != AnimationDistributionParams::None) {
+	if (numSkippedFrames != 0 || flags != AnimationDistributionFlags::None) {
 		// Animation Frames that will be adjusted for the skipped Frames/game ticks
 		int relevantAnimationFramesForDistributing = numberOfFrames;
 		if (distributeFramesBeforeFrame != 0) {
@@ -91,7 +91,7 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 		// How many game ticks will the Animation be really shown (skipped Frames and game ticks removed)
 		int relevantAnimationTicksWithSkipping = relevantAnimationTicksForDistribution - (numSkippedFrames * ticksPerFrame);
 
-		if (params == AnimationDistributionParams::ProcessAnimationPending) {
+		if ((flags & AnimationDistributionFlags::ProcessAnimationPending) == AnimationDistributionFlags::ProcessAnimationPending) {
 			// If ProcessAnimation will be called after SetNewAnimation (in same game tick as SetNewAnimation), we increment the Animation-Counter.
 			// If no delay is specified, this will result in complete skipped frame (see ProcessAnimation).
 			// But if we have a delay specified, this would only result in a reduced time the first frame is shown (one skipped delay).
@@ -103,7 +103,7 @@ void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int dela
 			TicksSinceSequenceStarted = -1;
 		}
 
-		if (params == AnimationDistributionParams::SkipsDelayOfLastFrame) {
+		if ((flags & AnimationDistributionFlags::SkipsDelayOfLastFrame) == AnimationDistributionFlags::SkipsDelayOfLastFrame) {
 			// The logic for player/monster/... (not ProcessAnimation) only checks the frame not the delay.
 			// That means if a delay is specified, the last-frame is shown less then the other frames
 			// Example:
