@@ -478,16 +478,18 @@ void Interact()
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
-	} else if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
-		NetSendCmdParam1(true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 	} else if (leveltype != DTYPE_TOWN) {
-		// attack on the current direction
-		const int x = plr[myplr].position.future.x;
-		const int y = plr[myplr].position.future.y;
-		const int dx = x + Offsets[plr[myplr]._pdir][0];
-		const int dy = y + Offsets[plr[myplr]._pdir][1];
+		if (pcursplr != -1 && !gbFriendlyMode) {
+			NetSendCmdParam1(true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+		} else {
+			// attack on the current direction
+			const int x = plr[myplr].position.future.x;
+			const int y = plr[myplr].position.future.y;
+			const int dx = x + Offsets[plr[myplr]._pdir][0];
+			const int dy = y + Offsets[plr[myplr]._pdir][1];
 
-		NetSendCmdLoc(myplr, true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKXY : CMD_SATTACKXY, { dx, dy });
+			NetSendCmdLoc(myplr, true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKXY : CMD_SATTACKXY, { dx, dy });
+		}
 	}
 }
 
@@ -830,9 +832,9 @@ bool IsPathBlocked(int x, int y, int dir)
 	return !PosOkPlayer(myplr, d1x, d1y) && !PosOkPlayer(myplr, d2x, d2y);
 }
 
-direction GetPathNotBlocked(int x, int y, int dir)
+direction GetNonBlockedDirection(int x, int y, int dir)
 {
-	int d1, d2, d1x, d1y, d2x, d2y;
+	int d1, d2;
 
 	switch (dir) {
 	case DIR_N:
@@ -855,10 +857,10 @@ direction GetPathNotBlocked(int x, int y, int dir)
 		return DIR_OMNI;
 	}
 
-	d1x = x + Offsets[d1][0];
-	d1y = y + Offsets[d1][1];
-	d2x = x + Offsets[d2][0];
-	d2y = y + Offsets[d2][1];
+	const int d1x = x + Offsets[d1][0];
+	const int d1y = y + Offsets[d1][1];
+	const int d2x = x + Offsets[d2][0];
+	const int d2y = y + Offsets[d2][1];
 
 	if (!nSolidTable[dPiece[d1x][d1y]])
 		return (direction)d1;
@@ -868,7 +870,7 @@ direction GetPathNotBlocked(int x, int y, int dir)
 	return DIR_OMNI;
 }
 
-void WalkInDir(int playerId, const direction dir)
+void WalkInDirection(int playerId, const direction dir)
 {
 	const int x = plr[playerId].position.future.x;
 	const int y = plr[playerId].position.future.y;
@@ -878,9 +880,9 @@ void WalkInDir(int playerId, const direction dir)
 	plr[playerId]._pdir = dir;
 
 	if (nSolidTable[dPiece[dx][dy]]) {
-		const direction new_dir = GetPathNotBlocked(x, y, dir);
+		const direction new_dir = GetNonBlockedDirection(x, y, dir);
 		if (new_dir != DIR_OMNI) {
-			WalkInDir(playerId, new_dir);
+			WalkInDirection(playerId, new_dir);
 			return;
 		}
 	}
@@ -892,7 +894,7 @@ void WalkInDir(int playerId, const direction dir)
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, { dx, dy });
 }
 
-void WalkInDir(int playerId, const AxisDirection dir)
+void WalkInAxisDirection(int playerId, const AxisDirection dir)
 {
 	const int x = plr[playerId].position.future.x;
 	const int y = plr[playerId].position.future.y;
@@ -905,7 +907,7 @@ void WalkInDir(int playerId, const AxisDirection dir)
 
 	const direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 
-	WalkInDir(playerId, pdir);
+	WalkInDirection(playerId, pdir);
 }
 
 void QuestLogMove(AxisDirection moveDir)
@@ -969,7 +971,7 @@ void Movement(int playerId)
 	}
 
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
-		WalkInDir(playerId, moveDir);
+		WalkInAxisDirection(playerId, moveDir);
 	}
 }
 
