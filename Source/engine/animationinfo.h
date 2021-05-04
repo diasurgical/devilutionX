@@ -23,6 +23,10 @@ enum AnimationDistributionFlags : uint8_t {
 	* @brief Delay of last Frame is ignored (for example, because only Frame and not delay is checked in game_logic)
 	*/
 	SkipsDelayOfLastFrame = 1 << 1,
+	/**
+	 * @brief Repeated Animation (for example same player melee attack, that can be repeated directly after hit frame and doesn't need to show all animation frames)
+	 */
+	RepeatedAction = 1 << 2,
 };
 
 /*

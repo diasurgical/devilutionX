@@ -1489,7 +1489,10 @@ void StartAttack(int pnum, direction d)
 		skippedAnimationFrames = 2;
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationDistributionFlags::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
+	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
+	if (plr[pnum]._pmode == PM_ATTACK)
+		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, animationFlags, skippedAnimationFrames, plr[pnum]._pAFNum);
 	plr[pnum]._pmode = PM_ATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(pnum);
@@ -1517,7 +1520,10 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 		}
 	}
 
-	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, AnimationDistributionFlags::ProcessAnimationPending, skippedAnimationFrames, plr[pnum]._pAFNum);
+	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
+	if (plr[pnum]._pmode == PM_RATTACK)
+		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
+	NewPlrAnim(pnum, plr[pnum]._pAAnim[d], plr[pnum]._pAFrames, 0, plr[pnum]._pAWidth, animationFlags, skippedAnimationFrames, plr[pnum]._pAFNum);
 
 	plr[pnum]._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
@@ -1565,24 +1571,28 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 	}
 
 	if (leveltype != DTYPE_TOWN) {
+		auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
+		if (plr[pnum]._pmode == PM_SPELL)
+			animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
+
 		switch (spelldata[plr[pnum]._pSpell].sType) {
 		case STYPE_FIRE:
 			if ((plr[pnum]._pGFXLoad & PFILE_FIRE) == 0) {
 				LoadPlrGFX(pnum, PFILE_FIRE);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionFlags::ProcessAnimationPending, 0, plr[pnum]._pSFNum);
+			NewPlrAnim(pnum, plr[pnum]._pFAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, animationFlags, 0, plr[pnum]._pSFNum);
 			break;
 		case STYPE_LIGHTNING:
 			if ((plr[pnum]._pGFXLoad & PFILE_LIGHTNING) == 0) {
 				LoadPlrGFX(pnum, PFILE_LIGHTNING);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionFlags::ProcessAnimationPending, 0, plr[pnum]._pSFNum);
+			NewPlrAnim(pnum, plr[pnum]._pLAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, animationFlags, 0, plr[pnum]._pSFNum);
 			break;
 		case STYPE_MAGIC:
 			if ((plr[pnum]._pGFXLoad & PFILE_MAGIC) == 0) {
 				LoadPlrGFX(pnum, PFILE_MAGIC);
 			}
-			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, AnimationDistributionFlags::ProcessAnimationPending, 0, plr[pnum]._pSFNum);
+			NewPlrAnim(pnum, plr[pnum]._pTAnim[d], plr[pnum]._pSFrames, 0, plr[pnum]._pSWidth, animationFlags, 0, plr[pnum]._pSFNum);
 			break;
 		}
 	}

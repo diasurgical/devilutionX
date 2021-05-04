@@ -54,7 +54,7 @@ int AnimationInfo::GetFrameToUseForRendering() const
 
 void AnimationInfo::SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
-	if (pData == this->pData && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
+	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
 		// So now we should add them back to the new Animation. This increases the speed of the current Animation but the game logic/ticks isn't affected.
 		SkippedFramesFromPreviousAnimation = NumberOfFrames - CurrentFrame;
