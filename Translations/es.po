@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.4.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
@@ -479,21 +479,27 @@ msgid "Enter address"
 msgstr "Ingresa la dirección"
 
 #: Source/DiabloUI/selgame.cpp:209
-msgid "Normal Difficulty\n"
+msgid ""
+"Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
-msgstr "Dificultad normal\n"
+msgstr ""
+"Dificultad normal\n"
 "Aquí es donde un personaje inicial debe comenzar la búsqueda para derrotar a Diablo."
 
 #: Source/DiabloUI/selgame.cpp:213
-msgid "Nightmare Difficulty\n"
+msgid ""
+"Nightmare Difficulty\n"
 "The denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only."
-msgstr "Dificultad de pesadilla\n"
+msgstr ""
+"Dificultad de pesadilla\n"
 "Los habitantes del Laberinto se han reforzado y demostrarán ser un desafío mayor. Esto se recomienda solo para personajes experimentados."
 
 #: Source/DiabloUI/selgame.cpp:217
-msgid "Hell Difficulty\n"
+msgid ""
+"Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm."
-msgstr "Dificultad del infierno\n"
+msgstr ""
+"Dificultad del infierno\n"
 "La más poderosa de las criaturas del inframundo acecha en la entrada al infierno. Solo los personajes más experimentados deberían aventurarse en este reino."
 
 #: Source/DiabloUI/selgame.cpp:232
@@ -521,27 +527,35 @@ msgid "Fastest"
 msgstr "Lo más rápido"
 
 #: Source/DiabloUI/selgame.cpp:332
-msgid "Normal Speed\n"
+msgid ""
+"Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
-msgstr "Velocidad normal\n"
+msgstr ""
+"Velocidad normal\n"
 "Aquí es donde un personaje inicial debe comenzar la búsqueda para derrotar a Diablo."
 
 #: Source/DiabloUI/selgame.cpp:336
-msgid "Fast Speed\n"
+msgid ""
+"Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a greater challenge. This is recommended for experienced characters only."
-msgstr "Rápida velocidad\n"
+msgstr ""
+"Rápida velocidad\n"
 "Los habitantes del Laberinto se han apresurado y demostrarán ser un desafío mayor. Esto se recomienda solo para personajes experimentados."
 
 #: Source/DiabloUI/selgame.cpp:340
-msgid "Faster Speed\n"
+msgid ""
+"Faster Speed\n"
 "Most monsters of the dungeon will seek you out quicker than ever before. Only an experienced champion should try their luck at this speed."
-msgstr "Velocidad más rápida\n"
+msgstr ""
+"Velocidad más rápida\n"
 "La mayoría de los monstruos de la mazmorra te buscarán más rápido que nunca. Solo un campeón experimentado debería probar suerte a esta velocidad."
 
 #: Source/DiabloUI/selgame.cpp:344
-msgid "Fastest Speed\n"
+msgid ""
+"Fastest Speed\n"
 "The minions of the underworld will rush to attack without hesitation. Only a true speed demon should enter at this pace."
-msgstr "Velocidad más rápida\n"
+msgstr ""
+"Velocidad más rápida\n"
 "Los esbirros del inframundo se apresurarán a atacar sin dudarlo. Solo un verdadero demonio de la velocidad debería entrar a este ritmo."
 
 #: Source/DiabloUI/selgame.cpp:386
@@ -750,16 +764,19 @@ msgstr "Error"
 
 #: Source/appfat.cpp:117
 #, c-format
-msgid "%s\n"
+msgid ""
+"%s\n"
 "\n"
 "The error occurred at: %s line %d"
-msgstr "%s\n"
+msgstr ""
+"%s\n"
 "\n"
 "El error ocurrió en: %s línea %d"
 
 #: Source/appfat.cpp:137
 #, c-format
-msgid "Unable to open a required file.\n"
+msgid ""
+"Unable to open a required file.\n"
 "\n"
 "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
 "011bc6518e6166206231080a4440b373\n"
@@ -767,7 +784,8 @@ msgid "Unable to open a required file.\n"
 "\n"
 "The problem occurred when loading:\n"
 "%s"
-msgstr "No se puede abrir un archivo requerido\n"
+msgstr ""
+"No se puede abrir un archivo requerido\n"
 "\n"
 "Verifique que el MD5 de diabdat.mpq coincida con uno de los siguientes valores\n"
 "68f049866b44688a7af65ba766bef75a\n"
@@ -780,18 +798,22 @@ msgid "Data File Error"
 msgstr "Error de archivo de datos"
 
 #: Source/appfat.cpp:160
-msgid "Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+msgid ""
+"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 "\n"
 "Make sure that it is in the game folder and that the file name is in all lowercase."
-msgstr "No se puede abrir el archivo de datos principal (diabdat.mpq o spawn.mpq).\n"
+msgstr ""
+"No se puede abrir el archivo de datos principal (diabdat.mpq o spawn.mpq).\n"
 "\n"
 "Asegúrate de que esté en la carpeta del juego y que el nombre del archivo esté en minúsculas."
 
 #: Source/appfat.cpp:175
 #, c-format
-msgid "Unable to write to location:\n"
+msgid ""
+"Unable to write to location:\n"
 "%s"
-msgstr "No se puede escribir en la ubicación:\n"
+msgstr ""
+"No se puede escribir en la ubicación:\n"
 "%s"
 
 #: Source/appfat.cpp:177
@@ -939,11 +961,11 @@ msgid "Hotkey: 's'"
 msgstr "Tecla de acceso rápido: 's'"
 
 #: Source/control.cpp:1261
-#, c-format
+#, fuzzy, c-format
 msgid "%i gold piece"
 msgid_plural "%i gold pieces"
 msgstr[0] "%i piezas de oro"
-msgstr[1] "%i oro %s"
+msgstr[1] "%i piezas de oro"
 
 #: Source/control.cpp:1264
 msgid "Requirements not met"
@@ -1010,11 +1032,11 @@ msgid "You have %u gold"
 msgstr "Tienes %u oro"
 
 #: Source/control.cpp:1906
-#, c-format
+#, fuzzy, c-format
 msgid "piece.  How many do"
 msgid_plural "pieces.  How many do"
 msgstr[0] "piezas. Cuantas hacen"
-msgstr[1] "%s. Cuantos hacen"
+msgstr[1] "piezas. Cuantas hacen"
 
 #: Source/control.cpp:1908
 msgid "you want to remove?"
@@ -1134,9 +1156,11 @@ msgid "Force spawn mode even if diabdat.mpq is found"
 msgstr "Force spawn mode even if diabdat.mpq is found"
 
 #: Source/diablo.cpp:173
-msgid "\n"
+msgid ""
+"\n"
 "Hellfire options:\n"
-msgstr "\n"
+msgstr ""
+"\n"
 "Opciones de Hellfire:\n"
 
 #: Source/diablo.cpp:174
@@ -1148,9 +1172,11 @@ msgid "Use alternate nest palette"
 msgstr "Usar paleta de nido alternativa"
 
 #: Source/diablo.cpp:191
-msgid "\n"
+msgid ""
+"\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr "\n"
+msgstr ""
+"\n"
 "Reportar errores a https://github.com/diasurgical/devilutionX/\n"
 
 #: Source/diablo.cpp:267
@@ -1497,9 +1523,11 @@ msgid "Some Hellfire MPQs are missing"
 msgstr "Faltan algunos MPQ de Hellfire"
 
 #: Source/init.cpp:202
-msgid "Not all Hellfire MPQs were found.\n"
+msgid ""
+"Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
-msgstr "No se encontraron todos los MPQ de Hellfire.\n"
+msgstr ""
+"No se encontraron todos los MPQ de Hellfire.\n"
 "Copie todos los archivos hf * .mpq."
 
 #: Source/init.cpp:212
@@ -3340,7 +3368,7 @@ msgid "to use armor or weapons"
 msgstr "usar armaduras o armas"
 
 #: Source/items.cpp:3341
-#, c-format
+#, no-c-format
 msgid "restores 20% of an"
 msgstr "restaura el 20% de un"
 
@@ -5926,12 +5954,14 @@ msgid " Ahh, the story of our King, is it? The tragic fall of Leoric was a harsh
 msgstr " Ahh, la historia de nuestro Rey, ¿verdad? La trágica caída de Leoric fue un duro golpe para esta tierra. La gente siempre amó al Rey, y ahora vive con un miedo mortal hacia él. La pregunta que me sigo haciendo es cómo pudo haber caído tan lejos de la Luz, ya que Leoric siempre había sido el más santo de los hombres. Sólo los poderes más viles del infierno podrían destruir tan completamente a un hombre desde dentro ...|"
 
 #: Source/textdat.cpp:17
-msgid "The village needs your help, good master! Some months ago King Leoric's son, Prince Albrecht, was kidnapped. The King went into a rage and scoured the village for his missing child. With each passing day, Leoric seemed to slip deeper into madness. He sought to blame innocent townsfolk for the boy's disappearance and had them brutally executed. Less than half of us survived his insanity...\n"
+msgid ""
+"The village needs your help, good master! Some months ago King Leoric's son, Prince Albrecht, was kidnapped. The King went into a rage and scoured the village for his missing child. With each passing day, Leoric seemed to slip deeper into madness. He sought to blame innocent townsfolk for the boy's disappearance and had them brutally executed. Less than half of us survived his insanity...\n"
 " \n"
 "The King's Knights and Priests tried to placate him, but he turned against them and sadly, they were forced to kill him. With his dying breath the King called down a terrible curse upon his former followers. He vowed that they would serve him in darkness forever...\n"
 " \n"
 "This is where things take an even darker twist than I thought possible! Our former King has risen from his eternal sleep and now commands a legion of undead minions within the Labyrinth. His body was buried in a tomb three levels beneath the Cathedral. Please, good master, put his soul at ease by destroying his now cursed form... |"
-msgstr "¡El pueblo necesita tu ayuda, buen maestro! Hace algunos meses, el hijo del rey Leoric, el príncipe Albrecht, fue secuestrado. El rey se enfureció y recorrió el pueblo en busca de su hijo desaparecido. Con cada día que pasaba, Leoric parecía hundirse cada vez más en la locura. Trató de culpar a los habitantes inocentes de la desaparición del niño y los ejecutó brutalmente. Menos de la mitad de nosotros sobrevivimos a su locura ...\n"
+msgstr ""
+"¡El pueblo necesita tu ayuda, buen maestro! Hace algunos meses, el hijo del rey Leoric, el príncipe Albrecht, fue secuestrado. El rey se enfureció y recorrió el pueblo en busca de su hijo desaparecido. Con cada día que pasaba, Leoric parecía hundirse cada vez más en la locura. Trató de culpar a los habitantes inocentes de la desaparición del niño y los ejecutó brutalmente. Menos de la mitad de nosotros sobrevivimos a su locura ...\n"
 " \n"
 "Los Caballeros y Sacerdotes del Rey intentaron aplacarlo, pero él se volvió contra ellos y, lamentablemente, se vieron obligados a matarlo. Con su último aliento, el rey lanzó una terrible maldición sobre sus antiguos seguidores. Juró que lo servirían en la oscuridad para siempre ...\n"
 " \n"
@@ -5994,10 +6024,12 @@ msgid "Oh my! Is that where the sign went? My Grandmother and I must have slept 
 msgstr "¡Oh mi! ¿Es ahí donde fue el letrero? Mi abuela y yo debimos haber dormido todo el rato. Gracias a la Luz que esos monstruos no atacaron la posada.|"
 
 #: Source/textdat.cpp:47
-msgid "Demons stole Ogden's sign, you say? That doesn't sound much like the atrocities I've heard of - or seen. \n"
+msgid ""
+"Demons stole Ogden's sign, you say? That doesn't sound much like the atrocities I've heard of - or seen. \n"
 " \n"
 "Demons are concerned with ripping out your heart, not your signpost. |"
-msgstr "¿Los demonios robaron la señal de Ogden, dices? Eso no se parece mucho a las atrocidades de las que he oído o visto. \n"
+msgstr ""
+"¿Los demonios robaron la señal de Ogden, dices? Eso no se parece mucho a las atrocidades de las que he oído o visto. \n"
 " \n"
 "A los demonios les preocupa arrancarte el corazón, no tu señal.|"
 
@@ -6006,18 +6038,22 @@ msgid "You know what I think? Somebody took that sign, and they gonna want lots 
 msgstr "¿Sabes lo que pienso? Alguien tomó ese letrero y querrán mucho dinero por él. Si yo fuera Ogden ... y no lo soy, pero si fuera ... compraría un nuevo cartel con un bonito dibujo. Quizás una buena jarra de cerveza o un trozo de queso ...|"
 
 #: Source/textdat.cpp:51
-msgid "No mortal can truly understand the mind of the demon. \n"
+msgid ""
+"No mortal can truly understand the mind of the demon. \n"
 " \n"
 "Never let their erratic actions confuse you, as that too may be their plan. |"
-msgstr "Ningún mortal puede comprender verdaderamente la mente del demonio. \n"
+msgstr ""
+"Ningún mortal puede comprender verdaderamente la mente del demonio. \n"
 " \n"
 "Nunca dejes que sus acciones erráticas te confundan, ya que ese también puede ser su plan.|"
 
 #: Source/textdat.cpp:53
-msgid "What - is he saying I took that? I suppose that Griswold is on his side, too. \n"
+msgid ""
+"What - is he saying I took that? I suppose that Griswold is on his side, too. \n"
 " \n"
 "Look, I got over simple sign stealing months ago. You can't turn a profit on a piece of wood. |"
-msgstr "¿Qué - está diciendo que me llevé eso? Supongo que Griswold también está de su lado. \n"
+msgstr ""
+"¿Qué - está diciendo que me llevé eso? Supongo que Griswold también está de su lado. \n"
 " \n"
 "Mira, superé el simple robo de señales hace meses. No puede obtener ganancias con un trozo de madera.|"
 
@@ -6034,7 +6070,8 @@ msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic! |"
 msgstr "¡Das! ¡Si bien! Vete ahora, somos fuertes. ¡Matamos a todos con gran magia!|"
 
 #: Source/textdat.cpp:61
-msgid "This does not bode well, for it confirms my darkest fears. While I did not allow myself to believe the ancient legends, I cannot deny them now. Perhaps the time has come to reveal who I am.\n"
+msgid ""
+"This does not bode well, for it confirms my darkest fears. While I did not allow myself to believe the ancient legends, I cannot deny them now. Perhaps the time has come to reveal who I am.\n"
 " \n"
 "My true name is Deckard Cain the Elder, and I am the last descendant of an ancient Brotherhood that was dedicated to safeguarding the secrets of a timeless evil. An evil that quite obviously has now been released.\n"
 " \n"
@@ -6043,7 +6080,8 @@ msgid "This does not bode well, for it confirms my darkest fears. While I did no
 "Curse me for a fool! I should have suspected his veiled treachery then. It must have been Lazarus himself who kidnapped Albrecht and has since hidden him within the Labyrinth. I do not understand why the Archbishop turned to the darkness, or what his interest is in the child, unless he means to sacrifice him to his dark masters!\n"
 " \n"
 "That must be what he has planned! The survivors of his 'rescue party' say that Lazarus was last seen running into the deepest bowels of the labyrinth. You must hurry and save the prince from the sacrificial blade of this demented fiend! |"
-msgstr "Esto no augura nada bueno, ya que confirma mis temores más oscuros. Si bien no me permití creer las leyendas antiguas, no puedo negarlas ahora. Quizás ha llegado el momento de revelar quién soy.\n"
+msgstr ""
+"Esto no augura nada bueno, ya que confirma mis temores más oscuros. Si bien no me permití creer las leyendas antiguas, no puedo negarlas ahora. Quizás ha llegado el momento de revelar quién soy.\n"
 " \n"
 "Mi verdadero nombre es Deckard Cain the Elder, y soy el último descendiente de una antigua Hermandad que se dedicó a salvaguardar los secretos de un mal atemporal. Un mal que obviamente ahora se ha liberado.\n"
 " \n"
@@ -6058,10 +6096,12 @@ msgid "You must hurry and rescue Albrecht from the hands of Lazarus. The prince 
 msgstr "Debes darte prisa y rescatar a Albrecht de las manos de Lázaro. ¡El príncipe y la gente de este reino cuentan contigo!|"
 
 #: Source/textdat.cpp:65
-msgid "Your story is quite grim, my friend. Lazarus will surely burn in Hell for his horrific deed. The boy that you describe is not our prince, but I believe that Albrecht may yet be in danger. The symbol of power that you speak of must be a portal in the very heart of the labyrinth.\n"
+msgid ""
+"Your story is quite grim, my friend. Lazarus will surely burn in Hell for his horrific deed. The boy that you describe is not our prince, but I believe that Albrecht may yet be in danger. The symbol of power that you speak of must be a portal in the very heart of the labyrinth.\n"
 " \n"
 "Know this, my friend - The evil that you move against is the dark Lord of Terror. He is known to mortal men as Diablo. It was he who was imprisoned within the Labyrinth many centuries ago and I fear that he seeks to once again sow chaos in the realm of mankind. You must venture through the portal and destroy Diablo before it is too late! |"
-msgstr "Tu historia es bastante sombría, amigo. Lázaro seguramente arderá en el infierno por su horrible acto. El chico que describe no es nuestro príncipe, pero creo que Albrecht aún puede estar en peligro. El símbolo de poder del que hablas debe ser un portal en el corazón mismo del laberinto.\n"
+msgstr ""
+"Tu historia es bastante sombría, amigo. Lázaro seguramente arderá en el infierno por su horrible acto. El chico que describe no es nuestro príncipe, pero creo que Albrecht aún puede estar en peligro. El símbolo de poder del que hablas debe ser un portal en el corazón mismo del laberinto.\n"
 " \n"
 "Debes saber esto, amigo mío: el mal contra el que te mueves es el oscuro Señor del Terror. Es conocido por los hombres mortales como Diablo. Fue él quien fue encarcelado dentro del Laberinto hace muchos siglos y me temo que busca sembrar una vez más el caos en el reino de la humanidad. ¡Debes aventurarte a través del portal y destruir Diablo antes de que sea demasiado tarde!|"
 
@@ -6102,10 +6142,12 @@ msgid "Hmm, I don't know what I can really tell you about this that will be of a
 msgstr "Mmm, no sé qué puedo decirte realmente sobre esto que sea de alguna ayuda. El agua que llena nuestros pozos proviene de un manantial subterráneo. He oído hablar de un túnel que conduce a un gran lago; tal vez sean uno y el mismo. Desafortunadamente, no sé qué causaría que nuestro suministro de agua se viera contaminado.|"
 
 #: Source/textdat.cpp:88
-msgid "I have always tried to keep a large supply of foodstuffs and drink in our storage cellar, but with the entire town having no source of fresh water, even our stores will soon run dry. \n"
+msgid ""
+"I have always tried to keep a large supply of foodstuffs and drink in our storage cellar, but with the entire town having no source of fresh water, even our stores will soon run dry. \n"
 " \n"
 "Please, do what you can or I don't know what we will do. |"
-msgstr "Siempre he tratado de mantener una gran cantidad de alimentos y bebidas en nuestro sótano de almacenamiento, pero como toda la ciudad no tiene una fuente de agua dulce, incluso nuestras tiendas se secarán pronto. \n"
+msgstr ""
+"Siempre he tratado de mantener una gran cantidad de alimentos y bebidas en nuestro sótano de almacenamiento, pero como toda la ciudad no tiene una fuente de agua dulce, incluso nuestras tiendas se secarán pronto. \n"
 " \n"
 "Por favor, haz lo que puedas o no sé qué haremos.|"
 
@@ -6114,10 +6156,12 @@ msgid "I'm glad I caught up to you in time! Our wells have become brackish and s
 msgstr "¡Me alegro de haberte alcanzado a tiempo! Nuestros pozos se han vuelto salobres y estancados y algunos de los habitantes del pueblo se han enfermado al beber de ellos. Nuestras reservas de agua dulce se están secando rápidamente. Creo que hay un pasaje que conduce a los manantiales que sirven a nuestro pueblo. Por favor, averigüe qué ha causado esta calamidad, o seguramente todos moriremos.|"
 
 #: Source/textdat.cpp:92
-msgid "Please, you must hurry. Every hour that passes brings us closer to having no water to drink. \n"
+msgid ""
+"Please, you must hurry. Every hour that passes brings us closer to having no water to drink. \n"
 " \n"
 "We cannot survive for long without your help. |"
-msgstr "Por favor, debe darse prisa. Cada hora que pasa nos acerca a no tener agua para beber. \n"
+msgstr ""
+"Por favor, debe darse prisa. Cada hora que pasa nos acerca a no tener agua para beber. \n"
 " \n"
 "No podemos sobrevivir por mucho tiempo sin su ayuda.|"
 
@@ -6138,10 +6182,12 @@ msgid "You drink water? |"
 msgstr "¿Tu bebes agua? |"
 
 #: Source/textdat.cpp:101
-msgid "The people of Tristram will die if you cannot restore fresh water to their wells. \n"
+msgid ""
+"The people of Tristram will die if you cannot restore fresh water to their wells. \n"
 " \n"
 "Know this - demons are at the heart of this matter, but they remain ignorant of what they have spawned. |"
-msgstr "La gente de Tristram morirá si no puedes devolver agua fresca a sus pozos. \n"
+msgstr ""
+"La gente de Tristram morirá si no puedes devolver agua fresca a sus pozos. \n"
 " \n"
 "Sepa esto: los demonios están en el centro de este asunto, pero siguen ignorando lo que han engendrado.|"
 
@@ -6174,10 +6220,12 @@ msgid "Okay, so listen. There's this chamber of wood, see. And his wife, you kno
 msgstr "Bien, escucha. Ahí está esta cámara de madera, ¿ven? Y su esposa, ya sabes, ella, le dice al árbol ... porque tienes que esperar. Entonces digo, eso podría funcionar en su contra, pero si crees que voy a PAGAR por esto ... tú ... eh ... sí.|"
 
 #: Source/textdat.cpp:117
-msgid "You will become an eternal servant of the dark lords should you perish within this cursed domain. \n"
+msgid ""
+"You will become an eternal servant of the dark lords should you perish within this cursed domain. \n"
 " \n"
 "Enter the Chamber of Bone at your own peril. |"
-msgstr "Te convertirás en un sirviente eterno de los señores oscuros si pereces dentro de este dominio maldito. \n"
+msgstr ""
+"Te convertirás en un sirviente eterno de los señores oscuros si pereces dentro de este dominio maldito. \n"
 " \n"
 "Ingrese a la Cámara de Hueso bajo su propio riesgo.|"
 
@@ -6214,10 +6262,12 @@ msgid "The Butcher is a sadistic creature that delights in the torture and pain 
 msgstr "El Carnicero es una criatura sádica que se deleita con la tortura y el dolor de los demás. Has visto su obra en el borracho Farnham. Su destrucción hará mucho para garantizar la seguridad de esta aldea.|"
 
 #: Source/textdat.cpp:135
-msgid "I know more than you'd think about that grisly fiend. His little friends got a hold of me and managed to get my leg before Griswold pulled me out of that hole. \n"
+msgid ""
+"I know more than you'd think about that grisly fiend. His little friends got a hold of me and managed to get my leg before Griswold pulled me out of that hole. \n"
 " \n"
 "I'll put it bluntly - kill him before he kills you and adds your corpse to his collection. |"
-msgstr "Sé más de lo que piensas sobre ese demonio espantoso. Sus amiguitos me agarraron y lograron sacarme la pierna antes de que Griswold me sacara de ese agujero. \n"
+msgstr ""
+"Sé más de lo que piensas sobre ese demonio espantoso. Sus amiguitos me agarraron y lograron sacarme la pierna antes de que Griswold me sacara de ese agujero. \n"
 " \n"
 "Lo diré sin rodeos: mátalo antes de que te mate y agregue tu cadáver a su colección.|"
 
@@ -6226,18 +6276,22 @@ msgid "Please, listen to me. The Archbishop Lazarus, he led us down here to find
 msgstr "Por favor escuchame. El arzobispo Lázaro, nos llevó hasta aquí para encontrar al príncipe perdido. ¡El bastardo nos llevó a una trampa! Ahora todo el mundo está muerto ... asesinado por un demonio que llamó el Carnicero. ¡Vénganos! Encuentra a este Carnicero y mátalo para que nuestras almas finalmente descansen ...|"
 
 #: Source/textdat.cpp:140
-msgid "You recite an interesting rhyme written in a style that reminds me of other works. Let me think now - what was it?\n"
+msgid ""
+"You recite an interesting rhyme written in a style that reminds me of other works. Let me think now - what was it?\n"
 " \n"
 "...Darkness shrouds the Hidden. Eyes glowing unseen with only the sounds of razor claws briefly scraping to torment those poor souls who have been made sightless for all eternity. The prison for those so damned is named the Halls of the Blind... |"
-msgstr "Recitas una rima interesante escrita en un estilo que me recuerda a otras obras. Déjame pensar ahora, ¿qué fue?\n"
+msgstr ""
+"Recitas una rima interesante escrita en un estilo que me recuerda a otras obras. Déjame pensar ahora, ¿qué fue?\n"
 " \n"
 "... La oscuridad envuelve lo oculto. Ojos que brillan sin ser vistos con solo el sonido de las garras de las navajas raspando brevemente para atormentar a esas pobres almas que han quedado ciegas por toda la eternidad. La prisión para los condenados se llama las Cámaras de los Ciegos ...|"
 
 #: Source/textdat.cpp:142
-msgid "I never much cared for poetry. Occasionally, I had cause to hire minstrels when the inn was doing well, but that seems like such a long time ago now. \n"
+msgid ""
+"I never much cared for poetry. Occasionally, I had cause to hire minstrels when the inn was doing well, but that seems like such a long time ago now. \n"
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows. |"
-msgstr "Nunca me gustó mucho la poesía. De vez en cuando, tenía motivos para contratar juglares cuando la posada iba bien, pero eso parece que fue hace mucho tiempo. \n"
+msgstr ""
+"Nunca me gustó mucho la poesía. De vez en cuando, tenía motivos para contratar juglares cuando la posada iba bien, pero eso parece que fue hace mucho tiempo. \n"
 " \n"
 "¿Qué? Oh, sí ... eh, bueno, supongo que podrías ver lo que alguien más sabe.|"
 
@@ -6258,10 +6312,12 @@ msgid "Look here... that's pretty funny, huh? Get it? Blind - look here? |"
 msgstr "Mira aquí ... eso es muy gracioso, ¿eh? ¿Consíguelo? Ciego, ¿mira aquí?|"
 
 #: Source/textdat.cpp:152
-msgid "This is a place of great anguish and terror, and so serves its master well. \n"
+msgid ""
+"This is a place of great anguish and terror, and so serves its master well. \n"
 " \n"
 "Tread carefully or you may yourself be staying much longer than you had anticipated. |"
-msgstr "Este es un lugar de gran angustia y terror, y por eso sirve bien a su amo. \n"
+msgstr ""
+"Este es un lugar de gran angustia y terror, y por eso sirve bien a su amo. \n"
 " \n"
 "Pise con cuidado o puede que usted mismo se quede mucho más tiempo de lo que había anticipado.|"
 
@@ -6270,10 +6326,12 @@ msgid "Lets see, am I selling you something? No. Are you giving me money to tell
 msgstr "Veamos, ¿te estoy vendiendo algo? No. ¿Me estás dando dinero para contarte esto? No. ¿Ahora te vas y vas a hablar con el narrador que vive para este tipo de cosas? Si.|"
 
 #: Source/textdat.cpp:156
-msgid "You claim to have spoken with Lachdanan? He was a great hero during his life. Lachdanan was an honorable and just man who served his King faithfully for years. But of course, you already know that.\n"
+msgid ""
+"You claim to have spoken with Lachdanan? He was a great hero during his life. Lachdanan was an honorable and just man who served his King faithfully for years. But of course, you already know that.\n"
 " \n"
 "Of those who were caught within the grasp of the King's Curse, Lachdanan would be the least likely to submit to the darkness without a fight, so I suppose that your story could be true. If I were in your place, my friend, I would find a way to release him from his torture. |"
-msgstr "¿Afirmas haber hablado con Lachdanan? Fue un gran héroe durante su vida. Lachdanan fue un hombre honorable y justo que sirvió fielmente a su Rey durante años. Pero claro, eso ya lo sabes.\n"
+msgstr ""
+"¿Afirmas haber hablado con Lachdanan? Fue un gran héroe durante su vida. Lachdanan fue un hombre honorable y justo que sirvió fielmente a su Rey durante años. Pero claro, eso ya lo sabes.\n"
 " \n"
 "De aquellos que quedaron atrapados en las garras de la Maldición del Rey, Lachdanan sería el menos propenso a someterse a la oscuridad sin luchar, así que supongo que tu historia podría ser cierta. Si estuviera en tu lugar, amigo mío, encontraría la manera de liberarlo de su tortura. |"
 
@@ -6298,10 +6356,12 @@ msgid " Lachdanan is dead. Everybody knows that, and you can't fool me into thin
 msgstr " Lachdanan está muerto. Todo el mundo lo sabe, y no puedes engañarme para que piense de otra manera. No puedes hablar con los muertos. ¡Sé!|"
 
 #: Source/textdat.cpp:168
-msgid "You may meet people who are trapped within the Labyrinth, such as Lachdanan. \n"
+msgid ""
+"You may meet people who are trapped within the Labyrinth, such as Lachdanan. \n"
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram. |"
-msgstr "Es posible que conozca a personas atrapadas dentro del Laberinto, como Lachdanan. \n"
+msgstr ""
+"Es posible que conozca a personas atrapadas dentro del Laberinto, como Lachdanan. \n"
 " \n"
 "Siento en él honor y una gran culpa. Ayúdalo y ayudarás a todo Tristram.|"
 
@@ -6310,10 +6370,12 @@ msgid "Wait, let me guess. Cain was swallowed up in a gigantic fissure that open
 msgstr "Espera, déjame adivinar. Cain fue tragado por una gigantesca fisura que se abrió debajo de él. Fue incinerado en una bola de fuego del infierno y ya no puede responder a sus preguntas. Oh, ¿no es eso lo que pasó? Entonces supongo que comprarás algo o estarás en camino.|"
 
 #: Source/textdat.cpp:172
-msgid "Please, don't kill me, just hear me out. I was once Captain of King Leoric's Knights, upholding the laws of this land with justice and honor. Then his dark Curse fell upon us for the role we played in his tragic death. As my fellow Knights succumbed to their twisted fate, I fled from the King's burial chamber, searching for some way to free myself from the Curse. I failed...\n"
+msgid ""
+"Please, don't kill me, just hear me out. I was once Captain of King Leoric's Knights, upholding the laws of this land with justice and honor. Then his dark Curse fell upon us for the role we played in his tragic death. As my fellow Knights succumbed to their twisted fate, I fled from the King's burial chamber, searching for some way to free myself from the Curse. I failed...\n"
 " \n"
 "I have heard of a Golden Elixir that could lift the Curse and allow my soul to rest, but I have been unable to find it. My strength now wanes, and with it the last of my humanity as well. Please aid me and find the Elixir. I will repay your efforts - I swear upon my honor. |"
-msgstr "Por favor, no me mates, solo escúchame. Una vez fui Capitán de los Caballeros del Rey Leoric, defendiendo las leyes de esta tierra con justicia y honor. Entonces su oscura Maldición cayó sobre nosotros por el papel que jugamos en su trágica muerte. Mientras mis compañeros Caballeros sucumbían a su retorcido destino, huí de la cámara funeraria del Rey, buscando alguna forma de liberarme de la Maldición. Fallé...\n"
+msgstr ""
+"Por favor, no me mates, solo escúchame. Una vez fui Capitán de los Caballeros del Rey Leoric, defendiendo las leyes de esta tierra con justicia y honor. Entonces su oscura Maldición cayó sobre nosotros por el papel que jugamos en su trágica muerte. Mientras mis compañeros Caballeros sucumbían a su retorcido destino, huí de la cámara funeraria del Rey, buscando alguna forma de liberarme de la Maldición. Fallé...\n"
 " \n"
 "He oído hablar de un Elixir Dorado que podría levantar la Maldición y permitir que mi alma descanse, pero no he podido encontrarlo. Mi fuerza ahora se desvanece, y con ella también lo último de mi humanidad. Por favor ayúdame y encuentra el Elixir. Les pagaré sus esfuerzos, lo juro por mi honor.|"
 
@@ -6342,14 +6404,16 @@ msgid "Griswold's father used to tell some of us when we were growing up about a
 msgstr "El padre de Griswold solía contarnos a algunos de nosotros cuando éramos pequeños acerca de un yunque gigante que se usaba para fabricar armas poderosas. Dijo que cuando se golpeaba un martillo en este yunque, el suelo temblaba con gran furia. Siempre que la tierra se mueve, siempre recuerdo esa historia.|"
 
 #: Source/textdat.cpp:186
-msgid "Greetings! It's always a pleasure to see one of my best customers! I know that you have been venturing deeper into the Labyrinth, and there is a story I was told that you may find worth the time to listen to...\n"
+msgid ""
+"Greetings! It's always a pleasure to see one of my best customers! I know that you have been venturing deeper into the Labyrinth, and there is a story I was told that you may find worth the time to listen to...\n"
 " \n"
 "One of the men who returned from the Labyrinth told me about a mystic anvil that he came across during his escape. His description reminded me of legends I had heard in my youth about the burning Hellforge where powerful weapons of magic are crafted. The legend had it that deep within the Hellforge rested the Anvil of Fury! This Anvil contained within it the very essence of the demonic underworld...\n"
 " \n"
 "It is said that any weapon crafted upon the burning Anvil is imbued with great power. If this anvil is indeed the Anvil of Fury, I may be able to make you a weapon capable of defeating even the darkest lord of Hell! \n"
 " \n"
 "Find the Anvil for me, and I'll get to work! |"
-msgstr "¡Saludos! ¡Siempre es un placer ver a uno de mis mejores clientes! Sé que te has estado aventurando más profundamente en el Laberinto, y hay una historia que me contaron que puede que valga la pena escucharla ...\n"
+msgstr ""
+"¡Saludos! ¡Siempre es un placer ver a uno de mis mejores clientes! Sé que te has estado aventurando más profundamente en el Laberinto, y hay una historia que me contaron que puede que valga la pena escucharla ...\n"
 " \n"
 "Uno de los hombres que regresó del Laberinto me habló de un yunque místico que encontró durante su fuga. Su descripción me recordó las leyendas que había escuchado en mi juventud sobre la ardiente Hellforge donde se fabrican poderosas armas mágicas. ¡La leyenda decía que en lo profundo de la Forja Infernal descansaba el Yunque de la Furia! Este Yunque contenía la esencia misma del inframundo demoníaco ...\n"
 " \n"
@@ -6378,14 +6442,16 @@ msgid "If you were to find this artifact for Griswold, it could put a serious da
 msgstr "Si encontraras este artefacto para Griswold, podría poner un serio freno a mi negocio aquí. Awwww, nunca lo encontrarás.|"
 
 #: Source/textdat.cpp:198
-msgid "The Gateway of Blood and the Halls of Fire are landmarks of mystic origin. Wherever this book you read from resides it is surely a place of great power.\n"
+msgid ""
+"The Gateway of Blood and the Halls of Fire are landmarks of mystic origin. Wherever this book you read from resides it is surely a place of great power.\n"
 " \n"
 "Legends speak of a pedestal that is carved from obsidian stone and has a pool of boiling blood atop its bone encrusted surface. There are also allusions to Stones of Blood that will open a door that guards an ancient treasure...\n"
 " \n"
 "The nature of this treasure is shrouded in speculation, my friend, but it is said that the ancient hero Arkaine placed the holy armor Valor in a secret vault. Arkaine was the first mortal to turn the tide of the Sin War and chase the legions of darkness back to the Burning Hells.\n"
 " \n"
 "Just before Arkaine died, his armor was hidden away in a secret vault. It is said that when this holy armor is again needed, a hero will arise to don Valor once more. Perhaps you are that hero... |"
-msgstr "La Puerta de la Sangre y las Cámaras del Fuego son hitos de origen místico. Dondequiera que resida este libro que lea, seguramente es un lugar de gran poder.\n"
+msgstr ""
+"La Puerta de la Sangre y las Cámaras del Fuego son hitos de origen místico. Dondequiera que resida este libro que lea, seguramente es un lugar de gran poder.\n"
 " \n"
 "Las leyendas hablan de un pedestal que está tallado en piedra de obsidiana y tiene un charco de sangre hirviendo sobre su superficie incrustada de huesos. También hay alusiones a Stones of Blood que abrirán una puerta que guarda un antiguo tesoro ...\n"
 " \n"
@@ -6414,28 +6480,34 @@ msgid "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz... |"
 msgstr "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz ...|"
 
 #: Source/textdat.cpp:209
-msgid "Should you find these Stones of Blood, use them carefully. \n"
+msgid ""
+"Should you find these Stones of Blood, use them carefully. \n"
 " \n"
 "The way is fraught with danger and your only hope rests within your self trust. |"
-msgstr "Si encuentra estas Piedras de sangre, úselas con cuidado. \n"
+msgstr ""
+"Si encuentra estas Piedras de sangre, úselas con cuidado. \n"
 " \n"
 "El camino está plagado de peligros y su única esperanza reside en su confianza en sí mismo.|"
 
 #: Source/textdat.cpp:211
-msgid "You intend to find the armor known as Valor? \n"
+msgid ""
+"You intend to find the armor known as Valor? \n"
 " \n"
 "No one has ever figured out where Arkaine stashed the stuff, and if my contacts couldn't find it, I seriously doubt you ever will either. |"
-msgstr "¿Tiene la intención de encontrar la armadura conocida como Valor? \n"
+msgstr ""
+"¿Tiene la intención de encontrar la armadura conocida como Valor? \n"
 " \n"
 "Nadie ha descubierto nunca dónde escondió Arkaine las cosas, y si mis contactos no pudieron encontrarlo, dudo seriamente que tú tampoco lo hagas.|"
 
 #: Source/textdat.cpp:213
-msgid "I know of only one legend that speaks of such a warrior as you describe. His story is found within the ancient chronicles of the Sin War...\n"
+msgid ""
+"I know of only one legend that speaks of such a warrior as you describe. His story is found within the ancient chronicles of the Sin War...\n"
 " \n"
 "Stained by a thousand years of war, blood and death, the Warlord of Blood stands upon a mountain of his tattered victims. His dark blade screams a black curse to the living; a tortured invitation to any who would stand before this Executioner of Hell.\n"
 " \n"
 "It is also written that although he was once a mortal who fought beside the Legion of Darkness during the Sin War, he lost his humanity to his insatiable hunger for blood. |"
-msgstr "Solo conozco una leyenda que habla de un guerrero como el que usted describe. Su historia se encuentra dentro de las antiguas crónicas de la Guerra del Pecado ...\n"
+msgstr ""
+"Solo conozco una leyenda que habla de un guerrero como el que usted describe. Su historia se encuentra dentro de las antiguas crónicas de la Guerra del Pecado ...\n"
 " \n"
 "Manchado por mil años de guerra, sangre y muerte, el Señor de la Guerra de la Sangre se alza sobre una montaña de sus destrozadas víctimas. Su espada oscura grita una maldición negra a los vivos; una torturada invitación a cualquiera que se presente ante este Verdugo del Infierno.\n"
 " \n"
@@ -6486,10 +6558,12 @@ msgid "I don't know what it is that they thought they could see with that rock, 
 msgstr "No sé qué es lo que pensaron que podían ver con esa piedra, pero diré esto. Si caen rocas del cielo, ¡es mejor que tengas cuidado!|"
 
 #: Source/textdat.cpp:237
-msgid "Well, a caravan of some very important people did stop here, but that was quite a while ago. They had strange accents and were starting on a long journey, as I recall. \n"
+msgid ""
+"Well, a caravan of some very important people did stop here, but that was quite a while ago. They had strange accents and were starting on a long journey, as I recall. \n"
 " \n"
 "I don't see how you could hope to find anything that they would have been carrying. |"
-msgstr "Bueno, una caravana de personas muy importantes se detuvo aquí, pero eso fue hace bastante tiempo. Tenían acentos extraños y estaban iniciando un largo viaje, según recuerdo. \n"
+msgstr ""
+"Bueno, una caravana de personas muy importantes se detuvo aquí, pero eso fue hace bastante tiempo. Tenían acentos extraños y estaban iniciando un largo viaje, según recuerdo. \n"
 " \n"
 "No veo cómo podrías esperar encontrar algo que hubieran estado cargando.|"
 
@@ -6502,10 +6576,12 @@ msgid "I am still waiting for you to bring me that stone from the heavens. I kno
 msgstr "Todavía estoy esperando que me traigas esa piedra del cielo. Sé que puedo hacer algo poderoso con eso.|"
 
 #: Source/textdat.cpp:243
-msgid "Let me see that - aye... aye, it is as I believed. Give me a moment...\n"
+msgid ""
+"Let me see that - aye... aye, it is as I believed. Give me a moment...\n"
 " \n"
 "Ah, Here you are. I arranged pieces of the stone within a silver ring that my father left me. I hope it serves you well. |"
-msgstr "Déjame ver eso - sí ... sí, es como yo creía. Dame un momento...\n"
+msgstr ""
+"Déjame ver eso - sí ... sí, es como yo creía. Dame un momento...\n"
 " \n"
 "Ah, aquí tienes. Acomodé pedazos de la piedra dentro de un anillo de plata que me dejó mi padre. Espero que te sirva bien.|"
 
@@ -6574,14 +6650,16 @@ msgid "I don't have any mushrooms of any size or color for sale. How about somet
 msgstr "No tengo hongos de ningún tamaño o color a la venta. ¿Qué tal algo un poco más útil?|"
 
 #: Source/textdat.cpp:277
-msgid "So, the legend of the Map is real. Even I never truly believed any of it! I suppose it is time that I told you the truth about who I am, my friend. You see, I am not all that I seem...\n"
+msgid ""
+"So, the legend of the Map is real. Even I never truly believed any of it! I suppose it is time that I told you the truth about who I am, my friend. You see, I am not all that I seem...\n"
 " \n"
 "My true name is Deckard Cain the Elder, and I am the last descendant of an ancient Brotherhood that was dedicated to keeping and safeguarding the secrets of a timeless evil. An evil that quite obviously has now been released...\n"
 " \n"
 "The evil that you move against is the dark Lord of Terror - known to mortal men as Diablo. It was he who was imprisoned within the Labyrinth many centuries ago. The Map that you hold now was created ages ago to mark the time when Diablo would rise again from his imprisonment. When the two stars on that map align, Diablo will be at the height of his power. He will be all but invincible...\n"
 " \n"
 "You are now in a race against time, my friend! Find Diablo and destroy him before the stars align, for we may never have a chance to rid the world of his evil again! |"
-msgstr "Entonces, la leyenda del Mapa es real. ¡Incluso yo nunca creí realmente nada de eso! Supongo que es hora de que te diga la verdad sobre quién soy, amigo mío. Verás, no soy todo lo que parezco ...\n"
+msgstr ""
+"Entonces, la leyenda del Mapa es real. ¡Incluso yo nunca creí realmente nada de eso! Supongo que es hora de que te diga la verdad sobre quién soy, amigo mío. Verás, no soy todo lo que parezco ...\n"
 " \n"
 "Mi verdadero nombre es Deckard Cain the Elder, y soy el último descendiente de una antigua Hermandad que se dedicó a guardar y salvaguardar los secretos de un mal atemporal. Un mal que obviamente ahora ha sido liberado ...\n"
 " \n"
@@ -6602,18 +6680,22 @@ msgid "If the witch can't help you and suggests you see Cain, what makes you thi
 msgstr "Si la bruja no puede ayudarte y te sugiere que veas a Caín, ¿qué te hace pensar que yo sabría algo? Parece que este es un asunto muy serio. Debes darte prisa y ver al narrador como sugiere Adria.|"
 
 #: Source/textdat.cpp:285
-msgid "I can't make much of the writing on this map, but perhaps Adria or Cain could help you decipher what this refers to. \n"
+msgid ""
+"I can't make much of the writing on this map, but perhaps Adria or Cain could help you decipher what this refers to. \n"
 " \n"
 "I can see that it is a map of the stars in our sky, but any more than that is beyond my talents. |"
-msgstr "No puedo hacer mucho de lo escrito en este mapa, pero tal vez Adria o Caín podrían ayudarlo a descifrar a qué se refiere esto. \n"
+msgstr ""
+"No puedo hacer mucho de lo escrito en este mapa, pero tal vez Adria o Caín podrían ayudarlo a descifrar a qué se refiere esto. \n"
 " \n"
 "Puedo ver que es un mapa de las estrellas en nuestro cielo, pero nada más que eso está más allá de mis talentos.|"
 
 #: Source/textdat.cpp:287
-msgid "The best person to ask about that sort of thing would be our storyteller. \n"
+msgid ""
+"The best person to ask about that sort of thing would be our storyteller. \n"
 " \n"
 "Cain is very knowledgeable about ancient writings, and that is easily the oldest looking piece of paper that I have ever seen. |"
-msgstr "La mejor persona para preguntar sobre ese tipo de cosas sería nuestro narrador. \n"
+msgstr ""
+"La mejor persona para preguntar sobre ese tipo de cosas sería nuestro narrador. \n"
 " \n"
 "Caín está muy bien informado sobre los escritos antiguos, y ese es fácilmente el pedazo de papel más antiguo que he visto en mi vida.|"
 
@@ -6638,20 +6720,24 @@ msgid "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you. 
 msgstr "Por favor, no te preocupes. No matar. Mantente vivo y la próxima vez te lo traerá bien.|"
 
 #: Source/textdat.cpp:299
-msgid "Something for you I am making. Again, not kill Gharbad. Live and give good. \n"
+msgid ""
+"Something for you I am making. Again, not kill Gharbad. Live and give good. \n"
 " \n"
 "You take this as proof I keep word... |"
-msgstr "Algo para ti estoy haciendo. Nuevamente, no mates a Gharbad. Vive y da el bien. \n"
+msgstr ""
+"Algo para ti estoy haciendo. Nuevamente, no mates a Gharbad. Vive y da el bien. \n"
 " \n"
 "Toma esto como prueba de que cumplo la palabra ...|"
 
 #: Source/textdat.cpp:301
-msgid "Nothing yet! Almost done. \n"
+msgid ""
+"Nothing yet! Almost done. \n"
 " \n"
 "Very powerful, very strong. Live! Live! \n"
 " \n"
 "No pain and promise I keep! |"
-msgstr "¡Nada aún! Casi termino. \n"
+msgstr ""
+"¡Nada aún! Casi termino. \n"
 " \n"
 "Muy poderoso, muy fuerte. ¡Vivir! ¡Vivir! \n"
 " \n"
@@ -6674,10 +6760,12 @@ msgid "Hello, my friend. Stay awhile and listen... |"
 msgstr "Hola mi amigo. Quédate un rato y escucha ...|"
 
 #: Source/textdat.cpp:309
-msgid "While you are venturing deeper into the Labyrinth you may find tomes of great knowledge hidden there. \n"
+msgid ""
+"While you are venturing deeper into the Labyrinth you may find tomes of great knowledge hidden there. \n"
 " \n"
 "Read them carefully for they can tell you things that even I cannot. |"
-msgstr "Mientras te adentras más en el Laberinto, es posible que encuentres tomos de gran conocimiento escondidos allí. \n"
+msgstr ""
+"Mientras te adentras más en el Laberinto, es posible que encuentres tomos de gran conocimiento escondidos allí. \n"
 " \n"
 "Léelos atentamente porque pueden decirte cosas que incluso yo no puedo.|"
 
@@ -6730,10 +6818,12 @@ msgid "Farnham spends far too much time here, drowning his sorrows in cheap ale.
 msgstr "Farnham pasa demasiado tiempo aquí, ahogando sus penas en cerveza barata. Lo haría irse, pero sufrió tanto durante su tiempo en el Laberinto.|"
 
 #: Source/textdat.cpp:335
-msgid "Adria is wise beyond her years, but I must admit - she frightens me a little. \n"
+msgid ""
+"Adria is wise beyond her years, but I must admit - she frightens me a little. \n"
 " \n"
 "Well, no matter. If you ever have need to trade in items of sorcery, she maintains a strangely well-stocked hut just across the river. |"
-msgstr "Adria es sabia para su edad, pero debo admitir que me asusta un poco. \n"
+msgstr ""
+"Adria es sabia para su edad, pero debo admitir que me asusta un poco. \n"
 " \n"
 "Bueno, no importa. Si alguna vez necesitas intercambiar objetos de hechicería, ella mantiene una choza extrañamente bien abastecida al otro lado del río.|"
 
@@ -6742,10 +6832,12 @@ msgid "If you want to know more about the history of our village, the storytelle
 msgstr "Si quieres saber más sobre la historia de nuestro pueblo, el narrador Cain sabe bastante sobre el pasado.|"
 
 #: Source/textdat.cpp:339
-msgid "Wirt is a rapscallion and a little scoundrel. He was always getting into trouble, and it's no surprise what happened to him. \n"
+msgid ""
+"Wirt is a rapscallion and a little scoundrel. He was always getting into trouble, and it's no surprise what happened to him. \n"
 " \n"
 "He probably went fooling about someplace that he shouldn't have been. I feel sorry for the boy, but I don't abide the company that he keeps. |"
-msgstr "Wirt es un canalla y un pequeño sinvergüenza. Siempre se estaba metiendo en problemas, y no es de extrañar lo que le sucedió. \n"
+msgstr ""
+"Wirt es un canalla y un pequeño sinvergüenza. Siempre se estaba metiendo en problemas, y no es de extrañar lo que le sucedió. \n"
 " \n"
 "Probablemente se fue a hacer el tonto por algún lugar donde no debería haber estado. Lo siento por el chico, pero no acepto la compañía que tiene.|"
 
@@ -6754,10 +6846,12 @@ msgid "Pepin is a good man - and certainly the most generous in the village. He 
 msgstr "Pepin es un buen hombre y, sin duda, el más generoso del pueblo. Siempre está atendiendo las necesidades de los demás, pero los problemas de una u otra clase parecen seguirlo dondequiera que vaya ...|"
 
 #: Source/textdat.cpp:343
-msgid "Gillian, my Barmaid? If it were not for her sense of duty to her grand-dam, she would have fled from here long ago. \n"
+msgid ""
+"Gillian, my Barmaid? If it were not for her sense of duty to her grand-dam, she would have fled from here long ago. \n"
 " \n"
 "Goodness knows I begged her to leave, telling her that I would watch after the old woman, but she is too sweet and caring to have done so. |"
-msgstr "Gillian, mi camarera? Si no fuera por su sentido del deber hacia su abuela, habría huido de aquí hace mucho tiempo. \n"
+msgstr ""
+"Gillian, mi camarera? Si no fuera por su sentido del deber hacia su abuela, habría huido de aquí hace mucho tiempo. \n"
 " \n"
 "Dios sabe que le rogué que se fuera, diciéndole que cuidaría de la anciana, pero ella es demasiado dulce y cariñosa para haberlo hecho.|"
 
@@ -6798,10 +6892,12 @@ msgid "I really don't understand why Ogden stays here in Tristram. He suffers fr
 msgstr "Realmente no entiendo por qué Ogden se queda aquí en Tristram. Sufre de una leve condición nerviosa, pero es un hombre inteligente y trabajador que le iría muy bien donde quiera que fuera. Supongo que puede ser el miedo a los muchos asesinatos que ocurren en el campo circundante, o quizás los deseos de su esposa lo que lo mantiene a él y a su familia donde están.|"
 
 #: Source/textdat.cpp:362
-msgid "Ogden's barmaid is a sweet girl. Her grandmother is quite ill, and suffers from delusions. \n"
+msgid ""
+"Ogden's barmaid is a sweet girl. Her grandmother is quite ill, and suffers from delusions. \n"
 " \n"
 "She claims that they are visions, but I have no proof of that one way or the other. |"
-msgstr "La camarera de Ogden es una chica dulce. Su abuela está bastante enferma y sufre delirios \n"
+msgstr ""
+"La camarera de Ogden es una chica dulce. Su abuela está bastante enferma y sufre delirios \n"
 " \n"
 "Ella afirma que son visiones, pero no tengo pruebas de eso de una forma u otra.|"
 
@@ -6814,10 +6910,12 @@ msgid "My grandmother had a dream that you would come and talk to me. She has vi
 msgstr "Mi abuela soñó que vendrías a hablar conmigo. Ella tiene visiones, sabes y puedes ver el futuro.|"
 
 #: Source/textdat.cpp:367
-msgid "The woman at the edge of town is a witch! She seems nice enough, and her name, Adria, is very pleasing to the ear, but I am very afraid of her. \n"
+msgid ""
+"The woman at the edge of town is a witch! She seems nice enough, and her name, Adria, is very pleasing to the ear, but I am very afraid of her. \n"
 " \n"
 "It would take someone quite brave, like you, to see what she is doing out there. |"
-msgstr "¡La mujer de las afueras de la ciudad es una bruja! Parece bastante agradable y su nombre, Adria, es muy agradable al oído, pero le tengo mucho miedo. \n"
+msgstr ""
+"¡La mujer de las afueras de la ciudad es una bruja! Parece bastante agradable y su nombre, Adria, es muy agradable al oído, pero le tengo mucho miedo. \n"
 " \n"
 "Se necesitaría alguien bastante valiente, como tú, para ver lo que está haciendo ahí fuera.|"
 
@@ -6830,10 +6928,12 @@ msgid "Cain has been the storyteller of Tristram for as long as I can remember. 
 msgstr "Cain ha sido el narrador de Tristram desde que tengo uso de razón. Él sabe mucho y puede decirte casi cualquier cosa sobre casi todo.|"
 
 #: Source/textdat.cpp:373
-msgid "Farnham is a drunkard who fills his belly with ale and everyone else's ears with nonsense. \n"
+msgid ""
+"Farnham is a drunkard who fills his belly with ale and everyone else's ears with nonsense. \n"
 " \n"
 "I know that both Pepin and Ogden feel sympathy for him, but I get so frustrated watching him slip farther and farther into a befuddled stupor every night. |"
-msgstr "Farnham es un borracho que se llena la barriga de cerveza y los oídos de los demás de tonterías. \n"
+msgstr ""
+"Farnham es un borracho que se llena la barriga de cerveza y los oídos de los demás de tonterías. \n"
 " \n"
 "Sé que tanto Pepin como Ogden sienten simpatía por él, pero me frustra tanto verlo caer cada vez más en un aturdido estupor todas las noches.|"
 
@@ -6998,10 +7098,12 @@ msgid "Pssst... over here... |"
 msgstr "Pssst ... por aquí ...|"
 
 #: Source/textdat.cpp:451
-msgid "Not everyone in Tristram has a use - or a market - for everything you will find in the labyrinth. Not even me, as hard as that is to believe. \n"
+msgid ""
+"Not everyone in Tristram has a use - or a market - for everything you will find in the labyrinth. Not even me, as hard as that is to believe. \n"
 " \n"
 "Sometimes, only you will be able to find a purpose for some things. |"
-msgstr "No todo el mundo en Tristram tiene un uso, o un mercado, para todo lo que encontrará en el laberinto. Ni siquiera yo, por más difícil que sea de creer. \n"
+msgstr ""
+"No todo el mundo en Tristram tiene un uso, o un mercado, para todo lo que encontrará en el laberinto. Ni siquiera yo, por más difícil que sea de creer. \n"
 " \n"
 "A veces, solo tú podrás encontrar un propósito para algunas cosas.|"
 
@@ -7030,10 +7132,12 @@ msgid "Farnham - now there is a man with serious problems, and I know all about 
 msgstr "Farnham: ahora hay un hombre con problemas graves y sé todo acerca de lo graves que pueden ser los problemas. Confió demasiado en la integridad de un hombre, y Lázaro lo llevó a las mismas fauces de la muerte. Oh, sé lo que es ahí abajo, así que ni siquiera empieces a contarme tus planes para destruir el mal que habita en ese Laberinto. Cuida tus piernas ...|"
 
 #: Source/textdat.cpp:465
-msgid "As long as you don't need anything reattached, old Pepin is as good as they come. \n"
+msgid ""
+"As long as you don't need anything reattached, old Pepin is as good as they come. \n"
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg... |"
-msgstr "Siempre que no necesites volver a colocar nada, el viejo Pepin es tan bueno como viene. \n"
+msgstr ""
+"Siempre que no necesites volver a colocar nada, el viejo Pepin es tan bueno como viene. \n"
 " \n"
 "Si hubiera tenido algunas de esas pociones que él prepara, aún podría tener mi pierna ...|"
 
@@ -7056,7 +7160,8 @@ msgstr "... y así, encerrado más allá de la Puerta de la Sangre y más allá 
 
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
 #: Source/textdat.cpp:529 Source/textdat.cpp:537
-msgid "I can see what you see not.\n"
+msgid ""
+"I can see what you see not.\n"
 "Vision milky then eyes rot.\n"
 "When you turn they will be gone,\n"
 "Whispering their hidden song.\n"
@@ -7064,7 +7169,8 @@ msgid "I can see what you see not.\n"
 "Shadows move where light should be.\n"
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind. |\n"
-msgstr "Puedo ver lo que tú no ves.\n"
+msgstr ""
+"Puedo ver lo que tú no ves.\n"
 "Visión lechosa, luego los ojos se pudren.\n"
 "Cuando te vuelvas se habrán ido,\n"
 "Susurrando su canción oculta.\n"
@@ -7086,12 +7192,14 @@ msgid "Take heed and bear witness to the truths that lie herein, for they are th
 msgstr "Presta atención y da testimonio de las verdades que se encuentran aquí, porque son el último legado de los Horadrim. Cuando el Conflicto Eterno entre los Altos Cielos y los Infiernos Ardientes cae sobre suelo mortal, se llama la Guerra del Pecado. Ángeles y demonios caminan entre la humanidad disfrazados, luchando en secreto, lejos de las miradas indiscretas de los mortales. Algunos mortales atrevidos y poderosos incluso se han aliado con ambos bandos y han ayudado a dictar el curso de la Guerra del Pecado.|"
 
 #: Source/textdat.cpp:509
-msgid "Take heed and bear witness to the truths that lie herein, for they are the last legacy of the Horadrim. Nearly three hundred years ago, it came to be known that the Three Prime Evils of the Burning Hells had mysteriously come to our world. The Three Brothers ravaged the lands of the east for decades, while humanity was left trembling in their wake. Our Order - the Horadrim - was founded by a group of secretive magi to hunt down and capture the Three Evils once and for all.\n"
+msgid ""
+"Take heed and bear witness to the truths that lie herein, for they are the last legacy of the Horadrim. Nearly three hundred years ago, it came to be known that the Three Prime Evils of the Burning Hells had mysteriously come to our world. The Three Brothers ravaged the lands of the east for decades, while humanity was left trembling in their wake. Our Order - the Horadrim - was founded by a group of secretive magi to hunt down and capture the Three Evils once and for all.\n"
 " \n"
 "The original Horadrim captured two of the Three within powerful artifacts known as Soulstones and buried them deep beneath the desolate eastern sands. The third Evil escaped capture and fled to the west with many of the Horadrim in pursuit. The Third Evil - known as Diablo, the Lord of Terror - was eventually captured, his essence set in a Soulstone and buried within this Labyrinth.\n"
 " \n"
 "Be warned that the soulstone must be kept from discovery by those not of the faith. If Diablo were to be released, he would seek a body that is easily controlled as he would be very weak - perhaps that of an old man or a child. |"
-msgstr "Presta atención y da testimonio de las verdades que se encuentran aquí, porque son el último legado de los Horadrim. Hace casi trescientos años, se supo que los Tres Malos Principales de los Infiernos Ardientes habían llegado misteriosamente a nuestro mundo. Los Tres Hermanos asolaron las tierras del este durante décadas, mientras que la humanidad quedó temblando a su paso. Nuestra Orden, los Horadrim, fue fundada por un grupo de magos secretos para perseguir y capturar a los Tres Malos de una vez por todas.\n"
+msgstr ""
+"Presta atención y da testimonio de las verdades que se encuentran aquí, porque son el último legado de los Horadrim. Hace casi trescientos años, se supo que los Tres Malos Principales de los Infiernos Ardientes habían llegado misteriosamente a nuestro mundo. Los Tres Hermanos asolaron las tierras del este durante décadas, mientras que la humanidad quedó temblando a su paso. Nuestra Orden, los Horadrim, fue fundada por un grupo de magos secretos para perseguir y capturar a los Tres Malos de una vez por todas.\n"
 " \n"
 "El Horadrim original capturó a dos de los Tres dentro de poderosos artefactos conocidos como Soulstones y los enterró profundamente bajo las desoladas arenas del este. El tercer Malvado escapó de la captura y huyó hacia el oeste con muchos de los Horadrim persiguiéndolo. El Tercer Mal, conocido como Diablo, el Señor del Terror, finalmente fue capturado, su esencia colocada en una Piedra de Alma y enterrada dentro de este Laberinto.\n"
 " \n"
@@ -7106,10 +7214,12 @@ msgid "Many demons traveled to the mortal realm in search of the Three Brothers.
 msgstr "Muchos demonios viajaron al reino de los mortales en busca de los Tres Hermanos. Estos demonios fueron seguidos al plano mortal por Ángeles que los cazaron por las vastas ciudades del Este. Los Ángeles se aliaron con una Orden secreta de magos mortales llamada Horadrim, quienes rápidamente se volvieron expertos en cazar demonios. También se hicieron muchos enemigos oscuros en los inframundos.|"
 
 #: Source/textdat.cpp:515
-msgid "So it came to be that the Three Prime Evils were banished in spirit form to the mortal realm and after sewing chaos across the East for decades, they were hunted down by the cursed Order of the mortal Horadrim. The Horadrim used artifacts called Soulstones to contain the essence of Mephisto, the Lord of Hatred and his brother Baal, the Lord of Destruction. The youngest brother - Diablo, the Lord of Terror - escaped to the west.\n"
+msgid ""
+"So it came to be that the Three Prime Evils were banished in spirit form to the mortal realm and after sewing chaos across the East for decades, they were hunted down by the cursed Order of the mortal Horadrim. The Horadrim used artifacts called Soulstones to contain the essence of Mephisto, the Lord of Hatred and his brother Baal, the Lord of Destruction. The youngest brother - Diablo, the Lord of Terror - escaped to the west.\n"
 " \n"
 "Eventually the Horadrim captured Diablo within a Soulstone as well, and buried him under an ancient, forgotten Cathedral. There, the Lord of Terror sleeps and awaits the time of his rebirth. Know ye that he will seek a body of youth and power to possess - one that is innocent and easily controlled. He will then arise to free his Brothers and once more fan the flames of the Sin War... |"
-msgstr "Así sucedió que los Tres Malos Principales fueron desterrados en forma espiritual al reino de los mortales y después de sembrar el caos en el Este durante décadas, fueron perseguidos por la Orden maldita de los Horadrim mortales. Los Horadrim usaron artefactos llamados Soulstones para contener la esencia de Mephisto, el Señor del Odio y su hermano Baal, el Señor de la Destrucción. El hermano menor, Diablo, el Señor del Terror, escapó hacia el oeste.\n"
+msgstr ""
+"Así sucedió que los Tres Malos Principales fueron desterrados en forma espiritual al reino de los mortales y después de sembrar el caos en el Este durante décadas, fueron perseguidos por la Orden maldita de los Horadrim mortales. Los Horadrim usaron artefactos llamados Soulstones para contener la esencia de Mephisto, el Señor del Odio y su hermano Baal, el Señor de la Destrucción. El hermano menor, Diablo, el Señor del Terror, escapó hacia el oeste.\n"
 " \n"
 "Finalmente, los Horadrim capturaron a Diablo dentro de una piedra de alma y lo enterraron bajo una antigua y olvidada Catedral. Allí, el Señor del Terror duerme y espera el momento de su renacimiento. Sepan que buscará un cuerpo de juventud y poder para poseer, uno que sea inocente y fácil de controlar. Luego se levantará para liberar a sus Hermanos y avivar una vez más las llamas de la Guerra del Pecado ...|"
 
@@ -7126,11 +7236,13 @@ msgid "Hail and Sacrifice to Diablo - Lord of Terror and Destroyer of Souls. Whe
 msgstr "Salve y sacrifique a Diablo - Lord of Terror y Destroyer of Souls. Cuando desperté a mi Maestro de su sueño, intentó poseer la forma de un mortal. Diablo intentó reclamar el cuerpo del Rey Leoric, pero mi Maestro estaba demasiado débil por su encarcelamiento. Mi señor necesitaba un ancla simple e inocente a este mundo, y por eso encontró que el niño Albrecht era perfecto para la tarea. Mientras el buen rey Leoric estaba enloquecido por la posesión fallida de Diablo, yo secuestré a su hijo Albrecht y lo llevé ante mi Maestro. Ahora espero la llamada de Diablo y rezo para ser recompensado cuando él finalmente emerja como el Señor de este mundo.|"
 
 #: Source/textdat.cpp:523
-msgid "Thank goodness you've returned!\n"
+msgid ""
+"Thank goodness you've returned!\n"
 "Much has changed since you lived here, my friend. All was peaceful until the dark riders came and destroyed our village. Many were cut down where they stood, and those who took up arms were slain or dragged away to become slaves - or worse. The church at the edge of town has been desecrated and is being used for dark rituals. The screams that echo in the night are inhuman, but some of our townsfolk may yet survive. Follow the path that lies between my tavern and the blacksmith shop to find the church and save who you can. \n"
 " \n"
 "Perhaps I can tell you more if we speak again. Good luck.|"
-msgstr "¡Gracias a Dios que has vuelto!\n"
+msgstr ""
+"¡Gracias a Dios que has vuelto!\n"
 "Mucho ha cambiado desde que viviste aquí, amigo. Todo estaba en paz hasta que llegaron los jinetes oscuros y destruyeron nuestra aldea. Muchos fueron asesinados donde estaban, y los que tomaron las armas fueron asesinados o arrastrados para convertirse en esclavos, o algo peor. La iglesia en las afueras de la ciudad ha sido profanada y se utiliza para rituales oscuros. Los gritos que resuenan en la noche son inhumanos, pero es posible que algunos de nuestros habitantes sobrevivan. Sigue el camino que se encuentra entre mi taberna y la herrería para encontrar la iglesia y salvar a quien puedas. \n"
 " \n"
 "Quizás pueda contarte más si volvemos a hablar. Buena suerte.|"
@@ -7232,12 +7344,14 @@ msgid "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and
 msgstr "Ah, te puedo oler... ¡estás cerca! ¡Cerca! Ssss... el olor a sangre y miedo... qué tentador...|"
 
 #: Source/textdat.cpp:592
-msgid "And in the year of the Golden Light, it was so decreed that a great Cathedral be raised.  The cornerstone of this holy place was to be carved from the translucent stone Antyrael, named for the Angel who shared his power with the Horadrim.  \n"
+msgid ""
+"And in the year of the Golden Light, it was so decreed that a great Cathedral be raised.  The cornerstone of this holy place was to be carved from the translucent stone Antyrael, named for the Angel who shared his power with the Horadrim.  \n"
 " \n"
 "In the Year of Drawing Shadows, the ground shook and the Cathedral shattered and fell.  As the building of catacombs and castles began and man stood against the ravages of the Sin War, the ruins were scavenged for their stones.  And so it was that the cornerstone vanished from the eyes of man. \n"
 " \n"
 "The stone was of this world -- and of all worlds -- as the Light is both within all things and beyond all things. Light and unity are the products of this holy foundation, a unity of purpose and a unity of possession.|"
-msgstr "Y en el año de la Luz Dorada, se decretó que se levantara una gran Catedral. La piedra angular de este lugar sagrado debía ser tallada en la piedra translúcida Antyrael, llamada así por el ángel que compartía su poder con los Horadrim.\n"
+msgstr ""
+"Y en el año de la Luz Dorada, se decretó que se levantara una gran Catedral. La piedra angular de este lugar sagrado debía ser tallada en la piedra translúcida Antyrael, llamada así por el ángel que compartía su poder con los Horadrim.\n"
 " \n"
 "En el Año de Dibujar Sombras, el suelo tembló y la Catedral se hizo añicos y cayó. Cuando comenzó la construcción de catacumbas y castillos y el hombre se enfrentó a los estragos de la Guerra del Pecado, las ruinas fueron escarbadas en busca de sus piedras. Y así fue como la piedra angular desapareció de los ojos del hombre.\n"
 " \n"
@@ -7344,12 +7458,14 @@ msgid "My time is quickly running out.  I must record the ways to weaken the dem
 msgstr "Mi tiempo se acaba rápidamente. Debo registrar las formas de debilitar al demonio y luego ocultar ese texto, no sea que sus secuaces encuentren alguna manera de usar mi conocimiento para liberar a su señor. Espero que quien encuentre esta revista busque el conocimiento.|"
 
 #: Source/textdat.cpp:640
-msgid "Whoever finds this scroll is charged with stopping the demonic creature that lies within these walls.  My time is over. Even now, its hellish minions claw at the frail door behind which I hide.  \n"
+msgid ""
+"Whoever finds this scroll is charged with stopping the demonic creature that lies within these walls.  My time is over. Even now, its hellish minions claw at the frail door behind which I hide.  \n"
 " \n"
 "I have hobbled the demon with arcane magic and encased it within great walls, but I fear that will not be enough. \n"
 " \n"
 "The spells found in my three grimoires will provide you protected entrance to his domain, but only if cast in their proper sequence.  The levers at the entryway will remove the barriers and free the demon; touch them not!  Use only these spells to gain entry or his power may be too great for you to defeat.|"
-msgstr "Quien encuentre este pergamino está encargado de detener a la criatura demoníaca que se encuentra dentro de estos muros. Mi tiempo se acabo. Incluso ahora, sus infernales secuaces se aferran a la frágil puerta detrás de la cual me escondo.\n"
+msgstr ""
+"Quien encuentre este pergamino está encargado de detener a la criatura demoníaca que se encuentra dentro de estos muros. Mi tiempo se acabo. Incluso ahora, sus infernales secuaces se aferran a la frágil puerta detrás de la cual me escondo.\n"
 " \n"
 "He cojeado al demonio con magia arcana y lo he encerrado dentro de grandes muros, pero me temo que eso no será suficiente.\n"
 " \n"
@@ -7478,9 +7594,3 @@ msgstr "Hasta el Diablo"
 #, c-format
 msgid "Back to Level %i"
 msgstr "Volver al nivel %i"
-
-#~ msgid "piece"
-#~ msgstr "pieza"
-
-#~ msgid "pieces"
-#~ msgstr "piezas"
