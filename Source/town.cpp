@@ -161,24 +161,24 @@ void T_Pass3()
 		}
 	}
 
-	auto P3Tiles = LoadFileInMem<MegaTile>("Levels\\TownData\\Town.TIL");
+	auto megaTiles = LoadFileInMem<MegaTile>("Levels\\TownData\\Town.TIL");
 
-	T_FillSector(P3Tiles.get(), "Levels\\TownData\\Sector1s.DUN", 46, 46);
-	T_FillSector(P3Tiles.get(), "Levels\\TownData\\Sector2s.DUN", 46, 0);
-	T_FillSector(P3Tiles.get(), "Levels\\TownData\\Sector3s.DUN", 0, 46);
-	T_FillSector(P3Tiles.get(), "Levels\\TownData\\Sector4s.DUN", 0, 0);
+	T_FillSector(megaTiles.get(), "Levels\\TownData\\Sector1s.DUN", 46, 46);
+	T_FillSector(megaTiles.get(), "Levels\\TownData\\Sector2s.DUN", 46, 0);
+	T_FillSector(megaTiles.get(), "Levels\\TownData\\Sector3s.DUN", 0, 46);
+	T_FillSector(megaTiles.get(), "Levels\\TownData\\Sector4s.DUN", 0, 0);
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
-			T_FillTile(P3Tiles.get(), 48, 20, 320);
+			T_FillTile(megaTiles.get(), 48, 20, 320);
 		}
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 2) && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
-			T_FillTile(P3Tiles.get(), 16, 68, 332);
-			T_FillTile(P3Tiles.get(), 16, 70, 331);
+			T_FillTile(megaTiles.get(), 16, 68, 332);
+			T_FillTile(megaTiles.get(), 16, 70, 331);
 		}
 		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (x = 36; x < 46; x++) {
-				T_FillTile(P3Tiles.get(), x, 78, GenerateRnd(4) + 1);
+				T_FillTile(megaTiles.get(), x, 78, GenerateRnd(4) + 1);
 			}
 		}
 	}
@@ -196,9 +196,9 @@ void T_Pass3()
 	}
 
 	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
-		T_FillTile(P3Tiles.get(), 60, 70, 342);
+		T_FillTile(megaTiles.get(), 60, 70, 342);
 	} else {
-		T_FillTile(P3Tiles.get(), 60, 70, 71);
+		T_FillTile(megaTiles.get(), 60, 70, 71);
 	}
 }
 
