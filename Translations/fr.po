@@ -356,7 +356,7 @@ msgstr "Quitter Hellfire"
 
 #: Source/DiabloUI/mainmenu.cpp:44
 msgid "Show Credits"
-msgstr "Afficher les cédits"
+msgstr "Afficher les crédits"
 
 #: Source/DiabloUI/mainmenu.cpp:45
 msgid "Exit Diablo"
@@ -397,7 +397,7 @@ msgstr "Prérequis:"
 
 #: Source/DiabloUI/selconn.cpp:54
 msgid "no gateway needed"
-msgstr "pas de passerelle nécessaire"
+msgstr "sans passerelle"
 
 #: Source/DiabloUI/selconn.cpp:60
 msgid "Select Connection"
@@ -409,8 +409,7 @@ msgstr "Changer de Passerelle"
 
 #: Source/DiabloUI/selconn.cpp:102
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr ""
-"Toutes les machines doivent être connectées à un réseau compatible TCP."
+msgstr "Les machines doivent être connectées à un réseau compatible TCP."
 
 #: Source/DiabloUI/selconn.cpp:106
 msgid "All computers must be connected to the internet."
@@ -743,8 +742,7 @@ msgstr "Non"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr ""
-"GOG.com maintient un site Web à l'adresse https://www.gog.com/forum/diablo"
+msgstr "GOG.com héberge un site à l'adresse https://www.gog.com/forum/diablo"
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
@@ -758,24 +756,21 @@ msgstr "et l'extension Hellfire."
 #: Source/DiabloUI/support_lines.cpp:12
 msgid ""
 "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
-msgstr ""
-"DevilutionX est maintenu par Diasurgical, des problèmes et des bugs peuvent "
-"être signalés"
+msgstr "DevilutionX est développé par Diasurgical. Les problèmes peuvent être"
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr "a cette adresse: https://github.com/diasurgical/devilutionX"
+msgstr "signalés à cette adresse: https://github.com/diasurgical/devilutionX"
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
 "To help us better serve you, please be sure to include the version number,"
 msgstr ""
-"Pour nous aider à mieux vous servir, assurez-vous d'inclure le numéro de "
-"version,"
+"Merci de bien vouloir inclure le numéro de version ainsi que le système"
 
 #: Source/DiabloUI/support_lines.cpp:15
 msgid "operating system, and the nature of the problem."
-msgstr "système d'exploitation et la nature du problème."
+msgstr "d'exploitation utilisé afin que nous puissions mieux vous aider."
 
 #: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
@@ -784,7 +779,7 @@ msgstr "Avertissement:"
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
 msgstr ""
-" DevilutionX n'est pas pris en charge ni maintenu par Blizzard Entertainment,"
+" DevilutionX n'est pas supporté ni maintenu par Blizzard Entertainment,"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
@@ -794,25 +789,20 @@ msgstr " ou GOG.com. Ni Blizzard Entertainment ni GOG.com n'ont testé"
 msgid ""
 "  or certified the quality or compatibility of DevilutionX. All inquiries"
 msgstr ""
-" ni certifié la qualité ou la compatibilité de DevilutionX. Toutes les "
-"demandes"
+" ou certifié la qualité ou la compatibilité de DevilutionX. Toutes demandes"
 
 #: Source/DiabloUI/support_lines.cpp:22
 msgid ""
 "  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
-msgstr ""
-" concernant DevilutionX doivent être adressées à Diasurgical et non à "
-"Blizzard"
+msgstr " concernant DevilutionX doivent être adressées à Diasurgical et non à"
 
 #: Source/DiabloUI/support_lines.cpp:23
 msgid "  Entertainment or GOG.com."
-msgstr " Entertainment ou GOG.com."
+msgstr " Blizzard Entertainment ou GOG.com."
 
 #: Source/DiabloUI/title.cpp:47
-#, fuzzy
-#| msgid "Copyright  1996-2001 Blizzard Entertainment"
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
-msgstr "Droits d'auteur 1996-2001 Blizzard Entertainment"
+msgstr "Droits d'auteur © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:34
 msgid "Error"
@@ -4014,25 +4004,25 @@ msgid "hit monster doesn't heal"
 msgstr "le monstre touché ne guérit pas"
 
 #: Source/items.cpp:3629
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "hit steals 3% mana"
 msgid "hit steals 3% mana"
 msgstr "frapper vole 3% de mana"
 
 #: Source/items.cpp:3631
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "hit steals 5% mana"
 msgid "hit steals 5% mana"
 msgstr "frapper vole 5% de mana"
 
 #: Source/items.cpp:3635
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "hit steals 3% life"
 msgid "hit steals 3% life"
 msgstr "frapper vole 3% de vie"
 
 #: Source/items.cpp:3637
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "hit steals 5% life"
 msgid "hit steals 5% life"
 msgstr "frapper vole 5% de mana"
@@ -4147,7 +4137,7 @@ msgid "2x dmg to monst, 1x to you"
 msgstr "2x dgt au monstre, 1x à vous"
 
 #: Source/items.cpp:3721
-#, fuzzy, c-format
+#, fuzzy, no-c-format
 #| msgid "Random 0 - 500% damage"
 msgid "Random 0 - 500% damage"
 msgstr "Dégâts 0-500% aléatoire"
