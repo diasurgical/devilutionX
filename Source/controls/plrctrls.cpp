@@ -33,9 +33,6 @@ static const direction FaceDir[3][3] = {
 	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
 	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
 };
-static const AxisDirection AxisDir[2][2] = {
-	{  }
-};
 static const int Offsets[8][2] = {
 	{ 1, 1 },   // DIR_S
 	{ 0, 1 },   // DIR_SW
