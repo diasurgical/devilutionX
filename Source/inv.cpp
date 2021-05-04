@@ -779,8 +779,13 @@ bool GoldAutoPlace(int pnum)
 		plr[pnum]._pGold = CalculateGold(pnum);
 	}
 
-	for (int i = 39; i >= 0 && !done; i--) {
+	for (int i = 39; i >= 30 && !done; i--) {
 		done = GoldAutoPlaceInInventorySlot(pnum, i);
+	}
+	for (int x = 9; x >= 0 && !done; x--) {
+		for (int y = 2; y >= 0 && !done; y--) {
+			done = GoldAutoPlaceInInventorySlot(pnum, 10 * y + x);
+		}
 	}
 
 	return done;
