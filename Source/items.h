@@ -371,7 +371,7 @@ extern CornerStoneStruct CornerStone;
 extern bool UniqueItemFlags[128];
 extern int numitems;
 
-BYTE GetOutlineColor(ItemStruct &item, bool checkReq);
+BYTE GetOutlineColor(const ItemStruct &item, bool checkReq);
 bool IsItemAvailable(int i);
 bool IsUniqueAvailable(int i);
 void InitItemGFX();

@@ -338,10 +338,12 @@ bool IsItemAvailable(int i)
 	        sgOptions.Gameplay.bTestBard && (i == IDI_BARDSWORD || i == IDI_BARDDAGGER));
 }
 
-BYTE GetOutlineColor(ItemStruct &item, bool checkReq)
+BYTE GetOutlineColor(const ItemStruct &item, bool checkReq)
 {
 	if (checkReq && !item._iStatFlag)
 		return ICOL_RED;
+	if (item._itype == ITYPE_GOLD)
+		return ICOL_YELLOW;
 	if (item._iMagical == ITEM_QUALITY_MAGIC)
 		return ICOL_BLUE;
 	if (item._iMagical == ITEM_QUALITY_UNIQUE)
