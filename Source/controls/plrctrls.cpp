@@ -27,6 +27,23 @@ bool sgbControllerActive = false;
 coords speedspellscoords[50];
 int speedspellcount = 0;
 
+static const direction FaceDir[3][3] = {
+	// NONE      UP      DOWN
+	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
+	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
+	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
+};
+static const int Offsets[8][2] = {
+	{ 1, 1 },   // DIR_S
+	{ 0, 1 },   // DIR_SW
+	{ -1, 1 },  // DIR_W
+	{ -1, 0 },  // DIR_NW
+	{ -1, -1 }, // DIR_N
+	{ 0, -1 },  // DIR_NE
+	{ 1, -1 },  // DIR_E
+	{ 1, 0 },   // DIR_SE
+};
+
 /**
  * Native game menu, controlled by simulating a keyboard.
  */
@@ -445,12 +462,32 @@ void Interact()
 		NetSendCmdLocParam1(true, CMD_TALKXY, towners[pcursmonst].position, pcursmonst);
 	} else if (pcursmonst != -1) {
 		if (plr[myplr]._pwtype != WT_RANGED || CanTalkToMonst(pcursmonst)) {
-			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+			int distx = abs(plr[myplr].position.tile.x - monster[pcursmonst].position.future.x);
+			int disty = abs(plr[myplr].position.tile.y - monster[pcursmonst].position.future.y);
+			if (distx > 1 || disty > 1) {
+				// attack on the current direction
+				const int x = plr[myplr].position.future.x;
+				const int y = plr[myplr].position.future.y;
+				const int dx = x + Offsets[plr[myplr]._pdir][0];
+				const int dy = y + Offsets[plr[myplr]._pdir][1];
+				
+				NetSendCmdLoc(myplr, true, CMD_SATTACKXY, { dx, dy });
+			} else {
+				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+			}
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
 	} else if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
 		NetSendCmdParam1(true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+	} else if (leveltype != DTYPE_TOWN) {
+		// attack on the current direction
+		const int x = plr[myplr].position.future.x;
+		const int y = plr[myplr].position.future.y;
+		const int dx = x + Offsets[plr[myplr]._pdir][0];
+		const int dy = y + Offsets[plr[myplr]._pdir][1];
+
+		NetSendCmdLoc(myplr, true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKXY : CMD_SATTACKXY, { dx, dy });
 	}
 }
 
@@ -746,23 +783,6 @@ void SpellBookMove(AxisDirection dir)
 			sbooktab++;
 	}
 }
-
-static const direction FaceDir[3][3] = {
-	// NONE      UP      DOWN
-	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
-	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
-	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
-};
-static const int Offsets[8][2] = {
-	{ 1, 1 },   // DIR_S
-	{ 0, 1 },   // DIR_SW
-	{ -1, 1 },  // DIR_W
-	{ -1, 0 },  // DIR_NW
-	{ -1, -1 }, // DIR_N
-	{ 0, -1 },  // DIR_NE
-	{ 1, -1 },  // DIR_E
-	{ 1, 0 },   // DIR_SE
-};
 
 /**
  * @brief check if stepping in direction (dir) from x, y is blocked.
