@@ -490,7 +490,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	SetCursorPos(x, y);
 }
 
-coords InvGetCoord(const inv_body_loc inv_slot)
+coords InvGetSlotCoord(const inv_body_loc inv_slot)
 {
 	coords result{};
 	switch (inv_slot)
@@ -583,13 +583,13 @@ void InvMove(AxisDirection dir)
 	// when item is on cursor (pcurs > 1), this is the real cursor XY
 	if (dir.x == AxisDirectionX_LEFT) {
 		if (slot == SLOTXY_HAND_RIGHT_FIRST) {
-			mousePos = InvGetCoord(INVLOC_CHEST);
+			mousePos = InvGetSlotCoord(INVLOC_CHEST);
 		} else if (slot == SLOTXY_CHEST_FIRST) {
-			mousePos = InvGetCoord(INVLOC_HAND_LEFT);
+			mousePos = InvGetSlotCoord(INVLOC_HAND_LEFT);
 		} else if (slot == SLOTXY_AMULET) {
-			mousePos = InvGetCoord(INVLOC_HEAD);
+			mousePos = InvGetSlotCoord(INVLOC_HEAD);
 		} else if (slot == SLOTXY_RING_RIGHT) {
-			mousePos = InvGetCoord(INVLOC_RING_LEFT);
+			mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
 		} else if (slot > SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {              // general inventory
 			if (slot != SLOTXY_INV_FIRST && slot != 35 && slot != 45 && slot != 55) { // left bounds
 				slot -= 1;
@@ -605,13 +605,13 @@ void InvMove(AxisDirection dir)
 		}
 	} else if (dir.x == AxisDirectionX_RIGHT) {
 		if (slot == SLOTXY_RING_LEFT) {
-			mousePos = InvGetCoord(INVLOC_RING_RIGHT);
+			mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
 		} else if (slot == SLOTXY_HAND_LEFT_FIRST) {
-			mousePos = InvGetCoord(INVLOC_CHEST);
+			mousePos = InvGetSlotCoord(INVLOC_CHEST);
 		} else if (slot == SLOTXY_CHEST_FIRST) {
-			mousePos = InvGetCoord(INVLOC_HAND_RIGHT);
+			mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
 		} else if (slot == SLOTXY_HEAD_FIRST) { // head to amulet
-			mousePos = InvGetCoord(INVLOC_AMULET);
+			mousePos = InvGetSlotCoord(INVLOC_AMULET);
 		} else if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {            // general inventory
 			if (slot != 34 && slot != 44 && slot != 54 && slot != SLOTXY_INV_LAST) { // right bounds
 				slot += 1;
@@ -628,19 +628,19 @@ void InvMove(AxisDirection dir)
 	}
 	if (dir.y == AxisDirectionY_UP) {
 		if (slot > 24 && slot <= 27) { // first 3 general slots
-			mousePos = InvGetCoord(INVLOC_RING_LEFT);
+			mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
 		} else if (slot >= 28 && slot <= 32) { // middle 4 general slots
-			mousePos = InvGetCoord(INVLOC_CHEST);
+			mousePos = InvGetSlotCoord(INVLOC_CHEST);
 		} else if (slot >= 33 && slot < 35) { // last 3 general slots
-			mousePos = InvGetCoord(INVLOC_RING_RIGHT);
+			mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
 		} else if (slot == SLOTXY_CHEST_FIRST || slot == SLOTXY_HAND_LEFT_FIRST) { // chest to head
-			mousePos = InvGetCoord(INVLOC_HEAD);
+			mousePos = InvGetSlotCoord(INVLOC_HEAD);
 		} else if (slot == SLOTXY_RING_LEFT) { // left ring to left hand
-			mousePos = InvGetCoord(INVLOC_HAND_LEFT);
+			mousePos = InvGetSlotCoord(INVLOC_HAND_LEFT);
 		} else if (slot == SLOTXY_RING_RIGHT) { // right ring to right hand
-			mousePos = InvGetCoord(INVLOC_HAND_RIGHT);
+			mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
 		} else if (slot == SLOTXY_HAND_RIGHT_FIRST) { // right hand to amulet
-			mousePos = InvGetCoord(INVLOC_AMULET);
+			mousePos = InvGetSlotCoord(INVLOC_AMULET);
 		} else if (slot >= (SLOTXY_INV_FIRST + 10)) { // general inventory
 			slot -= 10;
 			mousePos.x = InvRect[slot].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
@@ -648,12 +648,12 @@ void InvMove(AxisDirection dir)
 		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
 		if (slot == SLOTXY_HEAD_FIRST) {
-			mousePos = InvGetCoord(INVLOC_CHEST);
+			mousePos = InvGetSlotCoord(INVLOC_CHEST);
 		} else if (slot == SLOTXY_CHEST_FIRST) {
 			mousePos.x = InvRect[30].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			mousePos.y = InvRect[30].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_HAND_LEFT_FIRST) {
-			mousePos = InvGetCoord(INVLOC_RING_LEFT);
+			mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
 		} else if (slot == SLOTXY_RING_LEFT) {
 			mousePos.x = InvRect[26].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			mousePos.y = InvRect[26].Y - (INV_SLOT_SIZE_PX / 2);
@@ -661,9 +661,9 @@ void InvMove(AxisDirection dir)
 			mousePos.x = InvRect[33].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			mousePos.y = InvRect[33].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_AMULET) {
-			mousePos = InvGetCoord(INVLOC_HAND_RIGHT);
+			mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
 		} else if (slot == SLOTXY_HAND_RIGHT_FIRST) {
-			mousePos = InvGetCoord(INVLOC_RING_RIGHT);
+			mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
 		} else if (slot <= (SLOTXY_INV_LAST - 10)) { // general inventory
 			slot += 10;
 			mousePos.x = InvRect[slot].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
