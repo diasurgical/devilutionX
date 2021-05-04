@@ -995,9 +995,9 @@ msgstr "Tasto: 's'"
 
 #: Source/control.cpp:1057
 #, c-format
-msgid "%s Scroll"
+msgid "%i Scroll"
 msgid_plural "%i Scrolls"
-msgstr[0] "%s Pergamena"
+msgstr[0] "%i Pergamena"
 msgstr[1] "%i Pergamene"
 
 #: Source/control.cpp:1250 Source/inv.cpp:2104 Source/items.cpp:3076
