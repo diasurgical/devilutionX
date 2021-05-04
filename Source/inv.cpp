@@ -635,21 +635,14 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 	InvXY itemSize = GetInventorySize(item);
 	bool done = false;
 
-	if (itemSize.X == 1 && itemSize.Y == 1) {
+	if (itemSize.Y == 1) {
 		for (int i = 30; i <= 39 && !done; i++) {
 			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
-
-		for (int i = 20; i <= 29 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 10; i <= 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 0; i <= 9 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+		for (int x = 9; x >= 0 && !done; x--) {
+			for (int y = 2; y >= 0 && !done; y--) {
+				done = AutoPlaceItemInInventorySlot(playerNumber, 10 * y + x, item, persistItem);
+			}
 		}
 	}
 
