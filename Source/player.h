@@ -399,11 +399,11 @@ void FreePlayerGFX(int pnum);
  * @param numberOfFrames Number of Frames in Animation
  * @param delayLen Delay after each Animation sequence
  * @param width Width of sprite
- * @param params Specifies what special logics are applied to this Animation
+ * @param flags Specifies what special logics are applied to this Animation
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(int pnum);
 void CreatePlayer(int pnum, HeroClass c);
 int CalcStatDiff(int pnum);

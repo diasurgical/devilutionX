@@ -6,22 +6,23 @@
 #pragma once
 
 #include <stdint.h>
+#include <type_traits>
 
 namespace devilution {
 
 /**
  * @brief Specifies what special logics are applied for a Animation
  */
-enum class AnimationDistributionParams : uint8_t {
-	None,
+enum AnimationDistributionFlags : uint8_t {
+	None = 0,
 	/*
 	* @brief ProcessAnimation will be called after SetNewAnimation (in same game tick as NewPlrAnim)
 	*/
-	ProcessAnimationPending,
+	ProcessAnimationPending = 1 << 0,
 	/*
 	* @brief Delay of last Frame is ignored (for example, because only Frame and not delay is checked in game_logic)
 	*/
-	SkipsDelayOfLastFrame,
+	SkipsDelayOfLastFrame = 1 << 1,
 };
 
 /*
@@ -61,11 +62,11 @@ public:
 	 * @param pData Pointer to Animation Data
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param delayLen Delay after each Animation sequence
-	 * @param params Specifies what special logics are applied to this Animation
+	 * @param flags Specifies what special logics are applied to this Animation
 	 * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 */
-	void SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+	void SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 
 	/*
 	* @brief Process the Animation for a game tick (for example advances the frame)
