@@ -868,7 +868,8 @@ direction GetPathNotBlocked(int x, int y, int dir)
 	return DIR_OMNI;
 }
 
-void MoveInDirection(int playerId, const direction dir) {
+void WalkInDir(int playerId, const direction dir)
+{
 	const int x = plr[playerId].position.future.x;
 	const int y = plr[playerId].position.future.y;
 	
@@ -879,7 +880,7 @@ void MoveInDirection(int playerId, const direction dir) {
 	if (nSolidTable[dPiece[dx][dy]]) {
 		const direction new_dir = GetPathNotBlocked(x, y, dir);
 		if (new_dir != DIR_OMNI) {
-			MoveInDirection(playerId, new_dir);
+			WalkInDir(playerId, new_dir);
 			return;
 		}
 	}
@@ -891,7 +892,7 @@ void MoveInDirection(int playerId, const direction dir) {
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, { dx, dy });
 }
 
-void WalkInDir(int playerId, AxisDirection dir)
+void WalkInDir(int playerId, const AxisDirection dir)
 {
 	const int x = plr[playerId].position.future.x;
 	const int y = plr[playerId].position.future.y;
@@ -904,7 +905,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 
 	const direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 
-	MoveInDirection(playerId, pdir);
+	WalkInDir(playerId, pdir);
 }
 
 void QuestLogMove(AxisDirection moveDir)
