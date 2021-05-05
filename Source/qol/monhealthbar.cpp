@@ -86,11 +86,11 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 150 /*beast*/ };
 		Uint8 borderColor = borderColors[mon.MData->mMonstClass];
 		int borderWidth = width - (border * 2);
-		FastDrawHorizLine(out, xPos + border, yPos + border, borderWidth, borderColor);
-		FastDrawHorizLine(out, xPos + border, yPos + height - border - 1, borderWidth, borderColor);
+		UnsafeDrawHorizontalLine(out, { xPos + border, yPos + border }, borderWidth, borderColor);
+		UnsafeDrawHorizontalLine(out, { xPos + border, yPos + height - border - 1 }, borderWidth, borderColor);
 		int borderHeight = height - (border * 2) - 2;
-		FastDrawVertLine(out, xPos + border, yPos + border + 1, borderHeight, borderColor);
-		FastDrawVertLine(out, xPos + width - border - 1, yPos + border + 1, borderHeight, borderColor);
+		UnsafeDrawVerticalLine(out, { xPos + border, yPos + border + 1 }, borderHeight, borderColor);
+		UnsafeDrawVerticalLine(out, { xPos + width - border - 1, yPos + border + 1 }, borderHeight, borderColor);
 	}
 
 	int barLableX = xPos + width / 2 - GetTextWidth(mon.mName) / 2;

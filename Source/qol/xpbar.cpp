@@ -29,9 +29,9 @@ Art xpbarArt;
 
 void DrawBar(const CelOutputBuffer &out, int x, int y, int width, const ColorGradient &gradient)
 {
-	FastDrawHorizLine(out, x, y + 1, width, gradient[gradient.size() * 3 / 4 - 1]);
-	FastDrawHorizLine(out, x, y + 2, width, gradient[gradient.size() - 1]);
-	FastDrawHorizLine(out, x, y + 3, width, gradient[gradient.size() / 2 - 1]);
+	UnsafeDrawHorizontalLine(out, { x, y + 1 }, width, gradient[gradient.size() * 3 / 4 - 1]);
+	UnsafeDrawHorizontalLine(out, { x, y + 2 }, width, gradient[gradient.size() - 1]);
+	UnsafeDrawHorizontalLine(out, { x, y + 3 }, width, gradient[gradient.size() / 2 - 1]);
 }
 
 void DrawEndCap(const CelOutputBuffer &out, Point point, int idx, const ColorGradient &gradient)
