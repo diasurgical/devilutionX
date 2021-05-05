@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-05-04 17:42+0200\n"
-"PO-Revision-Date: 2021-05-04 17:43+0200\n"
+"POT-Creation-Date: 2021-05-05 10:59+0200\n"
+"PO-Revision-Date: 2021-05-05 10:59+0200\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -198,7 +198,7 @@ msgstr "Produzione"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr "Legale & Commerciale"
+msgstr "Legale e Commerciale"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
@@ -214,7 +214,7 @@ msgstr "\tSchafer, Richard e Sandra Schaefer, Rick Bowles, Greg Bogden, "
 
 #: Source/DiabloUI/credits_lines.cpp:190
 msgid "\tThe Strike Team Deflectors, Tony Levin, Big Jim and the Twins, "
-msgstr "\tThe Strike Team Deflectors, Tony Levin, Big Jim e i Gemelli, "
+msgstr "\tThe Strike Team Deflectors, Tony Levin, Big Jim e i Twins, "
 
 #: Source/DiabloUI/credits_lines.cpp:198
 msgid "\tSaag and all the folks at Davidson"
@@ -439,7 +439,7 @@ msgstr "Crea Partita"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
-msgstr "Partecipa"
+msgstr "Unisciti alla Partita"
 
 #: Source/DiabloUI/selgame.cpp:102 Source/DiabloUI/selgame.cpp:171
 #: Source/DiabloUI/selgame.cpp:189 Source/DiabloUI/selgame.cpp:322
@@ -481,7 +481,7 @@ msgstr "Inferno"
 
 #: Source/DiabloUI/selgame.cpp:177
 msgid "Join TCP Games"
-msgstr "Partita su TCP"
+msgstr "Unisciti a Partite TCP"
 
 #: Source/DiabloUI/selgame.cpp:180
 msgid "Enter address"
@@ -493,8 +493,8 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Difficoltà Normale\n"
-"Qui è dove un personaggio iniziale dovrebbe iniziare la missione "
-"persconfiggere Diablo."
+"Qui è dove un personaggio agli inizi dovrebbe intraprendere la missione per "
+"sconfiggere Diablo."
 
 #: Source/DiabloUI/selgame.cpp:213
 msgid ""
@@ -503,8 +503,8 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "Difficoltà Incubo\n"
-"Gli abitanti del Labirinto sono stati rafforzati e si rivelerà una sfida più "
-"grande. Raccomandato solo per personaggi esperti."
+"Gli abitanti del Labirinto sono stati rafforzati e la sfida si dimostrerà "
+"ardua. Raccomandato solo per personaggi esperti."
 
 #: Source/DiabloUI/selgame.cpp:217
 msgid ""
@@ -565,8 +565,8 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "Veloce\n"
-"Gli abitanti del Labirinto sono rapidi e dimostreranno di esser una sfida "
-"più grande. Consigliato solo a personaggi esperti."
+"Gli abitanti del Labirinto sono stati velocizzati e la sfida si dimostrerà "
+"ardua. Raccomandato solo per personaggi esperti."
 
 #: Source/DiabloUI/selgame.cpp:340
 msgid ""
@@ -664,7 +664,7 @@ msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"Il Ladro e il Mago sono disponibili solo nella versione completa diDiablo. "
+"Il Ladro e il Mago sono disponibili solo nella versione completa di Diablo. "
 "Visita https://www.gog.com/game/diablo per acquistare."
 
 #: Source/DiabloUI/selhero.cpp:299 Source/DiabloUI/selhero.cpp:305
@@ -676,9 +676,8 @@ msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
 msgstr ""
-"Nome non valido. Non può contenere spazi, caratteri speciali, o "
-"parolespeciali.\n"
-"\n"
+"Nome non valido. Non può contenere spazi, caratteri speciali, o parole "
+"speciali.\n"
 
 #: Source/DiabloUI/selhero.cpp:345
 #, c-format
@@ -1002,7 +1001,7 @@ msgstr "Tasto: %s"
 
 #: Source/control.cpp:1037
 msgid "Select current spell button"
-msgstr "Tasto seleziona magia corrente"
+msgstr "Seleziona magia corrente"
 
 #: Source/control.cpp:1041
 msgid "Hotkey: 's'"
@@ -1055,17 +1054,17 @@ msgstr[1] "Verga (%i cariche)"
 #: Source/control.cpp:1867
 #, c-format
 msgid "Mana: %i  Dam: %i - %i"
-msgstr "Mana: %i Dan: %i - %i"
+msgstr "Mana: %i  Dan: %i - %i"
 
 #: Source/control.cpp:1869
 #, c-format
 msgid "Mana: %i   Dam: n/a"
-msgstr "Mana: %i Dan: n/a"
+msgstr "Mana: %i   Dan: n/a"
 
 #: Source/control.cpp:1872
 #, c-format
 msgid "Mana: %i  Dam: 1/3 tgt hp"
-msgstr "Mana: %i Dan: 1/3 tgt hp"
+msgstr "Mana: %i  Dan: 1/3 tgt hp"
 
 #: Source/control.cpp:1919
 #, c-format
@@ -1232,7 +1231,7 @@ msgstr "versione %s"
 
 #: Source/diablo.cpp:1914
 msgid "-- Network timeout --"
-msgstr "-- Tempo di rete scaduto --"
+msgstr "-- Timeout di rete --"
 
 #: Source/diablo.cpp:1915
 msgid "-- Waiting for players --"
@@ -1413,11 +1412,11 @@ msgstr "La luce dell'intelletto ti rivela molte cose"
 
 #: Source/error.cpp:59
 msgid "Those who are last may yet be first"
-msgstr "Gli ultimi potranno essere i prim"
+msgstr "Gli ultimi potranno essere i primi"
 
 #: Source/error.cpp:60
 msgid "Generosity brings its own rewards"
-msgstr "La tua generosità ti ricompensa"
+msgstr "La generosità porta le sue ricompense"
 
 #: Source/error.cpp:61
 msgid "You must be at least level 8 to use this."
@@ -1808,7 +1807,7 @@ msgstr ""
 "l'inventario e prova a riorganizzare o rimuovere gli oggetti per trasportare "
 "ciò che desideri o di cui hai veramente bisogno.||$Inventario:|Puoi mostrare "
 "o meno l'Inventario facendo clic sul pulsante INV> sul pannello di "
-"controllo. Gli oggetti possono essere spostati nell' inventario "
+"controllo. Gli oggetti possono essere spostati nell'inventario "
 "selezionandoli e quindi facendo clic sinistro del mouse per raccoglierli. "
 "Quando raccogli un oggetto ad inventario aperto, il cursore si trasforma "
 "nell'oggetto. Puoi quindi posizionare questo oggetto in spazi vuoti del tuo "
@@ -1895,99 +1894,100 @@ msgstr ""
 "Ladro:|Il Ladro ha l'abilità di disarmare le trappole. Ciò gli consente non "
 "solo di rimuovere le trappole, ma agisce anche come \"sesto senso\" che lo "
 "avverte di dove si trovano le trappole. Per farlo, seleziona l'abilità "
-"Disarma Trappola tramite Libro Magie o Speedbook e fai clic destro del mouse "
-"come se stessi lanciando una magia. Il cursore si trasformerà in un mirino "
-"che utilizzerai per selezionare l'elemento da disarmare. Il successo di "
-"questo tentativo si basa sul livello del Ladro e sull'esperienza di chiunque "
-"abbia piazzato la trappola.||Stregone:|Lo Stregone ha l'abilità di Ricarica "
-"Verga. Questo gli permette di concentrare il suo mana in una verga "
+"Disarma Trappola tramite Libro di Magia o Speedbook e fai clic destro del "
+"mouse come se stessi lanciando una magia. Il cursore si trasformerà in un "
+"mirino che utilizzerai per selezionare l'elemento da disarmare. Il successo "
+"di questo tentativo si basa sul livello del Ladro e sull'esperienza di "
+"chiunque abbia piazzato la trappola.||Stregone:|Lo Stregone ha l'abilità di "
+"Ricarica Verga. Questo gli permette di concentrare il suo mana in una verga "
 "prosciugata delle sue energie magiche. Per farlo, seleziona l'abilità "
-"Ricarica Verga tramite Libro Magie o Speedbook e fai clic destro del mouse "
-"come se stessi lanciando una magia. Il cursore si trasformerà in una Verga "
-"che utilizzerai per selezionare l'elemento da ricaricare. Sebbene ricaricare "
-"una verga in questo modo ridurrà le sue cariche massime, può essere fatto "
-"senza lasciare il labirinto.||Anche la Strega può ricaricare la verga a un "
-"prezzo. Quando la Strega esegue questo servizio, riduce le cariche massime "
-"dell'oggetto.||Le Magie sono effetti magici lanciati da una pergamena, una "
-"verga o memorizzati in un libro. Le Magie possono richiedere o meno mana per "
-"essere usate e sono disponibili per tutte le classi.||Le Magie lanciate da "
-"una pergamena non costano mana da usare, ma sono limitate a una sola carica. "
-"Lanciare una magia da una pergamena si ottiene facendo clic destro del mouse "
-"sulla pergamena o, se si trova nella nostra cintura, premendo il numero "
-"corrispondente sulla tastiera. Le pergamene possono anche essere preparate "
-"nello Speedbook e sono rappresentate da un'icona/pulsante rosso nell'area "
-"\"seleziona magia corrente\".||Le Magie lanciate dalla verga non costano "
-"mana, ma sono limitate dal numero di cariche disponibili. Per lanciare magie "
-"da una verga, devi prima equipaggiarla. L'icona/pulsante \"seleziona magia "
-"corrente\" cambierà per indicare che la magia sulla verga è attualmente "
-"pronto per essere lanciata. Le pergamene possono anche essere preparate nel "
-"Libro di Magie o nello Speedbook e sono rappresentate da un'icona/pulsante "
-"arancione nell'area \"seleziona magia corrente\".||Le Magie memorizzate "
-"costano mana per essere lanciate, ma possono essere usate fintanto che il "
-"personaggio ha mana per potenziarle. Il Guerriero e il Ladro iniziano il "
-"gioco senza magie memorizzate mentre il Mago inizia con Fulmine Infuocato. "
-"Se il personaggio trova un libro nel labirinto, può memorizzare la magia "
-"scritta in quel libro aprendo l'Inventario e facendo clic destro del mouse "
-"sul libro. Ciò renderà la magia sempre disponibile per il lancio. Le magie "
-"memorizzate possono essere preparate tramite Libro Magie o Speedbook e sono "
-"rappresentate da un'icona/pulsante blu nell'area \"seleziona magia corrente"
-"\".||$Nota importante sui libri:|Leggere più di un libro aumenta la tua "
-"conoscenza di quella magia e ne incrementa il livello. Più il livello di una "
-"magia è alto, più essa è efficace.||Mentre alcune magie influenzano "
-"l'incantatore, altre richiedono un bersaglio. Queste magie mirate vengono "
-"lanciate nella direzione indicata dal cursore sull'area di gioco. Se "
-"evidenzi una creatura, lancerai quella magia su quella creatura. Non tutti "
-"gli oggetti all'interno del labirinto possono essere bersagliati.||Esempio: "
-"una magia Sfera Infuocata viaggerà verso la creatura o verso la posizione su "
-"cui fai clic destro del mouse. Una magia di guarigione aggiungerà "
-"semplicemente salute al tuo personaggio diminuendo il suo mana disponibile e "
-"non richiede bersagli.||Puoi anche impostare una magia o scegliere un tasto "
-"rapido per la selezione istantanea. Inizia aprendo il menu a comparsa come "
-"descritto nella sezione abilità sopra. Assegna i Tasti Rapidi premendo i "
-"tasti F5, F6, F7 o F8 sulla tastiera dopo aver fatto scorrere le magie "
-"disponibili ed evidenziando quella che desideri assegnare.||$Salute e Mana:|"
-"Le due sfere nella barra dei dettagli mostrano la tua vita e il tuo mana. La "
-"sfera col fluido rosso a sinistra del pannello rappresenta la salute "
-"generale del tuo personaggio. Quando il fluido è finito, il tuo personaggio "
-"è morto.||Il fluido blu sul lato destro del pannello rappresenta il mana "
-"disponibile del tuo personaggio. Il mana è la forza magica usata dal tuo "
-"personaggio per lanciare magie. Quando il liquido nella sfera è basso o "
-"esaurito, potresti non essere in grado di lanciare alcune (o tutte) le tue "
-"magie.||$Barra dei Dettagli:|La Barra dei Dettagli è dove ricevi "
-"informazioni in Diablo e interagisci con ciò che ti circonda. Ecco una "
-"rapida carrellata delle aree del pannello e del loro utilizzo:||CHAR: "
-"Utilizzato per accedere alla statistiche del personaggio|INV: Utilizzato per "
-"accedere all'Inventario|QUEST: Mostra la tua missione (inattivo nella "
-"versione Shareware)|MAP: Attiva la sovrapposizione della mappa|MENU: Attiva "
-"la schermata del menu di gioco|SPELLS: Utilizzato per accedere al Libro "
-"delle Magie|Magia corrente: la magia preparata per il lancio immediato|Sfera "
-"Vitale: la quantità di salute che il tuo personaggio ha attualmente|Sfera "
-"del Mana: la quantità di mana che il tuo personaggio ha attualmente|"
-"Messaggio Multigiocatore: Attiva l'area dei messaggi|Area Dettagli: Tutte le "
-"informazioni importanti su creature o oggetti con cui puoi interagire. Qui "
-"inserirai anche il testo da inviare come messaggio multigiocatore.||"
-"$Dettagli Personaggio:|Mostra le statistiche del personaggio facendo clic "
-"sul pulsante <CHAR sulla Barra dei Dettagli. Essa mostra \"gli ingranaggi\" "
-"del tuo personaggio. Ci sono quattro attributi principali che determinano il "
-"modo in cui il personaggio evolve.||FORZA: Quanto è potente fisicamente il "
-"personaggio. Gioca un ruolo importante nel determinare quanto danno puoi "
-"fare quando attacchi le creature.||MAGIA: Il modo in cui personaggio è in "
-"sintonia con i poteri arcani del mondo. Gioca un ruolo importante nel "
-"determinare quanto mana hai a disposizione per lanciare magie.||DESTREZZA: "
-"Quanto è veloce il personaggio con i piedi e le mani. Gioca un ruolo "
-"importante nel determinare la possibilità che hai di colpire le creature in "
-"combattimento.||VITALITÀ: Quanto è fisicamente in forma il personaggio. "
-"Gioca un ruolo importante nel determinare la salute del personaggio quando "
-"non è ferito.||$Menu di Gioco:|Per attivare il menu di gioco, fai clic sul "
-"pulsante MENU nella barra dei dettagli. Ci sono tre voci:||Nuova Partita: Ti "
-"fa uscire dal gioco corrente e ti riporta al Menu Principale.||Opzioni: Apre "
-"il menu delle opzioni che ti permette di regolare musica ed effetti sonori o "
-"il livello gamma dello schermo.||Esci dal Gioco: Esce dal programma. Nota "
-"che questo salva automaticamente il tuo personaggio.||$Mappa:|Mostra i "
-"luoghi nel labirinto già visitati dal personaggio. Per accedere alla mappa, "
-"fai clic sul pulsante MAP sulla Barra dei Dettagli. Puoi anche premere TAB "
-"sulla tastiera per attivare la mappa. Puoi ingrandire o meno la mappa con i "
-"tasti + e -. Puoi scorrere la mappa con i tasti freccia.|&"
+"Ricarica Verga tramite Libro di Magia o Speedbook e fai clic destro del "
+"mouse come se stessi lanciando una magia. Il cursore si trasformerà in una "
+"Verga che utilizzerai per selezionare l'elemento da ricaricare. Sebbene "
+"ricaricare una verga in questo modo ridurrà le sue cariche massime, può "
+"essere fatto senza lasciare il labirinto.||Anche la Strega può ricaricare la "
+"verga a un prezzo. Quando la Strega esegue questo servizio, riduce le "
+"cariche massime dell'oggetto.||Le Magie sono effetti magici lanciati da una "
+"pergamena, una verga o memorizzati in un libro. Le Magie possono richiedere "
+"o meno mana per essere usate e sono disponibili per tutte le classi.||Le "
+"Magie lanciate da una pergamena non costano mana da usare, ma sono limitate "
+"a una sola carica. Lanciare una magia da una pergamena si ottiene facendo "
+"clic destro del mouse sulla pergamena o, se si trova nella nostra cintura, "
+"premendo il numero corrispondente sulla tastiera. Le pergamene possono anche "
+"essere preparate nello Speedbook e sono rappresentate da un'icona/pulsante "
+"rosso nell'area \"seleziona magia corrente\".||Le Magie lanciate dalla verga "
+"non costano mana, ma sono limitate dal numero di cariche disponibili. Per "
+"lanciare magie da una verga, devi prima equipaggiarla. L'icona/pulsante "
+"\"seleziona magia corrente\" cambierà per indicare che la magia sulla verga "
+"è attualmente pronto per essere lanciata. Le pergamene possono anche essere "
+"preparate nel Libro di Magie o nello Speedbook e sono rappresentate da "
+"un'icona/pulsante arancione nell'area \"seleziona magia corrente\".||Le "
+"Magie memorizzate costano mana per essere lanciate, ma possono essere usate "
+"fintanto che il personaggio ha mana per potenziarle. Il Guerriero e il Ladro "
+"iniziano il gioco senza magie memorizzate mentre il Mago inizia con Fulmine "
+"Infuocato. Se il personaggio trova un libro nel labirinto, può memorizzare "
+"la magia scritta in quel libro aprendo l'Inventario e facendo clic destro "
+"del mouse sul libro. Ciò renderà la magia sempre disponibile per il lancio. "
+"Le magie memorizzate possono essere preparate tramite Libro di Magia o "
+"Speedbook e sono rappresentate da un'icona/pulsante blu nell'area "
+"\"seleziona magia corrente\".||$Nota importante sui libri:|Leggere più di un "
+"libro aumenta la tua conoscenza di quella magia e ne incrementa il livello. "
+"Più il livello di una magia è alto, più essa è efficace.||Mentre alcune "
+"magie influenzano l'incantatore, altre richiedono un bersaglio. Queste magie "
+"mirate vengono lanciate nella direzione indicata dal cursore sull'area di "
+"gioco. Se evidenzi una creatura, lancerai quella magia su quella creatura. "
+"Non tutti gli oggetti all'interno del labirinto possono essere bersagliati.||"
+"Esempio: una magia Sfera Infuocata viaggerà verso la creatura o verso la "
+"posizione su cui fai clic destro del mouse. Una magia di guarigione "
+"aggiungerà semplicemente salute al tuo personaggio diminuendo il suo mana "
+"disponibile e non richiede bersagli.||Puoi anche impostare una magia o "
+"scegliere un tasto rapido per la selezione istantanea. Inizia aprendo il "
+"menu a comparsa come descritto nella sezione abilità sopra. Assegna i Tasti "
+"Rapidi premendo i tasti F5, F6, F7 o F8 sulla tastiera dopo aver fatto "
+"scorrere le magie disponibili ed evidenziando quella che desideri "
+"assegnare.||$Salute e Mana:|Le due sfere nella barra dei dettagli mostrano "
+"la tua vita e il tuo mana. La sfera col fluido rosso a sinistra del pannello "
+"rappresenta la salute generale del tuo personaggio. Quando il fluido è "
+"finito, il tuo personaggio è morto.||Il fluido blu sul lato destro del "
+"pannello rappresenta il mana disponibile del tuo personaggio. Il mana è la "
+"forza magica usata dal tuo personaggio per lanciare magie. Quando il liquido "
+"nella sfera è basso o esaurito, potresti non essere in grado di lanciare "
+"alcune (o tutte) le tue magie.||$Barra dei Dettagli:|La Barra dei Dettagli è "
+"dove ricevi informazioni in Diablo e interagisci con ciò che ti circonda. "
+"Ecco una rapida carrellata delle aree del pannello e del loro utilizzo:||"
+"CHAR: Utilizzato per accedere alla statistiche del personaggio|INV: "
+"Utilizzato per accedere all'Inventario|QUEST: Mostra la tua missione "
+"(inattivo nella versione Shareware)|MAP: Attiva la sovrapposizione della "
+"mappa|MENU: Attiva la schermata del menu di gioco|SPELLS: Utilizzato per "
+"accedere al Libro delle Magie|Magia corrente: la magia preparata per il "
+"lancio immediato|Sfera Vitale: la quantità di salute che il tuo personaggio "
+"ha attualmente|Sfera del Mana: la quantità di mana che il tuo personaggio ha "
+"attualmente|Messaggio Multigiocatore: Attiva l'area dei messaggi|Area "
+"Dettagli: Tutte le informazioni importanti su creature o oggetti con cui "
+"puoi interagire. Qui inserirai anche il testo da inviare come messaggio "
+"multigiocatore.||$Dettagli Personaggio:|Mostra le statistiche del "
+"personaggio facendo clic sul pulsante <CHAR sulla Barra dei Dettagli. Essa "
+"mostra \"gli ingranaggi\" del tuo personaggio. Ci sono quattro attributi "
+"principali che determinano il modo in cui il personaggio evolve.||FORZA: "
+"Quanto è potente fisicamente il personaggio. Gioca un ruolo importante nel "
+"determinare quanto danno puoi fare quando attacchi le creature.||MAGIA: Il "
+"modo in cui personaggio è in sintonia con i poteri arcani del mondo. Gioca "
+"un ruolo importante nel determinare quanto mana hai a disposizione per "
+"lanciare magie.||DESTREZZA: Quanto è veloce il personaggio con i piedi e le "
+"mani. Gioca un ruolo importante nel determinare la possibilità che hai di "
+"colpire le creature in combattimento.||VITALITÀ: Quanto è fisicamente in "
+"forma il personaggio. Gioca un ruolo importante nel determinare la salute "
+"del personaggio quando non è ferito.||$Menu di Gioco:|Per attivare il menu "
+"di gioco, fai clic sul pulsante MENU nella barra dei dettagli. Ci sono tre "
+"voci:||Nuova Partita: Ti fa uscire dal gioco corrente e ti riporta al Menu "
+"Principale.||Opzioni: Apre il menu delle opzioni che ti permette di regolare "
+"musica ed effetti sonori o il livello gamma dello schermo.||Esci dal Gioco: "
+"Esce dal programma. Nota che questo salva automaticamente il tuo "
+"personaggio.||$Mappa:|Mostra i luoghi nel labirinto già visitati dal "
+"personaggio. Per accedere alla mappa, fai clic sul pulsante MAP sulla Barra "
+"dei Dettagli. Puoi anche premere TAB sulla tastiera per attivare la mappa. "
+"Puoi ingrandire o meno la mappa con i tasti + e -. Puoi scorrere la mappa "
+"con i tasti freccia.|&"
 
 #: Source/help.cpp:384
 msgid ""
@@ -2334,7 +2334,7 @@ msgid "Quilted Armor"
 msgstr "Gambesone"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-#: Source/itemdat.cpp:77 Source/objects.cpp:5570
+#: Source/itemdat.cpp:77 Source/objects.cpp:5531
 msgid "Armor"
 msgstr "Armatura"
 
@@ -2861,7 +2861,7 @@ msgstr "Inerme"
 
 #: Source/itemdat.cpp:227
 msgid "Rusted"
-msgstr "Arruginito"
+msgstr "Arrugginito"
 
 #: Source/itemdat.cpp:229
 msgid "Strong"
@@ -3881,7 +3881,7 @@ msgstr "Olio dell'Impermeabilità"
 msgid "%s of %s"
 msgstr "%s di %s"
 
-#: Source/items.cpp:2781 Source/player.cpp:1826
+#: Source/items.cpp:2781 Source/player.cpp:1832
 #, c-format
 msgid "Ear of %s"
 msgstr "Orecchio di %s"
@@ -4412,11 +4412,11 @@ msgstr "dur ridotta, %+i%% danno"
 
 #: Source/items.cpp:3728
 msgid "extra AC vs demons"
-msgstr "AC extra contro demoni"
+msgstr "extra AC contro demoni"
 
 #: Source/items.cpp:3731
 msgid "extra AC vs undead"
-msgstr "AC extra contro non morti"
+msgstr "extra AC contro non morti"
 
 #: Source/items.cpp:3734
 #, no-c-format
@@ -4496,22 +4496,22 @@ msgstr "danno: %i  Dur: %i/%i"
 #: Source/items.cpp:3901 Source/items.cpp:3948
 #, c-format
 msgid "damage: %i-%i  Indestructible"
-msgstr "danno: %i-%i Indistruttibile"
+msgstr "danno: %i-%i  Indistruttibile"
 
 #: Source/items.cpp:3903 Source/items.cpp:3950
 #, c-format
 msgid "damage: %i-%i  Dur: %i/%i"
-msgstr "danno: %i-%i Dur: %i/%i"
+msgstr "danno: %i-%i  Dur: %i/%i"
 
 #: Source/items.cpp:3909 Source/items.cpp:3962
 #, c-format
 msgid "armor: %i  Indestructible"
-msgstr "armatura:%i Indistruttibile"
+msgstr "armatura:%i  Indistruttibile"
 
 #: Source/items.cpp:3911 Source/items.cpp:3964
 #, c-format
 msgid "armor: %i  Dur: %i/%i"
-msgstr "armatura:%i Dur: %i/%i"
+msgstr "armatura:%i  Dur: %i/%i"
 
 #: Source/items.cpp:3916
 #, c-format
@@ -4521,13 +4521,13 @@ msgstr "dan: %i  Dur: %i/%i"
 #: Source/items.cpp:3918
 #, c-format
 msgid "dam: %i-%i  Dur: %i/%i"
-msgstr "dan: %i-%i Dur: %i/%i"
+msgstr "dan: %i-%i  Dur: %i/%i"
 
 #: Source/items.cpp:3919 Source/items.cpp:3954 Source/items.cpp:3969
 #: Source/stores.cpp:169
 #, c-format
 msgid "Charges: %i/%i"
-msgstr "Ricariche: %i/%i"
+msgstr "Cariche: %i/%i"
 
 #: Source/items.cpp:3931
 msgid "unique item"
@@ -4547,7 +4547,7 @@ msgstr "Salvataggio non valido"
 
 #: Source/loadsave.cpp:1027
 msgid "Player is on a Hellfire only level"
-msgstr "Il Giocatore è in un livello esclusivo  Hellfire"
+msgstr "Il Giocatore è in un livello esclusivo di Hellfire"
 
 #: Source/loadsave.cpp:1785
 msgid "Invalid game state"
@@ -4995,7 +4995,7 @@ msgstr "Lord Ragno"
 
 #: Source/monstdat.cpp:139
 msgid "Lashworm"
-msgstr "Lashworm "
+msgstr "Lashworm"
 
 #: Source/monstdat.cpp:140
 msgid "Torchant"
@@ -5095,7 +5095,7 @@ msgstr "Bonehead Keenaxe"
 
 #: Source/monstdat.cpp:483
 msgid "Bladeskin the Slasher"
-msgstr "Bladeskin the Slasher"
+msgstr "Bladeskin lo Squartatore"
 
 #: Source/monstdat.cpp:484
 msgid "Soulpus"
@@ -5147,7 +5147,7 @@ msgstr "Warpskull"
 
 #: Source/monstdat.cpp:498
 msgid "Goretongue"
-msgstr "Goretongue"
+msgstr "Lingua Cruenta"
 
 #: Source/monstdat.cpp:499
 msgid "Pulsecrawler"
@@ -5171,7 +5171,7 @@ msgstr "Blackash il Bruciato"
 
 #: Source/monstdat.cpp:504
 msgid "Shadowcrow"
-msgstr "Shadowcrow"
+msgstr "Corvo Ombra"
 
 #: Source/monstdat.cpp:505
 msgid "Blightstone the Weak"
@@ -5199,7 +5199,7 @@ msgstr "Hazeshifter"
 
 #: Source/monstdat.cpp:511
 msgid "Deathspit"
-msgstr "Deathspit"
+msgstr "Sputa Morte"
 
 #: Source/monstdat.cpp:512
 msgid "Bloodgutter"
@@ -5211,11 +5211,11 @@ msgstr "Deathshade Fleshmaul"
 
 #: Source/monstdat.cpp:514
 msgid "Warmaggot the Mad"
-msgstr "Folle Warmaggot"
+msgstr "Warmaggot il Folle"
 
 #: Source/monstdat.cpp:515
 msgid "Glasskull the Jagged"
-msgstr "Glasskull the Jagged"
+msgstr "Glasskull il Dentato"
 
 #: Source/monstdat.cpp:516
 msgid "Blightfire"
@@ -5243,7 +5243,7 @@ msgstr "Firewound il Bieco"
 
 #: Source/monstdat.cpp:522
 msgid "Baron Sludge"
-msgstr "Barone "
+msgstr "Barone di Melma"
 
 #: Source/monstdat.cpp:523
 msgid "Blighthorn Steelmace"
@@ -5299,7 +5299,7 @@ msgstr "Appestato"
 
 #: Source/monstdat.cpp:536
 msgid "The Flayer"
-msgstr "Lo Scuoiato"
+msgstr "Scuoiato"
 
 #: Source/monstdat.cpp:537
 msgid "Bluehorn"
@@ -5323,11 +5323,11 @@ msgstr "Lionskull il Curvo"
 
 #: Source/monstdat.cpp:542
 msgid "Blacktongue"
-msgstr "Blacktongue"
+msgstr "Lingua Nera"
 
 #: Source/monstdat.cpp:543
 msgid "Viletouch"
-msgstr "Viletouch"
+msgstr "Vil Tocco"
 
 #: Source/monstdat.cpp:544
 msgid "Viperflame"
@@ -5403,7 +5403,7 @@ msgstr "Sir Gorash"
 
 #: Source/monstdat.cpp:562
 msgid "The Vizier"
-msgstr "Il Visir"
+msgstr "Visir"
 
 #: Source/monstdat.cpp:564
 msgid "Bloodlust"
@@ -5421,75 +5421,75 @@ msgstr "Grimspike"
 msgid "Doomlock"
 msgstr "Doomlock"
 
-#: Source/monster.cpp:4954
+#: Source/monster.cpp:4948
 msgid "Animal"
 msgstr "Bestia"
 
-#: Source/monster.cpp:4956
+#: Source/monster.cpp:4950
 msgid "Demon"
 msgstr "Demone"
 
-#: Source/monster.cpp:4958
+#: Source/monster.cpp:4952
 msgid "Undead"
 msgstr "Non morto"
 
-#: Source/monster.cpp:4969
+#: Source/monster.cpp:4963
 #, c-format
 msgid "Type: %s  Kills: %i"
 msgstr "Tipo: %s  Uccisioni: %i"
 
-#: Source/monster.cpp:4971
+#: Source/monster.cpp:4965
 #, c-format
 msgid "Total kills: %i"
 msgstr "Tot. Uccisi : %i"
 
-#: Source/monster.cpp:5004
+#: Source/monster.cpp:4998
 #, c-format
 msgid "Hit Points: %i-%i"
 msgstr "Poss. Colpo: %i-%i"
 
-#: Source/monster.cpp:5014
+#: Source/monster.cpp:5008
 msgid "No magic resistance"
 msgstr "Nessuna Res. Magica"
 
-#: Source/monster.cpp:5018
+#: Source/monster.cpp:5012
 msgid "Resists: "
 msgstr "Resiste: "
 
-#: Source/monster.cpp:5020 Source/monster.cpp:5031
+#: Source/monster.cpp:5014 Source/monster.cpp:5025
 msgid "Magic "
 msgstr "Magia "
 
-#: Source/monster.cpp:5022 Source/monster.cpp:5033
+#: Source/monster.cpp:5016 Source/monster.cpp:5027
 msgid "Fire "
 msgstr "Fuoco "
 
-#: Source/monster.cpp:5024 Source/monster.cpp:5035
+#: Source/monster.cpp:5018 Source/monster.cpp:5029
 msgid "Lightning "
 msgstr "Fulmine "
 
-#: Source/monster.cpp:5029
+#: Source/monster.cpp:5023
 msgid "Immune: "
 msgstr "Immune: "
 
-#: Source/monster.cpp:5049
+#: Source/monster.cpp:5043
 #, c-format
 msgid "Type: %s"
 msgstr "Tipo: %s"
 
-#: Source/monster.cpp:5055 Source/monster.cpp:5062
+#: Source/monster.cpp:5049 Source/monster.cpp:5056
 msgid "No resistances"
 msgstr "Nessuna Res"
 
-#: Source/monster.cpp:5057 Source/monster.cpp:5067
+#: Source/monster.cpp:5051 Source/monster.cpp:5061
 msgid "No Immunities"
 msgstr "Passibile"
 
-#: Source/monster.cpp:5060
+#: Source/monster.cpp:5054
 msgid "Some Magic Resistances"
 msgstr "Resistente alle Magie"
 
-#: Source/monster.cpp:5065
+#: Source/monster.cpp:5059
 msgid "Some Magic Immunities"
 msgstr "Immune a molte Magie"
 
@@ -5503,11 +5503,11 @@ msgstr "Gioco Concluso"
 
 #: Source/msg.cpp:186
 msgid "Unable to get level data"
-msgstr "Imposs.OttenereDatiGioco"
+msgstr "Impossibile ottenere dati di livello"
 
 #: Source/msg.cpp:611
 msgid "Trying to drop a floor item?"
-msgstr "Provi a Lasciare un oggetto?"
+msgstr "Abbandonare un oggetto a terra?"
 
 #: Source/msg.cpp:1388 Source/msg.cpp:1659 Source/msg.cpp:1681
 #: Source/msg.cpp:1703 Source/msg.cpp:1823 Source/msg.cpp:1844
@@ -5567,7 +5567,7 @@ msgstr "Incantato"
 
 #: Source/objects.cpp:98
 msgid "Thaumaturgic"
-msgstr "Taumaturgica"
+msgstr "Taumaturgico"
 
 #: Source/objects.cpp:99
 msgid "Fascinating"
@@ -5575,15 +5575,15 @@ msgstr "Avvenente"
 
 #: Source/objects.cpp:100
 msgid "Cryptic"
-msgstr "Celato"
+msgstr "Sibillino"
 
 #: Source/objects.cpp:102
 msgid "Eldritch"
-msgstr "Eldritch"
+msgstr "Arcano"
 
 #: Source/objects.cpp:103
 msgid "Eerie"
-msgstr "Eerie"
+msgstr "Inquietante"
 
 #: Source/objects.cpp:104
 msgid "Divine"
@@ -5595,19 +5595,19 @@ msgstr "Sacro"
 
 #: Source/objects.cpp:107
 msgid "Spiritual"
-msgstr "Spiritual"
+msgstr "Spirituale"
 
 #: Source/objects.cpp:108
 msgid "Spooky"
-msgstr "Spooky"
+msgstr "Sinistro"
 
 #: Source/objects.cpp:109
 msgid "Abandoned"
-msgstr "Derelitto"
+msgstr "Abbandonato"
 
 #: Source/objects.cpp:110
 msgid "Creepy"
-msgstr "Creepy"
+msgstr "Pauroso"
 
 #: Source/objects.cpp:111
 msgid "Quiet"
@@ -5627,7 +5627,7 @@ msgstr "Luccicante"
 
 #: Source/objects.cpp:115
 msgid "Tainted"
-msgstr "Tainted"
+msgstr "Contaminato"
 
 #: Source/objects.cpp:116
 msgid "Oily"
@@ -5725,157 +5725,157 @@ msgstr "Diario: La Fine"
 msgid "A Spellbook"
 msgstr "Un Libro di Magia"
 
-#: Source/objects.cpp:5476
+#: Source/objects.cpp:5437
 msgid "Crucified Skeleton"
 msgstr "Scheletro Crocifisso"
 
-#: Source/objects.cpp:5480
+#: Source/objects.cpp:5441
 msgid "Lever"
 msgstr "Leva"
 
-#: Source/objects.cpp:5489
+#: Source/objects.cpp:5450
 msgid "Open Door"
 msgstr "Porta Aperta"
 
-#: Source/objects.cpp:5491
+#: Source/objects.cpp:5452
 msgid "Closed Door"
 msgstr "Porta Chiusa"
 
-#: Source/objects.cpp:5493
+#: Source/objects.cpp:5454
 msgid "Blocked Door"
 msgstr "Porta Bloccata"
 
-#: Source/objects.cpp:5498
+#: Source/objects.cpp:5459
 msgid "Ancient Tome"
 msgstr "Tomo Antico"
 
-#: Source/objects.cpp:5500
+#: Source/objects.cpp:5461
 msgid "Book of Vileness"
 msgstr "Libro della Viltà"
 
-#: Source/objects.cpp:5505
+#: Source/objects.cpp:5466
 msgid "Skull Lever"
-msgstr "LevaTeschio"
+msgstr "Leva con Teschio"
 
-#: Source/objects.cpp:5508
+#: Source/objects.cpp:5469
 msgid "Mythical Book"
 msgstr "Libro Mitico"
 
-#: Source/objects.cpp:5512
+#: Source/objects.cpp:5473
 msgid "Small Chest"
 msgstr "Cofanetto"
 
-#: Source/objects.cpp:5516
+#: Source/objects.cpp:5477
 msgid "Chest"
 msgstr "Baule"
 
-#: Source/objects.cpp:5521
+#: Source/objects.cpp:5482
 msgid "Large Chest"
 msgstr "Scrigno"
 
-#: Source/objects.cpp:5524
+#: Source/objects.cpp:5485
 msgid "Sarcophagus"
 msgstr "Sarcofago"
 
-#: Source/objects.cpp:5527
+#: Source/objects.cpp:5488
 msgid "Bookshelf"
 msgstr "Scaffale"
 
-#: Source/objects.cpp:5531
+#: Source/objects.cpp:5492
 msgid "Bookcase"
 msgstr "Libreria"
 
-#: Source/objects.cpp:5536
+#: Source/objects.cpp:5497
 msgid "Pod"
 msgstr "Capsula"
 
-#: Source/objects.cpp:5538
+#: Source/objects.cpp:5499
 msgid "Urn"
 msgstr "Urna"
 
-#: Source/objects.cpp:5540
+#: Source/objects.cpp:5501
 msgid "Barrel"
 msgstr "Barile"
 
-#: Source/objects.cpp:5544
+#: Source/objects.cpp:5505
 #, c-format
 msgid "%s Shrine"
 msgstr "%s Santuario"
 
-#: Source/objects.cpp:5548
+#: Source/objects.cpp:5509
 msgid "Skeleton Tome"
 msgstr "Tomo dello Scheletro"
 
-#: Source/objects.cpp:5551
+#: Source/objects.cpp:5512
 msgid "Library Book"
-msgstr "Libro su Leggio"
+msgstr "Libro di Biblioteca"
 
-#: Source/objects.cpp:5554
+#: Source/objects.cpp:5515
 msgid "Blood Fountain"
-msgstr "Fonte Del Sangue"
+msgstr "Fonte del Sangue"
 
-#: Source/objects.cpp:5557
+#: Source/objects.cpp:5518
 msgid "Decapitated Body"
 msgstr "Corpo Decapitato"
 
-#: Source/objects.cpp:5560
+#: Source/objects.cpp:5521
 msgid "Book of the Blind"
 msgstr "Libro degli Orbi"
 
-#: Source/objects.cpp:5563
+#: Source/objects.cpp:5524
 msgid "Book of Blood"
 msgstr "Libro del Sangue"
 
-#: Source/objects.cpp:5566
+#: Source/objects.cpp:5527
 msgid "Purifying Spring"
-msgstr "Primavera purificante"
+msgstr "Primavera Purificante"
 
-#: Source/objects.cpp:5573 Source/objects.cpp:5597
+#: Source/objects.cpp:5534 Source/objects.cpp:5558
 msgid "Weapon Rack"
 msgstr "Rastrelliera"
 
-#: Source/objects.cpp:5576
+#: Source/objects.cpp:5537
 msgid "Goat Shrine"
-msgstr "Goat Shrine"
+msgstr "Santuario della Capra"
 
-#: Source/objects.cpp:5579
+#: Source/objects.cpp:5540
 msgid "Cauldron"
 msgstr "Calderone"
 
-#: Source/objects.cpp:5582
+#: Source/objects.cpp:5543
 msgid "Murky Pool"
 msgstr "Pozza Buia"
 
-#: Source/objects.cpp:5585
+#: Source/objects.cpp:5546
 msgid "Fountain of Tears"
 msgstr "Fonte del Pianto"
 
-#: Source/objects.cpp:5588
+#: Source/objects.cpp:5549
 msgid "Steel Tome"
 msgstr "Tomo d'Acciaio"
 
-#: Source/objects.cpp:5591
+#: Source/objects.cpp:5552
 msgid "Pedestal of Blood"
 msgstr "Colonna di Sangue"
 
-#: Source/objects.cpp:5600
+#: Source/objects.cpp:5561
 msgid "Mushroom Patch"
 msgstr "Pugno di Funghi"
 
-#: Source/objects.cpp:5603
+#: Source/objects.cpp:5564
 msgid "Vile Stand"
 msgstr "Stallo del Vile"
 
-#: Source/objects.cpp:5606
+#: Source/objects.cpp:5567
 msgid "Slain Hero"
 msgstr "Eroe Ucciso"
 
-#: Source/objects.cpp:5613
+#: Source/objects.cpp:5574
 #, c-format
 msgid "Trapped %s"
 msgstr "Trappola %s"
 
-#: Source/objects.cpp:5619
+#: Source/objects.cpp:5580
 #, c-format
 msgid "%s (disabled)"
 msgstr "%s (disabilitato)"
@@ -5932,7 +5932,7 @@ msgstr "Livello Successivo: "
 #: Source/qol/xpbar.cpp:148
 #, c-format
 msgid " to Level %d"
-msgstr "al Livello %d"
+msgstr " al Livello %d"
 
 #: Source/quests.cpp:39
 msgid "The Magic Rock"
@@ -6015,17 +6015,17 @@ msgstr "L'Empio Altare"
 msgid "To %s"
 msgstr "Verso %s"
 
-#: Source/quests.cpp:760
+#: Source/quests.cpp:741
 msgid "Quest Log"
 msgstr "Missioni"
 
-#: Source/quests.cpp:767
+#: Source/quests.cpp:748
 msgid "Close Quest Log"
 msgstr "Chiudi Missioni"
 
 #: Source/setmaps.cpp:77
 msgid "Skeleton King's Lair"
-msgstr "Covo - Re Scheletro"
+msgstr "Covo di Re Scheletro"
 
 #: Source/setmaps.cpp:78
 msgid "Chamber of Bone"
@@ -6033,7 +6033,7 @@ msgstr "Camera d'Ossa"
 
 #: Source/setmaps.cpp:81
 msgid "Archbishop Lazarus' Lair"
-msgstr "Covo Arivescovo Lazarus"
+msgstr "Covo di Lazarus"
 
 #: Source/spelldat.cpp:16
 msgid "Firebolt"
@@ -6053,27 +6053,27 @@ msgstr "Identifica"
 
 #: Source/spelldat.cpp:21
 msgid "Fire Wall"
-msgstr "Fire Wall"
+msgstr "Muro Infuocato"
 
 #: Source/spelldat.cpp:23
 msgid "Stone Curse"
-msgstr "Stone Curse"
+msgstr "Inganno di Pietra"
 
 #: Source/spelldat.cpp:24
 msgid "Infravision"
-msgstr "Infravision"
+msgstr "Infravisione"
 
 #: Source/spelldat.cpp:25
 msgid "Phasing"
-msgstr "Phasing"
+msgstr "Fase"
 
 #: Source/spelldat.cpp:26
 msgid "Mana Shield"
-msgstr "Mana Shield"
+msgstr "Scudo Magico"
 
 #: Source/spelldat.cpp:27
 msgid "Fireball"
-msgstr "Sfera infuocata"
+msgstr "Sfera Infuocata"
 
 #: Source/spelldat.cpp:29
 msgid "Chain Lightning"
@@ -6113,7 +6113,7 @@ msgstr "Apocalisse"
 
 #: Source/spelldat.cpp:40
 msgid "Etherealize"
-msgstr "Eterealiza"
+msgstr "Eterealizza"
 
 #: Source/spelldat.cpp:41
 msgid "Item Repair"
@@ -6197,7 +6197,7 @@ msgstr "Anello del Fuoco"
 
 #: Source/spelldat.cpp:61
 msgid "Search"
-msgstr "Cerca"
+msgstr "Ricerca"
 
 #: Source/spelldat.cpp:63
 msgid "Rune of Light"
@@ -6218,21 +6218,21 @@ msgstr ",  "
 #: Source/stores.cpp:180
 #, c-format
 msgid "Damage: %i-%i  "
-msgstr "Danno : %i-%i "
+msgstr "Danno : %i-%i  "
 
 #: Source/stores.cpp:182
 #, c-format
 msgid "Armor: %i  "
-msgstr "Armat: %i "
+msgstr "Armat: %i  "
 
 #: Source/stores.cpp:184
 #, c-format
 msgid "Dur: %i/%i,  "
-msgstr "Dur: %i/%i, "
+msgstr "Dur: %i/%i,  "
 
 #: Source/stores.cpp:187
 msgid "Indestructible,  "
-msgstr "Indistruttibile, "
+msgstr "Indistruttibile,  "
 
 #: Source/stores.cpp:195
 msgid "No required attributes"
@@ -6359,7 +6359,7 @@ msgstr "Facciamo l'affare?"
 
 #: Source/stores.cpp:866
 msgid "Are you sure you want to identify this item?"
-msgstr "Sei sicuro di voler indentificare l'oggetto?"
+msgstr "Sei sicuro di voler identificare l'oggetto?"
 
 #: Source/stores.cpp:872
 msgid "Are you sure you want to buy this item?"
@@ -7159,7 +7159,7 @@ msgstr ""
 "labirinto per ritrovare il figlio scomparso del re. Sfruttò le loro paure "
 "per trasformarli in una folla scatenata. Nessuno di loro era preparato per "
 "quello che giaceva sottoterra. Lazarus li abbandonò - fra le grinfie di "
-"orrori inenarrabili - a morire laggiù.  |"
+"orrori inenarrabili - a morire laggiù. |"
 
 #: Source/textdat.cpp:123
 msgid ""
@@ -7467,7 +7467,7 @@ msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying... |"
 msgstr ""
-"Non hai trovato l'elisir Dorato. Temo di essere condannato per l'eternità. "
+"Non hai trovato l'Elisir Dorato. Temo di essere condannato per l'eternità. "
 "Per favore, tieni duro.|"
 
 #: Source/textdat.cpp:176
@@ -7481,7 +7481,7 @@ msgstr ""
 "Tu hai salvato la mia anima dalla dannazione e per questo ti sono debitore. "
 "Se troverò un modo per sdebitarmi dall'oltretomba lo farò, ma per ora... "
 "prendi il mio elmo. Nel viaggio che sto per fare mi servirà ben poco. Che "
-"possa proteggerti dagli Oscuri Poteri. Ora vai e che la luce ti assista nel "
+"possa proteggerti dagli Oscuri Poteri. Ora vai e che la Luce ti assista nel "
 "tuo cammino, amico mio...|"
 
 #: Source/textdat.cpp:178
@@ -8048,7 +8048,7 @@ msgid ""
 msgstr ""
 "Perché lo hai portato da me? Non ho bisogno del cervello di un demone. Mi "
 "serve solo l'elisir al quale il Guaritore sta lavorando. È lui che ha "
-"bisogno di questo bizzarro organo, e ricordati di portarmi un pò di elisir. "
+"bisogno di questo bizzarro organo, e ricordati di portarmi un po' di elisir. "
 "Pensi di farcela? |"
 
 #: Source/textdat.cpp:273
@@ -8250,7 +8250,7 @@ msgstr "Arrrrgh! La tua curiosità ti porterà alla morte!!! |"
 
 #: Source/textdat.cpp:308
 msgid "Hello, my friend. Stay awhile and listen... |"
-msgstr "Ciao, amico mio. Resta un pò e ascolta... |"
+msgstr "Ciao, amico mio. Resta un po' e ascolta... |"
 
 #: Source/textdat.cpp:309
 msgid ""
@@ -8356,7 +8356,7 @@ msgid ""
 "open. |"
 msgstr ""
 "Ah, Pepin. Lui per me è un vero amico, forse il migliore che ho. A volte è "
-"un pò confuso, ma non esiste nessuno con un animo così premuroso. Pochi "
+"un po' confuso, ma non esiste nessuno con un animo così premuroso. Pochi "
 "eguagliano la sua conoscenza e le sue abilità, e la sua porta è sempre "
 "aperta. |"
 
@@ -8427,7 +8427,7 @@ msgid ""
 "Cain knows quite a bit about the past. |"
 msgstr ""
 "Se vuoi saperne di più sulla storia del nostro villaggio, Cain il Narratore "
-"sa un bel pò di cose sul passato. |"
+"sa un bel po' di cose sul passato. |"
 
 #: Source/textdat.cpp:339
 msgid ""
@@ -8725,7 +8725,7 @@ msgid ""
 "restore them to top fighting form. |"
 msgstr ""
 "Le tue armi e la tua armatura porteranno i segni della lotta contro "
-"l'oscurità. Se me li porterai, un pò di lavoro e una fornace calda, li "
+"l'oscurità. Se me li porterai, un po' di lavoro e una fornace calda, li "
 "riporteranno alla loro migliore condizione. |"
 
 #: Source/textdat.cpp:390
@@ -8738,7 +8738,7 @@ msgstr ""
 "Mentre io devo praticamente contrabbandare i metalli e gli strumenti di cui "
 "ho bisogno dalle carovane che passano per i limiti della nostra maledetta "
 "città, Adria ha sempre quello di cui necessita. Se potessi controllare solo "
-"un pò della sua magia, potrei fare cose veramente incredibili. |"
+"un po' della sua magia, potrei fare cose veramente incredibili. |"
 
 #: Source/textdat.cpp:392
 msgid ""
@@ -8851,7 +8851,7 @@ msgid ""
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!! |"
 msgstr ""
 "Griswold? Buon Vecchio Griswold! L'amo come un fratello! Lottammo insieme, "
-"sai, quando... noi... Lazarus... Lazarus... Lazarus!!! |"
+"sai, quando... noi... Lazarus...  Lazarus... Lazarus!!! |"
 
 #: Source/textdat.cpp:413
 msgid ""
@@ -8862,7 +8862,7 @@ msgid ""
 msgstr ""
 "Hehehe, mi piace Pepin. A volte ci prova veramente. Ascoltami, devi "
 "assolutamente conoscerlo. Una brava persona a cui piacciono le persone in "
-"cerca d'aiuto. Ehi, credo che sia un pò come te, huh, eroe? Anch'io ero un "
+"cerca d'aiuto. Ehi, credo che sia un po' come te, huh, eroe? Anch'io ero un "
 "eroe... |"
 
 #: Source/textdat.cpp:415
@@ -8967,7 +8967,7 @@ msgid ""
 msgstr ""
 "Anche se il calore del sole è oltre misura, la mera fiamma di una candela è "
 "un pericolo maggiore. Nessuna energia, per quanto grande, può essere usata "
-"senza una focalizzazione. Per molti incantesimi, Staffe istoriate possono "
+"senza una focalizzazione. Per molti incantesimi, Verghe istoriate possono "
 "essere ricaricate più volte con energie magiche. Ho la capacità di "
 "ristabilire quel potere, ma a pagamento ovviamente. |"
 
@@ -9023,9 +9023,9 @@ msgid ""
 "be gleaned, but you must separate fact from fantasy. |"
 msgstr ""
 "Più fiducia riponi in una persona, più è dura sopportare il tradimento. "
-"Farnham ha perso la sua anima, ma non per via di un demone.L'ha persa quando "
-"ha visto i suoi concittadini traditi dall'Arcivescovo Lazarus. Sa qualcosa, "
-"ma devi distinguere la realtà dalla fantasia. |"
+"Farnham ha perso la sua anima, ma non per via di un demone. L'ha persa "
+"quando ha visto i suoi concittadini traditi dall'Arcivescovo Lazarus. Sa "
+"qualcosa, ma devi distinguere la realtà dalla fantasia. |"
 
 #: Source/textdat.cpp:444
 msgid ""
@@ -9132,10 +9132,10 @@ msgid ""
 "Gillian is a beautiful girl who should get out of Tristram as soon as it is "
 "safe. Hmmm... maybe I'll take her with me when I go... |"
 msgstr ""
-"Se fossi solo un pò più vecchio, la coprirei di ricchezze, e ti assicuro che "
-"posso mettere le mani su oggetti molto preziosi. Gillian è una bellissima "
-"ragazza che dovrebbe lasciare Tristram finché è ancora sicuro. Hmm... forse "
-"la porterò con me quando me ne andrò... |"
+"Se fossi solo un po' più vecchio, la coprirei di ricchezze, e ti assicuro "
+"che posso mettere le mani su oggetti molto preziosi. Gillian è una "
+"bellissima ragazza che dovrebbe lasciare Tristram finché è ancora sicuro. "
+"Hmm... forse la porterò con me quando me ne andrò... |"
 
 #: Source/textdat.cpp:461
 msgid ""
@@ -9185,7 +9185,7 @@ msgstr ""
 "Adria fa paura. Cain dà i brividi per quello che può dirti sul passato, ma "
 "quella strega può vedere nel tuo passato. Inoltre, ha sempre un modo per "
 "avere quello di cui ha bisogno. Adria mette le mani su più mercanzia di "
-"quella che ho visto passare per i cancelli del Bazaar Reale in piena festa. |"
+"quella che ho visto passare per i cancelli del Bazar Reale in piena festa. |"
 
 #: Source/textdat.cpp:469
 msgid ""
@@ -9477,8 +9477,8 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written. |"
 msgstr ""
-"Oltre la Sala degli Eroi si trova la Camera d'Ossa. Morte eterna attende "
-"coloro che cercassero di rubare i tesori protetti in essa. Così parla il "
+"Oltre la Sala degli Eroi si trova la Camera d'Ossa.  Morte eterna attende "
+"coloro che cercassero di rubare i tesori protetti in essa.  Così parla il "
 "Signore del Terrore, e così è scritto. |"
 
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
@@ -9488,10 +9488,10 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood. |"
 msgstr ""
-"Nelle armerie infernali risiede il Signore del Sangue. Sul suo cammino "
-"giacciono migliaia di corpi mutilati. Senza distinzione angeli e uomini sono "
-"stati trucidati per i suoi sacrifici agli Oscuri che esigono solo una cosa - "
-"sangue. |"
+"Nelle armerie infernali risiede il Signore del Sangue.  Sul suo cammino "
+"giacciono migliaia di corpi mutilati.  Senza distinzione angeli e uomini "
+"sono stati trucidati per i suoi sacrifici agli Oscuri che esigono solo una "
+"cosa - sangue. |"
 
 #: Source/textdat.cpp:541
 msgid ""
@@ -9499,9 +9499,9 @@ msgid ""
 "a treasure that is hidden less so.  I will leave you with this.  Do not let "
 "the sands of time confuse your search.|"
 msgstr ""
-"Perdura nella tua missione. Trovare un tesoro disperso non è facile. Scovare "
-"un tesoro celato ancor meno. Ti lascio con questo. Non lasciare che le "
-"sabbie del tempo confondano la tua ricerca.|"
+"Perdura nella tua missione.  Trovare un tesoro disperso non è facile.  "
+"Scovare un tesoro celato ancor meno.  Ti lascio con questo.  Non lasciare "
+"che le sabbie del tempo confondano la tua ricerca.|"
 
 #: Source/textdat.cpp:543
 msgid ""
@@ -9510,17 +9510,17 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil.|"
 msgstr ""
-"Un cosa?! Questa è follia. Non c'è tesoro sepolto a Tristram. Fammi vedere! "
-"Ah, guarda questi disegni inesatti. Non combaciano con la nostra città. "
-"Rimarrò con la mente su ciò che si trova sotto la cattedrale e non su ciò "
-"che sta nel nostro sottosuolo.|"
+"Un cosa?!  Questa è follia.  Non c'è tesoro sepolto a Tristram.  Fammi "
+"vedere!  Ah, guarda questi disegni inesatti.  Non combaciano con la nostra "
+"città.  Rimarrò con la mente su ciò che si trova sotto la cattedrale e non "
+"su ciò che sta nel nostro sottosuolo.|"
 
 #: Source/textdat.cpp:545
 msgid ""
 "I really don't have time to discuss some map you are looking for.  I have "
 "many sick people that require my help and yours as well.|"
 msgstr ""
-"Non ho veramente tempo di discutere sulla mappa che stai cercando. Ho molta "
+"Non ho veramente tempo di discutere sulla mappa che stai cercando.  Ho molta "
 "gente malata che richiede il mio aiuto e anche il tuo.|"
 
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
@@ -9529,9 +9529,9 @@ msgid ""
 "His honor stripped and his visage altered.  He is trapped in immortal "
 "torment.  Charged to conceal the very thing that could free him.|"
 msgstr ""
-"Il fiero Iswall è intrappolato nelle profondità di questo mondo. Spogliato "
-"dell'onore e sfigurato in viso. Egli è intrappolato in un tormento "
-"immortale. Incaricato a celare la cosa che potrebbe liberarlo.|"
+"Il fiero Iswall è intrappolato nelle profondità di questo mondo.  Spogliato "
+"dell'onore e sfigurato in viso.  Egli è intrappolato in un tormento "
+"immortale.  Incaricato a celare la cosa che potrebbe liberarlo.|"
 
 #: Source/textdat.cpp:549
 msgid ""
@@ -9541,7 +9541,7 @@ msgid ""
 msgstr ""
 "Scommetto che Wirt vedendoti arrivare improvvisò una sceneggiata per "
 "deriderti più tardi, quando avresti girato in città col tuo naso "
-"nell'immondizia. Io l'ignorerei.|"
+"nell'immondizia.  Io l'ignorerei.|"
 
 #: Source/textdat.cpp:551
 msgid ""
@@ -9551,17 +9551,17 @@ msgid ""
 "youthful games.  So it may just be his imagination.|"
 msgstr ""
 "Ci fu un tempo in cui la città era meta frequente per viaggiatori "
-"provenienti da ogni dove. Molto è cambiato da allora. Ma caverne ignote e "
-"tesori sepolti sono fantasie comuni nei bambini. Wirt fa di raro giochi "
-"infantili. Quindi può esserselo solo immaginato.|"
+"provenienti da ogni dove.  Molto è cambiato da allora.  Ma caverne ignote e "
+"tesori sepolti sono fantasie comuni nei bambini.  Wirt fa di raro giochi "
+"infantili.  Quindi può esserselo solo immaginato.|"
 
 #: Source/textdat.cpp:553
 msgid ""
 "Listen here.  Come close.  I don't know if you know what I know, but you've "
 "have really got something here.  That's a map.|"
 msgstr ""
-"Ascolta, vieni qui. Io non so se tu sai quello che so, ma hai trovato "
-"davvero qualcosa. Quella è una mappa.|"
+"Ascolta.  Vieni qui.  Io non so se tu sai quello che so, ma hai trovato "
+"davvero qualcosa.  Quella è una mappa.|"
 
 #: Source/textdat.cpp:555
 msgid ""
@@ -9573,10 +9573,10 @@ msgid ""
 "the talk of an old sick woman, but anything seems possible these days.|"
 msgstr ""
 "Mia nonna mi racconta spesso storie riguardo strane forze sconosciute che "
-"popolano il cimitero al di fuori della chiesa. Potrebbe interessarti "
-"sentirne una. Ha detto che se lasci un'offerta adeguata nel cimitero, entri "
+"popolano il cimitero al di fuori della chiesa.  Potrebbe interessarti "
+"sentirne una.  Ha detto che se lasci un'offerta adeguata nel cimitero, entri "
 "nella cattedrale per pregare i morti, e ritorni, l'offerta si sarebbe "
-"alterata in qualche strano modo. Io non so se questi sono solo i "
+"alterata in qualche strano modo.  Io non so se questi sono solo i "
 "vaneggiamenti di un'anziana donna malata, ma qualsiasi cosa pare possibile "
 "di questi giorni.|"
 
@@ -9586,8 +9586,8 @@ msgid ""
 "interested in picking up a few things from you.  Or better yet, don't you "
 "need some rare and expensive supplies to get you through this ordeal?|"
 msgstr ""
-"Hmmm. Un tesoro vasto e misterioso, dici. Mmmm. Forse potrei essere "
-"interessato a raccogliere alcune cose da te. O meglio ancora, non hai "
+"Hmmm.  Un tesoro vasto e misterioso, dici.  Mmmm.  Forse potrei essere "
+"interessato a raccogliere alcune cose da te.  O meglio ancora, non hai "
 "bisogno di rifornimenti rari e costosi per superare questo calvario? |"
 
 #: Source/textdat.cpp:561
@@ -9647,7 +9647,7 @@ msgid ""
 msgstr ""
 "Oh, che problema che ho...forse...No, non posso importelo, con tutti i "
 "problemi che hai. Forse dopo che avrai ripulito la chiesa da queste creature "
-"potresti ritornare... e dedicare un pò del tuo tempo per aiutare un povero "
+"potresti ritornare... e dedicare un po' del tuo tempo per aiutare un povero "
 "contadino?|"
 
 #: Source/textdat.cpp:571
@@ -9661,18 +9661,18 @@ msgid ""
 "but we snuck over there, and then suddenly this BUG came out!  We ran away "
 "but Theo fell down and the bug GRABBED him and took him away!|"
 msgstr ""
-"Ho perso Theo! Ho perso il mio migliore amico! Giocavamo sul fiume, e Theo "
-"disse di voler andare a vedere la grande cosa verde. Dissi che non dovevamo, "
-"ma sgattaiolammo fino a là, e improvvisamente questo INSETTO uscì! Siamo "
-"fuggiti ma Theo cadde e l'insetto l'AFFERRò portandoselo via!|"
+"Ho perso Theo!  Ho perso il mio migliore amico!  Giocavamo sul fiume, e Theo "
+"disse di voler andare a vedere la grande cosa verde.  Dissi che non "
+"dovevamo, ma sgattaiolammo fino a là, e improvvisamente questo INSETTO "
+"uscì!  Siamo fuggiti ma Theo cadde e l'insetto l'AFFERRò portandoselo via!|"
 
 #: Source/textdat.cpp:574
 msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!|"
 msgstr ""
-"L'hai trovato? Ritrova Theodore, per favore! è piccolo. Non è in grado di "
-"prendersi cura di sé. Ti prego!|"
+"L'hai trovato?  Ritrova Theodore, per favore!  È piccolo.  Non è in grado di "
+"prendersi cura di sé.  Ti prego!|"
 
 #: Source/textdat.cpp:576
 msgid ""
@@ -9680,25 +9680,25 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!|"
 msgstr ""
-"L'hai trovato! L'hai trovato! Grazie! Oh Theo, quei brutti insetti ti hanno "
-"spaventato? Ehi! Ugh! Hai qualcosa attaccato alla pelle! Ick! Su, Theo, "
-"torniamo a casa! Grazie di nuovo, eroico individuo!|"
+"L'hai trovato!  L'hai trovato!  Grazie!  Oh Theo, quei brutti insetti ti "
+"hanno spaventato? Ehi! Ugh! Hai qualcosa attaccato alla pelle!  Ick!  Su, "
+"Theo, torniamo a casa!  Grazie di nuovo, eroico individuo!|"
 
 #: Source/textdat.cpp:578
 msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed...|"
 msgstr ""
-"Siamo rimasti a lungo sopiti, il tempo del risveglio è ormai giunto. Dopo il "
-"nostro lungo sonno, siamo affamati. Presto, ora, ci nutriremo... |"
+"Siamo rimasti a lungo sopiti, il tempo del risveglio è ormai giunto.  Dopo "
+"il nostro lungo sonno, siamo affamati.  Presto, ora, ci nutriremo...|"
 
 #: Source/textdat.cpp:580
 msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all.|"
 msgstr ""
-"Ti diverti, piccolo mammifero? Com'è patetico. Il tuo piccolo mondo non sarà "
-"minimamente una minaccia.|"
+"Ti diverti, piccolo mammifero?  Com'è patetico. Il tuo piccolo mondo non "
+"sarà minimamente una minaccia.|"
 
 #: Source/textdat.cpp:582
 msgid ""
@@ -9707,8 +9707,8 @@ msgid ""
 "the flesh of its denizens.  Man shall become our chattel and sustenance.|"
 msgstr ""
 "Contamineremo queste terre, la nostra stirpe invaderà le distese che gli "
-"uomini chiamano casa. I nostri viticci avvolgeranno il mondo, e noi "
-"banchetteremo con la carne dei suoi abitanti. L'uomo sarà il nostro "
+"uomini chiamano casa.  I nostri viticci avvolgeranno il mondo, e noi "
+"banchetteremo con la carne dei suoi abitanti.  L'uomo sarà il nostro "
 "nutrimento.|"
 
 #: Source/textdat.cpp:584
@@ -9736,14 +9736,14 @@ msgid ""
 "this holy foundation, a unity of purpose and a unity of possession.|"
 msgstr ""
 "E nell'anno della Luce Dorata, fu decretato che una maestosa Cattedrale "
-"fosse eretta. La pietra angolare di questo sacro luogo doveva essere scavata "
-"nella pietra traslucida di Antyrael, così chiamata in nome dell'Angelo che "
-"ha condiviso il suo potere con gli Horadrim. \n"
+"fosse eretta.  La pietra angolare di questo sacro luogo doveva essere "
+"scavata nella pietra traslucida di Antyrael, così chiamata in nome "
+"dell'Angelo che ha condiviso il suo potere con gli Horadrim.  \n"
 "\n"
 "Nell'anno designato all'Oscurità, la terra tremò e la Cattedrale cadde in "
-"frantumi. Quando iniziò la costruzione di catacombe e castelli e l'uomo si "
+"frantumi.  Quando iniziò la costruzione di catacombe e castelli e l'uomo si "
 "oppose alle devastazioni della Guerra del Peccato, le rovine vennero "
-"spazzate via da tutte le loro pietre. E così la pietra angolare svanì. \n"
+"spazzate via da tutte le loro pietre.  E così la pietra angolare svanì. \n"
 "\n"
 "La pietra era di questo mondo - e di tutti i mondi - come la luce è sia "
 "dentro che fuori da ogni cosa. La luce e l'unità sono le fondamenta di "
@@ -9774,31 +9774,31 @@ msgid ""
 "my house, it's just south of the fork in the river... you know... the one "
 "with the overgrown vegetable garden.|"
 msgstr ""
-"Va bene, va bene. Non sono una mucca. di solito non giro in questo modo; ero "
-"seduto a casa a farmi gli affari miei quando a un tratto questi insetti, "
+"Va bene, va bene.  Non sono una mucca.  Di solito non giro in questo modo; "
+"ero seduto a casa a farmi gli affari miei quando a un tratto questi insetti, "
 "tralci e bulbi e altro sono iniziati ad uscire fuori dal pavimento... "
-"orribile! Se soltanto avessi qualcosa di decente da indossare, non sarebbe "
-"così male. Ehi! Potresti tornare alla mia dimora a prendere il mio vestito? "
-"Quello marrone, non il grigio, che sfrutto solo di sera. Lo farei io, ma non "
-"voglio che mi vedano conciato così. Ecco, prendi questo, potrebbe "
-"servirti... per uccidere quelle cose che hanno invaso tutto. Non puoi "
-"mancare la mia casa, è poco più a sud del biforcarsi del fiume... sai... "
-"quella con l'orto incolto.|"
+"orribile!  Se soltanto avessi qualcosa di decente da indossare, non sarebbe "
+"così male.  Ehi!  Potresti tornare alla mia dimora a prendere il mio "
+"vestito?  Quello marrone, non il grigio, che sfrutto solo di sera.  Lo farei "
+"io, ma non voglio che mi vedano conciato così.  Ecco, prendi questo, "
+"potrebbe servirti... per uccidere quelle cose che hanno invaso tutto.  Non "
+"puoi mancare la mia casa, è poco più a sud del biforcarsi del fiume... "
+"sai... quella con l'orto incolto.|"
 
 #: Source/textdat.cpp:599
 msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me! |"
 msgstr ""
-"Perché perdi tempo? Riportami il vestito! Sbrigati! Quella Holstein laggiù "
-"continua a farmi l'occhiolino! |"
+"Perché perdi tempo?  Riportami il vestito!  Sbrigati!  Quella Holstein "
+"laggiù continua a farmi l'occhiolino! |"
 
 #: Source/textdat.cpp:601
 msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!|"
 msgstr ""
-"Ehi, hai preso il mio vestito? Presto, passamelo! Queste orecchie prudono "
+"Ehi, hai preso il mio vestito?  Presto, passamelo!  Queste orecchie prudono "
 "come non crederesti mai!|"
 
 #: Source/textdat.cpp:603
@@ -9807,9 +9807,9 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit.|"
 msgstr ""
-"No no no no! Questo è l'abito GRIGIO! è per la sera! Da occasioni formali! "
-"Non posso indossarlo. Cosa sei, un tipo strambo? Ho bisogno dell'abito "
-"MARRONE.|"
+"No no no no! Questo è l'abito GRIGIO!  È per la sera!  Da occasioni "
+"formali!  Non posso indossarlo.  Cosa sei, un tipo strambo?  Ho bisogno "
+"dell'abito MARRONE.|"
 
 #: Source/textdat.cpp:605
 msgid ""
@@ -9819,19 +9819,19 @@ msgid ""
 "you could use a new... yknowwhatImean?  The whole adventurer motif is just "
 "so... retro.  Just a word of advice, eh?  Ciao.|"
 msgstr ""
-"Ahh, MOLTO meglio. Wow! Infine, un pò di dignità! Le mie corna son dritte? "
-"Bene. Guarda, grazie dell'aiuto. Ecco, prendi questo dono; e, sai.. una "
-"piccola dritta sulla moda.. potresti usarne uno piccolo.. potresti usarne "
-"uno nuovo.. sai cosa intendo? Il vero motto dell'avventuriero è solo "
-"questo... retrò. È solo un consiglio eh? Ciao.|"
+"Ahh, MOLTO meglio.  Wow! Infine, un po' di dignità!  Le mie corna son "
+"dritte?  Bene.  Guarda, grazie dell'aiuto.  Ecco, prendi questo dono; e, "
+"sai.. una piccola dritta sulla moda... potresti usarne uno piccolo.. "
+"potresti usarne uno nuovo.. sai cosa intendo? Il vero motto "
+"dell'avventuriero è solo questo... retrò.  È solo un consiglio eh?  Ciao.|"
 
 #: Source/textdat.cpp:607
 msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk...|"
 msgstr ""
-"Guarda. Io sono una mucca. E tu, sei un'esca da mostro. Fai un pò di "
-"esperienza! E poi parleremo...|"
+"Guarda.  Io sono una mucca.  E tu, sei un'esca da mostro. Fai un po' di "
+"esperienza!  E poi parleremo...|"
 
 #: Source/textdat.cpp:609
 msgid "|"
@@ -9867,7 +9867,7 @@ msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?|"
 msgstr ""
-"Io vedo in te un potenziale di grandezza. Forse un giorno mentre adempirai "
+"Io vedo in te un potenziale di grandezza.  Forse un giorno mentre adempirai "
 "al tuo destino, potresti fermarti e farmi un piccolo favore?|"
 
 #: Source/textdat.cpp:618
@@ -9876,7 +9876,7 @@ msgid ""
 "more powerful. I wouldn't want to injure the village's only chance to "
 "destroy the menace in the church!|"
 msgstr ""
-"Penso che potresti aiutarmi,ma forse dopo che sarai diventato un pò più "
+"Penso che potresti aiutarmi,ma forse dopo che sarai diventato un po' più "
 "potente. Non vorrei pregiudicare al villaggio l'unica possibilità di "
 "distruggere la minaccia nella chiesa!|"
 
@@ -9885,15 +9885,15 @@ msgid ""
 "Me, I'm a self-made cow.  Make something of yourself, and... then we'll "
 "talk.|"
 msgstr ""
-"Io, sono una mucca fatta da sé. Realizzati pure tu, e... poi ne parleremo.|"
+"Io, sono una mucca fatta da sé.  Realizzati pure tu, e... poi ne parleremo.|"
 
 #: Source/textdat.cpp:622
 msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live...|"
 msgstr ""
-"Non sono tenuto a giustificarmi con ogni turista che passa da qui! Non hai "
-"dei mostri da uccidere? Forse ne riparleremo dopo. Se sarai vivo...|"
+"Non sono tenuto a giustificarmi con ogni turista che passa da qui!  Non hai "
+"dei mostri da uccidere?  Forse ne riparleremo dopo.  Se sarai vivo...|"
 
 #: Source/textdat.cpp:624
 msgid ""
@@ -9901,8 +9901,8 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero.|"
 msgstr ""
-"Smettila di irritarmi. Sto cercando qualcuno di veramente eroico. E tu non "
-"lo sei. Non posso fidarmi di te, sarai mangiato dai mostri a giorni... "
+"Smettila di irritarmi.  Sto cercando qualcuno di veramente eroico.  E tu non "
+"lo sei.  Non posso fidarmi di te, sarai mangiato dai mostri a giorni... "
 "Necessito di un eroe di una certa esperienza.|"
 
 #: Source/textdat.cpp:626
@@ -9919,15 +9919,15 @@ msgid ""
 "it's just south of the fork in the river... you know... the one with the "
 "overgrown vegetable garden.|"
 msgstr ""
-"Va bene, diamoci un taglio col toro. Non voglio sviarti. Stavo seduto a "
+"Va bene, diamoci un taglio col toro.  Non voglio sviarti.  Stavo seduto a "
 "casa, di malumore, quando le cose sono degenerate, un gruppo di mostri in "
-"fuga uscì dal pavimento! Ero atterrito, a malapena ho indossato questo "
+"fuga uscì dal pavimento!  Ero atterrito.  A malapena ho indossato questo "
 "travestimento da mucca del Jersey uscendo dalla porta, e ora guardo queste "
-"ridicole mammelle. Se solo avessi qualcosa di normale da indossare, non "
-"sarebbe così male. Ehi! Potresti tornare alla mia dimora a prendere il mio "
-"vestito? Quello marrone, non quello grigio, che sfrutto solo di sera. Lo "
-"farei io, ma non voglio che nessuno mi veda conciato così. Ecco, prendi "
-"questo, potrebbe servirti... per uccidere quella cosa che ha invaso tutto. "
+"ridicole mammelle.  Se solo avessi qualcosa di normale da indossare, non "
+"sarebbe così male.  Ehi!  Potresti tornare alla mia dimora a prendere il mio "
+"vestito?  Quello marrone, non quello grigio, che sfrutto solo di sera.  Lo "
+"farei io, ma non voglio che nessuno mi veda conciato così.  Ecco, prendi "
+"questo, potrebbe servirti... per uccidere quella cosa che ha invaso tutto.  "
 "Non puoi mancare la mia casa, è poco più a sud del biforcarsi del fiume... "
 "sai... quella con l'orto incolto.|"
 
@@ -9938,10 +9938,10 @@ msgid ""
 "remember to order some more bat guano and black candles from Adria; I'm "
 "running a bit low.|"
 msgstr ""
-"Nuvoloso e fresco oggi. Lanciando trappole di necromanzia nel vuoto cadranno "
-"due nuove sottospecie di orrori volanti; un bel giorno di lavoro. Ricorda di "
-"ordinare guano di pipistrello e candele nere da Adria; la mia è una piccola "
-"parte.|"
+"Nuvoloso e fresco oggi.  Lanciando trappole di necromanzia nel vuoto "
+"cadranno due nuove sottospecie di orrori volanti; un bel giorno di lavoro.  "
+"Ricorda di ordinare guano di pipistrello e candele nere da Adria; la mia è "
+"una piccola parte.|"
 
 #: Source/textdat.cpp:630
 msgid ""
@@ -9950,7 +9950,7 @@ msgid ""
 "no effect on this fearsome beast.|"
 msgstr ""
 "Ho provato incantesimi, minacce, abiura e negoziazione con questa disgustosa "
-"creatura -- inutilmente. I miei metodi di costrizione dei demoni non hanno "
+"creatura -- inutilmente.  I miei metodi di costrizione dei demoni non hanno "
 "effetto su questa spaventosa bestia|"
 
 #: Source/textdat.cpp:632
@@ -9961,8 +9961,8 @@ msgid ""
 "hearing. They are searching, I think, for this journal.|"
 msgstr ""
 "La mia casa si sta lentamente contaminando dall'abiezione di questo "
-"prigioniero indesiderato. Le cripte sono\tpiene di ombre che si muovono "
-"svanendo dalla mia vista. Il languido strisciare di artigli pulsa nelle mie "
+"prigioniero indesiderato.  Le cripte sono\tpiene di ombre che si muovono "
+"svanendo dalla mia vista.  Il languido strisciare di artigli pulsa nelle mie "
 "orecchie. Loro stanno cercando, credo, questo diario.|"
 
 #: Source/textdat.cpp:634
@@ -9972,10 +9972,10 @@ msgid ""
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name.|"
 msgstr ""
-"Nel suo sbraitare, alla creatura è sfuggito il suo nome -- Na-Krul. Ho "
+"Nel suo sbraitare, alla creatura è sfuggito il suo nome -- Na-Krul.  Ho "
 "indagato sul suo nome, ma i demoni minori hanno in qualche modo distrutto la "
-"mia biblioteca. Na-Krul... Il nome mi fa raggelare. Preferisco pensare a lui "
-"solamente come La Creatura piuttosto che al suo vero nome.|"
+"mia biblioteca.  Na-Krul... Il nome mi fa raggelare.  Preferisco pensare a "
+"lui solamente come La Creatura piuttosto che al suo vero nome.|"
 
 #: Source/textdat.cpp:636
 msgid ""
@@ -9984,9 +9984,9 @@ msgid ""
 "curses upon me for trapping it here.  Its words fill my heart with terror, "
 "and yet I cannot block out its voice.|"
 msgstr ""
-"La creatura intrappolata ulula con furia negandomi il sonno. È accanita "
+"La creatura intrappolata ulula con furia negandomi il sonno.  È accanita "
 "contro colui che l'ha segregata nel vuoto,e fa appello a sleali maledizioni "
-"su di me per intrappolarmi qui. Le sue parole mi riempono il cuore di "
+"su di me per intrappolarmi qui.  Le sue parole mi riempono il cuore di "
 "terrore,e non riesco a ignorare la sua voce.|"
 
 #: Source/textdat.cpp:638
@@ -9996,9 +9996,9 @@ msgid ""
 "knowledge to free their lord.  I hope that whoever finds this journal will "
 "seek the knowledge.|"
 msgstr ""
-"Il mio tempo è giunto al termine. Devo tramandare i modi per indebolire il "
+"Il mio tempo è giunto al termine.  Devo tramandare i modi per indebolire il "
 "demone, e nascondere i testi, affinché i suoi servitori non li usino per "
-"liberare il loro signore. Mi auguro che chiunque trovi questo diario sia in "
+"liberare il loro signore.  Mi auguro che chiunque trovi questo diario sia in "
 "cerca del sapere.|"
 
 #: Source/textdat.cpp:640
@@ -10017,15 +10017,15 @@ msgid ""
 "defeat.|"
 msgstr ""
 "Chi trova questo libro ha il dovere di fermare la creatura demoniaca che si "
-"cela all'interno di queste mura. Il mio tempo è finito. Anche ora, i suoi "
-"tirapiedi infernali graffiano da dietro la porta che li nasconde. \n"
+"cela all'interno di queste mura.  Il mio tempo è finito. Anche ora, i suoi "
+"tirapiedi infernali graffiano da dietro la porta che li nasconde.  \n"
 "\n"
 "Ho bloccato il Demone con arcane magie segregandolo dietro delle grandi "
 "mura, ma temo non sarà sufficiente. \n"
 "\n"
 "Gli incantesimi ritrovati nei miei tre grimori proteggeranno il suo "
-"possessore, ma solo se lanciati nel giusto ordine. Le leve all'entrata "
-"rimuovono le barriere liberando il demone; non toccarle! Usa solo questi "
+"possessore, ma solo se lanciati nel giusto ordine.  Le leve all'entrata "
+"rimuovono le barriere liberando il demone; non toccarle!  Usa solo questi "
 "incantesimi per entrare o il suo potere potrebbe essere troppo grande da "
 "sconfiggere.|"
 
@@ -10082,7 +10082,7 @@ msgstr "Lester il contadino"
 
 #: Source/towners.cpp:437
 msgid "Complete Nut"
-msgstr "Dado Completo"
+msgstr "Matto Svitato"
 
 #: Source/towners.cpp:549
 msgid "Slain Townsman"
@@ -10152,11 +10152,3 @@ msgstr "Giù da Diablo"
 #, c-format
 msgid "Back to Level %i"
 msgstr "Torna al Livello %i"
-
-#, fuzzy, c-format
-#~| msgid "%i Scroll"
-#~| msgid_plural "%i Scrolls"
-#~ msgid "%s Scroll"
-#~ msgid_plural "%i Scrolls"
-#~ msgstr[0] "%i Pergamena"
-#~ msgstr[1] "%i Pergamene"
