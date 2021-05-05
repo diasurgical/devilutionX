@@ -3936,7 +3936,7 @@ msgstr "várias flechas por tiro"
 #: Source/items.cpp:3590
 #, c-format
 msgid "fire arrows damage: %i"
-msgstr "flechas de fogo: %i"
+msgstr "dano das flechas de fogo: %i"
 
 #: Source/items.cpp:3592
 #, c-format
