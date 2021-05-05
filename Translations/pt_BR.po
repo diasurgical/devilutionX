@@ -3961,7 +3961,7 @@ msgstr "dano das bolas de fogo: %i"
 #: Source/items.cpp:3604
 #, c-format
 msgid "fireball damage: %i-%i"
-msgstr "bolas de fogo: %i-%i"
+msgstr "dano das bolas de fogo: %i-%i"
 
 #: Source/items.cpp:3607
 msgid "attacker takes 1-3 damage"
