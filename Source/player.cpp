@@ -1148,7 +1148,6 @@ void InitPlayer(int pnum, bool FirstTime)
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
-			plr[pnum].actionFrame = 2 * plr[pnum].AnimInfo.NumberOfFrames;
 		}
 
 		plr[pnum]._pdir = DIR_S;
