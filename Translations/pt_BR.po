@@ -1131,7 +1131,7 @@ msgstr "Siga-me."
 
 #: Source/diablo.cpp:140
 msgid "Here's something for you."
-msgstr "Tenho uma coisa para você."
+msgstr "Tenho algo pra você."
 
 #: Source/diablo.cpp:141
 msgid "Now you DIE!"
