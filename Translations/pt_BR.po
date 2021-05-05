@@ -3860,7 +3860,7 @@ msgstr "Dano do acerto de fogo: %i-%i"
 #: Source/items.cpp:3534
 #, c-format
 msgid "Lightning hit damage: %i"
-msgstr "Dano de raios: %i"
+msgstr "Dano do acerto de raios: %i"
 
 #: Source/items.cpp:3536
 #, c-format
