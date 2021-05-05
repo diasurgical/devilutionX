@@ -637,7 +637,6 @@ void ClearPlrPVars(int pnum)
 	plr[pnum]._pVar4 = 0;
 	plr[pnum]._pVar5 = 0;
 	plr[pnum].position.offset2 = { 0, 0 };
-	plr[pnum].actionFrame = 0;
 	plr[pnum].deathFrame = 0;
 }
 
