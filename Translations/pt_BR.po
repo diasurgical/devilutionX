@@ -4405,7 +4405,7 @@ msgstr "Demônio"
 
 #: Source/monstdat.cpp:57
 msgid "Blink"
-msgstr "Cintilação"
+msgstr "Cintilador"
 
 #: Source/monstdat.cpp:58
 msgid "Gloom"
