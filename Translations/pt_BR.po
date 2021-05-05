@@ -833,7 +833,7 @@ msgstr ""
 
 #: Source/appfat.cpp:146 Source/appfat.cpp:164
 msgid "Data File Error"
-msgstr "Erro do arquivo de dados"
+msgstr "Erro de arquivo de dados"
 
 #: Source/appfat.cpp:160
 msgid ""
