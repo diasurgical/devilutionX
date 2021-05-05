@@ -4449,7 +4449,7 @@ msgstr "Homem-Lama"
 
 #: Source/monstdat.cpp:72
 msgid "Toad Demon"
-msgstr "Sapo Demoníaco"
+msgstr "Demônio Sapo"
 
 #: Source/monstdat.cpp:73
 msgid "Flayed One"
