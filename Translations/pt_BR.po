@@ -3850,7 +3850,7 @@ msgstr "%i %s cargas"
 #: Source/items.cpp:3528
 #, c-format
 msgid "Fire hit damage: %i"
-msgstr "Dano de fogo: %i"
+msgstr "Dano do acerto de fogo: %i"
 
 #: Source/items.cpp:3530
 #, c-format
