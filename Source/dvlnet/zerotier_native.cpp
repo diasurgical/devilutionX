@@ -64,7 +64,8 @@ void zerotier_network_start()
 {
 	if (zt_started)
 		return;
-	zts_start(paths::PrefPath().c_str(), (void (*)(void *))Callback, 0);
+	std::string ztpath = paths::PrefPath() + "zerotier";
+	zts_start(ztpath.c_str(), (void (*)(void *))Callback, 0);
 	std::atexit(zerotier_network_stop);
 }
 
