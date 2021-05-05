@@ -1667,7 +1667,6 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 
 	plr[pnum].position.temp = { cx, cy };
 	plr[pnum]._pVar4 = GetSpellLevel(pnum, plr[pnum]._pSpell);
-	plr[pnum].actionFrame = 1;
 }
 
 void FixPlrWalkTags(int pnum)
@@ -3087,7 +3086,7 @@ bool PM_DoSpell(int pnum)
 		app_fatal("PM_DoSpell: illegal player %d", pnum);
 	}
 
-	if (plr[pnum].actionFrame == plr[pnum]._pSFNum) {
+	if (plr[pnum].AnimInfo.CurrentFrame == (plr[pnum]._pSFNum + 1)) {
 		CastSpell(
 		    pnum,
 		    plr[pnum]._pSpell,
@@ -3102,10 +3101,8 @@ bool PM_DoSpell(int pnum)
 		}
 	}
 
-	plr[pnum].actionFrame++;
-
 	if (leveltype == DTYPE_TOWN) {
-		if (plr[pnum].actionFrame > plr[pnum]._pSFrames) {
+		if (plr[pnum].AnimInfo.CurrentFrame > plr[pnum]._pSFrames) {
 			StartWalkStand(pnum);
 			ClearPlrPVars(pnum);
 			return true;
