@@ -1258,8 +1258,6 @@ static void PressChar(int32_t vkey)
 		return;
 	}
 
-	keymapper.keyPressed(vkey, deathflag);
-
 	switch (vkey) {
 	case '+':
 	case '=':
