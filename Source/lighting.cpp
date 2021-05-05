@@ -15,12 +15,12 @@ LightListStruct VisionList[MAXVISION];
 uint8_t lightactive[MAXLIGHTS];
 LightListStruct LightList[MAXLIGHTS];
 int numlights;
-BYTE lightradius[16][128];
+uint8_t lightradius[16][128];
 bool dovision;
 int numvision;
 char lightmax;
 bool dolighting;
-BYTE lightblock[64][16][16];
+uint8_t lightblock[64][16][16];
 int visionid;
 std::array<uint8_t, LIGHTSIZE> pLightTbl;
 bool lightflag;
@@ -451,12 +451,10 @@ const BYTE RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 
 
 void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, int *by)
 {
-	int swap;
-
 	*bx = 0;
 	*by = 0;
 
-	swap = *dx;
+	int swap = *dx;
 	*dx = 7 - *dy;
 	*dy = swap;
 	swap = *lx;
@@ -494,16 +492,16 @@ char GetLight(int x, int y)
 
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 {
-	int x, y, v, xoff, yoff, mult, radius_block;
+	int x, y, v, mult, radius_block;
 	int min_x, max_x, min_y, max_y;
-	int dist_x, dist_y, light_x, light_y, block_x, block_y, temp_x, temp_y;
+	int dist_x, dist_y, temp_x, temp_y;
 
-	xoff = 0;
-	yoff = 0;
-	light_x = 0;
-	light_y = 0;
-	block_x = 0;
-	block_y = 0;
+	int xoff = 0;
+	int yoff = 0;
+	int light_x = 0;
+	int light_y = 0;
+	int block_x = 0;
+	int block_y = 0;
 
 	if (Lnum >= 0) {
 		xoff = LightList[Lnum].position.offset.x;
@@ -613,29 +611,20 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 
 void DoUnLight(int nXPos, int nYPos, int nRadius)
 {
-	int x, y, min_x, min_y, max_x, max_y;
-
 	nRadius++;
-	min_y = nYPos - nRadius;
-	max_y = nYPos + nRadius;
-	min_x = nXPos - nRadius;
-	max_x = nXPos + nRadius;
 
-	if (min_y < 0) {
-		min_y = 0;
-	}
-	if (max_y > MAXDUNY) {
-		max_y = MAXDUNY;
-	}
-	if (min_x < 0) {
-		min_x = 0;
-	}
-	if (max_x > MAXDUNX) {
-		max_x = MAXDUNX;
-	}
+	int min_x = nXPos - nRadius;
+	int max_x = nXPos + nRadius;
+	int min_y = nYPos - nRadius;
+	int max_y = nYPos + nRadius;
 
-	for (y = min_y; y < max_y; y++) {
-		for (x = min_x; x < max_x; x++) {
+	min_x = std::max(min_x, 0);
+	max_x = std::max(max_x, MAXDUNX);
+	min_y = std::max(min_y, 0);
+	max_y = std::max(max_y, MAXDUNY);
+
+	for (int y = min_y; y < max_y; y++) {
+		for (int x = min_x; x < max_x; x++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY)
 				dLight[x][y] = dPreLight[x][y];
 		}
@@ -644,14 +633,12 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 
 void DoUnVision(int nXPos, int nYPos, int nRadius)
 {
-	int i, j, x1, y1, x2, y2;
-
 	nRadius++;
 	nRadius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
-	y1 = nYPos - nRadius;
-	y2 = nYPos + nRadius;
-	x1 = nXPos - nRadius;
-	x2 = nXPos + nRadius;
+	int y1 = nYPos - nRadius;
+	int y2 = nYPos + nRadius;
+	int x1 = nXPos - nRadius;
+	int x2 = nXPos + nRadius;
 
 	if (y1 < 0) {
 		y1 = 0;
@@ -666,8 +653,8 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 		x2 = MAXDUNX;
 	}
 
-	for (i = x1; i < x2; i++) {
-		for (j = y1; j < y2; j++) {
+	for (int i = x1; i < x2; i++) {
+		for (int j = y1; j < y2; j++) {
 			dFlags[i][j] &= ~(BFLAG_VISIBLE | BFLAG_LIT);
 		}
 	}
@@ -766,27 +753,16 @@ void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
 
 void MakeLightTable()
 {
-	int i, j, k, l, lights, shade, l1, l2, cnt, rem, div;
-	double fs, fa;
-	BYTE col, max;
-	uint8_t *tbl;
-	BYTE blood[16];
+	uint8_t *tbl = pLightTbl.data();
+	int shade = 0;
+	int lights = 15;
 
-	tbl = pLightTbl.data();
-	shade = 0;
-
-	if (light4flag) {
-		lights = 3;
-	} else {
-		lights = 15;
-	}
-
-	for (i = 0; i < lights; i++) {
+	for (int i = 0; i < lights; i++) {
 		*tbl++ = 0;
-		for (j = 0; j < 8; j++) {
-			col = 16 * j + shade;
-			max = 16 * j + 15;
-			for (k = 0; k < 16; k++) {
+		for (int j = 0; j < 8; j++) {
+			uint8_t col = 16 * j + shade;
+			uint8_t max = 16 * j + 15;
+			for (int k = 0; k < 16; k++) {
 				if (k != 0 || j != 0) {
 					*tbl++ = col;
 				}
@@ -798,10 +774,10 @@ void MakeLightTable()
 				}
 			}
 		}
-		for (j = 16; j < 20; j++) {
-			col = 8 * j + (shade >> 1);
-			max = 8 * j + 7;
-			for (k = 0; k < 8; k++) {
+		for (int j = 16; j < 20; j++) {
+			uint8_t col = 8 * j + (shade >> 1);
+			uint8_t max = 8 * j + 7;
+			for (int k = 0; k < 8; k++) {
 				*tbl++ = col;
 				if (col < max) {
 					col++;
@@ -811,10 +787,10 @@ void MakeLightTable()
 				}
 			}
 		}
-		for (j = 10; j < 16; j++) {
-			col = 16 * j + shade;
-			max = 16 * j + 15;
-			for (k = 0; k < 16; k++) {
+		for (int j = 10; j < 16; j++) {
+			uint8_t col = 16 * j + shade;
+			uint8_t max = 16 * j + 15;
+			for (int k = 0; k < 16; k++) {
 				*tbl++ = col;
 				if (col < max) {
 					col++;
@@ -828,28 +804,25 @@ void MakeLightTable()
 				}
 			}
 		}
-		if (light4flag) {
-			shade += 5;
-		} else {
-			shade++;
-		}
+		shade++;
 	}
 
-	for (i = 0; i < 256; i++) {
+	for (int i = 0; i < 256; i++) {
 		*tbl++ = 0;
 	}
 
 	if (leveltype == DTYPE_HELL) {
+		BYTE blood[16];
 		tbl = pLightTbl.data();
-		for (i = 0; i < lights; i++) {
-			l1 = lights - i;
-			l2 = l1;
-			div = lights / l1;
-			rem = lights % l1;
-			cnt = 0;
+		for (int i = 0; i < lights; i++) {
+			int l1 = lights - i;
+			int l2 = l1;
+			int div = lights / l1;
+			int rem = lights % l1;
+			int cnt = 0;
 			blood[0] = 0;
-			col = 1;
-			for (j = 1; j < 16; j++) {
+			uint8_t col = 1;
+			for (int j = 1; j < 16; j++) {
 				blood[j] = col;
 				l2 += rem;
 				if (l2 > l1 && j < 15) {
@@ -864,31 +837,31 @@ void MakeLightTable()
 				}
 			}
 			*tbl++ = 0;
-			for (j = 1; j <= 15; j++) {
+			for (int j = 1; j <= 15; j++) {
 				*tbl++ = blood[j];
 			}
-			for (j = 15; j > 0; j--) {
+			for (int j = 15; j > 0; j--) {
 				*tbl++ = blood[j];
 			}
 			*tbl++ = 1;
 			tbl += 224;
 		}
 		*tbl++ = 0;
-		for (j = 0; j < 31; j++) {
+		for (int j = 0; j < 31; j++) {
 			*tbl++ = 1;
 		}
 		tbl += 224;
 	}
 	if (currlevel >= 17) {
 		tbl = pLightTbl.data();
-		for (i = 0; i < lights; i++) {
+		for (int i = 0; i < lights; i++) {
 			*tbl++ = 0;
-			for (j = 1; j < 16; j++)
+			for (int j = 1; j < 16; j++)
 				*tbl++ = j;
 			tbl += 240;
 		}
 		*tbl++ = 0;
-		for (j = 1; j < 16; j++)
+		for (int j = 1; j < 16; j++)
 			*tbl++ = 1;
 		tbl += 240;
 	}
@@ -899,8 +872,8 @@ void MakeLightTable()
 	LoadFileInMem("PlrGFX\\Stone.TRN", tbl, 256);
 	tbl += 256;
 
-	for (i = 0; i < 8; i++) {
-		for (col = 226; col < 239; col++) {
+	for (int i = 0; i < 8; i++) {
+		for (uint8_t col = 226; col < 239; col++) {
 			if (i != 0 || col != 226) {
 				*tbl++ = col;
 			} else {
@@ -911,36 +884,36 @@ void MakeLightTable()
 		*tbl++ = 0;
 		*tbl++ = 0;
 	}
-	for (i = 0; i < 4; i++) {
-		col = 224;
-		for (j = 224; j < 239; j += 2) {
+	for (int i = 0; i < 4; i++) {
+		uint8_t col = 224;
+		for (int j = 224; j < 239; j += 2) {
 			*tbl++ = col;
 			col += 2;
 		}
 	}
-	for (i = 0; i < 6; i++) {
-		for (col = 224; col < 239; col++) {
+	for (int i = 0; i < 6; i++) {
+		for (uint8_t col = 224; col < 239; col++) {
 			*tbl++ = col;
 		}
 		*tbl++ = 0;
 	}
 
-	for (j = 0; j < 16; j++) {
-		for (i = 0; i < 128; i++) {
+	for (int j = 0; j < 16; j++) {
+		for (int i = 0; i < 128; i++) {
 			if (i > (j + 1) * 8) {
 				lightradius[j][i] = 15;
 			} else {
-				fs = (double)15 * i / ((double)8 * (j + 1));
+				double fs = (double)15 * i / ((double)8 * (j + 1));
 				lightradius[j][i] = (BYTE)(fs + 0.5);
 			}
 		}
 	}
 
 	if (currlevel >= 17) {
-		for (j = 0; j < 16; j++) {
-			fa = (sqrt((double)(16 - j))) / 128;
+		for (int j = 0; j < 16; j++) {
+			double fa = (sqrt((double)(16 - j))) / 128;
 			fa *= fa;
-			for (i = 0; i < 128; i++) {
+			for (int i = 0; i < 128; i++) {
 				lightradius[15 - j][i] = 15 - (BYTE)(fa * (double)((128 - i) * (128 - i)));
 				if (lightradius[15 - j][i] > 15)
 					lightradius[15 - j][i] = 0;
@@ -950,11 +923,11 @@ void MakeLightTable()
 			}
 		}
 	}
-	for (j = 0; j < 8; j++) {
-		for (i = 0; i < 8; i++) {
-			for (k = 0; k < 16; k++) {
-				for (l = 0; l < 16; l++) {
-					fs = (BYTE)sqrt((double)(8 * l - j) * (8 * l - j) + (8 * k - i) * (8 * k - i));
+	for (int j = 0; j < 8; j++) {
+		for (int i = 0; i < 8; i++) {
+			for (int k = 0; k < 16; k++) {
+				for (int l = 0; l < 16; l++) {
+					double fs = (BYTE)sqrt((double)(8 * l - j) * (8 * l - j) + (8 * k - i) * (8 * k - i));
 					fs += fs < 0 ? -0.5 : 0.5;
 
 					lightblock[j * 8 + i][k][l] = fs;
@@ -967,18 +940,17 @@ void MakeLightTable()
 #ifdef _DEBUG
 void ToggleLighting()
 {
-	int i;
-
 	lightflag ^= true;
 
 	if (lightflag) {
 		memset(dLight, 0, sizeof(dLight));
-	} else {
-		memcpy(dLight, dPreLight, sizeof(dLight));
-		for (i = 0; i < MAX_PLRS; i++) {
-			if (plr[i].plractive && plr[i].plrlevel == currlevel) {
-				DoLighting(plr[i].position.tile.x, plr[i].position.tile.y, plr[i]._pLightRad, -1);
-			}
+		return;
+	}
+
+	memcpy(dLight, dPreLight, sizeof(dLight));
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if (plr[i].plractive && plr[i].plrlevel == currlevel) {
+			DoLighting(plr[i].position.tile.x, plr[i].position.tile.y, plr[i]._pLightRad, -1);
 		}
 	}
 }
@@ -986,22 +958,16 @@ void ToggleLighting()
 
 void InitLightMax()
 {
-	if (light4flag) {
-		lightmax = 3;
-	} else {
-		lightmax = 15;
-	}
+	lightmax = 15;
 }
 
 void InitLighting()
 {
-	int i;
-
 	numlights = 0;
 	dolighting = false;
 	lightflag = false;
 
-	for (i = 0; i < MAXLIGHTS; i++) {
+	for (int i = 0; i < MAXLIGHTS; i++) {
 		lightactive[i] = i;
 	}
 }
@@ -1094,16 +1060,13 @@ void ChangeLight(int i, int x, int y, int r)
 
 void ProcessLightList()
 {
-	int i, j;
-	BYTE temp;
-
 	if (lightflag) {
 		return;
 	}
 
 	if (dolighting) {
-		for (i = 0; i < numlights; i++) {
-			j = lightactive[i];
+		for (int i = 0; i < numlights; i++) {
+			int j = lightactive[i];
 			if (LightList[j]._ldel) {
 				DoUnLight(LightList[j].position.tile.x, LightList[j].position.tile.y, LightList[j]._lradius);
 			}
@@ -1112,17 +1075,17 @@ void ProcessLightList()
 				LightList[j]._lunflag = false;
 			}
 		}
-		for (i = 0; i < numlights; i++) {
-			j = lightactive[i];
+		for (int i = 0; i < numlights; i++) {
+			int j = lightactive[i];
 			if (!LightList[j]._ldel) {
 				DoLighting(LightList[j].position.tile.x, LightList[j].position.tile.y, LightList[j]._lradius, j);
 			}
 		}
-		i = 0;
+		int i = 0;
 		while (i < numlights) {
 			if (LightList[lightactive[i]]._ldel) {
 				numlights--;
-				temp = lightactive[numlights];
+				BYTE temp = lightactive[numlights];
 				lightactive[numlights] = lightactive[i];
 				lightactive[i] = temp;
 			} else {
@@ -1141,13 +1104,11 @@ void SavePreLighting()
 
 void InitVision()
 {
-	int i;
-
 	numvision = 0;
 	dovision = false;
 	visionid = 1;
 
-	for (i = 0; i < TransVal; i++) {
+	for (int i = 0; i < TransVal; i++) {
 		TransList[i] = false;
 	}
 }
@@ -1173,9 +1134,7 @@ int AddVision(int x, int y, int r, bool mine)
 
 void ChangeVisionRadius(int id, int r)
 {
-	int i;
-
-	for (i = 0; i < numvision; i++) {
+	for (int i = 0; i < numvision; i++) {
 		if (VisionList[i]._lid == id) {
 			VisionList[i]._lunflag = true;
 			VisionList[i].position.old = VisionList[i].position.tile;
@@ -1188,9 +1147,7 @@ void ChangeVisionRadius(int id, int r)
 
 void ChangeVisionXY(int id, int x, int y)
 {
-	int i;
-
-	for (i = 0; i < numvision; i++) {
+	for (int i = 0; i < numvision; i++) {
 		if (VisionList[i]._lid == id) {
 			VisionList[i]._lunflag = true;
 			VisionList[i].position.old = VisionList[i].position.tile;
@@ -1203,11 +1160,8 @@ void ChangeVisionXY(int id, int x, int y)
 
 void ProcessVisionList()
 {
-	int i;
-	bool delflag;
-
 	if (dovision) {
-		for (i = 0; i < numvision; i++) {
+		for (int i = 0; i < numvision; i++) {
 			if (VisionList[i]._ldel) {
 				DoUnVision(VisionList[i].position.tile.x, VisionList[i].position.tile.y, VisionList[i]._lradius);
 			}
@@ -1216,10 +1170,10 @@ void ProcessVisionList()
 				VisionList[i]._lunflag = false;
 			}
 		}
-		for (i = 0; i < TransVal; i++) {
+		for (int i = 0; i < TransVal; i++) {
 			TransList[i] = false;
 		}
-		for (i = 0; i < numvision; i++) {
+		for (int i = 0; i < numvision; i++) {
 			if (!VisionList[i]._ldel) {
 				DoVision(
 				    VisionList[i].position.tile.x,
@@ -1229,9 +1183,10 @@ void ProcessVisionList()
 				    VisionList[i]._lflags);
 			}
 		}
+		bool delflag;
 		do {
 			delflag = false;
-			for (i = 0; i < numvision; i++) {
+			for (int i = 0; i < numvision; i++) {
 				if (VisionList[i]._ldel) {
 					numvision--;
 					if (numvision > 0 && i != numvision) {
@@ -1248,22 +1203,16 @@ void ProcessVisionList()
 
 void lighting_color_cycling()
 {
-	int i, j, l;
-	BYTE col;
-	BYTE *tbl;
-
-	l = light4flag ? 4 : 16;
-
 	if (leveltype != DTYPE_HELL) {
 		return;
 	}
 
-	tbl = pLightTbl.data();
+	uint8_t *tbl = pLightTbl.data();
 
-	for (j = 0; j < l; j++) {
+	for (int j = 0; j < 16; j++) {
 		tbl++;
-		col = *tbl;
-		for (i = 0; i < 30; i++) {
+		uint8_t col = *tbl;
+		for (int i = 0; i < 30; i++) {
 			tbl[0] = tbl[1];
 			tbl++;
 		}

@@ -99,7 +99,6 @@ bool gbProcessPlayers;
 bool gbLoadGame;
 bool cineflag;
 int force_redraw;
-bool light4flag;
 int setseed;
 int PauseMode;
 bool forceSpawn;

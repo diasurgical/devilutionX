@@ -40,7 +40,6 @@ extern int force_redraw;
 /* These are defined in fonts.h */
 extern bool was_fonts_init;
 extern void FontsCleanup();
-extern bool light4flag;
 extern int PauseMode;
 extern bool gbNestArt;
 extern bool gbBard;

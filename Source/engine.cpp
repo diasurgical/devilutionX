@@ -79,7 +79,7 @@ constexpr std::uint8_t MaxCl2Width = 65;
 
 BYTE *GetLightTable(char light)
 {
-	int idx = light4flag ? 1024 : 4096;
+	int idx = 4096;
 	if (light == 2)
 		idx += 256; // gray colors
 	if (light >= 4)

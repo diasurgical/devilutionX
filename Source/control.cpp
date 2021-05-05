@@ -1746,26 +1746,13 @@ void DrawDurIcon(const CelOutputBuffer &out)
 
 void RedBack(const CelOutputBuffer &out)
 {
-	int idx = light4flag ? 1536 : 4608;
-
-	if (leveltype != DTYPE_HELL) {
-		BYTE *dst = out.begin();
-		BYTE *tbl = &pLightTbl[idx];
-		for (int h = gnViewportHeight; h != 0; h--, dst += out.pitch() - gnScreenWidth) {
-			for (int w = gnScreenWidth; w != 0; w--) {
+	uint8_t *dst = out.begin();
+	uint8_t *tbl = &pLightTbl[4608];
+	for (int h = gnViewportHeight; h != 0; h--, dst += out.pitch() - gnScreenWidth) {
+		for (int w = gnScreenWidth; w != 0; w--) {
+			if (leveltype != DTYPE_HELL || *dst >= 32)
 				*dst = tbl[*dst];
-				dst++;
-			}
-		}
-	} else {
-		BYTE *dst = out.begin();
-		BYTE *tbl = &pLightTbl[idx];
-		for (int h = gnViewportHeight; h != 0; h--, dst += out.pitch() - gnScreenWidth) {
-			for (int w = gnScreenWidth; w != 0; w--) {
-				if (*dst >= 32)
-					*dst = tbl[*dst];
-				dst++;
-			}
+			dst++;
 		}
 	}
 }

@@ -1141,8 +1141,6 @@ static void DRLG_FreeL1SP()
 
 void DRLG_Init_Globals()
 {
-	char c;
-
 	memset(dFlags, 0, sizeof(dFlags));
 	memset(dPlayer, 0, sizeof(dPlayer));
 	memset(dMonster, 0, sizeof(dMonster));
@@ -1151,14 +1149,7 @@ void DRLG_Init_Globals()
 	memset(dItem, 0, sizeof(dItem));
 	memset(dMissile, 0, sizeof(dMissile));
 	memset(dSpecial, 0, sizeof(dSpecial));
-	if (!lightflag) {
-		if (light4flag)
-			c = 3;
-		else
-			c = 15;
-	} else {
-		c = 0;
-	}
+	int8_t c = lightflag ? 0 : 15;
 	memset(dLight, c, sizeof(dLight));
 }
 
@@ -1803,30 +1794,27 @@ static void DRLG_L5GChamber(int sx, int sy, bool topflag, bool bottomflag, bool 
 
 static void DRLG_L5GHall(int x1, int y1, int x2, int y2)
 {
-	int i;
-
 	if (y1 == y2) {
-		for (i = x1; i < x2; i++) {
+		for (int i = x1; i < x2; i++) {
 			dungeon[i][y1] = 12;
 			dungeon[i][y1 + 3] = 12;
 		}
-	} else {
-		for (i = y1; i < y2; i++) {
-			dungeon[x1][i] = 11;
-			dungeon[x1 + 3][i] = 11;
-		}
+		return;
+	}
+
+	for (int i = y1; i < y2; i++) {
+		dungeon[x1][i] = 11;
+		dungeon[x1 + 3][i] = 11;
 	}
 }
 
 static void L5tileFix()
 {
-	int i, j;
-
 	// BUGFIX: Bounds checks are required in all loop bodies.
 	// See https://github.com/diasurgical/devilutionX/pull/401
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (i + 1 < DMAXX) {
 				if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 22)
 					dungeon[i + 1][j] = 23;
@@ -1848,8 +1836,8 @@ static void L5tileFix()
 		}
 	}
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (i + 1 < DMAXX) {
 				if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 19)
 					dungeon[i + 1][j] = 21;
@@ -1929,8 +1917,8 @@ static void L5tileFix()
 		}
 	}
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (j + 1 < DMAXY && dungeon[i][j] == 4 && dungeon[i][j + 1] == 2)
 				dungeon[i][j + 1] = 7;
 			if (i + 1 < DMAXX && dungeon[i][j] == 2 && dungeon[i + 1][j] == 19)
@@ -1943,18 +1931,15 @@ static void L5tileFix()
 
 void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 {
-	int sx, sy, sw, sh, xx, yy, ii, kk;
-	bool found;
+	int sw = miniset[0];
+	int sh = miniset[1];
 
-	sw = miniset[0];
-	sh = miniset[1];
-
-	for (sy = 0; sy < DMAXY - sh; sy++) {
-		for (sx = 0; sx < DMAXX - sw; sx++) {
-			found = true;
-			ii = 2;
-			for (yy = 0; yy < sh && found; yy++) {
-				for (xx = 0; xx < sw && found; xx++) {
+	for (int sy = 0; sy < DMAXY - sh; sy++) {
+		for (int sx = 0; sx < DMAXX - sw; sx++) {
+			bool found = true;
+			int ii = 2;
+			for (int yy = 0; yy < sh && found; yy++) {
+				for (int xx = 0; xx < sw && found; xx++) {
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
 						found = false;
 					}
@@ -1964,7 +1949,7 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 					ii++;
 				}
 			}
-			kk = sw * sh + 2;
+			int kk = sw * sh + 2;
 			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found) {
 				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
 				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 (fixed)
@@ -1982,8 +1967,8 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 				}
 			}
 			if (found && GenerateRnd(100) < rndper) {
-				for (yy = 0; yy < sh; yy++) {
-					for (xx = 0; xx < sw; xx++) {
+				for (int yy = 0; yy < sh; yy++) {
+					for (int xx = 0; xx < sw; xx++) {
 						if (miniset[kk] != 0) {
 							dungeon[xx + sx][yy + sy] = miniset[kk];
 						}
@@ -2063,8 +2048,6 @@ static void DRLG_L5SetRoom(int rx1, int ry1)
 
 static void L5FillChambers()
 {
-	int c;
-
 	if (HR1)
 		DRLG_L5GChamber(0, 14, false, false, false, true);
 
@@ -2112,17 +2095,14 @@ static void L5FillChambers()
 
 	if (currlevel == 24) {
 		if (VR1 || VR2 || VR3) {
-			c = 1;
+			int c = 1;
 			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
 				c = 2;
 			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
 				c = 0;
 
 			if (VR1 && !VR2 && VR3) {
-				if (GenerateRnd(2) != 0)
-					c = 0;
-				else
-					c = 2;
+				c = (GenerateRnd(2) != 0) ? 0 : 2;
 			}
 
 			if (VR1 && VR2 && VR3)
@@ -2140,17 +2120,14 @@ static void L5FillChambers()
 				break;
 			}
 		} else {
-			c = 1;
+			int c = 1;
 			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
 				c = 2;
 			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
 				c = 0;
 
 			if (HR1 && !HR2 && HR3) {
-				if (GenerateRnd(2) != 0)
-					c = 0;
-				else
-					c = 2;
+				c = (GenerateRnd(2) != 0) ? 0 : 2;
 			}
 
 			if (HR1 && HR2 && HR3)
@@ -2171,7 +2148,7 @@ static void L5FillChambers()
 	}
 	if (currlevel == 21) {
 		if (VR1 || VR2 || VR3) {
-			c = 1;
+			int c = 1;
 			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
 				c = 2;
 			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
@@ -2199,7 +2176,7 @@ static void L5FillChambers()
 				break;
 			}
 		} else {
-			c = 1;
+			int c = 1;
 			if (!HR1 && HR2 && HR3 && GenerateRnd(2))
 				c = 2;
 			if (HR1 && HR2 && !HR3 && GenerateRnd(2))
@@ -2230,7 +2207,7 @@ static void L5FillChambers()
 	}
 	if (L5setloadflag) {
 		if (VR1 || VR2 || VR3) {
-			c = 1;
+			int c = 1;
 			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
 				c = 2;
 			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
@@ -2258,7 +2235,7 @@ static void L5FillChambers()
 				break;
 			}
 		} else {
-			c = 1;
+			int c = 1;
 			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
 				c = 2;
 			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
@@ -2291,10 +2268,8 @@ static void L5FillChambers()
 
 void drlg_l1_set_crypt_room(int rx1, int ry1)
 {
-	int rw, rh, i, j, sp;
-
-	rw = UberRoomPattern[0];
-	rh = UberRoomPattern[1];
+	int rw = UberRoomPattern[0];
+	int rh = UberRoomPattern[1];
 
 	UberRow = 2 * rx1 + 6;
 	UberCol = 2 * ry1 + 8;
@@ -2305,10 +2280,10 @@ void drlg_l1_set_crypt_room(int rx1, int ry1)
 	IsUberRoomOpened = false;
 	IsUberLeverActivated = false;
 
-	sp = 2;
+	int sp = 2;
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
+	for (int j = 0; j < rh; j++) {
+		for (int i = 0; i < rw; i++) {
 			if (UberRoomPattern[sp]) {
 				dungeon[rx1 + i][ry1 + j] = UberRoomPattern[sp];
 				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
@@ -2322,20 +2297,18 @@ void drlg_l1_set_crypt_room(int rx1, int ry1)
 
 void drlg_l1_set_corner_room(int rx1, int ry1)
 {
-	int rw, rh, i, j, sp;
-
-	rw = CornerstoneRoomPattern[0];
-	rh = CornerstoneRoomPattern[1];
+	int rw = CornerstoneRoomPattern[0];
+	int rh = CornerstoneRoomPattern[1];
 
 	setpc_x = rx1;
 	setpc_y = ry1;
 	setpc_w = rw;
 	setpc_h = rh;
 
-	sp = 2;
+	int sp = 2;
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
+	for (int j = 0; j < rh; j++) {
+		for (int i = 0; i < rw; i++) {
 			if (CornerstoneRoomPattern[sp]) {
 				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
 				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
@@ -2374,32 +2347,31 @@ static void DRLG_L5FTVR(int i, int j, int x, int y, int d)
 			dTransVal[x + 1][y] = TransVal;
 		if (d == 8)
 			dTransVal[x][y] = TransVal;
-	} else {
-		dTransVal[x][y] = TransVal;
-		dTransVal[x + 1][y] = TransVal;
-		dTransVal[x][y + 1] = TransVal;
-		dTransVal[x + 1][y + 1] = TransVal;
-		DRLG_L5FTVR(i + 1, j, x + 2, y, 1);
-		DRLG_L5FTVR(i - 1, j, x - 2, y, 2);
-		DRLG_L5FTVR(i, j + 1, x, y + 2, 3);
-		DRLG_L5FTVR(i, j - 1, x, y - 2, 4);
-		DRLG_L5FTVR(i - 1, j - 1, x - 2, y - 2, 5);
-		DRLG_L5FTVR(i + 1, j - 1, x + 2, y - 2, 6);
-		DRLG_L5FTVR(i - 1, j + 1, x - 2, y + 2, 7);
-		DRLG_L5FTVR(i + 1, j + 1, x + 2, y + 2, 8);
+		return;
 	}
+
+	dTransVal[x][y] = TransVal;
+	dTransVal[x + 1][y] = TransVal;
+	dTransVal[x][y + 1] = TransVal;
+	dTransVal[x + 1][y + 1] = TransVal;
+	DRLG_L5FTVR(i + 1, j, x + 2, y, 1);
+	DRLG_L5FTVR(i - 1, j, x - 2, y, 2);
+	DRLG_L5FTVR(i, j + 1, x, y + 2, 3);
+	DRLG_L5FTVR(i, j - 1, x, y - 2, 4);
+	DRLG_L5FTVR(i - 1, j - 1, x - 2, y - 2, 5);
+	DRLG_L5FTVR(i + 1, j - 1, x + 2, y - 2, 6);
+	DRLG_L5FTVR(i - 1, j + 1, x - 2, y + 2, 7);
+	DRLG_L5FTVR(i + 1, j + 1, x + 2, y + 2, 8);
 }
 
 static void DRLG_L5FloodTVal()
 {
-	int xx, yy, i, j;
+	int yy = 16;
 
-	yy = 16;
+	for (int j = 0; j < DMAXY; j++) {
+		int xx = 16;
 
-	for (j = 0; j < DMAXY; j++) {
-		xx = 16;
-
-		for (i = 0; i < DMAXX; i++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 13 && !dTransVal[xx][yy]) {
 				DRLG_L5FTVR(i, j, xx, yy, 0);
 				TransVal++;
@@ -2412,14 +2384,12 @@ static void DRLG_L5FloodTVal()
 
 static void DRLG_L5TransFix()
 {
-	int xx, yy, i, j;
+	int yy = 16;
 
-	yy = 16;
+	for (int j = 0; j < DMAXY; j++) {
+		int xx = 16;
 
-	for (j = 0; j < DMAXY; j++) {
-		xx = 16;
-
-		for (i = 0; i < DMAXX; i++) {
+		for (int i = 0; i < DMAXX; i++) {
 			// BUGFIX: Should check for `j > 0` first. (fixed)
 			if (dungeon[i][j] == 23 && j > 0 && dungeon[i][j - 1] == 18) {
 				dTransVal[xx + 1][yy] = dTransVal[xx][yy];
@@ -2451,11 +2421,9 @@ static void DRLG_L5TransFix()
 
 static void DRLG_L5DirtFix()
 {
-	int i, j;
-
 	if (currlevel < 21) {
-		for (j = 0; j < DMAXY - 1; j++) {
-			for (i = 0; i < DMAXX - 1; i++) {
+		for (int j = 0; j < DMAXY - 1; j++) {
+			for (int i = 0; i < DMAXX - 1; i++) {
 				if (dungeon[i][j] == 21 && dungeon[i + 1][j] != 19)
 					dungeon[i][j] = 202;
 				if (dungeon[i][j] == 19 && dungeon[i + 1][j] != 19)
@@ -2470,30 +2438,29 @@ static void DRLG_L5DirtFix()
 					dungeon[i][j] = 204;
 			}
 		}
-	} else {
-		for (j = 0; j < DMAXY - 1; j++) {
-			for (i = 0; i < DMAXX - 1; i++) {
-				if (dungeon[i][j] == 19)
-					dungeon[i][j] = 83;
-				if (dungeon[i][j] == 21)
-					dungeon[i][j] = 85;
-				if (dungeon[i][j] == 23)
-					dungeon[i][j] = 87;
-				if (dungeon[i][j] == 24)
-					dungeon[i][j] = 88;
-				if (dungeon[i][j] == 18)
-					dungeon[i][j] = 82;
-			}
+		return;
+	}
+
+	for (int j = 0; j < DMAXY - 1; j++) {
+		for (int i = 0; i < DMAXX - 1; i++) {
+			if (dungeon[i][j] == 19)
+				dungeon[i][j] = 83;
+			if (dungeon[i][j] == 21)
+				dungeon[i][j] = 85;
+			if (dungeon[i][j] == 23)
+				dungeon[i][j] = 87;
+			if (dungeon[i][j] == 24)
+				dungeon[i][j] = 88;
+			if (dungeon[i][j] == 18)
+				dungeon[i][j] = 82;
 		}
 	}
 }
 
 static void DRLG_L5CornerFix()
 {
-	int i, j;
-
-	for (j = 1; j < DMAXY - 1; j++) {
-		for (i = 1; i < DMAXX - 1; i++) {
+	for (int j = 1; j < DMAXY - 1; j++) {
+		for (int i = 1; i < DMAXX - 1; i++) {
 			if (!(L5dflags[i][j] & DLRG_PROTECTED) && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
 				dungeon[i][j] = 16;
 				L5dflags[i][j - 1] &= DLRG_PROTECTED;
@@ -2734,8 +2701,6 @@ static void DRLG_L5(lvl_entry entry)
 
 void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 {
-	int i, j;
-
 	SetRndSeed(rseed);
 
 	dminx = 16;
@@ -2765,8 +2730,8 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 
 	DRLG_SetPC();
 
-	for (j = dminy; j < dmaxy; j++) {
-		for (i = dminx; i < dmaxx; i++) {
+	for (int j = dminy; j < dmaxy; j++) {
+		for (int i = dminx; i < dmaxx; i++) {
 			if (dPiece[i][j] == 290) {
 				UberRow = i;
 				UberCol = j;
