@@ -3956,7 +3956,7 @@ msgstr "flechas de raios %i-%i"
 #: Source/items.cpp:3602
 #, c-format
 msgid "fireball damage: %i"
-msgstr "bolas de fogo: %i"
+msgstr "dano das bolas de fogo: %i"
 
 #: Source/items.cpp:3604
 #, c-format
