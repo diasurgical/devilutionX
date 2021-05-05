@@ -3792,7 +3792,7 @@ msgstr "Resiste a fogo:75% MÁX"
 #: Source/items.cpp:3490
 #, c-format
 msgid "Resist Lightning: %+i%%"
-msgstr "Resiste a raios: %+i%%"
+msgstr "Resistência a raios: %+i%%"
 
 #: Source/items.cpp:3492
 msgid "Resist Lightning: 75% MAX"
