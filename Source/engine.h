@@ -202,7 +202,7 @@ struct FrameHeader {
 	uint16_t row128;
 };
 
-inline const uint8_t *CelGetFrameClipped(const byte *pCelBuff, int nCel, int *nDataSize)
+inline const byte *CelGetFrameClipped(const byte *pCelBuff, int nCel, int *nDataSize)
 {
 	const byte *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
 
@@ -212,7 +212,7 @@ inline const uint8_t *CelGetFrameClipped(const byte *pCelBuff, int nCel, int *nD
 	uint16_t nDataStart = SDL_SwapLE16(frameHeader.row0);
 	*nDataSize -= nDataStart;
 
-	return reinterpret_cast<const uint8_t *>(&pRLEBytes[nDataStart]);
+	return &pRLEBytes[nDataStart];
 }
 
 struct CelOutputBuffer {
@@ -481,7 +481,7 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSpri
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  */
-void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth);
+void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth);
 
 /**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
@@ -502,7 +502,7 @@ void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelS
  * @param nDataSize Size of CEL in bytes
  * @param tbl Palette translation table
  */
-void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl);
+void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl);
 
 /**
  * @brief Same as CelBlitLightSafeTo but with stippled transparancy applied
@@ -512,7 +512,7 @@ void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  */
-void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth);
+void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth);
 
 /**
  * @brief Same as CelDrawLightRedTo but checks for drawing outside the buffer
