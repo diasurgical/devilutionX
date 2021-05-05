@@ -189,22 +189,25 @@ https://devkitpro.org/wiki/Getting_Started
 
 - Install required packages with (dkp-)pacman:
 ```
-sudo (dkp-)pacman -S devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-	libctru citro3d 3ds-sdl 3ds-sdl_ttf \
-	3ds-freetype 3ds-libogg 3ds-libvorbisidec 3ds-mikmod
+sudo (dkp-)pacman -S \
+		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
+		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype
 ```
 - Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
   - Copy binaries to: `/opt/devkitpro/tools/bin/`
 
 ### Compiling
+_If you are compiling using MSYS2, you will need to run `export MSYS2_ARG_CONV_EXCL=-D` before compiling.
+Otherwise, MSYS will sanitize file paths in compiler flags which will likely lead to errors in the build._
+
 ```
 cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
-The output-files will be generated in the build folder.
+The output files will be generated in the build folder.
 
-[Nintendo 3DS manual](docs/manual/platforms/n3ds.md)
+[Nintendo 3DS manual](/docs/manual/platforms/n3ds.md)
 </details>
 
 <details><summary>PlayStation Vita</summary>
