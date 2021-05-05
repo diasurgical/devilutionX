@@ -1227,7 +1227,7 @@ msgstr "Nenhuma ajuda disponível"
 
 #: Source/diablo.cpp:1173
 msgid "while in stores"
-msgstr "enquanto estiver nas lojas"
+msgstr "enquanto estiver em lojas"
 
 #: Source/diablo.cpp:1453
 #, c-format
