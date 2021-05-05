@@ -551,14 +551,6 @@ void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, cons
 	}
 }
 
-void SetPixel(const CelOutputBuffer &out, Point position, BYTE col)
-{
-	if (!out.in_bounds(position))
-		return;
-
-	*out.at(position.x, position.y) = col;
-}
-
 void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
 	if (from.y < 0 || from.y >= out.h() || from.x >= out.w() || width <= 0 || from.x + width <= 0)
@@ -574,7 +566,7 @@ void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::
 
 void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
-	std::memset(out.at(from.x, from.y), colorIndex, width);
+	std::memset(&out[from], colorIndex, width);
 }
 
 void DrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
@@ -592,7 +584,7 @@ void DrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::u
 
 void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
 {
-	auto *dst = out.at(from.x, from.y);
+	auto *dst = &out[from];
 	const auto pitch = out.pitch();
 	while (height-- > 0) {
 		*dst = colorIndex;
