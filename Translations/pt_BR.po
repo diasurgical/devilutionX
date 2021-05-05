@@ -4761,7 +4761,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:151
 msgid "Arch Lich"
-msgstr "Arqui-Litch"
+msgstr "Arqui-Lich"
 
 #: Source/monstdat.cpp:152
 msgid "Biclops"
