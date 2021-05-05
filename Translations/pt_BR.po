@@ -3783,7 +3783,7 @@ msgstr "classe de armadura: %i"
 #: Source/items.cpp:3483 Source/items.cpp:3712
 #, c-format
 msgid "Resist Fire: %+i%%"
-msgstr "Resiste a fogo: %+i%%"
+msgstr "Resistência a fogo: %+i%%"
 
 #: Source/items.cpp:3485
 msgid "Resist Fire: 75% MAX"
