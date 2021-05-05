@@ -1199,7 +1199,7 @@ msgstr ""
 
 #: Source/diablo.cpp:174
 msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "Forçar o modo Diablo mesmo se o arquivo hellfire.mpq for encontrado"
+msgstr "Forçar o modo Diablo mesmo que o arquivo hellfire.mpq seja encontrado"
 
 #: Source/diablo.cpp:175
 msgid "Use alternate nest palette"
