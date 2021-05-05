@@ -22,7 +22,7 @@ char lightmax;
 bool dolighting;
 BYTE lightblock[64][16][16];
 int visionid;
-std::array<BYTE, LIGHTSIZE> pLightTbl;
+std::array<uint8_t, LIGHTSIZE> pLightTbl;
 bool lightflag;
 
 /**
@@ -769,7 +769,7 @@ void MakeLightTable()
 	int i, j, k, l, lights, shade, l1, l2, cnt, rem, div;
 	double fs, fa;
 	BYTE col, max;
-	BYTE *tbl;
+	uint8_t *tbl;
 	BYTE blood[16];
 
 	tbl = pLightTbl.data();
@@ -893,19 +893,11 @@ void MakeLightTable()
 		tbl += 240;
 	}
 
-	{
-		auto trn = LoadFileInMem<BYTE>("PlrGFX\\Infra.TRN");
-		for (i = 0; i < 256; i++) {
-			*tbl++ = trn[i];
-		}
-	}
+	LoadFileInMem("PlrGFX\\Infra.TRN", tbl, 256);
+	tbl += 256;
 
-	{
-		auto trn = LoadFileInMem<BYTE>("PlrGFX\\Stone.TRN");
-		for (i = 0; i < 256; i++) {
-			*tbl++ = trn[i];
-		}
-	}
+	LoadFileInMem("PlrGFX\\Stone.TRN", tbl, 256);
+	tbl += 256;
 
 	for (i = 0; i < 8; i++) {
 		for (col = 226; col < 239; col++) {

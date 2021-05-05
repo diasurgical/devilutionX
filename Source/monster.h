@@ -130,11 +130,6 @@ struct CMonster {
 	uint8_t mAFNum;
 	int8_t mdeadval;
 	const MonsterData *MData;
-	/**
-	 * A TRN file contains a sequence of color transitions, represented
-	 * as indexes into a palette. (a 256 byte array of palette indices)
-	 */
-	uint8_t *trans_file;
 };
 
 struct MonsterStruct { // note: missing field _mAFNum

@@ -131,7 +131,7 @@ extern std::unique_ptr<uint16_t[]> pSetPiece;
 extern bool setloadflag;
 extern std::optional<CelSprite> pSpecialCels;
 extern std::unique_ptr<MegaTile[]> pMegaTiles;
-extern std::unique_ptr<BYTE[]> pLevelPieces;
+extern std::unique_ptr<uint16_t[]> pLevelPieces;
 extern std::unique_ptr<BYTE[]> pDungeonCels;
 /**
  * List of transparancy masks to use for dPieces

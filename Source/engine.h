@@ -609,10 +609,16 @@ int32_t GenerateRnd(int32_t v);
 size_t GetFileSize(const char *pszName);
 void LoadFileData(const char *pszName, byte *buffer, size_t bufferSize);
 
+template <typename T>
+void LoadFileInMem(const char *path, T *data, std::size_t count)
+{
+	LoadFileData(path, reinterpret_cast<byte *>(data), count * sizeof(T));
+}
+
 template <typename T, std::size_t N>
 void LoadFileInMem(const char *path, std::array<T, N> &data)
 {
-	LoadFileData(path, reinterpret_cast<byte *>(&data), N * sizeof(T));
+	LoadFileInMem(path, &data, N);
 }
 
 /**
@@ -640,7 +646,7 @@ std::unique_ptr<T[]> LoadFileInMem(const char *path, size_t *elements = nullptr)
 }
 
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
-void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
+void Cl2ApplyTrans(BYTE *p, const std::array<uint8_t, 256> &ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
 } // namespace devilution

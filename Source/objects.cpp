@@ -2237,37 +2237,27 @@ void ProcessObjects()
 
 void ObjSetMicro(int dx, int dy, int pn)
 {
-	uint16_t *v;
-	MICROS *defs;
-	int i;
-
 	dPiece[dx][dy] = pn;
 	pn--;
-	defs = &dpiece_defs_map_2[dx][dy];
-	if (leveltype != DTYPE_HELL) {
-		v = (uint16_t *)pLevelPieces.get() + 10 * pn;
-		for (i = 0; i < 10; i++) {
-			defs->mt[i] = SDL_SwapLE16(v[(i & 1) - (i & 0xE) + 8]);
-		}
-	} else {
-		v = (uint16_t *)pLevelPieces.get() + 16 * pn;
-		for (i = 0; i < 16; i++) {
-			defs->mt[i] = SDL_SwapLE16(v[(i & 1) - (i & 0xE) + 14]);
-		}
+
+	int blocks = leveltype != DTYPE_HELL ? 10 : 16;
+
+	uint16_t *piece = &pLevelPieces[blocks * pn ];
+	MICROS &micros = dpiece_defs_map_2[dx][dy];
+
+	for (int i = 0; i < blocks; i++) {
+		micros.mt[i] = SDL_SwapLE16(piece[blocks - 2 + (i & 1) - (i & 0xE)]);
 	}
 }
 
 void objects_set_door_piece(int x, int y)
 {
-	int pn;
-	long v1, v2;
+	int pn = dPiece[x][y] - 1;
 
-	pn = dPiece[x][y] - 1;
+	uint16_t *piece = &pLevelPieces[10 * pn + 8];
 
-	v1 = *((uint16_t *)pLevelPieces.get() + 10 * pn + 8);
-	v2 = *((uint16_t *)pLevelPieces.get() + 10 * pn + 9);
-	dpiece_defs_map_2[x][y].mt[0] = SDL_SwapLE16(v1);
-	dpiece_defs_map_2[x][y].mt[1] = SDL_SwapLE16(v2);
+	dpiece_defs_map_2[x][y].mt[0] = SDL_SwapLE16(piece[0]);
+	dpiece_defs_map_2[x][y].mt[1] = SDL_SwapLE16(piece[1]);
 }
 
 void ObjSetMini(int x, int y, int v)
