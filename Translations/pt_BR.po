@@ -1248,7 +1248,7 @@ msgstr "loopback"
 
 #: Source/dvlnet/tcp_client.cpp:68
 msgid "Unable to connect"
-msgstr "Incapaz de se conectar"
+msgstr "Não foi possível se conectar"
 
 #: Source/dvlnet/tcp_client.cpp:89
 msgid "error: read 0 bytes from server"
