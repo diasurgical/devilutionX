@@ -3801,7 +3801,7 @@ msgstr "Resiste a raios:75% MÁX"
 #: Source/items.cpp:3497
 #, c-format
 msgid "Resist Magic: %+i%%"
-msgstr "Resiste a magia: %+i%%"
+msgstr "Resistência à magia: %+i%%"
 
 #: Source/items.cpp:3499
 msgid "Resist Magic: 75% MAX"
