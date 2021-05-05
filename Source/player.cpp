@@ -1390,7 +1390,6 @@ void PM_ChangeOffset(int pnum)
 		app_fatal("PM_ChangeOffset: illegal player %d", pnum);
 	}
 
-	plr[pnum].actionFrame++;
 	px = plr[pnum].position.offset2.x / 256;
 	py = plr[pnum].position.offset2.y / 256;
 
@@ -1418,7 +1417,7 @@ void PM_ChangeOffset(int pnum)
 /**
  * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, direction EndDir, _scroll_direction sdir, int variant)
+void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, direction EndDir, _scroll_direction sdir, int variant, bool pmWillBeCalled)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartWalk: illegal player %d", pnum);
@@ -1502,10 +1501,14 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	}
 
 	//Start walk animation
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
+	int skippedFrames = -2;
+	if (currlevel == 0 && sgGameInitInfo.bRunInTown)
+		skippedFrames = 2;
+	if (pmWillBeCalled)
+		skippedFrames += 1;
+	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
 
 	plr[pnum]._pdir = EndDir;
-	plr[pnum].actionFrame = 0;
 
 	if (pnum != myplr) {
 		return;
@@ -2289,27 +2292,15 @@ bool PM_DoWalk(int pnum, int variant)
 	}
 
 	//Play walking sound effect on certain animation frames
-	if (sgOptions.Audio.bWalkingSound) {
-		if (plr[pnum].AnimInfo.CurrentFrame == 3
-		    || (plr[pnum]._pWFrames == 8 && plr[pnum].AnimInfo.CurrentFrame == 7)
-		    || (plr[pnum]._pWFrames != 8 && plr[pnum].AnimInfo.CurrentFrame == 4)) {
+	if (sgOptions.Audio.bWalkingSound && (currlevel != 0 || !sgGameInitInfo.bRunInTown)) {
+		if (plr[pnum].AnimInfo.CurrentFrame == 1
+		    || plr[pnum].AnimInfo.CurrentFrame == 5) {
 			PlaySfxLoc(PS_WALK1, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
 		}
 	}
 
-	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
-	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
-		if (plr[pnum].AnimInfo.CurrentFrame % 2 == 0) {
-			plr[pnum].AnimInfo.CurrentFrame++;
-			plr[pnum].actionFrame++;
-		}
-		if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pWFrames) {
-			plr[pnum].AnimInfo.CurrentFrame = 0;
-		}
-	}
-
 	//Check if we reached new tile
-	if (plr[pnum].actionFrame >= plr[pnum]._pWFrames) {
+	if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pWFrames) {
 
 		//Update the player's tile position
 		switch (variant) {
@@ -3164,7 +3155,7 @@ bool PM_DoDeath(int pnum)
 	return false;
 }
 
-void CheckNewPath(int pnum)
+void CheckNewPath(int pnum, bool pmWillBeCalled)
 {
 	int i, x, y;
 	int xvel3, xvel, yvel;
@@ -3224,28 +3215,28 @@ void CheckNewPath(int pnum)
 
 			switch (plr[pnum].walkpath[0]) {
 			case WALK_N:
-				StartWalk(pnum, 0, -xvel, 0, 0, -1, -1, 0, 0, DIR_N, SDIR_N, PM_WALK);
+				StartWalk(pnum, 0, -xvel, 0, 0, -1, -1, 0, 0, DIR_N, SDIR_N, PM_WALK, pmWillBeCalled);
 				break;
 			case WALK_NE:
-				StartWalk(pnum, xvel, -yvel, 0, 0, 0, -1, 0, 0, DIR_NE, SDIR_NE, PM_WALK);
+				StartWalk(pnum, xvel, -yvel, 0, 0, 0, -1, 0, 0, DIR_NE, SDIR_NE, PM_WALK, pmWillBeCalled);
 				break;
 			case WALK_E:
-				StartWalk(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E, PM_WALK3);
+				StartWalk(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E, PM_WALK3, pmWillBeCalled);
 				break;
 			case WALK_SE:
-				StartWalk(pnum, xvel, yvel, -32, -16, 1, 0, 0, 0, DIR_SE, SDIR_SE, PM_WALK2);
+				StartWalk(pnum, xvel, yvel, -32, -16, 1, 0, 0, 0, DIR_SE, SDIR_SE, PM_WALK2, pmWillBeCalled);
 				break;
 			case WALK_S:
-				StartWalk(pnum, 0, xvel, 0, -32, 1, 1, 0, 0, DIR_S, SDIR_S, PM_WALK2);
+				StartWalk(pnum, 0, xvel, 0, -32, 1, 1, 0, 0, DIR_S, SDIR_S, PM_WALK2, pmWillBeCalled);
 				break;
 			case WALK_SW:
-				StartWalk(pnum, -xvel, yvel, 32, -16, 0, 1, 0, 0, DIR_SW, SDIR_SW, PM_WALK2);
+				StartWalk(pnum, -xvel, yvel, 32, -16, 0, 1, 0, 0, DIR_SW, SDIR_SW, PM_WALK2, pmWillBeCalled);
 				break;
 			case WALK_W:
-				StartWalk(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W, PM_WALK3);
+				StartWalk(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W, PM_WALK3, pmWillBeCalled);
 				break;
 			case WALK_NW:
-				StartWalk(pnum, -xvel, -yvel, 0, 0, -1, 0, 0, 0, DIR_NW, SDIR_NW, PM_WALK);
+				StartWalk(pnum, -xvel, -yvel, 0, 0, -1, 0, 0, 0, DIR_NW, SDIR_NW, PM_WALK, pmWillBeCalled);
 				break;
 			}
 
@@ -3677,7 +3668,7 @@ void ProcessPlayers()
 					tplayer = PM_DoDeath(pnum);
 					break;
 				}
-				CheckNewPath(pnum);
+				CheckNewPath(pnum, tplayer);
 			} while (tplayer);
 
 			plr[pnum].AnimInfo.ProcessAnimation();
