@@ -260,6 +260,11 @@ struct CelOutputBuffer {
 		return region.h;
 	}
 
+	std::uint8_t &operator[](Point p) const
+	{
+		return *at(p.x, p.y);
+	}
+
 	BYTE *at(int x, int y) const
 	{
 		return static_cast<BYTE *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
@@ -283,7 +288,7 @@ struct CelOutputBuffer {
 		return surface->pitch;
 	}
 
-	bool in_bounds(Point position) const
+	bool InBounds(Point position) const
 	{
 		return position.x >= 0 && position.y >= 0 && position.x < region.w && position.y < region.h;
 	}
@@ -520,7 +525,13 @@ void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, cons
  * @param point Target buffer coordinate
  * @param col Color index from current palette
  */
-void SetPixel(const CelOutputBuffer &out, Point position, BYTE col);
+inline void SetPixel(const CelOutputBuffer &out, Point position, std::uint8_t col)
+{
+	if (!out.InBounds(position))
+		return;
+
+	out[position] = col;
+}
 
 /**
  * @brief Blit CL2 sprite, to the back buffer at the given coordianates
