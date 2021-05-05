@@ -119,8 +119,6 @@ const InvXY InvRect[] = {
 };
 
 /* data */
-/** Specifies the starting inventory slots for placement of 2x2 items. */
-int AP2x2Tbl[10] = { 8, 28, 6, 26, 4, 24, 2, 22, 0, 20 };
 
 void FreeInvGFX()
 {
@@ -646,40 +644,23 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 		}
 	}
 
-	if (itemSize.X == 1 && itemSize.Y == 2) {
-		for (int i = 29; i >= 20 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+	if (itemSize.Y == 2) {
+		for (int x = 10 - itemSize.X; x >= 0 && !done; x -= itemSize.X) {
+			for (int y = 0; y < 3 && !done; y++) {
+				done = AutoPlaceItemInInventorySlot(playerNumber, 10 * y + x, item, persistItem);
+			}
 		}
-
-		for (int i = 9; i >= 0 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 19; i >= 10 && !done; i--) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+		if (itemSize.X == 2) {
+			for (int x = 7; x >= 0 && !done; x -= 2) {
+				for (int y = 0; y < 3 && !done; y++) {
+					done = AutoPlaceItemInInventorySlot(playerNumber, 10 * y + x, item, persistItem);
+				}
+			}
 		}
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 3) {
 		for (int i = 0; i < 20 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-	}
-
-	if (itemSize.X == 2 && itemSize.Y == 2) {
-		for (int i = 0; i < 10 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, AP2x2Tbl[i], item, persistItem);
-		}
-
-		for (int i = 21; i < 29 && !done; i += 2) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 1; i < 9 && !done; i += 2) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
-		}
-
-		for (int i = 10; i < 19 && !done; i++) {
 			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
 	}

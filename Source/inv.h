@@ -130,6 +130,4 @@ bool DropItemBeforeTrig();
 
 /* data */
 
-extern int AP2x2Tbl[10];
-
 } // namespace devilution
