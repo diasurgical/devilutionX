@@ -29,7 +29,7 @@ bool setloadflag;
 std::optional<CelSprite> pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 std::unique_ptr<MegaTile[]> pMegaTiles;
-std::unique_ptr<BYTE[]> pLevelPieces;
+std::unique_ptr<uint16_t[]> pLevelPieces;
 std::unique_ptr<BYTE[]> pDungeonCels;
 std::array<uint8_t, MAXTILES + 1> block_lvid;
 std::array<bool, MAXTILES + 1> nBlockTable;
@@ -145,43 +145,36 @@ void FillSolidBlockTbls()
 		nBlockTable[i + 1] = (bv & 0x02) != 0;
 		nMissileTable[i + 1] = (bv & 0x04) != 0;
 		nTransTable[i + 1] = (bv & 0x08) != 0;
-		nTrapTable[i + 1] = (bv & 0x80) != 0 ;
+		nTrapTable[i + 1] = (bv & 0x80) != 0;
 		block_lvid[i + 1] = (bv & 0x70) >> 4;
 	}
 }
 
 void SetDungeonMicros()
 {
-	int i, x, y, lv, blocks;
-	uint16_t *pPiece;
-	MICROS *pMap;
+	MicroTileLen = 10;
+	int blocks = 10;
 
 	if (leveltype == DTYPE_TOWN) {
 		MicroTileLen = 16;
 		blocks = 16;
-	} else if (leveltype != DTYPE_HELL) {
-		MicroTileLen = 10;
-		blocks = 10;
-	} else {
+	} else if (leveltype == DTYPE_HELL) {
 		MicroTileLen = 12;
 		blocks = 16;
 	}
 
-	for (y = 0; y < MAXDUNY; y++) {
-		for (x = 0; x < MAXDUNX; x++) {
-			lv = dPiece[x][y];
-			pMap = &dpiece_defs_map_2[x][y];
+	for (int y = 0; y < MAXDUNY; y++) {
+		for (int x = 0; x < MAXDUNX; x++) {
+			int lv = dPiece[x][y];
+			MICROS &micros = dpiece_defs_map_2[x][y];
 			if (lv != 0) {
 				lv--;
-				if (leveltype != DTYPE_HELL && leveltype != DTYPE_TOWN)
-					pPiece = (uint16_t *)&pLevelPieces[20 * lv];
-				else
-					pPiece = (uint16_t *)&pLevelPieces[32 * lv];
-				for (i = 0; i < blocks; i++)
-					pMap->mt[i] = SDL_SwapLE16(pPiece[(i & 1) + blocks - 2 - (i & 0xE)]);
+				uint16_t *pieces = &pLevelPieces[blocks * lv];
+				for (int i = 0; i < blocks; i++)
+					micros.mt[i] = SDL_SwapLE16(pieces[blocks - 2 + (i & 1) - (i & 0xE)]);
 			} else {
-				for (i = 0; i < blocks; i++)
-					pMap->mt[i] = 0;
+				for (int i = 0; i < blocks; i++)
+					micros.mt[i] = 0;
 			}
 		}
 	}

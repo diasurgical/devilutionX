@@ -6,6 +6,7 @@
 #include "monster.h"
 
 #include <algorithm>
+#include <array>
 #include <climits>
 
 #include "control.h"
@@ -141,28 +142,24 @@ void (*AiProc[])(int i) = {
 	&MAI_BoneDemon
 };
 
-void InitMonsterTRN(int monst, bool special)
+void InitMonsterTRN(CMonster &monst)
 {
-	BYTE *f;
-	int i, n, j;
+	std::array<uint8_t, 256> colorTranslations;
+	LoadFileInMem(monst.MData->TransFile, colorTranslations);
 
-	f = Monsters[monst].trans_file;
-	for (i = 0; i < 256; i++) {
-		if (*f == 255) {
-			*f = 0;
+	std::replace(colorTranslations.begin(), colorTranslations.end(), 255, 0);
+
+	int n = monst.MData->has_special ? 6 : 5;
+	for (int i = 0; i < n; i++) {
+		if (i == 1 && monst.mtype >= MT_COUNSLR && monst.mtype <= MT_ADVOCATE) {
+			continue;
 		}
-		f++;
-	}
 
-	n = special ? 6 : 5;
-	for (i = 0; i < n; i++) {
-		if (i != 1 || Monsters[monst].mtype < MT_COUNSLR || Monsters[monst].mtype > MT_ADVOCATE) {
-			for (j = 0; j < 8; j++) {
-				Cl2ApplyTrans(
-				    Monsters[monst].Anims[i].Data[j],
-				    Monsters[monst].trans_file,
-				    Monsters[monst].Anims[i].Frames);
-			}
+		for (int j = 0; j < 8; j++) {
+			Cl2ApplyTrans(
+			    monst.Anims[i].Data[j],
+			    colorTranslations,
+			    monst.Anims[i].Frames);
 		}
 	}
 }
@@ -384,9 +381,7 @@ void InitMonsterGFX(int monst)
 	Monsters[monst].MData = &monsterdata[mtype];
 
 	if (monsterdata[mtype].has_trans) {
-		Monsters[monst].trans_file = LoadFileInMem<BYTE>(monsterdata[mtype].TransFile).release();
-		InitMonsterTRN(monst, monsterdata[mtype].has_special);
-		delete[] Monsters[monst].trans_file;
+		InitMonsterTRN(Monsters[monst]);
 	}
 
 	if (mtype >= MT_NMAGMA && mtype <= MT_WMAGMA && !(MissileFileFlag & 1)) {

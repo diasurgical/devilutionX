@@ -11,6 +11,8 @@
  * - Video playback
  */
 
+#include <array>
+
 #include "lighting.h"
 #include "movie.h"
 #include "options.h"
@@ -765,10 +767,9 @@ DWORD LoadFileWithMem(const char *pszName, BYTE *p)
  * @param ttbl Palette translation table
  * @param nCel Frame number in CL2 file
  */
-void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
+void Cl2ApplyTrans(BYTE *p, const std::array<uint8_t, 256> &ttbl, int nCel)
 {
 	assert(p != nullptr);
-	assert(ttbl != nullptr);
 
 	for (int i = 1; i <= nCel; i++) {
 		int nDataSize;
