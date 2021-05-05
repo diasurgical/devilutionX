@@ -23,16 +23,6 @@ int GetTextWidth(const char *s)
 	return l;
 }
 
-void FastDrawHorizLine(const CelOutputBuffer &out, int x, int y, int width, Uint8 col)
-{
-	UnsafeDrawHorizontalLine(out, {x, y}, width, col);
-}
-
-void FastDrawVertLine(const CelOutputBuffer &out, int x, int y, int height, Uint8 col)
-{
-	UnsafeDrawVerticalLine(out, {x, y}, height, col);
-}
-
 char *PrintWithSeparator(char *out, long long n)
 {
 	if (n < 1000) {
