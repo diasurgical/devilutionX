@@ -17,26 +17,26 @@ template <DirectionX DirX, DirectionY DirY>
 void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
 {
 	while (height-- > 0) {
-		SetPixel(out, from, colorIndex);
+		out.SetPixel(from, colorIndex);
 		from.x += static_cast<int>(DirX);
-		SetPixel(out, from, colorIndex);
+		out.SetPixel(from, colorIndex);
 		from.x += static_cast<int>(DirX);
 		from.y += static_cast<int>(DirY);
 	}
-	SetPixel(out, from, colorIndex);
+	out.SetPixel(from, colorIndex);
 }
 
 template <DirectionX DirX, DirectionY DirY>
 void DrawMapLineSteep(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
 	while (width-- > 0) {
-		SetPixel(out, from, colorIndex);
+		out.SetPixel(from, colorIndex);
 		from.y += static_cast<int>(DirY);
-		SetPixel(out, from, colorIndex);
+		out.SetPixel(from, colorIndex);
 		from.y += static_cast<int>(DirY);
 		from.x += static_cast<int>(DirX);
 	}
-	SetPixel(out, from, colorIndex);
+	out.SetPixel(from, colorIndex);
 }
 
 } // namespace
