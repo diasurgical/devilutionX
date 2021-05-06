@@ -8,11 +8,9 @@
 #include "control.h"
 #include "cursor.h"
 #include "dead.h"
-#ifdef _DEBUG
-#include "debug.h"
-#endif
 #include "doom.h"
 #include "dx.h"
+#include "engine/render/dun_render.hpp"
 #include "error.h"
 #include "gmenu.h"
 #include "help.h"
@@ -25,10 +23,13 @@
 #include "plrmsg.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
-#include "render.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/log.hpp"
+
+#ifdef _DEBUG
+#include "debug.h"
+#endif
 
 namespace devilution {
 

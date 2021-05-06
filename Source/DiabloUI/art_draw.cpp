@@ -1,7 +1,6 @@
 #include "DiabloUI/art_draw.h"
 
 #include "DiabloUI/diabloui.h"
-#include "render.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
 
