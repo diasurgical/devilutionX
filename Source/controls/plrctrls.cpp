@@ -536,6 +536,7 @@ coords InvGetInvSlotCoord(const inv_body_loc inv_slot, bool center = true)
  */
 coords InvGetSlotCoord(int slot)
 {
+    assert(slot <= SLOTXY_INV_LAST);
     return {InvRect[slot].X + RIGHT_PANEL, InvRect[slot].Y };
 }
 
@@ -544,6 +545,7 @@ coords InvGetSlotCoord(int slot)
  */
 coords BeltGetSlotCoord(int slot)
 {
+    assert(slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST);
     return {InvRect[slot].X + PANEL_LEFT, InvRect[slot].Y + PANEL_TOP };
 }
 
@@ -554,7 +556,7 @@ coords BeltGetSlotCoord(int slot)
  */
 void InvMove(AxisDirection dir)
 {
-	static AxisDirectionRepeater repeater(/*min_interval_ms=*/100);
+	static AxisDirectionRepeater repeater(/*min_interval_ms=*/150);
 	dir = repeater.Get(dir);
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 		return;
@@ -576,6 +578,8 @@ void InvMove(AxisDirection dir)
 		slot = SLOTXY_HAND_RIGHT_FIRST;
 	else if (slot > SLOTXY_BELT_LAST)
 		slot = SLOTXY_BELT_LAST;
+
+	const int initialSlot = slot;
 
 	// when item is on cursor (pcurs > 1), this is the real cursor XY
 	if (dir.x == AxisDirectionX_LEFT) {
@@ -792,18 +796,22 @@ void InvMove(AxisDirection dir)
 		}
 	}
 
+	// not movement was made
+	if (slot == initialSlot)
+	    return;
+
+    // move cursor to the center of the object or slot
+    mousePos.y -= (INV_SLOT_SIZE_PX / 2);
+    if (isHoldingItem) {
+        mousePos.y -= (int)((icursH28 / 2.f) * INV_SLOT_SIZE_PX);
+    } else {
+        mousePos.x += (INV_SLOT_SIZE_PX / 2);
+    }
+
 	if (mousePos.x == MouseX && mousePos.y == MouseY) {
 		return; // Avoid wobeling when scalled
 	}
 
-	// move cursor to the center of the object or slot
-    mousePos.y -= (INV_SLOT_SIZE_PX / 2);
-	if (isHoldingItem) {
-        mousePos.y -= (int)((icursH28 / 2.f) * INV_SLOT_SIZE_PX);
-	} else {
-		mousePos.x += (INV_SLOT_SIZE_PX / 2);
-	}
-	
 	SetCursorPos(mousePos.x, mousePos.y);
 }
 
