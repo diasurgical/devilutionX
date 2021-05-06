@@ -642,6 +642,7 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 				done = AutoPlaceItemInInventorySlot(playerNumber, 10 * y + x, item, persistItem);
 			}
 		}
+		return done;
 	}
 
 	if (itemSize.Y == 2) {
@@ -657,12 +658,14 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 				}
 			}
 		}
+		return done;
 	}
 
 	if (itemSize.X == 1 && itemSize.Y == 3) {
 		for (int i = 0; i < 20 && !done; i++) {
 			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
+		return done;
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 3) {
@@ -673,9 +676,10 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 		for (int i = 10; i < 19 && !done; i++) {
 			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
 		}
+		return done;
 	}
 
-	return done;
+	return false;
 }
 
 /**
