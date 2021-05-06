@@ -9,6 +9,7 @@
 #include "controls/axis_direction.h"
 #include "controls/controller_motion.h"
 #include "engine.h"
+#include "engine/render/cel_render.hpp"
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"

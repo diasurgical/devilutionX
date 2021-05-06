@@ -6,6 +6,7 @@
 
 #include "control.h"
 #include "cursor.h"
+#include "engine/render/cel_render.hpp"
 #include "gendung.h"
 #include "init.h"
 #include "minitext.h"

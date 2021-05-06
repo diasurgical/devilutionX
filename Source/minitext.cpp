@@ -7,6 +7,7 @@
 #include "control.h"
 #include "dx.h"
 #include "engine.h"
+#include "engine/render/cel_render.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
 
