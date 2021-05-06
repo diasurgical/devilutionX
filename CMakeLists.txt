@@ -322,7 +322,6 @@ set(devilutionx_SRCS
   Source/plrmsg.cpp
   Source/portal.cpp
   Source/quests.cpp
-  Source/render.cpp
   Source/restrict.cpp
   Source/scrollrt.cpp
   Source/setmaps.cpp
@@ -352,6 +351,7 @@ set(devilutionx_SRCS
   Source/controls/keymapper.cpp
   Source/engine/animationinfo.cpp
   Source/engine/render/automap_render.cpp
+  Source/engine/render/dun_render.cpp
   Source/qol/autopickup.cpp
   Source/qol/common.cpp
   Source/qol/monhealthbar.cpp

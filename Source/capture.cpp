@@ -8,7 +8,6 @@
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
 #include "palette.h"
-#include "render.h"
 #include "storm/storm.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"

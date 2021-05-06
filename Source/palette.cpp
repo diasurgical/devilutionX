@@ -6,7 +6,6 @@
 
 #include "dx.h"
 #include "options.h"
-#include "render.h"
 #include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"

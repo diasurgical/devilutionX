@@ -7,8 +7,8 @@
 
 #include <SDL.h>
 
+#include "engine.h"
 #include "options.h"
-#include "render.h"
 #include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"

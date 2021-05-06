@@ -7,9 +7,9 @@
 
 #include "control.h"
 #include "doom.h"
+#include "engine.h"
 #include "inv.h"
 #include "missiles.h"
-#include "render.h"
 #include "towners.h"
 #include "track.h"
 #include "trigs.h"
