@@ -4769,6 +4769,7 @@ void OperateStoryBook(int pnum, int i)
 	if (object[i]._oSelFlag != 0 && !deltaload && !qtextflag && pnum == myplr) {
 		object[i]._oAnimFrame = object[i]._oVar4;
 		PlaySfxLoc(IS_ISCROL, object[i].position.x, object[i].position.y);
+		auto msg = static_cast<_speech_id>(object[i]._oVar2);
 		if (object[i]._oVar8 != 0 && currlevel == 24) {
 			if (IsUberLeverActivated != 1 && quests[Q_NAKRUL]._qactive != QUEST_DONE && objects_lv_24_454B04(object[i]._oVar8)) {
 				NetSendCmd(false, CMD_NAKRUL);
@@ -4777,9 +4778,9 @@ void OperateStoryBook(int pnum, int i)
 		} else if (currlevel >= 21) {
 			quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
 			quests[Q_NAKRUL]._qlog = true;
-			quests[Q_NAKRUL]._qmsg = static_cast<_speech_id>(object[i]._oVar2);
+			quests[Q_NAKRUL]._qmsg = msg;
 		}
-		InitQTextMsg(object[i]._oVar2);
+		InitQTextMsg(msg);
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 	}
 }

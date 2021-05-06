@@ -1965,35 +1965,33 @@ void S_SIDEnter()
 
 void S_TalkEnter()
 {
-	int i, tq, sn, la;
-
 	if (stextsel == 22) {
 		StartStore(stextshold);
 		stextsel = stextlhold;
 		return;
 	}
 
-	sn = 0;
-	for (i = 0; i < MAXQUESTS; i++) {
+	int sn = 0;
+	for (int i = 0; i < MAXQUESTS; i++) {
 		if (quests[i]._qactive == QUEST_ACTIVE && Qtalklist[talker][i] != TEXT_NONE && quests[i]._qlog)
 			sn++;
 	}
+	int la = 2;
 	if (sn > 6) {
 		sn = 14 - (sn / 2);
 		la = 1;
 	} else {
 		sn = 15 - sn;
-		la = 2;
 	}
 
 	if (stextsel == sn - 2) {
 		SetRndSeed(towners[talker]._tSeed);
-		tq = gossipstart + GenerateRnd(gossipend - gossipstart + 1);
+		auto tq = static_cast<_speech_id>(gossipstart + GenerateRnd(gossipend - gossipstart + 1));
 		InitQTextMsg(tq);
 		return;
 	}
 
-	for (i = 0; i < MAXQUESTS; i++) {
+	for (int i = 0; i < MAXQUESTS; i++) {
 		if (quests[i]._qactive == QUEST_ACTIVE && Qtalklist[talker][i] != TEXT_NONE && quests[i]._qlog) {
 			if (sn == stextsel) {
 				InitQTextMsg(Qtalklist[talker][i]);

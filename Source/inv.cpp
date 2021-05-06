@@ -2279,7 +2279,7 @@ void DoTelekinesis()
 		NetSendCmdParam1(true, CMD_OPOBJT, pcursobj);
 	if (pcursitem != -1)
 		NetSendCmdGItem(true, CMD_REQUESTAGITEM, myplr, myplr, pcursitem);
-	if (pcursmonst != -1 && !M_Talker(pcursmonst) && monster[pcursmonst].mtalkmsg == 0)
+	if (pcursmonst != -1 && !M_Talker(pcursmonst) && monster[pcursmonst].mtalkmsg == TEXT_NONE)
 		NetSendCmdParam1(true, CMD_KNOCKBACK, pcursmonst);
 	NewCursor(CURSOR_HAND);
 }
