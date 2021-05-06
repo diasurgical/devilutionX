@@ -237,29 +237,29 @@ struct PlayerStruct {
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 	                               /** Using player_graphic as bitflags */
 	int _pGFXLoad;
-	uint8_t *_pNAnim[8]; // Stand animations
+	byte *_pNAnim[8]; // Stand animations
 	int _pNFrames;
 	int _pNWidth;
-	uint8_t *_pWAnim[8]; // Walk animations
+	byte *_pWAnim[8]; // Walk animations
 	int _pWFrames;
 	int _pWWidth;
-	uint8_t *_pAAnim[8]; // Attack animations
+	byte *_pAAnim[8]; // Attack animations
 	int _pAFrames;
 	int _pAWidth;
 	int _pAFNum;
-	uint8_t *_pLAnim[8]; // Lightning spell cast animations
-	uint8_t *_pFAnim[8]; // Fire spell cast animations
-	uint8_t *_pTAnim[8]; // Generic spell cast animations
+	byte *_pLAnim[8]; // Lightning spell cast animations
+	byte *_pFAnim[8]; // Fire spell cast animations
+	byte *_pTAnim[8]; // Generic spell cast animations
 	int _pSFrames;
 	int _pSWidth;
 	int _pSFNum;
-	uint8_t *_pHAnim[8]; // Getting hit animations
+	byte *_pHAnim[8]; // Getting hit animations
 	int _pHFrames;
 	int _pHWidth;
-	uint8_t *_pDAnim[8]; // Death animations
+	byte *_pDAnim[8]; // Death animations
 	int _pDFrames;
 	int _pDWidth;
-	uint8_t *_pBAnim[8]; // Block animations
+	byte *_pBAnim[8]; // Block animations
 	int _pBFrames;
 	int _pBWidth;
 	ItemStruct InvBody[NUM_INVLOC];
@@ -299,15 +299,15 @@ struct PlayerStruct {
 	uint8_t pDiabloKillLevel;
 	_difficulty pDifficulty;
 	uint32_t pDamAcFlags;
-	uint8_t *_pNData;
-	uint8_t *_pWData;
-	uint8_t *_pAData;
-	uint8_t *_pLData;
-	uint8_t *_pFData;
-	uint8_t *_pTData;
-	uint8_t *_pHData;
-	uint8_t *_pDData;
-	uint8_t *_pBData;
+	byte *_pNData;
+	byte *_pWData;
+	byte *_pAData;
+	byte *_pLData;
+	byte *_pFData;
+	byte *_pTData;
+	byte *_pHData;
+	byte *_pDData;
+	byte *_pBData;
 
 	/**
 	 * @brief Gets the most valuable item out of all the player's items that match the given predicate.
@@ -403,7 +403,7 @@ void FreePlayerGFX(int pnum);
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+void NewPlrAnim(int pnum, byte *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(int pnum);
 void CreatePlayer(int pnum, HeroClass c);
 int CalcStatDiff(int pnum);

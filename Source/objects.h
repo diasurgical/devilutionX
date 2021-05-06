@@ -20,7 +20,7 @@ struct ObjectStruct {
 	Point position;
 	bool _oLight;
 	uint32_t _oAnimFlag;
-	unsigned char *_oAnimData;
+	byte *_oAnimData;
 	int _oAnimDelay; // Tick length of each frame in the current animation
 	int _oAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
 	int _oAnimLen;   // Number of frames in current animation

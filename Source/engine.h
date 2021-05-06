@@ -139,13 +139,11 @@ struct ActorPosition {
 	Point temp;
 };
 
-inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
+inline byte *CelGetFrameStart(byte *pCelBuff, int nCel)
 {
-	DWORD *pFrameTable;
+	const uint32_t *pFrameTable = reinterpret_cast<const std::uint32_t *>(pCelBuff);
 
-	pFrameTable = (DWORD *)pCelBuff;
-
-	return pCelBuff + SDL_SwapLE32(pFrameTable[nCel]);
+	return &pCelBuff[SDL_SwapLE32(pFrameTable[nCel])];
 }
 
 template <typename T>
@@ -172,29 +170,41 @@ constexpr uint32_t LoadBE32(const T *b)
 #endif
 }
 
-inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
+inline byte *CelGetFrame(byte *pCelBuff, int nCel, int *nDataSize)
 {
-	DWORD nCellStart = LoadLE32(&pCelBuff[nCel * 4]);
-	*nDataSize = LoadLE32(&pCelBuff[(nCel + 1) * 4]) - nCellStart;
-	return pCelBuff + nCellStart;
+	auto frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
+	const uint32_t nCellStart = SDL_SwapLE32(frameTable[nCel]);
+	*nDataSize = SDL_SwapLE32(frameTable[nCel + 1]) - nCellStart;
+	return &pCelBuff[nCellStart];
 }
 
-inline const BYTE *CelGetFrame(const BYTE *pCelBuff, int nCel, int *nDataSize)
+inline const byte *CelGetFrame(const byte *pCelBuff, int nCel, int *nDataSize)
 {
-	DWORD nCellStart = LoadLE32(&pCelBuff[nCel * 4]);
-	*nDataSize = LoadLE32(&pCelBuff[(nCel + 1) * 4]) - nCellStart;
-	return pCelBuff + nCellStart;
+	auto frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
+	const uint32_t nCellStart = SDL_SwapLE32(frameTable[nCel]);
+	*nDataSize = SDL_SwapLE32(frameTable[nCel + 1]) - nCellStart;
+	return &pCelBuff[nCellStart];
 }
 
-inline const BYTE *CelGetFrameClipped(const BYTE *pCelBuff, int nCel, int *nDataSize)
-{
-	DWORD nDataStart;
-	const BYTE *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
+struct FrameHeader {
+	uint16_t row0;
+	uint16_t row32;
+	uint16_t row64;
+	uint16_t row96;
+	uint16_t row128;
+};
 
-	nDataStart = pRLEBytes[1] << 8 | pRLEBytes[0];
+inline const uint8_t *CelGetFrameClipped(const byte *pCelBuff, int nCel, int *nDataSize)
+{
+	const byte *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
+
+	FrameHeader frameHeader;
+	memcpy(&frameHeader, pRLEBytes, sizeof(FrameHeader));
+
+	uint16_t nDataStart = SDL_SwapLE16(frameHeader.row0);
 	*nDataSize -= nDataStart;
 
-	return pRLEBytes + nDataStart;
+	return reinterpret_cast<const uint8_t *>(&pRLEBytes[nDataStart]);
 }
 
 struct CelOutputBuffer {
@@ -265,16 +275,16 @@ struct CelOutputBuffer {
 		return *at(p.x, p.y);
 	}
 
-	BYTE *at(int x, int y) const
+	uint8_t *at(int x, int y) const
 	{
-		return static_cast<BYTE *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
+		return static_cast<uint8_t *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
 	}
 
-	BYTE *begin() const
+	uint8_t *begin() const
 	{
 		return at(0, 0);
 	}
-	BYTE *end() const
+	uint8_t *end() const
 	{
 		return at(0, region.h);
 	}
@@ -328,14 +338,14 @@ struct CelOutputBuffer {
  */
 class CelSprite {
 public:
-	CelSprite(std::unique_ptr<BYTE[]> data, int width)
+	CelSprite(std::unique_ptr<byte[]> data, int width)
 	    : data_(std::move(data))
 	    , data_ptr_(data_.get())
 	    , width_(width)
 	{
 	}
 
-	CelSprite(std::unique_ptr<BYTE[]> data, const int *widths)
+	CelSprite(std::unique_ptr<byte[]> data, const int *widths)
 	    : data_(std::move(data))
 	    , data_ptr_(data_.get())
 	    , widths_(widths)
@@ -346,7 +356,7 @@ public:
 	 * Constructs an unowned sprite.
 	 * Ideally we'd like to remove all uses of this constructor.
 	 */
-	CelSprite(const BYTE *data, int width)
+	CelSprite(const byte *data, int width)
 	    : data_ptr_(data)
 	    , width_(width)
 	{
@@ -355,7 +365,7 @@ public:
 	CelSprite(CelSprite &&) noexcept = default;
 	CelSprite &operator=(CelSprite &&) noexcept = default;
 
-	[[nodiscard]] const BYTE *Data() const
+	[[nodiscard]] const byte *Data() const
 	{
 		return data_ptr_;
 	}
@@ -366,8 +376,8 @@ public:
 	}
 
 private:
-	std::unique_ptr<BYTE[]> data_;
-	const BYTE *data_ptr_;
+	std::unique_ptr<byte[]> data_;
+	const byte *data_ptr_;
 	int width_ = 0;
 	const int *widths_ = nullptr; // unowned
 };
@@ -422,7 +432,7 @@ void CelClippedDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprit
  * @param cel CEL sprite
  * @param frame CEL frame number
  */
-void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, BYTE *tbl);
+void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, uint8_t *tbl);
 
 /**
  * @brief Same as CelDrawLightTo but with the option to skip parts of the top and bottom of the sprite
@@ -463,7 +473,7 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSpri
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  */
-void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth);
+void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth);
 
 /**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
@@ -484,7 +494,7 @@ void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelS
  * @param nDataSize Size of CEL in bytes
  * @param tbl Palette translation table
  */
-void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl);
+void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl);
 
 /**
  * @brief Same as CelBlitLightSafeTo but with stippled transparancy applied
@@ -494,7 +504,7 @@ void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  */
-void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth);
+void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth);
 
 /**
  * @brief Same as CelDrawLightRedTo but checks for drawing outside the buffer
@@ -517,7 +527,7 @@ void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const Cel
  * @param frame CEL frame number
  * @param skipColorIndexZero If true, color in index 0 will be treated as transparent (these are typically used for shadows in sprites)
  */
-void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, const CelSprite &cel, int frame, bool skipColorIndexZero = true);
+void CelBlitOutlineTo(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame, bool skipColorIndexZero = true);
 
 /**
  * @brief Set the value of a single pixel in the back buffer, checks bounds
@@ -552,7 +562,7 @@ void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, i
  * @param pCelBuff CL2 buffer
  * @param nCel CL2 frame number
  */
-void Cl2DrawOutline(const CelOutputBuffer &out, BYTE col, int sx, int sy, const CelSprite &cel, int frame);
+void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
  * @brief Blit CL2 sprite, and apply a given lighting, to the given buffer at the given coordianates
@@ -636,8 +646,11 @@ size_t GetFileSize(const char *pszName);
 void LoadFileData(const char *pszName, byte *buffer, size_t bufferSize);
 
 template <typename T>
-void LoadFileInMem(const char *path, T *data, std::size_t count)
+void LoadFileInMem(const char *path, T *data, std::size_t count = 0)
 {
+	if (count == 0)
+		count = GetFileSize(path);
+
 	LoadFileData(path, reinterpret_cast<byte *>(data), count * sizeof(T));
 }
 
@@ -671,8 +684,7 @@ std::unique_ptr<T[]> LoadFileInMem(const char *path, size_t *elements = nullptr)
 	return buf;
 }
 
-DWORD LoadFileWithMem(const char *pszName, BYTE *p);
-void Cl2ApplyTrans(BYTE *p, const std::array<uint8_t, 256> &ttbl, int nCel);
+void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
 } // namespace devilution

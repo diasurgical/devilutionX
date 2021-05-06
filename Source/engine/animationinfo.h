@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <type_traits>
 
+#include "engine.h"
+
 namespace devilution {
 
 /**
@@ -37,7 +39,7 @@ public:
 	/*
 	* @brief Pointer to Animation Data
 	*/
-	uint8_t *pData;
+	byte *pData;
 	/*
 	* @brief Additional delay of each animation in the current animation
 	*/
@@ -70,7 +72,7 @@ public:
 	 * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 */
-	void SetNewAnimation(uint8_t *pData, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+	void SetNewAnimation(byte *pData, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 
 	/*
 	* @brief Process the Animation for a game tick (for example advances the frame)

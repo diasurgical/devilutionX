@@ -77,7 +77,7 @@ constexpr std::uint8_t GetCelTransparentWidth(std::uint8_t control)
 
 constexpr std::uint8_t MaxCl2Width = 65;
 
-BYTE *GetLightTable(char light)
+uint8_t *GetLightTable(char light)
 {
 	int idx = 4096;
 	if (light == 2)
@@ -91,19 +91,19 @@ BYTE *GetLightTable(char light)
 
 CelSprite LoadCel(const char *pszName, int width)
 {
-	return CelSprite(LoadFileInMem<BYTE>(pszName), width);
+	return CelSprite(LoadFileInMem(pszName), width);
 }
 
 CelSprite LoadCel(const char *pszName, const int *widths)
 {
-	return CelSprite(LoadFileInMem<BYTE>(pszName), widths);
+	return CelSprite(LoadFileInMem(pszName), widths);
 }
 
 std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame)
 {
 	int nDataSize;
-	const BYTE *src = CelGetFrame(cel.Data(), frame, &nDataSize);
-	const BYTE *end = src + nDataSize;
+	auto src = reinterpret_cast<const uint8_t *>(CelGetFrame(cel.Data(), frame, &nDataSize));
+	auto end = &src[nDataSize];
 	const int celWidth = cel.Width(frame);
 
 	int xBegin = celWidth;
@@ -149,22 +149,22 @@ std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame
 void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
+	auto pRLEBytes = reinterpret_cast<const uint8_t *>(CelGetFrame(cel.Data(), frame, &nDataSize));
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
 void CelClippedDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, BYTE *tbl)
+void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, uint8_t *tbl)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
+	auto pRLEBytes = reinterpret_cast<const uint8_t *>(CelGetFrame(cel.Data(), frame, &nDataSize));
 
 	if (light_table_index != 0 || tbl != nullptr)
 		CelBlitLightSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), tbl);
@@ -175,7 +175,7 @@ void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite 
 void CelClippedDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	if (light_table_index != 0)
 		CelBlitLightSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
@@ -186,14 +186,14 @@ void CelClippedDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const Cel
 void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 	BYTE *dst = out.at(sx, sy);
-	BYTE *tbl = GetLightTable(light);
+	uint8_t *tbl = GetLightTable(light);
 	const auto celWidth = cel.Width(frame);
 
-	for (const BYTE *end = &pRLEBytes[nDataSize]; pRLEBytes != end; dst -= out.pitch() + celWidth) {
+	for (const uint8_t *end = &pRLEBytes[nDataSize]; pRLEBytes != end; dst -= out.pitch() + celWidth) {
 		for (int w = celWidth; w > 0;) {
-			BYTE width = *pRLEBytes++;
+			uint8_t width = *pRLEBytes++;
 			if (!IsCelTransparent(width)) {
 				w -= width;
 				while (width > 0) {
@@ -211,16 +211,16 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSpri
 	}
 }
 
-void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth)
+void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth)
 {
 	assert(pRLEBytes != nullptr);
 
-	const BYTE *src = pRLEBytes;
+	const uint8_t *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
-			BYTE width = *src++;
+			uint8_t width = *src++;
 			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst >= out.begin()) {
@@ -240,15 +240,15 @@ void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEB
 void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
+void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
 {
 	assert(pRLEBytes != nullptr);
 
-	const BYTE *src = pRLEBytes;
+	const uint8_t *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
 
 	if (tbl == nullptr)
@@ -256,7 +256,7 @@ void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
-			BYTE width = *src++;
+			uint8_t width = *src++;
 			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
@@ -294,18 +294,18 @@ void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *
 	}
 }
 
-void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth)
+void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth)
 {
 	assert(pRLEBytes != nullptr);
 
-	const BYTE *src = pRLEBytes;
+	const uint8_t *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
-	BYTE *tbl = &pLightTbl[light_table_index * 256];
+	uint8_t *tbl = &pLightTbl[light_table_index * 256];
 	bool shift = ((size_t)dst % 2) != 0;
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth, shift = !shift) {
 		for (int w = nWidth; w > 0;) {
-			BYTE width = *src++;
+			uint8_t width = *src++;
 			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
@@ -374,18 +374,18 @@ void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const B
  * @param nWidth Width of sprite
  * @param tbl Palette translation table
  */
-static void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
+static void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
 {
 	assert(pRLEBytes != nullptr);
 
-	const BYTE *src = pRLEBytes;
+	const uint8_t *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
 	if (tbl == nullptr)
 		tbl = &pLightTbl[light_table_index * 256];
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= out.pitch() + nWidth) {
 		for (int w = nWidth; w > 0;) {
-			BYTE width = *src++;
+			uint8_t width = *src++;
 			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
@@ -426,7 +426,7 @@ static void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy
 void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	if (cel_transparency_active) {
 		if (sgOptions.Graphics.bBlendedTransparancy)
@@ -442,16 +442,16 @@ void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, cons
 void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 	BYTE *dst = out.at(sx, sy);
 
-	BYTE *tbl = GetLightTable(light);
-	const BYTE *end = &pRLEBytes[nDataSize];
+	uint8_t *tbl = GetLightTable(light);
+	const uint8_t *end = &pRLEBytes[nDataSize];
 	const int celWidth = static_cast<int>(cel.Width(frame));
 
 	for (; pRLEBytes != end; dst -= out.pitch() + celWidth) {
 		for (int w = celWidth; w > 0;) {
-			BYTE width = *pRLEBytes++;
+			uint8_t width = *pRLEBytes++;
 			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
@@ -477,14 +477,14 @@ void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const Cel
 void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame)
 {
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
-	const BYTE *end = &pRLEBytes[nDataSize];
+	auto *pRLEBytes = reinterpret_cast<const uint8_t *>(CelGetFrame(cel.Data(), frame, &nDataSize));
+	auto *end = &pRLEBytes[nDataSize];
 	BYTE *dst = out.at(x, y);
 	const int celWidth = static_cast<int>(cel.Width(frame));
 
 	for (; pRLEBytes != end; dst -= out.pitch() + celWidth) {
 		for (int w = celWidth; w > 0;) {
-			BYTE width = *pRLEBytes++;
+			auto width = *pRLEBytes++;
 			if (!IsCelTransparent(width)) {
 				w -= width;
 				memcpy(dst, pRLEBytes, width);
@@ -499,18 +499,18 @@ void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, const CelSprite &
 	}
 }
 
-void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, const CelSprite &cel, int frame, bool skipColorIndexZero)
+void CelBlitOutlineTo(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame, bool skipColorIndexZero)
 {
 	int nDataSize;
 
-	const BYTE *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	const BYTE *end = &src[nDataSize];
+	const uint8_t *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *end = &src[nDataSize];
 	BYTE *dst = out.at(sx, sy);
 	const int celWidth = static_cast<int>(cel.Width(frame));
 
 	for (; src != end; dst -= out.pitch() + celWidth) {
 		for (int w = celWidth; w > 0;) {
-			BYTE width = *src++;
+			uint8_t width = *src++;
 			if (!IsCelTransparent(width)) {
 				w -= width;
 				if (dst < out.end() && dst > out.begin()) {
@@ -753,45 +753,18 @@ void LoadFileData(const char *pszName, byte *buffer, size_t fileLen)
 }
 
 /**
- * @brief Load a file in to the given buffer
- * @param pszName Path of file
- * @param p Target buffer
- * @return Size of file
- */
-DWORD LoadFileWithMem(const char *pszName, BYTE *p)
-{
-	assert(pszName);
-	if (p == nullptr) {
-		app_fatal("LoadFileWithMem(NULL):\n%s", pszName);
-	}
-
-	HANDLE hsFile;
-	SFileOpenFile(pszName, &hsFile);
-
-	DWORD dwFileLen = SFileGetFileSize(hsFile, nullptr);
-	if (dwFileLen == 0) {
-		app_fatal("Zero length SFILE:\n%s", pszName);
-	}
-
-	SFileReadFileThreadSafe(hsFile, p, dwFileLen);
-	SFileCloseFile(hsFile);
-
-	return dwFileLen;
-}
-
-/**
  * @brief Apply the color swaps to a CL2 sprite
  * @param p CL2 buffer
  * @param ttbl Palette translation table
  * @param nCel Frame number in CL2 file
  */
-void Cl2ApplyTrans(BYTE *p, const std::array<uint8_t, 256> &ttbl, int nCel)
+void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
 {
 	assert(p != nullptr);
 
 	for (int i = 1; i <= nCel; i++) {
 		int nDataSize;
-		BYTE *dst = CelGetFrame(p, i, &nDataSize) + 10;
+		auto dst = reinterpret_cast<uint8_t *>(CelGetFrame(p, i, &nDataSize) + 10);
 		nDataSize -= 10;
 		while (nDataSize > 0) {
 			char width = *dst++;
@@ -826,9 +799,9 @@ void Cl2ApplyTrans(BYTE *p, const std::array<uint8_t, 256> &ttbl, int nCel)
  * @param nDataSize Size of CL2 in bytes
  * @param nWidth Width of sprite
  */
-static void Cl2BlitSafe(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth)
+static void Cl2BlitSafe(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth)
 {
-	const BYTE *src = pRLEBytes;
+	const uint8_t *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
 	int w = nWidth;
 
@@ -840,7 +813,7 @@ static void Cl2BlitSafe(const CelOutputBuffer &out, int sx, int sy, const BYTE *
 			if (width > MaxCl2Width) {
 				width -= MaxCl2Width;
 				nDataSize--;
-				BYTE fill = *src++;
+				uint8_t fill = *src++;
 				if (dst < out.end() && dst > out.begin()) {
 					w -= width;
 					while (width > 0) {
@@ -901,9 +874,9 @@ static void Cl2BlitSafe(const CelOutputBuffer &out, int sx, int sy, const BYTE *
  * @param nWidth Width of sprite
  * @param col Color index from current palette
  */
-static void Cl2BlitOutlineSafe(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE col)
+static void Cl2BlitOutlineSafe(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth, uint8_t col)
 {
-	const BYTE *src = pRLEBytes;
+	const uint8_t *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
 	int w = nWidth;
 
@@ -984,9 +957,9 @@ static void Cl2BlitOutlineSafe(const CelOutputBuffer &out, int sx, int sy, const
  * @param nWidth With of CL2 sprite
  * @param pTable Light color table
  */
-static void Cl2BlitLightSafe(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *pTable)
+static void Cl2BlitLightSafe(const CelOutputBuffer &out, int sx, int sy, const uint8_t *pRLEBytes, int nDataSize, int nWidth, uint8_t *pTable)
 {
-	const BYTE *src = pRLEBytes;
+	const uint8_t *src = pRLEBytes;
 	BYTE *dst = out.at(sx, sy);
 	int w = nWidth;
 
@@ -998,7 +971,7 @@ static void Cl2BlitLightSafe(const CelOutputBuffer &out, int sx, int sy, const B
 			if (width > MaxCl2Width) {
 				width -= MaxCl2Width;
 				nDataSize--;
-				BYTE fill = pTable[*src++];
+				uint8_t fill = pTable[*src++];
 				if (dst < out.end() && dst > out.begin()) {
 					w -= width;
 					while (width > 0) {
@@ -1054,17 +1027,17 @@ void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, i
 	assert(frame > 0);
 
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void Cl2DrawOutline(const CelOutputBuffer &out, BYTE col, int sx, int sy, const CelSprite &cel, int frame)
+void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame)
 {
 	assert(frame > 0);
 
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	const CelOutputBuffer &sub = out.subregionY(0, out.h() - 1);
 	Cl2BlitOutlineSafe(sub, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), col);
@@ -1075,7 +1048,7 @@ void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite
 	assert(frame > 0);
 
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 	Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(light));
 }
 
@@ -1084,7 +1057,7 @@ void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, const CelSprite &c
 	assert(frame > 0);
 
 	int nDataSize;
-	const BYTE *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const uint8_t *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	if (light_table_index != 0)
 		Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), &pLightTbl[light_table_index * 256]);

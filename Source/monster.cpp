@@ -346,9 +346,9 @@ void InitMonsterGFX(int monst)
 		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && frames > 0) {
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
 
-			BYTE *celBuf;
+			byte *celBuf;
 			{
-				auto celData = LoadFileInMem<BYTE>(strBuff);
+				auto celData = LoadFileInMem(strBuff);
 				celBuf = celData.get();
 				Monsters[monst].Anims[anim].CMem = std::move(celData);
 			}
@@ -853,7 +853,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", Uniq->mTrnName);
-	LoadFileWithMem(filestr, &pLightTbl[256 * (uniquetrans + 19)]);
+	LoadFileInMem("PlrGFX\\Infra.TRN", &pLightTbl[256 * (uniquetrans + 19)], 256);
 
 	Monst->_uniqtrans = uniquetrans++;
 

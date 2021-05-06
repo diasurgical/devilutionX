@@ -1140,16 +1140,16 @@ void LoadMissileGFX(BYTE mi)
 	char pszName[256];
 	if ((mfd->mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
-		BYTE *file = LoadFileInMem<BYTE>(pszName).release();
+		byte *file = LoadFileInMem(pszName).release();
 		for (unsigned i = 0; i < mfd->mAnimFAmt; i++)
 			mfd->mAnimData[i] = CelGetFrameStart(file, i);
 	} else if (mfd->mAnimFAmt == 1) {
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
-		mfd->mAnimData[0] = LoadFileInMem<BYTE>(pszName).release();
+		mfd->mAnimData[0] = LoadFileInMem(pszName).release();
 	} else {
 		for (unsigned i = 0; i < mfd->mAnimFAmt; i++) {
 			sprintf(pszName, "Missiles\\%s%u.CL2", mfd->mName, i + 1);
-			mfd->mAnimData[i] = LoadFileInMem<BYTE>(pszName).release();
+			mfd->mAnimData[i] = LoadFileInMem(pszName).release();
 		}
 	}
 }

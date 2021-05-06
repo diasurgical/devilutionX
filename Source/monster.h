@@ -109,8 +109,8 @@ enum placeflag : uint8_t {
 };
 
 struct AnimStruct {
-	std::unique_ptr<uint8_t[]> CMem;
-	std::array<uint8_t *, 8> Data;
+	std::unique_ptr<byte[]> CMem;
+	std::array<byte *, 8> Data;
 	int Frames;
 	int Rate;
 };
@@ -147,7 +147,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	int _menemy;
 	/** Usually correspond's to the enemy's future position */
 	Point enemyPosition;
-	uint8_t *_mAnimData;
+	byte *_mAnimData;
 	/** Tick length of each frame in the current animation */
 	int _mAnimDelay;
 	/** Increases by one each game tick, counting how close we are to _pAnimDelay */
