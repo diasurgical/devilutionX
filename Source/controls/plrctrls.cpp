@@ -1369,7 +1369,10 @@ void CtrlUseInvItem()
 		return;
 	}
 
-	UseInvItem(myplr, pcursinvitem);
+	if (item->isEquipment())
+        CheckInvItem(true); // auto-equip if it's an equipment
+    else
+	    UseInvItem(myplr, pcursinvitem);
 }
 
 void PerformSecondaryAction()
