@@ -409,48 +409,6 @@ inline void SetPixel(const CelOutputBuffer &out, Point position, std::uint8_t co
 }
 
 /**
- * @brief Blit CL2 sprite, to the back buffer at the given coordianates
- * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- */
-void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the given buffer at the given coordianates
- * @param col Color index from current palette
- * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- */
-void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Blit CL2 sprite, and apply a given lighting, to the given buffer at the given coordianates
- * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- * @param light Light shade to use
- */
-void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
-
-/**
- * @brief Blit CL2 sprite, and apply lighting, to the given buffer at the given coordinates
- * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- */
-void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
  * @brief Draw a horizontal line segment in the target buffer (left to right)
  * @param out Target buffer
  * @param from Start of the line segment
@@ -549,7 +507,6 @@ std::unique_ptr<T[]> LoadFileInMem(const char *path, size_t *elements = nullptr)
 	return buf;
 }
 
-void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
 } // namespace devilution
