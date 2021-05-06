@@ -528,7 +528,7 @@ void InitMonster(int i, direction rd, int mtype, int x, int y)
 	monster[i].leader = 0;
 	monster[i].leaderflag = 0;
 	monster[i]._mFlags = monst->MData->mFlags;
-	monster[i].mtalkmsg = 0;
+	monster[i].mtalkmsg = TEXT_NONE;
 
 	if (monster[i]._mAi == AI_GARG) {
 		monster[i]._mAnimData = monst->Anims[MA_SPECIAL].Data[rd];
@@ -814,13 +814,13 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	if (gbIsMultiplayer) {
 		if (Monst->_mAi == AI_LAZHELP)
-			Monst->mtalkmsg = 0;
+			Monst->mtalkmsg = TEXT_NONE;
 		if (Monst->_mAi == AI_LAZURUS && quests[Q_BETRAYER]._qvar1 > 3) {
 			Monst->_mgoal = MGOAL_NORMAL;
-		} else if (Monst->mtalkmsg) {
+		} else if (Monst->mtalkmsg != TEXT_NONE) {
 			Monst->_mgoal = MGOAL_INQUIRING;
 		}
-	} else if (Monst->mtalkmsg) {
+	} else if (Monst->mtalkmsg != TEXT_NONE) {
 		Monst->_mgoal = MGOAL_INQUIRING;
 	}
 
@@ -1338,7 +1338,7 @@ void M_Enemy(int i)
 			continue;
 		if (monster[mi].position.tile.x == 1 && monster[mi].position.tile.y == 0)
 			continue;
-		if (M_Talker(mi) && monster[mi].mtalkmsg)
+		if (M_Talker(mi) && monster[mi].mtalkmsg != TEXT_NONE)
 			continue;
 		if ((Monst->_mFlags & MFLAG_GOLEM) && (monster[mi]._mFlags & MFLAG_GOLEM)) // prevent golems from fighting each other
 			continue;
@@ -2458,7 +2458,7 @@ bool M_DoTalk(int i)
 		quests[Q_BETRAYER]._qvar1 = 6;
 		monster[i]._mgoal = MGOAL_NORMAL;
 		monster[i]._msquelch = UINT8_MAX;
-		monster[i].mtalkmsg = 0;
+		monster[i].mtalkmsg = TEXT_NONE;
 	}
 	return false;
 }
@@ -4231,6 +4231,8 @@ void MAI_Garbud(int i)
 		case TEXT_GARBUD3:
 			Monst->mtalkmsg = TEXT_GARBUD4;
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -4239,7 +4241,7 @@ void MAI_Garbud(int i)
 			if (!effect_is_playing(USFX_GARBUD4) && Monst->_mgoal == MGOAL_TALKING) {
 				Monst->_mgoal = MGOAL_NORMAL;
 				Monst->_msquelch = UINT8_MAX;
-				Monst->mtalkmsg = 0;
+				Monst->mtalkmsg = TEXT_NONE;
 			}
 		}
 	}
@@ -4277,7 +4279,7 @@ void MAI_Zhar(int i)
 		if (Monst->mtalkmsg == TEXT_ZHAR2) {
 			if (!effect_is_playing(USFX_ZHAR2) && Monst->_mgoal == MGOAL_TALKING) {
 				Monst->_msquelch = UINT8_MAX;
-				Monst->mtalkmsg = 0;
+				Monst->mtalkmsg = TEXT_NONE;
 				Monst->_mgoal = MGOAL_NORMAL;
 			}
 		}
@@ -4314,7 +4316,7 @@ void MAI_SnotSpil(int i)
 	}
 
 	if (Monst->mtalkmsg == TEXT_BANNER11 && quests[Q_LTBANNER]._qvar1 == 3) {
-		Monst->mtalkmsg = 0;
+		Monst->mtalkmsg = TEXT_NONE;
 		Monst->_mgoal = MGOAL_NORMAL;
 	}
 
@@ -4325,7 +4327,7 @@ void MAI_SnotSpil(int i)
 				quests[Q_LTBANNER]._qvar1 = 3;
 				RedoPlayerVision();
 				Monst->_msquelch = UINT8_MAX;
-				Monst->mtalkmsg = 0;
+				Monst->mtalkmsg = TEXT_NONE;
 				Monst->_mgoal = MGOAL_NORMAL;
 			}
 		}
@@ -4370,7 +4372,7 @@ void MAI_Lazurus(int i)
 				quests[Q_BETRAYER]._qvar1 = 6;
 				Monst->_mgoal = MGOAL_NORMAL;
 				Monst->_msquelch = UINT8_MAX;
-				Monst->mtalkmsg = 0;
+				Monst->mtalkmsg = TEXT_NONE;
 			}
 		}
 
@@ -4380,12 +4382,12 @@ void MAI_Lazurus(int i)
 	}
 
 	if (Monst->_mgoal == MGOAL_NORMAL || Monst->_mgoal == MGOAL_RETREAT || Monst->_mgoal == MGOAL_MOVE) {
-		if (!gbIsMultiplayer && quests[Q_BETRAYER]._qvar1 == 4 && Monst->mtalkmsg == 0) { // Fix save games affected by teleport bug
+		if (!gbIsMultiplayer && quests[Q_BETRAYER]._qvar1 == 4 && Monst->mtalkmsg == TEXT_NONE) { // Fix save games affected by teleport bug
 			ObjChangeMapResync(1, 18, 20, 24);
 			RedoPlayerVision();
 			quests[Q_BETRAYER]._qvar1 = 6;
 		}
-		Monst->mtalkmsg = 0;
+		Monst->mtalkmsg = TEXT_NONE;
 		MAI_Counselor(i);
 	}
 
@@ -4415,7 +4417,7 @@ void MAI_Lazhelp(int i)
 				Monst->_mgoal = MGOAL_INQUIRING;
 			} else {
 				Monst->_mgoal = MGOAL_NORMAL;
-				Monst->mtalkmsg = 0;
+				Monst->mtalkmsg = TEXT_NONE;
 			}
 		} else
 			Monst->_mgoal = MGOAL_NORMAL;
@@ -4451,7 +4453,7 @@ void MAI_Lachdanan(int i)
 	if (dFlags[_mx][_my] & BFLAG_VISIBLE) {
 		if (Monst->mtalkmsg == TEXT_VEIL11) {
 			if (!effect_is_playing(USFX_LACH3) && Monst->_mgoal == MGOAL_TALKING) {
-				Monst->mtalkmsg = 0;
+				Monst->mtalkmsg = TEXT_NONE;
 				quests[Q_VEIL]._qactive = QUEST_DONE;
 				M_StartKill(i, -1);
 			}
@@ -4484,7 +4486,7 @@ void MAI_Warlord(int i)
 			Monst->_mmode = MM_TALK;
 		if (Monst->mtalkmsg == TEXT_WARLRD9 && !effect_is_playing(USFX_WARLRD1) && Monst->_mgoal == MGOAL_TALKING) {
 			Monst->_msquelch = UINT8_MAX;
-			Monst->mtalkmsg = 0;
+			Monst->mtalkmsg = TEXT_NONE;
 			Monst->_mgoal = MGOAL_NORMAL;
 		}
 	}

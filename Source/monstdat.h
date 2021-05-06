@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include "textdat.h"
+
 namespace devilution {
 
 enum _mai_id : int8_t {
@@ -276,7 +278,7 @@ struct UniqMonstStruct {
 	uint16_t mUnqAttr; // TODO create enum
 	uint8_t mUnqVar1;
 	uint8_t mUnqVar2;
-	int mtalkmsg;
+	_speech_id mtalkmsg;
 };
 
 extern const MonsterData monsterdata[];
