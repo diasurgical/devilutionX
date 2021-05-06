@@ -225,7 +225,7 @@ bool PlayerStruct::HasItem(int item, int *idx) const
 	for (int i = 0; i < _pNumInv; i++) {
 		if (InvList[i].IDidx == item) {
 			*idx = i;
-			true;
+			return true;
 		}
 	}
 
