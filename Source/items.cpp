@@ -5112,9 +5112,9 @@ void CreateMagicArmor(int x, int y, int imisc, int icurs, bool sendmsg, bool del
 	CreateMagicItem(x, y, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
 }
 
-void CreateAmulet(int x, int y, int lvl, bool sendmsg, bool delta)
+void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta)
 {
-	CreateMagicItem(x, y, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
+	CreateMagicItem(position.x, position.y, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
 }
 
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool delta)

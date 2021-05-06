@@ -1679,7 +1679,7 @@ void SpawnLoot(int i, bool sendmsg)
 		if (sgGameInitInfo.bTheoQuest) {
 			SpawnTheodore(Monst->position.tile.x, Monst->position.tile.y);
 		} else {
-			CreateAmulet(Monst->position.tile.x, Monst->position.tile.y, 13, false, true);
+			CreateAmulet(Monst->position.tile, 13, false, true);
 		}
 	} else if (Monst->MType->mtype == MT_HORKSPWN) {
 	} else if (Monst->MType->mtype == MT_NAKRUL) {
