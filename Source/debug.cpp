@@ -76,7 +76,7 @@ void TakeGoldCheat()
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		ig = plr[myplr].InvGrid[i];
 		if (ig > 0 && plr[myplr].InvList[ig - 1]._itype == ITYPE_GOLD)
-			RemoveInvItem(myplr, ig - 1);
+			plr[myplr].RemoveInvItem(ig - 1);
 	}
 
 	for (i = 0; i < MAXBELTITEMS; i++) {

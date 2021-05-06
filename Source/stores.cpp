@@ -1425,7 +1425,7 @@ void StoreSellItem()
 
 	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (storehidx[idx] >= 0)
-		RemoveInvItem(myplr, storehidx[idx]);
+		plr[myplr].RemoveInvItem(storehidx[idx]);
 	else
 		RemoveSpdBarItem(myplr, -(storehidx[idx] + 1));
 	cost = storehold[idx]._iIvalue;
@@ -2637,7 +2637,7 @@ void TakePlrsMoney(int cost)
 					cost = 0;
 				} else {
 					cost -= plr[myplr].InvList[i]._ivalue;
-					RemoveInvItem(myplr, i);
+					plr[myplr].RemoveInvItem(i);
 					i = -1;
 				}
 			}
@@ -2651,7 +2651,7 @@ void TakePlrsMoney(int cost)
 						cost = 0;
 					} else {
 						cost -= plr[myplr].InvList[i]._ivalue;
-						RemoveInvItem(myplr, i);
+						plr[myplr].RemoveInvItem(i);
 						i = -1;
 					}
 				}

@@ -149,7 +149,7 @@ TEST(Inv, RemoveInvItem)
 	plr[myplr].InvGrid[1] = -1;
 	plr[myplr].InvList[0]._itype = ITYPE_MISC;
 
-	RemoveInvItem(myplr, 0);
+	plr[myplr].RemoveInvItem(0);
 	EXPECT_EQ(plr[myplr].InvGrid[0], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[1], 0);
 	EXPECT_EQ(plr[myplr]._pNumInv, 0);
@@ -169,7 +169,7 @@ TEST(Inv, RemoveInvItem_other_item)
 	plr[myplr].InvGrid[2] = 2;
 	plr[myplr].InvList[1]._itype = ITYPE_RING;
 
-	RemoveInvItem(myplr, 0);
+	plr[myplr].RemoveInvItem(0);
 	EXPECT_EQ(plr[myplr].InvGrid[0], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[1], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[2], 1);

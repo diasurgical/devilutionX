@@ -5372,24 +5372,22 @@ int PreSpawnSkeleton()
 
 void TalktoMonster(int i)
 {
-	MonsterStruct *Monst;
-	int pnum, itm;
-
 	assurance((DWORD)i < MAXMONSTERS, i);
 
-	Monst = &monster[i];
-	pnum = Monst->_menemy;
+	MonsterStruct *Monst = &monster[i];
+	int pnum = Monst->_menemy;
 	Monst->_mmode = MM_TALK;
 	if (Monst->_mAi == AI_SNOTSPIL || Monst->_mAi == AI_LACHDAN) {
-		if (QuestStatus(Q_LTBANNER) && quests[Q_LTBANNER]._qvar1 == 2 && PlrHasItem(pnum, IDI_BANNER, &itm)) {
-			RemoveInvItem(pnum, itm);
+		int itm;
+		if (QuestStatus(Q_LTBANNER) && quests[Q_LTBANNER]._qvar1 == 2 && plr[pnum].HasItem(IDI_BANNER, &itm)) {
+			plr[pnum].RemoveInvItem(itm);
 			quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			Monst->mtalkmsg = TEXT_BANNER12;
 			Monst->_mgoal = MGOAL_INQUIRING;
 		}
 		if (QuestStatus(Q_VEIL) && Monst->mtalkmsg >= TEXT_VEIL9) {
-			if (PlrHasItem(pnum, IDI_GLDNELIX, &itm)) {
-				RemoveInvItem(pnum, itm);
+			if (plr[pnum].HasItem(IDI_GLDNELIX, &itm)) {
+				plr[pnum].RemoveInvItem(itm);
 				Monst->mtalkmsg = TEXT_VEIL11;
 				Monst->_mgoal = MGOAL_INQUIRING;
 			}

@@ -3288,36 +3288,37 @@ void OperateL3Door(int pnum, int i, bool sendflag)
 
 void OperatePedistal(int pnum, int i)
 {
-	int iv;
-
 	if (numitems >= MAXITEMS) {
 		return;
 	}
 
-	if (object[i]._oVar6 != 3 && PlrHasItem(pnum, IDI_BLDSTONE, &iv) != nullptr) {
-		RemoveInvItem(pnum, iv);
-		object[i]._oAnimFrame++;
-		object[i]._oVar6++;
-		if (object[i]._oVar6 == 1) {
-			if (!deltaload)
-				PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
-			ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, true);
-		}
-		if (object[i]._oVar6 == 2) {
-			if (!deltaload)
-				PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
-			ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, true);
-		}
-		if (object[i]._oVar6 == 3) {
-			if (!deltaload)
-				PlaySfxLoc(LS_BLODSTAR, object[i].position.x, object[i].position.y);
-			ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-			LoadMapObjs("Levels\\L2Data\\Blood2.DUN", 2 * setpc_x, 2 * setpc_y);
-			SpawnUnique(UITEM_ARMOFVAL, 2 * setpc_x + 25, 2 * setpc_y + 19);
-			object[i]._oSelFlag = 0;
-		}
+	int iv;
+	if (object[i]._oVar6 == 3 || !plr[pnum].HasItem(IDI_BLDSTONE, &iv)) {
+		return;
+	}
+
+	plr[pnum].RemoveInvItem(iv);
+	object[i]._oAnimFrame++;
+	object[i]._oVar6++;
+	if (object[i]._oVar6 == 1) {
+		if (!deltaload)
+			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
+		ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
+		SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, true);
+	}
+	if (object[i]._oVar6 == 2) {
+		if (!deltaload)
+			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
+		ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
+		SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, true);
+	}
+	if (object[i]._oVar6 == 3) {
+		if (!deltaload)
+			PlaySfxLoc(LS_BLODSTAR, object[i].position.x, object[i].position.y);
+		ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
+		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", 2 * setpc_x, 2 * setpc_y);
+		SpawnUnique(UITEM_ARMOFVAL, 2 * setpc_x + 25, 2 * setpc_y + 19);
+		object[i]._oSelFlag = 0;
 	}
 }
 

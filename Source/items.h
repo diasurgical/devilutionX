@@ -173,9 +173,9 @@ struct ItemStruct {
 	Point position;
 	bool _iAnimFlag;
 	CelSprite *_iAnimData; // PSX name -> ItemFrame
-	uint8_t _iAnimLen;   // Number of frames in current animation
-	uint8_t _iAnimFrame; // Current frame of animation.
-	bool _iDelFlag;   // set when item is flagged for deletion, deprecated in 1.02
+	uint8_t _iAnimLen;     // Number of frames in current animation
+	uint8_t _iAnimFrame;   // Current frame of animation.
+	bool _iDelFlag;        // set when item is flagged for deletion, deprecated in 1.02
 	uint8_t _iSelFlag;
 	bool _iPostDraw;
 	bool _iIdentified;
@@ -377,7 +377,6 @@ bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(int p, bool Loadgfx);
-void CalcPlrScrolls(int p);
 void CalcPlrStaff(int p);
 void CalcPlrInv(int p, bool Loadgfx);
 void SetPlrHandItem(ItemStruct *h, int idata);

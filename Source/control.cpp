@@ -1969,7 +1969,7 @@ void control_remove_gold(int pnum, int goldIndex)
 		if (plr[pnum].InvList[gi]._ivalue > 0)
 			SetGoldCurs(pnum, gi);
 		else
-			RemoveInvItem(pnum, gi);
+			plr[pnum].RemoveInvItem(gi);
 	} else {
 		int gi = goldIndex - INVITEM_BELT_FIRST;
 		plr[pnum].SpdList[gi]._ivalue -= dropGoldValue;
