@@ -1,4 +1,4 @@
-#include "automap_render.hpp"
+#include "engine/render/automap_render.hpp"
 
 namespace devilution {
 namespace {
@@ -27,7 +27,7 @@ void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_
 }
 
 template <DirectionX DirX, DirectionY DirY>
-void DrawMapLine2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteep(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
 	while (width-- > 0) {
 		SetPixel(out, from, colorIndex);
@@ -61,24 +61,24 @@ void DrawMapLineSW(const CelOutputBuffer &out, Point from, int height, std::uint
 	DrawMapLine<DirectionX::WEST, DirectionY::SOUTH>(out, from, height, colorIndex);
 }
 
-void DrawMapLineNE2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteepNE(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
-	DrawMapLine2<DirectionX::EAST, DirectionY::NORTH>(out, from, width, colorIndex);
+	DrawMapLineSteep<DirectionX::EAST, DirectionY::NORTH>(out, from, width, colorIndex);
 }
 
-void DrawMapLineSE2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteepSE(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
-	DrawMapLine2<DirectionX::EAST, DirectionY::SOUTH>(out, from, width, colorIndex);
+	DrawMapLineSteep<DirectionX::EAST, DirectionY::SOUTH>(out, from, width, colorIndex);
 }
 
-void DrawMapLineNW2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteepNW(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
-	DrawMapLine2<DirectionX::WEST, DirectionY::NORTH>(out, from, width, colorIndex);
+	DrawMapLineSteep<DirectionX::WEST, DirectionY::NORTH>(out, from, width, colorIndex);
 }
 
-void DrawMapLineSW2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteepSW(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
 {
-	DrawMapLine2<DirectionX::WEST, DirectionY::SOUTH>(out, from, width, colorIndex);
+	DrawMapLineSteep<DirectionX::WEST, DirectionY::SOUTH>(out, from, width, colorIndex);
 }
 
 } // namespace devilution

@@ -7,8 +7,8 @@
 
 #include <algorithm>
 
-#include "automap_render.hpp"
 #include "control.h"
+#include "engine/render/automap_render.hpp"
 #include "inv.h"
 #include "miniwin/miniwin.h"
 #include "monster.h"
@@ -284,14 +284,14 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 	case DIR_N: {
 		const Point point { base.x, base.y - AmLine16 };
 		DrawVerticalLine(out, point, AmLine16, playerColor);
-		DrawMapLineNE2(out, { point.x - AmLine4, point.y + 2 * AmLine4 }, AmLine4, playerColor);
-		DrawMapLineNW2(out, { point.x + AmLine4, point.y + 2 * AmLine4 }, AmLine4, playerColor);
+		DrawMapLineSteepNE(out, { point.x - AmLine4, point.y + 2 * AmLine4 }, AmLine4, playerColor);
+		DrawMapLineSteepNW(out, { point.x + AmLine4, point.y + 2 * AmLine4 }, AmLine4, playerColor);
 	} break;
 	case DIR_NE: {
 		const Point point { base.x + AmLine16, base.y - AmLine8 };
 		DrawHorizontalLine(out, {point.x - AmLine8, point.y}, AmLine8, playerColor);
 		DrawMapLineNE(out, { point.x - 2 * AmLine8, point.y + AmLine8 }, AmLine8, playerColor);
-		DrawMapLineSW2(out, point, AmLine4, playerColor);
+		DrawMapLineSteepSW(out, point, AmLine4, playerColor);
 	} break;
 	case DIR_E: {
 		const Point point { base.x + AmLine16, base.y };
@@ -303,18 +303,18 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 		const Point point { base.x + AmLine16, base.y + AmLine8 };
 		DrawMapLineSE(out, { point.x - 2 * AmLine8, point.y - AmLine8 }, AmLine8, playerColor);
 		DrawHorizontalLine(out, { point.x - (AmLine8 + 1), point.y }, AmLine8 + 1, playerColor);
-		DrawMapLineNW2(out, point, AmLine4, playerColor);
+		DrawMapLineSteepNW(out, point, AmLine4, playerColor);
 	} break;
 	case DIR_S:
 	case DIR_OMNI: {
 		const Point point { base.x, base.y + AmLine16 };
 		DrawVerticalLine(out, { point.x, point.y - AmLine16 }, AmLine16, playerColor);
-		DrawMapLineSW2(out, { point.x + AmLine4, point.y - 2 * AmLine4}, AmLine4, playerColor);
-		DrawMapLineSE2(out, { point.x - AmLine4, point.y - 2 * AmLine4}, AmLine4, playerColor);
+		DrawMapLineSteepSW(out, { point.x + AmLine4, point.y - 2 * AmLine4}, AmLine4, playerColor);
+		DrawMapLineSteepSE(out, { point.x - AmLine4, point.y - 2 * AmLine4}, AmLine4, playerColor);
 	} break;
 	case DIR_SW: {
 		const Point point { base.x - AmLine16, base.y + AmLine8 };
-		DrawMapLineNE2(out, point, AmLine4, playerColor);
+		DrawMapLineSteepNE(out, point, AmLine4, playerColor);
 		DrawMapLineSW(out, { point.x + 2 * AmLine8, point.y - AmLine8 }, AmLine8, playerColor);
 		DrawHorizontalLine(out, point, AmLine8 + 1, playerColor);
 	} break;
@@ -328,7 +328,7 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 		const Point point { base.x - AmLine16, base.y - AmLine8 };
 		DrawMapLineNW(out, { point.x + 2 * AmLine8, point.y + AmLine8 }, AmLine8, playerColor);
 		DrawHorizontalLine(out, point, AmLine8 + 1, playerColor);
-		DrawMapLineSE2(out, point, AmLine4, playerColor);
+		DrawMapLineSteepSE(out, point, AmLine4, playerColor);
 	} break;
 	}
 }
