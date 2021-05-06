@@ -162,8 +162,8 @@ struct PlayerStruct {
 	direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
 	/*
-	* @brief Contains Information for current Animation
-	*/
+	 * @brief Contains Information for current Animation
+	 */
 	AnimationInfo AnimInfo;
 	int _pAnimWidth;
 	int _plid;
