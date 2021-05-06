@@ -352,6 +352,7 @@ set(devilutionx_SRCS
   Source/engine/animationinfo.cpp
   Source/engine/render/automap_render.cpp
   Source/engine/render/cel_render.cpp
+  Source/engine/render/cl2_render.cpp
   Source/engine/render/dun_render.cpp
   Source/qol/autopickup.cpp
   Source/qol/common.cpp
