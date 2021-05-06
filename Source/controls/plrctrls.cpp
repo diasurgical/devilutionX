@@ -550,6 +550,35 @@ coords BeltGetSlotCoord(int slot)
 }
 
 /**
+ * Get item size (grid size) on the slot specified. Returns 1x1 if none exists.
+ */
+std::pair<int, int> GetItemSizeOnSlot(int slot, char& itemInvId)
+{
+    if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
+        int ig = slot - SLOTXY_INV_FIRST;
+        char ii = plr[myplr].InvGrid[ig];
+        if (ii != 0) {
+            int iv = ii;
+            if (ii <= 0) {
+                iv = -ii;
+            }
+
+            ItemStruct &item = plr[myplr].InvList[iv - 1];
+            if (!item.isEmpty()) {
+                std::pair<int, int> size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
+                size.first /= INV_SLOT_SIZE_PX;
+                size.second /= INV_SLOT_SIZE_PX;
+
+                itemInvId = ii;
+				return size;
+            }
+        }
+    }
+    itemInvId = 0;
+	return {1, 1};
+}
+
+/**
  * Move the cursor around in our inventory
  * If mouse coords are at SLOTXY_CHEST_LAST, consider this center of equipment
  * small inventory squares are 29x29 (roughly)
@@ -560,6 +589,11 @@ void InvMove(AxisDirection dir)
 	dir = repeater.Get(dir);
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 		return;
+
+	int itemSizeX;
+	int itemSizeY;
+	char itemInvId;
+	std::tie(itemSizeX, itemSizeY) = GetItemSizeOnSlot(slot, itemInvId);
 
 	coords mousePos { MouseX, MouseY };
 
@@ -672,10 +706,13 @@ void InvMove(AxisDirection dir)
                 slot = SLOTXY_AMULET;
 				mousePos = InvGetInvSlotCoord(INVLOC_AMULET);
 			} else if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
-				if (slot == SLOTXY_INV_ROW1_LAST || slot == SLOTXY_INV_ROW2_LAST || slot == SLOTXY_INV_ROW3_LAST || slot == SLOTXY_INV_ROW4_LAST) {
-					slot -= INV_ROW_SLOT_SIZE - 1;
+				if (
+                    slot == SLOTXY_INV_ROW1_LAST + 1 - itemSizeX || slot == SLOTXY_INV_ROW2_LAST + 1 - itemSizeX ||
+				    slot == SLOTXY_INV_ROW3_LAST + 1 - itemSizeX || slot == SLOTXY_INV_ROW4_LAST + 1 - itemSizeX
+                ) {
+					slot -= INV_ROW_SLOT_SIZE - itemSizeX;
 				} else {
-					slot += 1;
+					slot += itemSizeX;
 				}
                 mousePos = InvGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {
@@ -753,7 +790,7 @@ void InvMove(AxisDirection dir)
 			} else if (slot == SLOTXY_RING_RIGHT || slot == SLOTXY_HAND_RIGHT_FIRST || slot == SLOTXY_AMULET) {
                 slot = SLOTXY_INV_ROW1_LAST - 1;
                 mousePos = InvGetSlotCoord(slot);
-			} else if (slot <= (SLOTXY_INV_ROW3_LAST)) {
+			} else if (slot <= (SLOTXY_INV_ROW4_LAST - (icursH28 * INV_ROW_SLOT_SIZE))) {
 				slot += INV_ROW_SLOT_SIZE;
                 mousePos = InvGetSlotCoord(slot);
 			} else if (slot <= SLOTXY_INV_LAST && plr[myplr].HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // forcing only 1x1 misc items
@@ -784,11 +821,11 @@ void InvMove(AxisDirection dir)
 			} else if (slot == SLOTXY_HAND_RIGHT_FIRST) {
                 slot = SLOTXY_RING_RIGHT;
 				mousePos = InvGetInvSlotCoord(INVLOC_RING_RIGHT);
-			} else if (slot <= (SLOTXY_INV_ROW3_LAST)) {
-				slot += INV_ROW_SLOT_SIZE;
+			} else if (slot <= (SLOTXY_INV_ROW4_LAST - (itemSizeY * INV_ROW_SLOT_SIZE))) {
+				slot += itemSizeY * INV_ROW_SLOT_SIZE;
                 mousePos = InvGetSlotCoord(slot);
 			} else if (slot <= SLOTXY_INV_LAST) {
-				slot += INV_ROW_SLOT_SIZE;
+				slot += itemSizeY * INV_ROW_SLOT_SIZE;
                 if (slot > SLOTXY_BELT_LAST)
                     slot = SLOTXY_BELT_LAST;
                 mousePos = BeltGetSlotCoord(slot);
@@ -796,16 +833,40 @@ void InvMove(AxisDirection dir)
 		}
 	}
 
-	// not movement was made
+	// no movement was made
 	if (slot == initialSlot)
 	    return;
 
-    // move cursor to the center of the object or slot
-    mousePos.y -= (INV_SLOT_SIZE_PX / 2);
+	// get item under new slot if navigating on the inventory
+	if (!isHoldingItem && slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
+		std::tie(itemSizeX, itemSizeY) = GetItemSizeOnSlot(slot, itemInvId);
+
+        // search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
+		if (itemInvId < 0) {
+			for (int s = 0; s < SLOTXY_INV_LAST - SLOTXY_INV_FIRST; ++s) {
+				if (plr[myplr].InvGrid[s] == -itemInvId) {
+                    slot = SLOTXY_INV_FIRST + s;
+					break;
+				}
+			}
+		}
+
+		// offset the slot to always move to the top-left most slot of that item
+        slot -= ((itemSizeY - 1) * INV_ROW_SLOT_SIZE);
+        mousePos = InvGetSlotCoord(slot);
+        mousePos.x += ((itemSizeX - 1) * INV_SLOT_SIZE_PX) / 2;
+        mousePos.y += ((itemSizeY - 1) * INV_SLOT_SIZE_PX) / 2;
+	}
+
+	// move cursor to the center of the slot if not holding anything or top left is holding an object
     if (isHoldingItem) {
-        mousePos.y -= (int)((icursH28 / 2.f) * INV_SLOT_SIZE_PX);
+		if (slot >= SLOTXY_INV_FIRST)
+            mousePos.y -= INV_SLOT_SIZE_PX;
+		else
+            mousePos.y -= (int)((icursH28 / 2.f) * INV_SLOT_SIZE_PX) + (INV_SLOT_SIZE_PX / 2);
     } else {
         mousePos.x += (INV_SLOT_SIZE_PX / 2);
+        mousePos.y -= (INV_SLOT_SIZE_PX / 2);
     }
 
 	if (mousePos.x == MouseX && mousePos.y == MouseY) {
