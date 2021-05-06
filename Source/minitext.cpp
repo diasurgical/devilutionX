@@ -8,6 +8,7 @@
 #include "dx.h"
 #include "engine.h"
 #include "engine/render/cel_render.hpp"
+#include "textdat.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -248,7 +249,7 @@ void InitQuestText()
  * @brief Start the given naration
  * @param m Index of narration from the alltext table
  */
-void InitQTextMsg(int m)
+void InitQTextMsg(_speech_id m)
 {
 	if (alltext[m].scrlltxt) {
 		questlog = false;

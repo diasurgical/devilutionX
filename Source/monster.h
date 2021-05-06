@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "miniwin/miniwin.h"
 #include "monstdat.h"
+#include "textdat.h"
 
 #ifndef NOSOUND
 #include "sound.h"
@@ -184,7 +185,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	uint8_t mMaxDamage2;
 	uint8_t mArmorClass;
 	uint16_t mMagicRes;
-	int mtalkmsg;
+	_speech_id mtalkmsg;
 	uint8_t leader;
 	uint8_t leaderflag;
 	uint8_t packsize;

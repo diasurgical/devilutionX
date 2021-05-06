@@ -612,7 +612,9 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->mMagicRes = file->nextLE<uint16_t>();
 	file->skip(2); // Alignment
 
-	pMonster->mtalkmsg = file->nextLE<int32_t>();
+	pMonster->mtalkmsg = static_cast<_speech_id>(file->nextLE<int32_t>());
+	if (pMonster->mtalkmsg == TEXT_KING1) // Fix original bad mapping of NONE for monsters
+		pMonster->mtalkmsg = TEXT_NONE;
 	pMonster->leader = file->nextLE<uint8_t>();
 	pMonster->leaderflag = file->nextLE<uint8_t>();
 	pMonster->packsize = file->nextLE<uint8_t>();
@@ -1582,7 +1584,7 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->writeLE<uint16_t>(pMonster->mMagicRes);
 	file->skip(2); // Alignment
 
-	file->writeLE<int32_t>(pMonster->mtalkmsg);
+	file->writeLE<int32_t>(pMonster->mtalkmsg == TEXT_NONE ? 0 : pMonster->mtalkmsg); // Replicate original bad mapping of none for monsters
 	file->writeLE<uint8_t>(pMonster->leader);
 	file->writeLE<uint8_t>(pMonster->leaderflag);
 	file->writeLE<uint8_t>(pMonster->packsize);
