@@ -490,7 +490,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	SetCursorPos(x, y);
 }
 
-coords InvGetSlotCoord(const inv_body_loc inv_slot, bool center = true)
+coords InvGetInvSlotCoord(const inv_body_loc inv_slot, bool center = true)
 {
 	coords result { RIGHT_PANEL, 0 };
 	result.x -= (icursW28 - 1) * (INV_SLOT_SIZE_PX / 2);
@@ -529,6 +529,11 @@ coords InvGetSlotCoord(const inv_body_loc inv_slot, bool center = true)
 	}
 
 	return result;
+}
+
+coords InvGetSlotCoord(int slot)
+{
+    return {InvRect[slot].X + RIGHT_PANEL, InvRect[slot].Y };
 }
 
 /**
@@ -587,45 +592,43 @@ void InvMove(AxisDirection dir)
 				} else {
 					slot -= 1;
 				}
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+				mousePos = InvGetSlotCoord(slot);
 			} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
                 slot -= 1;
                 mousePos.x = InvRect[slot].X + PANEL_LEFT;
                 mousePos.y = InvRect[slot].Y + PANEL_TOP;
             } else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
                 slot = SLOTXY_RING_LEFT;
-				mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
+				mousePos = InvGetInvSlotCoord(INVLOC_RING_LEFT);
 			} else if (plr[myplr].HoldItem.isWeapon() || plr[myplr].HoldItem.isShield()) {
 			    if (slot == SLOTXY_HAND_LEFT_FIRST) {
                     slot = SLOTXY_HAND_RIGHT_FIRST;
-                    mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
+                    mousePos = InvGetInvSlotCoord(INVLOC_HAND_RIGHT);
                 } else if (slot == SLOTXY_HAND_RIGHT_FIRST) {
                     slot = SLOTXY_HAND_LEFT_FIRST;
-                    mousePos = InvGetSlotCoord(INVLOC_HAND_LEFT);
+                    mousePos = InvGetInvSlotCoord(INVLOC_HAND_LEFT);
                 }
             }
 		} else {
 			if (slot == SLOTXY_HAND_RIGHT_FIRST) {
                 slot = SLOTXY_CHEST_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_CHEST);
+				mousePos = InvGetInvSlotCoord(INVLOC_CHEST);
 			} else if (slot == SLOTXY_CHEST_FIRST) {
                 slot = SLOTXY_HAND_LEFT_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_HAND_LEFT);
+				mousePos = InvGetInvSlotCoord(INVLOC_HAND_LEFT);
 			} else if (slot == SLOTXY_AMULET) {
                 slot = SLOTXY_HEAD_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_HEAD);
+				mousePos = InvGetInvSlotCoord(INVLOC_HEAD);
 			} else if (slot == SLOTXY_RING_RIGHT) {
                 slot = SLOTXY_RING_LEFT;
-				mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
+				mousePos = InvGetInvSlotCoord(INVLOC_RING_LEFT);
 			} else if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 				if (slot == SLOTXY_INV_ROW1_FIRST || slot == SLOTXY_INV_ROW2_FIRST || slot == SLOTXY_INV_ROW3_FIRST || slot == SLOTXY_INV_ROW4_FIRST) {
 					slot += 9;
 				} else {
 					slot -= 1;
 				}
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
 				slot -= 1;
 				mousePos.x = InvRect[slot].X + PANEL_LEFT;
@@ -643,45 +646,43 @@ void InvMove(AxisDirection dir)
 				} else {
 					slot += 1;
 				}
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {
                 slot += 1;
                 mousePos.x = InvRect[slot].X + PANEL_LEFT;
                 mousePos.y = InvRect[slot].Y + PANEL_TOP;
             } else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
                 slot = SLOTXY_RING_RIGHT;
-				mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
+				mousePos = InvGetInvSlotCoord(INVLOC_RING_RIGHT);
 			} else if (plr[myplr].HoldItem.isWeapon() || plr[myplr].HoldItem.isShield()) {
                 if (slot == SLOTXY_HAND_LEFT_FIRST) {
                     slot = SLOTXY_HAND_RIGHT_FIRST;
-                    mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
+                    mousePos = InvGetInvSlotCoord(INVLOC_HAND_RIGHT);
                 } else if (slot == SLOTXY_HAND_RIGHT_FIRST) {
                     slot = SLOTXY_HAND_LEFT_FIRST;
-                    mousePos = InvGetSlotCoord(INVLOC_HAND_LEFT);
+                    mousePos = InvGetInvSlotCoord(INVLOC_HAND_LEFT);
                 }
             }
 		} else {
 			if (slot == SLOTXY_RING_LEFT) {
                 slot = SLOTXY_RING_RIGHT;
-				mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
+				mousePos = InvGetInvSlotCoord(INVLOC_RING_RIGHT);
 			} else if (slot == SLOTXY_HAND_LEFT_FIRST) {
                 slot = SLOTXY_CHEST_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_CHEST);
+				mousePos = InvGetInvSlotCoord(INVLOC_CHEST);
 			} else if (slot == SLOTXY_CHEST_FIRST) {
                 slot = SLOTXY_HAND_RIGHT_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
+				mousePos = InvGetInvSlotCoord(INVLOC_HAND_RIGHT);
 			} else if (slot == SLOTXY_HEAD_FIRST) {
                 slot = SLOTXY_AMULET;
-				mousePos = InvGetSlotCoord(INVLOC_AMULET);
+				mousePos = InvGetInvSlotCoord(INVLOC_AMULET);
 			} else if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 				if (slot == SLOTXY_INV_ROW1_LAST || slot == SLOTXY_INV_ROW2_LAST || slot == SLOTXY_INV_ROW3_LAST || slot == SLOTXY_INV_ROW4_LAST) {
 					slot -= 9;
 				} else {
 					slot += 1;
 				}
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {
 				slot += 1;
 				mousePos.x = InvRect[slot].X + PANEL_LEFT;
@@ -693,80 +694,74 @@ void InvMove(AxisDirection dir)
 		if (isHoldingItem) {
 			if (slot >= SLOTXY_INV_ROW2_FIRST) { // general inventory
 				slot -= 10;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_INV_FIRST) {
 				if (plr[myplr].HoldItem._itype == ITYPE_RING) {
 					if (slot >= SLOTXY_INV_ROW1_FIRST && slot <= SLOTXY_INV_ROW1_FIRST + 5) {
                         slot = SLOTXY_RING_LEFT;
-                        mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
+                        mousePos = InvGetInvSlotCoord(INVLOC_RING_LEFT);
                     } else {
                         slot = SLOTXY_RING_RIGHT;
-                        mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
+                        mousePos = InvGetInvSlotCoord(INVLOC_RING_RIGHT);
                     }
 				} else if (plr[myplr].HoldItem.isWeapon()) {
                     slot = SLOTXY_HAND_LEFT_FIRST;
-					mousePos = InvGetSlotCoord(INVLOC_HAND_LEFT);
+					mousePos = InvGetInvSlotCoord(INVLOC_HAND_LEFT);
 				} else if (plr[myplr].HoldItem.isShield()) {
                     slot = SLOTXY_HAND_RIGHT_FIRST;
-					mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
+					mousePos = InvGetInvSlotCoord(INVLOC_HAND_RIGHT);
 				} else if (plr[myplr].HoldItem.isHelm()) {
                     slot = SLOTXY_HEAD_FIRST;
-					mousePos = InvGetSlotCoord(INVLOC_HEAD);
+					mousePos = InvGetInvSlotCoord(INVLOC_HEAD);
 				} else if (plr[myplr].HoldItem.isArmor()) {
                     slot = SLOTXY_CHEST_FIRST;
-					mousePos = InvGetSlotCoord(INVLOC_CHEST);
+					mousePos = InvGetInvSlotCoord(INVLOC_CHEST);
 				} else if (plr[myplr].HoldItem._itype == ITYPE_AMULET) {
                     slot = SLOTXY_AMULET;
-					mousePos = InvGetSlotCoord(INVLOC_AMULET);
+					mousePos = InvGetInvSlotCoord(INVLOC_AMULET);
 				}
 			}
 		} else {
 			if (slot >= SLOTXY_INV_ROW1_FIRST && slot < SLOTXY_INV_ROW1_FIRST + 3) { // first 3 general slots
                 slot = SLOTXY_RING_LEFT;
-				mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
+				mousePos = InvGetInvSlotCoord(INVLOC_RING_LEFT);
 			} else if (slot >= SLOTXY_INV_ROW1_FIRST + 3 && slot < SLOTXY_INV_ROW1_FIRST + 7) { // middle 4 general slots
                 slot = SLOTXY_CHEST_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_CHEST);
+				mousePos = InvGetInvSlotCoord(INVLOC_CHEST);
 			} else if (slot >= SLOTXY_INV_ROW1_FIRST + 7 && slot < SLOTXY_INV_ROW1_LAST) { // last 3 general slots
                 slot = SLOTXY_RING_RIGHT;
-				mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
+				mousePos = InvGetInvSlotCoord(INVLOC_RING_RIGHT);
 			} else if (slot == SLOTXY_CHEST_FIRST || slot == SLOTXY_HAND_LEFT_FIRST) {
                 slot = SLOTXY_HEAD_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_HEAD);
+				mousePos = InvGetInvSlotCoord(INVLOC_HEAD);
 			} else if (slot == SLOTXY_RING_LEFT) {
                 slot = SLOTXY_HAND_LEFT_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_HAND_LEFT);
+				mousePos = InvGetInvSlotCoord(INVLOC_HAND_LEFT);
 			} else if (slot == SLOTXY_RING_RIGHT) {
                 slot = SLOTXY_HAND_RIGHT_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
+				mousePos = InvGetInvSlotCoord(INVLOC_HAND_RIGHT);
 			} else if (slot == SLOTXY_HAND_RIGHT_FIRST) {
                 slot = SLOTXY_AMULET;
-				mousePos = InvGetSlotCoord(INVLOC_AMULET);
+				mousePos = InvGetInvSlotCoord(INVLOC_AMULET);
 			} else if (slot >= SLOTXY_INV_ROW2_FIRST) { // general inventory
 				slot -= 10;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			}
 		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
 		if (isHoldingItem) {
 			if (slot == SLOTXY_HEAD_FIRST || slot == SLOTXY_CHEST_FIRST) {
 			    slot = SLOTXY_INV_ROW1_FIRST + 4;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot == SLOTXY_RING_LEFT || slot == SLOTXY_HAND_LEFT_FIRST) {
                 slot = SLOTXY_INV_ROW1_FIRST + 1;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot == SLOTXY_RING_RIGHT || slot == SLOTXY_HAND_RIGHT_FIRST || slot == SLOTXY_AMULET) {
                 slot = SLOTXY_INV_ROW1_LAST - 1;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot <= (SLOTXY_INV_ROW3_LAST)) { // general inventory
 				slot += 10;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 				SDL_Log("mouse: {%d, %d}; %d", mousePos.x, mousePos.y, InvRect[slot].Y);
 			} else if (slot <= (SLOTXY_BELT_LAST - 10) && plr[myplr].HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // forcing only 1x1 misc items
 				slot += 10;
@@ -780,32 +775,28 @@ void InvMove(AxisDirection dir)
 		} else {
 			if (slot == SLOTXY_HEAD_FIRST) {
                 slot = SLOTXY_CHEST_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_CHEST);
+				mousePos = InvGetInvSlotCoord(INVLOC_CHEST);
 			} else if (slot == SLOTXY_CHEST_FIRST) {
                 slot = SLOTXY_INV_ROW1_FIRST + 5;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot == SLOTXY_HAND_LEFT_FIRST) {
                 slot = SLOTXY_RING_LEFT;
-				mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
+				mousePos = InvGetInvSlotCoord(INVLOC_RING_LEFT);
 			} else if (slot == SLOTXY_RING_LEFT) {
                 slot = SLOTXY_INV_ROW1_FIRST + 1;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot == SLOTXY_RING_RIGHT) {
                 slot = SLOTXY_INV_ROW1_LAST - 1;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot == SLOTXY_AMULET) {
                 slot = SLOTXY_HAND_RIGHT_FIRST;
-				mousePos = InvGetSlotCoord(INVLOC_HAND_RIGHT);
+				mousePos = InvGetInvSlotCoord(INVLOC_HAND_RIGHT);
 			} else if (slot == SLOTXY_HAND_RIGHT_FIRST) {
                 slot = SLOTXY_RING_RIGHT;
-				mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
+				mousePos = InvGetInvSlotCoord(INVLOC_RING_RIGHT);
 			} else if (slot <= (SLOTXY_INV_ROW3_LAST)) {
 				slot += 10;
-				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
-				mousePos.y = InvRect[slot].Y;
+                mousePos = InvGetSlotCoord(slot);
 			} else if (slot <= (SLOTXY_BELT_LAST - 10)) {
 				slot += 10;
 				mousePos.x = InvRect[slot].X + PANEL_LEFT;
