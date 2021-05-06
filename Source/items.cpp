@@ -10,6 +10,7 @@
 #include "cursor.h"
 #include "doom.h"
 #include "dx.h"
+#include "engine/render/cel_render.hpp"
 #include "init.h"
 #include "lighting.h"
 #include "missiles.h"

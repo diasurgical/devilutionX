@@ -10,7 +10,9 @@
 
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
+#include "controls/keymapper.hpp"
 #include "cursor.h"
+#include "engine/render/cel_render.hpp"
 #include "error.h"
 #include "gamemenu.h"
 #include "init.h"
@@ -23,7 +25,6 @@
 #include "towners.h"
 #include "trigs.h"
 #include "utils/language.h"
-#include "controls/keymapper.hpp"
 
 namespace devilution {
 namespace {

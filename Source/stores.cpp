@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "cursor.h"
+#include "engine/render/cel_render.hpp"
 #include "init.h"
 #include "minitext.h"
 #include "options.h"

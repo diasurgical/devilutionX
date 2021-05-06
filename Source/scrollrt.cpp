@@ -10,6 +10,7 @@
 #include "dead.h"
 #include "doom.h"
 #include "dx.h"
+#include "engine/render/cel_render.hpp"
 #include "engine/render/dun_render.hpp"
 #include "error.h"
 #include "gmenu.h"

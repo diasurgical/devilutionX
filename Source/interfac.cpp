@@ -6,10 +6,11 @@
 
 #include <cstdint>
 
-#include "control.h"
 #include "DiabloUI/art_draw.h"
+#include "control.h"
 #include "dx.h"
 #include "engine.h"
+#include "engine/render/cel_render.hpp"
 #include "init.h"
 #include "loadsave.h"
 #include "palette.h"

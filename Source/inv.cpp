@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "cursor.h"
+#include "engine/render/cel_render.hpp"
 #include "minitext.h"
 #include "options.h"
 #include "plrmsg.h"
