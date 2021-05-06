@@ -1314,7 +1314,7 @@ void RenderTile(const CelOutputBuffer &out, int x, int y)
 
 	const std::uint8_t *tbl = &pLightTbl[256 * light_table_index];
 	const auto *pFrameTable = reinterpret_cast<const std::uint32_t *>(pDungeonCels.get());
-	const std::uint8_t *src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
+	const auto *src = reinterpret_cast<const std::uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])]);
 	std::uint8_t *dst = out.at(static_cast<int>(x + clip.left), static_cast<int>(y - clip.bottom));
 	const auto dstPitch = out.pitch();
 	mask -= clip.bottom;

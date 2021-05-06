@@ -242,13 +242,13 @@ void DrawMissilePrivate(const CelOutputBuffer &out, MissileStruct *m, int sx, in
 	if (m->_miPreFlag != pre || !m->_miDrawFlag)
 		return;
 
-	BYTE *pCelBuff = m->_miAnimData;
-	if (pCelBuff == nullptr) {
+	if (m->_miAnimData == nullptr) {
 		Log("Draw Missile 2 type {}: NULL Cel Buffer", m->_mitype);
 		return;
 	}
 	int nCel = m->_miAnimFrame;
-	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	auto frameTable = reinterpret_cast<const uint32_t *>(m->_miAnimData);
+	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
 		return;
@@ -312,14 +312,14 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		return;
 	}
 
-	BYTE *pCelBuff = monster[m]._mAnimData;
-	if (pCelBuff == nullptr) {
+	if (monster[m]._mAnimData == nullptr) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster[m].mName);
 		return;
 	}
 
 	int nCel = monster[m]._mAnimFrame;
-	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m]._mAnimData);
+	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (monster[m]._mmode <= 17)
@@ -370,7 +370,7 @@ static void DrawManaShield(const CelOutputBuffer &out, int pnum, int x, int y, b
 	x += CalculateWidth2(plr[pnum]._pAnimWidth) - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
 
 	int width = misfiledata[MFILE_MANASHLD].mAnimWidth[0];
-	BYTE *pCelBuff = misfiledata[MFILE_MANASHLD].mAnimData[0];
+	byte *pCelBuff = misfiledata[MFILE_MANASHLD].mAnimData[0];
 
 	CelSprite cel { pCelBuff, width };
 
@@ -407,7 +407,7 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 
 	PlayerStruct *pPlayer = &plr[pnum];
 
-	BYTE *pCelBuff = pPlayer->AnimInfo.pData;
+	byte *pCelBuff = pPlayer->AnimInfo.pData;
 	int nCel = pPlayer->AnimInfo.GetFrameToUseForRendering();
 
 	if (pCelBuff == nullptr) {
@@ -519,14 +519,14 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 
 	assert(bv >= 0 && bv < MAXOBJECTS);
 
-	BYTE *pCelBuff = object[bv]._oAnimData;
+	byte *pCelBuff = object[bv]._oAnimData;
 	if (pCelBuff == nullptr) {
 		Log("Draw Object type {}: NULL Cel Buffer", object[bv]._otype);
 		return;
 	}
 
 	int nCel = object[bv]._oAnimFrame;
-	int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	auto frames = SDL_SwapLE32(reinterpret_cast<const std::uint32_t *>(pCelBuff)[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, object[bv]._otype);
 		return;
@@ -761,11 +761,10 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<direction>((bDead >> 5) & 7);
 			int px = dx - CalculateWidth2(pDeadGuy->_deadWidth);
-			BYTE *pCelBuff = pDeadGuy->_deadData[dd];
+			byte *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);
-			if (pCelBuff == nullptr)
-				break;
-			int frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+			auto frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
+			int frames = SDL_SwapLE32(frameTable[0]);
 			int nCel = pDeadGuy->_deadFrame;
 			if (nCel < 1 || frames > 50 || nCel > frames) {
 				Log("Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);

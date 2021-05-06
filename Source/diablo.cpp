@@ -1500,11 +1500,11 @@ void LoadLvlGFX()
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire) {
-			pDungeonCels = LoadFileInMem<BYTE>("NLevels\\TownData\\Town.CEL");
+			pDungeonCels = LoadFileInMem("NLevels\\TownData\\Town.CEL");
 			pMegaTiles = LoadFileInMem<MegaTile>("NLevels\\TownData\\Town.TIL");
 			pLevelPieces = LoadFileInMem<uint16_t>("NLevels\\TownData\\Town.MIN");
 		} else {
-			pDungeonCels = LoadFileInMem<BYTE>("Levels\\TownData\\Town.CEL");
+			pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL");
 			pMegaTiles = LoadFileInMem<MegaTile>("Levels\\TownData\\Town.TIL");
 			pLevelPieces = LoadFileInMem<uint16_t>("Levels\\TownData\\Town.MIN");
 		}
@@ -1512,37 +1512,37 @@ void LoadLvlGFX()
 		break;
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 21) {
-			pDungeonCels = LoadFileInMem<BYTE>("Levels\\L1Data\\L1.CEL");
+			pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL");
 			pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L1Data\\L1.TIL");
 			pLevelPieces = LoadFileInMem<uint16_t>("Levels\\L1Data\\L1.MIN");
 			pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		} else {
-			pDungeonCels = LoadFileInMem<BYTE>("NLevels\\L5Data\\L5.CEL");
+			pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL");
 			pMegaTiles = LoadFileInMem<MegaTile>("NLevels\\L5Data\\L5.TIL");
 			pLevelPieces = LoadFileInMem<uint16_t>("NLevels\\L5Data\\L5.MIN");
 			pSpecialCels = LoadCel("NLevels\\L5Data\\L5S.CEL", SpecialCelWidth);
 		}
 		break;
 	case DTYPE_CATACOMBS:
-		pDungeonCels = LoadFileInMem<BYTE>("Levels\\L2Data\\L2.CEL");
+		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L2Data\\L2.TIL");
 		pLevelPieces = LoadFileInMem<uint16_t>("Levels\\L2Data\\L2.MIN");
 		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CAVES:
 		if (currlevel < 17) {
-			pDungeonCels = LoadFileInMem<BYTE>("Levels\\L3Data\\L3.CEL");
+			pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL");
 			pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L3Data\\L3.TIL");
 			pLevelPieces = LoadFileInMem<uint16_t>("Levels\\L3Data\\L3.MIN");
 		} else {
-			pDungeonCels = LoadFileInMem<BYTE>("NLevels\\L6Data\\L6.CEL");
+			pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL");
 			pMegaTiles = LoadFileInMem<MegaTile>("NLevels\\L6Data\\L6.TIL");
 			pLevelPieces = LoadFileInMem<uint16_t>("NLevels\\L6Data\\L6.MIN");
 		}
 		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_HELL:
-		pDungeonCels = LoadFileInMem<BYTE>("Levels\\L4Data\\L4.CEL");
+		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L4Data\\L4.TIL");
 		pLevelPieces = LoadFileInMem<uint16_t>("Levels\\L4Data\\L4.MIN");
 		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);

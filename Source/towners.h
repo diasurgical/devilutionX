@@ -42,8 +42,8 @@ struct TNQ {
 
 struct TownerStruct {
 	byte *_tNAnim[8];
-	std::unique_ptr<BYTE[]> _tNData;
-	uint8_t *_tAnimData;
+	std::unique_ptr<byte[]> _tNData;
+	byte *_tAnimData;
 	int16_t _tSeed;
 	/** Tile position of NPC */
 	Point position;

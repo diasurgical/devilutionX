@@ -68,7 +68,7 @@ enum shrine_type : uint8_t {
 
 int trapid;
 int trapdir;
-std::unique_ptr<BYTE[]> pObjCels[40];
+std::unique_ptr<byte[]> pObjCels[40];
 object_graphic_id ObjFileList[40];
 int objectactive[MAXOBJECTS];
 /** Specifies the number of active objects. */
@@ -314,7 +314,7 @@ void InitObjectGFX()
 				sprintf(filestr, "Objects\\%s.CEL", ObjHiveLoadList[i]);
 			else if (currlevel >= 21)
 				sprintf(filestr, "Objects\\%s.CEL", ObjCryptLoadList[i]);
-			pObjCels[numobjfiles] = LoadFileInMem<BYTE>(filestr);
+			pObjCels[numobjfiles] = LoadFileInMem(filestr);
 			numobjfiles++;
 		}
 	}
@@ -1225,7 +1225,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 		ObjFileList[numobjfiles] = (object_graphic_id)i;
 		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
-		pObjCels[numobjfiles] = LoadFileInMem<BYTE>(filestr);
+		pObjCels[numobjfiles] = LoadFileInMem(filestr);
 		numobjfiles++;
 	}
 
@@ -2242,7 +2242,7 @@ void ObjSetMicro(int dx, int dy, int pn)
 
 	int blocks = leveltype != DTYPE_HELL ? 10 : 16;
 
-	uint16_t *piece = &pLevelPieces[blocks * pn ];
+	uint16_t *piece = &pLevelPieces[blocks * pn];
 	MICROS &micros = dpiece_defs_map_2[dx][dy];
 
 	for (int i = 0; i < blocks; i++) {

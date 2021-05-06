@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "effects.h"
+#include "engine.h"
 
 namespace devilution {
 
@@ -105,7 +106,7 @@ typedef struct MisFileData {
 	uint8_t mAnimName;
 	uint8_t mAnimFAmt;
 	uint32_t mFlags;
-	BYTE *mAnimData[16];
+	byte *mAnimData[16];
 	uint8_t mAnimDelay[16];
 	uint8_t mAnimLen[16];
 	int16_t mAnimWidth[16];

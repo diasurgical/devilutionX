@@ -77,7 +77,7 @@ char infostr[64];
 int numpanbtns;
 char panelstr[4][64];
 bool panelflag;
-BYTE SplTransTbl[256];
+uint8_t SplTransTbl[256];
 int initialDropGoldValue;
 bool panbtndown;
 bool spselflag;

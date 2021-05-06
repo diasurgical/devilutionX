@@ -30,7 +30,7 @@ std::optional<CelSprite> pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<uint16_t[]> pLevelPieces;
-std::unique_ptr<BYTE[]> pDungeonCels;
+std::unique_ptr<byte[]> pDungeonCels;
 std::array<uint8_t, MAXTILES + 1> block_lvid;
 std::array<bool, MAXTILES + 1> nBlockTable;
 std::array<bool, MAXTILES + 1> nSolidTable;
