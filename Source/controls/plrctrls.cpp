@@ -589,7 +589,11 @@ void InvMove(AxisDirection dir)
 				}
 				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
 				mousePos.y = InvRect[slot].Y;
-			} else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
+			} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
+                slot -= 1;
+                mousePos.x = InvRect[slot].X + PANEL_LEFT;
+                mousePos.y = InvRect[slot].Y + PANEL_TOP;
+            } else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
                 slot = SLOTXY_RING_LEFT;
 				mousePos = InvGetSlotCoord(INVLOC_RING_LEFT);
 			} else if (plr[myplr].HoldItem.isWeapon() || plr[myplr].HoldItem.isShield()) {
@@ -622,7 +626,7 @@ void InvMove(AxisDirection dir)
 				}
 				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
 				mousePos.y = InvRect[slot].Y;
-			} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) { // belt
+			} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
 				slot -= 1;
 				mousePos.x = InvRect[slot].X + PANEL_LEFT;
 				mousePos.y = InvRect[slot].Y + PANEL_TOP;
@@ -641,7 +645,11 @@ void InvMove(AxisDirection dir)
 				}
 				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
 				mousePos.y = InvRect[slot].Y;
-			} else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
+			} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {
+                slot += 1;
+                mousePos.x = InvRect[slot].X + PANEL_LEFT;
+                mousePos.y = InvRect[slot].Y + PANEL_TOP;
+            } else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
                 slot = SLOTXY_RING_RIGHT;
 				mousePos = InvGetSlotCoord(INVLOC_RING_RIGHT);
 			} else if (plr[myplr].HoldItem.isWeapon() || plr[myplr].HoldItem.isShield()) {
@@ -760,8 +768,8 @@ void InvMove(AxisDirection dir)
 				mousePos.x = InvRect[slot].X + RIGHT_PANEL;
 				mousePos.y = InvRect[slot].Y;
 				SDL_Log("mouse: {%d, %d}; %d", mousePos.x, mousePos.y, InvRect[slot].Y);
-			} else if (slot <= (SLOTXY_BELT_LAST - 8) && plr[myplr].HoldItem._itype == ITYPE_MISC) {
-				slot += 8;
+			} else if (slot <= (SLOTXY_BELT_LAST - 10) && plr[myplr].HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // forcing only 1x1 misc items
+				slot += 10;
 				mousePos.x = InvRect[slot].X + PANEL_LEFT;
 				mousePos.y = InvRect[slot].Y + PANEL_TOP;
 			}
