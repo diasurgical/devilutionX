@@ -531,9 +531,20 @@ coords InvGetInvSlotCoord(const inv_body_loc inv_slot, bool center = true)
 	return result;
 }
 
+/**
+ * Get coordinates for a given inventory slot (for belt use BeltGetSlotCoord)
+ */
 coords InvGetSlotCoord(int slot)
 {
     return {InvRect[slot].X + RIGHT_PANEL, InvRect[slot].Y };
+}
+
+/**
+ * Get coordinates for a given belt slot (for normal inventory use InvGetSlotCoord)
+ */
+coords BeltGetSlotCoord(int slot)
+{
+    return {InvRect[slot].X + PANEL_LEFT, InvRect[slot].Y + PANEL_TOP };
 }
 
 /**
@@ -550,24 +561,7 @@ void InvMove(AxisDirection dir)
 
 	coords mousePos { MouseX, MouseY };
 
-    SDL_Log("beg: slot: %d | icursW28: %d | icursH28: %d | mouse: {%d, %d}", slot, icursW28, icursH28, mousePos.x, mousePos.y);
-
 	const bool isHoldingItem = pcurs > 1;
-
-	// check which inventory rectangle the mouse is in, if any
-	/*for (int r = 0; (DWORD)r < NUM_XY_SLOTS; r++) {
-		int xo = RIGHT_PANEL;
-		int yo = 0;
-		if (r >= SLOTXY_BELT_FIRST) {
-			xo = PANEL_LEFT;
-			yo = PANEL_TOP;
-		}
-
-		if (mousePos.x >= InvRect[r].X + xo && mousePos.x < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1) && mousePos.y >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1) && mousePos.y < InvRect[r].Y + yo) {
-			slot = r;
-			break;
-		}
-	}*/
 
 	// normalize slots
 	if (slot < 0)
@@ -595,8 +589,7 @@ void InvMove(AxisDirection dir)
 				mousePos = InvGetSlotCoord(slot);
 			} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
                 slot -= 1;
-                mousePos.x = InvRect[slot].X + PANEL_LEFT;
-                mousePos.y = InvRect[slot].Y + PANEL_TOP;
+                mousePos = BeltGetSlotCoord(slot);
             } else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
                 slot = SLOTXY_RING_LEFT;
 				mousePos = InvGetInvSlotCoord(INVLOC_RING_LEFT);
@@ -631,8 +624,7 @@ void InvMove(AxisDirection dir)
                 mousePos = InvGetSlotCoord(slot);
 			} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
 				slot -= 1;
-				mousePos.x = InvRect[slot].X + PANEL_LEFT;
-				mousePos.y = InvRect[slot].Y + PANEL_TOP;
+                mousePos = BeltGetSlotCoord(slot);
 			}
 		}
 	} else if (dir.x == AxisDirectionX_RIGHT) {
@@ -649,8 +641,7 @@ void InvMove(AxisDirection dir)
                 mousePos = InvGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {
                 slot += 1;
-                mousePos.x = InvRect[slot].X + PANEL_LEFT;
-                mousePos.y = InvRect[slot].Y + PANEL_TOP;
+                mousePos = BeltGetSlotCoord(slot);
             } else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
                 slot = SLOTXY_RING_RIGHT;
 				mousePos = InvGetInvSlotCoord(INVLOC_RING_RIGHT);
@@ -685,8 +676,7 @@ void InvMove(AxisDirection dir)
                 mousePos = InvGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {
 				slot += 1;
-				mousePos.x = InvRect[slot].X + PANEL_LEFT;
-				mousePos.y = InvRect[slot].Y + PANEL_TOP;
+                mousePos = BeltGetSlotCoord(slot);
 			}
 		}
 	}
@@ -762,15 +752,12 @@ void InvMove(AxisDirection dir)
 			} else if (slot <= (SLOTXY_INV_ROW3_LAST)) { // general inventory
 				slot += 10;
                 mousePos = InvGetSlotCoord(slot);
-				SDL_Log("mouse: {%d, %d}; %d", mousePos.x, mousePos.y, InvRect[slot].Y);
 			} else if (slot <= (SLOTXY_BELT_LAST - 10) && plr[myplr].HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // forcing only 1x1 misc items
 				slot += 10;
-				mousePos.x = InvRect[slot].X + PANEL_LEFT;
-				mousePos.y = InvRect[slot].Y + PANEL_TOP;
+                mousePos = BeltGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_INV_LAST - 1 && slot <= SLOTXY_INV_LAST && plr[myplr].HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // slots 9 and 10 should go to belt 8
                 slot = SLOTXY_BELT_LAST;
-                mousePos.x = InvRect[slot].X + PANEL_LEFT;
-                mousePos.y = InvRect[slot].Y + PANEL_TOP;
+                mousePos = BeltGetSlotCoord(slot);
             }
 		} else {
 			if (slot == SLOTXY_HEAD_FIRST) {
@@ -799,12 +786,10 @@ void InvMove(AxisDirection dir)
                 mousePos = InvGetSlotCoord(slot);
 			} else if (slot <= (SLOTXY_BELT_LAST - 10)) {
 				slot += 10;
-				mousePos.x = InvRect[slot].X + PANEL_LEFT;
-				mousePos.y = InvRect[slot].Y + PANEL_TOP;
+                mousePos = BeltGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_INV_LAST - 1 && slot <= SLOTXY_INV_LAST) { // slots 9 and 10 should go to belt 8
 			    slot = SLOTXY_BELT_LAST;
-                mousePos.x = InvRect[slot].X + PANEL_LEFT;
-                mousePos.y = InvRect[slot].Y + PANEL_TOP;
+                mousePos = BeltGetSlotCoord(slot);
 			}
 		}
 	}
