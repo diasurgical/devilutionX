@@ -437,7 +437,7 @@ void RecalcStoreStats();
 int ItemNoFlippy();
 void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(int x, int y, int imisc, int icurs, bool sendmsg, bool delta);
-void CreateAmulet(int x, int y, int curlv, bool sendmsg, bool delta);
+void CreateAmulet(Point position, int curlv, bool sendmsg, bool delta);
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool delta);
 bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void SetItemRecord(int nSeed, uint16_t wCI, int nIndex);
