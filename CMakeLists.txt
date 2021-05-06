@@ -272,7 +272,6 @@ add_library(PKWare STATIC
 set(devilutionx_SRCS
   Source/appfat.cpp
   Source/automap.cpp
-  Source/automap_render.cpp
   Source/capture.cpp
   Source/codec.cpp
   Source/control.cpp
@@ -352,6 +351,7 @@ set(devilutionx_SRCS
   Source/controls/touch.cpp
   Source/controls/keymapper.cpp
   Source/engine/animationinfo.cpp
+  Source/engine/render/automap_render.cpp
   Source/qol/autopickup.cpp
   Source/qol/common.cpp
   Source/qol/monhealthbar.cpp

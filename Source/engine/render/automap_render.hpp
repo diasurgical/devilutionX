@@ -1,3 +1,14 @@
+/** @file automap_render.hpp
+ * Defines 2 sets of rendering primitives for drawing automap lines.
+ *
+ * 1. DrawMapLine* - used for rendering most map lines - 2 pixels horizontally for each pixel vertically.
+ * 2. DrawMapLineSteep* - currently only used for rendering the player arrow - 2 pixels vertically for each pixel horizontally.
+ *
+ * These functions draw a single extra pixel at the end of the line -- they always draw an odd number of pixels.
+ * These functions clip to the output buffer -- they are safe to call with out-of-bounds coordinates.
+ */
+#pragma once
+
 #include "engine.h"
 
 namespace devilution {
@@ -45,7 +56,7 @@ void DrawMapLineSW(const CelOutputBuffer &out, Point from, int height, std::uint
  *
  * The end point is at `{ from.x + width + 1, from.y - 2 * width }`.
  */
-void DrawMapLineNE2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapLineSteepNE(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards south east at an `atan(2)` angle.
@@ -54,7 +65,7 @@ void DrawMapLineNE2(const CelOutputBuffer &out, Point from, int width, std::uint
  *
  * The end point is at `{ from.x + width + 1, from.y + 2 * width }`.
  */
-void DrawMapLineSE2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapLineSteepSE(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards north west at an `atan(1/2)` angle.
@@ -63,7 +74,7 @@ void DrawMapLineSE2(const CelOutputBuffer &out, Point from, int width, std::uint
  *
  * The end point is at `{ from.x - (width + 1), from.y - 2 * width }`.
  */
-void DrawMapLineNW2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapLineSteepNW(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards south west at an `atan(1/2)` angle.
@@ -72,6 +83,6 @@ void DrawMapLineNW2(const CelOutputBuffer &out, Point from, int width, std::uint
  *
  * The end point is at `{ from.x - (width + 1), from.y + 2 * width }`.
  */
-void DrawMapLineSW2(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapLineSteepSW(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
 
 } // namespace devilution
