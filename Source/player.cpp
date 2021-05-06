@@ -201,6 +201,69 @@ const char *const ClassPathTbl[] = {
 	"Warrior",
 };
 
+void PlayerStruct::CalcScrolls()
+{
+	_pScrlSpells = 0;
+	for (int i = 0; i < _pNumInv; i++) {
+		if (!InvList[i].isEmpty() && (InvList[i]._iMiscId == IMISC_SCROLL || InvList[i]._iMiscId == IMISC_SCROLLT)) {
+			if (InvList[i]._iStatFlag)
+				_pScrlSpells |= GetSpellBitmask(InvList[i]._iSpell);
+		}
+	}
+
+	for (int j = 0; j < MAXBELTITEMS; j++) {
+		if (!SpdList[j].isEmpty() && (SpdList[j]._iMiscId == IMISC_SCROLL || SpdList[j]._iMiscId == IMISC_SCROLLT)) {
+			if (SpdList[j]._iStatFlag)
+				_pScrlSpells |= GetSpellBitmask(SpdList[j]._iSpell);
+		}
+	}
+	EnsureValidReadiedSpell(*this);
+}
+
+bool PlayerStruct::HasItem(int item, int *idx) const
+{
+	for (int i = 0; i < _pNumInv; i++) {
+		if (InvList[i].IDidx == item) {
+			*idx = i;
+			true;
+		}
+	}
+
+	return false;
+}
+
+void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
+{
+	iv++;
+
+	//Iterate through invGrid and remove every reference to item
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+		if (InvGrid[i] == iv || InvGrid[i] == -iv) {
+			InvGrid[i] = 0;
+		}
+	}
+
+	iv--;
+	_pNumInv--;
+
+	//If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
+	if (_pNumInv > 0 && _pNumInv != iv) {
+		InvList[iv] = InvList[_pNumInv];
+
+		for (int j = 0; j < NUM_INV_GRID_ELEM; j++) {
+			if (InvGrid[j] == _pNumInv + 1) {
+				InvGrid[j] = iv + 1;
+			}
+			if (InvGrid[j] == -(_pNumInv + 1)) {
+				InvGrid[j] = -(iv + 1);
+			}
+		}
+	}
+
+	if (calcScrolls)
+		CalcScrolls();
+}
+
 int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
@@ -1947,7 +2010,7 @@ void DropHalfPlayersGold(int pnum)
 					hGold = 0;
 				} else {
 					hGold -= plr[pnum].InvList[i]._ivalue;
-					RemoveInvItem(pnum, i);
+					plr[pnum].RemoveInvItem(i);
 					SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 					GetGoldSeed(pnum, &plr[pnum].HoldItem);
 					SetPlrHandGoldCurs(&plr[pnum].HoldItem);
@@ -1972,7 +2035,7 @@ void DropHalfPlayersGold(int pnum)
 					hGold = 0;
 				} else {
 					hGold -= plr[pnum].InvList[i]._ivalue;
-					RemoveInvItem(pnum, i);
+					plr[pnum].RemoveInvItem(i);
 					SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 					GetGoldSeed(pnum, &plr[pnum].HoldItem);
 					SetPlrHandGoldCurs(&plr[pnum].HoldItem);
@@ -3379,7 +3442,7 @@ void CheckNewPath(int pnum)
 			break;
 		case ACTION_TALK:
 			if (pnum == myplr) {
-				TalkToTowner(pnum, plr[pnum].destParam1);
+				TalkToTowner(plr[pnum], plr[pnum].destParam1);
 			}
 			break;
 		default:

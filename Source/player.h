@@ -309,6 +309,18 @@ struct PlayerStruct {
 	byte *_pDData;
 	byte *_pBData;
 
+	void CalcScrolls();
+
+	bool HasItem(int item, int *idx = nullptr) const;
+
+	/**
+     * @brief Remove an item from player inventory
+     * @param pnum Player index
+     * @param iv invList index of item to be removed
+     * @param calcScrolls If true, CalcScrolls() gets called after removing item
+     */
+	void RemoveInvItem(int iv, bool calcScrolls = true);
+
 	/**
 	 * @brief Gets the most valuable item out of all the player's items that match the given predicate.
 	 * @param itemPredicate The predicate used to match the items.

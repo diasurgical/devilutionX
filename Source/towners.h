@@ -59,7 +59,7 @@ struct TownerStruct {
 	bool _tSelFlag;
 	bool _tMsgSaid;
 	int8_t _tAnimOrder;
-	int8_t _tTalkingToPlayer;
+	PlayerStruct *_tTalkingToPlayer;
 	bool _tbtcnt;
 	_talker_id _ttype;
 };
@@ -69,8 +69,7 @@ extern TownerStruct towners[NUM_TOWNERS];
 void InitTowners();
 void FreeTownerGFX();
 void ProcessTowners();
-ItemStruct *PlrHasItem(int pnum, int item, int *i);
-void TalkToTowner(int p, int t);
+void TalkToTowner(PlayerStruct &player, int t);
 
 extern _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS];
 

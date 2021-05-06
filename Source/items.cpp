@@ -905,27 +905,6 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	drawhpflag = true;
 }
 
-void CalcPlrScrolls(int p)
-{
-	int i, j;
-
-	plr[p]._pScrlSpells = 0;
-	for (i = 0; i < plr[p]._pNumInv; i++) {
-		if (!plr[p].InvList[i].isEmpty() && (plr[p].InvList[i]._iMiscId == IMISC_SCROLL || plr[p].InvList[i]._iMiscId == IMISC_SCROLLT)) {
-			if (plr[p].InvList[i]._iStatFlag)
-				plr[p]._pScrlSpells |= GetSpellBitmask(plr[p].InvList[i]._iSpell);
-		}
-	}
-
-	for (j = 0; j < MAXBELTITEMS; j++) {
-		if (!plr[p].SpdList[j].isEmpty() && (plr[p].SpdList[j]._iMiscId == IMISC_SCROLL || plr[p].SpdList[j]._iMiscId == IMISC_SCROLLT)) {
-			if (plr[p].SpdList[j]._iStatFlag)
-				plr[p]._pScrlSpells |= GetSpellBitmask(plr[p].SpdList[j]._iSpell);
-		}
-	}
-	EnsureValidReadiedSpell(plr[p]);
-}
-
 void CalcPlrStaff(int p)
 {
 	plr[p]._pISpells = 0;
@@ -1061,7 +1040,7 @@ void CalcPlrInv(int p, bool Loadgfx)
 	CalcPlrItemMin(p);
 	if (p == myplr) {
 		CalcPlrBookVals(p);
-		CalcPlrScrolls(p);
+		plr[p].CalcScrolls();
 		CalcPlrStaff(p);
 		if (p == myplr && currlevel == 0)
 			RecalcStoreStats();

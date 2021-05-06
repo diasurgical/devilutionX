@@ -95,15 +95,6 @@ bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistI
 bool GoldAutoPlace(int pnum);
 void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(int pnum, BYTE iv);
-
-/**
- * @brief Remove an item from player inventory
- * @param pnum Player index
- * @param iv invList index of item to be removed
- * @param calcPlrScrolls If true, CalcPlrScrolls() gets called after removing item
- */
-void RemoveInvItem(int pnum, int iv, bool calcPlrScrolls = true);
-
 void RemoveSpdBarItem(int pnum, int iv);
 void CheckInvItem(bool isShiftHeld = false);
 void CheckInvScrn(bool isShiftHeld);
