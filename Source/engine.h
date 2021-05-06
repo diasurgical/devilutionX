@@ -180,17 +180,15 @@ constexpr uint32_t LoadBE32(const T *b)
 
 inline byte *CelGetFrame(byte *pCelBuff, int nCel, int *nDataSize)
 {
-	auto frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
-	const uint32_t nCellStart = SDL_SwapLE32(frameTable[nCel]);
-	*nDataSize = SDL_SwapLE32(frameTable[nCel + 1]) - nCellStart;
+	const uint32_t nCellStart = LoadLE32(&pCelBuff[nCel * sizeof(std::uint32_t)]);
+	*nDataSize = LoadLE32(&pCelBuff[(nCel + 1) * sizeof(std::uint32_t)]) - nCellStart;
 	return &pCelBuff[nCellStart];
 }
 
 inline const byte *CelGetFrame(const byte *pCelBuff, int nCel, int *nDataSize)
 {
-	auto frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
-	const uint32_t nCellStart = SDL_SwapLE32(frameTable[nCel]);
-	*nDataSize = SDL_SwapLE32(frameTable[nCel + 1]) - nCellStart;
+	const uint32_t nCellStart = LoadLE32(&pCelBuff[nCel * sizeof(std::uint32_t)]);
+	*nDataSize = LoadLE32(&pCelBuff[(nCel + 1) * sizeof(std::uint32_t)]) - nCellStart;
 	return &pCelBuff[nCellStart];
 }
 
