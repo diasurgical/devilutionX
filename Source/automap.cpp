@@ -88,22 +88,22 @@ void DrawAutomapTile(const CelOutputBuffer &out, Point center, uint16_t automapT
 	uint8_t flags = automapType >> 8;
 
 	if ((flags & MapFlagsDirt) != 0) {
-		SetPixel(out, center, MapColorsDim);
-		SetPixel(out, { center.x - AmLine8, center.y - AmLine4 }, MapColorsDim);
-		SetPixel(out, { center.x - AmLine8, center.y + AmLine4 }, MapColorsDim);
-		SetPixel(out, { center.x + AmLine8, center.y - AmLine4 }, MapColorsDim);
-		SetPixel(out, { center.x + AmLine8, center.y + AmLine4 }, MapColorsDim);
-		SetPixel(out, { center.x - AmLine16, center.y }, MapColorsDim);
-		SetPixel(out, { center.x + AmLine16, center.y }, MapColorsDim);
-		SetPixel(out, { center.x, center.y - AmLine8 }, MapColorsDim);
-		SetPixel(out, { center.x, center.y + AmLine8 }, MapColorsDim);
-		SetPixel(out, { center.x + AmLine8 - AmLine32, center.y + AmLine4 }, MapColorsDim);
-		SetPixel(out, { center.x - AmLine8 + AmLine32, center.y + AmLine4 }, MapColorsDim);
-		SetPixel(out, { center.x - AmLine16, center.y + AmLine8 }, MapColorsDim);
-		SetPixel(out, { center.x + AmLine16, center.y + AmLine8 }, MapColorsDim);
-		SetPixel(out, { center.x - AmLine8, center.y + AmLine16 - AmLine4 }, MapColorsDim);
-		SetPixel(out, { center.x + AmLine8, center.y + AmLine16 - AmLine4 }, MapColorsDim);
-		SetPixel(out, { center.x, center.y + AmLine16 }, MapColorsDim);
+		out.SetPixel(center, MapColorsDim);
+		out.SetPixel({ center.x - AmLine8, center.y - AmLine4 }, MapColorsDim);
+		out.SetPixel({ center.x - AmLine8, center.y + AmLine4 }, MapColorsDim);
+		out.SetPixel({ center.x + AmLine8, center.y - AmLine4 }, MapColorsDim);
+		out.SetPixel({ center.x + AmLine8, center.y + AmLine4 }, MapColorsDim);
+		out.SetPixel({ center.x - AmLine16, center.y }, MapColorsDim);
+		out.SetPixel({ center.x + AmLine16, center.y }, MapColorsDim);
+		out.SetPixel({ center.x, center.y - AmLine8 }, MapColorsDim);
+		out.SetPixel({ center.x, center.y + AmLine8 }, MapColorsDim);
+		out.SetPixel({ center.x + AmLine8 - AmLine32, center.y + AmLine4 }, MapColorsDim);
+		out.SetPixel({ center.x - AmLine8 + AmLine32, center.y + AmLine4 }, MapColorsDim);
+		out.SetPixel({ center.x - AmLine16, center.y + AmLine8 }, MapColorsDim);
+		out.SetPixel({ center.x + AmLine16, center.y + AmLine8 }, MapColorsDim);
+		out.SetPixel({ center.x - AmLine8, center.y + AmLine16 - AmLine4 }, MapColorsDim);
+		out.SetPixel({ center.x + AmLine8, center.y + AmLine16 - AmLine4 }, MapColorsDim);
+		out.SetPixel({ center.x, center.y + AmLine16 }, MapColorsDim);
 	}
 
 	if ((flags & MapFlagsStairs) != 0) {

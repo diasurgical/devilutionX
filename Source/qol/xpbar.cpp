@@ -36,9 +36,9 @@ void DrawBar(const CelOutputBuffer &out, int x, int y, int width, const ColorGra
 
 void DrawEndCap(const CelOutputBuffer &out, Point point, int idx, const ColorGradient &gradient)
 {
-	SetPixel(out, { point.x, point.y + 1 }, gradient[idx * 3 / 4]);
-	SetPixel(out, { point.x, point.y + 2 }, gradient[idx]);
-	SetPixel(out, { point.x, point.y + 3 }, gradient[idx / 2]);
+	out.SetPixel({ point.x, point.y + 1 }, gradient[idx * 3 / 4]);
+	out.SetPixel({ point.x, point.y + 2 }, gradient[idx]);
+	out.SetPixel({ point.x, point.y + 3 }, gradient[idx / 2]);
 }
 
 } // namespace
