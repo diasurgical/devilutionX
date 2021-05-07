@@ -2238,9 +2238,9 @@ void initKeymapActions()
 	});
 #endif
 	keymapper.addAction({
-		"StopHero",
-		DVL_VK_INVALID,
-		[] { plr[myplr].Stop(); },
+	    "StopHero",
+	    DVL_VK_INVALID,
+	    [] { plr[myplr].Stop(); },
 	});
 }
 

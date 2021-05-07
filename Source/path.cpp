@@ -253,7 +253,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 			dxdy->g = next_g;
 			dxdy->h = path_get_h_cost(dx, dy, sx, sy);
 			dxdy->f = next_g + dxdy->h;
-			dxdy->position = {dx,dy};
+			dxdy->position = { dx, dy };
 			// add it to the frontier
 			path_next_node(dxdy);
 

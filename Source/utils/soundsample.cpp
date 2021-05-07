@@ -52,7 +52,7 @@ float PanLogToLinear(int logPan)
 		return 0;
 
 	auto factor = std::pow(LogBase, static_cast<float>(-std::abs(logPan)) / StereoSeparation);
-	
+
 	return copysign(1.0f - factor, static_cast<float>(logPan));
 }
 

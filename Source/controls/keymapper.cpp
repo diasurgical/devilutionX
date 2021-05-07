@@ -109,7 +109,6 @@ int Keymapper::getActionKey(const Keymapper::Action &action)
 	if (key.empty())
 		return action.defaultKey; // Return the default key if no key has been set.
 
-
 	auto keyIt = keyNameToKeyID.find(key);
 	if (keyIt == keyNameToKeyID.end()) {
 		// Return the default key if the key is unknown.

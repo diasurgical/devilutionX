@@ -188,14 +188,14 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 		const float volume = static_cast<float>(sgOptions.Audio.nSoundVolume - VOLUME_MIN) / -VOLUME_MIN;
 		SVidAudioStream->setVolume(volume);
 		if (!SVidAudioStream->open()) {
-				LogError(LogCategory::Audio, "Aulib::Stream::open (from SVidPlayBegin): {}", SDL_GetError());
-				SVidAudioStream = std::nullopt;
-				SVidAudioDecoder = nullptr;
+			LogError(LogCategory::Audio, "Aulib::Stream::open (from SVidPlayBegin): {}", SDL_GetError());
+			SVidAudioStream = std::nullopt;
+			SVidAudioDecoder = nullptr;
 		}
 		if (!SVidAudioStream->play()) {
-				LogError(LogCategory::Audio, "Aulib::Stream::play (from SVidPlayBegin): {}", SDL_GetError());
-				SVidAudioStream = std::nullopt;
-				SVidAudioDecoder = nullptr;
+			LogError(LogCategory::Audio, "Aulib::Stream::play (from SVidPlayBegin): {}", SDL_GetError());
+			SVidAudioStream = std::nullopt;
+			SVidAudioDecoder = nullptr;
 		}
 	}
 #endif

@@ -109,7 +109,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, Point center, uint16_t automapT
 	if ((flags & MapFlagsStairs) != 0) {
 		constexpr int NumStairSteps = 4;
 		const Point offset = { -AmLine8, AmLine4 };
-		Point p = { center.x - AmLine8 , center.y - AmLine8 - AmLine4 };
+		Point p = { center.x - AmLine8, center.y - AmLine8 - AmLine4 };
 		for (int i = 0; i < NumStairSteps; ++i) {
 			DrawMapLineSE(out, p, AmLine16, MapColorsBright);
 			p += offset;
@@ -289,7 +289,7 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 	} break;
 	case DIR_NE: {
 		const Point point { base.x + AmLine16, base.y - AmLine8 };
-		DrawHorizontalLine(out, {point.x - AmLine8, point.y}, AmLine8, playerColor);
+		DrawHorizontalLine(out, { point.x - AmLine8, point.y }, AmLine8, playerColor);
 		DrawMapLineNE(out, { point.x - 2 * AmLine8, point.y + AmLine8 }, AmLine8, playerColor);
 		DrawMapLineSteepSW(out, point, AmLine4, playerColor);
 	} break;
@@ -309,8 +309,8 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 	case DIR_OMNI: {
 		const Point point { base.x, base.y + AmLine16 };
 		DrawVerticalLine(out, { point.x, point.y - AmLine16 }, AmLine16, playerColor);
-		DrawMapLineSteepSW(out, { point.x + AmLine4, point.y - 2 * AmLine4}, AmLine4, playerColor);
-		DrawMapLineSteepSE(out, { point.x - AmLine4, point.y - 2 * AmLine4}, AmLine4, playerColor);
+		DrawMapLineSteepSW(out, { point.x + AmLine4, point.y - 2 * AmLine4 }, AmLine4, playerColor);
+		DrawMapLineSteepSE(out, { point.x - AmLine4, point.y - 2 * AmLine4 }, AmLine4, playerColor);
 	} break;
 	case DIR_SW: {
 		const Point point { base.x - AmLine16, base.y + AmLine8 };

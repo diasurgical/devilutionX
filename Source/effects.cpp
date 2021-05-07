@@ -1091,7 +1091,7 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 	assert(pSFX);
 	assert(pSFX->bFlags & sfx_STREAM);
 	stream_stop();
-	
+
 	if (lVolume >= VOLUME_MIN) {
 		if (lVolume > VOLUME_MAX)
 			lVolume = VOLUME_MAX;
@@ -1199,7 +1199,6 @@ static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
 void PlayEffect(int i, int mode)
 {
 	int sndIdx, mi, lVolume, lPan;
-
 
 	if (plr[myplr].pLvlLoad) {
 		return;

@@ -18,7 +18,6 @@
 #include "utils/log.hpp"
 #include "miniwin/miniwin.h"
 
-
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
 #include <switch.h>
@@ -719,7 +718,7 @@ void PushMessage(const tagMSG *lpMsg)
 
 bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam)
 {
-	message_queue.push_back({type, wParam, lParam});
+	message_queue.push_back({ type, wParam, lParam });
 
 	return true;
 }

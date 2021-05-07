@@ -53,13 +53,13 @@ void LoadMusic(HANDLE handle)
 	SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 #endif
 	music.emplace(musicRw, std::make_unique<Aulib::DecoderDrwav>(),
-			std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
+	    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
 }
 
 void CleanupMusic()
 {
-		music = std::nullopt;
-		sgnMusicTrack = NUM_MUSIC;
+	music = std::nullopt;
+	sgnMusicTrack = NUM_MUSIC;
 #ifdef DISABLE_STREAMING_MUSIC
 	if (musicBuffer != nullptr) {
 		delete[] musicBuffer;
@@ -71,7 +71,8 @@ void CleanupMusic()
 std::list<std::unique_ptr<SoundSample>> duplicateSounds;
 SDLMutexUniquePtr duplicateSoundsMutex;
 
-SoundSample *DuplicateSound(const SoundSample &sound) {
+SoundSample *DuplicateSound(const SoundSample &sound)
+{
 	auto duplicate = std::make_unique<SoundSample>();
 	if (duplicate->DuplicateFrom(sound) != 0)
 		return nullptr;
@@ -126,7 +127,8 @@ static int CapVolume(int volume)
 	return clamp(volume, VOLUME_MIN, VOLUME_MAX);
 }
 
-void ClearDuplicateSounds() {
+void ClearDuplicateSounds()
+{
 	SDLMutexLockGuard lock(duplicateSoundsMutex.get());
 	duplicateSounds.clear();
 }
@@ -216,7 +218,8 @@ void snd_init()
 	gbSndInited = true;
 }
 
-void snd_deinit() {
+void snd_deinit()
+{
 	if (gbSndInited) {
 		Aulib::quit();
 		duplicateSoundsMutex = nullptr;
