@@ -484,7 +484,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 	bool resist, ret;
 
 	resist = false;
-	if (monster[m].mtalkmsg) {
+	if (monster[m].mtalkmsg != TEXT_NONE) {
 		return false;
 	}
 	if (monster[m]._mhitpoints >> 6 <= 0) {
@@ -565,7 +565,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	bool resist, ret;
 
 	resist = false;
-	if (monster[m].mtalkmsg
+	if (monster[m].mtalkmsg != TEXT_NONE
 	    || monster[m]._mhitpoints >> 6 <= 0
 	    || (t == MIS_HBOLT && monster[m].MType->mtype != MT_DIABLO && monster[m].MData->mMonstClass != MC_UNDEAD)) {
 		return false;

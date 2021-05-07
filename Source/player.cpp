@@ -3245,7 +3245,7 @@ void CheckNewPath(int pnum)
 
 					if (x < 2 && y < 2) {
 						ClrPlrPath(&plr[pnum]);
-						if (monster[i].mtalkmsg && monster[i].mtalkmsg != TEXT_VILE14) {
+						if (monster[i].mtalkmsg != TEXT_NONE && monster[i].mtalkmsg != TEXT_VILE14) {
 							TalktoMonster(i);
 						} else {
 							StartAttack(pnum, d);
@@ -3322,7 +3322,7 @@ void CheckNewPath(int pnum)
 			y = abs(plr[pnum].position.tile.y - monster[i].position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(plr[pnum].position.future, monster[i].position.future);
-				if (monster[i].mtalkmsg && monster[i].mtalkmsg != TEXT_VILE14) {
+				if (monster[i].mtalkmsg != TEXT_NONE && monster[i].mtalkmsg != TEXT_VILE14) {
 					TalktoMonster(i);
 				} else {
 					StartAttack(pnum, d);
@@ -3345,7 +3345,7 @@ void CheckNewPath(int pnum)
 		case ACTION_RATTACKMON:
 			i = plr[pnum].destParam1;
 			d = GetDirection(plr[pnum].position.future, monster[i].position.future);
-			if (monster[i].mtalkmsg && monster[i].mtalkmsg != TEXT_VILE14) {
+			if (monster[i].mtalkmsg != TEXT_NONE && monster[i].mtalkmsg != TEXT_VILE14) {
 				TalktoMonster(i);
 			} else {
 				StartRangeAttack(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
