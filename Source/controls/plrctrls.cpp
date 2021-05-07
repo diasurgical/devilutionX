@@ -1389,6 +1389,8 @@ void PerformSpellAction()
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
+		} else {
+            CheckInvItem(true);
 		}
 		return;
 	}
