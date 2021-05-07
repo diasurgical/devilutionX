@@ -11,7 +11,7 @@ find_package(PNG REQUIRED)
 
 #additional compilation definitions
 add_definitions(-D__3DS__)
-set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE}\ -DTTF_FONT_DIR=\\"romfs:/\\")
+set(TTF_FONT_DIR \"romfs:/\")
 
 #Force scaling, for now..
 set(SDL1_VIDEO_MODE_BPP 8)
