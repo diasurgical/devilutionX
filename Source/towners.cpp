@@ -121,7 +121,7 @@ void InitBarOwner(TownerStruct &towner, const TownerInit &initData)
 	towner._tAnimWidth = 96;
 	towner.animOrder = {
 		// clang-format off
-		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 16,
+		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
 		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
 		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
 		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
