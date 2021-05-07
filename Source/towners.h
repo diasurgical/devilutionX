@@ -60,6 +60,7 @@ struct TownerStruct {
 	bool _tMsgSaid;
 	int8_t _tAnimOrder;
 	PlayerStruct *_tTalkingToPlayer;
+	void (*talk)(PlayerStruct &player, TownerStruct &barOwner);
 	bool _tbtcnt;
 	_talker_id _ttype;
 };
