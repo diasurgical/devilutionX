@@ -2193,7 +2193,7 @@ void initKeymapActions()
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    sprintf(pszStr, _("%s, version = %s, mode = %s"), gszProductName, gszVersionNumber, difficulties[sgGameInitInfo.nDifficulty]);
+		    sprintf(pszStr, _("%s, version = %s, mode = %s"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]);
 		    NetSendCmdString(1 << myplr, pszStr);
 	    },
 	});
