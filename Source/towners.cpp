@@ -114,6 +114,7 @@ struct TownerInit {
 	Point position;
 	direction dir;
 	void (*init)(TownerStruct &towner, const TownerInit &initData);
+	void (*talk)(PlayerStruct &player, TownerStruct &barOwner);
 };
 
 void NewTownerAnim(TownerStruct &towner, byte *pAnim, uint8_t numFrames, int delay)
@@ -134,6 +135,7 @@ void InitTownerInfo(int i, const TownerInit &initData)
 	towner._tMsgSaid = false;
 	towner._ttype = initData.type;
 	towner.position = initData.position;
+	towner.talk = initData.talk;
 	towner._tSeed = AdvanceRndSeed();
 
 	dMonster[towner.position.x][towner.position.y] = i + 1;
@@ -299,24 +301,6 @@ void InitGirl(TownerStruct &towner, const TownerInit &initData)
 	LoadTownerAnimations(towner, celPath, 20, initData.dir, 6);
 	towner._tName = "Celia";
 }
-
-const TownerInit TownerInitList[] = {
-	{ TOWN_SMITH, { 62, 63 }, DIR_SW, InitSmith },
-	{ TOWN_HEALER, { 55, 79 }, DIR_SE, InitHealer },
-	{ TOWN_DEADGUY, { 24, 32 }, DIR_N, InitTownDead },
-	{ TOWN_TAVERN, { 55, 62 }, DIR_SW, InitBarOwner },
-	{ TOWN_STORY, { 62, 71 }, DIR_S, InitTeller },
-	{ TOWN_DRUNK, { 71, 84 }, DIR_S, InitDrunk },
-	{ TOWN_WITCH, { 80, 20 }, DIR_S, InitWitch },
-	{ TOWN_BMAID, { 43, 66 }, DIR_S, InitBarmaid },
-	{ TOWN_PEGBOY, { 11, 53 }, DIR_S, InitBoy },
-	{ TOWN_COW, { 58, 16 }, DIR_SW, InitCows },
-	{ TOWN_COW, { 56, 14 }, DIR_NW, InitCows },
-	{ TOWN_COW, { 59, 20 }, DIR_N, InitCows },
-	{ TOWN_COWFARM, { 61, 22 }, DIR_SW, InitCowFarmer },
-	{ TOWN_FARMER, { 62, 16 }, DIR_S, InitFarmer },
-	{ TOWN_GIRL, { 77, 43 }, DIR_S, InitGirl },
-};
 
 void TownCtrlMsg(TownerStruct &towner)
 {
@@ -595,7 +579,7 @@ void TalkToBarmaid(PlayerStruct &player, TownerStruct &barmaid)
 	}
 }
 
-void TalkToDrunk()
+void TalkToDrunk(PlayerStruct &player, TownerStruct &barmaid)
 {
 	TownerTalk(TEXT_FARNHAM1);
 	StartStore(STORE_DRUNK);
@@ -640,7 +624,7 @@ void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
 	}
 }
 
-void TalkToBoy()
+void TalkToBoy(PlayerStruct &player, TownerStruct &storyteller)
 {
 	TownerTalk(TEXT_WIRT1);
 	StartStore(STORE_BOY);
@@ -692,7 +676,7 @@ void TalkToStoryteller(PlayerStruct &player, TownerStruct &storyteller)
 	}
 }
 
-void TalkToCow(PlayerStruct &player)
+void TalkToCow(PlayerStruct &player, TownerStruct &storyteller)
 {
 	if (CowPlaying != -1 && effect_is_playing(CowPlaying))
 		return;
@@ -953,6 +937,27 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 	}
 }
 
+const TownerInit TownerInitList[] = {
+	// clang-format off
+	// type         position    dir     init           talk
+	{ TOWN_SMITH,   { 62, 63 }, DIR_SW, InitSmith,     TalkToBlackSmith  },
+	{ TOWN_HEALER,  { 55, 79 }, DIR_SE, InitHealer,    TalkToHealer      },
+	{ TOWN_DEADGUY, { 24, 32 }, DIR_N,  InitTownDead,  TalkToDeadguy     },
+	{ TOWN_TAVERN,  { 55, 62 }, DIR_SW, InitBarOwner,  TalkToBarOwner    },
+	{ TOWN_STORY,   { 62, 71 }, DIR_S,  InitTeller,    TalkToStoryteller },
+	{ TOWN_DRUNK,   { 71, 84 }, DIR_S,  InitDrunk,     TalkToDrunk       },
+	{ TOWN_WITCH,   { 80, 20 }, DIR_S,  InitWitch,     TalkToWitch       },
+	{ TOWN_BMAID,   { 43, 66 }, DIR_S,  InitBarmaid,   TalkToBarmaid     },
+	{ TOWN_PEGBOY,  { 11, 53 }, DIR_S,  InitBoy,       TalkToBoy         },
+	{ TOWN_COW,     { 58, 16 }, DIR_SW, InitCows,      TalkToCow         },
+	{ TOWN_COW,     { 56, 14 }, DIR_NW, InitCows,      TalkToCow         },
+	{ TOWN_COW,     { 59, 20 }, DIR_N,  InitCows,      TalkToCow         },
+	{ TOWN_COWFARM, { 61, 22 }, DIR_SW, InitCowFarmer, TalkToCowFarmer   },
+	{ TOWN_FARMER,  { 62, 16 }, DIR_S,  InitFarmer,    TalkToFarmer      },
+	{ TOWN_GIRL,    { 77, 43 }, DIR_S,  InitGirl,      TalkToGirl        },
+	// clang-format on
+};
+
 } // namespace
 
 TownerStruct towners[NUM_TOWNERS];
@@ -1076,47 +1081,7 @@ void TalkToTowner(PlayerStruct &player, int t)
 		return;
 	}
 
-	switch (towner._ttype) {
-	case TOWN_TAVERN:
-		TalkToBarOwner(player, towner);
-		break;
-	case TOWN_DEADGUY:
-		TalkToDeadguy(player, towner);
-		break;
-	case TOWN_SMITH:
-		TalkToBlackSmith(player, towner);
-		break;
-	case TOWN_WITCH:
-		TalkToWitch(player, towner);
-		break;
-	case TOWN_BMAID:
-		TalkToBarmaid(player, towner);
-		break;
-	case TOWN_DRUNK:
-		TalkToDrunk();
-		break;
-	case TOWN_HEALER:
-		TalkToHealer(player, towner);
-		break;
-	case TOWN_PEGBOY:
-		TalkToBoy();
-		break;
-	case TOWN_STORY:
-		TalkToStoryteller(player, towner);
-		break;
-	case TOWN_COW:
-		TalkToCow(player);
-		break;
-	case TOWN_FARMER:
-		TalkToFarmer(player, towner);
-		break;
-	case TOWN_COWFARM:
-		TalkToCowFarmer(player, towner);
-		break;
-	case TOWN_GIRL:
-		TalkToGirl(player, towner);
-		break;
-	}
+	towner.talk(player, towner);
 }
 
 } // namespace devilution
