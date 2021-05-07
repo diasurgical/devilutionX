@@ -31,74 +31,6 @@ const _sfx_id SnSfx[3][enum_size<HeroClass>::value] = {
 	{ PS_WARR50, PS_ROGUE50, PS_MAGE50, PS_MONK50, PS_ROGUE50, PS_WARR50 },
 };
 
-/** Specifies the animation frame sequence of a given NPC. */
-char AnimOrder[6][148] = {
-	{ 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-	    14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-	    5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-	    14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-	    5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-	    14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-	    5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-	    14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-	    5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-	    14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-	    5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-	    15, 16, 1, 1, 1, 1, 1, 1, 1, 1,
-	    1, 1, 1, 1, 1, 1, 1, 2, 3, 4,
-	    -1 },
-	{ 1, 2, 3, 3, 2, 1, 20, 19, 19, 20,
-	    1, 2, 3, 3, 2, 1, 20, 19, 19, 20,
-	    1, 2, 3, 3, 2, 1, 20, 19, 19, 20,
-	    1, 2, 3, 3, 2, 1, 20, 19, 19, 20,
-	    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-	    11, 12, 13, 14, 15, 16, 15, 14, 13, 12,
-	    11, 10, 9, 8, 7, 6, 5, 4, 5, 6,
-	    7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-	    15, 14, 13, 12, 11, 10, 9, 8, 7, 6,
-	    5, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-	    13, 14, 15, 16, 17, 18, 19, 20, -1 },
-	{ 1, 1, 25, 25, 24, 23, 22, 21, 20, 19,
-	    18, 17, 16, 15, 16, 17, 18, 19, 20, 21,
-	    22, 23, 24, 25, 25, 25, 1, 1, 1, 25,
-	    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-	    11, 12, 13, 14, 15, 14, 13, 12, 11, 10,
-	    9, 8, 7, 6, 5, 4, 3, 2, 1, -1 },
-	{ 1, 2, 3, 3, 2, 1, 16, 15, 14, 14,
-	    16, 1, 2, 3, 3, 2, 1, 16, 15, 14,
-	    14, 15, 16, 1, 2, 3, 3, 2, 1, 16,
-	    15, 14, 14, 15, 16, 1, 2, 3, 3, 2,
-	    1, 16, 15, 14, 14, 15, 16, 1, 2, 3,
-	    3, 2, 1, 16, 15, 14, 14, 15, 16, 1,
-	    2, 3, 3, 2, 1, 16, 15, 14, 14, 15,
-	    16, 1, 2, 3, 3, 2, 1, 16, 15, 14,
-	    14, 15, 16, 1, 2, 3, 2, 1, 16, 15,
-	    14, 14, 15, 16, 1, 2, 3, 4, 5, 6,
-	    7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-	    -1 },
-	{ 1, 1, 1, 2, 3, 4, 5, 6, 7, 8,
-	    9, 10, 11, 11, 11, 11, 12, 13, 14, 15,
-	    16, 17, 18, 18, 1, 1, 1, 18, 17, 16,
-	    15, 14, 13, 12, 11, 10, 11, 12, 13, 14,
-	    15, 16, 17, 18, 1, 2, 3, 4, 5, 5,
-	    5, 4, 3, 2, -1 },
-	{ 4, 4, 4, 5, 6, 6, 6, 5, 4, 15,
-	    14, 13, 13, 13, 14, 15, 4, 5, 6, 6,
-	    6, 5, 4, 4, 4, 5, 6, 6, 6, 5,
-	    4, 15, 14, 13, 13, 13, 14, 15, 4, 5,
-	    6, 6, 6, 5, 4, 4, 4, 5, 6, 6,
-	    6, 5, 4, 15, 14, 13, 13, 13, 14, 15,
-	    4, 5, 6, 6, 6, 5, 4, 3, 2, 1,
-	    19, 18, 19, 1, 2, 1, 19, 18, 19, 1,
-	    2, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-	    10, 11, 12, 13, 14, 15, 15, 15, 14, 13,
-	    13, 13, 13, 14, 15, 15, 15, 14, 13, 12,
-	    12, 12, 11, 10, 10, 10, 9, 8, 9, 10,
-	    10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-	    1, 2, 1, 19, 18, 19, 1, 2, 1, 2,
-	    3, -1 }
-};
-
 /**
  * Maps from direction to coordinate delta, which is used when
  * placing cows in Tristram. A single cow may require space of up
@@ -168,7 +100,17 @@ void InitSmith(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = 0;
+	towner.animOrder = {
+		// clang-format off
+		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
+		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
+		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
+		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
+		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
+		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+		1, 1, 1, 1, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 2, 3, 4
+		// clang-format on
+	};
 	LoadTownerAnimations(towner, "Towners\\Smith\\SmithN.CEL", 16, initData.dir, 3);
 	towner._tName = _("Griswold the Blacksmith");
 }
@@ -177,7 +119,19 @@ void InitBarOwner(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = 3;
+	towner.animOrder = {
+		// clang-format off
+		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 16,
+		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
+		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
+		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
+		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
+		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
+		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
+		1, 2, 3, 2, 1, 16, 15, 14, 14, 15, 16,
+		1, 2, 3, 4, 5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16
+		// clang-format on
+	};
 	LoadTownerAnimations(towner, "Towners\\TwnF\\TwnFN.CEL", 16, initData.dir, 3);
 	towner._tName = _("Ogden the Tavern owner");
 }
@@ -186,7 +140,7 @@ void InitTownDead(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = -1;
+	towner.animOrder.clear();
 	LoadTownerAnimations(towner, "Towners\\Butch\\Deadguy.CEL", 8, initData.dir, 6);
 	towner._tName = _("Wounded Townsman");
 }
@@ -195,7 +149,19 @@ void InitWitch(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = 5;
+	towner.animOrder = {
+		// clang-format off
+		 4,  4,  4,  5,  6,  6,  6,  5,  4, 15, 14, 13, 13, 13, 14, 15, 4, 5, 6, 6, 6, 5,
+		 4,  4,  4,  5,  6,  6,  6,  5,  4, 15, 14, 13, 13, 13, 14, 15, 4, 5, 6, 6, 6, 5,
+		 4,  4,  4,  5,  6,  6,  6,  5,  4, 15, 14, 13, 13, 13, 14, 15, 4, 5, 6, 6, 6, 5,
+		 4,  3,  2,  1, 19, 18, 19,  1,  2,  1, 19, 18, 19,  1,  2,
+		 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+		15, 15, 14, 13, 13, 13, 13, 14, 15,
+		15, 15, 14, 13, 12, 12, 12, 11, 10, 10, 10,  9,
+		 8,  9, 10, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+		 1,  2,  1, 19, 18, 19,  1,  2,  1,  2,  3
+		// clang-format on
+	};
 	LoadTownerAnimations(towner, "Towners\\TownWmn1\\Witch.CEL", 19, initData.dir, 6);
 	towner._tName = _("Adria the Witch");
 }
@@ -204,7 +170,7 @@ void InitBarmaid(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = -1;
+	towner.animOrder.clear();
 	LoadTownerAnimations(towner, "Towners\\TownWmn1\\WmnN.CEL", 18, initData.dir, 6);
 	towner._tName = _("Gillian the Barmaid");
 }
@@ -213,7 +179,7 @@ void InitBoy(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = -1;
+	towner.animOrder.clear();
 	LoadTownerAnimations(towner, "Towners\\TownBoy\\PegKid1.CEL", 20, initData.dir, 6);
 	towner._tName = _("Wirt the Peg-legged boy");
 }
@@ -222,7 +188,19 @@ void InitHealer(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = 1;
+	towner.animOrder = {
+		// clang-format off
+		 1,  2,  3,  3,  2,  1, 20, 19, 19, 20,
+		 1,  2,  3,  3,  2,  1, 20, 19, 19, 20,
+		 1,  2,  3,  3,  2,  1, 20, 19, 19, 20,
+		 1,  2,  3,  3,  2,  1, 20, 19, 19, 20,
+		 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
+		15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,
+		 5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
+		15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,
+		 5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+		// clang-format on
+	};
 	LoadTownerAnimations(towner, "Towners\\Healer\\Healer.CEL", 20, initData.dir, 6);
 	towner._tName = _("Pepin the Healer");
 }
@@ -231,7 +209,14 @@ void InitTeller(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = 2;
+	towner.animOrder = {
+		// clang-format off
+		 1,  1, 25, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15,
+		16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 25, 25,  1,  1,  1, 25,
+		 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+		14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1
+		// clang-format on
+	};
 	LoadTownerAnimations(towner, "Towners\\Strytell\\Strytell.CEL", 25, initData.dir, 3);
 	towner._tName = _("Cain the Elder");
 }
@@ -240,7 +225,13 @@ void InitDrunk(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = 4;
+	towner.animOrder = {
+		// clang-format off
+		 1, 1, 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 11, 11, 11, 12, 13, 14, 15, 16, 17, 18, 18,
+		 1, 1, 1, 18, 17, 16, 15, 14, 13, 12, 11, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+		 1, 2, 3,  4,  5,  5,  5,  4,  3,  2
+		// clang-format off
+	};
 	LoadTownerAnimations(towner, "Towners\\Drunk\\TwnDrunk.CEL", 18, initData.dir, 3);
 	towner._tName = _("Farnham the Drunk");
 }
@@ -248,7 +239,7 @@ void InitDrunk(TownerStruct &towner, const TownerInit &initData)
 void InitCows(TownerStruct &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 128;
-	towner._tAnimOrder = -1;
+	towner.animOrder.clear();
 	for (int i = 0; i < 8; i++) {
 		towner._tNAnim[i] = CelGetFrameStart(CowCels.get(), i);
 	}
@@ -271,7 +262,7 @@ void InitFarmer(TownerStruct &towner, const TownerInit &initData)
 {
 	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = -1;
+	towner.animOrder.clear();
 	LoadTownerAnimations(towner, "Towners\\Farmer\\Farmrn2.CEL", 15, initData.dir, 3);
 	towner._tName = _("Lester the farmer");
 }
@@ -284,7 +275,7 @@ void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
 		celPath = "Towners\\Farmer\\mfrmrn2.CEL";
 	}
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = -1;
+	towner.animOrder.clear();
 	LoadTownerAnimations(towner, celPath, 15, initData.dir, 3);
 	towner._tName = _("Complete Nut");
 }
@@ -297,7 +288,7 @@ void InitGirl(TownerStruct &towner, const TownerInit &initData)
 		celPath = "Towners\\Girl\\Girls1.CEL";
 	}
 	towner._tAnimWidth = 96;
-	towner._tAnimOrder = -1;
+	towner.animOrder.clear();
 	LoadTownerAnimations(towner, celPath, 20, initData.dir, 6);
 	towner._tName = "Celia";
 }
@@ -1040,13 +1031,12 @@ void ProcessTowners()
 
 		towner._tAnimCnt = 0;
 
-		if (towner._tAnimOrder >= 0) {
-			int ao = towner._tAnimOrder;
+		if (towner.animOrder.size() > 0) {
 			towner._tAnimFrameCnt++;
-			if (AnimOrder[ao][towner._tAnimFrameCnt] == -1)
+			if (towner._tAnimFrameCnt > towner.animOrder.size() - 1)
 				towner._tAnimFrameCnt = 0;
 
-			towner._tAnimFrame = AnimOrder[ao][towner._tAnimFrameCnt];
+			towner._tAnimFrame = towner.animOrder[towner._tAnimFrameCnt];
 			continue;
 		}
 
