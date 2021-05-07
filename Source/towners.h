@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <vector>
 #include "utils/stdcompat/string_view.hpp"
 
 #include "items.h"
@@ -58,7 +59,8 @@ struct TownerStruct {
 	TNQ qsts[MAXQUESTS];
 	bool _tSelFlag;
 	bool _tMsgSaid;
-	int8_t _tAnimOrder;
+	/** Specifies the animation frame sequence. */
+	std::vector<uint8_t> animOrder;
 	PlayerStruct *_tTalkingToPlayer;
 	void (*talk)(PlayerStruct &player, TownerStruct &barOwner);
 	bool _tbtcnt;
