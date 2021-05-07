@@ -312,9 +312,6 @@ void RenderPresent()
 		LimitFrameRate();
 	}
 #else
-#ifdef __3DS__
-	gspWaitForVBlank();
-#endif
 	if (SDL_Flip(surface) <= -1) {
 		ErrSdl();
 	}
