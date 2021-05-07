@@ -374,15 +374,6 @@ int GetSpellBookLevel(spell_id s)
 		}
 	}
 
-	if (gbIsHellfire) {
-		switch (s) {
-		case SPL_ELEMENT:
-			return -1;
-		default:
-			break;
-		}
-	}
-
 	return spelldata[s].sBookLvl;
 }
 
@@ -404,15 +395,6 @@ int GetSpellStaffLevel(spell_id s)
 
 	if (!gbIsHellfire && s > SPL_LASTDIABLO)
 		return -1;
-
-	if (gbIsHellfire) {
-		switch (s) {
-		case SPL_ELEMENT:
-			return -1;
-		default:
-			break;
-		}
-	}
 
 	return spelldata[s].sStaffLvl;
 }
