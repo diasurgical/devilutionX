@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-05-04 17:42+0200\n"
+"POT-Creation-Date: 2021-05-08 15:46+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -776,7 +776,7 @@ msgstr ""
 msgid ""
 "Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 "\n"
-"Make sure that it is in the game folder and that the file name is in all lowercase."
+"Make sure that it is in the game folder."
 msgstr ""
 
 #: Source/appfat.cpp:176
@@ -987,19 +987,10 @@ msgstr ""
 
 #: Source/control.cpp:1919
 #, c-format
-msgid "You have %u gold"
-msgstr ""
-
-#: Source/control.cpp:1921
-#, c-format
-msgid "piece.  How many do"
-msgid_plural "pieces.  How many do"
+msgid "You have %u gold piece. How many do you want to remove?"
+msgid_plural "You have %u gold pieces. How many do you want to remove?"
 msgstr[0] ""
 msgstr[1] ""
-
-#: Source/control.cpp:1923
-msgid "you want to remove?"
-msgstr ""
 
 #: Source/controls/modifier_hints.cpp:117
 msgid "Menu"
@@ -5299,7 +5290,10 @@ msgid "%s (lvl %d): %s"
 msgstr ""
 
 #: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:52
-msgid "Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"
+msgid ""
+"Failed to load UI resources.\n"
+"\n"
+"Make sure devilutionx.mpq is in the game folder and that it is up to date."
 msgstr ""
 
 #: Source/qol/xpbar.cpp:122
