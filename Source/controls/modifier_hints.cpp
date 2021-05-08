@@ -5,6 +5,7 @@
 #include "control.h"
 #include "controls/controller.h"
 #include "controls/game_controls.h"
+#include "engine/render/text_render.hpp"
 #include "options.h"
 #include "utils/language.h"
 
@@ -12,53 +13,21 @@ namespace devilution {
 
 namespace {
 
-int CalculateTextWidth(const char *s)
-{
-	int l = 0;
-	while (*s != '\0') {
-		l += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[static_cast<unsigned char>(*s++)]]] + 1;
-	}
-	return l;
-}
-
-int SpaceWidth()
-{
-	static const int spaceWidth = CalculateTextWidth(" ");
-	return spaceWidth;
-}
-
 struct CircleMenuHint {
 	CircleMenuHint(bool isDpad, const char *top, const char *right, const char *bottom, const char *left)
 	    : is_dpad(isDpad)
 	    , top(top)
-	    , top_w(CalculateTextWidth(top))
 	    , right(right)
-	    , right_w(CalculateTextWidth(right))
 	    , bottom(bottom)
-	    , bottom_w(CalculateTextWidth(bottom))
 	    , left(left)
-	    , left_w(CalculateTextWidth(left))
-	    , x_mid(left_w + SpaceWidth() * 2.5)
 	{
 	}
-
-	int Width() const
-	{
-		return 2 * x_mid;
-	}
-
 	bool is_dpad;
 
 	const char *top;
-	int top_w;
 	const char *right;
-	int right_w;
 	const char *bottom;
-	int bottom_w;
 	const char *left;
-	int left_w;
-
-	int x_mid;
 };
 
 bool IsTopActive(const CircleMenuHint &hint)
@@ -89,26 +58,26 @@ bool IsLeftActive(const CircleMenuHint &hint)
 	return IsControllerButtonPressed(ControllerButton_BUTTON_X);
 }
 
-text_color CircleMenuHintTextColor(bool active)
+uint16_t CircleMenuHintTextColor(bool active)
 {
-	return active ? COL_BLUE : COL_GOLD;
+	return active ? UIS_BLUE : UIS_GOLD;
 }
+
+const int CircleSpacing = 40;
+const int CircleMarginX = 16 + CircleSpacing * 2;
+const int CirclesTop = 16 + CircleSpacing * 2;
 
 void DrawCircleMenuHint(const CelOutputBuffer &out, const CircleMenuHint &hint, int x, int y)
 {
-	const int lineHeight = 25;
-	PrintGameStr(out, x + hint.x_mid - hint.top_w / 2, y, hint.top, CircleMenuHintTextColor(IsTopActive(hint)));
-	y += lineHeight;
+	DrawString(out, hint.top, { x, y, CircleSpacing, 0 }, CircleMenuHintTextColor(IsTopActive(hint)) | UIS_CENTER);
+	y += CircleSpacing;
 
-	PrintGameStr(out, x, y, hint.left, CircleMenuHintTextColor(IsLeftActive(hint)));
-	PrintGameStr(out, x + hint.left_w + 5 * SpaceWidth(), y, hint.right, CircleMenuHintTextColor(IsRightActive(hint)));
-	y += lineHeight;
+	DrawString(out, hint.left, { x + CircleSpacing, y, CircleSpacing, 0 }, CircleMenuHintTextColor(IsLeftActive(hint)) | UIS_CENTER);
+	DrawString(out, hint.right, { x - CircleSpacing, y, CircleSpacing, 0 }, CircleMenuHintTextColor(IsRightActive(hint)) | UIS_CENTER);
+	y += CircleSpacing;
 
-	PrintGameStr(out, x + hint.x_mid - hint.bottom_w / 2, y, hint.bottom, CircleMenuHintTextColor(IsBottomActive(hint)));
+	DrawString(out, hint.bottom, { x, y, CircleSpacing, 0 }, CircleMenuHintTextColor(IsBottomActive(hint)) | UIS_CENTER);
 }
-
-const int CircleMarginX = 16;
-const int CirclesTop = 76;
 
 void DrawStartModifierMenu(const CelOutputBuffer &out)
 {
@@ -117,7 +86,7 @@ void DrawStartModifierMenu(const CelOutputBuffer &out)
 	static const CircleMenuHint dPad(/*is_dpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
 	static const CircleMenuHint buttons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
 	DrawCircleMenuHint(out, dPad, PANEL_LEFT + CircleMarginX, PANEL_TOP - CirclesTop);
-	DrawCircleMenuHint(out, buttons, PANEL_LEFT + PANEL_WIDTH - buttons.Width() - CircleMarginX, PANEL_TOP - CirclesTop);
+	DrawCircleMenuHint(out, buttons, PANEL_LEFT + PANEL_WIDTH - CircleMarginX, PANEL_TOP - CirclesTop);
 }
 
 void DrawSelectModifierMenu(const CelOutputBuffer &out)
@@ -129,7 +98,7 @@ void DrawSelectModifierMenu(const CelOutputBuffer &out)
 		DrawCircleMenuHint(out, dPad, PANEL_LEFT + CircleMarginX, PANEL_TOP - CirclesTop);
 	}
 	static const CircleMenuHint spells(/*is_dpad=*/false, "F6", "F8", "F7", "F5");
-	DrawCircleMenuHint(out, spells, PANEL_LEFT + PANEL_WIDTH - spells.Width() - CircleMarginX, PANEL_TOP - CirclesTop);
+	DrawCircleMenuHint(out, spells, PANEL_LEFT + PANEL_WIDTH - CircleMarginX, PANEL_TOP - CirclesTop);
 }
 
 } // namespace

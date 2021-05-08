@@ -319,21 +319,15 @@ static void DrawSpell(const CelOutputBuffer &out)
 		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, *pSpellCels, 27);
 }
 
-static void PrintSBookHotkey(CelOutputBuffer out, int x, int y, const std::string &text, text_color col)
+static void PrintSBookHotkey(CelOutputBuffer out, int x, int y, const std::string &text)
 {
+	x -= GetLineWidth(text.c_str()) + 5;
 	x += SPLICONLENGTH;
+	y += 17;
 	y -= SPLICONLENGTH;
 
-	int totalWidth = 0;
-
-	for (const char txtChar : text) {
-		auto c = gbFontTransTbl[static_cast<uint8_t>(txtChar)];
-		c = fontframe[GameFontSmall][c];
-
-		totalWidth += fontkern[GameFontSmall][c] + 1;
-	}
-
-	PrintGameStr(out, x - totalWidth - 4, y + 17, text.c_str(), col);
+	DrawString(out, text.c_str(), { x - 1, y + 1, 0, 0 }, UIS_BLACK);
+	DrawString(out, text.c_str(), { x + 0, y + 0, 0, 0 }, UIS_SILVER);
 }
 
 void DrawSpellList(const CelOutputBuffer &out)
@@ -444,8 +438,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 				for (int t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
 						auto hotkeyName = keymapper.keyNameForAction(quickSpellActionIndexes[t]);
-						PrintSBookHotkey(out, x - 1, y + 1, hotkeyName, COL_BLACK);
-						PrintSBookHotkey(out, x, y, hotkeyName, COL_WHITE);
+						PrintSBookHotkey(out, x, y, hotkeyName);
 						sprintf(tempstr, _("Spell Hotkey %s"), hotkeyName.c_str());
 						AddPanelString(tempstr, true);
 					}
@@ -1221,17 +1214,6 @@ void DrawInfoBox(const CelOutputBuffer &out)
 
 #define ADD_PlrStringXY(out, x, y, width, pszStr, col) MY_PlrStringXY(out, x, y, width, pszStr, col, 1)
 
-void PrintGameStr(const CelOutputBuffer &out, int x, int y, const char *str, text_color color)
-{
-	while (*str != '\0') {
-		BYTE c = gbFontTransTbl[(BYTE)*str++];
-		c = fontframe[GameFontSmall][c];
-		if (c != 0)
-			PrintChar(out, x, y, c, color);
-		x += fontkern[GameFontSmall][c] + 1;
-	}
-}
-
 /**
  * @brief Render text string to the given buffer
  * @param out Buffer to render to
@@ -1799,27 +1781,25 @@ void CheckSBook()
 
 void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 {
-	int screenX = 0;
-	CelDrawTo(out, 351, 178, *pGBoxBuff, 1);
-	sprintf(tempstr, _("You have %u gold"), initialDropGoldValue);
-	ADD_PlrStringXY(out, 366, 87, 600, tempstr, COL_GOLD);
-	sprintf(tempstr, ngettext("piece.  How many do", "pieces.  How many do", initialDropGoldValue), initialDropGoldValue);
-	ADD_PlrStringXY(out, 366, 103, 600, tempstr, COL_GOLD);
-	ADD_PlrStringXY(out, 366, 121, 600, _("you want to remove?"), COL_GOLD);
+	const int dialogX = RIGHT_PANEL_X + 30;
+
+	CelDrawTo(out, dialogX, 178, *pGBoxBuff, 1);
+
+	sprintf(
+	    tempstr,
+	    ngettext(
+	        "You have %u gold piece. How many do you want to remove?",
+	        "You have %u gold pieces. How many do you want to remove?",
+	        initialDropGoldValue),
+	    initialDropGoldValue);
+	WordWrapGameString(tempstr, 200);
+	DrawString(out, tempstr, { dialogX + 31, 87, 200, 50 }, UIS_GOLD | UIS_CENTER);
+
+	tempstr[0] = '\0';
 	if (amount > 0) {
 		sprintf(tempstr, "%u", amount);
-		PrintGameStr(out, 388, 140, tempstr, COL_WHITE);
 	}
-	if (amount > 0) {
-		for (int i = 0; i < tempstr[i]; i++) {
-			BYTE c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)tempstr[i]]];
-			screenX += fontkern[GameFontSmall][c] + 1;
-		}
-		screenX += 388;
-	} else {
-		screenX = 386;
-	}
-	CelDrawTo(out, screenX, 140, *pSPentSpn2Cels, PentSpn2Spin());
+	DrawString(out, tempstr, { dialogX + 37, 140, 0, 0 }, UIS_SILVER, true);
 }
 
 void control_drop_gold(char vkey)

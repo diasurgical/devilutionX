@@ -7,22 +7,12 @@
 #include <SDL.h>
 
 #include "common.h"
-#include "control.h"
 #include "engine.h"
 #include "engine/render/text_render.hpp"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
 
 namespace devilution {
-
-int GetTextWidth(const char *s)
-{
-	int l = 0;
-	while (*s) {
-		l += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[static_cast<BYTE>(*s++)]]] + 1;
-	}
-	return l;
-}
 
 char *PrintWithSeparator(char *out, long long n)
 {
