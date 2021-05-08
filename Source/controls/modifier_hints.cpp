@@ -16,7 +16,7 @@ int CalculateTextWidth(const char *s)
 {
 	int l = 0;
 	while (*s != '\0') {
-		l += fontkern[fontframe[gbFontTransTbl[static_cast<unsigned char>(*s++)]]] + 1;
+		l += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[static_cast<unsigned char>(*s++)]]] + 1;
 	}
 	return l;
 }

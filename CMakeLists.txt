@@ -354,6 +354,7 @@ set(devilutionx_SRCS
   Source/engine/render/cel_render.cpp
   Source/engine/render/cl2_render.cpp
   Source/engine/render/dun_render.cpp
+  Source/engine/render/text_render.cpp
   Source/qol/autopickup.cpp
   Source/qol/common.cpp
   Source/qol/monhealthbar.cpp

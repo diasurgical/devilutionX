@@ -1652,6 +1652,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitStores();
 		InitAutomapOnce();
 		InitHelp();
+		InitText();
 	}
 
 	SetRndSeed(glSeedTbl[currlevel]);

@@ -7,6 +7,7 @@
 #include "control.h"
 #include "cursor.h"
 #include "engine/render/cel_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "gendung.h"
 #include "init.h"
 #include "minitext.h"
@@ -714,7 +715,7 @@ static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustfl
 	if (cjustflag) {
 		width = 0;
 		for (i = 0; i < len; i++)
-			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
+			width += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < 257)
 			k = (257 - width) / 2;
 		sx += k;
@@ -723,12 +724,12 @@ static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustfl
 		CelDrawTo(out, cjustflag ? x + k + 12 : x + 12, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 	for (i = 0; i < len; i++) {
-		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
-		k += fontkern[c] + 1;
+		c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]];
+		k += fontkern[GameFontSmall][c] + 1;
 		if (c && k <= 257) {
 			PrintChar(out, sx, sy, c, col);
 		}
-		sx += fontkern[c] + 1;
+		sx += fontkern[GameFontSmall][c] + 1;
 	}
 	if (qline == y) {
 		CelDrawTo(out, cjustflag ? x + k + 36 : 276 - x, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());

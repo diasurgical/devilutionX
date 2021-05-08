@@ -57,7 +57,6 @@ int dropGoldValue;
 bool drawmanaflag;
 bool chrbtnactive;
 char sgszTalkMsg[MAX_SEND_STR_LEN];
-std::optional<CelSprite> pPanelText;
 bool pstrjust[4];
 int pnumlines;
 bool pinfoflag;
@@ -95,32 +94,6 @@ const char *const ClassStrTbl[] = {
 	N_("Barbarian"),
 };
 
-/** Maps from font index to smaltext.cel frame number. */
-const BYTE fontframe[128] = {
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 54, 44, 57, 58, 56, 55, 47, 40, 41, 59, 39, 50, 37, 51, 52,
-	36, 27, 28, 29, 30, 31, 32, 33, 34, 35, 48, 49, 60, 38, 61, 53,
-	62, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 42, 63, 43, 64, 65,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 40, 66, 41, 67, 0
-};
-
-/**
- * Maps from smaltext.cel frame number to character width. Note, the
- * character width may be distinct from the frame width, which is 13 for every
- * smaltext.cel frame.
- */
-const BYTE fontkern[68] = {
-	8, 10, 7, 9, 8, 7, 6, 8, 8, 3,
-	3, 8, 6, 11, 9, 10, 6, 9, 9, 6,
-	9, 11, 10, 13, 10, 11, 7, 5, 7, 7,
-	8, 7, 7, 7, 7, 7, 10, 4, 5, 6,
-	3, 3, 4, 3, 6, 6, 3, 3, 3, 3,
-	3, 2, 7, 6, 3, 10, 10, 6, 6, 7,
-	4, 4, 9, 6, 6, 12, 3, 7
-};
 /**
  * Line start position for info box text when displaying 1, 2, 3, 4 and 5 lines respectivly
  */
@@ -130,32 +103,6 @@ const int LineOffsets[5][5] = {
 	{ 64, 82, 100 },
 	{ 60, 75, 89, 104 },
 	{ 58, 70, 82, 94, 105 },
-};
-
-/**
- * Maps ASCII character code to font index, as used by the
- * small, medium and large sized fonts; which corresponds to smaltext.cel,
- * medtexts.cel and bigtgold.cel respectively.
- */
-const BYTE gbFontTransTbl[256] = {
-	// clang-format off
-	'\0', 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	' ',  '!',  '\"', '#',  '$',  '%',  '&',  '\'', '(',  ')',  '*',  '+',  ',',  '-',  '.',  '/',
-	'0',  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  ':',  ';',  '<',  '=',  '>',  '?',
-	'@',  'A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',  'I',  'J',  'K',  'L',  'M',  'N',  'O',
-	'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z',  '[',  '\\', ']',  '^',  '_',
-	'`',  'a',  'b',  'c',  'd',  'e',  'f',  'g',  'h',  'i',  'j',  'k',  'l',  'm',  'n',  'o',
-	'p',  'q',  'r',  's',  't',  'u',  'v',  'w',  'x',  'y',  'z',  '{',  '|',  '}',  '~',  0x01,
-	'C',  'u',  'e',  'a',  'a',  'a',  'a',  'c',  'e',  'e',  'e',  'i',  'i',  'i',  'A',  'A',
-	'E',  'a',  'A',  'o',  'o',  'o',  'u',  'u',  'y',  'O',  'U',  'c',  'L',  'Y',  'P',  'f',
-	'a',  'i',  'o',  'u',  'n',  'N',  'a',  'o',  '?',  0x01, 0x01, 0x01, 0x01, '!',  '<',  '>',
-	'o',  '+',  '2',  '3',  '\'', 'u',  'P',  '.',  ',',  '1',  '0',  '>',  0x01, 0x01, 0x01, '?',
-	'A',  'A',  'A',  'A',  'A',  'A',  'A',  'C',  'E',  'E',  'E',  'E',  'I',  'I',  'I',  'I',
-	'D',  'N',  'O',  'O',  'O',  'O',  'O',  'X',  '0',  'U',  'U',  'U',  'U',  'Y',  'b',  'B',
-	'a',  'a',  'a',  'a',  'a',  'a',  'a',  'c',  'e',  'e',  'e',  'e',  'i',  'i',  'i',  'i',
-	'o',  'n',  'o',  'o',  'o',  'o',  'o',  '/',  '0',  'u',  'u',  'u',  'u',  'y',  'b',  'y',
-	// clang-format on
 };
 
 /* data */
@@ -380,10 +327,10 @@ static void PrintSBookHotkey(CelOutputBuffer out, int x, int y, const std::strin
 	int totalWidth = 0;
 
 	for (const char txtChar : text) {
-		auto c = gbFontTransTbl[static_cast<BYTE>(txtChar)];
-		c = fontframe[c];
+		auto c = gbFontTransTbl[static_cast<uint8_t>(txtChar)];
+		c = fontframe[GameFontSmall][c];
 
-		totalWidth += fontkern[c] + 1;
+		totalWidth += fontkern[GameFontSmall][c] + 1;
 	}
 
 	PrintGameStr(out, x - totalWidth - 4, y + 17, text.c_str(), col);
@@ -574,54 +521,6 @@ void ToggleSpell(int slot)
 	}
 }
 
-void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col)
-{
-	int i;
-	BYTE pix;
-	BYTE tbl[256];
-
-	switch (col) {
-	case COL_WHITE:
-		CelDrawTo(out, sx, sy, *pPanelText, nCel);
-		return;
-	case COL_BLUE:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix > PAL16_GRAY + 13)
-				pix = PAL16_BLUE + 15;
-			else if (pix >= PAL16_GRAY)
-				pix -= PAL16_GRAY - (PAL16_BLUE + 2);
-			tbl[i] = pix;
-		}
-		break;
-	case COL_RED:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix >= PAL16_GRAY)
-				pix -= PAL16_GRAY - PAL16_RED;
-			tbl[i] = pix;
-		}
-		break;
-	case COL_GOLD:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix >= PAL16_GRAY) {
-				if (pix >= PAL16_GRAY + 14)
-					pix = PAL16_YELLOW + 15;
-				else
-					pix -= PAL16_GRAY - (PAL16_YELLOW + 2);
-			}
-			tbl[i] = pix;
-		}
-		break;
-	case COL_BLACK:
-		light_table_index = 15;
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, nullptr);
-		return;
-	}
-	CelDrawLightTo(out, sx, sy, *pPanelText, nCel, tbl);
-}
-
 void AddPanelString(const char *str, bool just)
 {
 	strcpy(panelstr[pnumlines], str);
@@ -781,7 +680,6 @@ void InitControlPan()
 	pManaBuff = CelOutputBuffer::Alloc(88, 88);
 	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
 
-	pPanelText = LoadCel("CtrlPan\\SmalText.CEL", 13);
 	pChrPanel = LoadCel("Data\\Char.CEL", SPANEL_WIDTH);
 	if (!gbIsHellfire)
 		pSpellCels = LoadCel("CtrlPan\\SpelIcon.CEL", SPLICONLENGTH);
@@ -1182,7 +1080,6 @@ void FreeControlPan()
 	pBtmBuff.Free();
 	pManaBuff.Free();
 	pLifeBuff.Free();
-	pPanelText = std::nullopt;
 	pChrPanel = std::nullopt;
 	pSpellCels = std::nullopt;
 	pPanelButtons = std::nullopt;
@@ -1203,7 +1100,7 @@ bool control_WriteStringToBuffer(BYTE *str)
 	while (*str != '\0') {
 		BYTE ichar = gbFontTransTbl[*str];
 		str++;
-		k += fontkern[fontframe[ichar]];
+		k += fontkern[GameFontSmall][fontframe[GameFontSmall][ichar]];
 		if (k >= 125)
 			return false;
 	}
@@ -1221,7 +1118,7 @@ static void CPrintString(const CelOutputBuffer &out, int y, const char *str, boo
 		const char *tmp = str;
 		while (*tmp != 0) {
 			BYTE c = gbFontTransTbl[(BYTE)*tmp++];
-			strWidth += fontkern[fontframe[c]] + 2;
+			strWidth += fontkern[GameFontSmall][fontframe[GameFontSmall][c]] + 2;
 		}
 		if (strWidth < 288)
 			lineOffset = (288 - strWidth) / 2;
@@ -1229,14 +1126,14 @@ static void CPrintString(const CelOutputBuffer &out, int y, const char *str, boo
 	}
 	while (*str != '\0') {
 		BYTE c = gbFontTransTbl[(BYTE)*str++];
-		c = fontframe[c];
-		lineOffset += fontkern[c] + 2;
+		c = fontframe[GameFontSmall][c];
+		lineOffset += fontkern[GameFontSmall][c] + 2;
 		if (c != 0) {
 			if (lineOffset < 288) {
 				PrintChar(out, sx, sy, c, infoclr);
 			}
 		}
-		sx += fontkern[c] + 2;
+		sx += fontkern[GameFontSmall][c] + 2;
 	}
 }
 
@@ -1328,10 +1225,10 @@ void PrintGameStr(const CelOutputBuffer &out, int x, int y, const char *str, tex
 {
 	while (*str != '\0') {
 		BYTE c = gbFontTransTbl[(BYTE)*str++];
-		c = fontframe[c];
+		c = fontframe[GameFontSmall][c];
 		if (c != 0)
 			PrintChar(out, x, y, c, color);
-		x += fontkern[c] + 1;
+		x += fontkern[GameFontSmall][c] + 1;
 	}
 }
 
@@ -1353,20 +1250,20 @@ static void MY_PlrStringXY(const CelOutputBuffer &out, int x, int y, int endX, c
 	const char *tmp = pszStr;
 	while (*tmp != 0) {
 		BYTE c = gbFontTransTbl[(BYTE)*tmp++];
-		screenX += fontkern[fontframe[c]] + base;
+		screenX += fontkern[GameFontSmall][fontframe[GameFontSmall][c]] + base;
 	}
 	if (screenX < widthOffset)
 		line = (widthOffset - screenX) / 2;
 	x += line;
 	while (*pszStr != 0) {
 		BYTE c = gbFontTransTbl[(BYTE)*pszStr++];
-		c = fontframe[c];
-		line += fontkern[c] + base;
+		c = fontframe[GameFontSmall][c];
+		line += fontkern[GameFontSmall][c] + base;
 		if (c != 0) {
 			if (line < widthOffset)
 				PrintChar(out, x, y, c, col);
 		}
-		x += fontkern[c] + base;
+		x += fontkern[GameFontSmall][c] + base;
 	}
 }
 
@@ -1767,7 +1664,7 @@ static void PrintSBookStr(const CelOutputBuffer &out, int x, int y, bool cjustfl
 		const char *tmp = pszStr;
 		while (*tmp != 0) {
 			BYTE c = gbFontTransTbl[(BYTE)*tmp++];
-			screenX += fontkern[fontframe[c]] + 1;
+			screenX += fontkern[GameFontSmall][fontframe[GameFontSmall][c]] + 1;
 		}
 		if (screenX < 222)
 			line = (222 - screenX) / 2;
@@ -1775,13 +1672,13 @@ static void PrintSBookStr(const CelOutputBuffer &out, int x, int y, bool cjustfl
 	}
 	while (*pszStr != 0) {
 		BYTE c = gbFontTransTbl[(BYTE)*pszStr++];
-		c = fontframe[c];
-		line += fontkern[c] + 1;
+		c = fontframe[GameFontSmall][c];
+		line += fontkern[GameFontSmall][c] + 1;
 		if (c != 0) {
 			if (line <= 222)
 				PrintChar(out, sx, y, c, col);
 		}
-		sx += fontkern[c] + 1;
+		sx += fontkern[GameFontSmall][c] + 1;
 	}
 }
 
@@ -1915,8 +1812,8 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	}
 	if (amount > 0) {
 		for (int i = 0; i < tempstr[i]; i++) {
-			BYTE c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
-			screenX += fontkern[c] + 1;
+			BYTE c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)tempstr[i]]];
+			screenX += fontkern[GameFontSmall][c] + 1;
 		}
 		screenX += 388;
 	} else {
@@ -2000,15 +1897,15 @@ static char *ControlPrintTalkMsg(const CelOutputBuffer &out, char *msg, int *x, 
 	int width = *x;
 	while (*msg != 0) {
 		BYTE c = gbFontTransTbl[(BYTE)*msg];
-		c = fontframe[c];
-		width += fontkern[c] + 1;
+		c = fontframe[GameFontSmall][c];
+		width += fontkern[GameFontSmall][c] + 1;
 		if (width > 450 + PANEL_X)
 			return msg;
 		msg++;
 		if (c != 0) {
 			PrintChar(out, *x, y, c, color);
 		}
-		*x += fontkern[c] + 1;
+		*x += fontkern[GameFontSmall][c] + 1;
 	}
 	return nullptr;
 }

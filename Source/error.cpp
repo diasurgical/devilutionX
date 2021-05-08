@@ -7,6 +7,7 @@
 
 #include "control.h"
 #include "engine/render/cel_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "stores.h"
 #include "utils/language.h"
 
@@ -138,7 +139,7 @@ void DrawDiabloMsg(const CelOutputBuffer &out)
 	width = 0;
 
 	for (i = 0; i < len; i++) {
-		width += fontkern[fontframe[gbFontTransTbl[(BYTE)tempstr[i]]]] + 1;
+		width += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[(BYTE)tempstr[i]]]] + 1;
 	}
 
 	if (width < 442) {
@@ -146,11 +147,11 @@ void DrawDiabloMsg(const CelOutputBuffer &out)
 	}
 
 	for (i = 0; i < len; i++) {
-		c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
+		c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)tempstr[i]]];
 		if (c != '\0') {
 			PrintChar(out, sx, sy, c, COL_GOLD);
 		}
-		sx += fontkern[c] + 1;
+		sx += fontkern[GameFontSmall][c] + 1;
 	}
 
 	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {

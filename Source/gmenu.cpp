@@ -10,6 +10,7 @@
 #include "controls/controller_motion.h"
 #include "engine.h"
 #include "engine/render/cel_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
@@ -19,7 +20,6 @@ namespace devilution {
 namespace {
 std::optional<CelSprite> optbar_cel;
 std::optional<CelSprite> PentSpin_cel;
-std::optional<CelSprite> BigTGold_cel;
 std::optional<CelSprite> option_cel;
 std::optional<CelSprite> sgpLogo;
 } // namespace
@@ -33,43 +33,16 @@ void (*gmenu_current_option)();
 TMenuItem *sgpCurrentMenu;
 int sgCurrentMenuIdx;
 
-/** Maps from font index to bigtgold.cel frame number. */
-const BYTE lfontframe[] = {
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 37, 49, 38, 0, 39, 40, 47,
-	42, 43, 41, 45, 52, 44, 53, 55, 36, 27,
-	28, 29, 30, 31, 32, 33, 34, 35, 51, 50,
-	0, 46, 0, 54, 0, 1, 2, 3, 4, 5,
-	6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-	26, 42, 0, 43, 0, 0, 0, 1, 2, 3,
-	4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	24, 25, 26, 20, 0, 21, 0, 0
-};
-
-/** Maps from bigtgold.cel frame number to character width. */
-const BYTE lfontkern[] = {
-	18, 33, 21, 26, 28, 19, 19, 26, 25, 11,
-	12, 25, 19, 34, 28, 32, 20, 32, 28, 20,
-	28, 36, 35, 46, 33, 33, 24, 11, 23, 22,
-	22, 21, 22, 21, 21, 21, 32, 10, 20, 36,
-	31, 17, 13, 12, 13, 18, 16, 11, 20, 21,
-	11, 10, 12, 11, 21, 23
-};
-
 static void gmenu_print_text(const CelOutputBuffer &out, int x, int y, const char *pszStr)
 {
 	BYTE c;
 
 	while (*pszStr) {
 		c = gbFontTransTbl[(BYTE)*pszStr++];
-		c = lfontframe[c];
+		c = fontframe[GameFontBig][c];
 		if (c != 0)
 			CelDrawLightTo(out, x, y, *BigTGold_cel, c, nullptr);
-		x += lfontkern[c] + 2;
+		x += fontkern[GameFontBig][c] + 2;
 	}
 }
 
@@ -86,7 +59,6 @@ void gmenu_draw_pause(const CelOutputBuffer &out)
 void FreeGMenu()
 {
 	sgpLogo = std::nullopt;
-	BigTGold_cel = std::nullopt;
 	PentSpin_cel = std::nullopt;
 	option_cel = std::nullopt;
 	optbar_cel = std::nullopt;
@@ -104,7 +76,6 @@ void gmenu_init_menu()
 		sgpLogo = LoadCel("Data\\hf_logo3.CEL", 430);
 	else
 		sgpLogo = LoadCel("Data\\Diabsmal.CEL", 296);
-	BigTGold_cel = LoadCel("Data\\BigTGold.CEL", 46);
 	PentSpin_cel = LoadCel("Data\\PentSpin.CEL", 48);
 	option_cel = LoadCel("Data\\option.CEL", 27);
 	optbar_cel = LoadCel("Data\\optbar.CEL", 287);
@@ -212,7 +183,7 @@ static int gmenu_get_lfont(TMenuItem *pItem)
 	i = 0;
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text++];
-		i += lfontkern[lfontframe[c]] + 2;
+		i += fontkern[GameFontBig][fontframe[GameFontBig][c]] + 2;
 	}
 	return i - 2;
 }

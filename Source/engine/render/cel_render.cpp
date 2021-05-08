@@ -1,5 +1,5 @@
 /**
- * @file cel_render.hpp
+ * @file cel_render.cpp
  *
  * CEL rendering.
  */
