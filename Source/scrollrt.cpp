@@ -5,7 +5,6 @@
  */
 
 #include "automap.h"
-#include "control.h"
 #include "cursor.h"
 #include "dead.h"
 #include "doom.h"
@@ -13,6 +12,7 @@
 #include "engine/render/cel_render.hpp"
 #include "engine/render/cl2_render.hpp"
 #include "engine/render/dun_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "error.h"
 #include "gmenu.h"
 #include "help.h"
@@ -1427,7 +1427,7 @@ static void DrawFPS(const CelOutputBuffer &out)
 			frameend = 0;
 		}
 		snprintf(String, 12, "%d FPS", framerate);
-		PrintGameStr(out, 8, 65, String, COL_RED);
+		DrawString(out, String, { 8, 65, 0, 0 }, UIS_RED);
 	}
 }
 

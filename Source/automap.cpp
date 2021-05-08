@@ -385,19 +385,19 @@ void DrawAutomapText(const CelOutputBuffer &out)
 	if (gbIsMultiplayer) {
 		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {
 			strcat(strcpy(desc, _("game: ")), szPlayerName);
-			PrintGameStr(out, 8, nextLine, desc, COL_GOLD);
+			DrawString(out, desc, { 8, nextLine, 0, 0 });
 			nextLine += 15;
 		}
 
 		if (szPlayerDescript[0] != '\0') {
 			strcat(strcpy(desc, _("password: ")), szPlayerDescript);
-			PrintGameStr(out, 8, nextLine, desc, COL_GOLD);
+			DrawString(out, desc, { 8, nextLine, 0, 0 });
 			nextLine += 15;
 		}
 	}
 
 	if (setlevel) {
-		PrintGameStr(out, 8, nextLine, _(quest_level_names[setlvlnum]), COL_GOLD);
+		DrawString(out, _(quest_level_names[setlvlnum]), { 8, nextLine, 0, 0 });
 		return;
 	}
 
@@ -410,7 +410,7 @@ void DrawAutomapText(const CelOutputBuffer &out)
 			sprintf(desc, _("Level: %i"), currlevel);
 		}
 
-		PrintGameStr(out, 8, nextLine, desc, COL_GOLD);
+		DrawString(out, desc, { 8, nextLine, 0, 0 });
 	}
 }
 

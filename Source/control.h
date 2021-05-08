@@ -121,8 +121,6 @@ bool control_WriteStringToBuffer(BYTE *str);
  * Sets a string to be drawn in the info box and then draws it.
  */
 void DrawInfoBox(const CelOutputBuffer &out);
-
-void PrintGameStr(const CelOutputBuffer &out, int x, int y, const char *str, text_color color);
 void DrawChr(const CelOutputBuffer &out);
 void CheckLvlBtn();
 void ReleaseLvlBtn();
