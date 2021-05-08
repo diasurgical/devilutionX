@@ -703,51 +703,30 @@ void ResyncQuests()
 	}
 }
 
-static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col)
+static void PrintQLString(const CelOutputBuffer &out, int x, int line, const char *str)
 {
-	int len, width, i, k, sx, sy;
-	BYTE c;
-
-	sx = x + 32;
-	sy = y * 12 + 44;
-	len = strlen(str);
-	k = 0;
-	if (cjustflag) {
-		width = 0;
-		for (i = 0; i < len; i++)
-			width += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]]] + 1;
-		if (width < 257)
-			k = (257 - width) / 2;
-		sx += k;
+	int width = GetLineWidth(str);
+	int sx = x + std::max((257 - width) / 2, 0);
+	int sy = line * 12 + 44;
+	if (qline == line) {
+		CelDrawTo(out, sx - 20, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
 	}
-	if (qline == y) {
-		CelDrawTo(out, cjustflag ? x + k + 12 : x + 12, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
-	}
-	for (i = 0; i < len; i++) {
-		c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]];
-		k += fontkern[GameFontSmall][c] + 1;
-		if (c && k <= 257) {
-			PrintChar(out, sx, sy, c, col);
-		}
-		sx += fontkern[GameFontSmall][c] + 1;
-	}
-	if (qline == y) {
-		CelDrawTo(out, cjustflag ? x + k + 36 : 276 - x, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
+	DrawString(out, str, { sx, sy, 257, 0 }, UIS_SILVER);
+	if (qline == line) {
+		CelDrawTo(out, sx + width + 7, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 }
 
 void DrawQuestLog(const CelOutputBuffer &out)
 {
-	int y, i;
-
-	PrintQLString(out, 0, 2, true, _("Quest Log"), COL_GOLD);
+	DrawString(out, _("Quest Log"), { 32, 44, 257, 0 }, UIS_CENTER);
 	CelDrawTo(out, 0, 351, *pQLogCel, 1);
-	y = qtopline;
-	for (i = 0; i < numqlines; i++) {
-		PrintQLString(out, 0, y, true, _(questlist[qlist[i]]._qlstr), COL_WHITE);
-		y += 2;
+	int line = qtopline;
+	for (int i = 0; i < numqlines; i++) {
+		PrintQLString(out, 32, line, _(questlist[qlist[i]]._qlstr));
+		line += 2;
 	}
-	PrintQLString(out, 0, 22, true, _("Close Quest Log"), COL_WHITE);
+	PrintQLString(out, 32, 22, _("Close Quest Log"));
 }
 
 void StartQuestlog()
