@@ -96,7 +96,6 @@ extern ItemStruct boyitem;
 
 void AddStoreHoldRepair(ItemStruct *itm, int i);
 void InitStores();
-int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
 void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col, int val);

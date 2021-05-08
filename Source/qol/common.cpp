@@ -9,6 +9,7 @@
 #include "common.h"
 #include "control.h"
 #include "engine.h"
+#include "engine/render/text_render.hpp"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
 
@@ -18,7 +19,7 @@ int GetTextWidth(const char *s)
 {
 	int l = 0;
 	while (*s) {
-		l += fontkern[fontframe[gbFontTransTbl[static_cast<BYTE>(*s++)]]] + 1;
+		l += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[static_cast<BYTE>(*s++)]]] + 1;
 	}
 	return l;
 }

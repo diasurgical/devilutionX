@@ -33,8 +33,11 @@ enum UiFlags : uint16_t {
 	UIS_VCENTER  = 1 << 6,
 	UIS_SILVER   = 1 << 7,
 	UIS_GOLD     = 1 << 8,
-	UIS_DISABLED = 1 << 9,
-	UIS_HIDDEN   = 1 << 10,
+	UIS_RED      = 1 << 9,
+	UIS_BLUE     = 1 << 10,
+	UIS_BLACK    = 1 << 11,
+	UIS_DISABLED = 1 << 12,
+	UIS_HIDDEN   = 1 << 13,
 	// clang-format on
 };
 

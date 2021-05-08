@@ -9,6 +9,7 @@
 
 #include "cursor.h"
 #include "engine/render/cel_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "init.h"
 #include "minitext.h"
 #include "options.h"
@@ -2058,7 +2059,6 @@ void S_DrunkEnter()
 ItemStruct golditem;
 
 std::optional<CelSprite> pSTextBoxCels;
-std::optional<CelSprite> pSPentSpn2Cels;
 std::optional<CelSprite> pSTextSlidCels;
 
 talk_id stextflag;
@@ -2105,7 +2105,6 @@ void AddStoreHoldRepair(ItemStruct *itm, int i)
 void InitStores()
 {
 	pSTextBoxCels = LoadCel("Data\\TextBox2.CEL", 271);
-	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
 	pSTextSlidCels = LoadCel("Data\\TextSlid.CEL", 12);
 	ClearSText(0, STORE_LINES);
 	stextflag = STORE_NONE;
@@ -2119,11 +2118,6 @@ void InitStores()
 
 	boyitem._itype = ITYPE_NONE;
 	boylevel = 0;
-}
-
-int PentSpn2Spin()
-{
-	return (SDL_GetTicks() / 50) % 8 + 1;
 }
 
 void SetupTownStores()
@@ -2156,7 +2150,6 @@ void SetupTownStores()
 void FreeStoreMem()
 {
 	pSTextBoxCels = std::nullopt;
-	pSPentSpn2Cels = std::nullopt;
 	pSTextSlidCels = std::nullopt;
 }
 
@@ -2183,7 +2176,7 @@ void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, cons
 	if (cjustflag) {
 		width = 0;
 		for (i = 0; i < len; i++)
-			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
+			width += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < yy)
 			k = (yy - width) / 2;
 		sx += k;
@@ -2192,20 +2185,20 @@ void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, cons
 		CelDrawTo(out, cjustflag ? xx + x + k - 20 : xx + x - 20, s + 45 + UI_OFFSET_Y, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 	for (i = 0; i < len; i++) {
-		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
-		k += fontkern[c] + 1;
+		c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]];
+		k += fontkern[GameFontSmall][c] + 1;
 		if (c != 0 && k <= yy) {
 			PrintChar(out, sx, sy, c, col);
 		}
-		sx += fontkern[c] + 1;
+		sx += fontkern[GameFontSmall][c] + 1;
 	}
 	if (!cjustflag && val >= 0) {
 		sprintf(valstr, "%i", val);
 		sx = PANEL_X + 592 - x;
 		len = strlen(valstr);
 		for (i = len - 1; i >= 0; i--) {
-			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
-			sx -= fontkern[c] + 1;
+			c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)valstr[i]]];
+			sx -= fontkern[GameFontSmall][c] + 1;
 			if (c != 0) {
 				PrintChar(out, sx, sy, c, col);
 			}

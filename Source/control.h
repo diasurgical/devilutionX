@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "engine.h"
+#include "engine/render/text_render.hpp"
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/ui_fwd.h"
@@ -27,14 +28,6 @@ namespace devilution {
 #define RIGHT_PANEL (gnScreenWidth - SPANEL_WIDTH)
 #define RIGHT_PANEL_X RIGHT_PANEL
 
-enum text_color : uint8_t {
-	COL_WHITE,
-	COL_BLUE,
-	COL_RED,
-	COL_GOLD,
-	COL_BLACK,
-};
-
 struct RECT32 {
 	int x;
 	int y;
@@ -49,7 +42,6 @@ extern bool lvlbtndown;
 extern int dropGoldValue;
 extern bool drawmanaflag;
 extern bool chrbtnactive;
-extern std::optional<CelSprite> pPanelText;
 extern int pnumlines;
 extern bool pinfoflag;
 extern spell_id pSpell;
@@ -80,16 +72,6 @@ void DrawSpellList(const CelOutputBuffer &out);
 void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
-
-/**
- * @brief Print letter to the given buffer
- * @param out The buffer to print to
- * @param sx Backbuffer offset
- * @param sy Backbuffer offset
- * @param nCel Number of letter in Windows-1252
- * @param col text_color color value
- */
-void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col);
 
 void AddPanelString(const char *str, bool just);
 void ClearPanel();
@@ -162,13 +144,6 @@ void control_type_message();
 void control_reset_talk();
 bool control_talk_last_key(int vkey);
 bool control_presskeys(int vkey);
-
-/* rdata */
-extern const BYTE fontframe[128];
-extern const BYTE fontkern[68];
-extern const BYTE gbFontTransTbl[256];
-
-/* data */
 
 extern RECT32 ChrBtnsRect[4];
 

@@ -11,6 +11,7 @@
 #include "doom.h"
 #include "dx.h"
 #include "engine/render/cel_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "init.h"
 #include "lighting.h"
 #include "missiles.h"
@@ -3740,19 +3741,19 @@ void PrintUString(const CelOutputBuffer &out, int x, int y, bool cjustflag, cons
 	if (cjustflag) {
 		width = 0;
 		for (i = 0; i < len; i++)
-			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
+			width += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < 257)
 			k = (257 - width) / 2;
 		sx += k;
 	}
 
 	for (i = 0; i < len; i++) {
-		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
-		k += fontkern[c] + 1;
+		c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]];
+		k += fontkern[GameFontSmall][c] + 1;
 		if (c && k <= 257) {
 			PrintChar(out, sx, sy, c, col);
 		}
-		sx += fontkern[c] + 1;
+		sx += fontkern[GameFontSmall][c] + 1;
 	}
 }
 

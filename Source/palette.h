@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include "gendung.h"
+
 namespace devilution {
 
 // Diablo uses a 256 color palette

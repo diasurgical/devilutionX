@@ -5,6 +5,7 @@
  */
 
 #include "control.h"
+#include "engine/render/text_render.hpp"
 #include "init.h"
 #include "minitext.h"
 #include "stores.h"
@@ -469,13 +470,13 @@ static void DrawHelpLine(const CelOutputBuffer &out, int x, int y, char *text, t
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text];
 		text++;
-		c = fontframe[c];
-		width += fontkern[c] + 1;
+		c = fontframe[GameFontSmall][c];
+		width += fontkern[GameFontSmall][c] + 1;
 		if (c) {
 			if (width <= 577)
 				PrintChar(out, sx, sy, c, color);
 		}
-		sx += fontkern[c] + 1;
+		sx += fontkern[GameFontSmall][c] + 1;
 	}
 }
 
@@ -513,7 +514,7 @@ void DrawHelp(const CelOutputBuffer &out)
 				s++;
 			}
 			tempstr[c] = *s;
-			w += fontkern[fontframe[gbFontTransTbl[(BYTE)tempstr[c]]]] + 1;
+			w += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[(BYTE)tempstr[c]]]] + 1;
 			c++;
 			s++;
 		}
@@ -549,7 +550,7 @@ void DrawHelp(const CelOutputBuffer &out)
 			}
 			tempstr[c] = *s;
 			BYTE tc = gbFontTransTbl[(BYTE)tempstr[c]];
-			w += fontkern[fontframe[tc]] + 1;
+			w += fontkern[GameFontSmall][fontframe[GameFontSmall][tc]] + 1;
 			c++;
 			s++;
 		}
