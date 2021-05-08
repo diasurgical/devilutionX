@@ -216,19 +216,18 @@ static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
 	mx++;
 	my++;
 
-	const CelOutputBuffer &sub = out.subregion(0, 0, out.w() - 2, out.h());
 	const auto &sprite = GetInvItemSprite(pcurs);
 	const int frame = GetInvItemFrame(pcurs);
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		const auto &heldItem = plr[myplr].HoldItem;
-		CelBlitOutlineTo(sub, GetOutlineColor(heldItem, true), mx, my + cursH - 1, sprite, frame, false);
+		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), mx, my + cursH - 1, sprite, frame, false);
 		if (heldItem._iStatFlag) {
-			CelClippedDrawSafeTo(sub, mx, my + cursH - 1, sprite, frame);
+			CelClippedDrawSafeTo(out, mx, my + cursH - 1, sprite, frame);
 		} else {
-			CelDrawLightRedSafeTo(sub, mx, my + cursH - 1, sprite, frame, 1);
+			CelDrawLightRedSafeTo(out, mx, my + cursH - 1, sprite, frame, 1);
 		}
 	} else {
-		CelClippedDrawSafeTo(sub, mx, my + cursH - 1, sprite, frame);
+		CelClippedDrawSafeTo(out, mx, my + cursH - 1, sprite, frame);
 	}
 }
 
