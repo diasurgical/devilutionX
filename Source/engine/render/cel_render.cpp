@@ -1,3 +1,8 @@
+/**
+ * @file cel_render.hpp
+ *
+ * CEL rendering.
+ */
 #include "engine/render/cel_render.hpp"
 
 #include <cstddef>

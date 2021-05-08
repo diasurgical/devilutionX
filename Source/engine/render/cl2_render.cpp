@@ -1,4 +1,8 @@
-
+/**
+ * @file cl2_render.cpp
+ *
+ * CL2 rendering.
+ */
 #include "cl2_render.hpp"
 
 #include "engine/render/common_impl.h"

@@ -1,4 +1,6 @@
 /**
+ * @file common_impl.h
+ *
  * Common code for implementing various renderers.
  */
 #pragma once

@@ -1,4 +1,5 @@
-/** @file automap_render.hpp
+/**
+ * @file automap_render.hpp
  * Defines 2 sets of rendering primitives for drawing automap lines.
  *
  * 1. DrawMapLine* - used for rendering most map lines - 2 pixels horizontally for each pixel vertically.
