@@ -459,25 +459,11 @@ void InitHelp()
 	helpflag = false;
 }
 
-static void DrawHelpLine(const CelOutputBuffer &out, int x, int y, char *text, text_color color)
+static void DrawHelpLine(const CelOutputBuffer &out, int x, int y, char *text, uint16_t style)
 {
-	int sx, sy, width;
-	BYTE c;
-
-	width = 0;
-	sx = x + 32 + PANEL_X;
-	sy = y * 12 + 44 + UI_OFFSET_Y;
-	while (*text) {
-		c = gbFontTransTbl[(BYTE)*text];
-		text++;
-		c = fontframe[GameFontSmall][c];
-		width += fontkern[GameFontSmall][c] + 1;
-		if (c) {
-			if (width <= 577)
-				PrintChar(out, sx, sy, c, color);
-		}
-		sx += fontkern[GameFontSmall][c] + 1;
-	}
+	const int sx = x + 32 + PANEL_X;
+	const int sy = y * 12 + 44 + UI_OFFSET_Y;
+	DrawString(out, text, { sx, sy, 577, 0 }, style);
 }
 
 void DrawHelp(const CelOutputBuffer &out)
@@ -535,10 +521,10 @@ void DrawHelp(const CelOutputBuffer &out)
 		while (*s == '\0') {
 			s++;
 		}
-		text_color col = COL_WHITE;
+		uint16_t style = UIS_SILVER;
 		if (*s == '$') {
 			s++;
-			col = COL_RED;
+			style = UIS_RED;
 		}
 		if (*s == '&') {
 			HelpTop = help_select_line;
@@ -563,7 +549,7 @@ void DrawHelp(const CelOutputBuffer &out)
 		}
 		if (c != 0) {
 			tempstr[c] = '\0';
-			DrawHelpLine(out, 0, i, tempstr, col);
+			DrawHelpLine(out, 0, i, tempstr, style);
 		}
 		if (*s == '|') {
 			s++;

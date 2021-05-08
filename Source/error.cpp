@@ -109,22 +109,19 @@ void ClrDiabloMsg()
 
 void DrawDiabloMsg(const CelOutputBuffer &out)
 {
-	int i, len, width, sx, sy;
-	BYTE c;
-
 	CelDrawTo(out, PANEL_X + 101, DIALOG_Y, *pSTextSlidCels, 1);
 	CelDrawTo(out, PANEL_X + 527, DIALOG_Y, *pSTextSlidCels, 4);
 	CelDrawTo(out, PANEL_X + 101, DIALOG_Y + 48, *pSTextSlidCels, 2);
 	CelDrawTo(out, PANEL_X + 527, DIALOG_Y + 48, *pSTextSlidCels, 3);
 
-	sx = PANEL_X + 109;
-	for (i = 0; i < 35; i++) {
+	int sx = PANEL_X + 109;
+	for (int i = 0; i < 35; i++) {
 		CelDrawTo(out, sx, DIALOG_Y, *pSTextSlidCels, 5);
 		CelDrawTo(out, sx, DIALOG_Y + 48, *pSTextSlidCels, 7);
 		sx += 12;
 	}
-	sy = DIALOG_Y + 12;
-	for (i = 0; i < 3; i++) {
+	int sy = DIALOG_Y + 12;
+	for (int i = 0; i < 3; i++) {
 		CelDrawTo(out, PANEL_X + 101, sy, *pSTextSlidCels, 6);
 		CelDrawTo(out, PANEL_X + 527, sy, *pSTextSlidCels, 8);
 		sy += 12;
@@ -133,26 +130,7 @@ void DrawDiabloMsg(const CelOutputBuffer &out)
 	DrawHalfTransparentRectTo(out, PANEL_X + 104, DIALOG_Y - 8, 432, 54);
 
 	strcpy(tempstr, _(MsgStrings[msgflag]));
-	sx = PANEL_X + 101;
-	sy = DIALOG_Y + 24;
-	len = strlen(tempstr);
-	width = 0;
-
-	for (i = 0; i < len; i++) {
-		width += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[(BYTE)tempstr[i]]]] + 1;
-	}
-
-	if (width < 442) {
-		sx += (442 - width) / 2;
-	}
-
-	for (i = 0; i < len; i++) {
-		c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)tempstr[i]]];
-		if (c != '\0') {
-			PrintChar(out, sx, sy, c, COL_GOLD);
-		}
-		sx += fontkern[GameFontSmall][c] + 1;
-	}
+	DrawString(out, tempstr, { PANEL_X + 101, DIALOG_Y + 24, 442, 0 }, UIS_CENTER);
 
 	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {
 		msgdelay = 0;

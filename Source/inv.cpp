@@ -301,8 +301,6 @@ void DrawInv(const CelOutputBuffer &out)
 
 void DrawInvBelt(const CelOutputBuffer &out)
 {
-	BYTE fi, ff;
-
 	if (talkflag) {
 		return;
 	}
@@ -335,9 +333,14 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
 		    && plr[myplr].SpdList[i]._iStatFlag
 		    && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
-			fi = i + 49;
-			ff = fontframe[GameFontSmall][gbFontTransTbl[fi]];
-			PrintChar(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X + INV_SLOT_SIZE_PX - fontkern[GameFontSmall][ff], InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, ff, COL_WHITE);
+			sprintf(tempstr, "%d", i + 1);
+			SDL_Rect rect {
+				InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X + INV_SLOT_SIZE_PX - GetLineWidth(tempstr),
+				InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1,
+				0,
+				0
+			};
+			DrawString(out, tempstr, rect, UIS_SILVER);
 		}
 	}
 }
