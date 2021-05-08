@@ -163,8 +163,6 @@ static void scrollrt_draw_cursor_back_buffer(const CelOutputBuffer &out)
  */
 static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
 {
-	int mx, my;
-
 	assert(!sgdwCursWdt);
 
 	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
@@ -175,59 +173,31 @@ static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
 		return;
 	}
 
-	mx = MouseX - 1;
-	if (mx < 0 - cursW - 1) {
+	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
+	if (MouseX < -cursW - 1 || MouseX > out.w() || MouseY < -cursH - 1 || MouseY > out.h())
 		return;
-	}
-	if (mx > gnScreenWidth - 1) {
-		return;
-	}
-	my = MouseY - 1;
-	if (my < 0 - cursH - 1) {
-		return;
-	}
-	if (my > gnScreenHeight - 1) {
-		return;
-	}
 
-	sgdwCursX = mx;
-	sgdwCursWdt = std::min(sgdwCursX + cursW + 1, gnScreenWidth - 1);
-	sgdwCursX &= ~3;
-	sgdwCursWdt |= 3;
-	sgdwCursWdt -= sgdwCursX;
-	sgdwCursWdt++;
+	sgdwCursX = std::max(MouseX - 1, 0);
+	sgdwCursWdt = MouseX < 0 ? cursW + MouseX + 1 : std::min(MouseX + cursW + 1, out.w()) - MouseX;
 
-	sgdwCursY = my;
-	sgdwCursHgt = std::min(sgdwCursY + cursH + 1, gnScreenHeight - 1);
-	sgdwCursHgt -= sgdwCursY;
-	sgdwCursHgt++;
+	sgdwCursY = std::max(MouseY - 1, 0);
+	sgdwCursHgt = MouseY < 0 ? cursH + MouseY + 1 : std::min(MouseY + cursH + 1, out.h()) - MouseY;
 
-	if (sgdwCursX < 0) {
-		sgdwCursWdt -= sgdwCursX;
-		sgdwCursX = 0;
-	}
-	if (sgdwCursY < 0) {
-		sgdwCursHgt -= sgdwCursY;
-		sgdwCursY = 0;
-	}
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
-
-	mx++;
-	my++;
 
 	const auto &sprite = GetInvItemSprite(pcurs);
 	const int frame = GetInvItemFrame(pcurs);
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		const auto &heldItem = plr[myplr].HoldItem;
-		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), mx, my + cursH - 1, sprite, frame, false);
+		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), MouseX, MouseY + cursH - 1, sprite, frame, false);
 		if (heldItem._iStatFlag) {
-			CelClippedDrawSafeTo(out, mx, my + cursH - 1, sprite, frame);
+			CelClippedDrawSafeTo(out, MouseX, MouseY + cursH - 1, sprite, frame);
 		} else {
-			CelDrawLightRedSafeTo(out, mx, my + cursH - 1, sprite, frame, 1);
+			CelDrawLightRedSafeTo(out, MouseX, MouseY + cursH - 1, sprite, frame, 1);
 		}
 	} else {
-		CelClippedDrawSafeTo(out, mx, my + cursH - 1, sprite, frame);
+		CelClippedDrawSafeTo(out, MouseX, MouseY + cursH - 1, sprite, frame);
 	}
 }
 
