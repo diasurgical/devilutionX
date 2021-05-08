@@ -125,6 +125,10 @@ std::optional<CelSprite> BigTGold_cel;
 
 std::optional<CelSprite> pSPentSpn2Cels;
 
+uint8_t fontColorTableGold[256];
+uint8_t fontColorTableBlue[256];
+uint8_t fontColorTableRed[256];
+
 void InitText()
 {
 	pPanelText = LoadCel("CtrlPan\\SmalText.CEL", 13);
@@ -132,6 +136,31 @@ void InitText()
 	BigTGold_cel = LoadCel("Data\\BigTGold.CEL", 46);
 
 	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
+
+	for (int i = 0; i < 256; i++) {
+		uint8_t pix = i;
+		if (pix >= PAL16_GRAY + 14)
+			pix = PAL16_BLUE + 15;
+		else if (pix >= PAL16_GRAY)
+			pix -= PAL16_GRAY - (PAL16_BLUE + 2);
+		fontColorTableBlue[i] = pix;
+	}
+
+	for (int i = 0; i < 256; i++) {
+		uint8_t pix = i;
+		if (pix >= PAL16_GRAY)
+			pix -= PAL16_GRAY - PAL16_RED;
+		fontColorTableRed[i] = pix;
+	}
+
+	for (int i = 0; i < 256; i++) {
+		uint8_t pix = i;
+		if (pix >= PAL16_GRAY + 14)
+			pix = PAL16_YELLOW + 15;
+		else if (pix >= PAL16_GRAY)
+			pix -= PAL16_GRAY - (PAL16_YELLOW + 2);
+		fontColorTableGold[i] = pix;
+	}
 }
 
 void FreeText()
@@ -145,50 +174,24 @@ void FreeText()
 
 void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col)
 {
-	int i;
-	BYTE pix;
-	BYTE tbl[256];
-
 	switch (col) {
 	case COL_WHITE:
 		CelDrawTo(out, sx, sy, *pPanelText, nCel);
 		return;
 	case COL_BLUE:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix > PAL16_GRAY + 13)
-				pix = PAL16_BLUE + 15;
-			else if (pix >= PAL16_GRAY)
-				pix -= PAL16_GRAY - (PAL16_BLUE + 2);
-			tbl[i] = pix;
-		}
+		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableBlue);
 		break;
 	case COL_RED:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix >= PAL16_GRAY)
-				pix -= PAL16_GRAY - PAL16_RED;
-			tbl[i] = pix;
-		}
+		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableRed);
 		break;
 	case COL_GOLD:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix >= PAL16_GRAY) {
-				if (pix >= PAL16_GRAY + 14)
-					pix = PAL16_YELLOW + 15;
-				else
-					pix -= PAL16_GRAY - (PAL16_YELLOW + 2);
-			}
-			tbl[i] = pix;
-		}
+		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableGold);
 		break;
 	case COL_BLACK:
 		light_table_index = 15;
 		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, nullptr);
 		return;
 	}
-	CelDrawLightTo(out, sx, sy, *pPanelText, nCel, tbl);
 }
 
 int GetLineWidth(const char *text, GameFontTables size)
