@@ -49,7 +49,7 @@ int SFileCookieSeek(void *cookie, off64_t *pos, int whence)
 
 int SFileCookieClose(void *cookie)
 {
-	return SFileCloseFile(static_cast<HANDLE>(cookie)) ? 0 : -1;
+	return SFileCloseFileThreadSafe(static_cast<HANDLE>(cookie)) ? 0 : -1;
 }
 
 } // extern "C"

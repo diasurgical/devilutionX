@@ -538,7 +538,7 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 			if (SFileOpenFile(pszName, &hsFile)) {
 				assert(hsFile);
 				dwSize = SFileGetFileSize(hsFile, nullptr);
-				SFileCloseFile(hsFile);
+				SFileCloseFileThreadSafe(hsFile);
 				if (dwMaxSize <= dwSize) {
 					dwMaxSize = dwSize;
 				}
