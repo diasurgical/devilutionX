@@ -49,7 +49,9 @@ void InitXPBar()
 		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
 
 		if (xpbarArt.surface == nullptr) {
-			app_fatal("%s", _("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
+			app_fatal("%s", _("Failed to load UI resources.\n"
+			                  "\n"
+			                  "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
 		}
 	}
 }

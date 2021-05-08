@@ -160,7 +160,7 @@ void InsertCDDlg()
 	    "%s",
 	    _("Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 	      "\n"
-	      "Make sure that it is in the game folder and that the file name is in all lowercase."));
+	      "Make sure that it is in the game folder."));
 
 	UiErrorOkDialog(_("Data File Error"), text);
 	app_fatal(nullptr);
