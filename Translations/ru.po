@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-05-07 00:28+0500\n"
+"POT-Creation-Date: 2021-05-08 07:29+0500\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -51,11 +51,11 @@ msgstr "Программисты Battle.net"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr "Программирование последовательного порта"
+msgstr "Программирование последовательной передачи данных"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
-msgstr "Программисты инсталятора"
+msgstr "Программисты инсталлятора"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
@@ -75,7 +75,7 @@ msgstr "Художественные руководители роликов"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr "3D художники роликов"
+msgstr "Художники 3D-роликов"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
@@ -131,7 +131,7 @@ msgstr "Режиссер звукозаписи"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
-msgstr "Дизайн и верстка руководства"
+msgstr "Дизайн и вёрстка руководства"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
@@ -143,25 +143,23 @@ msgstr "Ведущий тестировщик"
 
 #: Source/DiabloUI/credits_lines.cpp:115
 msgid "QA Assault Team (Testers)"
-msgstr "Тестировщики"
+msgstr "Штурмовая команда (Тестировщики)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
-msgstr "Тестировщики совместимости"
+msgstr "Команда специальных операций (Тестировщики совместимости)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr "Дополнительные тестировщики"
+msgstr "Артиллеристская поддержка (Дополнительные тестировщики) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
-#, fuzzy
 msgid "QA Counterintelligence"
-msgstr "Ещё тестировщики"
+msgstr "Контрразведка тестировщиков"
 
 #: Source/DiabloUI/credits_lines.cpp:130
-#, fuzzy
 msgid "Order of Network Information Services"
-msgstr "Инженеры сетевых служб"
+msgstr "Орден Сетевых Информационных Служб"
 
 #: Source/DiabloUI/credits_lines.cpp:134
 msgid "Customer Support"
@@ -221,7 +219,7 @@ msgstr "\tThe Strike Team Deflectors, Tony Levin, Big Jim и the Twins, "
 
 #: Source/DiabloUI/credits_lines.cpp:198
 msgid "\tSaag and all the folks at Davidson"
-msgstr ""
+msgstr "\tSaag и все в Davidson"
 
 #: Source/DiabloUI/credits_lines.cpp:200
 msgid "In memory of"
@@ -237,51 +235,51 @@ msgstr "Генеральный менеджер"
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr "Разработчик ПО"
+msgstr "Разработка ПО"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr ""
+msgstr "Художественный руководитель"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
-msgstr ""
+msgstr "Художники"
 
 #: Source/DiabloUI/credits_lines.cpp:228
 msgid "Design"
-msgstr ""
+msgstr "Дизайнеры"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr ""
+msgstr "Производство звука и эффектов"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
-msgstr ""
+msgstr "Ведущий тестириовщик"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
-msgstr ""
+msgstr "Тестировщики"
 
 #: Source/DiabloUI/credits_lines.cpp:246
 msgid "Manual"
-msgstr ""
+msgstr "Руководство"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
-msgstr ""
+msgstr "\tДополнительные работы"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
-msgstr ""
+msgstr "Написание квестов"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
-msgstr ""
+msgstr "Благодарность"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
-msgstr ""
+msgstr "\t\t\tОсобая благодарность Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
@@ -289,11 +287,11 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr ""
+msgstr "Менеджер тестирования"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
-msgstr ""
+msgstr "Ведущий тестировщик"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
@@ -309,15 +307,15 @@ msgstr "Маркетинг"
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
-msgstr "ПР Менеджер"
+msgstr "Менеджер по связям с общественностью"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 msgid "Associate Product Manager"
-msgstr "АП Менеджер"
+msgstr "Помощник менеджера продукта"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
-msgstr "The Ring of One Thousand"
+msgstr "Кольцо Одной Тысячи"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
@@ -339,7 +337,7 @@ msgstr "Одиночная игра"
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
-msgstr "Мультиплеерная игра"
+msgstr "Многопользовательская игра"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Replay Intro"
@@ -370,8 +368,8 @@ msgid ""
 "The Diablo introduction cinematic is only available in the full retail "
 "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"Начальная катсцена в Diablo доступна только в полной версии. Перейдите на "
-"https://www.gog.com/game/diablo чтобы ее приобрести."
+"Начальный ролик в Diablo доступен только в полной версии. Перейдите на "
+"https://www.gog.com/game/diablo для покупки."
 
 #: Source/DiabloUI/progress.cpp:46 Source/DiabloUI/selconn.cpp:71
 #: Source/DiabloUI/selhero.cpp:210 Source/DiabloUI/selhero.cpp:236
@@ -391,7 +389,7 @@ msgstr "Петля"
 #: Source/DiabloUI/selconn.cpp:42 Source/DiabloUI/selgame.cpp:439
 #: Source/DiabloUI/selgame.cpp:457
 msgid "Multi Player Game"
-msgstr "Мультиплеерная игра"
+msgstr "Многопользовательсякая игра"
 
 #: Source/DiabloUI/selconn.cpp:48
 msgid "Requirements:"
@@ -523,7 +521,7 @@ msgid ""
 "of Nightmare difficulty."
 msgstr ""
 "Ваш персонаж должен достигнуть 20 уровня, чтобы вы смогли войти в "
-"мультиплеерную игру на Кошмарной сложности."
+"многопользовательскую игру на Кошмарной сложности."
 
 #: Source/DiabloUI/selgame.cpp:234
 msgid ""
@@ -531,7 +529,7 @@ msgid ""
 "of Hell difficulty."
 msgstr ""
 "Ваш персонаж должен достигнуть 30 уровня, чтобы вы смогли войти в "
-"мультиплеерную игру на Адской сложности."
+"многопользовательскую игру на Адской сложности."
 
 #: Source/DiabloUI/selgame.cpp:309
 msgid "Select Game Speed"
@@ -564,8 +562,8 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "Быстрая скорость\n"
-"Теперь обитатели лабиринта стали быстрее. Эта скорость рекомендуется для "
-"опытных персонажей."
+"Теперь обитатели лабиринта стали быстрее и будут большим вызовом. Эта "
+"скорость рекомендуется только для опытных персонажей."
 
 #: Source/DiabloUI/selgame.cpp:340
 msgid ""
@@ -574,8 +572,8 @@ msgid ""
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
 "Очень быстрая скорость\n"
-"Большинство монстров найдут вас быстрее чем вы найдете пульт от телевизора. "
-"Только опытные чемпионы смогут испытать свои навыки в скорости."
+"Большинство монстров найдут вас быстрее чем раньше. Только опытные чемпионы "
+"должны попытать своё счастье на этой скорости."
 
 #: Source/DiabloUI/selgame.cpp:344
 msgid ""
@@ -583,8 +581,8 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
-"Сверхбыстрая скорость\n"
-"Миньоны преисподней тут же бросаются в атаку. Только настоящие демоны "
+"Самая быстрая скорость\n"
+"Приспешники преисподней тут же бросаются в атаку. Только настоящие демоны "
 "скорости смогут испытать себя на этой скорости."
 
 #: Source/DiabloUI/selgame.cpp:386
@@ -609,27 +607,27 @@ msgstr "Новый герой"
 msgid "Choose Class"
 msgstr "Выберете класс"
 
-#: Source/DiabloUI/selhero.cpp:189 Source/control.cpp:89
+#: Source/DiabloUI/selhero.cpp:189 Source/control.cpp:90
 msgid "Warrior"
 msgstr "Воин"
 
-#: Source/DiabloUI/selhero.cpp:190 Source/control.cpp:90
+#: Source/DiabloUI/selhero.cpp:190 Source/control.cpp:91
 msgid "Rogue"
 msgstr "Разбойник"
 
-#: Source/DiabloUI/selhero.cpp:191 Source/control.cpp:91
+#: Source/DiabloUI/selhero.cpp:191 Source/control.cpp:92
 msgid "Sorcerer"
 msgstr "Маг"
 
-#: Source/DiabloUI/selhero.cpp:193 Source/control.cpp:92
+#: Source/DiabloUI/selhero.cpp:193 Source/control.cpp:93
 msgid "Monk"
 msgstr "Монах"
 
-#: Source/DiabloUI/selhero.cpp:196 Source/control.cpp:93
+#: Source/DiabloUI/selhero.cpp:196 Source/control.cpp:94
 msgid "Bard"
 msgstr "Бард"
 
-#: Source/DiabloUI/selhero.cpp:199 Source/control.cpp:94
+#: Source/DiabloUI/selhero.cpp:199 Source/control.cpp:95
 msgid "Barbarian"
 msgstr "Варвар"
 
@@ -639,7 +637,7 @@ msgstr "Новый герой для одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:295
 msgid "New Multi Player Hero"
-msgstr "Новый герой для мультплеерной игры"
+msgstr "Новый герой для многопользовательской игры"
 
 #: Source/DiabloUI/selhero.cpp:225
 msgid "Save File Exists"
@@ -664,7 +662,7 @@ msgid ""
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
 "Разбойник и колдун доступны только в полной версии. Перейдите на https://www."
-"gog.com/game/diablo чтобы ее приобрести."
+"gog.com/game/diablo для покупки."
 
 #: Source/DiabloUI/selhero.cpp:299 Source/DiabloUI/selhero.cpp:305
 msgid "Enter Name"
@@ -717,11 +715,11 @@ msgstr "Удалить"
 
 #: Source/DiabloUI/selhero.cpp:573
 msgid "Multi Player Characters"
-msgstr "Мультиплеерные персонажи"
+msgstr "Многопользовательские персонажи"
 
 #: Source/DiabloUI/selhero.cpp:617
 msgid "Delete Multi Player Hero"
-msgstr "Удалить мультиплеерного персонажа"
+msgstr "Удалить многопользовательского персонажа"
 
 #: Source/DiabloUI/selhero.cpp:619
 msgid "Delete Single Player Hero"
@@ -732,11 +730,11 @@ msgstr "Удалить персонажа для одиночной игры"
 msgid "Are you sure you want to delete the character \"%s\"?"
 msgstr "Вы действительно хотите удалить персонажа \"%s\"?"
 
-#: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:888
+#: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:889
 msgid "Yes"
 msgstr "Да"
 
-#: Source/DiabloUI/selyesno.cpp:62 Source/stores.cpp:889
+#: Source/DiabloUI/selyesno.cpp:62 Source/stores.cpp:890
 msgid "No"
 msgstr "Нет"
 
@@ -750,13 +748,13 @@ msgstr "Перейдите по ссылке, чтобы войти на фор�
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid "and the Hellfire expansion."
-msgstr "и Hellfire."
+msgstr "и дополнением Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:12
 msgid ""
 "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
 msgstr ""
-"DevilutionX поддерживается Diasurgical, вы можете отправить отчет об ошибке "
+"DevilutionX поддерживается Diasurgical, вы можете отправить отчёт об ошибке "
 "или баге"
 
 #: Source/DiabloUI/support_lines.cpp:13
@@ -774,7 +772,7 @@ msgstr "версию операционной системы, и опишите 
 
 #: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
-msgstr "Дисклеймер:"
+msgstr "Отказ от обязательств:"
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
@@ -861,7 +859,7 @@ msgid ""
 "Unable to write to location:\n"
 "%s"
 msgstr ""
-"Невозможно записать файл:\n"
+"Невозможно записать в:\n"
 "%s"
 
 #: Source/appfat.cpp:178
@@ -886,82 +884,82 @@ msgstr "Уровень: Nest %i"
 msgid "Level: Crypt %i"
 msgstr "Уровень: Crypt %i"
 
-#: Source/automap.cpp:410 Source/items.cpp:3863
+#: Source/automap.cpp:410 Source/items.cpp:3843
 #, c-format
 msgid "Level: %i"
 msgstr "Уровень: %i"
 
-#: Source/control.cpp:243
+#: Source/control.cpp:244
 msgid "Tab"
 msgstr ""
 
-#: Source/control.cpp:243
+#: Source/control.cpp:244
 msgid "Esc"
 msgstr ""
 
-#: Source/control.cpp:243
+#: Source/control.cpp:244
 #, fuzzy
 #| msgid "Enter Name"
 msgid "Enter"
 msgstr "Введите имя"
 
-#: Source/control.cpp:246
+#: Source/control.cpp:247
 msgid "Character Information"
 msgstr "Информация о персонаже"
 
-#: Source/control.cpp:247
+#: Source/control.cpp:248
 msgid "Quests log"
 msgstr "Логи квестов"
 
-#: Source/control.cpp:248
+#: Source/control.cpp:249
 msgid "Automap"
 msgstr "Автоматическая карта"
 
-#: Source/control.cpp:249
+#: Source/control.cpp:250
 msgid "Main Menu"
 msgstr "Основное меню"
 
-#: Source/control.cpp:250
+#: Source/control.cpp:251
 msgid "Inventory"
 msgstr "Инвентарь"
 
-#: Source/control.cpp:251
+#: Source/control.cpp:252
 msgid "Spell book"
 msgstr "Книга заклинаний"
 
-#: Source/control.cpp:252
+#: Source/control.cpp:253
 msgid "Send Message"
 msgstr "Отправить сообщение"
 
-#: Source/control.cpp:453 Source/control.cpp:1047
+#: Source/control.cpp:454 Source/control.cpp:1048
 #, c-format
 msgid "%s Skill"
 msgstr "%s навык"
 
-#: Source/control.cpp:456 Source/control.cpp:1051
+#: Source/control.cpp:457 Source/control.cpp:1052
 #, c-format
 msgid "%s Spell"
 msgstr "Заклинание %s"
 
-#: Source/control.cpp:458
+#: Source/control.cpp:459
 msgid "Damages undead only"
 msgstr "Наносит урон по нежити"
 
-#: Source/control.cpp:462 Source/control.cpp:1057 Source/control.cpp:1867
+#: Source/control.cpp:463 Source/control.cpp:1058 Source/control.cpp:1868
 msgid "Spell Level 0 - Unusable"
 msgstr "Уровень заклинаний 0 - Не используется"
 
-#: Source/control.cpp:464 Source/control.cpp:1059 Source/control.cpp:1869
+#: Source/control.cpp:465 Source/control.cpp:1060 Source/control.cpp:1870
 #, c-format
 msgid "Spell Level %i"
 msgstr "Уровень заклинаний %i"
 
-#: Source/control.cpp:468 Source/control.cpp:1063
+#: Source/control.cpp:469 Source/control.cpp:1064
 #, c-format
 msgid "Scroll of %s"
 msgstr "Свиток о %s"
 
-#: Source/control.cpp:484 Source/control.cpp:1080
+#: Source/control.cpp:485 Source/control.cpp:1081
 #, fuzzy, c-format
 #| msgid "%i Scrolls"
 msgid "%i Scroll"
@@ -970,12 +968,12 @@ msgstr[0] "%i свиток"
 msgstr[1] "%i свитков"
 msgstr[2] "%i свитков"
 
-#: Source/control.cpp:488 Source/control.cpp:1084 Source/items.cpp:1598
+#: Source/control.cpp:489 Source/control.cpp:1085 Source/items.cpp:1578
 #, c-format
 msgid "Staff of %s"
 msgstr ""
 
-#: Source/control.cpp:490 Source/control.cpp:1086
+#: Source/control.cpp:491 Source/control.cpp:1087
 #, c-format
 msgid "%i Charge"
 msgid_plural "%i Charges"
@@ -983,34 +981,34 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: Source/control.cpp:501
+#: Source/control.cpp:502
 #, fuzzy, c-format
 #| msgid "Spell book"
 msgid "Spell Hotkey %s"
 msgstr "Книга заклинаний"
 
-#: Source/control.cpp:1023
+#: Source/control.cpp:1024
 msgid "Player friendly"
 msgstr ""
 
-#: Source/control.cpp:1025
+#: Source/control.cpp:1026
 msgid "Player attack"
 msgstr ""
 
-#: Source/control.cpp:1028
+#: Source/control.cpp:1029
 #, c-format
 msgid "Hotkey: %s"
 msgstr ""
 
-#: Source/control.cpp:1037
+#: Source/control.cpp:1038
 msgid "Select current spell button"
 msgstr ""
 
-#: Source/control.cpp:1041
+#: Source/control.cpp:1042
 msgid "Hotkey: 's'"
 msgstr ""
 
-#: Source/control.cpp:1273 Source/inv.cpp:2104 Source/items.cpp:3078
+#: Source/control.cpp:1274 Source/inv.cpp:2071 Source/items.cpp:3058
 #, c-format
 msgid "%i gold piece"
 msgid_plural "%i gold pieces"
@@ -1018,37 +1016,37 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: Source/control.cpp:1276
+#: Source/control.cpp:1277
 msgid "Requirements not met"
 msgstr ""
 
-#: Source/control.cpp:1314
+#: Source/control.cpp:1315
 #, c-format
 msgid "%s, Level: %i"
 msgstr ""
 
-#: Source/control.cpp:1316
+#: Source/control.cpp:1317
 #, c-format
 msgid "Hit Points %i of %i"
 msgstr ""
 
-#: Source/control.cpp:1389
+#: Source/control.cpp:1390
 msgid "None"
 msgstr ""
 
-#: Source/control.cpp:1457 Source/control.cpp:1469 Source/control.cpp:1481
+#: Source/control.cpp:1458 Source/control.cpp:1470 Source/control.cpp:1482
 msgid "MAX"
 msgstr ""
 
-#: Source/control.cpp:1599
+#: Source/control.cpp:1600
 msgid "Level Up"
 msgstr "Новый уровень! |"
 
-#: Source/control.cpp:1842
+#: Source/control.cpp:1843
 msgid "Skill"
 msgstr ""
 
-#: Source/control.cpp:1846
+#: Source/control.cpp:1847
 #, c-format
 msgid "Staff (%i charge)"
 msgid_plural "Staff (%i charges)"
@@ -1056,27 +1054,27 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: Source/control.cpp:1854
+#: Source/control.cpp:1855
 #, c-format
 msgid "Mana: %i  Dam: %i - %i"
 msgstr ""
 
-#: Source/control.cpp:1856
+#: Source/control.cpp:1857
 #, c-format
 msgid "Mana: %i   Dam: n/a"
 msgstr ""
 
-#: Source/control.cpp:1859
+#: Source/control.cpp:1860
 #, c-format
 msgid "Mana: %i  Dam: 1/3 tgt hp"
 msgstr ""
 
-#: Source/control.cpp:1906
+#: Source/control.cpp:1907
 #, c-format
 msgid "You have %u gold"
 msgstr ""
 
-#: Source/control.cpp:1908
+#: Source/control.cpp:1909
 #, c-format
 msgid "piece.  How many do"
 msgid_plural "pieces.  How many do"
@@ -1084,7 +1082,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: Source/control.cpp:1910
+#: Source/control.cpp:1911
 msgid "you want to remove?"
 msgstr ""
 
@@ -1264,281 +1262,281 @@ msgstr ""
 msgid "error: read 0 bytes from server"
 msgstr ""
 
-#: Source/error.cpp:22
+#: Source/error.cpp:23
 msgid "No automap available in town"
 msgstr ""
 
-#: Source/error.cpp:23
+#: Source/error.cpp:24
 msgid "No multiplayer functions in demo"
 msgstr ""
 
-#: Source/error.cpp:24
+#: Source/error.cpp:25
 msgid "Direct Sound Creation Failed"
 msgstr ""
 
-#: Source/error.cpp:25
+#: Source/error.cpp:26
 msgid "Not available in shareware version"
 msgstr ""
 
-#: Source/error.cpp:26
+#: Source/error.cpp:27
 msgid "Not enough space to save"
 msgstr ""
 
-#: Source/error.cpp:27
+#: Source/error.cpp:28
 msgid "No Pause in town"
 msgstr ""
 
-#: Source/error.cpp:28
+#: Source/error.cpp:29
 msgid "Copying to a hard disk is recommended"
 msgstr ""
 
-#: Source/error.cpp:29
+#: Source/error.cpp:30
 msgid "Multiplayer sync problem"
 msgstr ""
 
-#: Source/error.cpp:30
+#: Source/error.cpp:31
 msgid "No pause in multiplayer"
 msgstr ""
 
-#: Source/error.cpp:31
+#: Source/error.cpp:32
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: Source/error.cpp:32
+#: Source/error.cpp:33
 msgid "Saving..."
 msgstr "Сохранение..."
 
-#: Source/error.cpp:33
+#: Source/error.cpp:34
 msgid "Some are weakened as one grows strong"
 msgstr ""
 
-#: Source/error.cpp:34
+#: Source/error.cpp:35
 msgid "New strength is forged through destruction"
 msgstr ""
 
-#: Source/error.cpp:35
+#: Source/error.cpp:36
 msgid "Those who defend seldom attack"
 msgstr ""
 
-#: Source/error.cpp:36
+#: Source/error.cpp:37
 msgid "The sword of justice is swift and sharp"
 msgstr ""
 
-#: Source/error.cpp:37
+#: Source/error.cpp:38
 msgid "While the spirit is vigilant the body thrives"
 msgstr ""
 
-#: Source/error.cpp:38
+#: Source/error.cpp:39
 msgid "The powers of mana refocused renews"
 msgstr ""
 
-#: Source/error.cpp:39
+#: Source/error.cpp:40
 msgid "Time cannot diminish the power of steel"
 msgstr ""
 
-#: Source/error.cpp:40
+#: Source/error.cpp:41
 msgid "Magic is not always what it seems to be"
 msgstr ""
 
-#: Source/error.cpp:41
+#: Source/error.cpp:42
 msgid "What once was opened now is closed"
 msgstr ""
 
-#: Source/error.cpp:42
+#: Source/error.cpp:43
 msgid "Intensity comes at the cost of wisdom"
 msgstr ""
 
-#: Source/error.cpp:43
+#: Source/error.cpp:44
 msgid "Arcane power brings destruction"
 msgstr ""
 
-#: Source/error.cpp:44
+#: Source/error.cpp:45
 msgid "That which cannot be held cannot be harmed"
 msgstr ""
 
-#: Source/error.cpp:45
+#: Source/error.cpp:46
 msgid "Crimson and Azure become as the sun"
 msgstr ""
 
-#: Source/error.cpp:46
+#: Source/error.cpp:47
 msgid "Knowledge and wisdom at the cost of self"
 msgstr ""
 
-#: Source/error.cpp:47
+#: Source/error.cpp:48
 msgid "Drink and be refreshed"
 msgstr ""
 
-#: Source/error.cpp:48
+#: Source/error.cpp:49
 msgid "Wherever you go, there you are"
 msgstr ""
 
-#: Source/error.cpp:49
+#: Source/error.cpp:50
 msgid "Energy comes at the cost of wisdom"
 msgstr ""
 
-#: Source/error.cpp:50
+#: Source/error.cpp:51
 msgid "Riches abound when least expected"
 msgstr ""
 
-#: Source/error.cpp:51
+#: Source/error.cpp:52
 msgid "Where avarice fails, patience gains reward"
 msgstr ""
 
-#: Source/error.cpp:52
+#: Source/error.cpp:53
 msgid "Blessed by a benevolent companion!"
 msgstr ""
 
-#: Source/error.cpp:53
+#: Source/error.cpp:54
 msgid "The hands of men may be guided by fate"
 msgstr ""
 
-#: Source/error.cpp:54
+#: Source/error.cpp:55
 msgid "Strength is bolstered by heavenly faith"
 msgstr ""
 
-#: Source/error.cpp:55
+#: Source/error.cpp:56
 msgid "The essence of life flows from within"
 msgstr ""
 
-#: Source/error.cpp:56
+#: Source/error.cpp:57
 msgid "The way is made clear when viewed from above"
 msgstr ""
 
-#: Source/error.cpp:57
+#: Source/error.cpp:58
 msgid "Salvation comes at the cost of wisdom"
 msgstr ""
 
-#: Source/error.cpp:58
+#: Source/error.cpp:59
 msgid "Mysteries are revealed in the light of reason"
 msgstr ""
 
-#: Source/error.cpp:59
+#: Source/error.cpp:60
 msgid "Those who are last may yet be first"
 msgstr ""
 
-#: Source/error.cpp:60
+#: Source/error.cpp:61
 msgid "Generosity brings its own rewards"
 msgstr ""
 
-#: Source/error.cpp:61
+#: Source/error.cpp:62
 msgid "You must be at least level 8 to use this."
 msgstr ""
 
-#: Source/error.cpp:62
+#: Source/error.cpp:63
 msgid "You must be at least level 13 to use this."
 msgstr ""
 
-#: Source/error.cpp:63
+#: Source/error.cpp:64
 msgid "You must be at least level 17 to use this."
 msgstr ""
 
-#: Source/error.cpp:64
+#: Source/error.cpp:65
 msgid "Arcane knowledge gained!"
 msgstr ""
 
-#: Source/error.cpp:65
+#: Source/error.cpp:66
 msgid "That which does not kill you..."
 msgstr ""
 
-#: Source/error.cpp:66
+#: Source/error.cpp:67
 msgid "Knowledge is power."
 msgstr ""
 
-#: Source/error.cpp:67
+#: Source/error.cpp:68
 msgid "Give and you shall receive."
 msgstr ""
 
-#: Source/error.cpp:68
+#: Source/error.cpp:69
 msgid "Some experience is gained by touch."
 msgstr ""
 
-#: Source/error.cpp:69
+#: Source/error.cpp:70
 msgid "There's no place like home."
 msgstr ""
 
-#: Source/error.cpp:70
+#: Source/error.cpp:71
 msgid "Spiritual energy is restored."
 msgstr ""
 
-#: Source/error.cpp:71
+#: Source/error.cpp:72
 msgid "You feel more agile."
 msgstr ""
 
-#: Source/error.cpp:72
+#: Source/error.cpp:73
 msgid "You feel stronger."
 msgstr ""
 
-#: Source/error.cpp:73
+#: Source/error.cpp:74
 msgid "You feel wiser."
 msgstr ""
 
-#: Source/error.cpp:74
+#: Source/error.cpp:75
 msgid "You feel refreshed."
 msgstr ""
 
-#: Source/error.cpp:75
+#: Source/error.cpp:76
 msgid "That which can break will."
 msgstr ""
 
 #: Source/gamemenu.cpp:38
 msgid "Save Game"
-msgstr ""
+msgstr "Сохранить Игру"
 
 #: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
 msgid "Options"
-msgstr ""
+msgstr "Настройки"
 
 #: Source/gamemenu.cpp:42 Source/gamemenu.cpp:53
 msgid "Quit Game"
-msgstr ""
+msgstr "Выйти из Игры"
 
 #: Source/gamemenu.cpp:52
 msgid "Restart In Town"
-msgstr ""
+msgstr "Начать в Городе"
 
 #: Source/gamemenu.cpp:62
 msgid "Gamma"
-msgstr ""
+msgstr "Гамма"
 
 #: Source/gamemenu.cpp:63 Source/gamemenu.cpp:178
 msgid "Speed"
-msgstr ""
+msgstr "Скорость"
 
 #: Source/gamemenu.cpp:64
 msgid "Previous Menu"
-msgstr ""
+msgstr "Предыдущее Меню"
 
 #: Source/gamemenu.cpp:71
 msgid "Music Disabled"
-msgstr ""
+msgstr "Музыка выключена"
 
 #: Source/gamemenu.cpp:75
 msgid "Sound"
-msgstr ""
+msgstr "Звук"
 
 #: Source/gamemenu.cpp:76
 msgid "Sound Disabled"
-msgstr ""
+msgstr "Звук Выключен"
 
 #: Source/gamemenu.cpp:166
 msgid "Speed: Fastest"
-msgstr ""
+msgstr "Скорость: Сверхбыстрая"
 
 #: Source/gamemenu.cpp:168
 msgid "Speed: Faster"
-msgstr ""
+msgstr "Скорость: Очень быстрая"
 
 #: Source/gamemenu.cpp:170
 msgid "Speed: Fast"
-msgstr ""
+msgstr "Скорость: Быстрая"
 
 #: Source/gamemenu.cpp:172
 msgid "Speed: Normal"
-msgstr ""
+msgstr "Скорость: Нормальная"
 
-#: Source/gmenu.cpp:81
+#: Source/gmenu.cpp:82
 msgid "Pause"
-msgstr ""
+msgstr "Пауза"
 
 #: Source/help.cpp:20
 msgid ""
@@ -1865,7 +1863,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:25
 msgid "Magic Rock"
-msgstr ""
+msgstr "Волшебный Камень"
 
 #: Source/itemdat.cpp:26 Source/itemdat.cpp:394
 msgid "Optic Amulet"
@@ -1875,9 +1873,11 @@ msgstr ""
 msgid "Ring of Truth"
 msgstr ""
 
+# Возможно нужно везде поменять "знак" на "вывеску"
 #: Source/itemdat.cpp:28
+#, fuzzy
 msgid "Tavern Sign"
-msgstr ""
+msgstr "Знак Таверны"
 
 #: Source/itemdat.cpp:29 Source/itemdat.cpp:396
 msgid "Harlequin Crest"
@@ -1891,17 +1891,17 @@ msgstr ""
 msgid "Golden Elixir"
 msgstr ""
 
-#: Source/itemdat.cpp:32 Source/quests.cpp:49
+#: Source/itemdat.cpp:32 Source/quests.cpp:50
 msgid "Anvil of Fury"
 msgstr ""
 
-#: Source/itemdat.cpp:33 Source/quests.cpp:40
+#: Source/itemdat.cpp:33 Source/quests.cpp:41
 msgid "Black Mushroom"
-msgstr ""
+msgstr "Чёрный Гриб"
 
 #: Source/itemdat.cpp:34
 msgid "Brain"
-msgstr ""
+msgstr "Мозг"
 
 #: Source/itemdat.cpp:35
 msgid "Fungal Tome"
@@ -1941,7 +1941,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:44 Source/itemdat.cpp:398
 msgid "Arkaine's Valor"
-msgstr ""
+msgstr "Доблесть Аркейна"
 
 #: Source/itemdat.cpp:45 Source/itemdat.cpp:94
 msgid "Potion of Full Healing"
@@ -1967,7 +1967,7 @@ msgstr ""
 msgid "Scroll of Resurrect"
 msgstr ""
 
-#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:72
+#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:73
 msgid "Blacksmith Oil"
 msgstr ""
 
@@ -2067,7 +2067,7 @@ msgid "Quilted Armor"
 msgstr ""
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-#: Source/itemdat.cpp:77 Source/objects.cpp:5531
+#: Source/itemdat.cpp:77 Source/objects.cpp:5533
 msgid "Armor"
 msgstr ""
 
@@ -2162,11 +2162,11 @@ msgstr ""
 msgid "Potion of Full Rejuvenation"
 msgstr ""
 
-#: Source/itemdat.cpp:100 Source/items.cpp:67
+#: Source/itemdat.cpp:100 Source/items.cpp:68
 msgid "Oil of Accuracy"
 msgstr ""
 
-#: Source/itemdat.cpp:101 Source/items.cpp:69
+#: Source/itemdat.cpp:101 Source/items.cpp:70
 msgid "Oil of Sharpness"
 msgstr ""
 
@@ -3580,256 +3580,256 @@ msgstr ""
 msgid "Gladiator's Ring"
 msgstr ""
 
-#: Source/items.cpp:68
+#: Source/items.cpp:69
 msgid "Oil of Mastery"
 msgstr ""
 
-#: Source/items.cpp:70
+#: Source/items.cpp:71
 msgid "Oil of Death"
 msgstr ""
 
-#: Source/items.cpp:71
+#: Source/items.cpp:72
 msgid "Oil of Skill"
 msgstr ""
 
-#: Source/items.cpp:73
+#: Source/items.cpp:74
 msgid "Oil of Fortitude"
 msgstr ""
 
-#: Source/items.cpp:74
+#: Source/items.cpp:75
 msgid "Oil of Permanence"
 msgstr ""
 
-#: Source/items.cpp:75
+#: Source/items.cpp:76
 msgid "Oil of Hardening"
 msgstr ""
 
-#: Source/items.cpp:76
+#: Source/items.cpp:77
 msgid "Oil of Imperviousness"
 msgstr ""
 
-#: Source/items.cpp:1555 Source/items.cpp:1596 Source/items.cpp:2189
-#: Source/items.cpp:2208
+#: Source/items.cpp:1535 Source/items.cpp:1576 Source/items.cpp:2169
+#: Source/items.cpp:2188
 #, c-format
 msgid "%s of %s"
 msgstr ""
 
-#: Source/items.cpp:2781 Source/player.cpp:1842
+#: Source/items.cpp:2761 Source/player.cpp:1903
 #, c-format
 msgid "Ear of %s"
 msgstr ""
 
-#: Source/items.cpp:3310 Source/items.cpp:3322
+#: Source/items.cpp:3290 Source/items.cpp:3302
 msgid "increases a weapon's"
 msgstr ""
 
-#: Source/items.cpp:3312
+#: Source/items.cpp:3292
 msgid "chance to hit"
 msgstr ""
 
-#: Source/items.cpp:3316
+#: Source/items.cpp:3296
 msgid "greatly increases a"
 msgstr ""
 
-#: Source/items.cpp:3318
+#: Source/items.cpp:3298
 msgid "weapon's chance to hit"
 msgstr ""
 
-#: Source/items.cpp:3324
+#: Source/items.cpp:3304
 msgid "damage potential"
 msgstr ""
 
-#: Source/items.cpp:3328
+#: Source/items.cpp:3308
 msgid "greatly increases a weapon's"
 msgstr ""
 
-#: Source/items.cpp:3330
+#: Source/items.cpp:3310
 msgid "damage potential - not bows"
 msgstr ""
 
-#: Source/items.cpp:3334
+#: Source/items.cpp:3314
 msgid "reduces attributes needed"
 msgstr ""
 
-#: Source/items.cpp:3336
+#: Source/items.cpp:3316
 msgid "to use armor or weapons"
 msgstr ""
 
-#: Source/items.cpp:3340
+#: Source/items.cpp:3320
 #, no-c-format
 msgid "restores 20% of an"
 msgstr ""
 
-#: Source/items.cpp:3342
+#: Source/items.cpp:3322
 msgid "item's durability"
 msgstr ""
 
-#: Source/items.cpp:3346
+#: Source/items.cpp:3326
 msgid "increases an item's"
 msgstr ""
 
-#: Source/items.cpp:3348
+#: Source/items.cpp:3328
 msgid "current and max durability"
 msgstr ""
 
-#: Source/items.cpp:3352
+#: Source/items.cpp:3332
 msgid "makes an item indestructible"
 msgstr ""
 
-#: Source/items.cpp:3356
+#: Source/items.cpp:3336
 msgid "increases the armor class"
 msgstr ""
 
-#: Source/items.cpp:3358
+#: Source/items.cpp:3338
 msgid "of armor and shields"
 msgstr ""
 
-#: Source/items.cpp:3362
+#: Source/items.cpp:3342
 msgid "greatly increases the armor"
 msgstr ""
 
-#: Source/items.cpp:3364
+#: Source/items.cpp:3344
 msgid "class of armor and shields"
 msgstr ""
 
-#: Source/items.cpp:3368 Source/items.cpp:3380
+#: Source/items.cpp:3348 Source/items.cpp:3360
 msgid "sets fire trap"
 msgstr ""
 
-#: Source/items.cpp:3372 Source/items.cpp:3376
+#: Source/items.cpp:3352 Source/items.cpp:3356
 msgid "sets lightning trap"
 msgstr ""
 
-#: Source/items.cpp:3384
+#: Source/items.cpp:3364
 msgid "sets petrification trap"
 msgstr ""
 
-#: Source/items.cpp:3388
+#: Source/items.cpp:3368
 msgid "fully recover life"
 msgstr ""
 
-#: Source/items.cpp:3392
+#: Source/items.cpp:3372
 msgid "recover partial life"
 msgstr ""
 
-#: Source/items.cpp:3396
+#: Source/items.cpp:3376
 msgid "recover life"
 msgstr ""
 
-#: Source/items.cpp:3400
+#: Source/items.cpp:3380
 msgid "deadly heal"
 msgstr ""
 
-#: Source/items.cpp:3404
+#: Source/items.cpp:3384
 msgid "recover mana"
 msgstr ""
 
-#: Source/items.cpp:3408
+#: Source/items.cpp:3388
 msgid "fully recover mana"
 msgstr ""
 
-#: Source/items.cpp:3412
+#: Source/items.cpp:3392
 msgid "increase strength"
 msgstr ""
 
-#: Source/items.cpp:3416
+#: Source/items.cpp:3396
 msgid "increase magic"
 msgstr ""
 
-#: Source/items.cpp:3420
+#: Source/items.cpp:3400
 msgid "increase dexterity"
 msgstr ""
 
-#: Source/items.cpp:3424
+#: Source/items.cpp:3404
 msgid "increase vitality"
 msgstr ""
 
-#: Source/items.cpp:3428 Source/items.cpp:3432
+#: Source/items.cpp:3408 Source/items.cpp:3412
 msgid "decrease strength"
 msgstr ""
 
-#: Source/items.cpp:3436
+#: Source/items.cpp:3416
 msgid "decrease dexterity"
 msgstr ""
 
-#: Source/items.cpp:3440
+#: Source/items.cpp:3420
 msgid "decrease vitality"
 msgstr ""
 
-#: Source/items.cpp:3444
+#: Source/items.cpp:3424
 msgid "recover life and mana"
 msgstr ""
 
-#: Source/items.cpp:3448
+#: Source/items.cpp:3428
 msgid "fully recover life and mana"
 msgstr ""
 
-#: Source/items.cpp:3459
+#: Source/items.cpp:3439
 #, c-format
 msgid "chance to hit: %+i%%"
 msgstr ""
 
-#: Source/items.cpp:3463
+#: Source/items.cpp:3443
 #, c-format
 msgid "%+i%% damage"
 msgstr ""
 
-#: Source/items.cpp:3467 Source/items.cpp:3725
+#: Source/items.cpp:3447 Source/items.cpp:3705
 #, c-format
 msgid "to hit: %+i%%, %+i%% damage"
 msgstr ""
 
-#: Source/items.cpp:3471
+#: Source/items.cpp:3451
 #, c-format
 msgid "%+i%% armor"
 msgstr ""
 
-#: Source/items.cpp:3474 Source/items.cpp:3477
+#: Source/items.cpp:3454 Source/items.cpp:3457
 #, c-format
 msgid "armor class: %i"
 msgstr ""
 
-#: Source/items.cpp:3482 Source/items.cpp:3707
+#: Source/items.cpp:3462 Source/items.cpp:3687
 #, c-format
 msgid "Resist Fire: %+i%%"
 msgstr ""
 
-#: Source/items.cpp:3484
+#: Source/items.cpp:3464
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr ""
 
-#: Source/items.cpp:3489
+#: Source/items.cpp:3469
 #, c-format
 msgid "Resist Lightning: %+i%%"
 msgstr ""
 
-#: Source/items.cpp:3491
+#: Source/items.cpp:3471
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr ""
 
-#: Source/items.cpp:3496
+#: Source/items.cpp:3476
 #, c-format
 msgid "Resist Magic: %+i%%"
 msgstr ""
 
-#: Source/items.cpp:3498
+#: Source/items.cpp:3478
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr ""
 
-#: Source/items.cpp:3503
+#: Source/items.cpp:3483
 #, c-format
 msgid "Resist All: %+i%%"
 msgstr ""
 
-#: Source/items.cpp:3505
+#: Source/items.cpp:3485
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr ""
 
-#: Source/items.cpp:3509
+#: Source/items.cpp:3489
 #, c-format
 msgid "spells are increased %i level"
 msgid_plural "spells are increased %i levels"
@@ -3837,7 +3837,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: Source/items.cpp:3511
+#: Source/items.cpp:3491
 #, c-format
 msgid "spells are decreased %i level"
 msgid_plural "spells are decreased %i levels"
@@ -3845,15 +3845,15 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: Source/items.cpp:3513
+#: Source/items.cpp:3493
 msgid "spell levels unchanged (?)"
 msgstr ""
 
-#: Source/items.cpp:3516
+#: Source/items.cpp:3496
 msgid "Extra charges"
 msgstr ""
 
-#: Source/items.cpp:3519
+#: Source/items.cpp:3499
 #, c-format
 msgid "%i %s charge"
 msgid_plural "%i %s charges"
@@ -3861,212 +3861,212 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: Source/items.cpp:3523
+#: Source/items.cpp:3503
 #, c-format
 msgid "Fire hit damage: %i"
 msgstr ""
 
-#: Source/items.cpp:3525
+#: Source/items.cpp:3505
 #, c-format
 msgid "Fire hit damage: %i-%i"
 msgstr ""
 
-#: Source/items.cpp:3529
+#: Source/items.cpp:3509
 #, c-format
 msgid "Lightning hit damage: %i"
 msgstr ""
 
-#: Source/items.cpp:3531
+#: Source/items.cpp:3511
 #, c-format
 msgid "Lightning hit damage: %i-%i"
 msgstr ""
 
-#: Source/items.cpp:3535
+#: Source/items.cpp:3515
 #, c-format
 msgid "%+i to strength"
 msgstr ""
 
-#: Source/items.cpp:3539
+#: Source/items.cpp:3519
 #, c-format
 msgid "%+i to magic"
 msgstr ""
 
-#: Source/items.cpp:3543
+#: Source/items.cpp:3523
 #, c-format
 msgid "%+i to dexterity"
 msgstr ""
 
-#: Source/items.cpp:3547
+#: Source/items.cpp:3527
 #, c-format
 msgid "%+i to vitality"
 msgstr ""
 
-#: Source/items.cpp:3551
+#: Source/items.cpp:3531
 #, c-format
 msgid "%+i to all attributes"
 msgstr ""
 
-#: Source/items.cpp:3555
+#: Source/items.cpp:3535
 #, c-format
 msgid "%+i damage from enemies"
 msgstr ""
 
-#: Source/items.cpp:3559
+#: Source/items.cpp:3539
 #, c-format
 msgid "Hit Points: %+i"
 msgstr ""
 
-#: Source/items.cpp:3563
+#: Source/items.cpp:3543
 #, c-format
 msgid "Mana: %+i"
 msgstr ""
 
-#: Source/items.cpp:3566
+#: Source/items.cpp:3546
 msgid "high durability"
 msgstr ""
 
-#: Source/items.cpp:3569
+#: Source/items.cpp:3549
 msgid "decreased durability"
 msgstr ""
 
-#: Source/items.cpp:3572
+#: Source/items.cpp:3552
 msgid "indestructible"
 msgstr ""
 
-#: Source/items.cpp:3575
+#: Source/items.cpp:3555
 #, c-format
 msgid "+%i%% light radius"
 msgstr ""
 
-#: Source/items.cpp:3578
+#: Source/items.cpp:3558
 #, c-format
 msgid "-%i%% light radius"
 msgstr ""
 
-#: Source/items.cpp:3581
+#: Source/items.cpp:3561
 msgid "multiple arrows per shot"
 msgstr ""
 
-#: Source/items.cpp:3585
+#: Source/items.cpp:3565
 #, c-format
 msgid "fire arrows damage: %i"
 msgstr ""
 
-#: Source/items.cpp:3587
+#: Source/items.cpp:3567
 #, c-format
 msgid "fire arrows damage: %i-%i"
 msgstr ""
 
-#: Source/items.cpp:3591
+#: Source/items.cpp:3571
 #, c-format
 msgid "lightning arrows damage %i"
 msgstr ""
 
-#: Source/items.cpp:3593
+#: Source/items.cpp:3573
 #, c-format
 msgid "lightning arrows damage %i-%i"
 msgstr ""
 
-#: Source/items.cpp:3597
+#: Source/items.cpp:3577
 #, c-format
 msgid "fireball damage: %i"
 msgstr ""
 
-#: Source/items.cpp:3599
+#: Source/items.cpp:3579
 #, c-format
 msgid "fireball damage: %i-%i"
 msgstr ""
 
-#: Source/items.cpp:3602
+#: Source/items.cpp:3582
 msgid "attacker takes 1-3 damage"
 msgstr ""
 
-#: Source/items.cpp:3605
+#: Source/items.cpp:3585
 msgid "user loses all mana"
 msgstr ""
 
-#: Source/items.cpp:3608
+#: Source/items.cpp:3588
 msgid "you can't heal"
 msgstr ""
 
-#: Source/items.cpp:3611
+#: Source/items.cpp:3591
 msgid "absorbs half of trap damage"
 msgstr ""
 
-#: Source/items.cpp:3614
+#: Source/items.cpp:3594
 msgid "knocks target back"
 msgstr ""
 
-#: Source/items.cpp:3617
+#: Source/items.cpp:3597
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr ""
 
-#: Source/items.cpp:3620
+#: Source/items.cpp:3600
 msgid "All Resistance equals 0"
 msgstr ""
 
-#: Source/items.cpp:3623
+#: Source/items.cpp:3603
 msgid "hit monster doesn't heal"
 msgstr ""
 
-#: Source/items.cpp:3627
+#: Source/items.cpp:3607
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr ""
 
-#: Source/items.cpp:3629
+#: Source/items.cpp:3609
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr ""
 
-#: Source/items.cpp:3633
+#: Source/items.cpp:3613
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr ""
 
-#: Source/items.cpp:3635
+#: Source/items.cpp:3615
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr ""
 
-#: Source/items.cpp:3638
+#: Source/items.cpp:3618
 msgid "penetrates target's armor"
 msgstr ""
 
-#: Source/items.cpp:3642
+#: Source/items.cpp:3622
 msgid "quick attack"
 msgstr ""
 
-#: Source/items.cpp:3644
+#: Source/items.cpp:3624
 msgid "fast attack"
 msgstr ""
 
-#: Source/items.cpp:3646
+#: Source/items.cpp:3626
 msgid "faster attack"
 msgstr ""
 
-#: Source/items.cpp:3648
+#: Source/items.cpp:3628
 msgid "fastest attack"
 msgstr ""
 
-#: Source/items.cpp:3652
+#: Source/items.cpp:3632
 msgid "fast hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3654
+#: Source/items.cpp:3634
 msgid "faster hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3656
+#: Source/items.cpp:3636
 msgid "fastest hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3659
+#: Source/items.cpp:3639
 msgid "fast block"
 msgstr ""
 
-#: Source/items.cpp:3662
+#: Source/items.cpp:3642
 #, c-format
 msgid "adds %i point to damage"
 msgid_plural "adds %i points to damage"
@@ -4074,219 +4074,219 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: Source/items.cpp:3665
+#: Source/items.cpp:3645
 msgid "fires random speed arrows"
 msgstr ""
 
-#: Source/items.cpp:3668
+#: Source/items.cpp:3648
 msgid "unusual item damage"
 msgstr ""
 
-#: Source/items.cpp:3671
+#: Source/items.cpp:3651
 msgid "altered durability"
 msgstr ""
 
-#: Source/items.cpp:3674
+#: Source/items.cpp:3654
 msgid "Faster attack swing"
 msgstr ""
 
-#: Source/items.cpp:3677
+#: Source/items.cpp:3657
 msgid "one handed sword"
 msgstr ""
 
-#: Source/items.cpp:3680
+#: Source/items.cpp:3660
 msgid "constantly lose hit points"
 msgstr ""
 
-#: Source/items.cpp:3683
+#: Source/items.cpp:3663
 msgid "life stealing"
 msgstr ""
 
-#: Source/items.cpp:3686
+#: Source/items.cpp:3666
 msgid "no strength requirement"
 msgstr ""
 
-#: Source/items.cpp:3689
+#: Source/items.cpp:3669
 msgid "see with infravision"
 msgstr ""
 
-#: Source/items.cpp:3696
+#: Source/items.cpp:3676
 #, c-format
 msgid "lightning damage: %i"
 msgstr ""
 
-#: Source/items.cpp:3698
+#: Source/items.cpp:3678
 #, c-format
 msgid "lightning damage: %i-%i"
 msgstr ""
 
-#: Source/items.cpp:3701
+#: Source/items.cpp:3681
 msgid "charged bolts on hits"
 msgstr ""
 
-#: Source/items.cpp:3710
+#: Source/items.cpp:3690
 msgid "occasional triple damage"
 msgstr ""
 
-#: Source/items.cpp:3713
+#: Source/items.cpp:3693
 #, c-format
 msgid "decaying %+i%% damage"
 msgstr ""
 
-#: Source/items.cpp:3716
+#: Source/items.cpp:3696
 msgid "2x dmg to monst, 1x to you"
 msgstr ""
 
-#: Source/items.cpp:3719
+#: Source/items.cpp:3699
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr ""
 
-#: Source/items.cpp:3722
+#: Source/items.cpp:3702
 #, c-format
 msgid "low dur, %+i%% damage"
 msgstr ""
 
-#: Source/items.cpp:3728
+#: Source/items.cpp:3708
 msgid "extra AC vs demons"
 msgstr ""
 
-#: Source/items.cpp:3731
+#: Source/items.cpp:3711
 msgid "extra AC vs undead"
 msgstr ""
 
-#: Source/items.cpp:3734
+#: Source/items.cpp:3714
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr ""
 
-#: Source/items.cpp:3737
+#: Source/items.cpp:3717
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr ""
 
-#: Source/items.cpp:3740
+#: Source/items.cpp:3720
 msgid "Another ability (NW)"
 msgstr ""
 
-#: Source/items.cpp:3826 Source/items.cpp:3851
+#: Source/items.cpp:3806 Source/items.cpp:3831
 msgid "Right-click to read"
 msgstr ""
 
-#: Source/items.cpp:3830
+#: Source/items.cpp:3810
 msgid "Right-click to read, then"
 msgstr ""
 
-#: Source/items.cpp:3832
+#: Source/items.cpp:3812
 msgid "left-click to target"
 msgstr ""
 
-#: Source/items.cpp:3837
+#: Source/items.cpp:3817
 msgid "Right-click to use"
 msgstr ""
 
-#: Source/items.cpp:3842 Source/items.cpp:3847
+#: Source/items.cpp:3822 Source/items.cpp:3827
 msgid "Right click to use"
 msgstr ""
 
-#: Source/items.cpp:3855
+#: Source/items.cpp:3835
 msgid "Right click to read"
 msgstr ""
 
-#: Source/items.cpp:3859
+#: Source/items.cpp:3839
 msgid "Right-click to view"
 msgstr ""
 
-#: Source/items.cpp:3867
+#: Source/items.cpp:3847
 msgid "Doubles gold capacity"
 msgstr ""
 
-#: Source/items.cpp:3879 Source/stores.cpp:197
+#: Source/items.cpp:3859 Source/stores.cpp:198
 msgid "Required:"
 msgstr ""
 
-#: Source/items.cpp:3881 Source/stores.cpp:199
+#: Source/items.cpp:3861 Source/stores.cpp:200
 #, c-format
 msgid " %i Str"
 msgstr ""
 
-#: Source/items.cpp:3883 Source/stores.cpp:201
+#: Source/items.cpp:3863 Source/stores.cpp:202
 #, c-format
 msgid " %i Mag"
 msgstr ""
 
-#: Source/items.cpp:3885 Source/stores.cpp:203
+#: Source/items.cpp:3865 Source/stores.cpp:204
 #, c-format
 msgid " %i Dex"
 msgstr ""
 
-#: Source/items.cpp:3896 Source/items.cpp:3943
+#: Source/items.cpp:3876 Source/items.cpp:3923
 #, c-format
 msgid "damage: %i  Indestructible"
 msgstr ""
 
-#: Source/items.cpp:3898 Source/items.cpp:3945
+#: Source/items.cpp:3878 Source/items.cpp:3925
 #, c-format
 msgid "damage: %i  Dur: %i/%i"
 msgstr ""
 
-#: Source/items.cpp:3901 Source/items.cpp:3948
+#: Source/items.cpp:3881 Source/items.cpp:3928
 #, c-format
 msgid "damage: %i-%i  Indestructible"
 msgstr ""
 
-#: Source/items.cpp:3903 Source/items.cpp:3950
+#: Source/items.cpp:3883 Source/items.cpp:3930
 #, c-format
 msgid "damage: %i-%i  Dur: %i/%i"
 msgstr ""
 
-#: Source/items.cpp:3909 Source/items.cpp:3962
+#: Source/items.cpp:3889 Source/items.cpp:3942
 #, c-format
 msgid "armor: %i  Indestructible"
 msgstr ""
 
-#: Source/items.cpp:3911 Source/items.cpp:3964
+#: Source/items.cpp:3891 Source/items.cpp:3944
 #, c-format
 msgid "armor: %i  Dur: %i/%i"
 msgstr ""
 
-#: Source/items.cpp:3916
+#: Source/items.cpp:3896
 #, c-format
 msgid "dam: %i  Dur: %i/%i"
 msgstr ""
 
-#: Source/items.cpp:3918
+#: Source/items.cpp:3898
 #, c-format
 msgid "dam: %i-%i  Dur: %i/%i"
 msgstr ""
 
-#: Source/items.cpp:3919 Source/items.cpp:3954 Source/items.cpp:3969
-#: Source/stores.cpp:169
+#: Source/items.cpp:3899 Source/items.cpp:3934 Source/items.cpp:3949
+#: Source/stores.cpp:170
 #, c-format
 msgid "Charges: %i/%i"
 msgstr ""
 
-#: Source/items.cpp:3931
+#: Source/items.cpp:3911
 msgid "unique item"
 msgstr ""
 
-#: Source/items.cpp:3958 Source/items.cpp:3967 Source/items.cpp:3974
+#: Source/items.cpp:3938 Source/items.cpp:3947 Source/items.cpp:3954
 msgid "Not Identified"
 msgstr ""
 
-#: Source/loadsave.cpp:995 Source/loadsave.cpp:2023
+#: Source/loadsave.cpp:997 Source/loadsave.cpp:2025
 msgid "Unable to open save file archive"
 msgstr ""
 
-#: Source/loadsave.cpp:998
+#: Source/loadsave.cpp:1000
 msgid "Invalid save file"
 msgstr ""
 
-#: Source/loadsave.cpp:1027
+#: Source/loadsave.cpp:1029
 msgid "Player is on a Hellfire only level"
 msgstr ""
 
-#: Source/loadsave.cpp:1785
+#: Source/loadsave.cpp:1787
 msgid "Invalid game state"
 msgstr ""
 
@@ -4454,7 +4454,7 @@ msgstr ""
 msgid "Skeleton King"
 msgstr ""
 
-#: Source/monstdat.cpp:69 Source/monstdat.cpp:478 Source/quests.cpp:45
+#: Source/monstdat.cpp:69 Source/monstdat.cpp:478 Source/quests.cpp:46
 msgid "The Butcher"
 msgstr ""
 
@@ -4796,33 +4796,33 @@ msgstr ""
 
 #: Source/monstdat.cpp:469
 msgid "Gharbad the Weak"
-msgstr ""
+msgstr "Гарбад слабак"
 
-#: Source/monstdat.cpp:471 Source/quests.cpp:42
+#: Source/monstdat.cpp:471 Source/quests.cpp:43
 msgid "Zhar the Mad"
-msgstr ""
+msgstr "Безумный Жар"
 
 #: Source/monstdat.cpp:472
 msgid "Snotspill"
-msgstr ""
+msgstr "Соплелей"
 
 #: Source/monstdat.cpp:473
 msgid "Arch-Bishop Lazarus"
-msgstr ""
+msgstr "Архиепископ Лазарь"
 
 #: Source/monstdat.cpp:474
 msgid "Red Vex"
-msgstr ""
+msgstr "Красный Векс"
 
 #: Source/monstdat.cpp:475
 msgid "Black Jade"
-msgstr ""
+msgstr "Чёрный Нефрит"
 
-#: Source/monstdat.cpp:477 Source/quests.cpp:50
+#: Source/monstdat.cpp:477 Source/quests.cpp:51
 msgid "Warlord of Blood"
-msgstr ""
+msgstr "Военачальник Крови"
 
-#: Source/monstdat.cpp:480 Source/quests.cpp:59
+#: Source/monstdat.cpp:480 Source/quests.cpp:60
 msgid "The Defiler"
 msgstr ""
 
@@ -5158,75 +5158,75 @@ msgstr ""
 msgid "Doomlock"
 msgstr ""
 
-#: Source/monster.cpp:4948
+#: Source/monster.cpp:4952
 msgid "Animal"
 msgstr ""
 
-#: Source/monster.cpp:4950
+#: Source/monster.cpp:4954
 msgid "Demon"
 msgstr ""
 
-#: Source/monster.cpp:4952
+#: Source/monster.cpp:4956
 msgid "Undead"
 msgstr ""
 
-#: Source/monster.cpp:4963
+#: Source/monster.cpp:4967
 #, c-format
 msgid "Type: %s  Kills: %i"
 msgstr ""
 
-#: Source/monster.cpp:4965
+#: Source/monster.cpp:4969
 #, c-format
 msgid "Total kills: %i"
 msgstr ""
 
-#: Source/monster.cpp:4998
+#: Source/monster.cpp:5002
 #, c-format
 msgid "Hit Points: %i-%i"
 msgstr ""
 
-#: Source/monster.cpp:5008
+#: Source/monster.cpp:5012
 msgid "No magic resistance"
 msgstr ""
 
-#: Source/monster.cpp:5012
+#: Source/monster.cpp:5016
 msgid "Resists: "
 msgstr ""
 
-#: Source/monster.cpp:5014 Source/monster.cpp:5025
+#: Source/monster.cpp:5018 Source/monster.cpp:5029
 msgid "Magic "
 msgstr ""
 
-#: Source/monster.cpp:5016 Source/monster.cpp:5027
+#: Source/monster.cpp:5020 Source/monster.cpp:5031
 msgid "Fire "
 msgstr ""
 
-#: Source/monster.cpp:5018 Source/monster.cpp:5029
+#: Source/monster.cpp:5022 Source/monster.cpp:5033
 msgid "Lightning "
 msgstr ""
 
-#: Source/monster.cpp:5023
+#: Source/monster.cpp:5027
 msgid "Immune: "
 msgstr ""
 
-#: Source/monster.cpp:5043
+#: Source/monster.cpp:5047
 #, c-format
 msgid "Type: %s"
 msgstr ""
 
-#: Source/monster.cpp:5049 Source/monster.cpp:5056
+#: Source/monster.cpp:5053 Source/monster.cpp:5060
 msgid "No resistances"
-msgstr ""
+msgstr "Нет сопротивлений"
 
-#: Source/monster.cpp:5051 Source/monster.cpp:5061
+#: Source/monster.cpp:5055 Source/monster.cpp:5065
 msgid "No Immunities"
-msgstr ""
+msgstr "Нет иммунитета"
 
-#: Source/monster.cpp:5054
+#: Source/monster.cpp:5058
 msgid "Some Magic Resistances"
 msgstr ""
 
-#: Source/monster.cpp:5059
+#: Source/monster.cpp:5063
 msgid "Some Magic Immunities"
 msgstr ""
 
@@ -5400,219 +5400,221 @@ msgstr ""
 
 #: Source/objects.cpp:253
 msgid "The Great Conflict"
-msgstr ""
+msgstr "Великий Конфликт"
 
 #: Source/objects.cpp:254
+#, fuzzy
 msgid "The Wages of Sin are War"
-msgstr ""
+msgstr "Возмездие за грех - Война"
 
 #: Source/objects.cpp:255
 msgid "The Tale of the Horadrim"
-msgstr ""
+msgstr "Сказ Хорадримов"
 
 #: Source/objects.cpp:256
 msgid "The Dark Exile"
-msgstr ""
+msgstr "Темный изгнанник"
 
 #: Source/objects.cpp:257
 msgid "The Sin War"
-msgstr ""
+msgstr "Война Грехов"
 
 #: Source/objects.cpp:258
 msgid "The Binding of the Three"
-msgstr ""
+msgstr "Связь Трех"
 
 #: Source/objects.cpp:259
 msgid "The Realms Beyond"
-msgstr ""
+msgstr "Царства за Гранью"
 
 #: Source/objects.cpp:260
 msgid "Tale of the Three"
-msgstr ""
+msgstr "Сказ Трёх"
 
 #: Source/objects.cpp:261
 msgid "The Black King"
-msgstr ""
+msgstr "Чёрный Король"
 
 #: Source/objects.cpp:262
 msgid "Journal: The Ensorcellment"
-msgstr ""
+msgstr "Журнал: Волшебство"
 
 #: Source/objects.cpp:263
 msgid "Journal: The Meeting"
-msgstr ""
+msgstr "Журнал: Встреча"
 
 #: Source/objects.cpp:264
 msgid "Journal: The Tirade"
-msgstr ""
+msgstr "Журнал: Тирада"
 
 #: Source/objects.cpp:265
 msgid "Journal: His Power Grows"
-msgstr ""
+msgstr "Журнал: Его сила растет"
 
 #: Source/objects.cpp:266
 msgid "Journal: NA-KRUL"
-msgstr ""
+msgstr "Журнал: НА-КРУЛ"
 
 #: Source/objects.cpp:267
 msgid "Journal: The End"
-msgstr ""
+msgstr "Журнал: Конец"
 
 #: Source/objects.cpp:268
 msgid "A Spellbook"
-msgstr ""
+msgstr "Книга Заклинаний"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5439
 msgid "Crucified Skeleton"
-msgstr ""
+msgstr "Распятый скелет"
 
-#: Source/objects.cpp:5441
+#: Source/objects.cpp:5443
 msgid "Lever"
-msgstr ""
-
-#: Source/objects.cpp:5450
-msgid "Open Door"
-msgstr ""
+msgstr "Рычаг"
 
 #: Source/objects.cpp:5452
-msgid "Closed Door"
-msgstr ""
+msgid "Open Door"
+msgstr "Открытая дверь"
 
 #: Source/objects.cpp:5454
-msgid "Blocked Door"
-msgstr ""
+msgid "Closed Door"
+msgstr "Закрытая дверь"
 
-#: Source/objects.cpp:5459
-msgid "Ancient Tome"
-msgstr ""
+#: Source/objects.cpp:5456
+msgid "Blocked Door"
+msgstr "Заблокированная дверь"
 
 #: Source/objects.cpp:5461
+msgid "Ancient Tome"
+msgstr "Древний фолиант"
+
+#: Source/objects.cpp:5463
 msgid "Book of Vileness"
-msgstr ""
+msgstr "Книга подлости"
 
-#: Source/objects.cpp:5466
+#: Source/objects.cpp:5468
 msgid "Skull Lever"
-msgstr ""
+msgstr "Череп-рычаг"
 
-#: Source/objects.cpp:5469
+#: Source/objects.cpp:5471
 msgid "Mythical Book"
-msgstr ""
+msgstr "Мифическая книга"
 
-#: Source/objects.cpp:5473
+#: Source/objects.cpp:5475
 msgid "Small Chest"
-msgstr ""
+msgstr "Маленький сундук"
 
-#: Source/objects.cpp:5477
+#: Source/objects.cpp:5479
 msgid "Chest"
-msgstr ""
+msgstr "Сундук"
 
-#: Source/objects.cpp:5482
+#: Source/objects.cpp:5484
 msgid "Large Chest"
-msgstr ""
+msgstr "Большой сундук"
 
-#: Source/objects.cpp:5485
+#: Source/objects.cpp:5487
 msgid "Sarcophagus"
-msgstr ""
+msgstr "Саркофаг"
 
-#: Source/objects.cpp:5488
+#: Source/objects.cpp:5490
 msgid "Bookshelf"
-msgstr ""
+msgstr "Книжная полка"
 
-#: Source/objects.cpp:5492
+#: Source/objects.cpp:5494
 msgid "Bookcase"
-msgstr ""
-
-#: Source/objects.cpp:5497
-msgid "Pod"
-msgstr ""
+msgstr "Книжный шкаф"
 
 #: Source/objects.cpp:5499
-msgid "Urn"
-msgstr ""
+#, fuzzy
+msgid "Pod"
+msgstr "Кокон"
 
 #: Source/objects.cpp:5501
-msgid "Barrel"
-msgstr ""
+msgid "Urn"
+msgstr "Урна"
 
-#: Source/objects.cpp:5505
+#: Source/objects.cpp:5503
+msgid "Barrel"
+msgstr "Бочка"
+
+#: Source/objects.cpp:5507
 #, c-format
 msgid "%s Shrine"
-msgstr ""
+msgstr "%s святыня"
 
-#: Source/objects.cpp:5509
+#: Source/objects.cpp:5511
 msgid "Skeleton Tome"
-msgstr ""
+msgstr "Фолиант скелетов"
 
-#: Source/objects.cpp:5512
+#: Source/objects.cpp:5514
 msgid "Library Book"
-msgstr ""
+msgstr "Библиотечная книга"
 
-#: Source/objects.cpp:5515
+#: Source/objects.cpp:5517
 msgid "Blood Fountain"
-msgstr ""
+msgstr "Кровавый фонтан"
 
-#: Source/objects.cpp:5518
+#: Source/objects.cpp:5520
 msgid "Decapitated Body"
-msgstr ""
+msgstr "Обезглавленное тело"
 
-#: Source/objects.cpp:5521
+#: Source/objects.cpp:5523
 msgid "Book of the Blind"
-msgstr ""
+msgstr "Книга Слепцов"
 
-#: Source/objects.cpp:5524
+#: Source/objects.cpp:5526
 msgid "Book of Blood"
-msgstr ""
+msgstr "Книга Крови"
 
-#: Source/objects.cpp:5527
+#: Source/objects.cpp:5529
 msgid "Purifying Spring"
-msgstr ""
+msgstr "Очищающий источник"
 
-#: Source/objects.cpp:5534 Source/objects.cpp:5558
+#: Source/objects.cpp:5536 Source/objects.cpp:5560
 msgid "Weapon Rack"
-msgstr ""
+msgstr "Стойка с оружием"
 
-#: Source/objects.cpp:5537
+#: Source/objects.cpp:5539
 msgid "Goat Shrine"
-msgstr ""
+msgstr "Козлиный храм"
 
-#: Source/objects.cpp:5540
+#: Source/objects.cpp:5542
 msgid "Cauldron"
-msgstr ""
+msgstr "Котел"
 
-#: Source/objects.cpp:5543
+#: Source/objects.cpp:5545
 msgid "Murky Pool"
-msgstr ""
+msgstr "Темный бассейн"
 
-#: Source/objects.cpp:5546
+#: Source/objects.cpp:5548
 msgid "Fountain of Tears"
-msgstr ""
+msgstr "Фонтан слез"
 
-#: Source/objects.cpp:5549
+#: Source/objects.cpp:5551
 msgid "Steel Tome"
-msgstr ""
+msgstr "Стальной фолиант"
 
-#: Source/objects.cpp:5552
+#: Source/objects.cpp:5554
 msgid "Pedestal of Blood"
-msgstr ""
+msgstr "Пьедестал крови"
 
-#: Source/objects.cpp:5561
+#: Source/objects.cpp:5563
 msgid "Mushroom Patch"
-msgstr ""
+msgstr "Грибы"
 
-#: Source/objects.cpp:5564
+#: Source/objects.cpp:5566
 msgid "Vile Stand"
-msgstr ""
+msgstr "Мерзкий стенд"
 
-#: Source/objects.cpp:5567
+#: Source/objects.cpp:5569
 msgid "Slain Hero"
-msgstr ""
+msgstr "Убитый Герой"
 
-#: Source/objects.cpp:5574
-#, c-format
+#: Source/objects.cpp:5576
+#, fuzzy, c-format
 msgid "Trapped %s"
-msgstr ""
+msgstr "Пойманная %s"
 
-#: Source/objects.cpp:5580
+#: Source/objects.cpp:5582
 #, c-format
 msgid "%s (disabled)"
 msgstr ""
@@ -5669,106 +5671,108 @@ msgstr ""
 msgid " to Level %d"
 msgstr ""
 
-#: Source/quests.cpp:39
+#: Source/quests.cpp:40
 msgid "The Magic Rock"
-msgstr ""
+msgstr "Волшебный Камень"
 
-#: Source/quests.cpp:41
+#: Source/quests.cpp:42
 msgid "Gharbad The Weak"
-msgstr ""
-
-#: Source/quests.cpp:46
-msgid "Ogden's Sign"
-msgstr ""
+msgstr "Гарбад слабак"
 
 #: Source/quests.cpp:47
-msgid "Halls of the Blind"
-msgstr ""
+msgid "Ogden's Sign"
+msgstr "Знак Огдена"
 
 #: Source/quests.cpp:48
+msgid "Halls of the Blind"
+msgstr "Залы Слепцов"
+
+#: Source/quests.cpp:49
 msgid "Valor"
-msgstr ""
+msgstr "Доблесть"
 
-#: Source/quests.cpp:51
+#: Source/quests.cpp:52
 msgid "The Curse of King Leoric"
-msgstr ""
+msgstr "Проклятье Короля Леорика"
 
-#: Source/quests.cpp:52 Source/setmaps.cpp:80
+#: Source/quests.cpp:53 Source/setmaps.cpp:80
 msgid "Poisoned Water Supply"
-msgstr ""
+msgstr "Отравленные воды"
 
-#: Source/quests.cpp:53 Source/quests.cpp:77
+#: Source/quests.cpp:54 Source/quests.cpp:78
 msgid "The Chamber of Bone"
-msgstr ""
-
-#: Source/quests.cpp:54
-msgid "Archbishop Lazarus"
-msgstr ""
+msgstr "Палата Костей"
 
 #: Source/quests.cpp:55
-msgid "Grave Matters"
-msgstr ""
+msgid "Archbishop Lazarus"
+msgstr "Архиепископ Лазарь"
 
 #: Source/quests.cpp:56
-msgid "Farmer's Orchard"
-msgstr ""
+msgid "Grave Matters"
+msgstr "Серьезные вопросы"
 
 #: Source/quests.cpp:57
-msgid "Little Girl"
-msgstr ""
+msgid "Farmer's Orchard"
+msgstr "Фермерский Сад"
 
 #: Source/quests.cpp:58
+msgid "Little Girl"
+msgstr "Малышка"
+
+#: Source/quests.cpp:59
 msgid "Wandering Trader"
-msgstr ""
+msgstr "Странствующий торговец"
 
-#: Source/quests.cpp:61 Source/trigs.cpp:435
+#: Source/quests.cpp:62 Source/trigs.cpp:435
 msgid "Cornerstone of the World"
-msgstr ""
+msgstr "Краеугольный камень мира"
 
-#: Source/quests.cpp:62
+# Возможно нужно везде джерси называть свитером/кофтой
+#: Source/quests.cpp:63
+#, fuzzy
 msgid "The Jersey's Jersey"
-msgstr ""
+msgstr "Джерси Джерси"
 
-#: Source/quests.cpp:76
+#: Source/quests.cpp:77
 msgid "King Leoric's Tomb"
-msgstr ""
+msgstr "Могила Короля Леорика"
 
-#: Source/quests.cpp:78 Source/setmaps.cpp:79
+#: Source/quests.cpp:79 Source/setmaps.cpp:79
 msgid "Maze"
-msgstr ""
-
-#: Source/quests.cpp:79
-msgid "A Dark Passage"
-msgstr ""
+msgstr "Лабиринт"
 
 #: Source/quests.cpp:80
-msgid "Unholy Altar"
-msgstr ""
+msgid "A Dark Passage"
+msgstr "Тёмный проход"
 
-#: Source/quests.cpp:283
+#: Source/quests.cpp:81
+msgid "Unholy Altar"
+msgstr "Нечестивый алтарь"
+
+#: Source/quests.cpp:284
 #, c-format
 msgid "To %s"
-msgstr ""
+msgstr "К %s"
 
-#: Source/quests.cpp:741
+#: Source/quests.cpp:742
 msgid "Quest Log"
-msgstr ""
+msgstr "Журнал"
 
-#: Source/quests.cpp:748
+#: Source/quests.cpp:749
 msgid "Close Quest Log"
-msgstr ""
+msgstr "Закрыть журнал"
 
 #: Source/setmaps.cpp:77
 msgid "Skeleton King's Lair"
-msgstr ""
+msgstr "Логово Короля Скелетов"
 
 #: Source/setmaps.cpp:78
 msgid "Chamber of Bone"
-msgstr ""
+msgstr "Палата Костей"
 
 #: Source/setmaps.cpp:81
 msgid "Archbishop Lazarus' Lair"
-msgstr ""
+msgstr "Логово архиепископа Лазаря"
 
 #: Source/spelldat.cpp:16
 msgid "Firebolt"
@@ -5946,307 +5950,307 @@ msgstr ""
 msgid "Rune of Immolation"
 msgstr ""
 
-#: Source/stores.cpp:164 Source/stores.cpp:171
+#: Source/stores.cpp:165 Source/stores.cpp:172
 msgid ",  "
 msgstr ""
 
-#: Source/stores.cpp:180
+#: Source/stores.cpp:181
 #, c-format
 msgid "Damage: %i-%i  "
 msgstr ""
 
-#: Source/stores.cpp:182
+#: Source/stores.cpp:183
 #, c-format
 msgid "Armor: %i  "
 msgstr ""
 
-#: Source/stores.cpp:184
+#: Source/stores.cpp:185
 #, c-format
 msgid "Dur: %i/%i,  "
 msgstr ""
 
-#: Source/stores.cpp:187
+#: Source/stores.cpp:188
 msgid "Indestructible,  "
-msgstr ""
+msgstr "Нерушимое,  "
 
-#: Source/stores.cpp:195
+#: Source/stores.cpp:196
 msgid "No required attributes"
-msgstr ""
+msgstr "Нет требований"
 
-#: Source/stores.cpp:225 Source/stores.cpp:950 Source/stores.cpp:1172
+#: Source/stores.cpp:226 Source/stores.cpp:951 Source/stores.cpp:1173
 msgid "Welcome to the"
 msgstr "Добро пожаловать в"
 
-#: Source/stores.cpp:226
+#: Source/stores.cpp:227
 msgid "Blacksmith's shop"
 msgstr "Магазин кузнеца"
 
-#: Source/stores.cpp:227 Source/stores.cpp:576 Source/stores.cpp:952
-#: Source/stores.cpp:1011 Source/stores.cpp:1174 Source/stores.cpp:1186
-#: Source/stores.cpp:1198
+#: Source/stores.cpp:228 Source/stores.cpp:577 Source/stores.cpp:953
+#: Source/stores.cpp:1012 Source/stores.cpp:1175 Source/stores.cpp:1187
+#: Source/stores.cpp:1199
 msgid "Would you like to:"
 msgstr "Вы хотите:"
 
-#: Source/stores.cpp:228
+#: Source/stores.cpp:229
 msgid "Talk to Griswold"
 msgstr "Поговорить с Гризвольдом"
 
-#: Source/stores.cpp:229
+#: Source/stores.cpp:230
 msgid "Buy basic items"
 msgstr "Купить базовые предметы"
 
-#: Source/stores.cpp:230
+#: Source/stores.cpp:231
 msgid "Buy premium items"
 msgstr "Купить премиальные предметы"
 
-#: Source/stores.cpp:231 Source/stores.cpp:579
+#: Source/stores.cpp:232 Source/stores.cpp:580
 msgid "Sell items"
 msgstr "Продать предметы"
 
-#: Source/stores.cpp:232
+#: Source/stores.cpp:233
 msgid "Repair items"
 msgstr "Починить предметы"
 
-#: Source/stores.cpp:233
+#: Source/stores.cpp:234
 msgid "Leave the shop"
 msgstr "Покинуть магазин"
 
-#: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
+#: Source/stores.cpp:275 Source/stores.cpp:624 Source/stores.cpp:990
 #, c-format
 msgid "I have these items for sale:             Your gold: %i"
 msgstr "У меня есть на продажу:                Ваше золото: %i"
 
-#: Source/stores.cpp:279 Source/stores.cpp:343 Source/stores.cpp:471
-#: Source/stores.cpp:482 Source/stores.cpp:541 Source/stores.cpp:554
-#: Source/stores.cpp:628 Source/stores.cpp:721 Source/stores.cpp:732
-#: Source/stores.cpp:797 Source/stores.cpp:808 Source/stores.cpp:994
-#: Source/stores.cpp:1094 Source/stores.cpp:1105 Source/stores.cpp:1138
-#: Source/stores.cpp:1165
+#: Source/stores.cpp:280 Source/stores.cpp:344 Source/stores.cpp:472
+#: Source/stores.cpp:483 Source/stores.cpp:542 Source/stores.cpp:555
+#: Source/stores.cpp:629 Source/stores.cpp:722 Source/stores.cpp:733
+#: Source/stores.cpp:798 Source/stores.cpp:809 Source/stores.cpp:995
+#: Source/stores.cpp:1095 Source/stores.cpp:1106 Source/stores.cpp:1139
+#: Source/stores.cpp:1166
 msgid "Back"
 msgstr "Назад"
 
 # “премиальные прдеметы” не влезают в длину строки
-#: Source/stores.cpp:339
+#: Source/stores.cpp:340
 #, c-format
 msgid "I have these premium items for sale:     Your gold: %i"
 msgstr "У меня есть на продажу:                Ваше золото: %i"
 
-#: Source/stores.cpp:467 Source/stores.cpp:717
+#: Source/stores.cpp:468 Source/stores.cpp:718
 #, c-format
 msgid "You have nothing I want.             Your gold: %i"
 msgstr "У вас нет ничего нужного мне.      Ваше золото: %i"
 
-#: Source/stores.cpp:477 Source/stores.cpp:727
+#: Source/stores.cpp:478 Source/stores.cpp:728
 #, c-format
 msgid "Which item is for sale?             Your gold: %i"
 msgstr "Какой предмет продать?            Ваше золото: %i"
 
-#: Source/stores.cpp:537
+#: Source/stores.cpp:538
 #, c-format
 msgid "You have nothing to repair.             Your gold: %i"
 msgstr "У вас нечего чинить.                  Ваше золото: %i"
 
-#: Source/stores.cpp:549
+#: Source/stores.cpp:550
 #, c-format
 msgid "Repair which item?             Your gold: %i"
 msgstr "Какой предмет починить?      Ваше золото: %i"
 
-#: Source/stores.cpp:575
+#: Source/stores.cpp:576
 msgid "Witch's shack"
 msgstr "Хижина ведьмы"
 
-#: Source/stores.cpp:577
+#: Source/stores.cpp:578
 msgid "Talk to Adria"
 msgstr "Поговорить с Адрией"
 
-#: Source/stores.cpp:578 Source/stores.cpp:954
+#: Source/stores.cpp:579 Source/stores.cpp:955
 msgid "Buy items"
 msgstr "Купить предметы"
 
-#: Source/stores.cpp:580
+#: Source/stores.cpp:581
 msgid "Recharge staves"
 msgstr "Зарядить посохи"
 
-#: Source/stores.cpp:581
+#: Source/stores.cpp:582
 msgid "Leave the shack"
 msgstr "Покинуть хижину"
 
-#: Source/stores.cpp:793
+#: Source/stores.cpp:794
 #, c-format
 msgid "You have nothing to recharge.             Your gold: %i"
 msgstr "У вас нечего заряжать.                  Ваше золото: %i"
 
-#: Source/stores.cpp:803
+#: Source/stores.cpp:804
 #, c-format
 msgid "Recharge which item?             Your gold: %i"
 msgstr "Какой предмет зарядить?        Ваше золото: %i"
 
-#: Source/stores.cpp:819
+#: Source/stores.cpp:820
 msgid "You do not have enough gold"
-msgstr "У вас не достаточно золота"
+msgstr "У вас недостаточно золота"
 
-#: Source/stores.cpp:827
+#: Source/stores.cpp:828
 msgid "You do not have enough room in inventory"
-msgstr "У вас не достаточно места в инвентаре"
+msgstr "У вас недостаточно места в инвентаре"
 
-#: Source/stores.cpp:863
+#: Source/stores.cpp:864
 msgid "Do we have a deal?"
 msgstr "По рукам?"
 
-#: Source/stores.cpp:866
+#: Source/stores.cpp:867
 msgid "Are you sure you want to identify this item?"
 msgstr "Вы уверены, что хотите идентифицировать эти предметы?"
 
-#: Source/stores.cpp:872
+#: Source/stores.cpp:873
 msgid "Are you sure you want to buy this item?"
 msgstr "Вы уверены, что хотите купить этот предмет?"
 
-#: Source/stores.cpp:875
+#: Source/stores.cpp:876
 msgid "Are you sure you want to recharge this item?"
 msgstr "Вы уверены что хотите зарядить этот предмет?"
 
-#: Source/stores.cpp:879
+#: Source/stores.cpp:880
 msgid "Are you sure you want to sell this item?"
 msgstr "Вы уверены, что хотите продать этот предмет?"
 
-#: Source/stores.cpp:882
+#: Source/stores.cpp:883
 msgid "Are you sure you want to repair this item?"
 msgstr "Вы уверены, что хотите починить эту вещь?"
 
-#: Source/stores.cpp:896 Source/towners.cpp:317
+#: Source/stores.cpp:897 Source/towners.cpp:216
 msgid "Wirt the Peg-legged boy"
 msgstr "Одноногий мальчик Вирт"
 
-#: Source/stores.cpp:899 Source/stores.cpp:906
+#: Source/stores.cpp:900 Source/stores.cpp:907
 msgid "Talk to Wirt"
 msgstr "Поговорить с Виртом"
 
-#: Source/stores.cpp:900
+#: Source/stores.cpp:901
 msgid "I have something for sale,"
 msgstr "У меня есть кое-что на продажу,"
 
-#: Source/stores.cpp:901
+#: Source/stores.cpp:902
 msgid "but it will cost 50 gold"
 msgstr "но это будет стоить 50 золотых"
 
-#: Source/stores.cpp:902
+#: Source/stores.cpp:903
 msgid "just to take a look. "
 msgstr "просто взгляни. "
 
-#: Source/stores.cpp:903
+#: Source/stores.cpp:904
 msgid "What have you got?"
 msgstr "Что у вас есть?"
 
-#: Source/stores.cpp:904 Source/stores.cpp:907 Source/stores.cpp:1014
-#: Source/stores.cpp:1188
+#: Source/stores.cpp:905 Source/stores.cpp:908 Source/stores.cpp:1015
+#: Source/stores.cpp:1189
 msgid "Say goodbye"
 msgstr "Попрощаться"
 
-#: Source/stores.cpp:915
+#: Source/stores.cpp:916
 #, c-format
 msgid "I have this item for sale:             Your gold: %i"
 msgstr "У меня есть на продажу:              Ваше золото: %i"
 
 # уйти
 # выйти
-#: Source/stores.cpp:931
+#: Source/stores.cpp:932
 msgid "Leave"
 msgstr "Покинуть"
 
-#: Source/stores.cpp:951
+#: Source/stores.cpp:952
 msgid "Healer's home"
 msgstr "Дом целителя"
 
-#: Source/stores.cpp:953
+#: Source/stores.cpp:954
 msgid "Talk to Pepin"
 msgstr "Поговорить с Пипином"
 
-#: Source/stores.cpp:955
+#: Source/stores.cpp:956
 msgid "Leave Healer's home"
 msgstr "Покинуть дом целителя"
 
-#: Source/stores.cpp:1010
+#: Source/stores.cpp:1011
 msgid "The Town Elder"
 msgstr "Городской Старец"
 
-#: Source/stores.cpp:1012
+#: Source/stores.cpp:1013
 msgid "Talk to Cain"
 msgstr "Поговорить с Каином"
 
-#: Source/stores.cpp:1013
+#: Source/stores.cpp:1014
 msgid "Identify an item"
 msgstr "Идентифицировать предмет"
 
-#: Source/stores.cpp:1090
+#: Source/stores.cpp:1091
 #, c-format
 msgid "You have nothing to identify.             Your gold: %i"
 msgstr "У вас нечего идентифицировать.          Ваше золото: %i"
 
 # Нужно выровнять с остальными строками
-#: Source/stores.cpp:1100
+#: Source/stores.cpp:1101
 #, c-format
 msgid "Identify which item?             Your gold: %i"
 msgstr "Какой предмет идентифицировать? Ваше золото: %i"
 
-#: Source/stores.cpp:1117
+#: Source/stores.cpp:1118
 msgid "This item is:"
 msgstr "Этот предмет:"
 
-#: Source/stores.cpp:1120
+#: Source/stores.cpp:1121
 msgid "Done"
 msgstr "Готово"
 
-#: Source/stores.cpp:1129
+#: Source/stores.cpp:1130
 #, c-format
 msgid "Talk to %s"
 msgstr "Поговорить с %s"
 
-#: Source/stores.cpp:1133
+#: Source/stores.cpp:1134
 #, c-format
 msgid "Talking to %s"
 msgstr "Разговор с %s"
 
-#: Source/stores.cpp:1135
+#: Source/stores.cpp:1136
 msgid "is not available"
 msgstr "не доступен"
 
-#: Source/stores.cpp:1136
+#: Source/stores.cpp:1137
 msgid "in the shareware"
 msgstr "в shareware"
 
-#: Source/stores.cpp:1137
+#: Source/stores.cpp:1138
 msgid "version"
 msgstr "версии"
 
-#: Source/stores.cpp:1164
+#: Source/stores.cpp:1165
 msgid "Gossip"
-msgstr "Сплети"
+msgstr "Сплетни"
 
-#: Source/stores.cpp:1173
+#: Source/stores.cpp:1174
 msgid "Rising Sun"
 msgstr "Восходящее солнце"
 
-#: Source/stores.cpp:1175
+#: Source/stores.cpp:1176
 msgid "Talk to Ogden"
 msgstr "Поговорить с Огденом"
 
-#: Source/stores.cpp:1176
+#: Source/stores.cpp:1177
 msgid "Leave the tavern"
 msgstr "Покинуть таверну"
 
-#: Source/stores.cpp:1187
+#: Source/stores.cpp:1188
 msgid "Talk to Gillian"
 msgstr "Поговорить с Джиллиан"
 
-#: Source/stores.cpp:1197 Source/towners.cpp:365
+#: Source/stores.cpp:1198 Source/towners.cpp:243
 msgid "Farnham the Drunk"
 msgstr "Пьяница Фарнхэм"
 
-#: Source/stores.cpp:1199
+#: Source/stores.cpp:1200
 msgid "Talk to Farnham"
 msgstr "Поговорить с Фарнхэмом"
 
-#: Source/stores.cpp:1200
+#: Source/stores.cpp:1201
 msgid "Say Goodbye"
 msgstr "Сказать До свидания"
 
@@ -6259,10 +6263,10 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within... |"
 msgstr ""
-" Ох, это история нашего короля, не так ли? Трагическое падение Леорика стало "
+" Ох, это история нашего Короля, не так ли? Трагическое падение Леорика стало "
 "тяжёлым ударом по этой земле. Люди всегда любили короля, а теперь они живут "
 "в смертельном страхе перед ним. Вопрос, который я продолжаю задавать себе, "
-"как он мог упасть так далеко от Света? Ведь Леорик всегда был самым святым "
+"как он мог пасть так далеко от Света? Ведь Леорик всегда был самым святым "
 "человеком в королевстве. Только самые страшные силы Ада могли так сильно "
 "изменить человека изнутри... |"
 
@@ -6310,8 +6314,8 @@ msgid ""
 "down there, waiting in the putrid darkness for his chance to destroy this "
 "land... |"
 msgstr ""
-"Как я уже говорил, господин, король был погребён на три уровня ниже. Он там, "
-"в гнилой темноте, ждёт своего шанса уничтожить этот мир|"
+"Как я уже говорил, господин, Король был погребён на три уровня ниже. Он там, "
+"в гнилой темноте, ждёт своего шанса уничтожить этот мир... |"
 
 #: Source/textdat.cpp:21
 msgid ""
@@ -6321,7 +6325,7 @@ msgid ""
 "your way, good master. |"
 msgstr ""
 "Проклятие нашего короля прошло, но я боюсь, что это была лишь часть того что "
-"может зло. Тем не менее, мы еще можем спастись от тьмы, которая поглощает "
+"может зло. Тем не менее, мы ещё можем спастись от тьмы, которая поглощает "
 "нашу землю, ибо ваша победа является хорошим предзнаменованием. Пусть Свет "
 "проведёт вас на вашем пути, хозяин. |"
 
@@ -6332,7 +6336,7 @@ msgid ""
 "this kingdom from that day forward, but perhaps if you were to free his "
 "spirit from his earthly prison, the curse would be lifted... |"
 msgstr ""
-"Потеря сына была слишком сильным потрясением для короля Леорика. Я сделал "
+"Потеря сына была слишком сильным потрясением для Короля Леорика. Я сделал "
 "все, что мог, чтобы облегчить его безумие, но в конце концов он преодолел "
 "его. Чёрное проклятие висело над этим королевством с того дня, но возможно, "
 "если освободить его дух из своей земной тюрьме, то проклятие будет снято...|"
@@ -6343,7 +6347,7 @@ msgid ""
 "the kind and just ruler that he was. His death was so sad and seemed very "
 "wrong, somehow. |"
 msgstr ""
-"Я не люблю вспоминать о том, как умер король. Мне нравится вспоминать его "
+"Я не люблю вспоминать о том, как умер Король. Мне нравится вспоминать его "
 "как доброго и честного правителя. Его смерть была очень печальной и, "
 "казалось что она не должно была случится. |"
 
@@ -6366,8 +6370,8 @@ msgid ""
 "I don't care about that. Listen, no skeleton is gonna be MY king. Leoric is "
 "King. King, so you hear me? HAIL TO THE KING! |"
 msgstr ""
-"Меня это не волнует. Слушай, никакой скелет не будет МОИМ королем. Леорик - "
-"король. Король, ты меня слышишь? Слава королю! |"
+"Меня это не волнует. Слушай, никакой скелет не будет МОИМ королём. Леорик - "
+"король. Король, ты меня слышишь? СЛАВА КОРОЛЮ! |"
 
 #: Source/textdat.cpp:31
 msgid ""
@@ -6376,10 +6380,10 @@ msgid ""
 "you do not stop his reign, he will surely march across this land and slay "
 "all who still live here. |"
 msgstr ""
-"Мертвые, ходящие среди живых, следуют за проклятым Королем. Он обладает "
-"силой которая может поднять еще больше воинов, для постоянно растущей армии "
+"Мёртвые, ходящие среди живых, следуют за проклятым Королём. Он обладает "
+"силой которая может поднять ещё больше воинов, для постоянно растущей армии "
 "нежити. Если вы не остановите его правление и существование, то он "
-"непременно пройдёт по этой земле и уничтожит всё, и всех кто здесь живет. |"
+"непременно пройдёт по этой земле и уничтожит всё, и всех кто здесь живёт. |"
 
 #: Source/textdat.cpp:33
 msgid ""
@@ -6389,7 +6393,7 @@ msgid ""
 "out... |"
 msgstr ""
 "Слушай, у меня здесь бизнес. Я не продаю информацию, и меня не волнует какой-"
-"то король, который мертв дольше, чем я жив. Если тебе нужно что-то, что "
+"то король, который мёртв дольше, чем я жив. Если тебе нужно что-то, что "
 "можно противопоставить Королю нежити, я могу помочь тебе ... |"
 
 #: Source/textdat.cpp:35
@@ -6397,8 +6401,8 @@ msgid ""
 "The warmth of life has entered my tomb. Prepare yourself, mortal, to serve "
 "my Master for eternity! |"
 msgstr ""
-"Тепло жизни вошло в мою могилу. Приготовься смертный, служить моему Учителю "
-"вечно! |"
+"Тепло жизни вошло в мою могилу. Приготовься смертный, служить моему "
+"Господину вечно! |"
 
 #: Source/textdat.cpp:37
 msgid ""
@@ -6529,11 +6533,11 @@ msgstr ""
 
 #: Source/textdat.cpp:57
 msgid "You kill uglies, get banner. You bring to me, or else... |"
-msgstr "Убиваешь уродов, достаешь знамя. Приносишь его мне, иначе  ... |"
+msgstr "Убиваешь уродов, достаёшь знамя. Приносишь его мне, а иначе... |"
 
 #: Source/textdat.cpp:59
 msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic! |"
-msgstr "Вы даете! Да хорошо! Давай, мы сильные. Убиваем всех большой Магией! |"
+msgstr "Вы даёте! Да хорошо! Давай, мы сильные. Убиваем всех большой Магией! |"
 
 #: Source/textdat.cpp:61
 msgid ""
@@ -6577,8 +6581,8 @@ msgstr ""
 "Чёрт побери! Тогда я должен был заподозрить его завуалированное "
 "предательство. Должно быть, что это Лазарь похитил Альбрехта и спрятал его в "
 "Лабиринте. Я не понимаю, почему архиепископ обратился к тьме и каков его "
-"интерес к ребенку... только если он не собирается принести его в жертву "
-"своим темным хозяевам!\n"
+"интерес к ребёнку... только если он не собирается принести его в жертву "
+"своим тёмным хозяевам!\n"
 "\n"
 "Видимо это и есть его зловещий план! Выжившие из его «отряда спасения» "
 "говорят, что в последний раз Лазаря видели бегущим в самые глубокие недра "
@@ -6610,7 +6614,7 @@ msgstr ""
 "свой ужасный поступок. Мальчик, которого вы описываете, не наш принц, но я "
 "считаю, что Альбрехту все ещё может угрожать опасность. Символ силы, о "
 "котором вы говорите, должен быть порталом в самом сердце лабиринта.\n"
-"Знай, мой друг - зло, против которого ты выступаешь, - это темный Лорд "
+"Знай, мой друг - зло, против которого ты выступаешь, - это тёмный Лорд "
 "Ужаса. Он известен смертным как Диабло. Это он был заточен в Лабиринте много "
 "веков назад, и я боюсь, что он пытается снова посеять хаос в царстве "
 "человечества. Вы должны пройти через портал и уничтожить Диабло, пока не "
@@ -6647,7 +6651,7 @@ msgid ""
 "troubled time. I pray every night that somehow, he is still alive and safe. |"
 msgstr ""
 "Я помню Лазаря как очень доброго и отзывчивого человека. Он выступал на "
-"похоронах моей матери и поддерживал меня и мою бабушку в очень тяжелые "
+"похоронах моей матери и поддерживал меня и мою бабушку в очень тяжёлые "
 "время. Каждую ночь я молюсь, о том чтобы он каким-то образом был жив и в "
 "безопасности. |"
 
@@ -6660,7 +6664,7 @@ msgid ""
 msgstr ""
 "Я был там, когда Лазарь ввел нас в лабиринт. Он говорил о священном "
 "возмездии, но когда мы начали сражаться с этими порождениями ада, он даже не "
-"поднял свою булаву. Он просто зыабежал глубже в тусклые бесконечные комнаты, "
+"поднял свою булаву. Он просто забежал глубже в тусклые бесконечные комнаты, "
 "заполненные слугами тьмы! |"
 
 #: Source/textdat.cpp:77
@@ -6692,7 +6696,7 @@ msgid ""
 msgstr ""
 "Да, праведный Лазарь, который был ооочень эффективен против этих монстров. "
 "Не помог спасти мою ногу, не так ли? Слушай, я дам тебе бесплатный совет. "
-"Спросите Фарнхема, он был там. |"
+"Спросите Фарнхэма, он был там. |"
 
 #: Source/textdat.cpp:83
 msgid ""
@@ -6713,7 +6717,7 @@ msgid ""
 msgstr ""
 "Хм, я не знаю, что я могу рассказать вам об этом такое, что вам поможет. "
 "Вода, которая наполняет наши колодцы, поступает из подземного источника. Ещё "
-"я слышал о туннеле, который ведет к большому озеру - возможно, это одно и то "
+"я слышал о туннеле, который ведёт к большому озеру - возможно, это одно и то "
 "же место. К сожалению, я не знаю, что могло вызвать испорченное "
 "водоснабжение. |"
 
@@ -6741,7 +6745,7 @@ msgid ""
 msgstr ""
 "Я рад, что догнал тебя вовремя! Наши колодцы стали солоноватой и застойной, "
 "и некоторые горожане заболели пить из них. Наши запасы пресной воды быстро "
-"иссякают. Я считаю, что есть проход, который ведет к источникам, которые "
+"иссякают. Я считаю, что есть проход, который ведёт к источникам, которые "
 "служат нашему городу. Пожалуйста, найдите то, что вызвало это бедствие, или "
 "мы все обязательно погибнем. |"
 
@@ -6893,7 +6897,7 @@ msgid ""
 "and expensive supplies to get you through this ordeal? |"
 msgstr ""
 "Вы говорите, огромное и таинственное сокровище? Может быть, мне было бы "
-"интересно забрать у вас кое-что ... или еще лучше, разве вам не нужны редкие "
+"интересно забрать у вас кое-что ... или ещё лучше, разве вам не нужны редкие "
 "и дорогие припасы, чтобы пройти через это испытание? |"
 
 #: Source/textdat.cpp:121
@@ -6954,7 +6958,7 @@ msgstr ""
 "Я видел, что Фарнхэм зовёт его Мясника, когда он прокладывал путь сквозь "
 "тела моих друзей. Он размахивал тесаком размером с топор, рубя конечности и "
 "рубя храбрых людей на месте. Я был отделен от битвы множеством маленьких "
-"визжащих демонов и каким-то образом нашел лестницу, ведущую наружу. Я больше "
+"визжащих демонов и каким-то образом нашёл лестницу, ведущую наружу. Я больше "
 "никогда не видел этого ужасного создания, но его окровавленное лицо "
 "преследует меня по сей день. |"
 
@@ -6991,7 +6995,7 @@ msgstr ""
 "поймали и сумели схватить меня за ногу, прежде чем Гризвольд вытащил меня из "
 "этой дыры.\n"
 "\n"
-"Скажу прямо - убейте его, прежде чем он убьет вас и добавит ваш труп в свою "
+"Скажу прямо - убейте его, прежде чем он убьёт вас и добавит ваш труп в свою "
 "коллекцию. |"
 
 #: Source/textdat.cpp:137
@@ -7001,8 +7005,8 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest... |"
 msgstr ""
-"Пожалуйста послушайте меня. Архиепископ Лазарь, он привел нас сюда, чтобы "
-"найти пропавшего принца, ублюдок и завел нас в ловушку! Теперь все "
+"Пожалуйста послушайте меня. Архиепископ Лазарь, он привёл нас сюда, чтобы "
+"найти пропавшего принца, ублюдок и завёл нас в ловушку! Теперь все "
 "мертвы ... убиты демоном, которого он назвал Мясником. Отомсти за нас! "
 "Найдите этого Мясника и убейте его, чтобы наши души наконец успокоились ... |"
 
@@ -7022,7 +7026,7 @@ msgstr ""
 "... Тьма окутывает Скрытое. Глаза светятся невидимым светом, и только звуки "
 "лезвия когтей, кратковременно царапающие, мучят те бедные души, которые на "
 "всю вечность лишились зрения. Тюрьма для проклятых носит название Залы "
-"слепых ... |"
+"Слепцов ... |"
 
 #: Source/textdat.cpp:142
 msgid ""
@@ -7031,13 +7035,10 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows. |"
 msgstr ""
-"Вы читаете интересный стишок, написанный в стиле, который напоминает мне "
-"другие произведения. Дайте мне подумать - что это было?\n"
+"Я никогда не интересовался поэзией. Иногда, я нанимал менестрелей, когда "
+"дела в таверне шли в гору, но это было так давно. \n"
 "\n"
-"... Тьма окутывает Скрытое. Глаза светятся невидимым светом, и только звуки "
-"лезвия когтей, кратковременно царапающие, мучят те бедные души, которые на "
-"всю вечность лишились зрения. Тюрьма для проклятых носит название Залы "
-"слепых ... |"
+"Что? Ах, да... э, думаю вы понимаете, что кто-то знает. |"
 
 #: Source/textdat.cpp:144
 msgid ""
@@ -7046,10 +7047,10 @@ msgid ""
 "spoke of a place of great evil that... wait - you're not going there are "
 "you? |"
 msgstr ""
-"Хммм это почему-то кажется знакомым. Мне кажется, я помню, как читал что-то "
-"очень похожее на это стихотворение, исследуя историю демонических недугов. "
-"Там говорилось о месте великого зла, которое ... подожди - ты туда не "
-"пойдешь? |"
+"Почему-то это кажется знакомым. Мне кажется, я помню, как читал что-то очень "
+"похожее на это стихотворение, исследуя историю демонических недугов. Там "
+"говорилось о месте великого зла, которое ... подожди - ты же туда не "
+"пойдёшь? |"
 
 #: Source/textdat.cpp:146
 msgid ""
@@ -7094,9 +7095,9 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes. |"
 msgstr ""
-"Посмотрим, я тебе что-то продаю? Нет. Вы даете мне деньги, чтобы я вам об "
+"Посмотрим, я тебе что-то продаю? Нет. Вы даёте мне деньги, чтобы я вам об "
 "этом рассказал? Нет. Вы уезжаете и собираетесь поговорить с рассказчиком, "
-"который живет такими вещами? Да. |"
+"который живёт такими вещами? Да. |"
 
 #: Source/textdat.cpp:156
 msgid ""
@@ -7115,7 +7116,7 @@ msgstr ""
 "\n"
 "Из тех, кто попал в ловушку Королевского проклятия, Лахданан с наименьшей "
 "вероятностью покорится тьме без боя, поэтому я полагаю, что ваша история "
-"может быть правдой. Если бы я был на твоем месте, мой друг, я бы нашел "
+"может быть правдой. Если бы я был на твоём месте, мой друг, я бы нашел "
 "способ освободить его от пыток. |"
 
 #: Source/textdat.cpp:158
@@ -7136,7 +7137,7 @@ msgstr ""
 "Ты говоришь, - Золотой эликсир? Я никогда не придумывал зелья такого цвета "
 "раньше, поэтому я не могу сказать, как это повлияет на вас, если вы "
 "попытаетесь выпить это. Как твой целитель, я настоятельно рекомендую тебе, "
-"если ты найдешь такой эликсир, делай, как просит Лахданан, и НЕ пытайся его "
+"если ты найдёшь такой эликсир, делай, как просит Лахданан, и НЕ пытайся его "
 "использовать. |"
 
 #: Source/textdat.cpp:162
@@ -7155,7 +7156,7 @@ msgid ""
 "would fall especially hard upon him. |"
 msgstr ""
 "Если вы на самом деле встречались с Лахдананом, то я бы посоветовал вам "
-"помочь ему. Я имел дело с ним несколько раз и нашел его честным а так же "
+"помочь ему. Я имел дело с ним несколько раз и нашёл его честным, а так же "
 "верным по своей природе. Проклятие, постигшее последователей короля Леорика "
 "будет особенно тяжко для него. |"
 
@@ -7187,7 +7188,7 @@ msgid ""
 "questions anymore. Oh, that isn't what happened? Then I guess you'll be "
 "buying something or you'll be on your way. |"
 msgstr ""
-"Подожди, дай угадаю. Каин был поглощен гигантской трещиной, которая "
+"Подожди, дай угадаю. Каин был поглощён гигантской трещиной, которая "
 "открылась под ним. Он сгорел в шаре адского огня, и не может больше отвечать "
 "на ваши вопросы. О, я ошибся? Тогда я думаю, вы будете покупать что-нибудь, "
 "или вы уже пойдёте. |"
@@ -7208,7 +7209,7 @@ msgid ""
 msgstr ""
 "Пожалуйста, не убивай меня, просто выслушай меня. Когда-то я был капитаном "
 "рыцарей Короля Леорика, честно и справедливо защищая законы этой страны. "
-"Затем его темное проклятие обрушилось на нас за ту роль, которую мы сыграли "
+"Затем его тёмное проклятие обрушилось на нас за ту роль, которую мы сыграли "
 "в его трагической смерти. Когда мои товарищи-рыцари уступили своей "
 "искривленной судьбе, я сбежал из погребальной камеры короля, ища способ "
 "освободиться от проклятия. Но я потерпел неудачу...\n"
@@ -7311,19 +7312,19 @@ msgid ""
 msgstr ""
 "Привет! Всегда приятно видеть одного из моих лучших клиентов! Я знаю, что вы "
 "все глубже и глубже погружались в Лабиринт, и мне рассказали историю, на "
-"которую вам стоит время, чтобы ее послушать ...\n"
+"которую вам стоит время, чтобы её послушать ...\n"
 "\n"
 "Один из мужчин, который вернулся из Лабиринта, рассказал мне о мистической "
 "наковальне, с которой он столкнулся во время своего побега. Его описание "
 "напомнило мне легенды, которые я слышал в юности о горящей Адской кузне, где "
-"создается мощное магическое оружие. Легенда гласит, что глубоко внутри "
+"создаётся мощное магическое оружие. Легенда гласит, что глубоко внутри "
 "Адской Кузни покоилась Наковальня Ярости! Эта наковальня содержала в себе "
 "самую суть демонического подземного мира ...\n"
 "\n"
 "Говорят, что любое оружие, созданное на горящей наковальне, наделено великой "
 "силой. Если эта наковальня действительно является наковальней Ярости, "
 "возможно, я смогу сделать из вас оружие, способное победить даже самого "
-"темного лорда ада!\n"
+"тёмного лорда ада!\n"
 "\n"
 "Найдите мне наковальню, и я помогу вам! |"
 
@@ -7333,7 +7334,7 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions. |"
 msgstr ""
-"Не нашел, да? Что ж, продолжай поиски. Оружие, выкованное на наковальне, "
+"Не нашёл, да? Что ж, продолжай поиски. Оружие, выкованное на наковальне, "
 "может стать вашей лучшей надеждой, и я уверен, что смогу сделать вас одним "
 "из легендарных героев. |"
 
@@ -7404,7 +7405,7 @@ msgstr ""
 "Камнях крови, которые откроют дверь, которая охраняет древнее сокровище ...\n"
 " \n"
 "Природа этого сокровища окутана предположениями друг мой, но говорят, что "
-"древний герой Аркаин поместил священные доспехи Доблести в секретное "
+"древний герой Аркейн поместил священные доспехи Доблесть в секретное "
 "хранилище. Аркейн был первым смертным, который переломил ход Войны Грехов и "
 "загнал легионы тьмы обратно в Пылающий Ад.\n"
 " \n"
@@ -7418,9 +7419,9 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth. |"
 msgstr ""
-"Каждый ребенок знает историю про воина Аркейна и его мистических доспехах, "
+"Каждый ребёнок знает историю про воина Аркейна и его мистических доспехах, "
 "известные как Доблесть. Если бы вы нашли его пристанище, вы были бы хорошо "
-"защищены от зла ​​в Лабиринте. |"
+"защищены от зла в Лабиринте. |"
 
 #: Source/textdat.cpp:202
 msgid ""
@@ -7437,7 +7438,7 @@ msgid ""
 "boys talk about. You had better ask one of the men in the village. |"
 msgstr ""
 "Я часто слышал, как мальчики рассказывают историю о волшебной броне под "
-"названием «Доблесть». Вам лучше спросить одного из мужчин в деревне. |"
+"названием Доблесть. Вам лучше спросить одного из мужчин в деревне. |"
 
 #: Source/textdat.cpp:206
 msgid ""
@@ -7480,7 +7481,7 @@ msgstr ""
 "Вы собираетесь найти доспехи, известные как Доблесть?\n"
 " \n"
 "Никто никогда даже не догадывался, где Аркейн спрятал вещи, и если я при "
-"своих связях не смог их найти то, я серьезно сомневаюсь, что вы когда-нибудь "
+"своих связях не смог их найти то, я серьёзно сомневаюсь, что вы когда-нибудь "
 "это сделаете. |"
 
 #: Source/textdat.cpp:213
@@ -7547,7 +7548,7 @@ msgid ""
 "that pretty girl that brings the drinks. Listen here, friend - you're "
 "obsessive, you know that? |"
 msgstr ""
-"Всегда нужно говорить о Крови? Что насчет цветов, солнечного света и той "
+"Всегда нужно говорить о Крови? Что насчёт цветов, солнечного света и той "
 "красивой девушки, которая приносит напитки. Послушай, друг, ты одержим, ты "
 "это знаешь? |"
 
@@ -7574,7 +7575,7 @@ msgid ""
 "My blade sings for your blood, mortal, and by my dark masters it shall not "
 "be denied. |"
 msgstr ""
-"Мой клинок жаждет твоей крови, смертный, и мои темные повелители не могут "
+"Мой клинок жаждет твоей крови, смертный, и мои тёмные повелители не могут "
 "отрицать этого. |"
 
 #: Source/textdat.cpp:231
@@ -7638,10 +7639,10 @@ msgid ""
 msgstr ""
 "Останься ненадолго - у меня есть история, которая может тебе понравиться. "
 "Некоторое время назад здесь проходил караван, направлявшийся в восточные "
-"королевства. Предположительно, он нес кусок неба, упавшего на землю! К "
+"королевства. Предположительно, он нёс кусок небес, упавших на землю! К "
 "северу отсюда вдоль проезжей части караван попал в засаду, устроенную "
 "всадниками в плащах. Я обыскал обломки в поисках этого небесного камня, но "
-"нигде не нашел. Если найдешь, думаю, что смогу из нее сделать что-нибудь "
+"нигде не нашёл. Если найдёшь, думаю, что смогу из неё сделать что-нибудь "
 "полезное. |"
 
 #: Source/textdat.cpp:241
@@ -7649,7 +7650,7 @@ msgid ""
 "I am still waiting for you to bring me that stone from the heavens. I know "
 "that I can make something powerful out of it. |"
 msgstr ""
-"Я все еще жду, когда ты принесешь мне этот камень с небес. Я знаю, что могу "
+"Я все ещё жду, когда ты принесёшь мне этот камень с небес. Я знаю, что могу "
 "сделать из него что-то мощное. |"
 
 #: Source/textdat.cpp:243
@@ -7672,7 +7673,7 @@ msgid ""
 "really miss that ring... |"
 msgstr ""
 "Раньше у меня было хорошее кольцо; оно было действительно дорогое, с синим, "
-"зеленым, красным и серебряным камнями. Не помню, что случилось с ним, "
+"зелёным, красным и серебряным камнями. Не помню, что случилось с ним, "
 "однако. Я очень скучаю по нему ... |"
 
 #: Source/textdat.cpp:247
@@ -7681,9 +7682,9 @@ msgid ""
 "find it, I would prevent it. He will harness its powers and its use will be "
 "for the good of us all. |"
 msgstr ""
-"Небесный Камень очень силен, и если бы кто-нибудь, кроме Гризуолда, велел "
-"вам найти его, я бы не советовал вам выполнять его волю. Он воспользуется "
-"его силой, и его использование будет против всех нас. |"
+"Небесный Камень очень силен, и если бы кто-нибудь, кроме Гризвольда, велел "
+"вам найти его, я бы не советовал вам выполнять его волю. Он использует его "
+"силы на благо всех нас. |"
 
 #: Source/textdat.cpp:249
 msgid ""
@@ -7691,8 +7692,8 @@ msgid ""
 "he is doing, and as much as I try to steal his customers, I respect the "
 "quality of his work. |"
 msgstr ""
-"Если кому и удастся что-нибудь сделать из этого камня, так это Гризволду. Он "
-"знает, что делает, и как бы я ни пытался украсть его клиентов, я уважаю "
+"Если кому и удастся что-нибудь сделать из этого камня, так это Гризвольду. "
+"Он знает, что делает, и как бы я ни пытался украсть его клиентов, я уважаю "
 "качество его работы. |"
 
 #: Source/textdat.cpp:251
@@ -7701,8 +7702,8 @@ msgid ""
 "as I do about Red Herrings. Perhaps Pepin the Healer could tell you more, "
 "but this is something that cannot be found in any of my stories or books. |"
 msgstr ""
-"Ведьма Адрия ищет черный гриб? Я знаю о черных грибах не меньше, чем о "
-"красных селедках. Возможно, Целитель Пипин мог бы рассказать вам больше, "
+"Ведьма Адрия ищет чёрный гриб? Я знаю о чёрных грибах не меньше, чем о "
+"красных селёдках. Возможно, Целитель Пипин мог бы рассказать вам больше, "
 "хотя этого нельзя найти ни в одном из моих рассказов или книг. |"
 
 #: Source/textdat.cpp:253
@@ -7713,9 +7714,9 @@ msgid ""
 "disgusting! |"
 msgstr ""
 "Позвольте мне сказать вот что. И Гарда, и я никогда, НИКОГДА не будем "
-"подавать черные грибы нашим дорогим гостям. Если Адрия хочет добавить в "
-"тушеное мясо грибов, то это ее дело, но я не могу помочь вам их найти. "
-"Черные грибы ... омерзительно! |"
+"подавать чёрные грибы нашим дорогим гостям. Если Адрия хочет добавить в "
+"тушёное мясо грибов, то это её дело, но я не могу помочь вам их найти. "
+"Чёрные грибы ... омерзительно! |"
 
 #: Source/textdat.cpp:255
 msgid ""
@@ -7728,8 +7729,8 @@ msgstr ""
 "Ведьма сказала мне, что вы искали мозг демона, чтобы помочь мне в создании "
 "моего эликсира. Он должен быть очень ценным для многих, кого ранили эти "
 "мерзкие твари, если только я смогу раскрыть секреты, которые, как я "
-"подозреваю, хранит его алхимия. Если вы можете удалить мозг демона, когда "
-"убьете его, я был бы признателен, если бы вы принесли его мне. |"
+"подозреваю, хранит его алхимия. Если вы можете забрать мозг демона, когда "
+"убьёте его, я был бы признателен, если бы вы принесли его мне. |"
 
 #: Source/textdat.cpp:257
 msgid ""
@@ -7739,7 +7740,7 @@ msgid ""
 msgstr ""
 "Отлично, это как раз то, что я и хотел. Я смог закончить эликсир и без "
 "этого, но мне не помешает его изучить. Не могли бы вы отнести это ведьме? Я "
-"считаю, что ждет этого. |"
+"считаю, что ждёт этого. |"
 
 #: Source/textdat.cpp:259
 msgid ""
@@ -7759,12 +7760,14 @@ msgstr ""
 "на ... огромный, гигантский, раздутый, раздутый гриб! Что ж, желаю вам "
 "удачи. |"
 
+# Смысл в том что Огден подаёт в баре напитки из черного гриба.
 #: Source/textdat.cpp:263
+#, fuzzy
 msgid ""
 "Ogden mixes a MEAN black mushroom, but I get sick if I drink that. Listen, "
 "listen... here's the secret - moderation is the key! |"
 msgstr ""
-"Огден смешивает СРЕДСТВО из черного гриба, но я боюсь что меня стошнит если "
+"Огден смешивает СРЕДСТВО из чёрного гриба, но я боюсь что меня стошнит если "
 "я попробую это. Слушай-слушай... Вот секрет - мера является ключом! |"
 
 #: Source/textdat.cpp:265
@@ -7773,16 +7776,16 @@ msgid ""
 "your eyes open for a black mushroom. It should be fairly large and easy to "
 "identify. If you find it, bring it to me, won't you? |"
 msgstr ""
-"Что же мы имеем? Интересно, это похоже на книгу с реагентами. Ищите за "
-"черным грибом. Он должен быть довольно большим и легко распознаваемым. Если "
-"найдешь его то принесёшь мне, правда? |"
+"Что у нас тут? Интересно, похоже на книгу реагентов. Поищи чёрный гриб. Он "
+"должен быть довольно большим и легко распознаваемым. Если найдёшь его то "
+"принесёшь мне, правда? |"
 
 #: Source/textdat.cpp:267
 msgid ""
 "It's a big, black mushroom that I need. Now run off and get it for me so "
 "that I can use it for a special concoction that I am working on. |"
 msgstr ""
-"Мне нужен большой черный гриб. А теперь беги и принеси мне, чтобы я мог "
+"Мне нужен большой чёрный гриб. А теперь беги и принеси мне, чтобы я мог "
 "использовать его для приготовления особой смеси, над которой я работаю. |"
 
 #: Source/textdat.cpp:269
@@ -7795,7 +7798,7 @@ msgid ""
 msgstr ""
 "Да, это идеально подходит для пива, которое я создаю. Между прочим, целитель "
 "ищет мозг того или иного демона, чтобы вылечить тех, кого поразила чума. Я "
-"считаю, что он собирается сделать из нее эликсир. Если вы поможете ему найти "
+"считаю, что он собирается сделать из неё эликсир. Если вы поможете ему найти "
 "то, что ему нужно, попробуйте достать для меня образец эликсира. |"
 
 #: Source/textdat.cpp:271
@@ -7816,14 +7819,14 @@ msgid ""
 "brew without it. Why don't you just keep it... |"
 msgstr ""
 "Что? Теперь ты принесешь мне эликсир от целителя? Я был в состоянии "
-"закончить мое пиво без него. Почему бы вам просто не оставить ... |"
+"закончить моё пиво без него. Почему бы вам просто не оставить ... |"
 
 #: Source/textdat.cpp:275
 msgid ""
 "I don't have any mushrooms of any size or color for sale. How about "
 "something a bit more useful? |"
 msgstr ""
-"Я не продаю грибов любого размера и цвета. Как насчет чего-нибудь более "
+"Я не продаю грибов любого размера и цвета. Как насчёт чего-нибудь более "
 "полезного? |"
 
 #: Source/textdat.cpp:277
@@ -7852,7 +7855,7 @@ msgstr ""
 "Полагаю, пора сказать тебе правду о том, кто я, мой друг. Видите ли, я не "
 "такой, каким кажусь ...\n"
 " \n"
-"Мое настоящее имя - Декард Каин Старший, и я последний потомок древнего "
+"Моё настоящее имя - Декард Каин Старший, и я последний потомок древнего "
 "Братства, которое посвятило себя хранению и защите секретов вневременного "
 "зла. Зло, которое совершенно очевидно, теперь было освобождено ... \n"
 " \n"
@@ -7894,7 +7897,7 @@ msgid ""
 "You should hurry along and see the storyteller as Adria suggests. |"
 msgstr ""
 "Если ведьма не может вам помочь и предлагает увидеть Каина, почему вы "
-"думаете, что я знаю что-нибудь? Похоже, это очень серьезный вопрос. Вам "
+"думаете, что я знаю что-нибудь? Похоже, это очень серьёзный вопрос. Вам "
 "следует поторопиться и увидеть рассказчика, как предлагает Адрия. |"
 
 #: Source/textdat.cpp:285
@@ -7908,7 +7911,7 @@ msgstr ""
 "Я не могу особо понять надписи на этой карте, но, возможно, Адрия или Каин "
 "помогут вам расшифровать, к чему это относится.\n"
 " \n"
-"Я вижу, что это карта звезд на нашем небе, но понять что-то большее выше "
+"Я вижу, что это карта звёзд на нашем небе, но понять что-то большее выше "
 "моих сил. |"
 
 #: Source/textdat.cpp:287
@@ -7947,8 +7950,8 @@ msgid ""
 "portends great disaster, but its secrets are not mine to tell. The time has "
 "come for you to have a very serious conversation with the Storyteller... |"
 msgstr ""
-"Боюсь, это не сулит абсолютно ничего хорошего. Эта звездная карта предвещает "
-"великую катастрофу, но я не могу понять ее секреты. Пришло время серьезно "
+"Боюсь, это не сулит абсолютно ничего хорошего. Эта звёздная карта предвещает "
+"великую катастрофу, но я не могу понять её секреты. Пришло время серьёзно "
 "поговорить с Рассказчиком ... |"
 
 #: Source/textdat.cpp:295
@@ -7965,8 +7968,8 @@ msgstr ""
 msgid ""
 "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you. |"
 msgstr ""
-"Пожалуйста, без ранений. Без убийств. Оставайтесь в живых и в следующий раз "
-"хорошо принесем вам. |"
+"Пожааалуйста, не вредить. Не убивать. Оставить живым и в следующий раз "
+"хорошо дам тебе. |"
 
 #: Source/textdat.cpp:299
 msgid ""
@@ -7975,7 +7978,7 @@ msgid ""
 " \n"
 "You take this as proof I keep word... |"
 msgstr ""
-"Что-то для тебя делаю. Опять же, не убивайте Гарбада. Живи и дари добро.\n"
+"Что-то для тебя делаю. Опять, не убивать Гарбада. Живи и давай добро.\n"
 " \n"
 "Вы воспринимаете это как доказательство, того что я держу слово ... |"
 
@@ -8007,7 +8010,7 @@ msgstr ""
 
 #: Source/textdat.cpp:307
 msgid "Arrrrgh! Your curiosity will be the death of you!!! |"
-msgstr "Аррргх! Ваше любопытство убьет вас !!! |"
+msgstr "Аррргх! Ваше любопытство убьёт вас !!! |"
 
 #: Source/textdat.cpp:308
 msgid "Hello, my friend. Stay awhile and listen... |"
@@ -8024,7 +8027,7 @@ msgstr ""
 "великих знаний.\n"
 " \n"
 "Прочтите их внимательно, потому что они могут сказать вам то, чего не знаю "
-"даже я. Слава Буське!!! |"
+"даже я. |"
 
 #: Source/textdat.cpp:311
 msgid ""
@@ -8074,7 +8077,7 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings. |"
 msgstr ""
-"Бедный Фарнем. Он - тревожное напоминание об обреченном собрании, которое "
+"Бедный Фарнхэм. Он - тревожное напоминание об обречённом собрании, которое "
 "вошло в Собор вместе с Лазарем в тот мрачный день. Он спас жизнь, но его "
 "храбрость и большая часть его рассудка остались в темной яме. В настоящее "
 "время он находит утешение только на дне кружки, но время от времени в его "
@@ -8089,7 +8092,7 @@ msgid ""
 "I have never seen before. |"
 msgstr ""
 "Ведьма Адрия - аномалия здесь, в Тристраме. Она прибыла вскоре после того, "
-"как собор был осквернен, в то время как все остальные бежали. У нее была "
+"как собор был осквернён, в то время как все остальные бежали. У неё была "
 "небольшая хижина, построенная на окраине города, по-видимому за ночь, и она "
 "имеет доступ ко многим странным и загадочным артефактам и фолиантам знаний, "
 "которых даже я, никогда раньше не видел. |"
@@ -8130,11 +8133,11 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed. |"
 msgstr ""
-"Джиллиан прекрасная женщина. Я обожаю ее за хорошее настроение и быстрый "
-"смех, и она занимает особое место в моем сердце. Она остается в таверне, "
+"Джиллиан прекрасная женщина. Я обожаю её за хорошее настроение и быстрый "
+"смех, и она занимает особое место в моем сердце. Она остаётся в таверне, "
 "чтобы поддержать свою пожилую бабушку, которая слишком больна, чтобы "
-"путешествовать. Иногда я опасаюсь за ее безопасность, но я знаю, что любой "
-"мужчина в деревне скорее умрет, чем стерпит то как ей причиняют вред. |"
+"путешествовать. Иногда я опасаюсь за её безопасность, но я знаю, что любой "
+"мужчина в деревне скорее умрёт, чем стерпит то как ей причиняют вред. |"
 
 #: Source/textdat.cpp:327
 msgid "Greetings, good master. Welcome to the Tavern of the Rising Sun! |"
@@ -8151,7 +8154,7 @@ msgstr ""
 "Многие авантюристы украшали столы моей таверны, и за стольким количеством "
 "эля было рассказано в десять раз больше историй. Единственное, о чем я когда-"
 "либо слышал, что кто-либо из них соглашался, была эта старая аксиома. "
-"Возможно, это вам поможет. Мякоть можно и разрезать, но кость придется "
+"Возможно, это вам поможет. Мякоть можно и разрезать, но кость придётся "
 "раздавить. |"
 
 #: Source/textdat.cpp:331
@@ -8184,7 +8187,7 @@ msgstr ""
 "Адрия не по годам мудра, но, признаться, она меня немного пугает.\n"
 " \n"
 "Не берите в голову. Если вам когда-нибудь понадобится торговать предметами "
-"колдовства, у нее есть хорошо укомплектованный магазинчик прямо через реку. |"
+"колдовства, у неё есть хорошо укомплектованный магазинчик прямо через реку. |"
 
 #: Source/textdat.cpp:337
 msgid ""
@@ -8229,7 +8232,7 @@ msgstr ""
 "Джиллиан, моя барменша? Если бы не чувство долга перед бабушкой, она бы "
 "давно сбежала отсюда.\n"
 " \n"
-"Бог знает, что я умолял ее уйти, говоря что буду присматривать за старухой, "
+"Бог знает, что я умолял её уйти, говоря что буду присматривать за старухой, "
 "но она слишком мила и заботлива, чтобы бросить бабушку. |"
 
 #: Source/textdat.cpp:345
@@ -8245,7 +8248,7 @@ msgid ""
 msgstr ""
 "Я сделал очень интересное открытие. В отличие от нас, существа в Лабиринте "
 "могут лечить себя без помощи зелий или магии. Если вы ранили одного из "
-"монстров, убедитесь, что он мертв, иначе он может восстановиться. |"
+"монстров, убедитесь, что он мёртв, иначе он может восстановиться. |"
 
 #: Source/textdat.cpp:348
 msgid ""
@@ -8275,7 +8278,7 @@ msgid ""
 "an innate ability to discern the true nature of many things. If you ever "
 "have any questions, he is the person to go to. |"
 msgstr ""
-"Каин - верный друг и великий мудрец. У него обширная библиотека и врожденная "
+"Каин - верный друг и великий мудрец. У него обширная библиотека и врождённая "
 "способность различать истинную природу многих вещей. Если у вас возникнут "
 "какие-либо вопросы, обратитесь к нему. |"
 
@@ -8284,7 +8287,7 @@ msgid ""
 "Even my skills have been unable to fully heal Farnham. Oh, I have been able "
 "to mend his body, but his mind and spirit are beyond anything I can do. |"
 msgstr ""
-"Даже мои навыки не смогли полностью вылечить Фарнхема. О, я смог вылечить "
+"Даже мои навыки не смогли полностью вылечить Фарнхэма. О, я смог вылечить "
 "его тело, но исцелить его разум и дух выше моих сил. |"
 
 #: Source/textdat.cpp:356
@@ -8297,8 +8300,8 @@ msgid ""
 msgstr ""
 "Хотя я использую некоторые формы магии для создания зелий и эликсиров, "
 "которые храню здесь, Адрия в отличии от меня - настоящая волшебница. "
-"Кажется, она никогда не спит, и у нее всегда есть доступ ко многим "
-"мистическим фолиантам и артефактам. Я считаю, что ее хижина может быть "
+"Кажется, она никогда не спит, и у неё всегда есть доступ ко многим "
+"мистическим фолиантам и артефактам. Я считаю, что её хижина может быть "
 "намного больше, чем кажется, но я никогда не смогу попасть внутрь((. |"
 
 #: Source/textdat.cpp:358
@@ -8308,9 +8311,9 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did. |"
 msgstr ""
-"Бедный Вирт. Я сделал все возможное для ребенка, но я знаю, что он презирает "
+"Бедный Вирт. Я сделал все возможное для ребёнка, но я знаю, что он презирает "
 "тот деревянный колышек, который я был вынужден прикрепить к его ноге. Его "
-"раны были ужасными. Никто - и особенно такой маленький ребенок - не должен "
+"раны были ужасными. Никто - и особенно такой маленький ребёнок - не должен "
 "страдать так, как страдает он. |"
 
 #: Source/textdat.cpp:360
@@ -8321,9 +8324,9 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are. |"
 msgstr ""
-"Я действительно не понимаю, почему Огден остается здесь, в Тристраме. Он "
-"страдает легким нервным расстройством, но он умный и трудолюбивый человек, "
-"который преуспеет везде , куда бы он ни пошел. Я полагаю, это может быть "
+"Я действительно не понимаю, почему Огден остаётся здесь, в Тристраме. Он "
+"страдает лёгким нервным расстройством, но он умный и трудолюбивый человек, "
+"который преуспеет везде , куда бы он ни пошёл. Я полагаю, это может быть "
 "страх перед многочисленными убийствами, которые происходят в окрестностях, "
 "или, возможно, это желание его жены удерживает его и его семью на одном "
 "месте. |"
@@ -8336,7 +8339,7 @@ msgid ""
 "She claims that they are visions, but I have no proof of that one way or the "
 "other. |"
 msgstr ""
-"Барменша Огдена - милая девушка. Ее бабушка очень больна и страдает бредом.\n"
+"Барменша Огдена - милая девушка. Её бабушка очень больна и страдает бредом.\n"
 " \n"
 "Она утверждает, что это видения, но у меня нет доказательств того или иного. "
 "|"
@@ -8350,7 +8353,7 @@ msgid ""
 "My grandmother had a dream that you would come and talk to me. She has "
 "visions, you know and can see into the future. |"
 msgstr ""
-"Моей бабушке приснилось, что ты придёшь и поговоришь со мной. Знаете, у нее "
+"Моей бабушке приснилось, что ты придёшь и поговоришь со мной. Знаете, у неё "
 "есть провидение, и она может заглянуть в будущее. |"
 
 #: Source/textdat.cpp:367
@@ -8361,8 +8364,8 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there. |"
 msgstr ""
-"Женщина на окраине города - ВЕДЬМА!!! Она кажется достаточно милой, и ее "
-"имя, Адрия, очень приятно для слуха, но я ее очень боюсь.\n"
+"Женщина на окраине города - ведьма! Она кажется достаточно милой, и её имя, "
+"Адрия, очень приятно для слуха, но я её очень боюсь.\n"
 " \n"
 "Понадобится кто-то достаточно смелый, вроде тебя, чтобы узнать, что она там "
 "делает. |"
@@ -8429,7 +8432,7 @@ msgstr ""
 "отвратительные существа украли его, она так и не смогла оправится. Я думаю, "
 "она умерла от разбитого сердца. Вирт стал подлым юношей, стремящимся только "
 "извлечь выгоду из чужих страданий. Я знаю, что он страдал и видел ужасы, "
-"которые я даже не могу представить, но часть этой боли все еще нависает над "
+"которые я даже не могу представить, но часть этой боли все ещё нависает над "
 "ним. |"
 
 #: Source/textdat.cpp:379
@@ -8467,7 +8470,7 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow! |"
 msgstr ""
-"Топор? Да, это хорошее оружие, сбалансированное,против любого врага. "
+"Топор? Да, это хорошее оружие, сбалансированное, против любого врага. "
 "Посмотрите, как он рассекает воздух, а затем представьте себе симпатичную "
 "толстую голову демона на его пути. Однако имейте в виду, что он медленно "
 "раскачивается - поэтому даже не думайте о нанесении быстрого удара! |"
@@ -8503,7 +8506,7 @@ msgid ""
 msgstr ""
 "Хотя мне приходится практически переправлять нужные мне металлы и "
 "инструменты из караванов, которые огибают границы нашего проклятого города, "
-"эта ведьма Адрия, кажется всегда получает все, что ей нужно. Если бы я знал "
+"эта ведьма Адрия, кажется всегда получает всё, что ей нужно. Если бы я знал "
 "хоть немного о том, как использовать магию как она, я мог бы творить "
 "поистине невероятные вещи. |"
 
@@ -8513,7 +8516,7 @@ msgid ""
 "would arrange to get both of them out of here on one of the trading "
 "caravans. |"
 msgstr ""
-"Джиллиан - милая девушка. Жалко, что у ее бабушки такое плохое здоровье, "
+"Джиллиан - милая девушка. Жалко, что у её бабушки такое плохое здоровье, "
 "иначе я бы устроил так, чтобы вывести их обоих отсюда на одном из торговых "
 "караванов. |"
 
@@ -8548,7 +8551,7 @@ msgid ""
 "say about the healer. |"
 msgstr ""
 "Хороший человек тот, который ставит нужды других выше своих собственных. Вы "
-"не найдете никого, кто оставался бы в Тристраме - или где-либо еще, - кто бы "
+"не найдёте никого, кто оставался бы в Тристраме - или где-либо ещё, - кто бы "
 "плохо отзывался о целителе. |"
 
 #: Source/textdat.cpp:400
@@ -8559,8 +8562,8 @@ msgid ""
 "origin. I cannot hold that against him after what happened to him, but I do "
 "wish he would at least be careful. |"
 msgstr ""
-"Этот парень попадет в серьезные неприятности ... или, я думаю, я должен "
-"сказать, еще раз. Я пытался заинтересовать его работой здесь и обучением "
+"Этот парень попадёт в серьёзные неприятности ... или, я думаю, я должен "
+"сказать, ещё раз. Я пытался заинтересовать его работой здесь и обучением "
 "честной торговле, но он предпочитает высокую прибыль от торговли товарами "
 "сомнительного происхождения. Я не могу обвинить его в этом после того, что с "
 "ним случилось, но я действительно хочу чтобы он был по крайней мере "
@@ -8577,11 +8580,11 @@ msgid ""
 "demons. |"
 msgstr ""
 "У трактирщика небольшой бизнес и нет реальных способов получить прибыль. Ему "
-"удается сводить концы с концами, обеспечивая едой и ночлегом тех, кто время "
-"от времени бродит по деревне, хотя они очень врядли заплатят ему. Если бы не "
-"запасы зерна и сушеного мяса, которые он хранил в своем подвале, большинство "
-"из нас голодали бы в тот первый год, когда всю сельскую местность наводнили "
-"демоны. |"
+"удаётся сводить концы с концами, обеспечивая едой и ночлегом тех, кто время "
+"от времени бродит по деревне, хотя они очень вряд ли заплатят ему. Если бы "
+"не запасы зерна и сушёного мяса, которые он хранил в своём подвале, "
+"большинство из нас голодали бы в тот первый год, когда всю сельскую "
+"местность наводнили демоны. |"
 
 #: Source/textdat.cpp:404
 msgid "Can't a fella drink in peace? |"
@@ -8602,9 +8605,9 @@ msgid ""
 "|"
 msgstr ""
 "Почему бы этой старой старухе не начать делать что-нибудь для разнообразия? "
-"Конечно, конечно, у нее есть вещи, но ты послушай меня ... она "
+"Конечно, конечно, у неё есть вещи, но ты послушай меня ... она "
 "сверхъестественная. Я никогда не видел, чтобы она ела или пила - и нельзя "
-"доверять тому, кто не пьет ничего. |"
+"доверять тому, кто не пьёт ничего. |"
 
 #: Source/textdat.cpp:409
 msgid ""
@@ -8698,7 +8701,7 @@ msgid ""
 "but you gotta give him some gold or he won't even show you what he's got. |"
 msgstr ""
 "Если бы я был на вашем месте ... а я не ... но если бы был, я бы продал все, "
-"что у вас есть, и ушел отсюда. Этот мальчик там ... У него всегда есть что-"
+"что у вас есть, и ушёл отсюда. Этот мальчик там ... У него всегда есть что-"
 "то хорошее, но ты должен дать ему немного золота, иначе он даже не покажет "
 "тебе, то что у него есть. |"
 
@@ -8826,12 +8829,11 @@ msgid ""
 "encroaching Darkness. |"
 msgstr ""
 "Мы многого не сможем получить в будущем, но когда оно наступит, этим будут "
-"владеть наши дети. У мальчика Вирта на душе тьма а над душой ями), но он не "
-"представляет угрозы для города или его жителей. Его тайные отношения с "
-"мальчишками и негласными гильдиями близлежащих городов дают ему доступ ко "
-"многим вещам, которые нелегко найти в Тристраме. Хотя его методы могут быть "
-"укоризненными, Вирт может оказаться полезным в вашей битве с наступающей "
-"Тьмой. |"
+"владеть наши дети. У мальчика Вирта на душе тьма, но он не представляет "
+"угрозы для города или его жителей. Его тайные отношения с мальчишками и "
+"негласными гильдиями близлежащих городов дают ему доступ ко многим вещам, "
+"которые нелегко найти в Тристраме. Хотя его методы могут быть укоризненными, "
+"Вирт может оказаться полезным в вашей битве с наступающей Тьмой. |"
 
 #: Source/textdat.cpp:448
 msgid ""
@@ -8845,7 +8847,7 @@ msgid ""
 msgstr ""
 "Глиняные стены и соломенный навес не создают дома. Хозяин гостиницы Огден "
 "служит в этому городу больше, чем многие думают. Он предоставляет убежище "
-"Джиллиан и ее матери, поддерживает ту жизнь, которую оставил ему Фарнхэм, и "
+"Джиллиан и её матери, поддерживает ту жизнь, которую оставил ему Фарнхэм, и "
 "обеспечивает прибежище для всех, кто остался в бывшем Тристраме. Его таверна "
 "и простые удовольствия, дают представление о жизни, которой помнят люди "
 "здесь. Именно эта память продолжает питать их надежды на ваш успех. |"
@@ -8862,7 +8864,7 @@ msgid ""
 "Sometimes, only you will be able to find a purpose for some things. |"
 msgstr ""
 "Не у всех в Тристраме есть применение - или магазин - для всего, что вы "
-"найдете в лабиринте. Даже мне, как бы трудно в это поверить.\n"
+"найдёте в лабиринте. Даже мне, как бы трудно в это поверить.\n"
 " \n"
 "Иногда только вы сможете найти применение для некоторых вещей. |"
 
@@ -8883,7 +8885,7 @@ msgid ""
 msgstr ""
 "Если вы не заметили, я ничего не покупаю в Тристраме? Я импортер "
 "качественного товара. Если вы хотите торговать хламом, вам нужно увидеть "
-"Гризволда, Пипина или эту чертову ведьму Адрию. Я уверен, что они возьмут "
+"Гризвольда, Пипина или эту чёртову ведьму Адрию. Я уверен, что они возьмут "
 "все, что вы им принесете ... |"
 
 #: Source/textdat.cpp:457
@@ -8905,11 +8907,11 @@ msgid ""
 "Gillian is a beautiful girl who should get out of Tristram as soon as it is "
 "safe. Hmmm... maybe I'll take her with me when I go... |"
 msgstr ""
-"Если бы я был всего на несколько лет старше неё, я бы осыпал ее всем "
+"Если бы я был всего на несколько лет старше неё, я бы осыпал её всем "
 "богатством, всем которое смог бы собрать, а я уж поверьте мне, смогу достать "
 "очень дорогие подарки. Джиллиан - красивая девушка, которой следует покинуть "
-"Тристрам, как только это будет безопасно. Хммм ... может, я возьму ее с "
-"собой, когда пойду ... | КОТЯ Я ХЗ КТО ЭТО ГОВОРИТ ПРОВЕРЬ"
+"Тристрам, как только это будет безопасно. Хммм ... может, я возьму её с "
+"собой, когда пойду ... |"
 
 #: Source/textdat.cpp:461
 msgid ""
@@ -8929,9 +8931,9 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs... |"
 msgstr ""
-"Фарнхэм - это человек с проблемами, и я знаю, насколько серьезными могут "
+"Фарнхэм - это человек с проблемами, и я знаю, насколько серьёзными могут "
 "быть его проблемы. Он слишком доверял честности одного человека, и Лазарь "
-"привел его прямиком в пасть смерти. О, я знаю, на что это похоже, так что "
+"привёл его прямиком в пасть смерти. О, я знаю, на что это похоже, так что "
 "даже не начинай рассказывать мне о своих планах уничтожить зло, обитающее в "
 "этом Лабиринте. Просто следи за своими ногами ... |"
 
@@ -8946,7 +8948,7 @@ msgstr ""
 "Пока вам ничего не нужно привязывать, старый Пипин так же хорош, как и они.\n"
 " \n"
 "Если бы у меня тогда были какие-то из тех зелий, которые он варит, у меня "
-"все еще была бы нога ... |"
+"все ещё была бы нога ... |"
 
 #: Source/textdat.cpp:467
 msgid ""
@@ -8956,7 +8958,7 @@ msgid ""
 "I've seen pass through the gates of the King's Bazaar during High Festival. |"
 msgstr ""
 "Адрия меня действительно беспокоит. Конечно, Каин может рассказать вам о "
-"прошлом, но эта ведьма может заглянуть в ВАШЕ прошлое. У нее всегда есть "
+"прошлом, но эта ведьма может заглянуть в ВАШЕ прошлое. У неё всегда есть "
 "способ получить все, что ей нужно. Адрия получает в свои руки больше "
 "товаров, чем я видел проходящих через ворота Королевского базара во время "
 "Высокого фестиваля. |"
@@ -8970,7 +8972,7 @@ msgid ""
 msgstr ""
 "Огден - поступил глупо, что остался здесь. Я мог бы вывезти его из города по "
 "очень разумной цене, но он настаивает на том, чтобы попытаться разобраться с "
-"этой дурацкой таверной. По крайней мере, он дает Джиллиан место для работы, "
+"этой дурацкой таверной. По крайней мере, он даёт Джиллиан место для работы, "
 "а его жена Гарда готовит великолепный пастуший пирог ... |"
 
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -8979,7 +8981,7 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written. |"
 msgstr ""
-"За Залом Героев находится Зал Костей. Вечная смертъ ждет любого, кто "
+"За Залом Героев находится Зал Костей. Вечная смерть ждёт любого, кто "
 "попытается украсть сокровища, хранящиеся в этой комнате. Так предписано, и "
 "так говорит Владыка Ужаса. |"
 
@@ -8989,7 +8991,7 @@ msgid ""
 "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, "
 "Valor awaits for the Hero of Light to awaken... |"
 msgstr ""
-"... и поэтому, запертый за Вратами Крови и за Залом Огня, Доблесть ждет "
+"... и поэтому, запертый за Вратами Крови и за Залом Огня, Доблесть ждёт "
 "пробуждения Героя Света ... |"
 
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
@@ -9007,7 +9009,7 @@ msgstr ""
 "Не видишь то, что вижу я.\n"
 "Мутный взор, затем гниют глаза.\n"
 "Шепчут песню свою вслед,\n"
-"Обернешься - их уж нет.\n"
+"Обернёшься - их уж нет.\n"
 "Видишь то, чего и нет,\n"
 "Ходят тени, где должен быть свет.\n"
 "В безумии, из темноты,\n"
@@ -9020,7 +9022,7 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood. |"
 msgstr ""
-"В арсенале ада живет Военачальник Крови. Вслед за ним лежали изуродованные "
+"В арсенале ада живёт Военачальник Крови. Вслед за ним лежали изуродованные "
 "тела тысяч людей. Ангелы и люди были убиты, чтобы принести бесконечные "
 "жертвы Темным, которые кричат ​​об одном - крови. |"
 
@@ -9036,9 +9038,9 @@ msgid ""
 msgstr ""
 "Будьте внимательны и изучайте истины, которые здесь лежат, поскольку они - "
 "последнее из наследия Хорадримов. Даже сейчас, за пределами известных нам "
-"полей, идет война между утопическими царствами Высоких Небес и хаотическими "
+"полей, идёт война между утопическими царствами Высоких Небес и хаотическими "
 "ямами Пылающего Ада. Эта война известна как Великий конфликт, она бушевала и "
-"горела дольше, чем любая из звезд на небе. Ни одна из сторон никогда не "
+"горела дольше, чем любая из звёзд на небе. Ни одна из сторон никогда не "
 "добивается господства надолго, пока силы Света и Тьмы постоянно соперничают "
 "за контроль над всем творением. |"
 
@@ -9084,12 +9086,12 @@ msgid ""
 msgstr ""
 "Будьте внимательны и изучайте истины, которые здесь лежат, поскольку они - "
 "последнее из наследия Хорадримов. Почти триста лет назад стало известно, что "
-"Три главных зла Пылающего ада таинственным образом пришли в наш мир. Три "
-"брата десятилетиями опустошали земли востока, в то время как человечество "
-"трепетало перед ними. Наш Орден - Хорадрим - был основан группой скрытных "
-"магов, чтобы раз и навсегда выследить и схватить Три Зла.\n"
+"Три главных зла Пылающих Преисподней таинственным образом пришли в наш мир. "
+"Три брата десятилетиями опустошали земли востока, в то время как "
+"человечество трепетало перед ними. Наш Орден - Хорадримом - был основан "
+"группой скрытных магов, чтобы раз и навсегда выследить и схватить Три Зла.\n"
 " \n"
-"Первоначальный Хорадрим захватил два из Трех зол внутри могущественных "
+"Первоначальный Хорадримы поймали два из Трёх зол внутри могущественных "
 "артефактов, известных как Камни Душ, и похоронил их глубоко под пустынными "
 "восточными песками. Третье Зло избежало плена и скрылось на западе, "
 "преследуя многих из Хорадримов. Третье зло, известное как Диабло, Повелитель "
@@ -9097,8 +9099,8 @@ msgstr ""
 "Души и похоронена в этом Лабиринте.\n"
 " \n"
 "Имейте в виду, что камень души не должен быть обнаружен неверующими. Если бы "
-"Диабло был освобожден, он бы стал искать тело, которым легко управлять, "
-"поскольку он был бы очень слаб - возможно, тело старика или ребенка. |"
+"Диабло был освобождён, он бы стал искать тело, которым легко управлять, "
+"поскольку он был бы очень слаб - возможно, тело старика или ребёнка. |"
 
 #: Source/textdat.cpp:511
 msgid ""
@@ -9154,11 +9156,11 @@ msgstr ""
 "брата Баала, Повелителя Разрушения. Младший брат - Диабло, Повелитель Ужаса "
 "- сбежал на запад.\n"
 " \n"
-"В конце концов, хорадримы захватили и Диабло в камень души, и похоронили его "
-"под древним, забытым собором. Там Владыка Ужаса спит и ждет своего "
+"В конце концов, Хорадримы захватили и Диабло в камень души, и похоронили его "
+"под древним, забытым собором. Там Владыка Ужаса спит и ждёт своего "
 "возрождения. Знайте, что он будет искать не молодое и могущественное тело, а "
 "то которым можно легко овладеть, невинное и легко управляемое. Затем он "
-"восстанет, чтобы освободить своих Братьев и еще раз раздуть пламя Войны "
+"восстанет, чтобы освободить своих Братьев и ещё раз раздуть пламя Войны "
 "Грехов ... |"
 
 #: Source/textdat.cpp:517
@@ -9189,7 +9191,7 @@ msgstr ""
 "Слава и одобрение Диабло - Повелителя Ужаса и Вождя Трех. Мой Повелитель "
 "рассказал мне о двух своих братьях, Мефисто и Ваале, которые были изгнаны в "
 "этот мир давным-давно. Мой Повелитель желает выжидать и использовать свою "
-"грозную силу, чтобы освободить своих плененных братьев из их гробниц под "
+"грозную силу, чтобы освободить своих пленённых братьев из их гробниц под "
 "песками востока. Как только мой Господь освободит своих Братьев, Война "
 "Грехов снова познает ярость Трех. |"
 
@@ -9234,7 +9236,7 @@ msgstr ""
 "зарублены там, где стояли, а те кто взяли в руки оружие, были убиты или "
 "уведены, чтобы стать рабами - или того хуже. Церковь на окраине города была "
 "осквернена и используется для темных ритуалов. Крики, раздающиеся эхом в "
-"ночи, нечеловеческие, но некоторые из наших горожан могут еще выжить. "
+"ночи, нечеловеческие, но некоторые из наших горожан могут ещё выжить. "
 "Следуйте по тропинке, которая пролегает между моей таверной и кузницей, "
 "чтобы найти церковь и спасти всех, кого сможете.\n"
 " \n"
@@ -9246,7 +9248,7 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written. |"
 msgstr ""
-"За Залом Героев находится Зал Костей. Вечная смерть ждет любого, кто "
+"За Залом Героев находится Зал Костей. Вечная смерть ждёт любого, кто "
 "попытается украсть сокровища, хранящиеся в этой комнате. Так говорит Владыка "
 "Ужаса, и так предписано. |"
 
@@ -9320,7 +9322,7 @@ msgid ""
 msgstr ""
 "Было время, когда этот город был частой остановкой путешественников "
 "отовсюду. С тех пор многое изменилось. Но скрытые пещеры и закопанные "
-"сокровища - частые фантазии любого ребенка. Вирт редко занимается юношескими "
+"сокровища - частые фантазии любого ребёнка. Вирт редко занимается юношескими "
 "играми. Так что это может быть только его воображение. |"
 
 #: Source/textdat.cpp:553
@@ -9343,7 +9345,7 @@ msgstr ""
 "Моя бабушка часто рассказывает мне истории о странных силах, обитающих на "
 "кладбище за пределами церкви. И вам вполне может быть интересно услышать "
 "одну из них. Она сказала, что если вы оставите надлежащее приношение на "
-"кладбище, войдете в собор, чтобы помолиться за мертвых, а затем вернетесь, "
+"кладбище, войдёте в собор, чтобы помолиться за мёртвых, а затем вернётесь, "
 "приношение будет каким-то странным образом изменено. Не знаю, болтает ли это "
 "старая больная женщина, но в наши дни все кажется возможным. |"
 
@@ -9354,7 +9356,7 @@ msgid ""
 "need some rare and expensive supplies to get you through this ordeal?|"
 msgstr ""
 "Хм. Вы говорите: огромное и таинственное сокровище. Мммм. Может быть, мне "
-"будет интересно узнать у вас кое-что. Или еще лучше, разве вам не нужны "
+"будет интересно узнать у вас кое-что. Или ещё лучше, разве вам не нужны "
 "редкие и дорогие материалы, чтобы пройти через это испытание?|"
 
 #: Source/textdat.cpp:561
@@ -9369,7 +9371,7 @@ msgid ""
 msgstr ""
 "Итак, ты герой о котором все говорят. Может быть, вы могли бы помочь бедному "
 "простому фермеру выбраться из ужасного беспорядка? На краю моего сада, к югу "
-"отсюда, из-под земли растет ужасная штука! Я не могу добраться до урожая или "
+"отсюда, из-под земли растёт ужасная штука! Я не могу добраться до урожая или "
 "тюков сена, и мои бедные коровы будут голодать. Ведьма дала мне это и "
 "сказала, что она вылетит из моего поля. Если бы вы могли его уничтожить, я "
 "был бы вечно благодарен. Я бы сделал это сам, но кто-то должен остаться с "
@@ -9402,7 +9404,7 @@ msgid ""
 msgstr ""
 "Я слышал взрыв отсюда! Большое спасибо тебе, добрый незнакомец. Эхх со всеми "
 "этими, выходящим из-под земли, монстрами, захватившими церковь, и так далее, "
-"настали тяжелые времена. Я всего лишь бедный фермер, но вот - примите это с "
+"настали тяжёлые времена. Я всего лишь бедный фермер, но вот - примите это с "
 "моей большой благодарностью.|"
 
 #: Source/textdat.cpp:569
@@ -9413,7 +9415,7 @@ msgid ""
 "poor farmer?|"
 msgstr ""
 "Ох, какая у меня беда ... может быть ... Нет, я не могу тебе навязывать, да "
-"еще и со всеми остальными неприятностями. Может быть, после того, как вы "
+"ещё и со всеми остальными неприятностями. Может быть, после того, как вы "
 "очистите церковь от некоторых из этих существ, вы сможете вернуться ... и "
 "уделить немного времени, чтобы помочь бедному фермеру? |"
 
@@ -9429,9 +9431,9 @@ msgid ""
 "but Theo fell down and the bug GRABBED him and took him away!|"
 msgstr ""
 "Я потерял Тео! Я потерял лучшего друга! Мы играли у реки, и Тео сказал, что "
-"хочет пойти посмотреть на большую зеленую штуку. Я сказал, что не надо, но "
+"хочет пойти посмотреть на большую зелёную штуку. Я сказал, что не надо, но "
 "мы пробрались туда, и вдруг этот ЖУК вышел! Мы убежали, но Тео упал, и жук "
-"УХВАТИЛ его и унес! |"
+"УХВАТИЛ его и унёс! |"
 
 #: Source/textdat.cpp:574
 msgid ""
@@ -9449,7 +9451,7 @@ msgid ""
 msgstr ""
 "Вы его нашли! Вы его нашли! Спасибо! О, Тео, тебя напугали эти мерзкие жуки? "
 "Хей! Фу! К твоей шерсти что-то прилипло! КРИК! Давай, Тео, поехали домой! "
-"Еще раз спасибо, герой! |"
+"Ещё раз спасибо, герой! |"
 
 #: Source/textdat.cpp:578
 msgid ""
@@ -9460,13 +9462,12 @@ msgstr ""
 "сильный голод. Скоро, поедим ... |"
 
 #: Source/textdat.cpp:580
-#, fuzzy
 msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all.|"
 msgstr ""
-"Тебе понравилось, маленькое млекопитающее? Как жалко. Ваш маленький мир "
-"вообще не будет проблемой. |"
+"Доволен собой, мелкое млекопитающее? Как жалко. Ваш маленький мир вообще не "
+"будет проблемой. |"
 
 #: Source/textdat.cpp:582
 msgid ""
@@ -9544,12 +9545,12 @@ msgstr ""
 "Хорошо, хорошо. Я не совсем корова. Я обычно так не хожу; но я сидел дома, "
 "занимаясь своими делами, и внезапно эти жуки, лозы, луковицы и прочее начали "
 "вылетать из пола ... это было ужасно! Если бы только у меня было что-нибудь "
-"нормальное, это было бы не так уж плохо. Хей! Не могли бы вы вернуться ко "
-"мне и принести мне мой костюм? Коричневая, а не серая, для вечерних нарядов. "
-"Я бы сделал это сам, но я не хочу, чтобы кто-то видел меня такой. Вот, "
-"возьми, может тебе это понадобится ... чтобы убрать тех тварей, которые "
-"заросли дорогу. Ты не можешь пропустить мой дом, он к югу от развилки "
-"реки ... ну, знаешь ... тот, где есть заросший огород. |"
+"нормальное, это было бы не так уж плохо. Эй! Не могли бы вы вернуться ко мне "
+"и принести мне мой костюм? Коричневая, а не серая, для вечерних нарядов. Я "
+"бы сделал это сам, но я не хочу, чтобы кто-то видел меня такой. Вот, возьми, "
+"может тебе это понадобится ... чтобы убрать тех тварей, которые заросли "
+"дорогу. Ты не можешь пропустить мой дом, он к югу от развилки реки ... ну, "
+"знаешь ... тот, где есть заросший огород. |"
 
 #: Source/textdat.cpp:599
 msgid ""
@@ -9573,7 +9574,7 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit.|"
 msgstr ""
-"Нет нет Нет Нет! Это мой СЕРЫЙ костюм! Это для вечернего наряда! Официальные "
+"Нет нет нет нет! Это мой СЕРЫЙ костюм! Это для вечернего наряда! Официальные "
 "мероприятия! Я не могу ЭТО носить. Ты что, чудак какой-то? Мне нужен "
 "КОРИЧНЕВЫЙ костюм. |"
 
@@ -9626,7 +9627,7 @@ msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor.|"
 msgstr ""
-"Мне нужно что-то сделать, но я не могу навязыватся совершенно незнакомому "
+"Мне нужно что-то сделать, но я не могу навязываться совершенно незнакомому "
 "человеку. Возможно, после того, как вы пробудете здесь какое-то время, мне "
 "будет удобнее попросить об одолжении. |"
 
@@ -9663,7 +9664,7 @@ msgid ""
 msgstr ""
 "Мне не нужно представлять себя каждому проходящему мимо туристу! Разве у вас "
 "нет монстров, которых нужно убить? Возможно, мы поговорим позже. Если "
-"останетесь живы…|"
+"останетесь живы...|"
 
 #: Source/textdat.cpp:624
 msgid ""
@@ -9697,8 +9698,8 @@ msgstr ""
 "Можешь вернуться ко мне и забрать мой костюм? Коричневый, а не серый, этот "
 "для вечерних нарядов. Я бы сделал это сам, но я не хочу, чтобы кто-то видел "
 "меня таким. Вот, возьми, может это тебе понадобится, чтобы убить тех тварей, "
-"которые заполонили все. Ты не пропустишь мой дом, он к югу от развилки реки… "
-"ну, знаешь… той, где есть заросший огород.|"
+"которые заполонили все. Ты не пропустишь мой дом, он к югу от развилки "
+"реки... ну, знаешь... той, где есть заросший огород.|"
 
 #: Source/textdat.cpp:628
 msgid ""
@@ -9709,8 +9710,8 @@ msgid ""
 msgstr ""
 "Сегодня пасмурно и прохладнее. Забросив сети некромантии через пустоту, мы "
 "получили два новых подвида летающего ужаса; хороший рабочий день. Надо не "
-"забыть заказать заказать еще гуано летучих мышей и черные свечи в Адрии; я "
-"немного на исходе.|"
+"забыть заказать ещё гуано летучих мышей и чёрные свечи у Адрии; я немного "
+"расстроен.|"
 
 #: Source/textdat.cpp:630
 msgid ""
@@ -9729,8 +9730,8 @@ msgid ""
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal.|"
 msgstr ""
-"Мой дом постепенно портится из-за мерзости этого нежеланного заключенного. "
-"Склепы\tполны теней, которые выходят за пределы моего восприятия. Слабый "
+"Мой дом постепенно портится из-за мерзости этого нежеланного заключённого. "
+"Склепы полны теней, которые выходят за пределы моего восприятия. Слабый "
 "скрежет когтей пляшет на краю моего слуха. Они ищут, я думаю, этот журнал.|"
 
 #: Source/textdat.cpp:634
@@ -9740,9 +9741,9 @@ msgid ""
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name.|"
 msgstr ""
-"В своих разговорах существо обмолвилось своим именем — На-Крул. Я хотел "
+"В своих разговорах существо обмолвилось своим именем -- На-Крул. Я хотел "
 "изучить его имя, но более мелкие демоны каким-то образом разрушили мою "
-"библиотеку. На-Крул… Это имя наполняет меня холодным ужасом. Я предпочитаю "
+"библиотеку. На-Крул... Это имя наполняет меня холодным ужасом. Я предпочитаю "
 "думать о нем только как о Существе, а не обдумывать его настоящее имя.|"
 
 #: Source/textdat.cpp:636
@@ -9752,9 +9753,9 @@ msgid ""
 "curses upon me for trapping it here.  Its words fill my heart with terror, "
 "and yet I cannot block out its voice.|"
 msgstr ""
-"Яростный вой пойманного существа не дает мне как следует выспаться. Оно "
+"Яростный вой пойманного существа не даёт мне как следует выспаться. Оно "
 "злится на того, кто послал его в Пустоту, и проклинает меня за то, что я "
-"поймал его здесь. Его слова наполняют мое сердце ужасом, но я не могу "
+"поймал его здесь. Его слова наполняют моё сердце ужасом, но я не могу "
 "заглушить его голос.|"
 
 #: Source/textdat.cpp:638
@@ -9764,10 +9765,10 @@ msgid ""
 "knowledge to free their lord.  I hope that whoever finds this journal will "
 "seek the knowledge.|"
 msgstr ""
-"Мое время быстро уходит. Я должен записать способы ослабить демона, а затем "
-"скрыть этот текст, чтобы его приспешники не нашли способ использовать мое "
-"знание, чтобы освободить своего господина. Я надеюсь что тот, кто найдет "
-"этот дневник, найдет знания.|"
+"Моё время быстро уходит. Я должен записать способы ослабить демона, а затем "
+"скрыть этот текст, чтобы его приспешники не нашли способ использовать моё "
+"знание, чтобы освободить своего господина. Я надеюсь что тот, кто найдёт "
+"этот дневник, найдёт знания.|"
 
 #: Source/textdat.cpp:640
 msgid ""
@@ -9784,15 +9785,15 @@ msgid ""
 "only these spells to gain entry or his power may be too great for you to "
 "defeat.|"
 msgstr ""
-"Тот кто найдет этот свитое должен остановить демоническое существо, запретом "
-"в этих стенах. Мое время кончилось. Даже сейчас его адские приспешники "
+"Тот кто найдёт этот свитое должен остановить демоническое существо, запретом "
+"в этих стенах. Моё время кончилось. Даже сейчас его адские приспешники "
 "царапают хлипкую дверь, за которой я прячусь. \n"
 "\n"
 "Я поймал демона с помощью тайной магии и заключил его в огромные стены, но, "
 "боюсь, этого будет недостаточно.\n"
 "\n"
-"Заклинания из трех моих гримуаров обеспечат вам безопасный вход в его "
-"владения, но только если оно будут накастованы в правильной "
+"Заклинания из трёх моих гримуаров обеспечат вам безопасный вход в его "
+"владения, но только если оно будут произнесены в правильной "
 "последовательности. Рычаги у входа снимут барьеры и освободят демона; не "
 "трогай их! Используй только эти заклинания, чтобы войти, иначе его сила "
 "будет слишком велика для вас.|"
@@ -9812,69 +9813,69 @@ msgstr ""
 msgid "Efficio Obitus Ut Inimicus. |"
 msgstr ""
 
-#: Source/towners.cpp:241
+#: Source/towners.cpp:171
 msgid "Griswold the Blacksmith"
 msgstr "Кузнец Гризвольд"
 
-#: Source/towners.cpp:255
+#: Source/towners.cpp:180
 msgid "Ogden the Tavern owner"
-msgstr "Владелец таверны Орден"
+msgstr "Владелец таверны Огден"
 
-#: Source/towners.cpp:269
+#: Source/towners.cpp:189
 msgid "Wounded Townsman"
 msgstr "Раненый горожанин"
 
-#: Source/towners.cpp:285
+#: Source/towners.cpp:198
 msgid "Adria the Witch"
 msgstr "Ведьма Адрия"
 
-#: Source/towners.cpp:301
+#: Source/towners.cpp:207
 msgid "Gillian the Barmaid"
 msgstr "Барменша Джиллиан"
 
-#: Source/towners.cpp:333
+#: Source/towners.cpp:225
 msgid "Pepin the Healer"
-msgstr "Лекарь Пипин"
+msgstr "Целитель Пипин"
 
-#: Source/towners.cpp:349
+#: Source/towners.cpp:234
 msgid "Cain the Elder"
 msgstr "Старец Каин"
 
-#: Source/towners.cpp:388
+#: Source/towners.cpp:255
 msgid "Cow"
 msgstr "Корова"
 
-#: Source/towners.cpp:415
+#: Source/towners.cpp:274
 msgid "Lester the farmer"
 msgstr "Фермер Лестер"
 
-#: Source/towners.cpp:435
+#: Source/towners.cpp:287
 msgid "Complete Nut"
 msgstr "Полный псих"
 
-#: Source/towners.cpp:547
+#: Source/towners.cpp:348
 msgid "Slain Townsman"
 msgstr "Убитый горожанин"
 
 #: Source/trigs.cpp:326
 msgid "Down to dungeon"
-msgstr "Спустится в подземелье"
+msgstr "Спуститься в подземелье"
 
 #: Source/trigs.cpp:336
 msgid "Down to catacombs"
-msgstr "Спустится в катакомбы"
+msgstr "Спуститься в катакомбы"
 
 #: Source/trigs.cpp:347
 msgid "Down to caves"
-msgstr "Спустится в пещеры"
+msgstr "Спуститься в пещеры"
 
 #: Source/trigs.cpp:358
 msgid "Down to hell"
-msgstr "Спустится в ад"
+msgstr "Спуститься в ад"
 
 #: Source/trigs.cpp:369
 msgid "Down to Crypt"
-msgstr "Спустится в Склеп"
+msgstr "Спуститься в Склеп"
 
 #: Source/trigs.cpp:377
 msgid "Down to Hive"
@@ -9914,9 +9915,9 @@ msgstr "Подняться в Гнездо на уровень %i"
 
 #: Source/trigs.cpp:681
 msgid "Down to Diablo"
-msgstr "Спустится к Диабло"
+msgstr "Спуститься к Диабло"
 
 #: Source/trigs.cpp:718 Source/trigs.cpp:735 Source/trigs.cpp:752
 #, c-format
 msgid "Back to Level %i"
-msgstr "Вернутся на Уровень %i"
+msgstr "Вернуться на Уровень %i"
