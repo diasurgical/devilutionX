@@ -179,6 +179,359 @@ constexpr auto RenderLineMemcpy = [](std::uint8_t *dst, const std::uint8_t *src,
 	std::memcpy(dst, src, w);
 };
 
+template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East>
+void RenderOutlineForPixels(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, int width, std::uint8_t color)
+{
+	for (; width-- > 0; ++src, ++dst) {
+		if (SkipColorIndexZero && *src == 0)
+			continue;
+		if (North)
+			dst[-dstPitch] = color;
+		if (West)
+			dst[-1] = color;
+		if (East)
+			dst[1] = color;
+		if (South)
+			dst[dstPitch] = color;
+	}
+}
+
+template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East>
+void RenderOutlineForPixel(std::uint8_t *dst, int dstPitch, std::uint8_t srcColor, std::uint8_t color)
+{
+	if (SkipColorIndexZero && srcColor == 0)
+		return;
+	if (North)
+		dst[-dstPitch] = color;
+	if (West)
+		dst[-1] = color;
+	if (East)
+		dst[1] = color;
+	if (South)
+		dst[dstPitch] = color;
+}
+
+template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East,
+    bool ClipWidth = false, bool CheckFirstColumn = false, bool CheckLastColumn = false, bool ContinueRleRun = false>
+const byte *RenderCelOutlineRowClipped( // NOLINT(readability-function-cognitive-complexity,misc-no-recursion)
+    const CelOutputBuffer &out, Point position, const byte *src, int srcWidth,
+    ClipX clipX, std::uint8_t color, std::uint8_t continueRleRun = 0)
+{
+	std::int_fast16_t remainingWidth = clipX.width;
+	std::uint8_t v;
+
+	if (ClipWidth && !ContinueRleRun) {
+		auto remainingLeftClip = clipX.left;
+		while (remainingLeftClip > 0) {
+			v = static_cast<std::uint8_t>(*src++);
+			if (!IsCelTransparent(v)) {
+				if (v > remainingLeftClip) {
+					return RenderCelOutlineRowClipped<SkipColorIndexZero, North, West, South, East, ClipWidth,
+					    CheckFirstColumn, CheckLastColumn, /*ContinueRleRun=*/true>(out, position,
+					    src + remainingLeftClip, srcWidth - clipX.left, { 0, 0, clipX.width }, color, v - remainingLeftClip);
+				}
+				src += v;
+			} else {
+				v = GetCelTransparentWidth(v);
+				if (v > remainingLeftClip) {
+					const std::uint8_t overshoot = v - remainingLeftClip;
+					position.x += overshoot;
+					remainingWidth -= overshoot;
+					if (remainingWidth <= 0)
+						return src;
+					break;
+				}
+			}
+			remainingLeftClip -= v;
+		}
+	}
+
+	auto *dst = &out[position];
+	const auto dstPitch = out.pitch();
+
+	const auto handleEdgePixels = [&](std::uint8_t width) -> bool {
+		if (CheckFirstColumn && position.x <= 0) {
+			if (position.x == -1) {
+				RenderOutlineForPixel<SkipColorIndexZero, /*North=*/false, /*West=*/false, /*South=*/false, East>(
+				    dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
+				--width;
+			}
+			if (width > 0) {
+				RenderOutlineForPixel<SkipColorIndexZero, North, /*West=*/false, South, East>(
+				    dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
+				--width;
+			}
+			if (width > 0) {
+				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
+				    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), width, color);
+				src += width, dst += width;
+			}
+			return true;
+		}
+		if (CheckLastColumn && position.x + width >= out.w()) {
+			const bool lastPixel = position.x < out.w() && width >= 1;
+			const bool oobPixel = position.x + width > out.w();
+			const int numSpecialPixels = (lastPixel ? 1 : 0) + (oobPixel ? 1 : 0);
+			if (width > numSpecialPixels) {
+				width -= numSpecialPixels;
+				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
+				    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), width, color);
+				src += width, dst += width;
+			}
+			if (lastPixel) {
+				RenderOutlineForPixel<SkipColorIndexZero, North, West, South, /*East=*/false>(
+						dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
+			}
+			if (oobPixel) {
+				RenderOutlineForPixel<SkipColorIndexZero, /*North=*/false, West, /*South=*/false, /*East=*/false>(
+				    dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
+			}
+			return true;
+		}
+		return false;
+	};
+
+	const auto handleOvershoot = [&]() -> bool {
+		if (!((ClipWidth || CheckLastColumn || CheckFirstColumn) && v >= remainingWidth))
+			return false;
+		if (handleEdgePixels(remainingWidth)) {
+			src += v - remainingWidth;
+		} else {
+			RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
+			    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), remainingWidth, color);
+			src += v;
+		}
+		if (ClipWidth && clipX.right != 0)
+			src = SkipRestOfCelLine(src, srcWidth - clipX.width - (v - remainingWidth));
+		return true;
+	};
+
+	if (ClipWidth || CheckFirstColumn || ContinueRleRun) {
+		v = ContinueRleRun ? continueRleRun : static_cast<std::uint8_t>(*src++);
+		if (ContinueRleRun || !IsCelTransparent(v)) {
+			if (handleOvershoot())
+				return src;
+			if (!handleEdgePixels(v)) {
+				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
+				    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), v, color);
+				src += v, dst += v;
+			}
+		} else {
+			v = GetCelTransparentWidth(v);
+			if ((ClipWidth || CheckLastColumn) && v >= remainingWidth) {
+				if (clipX.right != 0)
+					src = SkipRestOfCelLine(src, srcWidth - clipX.width - (v - remainingWidth));
+				return src;
+			}
+			dst += v;
+		}
+		position.x += v;
+		remainingWidth -= v;
+		if (!(ClipWidth || CheckLastColumn) && remainingWidth == 0) {
+			if (ClipWidth && clipX.right != 0)
+				src = SkipRestOfCelLine(src, srcWidth - clipX.width);
+			return src;
+		}
+	}
+
+	while (ClipWidth || CheckLastColumn || remainingWidth > 0) {
+		v = static_cast<std::uint8_t>(*src++);
+		if (!IsCelTransparent(v)) {
+			if (handleOvershoot())
+				return src;
+			if (!handleEdgePixels(v)) {
+				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
+						dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), v, color);
+				src += v, dst += v;
+			}
+		} else {
+			v = GetCelTransparentWidth(v);
+			dst += v;
+			if ((ClipWidth || CheckLastColumn) && v >= remainingWidth) {
+				if (clipX.right != 0)
+					src = SkipRestOfCelLine(src, srcWidth - clipX.width - (v - remainingWidth));
+				return src;
+			}
+		}
+		remainingWidth -= v;
+		position.x += v;
+	}
+
+	return src;
+}
+
+template <bool SkipColorIndexZero>
+void RenderCelOutlineClippedY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
+    std::size_t srcWidth, std::uint8_t color)
+{
+	const auto *srcEnd = src + srcSize;
+
+	// Skip the bottom clipped lines.
+	const auto dstHeight = out.h();
+	while (position.y > dstHeight && src != srcEnd) {
+		src = SkipRestOfCelLine(src, static_cast<std::int_fast16_t>(srcWidth));
+		--position.y;
+	}
+	if (src == srcEnd)
+		return;
+
+	const ClipX clipX = { 0, 0, static_cast<decltype(ClipX {}.width)>(srcWidth) };
+
+	if (position.y == dstHeight) {
+		// After-bottom line - can only draw north.
+		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false>(
+		    out, position, src, srcWidth, clipX, color);
+		--position.y;
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y + 1 == dstHeight) {
+		// Bottom line - cannot draw south.
+		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true>(
+		    out, position, src, srcWidth, clipX, color);
+		--position.y;
+	}
+
+	while (position.y > 0 && src != srcEnd) {
+		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true>(
+		    out, position, src, srcWidth, clipX, color);
+		--position.y;
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y == 0) {
+		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true>(
+		    out, position, src, srcWidth, clipX, color);
+		--position.y;
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y == -1) {
+		// Special case: the top of the sprite is 1px below the last line, render just the outline above.
+		RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false>(
+		    out, position, src, srcWidth, clipX, color);
+	}
+}
+
+template <bool SkipColorIndexZero>
+void RenderCelOutlineClippedXY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
+    std::size_t srcWidth, std::uint8_t color)
+{
+	const auto *srcEnd = src + srcSize;
+
+	// Skip the bottom clipped lines.
+	const auto dstHeight = out.h();
+	while (position.y > dstHeight && src != srcEnd) {
+		src = SkipRestOfCelLine(src, static_cast<std::int_fast16_t>(srcWidth));
+		--position.y;
+	}
+	if (src == srcEnd)
+		return;
+
+	ClipX clipX = CalculateClipX(position.x, srcWidth, out);
+	if (clipX.width < 0)
+		return;
+	if (clipX.left > 0) {
+		--clipX.left, ++clipX.width;
+	} else if (clipX.right > 0) {
+		--clipX.right, ++clipX.width;
+	}
+	position.x += static_cast<int>(clipX.left);
+
+	if (position.y == dstHeight) {
+		// After-bottom line - can only draw north.
+		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
+		    /*ClipWidth=*/true>(
+		    out, position, src, srcWidth, clipX, color);
+		--position.y;
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y + 1 == dstHeight) {
+		// Bottom line - cannot draw south.
+		if (position.x <= 0) {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
+			    out, position, src, srcWidth, clipX, color);
+		} else if (position.x + clipX.width >= out.w()) {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
+			    out, position, src, srcWidth, clipX, color);
+		} else {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
+			    /*ClipWidth=*/true>(
+			    out, position, src, srcWidth, clipX, color);
+		}
+		--position.y;
+	}
+
+	if (position.x <= 0) {
+		while (position.y > 0 && src != srcEnd) {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
+			    out, position, src, srcWidth, clipX, color);
+			--position.y;
+		}
+	} else if (position.x + clipX.width >= out.w()) {
+		while (position.y > 0 && src != srcEnd) {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
+			    out, position, src, srcWidth, clipX, color);
+			--position.y;
+		}
+	} else {
+		while (position.y > 0 && src != srcEnd) {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true>(
+			    out, position, src, srcWidth, clipX, color);
+			--position.y;
+		}
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y == 0) {
+		if (position.x <= 0) {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
+			    out, position, src, srcWidth, clipX, color);
+		} else if (position.x + clipX.width >= out.w()) {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
+			    out, position, src, srcWidth, clipX, color);
+		} else {
+			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true>(
+			    out, position, src, srcWidth, clipX, color);
+		}
+		--position.y;
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y == -1) {
+		// Special case: the top of the sprite is 1px below the last line, render just the outline above.
+		RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
+		    /*ClipWidth=*/true>(
+		    out, position, src, srcWidth, clipX, color);
+	}
+}
+
+template <bool SkipColorIndexZero>
+void RenderCelOutline(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
+    std::size_t srcWidth, std::uint8_t color)
+{
+	if (position.x > 0 && position.x + static_cast<int>(srcWidth) < static_cast<int>(out.w())) {
+		RenderCelOutlineClippedY<SkipColorIndexZero>(out, position, src, srcSize, srcWidth, color);
+	} else {
+		RenderCelOutlineClippedXY<SkipColorIndexZero>(out, position, src, srcSize, srcWidth, color);
+	}
+}
+
 } // namespace
 
 void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
@@ -306,10 +659,9 @@ void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const b
 							}
 						}
 					}
-				} else {
-					src += width;
-					dst += width;
 				}
+				src += width;
+				dst += width;
 			} else {
 				width = -static_cast<std::int8_t>(width);
 				dst += width;
@@ -374,53 +726,11 @@ void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, const CelSprite &
 void CelBlitOutlineTo(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame, bool skipColorIndexZero)
 {
 	int nDataSize;
-
 	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	const auto *end = &src[nDataSize];
-	uint8_t *dst = out.at(sx, sy);
-	const int celWidth = static_cast<int>(cel.Width(frame));
-
-	for (; src != end; dst -= out.pitch() + celWidth) {
-		for (int w = celWidth; w > 0;) {
-			auto width = static_cast<std::uint8_t>(*src++);
-			if (!IsCelTransparent(width)) {
-				w -= width;
-				if (dst < out.end() && dst > out.begin()) {
-					if (dst >= out.end() - out.pitch()) {
-						while (width > 0) {
-							if (!skipColorIndexZero || static_cast<std::uint8_t>(*src) > 0) {
-								dst[-out.pitch()] = col;
-								dst[-1] = col;
-								dst[1] = col;
-							}
-							src++;
-							dst++;
-							width--;
-						}
-					} else {
-						while (width > 0) {
-							if (!skipColorIndexZero || static_cast<std::uint8_t>(*src) > 0) {
-								dst[-out.pitch()] = col;
-								dst[-1] = col;
-								dst[1] = col;
-								dst[out.pitch()] = col;
-							}
-							src++;
-							dst++;
-							width--;
-						}
-					}
-				} else {
-					src += width;
-					dst += width;
-				}
-			} else {
-				width = GetCelTransparentWidth(width);
-				dst += width;
-				w -= width;
-			}
-		}
-	}
+	if (skipColorIndexZero)
+		RenderCelOutline<true>(out, { sx, sy }, src, nDataSize, cel.Width(frame), col);
+	else
+		RenderCelOutline<false>(out, { sx, sy }, src, nDataSize, cel.Width(frame), col);
 }
 
 std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame)
