@@ -15,6 +15,7 @@
 #include "inv.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "options.h"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
@@ -462,18 +463,22 @@ void Interact()
 		NetSendCmdLocParam1(true, CMD_TALKXY, towners[pcursmonst].position, pcursmonst);
 	} else if (pcursmonst != -1) {
 		if (plr[myplr]._pwtype != WT_RANGED || CanTalkToMonst(pcursmonst)) {
-			int distx = abs(plr[myplr].position.tile.x - monster[pcursmonst].position.future.x);
-			int disty = abs(plr[myplr].position.tile.y - monster[pcursmonst].position.future.y);
-			if (distx > 1 || disty > 1) {
-				// attack on the current direction
-				const int x = plr[myplr].position.future.x;
-				const int y = plr[myplr].position.future.y;
-				const int dx = x + Offsets[plr[myplr]._pdir][0];
-				const int dy = y + Offsets[plr[myplr]._pdir][1];
-				
-				NetSendCmdLoc(myplr, true, CMD_SATTACKXY, { dx, dy });
-			} else {
+			if (sgOptions.Controller.bMoveToInteract) {
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+			} else {
+				int distx = abs(plr[myplr].position.tile.x - monster[pcursmonst].position.future.x);
+				int disty = abs(plr[myplr].position.tile.y - monster[pcursmonst].position.future.y);
+				if (distx > 1 || disty > 1) {
+					// attack on the current direction
+					const int x = plr[myplr].position.future.x;
+					const int y = plr[myplr].position.future.y;
+					const int dx = x + Offsets[plr[myplr]._pdir][0];
+					const int dy = y + Offsets[plr[myplr]._pdir][1];
+
+					NetSendCmdLoc(myplr, true, CMD_SATTACKXY, { dx, dy });
+				} else {
+					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+				}
 			}
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
@@ -481,7 +486,7 @@ void Interact()
 	} else if (leveltype != DTYPE_TOWN) {
 		if (pcursplr != -1 && !gbFriendlyMode) {
 			NetSendCmdParam1(true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
-		} else {
+		} else if (!sgOptions.Controller.bMoveToInteract) {
 			// attack on the current direction
 			const int x = plr[myplr].position.future.x;
 			const int y = plr[myplr].position.future.y;
