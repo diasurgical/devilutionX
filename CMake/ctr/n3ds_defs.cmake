@@ -13,9 +13,8 @@ find_package(PNG REQUIRED)
 add_definitions(-D__3DS__)
 set(TTF_FONT_DIR \"romfs:/\")
 
-#Force scaling, for now..
+#SDL video mode parameters
 set(SDL1_VIDEO_MODE_BPP 8)
-set(SDL1_VIDEO_MODE_FLAGS SDL_FULLSCREEN)
 set(DEFAULT_WIDTH 800)
 set(DEFAULT_HEIGHT 480)
 
