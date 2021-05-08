@@ -1,3 +1,8 @@
+/**
+ * @file automap_render.cpp
+ *
+ * Line drawing routines for the automap.
+ */
 #include "engine/render/automap_render.hpp"
 
 namespace devilution {
