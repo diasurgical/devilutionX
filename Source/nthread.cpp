@@ -247,7 +247,7 @@ bool nthread_has_500ms_passed()
 
 void nthread_UpdateProgressToNextGameTick()
 {
-	if (!gbRunGame || PauseMode || (!gbIsMultiplayer && gmenu_is_active())) // if game is not running or paused there is no next gametick in the near future
+	if (!gbRunGame || PauseMode || (!gbIsMultiplayer && gmenu_is_active()) || !gbProcessPlayers) // if game is not running or paused there is no next gametick in the near future
 		return;
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = last_tick - currentTickCount;
