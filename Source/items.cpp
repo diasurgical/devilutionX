@@ -3729,34 +3729,6 @@ static void DrawUTextBack(const CelOutputBuffer &out)
 	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
-void PrintUString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col)
-{
-	int len, width, sx, sy, i, k;
-	BYTE c;
-
-	sx = x + 32;
-	sy = y * 12 + 44;
-	len = strlen(str);
-	k = 0;
-	if (cjustflag) {
-		width = 0;
-		for (i = 0; i < len; i++)
-			width += fontkern[GameFontSmall][fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]]] + 1;
-		if (width < 257)
-			k = (257 - width) / 2;
-		sx += k;
-	}
-
-	for (i = 0; i < len; i++) {
-		c = fontframe[GameFontSmall][gbFontTransTbl[(BYTE)str[i]]];
-		k += fontkern[GameFontSmall][c] + 1;
-		if (c && k <= 257) {
-			PrintChar(out, sx, sy, c, col);
-		}
-		sx += fontkern[GameFontSmall][c] + 1;
-	}
-}
-
 static void DrawULine(const CelOutputBuffer &out, int y)
 {
 	BYTE *src = out.at(26 + RIGHT_PANEL - SPANEL_WIDTH, 25);
@@ -3768,36 +3740,45 @@ static void DrawULine(const CelOutputBuffer &out, int y)
 
 void DrawUniqueInfo(const CelOutputBuffer &out)
 {
-	int uid, y;
+	if ((chrflag || questlog) && gnScreenWidth < SPANEL_WIDTH * 3) {
+		return;
+	}
 
-	if ((!chrflag && !questlog) || gnScreenWidth >= SPANEL_WIDTH * 3) {
-		uid = curruitem._iUid;
-		DrawUTextBack(GlobalBackBuffer());
-		PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, 2, true, _(UniqueItemList[uid].UIName), COL_GOLD);
-		DrawULine(out, 5);
-		PrintItemPower(UniqueItemList[uid].UIPower1, &curruitem);
-		y = 6 - UniqueItemList[uid].UINumPL + 8;
-		PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, y, true, tempstr, COL_WHITE);
-		if (UniqueItemList[uid].UINumPL > 1) {
-			PrintItemPower(UniqueItemList[uid].UIPower2, &curruitem);
-			PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, y + 2, true, tempstr, COL_WHITE);
-		}
-		if (UniqueItemList[uid].UINumPL > 2) {
-			PrintItemPower(UniqueItemList[uid].UIPower3, &curruitem);
-			PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, y + 4, true, tempstr, COL_WHITE);
-		}
-		if (UniqueItemList[uid].UINumPL > 3) {
-			PrintItemPower(UniqueItemList[uid].UIPower4, &curruitem);
-			PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, y + 6, true, tempstr, COL_WHITE);
-		}
-		if (UniqueItemList[uid].UINumPL > 4) {
-			PrintItemPower(UniqueItemList[uid].UIPower5, &curruitem);
-			PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, y + 8, true, tempstr, COL_WHITE);
-		}
-		if (UniqueItemList[uid].UINumPL > 5) {
-			PrintItemPower(UniqueItemList[uid].UIPower6, &curruitem);
-			PrintUString(out, 0 + RIGHT_PANEL - SPANEL_WIDTH, y + 10, true, tempstr, COL_WHITE);
-		}
+	DrawUTextBack(GlobalBackBuffer());
+
+	SDL_Rect rect { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12, 257, 0 };
+	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
+	DrawString(out, _(uitem.UIName), rect, UIS_CENTER);
+
+	DrawULine(out, 5);
+
+	rect.y += (12 - uitem.UINumPL) * 12;
+	PrintItemPower(uitem.UIPower1, &curruitem);
+	DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
+	if (uitem.UINumPL > 1) {
+		rect.y += 2 * 12;
+		PrintItemPower(uitem.UIPower2, &curruitem);
+		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
+	}
+	if (uitem.UINumPL > 2) {
+		rect.y += 2 * 12;
+		PrintItemPower(uitem.UIPower3, &curruitem);
+		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
+	}
+	if (uitem.UINumPL > 3) {
+		rect.y += 2 * 12;
+		PrintItemPower(uitem.UIPower4, &curruitem);
+		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
+	}
+	if (uitem.UINumPL > 4) {
+		rect.y += 2 * 12;
+		PrintItemPower(uitem.UIPower5, &curruitem);
+		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
+	}
+	if (uitem.UINumPL > 5) {
+		rect.y += 2 * 12;
+		PrintItemPower(uitem.UIPower6, &curruitem);
+		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 }
 
