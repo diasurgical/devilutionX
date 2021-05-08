@@ -177,7 +177,7 @@ void init_archives()
 	HANDLE fh = nullptr;
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
-	SFileCloseFile(fh);
+	SFileCloseFileThreadSafe(fh);
 
 	patch_rt_mpq = init_test_access(paths, "patch_rt.mpq");
 	if (patch_rt_mpq == nullptr)

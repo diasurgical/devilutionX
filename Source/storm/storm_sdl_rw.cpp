@@ -71,7 +71,7 @@ static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnu
 
 static int SFileRwClose(struct SDL_RWops *context)
 {
-	SFileCloseFile(SFileRwGetHandle(context));
+	SFileCloseFileThreadSafe(SFileRwGetHandle(context));
 	delete context;
 	return 0;
 }

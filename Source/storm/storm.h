@@ -321,9 +321,10 @@ bool SFileEnableDirectAccess(bool enable);
 
 // Additions to Storm API:
 
-// Locks ReadFile under a mutex.
+// Locks ReadFile and CloseFile under a mutex.
 // See https://github.com/ladislav-zezula/StormLib/issues/175
 bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read = nullptr, int *lpDistanceToMoveHigh = nullptr);
+bool SFileCloseFileThreadSafe(HANDLE hFile);
 
 // Sets the file's 64-bit seek position.
 inline std::uint64_t SFileSetFilePointer(HANDLE hFile, std::int64_t offset, int whence)

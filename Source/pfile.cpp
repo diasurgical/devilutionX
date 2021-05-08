@@ -147,7 +147,7 @@ static std::unique_ptr<uint8_t[]> pfile_read_archive(HANDLE archive, const char 
 	std::unique_ptr<uint8_t[]> buf { new uint8_t[*pdwLen] };
 	if (!SFileReadFileThreadSafe(file, buf.get(), *pdwLen, &nread))
 		return nullptr;
-	SFileCloseFile(file);
+	SFileCloseFileThreadSafe(file);
 
 	*pdwLen = codec_decode(buf.get(), *pdwLen, pfile_get_password());
 	if (*pdwLen == 0)

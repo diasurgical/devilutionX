@@ -35,11 +35,18 @@ std::string *SBasePath = nullptr;
 
 } // namespace
 
+SDL_mutex *Mutex = SDL_CreateMutex();
+
 bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh)
 {
-	static SDL_mutex *Mutex = SDL_CreateMutex();
 	SDLMutexLockGuard lock(Mutex);
 	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, read, lpDistanceToMoveHigh);
+}
+
+bool SFileCloseFileThreadSafe(HANDLE hFile)
+{
+	SDLMutexLockGuard lock(Mutex);
+	return SFileCloseFile(hFile);
 }
 
 radon::File &getIni()

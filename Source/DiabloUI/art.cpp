@@ -116,7 +116,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 
 	if (!LoadPcxMeta(handle, width, height, bpp)) {
 		Log("LoadArt(\"{}\"): LoadPcxMeta failed with code {}", pszFile, SErrGetLastError());
-		SFileCloseFile(handle);
+		SFileCloseFileThreadSafe(handle);
 		return;
 	}
 
@@ -124,10 +124,10 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 	if (!LoadPcxPixelsAndPalette(handle, width, height, bpp, static_cast<BYTE *>(artSurface->pixels),
 	        artSurface->pitch, pPalette)) {
 		Log("LoadArt(\"{}\"): LoadPcxPixelsAndPalette failed with code {}", pszFile, SErrGetLastError());
-		SFileCloseFile(handle);
+		SFileCloseFileThreadSafe(handle);
 		return;
 	}
-	SFileCloseFile(handle);
+	SFileCloseFileThreadSafe(handle);
 
 	art->logical_width = artSurface->w;
 	art->frame_height = height / frames;
