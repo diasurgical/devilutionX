@@ -14,6 +14,7 @@
 namespace devilution {
 
 #define INV_SLOT_SIZE_PX 28
+#define INV_ROW_SLOT_SIZE 10
 
 enum inv_item : int8_t {
 	// clang-format off
@@ -51,7 +52,15 @@ enum inv_xy_slot : uint8_t {
 
 	// regular inventory
 	SLOTXY_INV_FIRST        = 25,
-	SLOTXY_INV_LAST         = 64,
+	SLOTXY_INV_ROW1_FIRST   = SLOTXY_INV_FIRST,
+	SLOTXY_INV_ROW1_LAST    = 34,
+	SLOTXY_INV_ROW2_FIRST   = 35,
+	SLOTXY_INV_ROW2_LAST    = 44,
+	SLOTXY_INV_ROW3_FIRST   = 45,
+	SLOTXY_INV_ROW3_LAST    = 54,
+	SLOTXY_INV_ROW4_FIRST   = 55,
+	SLOTXY_INV_ROW4_LAST    = 64,
+	SLOTXY_INV_LAST         = SLOTXY_INV_ROW4_LAST,
 
 	// belt items
 	SLOTXY_BELT_FIRST       = 65,
