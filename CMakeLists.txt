@@ -241,16 +241,21 @@ else()
   find_package(SDL2_ttf REQUIRED)
 endif()
 
+add_library(asio INTERFACE)
+target_include_directories(asio INTERFACE 3rdParty/asio/include)
+
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
   3rdParty/libsmacker/smk_hufftree.c
   3rdParty/libsmacker/smacker.c)
+target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
 add_library(Radon STATIC
   3rdParty/Radon/Radon/source/File.cpp
   3rdParty/Radon/Radon/source/Key.cpp
   3rdParty/Radon/Radon/source/Named.cpp
   3rdParty/Radon/Radon/source/Section.cpp)
+target_include_directories(Radon PUBLIC 3rdParty/Radon/Radon/include)
 
 add_library(StormLib STATIC
   3rdParty/StormLib/src/FileStream.cpp
@@ -268,6 +273,7 @@ add_library(StormLib STATIC
 add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
+target_include_directories(PKWare PUBLIC 3rdParty/PKWare)
 
 set(devilutionx_SRCS
   Source/appfat.cpp
@@ -529,10 +535,6 @@ endif()
 
 target_include_directories(${BIN_TARGET} PRIVATE
   Source
-  3rdParty/PKWare
-  3rdParty/asio/include
-  3rdParty/Radon/Radon/include
-  3rdParty/libsmacker
   ${CMAKE_CURRENT_BINARY_DIR})
 
 if(NOT N3DS)
@@ -541,6 +543,7 @@ if(NOT N3DS)
 endif()
 
 target_link_libraries(${BIN_TARGET} PRIVATE
+  asio
   PKWare
   StormLib
   smacker
