@@ -246,6 +246,9 @@ add_library(smacker STATIC
   3rdParty/libsmacker/smk_hufftree.c
   3rdParty/libsmacker/smacker.c)
 
+add_library(span-lite INTERFACE)
+target_include_directories(span-lite INTERFACE 3rdParty/span-lite)
+
 add_library(Radon STATIC
   3rdParty/Radon/Radon/source/File.cpp
   3rdParty/Radon/Radon/source/Key.cpp
@@ -544,7 +547,8 @@ target_link_libraries(${BIN_TARGET} PRIVATE
   PKWare
   StormLib
   smacker
-  Radon)
+  Radon
+  span-lite)
 
 if(NOT NONET)
   target_link_libraries(${BIN_TARGET} PRIVATE sodium)
