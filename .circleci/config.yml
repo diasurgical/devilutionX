@@ -103,9 +103,10 @@ workflows:
   version: 2
   testflow:
     jobs:
-      - linux_x86_64
-      - linux_x86_64_test
-      - switch
-      - 3ds
-      - amigaos-m68k
-      - vita
+      # - linux_x86_64
+      # - linux_x86_64_test
+      # - switch
+      # - 3ds
+      # - amigaos-m68k
+      # - vita
+      - psp
