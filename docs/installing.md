@@ -73,6 +73,7 @@ sudo apt install devilutionx
 
 - Copy `devilutionx.cia` to your SD card.
 - Copy the MPQ files to `sd:/3ds/devilutionx/`.
+- Copy the `CharisSILB.ttf` font file into `sd:/3ds/devilutionx/`.
 - Install `devilutionx.cia` with a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
     - `devilutionx.cia` can be removed after being installed.
 - Launch Diablo from your 3DS Homemenu.
