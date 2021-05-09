@@ -1170,92 +1170,55 @@ void DrawInfoBox(const CelOutputBuffer &out)
 		PrintInfo(out);
 }
 
-#define ADD_PlrStringXY(out, x, y, width, pszStr, col) MY_PlrStringXY(out, x, y, width, pszStr, col, 1)
-
-/**
- * @brief Render text string to the given buffer
- * @param out Buffer to render to
- * @param x Screen coordinate
- * @param y Screen coordinate
- * @param endX End of line in screen coordinate
- * @param pszStr String to print, in Windows-1252 encoding
- * @param col text_color color value
- * @param base Letter spacing
- */
-static void MY_PlrStringXY(const CelOutputBuffer &out, int x, int y, int endX, const char *pszStr, text_color col, int base)
-{
-	int widthOffset = endX - x + 1;
-	int line = 0;
-	int screenX = 0;
-	const char *tmp = pszStr;
-	while (*tmp != 0) {
-		BYTE c = gbFontTransTbl[(BYTE)*tmp++];
-		screenX += fontkern[GameFontSmall][fontframe[GameFontSmall][c]] + base;
-	}
-	if (screenX < widthOffset)
-		line = (widthOffset - screenX) / 2;
-	x += line;
-	while (*pszStr != 0) {
-		BYTE c = gbFontTransTbl[(BYTE)*pszStr++];
-		c = fontframe[GameFontSmall][c];
-		line += fontkern[GameFontSmall][c] + base;
-		if (c != 0) {
-			if (line < widthOffset)
-				PrintChar(out, x, y, c, col);
-		}
-		x += fontkern[GameFontSmall][c] + base;
-	}
-}
-
 void DrawChr(const CelOutputBuffer &out)
 {
-	text_color col = COL_WHITE;
+	uint32_t style = UIS_SILVER;
 	char chrstr[64];
 
 	CelDrawTo(out, 0, 351, *pChrPanel, 1);
-	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
+	DrawString(out, plr[myplr]._pName, { 20, 32, 131, 0 }, UIS_SILVER | UIS_CENTER);
 
-	ADD_PlrStringXY(out, 168, 32, 299, _(ClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)]), COL_WHITE);
+	DrawString(out, _(ClassStrTbl[static_cast<std::size_t>(plr[myplr]._pClass)]), { 168, 32, 131, 0 }, UIS_SILVER | UIS_CENTER);
 
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
-	ADD_PlrStringXY(out, 66, 69, 109, chrstr, COL_WHITE);
+	DrawString(out, chrstr, { 66, 69, 43, 0 }, UIS_SILVER | UIS_CENTER);
 
 	sprintf(chrstr, "%i", plr[myplr]._pExperience);
-	ADD_PlrStringXY(out, 216, 69, 300, chrstr, COL_WHITE);
+	DrawString(out, chrstr, { 216, 69, 84, 0 }, UIS_SILVER | UIS_CENTER);
 
 	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
 		strcpy(chrstr, _("None"));
-		col = COL_GOLD;
+		style = UIS_GOLD;
 	} else {
 		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
-		col = COL_WHITE;
+		style = UIS_SILVER;
 	}
-	ADD_PlrStringXY(out, 216, 97, 300, chrstr, col);
+	DrawString(out, chrstr, { 216, 97, 84, 0 }, style | UIS_CENTER);
 
 	sprintf(chrstr, "%i", plr[myplr]._pGold);
-	ADD_PlrStringXY(out, 216, 146, 300, chrstr, COL_WHITE);
+	DrawString(out, chrstr, { 216, 146, 84, 0 }, UIS_SILVER | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	if (plr[myplr]._pIBonusAC > 0)
-		col = COL_BLUE;
+		style = UIS_BLUE;
 	if (plr[myplr]._pIBonusAC < 0)
-		col = COL_RED;
+		style = UIS_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pIBonusAC + plr[myplr]._pIAC + plr[myplr]._pDexterity / 5);
-	ADD_PlrStringXY(out, 258, 183, 301, chrstr, col);
+	DrawString(out, chrstr, { 258, 183, 43, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	if (plr[myplr]._pIBonusToHit > 0)
-		col = COL_BLUE;
+		style = UIS_BLUE;
 	if (plr[myplr]._pIBonusToHit < 0)
-		col = COL_RED;
+		style = UIS_RED;
 	sprintf(chrstr, "%i%%", (plr[myplr]._pDexterity / 2) + plr[myplr]._pIBonusToHit + 50);
-	ADD_PlrStringXY(out, 258, 211, 301, chrstr, col);
+	DrawString(out, chrstr, { 258, 211, 43, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	if (plr[myplr]._pIBonusDam > 0)
-		col = COL_BLUE;
+		style = UIS_BLUE;
 	if (plr[myplr]._pIBonusDam < 0)
-		col = COL_RED;
+		style = UIS_RED;
 	int mindam = plr[myplr]._pIMinDam;
 	mindam += plr[myplr]._pIBonusDam * mindam / 100;
 	mindam += plr[myplr]._pIBonusDamMod;
@@ -1279,102 +1242,96 @@ void DrawChr(const CelOutputBuffer &out)
 		maxdam += plr[myplr]._pDamageMod;
 	}
 	sprintf(chrstr, "%i-%i", mindam, maxdam);
-	if (mindam >= 100 || maxdam >= 100)
-		MY_PlrStringXY(out, 254, 239, 305, chrstr, col, -1);
-	else
-		MY_PlrStringXY(out, 258, 239, 301, chrstr, col, 0);
+	DrawString(out, chrstr, { 254, 239, 49, 0 }, style | UIS_CENTER);
 
+	style = UIS_BLUE;
 	if (plr[myplr]._pMagResist == 0)
-		col = COL_WHITE;
-	else
-		col = COL_BLUE;
+		style = UIS_SILVER;
 	if (plr[myplr]._pMagResist < MAXRESIST) {
 		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
 	} else {
-		col = COL_GOLD;
+		style = UIS_GOLD;
 		strcpy(chrstr, _("MAX"));
 	}
-	ADD_PlrStringXY(out, 257, 276, 300, chrstr, col);
+	DrawString(out, chrstr, { 257, 276, 43, 0 }, style | UIS_CENTER);
 
+	style = UIS_BLUE;
 	if (plr[myplr]._pFireResist == 0)
-		col = COL_WHITE;
-	else
-		col = COL_BLUE;
+		style = UIS_SILVER;
 	if (plr[myplr]._pFireResist < MAXRESIST) {
 		sprintf(chrstr, "%i%%", plr[myplr]._pFireResist);
 	} else {
-		col = COL_GOLD;
+		style = UIS_GOLD;
 		strcpy(chrstr, _("MAX"));
 	}
-	ADD_PlrStringXY(out, 257, 304, 300, chrstr, col);
+	DrawString(out, chrstr, { 257, 304, 43, 0 }, style | UIS_CENTER);
 
+	style = UIS_BLUE;
 	if (plr[myplr]._pLghtResist == 0)
-		col = COL_WHITE;
-	else
-		col = COL_BLUE;
+		style = UIS_SILVER;
 	if (plr[myplr]._pLghtResist < MAXRESIST) {
 		sprintf(chrstr, "%i%%", plr[myplr]._pLghtResist);
 	} else {
-		col = COL_GOLD;
+		style = UIS_GOLD;
 		strcpy(chrstr, _("MAX"));
 	}
-	ADD_PlrStringXY(out, 257, 332, 300, chrstr, col);
+	DrawString(out, chrstr, { 257, 332, 43, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseStr);
 	if (plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength) == plr[myplr]._pBaseStr)
-		col = COL_GOLD;
-	ADD_PlrStringXY(out, 95, 155, 126, chrstr, col);
+		style = UIS_GOLD;
+	DrawString(out, chrstr, { 95, 155, 31, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseMag);
 	if (plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic) == plr[myplr]._pBaseMag)
-		col = COL_GOLD;
-	ADD_PlrStringXY(out, 95, 183, 126, chrstr, col);
+		style = UIS_GOLD;
+	DrawString(out, chrstr, { 95, 183, 31, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseDex);
 	if (plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity) == plr[myplr]._pBaseDex)
-		col = COL_GOLD;
-	ADD_PlrStringXY(out, 95, 211, 126, chrstr, col);
+		style = UIS_GOLD;
+	DrawString(out, chrstr, { 95, 211, 31, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	sprintf(chrstr, "%i", plr[myplr]._pBaseVit);
 	if (plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality) == plr[myplr]._pBaseVit)
-		col = COL_GOLD;
-	ADD_PlrStringXY(out, 95, 239, 126, chrstr, col);
+		style = UIS_GOLD;
+	DrawString(out, chrstr, { 95, 239, 31, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	if (plr[myplr]._pStrength > plr[myplr]._pBaseStr)
-		col = COL_BLUE;
+		style = UIS_BLUE;
 	if (plr[myplr]._pStrength < plr[myplr]._pBaseStr)
-		col = COL_RED;
+		style = UIS_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pStrength);
-	ADD_PlrStringXY(out, 143, 155, 173, chrstr, col);
+	DrawString(out, chrstr, { 143, 155, 30, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	if (plr[myplr]._pMagic > plr[myplr]._pBaseMag)
-		col = COL_BLUE;
+		style = UIS_BLUE;
 	if (plr[myplr]._pMagic < plr[myplr]._pBaseMag)
-		col = COL_RED;
+		style = UIS_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pMagic);
-	ADD_PlrStringXY(out, 143, 183, 173, chrstr, col);
+	DrawString(out, chrstr, { 143, 183, 30, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	if (plr[myplr]._pDexterity > plr[myplr]._pBaseDex)
-		col = COL_BLUE;
+		style = UIS_BLUE;
 	if (plr[myplr]._pDexterity < plr[myplr]._pBaseDex)
-		col = COL_RED;
+		style = UIS_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pDexterity);
-	ADD_PlrStringXY(out, 143, 211, 173, chrstr, col);
+	DrawString(out, chrstr, { 143, 211, 30, 0 }, style | UIS_CENTER);
 
-	col = COL_WHITE;
+	style = UIS_SILVER;
 	if (plr[myplr]._pVitality > plr[myplr]._pBaseVit)
-		col = COL_BLUE;
+		style = UIS_BLUE;
 	if (plr[myplr]._pVitality < plr[myplr]._pBaseVit)
-		col = COL_RED;
+		style = UIS_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pVitality);
-	ADD_PlrStringXY(out, 143, 239, 173, chrstr, col);
+	DrawString(out, chrstr, { 143, 239, 30, 0 }, style | UIS_CENTER);
 
 	if (plr[myplr]._pStatPts > 0) {
 		if (CalcStatDiff(myplr) < plr[myplr]._pStatPts) {
@@ -1383,7 +1340,7 @@ void DrawChr(const CelOutputBuffer &out)
 	}
 	if (plr[myplr]._pStatPts > 0) {
 		sprintf(chrstr, "%i", plr[myplr]._pStatPts);
-		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
+		DrawString(out, chrstr, { 95, 266, 31, 0 }, UIS_RED | UIS_CENTER);
 		if (plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength))
 			CelDrawTo(out, 137, 159, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 3 : 2);
 		if (plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic))
@@ -1394,27 +1351,25 @@ void DrawChr(const CelOutputBuffer &out)
 			CelDrawTo(out, 137, 244, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 9 : 8);
 	}
 
+	style = UIS_SILVER;
 	if (plr[myplr]._pMaxHP > plr[myplr]._pMaxHPBase)
-		col = COL_BLUE;
-	else
-		col = COL_WHITE;
+		style = UIS_BLUE;
 	sprintf(chrstr, "%i", plr[myplr]._pMaxHP >> 6);
-	ADD_PlrStringXY(out, 95, 304, 126, chrstr, col);
+	DrawString(out, chrstr, { 95, 304, 31, 0 }, style | UIS_CENTER);
 	if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP)
-		col = COL_RED;
+		style = UIS_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pHitPoints >> 6);
-	ADD_PlrStringXY(out, 143, 304, 174, chrstr, col);
+	DrawString(out, chrstr, { 143, 304, 31, 0 }, style | UIS_CENTER);
 
+	style = UIS_SILVER;
 	if (plr[myplr]._pMaxMana > plr[myplr]._pMaxManaBase)
-		col = COL_BLUE;
-	else
-		col = COL_WHITE;
+		style = UIS_BLUE;
 	sprintf(chrstr, "%i", plr[myplr]._pMaxMana >> 6);
-	ADD_PlrStringXY(out, 95, 332, 126, chrstr, col);
+	DrawString(out, chrstr, { 95, 332, 31, 0 }, style | UIS_CENTER);
 	if (plr[myplr]._pMana != plr[myplr]._pMaxMana)
-		col = COL_RED;
+		style = UIS_RED;
 	sprintf(chrstr, "%i", plr[myplr]._pMana >> 6);
-	ADD_PlrStringXY(out, 143, 332, 174, chrstr, col);
+	DrawString(out, chrstr, { 143, 332, 31, 0 }, style | UIS_CENTER);
 }
 
 void CheckLvlBtn()
@@ -1434,7 +1389,7 @@ void DrawLevelUpIcon(const CelOutputBuffer &out)
 {
 	if (stextflag == STORE_NONE) {
 		int nCel = lvlbtndown ? 3 : 2;
-		ADD_PlrStringXY(out, PANEL_LEFT + 0, PANEL_TOP - 49, PANEL_LEFT + 120, _("Level Up"), COL_WHITE);
+		DrawString(out, _("Level Up"), { PANEL_LEFT + 0, PANEL_TOP - 49, 120, 0 }, UIS_SILVER | UIS_CENTER);
 		CelDrawTo(out, 40 + PANEL_X, -17 + PANEL_Y, *pChrButtons, nCel);
 	}
 }
