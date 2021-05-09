@@ -94,10 +94,8 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: cd Packaging/psp
-      - run: sh build.sh
-      - run: cd ../..
-      - store_artifacts: {path: ./build/EBOOT.PBP, destination: EBOOT.PBP}
+      - run: sh Packaging/psp/build.sh
+      - store_artifacts: {path: ./EBOOT.PBP, destination: EBOOT.PBP}
 
 workflows:
   version: 2
