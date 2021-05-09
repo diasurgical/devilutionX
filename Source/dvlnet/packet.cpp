@@ -36,10 +36,14 @@ wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<p
 	message_ = "Expected packet of type ";
 	const auto appendPacketType = [this](std::uint8_t t) {
 		const char *typeStr = packet_type_to_string(t);
-		if (typeStr != nullptr)
+		if (typeStr != nullptr) {
 			message_.append(typeStr);
-		else
-			message_.append(std::to_string(t));
+		}
+		else {
+			char buffer[5];
+			snprintf(buffer, 5, "%d", t);
+			message_.append(std::string(buffer));
+		}
 	};
 
 	constexpr char KJoinTypes[] = " or ";

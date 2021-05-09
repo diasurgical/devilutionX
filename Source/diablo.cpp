@@ -2121,16 +2121,19 @@ void initKeymapActions()
 	});
 #endif
 	for (int i = 0; i < 4; ++i) {
+		char buffer[12];
+		snprintf(buffer, 12, "QuickSpell%d", i + 1);
+		
 		quickSpellActionIndexes[i] = keymapper.addAction({
-		    std::string("QuickSpell") + std::to_string(i + 1),
-		    DVL_VK_F5 + i,
-		    [i]() {
-			    if (spselflag) {
-				    SetSpeedSpell(i);
-				    return;
-			    }
-			    ToggleSpell(i);
-		    },
+			buffer,
+			DVL_VK_F5 + i,
+			[i]() {
+				if (spselflag) {
+					SetSpeedSpell(i);
+					return;
+				}
+				ToggleSpell(i);
+			},
 		});
 	}
 	for (int i = 0; i < 4; ++i) {
@@ -2199,8 +2202,11 @@ void initKeymapActions()
 	    },
 	});
 	for (int i = 0; i < 8; ++i) {
-		keymapper.addAction({
-		    std::string("BeltItem") + std::to_string(i + 1),
+        char buffer[10];
+        snprintf(buffer, 10, "BeltItem%d", i + 1);
+
+        keymapper.addAction({
+            buffer,
 		    '1' + i,
 		    [i] {
 			    if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {

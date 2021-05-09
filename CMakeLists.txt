@@ -116,6 +116,11 @@ if(SWITCH)
   include(switch_defs)
 endif()
 
+if(PSP)
+  include("$ENV{PSPDEV}/psp/share/cmake/PSP.cmake" REQUIRED)
+  include(psp_defs)
+endif()
+
 if(VITA)
   # Work around a missing setting in the toolchain file.
   # Fix sent upstream: https://github.com/vitasdk/vita-toolchain/pull/182
@@ -187,7 +192,7 @@ if(NOT NOSOUND)
   endif()
 endif()
 
-if(NOT N3DS)
+if(NOT N3DS AND NOT PSP)
   find_package(Threads REQUIRED)
 endif()
 
@@ -212,10 +217,12 @@ if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
 endif()
 
-if(USE_SDL1)
+if(USE_SDL1 AND NOT PSP)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
+elseif(PSP)
+  include_directories("$ENV{PSPDEV}/psp/include/SDL")
 else()
   find_package(SDL2 REQUIRED)
   if(TARGET SDL2::SDL2)
@@ -537,7 +544,7 @@ target_include_directories(${BIN_TARGET} PRIVATE
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
-if(NOT N3DS)
+if(NOT N3DS AND NOT PSP)
   target_link_libraries(${BIN_TARGET} PUBLIC
   Threads::Threads)
 endif()
@@ -654,9 +661,13 @@ else()
   target_link_libraries(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
 endif()
 
-if(USE_SDL1)
+if(USE_SDL1 AND NOT PSP)
   target_link_libraries(${BIN_TARGET} PRIVATE
     ${SDL_TTF_LIBRARY}
+    ${SDL_LIBRARY})
+  target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
+elseif(PSP)
+  target_link_libraries(${BIN_TARGET} PRIVATE
     ${SDL_LIBRARY})
   target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
 else()
@@ -699,13 +710,22 @@ if(N3DS)
   target_link_libraries(${BIN_TARGET} PRIVATE 3ds::citro3d 3ds::ctrulib)
 endif()
 
+if(PSP)
+  target_link_libraries(${BIN_TARGET} PRIVATE -lSDL_ttf -lSDL_mixer -lSDLmain -lSDL)
+  target_link_libraries(${BIN_TARGET} PRIVATE
+    -L${PSPDEV}/psp/lib -lg -lstdc++ -lc -lGLU -lglut -lz -lm -lGL -lvorbisidec -lmikmod -lpspvfpu -lfreetype
+    -L${PSPDEV}/psp/sdk/lib -L${PSPDEV}/psp
+    -lpspdebug -lpspgu -lpspctrl -lpspge -lpspirkeyb -lpsppower -lpsppower_driver -lpspdisplay -lpsphprm -lpspsdk -lpsprtc
+    -lpspaudio -lpsputility -lpspnet_inet -lc -lpspuser)
+endif()
+
 target_compile_definitions(${BIN_TARGET} PRIVATE ${def_list})
 
 if (GPERF)
   target_link_libraries(${BIN_TARGET} PRIVATE ${GPERFTOOLS_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU AND NOT VITA)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU AND NOT VITA AND NOT PSP)
   target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
@@ -726,7 +746,7 @@ if(HAIKU)
   target_link_libraries(${BIN_TARGET} PRIVATE network)
 endif()
 
-if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC" AND NOT PSP)
   # Change __FILE__ to only show the path relative to the project folder
   get_target_property(devilutionx_SRCS ${BIN_TARGET} SOURCES)
   foreach(SOURCE_FILE ${devilutionx_SRCS})
@@ -831,6 +851,26 @@ if(N3DS)
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
+endif()
+
+if(PSP)
+  set(EXTRA_TARGETS   "EBOOT.PBP")
+  set(PSP_EBOOT_TITLE "DevilutionX")
+  # may want to add these later
+  # set_target_properties(${BIN_TARGET} PROPERTIES CXX_STANDARD 17 CXX_EXTENSIONS OFF)
+  # set_target_properties(${BIN_TARGET} PROPERTIES COMPILE_FLAGS -fno-rtti -G0 -O2)
+
+  add_custom_command(
+    TARGET ${BIN_TARGET}
+    POST_BUILD COMMAND
+    "psp-strip" "$<TARGET_FILE:${BIN_TARGET}>"
+    COMMENT "Stripping binary"
+  )
+
+  create_pbp_file(TARGET ${BIN_TARGET}
+    ICON_PATH "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
+    BACKGROUND_PATH "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
+  )
 endif()
 
 if(CPACK)

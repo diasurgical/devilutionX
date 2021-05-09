@@ -158,7 +158,7 @@ void init_archives()
 		std::string message;
 		for (std::size_t i = 0; i < paths.size(); ++i) {
 			char prefix[32];
-			std::snprintf(prefix, sizeof(prefix), "\n%6u. '", static_cast<unsigned>(i + 1));
+			snprintf(prefix, sizeof(prefix), "\n%6u. '", static_cast<unsigned>(i + 1));
 			message.append(prefix);
 			message.append(paths[i]);
 			message += '\'';

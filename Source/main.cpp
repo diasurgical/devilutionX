@@ -18,7 +18,18 @@ extern "C" const char *__asan_default_options()
 }
 #endif
 
+#ifdef __PSP__
+#include <pspkernel.h>
+#include <pspdebug.h>
+
+PSP_MODULE_INFO("GETREKT", 0, 1, 1);
+PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+PSP_HEAP_SIZE_MAX();
+
+extern "C" int main(int argc, char** argv)
+#else
 int main(int argc, char **argv)
+#endif
 {
 #ifdef RUN_TESTS
 	testing::InitGoogleTest(&argc, argv);

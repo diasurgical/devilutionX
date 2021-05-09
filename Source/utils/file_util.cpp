@@ -111,6 +111,8 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 	}
 	::CloseHandle(file);
 	return true;
+#elif defined(__PSP__)
+	return false;
 #elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 	return ::truncate(path, static_cast<off_t>(size)) == 0;
 #else

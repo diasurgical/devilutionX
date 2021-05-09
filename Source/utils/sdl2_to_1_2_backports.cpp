@@ -489,7 +489,7 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 // = Filesystem
 
 namespace {
-#if !defined(__QNXNTO__)
+#if !defined(__QNXNTO__) && !defined(__PSP__)
 char *readSymLink(const char *path)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
@@ -540,8 +540,7 @@ char *SDL_GetBasePath()
 			return NULL;
 		}
 	}
-#endif
-#if defined(__OPENBSD__)
+#elif defined(__OPENBSD__)
 	char **retvalargs;
 	size_t len;
 	const int mib[] = { CTL_KERN, KERN_PROC_ARGS, getpid(), KERN_PROC_ARGV };
@@ -558,8 +557,7 @@ char *SDL_GetBasePath()
 
 		SDL_free(retvalargs);
 	}
-#endif
-#if defined(__SOLARIS__)
+#elif defined(__SOLARIS__)
 	const char *path = getexecname();
 	if ((path != NULL) && (path[0] == '/')) { /* must be absolute path... */
 		retval = SDL_strdup(path);
@@ -568,11 +566,23 @@ char *SDL_GetBasePath()
 			return NULL;
 		}
 	}
-#endif
-#if defined(__3DS__)
+#elif defined(__3DS__)
 	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
 	return retval;
-#endif
+#elif defined(__PSP__)
+	{
+		// replacement for strdup
+		const char* str = "/";
+		int len = strlen(str) + 1;
+		retval = (char*)malloc(len);
+
+		if (retval) {
+			memset(retval, 0, len);
+			memcpy(retval, str, len - 1);
+		}
+		return retval;
+	}
+#else
 
 	/* is a Linux-style /proc filesystem available? */
 	if (!retval && (access("/proc", F_OK) == 0)) {
@@ -621,6 +631,7 @@ char *SDL_GetBasePath()
 	}
 
 	return retval;
+#endif
 }
 
 char *SDL_GetPrefPath(const char *org, const char *app)
@@ -633,16 +644,31 @@ char *SDL_GetPrefPath(const char *org, const char *app)
      *
      * http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
      */
-	const char *envr = SDL_getenv("XDG_DATA_HOME");
-	const char *append;
 	char *retval = NULL;
-	char *ptr = NULL;
-	size_t len = 0;
 
 #if defined(__3DS__)
 	retval = SDL_strdup("sdmc:/3ds/devilutionx/");
 	return retval;
 #endif
+#if defined(__PSP__)
+	{
+		// replacement for strdup
+		const char* str = "/";
+		int len = strlen(str) + 1;
+		retval = (char*)malloc(len);
+
+		if (retval) {
+			memset(retval, 0, len);
+			memcpy(retval, str, len - 1);
+		}
+		return retval;
+	}
+#endif
+
+	const char *envr = SDL_getenv("XDG_DATA_HOME");
+	const char *append;
+	char *ptr = NULL;
+	size_t len = 0;
 
 	if (!app) {
 		SDL_InvalidParamError("app");

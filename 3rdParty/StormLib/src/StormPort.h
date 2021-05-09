@@ -220,6 +220,31 @@
 #endif
 
 //-----------------------------------------------------------------------------
+// Defines for PSP platform
+
+#if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__PSP__)
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <strings.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #define STORMLIB_LITTLE_ENDIAN
+
+  #define STORMLIB_PLATFORM_DEFINED
+
+#endif
+
+//-----------------------------------------------------------------------------
 // Defines for Vita platform
 
 #if !defined(STORMLIB_PLATFORM_DEFINED) && defined(__vita__)
@@ -364,7 +389,7 @@
 #endif
 
 // Platform-specific error codes for UNIX-based platforms
-#if defined(STORMLIB_MAC) || defined(STORMLIB_LINUX)
+#if defined(STORMLIB_MAC) || defined(STORMLIB_LINUX) || defined(__PSP__)
   #define ERROR_SUCCESS                  0
   #define ERROR_FILE_NOT_FOUND           ENOENT
   #define ERROR_ACCESS_DENIED            EPERM

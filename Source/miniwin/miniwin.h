@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __PSP__
+#include <cstdarg>
+#endif
+
 #include <cstdint>
 
 #include <cctype>
@@ -59,6 +63,12 @@ bool FetchMessage(tagMSG *lpMsg);
 bool TranslateMessage(const tagMSG *lpMsg);
 void PushMessage(const tagMSG *lpMsg);
 bool PostMessage(uint32_t Msg, int32_t wParam, int32_t lParam);
+
+#ifdef __PSP__
+int snprintf(char *s, size_t n, const char *format, ...);
+int vsnprintf(char *s, size_t n, const char *format, va_list arg);
+#define strcasecmp strcmp
+#endif
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
