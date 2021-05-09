@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <string>
+#include <sys/stat.h>
 
 #include <SDL.h>
 
@@ -25,7 +26,6 @@
 #endif
 
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
-#include <sys/stat.h>
 #include <unistd.h>
 #else
 #include <cstdio>
@@ -82,25 +82,11 @@ bool FileExists(const char *path)
 
 bool GetFileSize(const char *path, std::uintmax_t *size)
 {
-#if defined(_WIN64) || defined(_WIN32)
-	const auto pathUtf16 = ToWideChar(path);
-	if (pathUtf16 == nullptr) {
-		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
-		return false;
-	}
-	WIN32_FILE_ATTRIBUTE_DATA attr;
-	if (!GetFileAttributesExW(&pathUtf16[0], GetFileExInfoStandard, &attr)) {
-		return false;
-	}
-	*size = (attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
-	return true;
-#else
 	struct ::stat statResult;
 	if (::stat(path, &statResult) == -1)
 		return false;
 	*size = static_cast<uintmax_t>(statResult.st_size);
 	return true;
-#endif
 }
 
 bool ResizeFile(const char *path, std::uintmax_t size)
