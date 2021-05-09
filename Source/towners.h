@@ -54,11 +54,8 @@ struct TownerStruct {
 	uint8_t _tAnimLen;   // Number of frames in current animation
 	uint8_t _tAnimFrame; // Current frame of animation.
 	uint8_t _tAnimFrameCnt;
-	uint8_t _tNFrames;
 	string_view _tName;
 	TNQ qsts[MAXQUESTS];
-	bool _tSelFlag;
-	bool _tMsgSaid;
 	/** Specifies the animation frame sequence. */
 	const uint8_t *animOrder; // unowned
 	std::size_t animOrderSize;

@@ -141,7 +141,6 @@ bool debug_mode_key_s = false;
 bool debug_mode_key_w = false;
 bool debug_mode_key_inverted_v = false;
 bool debug_mode_dollar_sign = false;
-bool debug_mode_key_d = false;
 bool debug_mode_key_i = false;
 int debug_mode_key_j = 0;
 int arrowdebug = 0;
@@ -192,7 +191,6 @@ void initKeymapActions();
 	printInConsole("    %-20s %-30s\n", "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
-	printInConsole("    %-20s %-30s\n", "-d", "Increaased item drops");
 	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
 	printInConsole("    %-20s %-30s\n", "-$", "Enable god mode");
 	printInConsole("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
@@ -250,8 +248,6 @@ static void diablo_parse_flags(int argc, char **argv)
 			debug_mode_key_inverted_v = true;
 		} else if (strcasecmp("-$", argv[i]) == 0) {
 			debug_mode_dollar_sign = true;
-		} else if (strcasecmp("-d", argv[i]) == 0) {
-			debug_mode_key_d = true;
 		} else if (strcasecmp("-i", argv[i]) == 0) {
 			debug_mode_key_i = true;
 		} else if (strcasecmp("-j", argv[i]) == 0) {

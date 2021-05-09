@@ -3137,21 +3137,22 @@ void OperateMushPatch(int pnum, int i)
 		return;
 	}
 
-	if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || quests[Q_MUSHROOM]._qvar1 < QS_TOMEGIVEN) {
+	if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE) {
 		if (!deltaload && pnum == myplr) {
 			plr[myplr].PlaySpeach(13);
 		}
-	} else {
-		if (object[i]._oSelFlag != 0) {
-			if (!deltaload)
-				PlaySfxLoc(IS_CHEST, object[i].position.x, object[i].position.y);
-			object[i]._oSelFlag = 0;
-			object[i]._oAnimFrame++;
-			if (!deltaload) {
-				GetSuperItemLoc(object[i].position.x, object[i].position.y, &x, &y);
-				SpawnQuestItem(IDI_MUSHROOM, x, y, 0, false);
-				quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
-			}
+		return;
+	}
+
+	if (object[i]._oSelFlag != 0) {
+		if (!deltaload)
+			PlaySfxLoc(IS_CHEST, object[i].position.x, object[i].position.y);
+		object[i]._oSelFlag = 0;
+		object[i]._oAnimFrame++;
+		if (!deltaload) {
+			GetSuperItemLoc(object[i].position.x, object[i].position.y, &x, &y);
+			SpawnQuestItem(IDI_MUSHROOM, x, y, 0, false);
+			quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 		}
 	}
 }
