@@ -19,6 +19,7 @@
 #define NOMINMAX 1
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <shlwapi.h>
 
 #include "utils/log.hpp"
 #endif
@@ -53,7 +54,22 @@ std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 
 bool FileExists(const char *path)
 {
-#if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+#if defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return false;
+	}
+	if (!::PathFileExistsW(&pathUtf16[0])) {
+		if (::GetLastError() == ERROR_FILE_NOT_FOUND) {
+			::SetLastError(ERROR_SUCCESS);
+		} else {
+			LogError("PathFileExistsW: error code {}", ::GetLastError());
+		}
+		return false;
+	}
+	return true;
+#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 	return ::access(path, F_OK) == 0;
 #else
 	FILE *file = std::fopen(path, "rb");
