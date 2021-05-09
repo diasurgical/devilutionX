@@ -22,11 +22,12 @@ extern "C" const char *__asan_default_options()
 #include <pspkernel.h>
 #include <pspdebug.h>
 
-PSP_MODULE_INFO("GETREKT", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 PSP_HEAP_SIZE_MAX();
 
-extern "C" int main(int argc, char** argv)
+extern "C"
+{
+int SDL_main(int argc, char *argv[])
 #else
 int main(int argc, char **argv)
 #endif
@@ -44,3 +45,7 @@ int main(int argc, char **argv)
 
 	return devilution::DiabloMain(argc, argv);
 }
+
+#if __PSP__
+}
+#endif

@@ -3,9 +3,6 @@ set(NONET ON)
 set(USE_SDL1 ON)
 set(NOSOUND ON)
 
-#additional compilation definitions
-add_definitions(-D__PSP__)
-
 # keeping the 3DS defaults for now
 # Streaming audio is broken on the 3DS as of 25 Mar 2021:
 # https://github.com/devkitPro/SDL/issues/72

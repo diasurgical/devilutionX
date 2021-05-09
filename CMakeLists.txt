@@ -655,7 +655,7 @@ target_link_libraries(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined
 if(TSAN)
   target_compile_options(${BIN_TARGET} PUBLIC -fsanitize=thread)
   target_link_libraries(${BIN_TARGET} PUBLIC -fsanitize=thread)
-else()
+elseif(NOT PSP)
   genex_for_option(ASAN)
   target_compile_options(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   target_link_libraries(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
@@ -713,10 +713,12 @@ endif()
 if(PSP)
   target_link_libraries(${BIN_TARGET} PRIVATE -lSDL_ttf -lSDL_mixer -lSDLmain -lSDL)
   target_link_libraries(${BIN_TARGET} PRIVATE
-    -L${PSPDEV}/psp/lib -lg -lstdc++ -lc -lGLU -lglut -lz -lm -lGL -lvorbisidec -lmikmod -lpspvfpu -lfreetype
+    -L${PSPDEV}/psp/lib -lg -lstdc++ -lc -lz -lm -lGL -lvorbisidec -lmikmod -lpspvfpu -lfreetype
     -L${PSPDEV}/psp/sdk/lib -L${PSPDEV}/psp
     -lpspdebug -lpspgu -lpspctrl -lpspge -lpspirkeyb -lpsppower -lpsppower_driver -lpspdisplay -lpsphprm -lpspsdk -lpsprtc
     -lpspaudio -lpsputility -lpspnet_inet -lc -lpspuser)
+
+  target_compile_definitions(${BIN_TARGET} PRIVATE -Dmain=SDL_main)
 endif()
 
 target_compile_definitions(${BIN_TARGET} PRIVATE ${def_list})
@@ -859,13 +861,6 @@ if(PSP)
   # may want to add these later
   # set_target_properties(${BIN_TARGET} PROPERTIES CXX_STANDARD 17 CXX_EXTENSIONS OFF)
   # set_target_properties(${BIN_TARGET} PROPERTIES COMPILE_FLAGS -fno-rtti -G0 -O2)
-
-  add_custom_command(
-    TARGET ${BIN_TARGET}
-    POST_BUILD COMMAND
-    "psp-strip" "$<TARGET_FILE:${BIN_TARGET}>"
-    COMMENT "Stripping binary"
-  )
 
   create_pbp_file(TARGET ${BIN_TARGET}
     ICON_PATH "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
