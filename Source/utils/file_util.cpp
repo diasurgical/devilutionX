@@ -31,6 +31,8 @@
 #include <cstdio>
 #endif
 
+#include "storm/storm.h"
+
 namespace devilution {
 
 namespace {
@@ -159,6 +161,11 @@ void RemoveFile(const char *lpFileName)
 std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode)
 {
 	return std::make_unique<std::fstream>(path, mode);
+}
+
+bool SFileOpenArchiveDiablo(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq)
+{
+	return SFileOpenArchive(szMpqName, dwPriority, dwFlags, phMpq);
 }
 
 } // namespace devilution
