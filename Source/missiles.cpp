@@ -1537,7 +1537,6 @@ void AddStealPotions(int mi, int sx, int sy, int dx, int dy, int midir, int8_t m
 								} else {
 									ii = ItemMiscIdIdx(IMISC_HEAL);
 								}
-								ii = ItemMiscIdIdx(IMISC_HEAL);
 								break;
 							case IMISC_FULLREJUV:
 								switch (GenerateRnd(3)) {
