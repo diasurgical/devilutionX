@@ -52,7 +52,6 @@ HANDLE hfopt2_mpq;
 HANDLE devilutionx_mpq;
 
 namespace {
-
 HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_name)
 {
 	HANDLE archive;
@@ -177,9 +176,11 @@ void init_archives()
 		if (spawn_mpq != nullptr)
 			gbIsSpawn = true;
 	}
+
 	HANDLE fh = nullptr;
-	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
+	if (!SFileOpenFile("ui_art\\title.pcx", &fh)) {
 		InsertCDDlg();
+	}
 	SFileCloseFileThreadSafe(fh);
 
 	patch_rt_mpq = init_test_access(paths, "patch_rt.mpq");
@@ -211,8 +212,9 @@ void init_archives()
 
 void init_create_window()
 {
-	if (!SpawnWindow(PROJECT_NAME))
+	if (!SpawnWindow(PROJECT_NAME)) {
 		app_fatal("%s", _("Unable to create main window"));
+	}
 	dx_init();
 	gbActive = true;
 #ifndef USE_SDL1

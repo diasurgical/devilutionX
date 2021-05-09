@@ -239,7 +239,8 @@
   #include <errno.h>
 
   #define STORMLIB_LITTLE_ENDIAN
-
+  
+  #define STORMLIB_MAC
   #define STORMLIB_PLATFORM_DEFINED
 
 #endif

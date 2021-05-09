@@ -34,7 +34,12 @@
 // Local functions - platform-specific functions
 
 #ifndef STORMLIB_WINDOWS
+
+#ifdef __PSP__
+static DWORD nLastError = ERROR_SUCCESS;
+#else
 static thread_local DWORD nLastError = ERROR_SUCCESS;
+#endif
 
 DWORD GetLastError()
 {
@@ -366,11 +371,13 @@ static bool BaseFile_Resize(TFileStream * pStream, ULONGLONG NewFileSize)
 
 #if defined(STORMLIB_MAC) || defined(STORMLIB_LINUX)
     {
+#ifndef __PSP__
         if(ftruncate64((intptr_t)pStream->Base.File.hFile, (off64_t)NewFileSize) == -1)
         {
             nLastError = errno;
             return false;
         }
+#endif
 
         pStream->Base.File.FileSize = NewFileSize;
         return true;
@@ -1434,7 +1441,6 @@ static bool FlatStream_CreateMirror(TBlockStream * pStream)
     // which would take long time on larger files.
     return true;
 }
-
 static TFileStream * FlatStream_Open(const TCHAR * szFileName, DWORD dwStreamFlags)
 {
     TBlockStream * pStream;

@@ -678,7 +678,6 @@ static void diablo_init()
 	SFileEnableDirectAccess(true);
 	init_archives();
 	was_archives_init = true;
-
 	if (forceSpawn)
 		gbIsSpawn = true;
 	if (forceDiablo)
@@ -688,7 +687,10 @@ static void diablo_init()
 
 	LanguageInitialize();
 
+// todo (PSP): fix crash here. we probably need a better implementation of 'snprintf' on 'misc_msg.cpp'
+#ifndef __PSP__
 	SetApplicationVersions();
+#endif
 
 	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++) {
 		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
@@ -780,7 +782,6 @@ int DiabloMain(int argc, char **argv)
 	diablo_splash();
 	mainmenu_loop();
 	diablo_deinit();
-
 	return 0;
 }
 
@@ -2121,7 +2122,7 @@ void initKeymapActions()
 	});
 #endif
 	for (int i = 0; i < 4; ++i) {
-		char buffer[12];
+		char buffer[20];
 		snprintf(buffer, 12, "QuickSpell%d", i + 1);
 		
 		quickSpellActionIndexes[i] = keymapper.addAction({
@@ -2202,8 +2203,8 @@ void initKeymapActions()
 	    },
 	});
 	for (int i = 0; i < 8; ++i) {
-        char buffer[10];
-        snprintf(buffer, 10, "BeltItem%d", i + 1);
+        char buffer[20];
+        snprintf(buffer, 20, "BeltItem%d", i + 1);
 
         keymapper.addAction({
             buffer,

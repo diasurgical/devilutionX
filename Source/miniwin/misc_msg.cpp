@@ -724,7 +724,6 @@ bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam)
 }
 
 #ifdef __PSP__
-
 int snprintf(char *s, size_t n, const char *format, ...)
 {
 	char message[256];
@@ -732,7 +731,7 @@ int snprintf(char *s, size_t n, const char *format, ...)
 	va_start(ap, format);
 	vsprintf(message, format, ap);
 	va_end(ap);
-
+	
 	return sprintf(s, format, message); // Security?
 }
 
