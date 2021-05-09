@@ -134,6 +134,14 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 
 void RemoveFile(const char *lpFileName)
 {
+#if defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(lpFileName);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return;
+	}
+	::DeleteFileW(&pathUtf16[0]);
+#else
 	std::string name = lpFileName;
 	std::replace(name.begin(), name.end(), '\\', '/');
 	FILE *f = fopen(name.c_str(), "r+");
@@ -145,6 +153,7 @@ void RemoveFile(const char *lpFileName)
 	} else {
 		Log("Failed to remove file: {}", name);
 	}
+#endif
 }
 
 } // namespace devilution
