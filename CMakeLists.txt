@@ -541,13 +541,11 @@ else()
     Source/main.cpp
     Source/devilutionx.exe.manifest
     Packaging/macOS/AppIcon.icns
-    Packaging/resources/CharisSILB.ttf
     Packaging/windows/devilutionx.rc)
 endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory
-file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Use file GENERATE instead of configure_file because configure_file
@@ -831,7 +829,6 @@ endif()
 
 if(APPLE)
   set_source_files_properties("./Packaging/macOS/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set_source_files_properties("./Packaging/resources/CharisSILB.ttf" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(MACOSX_BUNDLE_GUI_IDENTIFIER com.diasurgical.devilutionx)
   set(MACOSX_BUNDLE_COPYRIGHT Unlicense)
   set(MACOSX_BUNDLE_BUNDLE_NAME devilutionx)
@@ -895,7 +892,6 @@ if(VITA)
     FILE Packaging/vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
     FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
     FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-    FILE Packaging/resources/CharisSILB.ttf CharisSILB.ttf
     FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
   )
 endif()
@@ -909,9 +905,7 @@ if(NINTENDO_3DS)
   set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  set(APP_ROMFS_FILES
-    "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-    "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq")
+  set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq")
   file(MAKE_DIRECTORY ${APP_ROMFS})
   file(COPY ${APP_ROMFS_FILES}
      DESTINATION ${APP_ROMFS})
@@ -929,9 +923,6 @@ if(CPACK)
     set(CPACK_STRIP_FILES TRUE)
     install(TARGETS ${BIN_TARGET} DESTINATION .)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
       DESTINATION "."
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
@@ -966,9 +957,6 @@ if(CPACK)
     set(CPACK_STRIP_FILES TRUE)
     install(TARGETS ${BIN_TARGET} DESTINATION .)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
       DESTINATION "."
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
@@ -1033,9 +1021,6 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
       DESTINATION "share/icons/hicolor/512x512/apps"
       RENAME "${project_name}-hellfire.png"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-      DESTINATION "share/fonts/truetype"
     )
 
     # -G DEB

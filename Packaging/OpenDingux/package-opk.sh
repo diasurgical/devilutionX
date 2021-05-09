@@ -17,8 +17,7 @@ package_opk() {
 	mksquashfs "${BUILD_DIR}/devilutionx" \
 		"${tmp}/default.${ext}.desktop" "${tmp}/hellfire.${ext}.desktop" \
 		"${tmp}/readme.${ext}.txt" Packaging/resources/icon_32.png \
-		Packaging/resources/hellfire_32.png Packaging/resources/CharisSILB.ttf \
-		Packaging/resources/devilutionx.mpq \
+		Packaging/resources/hellfire_32.png Packaging/resources/devilutionx.mpq \
 		"${BUILD_DIR}/devilutionx-${TARGET}.opk" \
 		-all-root -no-xattrs -noappend -no-exports -no-progress
 }
