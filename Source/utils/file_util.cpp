@@ -174,7 +174,16 @@ std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openm
 
 bool SFileOpenArchiveDiablo(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq)
 {
+#if defined(_WIN64) || defined(_WIN32)
+	const auto szMpqNameUtf16 = ToWideChar(szMpqName);
+	if (szMpqNameUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return false;
+	}
+	return SFileOpenArchive(szMpqNameUtf16.get(), dwPriority, dwFlags, phMpq);
+#else
 	return SFileOpenArchive(szMpqName, dwPriority, dwFlags, phMpq);
+#endif
 }
 
 } // namespace devilution
