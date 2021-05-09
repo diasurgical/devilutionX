@@ -620,7 +620,7 @@ static void SetupLocalCoords()
 	x = 75;
 	y = 68;
 #ifdef _DEBUG
-	if (debug_mode_key_inverted_v || debug_mode_key_d) {
+	if (debug_mode_key_inverted_v) {
 		x = 49;
 		y = 23;
 	}
