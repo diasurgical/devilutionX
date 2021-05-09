@@ -88,6 +88,16 @@ jobs:
       - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
+  psp:
+    docker:
+      - image: sharkwouter/pspdev
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: cd Packaging/psp
+      - run: sh build.sh
+      - run: cd ../..
+      - store_artifacts: {path: ./build/EBOOT.PBP, destination: EBOOT.PBP}
 
 workflows:
   version: 2
