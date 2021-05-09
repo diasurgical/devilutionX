@@ -1909,8 +1909,8 @@ static void timeout_cursor(bool bTimeout)
 			sgnTimeoutCurs = pcurs;
 			multi_net_ping();
 			ClearPanel();
-			AddPanelString(_("-- Network timeout --"), true);
-			AddPanelString(_("-- Waiting for players --"), true);
+			AddPanelString(_("-- Network timeout --"));
+			AddPanelString(_("-- Waiting for players --"));
 			NewCursor(CURSOR_HOURGLASS);
 			force_redraw = 255;
 		}
@@ -1967,8 +1967,8 @@ void helpKeyPressed()
 		helpflag = false;
 	} else if (stextflag != STORE_NONE) {
 		ClearPanel();
-		AddPanelString(_("No help available"), true); /// BUGFIX: message isn't displayed
-		AddPanelString(_("while in stores"), true);
+		AddPanelString(_("No help available")); /// BUGFIX: message isn't displayed
+		AddPanelString(_("while in stores"));
 		track_repeat_walk(false);
 	} else {
 		invflag = false;

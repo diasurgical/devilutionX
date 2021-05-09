@@ -122,7 +122,7 @@ bool CheckXPBarInfo()
 	const int charLevel = player._pLevel;
 
 	sprintf(tempstr, _("Level %d"), charLevel);
-	AddPanelString(tempstr, true);
+	AddPanelString(tempstr);
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Show a maximum level indicator for max level players.
@@ -130,9 +130,9 @@ bool CheckXPBarInfo()
 
 		strcpy(tempstr, _("Experience: "));
 		PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, ExpLvlsTbl[charLevel - 1]);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 
-		AddPanelString(_("Maximum Level"), true);
+		AddPanelString(_("Maximum Level"));
 
 		return true;
 	}
@@ -141,14 +141,14 @@ bool CheckXPBarInfo()
 
 	strcpy(tempstr, _("Experience: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, player._pExperience);
-	AddPanelString(tempstr, true);
+	AddPanelString(tempstr);
 
 	strcpy(tempstr, _("Next Level: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
-	AddPanelString(tempstr, true);
+	AddPanelString(tempstr);
 
 	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), _(" to Level %d"), charLevel + 1);
-	AddPanelString(tempstr, true);
+	AddPanelString(tempstr);
 
 	return true;
 }

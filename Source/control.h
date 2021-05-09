@@ -73,7 +73,7 @@ void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
 
-void AddPanelString(const char *str, bool just);
+void AddPanelString(const char *str);
 void ClearPanel();
 void DrawPanelBox(const CelOutputBuffer &out, int x, int y, int w, int h, int sx, int sy);
 
@@ -115,7 +115,6 @@ void DoAutoMap();
 void CheckPanelInfo();
 void CheckBtnUp();
 void FreeControlPan();
-bool control_WriteStringToBuffer(BYTE *str);
 
 /**
  * Sets a string to be drawn in the info box and then draws it.
