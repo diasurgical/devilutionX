@@ -11,7 +11,7 @@
 namespace devilution {
 
 // Local definition to fix compilation issue due to header conflict.
-void app_fatal(const char *pszFmt, ...);
+[[noreturn]] void app_fatal(const char *pszFmt, ...);
 
 enum class LogCategory {
 	Application = SDL_LOG_CATEGORY_APPLICATION,
