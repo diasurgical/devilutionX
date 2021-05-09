@@ -2,6 +2,8 @@
 
 #include "diablo.h"
 #include "engine/load_file.hpp"
+#include "storm/storm.h"
+#include "storm/storm_sdl_rw.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 #include "utils/log.hpp"
@@ -53,6 +55,32 @@ void UnloadArtFonts()
 	FontTables[AFT_HUGE] = nullptr;
 }
 
+void LoadTtfFontFromFile()
+{
+	std::string ttfFontPath = paths::TtfPath() + paths::TtfName();
+#if defined(__linux__) && !defined(__ANDROID__)
+	if (!FileExists(ttfFontPath.c_str())) {
+		ttfFontPath = "/usr/share/fonts/truetype/" + paths::TtfName();
+	}
+#endif
+	font = TTF_OpenFont(ttfFontPath.c_str(), 17);
+	if (font == nullptr)
+		Log("TTF_OpenFont: {}", TTF_GetError());
+}
+
+void LoadCharisSILBFromMpq()
+{
+	HANDLE handle;
+	if (!SFileOpenFile("font\\CharisSILB.ttf", &handle)) {
+		Log("TTF_OpenFont: SFileOpenFile failed");
+		return;
+	}
+	SDL_RWops *fontRw = SFileRw_FromStormHandle(handle);
+	font = TTF_OpenFontRW(fontRw, true, 17);
+	if (font == nullptr)
+		Log("TTF_OpenFont: {}", TTF_GetError());
+}
+
 void LoadTtfFont()
 {
 	if (TTF_WasInit() == 0) {
@@ -63,17 +91,11 @@ void LoadTtfFont()
 		was_fonts_init = true;
 	}
 
-	std::string ttfFontPath = paths::TtfPath() + paths::TtfName();
-#if defined(__linux__) && !defined(__ANDROID__)
-	if (!FileExists(ttfFontPath.c_str())) {
-		ttfFontPath = "/usr/share/fonts/truetype/" + paths::TtfName();
-	}
-#endif
-	font = TTF_OpenFont(ttfFontPath.c_str(), 17);
-	if (font == nullptr) {
-		Log("TTF_OpenFont: {}", TTF_GetError());
+	LoadTtfFontFromFile();
+	if (font == nullptr)
+		LoadCharisSILBFromMpq();
+	if (font == nullptr)
 		return;
-	}
 
 	TTF_SetFontKerning(font, 0);
 	TTF_SetFontHinting(font, TTF_HINTING_MONO);
