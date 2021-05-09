@@ -6,15 +6,21 @@
 
 #include <SDL.h>
 
+#include "utils/stdcompat/string_view.hpp"
+
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
 #if defined(_WIN64) || defined(_WIN32)
+#include <memory>
+
 // Suppress definitions of `min` and `max` macros by <windows.h>:
 #define NOMINMAX 1
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+
+#include "utils/log.hpp"
 #endif
 
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
@@ -25,6 +31,24 @@
 #endif
 
 namespace devilution {
+
+namespace {
+
+#if defined(_WIN64) || defined(_WIN32)
+std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
+{
+	constexpr std::uint32_t flags = MB_ERR_INVALID_CHARS;
+	const int utf16Size = ::MultiByteToWideChar(CP_UTF8, flags, path.data(), path.size(), nullptr, 0);
+	if (utf16Size == 0)
+		return nullptr;
+	std::unique_ptr<wchar_t[]> utf16 { new wchar_t[utf16Size] };
+	if (::MultiByteToWideChar(CP_UTF8, flags, path.data(), path.size(), &utf16[0], utf16Size) != utf16Size)
+		return nullptr;
+	return utf16;
+}
+#endif
+
+} // namespace
 
 bool FileExists(const char *path)
 {
@@ -42,18 +66,15 @@ bool FileExists(const char *path)
 bool GetFileSize(const char *path, std::uintmax_t *size)
 {
 #if defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return false;
+	}
 	WIN32_FILE_ATTRIBUTE_DATA attr;
-	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
-	wchar_t *path_utf16 = new wchar_t[path_utf16_size];
-	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
-		delete[] path_utf16;
+	if (!GetFileAttributesExW(&pathUtf16[0], GetFileExInfoStandard, &attr)) {
 		return false;
 	}
-	if (!GetFileAttributesExW(path_utf16, GetFileExInfoStandard, &attr)) {
-		delete[] path_utf16;
-		return false;
-	}
-	delete[] path_utf16;
 	*size = (attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
 	return true;
 #else
@@ -73,14 +94,12 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 	if (lisize.QuadPart < 0) {
 		return false;
 	}
-	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
-	wchar_t *path_utf16 = new wchar_t[path_utf16_size];
-	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
-		delete[] path_utf16;
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return false;
 	}
-	HANDLE file = ::CreateFileW(path_utf16, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
-	delete[] path_utf16;
+	HANDLE file = ::CreateFileW(&pathUtf16[0], GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 	if (file == INVALID_HANDLE_VALUE) {
 		return false;
 	} else if (::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0 || ::SetEndOfFile(file) == 0) {
