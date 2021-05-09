@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include "utils/stdcompat/span.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
 #include "items.h"
@@ -60,8 +61,7 @@ struct TownerStruct {
 	bool _tSelFlag;
 	bool _tMsgSaid;
 	/** Specifies the animation frame sequence. */
-	const uint8_t *animOrder; // unowned
-	std::size_t animOrderSize;
+	span<const uint8_t> animOrder;
 	PlayerStruct *_tTalkingToPlayer;
 	void (*talk)(PlayerStruct &player, TownerStruct &barOwner);
 	bool _tbtcnt;
