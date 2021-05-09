@@ -90,7 +90,7 @@ struct FStreamWrapper {
 public:
 	bool Open(const char *path, std::ios::openmode mode)
 	{
-		s_ = std::make_unique<std::fstream>(path, mode);
+		s_ = CreateFileStream(path, mode);
 		return CheckError("new std::fstream(\"%s\", %s)", path, OpenModeToString(mode).c_str());
 	}
 

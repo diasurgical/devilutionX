@@ -156,4 +156,9 @@ void RemoveFile(const char *lpFileName)
 #endif
 }
 
+std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode)
+{
+	return std::make_unique<std::fstream>(path, mode);
+}
+
 } // namespace devilution
