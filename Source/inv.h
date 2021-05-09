@@ -93,6 +93,7 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem);
 bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false);
 bool GoldAutoPlace(int pnum);
+bool GoldAutoPlaceInInventorySlot(int pnum, int slotIndex);
 void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(int pnum, BYTE iv);
 void RemoveSpdBarItem(int pnum, int iv);
@@ -119,7 +120,5 @@ int CalculateGold(int pnum);
 bool DropItemBeforeTrig();
 
 /* data */
-
-extern int AP2x2Tbl[10];
 
 } // namespace devilution
