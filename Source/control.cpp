@@ -57,7 +57,6 @@ int dropGoldValue;
 bool drawmanaflag;
 bool chrbtnactive;
 char sgszTalkMsg[MAX_SEND_STR_LEN];
-bool pstrjust[4];
 int pnumlines;
 bool pinfoflag;
 bool talkButtonsDown[3];
@@ -398,13 +397,13 @@ void DrawSpellList(const CelOutputBuffer &out)
 					sprintf(infostr, _("%s Spell"), _(spelldata[pSpell].sNameText));
 					if (pSpell == SPL_HBOLT) {
 						strcpy(tempstr, _("Damages undead only"));
-						AddPanelString(tempstr, true);
+						AddPanelString(tempstr);
 					}
 					if (s == 0)
 						strcpy(tempstr, _("Spell Level 0 - Unusable"));
 					else
 						sprintf(tempstr, _("Spell Level %i"), s);
-					AddPanelString(tempstr, true);
+					AddPanelString(tempstr);
 					break;
 				case RSPLTYPE_SCROLL: {
 					sprintf(infostr, _("Scroll of %s"), _(spelldata[pSpell].sNameText));
@@ -424,13 +423,13 @@ void DrawSpellList(const CelOutputBuffer &out)
 						}
 					}
 					sprintf(tempstr, ngettext("%i Scroll", "%i Scrolls", v), v);
-					AddPanelString(tempstr, true);
+					AddPanelString(tempstr);
 				} break;
 				case RSPLTYPE_CHARGES: {
 					sprintf(infostr, _("Staff of %s"), _(spelldata[pSpell].sNameText));
 					int charges = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges;
 					sprintf(tempstr, ngettext("%i Charge", "%i Charges", charges), charges);
-					AddPanelString(tempstr, true);
+					AddPanelString(tempstr);
 				} break;
 				case RSPLTYPE_INVALID:
 					break;
@@ -440,7 +439,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 						auto hotkeyName = keymapper.keyNameForAction(quickSpellActionIndexes[t]);
 						PrintSBookHotkey(out, x, y, hotkeyName);
 						sprintf(tempstr, _("Spell Hotkey %s"), hotkeyName.c_str());
-						AddPanelString(tempstr, true);
+						AddPanelString(tempstr);
 					}
 				}
 			}
@@ -514,10 +513,9 @@ void ToggleSpell(int slot)
 	}
 }
 
-void AddPanelString(const char *str, bool just)
+void AddPanelString(const char *str)
 {
 	strcpy(panelstr[pnumlines], str);
-	pstrjust[pnumlines] = just;
 
 	if (pnumlines < 4)
 		pnumlines++;
@@ -918,7 +916,7 @@ void CheckPanelInfo()
 			}
 			if (PanBtnHotKey[i] != nullptr) {
 				sprintf(tempstr, _("Hotkey: %s"), _(PanBtnHotKey[i]));
-				AddPanelString(tempstr, true);
+				AddPanelString(tempstr);
 			}
 			infoclr = COL_WHITE;
 			panelflag = true;
@@ -931,17 +929,17 @@ void CheckPanelInfo()
 		panelflag = true;
 		pinfoflag = true;
 		strcpy(tempstr, _("Hotkey: 's'"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		spell_id v = plr[myplr]._pRSpell;
 		if (v != SPL_INVALID) {
 			switch (plr[myplr]._pRSplType) {
 			case RSPLTYPE_SKILL:
 				sprintf(tempstr, _("%s Skill"), _(spelldata[v].sSkillText));
-				AddPanelString(tempstr, true);
+				AddPanelString(tempstr);
 				break;
 			case RSPLTYPE_SPELL: {
 				sprintf(tempstr, _("%s Spell"), _(spelldata[v].sNameText));
-				AddPanelString(tempstr, true);
+				AddPanelString(tempstr);
 				int c = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[v];
 				if (c < 0)
 					c = 0;
@@ -949,11 +947,11 @@ void CheckPanelInfo()
 					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				else
 					sprintf(tempstr, _("Spell Level %i"), c);
-				AddPanelString(tempstr, true);
+				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_SCROLL: {
 				sprintf(tempstr, _("Scroll of %s"), _(spelldata[v].sNameText));
-				AddPanelString(tempstr, true);
+				AddPanelString(tempstr);
 				int s = 0;
 				for (int i = 0; i < plr[myplr]._pNumInv; i++) {
 					if (!plr[myplr].InvList[i].isEmpty()
@@ -970,13 +968,13 @@ void CheckPanelInfo()
 					}
 				}
 				sprintf(tempstr, ngettext("%i Scroll", "%i Scrolls", s), s);
-				AddPanelString(tempstr, true);
+				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_CHARGES:
 				sprintf(tempstr, _("Staff of %s"), _(spelldata[v].sNameText));
-				AddPanelString(tempstr, true);
+				AddPanelString(tempstr);
 				sprintf(tempstr, ngettext("%i Charge", "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
-				AddPanelString(tempstr, true);
+				AddPanelString(tempstr);
 				break;
 			case RSPLTYPE_INVALID:
 				break;
@@ -1087,64 +1085,24 @@ void FreeControlPan()
 	pGBoxBuff = std::nullopt;
 }
 
-bool control_WriteStringToBuffer(BYTE *str)
-{
-	int k = 0;
-	while (*str != '\0') {
-		BYTE ichar = gbFontTransTbl[*str];
-		str++;
-		k += fontkern[GameFontSmall][fontframe[GameFontSmall][ichar]];
-		if (k >= 125)
-			return false;
-	}
-
-	return true;
-}
-
-static void CPrintString(const CelOutputBuffer &out, int y, const char *str, bool center, int lines)
-{
-	int lineOffset = 0;
-	int sx = 177 + PANEL_X;
-	int sy = LineOffsets[lines][y] + PANEL_Y;
-	if (center) {
-		int strWidth = 0;
-		const char *tmp = str;
-		while (*tmp != 0) {
-			BYTE c = gbFontTransTbl[(BYTE)*tmp++];
-			strWidth += fontkern[GameFontSmall][fontframe[GameFontSmall][c]] + 2;
-		}
-		if (strWidth < 288)
-			lineOffset = (288 - strWidth) / 2;
-		sx += lineOffset;
-	}
-	while (*str != '\0') {
-		BYTE c = gbFontTransTbl[(BYTE)*str++];
-		c = fontframe[GameFontSmall][c];
-		lineOffset += fontkern[GameFontSmall][c] + 2;
-		if (c != 0) {
-			if (lineOffset < 288) {
-				PrintChar(out, sx, sy, c, infoclr);
-			}
-		}
-		sx += fontkern[GameFontSmall][c] + 2;
-	}
-}
-
 static void PrintInfo(const CelOutputBuffer &out)
 {
 	if (talkflag)
 		return;
 
+	SDL_Rect line { PANEL_X + 177, PANEL_Y + LineOffsets[pnumlines][0], 288, 0 };
+
 	int yo = 0;
 	int lo = 1;
 	if (infostr[0] != '\0') {
-		CPrintString(out, 0, infostr, true, pnumlines);
+		DrawString(out, infostr, line, UIS_SILVER | UIS_CENTER);
 		yo = 1;
 		lo = 0;
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
-		CPrintString(out, i + yo, panelstr[i], pstrjust[i], pnumlines - lo);
+		line.y = PANEL_Y + LineOffsets[pnumlines - lo][i + yo];
+		DrawString(out, panelstr[i], line, UIS_SILVER | UIS_CENTER);
 	}
 }
 
@@ -1164,7 +1122,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 			sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 		} else if (!plr[myplr].HoldItem._iStatFlag) {
 			ClearPanel();
-			AddPanelString(_("Requirements not met"), true);
+			AddPanelString(_("Requirements not met"));
 			pinfoflag = true;
 		} else {
 			if (plr[myplr].HoldItem._iIdentified)
@@ -1203,9 +1161,9 @@ void DrawInfoBox(const CelOutputBuffer &out)
 			strcpy(infostr, plr[pcursplr]._pName);
 			ClearPanel();
 			sprintf(tempstr, _("%s, Level: %i"), _(ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)]), plr[pcursplr]._pLevel);
-			AddPanelString(tempstr, true);
+			AddPanelString(tempstr);
 			sprintf(tempstr, _("Hit Points %i of %i"), plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
-			AddPanelString(tempstr, true);
+			AddPanelString(tempstr);
 		}
 	}
 	if (infostr[0] != '\0' || pnumlines != 0)
