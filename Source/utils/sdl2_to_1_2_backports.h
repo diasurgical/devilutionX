@@ -22,6 +22,11 @@
 
 #define SDL_MAX_UINT32 ((Uint32)0xFFFFFFFFu)
 
+#ifdef __PSP__
+// PSP has the wrong definition on SDL_config.h, so we use ours
+#define SDL_snprintf devilution::snprintf
+#endif
+
 //== Events handling
 
 #define SDL_threadID Uint32
