@@ -148,6 +148,9 @@ void init_archives()
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #endif
+#ifdef __3DS__
+	paths.emplace_back("romfs:/");
+#endif
 
 	paths.emplace_back(""); // PWD
 

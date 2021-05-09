@@ -818,7 +818,9 @@ if(N3DS)
   set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf")
+  set(APP_ROMFS_FILES
+    "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+    "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq")
   file(MAKE_DIRECTORY ${APP_ROMFS})
   file(COPY ${APP_ROMFS_FILES}
      DESTINATION ${APP_ROMFS})
