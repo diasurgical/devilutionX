@@ -26,8 +26,6 @@
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 #include <sys/stat.h>
 #include <unistd.h>
-#else
-#include <cstdio>
 #endif
 
 namespace devilution {
@@ -162,6 +160,25 @@ std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openm
 	return std::make_unique<std::fstream>(pathUtf16.get(), mode);
 #else
 	return std::make_unique<std::fstream>(path, mode);
+#endif
+}
+
+FILE *FOpen(const char *path, const char *mode)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return nullptr;
+	}
+	const auto modeUtf16 = ToWideChar(mode);
+	if (modeUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return nullptr;
+	}
+	return ::_wfopen(&pathUtf16[0], &modeUtf16[0]);
+#else
+	return std::fopen(path, mode);
 #endif
 }
 

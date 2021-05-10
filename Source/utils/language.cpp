@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "options.h"
+#include "utils/file_util.h"
 #include "utils/paths.h"
 #include "utils/utf8.h"
 
@@ -239,9 +240,9 @@ void LanguageInitialize()
 	FILE *fp;
 
 	auto path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".gmo";
-	if ((fp = fopen(path.c_str(), "rb")) == nullptr) {
+	if ((fp = FOpen(path.c_str(), "rb")) == nullptr) {
 		path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".mo";
-		if ((fp = fopen(path.c_str(), "rb")) == nullptr) {
+		if ((fp = FOpen(path.c_str(), "rb")) == nullptr) {
 			perror(path.c_str());
 			return;
 		}
