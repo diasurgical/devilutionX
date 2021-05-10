@@ -131,7 +131,7 @@ void LoadPalette(const char *pszFileName)
 
 	LoadFileInMem(pszFileName, PalData);
 
-	for (int i = 0; i < PalData.size(); i++) {
+	for (unsigned i = 0; i < PalData.size(); i++) {
 		orig_palette[i].r = PalData[i].r;
 		orig_palette[i].g = PalData[i].g;
 		orig_palette[i].b = PalData[i].b;

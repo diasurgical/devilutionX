@@ -214,7 +214,7 @@ void WordWrapGameString(char *text, size_t width, size_t size)
 {
 	const size_t textLength = strlen(text);
 	size_t lineStart = 0;
-	int lineWidth = 0;
+	size_t lineWidth = 0;
 	for (unsigned i = 0; i < textLength; i++) {
 		if (text[i] == '\n') { // Existing line break, scan next line
 			lineStart = i + 1;
