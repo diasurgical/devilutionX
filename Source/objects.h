@@ -23,8 +23,8 @@ struct ObjectStruct {
 	byte *_oAnimData;
 	int _oAnimDelay; // Tick length of each frame in the current animation
 	int _oAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
-	int _oAnimLen;   // Number of frames in current animation
-	int _oAnimFrame; // Current frame of animation.
+	uint32_t _oAnimLen;   // Number of frames in current animation
+	uint32_t _oAnimFrame; // Current frame of animation.
 	int _oAnimWidth;
 	bool _oDelFlag;
 	int8_t _oBreak;
@@ -41,7 +41,7 @@ struct ObjectStruct {
 	int _oVar3;
 	int _oVar4;
 	int _oVar5;
-	int _oVar6;
+	uint32_t _oVar6;
 	_speech_id _oVar7;
 	int _oVar8;
 };
