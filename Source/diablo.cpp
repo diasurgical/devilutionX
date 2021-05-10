@@ -691,10 +691,7 @@ static void diablo_init()
 
 	LanguageInitialize();
 
-// todo (PSP): fix crash here. we probably need a better implementation of 'snprintf' on 'misc_msg.cpp'
-#ifndef __PSP__
 	SetApplicationVersions();
-#endif
 
 	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++) {
 		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
