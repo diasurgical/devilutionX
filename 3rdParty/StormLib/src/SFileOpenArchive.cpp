@@ -232,7 +232,7 @@ bool WINAPI SFileOpenArchive(
     // If not forcing MPQ v 1.0, also use file bitmap
     dwStreamFlags |= (dwFlags & MPQ_OPEN_FORCE_MPQ_V1) ? 0 : STREAM_FLAG_USE_BITMAP;
 
-    //Open the MPQ archive file
+    // Open the MPQ archive file
     pStream = FileStream_OpenFile(szMpqName, dwStreamFlags);
     if(pStream == NULL)
         return false;
