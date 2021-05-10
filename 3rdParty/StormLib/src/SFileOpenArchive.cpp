@@ -201,6 +201,7 @@ LCID WINAPI SFileSetLocale(LCID lcNewLocale)
 //   dwPriority - When SFileOpenFileEx called, this contains the search priority for searched archives
 //   dwFlags    - See MPQ_OPEN_XXX in StormLib.h
 //   phMpq      - Pointer to store open archive handle
+
 bool WINAPI SFileOpenArchive(
     const TCHAR * szMpqName,
     DWORD dwPriority,
@@ -240,9 +241,8 @@ bool WINAPI SFileOpenArchive(
     if(nError == ERROR_SUCCESS)
     {
         FileStream_GetSize(pStream, &FileSize);
-        if(FileSize < MPQ_HEADER_SIZE_V1) {
+        if(FileSize < MPQ_HEADER_SIZE_V1)
             nError = ERROR_BAD_FORMAT;
-        }
     }
 
     // Allocate the MPQhandle
