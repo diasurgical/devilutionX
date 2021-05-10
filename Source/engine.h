@@ -159,11 +159,7 @@ constexpr uint32_t LoadLE32(const T *b)
 {
 	static_assert(sizeof(T) == 1, "invalid argument");
 
-#if BYTE_ORDER == LITTLE_ENDIAN
 	return ((uint32_t)(b)[3] << 24) | ((uint32_t)(b)[2] << 16) | ((uint32_t)(b)[1] << 8) | (uint32_t)(b)[0];
-#else /* BIG ENDIAN */
-	return ((uint32_t)(b)[0] << 24) | ((uint32_t)(b)[1] << 16) | ((uint32_t)(b)[2] << 8) | (uint32_t)(b)[3];
-#endif
 }
 
 template <typename T>
@@ -171,11 +167,7 @@ constexpr uint32_t LoadBE32(const T *b)
 {
 	static_assert(sizeof(T) == 1, "invalid argument");
 
-#if BYTE_ORDER == LITTLE_ENDIAN
 	return ((uint32_t)(b)[0] << 24) | ((uint32_t)(b)[1] << 16) | ((uint32_t)(b)[2] << 8) | (uint32_t)(b)[3];
-#else /* BIG ENDIAN */
-	return ((uint32_t)(b)[3] << 24) | ((uint32_t)(b)[2] << 16) | ((uint32_t)(b)[1] << 8) | (uint32_t)(b)[0];
-#endif
 }
 
 inline byte *CelGetFrame(byte *pCelBuff, int nCel, int *nDataSize)
