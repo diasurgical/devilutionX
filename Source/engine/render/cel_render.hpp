@@ -89,16 +89,6 @@ void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, cons
 void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
 
 /**
- * @brief Blit CEL sprite to the given buffer, checks for drawing outside the buffer.
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- */
-void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth);
-
-/**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
  * @param out Target buffer
  * @param sx Target buffer coordinate
@@ -107,27 +97,6 @@ void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEB
  * @param frame CEL frame number
  */
 void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Blit CEL sprite, and apply lighting, to the given buffer, checks for drawing outside the buffer
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- * @param tbl Palette translation table
- */
-void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl);
-
-/**
- * @brief Same as CelBlitLightSafeTo but with stippled transparancy applied
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- */
-void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth);
 
 /**
  * @brief Same as CelDrawLightRedTo but checks for drawing outside the buffer

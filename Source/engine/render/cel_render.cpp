@@ -291,7 +291,7 @@ const byte *RenderCelOutlineRowClipped( // NOLINT(readability-function-cognitive
 			}
 			if (lastPixel) {
 				RenderOutlineForPixel<SkipColorIndexZero, North, West, South, /*East=*/false>(
-						dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
+				    dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
 			}
 			if (oobPixel) {
 				RenderOutlineForPixel<SkipColorIndexZero, /*North=*/false, West, /*South=*/false, /*East=*/false>(
@@ -352,7 +352,7 @@ const byte *RenderCelOutlineRowClipped( // NOLINT(readability-function-cognitive
 				return src;
 			if (!handleEdgePixels(v)) {
 				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
-						dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), v, color);
+				    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), v, color);
 				src += v, dst += v;
 			}
 		} else {
@@ -543,6 +543,89 @@ void RenderCelOutline(const CelOutputBuffer &out, Point position, const byte *sr
 	}
 }
 
+/**
+ * @brief Blit CEL sprite to the given buffer, checks for drawing outside the buffer.
+ * @param out Target buffer
+ * @param sx Target buffer coordinate
+ * @param sy Target buffer coordinate
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ */
+void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
+{
+	assert(pRLEBytes != nullptr);
+	RenderCel(out, { sx, sy }, pRLEBytes, nDataSize, nWidth, RenderLineMemcpy, NullLineEndFn);
+}
+
+/**
+ * @brief Same as CelBlitLightSafeTo but with stippled transparency applied
+ * @param out Target buffer
+ * @param sx Target buffer coordinate
+ * @param sy Target buffer coordinate
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ */
+void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
+{
+	assert(pRLEBytes != nullptr);
+	const std::uint8_t *tbl = &pLightTbl[light_table_index * 256];
+	const Point from { sx, sy };
+	bool shift = (reinterpret_cast<uintptr_t>(&out[from]) % 2 == 1);
+	const bool pitchIsEven = (out.pitch() % 2 == 0);
+	RenderCel(
+	    out, from, pRLEBytes, nDataSize, nWidth,
+	    [tbl, &shift](std::uint8_t *dst, const std::uint8_t *src, std::size_t width) {
+		    if (reinterpret_cast<uintptr_t>(dst) % 2 == (shift ? 1 : 0)) {
+			    ++dst, ++src, --width;
+		    }
+		    for (const auto *dstEnd = dst + width; dst < dstEnd; dst += 2, src += 2) {
+			    *dst = tbl[*src];
+		    }
+	    },
+	    [pitchIsEven, &shift]() { if (pitchIsEven) shift = !shift; });
+}
+
+/**
+ * @brief Same as CelBlitLightSafe, with blended transparency applied
+ * @param out The output buffer
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite
+ * @param tbl Palette translation table
+ */
+void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
+{
+	assert(pRLEBytes != nullptr);
+	if (tbl == nullptr)
+		tbl = &pLightTbl[light_table_index * 256];
+
+	RenderCel(
+	    out, { sx, sy }, pRLEBytes, nDataSize, nWidth, [tbl](std::uint8_t *dst, const uint8_t *src, std::size_t w) {
+		    while (w-- > 0) {
+			    *dst = paletteTransparencyLookup[*dst][tbl[*src++]];
+			    ++dst;
+		    }
+	    },
+	    NullLineEndFn);
+}
+
+/**
+ * @brief Blit CEL sprite, and apply lighting, to the given buffer, checks for drawing outside the buffer
+ * @param out Target buffer
+ * @param sx Target buffer coordinate
+ * @param sy Target buffer coordinate
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ * @param tbl Palette translation table
+ */
+void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
+{
+	assert(pRLEBytes != nullptr);
+	if (tbl == nullptr)
+		tbl = &pLightTbl[light_table_index * 256];
+	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, nWidth, tbl);
+}
+
 } // namespace
 
 void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
@@ -590,69 +673,11 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSpri
 	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), tbl);
 }
 
-void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
-{
-	assert(pRLEBytes != nullptr);
-	RenderCel(out, { sx, sy }, pRLEBytes, nDataSize, nWidth, RenderLineMemcpy, NullLineEndFn);
-}
-
 void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
-}
-
-void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
-{
-	assert(pRLEBytes != nullptr);
-	if (tbl == nullptr)
-		tbl = &pLightTbl[light_table_index * 256];
-	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, nWidth, tbl);
-}
-
-void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
-{
-	assert(pRLEBytes != nullptr);
-	const std::uint8_t *tbl = &pLightTbl[light_table_index * 256];
-	const Point from { sx, sy };
-	bool shift = (reinterpret_cast<uintptr_t>(&out[from]) % 2 == 1);
-	const bool pitchIsEven = (out.pitch() % 2 == 0);
-	RenderCel(
-	    out, from, pRLEBytes, nDataSize, nWidth,
-	    [tbl, &shift](std::uint8_t *dst, const std::uint8_t *src, std::size_t width) {
-		    if (reinterpret_cast<uintptr_t>(dst) % 2 == (shift ? 1 : 0)) {
-			    ++dst, ++src, --width;
-		    }
-		    for (const auto *dstEnd = dst + width; dst < dstEnd; dst += 2, src += 2) {
-			    *dst = tbl[*src];
-		    }
-	    },
-	    [pitchIsEven, &shift]() { if (pitchIsEven) shift = !shift; });
-}
-
-/**
- * @brief Same as CelBlitLightSafe, with blended transparancy applied
- * @param out The output buffer
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- * @param nWidth Width of sprite
- * @param tbl Palette translation table
- */
-static void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
-{
-	assert(pRLEBytes != nullptr);
-	if (tbl == nullptr)
-		tbl = &pLightTbl[light_table_index * 256];
-
-	RenderCel(
-	    out, { sx, sy }, pRLEBytes, nDataSize, nWidth, [tbl](std::uint8_t *dst, const uint8_t *src, std::size_t w) {
-		    while (w-- > 0) {
-			    *dst = paletteTransparencyLookup[*dst][tbl[*src++]];
-			    ++dst;
-		    }
-	    },
-	    NullLineEndFn);
 }
 
 void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
