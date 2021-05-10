@@ -22,7 +22,7 @@ void ReadOnlyTest()
 		DirErrorDlg(paths::PrefPath().c_str());
 	}
 
-	remove(path.c_str());
+	RemoveFile(path.c_str());
 }
 
 } // namespace devilution
