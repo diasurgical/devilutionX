@@ -22,7 +22,6 @@
 
 #define SDL_MAX_UINT32 ((Uint32)0xFFFFFFFFu)
 
-
 //== Events handling
 
 #define SDL_threadID Uint32

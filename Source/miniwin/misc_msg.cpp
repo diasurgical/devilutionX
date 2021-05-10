@@ -723,5 +723,4 @@ bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam)
 	return true;
 }
 
-
 } // namespace devilution

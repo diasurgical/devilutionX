@@ -2207,11 +2207,11 @@ void initKeymapActions()
 	    },
 	});
 	for (int i = 0; i < 8; ++i) {
-        char buffer[20];
-        snprintf(buffer, 20, "BeltItem%d", i + 1);
+		char buffer[20];
+		snprintf(buffer, 20, "BeltItem%d", i + 1);
 
-        keymapper.addAction({
-            buffer,
+		keymapper.addAction({
+			buffer,
 		    '1' + i,
 		    [i] {
 			    if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {

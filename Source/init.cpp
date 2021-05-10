@@ -177,7 +177,6 @@ void init_archives()
 		if (spawn_mpq != nullptr)
 			gbIsSpawn = true;
 	}
-
 	HANDLE fh = nullptr;
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
