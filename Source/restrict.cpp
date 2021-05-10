@@ -17,11 +17,12 @@ namespace devilution {
 void ReadOnlyTest()
 {
 	const std::string path = paths::PrefPath() + "Diablo1ReadOnlyTest.foo";
-	auto fileStream = CreateFileStream(path.c_str(), std::ios::in | std::ios::out);
-	if (fileStream->fail()) {
+	FILE *f = fopen(path.c_str(), "wt");
+	if (f == nullptr) {
 		DirErrorDlg(paths::PrefPath().c_str());
 	}
 
+	fclose(f);
 	RemoveFile(path.c_str());
 }
 
