@@ -4,7 +4,7 @@
 #include <fstream>
 #include <memory>
 
-#include "miniwin/miniwin.h"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -13,6 +13,9 @@ bool GetFileSize(const char *path, std::uintmax_t *size);
 bool ResizeFile(const char *path, std::uintmax_t size);
 void RemoveFile(const char *lpFileName);
 std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode);
-bool SFileOpenArchiveDiablo(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
+
+#if defined(_WIN64) || defined(_WIN32)
+std::unique_ptr<wchar_t[]> ToWideChar(string_view path);
+#endif
 
 } // namespace devilution

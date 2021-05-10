@@ -324,6 +324,10 @@ bool SFileEnableDirectAccess(bool enable);
 }
 
 // Additions to Storm API:
+#if defined(_WIN64) || defined(_WIN32)
+// On Windows, handles wchar conversion and calls the wchar version of SFileOpenArchive.
+bool SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
+#endif
 
 // Locks ReadFile and CloseFile under a mutex.
 // See https://github.com/ladislav-zezula/StormLib/issues/175

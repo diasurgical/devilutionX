@@ -12,11 +12,10 @@
 #include "dx.h"
 #include "pfile.h"
 #include "storm/storm.h"
-#include "utils/file_util.h"
+#include "utils/language.h"
+#include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
-#include "utils/log.hpp"
-#include "utils/language.h"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita
@@ -60,7 +59,7 @@ HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_n
 	std::string mpq_abspath;
 	for (const auto &path : paths) {
 		mpq_abspath = path + mpq_name;
-		if (SFileOpenArchiveDiablo(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
+		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
 			LogVerbose("  Found: {} in {}", mpq_name, path);
 			SFileSetBasePath(path.c_str());
 			return archive;
