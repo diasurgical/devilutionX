@@ -280,7 +280,10 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 
 	inDialog = true;
 	Init(text, caption, error, !renderBehind.empty());
-	DialogLoop(vecOkDialog, renderBehind);
+	if (font != nullptr)
+		DialogLoop(vecOkDialog, renderBehind);
+	else
+		UiOkDialog(text, caption, error, renderBehind);
 	Deinit();
 	inDialog = false;
 }
