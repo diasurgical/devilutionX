@@ -1441,6 +1441,7 @@ static bool FlatStream_CreateMirror(TBlockStream * pStream)
     // which would take long time on larger files.
     return true;
 }
+
 static TFileStream * FlatStream_Open(const TCHAR * szFileName, DWORD dwStreamFlags)
 {
     TBlockStream * pStream;
