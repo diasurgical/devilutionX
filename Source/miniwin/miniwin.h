@@ -14,6 +14,14 @@
 #include <cstring>
 #include <ctime>
 
+#ifdef __PSP__
+#define snprintf(buffer, size, format, ...) \
+     sprintf(buffer, format, __VA_ARGS__)
+#define vsnprintf(buffer, size, format, ...) \
+     vsprintf(buffer, format, __VA_ARGS__)
+#define strcasecmp strcmp
+#endif
+
 namespace devilution {
 
 #ifndef MAX_PATH
@@ -63,12 +71,6 @@ bool FetchMessage(tagMSG *lpMsg);
 bool TranslateMessage(const tagMSG *lpMsg);
 void PushMessage(const tagMSG *lpMsg);
 bool PostMessage(uint32_t Msg, int32_t wParam, int32_t lParam);
-
-#ifdef __PSP__
-int snprintf(char *s, size_t n, const char *format, ...);
-int vsnprintf(char *s, size_t n, const char *format, va_list arg);
-#define strcasecmp strcmp
-#endif
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp

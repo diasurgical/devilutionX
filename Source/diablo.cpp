@@ -129,8 +129,12 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 /* rdata */
 
 bool gbForceWindowed = false;
-bool gbShowIntro = true;
 bool leveldebug = false;
+#ifdef __PSP__
+bool gbShowIntro = false;
+#else
+bool gbShowIntro = true;
+#endif
 #ifdef _DEBUG
 bool monstdebug = false;
 _monster_id DebugMonsters[10];

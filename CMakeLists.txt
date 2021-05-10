@@ -718,7 +718,7 @@ if(PSP)
     -lpspdebug -lpspgu -lpspctrl -lpspge -lpspirkeyb -lpsppower -lpsppower_driver -lpspdisplay -lpsphprm -lpspsdk -lpsprtc
     -lpspaudio -lpsputility -lpspnet_inet -lc -lpspuser)
 
-  target_compile_definitions(${BIN_TARGET} PRIVATE -Dmain=SDL_main)
+  target_compile_definitions(${BIN_TARGET} PRIVATE -Dmain=SDL_main -DPSP_LARGE_MEMORY=1)
 endif()
 
 target_compile_definitions(${BIN_TARGET} PRIVATE ${def_list})
@@ -858,6 +858,7 @@ endif()
 if(PSP)
   set(EXTRA_TARGETS   "EBOOT.PBP")
   set(PSP_EBOOT_TITLE "DevilutionX")
+  set(PSP_LARGE_MEMORY 1)
   # may want to add these later
   # set_target_properties(${BIN_TARGET} PROPERTIES CXX_STANDARD 17 CXX_EXTENSIONS OFF)
   # set_target_properties(${BIN_TARGET} PROPERTIES COMPILE_FLAGS -fno-rtti -G0 -O2)
