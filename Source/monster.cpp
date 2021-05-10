@@ -855,7 +855,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", Uniq->mTrnName);
-	LoadFileInMem("PlrGFX\\Infra.TRN", &pLightTbl[256 * (uniquetrans + 19)], 256);
+	LoadFileInMem(filestr, &pLightTbl[256 * (uniquetrans + 19)], 256);
 
 	Monst->_uniqtrans = uniquetrans++;
 
