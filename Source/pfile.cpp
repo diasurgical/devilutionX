@@ -15,8 +15,8 @@
 #include "pack.h"
 #include "storm/storm.h"
 #include "utils/file_util.h"
-#include "utils/paths.h"
 #include "utils/language.h"
+#include "utils/paths.h"
 
 namespace devilution {
 
@@ -195,7 +195,7 @@ static HANDLE pfile_open_save_archive(DWORD save_num)
 {
 	HANDLE archive;
 
-	if (SFileOpenArchiveDiablo(GetSavePath(save_num).c_str(), 0, 0, &archive))
+	if (SFileOpenArchive(GetSavePath(save_num).c_str(), 0, 0, &archive))
 		return archive;
 	return nullptr;
 }

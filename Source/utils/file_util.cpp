@@ -1,12 +1,11 @@
 #include "utils/file_util.h"
-#include "utils/log.hpp"
 
 #include <algorithm>
 #include <string>
 
 #include <SDL.h>
 
-#include "utils/stdcompat/string_view.hpp"
+#include "utils/log.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -31,11 +30,7 @@
 #include <cstdio>
 #endif
 
-#include "storm/storm.h"
-
 namespace devilution {
-
-namespace {
 
 #if defined(_WIN64) || defined(_WIN32)
 std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
@@ -51,8 +46,6 @@ std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 	return utf16;
 }
 #endif
-
-} // namespace
 
 bool FileExists(const char *path)
 {
@@ -169,20 +162,6 @@ std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openm
 	return std::make_unique<std::fstream>(pathUtf16.get(), mode);
 #else
 	return std::make_unique<std::fstream>(path, mode);
-#endif
-}
-
-bool SFileOpenArchiveDiablo(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq)
-{
-#if defined(_WIN64) || defined(_WIN32)
-	const auto szMpqNameUtf16 = ToWideChar(szMpqName);
-	if (szMpqNameUtf16 == nullptr) {
-		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
-		return false;
-	}
-	return SFileOpenArchive(szMpqNameUtf16.get(), dwPriority, dwFlags, phMpq);
-#else
-	return SFileOpenArchive(szMpqName, dwPriority, dwFlags, phMpq);
 #endif
 }
 
