@@ -84,9 +84,8 @@ void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, cons
  * @param sy Target buffer coordinate
  * @param cel CEL sprite
  * @param frame CEL frame number
- * @param light Light shade to use
  */
-void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
+void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
@@ -105,9 +104,8 @@ void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelS
  * @param sy Target buffer coordinate
  * @param cel CEL sprite
  * @param frame CEL frame number
- * @param light Light shade to use
  */
-void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
+void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
  * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the target buffer at the given coordianates
