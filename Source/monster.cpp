@@ -2004,8 +2004,7 @@ bool M_DoWalk(int i, int variant)
 			if (monster[i].actionFrame == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
 			monster[i].actionFrame++;
-			monster[i].position.offset2.x += monster[i].position.velocity.x;
-			monster[i].position.offset2.y += monster[i].position.velocity.y;
+			monster[i].position.offset2 += monster[i].position.velocity;
 			monster[i].position.offset.x = monster[i].position.offset2.x >> 4;
 			monster[i].position.offset.y = monster[i].position.offset2.y >> 4;
 		}

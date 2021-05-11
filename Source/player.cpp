@@ -1379,12 +1379,10 @@ void PM_ChangeOffset(int pnum)
 	int py = player.position.offset2.y / 256;
 >>>>>>> ♻️ Player by reference
 
-	player.position.offset2.x += player.position.velocity.x;
-	player.position.offset2.y += player.position.velocity.y;
+	player.position.offset2 += player.position.velocity;
 
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
-		player.position.offset2.x += player.position.velocity.x;
-		player.position.offset2.y += player.position.velocity.y;
+		player.position.offset2 += player.position.velocity;
 	}
 
 	player.position.offset = { player.position.offset2.x >> 8, player.position.offset2.y >> 8 };
@@ -2343,8 +2341,7 @@ bool PM_DoWalk(int pnum, int variant)
 		switch (variant) {
 		case PM_WALK:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			player.position.tile.x += player.position.temp.x;
-			player.position.tile.y += player.position.temp.y;
+			player.position.tile += player.position.temp;
 			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 			break;
 		case PM_WALK2:
