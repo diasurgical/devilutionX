@@ -180,22 +180,29 @@ inline const byte *CelGetFrame(const byte *pCelBuff, int nCel, int *nDataSize)
 }
 
 struct FrameHeader {
-	uint16_t row0;
-	uint16_t row32;
-	uint16_t row64;
-	uint16_t row96;
-	uint16_t row128;
+	/** Offsets in to the RLE data for each 32th pixel row start */
+	uint16_t offsets[5];
 };
 
-inline const byte *CelGetFrameClipped(const byte *pCelBuff, int nCel, int *nDataSize)
+inline const byte *CelGetFrameClipped(const byte *pCelBuff, int nCel, int *nDataSize, int clipTop32 = 0, int clipBottom32 = 0)
 {
 	const byte *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
 
 	FrameHeader frameHeader;
 	memcpy(&frameHeader, pRLEBytes, sizeof(FrameHeader));
 
-	uint16_t nDataStart = SDL_SwapLE16(frameHeader.row0);
-	*nDataSize -= nDataStart;
+	uint16_t nDataStart = SDL_SwapLE16(frameHeader.offsets[clipBottom32]);
+	if (nDataStart == 0) {
+		*nDataSize = 0;
+
+		return &pRLEBytes[10];
+	}
+
+	int offset = (clipTop32 != 0) ? SDL_SwapLE16(frameHeader.offsets[4 - clipTop32]) : 0;
+
+	offset = (offset != 0) ? offset : *nDataSize;
+
+	*nDataSize = offset - nDataStart;
 
 	return &pRLEBytes[nDataStart];
 }

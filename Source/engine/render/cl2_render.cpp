@@ -9,6 +9,7 @@
 
 #include "engine/render/common_impl.h"
 #include "scrollrt.h"
+#include "utils/display.h"
 
 namespace devilution {
 namespace {
@@ -754,42 +755,70 @@ void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, i
 {
 	assert(frame > 0);
 
-	int nDataSize;
-	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
 
-	Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+	int nDataSize;
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
+
+	Cl2BlitSafe(out, sx, sy, src, nDataSize, cel.Width(frame));
 }
 
 void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame)
 {
 	assert(frame > 0);
 
-	int nDataSize;
-	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
 
-	RenderCl2Outline(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), col);
+	int nDataSize;
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
+
+	RenderCl2Outline(out, { sx, sy }, src, nDataSize, cel.Width(frame), col);
 }
 
 void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light)
 {
 	assert(frame > 0);
 
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
+
 	int nDataSize;
-	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(light));
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
+	Cl2BlitLightSafe(out, sx, sy, src, nDataSize, cel.Width(frame), GetLightTable(light));
 }
 
 void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	assert(frame > 0);
 
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
+
 	int nDataSize;
-	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
 
 	if (light_table_index != 0)
-		Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), &pLightTbl[light_table_index * 256]);
+		Cl2BlitLightSafe(out, sx, sy, src, nDataSize, cel.Width(frame), &pLightTbl[light_table_index * 256]);
 	else
-		Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+		Cl2BlitSafe(out, sx, sy, src, nDataSize, cel.Width(frame));
 }
 
 } // namespace devilution

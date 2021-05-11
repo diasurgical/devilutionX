@@ -637,10 +637,17 @@ void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel,
 
 void CelClippedDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
-	int nDataSize;
-	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
 
-	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+	int nDataSize;
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
+
+	CelBlitSafeTo(out, sx, sy, src, nDataSize, cel.Width(frame));
 }
 
 void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, uint8_t *tbl)
@@ -656,51 +663,86 @@ void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite 
 
 void CelClippedDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
+
 	int nDataSize;
-	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
 
 	if (light_table_index != 0)
-		CelBlitLightSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
+		CelBlitLightSafeTo(out, sx, sy, src, nDataSize, cel.Width(frame), nullptr);
 	else
-		CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+		CelBlitSafeTo(out, sx, sy, src, nDataSize, cel.Width(frame));
 }
 
 void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light)
 {
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
+
 	int nDataSize;
-	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
 	const std::uint8_t *tbl = GetLightTable(light);
-	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), tbl);
+	RenderCelWithLightTable(out, { sx, sy }, src, nDataSize, cel.Width(frame), tbl);
 }
 
 void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
+
 	int nDataSize;
-	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
+	CelBlitSafeTo(out, sx, sy, src, nDataSize, cel.Width(frame));
 }
 
 void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
+
 	int nDataSize;
-	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
 
 	if (cel_transparency_active) {
 		if (sgOptions.Graphics.bBlendedTransparancy)
-			CelBlitLightBlendedSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
+			CelBlitLightBlendedSafeTo(out, sx, sy, src, nDataSize, cel.Width(frame), nullptr);
 		else
-			CelBlitLightTransSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+			CelBlitLightTransSafeTo(out, sx, sy, src, nDataSize, cel.Width(frame));
 	} else if (light_table_index != 0)
-		CelBlitLightSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
+		CelBlitLightSafeTo(out, sx, sy, src, nDataSize, cel.Width(frame), nullptr);
 	else
-		CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+		CelBlitSafeTo(out, sx, sy, src, nDataSize, cel.Width(frame));
 }
 
 void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light)
 {
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
+
 	int nDataSize;
-	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(light));
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
+	RenderCelWithLightTable(out, { sx, sy }, src, nDataSize, cel.Width(frame), GetLightTable(light));
 }
 
 void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame)
@@ -712,8 +754,16 @@ void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, const CelSprite &
 
 void CelBlitOutlineTo(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame, bool skipColorIndexZero)
 {
+	const int upperEdge = sy - 128;
+	const int clipTop32 = (upperEdge < 0) ? (std::min(-upperEdge, 128) / 32) : 0;
+	const int clipBottom32 = (sy > gnViewportHeight) ? (std::min(sy - gnViewportHeight, 128) / 32) : 0;
+	if (clipBottom32 != 0) {
+		sy -= clipBottom32 * 32;
+	}
+
 	int nDataSize;
-	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize, clipTop32, clipBottom32);
+
 	if (skipColorIndexZero)
 		RenderCelOutline<true>(out, { sx, sy }, src, nDataSize, cel.Width(frame), col);
 	else
