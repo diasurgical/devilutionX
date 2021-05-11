@@ -3316,8 +3316,7 @@ void MI_LArrow(int i)
 		missiledata[missile[i]._mitype].mResist = rst;
 	} else {
 		missile[i]._midist++;
-		missile[i].position.traveled.x += missile[i].position.velocity.x;
-		missile[i].position.traveled.y += missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
 
 		if (p != -1) {
@@ -3370,8 +3369,7 @@ void MI_Arrow(int i)
 
 	missile[i]._mirange--;
 	missile[i]._midist++;
-	missile[i].position.traveled.x += missile[i].position.velocity.x;
-	missile[i].position.traveled.y += missile[i].position.velocity.y;
+	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 	p = missile[i]._misource;
 	if (p != -1) {
@@ -3402,8 +3400,7 @@ void MI_Firebolt(int i)
 	if (missile[i]._mitype != MIS_BONESPIRIT || missile[i]._mimfnum != 8) {
 		omx = missile[i].position.traveled.x;
 		omy = missile[i].position.traveled.y;
-		missile[i].position.traveled.x += missile[i].position.velocity.x;
-		missile[i].position.traveled.y += missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
 		p = missile[i]._misource;
 		if (p != -1) {
@@ -3495,8 +3492,7 @@ void MI_Lightball(int i)
 	tx = missile[i]._miVar1;
 	ty = missile[i]._miVar2;
 	missile[i]._mirange--;
-	missile[i].position.traveled.x += missile[i].position.velocity.x;
-	missile[i].position.traveled.y += missile[i].position.velocity.y;
+	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 	j = missile[i]._mirange;
 	CheckMissileCol(i, missile[i]._midam, missile[i]._midam, false, missile[i].position.tile.x, missile[i].position.tile.y, false);
@@ -3520,8 +3516,7 @@ void MI_Lightball(int i)
 void MI_Krull(int i)
 {
 	missile[i]._mirange--;
-	missile[i].position.traveled.x += missile[i].position.velocity.x;
-	missile[i].position.traveled.y += missile[i].position.velocity.y;
+	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 	CheckMissileCol(i, missile[i]._midam, missile[i]._midam, false, missile[i].position.tile.x, missile[i].position.tile.y, false);
 	if (missile[i]._mirange == 0)
@@ -3687,8 +3682,7 @@ void MI_HorkSpawn(int i)
 		}
 	} else {
 		missile[i]._midist++;
-		missile[i].position.traveled.x += missile[i].position.velocity.x;
-		missile[i].position.traveled.y += missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
 	}
 	PutMissile(i);
@@ -3783,8 +3777,7 @@ void MI_LightningArrow(int i)
 	int pn, mx, my;
 
 	missile[i]._mirange--;
-	missile[i].position.traveled.x += missile[i].position.velocity.x;
-	missile[i].position.traveled.y += missile[i].position.velocity.y;
+	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 
 	mx = missile[i].position.tile.x;
@@ -4114,8 +4107,7 @@ void MI_Lightctrl(int i)
 		dam = GenerateRnd(currlevel) + 2 * currlevel;
 	}
 
-	missile[i].position.traveled.x += missile[i].position.velocity.x;
-	missile[i].position.traveled.y += missile[i].position.velocity.y;
+	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 
 	mx = missile[i].position.tile.x;
@@ -4354,8 +4346,7 @@ void MI_Firemove(int i)
 		SetMissDir(i, 1);
 		missile[i]._miAnimFrame = GenerateRnd(11) + 1;
 	}
-	missile[i].position.traveled.x += missile[i].position.velocity.x;
-	missile[i].position.traveled.y += missile[i].position.velocity.y;
+	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 	j = missile[i]._mirange;
 	CheckMissileCol(i, missile[i]._midam, missile[i]._midam, false, missile[i].position.tile.x, missile[i].position.tile.y, false);
@@ -4659,8 +4650,7 @@ void MI_Rhino(int i)
 		missile[i].position.traveled.x -= missile[i].position.velocity.x;
 		missile[i].position.traveled.y -= missile[i].position.velocity.y;
 	} else {
-		missile[i].position.traveled.x += missile[i].position.velocity.x;
-		missile[i].position.traveled.y += missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity;
 	}
 	GetMissilePos(i);
 	omx = missile[i].position.tile.x;
@@ -4687,8 +4677,7 @@ void MI_Fireman(int i)
 	GetMissilePos(i);
 	ax = missile[i].position.tile.x;
 	ay = missile[i].position.tile.y;
-	missile[i].position.traveled.x += missile[i].position.velocity.x;
-	missile[i].position.traveled.y += missile[i].position.velocity.y;
+	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 	src = missile[i]._misource;
 	bx = missile[i].position.tile.x;
@@ -4939,8 +4928,7 @@ void MI_Flamec(int i)
 
 	missile[i]._mirange--;
 	src = missile[i]._misource;
-	missile[i].position.traveled.x += missile[i].position.velocity.x;
-	missile[i].position.traveled.y += missile[i].position.velocity.y;
+	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 	if (missile[i].position.tile.x != missile[i]._miVar1 || missile[i].position.tile.y != missile[i]._miVar2) {
 		id = dPiece[missile[i].position.tile.x][missile[i].position.tile.y];
@@ -4982,8 +4970,7 @@ void MI_Cbolt(int i)
 		} else {
 			missile[i]._miVar3--;
 		}
-		missile[i].position.traveled.x += missile[i].position.velocity.x;
-		missile[i].position.traveled.y += missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
 		CheckMissileCol(i, missile[i]._midam, missile[i]._midam, false, missile[i].position.tile.x, missile[i].position.tile.y, false);
 		if (missile[i]._miHitFlag) {
@@ -5009,8 +4996,7 @@ void MI_Hbolt(int i)
 
 	missile[i]._mirange--;
 	if (missile[i]._miAnimType != MFILE_HOLYEXPL) {
-		missile[i].position.traveled.x += missile[i].position.velocity.x;
-		missile[i].position.traveled.y += missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
 		dam = missile[i]._midam;
 		if (missile[i].position.tile != missile[i].position.start) {
@@ -5076,8 +5062,7 @@ void MI_Element(int i)
 			AddUnLight(missile[i]._mlid);
 		}
 	} else {
-		missile[i].position.traveled.x += missile[i].position.velocity.x;
-		missile[i].position.traveled.y += missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
 		cx = missile[i].position.tile.x;
 		cy = missile[i].position.tile.y;
@@ -5128,8 +5113,7 @@ void MI_Bonespirit(int i)
 		}
 		PutMissile(i);
 	} else {
-		missile[i].position.traveled.x += missile[i].position.velocity.x;
-		missile[i].position.traveled.y += missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
 		cx = missile[i].position.tile.x;
 		cy = missile[i].position.tile.y;
