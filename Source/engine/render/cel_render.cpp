@@ -533,7 +533,7 @@ void RenderCelOutlineClippedXY(const CelOutputBuffer &out, Point position, const
 }
 
 template <bool SkipColorIndexZero>
-void RenderCelOutline(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
+void RenderCelOutline(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize,
     std::size_t srcWidth, std::uint8_t color)
 {
 	if (position.x > 0 && position.x + static_cast<int>(srcWidth) < static_cast<int>(out.w())) {
