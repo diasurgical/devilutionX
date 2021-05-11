@@ -498,7 +498,7 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 	}
 
 	uint32_t nCel = object[bv]._oAnimFrame;
-	auto frames = SDL_SwapLE32(reinterpret_cast<const uint32_t *>(pCelBuff)[0]);
+	uint32_t frames = LoadLE32(pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, object[bv]._otype);
 		return;
