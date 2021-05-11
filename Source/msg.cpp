@@ -1378,7 +1378,7 @@ static DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1) {
-		auto spell = static_cast<spell_id>(p->wParam1);
+		auto spell = endian_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pSBkSplType;
@@ -1644,13 +1644,13 @@ static DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLocParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
+		auto spell = endian_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(&plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLWALL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
+			plr[pnum].destParam3 = endian_cast<direction>(p->wParam2);
 			plr[pnum].destParam4 = p->wParam3;
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
@@ -1667,13 +1667,13 @@ static DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLocParam2 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
+		auto spell = endian_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(&plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
+			plr[pnum].destParam3 = endian_cast<direction>(p->wParam2);
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
@@ -1689,13 +1689,13 @@ static DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLocParam2 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
+		auto spell = endian_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(&plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
+			plr[pnum].destParam3 = endian_cast<direction>(p->wParam2);
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;
@@ -1810,7 +1810,7 @@ static DWORD On_SPELLID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
+		auto spell = endian_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(&plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLMON;
@@ -1831,7 +1831,7 @@ static DWORD On_SPELLPID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
+		auto spell = endian_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(&plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLPLR;
@@ -1852,7 +1852,7 @@ static DWORD On_TSPELLID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
+		auto spell = endian_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(&plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLMON;
@@ -1873,7 +1873,7 @@ static DWORD On_TSPELLPID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
+		auto spell = endian_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(&plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLPLR;
@@ -1945,7 +1945,7 @@ static DWORD On_NEWLVL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		StartNewLvl(pnum, (interface_mode)p->wParam1, p->wParam2);
+		StartNewLvl(pnum, endian_cast<interface_mode>(p->wParam1), p->wParam2);
 
 	return sizeof(*p);
 }
@@ -2257,7 +2257,7 @@ static DWORD On_ACTIVATEPORTAL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
-		ActivatePortal(pnum, p->x, p->y, p->wParam1, (dungeon_type)p->wParam2, p->wParam3);
+		ActivatePortal(pnum, p->x, p->y, p->wParam1, endian_cast<dungeon_type>(p->wParam2), p->wParam3);
 		if (pnum != myplr) {
 			if (currlevel == 0)
 				AddInTownPortal(pnum);
@@ -2275,7 +2275,7 @@ static DWORD On_ACTIVATEPORTAL(TCmd *pCmd, int pnum)
 			} else
 				RemovePortalMissile(pnum);
 		}
-		delta_open_portal(pnum, p->x, p->y, p->wParam1, (dungeon_type)p->wParam2, p->wParam3);
+		delta_open_portal(pnum, p->x, p->y, p->wParam1, endian_cast<dungeon_type>(p->wParam2), p->wParam3);
 	}
 
 	return sizeof(*p);

@@ -1,4 +1,5 @@
 #include "dvlnet/packet.h"
+#include "utils/endian_int.h"
 
 namespace devilution {
 namespace net {
