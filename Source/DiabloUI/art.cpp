@@ -32,7 +32,7 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
     BYTE *buffer, std::size_t bufferPitch, SDL_Color *palette)
 {
 	const bool has256ColorPalette = palette != nullptr && bpp == 8;
-	std::uint32_t pixelDataSize = SFileGetFileSize(handle, nullptr);
+	std::uint32_t pixelDataSize = SFileGetFileSize(handle);
 	if (pixelDataSize == static_cast<std::uint32_t>(-1)) {
 		return false;
 	}

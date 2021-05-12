@@ -15,7 +15,7 @@ TMsg *sgpTimedMsgHead;
 
 } // namespace
 
-int tmsg_get(BYTE *pbMsg)
+int tmsg_get(byte *pbMsg)
 {
 	int len;
 	TMsg *head;
@@ -34,7 +34,7 @@ int tmsg_get(BYTE *pbMsg)
 	return len;
 }
 
-void tmsg_add(BYTE *pbMsg, uint8_t bLen)
+void tmsg_add(byte *pbMsg, uint8_t bLen)
 {
 	TMsg **tail;
 

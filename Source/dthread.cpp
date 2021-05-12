@@ -69,7 +69,7 @@ void dthread_remove_player(uint8_t pnum)
 	sgMemCrit.Leave();
 }
 
-void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
+void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, int dwLen)
 {
 	TMegaPkt *pkt;
 	TMegaPkt *p;
@@ -81,7 +81,7 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 	pkt = static_cast<TMegaPkt *>(std::malloc(dwLen + 20));
 	pkt->pNext = nullptr;
 	pkt->dwSpaceLeft = pnum;
-	pkt->data[0] = cmd;
+	pkt->data[0] = static_cast<byte>(cmd);
 	*(DWORD *)&pkt->data[4] = dwLen;
 	memcpy(&pkt->data[8], pbSrc, dwLen);
 	sgMemCrit.Enter();

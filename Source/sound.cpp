@@ -45,7 +45,7 @@ void LoadMusic(HANDLE handle)
 #ifndef DISABLE_STREAMING_MUSIC
 	SDL_RWops *musicRw = SFileRw_FromStormHandle(handle);
 #else
-	int bytestoread = SFileGetFileSize(handle, 0);
+	int bytestoread = SFileGetFileSize(handle);
 	musicBuffer = new char[bytestoread];
 	SFileReadFileThreadSafe(handle, musicBuffer, bytestoread);
 	SFileCloseFileThreadSafe(handle);
@@ -174,7 +174,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		if (!SFileOpenFile(path, &file)) {
 			ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
 		}
-		DWORD dwBytes = SFileGetFileSize(file, nullptr);
+		DWORD dwBytes = SFileGetFileSize(file);
 		auto wave_file = MakeArraySharedPtr<std::uint8_t>(dwBytes);
 		SFileReadFileThreadSafe(file, wave_file.get(), dwBytes);
 		error = snd->DSB.SetChunk(wave_file, dwBytes);

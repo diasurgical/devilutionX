@@ -7,12 +7,12 @@
 
 #include <cstddef>
 
-#include "miniwin/miniwin.h"
+#include "engine.h"
 
 namespace devilution {
 
-int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword);
+std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword);
 std::size_t codec_get_encoded_len(std::size_t dwSrcBytes);
-void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword);
+void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword);
 
 } // namespace devilution

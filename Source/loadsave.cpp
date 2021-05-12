@@ -14,6 +14,7 @@
 #include "cursor.h"
 #include "dead.h"
 #include "doom.h"
+#include "engine.h"
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"
@@ -63,9 +64,9 @@ T SwapBE(T in)
 }
 
 class LoadHelper {
-	std::unique_ptr<uint8_t[]> m_buffer;
+	std::unique_ptr<byte[]> m_buffer;
 	uint32_t m_cur = 0;
-	uint32_t m_size;
+	size_t m_size;
 
 	template <class T>
 	T next()
@@ -132,14 +133,14 @@ public:
 
 class SaveHelper {
 	const char *m_szFileName;
-	std::unique_ptr<uint8_t[]> m_buffer;
+	std::unique_ptr<byte[]> m_buffer;
 	uint32_t m_cur = 0;
 	uint32_t m_capacity;
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
 	    : m_szFileName(szFileName)
-	    , m_buffer(new uint8_t[codec_get_encoded_len(bufferLen)])
+	    , m_buffer(new byte[codec_get_encoded_len(bufferLen)])
 	    , m_capacity(bufferLen)
 	{
 	}

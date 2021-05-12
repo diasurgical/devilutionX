@@ -533,7 +533,7 @@ static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int 
 	return pBlk;
 }
 
-static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD dwLen, _BLOCKENTRY *pBlk)
+static bool mpqapi_write_file_contents(const char *pszName, const byte *pbData, size_t dwLen, _BLOCKENTRY *pBlk)
 {
 	const char *tmp;
 	while ((tmp = strchr(pszName, ':')))
@@ -542,7 +542,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 		pszName = tmp + 1;
 	Hash(pszName, 3);
 
-	constexpr uint32_t sectorSize = 4096;
+	constexpr size_t sectorSize = 4096;
 	const uint32_t num_sectors = (dwLen + (sectorSize - 1)) / sectorSize;
 	const uint32_t offset_table_bytesize = sizeof(uint32_t) * (num_sectors + 1);
 	pBlk->offset = mpqapi_find_free_block(dwLen + offset_table_bytesize, &pBlk->sizealloc);
@@ -578,7 +578,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 #endif
 
 	uint32_t destsize = offset_table_bytesize;
-	BYTE mpq_buf[sectorSize];
+	byte mpq_buf[sectorSize];
 	std::size_t cur_sector = 0;
 	while (true) {
 		uint32_t len = std::min(dwLen, sectorSize);
@@ -613,7 +613,7 @@ static bool mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 	return true;
 }
 
-bool mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen)
+bool mpqapi_write_file(const char *pszName, const byte *pbData, size_t dwLen)
 {
 	_BLOCKENTRY *blockEntry;
 
