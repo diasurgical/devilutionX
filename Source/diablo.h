@@ -44,6 +44,10 @@ extern int PauseMode;
 extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
+/**
+ * @brief Don't show Messageboxes or other user-interaction. Needed for UnitTests.
+ */
+extern bool gbQuietMode;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];

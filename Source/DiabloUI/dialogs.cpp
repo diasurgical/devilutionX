@@ -266,15 +266,13 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
 			Log("{}", SDL_GetError());
 		}
-#ifndef RUN_TESTS
-		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
-			Log("{}", SDL_GetError());
-#else
-		{
-#endif
-			Log("{}", text);
-			Log("{}", caption);
+		if (!gbQuietMode) {
+			if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
+				Log("{}", SDL_GetError());
+			}
 		}
+		Log("{}", text);
+		Log("{}", caption);
 		return;
 	}
 
