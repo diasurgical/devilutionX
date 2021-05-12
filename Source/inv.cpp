@@ -2014,7 +2014,7 @@ char CheckInvHLight()
 		return -1;
 
 	int8_t rv = -1;
-	infoclr = COL_WHITE;
+	infoclr = UIS_SILVER;
 	pi = nullptr;
 	p = &plr[myplr];
 	ClearPanel();
@@ -2069,9 +2069,9 @@ char CheckInvHLight()
 		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 	} else {
 		if (pi->_iMagical == ITEM_QUALITY_MAGIC) {
-			infoclr = COL_BLUE;
+			infoclr = UIS_BLUE;
 		} else if (pi->_iMagical == ITEM_QUALITY_UNIQUE) {
-			infoclr = COL_GOLD;
+			infoclr = UIS_GOLD;
 		}
 		if (pi->_iIdentified) {
 			strcpy(infostr, pi->_iIName);

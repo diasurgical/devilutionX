@@ -5576,13 +5576,13 @@ void GetObjectStr(int i)
 		if (object[i]._oTrapFlag) {
 			sprintf(tempstr, _("Trapped %s"), infostr);
 			strcpy(infostr, tempstr);
-			infoclr = COL_RED;
+			infoclr = UIS_RED;
 		}
 	}
 	if (objectIsDisabled(i)) {
 		sprintf(tempstr, _("%s (disabled)"), infostr);
 		strcpy(infostr, tempstr);
-		infoclr = COL_RED;
+		infoclr = UIS_RED;
 	}
 }
 

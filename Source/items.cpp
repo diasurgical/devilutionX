@@ -3056,9 +3056,9 @@ void GetItemStr(int i)
 			strcpy(infostr, items[i]._iName);
 
 		if (items[i]._iMagical == ITEM_QUALITY_MAGIC)
-			infoclr = COL_BLUE;
+			infoclr = UIS_BLUE;
 		if (items[i]._iMagical == ITEM_QUALITY_UNIQUE)
-			infoclr = COL_GOLD;
+			infoclr = UIS_GOLD;
 	} else {
 		nGold = items[i]._ivalue;
 		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
