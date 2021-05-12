@@ -4219,7 +4219,7 @@ void MI_Town(int i)
 
 	for (p = 0; p < MAX_PLRS; p++) {
 		if (plr[p].plractive && currlevel == plr[p].plrlevel && !plr[p]._pLvlChanging && plr[p]._pmode == PM_STAND && plr[p].position.tile == missile[i].position.tile) {
-			ClrPlrPath(&plr[p]);
+			ClrPlrPath(plr[p]);
 			if (p == myplr) {
 				NetSendCmdParam1(true, CMD_WARP, missile[i]._misource);
 				plr[p]._pmode = PM_NEWLVL;

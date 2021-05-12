@@ -2202,7 +2202,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			FixPlayerLocation(pnum, plr[pnum]._pdir);
 			FixPlrWalkTags(pnum);
 			dPlayer[newx][newy] = pnum + 1;
-			SetPlayerOld(pnum);
+			SetPlayerOld(plr[pnum]);
 		}
 	}
 }
@@ -5115,7 +5115,7 @@ void MissToMonst(int i, int x, int y)
 						FixPlayerLocation(pnum, plr[pnum]._pdir);
 						FixPlrWalkTags(pnum);
 						dPlayer[newx][newy] = pnum + 1;
-						SetPlayerOld(pnum);
+						SetPlayerOld(plr[pnum]);
 					}
 				}
 			}
