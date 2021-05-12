@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstddef>
 
+#include "utils/attributes.h"
 #include "utils/console.h"
 #include "utils/stubs.h"
 

@@ -11,6 +11,7 @@
 
 #include "lighting.h"
 #include "options.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -476,7 +477,7 @@ inline int CountLeadingZeros(std::uint32_t mask)
 }
 
 template <typename F>
-void ForEachSetBit(std::uint32_t mask, const F &f)
+DVL_ALWAYS_INLINE void ForEachSetBit(std::uint32_t mask, const F &f)
 {
 	int i = 0;
 	while (mask != 0) {
@@ -500,7 +501,7 @@ enum class LightType {
 };
 
 template <LightType Light>
-inline void RenderLineOpaque(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl)
+DVL_ALWAYS_INLINE void RenderLineOpaque(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl)
 {
 	if (Light == LightType::FullyDark) {
 		memset(dst, 0, n);
@@ -522,7 +523,7 @@ inline void RenderLineOpaque(std::uint8_t *dst, const std::uint8_t *src, std::ui
 }
 
 template <LightType Light>
-inline void RenderLineBlended(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
+DVL_ALWAYS_INLINE void RenderLineBlended(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
 {
 #ifndef DEBUG_RENDER_COLOR
 	if (Light == LightType::FullyDark) {
@@ -558,7 +559,7 @@ inline void RenderLineBlended(std::uint8_t *dst, const std::uint8_t *src, std::u
 }
 
 template <LightType Light>
-inline void RenderLineStippled(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
+DVL_ALWAYS_INLINE void RenderLineStippled(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
 {
 	if (Light == LightType::FullyDark) {
 		ForEachSetBit(mask, [=](int i) { dst[i] = 0; });
@@ -574,7 +575,7 @@ inline void RenderLineStippled(std::uint8_t *dst, const std::uint8_t *src, std::
 }
 
 template <TransparencyType Transparency, LightType Light>
-inline void RenderLine(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
+DVL_ALWAYS_INLINE void RenderLine(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
 {
 	if (Transparency == TransparencyType::Solid) {
 		RenderLineOpaque<Light>(dst, src, n, tbl);
