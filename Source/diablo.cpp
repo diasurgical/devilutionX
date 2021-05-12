@@ -109,6 +109,7 @@ bool forceDiablo;
 bool gbNestArt;
 bool gbBard;
 bool gbBarbarian;
+bool gbQuietMode = false;
 int sgnTimeoutCurs;
 clicktype sgbMouseDown;
 int color_cycle_timer;
