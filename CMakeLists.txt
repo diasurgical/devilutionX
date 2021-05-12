@@ -579,7 +579,7 @@ target_link_libraries(${BIN_TARGET} PUBLIC fmt::fmt)
 
 genex_for_option(DEBUG)
 target_compile_definitions(${BIN_TARGET} PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
-target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
+target_compile_definitions(${BIN_TARGET} PUBLIC ASIO_STANDALONE)
 
 # Defines without value
 foreach(
@@ -683,7 +683,7 @@ if(USE_SDL1)
   target_link_libraries(${BIN_TARGET} PUBLIC
     ${SDL_TTF_LIBRARY}
     ${SDL_LIBRARY})
-  target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
+  target_compile_definitions(${BIN_TARGET} PUBLIC USE_SDL1)
 else()
   target_link_libraries(${BIN_TARGET} PUBLIC
     SDL2::SDL2
@@ -724,7 +724,7 @@ if(N3DS)
   target_link_libraries(${BIN_TARGET} PUBLIC 3ds::citro3d 3ds::ctrulib)
 endif()
 
-target_compile_definitions(${BIN_TARGET} PRIVATE ${def_list})
+target_compile_definitions(${BIN_TARGET} PUBLIC ${def_list})
 
 if (GPERF)
   target_link_libraries(${BIN_TARGET} PUBLIC ${GPERFTOOLS_LIBRARIES})
