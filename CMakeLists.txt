@@ -767,16 +767,16 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(${BIN_TARGET} PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
 
   # Warnings for devilutionX
-  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter)
+  target_compile_options(${BIN_TARGET} PUBLIC -Wall -Wextra -Wno-unused-parameter)
 
   # For ARM and other default unsigned char platforms
-  target_compile_options(${BIN_TARGET} PRIVATE -fsigned-char)
+  target_compile_options(${BIN_TARGET} PUBLIC -fsigned-char)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  target_compile_options(${BIN_TARGET} PRIVATE "/W1")
-  target_compile_options(${BIN_TARGET} PRIVATE "/Zc:__cplusplus")
-  target_compile_options(${BIN_TARGET} PRIVATE "/permissive-")
+  target_compile_options(${BIN_TARGET} PUBLIC "/W1")
+  target_compile_options(${BIN_TARGET} PUBLIC "/Zc:__cplusplus")
+  target_compile_options(${BIN_TARGET} PUBLIC "/permissive-")
 endif()
 
 if(APPLE)
