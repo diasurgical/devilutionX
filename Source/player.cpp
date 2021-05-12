@@ -537,7 +537,7 @@ static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
 			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
 			if (SFileOpenFile(pszName, &hsFile)) {
 				assert(hsFile);
-				dwSize = SFileGetFileSize(hsFile, nullptr);
+				dwSize = SFileGetFileSize(hsFile);
 				SFileCloseFileThreadSafe(hsFile);
 				if (dwMaxSize <= dwSize) {
 					dwMaxSize = dwSize;

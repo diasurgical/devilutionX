@@ -155,7 +155,7 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	FILE *file = FILE_FromStormHandle(*video);
 	SVidSMK = smk_open_filepointer(file, SMK_MODE_DISK);
 #else
-	int bytestoread = SFileGetFileSize(*video, nullptr);
+	int bytestoread = SFileGetFileSize(*video);
 	SVidBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[bytestoread] };
 	SFileReadFileThreadSafe(*video, SVidBuffer.get(), bytestoread);
 	SFileCloseFileThreadSafe(*video);

@@ -22,7 +22,7 @@ static void SFileRwSetHandle(struct SDL_RWops *context, HANDLE handle)
 #ifndef USE_SDL1
 static Sint64 SFileRwSize(struct SDL_RWops *context)
 {
-	return SFileGetFileSize(SFileRwGetHandle(context), nullptr);
+	return SFileGetFileSize(SFileRwGetHandle(context));
 }
 #endif
 

@@ -10,7 +10,6 @@
 #include "control.h"
 #include "engine/render/automap_render.hpp"
 #include "inv.h"
-#include "miniwin/miniwin.h"
 #include "monster.h"
 #include "palette.h"
 #include "player.h"
