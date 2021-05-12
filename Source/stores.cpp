@@ -216,7 +216,7 @@ void StoreAutoPlace()
 	}
 
 	if (!done) {
-		AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true) || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, true);
+		AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, true) || AutoPlaceItemInInventory(plr[myplr], plr[myplr].HoldItem, true);
 	}
 }
 
@@ -1279,7 +1279,7 @@ void S_SBuyEnter()
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
+			if (done || AutoPlaceItemInInventory(plr[myplr], plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1344,7 +1344,7 @@ void S_SPBuyEnter()
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false))
+			if (done || AutoPlaceItemInInventory(plr[myplr], plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1608,7 +1608,7 @@ void S_WBuyEnter()
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
+			if (done || AutoPlaceItemInInventory(plr[myplr], plr[myplr].HoldItem, false) || AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
@@ -1784,7 +1784,7 @@ void S_BBuyEnter()
 	}
 
 	if (!done) {
-		done = AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false);
+		done = AutoPlaceItemInInventory(plr[myplr], plr[myplr].HoldItem, false);
 	}
 
 	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
@@ -1915,7 +1915,7 @@ void S_HBuyEnter()
 				done = true;
 			}
 
-			if (done || AutoPlaceItemInInventory(myplr, plr[myplr].HoldItem, false) || AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
+			if (done || AutoPlaceItemInInventory(plr[myplr], plr[myplr].HoldItem, false) || AutoPlaceItemInBelt(myplr, plr[myplr].HoldItem, false))
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);

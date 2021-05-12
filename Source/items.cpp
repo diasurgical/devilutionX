@@ -540,9 +540,9 @@ void InitItems()
 	uitemflag = false;
 }
 
-void CalcPlrItemVals(int p, bool Loadgfx)
+void CalcPlrItemVals(int playerId, bool Loadgfx)
 {
-	int d;
+	auto &player = plr[playerId];
 
 	int mind = 0; // min damage
 	int maxd = 0; // max damage
@@ -587,7 +587,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 	int lmax = 0; // maximum lightning damage
 
 	for (i = 0; i < NUM_INVLOC; i++) {
-		ItemStruct *itm = &plr[p].InvBody[i];
+		ItemStruct *itm = &player.InvBody[i];
 		if (!itm->isEmpty() && itm->_iStatFlag) {
 
 			mind += itm->_iMinDam;
@@ -637,117 +637,117 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		mind = 1;
 		maxd = 1;
 
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 			maxd = 3;
 		}
 
-		if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD && plr[p].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 			maxd = 3;
 		}
 
-		if (plr[p]._pClass == HeroClass::Monk) {
-			mind = std::max(mind, plr[p]._pLevel / 2);
-			maxd = std::max(maxd, (int)plr[p]._pLevel);
+		if (player._pClass == HeroClass::Monk) {
+			mind = std::max(mind, player._pLevel / 2);
+			maxd = std::max(maxd, (int)player._pLevel);
 		}
 	}
 
-	if ((plr[p]._pSpellFlags & 2) == 2) {
-		sadd += 2 * plr[p]._pLevel;
-		dadd += plr[p]._pLevel + plr[p]._pLevel / 2;
-		vadd += 2 * plr[p]._pLevel;
+	if ((player._pSpellFlags & 2) == 2) {
+		sadd += 2 * player._pLevel;
+		dadd += player._pLevel + player._pLevel / 2;
+		vadd += 2 * player._pLevel;
 	}
-	if ((plr[p]._pSpellFlags & 4) == 4) {
-		sadd -= 2 * plr[p]._pLevel;
-		dadd -= plr[p]._pLevel + plr[p]._pLevel / 2;
-		vadd -= 2 * plr[p]._pLevel;
+	if ((player._pSpellFlags & 4) == 4) {
+		sadd -= 2 * player._pLevel;
+		dadd -= player._pLevel + player._pLevel / 2;
+		vadd -= 2 * player._pLevel;
 	}
 
-	plr[p]._pIMinDam = mind;
-	plr[p]._pIMaxDam = maxd;
-	plr[p]._pIAC = tac;
-	plr[p]._pIBonusDam = bdam;
-	plr[p]._pIBonusToHit = btohit;
-	plr[p]._pIBonusAC = bac;
-	plr[p]._pIFlags = iflgs;
-	plr[p].pDamAcFlags = pDamAcFlags;
-	plr[p]._pIBonusDamMod = dmod;
-	plr[p]._pIGetHit = ghit;
+	player._pIMinDam = mind;
+	player._pIMaxDam = maxd;
+	player._pIAC = tac;
+	player._pIBonusDam = bdam;
+	player._pIBonusToHit = btohit;
+	player._pIBonusAC = bac;
+	player._pIFlags = iflgs;
+	player.pDamAcFlags = pDamAcFlags;
+	player._pIBonusDamMod = dmod;
+	player._pIGetHit = ghit;
 
 	lrad = clamp(lrad, 2, 15);
 
-	if (plr[p]._pLightRad != lrad && p == myplr) {
-		ChangeLightRadius(plr[p]._plid, lrad);
-		ChangeVisionRadius(plr[p]._pvid, lrad);
-		plr[p]._pLightRad = lrad;
+	if (player._pLightRad != lrad && playerId == myplr) {
+		ChangeLightRadius(player._plid, lrad);
+		ChangeVisionRadius(player._pvid, lrad);
+		player._pLightRad = lrad;
 	}
 
-	plr[p]._pStrength = std::max(0, sadd + plr[p]._pBaseStr);
-	plr[p]._pMagic = std::max(0, madd + plr[p]._pBaseMag);
-	plr[p]._pDexterity = std::max(0, dadd + plr[p]._pBaseDex);
-	plr[p]._pVitality = std::max(0, vadd + plr[p]._pBaseVit);
+	player._pStrength = std::max(0, sadd + player._pBaseStr);
+	player._pMagic = std::max(0, madd + player._pBaseMag);
+	player._pDexterity = std::max(0, dadd + player._pBaseDex);
+	player._pVitality = std::max(0, vadd + player._pBaseVit);
 
-	if (plr[p]._pClass == HeroClass::Rogue) {
-		plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
-	} else if (plr[p]._pClass == HeroClass::Monk) {
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_STAFF) {
-			if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && (!plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty() || !plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty())) {
-				plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 300;
+	if (player._pClass == HeroClass::Rogue) {
+		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 200;
+	} else if (player._pClass == HeroClass::Monk) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_STAFF) {
+			if (player.InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() || !player.InvBody[INVLOC_HAND_RIGHT].isEmpty())) {
+				player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 300;
 			} else {
-				plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 150;
+				player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
 			}
 		} else {
-			plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 150;
+			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
 		}
-	} else if (plr[p]._pClass == HeroClass::Bard) {
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD)
-			plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 150;
-		else if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_BOW) {
-			plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 250;
+	} else if (player._pClass == HeroClass::Bard) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD)
+			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
+		else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_BOW) {
+			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 250;
 		} else {
-			plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 100;
+			player._pDamageMod = player._pLevel * player._pStrength / 100;
 		}
-	} else if (plr[p]._pClass == HeroClass::Barbarian) {
+	} else if (player._pClass == HeroClass::Barbarian) {
 
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_AXE || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_AXE) {
-			plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 75;
-		} else if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_MACE) {
-			plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 75;
-		} else if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_BOW) {
-			plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 300;
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_AXE || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_AXE) {
+			player._pDamageMod = player._pLevel * player._pStrength / 75;
+		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_MACE) {
+			player._pDamageMod = player._pLevel * player._pStrength / 75;
+		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_BOW) {
+			player._pDamageMod = player._pLevel * player._pStrength / 300;
 		} else {
-			plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 100;
+			player._pDamageMod = player._pLevel * player._pStrength / 100;
 		}
 
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD) {
-			if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD)
-				plr[p]._pIAC -= plr[p].InvBody[INVLOC_HAND_LEFT]._iAC / 2;
-			else if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
-				plr[p]._pIAC -= plr[p].InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
-		} else if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_STAFF && plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_BOW && plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_BOW) {
-			plr[p]._pDamageMod += plr[p]._pLevel * plr[p]._pVitality / 100;
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD) {
+			if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD)
+				player._pIAC -= player.InvBody[INVLOC_HAND_LEFT]._iAC / 2;
+			else if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
+				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
+		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_STAFF && player.InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && player.InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_BOW && player.InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_BOW) {
+			player._pDamageMod += player._pLevel * player._pVitality / 100;
 		}
-		plr[p]._pIAC += plr[p]._pLevel / 4;
+		player._pIAC += player._pLevel / 4;
 	} else {
-		plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 100;
+		player._pDamageMod = player._pLevel * player._pStrength / 100;
 	}
 
-	plr[p]._pISpells = spl;
+	player._pISpells = spl;
 
-	EnsureValidReadiedSpell(plr[p]);
+	EnsureValidReadiedSpell(player);
 
-	plr[p]._pISplLvlAdd = spllvladd;
-	plr[p]._pIEnAc = enac;
+	player._pISplLvlAdd = spllvladd;
+	player._pIEnAc = enac;
 
-	if (plr[p]._pClass == HeroClass::Barbarian) {
-		mr += plr[p]._pLevel;
-		fr += plr[p]._pLevel;
-		lr += plr[p]._pLevel;
+	if (player._pClass == HeroClass::Barbarian) {
+		mr += player._pLevel;
+		fr += player._pLevel;
+		lr += player._pLevel;
 	}
 
-	if ((plr[p]._pSpellFlags & 4) == 4) {
-		mr -= plr[p]._pLevel;
-		fr -= plr[p]._pLevel;
-		lr -= plr[p]._pLevel;
+	if ((player._pSpellFlags & 4) == 4) {
+		mr -= player._pLevel;
+		fr -= player._pLevel;
+		lr -= player._pLevel;
 	}
 
 	if ((iflgs & ISPL_ALLRESZERO) != 0) {
@@ -757,82 +757,82 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		lr = 0;
 	}
 
-	plr[p]._pMagResist = clamp(mr, 0, MAXRESIST);
-	plr[p]._pFireResist = clamp(fr, 0, MAXRESIST);
-	plr[p]._pLghtResist = clamp(lr, 0, MAXRESIST);
+	player._pMagResist = clamp(mr, 0, MAXRESIST);
+	player._pFireResist = clamp(fr, 0, MAXRESIST);
+	player._pLghtResist = clamp(lr, 0, MAXRESIST);
 
-	if (plr[p]._pClass == HeroClass::Warrior) {
+	if (player._pClass == HeroClass::Warrior) {
 		vadd *= 2;
-	} else if (plr[p]._pClass == HeroClass::Barbarian) {
+	} else if (player._pClass == HeroClass::Barbarian) {
 		vadd += vadd;
 		vadd += (vadd / 4);
-	} else if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard) {
+	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard) {
 		vadd += vadd / 2;
 	}
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
-	if (plr[p]._pClass == HeroClass::Sorcerer) {
+	if (player._pClass == HeroClass::Sorcerer) {
 		madd *= 2;
 	}
-	if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk) {
+	if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk) {
 		madd += madd / 2;
-	} else if (plr[p]._pClass == HeroClass::Bard) {
+	} else if (player._pClass == HeroClass::Bard) {
 		madd += (madd / 4) + (madd / 2);
 	}
 	imana += (madd << 6);
 
-	plr[p]._pMaxHP = ihp + plr[p]._pMaxHPBase;
-	plr[p]._pHitPoints = std::min(ihp + plr[p]._pHPBase, plr[p]._pMaxHP);
+	player._pMaxHP = ihp + player._pMaxHPBase;
+	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
 
-	if (p == myplr && (plr[p]._pHitPoints >> 6) <= 0) {
-		SetPlayerHitPoints(p, 0);
+	if (playerId == myplr && (player._pHitPoints >> 6) <= 0) {
+		SetPlayerHitPoints(playerId, 0);
 	}
 
-	plr[p]._pMaxMana = imana + plr[p]._pMaxManaBase;
-	plr[p]._pMana = std::min(imana + plr[p]._pManaBase, plr[p]._pMaxMana);
+	player._pMaxMana = imana + player._pMaxManaBase;
+	player._pMana = std::min(imana + player._pManaBase, player._pMaxMana);
 
-	plr[p]._pIFMinDam = fmin;
-	plr[p]._pIFMaxDam = fmax;
-	plr[p]._pILMinDam = lmin;
-	plr[p]._pILMaxDam = lmax;
+	player._pIFMinDam = fmin;
+	player._pIFMaxDam = fmax;
+	player._pILMinDam = lmin;
+	player._pILMaxDam = lmax;
 
 	if ((iflgs & ISPL_INFRAVISION) != 0) {
-		plr[p]._pInfraFlag = true;
+		player._pInfraFlag = true;
 	} else {
-		plr[p]._pInfraFlag = false;
+		player._pInfraFlag = false;
 	}
 
-	plr[p]._pBlockFlag = false;
-	if (plr[p]._pClass == HeroClass::Monk) {
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-			plr[p]._pBlockFlag = true;
-			plr[p]._pIFlags |= ISPL_FASTBLOCK;
+	player._pBlockFlag = false;
+	if (player._pClass == HeroClass::Monk) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+			player._pBlockFlag = true;
+			player._pIFlags |= ISPL_FASTBLOCK;
 		}
-		if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_STAFF && plr[p].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-			plr[p]._pBlockFlag = true;
-			plr[p]._pIFlags |= ISPL_FASTBLOCK;
+		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_STAFF && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+			player._pBlockFlag = true;
+			player._pIFlags |= ISPL_FASTBLOCK;
 		}
-		if (plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty() && plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty())
-			plr[p]._pBlockFlag = true;
-		if (plr[p].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[p].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND && plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty())
-			plr[p]._pBlockFlag = true;
-		if (plr[p].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[p].InvBody[INVLOC_HAND_RIGHT]._iLoc != ILOC_TWOHAND && plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty())
-			plr[p]._pBlockFlag = true;
+		if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT].isEmpty())
+			player._pBlockFlag = true;
+		if (player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && player.InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND && player.InvBody[INVLOC_HAND_RIGHT].isEmpty())
+			player._pBlockFlag = true;
+		if (player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && player.InvBody[INVLOC_HAND_RIGHT]._iLoc != ILOC_TWOHAND && player.InvBody[INVLOC_HAND_LEFT].isEmpty())
+			player._pBlockFlag = true;
 	}
-	plr[p]._pwtype = WT_MELEE;
+	player._pwtype = WT_MELEE;
 
 	g = 0;
 
-	if (!plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty()
-	    && plr[p].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON
-	    && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-		g = plr[p].InvBody[INVLOC_HAND_LEFT]._itype;
+	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
+	    && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON
+	    && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+		g = player.InvBody[INVLOC_HAND_LEFT]._itype;
 	}
 
-	if (!plr[p].InvBody[INVLOC_HAND_RIGHT].isEmpty()
-	    && plr[p].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON
-	    && plr[p].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-		g = plr[p].InvBody[INVLOC_HAND_RIGHT]._itype;
+	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()
+	    && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON
+	    && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+		g = player.InvBody[INVLOC_HAND_RIGHT]._itype;
 	}
 
 	switch (g) {
@@ -843,7 +843,7 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		g = ANIM_ID_AXE;
 		break;
 	case ITYPE_BOW:
-		plr[p]._pwtype = WT_RANGED;
+		player._pwtype = WT_RANGED;
 		g = ANIM_ID_BOW;
 		break;
 	case ITYPE_MACE:
@@ -854,51 +854,51 @@ void CalcPlrItemVals(int p, bool Loadgfx)
 		break;
 	}
 
-	if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-		plr[p]._pBlockFlag = true;
+	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+		player._pBlockFlag = true;
 		g++;
 	}
-	if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD && plr[p].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-		plr[p]._pBlockFlag = true;
+	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+		player._pBlockFlag = true;
 		g++;
 	}
 
-	if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
-		if (plr[p]._pClass == HeroClass::Monk && plr[p].InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-			plr[p]._pIAC += plr[p]._pLevel / 2;
+	if (player.InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && player.InvBody[INVLOC_CHEST]._iStatFlag) {
+		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
+			player._pIAC += player._pLevel / 2;
 		g += ANIM_ID_HEAVY_ARMOR;
-	} else if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
-		if (plr[p]._pClass == HeroClass::Monk) {
-			if (plr[p].InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-				plr[p]._pIAC += plr[p]._pLevel * 2;
+	} else if (player.InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && player.InvBody[INVLOC_CHEST]._iStatFlag) {
+		if (player._pClass == HeroClass::Monk) {
+			if (player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
+				player._pIAC += player._pLevel * 2;
 			else
-				plr[p]._pIAC += plr[p]._pLevel / 2;
+				player._pIAC += player._pLevel / 2;
 		}
 		g += ANIM_ID_MEDIUM_ARMOR;
-	} else if (plr[p]._pClass == HeroClass::Monk) {
-		plr[p]._pIAC += plr[p]._pLevel * 2;
+	} else if (player._pClass == HeroClass::Monk) {
+		player._pIAC += player._pLevel * 2;
 	}
 
-	if (plr[p]._pgfxnum != g && Loadgfx) {
-		plr[p]._pgfxnum = g;
-		plr[p]._pGFXLoad = 0;
-		LoadPlrGFX(p, PFILE_STAND);
-		SetPlrAnims(p);
+	if (player._pgfxnum != g && Loadgfx) {
+		player._pgfxnum = g;
+		player._pGFXLoad = 0;
+		LoadPlrGFX(playerId, PFILE_STAND);
+		SetPlrAnims(player);
 
-		d = plr[p]._pdir;
+		direction d = player._pdir;
 
-		assert(plr[p]._pNAnim[d]);
-		NewPlrAnim(p, plr[p]._pNAnim[d], plr[p]._pNFrames, 3, plr[p]._pNWidth);
+		assert(player._pNAnim[d]);
+		NewPlrAnim(player, player._pNAnim[d], player._pNFrames, 3, player._pNWidth);
 	} else {
-		plr[p]._pgfxnum = g;
+		player._pgfxnum = g;
 	}
 
-	if (plr[p].InvBody[INVLOC_AMULET].isEmpty() || plr[p].InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
+	if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
 		int half = MaxGold;
 		MaxGold = GOLD_MAX_LIMIT;
 
 		if (half != MaxGold)
-			StripTopGold(p);
+			StripTopGold(playerId);
 	} else {
 		MaxGold = GOLD_MAX_LIMIT * 2;
 	}
@@ -917,20 +917,17 @@ void CalcPlrStaff(int p)
 	}
 }
 
-void CalcSelfItems(int pnum)
+void CalcSelfItems(PlayerStruct &player)
 {
 	int i;
-	PlayerStruct *p;
 	ItemStruct *pi;
 	bool sf, changeflag;
 	int sa, ma, da;
 
-	p = &plr[pnum];
-
 	sa = 0;
 	ma = 0;
 	da = 0;
-	pi = p->InvBody;
+	pi = player.InvBody;
 	for (i = 0; i < NUM_INVLOC; i++, pi++) {
 		if (!pi->isEmpty()) {
 			pi->_iStatFlag = true;
@@ -943,15 +940,15 @@ void CalcSelfItems(int pnum)
 	}
 	do {
 		changeflag = false;
-		pi = p->InvBody;
+		pi = player.InvBody;
 		for (i = 0; i < NUM_INVLOC; i++, pi++) {
 			if (!pi->isEmpty() && pi->_iStatFlag) {
 				sf = true;
-				if (sa + p->_pBaseStr < pi->_iMinStr)
+				if (sa + player._pBaseStr < pi->_iMinStr)
 					sf = false;
-				if (ma + p->_pBaseMag < pi->_iMinMag)
+				if (ma + player._pBaseMag < pi->_iMinMag)
 					sf = false;
-				if (da + p->_pBaseDex < pi->_iMinDex)
+				if (da + player._pBaseDex < pi->_iMinDex)
 					sf = false;
 				if (!sf) {
 					changeflag = true;
@@ -967,84 +964,79 @@ void CalcSelfItems(int pnum)
 	} while (changeflag);
 }
 
-static bool ItemMinStats(PlayerStruct *p, ItemStruct *x)
+static bool ItemMinStats(const PlayerStruct &player, ItemStruct *x)
 {
-	if (p->_pMagic < x->_iMinMag)
+	if (player._pMagic < x->_iMinMag)
 		return false;
 
-	if (p->_pStrength < x->_iMinStr)
+	if (player._pStrength < x->_iMinStr)
 		return false;
 
-	if (p->_pDexterity < x->_iMinDex)
+	if (player._pDexterity < x->_iMinDex)
 		return false;
 
 	return true;
 }
 
-void CalcPlrItemMin(int pnum)
+void CalcPlrItemMin(PlayerStruct &player)
 {
-	PlayerStruct *p;
-	ItemStruct *pi;
-	int i;
-
-	p = &plr[pnum];
-	pi = p->InvList;
-	i = p->_pNumInv;
+	ItemStruct *pi = player.InvList;
+	int i = player._pNumInv;
 
 	while (i--) {
-		pi->_iStatFlag = ItemMinStats(p, pi);
+		pi->_iStatFlag = ItemMinStats(player, pi);
 		pi++;
 	}
 
-	pi = p->SpdList;
+	pi = player.SpdList;
 	for (i = MAXBELTITEMS; i != 0; i--) {
 		if (!pi->isEmpty()) {
-			pi->_iStatFlag = ItemMinStats(p, pi);
+			pi->_iStatFlag = ItemMinStats(player, pi);
 		}
 		pi++;
 	}
 }
 
-void CalcPlrBookVals(int p)
+void CalcPlrBookVals(PlayerStruct &player)
 {
-	int i, slvl;
-
 	if (currlevel == 0) {
-		for (i = 1; !witchitem[i].isEmpty(); i++) {
+		for (int i = 1; !witchitem[i].isEmpty(); i++) {
 			WitchBookLevel(i);
 			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
 		}
 	}
 
-	for (i = 0; i < plr[p]._pNumInv; i++) {
-		if (plr[p].InvList[i]._itype == ITYPE_MISC && plr[p].InvList[i]._iMiscId == IMISC_BOOK) {
-			plr[p].InvList[i]._iMinMag = spelldata[plr[p].InvList[i]._iSpell].sMinInt;
-			slvl = plr[p]._pSplLvl[plr[p].InvList[i]._iSpell];
+	for (int i = 0; i < player._pNumInv; i++) {
+		if (player.InvList[i]._itype == ITYPE_MISC && player.InvList[i]._iMiscId == IMISC_BOOK) {
+			player.InvList[i]._iMinMag = spelldata[player.InvList[i]._iSpell].sMinInt;
+			int slvl = player._pSplLvl[player.InvList[i]._iSpell];
 
 			while (slvl != 0) {
-				plr[p].InvList[i]._iMinMag += 20 * plr[p].InvList[i]._iMinMag / 100;
+				player.InvList[i]._iMinMag += 20 * player.InvList[i]._iMinMag / 100;
 				slvl--;
-				if (plr[p].InvList[i]._iMinMag + 20 * plr[p].InvList[i]._iMinMag / 100 > 255) {
-					plr[p].InvList[i]._iMinMag = 255;
+				if (player.InvList[i]._iMinMag + 20 * player.InvList[i]._iMinMag / 100 > 255) {
+					player.InvList[i]._iMinMag = 255;
 					slvl = 0;
 				}
 			}
-			plr[p].InvList[i]._iStatFlag = ItemMinStats(&plr[p], &plr[p].InvList[i]);
+			player.InvList[i]._iStatFlag = ItemMinStats(player, &player.InvList[i]);
 		}
 	}
 }
 
-void CalcPlrInv(int p, bool Loadgfx)
+void CalcPlrInv(int playerId, bool Loadgfx)
 {
-	CalcPlrItemMin(p);
-	CalcSelfItems(p);
-	CalcPlrItemVals(p, Loadgfx);
-	CalcPlrItemMin(p);
-	if (p == myplr) {
-		CalcPlrBookVals(p);
-		plr[p].CalcScrolls();
-		CalcPlrStaff(p);
-		if (p == myplr && currlevel == 0)
+	auto &player = plr[playerId];
+
+	CalcPlrItemMin(player);
+	CalcSelfItems(player);
+	CalcPlrItemVals(playerId, Loadgfx);
+	CalcPlrItemMin(player);
+	if (playerId == myplr) {
+		CalcPlrBookVals(player);
+		player.CalcScrolls();
+		CalcPlrStaff(playerId);
+		if (playerId == myplr && currlevel == 0)
 			RecalcStoreStats();
 	}
 }
@@ -1149,138 +1141,132 @@ void SetPlrHandGoldCurs(ItemStruct *h)
 	h->_iCurs = GetGoldCursor(h->_ivalue);
 }
 
-void CreatePlrItems(int p)
+void CreatePlrItems(int playerId)
 {
-	int i;
-	ItemStruct *pi = plr[p].InvBody;
+	auto &player = plr[playerId];
 
-	for (i = NUM_INVLOC; i != 0; i--) {
-		pi->_itype = ITYPE_NONE;
-		pi++;
+	for (auto &item : player.InvBody) {
+		item._itype = ITYPE_NONE;
 	}
 
 	// converting this to a for loop creates a `rep stosd` instruction,
 	// so this probably actually was a memset
-	memset(&plr[p].InvGrid, 0, sizeof(plr[p].InvGrid));
+	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
 
-	pi = plr[p].InvList;
-	for (i = NUM_INV_GRID_ELEM; i != 0; i--) {
-		pi->_itype = ITYPE_NONE;
-		pi++;
+	for (auto &item : player.InvList) {
+		item._itype = ITYPE_NONE;
 	}
 
-	plr[p]._pNumInv = 0;
+	player._pNumInv = 0;
 
-	pi = &plr[p].SpdList[0];
-	for (i = MAXBELTITEMS; i != 0; i--) {
-		pi->_itype = ITYPE_NONE;
-		pi++;
+	for (auto &item : player.SpdList) {
+		item._itype = ITYPE_NONE;
 	}
 
-	switch (plr[p]._pClass) {
+	switch (player._pClass) {
 	case HeroClass::Warrior:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_WARRIOR);
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], IDI_WARRIOR);
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_RIGHT]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
 
 #ifdef _DEBUG
 		if (!debug_mode_key_w)
 #endif
 		{
-			SetPlrHandItem(&plr[p].HoldItem, IDI_WARRCLUB);
-			GetPlrHandSeed(&plr[p].HoldItem);
-			AutoPlaceItemInInventory(p, plr[p].HoldItem, true);
+			SetPlrHandItem(&player.HoldItem, IDI_WARRCLUB);
+			GetPlrHandSeed(&player.HoldItem);
+			AutoPlaceItemInInventory(player, player.HoldItem, true);
 		}
 
-		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[0]);
+		SetPlrHandItem(&player.SpdList[0], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[1]);
+		SetPlrHandItem(&player.SpdList[1], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Rogue:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[0]);
+		SetPlrHandItem(&player.SpdList[0], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[1]);
+		SetPlrHandItem(&player.SpdList[1], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Sorcerer:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(&plr[p].SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
-		GetPlrHandSeed(&plr[p].SpdList[0]);
+		SetPlrHandItem(&player.SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
+		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(&plr[p].SpdList[1], gbIsHellfire ? IDI_HEAL : IDI_MANA);
-		GetPlrHandSeed(&plr[p].SpdList[1]);
+		SetPlrHandItem(&player.SpdList[1], gbIsHellfire ? IDI_HEAL : IDI_MANA);
+		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 
 	case HeroClass::Monk:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
-		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[0]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
+		SetPlrHandItem(&player.SpdList[0], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[1]);
+		SetPlrHandItem(&player.SpdList[1], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Bard:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_RIGHT], IDI_BARDDAGGER);
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_RIGHT]);
-		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[0]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_RIGHT], IDI_BARDDAGGER);
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
+		SetPlrHandItem(&player.SpdList[0], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[1]);
+		SetPlrHandItem(&player.SpdList[1], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Barbarian:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], 139); // TODO: add more enums to items
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], 139); // TODO: add more enums to items
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
-		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_RIGHT]);
-		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[0]);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
+		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
+		SetPlrHandItem(&player.SpdList[0], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&plr[p].SpdList[1]);
+		SetPlrHandItem(&player.SpdList[1], IDI_HEAL);
+		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	}
 
-	SetPlrHandItem(&plr[p].HoldItem, IDI_GOLD);
-	GetPlrHandSeed(&plr[p].HoldItem);
+	SetPlrHandItem(&player.HoldItem, IDI_GOLD);
+	GetPlrHandSeed(&player.HoldItem);
 
 #ifdef _DEBUG
 	if (!debug_mode_key_w) {
 #endif
-		plr[p].HoldItem._ivalue = 100;
-		plr[p].HoldItem._iCurs = ICURS_GOLD_SMALL;
-		plr[p]._pGold = plr[p].HoldItem._ivalue;
-		plr[p].InvList[plr[p]._pNumInv++] = plr[p].HoldItem;
-		plr[p].InvGrid[30] = plr[p]._pNumInv;
+		player.HoldItem._ivalue = 100;
+		player.HoldItem._iCurs = ICURS_GOLD_SMALL;
+		player._pGold = player.HoldItem._ivalue;
+		player.InvList[player._pNumInv++] = player.HoldItem;
+		player.InvGrid[30] = player._pNumInv;
 #ifdef _DEBUG
 	} else {
-		plr[p].HoldItem._ivalue = GOLD_MAX_LIMIT;
-		plr[p].HoldItem._iCurs = ICURS_GOLD_LARGE;
-		plr[p]._pGold = plr[p].HoldItem._ivalue * 40;
-		for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-			GetPlrHandSeed(&plr[p].HoldItem);
-			plr[p].InvList[plr[p]._pNumInv++] = plr[p].HoldItem;
-			plr[p].InvGrid[i] = plr[p]._pNumInv;
+		player.HoldItem._ivalue = GOLD_MAX_LIMIT;
+		player.HoldItem._iCurs = ICURS_GOLD_LARGE;
+		player._pGold = player.HoldItem._ivalue * 40;
+		for (auto &cell : player.InvGrid) {
+			GetPlrHandSeed(&player.HoldItem);
+			player.InvList[player._pNumInv++] = player.HoldItem;
+			cell = player._pNumInv;
 		}
 	}
 #endif
 
-	CalcPlrItemVals(p, false);
+	CalcPlrItemVals(playerId, false);
 }
 
 bool ItemSpaceOk(int i, int j)
@@ -4045,7 +4031,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			if (p == myplr)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
-			ClrPlrPath(&plr[p]);
+			ClrPlrPath(plr[p]);
 			plr[p]._pSpell = spl;
 			plr[p]._pSplType = RSPLTYPE_INVALID;
 			plr[p]._pSplFrom = 3;
@@ -4063,7 +4049,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			if (p == myplr)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
-			ClrPlrPath(&plr[p]);
+			ClrPlrPath(plr[p]);
 			plr[p]._pSpell = spl;
 			plr[p]._pSplType = RSPLTYPE_INVALID;
 			plr[p]._pSplFrom = 3;
@@ -4083,7 +4069,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			plr[p]._pManaBase = std::min(plr[p]._pManaBase, plr[p]._pMaxManaBase);
 		}
 		if (p == myplr)
-			CalcPlrBookVals(p);
+			CalcPlrBookVals(plr[p]);
 		drawmanaflag = true;
 		break;
 	case IMISC_MAPOFDOOM:

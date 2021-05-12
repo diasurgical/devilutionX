@@ -1334,8 +1334,8 @@ void DrawChr(const CelOutputBuffer &out)
 	DrawString(out, chrstr, { 143, 239, 30, 0 }, style | UIS_CENTER);
 
 	if (plr[myplr]._pStatPts > 0) {
-		if (CalcStatDiff(myplr) < plr[myplr]._pStatPts) {
-			plr[myplr]._pStatPts = CalcStatDiff(myplr);
+		if (CalcStatDiff(plr[myplr]) < plr[myplr]._pStatPts) {
+			plr[myplr]._pStatPts = CalcStatDiff(plr[myplr]);
 		}
 	}
 	if (plr[myplr]._pStatPts > 0) {
@@ -1454,7 +1454,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 		    && MouseX <= ChrBtnsRect[buttonId].x + ChrBtnsRect[buttonId].w
 		    && MouseY >= ChrBtnsRect[buttonId].y
 		    && MouseY <= ChrBtnsRect[buttonId].y + ChrBtnsRect[buttonId].h) {
-			PlayerStruct &player = plr[myplr];
+			auto &player = plr[myplr];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
 				statPointsToAdd = CapStatPointsToAdd(player._pStatPts, player, attribute);

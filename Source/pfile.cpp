@@ -230,7 +230,7 @@ void pfile_write_hero(bool write_game_data, bool clear_tables)
 		pfile_rename_temp_to_perm();
 	}
 	PkPlayerStruct pkplr;
-	PackPlayer(&pkplr, myplr, !gbIsMultiplayer);
+	PackPlayer(&pkplr, plr[myplr], !gbIsMultiplayer);
 	pfile_encode_hero(&pkplr);
 	if (!gbVanilla) {
 		SaveHotkeys();
@@ -328,16 +328,19 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	mpqapi_remove_hash_entries(pfile_get_file_name);
 	strncpy(hero_names[save_num], heroinfo->name, PLR_NAME_LEN);
 	hero_names[save_num][PLR_NAME_LEN - 1] = '\0';
+
+	auto &player = plr[0];
 	CreatePlayer(0, heroinfo->heroclass);
-	strncpy(plr[0]._pName, heroinfo->name, PLR_NAME_LEN);
-	plr[0]._pName[PLR_NAME_LEN - 1] = '\0';
-	PackPlayer(&pkplr, 0, true);
+	strncpy(player._pName, heroinfo->name, PLR_NAME_LEN);
+	player._pName[PLR_NAME_LEN - 1] = '\0';
+	PackPlayer(&pkplr, player, true);
 	pfile_encode_hero(&pkplr);
-	game_2_ui_player(&plr[0], heroinfo, false);
+	game_2_ui_player(&player, heroinfo, false);
 	if (!gbVanilla) {
 		SaveHotkeys();
-		SaveHeroItems(&plr[0]);
+		SaveHeroItems(&player);
 	}
+
 	mpqapi_flush_and_close(true);
 	return true;
 }

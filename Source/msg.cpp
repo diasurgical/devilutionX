@@ -1317,7 +1317,7 @@ static DWORD On_WALKXY(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		ClrPlrPath(&plr[pnum]);
+		ClrPlrPath(plr[pnum]);
 		MakePlrPath(pnum, p->x, p->y, true);
 		plr[pnum].destAction = ACTION_NONE;
 	}
@@ -1616,7 +1616,7 @@ static DWORD On_SATTACKXY(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		ClrPlrPath(&plr[pnum]);
+		ClrPlrPath(plr[pnum]);
 		plr[pnum].destAction = ACTION_ATTACK;
 		plr[pnum].destParam1 = p->x;
 		plr[pnum].destParam2 = p->y;
@@ -1630,7 +1630,7 @@ static DWORD On_RATTACKXY(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		ClrPlrPath(&plr[pnum]);
+		ClrPlrPath(plr[pnum]);
 		plr[pnum].destAction = ACTION_RATTACK;
 		plr[pnum].destParam1 = p->x;
 		plr[pnum].destParam2 = p->y;
@@ -1646,7 +1646,7 @@ static DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(&plr[pnum]);
+			ClrPlrPath(plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLWALL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
@@ -1669,7 +1669,7 @@ static DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(&plr[pnum]);
+			ClrPlrPath(plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
@@ -1691,7 +1691,7 @@ static DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam1);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(&plr[pnum]);
+			ClrPlrPath(plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
@@ -1784,7 +1784,7 @@ static DWORD On_RATTACKID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		ClrPlrPath(&plr[pnum]);
+		ClrPlrPath(plr[pnum]);
 		plr[pnum].destAction = ACTION_RATTACKMON;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -1797,7 +1797,7 @@ static DWORD On_RATTACKPID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		ClrPlrPath(&plr[pnum]);
+		ClrPlrPath(plr[pnum]);
 		plr[pnum].destAction = ACTION_RATTACKPLR;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -1812,7 +1812,7 @@ static DWORD On_SPELLID(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(&plr[pnum]);
+			ClrPlrPath(plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLMON;
 			plr[pnum].destParam1 = p->wParam1;
 			plr[pnum].destParam2 = p->wParam3;
@@ -1833,7 +1833,7 @@ static DWORD On_SPELLPID(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(&plr[pnum]);
+			ClrPlrPath(plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLPLR;
 			plr[pnum].destParam1 = p->wParam1;
 			plr[pnum].destParam2 = p->wParam3;
@@ -1854,7 +1854,7 @@ static DWORD On_TSPELLID(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(&plr[pnum]);
+			ClrPlrPath(plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLMON;
 			plr[pnum].destParam1 = p->wParam1;
 			plr[pnum].destParam2 = p->wParam3;
@@ -1875,7 +1875,7 @@ static DWORD On_TSPELLPID(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(&plr[pnum]);
+			ClrPlrPath(plr[pnum]);
 			plr[pnum].destAction = ACTION_SPELLPLR;
 			plr[pnum].destParam1 = p->wParam1;
 			plr[pnum].destParam2 = p->wParam3;
@@ -2216,7 +2216,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 	else {
 		plr[pnum]._pLvlChanging = false;
 		if (plr[pnum]._pName[0] != 0 && !plr[pnum].plractive) {
-			InitPlrGFXMem(pnum);
+			InitPlrGFXMem(plr[pnum]);
 			plr[pnum].plractive = true;
 			gbActivePlayers++;
 			EventPlrMsg(_("Player '%s' (level %d) just joined the game"), plr[pnum]._pName, plr[pnum]._pLevel);
@@ -2235,7 +2235,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 					plr[pnum]._pgfxnum = 0;
 					LoadPlrGFX(pnum, PFILE_DEATH);
 					plr[pnum]._pmode = PM_DEATH;
-					NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
+					NewPlrAnim(plr[pnum], plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 					plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
 					dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 				}
@@ -2429,7 +2429,7 @@ static DWORD On_NOVA(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel && pnum != myplr) {
-		ClrPlrPath(&plr[pnum]);
+		ClrPlrPath(plr[pnum]);
 		plr[pnum]._pSpell = SPL_NOVA;
 		plr[pnum]._pSplType = RSPLTYPE_INVALID;
 		plr[pnum]._pSplFrom = 3;

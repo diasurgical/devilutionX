@@ -948,9 +948,9 @@ void ToggleLighting()
 	}
 
 	memcpy(dLight, dPreLight, sizeof(dLight));
-	for (int i = 0; i < MAX_PLRS; i++) {
-		if (plr[i].plractive && plr[i].plrlevel == currlevel) {
-			DoLighting(plr[i].position.tile.x, plr[i].position.tile.y, plr[i]._pLightRad, -1);
+	for (const auto &player : plr) {
+		if (player.plractive && player.plrlevel == currlevel) {
+			DoLighting(player.position.tile.x, player.position.tile.y, player._pLightRad, -1);
 		}
 	}
 }

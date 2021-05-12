@@ -280,7 +280,7 @@ static void multi_player_left_msg(int pnum, bool left)
 		}
 		plr[pnum].plractive = false;
 		plr[pnum]._pName[0] = '\0';
-		FreePlayerGFX(pnum);
+		FreePlayerGFX(plr[pnum]);
 		gbActivePlayers--;
 	}
 }
@@ -584,7 +584,7 @@ static void multi_send_pinfo(int pnum, char cmd)
 {
 	PkPlayerStruct pkplr;
 
-	PackPlayer(&pkplr, myplr, true);
+	PackPlayer(&pkplr, plr[myplr], true);
 	dthread_send_delta(pnum, cmd, &pkplr, sizeof(pkplr));
 }
 
@@ -754,7 +754,7 @@ bool NetInit(bool bSinglePlayer)
 		SetupLocalCoords();
 		multi_send_pinfo(-2, CMD_SEND_PLRINFO);
 
-		InitPlrGFXMem(myplr);
+		InitPlrGFXMem(plr[myplr]);
 		plr[myplr].plractive = true;
 		gbActivePlayers = 1;
 
@@ -858,7 +858,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 		return;
 	}
 
-	InitPlrGFXMem(pnum);
+	InitPlrGFXMem(plr[pnum]);
 	plr[pnum].plractive = true;
 	gbActivePlayers++;
 
@@ -879,7 +879,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 			plr[pnum]._pgfxnum = 0;
 			LoadPlrGFX(pnum, PFILE_DEATH);
 			plr[pnum]._pmode = PM_DEATH;
-			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
+			NewPlrAnim(plr[pnum], plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
 			dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 		}
