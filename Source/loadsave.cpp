@@ -421,7 +421,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pVar5 = file->nextLE<int32_t>();
 	pPlayer->position.offset2.x = file->nextLE<int32_t>();
 	pPlayer->position.offset2.y = file->nextLE<int32_t>();
-	pPlayer->actionFrame = file->nextLE<int32_t>();
+	// Skip actionFrame
+	file->skip(4);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		pPlayer->_pLvlVisited[i] = file->nextBool8();
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
@@ -1407,7 +1408,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->_pVar5);
 	file->writeLE<int32_t>(pPlayer->position.offset2.x);
 	file->writeLE<int32_t>(pPlayer->position.offset2.y);
-	file->writeLE<int32_t>(pPlayer->actionFrame);
+	// Write actionFrame for vanilla compatibility
+	file->writeLE<int32_t>(0);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		file->writeLE<uint8_t>(pPlayer->_pLvlVisited[i]);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)

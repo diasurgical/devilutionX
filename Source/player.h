@@ -229,8 +229,6 @@ struct PlayerStruct {
 	int _pVar4;
 	/** Used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it) */
 	int _pVar5;
-	/** Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). */
-	int actionFrame;
 	/** Used for stalling the appearance of the options screen after dying in singleplayer */
 	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
