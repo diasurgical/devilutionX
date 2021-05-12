@@ -564,7 +564,7 @@ if(NOT N3DS)
   Threads::Threads)
 endif()
 
-target_link_libraries(${BIN_TARGET} PRIVATE
+target_link_libraries(${BIN_TARGET} PUBLIC
   asio
   PKWare
   StormLib
@@ -572,10 +572,10 @@ target_link_libraries(${BIN_TARGET} PRIVATE
   Radon)
 
 if(NOT NONET)
-  target_link_libraries(${BIN_TARGET} PRIVATE sodium)
+  target_link_libraries(${BIN_TARGET} PUBLIC sodium)
 endif()
 
-target_link_libraries(${BIN_TARGET} PRIVATE fmt::fmt)
+target_link_libraries(${BIN_TARGET} PUBLIC fmt::fmt)
 
 genex_for_option(DEBUG)
 target_compile_definitions(${BIN_TARGET} PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
@@ -680,54 +680,54 @@ else()
 endif()
 
 if(USE_SDL1)
-  target_link_libraries(${BIN_TARGET} PRIVATE
+  target_link_libraries(${BIN_TARGET} PUBLIC
     ${SDL_TTF_LIBRARY}
     ${SDL_LIBRARY})
   target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
 else()
-  target_link_libraries(${BIN_TARGET} PRIVATE
+  target_link_libraries(${BIN_TARGET} PUBLIC
     SDL2::SDL2
     ${SDL2_MAIN}
     SDL2::SDL2_ttf)
 endif()
 
 if(NOT NOSOUND)
-  target_link_libraries(${BIN_TARGET} PRIVATE SDL_audiolib)
+  target_link_libraries(${BIN_TARGET} PUBLIC SDL_audiolib)
 endif()
 
 if(SWITCH)
-  target_link_libraries(${BIN_TARGET} PRIVATE switch::libnx
+  target_link_libraries(${BIN_TARGET} PUBLIC switch::libnx
     -lfreetype -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
 endif()
 
 if(AMIGA)
-  target_link_libraries(${BIN_TARGET} PRIVATE
+  target_link_libraries(${BIN_TARGET} PUBLIC
     ${FREETYPE_LIBRARY}
     ${ZLIB_LIBRARY})
   if(NOT WARPOS)
-    target_link_libraries(${BIN_TARGET} PRIVATE -ldebug)
+    target_link_libraries(${BIN_TARGET} PUBLIC -ldebug)
   endif()
 endif()
 
 if (VITA)
-  target_link_libraries(${BIN_TARGET} PRIVATE
+  target_link_libraries(${BIN_TARGET} PUBLIC
         ScePower_stub
         freetype
         png
         z
   )
-  target_compile_definitions(${BIN_TARGET} PRIVATE VITA)
+  target_compile_definitions(${BIN_TARGET} PUBLIC VITA)
 endif()
 
 if(N3DS)
-  target_link_libraries(${BIN_TARGET} PRIVATE 3ds::freetype 3ds::bzip2 3ds::png)
-  target_link_libraries(${BIN_TARGET} PRIVATE 3ds::citro3d 3ds::ctrulib)
+  target_link_libraries(${BIN_TARGET} PUBLIC 3ds::freetype 3ds::bzip2 3ds::png)
+  target_link_libraries(${BIN_TARGET} PUBLIC 3ds::citro3d 3ds::ctrulib)
 endif()
 
 target_compile_definitions(${BIN_TARGET} PRIVATE ${def_list})
 
 if (GPERF)
-  target_link_libraries(${BIN_TARGET} PRIVATE ${GPERFTOOLS_LIBRARIES})
+  target_link_libraries(${BIN_TARGET} PUBLIC ${GPERFTOOLS_LIBRARIES})
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
@@ -735,7 +735,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
 endif()
 
 if(WIN32)
-  target_link_libraries(${BIN_TARGET} PRIVATE wsock32 ws2_32 wininet)
+  target_link_libraries(${BIN_TARGET} PUBLIC wsock32 ws2_32 wininet)
 
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${BIN_TARGET} PUBLIC $<$<CONFIG:Debug>:-gstabs>)
@@ -748,7 +748,7 @@ if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
 endif()
 
 if(HAIKU)
-  target_link_libraries(${BIN_TARGET} PRIVATE network)
+  target_link_libraries(${BIN_TARGET} PUBLIC network)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -1011,5 +1011,5 @@ endif()
 
 if(NOT NONET)
   add_subdirectory(3rdParty/libzt)
-  target_link_libraries(${BIN_TARGET} PRIVATE zt-static)
+  target_link_libraries(${BIN_TARGET} PUBLIC zt-static)
 endif()
