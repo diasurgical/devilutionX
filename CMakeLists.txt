@@ -518,7 +518,7 @@ file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BIN
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(is_multi_config)
   set(CONFIG_PATH $<CONFIG>/config.h)
-  target_include_directories(${BIN_TARGET} PRIVATE ${CMAKE_BINARY_DIR}/$<CONFIG>)
+  target_include_directories(${BIN_TARGET} PUBLIC ${CMAKE_BINARY_DIR}/$<CONFIG>)
 else()
   set(CONFIG_PATH config.h)
 endif()
@@ -555,7 +555,7 @@ if(USE_GETTEXT)
   endforeach(lang)
 endif()
 
-target_include_directories(${BIN_TARGET} PRIVATE
+target_include_directories(${BIN_TARGET} PUBLIC
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
