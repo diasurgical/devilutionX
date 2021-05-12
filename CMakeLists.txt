@@ -475,7 +475,8 @@ if(N3DS)
   list(APPEND devilutionx_SRCS
     Source/platform/ctr/system.cpp
     Source/platform/ctr/keyboard.cpp
-    Source/platform/ctr/display.cpp)
+    Source/platform/ctr/display.cpp
+    Source/platform/ctr/messagebox.cpp)
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
