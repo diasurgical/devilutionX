@@ -296,7 +296,7 @@ add_library(PKWare STATIC
   3rdParty/PKWare/implode.cpp)
 target_include_directories(PKWare PUBLIC 3rdParty/PKWare)
 
-set(devilutionx_SRCS
+set(libdevilutionx_SRCS
   Source/appfat.cpp
   Source/automap.cpp
   Source/capture.cpp
@@ -327,7 +327,6 @@ set(devilutionx_SRCS
   Source/items.cpp
   Source/lighting.cpp
   Source/loadsave.cpp
-  Source/main.cpp
   Source/mainmenu.cpp
   Source/minitext.cpp
   Source/misdat.cpp
@@ -425,22 +424,25 @@ set(devilutionx_SRCS
   Source/storm/storm_net.cpp
   Source/storm/storm_sdl_rw.cpp
   Source/storm/storm_svid.cpp
-  Source/miniwin/misc_msg.cpp
+  Source/miniwin/misc_msg.cpp)
+
+set(devilutionxbin_SRCS
+  Source/main.cpp
   Source/devilutionx.exe.manifest
   Packaging/macOS/AppIcon.icns
   Packaging/resources/CharisSILB.ttf
   Packaging/windows/devilutionx.rc)
 
 if(USE_SDL1)
-  list(APPEND devilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
+  list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
 endif()
 
 if(NOSOUND)
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/effects_stubs.cpp
     Source/sound_stubs.cpp)
 else()
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/effects.cpp
     Source/sound.cpp
     Source/utils/push_aulib_decoder.cpp
@@ -448,7 +450,7 @@ else()
 endif()
 
 if(NOT NONET)
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/dvlnet/tcp_client.cpp
     Source/dvlnet/tcp_server.cpp
     Source/dvlnet/protocol_zt.cpp
@@ -459,7 +461,7 @@ endif()
 set(BIN_TARGET devilutionx)
 
 if(SWITCH)
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/platform/switch/network.cpp
     Source/platform/switch/keyboard.cpp
     Source/platform/switch/docking.cpp)
@@ -467,12 +469,12 @@ if(SWITCH)
 endif()
 
 if(VITA)
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/platform/vita/keyboard.cpp)
 endif()
 
 if(N3DS)
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/platform/ctr/system.cpp
     Source/platform/ctr/keyboard.cpp
     Source/platform/ctr/display.cpp
@@ -481,7 +483,7 @@ if(N3DS)
 endif()
 
 if(RUN_TESTS)
-  list(APPEND devilutionx_SRCS
+  set(devilutionxtest_SRCS
     test/appfat_test.cpp
     test/automap_test.cpp
     test/control_test.cpp
@@ -507,7 +509,8 @@ if(RUN_TESTS)
     test/animationinfo_test.cpp)
 endif()
 
-add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
+list(APPEND devilutionxbin_SRCS ${libdevilutionx_SRCS})
+add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionxbin_SRCS})
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory
 file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
@@ -540,6 +543,7 @@ if(RUN_TESTS)
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_definitions(-fprofile-arcs -ftest-coverage)
   endif()
+  list(APPEND devilutionxbin_SRCS ${devilutionxtest_SRCS})
   target_link_libraries(${BIN_TARGET} PRIVATE -fprofile-arcs ${GTEST_LIBRARIES})
   gtest_add_tests(${BIN_TARGET} "" AUTO)
 endif()
@@ -753,8 +757,8 @@ endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Change __FILE__ to only show the path relative to the project folder
-  get_target_property(devilutionx_SRCS ${BIN_TARGET} SOURCES)
-  foreach(SOURCE_FILE ${devilutionx_SRCS})
+  get_target_property(libdevilutionx_SRCS ${BIN_TARGET} SOURCES)
+  foreach(SOURCE_FILE ${libdevilutionx_SRCS})
     set_source_files_properties(${SOURCE_FILE} PROPERTIES
       COMPILE_DEFINITIONS __FILE__="${SOURCE_FILE}"
     )
