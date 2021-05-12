@@ -81,35 +81,21 @@ void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashie
 	for (int i = 37; i < 47; i++)
 		pPack->pSplLvl2[i - 37] = player._pSplLvl[i];
 
-	PkItemStruct *pki = &pPack->InvBody[0];
-	const ItemStruct *pi = &player.InvBody[0];
-
 	for (int i = 0; i < NUM_INVLOC; i++) {
-		PackItem(pki, pi);
-		pki++;
-		pi++;
+		PackItem(&pPack->InvBody[i], &player.InvBody[i]);
 	}
 
-	pki = &pPack->InvList[0];
-	pi = &player.InvList[0];
-
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		PackItem(pki, pi);
-		pki++;
-		pi++;
+		PackItem(&pPack->InvList[i], &player.InvList[i]);
 	}
 
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
 		pPack->InvGrid[i] = player.InvGrid[i];
 
 	pPack->_pNumInv = player._pNumInv;
-	pki = &pPack->SpdList[0];
-	pi = &player.SpdList[0];
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		PackItem(pki, pi);
-		pki++;
-		pi++;
+		PackItem(&pPack->SpdList[i], &player.SpdList[i]);
 	}
 
 	pPack->wReflections = SDL_SwapLE16(player.wReflections);
@@ -239,40 +225,28 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 	for (int i = 37; i < 47; i++)
 		player._pSplLvl[i] = pPack->pSplLvl2[i - 37];
 
-	const PkItemStruct *pki = &pPack->InvBody[0];
-	ItemStruct *pi = &player.InvBody[0];
-
 	for (int i = 0; i < NUM_INVLOC; i++) {
-		bool isHellfire = netSync ? ((pki->dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
-		UnPackItem(pki, pi, isHellfire);
-		pki++;
-		pi++;
+		auto packedItem = pPack->InvBody[i];
+		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		UnPackItem(&packedItem, &player.InvBody[i], isHellfire);
 	}
 
-	pki = &pPack->InvList[0];
-	pi = &player.InvList[0];
-
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		bool isHellfire = netSync ? ((pki->dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
-		UnPackItem(pki, pi, isHellfire);
-		pki++;
-		pi++;
+		auto packedItem = pPack->InvList[i];
+		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		UnPackItem(&packedItem, &player.InvList[i], isHellfire);
 	}
 
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
 		player.InvGrid[i] = pPack->InvGrid[i];
 
 	player._pNumInv = pPack->_pNumInv;
-	VerifyGoldSeeds(&player);
-
-	pki = &pPack->SpdList[0];
-	pi = &player.SpdList[0];
+	VerifyGoldSeeds(player);
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		bool isHellfire = netSync ? ((pki->dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
-		UnPackItem(pki, pi, isHellfire);
-		pki++;
-		pi++;
+		auto packedItem = pPack->SpdList[i];
+		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		UnPackItem(&packedItem, &player.SpdList[i], isHellfire);
 	}
 
 	if (pnum == myplr) {
