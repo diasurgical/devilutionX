@@ -342,9 +342,118 @@ void RenderOutlineForPixels(std::uint8_t *dst, int dstPitch, int width, std::uin
 		RenderOutlineForPixel<North, West, South, East>(dst++, dstPitch, color);
 }
 
+template <bool North, bool West, bool South, bool East>
+void RenderOutlineForPixel(std::uint8_t *dst, int dstPitch, std::uint8_t srcColor, std::uint8_t color)
+{
+	if (srcColor == 0)
+		return;
+	RenderOutlineForPixel<North, West, South, East>(dst, dstPitch, color);
+}
+
+template <bool North, bool West, bool South, bool East>
+void RenderOutlineForPixels(std::uint8_t *dst, int dstPitch, int width, const std::uint8_t *src, std::uint8_t color)
+{
+	while (width-- > 0)
+		RenderOutlineForPixel<North, West, South, East>(dst++, dstPitch, *src++, color);
+}
+
+template <bool Fill, bool North, bool West, bool South, bool East>
+std::uint8_t *RenderCl2OutlinePixelsCheckFirstColumn(
+    std::uint8_t *dst, int dstPitch, int dstX,
+    const std::uint8_t *src, std::uint8_t width, std::uint8_t color)
+{
+	if (dstX == -1) {
+		if (Fill) {
+			RenderOutlineForPixel</*North=*/false, /*West=*/false, /*South=*/false, East>(
+			    dst++, dstPitch, color);
+		} else {
+			RenderOutlineForPixel</*North=*/false, /*West=*/false, /*South=*/false, East>(
+			    dst++, dstPitch, *src++, color);
+		}
+		--width;
+	}
+	if (width > 0) {
+		if (Fill) {
+			RenderOutlineForPixel<North, /*West=*/false, South, East>(dst++, dstPitch, color);
+		} else {
+			RenderOutlineForPixel<North, /*West=*/false, South, East>(dst++, dstPitch, *src++, color);
+		}
+		--width;
+	}
+	if (width > 0) {
+		if (Fill) {
+			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
+			++src;
+		} else {
+			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, src, color);
+		}
+		dst += width;
+	}
+	return dst;
+}
+
+template <bool Fill, bool North, bool West, bool South, bool East>
+std::uint8_t *RenderCl2OutlinePixelsCheckLastColumn(
+    std::uint8_t *dst, int dstPitch, int dstX, int dstW,
+    const std::uint8_t *src, std::uint8_t width, std::uint8_t color)
+{
+	const bool lastPixel = dstX < dstW && width >= 1;
+	const bool oobPixel = dstX + width > dstW;
+	const int numSpecialPixels = (lastPixel ? 1 : 0) + (oobPixel ? 1 : 0);
+	if (width > numSpecialPixels) {
+		width -= numSpecialPixels;
+		if (Fill) {
+			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
+		} else {
+			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, src, color);
+			src += width;
+		}
+		dst += width;
+	}
+	if (lastPixel) {
+		if (Fill) {
+			RenderOutlineForPixel<North, West, South, /*East=*/false>(dst++, dstPitch, color);
+		} else {
+			RenderOutlineForPixel<North, West, South, /*East=*/false>(dst++, dstPitch, *src++, color);
+		}
+	}
+	if (oobPixel) {
+		if (Fill) {
+			RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false>(dst++, dstPitch, color);
+		} else {
+			RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false>(dst++, dstPitch, *src++, color);
+		}
+	}
+	return dst;
+}
+
+template <bool Fill, bool North, bool West, bool South, bool East, bool CheckFirstColumn, bool CheckLastColumn>
+std::uint8_t *RenderCl2OutlinePixels(
+    std::uint8_t *dst, int dstPitch, int dstX, int dstW,
+    const std::uint8_t *src, std::uint8_t width, std::uint8_t color)
+{
+	if (Fill && *src == 0)
+		return dst + width;
+
+	if (CheckFirstColumn && dstX <= 0) {
+		return RenderCl2OutlinePixelsCheckFirstColumn<Fill, North, West, South, East>(
+		    dst, dstPitch, dstX, src, width, color);
+	}
+	if (CheckLastColumn && dstX + width >= dstW) {
+		return RenderCl2OutlinePixelsCheckLastColumn<Fill, North, West, South, East>(
+		    dst, dstPitch, dstX, dstW, src, width, color);
+	}
+	if (Fill) {
+		RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
+	} else {
+		RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, src, color);
+	}
+	return dst + width;
+}
+
 template <bool North, bool West, bool South, bool East,
     bool ClipWidth = false, bool CheckFirstColumn = false, bool CheckLastColumn = false>
-const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive-complexity,misc-no-recursion)
+const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive-complexity)
     const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcWidth,
     ClipX clipX, std::uint8_t color, SkipSize &skipSize)
 {
@@ -354,38 +463,15 @@ const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive
 	auto *dst = &out[position];
 	const auto dstPitch = out.pitch();
 
-	const auto renderPixels = [&](std::uint8_t width) { // NOLINT(readability-function-cognitive-complexity)
-		if (CheckFirstColumn && position.x <= 0) {
-			if (position.x == -1) {
-				RenderOutlineForPixel</*North=*/false, /*West=*/false, /*South=*/false, East>(dst++, dstPitch, color);
-				--width;
-			}
-			if (width > 0) {
-				RenderOutlineForPixel<North, /*West=*/false, South, East>(dst++, dstPitch, color);
-				--width;
-			}
-			if (width > 0) {
-				RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
-				dst += width;
-			}
-		} else if (CheckLastColumn && position.x + width >= out.w()) {
-			const bool lastPixel = position.x < out.w() && width >= 1;
-			const bool oobPixel = position.x + width > out.w();
-			const int numSpecialPixels = (lastPixel ? 1 : 0) + (oobPixel ? 1 : 0);
-			if (width > numSpecialPixels) {
-				width -= numSpecialPixels;
-				RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
-				dst += width;
-			}
-			if (lastPixel) {
-				RenderOutlineForPixel<North, West, South, /*East=*/false>(dst++, dstPitch, color);
-			}
-			if (oobPixel) {
-				RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false>(dst++, dstPitch, color);
-			}
+	const auto renderPixels = [&](bool fill, std::uint8_t w) {
+		if (fill) {
+			dst = RenderCl2OutlinePixels</*Fill=*/true, North, West, South, East, CheckFirstColumn, CheckLastColumn>(
+			    dst, dstPitch, position.x, out.w(), reinterpret_cast<const std::uint8_t *>(src), w, color);
+			++src;
 		} else {
-			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
-			dst += width;
+			dst = RenderCl2OutlinePixels</*Fill=*/false, North, West, South, East, CheckFirstColumn, CheckLastColumn>(
+			    dst, dstPitch, position.x, out.w(), reinterpret_cast<const std::uint8_t *>(src), w, color);
+			src += v;
 		}
 	};
 
@@ -398,16 +484,11 @@ const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive
 		while (remainingLeftClip > 0) {
 			v = static_cast<std::uint8_t>(*src++);
 			if (IsCl2Opaque(v)) {
-				if (IsCl2OpaqueFill(v)) {
-					v = GetCl2OpaqueFillWidth(v);
-					++src;
-				} else {
-					v = GetCl2OpaquePixelsWidth(v);
-					src += v;
-				}
+				const bool fill = IsCl2OpaqueFill(v);
+				v = fill ? GetCl2OpaqueFillWidth(v) : GetCl2OpaquePixelsWidth(v);
 				if (v > remainingLeftClip) {
 					const std::uint8_t overshoot = v - remainingLeftClip;
-					renderPixels(overshoot);
+					renderPixels(fill, overshoot);
 					position.x += overshoot;
 				}
 			} else {
@@ -429,14 +510,9 @@ const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive
 	while (remainingWidth > 0) {
 		v = static_cast<std::uint8_t>(*src++);
 		if (IsCl2Opaque(v)) {
-			if (IsCl2OpaqueFill(v)) {
-				v = GetCl2OpaqueFillWidth(v);
-				++src;
-			} else {
-				v = GetCl2OpaquePixelsWidth(v);
-				src += v;
-			}
-			renderPixels(ClipWidth ? std::min(remainingWidth, static_cast<std::int_fast16_t>(v)) : v);
+			const bool fill = IsCl2OpaqueFill(v);
+			v = fill ? GetCl2OpaqueFillWidth(v) : GetCl2OpaquePixelsWidth(v);
+			renderPixels(fill, ClipWidth ? std::min(remainingWidth, static_cast<std::int_fast16_t>(v)) : v);
 		} else {
 			dst += v;
 		}
