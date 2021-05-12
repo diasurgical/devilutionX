@@ -500,6 +500,7 @@ if(RUN_TESTS)
     test/file_util_test.cpp
     test/inv_test.cpp
     test/lighting_test.cpp
+    test/main.cpp
     test/missiles_test.cpp
     test/pack_test.cpp
     test/player_test.cpp
@@ -509,8 +510,9 @@ if(RUN_TESTS)
     test/animationinfo_test.cpp)
 endif()
 
-list(APPEND devilutionxbin_SRCS ${libdevilutionx_SRCS})
+add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionxbin_SRCS})
+target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory
 file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
@@ -521,7 +523,7 @@ file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BIN
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(is_multi_config)
   set(CONFIG_PATH $<CONFIG>/config.h)
-  target_include_directories(${BIN_TARGET} PUBLIC ${CMAKE_BINARY_DIR}/$<CONFIG>)
+  target_include_directories(libdevilutionx PUBLIC ${CMAKE_BINARY_DIR}/$<CONFIG>)
 else()
   set(CONFIG_PATH config.h)
 endif()
@@ -535,17 +537,18 @@ file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 ")
 
 if(RUN_TESTS)
+  add_executable(devilutionx-tests WIN32 MACOSX_BUNDLE ${devilutionxtest_SRCS})
   include(CTest)
   include(GoogleTest)
   find_package(GTest REQUIRED)
-  include_directories(${GTEST_INCLUDE_DIRS})
+  target_include_directories(devilutionx-tests PRIVATE ${GTEST_INCLUDE_DIRS})
   add_definitions(-DRUN_TESTS)
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    add_definitions(-fprofile-arcs -ftest-coverage)
+    target_compile_options(devilutionx-tests PRIVATE -fprofile-arcs -ftest-coverage)
   endif()
-  list(APPEND devilutionxbin_SRCS ${devilutionxtest_SRCS})
-  target_link_libraries(${BIN_TARGET} PRIVATE -fprofile-arcs ${GTEST_LIBRARIES})
-  gtest_add_tests(${BIN_TARGET} "" AUTO)
+  target_link_libraries(devilutionx-tests PRIVATE -fprofile-arcs libdevilutionx)
+  target_link_libraries(devilutionx-tests PRIVATE -fprofile-arcs ${GTEST_LIBRARIES})
+  gtest_add_tests(devilutionx-tests "" AUTO)
 endif()
 
 if(GPERF)
@@ -559,16 +562,16 @@ if(USE_GETTEXT)
   endforeach(lang)
 endif()
 
-target_include_directories(${BIN_TARGET} PUBLIC
+target_include_directories(libdevilutionx PUBLIC
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
 if(NOT N3DS)
-  target_link_libraries(${BIN_TARGET} PUBLIC
+  target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads)
 endif()
 
-target_link_libraries(${BIN_TARGET} PUBLIC
+target_link_libraries(libdevilutionx PUBLIC
   asio
   PKWare
   StormLib
@@ -576,14 +579,14 @@ target_link_libraries(${BIN_TARGET} PUBLIC
   Radon)
 
 if(NOT NONET)
-  target_link_libraries(${BIN_TARGET} PUBLIC sodium)
+  target_link_libraries(libdevilutionx PUBLIC sodium)
 endif()
 
-target_link_libraries(${BIN_TARGET} PUBLIC fmt::fmt)
+target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
 
 genex_for_option(DEBUG)
-target_compile_definitions(${BIN_TARGET} PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
-target_compile_definitions(${BIN_TARGET} PUBLIC ASIO_STANDALONE)
+target_compile_definitions(libdevilutionx PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
+target_compile_definitions(libdevilutionx PUBLIC ASIO_STANDALONE)
 
 # Defines without value
 foreach(
@@ -671,78 +674,78 @@ foreach(
 endforeach(def_name)
 
 genex_for_option(UBSAN)
-target_compile_options(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
-target_link_libraries(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+target_compile_options(libdevilutionx PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+target_link_libraries(libdevilutionx PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
 
 if(TSAN)
-  target_compile_options(${BIN_TARGET} PUBLIC -fsanitize=thread)
-  target_link_libraries(${BIN_TARGET} PUBLIC -fsanitize=thread)
+  target_compile_options(libdevilutionx PUBLIC -fsanitize=thread)
+  target_link_libraries(libdevilutionx PUBLIC -fsanitize=thread)
 else()
   genex_for_option(ASAN)
-  target_compile_options(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-  target_link_libraries(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+  target_compile_options(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+  target_link_libraries(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
 endif()
 
 if(USE_SDL1)
-  target_link_libraries(${BIN_TARGET} PUBLIC
+  target_link_libraries(libdevilutionx PUBLIC
     ${SDL_TTF_LIBRARY}
     ${SDL_LIBRARY})
-  target_compile_definitions(${BIN_TARGET} PUBLIC USE_SDL1)
+  target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
 else()
-  target_link_libraries(${BIN_TARGET} PUBLIC
+  target_link_libraries(libdevilutionx PUBLIC
     SDL2::SDL2
     ${SDL2_MAIN}
     SDL2::SDL2_ttf)
 endif()
 
 if(NOT NOSOUND)
-  target_link_libraries(${BIN_TARGET} PUBLIC SDL_audiolib)
+  target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)
 endif()
 
 if(SWITCH)
-  target_link_libraries(${BIN_TARGET} PUBLIC switch::libnx
+  target_link_libraries(libdevilutionx PUBLIC switch::libnx
     -lfreetype -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
 endif()
 
 if(AMIGA)
-  target_link_libraries(${BIN_TARGET} PUBLIC
+  target_link_libraries(libdevilutionx PUBLIC
     ${FREETYPE_LIBRARY}
     ${ZLIB_LIBRARY})
   if(NOT WARPOS)
-    target_link_libraries(${BIN_TARGET} PUBLIC -ldebug)
+    target_link_libraries(libdevilutionx PUBLIC -ldebug)
   endif()
 endif()
 
 if (VITA)
-  target_link_libraries(${BIN_TARGET} PUBLIC
+  target_link_libraries(libdevilutionx PUBLIC
         ScePower_stub
         freetype
         png
         z
   )
-  target_compile_definitions(${BIN_TARGET} PUBLIC VITA)
+  target_compile_definitions(libdevilutionx PUBLIC VITA)
 endif()
 
 if(N3DS)
-  target_link_libraries(${BIN_TARGET} PUBLIC 3ds::freetype 3ds::bzip2 3ds::png)
-  target_link_libraries(${BIN_TARGET} PUBLIC 3ds::citro3d 3ds::ctrulib)
+  target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2 3ds::png)
+  target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
 endif()
 
-target_compile_definitions(${BIN_TARGET} PUBLIC ${def_list})
+target_compile_definitions(libdevilutionx PUBLIC ${def_list})
 
 if (GPERF)
-  target_link_libraries(${BIN_TARGET} PUBLIC ${GPERFTOOLS_LIBRARIES})
+  target_link_libraries(libdevilutionx PUBLIC ${GPERFTOOLS_LIBRARIES})
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
-  target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
+  target_link_libraries(libdevilutionx PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
 if(WIN32)
-  target_link_libraries(${BIN_TARGET} PUBLIC wsock32 ws2_32 wininet)
+  target_link_libraries(libdevilutionx PUBLIC wsock32 ws2_32 wininet)
 
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(${BIN_TARGET} PUBLIC $<$<CONFIG:Debug>:-gstabs>)
+    target_compile_options(libdevilutionx PUBLIC $<$<CONFIG:Debug>:-gstabs>)
   endif()
 endif()
 
@@ -752,7 +755,7 @@ if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
 endif()
 
 if(HAIKU)
-  target_link_libraries(${BIN_TARGET} PUBLIC network)
+  target_link_libraries(libdevilutionx PUBLIC network)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -768,19 +771,19 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
   # Note: For Valgrind support.
   genex_for_option(DEBUG)
-  target_compile_options(${BIN_TARGET} PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
+  target_compile_options(libdevilutionx PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
 
   # Warnings for devilutionX
-  target_compile_options(${BIN_TARGET} PUBLIC -Wall -Wextra -Wno-unused-parameter)
+  target_compile_options(libdevilutionx PUBLIC -Wall -Wextra -Wno-unused-parameter)
 
   # For ARM and other default unsigned char platforms
-  target_compile_options(${BIN_TARGET} PUBLIC -fsigned-char)
+  target_compile_options(libdevilutionx PUBLIC -fsigned-char)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  target_compile_options(${BIN_TARGET} PUBLIC "/W1")
-  target_compile_options(${BIN_TARGET} PUBLIC "/Zc:__cplusplus")
-  target_compile_options(${BIN_TARGET} PUBLIC "/permissive-")
+  target_compile_options(libdevilutionx PUBLIC "/W1")
+  target_compile_options(libdevilutionx PUBLIC "/Zc:__cplusplus")
+  target_compile_options(libdevilutionx PUBLIC "/permissive-")
 endif()
 
 if(APPLE)
@@ -1015,5 +1018,5 @@ endif()
 
 if(NOT NONET)
   add_subdirectory(3rdParty/libzt)
-  target_link_libraries(${BIN_TARGET} PUBLIC zt-static)
+  target_link_libraries(libdevilutionx PUBLIC zt-static)
 endif()
