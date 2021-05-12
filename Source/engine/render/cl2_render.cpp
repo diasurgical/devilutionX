@@ -490,6 +490,8 @@ const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive
 					const std::uint8_t overshoot = v - remainingLeftClip;
 					renderPixels(fill, overshoot);
 					position.x += overshoot;
+				} else {
+					src += fill ? 1 : v;
 				}
 			} else {
 				if (v > remainingLeftClip) {
