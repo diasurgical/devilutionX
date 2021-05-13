@@ -869,7 +869,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 			yo = PANEL_TOP;
 		}
 
-		if (i >= InvRect[r].X + xo && i < InvRect[r].X + xo + INV_SLOT_SIZE_PX) {
+		if (i >= InvRect[r].X + xo && i <= InvRect[r].X + xo + INV_SLOT_SIZE_PX) {
 			if (j >= InvRect[r].Y + yo - INV_SLOT_SIZE_PX - 1 && j < InvRect[r].Y + yo) {
 				done = true;
 				r--;
