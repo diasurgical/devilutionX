@@ -4,6 +4,10 @@
 
 #include "./console.h"
 
+#ifdef __PSP__
+#include "miniwin/miniwin.h"
+#endif
+
 #define DEFAULT_PRIORITY SDL_LOG_PRIORITY_CRITICAL
 #define DEFAULT_ASSERT_PRIORITY SDL_LOG_PRIORITY_WARN
 #define DEFAULT_APPLICATION_PRIORITY SDL_LOG_PRIORITY_INFO
