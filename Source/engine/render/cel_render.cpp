@@ -13,6 +13,7 @@
 #include "options.h"
 #include "palette.h"
 #include "scrollrt.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -29,7 +30,7 @@ constexpr std::uint8_t GetCelTransparentWidth(std::uint8_t control)
 	return -static_cast<std::int8_t>(control);
 }
 
-const byte *SkipRestOfCelLine(const byte *src, std::int_fast16_t remainingWidth)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const byte *SkipRestOfCelLine(const byte *src, std::int_fast16_t remainingWidth)
 {
 	while (remainingWidth > 0) {
 		const auto v = static_cast<std::int8_t>(*src++);
@@ -47,7 +48,7 @@ constexpr auto NullLineEndFn = []() {};
 
 /** Renders a CEL with only vertical clipping to the output buffer. */
 template <typename RenderLine, typename LineEndFn>
-void RenderCelClipY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
     const RenderLine &renderLine, const LineEndFn &lineEndFn)
 {
 	const auto *srcEnd = src + srcSize;
@@ -82,7 +83,8 @@ void RenderCelClipY(const CelOutputBuffer &out, Point position, const byte *src,
 
 /** Renders a CEL with both horizontal and vertical clipping to the output buffer. */
 template <typename RenderLine, typename LineEndFn>
-void RenderCelClipXY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, ClipX clipX,
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipXY( // NOLINT(readability-function-cognitive-complexity)
+    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, ClipX clipX,
     const RenderLine &renderLine, const LineEndFn &lineEndFn)
 {
 	const auto *srcEnd = src + srcSize;
@@ -161,7 +163,8 @@ void RenderCelClipXY(const CelOutputBuffer &out, Point position, const byte *src
 }
 
 template <typename RenderLine, typename LineEndFn>
-void RenderCel(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCel(
+    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
     const RenderLine &renderLine, const LineEndFn &lineEndFn)
 {
 	const ClipX clipX = CalculateClipX(position.x, srcWidth, out);
