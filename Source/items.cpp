@@ -4135,21 +4135,18 @@ bool StoreStatOk(ItemStruct *h)
 
 bool SmithItemOk(int i)
 {
-	bool rv;
-
-	rv = true;
 	if (AllItemsList[i].itype == ITYPE_MISC)
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_GOLD)
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_STAFF && (!gbIsHellfire || AllItemsList[i].iSpell))
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_RING)
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_AMULET)
-		rv = false;
+		return false;
 
-	return rv;
+	return true;
 }
 
 int RndSmithItem(int lvl)
