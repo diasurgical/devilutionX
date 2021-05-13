@@ -2359,16 +2359,14 @@ int RndAllItems()
 
 int RndTypeItems(int itype, int imid, int lvl)
 {
-	int i, ri;
-	bool okflag;
 	int ril[512];
 
-	ri = 0;
-	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
-		okflag = true;
+		bool okflag = true;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = false;
 		if (lvl * 2 < AllItemsList[i].iMinMLvl)
