@@ -3125,7 +3125,8 @@ void DoRecharge(int pnum, int cii)
 		pi = &p->InvBody[cii];
 	}
 	if (pi->_itype == ITYPE_STAFF && pi->_iSpell != SPL_NULL) {
-		int r = GenerateRnd(p->_pLevel / r) + 1;
+		int r = GetSpellBookLevel(pi->_iSpell);
+		r = GenerateRnd(p->_pLevel / r) + 1;
 		RechargeItem(pi, r);
 		CalcPlrInv(pnum, true);
 	}
