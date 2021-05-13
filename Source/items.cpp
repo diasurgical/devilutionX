@@ -2751,19 +2751,17 @@ void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int 
 
 void items_427A72()
 {
-	PkItemStruct id;
-	BYTE *buffer;
-
-	if (CornerStone.activated) {
-		if (!CornerStone.item.isEmpty()) {
-			PackItem(&id, &CornerStone.item);
-			buffer = (BYTE *)&id;
-			for (size_t i = 0; i < sizeof(PkItemStruct); i++) {
-				sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
-			}
-		} else {
-			sgOptions.Hellfire.szItem[0] = '\0';
+	if (!CornerStone.activated)
+		return;
+	if (!CornerStone.item.isEmpty()) {
+		PkItemStruct id;
+		PackItem(&id, &CornerStone.item);
+		BYTE *buffer = (BYTE *)&id;
+		for (size_t i = 0; i < sizeof(PkItemStruct); i++) {
+			sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
 		}
+	} else {
+		sgOptions.Hellfire.szItem[0] = '\0';
 	}
 }
 
