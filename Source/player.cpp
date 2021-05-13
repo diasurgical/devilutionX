@@ -1475,7 +1475,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		skippedFrames = 2;
 	if (pmWillBeCalled)
 		skippedFrames += 1;
-	NewPlrAnim(player, player._pWAnim[EndDir], player._pWFrames, 0, player._pWWidth);
+	NewPlrAnim(player, player._pWAnim[EndDir], player._pWFrames, 0, player._pWWidth, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
 
 	player._pdir = EndDir;
 
@@ -1642,7 +1642,7 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 	SetPlayerOld(player);
 
 	player.position.temp = { cx, cy };
-	player._pVar4 = GetSpellLevel(pnum, plr[pnum]._pSpell);
+	player._pVar4 = GetSpellLevel(pnum, player._pSpell);
 }
 
 void FixPlrWalkTags(int pnum)
