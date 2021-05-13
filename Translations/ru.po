@@ -1182,7 +1182,7 @@ msgstr "Включить подробное логирование"
 
 #: Source/diablo.cpp:191
 msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "Форсировать режим spawn даже если найден diabdat.mpq"
+msgstr "Принудительный режим spawn, даже если diabdat.mpq был найден"
 
 #: Source/diablo.cpp:192
 msgid ""
