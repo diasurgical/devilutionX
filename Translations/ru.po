@@ -948,7 +948,7 @@ msgstr "Уровень заклинаний 0 - Нельзя использов�
 #: Source/control.cpp:405 Source/control.cpp:949 Source/control.cpp:1662
 #, c-format
 msgid "Spell Level %i"
-msgstr "Уровень заклинаня %i"
+msgstr "Уровень заклинания %i"
 
 #: Source/control.cpp:409 Source/control.cpp:953
 #, c-format
