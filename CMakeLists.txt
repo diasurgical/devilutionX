@@ -117,6 +117,9 @@ if(SWITCH)
 endif()
 
 if(PSP)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+
   include("$ENV{PSPDEV}/psp/share/cmake/PSP.cmake" REQUIRED)
   include(psp_defs)
 endif()
@@ -713,11 +716,12 @@ endif()
 if(PSP)
   target_link_libraries(${BIN_TARGET} PRIVATE -lSDL_ttf -lSDL_mixer -lSDLmain -lSDL)
   target_link_libraries(${BIN_TARGET} PRIVATE
-    -L${PSPDEV}/psp/lib -lg -lstdc++ -lc -lz -lm -lGL -lvorbisidec -lmikmod -lpspvfpu -lfreetype
-    -L${PSPDEV}/psp/sdk/lib -L${PSPDEV}/psp
+    -L${PSPDEV}/psp/lib -lg -lc -lz -lm -lGL -lvorbisidec -lmikmod -lpspvfpu -lfreetype
+    -L${PSPDEV}/psp/sdk/lib -lstdc++ -L${PSPDEV}/psp
     -lpspdebug -lpspgu -lpspctrl -lpspge -lpspirkeyb -lpsppower -lpsppower_driver -lpspdisplay -lpsphprm -lpspsdk -lpsprtc
     -lpspaudio -lpsputility -lpspnet_inet -lc -lpspuser)
 
+  target_link_options(${BIN_TARGET} PUBLIC -D_PSP_FW_VERSION=500)
   target_compile_definitions(${BIN_TARGET} PRIVATE -Dmain=SDL_main -DPSP_LARGE_MEMORY=1)
 endif()
 
@@ -748,7 +752,7 @@ if(HAIKU)
   target_link_libraries(${BIN_TARGET} PRIVATE network)
 endif()
 
-if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC" AND NOT PSP)
+if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Change __FILE__ to only show the path relative to the project folder
   get_target_property(devilutionx_SRCS ${BIN_TARGET} SOURCES)
   foreach(SOURCE_FILE ${devilutionx_SRCS})
@@ -859,13 +863,18 @@ if(PSP)
   set(EXTRA_TARGETS   "EBOOT.PBP")
   set(PSP_EBOOT_TITLE "DevilutionX")
   set(PSP_LARGE_MEMORY 1)
-  # may want to add these later
-  # set_target_properties(${BIN_TARGET} PROPERTIES CXX_STANDARD 17 CXX_EXTENSIONS OFF)
-  # set_target_properties(${BIN_TARGET} PROPERTIES COMPILE_FLAGS -fno-rtti -G0 -O2)
+
+  if(BINARY_RELEASE)
+    set_target_properties(${BIN_TARGET} PROPERTIES COMPILE_FLAGS -fno-rtti -G0 -O2)
+  else()
+    set_target_properties(${BIN_TARGET} PROPERTIES COMPILE_FLAGS -fno-rtti -g -O0)
+  endif()
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_PSP_FW_VERSION=500")
 
   create_pbp_file(TARGET ${BIN_TARGET}
-    ICON_PATH "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
-    BACKGROUND_PATH "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
+    ICON_PATH "${PROJECT_SOURCE_DIR}/Packaging/psp/icon.png"
+    BACKGROUND_PATH "${PROJECT_SOURCE_DIR}/Packaging/psp/background.png"
   )
 endif()
 

@@ -572,7 +572,7 @@ char *SDL_GetBasePath()
 #elif defined(__PSP__)
 	{
 		// replacement for strdup
-		const char* str = "ms0:/PSP/SAVEDATA/DEVILUTIONX/";
+		const char* str = "ms0:/PSP/GAME/DevilutionX/";
 		int len = strlen(str) + 1;
 		retval = (char*)malloc(len);
 
