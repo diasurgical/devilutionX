@@ -6,7 +6,7 @@
 namespace devilution {
 
 struct Art {
-	SDLSurfaceUniquePtr surface;
+	SDLUniquePtr<SDL_Surface> surface;
 	int frames;
 	int logical_width;
 	int frame_height;

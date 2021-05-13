@@ -120,7 +120,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 		return;
 	}
 
-	SDLSurfaceUniquePtr artSurface { SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, GetPcxSdlPixelFormat(bpp)) };
+	SDLUniquePtr<SDL_Surface> artSurface { SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, GetPcxSdlPixelFormat(bpp)) };
 	if (!LoadPcxPixelsAndPalette(handle, width, height, bpp, static_cast<BYTE *>(artSurface->pixels),
 	        artSurface->pitch, pPalette)) {
 		Log("LoadArt(\"{}\"): LoadPcxPixelsAndPalette failed with code {}", pszFile, SErrGetLastError());
@@ -147,7 +147,7 @@ void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 	constexpr int DefaultArtBpp = 8;
 	constexpr int DefaultArtFormat = SDL_PIXELFORMAT_INDEX8;
 	art->frames = frames;
-	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormatFrom(
+	art->surface = ScaleSurfaceToOutput(SDLUniquePtr<SDL_Surface> { SDL_CreateRGBSurfaceWithFormatFrom(
 	    const_cast<BYTE *>(artData), w, h, DefaultArtBpp, w, DefaultArtFormat) });
 	art->logical_width = w;
 	art->frame_height = h / frames;

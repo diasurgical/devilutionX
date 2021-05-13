@@ -11,28 +11,18 @@
 namespace devilution {
 
 /**
- * @brief Deletes the SDL surface using `SDL_FreeSurface`.
- */
-struct SDLSurfaceDeleter {
-	void operator()(SDL_Surface *surface) const
-	{
-		SDL_FreeSurface(surface);
-	}
-};
-
-using SDLSurfaceUniquePtr = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>;
-
-/**
- * @brief Deletes the object using `SDL_free`.
+ * @brief Deletes the object using `SDL_free*`.
  */
 template <typename T>
 struct SDLFreeDeleter {
-	static_assert(!std::is_same<T, SDL_Surface>::value,
-	    "SDL_Surface should use SDLSurfaceUniquePtr instead.");
-
 	void operator()(T *obj) const
 	{
-		SDL_free(obj);
+		if constexpr (std::is_same<T, SDL_Surface>::value)
+			SDL_FreeSurface(obj);
+		else if constexpr (std::is_same<T, SDL_Palette>::value)
+			SDL_FreePalette(obj);
+		else
+			SDL_free(obj);
 	}
 };
 

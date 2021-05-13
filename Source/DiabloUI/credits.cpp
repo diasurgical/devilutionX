@@ -41,7 +41,7 @@ struct CachedLine {
 		palette_version = pal_surface_palette_version;
 	}
 
-	CachedLine(std::size_t index, SDLSurfaceUniquePtr surface)
+	CachedLine(std::size_t index, SDLUniquePtr<SDL_Surface> surface)
 	{
 		m_index = index;
 		m_surface = std::move(surface);
@@ -49,7 +49,7 @@ struct CachedLine {
 	}
 
 	std::size_t m_index;
-	SDLSurfaceUniquePtr m_surface;
+	SDLUniquePtr<SDL_Surface> m_surface;
 	unsigned int palette_version;
 };
 
@@ -70,13 +70,13 @@ CachedLine PrepareLine(std::size_t index)
 		++contents;
 
 	const SDL_Color shadowColor = { 0, 0, 0, 0 };
-	SDLSurfaceUniquePtr text { RenderText(contents, shadowColor) };
+	SDLUniquePtr<SDL_Surface> text { RenderText(contents, shadowColor) };
 
 	// Precompose shadow and text:
-	SDLSurfaceUniquePtr surface;
+	SDLUniquePtr<SDL_Surface> surface;
 	if (text != nullptr) {
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
-		surface = SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8) };
+		surface = SDLUniquePtr<SDL_Surface> { SDL_CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8) };
 		const SDL_Color maskColor = { 0, 255, 0, 0 }; // Any color different from both shadow and text
 		const SDL_Color &textColor = palette->colors[224];
 		SDL_Color colors[3] = { maskColor, textColor, shadowColor };
