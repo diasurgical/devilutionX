@@ -1122,16 +1122,9 @@ void InitPlayer(int pnum, bool FirstTime)
 			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1) + 1;
 			player.AnimInfo.DelayCounter = GenerateRnd(3);
 		} else {
-<<<<<<< refs/remotes/origin/master
-			plr[pnum]._pmode = PM_DEATH;
-			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
-			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
-=======
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player._pDAnim[DIR_S], player._pDFrames, 1, player._pDWidth);
 			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
-			player.actionFrame = 2 * player.AnimInfo.NumberOfFrames;
->>>>>>> ♻️ Player by reference
 		}
 
 		player._pdir = DIR_S;
@@ -1370,14 +1363,8 @@ void PM_ChangeOffset(int pnum)
 	}
 	auto &player = plr[pnum];
 
-<<<<<<< refs/remotes/origin/master
-	px = plr[pnum].position.offset2.x / 256;
-	py = plr[pnum].position.offset2.y / 256;
-=======
-	player.actionFrame++;
 	int px = player.position.offset2.x / 256;
 	int py = player.position.offset2.y / 256;
->>>>>>> ♻️ Player by reference
 
 	player.position.offset2 += player.position.velocity;
 
@@ -1483,21 +1470,14 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	}
 
 	//Start walk animation
-<<<<<<< refs/remotes/origin/master
 	int skippedFrames = -2;
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown)
 		skippedFrames = 2;
 	if (pmWillBeCalled)
 		skippedFrames += 1;
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
-
-	plr[pnum]._pdir = EndDir;
-=======
 	NewPlrAnim(player, player._pWAnim[EndDir], player._pWFrames, 0, player._pWWidth);
 
 	player._pdir = EndDir;
-	player.actionFrame = 0;
->>>>>>> ♻️ Player by reference
 
 	if (pnum != myplr) {
 		return;
@@ -1661,14 +1641,8 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(player);
 
-<<<<<<< refs/remotes/origin/master
-	plr[pnum].position.temp = { cx, cy };
-	plr[pnum]._pVar4 = GetSpellLevel(pnum, plr[pnum]._pSpell);
-=======
 	player.position.temp = { cx, cy };
-	player._pVar4 = GetSpellLevel(pnum, player._pSpell);
-	player.actionFrame = 1;
->>>>>>> ♻️ Player by reference
+	player._pVar4 = GetSpellLevel(pnum, plr[pnum]._pSpell);
 }
 
 void FixPlrWalkTags(int pnum)
@@ -2303,39 +2277,15 @@ bool PM_DoWalk(int pnum, int variant)
 	auto &player = plr[pnum];
 
 	//Play walking sound effect on certain animation frames
-<<<<<<< refs/remotes/origin/master
 	if (sgOptions.Audio.bWalkingSound && (currlevel != 0 || !sgGameInitInfo.bRunInTown)) {
-		if (plr[pnum].AnimInfo.CurrentFrame == 1
-		    || plr[pnum].AnimInfo.CurrentFrame == 5) {
-			PlaySfxLoc(PS_WALK1, plr[pnum].position.tile.x, plr[pnum].position.tile.y);
-		}
-	}
-
-	//Check if we reached new tile
-	if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pWFrames) {
-=======
-	if (sgOptions.Audio.bWalkingSound) {
-		if (player.AnimInfo.CurrentFrame == 3
-		    || (player._pWFrames == 8 && player.AnimInfo.CurrentFrame == 7)
-		    || (player._pWFrames != 8 && player.AnimInfo.CurrentFrame == 4)) {
+		if (player.AnimInfo.CurrentFrame == 1
+		    || player.AnimInfo.CurrentFrame == 5) {
 			PlaySfxLoc(PS_WALK1, player.position.tile.x, player.position.tile.y);
 		}
 	}
 
-	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
-	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
-		if (player.AnimInfo.CurrentFrame % 2 == 0) {
-			player.AnimInfo.CurrentFrame++;
-			player.actionFrame++;
-		}
-		if (player.AnimInfo.CurrentFrame >= player._pWFrames) {
-			player.AnimInfo.CurrentFrame = 0;
-		}
-	}
-
 	//Check if we reached new tile
-	if (player.actionFrame >= player._pWFrames) {
->>>>>>> ♻️ Player by reference
+	if (player.AnimInfo.CurrentFrame >= player._pWFrames) {
 
 		//Update the player's tile position
 		switch (variant) {
@@ -3119,11 +3069,7 @@ bool PM_DoSpell(int pnum)
 	}
 	auto &player = plr[pnum];
 
-<<<<<<< refs/remotes/origin/master
-	if (plr[pnum].AnimInfo.CurrentFrame == (plr[pnum]._pSFNum + 1)) {
-=======
-	if (player.actionFrame == player._pSFNum) {
->>>>>>> ♻️ Player by reference
+	if (player.AnimInfo.CurrentFrame == (player._pSFNum + 1)) {
 		CastSpell(
 		    pnum,
 		    player._pSpell,
@@ -3138,15 +3084,8 @@ bool PM_DoSpell(int pnum)
 		}
 	}
 
-<<<<<<< refs/remotes/origin/master
 	if (leveltype == DTYPE_TOWN) {
-		if (plr[pnum].AnimInfo.CurrentFrame > plr[pnum]._pSFrames) {
-=======
-	player.actionFrame++;
-
-	if (leveltype == DTYPE_TOWN) {
-		if (player.actionFrame > player._pSFrames) {
->>>>>>> ♻️ Player by reference
+		if (player.AnimInfo.CurrentFrame > player._pSFrames) {
 			StartWalkStand(pnum);
 			ClearPlrPVars(player);
 			return true;
