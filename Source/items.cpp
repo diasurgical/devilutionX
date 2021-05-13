@@ -4417,31 +4417,26 @@ void SpawnPremium(int pnum)
 
 bool WitchItemOk(int i)
 {
-	bool rv;
-
-	rv = false;
-	if (AllItemsList[i].itype == ITYPE_MISC)
-		rv = true;
-	if (AllItemsList[i].itype == ITYPE_STAFF)
-		rv = true;
+	if (AllItemsList[i].itype != ITYPE_MISC && AllItemsList[i].itype != ITYPE_STAFF)
+		return false;
 	if (AllItemsList[i].iMiscId == IMISC_MANA)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iMiscId == IMISC_FULLMANA)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iSpell == SPL_TOWN)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iMiscId == IMISC_FULLHEAL)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iMiscId == IMISC_HEAL)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iMiscId > IMISC_OILFIRST && AllItemsList[i].iMiscId < IMISC_OILLAST)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
-		rv = false;
+		return false;
 
-	return rv;
+	return true;
 }
 
 int RndWitchItem(int lvl)
