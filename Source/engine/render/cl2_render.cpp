@@ -9,6 +9,7 @@
 
 #include "engine/render/common_impl.h"
 #include "scrollrt.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 namespace {
@@ -48,7 +49,7 @@ struct SkipSize {
 	std::int_fast16_t wholeLines;
 	std::int_fast16_t xOffset;
 };
-SkipSize GetSkipSize(std::int_fast16_t overrun, std::int_fast16_t srcWidth)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT SkipSize GetSkipSize(std::int_fast16_t overrun, std::int_fast16_t srcWidth)
 {
 	SkipSize result;
 	result.wholeLines = overrun / srcWidth;
@@ -59,7 +60,7 @@ SkipSize GetSkipSize(std::int_fast16_t overrun, std::int_fast16_t srcWidth)
 // Debugging variables
 // #define DEBUG_RENDER_COLOR 213 // orange-ish hue
 
-const byte *SkipRestOfCl2Line(
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const byte *SkipRestOfCl2Line(
     const byte *src, std::int_fast16_t srcWidth,
     std::int_fast16_t remainingWidth, SkipSize &skipSize)
 {
@@ -90,7 +91,8 @@ const byte *SkipRestOfCl2Line(
 
 /** Renders a CL2 sprite with only vertical clipping to the output buffer. */
 template <typename RenderPixels, typename RenderFill>
-void RenderCl2ClipY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2ClipY(
+    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
     const RenderPixels &renderPixels, const RenderFill &renderFill)
 {
 	const auto *srcEnd = src + srcSize;
@@ -142,7 +144,7 @@ void RenderCl2ClipY(const CelOutputBuffer &out, Point position, const byte *src,
 
 /** Renders a CEL with both horizontal and vertical clipping to the output buffer. */
 template <typename RenderPixels, typename RenderFill>
-void RenderCl2ClipXY( // NOLINT(readability-function-cognitive-complexity)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2ClipXY( // NOLINT(readability-function-cognitive-complexity)
     const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, ClipX clipX,
     const RenderPixels &renderPixels, const RenderFill &renderFill)
 {
@@ -245,7 +247,8 @@ void RenderCl2ClipXY( // NOLINT(readability-function-cognitive-complexity)
 }
 
 template <typename RenderPixels, typename RenderFill>
-void RenderCl2(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2(
+    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
     const RenderPixels &renderPixels, const RenderFill &renderFill)
 {
 	const ClipX clipX = CalculateClipX(position.x, srcWidth, out);
