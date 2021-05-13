@@ -528,7 +528,7 @@ void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
 	if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 		if (quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && player.HasItem(IDI_BRAIN, &i)) {
 			player.RemoveInvItem(i);
-			SpawnQuestItem(IDI_SPECELIX, healer.position.x, healer.position.y + 1, 0, 0);
+			SpawnQuestItem(IDI_SPECELIX, healer.position + Point{0, 1}, 0, 0);
 			InitQTextMsg(TEXT_MUSH4);
 			quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
 			Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;

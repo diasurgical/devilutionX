@@ -495,7 +495,7 @@ static void items_42390F()
 		id = IDI_NOTE1;
 		break;
 	}
-	SpawnQuestItem(id, x, y, 0, 1);
+	SpawnQuestItem(id, {x, y}, 0, 1);
 }
 
 void InitItems()
@@ -527,11 +527,11 @@ void InitItems()
 		if (QuestStatus(Q_ROCK))
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))
-			SpawnQuestItem(IDI_ANVIL, 2 * setpc_x + 27, 2 * setpc_y + 27, 0, 1);
+			SpawnQuestItem(IDI_ANVIL, {2 * setpc_x + 27, 2 * setpc_y + 27}, 0, 1);
 		if (sgGameInitInfo.bCowQuest && currlevel == 20)
-			SpawnQuestItem(IDI_BROWNSUIT, 25, 25, 3, 1);
+			SpawnQuestItem(IDI_BROWNSUIT, {25, 25}, 3, 1);
 		if (sgGameInitInfo.bCowQuest && currlevel == 19)
-			SpawnQuestItem(IDI_GREYSUIT, 25, 25, 3, 1);
+			SpawnQuestItem(IDI_GREYSUIT, {25, 25}, 3, 1);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 		if (currlevel >= 21 && currlevel <= 23)
@@ -2817,7 +2817,7 @@ void items_427ABA(Point position)
 	CornerStone.item = items[ii];
 }
 
-void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
+void SpawnQuestItem(int itemid, Point pos, int randarea, int selflag)
 {
 	if (randarea) {
 		int tries = 0;
@@ -2826,13 +2826,13 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 			if (tries > 1000 && randarea > 1)
 				randarea--;
 
-			x = GenerateRnd(MAXDUNX);
-			y = GenerateRnd(MAXDUNY);
+			pos.x = GenerateRnd(MAXDUNX);
+			pos.y = GenerateRnd(MAXDUNY);
 
 			bool failed = false;
 			for (int i = 0; i < randarea && !failed; i++) {
 				for (int j = 0; j < randarea && !failed; j++) {
-					failed = !ItemSpaceOk(i + x, j + y);
+					failed = !ItemSpaceOk(i + pos.x, j + pos.y);
 				}
 			}
 			if (!failed)
@@ -2845,9 +2845,9 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 
 	int ii = AllocateItem();
 
-	items[ii].position = { x, y };
+	items[ii].position = pos;
 
-	dItem[x][y] = ii + 1;
+	dItem[pos.x][pos.y] = ii + 1;
 
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, itemid, curlv);

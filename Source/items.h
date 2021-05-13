@@ -402,7 +402,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void items_427A72();
 void items_427ABA(Point position);
-void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag);
+void SpawnQuestItem(int itemid, Point pos, int randarea, int selflag);
 void SpawnRock();
 void SpawnRewardItem(int itemid, int xx, int yy);
 void SpawnMapOfDoom(int xx, int yy);

@@ -3004,7 +3004,7 @@ void OperateBookLever(int pnum, int i)
 			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			quests[Q_BLOOD]._qlog = true;
 			quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, true);
+			SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 25, 2 * setpc_y + 33}, 0, true);
 		}
 		object[i]._otype = object[i]._otype;
 		if (object[i]._otype == OBJ_STEELTOME && quests[Q_WARLORD]._qvar1 == 0) {
@@ -3149,7 +3149,7 @@ void OperateMushPatch(int pnum, int i)
 		object[i]._oAnimFrame++;
 		if (!deltaload) {
 			Point pos = GetSuperItemLoc(object[i].position);
-			SpawnQuestItem(IDI_MUSHROOM, pos.x, pos.y, 0, false);
+			SpawnQuestItem(IDI_MUSHROOM, pos, 0, false);
 			quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 		}
 	}
@@ -3173,7 +3173,7 @@ void OperateInnSignChest(int pnum, int i)
 			object[i]._oAnimFrame += 2;
 			if (!deltaload) {
 				Point pos = GetSuperItemLoc(object[i].position);
-				SpawnQuestItem(IDI_BANNER, pos.x, pos.y, 0, false);
+				SpawnQuestItem(IDI_BANNER, pos, 0, false);
 			}
 		}
 	}
@@ -3301,13 +3301,13 @@ void OperatePedistal(int pnum, int i)
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
 		ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, true);
+		SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 19, 2 * setpc_y + 26}, 0, true);
 	}
 	if (object[i]._oVar6 == 2) {
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
 		ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, true);
+		SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 31, 2 * setpc_y + 26}, 0, true);
 	}
 	if (object[i]._oVar6 == 3) {
 		if (!deltaload)
@@ -4792,7 +4792,7 @@ void OperateLazStand(int pnum, int i)
 		object[i]._oAnimFrame++;
 		object[i]._oSelFlag = 0;
 		Point pos = GetSuperItemLoc(object[i].position);
-		SpawnQuestItem(IDI_LAZSTAFF, pos.x, pos.y, 0, false);
+		SpawnQuestItem(IDI_LAZSTAFF, pos, 0, false);
 	}
 }
 
