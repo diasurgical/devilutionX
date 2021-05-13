@@ -1481,7 +1481,6 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 	int l[256];
 	char istr[128];
 	int nl, j, preidx;
-	bool addok;
 	int tmp;
 
 	tmp = GenerateRnd(10);
@@ -1489,18 +1488,15 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 	if (tmp == 0 || onlygood) {
 		nl = 0;
 		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
-			if (IsPrefixValidForItemType(j, PLT_STAFF) && PL_Prefix[j].PLMinLvl <= lvl) {
-				addok = true;
-				if (onlygood && !PL_Prefix[j].PLOk)
-					addok = false;
-				if (addok) {
-					l[nl] = j;
-					nl++;
-					if (PL_Prefix[j].PLDouble) {
-						l[nl] = j;
-						nl++;
-					}
-				}
+			if (!IsPrefixValidForItemType(j, PLT_STAFF) || PL_Prefix[j].PLMinLvl > lvl)
+				continue;
+			if (onlygood && !PL_Prefix[j].PLOk)
+				continue;
+			l[nl] = j;
+			nl++;
+			if (PL_Prefix[j].PLDouble) {
+				l[nl] = j;
+				nl++;
 			}
 		}
 		if (nl != 0) {
