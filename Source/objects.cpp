@@ -3092,7 +3092,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 					if (object[i]._oVar2 != 0)
 						CreateRndItem(object[i].position, false, sendmsg, false);
 					else
-						CreateRndUseful(object[i].position.x, object[i].position.y, sendmsg);
+						CreateRndUseful(object[i].position, sendmsg);
 				}
 			}
 			if (object[i]._oTrapFlag && object[i]._otype >= OBJ_TCHEST1 && object[i]._otype <= OBJ_TCHEST3) {
@@ -5188,7 +5188,7 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 		SetRndSeed(object[i]._oRndSeed);
 		if (object[i]._oVar2 <= 1) {
 			if (object[i]._oVar3 == 0)
-				CreateRndUseful(object[i].position.x, object[i].position.y, sendmsg);
+				CreateRndUseful(object[i].position, sendmsg);
 			else
 				CreateRndItem(object[i].position, false, sendmsg, false);
 		}

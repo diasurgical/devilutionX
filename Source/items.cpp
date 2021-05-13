@@ -2643,13 +2643,13 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	SetupItem(ii);
 }
 
-void CreateRndUseful(int x, int y, bool sendmsg)
+void CreateRndUseful(Point pos, bool sendmsg)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace({x, y}, ii);
+	GetSuperItemSpace(pos, ii);
 	int curlv = items_get_currlevel();
 
 	SetupAllUseful(ii, AdvanceRndSeed(), curlv);
