@@ -4375,12 +4375,10 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 
 void SpawnPremium(int pnum)
 {
-	int i;
-
 	int lvl = plr[pnum]._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
-		for (i = 0; i < maxItems; i++) {
+		for (int i = 0; i < maxItems; i++) {
 			if (premiumitems[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
 				SpawnOnePremium(i, plvl, pnum);
