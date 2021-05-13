@@ -4123,17 +4123,14 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 
 bool StoreStatOk(ItemStruct *h)
 {
-	bool sf;
-
-	sf = true;
 	if (plr[myplr]._pStrength < h->_iMinStr)
-		sf = false;
+		return false;
 	if (plr[myplr]._pMagic < h->_iMinMag)
-		sf = false;
+		return false;
 	if (plr[myplr]._pDexterity < h->_iMinDex)
-		sf = false;
+		return false;
 
-	return sf;
+	return true;
 }
 
 bool SmithItemOk(int i)
