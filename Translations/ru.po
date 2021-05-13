@@ -1896,7 +1896,7 @@ msgstr "Мозг"
 
 #: Source/itemdat.cpp:35
 msgid "Fungal Tome"
-msgstr "Грибной фолиант"
+msgstr "Грибной Фолиант"
 
 #: Source/itemdat.cpp:36
 msgid "Spectral Elixir"
