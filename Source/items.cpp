@@ -1373,20 +1373,20 @@ int AllocateItem()
 	return inum;
 }
 
-static void GetSuperItemSpace(int x, int y, int8_t inum)
+static void GetSuperItemSpace(Point pos, int8_t inum)
 {
-	if (!GetItemSpace({x, y}, inum)) {
-		for (int k = 2; k < 50; k++) {
-			for (int j = -k; j <= k; j++) {
-				int yy = y + j;
-				for (int i = -k; i <= k; i++) {
-					int xx = i + x;
-					if (ItemSpaceOk(xx, yy)) {
-						items[inum].position = { xx, yy };
-						dItem[xx][yy] = inum + 1;
-						return;
-					}
-				}
+	if (GetItemSpace(pos, inum))
+		return;
+	for (int k = 2; k < 50; k++) {
+		for (int j = -k; j <= k; j++) {
+			int yy = pos.y + j;
+			for (int i = -k; i <= k; i++) {
+				int xx = i + pos.x;
+				if (!ItemSpaceOk(xx, yy))
+					continue;
+				items[inum].position = { xx, yy };
+				dItem[xx][yy] = inum + 1;
+				return;
 			}
 		}
 	}
@@ -2461,7 +2461,7 @@ void SpawnUnique(_unique_items uid, int x, int y)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace({x, y}, ii);
 	int curlv = items_get_currlevel();
 
 	int idx = 0;
@@ -2568,7 +2568,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace({x, y}, ii);
 	int uper = monster[m]._uniqtype ? 15 : 1;
 
 	int mLevel = monster[m].MData->mLevel;
@@ -2587,7 +2587,7 @@ static void SetupBaseItem(int x, int y, int idx, bool onlygood, bool sendmsg, bo
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace({x, y}, ii);
 	int curlv = items_get_currlevel();
 
 	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
@@ -2658,7 +2658,7 @@ void CreateRndUseful(int x, int y, bool sendmsg)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace({x, y}, ii);
 	int curlv = items_get_currlevel();
 
 	SetupAllUseful(ii, AdvanceRndSeed(), curlv);
@@ -5027,7 +5027,7 @@ void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta)
 		if (items[ii]._iMiscId == IMISC_BOOK && items[ii]._iSpell == ispell)
 			break;
 	}
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace({x, y}, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -5051,7 +5051,7 @@ static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icur
 
 		idx = RndTypeItems(imisc, imid, lvl);
 	}
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace({x, y}, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
