@@ -1951,7 +1951,7 @@ msgstr "Лезвие Гризвольда"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:400
 msgid "Bovine Plate"
-msgstr "Коровьи Доспехи"
+msgstr "Бычьи Доспехи"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
