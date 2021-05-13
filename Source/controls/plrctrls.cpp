@@ -492,7 +492,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 
 coords InvGetEquipSlotCoord(const inv_body_loc inv_slot)
 {
-	coords result { RIGHT_PANEL, 0 };
+	coords result { RIGHT_PANEL - 1, -1 };
 	result.x -= (icursW28 - 1) * (INV_SLOT_SIZE_PX / 2);
 	switch (inv_slot) {
 	case INVLOC_HEAD:
