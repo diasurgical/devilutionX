@@ -2572,13 +2572,13 @@ void SpawnItem(int m, Point pos, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-static void SetupBaseItem(int x, int y, int idx, bool onlygood, bool sendmsg, bool delta)
+static void SetupBaseItem(Point pos, int idx, bool onlygood, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace({x, y}, ii);
+	GetSuperItemSpace(pos, ii);
 	int curlv = items_get_currlevel();
 
 	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
@@ -2593,7 +2593,7 @@ void CreateRndItem(int x, int y, bool onlygood, bool sendmsg, bool delta)
 {
 	int idx = onlygood ? RndUItem(-1) : RndAllItems();
 
-	SetupBaseItem(x, y, idx, onlygood, sendmsg, delta);
+	SetupBaseItem({x, y}, idx, onlygood, sendmsg, delta);
 }
 
 void SetupAllUseful(int ii, int iseed, int lvl)
@@ -2667,7 +2667,7 @@ void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool send
 	else
 		idx = IDI_GOLD;
 
-	SetupBaseItem(x, y, idx, onlygood, sendmsg, delta);
+	SetupBaseItem({x, y}, idx, onlygood, sendmsg, delta);
 }
 
 void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
