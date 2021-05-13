@@ -2785,7 +2785,7 @@ void items_427ABA(Point position)
 {
 	PkItemStruct PkSItem;
 
-	if (CornerStone.activated || position.x == 0 || position.y == 0) {
+	if (CornerStone.activated || position == Point{0, 0}) {
 		return;
 	}
 
