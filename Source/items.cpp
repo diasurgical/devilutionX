@@ -2333,15 +2333,14 @@ int RndUItem(int m)
 
 int RndAllItems()
 {
-	int i, ri;
 	int ril[512];
 
 	if (GenerateRnd(100) > 25)
 		return 0;
 
 	int curlv = items_get_currlevel();
-	ri = 0;
-	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
