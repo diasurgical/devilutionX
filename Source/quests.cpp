@@ -240,12 +240,9 @@ void CheckQuests()
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
 			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile.x, plr[myplr].position.tile.y);
-			LoadPalette("Levels\\L3Data\\L3pwater.pal");
+			LoadPalette("Levels\\L3Data\\L3pwater.pal", false);
+			UpdatePWaterPalette();
 			WaterDone = 32;
-		}
-		if (WaterDone > 0) {
-			palette_update_quest_palette(WaterDone);
-			WaterDone--;
 		}
 	} else if (plr[myplr]._pmode == PM_STAND) {
 		for (i = 0; i < MAXQUESTS; i++) {
@@ -582,6 +579,16 @@ void LoadPWaterPalette()
 		LoadPalette("Levels\\L3Data\\L3pwater.pal");
 	else
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
+}
+
+void UpdatePWaterPalette()
+{
+	if (WaterDone > 0) {
+		palette_update_quest_palette(WaterDone);
+		WaterDone--;
+		return;
+	}
+	palette_update_caves();
 }
 
 void ResyncMPQuests()

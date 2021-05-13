@@ -1960,6 +1960,8 @@ void diablo_color_cyc_logic()
 		palette_update_crypt();
 	} else if (currlevel >= 17) {
 		palette_update_hive();
+	} else if (setlevel && setlvlnum == quests[Q_PWATER]._qslvl) {
+		UpdatePWaterPalette();
 	} else if (leveltype == DTYPE_CAVES) {
 		palette_update_caves();
 	}
