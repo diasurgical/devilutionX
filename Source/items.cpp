@@ -3021,8 +3021,6 @@ void GetItemFrm(int i)
 
 void GetItemStr(int i)
 {
-	int nGold;
-
 	if (items[i]._itype != ITYPE_GOLD) {
 		if (items[i]._iIdentified)
 			strcpy(infostr, items[i]._iIName);
@@ -3034,7 +3032,7 @@ void GetItemStr(int i)
 		if (items[i]._iMagical == ITEM_QUALITY_UNIQUE)
 			infoclr = UIS_GOLD;
 	} else {
-		nGold = items[i]._ivalue;
+		int nGold = items[i]._ivalue;
 		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 	}
 }
