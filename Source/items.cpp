@@ -2589,11 +2589,11 @@ static void SetupBaseItem(Point pos, int idx, bool onlygood, bool sendmsg, bool 
 		DeltaAddItem(ii);
 }
 
-void CreateRndItem(int x, int y, bool onlygood, bool sendmsg, bool delta)
+void CreateRndItem(Point pos, bool onlygood, bool sendmsg, bool delta)
 {
 	int idx = onlygood ? RndUItem(-1) : RndAllItems();
 
-	SetupBaseItem({x, y}, idx, onlygood, sendmsg, delta);
+	SetupBaseItem(pos, idx, onlygood, sendmsg, delta);
 }
 
 void SetupAllUseful(int ii, int iseed, int lvl)

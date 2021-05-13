@@ -3085,12 +3085,12 @@ void OperateChest(int pnum, int i, bool sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			if (setlevel) {
 				for (j = 0; j < object[i]._oVar1; j++) {
-					CreateRndItem(object[i].position.x, object[i].position.y, true, sendmsg, false);
+					CreateRndItem(object[i].position, true, sendmsg, false);
 				}
 			} else {
 				for (j = 0; j < object[i]._oVar1; j++) {
 					if (object[i]._oVar2 != 0)
-						CreateRndItem(object[i].position.x, object[i].position.y, false, sendmsg, false);
+						CreateRndItem(object[i].position, false, sendmsg, false);
 					else
 						CreateRndUseful(object[i].position.x, object[i].position.y, sendmsg);
 				}
@@ -3250,7 +3250,7 @@ void OperateSarc(int pnum, int i, bool sendmsg)
 			object[i]._oAnimDelay = 3;
 			SetRndSeed(object[i]._oRndSeed);
 			if (object[i]._oVar1 <= 2)
-				CreateRndItem(object[i].position.x, object[i].position.y, false, sendmsg, false);
+				CreateRndItem(object[i].position, false, sendmsg, false);
 			if (object[i]._oVar1 >= 8)
 				SpawnSkeleton(object[i]._oVar2, object[i].position.x, object[i].position.y);
 			if (pnum == myplr)
@@ -4521,7 +4521,7 @@ void OperateDecap(int pnum, int i, bool sendmsg)
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			CreateRndItem(object[i].position.x, object[i].position.y, false, sendmsg, false);
+			CreateRndItem(object[i].position, false, sendmsg, false);
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		}
@@ -5190,7 +5190,7 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 			if (object[i]._oVar3 == 0)
 				CreateRndUseful(object[i].position.x, object[i].position.y, sendmsg);
 			else
-				CreateRndItem(object[i].position.x, object[i].position.y, false, sendmsg, false);
+				CreateRndItem(object[i].position, false, sendmsg, false);
 		}
 		if (object[i]._oVar2 >= 8)
 			SpawnSkeleton(object[i]._oVar4, object[i].position.x, object[i].position.y);

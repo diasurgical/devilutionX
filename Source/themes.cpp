@@ -596,7 +596,7 @@ void Theme_MonstPit(int t)
 			}
 		}
 	}
-	CreateRndItem(ixp, iyp, true, false, true);
+	CreateRndItem({ixp, iyp}, true, false, true);
 	ItemNoFlippy();
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
@@ -694,7 +694,7 @@ void Theme_Treasure(int t)
 					ItemNoFlippy();
 				}
 				if (rv == 0) {
-					CreateRndItem(xp, yp, false, false, true);
+					CreateRndItem({xp, yp}, false, false, true);
 					ItemNoFlippy();
 				}
 				if (rv == 0 || rv >= treasrnd[leveltype - 1] - 2) {

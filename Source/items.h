@@ -395,7 +395,7 @@ void SetupItem(int i);
 int RndItem(int m);
 void SpawnUnique(_unique_items uid, int x, int y);
 void SpawnItem(int m, Point pos, bool sendmsg);
-void CreateRndItem(int x, int y, bool onlygood, bool sendmsg, bool delta);
+void CreateRndItem(Point pos, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(int x, int y, bool sendmsg);
 void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);
 void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
