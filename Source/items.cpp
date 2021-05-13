@@ -4151,23 +4151,26 @@ bool SmithItemOk(int i)
 
 int RndSmithItem(int lvl)
 {
-	int i, ri;
 	int ril[512];
 
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
-		if (AllItemsList[i].iRnd != IDROP_NEVER && SmithItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
+		if (AllItemsList[i].iRnd == IDROP_NEVER)
+			continue;
+		if (!SmithItemOk(i))
+			continue;
+		if (lvl < AllItemsList[i].iMinMLvl)
+			continue;
+		if (ri >= 512)
+			continue;
+		ril[ri] = i;
+		ri++;
+		if (AllItemsList[i].iRnd == IDROP_DOUBLE && ri < 512) {
 			ril[ri] = i;
 			ri++;
-			if (AllItemsList[i].iRnd == IDROP_DOUBLE
-			    && ri < 512) {
-				ril[ri] = i;
-				ri++;
-			}
 		}
 	}
 
@@ -4267,27 +4270,34 @@ bool PremiumItemOk(int i)
 	return rv;
 }
 
-int RndPremiumItem(int minlvl, int maxlvl)
+template <bool (*Ok)(int)>
+int RndVendorItem(int minlvl, int maxlvl = std::numeric_limits<uint8_t>::max())
 {
-	int i, ri;
 	int ril[512];
 
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
+		if (AllItemsList[i].iRnd == IDROP_NEVER)
+			continue;
+		if (!Ok(i))
+			continue;
+		if (AllItemsList[i].iMinMLvl < minlvl && AllItemsList[i].iMinMLvl > maxlvl)
+			continue;
+		if (ri == 512)
+			break;
 
-		if (AllItemsList[i].iRnd != IDROP_NEVER) {
-			if (PremiumItemOk(i)) {
-				if (AllItemsList[i].iMinMLvl >= minlvl && AllItemsList[i].iMinMLvl <= maxlvl && ri < 512) {
-					ril[ri] = i;
-					ri++;
-				}
-			}
-		}
+		ril[ri] = i;
+		ri++;
 	}
 
 	return ril[GenerateRnd(ri)] + 1;
+}
+
+int RndPremiumItem(int minlvl, int maxlvl)
+{
+	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
 static void SpawnOnePremium(int i, int plvl, int myplr)
@@ -4450,23 +4460,7 @@ bool WitchItemOk(int i)
 
 int RndWitchItem(int lvl)
 {
-	int i, ri;
-	int ril[512];
-
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER && WitchItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-
-			ril[ri] = i;
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(ri)] + 1;
+	return RndVendorItem<WitchItemOk>(lvl);
 }
 
 void SortWitch()
@@ -4592,22 +4586,7 @@ void SpawnWitch(int lvl)
 
 int RndBoyItem(int lvl)
 {
-	int i, ri;
-	int ril[512];
-
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER && PremiumItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-			ril[ri] = i;
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(ri)] + 1;
+	return RndVendorItem<PremiumItemOk>(lvl);
 }
 
 void SpawnBoy(int lvl)
@@ -4757,22 +4736,7 @@ bool HealerItemOk(int i)
 
 int RndHealerItem(int lvl)
 {
-	int i, ri;
-	int ril[512];
-
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER && HealerItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-			ril[ri] = i;
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(ri)] + 1;
+	return RndVendorItem<HealerItemOk>(lvl);
 }
 
 void SortHealer()
