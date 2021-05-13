@@ -1472,7 +1472,7 @@ void GetBookSpell(int i, int lvl)
 
 static bool control_WriteStringToBuffer(const char *str)
 {
-	return GetLineWidth(str) < 125;
+	return GetLineWidth(str, GameFontSmall, 0) < 125;
 }
 
 void GetStaffPower(int i, int lvl, int bs, bool onlygood)
