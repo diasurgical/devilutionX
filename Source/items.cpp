@@ -3136,7 +3136,7 @@ void DoRecharge(int pnum, int cii)
 
 static bool OilItem(ItemStruct *x, PlayerStruct *p)
 {
-	int dur, r;
+	int r;
 
 	if (x->_iClass == ICLASS_MISC) {
 		return false;
@@ -3204,6 +3204,7 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 		break;
 	case IMISC_OILBSMTH:
 		if (x->_iMaxDur != 255) {
+			int dur;
 			if (x->_iDurability < x->_iMaxDur) {
 				dur = (x->_iMaxDur + 4) / 5 + x->_iDurability;
 				dur = std::min<int>(dur, x->_iMaxDur);
