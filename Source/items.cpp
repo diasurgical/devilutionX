@@ -2890,15 +2890,15 @@ void SpawnRock()
 	items[ii]._iAnimFrame = 11;
 }
 
-void SpawnRewardItem(int itemid, int xx, int yy)
+void SpawnRewardItem(int itemid, Point pos)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
 
-	items[ii].position = { xx, yy };
-	dItem[xx][yy] = ii + 1;
+	items[ii].position = pos;
+	dItem[pos.x][pos.y] = ii + 1;
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, itemid, curlv);
 	SetupItem(ii);
@@ -2909,19 +2909,19 @@ void SpawnRewardItem(int itemid, int xx, int yy)
 	items[ii]._iIdentified = true;
 }
 
-void SpawnMapOfDoom(int xx, int yy)
+void SpawnMapOfDoom(Point pos)
 {
-	SpawnRewardItem(IDI_MAPOFDOOM, xx, yy);
+	SpawnRewardItem(IDI_MAPOFDOOM, pos);
 }
 
-void SpawnRuneBomb(int xx, int yy)
+void SpawnRuneBomb(Point pos)
 {
-	SpawnRewardItem(IDI_RUNEBOMB, xx, yy);
+	SpawnRewardItem(IDI_RUNEBOMB, pos);
 }
 
-void SpawnTheodore(int xx, int yy)
+void SpawnTheodore(Point pos)
 {
-	SpawnRewardItem(IDI_THEODORE, xx, yy);
+	SpawnRewardItem(IDI_THEODORE, pos);
 }
 
 void RespawnItem(ItemStruct *item, bool FlipFlag)

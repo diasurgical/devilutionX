@@ -1676,10 +1676,10 @@ void SpawnLoot(int i, bool sendmsg)
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
 		quests[Q_DEFILER]._qlog = false;
-		SpawnMapOfDoom(Monst->position.tile.x, Monst->position.tile.y);
+		SpawnMapOfDoom(Monst->position.tile);
 	} else if (Monst->_uniqtype - 1 == UMT_HORKDMN) {
 		if (sgGameInitInfo.bTheoQuest) {
-			SpawnTheodore(Monst->position.tile.x, Monst->position.tile.y);
+			SpawnTheodore(Monst->position.tile);
 		} else {
 			CreateAmulet(Monst->position.tile, 13, false, true);
 		}
