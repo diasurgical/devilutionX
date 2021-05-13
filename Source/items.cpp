@@ -4177,15 +4177,6 @@ int RndSmithItem(int lvl)
 	return ril[GenerateRnd(ri)] + 1;
 }
 
-void BubbleSwapItem(ItemStruct *a, ItemStruct *b)
-{
-	ItemStruct h;
-
-	h = *a;
-	*a = *b;
-	*b = h;
-}
-
 void SortSmith()
 {
 	int j, k;
@@ -4201,7 +4192,7 @@ void SortSmith()
 		sorted = true;
 		for (k = 0; k < j; k++) {
 			if (smithitem[k].IDidx > smithitem[k + 1].IDidx) {
-				BubbleSwapItem(&smithitem[k], &smithitem[k + 1]);
+				std::swap(smithitem[k], smithitem[k + 1]);
 				sorted = false;
 			}
 		}
@@ -4465,25 +4456,16 @@ int RndWitchItem(int lvl)
 
 void SortWitch()
 {
-	int j, k;
-	bool sorted;
-
-	j = 3;
+	int j = 3;
 	while (!witchitem[j + 1].isEmpty()) {
 		j++;
 	}
 
-	sorted = false;
-	while (j > 3 && !sorted) {
-		sorted = true;
-		for (k = 3; k < j; k++) {
-			if (witchitem[k].IDidx > witchitem[k + 1].IDidx) {
-				BubbleSwapItem(&witchitem[k], &witchitem[k + 1]);
-				sorted = false;
-			}
-		}
-		j--;
-	}
+	auto cmp = [](const ItemStruct &a, ItemStruct &b) {
+		return a.IDidx < b.IDidx;
+	};
+
+	std::sort(witchitem + 3, witchitem + j, cmp);
 }
 
 void WitchBookLevel(int ii)
@@ -4741,25 +4723,16 @@ int RndHealerItem(int lvl)
 
 void SortHealer()
 {
-	int j, k;
-	bool sorted;
-
-	j = 2;
+	int j = 2;
 	while (!healitem[j + 1].isEmpty()) {
 		j++;
 	}
 
-	sorted = false;
-	while (j > 2 && !sorted) {
-		sorted = true;
-		for (k = 2; k < j; k++) {
-			if (healitem[k].IDidx > healitem[k + 1].IDidx) {
-				BubbleSwapItem(&healitem[k], &healitem[k + 1]);
-				sorted = false;
-			}
-		}
-		j--;
-	}
+	auto cmp = [](const ItemStruct &a, ItemStruct &b) {
+		return a.IDidx < b.IDidx;
+	};
+
+	std::sort(healitem + 2, healitem + j, cmp);
 }
 
 void SpawnHealer(int lvl)
