@@ -2093,36 +2093,39 @@ static void SaveItemSuffix(int i, int sufidx)
 
 void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
 {
-	int pre, post, nt, nl, j, preidx, sufidx;
 	int l[256];
 	char istr[128];
 	goodorevil goe;
 
-	pre = GenerateRnd(4);
-	post = GenerateRnd(3);
+	int pre = GenerateRnd(4);
+	int post = GenerateRnd(3);
 	if (pre != 0 && post == 0) {
 		if (GenerateRnd(2) != 0)
 			post = 1;
 		else
 			pre = 0;
 	}
-	preidx = -1;
-	sufidx = -1;
+	int preidx = -1;
+	int sufidx = -1;
 	goe = GOE_ANY;
 	if (!onlygood && GenerateRnd(3) != 0)
 		onlygood = true;
 	if (pre == 0) {
-		nt = 0;
-		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
-			if (IsPrefixValidForItemType(j, flgs)) {
-				if (PL_Prefix[j].PLMinLvl >= minlvl && PL_Prefix[j].PLMinLvl <= maxlvl && (!onlygood || PL_Prefix[j].PLOk) && (flgs != PLT_STAFF || PL_Prefix[j].PLPower != IPL_CHARGES)) {
-					l[nt] = j;
-					nt++;
-					if (PL_Prefix[j].PLDouble) {
-						l[nt] = j;
-						nt++;
-					}
-				}
+		int nt = 0;
+		for (int j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
+			if (!IsPrefixValidForItemType(j, flgs))
+				continue;
+			if (PL_Prefix[j].PLMinLvl < minlvl || PL_Prefix[j].PLMinLvl > maxlvl)
+				continue;
+			if (onlygood && !PL_Prefix[j].PLOk)
+				continue;
+			if (flgs == PLT_STAFF && PL_Prefix[j].PLPower == IPL_CHARGES)
+				continue;
+			l[nt] = j;
+			nt++;
+			if (PL_Prefix[j].PLDouble) {
+				l[nt] = j;
+				nt++;
 			}
 		}
 		if (nt != 0) {
@@ -2143,8 +2146,8 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		}
 	}
 	if (post != 0) {
-		nl = 0;
-		for (j = 0; PL_Suffix[j].PLPower != IPL_INVALID; j++) {
+		int nl = 0;
+		for (int j = 0; PL_Suffix[j].PLPower != IPL_INVALID; j++) {
 			if (IsSuffixValidForItemType(j, flgs)
 			    && PL_Suffix[j].PLMinLvl >= minlvl && PL_Suffix[j].PLMinLvl <= maxlvl
 			    && !((goe == GOE_GOOD && PL_Suffix[j].PLGOE == GOE_EVIL) || (goe == GOE_EVIL && PL_Suffix[j].PLGOE == GOE_GOOD))
