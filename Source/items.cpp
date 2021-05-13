@@ -2983,29 +2983,27 @@ void ItemDoppel()
 
 void ProcessItems()
 {
-	int i, ii;
+	for (int i = 0; i < numitems; i++) {
+		int ii = itemactive[i];
+		if (!items[ii]._iAnimFlag)
+			continue;
+		items[ii]._iAnimFrame++;
+		if (items[ii]._iCurs == ICURS_MAGIC_ROCK) {
+			if (items[ii]._iSelFlag == 1 && items[ii]._iAnimFrame == 11)
+				items[ii]._iAnimFrame = 1;
+			if (items[ii]._iSelFlag == 2 && items[ii]._iAnimFrame == 21)
+				items[ii]._iAnimFrame = 11;
+		} else {
+			if (items[ii]._iAnimFrame == items[ii]._iAnimLen / 2)
+				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii].position.x, items[ii].position.y);
 
-	for (i = 0; i < numitems; i++) {
-		ii = itemactive[i];
-		if (items[ii]._iAnimFlag) {
-			items[ii]._iAnimFrame++;
-			if (items[ii]._iCurs == ICURS_MAGIC_ROCK) {
-				if (items[ii]._iSelFlag == 1 && items[ii]._iAnimFrame == 11)
-					items[ii]._iAnimFrame = 1;
-				if (items[ii]._iSelFlag == 2 && items[ii]._iAnimFrame == 21)
-					items[ii]._iAnimFrame = 11;
-			} else {
-				if (items[ii]._iAnimFrame == items[ii]._iAnimLen / 2)
-					PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii].position.x, items[ii].position.y);
-
-				if (items[ii]._iAnimFrame >= items[ii]._iAnimLen) {
-					items[ii]._iAnimFrame = items[ii]._iAnimLen;
-					items[ii]._iAnimFlag = false;
-					items[ii]._iSelFlag = 1;
-				}
+			if (items[ii]._iAnimFrame >= items[ii]._iAnimLen) {
+				items[ii]._iAnimFrame = items[ii]._iAnimLen;
+				items[ii]._iAnimFlag = false;
+				items[ii]._iSelFlag = 1;
 			}
 		}
-	}
+}
 	ItemDoppel();
 }
 
