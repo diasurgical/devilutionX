@@ -1308,16 +1308,16 @@ bool ItemSpaceOk(int i, int j)
 	return !nSolidTable[dPiece[i][j]];
 }
 
-static bool GetItemSpace(int x, int y, int8_t inum)
+static bool GetItemSpace(Point pos, int8_t inum)
 {
-	int i, j, rs;
+	int rs;
 	int xx, yy;
 	bool savail;
 
 	yy = 0;
-	for (j = y - 1; j <= y + 1; j++) {
+	for (int j = pos.y - 1; j <= pos.y + 1; j++) {
 		xx = 0;
-		for (i = x - 1; i <= x + 1; i++) {
+		for (int i = pos.x - 1; i <= pos.x + 1; i++) {
 			itemhold[xx][yy] = ItemSpaceOk(i, j);
 			xx++;
 		}
@@ -1325,8 +1325,8 @@ static bool GetItemSpace(int x, int y, int8_t inum)
 	}
 
 	savail = false;
-	for (j = 0; j < 3; j++) {
-		for (i = 0; i < 3; i++) {
+	for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 3; i++) {
 			if (itemhold[i][j])
 				savail = true;
 		}
@@ -1342,19 +1342,19 @@ static bool GetItemSpace(int x, int y, int8_t inum)
 	while (rs > 0) {
 		if (itemhold[xx][yy])
 			rs--;
-		if (rs > 0) {
-			xx++;
-			if (xx == 3) {
-				xx = 0;
-				yy++;
-				if (yy == 3)
-					yy = 0;
-			}
-		}
+		if (rs <= 0)
+			continue;
+		xx++;
+		if (xx != 3)
+			continue;
+		xx = 0;
+		yy++;
+		if (yy == 3)
+			yy = 0;
 	}
 
-	xx += x - 1;
-	yy += y - 1;
+	xx += pos.x - 1;
+	yy += pos.y - 1;
 	items[inum].position = { xx, yy };
 	dItem[xx][yy] = inum + 1;
 
@@ -1375,7 +1375,7 @@ int AllocateItem()
 
 static void GetSuperItemSpace(int x, int y, int8_t inum)
 {
-	if (!GetItemSpace(x, y, inum)) {
+	if (!GetItemSpace({x, y}, inum)) {
 		for (int k = 2; k < 50; k++) {
 			for (int j = -k; j <= k; j++) {
 				int yy = y + j;
