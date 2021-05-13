@@ -50,9 +50,9 @@ void FreeText();
  * @param col text_color color value
  */
 void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col);
-int GetLineWidth(const char *text, GameFontTables size = GameFontSmall);
-void WordWrapGameString(char *text, size_t width, size_t size = GameFontSmall);
-void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags = 0, bool drawTextCursor = false);
+int GetLineWidth(const char *text, GameFontTables size = GameFontSmall, int spacing = 1);
+void WordWrapGameString(char *text, size_t width, size_t size = GameFontSmall, int spacing = 1);
+void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags = 0, int spacing = 1, bool drawTextCursor = false);
 int PentSpn2Spin();
 
 } // namespace devilution
