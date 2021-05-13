@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <climits>
 #include <cstdint>
+#include <bitset>
 
 #include "cursor.h"
 #include "doom.h"
@@ -2386,15 +2387,13 @@ int RndTypeItems(int itype, int imid, int lvl)
 
 _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 {
-	int j, numu;
-	bool uok[128];
+	std::bitset<128> uok = {};
 
 	if (GenerateRnd(100) > uper)
 		return UITEM_INVALID;
 
-	numu = 0;
-	memset(uok, 0, sizeof(uok));
-	for (j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
+	int numu = 0;
+	for (int j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
 		if (!IsUniqueAvailable(j))
 			break;
 		if (UniqueItemList[j].UIItemId == AllItemsList[items[i].IDidx].iItemId
@@ -2413,11 +2412,8 @@ _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 	while (numu > 0) {
 		if (uok[idata])
 			numu--;
-		if (numu > 0) {
-			idata++;
-			if (idata == 128)
-				idata = 0;
-		}
+		if (numu > 0)
+			idata = (idata + 1) % 128;
 	}
 
 	return (_unique_items)idata;
