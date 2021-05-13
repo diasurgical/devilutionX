@@ -4203,7 +4203,6 @@ void SortSmith()
 
 void SpawnSmith(int lvl)
 {
-	int i, iCnt, idata;
 	int maxValue, maxItems;
 
 	ItemStruct holditem;
@@ -4217,13 +4216,13 @@ void SpawnSmith(int lvl)
 		maxItems = 20;
 	}
 
-	iCnt = GenerateRnd(maxItems - 10) + 10;
-	for (i = 0; i < iCnt; i++) {
+	int iCnt = GenerateRnd(maxItems - 10) + 10;
+	for (int i = 0; i < iCnt; i++) {
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(items[0]._iSeed);
-			idata = RndSmithItem(lvl) - 1;
+			int idata = RndSmithItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
 		} while (items[0]._iIvalue > maxValue);
 		smithitem[i] = items[0];
@@ -4231,7 +4230,7 @@ void SpawnSmith(int lvl)
 		smithitem[i]._iIdentified = true;
 		smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
 	}
-	for (i = iCnt; i < SMITH_ITEMS; i++)
+	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ITYPE_NONE;
 
 	SortSmith();
