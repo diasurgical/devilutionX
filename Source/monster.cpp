@@ -1671,7 +1671,7 @@ void SpawnLoot(int i, bool sendmsg)
 
 	Monst = &monster[i];
 	if (QuestStatus(Q_GARBUD) && Monst->_uniqtype - 1 == UMT_GARBUD) {
-		CreateTypeItem(Monst->position.tile.x + 1, Monst->position.tile.y + 1, true, ITYPE_MACE, IMISC_NONE, true, false);
+		CreateTypeItem(Monst->position.tile + Point{1, 1}, true, ITYPE_MACE, IMISC_NONE, true, false);
 	} else if (Monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
@@ -2424,7 +2424,7 @@ bool M_DoTalk(int i)
 	    && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
 		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		quests[Q_ZHAR]._qlog = true;
-		CreateTypeItem(monster[i].position.tile.x + 1, monster[i].position.tile.y + 1, false, ITYPE_MISC, IMISC_BOOK, true, false);
+		CreateTypeItem(monster[i].position.tile + Point{1,1}, false, ITYPE_MISC, IMISC_BOOK, true, false);
 		monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {

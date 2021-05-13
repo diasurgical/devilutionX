@@ -3806,11 +3806,11 @@ bool OperateShrineDivine(int pnum, int x, int y)
 		return false;
 
 	if (currlevel < 4) {
-		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
-		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
+		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
+		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
 	} else {
-		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
-		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
 	}
 
 	plr[pnum]._pMana = plr[pnum]._pMaxMana;
@@ -4480,9 +4480,9 @@ void OperateSkelBook(int pnum, int i, bool sendmsg)
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
 			if (GenerateRnd(5) != 0)
-				CreateTypeItem(object[i].position.x, object[i].position.y, false, ITYPE_MISC, IMISC_SCROLL, sendmsg, false);
+				CreateTypeItem(object[i].position, false, ITYPE_MISC, IMISC_SCROLL, sendmsg, false);
 			else
-				CreateTypeItem(object[i].position.x, object[i].position.y, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
+				CreateTypeItem(object[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		}
@@ -4498,7 +4498,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 		object[i]._oAnimFrame -= 2;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			CreateTypeItem(object[i].position.x, object[i].position.y, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
+			CreateTypeItem(object[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
 			if (QuestStatus(Q_ZHAR)
 			    && monster[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 			    && monster[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
@@ -4539,15 +4539,15 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			uniqueRnd = (GenerateRnd(2) != 0);
 			if (currlevel <= 5) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, true, ITYPE_LARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, true, ITYPE_LARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 6 && currlevel <= 9) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, uniqueRnd, ITYPE_MARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, uniqueRnd, ITYPE_MARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 10 && currlevel <= 12) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, false, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, false, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 13 && currlevel <= 16) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 17) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
 			}
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -4755,7 +4755,7 @@ void OperateWeaponRack(int pnum, int i, bool sendmsg)
 	if (deltaload)
 		return;
 
-	CreateTypeItem(object[i].position.x, object[i].position.y, leveltype > 1, weaponType, IMISC_NONE, sendmsg, false);
+	CreateTypeItem(object[i].position, leveltype > 1, weaponType, IMISC_NONE, sendmsg, false);
 
 	if (pnum == myplr)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);

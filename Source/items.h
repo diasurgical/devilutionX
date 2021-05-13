@@ -397,7 +397,7 @@ void SpawnUnique(_unique_items uid, int x, int y);
 void SpawnItem(int m, Point pos, bool sendmsg);
 void CreateRndItem(Point pos, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point pos, bool sendmsg);
-void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);
+void CreateTypeItem(Point pos, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);
 void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
 void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void items_427A72();

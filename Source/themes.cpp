@@ -690,7 +690,7 @@ void Theme_Treasure(int t)
 				int rv = GenerateRnd(treasrnd[leveltype - 1]);
 				// BUGFIX: the `2*` in `2*GenerateRnd(treasrnd...) == 0` has no effect, should probably be `GenerateRnd(2*treasrnd...) == 0`
 				if ((2 * GenerateRnd(treasrnd[leveltype - 1])) == 0) {
-					CreateTypeItem(xp, yp, false, ITYPE_GOLD, IMISC_NONE, false, true);
+					CreateTypeItem({xp, yp}, false, ITYPE_GOLD, IMISC_NONE, false, true);
 					ItemNoFlippy();
 				}
 				if (rv == 0) {

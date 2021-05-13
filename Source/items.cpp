@@ -2657,7 +2657,7 @@ void CreateRndUseful(Point pos, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
+void CreateTypeItem(Point pos, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
 {
 	int idx;
 
@@ -2667,7 +2667,7 @@ void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool send
 	else
 		idx = IDI_GOLD;
 
-	SetupBaseItem({x, y}, idx, onlygood, sendmsg, delta);
+	SetupBaseItem(pos, idx, onlygood, sendmsg, delta);
 }
 
 void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
