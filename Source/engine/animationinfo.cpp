@@ -52,6 +52,23 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	return absoluteAnimationFrame;
 }
 
+float AnimationInfo::GetAnimationProgress() const
+{
+	if (RelevantFramesForDistributing <= 0) {
+		// This logic is used if animation distrubtion is not active (see GetFrameToUseForRendering).
+		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given informations.
+		float ticksPerFrame = (DelayLen + 1);
+		float totalTicksForCurrentAnimationSequence = gfProgressToNextGameTick + (float)CurrentFrame + (DelayCounter / ticksPerFrame);
+		float fAnimationFraction = totalTicksForCurrentAnimationSequence / ((float)NumberOfFrames * ticksPerFrame);
+		return fAnimationFraction;
+	}
+
+	float totalTicksForCurrentAnimationSequence = gfProgressToNextGameTick + (float)TicksSinceSequenceStarted;
+	float fProgressInAnimationFrames = totalTicksForCurrentAnimationSequence * TickModifier;
+	float fAnimationFraction = fProgressInAnimationFrames / (float)NumberOfFrames;
+	return fAnimationFraction;
+}
+
 void AnimationInfo::SetNewAnimation(byte *pData, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
