@@ -2290,7 +2290,6 @@ int RndItem(int m)
 
 int RndUItem(int m)
 {
-	int i, ri;
 	int ril[512];
 	bool okflag;
 
@@ -2298,8 +2297,8 @@ int RndUItem(int m)
 		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
 
 	int curlv = items_get_currlevel();
-	ri = 0;
-	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
