@@ -10,10 +10,11 @@
 
 #include "DiabloUI/diabloui.h"
 #include "options.h"
-#include "utils/paths.h"
-#include "utils/stubs.h"
+#include "utils/file_util.h"
 #include "utils/log.hpp"
+#include "utils/paths.h"
 #include "utils/sdl_mutex.h"
+#include "utils/stubs.h"
 
 // Include Windows headers for Get/SetLastError.
 #if defined(_WIN32)
@@ -260,4 +261,17 @@ bool SFileEnableDirectAccess(bool enable)
 	directFileAccess = enable;
 	return true;
 }
+
+#if defined(_WIN64) || defined(_WIN32)
+bool SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq)
+{
+	const auto szMpqNameUtf16 = ToWideChar(szMpqName);
+	if (szMpqNameUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return false;
+	}
+	return SFileOpenArchive(szMpqNameUtf16.get(), dwPriority, dwFlags, phMpq);
+}
+#endif
+
 } // namespace devilution

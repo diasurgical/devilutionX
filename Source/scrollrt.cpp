@@ -497,8 +497,8 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 		return;
 	}
 
-	int nCel = object[bv]._oAnimFrame;
-	auto frames = SDL_SwapLE32(reinterpret_cast<const std::uint32_t *>(pCelBuff)[0]);
+	uint32_t nCel = object[bv]._oAnimFrame;
+	uint32_t frames = LoadLE32(pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, object[bv]._otype);
 		return;
@@ -1275,14 +1275,7 @@ void ClearScreenBuffer()
 	lock_buf(3);
 
 	assert(pal_surface != nullptr);
-
-	SDL_Rect SrcRect = {
-		BUFFER_BORDER_LEFT,
-		BUFFER_BORDER_TOP,
-		gnScreenWidth,
-		gnScreenHeight,
-	};
-	SDL_FillRect(pal_surface, &SrcRect, 0);
+	SDL_FillRect(pal_surface, nullptr, 0);
 
 	unlock_buf(3);
 }
@@ -1413,8 +1406,8 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
 	using CoordType = decltype(SDL_Rect {}.x);
 	SDL_Rect src_rect {
-		static_cast<CoordType>(BUFFER_BORDER_LEFT + dwX),
-		static_cast<CoordType>(BUFFER_BORDER_TOP + dwY),
+		static_cast<CoordType>(dwX),
+		static_cast<CoordType>(dwY),
 		dwWdt, dwHgt
 	};
 	SDL_Rect dst_rect { dwX, dwY, dwWdt, dwHgt };

@@ -34,7 +34,6 @@ extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
 Uint16 gnViewportHeight;
-Uint16 borderRight;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
@@ -75,12 +74,6 @@ void AdjustToScreenGeometry(int width, int height)
 {
 	gnScreenWidth = width;
 	gnScreenHeight = height;
-
-	borderRight = 64;
-	if ((gnScreenWidth % 4) != 0) {
-		// The buffer needs to be divisible by 4 for the engine to blit correctly
-		borderRight += 4 - gnScreenWidth % 4;
-	}
 
 	gnViewportHeight = gnScreenHeight;
 	if (gnScreenWidth <= PANEL_WIDTH) {

@@ -1,13 +1,11 @@
 #include "utils/file_util.h"
-#include "utils/log.hpp"
 
 #include <algorithm>
 #include <string>
-#include <sys/stat.h>
 
 #include <SDL.h>
 
-#include "utils/stdcompat/string_view.hpp"
+#include "utils/log.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -26,14 +24,11 @@
 #endif
 
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+#include <sys/stat.h>
 #include <unistd.h>
-#else
-#include <cstdio>
 #endif
 
 namespace devilution {
-
-namespace {
 
 #if defined(_WIN64) || defined(_WIN32)
 std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
@@ -49,8 +44,6 @@ std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 	return utf16;
 }
 #endif
-
-} // namespace
 
 bool FileExists(const char *path)
 {
@@ -82,11 +75,25 @@ bool FileExists(const char *path)
 
 bool GetFileSize(const char *path, std::uintmax_t *size)
 {
+#if defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return false;
+	}
+	WIN32_FILE_ATTRIBUTE_DATA attr;
+	if (!GetFileAttributesExW(&pathUtf16[0], GetFileExInfoStandard, &attr)) {
+		return false;
+	}
+	*size = (attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
+	return true;
+#else
 	struct ::stat statResult;
 	if (::stat(path, &statResult) == -1)
 		return false;
 	*size = static_cast<uintmax_t>(statResult.st_size);
 	return true;
+#endif
 }
 
 bool ResizeFile(const char *path, std::uintmax_t size)
@@ -141,6 +148,39 @@ void RemoveFile(const char *lpFileName)
 	} else {
 		Log("Failed to remove file: {}", name);
 	}
+#endif
+}
+
+std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return nullptr;
+	}
+	return std::make_unique<std::fstream>(pathUtf16.get(), mode);
+#else
+	return std::make_unique<std::fstream>(path, mode);
+#endif
+}
+
+FILE *FOpen(const char *path, const char *mode)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(path);
+	if (pathUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return nullptr;
+	}
+	const auto modeUtf16 = ToWideChar(mode);
+	if (modeUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return nullptr;
+	}
+	return ::_wfopen(&pathUtf16[0], &modeUtf16[0]);
+#else
+	return std::fopen(path, mode);
 #endif
 }
 

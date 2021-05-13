@@ -1484,6 +1484,11 @@ void GetBookSpell(int i, int lvl)
 		items[i]._iCurs = ICURS_BOOK_GREY;
 }
 
+static bool control_WriteStringToBuffer(const char *str)
+{
+	return GetLineWidth(str) < 125;
+}
+
 void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 {
 	int l[256];
@@ -1527,7 +1532,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 			items[i]._iPrePower = PL_Prefix[preidx].PLPower;
 		}
 	}
-	if (!control_WriteStringToBuffer((BYTE *)items[i]._iIName)) {
+	if (!control_WriteStringToBuffer(items[i]._iIName)) {
 		strcpy(items[i]._iIName, _(AllItemsList[items[i].IDidx].iSName));
 		if (preidx != -1) {
 			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
@@ -1574,9 +1579,9 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 			if (s == maxSpells)
 				s = SPL_FIREBOLT;
 		}
-		sprintf(istr, _("%s of %s"), items[i]._iName, _(spelldata[bs].sNameText));
-		if (!control_WriteStringToBuffer((BYTE *)istr))
-			sprintf(istr, _("Staff of %s"), _(spelldata[bs].sNameText));
+		if (!control_WriteStringToBuffer(istr))
+			sprintf(istr, _("%s of %s"), items[i]._iName, _(spelldata[bs].sNameText));
+		sprintf(istr, _("Staff of %s"), _(spelldata[bs].sNameText));
 		strcpy(items[i]._iName, istr);
 		strcpy(items[i]._iIName, istr);
 
@@ -2174,7 +2179,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			items[i]._iSufPower = PL_Suffix[sufidx].PLPower;
 		}
 	}
-	if (!control_WriteStringToBuffer((BYTE *)items[i]._iIName)) {
+	if (!control_WriteStringToBuffer(items[i]._iIName)) {
 		int aii = items[i].IDidx;
 		if (AllItemsList[aii].iSName != nullptr)
 			strcpy(items[i]._iIName, _(AllItemsList[aii].iSName));
@@ -3289,145 +3294,145 @@ void PrintItemOil(char IDidx)
 	switch (IDidx) {
 	case IMISC_OILACC:
 		strcpy(tempstr, _("increases a weapon's"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("chance to hit"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILMAST:
 		strcpy(tempstr, _("greatly increases a"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("weapon's chance to hit"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILSHARP:
 		strcpy(tempstr, _("increases a weapon's"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("damage potential"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILDEATH:
 		strcpy(tempstr, _("greatly increases a weapon's"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("damage potential - not bows"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILSKILL:
 		strcpy(tempstr, _("reduces attributes needed"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("to use armor or weapons"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILBSMTH:
 		/*xgettext:no-c-format*/ strcpy(tempstr, _("restores 20% of an"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("item's durability"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILFORT:
 		strcpy(tempstr, _("increases an item's"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("current and max durability"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILPERM:
 		strcpy(tempstr, _("makes an item indestructible"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILHARD:
 		strcpy(tempstr, _("increases the armor class"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("of armor and shields"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OILIMP:
 		strcpy(tempstr, _("greatly increases the armor"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("class of armor and shields"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_RUNEF:
 		strcpy(tempstr, _("sets fire trap"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_RUNEL:
 		strcpy(tempstr, _("sets lightning trap"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_GR_RUNEL:
 		strcpy(tempstr, _("sets lightning trap"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_GR_RUNEF:
 		strcpy(tempstr, _("sets fire trap"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_RUNES:
 		strcpy(tempstr, _("sets petrification trap"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLHEAL:
 		strcpy(tempstr, _("fully recover life"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_HEAL:
 		strcpy(tempstr, _("recover partial life"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_OLDHEAL:
 		strcpy(tempstr, _("recover life"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_DEADHEAL:
 		strcpy(tempstr, _("deadly heal"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_MANA:
 		strcpy(tempstr, _("recover mana"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLMANA:
 		strcpy(tempstr, _("fully recover mana"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXSTR:
 		strcpy(tempstr, _("increase strength"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXMAG:
 		strcpy(tempstr, _("increase magic"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXDEX:
 		strcpy(tempstr, _("increase dexterity"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXVIT:
 		strcpy(tempstr, _("increase vitality"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXWEAK:
 		strcpy(tempstr, _("decrease strength"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXDIS:
 		strcpy(tempstr, _("decrease strength"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXCLUM:
 		strcpy(tempstr, _("decrease dexterity"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXSICK:
 		strcpy(tempstr, _("decrease vitality"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_REJUV:
 		strcpy(tempstr, _("recover life and mana"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLREJUV:
 		strcpy(tempstr, _("fully recover life and mana"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		break;
 	}
 }
@@ -3786,48 +3791,48 @@ void PrintItemMisc(ItemStruct *x)
 {
 	if (x->_iMiscId == IMISC_SCROLL) {
 		strcpy(tempstr, _("Right-click to read"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_SCROLLT) {
 		strcpy(tempstr, _("Right-click to read, then"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		strcpy(tempstr, _("left-click to target"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId >= IMISC_USEFIRST && x->_iMiscId <= IMISC_USELAST) {
 		PrintItemOil(x->_iMiscId);
 		strcpy(tempstr, _("Right-click to use"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId > IMISC_OILFIRST && x->_iMiscId < IMISC_OILLAST) {
 		PrintItemOil(x->_iMiscId);
 		strcpy(tempstr, _("Right click to use"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId > IMISC_RUNEFIRST && x->_iMiscId < IMISC_RUNELAST) {
 		PrintItemOil(x->_iMiscId);
 		strcpy(tempstr, _("Right click to use"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_BOOK) {
 		strcpy(tempstr, _("Right-click to read"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_NOTE) {
 		strcpy(tempstr, _("Right click to read"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_MAPOFDOOM) {
 		strcpy(tempstr, _("Right-click to view"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_EAR) {
 		sprintf(tempstr, _("Level: %i"), x->_ivalue);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_AURIC) {
 		strcpy(tempstr, _("Doubles gold capacity"));
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 }
 
@@ -3845,7 +3850,7 @@ static void PrintItemInfo(ItemStruct *x)
 			sprintf(tempstr + strlen(tempstr), _(" %i Mag"), mag);
 		if (dex)
 			sprintf(tempstr + strlen(tempstr), _(" %i Dex"), dex);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	pinfoflag = true;
 }
@@ -3864,14 +3869,14 @@ void PrintItemDetails(ItemStruct *x)
 			else
 				sprintf(tempstr, _("damage: %i-%i  Dur: %i/%i"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
 		}
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iClass == ICLASS_ARMOR) {
 		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 			sprintf(tempstr, _("armor: %i  Indestructible"), x->_iAC);
 		else
 			sprintf(tempstr, _("armor: %i  Dur: %i/%i"), x->_iAC, x->_iDurability, x->_iMaxDur);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0) {
 		if (x->_iMinDam == x->_iMaxDam)
@@ -3879,18 +3884,18 @@ void PrintItemDetails(ItemStruct *x)
 		else
 			sprintf(tempstr, _("dam: %i-%i  Dur: %i/%i"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
 		sprintf(tempstr, _("Charges: %i/%i"), x->_iCharges, x->_iMaxCharges);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iPrePower != -1) {
 		PrintItemPower(x->_iPrePower, x);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iSufPower != -1) {
 		PrintItemPower(x->_iSufPower, x);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 	}
 	if (x->_iMagical == ITEM_QUALITY_UNIQUE) {
-		AddPanelString(_("unique item"), true);
+		AddPanelString(_("unique item"));
 		uitemflag = true;
 		curruitem = *x;
 	}
@@ -3911,29 +3916,29 @@ void PrintItemDur(ItemStruct *x)
 			else
 				sprintf(tempstr, _("damage: %i-%i  Dur: %i/%i"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
 		}
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
 			sprintf(tempstr, _("Charges: %i/%i"), x->_iCharges, x->_iMaxCharges);
-			AddPanelString(tempstr, true);
+			AddPanelString(tempstr);
 		}
 		if (x->_iMagical != ITEM_QUALITY_NORMAL)
-			AddPanelString(_("Not Identified"), true);
+			AddPanelString(_("Not Identified"));
 	}
 	if (x->_iClass == ICLASS_ARMOR) {
 		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 			sprintf(tempstr, _("armor: %i  Indestructible"), x->_iAC);
 		else
 			sprintf(tempstr, _("armor: %i  Dur: %i/%i"), x->_iAC, x->_iDurability, x->_iMaxDur);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 		if (x->_iMagical != ITEM_QUALITY_NORMAL)
-			AddPanelString(_("Not Identified"), true);
+			AddPanelString(_("Not Identified"));
 		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
 			sprintf(tempstr, _("Charges: %i/%i"), x->_iCharges, x->_iMaxCharges);
-			AddPanelString(tempstr, true);
+			AddPanelString(tempstr);
 		}
 	}
 	if (x->_itype == ITYPE_RING || x->_itype == ITYPE_AMULET)
-		AddPanelString(_("Not Identified"), true);
+		AddPanelString(_("Not Identified"));
 	PrintItemInfo(x);
 }
 

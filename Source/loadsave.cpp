@@ -695,8 +695,8 @@ static void LoadObject(LoadHelper *file, int i)
 	file->skip(4); // Skip pointer _oAnimData
 	pObject->_oAnimDelay = file->nextLE<int32_t>();
 	pObject->_oAnimCnt = file->nextLE<int32_t>();
-	pObject->_oAnimLen = file->nextLE<int32_t>();
-	pObject->_oAnimFrame = file->nextLE<int32_t>();
+	pObject->_oAnimLen = file->nextLE<uint32_t>();
+	pObject->_oAnimFrame = file->nextLE<uint32_t>();
 	pObject->_oAnimWidth = file->nextLE<int32_t>();
 	// Skip _oAnimWidth2
 	file->skip(4);
@@ -718,7 +718,7 @@ static void LoadObject(LoadHelper *file, int i)
 	pObject->_oVar3 = file->nextLE<int32_t>();
 	pObject->_oVar4 = file->nextLE<int32_t>();
 	pObject->_oVar5 = file->nextLE<int32_t>();
-	pObject->_oVar6 = file->nextLE<int32_t>();
+	pObject->_oVar6 = file->nextLE<uint32_t>();
 	pObject->_oVar7 = static_cast<_speech_id>(file->nextLE<int32_t>());
 	pObject->_oVar8 = file->nextLE<int32_t>();
 }
@@ -1658,8 +1658,8 @@ static void SaveObject(SaveHelper *file, int i)
 	file->skip(4); // Skip pointer _oAnimData
 	file->writeLE<int32_t>(pObject->_oAnimDelay);
 	file->writeLE<int32_t>(pObject->_oAnimCnt);
-	file->writeLE<int32_t>(pObject->_oAnimLen);
-	file->writeLE<int32_t>(pObject->_oAnimFrame);
+	file->writeLE<uint32_t>(pObject->_oAnimLen);
+	file->writeLE<uint32_t>(pObject->_oAnimFrame);
 	file->writeLE<int32_t>(pObject->_oAnimWidth);
 	file->writeLE<int32_t>(pObject->_oAnimWidth);
 	// Write _oAnimWidth2 for vanilla compatibility
@@ -1681,7 +1681,7 @@ static void SaveObject(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pObject->_oVar3);
 	file->writeLE<int32_t>(pObject->_oVar4);
 	file->writeLE<int32_t>(pObject->_oVar5);
-	file->writeLE<int32_t>(pObject->_oVar6);
+	file->writeLE<uint32_t>(pObject->_oVar6);
 	file->writeLE<int32_t>(pObject->_oVar7);
 	file->writeLE<int32_t>(pObject->_oVar8);
 }

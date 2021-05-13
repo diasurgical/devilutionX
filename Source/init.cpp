@@ -12,10 +12,10 @@
 #include "dx.h"
 #include "pfile.h"
 #include "storm/storm.h"
+#include "utils/language.h"
+#include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
-#include "utils/log.hpp"
-#include "utils/language.h"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita

@@ -280,6 +280,11 @@ add_library(StormLib STATIC
   3rdParty/StormLib/src/SFileOpenFileEx.cpp
   3rdParty/StormLib/src/SFileReadFile.cpp)
 
+if(WIN32)
+# Enable Unicode for StormLib wchar_t* file APIs
+target_compile_definitions(StormLib PRIVATE -DUNICODE -D_UNICODE)
+endif()
+
 add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)

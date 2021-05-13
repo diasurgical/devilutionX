@@ -43,8 +43,8 @@ static void dx_create_back_buffer()
 {
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(
 	    /*flags=*/0,
-	    /*width=*/BUFFER_BORDER_LEFT + gnScreenWidth + BUFFER_BORDER_RIGHT,
-	    /*height=*/BUFFER_BORDER_TOP + gnScreenHeight + BUFFER_BORDER_BOTTOM,
+	    /*width=*/gnScreenWidth,
+	    /*height=*/gnScreenHeight,
 	    /*depth=*/8,
 	    SDL_PIXELFORMAT_INDEX8);
 	if (pal_surface == nullptr) {
@@ -137,7 +137,7 @@ CelOutputBuffer GlobalBackBuffer()
 		return CelOutputBuffer();
 	}
 
-	return CelOutputBuffer(pal_surface, SDL_Rect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight });
+	return CelOutputBuffer(pal_surface, SDL_Rect { 0, 0, gnScreenWidth, gnScreenHeight });
 }
 
 void dx_cleanup()

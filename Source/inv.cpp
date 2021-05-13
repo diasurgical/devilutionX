@@ -30,14 +30,18 @@ int sgdwLastTime; // check name
  * arranged as follows:
  *                          00 01
  *                          02 03   06
+ *
  *              07 08       19 20       13 14
  *              09 10       21 22       15 16
  *              11 12       23 24       17 18
+ *
  *                 04                   05
+ *
  *              25 26 27 28 29 30 31 32 33 34
  *              35 36 37 38 39 40 41 42 43 44
  *              45 46 47 48 49 50 51 52 53 54
  *              55 56 57 58 59 60 61 62 63 64
+ *
  * 65 66 67 68 69 70 71 72
  * @see graphics/inv/inventory.png
  */
@@ -1558,7 +1562,6 @@ void CheckQuestItem(int pnum)
 	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 		if (quests[Q_ANVIL]._qactive == QUEST_INIT) {
 			quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
-			quests[Q_ANVIL]._qvar1 = 1;
 		}
 		if (quests[Q_ANVIL]._qlog) {
 			plr[myplr].PlaySpeach(89, 10);
@@ -1570,7 +1573,6 @@ void CheckQuestItem(int pnum)
 	if (plr[pnum].HoldItem.IDidx == IDI_ROCK && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (quests[Q_ROCK]._qactive == QUEST_INIT) {
 			quests[Q_ROCK]._qactive = QUEST_ACTIVE;
-			quests[Q_ROCK]._qvar1 = 1;
 		}
 		if (quests[Q_ROCK]._qlog) {
 			plr[myplr].PlaySpeach(87, 10);

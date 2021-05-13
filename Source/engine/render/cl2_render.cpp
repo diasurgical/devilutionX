@@ -21,15 +21,13 @@ namespace {
  *    indicates a fill-N command.
  */
 
-constexpr std::uint8_t MaxCl2Width = 65;
-
 constexpr bool IsCl2Opaque(std::uint8_t control)
 {
 	constexpr std::uint8_t Cl2OpaqueMin = 0x80;
 	return control >= Cl2OpaqueMin;
 }
 
-constexpr std::uint8_t GetCl2Cl2OpaquePixelsWidth(std::uint8_t control)
+constexpr std::uint8_t GetCl2OpaquePixelsWidth(std::uint8_t control)
 {
 	return -static_cast<std::int8_t>(control);
 }
@@ -72,7 +70,7 @@ const byte *SkipRestOfCl2Line(
 				remainingWidth -= GetCl2OpaqueFillWidth(v);
 				++src;
 			} else {
-				v = GetCl2Cl2OpaquePixelsWidth(v);
+				v = GetCl2OpaquePixelsWidth(v);
 				src += v;
 				remainingWidth -= v;
 			}
@@ -123,7 +121,7 @@ void RenderCl2ClipY(const CelOutputBuffer &out, Point position, const byte *src,
 					v = GetCl2OpaqueFillWidth(v);
 					renderFill(dst, static_cast<uint8_t>(*src++), v);
 				} else {
-					v = GetCl2Cl2OpaquePixelsWidth(v);
+					v = GetCl2OpaquePixelsWidth(v);
 					renderPixels(dst, reinterpret_cast<const std::uint8_t *>(src), v);
 					src += v;
 				}
@@ -187,7 +185,7 @@ void RenderCl2ClipXY( // NOLINT(readability-function-cognitive-complexity)
 					}
 					++src;
 				} else {
-					v = GetCl2Cl2OpaquePixelsWidth(v);
+					v = GetCl2OpaquePixelsWidth(v);
 					if (v > remainingLeftClip) {
 						const auto overshoot = v - remainingLeftClip;
 						renderPixels(dst, reinterpret_cast<const std::uint8_t *>(src + remainingLeftClip), overshoot);
@@ -213,7 +211,7 @@ void RenderCl2ClipXY( // NOLINT(readability-function-cognitive-complexity)
 					v = GetCl2OpaqueFillWidth(v);
 					renderFill(dst, static_cast<uint8_t>(*src++), std::min(remainingWidth, static_cast<std::int_fast16_t>(v)));
 				} else {
-					v = GetCl2Cl2OpaquePixelsWidth(v);
+					v = GetCl2OpaquePixelsWidth(v);
 					renderPixels(dst, reinterpret_cast<const std::uint8_t *>(src), std::min(remainingWidth, static_cast<std::int_fast16_t>(v)));
 					src += v;
 				}
@@ -292,89 +290,6 @@ void Cl2BlitSafe(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEByt
 }
 
 /**
- * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the given buffer
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pRLEBytes CL2 pixel stream (run-length encoded)
- * @param nDataSize Size of CL2 in bytes
- * @param nWidth Width of sprite
- * @param col Color index from current palette
- */
-void Cl2BlitOutlineSafe(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t col)
-{
-	const byte *src = pRLEBytes;
-	BYTE *dst = out.at(sx, sy);
-	int w = nWidth;
-
-	while (nDataSize > 0) {
-		auto width = static_cast<std::int8_t>(*src++);
-		nDataSize--;
-		if (width < 0) {
-			width = -width;
-			if (width > MaxCl2Width) {
-				width -= MaxCl2Width;
-				nDataSize--;
-				if (static_cast<std::uint8_t>(*src++) != 0 && dst < out.end() && dst > out.begin()) {
-					w -= width;
-					dst[-1] = col;
-					dst[width] = col;
-					while (width > 0) {
-						dst[-out.pitch()] = col;
-						dst[out.pitch()] = col;
-						dst++;
-						width--;
-					}
-					if (w == 0) {
-						w = nWidth;
-						dst -= out.pitch() + w;
-					}
-					continue;
-				}
-			} else {
-				nDataSize -= width;
-				if (dst < out.end() && dst > out.begin()) {
-					w -= width;
-					while (width > 0) {
-						if (static_cast<std::uint8_t>(*src) != 0) {
-							dst[-1] = col;
-							dst[1] = col;
-							dst[-out.pitch()] = col;
-							// BUGFIX: only set `if (dst+out.pitch() < out.end())`
-							dst[out.pitch()] = col;
-						}
-						src++;
-						dst++;
-						width--;
-					}
-					if (w == 0) {
-						w = nWidth;
-						dst -= out.pitch() + w;
-					}
-					continue;
-				}
-				src += width;
-			}
-		}
-		while (width > 0) {
-			if (width > w) {
-				dst += w;
-				width -= w;
-				w = 0;
-			} else {
-				dst += width;
-				w -= width;
-				width = 0;
-			}
-			if (w == 0) {
-				w = nWidth;
-				dst -= out.pitch() + w;
-			}
-		}
-	}
-}
-
-/**
  * @brief Blit CL2 sprite, and apply lighting, to the given buffer
  * @param out Target buffer
  * @param sx Target buffer coordinate
@@ -407,6 +322,321 @@ void Cl2BlitLightSafe(const CelOutputBuffer &out, int sx, int sy, const byte *pR
 	);
 }
 
+template <bool North, bool West, bool South, bool East>
+void RenderOutlineForPixel(std::uint8_t *dst, int dstPitch, std::uint8_t color)
+{
+	if (North)
+		dst[-dstPitch] = color;
+	if (West)
+		dst[-1] = color;
+	if (East)
+		dst[1] = color;
+	if (South)
+		dst[dstPitch] = color;
+}
+
+template <bool North, bool West, bool South, bool East>
+void RenderOutlineForPixels(std::uint8_t *dst, int dstPitch, int width, std::uint8_t color)
+{
+	while (width-- > 0)
+		RenderOutlineForPixel<North, West, South, East>(dst++, dstPitch, color);
+}
+
+template <bool North, bool West, bool South, bool East,
+    bool ClipWidth = false, bool CheckFirstColumn = false, bool CheckLastColumn = false>
+const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive-complexity,misc-no-recursion)
+    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcWidth,
+    ClipX clipX, std::uint8_t color, SkipSize &skipSize)
+{
+	std::int_fast16_t remainingWidth = clipX.width;
+	std::uint8_t v;
+
+	auto *dst = &out[position];
+	const auto dstPitch = out.pitch();
+
+	const auto renderPixels = [&](std::uint8_t width) { // NOLINT(readability-function-cognitive-complexity)
+		if (CheckFirstColumn && position.x <= 0) {
+			if (position.x == -1) {
+				RenderOutlineForPixel</*North=*/false, /*West=*/false, /*South=*/false, East>(dst++, dstPitch, color);
+				--width;
+			}
+			if (width > 0) {
+				RenderOutlineForPixel<North, /*West=*/false, South, East>(dst++, dstPitch, color);
+				--width;
+			}
+			if (width > 0) {
+				RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
+				dst += width;
+			}
+		} else if (CheckLastColumn && position.x + width >= out.w()) {
+			const bool lastPixel = position.x < out.w() && width >= 1;
+			const bool oobPixel = position.x + width > out.w();
+			const int numSpecialPixels = (lastPixel ? 1 : 0) + (oobPixel ? 1 : 0);
+			if (width > numSpecialPixels) {
+				width -= numSpecialPixels;
+				RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
+				dst += width;
+			}
+			if (lastPixel) {
+				RenderOutlineForPixel<North, West, South, /*East=*/false>(dst++, dstPitch, color);
+			}
+			if (oobPixel) {
+				RenderOutlineForPixel</*North=*/false, West, /*South=*/false, /*East=*/false>(dst++, dstPitch, color);
+			}
+		} else {
+			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
+			dst += width;
+		}
+	};
+
+	if (ClipWidth) {
+		auto remainingLeftClip = clipX.left - skipSize.xOffset;
+		if (skipSize.xOffset > clipX.left) {
+			position.x += static_cast<int>(skipSize.xOffset - clipX.left);
+			dst += skipSize.xOffset - clipX.left;
+		}
+		while (remainingLeftClip > 0) {
+			v = static_cast<std::uint8_t>(*src++);
+			if (IsCl2Opaque(v)) {
+				if (IsCl2OpaqueFill(v)) {
+					v = GetCl2OpaqueFillWidth(v);
+					++src;
+				} else {
+					v = GetCl2OpaquePixelsWidth(v);
+					src += v;
+				}
+				if (v > remainingLeftClip) {
+					const std::uint8_t overshoot = v - remainingLeftClip;
+					renderPixels(overshoot);
+					position.x += overshoot;
+				}
+			} else {
+				if (v > remainingLeftClip) {
+					const std::uint8_t overshoot = v - remainingLeftClip;
+					dst += overshoot;
+					position.x += overshoot;
+				}
+			}
+			remainingLeftClip -= v;
+		}
+		remainingWidth += remainingLeftClip;
+	} else {
+		position.x += static_cast<int>(skipSize.xOffset);
+		dst += skipSize.xOffset;
+		remainingWidth -= skipSize.xOffset;
+	}
+
+	while (remainingWidth > 0) {
+		v = static_cast<std::uint8_t>(*src++);
+		if (IsCl2Opaque(v)) {
+			if (IsCl2OpaqueFill(v)) {
+				v = GetCl2OpaqueFillWidth(v);
+				++src;
+			} else {
+				v = GetCl2OpaquePixelsWidth(v);
+				src += v;
+			}
+			renderPixels(ClipWidth ? std::min(remainingWidth, static_cast<std::int_fast16_t>(v)) : v);
+		} else {
+			dst += v;
+		}
+		remainingWidth -= v;
+		position.x += v;
+	}
+
+	if (ClipWidth) {
+		remainingWidth += clipX.right;
+		if (remainingWidth > 0) {
+			src = SkipRestOfCl2Line(src, static_cast<std::int_fast16_t>(srcWidth),
+			    remainingWidth, skipSize);
+			if (skipSize.wholeLines > 1)
+				dst -= dstPitch * (skipSize.wholeLines - 1);
+			remainingWidth = -skipSize.xOffset;
+		}
+	}
+	if (remainingWidth < 0) {
+		skipSize = GetSkipSize(-remainingWidth, static_cast<std::int_fast16_t>(srcWidth));
+		++skipSize.wholeLines;
+	} else {
+		skipSize.xOffset = 0;
+		skipSize.wholeLines = 1;
+	}
+
+	return src;
+}
+
+void RenderCl2OutlineClippedY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
+    std::size_t srcWidth, std::uint8_t color)
+{
+	const auto *srcEnd = src + srcSize;
+
+	// Skip the bottom clipped lines.
+	const auto dstHeight = out.h();
+	SkipSize skipSize = { 0, 0 };
+	while (position.y >= dstHeight && src != srcEnd) {
+		src = SkipRestOfCl2Line(src, static_cast<std::int_fast16_t>(srcWidth),
+		    static_cast<std::int_fast16_t>(srcWidth - skipSize.xOffset), skipSize);
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+	if (src == srcEnd)
+		return;
+
+	const ClipX clipX = { 0, 0, static_cast<decltype(ClipX {}.width)>(srcWidth) };
+
+	if (position.y == dstHeight) {
+		// After-bottom line - can only draw north.
+		src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false>(
+		    out, position, src, srcWidth, clipX, color, skipSize);
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y + 1 == dstHeight) {
+		// Bottom line - cannot draw south.
+		src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true>(
+		    out, position, src, srcWidth, clipX, color, skipSize);
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+
+	while (position.y > 0 && src != srcEnd) {
+		src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true>(
+		    out, position, src, srcWidth, clipX, color, skipSize);
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y == 0) {
+		src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true>(
+		    out, position, src, srcWidth, clipX, color, skipSize);
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y == -1) {
+		// Special case: the top of the sprite is 1px below the last line, render just the outline above.
+		RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false>(
+		    out, position, src, srcWidth, clipX, color, skipSize);
+	}
+}
+
+void RenderCl2OutlineClippedXY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
+    std::size_t srcWidth, std::uint8_t color)
+{
+	const auto *srcEnd = src + srcSize;
+
+	// Skip the bottom clipped lines.
+	const auto dstHeight = out.h();
+	SkipSize skipSize = { 0, 0 };
+	while (position.y >= dstHeight && src != srcEnd) {
+		src = SkipRestOfCl2Line(src, static_cast<std::int_fast16_t>(srcWidth),
+		    static_cast<std::int_fast16_t>(srcWidth - skipSize.xOffset), skipSize);
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+	if (src == srcEnd)
+		return;
+
+	ClipX clipX = CalculateClipX(position.x, srcWidth, out);
+	if (clipX.width < 0)
+		return;
+	if (clipX.left > 0) {
+		--clipX.left, ++clipX.width;
+	} else if (clipX.right > 0) {
+		--clipX.right, ++clipX.width;
+	}
+	position.x += static_cast<int>(clipX.left);
+
+	if (position.y == dstHeight) {
+		// After-bottom line - can only draw north.
+		src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
+		    /*ClipWidth=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y + 1 == dstHeight) {
+		// Bottom line - cannot draw south.
+		if (position.x <= 0) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+		} else if (position.x + clipX.width >= out.w()) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+		} else {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
+			    /*ClipWidth=*/true>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+		}
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+
+	if (position.x <= 0) {
+		while (position.y > 0 && src != srcEnd) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+			position.y -= static_cast<int>(skipSize.wholeLines);
+		}
+	} else if (position.x + clipX.width >= out.w()) {
+		while (position.y > 0 && src != srcEnd) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+			position.y -= static_cast<int>(skipSize.wholeLines);
+		}
+	} else {
+		while (position.y > 0 && src != srcEnd) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+			position.y -= static_cast<int>(skipSize.wholeLines);
+		}
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y == 0) {
+		if (position.x <= 0) {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+		} else if (position.x + clipX.width >= out.w()) {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+		} else {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
+			    /*ClipWidth=*/true>(
+			    out, position, src, srcWidth, clipX, color, skipSize);
+		}
+		position.y -= static_cast<int>(skipSize.wholeLines);
+	}
+	if (src == srcEnd)
+		return;
+
+	if (position.y == -1) {
+		// Special case: the top of the sprite is 1px below the last line, render just the outline above.
+		RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
+		    /*ClipWidth=*/true>(
+		    out, position, src, srcWidth, clipX, color, skipSize);
+	}
+}
+
+void RenderCl2Outline(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize,
+    std::size_t srcWidth, std::uint8_t color)
+{
+	if (position.x > 0 && position.x + static_cast<int>(srcWidth) < static_cast<int>(out.w())) {
+		RenderCl2OutlineClippedY(out, position, src, srcSize, srcWidth, color);
+	} else {
+		RenderCl2OutlineClippedXY(out, position, src, srcSize, srcWidth, color);
+	}
+}
+
 } // namespace
 
 void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
@@ -414,27 +644,28 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
 	assert(p != nullptr);
 
 	for (int i = 1; i <= nCel; i++) {
+		constexpr int FrameHeaderSize = 10;
 		int nDataSize;
-		byte *dst = CelGetFrame(p, i, &nDataSize) + 10;
-		nDataSize -= 10;
+		byte *dst = CelGetFrame(p, i, &nDataSize) + FrameHeaderSize;
+		nDataSize -= FrameHeaderSize;
 		while (nDataSize > 0) {
-			auto width = static_cast<std::int8_t>(*dst++);
+			auto v = static_cast<std::uint8_t>(*dst++);
 			nDataSize--;
 			assert(nDataSize >= 0);
-			if (width < 0) {
-				width = -width;
-				if (width > MaxCl2Width) {
-					nDataSize--;
-					assert(nDataSize >= 0);
+			if (!IsCl2Opaque(v))
+				continue;
+			if (IsCl2OpaqueFill(v)) {
+				nDataSize--;
+				assert(nDataSize >= 0);
+				*dst = static_cast<byte>(ttbl[static_cast<std::uint8_t>(*dst)]);
+				dst++;
+			} else {
+				v = GetCl2OpaquePixelsWidth(v);
+				nDataSize -= v;
+				assert(nDataSize >= 0);
+				while (v-- > 0) {
 					*dst = static_cast<byte>(ttbl[static_cast<std::uint8_t>(*dst)]);
 					dst++;
-				} else {
-					nDataSize -= width;
-					assert(nDataSize >= 0);
-					for (; width > 0; width--) {
-						*dst = static_cast<byte>(ttbl[static_cast<std::uint8_t>(*dst)]);
-						dst++;
-					}
 				}
 			}
 		}
@@ -458,8 +689,7 @@ void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, con
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
-	const CelOutputBuffer &sub = out.subregionY(0, out.h() - 1);
-	Cl2BlitOutlineSafe(sub, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), col);
+	RenderCl2Outline(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), col);
 }
 
 void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light)

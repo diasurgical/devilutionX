@@ -15,8 +15,8 @@
 #include "pack.h"
 #include "storm/storm.h"
 #include "utils/file_util.h"
-#include "utils/paths.h"
 #include "utils/language.h"
+#include "utils/paths.h"
 
 namespace devilution {
 
