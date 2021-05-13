@@ -1178,7 +1178,7 @@ msgstr "Запустить в оконном режиме"
 
 #: Source/diablo.cpp:190
 msgid "Enable verbose logging"
-msgstr "Включить многословное логирование"
+msgstr "Включить подробное логирование"
 
 #: Source/diablo.cpp:191
 msgid "Force spawn mode even if diabdat.mpq is found"
