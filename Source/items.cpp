@@ -3116,19 +3116,16 @@ static void RechargeItem(ItemStruct *i, int r)
 
 void DoRecharge(int pnum, int cii)
 {
-	PlayerStruct *p;
 	ItemStruct *pi;
-	int r;
 
-	p = &plr[pnum];
+	PlayerStruct *p = &plr[pnum];
 	if (cii >= NUM_INVLOC) {
 		pi = &p->InvList[cii - NUM_INVLOC];
 	} else {
 		pi = &p->InvBody[cii];
 	}
 	if (pi->_itype == ITYPE_STAFF && pi->_iSpell != SPL_NULL) {
-		r = GetSpellBookLevel(pi->_iSpell);
-		r = GenerateRnd(p->_pLevel / r) + 1;
+		int r = GenerateRnd(p->_pLevel / r) + 1;
 		RechargeItem(pi, r);
 		CalcPlrInv(pnum, true);
 	}
