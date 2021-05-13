@@ -5189,15 +5189,15 @@ msgstr "Сопротивления: "
 
 #: Source/monster.cpp:5017 Source/monster.cpp:5028
 msgid "Magic "
-msgstr "Магия"
+msgstr "Магия "
 
 #: Source/monster.cpp:5019 Source/monster.cpp:5030
 msgid "Fire "
-msgstr "Огонь"
+msgstr "Огонь "
 
 #: Source/monster.cpp:5021 Source/monster.cpp:5032
 msgid "Lightning "
-msgstr "Молния"
+msgstr "Молния "
 
 #: Source/monster.cpp:5026
 msgid "Immune: "
