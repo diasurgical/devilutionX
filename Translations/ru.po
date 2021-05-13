@@ -1926,7 +1926,7 @@ msgstr "Зелье Маны"
 #: Source/itemdat.cpp:42 Source/itemdat.cpp:110
 #, fuzzy
 msgid "Scroll of Identify"
-msgstr "Свиток идентификации"
+msgstr "Свиток Идентификации"
 
 #: Source/itemdat.cpp:43 Source/itemdat.cpp:114
 msgid "Scroll of Town Portal"
