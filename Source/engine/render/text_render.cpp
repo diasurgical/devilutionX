@@ -194,7 +194,7 @@ void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color 
 	}
 }
 
-int GetLineWidth(const char *text, GameFontTables size)
+int GetLineWidth(const char *text, GameFontTables size, int spacing)
 {
 	int lineWidth = 0;
 
@@ -204,13 +204,13 @@ int GetLineWidth(const char *text, GameFontTables size)
 			break;
 
 		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
-		lineWidth += fontkern[size][frame] + 1;
+		lineWidth += fontkern[size][frame] + spacing;
 	}
 
-	return lineWidth != 0 ? (lineWidth - 1) : 0;
+	return lineWidth != 0 ? (lineWidth - spacing) : 0;
 }
 
-void WordWrapGameString(char *text, size_t width, size_t size)
+void WordWrapGameString(char *text, size_t width, size_t size, int spacing)
 {
 	const size_t textLength = strlen(text);
 	size_t lineStart = 0;
@@ -223,9 +223,9 @@ void WordWrapGameString(char *text, size_t width, size_t size)
 		}
 
 		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
-		lineWidth += fontkern[size][frame] + 1;
+		lineWidth += fontkern[size][frame] + spacing;
 
-		if (lineWidth - 1 <= width) {
+		if (lineWidth - spacing <= width) {
 			continue; // String is still within the limit, continue to the next line
 		}
 
@@ -253,7 +253,7 @@ void WordWrapGameString(char *text, size_t width, size_t size)
 /**
  * @todo replace SDL_Rect with croped CelOutputBuffer
  */
-void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags, bool drawTextCursor)
+void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags, int spacing, bool drawTextCursor)
 {
 	GameFontTables size = GameFontSmall;
 	if ((flags & UIS_MED) != 0)
@@ -276,7 +276,7 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 
 	int sx = rect.x;
 	if ((flags & UIS_CENTER) != 0)
-		sx += (w - GetLineWidth(text, size)) / 2;
+		sx += (w - GetLineWidth(text, size, spacing)) / 2;
 	int sy = rect.y;
 
 	int rightMargin = rect.x + w;
@@ -285,8 +285,8 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 	const size_t textLength = strlen(text);
 	for (unsigned i = 0; i < textLength; i++) {
 		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
-		int symbolWidth = fontkern[size][frame] + 1;
-		if (text[i] == '\n' || sx + symbolWidth - 1 > rightMargin) {
+		int symbolWidth = fontkern[size][frame] + spacing;
+		if (text[i] == '\n' || sx + symbolWidth - spacing > rightMargin) {
 			sx = rect.x;
 			if ((flags & UIS_CENTER) != 0)
 				sx += (w - GetLineWidth(&text[i + 1], size)) / 2;

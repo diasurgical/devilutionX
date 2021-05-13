@@ -1095,14 +1095,14 @@ static void PrintInfo(const CelOutputBuffer &out)
 	int yo = 0;
 	int lo = 1;
 	if (infostr[0] != '\0') {
-		DrawString(out, infostr, line, infoclr | UIS_CENTER);
+		DrawString(out, infostr, line, infoclr | UIS_CENTER, 2);
 		yo = 1;
 		lo = 0;
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
 		line.y = PANEL_Y + LineOffsets[pnumlines - lo][i + yo];
-		DrawString(out, panelstr[i], line, infoclr | UIS_CENTER);
+		DrawString(out, panelstr[i], line, infoclr | UIS_CENTER, 2);
 	}
 }
 
@@ -1242,7 +1242,10 @@ void DrawChr(const CelOutputBuffer &out)
 		maxdam += plr[myplr]._pDamageMod;
 	}
 	sprintf(chrstr, "%i-%i", mindam, maxdam);
-	DrawString(out, chrstr, { 254, 239, 49, 0 }, style | UIS_CENTER);
+	if (mindam >= 100 || maxdam >= 100)
+		DrawString(out, chrstr, { 254, 239, 51, 0 }, style | UIS_CENTER, -1);
+	else
+		DrawString(out, chrstr, { 258, 239, 43, 0 }, style | UIS_CENTER, 0);
 
 	style = UIS_BLUE;
 	if (plr[myplr]._pMagResist == 0)
