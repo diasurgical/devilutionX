@@ -394,7 +394,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 void SetupItem(int i);
 int RndItem(int m);
 void SpawnUnique(_unique_items uid, int x, int y);
-void SpawnItem(int m, int x, int y, bool sendmsg);
+void SpawnItem(int m, Point pos, bool sendmsg);
 void CreateRndItem(int x, int y, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(int x, int y, bool sendmsg);
 void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);

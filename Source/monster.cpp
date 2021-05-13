@@ -1697,7 +1697,7 @@ void SpawnLoot(int i, bool sendmsg)
 		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
 		CreateSpellBook(Monst->position.tile.x, Monst->position.tile.y, SPL_APOCA, false, true);
 	} else if (i > MAX_PLRS - 1) { // Golems should not spawn loot
-		SpawnItem(i, Monst->position.tile.x, Monst->position.tile.y, sendmsg);
+		SpawnItem(i, Monst->position.tile, sendmsg);
 	}
 }
 
@@ -2415,7 +2415,7 @@ bool M_DoTalk(int i)
 			quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
 		}
 		if (monster[i].mtalkmsg == TEXT_GARBUD2 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
-			SpawnItem(i, monster[i].position.tile.x + 1, monster[i].position.tile.y + 1, true);
+			SpawnItem(i, monster[i].position.tile + Point{1, 1}, true);
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}

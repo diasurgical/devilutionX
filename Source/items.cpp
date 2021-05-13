@@ -2527,7 +2527,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 	SetupItem(ii);
 }
 
-void SpawnItem(int m, int x, int y, bool sendmsg)
+void SpawnItem(int m, Point pos, bool sendmsg)
 {
 	int idx;
 	bool onlygood = true;
@@ -2535,7 +2535,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
-			SpawnUnique((_unique_items) - (idx + 1), x, y);
+			SpawnUnique((_unique_items) - (idx + 1), pos.x, pos.y);
 			return;
 		}
 		onlygood = true;
@@ -2547,7 +2547,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 			idx--;
 			onlygood = false;
 		} else {
-			SpawnUnique((_unique_items) - (idx + 1), x, y);
+			SpawnUnique((_unique_items) - (idx + 1), pos.x, pos.y);
 			return;
 		}
 	} else {
@@ -2559,7 +2559,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace({x, y}, ii);
+	GetSuperItemSpace(pos, ii);
 	int uper = monster[m]._uniqtype ? 15 : 1;
 
 	int mLevel = monster[m].MData->mLevel;
