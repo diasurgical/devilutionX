@@ -9650,7 +9650,7 @@ msgid ""
 "Me, I'm a self-made cow.  Make something of yourself, and... then we'll "
 "talk.|"
 msgstr ""
-"Я - обязанная за все самой себе корова. Стань кем-нибудь и... тогда мы "
+"Я - обязанная за всё самой себе корова. Стань кем-нибудь и... тогда мы "
 "поговорим.|"
 
 #: Source/textdat.cpp:622
