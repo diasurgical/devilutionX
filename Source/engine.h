@@ -91,6 +91,13 @@ struct Point {
 		return *this;
 	}
 
+	Point &operator*=(const float factor)
+	{
+		x *= factor;
+		y *= factor;
+		return *this;
+	}
+
 	friend Point operator+(Point a, const Point &b)
 	{
 		a += b;
@@ -100,6 +107,20 @@ struct Point {
 	friend Point operator-(Point a, const Point &b)
 	{
 		a -= b;
+		return a;
+	}
+
+	friend Point operator-(const Point &a)
+	{
+		Point b;
+		b.x = -a.x;
+		b.y = -a.y;
+		return b;
+	}
+
+	friend Point operator*(Point a, const float factor)
+	{
+		a *= factor;
 		return a;
 	}
 
