@@ -64,6 +64,11 @@ public:
 	int GetFrameToUseForRendering() const;
 
 	/**
+	 * @brief Calculates the progress of the current animation as a fraction (0.0f to 1.0f)
+	*/
+	float GetAnimationProgress() const;
+
+	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
 	 * @param pData Pointer to Animation Data
 	 * @param numberOfFrames Number of Frames in Animation
