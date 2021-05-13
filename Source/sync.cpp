@@ -158,7 +158,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 
 } // namespace
 
-uint32_t sync_all_monsters(const BYTE *pbBuf, uint32_t dwMaxLen)
+uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 {
 	TSyncHeader *pHdr;
 	int i;
@@ -252,12 +252,11 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 	decode_enemy(ndx, p->_menemy);
 }
 
-uint32_t sync_update(int pnum, const BYTE *pbBuf)
+uint32_t sync_update(int pnum, const byte *pbBuf)
 {
-	TSyncHeader *pHdr;
 	uint16_t wLen;
 
-	pHdr = (TSyncHeader *)pbBuf;
+	TSyncHeader *pHdr = (TSyncHeader *)pbBuf;
 	pbBuf += sizeof(*pHdr);
 
 	if (pHdr->bCmd != CMD_SYNCDATA) {

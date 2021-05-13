@@ -8,15 +8,16 @@
 #include <cstdint>
 
 #include "appfat.h"
+#include "engine.h"
 #include "miniwin/miniwin.h"
 #include "sha.h"
 
 namespace devilution {
 
 struct CodecSignature {
-	DWORD checksum;
-	BYTE error;
-	BYTE last_chunk_size;
+	uint32_t checksum;
+	uint8_t error;
+	uint8_t last_chunk_size;
 	uint16_t unused;
 };
 
@@ -54,7 +55,7 @@ static void codec_init_key(const char *pszPassword)
 	memset(key, 0, sizeof(key));
 }
 
-int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword)
+std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword)
 {
 	char buf[128];
 	char dst[SHA1HashSize];
@@ -105,7 +106,7 @@ std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 	return dwSrcBytes + sizeof(CodecSignature);
 }
 
-void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword)
+void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword)
 {
 	char buf[128];
 	char tmp[SHA1HashSize];

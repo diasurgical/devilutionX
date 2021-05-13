@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "miniwin/miniwin.h"
+#include "engine.h"
 
 namespace devilution {
 
@@ -22,12 +22,12 @@ struct TMsg {
 	TMsgHdr hdr;
 	// this is actually alignment padding, but the message body is appended to the struct
 	// so it's convenient to use byte-alignment and name it "body"
-	uint8_t body[3];
+	byte body[3];
 };
 #pragma pack(pop)
 
-int tmsg_get(BYTE *pbMsg);
-void tmsg_add(BYTE *pbMsg, uint8_t bLen);
+int tmsg_get(byte *pbMsg);
+void tmsg_add(byte *pbMsg, uint8_t bLen);
 void tmsg_start();
 void tmsg_cleanup();
 

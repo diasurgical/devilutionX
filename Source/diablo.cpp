@@ -324,8 +324,6 @@ static void start_game(interface_mode uMsg)
 
 static void free_game()
 {
-	int i;
-
 	FreeQol();
 	FreeControlPan();
 	FreeInvGFX();
@@ -333,8 +331,8 @@ static void free_game()
 	FreeQuestText();
 	FreeStoreMem();
 
-	for (i = 0; i < MAX_PLRS; i++)
-		FreePlayerGFX(i);
+	for (auto &player : plr)
+		FreePlayerGFX(player);
 
 	FreeCursor();
 #ifdef _DEBUG
@@ -468,7 +466,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 			InitLevels();
 			InitQuests();
 			InitPortals();
-			InitDungMsgs(myplr);
+			InitDungMsgs(plr[myplr]);
 		}
 		interface_mode uMsg = WM_DIABNEWGAME;
 		if (gbValidSaveFile && gbLoadGame) {

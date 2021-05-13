@@ -9,6 +9,9 @@
 
 namespace devilution {
 
+/** Whether we render directly to the screen surface, i.e. `pal_surface == GetOutputSurface()` */
+extern bool RenderDirectlyToOutputSurface;
+
 CelOutputBuffer GlobalBackBuffer();
 
 void dx_init();

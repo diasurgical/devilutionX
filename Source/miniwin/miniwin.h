@@ -16,19 +16,6 @@ namespace devilution {
 #define MAX_PATH 260
 #endif
 
-#ifdef __has_attribute
-#define DVL_HAVE_ATTRIBUTE(x) __has_attribute(x)
-#else
-#define DVL_HAVE_ATTRIBUTE(x) 0
-#endif
-
-#if DVL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
-#define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg) \
-	__attribute__((__format__(__printf__, fmtargnum, firstarg)))
-#else
-#define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg)
-#endif
-
 typedef uint32_t DWORD;
 typedef unsigned char BYTE;
 

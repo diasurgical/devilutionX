@@ -39,16 +39,45 @@ SDL_Surface *renderer_texture_surface = nullptr;
 /** 8-bit surface that we render to */
 SDL_Surface *pal_surface;
 
+/** Whether we render directly to the screen surface, i.e. `pal_surface == GetOutputSurface()` */
+bool RenderDirectlyToOutputSurface;
+
+namespace {
+
+bool CanRenderDirectlyToOutputSurface()
+{
+#ifdef USE_SDL1
+#ifdef SDL1_FORCE_DIRECT_RENDER
+	return true;
+#else
+	auto *outputSurface = GetOutputSurface();
+	return ((outputSurface->flags & SDL_DOUBLEBUF) == SDL_DOUBLEBUF
+	    && outputSurface->w == gnScreenWidth && outputSurface->h == gnScreenHeight
+	    && outputSurface->format->BitsPerPixel == 8);
+#endif
+#else // !USE_SDL1
+	return false;
+#endif
+}
+
+} // namespace
+
 static void dx_create_back_buffer()
 {
-	pal_surface = SDL_CreateRGBSurfaceWithFormat(
-	    /*flags=*/0,
-	    /*width=*/gnScreenWidth,
-	    /*height=*/gnScreenHeight,
-	    /*depth=*/8,
-	    SDL_PIXELFORMAT_INDEX8);
-	if (pal_surface == nullptr) {
-		ErrSdl();
+	if (CanRenderDirectlyToOutputSurface()) {
+		Log("{}", "Will render directly to the SDL output surface");
+		pal_surface = GetOutputSurface();
+		RenderDirectlyToOutputSurface = true;
+	} else {
+		pal_surface = SDL_CreateRGBSurfaceWithFormat(
+		    /*flags=*/0,
+		    /*width=*/gnScreenWidth,
+		    /*height=*/gnScreenHeight,
+		    /*depth=*/8,
+		    SDL_PIXELFORMAT_INDEX8);
+		if (pal_surface == nullptr) {
+			ErrSdl();
+		}
 	}
 
 #ifndef USE_SDL1
@@ -194,6 +223,8 @@ void InitPalette()
 
 void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 {
+	if (RenderDirectlyToOutputSurface)
+		return;
 	Blit(pal_surface, src_rect, dst_rect);
 }
 
@@ -315,6 +346,8 @@ void RenderPresent()
 	if (SDL_Flip(surface) <= -1) {
 		ErrSdl();
 	}
+	if (RenderDirectlyToOutputSurface)
+		pal_surface = GetOutputSurface();
 	LimitFrameRate();
 #endif
 }

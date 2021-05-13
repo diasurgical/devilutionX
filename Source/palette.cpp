@@ -381,7 +381,8 @@ void palette_update_quest_palette(int n)
 	}
 	ApplyGamma(system_palette, logical_palette, 32);
 	palette_update();
-	GenerateBlendedLookupTable(logical_palette, 1, 31, 32 - n); // Possible optimization would be to only update color 0 as only the UI can overlap with transparency in this quest
+	if (sgOptions.Graphics.bBlendedTransparancy)
+		GenerateBlendedLookupTable(logical_palette, 1, 31, 32 - n); // Possible optimization would be to only update color 0 as only the UI can overlap with transparency in this quest
 }
 
 } // namespace devilution

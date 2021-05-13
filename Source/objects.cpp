@@ -1956,7 +1956,7 @@ void Obj_Circle(int i)
 			AddMissile(plr[myplr].position.tile.x, plr[myplr].position.tile.y, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
 			track_repeat_walk(false);
 			sgbMouseDown = CLICK_NONE;
-			ClrPlrPath(&plr[myplr]);
+			ClrPlrPath(plr[myplr]);
 			StartStand(myplr, DIR_S);
 		}
 	} else {
@@ -3392,7 +3392,7 @@ bool OperateShrineMysterious(int pnum)
 		break;
 	}
 
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	InitDiabloMsg(EMSG_SHRINE_MYSTERIOUS);
 
@@ -3795,7 +3795,7 @@ bool OperateShrineEerie(int pnum)
 		return false;
 
 	ModifyPlrMag(pnum, 2);
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	InitDiabloMsg(EMSG_SHRINE_EERIE);
 
@@ -3941,7 +3941,7 @@ bool OperateShrineAbandoned(int pnum)
 		return false;
 
 	ModifyPlrDex(pnum, 2);
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	if (pnum != myplr)
 		return true;
@@ -3959,7 +3959,7 @@ bool OperateShrineCreepy(int pnum)
 		return false;
 
 	ModifyPlrStr(pnum, 2);
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	if (pnum != myplr)
 		return true;
@@ -3977,7 +3977,7 @@ bool OperateShrineQuiet(int pnum)
 		return false;
 
 	ModifyPlrVit(pnum, 2);
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	if (pnum != myplr)
 		return true;
@@ -4082,7 +4082,7 @@ bool OperateShrineTainted(int pnum)
 	ModifyPlrDex(myplr, v3);
 	ModifyPlrVit(myplr, v4);
 
-	CheckStats(myplr);
+	CheckStats(plr[myplr]);
 
 	InitDiabloMsg(EMSG_SHRINE_TAINTED2);
 
@@ -4119,7 +4119,7 @@ bool OperateShrineOily(int pnum, int x, int y)
 		break;
 	}
 
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	AddMissile(
 	    x,
@@ -4159,7 +4159,7 @@ bool OperateShrineGlowing(int pnum)
 		force_redraw = 255;
 	}
 
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	InitDiabloMsg(EMSG_SHRINE_GLOWING);
 
@@ -4177,7 +4177,7 @@ bool OperateShrineMendicant(int pnum)
 	AddPlrExperience(myplr, plr[myplr]._pLevel, gold);
 	TakePlrsMoney(gold);
 
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	InitDiabloMsg(EMSG_SHRINE_MENDICANT);
 
@@ -4205,7 +4205,7 @@ bool OperateShrineSparkling(int pnum, int x, int y)
 	    3 * currlevel + 2,
 	    0);
 
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	InitDiabloMsg(EMSG_SHRINE_SPARKLING);
 
@@ -4274,7 +4274,7 @@ bool OperateShrineSolar(int pnum)
 		ModifyPlrDex(myplr, 2);
 	}
 
-	CheckStats(pnum);
+	CheckStats(plr[pnum]);
 
 	return true;
 }
@@ -4719,7 +4719,7 @@ bool OperateFountains(int pnum, int i)
 
 			done = true;
 		}
-		CheckStats(pnum);
+		CheckStats(plr[pnum]);
 		applied = true;
 		if (pnum == myplr)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);

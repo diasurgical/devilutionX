@@ -2004,8 +2004,7 @@ bool M_DoWalk(int i, int variant)
 			if (monster[i].actionFrame == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
 			monster[i].actionFrame++;
-			monster[i].position.offset2.x += monster[i].position.velocity.x;
-			monster[i].position.offset2.y += monster[i].position.velocity.y;
+			monster[i].position.offset2 += monster[i].position.velocity;
 			monster[i].position.offset.x = monster[i].position.offset2.x >> 4;
 			monster[i].position.offset.y = monster[i].position.offset2.y >> 4;
 		}
@@ -2202,7 +2201,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			FixPlayerLocation(pnum, plr[pnum]._pdir);
 			FixPlrWalkTags(pnum);
 			dPlayer[newx][newy] = pnum + 1;
-			SetPlayerOld(pnum);
+			SetPlayerOld(plr[pnum]);
 		}
 	}
 }
@@ -5115,7 +5114,7 @@ void MissToMonst(int i, int x, int y)
 						FixPlayerLocation(pnum, plr[pnum]._pdir);
 						FixPlrWalkTags(pnum);
 						dPlayer[newx][newy] = pnum + 1;
-						SetPlayerOld(pnum);
+						SetPlayerOld(plr[pnum]);
 					}
 				}
 			}
