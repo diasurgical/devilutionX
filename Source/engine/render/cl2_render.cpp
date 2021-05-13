@@ -386,7 +386,6 @@ std::uint8_t *RenderCl2OutlinePixelsCheckFirstColumn(
 	if (width > 0) {
 		if (Fill) {
 			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, color);
-			++src;
 		} else {
 			RenderOutlineForPixels<North, West, South, East>(dst, dstPitch, width, src, color);
 		}
