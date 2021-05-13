@@ -3131,8 +3131,6 @@ void OperateChest(int pnum, int i, bool sendmsg)
 
 void OperateMushPatch(int pnum, int i)
 {
-	int x, y;
-
 	if (numitems >= MAXITEMS) {
 		return;
 	}
@@ -3150,8 +3148,8 @@ void OperateMushPatch(int pnum, int i)
 		object[i]._oSelFlag = 0;
 		object[i]._oAnimFrame++;
 		if (!deltaload) {
-			GetSuperItemLoc(object[i].position.x, object[i].position.y, &x, &y);
-			SpawnQuestItem(IDI_MUSHROOM, x, y, 0, false);
+			Point pos = GetSuperItemLoc(object[i].position);
+			SpawnQuestItem(IDI_MUSHROOM, pos.x, pos.y, 0, false);
 			quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 		}
 	}
@@ -3159,8 +3157,6 @@ void OperateMushPatch(int pnum, int i)
 
 void OperateInnSignChest(int pnum, int i)
 {
-	int x, y;
-
 	if (numitems >= MAXITEMS) {
 		return;
 	}
@@ -3176,8 +3172,8 @@ void OperateInnSignChest(int pnum, int i)
 			object[i]._oSelFlag = 0;
 			object[i]._oAnimFrame += 2;
 			if (!deltaload) {
-				GetSuperItemLoc(object[i].position.x, object[i].position.y, &x, &y);
-				SpawnQuestItem(IDI_BANNER, x, y, 0, false);
+				Point pos = GetSuperItemLoc(object[i].position);
+				SpawnQuestItem(IDI_BANNER, pos.x, pos.y, 0, false);
 			}
 		}
 	}
@@ -4788,8 +4784,6 @@ void OperateStoryBook(int pnum, int i)
 
 void OperateLazStand(int pnum, int i)
 {
-	int xx, yy;
-
 	if (numitems >= MAXITEMS) {
 		return;
 	}
@@ -4797,8 +4791,8 @@ void OperateLazStand(int pnum, int i)
 	if (object[i]._oSelFlag != 0 && !deltaload && !qtextflag && pnum == myplr) {
 		object[i]._oAnimFrame++;
 		object[i]._oSelFlag = 0;
-		GetSuperItemLoc(object[i].position.x, object[i].position.y, &xx, &yy);
-		SpawnQuestItem(IDI_LAZSTAFF, xx, yy, 0, false);
+		Point pos = GetSuperItemLoc(object[i].position);
+		SpawnQuestItem(IDI_LAZSTAFF, pos.x, pos.y, 0, false);
 	}
 }
 

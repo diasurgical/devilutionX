@@ -1392,21 +1392,22 @@ static void GetSuperItemSpace(int x, int y, int8_t inum)
 	}
 }
 
-void GetSuperItemLoc(int x, int y, int *xx, int *yy)
+Point GetSuperItemLoc(Point pos)
 {
-	int i, j, k;
+	Point ret;
 
-	for (k = 1; k < 50; k++) {
-		for (j = -k; j <= k; j++) {
-			*yy = y + j;
-			for (i = -k; i <= k; i++) {
-				*xx = i + x;
-				if (ItemSpaceOk(*xx, *yy)) {
-					return;
+	for (int k = 1; k < 50; k++) {
+		for (int j = -k; j <= k; j++) {
+			ret.y = pos.y + j;
+			for (int i = -k; i <= k; i++) {
+				ret.x = i + pos.x;
+				if (ItemSpaceOk(ret.x, ret.y)) {
+					return ret;
 				}
 			}
 		}
 	}
+	return ret;
 }
 
 void CalcItemValue(int i)

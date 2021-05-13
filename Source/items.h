@@ -387,7 +387,7 @@ void SetPlrHandGoldCurs(ItemStruct *h);
 void CreatePlrItems(int playerId);
 bool ItemSpaceOk(int i, int j);
 int AllocateItem();
-void GetSuperItemLoc(int x, int y, int *xx, int *yy);
+Point GetSuperItemLoc(Point pos);
 void GetItemAttrs(int i, int idata, int lvl);
 void SaveItemPower(int i, item_effect_type power, int param1, int param2, int minval, int maxval, int multval);
 void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood);
