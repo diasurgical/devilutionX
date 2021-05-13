@@ -3247,15 +3247,14 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 
 void DoOil(int pnum, int cii)
 {
+	if (cii < NUM_INVLOC && cii != INVLOC_HEAD && (cii <= INVLOC_AMULET || cii > INVLOC_CHEST))
+		return;
 	PlayerStruct *p = &plr[pnum];
-
-	if (cii >= NUM_INVLOC || cii == INVLOC_HEAD || (cii > INVLOC_AMULET && cii <= INVLOC_CHEST)) {
-		if (OilItem(&p->InvBody[cii], p)) {
-			CalcPlrInv(pnum, true);
-			if (pnum == myplr) {
-				NewCursor(CURSOR_HAND);
-			}
-		}
+	if (!OilItem(&p->InvBody[cii], p))
+		return;
+	CalcPlrInv(pnum, true);
+	if (pnum == myplr) {
+		NewCursor(CURSOR_HAND);
 	}
 }
 
