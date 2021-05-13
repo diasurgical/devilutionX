@@ -85,12 +85,12 @@ extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 /** Map of hero class names */
 const char *const ClassStrTbl[] = {
-	N_("Warrior"),
-	N_("Rogue"),
-	N_("Sorcerer"),
-	N_("Monk"),
-	N_("Bard"),
-	N_("Barbarian"),
+	N_(/*UI Element*/ "Warrior"),
+	N_(/*UI Element*/ "Rogue"),
+	N_(/*UI Element*/ "Sorcerer"),
+	N_(/*UI Element*/ "Monk"),
+	N_(/*UI Element*/ "Bard"),
+	N_(/*UI Element*/ "Barbarian"),
 };
 
 /**

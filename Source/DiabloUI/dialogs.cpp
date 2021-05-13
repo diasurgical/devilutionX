@@ -168,7 +168,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		vecOkDialog.push_back(new UiText(text, rect2, UIS_CENTER));
 
 		SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 265), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-		vecOkDialog.push_back(new UiButton(&SmlButton, _("OK"), &DialogActionOK, rect3, 0));
+		vecOkDialog.push_back(new UiButton(&SmlButton, _( /* UI Element - Confirm*/ "OK"), &DialogActionOK, rect3, 0));
 	} else {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 127), (Sint16)(UI_OFFSET_Y + 100), 385, 280 };
 		vecOkDialog.push_back(new UiImage(&dialogArt, rect1));
@@ -181,7 +181,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		vecOkDialog.push_back(new UiText(caption, rect3, UIS_CENTER));
 
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 264), (Sint16)(UI_OFFSET_Y + 335), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-		vecOkDialog.push_back(new UiButton(&SmlButton, _("OK"), &DialogActionOK, rect4, 0));
+		vecOkDialog.push_back(new UiButton(&SmlButton, _( /* UI Element - Confirm*/ "OK"), &DialogActionOK, rect4, 0));
 	}
 
 	if (!renderBehind) {

@@ -71,7 +71,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 		vecSelOkDialog.push_back(new UiArtText(dialogText, rect1, UIS_MED));
 	}
 
-	vecSelOkDialogItems.push_back(new UiListItem(_("OK"), 0));
+	vecSelOkDialogItems.push_back(new UiListItem(_( /* UI Element - Confirm*/ "OK"), 0));
 	vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	strncpy(dialogText, body, sizeof(dialogText) - 1);

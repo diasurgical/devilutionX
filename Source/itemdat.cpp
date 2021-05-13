@@ -216,7 +216,7 @@ const PLStruct PL_Prefix[] = {
 	{ N_("Dull"),           IPL_TOHIT_DAMP_CURSE,  25,       45,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  true,     false,        0,        0,        -5 },
 	{ N_("Sharp"),          IPL_TOHIT_DAMP,        20,       35,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  true,     false,      350,      950,         5 },
 	{ N_("Fine"),           IPL_TOHIT_DAMP,        36,       50,        6,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  true,     true,      1100,     1700,         7 },
-	{ N_("Warrior's"),      IPL_TOHIT_DAMP,        51,       65,       10,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  true,     true,      1850,     2450,        13 },
+	{ N_(/*UI Element*/ "Warrior's"),      IPL_TOHIT_DAMP,        51,       65,       10,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  true,     true,      1850,     2450,        13 },
 	{ N_("Soldier's"),      IPL_TOHIT_DAMP,        66,       80,       15,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  true,     true,      2600,     3950,        17 },
 	{ N_("Lord's"),         IPL_TOHIT_DAMP,        81,       95,       19,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  true,     true,      4100,     5950,        21 },
 	{ N_("Knight's"),       IPL_TOHIT_DAMP,        96,      110,       23,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  true,     true,      6100,     8450,        26 },

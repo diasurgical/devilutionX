@@ -14,6 +14,7 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "X-Poedit-SearchPath-0: Source\n"
+"X-Poedit-Flags-xgettext: -c --no-location\n"
 
 #. Shown in Credits
 #: Source/DiabloUI/credits_lines.cpp:7

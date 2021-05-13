@@ -2194,9 +2194,9 @@ void initKeymapActions()
 	    [] {
 		    char pszStr[120];
 		    const char *difficulties[3] = {
-			    _("Normal"),
-			    _("Nightmare"),
-			    _("Hell"),
+			    _(/* UI Element */ "Normal"),
+			    _(/* UI Element */ "Nightmare"),
+			    _(/* UI Element */ "Hell"),
 		    };
 		    sprintf(pszStr, _("%s, version = %s, mode = %s"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]);
 		    NetSendCmdString(1 << myplr, pszStr);

@@ -33,16 +33,16 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 {
 	gfnSoundFunction = fnSound;
 
-	vecMenuItems.push_back(new UiListItem(_("Single Player"), MAINMENU_SINGLE_PLAYER));
-	vecMenuItems.push_back(new UiListItem(_("Multi Player"), MAINMENU_MULTIPLAYER));
-	vecMenuItems.push_back(new UiListItem(_("Replay Intro"), MAINMENU_REPLAY_INTRO));
-	vecMenuItems.push_back(new UiListItem(_("Support"), MAINMENU_SHOW_SUPPORT));
+	vecMenuItems.push_back(new UiListItem(_( /* UI Element - Main Menu*/ "Single Player"), MAINMENU_SINGLE_PLAYER));
+	vecMenuItems.push_back(new UiListItem(_( /* UI Element - Main Menu*/ "Multi Player"), MAINMENU_MULTIPLAYER));
+	vecMenuItems.push_back(new UiListItem(_( /* UI Element - Main Menu*/ "Replay Intro"), MAINMENU_REPLAY_INTRO));
+	vecMenuItems.push_back(new UiListItem(_( /* UI Element - Main Menu*/ "Support"), MAINMENU_SHOW_SUPPORT));
 	if (gbIsHellfire) {
-		vecMenuItems.push_back(new UiListItem(_("Credits"), MAINMENU_SHOW_CREDITS));
-		vecMenuItems.push_back(new UiListItem(_("Exit Hellfire"), MAINMENU_EXIT_DIABLO));
+		vecMenuItems.push_back(new UiListItem(_( /* UI Element - Main Menu*/ "Credits"), MAINMENU_SHOW_CREDITS));
+		vecMenuItems.push_back(new UiListItem(_( /* UI Element - Main Menu*/ "Exit Hellfire"), MAINMENU_EXIT_DIABLO));
 	} else {
-		vecMenuItems.push_back(new UiListItem(_("Show Credits"), MAINMENU_SHOW_CREDITS));
-		vecMenuItems.push_back(new UiListItem(_("Exit Diablo"), MAINMENU_EXIT_DIABLO));
+		vecMenuItems.push_back(new UiListItem(_( /* UI Element - Main Menu*/ "Show Credits"), MAINMENU_SHOW_CREDITS));
+		vecMenuItems.push_back(new UiListItem(_( /* UI Element - Main Menu*/ "Exit Diablo"), MAINMENU_EXIT_DIABLO));
 	}
 
 	if (!gbSpawned || gbIsHellfire) {
@@ -107,7 +107,7 @@ bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*
 		MainmenuFree();
 
 		if (gbSpawned && !gbIsHellfire && MainMenuResult == MAINMENU_REPLAY_INTRO) {
-			UiSelOkDialog(nullptr, _("The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
+			UiSelOkDialog(nullptr, _( /* UI Error Message - Main Menu - Only Shareware Version spawn.mpq available*/ "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
 			MainMenuResult = MAINMENU_NONE;
 		}
 	}
