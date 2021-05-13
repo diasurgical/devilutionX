@@ -39,11 +39,13 @@ Uint16 gnViewportHeight;
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
 {
 	Log("Setting video mode {}x{} bpp={} flags=0x{:08X}", width, height, bpp, flags);
-	SDL_SetVideoMode(width, height, bpp, flags);
+	ghMainWnd = SDL_SetVideoMode(width, height, bpp, flags);
+	if (ghMainWnd == nullptr) {
+		ErrSdl();
+	}
 	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
 	Log("Video mode is now {}x{} bpp={} flags=0x{:08X}",
 	    current.current_w, current.current_h, current.vfmt->BitsPerPixel, SDL_GetVideoSurface()->flags);
-	ghMainWnd = SDL_GetVideoSurface();
 }
 
 void SetVideoModeToPrimary(bool fullscreen, int width, int height)

@@ -229,8 +229,6 @@ struct PlayerStruct {
 	int _pVar4;
 	/** Used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it) */
 	int _pVar5;
-	/** Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). */
-	int actionFrame;
 	/** Used for stalling the appearance of the options screen after dying in singleplayer */
 	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
@@ -401,8 +399,8 @@ extern int ToBlkTbl[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
-void InitPlrGFXMem(int pnum);
-void FreePlayerGFX(int pnum);
+void InitPlrGFXMem(PlayerStruct &player);
+void FreePlayerGFX(PlayerStruct &player);
 
 /**
  * @brief Sets the new Player Animation with all relevant information for rendering
@@ -415,10 +413,10 @@ void FreePlayerGFX(int pnum);
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(int pnum, byte *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
-void SetPlrAnims(int pnum);
-void CreatePlayer(int pnum, HeroClass c);
-int CalcStatDiff(int pnum);
+void NewPlrAnim(PlayerStruct &player, byte *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+void SetPlrAnims(PlayerStruct &player);
+void CreatePlayer(int playerId, HeroClass c);
+int CalcStatDiff(PlayerStruct &player);
 #ifdef _DEBUG
 void NextPlrLevel(int pnum);
 #endif
@@ -430,7 +428,7 @@ void InitMultiView();
 bool SolidLoc(int x, int y);
 void PlrClrTrans(int x, int y);
 void PlrDoTrans(int x, int y);
-void SetPlayerOld(int pnum);
+void SetPlayerOld(PlayerStruct &player);
 void FixPlayerLocation(int pnum, direction bDir);
 void StartStand(int pnum, direction dir);
 void StartAttack(int pnum, direction d);
@@ -447,14 +445,14 @@ void StartNewLvl(int pnum, interface_mode fom, int lvl);
 void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
-void ClrPlrPath(PlayerStruct *player);
+void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(int pnum, int x, int y);
 void MakePlrPath(int pnum, int xx, int yy, bool endspace);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
 void SyncInitPlr(int pnum);
-void CheckStats(int p);
+void CheckStats(PlayerStruct &player);
 void ModifyPlrStr(int p, int l);
 void ModifyPlrMag(int p, int l);
 void ModifyPlrDex(int p, int l);
@@ -464,7 +462,7 @@ void SetPlrStr(int p, int v);
 void SetPlrMag(int p, int v);
 void SetPlrDex(int p, int v);
 void SetPlrVit(int p, int v);
-void InitDungMsgs(int pnum);
+void InitDungMsgs(PlayerStruct &player);
 void PlayDungMsgs();
 
 /* data */

@@ -59,6 +59,9 @@
 #ifndef NOSOUND
 #include "sound.h"
 #endif
+#ifdef GPERF_HEAP_FIRST_GAME_ITERATION
+#include <gperftools/heap-profiler.h>
+#endif
 
 namespace devilution {
 
@@ -325,8 +328,6 @@ static void start_game(interface_mode uMsg)
 
 static void free_game()
 {
-	int i;
-
 	FreeQol();
 	FreeControlPan();
 	FreeInvGFX();
@@ -334,8 +335,8 @@ static void free_game()
 	FreeQuestText();
 	FreeStoreMem();
 
-	for (i = 0; i < MAX_PLRS; i++)
-		FreePlayerGFX(i);
+	for (auto &player : plr)
+		FreePlayerGFX(player);
 
 	FreeCursor();
 #ifdef _DEBUG
@@ -396,6 +397,9 @@ static void run_game_loop(interface_mode uMsg)
 	gbGameLoopStartup = true;
 	nthread_ignore_mutex(false);
 
+#ifdef GPERF_HEAP_FIRST_GAME_ITERATION
+	unsigned run_game_iteration = 0;
+#endif
 	while (gbRunGame) {
 		while (FetchMessage(&msg)) {
 			if (msg.message == DVL_WM_QUIT) {
@@ -419,6 +423,10 @@ static void run_game_loop(interface_mode uMsg)
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = false;
 		DrawAndBlit();
+#ifdef GPERF_HEAP_FIRST_GAME_ITERATION
+	if (run_game_iteration++ == 0)
+		HeapProfilerDump("first_game_iteration");
+#endif
 	}
 
 	if (gbIsMultiplayer) {
@@ -462,7 +470,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 			InitLevels();
 			InitQuests();
 			InitPortals();
-			InitDungMsgs(myplr);
+			InitDungMsgs(plr[myplr]);
 		}
 		interface_mode uMsg = WM_DIABNEWGAME;
 		if (gbValidSaveFile && gbLoadGame) {

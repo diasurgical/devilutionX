@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstddef>
 
+#include "utils/attributes.h"
 #include "utils/console.h"
 #include "utils/stubs.h"
 
@@ -123,6 +124,13 @@ enum {
 	// clang-format on
 };
 
+#ifdef __3DS__
+/** Defined in Source/platform/ctr/messagebox.cpp */
+int SDL_ShowSimpleMessageBox(Uint32 flags,
+    const char *title,
+    const char *message,
+    SDL_Surface *window);
+#else
 inline int SDL_ShowSimpleMessageBox(Uint32 flags,
     const char *title,
     const char *message,
@@ -131,6 +139,7 @@ inline int SDL_ShowSimpleMessageBox(Uint32 flags,
 	SDL_Log("MSGBOX: %s\n%s", title, message);
 	return 0;
 }
+#endif
 
 //= Window handling
 

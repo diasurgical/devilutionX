@@ -442,3 +442,6 @@ exefs/main
 ddraw_settings.ini
 Brewfile.lock.json
 .vscode/settings.json
+
+# GPerf heap profile dumps
+*.heap

@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-#include "miniwin/miniwin.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 

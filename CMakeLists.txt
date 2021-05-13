@@ -16,6 +16,7 @@ DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
 option(TSAN "Enable thread sanitizer (not compatible with ASAN=ON)" OFF)
 DEBUG_OPTION(DEBUG "Enable debug mode in engine")
 option(GPERF "Build with GPerfTools profiler" OFF)
+cmake_dependent_option(GPERF_HEAP_FIRST_GAME_ITERATION "Save heap profile of the first game iteration" OFF "GPERF" OFF)
 option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
 option(PIE "Generate position-independent code" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
@@ -106,6 +107,21 @@ if(NOT DISABLE_LTO)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
+
+if(GPERF)
+  if(GPERF_HEAP_FIRST_GAME_ITERATION)
+    set(GPERF_HEAP_MAIN ON)
+  endif()
+
+  # Compile with information about file and line numbers for everything
+  # even in non-Debug build types.
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    add_compile_options("$<$<NOT:$<CONFIG:Debug>>:-g2>")
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # Use the more size-efficient `-gmlt` option on clang.
+    add_compile_options("$<$<NOT:$<CONFIG:Debug>>:-gmlt>")
+  endif()
+endif()
 
 if(SWITCH)
   set(ASAN OFF)
@@ -469,7 +485,8 @@ if(N3DS)
   list(APPEND devilutionx_SRCS
     Source/platform/ctr/system.cpp
     Source/platform/ctr/keyboard.cpp
-    Source/platform/ctr/display.cpp)
+    Source/platform/ctr/display.cpp
+    Source/platform/ctr/messagebox.cpp)
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
@@ -583,6 +600,8 @@ foreach(
   DISABLE_STREAMING_MUSIC
   DISABLE_STREAMING_SOUNDS
   GPERF
+  GPERF_HEAP_MAIN
+  GPERF_HEAP_FIRST_GAME_ITERATION
 )
 if(${def_name})
   list(APPEND def_list ${def_name})
@@ -603,6 +622,7 @@ foreach(
   SDL1_VIDEO_MODE_BPP
   SDL1_VIDEO_MODE_FLAGS
   SDL1_FORCE_SVID_VIDEO_MODE
+  SDL1_FORCE_DIRECT_RENDER
   HAS_KBCTRL
   KBCTRL_BUTTON_DPAD_LEFT
   KBCTRL_BUTTON_DPAD_RIGHT
@@ -736,7 +756,7 @@ if (GPERF)
   target_link_libraries(${BIN_TARGET} PRIVATE ${GPERFTOOLS_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU AND NOT VITA AND NOT PSP)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA AND NOT PSP)
   target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
