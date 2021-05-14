@@ -143,7 +143,7 @@ static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
 /**
  * @brief Remove the cursor from the buffer
  */
-static void scrollrt_draw_cursor_back_buffer(const CelOutputBuffer &out)
+static void UndrawCursor(const CelOutputBuffer &out)
 {
 	if (sgdwCursWdt == 0) {
 		return;
@@ -159,12 +159,10 @@ static void scrollrt_draw_cursor_back_buffer(const CelOutputBuffer &out)
 }
 
 /**
- * @brief Draw the cursor on the given buffer
+ * @brief Save the content behind the cursor to a temporary buffer, then draw the cursor.
  */
-static void scrollrt_draw_cursor_item(const CelOutputBuffer &out)
+static void DrawCursor(const CelOutputBuffer &out)
 {
-	assert(!sgdwCursWdt);
-
 	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
 		return;
 	}
@@ -1422,7 +1420,7 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
  */
 static void DrawMain(int dwHgt, bool draw_desc, bool draw_hp, bool draw_mana, bool draw_sbar, bool draw_btn)
 {
-	if (!gbActive) {
+	if (!gbActive || RenderDirectlyToOutputSurface) {
 		return;
 	}
 
@@ -1477,18 +1475,19 @@ void scrollrt_draw_game_screen(bool draw_cursor)
 
 	if (draw_cursor) {
 		lock_buf(0);
-		scrollrt_draw_cursor_item(GlobalBackBuffer());
+		DrawCursor(GlobalBackBuffer());
 		unlock_buf(0);
 	}
 
 	DrawMain(hgt, false, false, false, false, false);
 
+	RenderPresent();
+
 	if (draw_cursor) {
 		lock_buf(0);
-		scrollrt_draw_cursor_back_buffer(GlobalBackBuffer());
+		UndrawCursor(GlobalBackBuffer());
 		unlock_buf(0);
 	}
-	RenderPresent();
 }
 
 /**
@@ -1522,6 +1521,7 @@ void DrawAndBlit()
 
 	lock_buf(0);
 	const CelOutputBuffer &out = GlobalBackBuffer();
+	UndrawCursor(out);
 
 	nthread_UpdateProgressToNextGameTick();
 
@@ -1546,7 +1546,7 @@ void DrawAndBlit()
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar(out);
-	scrollrt_draw_cursor_item(out);
+	DrawCursor(out);
 
 	DrawFPS(out);
 
@@ -1554,9 +1554,6 @@ void DrawAndBlit()
 
 	DrawMain(hgt, ddsdesc, drawhpflag, drawmanaflag, drawsbarflag, drawbtnflag);
 
-	lock_buf(0);
-	scrollrt_draw_cursor_back_buffer(GlobalBackBuffer());
-	unlock_buf(0);
 	RenderPresent();
 
 	drawhpflag = false;

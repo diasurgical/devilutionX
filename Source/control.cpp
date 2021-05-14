@@ -61,7 +61,7 @@ int pnumlines;
 bool pinfoflag;
 bool talkButtonsDown[3];
 spell_id pSpell;
-text_color infoclr;
+uint16_t infoclr;
 int sgbPlrTalkTbl;
 char tempstr[256];
 bool whisperList[MAX_PLRS];
@@ -918,14 +918,14 @@ void CheckPanelInfo()
 				sprintf(tempstr, _("Hotkey: %s"), _(PanBtnHotKey[i]));
 				AddPanelString(tempstr);
 			}
-			infoclr = COL_WHITE;
+			infoclr = UIS_SILVER;
 			panelflag = true;
 			pinfoflag = true;
 		}
 	}
 	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
 		strcpy(infostr, _("Select current spell button"));
-		infoclr = COL_WHITE;
+		infoclr = UIS_SILVER;
 		panelflag = true;
 		pinfoflag = true;
 		strcpy(tempstr, _("Hotkey: 's'"));
@@ -1095,14 +1095,14 @@ static void PrintInfo(const CelOutputBuffer &out)
 	int yo = 0;
 	int lo = 1;
 	if (infostr[0] != '\0') {
-		DrawString(out, infostr, line, UIS_SILVER | UIS_CENTER);
+		DrawString(out, infostr, line, infoclr | UIS_CENTER, 2);
 		yo = 1;
 		lo = 0;
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
 		line.y = PANEL_Y + LineOffsets[pnumlines - lo][i + yo];
-		DrawString(out, panelstr[i], line, UIS_SILVER | UIS_CENTER);
+		DrawString(out, panelstr[i], line, infoclr | UIS_CENTER, 2);
 	}
 }
 
@@ -1111,11 +1111,11 @@ void DrawInfoBox(const CelOutputBuffer &out)
 	DrawPanelBox(out, 177, 62, 288, 60, PANEL_X + 177, PANEL_Y + 46);
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
 		infostr[0] = '\0';
-		infoclr = COL_WHITE;
+		infoclr = UIS_SILVER;
 		ClearPanel();
 	}
 	if (spselflag || trigflag) {
-		infoclr = COL_WHITE;
+		infoclr = UIS_SILVER;
 	} else if (pcurs >= CURSOR_FIRSTITEM) {
 		if (plr[myplr].HoldItem._itype == ITYPE_GOLD) {
 			int nGold = plr[myplr].HoldItem._ivalue;
@@ -1130,9 +1130,9 @@ void DrawInfoBox(const CelOutputBuffer &out)
 			else
 				strcpy(infostr, plr[myplr].HoldItem._iName);
 			if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_MAGIC)
-				infoclr = COL_BLUE;
+				infoclr = UIS_BLUE;
 			if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_UNIQUE)
-				infoclr = COL_GOLD;
+				infoclr = UIS_GOLD;
 		}
 	} else {
 		if (pcursitem != -1)
@@ -1141,11 +1141,11 @@ void DrawInfoBox(const CelOutputBuffer &out)
 			GetObjectStr(pcursobj);
 		if (pcursmonst != -1) {
 			if (leveltype != DTYPE_TOWN) {
-				infoclr = COL_WHITE;
+				infoclr = UIS_SILVER;
 				strcpy(infostr, _(monster[pcursmonst].mName));
 				ClearPanel();
 				if (monster[pcursmonst]._uniqtype != 0) {
-					infoclr = COL_GOLD;
+					infoclr = UIS_GOLD;
 					PrintUniqueHistory();
 				} else {
 					PrintMonstHistory(monster[pcursmonst].MType->mtype);
@@ -1157,7 +1157,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 			}
 		}
 		if (pcursplr != -1) {
-			infoclr = COL_GOLD;
+			infoclr = UIS_GOLD;
 			strcpy(infostr, plr[pcursplr]._pName);
 			ClearPanel();
 			sprintf(tempstr, _("%s, Level: %i"), _(ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)]), plr[pcursplr]._pLevel);
@@ -1242,7 +1242,10 @@ void DrawChr(const CelOutputBuffer &out)
 		maxdam += plr[myplr]._pDamageMod;
 	}
 	sprintf(chrstr, "%i-%i", mindam, maxdam);
-	DrawString(out, chrstr, { 254, 239, 49, 0 }, style | UIS_CENTER);
+	if (mindam >= 100 || maxdam >= 100)
+		DrawString(out, chrstr, { 254, 239, 51, 0 }, style | UIS_CENTER, -1);
+	else
+		DrawString(out, chrstr, { 258, 239, 43, 0 }, style | UIS_CENTER, 0);
 
 	style = UIS_BLUE;
 	if (plr[myplr]._pMagResist == 0)
@@ -1334,8 +1337,8 @@ void DrawChr(const CelOutputBuffer &out)
 	DrawString(out, chrstr, { 143, 239, 30, 0 }, style | UIS_CENTER);
 
 	if (plr[myplr]._pStatPts > 0) {
-		if (CalcStatDiff(myplr) < plr[myplr]._pStatPts) {
-			plr[myplr]._pStatPts = CalcStatDiff(myplr);
+		if (CalcStatDiff(plr[myplr]) < plr[myplr]._pStatPts) {
+			plr[myplr]._pStatPts = CalcStatDiff(plr[myplr]);
 		}
 	}
 	if (plr[myplr]._pStatPts > 0) {
@@ -1454,7 +1457,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 		    && MouseX <= ChrBtnsRect[buttonId].x + ChrBtnsRect[buttonId].w
 		    && MouseY >= ChrBtnsRect[buttonId].y
 		    && MouseY <= ChrBtnsRect[buttonId].y + ChrBtnsRect[buttonId].h) {
-			PlayerStruct &player = plr[myplr];
+			auto &player = plr[myplr];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
 				statPointsToAdd = CapStatPointsToAdd(player._pStatPts, player, attribute);

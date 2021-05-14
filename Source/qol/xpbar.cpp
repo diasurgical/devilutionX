@@ -126,7 +126,7 @@ bool CheckXPBarInfo()
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Show a maximum level indicator for max level players.
-		infoclr = COL_GOLD;
+		infoclr = UIS_GOLD;
 
 		strcpy(tempstr, _("Experience: "));
 		PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, ExpLvlsTbl[charLevel - 1]);
@@ -137,7 +137,7 @@ bool CheckXPBarInfo()
 		return true;
 	}
 
-	infoclr = COL_WHITE;
+	infoclr = UIS_SILVER;
 
 	strcpy(tempstr, _("Experience: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, player._pExperience);

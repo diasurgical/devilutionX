@@ -37,9 +37,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
-      - run: apt-get update && apt-get install -y -t 'stretch-backports*' cmake
       - run: dkp-pacman -Syu --noconfirm
       # Install cmake files (https://github.com/devkitPro/docker/issues/3)
       - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
@@ -57,7 +54,7 @@ jobs:
       - run: apt-get update && apt-get install -y -t 'stretch-backports*' cmake unzip
       - run: dkp-pacman -Syu --noconfirm
       - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
-      - run: wget https://github.com/Steveice10/bannertool/releases/download/1.1.0/bannertool.zip
+      - run: wget https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
       - run: unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
       - run: wget https://github.com/jakcron/Project_CTR/releases/download/v0.16/makerom_016_ctrtool.zip
       - run: unzip -j "makerom_016_ctrtool.zip" "Ubuntu/makerom" -d "/opt/devkitpro/tools/bin"

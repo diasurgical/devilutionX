@@ -65,6 +65,26 @@ void palette_init()
 	InitPalette();
 }
 
+static Uint8 FindBestMatchForColor(SDL_Color *palette, SDL_Color color, int skipFrom, int skipTo)
+{
+	Uint8 best;
+	Uint32 bestDiff = SDL_MAX_UINT32;
+	for (int i = 0; i < 256; i++) {
+		if (i >= skipFrom && i <= skipTo)
+			continue;
+		int diffr = palette[i].r - color.r;
+		int diffg = palette[i].g - color.g;
+		int diffb = palette[i].b - color.b;
+		Uint32 diff = diffr * diffr + diffg * diffg + diffb * diffb;
+
+		if (bestDiff > diff) {
+			best = i;
+			bestDiff = diff;
+		}
+	}
+	return best;
+}
+
 /**
  * @brief Generate lookup table for transparency
  *
@@ -94,30 +114,17 @@ static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int ski
 				continue;
 			}
 
-			Uint8 r = ((int)palette[i].r + (int)palette[j].r) / 2;
-			Uint8 g = ((int)palette[i].g + (int)palette[j].g) / 2;
-			Uint8 b = ((int)palette[i].b + (int)palette[j].b) / 2;
-			Uint8 best;
-			Uint32 bestDiff = SDL_MAX_UINT32;
-			for (int k = 0; k < 256; k++) {
-				if (k >= skipFrom && k <= skipTo)
-					continue;
-				int diffr = palette[k].r - r;
-				int diffg = palette[k].g - g;
-				int diffb = palette[k].b - b;
-				Uint32 diff = diffr * diffr + diffg * diffg + diffb * diffb;
-
-				if (bestDiff > diff) {
-					best = k;
-					bestDiff = diff;
-				}
-			}
+			SDL_Color blendedColor;
+			blendedColor.r = ((int)palette[i].r + (int)palette[j].r) / 2;
+			blendedColor.g = ((int)palette[i].g + (int)palette[j].g) / 2;
+			blendedColor.b = ((int)palette[i].b + (int)palette[j].b) / 2;
+			Uint8 best = FindBestMatchForColor(palette, blendedColor, skipFrom, skipTo);
 			paletteTransparencyLookup[i][j] = best;
 		}
 	}
 }
 
-void LoadPalette(const char *pszFileName)
+void LoadPalette(const char *pszFileName, bool blend /*= true*/)
 {
 	assert(pszFileName);
 
@@ -140,7 +147,7 @@ void LoadPalette(const char *pszFileName)
 #endif
 	}
 
-	if (sgOptions.Graphics.bBlendedTransparancy) {
+	if (blend && sgOptions.Graphics.bBlendedTransparancy) {
 		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_CRYPT) {
 			GenerateBlendedLookupTable(orig_palette, 1, 31);
 		} else if (leveltype == DTYPE_NEST) {
@@ -374,14 +381,25 @@ void palette_update_hive()
 
 void palette_update_quest_palette(int n)
 {
-	int i;
-
-	for (i = 32 - n; i >= 0; i--) {
-		logical_palette[i] = orig_palette[i];
-	}
+	int i = 32 - n;
+	logical_palette[i] = orig_palette[i];
 	ApplyGamma(system_palette, logical_palette, 32);
 	palette_update();
-	GenerateBlendedLookupTable(logical_palette, 1, 31, 32 - n); // Possible optimization would be to only update color 0 as only the UI can overlap with transparency in this quest
+	if (sgOptions.Graphics.bBlendedTransparancy) {
+		// Update blended transparency, but only for the color that was updated
+		for (int j = 0; j < 256; j++) {
+			if (i == j) { // No need to calculate transparency between 2 identical colors
+				paletteTransparencyLookup[i][j] = j;
+				continue;
+			}
+			SDL_Color blendedColor;
+			blendedColor.r = ((int)logical_palette[i].r + (int)logical_palette[j].r) / 2;
+			blendedColor.g = ((int)logical_palette[i].g + (int)logical_palette[j].g) / 2;
+			blendedColor.b = ((int)logical_palette[i].b + (int)logical_palette[j].b) / 2;
+			Uint8 best = FindBestMatchForColor(logical_palette, blendedColor, 1, 31);
+			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[j][i] = best;
+		}
+	}
 }
 
 } // namespace devilution

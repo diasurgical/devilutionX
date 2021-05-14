@@ -13,6 +13,7 @@
 #include "options.h"
 #include "palette.h"
 #include "scrollrt.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -29,7 +30,7 @@ constexpr std::uint8_t GetCelTransparentWidth(std::uint8_t control)
 	return -static_cast<std::int8_t>(control);
 }
 
-const byte *SkipRestOfCelLine(const byte *src, std::int_fast16_t remainingWidth)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const byte *SkipRestOfCelLine(const byte *src, std::int_fast16_t remainingWidth)
 {
 	while (remainingWidth > 0) {
 		const auto v = static_cast<std::int8_t>(*src++);
@@ -47,7 +48,7 @@ constexpr auto NullLineEndFn = []() {};
 
 /** Renders a CEL with only vertical clipping to the output buffer. */
 template <typename RenderLine, typename LineEndFn>
-void RenderCelClipY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
     const RenderLine &renderLine, const LineEndFn &lineEndFn)
 {
 	const auto *srcEnd = src + srcSize;
@@ -82,7 +83,8 @@ void RenderCelClipY(const CelOutputBuffer &out, Point position, const byte *src,
 
 /** Renders a CEL with both horizontal and vertical clipping to the output buffer. */
 template <typename RenderLine, typename LineEndFn>
-void RenderCelClipXY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, ClipX clipX,
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipXY( // NOLINT(readability-function-cognitive-complexity)
+    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, ClipX clipX,
     const RenderLine &renderLine, const LineEndFn &lineEndFn)
 {
 	const auto *srcEnd = src + srcSize;
@@ -161,7 +163,8 @@ void RenderCelClipXY(const CelOutputBuffer &out, Point position, const byte *src
 }
 
 template <typename RenderLine, typename LineEndFn>
-void RenderCel(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCel(
+    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
     const RenderLine &renderLine, const LineEndFn &lineEndFn)
 {
 	const ClipX clipX = CalculateClipX(position.x, srcWidth, out);
@@ -191,19 +194,35 @@ constexpr auto RenderLineMemcpy = [](std::uint8_t *dst, const std::uint8_t *src,
 };
 
 template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East>
-void RenderOutlineForPixels(std::uint8_t *dst, int dstPitch, const std::uint8_t *src, int width, std::uint8_t color)
+void RenderOutlineForPixels( // NOLINT(readability-function-cognitive-complexity)
+    std::uint8_t *dst, int dstPitch, int width, const std::uint8_t *src, std::uint8_t color)
 {
-	for (; width-- > 0; ++src, ++dst) {
-		if (SkipColorIndexZero && *src == 0)
-			continue;
+	if (SkipColorIndexZero) {
+		for (; width-- > 0; ++src, ++dst) {
+			if (*src == 0)
+				continue;
+			if (North)
+				dst[-dstPitch] = color;
+			if (West)
+				dst[-1] = color;
+			if (East)
+				dst[1] = color;
+			if (South)
+				dst[dstPitch] = color;
+		}
+	} else {
 		if (North)
-			dst[-dstPitch] = color;
-		if (West)
-			dst[-1] = color;
-		if (East)
-			dst[1] = color;
+			std::memset(dst - dstPitch, color, width);
+
+		if (West && East)
+			std::memset(dst - 1, color, width + 2);
+		else if (West)
+			std::memset(dst - 1, color, width);
+		else if (East)
+			std::memset(dst + 1, color, width);
+
 		if (South)
-			dst[dstPitch] = color;
+			std::memset(dst + dstPitch, color, width);
 	}
 }
 
@@ -222,151 +241,114 @@ void RenderOutlineForPixel(std::uint8_t *dst, int dstPitch, std::uint8_t srcColo
 		dst[dstPitch] = color;
 }
 
+template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East>
+std::uint8_t *RenderCelOutlinePixelsCheckFirstColumn(
+    std::uint8_t *dst, int dstPitch, int dstX,
+    const std::uint8_t *src, std::uint8_t width, std::uint8_t color)
+{
+	if (dstX == -1) {
+		RenderOutlineForPixel<SkipColorIndexZero, /*North=*/false, /*West=*/false, /*South=*/false, East>(
+		    dst++, dstPitch, *src++, color);
+		--width;
+	}
+	if (width > 0) {
+		RenderOutlineForPixel<SkipColorIndexZero, North, /*West=*/false, South, East>(dst++, dstPitch, *src++, color);
+		--width;
+	}
+	if (width > 0) {
+		RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(dst, dstPitch, width, src, color);
+		dst += width;
+	}
+	return dst;
+}
+
+template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East>
+std::uint8_t *RenderCelOutlinePixelsCheckLastColumn(
+    std::uint8_t *dst, int dstPitch, int dstX, int dstW,
+    const std::uint8_t *src, std::uint8_t width, std::uint8_t color)
+{
+	const bool lastPixel = dstX < dstW && width >= 1;
+	const bool oobPixel = dstX + width > dstW;
+	const int numSpecialPixels = (lastPixel ? 1 : 0) + (oobPixel ? 1 : 0);
+	if (width > numSpecialPixels) {
+		width -= numSpecialPixels;
+		RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(dst, dstPitch, width, src, color);
+		src += width;
+		dst += width;
+	}
+	if (lastPixel)
+		RenderOutlineForPixel<SkipColorIndexZero, North, West, South, /*East=*/false>(dst++, dstPitch, *src++, color);
+	if (oobPixel)
+		RenderOutlineForPixel<SkipColorIndexZero, /*North=*/false, West, /*South=*/false, /*East=*/false>(dst++, dstPitch, *src++, color);
+	return dst;
+}
+
+template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East, bool CheckFirstColumn, bool CheckLastColumn>
+std::uint8_t *RenderCelOutlinePixels(
+    std::uint8_t *dst, int dstPitch, int dstX, int dstW,
+    const std::uint8_t *src, std::uint8_t width, std::uint8_t color)
+{
+	if (CheckFirstColumn && dstX <= 0) {
+		return RenderCelOutlinePixelsCheckFirstColumn<SkipColorIndexZero, North, West, South, East>(
+		    dst, dstPitch, dstX, src, width, color);
+	}
+	if (CheckLastColumn && dstX + width >= dstW) {
+		return RenderCelOutlinePixelsCheckLastColumn<SkipColorIndexZero, North, West, South, East>(
+		    dst, dstPitch, dstX, dstW, src, width, color);
+	}
+	RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(dst, dstPitch, width, src, color);
+	return dst + width;
+}
+
 template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East,
-    bool ClipWidth = false, bool CheckFirstColumn = false, bool CheckLastColumn = false, bool ContinueRleRun = false>
+    bool ClipWidth = false, bool CheckFirstColumn = false, bool CheckLastColumn = false>
 const byte *RenderCelOutlineRowClipped( // NOLINT(readability-function-cognitive-complexity,misc-no-recursion)
     const CelOutputBuffer &out, Point position, const byte *src, int srcWidth,
-    ClipX clipX, std::uint8_t color, std::uint8_t continueRleRun = 0)
+    ClipX clipX, std::uint8_t color)
 {
 	std::int_fast16_t remainingWidth = clipX.width;
 	std::uint8_t v;
 
-	if (ClipWidth && !ContinueRleRun) {
+	auto *dst = &out[position];
+	const auto dstPitch = out.pitch();
+	const auto dstW = out.w();
+
+	if (ClipWidth) {
 		auto remainingLeftClip = clipX.left;
 		while (remainingLeftClip > 0) {
 			v = static_cast<std::uint8_t>(*src++);
 			if (!IsCelTransparent(v)) {
 				if (v > remainingLeftClip) {
-					return RenderCelOutlineRowClipped<SkipColorIndexZero, North, West, South, East, ClipWidth,
-					    CheckFirstColumn, CheckLastColumn, /*ContinueRleRun=*/true>(out, position,
-					    src + remainingLeftClip, srcWidth - clipX.left, { 0, 0, clipX.width }, color, v - remainingLeftClip);
+					RenderCelOutlinePixels<SkipColorIndexZero, North, West, South, East, CheckFirstColumn, CheckLastColumn>(
+					    dst, dstPitch, position.x, dstW, reinterpret_cast<const std::uint8_t *>(src), v - remainingLeftClip, color);
 				}
 				src += v;
 			} else {
 				v = GetCelTransparentWidth(v);
-				if (v > remainingLeftClip) {
-					const std::uint8_t overshoot = v - remainingLeftClip;
-					position.x += overshoot;
-					remainingWidth -= overshoot;
-					if (remainingWidth <= 0)
-						return src;
-					break;
-				}
 			}
 			remainingLeftClip -= v;
 		}
+		dst -= static_cast<int>(remainingLeftClip);
+		position.x -= static_cast<int>(remainingLeftClip);
+		remainingWidth += remainingLeftClip;
 	}
 
-	auto *dst = &out[position];
-	const auto dstPitch = out.pitch();
-
-	const auto handleEdgePixels = [&](std::uint8_t width) -> bool {
-		if (CheckFirstColumn && position.x <= 0) {
-			if (position.x == -1) {
-				RenderOutlineForPixel<SkipColorIndexZero, /*North=*/false, /*West=*/false, /*South=*/false, East>(
-				    dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
-				--width;
-			}
-			if (width > 0) {
-				RenderOutlineForPixel<SkipColorIndexZero, North, /*West=*/false, South, East>(
-				    dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
-				--width;
-			}
-			if (width > 0) {
-				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
-				    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), width, color);
-				src += width, dst += width;
-			}
-			return true;
-		}
-		if (CheckLastColumn && position.x + width >= out.w()) {
-			const bool lastPixel = position.x < out.w() && width >= 1;
-			const bool oobPixel = position.x + width > out.w();
-			const int numSpecialPixels = (lastPixel ? 1 : 0) + (oobPixel ? 1 : 0);
-			if (width > numSpecialPixels) {
-				width -= numSpecialPixels;
-				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
-				    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), width, color);
-				src += width, dst += width;
-			}
-			if (lastPixel) {
-				RenderOutlineForPixel<SkipColorIndexZero, North, West, South, /*East=*/false>(
-				    dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
-			}
-			if (oobPixel) {
-				RenderOutlineForPixel<SkipColorIndexZero, /*North=*/false, West, /*South=*/false, /*East=*/false>(
-				    dst++, dstPitch, static_cast<std::uint8_t>(*src++), color);
-			}
-			return true;
-		}
-		return false;
-	};
-
-	const auto handleOvershoot = [&]() -> bool {
-		if (!((ClipWidth || CheckLastColumn || CheckFirstColumn) && v >= remainingWidth))
-			return false;
-		if (handleEdgePixels(remainingWidth)) {
-			src += v - remainingWidth;
-		} else {
-			RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
-			    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), remainingWidth, color);
-			src += v;
-		}
-		if (ClipWidth && clipX.right != 0)
-			src = SkipRestOfCelLine(src, srcWidth - clipX.width - (v - remainingWidth));
-		return true;
-	};
-
-	if (ClipWidth || CheckFirstColumn || ContinueRleRun) {
-		v = ContinueRleRun ? continueRleRun : static_cast<std::uint8_t>(*src++);
-		if (ContinueRleRun || !IsCelTransparent(v)) {
-			if (handleOvershoot())
-				return src;
-			if (!handleEdgePixels(v)) {
-				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
-				    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), v, color);
-				src += v, dst += v;
-			}
-		} else {
-			v = GetCelTransparentWidth(v);
-			if ((ClipWidth || CheckLastColumn) && v >= remainingWidth) {
-				if (clipX.right != 0)
-					src = SkipRestOfCelLine(src, srcWidth - clipX.width - (v - remainingWidth));
-				return src;
-			}
-			dst += v;
-		}
-		position.x += v;
-		remainingWidth -= v;
-		if (!(ClipWidth || CheckLastColumn) && remainingWidth == 0) {
-			if (ClipWidth && clipX.right != 0)
-				src = SkipRestOfCelLine(src, srcWidth - clipX.width);
-			return src;
-		}
-	}
-
-	while (ClipWidth || CheckLastColumn || remainingWidth > 0) {
+	while (remainingWidth > 0) {
 		v = static_cast<std::uint8_t>(*src++);
 		if (!IsCelTransparent(v)) {
-			if (handleOvershoot())
-				return src;
-			if (!handleEdgePixels(v)) {
-				RenderOutlineForPixels<SkipColorIndexZero, North, West, South, East>(
-				    dst, dstPitch, reinterpret_cast<const std::uint8_t *>(src), v, color);
-				src += v, dst += v;
-			}
+			dst = RenderCelOutlinePixels<SkipColorIndexZero, North, West, South, East, CheckFirstColumn, CheckLastColumn>(
+			    dst, dstPitch, position.x, dstW, reinterpret_cast<const std::uint8_t *>(src),
+			    std::min(remainingWidth, static_cast<std::int_fast16_t>(v)), color);
+			src += v;
 		} else {
 			v = GetCelTransparentWidth(v);
 			dst += v;
-			if ((ClipWidth || CheckLastColumn) && v >= remainingWidth) {
-				if (clipX.right != 0)
-					src = SkipRestOfCelLine(src, srcWidth - clipX.width - (v - remainingWidth));
-				return src;
-			}
 		}
 		remainingWidth -= v;
 		position.x += v;
 	}
+
+	src = SkipRestOfCelLine(src, clipX.right + remainingWidth);
 
 	return src;
 }

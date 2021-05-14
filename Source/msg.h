@@ -356,7 +356,7 @@ struct TPktHdr {
 
 struct TPkt {
 	TPktHdr hdr;
-	uint8_t body[493];
+	byte body[493];
 };
 
 struct DMonsterStr {
@@ -406,13 +406,13 @@ struct DJunk {
 struct TMegaPkt {
 	struct TMegaPkt *pNext;
 	uint32_t dwSpaceLeft;
-	uint8_t data[32000];
+	byte data[32000];
 };
 #pragma pack(pop)
 
 struct TBuffer {
 	uint32_t dwNextWriteOffset;
-	uint8_t bData[4096];
+	byte bData[4096];
 };
 
 extern bool deltaload;
@@ -447,7 +447,7 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdChItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDItem(bool bHiPri, int ii);
-void NetSendCmdDamage(bool bHiPri, BYTE bPlr, DWORD dwDam);
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, DWORD dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t bMon, DWORD dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);

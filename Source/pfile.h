@@ -23,7 +23,7 @@ public:
 	~PFileScopedArchiveWriter();
 
 private:
-	DWORD save_num_;
+	int save_num_;
 	bool clear_tables_;
 };
 
@@ -40,8 +40,7 @@ bool LevelFileExists();
 void GetTempLevelNames(char *szTemp);
 void GetPermLevelNames(char *szPerm);
 void pfile_remove_temp_files();
-void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD qwLen);
-std::unique_ptr<uint8_t[]> pfile_read(const char *pszName, DWORD *pdwLen);
+std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen);
 void pfile_update(bool force_save);
 
 } // namespace devilution

@@ -229,7 +229,7 @@ size_t GetFileSize(const char *pszName)
 {
 	HANDLE file;
 	SFileOpenFile(pszName, &file);
-	const size_t fileLen = SFileGetFileSize(file, nullptr);
+	const size_t fileLen = SFileGetFileSize(file);
 	SFileCloseFileThreadSafe(file);
 
 	return fileLen;

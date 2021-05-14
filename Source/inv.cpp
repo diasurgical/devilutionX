@@ -338,21 +338,20 @@ void DrawInvBelt(const CelOutputBuffer &out)
 
 /**
  * @brief Adds an item to a player's InvGrid array
- * @param playerNumber Player index
  * @param invGridIndex Item's position in InvGrid (this should be the item's topleft grid tile)
  * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
  * @param sizeX Horizontal size of item
  * @param sizeY Vertical size of item
  */
-static void AddItemToInvGrid(int playerNumber, int invGridIndex, int invListIndex, int sizeX, int sizeY)
+static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invListIndex, int sizeX, int sizeY)
 {
 	const int pitch = 10;
 	for (int y = 0; y < sizeY; y++) {
 		for (int x = 0; x < sizeX; x++) {
 			if (x == 0 && y == sizeY - 1)
-				plr[playerNumber].InvGrid[invGridIndex + x] = invListIndex;
+				player.InvGrid[invGridIndex + x] = invListIndex;
 			else
-				plr[playerNumber].InvGrid[invGridIndex + x] = -invListIndex;
+				player.InvGrid[invGridIndex + x] = -invListIndex;
 		}
 		invGridIndex += pitch;
 	}
@@ -453,7 +452,7 @@ bool CanWield(int playerNumber, const ItemStruct &item)
 	if (!CanEquip(item) || (item._iLoc != ILOC_ONEHAND && item._iLoc != ILOC_TWOHAND))
 		return false;
 
-	PlayerStruct &player = plr[playerNumber];
+	auto &player = plr[playerNumber];
 	ItemStruct &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
 	ItemStruct &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 
@@ -503,7 +502,7 @@ bool CanWield(int playerNumber, const ItemStruct &item)
  */
 bool CanEquip(int playerNumber, const ItemStruct &item, inv_body_loc bodyLocation)
 {
-	PlayerStruct &player = plr[playerNumber];
+	auto &player = plr[playerNumber];
 	if (!CanEquip(item) || player._pmode > PM_WALK3 || !player.InvBody[bodyLocation].isEmpty()) {
 		return false;
 	}
@@ -621,23 +620,22 @@ bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
 /**
  * @brief Checks whether the given item can be placed on the specified player's inventory.
  * If 'persistItem' is 'True', the item is also placed in the inventory.
- * @param playerNumber The player number on whose inventory will be checked.
  * @param item The item to be checked.
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool persistItem)
+bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool persistItem)
 {
 	InvXY itemSize = GetInventorySize(item);
 	bool done = false;
 
 	if (itemSize.Y == 1) {
 		for (int i = 30; i <= 39 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(player, i, item, persistItem);
 		}
 		for (int x = 9; x >= 0 && !done; x--) {
 			for (int y = 2; y >= 0 && !done; y--) {
-				done = AutoPlaceItemInInventorySlot(playerNumber, 10 * y + x, item, persistItem);
+				done = AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem);
 			}
 		}
 		return done;
@@ -646,13 +644,13 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 	if (itemSize.Y == 2) {
 		for (int x = 10 - itemSize.X; x >= 0 && !done; x -= itemSize.X) {
 			for (int y = 0; y < 3 && !done; y++) {
-				done = AutoPlaceItemInInventorySlot(playerNumber, 10 * y + x, item, persistItem);
+				done = AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem);
 			}
 		}
 		if (itemSize.X == 2) {
 			for (int x = 7; x >= 0 && !done; x -= 2) {
 				for (int y = 0; y < 3 && !done; y++) {
-					done = AutoPlaceItemInInventorySlot(playerNumber, 10 * y + x, item, persistItem);
+					done = AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem);
 				}
 			}
 		}
@@ -661,18 +659,18 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 
 	if (itemSize.X == 1 && itemSize.Y == 3) {
 		for (int i = 0; i < 20 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(player, i, item, persistItem);
 		}
 		return done;
 	}
 
 	if (itemSize.X == 2 && itemSize.Y == 3) {
 		for (int i = 0; i < 9 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(player, i, item, persistItem);
 		}
 
 		for (int i = 10; i < 19 && !done; i++) {
-			done = AutoPlaceItemInInventorySlot(playerNumber, i, item, persistItem);
+			done = AutoPlaceItemInInventorySlot(player, i, item, persistItem);
 		}
 		return done;
 	}
@@ -683,13 +681,12 @@ bool AutoPlaceItemInInventory(int playerNumber, const ItemStruct &item, bool per
 /**
  * @brief Checks whether the given item can be placed on the specified player's inventory slot.
  * If 'persistItem' is 'True', the item is also placed in the inventory slot.
- * @param playerNumber The player number on whose inventory slot will be checked.
  * @param slotIndex The 0-based index of the slot to put the item on.
  * @param item The item to be checked.
  * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
  * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
  */
-bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStruct &item, bool persistItem)
+bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int i, j, xx, yy;
 	bool done;
@@ -713,18 +710,18 @@ bool AutoPlaceItemInInventorySlot(int playerNumber, int slotIndex, const ItemStr
 			if (xx >= 10) {
 				done = false;
 			} else {
-				done = plr[playerNumber].InvGrid[xx + yy] == 0;
+				done = player.InvGrid[xx + yy] == 0;
 			}
 			xx++;
 		}
 		yy += 10;
 	}
 	if (done && persistItem) {
-		plr[playerNumber].InvList[plr[playerNumber]._pNumInv] = plr[playerNumber].HoldItem;
-		plr[playerNumber]._pNumInv++;
+		player.InvList[player._pNumInv] = player.HoldItem;
+		player._pNumInv++;
 
-		AddItemToInvGrid(playerNumber, slotIndex, plr[playerNumber]._pNumInv, itemSize.X, itemSize.Y);
-		plr[playerNumber].CalcScrolls();
+		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize.X, itemSize.Y);
+		player.CalcScrolls();
 	}
 	return done;
 }
@@ -1072,7 +1069,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 				NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
-			done2h = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
+			done2h = AutoPlaceItemInInventory(plr[pnum], plr[pnum].HoldItem, true);
 			plr[pnum].HoldItem = tempitem;
 			if (pnum == myplr)
 				NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -1172,7 +1169,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 				yy = 0;
 			if (xx < 0)
 				xx = 0;
-			AddItemToInvGrid(pnum, xx + yy, it, sx, sy);
+			AddItemToInvGrid(plr[pnum], xx + yy, it, sx, sy);
 		}
 		break;
 	case ILOC_BELT:
@@ -1255,7 +1252,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	bool done;
 	char ii;
 	int iv, ig;
-	PlayerStruct &player = plr[pnum];
+	auto &player = plr[pnum];
 
 	if (player._pmode > PM_WALK3) {
 		return;
@@ -1303,7 +1300,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = headItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1317,7 +1314,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = leftRingItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1331,7 +1328,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = rightRingItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1345,7 +1342,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = amuletItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1359,7 +1356,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = leftHandItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1373,7 +1370,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = rightHandItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1387,7 +1384,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		holdItem = chestItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
 		}
 
 		if (!automaticMove || automaticallyMoved) {
@@ -1425,7 +1422,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		if (!beltItem.isEmpty()) {
 			holdItem = beltItem;
 			if (automaticMove) {
-				automaticallyMoved = AutoPlaceItemInInventory(pnum, holdItem, true);
+				automaticallyMoved = AutoPlaceItemInInventory(player, holdItem, true);
 			}
 
 			if (!automaticMove || automaticallyMoved) {
@@ -1708,7 +1705,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 			done = AutoPlaceItemInBelt(pnum, plr[pnum].HoldItem, true);
 		}
 		if (!done) {
-			done = AutoPlaceItemInInventory(pnum, plr[pnum].HoldItem, true);
+			done = AutoPlaceItemInInventory(plr[pnum], plr[pnum].HoldItem, true);
 		}
 	}
 
@@ -2003,7 +2000,7 @@ char CheckInvHLight()
 		return -1;
 
 	int8_t rv = -1;
-	infoclr = COL_WHITE;
+	infoclr = UIS_SILVER;
 	pi = nullptr;
 	p = &plr[myplr];
 	ClearPanel();
@@ -2058,9 +2055,9 @@ char CheckInvHLight()
 		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 	} else {
 		if (pi->_iMagical == ITEM_QUALITY_MAGIC) {
-			infoclr = COL_BLUE;
+			infoclr = UIS_BLUE;
 		} else if (pi->_iMagical == ITEM_QUALITY_UNIQUE) {
-			infoclr = COL_GOLD;
+			infoclr = UIS_GOLD;
 		}
 		if (pi->_iIdentified) {
 			strcpy(infostr, pi->_iIName);

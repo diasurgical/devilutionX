@@ -6,7 +6,6 @@
 
 #include <Aulib/Stream.h>
 
-#include "miniwin/miniwin.h"
 #include "utils/stdcompat/shared_ptr_array.hpp"
 
 namespace devilution {
