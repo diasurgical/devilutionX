@@ -656,7 +656,7 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSpri
 
 void CelDrawItem(bool usable, const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame)
 {
-	if (usable) {
+	if (!usable) {
 		CelDrawLightRedTo(out, x, y, cel, frame);
 	} else {
 		CelClippedDrawTo(out, x, y, cel, frame);
