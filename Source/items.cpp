@@ -4869,24 +4869,22 @@ void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed)
 
 void RecalcStoreStats()
 {
-	int i;
-
-	for (i = 0; i < SMITH_ITEMS; i++) {
+	for (int i = 0; i < SMITH_ITEMS; i++) {
 		if (!smithitem[i].isEmpty()) {
 			smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
 		}
 	}
-	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
+	for (int i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
 		if (!premiumitems[i].isEmpty()) {
 			premiumitems[i]._iStatFlag = StoreStatOk(&premiumitems[i]);
 		}
 	}
-	for (i = 0; i < 20; i++) {
+	for (int i = 0; i < 20; i++) {
 		if (!witchitem[i].isEmpty()) {
 			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
 		}
 	}
-	for (i = 0; i < 20; i++) {
+	for (int i = 0; i < 20; i++) {
 		if (!healitem[i].isEmpty()) {
 			healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
 		}
