@@ -4726,7 +4726,7 @@ void SortHealer()
 
 void SpawnHealer(int lvl)
 {
-	int i, nsi, srnd, itype;
+	int srnd;
 
 	memset(&items[0], 0, sizeof(*items));
 	GetItemAttrs(0, IDI_HEAL, 1);
@@ -4751,19 +4751,19 @@ void SpawnHealer(int lvl)
 	} else {
 		srnd = 2;
 	}
-	nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
-	for (i = srnd; i < nsi; i++) {
+	int nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
+	for (int i = srnd; i < nsi; i++) {
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
 		SetRndSeed(items[0]._iSeed);
-		itype = RndHealerItem(lvl) - 1;
+		int itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		healitem[i] = items[0];
 		healitem[i]._iCreateInfo = lvl | CF_HEALER;
 		healitem[i]._iIdentified = true;
 		healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
 	}
-	for (i = nsi; i < 20; i++) {
+	for (int i = nsi; i < 20; i++) {
 		healitem[i]._itype = ITYPE_NONE;
 	}
 	SortHealer();
