@@ -1628,6 +1628,7 @@ void M_StartHit(int i, int pnum, int dam)
 
 void M_DiabloDeath(int i, bool sendmsg)
 {
+	return;
 	MonsterStruct *Monst;
 	int dist;
 	int j, k;
@@ -2611,23 +2612,16 @@ bool M_DoDeath(int i)
 
 	monster[i]._mVar1++;
 	if (monster[i].MType->mtype == MT_DIABLO) {
-		x = monster[i].position.tile.x - ViewX;
-		if (x < 0)
-			x = -1;
-		else
-			x = x > 0;
-		ViewX += x;
+		SDL_Log("MVAR1: %d", monster[i]._mVar1);
 
-		y = monster[i].position.tile.y - ViewY;
-		if (y < 0) {
-			y = -1;
-		} else {
-			y = y > 0;
+		if (monster[i]._mVar1 == 140) {
+			Point pos = monster[i].position.tile;
+			AddMissile(pos.x, pos.y, pos.x, pos.y, 0, MIS_BOOM2, -1, -1, 0, 0);
+			dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = 0;
+			monster[i]._mDelFlag = true;
+			SpawnQuestItem(IDI_SOULSTONE, pos.x, pos.y, 0, true);
 		}
-		ViewY += y;
-
-		if (monster[i]._mVar1 == 140)
-			PrepDoEnding();
+			//PrepDoEnding();
 	} else if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
 		if (monster[i]._uniqtype == 0)
 			AddDead(monster[i].position.tile, monster[i].MType->mdeadval, monster[i]._mdir);

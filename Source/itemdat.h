@@ -64,6 +64,7 @@ enum _item_indexes : uint8_t {
 	IDI_FULLNOTE,
 	IDI_BROWNSUIT,
 	IDI_GREYSUIT,
+	IDI_SOULSTONE = 167,
 };
 
 enum item_drop_rate : uint8_t {
