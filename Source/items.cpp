@@ -4178,31 +4178,23 @@ int RndSmithItem(int lvl)
 	return ril[GenerateRnd(ri)] + 1;
 }
 
-void SortSmith()
+void SortVendor(ItemStruct *items)
 {
-	int j, k;
-	bool sorted;
+	int count = 1;
+	while (!items[count].isEmpty())
+		count++;
 
-	j = 0;
-	while (!smithitem[j + 1].isEmpty()) {
-		j++;
-	}
+	auto cmp = [](const ItemStruct &a, const ItemStruct &b) {
+		return a.IDidx < b.IDidx;
+	};
 
-	sorted = false;
-	while (j > 0 && !sorted) {
-		sorted = true;
-		for (k = 0; k < j; k++) {
-			if (smithitem[k].IDidx > smithitem[k + 1].IDidx) {
-				std::swap(smithitem[k], smithitem[k + 1]);
-				sorted = false;
-			}
-		}
-		j--;
-	}
+	std::sort(items, items + count, cmp);
 }
 
 void SpawnSmith(int lvl)
 {
+	constexpr int Unsorted = 0;
+
 	int maxValue, maxItems;
 
 	ItemStruct holditem;
@@ -4233,7 +4225,7 @@ void SpawnSmith(int lvl)
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ITYPE_NONE;
 
-	SortSmith();
+	SortVendor(smithitem + Unsorted);
 	items[0] = holditem;
 }
 
@@ -4444,20 +4436,6 @@ int RndWitchItem(int lvl)
 	return RndVendorItem<WitchItemOk>(lvl);
 }
 
-void SortWitch()
-{
-	int j = 3;
-	while (!witchitem[j + 1].isEmpty()) {
-		j++;
-	}
-
-	auto cmp = [](const ItemStruct &a, ItemStruct &b) {
-		return a.IDidx < b.IDidx;
-	};
-
-	std::sort(witchitem + 3, witchitem + j, cmp);
-}
-
 void WitchBookLevel(int ii)
 {
 	if (witchitem[ii]._iMiscId != IMISC_BOOK)
@@ -4476,10 +4454,12 @@ void WitchBookLevel(int ii)
 
 void SpawnWitch(int lvl)
 {
+	constexpr int Unsorted = 3;
+
 	int iCnt;
 	int idata, maxlvl, maxValue;
 
-	int j = 3;
+	int j = Unsorted;
 
 	memset(&items[0], 0, sizeof(*items));
 	GetItemAttrs(0, IDI_MANA, 1);
@@ -4552,7 +4532,7 @@ void SpawnWitch(int lvl)
 	for (int i = iCnt; i < WITCH_ITEMS; i++)
 		witchitem[i]._itype = ITYPE_NONE;
 
-	SortWitch();
+	SortVendor(witchitem + Unsorted);
 }
 
 int RndBoyItem(int lvl)
@@ -4710,22 +4690,10 @@ int RndHealerItem(int lvl)
 	return RndVendorItem<HealerItemOk>(lvl);
 }
 
-void SortHealer()
-{
-	int j = 2;
-	while (!healitem[j + 1].isEmpty()) {
-		j++;
-	}
-
-	auto cmp = [](const ItemStruct &a, ItemStruct &b) {
-		return a.IDidx < b.IDidx;
-	};
-
-	std::sort(healitem + 2, healitem + j, cmp);
-}
-
 void SpawnHealer(int lvl)
 {
+	constexpr int Unsorted = 2;
+
 	int srnd;
 
 	memset(&items[0], 0, sizeof(*items));
@@ -4766,7 +4734,7 @@ void SpawnHealer(int lvl)
 	for (int i = nsi; i < 20; i++) {
 		healitem[i]._itype = ITYPE_NONE;
 	}
-	SortHealer();
+	SortVendor(healitem + Unsorted);
 }
 
 void SpawnStoreGold()
