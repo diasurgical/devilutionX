@@ -4933,7 +4933,7 @@ void CreateSpellBook(Point pos, spell_id ispell, bool sendmsg, bool delta)
 		DeltaAddItem(ii);
 }
 
-static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
+static void CreateMagicItem(Point pos, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -4949,7 +4949,7 @@ static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icur
 
 		idx = RndTypeItems(imisc, imid, lvl);
 	}
-	GetSuperItemSpace({x, y}, ii);
+	GetSuperItemSpace(pos, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -4957,18 +4957,18 @@ static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icur
 		DeltaAddItem(ii);
 }
 
-void CreateMagicArmor(int x, int y, int imisc, int icurs, bool sendmsg, bool delta)
+void CreateMagicArmor(Point pos, int imisc, int icurs, bool sendmsg, bool delta)
 {
 	int lvl = items_get_currlevel();
-	CreateMagicItem(x, y, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
+	CreateMagicItem(pos, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
 }
 
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta)
 {
-	CreateMagicItem(position.x, position.y, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
+	CreateMagicItem(position, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
 }
 
-void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool delta)
+void CreateMagicWeapon(Point pos, int imisc, int icurs, bool sendmsg, bool delta)
 {
 	int imid = IMISC_NONE;
 	if (imisc == ITYPE_STAFF)
@@ -4976,7 +4976,7 @@ void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool de
 
 	int curlv = items_get_currlevel();
 
-	CreateMagicItem(x, y, curlv, imisc, imid, icurs, sendmsg, delta);
+	CreateMagicItem(pos, curlv, imisc, imid, icurs, sendmsg, delta);
 }
 
 static void NextItemRecord(int i)

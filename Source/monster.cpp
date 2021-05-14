@@ -1692,9 +1692,9 @@ void SpawnLoot(int i, bool sendmsg)
 			stream_stop();
 		quests[Q_NAKRUL]._qlog = false;
 		UberDiabloMonsterIndex = -2;
-		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_SWORD, ICURS_GREAT_SWORD, false, true);
-		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
-		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
+		CreateMagicWeapon(Monst->position.tile, ITYPE_SWORD, ICURS_GREAT_SWORD, false, true);
+		CreateMagicWeapon(Monst->position.tile, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
+		CreateMagicWeapon(Monst->position.tile, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
 		CreateSpellBook(Monst->position.tile, SPL_APOCA, false, true);
 	} else if (i > MAX_PLRS - 1) { // Golems should not spawn loot
 		SpawnItem(i, Monst->position.tile, sendmsg);

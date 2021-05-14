@@ -3185,17 +3185,17 @@ void OperateSlainHero(int pnum, int i)
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
 			if (plr[pnum]._pClass == HeroClass::Warrior) {
-				CreateMagicArmor(object[i].position.x, object[i].position.y, ITYPE_HARMOR, ICURS_BREAST_PLATE, false, true);
+				CreateMagicArmor(object[i].position, ITYPE_HARMOR, ICURS_BREAST_PLATE, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
+				CreateMagicWeapon(object[i].position, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
 				CreateSpellBook(object[i].position, SPL_LIGHTNING, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Monk) {
-				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
+				CreateMagicWeapon(object[i].position, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Bard) {
-				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_SWORD, ICURS_BASTARD_SWORD, false, true);
+				CreateMagicWeapon(object[i].position, ITYPE_SWORD, ICURS_BASTARD_SWORD, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
+				CreateMagicWeapon(object[i].position, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
 			}
 			plr[myplr].PlaySpeach(9);
 			if (pnum == myplr)
