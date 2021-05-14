@@ -84,9 +84,19 @@ void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, cons
  * @param sy Target buffer coordinate
  * @param cel CEL sprite
  * @param frame CEL frame number
- * @param light Light shade to use
  */
-void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
+void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
+
+/**
+ * @brief Blit item's CEL sprite recolored red if not usable, normal if usable
+ * @param usable indicates if the item should be recolored red or not
+ * @param out Target buffer
+ * @param x Target buffer coordinate
+ * @param y Target buffer coordinate
+ * @param cel CEL sprite
+ * @param frame CEL frame number
+ */
+void CelDrawItem(bool usable, const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame);
 
 /**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
@@ -105,9 +115,8 @@ void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelS
  * @param sy Target buffer coordinate
  * @param cel CEL sprite
  * @param frame CEL frame number
- * @param light Light shade to use
  */
-void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
+void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
  * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the target buffer at the given coordianates
