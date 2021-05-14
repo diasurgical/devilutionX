@@ -473,10 +473,7 @@ void DrawHelp(const CelOutputBuffer &out)
 
 	DrawSTextHelp();
 	DrawQTextBack(out);
-	if (gbIsHellfire)
-		PrintSString(out, 0, 2, true, _("Hellfire Help"), COL_GOLD, 0);
-	else
-		PrintSString(out, 0, 2, true, _("Diablo Help"), COL_GOLD, 0);
+	PrintSString(out, 0, 2, gbIsHellfire ? _("Hellfire Help") : _("Diablo Help"), UIS_GOLD | UIS_CENTER);
 	DrawSLine(out, 5);
 
 	s = _(&gszHelpText[0]);
@@ -556,7 +553,7 @@ void DrawHelp(const CelOutputBuffer &out)
 		}
 	}
 
-	PrintSString(out, 0, 23, true, _("Press ESC to end or the arrow keys to scroll."), COL_GOLD, 0);
+	PrintSString(out, 0, 23, _("Press ESC to end or the arrow keys to scroll."), UIS_GOLD | UIS_CENTER);
 }
 
 void DisplayHelp()

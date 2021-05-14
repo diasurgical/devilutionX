@@ -36,7 +36,7 @@ extern Uint8 paletteTransparencyLookup[256][256];
 
 void palette_update();
 void palette_init();
-void LoadPalette(const char *pszFileName);
+void LoadPalette(const char *pszFileName, bool blend = true);
 void LoadRndLvlPal(dungeon_type l);
 void ResetPal();
 void IncreaseGamma();

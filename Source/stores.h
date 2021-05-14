@@ -47,8 +47,7 @@ struct STextStruct {
 	int _sx;
 	int _syoff;
 	char _sstr[128];
-	bool _sjust;
-	text_color _sclr;
+	uint16_t flags;
 	int _sline;
 	bool _ssel;
 	int _sval;
@@ -98,7 +97,7 @@ void AddStoreHoldRepair(ItemStruct *itm, int i);
 void InitStores();
 void SetupTownStores();
 void FreeStoreMem();
-void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col, int val);
+void PrintSString(const CelOutputBuffer &out, int margin, int line, const char *text, uint16_t flags, int price = 0);
 void DrawSLine(const CelOutputBuffer &out, int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);

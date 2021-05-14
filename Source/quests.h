@@ -83,6 +83,7 @@ void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
 void GetReturnLvlPos();
 void LoadPWaterPalette();
+void UpdatePWaterPalette();
 void ResyncMPQuests();
 void ResyncQuests();
 void DrawQuestLog(const CelOutputBuffer &out);
