@@ -3189,7 +3189,7 @@ void OperateSlainHero(int pnum, int i)
 			} else if (plr[pnum]._pClass == HeroClass::Rogue) {
 				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-				CreateSpellBook(object[i].position.x, object[i].position.y, SPL_LIGHTNING, false, true);
+				CreateSpellBook(object[i].position, SPL_LIGHTNING, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Monk) {
 				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Bard) {

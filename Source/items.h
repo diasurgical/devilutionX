@@ -434,7 +434,7 @@ void SpawnStoreGold();
 void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed);
 void RecalcStoreStats();
 int ItemNoFlippy();
-void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta);
+void CreateSpellBook(Point pos, spell_id ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(int x, int y, int imisc, int icurs, bool sendmsg, bool delta);
 void CreateAmulet(Point position, int curlv, bool sendmsg, bool delta);
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool delta);

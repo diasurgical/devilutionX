@@ -1695,7 +1695,7 @@ void SpawnLoot(int i, bool sendmsg)
 		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_SWORD, ICURS_GREAT_SWORD, false, true);
 		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
 		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
-		CreateSpellBook(Monst->position.tile.x, Monst->position.tile.y, SPL_APOCA, false, true);
+		CreateSpellBook(Monst->position.tile, SPL_APOCA, false, true);
 	} else if (i > MAX_PLRS - 1) { // Golems should not spawn loot
 		SpawnItem(i, Monst->position.tile, sendmsg);
 	}

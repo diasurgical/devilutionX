@@ -4902,7 +4902,7 @@ int ItemNoFlippy()
 	return r;
 }
 
-void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta)
+void CreateSpellBook(Point pos, spell_id ispell, bool sendmsg, bool delta)
 {
 	int lvl = currlevel;
 
@@ -4925,7 +4925,7 @@ void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta)
 		if (items[ii]._iMiscId == IMISC_BOOK && items[ii]._iSpell == ispell)
 			break;
 	}
-	GetSuperItemSpace({x, y}, ii);
+	GetSuperItemSpace(pos, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
