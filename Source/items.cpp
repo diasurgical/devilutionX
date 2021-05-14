@@ -4476,10 +4476,10 @@ void WitchBookLevel(int ii)
 
 void SpawnWitch(int lvl)
 {
-	int i, j, iCnt;
+	int iCnt;
 	int idata, maxlvl, maxValue;
 
-	j = 3;
+	int j = 3;
 
 	memset(&items[0], 0, sizeof(*items));
 	GetItemAttrs(0, IDI_MANA, 1);
@@ -4501,32 +4501,33 @@ void SpawnWitch(int lvl)
 		iCnt = GenerateRnd(WITCH_ITEMS - 10) + 10;
 		maxValue = 200000;
 
-		int bCnt;
 		int books = GenerateRnd(4);
-		for (i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
-			if (WitchItemOk(i)
-			    && lvl >= AllItemsList[i].iMinMLvl) {
-				memset(&items[0], 0, sizeof(*items));
-				items[0]._iSeed = AdvanceRndSeed();
-				SetRndSeed(items[0]._iSeed);
-				GenerateRnd(1);
+		for (int i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
+			if (!WitchItemOk(i))
+				continue;
+			if (lvl < AllItemsList[i].iMinMLvl)
+				continue;
 
-				GetItemAttrs(0, i, lvl);
-				witchitem[j] = items[0];
-				witchitem[j]._iCreateInfo = lvl | CF_WITCH;
-				witchitem[j]._iIdentified = true;
-				WitchBookLevel(j);
-				witchitem[j]._iStatFlag = StoreStatOk(&witchitem[j]);
-				j++;
-				bCnt++;
-			}
+			memset(&items[0], 0, sizeof(*items));
+			items[0]._iSeed = AdvanceRndSeed();
+			SetRndSeed(items[0]._iSeed);
+			GenerateRnd(1);
+
+			GetItemAttrs(0, i, lvl);
+			witchitem[j] = items[0];
+			witchitem[j]._iCreateInfo = lvl | CF_WITCH;
+			witchitem[j]._iIdentified = true;
+			WitchBookLevel(j);
+			witchitem[j]._iStatFlag = StoreStatOk(&witchitem[j]);
+			j++;
+			bCnt++;
 		}
 	} else {
 		iCnt = GenerateRnd(WITCH_ITEMS - 12) + 10;
 		maxValue = 140000;
 	}
 
-	for (i = j; i < iCnt; i++) {
+	for (int i = j; i < iCnt; i++) {
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
@@ -4548,7 +4549,7 @@ void SpawnWitch(int lvl)
 		witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
 	}
 
-	for (i = iCnt; i < WITCH_ITEMS; i++)
+	for (int i = iCnt; i < WITCH_ITEMS; i++)
 		witchitem[i]._itype = ITYPE_NONE;
 
 	SortWitch();
