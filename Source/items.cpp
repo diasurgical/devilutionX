@@ -4840,13 +4840,11 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 
 void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 {
-	int itype;
-
 	if (idx == IDI_HEAL || idx == IDI_FULLHEAL || idx == IDI_RESURRECT) {
 		GetItemAttrs(ii, idx, lvl);
 	} else {
 		SetRndSeed(iseed);
-		itype = RndHealerItem(lvl) - 1;
+		int itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(ii, itype, lvl);
 	}
 
