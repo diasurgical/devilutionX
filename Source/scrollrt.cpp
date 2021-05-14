@@ -186,13 +186,13 @@ static void DrawCursor(const CelOutputBuffer &out)
 
 	const auto &sprite = GetInvItemSprite(pcurs);
 	const int frame = GetInvItemFrame(pcurs);
-	void (*drawingFun)(const CelOutputBuffer &, int, int, const CelSprite &, int) = &CelClippedDrawSafeTo;
+	bool usable = true;
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		const auto &heldItem = plr[myplr].HoldItem;
 		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), MouseX, MouseY + cursH - 1, sprite, frame, false);
-		drawingFun = (heldItem._iStatFlag ? &CelClippedDrawSafeTo : &CelDrawLightRedSafeTo);
+		usable = heldItem._iStatFlag;
 	}
-	drawingFun(out, MouseX, MouseY + cursH - 1, sprite, frame);
+	CelDrawItem(usable, out, MouseX, MouseY + cursH - 1, sprite, frame);
 }
 
 /**

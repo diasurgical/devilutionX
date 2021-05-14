@@ -202,8 +202,6 @@ void DrawInv(const CelOutputBuffer &out)
 		{ 133, 160 }, // chest
 	};
 
-	void (*drawingFun)(const CelOutputBuffer &, int, int, const CelSprite &, int);
-
 	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
 		if (!plr[myplr].InvBody[slot].isEmpty()) {
 			int screen_x = slotPos[slot].X;
@@ -232,8 +230,7 @@ void DrawInv(const CelOutputBuffer &out)
 				CelBlitOutlineTo(out, GetOutlineColor(plr[myplr].InvBody[slot], true), RIGHT_PANEL_X + screen_x, screen_y, cel, celFrame, false);
 			}
 
-			drawingFun = (plr[myplr].InvBody[slot]._iStatFlag ? &CelClippedDrawTo : &CelDrawLightRedTo);
-			drawingFun(out, RIGHT_PANEL_X + screen_x, screen_y, cel, celFrame);
+			CelDrawItem(plr[myplr].InvBody[slot]._iStatFlag, out, RIGHT_PANEL_X + screen_x, screen_y, cel, celFrame);
 
 			if (slot == INVLOC_HAND_LEFT) {
 				if (plr[myplr].InvBody[slot]._iLoc == ILOC_TWOHAND) {
@@ -283,8 +280,8 @@ void DrawInv(const CelOutputBuffer &out)
 				    cel, celFrame, false);
 			}
 
-			drawingFun = (plr[myplr].InvList[ii]._iStatFlag ? &CelClippedDrawTo : &CelDrawLightRedTo);
-			drawingFun(
+			CelDrawItem(
+			    plr[myplr].InvList[ii]._iStatFlag,
 			    out,
 			    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 			    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
@@ -318,8 +315,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 			}
 		}
 
-		void (*drawingFun)(const CelOutputBuffer &, int, int, const CelSprite &, int) = (plr[myplr].SpdList[i]._iStatFlag ? &CelClippedDrawTo : &CelDrawLightRedTo);
-		drawingFun(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cel, celFrame);
+		CelDrawItem(plr[myplr].SpdList[i]._iStatFlag, out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cel, celFrame);
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
 		    && plr[myplr].SpdList[i]._iStatFlag

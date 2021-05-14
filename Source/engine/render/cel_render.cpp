@@ -654,6 +654,15 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSpri
 	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(1));
 }
 
+void CelDrawItem(bool usable, const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame)
+{
+	if (usable) {
+		CelDrawLightRedTo(out, x, y, cel, frame);
+	} else {
+		CelClippedDrawTo(out, x, y, cel, frame);
+	}
+}
+
 void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	int nDataSize;

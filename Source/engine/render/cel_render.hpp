@@ -88,6 +88,17 @@ void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, cons
 void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
+ * @brief Blit item's CEL sprite recolored red if not usable, normal if usable
+ * @param usable indicates if the item should be recolored red or not
+ * @param out Target buffer
+ * @param x Target buffer coordinate
+ * @param y Target buffer coordinate
+ * @param cel CEL sprite
+ * @param frame CEL frame number
+ */
+void CelDrawItem(bool usable, const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame);
+
+/**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
  * @param out Target buffer
  * @param sx Target buffer coordinate
