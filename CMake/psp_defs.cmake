@@ -1,0 +1,27 @@
+#General compilation options
+set(NONET ON)
+set(USE_SDL1 ON)
+set(NOSOUND ON)
+
+#Force scaling, for now..
+# set(SDL1_VIDEO_MODE_FLAGS SDL_FULLSCREEN)
+set(SDL1_VIDEO_MODE_BPP 8)
+set(DEFAULT_WIDTH 480)
+set(DEFAULT_HEIGHT 272)
+
+#SDL Joystick axis mapping (analog)
+set(JOY_AXIS_LEFTX 0)
+set(JOY_AXIS_LEFTY 1)
+#SDL Joystick button mapping
+set(JOY_BUTTON_B 1)
+set(JOY_BUTTON_A 2)
+set(JOY_BUTTON_X 3)
+set(JOY_BUTTON_Y 0)
+set(JOY_BUTTON_LEFTSHOULDER 4)
+set(JOY_BUTTON_RIGHTSHOULDER 5)
+set(JOY_BUTTON_BACK 10)
+set(JOY_BUTTON_START 11)
+set(JOY_BUTTON_DPAD_UP 8)
+set(JOY_BUTTON_DPAD_DOWN 6)
+set(JOY_BUTTON_DPAD_LEFT 7)
+set(JOY_BUTTON_DPAD_RIGHT 9)

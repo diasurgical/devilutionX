@@ -21,7 +21,39 @@ extern "C" const char *__asan_default_options()
 }
 #endif
 
+#ifdef __PSP__
+#include <pspkernel.h>
+
+PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
+PSP_HEAP_SIZE_MAX();
+
+int exit_callback(int arg1, int arg2, void* common){
+	sceKernelExitGame();
+	return 0;
+}
+ 
+int CallbackThread(SceSize args, void* argp) {
+	int cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
+	sceKernelRegisterExitCallback(cbid);
+	sceKernelSleepThreadCB();
+ 
+	return 0;
+}
+ 
+int SetupCallbacks() {
+	int thid = sceKernelCreateThread("update_thread", CallbackThread, 0x11, 0xFA0, 0, 0);
+	if (thid >= 0) {
+		sceKernelStartThread(thid, 0, 0);
+	}
+	return thid;
+}
+
+extern "C"
+{
+int SDL_main(int argc, char *argv[])
+#else
 int main(int argc, char **argv)
+#endif
 {
 #ifdef RUN_TESTS
 	testing::InitGoogleTest(&argc, argv);
@@ -33,6 +65,11 @@ int main(int argc, char **argv)
 #ifdef __3DS__
 	ctr_sys_init();
 #endif
+#ifdef __PSP__
+	SetupCallbacks();
+
+#endif
+
 #ifdef GPERF_HEAP_MAIN
 	HeapProfilerStart("main");
 #endif
@@ -42,3 +79,7 @@ int main(int argc, char **argv)
 #endif
 	return result;
 }
+
+#if __PSP__
+}
+#endif

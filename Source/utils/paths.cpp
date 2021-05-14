@@ -51,7 +51,9 @@ std::string FromSDL(char *s)
 	if (s != nullptr) {
 		SDL_free(s);
 	} else {
+#ifndef __PSP__
 		Log("{}", SDL_GetError());
+#endif
 		SDL_ClearError();
 	}
 	return result;

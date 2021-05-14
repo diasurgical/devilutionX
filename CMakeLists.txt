@@ -132,6 +132,13 @@ if(SWITCH)
   include(switch_defs)
 endif()
 
+if(PSP)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+
+  include(psp_defs)
+endif()
+
 if(VITA)
   # Work around a missing setting in the toolchain file.
   # Fix sent upstream: https://github.com/vitasdk/vita-toolchain/pull/182
@@ -559,7 +566,7 @@ target_include_directories(${BIN_TARGET} PRIVATE
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
-if(NOT N3DS)
+if(NOT N3DS AND NOT PSP)
   target_link_libraries(${BIN_TARGET} PUBLIC
   Threads::Threads)
 endif()
@@ -724,13 +731,24 @@ if(N3DS)
   target_link_libraries(${BIN_TARGET} PRIVATE 3ds::citro3d 3ds::ctrulib)
 endif()
 
+if(PSP)
+  target_link_libraries(${BIN_TARGET} PRIVATE
+    -L${PSPDEV}/psp/lib -lg -lc -lz -lm -lGL -lvorbisidec -lmikmod -lpspvfpu -lfreetype
+    -L${PSPDEV}/psp/sdk/lib -lstdc++ -L${PSPDEV}/psp
+    -lpspdebug -lpspgu -lpspctrl -lpspge -lpspirkeyb -lpsppower -lpsppower_driver -lpspdisplay -lpsphprm -lpspsdk -lpsprtc
+    -lpspaudio -lpsputility -lpspnet_inet -lc -lpspuser)
+
+  target_link_options(${BIN_TARGET} PUBLIC -D_PSP_FW_VERSION=500)
+  target_compile_definitions(${BIN_TARGET} PRIVATE -Dmain=SDL_main -DPSP_LARGE_MEMORY=1)
+endif()
+
 target_compile_definitions(${BIN_TARGET} PRIVATE ${def_list})
 
 if (GPERF)
   target_link_libraries(${BIN_TARGET} PRIVATE ${GPERFTOOLS_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA AND NOT PSP)
   target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
@@ -856,6 +874,25 @@ if(N3DS)
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
+endif()
+
+if(PSP)
+  set(EXTRA_TARGETS   "EBOOT.PBP")
+  set(PSP_EBOOT_TITLE "DevilutionX")
+  set(PSP_LARGE_MEMORY 1)
+
+  if(BINARY_RELEASE)
+    set_target_properties(${BIN_TARGET} PROPERTIES COMPILE_FLAGS -fno-rtti -G0 -O2)
+  else()
+    set_target_properties(${BIN_TARGET} PROPERTIES COMPILE_FLAGS -fno-rtti -g -O0)
+  endif()
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_PSP_FW_VERSION=500")
+
+  create_pbp_file(TARGET ${BIN_TARGET}
+    ICON_PATH "${PROJECT_SOURCE_DIR}/Packaging/psp/icon.png"
+    BACKGROUND_PATH "${PROJECT_SOURCE_DIR}/Packaging/psp/background.png"
+  )
 endif()
 
 if(CPACK)

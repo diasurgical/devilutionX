@@ -132,8 +132,13 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 /* rdata */
 
 bool gbForceWindowed = false;
-bool gbShowIntro = true;
 bool leveldebug = false;
+#ifdef __PSP__
+// skipping intro as it messes up with the next screen
+bool gbShowIntro = false;
+#else
+bool gbShowIntro = true;
+#endif
 #ifdef _DEBUG
 bool monstdebug = false;
 _monster_id DebugMonsters[10];
@@ -682,7 +687,6 @@ static void diablo_init()
 	SFileEnableDirectAccess(true);
 	init_archives();
 	was_archives_init = true;
-
 	if (forceSpawn)
 		gbIsSpawn = true;
 	if (forceDiablo)
@@ -784,7 +788,6 @@ int DiabloMain(int argc, char **argv)
 	diablo_splash();
 	mainmenu_loop();
 	diablo_deinit();
-
 	return 0;
 }
 
@@ -2127,16 +2130,19 @@ void initKeymapActions()
 	});
 #endif
 	for (int i = 0; i < 4; ++i) {
+		char buffer[20];
+		snprintf(buffer, 12, "QuickSpell%d", i + 1);
+		
 		quickSpellActionIndexes[i] = keymapper.addAction({
-		    std::string("QuickSpell") + std::to_string(i + 1),
-		    DVL_VK_F5 + i,
-		    [i]() {
-			    if (spselflag) {
-				    SetSpeedSpell(i);
-				    return;
-			    }
-			    ToggleSpell(i);
-		    },
+			buffer,
+			DVL_VK_F5 + i,
+			[i]() {
+				if (spselflag) {
+					SetSpeedSpell(i);
+					return;
+				}
+				ToggleSpell(i);
+			},
 		});
 	}
 	for (int i = 0; i < 4; ++i) {
@@ -2205,8 +2211,11 @@ void initKeymapActions()
 	    },
 	});
 	for (int i = 0; i < 8; ++i) {
+		char buffer[20];
+		snprintf(buffer, 20, "BeltItem%d", i + 1);
+
 		keymapper.addAction({
-		    std::string("BeltItem") + std::to_string(i + 1),
+			buffer,
 		    '1' + i,
 		    [i] {
 			    if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {

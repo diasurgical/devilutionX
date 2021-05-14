@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __PSP__
+#include <cstdarg>
+#endif
+
 #include <cstdint>
 
 #include <cctype>
@@ -9,6 +13,14 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+
+#ifdef __PSP__
+#define snprintf(buffer, size, format, ...) \
+     sprintf(buffer, format, __VA_ARGS__)
+#define vsnprintf(buffer, size, format, ...) \
+     vsprintf(buffer, format, __VA_ARGS__)
+#define strcasecmp strcmp
+#endif
 
 namespace devilution {
 
