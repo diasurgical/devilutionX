@@ -1254,7 +1254,7 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
 	} else {
 		style = UIS_GOLD;
-		strcpy(chrstr, _("MAX"));
+		strcpy(chrstr, _( /* TRANSLATORS: UI Constrains. Keep translation short please!*/ "MAX"));
 	}
 	DrawString(out, chrstr, { 257, 276, 43, 0 }, style | UIS_CENTER);
 
@@ -1647,12 +1647,12 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				int max;
 				GetDamageAmt(sn, &min, &max);
 				if (min != -1) {
-					sprintf(tempstr, _("Mana: %i  Dam: %i - %i"), mana, min, max);
+					sprintf(tempstr, _( /* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: %i - %i"), mana, min, max);
 				} else {
-					sprintf(tempstr, _("Mana: %i   Dam: n/a"), mana);
+					sprintf(tempstr, _( /* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i   Dam: n/a"), mana);
 				}
 				if (sn == SPL_BONESPIRIT) {
-					sprintf(tempstr, _("Mana: %i  Dam: 1/3 tgt hp"), mana);
+					sprintf(tempstr, _( /* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: 1/3 tgt hp"), mana);
 				}
 				PrintSBookStr(out, 10, yp - 1, false, tempstr, COL_WHITE);
 				int lvl = plr[myplr]._pSplLvl[sn] + plr[myplr]._pISplLvlAdd;
@@ -1704,7 +1704,7 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	sprintf(
 	    tempstr,
 	    ngettext(
-	        "You have %u gold piece. How many do you want to remove?",
+	         /* TRANSLATORS: %u is a number. Dialog is shown when splitting a stash of Gold.*/ "You have %u gold piece. How many do you want to remove?",
 	        "You have %u gold pieces. How many do you want to remove?",
 	        initialDropGoldValue),
 	    initialDropGoldValue);

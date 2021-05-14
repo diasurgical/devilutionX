@@ -342,7 +342,7 @@ void SelheroNameSelect(int value)
 			if (strcasecmp(selhero_heros[i].name, selhero_heroInfo.name) == 0) {
 				ArtBackground.Unload();
 				char dialogText[256];
-				snprintf(dialogText, sizeof(dialogText), _("Character already exists. Do you want to overwrite \"%s\"?"), selhero_heroInfo.name);
+				snprintf(dialogText, sizeof(dialogText), _( /* Error Message when User tries to create new Hero with same character name */ "Character already exists. Do you want to overwrite \"%s\"?"), selhero_heroInfo.name);
 				overwrite = UiSelHeroYesNoDialog(title, dialogText);
 				LoadBackgroundArt("ui_art\\selhero.pcx");
 				break;
@@ -354,7 +354,7 @@ void SelheroNameSelect(int value)
 				SelheroLoadSelect(1);
 				return;
 			}
-			UiErrorOkDialog(_("Unable to create character."), vecSelDlgItems);
+			UiErrorOkDialog(_( /* TRANSLATORS: Error Message */ "Unable to create character."), vecSelDlgItems);
 		}
 	}
 
