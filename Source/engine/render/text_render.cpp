@@ -277,6 +277,8 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 	int sx = rect.x;
 	if ((flags & UIS_CENTER) != 0)
 		sx += (w - GetLineWidth(text, size, spacing)) / 2;
+	else if ((flags & UIS_RIGHT) != 0)
+		sx += w - GetLineWidth(text, size, spacing);
 	int sy = rect.y;
 
 	int rightMargin = rect.x + w;
@@ -290,6 +292,8 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 			sx = rect.x;
 			if ((flags & UIS_CENTER) != 0)
 				sx += (w - GetLineWidth(&text[i + 1], size)) / 2;
+			else if ((flags & UIS_RIGHT) != 0)
+				sx += w - GetLineWidth(&text[i + 1], size, spacing);
 			sy += LineHeights[size];
 			if (sy > bottomMargin)
 				return;
