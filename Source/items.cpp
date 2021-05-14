@@ -3812,6 +3812,12 @@ void PrintItemMisc(ItemStruct *x)
 		strcpy(tempstr, _("Right-click to view"));
 		AddPanelString(tempstr);
 	}
+	if (x->_iMiscId == IMISC_SOULSTONE) {
+		strcpy(tempstr, _("Right-click to see cinematic"));
+		AddPanelString(tempstr);
+		strcpy(tempstr, _("and end the game"));
+		AddPanelString(tempstr);
+	}
 	if (x->_iMiscId == IMISC_EAR) {
 		sprintf(tempstr, _("Level: %i"), x->_ivalue);
 		AddPanelString(tempstr);

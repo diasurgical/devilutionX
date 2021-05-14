@@ -1628,7 +1628,6 @@ void M_StartHit(int i, int pnum, int dam)
 
 void M_DiabloDeath(int i, bool sendmsg)
 {
-	return;
 	MonsterStruct *Monst;
 	int dist;
 	int j, k;
@@ -1638,8 +1637,6 @@ void M_DiabloDeath(int i, bool sendmsg)
 	quests[Q_DIABLO]._qactive = QUEST_DONE;
 	if (sendmsg)
 		NetSendCmdQuest(true, Q_DIABLO);
-	sgbSaveSoundOn = gbSoundOn;
-	gbProcessPlayers = false;
 	for (j = 0; j < nummonsters; j++) {
 		k = monstactive[j];
 		if (k == i || Monst->_msquelch == 0)
@@ -1656,13 +1653,6 @@ void M_DiabloDeath(int i, bool sendmsg)
 	}
 	AddLight(Monst->position.tile.x, Monst->position.tile.y, 8);
 	DoVision(Monst->position.tile.x, Monst->position.tile.y, 8, false, true);
-	dist = std::max(abs(ViewX - Monst->position.tile.x), abs(ViewY - Monst->position.tile.y));
-	if (dist > 20)
-		dist = 20;
-	Monst->_mVar3 = ViewX << 16;
-	Monst->position.temp.x = ViewY << 16;
-	Monst->position.temp.y = (int)((Monst->_mVar3 - (Monst->position.tile.x << 16)) / (double)dist);
-	Monst->position.offset2.x = (int)((Monst->position.temp.x - (Monst->position.tile.y << 16)) / (double)dist);
 }
 
 void SpawnLoot(int i, bool sendmsg)
@@ -2584,7 +2574,6 @@ void DoEnding()
 
 void PrepDoEnding()
 {
-	gbSoundOn = sgbSaveSoundOn;
 	gbRunGame = false;
 	deathflag = false;
 	cineflag = true;
@@ -2612,16 +2601,14 @@ bool M_DoDeath(int i)
 
 	monster[i]._mVar1++;
 	if (monster[i].MType->mtype == MT_DIABLO) {
-		SDL_Log("MVAR1: %d", monster[i]._mVar1);
-
 		if (monster[i]._mVar1 == 140) {
 			Point pos = monster[i].position.tile;
 			AddMissile(pos.x, pos.y, pos.x, pos.y, 0, MIS_BOOM2, -1, -1, 0, 0);
 			dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = 0;
 			monster[i]._mDelFlag = true;
-			SpawnQuestItem(IDI_SOULSTONE, pos.x, pos.y, 0, true);
+			SpawnQuestItem(IDI_SOULSTONE, pos.x, pos.y, 0, false);
+			plr[myplr].PlaySpeach(57);
 		}
-			//PrepDoEnding();
 	} else if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
 		if (monster[i]._uniqtype == 0)
 			AddDead(monster[i].position.tile, monster[i].MType->mdeadval, monster[i]._mdir);

@@ -2225,6 +2225,13 @@ bool UseInvItem(int pnum, int cii)
 		return true;
 	}
 
+	if (Item->_iMiscId == IMISC_SOULSTONE) {
+		PlaySFX(IS_IBODY);
+		plr[pnum].RemoveInvItem(c);
+		PrepDoEnding();
+		return true;
+	}
+
 	idata = ItemCAnimTbl[Item->_iCurs];
 	if (Item->_iMiscId == IMISC_BOOK)
 		PlaySFX(IS_RBOOK);

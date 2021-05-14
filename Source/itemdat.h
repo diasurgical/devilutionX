@@ -408,6 +408,7 @@ enum item_misc_id : int8_t {
 	IMISC_RUNELAST,
 	IMISC_AURIC,
 	IMISC_NOTE,
+	IMISC_SOULSTONE,
 	IMISC_INVALID = -1,
 };
 
