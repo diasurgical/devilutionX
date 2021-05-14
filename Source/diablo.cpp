@@ -212,10 +212,6 @@ void initKeymapActions();
 
 static void diablo_parse_flags(int argc, char **argv)
 {
-	#ifdef _DEBUG
-	debug_mode_key_inverted_v = true;
-	debug_mode_key_w = true;
-	#endif
 	for (int i = 1; i < argc; i++) {
 		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
 			print_help_and_exit();
