@@ -4995,13 +4995,10 @@ static void NextItemRecord(int i)
 
 bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
-	int i;
-	DWORD dwTicks;
+	uint32_t ticks = SDL_GetTicks();
 
-	dwTicks = SDL_GetTicks();
-
-	for (i = 0; i < gnNumGetRecords; i++) {
-		if (dwTicks - itemrecord[i].dwTimestamp > 6000) {
+	for (int i = 0; i < gnNumGetRecords; i++) {
+		if (ticks - itemrecord[i].dwTimestamp > 6000) {
 			NextItemRecord(i);
 			i--;
 		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && nIndex == itemrecord[i].nIndex) {
@@ -5014,15 +5011,13 @@ bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 
 void SetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
-	DWORD dwTicks;
-
-	dwTicks = SDL_GetTicks();
+	uint32_t ticks = SDL_GetTicks();
 
 	if (gnNumGetRecords == MAXITEMS) {
 		return;
 	}
 
-	itemrecord[gnNumGetRecords].dwTimestamp = dwTicks;
+	itemrecord[gnNumGetRecords].dwTimestamp = ticks;
 	itemrecord[gnNumGetRecords].nSeed = nSeed;
 	itemrecord[gnNumGetRecords].wCI = wCI;
 	itemrecord[gnNumGetRecords].nIndex = nIndex;
@@ -5031,13 +5026,10 @@ void SetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 
 void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
-	int i;
-	DWORD dwTicks;
+	uint32_t ticks = SDL_GetTicks();
 
-	dwTicks = SDL_GetTicks();
-
-	for (i = 0; i < gnNumGetRecords; i++) {
-		if (dwTicks - itemrecord[i].dwTimestamp > 6000) {
+	for (int i = 0; i < gnNumGetRecords; i++) {
+		if (ticks - itemrecord[i].dwTimestamp > 6000) {
 			NextItemRecord(i);
 			i--;
 		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && nIndex == itemrecord[i].nIndex) {
