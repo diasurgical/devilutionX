@@ -22,11 +22,11 @@ Not working:
 
 	`%s' (level %d) just joined the game`
 changed to
-	`An level %d Character named % s' is now with you.`
+	`A level %d Character named % s' is now with you.`
 	
 ## Names
 
-Please try to keep original names intact, however it's up to your judgement to change something that sounds completely wrong in the language you are translating to.
+Please try to keep original names intact, however it's up to your judgment to change something that sounds completely wrong in the language you are translating to.
 
 ## Coherence
 
@@ -48,7 +48,7 @@ Bad:
 
 ## References
 
-Don't worry - we all forget details. Here's a list of resources you can use if you are unsure about a thing.
+Don't worry – we all forget details. Here's a list of resources you can use if you are unsure about a thing.
 
 ### Creatures
 * Diablo Creatures - [Diablo Archive](https://diablo-archive.fandom.com/wiki/Monsters_(Diablo_I))
