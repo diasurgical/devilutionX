@@ -4556,104 +4556,104 @@ void SpawnBoy(int lvl)
 	dexterity *= 1.2;
 	magic *= 1.2;
 
-	if (boylevel < (lvl / 2) || boyitem.isEmpty()) {
-		do {
-			keepgoing = false;
-			memset(&items[0], 0, sizeof(*items));
-			items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(items[0]._iSeed);
-			itype = RndBoyItem(lvl) - 1;
-			GetItemAttrs(0, itype, lvl);
-			GetItemBonus(0, lvl, 2 * lvl, true, true);
+	if (boylevel >= (lvl / 2) && !boyitem.isEmpty())
+		return;
+	do {
+		keepgoing = false;
+		memset(&items[0], 0, sizeof(*items));
+		items[0]._iSeed = AdvanceRndSeed();
+		SetRndSeed(items[0]._iSeed);
+		itype = RndBoyItem(lvl) - 1;
+		GetItemAttrs(0, itype, lvl);
+		GetItemBonus(0, lvl, 2 * lvl, true, true);
 
-			if (!gbIsHellfire) {
-				if (items[0]._iIvalue > 90000) {
-					keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
-					continue;
-				}
+		if (!gbIsHellfire) {
+			if (items[0]._iIvalue > 90000) {
+				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
+				continue;
+			}
+			break;
+		}
+
+		ivalue = 0;
+
+		int itemType = items[0]._itype;
+
+		switch (itemType) {
+		case ITYPE_LARMOR:
+		case ITYPE_MARMOR:
+		case ITYPE_HARMOR: {
+			const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
+			    [](const ItemStruct &item) {
+				    return item._itype == ITYPE_LARMOR
+					|| item._itype == ITYPE_MARMOR
+					|| item._itype == ITYPE_HARMOR;
+			    });
+
+			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
+			break;
+		}
+		case ITYPE_SHIELD:
+		case ITYPE_AXE:
+		case ITYPE_BOW:
+		case ITYPE_MACE:
+		case ITYPE_SWORD:
+		case ITYPE_HELM:
+		case ITYPE_STAFF:
+		case ITYPE_RING:
+		case ITYPE_AMULET: {
+			const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
+			    [itemType](const ItemStruct &item) { return item._itype == itemType; });
+
+			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
+			break;
+		}
+		}
+		ivalue *= 0.8;
+
+		count++;
+
+		if (count < 200) {
+			switch (pc) {
+			case HeroClass::Warrior:
+				if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Rogue:
+				if (itemType == ITYPE_SWORD || itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_SHIELD)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Sorcerer:
+				if (itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_BOW || itemType == ITYPE_MACE)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Monk:
+				if (itemType == ITYPE_BOW || itemType == ITYPE_MARMOR || itemType == ITYPE_SHIELD || itemType == ITYPE_MACE)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Bard:
+				if (itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_STAFF)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Barbarian:
+				if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
+					ivalue = INT_MAX;
 				break;
 			}
-
-			ivalue = 0;
-
-			int itemType = items[0]._itype;
-
-			switch (itemType) {
-			case ITYPE_LARMOR:
-			case ITYPE_MARMOR:
-			case ITYPE_HARMOR: {
-				const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
-				    [](const ItemStruct &item) {
-					    return item._itype == ITYPE_LARMOR
-					        || item._itype == ITYPE_MARMOR
-					        || item._itype == ITYPE_HARMOR;
-				    });
-
-				ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
-				break;
-			}
-			case ITYPE_SHIELD:
-			case ITYPE_AXE:
-			case ITYPE_BOW:
-			case ITYPE_MACE:
-			case ITYPE_SWORD:
-			case ITYPE_HELM:
-			case ITYPE_STAFF:
-			case ITYPE_RING:
-			case ITYPE_AMULET: {
-				const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
-				    [itemType](const ItemStruct &item) { return item._itype == itemType; });
-
-				ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
-				break;
-			}
-			}
-			ivalue *= 0.8;
-
-			count++;
-
-			if (count < 200) {
-				switch (pc) {
-				case HeroClass::Warrior:
-					if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Rogue:
-					if (itemType == ITYPE_SWORD || itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_SHIELD)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Sorcerer:
-					if (itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_BOW || itemType == ITYPE_MACE)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Monk:
-					if (itemType == ITYPE_BOW || itemType == ITYPE_MARMOR || itemType == ITYPE_SHIELD || itemType == ITYPE_MACE)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Bard:
-					if (itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_STAFF)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Barbarian:
-					if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
-						ivalue = INT_MAX;
-					break;
-				}
-			}
-		} while (keepgoing
-		    || ((
-		            items[0]._iIvalue > 200000
-		            || items[0]._iMinStr > strength
-		            || items[0]._iMinMag > magic
-		            || items[0]._iMinDex > dexterity
-		            || items[0]._iIvalue < ivalue)
-		        && count < 250));
-		boyitem = items[0];
-		boyitem._iCreateInfo = lvl | CF_BOY;
-		boyitem._iIdentified = true;
-		boyitem._iStatFlag = StoreStatOk(&boyitem);
-		boylevel = lvl / 2;
-	}
+		}
+	} while (keepgoing
+	    || ((
+		    items[0]._iIvalue > 200000
+		    || items[0]._iMinStr > strength
+		    || items[0]._iMinMag > magic
+		    || items[0]._iMinDex > dexterity
+		    || items[0]._iIvalue < ivalue)
+		&& count < 250));
+	boyitem = items[0];
+	boyitem._iCreateInfo = lvl | CF_BOY;
+	boyitem._iIdentified = true;
+	boyitem._iStatFlag = StoreStatOk(&boyitem);
+	boylevel = lvl / 2;
 }
 
 bool HealerItemOk(int i)
