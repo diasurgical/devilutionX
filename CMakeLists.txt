@@ -136,7 +136,6 @@ if(PSP)
   set(ASAN OFF)
   set(UBSAN OFF)
 
-  include("$ENV{PSPDEV}/psp/share/cmake/PSP.cmake" REQUIRED)
   include(psp_defs)
 endif()
 
@@ -211,7 +210,7 @@ if(NOT NOSOUND)
   endif()
 endif()
 
-if(NOT N3DS AND NOT PSP)
+if(NOT N3DS)
   find_package(Threads REQUIRED)
 endif()
 
@@ -236,12 +235,10 @@ if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
 endif()
 
-if(USE_SDL1 AND NOT PSP)
+if(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
-elseif(PSP)
-  include_directories("$ENV{PSPDEV}/psp/include/SDL")
 else()
   find_package(SDL2 REQUIRED)
   if(TARGET SDL2::SDL2)
@@ -683,19 +680,15 @@ target_link_libraries(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined
 if(TSAN)
   target_compile_options(${BIN_TARGET} PUBLIC -fsanitize=thread)
   target_link_libraries(${BIN_TARGET} PUBLIC -fsanitize=thread)
-elseif(NOT PSP)
+else()
   genex_for_option(ASAN)
   target_compile_options(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   target_link_libraries(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
 endif()
 
-if(USE_SDL1 AND NOT PSP)
+if(USE_SDL1)
   target_link_libraries(${BIN_TARGET} PRIVATE
     ${SDL_TTF_LIBRARY}
-    ${SDL_LIBRARY})
-  target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
-elseif(PSP)
-  target_link_libraries(${BIN_TARGET} PRIVATE
     ${SDL_LIBRARY})
   target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
 else()
@@ -739,7 +732,6 @@ if(N3DS)
 endif()
 
 if(PSP)
-  target_link_libraries(${BIN_TARGET} PRIVATE -lSDL_ttf -lSDL_mixer -lSDLmain -lSDL)
   target_link_libraries(${BIN_TARGET} PRIVATE
     -L${PSPDEV}/psp/lib -lg -lc -lz -lm -lGL -lvorbisidec -lmikmod -lpspvfpu -lfreetype
     -L${PSPDEV}/psp/sdk/lib -lstdc++ -L${PSPDEV}/psp

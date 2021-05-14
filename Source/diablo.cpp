@@ -134,6 +134,7 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 bool gbForceWindowed = false;
 bool leveldebug = false;
 #ifdef __PSP__
+// skipping intro as it messes up with the next screen
 bool gbShowIntro = false;
 #else
 bool gbShowIntro = true;
