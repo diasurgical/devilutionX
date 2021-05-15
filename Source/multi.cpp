@@ -264,6 +264,9 @@ static void multi_player_left_msg(int pnum, bool left)
 			case LEAVE_ENDING:
 				pszFmt = _("Player '%s' killed Diablo and left the game!");
 				gbSomebodyWonGameKludge = true;
+				if (plr[myplr].plrlevel == 16) {
+					PrepDoEnding();
+				}
 				break;
 			case LEAVE_DROP:
 				pszFmt = _("Player '%s' dropped due to timeout");

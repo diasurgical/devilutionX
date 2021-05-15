@@ -2226,9 +2226,20 @@ bool UseInvItem(int pnum, int cii)
 	}
 
 	if (Item->_iMiscId == IMISC_SOULSTONE) {
-		PlaySFX(IS_IBODY);
-		plr[pnum].RemoveInvItem(c);
-		PrepDoEnding();
+		if (plr[myplr].plrlevel == 16) {
+			for (int j = 0; j < nummonsters; j++) {
+				int mi = monstactive[j];
+				if (monster[mi].MType->mtype == MT_DIABLO) {
+					plr[myplr].PlaySpeach(38); // no
+					return true;
+				}
+			}
+			PlaySFX(IS_IBODY);
+			plr[pnum].RemoveInvItem(c);
+			PrepDoEnding();
+		} else {
+			plr[myplr].PlaySpeach(41); //that will not work here
+		}
 		return true;
 	}
 

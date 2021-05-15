@@ -2586,8 +2586,6 @@ void PrepDoEnding()
 		if (gbIsMultiplayer) {
 			if (player._pHitPoints >> 6 == 0)
 				player._pHitPoints = 64;
-			if (player._pMana >> 6 == 0)
-				player._pMana = 64;
 		}
 	}
 }
