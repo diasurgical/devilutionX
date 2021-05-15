@@ -276,8 +276,12 @@ void CheckCursMove()
 
 	// Adjust by player offset and tile grid alignment
 	CalcTileOffset(&xo, &yo);
-	sx -= ScrollInfo.offset.x - xo;
-	sy -= ScrollInfo.offset.y - yo;
+	PlayerStruct *pPlayer = &plr[myplr];
+	Point offset = ScrollInfo.offset;
+	if (pPlayer->IsWalking())
+		offset = GetOffsetForWalking(pPlayer->AnimInfo, pPlayer->_pdir, true);
+	sx -= offset.x - xo;
+	sy -= offset.y - yo;
 
 	// Predict the next frame when walking to avoid input jitter
 	fx = plr[myplr].position.offset2.x / 256;
