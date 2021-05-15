@@ -176,22 +176,22 @@ void initKeymapActions();
 
 [[noreturn]] static void print_help_and_exit()
 {
-	printInConsole("%s", _( /* TRANSLATORS: Commandline Option. No need to translate this.*/ "Options:\n"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "-h, --help", _("Print this message and exit"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--version", _("Print the version and exit"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--data-dir", _("Specify the folder of diabdat.mpq"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--save-dir", _("Specify the folder of save files"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--config-dir", _("Specify the location of diablo.ini"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--ttf-dir", _("Specify the location of the .ttf font"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--ttf-name", _("Specify the name of a custom .ttf font"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "-n", _("Skip startup videos"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "-f", _("Display frames per second"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "-x", _("Run in windowed mode"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--verbose", _("Enable verbose logging"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
-	printInConsole("%s", _( /* TRANSLATORS: Commandline Option. No need to translate this.*/ "\nHellfire options:\n"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option. No need to translate this.*/  "--nestart", _("Use alternate nest palette"));
+	printInConsole("%s", _( /* TRANSLATORS: Commandline Option */ "Options:\n"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "-h, --help", _("Print this message and exit"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--version", _("Print the version and exit"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--data-dir", _("Specify the folder of diabdat.mpq"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--save-dir", _("Specify the folder of save files"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--config-dir", _("Specify the location of diablo.ini"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--ttf-dir", _("Specify the location of the .ttf font"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--ttf-name", _("Specify the name of a custom .ttf font"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "-n", _("Skip startup videos"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "-f", _("Display frames per second"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "-x", _("Run in windowed mode"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--verbose", _("Enable verbose logging"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
+	printInConsole("%s", _( /* TRANSLATORS: Commandline Option */ "\nHellfire options:\n"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
