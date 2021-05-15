@@ -23,6 +23,14 @@ Not working:
 	`%s' (level %d) just joined the game`
 changed to
 	`A level %d Character named % s' is now with you.`
+
+## %s of %s
+
+The rather tricky line `%s of %s` is used to create items with pre- and suffixes as mentioned in aboves examples. If your language has gendered articles it might be advisable to remove then "of" but add a gendered article to each suffix instead. If you do so the line should be changed to `%s %s` and you will have to add the appropriate article to each suffix.
+
+## Adding lines
+
+Unfortunately it is not possible to add new lines for languages outside of quest texts.
 	
 ## Names
 

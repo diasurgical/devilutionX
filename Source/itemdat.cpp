@@ -188,7 +188,8 @@ ItemDataStruct AllItemsList[] = {
 const PLStruct PL_Prefix[] = {
 	// clang-format off
 	// PLName,          PLPower,         PLParam1, PLParam2, PLMinLvl, PLIType,                                                          PLGOE,    PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
-	{ N_("Tin"),            IPL_TOHIT_CURSE,        6,       10,        3,                       PLT_WEAP |             PLT_BOW | PLT_MISC,  GOE_ANY,  true,     false,        0,        0,        -3 },
+	// TRANSLATORS: Item prefix section.
+	{ N_( "Tin"),            IPL_TOHIT_CURSE,        6,       10,        3,                       PLT_WEAP |             PLT_BOW | PLT_MISC,  GOE_ANY,  true,     false,        0,        0,        -3 },
 	{ N_("Brass"),          IPL_TOHIT_CURSE,        1,        5,        1,                       PLT_WEAP |             PLT_BOW | PLT_MISC,  GOE_ANY,  true,     false,        0,        0,        -2 },
 	{ N_("Bronze"),         IPL_TOHIT,              1,        5,        1,                       PLT_WEAP |             PLT_BOW | PLT_MISC,  GOE_ANY,  true,     true,       100,      500,         2 },
 	{ N_("Iron"),           IPL_TOHIT,              6,       10,        4,                       PLT_WEAP |             PLT_BOW | PLT_MISC,  GOE_ANY,  true,     true,       600,     1000,         3 },
@@ -273,6 +274,7 @@ const PLStruct PL_Prefix[] = {
 	{ N_("Lightning"),      IPL_LIGHTDAM,           2,       20,       18,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  false,    true,     10000,    10000,         2 },
 	{ N_("Jester's"),       IPL_JESTERS,            1,        1,        7,                       PLT_WEAP                                 ,  GOE_ANY,  false,    true,      1200,     1200,         3 },
 	{ N_("Crystalline"),    IPL_CRYSTALLINE,       30,       70,        5,                       PLT_WEAP                                 ,  GOE_ANY,  false,    true,      1000,     3000,         3 },
+	// TRANSLATORS: Item prefix section end.
 	{ N_("Doppelganger's"), IPL_DOPPELGANGER,      81,       95,       11,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  false,    true,      2000,     2400,        10 },
 	{ "",                   IPL_INVALID,            0,        0,        0, 0                                                              ,  GOE_ANY,  false,    false,        0,        0,         0 },
 	// clang-format on
@@ -282,6 +284,7 @@ const PLStruct PL_Prefix[] = {
 const PLStruct PL_Suffix[] = {
 	// clang-format off
 	// PLName,          PLPower,       PLParam1, PLParam2, PLMinLvl, PLIType,                                                             PLGOE,    PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
+	// TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: %s of %s - e.g. Rags of Valor)
 	{  N_("quality"),       IPL_DAMMOD,           1,        2,        2,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,       100,      200,         2 },
 	{  N_("maiming"),       IPL_DAMMOD,           3,        5,        7,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,      1300,     1500,         3 },
 	{  N_("slaying"),       IPL_DAMMOD,           6,        8,       15,                       PLT_WEAP                                 ,     GOE_ANY,  false,    true,      2600,     3000,         5 },
@@ -379,6 +382,7 @@ const PLStruct PL_Suffix[] = {
 	{  N_("blocking"),      IPL_FASTBLOCK,        1,        1,        5,            PLT_SHLD                                            ,     GOE_ANY,  false,    true,      4000,     4000,         4 },
 	{  N_("devastation"),   IPL_DEVASTATION,      1,        1,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,      1200,     1200,         3 },
 	{  N_("decay"),         IPL_DECAY,          150,      250,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,       200,      200,         2 },
+    // TRANSLATORS: Item suffix section end.
 	{  N_("peril"),         IPL_PERIL,            1,        1,        5,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,       500,      500,         1 },
 	{  "",                  IPL_INVALID,          0,        0,        0, 0                                                              ,     GOE_ANY,  false,    false,        0,        0,         0 },
 	// clang-format on
@@ -388,6 +392,7 @@ const PLStruct PL_Suffix[] = {
 const UItemStruct UniqueItemList[] = {
 	// clang-format off
 	// UIName,                    UIItemId,     UIMinLvl, UINumPL, UIValue, UIPower1,     UIParam1, UIParam2, UIPower2,      UIParam3, UIParam4, UIPower3,      UIParam5, UIParam6, UIPower4,      UIParam7, UIParam8, UIPower5,      UIParam9, UIParam10, UIPower6,      UIParam11, UIParam12
+    // TRANSLATORS: Unique Item section	
 	{  N_("The Butcher's Cleaver"),   UITYPE_CLEAVER,      1,       3,    3650, IPL_STR,            10,       10, IPL_SETDAM,           4,       24, IPL_SETDUR,          10,       10, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  N_("The Undead Crown"),        UITYPE_SKCROWN,      1,       3,   16650, IPL_RNDSTEALLIFE,    0,        0, IPL_SETAC,            8,        8, IPL_INVCURS,         77,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  N_("Empyrean Band"),           UITYPE_INFRARING,    1,       4,    8000, IPL_ATTRIBS,         2,        2, IPL_LIGHT,            2,        2, IPL_FASTRECOVER,      1,        1, IPL_ABSHALFTRAP,      0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
@@ -497,6 +502,7 @@ const UItemStruct UniqueItemList[] = {
 	{  N_("Bone Chain Armor"),        UITYPE_CHAINMAIL,   13,       3,   36000, IPL_SETAC,          40,       40, IPL_ACUNDEAD,         0,        0, IPL_INVCURS,        204,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  N_("Demon Plate Armor"),       UITYPE_FULLPLATE,   25,       3,   80000, IPL_SETAC,          80,       80, IPL_ACDEMON,          0,        0, IPL_INVCURS,        225,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  N_("Acolyte's Amulet"),        UITYPE_AMULET,      10,       2,   10000, IPL_MANATOLIFE,     50,       50, IPL_INVCURS,        183,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
+    // TRANSLATORS: Unique Item section end.
 	{  N_("Gladiator's Ring"),        UITYPE_RING,        10,       2,   10000, IPL_LIFETOMANA,     40,       40, IPL_INVCURS,        186,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  "",                            UITYPE_INVALID,      0,       0,       0, IPL_TOHIT,           0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	// clang-format on

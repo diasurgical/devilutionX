@@ -87,6 +87,7 @@ int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 /** Maps from shrine_id to shrine name. */
 const char *const shrinestrs[] = {
+	// TRANSLATORS: Shrine Name Block	
 	N_("Mysterious"),
 	N_("Hidden"),
 	N_("Gloomy"),
@@ -120,6 +121,7 @@ const char *const shrinestrs[] = {
 	N_("Town"),
 	N_("Shimmering"),
 	N_("Solar"),
+	// TRANSLATORS: Shrine Name Block end
 	N_("Murphy's"),
 };
 /** Specifies the minimum dungeon level on which each shrine will appear. */
@@ -250,22 +252,22 @@ shrine_gametype shrineavail[] = {
 };
 /** Maps from book_id to book name. */
 const char *const StoryBookName[] = {
-	N_("The Great Conflict"),
-	N_("The Wages of Sin are War"),
-	N_("The Tale of the Horadrim"),
-	N_("The Dark Exile"),
-	N_("The Sin War"),
-	N_("The Binding of the Three"),
-	N_("The Realms Beyond"),
-	N_("Tale of the Three"),
-	N_("The Black King"),
-	N_("Journal: The Ensorcellment"),
-	N_("Journal: The Meeting"),
-	N_("Journal: The Tirade"),
-	N_("Journal: His Power Grows"),
-	N_("Journal: NA-KRUL"),
-	N_("Journal: The End"),
-	N_("A Spellbook"),
+	N_( /* TRANSLATORS: Book Title */ "The Great Conflict"),
+	N_( /* TRANSLATORS: Book Title */ "The Wages of Sin are War"),
+	N_( /* TRANSLATORS: Book Title */ "The Tale of the Horadrim"),
+	N_( /* TRANSLATORS: Book Title */ "The Dark Exile"),
+	N_( /* TRANSLATORS: Book Title */ "The Sin War"),
+	N_( /* TRANSLATORS: Book Title */ "The Binding of the Three"),
+	N_( /* TRANSLATORS: Book Title */ "The Realms Beyond"),
+	N_( /* TRANSLATORS: Book Title */ "Tale of the Three"),
+	N_( /* TRANSLATORS: Book Title */ "The Black King"),
+	N_( /* TRANSLATORS: Book Title */ "Journal: The Ensorcellment"),
+	N_( /* TRANSLATORS: Book Title */ "Journal: The Meeting"),
+	N_( /* TRANSLATORS: Book Title */ "Journal: The Tirade"),
+	N_( /* TRANSLATORS: Book Title */ "Journal: His Power Grows"),
+	N_( /* TRANSLATORS: Book Title */ "Journal: NA-KRUL"),
+	N_( /* TRANSLATORS: Book Title */ "Journal: The End"),
+	N_( /* TRANSLATORS: Book Title */ "A Spellbook"),
 };
 /** Specifies the speech IDs of each dungeon type narrator book, for each player class. */
 _speech_id StoryText[3][3] = {
@@ -5505,7 +5507,7 @@ void GetObjectStr(int i)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		sprintf(tempstr, _("%s Shrine"), _(shrinestrs[object[i]._oVar1]));
+		sprintf(tempstr, _( /* TRANSLATORS: %s will be a name from the Shrine block above */ "%s Shrine"), _(shrinestrs[object[i]._oVar1]));
 		strcpy(infostr, tempstr);
 		break;
 	case OBJ_SKELBOOK:
@@ -5574,13 +5576,13 @@ void GetObjectStr(int i)
 	}
 	if (plr[myplr]._pClass == HeroClass::Rogue) {
 		if (object[i]._oTrapFlag) {
-			sprintf(tempstr, _("Trapped %s"), infostr);
+			sprintf(tempstr, _( /* TRANSLATORS: %s will either be a chest or a door */ "Trapped %s"), infostr);
 			strcpy(infostr, tempstr);
 			infoclr = UIS_RED;
 		}
 	}
 	if (objectIsDisabled(i)) {
-		sprintf(tempstr, _("%s (disabled)"), infostr);
+		sprintf(tempstr, _( /* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "%s (disabled)"), infostr);
 		strcpy(infostr, tempstr);
 		infoclr = UIS_RED;
 	}
