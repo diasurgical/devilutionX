@@ -101,11 +101,11 @@ void SelheroFree()
 void SelheroSetStats()
 {
 	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(selhero_heroInfo.heroclass);
-	snprintf(textStats[0], sizeof(textStats[0]), "%d", selhero_heroInfo.level);
-	snprintf(textStats[1], sizeof(textStats[1]), "%d", selhero_heroInfo.strength);
-	snprintf(textStats[2], sizeof(textStats[2]), "%d", selhero_heroInfo.magic);
-	snprintf(textStats[3], sizeof(textStats[3]), "%d", selhero_heroInfo.dexterity);
-	snprintf(textStats[4], sizeof(textStats[4]), "%d", selhero_heroInfo.vitality);
+	snprintf(textStats[0], sizeof(textStats[0]), "%i", selhero_heroInfo.level);
+	snprintf(textStats[1], sizeof(textStats[1]), "%i", selhero_heroInfo.strength);
+	snprintf(textStats[2], sizeof(textStats[2]), "%i", selhero_heroInfo.magic);
+	snprintf(textStats[3], sizeof(textStats[3]), "%i", selhero_heroInfo.dexterity);
+	snprintf(textStats[4], sizeof(textStats[4]), "%i", selhero_heroInfo.vitality);
 }
 
 std::size_t listOffset = 0;

@@ -112,7 +112,7 @@ void SelconnFocus(int value)
 		break;
 	}
 
-	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), _("Players Supported: %d"), players);
+	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), _("Players Supported: %i"), players);
 	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 

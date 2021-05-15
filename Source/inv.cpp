@@ -320,7 +320,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
 		    && plr[myplr].SpdList[i]._iStatFlag
 		    && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
-			sprintf(tempstr, "%d", i + 1);
+			sprintf(tempstr, "%i", i + 1);
 			SDL_Rect rect {
 				InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X + INV_SLOT_SIZE_PX - GetLineWidth(tempstr),
 				InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1,

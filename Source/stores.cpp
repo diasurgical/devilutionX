@@ -883,7 +883,7 @@ void S_StartConfirm()
 		strcpy(tempstr, _("Are you sure you want to repair this item?"));
 		break;
 	default:
-		app_fatal("Unknown store dialog %d", stextshold);
+		app_fatal("Unknown store dialog %i", stextshold);
 	}
 	AddSText(0, 15, tempstr, UIS_SILVER | UIS_CENTER, false);
 	AddSText(0, 18, _("Yes"), UIS_SILVER | UIS_CENTER, true);

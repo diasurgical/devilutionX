@@ -637,7 +637,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
 		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
-			app_fatal("Invalid size of game data: %d", gameData->size);
+			app_fatal("Invalid size of game data: %i", gameData->size);
 		sgGameInitInfo = *gameData;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
 		break;
@@ -856,9 +856,9 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	gbActivePlayers++;
 
 	if (sgbPlayerTurnBitTbl[pnum]) {
-		szEvent = _("Player '%s' (level %d) just joined the game");
+		szEvent = _("Player '%s' (level %i) just joined the game");
 	} else {
-		szEvent = _("Player '%s' (level %d) is already in the game");
+		szEvent = _("Player '%s' (level %i) is already in the game");
 	}
 	EventPlrMsg(szEvent, plr[pnum]._pName, plr[pnum]._pLevel);
 

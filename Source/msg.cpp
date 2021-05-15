@@ -386,7 +386,7 @@ static void DeltaImportData(BYTE cmd, DWORD recv_offset)
 		src = DeltaImportObject(src, sgLevels[i].object);
 		DeltaImportMonster(src, sgLevels[i].monster);
 	} else {
-		app_fatal("Unkown network message type: %d", cmd);
+		app_fatal("Unkown network message type: %i", cmd);
 	}
 
 	sgbDeltaChunks++;
@@ -2225,7 +2225,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 			InitPlrGFXMem(plr[pnum]);
 			plr[pnum].plractive = true;
 			gbActivePlayers++;
-			EventPlrMsg(_("Player '%s' (level %d) just joined the game"), plr[pnum]._pName, plr[pnum]._pLevel);
+			EventPlrMsg(_("Player '%s' (level %i) just joined the game"), plr[pnum]._pName, plr[pnum]._pLevel);
 		}
 
 		if (plr[pnum].plractive && myplr != pnum) {

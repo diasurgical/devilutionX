@@ -50,7 +50,7 @@ std::string GetSavePath(uint32_t save_num)
 	}
 
 	char save_num_str[21];
-	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), "%d", save_num);
+	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), "%i", save_num);
 	path.append(save_num_str);
 	path.append(ext);
 	return path;

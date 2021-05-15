@@ -101,7 +101,7 @@ void DrawDlg(const char *pszFmt, ...)
  */
 void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 {
-	app_fatal("assertion failed (%s:%d)\n%s", pszFile, nLineNo, pszFail);
+	app_fatal("assertion failed (%s:%i)\n%s", pszFile, nLineNo, pszFail);
 }
 #endif
 
@@ -114,7 +114,7 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 
 	FreeDlg();
 
-	snprintf(text, sizeof(text), _( /* TRANSLATORS: Error message that displays relevant information for bug report */ "%s\n\nThe error occurred at: %s line %d"), error, logFilePath, logLineNr);
+	snprintf(text, sizeof(text), _( /* TRANSLATORS: Error message that displays relevant information for bug report */ "%s\n\nThe error occurred at: %s line %i"), error, logFilePath, logLineNr);
 
 	UiErrorOkDialog(title, text);
 	app_fatal(nullptr);

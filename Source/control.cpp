@@ -1729,7 +1729,7 @@ void control_drop_gold(char vkey)
 	}
 
 	memset(input, 0, sizeof(input));
-	snprintf(input, sizeof(input), "%d", dropGoldValue);
+	snprintf(input, sizeof(input), "%i", dropGoldValue);
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
 			control_remove_gold(myplr, initialDropGoldIndex);

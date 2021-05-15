@@ -227,7 +227,7 @@ int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 void setIniInt(const char *keyname, const char *valuename, int value)
 {
 	char str[10];
-	sprintf(str, "%d", value);
+	sprintf(str, "%i", value);
 	setIniValue(keyname, valuename, str);
 }
 

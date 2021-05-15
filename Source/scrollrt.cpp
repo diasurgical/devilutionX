@@ -1383,7 +1383,7 @@ static void DrawFPS(const CelOutputBuffer &out)
 			framerate = 1000 * frameend / frames;
 			frameend = 0;
 		}
-		snprintf(String, 12, "%d FPS", framerate);
+		snprintf(String, 12, "%i FPS", framerate);
 		DrawString(out, String, { 8, 65, 0, 0 }, UIS_RED);
 	}
 }

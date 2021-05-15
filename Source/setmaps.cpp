@@ -91,7 +91,7 @@ int ObjIndex(int x, int y)
 		if (object[oi].position.x == x && object[oi].position.y == y)
 			return oi;
 	}
-	app_fatal("ObjIndex: Active object not found at (%d,%d)", x, y);
+	app_fatal("ObjIndex: Active object not found at (%i,%i)", x, y);
 }
 
 void AddSKingObjs()

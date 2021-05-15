@@ -4955,7 +4955,7 @@ const char *GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Undead");
 	}
 
-	app_fatal("Unknown mMonstClass %d", monsterData.mMonstClass);
+	app_fatal("Unknown mMonstClass %i", monsterData.mMonstClass);
 }
 
 void PrintMonstHistory(int mt)
