@@ -10,7 +10,7 @@ There are three types of variables in the text files: %s, %i, %d. All of these w
 
 **IMPORTANT**: You have to keep those intact and in the same order. 
 
-Example: 
+### Example
 
 Working:
 
