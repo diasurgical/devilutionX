@@ -38,6 +38,7 @@ enum UiFlags : uint16_t {
 	UIS_BLACK    = 1 << 11,
 	UIS_DISABLED = 1 << 12,
 	UIS_HIDDEN   = 1 << 13,
+	UIS_FIT_HORZ = 1 << 14,
 	// clang-format on
 };
 

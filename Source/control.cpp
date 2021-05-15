@@ -1095,14 +1095,14 @@ static void PrintInfo(const CelOutputBuffer &out)
 	int yo = 0;
 	int lo = 1;
 	if (infostr[0] != '\0') {
-		DrawString(out, infostr, line, infoclr | UIS_CENTER, 2);
+		DrawString(out, infostr, line, infoclr | UIS_CENTER | UIS_FIT_HORZ, 2);
 		yo = 1;
 		lo = 0;
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
 		line.y = PANEL_Y + LineOffsets[pnumlines - lo][i + yo];
-		DrawString(out, panelstr[i], line, infoclr | UIS_CENTER, 2);
+		DrawString(out, panelstr[i], line, infoclr | UIS_CENTER | UIS_FIT_HORZ, 2);
 	}
 }
 

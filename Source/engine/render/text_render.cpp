@@ -272,19 +272,30 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 		color = COL_BLACK;
 
 	const int w = rect.w != 0 ? rect.w : out.w() - rect.x;
-	const int h = rect.h != 0 ? rect.h : out.h() - rect.x;
+	const int h = rect.h != 0 ? rect.h : out.h() - rect.y;
+
+	const size_t textLength = strlen(text);
+
+	int lineWidth = GetLineWidth(text, size, spacing);
+	if ((flags & UIS_FIT_HORZ) != 0) {
+		if (lineWidth > rect.w && textLength > 1) {
+			const int superfluousSpacing = lineWidth - rect.w;
+			const int spacingRedux = (superfluousSpacing + textLength - 2) / (textLength - 1);
+			spacing -= spacingRedux;
+			lineWidth -= spacingRedux * (textLength - 1);
+		}
+	}
 
 	int sx = rect.x;
 	if ((flags & UIS_CENTER) != 0)
-		sx += (w - GetLineWidth(text, size, spacing)) / 2;
+		sx += (w - lineWidth) / 2;
 	else if ((flags & UIS_RIGHT) != 0)
-		sx += w - GetLineWidth(text, size, spacing);
+		sx += w - lineWidth;
 	int sy = rect.y;
 
 	int rightMargin = rect.x + w;
 	int bottomMargin = rect.y + h;
 
-	const size_t textLength = strlen(text);
 	for (unsigned i = 0; i < textLength; i++) {
 		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
 		int symbolWidth = fontkern[size][frame] + spacing;
