@@ -2,11 +2,10 @@
 
 ## Variables
 
-There are three types of variables in the text files: %s, %i, %d. All of these will add something within the single string, here are some examples. 
+There are two types of variables in the text files: %s, %i. All of these will add something within the single string, here are some examples. 
 
 `%s` will always be another word. Example: `%s of %s` refers to an created Item which includes affixes. `Tin Cap of the Fool` would be such an item.
 `%i` will always be a number. Example: Fire hit damage: %i-%i` will indicate how much fire damage a weapon will deal
-`%d` will always be a number. Example: `Player '%s' (level %d) just joined the game` - Player Arcas (level 15) just joined the game
 
 **IMPORTANT**: You have to keep those intact and in the same order. 
 
@@ -14,15 +13,15 @@ There are three types of variables in the text files: %s, %i, %d. All of these w
 
 Working:
 
-	`%s' (level %d) just joined the game`
+	`%s' (level %i) just joined the game`
 changed to
-	`%s' (level %d) is now with you.`
+	`%s' (level %i) is now with you.`
 
 Not working:
 
-	`%s' (level %d) just joined the game`
+	`%s' (level %i) just joined the game`
 changed to
-	`A level %d Character named % s' is now with you.`
+	`A level %i Character named % s' is now with you.`
 
 ## %s of %s
 
