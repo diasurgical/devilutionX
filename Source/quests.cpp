@@ -38,7 +38,7 @@ int ReturnLvl;
 QuestData questlist[] = {
 	// clang-format off
 	// _qdlvl,  _qdmultlvl, _qlvlt,          _qdtype,     _qdrnd, _qslvl,          isSinglePlayerOnly, _qdmsg,        _qlstr
-	{       5,          -1, DTYPE_NONE,      Q_ROCK,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_("The Magic Rock")           },
+	{       5,          -1, DTYPE_NONE,      Q_ROCK,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_( /* TRANSLATORS: Quest Name Block */ "The Magic Rock")           },
 	{       9,          -1, DTYPE_NONE,      Q_MUSHROOM,  100,    SL_NONE,         true,               TEXT_MUSH8,    N_("Black Mushroom")           },
 	{       4,          -1, DTYPE_NONE,      Q_GARBUD,    100,    SL_NONE,         true,               TEXT_GARBUD1,  N_("Gharbad The Weak")         },
 	{       8,          -1, DTYPE_NONE,      Q_ZHAR,      100,    SL_NONE,         true,               TEXT_ZHAR1,    N_("Zhar the Mad")             },
@@ -61,7 +61,7 @@ QuestData questlist[] = {
 	{      17,          17, DTYPE_NONE,      Q_DEFILER,   100,    SL_NONE,         false,              TEXT_DEFILER1, N_("The Defiler")              },
 	{      21,          21, DTYPE_NONE,      Q_NAKRUL,    100,    SL_NONE,         false,              TEXT_NAKRUL1,  "Na-Krul"                      },
 	{      21,          -1, DTYPE_NONE,      Q_CORNSTN,   100,    SL_NONE,         true,               TEXT_CORNSTN,  N_("Cornerstone of the World") },
-	{       9,           9, DTYPE_NONE,      Q_JERSEY,    100,    SL_NONE,         false,              TEXT_JERSEY4,  N_("The Jersey's Jersey")      },
+	{       9,           9, DTYPE_NONE,      Q_JERSEY,    100,    SL_NONE,         false,              TEXT_JERSEY4,  N_( /* TRANSLATORS: Quest Name Block end*/ "The Jersey's Jersey")      },
 	// clang-format on
 };
 /**
@@ -75,11 +75,11 @@ char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
  */
 char questyoff[7] = { 0, 0, -1, -1, -1, -2, -2 };
 const char *const questtrigstr[5] = {
-	N_("King Leoric's Tomb"),
-	N_("The Chamber of Bone"),
-	N_("Maze"),
-	N_("A Dark Passage"),
-	N_("Unholy Altar")
+	N_( /* TRANSLATORS: Quest Map*/ "King Leoric's Tomb"),
+	N_( /* TRANSLATORS: Quest Map*/ "The Chamber of Bone"),
+	N_( /* TRANSLATORS: Quest Map*/ "Maze"),
+	N_( /* TRANSLATORS: Quest Map*/ "A Dark Passage"),
+	N_( /* TRANSLATORS: Quest Map*/ "Unholy Altar")
 };
 /**
  * A quest group containing the three quests the Butcher,
@@ -279,7 +279,7 @@ bool ForceQuests()
 
 			for (j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
-					sprintf(infostr, _("To %s"), _(questtrigstr[ql]));
+					sprintf(infostr, _( /* TRANSLATORS: Used for Quest Portals. %s is a Map Name */ "To %s"), _(questtrigstr[ql]));
 					cursmx = qx;
 					cursmy = qy;
 					return true;
