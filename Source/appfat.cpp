@@ -114,7 +114,7 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 
 	FreeDlg();
 
-	snprintf(text, sizeof(text), _("%s\n\nThe error occurred at: %s line %d"), error, logFilePath, logLineNr);
+	snprintf(text, sizeof(text), _( /* TRANSLATORS: Error message that displays relevant information for bug report */ "%s\n\nThe error occurred at: %s line %d"), error, logFilePath, logLineNr);
 
 	UiErrorOkDialog(title, text);
 	app_fatal(nullptr);
@@ -134,7 +134,7 @@ void FileErrDlg(const char *error)
 	snprintf(
 	    text,
 	    sizeof(text),
-	    _("Unable to open a required file.\n"
+	    _( /* TRANSLATORS: Error Message when diabdat.mpq is broken. Keep values unchanged. */ "Unable to open a required file.\n"
 	      "\n"
 	      "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
 	      "011bc6518e6166206231080a4440b373\n"
@@ -173,7 +173,7 @@ void DirErrorDlg(const char *error)
 {
 	char text[1024];
 
-	snprintf(text, sizeof(text), _("Unable to write to location:\n%s"), error);
+	snprintf(text, sizeof(text), _( /* TRANSLATORS: Error when Program is not allowed to write data */"Unable to write to location:\n%s"), error);
 
 	UiErrorOkDialog(_("Read-Only Directory Error"), text);
 	app_fatal(nullptr);

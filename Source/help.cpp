@@ -18,6 +18,7 @@ bool helpflag;
 int HelpTop;
 
 const char gszSpawnHelpText[] = {
+	// TRANSLATORS: HUGE KEY. There might be changes in a future version where redundant keys between the shareware help and the full game help will be consolidated. 
 	N_("Shareware Diablo Help|"
 	   "|"
 	   "$Keyboard Shortcuts:|"
@@ -382,6 +383,7 @@ const char gszSpawnHelpText[] = {
 };
 
 const char gszHelpText[] = {
+	// TRANSLATORS: HUGE KEY. There might be changes in a future version where redundant keys between the shareware help and the full game help will be consolidated. 
 	N_("$Keyboard Shortcuts:|"
 	   "F1:    Open Help Screen|"
 	   "Esc:   Display Main Menu|"

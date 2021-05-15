@@ -272,7 +272,7 @@ void S_StartSBuy()
 	stextsize = true;
 	stextscrl = true;
 	stextsval = 0;
-	sprintf(tempstr, _("I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
+	sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 	AddSLine(3);
 	AddSLine(21);
@@ -337,7 +337,7 @@ bool S_StartSPBuy()
 	stextscrl = true;
 	stextsval = 0;
 
-	sprintf(tempstr, _("I have these premium items for sale:     Your gold: %i"), plr[myplr]._pGold);
+	sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "I have these premium items for sale:     Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 	AddSLine(3);
 	AddSLine(21);
@@ -465,7 +465,7 @@ void S_StartSSell()
 
 	if (!sellok) {
 		stextscrl = false;
-		sprintf(tempstr, _("You have nothing I want.             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "You have nothing I want.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);
@@ -475,7 +475,7 @@ void S_StartSSell()
 		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
-		sprintf(tempstr, _("Which item is for sale?             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "Which item is for sale?             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);
@@ -535,7 +535,7 @@ void S_StartSRepair()
 	}
 	if (!repairok) {
 		stextscrl = false;
-		sprintf(tempstr, _("You have nothing to repair.             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "You have nothing to repair.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);
@@ -547,7 +547,7 @@ void S_StartSRepair()
 	stextscrl = true;
 	stextsval = 0;
 	stextsmax = plr[myplr]._pNumInv;
-	sprintf(tempstr, _("Repair which item?             Your gold: %i"), plr[myplr]._pGold);
+	sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "Repair which item?             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 	AddSLine(3);
 	AddSLine(21);
@@ -621,7 +621,7 @@ void S_StartWBuy()
 	stextscrl = true;
 	stextsval = 0;
 	stextsmax = 20;
-	sprintf(tempstr, _("I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
+	sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 	AddSLine(3);
 	AddSLine(21);
@@ -715,7 +715,7 @@ void S_StartWSell()
 
 	if (!sellok) {
 		stextscrl = false;
-		sprintf(tempstr, _("You have nothing I want.             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "You have nothing I want.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);
@@ -725,7 +725,7 @@ void S_StartWSell()
 		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
-		sprintf(tempstr, _("Which item is for sale?             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "Which item is for sale?             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);
@@ -791,7 +791,7 @@ void S_StartWRecharge()
 
 	if (!rechargeok) {
 		stextscrl = false;
-		sprintf(tempstr, _("You have nothing to recharge.             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "You have nothing to recharge.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);
@@ -801,7 +801,7 @@ void S_StartWRecharge()
 		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
-		sprintf(tempstr, _("Recharge which item?             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "Recharge which item?             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);
@@ -913,7 +913,7 @@ void S_StartBBoy()
 {
 	stextsize = true;
 	stextscrl = false;
-	sprintf(tempstr, _("I have this item for sale:             Your gold: %i"), plr[myplr]._pGold);
+	sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "I have this item for sale:             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 	AddSLine(3);
 	AddSLine(21);
@@ -987,7 +987,7 @@ void S_StartHBuy()
 	stextsize = true;
 	stextscrl = true;
 	stextsval = 0;
-	sprintf(tempstr, _("I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
+	sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "I have these items for sale:             Your gold: %i"), plr[myplr]._pGold);
 	AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 	AddSLine(3);
 	AddSLine(21);
@@ -1088,7 +1088,7 @@ void S_StartSIdentify()
 
 	if (!idok) {
 		stextscrl = false;
-		sprintf(tempstr, _("You have nothing to identify.             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "You have nothing to identify.             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);
@@ -1098,7 +1098,7 @@ void S_StartSIdentify()
 		stextscrl = true;
 		stextsval = 0;
 		stextsmax = plr[myplr]._pNumInv;
-		sprintf(tempstr, _("Identify which item?             Your gold: %i"), plr[myplr]._pGold);
+		sprintf(tempstr, _( /* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */ "Identify which item?             Your gold: %i"), plr[myplr]._pGold);
 		AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 		AddSLine(3);
 		AddSLine(21);

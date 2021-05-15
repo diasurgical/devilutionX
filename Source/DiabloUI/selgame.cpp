@@ -412,7 +412,8 @@ static bool IsGameCompatible(GameData *data)
 		UiSelOkDialog(title, _("The host is running a different game than you."), false);
 	} else {
 		char msg[64];
-		sprintf(msg, _("Your version %s does not match the host %d.%d.%d."), PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH);
+		sprintf(msg, _( /* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version %s does not match the host %d.%d.%d."), PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH);
+
 
 		UiSelOkDialog(title, msg, false);
 	}

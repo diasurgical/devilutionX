@@ -1524,7 +1524,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 		}
-		sprintf(istr, _("%s of %s"), items[i]._iIName, _(spelldata[bs].sNameText));
+		sprintf(istr, _( /* TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale */ "%s of %s"), items[i]._iIName, _(spelldata[bs].sNameText));
 		strcpy(items[i]._iIName, istr);
 		if (items[i]._iMagical == ITEM_QUALITY_NORMAL)
 			strcpy(items[i]._iName, items[i]._iIName);
@@ -2750,7 +2750,7 @@ void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int 
 	tempstr[14] = (ibuff >> 8) & 0x7F;
 	tempstr[15] = ibuff & 0x7F;
 	tempstr[16] = '\0';
-	sprintf(items[ii]._iName, _("Ear of %s"), tempstr);
+	sprintf(items[ii]._iName, _( /* TRANSLATORS: %s will be a Character Name */ "Ear of %s"), tempstr);
 	items[ii]._iCurs = ((ivalue >> 6) & 3) + ICURS_EAR_SORCERER;
 	items[ii]._ivalue = ivalue & 0x3F;
 	items[ii]._iCreateInfo = ic;
@@ -3848,12 +3848,12 @@ void PrintItemDetails(ItemStruct *x)
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 				sprintf(tempstr, _("damage: %i  Indestructible"), x->_iMinDam);
 			else
-				sprintf(tempstr, _("damage: %i  Dur: %i/%i"), x->_iMinDam, x->_iDurability, x->_iMaxDur);
+				sprintf(tempstr, _( /* TRANSLATORS: Dur: is durability */ "damage: %i  Dur: %i/%i"), x->_iMinDam, x->_iDurability, x->_iMaxDur);
 		} else {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 				sprintf(tempstr, _("damage: %i-%i  Indestructible"), x->_iMinDam, x->_iMaxDam);
 			else
-				sprintf(tempstr, _("damage: %i-%i  Dur: %i/%i"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
+				sprintf(tempstr, _( /* TRANSLATORS: Dur: is durability */ "damage: %i-%i  Dur: %i/%i"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
 		}
 		AddPanelString(tempstr);
 	}
@@ -3861,14 +3861,14 @@ void PrintItemDetails(ItemStruct *x)
 		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 			sprintf(tempstr, _("armor: %i  Indestructible"), x->_iAC);
 		else
-			sprintf(tempstr, _("armor: %i  Dur: %i/%i"), x->_iAC, x->_iDurability, x->_iMaxDur);
+			sprintf(tempstr, _( /* TRANSLATORS: Dur: is durability */ "armor: %i  Dur: %i/%i"), x->_iAC, x->_iDurability, x->_iMaxDur);
 		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0) {
 		if (x->_iMinDam == x->_iMaxDam)
-			sprintf(tempstr, _("dam: %i  Dur: %i/%i"), x->_iMinDam, x->_iDurability, x->_iMaxDur);
+			sprintf(tempstr, _( /* TRANSLATORS: dam: is damage Dur: is durability */ "dam: %i  Dur: %i/%i"), x->_iMinDam, x->_iDurability, x->_iMaxDur);
 		else
-			sprintf(tempstr, _("dam: %i-%i  Dur: %i/%i"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
+			sprintf(tempstr, _( /* TRANSLATORS: dam: is damage Dur: is durability */ "dam: %i-%i  Dur: %i/%i"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
 		sprintf(tempstr, _("Charges: %i/%i"), x->_iCharges, x->_iMaxCharges);
 		AddPanelString(tempstr);
 	}

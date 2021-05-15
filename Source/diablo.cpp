@@ -177,22 +177,22 @@ void initKeymapActions();
 
 [[noreturn]] static void print_help_and_exit()
 {
-	printInConsole("%s", _("Options:\n"));
-	printInConsole("    %-20s %-30s\n", "-h, --help", _("Print this message and exit"));
-	printInConsole("    %-20s %-30s\n", "--version", _("Print the version and exit"));
-	printInConsole("    %-20s %-30s\n", "--data-dir", _("Specify the folder of diabdat.mpq"));
-	printInConsole("    %-20s %-30s\n", "--save-dir", _("Specify the folder of save files"));
-	printInConsole("    %-20s %-30s\n", "--config-dir", _("Specify the location of diablo.ini"));
-	printInConsole("    %-20s %-30s\n", "--ttf-dir", _("Specify the location of the .ttf font"));
-	printInConsole("    %-20s %-30s\n", "--ttf-name", _("Specify the name of a custom .ttf font"));
-	printInConsole("    %-20s %-30s\n", "-n", _("Skip startup videos"));
-	printInConsole("    %-20s %-30s\n", "-f", _("Display frames per second"));
-	printInConsole("    %-20s %-30s\n", "-x", _("Run in windowed mode"));
-	printInConsole("    %-20s %-30s\n", "--verbose", _("Enable verbose logging"));
-	printInConsole("    %-20s %-30s\n", "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
-	printInConsole("%s", _("\nHellfire options:\n"));
-	printInConsole("    %-20s %-30s\n", "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
-	printInConsole("    %-20s %-30s\n", "--nestart", _("Use alternate nest palette"));
+	printInConsole("%s", _( /* TRANSLATORS: Commandline Option */ "Options:\n"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "-h, --help", _("Print this message and exit"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--version", _("Print the version and exit"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--data-dir", _("Specify the folder of diabdat.mpq"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--save-dir", _("Specify the folder of save files"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--config-dir", _("Specify the location of diablo.ini"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--ttf-dir", _("Specify the location of the .ttf font"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--ttf-name", _("Specify the name of a custom .ttf font"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "-n", _("Skip startup videos"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "-f", _("Display frames per second"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "-x", _("Run in windowed mode"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--verbose", _("Enable verbose logging"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
+	printInConsole("%s", _( /* TRANSLATORS: Commandline Option */ "\nHellfire options:\n"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */  "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
@@ -2201,7 +2201,7 @@ void initKeymapActions()
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    sprintf(pszStr, _("%s, version = %s, mode = %s"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]);
+		    sprintf(pszStr, _( /* TRANSLATORS: %s means: Character Name, Game Version, Game Difficulty. */ "%s, version = %s, mode = %s"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]);
 		    NetSendCmdString(1 << myplr, pszStr);
 	    },
 	});
