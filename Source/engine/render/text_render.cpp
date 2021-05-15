@@ -194,12 +194,13 @@ void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color 
 	}
 }
 
-int GetLineWidth(const char *text, GameFontTables size, int spacing)
+int GetLineWidth(const char *text, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
 
 	size_t textLength = strlen(text);
-	for (unsigned i = 0; i < textLength; i++) {
+	size_t i = 0;
+	for (; i < textLength; i++) {
 		if (text[i] == '\n')
 			break;
 
@@ -207,7 +208,21 @@ int GetLineWidth(const char *text, GameFontTables size, int spacing)
 		lineWidth += fontkern[size][frame] + spacing;
 	}
 
+	if (charactersInLine != nullptr)
+		*charactersInLine = i;
+
 	return lineWidth != 0 ? (lineWidth - spacing) : 0;
+}
+
+int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int charactersInLine, int availableWidth)
+{
+	if (lineWidth <= availableWidth || charactersInLine < 2)
+		return maxSpacing;
+
+	const int overhang = lineWidth - availableWidth;
+	const int spacingRedux = (overhang + charactersInLine - 2) / (charactersInLine - 1);
+	lineWidth -= spacingRedux * (charactersInLine - 1);
+	return maxSpacing - spacingRedux;
 }
 
 void WordWrapGameString(char *text, size_t width, size_t size, int spacing)
@@ -272,28 +287,44 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 		color = COL_BLACK;
 
 	const int w = rect.w != 0 ? rect.w : out.w() - rect.x;
-	const int h = rect.h != 0 ? rect.h : out.h() - rect.x;
+	const int h = rect.h != 0 ? rect.h : out.h() - rect.y;
+
+	const size_t textLength = strlen(text);
+
+	int charactersInLine = 0;
+	int lineWidth = 0;
+	if ((flags & (UIS_CENTER | UIS_RIGHT | UIS_FIT_SPACING)) != 0)
+		lineWidth = GetLineWidth(text, size, spacing, &charactersInLine);
+
+	int maxSpacing = spacing;
+	if ((flags & UIS_FIT_SPACING) != 0)
+		spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.w);
 
 	int sx = rect.x;
 	if ((flags & UIS_CENTER) != 0)
-		sx += (w - GetLineWidth(text, size, spacing)) / 2;
+		sx += (w - lineWidth) / 2;
 	else if ((flags & UIS_RIGHT) != 0)
-		sx += w - GetLineWidth(text, size, spacing);
+		sx += w - lineWidth;
 	int sy = rect.y;
 
 	int rightMargin = rect.x + w;
 	int bottomMargin = rect.y + h;
 
-	const size_t textLength = strlen(text);
 	for (unsigned i = 0; i < textLength; i++) {
 		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
-		int symbolWidth = fontkern[size][frame] + spacing;
-		if (text[i] == '\n' || sx + symbolWidth - spacing > rightMargin) {
+		int symbolWidth = fontkern[size][frame];
+		if (text[i] == '\n' || sx + symbolWidth > rightMargin) {
+			if ((flags & (UIS_CENTER | UIS_RIGHT | UIS_FIT_SPACING)) != 0)
+				lineWidth = GetLineWidth(&text[i + 1], size, spacing, &charactersInLine);
+
+			if ((flags & UIS_FIT_SPACING) != 0)
+				spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.w);
+
 			sx = rect.x;
 			if ((flags & UIS_CENTER) != 0)
-				sx += (w - GetLineWidth(&text[i + 1], size)) / 2;
+				sx += (w - lineWidth) / 2;
 			else if ((flags & UIS_RIGHT) != 0)
-				sx += w - GetLineWidth(&text[i + 1], size, spacing);
+				sx += w - lineWidth;
 			sy += LineHeights[size];
 			if (sy > bottomMargin)
 				return;
@@ -302,7 +333,7 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 			PrintChar(out, sx, sy, frame, color);
 		}
 		if (text[i] != '\n')
-			sx += symbolWidth;
+			sx += symbolWidth + spacing;
 	}
 	if (drawTextCursor) {
 		CelDrawTo(out, sx, sy, *pSPentSpn2Cels, PentSpn2Spin());
