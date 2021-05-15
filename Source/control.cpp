@@ -1254,7 +1254,7 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
 	} else {
 		style = UIS_GOLD;
-		strcpy(chrstr, _( /* TRANSLATORS: UI Constrains. Keep translation short please!*/ "MAX"));
+		strcpy(chrstr, _(/* TRANSLATORS: UI Constrains. Keep translation short please!*/ "MAX"));
 	}
 	DrawString(out, chrstr, { 257, 276, 43, 0 }, style | UIS_CENTER);
 
@@ -1553,31 +1553,9 @@ void RedBack(const CelOutputBuffer &out)
 	}
 }
 
-static void PrintSBookStr(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *pszStr, text_color col)
+static void PrintSBookStr(const CelOutputBuffer &out, int x, int y, const char *text)
 {
-	int sx = x + RIGHT_PANEL_X + SPLICONLENGTH;
-	int line = 0;
-	if (cjustflag) {
-		int screenX = 0;
-		const char *tmp = pszStr;
-		while (*tmp != 0) {
-			BYTE c = gbFontTransTbl[(BYTE)*tmp++];
-			screenX += fontkern[GameFontSmall][fontframe[GameFontSmall][c]] + 1;
-		}
-		if (screenX < 222)
-			line = (222 - screenX) / 2;
-		sx += line;
-	}
-	while (*pszStr != 0) {
-		BYTE c = gbFontTransTbl[(BYTE)*pszStr++];
-		c = fontframe[GameFontSmall][c];
-		line += fontkern[GameFontSmall][c] + 1;
-		if (c != 0) {
-			if (line <= 222)
-				PrintChar(out, sx, y, c, col);
-		}
-		sx += fontkern[GameFontSmall][c] + 1;
-	}
+	DrawString(out, text, { RIGHT_PANEL_X + SPLICONLENGTH + x, y, 222, 0 }, UIS_SILVER);
 }
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
@@ -1632,7 +1610,7 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				SetSpellTrans(RSPLTYPE_SKILL);
 				DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, *pSBkIconCels, SPLICONLAST);
 			}
-			PrintSBookStr(out, 10, yp - 23, false, _(spelldata[sn].sNameText), COL_WHITE);
+			PrintSBookStr(out, 10, yp - 23, _(spelldata[sn].sNameText));
 			switch (GetSBookTrans(sn, false)) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, _("Skill"));
@@ -1647,14 +1625,14 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				int max;
 				GetDamageAmt(sn, &min, &max);
 				if (min != -1) {
-					sprintf(tempstr, _( /* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: %i - %i"), mana, min, max);
+					sprintf(tempstr, _(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: %i - %i"), mana, min, max);
 				} else {
-					sprintf(tempstr, _( /* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i   Dam: n/a"), mana);
+					sprintf(tempstr, _(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i   Dam: n/a"), mana);
 				}
 				if (sn == SPL_BONESPIRIT) {
-					sprintf(tempstr, _( /* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: 1/3 tgt hp"), mana);
+					sprintf(tempstr, _(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: 1/3 tgt hp"), mana);
 				}
-				PrintSBookStr(out, 10, yp - 1, false, tempstr, COL_WHITE);
+				PrintSBookStr(out, 10, yp - 1, tempstr);
 				int lvl = plr[myplr]._pSplLvl[sn] + plr[myplr]._pISplLvlAdd;
 				if (lvl < 0) {
 					lvl = 0;
@@ -1666,7 +1644,7 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				}
 			} break;
 			}
-			PrintSBookStr(out, 10, yp - 12, false, tempstr, COL_WHITE);
+			PrintSBookStr(out, 10, yp - 12, tempstr);
 		}
 		yp += 43;
 	}
@@ -1704,7 +1682,7 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	sprintf(
 	    tempstr,
 	    ngettext(
-	         /* TRANSLATORS: %u is a number. Dialog is shown when splitting a stash of Gold.*/ "You have %u gold piece. How many do you want to remove?",
+	        /* TRANSLATORS: %u is a number. Dialog is shown when splitting a stash of Gold.*/ "You have %u gold piece. How many do you want to remove?",
 	        "You have %u gold pieces. How many do you want to remove?",
 	        initialDropGoldValue),
 	    initialDropGoldValue);
