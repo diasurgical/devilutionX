@@ -355,6 +355,19 @@ void PlayerStruct::Stop()
 	destAction = ACTION_NONE;
 }
 
+bool PlayerStruct::IsWalking() const
+{
+	switch (_pmode)
+	{
+	case PM_WALK:
+	case PM_WALK2:
+	case PM_WALK3:
+		return true;
+	default:
+		return false;
+	}
+}
+
 void SetPlayerGPtrs(byte *pData, byte **pAnim)
 {
 	int i;
