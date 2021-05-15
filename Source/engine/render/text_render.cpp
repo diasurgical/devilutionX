@@ -194,12 +194,13 @@ void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color 
 	}
 }
 
-int GetLineWidth(const char *text, GameFontTables size, int spacing)
+int GetLineWidth(const char *text, GameFontTables size, int spacing, int* lineLength)
 {
 	int lineWidth = 0;
 
 	size_t textLength = strlen(text);
-	for (unsigned i = 0; i < textLength; i++) {
+	int i = 0;
+	for (; i < textLength; i++) {
 		if (text[i] == '\n')
 			break;
 
@@ -207,7 +208,21 @@ int GetLineWidth(const char *text, GameFontTables size, int spacing)
 		lineWidth += fontkern[size][frame] + spacing;
 	}
 
+	if (lineLength != nullptr)
+		*lineLength = i;
+
 	return lineWidth != 0 ? (lineWidth - spacing) : 0;
+}
+
+int AdjustSpacingToFitHorizontally(int &lineWidth, int spacing, int lineLength, int availableWidth)
+{
+	if (lineWidth <= availableWidth || lineLength < 2)
+		return spacing;
+
+	const int overhang = lineWidth - availableWidth;
+	const int spacingRedux = (overhang + lineLength - 2) / (lineLength - 1);
+	lineWidth -= spacingRedux * (lineLength - 1);
+	return spacing - spacingRedux;
 }
 
 void WordWrapGameString(char *text, size_t width, size_t size, int spacing)
@@ -276,15 +291,11 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 
 	const size_t textLength = strlen(text);
 
-	int lineWidth = GetLineWidth(text, size, spacing);
-	if ((flags & UIS_FIT_HORZ) != 0) {
-		if (lineWidth > rect.w && textLength > 1) {
-			const int superfluousSpacing = lineWidth - rect.w;
-			const int spacingRedux = (superfluousSpacing + textLength - 2) / (textLength - 1);
-			spacing -= spacingRedux;
-			lineWidth -= spacingRedux * (textLength - 1);
-		}
-	}
+	int lineLength = 0;
+	int lineWidth = GetLineWidth(text, size, spacing, &lineLength);
+	int effectiveSpacing = spacing;
+	if ((flags & UIS_FIT_HORZ) != 0)
+		effectiveSpacing = AdjustSpacingToFitHorizontally(lineWidth, spacing, lineLength, rect.w);
 
 	int sx = rect.x;
 	if ((flags & UIS_CENTER) != 0)
@@ -298,13 +309,17 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 
 	for (unsigned i = 0; i < textLength; i++) {
 		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
-		int symbolWidth = fontkern[size][frame] + spacing;
-		if (text[i] == '\n' || sx + symbolWidth - spacing > rightMargin) {
+		int symbolWidth = fontkern[size][frame] + effectiveSpacing;
+		if (text[i] == '\n' || sx + symbolWidth - effectiveSpacing > rightMargin) {
+			lineWidth = GetLineWidth(&text[i + 1], size, spacing, &lineLength);
+			if ((flags & UIS_FIT_HORZ) != 0)
+				effectiveSpacing = AdjustSpacingToFitHorizontally(lineWidth, spacing, lineLength, rect.w);
+
 			sx = rect.x;
 			if ((flags & UIS_CENTER) != 0)
-				sx += (w - GetLineWidth(&text[i + 1], size)) / 2;
+				sx += (w - lineWidth) / 2;
 			else if ((flags & UIS_RIGHT) != 0)
-				sx += w - GetLineWidth(&text[i + 1], size, spacing);
+				sx += w - lineWidth;
 			sy += LineHeights[size];
 			if (sy > bottomMargin)
 				return;

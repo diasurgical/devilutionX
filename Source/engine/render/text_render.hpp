@@ -50,7 +50,16 @@ void FreeText();
  * @param col text_color color value
  */
 void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col);
-int GetLineWidth(const char *text, GameFontTables size = GameFontSmall, int spacing = 1);
+
+/**
+ * @brief Calculate pixel width of first line of text, respecting kerning
+ * @param text Text to check, will read until first eol or terminator
+ * @param size Font size to use
+ * @param spacing Extra spacing to add per character
+ * @param lineLength Receives characters read until newline or terminator
+ * @return Line width in pixels
+*/
+int GetLineWidth(const char *text, GameFontTables size = GameFontSmall, int spacing = 1, int* lineLength = nullptr);
 void WordWrapGameString(char *text, size_t width, size_t size = GameFontSmall, int spacing = 1);
 void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags = 0, int spacing = 1, bool drawTextCursor = false);
 int PentSpn2Spin();
