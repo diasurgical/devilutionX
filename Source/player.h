@@ -390,6 +390,11 @@ struct PlayerStruct {
 	 * opening a chest, picking an item up, etc) this action will also be cancelled.
 	 */
 	void Stop();
+
+	/**
+	 * @brief Is the player currently walking?
+	*/
+	bool IsWalking() const;
 };
 
 extern int myplr;
