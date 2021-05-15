@@ -601,8 +601,8 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 
 	auto animWeaponId = static_cast<anim_weapon_id>(player._pgfxnum & 0xF);
 	int animationWidth = 96;
+	bool useUnarmedAnimationInTown = false;
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[animWeaponId]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	switch (graphic) {
@@ -638,6 +638,7 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		break;
 	case player_graphic::Lightning:
 		szCel = "LM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
@@ -645,6 +646,7 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		break;
 	case player_graphic::Fire:
 		szCel = "FM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
@@ -652,6 +654,7 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		break;
 	case player_graphic::Magic:
 		szCel = "QM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
@@ -676,6 +679,21 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		app_fatal("PLR:2");
 	}
 
+	if (leveltype == DTYPE_TOWN && useUnarmedAnimationInTown) {
+		// If the hero don't hold the weapon in town then we should use the unarmed animation for casting
+		switch (animWeaponId) {
+		case ANIM_ID_MACE:
+		case ANIM_ID_SWORD:
+			animWeaponId = ANIM_ID_UNARMED;
+			break;
+		case ANIM_ID_SWORD_SHIELD:
+		case ANIM_ID_MACE_SHIELD:
+			animWeaponId = ANIM_ID_UNARMED_SHIELD;
+			break;
+		}
+	}
+
+	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[animWeaponId]);
 	sprintf(pszName, R"(PlrGFX\%s\%s\%s%s.CL2)", cs, prefix, prefix, szCel);
 	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
