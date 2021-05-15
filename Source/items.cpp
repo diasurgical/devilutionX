@@ -1309,16 +1309,16 @@ bool ItemSpaceOk(int i, int j)
 	return !nSolidTable[dPiece[i][j]];
 }
 
-static bool GetItemSpace(Point pos, int8_t inum)
+static bool GetItemSpace(Point position, int8_t inum)
 {
 	int rs;
 	int xx, yy;
 	bool savail;
 
 	yy = 0;
-	for (int j = pos.y - 1; j <= pos.y + 1; j++) {
+	for (int j = position.y - 1; j <= position.y + 1; j++) {
 		xx = 0;
-		for (int i = pos.x - 1; i <= pos.x + 1; i++) {
+		for (int i = position.x - 1; i <= position.x + 1; i++) {
 			itemhold[xx][yy] = ItemSpaceOk(i, j);
 			xx++;
 		}
@@ -1354,8 +1354,8 @@ static bool GetItemSpace(Point pos, int8_t inum)
 			yy = 0;
 	}
 
-	xx += pos.x - 1;
-	yy += pos.y - 1;
+	xx += position.x - 1;
+	yy += position.y - 1;
 	items[inum].position = { xx, yy };
 	dItem[xx][yy] = inum + 1;
 
@@ -1374,15 +1374,15 @@ int AllocateItem()
 	return inum;
 }
 
-static void GetSuperItemSpace(Point pos, int8_t inum)
+static void GetSuperItemSpace(Point position, int8_t inum)
 {
-	if (GetItemSpace(pos, inum))
+	if (GetItemSpace(position, inum))
 		return;
 	for (int k = 2; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
-			int yy = pos.y + j;
+			int yy = position.y + j;
 			for (int i = -k; i <= k; i++) {
-				int xx = i + pos.x;
+				int xx = i + position.x;
 				if (!ItemSpaceOk(xx, yy))
 					continue;
 				items[inum].position = { xx, yy };
@@ -1393,15 +1393,15 @@ static void GetSuperItemSpace(Point pos, int8_t inum)
 	}
 }
 
-Point GetSuperItemLoc(Point pos)
+Point GetSuperItemLoc(Point position)
 {
 	Point ret;
 
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
-			ret.y = pos.y + j;
+			ret.y = position.y + j;
 			for (int i = -k; i <= k; i++) {
-				ret.x = i + pos.x;
+				ret.x = i + position.x;
 				if (ItemSpaceOk(ret.x, ret.y)) {
 					return ret;
 				}
@@ -2527,7 +2527,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 	SetupItem(ii);
 }
 
-void SpawnItem(int m, Point pos, bool sendmsg)
+void SpawnItem(int m, Point position, bool sendmsg)
 {
 	int idx;
 	bool onlygood = true;
@@ -2535,7 +2535,7 @@ void SpawnItem(int m, Point pos, bool sendmsg)
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
-			SpawnUnique((_unique_items) - (idx + 1), pos.x, pos.y);
+			SpawnUnique((_unique_items) - (idx + 1), position.x, position.y);
 			return;
 		}
 		onlygood = true;
@@ -2547,7 +2547,7 @@ void SpawnItem(int m, Point pos, bool sendmsg)
 			idx--;
 			onlygood = false;
 		} else {
-			SpawnUnique((_unique_items) - (idx + 1), pos.x, pos.y);
+			SpawnUnique((_unique_items) - (idx + 1), position.x, position.y);
 			return;
 		}
 	} else {
@@ -2559,7 +2559,7 @@ void SpawnItem(int m, Point pos, bool sendmsg)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(pos, ii);
+	GetSuperItemSpace(position, ii);
 	int uper = monster[m]._uniqtype ? 15 : 1;
 
 	int mLevel = monster[m].MData->mLevel;
@@ -2572,13 +2572,13 @@ void SpawnItem(int m, Point pos, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-static void SetupBaseItem(Point pos, int idx, bool onlygood, bool sendmsg, bool delta)
+static void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(pos, ii);
+	GetSuperItemSpace(position, ii);
 	int curlv = items_get_currlevel();
 
 	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
@@ -2589,11 +2589,11 @@ static void SetupBaseItem(Point pos, int idx, bool onlygood, bool sendmsg, bool 
 		DeltaAddItem(ii);
 }
 
-void CreateRndItem(Point pos, bool onlygood, bool sendmsg, bool delta)
+void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
 {
 	int idx = onlygood ? RndUItem(-1) : RndAllItems();
 
-	SetupBaseItem(pos, idx, onlygood, sendmsg, delta);
+	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
 void SetupAllUseful(int ii, int iseed, int lvl)
@@ -2643,13 +2643,13 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	SetupItem(ii);
 }
 
-void CreateRndUseful(Point pos, bool sendmsg)
+void CreateRndUseful(Point position, bool sendmsg)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(pos, ii);
+	GetSuperItemSpace(position, ii);
 	int curlv = items_get_currlevel();
 
 	SetupAllUseful(ii, AdvanceRndSeed(), curlv);
@@ -2657,7 +2657,7 @@ void CreateRndUseful(Point pos, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-void CreateTypeItem(Point pos, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
+void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
 {
 	int idx;
 
@@ -2667,7 +2667,7 @@ void CreateTypeItem(Point pos, bool onlygood, int itype, int imisc, bool sendmsg
 	else
 		idx = IDI_GOLD;
 
-	SetupBaseItem(pos, idx, onlygood, sendmsg, delta);
+	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
 void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
@@ -2817,7 +2817,7 @@ void items_427ABA(Point position)
 	CornerStone.item = items[ii];
 }
 
-void SpawnQuestItem(int itemid, Point pos, int randarea, int selflag)
+void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 {
 	if (randarea) {
 		int tries = 0;
@@ -2826,13 +2826,13 @@ void SpawnQuestItem(int itemid, Point pos, int randarea, int selflag)
 			if (tries > 1000 && randarea > 1)
 				randarea--;
 
-			pos.x = GenerateRnd(MAXDUNX);
-			pos.y = GenerateRnd(MAXDUNY);
+			position.x = GenerateRnd(MAXDUNX);
+			position.y = GenerateRnd(MAXDUNY);
 
 			bool failed = false;
 			for (int i = 0; i < randarea && !failed; i++) {
 				for (int j = 0; j < randarea && !failed; j++) {
-					failed = !ItemSpaceOk(i + pos.x, j + pos.y);
+					failed = !ItemSpaceOk(i + position.x, j + position.y);
 				}
 			}
 			if (!failed)
@@ -2845,9 +2845,9 @@ void SpawnQuestItem(int itemid, Point pos, int randarea, int selflag)
 
 	int ii = AllocateItem();
 
-	items[ii].position = pos;
+	items[ii].position = position;
 
-	dItem[pos.x][pos.y] = ii + 1;
+	dItem[position.x][position.y] = ii + 1;
 
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, itemid, curlv);
@@ -2890,15 +2890,15 @@ void SpawnRock()
 	items[ii]._iAnimFrame = 11;
 }
 
-void SpawnRewardItem(int itemid, Point pos)
+void SpawnRewardItem(int itemid, Point position)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
 
-	items[ii].position = pos;
-	dItem[pos.x][pos.y] = ii + 1;
+	items[ii].position = position;
+	dItem[position.x][position.y] = ii + 1;
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, itemid, curlv);
 	SetupItem(ii);
@@ -2909,19 +2909,19 @@ void SpawnRewardItem(int itemid, Point pos)
 	items[ii]._iIdentified = true;
 }
 
-void SpawnMapOfDoom(Point pos)
+void SpawnMapOfDoom(Point position)
 {
-	SpawnRewardItem(IDI_MAPOFDOOM, pos);
+	SpawnRewardItem(IDI_MAPOFDOOM, position);
 }
 
-void SpawnRuneBomb(Point pos)
+void SpawnRuneBomb(Point position)
 {
-	SpawnRewardItem(IDI_RUNEBOMB, pos);
+	SpawnRewardItem(IDI_RUNEBOMB, position);
 }
 
-void SpawnTheodore(Point pos)
+void SpawnTheodore(Point position)
 {
-	SpawnRewardItem(IDI_THEODORE, pos);
+	SpawnRewardItem(IDI_THEODORE, position);
 }
 
 void RespawnItem(ItemStruct *item, bool FlipFlag)
@@ -4870,7 +4870,7 @@ int ItemNoFlippy()
 	return r;
 }
 
-void CreateSpellBook(Point pos, spell_id ispell, bool sendmsg, bool delta)
+void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 {
 	int lvl = currlevel;
 
@@ -4893,7 +4893,7 @@ void CreateSpellBook(Point pos, spell_id ispell, bool sendmsg, bool delta)
 		if (items[ii]._iMiscId == IMISC_BOOK && items[ii]._iSpell == ispell)
 			break;
 	}
-	GetSuperItemSpace(pos, ii);
+	GetSuperItemSpace(position, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -4901,7 +4901,7 @@ void CreateSpellBook(Point pos, spell_id ispell, bool sendmsg, bool delta)
 		DeltaAddItem(ii);
 }
 
-static void CreateMagicItem(Point pos, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
+static void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -4917,7 +4917,7 @@ static void CreateMagicItem(Point pos, int lvl, int imisc, int imid, int icurs, 
 
 		idx = RndTypeItems(imisc, imid, lvl);
 	}
-	GetSuperItemSpace(pos, ii);
+	GetSuperItemSpace(position, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -4925,10 +4925,10 @@ static void CreateMagicItem(Point pos, int lvl, int imisc, int imid, int icurs, 
 		DeltaAddItem(ii);
 }
 
-void CreateMagicArmor(Point pos, int imisc, int icurs, bool sendmsg, bool delta)
+void CreateMagicArmor(Point position, int imisc, int icurs, bool sendmsg, bool delta)
 {
 	int lvl = items_get_currlevel();
-	CreateMagicItem(pos, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
+	CreateMagicItem(position, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
 }
 
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta)
@@ -4936,7 +4936,7 @@ void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta)
 	CreateMagicItem(position, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
 }
 
-void CreateMagicWeapon(Point pos, int imisc, int icurs, bool sendmsg, bool delta)
+void CreateMagicWeapon(Point position, int imisc, int icurs, bool sendmsg, bool delta)
 {
 	int imid = IMISC_NONE;
 	if (imisc == ITYPE_STAFF)
@@ -4944,7 +4944,7 @@ void CreateMagicWeapon(Point pos, int imisc, int icurs, bool sendmsg, bool delta
 
 	int curlv = items_get_currlevel();
 
-	CreateMagicItem(pos, curlv, imisc, imid, icurs, sendmsg, delta);
+	CreateMagicItem(position, curlv, imisc, imid, icurs, sendmsg, delta);
 }
 
 static void NextItemRecord(int i)
