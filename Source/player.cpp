@@ -517,16 +517,10 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN) {
-		auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-		if (player._pmode == PM_SPELL)
-			animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-		NewPlrAnim(player, GetPlayerGraphicForSpell(player._pSpell), d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
-	} else {
-		// Start new stand animation so that currentframe is reset
-		d = player._pdir;
-		StartStand(pnum, d);
-	}
+	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
+	if (player._pmode == PM_SPELL)
+		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
+	NewPlrAnim(player, GetPlayerGraphicForSpell(player._pSpell), d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
 
 	PlaySfxLoc(spelldata[player._pSpell].sSFX, player.position.tile);
 
@@ -1395,8 +1389,7 @@ bool DoSpell(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : ((player.AnimInfo.CurrentFrame * player.AnimInfo.TicksPerFrame) + player.AnimInfo.TickCounterOfCurrentFrame);
-	if (currentSpellFrame == player._pSFNum) {
+	if (player.AnimInfo.CurrentFrame == player._pSFNum) {
 		CastSpell(
 		    pnum,
 		    player._pSpell,
@@ -1411,7 +1404,7 @@ bool DoSpell(int pnum)
 		}
 	}
 
-	if (currentSpellFrame >= player._pSFrames - 1) {
+	if (player.AnimInfo.CurrentFrame >= player._pSFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1776,8 +1769,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	const int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.TicksPerFrame + 1) + player.AnimInfo.TickCounterOfCurrentFrame);
-	if (player._pmode == PM_SPELL && currentSpellFrame >= player._pSFNum) {
+	if (player._pmode == PM_SPELL && player.AnimInfo.CurrentFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
@@ -2250,7 +2242,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		}
 	}
 
-	if (!graphic || (leveltype == DTYPE_TOWN && IsAnyOf(graphic, player_graphic::Fire, player_graphic::Lightning, player_graphic::Magic)))
+	if (!graphic)
 		return;
 
 	LoadPlrGFX(*this, *graphic);
@@ -2316,8 +2308,6 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 			animationWidth = 98;
 		break;
 	case player_graphic::Lightning:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "LM";
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
@@ -2325,8 +2315,6 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 			animationWidth = 128;
 		break;
 	case player_graphic::Fire:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "FM";
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
@@ -2334,8 +2322,6 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 			animationWidth = 128;
 		break;
 	case player_graphic::Magic:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "QM";
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
