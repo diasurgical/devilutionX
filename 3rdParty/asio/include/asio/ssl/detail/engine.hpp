@@ -2,7 +2,7 @@
 // ssl/detail/engine.hpp
 // ~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2018 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2021 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -57,6 +57,11 @@ public:
 
   // Construct a new engine for the specified context.
   ASIO_DECL explicit engine(SSL_CTX* context);
+
+#if defined(ASIO_HAS_MOVE)
+  // Move construct from another engine.
+  ASIO_DECL engine(engine&& other) ASIO_NOEXCEPT;
+#endif // defined(ASIO_HAS_MOVE)
 
   // Destructor.
   ASIO_DECL ~engine();

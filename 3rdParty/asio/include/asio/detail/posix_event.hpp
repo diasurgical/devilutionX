@@ -2,7 +2,7 @@
 // detail/posix_event.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2018 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2021 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -19,6 +19,7 @@
 
 #if defined(ASIO_HAS_PTHREADS)
 
+#include <cstddef>
 #include <pthread.h>
 #include "asio/detail/assert.hpp"
 #include "asio/detail/noncopyable.hpp"
@@ -68,6 +69,18 @@ public:
     lock.unlock();
     if (have_waiters)
       ::pthread_cond_signal(&cond_); // Ignore EINVAL.
+  }
+
+  // Unlock the mutex and signal one waiter who may destroy us.
+  template <typename Lock>
+  void unlock_and_signal_one_for_destruction(Lock& lock)
+  {
+    ASIO_ASSERT(lock.locked());
+    state_ |= 1;
+    bool have_waiters = (state_ > 1);
+    if (have_waiters)
+      ::pthread_cond_signal(&cond_); // Ignore EINVAL.
+    lock.unlock();
   }
 
   // If there's a waiter, unlock the mutex and signal it.
@@ -129,7 +142,7 @@ public:
       if (::clock_gettime(CLOCK_MONOTONIC, &ts) == 0)
       {
         ts.tv_sec += usec / 1000000;
-        ts.tv_nsec = (usec % 1000000) * 1000;
+        ts.tv_nsec += (usec % 1000000) * 1000;
         ts.tv_sec += ts.tv_nsec / 1000000000;
         ts.tv_nsec = ts.tv_nsec % 1000000000;
         ::pthread_cond_timedwait(&cond_,

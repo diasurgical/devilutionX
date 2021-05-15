@@ -2,7 +2,7 @@
 // detail/impl/win_iocp_io_context.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2018 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2021 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -76,6 +76,7 @@ std::size_t win_iocp_io_context::cancel_timer(timer_queue<Time_Traits>& queue,
   mutex::scoped_lock lock(dispatch_mutex_);
   op_queue<win_iocp_operation> ops;
   std::size_t n = queue.cancel_timer(timer, ops, max_cancelled);
+  lock.unlock();
   post_deferred_completions(ops);
   return n;
 }
