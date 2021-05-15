@@ -124,6 +124,36 @@ const char *const szPlrModeAssert[] = {
 	"quitting"
 };
 
+Point GetOffsetForWalking(const AnimationInfo &animationInfo, const direction dir, bool cameraMode /*= false*/)
+{
+	// clang-format off
+	//                                  DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
+	constexpr Point startOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
+	constexpr Point movingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
+	constexpr bool isDiagionalWalk[8] = {        false,         true,        false,         true,        false,         true,         false,         true };
+	// clang-format on
+
+	float fAnimationProgress = animationInfo.GetAnimationProgress();
+	Point offset = movingOffset[dir];
+	offset *= fAnimationProgress;
+
+	// In diagonal walks the offset for y is smaller then x.
+	// This means that sometimes x is updated but y not.
+	// That result in a small stuttering.
+	// To fix this we disallow odd x as this is the only case where y is not updated.
+	if (isDiagionalWalk[dir] && ((offset.x % 2) != 0)) {
+		offset.x -= offset.x > 0 ? 1 : -1;
+	}
+
+	if (cameraMode) {
+		offset = -offset;
+	} else {
+		offset += startOffset[dir];
+	}
+
+	return offset;
+}
+
 /**
  * @brief Clear cursor state
  */
@@ -677,8 +707,12 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	}
 
 	PlayerStruct *pPlayer = &plr[p];
-	int px = sx + pPlayer->position.offset.x - CalculateWidth2(pPlayer->_pAnimWidth);
-	int py = sy + pPlayer->position.offset.y;
+	Point offset = ScrollInfo.offset;
+	if (pPlayer->IsWalking()) {
+		offset = GetOffsetForWalking(pPlayer->AnimInfo, pPlayer->_pdir);
+	}
+	int px = sx + offset.x - CalculateWidth2(pPlayer->_pAnimWidth);
+	int py = sy + offset.y;
 
 	DrawPlayer(out, p, x, y, px, py);
 }
@@ -1107,8 +1141,12 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 	    : full_out.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
-	sx = ScrollInfo.offset.x + tileOffsetX;
-	sy = ScrollInfo.offset.y + tileOffsetY;
+	PlayerStruct *pPlayer = &plr[myplr];
+	Point offset = ScrollInfo.offset;
+	if (pPlayer->IsWalking())
+		offset = GetOffsetForWalking(pPlayer->AnimInfo, pPlayer->_pdir, true);
+	sx = offset.x + tileOffsetX;
+	sy = offset.y + tileOffsetY;
 
 	columns = tileColums;
 	rows = tileRows;

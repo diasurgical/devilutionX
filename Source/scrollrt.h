@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "engine/animationinfo.h"
 #include "engine.h"
 
 namespace devilution {
@@ -34,6 +35,14 @@ extern bool cel_transparency_active;
 extern bool cel_foliage_active;
 extern int level_piece_id;
 extern bool AutoMapShowItems;
+
+/**
+ * @brief Returns the offset for the walking animation
+ * @param animationInfo the current active walking animation
+ * @param dir walking direction
+ * @param cameraMode Adjusts the offset relative to the camera
+ */
+Point GetOffsetForWalking(const AnimationInfo &animationInfo, const direction dir, bool cameraMode = false);
 
 void ClearCursor();
 void ShiftGrid(int *x, int *y, int horizontal, int vertical);
