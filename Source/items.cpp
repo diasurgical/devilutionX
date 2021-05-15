@@ -4193,7 +4193,7 @@ void SortVendor(ItemStruct *items)
 
 void SpawnSmith(int lvl)
 {
-	constexpr int Unsorted = 0;
+	constexpr int PinnedItemCount = 0;
 
 	int maxValue, maxItems;
 
@@ -4225,7 +4225,7 @@ void SpawnSmith(int lvl)
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ITYPE_NONE;
 
-	SortVendor(smithitem + Unsorted);
+	SortVendor(smithitem + PinnedItemCount);
 	items[0] = holditem;
 }
 
@@ -4454,12 +4454,12 @@ void WitchBookLevel(int ii)
 
 void SpawnWitch(int lvl)
 {
-	constexpr int Unsorted = 3;
+	constexpr int PinnedItemCount = 3;
 
 	int iCnt;
 	int idata, maxlvl, maxValue;
 
-	int j = Unsorted;
+	int j = PinnedItemCount;
 
 	memset(&items[0], 0, sizeof(*items));
 	GetItemAttrs(0, IDI_MANA, 1);
@@ -4532,7 +4532,7 @@ void SpawnWitch(int lvl)
 	for (int i = iCnt; i < WITCH_ITEMS; i++)
 		witchitem[i]._itype = ITYPE_NONE;
 
-	SortVendor(witchitem + Unsorted);
+	SortVendor(witchitem + PinnedItemCount);
 }
 
 int RndBoyItem(int lvl)
@@ -4692,7 +4692,7 @@ int RndHealerItem(int lvl)
 
 void SpawnHealer(int lvl)
 {
-	constexpr int Unsorted = 2;
+	constexpr int PinnedItemCount = 2;
 
 	int srnd;
 
@@ -4734,7 +4734,7 @@ void SpawnHealer(int lvl)
 	for (int i = nsi; i < 20; i++) {
 		healitem[i]._itype = ITYPE_NONE;
 	}
-	SortVendor(healitem + Unsorted);
+	SortVendor(healitem + PinnedItemCount);
 }
 
 void SpawnStoreGold()
