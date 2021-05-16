@@ -882,13 +882,8 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 	if (player._pgfxnum != g && Loadgfx) {
 		player._pgfxnum = g;
 		player._pGFXLoad = 0;
-		LoadPlrGFX(playerId, PFILE_STAND);
+		LoadPlrGFX(playerId, static_cast<player_graphic>(PFILE_STAND | PFILE_WALK));
 		SetPlrAnims(player);
-
-		direction d = player._pdir;
-
-		assert(player._pNAnim[d]);
-		NewPlrAnim(player, player._pNAnim[d], player._pNFrames, 3, player._pNWidth);
 	} else {
 		player._pgfxnum = g;
 	}
