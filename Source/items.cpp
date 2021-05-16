@@ -4150,7 +4150,8 @@ bool SmithItemOk(int i)
 	return true;
 }
 
-int RndSmithItem(int lvl)
+template <bool (*Ok)(int), bool ConsiderDropRate = false>
+int RndVendorItem(int minlvl, int maxlvl = std::numeric_limits<int>::max())
 {
 	int ril[512];
 
@@ -4158,24 +4159,33 @@ int RndSmithItem(int lvl)
 	for (int i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
-
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			continue;
-		if (!SmithItemOk(i))
+		if (!Ok(i))
 			continue;
-		if (lvl < AllItemsList[i].iMinMLvl)
+		if (AllItemsList[i].iMinMLvl < minlvl && AllItemsList[i].iMinMLvl > maxlvl)
 			continue;
-		if (ri >= 512)
-			continue;
+
 		ril[ri] = i;
 		ri++;
-		if (AllItemsList[i].iRnd == IDROP_DOUBLE && ri < 512) {
-			ril[ri] = i;
-			ri++;
-		}
+		if (ri == 512)
+			break;
+
+		if (!ConsiderDropRate || AllItemsList[i].iRnd != IDROP_DOUBLE)
+			continue;
+
+		ril[ri] = i;
+		ri++;
+		if (ri == 512)
+			break;
 	}
 
 	return ril[GenerateRnd(ri)] + 1;
+}
+
+int RndSmithItem(int lvl)
+{
+	return RndVendorItem<SmithItemOk, true>(lvl);
 }
 
 void SortVendor(ItemStruct *items)
@@ -4248,31 +4258,6 @@ bool PremiumItemOk(int i)
 	}
 
 	return true;
-}
-
-template <bool (*Ok)(int)>
-int RndVendorItem(int minlvl, int maxlvl = std::numeric_limits<uint8_t>::max())
-{
-	int ril[512];
-
-	int ri = 0;
-	for (int i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-		if (AllItemsList[i].iRnd == IDROP_NEVER)
-			continue;
-		if (!Ok(i))
-			continue;
-		if (AllItemsList[i].iMinMLvl < minlvl && AllItemsList[i].iMinMLvl > maxlvl)
-			continue;
-		if (ri == 512)
-			break;
-
-		ril[ri] = i;
-		ri++;
-	}
-
-	return ril[GenerateRnd(ri)] + 1;
 }
 
 int RndPremiumItem(int minlvl, int maxlvl)
