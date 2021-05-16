@@ -495,7 +495,7 @@ static void items_42390F()
 		id = IDI_NOTE1;
 		break;
 	}
-	SpawnQuestItem(id, {x, y}, 0, 1);
+	SpawnQuestItem(id, { x, y }, 0, 1);
 }
 
 void InitItems()
@@ -527,11 +527,11 @@ void InitItems()
 		if (QuestStatus(Q_ROCK))
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))
-			SpawnQuestItem(IDI_ANVIL, {2 * setpc_x + 27, 2 * setpc_y + 27}, 0, 1);
+			SpawnQuestItem(IDI_ANVIL, { 2 * setpc_x + 27, 2 * setpc_y + 27 }, 0, 1);
 		if (sgGameInitInfo.bCowQuest && currlevel == 20)
-			SpawnQuestItem(IDI_BROWNSUIT, {25, 25}, 3, 1);
+			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1);
 		if (sgGameInitInfo.bCowQuest && currlevel == 19)
-			SpawnQuestItem(IDI_GREYSUIT, {25, 25}, 3, 1);
+			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 		if (currlevel >= 21 && currlevel <= 23)
@@ -2452,7 +2452,7 @@ void SpawnUnique(_unique_items uid, int x, int y)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace({x, y}, ii);
+	GetSuperItemSpace({ x, y }, ii);
 	int curlv = items_get_currlevel();
 
 	int idx = 0;
@@ -3003,7 +3003,7 @@ void ProcessItems()
 				items[ii]._iSelFlag = 1;
 			}
 		}
-}
+	}
 	ItemDoppel();
 }
 
@@ -4569,8 +4569,8 @@ void SpawnBoy(int lvl)
 			const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
 			    [](const ItemStruct &item) {
 				    return item._itype == ITYPE_LARMOR
-					|| item._itype == ITYPE_MARMOR
-					|| item._itype == ITYPE_HARMOR;
+				        || item._itype == ITYPE_MARMOR
+				        || item._itype == ITYPE_HARMOR;
 			    });
 
 			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
@@ -4626,12 +4626,12 @@ void SpawnBoy(int lvl)
 		}
 	} while (keepgoing
 	    || ((
-		    items[0]._iIvalue > 200000
-		    || items[0]._iMinStr > strength
-		    || items[0]._iMinMag > magic
-		    || items[0]._iMinDex > dexterity
-		    || items[0]._iIvalue < ivalue)
-		&& count < 250));
+	            items[0]._iIvalue > 200000
+	            || items[0]._iMinStr > strength
+	            || items[0]._iMinMag > magic
+	            || items[0]._iMinDex > dexterity
+	            || items[0]._iIvalue < ivalue)
+	        && count < 250));
 	boyitem = items[0];
 	boyitem._iCreateInfo = lvl | CF_BOY;
 	boyitem._iIdentified = true;
