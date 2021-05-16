@@ -3204,19 +3204,17 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 		x->_iMinDex = std::max(0, x->_iMinDex - r);
 		break;
 	case IMISC_OILBSMTH:
-		if (x->_iMaxDur != 255) {
-			int dur;
-			if (x->_iDurability < x->_iMaxDur) {
-				dur = (x->_iMaxDur + 4) / 5 + x->_iDurability;
-				dur = std::min<int>(dur, x->_iMaxDur);
-			} else {
-				if (x->_iMaxDur >= 100) {
-					return true;
-				}
-				dur = x->_iMaxDur + 1;
-				x->_iMaxDur = dur;
+		if (x->_iMaxDur == 255)
+			return true;
+		if (x->_iDurability < x->_iMaxDur) {
+			x->_iDurability = (x->_iMaxDur + 4) / 5 + x->_iDurability;
+			x->_iDurability = std::min<int>(x->_iDurability, x->_iMaxDur);
+		} else {
+			if (x->_iMaxDur >= 100) {
+				return true;
 			}
-			x->_iDurability = dur;
+			x->_iMaxDur++;
+			x->_iDurability = x->_iMaxDur;
 		}
 		break;
 	case IMISC_OILFORT:
