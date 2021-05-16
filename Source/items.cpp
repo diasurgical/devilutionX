@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <climits>
 #include <cstdint>
+#include <bitset>
 
 #include "cursor.h"
 #include "doom.h"
@@ -494,7 +495,7 @@ static void items_42390F()
 		id = IDI_NOTE1;
 		break;
 	}
-	SpawnQuestItem(id, x, y, 0, 1);
+	SpawnQuestItem(id, { x, y }, 0, 1);
 }
 
 void InitItems()
@@ -526,11 +527,11 @@ void InitItems()
 		if (QuestStatus(Q_ROCK))
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))
-			SpawnQuestItem(IDI_ANVIL, 2 * setpc_x + 27, 2 * setpc_y + 27, 0, 1);
+			SpawnQuestItem(IDI_ANVIL, { 2 * setpc_x + 27, 2 * setpc_y + 27 }, 0, 1);
 		if (sgGameInitInfo.bCowQuest && currlevel == 20)
-			SpawnQuestItem(IDI_BROWNSUIT, 25, 25, 3, 1);
+			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1);
 		if (sgGameInitInfo.bCowQuest && currlevel == 19)
-			SpawnQuestItem(IDI_GREYSUIT, 25, 25, 3, 1);
+			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 		if (currlevel >= 21 && currlevel <= 23)
@@ -1303,16 +1304,16 @@ bool ItemSpaceOk(int i, int j)
 	return !nSolidTable[dPiece[i][j]];
 }
 
-static bool GetItemSpace(int x, int y, int8_t inum)
+static bool GetItemSpace(Point position, int8_t inum)
 {
-	int i, j, rs;
+	int rs;
 	int xx, yy;
 	bool savail;
 
 	yy = 0;
-	for (j = y - 1; j <= y + 1; j++) {
+	for (int j = position.y - 1; j <= position.y + 1; j++) {
 		xx = 0;
-		for (i = x - 1; i <= x + 1; i++) {
+		for (int i = position.x - 1; i <= position.x + 1; i++) {
 			itemhold[xx][yy] = ItemSpaceOk(i, j);
 			xx++;
 		}
@@ -1320,8 +1321,8 @@ static bool GetItemSpace(int x, int y, int8_t inum)
 	}
 
 	savail = false;
-	for (j = 0; j < 3; j++) {
-		for (i = 0; i < 3; i++) {
+	for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 3; i++) {
 			if (itemhold[i][j])
 				savail = true;
 		}
@@ -1337,19 +1338,19 @@ static bool GetItemSpace(int x, int y, int8_t inum)
 	while (rs > 0) {
 		if (itemhold[xx][yy])
 			rs--;
-		if (rs > 0) {
-			xx++;
-			if (xx == 3) {
-				xx = 0;
-				yy++;
-				if (yy == 3)
-					yy = 0;
-			}
-		}
+		if (rs <= 0)
+			continue;
+		xx++;
+		if (xx != 3)
+			continue;
+		xx = 0;
+		yy++;
+		if (yy == 3)
+			yy = 0;
 	}
 
-	xx += x - 1;
-	yy += y - 1;
+	xx += position.x - 1;
+	yy += position.y - 1;
 	items[inum].position = { xx, yy };
 	dItem[xx][yy] = inum + 1;
 
@@ -1368,40 +1369,41 @@ int AllocateItem()
 	return inum;
 }
 
-static void GetSuperItemSpace(int x, int y, int8_t inum)
+static void GetSuperItemSpace(Point position, int8_t inum)
 {
-	if (!GetItemSpace(x, y, inum)) {
-		for (int k = 2; k < 50; k++) {
-			for (int j = -k; j <= k; j++) {
-				int yy = y + j;
-				for (int i = -k; i <= k; i++) {
-					int xx = i + x;
-					if (ItemSpaceOk(xx, yy)) {
-						items[inum].position = { xx, yy };
-						dItem[xx][yy] = inum + 1;
-						return;
-					}
-				}
+	if (GetItemSpace(position, inum))
+		return;
+	for (int k = 2; k < 50; k++) {
+		for (int j = -k; j <= k; j++) {
+			int yy = position.y + j;
+			for (int i = -k; i <= k; i++) {
+				int xx = i + position.x;
+				if (!ItemSpaceOk(xx, yy))
+					continue;
+				items[inum].position = { xx, yy };
+				dItem[xx][yy] = inum + 1;
+				return;
 			}
 		}
 	}
 }
 
-void GetSuperItemLoc(int x, int y, int *xx, int *yy)
+Point GetSuperItemLoc(Point position)
 {
-	int i, j, k;
+	Point ret;
 
-	for (k = 1; k < 50; k++) {
-		for (j = -k; j <= k; j++) {
-			*yy = y + j;
-			for (i = -k; i <= k; i++) {
-				*xx = i + x;
-				if (ItemSpaceOk(*xx, *yy)) {
-					return;
+	for (int k = 1; k < 50; k++) {
+		for (int j = -k; j <= k; j++) {
+			ret.y = position.y + j;
+			for (int i = -k; i <= k; i++) {
+				ret.x = i + position.x;
+				if (ItemSpaceOk(ret.x, ret.y)) {
+					return ret;
 				}
 			}
 		}
 	}
+	return ret; // TODO handle no space for dropping items
 }
 
 void CalcItemValue(int i)
@@ -1475,7 +1477,6 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 	int l[256];
 	char istr[128];
 	int nl, j, preidx;
-	bool addok;
 	int tmp;
 
 	tmp = GenerateRnd(10);
@@ -1483,18 +1484,15 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 	if (tmp == 0 || onlygood) {
 		nl = 0;
 		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
-			if (IsPrefixValidForItemType(j, PLT_STAFF) && PL_Prefix[j].PLMinLvl <= lvl) {
-				addok = true;
-				if (onlygood && !PL_Prefix[j].PLOk)
-					addok = false;
-				if (addok) {
-					l[nl] = j;
-					nl++;
-					if (PL_Prefix[j].PLDouble) {
-						l[nl] = j;
-						nl++;
-					}
-				}
+			if (!IsPrefixValidForItemType(j, PLT_STAFF) || PL_Prefix[j].PLMinLvl > lvl)
+				continue;
+			if (onlygood && !PL_Prefix[j].PLOk)
+				continue;
+			l[nl] = j;
+			nl++;
+			if (PL_Prefix[j].PLDouble) {
+				l[nl] = j;
+				nl++;
 			}
 		}
 		if (nl != 0) {
@@ -2091,36 +2089,39 @@ static void SaveItemSuffix(int i, int sufidx)
 
 void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
 {
-	int pre, post, nt, nl, j, preidx, sufidx;
 	int l[256];
 	char istr[128];
 	goodorevil goe;
 
-	pre = GenerateRnd(4);
-	post = GenerateRnd(3);
+	int pre = GenerateRnd(4);
+	int post = GenerateRnd(3);
 	if (pre != 0 && post == 0) {
 		if (GenerateRnd(2) != 0)
 			post = 1;
 		else
 			pre = 0;
 	}
-	preidx = -1;
-	sufidx = -1;
+	int preidx = -1;
+	int sufidx = -1;
 	goe = GOE_ANY;
 	if (!onlygood && GenerateRnd(3) != 0)
 		onlygood = true;
 	if (pre == 0) {
-		nt = 0;
-		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
-			if (IsPrefixValidForItemType(j, flgs)) {
-				if (PL_Prefix[j].PLMinLvl >= minlvl && PL_Prefix[j].PLMinLvl <= maxlvl && (!onlygood || PL_Prefix[j].PLOk) && (flgs != PLT_STAFF || PL_Prefix[j].PLPower != IPL_CHARGES)) {
-					l[nt] = j;
-					nt++;
-					if (PL_Prefix[j].PLDouble) {
-						l[nt] = j;
-						nt++;
-					}
-				}
+		int nt = 0;
+		for (int j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
+			if (!IsPrefixValidForItemType(j, flgs))
+				continue;
+			if (PL_Prefix[j].PLMinLvl < minlvl || PL_Prefix[j].PLMinLvl > maxlvl)
+				continue;
+			if (onlygood && !PL_Prefix[j].PLOk)
+				continue;
+			if (flgs == PLT_STAFF && PL_Prefix[j].PLPower == IPL_CHARGES)
+				continue;
+			l[nt] = j;
+			nt++;
+			if (PL_Prefix[j].PLDouble) {
+				l[nt] = j;
+				nt++;
 			}
 		}
 		if (nt != 0) {
@@ -2141,8 +2142,8 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		}
 	}
 	if (post != 0) {
-		nl = 0;
-		for (j = 0; PL_Suffix[j].PLPower != IPL_INVALID; j++) {
+		int nl = 0;
+		for (int j = 0; PL_Suffix[j].PLPower != IPL_INVALID; j++) {
 			if (IsSuffixValidForItemType(j, flgs)
 			    && PL_Suffix[j].PLMinLvl >= minlvl && PL_Suffix[j].PLMinLvl <= maxlvl
 			    && !((goe == GOE_GOOD && PL_Suffix[j].PLGOE == GOE_EVIL) || (goe == GOE_EVIL && PL_Suffix[j].PLGOE == GOE_GOOD))
@@ -2285,7 +2286,6 @@ int RndItem(int m)
 
 int RndUItem(int m)
 {
-	int i, ri;
 	int ril[512];
 	bool okflag;
 
@@ -2293,8 +2293,8 @@ int RndUItem(int m)
 		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
 
 	int curlv = items_get_currlevel();
-	ri = 0;
-	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
@@ -2329,15 +2329,14 @@ int RndUItem(int m)
 
 int RndAllItems()
 {
-	int i, ri;
 	int ril[512];
 
 	if (GenerateRnd(100) > 25)
 		return 0;
 
 	int curlv = items_get_currlevel();
-	ri = 0;
-	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
@@ -2356,16 +2355,14 @@ int RndAllItems()
 
 int RndTypeItems(int itype, int imid, int lvl)
 {
-	int i, ri;
-	bool okflag;
 	int ril[512];
 
-	ri = 0;
-	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
-		okflag = true;
+		bool okflag = true;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = false;
 		if (lvl * 2 < AllItemsList[i].iMinMLvl)
@@ -2385,15 +2382,13 @@ int RndTypeItems(int itype, int imid, int lvl)
 
 _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 {
-	int j, numu;
-	bool uok[128];
+	std::bitset<128> uok = {};
 
 	if (GenerateRnd(100) > uper)
 		return UITEM_INVALID;
 
-	numu = 0;
-	memset(uok, 0, sizeof(uok));
-	for (j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
+	int numu = 0;
+	for (int j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
 		if (!IsUniqueAvailable(j))
 			break;
 		if (UniqueItemList[j].UIItemId == AllItemsList[items[i].IDidx].iItemId
@@ -2412,11 +2407,8 @@ _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 	while (numu > 0) {
 		if (uok[idata])
 			numu--;
-		if (numu > 0) {
-			idata++;
-			if (idata == 128)
-				idata = 0;
-		}
+		if (numu > 0)
+			idata = (idata + 1) % 128;
 	}
 
 	return (_unique_items)idata;
@@ -2455,7 +2447,7 @@ void SpawnUnique(_unique_items uid, int x, int y)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace({ x, y }, ii);
 	int curlv = items_get_currlevel();
 
 	int idx = 0;
@@ -2530,7 +2522,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 	SetupItem(ii);
 }
 
-void SpawnItem(int m, int x, int y, bool sendmsg)
+void SpawnItem(int m, Point position, bool sendmsg)
 {
 	int idx;
 	bool onlygood = true;
@@ -2538,7 +2530,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
-			SpawnUnique((_unique_items) - (idx + 1), x, y);
+			SpawnUnique((_unique_items) - (idx + 1), position.x, position.y);
 			return;
 		}
 		onlygood = true;
@@ -2550,7 +2542,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 			idx--;
 			onlygood = false;
 		} else {
-			SpawnUnique((_unique_items) - (idx + 1), x, y);
+			SpawnUnique((_unique_items) - (idx + 1), position.x, position.y);
 			return;
 		}
 	} else {
@@ -2562,7 +2554,7 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace(position, ii);
 	int uper = monster[m]._uniqtype ? 15 : 1;
 
 	int mLevel = monster[m].MData->mLevel;
@@ -2575,13 +2567,13 @@ void SpawnItem(int m, int x, int y, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-static void SetupBaseItem(int x, int y, int idx, bool onlygood, bool sendmsg, bool delta)
+static void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace(position, ii);
 	int curlv = items_get_currlevel();
 
 	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
@@ -2592,11 +2584,11 @@ static void SetupBaseItem(int x, int y, int idx, bool onlygood, bool sendmsg, bo
 		DeltaAddItem(ii);
 }
 
-void CreateRndItem(int x, int y, bool onlygood, bool sendmsg, bool delta)
+void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
 {
 	int idx = onlygood ? RndUItem(-1) : RndAllItems();
 
-	SetupBaseItem(x, y, idx, onlygood, sendmsg, delta);
+	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
 void SetupAllUseful(int ii, int iseed, int lvl)
@@ -2646,13 +2638,13 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	SetupItem(ii);
 }
 
-void CreateRndUseful(int x, int y, bool sendmsg)
+void CreateRndUseful(Point position, bool sendmsg)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace(position, ii);
 	int curlv = items_get_currlevel();
 
 	SetupAllUseful(ii, AdvanceRndSeed(), curlv);
@@ -2660,7 +2652,7 @@ void CreateRndUseful(int x, int y, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
+void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
 {
 	int idx;
 
@@ -2670,7 +2662,7 @@ void CreateTypeItem(int x, int y, bool onlygood, int itype, int imisc, bool send
 	else
 		idx = IDI_GOLD;
 
-	SetupBaseItem(x, y, idx, onlygood, sendmsg, delta);
+	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
 void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
@@ -2754,19 +2746,17 @@ void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int 
 
 void items_427A72()
 {
-	PkItemStruct id;
-	BYTE *buffer;
-
-	if (CornerStone.activated) {
-		if (!CornerStone.item.isEmpty()) {
-			PackItem(&id, &CornerStone.item);
-			buffer = (BYTE *)&id;
-			for (size_t i = 0; i < sizeof(PkItemStruct); i++) {
-				sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
-			}
-		} else {
-			sgOptions.Hellfire.szItem[0] = '\0';
+	if (!CornerStone.activated)
+		return;
+	if (!CornerStone.item.isEmpty()) {
+		PkItemStruct id;
+		PackItem(&id, &CornerStone.item);
+		BYTE *buffer = (BYTE *)&id;
+		for (size_t i = 0; i < sizeof(PkItemStruct); i++) {
+			sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
 		}
+	} else {
+		sgOptions.Hellfire.szItem[0] = '\0';
 	}
 }
 
@@ -2822,7 +2812,7 @@ void items_427ABA(Point position)
 	CornerStone.item = items[ii];
 }
 
-void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
+void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 {
 	if (randarea) {
 		int tries = 0;
@@ -2831,13 +2821,13 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 			if (tries > 1000 && randarea > 1)
 				randarea--;
 
-			x = GenerateRnd(MAXDUNX);
-			y = GenerateRnd(MAXDUNY);
+			position.x = GenerateRnd(MAXDUNX);
+			position.y = GenerateRnd(MAXDUNY);
 
 			bool failed = false;
 			for (int i = 0; i < randarea && !failed; i++) {
 				for (int j = 0; j < randarea && !failed; j++) {
-					failed = !ItemSpaceOk(i + x, j + y);
+					failed = !ItemSpaceOk(i + position.x, j + position.y);
 				}
 			}
 			if (!failed)
@@ -2850,9 +2840,9 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 
 	int ii = AllocateItem();
 
-	items[ii].position = { x, y };
+	items[ii].position = position;
 
-	dItem[x][y] = ii + 1;
+	dItem[position.x][position.y] = ii + 1;
 
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, itemid, curlv);
@@ -2895,15 +2885,15 @@ void SpawnRock()
 	items[ii]._iAnimFrame = 11;
 }
 
-void SpawnRewardItem(int itemid, int xx, int yy)
+void SpawnRewardItem(int itemid, Point position)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
 
-	items[ii].position = { xx, yy };
-	dItem[xx][yy] = ii + 1;
+	items[ii].position = position;
+	dItem[position.x][position.y] = ii + 1;
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, itemid, curlv);
 	SetupItem(ii);
@@ -2914,19 +2904,19 @@ void SpawnRewardItem(int itemid, int xx, int yy)
 	items[ii]._iIdentified = true;
 }
 
-void SpawnMapOfDoom(int xx, int yy)
+void SpawnMapOfDoom(Point position)
 {
-	SpawnRewardItem(IDI_MAPOFDOOM, xx, yy);
+	SpawnRewardItem(IDI_MAPOFDOOM, position);
 }
 
-void SpawnRuneBomb(int xx, int yy)
+void SpawnRuneBomb(Point position)
 {
-	SpawnRewardItem(IDI_RUNEBOMB, xx, yy);
+	SpawnRewardItem(IDI_RUNEBOMB, position);
 }
 
-void SpawnTheodore(int xx, int yy)
+void SpawnTheodore(Point position)
 {
-	SpawnRewardItem(IDI_THEODORE, xx, yy);
+	SpawnRewardItem(IDI_THEODORE, position);
 }
 
 void RespawnItem(ItemStruct *item, bool FlipFlag)
@@ -2988,26 +2978,24 @@ void ItemDoppel()
 
 void ProcessItems()
 {
-	int i, ii;
+	for (int i = 0; i < numitems; i++) {
+		int ii = itemactive[i];
+		if (!items[ii]._iAnimFlag)
+			continue;
+		items[ii]._iAnimFrame++;
+		if (items[ii]._iCurs == ICURS_MAGIC_ROCK) {
+			if (items[ii]._iSelFlag == 1 && items[ii]._iAnimFrame == 11)
+				items[ii]._iAnimFrame = 1;
+			if (items[ii]._iSelFlag == 2 && items[ii]._iAnimFrame == 21)
+				items[ii]._iAnimFrame = 11;
+		} else {
+			if (items[ii]._iAnimFrame == items[ii]._iAnimLen / 2)
+				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii].position.x, items[ii].position.y);
 
-	for (i = 0; i < numitems; i++) {
-		ii = itemactive[i];
-		if (items[ii]._iAnimFlag) {
-			items[ii]._iAnimFrame++;
-			if (items[ii]._iCurs == ICURS_MAGIC_ROCK) {
-				if (items[ii]._iSelFlag == 1 && items[ii]._iAnimFrame == 11)
-					items[ii]._iAnimFrame = 1;
-				if (items[ii]._iSelFlag == 2 && items[ii]._iAnimFrame == 21)
-					items[ii]._iAnimFrame = 11;
-			} else {
-				if (items[ii]._iAnimFrame == items[ii]._iAnimLen / 2)
-					PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii].position.x, items[ii].position.y);
-
-				if (items[ii]._iAnimFrame >= items[ii]._iAnimLen) {
-					items[ii]._iAnimFrame = items[ii]._iAnimLen;
-					items[ii]._iAnimFlag = false;
-					items[ii]._iSelFlag = 1;
-				}
+			if (items[ii]._iAnimFrame >= items[ii]._iAnimLen) {
+				items[ii]._iAnimFrame = items[ii]._iAnimLen;
+				items[ii]._iAnimFlag = false;
+				items[ii]._iSelFlag = 1;
 			}
 		}
 	}
@@ -3028,8 +3016,6 @@ void GetItemFrm(int i)
 
 void GetItemStr(int i)
 {
-	int nGold;
-
 	if (items[i]._itype != ITYPE_GOLD) {
 		if (items[i]._iIdentified)
 			strcpy(infostr, items[i]._iIName);
@@ -3041,7 +3027,7 @@ void GetItemStr(int i)
 		if (items[i]._iMagical == ITEM_QUALITY_UNIQUE)
 			infoclr = UIS_GOLD;
 	} else {
-		nGold = items[i]._ivalue;
+		int nGold = items[i]._ivalue;
 		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
 	}
 }
@@ -3125,18 +3111,16 @@ static void RechargeItem(ItemStruct *i, int r)
 
 void DoRecharge(int pnum, int cii)
 {
-	PlayerStruct *p;
 	ItemStruct *pi;
-	int r;
 
-	p = &plr[pnum];
+	PlayerStruct *p = &plr[pnum];
 	if (cii >= NUM_INVLOC) {
 		pi = &p->InvList[cii - NUM_INVLOC];
 	} else {
 		pi = &p->InvBody[cii];
 	}
 	if (pi->_itype == ITYPE_STAFF && pi->_iSpell != SPL_NULL) {
-		r = GetSpellBookLevel(pi->_iSpell);
+		int r = GetSpellBookLevel(pi->_iSpell);
 		r = GenerateRnd(p->_pLevel / r) + 1;
 		RechargeItem(pi, r);
 		CalcPlrInv(pnum, true);
@@ -3148,7 +3132,7 @@ void DoRecharge(int pnum, int cii)
 
 static bool OilItem(ItemStruct *x, PlayerStruct *p)
 {
-	int dur, r;
+	int r;
 
 	if (x->_iClass == ICLASS_MISC) {
 		return false;
@@ -3215,18 +3199,17 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 		x->_iMinDex = std::max(0, x->_iMinDex - r);
 		break;
 	case IMISC_OILBSMTH:
-		if (x->_iMaxDur != 255) {
-			if (x->_iDurability < x->_iMaxDur) {
-				dur = (x->_iMaxDur + 4) / 5 + x->_iDurability;
-				dur = std::min<int>(dur, x->_iMaxDur);
-			} else {
-				if (x->_iMaxDur >= 100) {
-					return true;
-				}
-				dur = x->_iMaxDur + 1;
-				x->_iMaxDur = dur;
+		if (x->_iMaxDur == 255)
+			return true;
+		if (x->_iDurability < x->_iMaxDur) {
+			x->_iDurability = (x->_iMaxDur + 4) / 5 + x->_iDurability;
+			x->_iDurability = std::min<int>(x->_iDurability, x->_iMaxDur);
+		} else {
+			if (x->_iMaxDur >= 100) {
+				return true;
 			}
-			x->_iDurability = dur;
+			x->_iMaxDur++;
+			x->_iDurability = x->_iMaxDur;
 		}
 		break;
 	case IMISC_OILFORT:
@@ -3258,15 +3241,14 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 
 void DoOil(int pnum, int cii)
 {
+	if (cii < NUM_INVLOC && cii != INVLOC_HEAD && (cii <= INVLOC_AMULET || cii > INVLOC_CHEST))
+		return;
 	PlayerStruct *p = &plr[pnum];
-
-	if (cii >= NUM_INVLOC || cii == INVLOC_HEAD || (cii > INVLOC_AMULET && cii <= INVLOC_CHEST)) {
-		if (OilItem(&p->InvBody[cii], p)) {
-			CalcPlrInv(pnum, true);
-			if (pnum == myplr) {
-				NewCursor(CURSOR_HAND);
-			}
-		}
+	if (!OilItem(&p->InvBody[cii], p))
+		return;
+	CalcPlrInv(pnum, true);
+	if (pnum == myplr) {
+		NewCursor(CURSOR_HAND);
 	}
 }
 
@@ -4135,98 +4117,87 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 
 bool StoreStatOk(ItemStruct *h)
 {
-	bool sf;
-
-	sf = true;
 	if (plr[myplr]._pStrength < h->_iMinStr)
-		sf = false;
+		return false;
 	if (plr[myplr]._pMagic < h->_iMinMag)
-		sf = false;
+		return false;
 	if (plr[myplr]._pDexterity < h->_iMinDex)
-		sf = false;
+		return false;
 
-	return sf;
+	return true;
 }
 
 bool SmithItemOk(int i)
 {
-	bool rv;
-
-	rv = true;
 	if (AllItemsList[i].itype == ITYPE_MISC)
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_GOLD)
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_STAFF && (!gbIsHellfire || AllItemsList[i].iSpell))
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_RING)
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_AMULET)
-		rv = false;
+		return false;
 
-	return rv;
+	return true;
 }
 
-int RndSmithItem(int lvl)
+template <bool (*Ok)(int), bool ConsiderDropRate = false>
+int RndVendorItem(int minlvl, int maxlvl)
 {
-	int i, ri;
 	int ril[512];
 
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ri = 0;
+	for (int i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
+		if (AllItemsList[i].iRnd == IDROP_NEVER)
+			continue;
+		if (!Ok(i))
+			continue;
+		if (AllItemsList[i].iMinMLvl < minlvl || AllItemsList[i].iMinMLvl > maxlvl)
+			continue;
 
-		if (AllItemsList[i].iRnd != IDROP_NEVER && SmithItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-			ril[ri] = i;
-			ri++;
-			if (AllItemsList[i].iRnd == IDROP_DOUBLE
-			    && ri < 512) {
-				ril[ri] = i;
-				ri++;
-			}
-		}
+		ril[ri] = i;
+		ri++;
+		if (ri == 512)
+			break;
+
+		if (!ConsiderDropRate || AllItemsList[i].iRnd != IDROP_DOUBLE)
+			continue;
+
+		ril[ri] = i;
+		ri++;
+		if (ri == 512)
+			break;
 	}
 
 	return ril[GenerateRnd(ri)] + 1;
 }
 
-void BubbleSwapItem(ItemStruct *a, ItemStruct *b)
+int RndSmithItem(int lvl)
 {
-	ItemStruct h;
-
-	h = *a;
-	*a = *b;
-	*b = h;
+	return RndVendorItem<SmithItemOk, true>(0, lvl);
 }
 
-void SortSmith()
+void SortVendor(ItemStruct *items)
 {
-	int j, k;
-	bool sorted;
+	int count = 1;
+	while (!items[count].isEmpty())
+		count++;
 
-	j = 0;
-	while (!smithitem[j + 1].isEmpty()) {
-		j++;
-	}
+	auto cmp = [](const ItemStruct &a, const ItemStruct &b) {
+		return a.IDidx < b.IDidx;
+	};
 
-	sorted = false;
-	while (j > 0 && !sorted) {
-		sorted = true;
-		for (k = 0; k < j; k++) {
-			if (smithitem[k].IDidx > smithitem[k + 1].IDidx) {
-				BubbleSwapItem(&smithitem[k], &smithitem[k + 1]);
-				sorted = false;
-			}
-		}
-		j--;
-	}
+	std::sort(items, items + count, cmp);
 }
 
 void SpawnSmith(int lvl)
 {
-	int i, iCnt, idata;
+	constexpr int PinnedItemCount = 0;
+
 	int maxValue, maxItems;
 
 	ItemStruct holditem;
@@ -4240,13 +4211,13 @@ void SpawnSmith(int lvl)
 		maxItems = 20;
 	}
 
-	iCnt = GenerateRnd(maxItems - 10) + 10;
-	for (i = 0; i < iCnt; i++) {
+	int iCnt = GenerateRnd(maxItems - 10) + 10;
+	for (int i = 0; i < iCnt; i++) {
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(items[0]._iSeed);
-			idata = RndSmithItem(lvl) - 1;
+			int idata = RndSmithItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
 		} while (items[0]._iIvalue > maxValue);
 		smithitem[i] = items[0];
@@ -4254,58 +4225,37 @@ void SpawnSmith(int lvl)
 		smithitem[i]._iIdentified = true;
 		smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
 	}
-	for (i = iCnt; i < SMITH_ITEMS; i++)
+	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ITYPE_NONE;
 
-	SortSmith();
+	SortVendor(smithitem + PinnedItemCount);
 	items[0] = holditem;
 }
 
 bool PremiumItemOk(int i)
 {
-	bool rv;
-
-	rv = true;
 	if (AllItemsList[i].itype == ITYPE_MISC)
-		rv = false;
+		return false;
 	if (AllItemsList[i].itype == ITYPE_GOLD)
-		rv = false;
+		return false;
 	if (!gbIsHellfire && AllItemsList[i].itype == ITYPE_STAFF)
-		rv = false;
+		return false;
 
 	if (gbIsMultiplayer) {
 		if (AllItemsList[i].iMiscId == IMISC_OILOF)
-			rv = false;
+			return false;
 		if (AllItemsList[i].itype == ITYPE_RING)
-			rv = false;
+			return false;
 		if (AllItemsList[i].itype == ITYPE_AMULET)
-			rv = false;
+			return false;
 	}
 
-	return rv;
+	return true;
 }
 
 int RndPremiumItem(int minlvl, int maxlvl)
 {
-	int i, ri;
-	int ril[512];
-
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER) {
-			if (PremiumItemOk(i)) {
-				if (AllItemsList[i].iMinMLvl >= minlvl && AllItemsList[i].iMinMLvl <= maxlvl && ri < 512) {
-					ril[ri] = i;
-					ri++;
-				}
-			}
-		}
-	}
-
-	return ril[GenerateRnd(ri)] + 1;
+	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
 static void SpawnOnePremium(int i, int plvl, int myplr)
@@ -4395,12 +4345,10 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 
 void SpawnPremium(int pnum)
 {
-	int i;
-
 	int lvl = plr[pnum]._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
-		for (i = 0; i < maxItems; i++) {
+		for (int i = 0; i < maxItems; i++) {
 			if (premiumitems[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
 				SpawnOnePremium(i, plvl, pnum);
@@ -4439,101 +4387,57 @@ void SpawnPremium(int pnum)
 
 bool WitchItemOk(int i)
 {
-	bool rv;
-
-	rv = false;
-	if (AllItemsList[i].itype == ITYPE_MISC)
-		rv = true;
-	if (AllItemsList[i].itype == ITYPE_STAFF)
-		rv = true;
+	if (AllItemsList[i].itype != ITYPE_MISC && AllItemsList[i].itype != ITYPE_STAFF)
+		return false;
 	if (AllItemsList[i].iMiscId == IMISC_MANA)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iMiscId == IMISC_FULLMANA)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iSpell == SPL_TOWN)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iMiscId == IMISC_FULLHEAL)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iMiscId == IMISC_HEAL)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iMiscId > IMISC_OILFIRST && AllItemsList[i].iMiscId < IMISC_OILLAST)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
-		rv = false;
+		return false;
 	if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
-		rv = false;
+		return false;
 
-	return rv;
+	return true;
 }
 
 int RndWitchItem(int lvl)
 {
-	int i, ri;
-	int ril[512];
-
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER && WitchItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-
-			ril[ri] = i;
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(ri)] + 1;
-}
-
-void SortWitch()
-{
-	int j, k;
-	bool sorted;
-
-	j = 3;
-	while (!witchitem[j + 1].isEmpty()) {
-		j++;
-	}
-
-	sorted = false;
-	while (j > 3 && !sorted) {
-		sorted = true;
-		for (k = 3; k < j; k++) {
-			if (witchitem[k].IDidx > witchitem[k + 1].IDidx) {
-				BubbleSwapItem(&witchitem[k], &witchitem[k + 1]);
-				sorted = false;
-			}
-		}
-		j--;
-	}
+	return RndVendorItem<WitchItemOk>(0, lvl);
 }
 
 void WitchBookLevel(int ii)
 {
-	int slvl;
-
-	if (witchitem[ii]._iMiscId == IMISC_BOOK) {
-		witchitem[ii]._iMinMag = spelldata[witchitem[ii]._iSpell].sMinInt;
-		slvl = plr[myplr]._pSplLvl[witchitem[ii]._iSpell];
-		while (slvl) {
-			witchitem[ii]._iMinMag += 20 * witchitem[ii]._iMinMag / 100;
-			slvl--;
-			if (witchitem[ii]._iMinMag + 20 * witchitem[ii]._iMinMag / 100 > 255) {
-				witchitem[ii]._iMinMag = 255;
-				slvl = 0;
-			}
+	if (witchitem[ii]._iMiscId != IMISC_BOOK)
+		return;
+	witchitem[ii]._iMinMag = spelldata[witchitem[ii]._iSpell].sMinInt;
+	int slvl = plr[myplr]._pSplLvl[witchitem[ii]._iSpell];
+	while (slvl) {
+		witchitem[ii]._iMinMag += 20 * witchitem[ii]._iMinMag / 100;
+		slvl--;
+		if (witchitem[ii]._iMinMag + 20 * witchitem[ii]._iMinMag / 100 > 255) {
+			witchitem[ii]._iMinMag = 255;
+			slvl = 0;
 		}
 	}
 }
 
 void SpawnWitch(int lvl)
 {
-	int i, j, iCnt;
+	constexpr int PinnedItemCount = 3;
+
+	int iCnt;
 	int idata, maxlvl, maxValue;
 
-	j = 3;
+	int j = PinnedItemCount;
 
 	memset(&items[0], 0, sizeof(*items));
 	GetItemAttrs(0, IDI_MANA, 1);
@@ -4555,32 +4459,33 @@ void SpawnWitch(int lvl)
 		iCnt = GenerateRnd(WITCH_ITEMS - 10) + 10;
 		maxValue = 200000;
 
-		int bCnt;
 		int books = GenerateRnd(4);
-		for (i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
-			if (WitchItemOk(i)
-			    && lvl >= AllItemsList[i].iMinMLvl) {
-				memset(&items[0], 0, sizeof(*items));
-				items[0]._iSeed = AdvanceRndSeed();
-				SetRndSeed(items[0]._iSeed);
-				GenerateRnd(1);
+		for (int i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
+			if (!WitchItemOk(i))
+				continue;
+			if (lvl < AllItemsList[i].iMinMLvl)
+				continue;
 
-				GetItemAttrs(0, i, lvl);
-				witchitem[j] = items[0];
-				witchitem[j]._iCreateInfo = lvl | CF_WITCH;
-				witchitem[j]._iIdentified = true;
-				WitchBookLevel(j);
-				witchitem[j]._iStatFlag = StoreStatOk(&witchitem[j]);
-				j++;
-				bCnt++;
-			}
+			memset(&items[0], 0, sizeof(*items));
+			items[0]._iSeed = AdvanceRndSeed();
+			SetRndSeed(items[0]._iSeed);
+			GenerateRnd(1);
+
+			GetItemAttrs(0, i, lvl);
+			witchitem[j] = items[0];
+			witchitem[j]._iCreateInfo = lvl | CF_WITCH;
+			witchitem[j]._iIdentified = true;
+			WitchBookLevel(j);
+			witchitem[j]._iStatFlag = StoreStatOk(&witchitem[j]);
+			j++;
+			bCnt++;
 		}
 	} else {
 		iCnt = GenerateRnd(WITCH_ITEMS - 12) + 10;
 		maxValue = 140000;
 	}
 
-	for (i = j; i < iCnt; i++) {
+	for (int i = j; i < iCnt; i++) {
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
@@ -4602,30 +4507,15 @@ void SpawnWitch(int lvl)
 		witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
 	}
 
-	for (i = iCnt; i < WITCH_ITEMS; i++)
+	for (int i = iCnt; i < WITCH_ITEMS; i++)
 		witchitem[i]._itype = ITYPE_NONE;
 
-	SortWitch();
+	SortVendor(witchitem + PinnedItemCount);
 }
 
 int RndBoyItem(int lvl)
 {
-	int i, ri;
-	int ril[512];
-
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER && PremiumItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-			ril[ri] = i;
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(ri)] + 1;
+	return RndVendorItem<PremiumItemOk>(0, lvl);
 }
 
 void SpawnBoy(int lvl)
@@ -4644,104 +4534,104 @@ void SpawnBoy(int lvl)
 	dexterity *= 1.2;
 	magic *= 1.2;
 
-	if (boylevel < (lvl / 2) || boyitem.isEmpty()) {
-		do {
-			keepgoing = false;
-			memset(&items[0], 0, sizeof(*items));
-			items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(items[0]._iSeed);
-			itype = RndBoyItem(lvl) - 1;
-			GetItemAttrs(0, itype, lvl);
-			GetItemBonus(0, lvl, 2 * lvl, true, true);
+	if (boylevel >= (lvl / 2) && !boyitem.isEmpty())
+		return;
+	do {
+		keepgoing = false;
+		memset(&items[0], 0, sizeof(*items));
+		items[0]._iSeed = AdvanceRndSeed();
+		SetRndSeed(items[0]._iSeed);
+		itype = RndBoyItem(lvl) - 1;
+		GetItemAttrs(0, itype, lvl);
+		GetItemBonus(0, lvl, 2 * lvl, true, true);
 
-			if (!gbIsHellfire) {
-				if (items[0]._iIvalue > 90000) {
-					keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
-					continue;
-				}
+		if (!gbIsHellfire) {
+			if (items[0]._iIvalue > 90000) {
+				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
+				continue;
+			}
+			break;
+		}
+
+		ivalue = 0;
+
+		int itemType = items[0]._itype;
+
+		switch (itemType) {
+		case ITYPE_LARMOR:
+		case ITYPE_MARMOR:
+		case ITYPE_HARMOR: {
+			const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
+			    [](const ItemStruct &item) {
+				    return item._itype == ITYPE_LARMOR
+				        || item._itype == ITYPE_MARMOR
+				        || item._itype == ITYPE_HARMOR;
+			    });
+
+			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
+			break;
+		}
+		case ITYPE_SHIELD:
+		case ITYPE_AXE:
+		case ITYPE_BOW:
+		case ITYPE_MACE:
+		case ITYPE_SWORD:
+		case ITYPE_HELM:
+		case ITYPE_STAFF:
+		case ITYPE_RING:
+		case ITYPE_AMULET: {
+			const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
+			    [itemType](const ItemStruct &item) { return item._itype == itemType; });
+
+			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
+			break;
+		}
+		}
+		ivalue *= 0.8;
+
+		count++;
+
+		if (count < 200) {
+			switch (pc) {
+			case HeroClass::Warrior:
+				if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Rogue:
+				if (itemType == ITYPE_SWORD || itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_SHIELD)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Sorcerer:
+				if (itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_BOW || itemType == ITYPE_MACE)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Monk:
+				if (itemType == ITYPE_BOW || itemType == ITYPE_MARMOR || itemType == ITYPE_SHIELD || itemType == ITYPE_MACE)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Bard:
+				if (itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_STAFF)
+					ivalue = INT_MAX;
+				break;
+			case HeroClass::Barbarian:
+				if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
+					ivalue = INT_MAX;
 				break;
 			}
-
-			ivalue = 0;
-
-			int itemType = items[0]._itype;
-
-			switch (itemType) {
-			case ITYPE_LARMOR:
-			case ITYPE_MARMOR:
-			case ITYPE_HARMOR: {
-				const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
-				    [](const ItemStruct &item) {
-					    return item._itype == ITYPE_LARMOR
-					        || item._itype == ITYPE_MARMOR
-					        || item._itype == ITYPE_HARMOR;
-				    });
-
-				ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
-				break;
-			}
-			case ITYPE_SHIELD:
-			case ITYPE_AXE:
-			case ITYPE_BOW:
-			case ITYPE_MACE:
-			case ITYPE_SWORD:
-			case ITYPE_HELM:
-			case ITYPE_STAFF:
-			case ITYPE_RING:
-			case ITYPE_AMULET: {
-				const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
-				    [itemType](const ItemStruct &item) { return item._itype == itemType; });
-
-				ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
-				break;
-			}
-			}
-			ivalue *= 0.8;
-
-			count++;
-
-			if (count < 200) {
-				switch (pc) {
-				case HeroClass::Warrior:
-					if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Rogue:
-					if (itemType == ITYPE_SWORD || itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_SHIELD)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Sorcerer:
-					if (itemType == ITYPE_STAFF || itemType == ITYPE_AXE || itemType == ITYPE_BOW || itemType == ITYPE_MACE)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Monk:
-					if (itemType == ITYPE_BOW || itemType == ITYPE_MARMOR || itemType == ITYPE_SHIELD || itemType == ITYPE_MACE)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Bard:
-					if (itemType == ITYPE_AXE || itemType == ITYPE_MACE || itemType == ITYPE_STAFF)
-						ivalue = INT_MAX;
-					break;
-				case HeroClass::Barbarian:
-					if (itemType == ITYPE_BOW || itemType == ITYPE_STAFF)
-						ivalue = INT_MAX;
-					break;
-				}
-			}
-		} while (keepgoing
-		    || ((
-		            items[0]._iIvalue > 200000
-		            || items[0]._iMinStr > strength
-		            || items[0]._iMinMag > magic
-		            || items[0]._iMinDex > dexterity
-		            || items[0]._iIvalue < ivalue)
-		        && count < 250));
-		boyitem = items[0];
-		boyitem._iCreateInfo = lvl | CF_BOY;
-		boyitem._iIdentified = true;
-		boyitem._iStatFlag = StoreStatOk(&boyitem);
-		boylevel = lvl / 2;
-	}
+		}
+	} while (keepgoing
+	    || ((
+	            items[0]._iIvalue > 200000
+	            || items[0]._iMinStr > strength
+	            || items[0]._iMinMag > magic
+	            || items[0]._iMinDex > dexterity
+	            || items[0]._iIvalue < ivalue)
+	        && count < 250));
+	boyitem = items[0];
+	boyitem._iCreateInfo = lvl | CF_BOY;
+	boyitem._iIdentified = true;
+	boyitem._iStatFlag = StoreStatOk(&boyitem);
+	boylevel = lvl / 2;
 }
 
 bool HealerItemOk(int i)
@@ -4775,50 +4665,14 @@ bool HealerItemOk(int i)
 
 int RndHealerItem(int lvl)
 {
-	int i, ri;
-	int ril[512];
-
-	ri = 0;
-	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
-			continue;
-
-		if (AllItemsList[i].iRnd != IDROP_NEVER && HealerItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-		    && ri < 512) {
-			ril[ri] = i;
-			ri++;
-		}
-	}
-
-	return ril[GenerateRnd(ri)] + 1;
-}
-
-void SortHealer()
-{
-	int j, k;
-	bool sorted;
-
-	j = 2;
-	while (!healitem[j + 1].isEmpty()) {
-		j++;
-	}
-
-	sorted = false;
-	while (j > 2 && !sorted) {
-		sorted = true;
-		for (k = 2; k < j; k++) {
-			if (healitem[k].IDidx > healitem[k + 1].IDidx) {
-				BubbleSwapItem(&healitem[k], &healitem[k + 1]);
-				sorted = false;
-			}
-		}
-		j--;
-	}
+	return RndVendorItem<HealerItemOk>(0, lvl);
 }
 
 void SpawnHealer(int lvl)
 {
-	int i, nsi, srnd, itype;
+	constexpr int PinnedItemCount = 2;
+
+	int srnd;
 
 	memset(&items[0], 0, sizeof(*items));
 	GetItemAttrs(0, IDI_HEAL, 1);
@@ -4843,22 +4697,22 @@ void SpawnHealer(int lvl)
 	} else {
 		srnd = 2;
 	}
-	nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
-	for (i = srnd; i < nsi; i++) {
+	int nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
+	for (int i = srnd; i < nsi; i++) {
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
 		SetRndSeed(items[0]._iSeed);
-		itype = RndHealerItem(lvl) - 1;
+		int itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		healitem[i] = items[0];
 		healitem[i]._iCreateInfo = lvl | CF_HEALER;
 		healitem[i]._iIdentified = true;
 		healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
 	}
-	for (i = nsi; i < 20; i++) {
+	for (int i = nsi; i < 20; i++) {
 		healitem[i]._itype = ITYPE_NONE;
 	}
-	SortHealer();
+	SortVendor(healitem + PinnedItemCount);
 }
 
 void SpawnStoreGold()
@@ -4932,13 +4786,11 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 
 void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 {
-	int itype;
-
 	if (idx == IDI_HEAL || idx == IDI_FULLHEAL || idx == IDI_RESURRECT) {
 		GetItemAttrs(ii, idx, lvl);
 	} else {
 		SetRndSeed(iseed);
-		itype = RndHealerItem(lvl) - 1;
+		int itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(ii, itype, lvl);
 	}
 
@@ -4963,24 +4815,22 @@ void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed)
 
 void RecalcStoreStats()
 {
-	int i;
-
-	for (i = 0; i < SMITH_ITEMS; i++) {
+	for (int i = 0; i < SMITH_ITEMS; i++) {
 		if (!smithitem[i].isEmpty()) {
 			smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
 		}
 	}
-	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
+	for (int i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
 		if (!premiumitems[i].isEmpty()) {
 			premiumitems[i]._iStatFlag = StoreStatOk(&premiumitems[i]);
 		}
 	}
-	for (i = 0; i < 20; i++) {
+	for (int i = 0; i < 20; i++) {
 		if (!witchitem[i].isEmpty()) {
 			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
 		}
 	}
-	for (i = 0; i < 20; i++) {
+	for (int i = 0; i < 20; i++) {
 		if (!healitem[i].isEmpty()) {
 			healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
 		}
@@ -4998,7 +4848,7 @@ int ItemNoFlippy()
 	return r;
 }
 
-void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta)
+void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 {
 	int lvl = currlevel;
 
@@ -5021,7 +4871,7 @@ void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta)
 		if (items[ii]._iMiscId == IMISC_BOOK && items[ii]._iSpell == ispell)
 			break;
 	}
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace(position, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -5029,7 +4879,7 @@ void CreateSpellBook(int x, int y, spell_id ispell, bool sendmsg, bool delta)
 		DeltaAddItem(ii);
 }
 
-static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
+static void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -5045,7 +4895,7 @@ static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icur
 
 		idx = RndTypeItems(imisc, imid, lvl);
 	}
-	GetSuperItemSpace(x, y, ii);
+	GetSuperItemSpace(position, ii);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -5053,18 +4903,18 @@ static void CreateMagicItem(int x, int y, int lvl, int imisc, int imid, int icur
 		DeltaAddItem(ii);
 }
 
-void CreateMagicArmor(int x, int y, int imisc, int icurs, bool sendmsg, bool delta)
+void CreateMagicArmor(Point position, int imisc, int icurs, bool sendmsg, bool delta)
 {
 	int lvl = items_get_currlevel();
-	CreateMagicItem(x, y, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
+	CreateMagicItem(position, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
 }
 
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta)
 {
-	CreateMagicItem(position.x, position.y, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
+	CreateMagicItem(position, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
 }
 
-void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool delta)
+void CreateMagicWeapon(Point position, int imisc, int icurs, bool sendmsg, bool delta)
 {
 	int imid = IMISC_NONE;
 	if (imisc == ITYPE_STAFF)
@@ -5072,7 +4922,7 @@ void CreateMagicWeapon(int x, int y, int imisc, int icurs, bool sendmsg, bool de
 
 	int curlv = items_get_currlevel();
 
-	CreateMagicItem(x, y, curlv, imisc, imid, icurs, sendmsg, delta);
+	CreateMagicItem(position, curlv, imisc, imid, icurs, sendmsg, delta);
 }
 
 static void NextItemRecord(int i)
@@ -5091,13 +4941,10 @@ static void NextItemRecord(int i)
 
 bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
-	int i;
-	DWORD dwTicks;
+	uint32_t ticks = SDL_GetTicks();
 
-	dwTicks = SDL_GetTicks();
-
-	for (i = 0; i < gnNumGetRecords; i++) {
-		if (dwTicks - itemrecord[i].dwTimestamp > 6000) {
+	for (int i = 0; i < gnNumGetRecords; i++) {
+		if (ticks - itemrecord[i].dwTimestamp > 6000) {
 			NextItemRecord(i);
 			i--;
 		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && nIndex == itemrecord[i].nIndex) {
@@ -5110,15 +4957,13 @@ bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 
 void SetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
-	DWORD dwTicks;
-
-	dwTicks = SDL_GetTicks();
+	uint32_t ticks = SDL_GetTicks();
 
 	if (gnNumGetRecords == MAXITEMS) {
 		return;
 	}
 
-	itemrecord[gnNumGetRecords].dwTimestamp = dwTicks;
+	itemrecord[gnNumGetRecords].dwTimestamp = ticks;
 	itemrecord[gnNumGetRecords].nSeed = nSeed;
 	itemrecord[gnNumGetRecords].wCI = wCI;
 	itemrecord[gnNumGetRecords].nIndex = nIndex;
@@ -5127,13 +4972,10 @@ void SetItemRecord(int nSeed, uint16_t wCI, int nIndex)
 
 void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 {
-	int i;
-	DWORD dwTicks;
+	uint32_t ticks = SDL_GetTicks();
 
-	dwTicks = SDL_GetTicks();
-
-	for (i = 0; i < gnNumGetRecords; i++) {
-		if (dwTicks - itemrecord[i].dwTimestamp > 6000) {
+	for (int i = 0; i < gnNumGetRecords; i++) {
+		if (ticks - itemrecord[i].dwTimestamp > 6000) {
 			NextItemRecord(i);
 			i--;
 		} else if (nSeed == itemrecord[i].nSeed && wCI == itemrecord[i].wCI && nIndex == itemrecord[i].nIndex) {

@@ -1671,15 +1671,15 @@ void SpawnLoot(int i, bool sendmsg)
 
 	Monst = &monster[i];
 	if (QuestStatus(Q_GARBUD) && Monst->_uniqtype - 1 == UMT_GARBUD) {
-		CreateTypeItem(Monst->position.tile.x + 1, Monst->position.tile.y + 1, true, ITYPE_MACE, IMISC_NONE, true, false);
+		CreateTypeItem(Monst->position.tile + Point{1, 1}, true, ITYPE_MACE, IMISC_NONE, true, false);
 	} else if (Monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
 		quests[Q_DEFILER]._qlog = false;
-		SpawnMapOfDoom(Monst->position.tile.x, Monst->position.tile.y);
+		SpawnMapOfDoom(Monst->position.tile);
 	} else if (Monst->_uniqtype - 1 == UMT_HORKDMN) {
 		if (sgGameInitInfo.bTheoQuest) {
-			SpawnTheodore(Monst->position.tile.x, Monst->position.tile.y);
+			SpawnTheodore(Monst->position.tile);
 		} else {
 			CreateAmulet(Monst->position.tile, 13, false, true);
 		}
@@ -1692,12 +1692,12 @@ void SpawnLoot(int i, bool sendmsg)
 			stream_stop();
 		quests[Q_NAKRUL]._qlog = false;
 		UberDiabloMonsterIndex = -2;
-		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_SWORD, ICURS_GREAT_SWORD, false, true);
-		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
-		CreateMagicWeapon(Monst->position.tile.x, Monst->position.tile.y, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
-		CreateSpellBook(Monst->position.tile.x, Monst->position.tile.y, SPL_APOCA, false, true);
+		CreateMagicWeapon(Monst->position.tile, ITYPE_SWORD, ICURS_GREAT_SWORD, false, true);
+		CreateMagicWeapon(Monst->position.tile, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
+		CreateMagicWeapon(Monst->position.tile, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
+		CreateSpellBook(Monst->position.tile, SPL_APOCA, false, true);
 	} else if (i > MAX_PLRS - 1) { // Golems should not spawn loot
-		SpawnItem(i, Monst->position.tile.x, Monst->position.tile.y, sendmsg);
+		SpawnItem(i, Monst->position.tile, sendmsg);
 	}
 }
 
@@ -2415,7 +2415,7 @@ bool M_DoTalk(int i)
 			quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
 		}
 		if (monster[i].mtalkmsg == TEXT_GARBUD2 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
-			SpawnItem(i, monster[i].position.tile.x + 1, monster[i].position.tile.y + 1, true);
+			SpawnItem(i, monster[i].position.tile + Point{1, 1}, true);
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
@@ -2424,7 +2424,7 @@ bool M_DoTalk(int i)
 	    && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
 		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		quests[Q_ZHAR]._qlog = true;
-		CreateTypeItem(monster[i].position.tile.x + 1, monster[i].position.tile.y + 1, false, ITYPE_MISC, IMISC_BOOK, true, false);
+		CreateTypeItem(monster[i].position.tile + Point{1,1}, false, ITYPE_MISC, IMISC_BOOK, true, false);
 		monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {

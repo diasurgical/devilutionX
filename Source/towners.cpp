@@ -528,7 +528,7 @@ void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
 	if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 		if (quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && player.HasItem(IDI_BRAIN, &i)) {
 			player.RemoveInvItem(i);
-			SpawnQuestItem(IDI_SPECELIX, healer.position.x, healer.position.y + 1, 0, 0);
+			SpawnQuestItem(IDI_SPECELIX, healer.position + Point{0, 1}, 0, 0);
 			InitQTextMsg(TEXT_MUSH4);
 			quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
 			Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
@@ -640,7 +640,7 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 		quests[Q_FARMER]._qvar1 = 1;
 		quests[Q_FARMER]._qlog = true;
 		quests[Q_FARMER]._qmsg = TEXT_FARMER1;
-		SpawnRuneBomb(farmer.position.x + 1, farmer.position.y);
+		SpawnRuneBomb(farmer.position + Point{1, 0});
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_FARMER);
 		break;
@@ -649,7 +649,7 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 		break;
 	case QUEST_DONE:
 		InitQTextMsg(TEXT_FARMER4);
-		SpawnRewardItem(IDI_AURIC, farmer.position.x + 1, farmer.position.y);
+		SpawnRewardItem(IDI_AURIC, farmer.position + Point{1, 0});
 		quests[Q_FARMER]._qactive = QUEST_HIVE_DONE;
 		quests[Q_FARMER]._qlog = false;
 		if (gbIsMultiplayer)
@@ -735,7 +735,7 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 		quests[Q_JERSEY]._qvar1 = 1;
 		quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
 		quests[Q_JERSEY]._qlog = true;
-		SpawnRuneBomb(cowFarmer.position.x + 1, cowFarmer.position.y);
+		SpawnRuneBomb(cowFarmer.position + Point{1, 0});
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_JERSEY);
 		break;

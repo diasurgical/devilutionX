@@ -3006,7 +3006,7 @@ void OperateBookLever(int pnum, int i)
 			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			quests[Q_BLOOD]._qlog = true;
 			quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, true);
+			SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 25, 2 * setpc_y + 33}, 0, true);
 		}
 		object[i]._otype = object[i]._otype;
 		if (object[i]._otype == OBJ_STEELTOME && quests[Q_WARLORD]._qvar1 == 0) {
@@ -3087,14 +3087,14 @@ void OperateChest(int pnum, int i, bool sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			if (setlevel) {
 				for (j = 0; j < object[i]._oVar1; j++) {
-					CreateRndItem(object[i].position.x, object[i].position.y, true, sendmsg, false);
+					CreateRndItem(object[i].position, true, sendmsg, false);
 				}
 			} else {
 				for (j = 0; j < object[i]._oVar1; j++) {
 					if (object[i]._oVar2 != 0)
-						CreateRndItem(object[i].position.x, object[i].position.y, false, sendmsg, false);
+						CreateRndItem(object[i].position, false, sendmsg, false);
 					else
-						CreateRndUseful(object[i].position.x, object[i].position.y, sendmsg);
+						CreateRndUseful(object[i].position, sendmsg);
 				}
 			}
 			if (object[i]._oTrapFlag && object[i]._otype >= OBJ_TCHEST1 && object[i]._otype <= OBJ_TCHEST3) {
@@ -3133,8 +3133,6 @@ void OperateChest(int pnum, int i, bool sendmsg)
 
 void OperateMushPatch(int pnum, int i)
 {
-	int x, y;
-
 	if (numitems >= MAXITEMS) {
 		return;
 	}
@@ -3152,8 +3150,8 @@ void OperateMushPatch(int pnum, int i)
 		object[i]._oSelFlag = 0;
 		object[i]._oAnimFrame++;
 		if (!deltaload) {
-			GetSuperItemLoc(object[i].position.x, object[i].position.y, &x, &y);
-			SpawnQuestItem(IDI_MUSHROOM, x, y, 0, false);
+			Point pos = GetSuperItemLoc(object[i].position);
+			SpawnQuestItem(IDI_MUSHROOM, pos, 0, false);
 			quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 		}
 	}
@@ -3161,8 +3159,6 @@ void OperateMushPatch(int pnum, int i)
 
 void OperateInnSignChest(int pnum, int i)
 {
-	int x, y;
-
 	if (numitems >= MAXITEMS) {
 		return;
 	}
@@ -3178,8 +3174,8 @@ void OperateInnSignChest(int pnum, int i)
 			object[i]._oSelFlag = 0;
 			object[i]._oAnimFrame += 2;
 			if (!deltaload) {
-				GetSuperItemLoc(object[i].position.x, object[i].position.y, &x, &y);
-				SpawnQuestItem(IDI_BANNER, x, y, 0, false);
+				Point pos = GetSuperItemLoc(object[i].position);
+				SpawnQuestItem(IDI_BANNER, pos, 0, false);
 			}
 		}
 	}
@@ -3191,17 +3187,17 @@ void OperateSlainHero(int pnum, int i)
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
 			if (plr[pnum]._pClass == HeroClass::Warrior) {
-				CreateMagicArmor(object[i].position.x, object[i].position.y, ITYPE_HARMOR, ICURS_BREAST_PLATE, false, true);
+				CreateMagicArmor(object[i].position, ITYPE_HARMOR, ICURS_BREAST_PLATE, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Rogue) {
-				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
+				CreateMagicWeapon(object[i].position, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Sorcerer) {
-				CreateSpellBook(object[i].position.x, object[i].position.y, SPL_LIGHTNING, false, true);
+				CreateSpellBook(object[i].position, SPL_LIGHTNING, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Monk) {
-				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
+				CreateMagicWeapon(object[i].position, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Bard) {
-				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_SWORD, ICURS_BASTARD_SWORD, false, true);
+				CreateMagicWeapon(object[i].position, ITYPE_SWORD, ICURS_BASTARD_SWORD, false, true);
 			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
-				CreateMagicWeapon(object[i].position.x, object[i].position.y, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
+				CreateMagicWeapon(object[i].position, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
 			}
 			plr[myplr].PlaySpeach(9);
 			if (pnum == myplr)
@@ -3256,7 +3252,7 @@ void OperateSarc(int pnum, int i, bool sendmsg)
 			object[i]._oAnimDelay = 3;
 			SetRndSeed(object[i]._oRndSeed);
 			if (object[i]._oVar1 <= 2)
-				CreateRndItem(object[i].position.x, object[i].position.y, false, sendmsg, false);
+				CreateRndItem(object[i].position, false, sendmsg, false);
 			if (object[i]._oVar1 >= 8)
 				SpawnSkeleton(object[i]._oVar2, object[i].position.x, object[i].position.y);
 			if (pnum == myplr)
@@ -3307,13 +3303,13 @@ void OperatePedistal(int pnum, int i)
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
 		ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, true);
+		SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 19, 2 * setpc_y + 26}, 0, true);
 	}
 	if (object[i]._oVar6 == 2) {
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
 		ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, true);
+		SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 31, 2 * setpc_y + 26}, 0, true);
 	}
 	if (object[i]._oVar6 == 3) {
 		if (!deltaload)
@@ -3812,11 +3808,11 @@ bool OperateShrineDivine(int pnum, int x, int y)
 		return false;
 
 	if (currlevel < 4) {
-		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
-		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
+		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
+		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
 	} else {
-		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
-		CreateTypeItem(x, y, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
 	}
 
 	plr[pnum]._pMana = plr[pnum]._pMaxMana;
@@ -4486,9 +4482,9 @@ void OperateSkelBook(int pnum, int i, bool sendmsg)
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
 			if (GenerateRnd(5) != 0)
-				CreateTypeItem(object[i].position.x, object[i].position.y, false, ITYPE_MISC, IMISC_SCROLL, sendmsg, false);
+				CreateTypeItem(object[i].position, false, ITYPE_MISC, IMISC_SCROLL, sendmsg, false);
 			else
-				CreateTypeItem(object[i].position.x, object[i].position.y, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
+				CreateTypeItem(object[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		}
@@ -4504,7 +4500,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 		object[i]._oAnimFrame -= 2;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			CreateTypeItem(object[i].position.x, object[i].position.y, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
+			CreateTypeItem(object[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
 			if (QuestStatus(Q_ZHAR)
 			    && monster[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 			    && monster[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
@@ -4527,7 +4523,7 @@ void OperateDecap(int pnum, int i, bool sendmsg)
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			CreateRndItem(object[i].position.x, object[i].position.y, false, sendmsg, false);
+			CreateRndItem(object[i].position, false, sendmsg, false);
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		}
@@ -4545,15 +4541,15 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			uniqueRnd = (GenerateRnd(2) != 0);
 			if (currlevel <= 5) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, true, ITYPE_LARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, true, ITYPE_LARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 6 && currlevel <= 9) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, uniqueRnd, ITYPE_MARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, uniqueRnd, ITYPE_MARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 10 && currlevel <= 12) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, false, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, false, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 13 && currlevel <= 16) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
 			} else if (currlevel >= 17) {
-				CreateTypeItem(object[i].position.x, object[i].position.y, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+				CreateTypeItem(object[i].position, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
 			}
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -4761,7 +4757,7 @@ void OperateWeaponRack(int pnum, int i, bool sendmsg)
 	if (deltaload)
 		return;
 
-	CreateTypeItem(object[i].position.x, object[i].position.y, leveltype > 1, weaponType, IMISC_NONE, sendmsg, false);
+	CreateTypeItem(object[i].position, leveltype > 1, weaponType, IMISC_NONE, sendmsg, false);
 
 	if (pnum == myplr)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -4790,8 +4786,6 @@ void OperateStoryBook(int pnum, int i)
 
 void OperateLazStand(int pnum, int i)
 {
-	int xx, yy;
-
 	if (numitems >= MAXITEMS) {
 		return;
 	}
@@ -4799,8 +4793,8 @@ void OperateLazStand(int pnum, int i)
 	if (object[i]._oSelFlag != 0 && !deltaload && !qtextflag && pnum == myplr) {
 		object[i]._oAnimFrame++;
 		object[i]._oSelFlag = 0;
-		GetSuperItemLoc(object[i].position.x, object[i].position.y, &xx, &yy);
-		SpawnQuestItem(IDI_LAZSTAFF, xx, yy, 0, false);
+		Point pos = GetSuperItemLoc(object[i].position);
+		SpawnQuestItem(IDI_LAZSTAFF, pos, 0, false);
 	}
 }
 
@@ -5196,9 +5190,9 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 		SetRndSeed(object[i]._oRndSeed);
 		if (object[i]._oVar2 <= 1) {
 			if (object[i]._oVar3 == 0)
-				CreateRndUseful(object[i].position.x, object[i].position.y, sendmsg);
+				CreateRndUseful(object[i].position, sendmsg);
 			else
-				CreateRndItem(object[i].position.x, object[i].position.y, false, sendmsg, false);
+				CreateRndItem(object[i].position, false, sendmsg, false);
 		}
 		if (object[i]._oVar2 >= 8)
 			SpawnSkeleton(object[i]._oVar4, object[i].position.x, object[i].position.y);
