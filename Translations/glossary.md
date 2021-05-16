@@ -64,10 +64,10 @@ Don't worry – we all forget details. Here's a list of resources you can use if
 
 
 ### Items and Equipment References and Pictures
-Diablo Unique Weapons - [Diablo Archive](https://diablo-archive.fandom.com/wiki/Unique_Weapons_(Diablo_I))
-Diablo Normal Weapons - [Diablo Archive](https://diablo-archive.fandom.com/wiki/Normal_Weapons_(Diablo_I))
-Diablo and Hellfire Unique Armor - [Diablo Wiki](https://diablo.fandom.com/wiki/List_of_Unique_Body_Armor_(Diablo_I))
-Diablo Normal Armor - [Diablo Archive](https://diablo-archive.fandom.com/wiki/Normal_Armor_(Diablo_I))
-Diablo and Hellfire Unique Rings - [Diablo Wiki](https://diablo.fandom.com/wiki/List_of_Unique_Rings_(Diablo_I))
-Diablo and Hellfire Unique Amulets - [Diablo Wiki](https://diablo.fandom.com/wiki/List_of_Unique_Amulets_(Diablo_I))
-Affixes - [diablowiki.net](https://diablo2.diablowiki.net/D1_Modifiers)
+* Diablo Unique Weapons - [Diablo Archive](https://diablo-archive.fandom.com/wiki/Unique_Weapons_(Diablo_I))
+* Diablo Normal Weapons - [Diablo Archive](https://diablo-archive.fandom.com/wiki/Normal_Weapons_(Diablo_I))
+* Diablo and Hellfire Unique Armor - [Diablo Wiki](https://diablo.fandom.com/wiki/List_of_Unique_Body_Armor_(Diablo_I))
+* Diablo Normal Armor - [Diablo Archive](https://diablo-archive.fandom.com/wiki/Normal_Armor_(Diablo_I))
+* Diablo and Hellfire Unique Rings - [Diablo Wiki](https://diablo.fandom.com/wiki/List_of_Unique_Rings_(Diablo_I))
+* Diablo and Hellfire Unique Amulets - [Diablo Wiki](https://diablo.fandom.com/wiki/List_of_Unique_Amulets_(Diablo_I))
+* Affixes - [diablowiki.net](https://diablo2.diablowiki.net/D1_Modifiers)
