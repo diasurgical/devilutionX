@@ -4151,7 +4151,7 @@ bool SmithItemOk(int i)
 }
 
 template <bool (*Ok)(int), bool ConsiderDropRate = false>
-int RndVendorItem(int minlvl, int maxlvl = std::numeric_limits<int>::max())
+int RndVendorItem(int minlvl, int maxlvl)
 {
 	int ril[512];
 
@@ -4163,7 +4163,7 @@ int RndVendorItem(int minlvl, int maxlvl = std::numeric_limits<int>::max())
 			continue;
 		if (!Ok(i))
 			continue;
-		if (AllItemsList[i].iMinMLvl < minlvl && AllItemsList[i].iMinMLvl > maxlvl)
+		if (AllItemsList[i].iMinMLvl < minlvl || AllItemsList[i].iMinMLvl > maxlvl)
 			continue;
 
 		ril[ri] = i;
@@ -4185,7 +4185,7 @@ int RndVendorItem(int minlvl, int maxlvl = std::numeric_limits<int>::max())
 
 int RndSmithItem(int lvl)
 {
-	return RndVendorItem<SmithItemOk, true>(lvl);
+	return RndVendorItem<SmithItemOk, true>(0, lvl);
 }
 
 void SortVendor(ItemStruct *items)
@@ -4418,7 +4418,7 @@ bool WitchItemOk(int i)
 
 int RndWitchItem(int lvl)
 {
-	return RndVendorItem<WitchItemOk>(lvl);
+	return RndVendorItem<WitchItemOk>(0, lvl);
 }
 
 void WitchBookLevel(int ii)
@@ -4522,7 +4522,7 @@ void SpawnWitch(int lvl)
 
 int RndBoyItem(int lvl)
 {
-	return RndVendorItem<PremiumItemOk>(lvl);
+	return RndVendorItem<PremiumItemOk>(0, lvl);
 }
 
 void SpawnBoy(int lvl)
@@ -4672,7 +4672,7 @@ bool HealerItemOk(int i)
 
 int RndHealerItem(int lvl)
 {
-	return RndVendorItem<HealerItemOk>(lvl);
+	return RndVendorItem<HealerItemOk>(0, lvl);
 }
 
 void SpawnHealer(int lvl)
