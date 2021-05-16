@@ -1408,7 +1408,7 @@ Point GetSuperItemLoc(Point position)
 			}
 		}
 	}
-	return ret;
+	return ret; // TODO handle no space for dropping items
 }
 
 void CalcItemValue(int i)
