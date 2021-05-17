@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstring>
 #include <limits>
+#include <mutex>
 
 #include <aulib.h>
 
@@ -17,7 +18,7 @@ void PushAulibDecoder::PushSamples(const std::int16_t *data, unsigned size) noex
 	std::memcpy(item.data.get(), data, size * sizeof(data[0]));
 	item.len = size;
 	item.pos = item.data.get();
-	SDLMutexLockGuard lock(queue_mutex_.get());
+	const std::lock_guard<SdlMutex> lock(queue_mutex_);
 	queue_.push(std::move(item));
 }
 
@@ -31,13 +32,13 @@ void PushAulibDecoder::PushSamples(const std::uint8_t *data, unsigned size) noex
 		item.data[i] = static_cast<std::int16_t>((data[i] - Center) * Scale);
 	item.len = size;
 	item.pos = item.data.get();
-	SDLMutexLockGuard lock(queue_mutex_.get());
+	const std::lock_guard<SdlMutex> lock(queue_mutex_);
 	queue_.push(std::move(item));
 }
 
 void PushAulibDecoder::DiscardPendingSamples() noexcept
 {
-	SDLMutexLockGuard lock(queue_mutex_.get());
+	const std::lock_guard<SdlMutex> lock(queue_mutex_);
 	queue_ = std::queue<AudioQueueItem>();
 }
 
@@ -75,7 +76,7 @@ int PushAulibDecoder::doDecoding(float buf[], int len, bool &callAgain)
 
 	unsigned remaining = len;
 	{
-		SDLMutexLockGuard lock(queue_mutex_.get());
+		const std::lock_guard<SdlMutex> lock(queue_mutex_);
 		AudioQueueItem *item;
 		while ((item = Next()) != nullptr) {
 			if (static_cast<unsigned>(remaining) <= item->len) {

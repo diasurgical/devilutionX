@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <list>
 #include <memory>
+#include <mutex>
 
 #include <aulib.h>
 #include <Aulib/DecoderDrwav.h>
@@ -69,7 +70,7 @@ void CleanupMusic()
 }
 
 std::list<std::unique_ptr<SoundSample>> duplicateSounds;
-SDLMutexUniquePtr duplicateSoundsMutex;
+std::optional<SdlMutex> duplicateSoundsMutex;
 
 SoundSample *DuplicateSound(const SoundSample &sound)
 {
@@ -79,13 +80,13 @@ SoundSample *DuplicateSound(const SoundSample &sound)
 	auto *result = duplicate.get();
 	decltype(duplicateSounds.begin()) it;
 	{
-		SDLMutexLockGuard lock(duplicateSoundsMutex.get());
+		const std::lock_guard<SdlMutex> lock(*duplicateSoundsMutex);
 		duplicateSounds.push_back(std::move(duplicate));
 		it = duplicateSounds.end();
 		--it;
 	}
 	result->SetFinishCallback([it]([[maybe_unused]] Aulib::Stream &stream) {
-		SDLMutexLockGuard lock(duplicateSoundsMutex.get());
+		const std::lock_guard<SdlMutex> lock(*duplicateSoundsMutex);
 		duplicateSounds.erase(it);
 	});
 	return result;
@@ -129,7 +130,7 @@ static int CapVolume(int volume)
 
 void ClearDuplicateSounds()
 {
-	SDLMutexLockGuard lock(duplicateSoundsMutex.get());
+	const std::lock_guard<SdlMutex> lock(*duplicateSoundsMutex);
 	duplicateSounds.clear();
 }
 
@@ -214,7 +215,7 @@ void snd_init()
 	LogVerbose(LogCategory::Audio, "Aulib sampleRate={} channels={} frameSize={} format={:#x}",
 	    Aulib::sampleRate(), Aulib::channelCount(), Aulib::frameSize(), Aulib::sampleFormat());
 
-	duplicateSoundsMutex = SDLMutexUniquePtr { SDL_CreateMutex() };
+	duplicateSoundsMutex.emplace();
 	gbSndInited = true;
 }
 
@@ -222,7 +223,7 @@ void snd_deinit()
 {
 	if (gbSndInited) {
 		Aulib::quit();
-		duplicateSoundsMutex = nullptr;
+		duplicateSoundsMutex = std::nullopt;
 	}
 
 	gbSndInited = false;

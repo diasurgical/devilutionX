@@ -20,7 +20,6 @@ public:
 	PushAulibDecoder(int numChannels, int sampleRate)
 	    : numChannels_(numChannels)
 	    , sampleRate_(sampleRate)
-	    , queue_mutex_(SDL_CreateMutex())
 	{
 	}
 
@@ -61,7 +60,7 @@ private:
 	AudioQueueItem *Next();
 
 	std::queue<AudioQueueItem> queue_;
-	SDLMutexUniquePtr queue_mutex_;
+	SdlMutex queue_mutex_;
 };
 
 } // namespace devilution
