@@ -26,10 +26,12 @@ void track_process()
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
-	if (plr[myplr].AnimInfo.GetFrameToUseForRendering() <= 6 || (!plr[myplr].IsWalking() && plr[myplr]._pmode != PM_STAND))
+	const auto &player = plr[myplr];
+
+	if (player.AnimInfo.GetFrameToUseForRendering() <= 6 || (!player.IsWalking() && player._pmode != PM_STAND))
 		return;
 
-	const Point target = plr[myplr].GetTargetPosition();
+	const Point target = player.GetTargetPosition();
 	if (cursmx != target.x || cursmy != target.y) {
 		Uint32 tick = SDL_GetTicks();
 		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * 6) {
