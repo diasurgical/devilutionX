@@ -4,6 +4,7 @@
 #include <SDL_endian.h>
 #include <cstddef>
 #include <cstdint>
+#include <mutex>
 #include <string>
 
 #include "Radon.hpp"
@@ -34,19 +35,19 @@ namespace {
 bool directFileAccess = false;
 std::string *SBasePath = nullptr;
 
-} // namespace
+SdlMutex Mutex;
 
-SDL_mutex *Mutex = SDL_CreateMutex();
+} // namespace
 
 bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh)
 {
-	SDLMutexLockGuard lock(Mutex);
+	const std::lock_guard<SdlMutex> lock(Mutex);
 	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, read, lpDistanceToMoveHigh);
 }
 
 bool SFileCloseFileThreadSafe(HANDLE hFile)
 {
-	SDLMutexLockGuard lock(Mutex);
+	const std::lock_guard<SdlMutex> lock(Mutex);
 	return SFileCloseFile(hFile);
 }
 
