@@ -21,6 +21,13 @@
 #include <tuple>
 #include <utility>
 
+// We include `cinttypes` here so that it is included before `inttypes.h`
+// to work around a bug in older GCC versions on some platforms,
+// where including `inttypes.h` before `cinttypes` leads to missing
+// defines for `PRIuMAX` et al. SDL transitively includes `inttypes.h`.
+// See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97044
+#include <cinttypes>
+
 #include <SDL.h>
 
 #ifdef USE_SDL1
