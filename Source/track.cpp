@@ -28,7 +28,7 @@ void track_process()
 
 	const auto &player = plr[myplr];
 
-	if (player.AnimInfo.GetFrameToUseForRendering() <= 6 || (!player.IsWalking() && player._pmode != PM_STAND))
+	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
 		return;
 
 	const Point target = player.GetTargetPosition();
