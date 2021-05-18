@@ -668,7 +668,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
 
 	if (nXPos >= 0 && nXPos <= MAXDUNX && nYPos >= 0 && nYPos <= MAXDUNY) {
 		if (doautomap) {
-			if (dFlags[nXPos][nYPos] >= 0) {
+			if (dFlags[nXPos][nYPos] != 0) {
 				SetAutomapView({ nXPos, nYPos });
 			}
 			dFlags[nXPos][nYPos] |= BFLAG_EXPLORED;
@@ -729,7 +729,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
 					    || (x2adj + nCrawlX >= 0 && x2adj + nCrawlX < MAXDUNX && y2adj + nCrawlY >= 0 && y2adj + nCrawlY < MAXDUNY
 					        && !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
 						if (doautomap) {
-							if (dFlags[nCrawlX][nCrawlY] >= 0) {
+							if (dFlags[nCrawlX][nCrawlY] != 0) {
 								SetAutomapView({ nCrawlX, nCrawlY });
 							}
 							dFlags[nCrawlX][nCrawlY] |= BFLAG_EXPLORED;

@@ -1307,11 +1307,9 @@ static void InitL5Dungeon()
 
 static void L5ClearFlags()
 {
-	int i, j;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			L5dflags[i][j] &= 0xBF;
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			L5dflags[i][j] &= ~DLRG_CHAMBER;
 		}
 	}
 }
@@ -2628,7 +2626,7 @@ static void DRLG_L5(lvl_entry entry)
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (L5dflags[i][j] & 0x7F)
+			if (L5dflags[i][j] & ~DLRG_PROTECTED)
 				DRLG_PlaceDoor(i, j);
 		}
 	}
