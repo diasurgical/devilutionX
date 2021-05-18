@@ -34,7 +34,10 @@ void track_process()
 	const Point target = player.GetTargetPosition();
 	if (cursmx != target.x || cursmy != target.y) {
 		Uint32 tick = SDL_GetTicks();
-		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * 6) {
+		int TickMultiplier = 6;
+		if (currlevel == 0 && sgGameInitInfo.bRunInTown)
+			TickMultiplier = 3;
+		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * TickMultiplier) {
 			sgdwLastWalk = tick;
 			NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
 			if (!sgbIsScrolling)
