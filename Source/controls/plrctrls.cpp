@@ -10,6 +10,7 @@
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "cursor.h"
+#include "doom.h"
 #include "gmenu.h"
 #include "help.h"
 #include "inv.h"
@@ -1317,6 +1318,12 @@ void plrctrls_after_check_curs_move()
 		pcursquest = -1;
 		cursmx = -1;
 		cursmy = -1;
+		if (plr[myplr]._pInvincible) {
+			return;
+		}
+		if (DoomFlag) {
+			return;
+		}
 		if (!invflag) {
 			*infostr = '\0';
 			ClearPanel();
