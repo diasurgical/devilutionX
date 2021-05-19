@@ -173,19 +173,10 @@ static void gmenu_clear_buffer(const CelOutputBuffer &out, int x, int y, int wid
 
 static int gmenu_get_lfont(TMenuItem *pItem)
 {
-	const char *text;
-	int i;
-	BYTE c;
-
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0)
 		return 490;
-	text = _(pItem->pszStr);
-	i = 0;
-	while (*text) {
-		c = gbFontTransTbl[(BYTE)*text++];
-		i += fontkern[GameFontBig][fontframe[GameFontBig][c]] + 2;
-	}
-	return i - 2;
+
+	return GetLineWidth(_(pItem->pszStr), GameFontBig, 2);
 }
 
 static void gmenu_draw_menu_item(const CelOutputBuffer &out, TMenuItem *pItem, int y)
