@@ -61,7 +61,7 @@ void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color 
  */
 int GetLineWidth(const char *text, GameFontTables size = GameFontSmall, int spacing = 1, int *charactersInLine = nullptr);
 void WordWrapGameString(char *text, size_t width, size_t size = GameFontSmall, int spacing = 1);
-void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags = 0, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false);
+int DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags = 0, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false);
 int PentSpn2Spin();
 
 } // namespace devilution
