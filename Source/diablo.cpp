@@ -554,6 +554,7 @@ static void SaveOptions()
 	setIniInt("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
 	setIniInt("Controller", "Dpad Hotkeys", sgOptions.Controller.bDpadHotkeys);
 	setIniFloat("Controller", "deadzone", sgOptions.Controller.fDeadzone);
+    setIniInt("Controller", "Move to Interact", sgOptions.Controller.bMoveToInteract);
 #ifdef __vita__
 	setIniInt("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
 #endif
@@ -639,6 +640,7 @@ static void LoadOptions()
 	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
 	sgOptions.Controller.bDpadHotkeys = getIniBool("Controller", "Dpad Hotkeys", false);
 	sgOptions.Controller.fDeadzone = getIniFloat("Controller", "deadzone", 0.07);
+    sgOptions.Controller.bMoveToInteract = getIniBool("Controller", "Move to Interact", true);
 #ifdef __vita__
 	sgOptions.Controller.bRearTouch = getIniBool("Controller", "Enable Rear Touchpad", true);
 #endif

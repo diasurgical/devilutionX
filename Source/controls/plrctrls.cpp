@@ -16,6 +16,7 @@
 #include "inv.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "options.h"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
@@ -27,6 +28,23 @@ namespace devilution {
 bool sgbControllerActive = false;
 coords speedspellscoords[50];
 int speedspellcount = 0;
+
+static const direction FaceDir[3][3] = {
+	// NONE      UP      DOWN
+	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
+	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
+	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
+};
+static const int Offsets[8][2] = {
+	{ 1, 1 },   // DIR_S
+	{ 0, 1 },   // DIR_SW
+	{ -1, 1 },  // DIR_W
+	{ -1, 0 },  // DIR_NW
+	{ -1, -1 }, // DIR_N
+	{ 0, -1 },  // DIR_NE
+	{ 1, -1 },  // DIR_E
+	{ 1, 0 },   // DIR_SE
+};
 
 /**
  * Native game menu, controlled by simulating a keyboard.
@@ -446,12 +464,38 @@ void Interact()
 		NetSendCmdLocParam1(true, CMD_TALKXY, towners[pcursmonst].position, pcursmonst);
 	} else if (pcursmonst != -1) {
 		if (plr[myplr]._pwtype != WT_RANGED || CanTalkToMonst(pcursmonst)) {
-			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+			if (sgOptions.Controller.bMoveToInteract) {
+				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+			} else {
+				int distx = abs(plr[myplr].position.tile.x - monster[pcursmonst].position.future.x);
+				int disty = abs(plr[myplr].position.tile.y - monster[pcursmonst].position.future.y);
+				if (distx > 1 || disty > 1) {
+					// attack on the current direction
+					const int x = plr[myplr].position.future.x;
+					const int y = plr[myplr].position.future.y;
+					const int dx = x + Offsets[plr[myplr]._pdir][0];
+					const int dy = y + Offsets[plr[myplr]._pdir][1];
+
+					NetSendCmdLoc(myplr, true, CMD_SATTACKXY, { dx, dy });
+				} else {
+					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+				}
+			}
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
-	} else if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
-		NetSendCmdParam1(true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+	} else if (leveltype != DTYPE_TOWN) {
+		if (pcursplr != -1 && !gbFriendlyMode) {
+			NetSendCmdParam1(true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+		} else if (!sgOptions.Controller.bMoveToInteract) {
+			// attack on the current direction
+			const int x = plr[myplr].position.future.x;
+			const int y = plr[myplr].position.future.y;
+			const int dx = x + Offsets[plr[myplr]._pdir][0];
+			const int dy = y + Offsets[plr[myplr]._pdir][1];
+
+			NetSendCmdLoc(myplr, true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKXY : CMD_SATTACKXY, { dx, dy });
+		}
 	}
 }
 
@@ -1015,23 +1059,6 @@ void SpellBookMove(AxisDirection dir)
 	}
 }
 
-static const direction FaceDir[3][3] = {
-	// NONE      UP      DOWN
-	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
-	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
-	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
-};
-static const int Offsets[8][2] = {
-	{ 1, 1 },   // DIR_S
-	{ 0, 1 },   // DIR_SW
-	{ -1, 1 },  // DIR_W
-	{ -1, 0 },  // DIR_NW
-	{ -1, -1 }, // DIR_N
-	{ 0, -1 },  // DIR_NE
-	{ 1, -1 },  // DIR_E
-	{ 1, 0 },   // DIR_SE
-};
-
 /**
  * @brief check if stepping in direction (dir) from x, y is blocked.
  *
@@ -1078,7 +1105,69 @@ bool IsPathBlocked(int x, int y, int dir)
 	return !PosOkPlayer(myplr, d1x, d1y) && !PosOkPlayer(myplr, d2x, d2y);
 }
 
-void WalkInDir(int playerId, AxisDirection dir)
+direction GetNonBlockedDirection(int x, int y, int dir)
+{
+	int d1, d2;
+
+	switch (dir) {
+	case DIR_N:
+		d1 = DIR_NW;
+		d2 = DIR_NE;
+		break;
+	case DIR_E:
+		d1 = DIR_NE;
+		d2 = DIR_SE;
+		break;
+	case DIR_S:
+		d1 = DIR_SE;
+		d2 = DIR_SW;
+		break;
+	case DIR_W:
+		d1 = DIR_SW;
+		d2 = DIR_NW;
+		break;
+	default:
+		return DIR_OMNI;
+	}
+
+	const int d1x = x + Offsets[d1][0];
+	const int d1y = y + Offsets[d1][1];
+	const int d2x = x + Offsets[d2][0];
+	const int d2y = y + Offsets[d2][1];
+
+	if (!nSolidTable[dPiece[d1x][d1y]])
+		return (direction)d1;
+	if (!nSolidTable[dPiece[d2x][d2y]])
+		return (direction)d2;
+
+	return DIR_OMNI;
+}
+
+void WalkInDirection(int playerId, const direction dir)
+{
+	const int x = plr[playerId].position.future.x;
+	const int y = plr[playerId].position.future.y;
+	
+	const int dx = x + Offsets[dir][0];
+	const int dy = y + Offsets[dir][1];
+	plr[playerId]._pdir = dir;
+
+	if (nSolidTable[dPiece[dx][dy]]) {
+		const direction new_dir = GetNonBlockedDirection(x, y, dir);
+		if (new_dir != DIR_OMNI) {
+			WalkInDirection(playerId, new_dir);
+			return;
+		}
+	}
+
+	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, dir)) {
+		return; // Don't start backtrack around obstacles
+	}
+
+	NetSendCmdLoc(playerId, true, CMD_WALKXY, { dx, dy });
+}
+
+void WalkInAxisDirection(int playerId, const AxisDirection dir)
 {
 	const int x = plr[playerId].position.future.x;
 	const int y = plr[playerId].position.future.y;
@@ -1090,14 +1179,8 @@ void WalkInDir(int playerId, AxisDirection dir)
 	}
 
 	const direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
-	const int dx = x + Offsets[pdir][0];
-	const int dy = y + Offsets[pdir][1];
-	plr[playerId]._pdir = pdir;
 
-	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, pdir))
-		return; // Don't start backtrack around obstacles
-
-	NetSendCmdLoc(playerId, true, CMD_WALKXY, { dx, dy });
+	WalkInDirection(playerId, pdir);
 }
 
 void QuestLogMove(AxisDirection moveDir)
@@ -1161,7 +1244,7 @@ void Movement(int playerId)
 	}
 
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
-		WalkInDir(playerId, moveDir);
+		WalkInAxisDirection(playerId, moveDir);
 	}
 }
 

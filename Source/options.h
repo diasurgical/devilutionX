@@ -119,6 +119,8 @@ struct ControllerOptions {
 	bool bSwapShoulderButtonMode;
 	/** @brief Configure gamepad joysticks deadzone */
 	float fDeadzone;
+	/** @brief Move to monster/character when interacting (eg.: talk, attack, ..) */
+	bool bMoveToInteract;
 #ifdef __vita__
 	/** @brief Enable input via rear touchpad */
 	bool bRearTouch;
