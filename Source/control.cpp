@@ -1764,26 +1764,6 @@ void control_set_gold_curs(int pnum)
 	NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-static char *ControlPrintTalkMsg(const CelOutputBuffer &out, char *msg, int *x, int y, text_color color)
-{
-	*x += 200;
-	y += 22 + PANEL_Y;
-	int width = *x;
-	while (*msg != 0) {
-		BYTE c = gbFontTransTbl[(BYTE)*msg];
-		c = fontframe[GameFontSmall][c];
-		width += fontkern[GameFontSmall][c] + 1;
-		if (width > 450 + PANEL_X)
-			return msg;
-		msg++;
-		if (c != 0) {
-			PrintChar(out, *x, y, c, color);
-		}
-		*x += fontkern[GameFontSmall][c] + 1;
-	}
-	return nullptr;
-}
-
 void DrawTalkPan(const CelOutputBuffer &out)
 {
 	if (!talkflag)
@@ -1802,23 +1782,21 @@ void DrawTalkPan(const CelOutputBuffer &out)
 	DrawPanelBox(out, 170, sgbPlrTalkTbl + 80, 310, 55, PANEL_X + 170, PANEL_Y + 64);
 	char *msg = sgszTalkMsg;
 	int i = 0;
-	int x = 0;
-	for (; i < 39; i += 13) {
-		x = PANEL_LEFT;
-		msg = ControlPrintTalkMsg(out, msg, &x, i, COL_WHITE);
-		if (msg == nullptr)
-			break;
-	}
-	if (msg != nullptr)
-		*msg = '\0';
-	CelDrawTo(out, x, i + 22 + PANEL_Y, *pSPentSpn2Cels, PentSpn2Spin());
+	int x = PANEL_LEFT + 200;
+	int y = PANEL_Y + 22;
+
+	i = DrawString(out, msg, { x, y + i, 250, 39 }, UIS_SILVER, 1, 13, true);
+	msg[i] = '\0';
+
+	x += 46;
 	int talkBtn = 0;
 	for (int i = 0; i < 4; i++) {
 		if (i == myplr)
 			continue;
-		text_color color = COL_RED;
+
+		uint16_t color = UIS_RED;
 		if (whisperList[i]) {
-			color = COL_GOLD;
+			color = UIS_GOLD;
 			if (talkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 4 : 3;
 				CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y, *pTalkBtns, nCel);
@@ -1830,8 +1808,7 @@ void DrawTalkPan(const CelOutputBuffer &out)
 			CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y, *pTalkBtns, nCel);
 		}
 		if (plr[i].plractive) {
-			int x = 46 + PANEL_LEFT;
-			ControlPrintTalkMsg(out, plr[i]._pName, &x, 60 + talkBtn * 18, color);
+			DrawString(out, plr[i]._pName, { x, y + 60 + talkBtn * 18, 204, 0 }, color);
 		}
 
 		talkBtn++;
