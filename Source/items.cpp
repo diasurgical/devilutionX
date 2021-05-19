@@ -883,8 +883,15 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 	if (player._pgfxnum != g && Loadgfx) {
 		player._pgfxnum = g;
 		player._pGFXLoad = 0;
-		LoadPlrGFX(playerId, static_cast<player_graphic>(PFILE_STAND | PFILE_WALK));
 		SetPlrAnims(player);
+		LoadPlrGFX(playerId, static_cast<player_graphic>(PFILE_STAND | PFILE_WALK));
+		if (player._pmode == PM_STAND) {
+			player._pAnimWidth = player._pNWidth;
+			player.AnimInfo.ChangeAnimationData(player._pNAnim[player._pdir], player._pNFrames, 3);
+		} else {
+			player._pAnimWidth = player._pWWidth;
+			player.AnimInfo.ChangeAnimationData(player._pWAnim[player._pdir], player._pWFrames, 0);
+		}
 	} else {
 		player._pgfxnum = g;
 	}

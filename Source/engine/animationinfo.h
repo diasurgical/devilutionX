@@ -79,6 +79,14 @@ public:
 	 */
 	void SetNewAnimation(byte *pData, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 
+	/**
+	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
+	 * @param pData Pointer to Animation Data
+	 * @param numberOfFrames Number of Frames in Animation
+	 * @param delayLen Delay after each Animation sequence
+	 */
+	void ChangeAnimationData(byte *pData, int numberOfFrames, int delayLen);
+
 	/*
 	 * @brief Process the Animation for a game tick (for example advances the frame)
 	 */
