@@ -18,7 +18,7 @@ static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 /** Maps from player_num to text color, as used in chat messages. */
-const text_color text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
+const uint16_t text_color_from_player_num[MAX_PLRS + 1] = { UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_GOLD };
 
 void plrmsg_delay(bool delay)
 {
@@ -70,7 +70,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	pMsg->time = SDL_GetTicks();
 	assert(strlen(plr[pnum]._pName) < PLR_NAME_LEN);
 	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
-	sprintf(pMsg->str, _( /* TRANSLATORS: Shown if player presses "v" button. %s is player name, %i is level, %s is location */ "%s (lvl %i): %s"), plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
+	sprintf(pMsg->str, _(/* TRANSLATORS: Shown if player presses "v" button. %s is player name, %i is level, %s is location */ "%s (lvl %i): %s"), plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
 }
 
 void ClearPlrMsg()
@@ -91,45 +91,15 @@ void InitPlrMsg()
 	plr_msg_slot = 0;
 }
 
-static void PrintPlrMsg(const CelOutputBuffer &out, DWORD x, DWORD y, DWORD width, const char *str, text_color col)
+static void PrintPlrMsg(const CelOutputBuffer &out, int x, int y, int width, char *text, uint16_t style)
 {
-	int line = 0;
-
-	while (*str) {
-		BYTE c;
-		int sx = x;
-		DWORD len = 0;
-		const char *sstr = str;
-		const char *endstr = sstr;
-
-		while (true) {
-			if (*sstr) {
-				c = gbFontTransTbl[(BYTE)*sstr++];
-				c = fontframe[GameFontSmall][c];
-				len += fontkern[GameFontSmall][c] + 1;
-				if (!c) // allow wordwrap on blank glyph
-					endstr = sstr;
-				else if (len >= width)
-					break;
-			} else {
-				endstr = sstr;
-				break;
-			}
-		}
-
-		while (str < endstr) {
-			c = gbFontTransTbl[(BYTE)*str++];
-			c = fontframe[GameFontSmall][c];
-			if (c)
-				PrintChar(out, sx, y, c, col);
-			sx += fontkern[GameFontSmall][c] + 1;
-		}
-
-		y += 10;
-		line++;
-		if (line == 3)
-			break;
+	int length = strlen(text);
+	for (int i = 0; i < length; i++) {
+		if (text[i] == '\n')
+			text[i] = ' ';
 	}
+	WordWrapGameString(text, width);
+	DrawString(out, text, { x, y, width, 0 }, style, 1, 10);
 }
 
 void DrawPlrMsg(const CelOutputBuffer &out)
