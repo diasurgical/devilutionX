@@ -20,14 +20,6 @@ enum GameFontTables : uint8_t {
 	GameFontBig,
 };
 
-enum text_color : uint8_t {
-	COL_WHITE,
-	COL_BLUE,
-	COL_RED,
-	COL_GOLD,
-	COL_BLACK,
-};
-
 extern const uint8_t gbFontTransTbl[256];
 extern const uint8_t fontframe[3][128];
 extern const uint8_t fontkern[3][68];
@@ -40,16 +32,6 @@ extern std::optional<CelSprite> pSPentSpn2Cels;
 
 void InitText();
 void FreeText();
-
-/**
- * @brief Print letter to the given buffer
- * @param out The buffer to print to
- * @param sx Backbuffer offset
- * @param sy Backbuffer offset
- * @param nCel Number of letter in Windows-1252
- * @param col text_color color value
- */
-void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col);
 
 /**
  * @brief Calculate pixel width of first line of text, respecting kerning

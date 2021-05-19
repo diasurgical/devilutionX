@@ -116,7 +116,45 @@ const uint8_t fontkern[3][68] = {
 	}
 };
 
+namespace {
+
+enum text_color : uint8_t {
+	COL_WHITE,
+	COL_BLUE,
+	COL_RED,
+	COL_GOLD,
+	COL_BLACK,
+};
+
 int LineHeights[3] = { 12, 43, 50 };
+
+uint8_t fontColorTableGold[256];
+uint8_t fontColorTableBlue[256];
+uint8_t fontColorTableRed[256];
+
+static void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col)
+{
+	switch (col) {
+	case COL_WHITE:
+		CelDrawTo(out, sx, sy, *pPanelText, nCel);
+		return;
+	case COL_BLUE:
+		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableBlue);
+		break;
+	case COL_RED:
+		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableRed);
+		break;
+	case COL_GOLD:
+		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableGold);
+		break;
+	case COL_BLACK:
+		light_table_index = 15;
+		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, nullptr);
+		return;
+	}
+}
+
+} // namespace
 
 std::optional<CelSprite> pPanelText;
 /** Graphics for the medium size font */
@@ -124,10 +162,6 @@ std::optional<CelSprite> pMedTextCels;
 std::optional<CelSprite> BigTGold_cel;
 
 std::optional<CelSprite> pSPentSpn2Cels;
-
-uint8_t fontColorTableGold[256];
-uint8_t fontColorTableBlue[256];
-uint8_t fontColorTableRed[256];
 
 void InitText()
 {
@@ -170,28 +204,6 @@ void FreeText()
 	BigTGold_cel = std::nullopt;
 
 	pSPentSpn2Cels = std::nullopt;
-}
-
-void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col)
-{
-	switch (col) {
-	case COL_WHITE:
-		CelDrawTo(out, sx, sy, *pPanelText, nCel);
-		return;
-	case COL_BLUE:
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableBlue);
-		break;
-	case COL_RED:
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableRed);
-		break;
-	case COL_GOLD:
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableGold);
-		break;
-	case COL_BLACK:
-		light_table_index = 15;
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, nullptr);
-		return;
-	}
 }
 
 int GetLineWidth(const char *text, GameFontTables size, int spacing, int *charactersInLine)
