@@ -707,7 +707,7 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	}
 
 	PlayerStruct *pPlayer = &plr[p];
-	Point offset = ScrollInfo.offset;
+	Point offset = pPlayer->position.offset;
 	if (pPlayer->IsWalking()) {
 		offset = GetOffsetForWalking(pPlayer->AnimInfo, pPlayer->_pdir);
 	}
