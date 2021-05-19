@@ -154,6 +154,22 @@ void AnimationInfo::SetNewAnimation(byte *pData, int numberOfFrames, int delayLe
 	}
 }
 
+void AnimationInfo::ChangeAnimationData(byte *pData, int numberOfFrames, int delayLen)
+{
+	if (numberOfFrames != NumberOfFrames || delayLen != DelayLen) {
+		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
+		if (CurrentFrame > numberOfFrames)
+			CurrentFrame = numberOfFrames;
+		NumberOfFrames = numberOfFrames;
+		DelayLen = delayLen;
+		TicksSinceSequenceStarted = 0;
+		RelevantFramesForDistributing = 0;
+		TickModifier = 0.0f;
+	}
+	this->pData = pData;
+	DelayLen = delayLen;
+}
+
 void AnimationInfo::ProcessAnimation()
 {
 	DelayCounter++;
