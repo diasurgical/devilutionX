@@ -1078,6 +1078,19 @@ bool IsPathBlocked(int x, int y, int dir)
 	return !PosOkPlayer(myplr, d1x, d1y) && !PosOkPlayer(myplr, d2x, d2y);
 }
 
+bool CanChangeDirection(const PlayerStruct &player)
+{
+	if (player._pmode == PM_STAND)
+		return true;
+	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame > player._pAFNum)
+		return true;
+	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame > player._pAFNum)
+		return true;
+	if (player._pmode == PM_SPELL && player.AnimInfo.CurrentFrame > player._pSFNum)
+		return true;
+	return false;
+}
+
 void WalkInDir(int playerId, AxisDirection dir)
 {
 	const int x = plr[playerId].position.future.x;
@@ -1092,7 +1105,9 @@ void WalkInDir(int playerId, AxisDirection dir)
 	const direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 	const int dx = x + Offsets[pdir][0];
 	const int dy = y + Offsets[pdir][1];
-	plr[playerId]._pdir = pdir;
+
+	if (CanChangeDirection(plr[playerId]))
+		plr[playerId]._pdir = pdir;
 
 	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, pdir))
 		return; // Don't start backtrack around obstacles
