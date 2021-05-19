@@ -116,7 +116,7 @@ const uint8_t fontkern[3][68] = {
 	}
 };
 
-int LineHeights[3] = { 17, 43, 50 };
+int LineHeights[3] = { 12, 43, 50 };
 
 std::optional<CelSprite> pPanelText;
 /** Graphics for the medium size font */
@@ -268,7 +268,7 @@ void WordWrapGameString(char *text, size_t width, size_t size, int spacing)
 /**
  * @todo replace SDL_Rect with croped CelOutputBuffer
  */
-void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags, int spacing, bool drawTextCursor)
+void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags, int spacing, int lineHeight, bool drawTextCursor)
 {
 	GameFontTables size = GameFontSmall;
 	if ((flags & UIS_MED) != 0)
@@ -310,6 +310,9 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 	int rightMargin = rect.x + w;
 	int bottomMargin = rect.y + h;
 
+	if (lineHeight == -1)
+		lineHeight = LineHeights[size];
+
 	for (unsigned i = 0; i < textLength; i++) {
 		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
 		int symbolWidth = fontkern[size][frame];
@@ -325,7 +328,7 @@ void DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &re
 				sx += (w - lineWidth) / 2;
 			else if ((flags & UIS_RIGHT) != 0)
 				sx += w - lineWidth;
-			sy += LineHeights[size];
+			sy += lineHeight;
 			if (sy > bottomMargin)
 				return;
 		}

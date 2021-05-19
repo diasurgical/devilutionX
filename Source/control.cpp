@@ -1687,13 +1687,13 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	        initialDropGoldValue),
 	    initialDropGoldValue);
 	WordWrapGameString(tempstr, 200);
-	DrawString(out, tempstr, { dialogX + 31, 87, 200, 50 }, UIS_GOLD | UIS_CENTER);
+	DrawString(out, tempstr, { dialogX + 31, 87, 200, 50 }, UIS_GOLD | UIS_CENTER, 1, 17);
 
 	tempstr[0] = '\0';
 	if (amount > 0) {
 		sprintf(tempstr, "%u", amount);
 	}
-	DrawString(out, tempstr, { dialogX + 37, 140, 0, 0 }, UIS_SILVER, true);
+	DrawString(out, tempstr, { dialogX + 37, 140, 0, 0 }, UIS_SILVER, 1, -1, true);
 }
 
 void control_drop_gold(char vkey)
