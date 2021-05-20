@@ -1645,6 +1645,9 @@ void StartSpell(int pnum, direction d, int cx, int cy)
 			NewPlrAnim(player, player._pTAnim[d], player._pSFrames, 0, player._pSWidth, animationFlags, 0, player._pSFNum);
 			break;
 		}
+	} else {
+		// Start new stand animation so that currentframe is reset
+		StartStand(pnum, d);
 	}
 
 	PlaySfxLoc(spelldata[player._pSpell].sSFX, player.position.tile.x, player.position.tile.y);
@@ -3082,7 +3085,8 @@ bool PM_DoSpell(int pnum)
 	}
 	auto &player = plr[pnum];
 
-	if (player.AnimInfo.CurrentFrame == (player._pSFNum + 1)) {
+	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.DelayLen + 1) + player.AnimInfo.DelayCounter);
+	if (currentSpellFrame == (player._pSFNum + 1)) {
 		CastSpell(
 		    pnum,
 		    player._pSpell,
@@ -3097,13 +3101,7 @@ bool PM_DoSpell(int pnum)
 		}
 	}
 
-	if (leveltype == DTYPE_TOWN) {
-		if (player.AnimInfo.CurrentFrame > player._pSFrames) {
-			StartWalkStand(pnum);
-			ClearPlrPVars(player);
-			return true;
-		}
-	} else if (player.AnimInfo.CurrentFrame == player._pSFrames) {
+	if (currentSpellFrame >= player._pSFrames) {
 		StartStand(pnum, player._pdir);
 		ClearPlrPVars(player);
 		return true;
@@ -3471,7 +3469,8 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_SPELL && player.AnimInfo.CurrentFrame > player._pSFNum) {
+	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.DelayLen + 1) + player.AnimInfo.DelayCounter);
+	if (player._pmode == PM_SPELL && currentSpellFrame > player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
