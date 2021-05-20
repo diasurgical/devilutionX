@@ -351,22 +351,14 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 }
 
 /**
- * @brief Helper for rendering player a Mana Shield
- * @param out Output buffer
- * @param pnum Player id
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param lighting Should lighting be applied
+ * @brief Helper for rendering a specific player icon (Mana Shield or Reflect)
  */
-static void DrawManaShield(const CelOutputBuffer &out, int pnum, int x, int y, bool lighting)
+static void DrawPlayerIconHelper(const CelOutputBuffer &out, int pnum, missile_graphic_id missileGraphicId, int x, int y, bool lighting)
 {
-	if (!plr[pnum].pManaShield)
-		return;
+	x += CalculateWidth2(plr[pnum]._pAnimWidth) - misfiledata[missileGraphicId].mAnimWidth2[0];
 
-	x += CalculateWidth2(plr[pnum]._pAnimWidth) - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
-
-	int width = misfiledata[MFILE_MANASHLD].mAnimWidth[0];
-	byte *pCelBuff = misfiledata[MFILE_MANASHLD].mAnimData[0];
+	int width = misfiledata[missileGraphicId].mAnimWidth[0];
+	byte *pCelBuff = misfiledata[missileGraphicId].mAnimData[0];
 
 	CelSprite cel { pCelBuff, width };
 
@@ -381,6 +373,22 @@ static void DrawManaShield(const CelOutputBuffer &out, int pnum, int x, int y, b
 	}
 
 	Cl2DrawLight(out, x, y, cel, 1);
+}
+
+/**
+ * @brief Helper for rendering player icons (Mana Shield and Reflect)
+ * @param out Output buffer
+ * @param pnum Player id
+ * @param sx Output buffer coordinate
+ * @param sy Output buffer coordinate
+ * @param lighting Should lighting be applied
+ */
+static void DrawPlayerIcons(const CelOutputBuffer &out, int pnum, int x, int y, bool lighting)
+{
+	if (plr[pnum].pManaShield)
+		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, x, y, lighting);
+	if (plr[pnum].wReflections > 0)
+		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, x, y + 16, lighting);
 }
 
 /**
@@ -433,13 +441,13 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 
 	if (pnum == myplr) {
 		Cl2Draw(out, px, py, cel, nCel);
-		DrawManaShield(out, pnum, px, py, true);
+		DrawPlayerIcons(out, pnum, px, py, true);
 		return;
 	}
 
 	if (!(dFlags[x][y] & BFLAG_LIT) || (plr[myplr]._pInfraFlag && light_table_index > 8)) {
 		Cl2DrawLightTbl(out, px, py, cel, nCel, 1);
-		DrawManaShield(out, pnum, px, py, true);
+		DrawPlayerIcons(out, pnum, px, py, true);
 		return;
 	}
 
@@ -450,7 +458,7 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 		light_table_index -= 5;
 
 	Cl2DrawLight(out, px, py, cel, nCel);
-	DrawManaShield(out, pnum, px, py, false);
+	DrawPlayerIcons(out, pnum, px, py, false);
 
 	light_table_index = l;
 }
