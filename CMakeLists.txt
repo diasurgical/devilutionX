@@ -258,8 +258,9 @@ else()
   find_package(SDL2_ttf REQUIRED)
 endif()
 
-add_library(asio INTERFACE)
-target_include_directories(asio INTERFACE 3rdParty/asio/include)
+if(NOT NONET)
+  add_subdirectory(3rdParty/asio)
+endif()
 
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
@@ -581,21 +582,23 @@ if(NOT N3DS)
 endif()
 
 target_link_libraries(libdevilutionx PUBLIC
-  asio
   PKWare
   StormLib
   smacker
   Radon)
 
 if(NOT NONET)
-  target_link_libraries(libdevilutionx PUBLIC sodium)
+  target_link_libraries(libdevilutionx PUBLIC asio sodium)
 endif()
 
 target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
 
 genex_for_option(DEBUG)
 target_compile_definitions(libdevilutionx PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
-target_compile_definitions(libdevilutionx PUBLIC ASIO_STANDALONE)
+
+if(NOT NONET)
+  target_compile_definitions(libdevilutionx PUBLIC ASIO_STANDALONE)
+endif()
 
 # Defines without value
 foreach(
