@@ -5501,7 +5501,7 @@ void GetObjectStr(int i)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		sprintf(tempstr, fmt::format(_(/* TRANSLATORS: %s will be a name from the Shrine block above */ "%s Shrine"), _(shrinestrs[object[i]._oVar1])).c_str());
+		sprintf(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(shrinestrs[object[i]._oVar1])).c_str());
 		strcpy(infostr, tempstr);
 		break;
 	case OBJ_SKELBOOK:
@@ -5570,13 +5570,13 @@ void GetObjectStr(int i)
 	}
 	if (plr[myplr]._pClass == HeroClass::Rogue) {
 		if (object[i]._oTrapFlag) {
-			sprintf(tempstr, fmt::format(_(/* TRANSLATORS: %s will either be a chest or a door */ "Trapped %s"), infostr).c_str());
+			sprintf(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr).c_str());
 			strcpy(infostr, tempstr);
 			infoclr = UIS_RED;
 		}
 	}
 	if (objectIsDisabled(i)) {
-		sprintf(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "%s (disabled)"), infostr).c_str());
+		sprintf(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
 		strcpy(infostr, tempstr);
 		infoclr = UIS_RED;
 	}

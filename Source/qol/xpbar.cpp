@@ -123,7 +123,7 @@ bool CheckXPBarInfo()
 
 	const int charLevel = player._pLevel;
 
-	sprintf(tempstr, fmt::format(_("Level %i"), charLevel).c_str());
+	sprintf(tempstr, fmt::format(_("Level {:d}"), charLevel).c_str());
 	AddPanelString(tempstr);
 
 	if (charLevel == MAXCHARLEVEL - 1) {
@@ -149,7 +149,7 @@ bool CheckXPBarInfo()
 	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
 	AddPanelString(tempstr);
 
-	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), fmt::format(_(" to Level %i"), charLevel + 1).c_str());
+	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), fmt::format(_(" to Level {:d}"), charLevel + 1).c_str());
 	AddPanelString(tempstr);
 
 	return true;
