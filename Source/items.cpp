@@ -3037,7 +3037,7 @@ void GetItemStr(int i)
 			infoclr = UIS_GOLD;
 	} else {
 		int nGold = items[i]._ivalue;
-		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
+		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
 	}
 }
 
@@ -3464,9 +3464,9 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_SPLLVLADD:
 		if (x->_iSplLvlAdd > 0)
-			sprintf(tempstr, ngettext("spells are increased %i level", "spells are increased %i levels", x->_iSplLvlAdd), x->_iSplLvlAdd);
+			strcpy(tempstr, fmt::format(ngettext("spells are increased {:d} level", "spells are increased {:d} levels", x->_iSplLvlAdd), x->_iSplLvlAdd).c_str());
 		else if (x->_iSplLvlAdd < 0)
-			sprintf(tempstr, ngettext("spells are decreased %i level", "spells are decreased %i levels", -x->_iSplLvlAdd), -x->_iSplLvlAdd);
+			strcpy(tempstr, fmt::format(ngettext("spells are decreased {:d} level", "spells are decreased {:d} levels", -x->_iSplLvlAdd), -x->_iSplLvlAdd).c_str());
 		else if (x->_iSplLvlAdd == 0)
 			strcpy(tempstr, _("spell levels unchanged (?)"));
 		break;
@@ -3474,7 +3474,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("Extra charges"));
 		break;
 	case IPL_SPELL:
-		sprintf(tempstr, ngettext("%i %s charge", "%i %s charges", x->_iMaxCharges), x->_iMaxCharges, _(spelldata[x->_iSpell].sNameText));
+		strcpy(tempstr, fmt::format(ngettext("{:d} {:s} charge", "{:d} {:s} charges", x->_iMaxCharges), x->_iMaxCharges, _(spelldata[x->_iSpell].sNameText)).c_str());
 		break;
 	case IPL_FIREDAM:
 		if (x->_iFMinDam == x->_iFMaxDam)
@@ -3617,7 +3617,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("fast block"));
 		break;
 	case IPL_DAMMOD:
-		sprintf(tempstr, ngettext("adds %i point to damage", "adds %i points to damage", x->_iPLDamMod), x->_iPLDamMod);
+		strcpy(tempstr, fmt::format(ngettext("adds {:d} point to damage", "adds {:d} points to damage", x->_iPLDamMod), x->_iPLDamMod).c_str());
 		break;
 	case IPL_RNDARROWVEL:
 		strcpy(tempstr, _("fires random speed arrows"));

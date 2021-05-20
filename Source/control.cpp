@@ -424,13 +424,13 @@ void DrawSpellList(const CelOutputBuffer &out)
 							v++;
 						}
 					}
-					sprintf(tempstr, ngettext("%i Scroll", "%i Scrolls", v), v);
+					strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", v), v).c_str());
 					AddPanelString(tempstr);
 				} break;
 				case RSPLTYPE_CHARGES: {
 					strcpy(infostr, fmt::format(_("Staff of {:s}"), _(spelldata[pSpell].sNameText)).c_str());
 					int charges = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges;
-					sprintf(tempstr, ngettext("%i Charge", "%i Charges", charges), charges);
+					strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
 					AddPanelString(tempstr);
 				} break;
 				case RSPLTYPE_INVALID:
@@ -969,13 +969,13 @@ void CheckPanelInfo()
 						s++;
 					}
 				}
-				sprintf(tempstr, ngettext("%i Scroll", "%i Scrolls", s), s);
+				strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", s), s).c_str());
 				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_CHARGES:
 				strcpy(tempstr, fmt::format(_("Staff of {:s}"), _(spelldata[v].sNameText)).c_str());
 				AddPanelString(tempstr);
-				sprintf(tempstr, ngettext("%i Charge", "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
+				strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges).c_str());
 				AddPanelString(tempstr);
 				break;
 			case RSPLTYPE_INVALID:
@@ -1121,7 +1121,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 	} else if (pcurs >= CURSOR_FIRSTITEM) {
 		if (plr[myplr].HoldItem._itype == ITYPE_GOLD) {
 			int nGold = plr[myplr].HoldItem._ivalue;
-			sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
+			strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
 		} else if (!plr[myplr].HoldItem._iStatFlag) {
 			ClearPanel();
 			AddPanelString(_("Requirements not met"));
@@ -1619,7 +1619,7 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				break;
 			case RSPLTYPE_CHARGES: {
 				int charges = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges;
-				sprintf(tempstr, ngettext("Staff (%i charge)", "Staff (%i charges)", charges), charges);
+				strcpy(tempstr, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges).c_str());
 			} break;
 			default: {
 				int mana = GetManaAmount(myplr, sn) >> 6;
@@ -1681,13 +1681,14 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 
 	CelDrawTo(out, dialogX, 178, *pGBoxBuff, 1);
 
-	sprintf(
+	strcpy(
 	    tempstr,
-	    ngettext(
-	        /* TRANSLATORS: %u is a number. Dialog is shown when splitting a stash of Gold.*/ "You have %u gold piece. How many do you want to remove?",
-	        "You have %u gold pieces. How many do you want to remove?",
-	        initialDropGoldValue),
-	    initialDropGoldValue);
+	    fmt::format(ngettext(
+	                    /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/ "You have {:d} gold piece. How many do you want to remove?",
+	                    "You have {:d} gold pieces. How many do you want to remove?",
+	                    initialDropGoldValue),
+	        initialDropGoldValue)
+	        .c_str());
 	WordWrapGameString(tempstr, 200);
 	DrawString(out, tempstr, { dialogX + 31, 87, 200, 50 }, UIS_GOLD | UIS_CENTER, 1, 17);
 
