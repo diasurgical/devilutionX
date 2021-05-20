@@ -817,7 +817,7 @@ msgstr ""
 "68f049866b44688a7af65ba766bef75a\n"
 "\n"
 "Problemet opstod ved indlæsning af:\n"
-"% s"
+"%s"
 
 #: Source/appfat.cpp:159
 #, fuzzy, c-format

@@ -838,7 +838,7 @@ msgstr ""
 "68f049866b44688a7af65ba766bef75a\n"
 "\n"
 "Le problème est survenu lors du chargement:\n"
-"% s"
+"%s"
 
 #: Source/appfat.cpp:146 Source/appfat.cpp:163
 msgid "Data File Error"
@@ -865,7 +865,7 @@ msgid ""
 "%s"
 msgstr ""
 "Impossible d'écrire dans l'emplacement:\n"
-"% s"
+"%s"
 
 #: Source/appfat.cpp:176
 msgid "Read-Only Directory Error"
@@ -6021,7 +6021,7 @@ msgstr "Quitter la boutique"
 #: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
 #, c-format
 msgid "I have these items for sale:             Your gold: %i"
-msgstr "J'ai ces objets à vendre:             Votre or:% i"
+msgstr "J'ai ces objets à vendre:             Votre or: %i"
 
 #: Source/stores.cpp:279 Source/stores.cpp:343 Source/stores.cpp:471
 #: Source/stores.cpp:482 Source/stores.cpp:541 Source/stores.cpp:554
@@ -6035,27 +6035,27 @@ msgstr "Retour"
 #: Source/stores.cpp:339
 #, c-format
 msgid "I have these premium items for sale:     Your gold: %i"
-msgstr "J'ai ces objets premim à vendre:             Votre or:% i"
+msgstr "J'ai ces objets premim à vendre:             Votre or: %i"
 
 #: Source/stores.cpp:467 Source/stores.cpp:717
 #, c-format
 msgid "You have nothing I want.             Your gold: %i"
-msgstr "Vous n'avez rien pour moi.             Votre or:% i"
+msgstr "Vous n'avez rien pour moi.             Votre or: %i"
 
 #: Source/stores.cpp:477 Source/stores.cpp:727
 #, c-format
 msgid "Which item is for sale?             Your gold: %i"
-msgstr "Quel objet est à vendre?             Votre or:% i"
+msgstr "Quel objet est à vendre?             Votre or: %i"
 
 #: Source/stores.cpp:537
 #, c-format
 msgid "You have nothing to repair.             Your gold: %i"
-msgstr "Vous n'avez rien à réparer.             Votre or:% i"
+msgstr "Vous n'avez rien à réparer.             Votre or: %i"
 
 #: Source/stores.cpp:549
 #, c-format
 msgid "Repair which item?             Your gold: %i"
-msgstr "Réparer quel article?             Votre or:% i"
+msgstr "Réparer quel article?             Votre or: %i"
 
 #: Source/stores.cpp:575
 msgid "Witch's shack"
@@ -6080,12 +6080,12 @@ msgstr "Quitter la cabane"
 #: Source/stores.cpp:793
 #, c-format
 msgid "You have nothing to recharge.             Your gold: %i"
-msgstr "Vous n'avez rien à recharger.              Votre or:% i"
+msgstr "Vous n'avez rien à recharger.              Votre or: %i"
 
 #: Source/stores.cpp:803
 #, c-format
 msgid "Recharge which item?             Your gold: %i"
-msgstr "Recharger quel article?             Votre or:% i"
+msgstr "Recharger quel article?             Votre or: %i"
 
 #: Source/stores.cpp:819
 msgid "You do not have enough gold"
@@ -6151,7 +6151,7 @@ msgstr "Dire aurevoir"
 #: Source/stores.cpp:915
 #, c-format
 msgid "I have this item for sale:             Your gold: %i"
-msgstr "J'ai cet objet à vendre:             Votre or:% i"
+msgstr "J'ai cet objet à vendre:             Votre or: %i"
 
 #: Source/stores.cpp:931
 msgid "Leave"
@@ -6184,12 +6184,12 @@ msgstr "Identifier un objet"
 #: Source/stores.cpp:1090
 #, c-format
 msgid "You have nothing to identify.             Your gold: %i"
-msgstr "Vous n'avez rien à identifier.             Votre or:% i"
+msgstr "Vous n'avez rien à identifier.             Votre or: %i"
 
 #: Source/stores.cpp:1100
 #, c-format
 msgid "Identify which item?             Your gold: %i"
-msgstr "Identifier quel article?             Votre or:% i"
+msgstr "Identifier quel article?             Votre or: %i"
 
 #: Source/stores.cpp:1117
 msgid "This item is:"
