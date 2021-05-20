@@ -30,8 +30,12 @@ void SelconnLoad()
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
 #ifndef NONET
+#ifndef DISABLE_ZERO_TIER
 	vecConnItems.push_back(new UiListItem("Zerotier", SELCONN_ZT));
+#endif
+#ifndef DISABLE_TCP
 	vecConnItems.push_back(new UiListItem(_("Client-Server (TCP)"), SELCONN_TCP));
+#endif
 #endif
 	vecConnItems.push_back(new UiListItem(_("Loopback"), SELCONN_LOOPBACK));
 
