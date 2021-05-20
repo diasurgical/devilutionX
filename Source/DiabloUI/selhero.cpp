@@ -344,7 +344,7 @@ void SelheroNameSelect(int value)
 			if (strcasecmp(selhero_heros[i].name, selhero_heroInfo.name) == 0) {
 				ArtBackground.Unload();
 				char dialogText[256];
-				snprintf(dialogText, sizeof(dialogText), fmt::format(_(/* Error message when User tries to create multiple heros with the same name */ "Character already exists. Do you want to overwrite \"%s\"?"), selhero_heroInfo.name).c_str());
+				snprintf(dialogText, sizeof(dialogText), fmt::format(_(/* Error message when User tries to create multiple heros with the same name */ "Character already exists. Do you want to overwrite \"{:s}\"?"), selhero_heroInfo.name).c_str());
 
 				overwrite = UiSelHeroYesNoDialog(title, dialogText);
 				LoadBackgroundArt("ui_art\\selhero.pcx");
@@ -621,7 +621,7 @@ static void UiSelHeroDialog(
 			} else {
 				strncpy(dialogTitle, _("Delete Single Player Hero"), sizeof(dialogTitle) - 1);
 			}
-			snprintf(dialogText, sizeof(dialogText), fmt::format(_("Are you sure you want to delete the character \"%s\"?"), selhero_heroInfo.name).c_str());
+			snprintf(dialogText, sizeof(dialogText), fmt::format(_("Are you sure you want to delete the character \"{:s}\"?"), selhero_heroInfo.name).c_str());
 
 			if (UiSelHeroYesNoDialog(dialogTitle, dialogText))
 				fnremove(&selhero_heroInfo);

@@ -4965,9 +4965,9 @@ void PrintMonstHistory(int mt)
 	int minHP, maxHP, res;
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		sprintf(tempstr, fmt::format(_("Type: %s  Kills: %i"), GetMonsterTypeText(monsterdata[mt])).c_str(), monstkills[mt]);
+		sprintf(tempstr, fmt::format(_("Type: {:s}  Kills: {:d}"), GetMonsterTypeText(monsterdata[mt])).c_str(), monstkills[mt]);
 	} else {
-		sprintf(tempstr, fmt::format(_("Total kills: %i"), monstkills[mt]).c_str());
+		sprintf(tempstr, fmt::format(_("Total kills: {:d}"), monstkills[mt]).c_str());
 	}
 
 	AddPanelString(tempstr);
@@ -5000,7 +5000,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		sprintf(tempstr, fmt::format(_("Hit Points: %i-%i"), minHP, maxHP).c_str());
+		sprintf(tempstr, fmt::format(_("Hit Points: {:d}-{:d}"), minHP, maxHP).c_str());
 		AddPanelString(tempstr);
 	}
 	if (monstkills[mt] >= 15) {
@@ -5045,7 +5045,7 @@ void PrintUniqueHistory()
 	int res;
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		sprintf(tempstr, fmt::format(_("Type: %s"), GetMonsterTypeText(*monster[pcursmonst].MData)).c_str());
+		sprintf(tempstr, fmt::format(_("Type: {:s}"), GetMonsterTypeText(*monster[pcursmonst].MData)).c_str());
 		AddPanelString(tempstr);
 	}
 

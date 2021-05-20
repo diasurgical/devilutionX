@@ -118,7 +118,7 @@ void SelconnFocus(int value)
 		break;
 	}
 
-	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), fmt::format(_("Players Supported: %i"), players).c_str());
+	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), fmt::format(_("Players Supported: {:d}"), players).c_str());
 	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 

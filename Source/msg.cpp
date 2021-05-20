@@ -1393,7 +1393,7 @@ static DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 			plr[pnum]._pSplFrom = 1;
 			plr[pnum].destAction = ACTION_SPELL;
 		} else
-			msg_errorf(fmt::format(_("%s has cast an illegal spell."), plr[pnum]._pName).c_str());
+			msg_errorf(fmt::format(_("{:s} has cast an illegal spell."), plr[pnum]._pName).c_str());
 	}
 
 	return sizeof(*p);
@@ -1664,7 +1664,7 @@ static DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
 		} else
-			msg_errorf(fmt::format(_("%s has cast an illegal spell."), plr[pnum]._pName).c_str());
+			msg_errorf(fmt::format(_("{:s} has cast an illegal spell."), plr[pnum]._pName).c_str());
 	}
 
 	return sizeof(*p);
@@ -1686,7 +1686,7 @@ static DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
 		} else
-			msg_errorf(fmt::format(_("%s has cast an illegal spell."), plr[pnum]._pName).c_str());
+			msg_errorf(fmt::format(_("{:s} has cast an illegal spell."), plr[pnum]._pName).c_str());
 	}
 
 	return sizeof(*p);
@@ -1708,7 +1708,7 @@ static DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;
 		} else
-			msg_errorf(fmt::format(_("%s has cast an illegal spell."), plr[pnum]._pName).c_str());
+			msg_errorf(fmt::format(_("{:s} has cast an illegal spell."), plr[pnum]._pName).c_str());
 	}
 
 	return sizeof(*p);
@@ -1828,7 +1828,7 @@ static DWORD On_SPELLID(TCmd *pCmd, int pnum)
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
 		} else
-			msg_errorf(fmt::format(_("%s has cast an illegal spell."), plr[pnum]._pName).c_str());
+			msg_errorf(fmt::format(_("{:s} has cast an illegal spell."), plr[pnum]._pName).c_str());
 	}
 
 	return sizeof(*p);
@@ -1849,7 +1849,7 @@ static DWORD On_SPELLPID(TCmd *pCmd, int pnum)
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
 		} else
-			msg_errorf(fmt::format(_("%s has cast an illegal spell."), plr[pnum]._pName).c_str());
+			msg_errorf(fmt::format(_("{:s} has cast an illegal spell."), plr[pnum]._pName).c_str());
 	}
 
 	return sizeof(*p);
@@ -1870,7 +1870,7 @@ static DWORD On_TSPELLID(TCmd *pCmd, int pnum)
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;
 		} else
-			msg_errorf(fmt::format(_("%s has cast an illegal spell."), plr[pnum]._pName).c_str());
+			msg_errorf(fmt::format(_("{:s} has cast an illegal spell."), plr[pnum]._pName).c_str());
 	}
 
 	return sizeof(*p);
@@ -1891,7 +1891,7 @@ static DWORD On_TSPELLPID(TCmd *pCmd, int pnum)
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;
 		} else
-			msg_errorf(fmt::format(_("%s has cast an illegal spell."), plr[pnum]._pName).c_str());
+			msg_errorf(fmt::format(_("{:s} has cast an illegal spell."), plr[pnum]._pName).c_str());
 	}
 
 	return sizeof(*p);
@@ -2227,7 +2227,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 			InitPlrGFXMem(plr[pnum]);
 			plr[pnum].plractive = true;
 			gbActivePlayers++;
-			EventPlrMsg(fmt::format(_("Player '%s' (level %i) just joined the game"), plr[pnum]._pName, plr[pnum]._pLevel).c_str());
+			EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), plr[pnum]._pName, plr[pnum]._pLevel).c_str());
 		}
 
 		if (plr[pnum].plractive && myplr != pnum) {
