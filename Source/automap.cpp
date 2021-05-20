@@ -7,6 +7,8 @@
 
 #include <algorithm>
 
+#include <fmt/format.h>
+
 #include "control.h"
 #include "engine/render/automap_render.hpp"
 #include "inv.h"
@@ -402,11 +404,11 @@ void DrawAutomapText(const CelOutputBuffer &out)
 
 	if (currlevel != 0) {
 		if (currlevel >= 17 && currlevel <= 20) {
-			sprintf(desc, _("Level: Nest %i"), currlevel - 16);
+			sprintf(desc, fmt::format(_("Level: Nest %i"), currlevel - 16).c_str());
 		} else if (currlevel >= 21 && currlevel <= 24) {
-			sprintf(desc, _("Level: Crypt %i"), currlevel - 20);
+			sprintf(desc, fmt::format(_("Level: Crypt %i"), currlevel - 20).c_str());
 		} else {
-			sprintf(desc, _("Level: %i"), currlevel);
+			sprintf(desc, fmt::format(_("Level: %i"), currlevel).c_str());
 		}
 
 		DrawString(out, desc, { 8, nextLine, 0, 0 });

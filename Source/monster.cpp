@@ -9,6 +9,8 @@
 #include <array>
 #include <climits>
 
+#include <fmt/format.h>
+
 #include "control.h"
 #include "cursor.h"
 #include "dead.h"
@@ -1671,7 +1673,7 @@ void SpawnLoot(int i, bool sendmsg)
 
 	Monst = &monster[i];
 	if (QuestStatus(Q_GARBUD) && Monst->_uniqtype - 1 == UMT_GARBUD) {
-		CreateTypeItem(Monst->position.tile + Point{1, 1}, true, ITYPE_MACE, IMISC_NONE, true, false);
+		CreateTypeItem(Monst->position.tile + Point { 1, 1 }, true, ITYPE_MACE, IMISC_NONE, true, false);
 	} else if (Monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
@@ -2415,7 +2417,7 @@ bool M_DoTalk(int i)
 			quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
 		}
 		if (monster[i].mtalkmsg == TEXT_GARBUD2 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
-			SpawnItem(i, monster[i].position.tile + Point{1, 1}, true);
+			SpawnItem(i, monster[i].position.tile + Point { 1, 1 }, true);
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
@@ -2424,7 +2426,7 @@ bool M_DoTalk(int i)
 	    && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
 		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		quests[Q_ZHAR]._qlog = true;
-		CreateTypeItem(monster[i].position.tile + Point{1,1}, false, ITYPE_MISC, IMISC_BOOK, true, false);
+		CreateTypeItem(monster[i].position.tile + Point { 1, 1 }, false, ITYPE_MISC, IMISC_BOOK, true, false);
 		monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {
@@ -4963,9 +4965,9 @@ void PrintMonstHistory(int mt)
 	int minHP, maxHP, res;
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		sprintf(tempstr, _("Type: %s  Kills: %i"), GetMonsterTypeText(monsterdata[mt]), monstkills[mt]);
+		sprintf(tempstr, fmt::format(_("Type: %s  Kills: %i"), GetMonsterTypeText(monsterdata[mt])).c_str(), monstkills[mt]);
 	} else {
-		sprintf(tempstr, _("Total kills: %i"), monstkills[mt]);
+		sprintf(tempstr, fmt::format(_("Total kills: %i"), monstkills[mt]).c_str());
 	}
 
 	AddPanelString(tempstr);
@@ -4998,7 +5000,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		sprintf(tempstr, _("Hit Points: %i-%i"), minHP, maxHP);
+		sprintf(tempstr, fmt::format(_("Hit Points: %i-%i"), minHP, maxHP).c_str());
 		AddPanelString(tempstr);
 	}
 	if (monstkills[mt] >= 15) {
@@ -5043,7 +5045,7 @@ void PrintUniqueHistory()
 	int res;
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		sprintf(tempstr, _("Type: %s"), GetMonsterTypeText(*monster[pcursmonst].MData));
+		sprintf(tempstr, fmt::format(_("Type: %s"), GetMonsterTypeText(*monster[pcursmonst].MData)).c_str());
 		AddPanelString(tempstr);
 	}
 

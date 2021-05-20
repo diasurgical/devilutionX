@@ -6,6 +6,8 @@
 
 #include <config.h>
 
+#include <fmt/format.h>
+
 #include "diablo.h"
 #include "storm/storm.h"
 #include "utils/ui_fwd.h"
@@ -114,7 +116,7 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 
 	FreeDlg();
 
-	snprintf(text, sizeof(text), _( /* TRANSLATORS: Error message that displays relevant information for bug report */ "%s\n\nThe error occurred at: %s line %i"), error, logFilePath, logLineNr);
+	snprintf(text, sizeof(text), fmt::format(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "%s\n\nThe error occurred at: %s line %i"), error, logFilePath, logLineNr).c_str());
 
 	UiErrorOkDialog(title, text);
 	app_fatal(nullptr);
@@ -134,13 +136,13 @@ void FileErrDlg(const char *error)
 	snprintf(
 	    text,
 	    sizeof(text),
-	    _( /* TRANSLATORS: Error Message when diabdat.mpq is broken. Keep values unchanged. */ "Unable to open a required file.\n"
-	      "\n"
-	      "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
-	      "011bc6518e6166206231080a4440b373\n"
-	      "68f049866b44688a7af65ba766bef75a\n"
-	      "\n"
-	      "The problem occurred when loading:\n%s"),
+	    _(/* TRANSLATORS: Error Message when diabdat.mpq is broken. Keep values unchanged. */ "Unable to open a required file.\n"
+	                                                                                          "\n"
+	                                                                                          "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
+	                                                                                          "011bc6518e6166206231080a4440b373\n"
+	                                                                                          "68f049866b44688a7af65ba766bef75a\n"
+	                                                                                          "\n"
+	                                                                                          "The problem occurred when loading:\n%s"),
 	    error);
 
 	UiErrorOkDialog(_("Data File Error"), text);
@@ -173,7 +175,7 @@ void DirErrorDlg(const char *error)
 {
 	char text[1024];
 
-	snprintf(text, sizeof(text), _( /* TRANSLATORS: Error when Program is not allowed to write data */"Unable to write to location:\n%s"), error);
+	snprintf(text, sizeof(text), fmt::format(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n%s"), error).c_str());
 
 	UiErrorOkDialog(_("Read-Only Directory Error"), text);
 	app_fatal(nullptr);

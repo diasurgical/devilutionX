@@ -1,5 +1,7 @@
 #include "selgame.h"
 
+#include <fmt/format.h>
+
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/selhero.h"
@@ -412,7 +414,7 @@ static bool IsGameCompatible(GameData *data)
 		UiSelOkDialog(title, _("The host is running a different game than you."), false);
 	} else {
 		char msg[64];
-		sprintf(msg, _( /* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version %s does not match the host %i.%i.%i."), PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH);
+		sprintf(msg, fmt::format(_(/* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version %s does not match the host %i.%i.%i."), PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH).c_str());
 
 		UiSelOkDialog(title, msg, false);
 	}

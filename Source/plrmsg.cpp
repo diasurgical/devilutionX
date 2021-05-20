@@ -5,6 +5,8 @@
  */
 #include "plrmsg.h"
 
+#include <fmt/format.h>
+
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
@@ -70,7 +72,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	pMsg->time = SDL_GetTicks();
 	assert(strlen(plr[pnum]._pName) < PLR_NAME_LEN);
 	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
-	sprintf(pMsg->str, _(/* TRANSLATORS: Shown if player presses "v" button. %s is player name, %i is level, %s is location */ "%s (lvl %i): %s"), plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
+	sprintf(pMsg->str, fmt::format(_(/* TRANSLATORS: Shown if player presses "v" button. %s is player name, %i is level, %s is location */ "%s (lvl %i): %s"), plr[pnum]._pName, plr[pnum]._pLevel, pszStr).c_str());
 }
 
 void ClearPlrMsg()
