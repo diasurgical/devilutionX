@@ -1883,7 +1883,7 @@ StartPlayerKill(int pnum, int earflag)
 				if (earflag != -1) {
 					if (earflag != 0) {
 						SetPlrHandItem(&ear, IDI_EAR);
-						sprintf(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
+						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
 						if (player._pClass == HeroClass::Sorcerer) {
 							ear._iCurs = ICURS_EAR_SORCERER;
 						} else if (player._pClass == HeroClass::Warrior) {

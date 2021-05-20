@@ -1526,7 +1526,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 		}
-		sprintf(istr, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale */ "{:s} of {:s}"), items[i]._iIName, _(spelldata[bs].sNameText)).c_str());
+		strcpy(istr, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale */ "{:s} of {:s}"), items[i]._iIName, _(spelldata[bs].sNameText)).c_str());
 		strcpy(items[i]._iIName, istr);
 		if (items[i]._iMagical == ITEM_QUALITY_NORMAL)
 			strcpy(items[i]._iName, items[i]._iIName);
@@ -1568,8 +1568,8 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 				s = SPL_FIREBOLT;
 		}
 		if (!control_WriteStringToBuffer(istr))
-			sprintf(istr, fmt::format(_("{:s} of {:s}"), items[i]._iName, _(spelldata[bs].sNameText)).c_str());
-		sprintf(istr, fmt::format(_("Staff of {:s}"), _(spelldata[bs].sNameText)).c_str());
+			strcpy(istr, fmt::format(_("{:s} of {:s}"), items[i]._iName, _(spelldata[bs].sNameText)).c_str());
+		strcpy(istr, fmt::format(_("Staff of {:s}"), _(spelldata[bs].sNameText)).c_str());
 		strcpy(items[i]._iName, istr);
 		strcpy(items[i]._iIName, istr);
 
@@ -2163,7 +2163,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		}
 		if (nl != 0) {
 			sufidx = l[GenerateRnd(nl)];
-			sprintf(istr, fmt::format(_("{:s} of {:s}"), items[i]._iIName, _(PL_Suffix[sufidx].PLName)).c_str());
+			strcpy(istr, fmt::format(_("{:s} of {:s}"), items[i]._iIName, _(PL_Suffix[sufidx].PLName)).c_str());
 			strcpy(items[i]._iIName, istr);
 			items[i]._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemSuffix(i, sufidx);
@@ -2182,7 +2182,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			strcpy(items[i]._iIName, istr);
 		}
 		if (sufidx != -1) {
-			sprintf(istr, fmt::format(_("{:s} of {:s}"), items[i]._iIName, _(PL_Suffix[sufidx].PLName)).c_str());
+			strcpy(istr, fmt::format(_("{:s} of {:s}"), items[i]._iIName, _(PL_Suffix[sufidx].PLName)).c_str());
 			strcpy(items[i]._iIName, istr);
 		}
 	}
@@ -2746,7 +2746,7 @@ void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int 
 	tempstr[14] = (ibuff >> 8) & 0x7F;
 	tempstr[15] = ibuff & 0x7F;
 	tempstr[16] = '\0';
-	sprintf(items[ii]._iName, fmt::format(_(/* TRANSLATORS: {:s} will be a Character Name */ "Ear of {:s}"), tempstr).c_str());
+	strcpy(items[ii]._iName, fmt::format(_(/* TRANSLATORS: {:s} will be a Character Name */ "Ear of {:s}"), tempstr).c_str());
 	items[ii]._iCurs = ((ivalue >> 6) & 3) + ICURS_EAR_SORCERER;
 	items[ii]._ivalue = ivalue & 0x3F;
 	items[ii]._iCreateInfo = ic;
@@ -3414,51 +3414,51 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	switch (plidx) {
 	case IPL_TOHIT:
 	case IPL_TOHIT_CURSE:
-		sprintf(tempstr, fmt::format(_("chance to hit: {:+d}%"), x->_iPLToHit).c_str());
+		strcpy(tempstr, fmt::format(_("chance to hit: {:+d}%"), x->_iPLToHit).c_str());
 		break;
 	case IPL_DAMP:
 	case IPL_DAMP_CURSE:
-		sprintf(tempstr, fmt::format(_("{:+d}% damage"), x->_iPLDam).c_str());
+		strcpy(tempstr, fmt::format(_("{:+d}% damage"), x->_iPLDam).c_str());
 		break;
 	case IPL_TOHIT_DAMP:
 	case IPL_TOHIT_DAMP_CURSE:
-		sprintf(tempstr, fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam).c_str());
+		strcpy(tempstr, fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam).c_str());
 		break;
 	case IPL_ACP:
 	case IPL_ACP_CURSE:
-		sprintf(tempstr, fmt::format(_("{:+d}% armor"), x->_iPLAC).c_str());
+		strcpy(tempstr, fmt::format(_("{:+d}% armor"), x->_iPLAC).c_str());
 		break;
 	case IPL_SETAC:
-		sprintf(tempstr, fmt::format(_("armor class: {:d}"), x->_iAC).c_str());
+		strcpy(tempstr, fmt::format(_("armor class: {:d}"), x->_iAC).c_str());
 		break;
 	case IPL_AC_CURSE:
-		sprintf(tempstr, fmt::format(_("armor class: {:d}"), x->_iAC).c_str());
+		strcpy(tempstr, fmt::format(_("armor class: {:d}"), x->_iAC).c_str());
 		break;
 	case IPL_FIRERES:
 	case IPL_FIRERES_CURSE:
 		if (x->_iPLFR < 75)
-			sprintf(tempstr, fmt::format(_("Resist Fire: {:+d}%"), x->_iPLFR).c_str());
+			strcpy(tempstr, fmt::format(_("Resist Fire: {:+d}%"), x->_iPLFR).c_str());
 		else
 			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Fire: 75% MAX"));
 		break;
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
 		if (x->_iPLLR < 75)
-			sprintf(tempstr, fmt::format(_("Resist Lightning: {:+d}%"), x->_iPLLR).c_str());
+			strcpy(tempstr, fmt::format(_("Resist Lightning: {:+d}%"), x->_iPLLR).c_str());
 		else
 			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Lightning: 75% MAX"));
 		break;
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
 		if (x->_iPLMR < 75)
-			sprintf(tempstr, fmt::format(_("Resist Magic: {:+d}%"), x->_iPLMR).c_str());
+			strcpy(tempstr, fmt::format(_("Resist Magic: {:+d}%"), x->_iPLMR).c_str());
 		else
 			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Magic: 75% MAX"));
 		break;
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
 		if (x->_iPLFR < 75)
-			sprintf(tempstr, fmt::format(_("Resist All: {:+d}%"), x->_iPLFR).c_str());
+			strcpy(tempstr, fmt::format(_("Resist All: {:+d}%"), x->_iPLFR).c_str());
 		if (x->_iPLFR >= 75)
 			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist All: 75% MAX"));
 		break;
@@ -3478,47 +3478,47 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_FIREDAM:
 		if (x->_iFMinDam == x->_iFMaxDam)
-			sprintf(tempstr, fmt::format(_("Fire hit damage: {:d}"), x->_iFMinDam).c_str());
+			strcpy(tempstr, fmt::format(_("Fire hit damage: {:d}"), x->_iFMinDam).c_str());
 		else
-			sprintf(tempstr, fmt::format(_("Fire hit damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
+			strcpy(tempstr, fmt::format(_("Fire hit damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
 		break;
 	case IPL_LIGHTDAM:
 		if (x->_iLMinDam == x->_iLMaxDam)
-			sprintf(tempstr, fmt::format(_("Lightning hit damage: {:d}"), x->_iLMinDam).c_str());
+			strcpy(tempstr, fmt::format(_("Lightning hit damage: {:d}"), x->_iLMinDam).c_str());
 		else
-			sprintf(tempstr, fmt::format(_("Lightning hit damage: {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam).c_str());
+			strcpy(tempstr, fmt::format(_("Lightning hit damage: {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam).c_str());
 		break;
 	case IPL_STR:
 	case IPL_STR_CURSE:
-		sprintf(tempstr, fmt::format(_("{:+d} to strength"), x->_iPLStr).c_str());
+		strcpy(tempstr, fmt::format(_("{:+d} to strength"), x->_iPLStr).c_str());
 		break;
 	case IPL_MAG:
 	case IPL_MAG_CURSE:
-		sprintf(tempstr, fmt::format(_("{:+d} to magic"), x->_iPLMag).c_str());
+		strcpy(tempstr, fmt::format(_("{:+d} to magic"), x->_iPLMag).c_str());
 		break;
 	case IPL_DEX:
 	case IPL_DEX_CURSE:
-		sprintf(tempstr, fmt::format(_("{:+d} to dexterity"), x->_iPLDex).c_str());
+		strcpy(tempstr, fmt::format(_("{:+d} to dexterity"), x->_iPLDex).c_str());
 		break;
 	case IPL_VIT:
 	case IPL_VIT_CURSE:
-		sprintf(tempstr, fmt::format(_("{:+d} to vitality"), x->_iPLVit).c_str());
+		strcpy(tempstr, fmt::format(_("{:+d} to vitality"), x->_iPLVit).c_str());
 		break;
 	case IPL_ATTRIBS:
 	case IPL_ATTRIBS_CURSE:
-		sprintf(tempstr, fmt::format(_("{:+d} to all attributes"), x->_iPLStr).c_str());
+		strcpy(tempstr, fmt::format(_("{:+d} to all attributes"), x->_iPLStr).c_str());
 		break;
 	case IPL_GETHIT_CURSE:
 	case IPL_GETHIT:
-		sprintf(tempstr, fmt::format(_("{:+d} damage from enemies"), x->_iPLGetHit).c_str());
+		strcpy(tempstr, fmt::format(_("{:+d} damage from enemies"), x->_iPLGetHit).c_str());
 		break;
 	case IPL_LIFE:
 	case IPL_LIFE_CURSE:
-		sprintf(tempstr, fmt::format(_("Hit Points: {:+d}"), x->_iPLHP >> 6).c_str());
+		strcpy(tempstr, fmt::format(_("Hit Points: {:+d}"), x->_iPLHP >> 6).c_str());
 		break;
 	case IPL_MANA:
 	case IPL_MANA_CURSE:
-		sprintf(tempstr, fmt::format(_("Mana: {:+d}"), x->_iPLMana >> 6).c_str());
+		strcpy(tempstr, fmt::format(_("Mana: {:+d}"), x->_iPLMana >> 6).c_str());
 		break;
 	case IPL_DUR:
 		strcpy(tempstr, _("high durability"));
@@ -3530,31 +3530,31 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("indestructible"));
 		break;
 	case IPL_LIGHT:
-		sprintf(tempstr, fmt::format(_("+{:d}% light radius"), 10 * x->_iPLLight).c_str());
+		strcpy(tempstr, fmt::format(_("+{:d}% light radius"), 10 * x->_iPLLight).c_str());
 		break;
 	case IPL_LIGHT_CURSE:
-		sprintf(tempstr, fmt::format(_("-{:d}% light radius"), -10 * x->_iPLLight).c_str());
+		strcpy(tempstr, fmt::format(_("-{:d}% light radius"), -10 * x->_iPLLight).c_str());
 		break;
 	case IPL_MULT_ARROWS:
 		strcpy(tempstr, _("multiple arrows per shot"));
 		break;
 	case IPL_FIRE_ARROWS:
 		if (x->_iFMinDam == x->_iFMaxDam)
-			sprintf(tempstr, fmt::format(_("fire arrows damage: {:d}"), x->_iFMinDam).c_str());
+			strcpy(tempstr, fmt::format(_("fire arrows damage: {:d}"), x->_iFMinDam).c_str());
 		else
-			sprintf(tempstr, fmt::format(_("fire arrows damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
+			strcpy(tempstr, fmt::format(_("fire arrows damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
 		break;
 	case IPL_LIGHT_ARROWS:
 		if (x->_iLMinDam == x->_iLMaxDam)
-			sprintf(tempstr, fmt::format(_("lightning arrows damage {:d}"), x->_iLMinDam).c_str());
+			strcpy(tempstr, fmt::format(_("lightning arrows damage {:d}"), x->_iLMinDam).c_str());
 		else
-			sprintf(tempstr, fmt::format(_("lightning arrows damage {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam).c_str());
+			strcpy(tempstr, fmt::format(_("lightning arrows damage {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam).c_str());
 		break;
 	case IPL_FIREBALL:
 		if (x->_iFMinDam == x->_iFMaxDam)
-			sprintf(tempstr, fmt::format(_("fireball damage: {:d}"), x->_iFMinDam).c_str());
+			strcpy(tempstr, fmt::format(_("fireball damage: {:d}"), x->_iFMinDam).c_str());
 		else
-			sprintf(tempstr, fmt::format(_("fireball damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
+			strcpy(tempstr, fmt::format(_("fireball damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
 		break;
 	case IPL_THORNS:
 		strcpy(tempstr, _("attacker takes 1-3 damage"));
@@ -3651,9 +3651,9 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_ADDACLIFE:
 		if (x->_iFMinDam == x->_iFMaxDam)
-			sprintf(tempstr, fmt::format(_("lightning damage: {:d}"), x->_iFMinDam).c_str());
+			strcpy(tempstr, fmt::format(_("lightning damage: {:d}"), x->_iFMinDam).c_str());
 		else
-			sprintf(tempstr, fmt::format(_("lightning damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
+			strcpy(tempstr, fmt::format(_("lightning damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
 		break;
 	case IPL_ADDMANAAC:
 		strcpy(tempstr, _("charged bolts on hits"));
@@ -3662,13 +3662,13 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		if (x->_iPLFR <= 0)
 			strcpy(tempstr, " ");
 		else if (x->_iPLFR >= 1)
-			sprintf(tempstr, fmt::format(_("Resist Fire: {:+d}%"), x->_iPLFR).c_str());
+			strcpy(tempstr, fmt::format(_("Resist Fire: {:+d}%"), x->_iPLFR).c_str());
 		break;
 	case IPL_DEVASTATION:
 		strcpy(tempstr, _("occasional triple damage"));
 		break;
 	case IPL_DECAY:
-		sprintf(tempstr, fmt::format(_("decaying {:+d}% damage"), x->_iPLDam).c_str());
+		strcpy(tempstr, fmt::format(_("decaying {:+d}% damage"), x->_iPLDam).c_str());
 		break;
 	case IPL_PERIL:
 		strcpy(tempstr, _("2x dmg to monst, 1x to you"));
@@ -3677,10 +3677,10 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		/*xgettext:no-c-format*/ strcpy(tempstr, _("Random 0 - 500% damage"));
 		break;
 	case IPL_CRYSTALLINE:
-		sprintf(tempstr, fmt::format(_("low dur, {:+d}% damage"), x->_iPLDam).c_str());
+		strcpy(tempstr, fmt::format(_("low dur, {:+d}% damage"), x->_iPLDam).c_str());
 		break;
 	case IPL_DOPPELGANGER:
-		sprintf(tempstr, fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam).c_str());
+		strcpy(tempstr, fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam).c_str());
 		break;
 	case IPL_ACDEMON:
 		strcpy(tempstr, _("extra AC vs demons"));
@@ -3799,7 +3799,7 @@ void PrintItemMisc(ItemStruct *x)
 		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_EAR) {
-		sprintf(tempstr, fmt::format(_("Level: {:d}"), x->_ivalue).c_str());
+		strcpy(tempstr, fmt::format(_("Level: {:d}"), x->_ivalue).c_str());
 		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_AURIC) {
@@ -3817,11 +3817,11 @@ static void PrintItemInfo(ItemStruct *x)
 	if (str != 0 || mag != 0 || dex != 0) {
 		strcpy(tempstr, _("Required:"));
 		if (str)
-			sprintf(tempstr + strlen(tempstr), fmt::format(_(" {:d} Str"), str).c_str());
+			strcpy(tempstr + strlen(tempstr), fmt::format(_(" {:d} Str"), str).c_str());
 		if (mag)
-			sprintf(tempstr + strlen(tempstr), fmt::format(_(" {:d} Mag"), mag).c_str());
+			strcpy(tempstr + strlen(tempstr), fmt::format(_(" {:d} Mag"), mag).c_str());
 		if (dex)
-			sprintf(tempstr + strlen(tempstr), fmt::format(_(" {:d} Dex"), dex).c_str());
+			strcpy(tempstr + strlen(tempstr), fmt::format(_(" {:d} Dex"), dex).c_str());
 		AddPanelString(tempstr);
 	}
 	pinfoflag = true;
@@ -3832,30 +3832,30 @@ void PrintItemDetails(ItemStruct *x)
 	if (x->_iClass == ICLASS_WEAPON) {
 		if (x->_iMinDam == x->_iMaxDam) {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-				sprintf(tempstr, fmt::format(_("damage: {:d}  Indestructible"), x->_iMinDam).c_str());
+				strcpy(tempstr, fmt::format(_("damage: {:d}  Indestructible"), x->_iMinDam).c_str());
 			else
-				sprintf(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
+				strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
 		} else {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-				sprintf(tempstr, fmt::format(_("damage: {:d}-{:d}  Indestructible"), x->_iMinDam, x->_iMaxDam).c_str());
+				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Indestructible"), x->_iMinDam, x->_iMaxDam).c_str());
 			else
-				sprintf(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
+				strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
 		}
 		AddPanelString(tempstr);
 	}
 	if (x->_iClass == ICLASS_ARMOR) {
 		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-			sprintf(tempstr, fmt::format(_("armor: {:d}  Indestructible"), x->_iAC).c_str());
+			strcpy(tempstr, fmt::format(_("armor: {:d}  Indestructible"), x->_iAC).c_str());
 		else
-			sprintf(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}"), x->_iAC, x->_iDurability, x->_iMaxDur).c_str());
+			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}"), x->_iAC, x->_iDurability, x->_iMaxDur).c_str());
 		AddPanelString(tempstr);
 	}
 	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0) {
 		if (x->_iMinDam == x->_iMaxDam)
-			sprintf(tempstr, fmt::format(_(/* TRANSLATORS: dam: is damage Dur: is durability */ "dam: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
+			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: dam: is damage Dur: is durability */ "dam: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
 		else
-			sprintf(tempstr, fmt::format(_(/* TRANSLATORS: dam: is damage Dur: is durability */ "dam: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
-		sprintf(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
+			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: dam: is damage Dur: is durability */ "dam: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
+		strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
 		AddPanelString(tempstr);
 	}
 	if (x->_iPrePower != -1) {
@@ -3879,18 +3879,18 @@ void PrintItemDur(ItemStruct *x)
 	if (x->_iClass == ICLASS_WEAPON) {
 		if (x->_iMinDam == x->_iMaxDam) {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-				sprintf(tempstr, fmt::format(_("damage: {:d}  Indestructible"), x->_iMinDam).c_str());
+				strcpy(tempstr, fmt::format(_("damage: {:d}  Indestructible"), x->_iMinDam).c_str());
 			else
-				sprintf(tempstr, fmt::format(_("damage: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
+				strcpy(tempstr, fmt::format(_("damage: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
 		} else {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-				sprintf(tempstr, fmt::format(_("damage: {:d}-{:d}  Indestructible"), x->_iMinDam, x->_iMaxDam).c_str());
+				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Indestructible"), x->_iMinDam, x->_iMaxDam).c_str());
 			else
-				sprintf(tempstr, fmt::format(_("damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
+				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
 		}
 		AddPanelString(tempstr);
 		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
-			sprintf(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
+			strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
 			AddPanelString(tempstr);
 		}
 		if (x->_iMagical != ITEM_QUALITY_NORMAL)
@@ -3898,14 +3898,14 @@ void PrintItemDur(ItemStruct *x)
 	}
 	if (x->_iClass == ICLASS_ARMOR) {
 		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-			sprintf(tempstr, fmt::format(_("armor: {:d}  Indestructible"), x->_iAC).c_str());
+			strcpy(tempstr, fmt::format(_("armor: {:d}  Indestructible"), x->_iAC).c_str());
 		else
-			sprintf(tempstr, fmt::format(_("armor: {:d}  Dur: {:d}/{:d}"), x->_iAC, x->_iDurability, x->_iMaxDur).c_str());
+			strcpy(tempstr, fmt::format(_("armor: {:d}  Dur: {:d}/{:d}"), x->_iAC, x->_iDurability, x->_iMaxDur).c_str());
 		AddPanelString(tempstr);
 		if (x->_iMagical != ITEM_QUALITY_NORMAL)
 			AddPanelString(_("Not Identified"));
 		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
-			sprintf(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
+			strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
 			AddPanelString(tempstr);
 		}
 	}
