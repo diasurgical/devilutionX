@@ -29,6 +29,11 @@ option(RUN_TESTS "Build and run tests" OFF)
 option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with RUN_TESTS)" OFF)
 option(USE_GETTEXT "Build translation files using gettext" OFF)
 
+if(NOT NONET)
+  option(DISABLE_TCP "Disable TCP multiplayer option" OFF)
+  option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF)
+endif()
+
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
 option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken platform implementations)" OFF)
@@ -258,7 +263,7 @@ else()
   find_package(SDL2_ttf REQUIRED)
 endif()
 
-if(NOT NONET)
+if(NOT NONET AND NOT DISABLE_TCP)
   add_subdirectory(3rdParty/asio)
 endif()
 
@@ -452,12 +457,17 @@ else()
 endif()
 
 if(NOT NONET)
-  list(APPEND libdevilutionx_SRCS
-    Source/dvlnet/tcp_client.cpp
-    Source/dvlnet/tcp_server.cpp
-    Source/dvlnet/protocol_zt.cpp
-    Source/dvlnet/zerotier_native.cpp
-    Source/dvlnet/zerotier_lwip.cpp)
+  if(NOT DISABLE_TCP)
+    list(APPEND libdevilutionx_SRCS
+      Source/dvlnet/tcp_client.cpp
+      Source/dvlnet/tcp_server.cpp)
+  endif()
+  if(NOT DISABLE_ZERO_TIER)
+    list(APPEND libdevilutionx_SRCS
+      Source/dvlnet/protocol_zt.cpp
+      Source/dvlnet/zerotier_native.cpp
+      Source/dvlnet/zerotier_lwip.cpp)
+  endif()
 endif()
 
 set(BIN_TARGET devilutionx)
@@ -588,7 +598,10 @@ target_link_libraries(libdevilutionx PUBLIC
   Radon)
 
 if(NOT NONET)
-  target_link_libraries(libdevilutionx PUBLIC asio sodium)
+  if(NOT DISABLE_TCP)
+    target_link_libraries(libdevilutionx PUBLIC asio)
+  endif()
+  target_link_libraries(libdevilutionx PUBLIC sodium)
 endif()
 
 target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
@@ -596,7 +609,7 @@ target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
 genex_for_option(DEBUG)
 target_compile_definitions(libdevilutionx PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
 
-if(NOT NONET)
+if(NOT NONET AND NOT DISABLE_TCP)
   target_compile_definitions(libdevilutionx PUBLIC ASIO_STANDALONE)
 endif()
 
@@ -606,6 +619,8 @@ foreach(
   NOSOUND
   NONET
   PREFILL_PLAYER_NAME
+  DISABLE_TCP
+  DISABLE_ZERO_TIER
   DISABLE_STREAMING_MUSIC
   DISABLE_STREAMING_SOUNDS
   GPERF
@@ -754,7 +769,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
 endif()
 
 if(WIN32)
-  target_link_libraries(libdevilutionx PUBLIC wsock32 ws2_32 wininet)
+  target_link_libraries(libdevilutionx PUBLIC shlwapi wsock32 ws2_32 wininet)
 
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(libdevilutionx PUBLIC $<$<CONFIG:Debug>:-gstabs>)
@@ -1028,7 +1043,7 @@ if(CPACK)
   include(CPack)
 endif()
 
-if(NOT NONET)
+if(NOT NONET AND NOT DISABLE_ZERO_TIER)
   add_subdirectory(3rdParty/libzt)
   target_link_libraries(libdevilutionx PUBLIC zt-static)
 endif()
