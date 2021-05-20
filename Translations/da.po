@@ -437,7 +437,6 @@ msgid "Play by yourself with no network exposure."
 msgstr "Spil alene uden nogen netværkseksponering."
 
 #: Source/DiabloUI/selconn.cpp:115
-#, c-format
 msgid "Players Supported: {:d}"
 msgstr "Understøttede spillere: {:d}"
 
@@ -617,7 +616,6 @@ msgid "The host is running a different game than you."
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:415
-#, c-format
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr ""
 
@@ -705,7 +703,6 @@ msgstr ""
 "reserverede ord.\n"
 
 #: Source/DiabloUI/selhero.cpp:345
-#, c-format
 msgid "Character already exists. Do you want to overwrite \"{:s}\"?"
 msgstr "Karakteren findes allerede. Vil du overskrive \"{:s}\"?"
 
@@ -778,7 +775,6 @@ msgid "Error"
 msgstr "Fejl"
 
 #: Source/appfat.cpp:117
-#, c-format
 msgid ""
 "{:s}\n"
 "\n"
@@ -837,7 +833,6 @@ msgstr ""
 "Sørg for, at den findes i spilmappen, og at filnavnet er med små bogstaver."
 
 #: Source/appfat.cpp:174
-#, c-format
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -918,22 +913,18 @@ msgid ",  "
 msgstr ""
 
 #: Source/stores.cpp:169
-#, c-format
 msgid "Charges: {:d}/{:d}"
 msgstr ""
 
 #: Source/stores.cpp:180
-#, c-format
 msgid "Damage: {:d}-{:d}  "
 msgstr ""
 
 #: Source/stores.cpp:182
-#, c-format
 msgid "Armor: {:d}  "
 msgstr ""
 
 #: Source/stores.cpp:184
-#, c-format
 msgid "Dur: {:d}/{:d},  "
 msgstr ""
 
@@ -952,17 +943,14 @@ msgid "Required:"
 msgstr "Krav:"
 
 #: Source/stores.cpp:199
-#, c-format
 msgid " {:d} Str"
 msgstr ""
 
 #: Source/stores.cpp:201
-#, c-format
 msgid " {:d} Mag"
 msgstr ""
 
 #: Source/stores.cpp:203
-#, c-format
 msgid " {:d} Dex"
 msgstr ""
 
@@ -1015,7 +1003,6 @@ msgid "Leave the shop"
 msgstr "Forlad healers hjem"
 
 #: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
-#, c-format
 msgid "I have these items for sale:             Your gold: {:d}"
 msgstr ""
 
@@ -1029,27 +1016,22 @@ msgid "Back"
 msgstr ""
 
 #: Source/stores.cpp:339
-#, c-format
 msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:467 Source/stores.cpp:717
-#, c-format
 msgid "You have nothing I want.             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:477 Source/stores.cpp:727
-#, c-format
 msgid "Which item is for sale?             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:537
-#, c-format
 msgid "You have nothing to repair.             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:549
-#, c-format
 msgid "Repair which item?             Your gold: {:d}"
 msgstr ""
 
@@ -1076,12 +1058,10 @@ msgid "Leave the shack"
 msgstr ""
 
 #: Source/stores.cpp:793
-#, c-format
 msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:803
-#, c-format
 msgid "Recharge which item?             Your gold: {:d}"
 msgstr ""
 
@@ -1159,7 +1139,6 @@ msgid "Say goodbye"
 msgstr ""
 
 #: Source/stores.cpp:915
-#, c-format
 msgid "I have this item for sale:             Your gold: {:d}"
 msgstr ""
 
@@ -1194,12 +1173,10 @@ msgid "Identify an item"
 msgstr ""
 
 #: Source/stores.cpp:1090
-#, c-format
 msgid "You have nothing to identify.             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:1100
-#, c-format
 msgid "Identify which item?             Your gold: {:d}"
 msgstr ""
 
