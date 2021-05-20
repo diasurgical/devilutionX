@@ -1035,8 +1035,8 @@ msgid "pieces"
 msgstr "pièces"
 
 #: Source/control.cpp:1912
-msgid "You have %u gold"
-msgstr "Vous avez %u d'or"
+msgid "You have {:d} gold"
+msgstr "Vous avez {:d} d'or"
 
 #: Source/control.cpp:1914
 msgid "{:s}.  How many do"
