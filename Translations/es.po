@@ -1000,8 +1000,8 @@ msgid "pieces"
 msgstr "piezas"
 
 #: Source/control.cpp:1912
-msgid "You have %u gold"
-msgstr "Tienes %u oro"
+msgid "You have {:d} gold"
+msgstr "Tienes {:d} oro"
 
 #: Source/control.cpp:1906
 msgid "piece.  How many do"

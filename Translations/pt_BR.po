@@ -1035,8 +1035,8 @@ msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "Mana: {:d}  Dano: 1/3 da vida do oponente"
 
 #: Source/control.cpp:1904
-msgid "You have %u gold"
-msgstr "Você tem %u peças de ouro"
+msgid "You have {:d} gold"
+msgstr "Você tem {:d} peças de ouro"
 
 #: Source/control.cpp:1906
 #, fuzzy, c-format

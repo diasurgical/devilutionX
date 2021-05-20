@@ -999,8 +999,8 @@ msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "法 力 ： {:d} 伤 害 ：1/3  tgt hp"
 
 #: Source/control.cpp:1900
-msgid "You have %u gold"
-msgstr "你拥有 %u 金币"
+msgid "You have {:d} gold"
+msgstr "你拥有 {:d} 金币"
 
 #: Source/control.cpp:1902
 msgid "piece.  How many do"

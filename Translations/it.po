@@ -1037,12 +1037,12 @@ msgstr "Mana: {:d}   Dan: n/a"
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "Mana: {:d}  Dan: 1/3 tgt hp"
 
-#. TRANSLATORS: %u is a number. Dialog is shown when splitting a stash of Gold.
+#. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1685
-msgid "You have %u gold piece. How many do you want to remove?"
-msgid_plural "You have %u gold pieces. How many do you want to remove?"
-msgstr[0] "Possiedi %u moneta d'oro. Quante ne vuoi rimuovere?"
-msgstr[1] "Possiedi %u monete d'oro. Quante ne vuoi rimuovere?"
+msgid "You have {:d} gold piece. How many do you want to remove?"
+msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgstr[0] "Possiedi {:d} moneta d'oro. Quante ne vuoi rimuovere?"
+msgstr[1] "Possiedi {:d} monete d'oro. Quante ne vuoi rimuovere?"
 
 #: Source/controls/modifier_hints.cpp:117
 msgid "Menu"

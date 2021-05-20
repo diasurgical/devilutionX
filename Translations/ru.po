@@ -1038,11 +1038,11 @@ msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr ""
 
 #: Source/control.cpp:1704
-msgid "You have %u gold piece. How many do you want to remove?"
-msgid_plural "You have %u gold pieces. How many do you want to remove?"
-msgstr[0] "У вас %u золотой. Сколько вы хотите забрать?"
-msgstr[1] "У вас %u золотых. Сколько вы хотите забрать?"
-msgstr[2] "У вас %u золотых. Сколько вы хотите забрать?"
+msgid "You have {:d} gold piece. How many do you want to remove?"
+msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgstr[0] "У вас {:d} золотой. Сколько вы хотите забрать?"
+msgstr[1] "У вас {:d} золотых. Сколько вы хотите забрать?"
+msgstr[2] "У вас {:d} золотых. Сколько вы хотите забрать?"
 
 #: Source/controls/modifier_hints.cpp:117
 msgid "Menu"
