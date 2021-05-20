@@ -5,6 +5,8 @@
  */
 #include <utility>
 
+#include <fmt/format.h>
+
 #include "cursor.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -2048,7 +2050,7 @@ char CheckInvHLight()
 
 	if (pi->_itype == ITYPE_GOLD) {
 		nGold = pi->_ivalue;
-		sprintf(infostr, ngettext("%i gold piece", "%i gold pieces", nGold), nGold);
+		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
 	} else {
 		if (pi->_iMagical == ITEM_QUALITY_MAGIC) {
 			infoclr = UIS_BLUE;
