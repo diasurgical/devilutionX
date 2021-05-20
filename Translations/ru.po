@@ -420,7 +420,6 @@ msgid "Play by yourself with no network exposure."
 msgstr "Играть в одиночной игре без подключения к интернету."
 
 #: Source/DiabloUI/selconn.cpp:115
-#, c-format
 msgid "Players Supported: {:d}"
 msgstr "Поддержка игроков: {:d}"
 
@@ -594,7 +593,6 @@ msgid "The host is running a different game than you."
 msgstr "На сервере запущена другая игра."
 
 #: Source/DiabloUI/selgame.cpp:415
-#, c-format
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr ""
 "Ваша версия игры ({:s}) не соответствует с версией игры на сервере ({:d}.{:d}.{:d})"
@@ -677,7 +675,6 @@ msgstr ""
 "специальные слова.\n"
 
 #: Source/DiabloUI/selhero.cpp:345
-#, c-format
 msgid "Character already exists. Do you want to overwrite \"{:s}\"?"
 msgstr "Персонаж уже существует. Хотите его перезаписать \"{:s}\"?"
 
@@ -726,7 +723,6 @@ msgid "Delete Single Player Hero"
 msgstr "Удалить персонажа для одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:621
-#, c-format
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Вы действительно хотите удалить персонажа \"{:s}\"?"
 
@@ -806,7 +802,6 @@ msgid "Error"
 msgstr "Ошибка"
 
 #: Source/appfat.cpp:117
-#, c-format
 msgid ""
 "{:s}\n"
 "\n"
@@ -817,7 +812,6 @@ msgstr ""
 "Ошибка: в {:s} в строке {:d}"
 
 #: Source/appfat.cpp:137
-#, c-format
 msgid ""
 "Unable to open a required file.\n"
 "\n"
@@ -852,7 +846,6 @@ msgstr ""
 "Убедитесь, что файлы находятся в папке игры."
 
 #: Source/appfat.cpp:176
-#, c-format
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -873,17 +866,14 @@ msgid "password: "
 msgstr "пароль: "
 
 #: Source/automap.cpp:405
-#, c-format
 msgid "Level: Nest {:d}"
 msgstr "Уровень: Nest {:d}"
 
 #: Source/automap.cpp:407
-#, c-format
 msgid "Level: Crypt {:d}"
 msgstr "Уровень: Crypt {:d}"
 
 #: Source/automap.cpp:409 Source/items.cpp:3816
-#, c-format
 msgid "Level: {:d}"
 msgstr "Уровень: {:d}"
 
@@ -928,12 +918,10 @@ msgid "Send Message"
 msgstr "Отправить сообщение"
 
 #: Source/control.cpp:394 Source/control.cpp:937
-#, c-format
 msgid "{:s} Skill"
 msgstr "{:s} навык"
 
 #: Source/control.cpp:397 Source/control.cpp:941
-#, c-format
 msgid "{:s} Spell"
 msgstr "Заклинание {:s}"
 
@@ -946,17 +934,14 @@ msgid "Spell Level 0 - Unusable"
 msgstr "Уровень заклинаний 0 - Нельзя использовать"
 
 #: Source/control.cpp:405 Source/control.cpp:949 Source/control.cpp:1662
-#, c-format
 msgid "Spell Level {:d}"
 msgstr "Уровень заклинания {:d}"
 
 #: Source/control.cpp:409 Source/control.cpp:953
-#, c-format
 msgid "Scroll of {:s}"
 msgstr "Свиток о {:s}"
 
 #: Source/control.cpp:425 Source/control.cpp:970
-#, c-format
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} свиток"
@@ -964,12 +949,10 @@ msgstr[1] "{:d} свитка"
 msgstr[2] "{:d} свитков"
 
 #: Source/control.cpp:429 Source/control.cpp:974 Source/items.cpp:1570
-#, c-format
 msgid "Staff of {:s}"
 msgstr "Посох {:s}"
 
 #: Source/control.cpp:431 Source/control.cpp:976
-#, c-format
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} заряд"
@@ -977,7 +960,6 @@ msgstr[1] "{:d} заряда"
 msgstr[2] "{:d} зарядов"
 
 #: Source/control.cpp:441
-#, c-format
 msgid "Spell Hotkey {:s}"
 msgstr "Горячая клавиша {:s}"
 
@@ -990,7 +972,6 @@ msgid "Player attack"
 msgstr ""
 
 #: Source/control.cpp:918
-#, c-format
 msgid "Hotkey: {:s}"
 msgstr "Горячая клавиша: {:s}"
 
@@ -1003,7 +984,6 @@ msgid "Hotkey: 's'"
 msgstr "Горячая клавиша: 's'"
 
 #: Source/control.cpp:1122 Source/inv.cpp:2066 Source/items.cpp:3050
-#, c-format
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} золотой"
@@ -1015,12 +995,10 @@ msgid "Requirements not met"
 msgstr ""
 
 #: Source/control.cpp:1163
-#, c-format
 msgid "{:s}, Level: {:d}"
 msgstr ""
 
 #: Source/control.cpp:1165
-#, c-format
 msgid "Hit Points {:d} of {:d}"
 msgstr ""
 
@@ -1041,7 +1019,6 @@ msgid "Skill"
 msgstr ""
 
 #: Source/control.cpp:1639
-#, c-format
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] ""
@@ -1049,22 +1026,18 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: Source/control.cpp:1647
-#, c-format
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr ""
 
 #: Source/control.cpp:1649
-#, c-format
 msgid "Mana: {:d}   Dam: n/a"
 msgstr ""
 
 #: Source/control.cpp:1652
-#, c-format
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr ""
 
 #: Source/control.cpp:1704
-#, c-format
 msgid "You have %u gold piece. How many do you want to remove?"
 msgid_plural "You have %u gold pieces. How many do you want to remove?"
 msgstr[0] "У вас %u золотой. Сколько вы хотите забрать?"
@@ -1100,7 +1073,6 @@ msgid "Town Portal"
 msgstr ""
 
 #: Source/cursor.cpp:206
-#, c-format
 msgid "from {:s}"
 msgstr ""
 
@@ -1209,12 +1181,10 @@ msgstr ""
 "Сообщайте об ошибках на https://github.com/diasurgical/devilutionX/\n"
 
 #: Source/diablo.cpp:283
-#, c-format
 msgid "unrecognized option '{:s}'\n"
 msgstr "неизвестный параметр '{:s}'\n"
 
 #: Source/diablo.cpp:671
-#, c-format
 msgid "version {:s}"
 msgstr "версия {:s}"
 
@@ -1235,7 +1205,6 @@ msgid "while in stores"
 msgstr ""
 
 #: Source/diablo.cpp:2201
-#, c-format
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr ""
 
@@ -3604,12 +3573,10 @@ msgstr ""
 
 #: Source/items.cpp:1527 Source/items.cpp:1569 Source/items.cpp:2161
 #: Source/items.cpp:2180
-#, c-format
 msgid "{:s} of {:s}"
 msgstr ""
 
 #: Source/items.cpp:2753 Source/player.cpp:1874
-#, c-format
 msgid "Ear of {:s}"
 msgstr ""
 
@@ -3759,32 +3726,26 @@ msgid "fully recover life and mana"
 msgstr ""
 
 #: Source/items.cpp:3431
-#, c-format
 msgid "chance to hit: {:+d}%"
 msgstr ""
 
 #: Source/items.cpp:3435
-#, c-format
 msgid "{:+d}% damage"
 msgstr ""
 
 #: Source/items.cpp:3439 Source/items.cpp:3697
-#, c-format
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr ""
 
 #: Source/items.cpp:3443
-#, c-format
 msgid "{:+d}% armor"
 msgstr ""
 
 #: Source/items.cpp:3446 Source/items.cpp:3449
-#, c-format
 msgid "armor class: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3454 Source/items.cpp:3679
-#, c-format
 msgid "Resist Fire: {:+d}%"
 msgstr ""
 
@@ -3794,7 +3755,6 @@ msgid "Resist Fire: 75% MAX"
 msgstr ""
 
 #: Source/items.cpp:3461
-#, c-format
 msgid "Resist Lightning: {:+d}%"
 msgstr ""
 
@@ -3804,7 +3764,6 @@ msgid "Resist Lightning: 75% MAX"
 msgstr ""
 
 #: Source/items.cpp:3468
-#, c-format
 msgid "Resist Magic: {:+d}%"
 msgstr ""
 
@@ -3814,7 +3773,6 @@ msgid "Resist Magic: 75% MAX"
 msgstr ""
 
 #: Source/items.cpp:3475
-#, c-format
 msgid "Resist All: {:+d}%"
 msgstr ""
 
@@ -3824,7 +3782,6 @@ msgid "Resist All: 75% MAX"
 msgstr ""
 
 #: Source/items.cpp:3481
-#, c-format
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] ""
@@ -3832,7 +3789,6 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: Source/items.cpp:3483
-#, c-format
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] ""
@@ -3848,7 +3804,6 @@ msgid "Extra charges"
 msgstr ""
 
 #: Source/items.cpp:3491
-#, c-format
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] ""
@@ -3856,62 +3811,50 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: Source/items.cpp:3495
-#, c-format
 msgid "Fire hit damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3497
-#, c-format
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3501
-#, c-format
 msgid "Lightning hit damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3503
-#, c-format
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3507
-#, c-format
 msgid "{:+d} to strength"
 msgstr ""
 
 #: Source/items.cpp:3511
-#, c-format
 msgid "{:+d} to magic"
 msgstr ""
 
 #: Source/items.cpp:3515
-#, c-format
 msgid "{:+d} to dexterity"
 msgstr ""
 
 #: Source/items.cpp:3519
-#, c-format
 msgid "{:+d} to vitality"
 msgstr ""
 
 #: Source/items.cpp:3523
-#, c-format
 msgid "{:+d} to all attributes"
 msgstr ""
 
 #: Source/items.cpp:3527
-#, c-format
 msgid "{:+d} damage from enemies"
 msgstr ""
 
 #: Source/items.cpp:3531
-#, c-format
 msgid "Hit Points: {:+d}"
 msgstr ""
 
 #: Source/items.cpp:3535
-#, c-format
 msgid "Mana: {:+d}"
 msgstr ""
 
@@ -3928,12 +3871,10 @@ msgid "indestructible"
 msgstr ""
 
 #: Source/items.cpp:3547
-#, c-format
 msgid "+{:d}%% light radius"
 msgstr ""
 
 #: Source/items.cpp:3550
-#, c-format
 msgid "-{:d}%% light radius"
 msgstr ""
 
@@ -3942,32 +3883,26 @@ msgid "multiple arrows per shot"
 msgstr ""
 
 #: Source/items.cpp:3557
-#, c-format
 msgid "fire arrows damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3559
-#, c-format
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3563
-#, c-format
 msgid "lightning arrows damage {:d}"
 msgstr ""
 
 #: Source/items.cpp:3565
-#, c-format
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3569
-#, c-format
 msgid "fireball damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3571
-#, c-format
 msgid "fireball damage: {:d}-{:d}"
 msgstr ""
 
@@ -4061,7 +3996,6 @@ msgid "fast block"
 msgstr ""
 
 #: Source/items.cpp:3634
-#, c-format
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] ""
@@ -4105,12 +4039,10 @@ msgid "see with infravision"
 msgstr ""
 
 #: Source/items.cpp:3668
-#, c-format
 msgid "lightning damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3670
-#, c-format
 msgid "lightning damage: {:d}-{:d}"
 msgstr ""
 
@@ -4123,7 +4055,6 @@ msgid "occasional triple damage"
 msgstr ""
 
 #: Source/items.cpp:3685
-#, c-format
 msgid "decaying {:+d}% damage"
 msgstr ""
 
@@ -4137,7 +4068,6 @@ msgid "Random 0 - 500% damage"
 msgstr ""
 
 #: Source/items.cpp:3694
-#, c-format
 msgid "low dur, {:+d}% damage"
 msgstr ""
 
@@ -4200,63 +4130,51 @@ msgid "Required:"
 msgstr ""
 
 #: Source/items.cpp:3834 Source/stores.cpp:201
-#, c-format
 msgid " {:d} Str"
 msgstr ""
 
 #: Source/items.cpp:3836 Source/stores.cpp:203
-#, c-format
 msgid " {:d} Mag"
 msgstr ""
 
 #: Source/items.cpp:3838 Source/stores.cpp:205
-#, c-format
 msgid " {:d} Dex"
 msgstr ""
 
 #: Source/items.cpp:3849 Source/items.cpp:3896
-#, c-format
 msgid "damage: {:d}  Indestructible"
 msgstr ""
 
 #: Source/items.cpp:3851 Source/items.cpp:3898
-#, c-format
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3854 Source/items.cpp:3901
-#, c-format
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr ""
 
 #: Source/items.cpp:3856 Source/items.cpp:3903
-#, c-format
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3862 Source/items.cpp:3915
-#, c-format
 msgid "armor: {:d}  Indestructible"
 msgstr ""
 
 #: Source/items.cpp:3864 Source/items.cpp:3917
-#, c-format
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3869
-#, c-format
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3871
-#, c-format
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3872 Source/items.cpp:3907 Source/items.cpp:3922
 #: Source/stores.cpp:171
-#, c-format
 msgid "Charges: {:d}/{:d}"
 msgstr ""
 
@@ -5165,17 +5083,14 @@ msgid "Undead"
 msgstr "Нежить"
 
 #: Source/monster.cpp:4966
-#, c-format
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Тип: {:s}  Убито: {:d}"
 
 #: Source/monster.cpp:4968
-#, c-format
 msgid "Total kills: {:d}"
 msgstr "Убито: {:d}"
 
 #: Source/monster.cpp:5001
-#, c-format
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Здоровье: {:d}-{:d}"
 
@@ -5204,7 +5119,6 @@ msgid "Immune: "
 msgstr "Иммунитет: "
 
 #: Source/monster.cpp:5046
-#, c-format
 msgid "Type: {:s}"
 msgstr "Тип: {:s}"
 
@@ -5243,32 +5157,26 @@ msgstr ""
 #: Source/msg.cpp:1394 Source/msg.cpp:1665 Source/msg.cpp:1687
 #: Source/msg.cpp:1709 Source/msg.cpp:1829 Source/msg.cpp:1850
 #: Source/msg.cpp:1871 Source/msg.cpp:1892
-#, c-format
 msgid "{:s} has cast an illegal spell."
 msgstr ""
 
 #: Source/msg.cpp:2228 Source/multi.cpp:859
-#, c-format
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
 #: Source/multi.cpp:262
-#, c-format
 msgid "Player '{:s}' just left the game"
 msgstr ""
 
 #: Source/multi.cpp:265
-#, c-format
 msgid "Player '{:s}' killed Diablo and left the game!"
 msgstr ""
 
 #: Source/multi.cpp:269
-#, c-format
 msgid "Player '{:s}' dropped due to timeout"
 msgstr ""
 
 #: Source/multi.cpp:861
-#, c-format
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr ""
 
@@ -5531,7 +5439,6 @@ msgid "Barrel"
 msgstr "Бочка"
 
 #: Source/objects.cpp:5508
-#, c-format
 msgid "{:s} Shrine"
 msgstr "{:s} святыня"
 
@@ -5609,7 +5516,6 @@ msgid "Trapped {:s}"
 msgstr "Пойманная {:s}"
 
 #: Source/objects.cpp:5583
-#, c-format
 msgid "{:s} (disabled)"
 msgstr "{:s} (отключено)"
 
@@ -5634,7 +5540,6 @@ msgid "Unable to write to save file archive"
 msgstr ""
 
 #: Source/plrmsg.cpp:73
-#, c-format
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr ""
 
@@ -5646,7 +5551,6 @@ msgid ""
 msgstr ""
 
 #: Source/qol/xpbar.cpp:124
-#, c-format
 msgid "Level {:d}"
 msgstr "Уровень {:d}"
 
@@ -5663,7 +5567,6 @@ msgid "Next Level: "
 msgstr "Следующий Уровень: "
 
 #: Source/qol/xpbar.cpp:150
-#, c-format
 msgid " to Level {:d}"
 msgstr " до Уровня {:d}"
 
@@ -5746,7 +5649,6 @@ msgid "Unholy Altar"
 msgstr "Нечестивый алтарь"
 
 #: Source/quests.cpp:285
-#, c-format
 msgid "To {:s}"
 msgstr "К {:s}"
 
@@ -5951,17 +5853,14 @@ msgid ",  "
 msgstr ""
 
 #: Source/stores.cpp:182
-#, c-format
 msgid "Damage: {:d}-{:d}  "
 msgstr ""
 
 #: Source/stores.cpp:184
-#, c-format
 msgid "Armor: {:d}  "
 msgstr ""
 
 #: Source/stores.cpp:186
-#, c-format
 msgid "Dur: {:d}/{:d},  "
 msgstr ""
 
@@ -6012,7 +5911,6 @@ msgid "Leave the shop"
 msgstr "Покинуть магазин"
 
 #: Source/stores.cpp:276 Source/stores.cpp:625 Source/stores.cpp:991
-#, c-format
 msgid "I have these items for sale:             Your gold: {:d}"
 msgstr "У меня есть на продажу:                Ваше золото: {:d}"
 
@@ -6027,27 +5925,22 @@ msgstr "Назад"
 
 # “премиальные прдеметы” не влезают в длину строки
 #: Source/stores.cpp:341
-#, c-format
 msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr "У меня есть на продажу:                Ваше золото: {:d}"
 
 #: Source/stores.cpp:469 Source/stores.cpp:719
-#, c-format
 msgid "You have nothing I want.             Your gold: {:d}"
 msgstr "У вас нет ничего нужного мне.      Ваше золото: {:d}"
 
 #: Source/stores.cpp:479 Source/stores.cpp:729
-#, c-format
 msgid "Which item is for sale?             Your gold: {:d}"
 msgstr "Какой предмет продать?            Ваше золото: {:d}"
 
 #: Source/stores.cpp:539
-#, c-format
 msgid "You have nothing to repair.             Your gold: {:d}"
 msgstr "У вас нечего чинить.                  Ваше золото: {:d}"
 
 #: Source/stores.cpp:551
-#, c-format
 msgid "Repair which item?             Your gold: {:d}"
 msgstr "Какой предмет починить?      Ваше золото: {:d}"
 
@@ -6072,12 +5965,10 @@ msgid "Leave the shack"
 msgstr "Покинуть хижину"
 
 #: Source/stores.cpp:795
-#, c-format
 msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr "У вас нечего заряжать.                  Ваше золото: {:d}"
 
 #: Source/stores.cpp:805
-#, c-format
 msgid "Recharge which item?             Your gold: {:d}"
 msgstr "Какой предмет зарядить?        Ваше золото: {:d}"
 
@@ -6143,7 +6034,6 @@ msgid "Say goodbye"
 msgstr "Попрощаться"
 
 #: Source/stores.cpp:917
-#, c-format
 msgid "I have this item for sale:             Your gold: {:d}"
 msgstr "У меня есть на продажу:              Ваше золото: {:d}"
 
@@ -6178,13 +6068,11 @@ msgid "Identify an item"
 msgstr "Идентифицировать предмет"
 
 #: Source/stores.cpp:1092
-#, c-format
 msgid "You have nothing to identify.             Your gold: {:d}"
 msgstr "У вас нечего идентифицировать.          Ваше золото: {:d}"
 
 # Нужно выровнять с остальными строками
 #: Source/stores.cpp:1102
-#, c-format
 msgid "Identify which item?             Your gold: {:d}"
 msgstr "Какой предмет идентифицировать? Ваше золото: {:d}"
 
@@ -6197,12 +6085,10 @@ msgid "Done"
 msgstr "Готово"
 
 #: Source/stores.cpp:1131
-#, c-format
 msgid "Talk to {:s}"
 msgstr "Поговорить с {:s}"
 
 #: Source/stores.cpp:1135
-#, c-format
 msgid "Talking to {:s}"
 msgstr "Разговор с {:s}"
 
@@ -9879,7 +9765,6 @@ msgstr "Спустится в Улей"
 
 #: Source/trigs.cpp:397 Source/trigs.cpp:484 Source/trigs.cpp:536
 #: Source/trigs.cpp:635
-#, c-format
 msgid "Up to level {:d}"
 msgstr "Подняться на уровень {:d}"
 
@@ -9890,22 +9775,18 @@ msgstr "Подняться в город"
 
 #: Source/trigs.cpp:411 Source/trigs.cpp:496 Source/trigs.cpp:550
 #: Source/trigs.cpp:577 Source/trigs.cpp:648
-#, c-format
 msgid "Down to level {:d}"
 msgstr "Спуститься на уровень {:d}"
 
 #: Source/trigs.cpp:424
-#, c-format
 msgid "Up to Crypt level {:d}"
 msgstr "Подняться в Склеп на уровень {:d}"
 
 #: Source/trigs.cpp:440
-#, c-format
 msgid "Down to Crypt level {:d}"
 msgstr "Спуститься в Склеп на уровень {:d}"
 
 #: Source/trigs.cpp:563
-#, c-format
 msgid "Up to Nest level {:d}"
 msgstr "Подняться в Гнездо на уровень {:d}"
 
@@ -9914,6 +9795,5 @@ msgid "Down to Diablo"
 msgstr "Спуститься к Диабло"
 
 #: Source/trigs.cpp:718 Source/trigs.cpp:735 Source/trigs.cpp:752
-#, c-format
 msgid "Back to Level {:d}"
 msgstr "Вернуться на Уровень {:d}"
