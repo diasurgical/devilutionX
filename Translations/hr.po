@@ -444,8 +444,8 @@ msgstr "Igrajte sami sa sobom bez pristupa mreži."
 
 #: Source/DiabloUI/selconn.cpp:115
 #, c-format
-msgid "Players Supported: %d"
-msgstr "Podržano igrača: %d"
+msgid "Players Supported: {:d}"
+msgstr "Podržano igrača: {:d}"
 
 #: Source/DiabloUI/selgame.cpp:85 Source/DiabloUI/selgame.cpp:380
 msgid "Description:"
@@ -624,7 +624,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:415
 #, c-format
-msgid "Your version %s does not match the host %d.%d.%d."
+msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:123
@@ -712,8 +712,8 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:345
 #, c-format
-msgid "Character already exists. Do you want to overwrite \"%s\"?"
-msgstr "Lik već postoji. Želite li prebrisati \"%s\"?"
+msgid "Character already exists. Do you want to overwrite \"{:s}\"?"
+msgstr "Lik već postoji. Želite li prebrisati \"{:s}\"?"
 
 #: Source/DiabloUI/selhero.cpp:357
 msgid "Unable to create character."
@@ -761,9 +761,9 @@ msgstr "Obriši heroja jednog igrača"
 
 #: Source/DiabloUI/selhero.cpp:621
 #, fuzzy, c-format
-#| msgid "Are you sure you want to delete the character \"%s\"?"
-msgid "Are you sure you want to delete the character \"%s\"?"
-msgstr "Sigurno želite obrisati \"%s\" lik?"
+#| msgid "Are you sure you want to delete the character \"{:s}\"?"
+msgid "Are you sure you want to delete the character \"{:s}\"?"
+msgstr "Sigurno želite obrisati \"{:s}\" lik?"
 
 #: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:888
 msgid "Yes"
@@ -786,13 +786,13 @@ msgstr "Greška"
 #: Source/appfat.cpp:117
 #, c-format
 msgid ""
-"%s\n"
+"{:s}\n"
 "\n"
-"The error occurred at: %s line %d"
+"The error occurred at: {:s} line {:d}"
 msgstr ""
-"%s\n"
+"{:s}\n"
 "\n"
-"Greška se dogodila na: %s redak %d"
+"Greška se dogodila na: {:s} redak {:d}"
 
 #: Source/appfat.cpp:137
 #, fuzzy, c-format
@@ -804,7 +804,7 @@ msgstr ""
 #| "68f049866b44688a7af65ba766bef75a\n"
 #| "\n"
 #| "The problem occurred when loading:\n"
-#| "%s"
+#| "{:s}"
 msgid ""
 "Unable to open a required file.\n"
 "\n"
@@ -813,7 +813,7 @@ msgid ""
 "68f049866b44688a7af65ba766bef75a\n"
 "\n"
 "The problem occurred when loading:\n"
-"%s"
+"{:s}"
 msgstr ""
 "Nemoguće otvaranje potrebne datoteke.\n"
 "\n"
@@ -823,12 +823,12 @@ msgstr ""
 "68f049866b44688a7af65ba766bef75a\n"
 "\n"
 "Došlo je do problema učitavanja:\n"
-"%s"
+"{:s}"
 
 #: Source/appfat.cpp:159
 #, fuzzy, c-format
 #| msgid ""
-#| "Unable to open %s.\n"
+#| "Unable to open {:s}.\n"
 #| "\n"
 #| "Make sure that it is in the game folder and that the file name is in all "
 #| "lowercase."
@@ -838,7 +838,7 @@ msgid ""
 "Make sure that it is in the game folder and that the file name is in all "
 "lowercase."
 msgstr ""
-"Nemoguće je otvoriti %s.\n"
+"Nemoguće je otvoriti {:s}.\n"
 "\n"
 "Provjerite nalazi li se u mapi igre i je li naziv datoteke u malim slovima."
 
@@ -846,10 +846,10 @@ msgstr ""
 #, c-format
 msgid ""
 "Unable to write to location:\n"
-"%s"
+"{:s}"
 msgstr ""
 "Nemoguće zapisivanje lokacije:\n"
-"%s"
+"{:s}"
 
 #: Source/appfat.cpp:176
 msgid "Read-Only Directory Error"
@@ -925,22 +925,22 @@ msgstr ""
 
 #: Source/stores.cpp:169
 #, c-format
-msgid "Charges: %i/%i"
+msgid "Charges: {:d}/{:d}"
 msgstr ""
 
 #: Source/stores.cpp:180
 #, c-format
-msgid "Damage: %i-%i  "
+msgid "Damage: {:d}-{:d}  "
 msgstr ""
 
 #: Source/stores.cpp:182
 #, c-format
-msgid "Armor: %i  "
+msgid "Armor: {:d}  "
 msgstr ""
 
 #: Source/stores.cpp:184
 #, c-format
-msgid "Dur: %i/%i,  "
+msgid "Dur: {:d}/{:d},  "
 msgstr ""
 
 #: Source/stores.cpp:187
@@ -959,17 +959,17 @@ msgstr "Zahtjevi:"
 
 #: Source/stores.cpp:199
 #, c-format
-msgid " %i Str"
+msgid " {:d} Str"
 msgstr ""
 
 #: Source/stores.cpp:201
 #, c-format
-msgid " %i Mag"
+msgid " {:d} Mag"
 msgstr ""
 
 #: Source/stores.cpp:203
 #, c-format
-msgid " %i Dex"
+msgid " {:d} Dex"
 msgstr ""
 
 #: Source/stores.cpp:225 Source/stores.cpp:950 Source/stores.cpp:1172
@@ -1012,7 +1012,7 @@ msgstr ""
 
 #: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
 #, c-format
-msgid "I have these items for sale:             Your gold: %i"
+msgid "I have these items for sale:             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:279 Source/stores.cpp:343 Source/stores.cpp:471
@@ -1026,27 +1026,27 @@ msgstr ""
 
 #: Source/stores.cpp:339
 #, c-format
-msgid "I have these premium items for sale:     Your gold: %i"
+msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:467 Source/stores.cpp:717
 #, c-format
-msgid "You have nothing I want.             Your gold: %i"
+msgid "You have nothing I want.             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:477 Source/stores.cpp:727
 #, c-format
-msgid "Which item is for sale?             Your gold: %i"
+msgid "Which item is for sale?             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:537
 #, c-format
-msgid "You have nothing to repair.             Your gold: %i"
+msgid "You have nothing to repair.             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:549
 #, c-format
-msgid "Repair which item?             Your gold: %i"
+msgid "Repair which item?             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:575
@@ -1071,12 +1071,12 @@ msgstr ""
 
 #: Source/stores.cpp:793
 #, c-format
-msgid "You have nothing to recharge.             Your gold: %i"
+msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:803
 #, c-format
-msgid "Recharge which item?             Your gold: %i"
+msgid "Recharge which item?             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:819
@@ -1093,33 +1093,33 @@ msgstr ""
 
 #: Source/stores.cpp:866
 #, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
+#| msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgid "Are you sure you want to identify this item?"
-msgstr "Sigurno želite obrisati \"%s\" lik?"
+msgstr "Sigurno želite obrisati \"{:s}\" lik?"
 
 #: Source/stores.cpp:872
 #, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
+#| msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgid "Are you sure you want to buy this item?"
-msgstr "Sigurno želite obrisati \"%s\" lik?"
+msgstr "Sigurno želite obrisati \"{:s}\" lik?"
 
 #: Source/stores.cpp:875
 #, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
+#| msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgid "Are you sure you want to recharge this item?"
-msgstr "Sigurno želite obrisati \"%s\" lik?"
+msgstr "Sigurno želite obrisati \"{:s}\" lik?"
 
 #: Source/stores.cpp:879
 #, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
+#| msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgid "Are you sure you want to sell this item?"
-msgstr "Sigurno želite obrisati \"%s\" lik?"
+msgstr "Sigurno želite obrisati \"{:s}\" lik?"
 
 #: Source/stores.cpp:882
 #, fuzzy
-#| msgid "Are you sure you want to delete the character \"%s\"?"
+#| msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgid "Are you sure you want to repair this item?"
-msgstr "Sigurno želite obrisati \"%s\" lik?"
+msgstr "Sigurno želite obrisati \"{:s}\" lik?"
 
 #: Source/stores.cpp:896 Source/towners.cpp:319
 msgid "Wirt the Peg-legged boy"
@@ -1152,7 +1152,7 @@ msgstr ""
 
 #: Source/stores.cpp:915
 #, c-format
-msgid "I have this item for sale:             Your gold: %i"
+msgid "I have this item for sale:             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:931
@@ -1185,12 +1185,12 @@ msgstr ""
 
 #: Source/stores.cpp:1090
 #, c-format
-msgid "You have nothing to identify.             Your gold: %i"
+msgid "You have nothing to identify.             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:1100
 #, c-format
-msgid "Identify which item?             Your gold: %i"
+msgid "Identify which item?             Your gold: {:d}"
 msgstr ""
 
 #: Source/stores.cpp:1117
@@ -1203,12 +1203,12 @@ msgstr ""
 
 #: Source/stores.cpp:1129
 #, c-format
-msgid "Talk to %s"
+msgid "Talk to {:s}"
 msgstr ""
 
 #: Source/stores.cpp:1133
 #, c-format
-msgid "Talking to %s"
+msgid "Talking to {:s}"
 msgstr ""
 
 #: Source/stores.cpp:1135

@@ -418,7 +418,7 @@ msgstr ""
 
 #: Source/DiabloUI/selconn.cpp:115
 #, c-format
-msgid "Players Supported: %d"
+msgid "Players Supported: {:d}"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:85 Source/DiabloUI/selgame.cpp:380
@@ -567,7 +567,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:415
 #, c-format
-msgid "Your version %s does not match the host %d.%d.%d."
+msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:123
@@ -645,7 +645,7 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:345
 #, c-format
-msgid "Character already exists. Do you want to overwrite \"%s\"?"
+msgid "Character already exists. Do you want to overwrite \"{:s}\"?"
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:357
@@ -694,7 +694,7 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:621
 #, c-format
-msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr ""
 
 #: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:888
@@ -772,9 +772,9 @@ msgstr ""
 #: Source/appfat.cpp:117
 #, c-format
 msgid ""
-"%s\n"
+"{:s}\n"
 "\n"
-"The error occurred at: %s line %d"
+"The error occurred at: {:s} line {:d}"
 msgstr ""
 
 #: Source/appfat.cpp:137
@@ -787,7 +787,7 @@ msgid ""
 "68f049866b44688a7af65ba766bef75a\n"
 "\n"
 "The problem occurred when loading:\n"
-"%s"
+"{:s}"
 msgstr ""
 
 #: Source/appfat.cpp:146 Source/appfat.cpp:164
@@ -806,7 +806,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Unable to write to location:\n"
-"%s"
+"{:s}"
 msgstr ""
 
 #: Source/appfat.cpp:177
@@ -823,17 +823,17 @@ msgstr ""
 
 #: Source/automap.cpp:434 Source/items.cpp:3861
 #, c-format
-msgid "Level: %i"
-msgstr "等 级： %i"
+msgid "Level: {:d}"
+msgstr "等 级： {:d}"
 
 #: Source/automap.cpp:436
 #, c-format
-msgid "Level: Crypt %i"
+msgid "Level: Crypt {:d}"
 msgstr ""
 
 #: Source/automap.cpp:438
 #, c-format
-msgid "Level: Nest %i"
+msgid "Level: Nest {:d}"
 msgstr ""
 
 #: Source/control.cpp:239
@@ -878,13 +878,13 @@ msgstr "发 送 信 息"
 
 #: Source/control.cpp:432 Source/control.cpp:1024
 #, c-format
-msgid "%s Skill"
-msgstr "%s 技 能"
+msgid "{:s} Skill"
+msgstr "{:s} 技 能"
 
 #: Source/control.cpp:435 Source/control.cpp:1028
 #, c-format
-msgid "%s Spell"
-msgstr "%s 魔 法"
+msgid "{:s} Spell"
+msgstr "{:s} 魔 法"
 
 #: Source/control.cpp:437
 msgid "Damages undead only"
@@ -896,33 +896,33 @@ msgstr "0 级 魔 法 -- 不 可 使 用"
 
 #: Source/control.cpp:443 Source/control.cpp:1036 Source/control.cpp:1863
 #, c-format
-msgid "Spell Level %i"
-msgstr "魔 法 等 级 %i"
+msgid "Spell Level {:d}"
+msgstr "魔 法 等 级 {:d}"
 
 #: Source/control.cpp:447 Source/control.cpp:1040
 #, c-format
-msgid "Scroll of %s"
-msgstr "%s 卷 轴"
+msgid "Scroll of {:s}"
+msgstr "{:s} 卷 轴"
 
 #: Source/control.cpp:463
-msgid "%i Scroll"
-msgid_plural "%i Scrolls"
-msgstr[0] "%i 卷 轴"
+msgid "{:d} Scroll"
+msgid_plural "{:d} Scrolls"
+msgstr[0] "{:d} 卷 轴"
 
 #: Source/control.cpp:467 Source/control.cpp:1064 Source/items.cpp:1596
 #, c-format
-msgid "Staff of %s"
-msgstr "%s 法 杖"
+msgid "Staff of {:s}"
+msgstr "{:s} 法 杖"
 
 #: Source/control.cpp:469
-msgid "%i Charge"
-msgid_plural "%i Charges"
-msgstr[0] "%i 回复"
+msgid "{:d} Charge"
+msgid_plural "{:d} Charges"
+msgstr[0] "{:d} 回复"
 
 #: Source/control.cpp:478
 #, c-format
-msgid "Spell Hotkey #F%i"
-msgstr "魔 法 快 捷 键 #F%i"
+msgid "Spell Hotkey #F{:d}"
+msgstr "魔 法 快 捷 键 #F{:d}"
 
 #: Source/control.cpp:1000
 msgid "Player friendly"
@@ -934,8 +934,8 @@ msgstr "玩 家 互 攻"
 
 #: Source/control.cpp:1005
 #, c-format
-msgid "Hotkey: %s"
-msgstr "热 键 ：%s"
+msgid "Hotkey: {:s}"
+msgstr "热 键 ：{:s}"
 
 #: Source/control.cpp:1014
 msgid "Select current spell button"
@@ -951,8 +951,8 @@ msgstr "1 个 卷 轴"
 
 #: Source/control.cpp:1060
 #, c-format
-msgid "%i Scrolls"
-msgstr "%i 卷 轴"
+msgid "{:d} Scrolls"
+msgstr "{:d} 卷 轴"
 
 #: Source/control.cpp:1067
 msgid "1 Charge"
@@ -960,15 +960,15 @@ msgstr "1 金 币"
 
 #: Source/control.cpp:1069
 #, c-format
-msgid "%i Charges"
-msgstr "%i 回复"
+msgid "{:d} Charges"
+msgstr "{:d} 回复"
 
 #: Source/control.cpp:1256 Source/inv.cpp:2117 Source/items.cpp:3076
 #, fuzzy, c-format
-#| msgid "%i gold %s"
-msgid "%i gold piece"
-msgid_plural "%i gold pieces"
-msgstr[0] "%i 金 币 %s"
+#| msgid "{:d} gold {:s}"
+msgid "{:d} gold piece"
+msgid_plural "{:d} gold pieces"
+msgstr[0] "{:d} 金 币 {:s}"
 
 #: Source/control.cpp:1259
 msgid "Requirements not met"
@@ -976,13 +976,13 @@ msgstr "需 要 的 等 级 没 有 达 到"
 
 #: Source/control.cpp:1295
 #, c-format
-msgid "%s, Level: %i"
+msgid "{:s}, Level: {:d}"
 msgstr ""
 
 #: Source/control.cpp:1297
 #, c-format
-msgid "Hit Points %i of %i"
-msgstr "攻 击 点 数  %i / %i"
+msgid "Hit Points {:d} of {:d}"
+msgstr "攻 击 点 数  {:d} / {:d}"
 
 #: Source/control.cpp:1370
 msgid "None"
@@ -994,33 +994,33 @@ msgstr ""
 
 #: Source/control.cpp:1580
 #, fuzzy
-#| msgid "Level %d"
+#| msgid "Level {:d}"
 msgid "Level Up"
-msgstr "等 级 %i"
+msgstr "等 级 {:d}"
 
 #: Source/control.cpp:1836
 msgid "Skill"
 msgstr "技 巧"
 
 #: Source/control.cpp:1840
-msgid "Staff (%i charge)"
-msgid_plural "Staff (%i charges)"
-msgstr[0] "法 杖（%i 回复 ）"
+msgid "Staff ({:d} charge)"
+msgid_plural "Staff ({:d} charges)"
+msgstr[0] "法 杖（{:d} 回复 ）"
 
 #: Source/control.cpp:1848
 #, c-format
-msgid "Mana: %i  Dam: %i - %i"
-msgstr "法 力 ： %i 伤 害 ： %i - %i"
+msgid "Mana: {:d}  Dam: {:d} - {:d}"
+msgstr "法 力 ： {:d} 伤 害 ： {:d} - {:d}"
 
 #: Source/control.cpp:1850
 #, c-format
-msgid "Mana: %i   Dam: n/a"
-msgstr "法 力 ： %i 伤 害 ：n/a"
+msgid "Mana: {:d}   Dam: n/a"
+msgstr "法 力 ： {:d} 伤 害 ：n/a"
 
 #: Source/control.cpp:1853
 #, c-format
-msgid "Mana: %i  Dam: 1/3 tgt hp"
-msgstr "法 力 ： %i 伤 害 ：1/3  tgt hp"
+msgid "Mana: {:d}  Dam: 1/3 tgt hp"
+msgstr "法 力 ： {:d} 伤 害 ：1/3  tgt hp"
 
 #: Source/control.cpp:1900
 #, c-format
@@ -1067,8 +1067,8 @@ msgstr "时 空 之 门"
 
 #: Source/cursor.cpp:182
 #, c-format
-msgid "from %s"
-msgstr "从 %s"
+msgid "from {:s}"
+msgstr "从 {:s}"
 
 #: Source/cursor.cpp:207
 msgid "Portal to"
@@ -1172,12 +1172,12 @@ msgstr ""
 
 #: Source/diablo.cpp:267
 #, c-format
-msgid "unrecognized option '%s'\n"
+msgid "unrecognized option '{:s}'\n"
 msgstr ""
 
 #: Source/diablo.cpp:649
 #, c-format
-msgid "version %s"
+msgid "version {:s}"
 msgstr ""
 
 #: Source/diablo.cpp:1172
@@ -1190,7 +1190,7 @@ msgstr ""
 
 #: Source/diablo.cpp:1453
 #, c-format
-msgid "%s, mode = %s"
+msgid "{:s}, mode = {:s}"
 msgstr ""
 
 #: Source/diablo.cpp:2152
@@ -3560,12 +3560,12 @@ msgstr ""
 #: Source/items.cpp:1553 Source/items.cpp:1594 Source/items.cpp:2187
 #: Source/items.cpp:2206
 #, c-format
-msgid "%s of %s"
-msgstr "%s / %s"
+msgid "{:s} of {:s}"
+msgstr "{:s} / {:s}"
 
 #: Source/items.cpp:2779 Source/player.cpp:1817
 #, c-format
-msgid "Ear of %s"
+msgid "Ear of {:s}"
 msgstr ""
 
 #: Source/items.cpp:3308 Source/items.cpp:3320
@@ -3715,32 +3715,32 @@ msgstr "完 全 恢 复 生 命 值 和 魔 法 力"
 
 #: Source/items.cpp:3457
 #, c-format
-msgid "chance to hit: %+i%%"
+msgid "chance to hit: {:+d}%"
 msgstr ""
 
 #: Source/items.cpp:3461
 #, c-format
-msgid "%+i%% damage"
+msgid "{:+d}% damage"
 msgstr ""
 
 #: Source/items.cpp:3465 Source/items.cpp:3723
 #, c-format
-msgid "to hit: %+i%%, %+i%% damage"
+msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr ""
 
 #: Source/items.cpp:3469
 #, c-format
-msgid "%+i%% armor"
+msgid "{:+d}% armor"
 msgstr ""
 
 #: Source/items.cpp:3472 Source/items.cpp:3475
 #, c-format
-msgid "armor class: %i"
+msgid "armor class: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3480 Source/items.cpp:3705
 #, c-format
-msgid "Resist Fire: %+i%%"
+msgid "Resist Fire: {:+d}%"
 msgstr ""
 
 #: Source/items.cpp:3482
@@ -3750,7 +3750,7 @@ msgstr ""
 
 #: Source/items.cpp:3487
 #, c-format
-msgid "Resist Lightning: %+i%%"
+msgid "Resist Lightning: {:+d}%"
 msgstr ""
 
 #: Source/items.cpp:3489
@@ -3760,7 +3760,7 @@ msgstr ""
 
 #: Source/items.cpp:3494
 #, c-format
-msgid "Resist Magic: %+i%%"
+msgid "Resist Magic: {:+d}%"
 msgstr ""
 
 #: Source/items.cpp:3496
@@ -3770,7 +3770,7 @@ msgstr ""
 
 #: Source/items.cpp:3501
 #, c-format
-msgid "Resist All: %+i%%"
+msgid "Resist All: {:+d}%"
 msgstr ""
 
 #: Source/items.cpp:3503
@@ -3779,13 +3779,13 @@ msgid "Resist All: 75% MAX"
 msgstr ""
 
 #: Source/items.cpp:3507
-msgid "spells are increased %i level"
-msgid_plural "spells are increased %i levels"
+msgid "spells are increased {:d} level"
+msgid_plural "spells are increased {:d} levels"
 msgstr[0] "魔 法 提 升 一 个 等 级"
 
 #: Source/items.cpp:3509
-msgid "spells are decreased %i level"
-msgid_plural "spells are decreased %i levels"
+msgid "spells are decreased {:d} level"
+msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "魔 法 降 低 一 个 等 级"
 
 #: Source/items.cpp:3511
@@ -3797,69 +3797,69 @@ msgid "Extra charges"
 msgstr "额 外 补 充"
 
 #: Source/items.cpp:3517
-msgid "%i %s charge"
-msgid_plural "%i %s charges"
-msgstr[0] "%i %s 回 复"
+msgid "{:d} {:s} charge"
+msgid_plural "{:d} {:s} charges"
+msgstr[0] "{:d} {:s} 回 复"
 
 #: Source/items.cpp:3521
 #, c-format
-msgid "Fire hit damage: %i"
+msgid "Fire hit damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3523
 #, c-format
-msgid "Fire hit damage: %i-%i"
+msgid "Fire hit damage: {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3527
 #, c-format
-msgid "Lightning hit damage: %i"
+msgid "Lightning hit damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3529
 #, c-format
-msgid "Lightning hit damage: %i-%i"
+msgid "Lightning hit damage: {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3533
 #, c-format
-msgid "%+i to strength"
+msgid "{:+d} to strength"
 msgstr ""
 
 #: Source/items.cpp:3537
 #, c-format
-msgid "%+i to magic"
+msgid "{:+d} to magic"
 msgstr ""
 
 #: Source/items.cpp:3541
 #, c-format
-msgid "%+i to dexterity"
+msgid "{:+d} to dexterity"
 msgstr ""
 
 #: Source/items.cpp:3545
 #, c-format
-msgid "%+i to vitality"
+msgid "{:+d} to vitality"
 msgstr ""
 
 #: Source/items.cpp:3549
 #, c-format
-msgid "%+i to all attributes"
+msgid "{:+d} to all attributes"
 msgstr ""
 
 #: Source/items.cpp:3553
 #, c-format
-msgid "%+i damage from enemies"
+msgid "{:+d} damage from enemies"
 msgstr ""
 
 #: Source/items.cpp:3557
 #, c-format
-msgid "Hit Points: %+i"
+msgid "Hit Points: {:+d}"
 msgstr ""
 
 #: Source/items.cpp:3561
 #, c-format
-msgid "Mana: %+i"
-msgstr "魔法: %+i"
+msgid "Mana: {:+d}"
+msgstr "魔法: {:+d}"
 
 #: Source/items.cpp:3564
 msgid "high durability"
@@ -3875,12 +3875,12 @@ msgstr "不 可 毁 坏 的"
 
 #: Source/items.cpp:3573
 #, c-format
-msgid "+%i%% light radius"
+msgid "+{:d}%% light radius"
 msgstr ""
 
 #: Source/items.cpp:3576
 #, c-format
-msgid "-%i%% light radius"
+msgid "-{:d}%% light radius"
 msgstr ""
 
 #: Source/items.cpp:3579
@@ -3889,32 +3889,32 @@ msgstr ""
 
 #: Source/items.cpp:3583
 #, c-format
-msgid "fire arrows damage: %i"
+msgid "fire arrows damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3585
 #, c-format
-msgid "fire arrows damage: %i-%i"
+msgid "fire arrows damage: {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3589
 #, c-format
-msgid "lightning arrows damage %i"
+msgid "lightning arrows damage {:d}"
 msgstr ""
 
 #: Source/items.cpp:3591
 #, c-format
-msgid "lightning arrows damage %i-%i"
+msgid "lightning arrows damage {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3595
 #, c-format
-msgid "fireball damage: %i"
+msgid "fireball damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3597
 #, c-format
-msgid "fireball damage: %i-%i"
+msgid "fireball damage: {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3600
@@ -4008,8 +4008,8 @@ msgstr ""
 
 #: Source/items.cpp:3660
 #, c-format
-msgid "adds %i point to damage"
-msgid_plural "adds %i points to damage"
+msgid "adds {:d} point to damage"
+msgid_plural "adds {:d} points to damage"
 msgstr[0] ""
 
 #: Source/items.cpp:3663
@@ -4050,12 +4050,12 @@ msgstr ""
 
 #: Source/items.cpp:3694
 #, c-format
-msgid "lightning damage: %i"
+msgid "lightning damage: {:d}"
 msgstr ""
 
 #: Source/items.cpp:3696
 #, c-format
-msgid "lightning damage: %i-%i"
+msgid "lightning damage: {:d}-{:d}"
 msgstr ""
 
 #: Source/items.cpp:3699
@@ -4068,7 +4068,7 @@ msgstr ""
 
 #: Source/items.cpp:3711
 #, c-format
-msgid "decaying %+i%% damage"
+msgid "decaying {:+d}% damage"
 msgstr ""
 
 #: Source/items.cpp:3714
@@ -4082,7 +4082,7 @@ msgstr ""
 
 #: Source/items.cpp:3720
 #, c-format
-msgid "low dur, %+i%% damage"
+msgid "low dur, {:+d}% damage"
 msgstr ""
 
 #: Source/items.cpp:3726
@@ -4145,64 +4145,64 @@ msgstr ""
 
 #: Source/items.cpp:3879 Source/stores.cpp:199
 #, c-format
-msgid " %i Str"
+msgid " {:d} Str"
 msgstr ""
 
 #: Source/items.cpp:3881 Source/stores.cpp:201
 #, c-format
-msgid " %i Mag"
+msgid " {:d} Mag"
 msgstr ""
 
 #: Source/items.cpp:3883 Source/stores.cpp:203
 #, c-format
-msgid " %i Dex"
+msgid " {:d} Dex"
 msgstr ""
 
 #: Source/items.cpp:3894 Source/items.cpp:3941
 #, c-format
-msgid "damage: %i  Indestructible"
+msgid "damage: {:d}  Indestructible"
 msgstr ""
 
 #: Source/items.cpp:3896 Source/items.cpp:3943
 #, c-format
-msgid "damage: %i  Dur: %i/%i"
+msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3899 Source/items.cpp:3946
 #, c-format
-msgid "damage: %i-%i  Indestructible"
+msgid "damage: {:d}-{:d}  Indestructible"
 msgstr ""
 
 #: Source/items.cpp:3901 Source/items.cpp:3948
 #, c-format
-msgid "damage: %i-%i  Dur: %i/%i"
+msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3907 Source/items.cpp:3960
 #, c-format
-msgid "armor: %i  Indestructible"
+msgid "armor: {:d}  Indestructible"
 msgstr ""
 
 #: Source/items.cpp:3909 Source/items.cpp:3962
 #, c-format
-msgid "armor: %i  Dur: %i/%i"
+msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3914
 #, c-format
-msgid "dam: %i  Dur: %i/%i"
+msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3916
 #, c-format
-msgid "dam: %i-%i  Dur: %i/%i"
+msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:3917 Source/items.cpp:3952 Source/items.cpp:3967
 #: Source/stores.cpp:169
 #, c-format
-msgid "Charges: %i/%i"
-msgstr "回复: %i/%i"
+msgid "Charges: {:d}/{:d}"
+msgstr "回复: {:d}/{:d}"
 
 #: Source/items.cpp:3929
 msgid "unique item"
@@ -5112,18 +5112,18 @@ msgstr ""
 
 #: Source/monster.cpp:4969
 #, c-format
-msgid "Type: %s  Kills: %i"
+msgid "Type: {:s}  Kills: {:d}"
 msgstr ""
 
 #: Source/monster.cpp:4971
 #, c-format
-msgid "Total kills: %i"
+msgid "Total kills: {:d}"
 msgstr ""
 
 #: Source/monster.cpp:5004
 #, c-format
-msgid "Hit Points: %i-%i"
-msgstr "攻 击 点 数 魔 法 岩 石：%i / %i"
+msgid "Hit Points: {:d}-{:d}"
+msgstr "攻 击 点 数 魔 法 岩 石：{:d} / {:d}"
 
 #: Source/monster.cpp:5014
 msgid "No magic resistance"
@@ -5151,7 +5151,7 @@ msgstr ""
 
 #: Source/monster.cpp:5049
 #, c-format
-msgid "Type: %s"
+msgid "Type: {:s}"
 msgstr ""
 
 #: Source/monster.cpp:5055 Source/monster.cpp:5062
@@ -5190,32 +5190,32 @@ msgstr ""
 #: Source/msg.cpp:1702 Source/msg.cpp:1822 Source/msg.cpp:1843
 #: Source/msg.cpp:1864 Source/msg.cpp:1885
 #, c-format
-msgid "%s has cast an illegal spell."
+msgid "{:s} has cast an illegal spell."
 msgstr ""
 
 #: Source/msg.cpp:2221 Source/multi.cpp:866
 #, c-format
-msgid "Player '%s' (level %d) just joined the game"
+msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
 #: Source/multi.cpp:269
 #, c-format
-msgid "Player '%s' just left the game"
+msgid "Player '{:s}' just left the game"
 msgstr ""
 
 #: Source/multi.cpp:272
 #, c-format
-msgid "Player '%s' killed Diablo and left the game!"
+msgid "Player '{:s}' killed Diablo and left the game!"
 msgstr ""
 
 #: Source/multi.cpp:276
 #, c-format
-msgid "Player '%s' dropped due to timeout"
+msgid "Player '{:s}' dropped due to timeout"
 msgstr ""
 
 #: Source/multi.cpp:868
 #, c-format
-msgid "Player '%s' (level %d) is already in the game"
+msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr ""
 
 #: Source/objects.cpp:90
@@ -5476,7 +5476,7 @@ msgstr ""
 
 #: Source/objects.cpp:5544
 #, c-format
-msgid "%s Shrine"
+msgid "{:s} Shrine"
 msgstr ""
 
 #: Source/objects.cpp:5548
@@ -5549,12 +5549,12 @@ msgstr "被 杀 死 的 英 雄"
 
 #: Source/objects.cpp:5613
 #, c-format
-msgid "Trapped %s"
+msgid "Trapped {:s}"
 msgstr ""
 
 #: Source/objects.cpp:5619
 #, c-format
-msgid "%s (disabled)"
+msgid "{:s} (disabled)"
 msgstr ""
 
 #: Source/pfile.cpp:217
@@ -5579,7 +5579,7 @@ msgstr ""
 
 #: Source/plrmsg.cpp:72
 #, c-format
-msgid "%s (lvl %d): %s"
+msgid "{:s} (lvl {:d}): {:s}"
 msgstr ""
 
 #: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:52
@@ -5589,8 +5589,8 @@ msgstr ""
 
 #: Source/qol/xpbar.cpp:122
 #, c-format
-msgid "Level %d"
-msgstr "等 级 %i"
+msgid "Level {:d}"
+msgstr "等 级 {:d}"
 
 #: Source/qol/xpbar.cpp:129 Source/qol/xpbar.cpp:140
 msgid "Experience: "
@@ -5606,7 +5606,7 @@ msgstr ""
 
 #: Source/qol/xpbar.cpp:148
 #, c-format
-msgid " to Level %d"
+msgid " to Level {:d}"
 msgstr ""
 
 #: Source/quests.cpp:39
@@ -5689,7 +5689,7 @@ msgstr "邪 恶 祭 坛"
 
 #: Source/quests.cpp:283
 #, c-format
-msgid "To %s"
+msgid "To {:s}"
 msgstr ""
 
 #: Source/quests.cpp:760
@@ -5897,17 +5897,17 @@ msgstr ""
 
 #: Source/stores.cpp:180
 #, c-format
-msgid "Damage: %i-%i  "
+msgid "Damage: {:d}-{:d}  "
 msgstr ""
 
 #: Source/stores.cpp:182
 #, c-format
-msgid "Armor: %i  "
-msgstr "防 御：%i  "
+msgid "Armor: {:d}  "
+msgstr "防 御：{:d}  "
 
 #: Source/stores.cpp:184
 #, c-format
-msgid "Dur: %i/%i,  "
+msgid "Dur: {:d}/{:d},  "
 msgstr ""
 
 #: Source/stores.cpp:187
@@ -5958,8 +5958,8 @@ msgstr "离 开 铁 匠 铺"
 
 #: Source/stores.cpp:274 Source/stores.cpp:623 Source/stores.cpp:989
 #, c-format
-msgid "I have these items for sale:             Your gold: %i"
-msgstr "我 有 一 些 物 品 要 卖 ：              你 的 金 币：%i"
+msgid "I have these items for sale:             Your gold: {:d}"
+msgstr "我 有 一 些 物 品 要 卖 ：              你 的 金 币：{:d}"
 
 #: Source/stores.cpp:279 Source/stores.cpp:343 Source/stores.cpp:471
 #: Source/stores.cpp:482 Source/stores.cpp:541 Source/stores.cpp:554
@@ -5972,28 +5972,28 @@ msgstr "回 到 上 一 级"
 
 #: Source/stores.cpp:339
 #, c-format
-msgid "I have these premium items for sale:     Your gold: %i"
-msgstr "我 有 一 些 高 级 物 品 要 卖 ：      你 的 金 币：%i"
+msgid "I have these premium items for sale:     Your gold: {:d}"
+msgstr "我 有 一 些 高 级 物 品 要 卖 ：      你 的 金 币：{:d}"
 
 #: Source/stores.cpp:467 Source/stores.cpp:717
 #, c-format
-msgid "You have nothing I want.             Your gold: %i"
-msgstr "你 没 有 我 想 要 的 物 品 ？             你 的 金 币 ：%i"
+msgid "You have nothing I want.             Your gold: {:d}"
+msgstr "你 没 有 我 想 要 的 物 品 ？             你 的 金 币 ：{:d}"
 
 #: Source/stores.cpp:477 Source/stores.cpp:727
 #, c-format
-msgid "Which item is for sale?             Your gold: %i"
-msgstr "你 想 卖 哪 个 物 品 ？             你 的 金 币 ：%i"
+msgid "Which item is for sale?             Your gold: {:d}"
+msgstr "你 想 卖 哪 个 物 品 ？             你 的 金 币 ：{:d}"
 
 #: Source/stores.cpp:537
 #, c-format
-msgid "You have nothing to repair.             Your gold: %i"
-msgstr "你 没 有 需 要 修 补 的 物 品 ？             你 的 金 币 ：%i"
+msgid "You have nothing to repair.             Your gold: {:d}"
+msgstr "你 没 有 需 要 修 补 的 物 品 ？             你 的 金 币 ：{:d}"
 
 #: Source/stores.cpp:549
 #, c-format
-msgid "Repair which item?             Your gold: %i"
-msgstr "要 修 补 哪 个 物 品 ？              你 的 金 币 ：%i"
+msgid "Repair which item?             Your gold: {:d}"
+msgstr "要 修 补 哪 个 物 品 ？              你 的 金 币 ：{:d}"
 
 #: Source/stores.cpp:575
 msgid "Witch's shack"
@@ -6017,13 +6017,13 @@ msgstr "离 开 女 巫 小 屋"
 
 #: Source/stores.cpp:793
 #, c-format
-msgid "You have nothing to recharge.             Your gold: %i"
-msgstr "你没有东西可以回购。             你的金币: %i"
+msgid "You have nothing to recharge.             Your gold: {:d}"
+msgstr "你没有东西可以回购。             你的金币: {:d}"
 
 #: Source/stores.cpp:803
 #, c-format
-msgid "Recharge which item?             Your gold: %i"
-msgstr "回购哪个物品？             你的金币：%i"
+msgid "Recharge which item?             Your gold: {:d}"
+msgstr "回购哪个物品？             你的金币：{:d}"
 
 #: Source/stores.cpp:819
 msgid "You do not have enough gold"
@@ -6088,8 +6088,8 @@ msgstr "结 束 交 谈"
 
 #: Source/stores.cpp:915
 #, c-format
-msgid "I have this item for sale:             Your gold: %i"
-msgstr "我有这个物品要出售。             你的金币: %i"
+msgid "I have this item for sale:             Your gold: {:d}"
+msgstr "我有这个物品要出售。             你的金币: {:d}"
 
 #: Source/stores.cpp:931
 msgid "Leave"
@@ -6121,13 +6121,13 @@ msgstr "鉴 定 物 品"
 
 #: Source/stores.cpp:1090
 #, c-format
-msgid "You have nothing to identify.             Your gold: %i"
-msgstr "你没有需要鉴定的物品。             你的金币: %i"
+msgid "You have nothing to identify.             Your gold: {:d}"
+msgstr "你没有需要鉴定的物品。             你的金币: {:d}"
 
 #: Source/stores.cpp:1100
 #, c-format
-msgid "Identify which item?             Your gold: %i"
-msgstr "鉴定哪样物品。             你的金币: %i"
+msgid "Identify which item?             Your gold: {:d}"
+msgstr "鉴定哪样物品。             你的金币: {:d}"
 
 #: Source/stores.cpp:1117
 msgid "This item is:"
@@ -6139,12 +6139,12 @@ msgstr "好"
 
 #: Source/stores.cpp:1129
 #, c-format
-msgid "Talk to %s"
-msgstr "和 %s 聊天"
+msgid "Talk to {:s}"
+msgstr "和 {:s} 聊天"
 
 #: Source/stores.cpp:1133
 #, c-format
-msgid "Talking to %s"
+msgid "Talking to {:s}"
 msgstr ""
 
 #: Source/stores.cpp:1135
@@ -9440,8 +9440,8 @@ msgstr ""
 #: Source/trigs.cpp:397 Source/trigs.cpp:484 Source/trigs.cpp:536
 #: Source/trigs.cpp:635
 #, c-format
-msgid "Up to level %i"
-msgstr "上 到 第 %i 层"
+msgid "Up to level {:d}"
+msgstr "上 到 第 {:d} 层"
 
 #: Source/trigs.cpp:399 Source/trigs.cpp:458 Source/trigs.cpp:515
 #: Source/trigs.cpp:597 Source/trigs.cpp:615 Source/trigs.cpp:667
@@ -9451,22 +9451,22 @@ msgstr "返 回 城 镇"
 #: Source/trigs.cpp:411 Source/trigs.cpp:496 Source/trigs.cpp:550
 #: Source/trigs.cpp:577 Source/trigs.cpp:648
 #, c-format
-msgid "Down to level %i"
-msgstr "下 到 第 %i 层"
+msgid "Down to level {:d}"
+msgstr "下 到 第 {:d} 层"
 
 #: Source/trigs.cpp:424
 #, c-format
-msgid "Up to Crypt level %i"
+msgid "Up to Crypt level {:d}"
 msgstr ""
 
 #: Source/trigs.cpp:440
 #, c-format
-msgid "Down to Crypt level %i"
+msgid "Down to Crypt level {:d}"
 msgstr ""
 
 #: Source/trigs.cpp:563
 #, c-format
-msgid "Up to Nest level %i"
+msgid "Up to Nest level {:d}"
 msgstr ""
 
 #: Source/trigs.cpp:681
@@ -9475,6 +9475,6 @@ msgstr "下 到 Diablo"
 
 #: Source/trigs.cpp:718 Source/trigs.cpp:735 Source/trigs.cpp:752
 #, c-format
-msgid "Back to Level %i"
-msgstr "返 回 第 %i 层"
+msgid "Back to Level {:d}"
+msgstr "返 回 第 {:d} 层"
 
