@@ -4,13 +4,15 @@
 * Adds XP bar QoL feature
 */
 
+#include <array>
+
+#include <fmt/format.h>
+
 #include "DiabloUI/art_draw.h"
 #include "common.h"
 #include "control.h"
 #include "options.h"
 #include "utils/language.h"
-
-#include <array>
 
 namespace devilution {
 
@@ -121,7 +123,7 @@ bool CheckXPBarInfo()
 
 	const int charLevel = player._pLevel;
 
-	sprintf(tempstr, _("Level %i"), charLevel);
+	sprintf(tempstr, fmt::format(_("Level %i"), charLevel).c_str());
 	AddPanelString(tempstr);
 
 	if (charLevel == MAXCHARLEVEL - 1) {
@@ -147,7 +149,7 @@ bool CheckXPBarInfo()
 	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
 	AddPanelString(tempstr);
 
-	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), _(" to Level %i"), charLevel + 1);
+	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), fmt::format(_(" to Level %i"), charLevel + 1).c_str());
 	AddPanelString(tempstr);
 
 	return true;

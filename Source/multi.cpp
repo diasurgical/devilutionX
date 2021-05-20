@@ -7,6 +7,8 @@
 #include <SDL.h>
 #include <config.h>
 
+#include <fmt/format.h>
+
 #include "DiabloUI/diabloui.h"
 #include "diablo.h"
 #include "dthread.h"
@@ -860,7 +862,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	} else {
 		szEvent = _("Player '%s' (level %i) is already in the game");
 	}
-	EventPlrMsg(szEvent, plr[pnum]._pName, plr[pnum]._pLevel);
+	EventPlrMsg(fmt::format(szEvent, plr[pnum]._pName, plr[pnum]._pLevel).c_str());
 
 	LoadPlrGFX(pnum, PFILE_STAND);
 	SyncInitPlr(pnum);

@@ -87,7 +87,7 @@ int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 /** Maps from shrine_id to shrine name. */
 const char *const shrinestrs[] = {
-	// TRANSLATORS: Shrine Name Block	
+	// TRANSLATORS: Shrine Name Block
 	N_("Mysterious"),
 	N_("Hidden"),
 	N_("Gloomy"),
@@ -252,22 +252,22 @@ shrine_gametype shrineavail[] = {
 };
 /** Maps from book_id to book name. */
 const char *const StoryBookName[] = {
-	N_( /* TRANSLATORS: Book Title */ "The Great Conflict"),
-	N_( /* TRANSLATORS: Book Title */ "The Wages of Sin are War"),
-	N_( /* TRANSLATORS: Book Title */ "The Tale of the Horadrim"),
-	N_( /* TRANSLATORS: Book Title */ "The Dark Exile"),
-	N_( /* TRANSLATORS: Book Title */ "The Sin War"),
-	N_( /* TRANSLATORS: Book Title */ "The Binding of the Three"),
-	N_( /* TRANSLATORS: Book Title */ "The Realms Beyond"),
-	N_( /* TRANSLATORS: Book Title */ "Tale of the Three"),
-	N_( /* TRANSLATORS: Book Title */ "The Black King"),
-	N_( /* TRANSLATORS: Book Title */ "Journal: The Ensorcellment"),
-	N_( /* TRANSLATORS: Book Title */ "Journal: The Meeting"),
-	N_( /* TRANSLATORS: Book Title */ "Journal: The Tirade"),
-	N_( /* TRANSLATORS: Book Title */ "Journal: His Power Grows"),
-	N_( /* TRANSLATORS: Book Title */ "Journal: NA-KRUL"),
-	N_( /* TRANSLATORS: Book Title */ "Journal: The End"),
-	N_( /* TRANSLATORS: Book Title */ "A Spellbook"),
+	N_(/* TRANSLATORS: Book Title */ "The Great Conflict"),
+	N_(/* TRANSLATORS: Book Title */ "The Wages of Sin are War"),
+	N_(/* TRANSLATORS: Book Title */ "The Tale of the Horadrim"),
+	N_(/* TRANSLATORS: Book Title */ "The Dark Exile"),
+	N_(/* TRANSLATORS: Book Title */ "The Sin War"),
+	N_(/* TRANSLATORS: Book Title */ "The Binding of the Three"),
+	N_(/* TRANSLATORS: Book Title */ "The Realms Beyond"),
+	N_(/* TRANSLATORS: Book Title */ "Tale of the Three"),
+	N_(/* TRANSLATORS: Book Title */ "The Black King"),
+	N_(/* TRANSLATORS: Book Title */ "Journal: The Ensorcellment"),
+	N_(/* TRANSLATORS: Book Title */ "Journal: The Meeting"),
+	N_(/* TRANSLATORS: Book Title */ "Journal: The Tirade"),
+	N_(/* TRANSLATORS: Book Title */ "Journal: His Power Grows"),
+	N_(/* TRANSLATORS: Book Title */ "Journal: NA-KRUL"),
+	N_(/* TRANSLATORS: Book Title */ "Journal: The End"),
+	N_(/* TRANSLATORS: Book Title */ "A Spellbook"),
 };
 /** Specifies the speech IDs of each dungeon type narrator book, for each player class. */
 _speech_id StoryText[3][3] = {
@@ -3006,7 +3006,7 @@ void OperateBookLever(int pnum, int i)
 			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			quests[Q_BLOOD]._qlog = true;
 			quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 25, 2 * setpc_y + 33}, 0, true);
+			SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 25, 2 * setpc_y + 33 }, 0, true);
 		}
 		object[i]._otype = object[i]._otype;
 		if (object[i]._otype == OBJ_STEELTOME && quests[Q_WARLORD]._qvar1 == 0) {
@@ -3303,13 +3303,13 @@ void OperatePedistal(int pnum, int i)
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
 		ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 19, 2 * setpc_y + 26}, 0, true);
+		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 19, 2 * setpc_y + 26 }, 0, true);
 	}
 	if (object[i]._oVar6 == 2) {
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
 		ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, {2 * setpc_x + 31, 2 * setpc_y + 26}, 0, true);
+		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 31, 2 * setpc_y + 26 }, 0, true);
 	}
 	if (object[i]._oVar6 == 3) {
 		if (!deltaload)
@@ -3808,11 +3808,11 @@ bool OperateShrineDivine(int pnum, int x, int y)
 		return false;
 
 	if (currlevel < 4) {
-		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
-		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
+		CreateTypeItem({ x, y }, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
+		CreateTypeItem({ x, y }, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
 	} else {
-		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
-		CreateTypeItem({x, y}, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem({ x, y }, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem({ x, y }, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
 	}
 
 	plr[pnum]._pMana = plr[pnum]._pMaxMana;
@@ -5501,7 +5501,7 @@ void GetObjectStr(int i)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		sprintf(tempstr, _( /* TRANSLATORS: %s will be a name from the Shrine block above */ "%s Shrine"), _(shrinestrs[object[i]._oVar1]));
+		sprintf(tempstr, fmt::format(_(/* TRANSLATORS: %s will be a name from the Shrine block above */ "%s Shrine"), _(shrinestrs[object[i]._oVar1])).c_str());
 		strcpy(infostr, tempstr);
 		break;
 	case OBJ_SKELBOOK:
@@ -5570,13 +5570,13 @@ void GetObjectStr(int i)
 	}
 	if (plr[myplr]._pClass == HeroClass::Rogue) {
 		if (object[i]._oTrapFlag) {
-			sprintf(tempstr, _( /* TRANSLATORS: %s will either be a chest or a door */ "Trapped %s"), infostr);
+			sprintf(tempstr, fmt::format(_(/* TRANSLATORS: %s will either be a chest or a door */ "Trapped %s"), infostr).c_str());
 			strcpy(infostr, tempstr);
 			infoclr = UIS_RED;
 		}
 	}
 	if (objectIsDisabled(i)) {
-		sprintf(tempstr, _( /* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "%s (disabled)"), infostr);
+		sprintf(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "%s (disabled)"), infostr).c_str());
 		strcpy(infostr, tempstr);
 		infoclr = UIS_RED;
 	}

@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <array>
 
+#include <fmt/format.h>
+
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "controls/keymapper.hpp"
@@ -391,10 +393,10 @@ void DrawSpellList(const CelOutputBuffer &out)
 				DrawSpellCel(out, x, y, *pSpellCels, c);
 				switch (pSplType) {
 				case RSPLTYPE_SKILL:
-					sprintf(infostr, _("%s Skill"), _(spelldata[pSpell].sSkillText));
+					sprintf(infostr, fmt::format(_("%s Skill"), _(spelldata[pSpell].sSkillText)).c_str());
 					break;
 				case RSPLTYPE_SPELL:
-					sprintf(infostr, _("%s Spell"), _(spelldata[pSpell].sNameText));
+					sprintf(infostr, fmt::format(_("%s Spell"), _(spelldata[pSpell].sNameText)).c_str());
 					if (pSpell == SPL_HBOLT) {
 						strcpy(tempstr, _("Damages undead only"));
 						AddPanelString(tempstr);
@@ -402,11 +404,11 @@ void DrawSpellList(const CelOutputBuffer &out)
 					if (s == 0)
 						strcpy(tempstr, _("Spell Level 0 - Unusable"));
 					else
-						sprintf(tempstr, _("Spell Level %i"), s);
+						sprintf(tempstr, fmt::format(_("Spell Level %i"), s).c_str());
 					AddPanelString(tempstr);
 					break;
 				case RSPLTYPE_SCROLL: {
-					sprintf(infostr, _("Scroll of %s"), _(spelldata[pSpell].sNameText));
+					sprintf(infostr, fmt::format(_("Scroll of %s"), _(spelldata[pSpell].sNameText)).c_str());
 					int v = 0;
 					for (int t = 0; t < plr[myplr]._pNumInv; t++) {
 						if (!plr[myplr].InvList[t].isEmpty()
@@ -426,7 +428,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 					AddPanelString(tempstr);
 				} break;
 				case RSPLTYPE_CHARGES: {
-					sprintf(infostr, _("Staff of %s"), _(spelldata[pSpell].sNameText));
+					sprintf(infostr, fmt::format(_("Staff of %s"), _(spelldata[pSpell].sNameText)).c_str());
 					int charges = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges;
 					sprintf(tempstr, ngettext("%i Charge", "%i Charges", charges), charges);
 					AddPanelString(tempstr);
@@ -438,7 +440,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
 						auto hotkeyName = keymapper.keyNameForAction(quickSpellActionIndexes[t]);
 						PrintSBookHotkey(out, x, y, hotkeyName);
-						sprintf(tempstr, _("Spell Hotkey %s"), hotkeyName.c_str());
+						sprintf(tempstr, fmt::format(_("Spell Hotkey %s"), hotkeyName.c_str()).c_str());
 						AddPanelString(tempstr);
 					}
 				}
@@ -915,7 +917,7 @@ void CheckPanelInfo()
 					strcpy(infostr, _("Player attack"));
 			}
 			if (PanBtnHotKey[i] != nullptr) {
-				sprintf(tempstr, _("Hotkey: %s"), _(PanBtnHotKey[i]));
+				sprintf(tempstr, fmt::format(_("Hotkey: %s"), _(PanBtnHotKey[i])).c_str());
 				AddPanelString(tempstr);
 			}
 			infoclr = UIS_SILVER;
@@ -934,11 +936,11 @@ void CheckPanelInfo()
 		if (v != SPL_INVALID) {
 			switch (plr[myplr]._pRSplType) {
 			case RSPLTYPE_SKILL:
-				sprintf(tempstr, _("%s Skill"), _(spelldata[v].sSkillText));
+				sprintf(tempstr, fmt::format(_("%s Skill"), _(spelldata[v].sSkillText)).c_str());
 				AddPanelString(tempstr);
 				break;
 			case RSPLTYPE_SPELL: {
-				sprintf(tempstr, _("%s Spell"), _(spelldata[v].sNameText));
+				sprintf(tempstr, fmt::format(_("%s Spell"), _(spelldata[v].sNameText)).c_str());
 				AddPanelString(tempstr);
 				int c = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[v];
 				if (c < 0)
@@ -946,11 +948,11 @@ void CheckPanelInfo()
 				if (c == 0)
 					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				else
-					sprintf(tempstr, _("Spell Level %i"), c);
+					sprintf(tempstr, fmt::format(_("Spell Level %i"), c).c_str());
 				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_SCROLL: {
-				sprintf(tempstr, _("Scroll of %s"), _(spelldata[v].sNameText));
+				sprintf(tempstr, fmt::format(_("Scroll of %s"), _(spelldata[v].sNameText)).c_str());
 				AddPanelString(tempstr);
 				int s = 0;
 				for (int i = 0; i < plr[myplr]._pNumInv; i++) {
@@ -971,7 +973,7 @@ void CheckPanelInfo()
 				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_CHARGES:
-				sprintf(tempstr, _("Staff of %s"), _(spelldata[v].sNameText));
+				sprintf(tempstr, fmt::format(_("Staff of %s"), _(spelldata[v].sNameText)).c_str());
 				AddPanelString(tempstr);
 				sprintf(tempstr, ngettext("%i Charge", "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges), plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
 				AddPanelString(tempstr);
@@ -1160,9 +1162,9 @@ void DrawInfoBox(const CelOutputBuffer &out)
 			infoclr = UIS_GOLD;
 			strcpy(infostr, plr[pcursplr]._pName);
 			ClearPanel();
-			sprintf(tempstr, _("%s, Level: %i"), _(ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)]), plr[pcursplr]._pLevel);
+			sprintf(tempstr, fmt::format(_("%s, Level: %i"), _(ClassStrTbl[static_cast<std::size_t>(plr[pcursplr]._pClass)]), plr[pcursplr]._pLevel).c_str());
 			AddPanelString(tempstr);
-			sprintf(tempstr, _("Hit Points %i of %i"), plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
+			sprintf(tempstr, fmt::format(_("Hit Points %i of %i"), plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6).c_str());
 			AddPanelString(tempstr);
 		}
 	}
@@ -1625,12 +1627,12 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				int max;
 				GetDamageAmt(sn, &min, &max);
 				if (min != -1) {
-					sprintf(tempstr, _(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: %i - %i"), mana, min, max);
+					sprintf(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: %i - %i"), mana, min, max).c_str());
 				} else {
-					sprintf(tempstr, _(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i   Dam: n/a"), mana);
+					sprintf(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i   Dam: n/a"), mana).c_str());
 				}
 				if (sn == SPL_BONESPIRIT) {
-					sprintf(tempstr, _(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: 1/3 tgt hp"), mana);
+					sprintf(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: %i  Dam: 1/3 tgt hp"), mana).c_str());
 				}
 				PrintSBookStr(out, 10, yp - 1, tempstr);
 				int lvl = plr[myplr]._pSplLvl[sn] + plr[myplr]._pISplLvlAdd;
@@ -1640,7 +1642,7 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				if (lvl == 0) {
 					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				} else {
-					sprintf(tempstr, _("Spell Level %i"), lvl);
+					sprintf(tempstr, fmt::format(_("Spell Level %i"), lvl).c_str());
 				}
 			} break;
 			}

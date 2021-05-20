@@ -1,3 +1,5 @@
+#include <fmt/format.h>
+
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "stores.h"
@@ -116,7 +118,7 @@ void SelconnFocus(int value)
 		break;
 	}
 
-	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), _("Players Supported: %i"), players);
+	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), fmt::format(_("Players Supported: %i"), players).c_str());
 	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 

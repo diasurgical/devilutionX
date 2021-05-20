@@ -5,6 +5,8 @@
  */
 #include "cursor.h"
 
+#include <fmt/format.h>
+
 #include "control.h"
 #include "doom.h"
 #include "engine.h"
@@ -203,7 +205,7 @@ void CheckTown()
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, _("Town Portal"));
-				sprintf(tempstr, _("from %s"), plr[missile[mx]._misource]._pName);
+				sprintf(tempstr, fmt::format(_("from %s"), plr[missile[mx]._misource]._pName).c_str());
 				AddPanelString(tempstr);
 				cursmx = missile[mx].position.tile.x;
 				cursmy = missile[mx].position.tile.y;

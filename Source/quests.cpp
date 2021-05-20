@@ -4,6 +4,8 @@
  * Implementation of functionality for handling quests.
  */
 
+#include <fmt/format.h>
+
 #include "control.h"
 #include "cursor.h"
 #include "engine/render/cel_render.hpp"
@@ -75,11 +77,11 @@ char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
  */
 char questyoff[7] = { 0, 0, -1, -1, -1, -2, -2 };
 const char *const questtrigstr[5] = {
-	N_( /* TRANSLATORS: Quest Map*/ "King Leoric's Tomb"),
-	N_( /* TRANSLATORS: Quest Map*/ "The Chamber of Bone"),
-	N_( /* TRANSLATORS: Quest Map*/ "Maze"),
-	N_( /* TRANSLATORS: Quest Map*/ "A Dark Passage"),
-	N_( /* TRANSLATORS: Quest Map*/ "Unholy Altar")
+	N_(/* TRANSLATORS: Quest Map*/ "King Leoric's Tomb"),
+	N_(/* TRANSLATORS: Quest Map*/ "The Chamber of Bone"),
+	N_(/* TRANSLATORS: Quest Map*/ "Maze"),
+	N_(/* TRANSLATORS: Quest Map*/ "A Dark Passage"),
+	N_(/* TRANSLATORS: Quest Map*/ "Unholy Altar")
 };
 /**
  * A quest group containing the three quests the Butcher,
@@ -279,7 +281,7 @@ bool ForceQuests()
 
 			for (j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
-					sprintf(infostr, _( /* TRANSLATORS: Used for Quest Portals. %s is a Map Name */ "To %s"), _(questtrigstr[ql]));
+					sprintf(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. %s is a Map Name */ "To %s"), _(questtrigstr[ql])).c_str());
 					cursmx = qx;
 					cursmy = qy;
 					return true;
@@ -675,7 +677,7 @@ void ResyncQuests()
 	}
 	if (currlevel == quests[Q_MUSHROOM]._qlevel) {
 		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && quests[Q_MUSHROOM]._qvar1 == QS_INIT) {
-			SpawnQuestItem(IDI_FUNGALTM, {0, 0}, 5, true);
+			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, true);
 			quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
 		} else {
 			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
@@ -690,7 +692,7 @@ void ResyncQuests()
 	}
 	if (currlevel == quests[Q_VEIL]._qlevel + 1 && quests[Q_VEIL]._qactive == QUEST_ACTIVE && quests[Q_VEIL]._qvar1 == 0) {
 		quests[Q_VEIL]._qvar1 = 1;
-		SpawnQuestItem(IDI_GLDNELIX, {0, 0}, 5, true);
+		SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, true);
 	}
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (quests[Q_BETRAYER]._qvar1 >= 4)
