@@ -405,7 +405,7 @@ msgstr ""
 
 #: Source/DiabloUI/selconn.cpp:115
 #, c-format
-msgid "Players Supported: %d"
+msgid "Players Supported: {:d}"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:85 Source/DiabloUI/selgame.cpp:380
@@ -544,7 +544,7 @@ msgstr ""
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:415
 #, c-format
-msgid "Your version %s does not match the host %d.%d.%d."
+msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:123
@@ -618,7 +618,7 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:345
 #, c-format
-msgid "Character already exists. Do you want to overwrite \"%s\"?"
+msgid "Character already exists. Do you want to overwrite \"{:s}\"?"
 msgstr ""
 
 #. TRANSLATORS: Error Message
@@ -668,7 +668,7 @@ msgstr ""
 
 #: Source/DiabloUI/selhero.cpp:622
 #, c-format
-msgid "Are you sure you want to delete the character \"%s\"?"
+msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr ""
 
 #: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:889
@@ -743,9 +743,9 @@ msgstr ""
 #: Source/appfat.cpp:117
 #, c-format
 msgid ""
-"%s\n"
+"{:s}\n"
 "\n"
-"The error occurred at: %s line %d"
+"The error occurred at: {:s} line {:d}"
 msgstr ""
 
 #. TRANSLATORS: Error Message when diabdat.mpq is broken. Keep values unchanged.
@@ -759,7 +759,7 @@ msgid ""
 "68f049866b44688a7af65ba766bef75a\n"
 "\n"
 "The problem occurred when loading:\n"
-"%s"
+"{:s}"
 msgstr ""
 
 #: Source/appfat.cpp:146 Source/appfat.cpp:165
@@ -778,7 +778,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Unable to write to location:\n"
-"%s"
+"{:s}"
 msgstr ""
 
 #: Source/appfat.cpp:178
@@ -850,12 +850,12 @@ msgstr ""
 
 #: Source/control.cpp:394 Source/control.cpp:937
 #, c-format
-msgid "%s Skill"
+msgid "{:s} Skill"
 msgstr ""
 
 #: Source/control.cpp:397 Source/control.cpp:941
 #, c-format
-msgid "%s Spell"
+msgid "{:s} Spell"
 msgstr ""
 
 #: Source/control.cpp:399
@@ -873,7 +873,7 @@ msgstr ""
 
 #: Source/control.cpp:409 Source/control.cpp:953
 #, c-format
-msgid "Scroll of %s"
+msgid "Scroll of {:s}"
 msgstr ""
 
 #: Source/control.cpp:425 Source/control.cpp:970
@@ -885,7 +885,7 @@ msgstr[1] ""
 
 #: Source/control.cpp:429 Source/control.cpp:974 Source/items.cpp:1570
 #, c-format
-msgid "Staff of %s"
+msgid "Staff of {:s}"
 msgstr ""
 
 #: Source/control.cpp:431 Source/control.cpp:976
@@ -897,7 +897,7 @@ msgstr[1] ""
 
 #: Source/control.cpp:441
 #, c-format
-msgid "Spell Hotkey %s"
+msgid "Spell Hotkey {:s}"
 msgstr ""
 
 #: Source/control.cpp:913
@@ -910,7 +910,7 @@ msgstr ""
 
 #: Source/control.cpp:918
 #, c-format
-msgid "Hotkey: %s"
+msgid "Hotkey: {:s}"
 msgstr ""
 
 #: Source/control.cpp:927
@@ -934,7 +934,7 @@ msgstr ""
 
 #: Source/control.cpp:1163
 #, c-format
-msgid "%s, Level: %i"
+msgid "{:s}, Level: %i"
 msgstr ""
 
 #: Source/control.cpp:1165
@@ -1022,7 +1022,7 @@ msgstr ""
 
 #: Source/cursor.cpp:206
 #, c-format
-msgid "from %s"
+msgid "from {:s}"
 msgstr ""
 
 #: Source/cursor.cpp:231
@@ -1143,12 +1143,12 @@ msgstr ""
 
 #: Source/diablo.cpp:283
 #, c-format
-msgid "unrecognized option '%s'\n"
+msgid "unrecognized option '{:s}'\n"
 msgstr ""
 
 #: Source/diablo.cpp:671
 #, c-format
-msgid "version %s"
+msgid "version {:s}"
 msgstr ""
 
 #: Source/diablo.cpp:1916
@@ -1167,10 +1167,10 @@ msgstr ""
 msgid "while in stores"
 msgstr ""
 
-#. TRANSLATORS: %s means: Character Name, Game Version, Game Difficulty.
+#. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:2203
 #, c-format
-msgid "%s, version = %s, mode = %s"
+msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr ""
 
 #: Source/dvlnet/loopback.cpp:113
@@ -2499,7 +2499,7 @@ msgstr ""
 msgid "Doppelganger's"
 msgstr ""
 
-#. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: %s of %s - e.g. Rags of Valor)
+#. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:288
 msgid "quality"
 msgstr ""
@@ -3331,13 +3331,13 @@ msgstr ""
 #: Source/items.cpp:1527 Source/items.cpp:1569 Source/items.cpp:2161
 #: Source/items.cpp:2180
 #, c-format
-msgid "%s of %s"
+msgid "{:s} of {:s}"
 msgstr ""
 
-#. TRANSLATORS: %s will be a Character Name
+#. TRANSLATORS: {:s} will be a Character Name
 #: Source/items.cpp:2753 Source/player.cpp:1874
 #, c-format
-msgid "Ear of %s"
+msgid "Ear of {:s}"
 msgstr ""
 
 #: Source/items.cpp:3282 Source/items.cpp:3294
@@ -3574,8 +3574,8 @@ msgstr ""
 
 #: Source/items.cpp:3491
 #, c-format
-msgid "%i %s charge"
-msgid_plural "%i %s charges"
+msgid "%i {:s} charge"
+msgid_plural "%i {:s} charges"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -4897,7 +4897,7 @@ msgstr ""
 
 #: Source/monster.cpp:4966
 #, c-format
-msgid "Type: %s  Kills: %i"
+msgid "Type: {:s}  Kills: %i"
 msgstr ""
 
 #: Source/monster.cpp:4968
@@ -4936,7 +4936,7 @@ msgstr ""
 
 #: Source/monster.cpp:5046
 #, c-format
-msgid "Type: %s"
+msgid "Type: {:s}"
 msgstr ""
 
 #: Source/monster.cpp:5052 Source/monster.cpp:5059
@@ -4975,32 +4975,32 @@ msgstr ""
 #: Source/msg.cpp:1709 Source/msg.cpp:1829 Source/msg.cpp:1850
 #: Source/msg.cpp:1871 Source/msg.cpp:1892
 #, c-format
-msgid "%s has cast an illegal spell."
+msgid "{:s} has cast an illegal spell."
 msgstr ""
 
 #: Source/msg.cpp:2228 Source/multi.cpp:859
 #, c-format
-msgid "Player '%s' (level %d) just joined the game"
+msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
 #: Source/multi.cpp:262
 #, c-format
-msgid "Player '%s' just left the game"
+msgid "Player '{:s}' just left the game"
 msgstr ""
 
 #: Source/multi.cpp:265
 #, c-format
-msgid "Player '%s' killed Diablo and left the game!"
+msgid "Player '{:s}' killed Diablo and left the game!"
 msgstr ""
 
 #: Source/multi.cpp:269
 #, c-format
-msgid "Player '%s' dropped due to timeout"
+msgid "Player '{:s}' dropped due to timeout"
 msgstr ""
 
 #: Source/multi.cpp:861
 #, c-format
-msgid "Player '%s' (level %d) is already in the game"
+msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr ""
 
 #. TRANSLATORS: Shrine Name Block
@@ -5277,10 +5277,10 @@ msgstr ""
 msgid "Barrel"
 msgstr ""
 
-#. TRANSLATORS: %s will be a name from the Shrine block above
+#. TRANSLATORS: {:s} will be a name from the Shrine block above
 #: Source/objects.cpp:5510
 #, c-format
-msgid "%s Shrine"
+msgid "{:s} Shrine"
 msgstr ""
 
 #: Source/objects.cpp:5514
@@ -5351,16 +5351,16 @@ msgstr ""
 msgid "Slain Hero"
 msgstr ""
 
-#. TRANSLATORS: %s will either be a chest or a door
+#. TRANSLATORS: {:s} will either be a chest or a door
 #: Source/objects.cpp:5579
 #, c-format
-msgid "Trapped %s"
+msgid "Trapped {:s}"
 msgstr ""
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
 #: Source/objects.cpp:5585
 #, c-format
-msgid "%s (disabled)"
+msgid "{:s} (disabled)"
 msgstr ""
 
 #: Source/pfile.cpp:219
@@ -5383,10 +5383,10 @@ msgstr ""
 msgid "Unable to write to save file archive"
 msgstr ""
 
-#. TRANSLATORS: Shown if player presses "v" button. %s is player name, %d is level, %s is location
+#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:73
 #, c-format
-msgid "%s (lvl %d): %s"
+msgid "{:s} (lvl {:d}): {:s}"
 msgstr ""
 
 #: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:52
@@ -5398,7 +5398,7 @@ msgstr ""
 
 #: Source/qol/xpbar.cpp:124
 #, c-format
-msgid "Level %d"
+msgid "Level {:d}"
 msgstr ""
 
 #: Source/qol/xpbar.cpp:131 Source/qol/xpbar.cpp:142
@@ -5415,7 +5415,7 @@ msgstr ""
 
 #: Source/qol/xpbar.cpp:150
 #, c-format
-msgid " to Level %d"
+msgid " to Level {:d}"
 msgstr ""
 
 #. TRANSLATORS: Quest Name Block
@@ -5501,10 +5501,10 @@ msgstr ""
 msgid "Unholy Altar"
 msgstr ""
 
-#. TRANSLATORS: Used for Quest Portals. %s is a Map Name
+#. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
 #: Source/quests.cpp:282
 #, c-format
-msgid "To %s"
+msgid "To {:s}"
 msgstr ""
 
 #: Source/quests.cpp:729
@@ -5962,12 +5962,12 @@ msgstr ""
 
 #: Source/stores.cpp:1130
 #, c-format
-msgid "Talk to %s"
+msgid "Talk to {:s}"
 msgstr ""
 
 #: Source/stores.cpp:1134
 #, c-format
-msgid "Talking to %s"
+msgid "Talking to {:s}"
 msgstr ""
 
 #: Source/stores.cpp:1136
