@@ -404,11 +404,11 @@ void DrawAutomapText(const CelOutputBuffer &out)
 
 	if (currlevel != 0) {
 		if (currlevel >= 17 && currlevel <= 20) {
-			sprintf(desc, fmt::format(_("Level: Nest {:d}"), currlevel - 16).c_str());
+			strcpy(desc, fmt::format(_("Level: Nest {:d}"), currlevel - 16).c_str());
 		} else if (currlevel >= 21 && currlevel <= 24) {
-			sprintf(desc, fmt::format(_("Level: Crypt {:d}"), currlevel - 20).c_str());
+			strcpy(desc, fmt::format(_("Level: Crypt {:d}"), currlevel - 20).c_str());
 		} else {
-			sprintf(desc, fmt::format(_("Level: {:d}"), currlevel).c_str());
+			strcpy(desc, fmt::format(_("Level: {:d}"), currlevel).c_str());
 		}
 
 		DrawString(out, desc, { 8, nextLine, 0, 0 });

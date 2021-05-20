@@ -283,7 +283,7 @@ static void diablo_parse_flags(int argc, char **argv)
 			debug_mode_key_w = true;
 #endif
 		} else {
-			printInConsole(fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
+			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
 			print_help_and_exit();
 		}
 	}
@@ -671,7 +671,7 @@ char gszProductName[64] = "DevilutionX vUnknown";
 static void SetApplicationVersions()
 {
 	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	snprintf(gszVersionNumber, sizeof(gszVersionNumber) / sizeof(char), fmt::format(_("version {:s}"), PROJECT_VERSION).c_str());
+	strncpy(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION).c_str(), sizeof(gszVersionNumber) / sizeof(char));
 }
 
 static void diablo_init()
@@ -2203,7 +2203,7 @@ void initKeymapActions()
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    sprintf(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s}, version = {:s}, mode = {:s}"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]).c_str());
+		    strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s}, version = {:s}, mode = {:s}"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]).c_str());
 		    NetSendCmdString(1 << myplr, pszStr);
 	    },
 	});
