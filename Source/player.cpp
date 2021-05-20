@@ -3412,9 +3412,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		return;
 	}
 
-	auto &myPlayer = plr[myplr];
-
-	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame > myPlayer._pAFNum) {
+	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame > player._pAFNum) {
 		if (player.destAction == ACTION_ATTACK) {
 			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
 			StartAttack(pnum, d);
@@ -3453,7 +3451,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame > myPlayer._pAFNum) {
+	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame > player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(pnum, d, player.destParam1, player.destParam2);
