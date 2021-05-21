@@ -284,7 +284,7 @@ const PLStruct PL_Prefix[] = {
 const PLStruct PL_Suffix[] = {
 	// clang-format off
 	// PLName,          PLPower,       PLParam1, PLParam2, PLMinLvl, PLIType,                                                             PLGOE,    PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
-	// TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: %s of %s - e.g. Rags of Valor)
+	// TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 	{  N_("quality"),       IPL_DAMMOD,           1,        2,        2,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,       100,      200,         2 },
 	{  N_("maiming"),       IPL_DAMMOD,           3,        5,        7,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  false,    true,      1300,     1500,         3 },
 	{  N_("slaying"),       IPL_DAMMOD,           6,        8,       15,                       PLT_WEAP                                 ,     GOE_ANY,  false,    true,      2600,     3000,         5 },
@@ -392,7 +392,7 @@ const PLStruct PL_Suffix[] = {
 const UItemStruct UniqueItemList[] = {
 	// clang-format off
 	// UIName,                    UIItemId,     UIMinLvl, UINumPL, UIValue, UIPower1,     UIParam1, UIParam2, UIPower2,      UIParam3, UIParam4, UIPower3,      UIParam5, UIParam6, UIPower4,      UIParam7, UIParam8, UIPower5,      UIParam9, UIParam10, UIPower6,      UIParam11, UIParam12
-    // TRANSLATORS: Unique Item section	
+    // TRANSLATORS: Unique Item section
 	{  N_("The Butcher's Cleaver"),   UITYPE_CLEAVER,      1,       3,    3650, IPL_STR,            10,       10, IPL_SETDAM,           4,       24, IPL_SETDUR,          10,       10, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  N_("The Undead Crown"),        UITYPE_SKCROWN,      1,       3,   16650, IPL_RNDSTEALLIFE,    0,        0, IPL_SETAC,            8,        8, IPL_INVCURS,         77,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },
 	{  N_("Empyrean Band"),           UITYPE_INFRARING,    1,       4,    8000, IPL_ATTRIBS,         2,        2, IPL_LIGHT,            2,        2, IPL_FASTRECOVER,      1,        1, IPL_ABSHALFTRAP,      0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,             0,         0 },

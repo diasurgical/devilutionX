@@ -211,7 +211,6 @@ static void DrawCursor(const CelOutputBuffer &out)
 	sgdwCursY = std::max(MouseY - 1, 0);
 	sgdwCursHgt = MouseY < 0 ? cursH + MouseY + 1 : std::min(MouseY + cursH + 1, out.h()) - MouseY;
 
-
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
 
 	const auto &sprite = GetInvItemSprite(pcurs);

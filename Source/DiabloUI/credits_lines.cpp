@@ -70,7 +70,7 @@ const char *const CREDITS_LINES[] = {
 	N_("Associate Producer"),
 	"	James Phinney",
 	"",
-	N_( /* TRANSLATORS: Keep Strike Team as Name */ "Diablo Strike Team"),
+	N_(/* TRANSLATORS: Keep Strike Team as Name */ "Diablo Strike Team"),
 	"	Allen Adham, Ron Millar, Mike O'Brien,",
 	"	James Phinney, Bill Roper, Patrick Wyatt",
 	"",

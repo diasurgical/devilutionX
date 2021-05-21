@@ -21,8 +21,8 @@ struct ObjectStruct {
 	bool _oLight;
 	uint32_t _oAnimFlag;
 	byte *_oAnimData;
-	int _oAnimDelay; // Tick length of each frame in the current animation
-	int _oAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
+	int _oAnimDelay;      // Tick length of each frame in the current animation
+	int _oAnimCnt;        // Increases by one each game tick, counting how close we are to _pAnimDelay
 	uint32_t _oAnimLen;   // Number of frames in current animation
 	uint32_t _oAnimFrame; // Current frame of animation.
 	int _oAnimWidth;
