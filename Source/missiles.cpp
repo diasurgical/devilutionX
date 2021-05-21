@@ -3883,25 +3883,7 @@ void MI_FlashBack(int i)
 
 void MI_Reflect(int i)
 {
-	int src;
-
-	src = missile[i]._misource;
-	missile[i].position.traveled.x = plr[src].position.offset.x << 16;
-	missile[i].position.traveled.y = plr[src].position.offset.y << 16;
-	if (plr[src]._pmode == PM_WALK3) {
-		missile[i].position.start.x = plr[src].position.future.x + 2;
-		missile[i].position.start.y = plr[src].position.future.y - 1;
-	} else {
-		missile[i].position.start.x = plr[src].position.tile.x + 2;
-		missile[i].position.start.y = plr[src].position.tile.y - 1;
-	}
-	GetMissilePos(i);
-	if (plr[src]._pmode == PM_WALK3) {
-		if (plr[src]._pdir == DIR_W)
-			missile[i].position.tile.x++;
-		else
-			missile[i].position.tile.y++;
-	}
+	int src = missile[i]._misource;
 	if (src != myplr && currlevel != plr[src].plrlevel)
 		missile[i]._miDelFlag = true;
 	if (plr[src].wReflections <= 0) {
@@ -4271,24 +4253,7 @@ void MI_Flash2(int i)
 
 void MI_Manashield(int i)
 {
-	int id;
-
-	id = missile[i]._misource;
-	missile[i].position.tile = plr[id].position.tile;
-	missile[i].position.traveled.x = plr[id].position.offset.x << 16;
-	missile[i].position.traveled.y = plr[id].position.offset.y << 16;
-	if (plr[id]._pmode == PM_WALK3) {
-		missile[i].position.start = plr[id].position.future;
-	} else {
-		missile[i].position.start = plr[id].position.tile;
-	}
-	GetMissilePos(i);
-	if (plr[id]._pmode == PM_WALK3) {
-		if (plr[id]._pdir == DIR_W)
-			missile[i].position.tile.x++;
-		else
-			missile[i].position.tile.y++;
-	}
+	int id = missile[i]._misource;
 	if (id != myplr) {
 		if (currlevel != plr[id].plrlevel)
 			missile[i]._miDelFlag = true;
