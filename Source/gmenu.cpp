@@ -33,26 +33,13 @@ void (*gmenu_current_option)();
 TMenuItem *sgpCurrentMenu;
 int sgCurrentMenuIdx;
 
-static void gmenu_print_text(const CelOutputBuffer &out, int x, int y, const char *pszStr)
-{
-	BYTE c;
-
-	while (*pszStr) {
-		c = gbFontTransTbl[(BYTE)*pszStr++];
-		c = fontframe[GameFontBig][c];
-		if (c != 0)
-			CelDrawLightTo(out, x, y, *BigTGold_cel, c, nullptr);
-		x += fontkern[GameFontBig][c] + 2;
-	}
-}
-
 void gmenu_draw_pause(const CelOutputBuffer &out)
 {
 	if (currlevel != 0)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		light_table_index = 0;
-		gmenu_print_text(out, 252 + PANEL_LEFT, 176, _("Pause"));
+		DrawString(out, _("Pause"), { PANEL_LEFT + 252, 176, 0, 0 }, UIS_MED, 2);
 	}
 }
 
@@ -181,22 +168,20 @@ static int gmenu_get_lfont(TMenuItem *pItem)
 
 static void gmenu_draw_menu_item(const CelOutputBuffer &out, TMenuItem *pItem, int y)
 {
-	DWORD w, x, nSteps, step, pos;
-	w = gmenu_get_lfont(pItem);
+	int w = gmenu_get_lfont(pItem);
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
-		x = 16 + w / 2;
+		int x = 16 + w / 2;
 		CelDrawTo(out, x + PANEL_LEFT, y - 10, *optbar_cel, 1);
-		step = pItem->dwFlags & 0xFFF;
-		nSteps = (pItem->dwFlags & 0xFFF000) >> 12;
-		if (nSteps < 2)
-			nSteps = 2;
-		pos = step * 256 / nSteps;
+		int step = pItem->dwFlags & 0xFFF;
+		int nSteps = std::max<int>((pItem->dwFlags & 0xFFF000) >> 12, 2);
+		int pos = step * 256 / nSteps;
 		gmenu_clear_buffer(out, x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
 		CelDrawTo(out, x + 2 + pos + PANEL_LEFT, y - 12, *option_cel, 1);
 	}
-	x = gnScreenWidth / 2 - w / 2;
-	light_table_index = (pItem->dwFlags & GMENU_ENABLED) ? 0 : 15;
-	gmenu_print_text(out, x, y, _(pItem->pszStr));
+
+	int x = (gnScreenWidth - w) / 2;
+	uint16_t style = (pItem->dwFlags & GMENU_ENABLED) ? UIS_SILVER : UIS_BLACK;
+	DrawString(out, _(pItem->pszStr), { x, y, 0, 0 }, style | UIS_HUGE, 2);
 	if (pItem == sgpCurrItem) {
 		CelDrawTo(out, x - 54, y + 1, *PentSpin_cel, PentSpn2Spin());
 		CelDrawTo(out, x + 4 + w, y + 1, *PentSpin_cel, PentSpn2Spin());

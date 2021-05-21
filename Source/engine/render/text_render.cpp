@@ -12,6 +12,8 @@
 
 namespace devilution {
 
+namespace {
+
 /**
  * Maps ASCII character code to font index, as used by the
  * small, medium and large sized fonts; which corresponds to smaltext.cel,
@@ -116,8 +118,6 @@ const uint8_t fontkern[3][68] = {
 	}
 };
 
-namespace {
-
 enum text_color : uint8_t {
 	COL_WHITE,
 	COL_BLUE,
@@ -126,48 +126,46 @@ enum text_color : uint8_t {
 	COL_BLACK,
 };
 
-int LineHeights[3] = { 12, 43, 50 };
+int LineHeights[3] = { 12, 38, 50 };
+
+/** Graphics for the fonts */
+std::array<std::optional<CelSprite>, 3> fonts;
 
 uint8_t fontColorTableGold[256];
 uint8_t fontColorTableBlue[256];
 uint8_t fontColorTableRed[256];
 
-static void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col)
+static void DrawChar(const CelOutputBuffer &out, Point point, GameFontTables size, int nCel, text_color color)
 {
-	switch (col) {
+	switch (color) {
 	case COL_WHITE:
-		CelDrawTo(out, sx, sy, *pPanelText, nCel);
+		CelDrawTo(out, point.x, point.y, *fonts[size], nCel);
 		return;
 	case COL_BLUE:
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableBlue);
+		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableBlue);
 		break;
 	case COL_RED:
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableRed);
+		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableRed);
 		break;
 	case COL_GOLD:
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, fontColorTableGold);
+		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableGold);
 		break;
 	case COL_BLACK:
 		light_table_index = 15;
-		CelDrawLightTo(out, sx, sy, *pPanelText, nCel, nullptr);
+		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, nullptr);
 		return;
 	}
 }
 
 } // namespace
 
-std::optional<CelSprite> pPanelText;
-/** Graphics for the medium size font */
-std::optional<CelSprite> pMedTextCels;
-std::optional<CelSprite> BigTGold_cel;
-
 std::optional<CelSprite> pSPentSpn2Cels;
 
 void InitText()
 {
-	pPanelText = LoadCel("CtrlPan\\SmalText.CEL", 13);
-	pMedTextCels = LoadCel("Data\\MedTextS.CEL", 22);
-	BigTGold_cel = LoadCel("Data\\BigTGold.CEL", 46);
+	fonts[GameFontSmall] = LoadCel("CtrlPan\\SmalText.CEL", 13);
+	fonts[GameFontMed] = LoadCel("Data\\MedTextS.CEL", 22);
+	fonts[GameFontBig] = LoadCel("Data\\BigTGold.CEL", 46);
 
 	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
 
@@ -199,9 +197,9 @@ void InitText()
 
 void FreeText()
 {
-	pPanelText = std::nullopt;
-	pMedTextCels = std::nullopt;
-	BigTGold_cel = std::nullopt;
+	fonts[GameFontSmall] = std::nullopt;
+	fonts[GameFontMed] = std::nullopt;
+	fonts[GameFontBig] = std::nullopt;
 
 	pSPentSpn2Cels = std::nullopt;
 }
@@ -237,7 +235,7 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 	return maxSpacing - spacingRedux;
 }
 
-void WordWrapGameString(char *text, size_t width, size_t size, int spacing)
+void WordWrapGameString(char *text, size_t width, GameFontTables size, int spacing)
 {
 	const size_t textLength = strlen(text);
 	size_t lineStart = 0;
@@ -347,7 +345,7 @@ int DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rec
 				sx += w - lineWidth;
 		}
 		if (frame != 0) {
-			PrintChar(out, sx, sy, frame, color);
+			DrawChar(out, { sx, sy }, size, frame, color);
 		}
 		if (text[i] != '\n')
 			sx += symbolWidth + spacing;

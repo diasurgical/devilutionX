@@ -1412,7 +1412,7 @@ static void DrawFPS(const CelOutputBuffer &out)
 	DWORD tc, frames;
 	char String[12];
 
-	if (frameflag && gbActive && pPanelText) {
+	if (frameflag && gbActive) {
 		frameend++;
 		tc = SDL_GetTicks();
 		frames = tc - framestart;

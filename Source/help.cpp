@@ -145,7 +145,7 @@ void DrawHelp(const CelOutputBuffer &out)
 			style = UIS_RED;
 		}
 
-		DrawString(out, &line[offset], { sx, sy + i * 12, 577, 0 }, style);
+		DrawString(out, &line[offset], { sx, sy + i * 12, 577, 12 }, style);
 	}
 
 	PrintSString(out, 0, 23, _("Press ESC to end or the arrow keys to scroll."), UIS_GOLD | UIS_CENTER);
