@@ -20,14 +20,6 @@ enum GameFontTables : uint8_t {
 	GameFontBig,
 };
 
-extern const uint8_t gbFontTransTbl[256];
-extern const uint8_t fontframe[3][128];
-extern const uint8_t fontkern[3][68];
-
-extern std::optional<CelSprite> pPanelText;
-extern std::optional<CelSprite> pMedTextCels;
-extern std::optional<CelSprite> BigTGold_cel;
-
 extern std::optional<CelSprite> pSPentSpn2Cels;
 
 void InitText();
@@ -42,7 +34,7 @@ void FreeText();
  * @return Line width in pixels
  */
 int GetLineWidth(const char *text, GameFontTables size = GameFontSmall, int spacing = 1, int *charactersInLine = nullptr);
-void WordWrapGameString(char *text, size_t width, size_t size = GameFontSmall, int spacing = 1);
+void WordWrapGameString(char *text, size_t width, GameFontTables size = GameFontSmall, int spacing = 1);
 int DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags = 0, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false);
 int PentSpn2Spin();
 
