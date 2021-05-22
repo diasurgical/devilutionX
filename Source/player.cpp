@@ -374,6 +374,52 @@ void PlayerStruct::Reset()
 	*this = std::move(*emptyPlayer);
 }
 
+int PlayerStruct::GetAnimationWidth(player_graphic graphic)
+{
+	switch (graphic) {
+	case PFILE_STAND:
+		if (_pClass == HeroClass::Monk)
+			return 112;
+		return 96;
+	case PFILE_WALK:
+		if (_pClass == HeroClass::Monk)
+			return 112;
+		return 96;
+	case PFILE_ATTACK:
+		if (_pClass == HeroClass::Monk)
+			return 130;
+		if (_pClass == HeroClass::Warrior || _pClass == HeroClass::Barbarian) {
+			auto gn = static_cast<anim_weapon_id>(_pgfxnum & 0xF);
+			if (gn == ANIM_ID_BOW)
+				return 96;
+		}
+		return 128;
+	case PFILE_HIT:
+		if (_pClass == HeroClass::Monk)
+			return 98;
+		return 96;
+	case PFILE_LIGHTNING:
+	case PFILE_FIRE:
+	case PFILE_MAGIC:
+		if (_pClass == HeroClass::Monk)
+			return 114;
+		if (_pClass == HeroClass::Sorcerer)
+			return 128;
+		return 96;
+	case PFILE_DEATH:
+		if (_pClass == HeroClass::Monk)
+			return 160;
+		return 128;
+	case PFILE_BLOCK:
+		if (_pClass == HeroClass::Monk)
+			return 98;
+		return 96;
+	default:
+		Log("GetAnimationWidth: Unkown graphic {}", graphic);
+		return 96;
+	}
+}
+
 void SetPlayerGPtrs(byte *pData, byte **pAnim)
 {
 	int i;
@@ -625,43 +671,34 @@ void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int
 	if ((player._pGFXLoad & graphic) != graphic)
 		LoadPlrGFX(player, graphic);
 
-	int width = 96;
+	int width = player.GetAnimationWidth(graphic);
 	byte *pData = nullptr;
 	switch (graphic) {
 	case PFILE_STAND:
-		width = player._pNWidth;
 		pData = player._pNAnim[dir];
 		break;
 	case PFILE_WALK:
-		width = player._pWWidth;
 		pData = player._pWAnim[dir];
 		break;
 	case PFILE_ATTACK:
-		width = player._pAWidth;
 		pData = player._pAAnim[dir];
 		break;
 	case PFILE_HIT:
-		width = player._pHWidth;
 		pData = player._pHAnim[dir];
 		break;
 	case PFILE_LIGHTNING:
-		width = player._pSWidth;
 		pData = player._pLAnim[dir];
 		break;
 	case PFILE_FIRE:
-		width = player._pSWidth;
 		pData = player._pFAnim[dir];
 		break;
 	case PFILE_MAGIC:
-		width = player._pSWidth;
 		pData = player._pTAnim[dir];
 		break;
 	case PFILE_DEATH:
-		width = player._pDWidth;
 		pData = player._pDAnim[dir];
 		break;
 	case PFILE_BLOCK:
-		width = player._pBWidth;
 		pData = player._pBAnim[dir];
 		break;
 	default:
@@ -685,14 +722,6 @@ static void ClearPlrPVars(PlayerStruct &player)
 
 void SetPlrAnims(PlayerStruct &player)
 {
-	player._pNWidth = 96;
-	player._pWWidth = 96;
-	player._pAWidth = 128;
-	player._pHWidth = 96;
-	player._pSWidth = 96;
-	player._pDWidth = 128;
-	player._pBWidth = 96;
-
 	HeroClass pc = player._pClass;
 
 	if (leveltype == DTYPE_TOWN) {
@@ -718,7 +747,6 @@ void SetPlrAnims(PlayerStruct &player)
 			if (leveltype != DTYPE_TOWN) {
 				player._pNFrames = 8;
 			}
-			player._pAWidth = 96;
 			player._pAFNum = 11;
 		} else if (gn == ANIM_ID_AXE) {
 			player._pAFrames = 20;
@@ -739,7 +767,6 @@ void SetPlrAnims(PlayerStruct &player)
 			player._pAFNum = 11;
 		}
 	} else if (pc == HeroClass::Sorcerer) {
-		player._pSWidth = 128;
 		if (gn == ANIM_ID_UNARMED) {
 			player._pAFrames = 20;
 		} else if (gn == ANIM_ID_UNARMED_SHIELD) {
@@ -752,14 +779,6 @@ void SetPlrAnims(PlayerStruct &player)
 			player._pAFNum = 16;
 		}
 	} else if (pc == HeroClass::Monk) {
-		player._pNWidth = 112;
-		player._pWWidth = 112;
-		player._pAWidth = 130;
-		player._pHWidth = 98;
-		player._pSWidth = 114;
-		player._pDWidth = 160;
-		player._pBWidth = 98;
-
 		switch (gn) {
 		case ANIM_ID_UNARMED:
 		case ANIM_ID_UNARMED_SHIELD:
@@ -800,7 +819,6 @@ void SetPlrAnims(PlayerStruct &player)
 			if (leveltype != DTYPE_TOWN) {
 				player._pNFrames = 8;
 			}
-			player._pAWidth = 96;
 			player._pAFNum = 11;
 		} else if (gn == ANIM_ID_STAFF) {
 			player._pAFrames = 16;

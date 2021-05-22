@@ -434,29 +434,36 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pGFXLoad = file->nextLE<int32_t>();
 	file->skip(4 * 8); // Skip pointers _pNAnim
 	pPlayer->_pNFrames = file->nextLE<int32_t>();
-	pPlayer->_pNWidth = file->nextLE<int32_t>();
+	// skip _pNWidth
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pWAnim
 	pPlayer->_pWFrames = file->nextLE<int32_t>();
-	pPlayer->_pWWidth = file->nextLE<int32_t>();
+	// skip _pWWidth
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pAAnim
 	pPlayer->_pAFrames = file->nextLE<int32_t>();
-	pPlayer->_pAWidth = file->nextLE<int32_t>();
+	// skip _pAWidth
+	file->skip(4);
 	pPlayer->_pAFNum = file->nextLE<int32_t>();
 	file->skip(4 * 8); // Skip pointers _pLAnim
 	file->skip(4 * 8); // Skip pointers _pFAnim
 	file->skip(4 * 8); // Skip pointers _pTAnim
 	pPlayer->_pSFrames = file->nextLE<int32_t>();
-	pPlayer->_pSWidth = file->nextLE<int32_t>();
+	// skip _pSWidth
+	file->skip(4);
 	pPlayer->_pSFNum = file->nextLE<int32_t>();
 	file->skip(4 * 8); // Skip pointers _pHAnim
 	pPlayer->_pHFrames = file->nextLE<int32_t>();
-	pPlayer->_pHWidth = file->nextLE<int32_t>();
+	// skip _pHWidth
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pDAnim
 	pPlayer->_pDFrames = file->nextLE<int32_t>();
-	pPlayer->_pDWidth = file->nextLE<int32_t>();
+	// skip _pDWidth
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pBAnim
 	pPlayer->_pBFrames = file->nextLE<int32_t>();
-	pPlayer->_pBWidth = file->nextLE<int32_t>();
+	// skip _pBWidth
+	file->skip(4);
 
 	LoadItems(file, NUM_INVLOC, pPlayer->InvBody);
 	LoadItems(file, NUM_INV_GRID_ELEM, pPlayer->InvList);
@@ -1421,29 +1428,36 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->_pGFXLoad);
 	file->skip(4 * 8); // Skip pointers _pNAnim
 	file->writeLE<int32_t>(pPlayer->_pNFrames);
-	file->writeLE<int32_t>(pPlayer->_pNWidth);
+	// Skip _pNWidth
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pWAnim
 	file->writeLE<int32_t>(pPlayer->_pWFrames);
-	file->writeLE<int32_t>(pPlayer->_pWWidth);
+	// Skip _pWWidth
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pAAnim
 	file->writeLE<int32_t>(pPlayer->_pAFrames);
-	file->writeLE<int32_t>(pPlayer->_pAWidth);
+	// Skip _pAWidth
+	file->skip(4);
 	file->writeLE<int32_t>(pPlayer->_pAFNum);
 	file->skip(4 * 8); // Skip pointers _pLAnim
 	file->skip(4 * 8); // Skip pointers _pFAnim
 	file->skip(4 * 8); // Skip pointers _pTAnim
 	file->writeLE<int32_t>(pPlayer->_pSFrames);
-	file->writeLE<int32_t>(pPlayer->_pSWidth);
+	// Skip _pSWidth
+	file->skip(4);
 	file->writeLE<int32_t>(pPlayer->_pSFNum);
 	file->skip(4 * 8); // Skip pointers _pHAnim
 	file->writeLE<int32_t>(pPlayer->_pHFrames);
-	file->writeLE<int32_t>(pPlayer->_pHWidth);
+	// Skip _pHWidth
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pDAnim
 	file->writeLE<int32_t>(pPlayer->_pDFrames);
-	file->writeLE<int32_t>(pPlayer->_pDWidth);
+	// Skip _pDWidth
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pBAnim
 	file->writeLE<int32_t>(pPlayer->_pBFrames);
-	file->writeLE<int32_t>(pPlayer->_pBWidth);
+	// Skip _pBWidth
+	file->skip(4);
 
 	SaveItems(file, pPlayer->InvBody, NUM_INVLOC);
 	SaveItems(file, pPlayer->InvList, NUM_INV_GRID_ELEM);

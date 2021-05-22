@@ -241,29 +241,22 @@ struct PlayerStruct {
 	int _pGFXLoad;
 	byte *_pNAnim[8]; // Stand animations
 	int _pNFrames;
-	int _pNWidth;
 	byte *_pWAnim[8]; // Walk animations
 	int _pWFrames;
-	int _pWWidth;
 	byte *_pAAnim[8]; // Attack animations
 	int _pAFrames;
-	int _pAWidth;
 	int _pAFNum;
 	byte *_pLAnim[8]; // Lightning spell cast animations
 	byte *_pFAnim[8]; // Fire spell cast animations
 	byte *_pTAnim[8]; // Generic spell cast animations
 	int _pSFrames;
-	int _pSWidth;
 	int _pSFNum;
 	byte *_pHAnim[8]; // Getting hit animations
 	int _pHFrames;
-	int _pHWidth;
 	byte *_pDAnim[8]; // Death animations
 	int _pDFrames;
-	int _pDWidth;
 	byte *_pBAnim[8]; // Block animations
 	int _pBFrames;
-	int _pBWidth;
 	ItemStruct InvBody[NUM_INVLOC];
 	ItemStruct InvList[NUM_INV_GRID_ELEM];
 	int _pNumInv;
@@ -403,6 +396,11 @@ struct PlayerStruct {
 	 * @brief Resets all Data of the current PlayerStruct
 	*/
 	void Reset();
+
+	/**
+	 * @brief Gets the width for the specified player animation
+	*/
+	int GetAnimationWidth(player_graphic graphic);
 };
 
 extern int myplr;
