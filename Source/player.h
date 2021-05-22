@@ -150,6 +150,9 @@ enum player_weapon_type : uint8_t {
 
 struct PlayerStruct {
 	PlayerStruct() = default;
+	PlayerStruct(PlayerStruct &&) noexcept = default;
+	PlayerStruct &operator=(PlayerStruct &&) noexcept = default;
+
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];
 	bool plractive;
@@ -395,6 +398,11 @@ struct PlayerStruct {
 	 * @brief Is the player currently walking?
 	*/
 	bool IsWalking() const;
+
+	/**
+	 * @brief Resets all Data of the current PlayerStruct
+	*/
+	void Reset();
 };
 
 extern int myplr;
