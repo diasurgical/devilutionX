@@ -341,8 +341,18 @@ void RenderOutlineForPixel(std::uint8_t *dst, int dstPitch, std::uint8_t color)
 template <bool North, bool West, bool South, bool East>
 void RenderOutlineForPixels(std::uint8_t *dst, int dstPitch, int width, std::uint8_t color)
 {
-	while (width-- > 0)
-		RenderOutlineForPixel<North, West, South, East>(dst++, dstPitch, color);
+	if (North)
+		std::memset(dst - dstPitch, color, width);
+
+	if (West && East)
+		std::memset(dst - 1, color, width + 2);
+	else if (West)
+		std::memset(dst - 1, color, width);
+	else if (East)
+		std::memset(dst + 1, color, width);
+
+	if (South)
+		std::memset(dst + dstPitch, color, width);
 }
 
 template <bool North, bool West, bool South, bool East>
