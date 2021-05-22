@@ -886,7 +886,7 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 		player._pgfxnum = g;
 		player._pGFXLoad = 0;
 		SetPlrAnims(player);
-		LoadPlrGFX(playerId, static_cast<player_graphic>(PFILE_STAND | PFILE_WALK));
+		LoadPlrGFX(player, static_cast<player_graphic>(PFILE_STAND | PFILE_WALK));
 		if (player._pmode == PM_STAND) {
 			player._pAnimWidth = player._pNWidth;
 			player.AnimInfo.ChangeAnimationData(player._pNAnim[player._pdir], player._pNFrames, 3);

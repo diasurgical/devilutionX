@@ -383,18 +383,13 @@ void SetPlayerGPtrs(byte *pData, byte **pAnim)
 	}
 }
 
-void LoadPlrGFX(int pnum, player_graphic gfxflag)
+void LoadPlrGFX(PlayerStruct &player, player_graphic gfxflag)
 {
 	char prefix[16];
 	char pszName[256];
 	const char *szCel;
 	byte *pData;
 	byte **pAnim;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("LoadPlrGFX: illegal player %i", pnum);
-	}
-	auto &player = plr[pnum];
 
 	HeroClass c = player._pClass;
 	if (c == HeroClass::Bard && hfbard_mpq == nullptr) {
@@ -508,9 +503,9 @@ void InitPlayerGFX(int pnum)
 
 	if (player._pHitPoints >> 6 == 0) {
 		player._pgfxnum = 0;
-		LoadPlrGFX(pnum, PFILE_DEATH);
+		LoadPlrGFX(player, PFILE_DEATH);
 	} else {
-		LoadPlrGFX(pnum, PFILE_NONDEATH);
+		LoadPlrGFX(player, PFILE_NONDEATH);
 	}
 }
 
@@ -1317,7 +1312,7 @@ void StartStand(int pnum, Direction dir)
 
 	if (!player._pInvincible || player._pHitPoints != 0 || pnum != myplr) {
 		if ((player._pGFXLoad & PFILE_STAND) == 0) {
-			LoadPlrGFX(pnum, PFILE_STAND);
+			LoadPlrGFX(player, PFILE_STAND);
 		}
 
 		NewPlrAnim(player, player._pNAnim[dir], player._pNFrames, 3, player._pNWidth);
@@ -1482,7 +1477,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 
 	//Load walk animation in case it's not loaded yet
 	if ((player._pGFXLoad & PFILE_WALK) == 0) {
-		LoadPlrGFX(pnum, PFILE_WALK);
+		LoadPlrGFX(player, PFILE_WALK);
 	}
 
 	//Start walk animation
@@ -1525,7 +1520,7 @@ void StartAttack(int pnum, Direction d)
 	}
 
 	if ((player._pGFXLoad & PFILE_ATTACK) == 0) {
-		LoadPlrGFX(pnum, PFILE_ATTACK);
+		LoadPlrGFX(player, PFILE_ATTACK);
 	}
 
 	int skippedAnimationFrames = 0;
@@ -1561,7 +1556,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	}
 
 	if ((player._pGFXLoad & PFILE_ATTACK) == 0) {
-		LoadPlrGFX(pnum, PFILE_ATTACK);
+		LoadPlrGFX(player, PFILE_ATTACK);
 	}
 
 	int skippedAnimationFrames = 0;
@@ -1597,7 +1592,7 @@ void StartPlrBlock(int pnum, Direction dir)
 	PlaySfxLoc(IS_ISWORD, player.position.tile.x, player.position.tile.y);
 
 	if ((player._pGFXLoad & PFILE_BLOCK) == 0) {
-		LoadPlrGFX(pnum, PFILE_BLOCK);
+		LoadPlrGFX(player, PFILE_BLOCK);
 	}
 
 	int skippedAnimationFrames = 0;
@@ -1631,19 +1626,19 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 		switch (spelldata[player._pSpell].sType) {
 		case STYPE_FIRE:
 			if ((player._pGFXLoad & PFILE_FIRE) == 0) {
-				LoadPlrGFX(pnum, PFILE_FIRE);
+				LoadPlrGFX(player, PFILE_FIRE);
 			}
 			NewPlrAnim(player, player._pFAnim[d], player._pSFrames, 0, player._pSWidth, animationFlags, 0, player._pSFNum);
 			break;
 		case STYPE_LIGHTNING:
 			if ((player._pGFXLoad & PFILE_LIGHTNING) == 0) {
-				LoadPlrGFX(pnum, PFILE_LIGHTNING);
+				LoadPlrGFX(player, PFILE_LIGHTNING);
 			}
 			NewPlrAnim(player, player._pLAnim[d], player._pSFrames, 0, player._pSWidth, animationFlags, 0, player._pSFNum);
 			break;
 		case STYPE_MAGIC:
 			if ((player._pGFXLoad & PFILE_MAGIC) == 0) {
-				LoadPlrGFX(pnum, PFILE_MAGIC);
+				LoadPlrGFX(player, PFILE_MAGIC);
 			}
 			NewPlrAnim(player, player._pTAnim[d], player._pSFrames, 0, player._pSWidth, animationFlags, 0, player._pSFNum);
 			break;
@@ -1743,7 +1738,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	Direction pd = player._pdir;
 
 	if ((player._pGFXLoad & PFILE_HIT) == 0) {
-		LoadPlrGFX(pnum, PFILE_HIT);
+		LoadPlrGFX(player, PFILE_HIT);
 	}
 
 	int skippedAnimationFrames = 0;
@@ -1852,7 +1847,7 @@ StartPlayerKill(int pnum, int earflag)
 	}
 
 	if ((player._pGFXLoad & PFILE_DEATH) == 0) {
-		LoadPlrGFX(pnum, PFILE_DEATH);
+		LoadPlrGFX(player, PFILE_DEATH);
 	}
 
 	NewPlrAnim(player, player._pDAnim[player._pdir], player._pDFrames, 1, player._pDWidth);
