@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "DiabloUI/ui_item.h"
 #include "engine.h"
 #include "itemdat.h"
 #include "utils/stdcompat/optional.hpp"
@@ -346,6 +347,20 @@ struct ItemStruct {
 
 		default:
 			return false;
+		}
+	}
+
+	UiFlags getTextColor() const
+	{
+		if (!_iStatFlag)
+			return UIS_RED;
+		switch (_iMagical) {
+		case ITEM_QUALITY_MAGIC:
+			return UIS_BLUE;
+		case ITEM_QUALITY_UNIQUE:
+			return UIS_GOLD;
+		default:
+			return UIS_SILVER;
 		}
 	}
 };
