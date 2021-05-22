@@ -367,6 +367,13 @@ bool PlayerStruct::IsWalking() const
 	}
 }
 
+void PlayerStruct::Reset()
+{
+	// Create empty default initialized PlayerStruct on heap to avoid excessive stack usage
+	auto emptyPlayer = std::make_unique<PlayerStruct>();
+	*this = std::move(*emptyPlayer);
+}
+
 void SetPlayerGPtrs(byte *pData, byte **pAnim)
 {
 	int i;
@@ -772,7 +779,7 @@ void CreatePlayer(int pnum, HeroClass c)
 	}
 	auto &player = plr[pnum];
 
-	memset(&player, 0, sizeof(PlayerStruct));
+	player.Reset();
 	SetRndSeed(SDL_GetTicks());
 
 	player._pClass = c;
