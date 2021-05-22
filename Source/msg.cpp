@@ -2236,15 +2236,13 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 			plr[pnum].plrlevel = p->wParam1;
 			plr[pnum]._pGFXLoad = 0;
 			if (currlevel == plr[pnum].plrlevel) {
-				LoadPlrGFX(player, PFILE_STAND);
 				SyncInitPlr(pnum);
 				if ((plr[pnum]._pHitPoints >> 6) > 0)
 					StartStand(pnum, DIR_S);
 				else {
 					plr[pnum]._pgfxnum = 0;
-					LoadPlrGFX(player, PFILE_DEATH);
 					plr[pnum]._pmode = PM_DEATH;
-					NewPlrAnim(plr[pnum], plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
+					NewPlrAnim(plr[pnum], PFILE_DEATH, DIR_S, plr[pnum]._pDFrames, 1);
 					plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
 					dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 				}

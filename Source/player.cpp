@@ -620,8 +620,55 @@ void FreePlayerGFX(PlayerStruct &player)
 	player._pGFXLoad = 0;
 }
 
-void NewPlrAnim(PlayerStruct &player, byte *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
+	if ((player._pGFXLoad & graphic) != graphic)
+		LoadPlrGFX(player, graphic);
+
+	int width = 96;
+	byte *pData = nullptr;
+	switch (graphic) {
+	case PFILE_STAND:
+		width = player._pNWidth;
+		pData = player._pNAnim[dir];
+		break;
+	case PFILE_WALK:
+		width = player._pWWidth;
+		pData = player._pWAnim[dir];
+		break;
+	case PFILE_ATTACK:
+		width = player._pAWidth;
+		pData = player._pAAnim[dir];
+		break;
+	case PFILE_HIT:
+		width = player._pHWidth;
+		pData = player._pHAnim[dir];
+		break;
+	case PFILE_LIGHTNING:
+		width = player._pSWidth;
+		pData = player._pLAnim[dir];
+		break;
+	case PFILE_FIRE:
+		width = player._pSWidth;
+		pData = player._pFAnim[dir];
+		break;
+	case PFILE_MAGIC:
+		width = player._pSWidth;
+		pData = player._pTAnim[dir];
+		break;
+	case PFILE_DEATH:
+		width = player._pDWidth;
+		pData = player._pDAnim[dir];
+		break;
+	case PFILE_BLOCK:
+		width = player._pBWidth;
+		pData = player._pBAnim[dir];
+		break;
+	default:
+		Log("NewPlrAnim: Unkown graphic {}", graphic);
+		break;
+	}
+
 	player._pAnimWidth = width;
 	player.AnimInfo.SetNewAnimation(pData, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame);
 }
@@ -1132,12 +1179,12 @@ void InitPlayer(int pnum, bool FirstTime)
 
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
-			NewPlrAnim(player, player._pNAnim[DIR_S], player._pNFrames, 3, player._pNWidth);
+			NewPlrAnim(player, PFILE_STAND, DIR_S, player._pNFrames, 3);
 			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1) + 1;
 			player.AnimInfo.DelayCounter = GenerateRnd(3);
 		} else {
 			player._pmode = PM_DEATH;
-			NewPlrAnim(player, player._pDAnim[DIR_S], player._pDFrames, 1, player._pDWidth);
+			NewPlrAnim(player, PFILE_DEATH, DIR_S, player._pDFrames, 1);
 			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
 		}
 
@@ -1311,11 +1358,7 @@ void StartStand(int pnum, Direction dir)
 	auto &player = plr[pnum];
 
 	if (!player._pInvincible || player._pHitPoints != 0 || pnum != myplr) {
-		if ((player._pGFXLoad & PFILE_STAND) == 0) {
-			LoadPlrGFX(player, PFILE_STAND);
-		}
-
-		NewPlrAnim(player, player._pNAnim[dir], player._pNFrames, 3, player._pNWidth);
+		NewPlrAnim(player, PFILE_STAND, dir, player._pNFrames, 3);
 		player._pmode = PM_STAND;
 		FixPlayerLocation(pnum, dir);
 		FixPlrWalkTags(pnum);
@@ -1475,18 +1518,13 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		break;
 	}
 
-	//Load walk animation in case it's not loaded yet
-	if ((player._pGFXLoad & PFILE_WALK) == 0) {
-		LoadPlrGFX(player, PFILE_WALK);
-	}
-
 	//Start walk animation
 	int skippedFrames = -2;
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown)
 		skippedFrames = 2;
 	if (pmWillBeCalled)
 		skippedFrames += 1;
-	NewPlrAnim(player, player._pWAnim[EndDir], player._pWFrames, 0, player._pWWidth, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
+	NewPlrAnim(player, PFILE_WALK, EndDir, player._pWFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
 
 	player._pdir = EndDir;
 
@@ -1519,10 +1557,6 @@ void StartAttack(int pnum, Direction d)
 		return;
 	}
 
-	if ((player._pGFXLoad & PFILE_ATTACK) == 0) {
-		LoadPlrGFX(player, PFILE_ATTACK);
-	}
-
 	int skippedAnimationFrames = 0;
 	if ((player._pIFlags & ISPL_FASTERATTACK) != 0) {
 		// The combination of Faster and Fast Attack doesn't result in more skipped skipped frames, cause the secound frame skip of Faster Attack is not triggered.
@@ -1537,7 +1571,7 @@ void StartAttack(int pnum, Direction d)
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player._pAAnim[d], player._pAFrames, 0, player._pAWidth, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, PFILE_ATTACK, d, player._pAFrames, 0, animationFlags, skippedAnimationFrames, player._pAFNum);
 	player._pmode = PM_ATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(player);
@@ -1555,10 +1589,6 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 		return;
 	}
 
-	if ((player._pGFXLoad & PFILE_ATTACK) == 0) {
-		LoadPlrGFX(player, PFILE_ATTACK);
-	}
-
 	int skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
 		if ((player._pIFlags & ISPL_FASTATTACK) != 0) {
@@ -1569,7 +1599,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_RATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player._pAAnim[d], player._pAFrames, 0, player._pAWidth, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, PFILE_ATTACK, d, player._pAFrames, 0, animationFlags, skippedAnimationFrames, player._pAFNum);
 
 	player._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
@@ -1591,16 +1621,12 @@ void StartPlrBlock(int pnum, Direction dir)
 
 	PlaySfxLoc(IS_ISWORD, player.position.tile.x, player.position.tile.y);
 
-	if ((player._pGFXLoad & PFILE_BLOCK) == 0) {
-		LoadPlrGFX(player, PFILE_BLOCK);
-	}
-
 	int skippedAnimationFrames = 0;
 	if ((player._pIFlags & ISPL_FASTBLOCK) != 0) {
 		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
-	NewPlrAnim(player, player._pBAnim[dir], player._pBFrames, 2, player._pBWidth, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
+	NewPlrAnim(player, PFILE_BLOCK, dir, player._pBFrames, 2, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
 	player._pmode = PM_BLOCK;
 	FixPlayerLocation(pnum, dir);
@@ -1625,22 +1651,13 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 
 		switch (spelldata[player._pSpell].sType) {
 		case STYPE_FIRE:
-			if ((player._pGFXLoad & PFILE_FIRE) == 0) {
-				LoadPlrGFX(player, PFILE_FIRE);
-			}
-			NewPlrAnim(player, player._pFAnim[d], player._pSFrames, 0, player._pSWidth, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, PFILE_FIRE, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
 			break;
 		case STYPE_LIGHTNING:
-			if ((player._pGFXLoad & PFILE_LIGHTNING) == 0) {
-				LoadPlrGFX(player, PFILE_LIGHTNING);
-			}
-			NewPlrAnim(player, player._pLAnim[d], player._pSFrames, 0, player._pSWidth, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, PFILE_LIGHTNING, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
 			break;
 		case STYPE_MAGIC:
-			if ((player._pGFXLoad & PFILE_MAGIC) == 0) {
-				LoadPlrGFX(player, PFILE_MAGIC);
-			}
-			NewPlrAnim(player, player._pTAnim[d], player._pSFrames, 0, player._pSWidth, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, PFILE_MAGIC, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
 			break;
 		}
 	} else {
@@ -1737,10 +1754,6 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 
 	Direction pd = player._pdir;
 
-	if ((player._pGFXLoad & PFILE_HIT) == 0) {
-		LoadPlrGFX(player, PFILE_HIT);
-	}
-
 	int skippedAnimationFrames = 0;
 	const int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
 	if ((player._pIFlags & ZenFlags) == ZenFlags) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
@@ -1755,7 +1768,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		skippedAnimationFrames = 0;
 	}
 
-	NewPlrAnim(player, player._pHAnim[pd], player._pHFrames, 0, player._pHWidth, AnimationDistributionFlags::None, skippedAnimationFrames);
+	NewPlrAnim(player, PFILE_HIT, pd, player._pHFrames, 0, AnimationDistributionFlags::None, skippedAnimationFrames);
 
 	player._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);
@@ -1846,11 +1859,7 @@ StartPlayerKill(int pnum, int earflag)
 		SetPlrAnims(player);
 	}
 
-	if ((player._pGFXLoad & PFILE_DEATH) == 0) {
-		LoadPlrGFX(player, PFILE_DEATH);
-	}
-
-	NewPlrAnim(player, player._pDAnim[player._pdir], player._pDFrames, 1, player._pDWidth);
+	NewPlrAnim(player, PFILE_DEATH, player._pdir, player._pDFrames, 1);
 
 	player._pBlockFlag = false;
 	player._pmode = PM_DEATH;

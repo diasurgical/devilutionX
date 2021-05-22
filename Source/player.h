@@ -418,15 +418,15 @@ void FreePlayerGFX(PlayerStruct &player);
 /**
  * @brief Sets the new Player Animation with all relevant information for rendering
  * @param pnum Player Id
- * @param pData Pointer to Animation Data
+ * @param graphic What player animation should be displayed
+ * @param dir Direction of the animation
  * @param numberOfFrames Number of Frames in Animation
  * @param delayLen Delay after each Animation sequence
- * @param width Width of sprite
  * @param flags Specifies what special logics are applied to this Animation
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(PlayerStruct &player, byte *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(PlayerStruct &player);
 void CreatePlayer(int playerId, HeroClass c);
 int CalcStatDiff(PlayerStruct &player);

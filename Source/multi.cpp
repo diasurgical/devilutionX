@@ -866,7 +866,6 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	}
 	EventPlrMsg(fmt::format(szEvent, plr[pnum]._pName, plr[pnum]._pLevel).c_str());
 
-	LoadPlrGFX(player, PFILE_STAND);
 	SyncInitPlr(pnum);
 
 	if (plr[pnum].plrlevel == currlevel) {
@@ -874,9 +873,8 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 			StartStand(pnum, DIR_S);
 		} else {
 			plr[pnum]._pgfxnum = 0;
-			LoadPlrGFX(player, PFILE_DEATH);
 			plr[pnum]._pmode = PM_DEATH;
-			NewPlrAnim(plr[pnum], plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
+			NewPlrAnim(player, PFILE_DEATH, DIR_S, plr[pnum]._pDFrames, 1);
 			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
 			dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 		}
