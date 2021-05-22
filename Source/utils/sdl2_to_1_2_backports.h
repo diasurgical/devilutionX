@@ -11,7 +11,6 @@
 
 #include "utils/attributes.h"
 #include "utils/console.h"
-#include "utils/stubs.h"
 
 #define WINDOW_ICON_NAME 0
 
@@ -174,21 +173,9 @@ SDL_WarpMouseInWindow(SDL_Window *window, int x, int y)
 
 #define SDL_Renderer void
 
-inline void SDL_DestroyRenderer(SDL_Renderer *renderer)
-{
-	if (renderer != NULL)
-		UNIMPLEMENTED();
-}
-
 //= Texture stubs
 
 #define SDL_Texture void
-
-inline void SDL_DestroyTexture(SDL_Texture *texture)
-{
-	if (texture != NULL)
-		UNIMPLEMENTED();
-}
 
 //= Palette handling
 
