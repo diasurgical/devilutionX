@@ -73,17 +73,6 @@ const char *const talkname[] = {
 	"Wirt"
 };
 
-uint16_t GetItemTextColor(ItemStruct &item)
-{
-	if (!item._iStatFlag)
-		return UIS_RED;
-	if (item._iMagical == ITEM_QUALITY_MAGIC)
-		return UIS_BLUE;
-	if (item._iMagical == ITEM_QUALITY_UNIQUE)
-		return UIS_GOLD;
-	return UIS_SILVER;
-}
-
 void DrawSTextBack(const CelOutputBuffer &out)
 {
 	CelDrawTo(out, PANEL_X + 320 + 24, 327 + UI_OFFSET_Y, *pSTextBoxCels, 1);
@@ -248,7 +237,7 @@ void S_ScrollSBuy(int idx)
 
 	for (l = 5; l < 20; l += 4) {
 		if (!smithitem[ls].isEmpty()) {
-			uint16_t iclr = GetItemTextColor(smithitem[ls]);
+			uint16_t iclr = smithitem[ls].getTextColor();
 
 			if (smithitem[ls]._iMagical) {
 				AddSText(20, l, smithitem[ls]._iIName, iclr, true);
@@ -306,7 +295,7 @@ void S_ScrollSPBuy(int idx)
 
 	for (l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
 		if (!premiumitems[idx].isEmpty()) {
-			uint16_t iclr = GetItemTextColor(premiumitems[idx]);
+			uint16_t iclr = premiumitems[idx].getTextColor();
 			AddSText(20, l, premiumitems[idx]._iIName, iclr, true);
 			AddSTextVal(l, premiumitems[idx]._iIvalue);
 			PrintStoreItem(&premiumitems[idx], l + 1, iclr);
@@ -396,7 +385,7 @@ void S_ScrollSSell(int idx)
 		if (idx >= storenumh)
 			break;
 		if (!storehold[idx].isEmpty()) {
-			uint16_t iclr = GetItemTextColor(storehold[idx]);
+			uint16_t iclr = storehold[idx].getTextColor();
 
 			if (storehold[idx]._iMagical && storehold[idx]._iIdentified) {
 				AddSText(20, l, storehold[idx]._iIName, iclr, true);
@@ -596,7 +585,7 @@ void S_ScrollWBuy(int idx)
 
 	for (l = 5; l < 20; l += 4) {
 		if (!witchitem[ls].isEmpty()) {
-			uint16_t iclr = GetItemTextColor(witchitem[ls]);
+			uint16_t iclr = witchitem[ls].getTextColor();
 
 			if (witchitem[ls]._iMagical) {
 				AddSText(20, l, witchitem[ls]._iIName, iclr, true);
@@ -837,7 +826,7 @@ void S_StartConfirm()
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-	uint16_t iclr = GetItemTextColor(plr[myplr].HoldItem);
+	uint16_t iclr = plr[myplr].HoldItem.getTextColor();
 
 	idprint = plr[myplr].HoldItem._iMagical != ITEM_QUALITY_NORMAL;
 
@@ -919,7 +908,7 @@ void S_StartBBoy()
 	AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 	AddSLine(3);
 	AddSLine(21);
-	uint16_t iclr = GetItemTextColor(boyitem);
+	uint16_t iclr = boyitem.getTextColor();
 
 	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
 		AddSText(20, 10, boyitem._iIName, iclr, true);
@@ -968,7 +957,7 @@ void S_ScrollHBuy(int idx)
 	stextup = 5;
 	for (l = 5; l < 20; l += 4) {
 		if (!healitem[idx].isEmpty()) {
-			uint16_t iclr = GetItemTextColor(healitem[idx]);
+			uint16_t iclr = healitem[idx].getTextColor();
 
 			AddSText(20, l, healitem[idx]._iName, iclr, true);
 			AddSTextVal(l, healitem[idx]._iIvalue);
@@ -1115,7 +1104,7 @@ void S_StartIdShow()
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-	uint16_t iclr = GetItemTextColor(plr[myplr].HoldItem);
+	uint16_t iclr = plr[myplr].HoldItem.getTextColor();
 
 	AddSText(0, 7, _("This item is:"), UIS_SILVER | UIS_CENTER, false);
 	AddSText(20, 11, plr[myplr].HoldItem._iIName, iclr, false);
