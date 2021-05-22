@@ -829,6 +829,8 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	}
 	assert((DWORD)pnum < MAX_PLRS);
 
+	auto &player = plr[pnum];
+
 	if (sgwPackPlrOffsetTbl[pnum] != p->wOffset) {
 		sgwPackPlrOffsetTbl[pnum] = 0;
 		if (p->wOffset != 0) {
@@ -864,7 +866,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	}
 	EventPlrMsg(fmt::format(szEvent, plr[pnum]._pName, plr[pnum]._pLevel).c_str());
 
-	LoadPlrGFX(pnum, PFILE_STAND);
+	LoadPlrGFX(player, PFILE_STAND);
 	SyncInitPlr(pnum);
 
 	if (plr[pnum].plrlevel == currlevel) {
@@ -872,7 +874,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 			StartStand(pnum, DIR_S);
 		} else {
 			plr[pnum]._pgfxnum = 0;
-			LoadPlrGFX(pnum, PFILE_DEATH);
+			LoadPlrGFX(player, PFILE_DEATH);
 			plr[pnum]._pmode = PM_DEATH;
 			NewPlrAnim(plr[pnum], plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;

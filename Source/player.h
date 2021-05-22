@@ -410,7 +410,7 @@ extern PlayerStruct plr[MAX_PLRS];
 extern bool deathflag;
 extern int ToBlkTbl[enum_size<HeroClass>::value];
 
-void LoadPlrGFX(int pnum, player_graphic gfxflag);
+void LoadPlrGFX(PlayerStruct &player, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(PlayerStruct &player);
 void FreePlayerGFX(PlayerStruct &player);

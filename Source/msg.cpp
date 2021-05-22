@@ -2218,6 +2218,7 @@ static DWORD On_ACK_PLRINFO(TCmd *pCmd, int pnum)
 static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
+	auto &player = plr[pnum];
 
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
@@ -2235,13 +2236,13 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 			plr[pnum].plrlevel = p->wParam1;
 			plr[pnum]._pGFXLoad = 0;
 			if (currlevel == plr[pnum].plrlevel) {
-				LoadPlrGFX(pnum, PFILE_STAND);
+				LoadPlrGFX(player, PFILE_STAND);
 				SyncInitPlr(pnum);
 				if ((plr[pnum]._pHitPoints >> 6) > 0)
 					StartStand(pnum, DIR_S);
 				else {
 					plr[pnum]._pgfxnum = 0;
-					LoadPlrGFX(pnum, PFILE_DEATH);
+					LoadPlrGFX(player, PFILE_DEATH);
 					plr[pnum]._pmode = PM_DEATH;
 					NewPlrAnim(plr[pnum], plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 					plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
