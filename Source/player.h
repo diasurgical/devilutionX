@@ -149,6 +149,7 @@ enum player_weapon_type : uint8_t {
 };
 
 struct PlayerStruct {
+	PlayerStruct() = default;
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];
 	bool plractive;
