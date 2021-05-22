@@ -1,6 +1,7 @@
 #pragma once
 
-#include "storm/storm.h"
+#include <cstdint>
+
 #include "utils/sdl_ptrs.h"
 
 namespace devilution {
@@ -39,6 +40,6 @@ struct Art {
 
 void LoadArt(const char *pszFile, Art *art, int frames = 1, SDL_Color *pPalette = NULL);
 void LoadMaskedArt(const char *pszFile, Art *art, int frames = 1, int mask = 250);
-void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames = 1);
+void LoadArt(Art *art, const std::uint8_t *artData, int w, int h, int frames = 1);
 
 } // namespace devilution
