@@ -370,19 +370,18 @@ struct PlayerStruct {
 
 	/**
 	 * @brief Play a speach file.
-	 * @todo Create enum for speachId
-	 * @todo BUGFIX Prevent more then one speach to be played at a time (reject new requests).
+	 * @todo BUGFIX Prevent more then one speech to be played at a time (reject new requests).
 	 */
-	void PlaySpeach(int speachId) const;
+	void PlaySpeach(HeroSpeech speachId) const;
 	/**
 	 * @brief Play a speach file after a given delay.
 	 * @param delay Multiple of 20ms waith before starting the speach
 	 */
-	void PlaySpeach(int speachId, int delay) const;
+	void PlaySpeach(HeroSpeech speachId, int delay) const;
 	/**
 	 * @brief Play a player speach file, with out random variants.
 	 */
-	void PlaySpecificSpeach(int speachId) const;
+	void PlaySpecificSpeach(HeroSpeech speachId) const;
 
 	/**
 	 * @brief Attempts to stop the player from performing any queued up action. If the player is currently walking, his walking will

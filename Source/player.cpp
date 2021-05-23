@@ -315,7 +315,7 @@ Point PlayerStruct::GetTargetPosition() const
 	return target;
 }
 
-_sfx_id herosounds[enum_size<HeroClass>::value][102] = {
+_sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {
 	// clang-format off
 	{ PS_WARR1,  PS_WARR2,  PS_WARR3,  PS_WARR4,  PS_WARR5,  PS_WARR6,  PS_WARR7,  PS_WARR8,  PS_WARR9,  PS_WARR10,  PS_WARR11,  PS_WARR12,  PS_WARR13,  PS_WARR14,  PS_WARR15,  PS_WARR16,  PS_WARR17,  PS_WARR18,  PS_WARR19,  PS_WARR20,  PS_WARR21,  PS_WARR22,  PS_WARR23,  PS_WARR24,  PS_WARR25,  PS_WARR26,  PS_WARR27,  PS_WARR28,  PS_WARR29,  PS_WARR30,  PS_WARR31,  PS_WARR32,  PS_WARR33,  PS_WARR34,  PS_WARR35,  PS_WARR36,  PS_WARR37,  PS_WARR38,  PS_WARR39,  PS_WARR40,  PS_WARR41,  PS_WARR42,  PS_WARR43,  PS_WARR44,  PS_WARR45,  PS_WARR46,  PS_WARR47,  PS_WARR48,  PS_WARR49,  PS_WARR50,  PS_WARR51,  PS_WARR52,  PS_WARR53,  PS_WARR54,  PS_WARR55,  PS_WARR56,  PS_WARR57,  PS_WARR58,  PS_WARR59,  PS_WARR60,  PS_WARR61,  PS_WARR62,  PS_WARR63,  PS_WARR64,  PS_WARR65,  PS_WARR66,  PS_WARR67,  PS_WARR68,  PS_WARR69,  PS_WARR70,  PS_WARR71,  PS_WARR72,  PS_WARR73,  PS_WARR74,  PS_WARR75,  PS_WARR76,  PS_WARR77,  PS_WARR78,  PS_WARR79,  PS_WARR80,  PS_WARR81,  PS_WARR82,  PS_WARR83,  PS_WARR84,  PS_WARR85,  PS_WARR86,  PS_WARR87,  PS_WARR88,  PS_WARR89,  PS_WARR90,  PS_WARR91,  PS_WARR92,  PS_WARR93,  PS_WARR94,  PS_WARR95,  PS_WARR96B,  PS_WARR97,  PS_WARR98,  PS_WARR99,  PS_WARR100,  PS_WARR101,  PS_WARR102  },
 	{ PS_ROGUE1, PS_ROGUE2, PS_ROGUE3, PS_ROGUE4, PS_ROGUE5, PS_ROGUE6, PS_ROGUE7, PS_ROGUE8, PS_ROGUE9, PS_ROGUE10, PS_ROGUE11, PS_ROGUE12, PS_ROGUE13, PS_ROGUE14, PS_ROGUE15, PS_ROGUE16, PS_ROGUE17, PS_ROGUE18, PS_ROGUE19, PS_ROGUE20, PS_ROGUE21, PS_ROGUE22, PS_ROGUE23, PS_ROGUE24, PS_ROGUE25, PS_ROGUE26, PS_ROGUE27, PS_ROGUE28, PS_ROGUE29, PS_ROGUE30, PS_ROGUE31, PS_ROGUE32, PS_ROGUE33, PS_ROGUE34, PS_ROGUE35, PS_ROGUE36, PS_ROGUE37, PS_ROGUE38, PS_ROGUE39, PS_ROGUE40, PS_ROGUE41, PS_ROGUE42, PS_ROGUE43, PS_ROGUE44, PS_ROGUE45, PS_ROGUE46, PS_ROGUE47, PS_ROGUE48, PS_ROGUE49, PS_ROGUE50, PS_ROGUE51, PS_ROGUE52, PS_ROGUE53, PS_ROGUE54, PS_ROGUE55, PS_ROGUE56, PS_ROGUE57, PS_ROGUE58, PS_ROGUE59, PS_ROGUE60, PS_ROGUE61, PS_ROGUE62, PS_ROGUE63, PS_ROGUE64, PS_ROGUE65, PS_ROGUE66, PS_ROGUE67, PS_ROGUE68, PS_ROGUE69, PS_ROGUE70, PS_ROGUE71, PS_ROGUE72, PS_ROGUE73, PS_ROGUE74, PS_ROGUE75, PS_ROGUE76, PS_ROGUE77, PS_ROGUE78, PS_ROGUE79, PS_ROGUE80, PS_ROGUE81, PS_ROGUE82, PS_ROGUE83, PS_ROGUE84, PS_ROGUE85, PS_ROGUE86, PS_ROGUE87, PS_ROGUE88, PS_ROGUE89, PS_ROGUE90, PS_ROGUE91, PS_ROGUE92, PS_ROGUE93, PS_ROGUE94, PS_ROGUE95, PS_ROGUE96,  PS_ROGUE97, PS_ROGUE98, PS_ROGUE99, PS_ROGUE100, PS_ROGUE101, PS_ROGUE102 },
@@ -326,16 +326,16 @@ _sfx_id herosounds[enum_size<HeroClass>::value][102] = {
 	// clang-format on
 };
 
-void PlayerStruct::PlaySpeach(int speachId) const
+void PlayerStruct::PlaySpeach(HeroSpeech speachId) const
 {
-	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][speachId - 1];
+	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speachId)];
 
 	PlaySfxLoc(soundEffect, position.tile.x, position.tile.y);
 }
 
-void PlayerStruct::PlaySpecificSpeach(int speachId) const
+void PlayerStruct::PlaySpecificSpeach(HeroSpeech speachId) const
 {
-	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][speachId - 1];
+	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speachId)];
 
 	if (effect_is_playing(soundEffect))
 		return;
@@ -343,10 +343,10 @@ void PlayerStruct::PlaySpecificSpeach(int speachId) const
 	PlaySfxLoc(soundEffect, position.tile.x, position.tile.y, false);
 }
 
-void PlayerStruct::PlaySpeach(int speachId, int delay) const
+void PlayerStruct::PlaySpeach(HeroSpeech speachId, int delay) const
 {
 	sfxdelay = delay;
-	sfxdnum = herosounds[static_cast<size_t>(_pClass)][speachId - 1];
+	sfxdnum = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speachId)];
 }
 
 void PlayerStruct::Stop()
@@ -1725,7 +1725,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		return;
 	}
 
-	player.PlaySpeach(69);
+	player.PlaySpeach(HeroSpeech::N69);
 
 	drawhpflag = true;
 	if (player._pClass == HeroClass::Barbarian) {
@@ -1839,7 +1839,7 @@ StartPlayerKill(int pnum, int earflag)
 
 	diablolevel = gbIsMultiplayer && player.plrlevel == 16;
 
-	player.PlaySpeach(71);
+	player.PlaySpeach(HeroSpeech::N71);
 
 	if (player._pgfxnum) {
 		player._pgfxnum = 0;
@@ -3813,12 +3813,12 @@ void CheckPlrSpell()
 
 	spell_id rspell = myPlayer._pRSpell;
 	if (rspell == SPL_INVALID) {
-		myPlayer.PlaySpeach(34);
+		myPlayer.PlaySpeach(HeroSpeech::N34);
 		return;
 	}
 
 	if (leveltype == DTYPE_TOWN && !spelldata[rspell].sTownSpell) {
-		myPlayer.PlaySpeach(27);
+		myPlayer.PlaySpeach(HeroSpeech::N27);
 		return;
 	}
 
@@ -3876,7 +3876,7 @@ void CheckPlrSpell()
 	}
 
 	if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-		myPlayer.PlaySpeach(35);
+		myPlayer.PlaySpeach(HeroSpeech::N35);
 	}
 }
 
@@ -4280,16 +4280,16 @@ void PlayDungMsgs()
 	auto &myPlayer = plr[myplr];
 
 	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CATHEDRAL)) {
-		myPlayer.PlaySpeach(97, 40);
+		myPlayer.PlaySpeach(HeroSpeech::N97, 40);
 		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DMSG_CATHEDRAL;
 	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CATACOMBS)) {
-		myPlayer.PlaySpeach(96, 40);
+		myPlayer.PlaySpeach(HeroSpeech::N96, 40);
 		myPlayer.pDungMsgs |= DMSG_CATACOMBS;
 	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CAVES)) {
-		myPlayer.PlaySpeach(98, 40);
+		myPlayer.PlaySpeach(HeroSpeech::N98, 40);
 		myPlayer.pDungMsgs |= DMSG_CAVES;
 	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_HELL)) {
-		myPlayer.PlaySpeach(99, 40);
+		myPlayer.PlaySpeach(HeroSpeech::N99, 40);
 		myPlayer.pDungMsgs |= DMSG_HELL;
 	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_DIABLO)) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
@@ -4307,7 +4307,7 @@ void PlayDungMsgs()
 		sfxdnum = USFX_DEFILER3;
 		myPlayer.pDungMsgs2 |= 4;
 	} else if (currlevel == 21 && !myPlayer._pLvlVisited[21] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & 32)) {
-		myPlayer.PlaySpeach(92, 30);
+		myPlayer.PlaySpeach(HeroSpeech::N92, 30);
 		myPlayer.pDungMsgs |= 32;
 	} else {
 		sfxdelay = 0;
