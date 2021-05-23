@@ -420,12 +420,14 @@ int PlayerStruct::GetAnimationWidth(player_graphic graphic)
 	}
 }
 
-void SetPlayerGPtrs(byte *pData, byte **pAnim)
+void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<std::optional<CelSprite>, 8> &anim, int width)
 {
-	int i;
+	data = nullptr;
+	data = LoadFileInMem(path);
 
-	for (i = 0; i < 8; i++) {
-		pAnim[i] = CelGetFrameStart(pData, i);
+	for (int i = 0; i < 8; i++) {
+		byte *pCelStart = CelGetFrameStart(data.get(), i);
+		anim[i].emplace(pCelStart, width);
 	}
 }
 
@@ -434,8 +436,8 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic gfxflag)
 	char prefix[16];
 	char pszName[256];
 	const char *szCel;
-	byte *pData;
-	byte **pAnim;
+	std::unique_ptr<byte[]> *pData;
+	std::array<std::optional<CelSprite>, 8> *pAnim;
 
 	HeroClass c = player._pClass;
 	if (c == HeroClass::Bard && hfbard_mpq == nullptr) {
@@ -458,64 +460,64 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic gfxflag)
 			if (leveltype == DTYPE_TOWN) {
 				szCel = "ST";
 			}
-			pData = player._pNData;
-			pAnim = player._pNAnim;
+			pData = &player._pNData;
+			pAnim = &player._pNAnim;
 			break;
 		case PFILE_WALK:
 			szCel = "AW";
 			if (leveltype == DTYPE_TOWN) {
 				szCel = "WL";
 			}
-			pData = player._pWData;
-			pAnim = player._pWAnim;
+			pData = &player._pWData;
+			pAnim = &player._pWAnim;
 			break;
 		case PFILE_ATTACK:
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
 			szCel = "AT";
-			pData = player._pAData;
-			pAnim = player._pAAnim;
+			pData = &player._pAData;
+			pAnim = &player._pAAnim;
 			break;
 		case PFILE_HIT:
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
 			szCel = "HT";
-			pData = player._pHData;
-			pAnim = player._pHAnim;
+			pData = &player._pHData;
+			pAnim = &player._pHAnim;
 			break;
 		case PFILE_LIGHTNING:
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
 			szCel = "LM";
-			pData = player._pLData;
-			pAnim = player._pLAnim;
+			pData = &player._pLData;
+			pAnim = &player._pLAnim;
 			break;
 		case PFILE_FIRE:
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
 			szCel = "FM";
-			pData = player._pFData;
-			pAnim = player._pFAnim;
+			pData = &player._pFData;
+			pAnim = &player._pFAnim;
 			break;
 		case PFILE_MAGIC:
 			if (leveltype == DTYPE_TOWN) {
 				continue;
 			}
 			szCel = "QM";
-			pData = player._pTData;
-			pAnim = player._pTAnim;
+			pData = &player._pTData;
+			pAnim = &player._pTAnim;
 			break;
 		case PFILE_DEATH:
 			if ((player._pgfxnum & 0xF) != 0) {
 				continue;
 			}
 			szCel = "DT";
-			pData = player._pDData;
-			pAnim = player._pDAnim;
+			pData = &player._pDData;
+			pAnim = &player._pDAnim;
 			break;
 		case PFILE_BLOCK:
 			if (leveltype == DTYPE_TOWN) {
@@ -526,16 +528,15 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic gfxflag)
 			}
 
 			szCel = "BL";
-			pData = player._pBData;
-			pAnim = player._pBAnim;
+			pData = &player._pBData;
+			pAnim = &player._pBAnim;
 			break;
 		default:
 			app_fatal("PLR:2");
 		}
 
 		sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", cs, prefix, prefix, szCel);
-		LoadFileInMem(pszName, pData);
-		SetPlayerGPtrs(pData, pAnim);
+		SetPlayerGPtrs(pszName, *pData, *pAnim, player.GetAnimationWidth(static_cast<player_graphic>(i)));
 		player._pGFXLoad |= i;
 	}
 }
@@ -567,101 +568,21 @@ static HeroClass GetPlrGFXClass(HeroClass c)
 	}
 }
 
-static DWORD GetPlrGFXSize(HeroClass c, const char *szCel)
-{
-	const char *a, *w;
-	DWORD dwSize, dwMaxSize;
-	HANDLE hsFile;
-	char pszName[256];
-	char Type[16];
-
-	c = GetPlrGFXClass(c);
-	dwMaxSize = 0;
-
-	const auto hasBlockAnimation = [c](char w) {
-		return w == 'D' || w == 'U' || w == 'H'
-		    || (c == HeroClass::Monk && (w == 'S' || w == 'M' || w == 'N' || w == 'T'));
-	};
-
-	for (a = &ArmourChar[0]; *a; a++) {
-		if (gbIsSpawn && a != &ArmourChar[0])
-			break;
-		for (w = &WepChar[0]; *w; w++) {
-			if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
-				continue; //Death has no weapon
-			}
-			if (szCel[0] == 'B' && szCel[1] == 'L' && !hasBlockAnimation(*w)) {
-				continue; // No block animation
-			}
-			sprintf(Type, "%c%c%c", CharChar[static_cast<std::size_t>(c)], *a, *w);
-			sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassPathTbl[static_cast<std::size_t>(c)], Type, Type, szCel);
-			if (SFileOpenFile(pszName, &hsFile)) {
-				assert(hsFile);
-				dwSize = SFileGetFileSize(hsFile);
-				SFileCloseFileThreadSafe(hsFile);
-				if (dwMaxSize <= dwSize) {
-					dwMaxSize = dwSize;
-				}
-			}
-		}
-	}
-
-	return dwMaxSize;
-}
-
 void InitPlrGFXMem(PlayerStruct &player)
 {
-	const HeroClass c = player._pClass;
-
-	// STAND (ST: TOWN, AS: DUNGEON)
-	player._pNData = new byte[std::max(GetPlrGFXSize(c, "ST"), GetPlrGFXSize(c, "AS"))];
-
-	// WALK (WL: TOWN, AW: DUNGEON)
-	player._pWData = new byte[std::max(GetPlrGFXSize(c, "WL"), GetPlrGFXSize(c, "AW"))];
-
-	// ATTACK
-	player._pAData = new byte[GetPlrGFXSize(c, "AT")];
-
-	// HIT
-	player._pHData = new byte[GetPlrGFXSize(c, "HT")];
-
-	// LIGHTNING
-	player._pLData = new byte[GetPlrGFXSize(c, "LM")];
-
-	// FIRE
-	player._pFData = new byte[GetPlrGFXSize(c, "FM")];
-
-	// MAGIC
-	player._pTData = new byte[GetPlrGFXSize(c, "QM")];
-
-	// DEATH
-	player._pDData = new byte[GetPlrGFXSize(c, "DT")];
-
-	// BLOCK
-	player._pBData = new byte[GetPlrGFXSize(c, "BL")];
-
-	player._pGFXLoad = 0;
+	FreePlayerGFX(player);
 }
 
 void FreePlayerGFX(PlayerStruct &player)
 {
-	delete[] player._pNData;
 	player._pNData = nullptr;
-	delete[] player._pWData;
 	player._pWData = nullptr;
-	delete[] player._pAData;
 	player._pAData = nullptr;
-	delete[] player._pHData;
 	player._pHData = nullptr;
-	delete[] player._pLData;
 	player._pLData = nullptr;
-	delete[] player._pFData;
 	player._pFData = nullptr;
-	delete[] player._pTData;
 	player._pTData = nullptr;
-	delete[] player._pDData;
 	player._pDData = nullptr;
-	delete[] player._pBData;
 	player._pBData = nullptr;
 	player._pGFXLoad = 0;
 }
@@ -671,43 +592,45 @@ void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int
 	if ((player._pGFXLoad & graphic) != graphic)
 		LoadPlrGFX(player, graphic);
 
-	int width = player.GetAnimationWidth(graphic);
-	byte *pData = nullptr;
+	std::array<std::optional<CelSprite>, 8> *pCelSprites = nullptr;
 	switch (graphic) {
 	case PFILE_STAND:
-		pData = player._pNAnim[dir];
+		pCelSprites = &player._pNAnim;
 		break;
 	case PFILE_WALK:
-		pData = player._pWAnim[dir];
+		pCelSprites = &player._pWAnim;
 		break;
 	case PFILE_ATTACK:
-		pData = player._pAAnim[dir];
+		pCelSprites = &player._pAAnim;
 		break;
 	case PFILE_HIT:
-		pData = player._pHAnim[dir];
+		pCelSprites = &player._pHAnim;
 		break;
 	case PFILE_LIGHTNING:
-		pData = player._pLAnim[dir];
+		pCelSprites = &player._pLAnim;
 		break;
 	case PFILE_FIRE:
-		pData = player._pFAnim[dir];
+		pCelSprites = &player._pFAnim;
 		break;
 	case PFILE_MAGIC:
-		pData = player._pTAnim[dir];
+		pCelSprites = &player._pTAnim;
 		break;
 	case PFILE_DEATH:
-		pData = player._pDAnim[dir];
+		pCelSprites = &player._pDAnim;
 		break;
 	case PFILE_BLOCK:
-		pData = player._pBAnim[dir];
+		pCelSprites = &player._pBAnim;
 		break;
 	default:
 		Log("NewPlrAnim: Unkown graphic {}", graphic);
 		break;
 	}
 
-	player._pAnimWidth = width;
-	player.AnimInfo.SetNewAnimation(pData, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame);
+	CelSprite *pCelSprite = nullptr;
+	if (pCelSprites != nullptr && (*pCelSprites)[dir])
+		pCelSprite = &*(*pCelSprites)[dir];
+
+	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame);
 }
 
 static void ClearPlrPVars(PlayerStruct &player)
@@ -3892,21 +3815,21 @@ void SyncPlrAnim(int pnum)
 	dir = player._pdir;
 	switch (player._pmode) {
 	case PM_STAND:
-		player.AnimInfo.pData = player._pNAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pNAnim[dir];
 		break;
 	case PM_WALK:
 	case PM_WALK2:
 	case PM_WALK3:
-		player.AnimInfo.pData = player._pWAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pWAnim[dir];
 		break;
 	case PM_ATTACK:
-		player.AnimInfo.pData = player._pAAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pAAnim[dir];
 		break;
 	case PM_RATTACK:
-		player.AnimInfo.pData = player._pAAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pAAnim[dir];
 		break;
 	case PM_BLOCK:
-		player.AnimInfo.pData = player._pBAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pBAnim[dir];
 		break;
 	case PM_SPELL:
 		if (pnum == myplr)
@@ -3914,23 +3837,23 @@ void SyncPlrAnim(int pnum)
 		else
 			sType = STYPE_FIRE;
 		if (sType == STYPE_FIRE)
-			player.AnimInfo.pData = player._pFAnim[dir];
+			player.AnimInfo.pCelSprite = &*player._pFAnim[dir];
 		if (sType == STYPE_LIGHTNING)
-			player.AnimInfo.pData = player._pLAnim[dir];
+			player.AnimInfo.pCelSprite = &*player._pLAnim[dir];
 		if (sType == STYPE_MAGIC)
-			player.AnimInfo.pData = player._pTAnim[dir];
+			player.AnimInfo.pCelSprite = &*player._pTAnim[dir];
 		break;
 	case PM_GOTHIT:
-		player.AnimInfo.pData = player._pHAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pHAnim[dir];
 		break;
 	case PM_NEWLVL:
-		player.AnimInfo.pData = player._pNAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pNAnim[dir];
 		break;
 	case PM_DEATH:
-		player.AnimInfo.pData = player._pDAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pDAnim[dir];
 		break;
 	case PM_QUIT:
-		player.AnimInfo.pData = player._pNAnim[dir];
+		player.AnimInfo.pCelSprite = &*player._pNAnim[dir];
 		break;
 	default:
 		app_fatal("SyncPlrAnim");

@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 #include "diablo.h"
@@ -169,7 +170,6 @@ struct PlayerStruct {
 	 * @brief Contains Information for current Animation
 	 */
 	AnimationInfo AnimInfo;
-	int _pAnimWidth;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
@@ -239,23 +239,23 @@ struct PlayerStruct {
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 	                               /** Using player_graphic as bitflags */
 	int _pGFXLoad;
-	byte *_pNAnim[8]; // Stand animations
+	std::array<std::optional<CelSprite>, 8> _pNAnim; // Stand animations
 	int _pNFrames;
-	byte *_pWAnim[8]; // Walk animations
+	std::array<std::optional<CelSprite>, 8> _pWAnim; // Walk animations
 	int _pWFrames;
-	byte *_pAAnim[8]; // Attack animations
+	std::array<std::optional<CelSprite>, 8> _pAAnim; // Attack animations
 	int _pAFrames;
 	int _pAFNum;
-	byte *_pLAnim[8]; // Lightning spell cast animations
-	byte *_pFAnim[8]; // Fire spell cast animations
-	byte *_pTAnim[8]; // Generic spell cast animations
+	std::array<std::optional<CelSprite>, 8> _pLAnim; // Lightning spell cast animations
+	std::array<std::optional<CelSprite>, 8> _pFAnim; // Fire spell cast animations
+	std::array<std::optional<CelSprite>, 8> _pTAnim; // Generic spell cast animations
 	int _pSFrames;
 	int _pSFNum;
-	byte *_pHAnim[8]; // Getting hit animations
+	std::array<std::optional<CelSprite>, 8> _pHAnim; // Getting hit animations
 	int _pHFrames;
-	byte *_pDAnim[8]; // Death animations
+	std::array<std::optional<CelSprite>, 8> _pDAnim; // Death animations
 	int _pDFrames;
-	byte *_pBAnim[8]; // Block animations
+	std::array<std::optional<CelSprite>, 8> _pBAnim; // Block animations
 	int _pBFrames;
 	ItemStruct InvBody[NUM_INVLOC];
 	ItemStruct InvList[NUM_INV_GRID_ELEM];
@@ -294,15 +294,15 @@ struct PlayerStruct {
 	uint8_t pDiabloKillLevel;
 	_difficulty pDifficulty;
 	uint32_t pDamAcFlags;
-	byte *_pNData;
-	byte *_pWData;
-	byte *_pAData;
-	byte *_pLData;
-	byte *_pFData;
-	byte *_pTData;
-	byte *_pHData;
-	byte *_pDData;
-	byte *_pBData;
+	std::unique_ptr<byte[]> _pNData;
+	std::unique_ptr<byte[]> _pWData;
+	std::unique_ptr<byte[]> _pAData;
+	std::unique_ptr<byte[]> _pLData;
+	std::unique_ptr<byte[]> _pFData;
+	std::unique_ptr<byte[]> _pTData;
+	std::unique_ptr<byte[]> _pHData;
+	std::unique_ptr<byte[]> _pDData;
+	std::unique_ptr<byte[]> _pBData;
 
 	void CalcScrolls();
 

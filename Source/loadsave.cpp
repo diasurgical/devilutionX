@@ -338,7 +338,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->AnimInfo.DelayCounter = file->nextLE<int32_t>();
 	pPlayer->AnimInfo.NumberOfFrames = file->nextLE<int32_t>();
 	pPlayer->AnimInfo.CurrentFrame = file->nextLE<int32_t>();
-	pPlayer->_pAnimWidth = file->nextLE<int32_t>();
+	// Skip _pAnimWidth
+	file->skip(4);
 	// Skip _pAnimWidth2
 	file->skip(4);
 	file->skip(4); // Skip _peflag
@@ -1333,9 +1334,11 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(pPlayer->AnimInfo.DelayCounter);
 	file->writeLE<int32_t>(pPlayer->AnimInfo.NumberOfFrames);
 	file->writeLE<int32_t>(pPlayer->AnimInfo.CurrentFrame);
-	file->writeLE<int32_t>(pPlayer->_pAnimWidth);
+	// write _pAnimWidth for vanilla compatibility
+	int animWidth = pPlayer->AnimInfo.pCelSprite == nullptr ? 96 : pPlayer->AnimInfo.pCelSprite->Width();
+	file->writeLE<int32_t>(animWidth);
 	// write _pAnimWidth2 for vanilla compatibility
-	file->writeLE<int32_t>(CalculateWidth2(pPlayer->_pAnimWidth));
+	file->writeLE<int32_t>(CalculateWidth2(animWidth));
 	file->skip(4); // Skip _peflag
 	file->writeLE<int32_t>(pPlayer->_plid);
 	file->writeLE<int32_t>(pPlayer->_pvid);

@@ -296,7 +296,6 @@ static void AssertPlayer(PlayerStruct *pPlayer)
 	ASSERT_EQ(pPlayer->AnimInfo.DelayCounter, 1);
 	ASSERT_EQ(pPlayer->AnimInfo.NumberOfFrames, 20);
 	ASSERT_EQ(pPlayer->AnimInfo.CurrentFrame, 1);
-	ASSERT_EQ(pPlayer->_pAnimWidth, 96);
 	ASSERT_EQ(pPlayer->_pSpell, -1);
 	ASSERT_EQ(pPlayer->_pSplType, 4);
 	ASSERT_EQ(pPlayer->_pSplFrom, 0);

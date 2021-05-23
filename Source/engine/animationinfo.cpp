@@ -69,7 +69,7 @@ float AnimationInfo::GetAnimationProgress() const
 	return fAnimationFraction;
 }
 
-void AnimationInfo::SetNewAnimation(byte *pData, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -79,7 +79,7 @@ void AnimationInfo::SetNewAnimation(byte *pData, int numberOfFrames, int delayLe
 		SkippedFramesFromPreviousAnimation = 0;
 	}
 
-	this->pData = pData;
+	this->pCelSprite = pCelSprite;
 	NumberOfFrames = numberOfFrames;
 	CurrentFrame = 1 + numSkippedFrames;
 	DelayCounter = 0;
@@ -154,7 +154,7 @@ void AnimationInfo::SetNewAnimation(byte *pData, int numberOfFrames, int delayLe
 	}
 }
 
-void AnimationInfo::ChangeAnimationData(byte *pData, int numberOfFrames, int delayLen)
+void AnimationInfo::ChangeAnimationData(CelSprite *pCelSprite, int numberOfFrames, int delayLen)
 {
 	if (numberOfFrames != NumberOfFrames || delayLen != DelayLen) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
@@ -166,7 +166,7 @@ void AnimationInfo::ChangeAnimationData(byte *pData, int numberOfFrames, int del
 		RelevantFramesForDistributing = 0;
 		TickModifier = 0.0f;
 	}
-	this->pData = pData;
+	this->pCelSprite = pCelSprite;
 	DelayLen = delayLen;
 }
 
