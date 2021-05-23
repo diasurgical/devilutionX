@@ -2144,7 +2144,7 @@ void Obj_BCrossDamage(int i)
 
 	ApplyPlrDamage(myplr, 0, 0, damage[leveltype - 1]);
 	if (plr[myplr]._pHitPoints >> 6 > 0) {
-		plr[myplr].PlaySpeach(68);
+		plr[myplr].PlaySpeach(HeroSpeech::N68);
 	}
 }
 
@@ -3139,7 +3139,7 @@ void OperateMushPatch(int pnum, int i)
 
 	if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE) {
 		if (!deltaload && pnum == myplr) {
-			plr[myplr].PlaySpeach(13);
+			plr[myplr].PlaySpeach(HeroSpeech::N13);
 		}
 		return;
 	}
@@ -3165,7 +3165,7 @@ void OperateInnSignChest(int pnum, int i)
 
 	if (quests[Q_LTBANNER]._qvar1 != 2) {
 		if (!deltaload && pnum == myplr) {
-			plr[myplr].PlaySpeach(24);
+			plr[myplr].PlaySpeach(HeroSpeech::N24);
 		}
 	} else {
 		if (object[i]._oSelFlag != 0) {
@@ -3199,7 +3199,7 @@ void OperateSlainHero(int pnum, int i)
 			} else if (plr[pnum]._pClass == HeroClass::Barbarian) {
 				CreateMagicWeapon(object[i].position, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
 			}
-			plr[myplr].PlaySpeach(9);
+			plr[myplr].PlaySpeach(HeroSpeech::N9);
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		}

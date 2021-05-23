@@ -810,7 +810,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 			}
 
 			if (plr[pnum]._pHitPoints >> 6 > 0) {
-				plr[pnum].PlaySpeach(69);
+				plr[pnum].PlaySpeach(HeroSpeech::N69);
 			}
 			return true;
 		}
@@ -920,7 +920,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			dam -= (dam * resper) / 100;
 			if (pnum == myplr)
 				NetSendCmdDamage(true, p, dam);
-			plr[pnum].PlaySpeach(69);
+			plr[pnum].PlaySpeach(HeroSpeech::N69);
 			return true;
 		}
 		if (blkper < blk) {
@@ -2919,7 +2919,7 @@ void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, int8_t miene
 		missile[mi]._mirange = lvl + 10 * missile[mi]._mispllvl + 245;
 		CalcPlrItemVals(id, true);
 		force_redraw = 255;
-		plr[id].PlaySpeach(70);
+		plr[id].PlaySpeach(HeroSpeech::N70);
 	}
 }
 
@@ -4848,7 +4848,7 @@ void MI_Blodboil(int i)
 			CalcPlrItemVals(id, true);
 			ApplyPlrDamage(id, 0, 1, hpdif);
 			force_redraw = 255;
-			plr[id].PlaySpeach(72);
+			plr[id].PlaySpeach(HeroSpeech::N72);
 		} else {
 			missile[i]._miDelFlag = true;
 			plr[id]._pSpellFlags &= ~0x4;
@@ -4856,7 +4856,7 @@ void MI_Blodboil(int i)
 			CalcPlrItemVals(id, true);
 			ApplyPlrDamage(id, 0, 1, hpdif + missile[i]._miVar2);
 			force_redraw = 255;
-			plr[id].PlaySpeach(72);
+			plr[id].PlaySpeach(HeroSpeech::N72);
 		}
 	}
 }
