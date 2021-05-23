@@ -377,15 +377,15 @@ void PlayerStruct::Reset()
 int PlayerStruct::GetAnimationWidth(player_graphic graphic)
 {
 	switch (graphic) {
-	case PFILE_STAND:
+	case player_graphic::Stand:
 		if (_pClass == HeroClass::Monk)
 			return 112;
 		return 96;
-	case PFILE_WALK:
+	case player_graphic::Walk:
 		if (_pClass == HeroClass::Monk)
 			return 112;
 		return 96;
-	case PFILE_ATTACK:
+	case player_graphic::Attack:
 		if (_pClass == HeroClass::Monk)
 			return 130;
 		if (_pClass == HeroClass::Warrior || _pClass == HeroClass::Barbarian) {
@@ -394,23 +394,23 @@ int PlayerStruct::GetAnimationWidth(player_graphic graphic)
 				return 96;
 		}
 		return 128;
-	case PFILE_HIT:
+	case player_graphic::Hit:
 		if (_pClass == HeroClass::Monk)
 			return 98;
 		return 96;
-	case PFILE_LIGHTNING:
-	case PFILE_FIRE:
-	case PFILE_MAGIC:
+	case player_graphic::Lightning:
+	case player_graphic::Fire:
+	case player_graphic::Magic:
 		if (_pClass == HeroClass::Monk)
 			return 114;
 		if (_pClass == HeroClass::Sorcerer)
 			return 128;
 		return 96;
-	case PFILE_DEATH:
+	case player_graphic::Death:
 		if (_pClass == HeroClass::Monk)
 			return 160;
 		return 128;
-	case PFILE_BLOCK:
+	case player_graphic::Block:
 		if (_pClass == HeroClass::Monk)
 			return 98;
 		return 96;
@@ -431,13 +431,11 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 	}
 }
 
-void LoadPlrGFX(PlayerStruct &player, player_graphic gfxflag)
+void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 {
 	char prefix[16];
 	char pszName[256];
 	const char *szCel;
-	std::unique_ptr<byte[]> *pData;
-	std::array<std::optional<CelSprite>, 8> *pAnim;
 
 	HeroClass c = player._pClass;
 	if (c == HeroClass::Bard && hfbard_mpq == nullptr) {
@@ -449,96 +447,61 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic gfxflag)
 	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[player._pgfxnum & 0xF]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
-	for (unsigned i = 1; i <= PFILE_NONDEATH; i <<= 1) {
-		if ((i & gfxflag) == 0) {
-			continue;
-		}
-
-		switch (i) {
-		case PFILE_STAND:
-			szCel = "AS";
-			if (leveltype == DTYPE_TOWN) {
-				szCel = "ST";
-			}
-			pData = &player._pNData;
-			pAnim = &player._pNAnim;
-			break;
-		case PFILE_WALK:
-			szCel = "AW";
-			if (leveltype == DTYPE_TOWN) {
-				szCel = "WL";
-			}
-			pData = &player._pWData;
-			pAnim = &player._pWAnim;
-			break;
-		case PFILE_ATTACK:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
-			szCel = "AT";
-			pData = &player._pAData;
-			pAnim = &player._pAAnim;
-			break;
-		case PFILE_HIT:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
-			szCel = "HT";
-			pData = &player._pHData;
-			pAnim = &player._pHAnim;
-			break;
-		case PFILE_LIGHTNING:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
-			szCel = "LM";
-			pData = &player._pLData;
-			pAnim = &player._pLAnim;
-			break;
-		case PFILE_FIRE:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
-			szCel = "FM";
-			pData = &player._pFData;
-			pAnim = &player._pFAnim;
-			break;
-		case PFILE_MAGIC:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
-			szCel = "QM";
-			pData = &player._pTData;
-			pAnim = &player._pTAnim;
-			break;
-		case PFILE_DEATH:
-			if ((player._pgfxnum & 0xF) != 0) {
-				continue;
-			}
-			szCel = "DT";
-			pData = &player._pDData;
-			pAnim = &player._pDAnim;
-			break;
-		case PFILE_BLOCK:
-			if (leveltype == DTYPE_TOWN) {
-				continue;
-			}
-			if (!player._pBlockFlag) {
-				continue;
-			}
-
-			szCel = "BL";
-			pData = &player._pBData;
-			pAnim = &player._pBAnim;
-			break;
-		default:
-			app_fatal("PLR:2");
-		}
-
-		sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", cs, prefix, prefix, szCel);
-		SetPlayerGPtrs(pszName, *pData, *pAnim, player.GetAnimationWidth(static_cast<player_graphic>(i)));
-		player._pGFXLoad |= i;
+	switch (graphic) {
+	case player_graphic::Stand:
+		szCel = "AS";
+		if (leveltype == DTYPE_TOWN)
+			szCel = "ST";
+		break;
+	case player_graphic::Walk:
+		szCel = "AW";
+		if (leveltype == DTYPE_TOWN)
+			szCel = "WL";
+		break;
+	case player_graphic::Attack:
+		if (leveltype == DTYPE_TOWN)
+			return;
+		szCel = "AT";
+		break;
+	case player_graphic::Hit:
+		if (leveltype == DTYPE_TOWN)
+			return;
+		szCel = "HT";
+		break;
+	case player_graphic::Lightning:
+		if (leveltype == DTYPE_TOWN)
+			return;
+		szCel = "LM";
+		break;
+	case player_graphic::Fire:
+		if (leveltype == DTYPE_TOWN)
+			return;
+		szCel = "FM";
+		break;
+	case player_graphic::Magic:
+		if (leveltype == DTYPE_TOWN)
+			return;
+		szCel = "QM";
+		break;
+	case player_graphic::Death:
+		if ((player._pgfxnum & 0xF) != 0)
+			return;
+		szCel = "DT";
+		break;
+	case player_graphic::Block:
+		if (leveltype == DTYPE_TOWN)
+			return;
+		if (!player._pBlockFlag)
+			return;
+		szCel = "BL";
+		break;
+	default:
+		app_fatal("PLR:2");
 	}
+
+	sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", cs, prefix, prefix, szCel);
+	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
+	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, player.GetAnimationWidth(graphic));
 }
 
 void InitPlayerGFX(int pnum)
@@ -550,9 +513,14 @@ void InitPlayerGFX(int pnum)
 
 	if (player._pHitPoints >> 6 == 0) {
 		player._pgfxnum = 0;
-		LoadPlrGFX(player, PFILE_DEATH);
+		LoadPlrGFX(player, player_graphic::Death);
 	} else {
-		LoadPlrGFX(player, PFILE_NONDEATH);
+		for (int i = 0; i < enum_size<player_graphic>::value; i++) {
+			auto graphic = static_cast<player_graphic>(i);
+			if (graphic == player_graphic::Death)
+				continue;
+			LoadPlrGFX(player, graphic);
+		}
 	}
 }
 
@@ -568,67 +536,26 @@ static HeroClass GetPlrGFXClass(HeroClass c)
 	}
 }
 
-void InitPlrGFXMem(PlayerStruct &player)
+void ResetPlayerGFX(PlayerStruct &player)
 {
-	FreePlayerGFX(player);
-}
-
-void FreePlayerGFX(PlayerStruct &player)
-{
-	player._pNData = nullptr;
-	player._pWData = nullptr;
-	player._pAData = nullptr;
-	player._pHData = nullptr;
-	player._pLData = nullptr;
-	player._pFData = nullptr;
-	player._pTData = nullptr;
-	player._pDData = nullptr;
-	player._pBData = nullptr;
-	player._pGFXLoad = 0;
+	player.AnimInfo.pCelSprite = nullptr;
+	for (auto &animData : player.AnimationData) {
+		for (auto &celSprite : animData.CelSpritesForDirections)
+			celSprite = std::nullopt;
+		animData.RawData = nullptr;
+	}
 }
 
 void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
-	if ((player._pGFXLoad & graphic) != graphic)
+	if (player.AnimationData[static_cast<size_t>(graphic)].RawData == nullptr)
 		LoadPlrGFX(player, graphic);
 
-	std::array<std::optional<CelSprite>, 8> *pCelSprites = nullptr;
-	switch (graphic) {
-	case PFILE_STAND:
-		pCelSprites = &player._pNAnim;
-		break;
-	case PFILE_WALK:
-		pCelSprites = &player._pWAnim;
-		break;
-	case PFILE_ATTACK:
-		pCelSprites = &player._pAAnim;
-		break;
-	case PFILE_HIT:
-		pCelSprites = &player._pHAnim;
-		break;
-	case PFILE_LIGHTNING:
-		pCelSprites = &player._pLAnim;
-		break;
-	case PFILE_FIRE:
-		pCelSprites = &player._pFAnim;
-		break;
-	case PFILE_MAGIC:
-		pCelSprites = &player._pTAnim;
-		break;
-	case PFILE_DEATH:
-		pCelSprites = &player._pDAnim;
-		break;
-	case PFILE_BLOCK:
-		pCelSprites = &player._pBAnim;
-		break;
-	default:
-		Log("NewPlrAnim: Unkown graphic {}", graphic);
-		break;
-	}
+	auto &CelSprites = player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections;
 
 	CelSprite *pCelSprite = nullptr;
-	if (pCelSprites != nullptr && (*pCelSprites)[dir])
-		pCelSprite = &*(*pCelSprites)[dir];
+	if (CelSprites[dir])
+		pCelSprite = &*CelSprites[dir];
 
 	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame);
 }
@@ -1120,12 +1047,12 @@ void InitPlayer(int pnum, bool FirstTime)
 
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
-			NewPlrAnim(player, PFILE_STAND, DIR_S, player._pNFrames, 3);
+			NewPlrAnim(player, player_graphic::Stand, DIR_S, player._pNFrames, 3);
 			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1) + 1;
 			player.AnimInfo.DelayCounter = GenerateRnd(3);
 		} else {
 			player._pmode = PM_DEATH;
-			NewPlrAnim(player, PFILE_DEATH, DIR_S, player._pDFrames, 1);
+			NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
 			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
 		}
 
@@ -1299,7 +1226,7 @@ void StartStand(int pnum, Direction dir)
 	auto &player = plr[pnum];
 
 	if (!player._pInvincible || player._pHitPoints != 0 || pnum != myplr) {
-		NewPlrAnim(player, PFILE_STAND, dir, player._pNFrames, 3);
+		NewPlrAnim(player, player_graphic::Stand, dir, player._pNFrames, 3);
 		player._pmode = PM_STAND;
 		FixPlayerLocation(pnum, dir);
 		FixPlrWalkTags(pnum);
@@ -1465,7 +1392,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		skippedFrames = 2;
 	if (pmWillBeCalled)
 		skippedFrames += 1;
-	NewPlrAnim(player, PFILE_WALK, EndDir, player._pWFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
+	NewPlrAnim(player, player_graphic::Walk, EndDir, player._pWFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
 
 	player._pdir = EndDir;
 
@@ -1512,7 +1439,7 @@ void StartAttack(int pnum, Direction d)
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, PFILE_ATTACK, d, player._pAFrames, 0, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 0, animationFlags, skippedAnimationFrames, player._pAFNum);
 	player._pmode = PM_ATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(player);
@@ -1540,7 +1467,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_RATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, PFILE_ATTACK, d, player._pAFrames, 0, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 0, animationFlags, skippedAnimationFrames, player._pAFNum);
 
 	player._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
@@ -1567,7 +1494,7 @@ void StartPlrBlock(int pnum, Direction dir)
 		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
-	NewPlrAnim(player, PFILE_BLOCK, dir, player._pBFrames, 2, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
+	NewPlrAnim(player, player_graphic::Block, dir, player._pBFrames, 2, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
 	player._pmode = PM_BLOCK;
 	FixPlayerLocation(pnum, dir);
@@ -1592,13 +1519,13 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 
 		switch (spelldata[player._pSpell].sType) {
 		case STYPE_FIRE:
-			NewPlrAnim(player, PFILE_FIRE, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, player_graphic::Fire, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
 			break;
 		case STYPE_LIGHTNING:
-			NewPlrAnim(player, PFILE_LIGHTNING, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, player_graphic::Lightning, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
 			break;
 		case STYPE_MAGIC:
-			NewPlrAnim(player, PFILE_MAGIC, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, player_graphic::Magic, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
 			break;
 		}
 	} else {
@@ -1709,7 +1636,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		skippedAnimationFrames = 0;
 	}
 
-	NewPlrAnim(player, PFILE_HIT, pd, player._pHFrames, 0, AnimationDistributionFlags::None, skippedAnimationFrames);
+	NewPlrAnim(player, player_graphic::Hit, pd, player._pHFrames, 0, AnimationDistributionFlags::None, skippedAnimationFrames);
 
 	player._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);
@@ -1796,11 +1723,11 @@ StartPlayerKill(int pnum, int earflag)
 
 	if (player._pgfxnum) {
 		player._pgfxnum = 0;
-		player._pGFXLoad = 0;
+		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 	}
 
-	NewPlrAnim(player, PFILE_DEATH, player._pdir, player._pDFrames, 1);
+	NewPlrAnim(player, player_graphic::Death, player._pdir, player._pDFrames, 1);
 
 	player._pBlockFlag = false;
 	player._pmode = PM_DEATH;
@@ -3812,24 +3739,24 @@ void SyncPlrAnim(int pnum)
 	}
 	auto &player = plr[pnum];
 
-	dir = player._pdir;
+	player_graphic graphic;
 	switch (player._pmode) {
 	case PM_STAND:
-		player.AnimInfo.pCelSprite = &*player._pNAnim[dir];
+	case PM_NEWLVL:
+	case PM_QUIT:
+		graphic = player_graphic::Stand;
 		break;
 	case PM_WALK:
 	case PM_WALK2:
 	case PM_WALK3:
-		player.AnimInfo.pCelSprite = &*player._pWAnim[dir];
+		graphic = player_graphic::Walk;
 		break;
 	case PM_ATTACK:
-		player.AnimInfo.pCelSprite = &*player._pAAnim[dir];
-		break;
 	case PM_RATTACK:
-		player.AnimInfo.pCelSprite = &*player._pAAnim[dir];
+		graphic = player_graphic::Attack;
 		break;
 	case PM_BLOCK:
-		player.AnimInfo.pCelSprite = &*player._pBAnim[dir];
+		graphic = player_graphic::Block;
 		break;
 	case PM_SPELL:
 		if (pnum == myplr)
@@ -3837,27 +3764,23 @@ void SyncPlrAnim(int pnum)
 		else
 			sType = STYPE_FIRE;
 		if (sType == STYPE_FIRE)
-			player.AnimInfo.pCelSprite = &*player._pFAnim[dir];
+			graphic = player_graphic::Fire;
 		if (sType == STYPE_LIGHTNING)
-			player.AnimInfo.pCelSprite = &*player._pLAnim[dir];
+			graphic = player_graphic::Lightning;
 		if (sType == STYPE_MAGIC)
-			player.AnimInfo.pCelSprite = &*player._pTAnim[dir];
+			graphic = player_graphic::Magic;
 		break;
 	case PM_GOTHIT:
-		player.AnimInfo.pCelSprite = &*player._pHAnim[dir];
-		break;
-	case PM_NEWLVL:
-		player.AnimInfo.pCelSprite = &*player._pNAnim[dir];
+		graphic = player_graphic::Hit;
 		break;
 	case PM_DEATH:
-		player.AnimInfo.pCelSprite = &*player._pDAnim[dir];
-		break;
-	case PM_QUIT:
-		player.AnimInfo.pCelSprite = &*player._pNAnim[dir];
+		graphic = player_graphic::Death;
 		break;
 	default:
 		app_fatal("SyncPlrAnim");
 	}
+
+	player.AnimInfo.pCelSprite = &*player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[player._pdir];
 }
 
 void SyncInitPlrPos(int pnum)

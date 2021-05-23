@@ -13,7 +13,6 @@ int RunBlockTest(int frames, int flags)
 	int pnum = 0;
 	plr[pnum]._pHFrames = frames;
 	plr[pnum]._pIFlags = flags;
-	plr[pnum]._pGFXLoad = -1;
 	StartPlrHit(pnum, 5, Direction::DIR_S);
 
 	int i = 1;
