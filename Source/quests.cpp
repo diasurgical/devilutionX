@@ -315,21 +315,21 @@ void CheckQuestKill(int m, bool sendmsg)
 
 	if (monster[m].MType->mtype == MT_SKING) {
 		quests[Q_SKELKING]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(HeroSpeech::N82, 30);
+		plr[myplr].Say(HeroSpeech::N82, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_SKELKING);
 
 	} else if (monster[m].MType->mtype == MT_CLEAVER) {
 		quests[Q_BUTCHER]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(HeroSpeech::N80, 30);
+		plr[myplr].Say(HeroSpeech::N80, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_BUTCHER);
 	} else if (monster[m]._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		quests[Q_GARBUD]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(HeroSpeech::N61, 30);
+		plr[myplr].Say(HeroSpeech::N61, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		quests[Q_ZHAR]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(HeroSpeech::N62, 30);
+		plr[myplr].Say(HeroSpeech::N62, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		quests[Q_BETRAYER]._qvar1 = 7;
@@ -344,7 +344,7 @@ void CheckQuestKill(int m, bool sendmsg)
 				}
 			}
 		}
-		plr[myplr].PlaySpeach(HeroSpeech::N83, 30);
+		plr[myplr].Say(HeroSpeech::N83, 30);
 		if (sendmsg) {
 			NetSendCmdQuest(true, Q_BETRAYER);
 			NetSendCmdQuest(true, Q_DIABLO);
@@ -356,10 +356,10 @@ void CheckQuestKill(int m, bool sendmsg)
 		quests[Q_BETRAYER]._qvar2 = 4;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
 		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
-		plr[myplr].PlaySpeach(HeroSpeech::N83, 30);
+		plr[myplr].Say(HeroSpeech::N83, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(HeroSpeech::N94, 30);
+		plr[myplr].Say(HeroSpeech::N94, 30);
 	}
 }
 

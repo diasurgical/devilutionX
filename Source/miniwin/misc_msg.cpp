@@ -281,7 +281,7 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			plr[myplr].PlaySpeach(HeroSpeech::N16); // "Where would I put this?"
+			plr[myplr].Say(HeroSpeech::N16); // "Where would I put this?"
 			return false;
 		}
 	}

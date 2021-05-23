@@ -369,19 +369,19 @@ struct PlayerStruct {
 	Point GetTargetPosition() const;
 
 	/**
-	 * @brief Play a speach file.
+	 * @brief Says a speech line.
 	 * @todo BUGFIX Prevent more then one speech to be played at a time (reject new requests).
 	 */
-	void PlaySpeach(HeroSpeech speachId) const;
+	void Say(HeroSpeech speechId) const;
 	/**
-	 * @brief Play a speach file after a given delay.
-	 * @param delay Multiple of 20ms waith before starting the speach
+	 * @brief Says a speech line after a given delay.
+	 * @param delay Multiple of 20ms wait before starting the speech
 	 */
-	void PlaySpeach(HeroSpeech speachId, int delay) const;
+	void Say(HeroSpeech speechId, int delay) const;
 	/**
-	 * @brief Play a player speach file, with out random variants.
+	 * @brief Says a speech line, without random variants.
 	 */
-	void PlaySpecificSpeach(HeroSpeech speachId) const;
+	void SaySpecific(HeroSpeech speechId) const;
 
 	/**
 	 * @brief Attempts to stop the player from performing any queued up action. If the player is currently walking, his walking will

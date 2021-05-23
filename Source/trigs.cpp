@@ -865,7 +865,7 @@ void CheckTriggers()
 				}
 
 				if (abort) {
-					plr[myplr].PlaySpeach(HeroSpeech::N43);
+					plr[myplr].Say(HeroSpeech::N43);
 
 					InitDiabloMsg(abortflag);
 					NetSendCmdLoc(myplr, true, CMD_WALKXY, position);
