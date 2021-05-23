@@ -1491,7 +1491,7 @@ void PerformSpellAction()
 	int spl = plr[myplr]._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
 	    || (pcursobj == -1 && spl == SPL_DISARM)) {
-		plr[myplr].PlaySpeach(HeroSpeech::N27);
+		plr[myplr].Say(HeroSpeech::N27);
 		return;
 	}
 

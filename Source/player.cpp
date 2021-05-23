@@ -326,16 +326,16 @@ _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = 
 	// clang-format on
 };
 
-void PlayerStruct::PlaySpeach(HeroSpeech speachId) const
+void PlayerStruct::Say(HeroSpeech speechId) const
 {
-	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speachId)];
+	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
 	PlaySfxLoc(soundEffect, position.tile.x, position.tile.y);
 }
 
-void PlayerStruct::PlaySpecificSpeach(HeroSpeech speachId) const
+void PlayerStruct::SaySpecific(HeroSpeech speechId) const
 {
-	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speachId)];
+	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
 	if (effect_is_playing(soundEffect))
 		return;
@@ -343,10 +343,10 @@ void PlayerStruct::PlaySpecificSpeach(HeroSpeech speachId) const
 	PlaySfxLoc(soundEffect, position.tile.x, position.tile.y, false);
 }
 
-void PlayerStruct::PlaySpeach(HeroSpeech speachId, int delay) const
+void PlayerStruct::Say(HeroSpeech speechId, int delay) const
 {
 	sfxdelay = delay;
-	sfxdnum = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speachId)];
+	sfxdnum = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 }
 
 void PlayerStruct::Stop()
@@ -1725,7 +1725,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		return;
 	}
 
-	player.PlaySpeach(HeroSpeech::N69);
+	player.Say(HeroSpeech::N69);
 
 	drawhpflag = true;
 	if (player._pClass == HeroClass::Barbarian) {
@@ -1839,7 +1839,7 @@ StartPlayerKill(int pnum, int earflag)
 
 	diablolevel = gbIsMultiplayer && player.plrlevel == 16;
 
-	player.PlaySpeach(HeroSpeech::N71);
+	player.Say(HeroSpeech::N71);
 
 	if (player._pgfxnum) {
 		player._pgfxnum = 0;
@@ -3813,12 +3813,12 @@ void CheckPlrSpell()
 
 	spell_id rspell = myPlayer._pRSpell;
 	if (rspell == SPL_INVALID) {
-		myPlayer.PlaySpeach(HeroSpeech::N34);
+		myPlayer.Say(HeroSpeech::N34);
 		return;
 	}
 
 	if (leveltype == DTYPE_TOWN && !spelldata[rspell].sTownSpell) {
-		myPlayer.PlaySpeach(HeroSpeech::N27);
+		myPlayer.Say(HeroSpeech::N27);
 		return;
 	}
 
@@ -3876,7 +3876,7 @@ void CheckPlrSpell()
 	}
 
 	if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-		myPlayer.PlaySpeach(HeroSpeech::N35);
+		myPlayer.Say(HeroSpeech::N35);
 	}
 }
 
@@ -4280,16 +4280,16 @@ void PlayDungMsgs()
 	auto &myPlayer = plr[myplr];
 
 	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CATHEDRAL)) {
-		myPlayer.PlaySpeach(HeroSpeech::N97, 40);
+		myPlayer.Say(HeroSpeech::N97, 40);
 		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DMSG_CATHEDRAL;
 	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CATACOMBS)) {
-		myPlayer.PlaySpeach(HeroSpeech::N96, 40);
+		myPlayer.Say(HeroSpeech::N96, 40);
 		myPlayer.pDungMsgs |= DMSG_CATACOMBS;
 	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CAVES)) {
-		myPlayer.PlaySpeach(HeroSpeech::N98, 40);
+		myPlayer.Say(HeroSpeech::N98, 40);
 		myPlayer.pDungMsgs |= DMSG_CAVES;
 	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_HELL)) {
-		myPlayer.PlaySpeach(HeroSpeech::N99, 40);
+		myPlayer.Say(HeroSpeech::N99, 40);
 		myPlayer.pDungMsgs |= DMSG_HELL;
 	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_DIABLO)) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
@@ -4307,7 +4307,7 @@ void PlayDungMsgs()
 		sfxdnum = USFX_DEFILER3;
 		myPlayer.pDungMsgs2 |= 4;
 	} else if (currlevel == 21 && !myPlayer._pLvlVisited[21] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & 32)) {
-		myPlayer.PlaySpeach(HeroSpeech::N92, 30);
+		myPlayer.Say(HeroSpeech::N92, 30);
 		myPlayer.pDungMsgs |= 32;
 	} else {
 		sfxdelay = 0;
