@@ -649,7 +649,7 @@ void DrawSelector(const SDL_Rect &rect)
 	Art *art = &ArtFocus[size];
 
 	int frame = GetAnimationFrame(art->frames);
-	int y = rect.y + (rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher then the box
+	int y = rect.y + (rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher than the box
 
 	DrawArt(rect.x, y, art, frame);
 	DrawArt(rect.x + rect.w - art->w(), y, art, frame);

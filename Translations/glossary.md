@@ -25,7 +25,7 @@ changed to
 
 ## %s of %s
 
-The rather tricky line `%s of %s` is used to create items with pre- and suffixes as mentioned in aboves examples. If your language has gendered articles it might be advisable to remove then "of" but add a gendered article to each suffix instead. If you do so the line should be changed to `%s %s` and you will have to add the appropriate article to each suffix.
+The rather tricky line `%s of %s` is used to create items with pre- and suffixes as mentioned in aboves examples. If your language has gendered articles it might be advisable to remove the "of" but add a gendered article to each suffix instead. If you do so the line should be changed to `%s %s` and you will have to add the appropriate article to each suffix.
 
 ## Adding lines
 

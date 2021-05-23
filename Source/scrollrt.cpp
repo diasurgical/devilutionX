@@ -137,9 +137,9 @@ Point GetOffsetForWalking(const AnimationInfo &animationInfo, const direction di
 	Point offset = movingOffset[dir];
 	offset *= fAnimationProgress;
 
-	// In diagonal walks the offset for y is smaller then x.
+	// In diagonal walks the offset for y is smaller than x.
 	// This means that sometimes x is updated but y not.
-	// That result in a small stuttering.
+	// That results in a small stuttering.
 	// To fix this we disallow odd x as this is the only case where y is not updated.
 	if (isDiagionalWalk[dir] && ((offset.x % 2) != 0)) {
 		offset.x -= offset.x > 0 ? 1 : -1;

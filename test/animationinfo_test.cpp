@@ -64,7 +64,7 @@ struct RenderingData : TestData {
 /*
 * @brief
 * This UnitTest tries to simulate the GameLoop (GameTickData) and the Rendering that can happen (RenderingData).
-* Rendering can happen more often then GameTicks and at any time between two GameTicks.
+* Rendering can happen more often than GameTicks and at any time between two GameTicks.
 * The Animation Distribution Logic must adjust to the Rendering that happens at any give point in time.
 */
 void RunAnimationTest(const std::vector<TestData *> &vecTestData)
