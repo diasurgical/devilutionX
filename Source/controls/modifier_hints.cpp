@@ -46,7 +46,7 @@ struct CircleMenuHint {
 	{
 	}
 
-	int Width() const
+	[[nodiscard]] int Width() const
 	{
 		return 2 * xMid;
 	}

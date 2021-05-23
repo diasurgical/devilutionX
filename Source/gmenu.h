@@ -32,8 +32,8 @@ bool gmenu_presskeys(int vkey);
 bool gmenu_on_mouse_move();
 bool gmenu_left_mouse(bool isDown);
 void gmenu_enable(TMenuItem *pMenuItem, bool enable);
-void gmenu_slider_set(TMenuItem *pItem, int min, int max, int gamma);
+void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value);
 int gmenu_slider_get(TMenuItem *pItem, int min, int max);
-void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
+void gmenu_slider_steps(TMenuItem *pItem, int steps);
 
 } // namespace devilution

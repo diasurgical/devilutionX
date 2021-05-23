@@ -4,11 +4,11 @@
  * Text rendering.
  */
 
-#include "engine.h"
 #include "text_render.hpp"
-#include "cel_render.hpp"
-#include "palette.h"
 #include "DiabloUI/ui_item.h"
+#include "cel_render.hpp"
+#include "engine.h"
+#include "palette.h"
 
 namespace devilution {
 
@@ -19,7 +19,7 @@ namespace {
  * small, medium and large sized fonts; which corresponds to smaltext.cel,
  * medtexts.cel and bigtgold.cel respectively.
  */
-const uint8_t gbFontTransTbl[256] = {
+const uint8_t FontIndex[256] = {
 	// clang-format off
 	'\0', 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
 	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
@@ -41,7 +41,7 @@ const uint8_t gbFontTransTbl[256] = {
 };
 
 /** Maps from font index to cel frame number. */
-const uint8_t fontframe[3][128] = {
+const uint8_t FontFrame[3][128] = {
 	{
 	    // clang-format off
 	     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -84,7 +84,7 @@ const uint8_t fontframe[3][128] = {
  * Maps from cel frame number to character width. Note, the character width
  * may be distinct from the frame width, which is the same for every cel frame.
  */
-const uint8_t fontkern[3][68] = {
+const uint8_t FontKern[3][68] = {
 	{
 	    // clang-format off
 		 8, 10,  7,  9,  8,  7,  6,  8,  8,  3,
@@ -119,11 +119,11 @@ const uint8_t fontkern[3][68] = {
 };
 
 enum text_color : uint8_t {
-	COL_WHITE,
-	COL_BLUE,
-	COL_RED,
-	COL_GOLD,
-	COL_BLACK,
+	ColorWhite,
+	ColorBlue,
+	ColorRed,
+	ColorGold,
+	ColorBlack,
 };
 
 int LineHeights[3] = { 12, 38, 50 };
@@ -135,22 +135,22 @@ uint8_t fontColorTableGold[256];
 uint8_t fontColorTableBlue[256];
 uint8_t fontColorTableRed[256];
 
-static void DrawChar(const CelOutputBuffer &out, Point point, GameFontTables size, int nCel, text_color color)
+void DrawChar(const CelOutputBuffer &out, Point point, GameFontTables size, int nCel, text_color color)
 {
 	switch (color) {
-	case COL_WHITE:
+	case ColorWhite:
 		CelDrawTo(out, point.x, point.y, *fonts[size], nCel);
 		return;
-	case COL_BLUE:
+	case ColorBlue:
 		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableBlue);
 		break;
-	case COL_RED:
+	case ColorRed:
 		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableRed);
 		break;
-	case COL_GOLD:
+	case ColorGold:
 		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableGold);
 		break;
-	case COL_BLACK:
+	case ColorBlack:
 		light_table_index = 15;
 		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, nullptr);
 		return;
@@ -214,8 +214,8 @@ int GetLineWidth(const char *text, GameFontTables size, int spacing, int *charac
 		if (text[i] == '\n')
 			break;
 
-		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
-		lineWidth += fontkern[size][frame] + spacing;
+		uint8_t frame = FontFrame[size][FontIndex[static_cast<uint8_t>(text[i])]];
+		lineWidth += FontKern[size][frame] + spacing;
 	}
 
 	if (charactersInLine != nullptr)
@@ -247,8 +247,8 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size, int spaci
 			continue;
 		}
 
-		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
-		lineWidth += fontkern[size][frame] + spacing;
+		uint8_t frame = FontFrame[size][FontIndex[static_cast<uint8_t>(text[i])]];
+		lineWidth += FontKern[size][frame] + spacing;
 
 		if (lineWidth - spacing <= width) {
 			continue; // String is still within the limit, continue to the next line
@@ -286,15 +286,15 @@ int DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rec
 	else if ((flags & UIS_HUGE) != 0)
 		size = GameFontBig;
 
-	text_color color = COL_GOLD;
+	text_color color = ColorGold;
 	if ((flags & UIS_SILVER) != 0)
-		color = COL_WHITE;
+		color = ColorWhite;
 	else if ((flags & UIS_BLUE) != 0)
-		color = COL_BLUE;
+		color = ColorBlue;
 	else if ((flags & UIS_RED) != 0)
-		color = COL_RED;
+		color = ColorRed;
 	else if ((flags & UIS_BLACK) != 0)
-		color = COL_BLACK;
+		color = ColorBlack;
 
 	const int w = rect.w != 0 ? rect.w : out.w() - rect.x;
 	const int h = rect.h != 0 ? rect.h : out.h() - rect.y;
@@ -325,8 +325,8 @@ int DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rec
 
 	unsigned i = 0;
 	for (; i < textLength; i++) {
-		uint8_t frame = fontframe[size][gbFontTransTbl[static_cast<uint8_t>(text[i])]];
-		int symbolWidth = fontkern[size][frame];
+		uint8_t frame = FontFrame[size][FontIndex[static_cast<uint8_t>(text[i])]];
+		int symbolWidth = FontKern[size][frame];
 		if (text[i] == '\n' || sx + symbolWidth > rightMargin) {
 			if (sy + lineHeight >= bottomMargin)
 				break;

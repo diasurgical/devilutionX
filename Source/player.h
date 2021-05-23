@@ -375,7 +375,7 @@ struct PlayerStruct {
 	void Say(HeroSpeech speechId) const;
 	/**
 	 * @brief Says a speech line after a given delay.
-	 * @param delay Multiple of 20ms wait before starting the speech
+	 * @param delay Multiple of 50ms wait before starting the speech
 	 */
 	void Say(HeroSpeech speechId, int delay) const;
 	/**
