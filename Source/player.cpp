@@ -2029,7 +2029,7 @@ void DropHalfPlayersGold(int pnum)
 			}
 		}
 	}
-	player._pGold = CalculateGold(pnum);
+	player._pGold = CalculateGold(player);
 }
 
 void StripTopGold(int pnum)
@@ -2054,12 +2054,12 @@ void StripTopGold(int pnum)
 				GetGoldSeed(pnum, &player.HoldItem);
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(&player.HoldItem);
-				if (!GoldAutoPlace(pnum))
+				if (!GoldAutoPlace(player))
 					PlrDeadItem(player, &player.HoldItem, 0, 0);
 			}
 		}
 	}
-	player._pGold = CalculateGold(pnum);
+	player._pGold = CalculateGold(player);
 	player.HoldItem = tmpItem;
 }
 

@@ -113,7 +113,7 @@ TEST(Inv, CalculateGold)
 	plr[myplr].InvList[2]._ivalue = 3;
 	plr[myplr].InvList[3]._ivalue = 30;
 
-	EXPECT_EQ(CalculateGold(myplr), 333);
+	EXPECT_EQ(CalculateGold(plr[myplr]), 333);
 }
 
 // Test automatic gold placing
@@ -131,7 +131,7 @@ TEST(Inv, GoldAutoPlace)
 	plr[myplr].HoldItem._itype = ITYPE_GOLD;
 	plr[myplr].HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
 
-	GoldAutoPlace(myplr);
+	GoldAutoPlace(plr[myplr]);
 	// We expect the inventory:
 	// | 5000 | 900 | ...
 	EXPECT_EQ(plr[myplr].InvList[0]._ivalue, GOLD_MAX_LIMIT);

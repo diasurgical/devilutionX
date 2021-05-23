@@ -47,7 +47,7 @@ void LoadText(const char *text)
 
 	size_t previous = 0;
 	while (true) {
-		size_t next = paragraphs.find("\n", previous);
+		size_t next = paragraphs.find('\n', previous);
 		TextLines.emplace_back(paragraphs.substr(previous, next));
 		if (next == std::string::npos)
 			break;
@@ -65,8 +65,8 @@ int CalculateTextSpeed(int nSFX)
 	const int numLines = TextLines.size();
 
 #ifndef NOSOUND
-	Uint32 SfxFrames = GetSFXLength(nSFX);
-	assert(SfxFrames != 0);
+	Uint32 sfxFrames = GetSFXLength(nSFX);
+	assert(sfxFrames != 0);
 #else
 	// Sound is disabled -- estimate length from the number of lines.
 	Uint32 SfxFrames = numLines * 3000;
@@ -75,7 +75,7 @@ int CalculateTextSpeed(int nSFX)
 	int textHeight = LineHeight * numLines;
 	textHeight += LineHeight * 5; // adjust so when speaker is done two line are left
 
-	return SfxFrames / textHeight;
+	return sfxFrames / textHeight;
 }
 
 int CalculateTextPosition()

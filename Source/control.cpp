@@ -5,8 +5,8 @@
  */
 #include "control.h"
 
-#include <cstddef>
 #include <array>
+#include <cstddef>
 
 #include <fmt/format.h>
 
@@ -320,7 +320,7 @@ static void DrawSpell(const CelOutputBuffer &out)
 		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, *pSpellCels, 27);
 }
 
-static void PrintSBookHotkey(CelOutputBuffer out, int x, int y, const std::string &text)
+static void PrintSBookHotkey(const CelOutputBuffer& out, int x, int y, const std::string &text)
 {
 	x -= GetLineWidth(text.c_str()) + 5;
 	x += SPLICONLENGTH;
@@ -550,7 +550,7 @@ void DrawPanelBox(const CelOutputBuffer &out, int x, int y, int w, int h, int sx
  * @param y0 Top of the flask cel section to draw.
  * @param y1 Bottom of the flask cel section to draw.
  */
-static void DrawFlaskTop(const CelOutputBuffer &out, int sx, int sy, CelOutputBuffer celBuf, int y0, int y1)
+static void DrawFlaskTop(const CelOutputBuffer &out, int sx, int sy, const CelOutputBuffer& celBuf, int y0, int y1)
 {
 	const BYTE *src = celBuf.at(0, y0);
 	BYTE *dst = out.at(sx, sy);
@@ -1757,7 +1757,7 @@ void control_remove_gold(int pnum, int goldIndex)
 	plr[pnum].HoldItem._ivalue = dropGoldValue;
 	plr[pnum].HoldItem._iStatFlag = true;
 	control_set_gold_curs(pnum);
-	plr[pnum]._pGold = CalculateGold(pnum);
+	plr[pnum]._pGold = CalculateGold(plr[pnum]);
 	dropGoldValue = 0;
 }
 

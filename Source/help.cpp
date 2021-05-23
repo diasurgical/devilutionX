@@ -19,7 +19,7 @@ namespace devilution {
 unsigned int SkipLines;
 bool helpflag;
 
-const char *const gszHelpText[] = {
+const char *const HelpText[] = {
 	N_("$Keyboard Shortcuts:"),
 	N_("F1:    Open Help Screen"),
 	N_("Esc:   Display Main Menu"),
@@ -98,7 +98,7 @@ void InitHelp()
 	helpflag = false;
 	char tempstr[512];
 
-	for (auto text : gszHelpText) {
+	for (const auto *text : HelpText) {
 		strcpy(tempstr, _(text));
 
 		WordWrapGameString(tempstr, 577);
@@ -106,7 +106,7 @@ void InitHelp()
 
 		size_t previous = 0;
 		while (true) {
-			size_t next = paragraph.find("\n", previous);
+			size_t next = paragraph.find('\n', previous);
 			HelpTextLines.emplace_back(paragraph.substr(previous, next));
 			if (next == std::string::npos)
 				break;
