@@ -229,7 +229,7 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 bool CheckBlock(int fx, int fy, int tx, int ty)
 {
 	while (fx != tx || fy != ty) {
-		direction pn = GetDirection({ fx, fy }, { tx, ty });
+		Direction pn = GetDirection({ fx, fy }, { tx, ty });
 		fx += XDirAdd[pn];
 		fy += YDirAdd[pn];
 		if (nSolidTable[dPiece[fx][fy]])
@@ -794,7 +794,7 @@ bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool s
 				dam = 64;
 		}
 		if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
-			direction dir = plr[pnum]._pdir;
+			Direction dir = plr[pnum]._pdir;
 			if (m != -1) {
 				dir = GetDirection(plr[pnum].position.tile, monster[m].position.tile);
 			}
@@ -3232,7 +3232,7 @@ int Sentfire(int i, int sx, int sy)
 	int ex = 0;
 	if (LineClearMissile(missile[i].position.tile.x, missile[i].position.tile.y, sx, sy)) {
 		if (dMonster[sx][sy] > 0 && monster[dMonster[sx][sy] - 1]._mhitpoints >> 6 > 0 && dMonster[sx][sy] - 1 > MAX_PLRS - 1) {
-			direction dir = GetDirection(missile[i].position.tile, { sx, sy });
+			Direction dir = GetDirection(missile[i].position.tile, { sx, sy });
 			missile[i]._miVar3 = missileavail[0];
 			AddMissile(missile[i].position.tile.x, missile[i].position.tile.y, sx, sy, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile[i]._misource, missile[i]._midam, GetSpellLevel(missile[i]._misource, SPL_FIREBOLT));
 			ex = -1;
@@ -3672,7 +3672,7 @@ void MI_HorkSpawn(int i)
 					dp = dPiece[tx][ty];
 					if (!nSolidTable[dp] && dMonster[tx][ty] == 0 && dPlayer[tx][ty] == 0 && dObject[tx][ty] == 0) {
 						j = 6;
-						auto md = static_cast<direction>(missile[i]._miVar1);
+						auto md = static_cast<Direction>(missile[i]._miVar1);
 						int mon = AddMonster(tx, ty, md, 1, true);
 						M_StartStand(mon, md);
 						break;
@@ -3691,7 +3691,7 @@ void MI_HorkSpawn(int i)
 void MI_Rune(int i)
 {
 	int mid, pid, mx, my;
-	direction dir;
+	Direction dir;
 
 	mx = missile[i].position.tile.x;
 	my = missile[i].position.tile.y;
@@ -4009,7 +4009,7 @@ void MI_FireNova(int i)
 	int dam = missile[i]._midam;
 	int sx = missile[i].position.tile.x;
 	int sy = missile[i].position.tile.y;
-	direction dir = DIR_S;
+	Direction dir = DIR_S;
 	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
 		dir = plr[id]._pdir;
@@ -4040,7 +4040,7 @@ void MI_SpecArrow(int i)
 	int dy = missile[i]._miVar2;
 	int spllvl = missile[i]._miVar3;
 	int mitype = 0;
-	direction dir = DIR_S;
+	Direction dir = DIR_S;
 	mienemy_type micaster = TARGET_PLAYERS;
 	if (src != -1) {
 		dir = plr[src]._pdir;
@@ -4422,7 +4422,7 @@ void MI_Chain(int i)
 	id = missile[i]._misource;
 	sx = missile[i].position.tile.x;
 	sy = missile[i].position.tile.y;
-	direction dir = GetDirection({ sx, sy }, { missile[i]._miVar1, missile[i]._miVar2 });
+	Direction dir = GetDirection({ sx, sy }, { missile[i]._miVar1, missile[i]._miVar2 });
 	AddMissile(sx, sy, missile[i]._miVar1, missile[i]._miVar2, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile[i]._mispllvl);
 	rad = missile[i]._mispllvl + 3;
 	if (rad > 19)
@@ -4762,9 +4762,9 @@ void MI_Wave(int i)
 	sy = missile[i].position.tile.y;
 	v1 = missile[i]._miVar1;
 	v2 = missile[i]._miVar2;
-	direction sd = GetDirection({ sx, sy }, { v1, v2 });
-	direction dira = left[left[sd]];
-	direction dirb = right[right[sd]];
+	Direction sd = GetDirection({ sx, sy }, { v1, v2 });
+	Direction dira = left[left[sd]];
+	Direction dirb = right[right[sd]];
 	nxa = sx + XDirAdd[sd];
 	nya = sy + YDirAdd[sd];
 	pn = dPiece[nxa][nya];
@@ -4809,7 +4809,7 @@ void MI_Nova(int i)
 	int dam = missile[i]._midam;
 	int sx = missile[i].position.tile.x;
 	int sy = missile[i].position.tile.y;
-	direction dir = DIR_S;
+	Direction dir = DIR_S;
 	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
 		dir = plr[id]._pdir;
@@ -5039,11 +5039,11 @@ void MI_Element(int i)
 			missile[i]._mirange = 255;
 			mid = FindClosest(cx, cy, 19);
 			if (mid > 0) {
-				direction sd = GetDirection({ cx, cy }, monster[mid].position.tile);
+				Direction sd = GetDirection({ cx, cy }, monster[mid].position.tile);
 				SetMissDir(i, sd);
 				GetMissileVel(i, cx, cy, monster[mid].position.tile.x, monster[mid].position.tile.y, 16);
 			} else {
-				direction sd = plr[id]._pdir;
+				Direction sd = plr[id]._pdir;
 				SetMissDir(i, sd);
 				GetMissileVel(i, cx, cy, cx + XDirAdd[sd], cy + YDirAdd[sd], 16);
 			}
@@ -5094,7 +5094,7 @@ void MI_Bonespirit(int i)
 				SetMissDir(i, GetDirection({ cx, cy }, monster[mid].position.tile));
 				GetMissileVel(i, cx, cy, monster[mid].position.tile.x, monster[mid].position.tile.y, 16);
 			} else {
-				direction sd = plr[id]._pdir;
+				Direction sd = plr[id]._pdir;
 				SetMissDir(i, sd);
 				GetMissileVel(i, cx, cy, cx + XDirAdd[sd], cy + YDirAdd[sd], 16);
 			}

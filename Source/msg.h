@@ -188,7 +188,7 @@ struct TCmdGolem {
 	_cmd_id bCmd;
 	uint8_t _mx;
 	uint8_t _my;
-	direction _mdir;
+	Direction _mdir;
 	int8_t _menemy;
 	int32_t _mhitpoints;
 	uint8_t _currlevel;
@@ -362,7 +362,7 @@ struct TPkt {
 struct DMonsterStr {
 	uint8_t _mx;
 	uint8_t _my;
-	direction _mdir;
+	Direction _mdir;
 	uint8_t _menemy;
 	uint8_t _mactive;
 	int32_t _mhitpoints;
@@ -433,7 +433,7 @@ void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
-void NetSendCmdGolem(BYTE mx, BYTE my, direction dir, BYTE menemy, int hp, BYTE cl);
+void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE cl);
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);

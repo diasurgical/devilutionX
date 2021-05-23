@@ -1284,7 +1284,7 @@ void SetPlayerOld(PlayerStruct &player)
 	player.position.old = player.position.tile;
 }
 
-void FixPlayerLocation(int pnum, direction bDir)
+void FixPlayerLocation(int pnum, Direction bDir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("FixPlayerLocation: illegal player %i", pnum);
@@ -1304,7 +1304,7 @@ void FixPlayerLocation(int pnum, direction bDir)
 	ChangeVisionXY(player._pvid, player.position.tile.x, player.position.tile.y);
 }
 
-void StartStand(int pnum, direction dir)
+void StartStand(int pnum, Direction dir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartStand: illegal player %i", pnum);
@@ -1400,7 +1400,7 @@ void PM_ChangeOffset(int pnum)
 /**
  * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, direction EndDir, _scroll_direction sdir, int variant, bool pmWillBeCalled)
+void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction EndDir, _scroll_direction sdir, int variant, bool pmWillBeCalled)
 {
 	auto &player = plr[pnum];
 
@@ -1508,7 +1508,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	}
 }
 
-void StartAttack(int pnum, direction d)
+void StartAttack(int pnum, Direction d)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartAttack: illegal player %i", pnum);
@@ -1544,7 +1544,7 @@ void StartAttack(int pnum, direction d)
 	SetPlayerOld(player);
 }
 
-void StartRangeAttack(int pnum, direction d, int cx, int cy)
+void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartRangeAttack: illegal player %i", pnum);
@@ -1578,7 +1578,7 @@ void StartRangeAttack(int pnum, direction d, int cx, int cy)
 	player.position.temp = { cx, cy };
 }
 
-void StartPlrBlock(int pnum, direction dir)
+void StartPlrBlock(int pnum, Direction dir)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlrBlock: illegal player %i", pnum);
@@ -1608,7 +1608,7 @@ void StartPlrBlock(int pnum, direction dir)
 	SetPlayerOld(player);
 }
 
-void StartSpell(int pnum, direction d, int cx, int cy)
+void StartSpell(int pnum, Direction d, int cx, int cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS)
 		app_fatal("StartSpell: illegal player %i", pnum);
@@ -1736,7 +1736,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		return;
 	}
 
-	direction pd = player._pdir;
+	Direction pd = player._pdir;
 
 	if ((player._pGFXLoad & PFILE_HIT) == 0) {
 		LoadPlrGFX(pnum, PFILE_HIT);
@@ -2743,7 +2743,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 
 	if (hit < hper) {
 		if (blk < blkper) {
-			direction dir = GetDirection(target.position.tile, attacker.position.tile);
+			Direction dir = GetDirection(target.position.tile, attacker.position.tile);
 			StartPlrBlock(p, dir);
 		} else {
 			mind = attacker._pIMinDam;
@@ -3179,7 +3179,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		MakePlrPath(pnum, target.position.future.x, target.position.future.y, false);
 	}
 
-	direction d;
+	Direction d;
 	if (player.walkpath[0] != WALK_NONE) {
 		if (player._pmode == PM_STAND) {
 			if (pnum == myplr) {
@@ -3859,7 +3859,7 @@ void CheckPlrSpell()
 
 	if (addflag) {
 		if (myPlayer._pRSpell == SPL_FIREWALL || myPlayer._pRSpell == SPL_LIGHTWALL) {
-			direction sd = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
+			Direction sd = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
 			sl = GetSpellLevel(myplr, myPlayer._pRSpell);
 			NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, myPlayer._pRSpell, sd, sl);
 		} else if (pcursmonst != -1) {

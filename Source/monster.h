@@ -143,7 +143,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	uint8_t _pathcount;
 	ActorPosition position;
 	/** Direction faced by monster (direction enum) */
-	direction _mdir;
+	Direction _mdir;
 	/** The current target of the mosnter. An index in to either the plr or monster array based on the _meflag value. */
 	int _menemy;
 	/** Usually correspond's to the enemy's future position */
@@ -206,17 +206,17 @@ extern int nummtypes;
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(int monst);
-void InitMonster(int i, direction rd, int mtype, int x, int y);
+void InitMonster(int i, Direction rd, int mtype, int x, int y);
 void ClrAllMonsters();
 void monster_some_crypt();
 void PlaceGroup(int mtype, int num, int leaderf, int leader);
 void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, int startx, int starty);
 void DeleteMonster(int i);
-int AddMonster(int x, int y, direction dir, int mtype, bool InMap);
+int AddMonster(int x, int y, Direction dir, int mtype, bool InMap);
 void monster_43C785(int i);
 bool M_Talker(int i);
-void M_StartStand(int i, direction md);
+void M_StartStand(int i, Direction md);
 void M_ClearSquares(int i);
 void M_GetKnockback(int i);
 void M_StartHit(int i, int pnum, int dam);
@@ -226,7 +226,7 @@ void M_Teleport(int i);
 void M_UpdateLeader(int i);
 void DoEnding();
 void PrepDoEnding();
-void M_WalkDir(int i, direction md);
+void M_WalkDir(int i, Direction md);
 void MAI_Zombie(int i);
 void MAI_SkelSd(int i);
 void MAI_Snake(int i);
@@ -273,7 +273,7 @@ void MAI_Warlord(int i);
 void DeleteMonsterList();
 void ProcessMonsters();
 void FreeMonsters();
-bool DirOK(int i, direction mdir);
+bool DirOK(int i, Direction mdir);
 bool PosOkMissile(int entity, int x, int y);
 bool LineClearSolid(int x1, int y1, int x2, int y2);
 bool LineClearMissile(int x1, int y1, int x2, int y2);
@@ -290,7 +290,7 @@ bool PosOkMonst2(int i, int x, int y);
 bool PosOkMonst3(int i, int x, int y);
 bool IsSkel(int mt);
 bool IsGoat(int mt);
-int M_SpawnSkel(int x, int y, direction dir);
+int M_SpawnSkel(int x, int y, Direction dir);
 bool SpawnSkeleton(int ii, int x, int y);
 int PreSpawnSkeleton();
 void TalktoMonster(int i);
@@ -302,9 +302,9 @@ void decode_enemy(int m, int enemy);
 
 /* data */
 
-extern direction left[8];
-extern direction right[8];
-extern direction opposite[8];
+extern Direction left[8];
+extern Direction right[8];
+extern Direction opposite[8];
 extern int offset_x[8];
 extern int offset_y[8];
 
