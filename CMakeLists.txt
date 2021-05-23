@@ -38,6 +38,8 @@ option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken p
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
 option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_SOUNDS)
+option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
+mark_as_advanced(STREAM_ALL_AUDIO)
 
 RELEASE_OPTION(CPACK "Configure CPack")
 
@@ -626,6 +628,7 @@ foreach(
   GPERF
   GPERF_HEAP_MAIN
   GPERF_HEAP_FIRST_GAME_ITERATION
+  STREAM_ALL_AUDIO
 )
 if(${def_name})
   list(APPEND def_list ${def_name})
