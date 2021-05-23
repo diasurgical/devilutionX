@@ -335,7 +335,7 @@ static void free_game()
 	FreeStoreMem();
 
 	for (auto &player : plr)
-		FreePlayerGFX(player);
+		ResetPlayerGFX(player);
 
 	FreeCursor();
 #ifdef _DEBUG

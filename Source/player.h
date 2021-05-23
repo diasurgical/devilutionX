@@ -77,21 +77,18 @@ enum inv_body_loc : uint8_t {
 	NUM_INVLOC,
 };
 
-enum player_graphic : uint16_t {
-	// clang-format off
-	PFILE_STAND     = 1 << 0,
-	PFILE_WALK      = 1 << 1,
-	PFILE_ATTACK    = 1 << 2,
-	PFILE_HIT       = 1 << 3,
-	PFILE_LIGHTNING = 1 << 4,
-	PFILE_FIRE      = 1 << 5,
-	PFILE_MAGIC     = 1 << 6,
-	PFILE_DEATH     = 1 << 7,
-	PFILE_BLOCK     = 1 << 8,
-	// everything except PFILE_DEATH
-	// 0b1_0111_1111
-	PFILE_NONDEATH  = 0x17F
-	// clang-format on
+enum class player_graphic : uint16_t {
+	Stand,
+	Walk,
+	Attack,
+	Hit,
+	Lightning,
+	Fire,
+	Magic,
+	Death,
+	Block,
+
+	LAST = Block
 };
 
 enum anim_weapon_id : uint8_t {
@@ -147,6 +144,21 @@ enum action_id : int8_t {
 enum player_weapon_type : uint8_t {
 	WT_MELEE,
 	WT_RANGED,
+};
+
+/*
+ * @brief Contains Data (CelSprites) for a player graphic (player_graphic)
+ */
+struct PlayerAnimationData {
+	/*
+	 * @brief CelSprites for the different directions
+	 */
+	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
+	/*
+	 * @brief Raw Data (binary) of the CL2 file.
+	 *        Is referenced from CelSprite in CelSpritesForDirections
+	 */
+	std::unique_ptr<byte[]> RawData;
 };
 
 struct PlayerStruct {
@@ -237,25 +249,18 @@ struct PlayerStruct {
 	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
-	                               /** Using player_graphic as bitflags */
-	int _pGFXLoad;
-	std::array<std::optional<CelSprite>, 8> _pNAnim; // Stand animations
+	/*
+	 * @brief Contains Data (Sprites) for the different Animations
+	 */
+	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
 	int _pNFrames;
-	std::array<std::optional<CelSprite>, 8> _pWAnim; // Walk animations
 	int _pWFrames;
-	std::array<std::optional<CelSprite>, 8> _pAAnim; // Attack animations
 	int _pAFrames;
 	int _pAFNum;
-	std::array<std::optional<CelSprite>, 8> _pLAnim; // Lightning spell cast animations
-	std::array<std::optional<CelSprite>, 8> _pFAnim; // Fire spell cast animations
-	std::array<std::optional<CelSprite>, 8> _pTAnim; // Generic spell cast animations
 	int _pSFrames;
 	int _pSFNum;
-	std::array<std::optional<CelSprite>, 8> _pHAnim; // Getting hit animations
 	int _pHFrames;
-	std::array<std::optional<CelSprite>, 8> _pDAnim; // Death animations
 	int _pDFrames;
-	std::array<std::optional<CelSprite>, 8> _pBAnim; // Block animations
 	int _pBFrames;
 	ItemStruct InvBody[NUM_INVLOC];
 	ItemStruct InvList[NUM_INV_GRID_ELEM];
@@ -294,15 +299,6 @@ struct PlayerStruct {
 	uint8_t pDiabloKillLevel;
 	_difficulty pDifficulty;
 	uint32_t pDamAcFlags;
-	std::unique_ptr<byte[]> _pNData;
-	std::unique_ptr<byte[]> _pWData;
-	std::unique_ptr<byte[]> _pAData;
-	std::unique_ptr<byte[]> _pLData;
-	std::unique_ptr<byte[]> _pFData;
-	std::unique_ptr<byte[]> _pTData;
-	std::unique_ptr<byte[]> _pHData;
-	std::unique_ptr<byte[]> _pDData;
-	std::unique_ptr<byte[]> _pBData;
 
 	void CalcScrolls();
 
@@ -408,10 +404,9 @@ extern PlayerStruct plr[MAX_PLRS];
 extern bool deathflag;
 extern int ToBlkTbl[enum_size<HeroClass>::value];
 
-void LoadPlrGFX(PlayerStruct &player, player_graphic gfxflag);
+void LoadPlrGFX(PlayerStruct &player, player_graphic graphic);
 void InitPlayerGFX(int pnum);
-void InitPlrGFXMem(PlayerStruct &player);
-void FreePlayerGFX(PlayerStruct &player);
+void ResetPlayerGFX(PlayerStruct &player);
 
 /**
  * @brief Sets the new Player Animation with all relevant information for rendering

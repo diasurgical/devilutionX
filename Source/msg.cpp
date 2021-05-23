@@ -696,7 +696,7 @@ void DeltaSaveLevel()
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (i != myplr)
-			plr[i]._pGFXLoad = 0;
+			ResetPlayerGFX(plr[i]);
 	}
 	plr[myplr]._pLvlVisited[currlevel] = true;
 	delta_leave_sync(currlevel);
@@ -2225,7 +2225,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 	else {
 		plr[pnum]._pLvlChanging = false;
 		if (plr[pnum]._pName[0] != 0 && !plr[pnum].plractive) {
-			InitPlrGFXMem(plr[pnum]);
+			ResetPlayerGFX(plr[pnum]);
 			plr[pnum].plractive = true;
 			gbActivePlayers++;
 			EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), plr[pnum]._pName, plr[pnum]._pLevel).c_str());
@@ -2234,7 +2234,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 		if (plr[pnum].plractive && myplr != pnum) {
 			plr[pnum].position.tile = { p->x, p->y };
 			plr[pnum].plrlevel = p->wParam1;
-			plr[pnum]._pGFXLoad = 0;
+			ResetPlayerGFX(plr[pnum]);
 			if (currlevel == plr[pnum].plrlevel) {
 				SyncInitPlr(pnum);
 				if ((plr[pnum]._pHitPoints >> 6) > 0)
@@ -2242,7 +2242,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 				else {
 					plr[pnum]._pgfxnum = 0;
 					plr[pnum]._pmode = PM_DEATH;
-					NewPlrAnim(plr[pnum], PFILE_DEATH, DIR_S, plr[pnum]._pDFrames, 1);
+					NewPlrAnim(plr[pnum], player_graphic::Death, DIR_S, plr[pnum]._pDFrames, 1);
 					plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
 					dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 				}

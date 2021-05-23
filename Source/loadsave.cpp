@@ -432,7 +432,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 
 	file->skip(2); // Alignment
 
-	pPlayer->_pGFXLoad = file->nextLE<int32_t>();
+	// skip _pGFXLoad
+	file->skip(4);
 	file->skip(4 * 8); // Skip pointers _pNAnim
 	pPlayer->_pNFrames = file->nextLE<int32_t>();
 	// skip _pNWidth
@@ -1428,7 +1429,8 @@ static void SavePlayer(SaveHelper *file, int p)
 
 	file->skip(2); // Alignment
 
-	file->writeLE<int32_t>(pPlayer->_pGFXLoad);
+	// Write _pGFXLoad for vanilla compatibility
+	file->writeLE<int32_t>(0);
 	file->skip(4 * 8); // Skip pointers _pNAnim
 	file->writeLE<int32_t>(pPlayer->_pNFrames);
 	// Skip _pNWidth

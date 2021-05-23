@@ -275,7 +275,7 @@ static void multi_player_left_msg(int pnum, bool left)
 		}
 		plr[pnum].plractive = false;
 		plr[pnum]._pName[0] = '\0';
-		FreePlayerGFX(plr[pnum]);
+		ResetPlayerGFX(plr[pnum]);
 		gbActivePlayers--;
 	}
 }
@@ -749,7 +749,7 @@ bool NetInit(bool bSinglePlayer)
 		SetupLocalCoords();
 		multi_send_pinfo(-2, CMD_SEND_PLRINFO);
 
-		InitPlrGFXMem(plr[myplr]);
+		ResetPlayerGFX(plr[myplr]);
 		plr[myplr].plractive = true;
 		gbActivePlayers = 1;
 
@@ -855,7 +855,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 		return;
 	}
 
-	InitPlrGFXMem(plr[pnum]);
+	ResetPlayerGFX(plr[pnum]);
 	plr[pnum].plractive = true;
 	gbActivePlayers++;
 
@@ -874,7 +874,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 		} else {
 			plr[pnum]._pgfxnum = 0;
 			plr[pnum]._pmode = PM_DEATH;
-			NewPlrAnim(player, PFILE_DEATH, DIR_S, plr[pnum]._pDFrames, 1);
+			NewPlrAnim(player, player_graphic::Death, DIR_S, plr[pnum]._pDFrames, 1);
 			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
 			dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 		}
