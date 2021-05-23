@@ -354,7 +354,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
  */
 static void DrawPlayerIconHelper(const CelOutputBuffer &out, int pnum, missile_graphic_id missileGraphicId, int x, int y, bool lighting)
 {
-	x += CalculateWidth2(plr[pnum]._pAnimWidth) - misfiledata[missileGraphicId].mAnimWidth2[0];
+	x += CalculateWidth2(plr[pnum].AnimInfo.pCelSprite->Width()) - misfiledata[missileGraphicId].mAnimWidth2[0];
 
 	int width = misfiledata[missileGraphicId].mAnimWidth[0];
 	byte *pCelBuff = misfiledata[missileGraphicId].mAnimData[0];
@@ -410,16 +410,15 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 
 	PlayerStruct *pPlayer = &plr[pnum];
 
-	byte *pCelBuff = pPlayer->AnimInfo.pData;
+	auto *pCelSprite = pPlayer->AnimInfo.pCelSprite;
 	int nCel = pPlayer->AnimInfo.GetFrameToUseForRendering();
 
-	if (pCelBuff == nullptr) {
-		Log("Drawing player {} \"{}\": NULL Cel Buffer", pnum, plr[pnum]._pName);
+	if (pCelSprite == nullptr) {
+		Log("Drawing player {} \"{}\": NULL CelSprite", pnum, plr[pnum]._pName);
 		return;
 	}
-	CelSprite cel { pCelBuff, pPlayer->_pAnimWidth };
 
-	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(cel.Data()));
+	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(pCelSprite->Data()));
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (plr[pnum]._pmode <= PM_QUIT)
@@ -436,16 +435,16 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 	}
 
 	if (pnum == pcursplr)
-		Cl2DrawOutline(out, 165, px, py, cel, nCel);
+		Cl2DrawOutline(out, 165, px, py, *pCelSprite, nCel);
 
 	if (pnum == myplr) {
-		Cl2Draw(out, px, py, cel, nCel);
+		Cl2Draw(out, px, py, *pCelSprite, nCel);
 		DrawPlayerIcons(out, pnum, px, py, true);
 		return;
 	}
 
 	if (!(dFlags[x][y] & BFLAG_LIT) || (plr[myplr]._pInfraFlag && light_table_index > 8)) {
-		Cl2DrawLightTbl(out, px, py, cel, nCel, 1);
+		Cl2DrawLightTbl(out, px, py, *pCelSprite, nCel, 1);
 		DrawPlayerIcons(out, pnum, px, py, true);
 		return;
 	}
@@ -456,7 +455,7 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 	else
 		light_table_index -= 5;
 
-	Cl2DrawLight(out, px, py, cel, nCel);
+	Cl2DrawLight(out, px, py, *pCelSprite, nCel);
 	DrawPlayerIcons(out, pnum, px, py, false);
 
 	light_table_index = l;
@@ -481,7 +480,7 @@ void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 		p = &plr[i];
 		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.tile.x == x && p->position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
-			px = sx + p->position.offset.x - CalculateWidth2(p->_pAnimWidth);
+			px = sx + p->position.offset.x - CalculateWidth2(p->AnimInfo.pCelSprite == nullptr ? 96 : p->AnimInfo.pCelSprite->Width());
 			py = sy + p->position.offset.y;
 			DrawPlayer(out, i, x, y, px, py);
 		}
@@ -718,7 +717,7 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	if (pPlayer->IsWalking()) {
 		offset = GetOffsetForWalking(pPlayer->AnimInfo, pPlayer->_pdir);
 	}
-	int px = sx + offset.x - CalculateWidth2(pPlayer->_pAnimWidth);
+	int px = sx + offset.x - CalculateWidth2(pPlayer->AnimInfo.pCelSprite == nullptr ? 96 : pPlayer->AnimInfo.pCelSprite->Width());
 	int py = sy + offset.y;
 
 	DrawPlayer(out, p, x, y, px, py);
