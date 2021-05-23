@@ -1015,7 +1015,7 @@ void SpellBookMove(AxisDirection dir)
 	}
 }
 
-static const direction FaceDir[3][3] = {
+static const Direction FaceDir[3][3] = {
 	// NONE      UP      DOWN
 	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
 	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
@@ -1102,7 +1102,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 		return;
 	}
 
-	const direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
+	const Direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 	const int dx = x + Offsets[pdir][0];
 	const int dy = y + Offsets[pdir][1];
 

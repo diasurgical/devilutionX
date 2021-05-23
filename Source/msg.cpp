@@ -865,7 +865,7 @@ void NetSendCmd(bool bHiPri, _cmd_id bCmd)
 		NetSendLoPri(myplr, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGolem(BYTE mx, BYTE my, direction dir, BYTE menemy, int hp, BYTE cl)
+void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE cl)
 {
 	TCmdGolem cmd;
 
@@ -1658,7 +1658,7 @@ static DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 			plr[pnum].destAction = ACTION_SPELLWALL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
+			plr[pnum].destParam3 = static_cast<Direction>(p->wParam2);
 			plr[pnum].destParam4 = p->wParam3;
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
@@ -1681,7 +1681,7 @@ static DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
+			plr[pnum].destParam3 = static_cast<Direction>(p->wParam2);
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pRSplType;
 			plr[pnum]._pSplFrom = 0;
@@ -1703,7 +1703,7 @@ static DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
 			plr[pnum].destParam2 = p->y;
-			plr[pnum].destParam3 = static_cast<direction>(p->wParam2);
+			plr[pnum].destParam3 = static_cast<Direction>(p->wParam2);
 			plr[pnum]._pSpell = spell;
 			plr[pnum]._pSplType = plr[pnum]._pTSplType;
 			plr[pnum]._pSplFrom = 2;

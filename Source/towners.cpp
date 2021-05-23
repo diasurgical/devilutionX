@@ -26,7 +26,7 @@ _sfx_id CowPlaying = SFX_NONE;
 struct TownerInit {
 	_talker_id type;
 	Point position;
-	direction dir;
+	Direction dir;
 	void (*init)(TownerStruct &towner, const TownerInit &initData);
 	void (*talk)(PlayerStruct &player, TownerStruct &towner);
 };
@@ -63,7 +63,7 @@ void InitQstSnds(TownerStruct &towner, _talker_id type)
 	}
 }
 
-void LoadTownerAnimations(TownerStruct &towner, const char *path, int frames, direction dir, int delay)
+void LoadTownerAnimations(TownerStruct &towner, const char *path, int frames, Direction dir, int delay)
 {
 	towner._tNData = LoadFileInMem(path);
 	for (auto &animation : towner._tNAnim) {

@@ -58,7 +58,7 @@ constexpr const T &clamp(const T &x, const T &lower, const T &upper)
 }
 #endif
 
-enum direction : uint8_t {
+enum Direction : uint8_t {
 	DIR_S,
 	DIR_SW,
 	DIR_W,
@@ -463,7 +463,7 @@ void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int w
  * @param destination Tile coordinate
  * @return A value from the direction enum
  */
-direction GetDirection(Point start, Point destination);
+Direction GetDirection(Point start, Point destination);
 
 /**
  * @brief Calculate Width2 from the orginal Width

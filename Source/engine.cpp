@@ -140,9 +140,9 @@ void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int w
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
 */
-direction GetDirection(Point start, Point destination)
+Direction GetDirection(Point start, Point destination)
 {
-	direction md = DIR_S;
+	Direction md = DIR_S;
 
 	int mx = destination.x - start.x;
 	int my = destination.y - start.y;

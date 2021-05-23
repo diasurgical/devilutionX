@@ -190,7 +190,7 @@ bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 {
-	direction dir = plr[id]._pdir;
+	Direction dir = plr[id]._pdir;
 	if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
 		dir = plr[id].tempDirection;
 	}

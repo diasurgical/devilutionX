@@ -155,11 +155,11 @@ struct PlayerStruct {
 	action_id destAction;
 	int destParam1;
 	int destParam2;
-	direction destParam3;
+	Direction destParam3;
 	int destParam4;
 	int plrlevel;
 	ActorPosition position;
-	direction _pdir; // Direction faced by player (direction enum)
+	Direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
 	/*
 	 * @brief Contains Information for current Animation
@@ -224,7 +224,7 @@ struct PlayerStruct {
 	int _pGold;
 	bool _pInfraFlag;
 	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
-	direction tempDirection;
+	Direction tempDirection;
 	/** Used for spell level, and X component of _pVar5 */
 	int _pVar4;
 	/** Used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it) */
@@ -433,10 +433,10 @@ bool SolidLoc(int x, int y);
 void PlrClrTrans(int x, int y);
 void PlrDoTrans(int x, int y);
 void SetPlayerOld(PlayerStruct &player);
-void FixPlayerLocation(int pnum, direction bDir);
-void StartStand(int pnum, direction dir);
-void StartAttack(int pnum, direction d);
-void StartPlrBlock(int pnum, direction dir);
+void FixPlayerLocation(int pnum, Direction bDir);
+void StartStand(int pnum, Direction dir);
+void StartAttack(int pnum, Direction d);
+void StartPlrBlock(int pnum, Direction dir);
 void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, bool forcehit);

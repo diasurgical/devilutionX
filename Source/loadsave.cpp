@@ -314,7 +314,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->destAction = static_cast<action_id>(file->nextLE<int32_t>());
 	pPlayer->destParam1 = file->nextLE<int32_t>();
 	pPlayer->destParam2 = file->nextLE<int32_t>();
-	pPlayer->destParam3 = static_cast<direction>(file->nextLE<int32_t>());
+	pPlayer->destParam3 = static_cast<Direction>(file->nextLE<int32_t>());
 	pPlayer->destParam4 = file->nextLE<int32_t>();
 	pPlayer->plrlevel = file->nextLE<int32_t>();
 	pPlayer->position.tile.x = file->nextLE<int32_t>();
@@ -330,7 +330,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->position.offset.y = file->nextLE<int32_t>();
 	pPlayer->position.velocity.x = file->nextLE<int32_t>();
 	pPlayer->position.velocity.y = file->nextLE<int32_t>();
-	pPlayer->_pdir = static_cast<direction>(file->nextLE<int32_t>());
+	pPlayer->_pdir = static_cast<Direction>(file->nextLE<int32_t>());
 	file->skip(4); // Unused
 	pPlayer->_pgfxnum = file->nextLE<int32_t>();
 	file->skip(4); // Skip pointer pData
@@ -417,7 +417,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	pPlayer->_pInfraFlag = file->nextBool32();
 	pPlayer->position.temp.x = file->nextLE<int32_t>();
 	pPlayer->position.temp.y = file->nextLE<int32_t>();
-	pPlayer->tempDirection = static_cast<direction>(file->nextLE<int32_t>());
+	pPlayer->tempDirection = static_cast<Direction>(file->nextLE<int32_t>());
 	pPlayer->_pVar4 = file->nextLE<int32_t>();
 	pPlayer->_pVar5 = file->nextLE<int32_t>();
 	pPlayer->position.offset2.x = file->nextLE<int32_t>();
@@ -554,7 +554,7 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->position.offset.y = file->nextLE<int32_t>();
 	pMonster->position.velocity.x = file->nextLE<int32_t>();
 	pMonster->position.velocity.y = file->nextLE<int32_t>();
-	pMonster->_mdir = static_cast<direction>(file->nextLE<int32_t>());
+	pMonster->_mdir = static_cast<Direction>(file->nextLE<int32_t>());
 	pMonster->_menemy = file->nextLE<int32_t>();
 	pMonster->enemyPosition.x = file->nextLE<uint8_t>();
 	pMonster->enemyPosition.y = file->nextLE<uint8_t>();

@@ -124,7 +124,7 @@ const char *const szPlrModeAssert[] = {
 	"quitting"
 };
 
-Point GetOffsetForWalking(const AnimationInfo &animationInfo, const direction dir, bool cameraMode /*= false*/)
+Point GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
 {
 	// clang-format off
 	//                                  DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
@@ -766,7 +766,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 	if (light_table_index < lightmax && bDead != 0) {
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
-			auto dd = static_cast<direction>((bDead >> 5) & 7);
+			auto dd = static_cast<Direction>((bDead >> 5) & 7);
 			int px = dx - CalculateWidth2(pDeadGuy->_deadWidth);
 			byte *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);

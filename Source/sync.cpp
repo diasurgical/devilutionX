@@ -231,7 +231,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 	mdy = abs(monster[ndx].position.tile.y - p->_my);
 	if (mdx <= 2 && mdy <= 2) {
 		if (monster[ndx]._mmode < MM_WALK || monster[ndx]._mmode > MM_WALK3) {
-			direction md = GetDirection(monster[ndx].position.tile, { p->_mx, p->_my });
+			Direction md = GetDirection(monster[ndx].position.tile, { p->_mx, p->_my });
 			if (DirOK(ndx, md)) {
 				M_ClearSquares(ndx);
 				dMonster[monster[ndx].position.tile.x][monster[ndx].position.tile.y] = ndx + 1;
@@ -244,7 +244,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		dMonster[p->_mx][p->_my] = ndx + 1;
 		monster[ndx].position.tile = { p->_mx, p->_my };
 		decode_enemy(ndx, p->_menemy);
-		direction md = GetDirection({ p->_mx, p->_my }, monster[ndx].enemyPosition);
+		Direction md = GetDirection({ p->_mx, p->_my }, monster[ndx].enemyPosition);
 		M_StartStand(ndx, md);
 		monster[ndx]._msquelch = UINT8_MAX;
 	}

@@ -2118,7 +2118,7 @@ void Obj_Trap(int i)
 		}
 	}
 	if (!deltaload) {
-		direction dir = GetDirection(object[i].position, object[oti].position);
+		Direction dir = GetDirection(object[i].position, object[oti].position);
 		int sx = object[i].position.x;
 		int sy = object[i].position.y;
 		AddMissile(sx, sy, dx, dy, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
@@ -3098,7 +3098,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				}
 			}
 			if (object[i]._oTrapFlag && object[i]._otype >= OBJ_TCHEST1 && object[i]._otype <= OBJ_TCHEST3) {
-				direction mdir = GetDirection(object[i].position, plr[pnum].position.tile);
+				Direction mdir = GetDirection(object[i].position, plr[pnum].position.tile);
 				switch (object[i]._oVar4) {
 				case 0:
 					mtype = MIS_ARROW;
