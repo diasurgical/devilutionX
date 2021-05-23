@@ -165,11 +165,14 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 	auto snd = std::make_unique<TSnd>();
 	snd->start_tc = SDL_GetTicks() - 80 - 1;
 
+#ifndef STREAM_ALL_AUDIO
 	if (stream) {
+#endif
 		error = snd->DSB.SetChunkStream(path);
 		if (error != 0) {
 			ErrSdl();
 		}
+#ifndef STREAM_ALL_AUDIO
 	} else {
 		HANDLE file;
 		if (!SFileOpenFile(path, &file)) {
@@ -181,6 +184,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		error = snd->DSB.SetChunk(wave_file, dwBytes);
 		SFileCloseFileThreadSafe(file);
 	}
+#endif
 	if (error != 0) {
 		ErrSdl();
 	}

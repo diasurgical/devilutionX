@@ -70,8 +70,10 @@ float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 void SoundSample::Release()
 {
 	stream_ = nullptr;
+#ifndef STREAM_ALL_AUDIO
 	file_data_ = nullptr;
 	file_data_size_ = 0;
+#endif
 };
 
 /**
@@ -131,6 +133,7 @@ int SoundSample::SetChunkStream(std::string filePath)
 	return 0;
 }
 
+#ifndef STREAM_ALL_AUDIO
 int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes)
 {
 	file_data_ = fileData;
@@ -151,6 +154,7 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 
 	return 0;
 };
+#endif
 
 /**
  * @return Audio duration in ms
