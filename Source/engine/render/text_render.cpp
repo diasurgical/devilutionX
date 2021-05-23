@@ -276,7 +276,7 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size, int spaci
 }
 
 /**
- * @todo replace SDL_Rect with croped CelOutputBuffer
+ * @todo replace SDL_Rect with cropped CelOutputBuffer
  */
 int DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rect, uint16_t flags, int spacing, int lineHeight, bool drawTextCursor)
 {
