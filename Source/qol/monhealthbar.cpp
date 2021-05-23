@@ -95,14 +95,14 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 		UnsafeDrawVerticalLine(out, { xPos + width - border - 1, yPos + border + 1 }, borderHeight, borderColor);
 	}
 
-	int barLableY = yPos + 10 + (height - 11) / 2;
-	DrawString(out, mon.mName, { xPos - 1, barLableY + 1, width, height }, UIS_CENTER | UIS_BLACK);
+	int barLabelY = yPos + 10 + (height - 11) / 2;
+	DrawString(out, mon.mName, { xPos - 1, barLabelY + 1, width, height }, UIS_CENTER | UIS_BLACK);
 	uint16_t style = UIS_SILVER;
 	if (mon._uniqtype != 0)
 		style = UIS_GOLD;
 	else if (mon.leader != 0)
 		style = UIS_BLUE;
-	DrawString(out, mon.mName, { xPos, barLableY, width, height }, UIS_CENTER | style);
+	DrawString(out, mon.mName, { xPos, barLabelY, width, height }, UIS_CENTER | style);
 
 	if (mon._uniqtype != 0 || monstkills[mon.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
