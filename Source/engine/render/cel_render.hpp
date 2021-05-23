@@ -119,7 +119,7 @@ void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelS
 void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
- * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the target buffer at the given coordianates
+ * @brief Blit a solid colder shape one pixel larger than the given sprite shape, to the target buffer at the given coordianates
  * @param out Target buffer
  * @param col Color index from current palette
  * @param sx Target buffer coordinate

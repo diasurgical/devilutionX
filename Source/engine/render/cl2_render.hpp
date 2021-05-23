@@ -31,7 +31,7 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel);
 void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
- * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the given buffer at the given coordianates
+ * @brief Blit a solid colder shape one pixel larger than the given sprite shape, to the given buffer at the given coordianates
  * @param col Color index from current palette
  * @param out Output buffer
  * @param sx Output buffer coordinate

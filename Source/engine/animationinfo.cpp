@@ -122,7 +122,7 @@ void AnimationInfo::SetNewAnimation(byte *pData, int numberOfFrames, int delayLe
 
 		if ((flags & AnimationDistributionFlags::SkipsDelayOfLastFrame) == AnimationDistributionFlags::SkipsDelayOfLastFrame) {
 			// The logic for player/monster/... (not ProcessAnimation) only checks the frame not the delay.
-			// That means if a delay is specified, the last-frame is shown less then the other frames
+			// That means if a delay is specified, the last-frame is shown less than the other frames
 			// Example:
 			// If we have a animation with 3 frames and with a delay of 1 (ticksPerFrame = 2).
 			// The logic checks "if (frame == 3) { start_new_animation(); }"

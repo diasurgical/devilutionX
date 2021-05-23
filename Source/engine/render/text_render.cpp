@@ -261,7 +261,7 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size, int spaci
 			}
 		}
 
-		if (j == lineStart) { // Single word longer then width
+		if (j == lineStart) { // Single word longer than width
 			if (i == textLength)
 				break;
 			j = i;
