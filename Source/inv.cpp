@@ -963,7 +963,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 
 	if (il != ILOC_UNEQUIPABLE && il != ILOC_BELT && !plr[pnum].HoldItem._iStatFlag) {
 		done = false;
-		plr[pnum].Say(HeroSpeech::N13);
+		plr[pnum].Say(HeroSpeech::ICantUseThisYet);
 	}
 
 	if (!done)
@@ -1448,9 +1448,9 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 			if (automaticMove) {
 				if (!automaticallyMoved) {
 					if (CanBePlacedOnBelt(holdItem) || automaticallyUnequip) {
-						player.SaySpecific(HeroSpeech::N15);
+						player.SaySpecific(HeroSpeech::IHaveNoRoom);
 					} else {
-						player.SaySpecific(HeroSpeech::N37);
+						player.SaySpecific(HeroSpeech::ICantDoThat);
 					}
 				}
 
@@ -1540,7 +1540,7 @@ void CheckQuestItem(int pnum)
 	if (plr[pnum].HoldItem.IDidx == IDI_OPTAMULET && quests[Q_BLIND]._qactive == QUEST_ACTIVE)
 		quests[Q_BLIND]._qactive = QUEST_DONE;
 	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
-		plr[pnum].Say(HeroSpeech::N95, 10); // BUGFIX: Voice for this quest might be wrong in MP
+		plr[pnum].Say(HeroSpeech::NowThatsOneBigMushroom, 10); // BUGFIX: Voice for this quest might be wrong in MP
 		quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
@@ -1548,29 +1548,29 @@ void CheckQuestItem(int pnum)
 			quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 		}
 		if (quests[Q_ANVIL]._qlog) {
-			plr[myplr].Say(HeroSpeech::N89, 10);
+			plr[myplr].Say(HeroSpeech::INeedToGetThisToGriswold, 10);
 		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX && quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
-		plr[myplr].Say(HeroSpeech::N88, 30);
+		plr[myplr].Say(HeroSpeech::INeedToGetThisToLachdanan, 30);
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ROCK && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (quests[Q_ROCK]._qactive == QUEST_INIT) {
 			quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 		}
 		if (quests[Q_ROCK]._qlog) {
-			plr[myplr].Say(HeroSpeech::N87, 10);
+			plr[myplr].Say(HeroSpeech::ThisMustBeWhatGriswoldWanted, 10);
 		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL && quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
 		quests[Q_BLOOD]._qactive = QUEST_DONE;
-		plr[myplr].Say(HeroSpeech::N91, 20);
+		plr[myplr].Say(HeroSpeech::MayTheSpiritOfArkaineProtectMe, 20);
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM) {
 		quests[Q_GRAVE]._qlog = false;
 		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		quests[Q_GRAVE]._qvar1 = 1;
-		plr[myplr].Say(HeroSpeech::N79, 10);
+		plr[myplr].Say(HeroSpeech::UhHuh, 10);
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_NOTE1 || plr[pnum].HoldItem.IDidx == IDI_NOTE2 || plr[pnum].HoldItem.IDidx == IDI_NOTE3) {
 		int mask, idx, item_num;
@@ -1585,7 +1585,7 @@ void CheckQuestItem(int pnum)
 			mask |= 4;
 		if (mask == 7) {
 			int n1, n2, n3;
-			plr[myplr].Say(HeroSpeech::N46, 10);
+			plr[myplr].Say(HeroSpeech::JustWhatIWasLookingFor, 10);
 			switch (idx) {
 			case IDI_NOTE1:
 				plr[pnum].HasItem(IDI_NOTE2, &n2);
@@ -1713,7 +1713,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	}
 
 	if (pnum == myplr) {
-		plr[pnum].Say(HeroSpeech::N14);
+		plr[pnum].Say(HeroSpeech::ICantCarryAnymore);
 	}
 	plr[pnum].HoldItem = *item;
 	RespawnItem(item, true);
@@ -2189,11 +2189,11 @@ bool UseInvItem(int pnum, int cii)
 
 	switch (Item->IDidx) {
 	case IDI_MUSHROOM:
-		plr[pnum].Say(HeroSpeech::N95, 10);
+		plr[pnum].Say(HeroSpeech::NowThatsOneBigMushroom, 10);
 		return true;
 	case IDI_FUNGALTM:
 		PlaySFX(IS_IBOOK);
-		plr[pnum].Say(HeroSpeech::N29, 10);
+		plr[pnum].Say(HeroSpeech::ThatDidntDoAnything, 10);
 		return true;
 	}
 
@@ -2201,7 +2201,7 @@ bool UseInvItem(int pnum, int cii)
 		return false;
 
 	if (!Item->_iStatFlag) {
-		plr[pnum].Say(HeroSpeech::N13);
+		plr[pnum].Say(HeroSpeech::ICantUseThisYet);
 		return true;
 	}
 

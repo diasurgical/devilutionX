@@ -1725,7 +1725,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		return;
 	}
 
-	player.Say(HeroSpeech::N69);
+	player.Say(HeroSpeech::ArghClang);
 
 	drawhpflag = true;
 	if (player._pClass == HeroClass::Barbarian) {
@@ -1839,7 +1839,7 @@ StartPlayerKill(int pnum, int earflag)
 
 	diablolevel = gbIsMultiplayer && player.plrlevel == 16;
 
-	player.Say(HeroSpeech::N71);
+	player.Say(HeroSpeech::OofAh);
 
 	if (player._pgfxnum) {
 		player._pgfxnum = 0;
@@ -3813,12 +3813,12 @@ void CheckPlrSpell()
 
 	spell_id rspell = myPlayer._pRSpell;
 	if (rspell == SPL_INVALID) {
-		myPlayer.Say(HeroSpeech::N34);
+		myPlayer.Say(HeroSpeech::IDontHaveASpellReady);
 		return;
 	}
 
 	if (leveltype == DTYPE_TOWN && !spelldata[rspell].sTownSpell) {
-		myPlayer.Say(HeroSpeech::N27);
+		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}
 
@@ -3876,7 +3876,7 @@ void CheckPlrSpell()
 	}
 
 	if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-		myPlayer.Say(HeroSpeech::N35);
+		myPlayer.Say(HeroSpeech::NotEnoughMana);
 	}
 }
 
@@ -4280,16 +4280,16 @@ void PlayDungMsgs()
 	auto &myPlayer = plr[myplr];
 
 	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CATHEDRAL)) {
-		myPlayer.Say(HeroSpeech::N97, 40);
+		myPlayer.Say(HeroSpeech::TheSanctityOfThisPlaceHasBeenFouled, 40);
 		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DMSG_CATHEDRAL;
 	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CATACOMBS)) {
-		myPlayer.Say(HeroSpeech::N96, 40);
+		myPlayer.Say(HeroSpeech::TheSmellOfDeathSurroundsMe, 40);
 		myPlayer.pDungMsgs |= DMSG_CATACOMBS;
 	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CAVES)) {
-		myPlayer.Say(HeroSpeech::N98, 40);
+		myPlayer.Say(HeroSpeech::ItsHotDownHere, 40);
 		myPlayer.pDungMsgs |= DMSG_CAVES;
 	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_HELL)) {
-		myPlayer.Say(HeroSpeech::N99, 40);
+		myPlayer.Say(HeroSpeech::IMustBeGettingClose, 40);
 		myPlayer.pDungMsgs |= DMSG_HELL;
 	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_DIABLO)) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
@@ -4307,7 +4307,7 @@ void PlayDungMsgs()
 		sfxdnum = USFX_DEFILER3;
 		myPlayer.pDungMsgs2 |= 4;
 	} else if (currlevel == 21 && !myPlayer._pLvlVisited[21] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & 32)) {
-		myPlayer.Say(HeroSpeech::N92, 30);
+		myPlayer.Say(HeroSpeech::ThisIsAPlaceOfGreatPower, 30);
 		myPlayer.pDungMsgs |= 32;
 	} else {
 		sfxdelay = 0;

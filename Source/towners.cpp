@@ -376,7 +376,7 @@ void TalkToDeadguy(PlayerStruct &player, TownerStruct & /*deadguy*/)
 		return;
 
 	if (quests[Q_BUTCHER]._qvar1 == 1) {
-		player.SaySpecific(HeroSpeech::N8);
+		player.SaySpecific(HeroSpeech::YourDeathWillBeAvenged);
 		return;
 	}
 
@@ -597,7 +597,7 @@ void TalkToCow(PlayerStruct &player, TownerStruct &cow)
 	} else if (CowClicks >= 8 && !gbIsSpawn) {
 		CowClicks = 4;
 
-		static const HeroSpeech snSfx[3] = { HeroSpeech::N52, HeroSpeech::N49, HeroSpeech::N50 };
+		static const HeroSpeech snSfx[3] = { HeroSpeech::YepThatsACowAlright, HeroSpeech::ImNotThirsty, HeroSpeech::ImNoMilkmade };
 		player.SaySpecific(snSfx[CowMsg]);
 		CowMsg++;
 		if (CowMsg >= 3)
