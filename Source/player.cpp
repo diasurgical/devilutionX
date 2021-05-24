@@ -3767,37 +3767,6 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 
 	if (!endspace) {
 		path--;
-
-		switch (player.walkpath[path]) {
-		case WALK_NE:
-			yy++;
-			break;
-		case WALK_NW:
-			xx++;
-			break;
-		case WALK_SE:
-			xx--;
-			break;
-		case WALK_SW:
-			yy--;
-			break;
-		case WALK_N:
-			xx++;
-			yy++;
-			break;
-		case WALK_E:
-			xx--;
-			yy++;
-			break;
-		case WALK_S:
-			xx--;
-			yy--;
-			break;
-		case WALK_W:
-			xx++;
-			yy--;
-			break;
-		}
 	}
 
 	player.walkpath[path] = WALK_NONE;
