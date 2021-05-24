@@ -1222,7 +1222,7 @@ bool SolidLoc(int x, int y)
 	return nSolidTable[dPiece[x][y]];
 }
 
-bool PlrDirOK(int pnum, int dir)
+bool PlrDirOK(int pnum, Direction dir)
 {
 	bool isOk;
 
@@ -1231,7 +1231,7 @@ bool PlrDirOK(int pnum, int dir)
 	}
 	auto &player = plr[pnum];
 
-	Point position = player.position.tile + static_cast<Direction>(dir);
+	Point position = player.position.tile + dir;
 	if (position.x < 0 || !dPiece[position.x][position.y] || !PosOkPlayer(pnum, position.x, position.y)) {
 		return false;
 	}
