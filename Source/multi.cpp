@@ -497,7 +497,7 @@ void multi_process_network_packets()
 					if (dx > 1 || dy > 1) {
 						plr[dwID].position.future = plr[dwID].position.tile;
 					}
-					MakePlrPath(dwID, pkt->targx, pkt->targy, true);
+					MakePlrPath(dwID, { pkt->targx, pkt->targy }, true);
 				} else {
 					plr[dwID].position.tile = { pkt->px, pkt->py };
 					plr[dwID].position.future = { pkt->px, pkt->py };

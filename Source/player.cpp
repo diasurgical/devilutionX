@@ -3173,12 +3173,12 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 
 	if (player.destAction == ACTION_ATTACKMON) {
 		i = player.destParam1;
-		MakePlrPath(pnum, monster[i].position.future.x, monster[i].position.future.y, false);
+		MakePlrPath(pnum, monster[i].position.future, false);
 	}
 
 	if (player.destAction == ACTION_ATTACKPLR) {
 		auto &target = plr[player.destParam1];
-		MakePlrPath(pnum, target.position.future.x, target.position.future.y, false);
+		MakePlrPath(pnum, target.position.future, false);
 	}
 
 	Direction d;
@@ -3747,7 +3747,7 @@ bool PosOkPlayer(int pnum, int x, int y)
 	return true;
 }
 
-void MakePlrPath(int pnum, int xx, int yy, bool endspace)
+void MakePlrPath(int pnum, Point targetPosition, bool endspace)
 {
 	int path;
 
@@ -3756,11 +3756,11 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 	}
 	auto &player = plr[pnum];
 
-	if (player.position.future.x == xx && player.position.future.y == yy) {
+	if (player.position.future == targetPosition) {
 		return;
 	}
 
-	path = FindPath(PosOkPlayer, pnum, player.position.future.x, player.position.future.y, xx, yy, player.walkpath);
+	path = FindPath(PosOkPlayer, pnum, player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
 	if (!path) {
 		return;
 	}

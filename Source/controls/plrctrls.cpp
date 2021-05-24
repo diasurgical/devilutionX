@@ -1540,13 +1540,13 @@ void PerformSecondaryAction()
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
 	} else if (pcursmissile != -1) {
-		MakePlrPath(myplr, missile[pcursmissile].position.tile.x, missile[pcursmissile].position.tile.y, true);
+		MakePlrPath(myplr, missile[pcursmissile].position.tile, true);
 		plr[myplr].destAction = ACTION_WALK;
 	} else if (pcurstrig != -1) {
-		MakePlrPath(myplr, trigs[pcurstrig].position.x, trigs[pcurstrig].position.y, true);
+		MakePlrPath(myplr, trigs[pcurstrig].position, true);
 		plr[myplr].destAction = ACTION_WALK;
 	} else if (pcursquest != -1) {
-		MakePlrPath(myplr, quests[pcursquest].position.x, quests[pcursquest].position.y, true);
+		MakePlrPath(myplr, quests[pcursquest].position, true);
 		plr[myplr].destAction = ACTION_WALK;
 	}
 }

@@ -451,7 +451,7 @@ void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
 void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(int pnum, int x, int y);
-void MakePlrPath(int pnum, int xx, int yy, bool endspace);
+void MakePlrPath(int pnum, Point targetPosition, bool endspace);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
