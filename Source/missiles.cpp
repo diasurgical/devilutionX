@@ -470,7 +470,7 @@ void MoveMissilePos(int i)
 	}
 	x = missile[i].position.tile.x + dx;
 	y = missile[i].position.tile.y + dy;
-	if (PosOkMonst(missile[i]._misource, x, y)) {
+	if (PosOkMonst(missile[i]._misource, { x, y })) {
 		missile[i].position.tile.x += dx;
 		missile[i].position.tile.y += dy;
 		missile[i].position.offset.x += (dy * 32) - (dx * 32);
@@ -1992,7 +1992,7 @@ void GetVileMissPos(int mi, int dx, int dy)
 			yy = j + dy;
 			for (i = -k; i <= k; i++) {
 				xx = i + dx;
-				if (PosOkPlayer(myplr, xx, yy)) {
+				if (PosOkPlayer(myplr, { xx, yy })) {
 					missile[mi].position.tile = { xx, yy };
 					return;
 				}
@@ -2039,7 +2039,7 @@ void AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mi
 		// BUGFIX: should only run magic circle check if dObject[dx][dy] is non-zero.
 		if (object[pn]._otype == OBJ_MCIRCLE1 || object[pn]._otype == OBJ_MCIRCLE2) {
 			missile[mi].position.tile = { dx, dy };
-			if (!PosOkPlayer(myplr, dx, dy))
+			if (!PosOkPlayer(myplr, { dx, dy }))
 				GetVileMissPos(mi, dx, dy);
 		}
 	}
@@ -4620,7 +4620,7 @@ void MI_Rhino(int i)
 	GetMissilePos(i);
 	omx = missile[i].position.tile.x;
 	omy = missile[i].position.tile.y;
-	if (!PosOkMonst(monst, missile[i].position.tile.x, missile[i].position.tile.y) || (monster[monst]._mAi == AI_SNAKE && !PosOkMonst(monst, mix2, miy2))) {
+	if (!PosOkMonst(monst, missile[i].position.tile) || (monster[monst]._mAi == AI_SNAKE && !PosOkMonst(monst, { mix2, miy2 }))) {
 		MissToMonst(i, mix, miy);
 		missile[i]._miDelFlag = true;
 		return;
@@ -4655,7 +4655,7 @@ void MI_Fireman(int i)
 		cx = monster[enemy].position.tile.x;
 		cy = monster[enemy].position.tile.y;
 	}
-	if ((bx != ax || by != ay) && ((missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4)) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, ax, ay)) {
+	if ((bx != ax || by != ay) && ((missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4)) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, { ax, ay })) {
 		MissToMonst(i, ax, ay);
 		missile[i]._miDelFlag = true;
 	} else if ((monster[src]._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
@@ -4663,7 +4663,7 @@ void MI_Fireman(int i)
 	} else {
 		j = dMonster[bx][by];
 	}
-	if (!PosOkMissile(0, bx, by) || (j > 0 && !(missile[i]._miVar1 & 1))) {
+	if (!PosOkMissile(0, { bx, by }) || (j > 0 && !(missile[i]._miVar1 & 1))) {
 		missile[i].position.velocity.x *= -1;
 		missile[i].position.velocity.y *= -1;
 		missile[i]._mimfnum = opposite[missile[i]._mimfnum];

@@ -2190,7 +2190,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			StartPlrHit(pnum, 0, true);
 
 		Point newPosition = plr[pnum].position.tile + monster[i]._mdir;
-		if (PosOkPlayer(pnum, newPosition.x, newPosition.y)) {
+		if (PosOkPlayer(pnum, newPosition)) {
 			plr[pnum].position.tile = newPosition;
 			FixPlayerLocation(pnum, plr[pnum]._pdir);
 			FixPlrWalkTags(pnum);
@@ -2493,7 +2493,7 @@ void M_Teleport(int i)
 				x = _mx + rx * j;
 				y = _my + ry * k;
 				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && x != Monst->position.tile.x && y != Monst->position.tile.y) {
-					if (PosOkMonst(i, x, y))
+					if (PosOkMonst(i, { x, y }))
 						done = true;
 				}
 			}
@@ -2813,7 +2813,7 @@ bool M_CallWalk(int i, Direction md)
 bool M_PathWalk(int i)
 {
 	int8_t path[MAX_PATH_LENGTH];
-	bool (*Check)(int, int, int);
+	bool (*Check)(int, Point);
 
 	/** Maps from walking path step to facing direction. */
 	const Direction plr2monst[9] = { DIR_S, DIR_NE, DIR_NW, DIR_SE, DIR_SW, DIR_N, DIR_E, DIR_S, DIR_W };
@@ -3975,7 +3975,7 @@ void MAI_SkelKing(int i)
 			    && ((dist >= 3 && v < 4 * Monst->_mint + 35) || v < 6)
 			    && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
 				Point newPosition = Monst->position.tile + md;
-				if (PosOkMonst(i, newPosition.x, newPosition.y) && nummonsters < MAXMONSTERS) {
+				if (PosOkMonst(i, newPosition) && nummonsters < MAXMONSTERS) {
 					M_SpawnSkel(newPosition.x, newPosition.y, md);
 					M_StartSpStand(i, md);
 				}
@@ -4113,7 +4113,7 @@ void MAI_HorkDemon(int i)
 	if (Monst->_mgoal == 1) {
 		if ((abs(mx) >= 3 || abs(my) >= 3) && v < 2 * Monst->_mint + 43) {
 			Point position = Monst->position.tile + Monst->_mdir;
-			if (PosOkMonst(i, position.x, position.y) && nummonsters < MAXMONSTERS) {
+			if (PosOkMonst(i, position) && nummonsters < MAXMONSTERS) {
 				M_StartRSpAttack(i, MIS_HORKDMN, 0);
 			}
 		} else if (abs(mx) < 2 && abs(my) < 2) {
@@ -4699,7 +4699,7 @@ bool DirOK(int i, Direction mdir)
 	commitment((DWORD)i < MAXMONSTERS, i);
 	Point position = monster[i].position.tile;
 	Point futurePosition = position + mdir;
-	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !PosOkMonst(i, futurePosition.x, futurePosition.y))
+	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !PosOkMonst(i, futurePosition))
 		return false;
 	if (mdir == DIR_E) {
 		if (SolidLoc(position + DIR_SE) || dFlags[position.x + 1][position.y] & BFLAG_MONSTLR)
@@ -4744,14 +4744,14 @@ bool DirOK(int i, Direction mdir)
 	return mcount == monster[i].packsize;
 }
 
-bool PosOkMissile(int entity, int x, int y)
+bool PosOkMissile(int entity, Point position)
 {
-	return !nMissileTable[dPiece[x][y]] && !(dFlags[x][y] & BFLAG_MONSTLR);
+	return !nMissileTable[dPiece[position.x][position.y]] && !(dFlags[position.x][position.y] & BFLAG_MONSTLR);
 }
 
-bool CheckNoSolid(int entity, int x, int y)
+bool CheckNoSolid(int entity, Point position)
 {
-	return !nSolidTable[dPiece[x][y]];
+	return !nSolidTable[dPiece[position.x][position.y]];
 }
 
 bool LineClearSolid(int x1, int y1, int x2, int y2)
@@ -4764,7 +4764,7 @@ bool LineClearMissile(int x1, int y1, int x2, int y2)
 	return LineClear(PosOkMissile, 0, x1, y1, x2, y2);
 }
 
-bool LineClear(bool (*Clear)(int, int, int), int entity, int x1, int y1, int x2, int y2)
+bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, int y2)
 {
 	int dx, dy;
 	int d;
@@ -4807,7 +4807,7 @@ bool LineClear(bool (*Clear)(int, int, int), int entity, int x1, int y1, int x2,
 				y1 += yincD;
 			}
 			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(entity, x1, y1));
+			done = ((x1 != xorg || y1 != yorg) && !Clear(entity, { x1, y1 }));
 		}
 	} else {
 		if (dy < 0) {
@@ -4839,7 +4839,7 @@ bool LineClear(bool (*Clear)(int, int, int), int entity, int x1, int y1, int x2,
 				x1 += xincD;
 			}
 			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(entity, x1, y1));
+			done = ((y1 != yorg || x1 != xorg) && !Clear(entity, { x1, y1 }));
 		}
 	}
 	return x1 == x2 && y1 == y2;
@@ -5109,7 +5109,7 @@ void MissToMonst(int i, int x, int y)
 					if (plr[pnum]._pmode != PM_GOTHIT && plr[pnum]._pmode != PM_DEATH)
 						StartPlrHit(pnum, 0, true);
 					newPosition = oldPosition + Monst->_mdir;
-					if (PosOkPlayer(pnum, newPosition.x, newPosition.y)) {
+					if (PosOkPlayer(pnum, newPosition)) {
 						plr[pnum].position.tile = newPosition;
 						FixPlayerLocation(pnum, plr[pnum]._pdir);
 						FixPlrWalkTags(pnum);
@@ -5125,7 +5125,7 @@ void MissToMonst(int i, int x, int y)
 				M_TryM2MHit(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, Monst->mMinDamage2, Monst->mMaxDamage2);
 				if (Monst->MType->mtype < MT_NSNAKE || Monst->MType->mtype > MT_GSNAKE) {
 					newPosition = oldPosition + Monst->_mdir;
-					if (PosOkMonst(dMonster[oldPosition.x][oldPosition.y] - 1, newPosition.x, newPosition.y)) {
+					if (PosOkMonst(dMonster[oldPosition.x][oldPosition.y] - 1, newPosition)) {
 						m = dMonster[oldPosition.x][oldPosition.y];
 						dMonster[newPosition.x][newPosition.y] = m;
 						dMonster[oldPosition.x][oldPosition.y] = 0;
@@ -5139,19 +5139,19 @@ void MissToMonst(int i, int x, int y)
 	}
 }
 
-bool PosOkMonst(int i, int x, int y)
+bool PosOkMonst(int i, Point position)
 {
 	int oi;
 	bool ret;
 
-	ret = !SolidLoc({ x, y }) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
-	if (ret && dObject[x][y] != 0) {
-		oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
+	ret = !SolidLoc(position) && dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0;
+	if (ret && dObject[position.x][position.y] != 0) {
+		oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
 		if (object[oi]._oSolidFlag)
 			ret = false;
 	}
 	if (ret)
-		ret = monster_posok(i, x, y);
+		ret = monster_posok(i, position.x, position.y);
 
 	return ret;
 }
@@ -5196,24 +5196,24 @@ bool monster_posok(int i, int x, int y)
 	return ret;
 }
 
-bool PosOkMonst2(int i, int x, int y)
+bool PosOkMonst2(int i, Point position)
 {
 	int oi;
 	bool ret;
 
-	ret = !SolidLoc({ x, y });
-	if (ret && dObject[x][y] != 0) {
-		oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
+	ret = !SolidLoc(position);
+	if (ret && dObject[position.x][position.y] != 0) {
+		oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
 		if (object[oi]._oSolidFlag)
 			ret = false;
 	}
 	if (ret)
-		ret = monster_posok(i, x, y);
+		ret = monster_posok(i, position.x, position.y);
 
 	return ret;
 }
 
-bool PosOkMonst3(int i, int x, int y)
+bool PosOkMonst3(int i, Point position)
 {
 	int oi, objtype;
 	bool ret, isdoor;
@@ -5221,8 +5221,8 @@ bool PosOkMonst3(int i, int x, int y)
 	ret = true;
 	isdoor = false;
 
-	if (ret && dObject[x][y] != 0) {
-		oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
+	if (ret && dObject[position.x][position.y] != 0) {
+		oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
 		objtype = object[oi]._otype;
 		isdoor = objtype == OBJ_L1LDOOR || objtype == OBJ_L1RDOOR
 		    || objtype == OBJ_L2LDOOR || objtype == OBJ_L2RDOOR
@@ -5232,10 +5232,10 @@ bool PosOkMonst3(int i, int x, int y)
 		}
 	}
 	if (ret) {
-		ret = (!SolidLoc({ x, y }) || isdoor) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
+		ret = (!SolidLoc(position) || isdoor) && dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0;
 	}
 	if (ret)
-		ret = monster_posok(i, x, y);
+		ret = monster_posok(i, position.x, position.y);
 
 	return ret;
 }
@@ -5298,7 +5298,7 @@ bool SpawnSkeleton(int ii, int x, int y)
 	if (ii == -1)
 		return false;
 
-	if (PosOkMonst(-1, x, y)) {
+	if (PosOkMonst(-1, { x, y })) {
 		Direction dir = GetDirection({ x, y }, { x, y }); // TODO useless calculation
 		ActivateSpawn(ii, x, y, dir);
 		return true;
@@ -5309,7 +5309,7 @@ bool SpawnSkeleton(int ii, int x, int y)
 	for (j = y - 1; j <= y + 1; j++) {
 		xx = 0;
 		for (k = x - 1; k <= x + 1; k++) {
-			monstok[xx][yy] = PosOkMonst(-1, k, j);
+			monstok[xx][yy] = PosOkMonst(-1, { k, j });
 			savail |= monstok[xx][yy];
 			xx++;
 		}

@@ -275,7 +275,7 @@ void FindMeleeTarget()
 				continue;
 			}
 
-			if (!PosOkPlayer(myplr, dx, dy)) {
+			if (!PosOkPlayer(myplr, { dx, dy })) {
 				visited[dx][dy] = true;
 
 				if (dMonster[dx][dy] != 0) {
@@ -1082,7 +1082,7 @@ bool IsPathBlocked(int x, int y, int dir)
 	if (!nSolidTable[dPiece[d1x][d1y]] && !nSolidTable[dPiece[d2x][d2y]])
 		return false;
 
-	return !PosOkPlayer(myplr, d1x, d1y) && !PosOkPlayer(myplr, d2x, d2y);
+	return !PosOkPlayer(myplr, { d1x, d1y }) && !PosOkPlayer(myplr, { d2x, d2y });
 }
 
 bool CanChangeDirection(const PlayerStruct &player)
@@ -1118,7 +1118,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	if (CanChangeDirection(player))
 		player._pdir = pdir;
 
-	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, pdir))
+	if (PosOkPlayer(playerId, { dx, dy }) && IsPathBlocked(x, y, pdir))
 		return; // Don't start backtrack around obstacles
 
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, { dx, dy });
