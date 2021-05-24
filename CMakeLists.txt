@@ -275,12 +275,7 @@ add_library(smacker STATIC
   3rdParty/libsmacker/smacker.c)
 target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
-add_library(Radon STATIC
-  3rdParty/Radon/Radon/source/File.cpp
-  3rdParty/Radon/Radon/source/Key.cpp
-  3rdParty/Radon/Radon/source/Named.cpp
-  3rdParty/Radon/Radon/source/Section.cpp)
-target_include_directories(Radon PUBLIC 3rdParty/Radon/Radon/include)
+add_subdirectory(3rdParty/simpleini)
 
 add_library(StormLib STATIC
   3rdParty/StormLib/src/FileStream.cpp
@@ -597,7 +592,7 @@ target_link_libraries(libdevilutionx PUBLIC
   PKWare
   StormLib
   smacker
-  Radon)
+  simpleini)
 
 if(NOT NONET)
   if(NOT DISABLE_TCP)

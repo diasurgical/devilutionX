@@ -1,5 +1,3 @@
-#include "storm/storm.h"
-
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <cstddef>
@@ -7,8 +5,10 @@
 #include <mutex>
 #include <string>
 
-#include "Radon.hpp"
+#define SI_SUPPORT_IOSTREAMS
+#include <SimpleIni.h>
 
+#include "storm/storm.h"
 #include "DiabloUI/diabloui.h"
 #include "options.h"
 #include "utils/file_util.h"
@@ -37,6 +37,27 @@ std::string *SBasePath = nullptr;
 
 SdlMutex Mutex;
 
+std::string getIniPath()
+{
+	auto path = paths::ConfigPath() + std::string("diablo.ini");
+	return path;
+}
+
+CSimpleIni &getIni()
+{
+	static CSimpleIni ini;
+	static bool isIniLoaded = false;
+	if (!isIniLoaded) {
+		auto path = getIniPath();
+		auto stream = CreateFileStream(path.c_str(), std::fstream::in | std::fstream::binary);
+		ini.SetSpaces(false);
+		if (stream != nullptr)
+			ini.LoadData(*stream);
+		isIniLoaded = true;
+	}
+	return ini;
+}
+
 } // namespace
 
 bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh)
@@ -49,12 +70,6 @@ bool SFileCloseFileThreadSafe(HANDLE hFile)
 {
 	const std::lock_guard<SdlMutex> lock(Mutex);
 	return SFileCloseFile(hFile);
-}
-
-radon::File &getIni()
-{
-	static radon::File ini(paths::ConfigPath() + "diablo.ini");
-	return ini;
 }
 
 // Converts ASCII characters to lowercase
@@ -159,68 +174,48 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
 {
-	radon::Section *section = getIni().getSection(sectionName);
-	if (section == nullptr)
+	const auto value = getIni().GetValue(sectionName, keyName);
+	if (value == nullptr)
 		return defaultValue;
 
-	radon::Key *key = section->getKey(keyName);
-	if (key == nullptr)
-		return defaultValue;
-
-	return key->getFloatValue();
+	return atof(value);
 }
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
 {
-	strncpy(string, defaultString, stringSize);
+	auto value = getIni().GetValue(sectionName, keyName);
 
-	radon::Section *section = getIni().getSection(sectionName);
-	if (section == nullptr)
+	if (value == nullptr) {
+		strncpy(string, defaultString, stringSize);
 		return false;
+	}
 
-	radon::Key *key = section->getKey(keyName);
-	if (key == nullptr)
-		return false;
-
-	std::string value = key->getStringValue();
-
-	if (string != nullptr)
-		strncpy(string, value.c_str(), stringSize);
+	strncpy(string, value, stringSize);
 
 	return true;
 }
 
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len)
 {
-	radon::File &ini = getIni();
-
-	radon::Section *section = ini.getSection(sectionName);
-	if (section == nullptr) {
-		ini.addSection(sectionName);
-		section = ini.getSection(sectionName);
-	}
+	auto &ini = getIni();
 
 	std::string stringValue(value, len ? len : strlen(value));
 
-	radon::Key *key = section->getKey(keyName);
-	if (key == nullptr) {
-		section->addKey(radon::Key(keyName, stringValue));
-	} else {
-		key->setValue(stringValue);
-	}
+	ini.SetValue(sectionName, keyName, stringValue.c_str());
 }
 
 void SaveIni()
 {
-	getIni().saveToFile();
+	auto iniPath = getIniPath();
+	auto stream = CreateFileStream(iniPath.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
+	getIni().Save(*stream, true);
 }
 
 int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 {
 	char string[10];
-	if (!getIniValue(keyname, valuename, string, sizeof(string))) {
+	if (!getIniValue(keyname, valuename, string, sizeof(string)))
 		return defaultValue;
-	}
 
 	return strtol(string, nullptr, sizeof(string));
 }
