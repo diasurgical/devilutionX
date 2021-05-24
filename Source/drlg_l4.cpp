@@ -1758,7 +1758,7 @@ void LoadL4Dungeon(const char *path, int vx, int vy)
 	DRLG_L4Pass3();
 	DRLG_Init_Globals();
 
-	SetMapMonsters(dunData.get(), 0, 0);
+	SetMapMonsters(dunData.get(), { 0, 0 });
 	SetMapObjects(dunData.get(), 0, 0);
 }
 
