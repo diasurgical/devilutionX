@@ -468,14 +468,14 @@ void ClearMVars(int i)
 	monster[i].actionFrame = 0;
 }
 
-void InitMonster(int i, Direction rd, int mtype, int x, int y)
+void InitMonster(int i, Direction rd, int mtype, Point position)
 {
 	CMonster *monst = &Monsters[mtype];
 
 	monster[i]._mdir = rd;
-	monster[i].position.tile = { x, y };
-	monster[i].position.future = { x, y };
-	monster[i].position.old = { x, y };
+	monster[i].position.tile = position;
+	monster[i].position.future = position;
+	monster[i].position.old = position;
 	monster[i]._mMTidx = mtype;
 	monster[i]._mmode = MM_STAND;
 	monster[i].mName = _(monst->MData->mName);
@@ -659,7 +659,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	dMonster[x][y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
-	InitMonster(i, rd, mtype, x, y);
+	InitMonster(i, rd, mtype, { x, y });
 }
 
 void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
@@ -1229,7 +1229,7 @@ int AddMonster(int x, int y, Direction dir, int mtype, bool InMap)
 		int i = monstactive[nummonsters++];
 		if (InMap)
 			dMonster[x][y] = i + 1;
-		InitMonster(i, dir, mtype, x, y);
+		InitMonster(i, dir, mtype, { x, y });
 		return i;
 	}
 
