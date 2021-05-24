@@ -4539,7 +4539,7 @@ void MI_Teleport(int i)
 		plr[id].position.tile = { missile[i].position.tile.x, missile[i].position.tile.y };
 		plr[id].position.future = plr[id].position.tile;
 		plr[id].position.old = plr[id].position.tile;
-		PlrDoTrans(plr[id].position.tile.x, plr[id].position.tile.y);
+		PlrDoTrans(plr[id].position.tile);
 		missile[i]._miVar1 = 1;
 		dPlayer[plr[id].position.tile.x][plr[id].position.tile.y] = id + 1;
 		if (leveltype != DTYPE_TOWN) {

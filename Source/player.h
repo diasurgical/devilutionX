@@ -431,7 +431,7 @@ void InitPlayer(int pnum, bool FirstTime);
 void InitMultiView();
 bool SolidLoc(int x, int y);
 void PlrClrTrans(Point position);
-void PlrDoTrans(int x, int y);
+void PlrDoTrans(Point position);
 void SetPlayerOld(PlayerStruct &player);
 void FixPlayerLocation(int pnum, Direction bDir);
 void StartStand(int pnum, Direction dir);

@@ -1259,15 +1259,15 @@ void PlrClrTrans(Point position)
 	}
 }
 
-void PlrDoTrans(int x, int y)
+void PlrDoTrans(Point position)
 {
 	int i, j;
 
 	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
 		TransList[1] = true;
 	} else {
-		for (i = y - 1; i <= y + 1; i++) {
-			for (j = x - 1; j <= x + 1; j++) {
+		for (i = position.y - 1; i <= position.y + 1; i++) {
+			for (j = position.x - 1; j <= position.x + 1; j++) {
 				if (!nSolidTable[dPiece[j][i]] && dTransVal[j][i]) {
 					TransList[dTransVal[j][i]] = true;
 				}
