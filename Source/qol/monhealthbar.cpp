@@ -78,7 +78,7 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 	const int maxLife = std::max(mon._mmaxhp, mon._mhitpoints);
 
 	DrawArt(out, xPos, yPos, &healthBox);
-	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
+	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2), 0);
 	int barProgress = (width * mon._mhitpoints) / maxLife;
 	if (barProgress) {
 		DrawArt(out, xPos + border + 1, yPos + border + 1, &health, 0, barProgress, height - (border * 2) - 2);

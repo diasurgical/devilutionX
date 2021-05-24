@@ -99,6 +99,8 @@ bool gbGameLoopStartup;
 bool gbRunGame;
 bool gbRunGameResult;
 bool zoomflag;
+bool drawitems_town = false;
+bool drawitems_dungeon = true;
 /** Enable updating of player character, set to false once Diablo dies */
 bool gbProcessPlayers;
 bool gbLoadGame;
@@ -536,6 +538,7 @@ static void SaveOptions()
 	setIniInt("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
 	setIniInt("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
 	setIniInt("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
+	setIniInt("Game", "Highlight Items", sgOptions.Gameplay.bHighlightItems);
 	setIniInt("Game", "Auto Equip Weapons", sgOptions.Gameplay.bAutoEquipWeapons);
 	setIniInt("Game", "Auto Equip Armor", sgOptions.Gameplay.bAutoEquipArmor);
 	setIniInt("Game", "Auto Equip Helms", sgOptions.Gameplay.bAutoEquipHelms);
@@ -621,6 +624,7 @@ static void LoadOptions()
 	sgOptions.Gameplay.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
 	sgOptions.Gameplay.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
 	sgOptions.Gameplay.bAdriaRefillsMana = getIniBool("Game", "Adria Refills Mana", false);
+	sgOptions.Gameplay.bHighlightItems = getIniBool("Game", "Highlight Items", true);
 	sgOptions.Gameplay.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons", true);
 	sgOptions.Gameplay.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor", false);
 	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms", false);
@@ -1138,6 +1142,24 @@ static void PressKey(int vkey)
 {
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
+	}
+
+	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU) {
+
+		if (leveltype == DTYPE_TOWN) {
+			if (drawitems_town == false) {
+				drawitems_town = true;
+			}
+			else {
+				drawitems_town = false;
+			}
+		} else {
+			if (drawitems_dungeon == false) {
+				drawitems_dungeon = true;
+			} else {
+				drawitems_dungeon = false;
+			}
+		}
 	}
 
 	if (deathflag) {

@@ -33,6 +33,8 @@ extern int MouseY;
 extern bool gbRunGame;
 extern bool gbRunGameResult;
 extern bool zoomflag;
+extern bool drawitems_town;
+extern bool drawitems_dungeon;
 extern bool gbProcessPlayers;
 extern bool gbLoadGame;
 extern bool cineflag;

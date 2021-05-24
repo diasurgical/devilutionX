@@ -489,7 +489,7 @@ void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, 
  * @param width Rectangle width
  * @param height Rectangle height
  */
-void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height);
+void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height, int color);
 
 /**
  * @brief Calculate the best fit direction between two points

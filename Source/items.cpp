@@ -3703,7 +3703,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 static void DrawUTextBack(const CelOutputBuffer &out)
 {
 	CelDrawTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327, *pSTextBoxCels, 1);
-	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
+	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297, 0);
 }
 
 static void DrawULine(const CelOutputBuffer &out, int y)

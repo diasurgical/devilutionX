@@ -127,7 +127,7 @@ void DrawDiabloMsg(const CelOutputBuffer &out)
 		sy += 12;
 	}
 
-	DrawHalfTransparentRectTo(out, PANEL_X + 104, DIALOG_Y - 8, 432, 54);
+	DrawHalfTransparentRectTo(out, PANEL_X + 104, DIALOG_Y - 8, 432, 54, 0);
 
 	strcpy(tempstr, _(MsgStrings[msgflag]));
 	DrawString(out, tempstr, { PANEL_X + 101, DIALOG_Y + 24, 442, 0 }, UIS_CENTER);

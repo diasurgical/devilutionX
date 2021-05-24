@@ -76,7 +76,7 @@ const char *const TownerNames[] = {
 void DrawSTextBack(const CelOutputBuffer &out)
 {
 	CelDrawTo(out, PANEL_X + 320 + 24, 327 + UI_OFFSET_Y, *pSTextBoxCels, 1);
-	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297);
+	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297, 0);
 }
 
 void DrawSSlider(const CelOutputBuffer &out, int y1, int y2)

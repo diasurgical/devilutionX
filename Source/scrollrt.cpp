@@ -28,6 +28,8 @@
 #include "stores.h"
 #include "towners.h"
 #include "utils/log.hpp"
+#include <map>
+#include "options.h"
 
 #ifdef _DEBUG
 #include "debug.h"
@@ -1244,6 +1246,146 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 // DevilutionX extension.
 extern void DrawControllerModifierHints(const CelOutputBuffer &out);
 
+void HighlightItemsNameOnMap(CelOutputBuffer out)
+{
+	if (leveltype == DTYPE_TOWN) {
+		if (drawitems_town == false) return;
+	} else {
+		if (drawitems_dungeon == false) return;
+	}
+	// items on ground name highlighting (Qndel)
+	class itemLabel
+	{
+	public:
+		int itemID;
+		int x;
+		int y;
+		int width;
+		int height;
+		int magicLevel;
+		std::string text;
+		itemLabel(int x, int y, int width, int height, int itemID, int q2, std::string text):
+			itemID(itemID), x(x), y(y), width(width), height(height), magicLevel(q2), text(text) {}
+	};
+
+	char textOnGround[256];
+	std::vector<itemLabel> q;
+
+	for (int i = 0; i < numitems; i++) {
+		ItemStruct& item_local = items[itemactive[i]];
+		if (item_local._itype == ITYPE_GOLD) {
+			sprintf(textOnGround, "%i gold", item_local._ivalue);
+		}
+		else {
+			sprintf(textOnGround, "%s", item_local._iIdentified ? item_local._iIName : item_local._iName);
+		}
+
+		int walkStandX = ScrollInfo.offset.x;
+		int walkStandY = ScrollInfo.offset.y;
+		if (plr[myplr]._pmode == PM_WALK2 && ScrollInfo._sdir == SDIR_SE) {
+			walkStandX += 32;
+			walkStandY += 16;
+		} else if (plr[myplr]._pmode == PM_WALK2 && ScrollInfo._sdir == SDIR_S) {
+			walkStandY += 32;
+		}
+
+		else if(plr[myplr]._pmode == PM_WALK2 && ScrollInfo._sdir == SDIR_SW) {
+			walkStandX += -32;
+			walkStandY += 16;
+		}
+
+		int row = item_local.position.x - plr[myplr].position.tile.x;
+		int col = item_local.position.y - plr[myplr].position.tile.y;
+		int x = (row - col) * TILE_WIDTH  / 2 + (200 * (walkStandX) / 100 >> 1);
+		int y = (row + col) * TILE_HEIGHT / 2 + (200 * (walkStandY) / 100 >> 1);
+
+
+		// add to drawing queue
+		const int labelWidth = GetLineWidth(textOnGround, GameFontSmall, 1, nullptr);
+		const int &id = itemactive[i];
+		const int &mag = item_local._iMagical;
+		const std::string &text = std::string(textOnGround);
+		q.push_back(itemLabel(x - labelWidth / 2, y, labelWidth, 13, id, mag, text));
+	}
+
+	const int borderX = 5;
+	for (unsigned int item1 = 0; item1 < q.size(); ++item1) {
+		std::map<int, bool> backtrace;
+		bool canShow = false;
+		while (!canShow) {
+			canShow = true;
+			for (unsigned int item2 = 0; item2 < item1; ++item2) {
+				if (abs(q[item2].y - q[item1].y) >= q[item1].height + 2) {
+					continue;
+				}
+				if (q[item2].x >= q[item1].x && q[item2].x - q[item1].x < q[item1].width + borderX) {
+					canShow = false;
+					int newpos = q[item2].x - q[item1].width - borderX;
+					if (backtrace.find(newpos) == backtrace.end()) {
+						q[item1].x = newpos;
+						backtrace[newpos] = 1;
+					} else {
+						newpos = q[item2].x + q[item2].width + borderX;
+						q[item1].x = newpos;
+						backtrace[newpos] = 1;
+					}
+				} else if (q[item2].x < q[item1].x && q[item1].x - q[item2].x < q[item2].width + borderX) {
+					canShow = false;
+					int newpos = q[item2].x + q[item2].width + borderX;
+					if (backtrace.find(newpos) == backtrace.end()) {
+						q[item1].x = newpos;
+						backtrace[newpos] = 1;
+					} else {
+						newpos = q[item2].x - q[item1].width - borderX;
+						q[item1].x = newpos;
+						backtrace[newpos] = 1;
+					}
+				}
+			}
+		}
+	}
+
+	for (unsigned int i = 0; i < q.size(); ++i) {
+		itemLabel &t = q[i];
+
+		int sx = t.x + (gnScreenWidth) / 2;
+		int sy = t.y + (PANEL_TOP) / 2  - 16;
+
+		if (sx < 0 || sx > gnScreenWidth || sy < 0 || sy > gnScreenWidth) {
+			continue;
+		}
+
+		if ((chrflag || questlog) && sx < SPANEL_WIDTH && sy < SPANEL_HEIGHT) {
+			continue;
+		}
+
+		if ((invflag || sbookflag) && sx + t.width > gnScreenWidth - SPANEL_WIDTH  && sy < SPANEL_HEIGHT) {
+			continue;
+		}
+
+		int bgcolor = 0;
+		// highlight label if item is under cursor:
+		if (pcursitem == t.itemID) {
+			bgcolor = 133;
+		}
+
+		int txt_color = UIS_SILVER;
+		if (t.magicLevel == ITEM_QUALITY_MAGIC) {
+			txt_color = UIS_BLUE;
+		} else if (t.magicLevel == ITEM_QUALITY_UNIQUE) {
+			txt_color = UIS_GOLD;
+		}
+
+		if ((sx + t.width < gnScreenWidth) &&
+			(sy + t.height < gnScreenHeight) &&
+			(sy - t.height - t.height > 0))
+		{
+			DrawHalfTransparentRectTo(out, sx, sy - t.height + 1, t.width + 2, t.height, bgcolor);
+			DrawString(out, (char*)(t.text.c_str()), { sx + 1, sy, t.width, t.height }, txt_color, 1, -1, false);
+		}
+	}
+}
+
 void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 {
 	DrawGame(out, StartX, StartY);
@@ -1261,6 +1403,10 @@ void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 	}
 
 	DrawDurIcon(out);
+
+	if(sgOptions.Gameplay.bHighlightItems == true) {
+		HighlightItemsNameOnMap(out);
+	}
 
 	if (chrflag) {
 		DrawChr(out);
