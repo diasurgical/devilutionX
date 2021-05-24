@@ -490,7 +490,7 @@ char GetLight(int x, int y)
 	return dLight[x][y];
 }
 
-void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
+void DoLighting(Point position, int nRadius, int Lnum)
 {
 	int x, y, v, mult, radius_block;
 	int min_x, max_x, min_y, max_y;
@@ -508,43 +508,43 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		yoff = LightList[Lnum].position.offset.y;
 		if (xoff < 0) {
 			xoff += 8;
-			nXPos--;
+			position -= { 1, 0 };
 		}
 		if (yoff < 0) {
 			yoff += 8;
-			nYPos--;
+			position -= { 0, 1 };
 		}
 	}
 
 	dist_x = xoff;
 	dist_y = yoff;
 
-	if (nXPos - 15 < 0) {
-		min_x = nXPos + 1;
+	if (position.x - 15 < 0) {
+		min_x = position.x + 1;
 	} else {
 		min_x = 15;
 	}
-	if (nXPos + 15 > MAXDUNX) {
-		max_x = MAXDUNX - nXPos;
+	if (position.x + 15 > MAXDUNX) {
+		max_x = MAXDUNX - position.x;
 	} else {
 		max_x = 15;
 	}
-	if (nYPos - 15 < 0) {
-		min_y = nYPos + 1;
+	if (position.y - 15 < 0) {
+		min_y = position.y + 1;
 	} else {
 		min_y = 15;
 	}
-	if (nYPos + 15 > MAXDUNY) {
-		max_y = MAXDUNY - nYPos;
+	if (position.y + 15 > MAXDUNY) {
+		max_y = MAXDUNY - position.y;
 	} else {
 		max_y = 15;
 	}
 
-	if (nXPos >= 0 && nXPos < MAXDUNX && nYPos >= 0 && nYPos < MAXDUNY) {
+	if (position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY) {
 		if (currlevel < 17) {
-			SetLight(nXPos, nYPos, 0);
-		} else if (GetLight(nXPos, nYPos) > lightradius[nRadius][0]) {
-			SetLight(nXPos, nYPos, lightradius[nRadius][0]);
+			SetLight(position.x, position.y, 0);
+		} else if (GetLight(position.x, position.y) > lightradius[nRadius][0]) {
+			SetLight(position.x, position.y, lightradius[nRadius][0]);
 		}
 	}
 
@@ -553,8 +553,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		for (x = 1; x < max_x; x++) {
 			radius_block = lightblock[mult][y][x];
 			if (radius_block < 128) {
-				temp_x = nXPos + x;
-				temp_y = nYPos + y;
+				temp_x = position.x + x;
+				temp_y = position.y + y;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
 					if (v < GetLight(temp_x, temp_y))
@@ -568,8 +568,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		for (x = 1; x < max_x; x++) {
 			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
-				temp_x = nXPos + y;
-				temp_y = nYPos - x;
+				temp_x = position.x + y;
+				temp_y = position.y - x;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
 					if (v < GetLight(temp_x, temp_y))
@@ -583,8 +583,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		for (x = 1; x < min_x; x++) {
 			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
-				temp_x = nXPos - x;
-				temp_y = nYPos - y;
+				temp_x = position.x - x;
+				temp_y = position.y - y;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
 					if (v < GetLight(temp_x, temp_y))
@@ -598,8 +598,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		for (x = 1; x < min_x; x++) {
 			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
-				temp_x = nXPos - y;
-				temp_y = nYPos + x;
+				temp_x = position.x - y;
+				temp_y = position.y + x;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
 					if (v < GetLight(temp_x, temp_y))
@@ -631,14 +631,14 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 	}
 }
 
-void DoUnVision(int nXPos, int nYPos, int nRadius)
+void DoUnVision(Point position, int nRadius)
 {
 	nRadius++;
 	nRadius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
-	int y1 = nYPos - nRadius;
-	int y2 = nYPos + nRadius;
-	int x1 = nXPos - nRadius;
-	int x2 = nXPos + nRadius;
+	int y1 = position.y - nRadius;
+	int y2 = position.y + nRadius;
+	int x1 = position.x - nRadius;
+	int x2 = position.x + nRadius;
 
 	if (y1 < 0) {
 		y1 = 0;
@@ -660,23 +660,23 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 	}
 }
 
-void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
+void DoVision(Point position, int nRadius, bool doautomap, bool visible)
 {
 	bool nBlockerFlag;
 	int nCrawlX, nCrawlY, nLineLen, nTrans;
 	int j, k, v, x1adj, x2adj, y1adj, y2adj;
 
-	if (nXPos >= 0 && nXPos <= MAXDUNX && nYPos >= 0 && nYPos <= MAXDUNY) {
+	if (position.x >= 0 && position.x<= MAXDUNX && position.y >= 0 && position.y <= MAXDUNY) {
 		if (doautomap) {
-			if (dFlags[nXPos][nYPos] != 0) {
-				SetAutomapView({ nXPos, nYPos });
+			if (dFlags[position.x][position.y] != 0) {
+				SetAutomapView(position);
 			}
-			dFlags[nXPos][nYPos] |= BFLAG_EXPLORED;
+			dFlags[position.x][position.y] |= BFLAG_EXPLORED;
 		}
 		if (visible) {
-			dFlags[nXPos][nYPos] |= BFLAG_LIT;
+			dFlags[position.x][position.y] |= BFLAG_LIT;
 		}
-		dFlags[nXPos][nYPos] |= BFLAG_VISIBLE;
+		dFlags[position.x][position.y] |= BFLAG_VISIBLE;
 	}
 
 	for (v = 0; v < 4; v++) {
@@ -690,32 +690,32 @@ void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
 				y2adj = 0;
 				switch (v) {
 				case 0:
-					nCrawlX = nXPos + vCrawlTable[j][k];
-					nCrawlY = nYPos + vCrawlTable[j][k + 1];
+					nCrawlX = position.x + vCrawlTable[j][k];
+					nCrawlY = position.y + vCrawlTable[j][k + 1];
 					if (vCrawlTable[j][k] > 0 && vCrawlTable[j][k + 1] > 0) {
 						x1adj = -1;
 						y2adj = -1;
 					}
 					break;
 				case 1:
-					nCrawlX = nXPos - vCrawlTable[j][k];
-					nCrawlY = nYPos - vCrawlTable[j][k + 1];
+					nCrawlX = position.x - vCrawlTable[j][k];
+					nCrawlY = position.y - vCrawlTable[j][k + 1];
 					if (vCrawlTable[j][k] > 0 && vCrawlTable[j][k + 1] > 0) {
 						y1adj = 1;
 						x2adj = 1;
 					}
 					break;
 				case 2:
-					nCrawlX = nXPos + vCrawlTable[j][k];
-					nCrawlY = nYPos - vCrawlTable[j][k + 1];
+					nCrawlX = position.x + vCrawlTable[j][k];
+					nCrawlY = position.y - vCrawlTable[j][k + 1];
 					if (vCrawlTable[j][k] > 0 && vCrawlTable[j][k + 1] > 0) {
 						x1adj = -1;
 						y2adj = 1;
 					}
 					break;
 				case 3:
-					nCrawlX = nXPos - vCrawlTable[j][k];
-					nCrawlY = nYPos + vCrawlTable[j][k + 1];
+					nCrawlX = position.x - vCrawlTable[j][k];
+					nCrawlY = position.y + vCrawlTable[j][k + 1];
 					if (vCrawlTable[j][k] > 0 && vCrawlTable[j][k + 1] > 0) {
 						y1adj = -1;
 						x2adj = 1;
@@ -950,7 +950,7 @@ void ToggleLighting()
 	memcpy(dLight, dPreLight, sizeof(dLight));
 	for (const auto &player : plr) {
 		if (player.plractive && player.plrlevel == currlevel) {
-			DoLighting(player.position.tile.x, player.position.tile.y, player._pLightRad, -1);
+			DoLighting(player.position.tile, player._pLightRad, -1);
 		}
 	}
 }
@@ -972,7 +972,7 @@ void InitLighting()
 	}
 }
 
-int AddLight(int x, int y, int r)
+int AddLight(Point position, int r)
 {
 	int lid;
 
@@ -984,7 +984,7 @@ int AddLight(int x, int y, int r)
 
 	if (numlights < MAXLIGHTS) {
 		lid = lightactive[numlights++];
-		LightList[lid].position.tile = { x, y };
+		LightList[lid].position.tile = position;
 		LightList[lid]._lradius = r;
 		LightList[lid].position.offset = { 0, 0 };
 		LightList[lid]._ldel = false;
@@ -1018,7 +1018,7 @@ void ChangeLightRadius(int i, int r)
 	dolighting = true;
 }
 
-void ChangeLightXY(int i, int x, int y)
+void ChangeLightXY(int i, Point position)
 {
 	if (lightflag || i == NO_LIGHT) {
 		return;
@@ -1027,11 +1027,11 @@ void ChangeLightXY(int i, int x, int y)
 	LightList[i]._lunflag = true;
 	LightList[i].position.old = LightList[i].position.tile;
 	LightList[i].oldRadious = LightList[i]._lradius;
-	LightList[i].position.tile = { x, y };
+	LightList[i].position.tile = position;
 	dolighting = true;
 }
 
-void ChangeLightOff(int i, int x, int y)
+void ChangeLightOff(int i, Point position)
 {
 	if (lightflag || i == NO_LIGHT) {
 		return;
@@ -1040,11 +1040,11 @@ void ChangeLightOff(int i, int x, int y)
 	LightList[i]._lunflag = true;
 	LightList[i].position.old = LightList[i].position.tile;
 	LightList[i].oldRadious = LightList[i]._lradius;
-	LightList[i].position.offset = { x, y };
+	LightList[i].position.offset = position;
 	dolighting = true;
 }
 
-void ChangeLight(int i, int x, int y, int r)
+void ChangeLight(int i, Point position, int r)
 {
 	if (lightflag || i == NO_LIGHT) {
 		return;
@@ -1053,7 +1053,7 @@ void ChangeLight(int i, int x, int y, int r)
 	LightList[i]._lunflag = true;
 	LightList[i].position.old = LightList[i].position.tile;
 	LightList[i].oldRadious = LightList[i]._lradius;
-	LightList[i].position.tile = { x, y };
+	LightList[i].position.tile = position;
 	LightList[i]._lradius = r;
 	dolighting = true;
 }
@@ -1078,7 +1078,7 @@ void ProcessLightList()
 		for (int i = 0; i < numlights; i++) {
 			int j = lightactive[i];
 			if (!LightList[j]._ldel) {
-				DoLighting(LightList[j].position.tile.x, LightList[j].position.tile.y, LightList[j]._lradius, j);
+				DoLighting(LightList[j].position.tile, LightList[j]._lradius, j);
 			}
 		}
 		int i = 0;
@@ -1113,12 +1113,12 @@ void InitVision()
 	}
 }
 
-int AddVision(int x, int y, int r, bool mine)
+int AddVision(Point position, int r, bool mine)
 {
 	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
 
 	if (numvision < MAXVISION) {
-		VisionList[numvision].position.tile = { x, y };
+		VisionList[numvision].position.tile = position;
 		VisionList[numvision]._lradius = r;
 		vid = visionid++;
 		VisionList[numvision]._lid = vid;
@@ -1145,14 +1145,14 @@ void ChangeVisionRadius(int id, int r)
 	}
 }
 
-void ChangeVisionXY(int id, int x, int y)
+void ChangeVisionXY(int id, Point position)
 {
 	for (int i = 0; i < numvision; i++) {
 		if (VisionList[i]._lid == id) {
 			VisionList[i]._lunflag = true;
 			VisionList[i].position.old = VisionList[i].position.tile;
 			VisionList[i].oldRadious = VisionList[i]._lradius;
-			VisionList[i].position.tile = { x, y };
+			VisionList[i].position.tile = position;
 			dovision = true;
 		}
 	}
@@ -1163,10 +1163,10 @@ void ProcessVisionList()
 	if (dovision) {
 		for (int i = 0; i < numvision; i++) {
 			if (VisionList[i]._ldel) {
-				DoUnVision(VisionList[i].position.tile.x, VisionList[i].position.tile.y, VisionList[i]._lradius);
+				DoUnVision(VisionList[i].position.tile, VisionList[i]._lradius);
 			}
 			if (VisionList[i]._lunflag) {
-				DoUnVision(VisionList[i].position.old.x, VisionList[i].position.old.y, VisionList[i].oldRadious);
+				DoUnVision(VisionList[i].position.old, VisionList[i].oldRadious);
 				VisionList[i]._lunflag = false;
 			}
 		}
@@ -1176,8 +1176,7 @@ void ProcessVisionList()
 		for (int i = 0; i < numvision; i++) {
 			if (!VisionList[i]._ldel) {
 				DoVision(
-				    VisionList[i].position.tile.x,
-				    VisionList[i].position.tile.y,
+				    VisionList[i].position.tile,
 				    VisionList[i]._lradius,
 				    VisionList[i]._lflags,
 				    VisionList[i]._lflags);

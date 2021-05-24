@@ -1326,7 +1326,7 @@ static DWORD On_WALKXY(TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		ClrPlrPath(plr[pnum]);
-		MakePlrPath(pnum, p->x, p->y, true);
+		MakePlrPath(pnum, { p->x, p->y }, true);
 		plr[pnum].destAction = ACTION_NONE;
 	}
 
@@ -1404,7 +1404,7 @@ static DWORD On_GOTOGETITEM(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		MakePlrPath(pnum, p->x, p->y, false);
+		MakePlrPath(pnum, { p->x, p->y }, false);
 		plr[pnum].destAction = ACTION_PICKUPITEM;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -1466,7 +1466,7 @@ static DWORD On_GOTOAGETITEM(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		MakePlrPath(pnum, p->x, p->y, false);
+		MakePlrPath(pnum, { p->x, p->y }, false);
 		plr[pnum].destAction = ACTION_PICKUPAITEM;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -1610,7 +1610,7 @@ static DWORD On_ATTACKXY(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLoc *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		MakePlrPath(pnum, p->x, p->y, false);
+		MakePlrPath(pnum, { p->x, p->y }, false);
 		plr[pnum].destAction = ACTION_ATTACK;
 		plr[pnum].destParam1 = p->x;
 		plr[pnum].destParam2 = p->y;
@@ -1720,9 +1720,9 @@ static DWORD On_OPOBJXY(TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		if (object[p->wParam1]._oSolidFlag || object[p->wParam1]._oDoorFlag)
-			MakePlrPath(pnum, p->x, p->y, false);
+			MakePlrPath(pnum, { p->x, p->y }, false);
 		else
-			MakePlrPath(pnum, p->x, p->y, true);
+			MakePlrPath(pnum, { p->x, p->y }, true);
 		plr[pnum].destAction = ACTION_OPERATE;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -1736,9 +1736,9 @@ static DWORD On_DISARMXY(TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		if (object[p->wParam1]._oSolidFlag || object[p->wParam1]._oDoorFlag)
-			MakePlrPath(pnum, p->x, p->y, false);
+			MakePlrPath(pnum, { p->x, p->y }, false);
 		else
-			MakePlrPath(pnum, p->x, p->y, true);
+			MakePlrPath(pnum, { p->x, p->y }, true);
 		plr[pnum].destAction = ACTION_DISARM;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -1766,7 +1766,7 @@ static DWORD On_ATTACKID(TCmd *pCmd, int pnum)
 		int distx = abs(plr[pnum].position.tile.x - monster[p->wParam1].position.future.x);
 		int disty = abs(plr[pnum].position.tile.y - monster[p->wParam1].position.future.y);
 		if (distx > 1 || disty > 1)
-			MakePlrPath(pnum, monster[p->wParam1].position.future.x, monster[p->wParam1].position.future.y, false);
+			MakePlrPath(pnum, monster[p->wParam1].position.future, false);
 		plr[pnum].destAction = ACTION_ATTACKMON;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -1779,7 +1779,7 @@ static DWORD On_ATTACKPID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		MakePlrPath(pnum, plr[p->wParam1].position.future.x, plr[p->wParam1].position.future.y, false);
+		MakePlrPath(pnum, plr[p->wParam1].position.future, false);
 		plr[pnum].destAction = ACTION_ATTACKPLR;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -1938,7 +1938,7 @@ static DWORD On_TALKXY(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		MakePlrPath(pnum, p->x, p->y, false);
+		MakePlrPath(pnum, { p->x, p->y }, false);
 		plr[pnum].destAction = ACTION_TALK;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -2248,7 +2248,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 					dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 				}
 
-				plr[pnum]._pvid = AddVision(plr[pnum].position.tile.x, plr[pnum].position.tile.y, plr[pnum]._pLightRad, pnum == myplr);
+				plr[pnum]._pvid = AddVision(plr[pnum].position.tile, plr[pnum]._pLightRad, pnum == myplr);
 				plr[pnum]._plid = NO_LIGHT;
 			}
 		}

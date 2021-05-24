@@ -2596,13 +2596,13 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
 				if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
-					DoLighting(i, j, 7, -1);
+					DoLighting({ i, j }, 7, -1);
 				} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
-					DoLighting(i, j, 7, -1);
+					DoLighting({ i, j }, 7, -1);
 				} else if (dPiece[i][j] == 150) {
-					DoLighting(i, j, 7, -1);
+					DoLighting({ i, j }, 7, -1);
 				} else if (dPiece[i][j] == 152) {
-					DoLighting(i, j, 7, -1);
+					DoLighting({ i, j }, 7, -1);
 				}
 			}
 		}
@@ -2610,7 +2610,7 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
 				if (dPiece[i][j] >= 382 && dPiece[i][j] <= 457) {
-					DoLighting(i, j, 9, -1);
+					DoLighting({ i, j }, 9, -1);
 				}
 			}
 		}
@@ -2663,13 +2663,13 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
-				DoLighting(i, j, 7, -1);
+				DoLighting({ i, j }, 7, -1);
 			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
-				DoLighting(i, j, 7, -1);
+				DoLighting({ i, j }, 7, -1);
 			} else if (dPiece[i][j] == 150) {
-				DoLighting(i, j, 7, -1);
+				DoLighting({ i, j }, 7, -1);
 			} else if (dPiece[i][j] == 152) {
-				DoLighting(i, j, 7, -1);
+				DoLighting({ i, j }, 7, -1);
 			}
 		}
 	}

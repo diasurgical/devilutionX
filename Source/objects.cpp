@@ -1433,7 +1433,7 @@ void AddTrap(int i)
 void AddObjLight(int i, int r)
 {
 	if (InitObjFlag) {
-		DoLighting(object[i].position.x, object[i].position.y, r, -1);
+		DoLighting(object[i].position, r, -1);
 		object[i]._oVar1 = -1;
 	} else {
 		object[i]._oVar1 = 0;
@@ -1920,7 +1920,7 @@ void Obj_Light(int i, int lr)
 		}
 		if (turnon) {
 			if (object[i]._oVar1 == 0)
-				object[i]._olid = AddLight(ox, oy, lr);
+				object[i]._olid = AddLight(object[i].position, lr);
 			object[i]._oVar1 = 1;
 		} else {
 			if (object[i]._oVar1 == 1)
@@ -2015,7 +2015,7 @@ void ActivateTrapLine(int ttype, int tid)
 			object[oi]._oVar4 = 1;
 			object[oi]._oAnimFlag = 1;
 			object[oi]._oAnimDelay = 1;
-			object[oi]._olid = AddLight(object[oi].position.x, object[oi].position.y, 1);
+			object[oi]._olid = AddLight(object[oi].position, 1);
 		}
 	}
 }
@@ -2431,7 +2431,7 @@ void RedoPlayerVision()
 
 	for (p = 0; p < MAX_PLRS; p++) {
 		if (plr[p].plractive && currlevel == plr[p].plrlevel) {
-			ChangeVisionXY(plr[p]._pvid, plr[p].position.tile.x, plr[p].position.tile.y);
+			ChangeVisionXY(plr[p]._pvid, plr[p].position.tile);
 		}
 	}
 }

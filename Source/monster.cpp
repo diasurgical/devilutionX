@@ -810,7 +810,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	if (uniqindex == UMT_HORKDMN)
 		Monst->mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	else
-		Monst->mlid = AddLight(Monst->position.tile.x, Monst->position.tile.y, 3);
+		Monst->mlid = AddLight(Monst->position.tile, 3);
 
 	if (gbIsMultiplayer) {
 		if (Monst->_mAi == AI_LAZHELP)
@@ -1129,7 +1129,7 @@ void InitMonsters()
 	for (i = 0; i < nt; i++) {
 		for (s = -2; s < 2; s++) {
 			for (t = -2; t < 2; t++)
-				DoVision(s + trigs[i].position.x, t + trigs[i].position.y, 15, false, false);
+				DoVision(Point { s, t } + trigs[i].position, 15, false, false);
 		}
 	}
 	if (!gbIsSpawn)
@@ -1170,7 +1170,7 @@ void InitMonsters()
 	for (i = 0; i < nt; i++) {
 		for (s = -2; s < 2; s++) {
 			for (t = -2; t < 2; t++)
-				DoUnVision(s + trigs[i].position.x, t + trigs[i].position.y, 15);
+				DoUnVision(Point { s, t } + trigs[i].position, 15);
 		}
 	}
 }
@@ -1448,7 +1448,7 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i].position.future = { fx, fy };
 	dMonster[fx][fy] = i + 1;
 	if (monster[i].mlid != NO_LIGHT)
-		ChangeLightXY(monster[i].mlid, monster[i].position.tile.x, monster[i].position.tile.y);
+		ChangeLightXY(monster[i].mlid, monster[i].position.tile);
 	monster[i].position.offset = { xoff, yoff };
 	monster[i]._mmode = MM_WALK2;
 	monster[i].position.velocity = { xvel, yvel };
@@ -1467,7 +1467,7 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	int y = mapy + monster[i].position.tile.y;
 
 	if (monster[i].mlid != NO_LIGHT)
-		ChangeLightXY(monster[i].mlid, x, y);
+		ChangeLightXY(monster[i].mlid, { x, y });
 
 	dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = -(i + 1);
 	dMonster[fx][fy] = -(i + 1);
@@ -1648,8 +1648,8 @@ void M_DiabloDeath(int i, bool sendmsg)
 		M_ClearSquares(k);
 		dMonster[monster[k].position.tile.x][monster[k].position.tile.y] = k + 1;
 	}
-	AddLight(Monst->position.tile.x, Monst->position.tile.y, 8);
-	DoVision(Monst->position.tile.x, Monst->position.tile.y, 8, false, true);
+	AddLight(Monst->position.tile, 8);
+	DoVision(Monst->position.tile, 8, false, true);
 	dist = std::max(abs(ViewX - Monst->position.tile.x), abs(ViewY - Monst->position.tile.y));
 	if (dist > 20)
 		dist = 20;
@@ -1937,7 +1937,7 @@ void M_ChangeLightOffset(int monst)
 
 	_myoff *= (ly / 8);
 	if (monster[monst].mlid != NO_LIGHT)
-		ChangeLightOff(monster[monst].mlid, _mxoff, _myoff);
+		ChangeLightOff(monster[monst].mlid, { _mxoff, _myoff });
 }
 
 bool M_DoStand(int i)
@@ -1991,7 +1991,7 @@ bool M_DoWalk(int i, int variant)
 			break;
 		}
 		if (monster[i].mlid != NO_LIGHT)
-			ChangeLightXY(monster[i].mlid, monster[i].position.tile.x, monster[i].position.tile.y);
+			ChangeLightXY(monster[i].mlid, monster[i].position.tile);
 		M_StartStand(i, monster[i]._mdir);
 		returnValue = true;
 	} else { //We didn't reach new tile so update monster's "sub-tile" position

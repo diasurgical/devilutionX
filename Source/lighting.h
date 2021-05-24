@@ -46,9 +46,9 @@ extern int visionid;
 extern std::array<BYTE, LIGHTSIZE> pLightTbl;
 extern bool lightflag;
 
-void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum);
-void DoUnVision(int nXPos, int nYPos, int nRadius);
-void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible);
+void DoLighting(Point position, int nRadius, int Lnum);
+void DoUnVision(Point position, int nRadius);
+void DoVision(Point position, int nRadius, bool doautomap, bool visible);
 void FreeLightTable();
 void InitLightTable();
 void MakeLightTable();
@@ -57,18 +57,18 @@ void ToggleLighting();
 #endif
 void InitLightMax();
 void InitLighting();
-int AddLight(int x, int y, int r);
+int AddLight(Point position, int r);
 void AddUnLight(int i);
 void ChangeLightRadius(int i, int r);
-void ChangeLightXY(int i, int x, int y);
-void ChangeLightOff(int i, int x, int y);
-void ChangeLight(int i, int x, int y, int r);
+void ChangeLightXY(int i, Point position);
+void ChangeLightOff(int i, Point position);
+void ChangeLight(int i, Point position, int r);
 void ProcessLightList();
 void SavePreLighting();
 void InitVision();
-int AddVision(int x, int y, int r, bool mine);
+int AddVision(Point position, int r, bool mine);
 void ChangeVisionRadius(int id, int r);
-void ChangeVisionXY(int id, int x, int y);
+void ChangeVisionXY(int id, Point position);
 void ProcessVisionList();
 void lighting_color_cycling();
 

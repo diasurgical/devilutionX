@@ -1157,12 +1157,12 @@ void InitPlayer(int pnum, bool FirstTime)
 		player.destAction = ACTION_NONE;
 
 		if (pnum == myplr) {
-			player._plid = AddLight(player.position.tile.x, player.position.tile.y, player._pLightRad);
-			ChangeLightXY(myPlayer._plid, myPlayer.position.tile.x, myPlayer.position.tile.y); // fix for a bug where old light is still visible at the entrance after reentering level
+			player._plid = AddLight(player.position.tile, player._pLightRad);
+			ChangeLightXY(myPlayer._plid, myPlayer.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player._plid = NO_LIGHT;
 		}
-		player._pvid = AddVision(player.position.tile.x, player.position.tile.y, player._pLightRad, pnum == myplr);
+		player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == myplr);
 	}
 
 	if (player._pClass == HeroClass::Warrior) {
@@ -1248,26 +1248,26 @@ bool PlrDirOK(int pnum, Direction dir)
 	return isOk;
 }
 
-void PlrClrTrans(int x, int y)
+void PlrClrTrans(Point position)
 {
 	int i, j;
 
-	for (i = y - 1; i <= y + 1; i++) {
-		for (j = x - 1; j <= x + 1; j++) {
+	for (i = position.y - 1; i <= position.y + 1; i++) {
+		for (j = position.x - 1; j <= position.x + 1; j++) {
 			TransList[dTransVal[j][i]] = false;
 		}
 	}
 }
 
-void PlrDoTrans(int x, int y)
+void PlrDoTrans(Point position)
 {
 	int i, j;
 
 	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
 		TransList[1] = true;
 	} else {
-		for (i = y - 1; i <= y + 1; i++) {
-			for (j = x - 1; j <= x + 1; j++) {
+		for (i = position.y - 1; i <= position.y + 1; i++) {
+			for (j = position.x - 1; j <= position.x + 1; j++) {
 				if (!nSolidTable[dPiece[j][i]] && dTransVal[j][i]) {
 					TransList[dTransVal[j][i]] = true;
 				}
@@ -1297,8 +1297,8 @@ void FixPlayerLocation(int pnum, Direction bDir)
 		ViewX = player.position.tile.x;
 		ViewY = player.position.tile.y;
 	}
-	ChangeLightXY(player._plid, player.position.tile.x, player.position.tile.y);
-	ChangeVisionXY(player._pvid, player.position.tile.x, player.position.tile.y);
+	ChangeLightXY(player._plid, player.position.tile);
+	ChangeVisionXY(player._pvid, player.position.tile);
 }
 
 void StartStand(int pnum, Direction dir)
@@ -1362,7 +1362,7 @@ static void PM_ChangeLightOff(PlayerStruct &player)
 	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
 		return;
 
-	ChangeLightOff(player._plid, x, y);
+	ChangeLightOff(player._plid, { x, y });
 }
 
 void PM_ChangeOffset(int pnum)
@@ -1441,7 +1441,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 		player.position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
 
-		ChangeLightXY(player._plid, player.position.tile.x, player.position.tile.y);
+		ChangeLightXY(player._plid, player.position.tile);
 		PM_ChangeLightOff(player);
 
 		player._pmode = PM_WALK2;
@@ -1461,7 +1461,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		player.position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
 
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(player._plid, x, y);
+			ChangeLightXY(player._plid, { x, y });
 			PM_ChangeLightOff(player);
 		}
 
@@ -2320,8 +2320,8 @@ bool PM_DoWalk(int pnum, int variant)
 
 		//Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(player._plid, player.position.tile.x, player.position.tile.y);
-			ChangeVisionXY(player._pvid, player.position.tile.x, player.position.tile.y);
+			ChangeLightXY(player._plid, player.position.tile);
+			ChangeVisionXY(player._pvid, player.position.tile);
 		}
 
 		//Update the "camera" tile position
@@ -2340,7 +2340,7 @@ bool PM_DoWalk(int pnum, int variant)
 
 		//Reset the "sub-tile" position of the player's light entry to 0
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(player._plid, 0, 0);
+			ChangeLightOff(player._plid, { 0, 0 });
 		}
 
 		AutoGoldPickup(pnum);
@@ -3173,12 +3173,12 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 
 	if (player.destAction == ACTION_ATTACKMON) {
 		i = player.destParam1;
-		MakePlrPath(pnum, monster[i].position.future.x, monster[i].position.future.y, false);
+		MakePlrPath(pnum, monster[i].position.future, false);
 	}
 
 	if (player.destAction == ACTION_ATTACKPLR) {
 		auto &target = plr[player.destParam1];
-		MakePlrPath(pnum, target.position.future.x, target.position.future.y, false);
+		MakePlrPath(pnum, target.position.future, false);
 	}
 
 	Direction d;
@@ -3747,7 +3747,7 @@ bool PosOkPlayer(int pnum, int x, int y)
 	return true;
 }
 
-void MakePlrPath(int pnum, int xx, int yy, bool endspace)
+void MakePlrPath(int pnum, Point targetPosition, bool endspace)
 {
 	int path;
 
@@ -3756,48 +3756,17 @@ void MakePlrPath(int pnum, int xx, int yy, bool endspace)
 	}
 	auto &player = plr[pnum];
 
-	if (player.position.future.x == xx && player.position.future.y == yy) {
+	if (player.position.future == targetPosition) {
 		return;
 	}
 
-	path = FindPath(PosOkPlayer, pnum, player.position.future.x, player.position.future.y, xx, yy, player.walkpath);
+	path = FindPath(PosOkPlayer, pnum, player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
 	if (!path) {
 		return;
 	}
 
 	if (!endspace) {
 		path--;
-
-		switch (player.walkpath[path]) {
-		case WALK_NE:
-			yy++;
-			break;
-		case WALK_NW:
-			xx++;
-			break;
-		case WALK_SE:
-			xx--;
-			break;
-		case WALK_SW:
-			yy--;
-			break;
-		case WALK_N:
-			xx++;
-			yy++;
-			break;
-		case WALK_E:
-			xx--;
-			yy++;
-			break;
-		case WALK_S:
-			xx--;
-			yy--;
-			break;
-		case WALK_W:
-			xx++;
-			yy--;
-			break;
-		}
 	}
 
 	player.walkpath[path] = WALK_NONE;
