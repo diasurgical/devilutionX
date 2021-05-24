@@ -133,7 +133,6 @@ void CheckSBook();
 void DrawGoldSplit(const CelOutputBuffer &out, int amount);
 void control_drop_gold(char vkey);
 void control_remove_gold(int pnum, int goldIndex);
-void control_set_gold_curs(int pnum);
 void DrawTalkPan(const CelOutputBuffer &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();

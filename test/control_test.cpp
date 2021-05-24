@@ -10,10 +10,11 @@ TEST(Control, SetSpell)
 	pinfoflag = true;
 	pSpell = SPL_FIREBOLT;
 	pSplType = RSPLTYPE_CHARGES;
+	auto &myPlayer = plr[myplr];
 	SetSpell();
 	EXPECT_EQ(spselflag, false);
-	EXPECT_EQ(plr[myplr]._pRSpell, SPL_FIREBOLT);
-	EXPECT_EQ(plr[myplr]._pRSplType, RSPLTYPE_CHARGES);
+	EXPECT_EQ(myPlayer._pRSpell, SPL_FIREBOLT);
+	EXPECT_EQ(myPlayer._pRSplType, RSPLTYPE_CHARGES);
 	EXPECT_EQ(pnumlines, 0);
 	EXPECT_EQ(pinfoflag, false);
 	EXPECT_EQ(force_redraw, 255);

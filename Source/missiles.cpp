@@ -1526,7 +1526,7 @@ void AddStealPotions(int mi, int sx, int sy, int dx, int dy, int midir, int8_t m
 								break;
 							case IMISC_HEAL:
 							case IMISC_MANA:
-								RemoveSpdBarItem(pnum, si);
+								plr[pnum].RemoveSpdBarItem(si);
 								break;
 							case IMISC_FULLMANA:
 								ii = ItemMiscIdIdx(IMISC_MANA);

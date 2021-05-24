@@ -108,8 +108,6 @@ void STextUp();
 void STextDown();
 void STextPrior();
 void STextNext();
-void SetGoldCurs(int pnum, int i);
-void SetSpdbarGoldCurs(int pnum, int i);
 void TakePlrsMoney(int cost);
 void STextEnter();
 void CheckStoreBtn();

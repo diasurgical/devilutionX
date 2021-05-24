@@ -312,6 +312,8 @@ struct PlayerStruct {
      */
 	void RemoveInvItem(int iv, bool calcScrolls = true);
 
+	void RemoveSpdBarItem(int iv);
+
 	/**
 	 * @brief Gets the most valuable item out of all the player's items that match the given predicate.
 	 * @param itemPredicate The predicate used to match the items.

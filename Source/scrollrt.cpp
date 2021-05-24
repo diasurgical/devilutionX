@@ -408,10 +408,10 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 		return;
 	}
 
-	PlayerStruct *pPlayer = &plr[pnum];
+	auto &player = plr[pnum];
 
-	auto *pCelSprite = pPlayer->AnimInfo.pCelSprite;
-	int nCel = pPlayer->AnimInfo.GetFrameToUseForRendering();
+	auto *pCelSprite = player.AnimInfo.pCelSprite;
+	int nCel = player.AnimInfo.GetFrameToUseForRendering();
 
 	if (pCelSprite == nullptr) {
 		Log("Drawing player {} \"{}\": NULL CelSprite", pnum, plr[pnum]._pName);
@@ -471,17 +471,14 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
  */
 void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
-	int i, px, py;
-	PlayerStruct *p;
-
 	dFlags[x][y] &= ~BFLAG_DEAD_PLAYER;
 
-	for (i = 0; i < MAX_PLRS; i++) {
-		p = &plr[i];
-		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->position.tile.x == x && p->position.tile.y == y) {
+	for (int i = 0; i < MAX_PLRS; i++) {
+		auto &player = plr[i];
+		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile.x == x && player.position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
-			px = sx + p->position.offset.x - CalculateWidth2(p->AnimInfo.pCelSprite == nullptr ? 96 : p->AnimInfo.pCelSprite->Width());
-			py = sy + p->position.offset.y;
+			int px = sx + player.position.offset.x - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
+			int py = sy + player.position.offset.y;
 			DrawPlayer(out, i, x, y, px, py);
 		}
 	}
@@ -711,13 +708,13 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 		Log("draw player: tried to draw illegal player {}", p);
 		return;
 	}
+	auto &player = plr[p];
 
-	PlayerStruct *pPlayer = &plr[p];
-	Point offset = pPlayer->position.offset;
-	if (pPlayer->IsWalking()) {
-		offset = GetOffsetForWalking(pPlayer->AnimInfo, pPlayer->_pdir);
+	Point offset = player.position.offset;
+	if (player.IsWalking()) {
+		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 	}
-	int px = sx + offset.x - CalculateWidth2(pPlayer->AnimInfo.pCelSprite == nullptr ? 96 : pPlayer->AnimInfo.pCelSprite->Width());
+	int px = sx + offset.x - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
 	int py = sy + offset.y;
 
 	DrawPlayer(out, p, x, y, px, py);
@@ -1147,10 +1144,10 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 	    : full_out.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
-	PlayerStruct *pPlayer = &plr[myplr];
+	auto &myPlayer = plr[myplr];
 	Point offset = ScrollInfo.offset;
-	if (pPlayer->IsWalking())
-		offset = GetOffsetForWalking(pPlayer->AnimInfo, pPlayer->_pdir, true);
+	if (myPlayer.IsWalking())
+		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 	sx = offset.x + tileOffsetX;
 	sy = offset.y + tileOffsetY;
 

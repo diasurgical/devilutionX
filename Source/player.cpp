@@ -265,6 +265,14 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 		CalcScrolls();
 }
 
+void PlayerStruct::RemoveSpdBarItem(int iv)
+{
+	SpdList[iv]._itype = ITYPE_NONE;
+
+	CalcScrolls();
+	force_redraw = 255;
+}
+
 int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
@@ -1781,116 +1789,53 @@ StartPlayerKill(int pnum, int earflag)
 	SetPlayerHitPoints(pnum, 0);
 }
 
+static int DropGold(int pnum, int amount, bool skipFullStacks)
+{
+	auto &player = plr[pnum];
+
+	for (int i = 0; i < player._pNumInv && amount > 0; i++) {
+		auto &item = player.InvList[i];
+
+		if (item._itype != ITYPE_GOLD || (skipFullStacks && item._ivalue == MaxGold))
+			continue;
+
+		if (amount < item._ivalue) {
+			item._ivalue -= amount;
+			SetPlrHandItem(&player.HoldItem, IDI_GOLD);
+			GetGoldSeed(pnum, &player.HoldItem);
+			SetPlrHandGoldCurs(&player.HoldItem);
+			player.HoldItem._ivalue = amount;
+			PlrDeadItem(player, &player.HoldItem, 0, 0);
+			return 0;
+		}
+
+		amount -= item._ivalue;
+		player.RemoveInvItem(i);
+		SetPlrHandItem(&player.HoldItem, IDI_GOLD);
+		GetGoldSeed(pnum, &player.HoldItem);
+		SetPlrHandGoldCurs(&player.HoldItem);
+		player.HoldItem._ivalue = item._ivalue;
+		PlrDeadItem(player, &player.HoldItem, 0, 0);
+		i = -1;
+	}
+
+	return amount;
+}
+
 void DropHalfPlayersGold(int pnum)
 {
-	int i, hGold;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("DropHalfPlayersGold: illegal player %i", pnum);
 	}
 	auto &player = plr[pnum];
 
-	hGold = player._pGold / 2;
-	for (i = 0; i < MAXBELTITEMS && hGold > 0; i++) {
-		if (player.SpdList[i]._itype == ITYPE_GOLD && player.SpdList[i]._ivalue != MaxGold) {
-			if (hGold < player.SpdList[i]._ivalue) {
-				player.SpdList[i]._ivalue -= hGold;
-				SetSpdbarGoldCurs(pnum, i);
-				SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-				GetGoldSeed(pnum, &player.HoldItem);
-				SetPlrHandGoldCurs(&player.HoldItem);
-				player.HoldItem._ivalue = hGold;
-				PlrDeadItem(player, &player.HoldItem, 0, 0);
-				hGold = 0;
-			} else {
-				hGold -= player.SpdList[i]._ivalue;
-				RemoveSpdBarItem(pnum, i);
-				SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-				GetGoldSeed(pnum, &player.HoldItem);
-				SetPlrHandGoldCurs(&player.HoldItem);
-				player.HoldItem._ivalue = player.SpdList[i]._ivalue;
-				PlrDeadItem(player, &player.HoldItem, 0, 0);
-				i = -1;
-			}
-		}
-	}
-	if (hGold > 0) {
-		for (i = 0; i < MAXBELTITEMS && hGold > 0; i++) {
-			if (player.SpdList[i]._itype == ITYPE_GOLD) {
-				if (hGold < player.SpdList[i]._ivalue) {
-					player.SpdList[i]._ivalue -= hGold;
-					SetSpdbarGoldCurs(pnum, i);
-					SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-					GetGoldSeed(pnum, &player.HoldItem);
-					SetPlrHandGoldCurs(&player.HoldItem);
-					player.HoldItem._ivalue = hGold;
-					PlrDeadItem(player, &player.HoldItem, 0, 0);
-					hGold = 0;
-				} else {
-					hGold -= player.SpdList[i]._ivalue;
-					RemoveSpdBarItem(pnum, i);
-					SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-					GetGoldSeed(pnum, &player.HoldItem);
-					SetPlrHandGoldCurs(&player.HoldItem);
-					player.HoldItem._ivalue = player.SpdList[i]._ivalue;
-					PlrDeadItem(player, &player.HoldItem, 0, 0);
-					i = -1;
-				}
-			}
-		}
-	}
-	force_redraw = 255;
-	if (hGold > 0) {
-		for (i = 0; i < player._pNumInv && hGold > 0; i++) {
-			if (player.InvList[i]._itype == ITYPE_GOLD && player.InvList[i]._ivalue != MaxGold) {
-				if (hGold < player.InvList[i]._ivalue) {
-					player.InvList[i]._ivalue -= hGold;
-					SetGoldCurs(pnum, i);
-					SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-					GetGoldSeed(pnum, &player.HoldItem);
-					SetPlrHandGoldCurs(&player.HoldItem);
-					player.HoldItem._ivalue = hGold;
-					PlrDeadItem(player, &player.HoldItem, 0, 0);
-					hGold = 0;
-				} else {
-					hGold -= player.InvList[i]._ivalue;
-					player.RemoveInvItem(i);
-					SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-					GetGoldSeed(pnum, &player.HoldItem);
-					SetPlrHandGoldCurs(&player.HoldItem);
-					player.HoldItem._ivalue = player.InvList[i]._ivalue;
-					PlrDeadItem(player, &player.HoldItem, 0, 0);
-					i = -1;
-				}
-			}
-		}
-	}
-	if (hGold > 0) {
-		for (i = 0; i < player._pNumInv && hGold > 0; i++) {
-			if (player.InvList[i]._itype == ITYPE_GOLD) {
-				if (hGold < player.InvList[i]._ivalue) {
-					player.InvList[i]._ivalue -= hGold;
-					SetGoldCurs(pnum, i);
-					SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-					GetGoldSeed(pnum, &player.HoldItem);
-					SetPlrHandGoldCurs(&player.HoldItem);
-					player.HoldItem._ivalue = hGold;
-					PlrDeadItem(player, &player.HoldItem, 0, 0);
-					hGold = 0;
-				} else {
-					hGold -= player.InvList[i]._ivalue;
-					player.RemoveInvItem(i);
-					SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-					GetGoldSeed(pnum, &player.HoldItem);
-					SetPlrHandGoldCurs(&player.HoldItem);
-					player.HoldItem._ivalue = player.InvList[i]._ivalue;
-					PlrDeadItem(player, &player.HoldItem, 0, 0);
-					i = -1;
-				}
-			}
-		}
-	}
-	player._pGold = CalculateGold(player);
+	int hGold = player._pGold / 2;
+
+	hGold = DropGold(pnum, hGold, true);
+	if (hGold > 0)
+		DropGold(pnum, hGold, false);
+
+	player._pGold -= hGold;
 }
 
 void StripTopGold(int pnum)
@@ -1910,7 +1855,6 @@ void StripTopGold(int pnum)
 			if (player.InvList[i]._ivalue > MaxGold) {
 				val = player.InvList[i]._ivalue - MaxGold;
 				player.InvList[i]._ivalue = MaxGold;
-				SetGoldCurs(pnum, i);
 				SetPlrHandItem(&player.HoldItem, 0);
 				GetGoldSeed(pnum, &player.HoldItem);
 				player.HoldItem._ivalue = val;
