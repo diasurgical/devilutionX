@@ -624,7 +624,7 @@ bool MonstPlace(int xp, int yp)
 		return false;
 	}
 
-	return !SolidLoc(xp, yp);
+	return !SolidLoc({ xp, yp });
 }
 
 void monster_some_crypt()
@@ -1140,7 +1140,7 @@ void InitMonsters()
 		na = 0;
 		for (s = 16; s < 96; s++) {
 			for (t = 16; t < 96; t++) {
-				if (!SolidLoc(s, t))
+				if (!SolidLoc({ s, t }))
 					na++;
 			}
 		}
@@ -1244,7 +1244,7 @@ void monster_43C785(int i)
 	if (monster[i].MType) {
 		for (d = 0; d < 8; d++) {
 			position = monster[i].position.tile + monster[i]._mdir;
-			if (!SolidLoc(position.x, position.y)) {
+			if (!SolidLoc(position)) {
 				if (dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0) {
 					if (dObject[position.x][position.y] == 0)
 						break;
@@ -4697,20 +4697,21 @@ bool DirOK(int i, Direction mdir)
 	int mcount, mi;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
-	Point futurePosition = monster[i].position.tile + mdir;
+	Point position = monster[i].position.tile;
+	Point futurePosition = position + mdir;
 	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !PosOkMonst(i, futurePosition.x, futurePosition.y))
 		return false;
 	if (mdir == DIR_E) {
-		if (SolidLoc(futurePosition.x, futurePosition.y + 1) || dFlags[futurePosition.x][futurePosition.y + 1] & BFLAG_MONSTLR)
+		if (SolidLoc(position + DIR_SE) || dFlags[position.x + 1][position.y] & BFLAG_MONSTLR)
 			return false;
 	} else if (mdir == DIR_W) {
-		if (SolidLoc(futurePosition.x + 1, futurePosition.y) || dFlags[futurePosition.x + 1][futurePosition.y] & BFLAG_MONSTLR)
+		if (SolidLoc(position + DIR_SW) || dFlags[position.x][position.y + 1] & BFLAG_MONSTLR)
 			return false;
 	} else if (mdir == DIR_N) {
-		if (SolidLoc(futurePosition.x + 1, futurePosition.y) || SolidLoc(futurePosition.x, futurePosition.y + 1))
+		if (SolidLoc(position + DIR_NE) || SolidLoc(position + DIR_NW))
 			return false;
 	} else if (mdir == DIR_S)
-		if (SolidLoc(futurePosition.x - 1, futurePosition.y) || SolidLoc(futurePosition.x, futurePosition.y - 1))
+		if (SolidLoc(position + DIR_SW) || SolidLoc(position + DIR_SE))
 			return false;
 	if (monster[i].leaderflag == 1) {
 		if (abs(futurePosition.x - monster[monster[i].leader].position.future.x) >= 4
@@ -5143,7 +5144,7 @@ bool PosOkMonst(int i, int x, int y)
 	int oi;
 	bool ret;
 
-	ret = !SolidLoc(x, y) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
+	ret = !SolidLoc({ x, y }) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
 	if (ret && dObject[x][y] != 0) {
 		oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
 		if (object[oi]._oSolidFlag)
@@ -5200,7 +5201,7 @@ bool PosOkMonst2(int i, int x, int y)
 	int oi;
 	bool ret;
 
-	ret = !SolidLoc(x, y);
+	ret = !SolidLoc({ x, y });
 	if (ret && dObject[x][y] != 0) {
 		oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
 		if (object[oi]._oSolidFlag)
@@ -5231,7 +5232,7 @@ bool PosOkMonst3(int i, int x, int y)
 		}
 	}
 	if (ret) {
-		ret = (!SolidLoc(x, y) || isdoor) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
+		ret = (!SolidLoc({ x, y }) || isdoor) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
 	}
 	if (ret)
 		ret = monster_posok(i, x, y);

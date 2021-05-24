@@ -428,7 +428,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask);
 void ApplyPlrDamage(int pnum, int dam, int minHP = 0, int frac = 0, int earflag = 0);
 void InitPlayer(int pnum, bool FirstTime);
 void InitMultiView();
-bool SolidLoc(int x, int y);
+bool SolidLoc(Point position);
 void PlrClrTrans(Point position);
 void PlrDoTrans(Point position);
 void SetPlayerOld(PlayerStruct &player);

@@ -1120,13 +1120,13 @@ void InitMultiView()
 	ViewY = myPlayer.position.tile.y;
 }
 
-bool SolidLoc(int x, int y)
+bool SolidLoc(Point position)
 {
-	if (x < 0 || y < 0 || x >= MAXDUNX || y >= MAXDUNY) {
+	if (position.x < 0 || position.y < 0 || position.x >= MAXDUNX || position.y >= MAXDUNY) {
 		return false;
 	}
 
-	return nSolidTable[dPiece[x][y]];
+	return nSolidTable[dPiece[position.x][position.y]];
 }
 
 bool PlrDirOK(int pnum, Direction dir)
@@ -1138,18 +1138,19 @@ bool PlrDirOK(int pnum, Direction dir)
 	}
 	auto &player = plr[pnum];
 
-	Point position = player.position.tile + dir;
-	if (position.x < 0 || !dPiece[position.x][position.y] || !PosOkPlayer(pnum, position.x, position.y)) {
+	Point position = player.position.tile;
+	Point futurePosition = position + dir;
+	if (futurePosition.x < 0 || !dPiece[futurePosition.x][futurePosition.y] || !PosOkPlayer(pnum, futurePosition.x, futurePosition.y)) {
 		return false;
 	}
 
 	isOk = true;
 	if (dir == DIR_E) {
-		isOk = !SolidLoc(position.x, position.y + 1) && !(dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR);
+		isOk = !SolidLoc(position + DIR_SE) && !(dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR);
 	}
 
 	if (isOk && dir == DIR_W) {
-		isOk = !SolidLoc(position.x + 1, position.y) && !(dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR);
+		isOk = !SolidLoc(position + DIR_SW) && !(dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR);
 	}
 
 	return isOk;
@@ -3510,7 +3511,7 @@ bool PosOkPlayer(int pnum, int x, int y)
 		return false;
 	if (dPiece[x][y] == 0)
 		return false;
-	if (SolidLoc(x, y))
+	if (SolidLoc({ x, y }))
 		return false;
 	if (dPlayer[x][y] != 0) {
 		if (dPlayer[x][y] > 0) {
