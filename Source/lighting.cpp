@@ -631,14 +631,14 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 	}
 }
 
-void DoUnVision(int nXPos, int nYPos, int nRadius)
+void DoUnVision(Point position, int nRadius)
 {
 	nRadius++;
 	nRadius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
-	int y1 = nYPos - nRadius;
-	int y2 = nYPos + nRadius;
-	int x1 = nXPos - nRadius;
-	int x2 = nXPos + nRadius;
+	int y1 = position.y - nRadius;
+	int y2 = position.y + nRadius;
+	int x1 = position.x - nRadius;
+	int x2 = position.x + nRadius;
 
 	if (y1 < 0) {
 		y1 = 0;
@@ -1163,10 +1163,10 @@ void ProcessVisionList()
 	if (dovision) {
 		for (int i = 0; i < numvision; i++) {
 			if (VisionList[i]._ldel) {
-				DoUnVision(VisionList[i].position.tile.x, VisionList[i].position.tile.y, VisionList[i]._lradius);
+				DoUnVision(VisionList[i].position.tile, VisionList[i]._lradius);
 			}
 			if (VisionList[i]._lunflag) {
-				DoUnVision(VisionList[i].position.old.x, VisionList[i].position.old.y, VisionList[i].oldRadious);
+				DoUnVision(VisionList[i].position.old, VisionList[i].oldRadious);
 				VisionList[i]._lunflag = false;
 			}
 		}

@@ -1936,7 +1936,7 @@ void SaveLevel()
 {
 	PFileScopedArchiveWriter scoped_writer;
 
-	DoUnVision(plr[myplr].position.tile.x, plr[myplr].position.tile.y, plr[myplr]._pLightRad); // fix for vision staying on the level
+	DoUnVision(plr[myplr].position.tile, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
 		glSeedTbl[0] = AdvanceRndSeed();

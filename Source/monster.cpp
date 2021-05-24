@@ -1170,7 +1170,7 @@ void InitMonsters()
 	for (i = 0; i < nt; i++) {
 		for (s = -2; s < 2; s++) {
 			for (t = -2; t < 2; t++)
-				DoUnVision(s + trigs[i].position.x, t + trigs[i].position.y, 15);
+				DoUnVision(Point { s, t } + trigs[i].position, 15);
 		}
 	}
 }
