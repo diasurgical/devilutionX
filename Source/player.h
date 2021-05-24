@@ -410,7 +410,7 @@ extern bool deathflag;
 extern int ToBlkTbl[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(PlayerStruct &player, player_graphic graphic);
-void InitPlayerGFX(int pnum);
+void InitPlayerGFX(PlayerStruct &player);
 void ResetPlayerGFX(PlayerStruct &player);
 
 /**
@@ -459,6 +459,7 @@ void ProcessPlayers();
 void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(int pnum, Point position);
 void MakePlrPath(int pnum, Point targetPosition, bool endspace);
+void CalcPlrStaff(PlayerStruct &player);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);

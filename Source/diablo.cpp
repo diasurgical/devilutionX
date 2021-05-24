@@ -1734,7 +1734,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		for (int i = 0; i < MAX_PLRS; i++) {
 			auto &player = plr[i];
 			if (player.plractive && currlevel == player.plrlevel) {
-				InitPlayerGFX(i);
+				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(i, firstflag);
 			}
@@ -1828,7 +1828,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		for (int i = 0; i < MAX_PLRS; i++) {
 			auto &player = plr[i];
 			if (player.plractive && currlevel == player.plrlevel) {
-				InitPlayerGFX(i);
+				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(i, firstflag);
 			}

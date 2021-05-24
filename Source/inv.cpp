@@ -1993,10 +1993,8 @@ char CheckInvHLight()
 	return rv;
 }
 
-void RemoveScroll(int pnum)
+void RemoveScroll(PlayerStruct &player)
 {
-	auto &player = plr[pnum];
-
 	for (int i = 0; i < player._pNumInv; i++) {
 		if (!player.InvList[i].isEmpty()
 		    && (player.InvList[i]._iMiscId == IMISC_SCROLL || player.InvList[i]._iMiscId == IMISC_SCROLLT)
@@ -2053,16 +2051,15 @@ static bool CanUseStaff(ItemStruct &staff, spell_id spell)
 	    && staff._iCharges > 0;
 }
 
-void UseStaffCharge(int pnum)
+void UseStaffCharge(PlayerStruct &player)
 {
-	auto &player = plr[pnum];
 	auto &staff = player.InvBody[INVLOC_HAND_LEFT];
 
 	if (!CanUseStaff(staff, player._pRSpell))
 		return;
 
 	staff._iCharges--;
-	CalcPlrStaff(pnum);
+	CalcPlrStaff(player);
 }
 
 bool UseStaff()

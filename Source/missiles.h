@@ -113,7 +113,7 @@ extern int nummissiles;
 extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
-int GetSpellLevel(int id, spell_id sn);
+int GetSpellLevel(int playerId, spell_id sn);
 Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int mi, int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);

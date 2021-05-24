@@ -407,7 +407,6 @@ bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(int p, bool Loadgfx);
-void CalcPlrStaff(int p);
 void CalcPlrInv(int p, bool Loadgfx);
 void SetPlrHandItem(ItemStruct *h, int idata);
 void GetPlrHandSeed(ItemStruct *h);

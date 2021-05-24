@@ -859,8 +859,8 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 		return;
 	}
 
-	ResetPlayerGFX(plr[pnum]);
-	plr[pnum].plractive = true;
+	ResetPlayerGFX(player);
+	player.plractive = true;
 	gbActivePlayers++;
 
 	if (sgbPlayerTurnBitTbl[pnum]) {
@@ -868,19 +868,19 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	} else {
 		szEvent = _("Player '{:s}' (level {:d}) is already in the game");
 	}
-	EventPlrMsg(fmt::format(szEvent, plr[pnum]._pName, plr[pnum]._pLevel).c_str());
+	EventPlrMsg(fmt::format(szEvent, player._pName, player._pLevel).c_str());
 
 	SyncInitPlr(pnum);
 
-	if (plr[pnum].plrlevel == currlevel) {
-		if (plr[pnum]._pHitPoints >> 6 > 0) {
+	if (player.plrlevel == currlevel) {
+		if (player._pHitPoints >> 6 > 0) {
 			StartStand(pnum, DIR_S);
 		} else {
-			plr[pnum]._pgfxnum = 0;
-			plr[pnum]._pmode = PM_DEATH;
-			NewPlrAnim(player, player_graphic::Death, DIR_S, plr[pnum]._pDFrames, 1);
-			plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
-			dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
+			player._pgfxnum = 0;
+			player._pmode = PM_DEATH;
+			NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
+			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
+			dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
 		}
 	}
 }
