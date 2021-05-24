@@ -62,7 +62,7 @@ enum class HeroSpeech {
 	IveGotABadFeelingAboutThis,
 	GotMilk,
 	ImNotThirsty,
-	ImNoMilkmade,
+	ImNoMilkmaid,
 	ICouldBlowUpTheWholeVillage,
 	YepThatsACowAlright,
 	TooUghHeavy,
@@ -96,7 +96,7 @@ enum class HeroSpeech {
 	TheTownIsSafeFromTheseFoulSpawn,
 	RestWellLeoricIllFindYourSon,
 	YourMadnessEndsHereBetrayer,
-	YouLureNoMoreMenToTheirDeaths,
+	YoullLureNoMoreMenToTheirDeaths,
 	ReturnToHeavenWarriorOfLight,
 	ICanSeeWhyTheyFearThisWeapon,
 	ThisMustBeWhatGriswoldWanted,
@@ -114,8 +114,8 @@ enum class HeroSpeech {
 	IMustBeGettingClose,
 	MaybeItsLockedFromTheInside,
 	LooksLikeItsRustedShut,
-	MaybeThereIsAnotherWay,
-	LAST = MaybeThereIsAnotherWay
+	MaybeTheresAnotherWay,
+	LAST = MaybeTheresAnotherWay
 };
 
 enum _sfx_id : int16_t {

@@ -597,7 +597,7 @@ void TalkToCow(PlayerStruct &player, TownerStruct &cow)
 	} else if (CowClicks >= 8 && !gbIsSpawn) {
 		CowClicks = 4;
 
-		static const HeroSpeech snSfx[3] = { HeroSpeech::YepThatsACowAlright, HeroSpeech::ImNotThirsty, HeroSpeech::ImNoMilkmade };
+		static const HeroSpeech snSfx[3] = { HeroSpeech::YepThatsACowAlright, HeroSpeech::ImNotThirsty, HeroSpeech::ImNoMilkmaid };
 		player.SaySpecific(snSfx[CowMsg]);
 		CowMsg++;
 		if (CowMsg >= 3)
