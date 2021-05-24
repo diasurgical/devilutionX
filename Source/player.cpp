@@ -1053,7 +1053,7 @@ void InitPlayer(int pnum, bool FirstTime)
 				player.position.tile = { ViewX, ViewY };
 			}
 		} else {
-			for (i = 0; i < 8 && !PosOkPlayer(pnum, plrxoff2[i] + player.position.tile.x, plryoff2[i] + player.position.tile.y); i++)
+			for (i = 0; i < 8 && !PosOkPlayer(pnum, Point { plrxoff2[i], plryoff2[i] } + player.position.tile); i++)
 				;
 			player.position.tile.x += plrxoff2[i];
 			player.position.tile.y += plryoff2[i];
@@ -1140,7 +1140,7 @@ bool PlrDirOK(int pnum, Direction dir)
 
 	Point position = player.position.tile;
 	Point futurePosition = position + dir;
-	if (futurePosition.x < 0 || !dPiece[futurePosition.x][futurePosition.y] || !PosOkPlayer(pnum, futurePosition.x, futurePosition.y)) {
+	if (futurePosition.x < 0 || !dPiece[futurePosition.x][futurePosition.y] || !PosOkPlayer(pnum, futurePosition)) {
 		return false;
 	}
 
@@ -3503,21 +3503,21 @@ void ClrPlrPath(PlayerStruct &player)
 	memset(player.walkpath, WALK_NONE, sizeof(player.walkpath));
 }
 
-bool PosOkPlayer(int pnum, int x, int y)
+bool PosOkPlayer(int pnum, Point position)
 {
 	int8_t p, bv;
 
-	if (x < 0 || x >= MAXDUNX || y < 0 || y >= MAXDUNY)
+	if (position.x < 0 || position.x >= MAXDUNX || position.y < 0 || position.y >= MAXDUNY)
 		return false;
-	if (dPiece[x][y] == 0)
+	if (dPiece[position.x][position.y] == 0)
 		return false;
-	if (SolidLoc({ x, y }))
+	if (SolidLoc(position))
 		return false;
-	if (dPlayer[x][y] != 0) {
-		if (dPlayer[x][y] > 0) {
-			p = dPlayer[x][y] - 1;
+	if (dPlayer[position.x][position.y] != 0) {
+		if (dPlayer[position.x][position.y] > 0) {
+			p = dPlayer[position.x][position.y] - 1;
 		} else {
-			p = -(dPlayer[x][y] + 1);
+			p = -(dPlayer[position.x][position.y] + 1);
 		}
 		if (p != pnum
 		    && p >= 0
@@ -3527,23 +3527,23 @@ bool PosOkPlayer(int pnum, int x, int y)
 		}
 	}
 
-	if (dMonster[x][y] != 0) {
+	if (dMonster[position.x][position.y] != 0) {
 		if (currlevel == 0) {
 			return false;
 		}
-		if (dMonster[x][y] <= 0) {
+		if (dMonster[position.x][position.y] <= 0) {
 			return false;
 		}
-		if ((monster[dMonster[x][y] - 1]._mhitpoints >> 6) > 0) {
+		if ((monster[dMonster[position.x][position.y] - 1]._mhitpoints >> 6) > 0) {
 			return false;
 		}
 	}
 
-	if (dObject[x][y] != 0) {
-		if (dObject[x][y] > 0) {
-			bv = dObject[x][y] - 1;
+	if (dObject[position.x][position.y] != 0) {
+		if (dObject[position.x][position.y] > 0) {
+			bv = dObject[position.x][position.y] - 1;
 		} else {
-			bv = -(dObject[x][y] + 1);
+			bv = -(dObject[position.x][position.y] + 1);
 		}
 		if (object[bv]._oSolidFlag) {
 			return false;
@@ -3712,7 +3712,7 @@ void SyncPlrAnim(int pnum)
 
 void SyncInitPlrPos(int pnum)
 {
-	int x, y, xx, yy, range;
+	int xx, yy, range;
 	DWORD i;
 	bool posOk;
 
@@ -3722,22 +3722,22 @@ void SyncInitPlrPos(int pnum)
 		return;
 	}
 
+	Point position = {};
 	for (i = 0; i < 8; i++) {
-		x = player.position.tile.x + plrxoff2[i];
-		y = player.position.tile.y + plryoff2[i];
-		if (PosOkPlayer(pnum, x, y)) {
+		position = player.position.tile + Point { plrxoff2[i], plryoff2[i] };
+		if (PosOkPlayer(pnum, position)) {
 			break;
 		}
 	}
 
-	if (!PosOkPlayer(pnum, x, y)) {
+	if (!PosOkPlayer(pnum, position)) {
 		posOk = false;
 		for (range = 1; range < 50 && !posOk; range++) {
 			for (yy = -range; yy <= range && !posOk; yy++) {
-				y = yy + player.position.tile.y;
+				position.y = yy + player.position.tile.y;
 				for (xx = -range; xx <= range && !posOk; xx++) {
-					x = xx + player.position.tile.x;
-					if (PosOkPlayer(pnum, x, y) && !PosOkPortal(currlevel, x, y)) {
+					position.x = xx + player.position.tile.x;
+					if (PosOkPlayer(pnum, position) && !PosOkPortal(currlevel, position.x, position.y)) {
 						posOk = true;
 					}
 				}
@@ -3745,13 +3745,13 @@ void SyncInitPlrPos(int pnum)
 		}
 	}
 
-	player.position.tile = { x, y };
-	dPlayer[x][y] = pnum + 1;
+	player.position.tile = position;
+	dPlayer[position.x][position.y] = pnum + 1;
 
 	if (pnum == myplr) {
-		player.position.future = { x, y };
-		ViewX = x;
-		ViewY = y;
+		player.position.future = position;
+		ViewX = position.x;
+		ViewY = position.y;
 	}
 }
 

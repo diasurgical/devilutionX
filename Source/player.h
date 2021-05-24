@@ -449,7 +449,7 @@ void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
 void ClrPlrPath(PlayerStruct &player);
-bool PosOkPlayer(int pnum, int x, int y);
+bool PosOkPlayer(int pnum, Point position);
 void MakePlrPath(int pnum, Point targetPosition, bool endspace);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);

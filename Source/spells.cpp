@@ -212,31 +212,30 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 
 static void PlacePlayer(int pnum)
 {
-	int nx, ny, max, min, x, y;
+	int max, min, x, y;
 	DWORD i;
 	bool done;
+	Point newPosition = {};
 
 	if (plr[pnum].plrlevel == currlevel) {
 		for (i = 0; i < 8; i++) {
-			nx = plr[pnum].position.tile.x + plrxoff2[i];
-			ny = plr[pnum].position.tile.y + plryoff2[i];
-
-			if (PosOkPlayer(pnum, nx, ny)) {
+			newPosition = plr[pnum].position.tile + Point { plrxoff2[i], plryoff2[i] };
+			if (PosOkPlayer(pnum, newPosition)) {
 				break;
 			}
 		}
 
-		if (!PosOkPlayer(pnum, nx, ny)) {
+		if (!PosOkPlayer(pnum, newPosition)) {
 			done = false;
 
 			for (max = 1, min = -1; min > -50 && !done; max++, min--) {
 				for (y = min; y <= max && !done; y++) {
-					ny = plr[pnum].position.tile.y + y;
+					newPosition.y = plr[pnum].position.tile.y + y;
 
 					for (x = min; x <= max && !done; x++) {
-						nx = plr[pnum].position.tile.x + x;
+						newPosition.x = plr[pnum].position.tile.x + x;
 
-						if (PosOkPlayer(pnum, nx, ny)) {
+						if (PosOkPlayer(pnum, newPosition)) {
 							done = true;
 						}
 					}
@@ -244,13 +243,13 @@ static void PlacePlayer(int pnum)
 			}
 		}
 
-		plr[pnum].position.tile = { nx, ny };
+		plr[pnum].position.tile = newPosition;
 
-		dPlayer[nx][ny] = pnum + 1;
+		dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 
 		if (pnum == myplr) {
-			ViewX = nx;
-			ViewY = ny;
+			ViewX = newPosition.x;
+			ViewY = newPosition.y;
 		}
 	}
 }
