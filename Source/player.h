@@ -392,11 +392,6 @@ struct PlayerStruct {
 	 * @brief Resets all Data of the current PlayerStruct
 	*/
 	void Reset();
-
-	/**
-	 * @brief Gets the width for the specified player animation
-	*/
-	int GetAnimationWidth(player_graphic graphic);
 };
 
 extern int myplr;

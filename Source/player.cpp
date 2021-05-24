@@ -374,52 +374,6 @@ void PlayerStruct::Reset()
 	*this = std::move(*emptyPlayer);
 }
 
-int PlayerStruct::GetAnimationWidth(player_graphic graphic)
-{
-	switch (graphic) {
-	case player_graphic::Stand:
-		if (_pClass == HeroClass::Monk)
-			return 112;
-		return 96;
-	case player_graphic::Walk:
-		if (_pClass == HeroClass::Monk)
-			return 112;
-		return 96;
-	case player_graphic::Attack:
-		if (_pClass == HeroClass::Monk)
-			return 130;
-		if (_pClass == HeroClass::Warrior || _pClass == HeroClass::Barbarian) {
-			auto gn = static_cast<anim_weapon_id>(_pgfxnum & 0xF);
-			if (gn == ANIM_ID_BOW)
-				return 96;
-		}
-		return 128;
-	case player_graphic::Hit:
-		if (_pClass == HeroClass::Monk)
-			return 98;
-		return 96;
-	case player_graphic::Lightning:
-	case player_graphic::Fire:
-	case player_graphic::Magic:
-		if (_pClass == HeroClass::Monk)
-			return 114;
-		if (_pClass == HeroClass::Sorcerer)
-			return 128;
-		return 96;
-	case player_graphic::Death:
-		if (_pClass == HeroClass::Monk)
-			return 160;
-		return 128;
-	case player_graphic::Block:
-		if (_pClass == HeroClass::Monk)
-			return 98;
-		return 96;
-	default:
-		Log("GetAnimationWidth: Unkown graphic {}", graphic);
-		return 96;
-	}
-}
-
 void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<std::optional<CelSprite>, 8> &anim, int width)
 {
 	data = nullptr;
@@ -444,7 +398,10 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		c = HeroClass::Warrior;
 	}
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[player._pgfxnum & 0xF]);
+	auto animWeaponId = static_cast<anim_weapon_id>(player._pgfxnum & 0xF);
+	int animationWidth = 96;
+
+	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[animWeaponId]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	switch (graphic) {
@@ -452,41 +409,64 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		szCel = "AS";
 		if (leveltype == DTYPE_TOWN)
 			szCel = "ST";
+		if (c == HeroClass::Monk)
+			animationWidth = 112;
 		break;
 	case player_graphic::Walk:
 		szCel = "AW";
 		if (leveltype == DTYPE_TOWN)
 			szCel = "WL";
+		if (c == HeroClass::Monk)
+			animationWidth = 112;
 		break;
 	case player_graphic::Attack:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "AT";
+		if (c == HeroClass::Monk)
+			animationWidth = 130;
+		else if (animWeaponId != ANIM_ID_BOW || !(c == HeroClass::Warrior || c == HeroClass::Barbarian))
+			animationWidth = 128;
 		break;
 	case player_graphic::Hit:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "HT";
+		if (c == HeroClass::Monk)
+			animationWidth = 98;
 		break;
 	case player_graphic::Lightning:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "LM";
+		if (c == HeroClass::Monk)
+			animationWidth = 114;
+		else if (c == HeroClass::Sorcerer)
+			animationWidth = 128;
 		break;
 	case player_graphic::Fire:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "FM";
+		if (c == HeroClass::Monk)
+			animationWidth = 114;
+		else if (c == HeroClass::Sorcerer)
+			animationWidth = 128;
 		break;
 	case player_graphic::Magic:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "QM";
+		if (c == HeroClass::Monk)
+			animationWidth = 114;
+		else if (c == HeroClass::Sorcerer)
+			animationWidth = 128;
 		break;
 	case player_graphic::Death:
-		if ((player._pgfxnum & 0xF) != 0)
+		if (animWeaponId != ANIM_ID_UNARMED)
 			return;
 		szCel = "DT";
+		animationWidth = (c == HeroClass::Monk) ? 160 : 128;
 		break;
 	case player_graphic::Block:
 		if (leveltype == DTYPE_TOWN)
@@ -494,6 +474,8 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		if (!player._pBlockFlag)
 			return;
 		szCel = "BL";
+		if (c == HeroClass::Monk)
+			animationWidth = 98;
 		break;
 	default:
 		app_fatal("PLR:2");
@@ -501,7 +483,7 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 
 	sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", cs, prefix, prefix, szCel);
 	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
-	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, player.GetAnimationWidth(graphic));
+	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
 
 void InitPlayerGFX(int pnum)
