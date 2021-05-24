@@ -430,7 +430,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP = 0, int frac = 0, int earflag 
 void InitPlayer(int pnum, bool FirstTime);
 void InitMultiView();
 bool SolidLoc(int x, int y);
-void PlrClrTrans(int x, int y);
+void PlrClrTrans(Point position);
 void PlrDoTrans(int x, int y);
 void SetPlayerOld(PlayerStruct &player);
 void FixPlayerLocation(int pnum, Direction bDir);

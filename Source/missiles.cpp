@@ -4535,7 +4535,7 @@ void MI_Teleport(int i)
 		missile[i]._miDelFlag = true;
 	} else {
 		dPlayer[plr[id].position.tile.x][plr[id].position.tile.y] = 0;
-		PlrClrTrans(plr[id].position.tile.x, plr[id].position.tile.y);
+		PlrClrTrans(plr[id].position.tile);
 		plr[id].position.tile = { missile[i].position.tile.x, missile[i].position.tile.y };
 		plr[id].position.future = plr[id].position.tile;
 		plr[id].position.old = plr[id].position.tile;

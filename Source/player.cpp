@@ -1248,12 +1248,12 @@ bool PlrDirOK(int pnum, int dir)
 	return isOk;
 }
 
-void PlrClrTrans(int x, int y)
+void PlrClrTrans(Point position)
 {
 	int i, j;
 
-	for (i = y - 1; i <= y + 1; i++) {
-		for (j = x - 1; j <= x + 1; j++) {
+	for (i = position.y - 1; i <= position.y + 1; i++) {
+		for (j = position.x - 1; j <= position.x + 1; j++) {
 			TransList[dTransVal[j][i]] = false;
 		}
 	}
