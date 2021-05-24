@@ -12,7 +12,7 @@
 
 namespace devilution {
 
-int GetManaAmount(int id, spell_id sn)
+int GetManaAmount(PlayerStruct &player, spell_id sn)
 {
 	int ma; // mana amount
 
@@ -20,7 +20,7 @@ int GetManaAmount(int id, spell_id sn)
 	int adj = 0;
 
 	// spell level
-	int sl = plr[id]._pSplLvl[sn] + plr[id]._pISplLvlAdd - 1;
+	int sl = player._pSplLvl[sn] + player._pISplLvlAdd - 1;
 
 	if (sl < 0) {
 		sl = 0;
@@ -37,9 +37,9 @@ int GetManaAmount(int id, spell_id sn)
 	}
 
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj);
+		ma = (spelldata[SPL_HEAL].sManaCost + 2 * player._pLevel - adj);
 	} else if (spelldata[sn].sManaCost == 255) {
-		ma = ((BYTE)plr[id]._pMaxManaBase - adj);
+		ma = ((BYTE)player._pMaxManaBase - adj);
 	} else {
 		ma = (spelldata[sn].sManaCost - adj);
 	}
@@ -48,9 +48,9 @@ int GetManaAmount(int id, spell_id sn)
 		ma = 0;
 	ma <<= 6;
 
-	if (gbIsHellfire && plr[id]._pClass == HeroClass::Sorcerer) {
+	if (gbIsHellfire && player._pClass == HeroClass::Sorcerer) {
 		ma /= 2;
-	} else if (plr[id]._pClass == HeroClass::Rogue || plr[id]._pClass == HeroClass::Monk || plr[id]._pClass == HeroClass::Bard) {
+	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard) {
 		ma -= ma / 4;
 	}
 
@@ -71,16 +71,16 @@ void UseMana(int id, spell_id sn)
 		case RSPLTYPE_INVALID:
 			break;
 		case RSPLTYPE_SCROLL:
-			RemoveScroll(id);
+			RemoveScroll(plr[id]);
 			break;
 		case RSPLTYPE_CHARGES:
-			UseStaffCharge(id);
+			UseStaffCharge(plr[id]);
 			break;
 		case RSPLTYPE_SPELL:
 #ifdef _DEBUG
 			if (!debug_mode_key_inverted_v) {
 #endif
-				ma = GetManaAmount(id, sn);
+				ma = GetManaAmount(plr[id], sn);
 				plr[id]._pMana -= ma;
 				plr[id]._pManaBase -= ma;
 				drawmanaflag = true;
@@ -167,7 +167,9 @@ bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 			if (GetSpellLevel(id, sn) <= 0) {
 				result = false;
 			} else {
-				result = plr[id]._pMana >= GetManaAmount(id, sn);
+				auto &player = plr[id];
+
+				return player._pMana >= GetManaAmount(player, sn);
 			}
 		}
 	}
@@ -298,10 +300,13 @@ void DoHealOther(int pnum, int rid)
 		NewCursor(CURSOR_HAND);
 	}
 
-	if ((char)rid != -1 && (plr[rid]._pHitPoints >> 6) > 0) {
+	auto &player = plr[pnum];
+	auto &target = plr[rid];
+
+	if ((char)rid != -1 && (target._pHitPoints >> 6) > 0) {
 		hp = (GenerateRnd(10) + 1) << 6;
 
-		for (i = 0; i < plr[pnum]._pLevel; i++) {
+		for (i = 0; i < player._pLevel; i++) {
 			hp += (GenerateRnd(4) + 1) << 6;
 		}
 
@@ -309,24 +314,24 @@ void DoHealOther(int pnum, int rid)
 			hp += (GenerateRnd(6) + 1) << 6;
 		}
 
-		if (plr[pnum]._pClass == HeroClass::Warrior || plr[pnum]._pClass == HeroClass::Barbarian) {
+		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
 			hp *= 2;
-		} else if (plr[pnum]._pClass == HeroClass::Rogue || plr[pnum]._pClass == HeroClass::Bard) {
+		} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard) {
 			hp += hp / 2;
-		} else if (plr[pnum]._pClass == HeroClass::Monk) {
+		} else if (player._pClass == HeroClass::Monk) {
 			hp *= 3;
 		}
 
-		plr[rid]._pHitPoints += hp;
+		target._pHitPoints += hp;
 
-		if (plr[rid]._pHitPoints > plr[rid]._pMaxHP) {
-			plr[rid]._pHitPoints = plr[rid]._pMaxHP;
+		if (target._pHitPoints > target._pMaxHP) {
+			target._pHitPoints = target._pMaxHP;
 		}
 
-		plr[rid]._pHPBase += hp;
+		target._pHPBase += hp;
 
-		if (plr[rid]._pHPBase > plr[rid]._pMaxHPBase) {
-			plr[rid]._pHPBase = plr[rid]._pMaxHPBase;
+		if (target._pHPBase > target._pMaxHPBase) {
+			target._pHPBase = target._pMaxHPBase;
 		}
 
 		drawhpflag = true;

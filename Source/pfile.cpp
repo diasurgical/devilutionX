@@ -275,7 +275,7 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 
 				pfile_SFileCloseArchive(&archive);
 				LoadHeroItems(plr[0]);
-				RemoveEmptyInventory(0);
+				RemoveEmptyInventory(plr[0]);
 				CalcPlrInv(0, false);
 
 				game_2_ui_player(plr[0], &uihero, hasSaveGame);
@@ -401,7 +401,7 @@ void pfile_read_player_from_save(char name[16], int playerId)
 	UnPackPlayer(&pkplr, playerId, false);
 
 	LoadHeroItems(plr[playerId]);
-	RemoveEmptyInventory(playerId);
+	RemoveEmptyInventory(plr[playerId]);
 	CalcPlrInv(playerId, false);
 }
 

@@ -494,13 +494,8 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
 
-void InitPlayerGFX(int pnum)
+void InitPlayerGFX(PlayerStruct &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("InitPlayerGFX: illegal player %i", pnum);
-	}
-	auto &player = plr[pnum];
-
 	if (player._pHitPoints >> 6 == 0) {
 		player._pgfxnum = 0;
 		LoadPlrGFX(player, player_graphic::Death);
@@ -3576,6 +3571,16 @@ void MakePlrPath(int pnum, Point targetPosition, bool endspace)
 	}
 
 	player.walkpath[path] = WALK_NONE;
+}
+
+void CalcPlrStaff(PlayerStruct &player)
+{
+	player._pISpells = 0;
+	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
+	    && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag
+	    && player.InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
+		player._pISpells |= GetSpellBitmask(player.InvBody[INVLOC_HAND_LEFT]._iSpell);
+	}
 }
 
 void CheckPlrSpell()

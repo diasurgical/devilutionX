@@ -414,21 +414,21 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
 
 	if (pCelSprite == nullptr) {
-		Log("Drawing player {} \"{}\": NULL CelSprite", pnum, plr[pnum]._pName);
+		Log("Drawing player {} \"{}\": NULL CelSprite", pnum, player._pName);
 		return;
 	}
 
 	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(pCelSprite->Data()));
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
-		if (plr[pnum]._pmode <= PM_QUIT)
-			szMode = szPlrModeAssert[plr[pnum]._pmode];
+		if (player._pmode <= PM_QUIT)
+			szMode = szPlrModeAssert[player._pmode];
 		Log(
 		    "Drawing player {} \"{}\" {}: facing {}, frame {} of {}",
 		    pnum,
-		    plr[pnum]._pName,
+		    player._pName,
 		    szMode,
-		    plr[pnum]._pdir,
+		    player._pdir,
 		    nCel,
 		    frames);
 		return;

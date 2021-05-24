@@ -1654,7 +1654,7 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				strcpy(tempstr, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges).c_str());
 			} break;
 			default: {
-				int mana = GetManaAmount(myplr, sn) >> 6;
+				int mana = GetManaAmount(myPlayer, sn) >> 6;
 				int min;
 				int max;
 				GetDamageAmt(sn, &min, &max);
