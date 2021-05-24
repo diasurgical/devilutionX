@@ -76,7 +76,9 @@ void InitTownTriggers()
 		townwarp = gbIsMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 1 || (gbIsHellfire && plr[myplr]._pLevel >= 10)) {
+		auto &myPlayer = plr[myplr];
+
+		if (gbIsMultiplayer || myPlayer.pTownWarps & 1 || (gbIsHellfire && myPlayer._pLevel >= 10)) {
 			townwarps[0] = true;
 			trigs[numtrigs].position = { 49, 21 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -87,14 +89,14 @@ void InitTownTriggers()
 #endif
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 2 || (gbIsHellfire && plr[myplr]._pLevel >= 15)) {
+		if (gbIsMultiplayer || myPlayer.pTownWarps & 2 || (gbIsHellfire && myPlayer._pLevel >= 15)) {
 			townwarps[1] = true;
 			trigs[numtrigs].position = { 17, 69 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 			trigs[numtrigs]._tlvl = 9;
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 4 || (gbIsHellfire && plr[myplr]._pLevel >= 20)) {
+		if (gbIsMultiplayer || myPlayer.pTownWarps & 4 || (gbIsHellfire && myPlayer._pLevel >= 20)) {
 			townwarps[2] = true;
 			trigs[numtrigs].position = { 41, 80 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -816,18 +818,20 @@ void CheckTrigForce()
 
 void CheckTriggers()
 {
-	if (plr[myplr]._pmode != PM_STAND)
+	auto &myPlayer = plr[myplr];
+
+	if (myPlayer._pmode != PM_STAND)
 		return;
 
 	for (int i = 0; i < numtrigs; i++) {
-		if (plr[myplr].position.tile != trigs[i].position) {
+		if (myPlayer.position.tile != trigs[i].position) {
 			continue;
 		}
 
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
-				NetSendCmdLoc(myplr, true, CMD_WALKXY, { plr[myplr].position.tile.x, plr[myplr].position.tile.y + 1 });
+				NetSendCmdLoc(myplr, true, CMD_WALKXY, { myPlayer.position.tile.x, myPlayer.position.tile.y + 1 });
 				PlaySFX(PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
@@ -845,27 +849,27 @@ void CheckTriggers()
 				bool abort = false;
 				diablo_message abortflag;
 
-				auto position = plr[myplr].position.tile;
-				if (trigs[i]._tlvl == 5 && plr[myplr]._pLevel < 8) {
+				auto position = myPlayer.position.tile;
+				if (trigs[i]._tlvl == 5 && myPlayer._pLevel < 8) {
 					abort = true;
 					position.y += 1;
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
-				if (trigs[i]._tlvl == 9 && plr[myplr]._pLevel < 13) {
+				if (trigs[i]._tlvl == 9 && myPlayer._pLevel < 13) {
 					abort = true;
 					position.x += 1;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
-				if (trigs[i]._tlvl == 13 && plr[myplr]._pLevel < 17) {
+				if (trigs[i]._tlvl == 13 && myPlayer._pLevel < 17) {
 					abort = true;
 					position.y += 1;
 					abortflag = EMSG_REQUIRES_LVL_17;
 				}
 
 				if (abort) {
-					plr[myplr].Say(HeroSpeech::ICantGetThereFromHere);
+					myPlayer.Say(HeroSpeech::ICantGetThereFromHere);
 
 					InitDiabloMsg(abortflag);
 					NetSendCmdLoc(myplr, true, CMD_WALKXY, position);

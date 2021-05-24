@@ -278,18 +278,18 @@ void CheckCursMove()
 
 	// Adjust by player offset and tile grid alignment
 	CalcTileOffset(&xo, &yo);
-	PlayerStruct *pPlayer = &plr[myplr];
+	const auto &myPlayer = plr[myplr];
 	Point offset = ScrollInfo.offset;
-	if (pPlayer->IsWalking())
-		offset = GetOffsetForWalking(pPlayer->AnimInfo, pPlayer->_pdir, true);
+	if (myPlayer.IsWalking())
+		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 	sx -= offset.x - xo;
 	sy -= offset.y - yo;
 
 	// Predict the next frame when walking to avoid input jitter
-	fx = plr[myplr].position.offset2.x / 256;
-	fy = plr[myplr].position.offset2.y / 256;
-	fx -= (plr[myplr].position.offset2.x + plr[myplr].position.velocity.x) / 256;
-	fy -= (plr[myplr].position.offset2.y + plr[myplr].position.velocity.y) / 256;
+	fx = myPlayer.position.offset2.x / 256;
+	fy = myPlayer.position.offset2.y / 256;
+	fx -= (myPlayer.position.offset2.x + myPlayer.position.velocity.x) / 256;
+	fy -= (myPlayer.position.offset2.y + myPlayer.position.velocity.y) / 256;
 	if (ScrollInfo._sdir != SDIR_NONE) {
 		sx -= fx;
 		sy -= fy;
@@ -364,7 +364,7 @@ void CheckCursMove()
 	panelflag = false;
 	trigflag = false;
 
-	if (plr[myplr]._pInvincible) {
+	if (myPlayer._pInvincible) {
 		return;
 	}
 	if (pcurs >= CURSOR_FIRSTITEM || spselflag) {

@@ -236,23 +236,23 @@ void pfile_write_hero(bool write_game_data, bool clear_tables)
 	pfile_encode_hero(&pkplr);
 	if (!gbVanilla) {
 		SaveHotkeys();
-		SaveHeroItems(&plr[myplr]);
+		SaveHeroItems(plr[myplr]);
 	}
 }
 
-static void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, bool bHasSaveFile)
+static void game_2_ui_player(const PlayerStruct &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
 	memset(heroinfo, 0, sizeof(*heroinfo));
-	strncpy(heroinfo->name, p->_pName, sizeof(heroinfo->name) - 1);
+	strncpy(heroinfo->name, player._pName, sizeof(heroinfo->name) - 1);
 	heroinfo->name[sizeof(heroinfo->name) - 1] = '\0';
-	heroinfo->level = p->_pLevel;
-	heroinfo->heroclass = p->_pClass;
-	heroinfo->strength = p->_pStrength;
-	heroinfo->magic = p->_pMagic;
-	heroinfo->dexterity = p->_pDexterity;
-	heroinfo->vitality = p->_pVitality;
+	heroinfo->level = player._pLevel;
+	heroinfo->heroclass = player._pClass;
+	heroinfo->strength = player._pStrength;
+	heroinfo->magic = player._pMagic;
+	heroinfo->dexterity = player._pDexterity;
+	heroinfo->vitality = player._pVitality;
 	heroinfo->hassaved = bHasSaveFile;
-	heroinfo->herorank = p->pDiabloKillLevel;
+	heroinfo->herorank = player.pDiabloKillLevel;
 	heroinfo->spawned = gbIsSpawn;
 }
 
@@ -274,11 +274,11 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 				UnPackPlayer(&pkplr, 0, false);
 
 				pfile_SFileCloseArchive(&archive);
-				LoadHeroItems(&plr[0]);
+				LoadHeroItems(plr[0]);
 				RemoveEmptyInventory(0);
 				CalcPlrInv(0, false);
 
-				game_2_ui_player(&plr[0], &uihero, hasSaveGame);
+				game_2_ui_player(plr[0], &uihero, hasSaveGame);
 				ui_add_hero_info(&uihero);
 			}
 			pfile_SFileCloseArchive(&archive);
@@ -335,10 +335,10 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	player._pName[PLR_NAME_LEN - 1] = '\0';
 	PackPlayer(&pkplr, player, true);
 	pfile_encode_hero(&pkplr);
-	game_2_ui_player(&player, heroinfo, false);
+	game_2_ui_player(player, heroinfo, false);
 	if (!gbVanilla) {
 		SaveHotkeys();
-		SaveHeroItems(&player);
+		SaveHeroItems(player);
 	}
 
 	mpqapi_flush_and_close(true);
@@ -400,7 +400,7 @@ void pfile_read_player_from_save(char name[16], int playerId)
 
 	UnPackPlayer(&pkplr, playerId, false);
 
-	LoadHeroItems(&plr[playerId]);
+	LoadHeroItems(plr[playerId]);
 	RemoveEmptyInventory(playerId);
 	CalcPlrInv(playerId, false);
 }

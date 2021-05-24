@@ -59,7 +59,6 @@ struct TownerStruct {
 	/** Specifies the animation frame sequence. */
 	const uint8_t *animOrder; // unowned
 	std::size_t animOrderSize;
-	PlayerStruct *_tTalkingToPlayer;
 	void (*talk)(PlayerStruct &player, TownerStruct &barOwner);
 	bool _tbtcnt;
 	_talker_id _ttype;

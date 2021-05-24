@@ -3082,19 +3082,19 @@ static void RepairItem(ItemStruct *i, int lvl)
 
 void DoRepair(int pnum, int cii)
 {
-	PlayerStruct *p;
 	ItemStruct *pi;
 
-	p = &plr[pnum];
-	PlaySfxLoc(IS_REPAIR, p->position.tile.x, p->position.tile.y);
+	auto &player = plr[pnum];
+
+	PlaySfxLoc(IS_REPAIR, player.position.tile.x, player.position.tile.y);
 
 	if (cii >= NUM_INVLOC) {
-		pi = &p->InvList[cii - NUM_INVLOC];
+		pi = &player.InvList[cii - NUM_INVLOC];
 	} else {
-		pi = &p->InvBody[cii];
+		pi = &player.InvBody[cii];
 	}
 
-	RepairItem(pi, p->_pLevel);
+	RepairItem(pi, player._pLevel);
 	CalcPlrInv(pnum, true);
 
 	if (pnum == myplr)
@@ -3121,15 +3121,15 @@ void DoRecharge(int pnum, int cii)
 {
 	ItemStruct *pi;
 
-	PlayerStruct *p = &plr[pnum];
+	auto &player = plr[pnum];
 	if (cii >= NUM_INVLOC) {
-		pi = &p->InvList[cii - NUM_INVLOC];
+		pi = &player.InvList[cii - NUM_INVLOC];
 	} else {
-		pi = &p->InvBody[cii];
+		pi = &player.InvBody[cii];
 	}
 	if (pi->_itype == ITYPE_STAFF && pi->_iSpell != SPL_NULL) {
 		int r = GetSpellBookLevel(pi->_iSpell);
-		r = GenerateRnd(p->_pLevel / r) + 1;
+		r = GenerateRnd(player._pLevel / r) + 1;
 		RechargeItem(pi, r);
 		CalcPlrInv(pnum, true);
 	}
@@ -3138,7 +3138,7 @@ void DoRecharge(int pnum, int cii)
 		NewCursor(CURSOR_HAND);
 }
 
-static bool OilItem(ItemStruct *x, PlayerStruct *p)
+static bool OilItem(ItemStruct *x, PlayerStruct &player)
 {
 	int r;
 
@@ -3152,7 +3152,7 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 		return false;
 	}
 
-	switch (p->_pOilType) {
+	switch (player._pOilType) {
 	case IMISC_OILACC:
 	case IMISC_OILMAST:
 	case IMISC_OILSHARP:
@@ -3178,7 +3178,7 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 		break;
 	}
 
-	switch (p->_pOilType) {
+	switch (player._pOilType) {
 	case IMISC_OILACC:
 		if (x->_iPLToHit < 50) {
 			x->_iPLToHit += GenerateRnd(2) + 1;
@@ -3251,8 +3251,8 @@ void DoOil(int pnum, int cii)
 {
 	if (cii < NUM_INVLOC && cii != INVLOC_HEAD && (cii <= INVLOC_AMULET || cii > INVLOC_CHEST))
 		return;
-	PlayerStruct *p = &plr[pnum];
-	if (!OilItem(&p->InvBody[cii], p))
+	auto &player = plr[pnum];
+	if (!OilItem(&player.InvBody[cii], player))
 		return;
 	CalcPlrInv(pnum, true);
 	if (pnum == myplr) {

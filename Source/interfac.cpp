@@ -237,6 +237,8 @@ void ShowProgress(interface_mode uMsg)
 	sound_init();
 	IncProgress();
 
+	auto &myPlayer = plr[myplr];
+
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
 		IncProgress();
@@ -246,7 +248,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		break;
 	case WM_DIABNEWGAME:
-		plr[myplr].pOriginalCathedral = !gbIsHellfire;
+		myPlayer.pOriginalCathedral = !gbIsHellfire;
 		IncProgress();
 		FreeGameMem();
 		IncProgress();
@@ -266,7 +268,7 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		currlevel++;
 		leveltype = gnLevelTypeTbl[currlevel];
-		assert(plr[myplr].plrlevel == currlevel);
+		assert(myPlayer.plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
@@ -282,7 +284,7 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		currlevel--;
 		leveltype = gnLevelTypeTbl[currlevel];
-		assert(plr[myplr].plrlevel == currlevel);
+		assert(myPlayer.plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_PREV);
 		IncProgress();
@@ -341,9 +343,8 @@ void ShowProgress(interface_mode uMsg)
 		}
 		IncProgress();
 		FreeGameMem();
-		currlevel = plr[myplr].plrlevel;
+		currlevel = myPlayer.plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_TWARPDN);
 		IncProgress();
@@ -357,9 +358,8 @@ void ShowProgress(interface_mode uMsg)
 		}
 		IncProgress();
 		FreeGameMem();
-		currlevel = plr[myplr].plrlevel;
+		currlevel = myPlayer.plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_TWARPUP);
 		IncProgress();
@@ -373,9 +373,8 @@ void ShowProgress(interface_mode uMsg)
 		}
 		IncProgress();
 		FreeGameMem();
-		currlevel = plr[myplr].plrlevel;
+		currlevel = myPlayer.plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
@@ -390,11 +389,11 @@ void ShowProgress(interface_mode uMsg)
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == DisableInputWndProc);
 
-	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, plr[myplr].position.tile, plr[myplr].plrlevel);
+	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel);
 	plrmsg_delay(false);
 	ResetPal();
 
-	if (gbSomebodyWonGameKludge && plr[myplr].plrlevel == 16) {
+	if (gbSomebodyWonGameKludge && myPlayer.plrlevel == 16) {
 		PrepDoEnding();
 	}
 

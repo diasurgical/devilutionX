@@ -1340,20 +1340,23 @@ void sound_init()
 			mask |= (sfx_ROGUE | sfx_SORCERER);
 		if (gbIsHellfire)
 			mask |= sfx_MONK;
-	} else if (plr[myplr]._pClass == HeroClass::Warrior) {
-		mask |= sfx_WARRIOR;
-	} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-		mask |= sfx_ROGUE;
-	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-		mask |= sfx_SORCERER;
-	} else if (plr[myplr]._pClass == HeroClass::Monk) {
-		mask |= sfx_MONK;
-	} else if (plr[myplr]._pClass == HeroClass::Bard) {
-		mask |= sfx_ROGUE;
-	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-		mask |= sfx_WARRIOR;
 	} else {
-		app_fatal("effects:1");
+		auto &myPlayer = plr[myplr];
+		if (myPlayer._pClass == HeroClass::Warrior) {
+			mask |= sfx_WARRIOR;
+		} else if (myPlayer._pClass == HeroClass::Rogue) {
+			mask |= sfx_ROGUE;
+		} else if (myPlayer._pClass == HeroClass::Sorcerer) {
+			mask |= sfx_SORCERER;
+		} else if (myPlayer._pClass == HeroClass::Monk) {
+			mask |= sfx_MONK;
+		} else if (myPlayer._pClass == HeroClass::Bard) {
+			mask |= sfx_ROGUE;
+		} else if (myPlayer._pClass == HeroClass::Barbarian) {
+			mask |= sfx_WARRIOR;
+		} else {
+			app_fatal("effects:1");
+		}
 	}
 
 	priv_sound_init(mask);

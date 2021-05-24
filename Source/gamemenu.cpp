@@ -78,13 +78,9 @@ const char *const sound_toggle_names[] = {
 
 void gamemenu_update_single()
 {
-	bool enable;
-
 	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
 
-	enable = false;
-	if (plr[myplr]._pmode != PM_DEATH && !deathflag)
-		enable = true;
+	bool enable = plr[myplr]._pmode != PM_DEATH && !deathflag;
 
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
@@ -101,11 +97,9 @@ void gamemenu_previous(bool bActivate)
 
 void gamemenu_new_game(bool bActivate)
 {
-	int i;
-
-	for (i = 0; i < MAX_PLRS; i++) {
-		plr[i]._pmode = PM_QUIT;
-		plr[i]._pInvincible = true;
+	for (auto &player : plr) {
+		player._pmode = PM_QUIT;
+		player._pInvincible = true;
 	}
 
 	deathflag = false;

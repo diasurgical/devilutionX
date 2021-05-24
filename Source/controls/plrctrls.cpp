@@ -54,15 +54,15 @@ int slot = SLOTXY_INV_FIRST;
  */
 int GetRotaryDistance(int x, int y)
 {
-	int d, d1, d2;
+	auto &myPlayer = plr[myplr];
 
-	if (plr[myplr].position.future.x == x && plr[myplr].position.future.y == y)
+	if (myPlayer.position.future.x == x && myPlayer.position.future.y == y)
 		return -1;
 
-	d1 = plr[myplr]._pdir;
-	d2 = GetDirection(plr[myplr].position.future, { x, y });
+	int d1 = myPlayer._pdir;
+	int d2 = GetDirection(myPlayer.position.future, { x, y });
 
-	d = abs(d1 - d2);
+	int d = abs(d1 - d2);
 	if (d > 4)
 		return 4 - (d % 4);
 
@@ -76,7 +76,9 @@ int GetRotaryDistance(int x, int y)
  */
 int GetMinDistance(int dx, int dy)
 {
-	return std::max(abs(plr[myplr].position.future.x - dx), abs(plr[myplr].position.future.y - dy));
+	auto &myPlayer = plr[myplr];
+
+	return std::max(abs(myPlayer.position.future.x - dx), abs(myPlayer.position.future.y - dy));
 }
 
 /**
@@ -326,21 +328,24 @@ void CheckPlayerNearby()
 	if (pcursmonst != -1)
 		return;
 
-	int spl = plr[myplr]._pRSpell;
+	auto &myPlayer = plr[myplr];
+
+	int spl = myPlayer._pRSpell;
 	if (gbFriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (i == myplr)
 			continue;
-		const int mx = plr[i].position.future.x;
-		const int my = plr[i].position.future.y;
+		auto &player = plr[i];
+		const int mx = player.position.future.x;
+		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
 		    || (dFlags[mx][my] & BFLAG_LIT) == 0
-		    || (plr[i]._pHitPoints == 0 && spl != SPL_RESURRECT))
+		    || (player._pHitPoints == 0 && spl != SPL_RESURRECT))
 			continue;
 
-		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER) {
+		if (myPlayer._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER) {
 			newDdistance = GetDistanceRanged(mx, my);
 		} else {
 			newDdistance = GetDistance(mx, my, distance);
@@ -582,14 +587,15 @@ std::pair<int, int> GetItemSizeOnSlot(int slot, char &itemInvId)
 {
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 		int ig = slot - SLOTXY_INV_FIRST;
-		char ii = plr[myplr].InvGrid[ig];
+		auto &myPlayer = plr[myplr];
+		char ii = myPlayer.InvGrid[ig];
 		if (ii != 0) {
 			int iv = ii;
 			if (ii <= 0) {
 				iv = -ii;
 			}
 
-			ItemStruct &item = plr[myplr].InvList[iv - 1];
+			ItemStruct &item = myPlayer.InvList[iv - 1];
 			if (!item.isEmpty()) {
 				std::pair<int, int> size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
 				size.first /= INV_SLOT_SIZE_PX;
@@ -679,6 +685,7 @@ void InvMove(AxisDirection dir)
 		slot = SLOTXY_BELT_LAST;
 
 	const int initialSlot = slot;
+	auto &myPlayer = plr[myplr];
 
 	// when item is on cursor (pcurs > 1), this is the real cursor XY
 	if (dir.x == AxisDirectionX_LEFT) {
@@ -693,10 +700,10 @@ void InvMove(AxisDirection dir)
 			} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {
 				slot -= 1;
 				mousePos = BeltGetSlotCoord(slot);
-			} else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
+			} else if (myPlayer.HoldItem._itype == ITYPE_RING) {
 				slot = SLOTXY_RING_LEFT;
 				mousePos = InvGetEquipSlotCoord(INVLOC_RING_LEFT);
-			} else if (plr[myplr].HoldItem.isWeapon() || plr[myplr].HoldItem.isShield()) {
+			} else if (myPlayer.HoldItem.isWeapon() || myPlayer.HoldItem.isShield()) {
 				if (slot == SLOTXY_HAND_LEFT_FIRST) {
 					slot = SLOTXY_HAND_RIGHT_FIRST;
 					mousePos = InvGetEquipSlotCoord(INVLOC_HAND_RIGHT);
@@ -743,10 +750,10 @@ void InvMove(AxisDirection dir)
 			} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {
 				slot += 1;
 				mousePos = BeltGetSlotCoord(slot);
-			} else if (plr[myplr].HoldItem._itype == ITYPE_RING) {
+			} else if (myPlayer.HoldItem._itype == ITYPE_RING) {
 				slot = SLOTXY_RING_RIGHT;
 				mousePos = InvGetEquipSlotCoord(INVLOC_RING_RIGHT);
-			} else if (plr[myplr].HoldItem.isWeapon() || plr[myplr].HoldItem.isShield()) {
+			} else if (myPlayer.HoldItem.isWeapon() || myPlayer.HoldItem.isShield()) {
 				if (slot == SLOTXY_HAND_LEFT_FIRST) {
 					slot = SLOTXY_HAND_RIGHT_FIRST;
 					mousePos = InvGetEquipSlotCoord(INVLOC_HAND_RIGHT);
@@ -788,7 +795,7 @@ void InvMove(AxisDirection dir)
 				slot -= INV_ROW_SLOT_SIZE;
 				mousePos = InvGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_INV_FIRST) {
-				if (plr[myplr].HoldItem._itype == ITYPE_RING) {
+				if (myPlayer.HoldItem._itype == ITYPE_RING) {
 					if (slot >= SLOTXY_INV_ROW1_FIRST && slot <= SLOTXY_INV_ROW1_FIRST + (INV_ROW_SLOT_SIZE / 2) - 1) {
 						slot = SLOTXY_RING_LEFT;
 						mousePos = InvGetEquipSlotCoord(INVLOC_RING_LEFT);
@@ -796,19 +803,19 @@ void InvMove(AxisDirection dir)
 						slot = SLOTXY_RING_RIGHT;
 						mousePos = InvGetEquipSlotCoord(INVLOC_RING_RIGHT);
 					}
-				} else if (plr[myplr].HoldItem.isWeapon()) {
+				} else if (myPlayer.HoldItem.isWeapon()) {
 					slot = SLOTXY_HAND_LEFT_FIRST;
 					mousePos = InvGetEquipSlotCoord(INVLOC_HAND_LEFT);
-				} else if (plr[myplr].HoldItem.isShield()) {
+				} else if (myPlayer.HoldItem.isShield()) {
 					slot = SLOTXY_HAND_RIGHT_FIRST;
 					mousePos = InvGetEquipSlotCoord(INVLOC_HAND_RIGHT);
-				} else if (plr[myplr].HoldItem.isHelm()) {
+				} else if (myPlayer.HoldItem.isHelm()) {
 					slot = SLOTXY_HEAD_FIRST;
 					mousePos = InvGetEquipSlotCoord(INVLOC_HEAD);
-				} else if (plr[myplr].HoldItem.isArmor()) {
+				} else if (myPlayer.HoldItem.isArmor()) {
 					slot = SLOTXY_CHEST_FIRST;
 					mousePos = InvGetEquipSlotCoord(INVLOC_CHEST);
-				} else if (plr[myplr].HoldItem._itype == ITYPE_AMULET) {
+				} else if (myPlayer.HoldItem._itype == ITYPE_AMULET) {
 					slot = SLOTXY_AMULET;
 					mousePos = InvGetEquipSlotCoord(INVLOC_AMULET);
 				}
@@ -854,7 +861,7 @@ void InvMove(AxisDirection dir)
 			} else if (slot <= (SLOTXY_INV_ROW4_LAST - (icursH28 * INV_ROW_SLOT_SIZE))) {
 				slot += INV_ROW_SLOT_SIZE;
 				mousePos = InvGetSlotCoord(slot);
-			} else if (slot <= SLOTXY_INV_LAST && plr[myplr].HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // forcing only 1x1 misc items
+			} else if (slot <= SLOTXY_INV_LAST && myPlayer.HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // forcing only 1x1 misc items
 				slot += INV_ROW_SLOT_SIZE;
 				if (slot > SLOTXY_BELT_LAST)
 					slot = SLOTXY_BELT_LAST;
@@ -905,7 +912,7 @@ void InvMove(AxisDirection dir)
 		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
 		if (itemInvId < 0) {
 			for (int s = 0; s < SLOTXY_INV_LAST - SLOTXY_INV_FIRST; ++s) {
-				if (plr[myplr].InvGrid[s] == -itemInvId) {
+				if (myPlayer.InvGrid[s] == -itemInvId) {
 					slot = SLOTXY_INV_FIRST + s;
 					break;
 				}
@@ -1093,11 +1100,13 @@ bool CanChangeDirection(const PlayerStruct &player)
 
 void WalkInDir(int playerId, AxisDirection dir)
 {
-	const int x = plr[playerId].position.future.x;
-	const int y = plr[playerId].position.future.y;
+	auto &player = plr[playerId];
+
+	const int x = player.position.future.x;
+	const int y = player.position.future.y;
 
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
-		if (sgbControllerActive && plr[playerId].walkpath[0] != WALK_NONE && plr[playerId].destAction == ACTION_NONE)
+		if (sgbControllerActive && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
 			NetSendCmdLoc(playerId, true, CMD_WALKXY, { x, y }); // Stop walking
 		return;
 	}
@@ -1106,8 +1115,8 @@ void WalkInDir(int playerId, AxisDirection dir)
 	const int dx = x + Offsets[pdir][0];
 	const int dy = y + Offsets[pdir][1];
 
-	if (CanChangeDirection(plr[playerId]))
-		plr[playerId]._pdir = pdir;
+	if (CanChangeDirection(player))
+		player._pdir = pdir;
 
 	if (PosOkPlayer(playerId, dx, dy) && IsPathBlocked(x, y, pdir))
 		return; // Don't start backtrack around obstacles
@@ -1227,18 +1236,19 @@ void StoreSpellCoords()
 	int yo = endY;
 	for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
 		std::uint64_t spells;
+		auto &myPlayer = plr[myplr];
 		switch (i) {
 		case RSPLTYPE_SKILL:
-			spells = plr[myplr]._pAblSpells;
+			spells = myPlayer._pAblSpells;
 			break;
 		case RSPLTYPE_SPELL:
-			spells = plr[myplr]._pMemSpells;
+			spells = myPlayer._pMemSpells;
 			break;
 		case RSPLTYPE_SCROLL:
-			spells = plr[myplr]._pScrlSpells;
+			spells = myPlayer._pScrlSpells;
 			break;
 		case RSPLTYPE_CHARGES:
-			spells = plr[myplr]._pISpells;
+			spells = myPlayer._pISpells;
 			break;
 		}
 		std::uint64_t spell = 1;
@@ -1363,12 +1373,13 @@ void plrctrls_after_game_logic()
 void UseBeltItem(int type)
 {
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		const int id = AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId;
-		const int spellId = AllItemsList[plr[myplr].SpdList[i].IDidx].iSpell;
+		auto &myPlayer = plr[myplr];
+		const int id = AllItemsList[myPlayer.SpdList[i].IDidx].iMiscId;
+		const int spellId = AllItemsList[myPlayer.SpdList[i].IDidx].iSpell;
 		if ((type == BLT_HEALING && (id == IMISC_HEAL || id == IMISC_FULLHEAL || (id == IMISC_SCROLL && spellId == SPL_HEAL)))
 		    || (type == BLT_MANA && (id == IMISC_MANA || id == IMISC_FULLMANA))
 		    || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
-			if (plr[myplr].SpdList[i]._itype > -1) {
+			if (myPlayer.SpdList[i]._itype > -1) {
 				UseInvItem(myplr, INVITEM_BELT_FIRST + i);
 				break;
 			}
@@ -1433,14 +1444,12 @@ void UpdateSpellTarget()
 	pcursplr = -1;
 	pcursmonst = -1;
 
-	const PlayerStruct &player = plr[myplr];
-
 	int range = 1;
 	if (plr[myplr]._pRSpell == SPL_TELEPORT)
 		range = 4;
 
-	cursmx = player.position.future.x + Offsets[player._pdir][0] * range;
-	cursmy = player.position.future.y + Offsets[player._pdir][1] * range;
+	cursmx = plr[myplr].position.future.x + Offsets[plr[myplr]._pdir][0] * range;
+	cursmy = plr[myplr].position.future.y + Offsets[plr[myplr]._pdir][1] * range;
 }
 
 /**
@@ -1448,12 +1457,14 @@ void UpdateSpellTarget()
  */
 bool TryDropItem()
 {
-	cursmx = plr[myplr].position.future.x + 1;
-	cursmy = plr[myplr].position.future.y;
+	const auto &myPlayer = plr[myplr];
+
+	cursmx = myPlayer.position.future.x + 1;
+	cursmy = myPlayer.position.future.y;
 	if (!DropItemBeforeTrig()) {
 		// Try to drop on the other side
-		cursmx = plr[myplr].position.future.x;
-		cursmy = plr[myplr].position.future.y + 1;
+		cursmx = myPlayer.position.future.x;
+		cursmy = myPlayer.position.future.y + 1;
 		DropItemBeforeTrig();
 	}
 
@@ -1488,10 +1499,11 @@ void PerformSpellAction()
 		return;
 	}
 
-	int spl = plr[myplr]._pRSpell;
+	const auto &myPlayer = plr[myplr];
+	int spl = myPlayer._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
 	    || (pcursobj == -1 && spl == SPL_DISARM)) {
-		plr[myplr].Say(HeroSpeech::ICantCastThatHere);
+		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}
 
@@ -1506,10 +1518,12 @@ void CtrlUseInvItem()
 	if (pcursinvitem == -1)
 		return;
 
+	auto &myPlayer = plr[myplr];
+
 	if (pcursinvitem <= INVITEM_INV_LAST)
-		item = &plr[myplr].InvList[pcursinvitem - INVITEM_INV_FIRST];
+		item = &myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST];
 	else
-		item = &plr[myplr].SpdList[pcursinvitem - INVITEM_BELT_FIRST];
+		item = &myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST];
 
 	if ((item->_iMiscId == IMISC_SCROLLT || item->_iMiscId == IMISC_SCROLL) && spelldata[item->_iSpell].sTargeted) {
 		return;

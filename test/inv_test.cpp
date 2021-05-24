@@ -102,14 +102,14 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 TEST(Inv, CalculateGold)
 {
 	plr[myplr]._pNumInv = 10;
-	// Set up two slots of gold both in the belt and inventory
-	plr[myplr].SpdList[1]._itype = ITYPE_GOLD;
-	plr[myplr].SpdList[5]._itype = ITYPE_GOLD;
+	// Set up 4 slots of gold in the inventory
+	plr[myplr].InvList[1]._itype = ITYPE_GOLD;
+	plr[myplr].InvList[5]._itype = ITYPE_GOLD;
 	plr[myplr].InvList[2]._itype = ITYPE_GOLD;
 	plr[myplr].InvList[3]._itype = ITYPE_GOLD;
 	// Set the gold amount to arbitrary values
-	plr[myplr].SpdList[1]._ivalue = 100;
-	plr[myplr].SpdList[5]._ivalue = 200;
+	plr[myplr].InvList[1]._ivalue = 100;
+	plr[myplr].InvList[5]._ivalue = 200;
 	plr[myplr].InvList[2]._ivalue = 3;
 	plr[myplr].InvList[3]._ivalue = 30;
 
@@ -187,7 +187,7 @@ TEST(Inv, RemoveSpdBarItem)
 	// Put an item in the belt: | x | x | item | x | x | x | x | x |
 	plr[myplr].SpdList[3]._itype = ITYPE_MISC;
 
-	RemoveSpdBarItem(myplr, 3);
+	plr[myplr].RemoveSpdBarItem(3);
 	EXPECT_EQ(plr[myplr].SpdList[3]._itype, ITYPE_NONE);
 }
 

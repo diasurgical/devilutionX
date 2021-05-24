@@ -805,12 +805,13 @@ static bool LeftMouseCmd(bool bShift)
 		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1)
 			return true;
 	} else {
-		bNear = abs(plr[myplr].position.tile.x - cursmx) < 2 && abs(plr[myplr].position.tile.y - cursmy) < 2;
+		auto &myPlayer = plr[myplr];
+		bNear = abs(myPlayer.position.tile.x - cursmx) < 2 && abs(myPlayer.position.tile.y - cursmy) < 2;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
 		} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && object[pcursobj]._oBreak == 1))) {
 			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
-		} else if (plr[myplr]._pwtype == WT_RANGED) {
+		} else if (myPlayer._pwtype == WT_RANGED) {
 			if (bShift) {
 				NetSendCmdLoc(myplr, true, CMD_RATTACKXY, { cursmx, cursmy });
 			} else if (pcursmonst != -1) {
@@ -896,12 +897,13 @@ bool TryIconCurs()
 	}
 
 	if (pcurs == CURSOR_TELEPORT) {
+		auto &myPlayer = plr[myplr];
 		if (pcursmonst != -1)
-			NetSendCmdParam3(true, CMD_TSPELLID, pcursmonst, plr[myplr]._pTSpell, GetSpellLevel(myplr, plr[myplr]._pTSpell));
+			NetSendCmdParam3(true, CMD_TSPELLID, pcursmonst, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
 		else if (pcursplr != -1)
-			NetSendCmdParam3(true, CMD_TSPELLPID, pcursplr, plr[myplr]._pTSpell, GetSpellLevel(myplr, plr[myplr]._pTSpell));
+			NetSendCmdParam3(true, CMD_TSPELLPID, pcursplr, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
 		else
-			NetSendCmdLocParam2(true, CMD_TSPELLXY, { cursmx, cursmy }, plr[myplr]._pTSpell, GetSpellLevel(myplr, plr[myplr]._pTSpell));
+			NetSendCmdLocParam2(true, CMD_TSPELLXY, { cursmx, cursmy }, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
@@ -1004,25 +1006,29 @@ static void LeftMouseUp(int wParam)
 
 static void RightMouseDown()
 {
-	if (!gmenu_is_active() && sgnTimeoutCurs == CURSOR_NONE && PauseMode != 2 && !plr[myplr]._pInvincible) {
-		if (DoomFlag) {
-			doom_close();
-			return;
-		}
-		if (stextflag != STORE_NONE)
-			return;
-		if (spselflag) {
-			SetSpell();
-		} else if (MouseY >= SPANEL_HEIGHT
-		    || ((!sbookflag || MouseX <= RIGHT_PANEL)
-		        && !TryIconCurs()
-		        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
-			if (pcurs == CURSOR_HAND) {
-				if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
-					CheckPlrSpell();
-			} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
-				NewCursor(CURSOR_HAND);
-			}
+	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || plr[myplr]._pInvincible) {
+		return;
+	}
+
+	if (DoomFlag) {
+		doom_close();
+		return;
+	}
+	if (stextflag != STORE_NONE)
+		return;
+	if (spselflag) {
+		SetSpell();
+		return;
+	}
+	if (MouseY >= SPANEL_HEIGHT
+	    || ((!sbookflag || MouseX <= RIGHT_PANEL)
+	        && !TryIconCurs()
+	        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
+		if (pcurs == CURSOR_HAND) {
+			if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
+				CheckPlrSpell();
+		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
+			NewCursor(CURSOR_HAND);
 		}
 	}
 }
@@ -1285,15 +1291,16 @@ static void PressChar(int32_t vkey)
 			if (arrowdebug > 2) {
 				arrowdebug = 0;
 			}
+			auto &myPlayer = plr[myplr];
 			if (arrowdebug == 0) {
-				plr[myplr]._pIFlags &= ~ISPL_FIRE_ARROWS;
-				plr[myplr]._pIFlags &= ~ISPL_LIGHT_ARROWS;
+				myPlayer._pIFlags &= ~ISPL_FIRE_ARROWS;
+				myPlayer._pIFlags &= ~ISPL_LIGHT_ARROWS;
 			}
 			if (arrowdebug == 1) {
-				plr[myplr]._pIFlags |= ISPL_FIRE_ARROWS;
+				myPlayer._pIFlags |= ISPL_FIRE_ARROWS;
 			}
 			if (arrowdebug == 2) {
-				plr[myplr]._pIFlags |= ISPL_LIGHT_ARROWS;
+				myPlayer._pIFlags |= ISPL_LIGHT_ARROWS;
 			}
 			arrowdebug++;
 		}
@@ -1316,7 +1323,8 @@ static void PressChar(int32_t vkey)
 	case 'a':
 		if (debug_mode_key_inverted_v) {
 			spelldata[SPL_TELEPORT].sTownSpell = true;
-			plr[myplr]._pSplLvl[plr[myplr]._pSpell]++;
+			auto &myPlayer = plr[myplr];
+			myPlayer._pSplLvl[myPlayer._pSpell]++;
 		}
 		return;
 	case 'D':
@@ -1349,7 +1357,8 @@ static void PressChar(int32_t vkey)
 	case 'T':
 	case 't':
 		if (debug_mode_key_inverted_v) {
-			sprintf(tempstr, "PX = %i  PY = %i", plr[myplr].position.tile.x, plr[myplr].position.tile.y);
+			auto &myPlayer = plr[myplr];
+			sprintf(tempstr, "PX = %i  PY = %i", myPlayer.position.tile.x, myPlayer.position.tile.y);
 			NetSendCmdString(1 << myplr, tempstr);
 			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursmx, cursmy, dungeon[cursmx][cursmy]);
 			NetSendCmdString(1 << myplr, tempstr);
@@ -1637,9 +1646,6 @@ static void UpdateMonsterLights()
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
-	int i, j;
-	bool visited;
-
 	if (setseed != 0)
 		glSeedTbl[currlevel] = setseed;
 
@@ -1678,6 +1684,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	InitLevelMonsters();
 	IncProgress();
 
+	auto &myPlayer = plr[myplr];
+
 	if (!setlevel) {
 		CreateLevel(lvldir);
 		IncProgress();
@@ -1705,8 +1713,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 		IncProgress();
 
-		for (i = 0; i < MAX_PLRS; i++) {
-			if (plr[i].plractive && currlevel == plr[i].plrlevel) {
+		for (int i = 0; i < MAX_PLRS; i++) {
+			auto &player = plr[i];
+			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(i);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(i, firstflag);
@@ -1717,17 +1726,18 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitMultiView();
 		IncProgress();
 
-		visited = false;
+		bool visited = false;
 		int players = gbIsMultiplayer ? MAX_PLRS : 1;
-		for (i = 0; i < players; i++) {
-			if (plr[i].plractive)
-				visited = visited || plr[i]._pLvlVisited[currlevel];
+		for (int i = 0; i < players; i++) {
+			auto &player = plr[i];
+			if (player.plractive)
+				visited = visited || player._pLvlVisited[currlevel];
 		}
 
 		SetRndSeed(glSeedTbl[currlevel]);
 
 		if (leveltype != DTYPE_TOWN) {
-			if (firstflag || lvldir == ENTRY_LOAD || !plr[myplr]._pLvlVisited[currlevel] || gbIsMultiplayer) {
+			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
 				glMid1Seed[currlevel] = GetRndSeed();
 				InitMonsters();
@@ -1758,8 +1768,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				IncProgress();
 			}
 		} else {
-			for (i = 0; i < MAXDUNX; i++) {
-				for (j = 0; j < MAXDUNY; j++)
+			for (int i = 0; i < MAXDUNX; i++) {
+				for (int j = 0; j < MAXDUNY; j++)
 					dFlags[i][j] |= BFLAG_LIT;
 			}
 
@@ -1768,7 +1778,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			InitMissiles();
 			IncProgress();
 
-			if (!firstflag && lvldir != ENTRY_LOAD && plr[myplr]._pLvlVisited[currlevel] && !gbIsMultiplayer)
+			if (!firstflag && lvldir != ENTRY_LOAD && myPlayer._pLvlVisited[currlevel] && !gbIsMultiplayer)
 				LoadLevel();
 			if (gbIsMultiplayer)
 				DeltaLoadLevel();
@@ -1797,8 +1807,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			GetPortalLvlPos();
 		IncProgress();
 
-		for (i = 0; i < MAX_PLRS; i++) {
-			if (plr[i].plractive && currlevel == plr[i].plrlevel) {
+		for (int i = 0; i < MAX_PLRS; i++) {
+			auto &player = plr[i];
+			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(i);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(i, firstflag);
@@ -1809,7 +1820,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitMultiView();
 		IncProgress();
 
-		if (firstflag || lvldir == ENTRY_LOAD || !plr[myplr]._pSLvlVisited[setlvlnum]) {
+		if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pSLvlVisited[setlvlnum]) {
 			InitItems();
 			SavePreLighting();
 		} else {
@@ -1822,15 +1833,16 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	SyncPortals();
 
-	for (i = 0; i < MAX_PLRS; i++) {
-		if (plr[i].plractive && plr[i].plrlevel == currlevel && (!plr[i]._pLvlChanging || i == myplr)) {
-			if (plr[i]._pHitPoints > 0) {
+	for (int i = 0; i < MAX_PLRS; i++) {
+		auto &player = plr[i];
+		if (player.plractive && player.plrlevel == currlevel && (!player._pLvlChanging || i == myplr)) {
+			if (player._pHitPoints > 0) {
 				if (!gbIsMultiplayer)
-					dPlayer[plr[i].position.tile.x][plr[i].position.tile.y] = i + 1;
+					dPlayer[player.position.tile.x][player.position.tile.y] = i + 1;
 				else
 					SyncInitPlrPos(i);
 			} else {
-				dFlags[plr[i].position.tile.x][plr[i].position.tile.y] |= BFLAG_DEAD_PLAYER;
+				dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
 			}
 		}
 	}
@@ -2212,7 +2224,8 @@ void initKeymapActions()
 		    std::string("BeltItem") + std::to_string(i + 1),
 		    '1' + i,
 		    [i] {
-			    if (!plr[myplr].SpdList[i].isEmpty() && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
+			    auto &myPlayer = plr[myplr];
+			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
 				    UseInvItem(myplr, INVITEM_BELT_FIRST + i);
 			    }
 		    },

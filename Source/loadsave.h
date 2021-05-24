@@ -17,7 +17,7 @@ int RemapItemIdxFromDiablo(int i);
 int RemapItemIdxToDiablo(int i);
 bool IsHeaderValid(uint32_t magicNumber);
 void LoadHotkeys();
-void LoadHeroItems(PlayerStruct *pPlayer);
+void LoadHeroItems(PlayerStruct &pPlayer);
 /**
  * @brief Remove invalid inventory items from the inventory grid
  * @param pnum The id of the player
@@ -25,7 +25,7 @@ void LoadHeroItems(PlayerStruct *pPlayer);
 void RemoveEmptyInventory(int pnum);
 void LoadGame(bool firstflag);
 void SaveHotkeys();
-void SaveHeroItems(PlayerStruct *pPlayer);
+void SaveHeroItems(PlayerStruct &pPlayer);
 void SaveGameData();
 void SaveGame();
 void SaveLevel();

@@ -209,10 +209,11 @@ void DrawAutomapTile(const CelOutputBuffer &out, Point center, uint16_t automapT
 
 void SearchAutomapItem(const CelOutputBuffer &out)
 {
-	Point tile = plr[myplr].position.tile;
-	if (plr[myplr]._pmode == PM_WALK3) {
-		tile = plr[myplr].position.future;
-		if (plr[myplr]._pdir == DIR_W)
+	auto &myPlayer = plr[myplr];
+	Point tile = myPlayer.position.tile;
+	if (myPlayer._pmode == PM_WALK3) {
+		tile = myPlayer.position.future;
+		if (myPlayer._pdir == DIR_W)
 			tile.x++;
 		else
 			tile.y++;
@@ -256,10 +257,11 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 {
 	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
 
-	Point tile = plr[playerId].position.tile;
-	if (plr[playerId]._pmode == PM_WALK3) {
-		tile = plr[playerId].position.future;
-		if (plr[playerId]._pdir == DIR_W)
+	auto &player = plr[playerId];
+	Point tile = player.position.tile;
+	if (player._pmode == PM_WALK3) {
+		tile = player.position.future;
+		if (player._pdir == DIR_W)
 			tile.x++;
 		else
 			tile.y++;
@@ -269,8 +271,8 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 	int py = tile.y - 2 * AutomapOffset.y - ViewY;
 
 	Point base = {
-		(plr[playerId].position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo.offset.x * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-		(plr[playerId].position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo.offset.y * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+		(player.position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo.offset.x * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
+		(player.position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo.offset.y * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
 	};
 
 	if (CanPanelsCoverView()) {
@@ -281,7 +283,7 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 	}
 	base.y -= AmLine8;
 
-	switch (plr[playerId]._pdir) {
+	switch (player._pdir) {
 	case DIR_N: {
 		const Point point { base.x, base.y - AmLine16 };
 		DrawVerticalLine(out, point, AmLine16, playerColor);
@@ -615,7 +617,8 @@ void DrawAutomap(const CelOutputBuffer &out)
 	}
 
 	for (unsigned playerId = 0; playerId < MAX_PLRS; playerId++) {
-		if (plr[playerId].plrlevel == plr[myplr].plrlevel && plr[playerId].plractive && !plr[playerId]._pLvlChanging) {
+		auto &player = plr[playerId];
+		if (player.plrlevel == plr[myplr].plrlevel && player.plractive && !player._pLvlChanging) {
 			DrawAutomapPlr(out, playerId);
 		}
 	}

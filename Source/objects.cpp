@@ -3902,7 +3902,7 @@ bool OperateShrineSpiritual(int pnum)
 			gridItem = plr[pnum]._pNumInv;
 			plr[pnum].InvList[t]._ivalue = r;
 			plr[pnum]._pGold += r;
-			SetGoldCurs(pnum, t);
+			SetPlrHandGoldCurs(&plr[pnum].InvList[t]);
 		}
 	}
 
