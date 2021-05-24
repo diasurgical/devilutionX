@@ -97,10 +97,6 @@ Direction left[8] = { DIR_SE, DIR_S, DIR_SW, DIR_W, DIR_NW, DIR_N, DIR_NE, DIR_E
 Direction right[8] = { DIR_SW, DIR_W, DIR_NW, DIR_N, DIR_NE, DIR_E, DIR_SE, DIR_S };
 /** Maps from direction to the opposite direction. */
 Direction opposite[8] = { DIR_N, DIR_NE, DIR_E, DIR_SE, DIR_S, DIR_SW, DIR_W, DIR_NW };
-/** Maps from direction to delta X-offset. */
-int offset_x[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
-/** Maps from direction to delta Y-offset. */
-int offset_y[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
 /** Maps from monster AI ID to monster AI function. */
 void (*AiProc[])(int i) = {
@@ -1026,8 +1022,9 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 
 		if (leaderf & 1) {
 			int offset = GenerateRnd(8);
-			x1 = xp = monster[leader].position.tile.x + offset_x[offset];
-			y1 = yp = monster[leader].position.tile.y + offset_y[offset];
+			auto position = monster[leader].position.tile + static_cast<Direction>(offset);
+			x1 = xp = position.x;
+			y1 = yp = position.y;
 		} else {
 			do {
 				x1 = xp = GenerateRnd(80) + 16;
@@ -1040,7 +1037,7 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 		}
 
 		j = 0;
-		for (try2 = 0; j < num && try2 < 100; xp += offset_x[GenerateRnd(8)], yp += offset_x[GenerateRnd(8)]) { /// BUGFIX: `yp += offset_y`
+		for (try2 = 0; j < num && try2 < 100; xp += (Point { 0, 0 } + static_cast<Direction>(GenerateRnd(8))).x, yp += (Point { 0, 0 } + static_cast<Direction>(GenerateRnd(8))).x) { /// BUGFIX: `yp += offset_y`
 			if (!MonstPlace(xp, yp)
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
 			    || ((leaderf & 2) && ((abs(xp - x1) >= 4) || (abs(yp - y1) >= 4)))) {
@@ -1241,20 +1238,17 @@ int AddMonster(int x, int y, Direction dir, int mtype, bool InMap)
 
 void monster_43C785(int i)
 {
-	int x, y, d, j, oi, mx, my;
+	int d, j, oi, mx, my;
+	Point position = {};
 
 	if (monster[i].MType) {
-		mx = monster[i].position.tile.x;
-		my = monster[i].position.tile.y;
-		Direction dir = monster[i]._mdir;
 		for (d = 0; d < 8; d++) {
-			x = mx + offset_x[d];
-			y = my + offset_y[d];
-			if (!SolidLoc(x, y)) {
-				if (dPlayer[x][y] == 0 && dMonster[x][y] == 0) {
-					if (dObject[x][y] == 0)
+			position = monster[i].position.tile + monster[i]._mdir;
+			if (!SolidLoc(position.x, position.y)) {
+				if (dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0) {
+					if (dObject[position.x][position.y] == 0)
 						break;
-					oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
+					oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
 					if (!object[oi]._oSolidFlag)
 						break;
 				}
@@ -1266,7 +1260,7 @@ void monster_43C785(int i)
 					break;
 			}
 			if (j < MAX_LVLMTYPES)
-				AddMonster(x, y, dir, j, true);
+				AddMonster(position.x, position.y, monster[i]._mdir, j, true);
 		}
 	}
 }
@@ -1580,8 +1574,7 @@ void M_GetKnockback(int i)
 	Direction d = opposite[monster[i]._mdir];
 	if (DirOK(i, d)) {
 		M_ClearSquares(i);
-		monster[i].position.old.x += offset_x[d];
-		monster[i].position.old.y += offset_y[d];
+		monster[i].position.old += d;
 		NewMonsterAnim(i, &monster[i].MType->Anims[MA_GOTHIT], monster[i]._mdir);
 		monster[i]._mmode = MM_GOTHIT;
 		monster[i].position.offset = { 0, 0 };
@@ -2057,7 +2050,6 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	int dx, dy;
 	int blk, blkper;
 	int dam, mdam;
-	int newx, newy;
 	int j, misnum, cur_ms_num, ac;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -2196,13 +2188,13 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (monster[i]._mFlags & MFLAG_KNOCKBACK) {
 		if (plr[pnum]._pmode != PM_GOTHIT)
 			StartPlrHit(pnum, 0, true);
-		newx = plr[pnum].position.tile.x + offset_x[monster[i]._mdir];
-		newy = plr[pnum].position.tile.y + offset_y[monster[i]._mdir];
-		if (PosOkPlayer(pnum, newx, newy)) {
-			plr[pnum].position.tile = { newx, newy };
+
+		Point newPosition = plr[pnum].position.tile + monster[i]._mdir;
+		if (PosOkPlayer(pnum, newPosition.x, newPosition.y)) {
+			plr[pnum].position.tile = newPosition;
 			FixPlayerLocation(pnum, plr[pnum]._pdir);
 			FixPlrWalkTags(pnum);
-			dPlayer[newx][newy] = pnum + 1;
+			dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 			SetPlayerOld(plr[pnum]);
 		}
 	}
@@ -2255,9 +2247,14 @@ bool M_DoRAttack(int i)
 			else
 				multimissiles = 1;
 			for (mi = 0; mi < multimissiles; mi++) {
+				Point sourcePosition = monster[i].position.tile;
+				if (gbIsHellfire) {
+					sourcePosition += monster[i]._mdir;
+				}
+
 				AddMissile(
-				    monster[i].position.tile.x + (gbIsHellfire ? offset_x[monster[i]._mdir] : 0),
-				    monster[i].position.tile.y + (gbIsHellfire ? offset_y[monster[i]._mdir] : 0),
+				    sourcePosition.x,
+				    sourcePosition.y,
 				    monster[i].enemyPosition.x,
 				    monster[i].enemyPosition.y,
 				    monster[i]._mdir,
@@ -2286,9 +2283,14 @@ bool M_DoRSpAttack(int i)
 	commitment(monster[i].MData != nullptr, i); // BUGFIX: should check MData (fixed)
 
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2 && monster[i]._mAnimCnt == 0) {
+		Point sourcePosition = monster[i].position.tile;
+		if (gbIsHellfire) {
+			sourcePosition += monster[i]._mdir;
+		}
+
 		AddMissile(
-		    monster[i].position.tile.x + (gbIsHellfire ? offset_x[monster[i]._mdir] : 0),
-		    monster[i].position.tile.y + (gbIsHellfire ? offset_y[monster[i]._mdir] : 0),
+		    sourcePosition.x,
+		    sourcePosition.y,
 		    monster[i].enemyPosition.x,
 		    monster[i].enemyPosition.y,
 		    monster[i]._mdir,
@@ -3938,7 +3940,7 @@ void MAI_Golum(int i)
 void MAI_SkelKing(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my, fx, fy, nx, ny;
+	int mx, my, fx, fy;
 	int dist, v;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
@@ -3972,10 +3974,9 @@ void MAI_SkelKing(int i)
 			if (!gbIsMultiplayer
 			    && ((dist >= 3 && v < 4 * Monst->_mint + 35) || v < 6)
 			    && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
-				nx = Monst->position.tile.x + offset_x[md];
-				ny = Monst->position.tile.y + offset_y[md];
-				if (PosOkMonst(i, nx, ny) && nummonsters < MAXMONSTERS) {
-					M_SpawnSkel(nx, ny, md);
+				Point newPosition = Monst->position.tile + md;
+				if (PosOkMonst(i, newPosition.x, newPosition.y) && nummonsters < MAXMONSTERS) {
+					M_SpawnSkel(newPosition.x, newPosition.y, md);
 					M_StartSpStand(i, md);
 				}
 			} else {
@@ -4111,7 +4112,8 @@ void MAI_HorkDemon(int i)
 
 	if (Monst->_mgoal == 1) {
 		if ((abs(mx) >= 3 || abs(my) >= 3) && v < 2 * Monst->_mint + 43) {
-			if (PosOkMonst(i, Monst->position.tile.x + offset_x[Monst->_mdir], Monst->position.tile.y + offset_y[Monst->_mdir]) && nummonsters < MAXMONSTERS) {
+			Point position = Monst->position.tile + Monst->_mdir;
+			if (PosOkMonst(i, position.x, position.y) && nummonsters < MAXMONSTERS) {
 				M_StartRSpAttack(i, MIS_HORKDMN, 0);
 			}
 		} else if (abs(mx) < 2 && abs(my) < 2) {
@@ -4691,30 +4693,28 @@ void FreeMonsters()
 
 bool DirOK(int i, Direction mdir)
 {
-	int fx, fy;
 	int x, y;
 	int mcount, mi;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
-	fx = monster[i].position.tile.x + offset_x[mdir];
-	fy = monster[i].position.tile.y + offset_y[mdir];
-	if (fy < 0 || fy >= MAXDUNY || fx < 0 || fx >= MAXDUNX || !PosOkMonst(i, fx, fy))
+	Point futurePosition = monster[i].position.tile + mdir;
+	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !PosOkMonst(i, futurePosition.x, futurePosition.y))
 		return false;
 	if (mdir == DIR_E) {
-		if (SolidLoc(fx, fy + 1) || dFlags[fx][fy + 1] & BFLAG_MONSTLR)
+		if (SolidLoc(futurePosition.x, futurePosition.y + 1) || dFlags[futurePosition.x][futurePosition.y + 1] & BFLAG_MONSTLR)
 			return false;
 	} else if (mdir == DIR_W) {
-		if (SolidLoc(fx + 1, fy) || dFlags[fx + 1][fy] & BFLAG_MONSTLR)
+		if (SolidLoc(futurePosition.x + 1, futurePosition.y) || dFlags[futurePosition.x + 1][futurePosition.y] & BFLAG_MONSTLR)
 			return false;
 	} else if (mdir == DIR_N) {
-		if (SolidLoc(fx + 1, fy) || SolidLoc(fx, fy + 1))
+		if (SolidLoc(futurePosition.x + 1, futurePosition.y) || SolidLoc(futurePosition.x, futurePosition.y + 1))
 			return false;
 	} else if (mdir == DIR_S)
-		if (SolidLoc(fx - 1, fy) || SolidLoc(fx, fy - 1))
+		if (SolidLoc(futurePosition.x - 1, futurePosition.y) || SolidLoc(futurePosition.x, futurePosition.y - 1))
 			return false;
 	if (monster[i].leaderflag == 1) {
-		if (abs(fx - monster[monster[i].leader].position.future.x) >= 4
-		    || abs(fy - monster[monster[i].leader].position.future.y) >= 4) {
+		if (abs(futurePosition.x - monster[monster[i].leader].position.future.x) >= 4
+		    || abs(futurePosition.y - monster[monster[i].leader].position.future.y) >= 4) {
 			return false;
 		}
 		return true;
@@ -4722,8 +4722,8 @@ bool DirOK(int i, Direction mdir)
 	if (monster[i]._uniqtype == 0 || !(UniqMonst[monster[i]._uniqtype - 1].mUnqAttr & 2))
 		return true;
 	mcount = 0;
-	for (x = fx - 3; x <= fx + 3; x++) {
-		for (y = fy - 3; y <= fy + 3; y++) {
+	for (x = futurePosition.x - 3; x <= futurePosition.x + 3; x++) {
+		for (y = futurePosition.y - 3; y <= futurePosition.y + 3; y++) {
 			if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 				continue;
 			mi = dMonster[x][y];
@@ -5072,8 +5072,6 @@ void PrintUniqueHistory()
 
 void MissToMonst(int i, int x, int y)
 {
-	int oldx, oldy;
-	int newx, newy;
 	int m, pnum;
 	MissileStruct *Miss;
 	MonsterStruct *Monst;
@@ -5086,8 +5084,7 @@ void MissToMonst(int i, int x, int y)
 	assurance((DWORD)m < MAXMONSTERS, m);
 
 	Monst = &monster[m];
-	oldx = Miss->position.tile.x;
-	oldy = Miss->position.tile.y;
+	Point oldPosition = Miss->position.tile;
 	dMonster[x][y] = m + 1;
 	Monst->_mdir = static_cast<Direction>(Miss->_mimfnum);
 	Monst->position.tile = { x, y };
@@ -5101,40 +5098,39 @@ void MissToMonst(int i, int x, int y)
 		M_StartFadein(m, Monst->_mdir, false);
 	}
 
+	Point newPosition = {};
 	if (!(Monst->_mFlags & MFLAG_TARGETS_MONSTER)) {
-		pnum = dPlayer[oldx][oldy] - 1;
-		if (dPlayer[oldx][oldy] > 0) {
+		pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
+		if (dPlayer[oldPosition.x][oldPosition.y] > 0) {
 			if (Monst->MType->mtype != MT_GLOOM && (Monst->MType->mtype < MT_INCIN || Monst->MType->mtype > MT_HELLBURN)) {
-				M_TryH2HHit(m, dPlayer[oldx][oldy] - 1, 500, Monst->mMinDamage2, Monst->mMaxDamage2);
-				if (pnum == dPlayer[oldx][oldy] - 1 && (Monst->MType->mtype < MT_NSNAKE || Monst->MType->mtype > MT_GSNAKE)) {
+				M_TryH2HHit(m, dPlayer[oldPosition.x][oldPosition.y] - 1, 500, Monst->mMinDamage2, Monst->mMaxDamage2);
+				if (pnum == dPlayer[oldPosition.x][oldPosition.y] - 1 && (Monst->MType->mtype < MT_NSNAKE || Monst->MType->mtype > MT_GSNAKE)) {
 					if (plr[pnum]._pmode != PM_GOTHIT && plr[pnum]._pmode != PM_DEATH)
 						StartPlrHit(pnum, 0, true);
-					newx = oldx + offset_x[Monst->_mdir];
-					newy = oldy + offset_y[Monst->_mdir];
-					if (PosOkPlayer(pnum, newx, newy)) {
-						plr[pnum].position.tile = { newx, newy };
+					newPosition = oldPosition + Monst->_mdir;
+					if (PosOkPlayer(pnum, newPosition.x, newPosition.y)) {
+						plr[pnum].position.tile = newPosition;
 						FixPlayerLocation(pnum, plr[pnum]._pdir);
 						FixPlrWalkTags(pnum);
-						dPlayer[newx][newy] = pnum + 1;
+						dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 						SetPlayerOld(plr[pnum]);
 					}
 				}
 			}
 		}
 	} else {
-		if (dMonster[oldx][oldy] > 0) {
+		if (dMonster[oldPosition.x][oldPosition.y] > 0) {
 			if (Monst->MType->mtype != MT_GLOOM && (Monst->MType->mtype < MT_INCIN || Monst->MType->mtype > MT_HELLBURN)) {
-				M_TryM2MHit(m, dMonster[oldx][oldy] - 1, 500, Monst->mMinDamage2, Monst->mMaxDamage2);
+				M_TryM2MHit(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, Monst->mMinDamage2, Monst->mMaxDamage2);
 				if (Monst->MType->mtype < MT_NSNAKE || Monst->MType->mtype > MT_GSNAKE) {
-					newx = oldx + offset_x[Monst->_mdir];
-					newy = oldy + offset_y[Monst->_mdir];
-					if (PosOkMonst(dMonster[oldx][oldy] - 1, newx, newy)) {
-						m = dMonster[oldx][oldy];
-						dMonster[newx][newy] = m;
-						dMonster[oldx][oldy] = 0;
+					newPosition = oldPosition + Monst->_mdir;
+					if (PosOkMonst(dMonster[oldPosition.x][oldPosition.y] - 1, newPosition.x, newPosition.y)) {
+						m = dMonster[oldPosition.x][oldPosition.y];
+						dMonster[newPosition.x][newPosition.y] = m;
+						dMonster[oldPosition.x][oldPosition.y] = 0;
 						m--;
-						monster[m].position.tile = { newx, newy };
-						monster[m].position.future = { newx, newy };
+						monster[m].position.tile = newPosition;
+						monster[m].position.future = newPosition;
 					}
 				}
 			}

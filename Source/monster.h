@@ -305,7 +305,5 @@ void decode_enemy(int m, int enemy);
 extern Direction left[8];
 extern Direction right[8];
 extern Direction opposite[8];
-extern int offset_x[8];
-extern int offset_y[8];
 
 } // namespace devilution

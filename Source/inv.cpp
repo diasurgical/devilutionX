@@ -1809,17 +1809,18 @@ bool TryInvPut()
 		return false;
 
 	Direction dir = GetDirection(plr[myplr].position.tile, { cursmx, cursmy });
-	if (CanPut(plr[myplr].position.tile.x + offset_x[dir], plr[myplr].position.tile.y + offset_y[dir])) {
+	Point position = plr[myplr].position.tile + dir;
+	if (CanPut(position.x, position.y)) {
 		return true;
 	}
 
-	Direction dirLeft = left[dir];
-	if (CanPut(plr[myplr].position.tile.x + offset_x[dirLeft], plr[myplr].position.tile.y + offset_y[dirLeft])) {
+	position = plr[myplr].position.tile + left[dir];
+	if (CanPut(position.x, position.y)) {
 		return true;
 	}
 
-	Direction dirRight = right[dir];
-	if (CanPut(plr[myplr].position.tile.x + offset_x[dirRight], plr[myplr].position.tile.y + offset_y[dirRight])) {
+	position = plr[myplr].position.tile + right[dir];
+	if (CanPut(position.x, position.y)) {
 		return true;
 	}
 
@@ -1847,21 +1848,16 @@ static bool PutItem(int pnum, Point &position)
 	Direction d = GetDirection(plr[pnum].position.tile, position);
 
 	if (abs(relativePosition.x) > 1 || abs(relativePosition.y) > 1) {
-		position.x = plr[pnum].position.tile.x + offset_x[d];
-		position.y = plr[pnum].position.tile.y + offset_y[d];
+		position = plr[pnum].position.tile + d;
 	}
 	if (CanPut(position.x, position.y))
 		return true;
 
-	Direction dLeft = left[d];
-	position.x = plr[pnum].position.tile.x + offset_x[dLeft];
-	position.y = plr[pnum].position.tile.y + offset_y[dLeft];
+	position = plr[pnum].position.tile + left[d];
 	if (CanPut(position.x, position.y))
 		return true;
 
-	Direction dRight = right[d];
-	position.x = plr[pnum].position.tile.x + offset_x[dRight];
-	position.y = plr[pnum].position.tile.y + offset_y[dRight];
+	position = plr[pnum].position.tile + right[d];
 	if (CanPut(position.x, position.y))
 		return true;
 

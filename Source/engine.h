@@ -91,6 +91,34 @@ struct Point {
 		return *this;
 	}
 
+	Point &operator+=(Direction direction)
+	{
+		constexpr auto toPoint = [](Direction direction) -> Point {
+			switch (direction) {
+			case DIR_S:
+				return { 1, 1 };
+			case DIR_SW:
+				return { 0, 1 };
+			case DIR_W:
+				return { -1, 1 };
+			case DIR_NW:
+				return { -1, 0 };
+			case DIR_N:
+				return { -1, -1 };
+			case DIR_NE:
+				return { 0, -1 };
+			case DIR_E:
+				return { 1, -1 };
+			case DIR_SE:
+				return { 1, 0 };
+			case DIR_OMNI:
+				return { 0, 0 };
+			}
+		};
+
+		return (*this) += toPoint(direction);
+	}
+
 	Point &operator-=(const Point &other)
 	{
 		x -= other.x;
@@ -108,6 +136,12 @@ struct Point {
 	friend Point operator+(Point a, const Point &b)
 	{
 		a += b;
+		return a;
+	}
+
+	friend Point operator+(Point a, Direction direction)
+	{
+		a += direction;
 		return a;
 	}
 

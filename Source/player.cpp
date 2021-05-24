@@ -1224,7 +1224,6 @@ bool SolidLoc(int x, int y)
 
 bool PlrDirOK(int pnum, int dir)
 {
-	int px, py;
 	bool isOk;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -1232,20 +1231,18 @@ bool PlrDirOK(int pnum, int dir)
 	}
 	auto &player = plr[pnum];
 
-	px = player.position.tile.x + offset_x[dir];
-	py = player.position.tile.y + offset_y[dir];
-
-	if (px < 0 || !dPiece[px][py] || !PosOkPlayer(pnum, px, py)) {
+	Point position = player.position.tile + static_cast<Direction>(dir);
+	if (position.x < 0 || !dPiece[position.x][position.y] || !PosOkPlayer(pnum, position.x, position.y)) {
 		return false;
 	}
 
 	isOk = true;
 	if (dir == DIR_E) {
-		isOk = !SolidLoc(px, py + 1) && !(dFlags[px][py + 1] & BFLAG_PLAYERLR);
+		isOk = !SolidLoc(position.x, position.y + 1) && !(dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR);
 	}
 
 	if (isOk && dir == DIR_W) {
-		isOk = !SolidLoc(px + 1, py) && !(dFlags[px + 1][py] & BFLAG_PLAYERLR);
+		isOk = !SolidLoc(position.x + 1, position.y) && !(dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR);
 	}
 
 	return isOk;
@@ -1909,7 +1906,8 @@ StartPlayerKill(int pnum, int earflag)
 						i = NUM_INVLOC;
 						while (i--) {
 							pdd = (i + player._pdir) & 7;
-							PlrDeadItem(player, pi, offset_x[pdd], offset_y[pdd]);
+							Point offset = Point { 0, 0 } + static_cast<Direction>(pdd);
+							PlrDeadItem(player, pi, offset.x, offset.y);
 							pi++;
 						}
 
@@ -2816,8 +2814,9 @@ bool PM_DoAttack(int pnum)
 	}
 
 	if (player.AnimInfo.CurrentFrame == player._pAFNum) {
-		dx = player.position.tile.x + offset_x[player._pdir];
-		dy = player.position.tile.y + offset_y[player._pdir];
+		Point position = player.position.tile + player._pdir;
+		dx = position.x;
+		dy = position.y;
 
 		if (dMonster[dx][dy] != 0) {
 			if (dMonster[dx][dy] > 0) {
@@ -2869,15 +2868,18 @@ bool PM_DoAttack(int pnum)
 		                    || (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD && player.InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
 		                    || (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD && player.InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND))
 		                && !(player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD))))) {
-			dx = player.position.tile.x + offset_x[(player._pdir + 1) % 8];
-			dy = player.position.tile.y + offset_y[(player._pdir + 1) % 8];
+			Point position = player.position.tile + right[player._pdir];
+			dx = position.x;
+			dy = position.y;
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
 			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m].position.old.x == dx && monster[m].position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
-			dx = player.position.tile.x + offset_x[(player._pdir + 7) % 8];
-			dy = player.position.tile.y + offset_y[(player._pdir + 7) % 8];
+
+			position = player.position.tile + left[player._pdir];
+			dx = position.x;
+			dy = position.y;
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
 			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m].position.old.x == dx && monster[m].position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
