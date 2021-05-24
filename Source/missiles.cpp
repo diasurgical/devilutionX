@@ -427,7 +427,7 @@ void GetMissilePos(int i)
 	missile[i].position.tile.y = dy + missile[i].position.start.y;
 	missile[i].position.offset.x = mx + (dy * 32) - (dx * 32);
 	missile[i].position.offset.y = my - (dx * 16) - (dy * 16);
-	ChangeLightOff(missile[i]._mlid, lx - (dx * 8), ly - (dy * 8));
+	ChangeLightOff(missile[i]._mlid, { lx - (dx * 8), ly - (dy * 8) });
 }
 
 void MoveMissilePos(int i)

@@ -61,7 +61,7 @@ int AddLight(int x, int y, int r);
 void AddUnLight(int i);
 void ChangeLightRadius(int i, int r);
 void ChangeLightXY(int i, Point position);
-void ChangeLightOff(int i, int x, int y);
+void ChangeLightOff(int i, Point position);
 void ChangeLight(int i, int x, int y, int r);
 void ProcessLightList();
 void SavePreLighting();

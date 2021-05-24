@@ -1937,7 +1937,7 @@ void M_ChangeLightOffset(int monst)
 
 	_myoff *= (ly / 8);
 	if (monster[monst].mlid != NO_LIGHT)
-		ChangeLightOff(monster[monst].mlid, _mxoff, _myoff);
+		ChangeLightOff(monster[monst].mlid, { _mxoff, _myoff });
 }
 
 bool M_DoStand(int i)
