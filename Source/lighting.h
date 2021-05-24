@@ -46,7 +46,7 @@ extern int visionid;
 extern std::array<BYTE, LIGHTSIZE> pLightTbl;
 extern bool lightflag;
 
-void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum);
+void DoLighting(Point position, int nRadius, int Lnum);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible);
 void FreeLightTable();

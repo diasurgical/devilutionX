@@ -490,7 +490,7 @@ char GetLight(int x, int y)
 	return dLight[x][y];
 }
 
-void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
+void DoLighting(Point position, int nRadius, int Lnum)
 {
 	int x, y, v, mult, radius_block;
 	int min_x, max_x, min_y, max_y;
@@ -508,43 +508,43 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		yoff = LightList[Lnum].position.offset.y;
 		if (xoff < 0) {
 			xoff += 8;
-			nXPos--;
+			position -= { 1, 0 };
 		}
 		if (yoff < 0) {
 			yoff += 8;
-			nYPos--;
+			position -= { 0, 1 };
 		}
 	}
 
 	dist_x = xoff;
 	dist_y = yoff;
 
-	if (nXPos - 15 < 0) {
-		min_x = nXPos + 1;
+	if (position.x - 15 < 0) {
+		min_x = position.x + 1;
 	} else {
 		min_x = 15;
 	}
-	if (nXPos + 15 > MAXDUNX) {
-		max_x = MAXDUNX - nXPos;
+	if (position.x + 15 > MAXDUNX) {
+		max_x = MAXDUNX - position.x;
 	} else {
 		max_x = 15;
 	}
-	if (nYPos - 15 < 0) {
-		min_y = nYPos + 1;
+	if (position.y - 15 < 0) {
+		min_y = position.y + 1;
 	} else {
 		min_y = 15;
 	}
-	if (nYPos + 15 > MAXDUNY) {
-		max_y = MAXDUNY - nYPos;
+	if (position.y + 15 > MAXDUNY) {
+		max_y = MAXDUNY - position.y;
 	} else {
 		max_y = 15;
 	}
 
-	if (nXPos >= 0 && nXPos < MAXDUNX && nYPos >= 0 && nYPos < MAXDUNY) {
+	if (position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY) {
 		if (currlevel < 17) {
-			SetLight(nXPos, nYPos, 0);
-		} else if (GetLight(nXPos, nYPos) > lightradius[nRadius][0]) {
-			SetLight(nXPos, nYPos, lightradius[nRadius][0]);
+			SetLight(position.x, position.y, 0);
+		} else if (GetLight(position.x, position.y) > lightradius[nRadius][0]) {
+			SetLight(position.x, position.y, lightradius[nRadius][0]);
 		}
 	}
 
@@ -553,8 +553,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		for (x = 1; x < max_x; x++) {
 			radius_block = lightblock[mult][y][x];
 			if (radius_block < 128) {
-				temp_x = nXPos + x;
-				temp_y = nYPos + y;
+				temp_x = position.x + x;
+				temp_y = position.y + y;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
 					if (v < GetLight(temp_x, temp_y))
@@ -568,8 +568,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		for (x = 1; x < max_x; x++) {
 			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
-				temp_x = nXPos + y;
-				temp_y = nYPos - x;
+				temp_x = position.x + y;
+				temp_y = position.y - x;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
 					if (v < GetLight(temp_x, temp_y))
@@ -583,8 +583,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		for (x = 1; x < min_x; x++) {
 			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
-				temp_x = nXPos - x;
-				temp_y = nYPos - y;
+				temp_x = position.x - x;
+				temp_y = position.y - y;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
 					if (v < GetLight(temp_x, temp_y))
@@ -598,8 +598,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		for (x = 1; x < min_x; x++) {
 			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
-				temp_x = nXPos - y;
-				temp_y = nYPos + x;
+				temp_x = position.x - y;
+				temp_y = position.y + x;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
 					if (v < GetLight(temp_x, temp_y))
@@ -950,7 +950,7 @@ void ToggleLighting()
 	memcpy(dLight, dPreLight, sizeof(dLight));
 	for (const auto &player : plr) {
 		if (player.plractive && player.plrlevel == currlevel) {
-			DoLighting(player.position.tile.x, player.position.tile.y, player._pLightRad, -1);
+			DoLighting(player.position.tile, player._pLightRad, -1);
 		}
 	}
 }
@@ -1078,7 +1078,7 @@ void ProcessLightList()
 		for (int i = 0; i < numlights; i++) {
 			int j = lightactive[i];
 			if (!LightList[j]._ldel) {
-				DoLighting(LightList[j].position.tile.x, LightList[j].position.tile.y, LightList[j]._lradius, j);
+				DoLighting(LightList[j].position.tile, LightList[j]._lradius, j);
 			}
 		}
 		int i = 0;

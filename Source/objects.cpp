@@ -1433,7 +1433,7 @@ void AddTrap(int i)
 void AddObjLight(int i, int r)
 {
 	if (InitObjFlag) {
-		DoLighting(object[i].position.x, object[i].position.y, r, -1);
+		DoLighting(object[i].position, r, -1);
 		object[i]._oVar1 = -1;
 	} else {
 		object[i]._oVar1 = 0;
