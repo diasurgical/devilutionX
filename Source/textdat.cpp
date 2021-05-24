@@ -606,7 +606,7 @@ const TextDataStruct alltext[] = {
 	    true, TSFX_COWSUT8 },
 	{ N_(/* TRANSLATORS: Quest text spoken by Complete Nut */ "Look.  I'm a cow.  And you, you're monster bait. Get some experience under your belt!  We'll talk..."),
 	    true, TSFX_COWSUT9 },
-	{ N_(""), true, TSFX_TRADER1 },
+	{ "", true, TSFX_TRADER1 },
 	{ N_(/* TRANSLATORS: Quest text spoken by Farmer */ "It must truly be a fearsome task I've set before you. If there was just some way that I could... would a flagon of some nice, fresh milk help?"),
 	    true, TSFX_FARMER2A },
 	{ N_(/* TRANSLATORS: Quest text spoken by Farmer */ "Oh, I could use your help, but perhaps after you've saved the catacombs from the desecration of those beasts."),

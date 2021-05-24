@@ -3529,10 +3529,10 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("indestructible"));
 		break;
 	case IPL_LIGHT:
-		strcpy(tempstr, fmt::format(_("+{:d}% light radius"), 10 * x->_iPLLight).c_str());
+		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("+{:d}% light radius"), 10 * x->_iPLLight).c_str());
 		break;
 	case IPL_LIGHT_CURSE:
-		strcpy(tempstr, fmt::format(_("-{:d}% light radius"), -10 * x->_iPLLight).c_str());
+		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("-{:d}% light radius"), -10 * x->_iPLLight).c_str());
 		break;
 	case IPL_MULT_ARROWS:
 		strcpy(tempstr, _("multiple arrows per shot"));
