@@ -2248,7 +2248,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 					dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
 				}
 
-				plr[pnum]._pvid = AddVision(plr[pnum].position.tile.x, plr[pnum].position.tile.y, plr[pnum]._pLightRad, pnum == myplr);
+				plr[pnum]._pvid = AddVision(plr[pnum].position.tile, plr[pnum]._pLightRad, pnum == myplr);
 				plr[pnum]._plid = NO_LIGHT;
 			}
 		}

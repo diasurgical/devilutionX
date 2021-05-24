@@ -1113,12 +1113,12 @@ void InitVision()
 	}
 }
 
-int AddVision(int x, int y, int r, bool mine)
+int AddVision(Point position, int r, bool mine)
 {
 	int vid = -1; // BUGFIX: if numvision >= MAXVISION behavior is undefined (fixed)
 
 	if (numvision < MAXVISION) {
-		VisionList[numvision].position.tile = { x, y };
+		VisionList[numvision].position.tile = position;
 		VisionList[numvision]._lradius = r;
 		vid = visionid++;
 		VisionList[numvision]._lid = vid;

@@ -1162,7 +1162,7 @@ void InitPlayer(int pnum, bool FirstTime)
 		} else {
 			player._plid = NO_LIGHT;
 		}
-		player._pvid = AddVision(player.position.tile.x, player.position.tile.y, player._pLightRad, pnum == myplr);
+		player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == myplr);
 	}
 
 	if (player._pClass == HeroClass::Warrior) {
