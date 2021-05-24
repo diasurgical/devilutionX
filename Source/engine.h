@@ -111,7 +111,7 @@ struct Point {
 				return { 1, -1 };
 			case DIR_SE:
 				return { 1, 0 };
-			case DIR_OMNI:
+			default:
 				return { 0, 0 };
 			}
 		};
