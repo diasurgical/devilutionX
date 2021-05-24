@@ -1238,7 +1238,7 @@ int AddMonster(int x, int y, Direction dir, int mtype, bool InMap)
 
 void monster_43C785(int i)
 {
-	int d, j, oi, mx, my;
+	int d, j, oi;
 	Point position = {};
 
 	if (monster[i].MType) {
