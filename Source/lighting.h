@@ -48,7 +48,7 @@ extern bool lightflag;
 
 void DoLighting(Point position, int nRadius, int Lnum);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
-void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible);
+void DoVision(Point position, int nRadius, bool doautomap, bool visible);
 void FreeLightTable();
 void InitLightTable();
 void MakeLightTable();

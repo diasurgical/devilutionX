@@ -660,23 +660,23 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 	}
 }
 
-void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
+void DoVision(Point position, int nRadius, bool doautomap, bool visible)
 {
 	bool nBlockerFlag;
 	int nCrawlX, nCrawlY, nLineLen, nTrans;
 	int j, k, v, x1adj, x2adj, y1adj, y2adj;
 
-	if (nXPos >= 0 && nXPos <= MAXDUNX && nYPos >= 0 && nYPos <= MAXDUNY) {
+	if (position.x >= 0 && position.x<= MAXDUNX && position.y >= 0 && position.y <= MAXDUNY) {
 		if (doautomap) {
-			if (dFlags[nXPos][nYPos] != 0) {
-				SetAutomapView({ nXPos, nYPos });
+			if (dFlags[position.x][position.y] != 0) {
+				SetAutomapView(position);
 			}
-			dFlags[nXPos][nYPos] |= BFLAG_EXPLORED;
+			dFlags[position.x][position.y] |= BFLAG_EXPLORED;
 		}
 		if (visible) {
-			dFlags[nXPos][nYPos] |= BFLAG_LIT;
+			dFlags[position.x][position.y] |= BFLAG_LIT;
 		}
-		dFlags[nXPos][nYPos] |= BFLAG_VISIBLE;
+		dFlags[position.x][position.y] |= BFLAG_VISIBLE;
 	}
 
 	for (v = 0; v < 4; v++) {
@@ -690,32 +690,32 @@ void DoVision(int nXPos, int nYPos, int nRadius, bool doautomap, bool visible)
 				y2adj = 0;
 				switch (v) {
 				case 0:
-					nCrawlX = nXPos + vCrawlTable[j][k];
-					nCrawlY = nYPos + vCrawlTable[j][k + 1];
+					nCrawlX = position.x + vCrawlTable[j][k];
+					nCrawlY = position.y + vCrawlTable[j][k + 1];
 					if (vCrawlTable[j][k] > 0 && vCrawlTable[j][k + 1] > 0) {
 						x1adj = -1;
 						y2adj = -1;
 					}
 					break;
 				case 1:
-					nCrawlX = nXPos - vCrawlTable[j][k];
-					nCrawlY = nYPos - vCrawlTable[j][k + 1];
+					nCrawlX = position.x - vCrawlTable[j][k];
+					nCrawlY = position.y - vCrawlTable[j][k + 1];
 					if (vCrawlTable[j][k] > 0 && vCrawlTable[j][k + 1] > 0) {
 						y1adj = 1;
 						x2adj = 1;
 					}
 					break;
 				case 2:
-					nCrawlX = nXPos + vCrawlTable[j][k];
-					nCrawlY = nYPos - vCrawlTable[j][k + 1];
+					nCrawlX = position.x + vCrawlTable[j][k];
+					nCrawlY = position.y - vCrawlTable[j][k + 1];
 					if (vCrawlTable[j][k] > 0 && vCrawlTable[j][k + 1] > 0) {
 						x1adj = -1;
 						y2adj = 1;
 					}
 					break;
 				case 3:
-					nCrawlX = nXPos - vCrawlTable[j][k];
-					nCrawlY = nYPos + vCrawlTable[j][k + 1];
+					nCrawlX = position.x - vCrawlTable[j][k];
+					nCrawlY = position.y + vCrawlTable[j][k + 1];
 					if (vCrawlTable[j][k] > 0 && vCrawlTable[j][k + 1] > 0) {
 						y1adj = -1;
 						x2adj = 1;
@@ -1176,8 +1176,7 @@ void ProcessVisionList()
 		for (int i = 0; i < numvision; i++) {
 			if (!VisionList[i]._ldel) {
 				DoVision(
-				    VisionList[i].position.tile.x,
-				    VisionList[i].position.tile.y,
+				    VisionList[i].position.tile,
 				    VisionList[i]._lradius,
 				    VisionList[i]._lflags,
 				    VisionList[i]._lflags);

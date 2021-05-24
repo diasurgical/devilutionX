@@ -1129,7 +1129,7 @@ void InitMonsters()
 	for (i = 0; i < nt; i++) {
 		for (s = -2; s < 2; s++) {
 			for (t = -2; t < 2; t++)
-				DoVision(s + trigs[i].position.x, t + trigs[i].position.y, 15, false, false);
+				DoVision(Point { s, t } + trigs[i].position, 15, false, false);
 		}
 	}
 	if (!gbIsSpawn)
@@ -1649,7 +1649,7 @@ void M_DiabloDeath(int i, bool sendmsg)
 		dMonster[monster[k].position.tile.x][monster[k].position.tile.y] = k + 1;
 	}
 	AddLight(Monst->position.tile, 8);
-	DoVision(Monst->position.tile.x, Monst->position.tile.y, 8, false, true);
+	DoVision(Monst->position.tile, 8, false, true);
 	dist = std::max(abs(ViewX - Monst->position.tile.x), abs(ViewY - Monst->position.tile.y));
 	if (dist > 20)
 		dist = 20;
