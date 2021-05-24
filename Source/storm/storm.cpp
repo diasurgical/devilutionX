@@ -164,43 +164,31 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 {
-	char string[2];
-
-	if (!getIniValue(sectionName, keyName, string, 2))
-		return defaultValue;
-
-	return strtol(string, nullptr, 10) != 0;
+	bool value = getIni().GetBoolValue(sectionName, keyName, defaultValue);
+	return value;
 }
 
 float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
 {
-	const auto value = getIni().GetValue(sectionName, keyName);
-	if (value == nullptr)
-		return defaultValue;
-
-	return atof(value);
+	const double value = getIni().GetDoubleValue(sectionName, keyName, defaultValue);
+	return (float)value;
 }
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
 {
-	auto value = getIni().GetValue(sectionName, keyName);
-
+	const char *value = getIni().GetValue(sectionName, keyName);
 	if (value == nullptr) {
 		strncpy(string, defaultString, stringSize);
 		return false;
 	}
-
 	strncpy(string, value, stringSize);
-
 	return true;
 }
 
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len)
 {
 	auto &ini = getIni();
-
 	std::string stringValue(value, len ? len : strlen(value));
-
 	ini.SetValue(sectionName, keyName, stringValue.c_str());
 }
 
@@ -213,25 +201,18 @@ void SaveIni()
 
 int getIniInt(const char *keyname, const char *valuename, int defaultValue)
 {
-	char string[10];
-	if (!getIniValue(keyname, valuename, string, sizeof(string)))
-		return defaultValue;
-
-	return strtol(string, nullptr, sizeof(string));
+	long value = getIni().GetLongValue(keyname, valuename, defaultValue);
+	return value;
 }
 
 void setIniInt(const char *keyname, const char *valuename, int value)
 {
-	char str[10];
-	sprintf(str, "%i", value);
-	setIniValue(keyname, valuename, str);
+	getIni().SetLongValue(keyname, valuename, value);
 }
 
 void setIniFloat(const char *keyname, const char *valuename, float value)
 {
-	char str[10];
-	sprintf(str, "%.2f", value);
-	setIniValue(keyname, valuename, str);
+	getIni().SetDoubleValue(keyname, valuename, value);
 }
 
 DWORD SErrGetLastError()
