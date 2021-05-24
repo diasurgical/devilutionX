@@ -1246,7 +1246,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 	if (currlevel < 17)
 		DRLG_InitL1Vals();
 
-	SetMapMonsters(dunData.get(), 0, 0);
+	SetMapMonsters(dunData.get(), { 0, 0 });
 	SetMapObjects(dunData.get(), 0, 0);
 }
 

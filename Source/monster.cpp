@@ -946,23 +946,23 @@ void PlaceQuestMonsters()
 
 		if (QuestStatus(Q_LTBANNER)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
-			SetMapMonsters(dunData.get(), 2 * setpc_x, 2 * setpc_y);
+			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 		}
 		if (QuestStatus(Q_BLOOD)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
-			SetMapMonsters(dunData.get(), 2 * setpc_x, 2 * setpc_y);
+			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 		}
 		if (QuestStatus(Q_BLIND)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind2.DUN");
-			SetMapMonsters(dunData.get(), 2 * setpc_x, 2 * setpc_y);
+			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 		}
 		if (QuestStatus(Q_ANVIL)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
-			SetMapMonsters(dunData.get(), 2 * setpc_x + 2, 2 * setpc_y + 2);
+			SetMapMonsters(dunData.get(), Point { setpc_x + 2, setpc_y + 2 } * 2);
 		}
 		if (QuestStatus(Q_WARLORD)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
-			SetMapMonsters(dunData.get(), 2 * setpc_x, 2 * setpc_y);
+			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_SCATTER);
 		}
 		if (QuestStatus(Q_VEIL)) {
@@ -979,7 +979,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
-			SetMapMonsters(dunData.get(), 2 * setpc_x, 2 * setpc_y);
+			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 		}
 
 		if (currlevel == 24) {
@@ -1083,19 +1083,19 @@ void LoadDiabMonsts()
 {
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab1.DUN");
-		SetMapMonsters(dunData.get(), 2 * diabquad1x, 2 * diabquad1y);
+		SetMapMonsters(dunData.get(), Point { diabquad1x, diabquad1y } * 2);
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab2a.DUN");
-		SetMapMonsters(dunData.get(), 2 * diabquad2x, 2 * diabquad2y);
+		SetMapMonsters(dunData.get(), Point { diabquad2x, diabquad2y } * 2);
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab3a.DUN");
-		SetMapMonsters(dunData.get(), 2 * diabquad3x, 2 * diabquad3y);
+		SetMapMonsters(dunData.get(), Point { diabquad3x, diabquad3y } * 2);
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab4a.DUN");
-		SetMapMonsters(dunData.get(), 2 * diabquad4x, 2 * diabquad4y);
+		SetMapMonsters(dunData.get(), Point { diabquad4x, diabquad4y } * 2);
 	}
 }
 
@@ -1175,7 +1175,7 @@ void InitMonsters()
 	}
 }
 
-void SetMapMonsters(const uint16_t *dunData, int startx, int starty)
+void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
 	AddMonster(1, 0, DIR_S, 0, false);
@@ -1207,7 +1207,7 @@ void SetMapMonsters(const uint16_t *dunData, int startx, int starty)
 			uint8_t monsterId = SDL_SwapLE16(monsterLayer[j * width + i]);
 			if (monsterId != 0) {
 				int mtype = AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL);
-				PlaceMonster(nummonsters++, mtype, i + startx + 16, j + starty + 16);
+				PlaceMonster(nummonsters++, mtype, i + startPosition.x + 16, j + startPosition.y + 16);
 			}
 		}
 	}

@@ -2657,7 +2657,7 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 	ViewX = vx;
 	ViewY = vy;
 
-	SetMapMonsters(dunData.get(), 0, 0);
+	SetMapMonsters(dunData.get(), { 0, 0 });
 	SetMapObjects(dunData.get(), 0, 0);
 
 	for (int j = 0; j < MAXDUNY; j++) {
