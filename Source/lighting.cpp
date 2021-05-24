@@ -1018,7 +1018,7 @@ void ChangeLightRadius(int i, int r)
 	dolighting = true;
 }
 
-void ChangeLightXY(int i, int x, int y)
+void ChangeLightXY(int i, Point position)
 {
 	if (lightflag || i == NO_LIGHT) {
 		return;
@@ -1027,7 +1027,7 @@ void ChangeLightXY(int i, int x, int y)
 	LightList[i]._lunflag = true;
 	LightList[i].position.old = LightList[i].position.tile;
 	LightList[i].oldRadious = LightList[i]._lradius;
-	LightList[i].position.tile = { x, y };
+	LightList[i].position.tile = position;
 	dolighting = true;
 }
 

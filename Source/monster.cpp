@@ -1448,7 +1448,7 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i].position.future = { fx, fy };
 	dMonster[fx][fy] = i + 1;
 	if (monster[i].mlid != NO_LIGHT)
-		ChangeLightXY(monster[i].mlid, monster[i].position.tile.x, monster[i].position.tile.y);
+		ChangeLightXY(monster[i].mlid, monster[i].position.tile);
 	monster[i].position.offset = { xoff, yoff };
 	monster[i]._mmode = MM_WALK2;
 	monster[i].position.velocity = { xvel, yvel };
@@ -1467,7 +1467,7 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	int y = mapy + monster[i].position.tile.y;
 
 	if (monster[i].mlid != NO_LIGHT)
-		ChangeLightXY(monster[i].mlid, x, y);
+		ChangeLightXY(monster[i].mlid, { x, y });
 
 	dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = -(i + 1);
 	dMonster[fx][fy] = -(i + 1);
@@ -1991,7 +1991,7 @@ bool M_DoWalk(int i, int variant)
 			break;
 		}
 		if (monster[i].mlid != NO_LIGHT)
-			ChangeLightXY(monster[i].mlid, monster[i].position.tile.x, monster[i].position.tile.y);
+			ChangeLightXY(monster[i].mlid, monster[i].position.tile);
 		M_StartStand(i, monster[i]._mdir);
 		returnValue = true;
 	} else { //We didn't reach new tile so update monster's "sub-tile" position

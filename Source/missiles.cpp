@@ -4543,7 +4543,7 @@ void MI_Teleport(int i)
 		missile[i]._miVar1 = 1;
 		dPlayer[plr[id].position.tile.x][plr[id].position.tile.y] = id + 1;
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(plr[id]._plid, plr[id].position.tile.x, plr[id].position.tile.y);
+			ChangeLightXY(plr[id]._plid, plr[id].position.tile);
 			ChangeVisionXY(plr[id]._pvid, plr[id].position.tile.x, plr[id].position.tile.y);
 		}
 		if (id == myplr) {
@@ -4630,7 +4630,7 @@ void MI_Rhino(int i)
 	monster[monst].position.tile = { omx, omy };
 	dMonster[omx][omy] = -(monst + 1);
 	if (monster[monst]._uniqtype != 0)
-		ChangeLightXY(missile[i]._mlid, omx, omy);
+		ChangeLightXY(missile[i]._mlid, { omx, omy });
 	MoveMissilePos(i);
 	PutMissile(i);
 }

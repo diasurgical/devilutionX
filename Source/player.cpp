@@ -1158,7 +1158,7 @@ void InitPlayer(int pnum, bool FirstTime)
 
 		if (pnum == myplr) {
 			player._plid = AddLight(player.position.tile.x, player.position.tile.y, player._pLightRad);
-			ChangeLightXY(myPlayer._plid, myPlayer.position.tile.x, myPlayer.position.tile.y); // fix for a bug where old light is still visible at the entrance after reentering level
+			ChangeLightXY(myPlayer._plid, myPlayer.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player._plid = NO_LIGHT;
 		}
@@ -1297,7 +1297,7 @@ void FixPlayerLocation(int pnum, Direction bDir)
 		ViewX = player.position.tile.x;
 		ViewY = player.position.tile.y;
 	}
-	ChangeLightXY(player._plid, player.position.tile.x, player.position.tile.y);
+	ChangeLightXY(player._plid, player.position.tile);
 	ChangeVisionXY(player._pvid, player.position.tile.x, player.position.tile.y);
 }
 
@@ -1441,7 +1441,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 		player.position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
 
-		ChangeLightXY(player._plid, player.position.tile.x, player.position.tile.y);
+		ChangeLightXY(player._plid, player.position.tile);
 		PM_ChangeLightOff(player);
 
 		player._pmode = PM_WALK2;
@@ -1461,7 +1461,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		player.position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
 
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(player._plid, x, y);
+			ChangeLightXY(player._plid, { x, y });
 			PM_ChangeLightOff(player);
 		}
 
@@ -2320,7 +2320,7 @@ bool PM_DoWalk(int pnum, int variant)
 
 		//Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(player._plid, player.position.tile.x, player.position.tile.y);
+			ChangeLightXY(player._plid, player.position.tile);
 			ChangeVisionXY(player._pvid, player.position.tile.x, player.position.tile.y);
 		}
 

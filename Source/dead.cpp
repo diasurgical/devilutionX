@@ -82,7 +82,7 @@ void SetDead()
 		for (int dx = 0; dx < MAXDUNX; dx++) {
 			for (int dy = 0; dy < MAXDUNY; dy++) {
 				if ((dDead[dx][dy] & 0x1F) == monster[mi]._udeadval)
-					ChangeLightXY(monster[mi].mlid, dx, dy);
+					ChangeLightXY(monster[mi].mlid, { dx, dy });
 			}
 		}
 	}
