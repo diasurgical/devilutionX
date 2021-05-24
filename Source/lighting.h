@@ -57,7 +57,7 @@ void ToggleLighting();
 #endif
 void InitLightMax();
 void InitLighting();
-int AddLight(int x, int y, int r);
+int AddLight(Point position, int r);
 void AddUnLight(int i);
 void ChangeLightRadius(int i, int r);
 void ChangeLightXY(int i, Point position);

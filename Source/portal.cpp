@@ -54,7 +54,7 @@ void AddWarpMissile(int i, int x, int y)
 		SetMissDir(mi, 1);
 
 		if (currlevel != 0)
-			missile[mi]._mlid = AddLight(missile[mi].position.tile.x, missile[mi].position.tile.y, 15);
+			missile[mi]._mlid = AddLight(missile[mi].position.tile, 15);
 
 		missiledata[MIS_TOWN].mlSFX = LS_SENTINEL;
 	}

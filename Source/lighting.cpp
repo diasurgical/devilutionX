@@ -972,7 +972,7 @@ void InitLighting()
 	}
 }
 
-int AddLight(int x, int y, int r)
+int AddLight(Point position, int r)
 {
 	int lid;
 
@@ -984,7 +984,7 @@ int AddLight(int x, int y, int r)
 
 	if (numlights < MAXLIGHTS) {
 		lid = lightactive[numlights++];
-		LightList[lid].position.tile = { x, y };
+		LightList[lid].position.tile = position;
 		LightList[lid]._lradius = r;
 		LightList[lid].position.offset = { 0, 0 };
 		LightList[lid]._ldel = false;

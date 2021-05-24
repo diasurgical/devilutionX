@@ -1920,7 +1920,7 @@ void Obj_Light(int i, int lr)
 		}
 		if (turnon) {
 			if (object[i]._oVar1 == 0)
-				object[i]._olid = AddLight(ox, oy, lr);
+				object[i]._olid = AddLight(object[i].position, lr);
 			object[i]._oVar1 = 1;
 		} else {
 			if (object[i]._oVar1 == 1)
@@ -2015,7 +2015,7 @@ void ActivateTrapLine(int ttype, int tid)
 			object[oi]._oVar4 = 1;
 			object[oi]._oAnimFlag = 1;
 			object[oi]._oAnimDelay = 1;
-			object[oi]._olid = AddLight(object[oi].position.x, object[oi].position.y, 1);
+			object[oi]._olid = AddLight(object[oi].position, 1);
 		}
 	}
 }

@@ -810,7 +810,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	if (uniqindex == UMT_HORKDMN)
 		Monst->mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	else
-		Monst->mlid = AddLight(Monst->position.tile.x, Monst->position.tile.y, 3);
+		Monst->mlid = AddLight(Monst->position.tile, 3);
 
 	if (gbIsMultiplayer) {
 		if (Monst->_mAi == AI_LAZHELP)
@@ -1648,7 +1648,7 @@ void M_DiabloDeath(int i, bool sendmsg)
 		M_ClearSquares(k);
 		dMonster[monster[k].position.tile.x][monster[k].position.tile.y] = k + 1;
 	}
-	AddLight(Monst->position.tile.x, Monst->position.tile.y, 8);
+	AddLight(Monst->position.tile, 8);
 	DoVision(Monst->position.tile.x, Monst->position.tile.y, 8, false, true);
 	dist = std::max(abs(ViewX - Monst->position.tile.x), abs(ViewY - Monst->position.tile.y));
 	if (dist > 20)

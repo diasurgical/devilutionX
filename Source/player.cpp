@@ -1157,7 +1157,7 @@ void InitPlayer(int pnum, bool FirstTime)
 		player.destAction = ACTION_NONE;
 
 		if (pnum == myplr) {
-			player._plid = AddLight(player.position.tile.x, player.position.tile.y, player._pLightRad);
+			player._plid = AddLight(player.position.tile, player._pLightRad);
 			ChangeLightXY(myPlayer._plid, myPlayer.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player._plid = NO_LIGHT;
