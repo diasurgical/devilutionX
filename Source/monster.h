@@ -206,7 +206,7 @@ extern int nummtypes;
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(int monst);
-void InitMonster(int i, Direction rd, int mtype, int x, int y);
+void InitMonster(int i, Direction rd, int mtype, Point position);
 void ClrAllMonsters();
 void monster_some_crypt();
 void PlaceGroup(int mtype, int num, int leaderf, int leader);
