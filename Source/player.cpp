@@ -1298,7 +1298,7 @@ void FixPlayerLocation(int pnum, Direction bDir)
 		ViewY = player.position.tile.y;
 	}
 	ChangeLightXY(player._plid, player.position.tile);
-	ChangeVisionXY(player._pvid, player.position.tile.x, player.position.tile.y);
+	ChangeVisionXY(player._pvid, player.position.tile);
 }
 
 void StartStand(int pnum, Direction dir)
@@ -2321,7 +2321,7 @@ bool PM_DoWalk(int pnum, int variant)
 		//Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(player._plid, player.position.tile);
-			ChangeVisionXY(player._pvid, player.position.tile.x, player.position.tile.y);
+			ChangeVisionXY(player._pvid, player.position.tile);
 		}
 
 		//Update the "camera" tile position

@@ -4544,7 +4544,7 @@ void MI_Teleport(int i)
 		dPlayer[plr[id].position.tile.x][plr[id].position.tile.y] = id + 1;
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(plr[id]._plid, plr[id].position.tile);
-			ChangeVisionXY(plr[id]._pvid, plr[id].position.tile.x, plr[id].position.tile.y);
+			ChangeVisionXY(plr[id]._pvid, plr[id].position.tile);
 		}
 		if (id == myplr) {
 			ViewX = plr[id].position.tile.x - ScrollInfo.tile.x;

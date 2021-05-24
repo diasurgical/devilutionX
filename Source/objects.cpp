@@ -2431,7 +2431,7 @@ void RedoPlayerVision()
 
 	for (p = 0; p < MAX_PLRS; p++) {
 		if (plr[p].plractive && currlevel == plr[p].plrlevel) {
-			ChangeVisionXY(plr[p]._pvid, plr[p].position.tile.x, plr[p].position.tile.y);
+			ChangeVisionXY(plr[p]._pvid, plr[p].position.tile);
 		}
 	}
 }

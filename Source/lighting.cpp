@@ -1145,14 +1145,14 @@ void ChangeVisionRadius(int id, int r)
 	}
 }
 
-void ChangeVisionXY(int id, int x, int y)
+void ChangeVisionXY(int id, Point position)
 {
 	for (int i = 0; i < numvision; i++) {
 		if (VisionList[i]._lid == id) {
 			VisionList[i]._lunflag = true;
 			VisionList[i].position.old = VisionList[i].position.tile;
 			VisionList[i].oldRadious = VisionList[i]._lradius;
-			VisionList[i].position.tile = { x, y };
+			VisionList[i].position.tile = position;
 			dovision = true;
 		}
 	}

@@ -68,7 +68,7 @@ void SavePreLighting();
 void InitVision();
 int AddVision(Point position, int r, bool mine);
 void ChangeVisionRadius(int id, int r);
-void ChangeVisionXY(int id, int x, int y);
+void ChangeVisionXY(int id, Point position);
 void ProcessVisionList();
 void lighting_color_cycling();
 
