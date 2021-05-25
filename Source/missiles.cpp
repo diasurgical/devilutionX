@@ -3950,42 +3950,54 @@ void MI_Search(int i)
 	AutoMapShowItems = false;
 }
 
+bool GrowWall(int playerId, Point position, Point target, missile_id type, int spellLevel, int damage)
+{
+	int dp = dPiece[position.x][position.y];
+	assert(dp <= MAXTILES && dp >= 0);
+
+	if (nMissileTable[dp] || target.x <= 0 || target.x >= MAXDUNX || target.y <= 0 || target.y >= MAXDUNY) {
+		return false;
+	}
+
+	AddMissile(position.x, position.y, position.x, position.y, plr[playerId]._pdir, type, TARGET_BOTH, playerId, damage, spellLevel);
+	return true;
+}
+
 void MI_LightningWallC(int i)
 {
-	int dp, tx, ty;
-
 	missile[i]._mirange--;
-	int id = missile[i]._misource;
-	int lvl = (id > -1) ? plr[id]._pLevel : 0;
-
-	int dmg = 16 * (GenerateRnd(10) + GenerateRnd(10) + lvl + 2);
 	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = true;
 		return;
 	}
 
-	dp = dPiece[missile[i]._miVar1][missile[i]._miVar2];
-	assert(dp <= MAXTILES && dp >= 0);
-	tx = missile[i]._miVar1 + XDirAdd[missile[i]._miVar3];
-	ty = missile[i]._miVar2 + YDirAdd[missile[i]._miVar3];
-	if (!nMissileTable[dp] && missile[i]._miVar8 == 0 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
-		AddMissile(missile[i]._miVar1, missile[i]._miVar2, missile[i]._miVar1, missile[i]._miVar2, plr[id]._pdir, MIS_LIGHTWALL, TARGET_BOTH, id, dmg, missile[i]._mispllvl);
-		missile[i]._miVar1 = tx;
-		missile[i]._miVar2 = ty;
-	} else {
-		missile[i]._miVar8 = 1;
+	int id = missile[i]._misource;
+	int lvl = (id > -1) ? plr[id]._pLevel : 0;
+
+	int dmg = 16 * (GenerateRnd(10) + GenerateRnd(10) + lvl + 2);
+
+	{
+		Point position = { missile[i]._miVar1, missile[i]._miVar2 };
+		Point target = position + static_cast<Direction>(missile[i]._miVar3);
+
+		if (missile[i]._miVar8 != 0 || !GrowWall(id, position, target, MIS_LIGHTWALL, missile[i]._mispllvl, dmg)) {
+			missile[i]._miVar1 = target.x;
+			missile[i]._miVar2 = target.y;
+		} else {
+			missile[i]._miVar8 = 1;
+		}
 	}
 
-	dp = dPiece[missile[i]._miVar5][missile[i]._miVar6];
-	assert(dp <= MAXTILES && dp >= 0);
-	tx = missile[i]._miVar5 + XDirAdd[missile[i]._miVar4];
-	ty = missile[i]._miVar6 + YDirAdd[missile[i]._miVar4];
-	if (!nMissileTable[dp] && missile[i]._miVar7 == 0 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
-		AddMissile(missile[i]._miVar5, missile[i]._miVar6, missile[i]._miVar5, missile[i]._miVar6, plr[id]._pdir, MIS_LIGHTWALL, TARGET_BOTH, id, dmg, missile[i]._mispllvl);
-		missile[i]._miVar5 = tx;
-		missile[i]._miVar6 = ty;
-	} else {
-		missile[i]._miVar7 = 1;
+	{
+		Point position = { missile[i]._miVar5, missile[i]._miVar6 };
+		Point target = position + static_cast<Direction>(missile[i]._miVar4);
+
+		if (missile[i]._miVar7 != 0 || !GrowWall(id, position, target, MIS_LIGHTWALL, missile[i]._mispllvl, dmg)) {
+			missile[i]._miVar5 = target.x;
+			missile[i]._miVar6 = target.y;
+		} else {
+			missile[i]._miVar7 = 1;
+		}
 	}
 }
 
@@ -4667,37 +4679,34 @@ void MI_Fireman(int i)
 
 void MI_FirewallC(int i)
 {
-	int dp, tx, ty;
-
 	missile[i]._mirange--;
-	int id = missile[i]._misource;
 	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = true;
 		return;
 	}
 
-	dp = dPiece[missile[i]._miVar1][missile[i]._miVar2];
-	assert(dp <= MAXTILES && dp >= 0);
-	tx = missile[i]._miVar1 + XDirAdd[missile[i]._miVar3];
-	ty = missile[i]._miVar2 + YDirAdd[missile[i]._miVar3];
-	if (!nMissileTable[dp] && missile[i]._miVar8 == 0 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
-		AddMissile(missile[i]._miVar1, missile[i]._miVar2, missile[i]._miVar1, missile[i]._miVar2, plr[id]._pdir, MIS_FIREWALL, TARGET_BOTH, id, 0, missile[i]._mispllvl);
-		missile[i]._miVar1 = tx;
-		missile[i]._miVar2 = ty;
-	} else {
-		missile[i]._miVar8 = 1;
+	{
+		Point position = { missile[i]._miVar1, missile[i]._miVar2 };
+		Point target = position + static_cast<Direction>(missile[i]._miVar3);
+
+		if (missile[i]._miVar8 != 0 || !GrowWall(missile[i]._misource, position, target, MIS_FIREWALL, missile[i]._mispllvl, 0)) {
+			missile[i]._miVar1 = target.x;
+			missile[i]._miVar2 = target.y;
+		} else {
+			missile[i]._miVar8 = 1;
+		}
 	}
 
-	dp = dPiece[missile[i]._miVar5][missile[i]._miVar6];
-	assert(dp <= MAXTILES && dp >= 0);
-	tx = missile[i]._miVar5 + XDirAdd[missile[i]._miVar4];
-	ty = missile[i]._miVar6 + YDirAdd[missile[i]._miVar4];
-	if (!nMissileTable[dp] && missile[i]._miVar7 == 0 && tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
-		AddMissile(missile[i]._miVar5, missile[i]._miVar6, missile[i]._miVar5, missile[i]._miVar6, plr[id]._pdir, MIS_FIREWALL, TARGET_BOTH, id, 0, missile[i]._mispllvl);
-		missile[i]._miVar5 = tx;
-		missile[i]._miVar6 = ty;
-	} else {
-		missile[i]._miVar7 = 1;
+	{
+		Point position = { missile[i]._miVar5, missile[i]._miVar6 };
+		Point target = position + static_cast<Direction>(missile[i]._miVar4);
+
+		if (missile[i]._miVar7 != 0 || !GrowWall(missile[i]._misource, position, target, MIS_FIREWALL, missile[i]._mispllvl, 0)) {
+			missile[i]._miVar5 = target.x;
+			missile[i]._miVar6 = target.y;
+		} else {
+			missile[i]._miVar7 = 1;
+		}
 	}
 }
 
