@@ -3968,7 +3968,7 @@ void MAI_SkelKing(int i)
 			    && LineClearMissile(Monst->position.tile, { fx, fy })) {
 				Point newPosition = Monst->position.tile + md;
 				if (PosOkMonst(i, newPosition) && nummonsters < MAXMONSTERS) {
-					M_SpawnSkel(newPosition.x, newPosition.y, md);
+					M_SpawnSkel(newPosition, md);
 					M_StartSpStand(i, md);
 				}
 			} else {
@@ -5245,7 +5245,7 @@ bool IsGoat(int mt)
 	    || (mt >= MT_NGOATBW && mt <= MT_GGOATBW);
 }
 
-int M_SpawnSkel(int x, int y, Direction dir)
+int M_SpawnSkel(Point position, Direction dir)
 {
 	int i, j, skeltypes, skel;
 
@@ -5262,7 +5262,7 @@ int M_SpawnSkel(int x, int y, Direction dir)
 			if (IsSkel(Monsters[i].mtype))
 				j++;
 		}
-		skel = AddMonster({ x, y }, dir, i - 1, true);
+		skel = AddMonster(position, dir, i - 1, true);
 		if (skel != -1)
 			M_StartSpStand(skel, dir);
 

@@ -290,7 +290,7 @@ bool PosOkMonst2(int i, Point position);
 bool PosOkMonst3(int i, Point position);
 bool IsSkel(int mt);
 bool IsGoat(int mt);
-int M_SpawnSkel(int x, int y, Direction dir);
+int M_SpawnSkel(Point position, Direction dir);
 bool SpawnSkeleton(int ii, int x, int y);
 int PreSpawnSkeleton();
 void TalktoMonster(int i);
