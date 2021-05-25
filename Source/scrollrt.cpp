@@ -1548,7 +1548,7 @@ void DrawAndBlit()
 	bool ddsdesc = false;
 	bool ctrlPan = false;
 
-	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255) {
+	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255 || IsHighlightingLabelsEnabled()) {
 		drawhpflag = true;
 		drawmanaflag = true;
 		drawbtnflag = true;

@@ -14,6 +14,7 @@
 #include "common.h"
 #include "control.h"
 #include "itemlabels.h"
+#include "utils/language.h"
 #include "engine/render/cel_render.hpp"
 
 namespace devilution {
@@ -50,9 +51,14 @@ bool IsItemLabelHighlighted()
 	return isLabelHighlighted;
 }
 
+bool IsHighlightingLabelsEnabled()
+{
+	return altPressed != invertHighlightToggle;
+}
+
 void AddItemToLabelQueue(int id, int x, int y)
 {
-	if (altPressed == invertHighlightToggle)
+	if (!IsHighlightingLabelsEnabled())
 		return;
 	ItemStruct *it = &items[id];
 
@@ -66,7 +72,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 
 	int nameWidth = GetLineWidth(textOnGround);
 	BYTE index = ItemCAnimTbl[it->_iCurs];
-	if (!labelCenterOffsets[index].has_value()) {
+	if (!labelCenterOffsets[index]) {
 		std::pair<int, int> itemBounds = MeasureSolidHorizontalBounds(*it->_iAnimData, it->_iAnimFrame);
 		labelCenterOffsets[index].emplace((itemBounds.first + itemBounds.second) / 2);
 	}
@@ -93,15 +99,10 @@ bool IsMouseOverGameArea()
 	return true;
 }
 
-void FastDrawHorizLine(const CelOutputBuffer &out, int x, int y, int width, Uint8 col)
-{
-	memset(out.at(x, y), col, width);
-}
-
 void FillRect(const CelOutputBuffer &out, int x, int y, int width, int height, Uint8 col)
 {
 	for (int j = 0; j < height; j++) {
-		FastDrawHorizLine(out, x, y + j, width, col);
+		DrawHorizontalLine(out, { x, y + j }, width, col);
 	}
 }
 
@@ -109,6 +110,7 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 {
 	isLabelHighlighted = false;
 	const int borderX = 5;
+	const int borderY = 2;
 	const int height = 13;
 	for (unsigned int i = 0; i < labelQueue.size(); ++i) {
 		std::unordered_set<int> backtrace;
@@ -118,7 +120,7 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 			canShow = true;
 			for (unsigned int j = 0; j < i; ++j) {
 				itemLabel &a = labelQueue[i], &b = labelQueue[j];
-				if (abs(b.pos.y - a.pos.y) < height + 2) {
+				if (abs(b.pos.y - a.pos.y) < height + borderY) {
 					int newpos = b.pos.x;
 					if (b.pos.x >= a.pos.x && b.pos.x - a.pos.x < a.width + borderX) {
 						newpos -= a.width + borderX;
@@ -139,9 +141,6 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 	}
 
 	for (const itemLabel &label : labelQueue) {
-
-		if (label.pos.x < 0 || label.pos.x >= out.w() || label.pos.y < 0 || label.pos.y >= out.h())
-			continue;
 		ItemStruct &itm = items[label.id];
 
 		if (MouseX >= label.pos.x && MouseX <= label.pos.x + label.width && MouseY >= label.pos.y - height && MouseY <= label.pos.y) {
@@ -155,7 +154,7 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 		if (pcursitem == label.id)
 			FillRect(out, label.pos.x, label.pos.y - height, label.width + 1, height, PAL8_BLUE + 6);
 		else
-			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y - height, label.width + 1, height);
+			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y - height, label.width, height);
 		DrawString(out, label.text.c_str(), { label.pos.x, label.pos.y, label.width, height }, itm.getTextColor());
 	}
 	labelQueue.clear();
