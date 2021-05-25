@@ -39,7 +39,7 @@ void gmenu_draw_pause(const CelOutputBuffer &out)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		light_table_index = 0;
-		DrawString(out, _("Pause"), { PANEL_LEFT + 252, 176, 0, 0 }, UIS_MED, 2);
+		DrawString(out, _("Pause"), { PANEL_LEFT + 252, PANEL_TOP / 2, 0, 0 }, UIS_HUGE, 2);
 	}
 }
 
