@@ -3153,11 +3153,9 @@ void MAI_SkelBow(int i)
 		}
 	}
 
-	mx = Monst->enemyPosition.x;
-	my = Monst->enemyPosition.y;
 	if (!walking) {
 		if (GenerateRnd(100) < 2 * Monst->_mint + 3) {
-			if (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, mx, my))
+			if (LineClearMissile(Monst->position.tile, Monst->enemyPosition))
 				M_StartRAttack(i, MIS_ARROW, 4);
 		}
 	}
@@ -3286,7 +3284,7 @@ void MAI_Fireman(int i)
 
 	Direction md = M_GetDir(i);
 	if (Monst->_mgoal == MGOAL_NORMAL) {
-		if (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)
+		if (LineClearMissile(Monst->position.tile, { fx, fy })
 		    && AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_FIREMAN, pnum, i, 0, 0) != -1) {
 			Monst->_mmode = MM_CHARGE;
 			Monst->_mgoal = MGOAL_ATTACK2;
@@ -3296,7 +3294,7 @@ void MAI_Fireman(int i)
 		if (Monst->_mgoalvar1 == 3) {
 			Monst->_mgoal = MGOAL_NORMAL;
 			M_StartFadeout(i, md, true);
-		} else if (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+		} else if (LineClearMissile(Monst->position.tile, { fx, fy })) {
 			M_StartRAttack(i, MIS_KRULL, 4);
 			Monst->_mgoalvar1++;
 		} else {
@@ -3512,7 +3510,7 @@ void MAI_Ranged(int i, int missile_type, bool special)
 				M_CallWalk(i, opposite[md]);
 		}
 		if (Monst->_mmode == MM_STAND) {
-			if (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			if (LineClearMissile(Monst->position.tile, { fx, fy })) {
 				if (special)
 					M_StartRSpAttack(i, missile_type, 4);
 				else
@@ -3734,7 +3732,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 				if (Monst->_mgoalvar1++ >= 2 * dist && DirOK(i, md)) {
 					Monst->_mgoal = MGOAL_NORMAL;
 				} else if (v < (500 * (Monst->_mint + 1) >> lessmissiles)
-				    && (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy))) {
+				    && (LineClearMissile(Monst->position.tile, { fx, fy }))) {
 					M_StartRSpAttack(i, missile_type, dam);
 				} else {
 					M_RoundWalk(i, md, &Monst->_mgoalvar2);
@@ -3746,7 +3744,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (((dist >= 3 && v < ((500 * (Monst->_mint + 2)) >> lessmissiles))
 			        || v < ((500 * (Monst->_mint + 1)) >> lessmissiles))
-			    && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			    && LineClearMissile(Monst->position.tile, { fx, fy })) {
 				M_StartRSpAttack(i, missile_type, dam);
 			} else if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -3833,7 +3831,7 @@ void MAI_RR2(int i, int mistype, int dam)
 		} else
 			Monst->_mgoal = MGOAL_NORMAL;
 		if (Monst->_mgoal == MGOAL_NORMAL) {
-			if (((dist >= 3 && v < 5 * (Monst->_mint + 2)) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			if (((dist >= 3 && v < 5 * (Monst->_mint + 2)) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClearMissile(Monst->position.tile, { fx, fy })) {
 				M_StartRSpAttack(i, mistype, dam);
 			} else if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -3969,7 +3967,7 @@ void MAI_SkelKing(int i)
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (!gbIsMultiplayer
 			    && ((dist >= 3 && v < 4 * Monst->_mint + 35) || v < 6)
-			    && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			    && LineClearMissile(Monst->position.tile, { fx, fy })) {
 				Point newPosition = Monst->position.tile + md;
 				if (PosOkMonst(i, newPosition) && nummonsters < MAXMONSTERS) {
 					M_SpawnSkel(newPosition.x, newPosition.y, md);
@@ -4172,7 +4170,7 @@ void MAI_Counselor(int i)
 			}
 		} else if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (abs(mx) >= 2 || abs(my) >= 2) {
-				if (v < 5 * (Monst->_mint + 10) && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+				if (v < 5 * (Monst->_mint + 10) && LineClearMissile(Monst->position.tile, { fx, fy })) {
 					M_StartRAttack(i, counsmiss[Monst->_mint], Monst->mMinDamage + GenerateRnd(Monst->mMaxDamage - Monst->mMinDamage + 1));
 				} else if (GenerateRnd(100) < 30) {
 					Monst->_mgoal = MGOAL_MOVE;
@@ -4755,9 +4753,9 @@ bool LineClearSolid(Point startPoint, Point endPoint)
 	return LineClear(CheckNoSolid, 0, startPoint.x, startPoint.y, endPoint.x, endPoint.y);
 }
 
-bool LineClearMissile(int x1, int y1, int x2, int y2)
+bool LineClearMissile(Point startPoint, Point endPoint)
 {
-	return LineClear(PosOkMissile, 0, x1, y1, x2, y2);
+	return LineClear(PosOkMissile, 0, startPoint.x, startPoint.y, endPoint.x, endPoint.y);
 }
 
 bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, int y2)

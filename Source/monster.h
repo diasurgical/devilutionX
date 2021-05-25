@@ -276,7 +276,7 @@ void FreeMonsters();
 bool DirOK(int i, Direction mdir);
 bool PosOkMissile(int entity, Point position);
 bool LineClearSolid(Point startPoint, Point endPoint);
-bool LineClearMissile(int x1, int y1, int x2, int y2);
+bool LineClearMissile(Point startPoint, Point endPoint);
 bool LineClear(int x1, int y1, int x2, int y2);
 bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, int y2);
 void SyncMonsterAnim(int i);
