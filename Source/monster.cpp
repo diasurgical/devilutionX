@@ -2976,10 +2976,8 @@ bool MAI_Path(int i)
 	clear = LineClear(
 	    PosOkMonst2,
 	    i,
-	    Monst->position.tile.x,
-	    Monst->position.tile.y,
-	    Monst->enemyPosition.x,
-	    Monst->enemyPosition.y);
+	    Monst->position.tile,
+	    Monst->enemyPosition);
 	if (!clear || (Monst->_pathcount >= 5 && Monst->_pathcount < 8)) {
 		if (Monst->_mFlags & MFLAG_CAN_OPEN_DOOR)
 			MonstCheckDoors(i);
@@ -3015,7 +3013,7 @@ void MAI_Snake(int i)
 	Direction md = GetDirection(Monst->position.tile, Monst->position.last);
 	Monst->_mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (abs(mx) < 3 && abs(my) < 3 && LineClear(PosOkMonst, i, Monst->position.tile.x, Monst->position.tile.y, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
+		if (abs(mx) < 3 && abs(my) < 3 && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy }) && Monst->_mVar1 != MM_CHARGE) {
 			if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(i, 0);
 				dMonster[Monst->position.tile.x][Monst->position.tile.y] = -(i + 1);
@@ -3098,7 +3096,7 @@ void MAI_Bat(int i)
 	if (Monst->MType->mtype == MT_GLOOM
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * Monst->_mint + 33
-	    && LineClear(PosOkMonst, i, Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+	    && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy })) {
 		if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 			dMonster[Monst->position.tile.x][Monst->position.tile.y] = -(i + 1);
 			Monst->_mmode = MM_CHARGE;
@@ -4029,7 +4027,7 @@ void MAI_Rhino(int i)
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (dist >= 5
 			    && v < 2 * Monst->_mint + 43
-			    && LineClear(PosOkMonst, i, Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			    && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy })) {
 				if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
 					if (Monst->MData->snd_special)
 						PlayEffect(i, 3);
@@ -4750,15 +4748,15 @@ bool CheckNoSolid(int entity, Point position)
 
 bool LineClearSolid(Point startPoint, Point endPoint)
 {
-	return LineClear(CheckNoSolid, 0, startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+	return LineClear(CheckNoSolid, 0, startPoint, endPoint);
 }
 
 bool LineClearMissile(Point startPoint, Point endPoint)
 {
-	return LineClear(PosOkMissile, 0, startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+	return LineClear(PosOkMissile, 0, startPoint, endPoint);
 }
 
-bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, int y2)
+bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point endPoint)
 {
 	int dx, dy;
 	int d;
@@ -4767,18 +4765,18 @@ bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, in
 	int tmp;
 	bool done = false;
 
-	xorg = x1;
-	yorg = y1;
-	dx = x2 - x1;
-	dy = y2 - y1;
+	xorg = startPoint.x;
+	yorg = startPoint.y;
+	dx = endPoint.x - startPoint.x;
+	dy = endPoint.y - startPoint.y;
 	if (abs(dx) > abs(dy)) {
 		if (dx < 0) {
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
+			tmp = startPoint.x;
+			startPoint.x = endPoint.x;
+			endPoint.x = tmp;
+			tmp = startPoint.y;
+			startPoint.y = endPoint.y;
+			endPoint.y = tmp;
 			dx = -dx;
 			dy = -dy;
 		}
@@ -4793,24 +4791,24 @@ bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, in
 			dincH = 2 * (dx + dy);
 			yincD = -1;
 		}
-		while (!done && (x1 != x2 || y1 != y2)) {
+		while (!done && (startPoint.x != endPoint.x || startPoint.y != endPoint.y)) {
 			if ((d <= 0) ^ (yincD < 0)) {
 				d += dincD;
 			} else {
 				d += dincH;
-				y1 += yincD;
+				startPoint.y += yincD;
 			}
-			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(entity, { x1, y1 }));
+			startPoint.x++;
+			done = ((startPoint.x != xorg || startPoint.y != yorg) && !Clear(entity, startPoint));
 		}
 	} else {
 		if (dy < 0) {
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
+			tmp = startPoint.y;
+			startPoint.y = endPoint.y;
+			endPoint.y = tmp;
+			tmp = startPoint.x;
+			startPoint.x = endPoint.x;
+			endPoint.x = tmp;
 			dy = -dy;
 			dx = -dx;
 		}
@@ -4825,18 +4823,18 @@ bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, in
 			dincH = 2 * (dy + dx);
 			xincD = -1;
 		}
-		while (!done && (y1 != y2 || x1 != x2)) {
+		while (!done && (startPoint.y != endPoint.y || startPoint.x != endPoint.x)) {
 			if ((d <= 0) ^ (xincD < 0)) {
 				d += dincD;
 			} else {
 				d += dincH;
-				x1 += xincD;
+				startPoint.x += xincD;
 			}
-			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(entity, { x1, y1 }));
+			startPoint.y++;
+			done = ((startPoint.y != yorg || startPoint.x != xorg) && !Clear(entity, startPoint));
 		}
 	}
-	return x1 == x2 && y1 == y2;
+	return startPoint == endPoint;
 }
 
 void SyncMonsterAnim(int i)
