@@ -56,11 +56,13 @@ void AddItemToLabelQueue(int id, int x, int y)
 		return;
 	ItemStruct *it = &items[id];
 
-	char textOnGround[64];
-	if (it->_itype == ITYPE_GOLD)
-		std::sprintf(textOnGround, "%i gold", it->_ivalue);
-	else
-		std::strcpy(textOnGround, it->_iIdentified ? it->_iIName : it->_iName);
+	const char *textOnGround;
+	if (it->_itype == ITYPE_GOLD) {
+		std::sprintf(tempstr, _("%i gold"), it->_ivalue);
+		textOnGround = tempstr;
+	} else {
+		textOnGround = it->_iIdentified ? it->_iIName : it->_iName;
+	}
 
 	int nameWidth = GetLineWidth(textOnGround);
 	BYTE index = ItemCAnimTbl[it->_iCurs];
@@ -72,10 +74,10 @@ void AddItemToLabelQueue(int id, int x, int y)
 	x += *labelCenterOffsets[index];
 	y -= TILE_HEIGHT;
 	if (!zoomflag) {
-		x <<= 1;
-		y <<= 1;
+		x *= 2;
+		y *= 2;
 	}
-	x -= nameWidth >> 1;
+	x -= nameWidth / 2;
 	labelQueue.push_back(itemLabel { id, nameWidth, { x, y }, textOnGround });
 }
 
