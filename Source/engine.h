@@ -133,6 +133,13 @@ struct Point {
 		return *this;
 	}
 
+	Point &operator*=(const int factor)
+	{
+		x *= factor;
+		y *= factor;
+		return *this;
+	}
+
 	friend Point operator+(Point a, const Point &b)
 	{
 		a += b;
@@ -160,6 +167,12 @@ struct Point {
 	}
 
 	friend Point operator*(Point a, const float factor)
+	{
+		a *= factor;
+		return a;
+	}
+
+	friend Point operator*(Point a, const int factor)
 	{
 		a *= factor;
 		return a;
