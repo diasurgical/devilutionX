@@ -285,7 +285,7 @@ void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void MissToMonst(int i, Point position);
 bool PosOkMonst(int i, Point position);
-bool monster_posok(int i, int x, int y);
+bool monster_posok(int i, Point position);
 bool PosOkMonst2(int i, Point position);
 bool PosOkMonst3(int i, Point position);
 bool IsSkel(int mt);

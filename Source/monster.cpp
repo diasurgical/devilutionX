@@ -5143,18 +5143,18 @@ bool PosOkMonst(int i, Point position)
 			ret = false;
 	}
 	if (ret)
-		ret = monster_posok(i, position.x, position.y);
+		ret = monster_posok(i, position);
 
 	return ret;
 }
 
-bool monster_posok(int i, int x, int y)
+bool monster_posok(int i, Point position)
 {
 	int mi, j;
 	bool ret, fire, lightning;
 
 	ret = true;
-	mi = dMissile[x][y];
+	mi = dMissile[position.x][position.y];
 	if (mi != 0 && i >= 0) {
 		fire = false;
 		lightning = false;
@@ -5167,7 +5167,7 @@ bool monster_posok(int i, int x, int y)
 		} else {
 			for (j = 0; j < nummissiles; j++) {
 				mi = missileactive[j];
-				if (missile[mi].position.tile.x == x && missile[mi].position.tile.y == y) {
+				if (missile[mi].position.tile == position) {
 					if (missile[mi]._mitype == MIS_FIREWALL) {
 						fire = true;
 						break;
@@ -5200,7 +5200,7 @@ bool PosOkMonst2(int i, Point position)
 			ret = false;
 	}
 	if (ret)
-		ret = monster_posok(i, position.x, position.y);
+		ret = monster_posok(i, position);
 
 	return ret;
 }
@@ -5227,7 +5227,7 @@ bool PosOkMonst3(int i, Point position)
 		ret = (!SolidLoc(position) || isdoor) && dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0;
 	}
 	if (ret)
-		ret = monster_posok(i, position.x, position.y);
+		ret = monster_posok(i, position);
 
 	return ret;
 }
