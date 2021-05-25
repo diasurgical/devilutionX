@@ -2741,7 +2741,7 @@ void GroupUnity(int i)
 
 	if (monster[i].leaderflag != 0) {
 		leader = monster[i].leader;
-		clear = LineClearSolid(monster[i].position.tile.x, monster[i].position.tile.y, monster[leader].position.future.x, monster[leader].position.future.y);
+		clear = LineClearSolid(monster[i].position.tile, monster[leader].position.future);
 		if (clear || monster[i].leaderflag != 1) {
 			if (clear
 			    && monster[i].leaderflag == 2
@@ -3627,10 +3627,8 @@ void MAI_Scav(int i)
 								continue;
 							done = dDead[Monst->position.tile.x + x][Monst->position.tile.y + y] != 0
 							    && LineClearSolid(
-							        Monst->position.tile.x,
-							        Monst->position.tile.y,
-							        Monst->position.tile.x + x,
-							        Monst->position.tile.y + y);
+							        Monst->position.tile,
+							        Monst->position.tile + Point { x, y });
 						}
 					}
 					x--;
@@ -3643,10 +3641,8 @@ void MAI_Scav(int i)
 								continue;
 							done = dDead[Monst->position.tile.x + x][Monst->position.tile.y + y] != 0
 							    && LineClearSolid(
-							        Monst->position.tile.x,
-							        Monst->position.tile.y,
-							        Monst->position.tile.x + x,
-							        Monst->position.tile.y + y);
+							        Monst->position.tile,
+							        Monst->position.tile + Point { x, y });
 						}
 					}
 					x++;
@@ -4754,9 +4750,9 @@ bool CheckNoSolid(int entity, Point position)
 	return !nSolidTable[dPiece[position.x][position.y]];
 }
 
-bool LineClearSolid(int x1, int y1, int x2, int y2)
+bool LineClearSolid(Point startPoint, Point endPoint)
 {
-	return LineClear(CheckNoSolid, 0, x1, y1, x2, y2);
+	return LineClear(CheckNoSolid, 0, startPoint.x, startPoint.y, endPoint.x, endPoint.y);
 }
 
 bool LineClearMissile(int x1, int y1, int x2, int y2)
