@@ -1774,15 +1774,6 @@ bool TryInvPut()
 	return CanPut(myPlayer.position.tile);
 }
 
-void DrawInvMsg(const char *msg)
-{
-	uint32_t dwTicks = SDL_GetTicks();
-	if (dwTicks - sgdwLastTime >= 5000) {
-		sgdwLastTime = dwTicks;
-		ErrorPlrMsg(msg);
-	}
-}
-
 static bool PutItem(PlayerStruct &player, Point &position)
 {
 	if (numitems >= MAXITEMS)
