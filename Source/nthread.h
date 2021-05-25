@@ -16,6 +16,7 @@ extern uintptr_t glpMsgTbl[MAX_PLRS];
 extern uint32_t gdwLargestMsgSize;
 extern uint32_t gdwNormalMsgSize;
 extern float gfProgressToNextGameTick; // the progress as a fraction (0.0f to 1.0f) in time to the next game tick
+extern int last_tick;
 
 void nthread_terminate_game(const char *pszFcn);
 uint32_t nthread_send_and_recv_turn(uint32_t curTurn, int turnDelta);

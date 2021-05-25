@@ -172,7 +172,7 @@ bool SpawnWindow(const char *lpWindowName)
 	int width = sgOptions.Graphics.nWidth;
 	int height = sgOptions.Graphics.nHeight;
 
-	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
+	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen && !demoMode) {
 		CalculatePreferdWindowSize(width, height);
 	}
 	AdjustToScreenGeometry(width, height);
@@ -220,7 +220,7 @@ bool SpawnWindow(const char *lpWindowName)
 #ifndef USE_SDL1
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
-		if (sgOptions.Graphics.bVSync) {
+		if (sgOptions.Graphics.bVSync && !timedemo) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 

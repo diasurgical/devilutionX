@@ -76,12 +76,20 @@ void PlayIntro()
 	RefreshMusic();
 }
 
+bool Dummy_GetHeroInfo(_uiheroinfo *pInfo)
+{
+	return true;
+}
+
 } // namespace
 
 bool mainmenu_select_hero_dialog(GameData *gameData)
 {
 	_selhero_selections dlgresult = SELHERO_NEW_DUNGEON;
-	if (!gbIsMultiplayer) {
+	if (demoMode) {
+		pfile_ui_set_hero_infos(Dummy_GetHeroInfo);
+		gbLoadGame = true;
+	} else if (!gbIsMultiplayer) {
 		UiSelHeroSingDialog(
 		    pfile_ui_set_hero_infos,
 		    pfile_ui_save_create,
@@ -108,6 +116,9 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 
 	pfile_read_player_from_save(gSaveNumber, MyPlayerId);
 
+	if (recordDemo != -1)
+		CreateDemoFile(recordDemo);
+
 	return true;
 }
 
@@ -121,7 +132,9 @@ void mainmenu_loop()
 
 	do {
 		menu = MAINMENU_NONE;
-		if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
+		if (demoMode)
+			menu = MAINMENU_SINGLE_PLAYER;
+		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
 			app_fatal("%s", _("Unable to display mainmenu"));
 
 		switch (menu) {

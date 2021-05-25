@@ -28,6 +28,9 @@ bool loop_movie;
  */
 void play_movie(const char *pszMovie, bool userCanClose)
 {
+	if (timedemo)
+		return;
+
 	movie_playing = true;
 
 #ifndef NOSOUND

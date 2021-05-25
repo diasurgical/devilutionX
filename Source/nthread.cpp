@@ -19,6 +19,7 @@ uint32_t gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];
 uint32_t gdwLargestMsgSize;
 uint32_t gdwNormalMsgSize;
+int last_tick;
 float gfProgressToNextGameTick = 0.0;
 
 namespace {
@@ -31,7 +32,6 @@ uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
 char sgbPacketCountdown;
 bool sgbThreadIsRunning;
-int last_tick;
 SdlThread Thread;
 
 void NthreadHandler()
