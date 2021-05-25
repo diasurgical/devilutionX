@@ -15,6 +15,7 @@
 namespace devilution {
 
 #define MAXITEMS 127
+#define ITEMTYPES 43
 
 #define GOLD_SMALL_LIMIT 1000
 #define GOLD_MEDIUM_LIMIT 2500

@@ -713,7 +713,7 @@ void CelBlitOutlineTo(const CelOutputBuffer &out, uint8_t col, int sx, int sy, c
 std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame)
 {
 	int nDataSize;
-	auto src = reinterpret_cast<const uint8_t *>(CelGetFrame(cel.Data(), frame, &nDataSize));
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 	auto end = &src[nDataSize];
 	const int celWidth = cel.Width(frame);
 

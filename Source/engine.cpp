@@ -55,7 +55,7 @@ void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::
 		from.x = 0;
 	}
 	if (from.x + width > out.w())
-		width = (from.x + width) - out.w();
+		width = out.w() - from.x;
 	return UnsafeDrawHorizontalLine(out, from, width, colorIndex);
 }
 
@@ -116,6 +116,29 @@ static void DrawHalfTransparentStippledRectTo(const CelOutputBuffer &out, int sx
 
 void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
 {
+	if (sx + width < 0)
+		return;
+	if (sy + height < 0)
+		return;
+	if (sx >= out.w())
+		return;
+	if (sy >= out.h())
+		return;
+
+	if (sx < 0) {
+		width += sx;
+		sx = 0;
+	} else if (sx + width >= out.w()) {
+		width = out.w() - sx;
+	}
+
+	if (sy < 0) {
+		height += sy;
+		sy = 0;
+	} else if (sy + height >= out.h()) {
+		height = out.h() - sy;
+	}
+
 	if (sgOptions.Graphics.bBlendedTransparancy) {
 		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
 	} else {

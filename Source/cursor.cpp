@@ -16,6 +16,7 @@
 #include "track.h"
 #include "trigs.h"
 #include "utils/language.h"
+#include "qol/itemlabels.h"
 
 namespace devilution {
 namespace {
@@ -248,6 +249,9 @@ void CheckCursMove()
 	int i, sx, sy, fx, fy, mx, my, tx, ty, px, py, xx, yy, mi, columns, rows, xo, yo;
 	int8_t bv;
 	bool flipflag, flipx, flipy;
+
+	if (IsItemLabelHighlighted())
+		return;
 
 	sx = MouseX;
 	sy = MouseY;

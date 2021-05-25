@@ -23,8 +23,6 @@
 #include "utils/language.h"
 #include "utils/math.h"
 
-#define ITEMTYPES 43
-
 namespace devilution {
 namespace {
 std::optional<CelSprite> itemanims[ITEMTYPES];
