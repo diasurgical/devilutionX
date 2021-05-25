@@ -43,6 +43,7 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/common.h"
+#include "qol/itemlabels.h"
 #include "restrict.h"
 #include "setmaps.h"
 #include "stores.h"
@@ -1070,6 +1071,10 @@ static void ReleaseKey(int vkey)
 {
 	if (vkey == DVL_VK_SNAPSHOT)
 		CaptureScreen();
+	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
+		AltPressed(false);
+	if (vkey == DVL_VK_CONTROL || vkey == DVL_VK_LCONTROL || vkey == DVL_VK_RCONTROL)
+		ToggleItemLabelHighlight();
 }
 
 static void ClosePanels()
@@ -1145,6 +1150,9 @@ static void PressKey(int vkey)
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
 	}
+
+	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
+		AltPressed(true);
 
 	if (deathflag) {
 		if (sgnTimeoutCurs != CURSOR_NONE) {

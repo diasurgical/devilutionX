@@ -389,6 +389,7 @@ set(libdevilutionx_SRCS
   Source/qol/common.cpp
   Source/qol/monhealthbar.cpp
   Source/qol/xpbar.cpp
+  Source/qol/itemlabels.cpp
   Source/utils/console.cpp
   Source/utils/display.cpp
   Source/utils/file_util.cpp

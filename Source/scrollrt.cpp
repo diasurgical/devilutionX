@@ -25,6 +25,7 @@
 #include "plrmsg.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
+#include "qol/itemlabels.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/log.hpp"
@@ -636,6 +637,8 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), px, sy, *cel, nCel);
 	}
 	CelClippedDrawLightTo(out, px, sy, *cel, nCel);
+	if (pItem->_iAnimFrame == pItem->_iAnimLen)
+		AddItemToLabelQueue(bItem - 1, px, sy);
 }
 
 /**
@@ -1247,6 +1250,7 @@ void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
 	DrawMonsterHealthBar(out);
+	DrawItemNameLabels(out);
 
 	if (stextflag != STORE_NONE && !qtextflag)
 		DrawSText(out);
