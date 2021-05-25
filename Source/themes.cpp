@@ -620,45 +620,45 @@ void Theme_SkelRoom(int t)
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp - 1, yp - 1);
+		SpawnSkeleton(i, { xp - 1, yp - 1 });
 	} else {
 		AddObject(OBJ_BANNERL, xp - 1, yp - 1);
 	}
 
 	i = PreSpawnSkeleton();
-	SpawnSkeleton(i, xp, yp - 1);
+	SpawnSkeleton(i, { xp, yp - 1 });
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp + 1, yp - 1);
+		SpawnSkeleton(i, { xp + 1, yp - 1 });
 	} else {
 		AddObject(OBJ_BANNERR, xp + 1, yp - 1);
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp - 1, yp);
+		SpawnSkeleton(i, { xp - 1, yp });
 	} else {
 		AddObject(OBJ_BANNERM, xp - 1, yp);
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp + 1, yp);
+		SpawnSkeleton(i, { xp + 1, yp });
 	} else {
 		AddObject(OBJ_BANNERM, xp + 1, yp);
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp - 1, yp + 1);
+		SpawnSkeleton(i, { xp - 1, yp + 1 });
 	} else {
 		AddObject(OBJ_BANNERR, xp - 1, yp + 1);
 	}
 
 	i = PreSpawnSkeleton();
-	SpawnSkeleton(i, xp, yp + 1);
+	SpawnSkeleton(i, { xp, yp + 1 });
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp + 1, yp + 1);
+		SpawnSkeleton(i, { xp + 1, yp + 1 });
 	} else {
 		AddObject(OBJ_BANNERL, xp + 1, yp + 1);
 	}

@@ -5281,7 +5281,7 @@ void ActivateSpawn(int i, int x, int y, Direction dir)
 	M_StartSpStand(i, dir);
 }
 
-bool SpawnSkeleton(int ii, int x, int y)
+bool SpawnSkeleton(int ii, Point position)
 {
 	int dx, dy, xx, yy, j, k, rs;
 	bool savail;
@@ -5290,17 +5290,17 @@ bool SpawnSkeleton(int ii, int x, int y)
 	if (ii == -1)
 		return false;
 
-	if (PosOkMonst(-1, { x, y })) {
-		Direction dir = GetDirection({ x, y }, { x, y }); // TODO useless calculation
-		ActivateSpawn(ii, x, y, dir);
+	if (PosOkMonst(-1, position)) {
+		Direction dir = GetDirection(position, position); // TODO useless calculation
+		ActivateSpawn(ii, position.x, position.y, dir);
 		return true;
 	}
 
 	savail = false;
 	yy = 0;
-	for (j = y - 1; j <= y + 1; j++) {
+	for (j = position.y - 1; j <= position.y + 1; j++) {
 		xx = 0;
-		for (k = x - 1; k <= x + 1; k++) {
+		for (k = position.x - 1; k <= position.x + 1; k++) {
 			monstok[xx][yy] = PosOkMonst(-1, { k, j });
 			savail |= monstok[xx][yy];
 			xx++;
@@ -5328,9 +5328,9 @@ bool SpawnSkeleton(int ii, int x, int y)
 		}
 	}
 
-	dx = x - 1 + xx;
-	dy = y - 1 + yy;
-	Direction dir = GetDirection({ dx, dy }, { x, y });
+	dx = position.x - 1 + xx;
+	dy = position.y - 1 + yy;
+	Direction dir = GetDirection({ dx, dy }, position);
 	ActivateSpawn(ii, dx, dy, dir);
 
 	return true;

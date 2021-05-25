@@ -3254,7 +3254,7 @@ void OperateSarc(int pnum, int i, bool sendmsg)
 			if (object[i]._oVar1 <= 2)
 				CreateRndItem(object[i].position, false, sendmsg, false);
 			if (object[i]._oVar1 >= 8)
-				SpawnSkeleton(object[i]._oVar2, object[i].position.x, object[i].position.y);
+				SpawnSkeleton(object[i]._oVar2, object[i].position);
 			if (pnum == myplr)
 				NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		}
@@ -5195,7 +5195,7 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 				CreateRndItem(object[i].position, false, sendmsg, false);
 		}
 		if (object[i]._oVar2 >= 8)
-			SpawnSkeleton(object[i]._oVar4, object[i].position.x, object[i].position.y);
+			SpawnSkeleton(object[i]._oVar4, object[i].position);
 	}
 	if (pnum == myplr)
 		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, i);
