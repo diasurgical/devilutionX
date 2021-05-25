@@ -283,7 +283,7 @@ void SyncMonsterAnim(int i);
 void M_FallenFear(int x, int y);
 void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
-void MissToMonst(int i, int x, int y);
+void MissToMonst(int i, Point position);
 bool PosOkMonst(int i, Point position);
 bool monster_posok(int i, int x, int y);
 bool PosOkMonst2(int i, Point position);

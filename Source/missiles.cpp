@@ -4621,7 +4621,7 @@ void MI_Rhino(int i)
 	omx = missile[i].position.tile.x;
 	omy = missile[i].position.tile.y;
 	if (!PosOkMonst(monst, missile[i].position.tile) || (monster[monst]._mAi == AI_SNAKE && !PosOkMonst(monst, { mix2, miy2 }))) {
-		MissToMonst(i, mix, miy);
+		MissToMonst(i, { mix, miy });
 		missile[i]._miDelFlag = true;
 		return;
 	}
@@ -4656,7 +4656,7 @@ void MI_Fireman(int i)
 		cy = monster[enemy].position.tile.y;
 	}
 	if ((bx != ax || by != ay) && ((missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4)) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, { ax, ay })) {
-		MissToMonst(i, ax, ay);
+		MissToMonst(i, { ax, ay });
 		missile[i]._miDelFlag = true;
 	} else if ((monster[src]._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
 		j = dPlayer[bx][by];

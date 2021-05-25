@@ -5063,7 +5063,7 @@ void PrintUniqueHistory()
 	pinfoflag = true;
 }
 
-void MissToMonst(int i, int x, int y)
+void MissToMonst(int i, Point position)
 {
 	int m, pnum;
 	MissileStruct *Miss;
@@ -5078,9 +5078,9 @@ void MissToMonst(int i, int x, int y)
 
 	Monst = &monster[m];
 	Point oldPosition = Miss->position.tile;
-	dMonster[x][y] = m + 1;
+	dMonster[position.x][position.y] = m + 1;
 	Monst->_mdir = static_cast<Direction>(Miss->_mimfnum);
-	Monst->position.tile = { x, y };
+	Monst->position.tile = position;
 	M_StartStand(m, Monst->_mdir);
 	if (Monst->MType->mtype < MT_INCIN || Monst->MType->mtype > MT_HELLBURN) {
 		if (!(Monst->_mFlags & MFLAG_TARGETS_MONSTER))
