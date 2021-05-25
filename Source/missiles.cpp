@@ -3673,7 +3673,7 @@ void MI_HorkSpawn(int i)
 					if (!nSolidTable[dp] && dMonster[tx][ty] == 0 && dPlayer[tx][ty] == 0 && dObject[tx][ty] == 0) {
 						j = 6;
 						auto md = static_cast<Direction>(missile[i]._miVar1);
-						int mon = AddMonster(tx, ty, md, 1, true);
+						int mon = AddMonster({ tx, ty }, md, 1, true);
 						M_StartStand(mon, md);
 						break;
 					}

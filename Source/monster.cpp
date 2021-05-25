@@ -1114,10 +1114,10 @@ void InitMonsters()
 		CheckDungeonClear();
 #endif
 	if (!setlevel) {
-		AddMonster(1, 0, DIR_S, 0, false);
-		AddMonster(1, 0, DIR_S, 0, false);
-		AddMonster(1, 0, DIR_S, 0, false);
-		AddMonster(1, 0, DIR_S, 0, false);
+		AddMonster({ 1, 0 }, DIR_S, 0, false);
+		AddMonster({ 1, 0 }, DIR_S, 0, false);
+		AddMonster({ 1, 0 }, DIR_S, 0, false);
+		AddMonster({ 1, 0 }, DIR_S, 0, false);
 	}
 
 	if (!gbIsSpawn && !setlevel && currlevel == 16)
@@ -1178,10 +1178,10 @@ void InitMonsters()
 void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
-	AddMonster(1, 0, DIR_S, 0, false);
-	AddMonster(1, 0, DIR_S, 0, false);
-	AddMonster(1, 0, DIR_S, 0, false);
-	AddMonster(1, 0, DIR_S, 0, false);
+	AddMonster({ 1, 0 }, DIR_S, 0, false);
+	AddMonster({ 1, 0 }, DIR_S, 0, false);
+	AddMonster({ 1, 0 }, DIR_S, 0, false);
+	AddMonster({ 1, 0 }, DIR_S, 0, false);
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		AddMonsterType(UniqMonst[UMT_LAZURUS].mtype, PLACE_UNIQUE);
 		AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, PLACE_UNIQUE);
@@ -1223,13 +1223,13 @@ void DeleteMonster(int i)
 	monstactive[i] = temp;
 }
 
-int AddMonster(int x, int y, Direction dir, int mtype, bool InMap)
+int AddMonster(Point position, Direction dir, int mtype, bool InMap)
 {
 	if (nummonsters < MAXMONSTERS) {
 		int i = monstactive[nummonsters++];
 		if (InMap)
-			dMonster[x][y] = i + 1;
-		InitMonster(i, dir, mtype, { x, y });
+			dMonster[position.x][position.y] = i + 1;
+		InitMonster(i, dir, mtype, position);
 		return i;
 	}
 
@@ -1260,7 +1260,7 @@ void monster_43C785(int i)
 					break;
 			}
 			if (j < MAX_LVLMTYPES)
-				AddMonster(position.x, position.y, monster[i]._mdir, j, true);
+				AddMonster(position, monster[i]._mdir, j, true);
 		}
 	}
 }
@@ -5270,7 +5270,7 @@ int M_SpawnSkel(int x, int y, Direction dir)
 			if (IsSkel(Monsters[i].mtype))
 				j++;
 		}
-		skel = AddMonster(x, y, dir, i - 1, true);
+		skel = AddMonster({ x, y }, dir, i - 1, true);
 		if (skel != -1)
 			M_StartSpStand(skel, dir);
 
@@ -5362,7 +5362,7 @@ int PreSpawnSkeleton()
 			if (IsSkel(Monsters[i].mtype))
 				j++;
 		}
-		skel = AddMonster(0, 0, DIR_S, i - 1, false);
+		skel = AddMonster({ 0, 0 }, DIR_S, i - 1, false);
 		if (skel != -1)
 			M_StartStand(skel, DIR_S);
 

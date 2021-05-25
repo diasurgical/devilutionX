@@ -511,7 +511,7 @@ void PlaceThemeMonsts(int t, int f)
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]] && dItem[xp][yp] == 0 && dObject[xp][yp] == 0) {
 				if (GenerateRnd(f) == 0) {
-					AddMonster(xp, yp, static_cast<Direction>(GenerateRnd(8)), mtype, true);
+					AddMonster({ xp, yp }, static_cast<Direction>(GenerateRnd(8)), mtype, true);
 				}
 			}
 		}
@@ -876,7 +876,7 @@ void Theme_GoatShrine(int t)
 	for (yy = themey - 1; yy <= themey + 1; yy++) {
 		for (xx = themex - 1; xx <= themex + 1; xx++) {
 			if (dTransVal[xx][yy] == themes[t].ttval && !nSolidTable[dPiece[xx][yy]] && (xx != themex || yy != themey)) {
-				AddMonster(xx, yy, DIR_SW, themeVar1, true);
+				AddMonster({ xx, yy }, DIR_SW, themeVar1, true);
 			}
 		}
 	}
