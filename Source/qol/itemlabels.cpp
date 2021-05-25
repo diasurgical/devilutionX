@@ -1,9 +1,3 @@
-/**
-* @file itemlabels.cpp
-*
-* Adds item labels QoL feature
-*/
-
 #include <vector>
 #include <string>
 #include <unordered_set>
