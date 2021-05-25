@@ -1838,7 +1838,7 @@ void M_StartKill(int i, int pnum)
 	MonstStartKill(i, pnum, true);
 }
 
-void M_SyncStartKill(int i, int x, int y, int pnum)
+void M_SyncStartKill(int i, Point position, int pnum)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -1846,10 +1846,10 @@ void M_SyncStartKill(int i, int x, int y, int pnum)
 		return;
 	}
 
-	if (dMonster[x][y] == 0) {
+	if (dMonster[position.x][position.y] == 0) {
 		M_ClearSquares(i);
-		monster[i].position.tile = { x, y };
-		monster[i].position.old = { x, y };
+		monster[i].position.tile = position;
+		monster[i].position.old = position;
 	}
 
 	if (monster[i]._mmode == MM_STONE) {

@@ -221,7 +221,7 @@ void M_ClearSquares(int i);
 void M_GetKnockback(int i);
 void M_StartHit(int i, int pnum, int dam);
 void M_StartKill(int i, int pnum);
-void M_SyncStartKill(int i, int x, int y, int pnum);
+void M_SyncStartKill(int i, Point position, int pnum);
 void M_Teleport(int i);
 void M_UpdateLeader(int i);
 void DoEnding();
