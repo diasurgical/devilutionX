@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-
 #include <cctype>
 #include <cmath>
 #include <cstdint>
@@ -9,6 +8,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <iostream>
+#include <fstream>
 
 namespace devilution {
 
@@ -32,6 +33,20 @@ struct tagMSG {
 	int32_t lParam;
 };
 
+enum class DemoMsgType {
+	Rendering = 1,
+	Message = 2,
+};
+
+struct demoMsg {
+	DemoMsgType type;
+	uint32_t message;
+	int32_t wParam;
+	int32_t lParam;
+};
+
+extern std::ofstream demoRecording;
+
 //
 // Everything else
 //
@@ -41,6 +56,8 @@ void FocusOnCharInfo();
 
 bool GetAsyncKeyState(int vKey);
 
+void CreateDemoFile(int i);
+bool LoadDemoMessages(int i);
 bool FetchMessage(tagMSG *lpMsg);
 
 bool TranslateMessage(const tagMSG *lpMsg);
