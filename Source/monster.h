@@ -294,7 +294,7 @@ int M_SpawnSkel(Point position, Direction dir);
 bool SpawnSkeleton(int ii, Point position);
 int PreSpawnSkeleton();
 void TalktoMonster(int i);
-void SpawnGolum(int i, int x, int y, int mi);
+void SpawnGolum(int i, Point position, int mi);
 bool CanTalkToMonst(int m);
 bool CheckMonsterHit(int m, bool *ret);
 int encode_enemy(int m);

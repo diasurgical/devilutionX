@@ -5389,14 +5389,14 @@ void TalktoMonster(int i)
 	}
 }
 
-void SpawnGolum(int i, int x, int y, int mi)
+void SpawnGolum(int i, Point position, int mi)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
-	dMonster[x][y] = i + 1;
-	monster[i].position.tile = { x, y };
-	monster[i].position.future = { x, y };
-	monster[i].position.old = { x, y };
+	dMonster[position.x][position.y] = i + 1;
+	monster[i].position.tile = position;
+	monster[i].position.future = position;
+	monster[i].position.old = position;
 	monster[i]._pathcount = 0;
 	monster[i]._mmaxhp = 2 * (320 * missile[mi]._mispllvl + plr[i]._pMaxMana / 3);
 	monster[i]._mhitpoints = monster[i]._mmaxhp;

@@ -3270,7 +3270,7 @@ void MI_Golem(int i)
 					if (LineClearMissile({ missile[i]._miVar1, missile[i]._miVar2 }, { tx, ty })) {
 						if ((dMonster[tx][ty] | nSolidTable[dp] | dObject[tx][ty]) == 0) {
 							l = 6;
-							SpawnGolum(src, tx, ty, i);
+							SpawnGolum(src, { tx, ty }, i);
 							break;
 						}
 					}
