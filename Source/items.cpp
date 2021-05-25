@@ -3199,12 +3199,10 @@ static bool OilItem(ItemStruct *x, PlayerStruct *p)
 		if (x->_iMaxDam - x->_iMinDam < 30)
 			x->_iMaxDam++;
 
-		auto &tempItem = items[MAXITEMS];
-		tempItem = {};
-		RecreateItem(MAXITEMS, x->IDidx, x->_iCreateInfo, x->_iSeed, x->_iIvalue, (x->dwBuff & CF_HELLFIRE) != 0);
+		const auto &orgItem = AllItemsList[x->IDidx];
 
-		const auto orgMinDmg = tempItem._iMinDam;
-		const auto orgMaxDmg = tempItem._iMaxDam;
+		const auto orgMinDmg = orgItem.iMinDam;
+		const auto orgMaxDmg = orgItem.iMaxDam;
 
 		const auto maxApplications = 30 - (orgMaxDmg - orgMinDmg);
 		const auto applicationsDone = x->_iMinDam - orgMinDmg;
