@@ -1,9 +1,12 @@
 #include <SDL.h>
 #include <cstdint>
 #include <deque>
+#include <string>
+#include <sstream>
 
 #include "control.h"
 #include "controls/controller.h"
+#include "utils/paths.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
@@ -19,6 +22,9 @@
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
+#include "menu.h"
+#include "nthread.h"
+#include "storm/storm.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -297,7 +303,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool FetchMessage(tagMSG *lpMsg)
+bool FetchMessage_Real(tagMSG *lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -468,7 +474,7 @@ bool FetchMessage(tagMSG *lpMsg)
 		if (key == -1)
 			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
 		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
-		lpMsg->wParam = (DWORD)key;
+		lpMsg->wParam = (uint32_t)key;
 		// HACK: Encode modifier in lParam for TranslateMessage later
 		lpMsg->lParam = e.key.keysym.mod << 16;
 	} break;
@@ -585,11 +591,152 @@ bool FetchMessage(tagMSG *lpMsg)
 	return true;
 }
 
+std::ofstream demoRecording;
+static std::deque<demoMsg> demo_message_queue;
+
+void CreateDemoFile(int i)
+{
+	char demoFilename[16];
+	snprintf(demoFilename, 15, "demo_%d.dmo", i);
+	demoRecording.open(paths::PrefPath() + demoFilename, std::fstream::trunc);
+
+	SDL_Log("gnScreenWidth %i", gnScreenWidth);
+	SDL_Log("gnScreenHeight %i", gnScreenHeight);
+
+	demoRecording << "0," << gSaveNumber << "," << gnScreenWidth << "," << gnScreenHeight << "\n";
+}
+
+void SaveDemoMessage(tagMSG *lpMsg, int tick)
+{
+	demoRecording << tick << ",0," << lpMsg->message << "," << lpMsg->wParam << "," << lpMsg->lParam << "\n";
+}
+
+void PumpDemoMessage(int tick, uint32_t message, int32_t wParam, int32_t lParam)
+{
+	demoMsg msg;
+	msg.tick = tick;
+	msg.message = message;
+	msg.wParam = wParam;
+	msg.lParam = lParam;
+
+	demo_message_queue.push_back(msg);
+}
+
+bool LoadDemoMessages(int i)
+{
+	std::ifstream demofile;
+	char demoFilename[16];
+	snprintf(demoFilename, 15, "demo_%d.dmo", i);
+	demofile.open(paths::PrefPath() + demoFilename);
+	if (!demofile.is_open()) {
+		return false;
+	}
+
+	std::string line, number;
+
+	std::getline(demofile, line);
+	std::stringstream header(line);
+
+	std::getline(header, number, ','); // Demo version
+	if (std::stoi(number) != 0) {
+		return false;
+	}
+
+	std::getline(header, number, ',');
+	gSaveNumber = std::stoi(number);
+
+	std::getline(header, number, ',');
+	uint32_t width = std::stoi(number);
+	sgOptions.Graphics.nWidth = width;
+
+	std::getline(header, number, ',');
+	uint32_t height = std::stoi(number);
+	sgOptions.Graphics.nHeight = height;
+
+	while (std::getline(demofile, line)) {
+		std::stringstream command(line);
+
+		std::getline(command, number, ',');
+		int tick = std::stoi(number);
+
+		std::getline(command, number, ',');
+		int type = std::stoi(number);
+
+		switch (type) {
+		case 0:
+			std::getline(command, number, ',');
+			uint32_t message = std::stoi(number);
+			std::getline(command, number, ',');
+			int32_t wParam = std::stoi(number);
+			std::getline(command, number, ',');
+			int32_t lParam = std::stoi(number);
+			PumpDemoMessage(tick, message, wParam, lParam);
+			break;
+		}
+	}
+
+	demofile.close();
+
+	return true;
+}
+
+bool DemoMessage(tagMSG *lpMsg, int tick)
+{
+	SDL_Event e;
+	if (SDL_PollEvent(&e)) {
+		if (e.type == SDL_QUIT) {
+			lpMsg->message = DVL_WM_QUIT;
+			lpMsg->lParam = 0;
+			lpMsg->wParam = 0;
+			return true;
+		}
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+			demo_message_queue.clear();
+			message_queue.clear();
+			demoMode = false;
+			timedemo = false;
+			last_tick = SDL_GetTicks();
+		}
+	}
+
+	if (!demo_message_queue.empty()) {
+		demoMsg dmsg = demo_message_queue.front();
+		if (dmsg.tick == tick) {
+			lpMsg->message = dmsg.message;
+			lpMsg->lParam = dmsg.lParam;
+			lpMsg->wParam = dmsg.wParam;
+			demo_message_queue.pop_front();
+			return true;
+		}
+	}
+
+	lpMsg->message = 0;
+	lpMsg->lParam = 0;
+	lpMsg->wParam = 0;
+
+	return false;
+}
+
+bool FetchMessage(tagMSG *lpMsg, int tick)
+{
+	bool available;
+
+	if (!demoMode)
+		available = FetchMessage_Real(lpMsg);
+	else
+		available = DemoMessage(lpMsg, tick);
+
+	if (recordDemo != -1 && available && tick > -1)
+		SaveDemoMessage(lpMsg, tick);
+
+	return available;
+}
+
 bool TranslateMessage(const tagMSG *lpMsg)
 {
 	if (lpMsg->message == DVL_WM_KEYDOWN) {
 		int key = lpMsg->wParam;
-		unsigned mod = (DWORD)lpMsg->lParam >> 16;
+		unsigned mod = (uint32_t)lpMsg->lParam >> 16;
 
 		bool shift = (mod & KMOD_SHIFT) != 0;
 		bool caps = (mod & KMOD_CAPS) != 0;

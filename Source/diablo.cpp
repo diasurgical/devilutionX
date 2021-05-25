@@ -109,6 +109,9 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 bool gbForceWindowed = false;
 bool leveldebug = false;
+int recordDemo = -1;
+bool demoMode = false;
+bool timedemo = false;
 #ifdef _DEBUG
 bool monstdebug = false;
 _monster_id DebugMonsters[10];
@@ -797,6 +800,7 @@ void RunGameLoop(interface_mode uMsg)
 {
 	WNDPROC saveProc;
 	tagMSG msg;
+	int startTime;
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
@@ -820,8 +824,11 @@ void RunGameLoop(interface_mode uMsg)
 
 	logicTick = 0;
 
+	if (timedemo)
+		startTime = SDL_GetTicks();
+
 	while (gbRunGame) {
-		while (FetchMessage(&msg)) {
+		while (FetchMessage(&msg, logicTick)) {
 			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = false;
 				gbRunGame = false;
@@ -848,6 +855,13 @@ void RunGameLoop(interface_mode uMsg)
 		if (run_game_iteration++ == 0)
 			HeapProfilerDump("first_game_iteration");
 #endif
+	}
+
+	if (timedemo) {
+		float secounds = (SDL_GetTicks() - startTime) / 1000.0;
+		SDL_Log("%d frames, %.2f seconds: %.1f fps", logicTick, secounds, logicTick / secounds);
+		gbRunGameResult = false;
+		gbRunGame = false;
 	}
 
 	if (gbIsMultiplayer) {
@@ -884,6 +898,9 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-x", _("Run in windowed mode"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--record <#>", _("Record a demo file"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--demo <#>", _("Play a demo file"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--timedemo", _("Disable all frame limiting during demo playback"));
 	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette"));
@@ -917,6 +934,16 @@ void DiabloParseFlags(int argc, char **argv)
 			paths::SetBasePath(argv[++i]);
 		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
 			paths::SetPrefPath(argv[++i]);
+		} else if (strcasecmp("--demo", argv[i]) == 0) {
+			demoMode = true;
+			if (!LoadDemoMessages(SDL_atoi(argv[++i]))) {
+				SDL_Log("Unable to load demo file");
+				diablo_quit(1);
+			}
+		} else if (strcasecmp("--timedemo", argv[i]) == 0) {
+			timedemo = true;
+		} else if (strcasecmp("--record", argv[i]) == 0) {
+			recordDemo = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
 			paths::SetConfigPath(argv[++i]);
 		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
@@ -1071,8 +1098,10 @@ void DiabloDeinit()
 {
 	FreeItemGFX();
 
-	if (sbWasOptionsLoaded)
+	if (sbWasOptionsLoaded && !demoMode)
 		SaveOptions();
+	if (demoRecording.is_open())
+		demoRecording.close();
 	if (was_snd_init)
 		effects_cleanup_sfx();
 #ifndef NOSOUND

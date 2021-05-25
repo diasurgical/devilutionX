@@ -28,6 +28,9 @@ bool loop_movie;
  */
 void play_movie(const char *pszMovie, bool userCanClose)
 {
+	if (timedemo)
+		return;
+
 	movie_playing = true;
 
 #ifndef NOSOUND
@@ -39,7 +42,7 @@ void play_movie(const char *pszMovie, bool userCanClose)
 	if (SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808)) {
 		tagMSG msg;
 		while (movie_playing) {
-			while (movie_playing && FetchMessage(&msg)) {
+			while (movie_playing && FetchMessage(&msg, -1)) {
 				switch (msg.message) {
 				case DVL_WM_KEYDOWN:
 				case DVL_WM_LBUTTONDOWN:

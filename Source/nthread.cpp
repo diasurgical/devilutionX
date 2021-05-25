@@ -19,6 +19,7 @@ uint32_t gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];
 uint32_t gdwLargestMsgSize;
 uint32_t gdwNormalMsgSize;
+int last_tick;
 float gfProgressToNextGameTick = 0.0;
 
 namespace {
@@ -31,7 +32,6 @@ uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
 char sgbPacketCountdown;
 bool sgbThreadIsRunning;
-int last_tick;
 SdlThread Thread;
 
 void NthreadHandler()
@@ -216,6 +216,9 @@ void nthread_ignore_mutex(bool bStart)
  */
 bool nthread_has_500ms_passed()
 {
+	if (timedemo)
+		return true;
+
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = currentTickCount - last_tick;
 	if (!gbIsMultiplayer && ticksElapsed > gnTickDelay * 10) {
