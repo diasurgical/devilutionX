@@ -91,6 +91,7 @@ bool gbBarbarian;
 bool gbQuietMode = false;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
+int logicTick;
 char gszProductName[64] = "DevilutionX vUnknown";
 Keymapper keymapper {
 	// Workaround: remove once the INI library has been replaced.
@@ -816,6 +817,9 @@ void RunGameLoop(interface_mode uMsg)
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 	unsigned run_game_iteration = 0;
 #endif
+
+	logicTick = 0;
+
 	while (gbRunGame) {
 		while (FetchMessage(&msg)) {
 			if (msg.message == DVL_WM_QUIT) {
@@ -839,6 +843,7 @@ void RunGameLoop(interface_mode uMsg)
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = false;
 		DrawAndBlit();
+		logicTick++;
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 		if (run_game_iteration++ == 0)
 			HeapProfilerDump("first_game_iteration");

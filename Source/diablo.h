@@ -80,6 +80,7 @@ extern bool gbBarbarian;
 extern bool gbQuietMode;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
+extern int logicTick;
 extern char gszProductName[64];
 
 extern MouseActionType LastMouseButtonAction;
