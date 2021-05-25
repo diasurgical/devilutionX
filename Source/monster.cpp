@@ -1770,7 +1770,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 	M_ClearSquares(i);
 	dMonster[Monst->position.tile.x][Monst->position.tile.y] = i + 1;
 	CheckQuestKill(i, sendmsg);
-	M_FallenFear(Monst->position.tile.x, Monst->position.tile.y);
+	M_FallenFear(Monst->position.tile);
 	if ((Monst->MType->mtype >= MT_NACID && Monst->MType->mtype <= MT_XACID) || Monst->MType->mtype == MT_SPIDLORD)
 		AddMissile(Monst->position.tile.x, Monst->position.tile.y, 0, 0, 0, MIS_ACIDPUD, TARGET_PLAYERS, i, Monst->_mint + 1, 0);
 }
@@ -1814,7 +1814,7 @@ void M2MStartKill(int i, int mid)
 	M_ClearSquares(mid);
 	dMonster[monster[mid].position.tile.x][monster[mid].position.tile.y] = mid + 1;
 	CheckQuestKill(mid, true);
-	M_FallenFear(monster[mid].position.tile.x, monster[mid].position.tile.y);
+	M_FallenFear(monster[mid].position.tile);
 	if (monster[mid].MType->mtype >= MT_NACID && monster[mid].MType->mtype <= MT_XACID)
 		AddMissile(monster[mid].position.tile.x, monster[mid].position.tile.y, 0, 0, 0, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster[mid]._mint + 1, 0);
 
@@ -4900,7 +4900,7 @@ void SyncMonsterAnim(int i)
 	}
 }
 
-void M_FallenFear(int x, int y)
+void M_FallenFear(Point position)
 {
 	MonsterStruct *m;
 	int i, rundist;
@@ -4929,12 +4929,12 @@ void M_FallenFear(int x, int y)
 			continue;
 		}
 		if (m->_mAi == AI_FALLEN
-		    && abs(x - m->position.tile.x) < 5
-		    && abs(y - m->position.tile.y) < 5
+		    && abs(position.x - m->position.tile.x) < 5
+		    && abs(position.y - m->position.tile.y) < 5
 		    && m->_mhitpoints >> 6 > 0) {
 			m->_mgoal = MGOAL_RETREAT;
 			m->_mgoalvar1 = rundist;
-			m->_mdir = GetDirection({ x, y }, m->position.tile);
+			m->_mdir = GetDirection(position, m->position.tile);
 		}
 	}
 }

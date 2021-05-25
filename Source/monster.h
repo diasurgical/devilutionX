@@ -280,7 +280,7 @@ bool LineClearMissile(Point startPoint, Point endPoint);
 bool LineClear(Point startPoint, Point endPoint);
 bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point endPoint);
 void SyncMonsterAnim(int i);
-void M_FallenFear(int x, int y);
+void M_FallenFear(Point position);
 void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void MissToMonst(int i, Point position);
