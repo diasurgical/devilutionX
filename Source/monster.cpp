@@ -1114,10 +1114,10 @@ void InitMonsters()
 		CheckDungeonClear();
 #endif
 	if (!setlevel) {
-		AddMonster(1, 0, DIR_S, 0, false);
-		AddMonster(1, 0, DIR_S, 0, false);
-		AddMonster(1, 0, DIR_S, 0, false);
-		AddMonster(1, 0, DIR_S, 0, false);
+		AddMonster({ 1, 0 }, DIR_S, 0, false);
+		AddMonster({ 1, 0 }, DIR_S, 0, false);
+		AddMonster({ 1, 0 }, DIR_S, 0, false);
+		AddMonster({ 1, 0 }, DIR_S, 0, false);
 	}
 
 	if (!gbIsSpawn && !setlevel && currlevel == 16)
@@ -1178,10 +1178,10 @@ void InitMonsters()
 void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
-	AddMonster(1, 0, DIR_S, 0, false);
-	AddMonster(1, 0, DIR_S, 0, false);
-	AddMonster(1, 0, DIR_S, 0, false);
-	AddMonster(1, 0, DIR_S, 0, false);
+	AddMonster({ 1, 0 }, DIR_S, 0, false);
+	AddMonster({ 1, 0 }, DIR_S, 0, false);
+	AddMonster({ 1, 0 }, DIR_S, 0, false);
+	AddMonster({ 1, 0 }, DIR_S, 0, false);
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		AddMonsterType(UniqMonst[UMT_LAZURUS].mtype, PLACE_UNIQUE);
 		AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, PLACE_UNIQUE);
@@ -1223,13 +1223,13 @@ void DeleteMonster(int i)
 	monstactive[i] = temp;
 }
 
-int AddMonster(int x, int y, Direction dir, int mtype, bool InMap)
+int AddMonster(Point position, Direction dir, int mtype, bool InMap)
 {
 	if (nummonsters < MAXMONSTERS) {
 		int i = monstactive[nummonsters++];
 		if (InMap)
-			dMonster[x][y] = i + 1;
-		InitMonster(i, dir, mtype, { x, y });
+			dMonster[position.x][position.y] = i + 1;
+		InitMonster(i, dir, mtype, position);
 		return i;
 	}
 
@@ -1260,7 +1260,7 @@ void monster_43C785(int i)
 					break;
 			}
 			if (j < MAX_LVLMTYPES)
-				AddMonster(position.x, position.y, monster[i]._mdir, j, true);
+				AddMonster(position, monster[i]._mdir, j, true);
 		}
 	}
 }
@@ -1770,7 +1770,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 	M_ClearSquares(i);
 	dMonster[Monst->position.tile.x][Monst->position.tile.y] = i + 1;
 	CheckQuestKill(i, sendmsg);
-	M_FallenFear(Monst->position.tile.x, Monst->position.tile.y);
+	M_FallenFear(Monst->position.tile);
 	if ((Monst->MType->mtype >= MT_NACID && Monst->MType->mtype <= MT_XACID) || Monst->MType->mtype == MT_SPIDLORD)
 		AddMissile(Monst->position.tile.x, Monst->position.tile.y, 0, 0, 0, MIS_ACIDPUD, TARGET_PLAYERS, i, Monst->_mint + 1, 0);
 }
@@ -1814,7 +1814,7 @@ void M2MStartKill(int i, int mid)
 	M_ClearSquares(mid);
 	dMonster[monster[mid].position.tile.x][monster[mid].position.tile.y] = mid + 1;
 	CheckQuestKill(mid, true);
-	M_FallenFear(monster[mid].position.tile.x, monster[mid].position.tile.y);
+	M_FallenFear(monster[mid].position.tile);
 	if (monster[mid].MType->mtype >= MT_NACID && monster[mid].MType->mtype <= MT_XACID)
 		AddMissile(monster[mid].position.tile.x, monster[mid].position.tile.y, 0, 0, 0, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster[mid]._mint + 1, 0);
 
@@ -1838,7 +1838,7 @@ void M_StartKill(int i, int pnum)
 	MonstStartKill(i, pnum, true);
 }
 
-void M_SyncStartKill(int i, int x, int y, int pnum)
+void M_SyncStartKill(int i, Point position, int pnum)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -1846,10 +1846,10 @@ void M_SyncStartKill(int i, int x, int y, int pnum)
 		return;
 	}
 
-	if (dMonster[x][y] == 0) {
+	if (dMonster[position.x][position.y] == 0) {
 		M_ClearSquares(i);
-		monster[i].position.tile = { x, y };
-		monster[i].position.old = { x, y };
+		monster[i].position.tile = position;
+		monster[i].position.old = position;
 	}
 
 	if (monster[i]._mmode == MM_STONE) {
@@ -2741,7 +2741,7 @@ void GroupUnity(int i)
 
 	if (monster[i].leaderflag != 0) {
 		leader = monster[i].leader;
-		clear = LineClearSolid(monster[i].position.tile.x, monster[i].position.tile.y, monster[leader].position.future.x, monster[leader].position.future.y);
+		clear = LineClearSolid(monster[i].position.tile, monster[leader].position.future);
 		if (clear || monster[i].leaderflag != 1) {
 			if (clear
 			    && monster[i].leaderflag == 2
@@ -2976,10 +2976,8 @@ bool MAI_Path(int i)
 	clear = LineClear(
 	    PosOkMonst2,
 	    i,
-	    Monst->position.tile.x,
-	    Monst->position.tile.y,
-	    Monst->enemyPosition.x,
-	    Monst->enemyPosition.y);
+	    Monst->position.tile,
+	    Monst->enemyPosition);
 	if (!clear || (Monst->_pathcount >= 5 && Monst->_pathcount < 8)) {
 		if (Monst->_mFlags & MFLAG_CAN_OPEN_DOOR)
 			MonstCheckDoors(i);
@@ -3015,7 +3013,7 @@ void MAI_Snake(int i)
 	Direction md = GetDirection(Monst->position.tile, Monst->position.last);
 	Monst->_mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (abs(mx) < 3 && abs(my) < 3 && LineClear(PosOkMonst, i, Monst->position.tile.x, Monst->position.tile.y, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
+		if (abs(mx) < 3 && abs(my) < 3 && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy }) && Monst->_mVar1 != MM_CHARGE) {
 			if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(i, 0);
 				dMonster[Monst->position.tile.x][Monst->position.tile.y] = -(i + 1);
@@ -3098,7 +3096,7 @@ void MAI_Bat(int i)
 	if (Monst->MType->mtype == MT_GLOOM
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * Monst->_mint + 33
-	    && LineClear(PosOkMonst, i, Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+	    && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy })) {
 		if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 			dMonster[Monst->position.tile.x][Monst->position.tile.y] = -(i + 1);
 			Monst->_mmode = MM_CHARGE;
@@ -3153,11 +3151,9 @@ void MAI_SkelBow(int i)
 		}
 	}
 
-	mx = Monst->enemyPosition.x;
-	my = Monst->enemyPosition.y;
 	if (!walking) {
 		if (GenerateRnd(100) < 2 * Monst->_mint + 3) {
-			if (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, mx, my))
+			if (LineClearMissile(Monst->position.tile, Monst->enemyPosition))
 				M_StartRAttack(i, MIS_ARROW, 4);
 		}
 	}
@@ -3286,7 +3282,7 @@ void MAI_Fireman(int i)
 
 	Direction md = M_GetDir(i);
 	if (Monst->_mgoal == MGOAL_NORMAL) {
-		if (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)
+		if (LineClearMissile(Monst->position.tile, { fx, fy })
 		    && AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_FIREMAN, pnum, i, 0, 0) != -1) {
 			Monst->_mmode = MM_CHARGE;
 			Monst->_mgoal = MGOAL_ATTACK2;
@@ -3296,7 +3292,7 @@ void MAI_Fireman(int i)
 		if (Monst->_mgoalvar1 == 3) {
 			Monst->_mgoal = MGOAL_NORMAL;
 			M_StartFadeout(i, md, true);
-		} else if (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+		} else if (LineClearMissile(Monst->position.tile, { fx, fy })) {
 			M_StartRAttack(i, MIS_KRULL, 4);
 			Monst->_mgoalvar1++;
 		} else {
@@ -3512,7 +3508,7 @@ void MAI_Ranged(int i, int missile_type, bool special)
 				M_CallWalk(i, opposite[md]);
 		}
 		if (Monst->_mmode == MM_STAND) {
-			if (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			if (LineClearMissile(Monst->position.tile, { fx, fy })) {
 				if (special)
 					M_StartRSpAttack(i, missile_type, 4);
 				else
@@ -3627,10 +3623,8 @@ void MAI_Scav(int i)
 								continue;
 							done = dDead[Monst->position.tile.x + x][Monst->position.tile.y + y] != 0
 							    && LineClearSolid(
-							        Monst->position.tile.x,
-							        Monst->position.tile.y,
-							        Monst->position.tile.x + x,
-							        Monst->position.tile.y + y);
+							        Monst->position.tile,
+							        Monst->position.tile + Point { x, y });
 						}
 					}
 					x--;
@@ -3643,10 +3637,8 @@ void MAI_Scav(int i)
 								continue;
 							done = dDead[Monst->position.tile.x + x][Monst->position.tile.y + y] != 0
 							    && LineClearSolid(
-							        Monst->position.tile.x,
-							        Monst->position.tile.y,
-							        Monst->position.tile.x + x,
-							        Monst->position.tile.y + y);
+							        Monst->position.tile,
+							        Monst->position.tile + Point { x, y });
 						}
 					}
 					x++;
@@ -3738,7 +3730,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 				if (Monst->_mgoalvar1++ >= 2 * dist && DirOK(i, md)) {
 					Monst->_mgoal = MGOAL_NORMAL;
 				} else if (v < (500 * (Monst->_mint + 1) >> lessmissiles)
-				    && (LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy))) {
+				    && (LineClearMissile(Monst->position.tile, { fx, fy }))) {
 					M_StartRSpAttack(i, missile_type, dam);
 				} else {
 					M_RoundWalk(i, md, &Monst->_mgoalvar2);
@@ -3750,7 +3742,7 @@ void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int less
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (((dist >= 3 && v < ((500 * (Monst->_mint + 2)) >> lessmissiles))
 			        || v < ((500 * (Monst->_mint + 1)) >> lessmissiles))
-			    && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			    && LineClearMissile(Monst->position.tile, { fx, fy })) {
 				M_StartRSpAttack(i, missile_type, dam);
 			} else if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -3837,7 +3829,7 @@ void MAI_RR2(int i, int mistype, int dam)
 		} else
 			Monst->_mgoal = MGOAL_NORMAL;
 		if (Monst->_mgoal == MGOAL_NORMAL) {
-			if (((dist >= 3 && v < 5 * (Monst->_mint + 2)) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			if (((dist >= 3 && v < 5 * (Monst->_mint + 2)) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClearMissile(Monst->position.tile, { fx, fy })) {
 				M_StartRSpAttack(i, mistype, dam);
 			} else if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -3973,10 +3965,10 @@ void MAI_SkelKing(int i)
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (!gbIsMultiplayer
 			    && ((dist >= 3 && v < 4 * Monst->_mint + 35) || v < 6)
-			    && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			    && LineClearMissile(Monst->position.tile, { fx, fy })) {
 				Point newPosition = Monst->position.tile + md;
 				if (PosOkMonst(i, newPosition) && nummonsters < MAXMONSTERS) {
-					M_SpawnSkel(newPosition.x, newPosition.y, md);
+					M_SpawnSkel(newPosition, md);
 					M_StartSpStand(i, md);
 				}
 			} else {
@@ -4035,7 +4027,7 @@ void MAI_Rhino(int i)
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (dist >= 5
 			    && v < 2 * Monst->_mint + 43
-			    && LineClear(PosOkMonst, i, Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+			    && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy })) {
 				if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
 					if (Monst->MData->snd_special)
 						PlayEffect(i, 3);
@@ -4176,7 +4168,7 @@ void MAI_Counselor(int i)
 			}
 		} else if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (abs(mx) >= 2 || abs(my) >= 2) {
-				if (v < 5 * (Monst->_mint + 10) && LineClearMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy)) {
+				if (v < 5 * (Monst->_mint + 10) && LineClearMissile(Monst->position.tile, { fx, fy })) {
 					M_StartRAttack(i, counsmiss[Monst->_mint], Monst->mMinDamage + GenerateRnd(Monst->mMaxDamage - Monst->mMinDamage + 1));
 				} else if (GenerateRnd(100) < 30) {
 					Monst->_mgoal = MGOAL_MOVE;
@@ -4754,37 +4746,29 @@ bool CheckNoSolid(int entity, Point position)
 	return !nSolidTable[dPiece[position.x][position.y]];
 }
 
-bool LineClearSolid(int x1, int y1, int x2, int y2)
+bool LineClearSolid(Point startPoint, Point endPoint)
 {
-	return LineClear(CheckNoSolid, 0, x1, y1, x2, y2);
+	return LineClear(CheckNoSolid, 0, startPoint, endPoint);
 }
 
-bool LineClearMissile(int x1, int y1, int x2, int y2)
+bool LineClearMissile(Point startPoint, Point endPoint)
 {
-	return LineClear(PosOkMissile, 0, x1, y1, x2, y2);
+	return LineClear(PosOkMissile, 0, startPoint, endPoint);
 }
 
-bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, int y2)
+bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point endPoint)
 {
-	int dx, dy;
 	int d;
-	int xorg, yorg;
 	int xincD, yincD, dincD, dincH;
-	int tmp;
 	bool done = false;
 
-	xorg = x1;
-	yorg = y1;
-	dx = x2 - x1;
-	dy = y2 - y1;
+	Point position = startPoint;
+
+	int dx = endPoint.x - position.x;
+	int dy = endPoint.y - position.y;
 	if (abs(dx) > abs(dy)) {
 		if (dx < 0) {
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
+			std::swap(position, endPoint);
 			dx = -dx;
 			dy = -dy;
 		}
@@ -4799,24 +4783,19 @@ bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, in
 			dincH = 2 * (dx + dy);
 			yincD = -1;
 		}
-		while (!done && (x1 != x2 || y1 != y2)) {
+		while (position != endPoint) {
 			if ((d <= 0) ^ (yincD < 0)) {
 				d += dincD;
 			} else {
 				d += dincH;
-				y1 += yincD;
+				position.y += yincD;
 			}
-			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(entity, { x1, y1 }));
+			position.x++;
+			done = position != startPoint && !Clear(entity, position);
 		}
 	} else {
 		if (dy < 0) {
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
+			std::swap(position, endPoint);
 			dy = -dy;
 			dx = -dx;
 		}
@@ -4831,18 +4810,18 @@ bool LineClear(bool (*Clear)(int, Point), int entity, int x1, int y1, int x2, in
 			dincH = 2 * (dy + dx);
 			xincD = -1;
 		}
-		while (!done && (y1 != y2 || x1 != x2)) {
+		while (!done && position != endPoint) {
 			if ((d <= 0) ^ (xincD < 0)) {
 				d += dincD;
 			} else {
 				d += dincH;
-				x1 += xincD;
+				position.x += xincD;
 			}
-			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(entity, { x1, y1 }));
+			position.y++;
+			done = position != startPoint && !Clear(entity, position);
 		}
 	}
-	return x1 == x2 && y1 == y2;
+	return position == endPoint;
 }
 
 void SyncMonsterAnim(int i)
@@ -4908,7 +4887,7 @@ void SyncMonsterAnim(int i)
 	}
 }
 
-void M_FallenFear(int x, int y)
+void M_FallenFear(Point position)
 {
 	MonsterStruct *m;
 	int i, rundist;
@@ -4937,12 +4916,12 @@ void M_FallenFear(int x, int y)
 			continue;
 		}
 		if (m->_mAi == AI_FALLEN
-		    && abs(x - m->position.tile.x) < 5
-		    && abs(y - m->position.tile.y) < 5
+		    && abs(position.x - m->position.tile.x) < 5
+		    && abs(position.y - m->position.tile.y) < 5
 		    && m->_mhitpoints >> 6 > 0) {
 			m->_mgoal = MGOAL_RETREAT;
 			m->_mgoalvar1 = rundist;
-			m->_mdir = GetDirection({ x, y }, m->position.tile);
+			m->_mdir = GetDirection(position, m->position.tile);
 		}
 	}
 }
@@ -5071,7 +5050,7 @@ void PrintUniqueHistory()
 	pinfoflag = true;
 }
 
-void MissToMonst(int i, int x, int y)
+void MissToMonst(int i, Point position)
 {
 	int m, pnum;
 	MissileStruct *Miss;
@@ -5086,9 +5065,9 @@ void MissToMonst(int i, int x, int y)
 
 	Monst = &monster[m];
 	Point oldPosition = Miss->position.tile;
-	dMonster[x][y] = m + 1;
+	dMonster[position.x][position.y] = m + 1;
 	Monst->_mdir = static_cast<Direction>(Miss->_mimfnum);
-	Monst->position.tile = { x, y };
+	Monst->position.tile = position;
 	M_StartStand(m, Monst->_mdir);
 	if (Monst->MType->mtype < MT_INCIN || Monst->MType->mtype > MT_HELLBURN) {
 		if (!(Monst->_mFlags & MFLAG_TARGETS_MONSTER))
@@ -5151,18 +5130,18 @@ bool PosOkMonst(int i, Point position)
 			ret = false;
 	}
 	if (ret)
-		ret = monster_posok(i, position.x, position.y);
+		ret = monster_posok(i, position);
 
 	return ret;
 }
 
-bool monster_posok(int i, int x, int y)
+bool monster_posok(int i, Point position)
 {
 	int mi, j;
 	bool ret, fire, lightning;
 
 	ret = true;
-	mi = dMissile[x][y];
+	mi = dMissile[position.x][position.y];
 	if (mi != 0 && i >= 0) {
 		fire = false;
 		lightning = false;
@@ -5175,7 +5154,7 @@ bool monster_posok(int i, int x, int y)
 		} else {
 			for (j = 0; j < nummissiles; j++) {
 				mi = missileactive[j];
-				if (missile[mi].position.tile.x == x && missile[mi].position.tile.y == y) {
+				if (missile[mi].position.tile == position) {
 					if (missile[mi]._mitype == MIS_FIREWALL) {
 						fire = true;
 						break;
@@ -5208,7 +5187,7 @@ bool PosOkMonst2(int i, Point position)
 			ret = false;
 	}
 	if (ret)
-		ret = monster_posok(i, position.x, position.y);
+		ret = monster_posok(i, position);
 
 	return ret;
 }
@@ -5235,7 +5214,7 @@ bool PosOkMonst3(int i, Point position)
 		ret = (!SolidLoc(position) || isdoor) && dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0;
 	}
 	if (ret)
-		ret = monster_posok(i, position.x, position.y);
+		ret = monster_posok(i, position);
 
 	return ret;
 }
@@ -5253,7 +5232,7 @@ bool IsGoat(int mt)
 	    || (mt >= MT_NGOATBW && mt <= MT_GGOATBW);
 }
 
-int M_SpawnSkel(int x, int y, Direction dir)
+int M_SpawnSkel(Point position, Direction dir)
 {
 	int i, j, skeltypes, skel;
 
@@ -5270,7 +5249,7 @@ int M_SpawnSkel(int x, int y, Direction dir)
 			if (IsSkel(Monsters[i].mtype))
 				j++;
 		}
-		skel = AddMonster(x, y, dir, i - 1, true);
+		skel = AddMonster(position, dir, i - 1, true);
 		if (skel != -1)
 			M_StartSpStand(skel, dir);
 
@@ -5289,7 +5268,7 @@ void ActivateSpawn(int i, int x, int y, Direction dir)
 	M_StartSpStand(i, dir);
 }
 
-bool SpawnSkeleton(int ii, int x, int y)
+bool SpawnSkeleton(int ii, Point position)
 {
 	int dx, dy, xx, yy, j, k, rs;
 	bool savail;
@@ -5298,17 +5277,17 @@ bool SpawnSkeleton(int ii, int x, int y)
 	if (ii == -1)
 		return false;
 
-	if (PosOkMonst(-1, { x, y })) {
-		Direction dir = GetDirection({ x, y }, { x, y }); // TODO useless calculation
-		ActivateSpawn(ii, x, y, dir);
+	if (PosOkMonst(-1, position)) {
+		Direction dir = GetDirection(position, position); // TODO useless calculation
+		ActivateSpawn(ii, position.x, position.y, dir);
 		return true;
 	}
 
 	savail = false;
 	yy = 0;
-	for (j = y - 1; j <= y + 1; j++) {
+	for (j = position.y - 1; j <= position.y + 1; j++) {
 		xx = 0;
-		for (k = x - 1; k <= x + 1; k++) {
+		for (k = position.x - 1; k <= position.x + 1; k++) {
 			monstok[xx][yy] = PosOkMonst(-1, { k, j });
 			savail |= monstok[xx][yy];
 			xx++;
@@ -5336,9 +5315,9 @@ bool SpawnSkeleton(int ii, int x, int y)
 		}
 	}
 
-	dx = x - 1 + xx;
-	dy = y - 1 + yy;
-	Direction dir = GetDirection({ dx, dy }, { x, y });
+	dx = position.x - 1 + xx;
+	dy = position.y - 1 + yy;
+	Direction dir = GetDirection({ dx, dy }, position);
 	ActivateSpawn(ii, dx, dy, dir);
 
 	return true;
@@ -5362,7 +5341,7 @@ int PreSpawnSkeleton()
 			if (IsSkel(Monsters[i].mtype))
 				j++;
 		}
-		skel = AddMonster(0, 0, DIR_S, i - 1, false);
+		skel = AddMonster({ 0, 0 }, DIR_S, i - 1, false);
 		if (skel != -1)
 			M_StartStand(skel, DIR_S);
 
@@ -5397,14 +5376,14 @@ void TalktoMonster(int i)
 	}
 }
 
-void SpawnGolum(int i, int x, int y, int mi)
+void SpawnGolum(int i, Point position, int mi)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
-	dMonster[x][y] = i + 1;
-	monster[i].position.tile = { x, y };
-	monster[i].position.future = { x, y };
-	monster[i].position.old = { x, y };
+	dMonster[position.x][position.y] = i + 1;
+	monster[i].position.tile = position;
+	monster[i].position.future = position;
+	monster[i].position.old = position;
 	monster[i]._pathcount = 0;
 	monster[i]._mmaxhp = 2 * (320 * missile[mi]._mispllvl + plr[i]._pMaxMana / 3);
 	monster[i]._mhitpoints = monster[i]._mmaxhp;

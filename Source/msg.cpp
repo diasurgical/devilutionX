@@ -1979,7 +1979,7 @@ static DWORD On_MONSTDEATH(TCmd *pCmd, int pnum)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr) {
 		if (currlevel == plr[pnum].plrlevel)
-			M_SyncStartKill(p->wParam1, p->x, p->y, pnum);
+			M_SyncStartKill(p->wParam1, { p->x, p->y }, pnum);
 		delta_kill_monster(p->wParam1, { p->x, p->y }, plr[pnum].plrlevel);
 	}
 
@@ -1994,7 +1994,7 @@ static DWORD On_KILLGOLEM(TCmd *pCmd, int pnum)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr) {
 		if (currlevel == p->wParam1)
-			M_SyncStartKill(pnum, p->x, p->y, pnum);
+			M_SyncStartKill(pnum, { p->x, p->y }, pnum);
 		delta_kill_monster(pnum, { p->x, p->y }, plr[pnum].plrlevel);
 	}
 
