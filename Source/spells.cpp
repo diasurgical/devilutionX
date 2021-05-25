@@ -93,19 +93,6 @@ void UseMana(int id, spell_id sn)
 }
 
 /**
- * @brief Gets a value that represents the specified spellID in 64bit bitmask format.
- * For example:
- *  - spell ID  1: 0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0001
- *  - spell ID 43: 0000.0000.0000.0000.0000.0100.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000
- * @param spellId The id of the spell to get a bitmask for.
- * @return A 64bit bitmask representation for the specified spell.
- */
-uint64_t GetSpellBitmask(int spellId)
-{
-	return 1ULL << (spellId - 1);
-}
-
-/**
  * @brief Gets a value indicating whether the player's current readied spell is a valid spell. Readied spells can be
  * invalidaded in a few scenarios where the spell comes from items, for example (like dropping the only scroll that
  * provided the spell).
