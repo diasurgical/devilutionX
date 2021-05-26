@@ -2001,11 +2001,7 @@ char CheckInvHLight()
 		int nGold = pi->_ivalue;
 		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
 	} else {
-		if (pi->_iMagical == ITEM_QUALITY_MAGIC) {
-			infoclr = UIS_BLUE;
-		} else if (pi->_iMagical == ITEM_QUALITY_UNIQUE) {
-			infoclr = UIS_GOLD;
-		}
+		infoclr = pi->getTextColor(true);
 		if (pi->_iIdentified) {
 			strcpy(infostr, pi->_iIName);
 			PrintItemDetails(pi);

@@ -3028,10 +3028,7 @@ void GetItemStr(int i)
 		else
 			strcpy(infostr, items[i]._iName);
 
-		if (items[i]._iMagical == ITEM_QUALITY_MAGIC)
-			infoclr = UIS_BLUE;
-		if (items[i]._iMagical == ITEM_QUALITY_UNIQUE)
-			infoclr = UIS_GOLD;
+		infoclr = items[i].getTextColor(true);
 	} else {
 		int nGold = items[i]._ivalue;
 		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());

@@ -351,9 +351,9 @@ struct ItemStruct {
 		}
 	}
 
-	UiFlags getTextColor() const
+	UiFlags getTextColor(bool skipStatCheck = false) const
 	{
-		if (!_iStatFlag)
+		if (!skipStatCheck && !_iStatFlag)
 			return UIS_RED;
 		switch (_iMagical) {
 		case ITEM_QUALITY_MAGIC:
