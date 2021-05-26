@@ -458,7 +458,6 @@ void AddInitItems()
 		dItem[x][y] = ii + 1;
 
 		items[ii]._iSeed = AdvanceRndSeed();
-		SetRndSeed(items[ii]._iSeed);
 
 		if (GenerateRnd(2) != 0)
 			GetItemAttrs(ii, IDI_HEAL, curlv);
@@ -2854,6 +2853,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	GetItemAttrs(ii, itemid, curlv);
 
 	SetupItem(ii);
+	items[ii]._iSeed = AdvanceRndSeed();
 	items[ii]._iPostDraw = true;
 	if (selflag) {
 		items[ii]._iSelFlag = selflag;
@@ -4219,7 +4219,6 @@ void SpawnSmith(int lvl)
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(items[0]._iSeed);
 			int idata = RndSmithItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
 		} while (items[0]._iIvalue > maxValue);
@@ -4282,7 +4281,6 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		keepgoing = false;
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(items[0]._iSeed);
 		int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 		GetItemAttrs(0, itype, plvl);
 		GetItemBonus(0, plvl / 2, plvl, true, !gbIsHellfire);
@@ -4471,7 +4469,6 @@ void SpawnWitch(int lvl)
 
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(items[0]._iSeed);
 			GenerateRnd(1);
 
 			GetItemAttrs(0, i, lvl);
@@ -4492,7 +4489,6 @@ void SpawnWitch(int lvl)
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(items[0]._iSeed);
 			idata = RndWitchItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
 			maxlvl = -1;
@@ -4543,7 +4539,6 @@ void SpawnBoy(int lvl)
 		keepgoing = false;
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(items[0]._iSeed);
 		itype = RndBoyItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		GetItemBonus(0, lvl, 2 * lvl, true, true);
@@ -4704,7 +4699,6 @@ void SpawnHealer(int lvl)
 	for (int i = srnd; i < nsi; i++) {
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(items[0]._iSeed);
 		int itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		healitem[i] = items[0];
