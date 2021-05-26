@@ -13,7 +13,7 @@ namespace devilution {
 namespace {
 
 bool sgbIsScrolling;
-Uint32 sgdwLastWalk;
+int sgdwLastWalk;
 bool sgbIsWalking;
 
 } // namespace
@@ -33,12 +33,11 @@ void track_process()
 
 	const Point target = player.GetTargetPosition();
 	if (cursmx != target.x || cursmy != target.y) {
-		Uint32 tick = SDL_GetTicks();
 		int TickMultiplier = 6;
 		if (currlevel == 0 && sgGameInitInfo.bRunInTown)
 			TickMultiplier = 3;
-		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * TickMultiplier) {
-			sgdwLastWalk = tick;
+		if (logicTick - sgdwLastWalk >= TickMultiplier) {
+			sgdwLastWalk = logicTick;
 			NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
 			if (!sgbIsScrolling)
 				sgbIsScrolling = true;
@@ -54,7 +53,7 @@ void track_repeat_walk(bool rep)
 	sgbIsWalking = rep;
 	if (rep) {
 		sgbIsScrolling = false;
-		sgdwLastWalk = SDL_GetTicks() - gnTickDelay;
+		sgdwLastWalk = logicTick;
 		NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
 	} else if (sgbIsScrolling) {
 		sgbIsScrolling = false;

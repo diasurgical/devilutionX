@@ -117,6 +117,7 @@ int sgnTimeoutCurs;
 clicktype sgbMouseDown;
 int color_cycle_timer;
 uint16_t gnTickDelay = 50;
+int logicTick;
 /** Game options */
 Options sgOptions;
 Keymapper keymapper {
@@ -138,6 +139,9 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 bool gbForceWindowed = false;
 bool gbShowIntro = true;
 bool leveldebug = false;
+int recordDemo = -1;
+bool demoMode = false;
+bool timedemo = false;
 #ifdef _DEBUG
 bool monstdebug = false;
 _monster_id DebugMonsters[10];
@@ -193,6 +197,9 @@ void initKeymapActions();
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-x", _("Run in windowed mode"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--record <#>", _("Record a demo file"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--demo <#>", _("Play a demo file"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--timedemo", _("Disable all frame limiting during demo playback"));
 	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette"));
@@ -226,6 +233,16 @@ static void diablo_parse_flags(int argc, char **argv)
 			paths::SetBasePath(argv[++i]);
 		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
 			paths::SetPrefPath(argv[++i]);
+		} else if (strcasecmp("--demo", argv[i]) == 0) {
+			demoMode = true;
+			if (!LoadDemoMessages(SDL_atoi(argv[++i]))) {
+				SDL_Log("Unable to load demo file");
+				diablo_quit(1);
+			}
+		} else if (strcasecmp("--timedemo", argv[i]) == 0) {
+			timedemo = true;
+		} else if (strcasecmp("--record", argv[i]) == 0) {
+			recordDemo = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
 			paths::SetConfigPath(argv[++i]);
 		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
@@ -379,6 +396,7 @@ static void run_game_loop(interface_mode uMsg)
 {
 	WNDPROC saveProc;
 	tagMSG msg;
+	int startTime;
 
 	nthread_ignore_mutex(true);
 	start_game(uMsg);
@@ -400,8 +418,14 @@ static void run_game_loop(interface_mode uMsg)
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 	unsigned run_game_iteration = 0;
 #endif
+
+	logicTick = 0;
+
+	if (timedemo)
+		startTime = SDL_GetTicks();
+
 	while (gbRunGame) {
-		while (FetchMessage(&msg)) {
+		while (FetchMessage(&msg, logicTick)) {
 			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = false;
 				gbRunGame = false;
@@ -423,10 +447,18 @@ static void run_game_loop(interface_mode uMsg)
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = false;
 		DrawAndBlit();
+		logicTick++;
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 		if (run_game_iteration++ == 0)
 			HeapProfilerDump("first_game_iteration");
 #endif
+	}
+
+	if (timedemo) {
+		float secounds = (SDL_GetTicks() - startTime) / 1000.0;
+		SDL_Log("%d frames, %.2f seconds: %.1f fps", logicTick, secounds, logicTick / secounds);
+		gbRunGameResult = false;
+		gbRunGame = false;
 	}
 
 	if (gbIsMultiplayer) {
@@ -494,6 +526,9 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
  */
 static void SaveOptions()
 {
+	if (demoMode)
+		return;
+
 	setIniInt("Diablo", "Intro", sgOptions.Diablo.bIntro);
 	setIniInt("Hellfire", "Intro", sgOptions.Hellfire.bIntro);
 	setIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
@@ -751,6 +786,8 @@ static void diablo_deinit()
 
 	if (sbWasOptionsLoaded)
 		SaveOptions();
+	if (demoRecording.is_open())
+		demoRecording.close();
 	if (was_snd_init) {
 		effects_cleanup_sfx();
 	}

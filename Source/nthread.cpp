@@ -236,6 +236,9 @@ bool nthread_has_500ms_passed()
 	DWORD currentTickCount;
 	int ticksElapsed;
 
+	if (timedemo)
+		return true;
+
 	currentTickCount = SDL_GetTicks();
 	ticksElapsed = currentTickCount - last_tick;
 	if (!gbIsMultiplayer && ticksElapsed > gnTickDelay * 10) {

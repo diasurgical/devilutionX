@@ -197,7 +197,7 @@ void interface_msg_pump()
 {
 	tagMSG Msg;
 
-	while (FetchMessage(&Msg)) {
+	while (FetchMessage(&Msg, -1)) {
 		if (Msg.message != DVL_WM_QUIT) {
 			TranslateMessage(&Msg);
 			PushMessage(&Msg);
