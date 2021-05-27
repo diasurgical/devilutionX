@@ -243,8 +243,8 @@ const char *strcasestr(const char *haystack, const char *needle)
 			return NULL;
 
 		for (pp = needle + 1, qq = look + 1; tolower(*pp) == tolower(*qq); pp++, qq++) {
-		    if (!*pp)	// match found!
-			return (look);
+			if (!*pp)	// match found!
+				return (look);
 		}
 	}
 	return NULL;
