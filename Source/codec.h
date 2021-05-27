@@ -5,9 +5,7 @@
  */
 #pragma once
 
-#include <cstddef>
-
-#include "engine.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 

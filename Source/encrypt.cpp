@@ -4,10 +4,9 @@
  * Implementation of functions for compression and decompressing MPQ data.
  */
 #include <memory>
+#include <SDL.h>
 
 #include "encrypt.h"
-
-#include "engine.h"
 #include "pkware.h"
 
 namespace devilution {

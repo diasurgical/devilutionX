@@ -5,7 +5,6 @@
  */
 #include "engine/render/cel_render.hpp"
 
-#include <cstddef>
 #include <cstdint>
 #include <cstring>
 

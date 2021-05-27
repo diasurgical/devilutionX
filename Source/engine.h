@@ -14,7 +14,6 @@
 
 #include <algorithm>
 #include <array>
-#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
@@ -36,18 +35,12 @@
 
 #include "appfat.h"
 #include "miniwin/miniwin.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 #define TILE_WIDTH 64
 #define TILE_HEIGHT 32
 
 namespace devilution {
-
-#if __cplusplus >= 201703L
-using byte = std::byte;
-#else
-using byte = uint8_t;
-#endif
-
 #if defined(__cpp_lib_clamp)
 using std::clamp;
 #else

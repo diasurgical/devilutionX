@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "engine.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
