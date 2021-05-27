@@ -147,6 +147,11 @@ bool SpawnWindow(const char *lpWindowName)
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();
 	}
+#if !defined(NONET) && !defined(DISABLE_TCP)
+	if (SDLNet_Init() <= -1) {
+		ErrSdlNet();
+	}
+#endif
 
 #ifndef USE_SDL1
 	if (sgOptions.Controller.szMapping[0] != '\0') {

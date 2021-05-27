@@ -3,6 +3,7 @@
 #include "utils/language.h"
 
 #include <SDL.h>
+#include <SDL_net.h>
 #include <exception>
 #include <functional>
 #include <memory>
@@ -11,21 +12,14 @@
 #include <stdexcept>
 #include <system_error>
 
-#include <asio/connect.hpp>
-
 namespace devilution {
 namespace net {
 
 int tcp_client::create(std::string addrstr, std::string passwd)
 {
-	try {
-		auto port = sgOptions.Network.nPort;
-		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, passwd);
-		return join(local_server->localhost_self(), passwd);
-	} catch (std::system_error &e) {
-		SDL_SetError("%s", e.what());
-		return -1;
-	}
+	auto port = sgOptions.Network.nPort;
+	local_server = std::make_unique<tcp_server>(port, passwd);
+	return join(std::string("localhost"), passwd);
 }
 
 int tcp_client::join(std::string addrstr, std::string passwd)
@@ -34,17 +28,23 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 	constexpr int NoSleep = 250;
 
 	setup_password(passwd);
-	try {
-		std::stringstream port;
-		port << sgOptions.Network.nPort;
-		asio::connect(sock, resolver.resolve(addrstr, port.str()));
-		asio::ip::tcp::no_delay option(true);
-		sock.set_option(option);
-	} catch (std::exception &e) {
-		SDL_SetError("%s", e.what());
+
+	IPaddress ip;
+	auto port = sgOptions.Network.nPort;
+	if (SDLNet_ResolveHost(&ip, addrstr.c_str(), port) == -1) {
+		auto error = SDLNet_GetError();
+		SDL_SetError("SDL_net: %s", error);
 		return -1;
 	}
-	start_recv();
+
+	socket = SDLNet_TCP_Open(&ip);
+	if (!socket) {
+		auto error = SDLNet_GetError();
+		SDL_SetError("SDL_net: %s", error);
+		return -1;
+	}
+	SDLNet_TCP_AddSocket(socketSet, socket);
+
 	{
 		randombytes_buf(reinterpret_cast<unsigned char *>(&cookie_self),
 		    sizeof(cookie_t));
@@ -74,50 +74,37 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 
 void tcp_client::poll()
 {
-	ioc.poll();
-}
+	if (local_server != nullptr)
+		local_server->poll();
 
-void tcp_client::handle_recv(const asio::error_code &error, size_t bytesRead)
-{
-	if (error) {
-		// error in recv from server
-		// returning and doing nothing should be the same
-		// as if all connections to other clients were lost
-		return;
-	}
-	if (bytesRead == 0) {
-		throw std::runtime_error(_("error: read 0 bytes from server"));
-	}
-	recv_buffer.resize(bytesRead);
-	recv_queue.write(std::move(recv_buffer));
-	recv_buffer.resize(frame_queue::max_frame_size);
-	while (recv_queue.packet_ready()) {
-		auto pkt = pktfty->make_packet(recv_queue.read_packet());
-		recv_local(*pkt);
-	}
-	start_recv();
-}
+	while (SDLNet_CheckSockets(socketSet, 0) > 0) {
+		auto *buffer = recv_buffer.data();
+		const auto maxLength = frame_queue::max_frame_size;
+		const auto bytesRead = SDLNet_TCP_Recv(socket, buffer, maxLength);
 
-void tcp_client::start_recv()
-{
-	sock.async_receive(asio::buffer(recv_buffer),
-	    std::bind(&tcp_client::handle_recv, this,
-	        std::placeholders::_1, std::placeholders::_2));
-}
+		if (bytesRead <= 0) {
+			Log("error: read 0 bytes from server");
+			SDLNet_TCP_DelSocket(socketSet, socket);
+			return;
+		}
 
-void tcp_client::handle_send(const asio::error_code &error, size_t bytesSent)
-{
-	// empty for now
+		recv_buffer.resize(bytesRead);
+		recv_queue.write(std::move(recv_buffer));
+		recv_buffer.resize(frame_queue::max_frame_size);
+		while (recv_queue.packet_ready()) {
+			auto pkt = pktfty->make_packet(recv_queue.read_packet());
+			recv_local(*pkt);
+		}
+	}
 }
 
 void tcp_client::send(packet &pkt)
 {
 	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
-	auto buf = asio::buffer(*frame);
-	asio::async_write(sock, buf, [this, frame](const asio::error_code &error, size_t bytesSent) {
-		handle_send(error, bytesSent);
-		delete frame;
-	});
+	const auto *buffer = frame->data();
+	const auto length = frame->size();
+	SDLNet_TCP_Send(socket, buffer, length);
+	delete frame;
 }
 
 bool tcp_client::SNetLeaveGame(int type)
@@ -131,11 +118,12 @@ bool tcp_client::SNetLeaveGame(int type)
 
 std::string tcp_client::make_default_gamename()
 {
-	return std::string(sgOptions.Network.szBindAddress);
+	return std::string("0.0.0.0");
 }
 
 tcp_client::~tcp_client()
 {
+	SDLNet_FreeSocketSet(socketSet);
 }
 
 } // namespace net

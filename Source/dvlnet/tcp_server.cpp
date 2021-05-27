@@ -11,35 +11,183 @@
 namespace devilution {
 namespace net {
 
-tcp_server::tcp_server(asio::io_context &ioc, const std::string &bindaddr,
-    unsigned short port, std::string pw)
-    : ioc(ioc)
-    , pktfty(std::move(pw))
+static std::chrono::milliseconds make_timeout_duration(int seconds)
 {
-	auto addr = asio::ip::address::from_string(bindaddr);
-	auto ep = asio::ip::tcp::endpoint(addr, port);
-	acceptor = std::make_unique<asio::ip::tcp::acceptor>(ioc, ep, true);
-	start_accept();
+	auto duration = std::chrono::seconds(seconds);
+	return std::chrono::milliseconds(duration);
 }
 
-std::string tcp_server::localhost_self()
+tcp_server::tcp_server(unsigned short port, std::string pw)
+    : pktfty(std::move(pw))
 {
-	auto addr = acceptor->local_endpoint().address();
-	if (addr.is_unspecified()) {
-		if (addr.is_v4()) {
-			return asio::ip::address_v4::loopback().to_string();
-		}
-		if (addr.is_v6()) {
-			return asio::ip::address_v6::loopback().to_string();
-		}
-		ABORT();
+	IPaddress ip;
+	if (SDLNet_ResolveHost(&ip, nullptr, port) == -1) {
+		auto error = SDLNet_GetError();
+		throw std::runtime_error(error);
 	}
-	return addr.to_string();
+	socket = SDLNet_TCP_Open(&ip);
+	if (!socket) {
+		auto error = SDLNet_GetError();
+		throw std::runtime_error(error);
+	}
 }
 
-tcp_server::scc tcp_server::make_connection()
+void tcp_server::poll()
 {
-	return std::make_shared<client_connection>(ioc);
+	accept();
+	recv();
+	timeout();
+}
+
+bool tcp_server::is_pending_connection_ready()
+{
+	const auto totalPending = pendingConnections.size();
+	const auto pendingSocketSet = SDLNet_AllocSocketSet(totalPending);
+	for (auto &connection : pendingConnections)
+		SDLNet_TCP_AddSocket(pendingSocketSet, connection->socket);
+
+	const auto count = SDLNet_CheckSockets(pendingSocketSet, 0);
+	SDLNet_FreeSocketSet(pendingSocketSet);
+	return count > 0;
+}
+
+void tcp_server::accept()
+{
+	while (true) {
+		auto clientSocket = SDLNet_TCP_Accept(socket);
+		if (!clientSocket) {
+			break;
+		}
+		if (next_free() == PLR_BROADCAST) {
+			SDLNet_TCP_Close(clientSocket);
+			break;
+		}
+
+		auto connection = make_connection(clientSocket);
+		connection->timeout = make_timeout_duration(timeout_connect);
+		pendingConnections.push_back(connection);
+	}
+
+	while (true) {
+		if (pendingConnections.empty())
+			return;
+
+		if (!is_pending_connection_ready())
+			return;
+
+		auto iter = pendingConnections.begin();
+		while (iter != pendingConnections.end()) {
+			auto &connection = *iter;
+			if (!SDLNet_SocketReady(connection->socket)) {
+				++iter;
+				continue;
+			}
+
+			auto buffer = recv_buffer.data();
+			const auto maxLength = frame_queue::max_frame_size;
+			const auto bytesRead = SDLNet_TCP_Recv(connection->socket, buffer, maxLength);
+			if (bytesRead <= 0) {
+				drop_connection(connection);
+				iter = pendingConnections.erase(iter);
+				continue;
+			}
+
+			recv_buffer.resize(bytesRead);
+			connection->recv_queue.write(std::move(recv_buffer));
+			recv_buffer.resize(frame_queue::max_frame_size);
+			if (connection->recv_queue.packet_ready()) {
+				try {
+					auto pkt = pktfty.make_packet(connection->recv_queue.read_packet());
+					connection->timeout = make_timeout_duration(timeout_active);
+					handle_recv_newplr(connection, *pkt);
+				} catch (dvlnet_exception &e) {
+					Log("Network error: {}", e.what());
+					drop_connection(connection);
+				}
+
+				iter = pendingConnections.erase(iter);
+				if (next_free() == PLR_BROADCAST) {
+					for (auto &connection : pendingConnections)
+						drop_connection(connection);
+
+					pendingConnections.clear();
+					return;
+				}
+				continue;
+			}
+
+			++iter;
+		}
+	}
+}
+
+void tcp_server::recv()
+{
+	while (SDLNet_CheckSockets(socketSet, 0) > 0) {
+		for (plr_t i = 0; i < MAX_PLRS; ++i) {
+			auto &connection = connections[i];
+			if (!connection || !SDLNet_SocketReady(connection->socket)) {
+				continue;
+			}
+
+			auto buffer = recv_buffer.data();
+			auto maxLength = frame_queue::max_frame_size;
+			auto bytesRead = SDLNet_TCP_Recv(connection->socket, buffer, maxLength);
+			if (bytesRead <= 0) {
+				drop_connection(connection);
+				continue;
+			}
+
+			recv_buffer.resize(bytesRead);
+			connection->recv_queue.write(std::move(recv_buffer));
+			recv_buffer.resize(frame_queue::max_frame_size);
+			while (connection->recv_queue.packet_ready()) {
+				try {
+					auto pkt = pktfty.make_packet(connection->recv_queue.read_packet());
+					connection->timeout = make_timeout_duration(timeout_active);
+					handle_recv_packet(*pkt);
+				} catch (dvlnet_exception &e) {
+					Log("Network error: {}", e.what());
+					drop_connection(connection);
+					continue;
+				}
+			}
+		}
+	}
+}
+
+void tcp_server::timeout()
+{
+	auto ticks = SDL_GetTicks();
+	auto diff = ticks - lastTicks;
+
+	auto iter = pendingConnections.begin();
+	while (iter != pendingConnections.end()) {
+		auto &connection = *iter;
+		connection->timeout -= std::chrono::milliseconds(diff);
+		if (connection->timeout <= std::chrono::milliseconds::zero()) {
+			drop_connection(connection);
+			iter = pendingConnections.erase(iter);
+			continue;
+		}
+		++iter;
+	}
+
+	for (plr_t plr = 0; plr < MAX_PLRS; ++plr) {
+		auto &connection = connections[plr];
+		if (!connection)
+			continue;
+		connection->timeout -= std::chrono::milliseconds(diff);
+		if (connection->timeout <= std::chrono::milliseconds::zero())
+			drop_connection(connection);
+	}
+
+	lastTicks = ticks;
+}
+
+tcp_server::scc tcp_server::make_connection(TCPsocket socket)
+{
+	return std::make_shared<client_connection>(socket);
 }
 
 plr_t tcp_server::next_free()
@@ -56,42 +204,6 @@ bool tcp_server::empty()
 		if (connections[i])
 			return false;
 	return true;
-}
-
-void tcp_server::start_recv(const scc &con)
-{
-	con->socket.async_receive(asio::buffer(con->recv_buffer),
-	    std::bind(&tcp_server::handle_recv, this, con,
-	        std::placeholders::_1,
-	        std::placeholders::_2));
-}
-
-void tcp_server::handle_recv(const scc &con, const asio::error_code &ec,
-    size_t bytesRead)
-{
-	if (ec || bytesRead == 0) {
-		drop_connection(con);
-		return;
-	}
-	con->recv_buffer.resize(bytesRead);
-	con->recv_queue.write(std::move(con->recv_buffer));
-	con->recv_buffer.resize(frame_queue::max_frame_size);
-	while (con->recv_queue.packet_ready()) {
-		try {
-			auto pkt = pktfty.make_packet(con->recv_queue.read_packet());
-			if (con->plr == PLR_BROADCAST) {
-				handle_recv_newplr(con, *pkt);
-			} else {
-				con->timeout = timeout_active;
-				handle_recv_packet(*pkt);
-			}
-		} catch (dvlnet_exception &e) {
-			Log("Network error: {}", e.what());
-			drop_connection(con);
-			return;
-		}
-	}
-	start_recv(con);
 }
 
 void tcp_server::send_connect(const scc &con)
@@ -111,10 +223,11 @@ void tcp_server::handle_recv_newplr(const scc &con, packet &pkt)
 	auto reply = pktfty.make_packet<PT_JOIN_ACCEPT>(PLR_MASTER, PLR_BROADCAST,
 	    pkt.cookie(), newplr,
 	    game_init_info);
-	start_send(con, *reply);
+	send(con, *reply);
 	con->plr = newplr;
+	SDLNet_TCP_AddSocket(socketSet, con->socket);
 	connections[newplr] = con;
-	con->timeout = timeout_active;
+	con->timeout = make_timeout_duration(timeout_active);
 	send_connect(con);
 }
 
@@ -128,102 +241,52 @@ void tcp_server::send_packet(packet &pkt)
 	if (pkt.dest() == PLR_BROADCAST) {
 		for (auto i = 0; i < MAX_PLRS; ++i)
 			if (i != pkt.src() && connections[i])
-				start_send(connections[i], pkt);
+				send(connections[i], pkt);
 	} else {
 		if (pkt.dest() >= MAX_PLRS)
 			throw server_exception();
 		if ((pkt.dest() != pkt.src()) && connections[pkt.dest()])
-			start_send(connections[pkt.dest()], pkt);
+			send(connections[pkt.dest()], pkt);
 	}
 }
 
-void tcp_server::start_send(const scc &con, packet &pkt)
+void tcp_server::send(const scc &con, packet &pkt)
 {
 	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
-	auto buf = asio::buffer(*frame);
-	asio::async_write(con->socket, buf,
-	    [this, con, frame](const asio::error_code &ec, size_t bytesSent) {
-		    handle_send(con, ec, bytesSent);
-		    delete frame;
-	    });
-}
-
-void tcp_server::handle_send(const scc &con, const asio::error_code &ec,
-    size_t bytesSent)
-{
-	// empty for now
-}
-
-void tcp_server::start_accept()
-{
-	auto nextcon = make_connection();
-	acceptor->async_accept(nextcon->socket,
-	    std::bind(&tcp_server::handle_accept,
-	        this, nextcon,
-	        std::placeholders::_1));
-}
-
-void tcp_server::handle_accept(const scc &con, const asio::error_code &ec)
-{
-	if (ec)
-		return;
-	if (next_free() == PLR_BROADCAST) {
-		drop_connection(con);
-	} else {
-		asio::ip::tcp::no_delay option(true);
-		con->socket.set_option(option);
-		con->timeout = timeout_connect;
-		start_recv(con);
-		start_timeout(con);
-	}
-	start_accept();
-}
-
-void tcp_server::start_timeout(const scc &con)
-{
-	con->timer.expires_after(std::chrono::seconds(1));
-	con->timer.async_wait(std::bind(&tcp_server::handle_timeout, this, con,
-	    std::placeholders::_1));
-}
-
-void tcp_server::handle_timeout(const scc &con, const asio::error_code &ec)
-{
-	if (ec) {
-		drop_connection(con);
-		return;
-	}
-	if (con->timeout > 0)
-		con->timeout -= 1;
-	if (con->timeout < 0)
-		con->timeout = 0;
-	if (!con->timeout) {
-		drop_connection(con);
-		return;
-	}
-	start_timeout(con);
+	const auto *buffer = frame->data();
+	const auto length = frame->size();
+	SDLNet_TCP_Send(con->socket, buffer, length);
+	delete frame;
 }
 
 void tcp_server::drop_connection(const scc &con)
 {
+	auto socket = con->socket;
 	if (con->plr != PLR_BROADCAST) {
 		auto pkt = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
 		    con->plr, LEAVE_DROP);
 		connections[con->plr] = nullptr;
 		send_packet(*pkt);
+		SDLNet_TCP_DelSocket(socketSet, socket);
 		// TODO: investigate if it is really ok for the server to
 		//       drop a client directly.
 	}
-	con->timer.cancel();
-	con->socket.close();
+	SDLNet_TCP_Close(socket);
 }
 
 void tcp_server::close()
 {
-	acceptor->close();
+	for (plr_t plr = 0; plr < MAX_PLRS; ++plr) {
+		auto &connection = connections[plr];
+		if (connection)
+			drop_connection(connection);
+	}
+	SDLNet_TCP_Close(socket);
 }
 
 tcp_server::~tcp_server()
 {
+	SDLNet_FreeSocketSet(socketSet);
 }
 
 } // namespace net

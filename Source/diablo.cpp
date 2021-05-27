@@ -546,7 +546,6 @@ static void SaveOptions()
 	setIniInt("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 	setIniInt("Game", "Disable Crippling Shrines", sgOptions.Gameplay.bDisableCripplingShrines);
 
-	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	setIniInt("Network", "Port", sgOptions.Network.nPort);
 	setIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
 
@@ -631,7 +630,6 @@ static void LoadOptions()
 	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
 	sgOptions.Gameplay.bDisableCripplingShrines = getIniBool("Game", "Disable Crippling Shrines", false);
 
-	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
 	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
@@ -756,6 +754,9 @@ static void diablo_deinit()
 	}
 #ifndef NOSOUND
 	Aulib::quit();
+#endif
+#if !defined(NONET) && !defined(DISABLE_TCP)
+	SDLNet_Quit();
 #endif
 	if (was_ui_init)
 		UiDestroy();

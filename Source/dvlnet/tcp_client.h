@@ -2,10 +2,7 @@
 
 #include <string>
 #include <memory>
-#include <asio/ts/buffer.hpp>
-#include <asio/ts/internet.hpp>
-#include <asio/ts/io_context.hpp>
-#include <asio/ts/net.hpp>
+#include <SDL_net.h>
 
 #include "dvlnet/packet.h"
 #include "dvlnet/frame_queue.h"
@@ -33,14 +30,9 @@ private:
 	frame_queue recv_queue;
 	buffer_t recv_buffer = buffer_t(frame_queue::max_frame_size);
 
-	asio::io_context ioc;
-	asio::ip::tcp::resolver resolver = asio::ip::tcp::resolver(ioc);
-	asio::ip::tcp::socket sock = asio::ip::tcp::socket(ioc);
+	TCPsocket socket;
+	SDLNet_SocketSet socketSet = SDLNet_AllocSocketSet(1);
 	std::unique_ptr<tcp_server> local_server; // must be declared *after* ioc
-
-	void handle_recv(const asio::error_code &error, size_t bytes_read);
-	void start_recv();
-	void handle_send(const asio::error_code &error, size_t bytes_sent);
 };
 
 } // namespace net

@@ -68,6 +68,12 @@ if(NOT NONET)
   option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
   cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
                         "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
+
+  if(NOT DISABLE_TCP)
+    option(DEVILUTIONX_SYSTEM_SDL_NET "Use system-provided SDL_net" ON)
+    cmake_dependent_option(DEVILUTIONX_STATIC_SDL_NET "Link static SDL_net" OFF
+                          "DEVILUTIONX_SYSTEM_SDL_NET AND NOT DIST" ON)
+  endif()
 endif()
 
 option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" ON)
@@ -234,6 +240,11 @@ endif()
 if(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
+  if(NOT NONET AND NOT DISABLE_TCP AND DEVILUTIONX_SYSTEM_SDL_NET)
+    find_package(SDL_net REQUIRED)
+    add_library(SDL_NET_LIBRARY INTERFACE)
+    target_link_libraries(SDL_NET_LIBRARY INTERFACE ${SDL_NET_LIBRARY})
+  endif()
   include_directories(${SDL_INCLUDE_DIR})
 else()
   find_package(SDL2 REQUIRED)
@@ -258,10 +269,13 @@ else()
     add_library(SDL2::SDL2 ALIAS SDL2_lib)
   endif()
   find_package(SDL2_ttf REQUIRED)
+  if(NOT NONET AND NOT DISABLE_TCP AND DEVILUTIONX_SYSTEM_SDL_NET)
+    find_package(SDL2_net REQUIRED)
+  endif()
 endif()
 
-if(NOT NONET AND NOT DISABLE_TCP)
-  add_subdirectory(3rdParty/asio)
+if(NOT NONET AND NOT DISABLE_TCP AND NOT DEVILUTIONX_SYSTEM_SDL_NET)
+  add_subdirectory(3rdParty/SDL_net)
 endif()
 
 add_library(smacker STATIC
@@ -590,9 +604,6 @@ target_link_libraries(libdevilutionx PUBLIC
   simpleini)
 
 if(NOT NONET)
-  if(NOT DISABLE_TCP)
-    target_link_libraries(libdevilutionx PUBLIC asio)
-  endif()
   target_link_libraries(libdevilutionx PUBLIC sodium)
 endif()
 
@@ -600,10 +611,6 @@ target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
 
 genex_for_option(DEBUG)
 target_compile_definitions(libdevilutionx PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
-
-if(NOT NONET AND NOT DISABLE_TCP)
-  target_compile_definitions(libdevilutionx PUBLIC ASIO_STANDALONE)
-endif()
 
 # Defines without value
 foreach(
@@ -710,12 +717,18 @@ if(USE_SDL1)
   target_link_libraries(libdevilutionx PUBLIC
     ${SDL_TTF_LIBRARY}
     ${SDL_LIBRARY})
+  if(NOT NONET AND NOT DISABLE_TCP)
+    target_link_libraries(libdevilutionx PUBLIC SDL_NET_LIBRARY)
+  endif()
   target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
 else()
   target_link_libraries(libdevilutionx PUBLIC
     SDL2::SDL2
     ${SDL2_MAIN}
     SDL2::SDL2_ttf)
+  if(NOT NONET AND NOT DISABLE_TCP)
+    target_link_libraries(libdevilutionx PUBLIC SDL2::SDL2_net)
+  endif()
 endif()
 
 if(NOT NOSOUND)

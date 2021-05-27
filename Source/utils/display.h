@@ -9,6 +9,9 @@
 #else
 #include "utils/sdl2_backports.h"
 #endif
+#if !defined(NONET) && !defined(DISABLE_TCP)
+#include <SDL_net.h>
+#endif
 
 #include "utils/sdl_ptrs.h"
 #include "utils/ui_fwd.h"

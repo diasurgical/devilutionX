@@ -6,12 +6,16 @@
 #pragma once
 
 #include <SDL.h>
+#if !defined(NONET) && !defined(DISABLE_TCP)
+#include <SDL_net.h>
+#endif
 
 #include "utils/attributes.h"
 
 namespace devilution {
 
 #define ErrSdl() ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)
+#define ErrSdlNet() ErrDlg("SDL_net Error", SDLNet_GetError(), __FILE__, __LINE__)
 
 #undef assert
 

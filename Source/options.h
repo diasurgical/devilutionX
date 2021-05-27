@@ -126,8 +126,6 @@ struct ControllerOptions {
 };
 
 struct NetworkOptions {
-	/** @brief Optionally bind to a specific network interface. */
-	char szBindAddress[129];
 	/** @brief Most recently entered Hostname in join dialog. */
 	char szPreviousHost[129];
 	/** @brief What network port to use. */
