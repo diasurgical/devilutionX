@@ -135,24 +135,24 @@ uint8_t fontColorTableGold[256];
 uint8_t fontColorTableBlue[256];
 uint8_t fontColorTableRed[256];
 
-void DrawChar(const CelOutputBuffer &out, Point point, GameFontTables size, int nCel, text_color color)
+void DrawChar(const CelOutputBuffer &out, Point position, GameFontTables size, int nCel, text_color color)
 {
 	switch (color) {
 	case ColorWhite:
-		CelDrawTo(out, point.x, point.y, *fonts[size], nCel);
+		CelDrawTo(out, position, *fonts[size], nCel);
 		return;
 	case ColorBlue:
-		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableBlue);
+		CelDrawLightTo(out, position, *fonts[size], nCel, fontColorTableBlue);
 		break;
 	case ColorRed:
-		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableRed);
+		CelDrawLightTo(out, position, *fonts[size], nCel, fontColorTableRed);
 		break;
 	case ColorGold:
-		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, fontColorTableGold);
+		CelDrawLightTo(out, position, *fonts[size], nCel, fontColorTableGold);
 		break;
 	case ColorBlack:
 		light_table_index = 15;
-		CelDrawLightTo(out, point.x, point.y, *fonts[size], nCel, nullptr);
+		CelDrawLightTo(out, position, *fonts[size], nCel, nullptr);
 		return;
 	}
 }
@@ -351,7 +351,7 @@ int DrawString(const CelOutputBuffer &out, const char *text, const SDL_Rect &rec
 			sx += symbolWidth + spacing;
 	}
 	if (drawTextCursor) {
-		CelDrawTo(out, sx, sy, *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, { sx, sy }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 
 	return i;

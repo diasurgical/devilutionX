@@ -179,7 +179,7 @@ static void InvDrawSlotBack(const CelOutputBuffer &out, int x, int y, int w, int
 
 void DrawInv(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, RIGHT_PANEL_X, 351, *pInvCels, 1);
+	CelDrawTo(out, { RIGHT_PANEL_X, 351 }, *pInvCels, 1);
 
 	InvXY slotSize[] = {
 		{ 2, 2 }, //head
@@ -226,12 +226,13 @@ void DrawInv(const CelOutputBuffer &out)
 
 			const auto &cel = GetInvItemSprite(frame);
 			const int celFrame = GetInvItemFrame(frame);
+			const Point position { RIGHT_PANEL_X + screenX, screenY };
 
 			if (pcursinvitem == slot) {
-				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.InvBody[slot], true), RIGHT_PANEL_X + screenX, screenY, cel, celFrame, false);
+				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, cel, celFrame, false);
 			}
 
-			CelDrawItem(myPlayer.InvBody[slot]._iStatFlag, out, RIGHT_PANEL_X + screenX, screenY, cel, celFrame);
+			CelDrawItem(myPlayer.InvBody[slot]._iStatFlag, out, position, cel, celFrame);
 
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.InvBody[slot]._iLoc == ILOC_TWOHAND) {
@@ -244,7 +245,7 @@ void DrawInv(const CelOutputBuffer &out)
 
 						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X + (frameW == INV_SLOT_SIZE_PX ? 13 : -1);
 						const int dstY = slotPos[INVLOC_HAND_RIGHT].Y;
-						CelClippedBlitLightTransTo(out, dstX, dstY, cel, celFrame);
+						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
 						cel_transparency_active = false;
 					}
@@ -271,21 +272,19 @@ void DrawInv(const CelOutputBuffer &out)
 
 			const auto &cel = GetInvItemSprite(frame);
 			const int celFrame = GetInvItemFrame(frame);
-
+			const Point position { InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X, InvRect[j + SLOTXY_INV_FIRST].Y - 1 };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
 				CelBlitOutlineTo(
 				    out,
 				    GetOutlineColor(myPlayer.InvList[ii], true),
-				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
-				    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
+				    position,
 				    cel, celFrame, false);
 			}
 
 			CelDrawItem(
 			    myPlayer.InvList[ii]._iStatFlag,
 			    out,
-			    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
-			    InvRect[j + SLOTXY_INV_FIRST].Y - 1,
+			    position,
 			    cel, celFrame);
 		}
 	}
@@ -297,7 +296,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		return;
 	}
 
-	DrawPanelBox(out, 205, 21, 232, 28, PANEL_X + 205, PANEL_Y + 5);
+	DrawPanelBox(out, { 205, 21 }, 232, 28, { PANEL_X + 205, PANEL_Y + 5 });
 
 	auto &myPlayer = plr[myplr];
 
@@ -306,7 +305,8 @@ void DrawInvBelt(const CelOutputBuffer &out)
 			continue;
 		}
 
-		InvDrawSlotBack(out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		const Point position { InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1 };
+		InvDrawSlotBack(out, position.x, position.y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 		int frame = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
 		const auto &cel = GetInvItemSprite(frame);
@@ -314,11 +314,11 @@ void DrawInvBelt(const CelOutputBuffer &out)
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 			if (!sgbControllerActive || invflag) {
-				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.SpdList[i], true), InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cel, celFrame, false);
+				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.SpdList[i], true), position, cel, celFrame, false);
 			}
 		}
 
-		CelDrawItem(myPlayer.SpdList[i]._iStatFlag, out, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, cel, celFrame);
+		CelDrawItem(myPlayer.SpdList[i]._iStatFlag, out, position, cel, celFrame);
 
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
 		    && myPlayer.SpdList[i]._iStatFlag

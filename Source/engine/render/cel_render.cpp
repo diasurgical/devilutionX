@@ -527,34 +527,31 @@ void RenderCelOutline(const CelOutputBuffer &out, Point position, const byte *sr
 /**
  * @brief Blit CEL sprite to the given buffer, checks for drawing outside the buffer.
  * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
+ * @param position Target buffer coordinate
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  */
-void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
+void CelBlitSafeTo(const CelOutputBuffer &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth)
 {
 	assert(pRLEBytes != nullptr);
-	RenderCel(out, { sx, sy }, pRLEBytes, nDataSize, nWidth, RenderLineMemcpy, NullLineEndFn);
+	RenderCel(out, position, pRLEBytes, nDataSize, nWidth, RenderLineMemcpy, NullLineEndFn);
 }
 
 /**
  * @brief Same as CelBlitLightSafeTo but with stippled transparency applied
  * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
+ * @param position Target buffer coordinate
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  */
-void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
+void CelBlitLightTransSafeTo(const CelOutputBuffer &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth)
 {
 	assert(pRLEBytes != nullptr);
 	const std::uint8_t *tbl = &pLightTbl[light_table_index * 256];
-	const Point from { sx, sy };
-	bool shift = (reinterpret_cast<uintptr_t>(&out[from]) % 2 == 1);
+	bool shift = (reinterpret_cast<uintptr_t>(&out[position]) % 2 == 1);
 	const bool pitchIsEven = (out.pitch() % 2 == 0);
 	RenderCel(
-	    out, from, pRLEBytes, nDataSize, nWidth,
+	    out, position, pRLEBytes, nDataSize, nWidth,
 	    [tbl, &shift](std::uint8_t *dst, const std::uint8_t *src, std::size_t width) {
 		    if (reinterpret_cast<uintptr_t>(dst) % 2 == (shift ? 1 : 0)) {
 			    ++dst, ++src, --width;
@@ -574,14 +571,14 @@ void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const b
  * @param nWidth Width of sprite
  * @param tbl Palette translation table
  */
-void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
+void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
 {
 	assert(pRLEBytes != nullptr);
 	if (tbl == nullptr)
 		tbl = &pLightTbl[light_table_index * 256];
 
 	RenderCel(
-	    out, { sx, sy }, pRLEBytes, nDataSize, nWidth, [tbl](std::uint8_t *dst, const uint8_t *src, std::size_t w) {
+	    out, position, pRLEBytes, nDataSize, nWidth, [tbl](std::uint8_t *dst, const uint8_t *src, std::size_t w) {
 		    while (w-- > 0) {
 			    *dst = paletteTransparencyLookup[*dst][tbl[*src++]];
 			    ++dst;
@@ -593,120 +590,119 @@ void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, int sx, int sy, const
 /**
  * @brief Blit CEL sprite, and apply lighting, to the given buffer, checks for drawing outside the buffer
  * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
+ * @param position Target buffer coordinate
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  * @param tbl Palette translation table
  */
-void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
+void CelBlitLightSafeTo(const CelOutputBuffer &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
 {
 	assert(pRLEBytes != nullptr);
 	if (tbl == nullptr)
 		tbl = &pLightTbl[light_table_index * 256];
-	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, nWidth, tbl);
+	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, nWidth, tbl);
 }
 
 } // namespace
 
-void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void CelDrawTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
-	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+	CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelClippedDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void CelClippedDrawTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
-	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+	CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, uint8_t *tbl)
+void CelDrawLightTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame, uint8_t *tbl)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
 
 	if (light_table_index != 0 || tbl != nullptr)
-		CelBlitLightSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), tbl);
+		CelBlitLightSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), tbl);
 	else
-		CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelClippedDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void CelClippedDrawLightTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	if (light_table_index != 0)
-		CelBlitLightSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
+		CelBlitLightSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 	else
-		CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void CelDrawLightRedTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(1));
+	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(1));
 }
 
-void CelDrawItem(bool usable, const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame)
+void CelDrawItem(bool usable, const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	if (!usable) {
-		CelDrawLightRedTo(out, x, y, cel, frame);
+		CelDrawLightRedTo(out, position, cel, frame);
 	} else {
-		CelClippedDrawTo(out, x, y, cel, frame);
+		CelClippedDrawTo(out, position, cel, frame);
 	}
 }
 
-void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void CelClippedDrawSafeTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+	CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void CelClippedBlitLightTransTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	if (cel_transparency_active) {
 		if (sgOptions.Graphics.bBlendedTransparancy)
-			CelBlitLightBlendedSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
+			CelBlitLightBlendedSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 		else
-			CelBlitLightTransSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+			CelBlitLightTransSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 	} else if (light_table_index != 0)
-		CelBlitLightSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
+		CelBlitLightSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 	else
-		CelBlitSafeTo(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void CelDrawLightRedSafeTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	RenderCelWithLightTable(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(1));
+	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(1));
 }
 
-void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame)
+void CelDrawUnsafeTo(const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
-	RenderCelClipY(out, { x, y }, pRLEBytes, nDataSize, cel.Width(frame), RenderLineMemcpy, NullLineEndFn);
+	RenderCelClipY(out, position, pRLEBytes, nDataSize, cel.Width(frame), RenderLineMemcpy, NullLineEndFn);
 }
 
-void CelBlitOutlineTo(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame, bool skipColorIndexZero)
+void CelBlitOutlineTo(const CelOutputBuffer &out, uint8_t col, Point position, const CelSprite &cel, int frame, bool skipColorIndexZero)
 {
 	int nDataSize;
 	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 	if (skipColorIndexZero)
-		RenderCelOutline<true>(out, { sx, sy }, src, nDataSize, cel.Width(frame), col);
+		RenderCelOutline<true>(out, position, src, nDataSize, cel.Width(frame), col);
 	else
-		RenderCelOutline<false>(out, { sx, sy }, src, nDataSize, cel.Width(frame), col);
+		RenderCelOutline<false>(out, position, src, nDataSize, cel.Width(frame), col);
 }
 
 std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame)

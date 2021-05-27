@@ -109,21 +109,21 @@ void ClrDiabloMsg()
 
 void DrawDiabloMsg(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, PANEL_X + 101, DIALOG_Y, *pSTextSlidCels, 1);
-	CelDrawTo(out, PANEL_X + 527, DIALOG_Y, *pSTextSlidCels, 4);
-	CelDrawTo(out, PANEL_X + 101, DIALOG_Y + 48, *pSTextSlidCels, 2);
-	CelDrawTo(out, PANEL_X + 527, DIALOG_Y + 48, *pSTextSlidCels, 3);
+	CelDrawTo(out, { PANEL_X + 101, DIALOG_Y }, *pSTextSlidCels, 1);
+	CelDrawTo(out, { PANEL_X + 527, DIALOG_Y }, *pSTextSlidCels, 4);
+	CelDrawTo(out, { PANEL_X + 101, DIALOG_Y + 48 }, *pSTextSlidCels, 2);
+	CelDrawTo(out, { PANEL_X + 527, DIALOG_Y + 48 }, *pSTextSlidCels, 3);
 
 	int sx = PANEL_X + 109;
 	for (int i = 0; i < 35; i++) {
-		CelDrawTo(out, sx, DIALOG_Y, *pSTextSlidCels, 5);
-		CelDrawTo(out, sx, DIALOG_Y + 48, *pSTextSlidCels, 7);
+		CelDrawTo(out, { sx, DIALOG_Y }, *pSTextSlidCels, 5);
+		CelDrawTo(out, { sx, DIALOG_Y + 48 }, *pSTextSlidCels, 7);
 		sx += 12;
 	}
 	int sy = DIALOG_Y + 12;
 	for (int i = 0; i < 3; i++) {
-		CelDrawTo(out, PANEL_X + 101, sy, *pSTextSlidCels, 6);
-		CelDrawTo(out, PANEL_X + 527, sy, *pSTextSlidCels, 8);
+		CelDrawTo(out, { PANEL_X + 101, sy }, *pSTextSlidCels, 6);
+		CelDrawTo(out, { PANEL_X + 527, sy }, *pSTextSlidCels, 8);
 		sy += 12;
 	}
 

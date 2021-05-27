@@ -718,18 +718,18 @@ static void PrintQLString(const CelOutputBuffer &out, int x, int line, const cha
 	int sx = x + std::max((257 - width) / 2, 0);
 	int sy = line * 12 + 44;
 	if (qline == line) {
-		CelDrawTo(out, sx - 20, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, { sx - 20, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 	DrawString(out, str, { sx, sy, 257, 0 }, UIS_SILVER);
 	if (qline == line) {
-		CelDrawTo(out, sx + width + 7, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, { sx + width + 7, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 }
 
 void DrawQuestLog(const CelOutputBuffer &out)
 {
 	DrawString(out, _("Quest Log"), { 32, 44, 257, 0 }, UIS_CENTER);
-	CelDrawTo(out, 0, 351, *pQLogCel, 1);
+	CelDrawTo(out, { 0, 351 }, *pQLogCel, 1);
 	int line = qtopline;
 	for (int i = 0; i < numqlines; i++) {
 		PrintQLString(out, 32, line, _(questlist[qlist[i]]._qlstr));
