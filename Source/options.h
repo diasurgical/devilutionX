@@ -92,6 +92,9 @@ struct GameplayOptions {
 	bool bAutoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */
 	bool bAdriaRefillsMana;
+	/** @brief List of automatically attempt to equip items when picking them up. */
+	// valid value is "Weapon, Armor, Helm, Shield, Jewelry"
+	char szAutoEquipItems[100];
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
 	bool bAutoEquipWeapons;
 	/** @brief Automatically attempt to equip armor-type items when picking them up. */
