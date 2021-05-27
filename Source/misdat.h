@@ -8,7 +8,7 @@
 #include <cstdint>
 
 #include "effects.h"
-#include "engine.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 

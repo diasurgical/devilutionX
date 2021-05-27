@@ -4,13 +4,12 @@
  * Implementation of save game encryption algorithm.
  */
 
-#include <cstddef>
 #include <cstdint>
 
 #include "appfat.h"
-#include "engine.h"
 #include "miniwin/miniwin.h"
 #include "sha.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 

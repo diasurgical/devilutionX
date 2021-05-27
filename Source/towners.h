@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include "utils/stdcompat/string_view.hpp"
@@ -13,6 +12,7 @@
 #include "items.h"
 #include "player.h"
 #include "quests.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
