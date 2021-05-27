@@ -537,6 +537,7 @@ static void SaveOptions()
 	setIniInt("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
 	setIniInt("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
 	setIniInt("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
+	setIniValue("Game", "Auto Equip Items", sgOptions.Gameplay.szAutoEquipItems);
 	setIniInt("Game", "Auto Equip Weapons", sgOptions.Gameplay.bAutoEquipWeapons);
 	setIniInt("Game", "Auto Equip Armor", sgOptions.Gameplay.bAutoEquipArmor);
 	setIniInt("Game", "Auto Equip Helms", sgOptions.Gameplay.bAutoEquipHelms);
@@ -627,6 +628,12 @@ static void LoadOptions()
 	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms", false);
 	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields", false);
 	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry", false);
+	getIniValue("Game", "Auto Equip Items", sgOptions.Gameplay.szAutoEquipItems, 99, "Weapon");
+	sgOptions.Gameplay.bAutoEquipWeapons |= IniFound(sgOptions.Gameplay.szAutoEquipItems, "Weapon");
+	sgOptions.Gameplay.bAutoEquipArmor |= IniFound(sgOptions.Gameplay.szAutoEquipItems, "Armor");
+	sgOptions.Gameplay.bAutoEquipHelms |= IniFound(sgOptions.Gameplay.szAutoEquipItems, "Helm");
+	sgOptions.Gameplay.bAutoEquipShields |= IniFound(sgOptions.Gameplay.szAutoEquipItems, "Shield");
+	sgOptions.Gameplay.bAutoEquipJewelry |= IniFound(sgOptions.Gameplay.szAutoEquipItems, "Jewelry");
 	sgOptions.Gameplay.bRandomizeQuests = getIniBool("Game", "Randomize Quests", true);
 	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
 	sgOptions.Gameplay.bDisableCripplingShrines = getIniBool("Game", "Disable Crippling Shrines", false);

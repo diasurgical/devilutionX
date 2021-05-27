@@ -215,6 +215,40 @@ void setIniFloat(const char *keyname, const char *valuename, float value)
 	getIni().SetDoubleValue(keyname, valuename, value);
 }
 
+/**
+ * @brief Find item in comma-sparated list
+ */
+bool IniFound(const char *list, const char *item)
+{
+	const char *look = strcasestr(list, item);
+	if (!look)
+		return false;
+	look += strlen(item)+1;
+	while (*look == ' ')
+		look++;
+	return (bool) strchr(",;:", *look); // delimters including '\0'
+}
+
+/**
+ * @brief Find needle pattern in haystack, ignoring case
+ */
+const char *strcasestr(const char *haystack, const char *needle)
+{
+    const char *look, *pp, *qq;
+
+    for (look = haystack; *look; look++) {
+	while (*look && (tolower(*look) != tolower(*needle)))
+	    look++;
+	if (!*look)
+	    return NULL;
+
+	for (pp = needle + 1, qq = look + 1; tolower(*pp) == tolower(*qq); pp++, qq++)
+	    if (!*pp)	// match found!
+		return (look);
+    }
+    return NULL;
+}
+
 DWORD SErrGetLastError()
 {
 	return ::GetLastError();

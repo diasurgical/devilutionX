@@ -591,6 +591,15 @@ bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
  */
 bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
 {
+	/*
+	// Use this when Gameplay.bAutoEquipXXX flags are removed.
+	return ((item.isWeapon() && player._pClass != HeroClass::Monk && IniFound(sgOptions.Gameplay.szAutoEquipItems, "Weapon"))
+		|| (item.isArmor() && IniFound(sgOptions.Gameplay.szAutoEquipItems, "Armor"))
+		|| (item.isHelm() && IniFound(sgOptions.Gameplay.szAutoEquipItems, "Helm"))
+		|| (item.isShield() && IniFound(sgOptions.Gameplay.szAutoEquipItems, "Shield"))
+		|| (item.isJewelry() && IniFound(sgOptions.Gameplay.szAutoEquipItems, "Jewelry")));
+	*/
+
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
 		// annoy players who prefer that playstyle.
