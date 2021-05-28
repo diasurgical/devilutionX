@@ -238,15 +238,13 @@ const char *strcasestr(const char *haystack, const char *needle)
 	const char *look, *pp, *qq;
 	assert(haystack && needle);
 
-	for (look = haystack; *look; look++) {
-		while (*look && (tolower(*look) != tolower(*needle)))
-			look++;
-		if (!*look)
-			return nullptr;
-
-		for (pp = needle+1, qq = look+1; tolower(*pp) == tolower(*qq); pp++, qq++) {
-			if (!*pp)	// match found!
-				return (look);
+	for ( look = haystack; *look; look++ ) {
+		if (tolower(*look) == tolower(*needle)) {
+			pp = needle + 1; qq = look + 1;
+			while (*pp && (tolower(*pp) == tolower(*qq)))
+				pp++, qq++;
+			if (!*pp)
+				return look;	// match found!
 		}
 	}
 	return nullptr;
