@@ -216,13 +216,14 @@ void setIniFloat(const char *keyname, const char *valuename, float value)
 }
 
 /**
- * @brief Find item in comma-sparated list
+ * @brief Check item exists in comma-sparated list
  */
 bool IniFound(const char *list, const char *item)
 {
 	const char *look = strcasestr(list, item);
 	if (!look)
 		return false;
+
 	look += strlen(item);
 	while (*look == ' ')
 		look++;
@@ -235,19 +236,20 @@ bool IniFound(const char *list, const char *item)
 const char *strcasestr(const char *haystack, const char *needle)
 {
 	const char *look, *pp, *qq;
+	assert(haystack && needle);
 
 	for (look = haystack; *look; look++) {
 		while (*look && (tolower(*look) != tolower(*needle)))
 			look++;
 		if (!*look)
-			return NULL;
+			return nullptr;
 
-		for (pp = needle + 1, qq = look + 1; tolower(*pp) == tolower(*qq); pp++, qq++) {
+		for (pp = needle+1, qq = look+1; tolower(*pp) == tolower(*qq); pp++, qq++) {
 			if (!*pp)	// match found!
 				return (look);
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 DWORD SErrGetLastError()
