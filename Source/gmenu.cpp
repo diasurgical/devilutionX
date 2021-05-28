@@ -165,20 +165,20 @@ static void GmenuDrawMenuItem(const CelOutputBuffer &out, TMenuItem *pItem, int 
 	int w = GmenuGetLfont(pItem);
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		int x = 16 + w / 2;
-		CelDrawTo(out, x + PANEL_LEFT, y - 10, *optbar_cel, 1);
+		CelDrawTo(out, { x + PANEL_LEFT, y - 10 }, *optbar_cel, 1);
 		int step = pItem->dwFlags & 0xFFF;
 		int nSteps = std::max<int>((pItem->dwFlags & 0xFFF000) >> 12, 2);
 		int pos = step * 256 / nSteps;
 		GmenuClearBuffer(out, x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
-		CelDrawTo(out, x + 2 + pos + PANEL_LEFT, y - 12, *option_cel, 1);
+		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y - 12 }, *option_cel, 1);
 	}
 
 	int x = (gnScreenWidth - w) / 2;
 	uint16_t style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UIS_SILVER : UIS_BLACK;
 	DrawString(out, _(pItem->pszStr), { x, y, 0, 0 }, style | UIS_HUGE, 2);
 	if (pItem == sgpCurrItem) {
-		CelDrawTo(out, x - 54, y + 1, *PentSpin_cel, PentSpn2Spin());
-		CelDrawTo(out, x + 4 + w, y + 1, *PentSpin_cel, PentSpn2Spin());
+		CelDrawTo(out, { x - 54, y + 1 }, *PentSpin_cel, PentSpn2Spin());
+		CelDrawTo(out, { x + 4 + w, y + 1 }, *PentSpin_cel, PentSpn2Spin());
 	}
 }
 
@@ -207,7 +207,7 @@ void gmenu_draw(const CelOutputBuffer &out)
 				LogoAnim_tick = ticks;
 			}
 		}
-		CelDrawTo(out, (gnScreenWidth - sgpLogo->Width()) / 2, 102 + UI_OFFSET_Y, *sgpLogo, LogoAnim_frame);
+		CelDrawTo(out, { (gnScreenWidth - sgpLogo->Width()) / 2, 102 + UI_OFFSET_Y }, *sgpLogo, LogoAnim_frame);
 		int y = 160 + UI_OFFSET_Y;
 		TMenuItem *i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu != nullptr) {

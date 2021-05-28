@@ -217,12 +217,13 @@ static void DrawCursor(const CelOutputBuffer &out)
 	const auto &sprite = GetInvItemSprite(pcurs);
 	const int frame = GetInvItemFrame(pcurs);
 	bool usable = true;
+	const Point mousePosition { MouseX, MouseY + cursH - 1 };
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		const auto &heldItem = plr[myplr].HoldItem;
-		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), MouseX, MouseY + cursH - 1, sprite, frame, false);
+		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), mousePosition, sprite, frame, false);
 		usable = heldItem._iStatFlag;
 	}
-	CelDrawItem(usable, out, MouseX, MouseY + cursH - 1, sprite, frame);
+	CelDrawItem(usable, out, mousePosition, sprite, frame);
 }
 
 /**
@@ -532,13 +533,14 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 		return;
 	}
 
+	const Point objectPosition { sx, sy };
 	CelSprite cel { object[bv]._oAnimData, object[bv]._oAnimWidth };
 	if (bv == pcursobj)
-		CelBlitOutlineTo(out, 194, sx, sy, cel, object[bv]._oAnimFrame);
+		CelBlitOutlineTo(out, 194, objectPosition, cel, object[bv]._oAnimFrame);
 	if (object[bv]._oLight) {
-		CelClippedDrawLightTo(out, sx, sy, cel, object[bv]._oAnimFrame);
+		CelClippedDrawLightTo(out, objectPosition, cel, object[bv]._oAnimFrame);
 	} else {
-		CelClippedDrawTo(out, sx, sy, cel, object[bv]._oAnimFrame);
+		CelClippedDrawTo(out, objectPosition, cel, object[bv]._oAnimFrame);
 	}
 }
 
@@ -633,10 +635,11 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 	}
 
 	int px = sx - CalculateWidth2(cel->Width());
+	const Point position { px, sy };
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
-		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), px, sy, *cel, nCel);
+		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), position, *cel, nCel);
 	}
-	CelClippedDrawLightTo(out, px, sy, *cel, nCel);
+	CelClippedDrawLightTo(out, position, *cel, nCel);
 	if (pItem->_iAnimFrame == pItem->_iAnimLen)
 		AddItemToLabelQueue(bItem - 1, px, sy);
 }
@@ -660,11 +663,12 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 
 	if (leveltype == DTYPE_TOWN) {
 		px = sx - CalculateWidth2(towners[mi]._tAnimWidth);
+		const Point position { px, sy };
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, px, sy, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
+			CelBlitOutlineTo(out, 166, position, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
 		}
 		assert(towners[mi]._tAnimData);
-		CelClippedDrawTo(out, px, sy, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
+		CelClippedDrawTo(out, position, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
 		return;
 	}
 
@@ -754,7 +758,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 
 #ifdef _DEBUG
 	if (visiondebug && bFlag & BFLAG_LIT) {
-		CelClippedDrawTo(out, dx, dy, *pSquareCel, 1);
+		CelClippedDrawTo(out, { dx, dy }, *pSquareCel, 1);
 	}
 #endif
 
@@ -814,7 +818,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 				cel_transparency_active = false; // Turn transparency off here for debugging
 			}
 #endif
-			CelClippedBlitLightTransTo(out, dx, dy, *pSpecialCels, bArch);
+			CelClippedBlitLightTransTo(out, { dx, dy }, *pSpecialCels, bArch);
 #ifdef _DEBUG
 			if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
 				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
@@ -828,7 +832,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT) {
 			char bArch = dSpecial[sx - 1][sy - 1];
 			if (bArch != 0) {
-				CelDrawTo(out, dx, dy - TILE_HEIGHT, *pSpecialCels, bArch);
+				CelDrawTo(out, { dx, dy - TILE_HEIGHT }, *pSpecialCels, bArch);
 			}
 		}
 	}

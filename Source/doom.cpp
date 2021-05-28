@@ -74,7 +74,7 @@ void doom_draw(const CelOutputBuffer &out)
 		return;
 	}
 
-	CelDrawTo(out, PANEL_X, PANEL_Y - 1, *DoomCel, 1);
+	CelDrawTo(out, { PANEL_X, PANEL_Y - 1 }, *DoomCel, 1);
 }
 
 } // namespace devilution

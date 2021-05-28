@@ -75,7 +75,7 @@ void ToggleSpell(int slot);
 
 void AddPanelString(const char *str);
 void ClearPanel();
-void DrawPanelBox(const CelOutputBuffer &out, int x, int y, int w, int h, int sx, int sy);
+void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosition);
 
 /**
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).

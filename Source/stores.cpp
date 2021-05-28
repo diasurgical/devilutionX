@@ -75,7 +75,7 @@ const char *const TownerNames[] = {
 
 void DrawSTextBack(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, PANEL_X + 320 + 24, 327 + UI_OFFSET_Y, *pSTextBoxCels, 1);
+	CelDrawTo(out, { PANEL_X + 320 + 24, 327 + UI_OFFSET_Y }, *pSTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297);
 }
 
@@ -84,17 +84,17 @@ void DrawSSlider(const CelOutputBuffer &out, int y1, int y2)
 	int yd1 = y1 * 12 + 44 + UI_OFFSET_Y;
 	int yd2 = y2 * 12 + 44 + UI_OFFSET_Y;
 	if (stextscrlubtn != -1)
-		CelDrawTo(out, PANEL_X + 601, yd1, *pSTextSlidCels, 12);
+		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 12);
 	else
-		CelDrawTo(out, PANEL_X + 601, yd1, *pSTextSlidCels, 10);
+		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 10);
 	if (stextscrldbtn != -1)
-		CelDrawTo(out, PANEL_X + 601, yd2, *pSTextSlidCels, 11);
+		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 11);
 	else
-		CelDrawTo(out, PANEL_X + 601, yd2, *pSTextSlidCels, 9);
+		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 9);
 	yd1 += 12;
 	int yd3 = yd1;
 	for (; yd3 < yd2; yd3 += 12) {
-		CelDrawTo(out, PANEL_X + 601, yd3, *pSTextSlidCels, 14);
+		CelDrawTo(out, { PANEL_X + 601, yd3 }, *pSTextSlidCels, 14);
 	}
 	if (stextsel == 22)
 		yd3 = stextlhold;
@@ -104,7 +104,7 @@ void DrawSSlider(const CelOutputBuffer &out, int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) / 4)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDrawTo(out, PANEL_X + 601, (y1 + 1) * 12 + 44 + UI_OFFSET_Y + yd3, *pSTextSlidCels, 13);
+	CelDrawTo(out, { PANEL_X + 601, (y1 + 1) * 12 + 44 + UI_OFFSET_Y + yd3 }, *pSTextSlidCels, 13);
 }
 
 void AddSLine(int y)
@@ -2226,13 +2226,13 @@ static void DrawSelector(const CelOutputBuffer &out, const SDL_Rect &rect, const
 	if ((flags & UIS_CENTER) != 0)
 		x1 += (rect.w - lineWidth) / 2;
 
-	CelDrawTo(out, x1, rect.y + 1, *pSPentSpn2Cels, PentSpn2Spin());
+	CelDrawTo(out, { x1, rect.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 
 	int x2 = rect.x + rect.w + 5;
 	if ((flags & UIS_CENTER) != 0)
 		x2 = rect.x + (rect.w - lineWidth) / 2 + lineWidth + 5;
 
-	CelDrawTo(out, x2, rect.y + 1, *pSPentSpn2Cels, PentSpn2Spin());
+	CelDrawTo(out, { x2, rect.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 }
 
 void PrintSString(const CelOutputBuffer &out, int margin, int line, const char *text, uint16_t flags, int price)

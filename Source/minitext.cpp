@@ -155,7 +155,7 @@ void InitQTextMsg(_speech_id m)
 
 void DrawQTextBack(const CelOutputBuffer &out)
 {
-	CelDrawTo(out, PANEL_X + 24, 327 + UI_OFFSET_Y, *pTextBoxCels, 1);
+	CelDrawTo(out, { PANEL_X + 24, 327 + UI_OFFSET_Y }, *pTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
