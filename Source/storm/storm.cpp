@@ -223,7 +223,7 @@ bool IniFound(const char *list, const char *item)
 	const char *look = strcasestr(list, item);
 	if (!look)
 		return false;
-	look += strlen(item)+1;
+	look += strlen(item);
 	while (*look == ' ')
 		look++;
 	return (bool) strchr(",;:", *look); // delimters including '\0'

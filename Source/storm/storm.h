@@ -265,7 +265,7 @@ int getIniInt(const char *keyname, const char *valuename, int defaultValue);
 void setIniInt(const char *keyname, const char *valuename, int value);
 void setIniFloat(const char *keyname, const char *valuename, float value);
 
-bool IniFound(const char* list, const char* item);
+bool IniFound(const char *list, const char *item);
 const char *strcasestr(const char *haystack, const char *needle);
 
 // These error codes are used and returned by StormLib.
