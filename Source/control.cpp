@@ -546,7 +546,7 @@ void ClearPanel()
 void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosition)
 {
 	const BYTE *src = pBtmBuff.at(srcRect.x, srcRect.y);
-	BYTE *dst = out.at(targetPosition.x, targetPosition.y);
+	BYTE *dst = &out[targetPosition];
 
 	for (int hgt = srcRect.h; hgt != 0; hgt--, src += pBtmBuff.pitch(), dst += out.pitch()) {
 		memcpy(dst, src, srcRect.w);
@@ -558,7 +558,7 @@ void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosi
  * of the flask getting empty. This function takes a cel and draws a
  * horizontal stripe of height (max-min) onto the given buffer.
  * @param out Target buffer.
- * @param position Burffer coordinate.
+ * @param position Buffer coordinate.
  * @param celBuf Buffer of the empty flask cel.
  * @param y0 Top of the flask cel section to draw.
  * @param y1 Bottom of the flask cel section to draw.
@@ -566,7 +566,7 @@ void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosi
 static void DrawFlaskTop(const CelOutputBuffer &out, Point position, const CelOutputBuffer &celBuf, int y0, int y1)
 {
 	const BYTE *src = celBuf.at(0, y0);
-	BYTE *dst = out.at(position.x, position.y);
+	BYTE *dst = &out[position];
 
 	for (int h = y1 - y0; h != 0; --h, src += celBuf.pitch(), dst += out.pitch())
 		memcpy(dst, src, celBuf.w());
@@ -584,8 +584,8 @@ static void DrawFlaskTop(const CelOutputBuffer &out, Point position, const CelOu
  */
 static void DrawFlask(const CelOutputBuffer &out, const CelOutputBuffer &celBuf, Point sourcePosition, Point targetPosition, int h)
 {
-	const BYTE *src = celBuf.at(sourcePosition.x, sourcePosition.y);
-	BYTE *dst = out.at(targetPosition.x, targetPosition.y);
+	const BYTE *src = &celBuf[sourcePosition];
+	BYTE *dst = &out[targetPosition];
 
 	for (int hgt = h; hgt != 0; hgt--, src += celBuf.pitch() - 59, dst += out.pitch() - 59) {
 		for (int wdt = 59; wdt != 0; wdt--) {
