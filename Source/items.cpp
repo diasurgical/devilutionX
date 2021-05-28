@@ -3028,7 +3028,7 @@ void GetItemStr(int i)
 		else
 			strcpy(infostr, items[i]._iName);
 
-		infoclr = items[i].getTextColor(true);
+		infoclr = items[i].getTextColor();
 	} else {
 		int nGold = items[i]._ivalue;
 		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());

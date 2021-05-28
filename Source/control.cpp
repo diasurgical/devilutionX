@@ -1156,7 +1156,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 				strcpy(infostr, myPlayer.HoldItem._iIName);
 			else
 				strcpy(infostr, myPlayer.HoldItem._iName);
-			infoclr = myPlayer.HoldItem.getTextColor(true);
+			infoclr = myPlayer.HoldItem.getTextColor();
 		}
 	} else {
 		if (pcursitem != -1)

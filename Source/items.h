@@ -351,10 +351,8 @@ struct ItemStruct {
 		}
 	}
 
-	UiFlags getTextColor(bool skipStatCheck = false) const
+	UiFlags getTextColor() const
 	{
-		if (!skipStatCheck && !_iStatFlag)
-			return UIS_RED;
 		switch (_iMagical) {
 		case ITEM_QUALITY_MAGIC:
 			return UIS_BLUE;
@@ -363,6 +361,13 @@ struct ItemStruct {
 		default:
 			return UIS_SILVER;
 		}
+	}
+
+	UiFlags getTextColorWithStatCheck() const
+	{
+		if (!_iStatFlag)
+			return UIS_RED;
+		return getTextColor();
 	}
 };
 

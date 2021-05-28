@@ -234,7 +234,7 @@ void S_ScrollSBuy(int idx)
 
 	for (int l = 5; l < 20; l += 4) {
 		if (!smithitem[idx].isEmpty()) {
-			uint16_t iclr = smithitem[idx].getTextColor();
+			uint16_t iclr = smithitem[idx].getTextColorWithStatCheck();
 
 			if (smithitem[idx]._iMagical != 0) {
 				AddSText(20, l, smithitem[idx]._iIName, iclr, true);
@@ -292,7 +292,7 @@ void S_ScrollSPBuy(int boughtitems)
 
 	for (int l = 5; l < 20 && idx < SMITH_PREMIUM_ITEMS; l += 4) {
 		if (!premiumitems[idx].isEmpty()) {
-			uint16_t iclr = premiumitems[idx].getTextColor();
+			uint16_t iclr = premiumitems[idx].getTextColorWithStatCheck();
 			AddSText(20, l, premiumitems[idx]._iIName, iclr, true);
 			AddSTextVal(l, premiumitems[idx]._iIvalue);
 			PrintStoreItem(&premiumitems[idx], l + 1, iclr);
@@ -382,7 +382,7 @@ void S_ScrollSSell(int idx)
 		if (idx >= storenumh)
 			break;
 		if (!storehold[idx].isEmpty()) {
-			uint16_t iclr = storehold[idx].getTextColor();
+			uint16_t iclr = storehold[idx].getTextColorWithStatCheck();
 
 			if (storehold[idx]._iMagical != 0 && storehold[idx]._iIdentified) {
 				AddSText(20, l, storehold[idx]._iIName, iclr, true);
@@ -605,7 +605,7 @@ void S_ScrollWBuy(int idx)
 
 	for (int l = 5; l < 20; l += 4) {
 		if (!witchitem[idx].isEmpty()) {
-			uint16_t iclr = witchitem[idx].getTextColor();
+			uint16_t iclr = witchitem[idx].getTextColorWithStatCheck();
 
 			if (witchitem[idx]._iMagical != 0) {
 				AddSText(20, l, witchitem[idx]._iIName, iclr, true);
@@ -858,7 +858,7 @@ void S_StartConfirm()
 
 	auto &item = plr[myplr].HoldItem;
 
-	uint16_t iclr = item.getTextColor();
+	uint16_t iclr = item.getTextColorWithStatCheck();
 
 	bool idprint = item._iMagical != ITEM_QUALITY_NORMAL;
 
@@ -943,7 +943,7 @@ void S_StartBBoy()
 	AddSText(0, 1, tempstr, UIS_GOLD | UIS_CENTER, false);
 	AddSLine(3);
 	AddSLine(21);
-	uint16_t iclr = boyitem.getTextColor();
+	uint16_t iclr = boyitem.getTextColorWithStatCheck();
 
 	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
 		AddSText(20, 10, boyitem._iIName, iclr, true);
@@ -994,7 +994,7 @@ void S_ScrollHBuy(int idx)
 	stextup = 5;
 	for (l = 5; l < 20; l += 4) {
 		if (!healitem[idx].isEmpty()) {
-			uint16_t iclr = healitem[idx].getTextColor();
+			uint16_t iclr = healitem[idx].getTextColorWithStatCheck();
 
 			AddSText(20, l, healitem[idx]._iName, iclr, true);
 			AddSTextVal(l, healitem[idx]._iIvalue);
@@ -1167,7 +1167,7 @@ void S_StartIdShow()
 
 	auto &item = plr[myplr].HoldItem;
 
-	uint16_t iclr = item.getTextColor();
+	uint16_t iclr = item.getTextColorWithStatCheck();
 
 	AddSText(0, 7, _("This item is:"), UIS_SILVER | UIS_CENTER, false);
 	AddSText(20, 11, item._iIName, iclr, false);
