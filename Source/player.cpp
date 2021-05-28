@@ -514,18 +514,6 @@ void InitPlayerGFX(int pnum)
 	}
 }
 
-static HeroClass GetPlrGFXClass(HeroClass c)
-{
-	switch (c) {
-	case HeroClass::Bard:
-		return hfbard_mpq == nullptr ? HeroClass::Rogue : c;
-	case HeroClass::Barbarian:
-		return hfbarb_mpq == nullptr ? HeroClass::Warrior : c;
-	default:
-		return c;
-	}
-}
-
 void ResetPlayerGFX(PlayerStruct &player)
 {
 	player.AnimInfo.pCelSprite = nullptr;
