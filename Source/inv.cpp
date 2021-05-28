@@ -296,7 +296,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		return;
 	}
 
-	DrawPanelBox(out, { 205, 21 }, 232, 28, { PANEL_X + 205, PANEL_Y + 5 });
+	DrawPanelBox(out, { 205, 21, 232, 28 }, { PANEL_X + 205, PANEL_Y + 5 });
 
 	auto &myPlayer = plr[myplr];
 

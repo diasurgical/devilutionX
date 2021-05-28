@@ -543,13 +543,13 @@ void ClearPanel()
 	pinfoflag = false;
 }
 
-void DrawPanelBox(const CelOutputBuffer &out, Point sourcePosition, int w, int h, Point targetPosition)
+void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosition)
 {
-	const BYTE *src = pBtmBuff.at(sourcePosition.x, sourcePosition.y);
+	const BYTE *src = pBtmBuff.at(srcRect.x, srcRect.y);
 	BYTE *dst = out.at(targetPosition.x, targetPosition.y);
 
-	for (int hgt = h; hgt != 0; hgt--, src += pBtmBuff.pitch(), dst += out.pitch()) {
-		memcpy(dst, src, w);
+	for (int hgt = srcRect.h; hgt != 0; hgt--, src += pBtmBuff.pitch(), dst += out.pitch()) {
+		memcpy(dst, src, srcRect.w);
 	}
 }
 
@@ -639,7 +639,7 @@ void UpdateLifeFlask(const CelOutputBuffer &out)
 	if (filled != 69)
 		DrawFlaskTop(out, { 96 + PANEL_X, PANEL_Y }, pLifeBuff, 16, 85 - filled);
 	if (filled != 0)
-		DrawPanelBox(out, { 96, 85 - filled }, 88, filled, { 96 + PANEL_X, PANEL_Y + 69 - filled });
+		DrawPanelBox(out, { 96, 85 - filled, 88, filled }, { 96 + PANEL_X, PANEL_Y + 69 - filled });
 }
 
 void DrawManaFlask(const CelOutputBuffer &out)
@@ -681,7 +681,7 @@ void UpdateManaFlask(const CelOutputBuffer &out)
 	if (filled != 69)
 		DrawFlaskTop(out, { PANEL_X + 464, PANEL_Y }, pManaBuff, 16, 85 - filled);
 	if (filled != 0)
-		DrawPanelBox(out, { 464, 85 - filled }, 88, filled, { PANEL_X + 464, PANEL_Y + 69 - filled });
+		DrawPanelBox(out, { 464, 85 - filled, 88, filled }, { PANEL_X + 464, PANEL_Y + 69 - filled });
 
 	DrawSpell(out);
 }
@@ -775,7 +775,7 @@ void InitControlPan()
 
 void DrawCtrlPan(const CelOutputBuffer &out)
 {
-	DrawPanelBox(out, { 0, sgbPlrTalkTbl + 16 }, PANEL_WIDTH, PANEL_HEIGHT, { PANEL_X, PANEL_Y });
+	DrawPanelBox(out, { 0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT }, { PANEL_X, PANEL_Y });
 	DrawInfoBox(out);
 }
 
@@ -783,7 +783,7 @@ void DrawCtrlBtns(const CelOutputBuffer &out)
 {
 	for (int i = 0; i < 6; i++) {
 		if (!panbtns[i])
-			DrawPanelBox(out, { PanBtnPos[i].x, PanBtnPos[i].y + 16 }, 71, 20, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y });
+			DrawPanelBox(out, { PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20 }, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y });
 		else
 			CelDrawTo(out, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 }, *pPanelButtons, i + 1);
 	}
@@ -1137,7 +1137,7 @@ static void PrintInfo(const CelOutputBuffer &out)
 
 void DrawInfoBox(const CelOutputBuffer &out)
 {
-	DrawPanelBox(out, { 177, 62 }, 288, 60, { PANEL_X + 177, PANEL_Y + 46 });
+	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
 		infostr[0] = '\0';
 		infoclr = UIS_SILVER;
@@ -1799,17 +1799,17 @@ void DrawTalkPan(const CelOutputBuffer &out)
 	if (!talkflag)
 		return;
 
-	DrawPanelBox(out, { 175, sgbPlrTalkTbl + 20 }, 294, 5, { PANEL_X + 175, PANEL_Y + 4 });
+	DrawPanelBox(out, { 175, sgbPlrTalkTbl + 20, 294, 5 }, { PANEL_X + 175, PANEL_Y + 4 });
 	int off = 0;
 	for (int i = 293; i > 283; off++, i--) {
-		DrawPanelBox(out, { (off / 2) + 175, sgbPlrTalkTbl + off + 25 }, i, 1, { (off / 2) + PANEL_X + 175, off + PANEL_Y + 9 });
+		DrawPanelBox(out, { (off / 2) + 175, sgbPlrTalkTbl + off + 25, i, 1 }, { (off / 2) + PANEL_X + 175, off + PANEL_Y + 9 });
 	}
-	DrawPanelBox(out, { 185, sgbPlrTalkTbl + 35 }, 274, 30, { PANEL_X + 185, PANEL_Y + 19 });
-	DrawPanelBox(out, { 180, sgbPlrTalkTbl + 65 }, 284, 5, { PANEL_X + 180, PANEL_Y + 49 });
+	DrawPanelBox(out, { 185, sgbPlrTalkTbl + 35, 274, 30 }, { PANEL_X + 185, PANEL_Y + 19 });
+	DrawPanelBox(out, { 180, sgbPlrTalkTbl + 65, 284, 5 }, { PANEL_X + 180, PANEL_Y + 49 });
 	for (int i = 0; i < 10; i++) {
-		DrawPanelBox(out, { 180, sgbPlrTalkTbl + i + 70 }, i + 284, 1, { PANEL_X + 180, i + PANEL_Y + 54 });
+		DrawPanelBox(out, { 180, sgbPlrTalkTbl + i + 70, i + 284, 1 }, { PANEL_X + 180, i + PANEL_Y + 54 });
 	}
-	DrawPanelBox(out, { 170, sgbPlrTalkTbl + 80 }, 310, 55, { PANEL_X + 170, PANEL_Y + 64 });
+	DrawPanelBox(out, { 170, sgbPlrTalkTbl + 80, 310, 55 }, { PANEL_X + 170, PANEL_Y + 64 });
 	char *msg = sgszTalkMsg;
 	int i = 0;
 	int x = PANEL_LEFT + 200;
