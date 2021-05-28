@@ -2,8 +2,8 @@ include(FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(asio
-    GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
-    GIT_TAG 77bcfe775ad63178942c9dd95d93edd10442b80f
+    URL https://github.com/chriskohlhoff/asio/archive/77bcfe775ad63178942c9dd95d93edd10442b80f.zip
+    URL_HASH MD5=bfb3071dff527a6618be8836dc753f0a
 )
 FetchContent_MakeAvailableExcludeFromAll(asio)
 
