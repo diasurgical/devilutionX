@@ -132,10 +132,6 @@ if(GPERF)
 endif()
 
 if(NINTENDO_SWITCH)
-  set(ASAN OFF)
-  set(UBSAN OFF)
-  set(NONET ON)
-  set(PREFILL_PLAYER_NAME ON)
   include(switch_defs)
 endif()
 
