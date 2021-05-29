@@ -4758,69 +4758,43 @@ bool LineClearMissile(Point startPoint, Point endPoint)
 
 bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point endPoint)
 {
-	int d;
-	int xincD, yincD, dincD, dincH;
-	bool done = false;
-
 	Point position = startPoint;
 
-	int dx = endPoint.x - position.x;
-	int dy = endPoint.y - position.y;
-	if (abs(dx) > abs(dy)) {
-		if (dx < 0) {
-			std::swap(position, endPoint);
-			dx = -dx;
-			dy = -dy;
-		}
-		if (dy > 0) {
-			d = 2 * dy - dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dy - dx);
-			yincD = 1;
-		} else {
-			d = 2 * dy + dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dx + dy);
-			yincD = -1;
-		}
-		while (position != endPoint) {
-			if ((d <= 0) ^ (yincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				position.y += yincD;
-			}
-			position.x++;
-			done = position != startPoint && !Clear(entity, position);
-		}
-	} else {
-		if (dy < 0) {
-			std::swap(position, endPoint);
-			dy = -dy;
-			dx = -dx;
-		}
-		if (dx > 0) {
-			d = 2 * dx - dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dx - dy);
-			xincD = 1;
-		} else {
-			d = 2 * dx + dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dy + dx);
-			xincD = -1;
-		}
-		while (!done && position != endPoint) {
-			if ((d <= 0) ^ (xincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				position.x += xincD;
-			}
-			position.y++;
-			done = position != startPoint && !Clear(entity, position);
-		}
+	int d1 = endPoint.x - position.x;
+	int d2 = endPoint.y - position.y;
+
+	bool horizontal = abs(d1) > abs(d2);
+
+	if (!horizontal)
+		std::swap(d1, d2);
+
+	if (d1 < 0) {
+		std::swap(position, endPoint);
+		d1 = -d1;
+		d2 = -d2;
 	}
+
+	int incD = (d2 > 0) ? 1 : -1;
+	int d = 2 * d2 - (d1 * incD);
+	int dincD = 2 * d2;
+	int dincH = 2 * (d2 - (d1 * incD));
+
+	while (position != endPoint && (position == startPoint || Clear(entity, position))) {
+		if ((d <= 0) ^ (incD < 0)) {
+			d += dincD;
+		} else {
+			d += dincH;
+			if (!horizontal)
+				position.x += incD;
+			else
+				position.y += incD;
+		}
+		if (horizontal)
+			position.x++;
+		else
+			position.y++;
+	}
+
 	return position == endPoint;
 }
 
