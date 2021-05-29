@@ -293,6 +293,8 @@ TEST(pack, UnPackItem_diablo)
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
+	plr[myplr]._pMaxManaBase = 125 << 6;
+	plr[myplr]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
 		UnPackItem(&PackedDiabloItems[i], &id, false);
@@ -359,6 +361,8 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = true;
+	plr[myplr]._pMaxManaBase = 125 << 6;
+	plr[myplr]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
 		UnPackItem(&PackedDiabloMPItems[i], &id, false);
@@ -434,6 +438,10 @@ const PkItemStruct PackedHellfireItems[] = {
 	{ 1133027011,         328, 139,   3,    8,    20,   0,    0,      0,      0 }, // Deadly Club
 	{  224835143,         732, 144,   5,  255,   255,   0,    0,      0,      0 }, // Gnat Sting
 	{ 1498080548,         796, 138,   5,  255,   255,   0,    0,      0,      0 }, // Thunderclap
+	{ 1218409601,         792, 155,   5,   75,    75,  50,   50,      0,      0 }, // Rod of Onan
+	{ 1228950066,         711, 146,   5,  255,   255,   0,    0,      0,      0 }, // Flambeau
+	{  863852923,         709, 156,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Thunder
+	{   89183927,         716, 159,   5,    0,     0,   0,    0,      0,      0 }, // Acolyte's Amulet
 	// clang-format on
 };
 
@@ -483,7 +491,7 @@ const TestItemStruct HellfireItems[] = {
 	{ "Oil of Permanence",                0,       3,     30,    15000,        0,        0,    0,          0,       38,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    86 },
 	{ "Doppelganger's Axe",               2,       1,    144,     6640,        4,       12,    0,          0,        0,       0,         0,            0,           23,       32,      86,        26,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         89,         -1,       22,        0,        0,   131 },
 	{ "Flail of vampires",                4,       1,    131,    16500,        2,       12,    0,      16384,        0,       0,         0,            0,           36,       36,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         55,       30,        0,        0,   141 },
-	{ "Gladiator's Ring",                12,       3,    186,    10000,        0,        0,    0,          0,       25,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,   109,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,   157 },
+	{ "Gladiator's Ring",                12,       3,    186,    10000,        0,        0,    0,          0,       25,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,     3200,  -3200,          0,          0,         0,           0,   109,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,   157 },
 	{ "Warrior's Staff of the moon",     10,       1,    124,    42332,        8,       16,    0,          0,       23,       0,         0,            0,           75,       75,      54,        15,      0,       5,       5,       5,       5,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          4,         27,       30,        0,        0,   155 },
 	{ "Shield of the ages",               5,       2,    113,     2600,        0,        0,   10,          0,        0,       0,         0,            0,          255,      255,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         37,       50,        0,        0,    74 },
 	{ "Heavy Club of puncturing",         4,       1,     70,     5239,        3,        6,    0,          0,        0,       0,         0,            0,           20,       20,      52,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          2,         57,       18,        0,        0,   139 },
@@ -502,6 +510,10 @@ const TestItemStruct HellfireItems[] = {
 	{ "Deadly Club",                      4,       1,     70,     1556,        3,        6,    0,          0,        0,       0,         0,            0,            8,       20,      47,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          2,         -1,       18,        0,        0,   139 },
 	{ "Gnat Sting",                       3,       1,    210,    30000,        1,        2,    0,     131584,        0,       0,         0,            0,          255,      255,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,    98,         0,         0,         0,         0,         -1,         -1,       20,        0,       35,   144 },
 	{ "Thunderclap",                      4,       1,    205,    30000,        5,        9,    0,         48,        0,       0,         0,            0,          255,      255,       0,         0,      0,      20,       0,       0,       0,      0,     30,      0,        0,      0,          0,          0,         2,           0,   102,         3,         6,         2,         0,         -1,         -1,       40,        0,        0,   138 },
+	{ "Rod of Onan",                     10,       1,    124,    44167,        8,       16,    0,          0,       23,      21,        50,           50,           75,       75,     100,         0,      0,       5,       5,       5,       5,      0,      0,      0,        0,      0,          0,          0,         0,           0,    62,         0,         0,         0,         0,         -1,         -1,       30,        0,        0,   155 },
+	{ "Flambeau",                         3,       1,    209,    30000,        0,        0,    0,   33554440,        0,       0,         0,            0,          255,      255,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,    99,        15,        20,         0,         0,         -1,         -1,       25,        0,       40,   146 },
+	{ "Ring of Thunder",                 12,       3,    177,     8000,        0,        0,    0,          0,       25,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,    -30,     60,    -30,        0,      0,          0,          0,         0,           0,    96,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,   156 },
+	{ "Acolyte's Amulet",                13,       3,    183,    10000,        0,        0,    0,          0,       26,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,    -3968,   3968,          0,          0,         0,           0,   108,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,   159 },
 	// clang-format on
 };
 
@@ -512,6 +524,8 @@ TEST(pack, UnPackItem_hellfire)
 
 	gbIsHellfire = true;
 	gbIsMultiplayer = false;
+	plr[myplr]._pMaxManaBase = 125 << 6;
+	plr[myplr]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
 		UnPackItem(&PackedHellfireItems[i], &id, true);
