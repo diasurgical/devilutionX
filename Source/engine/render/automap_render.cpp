@@ -23,19 +23,19 @@ template <DirectionX DirX, DirectionY DirY>
 void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
 {
 	while (height-- > 0) {
-		if(sgOptions.Gameplay.bDrawMapBorder == true) {
+		if(sgOptions.Gameplay.bDrawAutomapBorder == true) {
 			out.SetPixel({ from.x, from.y + 1 }, 0);
 		}
 			out.SetPixel(from, colorIndex);
 			from.x += static_cast<int>(DirX);
-		if(sgOptions.Gameplay.bDrawMapBorder == true) {
+		if(sgOptions.Gameplay.bDrawAutomapBorder == true) {
 			out.SetPixel({ from.x, from.y + 1 }, 0);
 		}
 			out.SetPixel(from, colorIndex);
 			from.x += static_cast<int>(DirX);
 			from.y += static_cast<int>(DirY);
 	}
-	if(sgOptions.Gameplay.bDrawMapBorder == true) {
+	if(sgOptions.Gameplay.bDrawAutomapBorder == true) {
 		out.SetPixel({ from.x, from.y + 1 }, 0);
 	}
 		out.SetPixel(from, colorIndex);
