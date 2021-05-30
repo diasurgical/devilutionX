@@ -797,13 +797,13 @@ int SwapItem(ItemStruct *a, ItemStruct *b)
 	return b->_iCurs + CURSOR_FIRSTITEM;
 }
 
-void CheckInvPaste(int pnum, int mx, int my)
+void CheckInvPaste(int pnum, Point cursorPosition)
 {
 	auto &player = plr[pnum];
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	int i = mx + (icursW / 2);
-	int j = my + (icursH / 2);
+	int i = cursorPosition.x + (icursW / 2);
+	int j = cursorPosition.y + (icursH / 2);
 	int sx = icursW28;
 	int sy = icursH28;
 	bool done = false;
@@ -1203,7 +1203,7 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId
 	CalcPlrInv(pnum, true);
 }
 
-void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
+void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 {
 	auto &player = plr[pnum];
 
@@ -1228,10 +1228,10 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		// check which inventory rectangle the mouse is in, if any
-		if (mx >= InvRect[r].X + xo
-		    && mx < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1)
-		    && my >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1)
-		    && my < InvRect[r].Y + yo) {
+		if (cursorPosition.x >= InvRect[r].X + xo
+		    && cursorPosition.x < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1)
+		    && cursorPosition.y >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1)
+		    && cursorPosition.y < InvRect[r].Y + yo) {
 			done = true;
 			r--;
 		}
@@ -1410,7 +1410,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 				holdItem._itype = ITYPE_NONE;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-				SetCursorPos(mx - (cursW / 2), MouseY - (cursH / 2));
+				SetCursorPos(cursorPosition.x - (cursW / 2), MouseY - (cursH / 2));
 			}
 		}
 	}
@@ -1430,9 +1430,9 @@ void inv_update_rem_item(int pnum, BYTE iv)
 void CheckInvItem(bool isShiftHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		CheckInvPaste(myplr, MouseX, MouseY);
+		CheckInvPaste(myplr, { MouseX, MouseY });
 	} else {
-		CheckInvCut(myplr, MouseX, MouseY, isShiftHeld);
+		CheckInvCut(myplr, { MouseX, MouseY }, isShiftHeld);
 	}
 }
 
@@ -1699,12 +1699,12 @@ int FindGetItem(int idx, uint16_t ci, int iseed)
 	return ii;
 }
 
-void SyncGetItem(int x, int y, int idx, uint16_t ci, int iseed)
+void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 {
 	int ii;
 
-	if (dItem[x][y] != 0) {
-		ii = dItem[x][y] - 1;
+	if (dItem[position.x][position.y] != 0) {
+		ii = dItem[position.x][position.y] - 1;
 		if (items[ii].IDidx == idx
 		    && items[ii]._iSeed == iseed
 		    && items[ii]._iCreateInfo == ci) {
@@ -1723,19 +1723,19 @@ void SyncGetItem(int x, int y, int idx, uint16_t ci, int iseed)
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
-bool CanPut(int x, int y)
+bool CanPut(Point position)
 {
-	if (dItem[x][y] != 0)
+	if (dItem[position.x][position.y] != 0)
 		return false;
-	if (nSolidTable[dPiece[x][y]])
+	if (nSolidTable[dPiece[position.x][position.y]])
 		return false;
 
-	if (dObject[x][y] != 0) {
-		if (object[dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1)]._oSolidFlag)
+	if (dObject[position.x][position.y] != 0) {
+		if (object[dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1)]._oSolidFlag)
 			return false;
 	}
 
-	int8_t oi = dObject[x + 1][y + 1];
+	int8_t oi = dObject[position.x + 1][position.y + 1];
 	if (oi > 0 && object[oi - 1]._oSelFlag != 0) {
 		return false;
 	}
@@ -1743,16 +1743,16 @@ bool CanPut(int x, int y)
 		return false;
 	}
 
-	oi = dObject[x + 1][y];
+	oi = dObject[position.x + 1][position.y];
 	if (oi > 0) {
-		int8_t oi2 = dObject[x][y + 1];
+		int8_t oi2 = dObject[position.x][position.y + 1];
 		if (oi2 > 0 && object[oi - 1]._oSelFlag != 0 && object[oi2 - 1]._oSelFlag != 0)
 			return false;
 	}
 
-	if (currlevel == 0 && dMonster[x][y] != 0)
+	if (currlevel == 0 && dMonster[position.x][position.y] != 0)
 		return false;
-	if (currlevel == 0 && dMonster[x + 1][y + 1] != 0)
+	if (currlevel == 0 && dMonster[position.x + 1][position.y + 1] != 0)
 		return false;
 
 	return true;
@@ -1766,22 +1766,19 @@ bool TryInvPut()
 	auto &myPlayer = plr[myplr];
 
 	Direction dir = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
-	Point position = myPlayer.position.tile + dir;
-	if (CanPut(position.x, position.y)) {
+	if (CanPut(myPlayer.position.tile + dir)) {
 		return true;
 	}
 
-	position = myPlayer.position.tile + left[dir];
-	if (CanPut(position.x, position.y)) {
+	if (CanPut(myPlayer.position.tile + left[dir])) {
 		return true;
 	}
 
-	position = myPlayer.position.tile + right[dir];
-	if (CanPut(position.x, position.y)) {
+	if (CanPut(myPlayer.position.tile + right[dir])) {
 		return true;
 	}
 
-	return CanPut(myPlayer.position.tile.x, myPlayer.position.tile.y);
+	return CanPut(myPlayer.position.tile);
 }
 
 void DrawInvMsg(const char *msg)
@@ -1805,15 +1802,15 @@ static bool PutItem(PlayerStruct &player, Point &position)
 	if (abs(relativePosition.x) > 1 || abs(relativePosition.y) > 1) {
 		position = player.position.tile + d;
 	}
-	if (CanPut(position.x, position.y))
+	if (CanPut(position))
 		return true;
 
 	position = player.position.tile + left[d];
-	if (CanPut(position.x, position.y))
+	if (CanPut(position))
 		return true;
 
 	position = player.position.tile + right[d];
-	if (CanPut(position.x, position.y))
+	if (CanPut(position))
 		return true;
 
 	for (int l = 1; l < 50; l++) {
@@ -1821,7 +1818,7 @@ static bool PutItem(PlayerStruct &player, Point &position)
 			int yp = j + player.position.tile.y;
 			for (int i = -l; i <= l; i++) {
 				int xp = i + player.position.tile.x;
-				if (!CanPut(xp, yp))
+				if (!CanPut({ xp, yp }))
 					continue;
 
 				position = { xp, yp };
@@ -1861,7 +1858,7 @@ int InvPutItem(PlayerStruct &player, Point position)
 		}
 	}
 
-	assert(CanPut(position.x, position.y));
+	assert(CanPut(position));
 
 	int ii = AllocateItem();
 
@@ -1886,7 +1883,7 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	if (!PutItem(player, position))
 		return -1;
 
-	assert(CanPut(position.x, position.y));
+	assert(CanPut(position));
 
 	int ii = AllocateItem();
 
