@@ -1377,17 +1377,18 @@ int AllocateItem()
 
 static void GetSuperItemSpace(Point position, int8_t inum)
 {
-	if (GetItemSpace(position, inum))
+	Point positionToCheck = position;
+	if (GetItemSpace(positionToCheck, inum))
 		return;
 	for (int k = 2; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
-			int yy = position.y + j;
 			for (int i = -k; i <= k; i++) {
-				int xx = i + position.x;
-				if (!ItemSpaceOk({ xx, yy }))
+				Point offset = { i, j };
+				positionToCheck = position + offset;
+				if (!ItemSpaceOk(positionToCheck))
 					continue;
-				items[inum].position = { xx, yy };
-				dItem[xx][yy] = inum + 1;
+				items[inum].position = positionToCheck;
+				dItem[positionToCheck.x][positionToCheck.y] = inum + 1;
 				return;
 			}
 		}
