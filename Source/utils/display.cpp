@@ -127,7 +127,7 @@ bool SpawnWindow(const char *lpWindowName)
 	scePowerSetArmClockFrequency(444);
 #endif
 
-#if SDL_VERSION_ATLEAST(2, 0, 6)
+#if SDL_VERSION_ATLEAST(2, 0, 6) && !defined(__ANDROID__)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
 
