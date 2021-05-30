@@ -21,25 +21,18 @@ public:
 	 */
 	class Action final {
 	public:
-		/** Can this action be triggered while the player is dead? */
-
-		enum class IfDead {
-			Allow,
-			Ignore,
-		};
-
 		Action(const std::string &name, int defaultKey, std::function<void()> action)
 		    : name(name)
 		    , defaultKey(defaultKey)
 		    , action(action)
-		    , ifDead(IfDead::Ignore)
+		    , enable([] { return true; })
 		{
 		}
-		Action(const std::string &name, int defaultKey, std::function<void()> action, IfDead ifDead)
+		Action(const std::string &name, int defaultKey, std::function<void()> action, std::function<bool()> enable)
 		    : name(name)
 		    , defaultKey(defaultKey)
 		    , action(action)
-		    , ifDead(ifDead)
+		    , enable(enable)
 		{
 		}
 
@@ -52,7 +45,7 @@ public:
 		std::string name;
 		int defaultKey;
 		std::function<void()> action;
-		IfDead ifDead;
+		std::function<bool()> enable;
 		int key {};
 
 		friend class Keymapper;
@@ -67,7 +60,7 @@ public:
 	Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction getKeyFunction);
 
 	ActionIndex addAction(const Action &action);
-	void keyPressed(int key, bool isPlayerDead) const;
+	void keyPressed(int key) const;
 	std::string keyNameForAction(ActionIndex actionIndex) const;
 	void save() const;
 	void load();

@@ -43,7 +43,7 @@ Keymapper::ActionIndex Keymapper::addAction(const Action &action)
 	return actions.size() - 1;
 }
 
-void Keymapper::keyPressed(int key, bool isPlayerDead) const
+void Keymapper::keyPressed(int key) const
 {
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
@@ -51,8 +51,8 @@ void Keymapper::keyPressed(int key, bool isPlayerDead) const
 
 	auto &action = it->second;
 
-	// Some actions cannot be triggered while the player is dead.
-	if (isPlayerDead && action.get().ifDead == Action::IfDead::Ignore)
+	// Some actions cannot always be triggered.
+	if (!action.get().enable())
 		return;
 
 	action();

@@ -1158,7 +1158,7 @@ static void PressKey(int vkey)
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
 		}
-		keymapper.keyPressed(vkey, deathflag);
+		keymapper.keyPressed(vkey);
 		if (vkey == DVL_VK_RETURN) {
 			if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0)
 				dx_reinit();
@@ -1190,7 +1190,7 @@ static void PressKey(int vkey)
 		return;
 	}
 
-	keymapper.keyPressed(vkey, deathflag);
+	keymapper.keyPressed(vkey);
 
 	if (vkey == DVL_VK_RETURN) {
 		if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
@@ -2130,23 +2130,31 @@ void spellBookKeyPressed()
 	invflag = false;
 }
 
+bool isPlayerDead()
+{
+	return plr[myplr]._pmode == PM_DEATH || deathflag;
+}
+
 void initKeymapActions()
 {
 	keymapper.addAction({
 	    "Help",
 	    DVL_VK_F1,
 	    helpKeyPressed,
+	    [&]() { return !isPlayerDead(); },
 	});
 #ifdef _DEBUG
 	keymapper.addAction({
 	    "ItemInfo",
 	    DVL_VK_INVALID,
 	    itemInfoKeyPressed,
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "QuestDebug",
 	    DVL_VK_INVALID,
 	    PrintDebugQuest,
+	    [&]() { return !isPlayerDead(); },
 	});
 #endif
 	for (int i = 0; i < 4; ++i) {
@@ -2160,6 +2168,7 @@ void initKeymapActions()
 			    }
 			    ToggleSpell(i);
 		    },
+		    [&]() { return !isPlayerDead(); },
 		});
 	}
 	for (int i = 0; i < 4; ++i) {
@@ -2167,33 +2176,37 @@ void initKeymapActions()
 		    spszMsgNameTbl[i],
 		    DVL_VK_F9 + i,
 		    [i]() { diablo_hotkey_msg(i); },
-		    Keymapper::Action::IfDead::Allow,
 		});
 	}
 	keymapper.addAction({
 	    "DecreaseGamma",
 	    'G',
 	    DecreaseGamma,
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "IncreaseGamma",
 	    'F',
 	    IncreaseGamma,
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "Inventory",
 	    'I',
 	    inventoryKeyPressed,
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "Character",
 	    'C',
 	    characterSheetKeyPressed,
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "QuestLog",
 	    'Q',
 	    questLogKeyPressed,
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "Zoom",
@@ -2202,16 +2215,19 @@ void initKeymapActions()
 		    zoomflag = !zoomflag;
 		    CalcViewportGeometry();
 	    },
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "DisplaySpells",
 	    'S',
 	    displaySpellsKeyPressed,
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "SpellBook",
 	    'B',
 	    spellBookKeyPressed,
+	    [&]() { return !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "GameInfo",
@@ -2226,6 +2242,7 @@ void initKeymapActions()
 		    strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s}, version = {:s}, mode = {:s}"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]).c_str());
 		    NetSendCmdString(1 << myplr, pszStr);
 	    },
+	    [&]() { return !isPlayerDead(); },
 	});
 	for (int i = 0; i < 8; ++i) {
 		keymapper.addAction({
@@ -2237,24 +2254,25 @@ void initKeymapActions()
 				    UseInvItem(myplr, INVITEM_BELT_FIRST + i);
 			    }
 		    },
+		    [&]() { return !isPlayerDead(); },
 		});
 	}
 	keymapper.addAction({
 	    "QuickSave",
 	    DVL_VK_F2,
 	    [] { gamemenu_save_game(false); },
+	    [&]() { return !gbIsMultiplayer && !isPlayerDead(); },
 	});
 	keymapper.addAction({
 	    "QuickLoad",
 	    DVL_VK_F3,
 	    [] { gamemenu_load_game(false); },
-	    Keymapper::Action::IfDead::Allow,
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile; },
 	});
 	keymapper.addAction({
 	    "QuitGame",
 	    DVL_VK_INVALID,
 	    [] { gamemenu_quit_game(false); },
-	    Keymapper::Action::IfDead::Allow,
 	});
 #ifdef _DEBUG
 	keymapper.addAction({
@@ -2266,12 +2284,14 @@ void initKeymapActions()
 			    return;
 		    }
 	    },
+	    [&]() { return !isPlayerDead(); },
 	});
 #endif
 	keymapper.addAction({
 	    "StopHero",
 	    DVL_VK_INVALID,
 	    [] { plr[myplr].Stop(); },
+	    [&]() { return !isPlayerDead(); },
 	});
 }
 
