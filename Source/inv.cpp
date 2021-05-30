@@ -797,13 +797,13 @@ int SwapItem(ItemStruct *a, ItemStruct *b)
 	return b->_iCurs + CURSOR_FIRSTITEM;
 }
 
-void CheckInvPaste(int pnum, int mx, int my)
+void CheckInvPaste(int pnum, Point cursorPosition)
 {
 	auto &player = plr[pnum];
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	int i = mx + (icursW / 2);
-	int j = my + (icursH / 2);
+	int i = cursorPosition.x + (icursW / 2);
+	int j = cursorPosition.y + (icursH / 2);
 	int sx = icursW28;
 	int sy = icursH28;
 	bool done = false;
@@ -1430,7 +1430,7 @@ void inv_update_rem_item(int pnum, BYTE iv)
 void CheckInvItem(bool isShiftHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		CheckInvPaste(myplr, MouseX, MouseY);
+		CheckInvPaste(myplr, { MouseX, MouseY });
 	} else {
 		CheckInvCut(myplr, MouseX, MouseY, isShiftHeld);
 	}
