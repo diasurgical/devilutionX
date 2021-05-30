@@ -2453,7 +2453,7 @@ bool M_DoTalk(int i)
 			quests[Q_VEIL]._qlog = true;
 		}
 		if (monster[i].mtalkmsg == TEXT_VEIL11 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
-			SpawnUnique(UITEM_STEELVEIL, monster[i].position.tile.x + 1, monster[i].position.tile.y + 1);
+			SpawnUnique(UITEM_STEELVEIL, monster[i].position.tile + DIR_S);
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}

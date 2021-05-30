@@ -3018,7 +3018,7 @@ void OperateBookLever(int pnum, int i)
 			if (object[i]._otype != OBJ_BLOODBOOK)
 				ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			if (object[i]._otype == OBJ_BLINDBOOK) {
-				SpawnUnique(UITEM_OPTAMULET, x + 5, y + 5);
+				SpawnUnique(UITEM_OPTAMULET, Point { x, y } + Point { 5, 5 });
 				tren = TransVal;
 				TransVal = 9;
 				DRLG_MRectTrans(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
@@ -3316,7 +3316,7 @@ void OperatePedistal(int pnum, int i)
 			PlaySfxLoc(LS_BLODSTAR, object[i].position.x, object[i].position.y);
 		ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", 2 * setpc_x, 2 * setpc_y);
-		SpawnUnique(UITEM_ARMOFVAL, 2 * setpc_x + 25, 2 * setpc_y + 19);
+		SpawnUnique(UITEM_ARMOFVAL, Point { setpc_x, setpc_y } * 2 + Point { 25, 19 });
 		object[i]._oSelFlag = 0;
 	}
 }

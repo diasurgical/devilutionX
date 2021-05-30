@@ -2446,13 +2446,13 @@ void GetUniqueItem(int i, _unique_items uid)
 	items[i]._iCreateInfo |= CF_UNIQUE;
 }
 
-void SpawnUnique(_unique_items uid, int x, int y)
+void SpawnUnique(_unique_items uid, Point position)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
-	GetSuperItemSpace({ x, y }, ii);
+	GetSuperItemSpace(position, ii);
 	int curlv = items_get_currlevel();
 
 	int idx = 0;
@@ -2535,7 +2535,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
-			SpawnUnique((_unique_items) - (idx + 1), position.x, position.y);
+			SpawnUnique((_unique_items) - (idx + 1), position);
 			return;
 		}
 		onlygood = true;
@@ -2547,7 +2547,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 			idx--;
 			onlygood = false;
 		} else {
-			SpawnUnique((_unique_items) - (idx + 1), position.x, position.y);
+			SpawnUnique((_unique_items) - (idx + 1), position);
 			return;
 		}
 	} else {
