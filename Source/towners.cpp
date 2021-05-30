@@ -359,7 +359,7 @@ void TalkToBarOwner(PlayerStruct &player, TownerStruct &barOwner)
 				quests[Q_LTBANNER]._qactive = QUEST_DONE;
 				quests[Q_LTBANNER]._qvar1 = 3;
 				player.RemoveInvItem(i);
-				SpawnUnique(UITEM_HARCREST, barOwner.position.x, barOwner.position.y + 1);
+				SpawnUnique(UITEM_HARCREST, barOwner.position + DIR_SW);
 				InitQTextMsg(TEXT_BANNER3);
 				return;
 			}
@@ -405,7 +405,7 @@ void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
 			if (quests[Q_ROCK]._qvar2 == 1 && player.HasItem(IDI_ROCK, &i)) {
 				quests[Q_ROCK]._qactive = QUEST_DONE;
 				player.RemoveInvItem(i);
-				SpawnUnique(UITEM_INFRARING, blackSmith.position.x, blackSmith.position.y + 1);
+				SpawnUnique(UITEM_INFRARING, blackSmith.position + DIR_SW);
 				InitQTextMsg(TEXT_INFRA7);
 				return;
 			}
@@ -426,7 +426,7 @@ void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
 			if (quests[Q_ANVIL]._qvar2 == 1 && player.HasItem(IDI_ANVIL, &i)) {
 				quests[Q_ANVIL]._qactive = QUEST_DONE;
 				player.RemoveInvItem(i);
-				SpawnUnique(UITEM_GRISWOLD, blackSmith.position.x, blackSmith.position.y + 1);
+				SpawnUnique(UITEM_GRISWOLD, blackSmith.position + DIR_SW);
 				InitQTextMsg(TEXT_ANVIL7);
 				return;
 			}
@@ -520,7 +520,7 @@ void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
 		if (quests[Q_PWATER]._qactive == QUEST_DONE && quests[Q_PWATER]._qvar1 != 2) {
 			quests[Q_PWATER]._qvar1 = 2;
 			InitQTextMsg(TEXT_POISON5);
-			SpawnUnique(UITEM_TRING, healer.position.x, healer.position.y + 1);
+			SpawnUnique(UITEM_TRING, healer.position + DIR_SW);
 			return;
 		}
 	}
@@ -670,7 +670,7 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 	}
 
 	if (player.HasItem(IDI_BROWNSUIT, &i)) {
-		SpawnUnique(UITEM_BOVINE, cowFarmer.position.x + 1, cowFarmer.position.y);
+		SpawnUnique(UITEM_BOVINE, cowFarmer.position + DIR_SE);
 		player.RemoveInvItem(i);
 		InitQTextMsg(TEXT_JERSEY8);
 		quests[Q_JERSEY]._qactive = QUEST_DONE;
