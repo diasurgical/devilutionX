@@ -2880,10 +2880,8 @@ void SpawnRock()
 
 	int ii = AllocateItem();
 
-	int xx = object[oi].position.x;
-	int yy = object[oi].position.y;
-	items[ii].position = { xx, yy };
-	dItem[xx][items[ii].position.y] = ii + 1;
+	items[ii].position = object[oi].position;
+	dItem[object[oi].position.x][object[oi].position.y] = ii + 1;
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, IDI_ROCK, curlv);
 	SetupItem(ii);
