@@ -1649,7 +1649,7 @@ static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, int xx, int yy)
 
 	int x = xx + player.position.tile.x;
 	int y = yy + player.position.tile.y;
-	if ((xx || yy) && ItemSpaceOk(x, y)) {
+	if ((xx || yy) && ItemSpaceOk({ x, y })) {
 		RespawnDeadItem(itm, x, y);
 		player.HoldItem = *itm;
 		NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
@@ -1661,7 +1661,7 @@ static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, int xx, int yy)
 			y = j + player.position.tile.y;
 			for (i = -k; i <= k; i++) {
 				x = i + player.position.tile.x;
-				if (ItemSpaceOk(x, y)) {
+				if (ItemSpaceOk({ x, y })) {
 					RespawnDeadItem(itm, x, y);
 					player.HoldItem = *itm;
 					NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });

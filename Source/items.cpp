@@ -1270,43 +1270,43 @@ void CreatePlrItems(int playerId)
 	CalcPlrItemVals(playerId, false);
 }
 
-bool ItemSpaceOk(int i, int j)
+bool ItemSpaceOk(Point position)
 {
 	int oi;
 
 	// BUGFIX: Check `i + 1 >= MAXDUNX` and `j + 1 >= MAXDUNY` (applied)
-	if (i < 0 || i + 1 >= MAXDUNX || j < 0 || j + 1 >= MAXDUNY)
+	if (position.x < 0 || position.x + 1 >= MAXDUNX || position.y < 0 || position.y + 1 >= MAXDUNY)
 		return false;
 
-	if (dMonster[i][j] != 0)
+	if (dMonster[position.x][position.y] != 0)
 		return false;
 
-	if (dPlayer[i][j] != 0)
+	if (dPlayer[position.x][position.y] != 0)
 		return false;
 
-	if (dItem[i][j] != 0)
+	if (dItem[position.x][position.y] != 0)
 		return false;
 
-	if (dObject[i][j] != 0) {
-		oi = dObject[i][j] > 0 ? dObject[i][j] - 1 : -(dObject[i][j] + 1);
+	if (dObject[position.x][position.y] != 0) {
+		oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
 		if (object[oi]._oSolidFlag)
 			return false;
 	}
 
-	if (dObject[i + 1][j + 1] > 0 && object[dObject[i + 1][j + 1] - 1]._oSelFlag != 0)
+	if (dObject[position.x + 1][position.y + 1] > 0 && object[dObject[position.x + 1][position.y + 1] - 1]._oSelFlag != 0)
 		return false;
 
-	if (dObject[i + 1][j + 1] < 0 && object[-(dObject[i + 1][j + 1] + 1)]._oSelFlag != 0)
+	if (dObject[position.x + 1][position.y + 1] < 0 && object[-(dObject[position.x + 1][position.y + 1] + 1)]._oSelFlag != 0)
 		return false;
 
-	if (dObject[i + 1][j] > 0
-	    && dObject[i][j + 1] > 0
-	    && object[dObject[i + 1][j] - 1]._oSelFlag != 0
-	    && object[dObject[i][j + 1] - 1]._oSelFlag != 0) {
+	if (dObject[position.x + 1][position.y] > 0
+	    && dObject[position.x][position.y + 1] > 0
+	    && object[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0
+	    && object[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0) {
 		return false;
 	}
 
-	return !nSolidTable[dPiece[i][j]];
+	return !nSolidTable[dPiece[position.x][position.y]];
 }
 
 static bool GetItemSpace(Point position, int8_t inum)
@@ -1319,7 +1319,7 @@ static bool GetItemSpace(Point position, int8_t inum)
 	for (int j = position.y - 1; j <= position.y + 1; j++) {
 		xx = 0;
 		for (int i = position.x - 1; i <= position.x + 1; i++) {
-			itemhold[xx][yy] = ItemSpaceOk(i, j);
+			itemhold[xx][yy] = ItemSpaceOk({ i, j });
 			xx++;
 		}
 		yy++;
@@ -1383,7 +1383,7 @@ static void GetSuperItemSpace(Point position, int8_t inum)
 			int yy = position.y + j;
 			for (int i = -k; i <= k; i++) {
 				int xx = i + position.x;
-				if (!ItemSpaceOk(xx, yy))
+				if (!ItemSpaceOk({ xx, yy }))
 					continue;
 				items[inum].position = { xx, yy };
 				dItem[xx][yy] = inum + 1;
@@ -1402,7 +1402,7 @@ Point GetSuperItemLoc(Point position)
 			ret.y = position.y + j;
 			for (int i = -k; i <= k; i++) {
 				ret.x = i + position.x;
-				if (ItemSpaceOk(ret.x, ret.y)) {
+				if (ItemSpaceOk(ret)) {
 					return ret;
 				}
 			}
@@ -2832,7 +2832,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 			bool failed = false;
 			for (int i = 0; i < randarea && !failed; i++) {
 				for (int j = 0; j < randarea && !failed; j++) {
-					failed = !ItemSpaceOk(i + position.x, j + position.y);
+					failed = !ItemSpaceOk(position + Point { i, j });
 				}
 			}
 			if (!failed)
