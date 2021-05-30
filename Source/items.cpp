@@ -420,19 +420,19 @@ void InitItemGFX()
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 }
 
-bool ItemPlace(int xp, int yp)
+bool ItemPlace(Point position)
 {
-	if (dMonster[xp][yp] != 0)
+	if (dMonster[position.x][position.y] != 0)
 		return false;
-	if (dPlayer[xp][yp] != 0)
+	if (dPlayer[position.x][position.y] != 0)
 		return false;
-	if (dItem[xp][yp] != 0)
+	if (dItem[position.x][position.y] != 0)
 		return false;
-	if (dObject[xp][yp] != 0)
+	if (dObject[position.x][position.y] != 0)
 		return false;
-	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
+	if ((dFlags[position.x][position.y] & BFLAG_POPULATED) != 0)
 		return false;
-	if (nSolidTable[dPiece[xp][yp]])
+	if (nSolidTable[dPiece[position.x][position.y]])
 		return false;
 
 	return true;
@@ -443,7 +443,7 @@ Point GetRandomAvailableItemPosition()
 	Point position = {};
 	do {
 		position = Point { 16, 16 } + Point { GenerateRnd(80), GenerateRnd(80) };
-	} while (!ItemPlace(position.x, position.y));
+	} while (!ItemPlace(position));
 
 	return position;
 }
