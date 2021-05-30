@@ -22,44 +22,21 @@ enum class DirectionY {
 template <DirectionX DirX, DirectionY DirY>
 void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
 {
-	Point border1 = from;
-	Point border2 = from;
-	border1.y-=1;
-	border2.y+=1;
-
 	while (height-- > 0) {
-
 		if(sgOptions.Gameplay.bDrawMapBorder == true) {
-			out.SetPixel(border1, 0);
-			out.SetPixel(border2, 0);
+			out.SetPixel({ from.x, from.y + 1 }, 0);
 		}
 			out.SetPixel(from, colorIndex);
-
-		if(sgOptions.Gameplay.bDrawMapBorder == true) {
-			border1.x += static_cast<int>(DirX);
-			border2.x += static_cast<int>(DirX);
-		}
 			from.x += static_cast<int>(DirX);
-
 		if(sgOptions.Gameplay.bDrawMapBorder == true) {
-			out.SetPixel(border1, 0);
-			out.SetPixel(border2, 0);
+			out.SetPixel({ from.x, from.y + 1 }, 0);
 		}
 			out.SetPixel(from, colorIndex);
-
-		if(sgOptions.Gameplay.bDrawMapBorder == true) {
-			border1.x += static_cast<int>(DirX);
-			border2.x += static_cast<int>(DirX);
-			border1.y += static_cast<int>(DirY);
-			border2.y += static_cast<int>(DirY);
-		}
 			from.x += static_cast<int>(DirX);
 			from.y += static_cast<int>(DirY);
 	}
-
 	if(sgOptions.Gameplay.bDrawMapBorder == true) {
-		out.SetPixel(border1, 0);
-		out.SetPixel(border2, 0);
+		out.SetPixel({ from.x, from.y + 1 }, 0);
 	}
 		out.SetPixel(from, colorIndex);
 }
