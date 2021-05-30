@@ -69,7 +69,7 @@ int CalculateTextSpeed(int nSFX)
 	assert(sfxFrames != 0);
 #else
 	// Sound is disabled -- estimate length from the number of lines.
-	Uint32 SfxFrames = numLines * 3000;
+	Uint32 sfxFrames = numLines * 3000;
 #endif
 
 	int textHeight = LineHeight * numLines;
