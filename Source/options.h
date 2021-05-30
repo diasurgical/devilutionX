@@ -92,8 +92,6 @@ struct GameplayOptions {
 	bool bAutoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */
 	bool bAdriaRefillsMana;
-	/** @brief Draw a black drop shadow for automap. */
-	bool bDrawAutomapBorder;
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
 	bool bAutoEquipWeapons;
 	/** @brief Automatically attempt to equip armor-type items when picking them up. */
