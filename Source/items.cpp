@@ -1397,20 +1397,19 @@ static void GetSuperItemSpace(Point position, int8_t inum)
 
 Point GetSuperItemLoc(Point position)
 {
-	Point ret;
-
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
-			ret.y = position.y + j;
 			for (int i = -k; i <= k; i++) {
-				ret.x = i + position.x;
-				if (ItemSpaceOk(ret)) {
-					return ret;
+				Point offset = { i, j };
+				Point positionToCheck = position + offset;
+				if (ItemSpaceOk(positionToCheck)) {
+					return positionToCheck;
 				}
 			}
 		}
 	}
-	return ret; // TODO handle no space for dropping items
+
+	return { 0, 0 }; // TODO handle no space for dropping items
 }
 
 void CalcItemValue(int i)
