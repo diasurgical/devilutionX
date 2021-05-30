@@ -252,22 +252,22 @@ int32_t GenerateRnd(int32_t v)
 	return AdvanceRndSeed() % v;
 }
 
-void SetRndSeed_rngv2(int32_t s)
+void SetRndSeedV2(int32_t s)
 {
 	rng.seed(s);
 }
 
-int32_t GetRndSeed_rngv2()
+int32_t GetRndSeedV2()
 {
 	std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
 	return dist(rng);
 }
 
-int32_t GenerateRnd_rngv2(int32_t v)
+int32_t GenerateRndV2(int32_t v)
 {
 	if (v <= 0)
 		return 0;
-	return GetRndSeed_rngv2() % v;
+	return GetRndSeedV2() % v;
 }
 
 size_t GetFileSize(const char *pszName)

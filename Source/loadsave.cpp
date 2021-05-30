@@ -510,7 +510,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	player.pDiabloKillLevel = file->nextLE<uint32_t>();
 	player.pDifficulty = static_cast<_difficulty>(file->nextLE<uint32_t>());
 	player.pDamAcFlags = file->nextLE<uint32_t>();
-	SetRndSeed_rngv2(file->nextLE<int32_t>());
+	SetRndSeedV2(file->nextLE<int32_t>());
 	file->skip(16); // Available bytes
 	CalcPlrItemVals(p, false);
 
@@ -1492,7 +1492,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<uint32_t>(player.pDiabloKillLevel);
 	file->writeLE<uint32_t>(player.pDifficulty);
 	file->writeLE<uint32_t>(player.pDamAcFlags);
-	file->writeLE<int32_t>(GetRndSeed_rngv2());
+	file->writeLE<int32_t>(GetRndSeedV2());
 	file->skip(16); // Available bytes
 
 	// Omit pointer _pNData
