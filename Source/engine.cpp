@@ -13,6 +13,7 @@
 
 #include <array>
 #include <random>
+#include <climits>
 
 #include "engine/render/common_impl.h"
 #include "lighting.h"
