@@ -1203,7 +1203,7 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId
 	CalcPlrInv(pnum, true);
 }
 
-void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
+void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 {
 	auto &player = plr[pnum];
 
@@ -1228,10 +1228,10 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		}
 
 		// check which inventory rectangle the mouse is in, if any
-		if (mx >= InvRect[r].X + xo
-		    && mx < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1)
-		    && my >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1)
-		    && my < InvRect[r].Y + yo) {
+		if (cursorPosition.x >= InvRect[r].X + xo
+		    && cursorPosition.x < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1)
+		    && cursorPosition.y >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1)
+		    && cursorPosition.y < InvRect[r].Y + yo) {
 			done = true;
 			r--;
 		}
@@ -1410,7 +1410,7 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 				holdItem._itype = ITYPE_NONE;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-				SetCursorPos(mx - (cursW / 2), MouseY - (cursH / 2));
+				SetCursorPos(cursorPosition.x - (cursW / 2), MouseY - (cursH / 2));
 			}
 		}
 	}
@@ -1432,7 +1432,7 @@ void CheckInvItem(bool isShiftHeld)
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckInvPaste(myplr, { MouseX, MouseY });
 	} else {
-		CheckInvCut(myplr, MouseX, MouseY, isShiftHeld);
+		CheckInvCut(myplr, { MouseX, MouseY }, isShiftHeld);
 	}
 }
 
