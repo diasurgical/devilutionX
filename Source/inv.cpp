@@ -1699,12 +1699,12 @@ int FindGetItem(int idx, uint16_t ci, int iseed)
 	return ii;
 }
 
-void SyncGetItem(int x, int y, int idx, uint16_t ci, int iseed)
+void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 {
 	int ii;
 
-	if (dItem[x][y] != 0) {
-		ii = dItem[x][y] - 1;
+	if (dItem[position.x][position.y] != 0) {
+		ii = dItem[position.x][position.y] - 1;
 		if (items[ii].IDidx == idx
 		    && items[ii]._iSeed == iseed
 		    && items[ii]._iCreateInfo == ci) {

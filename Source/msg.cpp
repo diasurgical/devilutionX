@@ -1422,7 +1422,7 @@ static DWORD On_REQUESTGITEM(TCmd *pCmd, int pnum)
 			if (ii != -1) {
 				NetSendCmdGItem2(false, CMD_GETITEM, myplr, p->bPnum, p);
 				if (p->bPnum != myplr)
-					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 				else
 					InvGetItem(myplr, &items[ii], ii);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
@@ -1452,7 +1452,7 @@ static DWORD On_GETITEM(TCmd *pCmd, int pnum)
 					} else
 						InvGetItem(myplr, &items[ii], ii);
 				} else
-					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 			}
 		} else
 			NetSendCmdGItem2(true, CMD_GETITEM, p->bMaster, p->bPnum, p);
@@ -1484,7 +1484,7 @@ static DWORD On_REQUESTAGITEM(TCmd *pCmd, int pnum)
 			if (ii != -1) {
 				NetSendCmdGItem2(false, CMD_AGETITEM, myplr, p->bPnum, p);
 				if (p->bPnum != myplr)
-					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 				else
 					AutoGetItem(myplr, &items[p->bCursitem], p->bCursitem);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
@@ -1514,7 +1514,7 @@ static DWORD On_AGETITEM(TCmd *pCmd, int pnum)
 					} else
 						AutoGetItem(myplr, &items[p->bCursitem], p->bCursitem);
 				} else
-					SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 			}
 		} else
 			NetSendCmdGItem2(true, CMD_AGETITEM, p->bMaster, p->bPnum, p);
@@ -1532,7 +1532,7 @@ static DWORD On_ITEMEXTRA(TCmd *pCmd, int pnum)
 	else {
 		delta_get_item(p, p->bLevel);
 		if (currlevel == plr[pnum].plrlevel)
-			SyncGetItem(p->x, p->y, p->wIndx, p->wCI, p->dwSeed);
+			SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 	}
 
 	return sizeof(*p);
