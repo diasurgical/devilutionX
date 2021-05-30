@@ -1663,7 +1663,7 @@ static void SaveObject(SaveHelper *file, int i)
 	file->writeLE<uint32_t>(pObject->_oAnimLen);
 	file->writeLE<uint32_t>(pObject->_oAnimFrame);
 	file->writeLE<int32_t>(pObject->_oAnimWidth);
-	file->writeLE<int32_t>(pObject->_oAnimWidth);
+	file->writeLE<int32_t>(CalculateWidth2(pObject->_oAnimWidth));
 	// Write _oAnimWidth2 for vanilla compatibility
 	file->writeLE<uint32_t>(pObject->_oDelFlag);
 	file->writeLE<int8_t>(pObject->_oBreak);
