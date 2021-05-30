@@ -188,6 +188,7 @@ if(N3DS)
 endif()
 
 if(ANDROID)
+  set(NOSOUND ON)
   set(ASAN OFF)
   set(UBSAN OFF)
   set(NONET ON)
