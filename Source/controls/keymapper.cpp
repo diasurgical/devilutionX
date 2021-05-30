@@ -9,6 +9,7 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
+#include "../control.h"
 #include "../miniwin/miniwin.h"
 #include "utils/log.hpp"
 
@@ -51,8 +52,9 @@ void Keymapper::keyPressed(int key) const
 
 	auto &action = it->second;
 
-	// Some actions cannot always be triggered.
-	if (!action.get().enable())
+	// Check that the action can be triggered and that the chat textbox is not
+	// open.
+	if (!action.get().enable() || talkflag)
 		return;
 
 	action();
