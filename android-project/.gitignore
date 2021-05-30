@@ -13,3 +13,5 @@ build/
 
 /SDL2/
 /SDL2_ttf/
+
+/app/src/main/assets/CharisSILB.ttf

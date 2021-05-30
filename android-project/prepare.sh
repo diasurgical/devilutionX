@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cp ../Packaging/resources/CharisSILB.ttf app/src/main/assets
+
 wget http://libsdl.org/release/SDL2-2.0.10.tar.gz
 tar -xzf SDL2-2.0.10.tar.gz
 rm SDL2-2.0.10/CMakeLists.txt
