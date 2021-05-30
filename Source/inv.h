@@ -112,7 +112,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii);
 void AutoGetItem(int pnum, ItemStruct *item, int ii);
 int FindGetItem(int idx, uint16_t ci, int iseed);
 void SyncGetItem(Point position, int idx, uint16_t ci, int iseed);
-bool CanPut(int x, int y);
+bool CanPut(Point position);
 bool TryInvPut();
 void DrawInvMsg(const char *msg);
 int InvPutItem(PlayerStruct &player, Point position);

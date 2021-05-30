@@ -1723,19 +1723,19 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
-bool CanPut(int x, int y)
+bool CanPut(Point position)
 {
-	if (dItem[x][y] != 0)
+	if (dItem[position.x][position.y] != 0)
 		return false;
-	if (nSolidTable[dPiece[x][y]])
+	if (nSolidTable[dPiece[position.x][position.y]])
 		return false;
 
-	if (dObject[x][y] != 0) {
-		if (object[dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1)]._oSolidFlag)
+	if (dObject[position.x][position.y] != 0) {
+		if (object[dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1)]._oSolidFlag)
 			return false;
 	}
 
-	int8_t oi = dObject[x + 1][y + 1];
+	int8_t oi = dObject[position.x + 1][position.y + 1];
 	if (oi > 0 && object[oi - 1]._oSelFlag != 0) {
 		return false;
 	}
@@ -1743,16 +1743,16 @@ bool CanPut(int x, int y)
 		return false;
 	}
 
-	oi = dObject[x + 1][y];
+	oi = dObject[position.x + 1][position.y];
 	if (oi > 0) {
-		int8_t oi2 = dObject[x][y + 1];
+		int8_t oi2 = dObject[position.x][position.y + 1];
 		if (oi2 > 0 && object[oi - 1]._oSelFlag != 0 && object[oi2 - 1]._oSelFlag != 0)
 			return false;
 	}
 
-	if (currlevel == 0 && dMonster[x][y] != 0)
+	if (currlevel == 0 && dMonster[position.x][position.y] != 0)
 		return false;
-	if (currlevel == 0 && dMonster[x + 1][y + 1] != 0)
+	if (currlevel == 0 && dMonster[position.x + 1][position.y + 1] != 0)
 		return false;
 
 	return true;
@@ -1766,22 +1766,19 @@ bool TryInvPut()
 	auto &myPlayer = plr[myplr];
 
 	Direction dir = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
-	Point position = myPlayer.position.tile + dir;
-	if (CanPut(position.x, position.y)) {
+	if (CanPut(myPlayer.position.tile + dir)) {
 		return true;
 	}
 
-	position = myPlayer.position.tile + left[dir];
-	if (CanPut(position.x, position.y)) {
+	if (CanPut(myPlayer.position.tile + left[dir])) {
 		return true;
 	}
 
-	position = myPlayer.position.tile + right[dir];
-	if (CanPut(position.x, position.y)) {
+	if (CanPut(myPlayer.position.tile + right[dir])) {
 		return true;
 	}
 
-	return CanPut(myPlayer.position.tile.x, myPlayer.position.tile.y);
+	return CanPut(myPlayer.position.tile);
 }
 
 void DrawInvMsg(const char *msg)
@@ -1805,15 +1802,15 @@ static bool PutItem(PlayerStruct &player, Point &position)
 	if (abs(relativePosition.x) > 1 || abs(relativePosition.y) > 1) {
 		position = player.position.tile + d;
 	}
-	if (CanPut(position.x, position.y))
+	if (CanPut(position))
 		return true;
 
 	position = player.position.tile + left[d];
-	if (CanPut(position.x, position.y))
+	if (CanPut(position))
 		return true;
 
 	position = player.position.tile + right[d];
-	if (CanPut(position.x, position.y))
+	if (CanPut(position))
 		return true;
 
 	for (int l = 1; l < 50; l++) {
@@ -1821,7 +1818,7 @@ static bool PutItem(PlayerStruct &player, Point &position)
 			int yp = j + player.position.tile.y;
 			for (int i = -l; i <= l; i++) {
 				int xp = i + player.position.tile.x;
-				if (!CanPut(xp, yp))
+				if (!CanPut({ xp, yp }))
 					continue;
 
 				position = { xp, yp };
@@ -1861,7 +1858,7 @@ int InvPutItem(PlayerStruct &player, Point position)
 		}
 	}
 
-	assert(CanPut(position.x, position.y));
+	assert(CanPut(position));
 
 	int ii = AllocateItem();
 
@@ -1886,7 +1883,7 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	if (!PutItem(player, position))
 		return -1;
 
-	assert(CanPut(position.x, position.y));
+	assert(CanPut(position));
 
 	int ii = AllocateItem();
 

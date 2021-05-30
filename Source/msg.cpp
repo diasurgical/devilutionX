@@ -805,14 +805,14 @@ void DeltaLoadLevel()
 				}
 				x = sgLevels[currlevel].item[i].x;
 				y = sgLevels[currlevel].item[i].y;
-				if (!CanPut(x, y)) {
+				if (!CanPut({ x, y })) {
 					done = false;
 					for (k = 1; k < 50 && !done; k++) {
 						for (j = -k; j <= k && !done; j++) {
 							yy = y + j;
 							for (l = -k; l <= k && !done; l++) {
 								xx = x + l;
-								if (CanPut(xx, yy)) {
+								if (CanPut({ xx, yy })) {
 									done = true;
 									x = xx;
 									y = yy;
