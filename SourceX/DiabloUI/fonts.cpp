@@ -68,10 +68,6 @@ void LoadTtfFont()
 	if (!FileExists(ttf_font_path.c_str())) {
 		ttf_font_path = "/usr/share/fonts/truetype/" + GetTtfName();
 	}
-#elif defined(__ANDROID__)
-	if (!FileExists(ttf_font_path.c_str())) {
-		ttf_font_path = GetTtfName();
-	}
 #endif
 	font = TTF_OpenFont(ttf_font_path.c_str(), 17);
 	if (font == NULL) {
