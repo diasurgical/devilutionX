@@ -669,6 +669,7 @@ void CreatePlayer(int pnum, HeroClass c)
 
 	player.Reset();
 	SetRndSeed(SDL_GetTicks());
+	SetRndSeed_rngv2(GetRndSeed());
 
 	player._pClass = c;
 
