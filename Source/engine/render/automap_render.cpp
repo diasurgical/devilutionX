@@ -38,7 +38,7 @@ void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_
 	if(sgOptions.Gameplay.bDrawAutomapBorder == true) {
 		out.SetPixel({ from.x, from.y + 1 }, 0);
 	}
-		out.SetPixel(from, colorIndex);
+	out.SetPixel(from, colorIndex);
 }
 
 template <DirectionX DirX, DirectionY DirY>
