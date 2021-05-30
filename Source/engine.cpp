@@ -12,6 +12,7 @@
  */
 
 #include <array>
+#include <random>
 
 #include "engine/render/common_impl.h"
 #include "lighting.h"
@@ -35,6 +36,8 @@ const uint32_t RndInc = 1;
  * Specifies the multiplier used in the Borland C/C++ pseudo-random number generator algorithm.
  */
 const uint32_t RndMult = 0x015A4E35;
+
+std::mt19937 rng;
 
 CelSprite LoadCel(const char *pszName, int width)
 {
@@ -246,6 +249,24 @@ int32_t GenerateRnd(int32_t v)
 	if (v < 0xFFFF)
 		return (AdvanceRndSeed() >> 16) % v;
 	return AdvanceRndSeed() % v;
+}
+
+void SetRndSeed_rngv2(int32_t s)
+{
+	rng.seed(s);
+}
+
+int32_t GetRndSeed_rngv2()
+{
+	std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
+	return dist(rng);
+}
+
+int32_t GenerateRnd_rngv2(int32_t v)
+{
+	if (v <= 0)
+		return 0;
+	return GetRndSeed_rngv2() % v;
 }
 
 size_t GetFileSize(const char *pszName)

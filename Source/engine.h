@@ -517,6 +517,10 @@ int32_t AdvanceRndSeed();
 int32_t GetRndSeed();
 int32_t GenerateRnd(int32_t v);
 
+void SetRndSeed_rngv2(int32_t s);
+int32_t GetRndSeed_rngv2();
+int32_t GenerateRnd_rngv2(int32_t v);
+
 size_t GetFileSize(const char *pszName);
 void LoadFileData(const char *pszName, byte *buffer, size_t bufferSize);
 

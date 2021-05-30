@@ -3330,7 +3330,7 @@ void TryDisarm(int pnum, int i)
 		NewCursor(CURSOR_HAND);
 	if (object[i]._oTrapFlag) {
 		trapdisper = 2 * plr[pnum]._pDexterity - 5 * currlevel;
-		if (GenerateRnd(100) <= trapdisper) {
+		if (GenerateRnd_rngv2(100) <= trapdisper) {
 			for (j = 0; j < nobjects; j++) {
 				checkflag = false;
 				oi = objectactive[j];
@@ -3375,7 +3375,7 @@ bool OperateShrineMysterious(int pnum)
 	ModifyPlrDex(pnum, -1);
 	ModifyPlrVit(pnum, -1);
 
-	switch (static_cast<CharacterAttribute>(GenerateRnd(4))) {
+	switch (static_cast<CharacterAttribute>(GenerateRnd_rngv2(4))) {
 	case CharacterAttribute::Strength:
 		ModifyPlrStr(pnum, 6);
 		break;
@@ -3429,7 +3429,7 @@ bool OperateShrineHidden(int pnum)
 			}
 			if (cnt == 0)
 				break;
-			int r = GenerateRnd(NUM_INVLOC);
+			int r = GenerateRnd_rngv2(NUM_INVLOC);
 			if (plr[pnum].InvBody[r].isEmpty() || plr[pnum].InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || plr[pnum].InvBody[r]._iMaxDur == 0)
 				continue;
 
@@ -3633,7 +3633,7 @@ bool OperateShrineEnchanted(int pnum)
 		}
 		int r;
 		do {
-			r = GenerateRnd(maxSpells);
+			r = GenerateRnd_rngv2(maxSpells);
 		} while (!(plr[pnum]._pMemSpells & GetSpellBitmask(r + 1)));
 		if (plr[pnum]._pSplLvl[r + 1] >= 2)
 			plr[pnum]._pSplLvl[r + 1] -= 2;
@@ -3834,8 +3834,8 @@ bool OperateShrineHoly(int pnum)
 	int xx, yy;
 	DWORD lv;
 	do {
-		xx = GenerateRnd(MAXDUNX);
-		yy = GenerateRnd(MAXDUNY);
+		xx = GenerateRnd_rngv2(MAXDUNX);
+		yy = GenerateRnd_rngv2(MAXDUNY);
 		lv = dPiece[xx][yy];
 		j++;
 		if (j > MAXDUNX * MAXDUNY)
@@ -3894,7 +3894,7 @@ bool OperateShrineSpiritual(int pnum)
 
 	for (int8_t &gridItem : plr[pnum].InvGrid) {
 		if (gridItem == 0) {
-			int r = 5 * leveltype + GenerateRnd(10 * leveltype);
+			int r = 5 * leveltype + GenerateRnd_rngv2(10 * leveltype);
 			DWORD t = plr[pnum]._pNumInv; // check
 			plr[pnum].InvList[t] = golditem;
 			plr[pnum].InvList[t]._iSeed = AdvanceRndSeed();
@@ -4068,7 +4068,7 @@ bool OperateShrineTainted(int pnum)
 		return true;
 	}
 
-	int r = GenerateRnd(4);
+	int r = GenerateRnd_rngv2(4);
 
 	int v1 = r == 0 ? 1 : -1;
 	int v2 = r == 1 ? 1 : -1;
@@ -4286,7 +4286,7 @@ bool OperateShrineMurphys(int pnum)
 
 	bool broke = false;
 	for (auto &item : plr[myplr].InvBody) {
-		if (!item.isEmpty() && GenerateRnd(3) == 0) {
+		if (!item.isEmpty() && GenerateRnd_rngv2(3) == 0) {
 			if (item._iDurability != DUR_INDESTRUCTIBLE) {
 				if (item._iDurability) {
 					item._iDurability /= 2;
@@ -4692,7 +4692,7 @@ bool OperateFountains(int pnum, int i)
 		if (pnum != myplr)
 			return false;
 		while (!done) {
-			rnd = GenerateRnd(4);
+			rnd = GenerateRnd_rngv2(4);
 			if (rnd != prev) {
 				switch (rnd) {
 				case 0:
@@ -5208,7 +5208,7 @@ void BreakObject(int pnum, int oi)
 	if (pnum != -1) {
 		mind = plr[pnum]._pIMinDam;
 		maxd = plr[pnum]._pIMaxDam;
-		objdam = GenerateRnd(maxd - mind + 1) + mind;
+		objdam = GenerateRnd_rngv2(maxd - mind + 1) + mind;
 		objdam += plr[pnum]._pDamageMod + plr[pnum]._pIBonusDamMod + objdam * plr[pnum]._pIBonusDam / 100;
 	} else {
 		objdam = 10;
