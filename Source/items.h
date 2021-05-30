@@ -406,7 +406,7 @@ void GetGoldSeed(int pnum, ItemStruct *h);
 int GetGoldCursor(int value);
 void SetPlrHandGoldCurs(ItemStruct *h);
 void CreatePlrItems(int playerId);
-bool ItemSpaceOk(int i, int j);
+bool ItemSpaceOk(Point position);
 int AllocateItem();
 Point GetSuperItemLoc(Point position);
 void GetItemAttrs(int i, int idata, int lvl);
