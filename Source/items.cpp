@@ -438,24 +438,29 @@ bool ItemPlace(int xp, int yp)
 	return true;
 }
 
+Point GetRandomAvailableItemPosition()
+{
+	Point position = {};
+	do {
+		position = Point { 16, 16 } + Point { GenerateRnd(80), GenerateRnd(80) };
+	} while (!ItemPlace(position.x, position.y));
+
+	return position;
+}
+
 void AddInitItems()
 {
-	int x, y, j, rnd;
+	int j, rnd;
 
 	int curlv = items_get_currlevel();
 	rnd = GenerateRnd(3) + 3;
 	for (j = 0; j < rnd; j++) {
 		int ii = AllocateItem();
 
-		x = GenerateRnd(80) + 16;
-		y = GenerateRnd(80) + 16;
-		while (!ItemPlace(x, y)) {
-			x = GenerateRnd(80) + 16;
-			y = GenerateRnd(80) + 16;
-		}
-		items[ii].position = { x, y };
+		Point position = GetRandomAvailableItemPosition();
+		items[ii].position = position;
 
-		dItem[x][y] = ii + 1;
+		dItem[position.x][position.y] = ii + 1;
 
 		items[ii]._iSeed = AdvanceRndSeed();
 
@@ -475,14 +480,8 @@ void AddInitItems()
 
 static void items_42390F()
 {
-	int x, y, id;
-
-	x = GenerateRnd(80) + 16;
-	y = GenerateRnd(80) + 16;
-	while (!ItemPlace(x, y)) {
-		x = GenerateRnd(80) + 16;
-		y = GenerateRnd(80) + 16;
-	}
+	int id;
+	
 	switch (currlevel) {
 	case 22:
 		id = IDI_NOTE2;
@@ -494,7 +493,9 @@ static void items_42390F()
 		id = IDI_NOTE1;
 		break;
 	}
-	SpawnQuestItem(id, { x, y }, 0, 1);
+
+	Point position = GetRandomAvailableItemPosition();
+	SpawnQuestItem(id, position, 0, 1);
 }
 
 void InitItems()
