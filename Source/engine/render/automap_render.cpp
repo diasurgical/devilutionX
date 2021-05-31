@@ -18,7 +18,7 @@ enum class DirectionY {
 	NORTH = -1,
 };
 
-void DrawMapPixelWithShadow(const CelOutputBuffer &out, Point position, std::uint8_t colorIndex)
+void SetPixelWithShadow(const CelOutputBuffer &out, Point position, std::uint8_t colorIndex)
 {
 	out.SetPixel(position + Point{ 0, 1 }, 0);
 	out.SetPixel(position, colorIndex);
@@ -28,13 +28,13 @@ template <DirectionX DirX, DirectionY DirY>
 void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
 {
 	while (height-- > 0) {
-		DrawMapPixelWithShadow(out, from, colorIndex);
+		SetPixelWithShadow(out, from, colorIndex);
 		from.x += static_cast<int>(DirX);
-		DrawMapPixelWithShadow(out, from, colorIndex);
+		SetPixelWithShadow(out, from, colorIndex);
 		from.x += static_cast<int>(DirX);
 		from.y += static_cast<int>(DirY);
 	}
-	DrawMapPixelWithShadow(out, from, colorIndex);
+	SetPixelWithShadow(out, from, colorIndex);
 }
 
 template <DirectionX DirX, DirectionY DirY>
