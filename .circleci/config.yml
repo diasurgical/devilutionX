@@ -56,8 +56,8 @@ jobs:
       - run: wget https://github.com/jakcron/Project_CTR/releases/download/v0.16/makerom_016_ctrtool.zip
       - run: unzip -j "makerom_016_ctrtool.zip" "Ubuntu/makerom" -d "/opt/devkitpro/tools/bin"
       - run: sudo chmod +rx /opt/devkitpro/tools/bin/makerom
-      - run: cd build && cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
-      - run: cd build && cmake --build . -j 2
+      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
+      - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
       - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
   amigaos-m68k:
