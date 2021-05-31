@@ -348,15 +348,14 @@ void DrawInvBelt(const CelOutputBuffer &out)
  * @brief Adds an item to a player's InvGrid array
  * @param invGridIndex Item's position in InvGrid (this should be the item's topleft grid tile)
  * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
- * @param sizeX Horizontal size of item
- * @param sizeY Vertical size of item
+ * @param itemSize Size of item
  */
-static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invListIndex, int sizeX, int sizeY)
+static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invListIndex, Size itemSize)
 {
 	const int pitch = 10;
-	for (int y = 0; y < sizeY; y++) {
-		for (int x = 0; x < sizeX; x++) {
-			if (x == 0 && y == sizeY - 1)
+	for (int y = 0; y < itemSize.height; y++) {
+		for (int x = 0; x < itemSize.width; x++) {
+			if (x == 0 && y == itemSize.height - 1)
 				player.InvGrid[invGridIndex + x] = invListIndex;
 			else
 				player.InvGrid[invGridIndex + x] = -invListIndex;
@@ -721,7 +720,7 @@ bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const Ite
 		player.InvList[player._pNumInv] = player.HoldItem;
 		player._pNumInv++;
 
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize.width, itemSize.height);
+		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize);
 		player.CalcScrolls();
 	}
 
@@ -1131,7 +1130,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 
 			int xx = std::max(ii % 10 - ((sx - 1) / 2), 0);
 			int yy = std::max(10 * (ii / 10 - ((sy - 1) / 2)), 0);
-			AddItemToInvGrid(player, xx + yy, it, sx, sy);
+			AddItemToInvGrid(player, xx + yy, it, { sx, sy });
 		}
 		break;
 	case ILOC_BELT: {
