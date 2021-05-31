@@ -25,7 +25,7 @@
 namespace devilution {
 
 bool sgbControllerActive = false;
-coords speedspellscoords[50];
+Point speedspellscoords[50];
 int speedspellcount = 0;
 
 /**
@@ -496,9 +496,9 @@ void AttrIncBtnSnap(AxisDirection dir)
 	SetCursorPos(x, y);
 }
 
-coords InvGetEquipSlotCoord(const inv_body_loc inv_slot)
+Point InvGetEquipSlotCoord(const inv_body_loc inv_slot)
 {
-	coords result { RIGHT_PANEL, 0 };
+	Point result { RIGHT_PANEL, 0 };
 	result.x -= (icursW28 - 1) * (INV_SLOT_SIZE_PX / 2);
 	switch (inv_slot) {
 	case INVLOC_HEAD:
@@ -536,7 +536,7 @@ coords InvGetEquipSlotCoord(const inv_body_loc inv_slot)
 	return result;
 }
 
-coords InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
+Point InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
 {
 	switch (slot) {
 	case SLOTXY_HEAD_FIRST:
@@ -565,7 +565,7 @@ coords InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
 /**
  * Get coordinates for a given inventory slot (for belt use BeltGetSlotCoord)
  */
-coords InvGetSlotCoord(int slot)
+Point InvGetSlotCoord(int slot)
 {
 	assert(slot <= SLOTXY_INV_LAST);
 	return { InvRect[slot].x + RIGHT_PANEL, InvRect[slot].y };
@@ -574,7 +574,7 @@ coords InvGetSlotCoord(int slot)
 /**
  * Get coordinates for a given belt slot (for normal inventory use InvGetSlotCoord)
  */
-coords BeltGetSlotCoord(int slot)
+Point BeltGetSlotCoord(int slot)
 {
 	assert(slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST);
 	return { InvRect[slot].x + PANEL_LEFT, InvRect[slot].y + PANEL_TOP };
@@ -615,7 +615,7 @@ std::pair<int, int> GetItemSizeOnSlot(int slot, char &itemInvId)
  */
 void ResetInvCursorPosition()
 {
-	coords mousePos {};
+	Point mousePos {};
 	if (slot < SLOTXY_INV_FIRST) {
 		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)slot);
 	} else if (slot < SLOTXY_BELT_FIRST) {
@@ -666,7 +666,7 @@ void InvMove(AxisDirection dir)
 	char itemInvId;
 	std::tie(itemSizeX, itemSizeY) = GetItemSizeOnSlot(slot, itemInvId);
 
-	coords mousePos { MouseX, MouseY };
+	Point mousePos { MouseX, MouseY };
 
 	const bool isHoldingItem = pcurs > 1;
 
