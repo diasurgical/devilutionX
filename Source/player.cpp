@@ -669,6 +669,7 @@ void CreatePlayer(int pnum, HeroClass c)
 
 	player.Reset();
 	SetRndSeed(SDL_GetTicks());
+	SetRndSeedV2(GetRndSeed());
 
 	player._pClass = c;
 
@@ -2172,7 +2173,7 @@ bool WeaponDur(int pnum, int durrnd)
 	if (WeaponDurDecay(pnum, INVLOC_HAND_RIGHT))
 		return true;
 
-	if (GenerateRnd(durrnd) != 0) {
+	if (GenerateRndV2(durrnd) != 0) {
 		return false;
 	}
 
@@ -2280,7 +2281,7 @@ bool PlrHitMonst(int pnum, int m)
 
 	rv = false;
 
-	hit = GenerateRnd(100);
+	hit = GenerateRndV2(100);
 	if (monster[m]._mmode == MM_STONE) {
 		hit = 0;
 	}
@@ -2324,19 +2325,19 @@ bool PlrHitMonst(int pnum, int m)
 	if (hit < hper) {
 #endif
 		if (player._pIFlags & ISPL_FIREDAM && player._pIFlags & ISPL_LIGHTDAM) {
-			int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
+			int midam = player._pIFMinDam + GenerateRndV2(player._pIFMaxDam - player._pIFMinDam);
 			AddMissile(player.position.tile.x, player.position.tile.y, player.position.temp.x, player.position.temp.y, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		}
 		mind = player._pIMinDam;
 		maxd = player._pIMaxDam;
-		dam = GenerateRnd(maxd - mind + 1) + mind;
+		dam = GenerateRndV2(maxd - mind + 1) + mind;
 		dam += dam * player._pIBonusDam / 100;
 		dam += player._pIBonusDamMod;
 		int dam2 = dam << 6;
 		dam += player._pDamageMod;
 		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
 			ddp = player._pLevel;
-			if (GenerateRnd(100) < ddp) {
+			if (GenerateRndV2(100) < ddp) {
 				dam *= 2;
 			}
 		}
@@ -2371,17 +2372,17 @@ bool PlrHitMonst(int pnum, int m)
 			break;
 		}
 
-		if (player.pDamAcFlags & 0x01 && GenerateRnd(100) < 5) {
+		if (player.pDamAcFlags & 0x01 && GenerateRndV2(100) < 5) {
 			dam *= 3;
 		}
 
-		if (player.pDamAcFlags & 0x10 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
+		if (player.pDamAcFlags & 0x10 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRndV2(100) < 10) {
 			monster_43C785(m);
 		}
 
 		dam <<= 6;
 		if ((player.pDamAcFlags & 0x08) != 0) {
-			int r = GenerateRnd(201);
+			int r = GenerateRndV2(201);
 			if (r >= 100)
 				r = 100 + (r - 100) * 5;
 			dam = dam * r / 100;
@@ -2402,7 +2403,7 @@ bool PlrHitMonst(int pnum, int m)
 		}
 
 		if ((player._pIFlags & ISPL_RNDSTEALLIFE) != 0) {
-			skdam = GenerateRnd(dam / 8);
+			skdam = GenerateRndV2(dam / 8);
 			player._pHitPoints += skdam;
 			if (player._pHitPoints > player._pMaxHP) {
 				player._pHitPoints = player._pMaxHP;
@@ -2504,7 +2505,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 	}
 	auto &attacker = plr[pnum];
 
-	hit = GenerateRnd(100);
+	hit = GenerateRndV2(100);
 
 	hper = (attacker._pDexterity / 2) + attacker._pLevel + 50 - (target._pIBonusAC + target._pIAC + target._pDexterity / 5);
 
@@ -2520,7 +2521,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 	}
 
 	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
-		blk = GenerateRnd(100);
+		blk = GenerateRndV2(100);
 	} else {
 		blk = 100;
 	}
@@ -2540,19 +2541,19 @@ bool PlrHitPlr(int pnum, int8_t p)
 		} else {
 			mind = attacker._pIMinDam;
 			maxd = attacker._pIMaxDam;
-			dam = GenerateRnd(maxd - mind + 1) + mind;
+			dam = GenerateRndV2(maxd - mind + 1) + mind;
 			dam += (dam * attacker._pIBonusDam) / 100;
 			dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 
 			if (attacker._pClass == HeroClass::Warrior || attacker._pClass == HeroClass::Barbarian) {
 				lvl = attacker._pLevel;
-				if (GenerateRnd(100) < lvl) {
+				if (GenerateRndV2(100) < lvl) {
 					dam *= 2;
 				}
 			}
 			skdam = dam << 6;
 			if ((attacker._pIFlags & ISPL_RNDSTEALLIFE) != 0) {
-				tac = GenerateRnd(skdam / 8);
+				tac = GenerateRndV2(skdam / 8);
 				attacker._pHitPoints += tac;
 				if (attacker._pHitPoints > attacker._pMaxHP) {
 					attacker._pHitPoints = attacker._pMaxHP;
@@ -2733,7 +2734,7 @@ bool PM_DoRangeAttack(int pnum)
 			mistype = MIS_LARROW;
 		}
 		if ((player._pIFlags & ISPL_FIRE_ARROWS) != 0 && (player._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
-			dmg = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
+			dmg = player._pIFMinDam + GenerateRndV2(player._pIFMaxDam - player._pIFMinDam);
 			mistype = MIS_SPECARROW;
 		}
 
@@ -2815,7 +2816,7 @@ bool PM_DoBlock(int pnum)
 		StartStand(pnum, player._pdir);
 		ClearPlrPVars(player);
 
-		if (GenerateRnd(10) == 0) {
+		if (GenerateRndV2(10) == 0) {
 			ShieldDur(pnum);
 		}
 		return true;
@@ -2842,7 +2843,7 @@ static void ArmorDur(int pnum)
 		return;
 	}
 
-	a = GenerateRnd(3);
+	a = GenerateRndV2(3);
 	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
 		a = 1;
 	}
@@ -2915,7 +2916,7 @@ bool PM_DoGotHit(int pnum)
 	if (player.AnimInfo.CurrentFrame >= player._pHFrames) {
 		StartStand(pnum, player._pdir);
 		ClearPlrPVars(player);
-		if (GenerateRnd(4) != 0) {
+		if (GenerateRndV2(4) != 0) {
 			ArmorDur(pnum);
 		}
 

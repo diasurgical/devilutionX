@@ -759,6 +759,7 @@ bool NetInit(bool bSinglePlayer)
 		gbSelectProvider = false;
 	}
 	SetRndSeed(sgGameInitInfo.dwSeed);
+	SetRndSeedV2(sgGameInitInfo.dwSeed);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
