@@ -80,7 +80,7 @@ enum item_color : uint8_t {
 
 extern bool invflag;
 extern bool drawsbarflag;
-extern const Size InvRect[73];
+extern const Point InvRect[73];
 
 void FreeInvGFX();
 void InitInv();
