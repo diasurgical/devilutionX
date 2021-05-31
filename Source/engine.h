@@ -192,6 +192,11 @@ struct Point {
 	}
 };
 
+struct Size {
+	int Width;
+	int Height;
+};
+
 struct ActorPosition {
 	Point tile;
 	/** Future tile position. Set at start of walking animation. */

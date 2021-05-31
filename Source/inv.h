@@ -78,11 +78,6 @@ enum item_color : uint8_t {
 	// clang-format on
 };
 
-struct Size {
-	int Width;
-	int Height;
-};
-
 extern bool invflag;
 extern bool drawsbarflag;
 extern const Size InvRect[73];
