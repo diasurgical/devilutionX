@@ -22,12 +22,15 @@ template <DirectionX DirX, DirectionY DirY>
 void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
 {
 	while (height-- > 0) {
+		out.SetPixel({ from.x, from.y + 1 }, 0);
 		out.SetPixel(from, colorIndex);
 		from.x += static_cast<int>(DirX);
+		out.SetPixel({ from.x, from.y + 1 }, 0);
 		out.SetPixel(from, colorIndex);
 		from.x += static_cast<int>(DirX);
 		from.y += static_cast<int>(DirY);
 	}
+	out.SetPixel({ from.x, from.y + 1 }, 0);
 	out.SetPixel(from, colorIndex);
 }
 
