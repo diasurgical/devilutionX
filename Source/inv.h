@@ -78,14 +78,14 @@ enum item_color : uint8_t {
 	// clang-format on
 };
 
-struct InvXY {
-	int X;
-	int Y;
+struct Size {
+	int Width;
+	int Height;
 };
 
 extern bool invflag;
 extern bool drawsbarflag;
-extern const InvXY InvRect[73];
+extern const Size InvRect[73];
 
 void FreeInvGFX();
 void InitInv();
