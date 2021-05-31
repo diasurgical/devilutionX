@@ -810,8 +810,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursW / 2));
 	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursH / 2));
-	int sx = icursW28;
-	int sy = icursH28;
+	Size itemSize { icursW28, icursW28 };
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
@@ -829,12 +828,12 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			}
 		}
 		if (r == SLOTXY_CHEST_LAST) {
-			if ((sx & 1) == 0)
+			if ((itemSize.width & 1) == 0)
 				i -= 14;
-			if ((sy & 1) == 0)
+			if ((itemSize.height & 1) == 0)
 				j -= 14;
 		}
-		if (r == SLOTXY_INV_LAST && (sy & 1) == 0)
+		if (r == SLOTXY_INV_LAST && (itemSize.height & 1) == 0)
 			j += 14;
 	}
 	if (!done)
@@ -865,7 +864,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		done = true;
 	}
 	if (player.HoldItem._iLoc == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
-		if (sx == 1 && sy == 1) {
+		if (itemSize == Size { 1, 1 }) {
 			done = true;
 			if (!AllItemsList[player.HoldItem.IDidx].iUsable)
 				done = false;
@@ -894,16 +893,16 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				}
 			}
 		} else {
-			int yy = 10 * ((ii / 10) - ((sy - 1) / 2));
+			int yy = 10 * ((ii / 10) - ((itemSize.height - 1) / 2));
 			if (yy < 0)
 				yy = 0;
-			for (j = 0; j < sy && done; j++) {
+			for (j = 0; j < itemSize.height && done; j++) {
 				if (yy >= NUM_INV_GRID_ELEM)
 					done = false;
-				int xx = (ii % 10) - ((sx - 1) / 2);
+				int xx = (ii % 10) - ((itemSize.width - 1) / 2);
 				if (xx < 0)
 					xx = 0;
-				for (i = 0; i < sx && done; i++) {
+				for (i = 0; i < itemSize.width && done; i++) {
 					if (xx >= 10) {
 						done = false;
 					} else {
@@ -1128,9 +1127,9 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 
 			// Calculate top-left position of item for InvGrid and then add item to InvGrid
 
-			int xx = std::max(ii % 10 - ((sx - 1) / 2), 0);
-			int yy = std::max(10 * (ii / 10 - ((sy - 1) / 2)), 0);
-			AddItemToInvGrid(player, xx + yy, it, { sx, sy });
+			int xx = std::max(ii % 10 - ((itemSize.width - 1) / 2), 0);
+			int yy = std::max(10 * (ii / 10 - ((itemSize.height - 1) / 2)), 0);
+			AddItemToInvGrid(player, xx + yy, it, itemSize);
 		}
 		break;
 	case ILOC_BELT: {
