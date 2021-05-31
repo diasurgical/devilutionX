@@ -48,7 +48,7 @@ int sgdwLastTime; // check name
  * 65 66 67 68 69 70 71 72
  * @see graphics/inv/inventory.png
  */
-const InvXY InvRect[] = {
+const Size InvRect[] = {
 	// clang-format off
 	//  X,   Y
 	{ 132,  31 }, // helmet
@@ -181,7 +181,7 @@ void DrawInv(const CelOutputBuffer &out)
 {
 	CelDrawTo(out, { RIGHT_PANEL_X, 351 }, *pInvCels, 1);
 
-	InvXY slotSize[] = {
+	Size slotSize[] = {
 		{ 2, 2 }, //head
 		{ 1, 1 }, //left ring
 		{ 1, 1 }, //right ring
@@ -191,7 +191,7 @@ void DrawInv(const CelOutputBuffer &out)
 		{ 2, 3 }, // chest
 	};
 
-	InvXY slotPos[] = {
+	Size slotPos[] = {
 		{ 133, 59 },  //head
 		{ 48, 205 },  //left ring
 		{ 249, 205 }, //right ring
@@ -205,9 +205,9 @@ void DrawInv(const CelOutputBuffer &out)
 
 	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
 		if (!myPlayer.InvBody[slot].isEmpty()) {
-			int screenX = slotPos[slot].X;
-			int screenY = slotPos[slot].Y;
-			InvDrawSlotBack(out, RIGHT_PANEL_X + screenX, screenY, slotSize[slot].X * INV_SLOT_SIZE_PX, slotSize[slot].Y * INV_SLOT_SIZE_PX);
+			int screenX = slotPos[slot].Width;
+			int screenY = slotPos[slot].Height;
+			InvDrawSlotBack(out, RIGHT_PANEL_X + screenX, screenY, slotSize[slot].Width * INV_SLOT_SIZE_PX, slotSize[slot].Height * INV_SLOT_SIZE_PX);
 
 			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
@@ -239,12 +239,12 @@ void DrawInv(const CelOutputBuffer &out)
 					if (myPlayer._pClass != HeroClass::Barbarian
 					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
 					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X, slotPos[INVLOC_HAND_RIGHT].Y, slotSize[INVLOC_HAND_RIGHT].X * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].Y * INV_SLOT_SIZE_PX);
+						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].Width, slotPos[INVLOC_HAND_RIGHT].Height, slotSize[INVLOC_HAND_RIGHT].Width * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].Height * INV_SLOT_SIZE_PX);
 						light_table_index = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].X + (frameW == INV_SLOT_SIZE_PX ? 13 : -1);
-						const int dstY = slotPos[INVLOC_HAND_RIGHT].Y;
+						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].Width + (frameW == INV_SLOT_SIZE_PX ? 13 : -1);
+						const int dstY = slotPos[INVLOC_HAND_RIGHT].Height;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
 						cel_transparency_active = false;
@@ -258,8 +258,8 @@ void DrawInv(const CelOutputBuffer &out)
 		if (myPlayer.InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
-			    InvRect[i + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
-			    InvRect[i + SLOTXY_INV_FIRST].Y - 1,
+			    InvRect[i + SLOTXY_INV_FIRST].Width + RIGHT_PANEL_X,
+			    InvRect[i + SLOTXY_INV_FIRST].Height - 1,
 			    INV_SLOT_SIZE_PX,
 			    INV_SLOT_SIZE_PX);
 		}
@@ -272,7 +272,7 @@ void DrawInv(const CelOutputBuffer &out)
 
 			const auto &cel = GetInvItemSprite(frame);
 			const int celFrame = GetInvItemFrame(frame);
-			const Point position { InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X, InvRect[j + SLOTXY_INV_FIRST].Y - 1 };
+			const Point position { InvRect[j + SLOTXY_INV_FIRST].Width + RIGHT_PANEL_X, InvRect[j + SLOTXY_INV_FIRST].Height - 1 };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
 				CelBlitOutlineTo(
 				    out,
@@ -305,7 +305,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 			continue;
 		}
 
-		const Point position { InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1 };
+		const Point position { InvRect[i + SLOTXY_BELT_FIRST].Width + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Height + PANEL_Y - 1 };
 		InvDrawSlotBack(out, position.x, position.y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 		int frame = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
@@ -325,8 +325,8 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
 			sprintf(tempstr, "%i", i + 1);
 			SDL_Rect rect {
-				InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X + INV_SLOT_SIZE_PX - GetLineWidth(tempstr),
-				InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1,
+				InvRect[i + SLOTXY_BELT_FIRST].Width + PANEL_X + INV_SLOT_SIZE_PX - GetLineWidth(tempstr),
+				InvRect[i + SLOTXY_BELT_FIRST].Height + PANEL_Y - 1,
 				0,
 				0
 			};
@@ -361,7 +361,7 @@ static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invList
  * @param item The item whose size is to be determined.
  * @return The size, in inventory cells, of the item.
  */
-InvXY GetInventorySize(const ItemStruct &item)
+Size GetInventorySize(const ItemStruct &item)
 {
 	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
 	int w;
@@ -377,9 +377,9 @@ InvXY GetInventorySize(const ItemStruct &item)
  */
 bool FitsInBeltSlot(const ItemStruct &item)
 {
-	InvXY size = GetInventorySize(item);
+	Size size = GetInventorySize(item);
 
-	return size.X == 1 && size.Y == 1;
+	return size.Width == 1 && size.Height == 1;
 }
 
 /**
@@ -625,9 +625,9 @@ bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
  */
 bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool persistItem)
 {
-	InvXY itemSize = GetInventorySize(item);
+	Size itemSize = GetInventorySize(item);
 
-	if (itemSize.Y == 1) {
+	if (itemSize.Height == 1) {
 		for (int i = 30; i <= 39; i++) {
 			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
 				return true;
@@ -641,14 +641,14 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 		return false;
 	}
 
-	if (itemSize.Y == 2) {
-		for (int x = 10 - itemSize.X; x >= 0; x -= itemSize.X) {
+	if (itemSize.Height == 2) {
+		for (int x = 10 - itemSize.Width; x >= 0; x -= itemSize.Width) {
 			for (int y = 0; y < 3; y++) {
 				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
 					return true;
 			}
 		}
-		if (itemSize.X == 2) {
+		if (itemSize.Width == 2) {
 			for (int x = 7; x >= 0; x -= 2) {
 				for (int y = 0; y < 3; y++) {
 					if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
@@ -659,7 +659,7 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 		return false;
 	}
 
-	if (itemSize.X == 1 && itemSize.Y == 3) {
+	if (itemSize.Width == 1 && itemSize.Height == 3) {
 		for (int i = 0; i < 20; i++) {
 			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
 				return true;
@@ -667,7 +667,7 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 		return false;
 	}
 
-	if (itemSize.X == 2 && itemSize.Y == 3) {
+	if (itemSize.Width == 2 && itemSize.Height == 3) {
 		for (int i = 0; i < 9; i++) {
 			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
 				return true;
@@ -680,7 +680,7 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 		return false;
 	}
 
-	app_fatal("Unknown item size: %ix%i", itemSize.X, itemSize.Y);
+	app_fatal("Unknown item size: %ix%i", itemSize.Width, itemSize.Height);
 }
 
 /**
@@ -695,13 +695,13 @@ bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const Ite
 {
 	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
 
-	InvXY itemSize = GetInventorySize(item);
-	for (int j = 0; j < itemSize.Y; j++) {
+	Size itemSize = GetInventorySize(item);
+	for (int j = 0; j < itemSize.Height; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
 			return false;
 		}
 		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
-		for (int i = 0; i < itemSize.X; i++) {
+		for (int i = 0; i < itemSize.Width; i++) {
 			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
 				return false;
 			}
@@ -714,7 +714,7 @@ bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const Ite
 		player.InvList[player._pNumInv] = player.HoldItem;
 		player._pNumInv++;
 
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize.X, itemSize.Y);
+		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize.Width, itemSize.Height);
 		player.CalcScrolls();
 	}
 
@@ -816,8 +816,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			yo = PANEL_TOP;
 		}
 
-		if (i >= InvRect[r].X + xo && i <= InvRect[r].X + xo + INV_SLOT_SIZE_PX) {
-			if (j >= InvRect[r].Y + yo - INV_SLOT_SIZE_PX - 1 && j < InvRect[r].Y + yo) {
+		if (i >= InvRect[r].Width + xo && i <= InvRect[r].Width + xo + INV_SLOT_SIZE_PX) {
+			if (j >= InvRect[r].Height + yo - INV_SLOT_SIZE_PX - 1 && j < InvRect[r].Height + yo) {
 				done = true;
 				r--;
 			}
@@ -1228,10 +1228,10 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		}
 
 		// check which inventory rectangle the mouse is in, if any
-		if (cursorPosition.x >= InvRect[r].X + xo
-		    && cursorPosition.x < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1)
-		    && cursorPosition.y >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1)
-		    && cursorPosition.y < InvRect[r].Y + yo) {
+		if (cursorPosition.x >= InvRect[r].Width + xo
+		    && cursorPosition.x < InvRect[r].Width + xo + (INV_SLOT_SIZE_PX + 1)
+		    && cursorPosition.y >= InvRect[r].Height + yo - (INV_SLOT_SIZE_PX + 1)
+		    && cursorPosition.y < InvRect[r].Height + yo) {
 			done = true;
 			r--;
 		}
@@ -1931,10 +1931,10 @@ char CheckInvHLight()
 			yo = PANEL_TOP;
 		}
 
-		if (MouseX >= InvRect[r].X + xo
-		    && MouseX < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1)
-		    && MouseY >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1)
-		    && MouseY < InvRect[r].Y + yo) {
+		if (MouseX >= InvRect[r].Width + xo
+		    && MouseX < InvRect[r].Width + xo + (INV_SLOT_SIZE_PX + 1)
+		    && MouseY >= InvRect[r].Height + yo - (INV_SLOT_SIZE_PX + 1)
+		    && MouseY < InvRect[r].Height + yo) {
 			break;
 		}
 	}

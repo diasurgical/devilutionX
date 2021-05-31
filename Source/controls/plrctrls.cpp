@@ -502,32 +502,32 @@ coords InvGetEquipSlotCoord(const inv_body_loc inv_slot)
 	result.x -= (icursW28 - 1) * (INV_SLOT_SIZE_PX / 2);
 	switch (inv_slot) {
 	case INVLOC_HEAD:
-		result.x += ((InvRect[SLOTXY_HEAD_FIRST].X + InvRect[SLOTXY_HEAD_LAST].X) / 2);
-		result.y += ((InvRect[SLOTXY_HEAD_FIRST].Y + InvRect[SLOTXY_HEAD_LAST].Y) / 2);
+		result.x += ((InvRect[SLOTXY_HEAD_FIRST].Width + InvRect[SLOTXY_HEAD_LAST].Width) / 2);
+		result.y += ((InvRect[SLOTXY_HEAD_FIRST].Height + InvRect[SLOTXY_HEAD_LAST].Height) / 2);
 		break;
 	case INVLOC_RING_LEFT:
-		result.x += InvRect[SLOTXY_RING_LEFT].X;
-		result.y += InvRect[SLOTXY_RING_LEFT].Y;
+		result.x += InvRect[SLOTXY_RING_LEFT].Width;
+		result.y += InvRect[SLOTXY_RING_LEFT].Height;
 		break;
 	case INVLOC_RING_RIGHT:
-		result.x += InvRect[SLOTXY_RING_RIGHT].X;
-		result.y += InvRect[SLOTXY_RING_RIGHT].Y;
+		result.x += InvRect[SLOTXY_RING_RIGHT].Width;
+		result.y += InvRect[SLOTXY_RING_RIGHT].Height;
 		break;
 	case INVLOC_AMULET:
-		result.x += InvRect[SLOTXY_AMULET].X;
-		result.y += InvRect[SLOTXY_AMULET].Y;
+		result.x += InvRect[SLOTXY_AMULET].Width;
+		result.y += InvRect[SLOTXY_AMULET].Height;
 		break;
 	case INVLOC_HAND_LEFT:
-		result.x += ((InvRect[SLOTXY_HAND_LEFT_FIRST].X + InvRect[SLOTXY_HAND_LEFT_LAST].X) / 2);
-		result.y += ((InvRect[SLOTXY_HAND_LEFT_FIRST].Y + InvRect[SLOTXY_HAND_LEFT_LAST].Y) / 2);
+		result.x += ((InvRect[SLOTXY_HAND_LEFT_FIRST].Width + InvRect[SLOTXY_HAND_LEFT_LAST].Width) / 2);
+		result.y += ((InvRect[SLOTXY_HAND_LEFT_FIRST].Height + InvRect[SLOTXY_HAND_LEFT_LAST].Height) / 2);
 		break;
 	case INVLOC_HAND_RIGHT:
-		result.x += ((InvRect[SLOTXY_HAND_RIGHT_FIRST].X + InvRect[SLOTXY_HAND_RIGHT_LAST].X) / 2);
-		result.y += ((InvRect[SLOTXY_HAND_RIGHT_FIRST].Y + InvRect[SLOTXY_HAND_RIGHT_LAST].Y) / 2);
+		result.x += ((InvRect[SLOTXY_HAND_RIGHT_FIRST].Width + InvRect[SLOTXY_HAND_RIGHT_LAST].Width) / 2);
+		result.y += ((InvRect[SLOTXY_HAND_RIGHT_FIRST].Height + InvRect[SLOTXY_HAND_RIGHT_LAST].Height) / 2);
 		break;
 	case INVLOC_CHEST:
-		result.x += ((InvRect[SLOTXY_CHEST_FIRST].X + InvRect[SLOTXY_CHEST_LAST].X) / 2);
-		result.y += ((InvRect[SLOTXY_CHEST_FIRST].Y + InvRect[SLOTXY_CHEST_LAST].Y) / 2);
+		result.x += ((InvRect[SLOTXY_CHEST_FIRST].Width + InvRect[SLOTXY_CHEST_LAST].Width) / 2);
+		result.y += ((InvRect[SLOTXY_CHEST_FIRST].Height + InvRect[SLOTXY_CHEST_LAST].Height) / 2);
 		break;
 	default:
 		break;
@@ -568,7 +568,7 @@ coords InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
 coords InvGetSlotCoord(int slot)
 {
 	assert(slot <= SLOTXY_INV_LAST);
-	return { InvRect[slot].X + RIGHT_PANEL, InvRect[slot].Y };
+	return { InvRect[slot].Width + RIGHT_PANEL, InvRect[slot].Height };
 }
 
 /**
@@ -577,7 +577,7 @@ coords InvGetSlotCoord(int slot)
 coords BeltGetSlotCoord(int slot)
 {
 	assert(slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST);
-	return { InvRect[slot].X + PANEL_LEFT, InvRect[slot].Y + PANEL_TOP };
+	return { InvRect[slot].Width + PANEL_LEFT, InvRect[slot].Height + PANEL_TOP };
 }
 
 /**
