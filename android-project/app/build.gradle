@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion = gradle.sdkVersion
+    aaptOptions {
+        noCompress 'mpq'
+    }
     defaultConfig {
         applicationId "org.diasurgical.devilutionx"
         minSdkVersion gradle.minSdkVersion
