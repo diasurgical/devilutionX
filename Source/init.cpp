@@ -139,20 +139,24 @@ void init_archives()
 {
 	std::vector<std::string> paths;
 	paths.reserve(5);
+#ifdef __ANDROID__
+	paths.push_back(std::string(getenv("EXTERNAL_STORAGE")) + "/");
+#else
 	paths.push_back(paths::BasePath());
+#endif
 	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
 		paths.pop_back();
 
-#ifdef __linux__
+#if defined(__linux__) && !defined(__ANDROID__)
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
-#endif
-#ifdef __3DS__
+#elif defined(__3DS__)
 	paths.emplace_back("romfs:/");
 #endif
 
 	paths.emplace_back(""); // PWD
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 
 	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
 		std::string message;

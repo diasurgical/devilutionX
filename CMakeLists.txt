@@ -187,6 +187,13 @@ if(N3DS)
   include(n3ds_defs)
 endif()
 
+if(ANDROID)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(NONET ON)
+  set(TTF_FONT_DIR \"\")
+endif()
+
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -231,7 +238,10 @@ if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
 endif()
 
-if(USE_SDL1)
+if(ANDROID)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+elseif(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
@@ -426,13 +436,6 @@ set(libdevilutionx_SRCS
   Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp)
 
-set(devilutionxbin_SRCS
-  Source/main.cpp
-  Source/devilutionx.exe.manifest
-  Packaging/macOS/AppIcon.icns
-  Packaging/resources/CharisSILB.ttf
-  Packaging/windows/devilutionx.rc)
-
 if(USE_SDL1)
   list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
 endif()
@@ -515,7 +518,18 @@ if(RUN_TESTS)
 endif()
 
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
-add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionxbin_SRCS})
+if (ANDROID)
+  add_library(${BIN_TARGET} SHARED Source/main.cpp)
+else()
+  add_executable(${BIN_TARGET}
+    WIN32
+    MACOSX_BUNDLE
+    Source/main.cpp
+    Source/devilutionx.exe.manifest
+    Packaging/macOS/AppIcon.icns
+    Packaging/resources/CharisSILB.ttf
+    Packaging/windows/devilutionx.rc)
+endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory
@@ -706,7 +720,19 @@ else()
   target_link_libraries(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
 endif()
 
-if(USE_SDL1)
+if (ANDROID)
+  target_include_directories(libdevilutionx PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/include
+
+    # SDL_internal.h is located in src required by SDL_android_main.c bridge
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+  target_link_libraries(libdevilutionx PRIVATE
+    SDL2
+    SDL2_ttf)
+elseif(USE_SDL1)
   target_link_libraries(libdevilutionx PUBLIC
     ${SDL_TTF_LIBRARY}
     ${SDL_LIBRARY})
