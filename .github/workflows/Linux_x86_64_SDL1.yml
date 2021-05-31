@@ -24,7 +24,7 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo apt update &&
-        sudo apt install -y cmake file g++ git libfmt-dev libsdl-dev libsdl-ttf2.0-dev libsodium-dev rpm
+        sudo apt install -y cmake file g++ git libfmt-dev libsdl-dev libsdl-ttf2.0-dev libsdl-net1.2-dev libsodium-dev rpm
 
     - name: Configure CMake
       shell: bash
