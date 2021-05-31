@@ -377,9 +377,7 @@ Size GetInventorySize(const ItemStruct &item)
  */
 bool FitsInBeltSlot(const ItemStruct &item)
 {
-	Size size = GetInventorySize(item);
-
-	return size.Width == 1 && size.Height == 1;
+	return GetInventorySize(item) == Size { 1, 1 };
 }
 
 /**
@@ -659,7 +657,7 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 		return false;
 	}
 
-	if (itemSize.Width == 1 && itemSize.Height == 3) {
+	if (itemSize == Size { 1, 3 }) {
 		for (int i = 0; i < 20; i++) {
 			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
 				return true;
@@ -667,7 +665,7 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 		return false;
 	}
 
-	if (itemSize.Width == 2 && itemSize.Height == 3) {
+	if (itemSize == Size { 2, 3 }) {
 		for (int i = 0; i < 9; i++) {
 			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
 				return true;

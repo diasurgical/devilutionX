@@ -195,6 +195,16 @@ struct Point {
 struct Size {
 	int Width;
 	int Height;
+
+	bool operator==(const Size &other) const
+	{
+		return Width == other.Width && Height == other.Height;
+	}
+
+	bool operator!=(const Size &other) const
+	{
+		return !(*this == other);
+	}
 };
 
 struct ActorPosition {
