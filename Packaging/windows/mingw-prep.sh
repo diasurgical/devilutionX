@@ -9,6 +9,8 @@ wget https://www.libsdl.org/release/SDL2-devel-2.0.14-mingw.tar.gz
 tar -xzf SDL2-devel-2.0.14-mingw.tar.gz
 wget https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.0.15-mingw.tar.gz
 tar -xzf SDL2_ttf-devel-2.0.15-mingw.tar.gz
+wget https://www.libsdl.org/projects/SDL_net/release/SDL2_net-devel-2.0.1-mingw.tar.gz
+tar -xzf SDL2_net-devel-2.0.1-mingw.tar.gz
 sudo cp -r SDL2*/i686-w64-mingw32 /usr
 
 wget https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-mingw.tar.gz
