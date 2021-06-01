@@ -201,8 +201,7 @@ uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 
 static void sync_monster(int pnum, const TSyncMonster *p)
 {
-	int ndx, mdx, mdy;
-	ndx = p->_mndx;
+	int ndx = p->_mndx;
 
 	if (monster[ndx]._mhitpoints <= 0) {
 		return;
@@ -223,9 +222,8 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		return;
 	}
 
-	mdx = abs(monster[ndx].position.tile.x - p->_mx);
-	mdy = abs(monster[ndx].position.tile.y - p->_my);
-	if (mdx <= 2 && mdy <= 2) {
+	Point md = (monster[ndx].position.tile - Point { p->_mx, p->_my }).Absolute();
+	if (md.x <= 2 && md.y <= 2) {
 		if (monster[ndx]._mmode < MM_WALK || monster[ndx]._mmode > MM_WALK3) {
 			Direction md = GetDirection(monster[ndx].position.tile, { p->_mx, p->_my });
 			if (DirOK(ndx, md)) {
