@@ -190,6 +190,18 @@ struct Point {
 
 		return (approx + 512) / 1024;
 	}
+
+	Point Absolute() const
+	{
+		return { abs(x), abs(y) };
+	}
+
+	int ManhattanDistance(Point other) const
+	{
+		Point offset = (*this - other).Absolute();
+
+		return offset.x + offset.y;
+	}
 };
 
 struct Size {
