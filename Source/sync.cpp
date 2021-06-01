@@ -21,11 +21,9 @@ int sgnSyncPInv;
 
 static void sync_one_monster()
 {
-	int i, m;
-
-	for (i = 0; i < nummonsters; i++) {
-		m = monstactive[i];
-		sgnMonsterPriority[m] = abs(plr[myplr].position.tile.x - monster[m].position.tile.x) + abs(plr[myplr].position.tile.y - monster[m].position.tile.y);
+	for (int i = 0; i < nummonsters; i++) {
+		int m = monstactive[i];
+		sgnMonsterPriority[m] = plr[myplr].position.tile.ManhattanDistance(monster[m].position.tile);
 		if (monster[m]._msquelch == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
