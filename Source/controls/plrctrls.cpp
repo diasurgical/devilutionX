@@ -71,14 +71,14 @@ int GetRotaryDistance(int x, int y)
 
 /**
  * @brief Get the best case walking steps to coordinates
- * @param dx Tile coordinates
- * @param dy Tile coordinates
+ * @param Position Tile coordinates
  */
-int GetMinDistance(int dx, int dy)
+int GetMinDistance(Point position)
 {
 	auto &myPlayer = plr[myplr];
+	Point delta = (myPlayer.position.future - position).Absolute();
 
-	return std::max(abs(myPlayer.position.future.x - dx), abs(myPlayer.position.future.y - dy));
+	return std::max(delta.x, delta.y);
 }
 
 /**
@@ -90,7 +90,7 @@ int GetMinDistance(int dx, int dy)
  */
 int GetDistance(int dx, int dy, int maxDistance)
 {
-	if (GetMinDistance(dx, dy) > maxDistance) {
+	if (GetMinDistance({ dx, dy }) > maxDistance) {
 		return 0;
 	}
 
