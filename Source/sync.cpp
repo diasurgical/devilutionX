@@ -202,15 +202,13 @@ uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 static void sync_monster(int pnum, const TSyncMonster *p)
 {
 	int ndx, mdx, mdy;
-	uint32_t delta;
-
 	ndx = p->_mndx;
 
 	if (monster[ndx]._mhitpoints <= 0) {
 		return;
 	}
 
-	delta = abs(plr[myplr].position.tile.x - monster[ndx].position.tile.x) + abs(plr[myplr].position.tile.y - monster[ndx].position.tile.y);
+	uint32_t delta = plr[myplr].position.tile.ManhattanDistance(monster[ndx].position.tile);
 	if (delta > 255) {
 		delta = 255;
 	}
