@@ -36,6 +36,7 @@
 #include "appfat.h"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/cstddef.hpp"
+#include "utils/stdcompat/abs.h"
 
 #define TILE_WIDTH 64
 #define TILE_HEIGHT 32
@@ -190,7 +191,7 @@ struct Point {
 
 	constexpr friend Point abs(Point a)
 	{
-		return { std::abs(a.x), std::abs(a.y) };
+		return { abs(a.x), abs(a.y) };
 	}
 
 	constexpr int ManhattanDistance(Point other) const
