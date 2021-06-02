@@ -1763,8 +1763,7 @@ static DWORD On_ATTACKID(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		Point dist = abs(plr[pnum].position.tile - monster[p->wParam1].position.future);
-		if (dist.x > 1 || dist.y > 1)
+		if (plr[pnum].position.tile.WalkingDistance(monster[p->wParam1].position.future) > 1)
 			MakePlrPath(pnum, monster[p->wParam1].position.future, false);
 		plr[pnum].destAction = ACTION_ATTACKMON;
 		plr[pnum].destParam1 = p->wParam1;
