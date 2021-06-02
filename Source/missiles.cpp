@@ -2276,12 +2276,10 @@ void AddWeapexp(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienem
 	missile[mi]._mirange = missile[mi]._miAnimLen - 1;
 }
 
-bool CheckIfTrig(int x, int y)
+bool CheckIfTrig(Point position)
 {
-	int i;
-
-	for (i = 0; i < numtrigs; i++) {
-		if ((x == trigs[i].position.x && y == trigs[i].position.y) || (abs(trigs[i].position.x - x) < 2 && abs(trigs[i].position.y - y) < 2))
+	for (int i = 0; i < numtrigs; i++) {
+		if (trigs[i].position.WalkingDistance(position) < 2)
 			return true;
 	}
 	return false;
@@ -2301,7 +2299,7 @@ void AddTown(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, 
 				if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
 					dp = dPiece[tx][ty];
 					if ((dMissile[tx][ty] | nSolidTable[dp] | nMissileTable[dp] | dObject[tx][ty] | dPlayer[tx][ty]) == 0) {
-						if (!CheckIfTrig(tx, ty)) {
+						if (!CheckIfTrig({ tx, ty })) {
 							missile[mi].position.tile = { tx, ty };
 							missile[mi].position.start = { tx, ty };
 							missile[mi]._miDelFlag = false;
