@@ -4681,9 +4681,6 @@ void FreeMonsters()
 
 bool DirOK(int i, Direction mdir)
 {
-	int x, y;
-	int mcount, mi;
-
 	commitment((DWORD)i < MAXMONSTERS, i);
 	Point position = monster[i].position.tile;
 	Point futurePosition = position + mdir;
@@ -4702,20 +4699,18 @@ bool DirOK(int i, Direction mdir)
 		if (SolidLoc(position + DIR_SW) || SolidLoc(position + DIR_SE))
 			return false;
 	if (monster[i].leaderflag == 1) {
-		if (abs(futurePosition.x - monster[monster[i].leader].position.future.x) >= 4
-		    || abs(futurePosition.y - monster[monster[i].leader].position.future.y) >= 4) {
+		if (futurePosition.WalkingDistance(monster[monster[i].leader].position.future) >= 4)
 			return false;
-		}
 		return true;
 	}
 	if (monster[i]._uniqtype == 0 || !(UniqMonst[monster[i]._uniqtype - 1].mUnqAttr & 2))
 		return true;
-	mcount = 0;
-	for (x = futurePosition.x - 3; x <= futurePosition.x + 3; x++) {
-		for (y = futurePosition.y - 3; y <= futurePosition.y + 3; y++) {
+	int mcount = 0;
+	for (int x = futurePosition.x - 3; x <= futurePosition.x + 3; x++) {
+		for (int y = futurePosition.y - 3; y <= futurePosition.y + 3; y++) {
 			if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 				continue;
-			mi = dMonster[x][y];
+			int mi = dMonster[x][y];
 			if (mi < 0)
 				mi = -mi;
 			if (mi != 0)
@@ -4723,8 +4718,7 @@ bool DirOK(int i, Direction mdir)
 			// BUGFIX: should only run pack member check if mi was non-zero prior to executing the body of the above if-statement.
 			if (monster[mi].leaderflag == 1
 			    && monster[mi].leader == i
-			    && monster[mi].position.future.x == x
-			    && monster[mi].position.future.y == y) {
+			    && monster[mi].position.future == Point { x, y }) {
 				mcount++;
 			}
 		}
