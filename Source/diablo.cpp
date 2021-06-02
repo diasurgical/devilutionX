@@ -807,8 +807,7 @@ static bool LeftMouseCmd(bool bShift)
 			return true;
 	} else {
 		auto &myPlayer = plr[myplr];
-		Point delta = abs(myPlayer.position.tile - Point { cursmx, cursmy });
-		bNear = delta.x < 2 && delta.y < 2;
+		bNear = myPlayer.position.tile.WalkingDistance({ cursmx, cursmy }) < 2;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
 		} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && object[pcursobj]._oBreak == 1))) {
