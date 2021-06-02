@@ -205,7 +205,7 @@ struct Point {
 	{
 		Point offset = abs(*this - other);
 
-		return std::max(offset.x, offset.y);
+		return std::max<int>(offset.x, offset.y);
 	}
 };
 
