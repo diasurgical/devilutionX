@@ -899,8 +899,7 @@ void TalkToTowner(PlayerStruct &player, int t)
 {
 	auto &towner = towners[t];
 
-	Point distance = player.position.tile - towner.position;
-	if (abs(distance.x) >= 2 || abs(distance.y) >= 2)
+	if (player.position.tile.WalkingDistance(towner.position) >= 2)
 		return;
 
 	if (pcurs >= CURSOR_FIRSTITEM) {
