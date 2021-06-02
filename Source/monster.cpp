@@ -1650,7 +1650,7 @@ void M_DiabloDeath(int i, bool sendmsg)
 	}
 	AddLight(Monst->position.tile, 8);
 	DoVision(Monst->position.tile, 8, false, true);
-	dist = std::max(abs(ViewX - Monst->position.tile.x), abs(ViewY - Monst->position.tile.y));
+	dist = Monst->position.tile.WalkingDistance({ ViewX, ViewY });
 	if (dist > 20)
 		dist = 20;
 	Monst->_mVar3 = ViewX << 16;
