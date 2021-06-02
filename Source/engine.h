@@ -12,6 +12,7 @@
  */
 #pragma once
 
+#include <limits>
 #include <algorithm>
 #include <array>
 #include <cstdint>
