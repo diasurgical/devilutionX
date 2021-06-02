@@ -4912,8 +4912,7 @@ void M_FallenFear(Point position)
 			continue;
 		}
 		if (m->_mAi == AI_FALLEN
-		    && abs(position.x - m->position.tile.x) < 5
-		    && abs(position.y - m->position.tile.y) < 5
+		    && position.WalkingDistance(m->position.tile) < 5
 		    && m->_mhitpoints >> 6 > 0) {
 			m->_mgoal = MGOAL_RETREAT;
 			m->_mgoalvar1 = rundist;
