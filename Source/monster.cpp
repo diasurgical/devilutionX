@@ -2742,8 +2742,7 @@ void GroupUnity(int i)
 		if (clear || monster[i].leaderflag != 1) {
 			if (clear
 			    && monster[i].leaderflag == 2
-			    && abs(monster[i].position.tile.x - monster[leader].position.future.x) < 4
-			    && abs(monster[i].position.tile.y - monster[leader].position.future.y) < 4) {
+			    && monster[i].position.tile.WalkingDistance(monster[leader].position.future) < 4) {
 				monster[leader].packsize++;
 				monster[i].leaderflag = 1;
 			}
