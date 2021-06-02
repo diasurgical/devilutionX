@@ -2047,7 +2047,6 @@ void M_TryM2MHit(int i, int mid, int hper, int mind, int maxd)
 void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 {
 	int hit, hper;
-	int dx, dy;
 	int blk, blkper;
 	int dam, mdam;
 	int j, misnum, cur_ms_num, ac;
@@ -2060,9 +2059,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	}
 	if (plr[pnum]._pHitPoints >> 6 <= 0 || plr[pnum]._pInvincible || plr[pnum]._pSpellFlags & 1)
 		return;
-	dx = abs(monster[i].position.tile.x - plr[pnum].position.tile.x);
-	dy = abs(monster[i].position.tile.y - plr[pnum].position.tile.y);
-	if (dx >= 2 || dy >= 2)
+	if (monster[i].position.tile.WalkingDistance(plr[pnum].position.tile) >= 2)
 		return;
 
 	hper = GenerateRnd(100);
