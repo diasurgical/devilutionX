@@ -75,10 +75,7 @@ int GetRotaryDistance(int x, int y)
  */
 int GetMinDistance(Point position)
 {
-	auto &myPlayer = plr[myplr];
-	Point delta = abs(myPlayer.position.future - position);
-
-	return std::max(delta.x, delta.y);
+	return plr[myplr].position.future.WalkingDistance(position);
 }
 
 /**
