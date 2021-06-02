@@ -202,6 +202,13 @@ struct Point {
 
 		return offset.x + offset.y;
 	}
+
+	int WalkingDistance(Point other) const
+	{
+		Point offset = abs(*this - other);
+
+		return std::max(offset.x, offset.y);
+	}
 };
 
 struct Size {
