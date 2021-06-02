@@ -222,7 +222,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		return;
 	}
 
-	Point md = (monster[ndx].position.tile - Point { p->_mx, p->_my }).Absolute();
+	Point md = abs(monster[ndx].position.tile - Point { p->_mx, p->_my });
 	if (md.x <= 2 && md.y <= 2) {
 		if (monster[ndx]._mmode < MM_WALK || monster[ndx]._mmode > MM_WALK3) {
 			Direction md = GetDirection(monster[ndx].position.tile, { p->_mx, p->_my });

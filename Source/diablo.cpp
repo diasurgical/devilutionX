@@ -807,7 +807,7 @@ static bool LeftMouseCmd(bool bShift)
 			return true;
 	} else {
 		auto &myPlayer = plr[myplr];
-		Point delta = (myPlayer.position.tile - Point { cursmx, cursmy }).Absolute();
+		Point delta = abs(myPlayer.position.tile - Point { cursmx, cursmy });
 		bNear = delta.x < 2 && delta.y < 2;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);

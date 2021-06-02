@@ -191,14 +191,14 @@ struct Point {
 		return (approx + 512) / 1024;
 	}
 
-	Point Absolute() const
+	constexpr friend Point abs(Point a)
 	{
-		return { abs(x), abs(y) };
+		return { std::abs(a.x), std::abs(a.y) };
 	}
 
 	int ManhattanDistance(Point other) const
 	{
-		Point offset = (*this - other).Absolute();
+		Point offset = abs(*this - other);
 
 		return offset.x + offset.y;
 	}
