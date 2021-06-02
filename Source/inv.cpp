@@ -1793,11 +1793,9 @@ static bool PutItem(PlayerStruct &player, Point &position)
 	if (numitems >= MAXITEMS)
 		return false;
 
-	auto relativePosition = position - player.position.tile;
-
 	Direction d = GetDirection(player.position.tile, position);
 
-	if (abs(relativePosition.x) > 1 || abs(relativePosition.y) > 1) {
+	if (position.WalkingDistance(player.position.tile) > 1) {
 		position = player.position.tile + d;
 	}
 	if (CanPut(position))
