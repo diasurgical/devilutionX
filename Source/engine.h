@@ -67,24 +67,24 @@ struct Point {
 	int x;
 	int y;
 
-	bool operator==(const Point &other) const
+	constexpr bool operator==(const Point &other) const
 	{
 		return x == other.x && y == other.y;
 	}
 
-	bool operator!=(const Point &other) const
+	constexpr bool operator!=(const Point &other) const
 	{
 		return !(*this == other);
 	}
 
-	Point &operator+=(const Point &other)
+	constexpr Point &operator+=(const Point &other)
 	{
 		x += other.x;
 		y += other.y;
 		return *this;
 	}
 
-	Point &operator+=(Direction direction)
+	constexpr Point &operator+=(Direction direction)
 	{
 		constexpr auto toPoint = [](Direction direction) -> Point {
 			switch (direction) {
@@ -112,60 +112,57 @@ struct Point {
 		return (*this) += toPoint(direction);
 	}
 
-	Point &operator-=(const Point &other)
+	constexpr Point &operator-=(const Point &other)
 	{
 		x -= other.x;
 		y -= other.y;
 		return *this;
 	}
 
-	Point &operator*=(const float factor)
+	constexpr Point &operator*=(const float factor)
 	{
 		x *= factor;
 		y *= factor;
 		return *this;
 	}
 
-	Point &operator*=(const int factor)
+	constexpr Point &operator*=(const int factor)
 	{
 		x *= factor;
 		y *= factor;
 		return *this;
 	}
 
-	friend Point operator+(Point a, const Point &b)
+	constexpr friend Point operator+(Point a, const Point &b)
 	{
 		a += b;
 		return a;
 	}
 
-	friend Point operator+(Point a, Direction direction)
+	constexpr friend Point operator+(Point a, Direction direction)
 	{
 		a += direction;
 		return a;
 	}
 
-	friend Point operator-(Point a, const Point &b)
+	constexpr friend Point operator-(Point a, const Point &b)
 	{
 		a -= b;
 		return a;
 	}
 
-	friend Point operator-(const Point &a)
+	constexpr friend Point operator-(const Point &a)
 	{
-		Point b;
-		b.x = -a.x;
-		b.y = -a.y;
-		return b;
+		return { -a.x, -a.y };
 	}
 
-	friend Point operator*(Point a, const float factor)
+	constexpr friend Point operator*(Point a, const float factor)
 	{
 		a *= factor;
 		return a;
 	}
 
-	friend Point operator*(Point a, const int factor)
+	constexpr friend Point operator*(Point a, const int factor)
 	{
 		a *= factor;
 		return a;
@@ -177,12 +174,12 @@ struct Point {
 	 * @return Magnitude of vector this -> other
 	 */
 
-	int ApproxDistance(Point other) const
+	constexpr int ApproxDistance(Point other) const
 	{
-		int min;
-		int max;
-
-		std::tie(min, max) = std::minmax(std::abs(other.x - x), std::abs(other.y - y));
+		Point offset = abs(other - *this);
+		auto minMax = std::minmax(offset.x, offset.y);
+		int min = minMax.first;
+		int max = minMax.second;
 
 		int approx = max * 1007 + min * 441;
 		if (max < (min * 16))
@@ -196,14 +193,14 @@ struct Point {
 		return { std::abs(a.x), std::abs(a.y) };
 	}
 
-	int ManhattanDistance(Point other) const
+	constexpr int ManhattanDistance(Point other) const
 	{
 		Point offset = abs(*this - other);
 
 		return offset.x + offset.y;
 	}
 
-	int WalkingDistance(Point other) const
+	constexpr int WalkingDistance(Point other) const
 	{
 		Point offset = abs(*this - other);
 
