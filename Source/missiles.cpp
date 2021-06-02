@@ -4635,35 +4635,26 @@ void MI_Rhino(int i)
 
 void MI_Fireman(int i)
 {
-	int src, enemy, ax, ay, bx, by, cx, cy, j;
+	int j;
 
 	GetMissilePos(i);
-	ax = missile[i].position.tile.x;
-	ay = missile[i].position.tile.y;
+	Point a = missile[i].position.tile;
 	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
-	src = missile[i]._misource;
-	bx = missile[i].position.tile.x;
-	by = missile[i].position.tile.y;
-	enemy = monster[src]._menemy;
-	if ((monster[src]._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
-		cx = plr[enemy].position.tile.x;
-		cy = plr[enemy].position.tile.y;
-	} else {
-		cx = monster[enemy].position.tile.x;
-		cy = monster[enemy].position.tile.y;
-	}
-	if ((bx != ax || by != ay) && ((missile[i]._miVar1 & 1 && (abs(ax - cx) >= 4 || abs(ay - cy) >= 4)) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, { ax, ay })) {
-		MissToMonst(i, { ax, ay });
+	int src = missile[i]._misource;
+	Point b = missile[i].position.tile;
+	int enemy = monster[src]._menemy;
+	Point c = (monster[src]._mFlags & MFLAG_TARGETS_MONSTER) == 0 ? plr[enemy].position.tile : monster[enemy].position.tile;
+	if (b != a && ((missile[i]._miVar1 & 1 && a.WalkingDistance(c) >= 4) || missile[i]._miVar2 > 1) && PosOkMonst(missile[i]._misource, a)) {
+		MissToMonst(i, a);
 		missile[i]._miDelFlag = true;
 	} else if ((monster[src]._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
-		j = dPlayer[bx][by];
+		j = dPlayer[b.x][b.y];
 	} else {
-		j = dMonster[bx][by];
+		j = dMonster[b.x][b.y];
 	}
-	if (!PosOkMissile(0, { bx, by }) || (j > 0 && !(missile[i]._miVar1 & 1))) {
-		missile[i].position.velocity.x *= -1;
-		missile[i].position.velocity.y *= -1;
+	if (!PosOkMissile(0, b) || (j > 0 && !(missile[i]._miVar1 & 1))) {
+		missile[i].position.velocity *= -1;
 		missile[i]._mimfnum = opposite[missile[i]._mimfnum];
 		missile[i]._miAnimData = monster[src].MType->Anims[MA_WALK].Data[missile[i]._mimfnum];
 		missile[i]._miVar2++;
