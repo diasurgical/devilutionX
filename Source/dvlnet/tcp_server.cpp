@@ -281,12 +281,12 @@ void tcp_server::close()
 		if (connection)
 			drop_connection(connection);
 	}
+	SDLNet_FreeSocketSet(socketSet);
 	SDLNet_TCP_Close(socket);
 }
 
 tcp_server::~tcp_server()
 {
-	SDLNet_FreeSocketSet(socketSet);
 }
 
 } // namespace net

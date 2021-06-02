@@ -111,6 +111,8 @@ bool tcp_client::SNetLeaveGame(int type)
 {
 	auto ret = base::SNetLeaveGame(type);
 	poll();
+	SDLNet_TCP_Close(socket);
+	SDLNet_FreeSocketSet(socketSet);
 	if (local_server != nullptr)
 		local_server->close();
 	return ret;
@@ -123,7 +125,6 @@ std::string tcp_client::make_default_gamename()
 
 tcp_client::~tcp_client()
 {
-	SDLNet_FreeSocketSet(socketSet);
 }
 
 } // namespace net
