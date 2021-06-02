@@ -2899,7 +2899,7 @@ void MAI_Zombie(int i)
 	}
 
 	if (GenerateRnd(100) < 2 * Monst->_mint + 10) {
-		int dist = std::max(abs(mx - Monst->enemyPosition.x), abs(my - Monst->enemyPosition.y));
+		int dist = Monst->enemyPosition.WalkingDistance({ mx, my });
 		if (dist >= 2) {
 			if (dist >= 2 * Monst->_mint + 4) {
 				Direction md = Monst->_mdir;
