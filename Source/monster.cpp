@@ -1315,7 +1315,7 @@ void M_Enemy(int i)
 			    || (((plr[pnum]._pHitPoints >> 6) == 0) && gbIsMultiplayer))
 				continue;
 			sameroom = (dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[plr[pnum].position.tile.x][plr[pnum].position.tile.y]);
-			dist = std::max(abs(Monst->position.tile.x - plr[pnum].position.tile.x), abs(Monst->position.tile.y - plr[pnum].position.tile.y));
+			dist = Monst->position.tile.WalkingDistance(plr[pnum].position.tile);
 			if ((sameroom && !bestsameroom)
 			    || ((sameroom || !bestsameroom) && dist < best_dist)
 			    || (_menemy == -1)) {
@@ -1341,7 +1341,7 @@ void M_Enemy(int i)
 		if ((Monst->_mFlags & MFLAG_GOLEM) && (monster[mi]._mFlags & MFLAG_GOLEM)) // prevent golems from fighting each other
 			continue;
 
-		dist = std::max(abs(monster[mi].position.tile.x - Monst->position.tile.x), abs(monster[mi].position.tile.y - Monst->position.tile.y));
+		dist = monster[mi].position.tile.WalkingDistance(Monst->position.tile);
 		if ((!(Monst->_mFlags & MFLAG_GOLEM)
 		        && !(Monst->_mFlags & MFLAG_BERSERK)
 		        && dist >= 2
