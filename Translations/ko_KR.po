@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-06-04 00:55+0900\n"
+"POT-Creation-Date: 2021-06-04 02:14+0900\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -8121,7 +8121,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
 msgid "I sense a soul in search of answers..."
-msgstr "해답을 갈구하는 영혼이 느껴져..."
+msgstr "답을 찾아 헤매는 영혼이 느껴지는군요..."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:428
