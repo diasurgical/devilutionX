@@ -445,3 +445,4 @@ Brewfile.lock.json
 
 # GPerf heap profile dumps
 *.heap
+*.mo
