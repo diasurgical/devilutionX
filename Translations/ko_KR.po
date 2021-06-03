@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-06-03 09:08+0900\n"
+"POT-Creation-Date: 2021-06-04 00:55+0900\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -7482,8 +7482,8 @@ msgid ""
 "all they had in making a life for themselves here. He is a good man with a "
 "deep sense of responsibility."
 msgstr ""
-"오그덴이 일출이라는 주막을 운영한 지 벌써 4년이 다 되어 가는군. 가게를 매입"
-"한 지 얼마 지나지 않아 이곳은 지옥으로 변해 버렸다네. 처인 가다와 함께 이곳"
+"오그덴이 해오름이라는 여관을 운영한 지 벌써 4년이 다 되어 가는군. 가게를 매입"
+"한 지 얼마 지나지 않아 이곳은 지옥으로 변해 버렸다네. 처인 가르다와 함께 이곳"
 "에 터를 잡느라 재산을 다 소진해서 떠날 여력이 없을 테지. 책임감이 강하고 선량"
 "한 사람인데 말일세."
 
@@ -7496,9 +7496,9 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings."
 msgstr ""
-"딱하지만 파른함을 보고 있자면 그 암흑의 날, 라자루스와 함께 대성당에 들어간 "
-"사람들이 떠올라 마음이 편치 않다네. 파른함은 간신히 살아 돌아왔으나 그만 정신"
-"줄을 놓고 무기력해졌지. 지금이야 술에만 의지하며 횡설수설하지만 개중에는 진실"
+"딱하지만 파넘을 보고 있자면 그 암흑의 날, 라자루스와 함께 대성당에 들어간 사"
+"람들이 떠올라 마음이 편치 않다네. 파넘은 간신히 살아 돌아왔으나 그만 정신줄"
+"을 놓고 무기력해졌지. 지금이야 술에만 의지하며 횡설수설하지만 개중에는 진실"
 "이 담겨 있는 말도 있을 걸세."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
@@ -7510,7 +7510,7 @@ msgid ""
 "access to many strange and arcane artifacts and tomes of knowledge that even "
 "I have never seen before."
 msgstr ""
-"마녀 아드리아는 이곳 트리스트람의 별종이라네. 대성당이 악에 오염되어 다들 떠"
+"마녀 아드리아는 이곳 트리스트럼의 별종이라네. 대성당이 악에 오염되어 다들 떠"
 "나던 무렵에 이곳에 왔지. 마을 변두리에 작은 오두막을 밤새워 지은 데다, 나조차"
 "도 본 적 없는 별스러운 유물과 학술서를 많이 갖고 있더군."
 
@@ -7551,15 +7551,15 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed."
 msgstr ""
-"질리안은 참한 처자라네. 신명난 웃음소리로 많은 이들에게 사랑받지. 나 또한 그"
+"질리언은 참한 처자라네. 신명난 웃음소리로 많은 이들에게 사랑받지. 나 또한 그"
 "리 여기고 말이야. 몸이 아파 거동이 불편한 할머니를 돌보기 위해 오그덴의 가게"
-"에 기거하고 있지. 종종 질리안의 안전이 염려스럽지만 이 마을 사내놈들 모두 그 "
+"에서 일하고 있지. 종종 질리언의 안전이 염려스럽지만 이 마을 사내놈들 모두 그 "
 "아이를 지켜줄 거라 믿네."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden
 #: Source/textdat.cpp:327
 msgid "Greetings, good master. Welcome to the Tavern of the Rising Sun!"
-msgstr ""
+msgstr "반갑습니다, 선생님. 해오름 여관에 오신 걸 환영합니다!"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:329
@@ -7569,6 +7569,9 @@ msgid ""
 "any of them agree on was this old axiom. Perhaps it will help you. You can "
 "cut the flesh, but you must crush the bone."
 msgstr ""
+"수많은 모험가들이 제 가게를 거쳐 가며, 맥주잔이 넘처 날 정도로 많은 이야기들"
+"을 꽃피웠죠. 제가 들었던 것 중에 가장 와닿았던 건 바로 이 격언이었습니다. '고"
+"기를 썰려면 뼈를 부숴야 한다.' 선생님한테도 도움이 되실 겁니다."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:331
@@ -7576,6 +7579,8 @@ msgid ""
 "Griswold the blacksmith is extremely knowledgeable about weapons and armor. "
 "If you ever need work done on your gear, he is definitely the man to see."
 msgstr ""
+"대장장이 그리스월드는 무기와 방어구에 정통하죠. 장비를 수선할 일이 있다면 그 "
+"사람이 적임자입니다."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:333
@@ -7583,6 +7588,8 @@ msgid ""
 "Farnham spends far too much time here, drowning his sorrows in cheap ale. I "
 "would make him leave, but he did suffer so during his time in the Labyrinth."
 msgstr ""
+"파넘은 슬픔에 젖어 싸구려 술로 허송세월하고 있습니다. 제가 도우려 하고는 있지"
+"만 미궁에서 그런 경험을 하면 그럴 수밖에 없겠지요."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:335
@@ -7593,6 +7600,10 @@ msgid ""
 "Well, no matter. If you ever have need to trade in items of sorcery, she "
 "maintains a strangely well-stocked hut just across the river."
 msgstr ""
+"아드리아는 나이에 비해 무척 똑똑하지만 좀 꺼림직한 게 사실입니다. \n"
+"\n"
+"뭐, 큰 문제는 아니지만요. 마법 물품을 거래하려면 강 건너편에 있는 아드리아의 "
+"오두막에 가 보십시오."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:337
@@ -7600,6 +7611,7 @@ msgid ""
 "If you want to know more about the history of our village, the storyteller "
 "Cain knows quite a bit about the past."
 msgstr ""
+"이 마을 역사에 관한 거라면 이야기꾼인 케인이 제법 상세히 알고 있습니다."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:339
@@ -7610,6 +7622,11 @@ msgid ""
 "He probably went fooling about someplace that he shouldn't have been. I feel "
 "sorry for the boy, but I don't abide the company that he keeps."
 msgstr ""
+"워트는 골칫덩이가 아닐 수 없습니다. 항상 말썽을 부리는지라 무슨 변을 당한다 "
+"해도 놀랄 일도 아니죠.\n"
+"\n"
+"어리석게도 들이지 말아야 할 곳에 발을 들인 모양입니다. 안됐기는 해도 용납은 "
+"못하겠군요."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:341
@@ -7618,6 +7635,9 @@ msgid ""
 "always attending to the needs of others, but trouble of some sort or another "
 "does seem to follow him wherever he goes..."
 msgstr ""
+"페핀은 정말 좋은 분입니다. 마을에서 가장 인자한 분이기도 하고요. 늘 도움이 필"
+"요한 사람들을 돌보고 있지만 어째 그분이 가는 곳마다 자잘한 말썽이 잇따르는군"
+"요."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:343
@@ -7628,11 +7648,14 @@ msgid ""
 "Goodness knows I begged her to leave, telling her that I would watch after "
 "the old woman, but she is too sweet and caring to have done so."
 msgstr ""
+"종업원 질리언 말입니까? 할머니를 돌볼 생각이 없었다면 진작에 떠났겠지요. 제"
+"가 할머니를 돌볼 테니 여기를 뜨라고 간곡히 부탁했건만, 참으로 마음씨 곱고 배"
+"려심 깊은 아가씨라 그러질 못하더군요."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
 msgid "What ails you, my friend?"
-msgstr ""
+msgstr "어디가 편찮으신가?"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:346
@@ -7642,6 +7665,9 @@ msgid ""
 "hurt one of the monsters, make sure it is dead or it very well may "
 "regenerate itself."
 msgstr ""
+"무척이나 흥미로운 걸 발견했네. 우리와는 달리 미궁의 괴물들은 물약이나 마법 없"
+"이 스스로 상처를 치료할 수 있더군. 괴물을 잡을 때, 숨통을 확실히 끊지 않으면 "
+"스스로 재생할지도 모르는 일이야."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:348
@@ -7651,6 +7677,9 @@ msgid ""
 "any, you should read them all, for some may hold secrets to the workings of "
 "the Labyrinth."
 msgstr ""
+"지하에 잠복한 그 무언가에게 빼앗기기 전까지 대성당은 위대한 지식의 보고였어. "
+"거기엔 많은 책이 있지. 책을 찾게 되거든 전부 읽어 보게나. 미궁의 비밀이 기록"
+"되어 있을지도 모르니 말이야."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -7659,6 +7688,9 @@ msgid ""
 "healing. He is a shrewd merchant, but his work is second to none. Oh, I "
 "suppose that may be because he is the only blacksmith left here."
 msgstr ""
+"내가 치료술에 박식한 것처럼 그리스월드는 무기와 갑옷에 정통하지. 영리한 장사"
+"꾼이기도 하지만 일 처리도 둘 째 가라면 서러울 정도야. 아, 그러니까 내말은 그 "
+"사람이 여기 남은 유일한 대장장이라서 그럴 거라는 뜻이네."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
@@ -7667,6 +7699,8 @@ msgid ""
 "an innate ability to discern the true nature of many things. If you ever "
 "have any questions, he is the person to go to."
 msgstr ""
+"케인은 진정한 친구이자 현자라네. 방대한 장서를 보존하는 데다 사물의 본질을 통"
+"찰하는 타고난 능력도 있으니 말이야. 궁금한 게 생기거든 그 친구에게 가 보게."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:354
@@ -7674,6 +7708,8 @@ msgid ""
 "Even my skills have been unable to fully heal Farnham. Oh, I have been able "
 "to mend his body, but his mind and spirit are beyond anything I can do."
 msgstr ""
+"내 실력으로도 파넘을 온전히 치료할 수가 없었어. 육신은 치료할 수 있었지만 마"
+"음과 정신은 어떻게 할 도리가 없었지."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:356
@@ -7684,6 +7720,10 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
+"나도 특정 마법을 사용해 비축할 물약과 비약을 제조하지만 아드리아는 진짜 마법"
+"사야. 잠도 안 잘뿐더러 다수의 신비한 학술서와 유물에도 정통하더라고. 그 여자 "
+"오두막엔 겉보기와 달리 뭔가가 더 있을 것 같은데, 그 안에 좀처럼 들어가 볼 수"
+"가 없군."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
@@ -7693,6 +7733,9 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did."
 msgstr ""
+"가엾은 워트. 그 아이를 위해 최선을 다했지만 의족을 달 수밖에 없었지. 그 아이"
+"가 의족을 혐오하는 건 알았지만 상처가 너무 심했어. 그토록 어린아이가 그런 괴"
+"로움을 겪어선 안 될 일인데."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
@@ -7703,6 +7746,10 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
+"오그덴이 왜 트리스트럼에 머물고 있는지 도통 이해가 안 가. 정서가 다소 불안정"
+"한 면이 있지만 총명한데다 근면해서 어디를 가도 성공할 텐데 말이야. 인근 지역"
+"에서 살인이 빈번히 일어나는 게 두려워서 그럴 수도 있겠지만 가족들이 그대로 머"
+"물기를 아내가 바라서 그럴지도 모르지."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -7713,11 +7760,13 @@ msgid ""
 "She claims that they are visions, but I have no proof of that one way or the "
 "other."
 msgstr ""
+"오그덴이 고용한 여급은 정말 참한 아가씨야. 그 아가씨 할머니는 병이 중한데다 "
+"망상을 겪고 있지. 본인 말로는 예지몽이라고 하는데 증명할 방법이 없지 않겠나."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
 msgid "Good day! How may I serve you?"
-msgstr ""
+msgstr "안녕하세요! 뭘 도와드릴까요?"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:365
@@ -7725,6 +7774,8 @@ msgid ""
 "My grandmother had a dream that you would come and talk to me. She has "
 "visions, you know and can see into the future."
 msgstr ""
+"할머니는 당신이 저와 얘기하러 오는 꿈을 꾸셨어요. 예지몽을 꾸신 거죠. 미래를 "
+"볼 수 있는 거 말이에요."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:367
@@ -7735,6 +7786,9 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there."
 msgstr ""
+"마을 끝에 사는 그 여자는 마녀예요! 좋은 사람인 것 같고 아드리아라는 이름도 예"
+"쁘지만 어쩐지 그 여자가 무섭네요. 그 여자가 거기서 뭘 하는지, 당신처럼 용기 "
+"있는 사람이 보러 가 주면 좋겠는데 말이죠."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:369
@@ -7744,6 +7798,9 @@ msgid ""
 "received praises from our King Leoric himself - may his soul rest in peace. "
 "Griswold is also a great hero; just ask Cain."
 msgstr ""
+"대장장이 그리스월드는 트리스트럼의 자랑이에요. 수많은 경연 대회를 휩쓴 장인"
+"일 뿐만 아니라 지금은 고인이 된 레오릭 왕에게 직접 찬사를 받기도 했죠. 그리스"
+"월드는 훌륭한 영웅이기도 하답니다. 케인에게 물어봐도 그렇다고 할걸요."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
@@ -7751,6 +7808,8 @@ msgid ""
 "Cain has been the storyteller of Tristram for as long as I can remember. He "
 "knows so much, and can tell you just about anything about almost everything."
 msgstr ""
+"케인은 옛부터 쭉 트리스트럼의 이야기꾼이었죠. 정말 박식해서 대개는 알고 있을 "
+"거예요."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -7762,6 +7821,9 @@ msgid ""
 "frustrated watching him slip farther and farther into a befuddled stupor "
 "every night."
 msgstr ""
+"파넘은 맥주로 배를 채우고 쓸데없는 말만 지껄이는 술고래죠. 페핀과 오그덴이 "
+"그 사람을 동정하는 건 알지만 매일 밤 술에 취해 정신 못 차리는 걸 보면 짜증스"
+"러울 따름이에요."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
@@ -7771,6 +7833,9 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
+"페핀은 제 할머니의 목숨을 구해 주셨죠. 그 은혜를 다 갚을 수 있을런지 모르겠네"
+"요. 병을 다스리는 그분의 힘은 그 어떤 칼보다도 강하며 그 어떤 마법보다도 신비"
+"롭답니다. 혹시 치료가 필요하면 페핀이 도와줄실 거예요."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -7782,6 +7847,10 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
+"전 워트의 엄마인 캐너스와 함께 자랐죠. 워트가 저 끔찍한 괴물들에게 끌려갔을 "
+"때, 캐너스는 가벼운 부상에 그쳤지만 결국 회복하지 못했어요. 절망감이 그녀를 "
+"죽게 만든 것이겠죠. 워트는 타인의 노력을 가로채서 이득만 챙기는 비열한 아이"
+"가 되어 버렸더군요. 그 아이에게는 여전히 어둠이 드리워진 것 같네요."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:379
@@ -7791,11 +7860,14 @@ msgid ""
 "them, and hope one day to leave this place and help them start a grand hotel "
 "in the east."
 msgstr ""
+"오그덴 부부는 저와 할머니를 자신들 집으로 데려가 저에게 가게 일자리까지 마련"
+"해 주셨죠. 신세 진 게 너무 많아서, 언젠가 여기를 떠나 그분들이 동부에서 훌륭"
+"한 호텔을 여는 걸 돕고 싶어요."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
 msgid "Well, what can I do for ya?"
-msgstr ""
+msgstr "그래, 뭘 도와드릴까, 형씨?"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:382
@@ -7805,6 +7877,8 @@ msgid ""
 "undying horrors down there, and there's nothing better to shatter skinny "
 "little skeletons!"
 msgstr ""
+"괜찮은 무기를 찾는 거라면 이건 어떤가, 형씨? 전곤 같은 둔기는 언데드에게 효과"
+"가 아주 그만이지. 비실비실한 해골들을 작살낼 때도 이만한 게 없다고!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
@@ -7814,6 +7888,9 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
+"도끼? 그래, 좋은 무기라 어떤 적과 맞서도 부족함이 없지. 쩍 하고 공기를 가르"
+"면 짝 하고 바닥에 널려 있을 악마 놈들 대가리를 상상해 보라고. 잽싸게 휘두르"
+"는 건 무리지만 파괴력은 발군이니 염두에 두도록 해!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -7823,6 +7900,9 @@ msgid ""
 "or pierce on the undead, but against a living, breathing enemy, a sword will "
 "better slice their flesh!"
 msgstr ""
+"어때? 날이 살아 있고 균형미가 있다고. 검이라는 건 말야, 적격인 사람이 쓰면 최"
+"강의 무기가 되거든. 언데드에겐 날카로운 칼날이 잘 안 먹히지만 상대가 생명체라"
+"면 놈들의 몸뚱이를 간단히 썰어 버릴 수 있지!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:388
@@ -7831,6 +7911,8 @@ msgid ""
 "Darkness. If you bring them to me, with a bit of work and a hot forge, I can "
 "restore them to top fighting form."
 msgstr ""
+"형씨의 무기와 갑옷을 보니 어둠의 세력에 맞서 얼마나 고군분투했는가를 한눈에 "
+"알겠군. 약간의 수고로 신품처럼 고칠 수 있으니 나한테 가져오라고."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:390
@@ -7840,6 +7922,9 @@ msgid ""
 "seems to get whatever she needs. If I knew even the smallest bit about how "
 "to harness magic as she did, I could make some truly incredible things."
 msgstr ""
+"난 이 젠장할 마을 변두리에 오는 대상들에게서 금속이나 공구를 밀수해야 하는"
+"데, 마녀 아드리아는 필요한 걸 항상 손에 넣는 거 같더군. 그 여자처럼 마법을 조"
+"금만이라도 알았으면 정말 끝내주는 물건을 만들 수 있을 텐데 말이야."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:392
@@ -7847,6 +7932,8 @@ msgid ""
 "Gillian is a nice lass. Shame that her gammer is in such poor health or I "
 "would arrange to get both of them out of here on one of the trading caravans."
 msgstr ""
+"질리언은 괜찮은 아가씨지. 그 아가씨 할매가 저렇게 아프지만 않았어도 대상들에"
+"게 부탁해 여기를 벗어나게 해주고 싶은데 말이야."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
@@ -7855,6 +7942,9 @@ msgid ""
 "in life. If I could bend steel as well as he can bend your ear, I could make "
 "a suit of court plate good enough for an Emperor!"
 msgstr ""
+"케인은 때때로 말이 너무 많은 거 아닌가 싶지만 그게 자기 천성이니 어쩔 수 없겠"
+"지. 케인이 형씨 귀를 닫게 만드는 것처럼 내가 강철을 다룰 수 있다면, 황제한테"
+"도 어울릴 왕실 갑옷을 만들 수 있을 텐데 말이야!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:396
@@ -7864,6 +7954,10 @@ msgid ""
 "my side. I fear that the attack left his soul as crippled as, well, another "
 "did my leg. I cannot fight this battle for him now, but I would if I could."
 msgstr ""
+"라자루스가 우리를 이끌고 미궁에 갔던 날 밤에 난 파넘과 함께였지. 대주교는 종"
+"적을 감춘데다 파넘이 곁에 없었다면 난 아마 죽었을 거야. 안됐지만 녀석은 영혼"
+"에 상처를 입었어. 내가 다리를 다친 것처럼 말야. 그래서 이제는 파넘을 위해 싸"
+"울 수 없지만, 그럴 수 있다면 기꺼이 싸우겠어."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
@@ -7872,6 +7966,8 @@ msgid ""
 "left in Tristram - or anywhere else for that matter - who has a bad thing to "
 "say about the healer."
 msgstr ""
+"페핀은 자신보다 남을 먼저 생각하는 훌륭한 분이지. 트리트스람뿐만 아니라 그 어"
+"디에도 그분을 험담하는 사람은 아무도 없다고."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:400
@@ -7882,6 +7978,9 @@ msgid ""
 "origin. I cannot hold that against him after what happened to him, but I do "
 "wish he would at least be careful."
 msgstr ""
+"저 애송이 새낀 언제 한번 크게 혼날 거야. 여기서 일하며 정직하게 장사하는 걸 "
+"가르치려 했는데, 밀수품 거래로 돈 좀 만지는 쪽이 성미에 맞는다나. 큰일을 겪었"
+"으니 뭐라고는 못 하겠지만 좀 더 신중했으면 좋겠는데 말야."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:402
@@ -7894,17 +7993,21 @@ msgid ""
 "starved during that first year when the entire countryside was overrun by "
 "demons."
 msgstr ""
+"여관 주인 오그덴은 밑지면서 장사를 해. 이따금 마을을 지나는 여행자들에게 숙식"
+"을 제공하면서 근근이 꾸려가기는 하는데 요금을 떼어먹고 튀는 새끼들이 있거든. "
+"그 양반이 창고에 곡물과 육포를 비축해 놓지 않았더라면 마귀놈들이 이 일대를 장"
+"악했을 때 모두 굶어 죽었을 거야."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
 msgid "Can't a fella drink in peace?"
-msgstr ""
+msgstr "술 마시게 좀 내버려 두겠어?"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:405
 msgid ""
 "The gal who brings the drinks? Oh, yeah, what a pretty lady. So nice, too."
-msgstr ""
+msgstr "그 술 갖다주는 여자? 아, 그래, 예쁘장한 처자지, 성격도 좋고."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:407
@@ -7913,6 +8016,9 @@ msgid ""
 "stuff, but you listen to me... she's unnatural. I ain't never seen her eat "
 "or drink - and you can't trust somebody who doesn't drink at least a little."
 msgstr ""
+"그 쭈그렁탱이 할망구는 왜 아무것도 안 하고 있나 몰라. 맞아, 맞아, 그 할망구"
+"가 물건을 갖고는 있지만... 정말 이상해. 뭔가를 먹거나 마시는 걸 본 적이 없"
+"어. 그러게 아무것도 마시지 않는 놈들은 믿으면 안 돼."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
@@ -7921,6 +8027,9 @@ msgid ""
 "'em are real scary or funny... but I think he knows more than he knows he "
 "knows."
 msgstr ""
+"케인은 정체를 숨기고 있어. 그래, 그래, 그 영감 하는 얘기가 재미는 있지... 정"
+"말 무서운 얘기라든지, 만담이라든지... 그래도 실은 더 많은 걸 알고 있지 않나 "
+"싶어."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
@@ -7928,6 +8037,8 @@ msgid ""
 "Griswold? Good old Griswold. I love him like a brother! We fought together, "
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
+"그리스월드? 정말 좋은 녀석이야. 내 형제나 다름없으니까! 우린 함께 싸웠지. 그"
+"러니까 그때... 우린... 라자루스... 라자루스... 라자루스!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
@@ -7937,6 +8048,9 @@ msgid ""
 "wantin' help. Hey, I guess that would be kinda like you, huh hero? I was a "
 "hero too..."
 msgstr ""
+"히히히, 난 페핀이 좋아. 알겠지만 그 양반 정말 열심이거든. 알아 두면 좋을 거"
+"야. 항상 사람들을 돕는 착한 양반이니까. 그래, 당신 같은 부류군. 뭐? 영웅? 나"
+"도 영웅이었지..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:415
@@ -7945,6 +8059,9 @@ msgid ""
 "problems. Listen here - that kid is gotta sweet deal, but he's been there, "
 "you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
 msgstr ""
+"워트 녀석은 나보다 더 지독한 걸 겪었지. 난 다 알아. 밀수품 거래를 하는 건 거"
+"기에 있었기 때문이야. 알겠어? 한쪽 다리를 잃었다고! 돌아다니려면 나무 지팡이"
+"가 있어야 해. 정말 안됐어, 정말로..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:417
@@ -7953,6 +8070,9 @@ msgid ""
 "long as she keeps tappin' kegs, I'll like her just fine. Seems like I been "
 "spendin' more time with Ogden than most, but he's so good to me..."
 msgstr ""
+"오그덴은 마을에서 제일 좋은 녀석이야. 그 친구 마누라는 날 별로 안 좋아하는 눈"
+"치지만 나한테 술을 주는 한, 난 그 여자가 좋기만 한걸. 내가 오그덴하고 한식구"
+"처럼 보이나 본데, 그 친구가 나한테 정말 잘하긴 해..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:419
@@ -7961,6 +8081,8 @@ msgid ""
 "specialty. This here is the best... theeeee best! That other ale ain't no "
 "good since those stupid dogs..."
 msgstr ""
+"말하고 싶은 게 있는데 난 이 술에 대해 정말 잘 알아. 특제품이거든. 최고의 물건"
+"이라고... 최-----고 말야! 다른 술은 개나 주라지..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:421
@@ -7969,6 +8091,9 @@ msgid ""
 "somewhere under the church is a whole pile o' gold. Gleamin' and shinin' and "
 "just waitin' for someone to get it."
 msgstr ""
+"아무도 내 말을... 딸꾹... 안 믿지만 말야, 어딘가에, 그러니까 장담은 못하지만 "
+"대성당 지하 어딘가에 금덩어리가 쌓여 있어. 반짝반짝 빛나는 데다가 줍는 놈이 "
+"임자라고."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:423
@@ -7978,6 +8103,9 @@ msgid ""
 "brutes! Oh, I don't care what Griswold says, they can't make anything like "
 "they used to in the old days..."
 msgstr ""
+"당신도 나름대로 생각하는 바가 있을 테니 이 얘기를 안 믿겠지만 저기서 산 무기"
+"는 큰 괴물한테 안 먹혀. 아, 그리스월드가 뭐라든 상관없어. 실력이 예전만 못하"
+"니까..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
@@ -7986,11 +8114,14 @@ msgid ""
 "and get out of here. That boy out there... He's always got somethin good, "
 "but you gotta give him some gold or he won't even show you what he's got."
 msgstr ""
+"내가 당신이면... 물론 아니지만... 어쨌든 당신이라면 가진 걸 다 팔고 여길 떠나"
+"겠어. 저 밖에 있는 꼬맹이 녀석은... 항상 뭔가 좋은 걸 갖고 있지만 돈을 좀 쥐"
+"어 줘야 갖고 있는 걸 보여 줄 거야."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
 msgid "I sense a soul in search of answers..."
-msgstr ""
+msgstr "해답을 갈구하는 영혼이 느껴져..."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:428
@@ -8367,6 +8498,16 @@ msgid ""
 " \n"
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
+"세상에나, 돌아오셨군요! \n"
+"당신이 떠난 후로 많은 게 변했습니다. 이토록 평화로웠던 마을에 어둠의 기수들"
+"이 나타나 마을을 파괴해 버렸죠. 그들이 지나간 자리는 초토화되었고 무기를 들"
+"고 맞선 사람들은 살해당하거나 끌려가 노예가 되기도 했습니다. 마을 끝에 있는 "
+"대성당도 악으로 오염돼 어둠의 의식에 이용되고 있습니다. 밤마다 울려퍼지는 비"
+"명소리가 너무도 끔찍하지만 마을 주민 몇몇은 아직 살아 있는 것 같더군요. 제 가"
+"게와 대장장이 상점 사이에 있는 길을 따라가면 대성당이 있으니 부디 한 사람이라"
+"도 더 많은 이들을 구해 주십시오. \n"
+"\n"
+"다시 만나게 되면 더 많은 걸 말씀드릴 수 있을 테죠. 행운을 빌겠습니다."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:525 Source/textdat.cpp:533
