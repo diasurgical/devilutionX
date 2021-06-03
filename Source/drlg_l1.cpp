@@ -1952,7 +1952,7 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
 				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 - NOT A BUG - "fixing" this breaks crypt
 
-				auto comparison_with_bounds_check = [](Point p1, Point p2) {
+				constexpr auto comparison_with_bounds_check = [](Point p1, Point p2) {
 					return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY) && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY) && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
 				};
 				if (comparison_with_bounds_check({ sx - 1, sy }, { sx - 1, sy })) {
