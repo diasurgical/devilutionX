@@ -484,7 +484,9 @@ if(NINTENDO_3DS)
     Source/platform/ctr/system.cpp
     Source/platform/ctr/keyboard.cpp
     Source/platform/ctr/display.cpp
-    Source/platform/ctr/messagebox.cpp)
+    Source/platform/ctr/messagebox.cpp
+    Source/platform/ctr/random.cpp
+    Source/platform/ctr/sockets.cpp)
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 

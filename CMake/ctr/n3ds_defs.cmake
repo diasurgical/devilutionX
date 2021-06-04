@@ -1,5 +1,6 @@
 #General compilation options
-set(NONET ON)
+set(DEVILUTIONX_SYSTEM_LIBSODIUM OFF)
+set(DISABLE_ZERO_TIER ON)
 set(USE_SDL1 ON)
 set(PREFILL_PLAYER_NAME ON)
 
