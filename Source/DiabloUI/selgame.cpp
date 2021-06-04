@@ -182,7 +182,7 @@ void selgame_GameSelection_Select(int value)
 		vecSelGameDialog.push_back(new UiArtText(_("Enter address"), rect4, UIS_CENTER | UIS_BIG));
 
 		SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 314), 285, 33 };
-		vecSelGameDialog.push_back(new UiEdit(selgame_Ip, 128, rect5, UIS_MED | UIS_GOLD));
+		vecSelGameDialog.push_back(new UiEdit(_("Enter address"), selgame_Ip, 128, rect5, UIS_MED | UIS_GOLD));
 
 		SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 		vecSelGameDialog.push_back(new UiArtTextButton(_("OK"), &UiFocusNavigationSelect, rect6, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
@@ -388,7 +388,7 @@ void selgame_Password_Init(int value)
 	vecSelGameDialog.push_back(new UiArtText(_("Enter Password"), rect4, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 314), 285, 33 };
-	vecSelGameDialog.push_back(new UiEdit(selgame_Password, 15, rect5, UIS_MED | UIS_GOLD));
+	vecSelGameDialog.push_back(new UiEdit(_("Enter Password"), selgame_Password, 15, rect5, UIS_MED | UIS_GOLD));
 
 	SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(new UiArtTextButton(_("OK"), &UiFocusNavigationSelect, rect6, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
