@@ -262,6 +262,13 @@ endif()
 
 if(NOT NONET AND NOT DISABLE_TCP)
   add_subdirectory(3rdParty/asio)
+  if(NINTENDO_3DS)
+      target_compile_definitions(asio INTERFACE
+        ASIO_DISABLE_THREADS=ON
+        ASIO_HAS_UNISTD_H=ON)
+
+      target_include_directories(asio BEFORE INTERFACE CMake/ctr/asio/include)
+  endif()
 endif()
 
 if(NOT NOSOUND)
