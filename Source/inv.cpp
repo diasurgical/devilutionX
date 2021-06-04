@@ -243,7 +243,7 @@ void DrawInv(const CelOutputBuffer &out)
 						light_table_index = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == INV_SLOT_SIZE_PX ? (INV_SLOT_SIZE_PX - 1) : -1);
+						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == INV_SLOT_SIZE_PX ? INV_SLOT_SIZE_PX : 0) - 1;
 						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
@@ -623,62 +623,11 @@ bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
  */
 bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool persistItem)
 {
-	Size itemSize = GetInventorySize(item);
-
-	if (itemSize.Height == 1) {
-		for (int i = 30; i <= 39; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-		for (int x = 9; x >= 0; x--) {
-			for (int y = 2; y >= 0; y--) {
-				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
-					return true;
-			}
-		}
-		return false;
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+		if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+			return true;
 	}
-
-	if (itemSize.Height == 2) {
-		for (int x = 10 - itemSize.Width; x >= 0; x -= itemSize.Width) {
-			for (int y = 0; y < 3; y++) {
-				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
-					return true;
-			}
-		}
-		if (itemSize.Width == 2) {
-			for (int x = 7; x >= 0; x -= 2) {
-				for (int y = 0; y < 3; y++) {
-					if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
-						return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	if (itemSize == Size { 1, 3 }) {
-		for (int i = 0; i < 20; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-		return false;
-	}
-
-	if (itemSize == Size { 2, 3 }) {
-		for (int i = 0; i < 9; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-
-		for (int i = 10; i < 19; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-		return false;
-	}
-
-	app_fatal("Unknown item size: %ix%i", itemSize.Width, itemSize.Height);
+	return false;
 }
 
 /**
@@ -691,21 +640,25 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
  */
 bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const ItemStruct &item, bool persistItem)
 {
-	int yy = INV_ROW_SLOT_SIZE * (slotIndex / INV_ROW_SLOT_SIZE);
-
+	int col = slotIndex % INV_ROW_SLOT_SIZE;
+	int row = INV_ROW_SLOT_SIZE * (slotIndex / INV_ROW_SLOT_SIZE);
+	int maxCol = INV_ROW_SLOT_SIZE - 1;
+	int maxRow = (NUM_INV_GRID_ELEM / INV_ROW_SLOT_SIZE) - 1; 
 	Size itemSize = GetInventorySize(item);
+	if (col + itemSize.Width > maxCol)
+		return false;
+	if (row + itemSize.Height > maxRow)
+		return false;
+
 	for (int j = 0; j < itemSize.Height; j++) {
-		if (yy >= NUM_INV_GRID_ELEM) {
-			return false;
-		}
-		int xx = slotIndex % INV_ROW_SLOT_SIZE;
 		for (int i = 0; i < itemSize.Width; i++) {
-			if (xx >= INV_ROW_SLOT_SIZE || player.InvGrid[xx + yy] != 0) {
+			int newRow = j + row;
+			int newCol = i + col;
+			int index = newCol + newRow * INV_ROW_SLOT_SIZE;
+			if (player.InvGrid[index] != 0) {
 				return false;
 			}
-			xx++;
 		}
-		yy += INV_ROW_SLOT_SIZE;
 	}
 
 	if (persistItem) {
@@ -798,7 +751,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	int sy = icursH28;
 	bool done = false;
 	int r = 0;
-	for (; r < NUM_XY_SLOTS && !done; r++) {
+	for (; r < NUM_XY_SLOTS; r++) {
 		int xo = RIGHT_PANEL;
 		int yo = 0;
 		if (r >= SLOTXY_BELT_FIRST) {
@@ -1071,7 +1024,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				int il = player._pNumInv;
 				player.InvList[il] = player.HoldItem;
 				player._pNumInv++;
-				player.InvGrid[yy + xx] = player._pNumInv;
+				player.InvGrid[ii] = player._pNumInv;
 				player._pGold += player.HoldItem._ivalue;
 				SetPlrHandGoldCurs(&player.InvList[il]);
 			}
