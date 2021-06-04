@@ -691,21 +691,21 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
  */
 bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const ItemStruct &item, bool persistItem)
 {
-	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
+	int yy = INV_ROW_SLOT_SIZE * (slotIndex / INV_ROW_SLOT_SIZE);
 
 	Size itemSize = GetInventorySize(item);
 	for (int j = 0; j < itemSize.Height; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
 			return false;
 		}
-		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
+		int xx = slotIndex % INV_ROW_SLOT_SIZE;
 		for (int i = 0; i < itemSize.Width; i++) {
-			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
+			if (xx >= INV_ROW_SLOT_SIZE || player.InvGrid[xx + yy] != 0) {
 				return false;
 			}
 			xx++;
 		}
-		yy += 10;
+		yy += INV_ROW_SLOT_SIZE;
 	}
 
 	if (persistItem) {
@@ -745,13 +745,8 @@ bool GoldAutoPlace(PlayerStruct &player)
 		player._pGold = CalculateGold(player);
 	}
 
-	for (int i = 39; i >= 30 && !done; i--) {
+	for (int i = NUM_INV_GRID_ELEM - 1; i >= 0 && !done; i--) {
 		done = GoldAutoPlaceInInventorySlot(player, i);
-	}
-	for (int x = 9; x >= 0 && !done; x--) {
-		for (int y = 2; y >= 0 && !done; y--) {
-			done = GoldAutoPlaceInInventorySlot(player, 10 * y + x);
-		}
 	}
 
 	return done;
@@ -759,17 +754,14 @@ bool GoldAutoPlace(PlayerStruct &player)
 
 bool GoldAutoPlaceInInventorySlot(PlayerStruct &player, int slotIndex)
 {
-	int yy = 10 * (slotIndex / 10);
-	int xx = slotIndex % 10;
-
-	if (player.InvGrid[xx + yy] != 0) {
+	if (player.InvGrid[slotIndex] != 0) {
 		return false;
 	}
 
 	int ii = player._pNumInv;
 	player.InvList[ii] = player.HoldItem;
-	player._pNumInv = player._pNumInv + 1;
-	player.InvGrid[xx + yy] = player._pNumInv;
+	player._pNumInv++;
+	player.InvGrid[slotIndex] = player._pNumInv;
 	GetPlrHandSeed(&player.InvList[ii]);
 
 	int gold = player.HoldItem._ivalue;
@@ -875,10 +867,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		done = true;
 		int ii = r - SLOTXY_INV_FIRST;
 		if (player.HoldItem._itype == ITYPE_GOLD) {
-			int yy = INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE);
-			int xx = ii % INV_ROW_SLOT_SIZE;
-			if (player.InvGrid[xx + yy] != 0) {
-				int iv = player.InvGrid[xx + yy];
+			if (player.InvGrid[ii] != 0) {
+				int iv = player.InvGrid[ii];
 				if (iv > 0) {
 					if (player.InvList[iv - 1]._itype != ITYPE_GOLD) {
 						it = iv;
@@ -1059,10 +1049,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	case ILOC_UNEQUIPABLE:
 		if (player.HoldItem._itype == ITYPE_GOLD && it == 0) {
 			int ii = r - SLOTXY_INV_FIRST;
-			int yy = INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE);
-			int xx = ii % INV_ROW_SLOT_SIZE;
-			if (player.InvGrid[yy + xx] > 0) {
-				int il = player.InvGrid[yy + xx] - 1;
+			if (player.InvGrid[ii] > 0) {
+				int il = player.InvGrid[ii] - 1;
 				int gt = player.InvList[il]._ivalue;
 				int ig = player.HoldItem._ivalue + gt;
 				if (ig <= MaxGold) {
