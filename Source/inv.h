@@ -14,6 +14,7 @@
 namespace devilution {
 
 #define INV_SLOT_SIZE_PX 28
+#define INV_SLOT_HALF_SIZE_PX (INV_SLOT_SIZE_PX / 2)
 #define INV_ROW_SLOT_SIZE 10
 
 enum inv_item : int8_t {

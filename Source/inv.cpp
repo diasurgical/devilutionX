@@ -217,11 +217,11 @@ void DrawInv(const CelOutputBuffer &out)
 
 			// calc item offsets for weapons smaller than 2x3 slots
 			if (slot == INVLOC_HAND_LEFT) {
-				screenX += frameW == INV_SLOT_SIZE_PX ? 14 : 0;
-				screenY += frameH == (3 * INV_SLOT_SIZE_PX) ? 0 : -14;
+				screenX += frameW == INV_SLOT_SIZE_PX ? INV_SLOT_SIZE_PX : 0;
+				screenY += frameH == (3 * INV_SLOT_SIZE_PX) ? 0 : -INV_SLOT_HALF_SIZE_PX;
 			} else if (slot == INVLOC_HAND_RIGHT) {
-				screenX += frameW == INV_SLOT_SIZE_PX ? 13 : 1;
-				screenY += frameH == 3 * INV_SLOT_SIZE_PX ? 0 : -14;
+				screenX += frameW == INV_SLOT_SIZE_PX ? (INV_SLOT_SIZE_PX - 1) : 1;
+				screenY += frameH == 3 * INV_SLOT_SIZE_PX ? 0 : -INV_SLOT_HALF_SIZE_PX;
 			}
 
 			const auto &cel = GetInvItemSprite(frame);
@@ -243,7 +243,7 @@ void DrawInv(const CelOutputBuffer &out)
 						light_table_index = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == INV_SLOT_SIZE_PX ? 13 : -1);
+						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == INV_SLOT_SIZE_PX ? (INV_SLOT_SIZE_PX - 1) : -1);
 						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
@@ -817,17 +817,19 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + INV_SLOT_SIZE_PX) {
 			if (j >= InvRect[r].y + yo - INV_SLOT_SIZE_PX - 1 && j < InvRect[r].y + yo) {
 				done = true;
-				r--;
 			}
 		}
-		if (r == SLOTXY_CHEST_LAST) {
+		if (r == SLOTXY_INV_FIRST) {
 			if ((sx & 1) == 0)
-				i -= 14;
+				i -= INV_SLOT_HALF_SIZE_PX;
 			if ((sy & 1) == 0)
-				j -= 14;
+				j -= INV_SLOT_HALF_SIZE_PX;
 		}
-		if (r == SLOTXY_INV_LAST && (sy & 1) == 0)
-			j += 14;
+		if (r == SLOTXY_BELT_FIRST && (sy & 1) == 0)
+			j += INV_SLOT_HALF_SIZE_PX;
+
+		if (done) // found a slot
+			break;
 	}
 	if (!done)
 		return;
@@ -873,8 +875,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		done = true;
 		int ii = r - SLOTXY_INV_FIRST;
 		if (player.HoldItem._itype == ITYPE_GOLD) {
-			int yy = 10 * (ii / 10);
-			int xx = ii % 10;
+			int yy = INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE);
+			int xx = ii % INV_ROW_SLOT_SIZE;
 			if (player.InvGrid[xx + yy] != 0) {
 				int iv = player.InvGrid[xx + yy];
 				if (iv > 0) {
@@ -886,17 +888,17 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				}
 			}
 		} else {
-			int yy = 10 * ((ii / 10) - ((sy - 1) / 2));
+			int yy = INV_ROW_SLOT_SIZE * ((ii / INV_ROW_SLOT_SIZE) - ((sy - 1) / 2));
 			if (yy < 0)
 				yy = 0;
 			for (j = 0; j < sy && done; j++) {
 				if (yy >= NUM_INV_GRID_ELEM)
 					done = false;
-				int xx = (ii % 10) - ((sx - 1) / 2);
+				int xx = (ii % INV_ROW_SLOT_SIZE) - ((sx - 1) / 2);
 				if (xx < 0)
 					xx = 0;
 				for (i = 0; i < sx && done; i++) {
-					if (xx >= 10) {
+					if (xx >= INV_ROW_SLOT_SIZE) {
 						done = false;
 					} else {
 						if (player.InvGrid[xx + yy] != 0) {
@@ -913,7 +915,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 					}
 					xx++;
 				}
-				yy += 10;
+				yy += INV_ROW_SLOT_SIZE;
 			}
 		}
 	}
@@ -935,34 +937,29 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	int cn = CURSOR_HAND;
 	switch (il) {
 	case ILOC_HELM:
-		NetSendCmdChItem(false, INVLOC_HEAD);
-		if (player.InvBody[INVLOC_HEAD].isEmpty())
-			player.InvBody[INVLOC_HEAD] = player.HoldItem;
-		else
-			cn = SwapItem(&player.InvBody[INVLOC_HEAD], &player.HoldItem);
-		break;
 	case ILOC_RING:
-		if (r == SLOTXY_RING_LEFT) {
-			NetSendCmdChItem(false, INVLOC_RING_LEFT);
-			if (player.InvBody[INVLOC_RING_LEFT].isEmpty())
-				player.InvBody[INVLOC_RING_LEFT] = player.HoldItem;
-			else
-				cn = SwapItem(&player.InvBody[INVLOC_RING_LEFT], &player.HoldItem);
-		} else {
-			NetSendCmdChItem(false, INVLOC_RING_RIGHT);
-			if (player.InvBody[INVLOC_RING_RIGHT].isEmpty())
-				player.InvBody[INVLOC_RING_RIGHT] = player.HoldItem;
-			else
-				cn = SwapItem(&player.InvBody[INVLOC_RING_RIGHT], &player.HoldItem);
-		}
-		break;
 	case ILOC_AMULET:
-		NetSendCmdChItem(false, INVLOC_AMULET);
-		if (player.InvBody[INVLOC_AMULET].isEmpty())
-			player.InvBody[INVLOC_AMULET] = player.HoldItem;
+	case ILOC_ARMOR: {
+		auto iLocToInvLoc = [&r](item_equip_type loc) {
+			switch (loc) {
+			case ILOC_HELM:
+				return INVLOC_HEAD;
+			case ILOC_RING:
+				return (r == SLOTXY_RING_LEFT ? INVLOC_RING_LEFT : INVLOC_RING_RIGHT);
+			case ILOC_AMULET:
+				return INVLOC_AMULET;
+			case ILOC_ARMOR:
+				return INVLOC_CHEST;
+			}
+		};
+		inv_body_loc slot = iLocToInvLoc(il);
+		NetSendCmdChItem(false, INVLOC_CHEST);
+		if (player.InvBody[slot].isEmpty())
+			player.InvBody[slot] = player.HoldItem;
 		else
-			cn = SwapItem(&player.InvBody[INVLOC_AMULET], &player.HoldItem);
+			cn = SwapItem(&player.InvBody[slot], &player.HoldItem);
 		break;
+	}
 	case ILOC_ONEHAND:
 		if (r <= SLOTXY_HAND_LEFT_LAST) {
 			if (player.InvBody[INVLOC_HAND_LEFT].isEmpty()) {
@@ -1059,18 +1056,11 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			force_redraw = 255;
 		}
 		break;
-	case ILOC_ARMOR:
-		NetSendCmdChItem(false, INVLOC_CHEST);
-		if (player.InvBody[INVLOC_CHEST].isEmpty())
-			player.InvBody[INVLOC_CHEST] = player.HoldItem;
-		else
-			cn = SwapItem(&player.InvBody[INVLOC_CHEST], &player.HoldItem);
-		break;
 	case ILOC_UNEQUIPABLE:
 		if (player.HoldItem._itype == ITYPE_GOLD && it == 0) {
 			int ii = r - SLOTXY_INV_FIRST;
-			int yy = 10 * (ii / 10);
-			int xx = ii % 10;
+			int yy = INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE);
+			int xx = ii % INV_ROW_SLOT_SIZE;
 			if (player.InvGrid[yy + xx] > 0) {
 				int il = player.InvGrid[yy + xx] - 1;
 				int gt = player.InvList[il]._ivalue;
@@ -1120,41 +1110,14 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 
 			// Calculate top-left position of item for InvGrid and then add item to InvGrid
 
-			int xx = std::max(ii % 10 - ((sx - 1) / 2), 0);
-			int yy = std::max(10 * (ii / 10 - ((sy - 1) / 2)), 0);
+			int xx = std::max(ii % INV_ROW_SLOT_SIZE - ((sx - 1) / 2), 0);
+			int yy = std::max(INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE - ((sy - 1) / 2)), 0);
 			AddItemToInvGrid(player, xx + yy, it, sx, sy);
 		}
 		break;
 	case ILOC_BELT: {
 		int ii = r - SLOTXY_BELT_FIRST;
-		if (player.HoldItem._itype == ITYPE_GOLD) {
-			if (!player.SpdList[ii].isEmpty()) {
-				if (player.SpdList[ii]._itype == ITYPE_GOLD) {
-					i = player.HoldItem._ivalue + player.SpdList[ii]._ivalue;
-					if (i <= MaxGold) {
-						player.SpdList[ii]._ivalue = i;
-						player._pGold += player.HoldItem._ivalue;
-						SetPlrHandGoldCurs(&player.SpdList[ii]);
-					} else {
-						i = MaxGold - player.SpdList[ii]._ivalue;
-						player._pGold += i;
-						player.HoldItem._ivalue -= i;
-						player.SpdList[ii]._ivalue = MaxGold;
-						player.SpdList[ii]._iCurs = ICURS_GOLD_LARGE;
-
-						// BUGFIX: incorrect values here are leftover from beta (fixed)
-						cn = GetGoldCursor(player.HoldItem._ivalue);
-						cn += CURSOR_FIRSTITEM;
-					}
-				} else {
-					player._pGold += player.HoldItem._ivalue;
-					cn = SwapItem(&player.SpdList[ii], &player.HoldItem);
-				}
-			} else {
-				player.SpdList[ii] = player.HoldItem;
-				player._pGold += player.HoldItem._ivalue;
-			}
-		} else if (player.SpdList[ii].isEmpty()) {
+		if (player.SpdList[ii].isEmpty()) {
 			player.SpdList[ii] = player.HoldItem;
 		} else {
 			cn = SwapItem(&player.SpdList[ii], &player.HoldItem);
@@ -1217,7 +1180,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 	bool done = false;
 
 	int r = 0;
-	for (; (DWORD)r < NUM_XY_SLOTS && !done; r++) {
+	for (; (DWORD)r < NUM_XY_SLOTS; r++) {
 		int xo = RIGHT_PANEL;
 		int yo = 0;
 		if (r >= SLOTXY_BELT_FIRST) {
@@ -1231,7 +1194,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		    && cursorPosition.y >= InvRect[r].y + yo - (INV_SLOT_SIZE_PX + 1)
 		    && cursorPosition.y < InvRect[r].y + yo) {
 			done = true;
-			r--;
+			break;
 		}
 	}
 
