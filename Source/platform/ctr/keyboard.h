@@ -1,3 +1,4 @@
 #include <3ds.h>
 
-const char *ctr_vkbdInput(const char *title, const char *inText, char *outText);
+void ctr_vkbdInput(const char *title, const char *inText, char *outText, int maxLength);
+void ctr_vkbdFlush();
