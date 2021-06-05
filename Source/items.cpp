@@ -405,6 +405,8 @@ int items_get_currlevel()
 	if (currlevel >= 21 && currlevel <= 24)
 		lvl = currlevel - 7;
 
+	return AdvanceRndSeed() % 17 + 1;
+
 	return lvl;
 }
 
@@ -2528,10 +2530,20 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 	SetupItem(ii);
 }
 
+#include <chrono>
+
+
 void SpawnItem(int m, Point position, bool sendmsg)
 {
+	SDL_Log("SPAWN ITEM!");
 	int idx;
 	bool onlygood = true;
+	int iter = 0;
+
+	int ii = AllocateItem();
+	GetSuperItemSpace(position, ii);
+
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
@@ -2541,9 +2553,18 @@ void SpawnItem(int m, Point position, bool sendmsg)
 		}
 		onlygood = true;
 	} else if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || quests[Q_MUSHROOM]._qvar1 != QS_MUSHGIVEN) {
-		idx = RndItem(m);
-		if (!idx)
+	begin:
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		int diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+		if (diff > 5000) {
+			NetSendCmdString(1 << myplr, "ITEM NOT FOUND IN 5 SECONDS! BREAKING!");
 			return;
+		}
+		monster[m].MData->mLevel = iter%35 + 1;
+		idx = RndItem(m);
+		//SDL_Log("IDX: %d", idx);
+		if (!idx)
+			goto begin;
 		if (idx > 0) {
 			idx--;
 			onlygood = false;
@@ -2559,15 +2580,48 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	if (numitems >= MAXITEMS)
 		return;
 
-	int ii = AllocateItem();
-	GetSuperItemSpace(position, ii);
-	int uper = monster[m]._uniqtype ? 15 : 1;
 
+	int uper = 15;
+
+	monster[m].MData->mLevel = GetRndSeed() % 30 + 1;
 	int mLevel = monster[m].MData->mLevel;
 	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
 	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
+
+	std::string tmp(items[ii]._iIName);
+	//char derp[64];
+
+	std::transform(tmp.begin(), tmp.end(), tmp.begin(),
+	    [](unsigned char c) { return std::tolower(c); });
+
+	//generate uniques only?
+	if (items[ii]._iMagical != ITEM_QUALITY_UNIQUE)
+		goto begin;
+
+	SDL_Log("ANY UNIQ? %s", tmp.c_str());
+
+	BYTE talkSave = sgbNextTalkSave - 1;
+	talkSave &= 7;
+	std::string itemName(sgszTalkSave[talkSave]);
+
+	std::transform(itemName.begin(), itemName.end(), itemName.begin(),
+	    [](unsigned char c) { return std::tolower(c); });
+	//sprintf(derp, "%s %d", items[ii]._iIName, (tmp.find(itemName) != std::string::npos));
+
+	if (iter++ > 5000) {
+		NetSendCmdString(1 << myplr, "ITEM NOT FOUND IN 5000 TRIES! BREAKING!");
+		goto end;
+	}
+	if (tmp.find(itemName) != std::string::npos) {
+		goto end;
+	}
+	goto begin;
+
+end:
+
+	items[ii]._iIdentified = true;
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);

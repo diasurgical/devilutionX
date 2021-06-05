@@ -60,6 +60,10 @@ extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
 
+extern char sgszTalkSave[8][80];
+extern BYTE sgbNextTalkSave;
+extern BYTE sgbTalkSavePos;
+
 /**
  * @brief Check if the UI can cover the game area entierly
  */
