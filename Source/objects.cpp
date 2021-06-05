@@ -3653,7 +3653,10 @@ bool OperateShrineThaumaturgic(int pnum)
 		assert((DWORD)v1 < MAXOBJECTS);
 		if ((object[v1]._otype == OBJ_CHEST1
 		        || object[v1]._otype == OBJ_CHEST2
-		        || object[v1]._otype == OBJ_CHEST3)
+		        || object[v1]._otype == OBJ_CHEST3
+		        || object[v1]._otype == OBJ_TCHEST1
+		        || object[v1]._otype == OBJ_TCHEST2
+		        || object[v1]._otype == OBJ_TCHEST3)
 		    && object[v1]._oSelFlag == 0) {
 			object[v1]._oRndSeed = AdvanceRndSeed();
 			object[v1]._oSelFlag = 1;
