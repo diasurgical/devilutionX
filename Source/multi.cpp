@@ -271,7 +271,7 @@ static void multi_player_left_msg(int pnum, bool left)
 				pszFmt = _("Player '{:s}' dropped due to timeout");
 				break;
 			}
-			EventPlrMsg(pszFmt, plr[pnum]._pName);
+			EventPlrMsg(fmt::format(pszFmt, plr[pnum]._pName).c_str());
 		}
 		plr[pnum].plractive = false;
 		plr[pnum]._pName[0] = '\0';
