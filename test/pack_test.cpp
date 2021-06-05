@@ -381,16 +381,23 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 const PkItemStruct PackedDiabloMPItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
-    {  309674341,         193, 109,   0,    0,     0,   0,    0,      0,      0 }, // Book of Firebolt
+	{  309674341,         193, 109,   0,    0,     0,   0,    0,      0,      0 }, // Book of Firebolt
 	{ 1291471654,           6,  34,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Resurrect
+	{ 1580941742,         385,  24,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Healing
+	{  467997257,         388,  27,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Town Portal
+	{  796933756,         385,  25,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Mana
 	// clang-format on
 };
 
 const TestItemStruct DiabloMPItems[] = {
 	// clang-format off
-	//_iIName,            _itype, _iClass, _iCurs, _iIvalue, _iMinDam, _iMaxDam, _iAC,   _iFlags, _iMiscId, _iSpell, _iCharges, _iMaxCharges, _iDurability, _iMaxDur, _iPLDam, _iPLToHit, _iPLAC, _iPLStr, _iPLMag, _iPLDex, _iPLVit, _iPLFR, _iPLLR, _iPLMR, _iPLMana, _iPLHP, _iPLDamMod, _iPLGetHit, _iPLLight, _iSplLvlAdd, _iUid, _iFMinDam, _iFMaxDam, _iLMinDam, _iLMaxDam, _iPrePower, _iSufPower, _iMinStr, _iMinMag, _iMinDex, IDidx );
-	{ "Book of Firebolt",      0,       3,     87,     1000,        0,        0,    0,         0,       24,       1,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       15,        0,   114 },
-	{ "Scroll of Resurrect",   0,       3,      1,      250,        0,        0,    0,         0,       22,      32,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    34 },
+	//_iIName,             _itype, _iClass, _iCurs, _iIvalue, _iMinDam, _iMaxDam, _iAC,   _iFlags, _iMiscId, _iSpell, _iCharges, _iMaxCharges, _iDurability, _iMaxDur, _iPLDam, _iPLToHit, _iPLAC, _iPLStr, _iPLMag, _iPLDex, _iPLVit, _iPLFR, _iPLLR, _iPLMR, _iPLMana, _iPLHP, _iPLDamMod, _iPLGetHit, _iPLLight, _iSplLvlAdd, _iUid, _iFMinDam, _iFMaxDam, _iLMinDam, _iLMaxDam, _iPrePower, _iSufPower, _iMinStr, _iMinMag, _iMinDex, IDidx );
+	{ "Book of Firebolt",       0,       3,     87,     1000,        0,        0,    0,         0,       24,       1,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       15,        0,   114 },
+	{ "Scroll of Resurrect",    0,       3,      1,      250,        0,        0,    0,         0,       22,      32,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    34 },
+	{ "Potion of Healing",      0,       3,     32,       50,        0,        0,    0,         0,        3,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    24 },
+	{ "Scroll of Town Portal",  0,       3,      1,      200,        0,        0,    0,         0,       21,       7,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    27 },
+	{ "Potion of Mana",         0,       3,     39,       50,        0,        0,    0,         0,        6,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    25 },
+
 	// clang-format on
 };
 
@@ -487,7 +494,6 @@ const PkItemStruct PackedHellfireItems[] = {
 	{ 1282740811,         290,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Permanence
 	{ 1403842263,         858,  70,   5,   90,    90,   0,    0,      0,      0 }, // Demon Plate Armor
 	{ 1543909415,         284,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Fortitude
-	{ 1572202402,         769, 156,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Regha
 	{ 1572202402,         769, 157,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Regha
 	{ 1572202657,         257, 156,   5,    0,     0,   0,    0,      0,      0 }, // Bronze Ring of dexterity
 	{ 1642077210,         264,  84,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Accuracy
@@ -500,6 +506,8 @@ const PkItemStruct PackedHellfireItems[] = {
 	{  580426378,         279,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Death
 	{  626919077,         264,  85,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Sharpness
 	{  979073763,         267, 119,   3,   13,    13,   0,    0,      0,      0 }, // Crystalline Sword of the leech
+	{ 1294354855,        8208, 153,   3,   45,    45,  14,   14,      0,      0 }, // Plentiful Staff of Mana Shield
+	{  695065155,        2078, 155,   3,   75,    75,   0,    0,      0,      0 }, // King's War Staff
 	// clang-format on
 };
 
@@ -577,7 +585,6 @@ const TestItemStruct HellfireItems[] = {
 	{ "Oil of Permanence",                0,       3,     30,    15000,        0,        0,    0,          0,       38,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    86 },
 	{ "Demon Plate Armor",                9,       2,    225,    80000,        0,        0,   80,          0,        0,       0,         0,            0,           90,       90,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,   107,         0,         0,         0,         0,         -1,         -1,       90,        0,        0,    70 },
 	{ "Oil of Fortitude",                 0,       3,     30,     2500,        0,        0,    0,          0,       37,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    86 },
-	{ "Ring of Regha",                   12,       3,     11,     4175,        0,        0,    0,          0,       25,       0,         0,            0,            0,        0,       0,         0,      0,      -3,      10,      -3,       0,      0,      0,     10,        0,      0,          0,          0,         1,           0,    86,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,   156 },
 	{ "Ring of Regha",                   12,       3,     11,     4175,        0,        0,    0,          0,       25,       0,         0,            0,            0,        0,       0,         0,      0,      -3,      10,      -3,       0,      0,      0,     10,        0,      0,          0,          0,         1,           0,    86,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,   157 },
 	{ "Bronze Ring of dexterity",        12,       3,     12,     5200,        0,        0,    0,          0,       25,       0,         0,            0,            0,        0,       0,         4,      0,       0,       0,       4,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          0,         23,        0,        0,        0,   156 },
 	{ "Oil of Accuracy",                  0,       3,     30,      500,        0,        0,    0,          0,       31,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    84 },
@@ -590,6 +597,8 @@ const TestItemStruct HellfireItems[] = {
 	{ "Oil of Death",                     0,       3,     30,     2500,        0,        0,    0,          0,       34,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    86 },
 	{ "Oil of Sharpness",                 0,       3,     30,      500,        0,        0,    0,          0,       33,       0,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,        0,        0,    85 },
 	{ "Crystalline Sword of the leech",   1,       1,     64,    10020,        2,        6,    0,      32768,        0,       0,         0,            0,           13,       13,     232,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         88,         56,       18,        0,        0,   119 },
+	{ "Plentiful Staff of Mana Shield",  10,       1,    166,     6360,        5,       10,    0,          0,       23,      11,        14,           14,           45,       45,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         15,         -1,        0,       25,        0,   153 },
+	{ "King's War Staff",                10,       1,    124,    92000,        8,       16,    0,          0,       23,       0,         0,            0,           75,       75,     175,        76,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,          4,         -1,       30,        0,        0,   155 },
 	// clang-format on
 };
 
