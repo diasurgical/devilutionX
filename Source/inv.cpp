@@ -641,9 +641,9 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const ItemStruct &item, bool persistItem)
 {
 	int col = slotIndex % INV_ROW_SLOT_SIZE;
-	int row = INV_ROW_SLOT_SIZE * (slotIndex / INV_ROW_SLOT_SIZE);
-	int maxCol = INV_ROW_SLOT_SIZE - 1;
-	int maxRow = (NUM_INV_GRID_ELEM / INV_ROW_SLOT_SIZE) - 1; 
+	int row = slotIndex / INV_ROW_SLOT_SIZE;
+	int maxCol = INV_ROW_SLOT_SIZE;
+	int maxRow = (NUM_INV_GRID_ELEM / INV_ROW_SLOT_SIZE); 
 	Size itemSize = GetInventorySize(item);
 	if (col + itemSize.Width > maxCol)
 		return false;
