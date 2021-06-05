@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-06-04 02:14+0900\n"
+"POT-Creation-Date: 2021-06-06 00:58+0900\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6083,7 +6083,7 @@ msgstr ""
 
 #: Source/stores.cpp:1228
 msgid "Rising Sun"
-msgstr ""
+msgstr "해오름 여관"
 
 #: Source/stores.cpp:1230
 msgid "Talk to Ogden"
@@ -6099,7 +6099,7 @@ msgstr ""
 
 #: Source/stores.cpp:1252 Source/towners.cpp:230
 msgid "Farnham the Drunk"
-msgstr ""
+msgstr "주정뱅이 파넘"
 
 #: Source/stores.cpp:1254
 msgid "Talk to Farnham"
@@ -6146,6 +6146,17 @@ msgid ""
 "levels beneath the Cathedral. Please, good master, put his soul at ease by "
 "destroying his now cursed form..."
 msgstr ""
+"선생님, 이 마을을 구할 수 있는 건 당신뿐입니다! 몇 개월 전, 레오릭 왕의 아들"
+"인 알베르히트 왕자가 유괴되었습니다. 레오릭 왕은 자식을 잃은 분노로 마을에 폭"
+"정을 가했고 나날이 광기에 휩싸여 갔습니다. 왕자의 유괴를 무고한 마을 사람들 "
+"탓으로 돌리고 잔인하게 처형해서 지금은 그 절반도 남아 있지 않게 되었습니"
+"다... 왕국의 기사들과 성직자들이 진정시키려 노력했지만 레오릭 왕은 그들을 적"
+"대시했고, 불행히도 그들이 왕을 시해하는 사태에 이르게 되었습니다. 레오릭 왕"
+"은 숨을 거두면서 신하들에게 끔찍한 저주를 내렸습니다. 영원히 어둠 속에서 자신"
+"을 섬기도록 말이죠... 그리고서 상상도 못할 끔찍한 일이 벌어졌습니다. 레오릭 "
+"왕이 영원한 잠에서 깨어나 미궁의 언데드 군단을 통솔하게 된 겁니다. 왕의 시신"
+"은 대성당 지하묘지 3층에 안치되어 있습니다. 선생님, 부디 저주받은 왕을 거두"
+"어 그 영혼에 평온이 깃들도록 해주십시오."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:19
@@ -6154,6 +6165,8 @@ msgid ""
 "down there, waiting in the putrid darkness for his chance to destroy this "
 "land..."
 msgstr ""
+"말씀드린 대로 왕의 시신은 지하 3층에 안치되어 있습니다. 그 썩은 내 풍기는 어"
+"둠 속에서 이 땅을 멸망시킬 기회만을 노리고 있는 거죠..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:21
@@ -6163,6 +6176,9 @@ msgid ""
 "consumes our land, for your victory is a good omen. May Light guide you on "
 "your way, good master."
 msgstr ""
+"레오릭 왕의 저주는 사라졌지만 거대한 악의 일부에 불과했던 건 아닌지 걱정됩니"
+"다. 어쨌든 당신의 승리는 좋은 징조입니다. 아직은 이 땅을 뒤덮은 어둠으로부터 "
+"몸을 건사할 수 있나 봅니다. 빛이 당신의 길을 이끌어 주시길."
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:23
@@ -6172,6 +6188,9 @@ msgid ""
 "this kingdom from that day forward, but perhaps if you were to free his "
 "spirit from his earthly prison, the curse would be lifted..."
 msgstr ""
+"레오릭 왕은 아들 잃은 걸 견디지 못했지. 나도 왕의 광기를 치료하려 했지만 결"
+"국 왕은 광기에 굴복하고 말았어. 그날부터 이 땅에 암흑의 저주가 씌었지만 자네"
+"가 왕의 영혼을 속세에서 해방시킨다면 저주는 사라질 게야."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:25
@@ -6180,6 +6199,9 @@ msgid ""
 "the kind and just ruler that he was. His death was so sad and seemed very "
 "wrong, somehow."
 msgstr ""
+"레오릭 왕의 죽음에 대한 건 떠올리고 싶지 않아요. 상냥하고 공정한 분이었다는 "
+"것만 기억하고 싶답니다. 그분의 죽음은 너무도 안타깝고 도저히 납득할 수가 없네"
+"요."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:27
@@ -6189,6 +6211,9 @@ msgid ""
 "mithril for him, as well as a field crown to match. I still cannot believe "
 "how he died, but it must have been some sinister force that drove him insane!"
 msgstr ""
+"레오릭 왕을 받드는 기사단을 위해 무기와 갑옷을 정말 많이 만들었지. 왕에겐 거"
+"대한 최고급 미스릴 양손 검과 투구를 헌상한 적도 있어. 그 양반 죽은 게 아직도 "
+"믿기지 않지만 사악한 기운에 사로잡힌 게 틀림없다고!"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:29
@@ -6196,6 +6221,8 @@ msgid ""
 "I don't care about that. Listen, no skeleton is gonna be MY king. Leoric is "
 "King. King, so you hear me? HAIL TO THE KING!"
 msgstr ""
+"그딴 거 알 게 뭐야. 봐봐, 해골 따윈 왕이 아니야. 레오릭이 왕이지. 왕 말이야, "
+"알겠어? 레오릭 전하 만세!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:31
@@ -6205,6 +6232,9 @@ msgid ""
 "you do not stop his reign, he will surely march across this land and slay "
 "all who still live here."
 msgstr ""
+"산 자 속을 방황하는 망자들은 저주받은 왕을 추종하죠. 그자는 전사들을 되살려 "
+"언데드 군대의 증강을 도모할 힘을 쥐었어요. 당신이 그자의 지배에 종지부를 찍"
+"지 않으면 그자는 이 땅을 유린하며 살아 있는 모든 것을 베어 버릴 테죠."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:33
@@ -6214,6 +6244,9 @@ msgid ""
 "need something to use against this King of the undead, then I can help you "
 "out..."
 msgstr ""
+"이봐요, 난 여기서 장사를 하는 거지 정보팔이를 하는 게 아니에요. 옛날에 죽은 "
+"왕 따위는 관심도 없고요. 언데드 왕을 상대로 싸울 무기가 필요한 거라면 도와줄 "
+"수도 있지만 말이죠..."
 
 #. TRANSLATORS: Quest dialog spoken by The Skeleton King (Hostile)
 #: Source/textdat.cpp:35
@@ -6221,6 +6254,8 @@ msgid ""
 "The warmth of life has entered my tomb. Prepare yourself, mortal, to serve "
 "my Master for eternity!"
 msgstr ""
+"산 것의 온기가 내 무덤에 들어왔다. 필멸자여, 영원토록 나의 주인을 섬길 준비"
+"나 하거라!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:37
@@ -6231,6 +6266,10 @@ msgid ""
 "led them to believe that it too holds some arcane powers. Hmm, perhaps they "
 "are not all as smart as we had feared..."
 msgstr ""
+"정말로 이상한 일이로군. 자네도 당혹스럽겠어. 마귀들은 햇빛에 엄청난 힘이 내재"
+"되어 있다고 믿어서 햇빛을 두려워할 텐데, 아마도 간판에 그려진 떠오르는 태양"
+"에 신비한 힘이 깃들어 있다고 여겼나 보네. 흐음, 녀석들, 우리가 두려워할 정도"
+"로 영리하진 않은가 보구만..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
@@ -6244,6 +6283,11 @@ msgid ""
 "the sign to my inn. I don't know why the demons would steal my sign but "
 "leave my family in peace... 'tis strange, no?"
 msgstr ""
+"선생님, 이상한 일을 겪었습니다. 저는 도무지 짐작도 못 하겠습니다. 미궁에 사"
+"는 괴물에 대해 잘 아시죠? 밤에 삐걱거리는 소리가 가게 밖에서 들려서 잠을 깼는"
+"데, 밖을 보니 가게 앞에 마귀처럼 보이는 것들이 있더군요. 순식간에 제 여관 간"
+"판을 훔쳐서 도망갔습니다. 왜 마귀들이 제 가족에게는 손대지 않고 간판만 훔쳐"
+"서 달아났는지 모르겠습니다... 정말 이상하지 않습니까?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:41
@@ -6254,6 +6298,9 @@ msgid ""
 "cap was left in one of the rooms by a magician who stayed here some time "
 "ago. Perhaps it may be of some value to you."
 msgstr ""
+"오, 일부러 찾아주시지 않아도 됐는데... 덕분에 새로운 걸 만들지 않아도 되겠습"
+"니다. 어디 보자, 답례를 해야겠는데, 흐음, 뭐가 좋으려나... 아, 그래! 예전에 "
+"묵었던 마법사가 두고간 모자인데 아마도 당신에게 도움이 되지 않을까 싶습니다."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:43
@@ -6262,6 +6309,9 @@ msgid ""
 "- is nothing sacred? I hope that Ogden and Garda are all right. I suppose "
 "that they would come to see me if they were hurt..."
 msgstr ""
+"맙소사, 마귀들이 밤에 마을을 약탈하며 돌아다녔다니, 이게 무슨 변인가? 오그덴"
+"과 가르다가 무사해야 할 텐데. 물론 다치기라도 했다면 나한테 왔겠지만 말이"
+"야..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:45
@@ -6270,6 +6320,8 @@ msgid ""
 "right through the whole thing. Thank the Light that those monsters didn't "
 "attack the inn."
 msgstr ""
+"세상에! 간판이 어디론가 사라졌다고요? 할머니와 저는 자고 있었는데 괴물들이 여"
+"관을 습격하지 않아서 다행이에요."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:47
@@ -6279,6 +6331,8 @@ msgid ""
 " \n"
 "Demons are concerned with ripping out your heart, not your signpost."
 msgstr ""
+"마귀들이 오그덴의 간판을 훔쳐갔다고? 우리 심장이 아니라 간판을 노리다니 살면"
+"서 별일을 다 보는군 그래."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:49
@@ -6288,6 +6342,9 @@ msgid ""
 "new sign with some pretty drawing on it. Maybe a nice mug of ale or a piece "
 "of cheese..."
 msgstr ""
+"내 생각에는 누군가 돈을 노리고 간판을 훔쳐간 거야. 내가 오그덴이면... 물론 아"
+"니지만 어쨌든 내가 그렇다면... 예쁜 그림이 있는 간판을 새로 사겠어. 멋진 맥주"
+"잔이나 치즈 같은 게 그려진 걸로 말야..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:51
@@ -6296,6 +6353,8 @@ msgid ""
 " \n"
 "Never let their erratic actions confuse you, as that too may be their plan."
 msgstr ""
+"마귀의 생각을 제대로 이해할 수 있는 인간은 없죠. 놈들의 기이한 행동에 절대 현"
+"혹되어선 안 돼요. 그게 바로 놈들의 목적이니까요."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:53
@@ -6306,6 +6365,8 @@ msgid ""
 "Look, I got over simple sign stealing months ago. You can't turn a profit on "
 "a piece of wood."
 msgstr ""
+"뭐요? 내가 훔쳤다고 그리스월드가 그러던가요? 이봐요, 팔아 봐야 돈도 안 되는 "
+"그딴 간판을 뭐 하러 훔치겠어요."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:55
@@ -6314,16 +6375,20 @@ msgid ""
 "no leave with life! You kill big uglies and give back Magic. Go past corner "
 "and door, find uglies. You give, you go!"
 msgstr ""
+"야, 전부 죽이고 다니는 놈! 마법 현판을 가져와라. 안 그럼 공격한다. 살아 못 돌"
+"아간다! 커다란 못난이들 죽이고 마법 현판 되찾아라. 모통이 돌면 문 안에 못난이"
+"들 있다. 현판 찾아오면 보내준다!"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:57
 msgid "You kill uglies, get banner. You bring to me, or else..."
-msgstr ""
+msgstr "못난이들 죽이고 간판 가져와라. 나한테 안 가져오면..."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:59
 msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic!"
 msgstr ""
+"가져왔나! 그래, 좋다! 이제 가라, 우린 강하다. 센 마법으로 다 죽일 테다!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:61
@@ -6352,6 +6417,22 @@ msgid ""
 "You must hurry and save the prince from the sacrificial blade of this "
 "demented fiend!"
 msgstr ""
+"불길한 징조야. 내가 가장 두려워하던 일이 일어났어. 옛 전설 같은 걸 믿고 싶지"
+"는 않지만 지금에서는 부정할 수가 없군그래. 내가 누구인지 밝혀야 할 때가 온 "
+"것 같군. \n"
+"\n"
+"내 진짜 이름은 데커드 케인으로 영원한 악의 봉인을 수호하는 고대 결사대의 마지"
+"막 후예라네. 허나 아무래도 악마의 봉인이 풀린 듯하군. 라자루스 대주교는 일찍"
+"이 레오릭 왕이 총애하던 참모로, 행방불명된 알브레히트 왕자를 찾으러 마을 사람"
+"들을 미궁으로 이끌고 갔지. 하지만 살아 돌아온 사람은 그저 몇 사람뿐... \n"
+"\n"
+"내가 어리석었어! 라자루스의 배신을 눈치챘어야 했는데 말일세. 알브레히트 왕자"
+"를 납치해 미궁에 숨긴 것도 필시 라자루스의 짓일 터. 대주교씩이나 되는 사람이 "
+"어째서 어둠의 세력으로 전향해 왕자에게 흥미를 가졌는지 납득은 안 가네만, 어둠"
+"의 지배자에게 왕자를 제물로 바치려는 속셈이 틀림없네! \n"
+"\n"
+"생존자들 말로는 라자루스가 미궁 깊숙한 곳으로 들어간 게 마지막 모습이었다는"
+"군. 이 광기들린 악마의 희생의 칼끝에서 서둘러 왕자를 구하게나!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:63
@@ -6359,6 +6440,8 @@ msgid ""
 "You must hurry and rescue Albrecht from the hands of Lazarus. The prince and "
 "the people of this kingdom are counting on you!"
 msgstr ""
+"라자루스의 손아귀에서 서둘러 알브레히트 왕자를 구하게. 왕자와 이 왕국 사람들 "
+"모두 자네만 믿고 있다네!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:65
@@ -6374,6 +6457,15 @@ msgid ""
 "again sow chaos in the realm of mankind. You must venture through the portal "
 "and destroy Diablo before it is too late!"
 msgstr ""
+"참으로 끔직한 이야기일세. 라자루스는 죄악의 대가로 틀림없이 지옥불에 떨어질 "
+"테지. 자네가 말한 소년은 왕자가 아니네. 알브레히트 왕자는 여전히 곤경에 처해 "
+"있을 테지. 바닥에 그려진 힘의 문양은 틀림없이 미궁의 중심으로 가는 차원문일 "
+"거네.\n"
+"\n"
+"이걸 알아 두게나. 자네가 맞설 상대는 공포의 군주라 불리는 악마라네. 사람들에"
+"겐 디아블로라고 알려져 있지. 놈은 몇 세기 전 미궁에 유폐되었지만 다시 한번 "
+"이 세상에 혼란을 초래하진 않을까 염려스럽군. 너무 늦기 전에 자네가 그 차원문"
+"으로 가서 디아블로를 쓰러트리게!"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:67
@@ -6383,6 +6475,9 @@ msgid ""
 "suppose he was killed along with most of the others. If you would do me a "
 "favor, good master - please do not talk to Farnham about that day."
 msgstr ""
+"라자루스 대주교는 마을 사람들을 이끌고 미궁에 들어갔습니다. 그날 많은 친구들"
+"을 잃게 되었고 라자루스도 돌아오지 않았죠. 다른 사람들과 마찬가지로 살해당했"
+"을 겁니다. 부탁이니 파넘에게는 그날 일을 묻지 말아 주십시오."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:71
@@ -6392,6 +6487,9 @@ msgid ""
 "that. He was an Archbishop, and always seemed to care so much for the "
 "townsfolk of Tristram. So many were injured, I could not save them all..."
 msgstr ""
+"그날 밤 마을 사람들이 하려는 계획을 듣고 귀를 의심했지. 라자루스가 그 같은 짓"
+"을 저지를 거라고는 생각도 못했는데 말이야. 대주교로서 언제나 트리스트럼 사람"
+"들을 보살펴 주었거든. 부상자도 너무 많아 그들 모두를 구할 수는 없었네..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:73
@@ -6400,6 +6498,9 @@ msgid ""
 "mother's funeral, and was supportive of my grandmother and myself in a very "
 "troubled time. I pray every night that somehow, he is still alive and safe."
 msgstr ""
+"라자루스는 친절하고 자비로운 분이셨어요. 제 어머니 장례식에서 송사를 맡아 주"
+"셨고, 곤경에 처한 저와 제 할머니의 버팀목이 되어 주셨죠. 그분이 무사하기를 매"
+"일 밤 기도한답니다."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:75
@@ -6409,6 +6510,9 @@ msgid ""
 "much as lift his mace against them. He just ran deeper into the dim, endless "
 "chambers that were filled with the servants of darkness!"
 msgstr ""
+"라자루스가 우리를 이끌고 미궁에 갔을 때 나도 거기 있었지. 천벌을 내리는 거라"
+"고 외치던 인간이 막상 마귀들하고 싸움이 시작되자 전곤 한번 안 휘두르더군. 그"
+"러더니 마귀들이 가득한 끝 모를 어둠 속으로 냅다 튀었지 뭐야!"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:77
@@ -6417,6 +6521,9 @@ msgid ""
 "dead! Dead! Do you hear me? They just keep falling and falling... their "
 "blood spilling out all over the floor... all his fault..."
 msgstr ""
+"놈들은 찌르고 물어뜯으며 우리를 포위했어. 거짓말쟁이! 거짓말쟁이! 거짓말쟁"
+"이! 전부 죽었어! 죽었다고! 알겠어? 차례대로 쓰러지고... 바닥이 피로 물들어 갔"
+"어... 전부 그놈 탓이야..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:79
@@ -6425,6 +6532,9 @@ msgid ""
 "conflict within his being. He poses a great danger, and will stop at nothing "
 "to serve the powers of darkness which have claimed him as theirs."
 msgstr ""
+"당신이 말하는 라자루스를 만난 적은 없지만 그자의 내면에서 크나큰 갈등이 느껴"
+"지는군요. 그자는 매우 위험한 존재예요. 자신을 사로잡은 어둠의 힘을 섬기기 위"
+"해 그 어떠한 짓도 서슴지 않을 테니까요."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:81
@@ -6433,6 +6543,9 @@ msgid ""
 "down there. Didn't help save my leg, did it? Look, I'll give you a free "
 "piece of advice. Ask Farnham, he was there."
 msgstr ""
+"그래요, 정의의 라자루스는 저 지하 괴물들과 맞서기에 아주아주 제격이었던 양반"
+"이죠. 내 다리 하나 못 구했으면서, 그렇잖아요? 공짜로 하나 가르져 주죠. 파넘한"
+"테 물어봐요. 거기 있었으니까요."
 
 #. TRANSLATORS: Quest dialog spoken by Lazarus (Hostile)
 #: Source/textdat.cpp:83
@@ -7747,7 +7860,7 @@ msgid ""
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
 "오그덴이 왜 트리스트럼에 머물고 있는지 도통 이해가 안 가. 정서가 다소 불안정"
-"한 면이 있지만 총명한데다 근면해서 어디를 가도 성공할 텐데 말이야. 인근 지역"
+"한 면이 있지만 총명한 데다 근면해서 어디를 가도 성공할 텐데 말이야. 인근 지역"
 "에서 살인이 빈번히 일어나는 게 두려워서 그럴 수도 있겠지만 가족들이 그대로 머"
 "물기를 아내가 바라서 그럴지도 모르지."
 
@@ -7888,9 +8001,9 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
-"도끼? 그래, 좋은 무기라 어떤 적과 맞서도 부족함이 없지. 쩍 하고 공기를 가르"
-"면 짝 하고 바닥에 널려 있을 악마 놈들 대가리를 상상해 보라고. 잽싸게 휘두르"
-"는 건 무리지만 파괴력은 발군이니 염두에 두도록 해!"
+"도끼? 그래, 좋은 무기라 어떤 적과 맞서도 부족함이 없지. 허공을 가르기만 해도 "
+"바닥에 널부러져 있을 악마 놈 대가리가 눈앞에 선하군. 잽싸게 휘두르는 건 무리"
+"지만 파괴력은 발군이니 염두에 두도록 해!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -8130,6 +8243,9 @@ msgid ""
 "words. Should you already have knowledge of the arcane mysteries scribed "
 "within a book, remember - that level of mastery can always increase."
 msgstr ""
+"지혜란 구하는 것이지 그냥 주어지는 것이 아니죠. 지식이 담긴 서적을 발견하면 "
+"그 책을 탐독하도록 하세요. 책에 담긴 신비한 지식을 이해할 수 있다면 숙련도가 "
+"더욱 증가할 테니까요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:430
@@ -8141,6 +8257,11 @@ msgid ""
 "be kept at the ready in your mind. Know also that these scrolls can be read "
 "but once, so use them with care."
 msgstr ""
+"강력한 힘은 대게 단명하는 법이죠.. 고대 힘의 언어가 쓰인 양피지 두루마리를 발"
+"견하는 경우가 있을 거예요. 두루마리의 장점은 숙련자든 초보자든 같은 능력을 발"
+"휘할 수 있다는 거고, 단점은 그 자리에서 소리 내어 읽어야 하기에 미리 기억해 "
+"둘 수 없다는 거죠. 또한 두루마리는 딱 한 번만 읽을 수 있으니 잘 생각해서 사용"
+"해야 해요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:432
@@ -8151,6 +8272,10 @@ msgid ""
 "magical energies many times over. I have the ability to restore their power "
 "- but know that nothing is done without a price."
 msgstr ""
+"태양의 그 뜨거움을 가늠할 길은 없지만, 한낱 양초의 불길이 더 위험할 때도 있"
+"는 법이죠. 아무리 강력한 에너지라도 한데 모으지 않으면 소용이 없어요. 지팡이"
+"에 담겼던 많은 주문을 마법 에너지로 다시 충전할 수 있죠. 나에겐 그 힘을 되돌"
+"릴 능력이 있지만 금전적인 대가가 필요해요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:434
@@ -8159,6 +8284,9 @@ msgid ""
 "or scroll that you cannot decipher, do not hesitate to bring it to me. If I "
 "can make sense of it I will share what I find."
 msgstr ""
+"머리를 맞대면 지식도 그 만큼 늘어나는 법이죠. 해석할 수 없는 책이나 두루마리"
+"를 찾으면 망설이지 말고 제게 가져오도록 하세요. 해석해서 그 내용을 함께 나눌 "
+"테니까요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:436
@@ -8167,6 +8295,9 @@ msgid ""
 "blacksmith Griswold is more of a sorcerer than he knows. His ability to meld "
 "fire and metal is unequaled in this land."
 msgstr ""
+"강철밖에 모르는 자에겐 강철이야말로 최강의 마법인 셈이죠. 본인은 자각 못 하지"
+"만 대장장이 그리스월드는 정말로 마술사 그 이상이에요. 불과 금속을 융합시키는 "
+"그의 능력은 견줄 자가 없죠."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:438
@@ -8176,6 +8307,9 @@ msgid ""
 "matriarch over her own. She fears me, but it is only because she does not "
 "understand me."
 msgstr ""
+"타락에는 기만의 기운이 담겨 있지만 순결에는 맑은 기운이 서려 있어요. 질리언이"
+"라는 젊은 여성은 순수한 마음을 지니고 있어서 자신보다 조모를 먼저 생각하죠. "
+"질리언이 저를 두려워하는 건 그저 저를 이해하지 못하기 때문이에요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
@@ -8185,6 +8319,9 @@ msgid ""
 "not look. His knowledge of what lies beneath the cathedral is far greater "
 "than even he allows himself to realize."
 msgstr ""
+"어둠 속이든 빛 속이든 상자 속의 보물은 변함이 없는 법이죠. 이야기꾼 케인은 수"
+"수께끼 같은 인물이지만 겉만 보고 하는 소리예요. 케인은 자신이 생ㄱ하는 것보"
+"다 대성당 지하에 있는 것에 대해 훨씬 더 많이 알고 있어요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
@@ -8194,6 +8331,10 @@ msgid ""
 "fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to "
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
+"신뢰가 깊을수록 그 절망감은 더욱 깊은 법이죠. 파넘의 영혼을 앗아 간 건 마귀 "
+"따위가 아니에요. 라자루스 대주교가 마을 사람들을 배신한 걸 보고 그렇게 되었"
+"죠. 파넘에게서 정보를 얻을 수도 있겠지만 진실과 허구를 잘 가려서 들도록 하세"
+"요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -8204,6 +8345,10 @@ msgid ""
 "understanding of the creation of elixirs and potions. He is as great an ally "
 "as you have in Tristram."
 msgstr ""
+"기술과 마음 그리고 정신이 완벽하게 조화를 이룰 때, 기적을 일으킬 수 있는 법이"
+"죠. 치료사 페핀은 몸속을 훤히 꿰뚫어 보지만 저로선 불가능한 일이에요. 환자를 "
+"치료하는 페핀의 능력은 비약과 물약 제조에 대한 이해를 바탕으로 더욱 증대하고 "
+"있죠. 트리스트럼에서 그만큼 든든한 아군은 없을 거예요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:446
@@ -8216,6 +8361,11 @@ msgid ""
 "reproachful, Wirt can provide assistance for your battle against the "
 "encroaching Darkness."
 msgstr ""
+"알 수 없는 다양한 미래가 있지만 그때가 오면 세상을 지배하는 건 아이들이죠. 워"
+"트는 영혼에 어둠이 드리워졌지만 마을이나 주민들에게 해가 될 정도는 아니에요. "
+"이웃 마을의 부랑아나 비밀스러운 길드와 은밀한 거래를 하기에 트리스트럼에서는 "
+"쉽게 구할 수 없는 것들을 접할 수 있죠. 방법이 좀 그럴지는 몰라도 잠식해오는 "
+"어둠과 맞섬에 있어 워트가 도움이 될 거예요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -8228,11 +8378,17 @@ msgid ""
 "found there, provide a glimpse of a life that the people here remember. It "
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
+"벽과 지붕이 있다고 해서 집이 되는 건 아니죠. 여관 주인 오그덴은 사람들이 생각"
+"하는 것보다 이 마을에서 훨씬 더 많은 역할을 하고 있어요. 질리언과 그 조모에"
+"게 보금자리를 마련해 주고 파넘의 남은 생애를 돌볼 뿐만 아니라 남은 마을 사람"
+"들에게 옛 트리스트럼과의 유대를 이어 주고 있죠. 오그덴의 여관에는 소박한 즐거"
+"움이 여전히 남아 있기에 그리운 옛 기억을 상기시키는 거죠. 그러한 추억이 당신"
+"의 성공을 기원하는 원동력이 되는 거예요."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
 msgid "Pssst... over here..."
-msgstr ""
+msgstr "쉬잇... 여기예요..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:451
@@ -8242,6 +8398,10 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
+"트리스트럼엔 그쪽이 미궁에서 발견한 걸 쓰려는 사람이 아무도 없어요. 못 믿을"
+"진 몰라도 난 아니지만요.\n"
+"\n"
+"때론 그쪽한테 필요한 걸 발견할 수도 있을 거예요."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:453
@@ -8249,6 +8409,7 @@ msgid ""
 "Don't trust everything the drunk says. Too many ales have fogged his vision "
 "and his good sense."
 msgstr ""
+"주정뱅이들이 하는 말은 하나도 믿지 마요. 술은 판단력을 흐리게 하니까요."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:455
@@ -8258,6 +8419,9 @@ msgid ""
 "Griswold, Pepin or that witch, Adria. I'm sure that they will snap up "
 "whatever you can bring them..."
 msgstr ""
+"그쪽이 아직 몰라서 그러나 본데 난 트리스트럼에서 어떤 것도 매입하지 않아요. "
+"품질 좋은 제품만 들인다고요. 고물딱지를 팔고 싶으면 그리스월드나 페핀, 아니"
+"면 아드리아한테나 가 봐요. 그딴 걸 가져가도 틀림없이 응해 줄 테니까요..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:457
@@ -8267,6 +8431,9 @@ msgid ""
 "I'll never get enough money to... well, let's just say that I have definite "
 "plans that require a large amount of gold."
 msgstr ""
+"대장장이 그리스월드는 내 생명의 은인이에요. 게다가 날 대장간 도제로 들였죠. "
+"정말 멋진 사나이에요. 하지만 난 돈이 정말 많이 필요하거든요... 뭐, 막대한 돈"
+"이 드는 계획이 있어서라고 해두죠."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:459
@@ -8276,6 +8443,9 @@ msgid ""
 "Gillian is a beautiful girl who should get out of Tristram as soon as it is "
 "safe. Hmmm... maybe I'll take her with me when I go..."
 msgstr ""
+"내가 좀만 더 나이가 많았으면 질리언한테 값비싼 것들을 한아름 안겨 줘서 내 여"
+"자로 만들었을 텐데 말이죠. 질리안은 예쁜 여자라서 트리스트럼처럼 위험한 데 있"
+"으면 안 돼요. 흐음... 내가 여기를 떠날 때 데리고 가면 되겠죠..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:461
@@ -8284,6 +8454,9 @@ msgid ""
 "woman across the river. He keeps telling me about how lucky I am to be "
 "alive, and how my story is foretold in legend. I think he's off his crock."
 msgstr ""
+"케인 영감은 너무 많이 알아서 탈이에요. 정말 오싹하게 만든다니까요. 심지어 강 "
+"건너 사는 아줌마보다 더하죠. 내가 살아 돌아온 게 기적이라느니, 전설에 이미 예"
+"견된 일이라느니 이런 말만 해대요. 늙다리가 어련하겠어요."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:463
@@ -8294,6 +8467,10 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs..."
 msgstr ""
+"파넘은 심각한 문제를 안고 있죠. 그게 얼마나 심각한 건지 나도 잘 알아요. 전적"
+"으로 믿었던 라자루스가 파넘을 죽음의 문턱까지 이르게 했거든요. 아, 난 그게 어"
+"떤 건지 알고 있으니까 미궁에 있는 악귀를 어떻게 쓸어버릴 건지 굳이 나한테 말"
+"할 필요는 없어요. 그쪽 다리나 조심하세요..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -8303,6 +8480,10 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
+"떨어져 나간 손발을 다시 붙은 것처럼 느껴질 정도로 페핀 영감은 정말 솜씨가 좋"
+"아요.\n"
+"\n"
+"페핀이 만든 물약이 있었더라면 내 다리는 멀쩡했겠죠..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:467
@@ -8312,6 +8493,9 @@ msgid ""
 "get whatever she needs, too. Adria gets her hands on more merchandise than "
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
+"아드리아는 정말 성가셔요. 물론 케인 영감이 해주는 옛날 얘기도 오싹하지만 저 "
+"마녀는 과거를 볼 수 있거든요. 게다가 필요한 건 항상 손에 넣더군요. 아드리아"
+"는 축제 때 열리는 시장에서 본 것보다도 더 많은 상품을 갖고 있더라고요."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:469
@@ -8321,6 +8505,9 @@ msgid ""
 "stupid tavern. I guess at the least he gives Gillian a place to work, and "
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
+"오그덴은 바보예요. 비교적 싼 가격에 이 마을을 벗어나게 해주겠다고 했는데 저 "
+"거지 같은 가게를 계속 운영해야 한다더군요. 뭐, 적어도 질리언은 계속 일할 수 "
+"있는 데다 가르다 아줌마는 끝내주는 셰퍼드 파이를 만들어 주긴 하지만요..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -8954,39 +9141,39 @@ msgstr ""
 
 #: Source/towners.cpp:96
 msgid "Griswold the Blacksmith"
-msgstr ""
+msgstr "대장장이 그리스월드"
 
 #: Source/towners.cpp:119
 msgid "Ogden the Tavern owner"
-msgstr ""
+msgstr "여관 주인 오그덴"
 
 #: Source/towners.cpp:129
 msgid "Wounded Townsman"
-msgstr ""
+msgstr "부상당한 마을 주민"
 
 #: Source/towners.cpp:152
 msgid "Adria the Witch"
-msgstr ""
+msgstr "마녀 아드리아"
 
 #: Source/towners.cpp:162
 msgid "Gillian the Barmaid"
-msgstr ""
+msgstr "여급 질리언"
 
 #: Source/towners.cpp:195
 msgid "Pepin the Healer"
-msgstr ""
+msgstr "치료사 페피"
 
 #: Source/towners.cpp:213
 msgid "Cain the Elder"
-msgstr ""
+msgstr "케인 장로"
 
 #: Source/towners.cpp:243
 msgid "Cow"
-msgstr ""
+msgstr "소"
 
 #: Source/towners.cpp:263
 msgid "Lester the farmer"
-msgstr ""
+msgstr "농부 레스터"
 
 #: Source/towners.cpp:277
 msgid "Complete Nut"
