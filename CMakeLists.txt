@@ -493,7 +493,10 @@ if(NINTENDO_3DS)
     Source/platform/ctr/display.cpp
     Source/platform/ctr/messagebox.cpp
     Source/platform/ctr/random.cpp
-    Source/platform/ctr/sockets.cpp)
+    Source/platform/ctr/sockets.cpp
+    Source/platform/ctr/asio/net/if.c
+    Source/platform/ctr/asio/sys/socket.c
+    Source/platform/ctr/asio/sys/uio.c)
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
