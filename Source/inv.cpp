@@ -161,19 +161,18 @@ void InitInv()
 	drawsbarflag = false;
 }
 
-static void InvDrawSlotBack(const CelOutputBuffer &out, int x, int y, int w, int h)
+static void InvDrawSlotBack(const CelOutputBuffer &out, Point targetPosition, Size size)
 {
-	SDL_Rect srcRect = MakeSdlRect(0, 0, w, h);
-	Point targetPosition { x, y };
+	SDL_Rect srcRect = MakeSdlRect(0, 0, size.width, size.height);
 	out.Clip(&srcRect, &targetPosition);
-	if (srcRect.w <= 0 || srcRect.h <= 0)
+	if (size.width <= 0 || size.height <= 0)
 		return;
 
 	std::uint8_t *dst = &out[targetPosition];
 	const auto dstPitch = out.pitch();
 
-	for (int hgt = srcRect.h; hgt != 0; hgt--, dst -= dstPitch + w) {
-		for (int wdt = srcRect.w; wdt != 0; wdt--) {
+	for (int hgt = size.height; hgt != 0; hgt--, dst -= dstPitch + size.width) {
+		for (int wdt = size.width; wdt != 0; wdt--) {
 			std::uint8_t pix = *dst;
 			if (pix >= PAL16_BLUE) {
 				if (pix <= PAL16_BLUE + 15)
@@ -216,7 +215,7 @@ void DrawInv(const CelOutputBuffer &out)
 		if (!myPlayer.InvBody[slot].isEmpty()) {
 			int screenX = slotPos[slot].x;
 			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, RIGHT_PANEL_X + screenX, screenY, slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height);
+			InvDrawSlotBack(out, { RIGHT_PANEL_X + screenX, screenY }, { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height });
 
 			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
@@ -248,7 +247,7 @@ void DrawInv(const CelOutputBuffer &out)
 					if (myPlayer._pClass != HeroClass::Barbarian
 					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
 					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y, slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height);
+						InvDrawSlotBack(out, { RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y }, { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
 						light_table_index = 0;
 						cel_transparency_active = true;
 
@@ -267,10 +266,8 @@ void DrawInv(const CelOutputBuffer &out)
 		if (myPlayer.InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
-			    InvRect[i + SLOTXY_INV_FIRST].x + RIGHT_PANEL_X,
-			    InvRect[i + SLOTXY_INV_FIRST].y - 1,
-			    InventorySlotSizeInPixels.width,
-			    InventorySlotSizeInPixels.height);
+			    InvRect[i + SLOTXY_INV_FIRST] + Point { RIGHT_PANEL_X, -1 },
+			    InventorySlotSizeInPixels);
 		}
 	}
 
@@ -315,7 +312,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		}
 
 		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1 };
-		InvDrawSlotBack(out, position.x, position.y, InventorySlotSizeInPixels.width, InventorySlotSizeInPixels.height);
+		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
 		int frame = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
 		const auto &cel = GetInvItemSprite(frame);
