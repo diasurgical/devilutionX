@@ -640,7 +640,7 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
 		CelBlitOutlineTo(out, GetOutlineColor(*pItem, false), position, *cel, nCel);
 	}
 	CelClippedDrawLightTo(out, position, *cel, nCel);
-	if (pItem->_iAnimFrame == pItem->_iAnimLen)
+	if (pItem->_iAnimFrame == pItem->_iAnimLen || pItem->_iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(bItem - 1, px, sy);
 }
 
