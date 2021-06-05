@@ -920,7 +920,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 			dam -= (dam * resper) / 100;
 			if (pnum == myplr)
 				NetSendCmdDamage(true, p, dam);
-			plr[pnum].Say(HeroSpeech::ArghClang);
+			plr[p].Say(HeroSpeech::ArghClang);
 			return true;
 		}
 		if (blkper < blk) {
