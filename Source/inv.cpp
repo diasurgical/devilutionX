@@ -216,7 +216,7 @@ void DrawInv(const CelOutputBuffer &out)
 		if (!myPlayer.InvBody[slot].isEmpty()) {
 			int screenX = slotPos[slot].x;
 			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, RIGHT_PANEL_X + screenX, screenY, slotSize[slot].width * INV_SLOT_SIZE_PX, slotSize[slot].height * INV_SLOT_SIZE_PX);
+			InvDrawSlotBack(out, RIGHT_PANEL_X + screenX, screenY, slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height);
 
 			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
@@ -226,11 +226,11 @@ void DrawInv(const CelOutputBuffer &out)
 
 			// calc item offsets for weapons smaller than 2x3 slots
 			if (slot == INVLOC_HAND_LEFT) {
-				screenX += frameW == INV_SLOT_SIZE_PX ? 14 : 0;
-				screenY += frameH == (3 * INV_SLOT_SIZE_PX) ? 0 : -14;
+				screenX += frameW == InventorySlotSizeInPixels.width ? 14 : 0;
+				screenY += frameH == (3 * InventorySlotSizeInPixels.height) ? 0 : -14;
 			} else if (slot == INVLOC_HAND_RIGHT) {
-				screenX += frameW == INV_SLOT_SIZE_PX ? 13 : 1;
-				screenY += frameH == 3 * INV_SLOT_SIZE_PX ? 0 : -14;
+				screenX += frameW == InventorySlotSizeInPixels.width ? 13 : 1;
+				screenY += frameH == (3 * InventorySlotSizeInPixels.height) ? 0 : -14;
 			}
 
 			const auto &cel = GetInvItemSprite(frame);
@@ -248,11 +248,11 @@ void DrawInv(const CelOutputBuffer &out)
 					if (myPlayer._pClass != HeroClass::Barbarian
 					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
 					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y, slotSize[INVLOC_HAND_RIGHT].width * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].height * INV_SLOT_SIZE_PX);
+						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y, slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height);
 						light_table_index = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == INV_SLOT_SIZE_PX ? 13 : -1);
+						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == InventorySlotSizeInPixels.width ? 13 : -1);
 						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
@@ -269,8 +269,8 @@ void DrawInv(const CelOutputBuffer &out)
 			    out,
 			    InvRect[i + SLOTXY_INV_FIRST].x + RIGHT_PANEL_X,
 			    InvRect[i + SLOTXY_INV_FIRST].y - 1,
-			    INV_SLOT_SIZE_PX,
-			    INV_SLOT_SIZE_PX);
+			    InventorySlotSizeInPixels.width,
+			    InventorySlotSizeInPixels.height);
 		}
 	}
 
@@ -315,7 +315,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		}
 
 		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1 };
-		InvDrawSlotBack(out, position.x, position.y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, position.x, position.y, InventorySlotSizeInPixels.width, InventorySlotSizeInPixels.height);
 		int frame = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
 		const auto &cel = GetInvItemSprite(frame);
@@ -334,7 +334,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
 			sprintf(tempstr, "%i", i + 1);
 			SDL_Rect rect {
-				InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X + INV_SLOT_SIZE_PX - GetLineWidth(tempstr),
+				InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X + InventorySlotSizeInPixels.width - GetLineWidth(tempstr),
 				InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1,
 				0,
 				0
@@ -375,7 +375,7 @@ Size GetInventorySize(const ItemStruct &item)
 	int w;
 	int h;
 	std::tie(w, h) = GetInvItemSize(itemSizeIndex);
-	return { w / INV_SLOT_SIZE_PX, h / INV_SLOT_SIZE_PX };
+	return { w / InventorySlotSizeInPixels.width, h / InventorySlotSizeInPixels.height };
 }
 
 /**
@@ -821,8 +821,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			yo = PANEL_TOP;
 		}
 
-		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + INV_SLOT_SIZE_PX) {
-			if (j >= InvRect[r].y + yo - INV_SLOT_SIZE_PX - 1 && j < InvRect[r].y + yo) {
+		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + InventorySlotSizeInPixels.width) {
+			if (j >= InvRect[r].y + yo - InventorySlotSizeInPixels.height - 1 && j < InvRect[r].y + yo) {
 				done = true;
 				r--;
 			}
@@ -1234,8 +1234,8 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		// check which inventory rectangle the mouse is in, if any
 		if (cursorPosition.x >= InvRect[r].x + xo
-		    && cursorPosition.x < InvRect[r].x + xo + (INV_SLOT_SIZE_PX + 1)
-		    && cursorPosition.y >= InvRect[r].y + yo - (INV_SLOT_SIZE_PX + 1)
+		    && cursorPosition.x < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
+		    && cursorPosition.y >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
 		    && cursorPosition.y < InvRect[r].y + yo) {
 			done = true;
 			r--;
@@ -1926,8 +1926,8 @@ char CheckInvHLight()
 		}
 
 		if (MouseX >= InvRect[r].x + xo
-		    && MouseX < InvRect[r].x + xo + (INV_SLOT_SIZE_PX + 1)
-		    && MouseY >= InvRect[r].y + yo - (INV_SLOT_SIZE_PX + 1)
+		    && MouseX < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
+		    && MouseY >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
 		    && MouseY < InvRect[r].y + yo) {
 			break;
 		}
