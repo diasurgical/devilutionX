@@ -224,6 +224,13 @@ struct Size {
 	}
 };
 
+struct RECT32 {
+	int x;
+	int y;
+	int w;
+	int h;
+};
+
 struct ActorPosition {
 	Point tile;
 	/** Future tile position. Set at start of walking animation. */

@@ -28,13 +28,6 @@ namespace devilution {
 #define RIGHT_PANEL (gnScreenWidth - SPANEL_WIDTH)
 #define RIGHT_PANEL_X RIGHT_PANEL
 
-struct RECT32 {
-	int x;
-	int y;
-	int w;
-	int h;
-};
-
 extern bool drawhpflag;
 extern bool dropGoldFlag;
 extern bool chrbtn[4];
