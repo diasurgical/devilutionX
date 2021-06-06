@@ -2539,6 +2539,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 	int iter = 0;
+	int seed = 0;
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(position, ii);
@@ -2556,11 +2557,12 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	begin:
 		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 		int diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-		if (diff > 5000) {
-			NetSendCmdString(1 << myplr, "ITEM NOT FOUND IN 5 SECONDS! BREAKING!");
+		if (diff > 1000) {
+			NetSendCmdString(1 << myplr, "ITEM NOT FOUND IN 1 SECONDS! BREAKING!");
 			return;
 		}
 		monster[m].MData->mLevel = iter%35 + 1;
+		seed = GetRndSeed();
 		idx = RndItem(m);
 		//SDL_Log("IDX: %d", idx);
 		if (!idx)
@@ -2583,7 +2585,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 
 	int uper = 15;
 
-	monster[m].MData->mLevel = GetRndSeed() % 30 + 1;
+	//monster[m].MData->mLevel = GetRndSeed() % 30 + 1;
 	int mLevel = monster[m].MData->mLevel;
 	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
 		mLevel -= 15;
@@ -2595,7 +2597,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 
 	std::transform(tmp.begin(), tmp.end(), tmp.begin(),
 	    [](unsigned char c) { return std::tolower(c); });
-
+	iter++;
 	//generate uniques only?
 	if (items[ii]._iMagical != ITEM_QUALITY_UNIQUE)
 		goto begin;
@@ -2610,7 +2612,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	    [](unsigned char c) { return std::tolower(c); });
 	//sprintf(derp, "%s %d", items[ii]._iIName, (tmp.find(itemName) != std::string::npos));
 
-	if (iter++ > 5000) {
+	if (iter > 5000) {
 		NetSendCmdString(1 << myplr, "ITEM NOT FOUND IN 5000 TRIES! BREAKING!");
 		goto end;
 	}
@@ -2621,6 +2623,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 
 end:
 
+	SDL_Log("SEED: %d  MONSTERLVL: %d ", seed, monster[m].MData->mLevel);
 	items[ii]._iIdentified = true;
 
 	if (sendmsg)
