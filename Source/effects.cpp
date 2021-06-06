@@ -1164,7 +1164,7 @@ bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 	return true;
 }
 
-static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
+static void PlaySFX_priv(TSFX *pSFX, bool loc, Point position)
 {
 	int lPan, lVolume;
 
@@ -1181,7 +1181,7 @@ static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
 
 	lPan = 0;
 	lVolume = 0;
-	if (loc && !calc_snd_position({ x, y }, &lVolume, &lPan)) {
+	if (loc && !calc_snd_position(position, &lVolume, &lPan)) {
 		return;
 	}
 
@@ -1258,7 +1258,7 @@ void PlaySFX(_sfx_id psfx)
 {
 	psfx = RndSFX(psfx);
 
-	PlaySFX_priv(&sgSFX[psfx], false, 0, 0);
+	PlaySFX_priv(&sgSFX[psfx], false, { 0, 0 });
 }
 
 void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
@@ -1273,7 +1273,7 @@ void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
 			pSnd->start_tc = 0;
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], true, x, y);
+	PlaySFX_priv(&sgSFX[psfx], true, { x, y });
 }
 
 void sound_stop()
