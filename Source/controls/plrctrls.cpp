@@ -651,7 +651,7 @@ void InvMove(AxisDirection dir)
 	char itemInvId;
 	auto itemSize = GetItemSizeOnSlot(slot, itemInvId);
 
-	Point mousePos { MousePosition.x, MousePosition.y };
+	Point mousePos = MousePosition;
 
 	const bool isHoldingItem = pcurs > 1;
 
@@ -963,33 +963,30 @@ void HotSpellMove(AxisDirection dir)
 		}
 	}
 
-	int x = speedspellscoords[spbslot].x;
-	int y = speedspellscoords[spbslot].y;
+	Point newMousePosition = speedspellscoords[spbslot];
 
 	if (dir.x == AxisDirectionX_LEFT) {
 		if (spbslot < speedspellcount - 1) {
-			x = speedspellscoords[spbslot + 1].x;
-			y = speedspellscoords[spbslot + 1].y;
+			newMousePosition = speedspellscoords[spbslot + 1];
 		}
 	} else if (dir.x == AxisDirectionX_RIGHT) {
 		if (spbslot > 0) {
-			x = speedspellscoords[spbslot - 1].x;
-			y = speedspellscoords[spbslot - 1].y;
+			newMousePosition = speedspellscoords[spbslot - 1];
 		}
 	}
 
 	if (dir.y == AxisDirectionY_UP) {
-		if (HSExists({ x, y - SPLICONLENGTH })) {
-			y -= SPLICONLENGTH;
+		if (HSExists(newMousePosition - Point { 0, SPLICONLENGTH })) {
+			newMousePosition.y -= SPLICONLENGTH;
 		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
-		if (HSExists({ x, y + SPLICONLENGTH })) {
-			y += SPLICONLENGTH;
+		if (HSExists(newMousePosition + Point { 0, SPLICONLENGTH })) {
+			newMousePosition.y += SPLICONLENGTH;
 		}
 	}
 
-	if (Point { x, y } != MousePosition) {
-		SetCursorPos(x, y);
+	if (newMousePosition != MousePosition) {
+		SetCursorPos(newMousePosition.x, newMousePosition.y);
 	}
 }
 
