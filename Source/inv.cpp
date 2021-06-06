@@ -623,9 +623,29 @@ bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
  */
 bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool persistItem)
 {
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-			return true;
+	Size itemSize = GetInventorySize(item);
+	int maxRow = (NUM_INV_GRID_ELEM / INV_ROW_SLOT_SIZE) - 1;
+
+	if (itemSize.Height == 1) {
+		// try to place items with height 1 in bottom row first
+		for (int i = NUM_INV_GRID_ELEM - INV_ROW_SLOT_SIZE; i < NUM_INV_GRID_ELEM; i++) {
+			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+				return true;
+		}
+		for (int x = INV_ROW_SLOT_SIZE - 1; x >= 0; x--) {
+			for (int y = maxRow - 1; y >= 0; y--) { // last valid row index is maxRow, we skip checking last row with maxRow - 1, because we know it's full from the loop above
+				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
+					return true;
+			}
+		}
+	} else {
+		// attempt to place everything else in columns starting from the right side
+		for (int x = INV_ROW_SLOT_SIZE - 1; x >= 0; x--) {
+			for (int y = 0; y <= maxRow; y++) {
+				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
+					return true;
+			}
+		}
 	}
 	return false;
 }
