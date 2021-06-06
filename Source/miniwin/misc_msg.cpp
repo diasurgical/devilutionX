@@ -35,13 +35,11 @@ namespace devilution {
 static std::deque<tagMSG> message_queue;
 
 bool mouseWarping = false;
-int mouseWarpingX;
-int mouseWarpingY;
+Point mousePositionWarping;
 
 void SetCursorPos(int x, int y)
 {
-	mouseWarpingX = x;
-	mouseWarpingY = y;
+	mousePositionWarping = { x, y };
 	mouseWarping = true;
 	LogicalToOutput(&x, &y);
 	SDL_WarpMouseInWindow(ghMainWnd, x, y);
@@ -562,7 +560,7 @@ bool FetchMessage(tagMSG *lpMsg)
 			// and SDL_GetMouseState gives previous location if mouse was
 			// outside window (observed on Ubuntu 19.04)
 			if (mouseWarping) {
-				MousePosition = { mouseWarpingX, mouseWarpingY };
+				MousePosition = mousePositionWarping;
 				mouseWarping = false;
 			}
 			break;
