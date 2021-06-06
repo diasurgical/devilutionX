@@ -1054,7 +1054,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 		missile[i]._miHitFlag = false;
 	}
 	if (missile[i]._mirange == 0 && missiledata[missile[i]._mitype].miSFX != -1)
-		PlaySfxLoc(missiledata[missile[i]._mitype].miSFX, missile[i].position.tile.x, missile[i].position.tile.y);
+		PlaySfxLoc(missiledata[missile[i]._mitype].miSFX, missile[i].position.tile);
 }
 
 void SetMissAnim(int mi, int animtype)
@@ -1507,7 +1507,7 @@ void AddStealPotions(int mi, Point src, Point dst, int midir, int8_t mienemy, in
 					player.SpdList[si] = player.HoldItem;
 				}
 				if (!hasPlayedSFX) {
-					PlaySfxLoc(IS_POPPOP2, tx, ty);
+					PlaySfxLoc(IS_POPPOP2, { tx, ty });
 					hasPlayedSFX = true;
 				}
 			}
@@ -1536,7 +1536,7 @@ void AddManaTrap(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 					player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
 					CalcPlrInv(pid, false);
 					drawmanaflag = true;
-					PlaySfxLoc(TSFX_COW7, tx, ty);
+					PlaySfxLoc(TSFX_COW7, { tx, ty });
 				}
 			}
 			pn += 2;
@@ -3039,7 +3039,7 @@ int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int
 	missile[mi]._mirnd = 0;
 
 	if (missiledata[mitype].mlSFX != -1) {
-		PlaySfxLoc(missiledata[mitype].mlSFX, missile[mi].position.start.x, missile[mi].position.start.y);
+		PlaySfxLoc(missiledata[mitype].mlSFX, missile[mi].position.start);
 	}
 
 	missiledata[mitype].mAddProc(mi, src, dst, midir, micaster, id, midam);
@@ -3298,7 +3298,7 @@ void MI_Firebolt(int i)
 		if (missile[i]._mlid != NO_LIGHT)
 			AddUnLight(missile[i]._mlid);
 		missile[i]._miDelFlag = true;
-		PlaySfxLoc(LS_BSIMPCT, missile[i].position.tile.x, missile[i].position.tile.y);
+		PlaySfxLoc(LS_BSIMPCT, missile[i].position.tile);
 		PutMissile(i);
 	} else
 		PutMissile(i);
@@ -3733,7 +3733,7 @@ void MI_Search(int i)
 		return;
 
 	missile[i]._miDelFlag = true;
-	PlaySfxLoc(IS_CAST7, plr[missile[i]._miVar1].position.tile.x, plr[missile[i]._miVar1].position.tile.y);
+	PlaySfxLoc(IS_CAST7, plr[missile[i]._miVar1].position.tile);
 	AutoMapShowItems = false;
 }
 

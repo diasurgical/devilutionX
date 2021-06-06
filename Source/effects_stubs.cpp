@@ -14,7 +14,7 @@ void InitMonsterSND(int monst) { }
 void FreeMonsterSnd() { }
 void PlayEffect(int i, int mode) { }
 void PlaySFX(_sfx_id psfx) { }
-void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory) { }
+void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory) { }
 void sound_stop() { }
 void sound_update() { }
 void effects_cleanup_sfx() { }

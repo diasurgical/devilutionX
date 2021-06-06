@@ -2918,7 +2918,7 @@ void RespawnItem(ItemStruct *item, bool FlipFlag)
 
 	if (item->_iCurs == ICURS_MAGIC_ROCK) {
 		item->_iSelFlag = 1;
-		PlaySfxLoc(ItemDropSnds[it], item->position.x, item->position.y);
+		PlaySfxLoc(ItemDropSnds[it], item->position);
 	}
 	if (item->_iCurs == ICURS_TAVERN_SIGN)
 		item->_iSelFlag = 1;
@@ -2968,7 +2968,7 @@ void ProcessItems()
 				items[ii].AnimInfo.CurrentFrame = 11;
 		} else {
 			if (items[ii].AnimInfo.CurrentFrame == items[ii].AnimInfo.NumberOfFrames / 2)
-				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii].position.x, items[ii].position.y);
+				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[items[ii]._iCurs]], items[ii].position);
 
 			if (items[ii].AnimInfo.CurrentFrame >= items[ii].AnimInfo.NumberOfFrames) {
 				items[ii].AnimInfo.CurrentFrame = items[ii].AnimInfo.NumberOfFrames;
@@ -3053,7 +3053,7 @@ void DoRepair(int pnum, int cii)
 
 	auto &player = plr[pnum];
 
-	PlaySfxLoc(IS_REPAIR, player.position.tile.x, player.position.tile.y);
+	PlaySfxLoc(IS_REPAIR, player.position.tile);
 
 	if (cii >= NUM_INVLOC) {
 		pi = &player.InvList[cii - NUM_INVLOC];

@@ -531,7 +531,7 @@ void PlayerStruct::Say(HeroSpeech speechId) const
 {
 	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
-	PlaySfxLoc(soundEffect, position.tile.x, position.tile.y);
+	PlaySfxLoc(soundEffect, position.tile);
 }
 
 void PlayerStruct::SaySpecific(HeroSpeech speechId) const
@@ -541,7 +541,7 @@ void PlayerStruct::SaySpecific(HeroSpeech speechId) const
 	if (effect_is_playing(soundEffect))
 		return;
 
-	PlaySfxLoc(soundEffect, position.tile.x, position.tile.y, false);
+	PlaySfxLoc(soundEffect, position.tile, false);
 }
 
 void PlayerStruct::Say(HeroSpeech speechId, int delay) const
@@ -1500,7 +1500,7 @@ void StartPlrBlock(int pnum, Direction dir)
 		return;
 	}
 
-	PlaySfxLoc(IS_ISWORD, player.position.tile.x, player.position.tile.y);
+	PlaySfxLoc(IS_ISWORD, player.position.tile);
 
 	int skippedAnimationFrames = 0;
 	if ((player._pIFlags & ISPL_FASTBLOCK) != 0) {
@@ -1546,7 +1546,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 		StartStand(pnum, d);
 	}
 
-	PlaySfxLoc(spelldata[player._pSpell].sSFX, player.position.tile.x, player.position.tile.y);
+	PlaySfxLoc(spelldata[player._pSpell].sSFX, player.position.tile);
 
 	player._pmode = PM_SPELL;
 
@@ -2121,7 +2121,7 @@ bool PM_DoWalk(int pnum, int variant)
 	if (sgOptions.Audio.bWalkingSound && (currlevel != 0 || !sgGameInitInfo.bRunInTown)) {
 		if (player.AnimInfo.CurrentFrame == 1
 		    || player.AnimInfo.CurrentFrame == 5) {
-			PlaySfxLoc(PS_WALK1, player.position.tile.x, player.position.tile.y);
+			PlaySfxLoc(PS_WALK1, player.position.tile);
 		}
 	}
 
@@ -2638,7 +2638,7 @@ bool PM_DoAttack(int pnum)
 	auto &player = plr[pnum];
 
 	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
-		PlaySfxLoc(PS_SWING, player.position.tile.x, player.position.tile.y);
+		PlaySfxLoc(PS_SWING, player.position.tile);
 	}
 
 	if (player.AnimInfo.CurrentFrame == player._pAFNum) {
@@ -2782,7 +2782,7 @@ bool PM_DoRangeAttack(int pnum)
 		    0);
 
 		if (arrow == 0 && mistype != MIS_SPECARROW) {
-			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, player.position.tile.x, player.position.tile.y);
+			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, player.position.tile);
 		}
 
 		if (WeaponDur(pnum, 40)) {
