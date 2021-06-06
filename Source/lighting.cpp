@@ -475,20 +475,20 @@ void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, i
 	}
 }
 
-void SetLight(int x, int y, char v)
+void SetLight(Point position, char v)
 {
 	if (LoadingMapObjects)
-		dPreLight[x][y] = v;
+		dPreLight[position.x][position.y] = v;
 	else
-		dLight[x][y] = v;
+		dLight[position.x][position.y] = v;
 }
 
-char GetLight(int x, int y)
+char GetLight(Point position)
 {
 	if (LoadingMapObjects)
-		return dPreLight[x][y];
+		return dPreLight[position.x][position.y];
 
-	return dLight[x][y];
+	return dLight[position.x][position.y];
 }
 
 void DoLighting(Point position, int nRadius, int lnum)
@@ -535,9 +535,9 @@ void DoLighting(Point position, int nRadius, int lnum)
 
 	if (position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY) {
 		if (currlevel < 17) {
-			SetLight(position.x, position.y, 0);
-		} else if (GetLight(position.x, position.y) > lightradius[nRadius][0]) {
-			SetLight(position.x, position.y, lightradius[nRadius][0]);
+			SetLight(position, 0);
+		} else if (GetLight(position) > lightradius[nRadius][0]) {
+			SetLight(position, lightradius[nRadius][0]);
 		}
 	}
 
@@ -546,12 +546,11 @@ void DoLighting(Point position, int nRadius, int lnum)
 		for (int x = 1; x < maxX; x++) {
 			int radiusBlock = lightblock[mult][y][x];
 			if (radiusBlock < 128) {
-				int tempX = position.x + x;
-				int tempY = position.y + y;
+				Point temp = position + Displacement { x, y };
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
-					if (v < GetLight(tempX, tempY))
-						SetLight(tempX, tempY, v);
+				if (temp.x >= 0 && temp.x < MAXDUNX && temp.y >= 0 && temp.y < MAXDUNY)
+					if (v < GetLight(temp))
+						SetLight(temp, v);
 			}
 		}
 	}
@@ -561,12 +560,11 @@ void DoLighting(Point position, int nRadius, int lnum)
 		for (int x = 1; x < maxX; x++) {
 			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
 			if (radiusBlock < 128) {
-				int tempX = position.x + y;
-				int tempY = position.y - x;
+				Point temp = position + Displacement { y, -x };
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
-					if (v < GetLight(tempX, tempY))
-						SetLight(tempX, tempY, v);
+				if (temp.x >= 0 && temp.x < MAXDUNX && temp.y >= 0 && temp.y < MAXDUNY)
+					if (v < GetLight(temp))
+						SetLight(temp, v);
 			}
 		}
 	}
@@ -576,12 +574,11 @@ void DoLighting(Point position, int nRadius, int lnum)
 		for (int x = 1; x < minX; x++) {
 			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
 			if (radiusBlock < 128) {
-				int tempX = position.x - x;
-				int tempY = position.y - y;
+				Point temp = position - Displacement { x, y };
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
-					if (v < GetLight(tempX, tempY))
-						SetLight(tempX, tempY, v);
+				if (temp.x >= 0 && temp.x < MAXDUNX && temp.y >= 0 && temp.y < MAXDUNY)
+					if (v < GetLight(temp))
+						SetLight(temp, v);
 			}
 		}
 	}
@@ -591,12 +588,11 @@ void DoLighting(Point position, int nRadius, int lnum)
 		for (int x = 1; x < minX; x++) {
 			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
 			if (radiusBlock < 128) {
-				int tempX = position.x - y;
-				int tempY = position.y + x;
+				Point temp = position + Displacement { -y, x };
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
-					if (v < GetLight(tempX, tempY))
-						SetLight(tempX, tempY, v);
+				if (temp.x >= 0 && temp.x < MAXDUNX && temp.y >= 0 && temp.y < MAXDUNY)
+					if (v < GetLight(temp))
+						SetLight(temp, v);
 			}
 		}
 	}
