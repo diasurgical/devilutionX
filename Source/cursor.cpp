@@ -157,7 +157,7 @@ int GetInvItemFrame(int i)
 	return i < InvItems1Size ? i : i - (InvItems1Size - 1);
 }
 
-std::pair<int, int> GetInvItemSize(int i)
+Size GetInvItemSize(int i)
 {
 	if (i >= InvItems1Size)
 		return { InvItemWidth2[i - (InvItems1Size - 1)], InvItemHeight2[i - (InvItems1Size - 1)] };
@@ -166,7 +166,9 @@ std::pair<int, int> GetInvItemSize(int i)
 
 void SetICursor(int i)
 {
-	std::tie(icursW, icursH) = GetInvItemSize(i);
+	auto size = GetInvItemSize(i);
+	icursW = size.width;
+	icursH = size.height;
 	icursW28 = icursW / 28;
 	icursH28 = icursH / 28;
 }
@@ -174,7 +176,9 @@ void SetICursor(int i)
 void NewCursor(int i)
 {
 	pcurs = i;
-	std::tie(cursW, cursH) = GetInvItemSize(i);
+	auto size = GetInvItemSize(i);
+	cursW = size.width;
+	cursH = size.height;
 	SetICursor(i);
 	if (IsHardwareCursorEnabled() && GetCurrentCursorInfo() != CursorInfo::GameCursor(pcurs) && pcurs != CURSOR_NONE) {
 		SetHardwareCursor(CursorInfo::GameCursor(pcurs));

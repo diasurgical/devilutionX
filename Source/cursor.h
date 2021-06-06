@@ -68,6 +68,6 @@ const CelSprite &GetInvItemSprite(int i);
 int GetInvItemFrame(int i);
 
 /** Returns the width and height for an inventory index. */
-std::pair<int, int> GetInvItemSize(int i);
+Size GetInvItemSize(int i);
 
 } // namespace devilution
