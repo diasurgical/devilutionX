@@ -75,13 +75,11 @@ bool SetHardwareCursorFromSprite(int pcurs)
 	const bool isItem = IsItemSprite(pcurs);
 	const int outlineWidth = isItem ? 1 : 0;
 
-	int width;
-	int height;
-	std::tie(width, height) = GetInvItemSize(pcurs);
-	width += 2 * outlineWidth;
-	height += 2 * outlineWidth;
+	auto size = GetInvItemSize(pcurs);
+	size.width += 2 * outlineWidth;
+	size.height += 2 * outlineWidth;
 
-	auto out = CelOutputBuffer::Alloc(width, height);
+	auto out = CelOutputBuffer::Alloc(size.width, size.height);
 	SDL_SetSurfacePalette(out.surface, palette);
 
 	// Transparent color must not be used in the sprite itself.
@@ -89,7 +87,7 @@ bool SetHardwareCursorFromSprite(int pcurs)
 	constexpr std::uint8_t TransparentColor = 1;
 	SDL_FillRect(out.surface, nullptr, TransparentColor);
 	SDL_SetColorKey(out.surface, 1, TransparentColor);
-	CelDrawCursor(out, { outlineWidth, height - outlineWidth }, pcurs);
+	CelDrawCursor(out, { outlineWidth, size.height - outlineWidth }, pcurs);
 
 	const bool result = SetHardwareCursor(out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
 	out.Free();

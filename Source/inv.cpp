@@ -219,17 +219,15 @@ void DrawInv(const CelOutputBuffer &out)
 
 			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
-			int frameW;
-			int frameH;
-			std::tie(frameW, frameH) = GetInvItemSize(frame);
+			auto frameSize = GetInvItemSize(frame);
 
 			// calc item offsets for weapons smaller than 2x3 slots
 			if (slot == INVLOC_HAND_LEFT) {
-				screenX += frameW == InventorySlotSizeInPixels.width ? 14 : 0;
-				screenY += frameH == (3 * InventorySlotSizeInPixels.height) ? 0 : -14;
+				screenX += frameSize.width == InventorySlotSizeInPixels.width ? 14 : 0;
+				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -14;
 			} else if (slot == INVLOC_HAND_RIGHT) {
-				screenX += frameW == InventorySlotSizeInPixels.width ? 13 : 1;
-				screenY += frameH == (3 * InventorySlotSizeInPixels.height) ? 0 : -14;
+				screenX += frameSize.width == InventorySlotSizeInPixels.width ? 13 : 1;
+				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -14;
 			}
 
 			const auto &cel = GetInvItemSprite(frame);
@@ -251,7 +249,7 @@ void DrawInv(const CelOutputBuffer &out)
 						light_table_index = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == InventorySlotSizeInPixels.width ? 13 : -1);
+						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? 13 : -1);
 						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
@@ -369,10 +367,9 @@ static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invList
 Size GetInventorySize(const ItemStruct &item)
 {
 	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
-	int w;
-	int h;
-	std::tie(w, h) = GetInvItemSize(itemSizeIndex);
-	return { w / InventorySlotSizeInPixels.width, h / InventorySlotSizeInPixels.height };
+	auto size = GetInvItemSize(itemSizeIndex);
+
+	return { size.width / InventorySlotSizeInPixels.width, size.height / InventorySlotSizeInPixels.height };
 }
 
 /**
