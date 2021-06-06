@@ -506,6 +506,7 @@ if(RUN_TESTS)
     test/lighting_test.cpp
     test/main.cpp
     test/missiles_test.cpp
+    test/monster_test.cpp
     test/pack_test.cpp
     test/player_test.cpp
     test/scrollrt_test.cpp

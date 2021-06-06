@@ -4783,7 +4783,7 @@ bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point en
 			dincH = 2 * (dx + dy);
 			yincD = -1;
 		}
-		while (position != endPoint) {
+		while (!done && position != endPoint) {
 			if ((d <= 0) ^ (yincD < 0)) {
 				d += dincD;
 			} else {
