@@ -225,8 +225,7 @@ struct Size {
 };
 
 struct Rectangle {
-	int x;
-	int y;
+	Point position;
 	int w;
 	int h;
 };
