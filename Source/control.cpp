@@ -1440,8 +1440,8 @@ void CheckChrBtns()
 			continue;
 		}
 		auto buttonId = static_cast<size_t>(attribute);
-		int x = ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].w;
-		int y = ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].h;
+		int x = ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].size.width;
+		int y = ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].size.height;
 		if (MouseX >= ChrBtnsRect[buttonId].position.x
 		    && MouseX <= x
 		    && MouseY >= ChrBtnsRect[buttonId].position.y
@@ -1469,9 +1469,9 @@ void ReleaseChrBtns(bool addAllStatPoints)
 
 		chrbtn[buttonId] = false;
 		if (MouseX >= ChrBtnsRect[buttonId].position.x
-		    && MouseX <= ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].w
+		    && MouseX <= ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].size.width
 		    && MouseY >= ChrBtnsRect[buttonId].position.y
-		    && MouseY <= ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].h) {
+		    && MouseY <= ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].size.height) {
 			auto &myPlayer = plr[myplr];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)

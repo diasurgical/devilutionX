@@ -226,8 +226,7 @@ struct Size {
 
 struct Rectangle {
 	Point position;
-	int w;
-	int h;
+	Size size;
 };
 
 struct ActorPosition {

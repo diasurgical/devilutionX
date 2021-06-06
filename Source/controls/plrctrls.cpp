@@ -471,9 +471,9 @@ void AttrIncBtnSnap(AxisDirection dir)
 	int slot = 0;
 	for (int i = 0; i < 4; i++) {
 		if (MouseX >= ChrBtnsRect[i].position.x
-		    && MouseX <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].w
+		    && MouseX <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
 		    && MouseY >= ChrBtnsRect[i].position.y
-		    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].position.y) {
+		    && MouseY <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
 			slot = i;
 			break;
 		}
@@ -488,8 +488,8 @@ void AttrIncBtnSnap(AxisDirection dir)
 	}
 
 	// move cursor to our new location
-	int x = ChrBtnsRect[slot].position.x + (ChrBtnsRect[slot].w / 2);
-	int y = ChrBtnsRect[slot].position.y + (ChrBtnsRect[slot].h / 2);
+	int x = ChrBtnsRect[slot].position.x + (ChrBtnsRect[slot].size.width / 2);
+	int y = ChrBtnsRect[slot].position.y + (ChrBtnsRect[slot].size.height / 2);
 	SetCursorPos(x, y);
 }
 
@@ -1401,9 +1401,9 @@ void PerformPrimaryAction()
 		CheckChrBtns();
 		for (int i = 0; i < 4; i++) {
 			if (MouseX >= ChrBtnsRect[i].position.x
-			    && MouseX <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].w
+			    && MouseX <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
 			    && MouseY >= ChrBtnsRect[i].position.y
-			    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].position.y) {
+			    && MouseY <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
 				chrbtn[i] = true;
 				chrbtnactive = true;
 				ReleaseChrBtns(false);
