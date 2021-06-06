@@ -1261,7 +1261,7 @@ void PlaySFX(_sfx_id psfx)
 	PlaySFX_priv(&sgSFX[psfx], false, { 0, 0 });
 }
 
-void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
+void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory)
 {
 	if (randomizeByCategory) {
 		psfx = RndSFX(psfx);
@@ -1273,7 +1273,7 @@ void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
 			pSnd->start_tc = 0;
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], true, { x, y });
+	PlaySFX_priv(&sgSFX[psfx], true, position);
 }
 
 void sound_stop()

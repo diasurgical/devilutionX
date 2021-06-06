@@ -2122,7 +2122,7 @@ void Obj_Trap(int i)
 	if (!deltaload) {
 		Direction dir = GetDirection(object[i].position, target);
 		AddMissile(object[i].position, target, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
-		PlaySfxLoc(IS_TRAP, object[oti].position.x, object[oti].position.y);
+		PlaySfxLoc(IS_TRAP, object[oti].position);
 	}
 	object[oti]._oTrapFlag = false;
 }
@@ -2436,39 +2436,50 @@ void RedoPlayerVision()
 	}
 }
 
+/**
+ * @brief Checks if an open door can be closed
+ *
+ * In order to be able to close a door the space where the closed door would be must be free of bodies, monsters, and items
+ *
+ * @param doorPos Map tile where the door is in its closed position
+ * @return true if the door is free to be closed, false if anything is blocking it
+*/
+static inline bool isDoorClear(const Point &doorPos)
+{
+	return dDead[doorPos.x][doorPos.y] == 0 && dMonster[doorPos.x][doorPos.y] == 0 && dItem[doorPos.x][doorPos.y] == 0;
+}
+
 void OperateL1RDoor(int pnum, int oi, bool sendflag)
 {
-	int xp, yp;
+	const Point &objPos = object[oi].position;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, object[oi].position.y);
+			PlaySfxLoc(IS_DOORCLOS, objPos);
 		return;
 	}
 
-	xp = object[oi].position.x;
-	yp = object[oi].position.y;
 	if (object[oi]._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (currlevel < 21) {
 			if (!deltaload)
-				PlaySfxLoc(IS_DOOROPEN, object[oi].position.x, object[oi].position.y);
-			ObjSetMicro(xp, yp, 395);
+				PlaySfxLoc(IS_DOOROPEN, objPos);
+			ObjSetMicro(objPos.x, objPos.y, 395);
 		} else {
 			if (!deltaload)
-				PlaySfxLoc(IS_CROPEN, object[oi].position.x, object[oi].position.y);
-			ObjSetMicro(xp, yp, 209);
+				PlaySfxLoc(IS_CROPEN, objPos);
+			ObjSetMicro(objPos.x, objPos.y, 209);
 		}
 		if (currlevel < 17) {
-			dSpecial[xp][yp] = 8;
+			dSpecial[objPos.x][objPos.y] = 8;
 		} else {
-			dSpecial[xp][yp] = 2;
+			dSpecial[objPos.x][objPos.y] = 2;
 		}
-		objects_set_door_piece(xp, yp - 1);
+		objects_set_door_piece(objPos.x, objPos.y - 1);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = true;
-		DoorSet(oi, xp - 1, yp);
+		DoorSet(oi, objPos.x - 1, objPos.y);
 		object[oi]._oVar4 = 1;
 		object[oi]._oSelFlag = 2;
 		RedoPlayerVision();
@@ -2477,37 +2488,37 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 
 	if (currlevel < 21) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, xp, object[oi].position.y);
+			PlaySfxLoc(IS_DOORCLOS, objPos);
 	} else {
 		if (!deltaload)
-			PlaySfxLoc(IS_CRCLOS, xp, object[oi].position.y);
+			PlaySfxLoc(IS_CRCLOS, objPos);
 	}
-	if (!deltaload && dDead[xp][yp] == 0 && dMonster[xp][yp] == 0 && dItem[xp][yp] == 0) {
+	if (!deltaload && isDoorClear(objPos)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
-		ObjSetMicro(xp, yp, object[oi]._oVar1);
+		ObjSetMicro(objPos.x, objPos.y, object[oi]._oVar1);
 		if (currlevel < 17) {
 			if (object[oi]._oVar2 != 50) {
-				ObjSetMicro(xp - 1, yp, object[oi]._oVar2);
+				ObjSetMicro(objPos.x - 1, objPos.y, object[oi]._oVar2);
 			} else {
-				if (dPiece[xp - 1][yp] == 396)
-					ObjSetMicro(xp - 1, yp, 411);
+				if (dPiece[objPos.x - 1][objPos.y] == 396)
+					ObjSetMicro(objPos.x - 1, objPos.y, 411);
 				else
-					ObjSetMicro(xp - 1, yp, 50);
+					ObjSetMicro(objPos.x - 1, objPos.y, 50);
 			}
 		} else {
 			if (object[oi]._oVar2 != 86) {
-				ObjSetMicro(xp - 1, yp, object[oi]._oVar2);
+				ObjSetMicro(objPos.x - 1, objPos.y, object[oi]._oVar2);
 			} else {
-				if (dPiece[xp - 1][yp] == 210)
-					ObjSetMicro(xp - 1, yp, 232);
+				if (dPiece[objPos.x - 1][objPos.y] == 210)
+					ObjSetMicro(objPos.x - 1, objPos.y, 232);
 				else
-					ObjSetMicro(xp - 1, yp, 86);
+					ObjSetMicro(objPos.x - 1, objPos.y, 86);
 			}
 		}
-		dSpecial[xp][yp] = 0;
+		dSpecial[objPos.x][objPos.y] = 0;
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = false;
 		RedoPlayerVision();
@@ -2518,40 +2529,38 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 
 void OperateL1LDoor(int pnum, int oi, bool sendflag)
 {
-	int xp, yp;
+	const Point &objPos = object[oi].position;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, object[oi].position.y);
+			PlaySfxLoc(IS_DOORCLOS, objPos);
 		return;
 	}
 
-	xp = object[oi].position.x;
-	yp = object[oi].position.y;
 	if (object[oi]._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (currlevel < 21) {
 			if (!deltaload)
-				PlaySfxLoc(IS_DOOROPEN, object[oi].position.x, object[oi].position.y);
+				PlaySfxLoc(IS_DOOROPEN, objPos);
 			if (object[oi]._oVar1 == 214)
-				ObjSetMicro(xp, yp, 408);
+				ObjSetMicro(objPos.x, objPos.y, 408);
 			else
-				ObjSetMicro(xp, yp, 393);
+				ObjSetMicro(objPos.x, objPos.y, 393);
 		} else {
 			if (!deltaload)
-				PlaySfxLoc(IS_CROPEN, object[oi].position.x, object[oi].position.y);
-			ObjSetMicro(xp, yp, 206);
+				PlaySfxLoc(IS_CROPEN, objPos);
+			ObjSetMicro(objPos.x, objPos.y, 206);
 		}
 		if (currlevel < 17) {
-			dSpecial[xp][yp] = 7;
+			dSpecial[objPos.x][objPos.y] = 7;
 		} else {
-			dSpecial[xp][yp] = 1;
+			dSpecial[objPos.x][objPos.y] = 1;
 		}
-		objects_set_door_piece(xp - 1, yp);
+		objects_set_door_piece(objPos.x - 1, objPos.y);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = true;
-		DoorSet(oi, xp, yp - 1);
+		DoorSet(oi, objPos.x, objPos.y - 1);
 		object[oi]._oVar4 = 1;
 		object[oi]._oSelFlag = 2;
 		RedoPlayerVision();
@@ -2560,37 +2569,37 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 
 	if (currlevel < 21) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, xp, object[oi].position.y);
+			PlaySfxLoc(IS_DOORCLOS, objPos);
 	} else {
 		if (!deltaload)
-			PlaySfxLoc(IS_CRCLOS, xp, object[oi].position.y);
+			PlaySfxLoc(IS_CRCLOS, objPos);
 	}
-	if (dDead[xp][yp] == 0 && dMonster[xp][yp] == 0 && dItem[xp][yp] == 0) {
+	if (isDoorClear(objPos)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
-		ObjSetMicro(xp, yp, object[oi]._oVar1);
+		ObjSetMicro(objPos.x, objPos.y, object[oi]._oVar1);
 		if (currlevel < 17) {
 			if (object[oi]._oVar2 != 50) {
-				ObjSetMicro(xp, yp - 1, object[oi]._oVar2);
+				ObjSetMicro(objPos.x, objPos.y - 1, object[oi]._oVar2);
 			} else {
-				if (dPiece[xp][yp - 1] == 396)
-					ObjSetMicro(xp, yp - 1, 412);
+				if (dPiece[objPos.x][objPos.y - 1] == 396)
+					ObjSetMicro(objPos.x, objPos.y - 1, 412);
 				else
-					ObjSetMicro(xp, yp - 1, 50);
+					ObjSetMicro(objPos.x, objPos.y - 1, 50);
 			}
 		} else {
 			if (object[oi]._oVar2 != 86) {
-				ObjSetMicro(xp, yp - 1, object[oi]._oVar2);
+				ObjSetMicro(objPos.x, objPos.y - 1, object[oi]._oVar2);
 			} else {
-				if (dPiece[xp][yp - 1] == 210)
-					ObjSetMicro(xp, yp - 1, 234);
+				if (dPiece[objPos.x][objPos.y - 1] == 210)
+					ObjSetMicro(objPos.x, objPos.y - 1, 234);
 				else
-					ObjSetMicro(xp, yp - 1, 86);
+					ObjSetMicro(objPos.x, objPos.y - 1, 86);
 			}
 		}
-		dSpecial[xp][yp] = 0;
+		dSpecial[objPos.x][objPos.y] = 0;
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = false;
 		RedoPlayerVision();
@@ -2601,23 +2610,21 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 
 void OperateL2RDoor(int pnum, int oi, bool sendflag)
 {
-	int xp, yp;
-	bool dok;
+	const Point &objPos = object[oi].position;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, object[oi].position.y);
+			PlaySfxLoc(IS_DOORCLOS, objPos);
 		return;
 	}
-	xp = object[oi].position.x;
-	yp = object[oi].position.y;
+
 	if (object[oi]._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, object[oi].position.x, object[oi].position.y);
-		ObjSetMicro(xp, yp, 17);
-		dSpecial[xp][yp] = 6;
+			PlaySfxLoc(IS_DOOROPEN, objPos);
+		ObjSetMicro(objPos.x, objPos.y, 17);
+		dSpecial[objPos.x][objPos.y] = 6;
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = true;
 		object[oi]._oVar4 = 1;
@@ -2627,17 +2634,15 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, yp);
-	dok = dMonster[xp][yp] == 0;
-	dok = dok && dItem[xp][yp] == 0;
-	dok = dok && dDead[xp][yp] == 0;
-	if (dok) {
+		PlaySfxLoc(IS_DOORCLOS, objPos);
+
+	if (isDoorClear(objPos)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
-		ObjSetMicro(xp, yp, 540);
-		dSpecial[xp][yp] = 0;
+		ObjSetMicro(objPos.x, objPos.y, 540);
+		dSpecial[objPos.x][objPos.y] = 0;
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = false;
 		RedoPlayerVision();
@@ -2648,23 +2653,21 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 
 void OperateL2LDoor(int pnum, int oi, bool sendflag)
 {
-	int xp, yp;
-	bool dok;
+	const Point &objPos = object[oi].position;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, object[oi].position.y);
+			PlaySfxLoc(IS_DOORCLOS, objPos);
 		return;
 	}
-	xp = object[oi].position.x;
-	yp = object[oi].position.y;
+
 	if (object[oi]._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, object[oi].position.x, object[oi].position.y);
-		ObjSetMicro(xp, yp, 13);
-		dSpecial[xp][yp] = 5;
+			PlaySfxLoc(IS_DOOROPEN, objPos);
+		ObjSetMicro(objPos.x, objPos.y, 13);
+		dSpecial[objPos.x][objPos.y] = 5;
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = true;
 		object[oi]._oVar4 = 1;
@@ -2674,17 +2677,15 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, yp);
-	dok = dMonster[xp][yp] == 0;
-	dok = dok && dItem[xp][yp] == 0;
-	dok = dok && dDead[xp][yp] == 0;
-	if (dok) {
+		PlaySfxLoc(IS_DOORCLOS, objPos);
+
+	if (isDoorClear(objPos)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
-		ObjSetMicro(xp, yp, 538);
-		dSpecial[xp][yp] = 0;
+		ObjSetMicro(objPos.x, objPos.y, 538);
+		dSpecial[objPos.x][objPos.y] = 0;
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = false;
 		RedoPlayerVision();
@@ -2695,23 +2696,20 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 
 void OperateL3RDoor(int pnum, int oi, bool sendflag)
 {
-	int xp, yp;
-	bool dok;
+	const Point &objPos = object[oi].position;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, object[oi].position.y);
+			PlaySfxLoc(IS_DOORCLOS, objPos);
 		return;
 	}
 
-	xp = object[oi].position.x;
-	yp = object[oi].position.y;
 	if (object[oi]._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, object[oi].position.x, object[oi].position.y);
-		ObjSetMicro(xp, yp, 541);
+			PlaySfxLoc(IS_DOOROPEN, objPos);
+		ObjSetMicro(objPos.x, objPos.y, 541);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = true;
 		object[oi]._oVar4 = 1;
@@ -2721,16 +2719,14 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, yp);
-	dok = dMonster[xp][yp] == 0;
-	dok = dok && dItem[xp][yp] == 0;
-	dok = dok && dDead[xp][yp] == 0;
-	if (dok) {
+		PlaySfxLoc(IS_DOORCLOS, objPos);
+
+	if (isDoorClear(objPos)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
-		ObjSetMicro(xp, yp, 534);
+		ObjSetMicro(objPos.x, objPos.y, 534);
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = false;
 		RedoPlayerVision();
@@ -2741,23 +2737,20 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 
 void OperateL3LDoor(int pnum, int oi, bool sendflag)
 {
-	int xp, yp;
-	bool dok;
+	const Point &objPos = object[oi].position;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, object[oi].position.y);
+			PlaySfxLoc(IS_DOORCLOS, objPos);
 		return;
 	}
 
-	xp = object[oi].position.x;
-	yp = object[oi].position.y;
 	if (object[oi]._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, object[oi].position.x, object[oi].position.y);
-		ObjSetMicro(xp, yp, 538);
+			PlaySfxLoc(IS_DOOROPEN, objPos);
+		ObjSetMicro(objPos.x, objPos.y, 538);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = true;
 		object[oi]._oVar4 = 1;
@@ -2767,16 +2760,14 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, object[oi].position.x, yp);
-	dok = dMonster[xp][yp] == 0;
-	dok = dok && dItem[xp][yp] == 0;
-	dok = dok && dDead[xp][yp] == 0;
-	if (dok) {
+		PlaySfxLoc(IS_DOORCLOS, objPos);
+
+	if (isDoorClear(objPos)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
-		ObjSetMicro(xp, yp, 531);
+		ObjSetMicro(objPos.x, objPos.y, 531);
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = false;
 		RedoPlayerVision();
@@ -2887,7 +2878,7 @@ void OperateLever(int pnum, int i)
 
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
-			PlaySfxLoc(IS_LEVER, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_LEVER, object[i].position);
 		object[i]._oSelFlag = 0;
 		object[i]._oAnimFrame++;
 		mapflag = true;
@@ -2962,7 +2953,7 @@ void OperateBook(int pnum, int i)
 			plr[pnum]._pSplLvl[SPL_GUARDIAN]++;
 		quests[Q_SCHAMB]._qactive = QUEST_DONE;
 		if (!deltaload)
-			PlaySfxLoc(IS_QUESTDN, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_QUESTDN, object[i].position);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
 		    plr[pnum].position.tile,
@@ -3078,7 +3069,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
-			PlaySfxLoc(IS_CHEST, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_CHEST, object[i].position);
 		object[i]._oSelFlag = 0;
 		object[i]._oAnimFrame += 2;
 		if (!deltaload) {
@@ -3144,7 +3135,7 @@ void OperateMushPatch(int pnum, int i)
 
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
-			PlaySfxLoc(IS_CHEST, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_CHEST, object[i].position);
 		object[i]._oSelFlag = 0;
 		object[i]._oAnimFrame++;
 		if (!deltaload) {
@@ -3168,7 +3159,7 @@ void OperateInnSignChest(int pnum, int i)
 	} else {
 		if (object[i]._oSelFlag != 0) {
 			if (!deltaload)
-				PlaySfxLoc(IS_CHEST, object[i].position.x, object[i].position.y);
+				PlaySfxLoc(IS_CHEST, object[i].position);
 			object[i]._oSelFlag = 0;
 			object[i]._oAnimFrame += 2;
 			if (!deltaload) {
@@ -3212,7 +3203,7 @@ void OperateTrapLvr(int i)
 	j = 0;
 
 	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, object[i].position.x, object[i].position.y);
+		PlaySfxLoc(IS_LEVER, object[i].position);
 
 	if (frame == 1) {
 		object[i]._oAnimFrame = 2;
@@ -3241,7 +3232,7 @@ void OperateSarc(int pnum, int i, bool sendmsg)
 {
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
-			PlaySfxLoc(IS_SARC, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_SARC, object[i].position);
 		object[i]._oSelFlag = 0;
 		if (deltaload) {
 			object[i]._oAnimFrame = object[i]._oAnimLen;
@@ -3297,19 +3288,19 @@ void OperatePedistal(int pnum, int i)
 	object[i]._oVar6++;
 	if (object[i]._oVar6 == 1) {
 		if (!deltaload)
-			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_PUDDLE, object[i].position);
 		ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
 		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 19, 2 * setpc_y + 26 }, 0, true);
 	}
 	if (object[i]._oVar6 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(LS_PUDDLE, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_PUDDLE, object[i].position);
 		ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
 		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 31, 2 * setpc_y + 26 }, 0, true);
 	}
 	if (object[i]._oVar6 == 3) {
 		if (!deltaload)
-			PlaySfxLoc(LS_BLODSTAR, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_BLODSTAR, object[i].position);
 		ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", 2 * setpc_x, 2 * setpc_y);
 		SpawnUnique(UITEM_ARMOFVAL, Point { setpc_x, setpc_y } * 2 + Point { 25, 19 });
@@ -4310,7 +4301,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 	object[i]._oSelFlag = 0;
 
 	if (!deltaload) {
-		PlaySfxLoc(sType, object[i].position.x, object[i].position.y);
+		PlaySfxLoc(sType, object[i].position);
 		object[i]._oAnimFlag = 1;
 		object[i]._oAnimDelay = 1;
 	} else {
@@ -4465,7 +4456,7 @@ void OperateSkelBook(int pnum, int i, bool sendmsg)
 {
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
-			PlaySfxLoc(IS_ISCROL, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_ISCROL, object[i].position);
 		object[i]._oSelFlag = 0;
 		object[i]._oAnimFrame += 2;
 		if (!deltaload) {
@@ -4484,7 +4475,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 {
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
-			PlaySfxLoc(IS_ISCROL, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_ISCROL, object[i].position);
 		object[i]._oSelFlag = 0;
 		object[i]._oAnimFrame -= 2;
 		if (!deltaload) {
@@ -4612,7 +4603,7 @@ bool OperateFountains(int pnum, int i)
 			return false;
 
 		if (plr[pnum]._pHitPoints < plr[pnum]._pMaxHP) {
-			PlaySfxLoc(LS_FOUNTAIN, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_FOUNTAIN, object[i].position);
 			plr[pnum]._pHitPoints += 64;
 			plr[pnum]._pHPBase += 64;
 			if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
@@ -4621,7 +4612,7 @@ bool OperateFountains(int pnum, int i)
 			}
 			applied = true;
 		} else
-			PlaySfxLoc(LS_FOUNTAIN, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_FOUNTAIN, object[i].position);
 		break;
 	case OBJ_PURIFYINGFTN:
 		if (deltaload)
@@ -4630,7 +4621,7 @@ bool OperateFountains(int pnum, int i)
 			return false;
 
 		if (plr[pnum]._pMana < plr[pnum]._pMaxMana) {
-			PlaySfxLoc(LS_FOUNTAIN, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_FOUNTAIN, object[i].position);
 
 			plr[pnum]._pMana += 64;
 			plr[pnum]._pManaBase += 64;
@@ -4641,13 +4632,13 @@ bool OperateFountains(int pnum, int i)
 
 			applied = true;
 		} else
-			PlaySfxLoc(LS_FOUNTAIN, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_FOUNTAIN, object[i].position);
 		break;
 	case OBJ_MURKYFTN:
 		if (object[i]._oSelFlag == 0)
 			break;
 		if (!deltaload)
-			PlaySfxLoc(LS_FOUNTAIN, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_FOUNTAIN, object[i].position);
 		object[i]._oSelFlag = 0;
 		if (deltaload)
 			return false;
@@ -4672,7 +4663,7 @@ bool OperateFountains(int pnum, int i)
 		done = false;
 		cnt = 0;
 		if (!deltaload)
-			PlaySfxLoc(LS_FOUNTAIN, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(LS_FOUNTAIN, object[i].position);
 		object[i]._oSelFlag = 0;
 		if (deltaload)
 			return false;
@@ -4754,7 +4745,7 @@ void OperateStoryBook(int pnum, int i)
 {
 	if (object[i]._oSelFlag != 0 && !deltaload && !qtextflag && pnum == myplr) {
 		object[i]._oAnimFrame = object[i]._oVar4;
-		PlaySfxLoc(IS_ISCROL, object[i].position.x, object[i].position.y);
+		PlaySfxLoc(IS_ISCROL, object[i].position);
 		auto msg = static_cast<_speech_id>(object[i]._oVar2);
 		if (object[i]._oVar8 != 0 && currlevel == 24) {
 			if (!IsUberLeverActivated && quests[Q_NAKRUL]._qactive != QUEST_DONE && NaKrulSpellTomesActive(object[i]._oVar8)) {
@@ -5104,7 +5095,7 @@ void BreakCrux(int i)
 	if (!triggered)
 		return;
 	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, object[i].position.x, object[i].position.y);
+		PlaySfxLoc(IS_LEVER, object[i].position);
 	ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 }
 
@@ -5126,7 +5117,7 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 		if (deltaload)
 			return;
 
-		PlaySfxLoc(IS_IBOW, object[i].position.x, object[i].position.y);
+		PlaySfxLoc(IS_IBOW, object[i].position);
 		return;
 	}
 
@@ -5148,11 +5139,11 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 
 	if (object[i]._otype == OBJ_BARRELEX) {
 		if (currlevel >= 21 && currlevel <= 24)
-			PlaySfxLoc(IS_POPPOP3, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_POPPOP3, object[i].position);
 		else if (currlevel >= 17 && currlevel <= 20)
-			PlaySfxLoc(IS_POPPOP8, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_POPPOP8, object[i].position);
 		else
-			PlaySfxLoc(IS_BARLFIRE, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_BARLFIRE, object[i].position);
 		for (yp = object[i].position.y - 1; yp <= object[i].position.y + 1; yp++) {
 			for (xp = object[i].position.x - 1; xp <= object[i].position.x + 1; xp++) {
 				if (dMonster[xp][yp] > 0)
@@ -5169,11 +5160,11 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 		}
 	} else {
 		if (currlevel >= 21 && currlevel <= 24)
-			PlaySfxLoc(IS_POPPOP2, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_POPPOP2, object[i].position);
 		else if (currlevel >= 17 && currlevel <= 20)
-			PlaySfxLoc(IS_POPPOP5, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_POPPOP5, object[i].position);
 		else
-			PlaySfxLoc(IS_BARREL, object[i].position.x, object[i].position.y);
+			PlaySfxLoc(IS_BARREL, object[i].position);
 		SetRndSeed(object[i]._oRndSeed);
 		if (object[i]._oVar2 <= 1) {
 			if (object[i]._oVar3 == 0)
@@ -5572,7 +5563,7 @@ void GetObjectStr(int i)
 void operate_lv24_lever()
 {
 	if (currlevel == 24) {
-		PlaySfxLoc(IS_CROPEN, UberRow, UberCol);
+		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
 		//the part below is the same as objects_454BA8
 		dPiece[UberRow][UberCol] = 298;
 		dPiece[UberRow][UberCol - 1] = 301;

@@ -595,7 +595,7 @@ void TalkToCow(PlayerStruct &player, TownerStruct &cow)
 			CowMsg = 0;
 	}
 
-	PlaySfxLoc(CowPlaying, cow.position.x, cow.position.y);
+	PlaySfxLoc(CowPlaying, cow.position);
 }
 
 void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)

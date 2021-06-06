@@ -243,7 +243,7 @@ void CheckQuests()
 		    && nummonsters == 4
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile.x, plr[myplr].position.tile.y);
+			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal", false);
 			UpdatePWaterPalette();
 			WaterDone = 32;
