@@ -333,6 +333,8 @@ TEST(pack, UnPackItem_diablo)
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
+	gbIsSpawn = false;
+
 	plr[myplr]._pMaxManaBase = 125 << 6;
 	plr[myplr]._pMaxHPBase = 125 << 6;
 
@@ -352,6 +354,7 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
+	gbIsSpawn = false;
 
 	ItemStruct id;
 	UnPackItem(&pkItemBug, &id, false);
@@ -376,6 +379,43 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 	PkItemStruct is;
 	PackItem(&is, &id);
 	ComparePackedItems(&is, &pkItem);
+}
+
+const PkItemStruct PackedSpawnItems[] = {
+	// clang-format off
+	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
+	{ 2060036013,         257, 131,   0,   11,    25,  50,   50,      0,      0 }, // Staff of Firebolt
+	{   81574809,         258,  94,   0,    0,     0,   0,    0,      0,      0 }, // Book of Holy Bolt
+	// clang-format on
+};
+
+const TestItemStruct SpawnItems[] = {
+	// clang-format off
+	//_iIName,             _itype, _iClass, _iCurs, _iIvalue, _iMinDam, _iMaxDam, _iAC,   _iFlags, _iMiscId, _iSpell, _iCharges, _iMaxCharges, _iDurability, _iMaxDur, _iPLDam, _iPLToHit, _iPLAC, _iPLStr, _iPLMag, _iPLDex, _iPLVit, _iPLFR, _iPLLR, _iPLMR, _iPLMana, _iPLHP, _iPLDamMod, _iPLGetHit, _iPLLight, _iSplLvlAdd, _iUid, _iFMinDam, _iFMaxDam, _iLMinDam, _iLMaxDam, _iPrePower, _iSufPower, _iMinStr, _iMinMag, _iMinDex, IDidx );
+	{ "Staff of Firebolt",     10,       1,    109,        1,        2,        4,    0,         0,       23,       1,        50,           50,           11,       25,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       15,        0,   151 },
+	{ "Book of Holy Bolt",      0,       3,     86,     1000,        0,        0,    0,         0,       24,      31,         0,            0,            0,        0,       0,         0,      0,       0,       0,       0,       0,      0,      0,      0,        0,      0,          0,          0,         0,           0,     0,         0,         0,         0,         0,         -1,         -1,        0,       20,        0,   114 },
+	// clang-format on
+};
+
+TEST(pack, UnPackItem_spawn)
+{
+	ItemStruct id;
+	PkItemStruct is;
+
+	gbIsHellfire = false;
+	gbIsMultiplayer = false;
+	gbIsSpawn = true;
+
+	plr[myplr]._pMaxManaBase = 125 << 6;
+	plr[myplr]._pMaxHPBase = 125 << 6;
+
+	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
+		UnPackItem(&PackedSpawnItems[i], &id, false);
+		CompareItems(&id, &SpawnItems[i]);
+
+		PackItem(&is, &id);
+		ComparePackedItems(&is, &PackedSpawnItems[i]);
+	}
 }
 
 const PkItemStruct PackedDiabloMPItems[] = {
@@ -408,6 +448,8 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = true;
+	gbIsSpawn = false;
+
 	plr[myplr]._pMaxManaBase = 125 << 6;
 	plr[myplr]._pMaxHPBase = 125 << 6;
 
@@ -609,6 +651,8 @@ TEST(pack, UnPackItem_hellfire)
 
 	gbIsHellfire = true;
 	gbIsMultiplayer = false;
+	gbIsSpawn = false;
+
 	plr[myplr]._pMaxManaBase = 125 << 6;
 	plr[myplr]._pMaxHPBase = 125 << 6;
 
@@ -629,6 +673,7 @@ TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
+	gbIsSpawn = false;
 
 	UnPackItem(&is, &id, true);
 

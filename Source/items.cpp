@@ -324,8 +324,16 @@ int premiumLvlAddHellfire[] = {
 
 bool IsItemAvailable(int i)
 {
+	if (gbIsSpawn) {
+		if (i >= 62 && i <= 71)
+			return false; // Medium and heavy armors
+		if (i == 105 || i == 107 || i == 108 || i == 110 || i == 111 || i == 113)
+			return false; // Unavailable scrolls
+	}
+
 	if (gbIsHellfire)
 		return true;
+
 	return (
 	           i != IDI_MAPOFDOOM                   // Cathedral Map
 	           && i != IDI_LGTFORGE                 // Bovine Plate
@@ -481,7 +489,7 @@ void AddInitItems()
 static void items_42390F()
 {
 	int id;
-	
+
 	switch (currlevel) {
 	case 22:
 		id = IDI_NOTE2;
