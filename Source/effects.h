@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <memory>
 
+#include "engine.h"
 #include "sound.h"
 
 namespace devilution {
@@ -1187,7 +1188,7 @@ void ui_sound_init();
 void effects_play_sound(const char *snd_file);
 
 #ifndef NOSOUND
-bool calc_snd_position(int x, int y, int *plVolume, int *plPan);
+bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan);
 int GetSFXLength(int nSFX);
 #endif
 
