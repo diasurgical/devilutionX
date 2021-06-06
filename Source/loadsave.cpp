@@ -281,6 +281,9 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	file->skip(1); // Alignment
 	pItem->_iStatFlag = file->nextBool32();
 	pItem->IDidx = file->nextLE<int32_t>();
+	if (gbIsSpawn) {
+		pItem->IDidx = RemapItemIdxFromSpawn(pItem->IDidx);
+	}
 	if (!gbIsHellfireSaveGame) {
 		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
 	}
@@ -829,6 +832,60 @@ int RemapItemIdxToDiablo(int i)
 	return i;
 }
 
+int RemapItemIdxFromSpawn(int i)
+{
+	if (i >= 62) {
+		i += 9; // Medium and heavy armors
+	}
+	if (i >= 96) {
+		i += 1; // Scroll of Stone Curse
+	}
+	if (i >= 98) {
+		i += 1; // Scroll of Guardian
+	}
+	if (i >= 99) {
+		i += 1; // Scroll of ...
+	}
+	if (i >= 101) {
+		i += 1; // Scroll of Golem
+	}
+	if (i >= 102) {
+		i += 1; // Scroll of None
+	}
+	if (i >= 104) {
+		i += 1; // Scroll of Apocalypse
+	}
+
+	return i;
+}
+
+int RemapItemIdxToSpawn(int i)
+{
+	if (i >= 104) {
+		i -= 1; // Scroll of Apocalypse
+	}
+	if (i >= 102) {
+		i -= 1; // Scroll of None
+	}
+	if (i >= 101) {
+		i -= 1; // Scroll of Golem
+	}
+	if (i >= 99) {
+		i -= 1; // Scroll of ...
+	}
+	if (i >= 98) {
+		i -= 1; // Scroll of Guardian
+	}
+	if (i >= 96) {
+		i -= 1; // Scroll of Stone Curse
+	}
+	if (i >= 71) {
+		i -= 9; // Medium and heavy armors
+	}
+
+	return i;
+}
+
 bool IsHeaderValid(uint32_t magicNumber)
 {
 	gbIsHellfireSaveGame = false;
@@ -1188,6 +1245,8 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	int idx = pItem->IDidx;
 	if (!gbIsHellfire)
 		idx = RemapItemIdxToDiablo(idx);
+	if (gbIsSpawn)
+		idx = RemapItemIdxToSpawn(idx);
 	int iType = pItem->_itype;
 	if (idx == -1) {
 		idx = 0;

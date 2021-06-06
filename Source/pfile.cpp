@@ -37,7 +37,7 @@ std::string GetSavePath(uint32_t save_num)
 
 	if (gbIsSpawn) {
 		if (!gbIsMultiplayer) {
-			path.append("spawn");
+			path.append("spawn_");
 		} else {
 			path.append("share_");
 		}
