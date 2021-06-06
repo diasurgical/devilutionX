@@ -330,14 +330,9 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
 		    && myPlayer.SpdList[i]._iStatFlag
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
-			sprintf(tempstr, "%i", i + 1);
-			SDL_Rect rect {
-				InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X + InventorySlotSizeInPixels.width - GetLineWidth(tempstr),
-				InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1,
-				0,
-				0
-			};
-			DrawString(out, tempstr, rect, UIS_SILVER);
+			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
+			// FIXME: Replace this with Rectangle(Point, Size) once https://github.com/diasurgical/devilutionX/pull/2131 is merged
+			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UIS_SILVER | UIS_RIGHT);
 		}
 	}
 }
