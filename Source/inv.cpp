@@ -217,10 +217,10 @@ void DrawInv(const CelOutputBuffer &out)
 
 			// calc item offsets for weapons smaller than 2x3 slots
 			if (slot == INVLOC_HAND_LEFT) {
-				screenX += frameW == INV_SLOT_SIZE_PX ? INV_SLOT_SIZE_PX : 0;
+				screenX += frameW == INV_SLOT_SIZE_PX ? INV_SLOT_HALF_SIZE_PX : 0;
 				screenY += frameH == (3 * INV_SLOT_SIZE_PX) ? 0 : -INV_SLOT_HALF_SIZE_PX;
 			} else if (slot == INVLOC_HAND_RIGHT) {
-				screenX += frameW == INV_SLOT_SIZE_PX ? (INV_SLOT_SIZE_PX - 1) : 1;
+				screenX += frameW == INV_SLOT_SIZE_PX ? (INV_SLOT_HALF_SIZE_PX - 1) : 1;
 				screenY += frameH == 3 * INV_SLOT_SIZE_PX ? 0 : -INV_SLOT_HALF_SIZE_PX;
 			}
 
@@ -243,7 +243,7 @@ void DrawInv(const CelOutputBuffer &out)
 						light_table_index = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == INV_SLOT_SIZE_PX ? INV_SLOT_SIZE_PX : 0) - 1;
+						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == INV_SLOT_SIZE_PX ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
 						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
