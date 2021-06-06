@@ -1143,19 +1143,17 @@ void FreeMonsterSnd()
 	}
 }
 
-bool calc_snd_position(int x, int y, int *plVolume, int *plPan)
+bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 {
 	int pan, volume;
 
 	const auto &playerPosition = plr[myplr].position.tile;
+	const auto delta = soundPosition - playerPosition;
 
-	const int dx = x - playerPosition.x;
-	const int dy = y - playerPosition.y;
-
-	pan = (dx - dy) * 256;
+	pan = (delta.x - delta.y) * 256;
 	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
 
-	volume = playerPosition.ApproxDistance({ x, y });
+	volume = playerPosition.ApproxDistance(soundPosition);
 	volume *= -64;
 
 	if (volume <= ATTENUATION_MIN)
@@ -1183,7 +1181,7 @@ static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
 
 	lPan = 0;
 	lVolume = 0;
-	if (loc && !calc_snd_position(x, y, &lVolume, &lPan)) {
+	if (loc && !calc_snd_position({ x, y }, &lVolume, &lPan)) {
 		return;
 	}
 
@@ -1218,7 +1216,7 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	if (!calc_snd_position(monster[i].position.tile.x, monster[i].position.tile.y, &lVolume, &lPan))
+	if (!calc_snd_position(monster[i].position.tile, &lVolume, &lPan))
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);
