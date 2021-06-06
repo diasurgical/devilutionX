@@ -940,13 +940,13 @@ void InvMove(AxisDirection dir)
 /**
  * check if hot spell at X Y exists
  */
-bool HSExists(int x, int y)
+bool HSExists(Point target)
 {
 	for (int r = 0; r < speedspellcount; r++) {
-		if (x >= speedspellscoords[r].x - SPLICONLENGTH / 2
-		    && x < speedspellscoords[r].x + SPLICONLENGTH / 2
-		    && y >= speedspellscoords[r].y - SPLICONLENGTH / 2
-		    && y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
+		if (target.x >= speedspellscoords[r].x - SPLICONLENGTH / 2
+		    && target.x < speedspellscoords[r].x + SPLICONLENGTH / 2
+		    && target.y >= speedspellscoords[r].y - SPLICONLENGTH / 2
+		    && target.y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
 			return true;
 		}
 	}
@@ -987,11 +987,11 @@ void HotSpellMove(AxisDirection dir)
 	}
 
 	if (dir.y == AxisDirectionY_UP) {
-		if (HSExists(x, y - SPLICONLENGTH)) {
+		if (HSExists({ x, y - SPLICONLENGTH })) {
 			y -= SPLICONLENGTH;
 		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
-		if (HSExists(x, y + SPLICONLENGTH)) {
+		if (HSExists({ x, y + SPLICONLENGTH })) {
 			y += SPLICONLENGTH;
 		}
 	}
