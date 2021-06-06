@@ -1021,16 +1021,6 @@ static const Direction FaceDir[3][3] = {
 	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
 	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
 };
-static const int Offsets[8][2] = {
-	{ 1, 1 },   // DIR_S
-	{ 0, 1 },   // DIR_SW
-	{ -1, 1 },  // DIR_W
-	{ -1, 0 },  // DIR_NW
-	{ -1, -1 }, // DIR_N
-	{ 0, -1 },  // DIR_NE
-	{ 1, -1 },  // DIR_E
-	{ 1, 0 },   // DIR_SE
-};
 
 /**
  * @brief check if stepping in direction (dir) from position is blocked.
@@ -1436,8 +1426,9 @@ void UpdateSpellTarget()
 	if (plr[myplr]._pRSpell == SPL_TELEPORT)
 		range = 4;
 
-	cursmx = plr[myplr].position.future.x + Offsets[plr[myplr]._pdir][0] * range;
-	cursmy = plr[myplr].position.future.y + Offsets[plr[myplr]._pdir][1] * range;
+	auto cursm{ plr[myplr].position.future + Point::fromDirection(plr[myplr]._pdir) * range };
+	cursmx = cursm.x;
+	cursmy = cursm.y;
 }
 
 /**
