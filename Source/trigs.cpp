@@ -832,7 +832,7 @@ void CheckTriggers()
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
 				NetSendCmdLoc(myplr, true, CMD_WALKXY, { myPlayer.position.tile.x, myPlayer.position.tile.y + 1 });
-				PlaySFX(PS_WARR18);
+				myPlayer.Say(HeroSpeech::NotAChance);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
 				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
