@@ -389,7 +389,7 @@ void DrawSpellList(const CelOutputBuffer &out)
 			DrawSpellCel(out, location, *pSpellCels, SpellITbl[j]);
 			int lx = x;
 			int ly = y - SPLICONLENGTH;
-			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
+			if (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH) {
 				pSpell = (spell_id)j;
 				pSplType = (spell_type)i;
 				if (myPlayer._pClass == HeroClass::Monk && j == SPL_SEARCH)
@@ -843,15 +843,15 @@ void DoPanBtn()
 	for (int i = 0; i < numpanbtns; i++) {
 		int x = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
 		int y = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
-		if (MouseX >= PanBtnPos[i].x + PANEL_LEFT && MouseX <= x) {
-			if (MouseY >= PanBtnPos[i].y + PANEL_TOP && MouseY <= y) {
+		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= x) {
+			if (MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= y) {
 				panbtns[i] = true;
 				drawbtnflag = true;
 				panbtndown = true;
 			}
 		}
 	}
-	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
+	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			auto &myPlayer = plr[myplr];
 			myPlayer._pRSpell = SPL_INVALID;
@@ -875,18 +875,18 @@ void control_check_btn_press()
 {
 	int x = PanBtnPos[3].x + PANEL_LEFT + PanBtnPos[3].w;
 	int y = PanBtnPos[3].y + PANEL_TOP + PanBtnPos[3].h;
-	if (MouseX >= PanBtnPos[3].x + PANEL_LEFT
-	    && MouseX <= x
-	    && MouseY >= PanBtnPos[3].y + PANEL_TOP
-	    && MouseY <= y) {
+	if (MousePosition.x >= PanBtnPos[3].x + PANEL_LEFT
+	    && MousePosition.x <= x
+	    && MousePosition.y >= PanBtnPos[3].y + PANEL_TOP
+	    && MousePosition.y <= y) {
 		control_set_button_down(3);
 	}
 	x = PanBtnPos[6].x + PANEL_LEFT + PanBtnPos[6].w;
 	y = PanBtnPos[6].y + PANEL_TOP + PanBtnPos[6].h;
-	if (MouseX >= PanBtnPos[6].x + PANEL_LEFT
-	    && MouseX <= x
-	    && MouseY >= PanBtnPos[6].y + PANEL_TOP
-	    && MouseY <= y) {
+	if (MousePosition.x >= PanBtnPos[6].x + PANEL_LEFT
+	    && MousePosition.x <= x
+	    && MousePosition.y >= PanBtnPos[6].y + PANEL_TOP
+	    && MousePosition.y <= y) {
 		control_set_button_down(6);
 	}
 }
@@ -914,7 +914,7 @@ void CheckPanelInfo()
 	for (int i = 0; i < numpanbtns; i++) {
 		int xend = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
 		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
-		if (MouseX >= PanBtnPos[i].x + PANEL_LEFT && MouseX <= xend && MouseY >= PanBtnPos[i].y + PANEL_TOP && MouseY <= yend) {
+		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= yend) {
 			if (i != 7) {
 				strcpy(infostr, _(PanBtnStr[i]));
 			} else {
@@ -932,7 +932,7 @@ void CheckPanelInfo()
 			pinfoflag = true;
 		}
 	}
-	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
+	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
 		strcpy(infostr, _("Select current spell button"));
 		infoclr = UIS_SILVER;
 		panelflag = true;
@@ -991,7 +991,7 @@ void CheckPanelInfo()
 			}
 		}
 	}
-	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
+	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT && MousePosition.y > 4 + PANEL_TOP && MousePosition.y < 33 + PANEL_TOP)
 		pcursinvitem = CheckInvHLight();
 
 	if (CheckXPBarInfo()) {
@@ -1017,10 +1017,10 @@ void CheckBtnUp()
 
 		panbtns[i] = false;
 
-		if (MouseX < PanBtnPos[i].x + PANEL_LEFT
-		    || MouseX > PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w
-		    || MouseY < PanBtnPos[i].y + PANEL_TOP
-		    || MouseY > PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h) {
+		if (MousePosition.x < PanBtnPos[i].x + PANEL_LEFT
+		    || MousePosition.x > PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w
+		    || MousePosition.y < PanBtnPos[i].y + PANEL_TOP
+		    || MousePosition.y > PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h) {
 			continue;
 		}
 
@@ -1388,13 +1388,13 @@ void DrawChr(const CelOutputBuffer &out)
 
 void CheckLvlBtn()
 {
-	if (!lvlbtndown && MouseX >= 40 + PANEL_LEFT && MouseX <= 81 + PANEL_LEFT && MouseY >= -39 + PANEL_TOP && MouseY <= -17 + PANEL_TOP)
+	if (!lvlbtndown && MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP)
 		lvlbtndown = true;
 }
 
 void ReleaseLvlBtn()
 {
-	if (MouseX >= 40 + PANEL_LEFT && MouseX <= 81 + PANEL_LEFT && MouseY >= -39 + PANEL_TOP && MouseY <= -17 + PANEL_TOP)
+	if (MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP)
 		chrflag = true;
 	lvlbtndown = false;
 }
@@ -1440,10 +1440,10 @@ void CheckChrBtns()
 		auto buttonId = static_cast<size_t>(attribute);
 		int x = ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].size.width;
 		int y = ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].size.height;
-		if (MouseX >= ChrBtnsRect[buttonId].position.x
-		    && MouseX <= x
-		    && MouseY >= ChrBtnsRect[buttonId].position.y
-		    && MouseY <= y) {
+		if (MousePosition.x >= ChrBtnsRect[buttonId].position.x
+		    && MousePosition.x <= x
+		    && MousePosition.y >= ChrBtnsRect[buttonId].position.y
+		    && MousePosition.y <= y) {
 			chrbtn[buttonId] = true;
 			chrbtnactive = true;
 		}
@@ -1466,10 +1466,10 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			continue;
 
 		chrbtn[buttonId] = false;
-		if (MouseX >= ChrBtnsRect[buttonId].position.x
-		    && MouseX <= ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].size.width
-		    && MouseY >= ChrBtnsRect[buttonId].position.y
-		    && MouseY <= ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].size.height) {
+		if (MousePosition.x >= ChrBtnsRect[buttonId].position.x
+		    && MousePosition.x <= ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].size.width
+		    && MousePosition.y >= ChrBtnsRect[buttonId].position.y
+		    && MousePosition.y <= ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].size.height) {
 			auto &myPlayer = plr[myplr];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
@@ -1668,8 +1668,8 @@ void DrawSpellBook(const CelOutputBuffer &out)
 
 void CheckSBook()
 {
-	if (MouseX >= RIGHT_PANEL + 11 && MouseX < RIGHT_PANEL + 48 && MouseY >= 18 && MouseY < 314) {
-		spell_id sn = SpellPages[sbooktab][(MouseY - 18) / 43];
+	if (MousePosition.x >= RIGHT_PANEL + 11 && MousePosition.x < RIGHT_PANEL + 48 && MousePosition.y >= 18 && MousePosition.y < 314) {
+		spell_id sn = SpellPages[sbooktab][(MousePosition.y - 18) / 43];
 		auto &myPlayer = plr[myplr];
 		uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
@@ -1685,8 +1685,8 @@ void CheckSBook()
 			force_redraw = 255;
 		}
 	}
-	if (MouseX >= RIGHT_PANEL + 7 && MouseX < RIGHT_PANEL + 311 && MouseY >= SPANEL_WIDTH && MouseY < 349) {
-		sbooktab = (MouseX - (RIGHT_PANEL + 7)) / (gbIsHellfire ? 61 : 76);
+	if (MousePosition.x >= RIGHT_PANEL + 7 && MousePosition.x < RIGHT_PANEL + 311 && MousePosition.y >= SPANEL_WIDTH && MousePosition.y < 349) {
+		sbooktab = (MousePosition.x - (RIGHT_PANEL + 7)) / (gbIsHellfire ? 61 : 76);
 	}
 }
 
@@ -1851,20 +1851,20 @@ bool control_check_talk_btn()
 	if (!talkflag)
 		return false;
 
-	if (MouseX < 172 + PANEL_LEFT)
+	if (MousePosition.x < 172 + PANEL_LEFT)
 		return false;
-	if (MouseY < 69 + PANEL_TOP)
+	if (MousePosition.y < 69 + PANEL_TOP)
 		return false;
-	if (MouseX > 233 + PANEL_LEFT)
+	if (MousePosition.x > 233 + PANEL_LEFT)
 		return false;
-	if (MouseY > 123 + PANEL_TOP)
+	if (MousePosition.y > 123 + PANEL_TOP)
 		return false;
 
 	for (bool &talkButtonDown : talkButtonsDown) {
 		talkButtonDown = false;
 	}
 
-	talkButtonsDown[(MouseY - (69 + PANEL_TOP)) / 18] = true;
+	talkButtonsDown[(MousePosition.y - (69 + PANEL_TOP)) / 18] = true;
 
 	return true;
 }
@@ -1877,10 +1877,10 @@ void control_release_talk_btn()
 	for (bool &talkButtonDown : talkButtonsDown)
 		talkButtonDown = false;
 
-	if (MouseX < 172 + PANEL_LEFT || MouseY < 69 + PANEL_TOP || MouseX > 233 + PANEL_LEFT || MouseY > 123 + PANEL_TOP)
+	if (MousePosition.x < 172 + PANEL_LEFT || MousePosition.y < 69 + PANEL_TOP || MousePosition.x > 233 + PANEL_LEFT || MousePosition.y > 123 + PANEL_TOP)
 		return;
 
-	int off = (MouseY - (69 + PANEL_TOP)) / 18;
+	int off = (MousePosition.y - (69 + PANEL_TOP)) / 18;
 
 	int p = 0;
 	for (; p < MAX_PLRS && off != -1; p++) {

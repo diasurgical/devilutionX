@@ -374,8 +374,7 @@ void UiHandleEvents(SDL_Event *event)
 #ifdef USE_SDL1
 		OutputToLogical(&event->motion.x, &event->motion.y);
 #endif
-		MouseX = event->motion.x;
-		MouseY = event->motion.y;
+		MousePosition = { event->motion.x, event->motion.y };
 		return;
 	}
 
@@ -969,6 +968,6 @@ void DrawMouse()
 	if (IsHardwareCursor() || sgbControllerActive)
 		return;
 
-	DrawArt(MouseX, MouseY, &ArtCursor);
+	DrawArt(MousePosition.x, MousePosition.y, &ArtCursor);
 }
 } // namespace devilution

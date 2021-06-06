@@ -3625,12 +3625,12 @@ void CheckPlrSpell()
 		if (pcurs != CURSOR_HAND)
 			return;
 
-		if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= RIGHT_PANEL) // inside main panel
+		if (MousePosition.y >= PANEL_TOP && MousePosition.x >= PANEL_LEFT && MousePosition.x <= RIGHT_PANEL) // inside main panel
 			return;
 
 		if (
-		    ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT)    // inside left panel
-		    || ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) // inside right panel
+		    ((chrflag || questlog) && MousePosition.x < SPANEL_WIDTH && MousePosition.y < SPANEL_HEIGHT)    // inside left panel
+		    || ((invflag || sbookflag) && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT) // inside right panel
 		) {
 			if (rspell != SPL_HEAL
 			    && rspell != SPL_IDENTIFY
