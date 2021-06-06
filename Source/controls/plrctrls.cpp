@@ -465,10 +465,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	// first, find our cursor location
 	int slot = 0;
 	for (int i = 0; i < 4; i++) {
-		if (MousePosition.x >= ChrBtnsRect[i].position.x
-		    && MousePosition.x <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
-		    && MousePosition.y >= ChrBtnsRect[i].position.y
-		    && MousePosition.y <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
+		if (ChrBtnsRect[i].Contains(MousePosition)) {
 			slot = i;
 			break;
 		}
@@ -1378,10 +1375,7 @@ void PerformPrimaryAction()
 	if (chrflag && !chrbtnactive && plr[myplr]._pStatPts > 0) {
 		CheckChrBtns();
 		for (int i = 0; i < 4; i++) {
-			if (MousePosition.x >= ChrBtnsRect[i].position.x
-			    && MousePosition.x <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
-			    && MousePosition.y >= ChrBtnsRect[i].position.y
-			    && MousePosition.y <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
+			if (ChrBtnsRect[i].Contains(MousePosition)) {
 				chrbtn[i] = true;
 				chrbtnactive = true;
 				ReleaseChrBtns(false);
