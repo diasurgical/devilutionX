@@ -78,7 +78,7 @@ void FocusOnCharInfo()
 	}
 	if (stat == -1)
 		return;
-	const RECT32 &rect = ChrBtnsRect[stat];
+	const Rectangle &rect = ChrBtnsRect[stat];
 	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
 }
 

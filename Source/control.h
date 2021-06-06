@@ -134,6 +134,6 @@ void control_reset_talk();
 bool control_talk_last_key(int vkey);
 bool control_presskeys(int vkey);
 
-extern RECT32 ChrBtnsRect[4];
+extern Rectangle ChrBtnsRect[4];
 
 } // namespace devilution
