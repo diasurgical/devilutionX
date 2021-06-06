@@ -224,7 +224,7 @@ struct Size {
 	}
 };
 
-struct RECT32 {
+struct Rectangle {
 	int x;
 	int y;
 	int w;

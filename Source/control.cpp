@@ -203,7 +203,7 @@ const char *const PanBtnStr[8] = {
 	"" // Player attack
 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
-RECT32 ChrBtnsRect[4] = {
+Rectangle ChrBtnsRect[4] = {
 	{ 137, 138, 41, 22 },
 	{ 137, 166, 41, 22 },
 	{ 137, 195, 41, 22 },
