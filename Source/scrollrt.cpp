@@ -208,7 +208,7 @@ static void DrawCursor(const CelOutputBuffer &out)
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
 	const int outlineWidth = IsItemSprite(pcurs) ? 1 : 0;
 
-	if (MouseX < -cursW - outlineWidth || MouseX - outlineWidth >= out.w() || MouseY < -cursH - outlineWidth || MouseY - outlineWidth >= out.h())
+	if (MousePosition.x < -cursW - outlineWidth || MousePosition.x - outlineWidth >= out.w() || MousePosition.y < -cursH - outlineWidth || MousePosition.y - outlineWidth >= out.h())
 		return;
 
 	constexpr auto Clip = [](int &pos, std::uint32_t &length, std::uint32_t posEnd) {
@@ -220,16 +220,16 @@ static void DrawCursor(const CelOutputBuffer &out)
 		}
 	};
 
-	sgdwCursX = MouseX - outlineWidth;
+	sgdwCursX = MousePosition.x - outlineWidth;
 	sgdwCursWdt = cursW + 2 * outlineWidth;
 	Clip(sgdwCursX, sgdwCursWdt, out.w());
 
-	sgdwCursY = MouseY - outlineWidth;
+	sgdwCursY = MousePosition.y - outlineWidth;
 	sgdwCursHgt = cursH + 2 * outlineWidth;
 	Clip(sgdwCursY, sgdwCursHgt, out.h());
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
-	CelDrawCursor(out, Point { MouseX, MouseY + cursH - 1 }, pcurs);
+	CelDrawCursor(out, MousePosition + Point { 0, cursH - 1 }, pcurs);
 }
 
 /**
@@ -1349,7 +1349,7 @@ void ScrollView()
 
 	scroll = false;
 
-	if (MouseX < 20) {
+	if (MousePosition.x < 20) {
 		if (dmaxy - 1 <= ViewY || dminx >= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;
@@ -1365,7 +1365,7 @@ void ScrollView()
 			scroll = true;
 		}
 	}
-	if (MouseX > gnScreenWidth - 20) {
+	if (MousePosition.x > gnScreenWidth - 20) {
 		if (dmaxx - 1 <= ViewX || dminy >= ViewY) {
 			if (dmaxx - 1 > ViewX) {
 				ViewX++;
@@ -1381,7 +1381,7 @@ void ScrollView()
 			scroll = true;
 		}
 	}
-	if (MouseY < 20) {
+	if (MousePosition.y < 20) {
 		if (dminy >= ViewY || dminx >= ViewX) {
 			if (dminy < ViewY) {
 				ViewY--;
@@ -1397,7 +1397,7 @@ void ScrollView()
 			scroll = true;
 		}
 	}
-	if (MouseY > gnScreenHeight - 20) {
+	if (MousePosition.y > gnScreenHeight - 20) {
 		if (dmaxy - 1 <= ViewY || dmaxx - 1 <= ViewX) {
 			if (dmaxy - 1 > ViewY) {
 				ViewY++;

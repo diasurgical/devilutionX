@@ -78,8 +78,7 @@ int glEndSeed[NUMLEVELS];
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
 int glMid3Seed[NUMLEVELS];
-int MouseX;
-int MouseY;
+Point MousePosition;
 bool gbGameLoopStartup;
 bool gbRunGame;
 bool gbRunGameResult;
@@ -343,7 +342,7 @@ static bool ProcessInput()
 
 	if (!gmenu_is_active() && sgnTimeoutCurs == CURSOR_NONE) {
 #ifndef USE_SDL1
-		finish_simulated_mouse_clicks(MouseX, MouseY);
+		finish_simulated_mouse_clicks(MousePosition.x, MousePosition.y);
 #endif
 		CheckCursMove();
 		plrctrls_after_check_curs_move();
@@ -469,10 +468,9 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 
 static void diablo_init_screen()
 {
-	MouseX = gnScreenWidth / 2;
-	MouseY = gnScreenHeight / 2;
+	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
 	if (!sgbControllerActive)
-		SetCursorPos(MouseX, MouseY);
+		SetCursorPos(MousePosition.x, MousePosition.y);
 	ScrollInfo.tile = { 0, 0 };
 	ScrollInfo.offset = { 0, 0 };
 	ScrollInfo._sdir = SDIR_NONE;
@@ -610,7 +608,7 @@ static bool LeftMouseCmd(bool bShift)
 {
 	bool bNear;
 
-	assert(MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH);
+	assert(MousePosition.y < PANEL_TOP || MousePosition.x < PANEL_LEFT || MousePosition.x >= PANEL_LEFT + PANEL_WIDTH);
 
 	if (leveltype == DTYPE_TOWN) {
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
@@ -767,19 +765,19 @@ static bool LeftMouseDown(int wParam)
 
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
 
-	if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH) {
+	if (MousePosition.y < PANEL_TOP || MousePosition.x < PANEL_LEFT || MousePosition.x >= PANEL_LEFT + PANEL_WIDTH) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
-			if (questlog && MouseX > 32 && MouseX < 288 && MouseY > 32 && MouseY < 308) {
+			if (questlog && MousePosition.x > 32 && MousePosition.x < 288 && MousePosition.y > 32 && MousePosition.y < 308) {
 				QuestlogESC();
 			} else if (qtextflag) {
 				qtextflag = false;
 				stream_stop();
-			} else if (chrflag && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT) {
+			} else if (chrflag && MousePosition.x < SPANEL_WIDTH && MousePosition.y < SPANEL_HEIGHT) {
 				CheckChrBtns();
-			} else if (invflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
+			} else if (invflag && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT) {
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld);
-			} else if (sbookflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
+			} else if (sbookflag && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
@@ -835,8 +833,8 @@ static void RightMouseDown()
 		SetSpell();
 		return;
 	}
-	if (MouseY >= SPANEL_HEIGHT
-	    || ((!sbookflag || MouseX <= RIGHT_PANEL)
+	if (MousePosition.y >= SPANEL_HEIGHT
+	    || ((!sbookflag || MousePosition.x <= RIGHT_PANEL)
 	        && !TryIconCurs()
 	        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
 		if (pcurs == CURSOR_HAND) {
@@ -894,10 +892,10 @@ static void ReleaseKey(int vkey)
 static void ClosePanels()
 {
 	if (CanPanelsCoverView()) {
-		if (!chrflag && !questlog && (invflag || sbookflag) && MouseX < 480 && MouseY < PANEL_TOP) {
-			SetCursorPos(MouseX + 160, MouseY);
-		} else if (!invflag && !sbookflag && (chrflag || questlog) && MouseX > 160 && MouseY < PANEL_TOP) {
-			SetCursorPos(MouseX - 160, MouseY);
+		if (!chrflag && !questlog && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+			SetCursorPos(MousePosition.x + 160, MousePosition.y);
+		} else if (!invflag && !sbookflag && (chrflag || questlog) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+			SetCursorPos(MousePosition.x - 160, MousePosition.y);
 		}
 	}
 	invflag = false;
@@ -1197,8 +1195,7 @@ static void PressChar(int32_t vkey)
 
 static void GetMousePos(int32_t lParam)
 {
-	MouseX = (short)(lParam & 0xffff);
-	MouseY = (short)((lParam >> 16) & 0xffff);
+	MousePosition = { (short)(lParam & 0xffff), (short)((lParam >> 16) & 0xffff) };
 }
 
 void DisableInputWndProc(uint32_t uMsg, int32_t wParam, int32_t lParam)
@@ -1853,12 +1850,12 @@ void inventoryKeyPressed()
 	invflag = !invflag;
 	if (!chrflag && !questlog && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
-			if (MouseX < 480 && MouseY < PANEL_TOP) {
-				SetCursorPos(MouseX + 160, MouseY);
+			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition.x + 160, MousePosition.y);
 			}
 		} else if (!sbookflag) { // We opened the invetory
-			if (MouseX > 160 && MouseY < PANEL_TOP) {
-				SetCursorPos(MouseX - 160, MouseY);
+			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition.x - 160, MousePosition.y);
 			}
 		}
 	}
@@ -1872,12 +1869,12 @@ void characterSheetKeyPressed()
 	chrflag = !chrflag;
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
 		if (!chrflag) { // We closed the character sheet
-			if (MouseX > 160 && MouseY < PANEL_TOP) {
-				SetCursorPos(MouseX - 160, MouseY);
+			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition.x - 160, MousePosition.y);
 			}
 		} else if (!questlog) { // We opened the character sheet
-			if (MouseX < 480 && MouseY < PANEL_TOP) {
-				SetCursorPos(MouseX + 160, MouseY);
+			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition.x + 160, MousePosition.y);
 			}
 		}
 	}
@@ -1895,12 +1892,12 @@ void questLogKeyPressed()
 	}
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
 		if (!questlog) { // We closed the quest log
-			if (MouseX > 160 && MouseY < PANEL_TOP) {
-				SetCursorPos(MouseX - 160, MouseY);
+			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition.x - 160, MousePosition.y);
 			}
 		} else if (!chrflag) { // We opened the character quest log
-			if (MouseX < 480 && MouseY < PANEL_TOP) {
-				SetCursorPos(MouseX + 160, MouseY);
+			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition.x + 160, MousePosition.y);
 			}
 		}
 	}
@@ -1930,12 +1927,12 @@ void spellBookKeyPressed()
 	sbookflag = !sbookflag;
 	if (!chrflag && !questlog && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
-			if (MouseX < 480 && MouseY < PANEL_TOP) {
-				SetCursorPos(MouseX + 160, MouseY);
+			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition.x + 160, MousePosition.y);
 			}
 		} else if (!invflag) { // We opened the invetory
-			if (MouseX > 160 && MouseY < PANEL_TOP) {
-				SetCursorPos(MouseX - 160, MouseY);
+			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition.x - 160, MousePosition.y);
 			}
 		}
 	}

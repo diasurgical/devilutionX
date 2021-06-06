@@ -257,10 +257,10 @@ bool gmenu_presskeys(int vkey)
 
 static bool GmenuMouseNavigation()
 {
-	if (MouseX < 282 + PANEL_LEFT) {
+	if (MousePosition.x < 282 + PANEL_LEFT) {
 		return false;
 	}
-	if (MouseX > 538 + PANEL_LEFT) {
+	if (MousePosition.x > 538 + PANEL_LEFT) {
 		return false;
 	}
 	return true;
@@ -268,13 +268,13 @@ static bool GmenuMouseNavigation()
 
 static int GmenuGetMouseSlider()
 {
-	if (MouseX < 282 + PANEL_LEFT) {
+	if (MousePosition.x < 282 + PANEL_LEFT) {
 		return 0;
 	}
-	if (MouseX > 538 + PANEL_LEFT) {
+	if (MousePosition.x > 538 + PANEL_LEFT) {
 		return 256;
 	}
-	return MouseX - 282 - PANEL_LEFT;
+	return MousePosition.x - 282 - PANEL_LEFT;
 }
 
 bool gmenu_on_mouse_move()
@@ -306,13 +306,13 @@ bool gmenu_left_mouse(bool isDown)
 	if (sgpCurrentMenu == nullptr) {
 		return false;
 	}
-	if (MouseY >= PANEL_TOP) {
+	if (MousePosition.y >= PANEL_TOP) {
 		return false;
 	}
-	if (MouseY - (117 + UI_OFFSET_Y) < 0) {
+	if (MousePosition.y - (117 + UI_OFFSET_Y) < 0) {
 		return true;
 	}
-	int i = (MouseY - (117 + UI_OFFSET_Y)) / 45;
+	int i = (MousePosition.y - (117 + UI_OFFSET_Y)) / 45;
 	if (i >= sgCurrentMenuIdx) {
 		return true;
 	}
@@ -321,10 +321,10 @@ bool gmenu_left_mouse(bool isDown)
 		return true;
 	}
 	int w = GmenuGetLfont(pItem);
-	if (MouseX < gnScreenWidth / 2 - w / 2) {
+	if (MousePosition.x < gnScreenWidth / 2 - w / 2) {
 		return true;
 	}
-	if (MouseX > gnScreenWidth / 2 + w / 2) {
+	if (MousePosition.x > gnScreenWidth / 2 + w / 2) {
 		return true;
 	}
 	sgpCurrItem = pItem;

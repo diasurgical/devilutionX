@@ -67,8 +67,8 @@ void play_movie(const char *pszMovie, bool user_can_close)
 
 	movie_playing = false;
 
-	SDL_GetMouseState(&MouseX, &MouseY);
-	OutputToLogical(&MouseX, &MouseY);
+	SDL_GetMouseState(&MousePosition.x, &MousePosition.y);
+	OutputToLogical(&MousePosition.x, &MousePosition.y);
 }
 
 } // namespace devilution

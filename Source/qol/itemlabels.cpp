@@ -93,11 +93,11 @@ void AddItemToLabelQueue(int id, int x, int y)
 
 bool IsMouseOverGameArea()
 {
-	if ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT)
+	if ((invflag || sbookflag) && MousePosition.x > RIGHT_PANEL && MousePosition.y <= SPANEL_HEIGHT)
 		return false;
-	if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT)
+	if ((chrflag || questlog) && MousePosition.x < SPANEL_WIDTH && MousePosition.y <= SPANEL_HEIGHT)
 		return false;
-	if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH)
+	if (MousePosition.y >= PANEL_TOP && MousePosition.x >= PANEL_LEFT && MousePosition.x <= PANEL_LEFT + PANEL_WIDTH)
 		return false;
 
 	return true;
@@ -147,7 +147,7 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 	for (const itemLabel &label : labelQueue) {
 		ItemStruct &itm = items[label.id];
 
-		if (MouseX >= label.pos.x && MouseX < label.pos.x + label.width && MouseY >= label.pos.y - height + marginY && MouseY < label.pos.y + marginY) {
+		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width && MousePosition.y >= label.pos.y - height + marginY && MousePosition.y < label.pos.y + marginY) {
 			if (!gmenu_is_active() && PauseMode == 0 && !deathflag && IsMouseOverGameArea()) {
 				isLabelHighlighted = true;
 				cursmx = itm.position.x;

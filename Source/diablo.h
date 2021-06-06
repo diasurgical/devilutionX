@@ -31,8 +31,7 @@ enum clicktype : int8_t {
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
 extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
-extern int MouseX;
-extern int MouseY;
+extern Point MousePosition;
 extern bool gbRunGame;
 extern bool gbRunGameResult;
 extern bool zoomflag;

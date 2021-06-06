@@ -1168,7 +1168,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	CalcPlrInv(pnum, true);
 	if (pnum == myplr) {
 		if (cn == CURSOR_HAND && !IsHardwareCursor())
-			SetCursorPos(MouseX + (cursW / 2), MouseY + (cursH / 2));
+			SetCursorPos(MousePosition.x + (cursW / 2), MousePosition.y + (cursH / 2));
 		NewCursor(cn);
 	}
 }
@@ -1429,9 +1429,9 @@ void inv_update_rem_item(int pnum, BYTE iv)
 void CheckInvItem(bool isShiftHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		CheckInvPaste(myplr, { MouseX, MouseY });
+		CheckInvPaste(myplr, MousePosition);
 	} else {
-		CheckInvCut(myplr, { MouseX, MouseY }, isShiftHeld);
+		CheckInvCut(myplr, MousePosition, isShiftHeld);
 	}
 }
 
@@ -1440,8 +1440,8 @@ void CheckInvItem(bool isShiftHeld)
  */
 void CheckInvScrn(bool isShiftHeld)
 {
-	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT
-	    && MouseY > PANEL_TOP && MouseY < 33 + PANEL_TOP) {
+	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT
+	    && MousePosition.y > PANEL_TOP && MousePosition.y < 33 + PANEL_TOP) {
 		CheckInvItem(isShiftHeld);
 	}
 }
@@ -1907,10 +1907,10 @@ char CheckInvHLight()
 			yo = PANEL_TOP;
 		}
 
-		if (MouseX >= InvRect[r].x + xo
-		    && MouseX < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
-		    && MouseY >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
-		    && MouseY < InvRect[r].y + yo) {
+		if (MousePosition.x >= InvRect[r].x + xo
+		    && MousePosition.x < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
+		    && MousePosition.y >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
+		    && MousePosition.y < InvRect[r].y + yo) {
 			break;
 		}
 	}

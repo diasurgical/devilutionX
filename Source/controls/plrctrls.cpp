@@ -465,10 +465,10 @@ void AttrIncBtnSnap(AxisDirection dir)
 	// first, find our cursor location
 	int slot = 0;
 	for (int i = 0; i < 4; i++) {
-		if (MouseX >= ChrBtnsRect[i].position.x
-		    && MouseX <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
-		    && MouseY >= ChrBtnsRect[i].position.y
-		    && MouseY <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
+		if (MousePosition.x >= ChrBtnsRect[i].position.x
+		    && MousePosition.x <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
+		    && MousePosition.y >= ChrBtnsRect[i].position.y
+		    && MousePosition.y <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
 			slot = i;
 			break;
 		}
@@ -654,7 +654,7 @@ void InvMove(AxisDirection dir)
 	char itemInvId;
 	auto itemSize = GetItemSizeOnSlot(slot, itemInvId);
 
-	Point mousePos { MouseX, MouseY };
+	Point mousePos { MousePosition.x, MousePosition.y };
 
 	const bool isHoldingItem = pcurs > 1;
 
@@ -925,7 +925,7 @@ void InvMove(AxisDirection dir)
 		mousePos.y -= (InventorySlotSizeInPixels.height / 2);
 	}
 
-	if (mousePos.x == MouseX && mousePos.y == MouseY) {
+	if (mousePos == MousePosition) {
 		return; // Avoid wobeling when scalled
 	}
 
@@ -957,10 +957,10 @@ void HotSpellMove(AxisDirection dir)
 
 	int spbslot = plr[myplr]._pRSpell;
 	for (int r = 0; r < speedspellcount; r++) {
-		if (MouseX >= speedspellscoords[r].x - SPLICONLENGTH / 2
-		    && MouseX < speedspellscoords[r].x + SPLICONLENGTH / 2
-		    && MouseY >= speedspellscoords[r].y - SPLICONLENGTH / 2
-		    && MouseY < speedspellscoords[r].y + SPLICONLENGTH / 2) {
+		if (MousePosition.x >= speedspellscoords[r].x - SPLICONLENGTH / 2
+		    && MousePosition.x < speedspellscoords[r].x + SPLICONLENGTH / 2
+		    && MousePosition.y >= speedspellscoords[r].y - SPLICONLENGTH / 2
+		    && MousePosition.y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
 			spbslot = r;
 			break;
 		}
@@ -991,7 +991,7 @@ void HotSpellMove(AxisDirection dir)
 		}
 	}
 
-	if (x != MouseX || y != MouseY) {
+	if (Point { x, y } != MousePosition) {
 		SetCursorPos(x, y);
 	}
 }
@@ -1273,8 +1273,8 @@ void HandleRightStickMotion()
 
 	{ // move cursor
 		sgbControllerActive = false;
-		int x = MouseX;
-		int y = MouseY;
+		int x = MousePosition.x;
+		int y = MousePosition.y;
 		acc.Pool(&x, &y, 2);
 		x = std::min(std::max(x, 0), gnScreenWidth - 1);
 		y = std::min(std::max(y, 0), gnScreenHeight - 1);
@@ -1378,10 +1378,10 @@ void PerformPrimaryAction()
 	if (chrflag && !chrbtnactive && plr[myplr]._pStatPts > 0) {
 		CheckChrBtns();
 		for (int i = 0; i < 4; i++) {
-			if (MouseX >= ChrBtnsRect[i].position.x
-			    && MouseX <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
-			    && MouseY >= ChrBtnsRect[i].position.y
-			    && MouseY <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
+			if (MousePosition.x >= ChrBtnsRect[i].position.x
+			    && MousePosition.x <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
+			    && MousePosition.y >= ChrBtnsRect[i].position.y
+			    && MousePosition.y <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
 				chrbtn[i] = true;
 				chrbtnactive = true;
 				ReleaseChrBtns(false);

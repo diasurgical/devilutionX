@@ -277,8 +277,8 @@ void CheckCursMove()
 	if (IsItemLabelHighlighted())
 		return;
 
-	sx = MouseX;
-	sy = MouseY;
+	sx = MousePosition.x;
+	sy = MousePosition.y;
 
 	if (CanPanelsCoverView()) {
 		if (chrflag || questlog) {
@@ -295,7 +295,7 @@ void CheckCursMove()
 			}
 		}
 	}
-	if (sy > PANEL_TOP - 1 && MouseX >= PANEL_LEFT && MouseX < PANEL_LEFT + PANEL_WIDTH && track_isscrolling()) {
+	if (sy > PANEL_TOP - 1 && MousePosition.x >= PANEL_LEFT && MousePosition.x < PANEL_LEFT + PANEL_WIDTH && track_isscrolling()) {
 		sy = PANEL_TOP - 1;
 	}
 
@@ -400,21 +400,21 @@ void CheckCursMove()
 		cursmy = my;
 		return;
 	}
-	if (MouseY > PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
+	if (MousePosition.y > PANEL_TOP && MousePosition.x >= PANEL_LEFT && MousePosition.x <= PANEL_LEFT + PANEL_WIDTH) {
 		CheckPanelInfo();
 		return;
 	}
 	if (DoomFlag) {
 		return;
 	}
-	if (invflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
+	if (invflag && MousePosition.x > RIGHT_PANEL && MousePosition.y <= SPANEL_HEIGHT) {
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
-	if (sbookflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
+	if (sbookflag && MousePosition.x > RIGHT_PANEL && MousePosition.y <= SPANEL_HEIGHT) {
 		return;
 	}
-	if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
+	if ((chrflag || questlog) && MousePosition.x < SPANEL_WIDTH && MousePosition.y <= SPANEL_HEIGHT) {
 		return;
 	}
 

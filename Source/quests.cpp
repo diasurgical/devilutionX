@@ -800,7 +800,7 @@ void QuestlogEnter()
 
 void QuestlogESC()
 {
-	int y = (MouseY - 32) / 12;
+	int y = (MousePosition.y - 32) / 12;
 	for (int i = 0; i < numqlines; i++) {
 		if (y == qtopline + 2 * i) {
 			qline = y;

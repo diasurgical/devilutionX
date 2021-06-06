@@ -118,7 +118,7 @@ bool CheckXPBarInfo()
 	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
 	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
 
-	if (MouseX < backX || MouseX >= backX + BACK_WIDTH || MouseY < backY || MouseY >= backY + BACK_HEIGHT)
+	if (MousePosition.x < backX || MousePosition.x >= backX + BACK_WIDTH || MousePosition.y < backY || MousePosition.y >= backY + BACK_HEIGHT)
 		return false;
 
 	const auto &player = plr[myplr];
