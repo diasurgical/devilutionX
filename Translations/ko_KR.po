@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2021-06-06 00:58+0900\n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: NSM53PROJECT <nsm53project@gmail.com>\n"
 "Language-Team: \n"
 "Language: ko_KR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
 "X-Poedit-Basepath: ..\n"
@@ -6422,7 +6422,7 @@ msgstr ""
 "것 같군. \n"
 "\n"
 "내 진짜 이름은 데커드 케인으로 영원한 악의 봉인을 수호하는 고대 결사대의 마지"
-"막 후예라네. 허나 아무래도 악마의 봉인이 풀린 듯하군. 라자루스 대주교는 일찍"
+"막 후예라네. 허나 아무래도 악마의 봉인이 풀린 듯하군. 대주교 라자루스는 일찍"
 "이 레오릭 왕이 총애하던 참모로, 행방불명된 알브레히트 왕자를 찾으러 마을 사람"
 "들을 미궁으로 이끌고 갔지. 하지만 살아 돌아온 사람은 그저 몇 사람뿐... \n"
 "\n"
@@ -6475,7 +6475,7 @@ msgid ""
 "suppose he was killed along with most of the others. If you would do me a "
 "favor, good master - please do not talk to Farnham about that day."
 msgstr ""
-"라자루스 대주교는 마을 사람들을 이끌고 미궁에 들어갔습니다. 그날 많은 친구들"
+"대주교 라자루스는 마을 사람들을 이끌고 미궁에 들어갔습니다. 그날 많은 친구들"
 "을 잃게 되었고 라자루스도 돌아오지 않았죠. 다른 사람들과 마찬가지로 살해당했"
 "을 겁니다. 부탁이니 파넘에게는 그날 일을 묻지 말아 주십시오."
 
@@ -6553,6 +6553,8 @@ msgid ""
 "Abandon your foolish quest. All that awaits you is the wrath of my Master! "
 "You are too late to save the child. Now you will join him in Hell!"
 msgstr ""
+"어리석은 수색 따위는 그만 포기해라. 네놈을 기다리는 건 오직 내 주인의 분노"
+"뿐! 그 아이를 구하기엔 너무 늦었으니 그만 지옥에서 만나 보거라!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:86
@@ -6563,6 +6565,9 @@ msgid ""
 "the same. Unfortunately, I do not know what would cause our water supply to "
 "be tainted."
 msgstr ""
+"흐음, 내가 어떻게 도움을 줘야 할지 모르겠군. 마을 우물물은 지하 수맥에서 비롯"
+"된다네. 큰 호수로 통하는 터널이 있다는 얘기를 들은 적이 있는데 아마도 그거겠"
+"지. 유감이네만 수원지가 오염된 이유는 모르겠네."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:88
@@ -6573,6 +6578,10 @@ msgid ""
 " \n"
 "Please, do what you can or I don't know what we will do."
 msgstr ""
+"전 항상 식료품과 물을 창고에 대량으로 비축하지만, 마을 전체에 신선한 물이 공"
+"급되지 않으니 창고 비축분도 바닥날 지경입니다.\n"
+"\n"
+"제발 어떻게든 부탁드립니다. 어찌하면 좋을지 모르겠습니다."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:90
@@ -6583,6 +6592,10 @@ msgid ""
 "passage that leads to the springs that serve our town. Please find what has "
 "caused this calamity, or we all will surely perish."
 msgstr ""
+"때마침 자네가 있어서 정말 다행이야! 우물이 오염돼서 마을 사람들이 그걸 마시"
+"고 병에 걸렸지. 신선한 물이 빠르게 고갈되고 있어. 마을에 물을 공급하는 수맥으"
+"로 통하는 길이 있다네. 부디 이 재난의 원인을 규명해 주게. 안 그러면 우리 모"
+"두 죽게 될 테니 말이야."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92
@@ -6592,6 +6605,9 @@ msgid ""
 " \n"
 "We cannot survive for long without your help."
 msgstr ""
+"부디 서두르게. 이제 곧 물이 바닥나니 말이야.\n"
+"\n"
+"자네 도움 없이 더는 버티기 어렵네."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:94
@@ -6601,6 +6617,9 @@ msgid ""
 "perseverance and courage gives us hope. Please take this ring - perhaps it "
 "will aid you in the destruction of such vile creatures."
 msgstr ""
+"그게 무슨 말인가? 물이 오염된 원인이 그저 마귀 때문이었다고? 이 마을 지하에 "
+"거대한 악이 잠복해 있다지만 자네의 인내와 용기는 우리에게 희망을 주네. 이 반"
+"지를 가져가게. 악귀를 물리치는 데 도움이 될 거야."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:96
@@ -6608,6 +6627,8 @@ msgid ""
 "My grandmother is very weak, and Garda says that we cannot drink the water "
 "from the wells. Please, can you do something to help us?"
 msgstr ""
+"제 할머니는 매우 편찮으신데 가르다가 우물물을 마실 수 없다고 하네요. 제발 우"
+"리를 도와주시겠어요?"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:98
@@ -6616,11 +6637,13 @@ msgid ""
 "have tried to clear one of the smaller wells, but it reeks of stagnant "
 "filth. It must be getting clogged at the source."
 msgstr ""
+"페핀이 형씨한테 말한 대로야. 신선한 물이 절실하지. 작은 우물을 정화해 보려고 "
+"했는데 오물이 고여서 악취를 풍기더군. 수원지에서부터 막혀 있는 게 틀림없어."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:100
 msgid "You drink water?"
-msgstr ""
+msgstr "물을 마신다고?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:101
@@ -6631,6 +6654,10 @@ msgid ""
 "Know this - demons are at the heart of this matter, but they remain ignorant "
 "of what they have spawned."
 msgstr ""
+"당신이 우물을 원상 복구하지 못하면 트리스트럼 사람들은 죽게 되겠죠.\n"
+"\n"
+"이걸 알아 두세요. 이 문제의 중심에는 마귀들이 있지만 놈들은 자신들이 초래한 "
+"사태를 깨닫지 못하고 있어요."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:103
@@ -6638,6 +6665,8 @@ msgid ""
 "For once, I'm with you. My business runs dry - so to speak - if I have no "
 "market to sell to. You better find out what is going on, and soon!"
 msgstr ""
+"이번만은 그쪽 편이 되죠. 구매자가 없으면 내 장사도 끝장이니까요. 무슨 일이 일"
+"어나고 있는지 조사해 보는 게 좋을 거예요, 어서요!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:105
@@ -6649,6 +6678,10 @@ msgid ""
 "the attempt to steal that treasure would be forever bound to defend it. A "
 "twisted, but strangely fitting, end?"
 msgstr ""
+"뼈의 방에 대한 책 말인가? 뼈의 방이라면 내가 동방의 도서관에서 연구한 고서에 "
+"언급이 있었지. 황천의 왕이 막대한 보물을 지킬 욕심에 특별한 장소를 만들었다"
+"고 하더군. 보물을 훔치러 온 사람은 목숨을 잃고 영원히 그 보물을 지키게 된다"
+"고 적혀 있었네. 엄한 이야기지만 묘하게 조리가 맞다고 생각되지 않는가?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:107
@@ -6656,20 +6689,22 @@ msgid ""
 "I am afraid that I don't know anything about that, good master. Cain has "
 "many books that may be of some help."
 msgstr ""
+"유감이지만 저는 전혀 모르겠습니다, 선생님. 케인이 갖고 있는 책이라면 도움이 "
+"될지도 모르겠군요."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:109
 msgid ""
 "This sounds like a very dangerous place. If you venture there, please take "
 "great care."
-msgstr ""
+msgstr "매우 위험한 장소인 것 같군. 가게 된다면 정말로 조심하게."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:111
 msgid ""
 "I am afraid that I haven't heard anything about that. Perhaps Cain the "
 "Storyteller could be of some help."
-msgstr ""
+msgstr "죄송한데 전혀 들어본 적이 없네요. 이야기꾼 케인이라면 알고 있을지도요."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:113
@@ -6678,6 +6713,8 @@ msgid ""
 "many things, and it would not surprise me if he had some answers to your "
 "question."
 msgstr ""
+"그런 데는 모르겠군. 케인한테 물어보지 그래? 그 양반 박식하니까 형씨 궁금증을 "
+"풀어 주는 건 일도 아닐걸."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:115
@@ -6686,6 +6723,9 @@ msgid ""
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
 "against him, but if you think I'm gonna PAY for this... you... uh... yeah."
 msgstr ""
+"좋아, 잘 들어. 나무 방이 있어. 그리고 녀석의 마누라가... 알지? 그 여자... 나"
+"무에 대해 말할 거야... 기다리면 말야. 녀석 때문은 아닐지 몰라도 돈을 내야 한"
+"다고 생각하면... 네가... 어... 그래."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:117
@@ -6695,6 +6735,9 @@ msgid ""
 " \n"
 "Enter the Chamber of Bone at your own peril."
 msgstr ""
+"그 저주받은 땅에서 죽게 된다면 어둠의 왕의 영원한 종이 될 터.\n"
+"\n"
+"뼈의 방에 들어갈 생각이라면 단단히 각오하도록 하세요."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -6703,6 +6746,8 @@ msgid ""
 "picking up a few things from you... or better yet, don't you need some rare "
 "and expensive supplies to get you through this ordeal?"
 msgstr ""
+"신비롭고 막대한 보물이라고 그랬나요? 몫을 좀 나눠 준다면 흥미가 있겠는데... "
+"그보단 고생하는 그쪽한테 딱인 진귀한 물건이 있는데 안 살래요?"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:121
@@ -6713,6 +6758,10 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
+"대주교 라자루스는 실종된 왕의 아들을 찾기 위해 마을 주민들을 미궁으로 몰아넣"
+"었다네. 사람들의 공포심을 이용해 그들을 흉폭한 폭도로 돌변하게 만들었지. 땅속"
+"에서 무엇이 기다리고 있을지 아는 사람은 아무도 없었지만 말일세... 라자루스는 "
+"사람들을 그곳에 내버려 두었고 형언할 수 없는 공포 속에서 그들은 죽어 갔지."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
@@ -6720,6 +6769,8 @@ msgid ""
 "Yes, Farnham has mumbled something about a hulking brute who wielded a "
 "fierce weapon. I believe he called him a butcher."
 msgstr ""
+"예, 파넘은 섬뜩한 무기를 휘두르는 흉측한 괴물에 대해 중얼거렸죠. 그 괴물을 도"
+"살자라고 불렀던 것 같습니다."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:125
@@ -6731,6 +6782,11 @@ msgid ""
 "festering with disease and even I found them almost impossible to treat. "
 "Beware if you plan to battle this fiend..."
 msgstr ""
+"그 사악한 악마는 당연히 알고 있지. 라자루스의 함정에서 살아남은 사람들이 대성"
+"당에서 나왔을 때, 사람들 대부분이 녀석의 분노가 서린 상처를 입고 있었어. 녀석"
+"이 희생자들을 도륙할 때 사용한 게 뭔지는 모르겠지만 이 세상에 존재하는 물건"
+"은 아닐 거야. 상처가 곪아 나조차도 손쓸 수 없었거든. 자네가 그 악마와 싸울 생"
+"각이라면 부디 조심하게."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:127
@@ -6738,6 +6794,8 @@ msgid ""
 "When Farnham said something about a butcher killing people, I immediately "
 "discounted it. But since you brought it up, maybe it is true."
 msgstr ""
+"파넘이 사람 잡는 도살자에 대해 말했지만 전 믿지 않았죠. 하지만 당신도 그러는 "
+"걸 보니 사실일지도 모르겠네요."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:129
@@ -6749,6 +6807,11 @@ msgid ""
 "I never saw that hideous beast again, but his blood-stained visage haunts me "
 "to this day."
 msgstr ""
+"내 친구들을 몰살시켰던 그놈을 파넘은 도살자라고 부르더군. 놈은 도끼 마냥 거대"
+"한 식칼을 휘두르며 거기에 있던 친구들의 사지를 도륙해댔지. 난 잡놈들을 상대하"
+"느라 그 난동에서 떨어져 있었기 때문에 그 끔찍한 괴물과 마주치지 않고 밖으로 "
+"나가는 계단을 찾았지만 말이야. 피투성이가 된 그놈의 얼굴이 아직도 잊혀지지가 "
+"않아."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (*sad face*)
 #: Source/textdat.cpp:131
@@ -6757,6 +6820,9 @@ msgid ""
 "couldn't save them. Trapped in a room with so many bodies... so many "
 "friends... NOOOOOOOOOO!"
 msgstr ""
+"너무 거대한 식칼로 내 친구들을 전부 죽였어. 놈을 막기는커녕 친구들도 못 구하"
+"고 도망쳐야만 했어. 갇혀 있던 방 안에 가득한 시체들은... 전부 친구들이었... "
+"으아아아아아!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:133
@@ -6765,6 +6831,9 @@ msgid ""
 "others. You have seen his handiwork in the drunkard Farnham. His destruction "
 "will do much to ensure the safety of this village."
 msgstr ""
+"도살자는 타인을 고문하고 고통을 주는 것에서 쾌락을 느끼는 가학적인 괴물이죠. "
+"주정뱅이 파넘을 봤다면 알 수 있을 터. 그 괴물을 쓰러트려야 이 마을의 평안을 "
+"어느 정도 되찾을 수 있을 거예요."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:135
@@ -6776,6 +6845,10 @@ msgid ""
 "I'll put it bluntly - kill him before he kills you and adds your corpse to "
 "his collection."
 msgstr ""
+"그 끔찍한 악마라면 당신보다 더 잘 알아요. 그리스월드가 저 구렁텅이에서 날 끌"
+"어내기 전에 그 자식의 친구들이 내 다리를 앗아갔으니까요. \n"
+"\n"
+"장담하는데 그 자식을 먼저 못 죽이면 녀석이 그쪽을 죽여서 시체를 수집할걸요."
 
 #. TRANSLATORS: Quest dialog spoken by Wounded Townsman (Dying)
 #: Source/textdat.cpp:137
@@ -6785,6 +6858,10 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
+"부디 제 얘기를 들어 주십시오. 대주교 라자루스는 실종된 왕자를 찾기 위해 우리"
+"를 여기로 내려보냈습니다. 하지만 그 개자식의 함정이었습니다! 이제 모두 죽어 "
+"버렸지요... 도살자라는 악마에게 말입니다. 복수를 해주십시오! 우리의 영혼이 편"
+"히 쉴 수 있게 도살자를 찾아 쓰러트려 주십시오..."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:140
@@ -6797,6 +6874,12 @@ msgid ""
 "sightless for all eternity. The prison for those so damned is named the "
 "Halls of the Blind..."
 msgstr ""
+"자네가 재미있는 시를 읊는 걸 보니 그와 비슷한 시가 생각나는군. 어디 보자, 어"
+"떤 내용이었더라...\n"
+"\n"
+"...어둠은 숨은자를 가릴지니, 그 눈의 빛남은 보이지 않고, 그저 날카로이 손톱 "
+"할퀴는 소리만이, 영원히 눈먼 가련한 영혼들을 고문한다. 영원한 단죄를 받은 자"
+"들의 감옥, 눈먼 자의 전당이라 하노라..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -6806,6 +6889,9 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows."
 msgstr ""
+"전 시에 그다지 조예가 없습니다. 경기가 좋던 무렵에는 음유시인도 고용을 했었지"
+"만 먼 옛날 일이로군요. 예? 아, 그렇죠... 시라면 다른 분들에게 물어보는 게 좋"
+"겠습니다."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:144
@@ -6814,6 +6900,9 @@ msgid ""
 "much like that poem while researching the history of demonic afflictions. It "
 "spoke of a place of great evil that... wait - you're not going there are you?"
 msgstr ""
+"이걸 어디선가 본 기억이 있어. 악마적 대환에 대한 역사를 조사하고 있었을 때 "
+"그 시와 아주 흡사한 걸 읽은 기억이 나네. 대단히 사악한 장소라고 하던데... 여"
+"보게, 잠깐만. 설마 갈 생각은 아니겠지?"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:146
@@ -6822,6 +6911,8 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
+"실명에 대해 궁금한 게 있으면 페핀한테 물어보세요. 페핀이 준 약 덕분에 할머니 "
+"눈이 보이게 되었거든요. 당신도 도와줄 수 있을 거예요."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:148
@@ -6830,11 +6921,13 @@ msgid ""
 "vivid description, my friend. Perhaps Cain the Storyteller could be of some "
 "help."
 msgstr ""
+"형씨가 말한 곳을 본 적도, 들은 적도 없지만 이야기꾼 케인이라면 뭔가 도움이 될"
+"지도 모르겠군."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:150
 msgid "Look here... that's pretty funny, huh? Get it? Blind - look here?"
-msgstr ""
+msgstr "이거 봐봐... 정말 웃기지? 어때? 장님이 이게 보인다고?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:152
@@ -6845,6 +6938,9 @@ msgid ""
 "Tread carefully or you may yourself be staying much longer than you had "
 "anticipated."
 msgstr ""
+"그곳은 그 주인의 뜻에 따라 크나큰 고통과 공포가 만연한 곳죠.\n"
+"\n"
+"신중히 행동하지 않으면 예상보다 더 오래 머물게 될 거예요."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:154
@@ -6853,6 +6949,9 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes."
 msgstr ""
+"가만 있자, 내가 그쪽한테 뭔가를 파는 건가요? 아니죠. 그에 대한 얘기를 해주면 "
+"나한테 돈을 낼 건가요? 그것도 아니죠. 그럼 이런 얘기로 먹고사는 이야기꾼한테 "
+"가야 할까요? 맞아요."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:156
@@ -6866,6 +6965,12 @@ msgid ""
 "suppose that your story could be true. If I were in your place, my friend, I "
 "would find a way to release him from his torture."
 msgstr ""
+"자네가 라크다난과 얘기했단 말인가? 그는 위대한 영웅이었다네. 라크다난은 명예"
+"로운 데다 왕을 충실히 섬겼었지. 물론 그 얘기는 자네도 알고 있을 걸세.\n"
+"\n"
+"많은 이들이 왕의 저주에 걸렸지만 적어도 라크다난만큼은 순순히 어둠에 복종하지"
+"는 않았을 터, 자네가 말한 얘기는 틀림없는 사실이겠지. 내가 자네 입장이라면 그"
+"를 고통에서 해방시킬 방법을 찾아보겠네."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:158
@@ -6873,6 +6978,8 @@ msgid ""
 "You speak of a brave warrior long dead! I'll have no such talk of speaking "
 "with departed souls in my inn yard, thank you very much."
 msgstr ""
+"먼 옛날에 죽은 용사와 얘기를 했다고요? 제 여관 앞에서 죽은 영혼과 대화 같은 "
+"걸 하지는 않을 겁니다. 감사합니다."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:160
@@ -6882,6 +6989,9 @@ msgid ""
 "drink it. As your healer, I strongly advise that should you find such an "
 "elixir, do as Lachdanan asks and DO NOT try to use it."
 msgstr ""
+"황금빛 영약이라고 했나? 그런 색상의 물약을 제조한 적이 없어서 마시면 어떤 효"
+"과가 있을지는 나도 모르겠군. 치료사로서 조언하자면 그런 영약을 찾거든 다른 용"
+"도로 사용 말고 라크다난이 말한 대로 하게."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:162
@@ -6889,6 +6999,7 @@ msgid ""
 "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I "
 "can be of much help to you."
 msgstr ""
+"라크다난에 대해 들어본 적이 없어요. 죄송하지만 별로 도움이 못 될 것 같네요."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:164
@@ -6898,6 +7009,9 @@ msgid ""
 "and loyal in nature. The curse that fell upon the followers of King Leoric "
 "would fall especially hard upon him."
 msgstr ""
+"형씨가 만난 사람이 정말 라크다난이라면 그를 도와주라고 말하고 싶군. 그 친구"
+"와 몇 번 상대해 봤는데 정말 정직하고 충직한 친구였거든. 레오릭 왕의 신하 중에"
+"서도 특히나 모진 저주에 걸렸을 테지."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
@@ -6905,6 +7019,8 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
+" 라크다난은 죽었어. 누구나 다 안다고. 날 속일 생각 마. 죽은 사람과 얘기할 순 "
+"없어. 당연하잖아!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -6914,6 +7030,9 @@ msgid ""
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram."
 msgstr ""
+"라크다난처럼 미궁에 갖힌 사람들을 만나게 될 수도 있어요. 라크다난에게선 명예"
+"와 크나큰 죄의식이 느껴지는군요. 그를 돕도록 하세요. 그게 트리스트럼 전체를 "
+"돕는 길이에요."
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
@@ -6923,6 +7042,9 @@ msgid ""
 "questions anymore. Oh, that isn't what happened? Then I guess you'll be "
 "buying something or you'll be on your way."
 msgstr ""
+"잠깐만요. 케인이 커다란 구멍에 빠져서 지옥불에 불타 죽으면 그쪽 질문에 더는 "
+"대답 못하겠죠. 오, 그럴 일 없다고요? 그럼 뭔가 사려는 게 아니면 가던 길이나 "
+"마저 가세요."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:172
@@ -6939,6 +7061,13 @@ msgid ""
 "it the last of my humanity as well. Please aid me and find the Elixir. I "
 "will repay your efforts - I swear upon my honor."
 msgstr ""
+"무기를 거두고 내 이야기를 들어 주시오. 나는 레오릭 왕의 기사단장으로, 정의와 "
+"명예로 이 땅의 법을 수호해 왔소. 그러나 왕의 비극적인 죽음을 초래한 까닭에 저"
+"주에 걸리게 되었다오. 기사단은 얄궂은 운명에 굴복했고 나는 왕의 무덤에서 피신"
+"해 저주에서 벗어날 방법을 찾아봤으나 헛된 일이었소... 저주를 풀어 영혼을 편"
+"히 잠들게 할 황금빛 영약에 대해 들은 적이 있지만 찾을 수가 없었소. 이제 기력"
+"도 쇠약해지고 내 남은 이성 또한 그러하니 부디 나를 도와 영약을 찾아 주시오. "
+"그 수고에 반드시 보답할 것이오. 내 명예를 걸고 맹세하오."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:174
@@ -6946,6 +7075,8 @@ msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying..."
 msgstr ""
+"아직 황금빛 영약을 못 찾은 것이오? 영원히 불행 속에 살게 될까 두렵소. 부디 계"
+"속 찾아봐 주시오..."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (Quest End)
 #: Source/textdat.cpp:176
@@ -6956,6 +7087,10 @@ msgid ""
 "have little use for it. May it protect you against the dark powers below. Go "
 "with the Light, my friend..."
 msgstr ""
+"그대가 나의 영혼을 파멸에서 구해 주었소. 감사를 표하는 바이오. 무덤 속에서라"
+"도 이 빚을 갚을 방법을 찾을 수 있다면 그러겠으나 일단은 이 투구를 받아 주시"
+"오. 앞으로 나의 여행에 있어서는 필요없는 물건이나 어둠의 힘으로부터 그대를 지"
+"켜 줄 것이오. 빛이 함께 하기를, 친구여.."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:178
@@ -6969,6 +7104,11 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be..."
 msgstr ""
+"그리스월드가 말한 분노의 모루는 오래도록 찾지 못한 전설의 유물이라네. 분노의 "
+"모루는 악마의 날카로운 금속질 뼈로 만들어졌는데, 황천에서 가장 강력한 다섯 마"
+"법사의 해골 근처에 있다고 하지. 힘과 혼돈의 상징이 새겨져 있어서 그 모루로 만"
+"들어진 무기에는 혼돈의 마력이 깃든다더군. 혼돈의 본질은 예측하기 어려운지라 "
+"그 모루로 제조를 하면 결과가 어떻게 될지는 모른다고 하네..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:180
@@ -6976,6 +7116,8 @@ msgid ""
 "Don't you think that Griswold would be a better person to ask about this? "
 "He's quite handy, you know."
 msgstr ""
+"이 얘기는 그리스월드에게 묻는 편이 더 나을 것 같습니다. 아시겠지만 유능한 사"
+"람이죠."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:182
@@ -6985,6 +7127,8 @@ msgid ""
 "However, in this matter, you would be better served to speak to either "
 "Griswold or Cain."
 msgstr ""
+"의료기구나 정화의 은 성배에 대한 정보라면 가르쳐 줄 수 있을 텐데 말이야. 어쨌"
+"든 그런 건 그리스월드나 케인에게 물어보게."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:184
@@ -6994,6 +7138,9 @@ msgid ""
 "was struck upon this anvil, the ground would shake with a great fury. "
 "Whenever the earth moves, I always remember that story."
 msgstr ""
+"어렸을 적에 그리스월드의 아버님이 강력한 무기를 만드는 데 쓰는 큰 모루 얘기"
+"를 해주셨죠. 모루를 망치로 내려치면 지면이 광분한 것처럼 흔들린다고 했어요. "
+"그래서 지진이 있을 때마다 항상 그 얘기가 떠오른답니다."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:186
@@ -7015,6 +7162,19 @@ msgid ""
 " \n"
 "Find the Anvil for me, and I'll get to work!"
 msgstr ""
+"어서 오라고! 형씨는 최고의 고객이라 언제든 환영이야! 미궁 깊숙한 곳까지 갔다"
+"왔다며? 그래서 긴히 하는 얘긴데 말야... \n"
+"\n"
+"미궁에서 살아 돌아온 녀석이 그러는데, 도망치던 도중에 마법의 모루를 봤다는"
+"군. 내가 젊었을 때 들었던 전설과 딱 들어맞지 뭐야. 전설에는 불타는 지옥용광"
+"로 깊숙한 곳에 분노의 모루라는 게 있어서 강력한 마법의 무기를 만들어 낸다고 "
+"해. 모루에는 황천 악마의 정수가 담겨 있어서... 그걸로 만든 무기에는 엄청난 힘"
+"이 스며든다지.\n"
+"\n"
+"그 모루가 진짜 분노의 모루라면 지옥의 군주도 물리칠 수 있는 무기를 만들 수 있"
+"다고! \n"
+"\n"
+"모루를 찾아 주겠나, 형씨? 그럼 내 솜씨를 보여 주지!"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:188
@@ -7023,6 +7183,8 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions."
 msgstr ""
+"아직 못 찾았나? 계속 찾아보라고. 그 모루만 있으면 내가 형씨한테 딱인 전설적"
+"인 무기를 만들어 줄 테니까."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:190
@@ -7031,6 +7193,9 @@ msgid ""
 "Now we'll show those bastards that there are no weapons in Hell more deadly "
 "than those made by men! Take this and may Light protect you."
 msgstr ""
+"믿기질 않는군! 이게 분노의 모루라니. 정말 잘했어, 형씨. 이제 지옥에 있는 저 "
+"개자식들에게 인간이 만든 무기가 얼마나 무서운지 깨닫게 해줘야겠어! 이걸 가져 "
+"가. 빛의 가호가 있기를 빌지."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:192
@@ -7038,6 +7203,8 @@ msgid ""
 "Griswold can't sell his anvil. What will he do then? And I'd be angry too if "
 "someone took my anvil!"
 msgstr ""
+"그리스월드는 모루를 팔면 안 돼. 그거 팔아서 어쩔라고? 내 모루를 판다면 나라"
+"도 화낼 거야!"
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:194
@@ -7047,6 +7214,9 @@ msgid ""
 "used by either the Light or the Darkness. Securing the Anvil from below "
 "could shift the course of the Sin War towards the Light."
 msgstr ""
+"미궁에는 인간의 이해를 넘어서는 많은 유물들이 있어요. 개중에는 빛이나 어둠에 "
+"이용될 수도 있는 엄청난 힘을 지닌 것도 있죠. 지하에서 모루를 찾게 된다면 죄악"
+"의 전쟁의 균형은 빛 쪽으로 기울 거예요."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:196
@@ -7054,6 +7224,8 @@ msgid ""
 "If you were to find this artifact for Griswold, it could put a serious "
 "damper on my business here. Awwww, you'll never find it."
 msgstr ""
+"그쪽이 모루를 찾아서 그리스월드한테 줬다간 내 사업에 심각한 차질이 생길 게 뻔"
+"하잖아요. 아으으, 절대 못 찾을 거예요."
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:198
@@ -7076,6 +7248,20 @@ msgid ""
 "said that when this holy armor is again needed, a hero will arise to don "
 "Valor once more. Perhaps you are that hero..."
 msgstr ""
+"피의 관문과 불의 전당은 신비의 기원이 되는 기념비적인 건축물이라네. 자네가 책"
+"을 어디서 읽었는지는 모르겠네만 틀림없이 위대한 힘이 깃든 장소일 것이야.\n"
+"\n"
+"전설에 따르면 흑요석으로 만든 대좌의 표면은 뼈로 드리워져 있으며 펄펄 끓는 피"
+"가 고여 있다고 하지. 또한 전설에는 고대의 보물을 지키는 관문을 여는 피의 돌"
+"에 대해서도 언급되어 있네... \n"
+"\n"
+"이 보물에 대해서는 여러 억측이 무성하지만 옛 영웅 아케인이 비밀의 장소에 안치"
+"한 성스러운 용맹의 갑옷이라 일컬어진다네. 아케인은 죄악의 전쟁 전세를 뒤집은 "
+"최초의 인간으로 어둠의 군단을 불타는 지옥으로 되돌려 보냈지. \n"
+"\n"
+"아케인은 죽기 직전, 갑옷을 비밀 장소에 감추었고 성스러운 갑옷이 필요한 시기"
+"가 다시 오면 용맹의 갑옷을 입으러 영웅이 나타난다고 했는데, 자네가 그 영웅일"
+"지도 모르겠구만..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
@@ -7084,6 +7270,8 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth."
 msgstr ""
+"전사 아케인과 용맹이라는 신비한 갑옷 이야기는 아이들도 알 정도입니다. 갑옷이 "
+"있는 곳을 찾게 되면 미궁의 마귀로부터 몸을 보호할 수 있겠지요."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
@@ -7092,6 +7280,8 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
+"흠... 들어 본 거 같긴 한데, 요즘 새로운 치료법을 익히고 영약을 제조하느라 바"
+"빠서 잊어버렸나 보네. 미안하군..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
@@ -7099,6 +7289,8 @@ msgid ""
 "The story of the magic armor called Valor is something I often heard the "
 "boys talk about. You had better ask one of the men in the village."
 msgstr ""
+"용맹이라는 마법 갑옷 이야기라면 사내 아이들이 자주 얘기하는 걸 들었어요. 마"
+"을 남자들에게 물어보는 게 좋겠네요."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:206
@@ -7108,11 +7300,14 @@ msgid ""
 "well, my friend, and it will take more than a bit of luck to unlock the "
 "secrets that have kept it concealed oh, lo these many years."
 msgstr ""
+"용맹이라는 갑옷이 있으면 상당한 도움이 될 거야. 나도 그렇고 많은 사람들이 그"
+"걸 찾았지만 소용없었지. 아케인이 정말 잘 숨겨 놨어. 오랜 세월 동안 감추어진 "
+"비밀을 밝히기 위해선 운도 제법 있어야 할 거야, 형씨."
 
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
 msgid "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz..."
-msgstr ""
+msgstr "드르렁 드르렁 쿨쿨..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:209
@@ -7122,6 +7317,9 @@ msgid ""
 "The way is fraught with danger and your only hope rests within your self "
 "trust."
 msgstr ""
+"피의 돌을 찾았다면 아무쪼록 조심히 다루세요.\n"
+"\n"
+"이제부터 만나게 될 수많은 위험을 벗어나려면 자신을 믿는 수밖에 없죠."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:211
@@ -7131,6 +7329,10 @@ msgid ""
 "No one has ever figured out where Arkaine stashed the stuff, and if my "
 "contacts couldn't find it, I seriously doubt you ever will either."
 msgstr ""
+"용맹이란 갑옷을 찾는 건가요? \n"
+"\n"
+"아케인이 어디다 감췄는지 아무도 못 알아냈죠. 내 연줄들도 못 찾았고요. 그쪽한"
+"테는 기대도 안 해요."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:213
@@ -7833,7 +8035,7 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
-"나도 특정 마법을 사용해 비축할 물약과 비약을 제조하지만 아드리아는 진짜 마법"
+"나도 특정 마법을 사용해 비축할 물약과 영약을 제조하지만 아드리아는 진짜 마법"
 "사야. 잠도 안 잘뿐더러 다수의 신비한 학술서와 유물에도 정통하더라고. 그 여자 "
 "오두막엔 겉보기와 달리 뭔가가 더 있을 것 같은데, 그 안에 좀처럼 들어가 볼 수"
 "가 없군."
@@ -8332,7 +8534,7 @@ msgid ""
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
 "신뢰가 깊을수록 그 절망감은 더욱 깊은 법이죠. 파넘의 영혼을 앗아 간 건 마귀 "
-"따위가 아니에요. 라자루스 대주교가 마을 사람들을 배신한 걸 보고 그렇게 되었"
+"따위가 아니에요. 대주교 라자루스가 마을 사람들을 배신한 걸 보고 그렇게 되었"
 "죠. 파넘에게서 정보를 얻을 수도 있겠지만 진실과 허구를 잘 가려서 들도록 하세"
 "요."
 
@@ -8347,7 +8549,7 @@ msgid ""
 msgstr ""
 "기술과 마음 그리고 정신이 완벽하게 조화를 이룰 때, 기적을 일으킬 수 있는 법이"
 "죠. 치료사 페핀은 몸속을 훤히 꿰뚫어 보지만 저로선 불가능한 일이에요. 환자를 "
-"치료하는 페핀의 능력은 비약과 물약 제조에 대한 이해를 바탕으로 더욱 증대하고 "
+"치료하는 페핀의 능력은 영약과 물약 제조에 대한 이해를 바탕으로 더욱 증대하고 "
 "있죠. 트리스트럼에서 그만큼 든든한 아군은 없을 거예요."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
@@ -8516,6 +8718,9 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written."
 msgstr ""
+"영웅의 전당 너머에는 뼈의 방이 있다. 그 방의 보물을 훔치려 하는 자에게는 영원"
+"한 죽음이 기다릴지니, 이는 공포의 군주께서 하신 말씀이자 이곳에 기록되어 있"
+"는 바이다."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
@@ -8524,6 +8729,8 @@ msgid ""
 "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, "
 "Valor awaits for the Hero of Light to awaken..."
 msgstr ""
+"...그리하여 피의 관문 넘어 불의 전당을 지난 곳에서 용맹은 빛의 영웅이 눈뜨기"
+"를 기다리고 있노라..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
@@ -8538,6 +8745,13 @@ msgid ""
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind."
 msgstr ""
+"그대가 보지 못하는 것을 나는 볼 수 있다.\n"
+"시야는 흐려지고 눈은 썩어든다.\n"
+"뒤돌면 그들은 신비한 노래를 속삭이며 사라질 것이다.\n"
+"그리하면 그대는 불가능한 것을 보게 된다.\n"
+"빛이 있어야 할 곳에 드리우는 그림자.\n"
+"어둠의 밖은 광기의 세계,\n"
+"눈먼 자의 전당에서 절망하리라."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
@@ -9181,7 +9395,7 @@ msgstr ""
 
 #: Source/towners.cpp:304
 msgid "Slain Townsman"
-msgstr ""
+msgstr "살해당한 마을사람"
 
 #: Source/trigs.cpp:330
 msgid "Down to dungeon"
