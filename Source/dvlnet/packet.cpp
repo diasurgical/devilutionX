@@ -227,8 +227,8 @@ packet_factory::packet_factory(std::string pw)
 	if (crypto_pwhash(key.data(), crypto_secretbox_KEYBYTES,
 	        pw.data(), pw.size(),
 	        reinterpret_cast<const unsigned char *>(salt.data()),
-	        crypto_pwhash_argon2id_OPSLIMIT_INTERACTIVE,
-	        crypto_pwhash_argon2id_MEMLIMIT_INTERACTIVE,
+	        3 * crypto_pwhash_argon2id_OPSLIMIT_MIN,
+	        2 * crypto_pwhash_argon2id_MEMLIMIT_MIN,
 	        crypto_pwhash_ALG_ARGON2ID13))
 		ABORT();
 #endif
