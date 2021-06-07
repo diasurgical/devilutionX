@@ -46,9 +46,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
-      - run: apt-get update && apt-get install -y -t 'stretch-backports*' cmake unzip
       - run: dkp-pacman -Syu --noconfirm
       - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
       - run: wget https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
