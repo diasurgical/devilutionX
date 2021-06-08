@@ -4814,54 +4814,48 @@ void SyncMonsterAnim(int i)
 		monster[i].mName = _(monster[i].MData->mName);
 	_mdir = monster[i]._mdir;
 
+	int graphic = MA_STAND;
+
 	switch (monster[i]._mmode) {
 	case MM_STAND:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_STAND].Data[_mdir];
+	case MM_DELAY:
+	case MM_TALK:
 		break;
 	case MM_WALK:
 	case MM_WALK2:
 	case MM_WALK3:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_WALK].Data[_mdir];
+		graphic = MA_WALK;
 		break;
 	case MM_ATTACK:
 	case MM_RATTACK:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_ATTACK].Data[_mdir];
+		graphic = MA_ATTACK;
 		break;
 	case MM_GOTHIT:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_GOTHIT].Data[_mdir];
+		graphic = MA_GOTHIT;
 		break;
 	case MM_DEATH:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_DEATH].Data[_mdir];
+		graphic = MA_DEATH;
 		break;
 	case MM_SATTACK:
 	case MM_FADEIN:
 	case MM_FADEOUT:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_SPECIAL].Data[_mdir];
-		break;
 	case MM_SPSTAND:
 	case MM_RSPATTACK:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_SPECIAL].Data[_mdir];
-		break;
 	case MM_HEAL:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_SPECIAL].Data[_mdir];
-		break;
-	case MM_DELAY:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_STAND].Data[_mdir];
-		break;
-	case MM_TALK:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_STAND].Data[_mdir];
+		graphic = MA_SPECIAL;
 		break;
 	case MM_CHARGE:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_ATTACK].Data[_mdir];
+		graphic = MA_ATTACK;
 		monster[i]._mAnimFrame = 1;
 		monster[i]._mAnimLen = monster[i].MType->Anims[MA_ATTACK].Frames;
 		break;
 	default:
-		monster[i]._mAnimData = monster[i].MType->Anims[MA_STAND].Data[_mdir];
 		monster[i]._mAnimFrame = 1;
 		monster[i]._mAnimLen = monster[i].MType->Anims[MA_STAND].Frames;
 		break;
 	}
+
+	monster[i]._mAnimData = monster[i].MType->Anims[graphic].Data[_mdir];
 }
 
 void M_FallenFear(Point position)
