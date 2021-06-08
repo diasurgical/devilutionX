@@ -193,6 +193,12 @@ struct MonsterStruct { // note: missing field _mAFNum
 	const char *mName;
 	CMonster *MType;
 	const MonsterData *MData;
+
+	/**
+	 * @brief Check thats the correct stand Animation is loaded. This is needed if direction is changed (monster stands and looks to player).
+	 * @param mdir direction of the monster
+	 */
+	void CheckStandAnimationIsLoaded(int mdir);
 };
 
 extern int monstkills[MAXMONSTERS];

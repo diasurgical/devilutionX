@@ -2915,8 +2915,7 @@ void MAI_Zombie(int i)
 		}
 	}
 
-	if (Monst->_mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[Monst->_mdir];
+	Monst->CheckStandAnimationIsLoaded(Monst->_mdir);
 }
 
 void MAI_SkelSd(int i)
@@ -2946,8 +2945,7 @@ void MAI_SkelSd(int i)
 		}
 	}
 
-	if (Monst->_mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 bool MAI_Path(int i)
@@ -3050,8 +3048,8 @@ void MAI_Snake(int i)
 		} else
 			M_StartDelay(i, 10 - Monst->_mint + GenerateRnd(10));
 	}
-	if (Monst->_mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[Monst->_mdir];
+
+	Monst->CheckStandAnimationIsLoaded(Monst->_mdir);
 }
 
 void MAI_Bat(int i)
@@ -3113,8 +3111,7 @@ void MAI_Bat(int i)
 		}
 	}
 
-	if (Monst->_mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_SkelBow(int i)
@@ -3154,8 +3151,7 @@ void MAI_SkelBow(int i)
 		}
 	}
 
-	if (Monst->_mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_Fat(int i)
@@ -3188,8 +3184,7 @@ void MAI_Fat(int i)
 		M_StartSpAttack(i);
 	}
 
-	if (Monst->_mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_Sneak(int i)
@@ -3409,8 +3404,7 @@ void MAI_Cleaver(int i)
 	else
 		M_StartAttack(i);
 
-	if (Monst->_mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_Round(int i, bool special)
@@ -3466,8 +3460,8 @@ void MAI_Round(int i, bool special)
 					M_StartAttack(i);
 			}
 		}
-		if (Monst->_mmode == MM_STAND)
-			Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+
+		Monst->CheckStandAnimationIsLoaded(md);
 	}
 }
 
@@ -3982,8 +3976,8 @@ void MAI_SkelKing(int i)
 				}
 			}
 		}
-		if (Monst->_mmode == MM_STAND)
-			Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+
+		Monst->CheckStandAnimationIsLoaded(md);
 	}
 }
 
@@ -4047,8 +4041,8 @@ void MAI_Rhino(int i)
 				}
 			}
 		}
-		if (Monst->_mmode == MM_STAND)
-			Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[Monst->_mdir];
+
+		Monst->CheckStandAnimationIsLoaded(Monst->_mdir);
 	}
 }
 
@@ -4119,9 +4113,8 @@ void MAI_HorkDemon(int i)
 			}
 		}
 	}
-	if (Monst->_mmode == MM_STAND) {
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[Monst->_mdir];
-	}
+
+	Monst->CheckStandAnimationIsLoaded(Monst->_mdir);
 }
 
 void MAI_Counselor(int i)
@@ -4244,8 +4237,7 @@ void MAI_Garbud(int i)
 
 	monster[i]._mdir = md;
 
-	if (Monst->_mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_Zhar(int i)
@@ -4283,8 +4275,7 @@ void MAI_Zhar(int i)
 
 	Monst->_mdir = md;
 
-	if (monster[i]._mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_SnotSpil(int i)
@@ -4332,8 +4323,7 @@ void MAI_SnotSpil(int i)
 
 	Monst->_mdir = md;
 
-	if (monster[i]._mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_Lazurus(int i)
@@ -4386,8 +4376,7 @@ void MAI_Lazurus(int i)
 
 	Monst->_mdir = md;
 
-	if (monster[i]._mmode == MM_STAND || monster[i]._mmode == MM_TALK)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_Lazhelp(int i)
@@ -4418,8 +4407,8 @@ void MAI_Lazhelp(int i)
 	if (Monst->_mgoal == MGOAL_NORMAL)
 		MAI_Succ(i);
 	Monst->_mdir = md;
-	if (monster[i]._mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_Lachdanan(int i)
@@ -4455,8 +4444,7 @@ void MAI_Lachdanan(int i)
 
 	Monst->_mdir = md;
 
-	if (monster[i]._mmode == MM_STAND)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+	Monst->CheckStandAnimationIsLoaded(md);
 }
 
 void MAI_Warlord(int i)
@@ -4489,8 +4477,7 @@ void MAI_Warlord(int i)
 
 	Monst->_mdir = md;
 
-	if (monster[i]._mmode == MM_STAND || monster[i]._mmode == MM_TALK)
-		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[Monst->_mdir];
+	Monst->CheckStandAnimationIsLoaded(Monst->_mdir);
 }
 
 void DeleteMonsterList()
@@ -5445,6 +5432,12 @@ void decode_enemy(int m, int enemy)
 		monster[m]._menemy = enemy;
 		monster[m].enemyPosition = monster[enemy].position.future;
 	}
+}
+
+void MonsterStruct::CheckStandAnimationIsLoaded(int mdir)
+{
+	if (_mmode == MM_STAND || _mmode == MM_TALK)
+		_mAnimData = MType->Anims[MA_STAND].Data[mdir];
 }
 
 } // namespace devilution
