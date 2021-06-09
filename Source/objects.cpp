@@ -2188,17 +2188,17 @@ void objects_set_door_piece(Point position)
 	dpiece_defs_map_2[position.x][position.y].mt[1] = SDL_SwapLE16(piece[1]);
 }
 
-void ObjSetMini(int x, int y, int v)
+void ObjSetMini(Point position, int v)
 {
 	MegaTile mega = pMegaTiles[v - 1];
 
-	int xx = 2 * x + 16;
-	int yy = 2 * y + 16;
+	// TODO pos * 2 + {16,16} should be a function so it can be reused, see ObjChangeMap*
+	Point megaOrigin = position * 2 + Displacement { 16, 16 };
 
-	ObjSetMicro({ xx + 0, yy + 0 }, SDL_SwapLE16(mega.micro1) + 1);
-	ObjSetMicro({ xx + 1, yy + 0 }, SDL_SwapLE16(mega.micro2) + 1);
-	ObjSetMicro({ xx + 0, yy + 1 }, SDL_SwapLE16(mega.micro3) + 1);
-	ObjSetMicro({ xx + 1, yy + 1 }, SDL_SwapLE16(mega.micro4) + 1);
+	ObjSetMicro(megaOrigin, SDL_SwapLE16(mega.micro1) + 1);
+	ObjSetMicro(megaOrigin + DIR_SE, SDL_SwapLE16(mega.micro2) + 1);
+	ObjSetMicro(megaOrigin + DIR_SW, SDL_SwapLE16(mega.micro3) + 1);
+	ObjSetMicro(megaOrigin + DIR_S, SDL_SwapLE16(mega.micro4) + 1);
 }
 
 void ObjL1Special(int x1, int y1, int x2, int y2)
@@ -2742,7 +2742,7 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 {
 	for (int j = y1; j <= y2; j++) {
 		for (int i = x1; i <= x2; i++) {
-			ObjSetMini(i, j, pdungeon[i][j]);
+			ObjSetMini({ i, j }, pdungeon[i][j]);
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
@@ -2760,7 +2760,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 {
 	for (int j = y1; j <= y2; j++) {
 		for (int i = x1; i <= x2; i++) {
-			ObjSetMini(i, j, pdungeon[i][j]);
+			ObjSetMini({ i, j }, pdungeon[i][j]);
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
