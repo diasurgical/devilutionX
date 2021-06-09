@@ -1319,9 +1319,9 @@ void AddL2Door(int i, int x, int y, int ot)
 {
 	Objects[i]._oDoorFlag = true;
 	if (ot == OBJ_L2LDOOR)
-		ObjSetMicro(x, y, 538);
+		ObjSetMicro({ x, y }, 538);
 	else
-		ObjSetMicro(x, y, 540);
+		ObjSetMicro({ x, y }, 540);
 	dSpecial[x][y] = 0;
 	Objects[i]._oVar4 = 0;
 }
@@ -1330,9 +1330,9 @@ void AddL3Door(int i, int x, int y, int ot)
 {
 	Objects[i]._oDoorFlag = true;
 	if (ot == OBJ_L3LDOOR)
-		ObjSetMicro(x, y, 531);
+		ObjSetMicro({ x, y }, 531);
 	else
-		ObjSetMicro(x, y, 534);
+		ObjSetMicro({ x, y }, 534);
 	Objects[i]._oVar4 = 0;
 }
 
@@ -2163,15 +2163,15 @@ void ProcessObjects()
 	}
 }
 
-void ObjSetMicro(int dx, int dy, int pn)
+void ObjSetMicro(Point position, int pn)
 {
-	dPiece[dx][dy] = pn;
+	dPiece[position.x][position.y] = pn;
 	pn--;
 
 	int blocks = leveltype != DTYPE_HELL ? 10 : 16;
 
 	uint16_t *piece = &pLevelPieces[blocks * pn];
-	MICROS &micros = dpiece_defs_map_2[dx][dy];
+	MICROS &micros = dpiece_defs_map_2[position.x][position.y];
 
 	for (int i = 0; i < blocks; i++) {
 		micros.mt[i] = SDL_SwapLE16(piece[blocks - 2 + (i & 1) - (i & 0xE)]);
@@ -2195,10 +2195,10 @@ void ObjSetMini(int x, int y, int v)
 	int xx = 2 * x + 16;
 	int yy = 2 * y + 16;
 
-	ObjSetMicro(xx + 0, yy + 0, SDL_SwapLE16(mega.micro1) + 1);
-	ObjSetMicro(xx + 1, yy + 0, SDL_SwapLE16(mega.micro2) + 1);
-	ObjSetMicro(xx + 0, yy + 1, SDL_SwapLE16(mega.micro3) + 1);
-	ObjSetMicro(xx + 1, yy + 1, SDL_SwapLE16(mega.micro4) + 1);
+	ObjSetMicro({ xx + 0, yy + 0 }, SDL_SwapLE16(mega.micro1) + 1);
+	ObjSetMicro({ xx + 1, yy + 0 }, SDL_SwapLE16(mega.micro2) + 1);
+	ObjSetMicro({ xx + 0, yy + 1 }, SDL_SwapLE16(mega.micro3) + 1);
+	ObjSetMicro({ xx + 1, yy + 1 }, SDL_SwapLE16(mega.micro4) + 1);
 }
 
 void ObjL1Special(int x1, int y1, int x2, int y2)
@@ -2278,70 +2278,70 @@ void DoorSet(int oi, int dx, int dy)
 	int pn = dPiece[dx][dy];
 	if (currlevel < 17) {
 		if (pn == 43)
-			ObjSetMicro(dx, dy, 392);
+			ObjSetMicro({ dx, dy }, 392);
 		if (pn == 45)
-			ObjSetMicro(dx, dy, 394);
+			ObjSetMicro({ dx, dy }, 394);
 		if (pn == 50 && Objects[oi]._otype == OBJ_L1LDOOR)
-			ObjSetMicro(dx, dy, 411);
+			ObjSetMicro({ dx, dy }, 411);
 		if (pn == 50 && Objects[oi]._otype == OBJ_L1RDOOR)
-			ObjSetMicro(dx, dy, 412);
+			ObjSetMicro({ dx, dy }, 412);
 		if (pn == 54)
-			ObjSetMicro(dx, dy, 397);
+			ObjSetMicro({ dx, dy }, 397);
 		if (pn == 55)
-			ObjSetMicro(dx, dy, 398);
+			ObjSetMicro({ dx, dy }, 398);
 		if (pn == 61)
-			ObjSetMicro(dx, dy, 399);
+			ObjSetMicro({ dx, dy }, 399);
 		if (pn == 67)
-			ObjSetMicro(dx, dy, 400);
+			ObjSetMicro({ dx, dy }, 400);
 		if (pn == 68)
-			ObjSetMicro(dx, dy, 401);
+			ObjSetMicro({ dx, dy }, 401);
 		if (pn == 69)
-			ObjSetMicro(dx, dy, 403);
+			ObjSetMicro({ dx, dy }, 403);
 		if (pn == 70)
-			ObjSetMicro(dx, dy, 404);
+			ObjSetMicro({ dx, dy }, 404);
 		if (pn == 72)
-			ObjSetMicro(dx, dy, 406);
+			ObjSetMicro({ dx, dy }, 406);
 		if (pn == 212)
-			ObjSetMicro(dx, dy, 407);
+			ObjSetMicro({ dx, dy }, 407);
 		if (pn == 354)
-			ObjSetMicro(dx, dy, 409);
+			ObjSetMicro({ dx, dy }, 409);
 		if (pn == 355)
-			ObjSetMicro(dx, dy, 410);
+			ObjSetMicro({ dx, dy }, 410);
 		if (pn == 411)
-			ObjSetMicro(dx, dy, 396);
+			ObjSetMicro({ dx, dy }, 396);
 		if (pn == 412)
-			ObjSetMicro(dx, dy, 396);
+			ObjSetMicro({ dx, dy }, 396);
 	} else {
 		if (pn == 75)
-			ObjSetMicro(dx, dy, 204);
+			ObjSetMicro({ dx, dy }, 204);
 		if (pn == 79)
-			ObjSetMicro(dx, dy, 208);
+			ObjSetMicro({ dx, dy }, 208);
 		if (pn == 86 && Objects[oi]._otype == OBJ_L1LDOOR) {
-			ObjSetMicro(dx, dy, 232);
+			ObjSetMicro({ dx, dy }, 232);
 		}
 		if (pn == 86 && Objects[oi]._otype == OBJ_L1RDOOR) {
-			ObjSetMicro(dx, dy, 234);
+			ObjSetMicro({ dx, dy }, 234);
 		}
 		if (pn == 91)
-			ObjSetMicro(dx, dy, 215);
+			ObjSetMicro({ dx, dy }, 215);
 		if (pn == 93)
-			ObjSetMicro(dx, dy, 218);
+			ObjSetMicro({ dx, dy }, 218);
 		if (pn == 99)
-			ObjSetMicro(dx, dy, 220);
+			ObjSetMicro({ dx, dy }, 220);
 		if (pn == 111)
-			ObjSetMicro(dx, dy, 222);
+			ObjSetMicro({ dx, dy }, 222);
 		if (pn == 113)
-			ObjSetMicro(dx, dy, 224);
+			ObjSetMicro({ dx, dy }, 224);
 		if (pn == 115)
-			ObjSetMicro(dx, dy, 226);
+			ObjSetMicro({ dx, dy }, 226);
 		if (pn == 117)
-			ObjSetMicro(dx, dy, 228);
+			ObjSetMicro({ dx, dy }, 228);
 		if (pn == 119)
-			ObjSetMicro(dx, dy, 230);
+			ObjSetMicro({ dx, dy }, 230);
 		if (pn == 232)
-			ObjSetMicro(dx, dy, 212);
+			ObjSetMicro({ dx, dy }, 212);
 		if (pn == 234)
-			ObjSetMicro(dx, dy, 212);
+			ObjSetMicro({ dx, dy }, 212);
 	}
 }
 
@@ -2385,11 +2385,11 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		if (currlevel < 21) {
 			if (!deltaload)
 				PlaySfxLoc(IS_DOOROPEN, door.position);
-			ObjSetMicro(door.position.x, door.position.y, 395);
+			ObjSetMicro(door.position, 395);
 		} else {
 			if (!deltaload)
 				PlaySfxLoc(IS_CROPEN, door.position);
-			ObjSetMicro(door.position.x, door.position.y, 209);
+			ObjSetMicro(door.position, 209);
 		}
 		if (currlevel < 17) {
 			dSpecial[door.position.x][door.position.y] = 8;
@@ -2418,24 +2418,24 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position.x, door.position.y, door._oVar1);
+		ObjSetMicro(door.position, door._oVar1);
 		if (currlevel < 17) {
 			if (door._oVar2 != 50) {
-				ObjSetMicro(door.position.x - 1, door.position.y, door._oVar2);
+				ObjSetMicro(door.position + Direction::DIR_NW, door._oVar2);
 			} else {
 				if (dPiece[door.position.x - 1][door.position.y] == 396)
-					ObjSetMicro(door.position.x - 1, door.position.y, 411);
+					ObjSetMicro(door.position + Direction::DIR_NW, 411);
 				else
-					ObjSetMicro(door.position.x - 1, door.position.y, 50);
+					ObjSetMicro(door.position + Direction::DIR_NW, 50);
 			}
 		} else {
 			if (door._oVar2 != 86) {
-				ObjSetMicro(door.position.x - 1, door.position.y, door._oVar2);
+				ObjSetMicro(door.position + Direction::DIR_NW, door._oVar2);
 			} else {
 				if (dPiece[door.position.x - 1][door.position.y] == 210)
-					ObjSetMicro(door.position.x - 1, door.position.y, 232);
+					ObjSetMicro(door.position + Direction::DIR_NW, 232);
 				else
-					ObjSetMicro(door.position.x - 1, door.position.y, 86);
+					ObjSetMicro(door.position + Direction::DIR_NW, 86);
 			}
 		}
 		dSpecial[door.position.x][door.position.y] = 0;
@@ -2464,13 +2464,13 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 			if (!deltaload)
 				PlaySfxLoc(IS_DOOROPEN, door.position);
 			if (door._oVar1 == 214)
-				ObjSetMicro(door.position.x, door.position.y, 408);
+				ObjSetMicro(door.position, 408);
 			else
-				ObjSetMicro(door.position.x, door.position.y, 393);
+				ObjSetMicro(door.position, 393);
 		} else {
 			if (!deltaload)
 				PlaySfxLoc(IS_CROPEN, door.position);
-			ObjSetMicro(door.position.x, door.position.y, 206);
+			ObjSetMicro(door.position, 206);
 		}
 		if (currlevel < 17) {
 			dSpecial[door.position.x][door.position.y] = 7;
@@ -2499,24 +2499,24 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position.x, door.position.y, door._oVar1);
+		ObjSetMicro(door.position, door._oVar1);
 		if (currlevel < 17) {
 			if (door._oVar2 != 50) {
-				ObjSetMicro(door.position.x, door.position.y - 1, door._oVar2);
+				ObjSetMicro(door.position + Direction::DIR_NE, door._oVar2);
 			} else {
 				if (dPiece[door.position.x][door.position.y - 1] == 396)
-					ObjSetMicro(door.position.x, door.position.y - 1, 412);
+					ObjSetMicro(door.position + Direction::DIR_NE, 412);
 				else
-					ObjSetMicro(door.position.x, door.position.y - 1, 50);
+					ObjSetMicro(door.position + Direction::DIR_NE, 50);
 			}
 		} else {
 			if (door._oVar2 != 86) {
-				ObjSetMicro(door.position.x, door.position.y - 1, door._oVar2);
+				ObjSetMicro(door.position + Direction::DIR_NE, door._oVar2);
 			} else {
 				if (dPiece[door.position.x][door.position.y - 1] == 210)
-					ObjSetMicro(door.position.x, door.position.y - 1, 234);
+					ObjSetMicro(door.position + Direction::DIR_NE, 234);
 				else
-					ObjSetMicro(door.position.x, door.position.y - 1, 86);
+					ObjSetMicro(door.position + Direction::DIR_NE, 86);
 			}
 		}
 		dSpecial[door.position.x][door.position.y] = 0;
@@ -2543,7 +2543,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position.x, door.position.y, 17);
+		ObjSetMicro(door.position, 17);
 		dSpecial[door.position.x][door.position.y] = 6;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -2561,7 +2561,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position.x, door.position.y, 540);
+		ObjSetMicro(door.position, 540);
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
@@ -2586,7 +2586,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position.x, door.position.y, 13);
+		ObjSetMicro(door.position, 13);
 		dSpecial[door.position.x][door.position.y] = 5;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -2604,7 +2604,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position.x, door.position.y, 538);
+		ObjSetMicro(door.position, 538);
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
@@ -2629,7 +2629,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position.x, door.position.y, 541);
+		ObjSetMicro(door.position, 541);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		door._oVar4 = 1;
@@ -2646,7 +2646,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position.x, door.position.y, 534);
+		ObjSetMicro(door.position, 534);
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
 		RedoPlayerVision();
@@ -2670,7 +2670,7 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position.x, door.position.y, 538);
+		ObjSetMicro(door.position, 538);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		door._oVar4 = 1;
@@ -2687,7 +2687,7 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position.x, door.position.y, 531);
+		ObjSetMicro(door.position, 531);
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
 		RedoPlayerVision();
@@ -5105,26 +5105,26 @@ void SyncL1Doors(int i)
 	if (currlevel < 17) {
 		if (Objects[i]._otype == OBJ_L1LDOOR) {
 			if (Objects[i]._oVar1 == 214)
-				ObjSetMicro(x, y, 408);
+				ObjSetMicro({ x, y }, 408);
 			else
-				ObjSetMicro(x, y, 393);
+				ObjSetMicro({ x, y }, 393);
 			dSpecial[x][y] = 7;
 			objects_set_door_piece(x - 1, y);
 			y--;
 		} else {
-			ObjSetMicro(x, y, 395);
+			ObjSetMicro({ x, y }, 395);
 			dSpecial[x][y] = 8;
 			objects_set_door_piece(x, y - 1);
 			x--;
 		}
 	} else {
 		if (Objects[i]._otype == OBJ_L1LDOOR) {
-			ObjSetMicro(x, y, 206);
+			ObjSetMicro({ x, y }, 206);
 			dSpecial[x][y] = 1;
 			objects_set_door_piece(x - 1, y);
 			y--;
 		} else {
-			ObjSetMicro(x, y, 209);
+			ObjSetMicro({ x, y }, 209);
 			dSpecial[x][y] = 2;
 			objects_set_door_piece(x, y - 1);
 			x--;
@@ -5191,16 +5191,16 @@ void SyncL2Doors(int i)
 	int y = Objects[i].position.y;
 	Objects[i]._oSelFlag = 2;
 	if (Objects[i]._otype == OBJ_L2LDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro(x, y, 538);
+		ObjSetMicro({ x, y }, 538);
 		dSpecial[x][y] = 0;
 	} else if (Objects[i]._otype == OBJ_L2LDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro(x, y, 13);
+		ObjSetMicro({ x, y }, 13);
 		dSpecial[x][y] = 5;
 	} else if (Objects[i]._otype == OBJ_L2RDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro(x, y, 540);
+		ObjSetMicro({ x, y }, 540);
 		dSpecial[x][y] = 0;
 	} else if (Objects[i]._otype == OBJ_L2RDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro(x, y, 17);
+		ObjSetMicro({ x, y }, 17);
 		dSpecial[x][y] = 6;
 	}
 }
@@ -5212,13 +5212,13 @@ void SyncL3Doors(int i)
 	int y = Objects[i].position.y;
 	Objects[i]._oSelFlag = 2;
 	if (Objects[i]._otype == OBJ_L3LDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro(x, y, 531);
+		ObjSetMicro({ x, y }, 531);
 	} else if (Objects[i]._otype == OBJ_L3LDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro(x, y, 538);
+		ObjSetMicro({ x, y }, 538);
 	} else if (Objects[i]._otype == OBJ_L3RDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro(x, y, 534);
+		ObjSetMicro({ x, y }, 534);
 	} else if (Objects[i]._otype == OBJ_L3RDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro(x, y, 541);
+		ObjSetMicro({ x, y }, 541);
 	}
 }
 

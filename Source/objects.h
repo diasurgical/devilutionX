@@ -75,7 +75,7 @@ void AddNakrulBook(int a1, int a2, int a3);
 void AddObject(_object_id ot, int ox, int oy);
 void Obj_Trap(int i);
 void ProcessObjects();
-void ObjSetMicro(int dx, int dy, int pn);
+void ObjSetMicro(Point position, int pn);
 void RedoPlayerVision();
 void MonstCheckDoors(int m);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
