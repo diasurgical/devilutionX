@@ -4110,7 +4110,13 @@ bool OperateShrineSparkling(int pnum, Point spawnPosition)
 	return true;
 }
 
-bool OperateShrineTown(int pnum, int x, int y)
+/**
+ * @brief Spawns a town portal near the active player
+ * @param pnum The player that activated the shrine
+ * @param spawnPosition The position of the shrine, the portal will be placed on the side closest to the player
+ * @return false if the current player didn't activate the shrine (to avoid doubling the effect), true otherwise
+ */
+bool OperateShrineTown(int pnum, Point spawnPosition)
 {
 	if (deltaload)
 		return false;
@@ -4118,7 +4124,7 @@ bool OperateShrineTown(int pnum, int x, int y)
 		return false;
 
 	AddMissile(
-	    { x, y },
+	    spawnPosition,
 	    Players[MyPlayerId].position.tile,
 	    Players[MyPlayerId]._pdir,
 	    MIS_TOWN,
@@ -4346,7 +4352,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineTown:
-		if (!OperateShrineTown(pnum, Objects[i].position.x, Objects[i].position.y))
+		if (!OperateShrineTown(pnum, Objects[i].position))
 			return;
 		break;
 	case ShrineShimmering:
