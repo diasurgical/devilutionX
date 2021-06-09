@@ -3977,7 +3977,15 @@ bool OperateShrineTainted(int pnum)
 	return true;
 }
 
-bool OperateShrineOily(int pnum, int x, int y)
+/**
+ * @brief Oily shrines increase the players primary stat(s) by a total of two, but spawn a
+ *        firewall near the shrine that will spread towards the player
+ * @param pnum The player that activated the shrine
+ * @param spawnPosition Start location for the firewall
+ * @return false if the current player did not activate the shrine (i.e. it's a multiplayer
+ *         game) and we bailed early to avoid doubling the effects, true otherwise.
+ */
+bool OperateShrineOily(int pnum, Point spawnPosition)
 {
 	if (deltaload)
 		return false;
@@ -4010,7 +4018,7 @@ bool OperateShrineOily(int pnum, int x, int y)
 	CheckStats(Players[pnum]);
 
 	AddMissile(
-	    { x, y },
+	    spawnPosition,
 	    Players[MyPlayerId].position.tile,
 	    Players[MyPlayerId]._pdir,
 	    MIS_FIREWALL,
@@ -4316,7 +4324,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineOily:
-		if (!OperateShrineOily(pnum, Objects[i].position.x, Objects[i].position.y))
+		if (!OperateShrineOily(pnum, Objects[i].position))
 			return;
 		break;
 	case ShrineGlowing:
