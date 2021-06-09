@@ -3681,7 +3681,15 @@ bool OperateShrineEerie(int pnum)
 	return true;
 }
 
-bool OperateShrineDivine(int pnum, int x, int y)
+/**
+ * @brief Fully restores HP and Mana of the active player and spawns a pair of potions
+ *        in response to the player activating a Divine shrine
+ * @param pnum The player that activated the shrine
+ * @param spawnPosition The map tile where the potions will be spawned
+ * @return false if the shrine was activated by another player in a multiplayer game and
+ *               no changes were made by this instance, true otherwise.
+*/
+bool OperateShrineDivine(int pnum, Point spawnPosition)
 {
 	if (deltaload)
 		return false;
@@ -3689,11 +3697,11 @@ bool OperateShrineDivine(int pnum, int x, int y)
 		return false;
 
 	if (currlevel < 4) {
-		CreateTypeItem({ x, y }, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
-		CreateTypeItem({ x, y }, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
+		CreateTypeItem(spawnPosition, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
+		CreateTypeItem(spawnPosition, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
 	} else {
-		CreateTypeItem({ x, y }, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
-		CreateTypeItem({ x, y }, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem(spawnPosition, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem(spawnPosition, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
 	}
 
 	Players[pnum]._pMana = Players[pnum]._pMaxMana;
@@ -4260,7 +4268,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineDivine:
-		if (!OperateShrineDivine(pnum, Objects[i].position.x, Objects[i].position.y))
+		if (!OperateShrineDivine(pnum, Objects[i].position))
 			return;
 		break;
 	case ShrineHoly:
