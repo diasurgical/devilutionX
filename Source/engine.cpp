@@ -87,34 +87,34 @@ void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, 
 	}
 }
 
-static void DrawHalfTransparentBlendedRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
+static void DrawTransparentBlendedRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height, int colorIndex)
 {
 	BYTE *pix = out.at(sx, sy);
 
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
-			*pix = paletteTransparencyLookup[0][*pix];
+			*pix = paletteTransparencyLookup[colorIndex][*pix];
 			pix++;
 		}
 		pix += out.pitch() - width;
 	}
 }
 
-static void DrawHalfTransparentStippledRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
+static void DrawTransparentStippledRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height, int colorIndex)
 {
 	BYTE *pix = out.at(sx, sy);
 
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			if (((row & 1) != 0 && (col & 1) != 0) || ((row & 1) == 0 && (col & 1) == 0))
-				*pix = 0;
+				*pix = colorIndex;
 			pix++;
 		}
 		pix += out.pitch() - width;
 	}
 }
 
-void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
+void DrawTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height, int colorIndex)
 {
 	if (sx + width < 0)
 		return;
@@ -140,10 +140,15 @@ void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int w
 	}
 
 	if (sgOptions.Graphics.bBlendedTransparancy) {
-		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
+		DrawTransparentBlendedRectTo(out, sx, sy, width, height, colorIndex);
 	} else {
-		DrawHalfTransparentStippledRectTo(out, sx, sy, width, height);
+		DrawTransparentStippledRectTo(out, sx, sy, width, height, colorIndex);
 	}
+}
+
+void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
+{
+	DrawTransparentRectTo(out, sx, sy, width, height, 0);
 }
 
 /**

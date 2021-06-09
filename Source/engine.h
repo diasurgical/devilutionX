@@ -530,6 +530,20 @@ void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, 
 void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height);
 
 /**
+ * Draws a transparent rectangle by blacking out odd pixels on odd lines,
+ * even pixels on even lines.
+ *
+ * @brief Render a colored transparent rectangle
+ * @param out Target buffer
+ * @param sx Screen coordinate
+ * @param sy Screen coordinate
+ * @param width Rectangle width
+ * @param height Rectangle height
+ * @param colorIndex Color index from current palette
+ */
+void DrawTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height, int colorIndex);
+
+/**
  * @brief Calculate the best fit direction between two points
  * @param start Tile coordinate
  * @param destination Tile coordinate
