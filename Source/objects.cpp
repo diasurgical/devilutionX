@@ -1841,7 +1841,7 @@ void AddObject(_object_id ot, int ox, int oy)
 	ActiveObjectCount++;
 }
 
-void Obj_Light(int i, int lr)
+void Obj_Light(int i, int lightRadius)
 {
 	if (Objects[i]._oVar1 == -1) {
 		return;
@@ -1850,7 +1850,7 @@ void Obj_Light(int i, int lr)
 	bool turnon = false;
 	int ox = Objects[i].position.x;
 	int oy = Objects[i].position.y;
-	int tr = lr + 10;
+	int tr = lightRadius + 10;
 	if (!DisableLighting) {
 		for (int p = 0; p < MAX_PLRS && !turnon; p++) {
 			if (Players[p].plractive) {
@@ -1865,7 +1865,7 @@ void Obj_Light(int i, int lr)
 	}
 	if (turnon) {
 		if (Objects[i]._oVar1 == 0)
-			Objects[i]._olid = AddLight(Objects[i].position, lr);
+			Objects[i]._olid = AddLight(Objects[i].position, lightRadius);
 		Objects[i]._oVar1 = 1;
 	} else {
 		if (Objects[i]._oVar1 == 1)
