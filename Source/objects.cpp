@@ -1259,15 +1259,15 @@ void SetBookMsg(int i, _speech_id msg)
 	Objects[i]._oVar7 = msg;
 }
 
-void AddL1Door(int i, int x, int y, int ot)
+void AddL1Door(int i, Point position, _object_id objectType)
 {
 	Objects[i]._oDoorFlag = true;
-	if (ot == 1) {
-		Objects[i]._oVar1 = dPiece[x][y];
-		Objects[i]._oVar2 = dPiece[x][y - 1];
-	} else {
-		Objects[i]._oVar1 = dPiece[x][y];
-		Objects[i]._oVar2 = dPiece[x - 1][y];
+	if (objectType == _object_id::OBJ_L1LDOOR) {
+		Objects[i]._oVar1 = dPiece[position.x][position.y];
+		Objects[i]._oVar2 = dPiece[position.x][position.y - 1];
+	} else { //_object_id::OBJ_L1RDOOR
+		Objects[i]._oVar1 = dPiece[position.x][position.y];
+		Objects[i]._oVar2 = dPiece[position.x - 1][position.y];
 	}
 	Objects[i]._oVar4 = 0;
 }
@@ -1315,24 +1315,24 @@ void AddChest(int i, int t)
 	Objects[i]._oVar2 = GenerateRnd(8);
 }
 
-void AddL2Door(int i, int x, int y, int ot)
+void AddL2Door(int i, Point position, _object_id objectType)
 {
 	Objects[i]._oDoorFlag = true;
-	if (ot == OBJ_L2LDOOR)
-		ObjSetMicro({ x, y }, 538);
+	if (objectType == OBJ_L2LDOOR)
+		ObjSetMicro(position, 538);
 	else
-		ObjSetMicro({ x, y }, 540);
-	dSpecial[x][y] = 0;
+		ObjSetMicro(position, 540);
+	dSpecial[position.x][position.y] = 0;
 	Objects[i]._oVar4 = 0;
 }
 
-void AddL3Door(int i, int x, int y, int ot)
+void AddL3Door(int i, Point position, _object_id objectType)
 {
 	Objects[i]._oDoorFlag = true;
-	if (ot == OBJ_L3LDOOR)
-		ObjSetMicro({ x, y }, 531);
+	if (objectType == OBJ_L3LDOOR)
+		ObjSetMicro(position, 531);
 	else
-		ObjSetMicro({ x, y }, 534);
+		ObjSetMicro(position, 534);
 	Objects[i]._oVar4 = 0;
 }
 
@@ -1724,15 +1724,15 @@ void AddObject(_object_id ot, int ox, int oy)
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		AddL1Door(oi, ox, oy, ot);
+		AddL1Door(oi, { ox, oy }, ot);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		AddL2Door(oi, ox, oy, ot);
+		AddL2Door(oi, { ox, oy }, ot);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		AddL3Door(oi, ox, oy, ot);
+		AddL3Door(oi, { ox, oy }, ot);
 		break;
 	case OBJ_BOOK2R:
 		AddSCambBook(oi);
