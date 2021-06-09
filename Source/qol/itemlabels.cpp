@@ -30,8 +30,8 @@ bool invertHighlightToggle = false;
 
 const int borderX = 4;   // minimal horizontal space between labels
 const int borderY = 2;   // minimal vertical space between labels
-const int marginX = 2; // horizontal margins between text and edges of the label
-const int marginY = 1; // vertical margins between text and edges of the label
+const int marginX = 6; // horizontal margins between text and edges of the label
+const int marginY = 2; // vertical margins between text and edges of the label
 const int height = 11 + marginY * 2; // going above 13 scatters labels of items that are next to each other
 
 } // namespace
@@ -153,7 +153,7 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 			}
 		}
 		if (pcursitem == label.id)
-			FillRect(out, label.pos.x, label.pos.y - height + marginY, label.width, height, PAL8_BLUE + 6);
+			DrawTransparentRectTo(out, label.pos.x, label.pos.y - height + marginY, label.width, height, PAL8_BLUE + 5);
 		else
 			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y - height + marginY, label.width, height);
 		DrawString(out, label.text.c_str(), { label.pos.x + marginX, label.pos.y, label.width, height }, itm.getTextColor());
