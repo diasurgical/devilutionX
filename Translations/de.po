@@ -2391,9 +2391,6 @@ msgstr ""
 msgid "Useless"
 msgstr ""
 
-# Verbogenes
-# Verbogener
-# Verbogene
 #: Source/itemdat.cpp:205
 #, fuzzy
 msgid "Bent"
@@ -8775,118 +8772,118 @@ msgstr ""
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
 #: Source/textdat.cpp:651 Source/textdat.cpp:654
 msgid "In Spiritu Sanctum."
-msgstr ""
+msgstr "In Spiritu Sanctum."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:643 Source/textdat.cpp:646 Source/textdat.cpp:649
 #: Source/textdat.cpp:652 Source/textdat.cpp:655
 msgid "Praedictum Otium."
-msgstr ""
+msgstr "Praedictum Otium."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:644 Source/textdat.cpp:647 Source/textdat.cpp:650
 #: Source/textdat.cpp:653 Source/textdat.cpp:656
 msgid "Efficio Obitus Ut Inimicus."
-msgstr ""
+msgstr "Efficio Obitus Ut Inimicus."
 
 #: Source/towners.cpp:96
 msgid "Griswold the Blacksmith"
-msgstr ""
+msgstr "Griswold, der Schmied"
 
 #: Source/towners.cpp:119
 msgid "Ogden the Tavern owner"
-msgstr ""
+msgstr "Ogden, der Gastwirt"
 
 #: Source/towners.cpp:129
 msgid "Wounded Townsman"
-msgstr ""
+msgstr "Verwundeter Dorfbewohner"
 
 #: Source/towners.cpp:152
 msgid "Adria the Witch"
-msgstr ""
+msgstr "Adria, die Hexe"
 
 #: Source/towners.cpp:162
 msgid "Gillian the Barmaid"
-msgstr ""
+msgstr "Gillian, die Kellnerin"
 
 #: Source/towners.cpp:195
 msgid "Pepin the Healer"
-msgstr ""
+msgstr "Pepin, der Heiler"
 
 #: Source/towners.cpp:213
 msgid "Cain the Elder"
-msgstr ""
+msgstr "Cain, der Dorfälteste"
 
 #: Source/towners.cpp:243
 msgid "Cow"
-msgstr ""
+msgstr "Kuh"
 
 #: Source/towners.cpp:263
 msgid "Lester the farmer"
-msgstr ""
+msgstr "Lester, der Farmer"
 
 #: Source/towners.cpp:277
 msgid "Complete Nut"
-msgstr ""
+msgstr "Völlig Verrückter"
 
 #: Source/towners.cpp:304
 msgid "Slain Townsman"
-msgstr ""
+msgstr "Getöteter Dorfbewohner"
 
 #: Source/trigs.cpp:328
 msgid "Down to dungeon"
-msgstr ""
+msgstr "Runter ins Labyrinth"
 
 #: Source/trigs.cpp:338
 msgid "Down to catacombs"
-msgstr ""
+msgstr "Runter in die Katakomben"
 
 #: Source/trigs.cpp:349
 msgid "Down to caves"
-msgstr ""
+msgstr "Runter in die Höhlen"
 
 #: Source/trigs.cpp:360
 msgid "Down to hell"
-msgstr ""
+msgstr "Runter in die Hölle"
 
 #: Source/trigs.cpp:371
 msgid "Down to Crypt"
-msgstr ""
+msgstr "Runter in die Krypta"
 
 #: Source/trigs.cpp:379
 msgid "Down to Hive"
-msgstr ""
+msgstr "Runter ins Nest"
 
 #: Source/trigs.cpp:399 Source/trigs.cpp:486 Source/trigs.cpp:538
 #: Source/trigs.cpp:637
 msgid "Up to level {:d}"
-msgstr ""
+msgstr "Rauf zur Ebene {:d}"
 
 #: Source/trigs.cpp:401 Source/trigs.cpp:460 Source/trigs.cpp:517
 #: Source/trigs.cpp:599 Source/trigs.cpp:617 Source/trigs.cpp:669
 msgid "Up to town"
-msgstr ""
+msgstr "Rauf in die Stadt"
 
 #: Source/trigs.cpp:413 Source/trigs.cpp:498 Source/trigs.cpp:552
 #: Source/trigs.cpp:579 Source/trigs.cpp:650
 msgid "Down to level {:d}"
-msgstr ""
+msgstr "Runter zur Ebene {:d}"
 
 #: Source/trigs.cpp:426
 msgid "Up to Crypt level {:d}"
-msgstr ""
+msgstr "Rauf zur Krypta-Ebene {:d}"
 
 #: Source/trigs.cpp:442
 msgid "Down to Crypt level {:d}"
-msgstr ""
+msgstr "Runter zur Krypta-Ebene {:d}"
 
 #: Source/trigs.cpp:565
 msgid "Up to Nest level {:d}"
-msgstr ""
+msgstr "Runter zur Nest-Ebene {:d}"
 
 #: Source/trigs.cpp:683
 msgid "Down to Diablo"
-msgstr ""
+msgstr "Runter zu Diablo"
 
 #: Source/trigs.cpp:720 Source/trigs.cpp:737 Source/trigs.cpp:754
 msgid "Back to Level {:d}"
