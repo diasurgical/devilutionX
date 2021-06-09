@@ -1206,11 +1206,11 @@ void DeleteObject(int oi, int i)
 		ActiveObjects[i] = ActiveObjects[ActiveObjectCount];
 }
 
-void SetupObject(int i, int x, int y, _object_id ot)
+void SetupObject(int i, Point position, _object_id ot)
 {
 	Objects[i]._otype = ot;
 	object_graphic_id ofi = AllObjects[ot].ofindex;
-	Objects[i].position = { x, y };
+	Objects[i].position = position;
 
 	const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), ofi);
 	if (found == std::end(ObjFileList)) {
@@ -1613,7 +1613,7 @@ void AddCryptBook(_object_id ot, int v2, int ox, int oy)
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
 	dObject[ox][oy] = oi + 1;
-	SetupObject(oi, ox, oy, ot);
+	SetupObject(oi, { ox, oy }, ot);
 	AddCryptObject(oi, v2);
 	ActiveObjectCount++;
 }
@@ -1704,7 +1704,7 @@ void AddObject(_object_id ot, int ox, int oy)
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
 	dObject[ox][oy] = oi + 1;
-	SetupObject(oi, ox, oy, ot);
+	SetupObject(oi, { ox, oy }, ot);
 	switch (ot) {
 	case OBJ_L1LIGHT:
 	case OBJ_SKFIRE:
