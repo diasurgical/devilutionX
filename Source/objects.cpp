@@ -2178,14 +2178,14 @@ void ObjSetMicro(Point position, int pn)
 	}
 }
 
-void objects_set_door_piece(int x, int y)
+void objects_set_door_piece(Point position)
 {
-	int pn = dPiece[x][y] - 1;
+	int pn = dPiece[position.x][position.y] - 1;
 
 	uint16_t *piece = &pLevelPieces[10 * pn + 8];
 
-	dpiece_defs_map_2[x][y].mt[0] = SDL_SwapLE16(piece[0]);
-	dpiece_defs_map_2[x][y].mt[1] = SDL_SwapLE16(piece[1]);
+	dpiece_defs_map_2[position.x][position.y].mt[0] = SDL_SwapLE16(piece[0]);
+	dpiece_defs_map_2[position.x][position.y].mt[1] = SDL_SwapLE16(piece[1]);
 }
 
 void ObjSetMini(int x, int y, int v)
@@ -2396,7 +2396,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		} else {
 			dSpecial[door.position.x][door.position.y] = 2;
 		}
-		objects_set_door_piece(door.position.x, door.position.y - 1);
+		objects_set_door_piece(door.position + Direction::DIR_NE);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		DoorSet(oi, door.position.x - 1, door.position.y);
@@ -2477,7 +2477,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		} else {
 			dSpecial[door.position.x][door.position.y] = 1;
 		}
-		objects_set_door_piece(door.position.x - 1, door.position.y);
+		objects_set_door_piece(door.position + Direction::DIR_NW);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		DoorSet(oi, door.position.x, door.position.y - 1);
@@ -5099,38 +5099,37 @@ void SyncL1Doors(int i)
 
 	Objects[i]._oMissFlag = true;
 
-	int x = Objects[i].position.x;
-	int y = Objects[i].position.y;
+	auto doorPosition = Objects[i].position;
 	Objects[i]._oSelFlag = 2;
 	if (currlevel < 17) {
 		if (Objects[i]._otype == OBJ_L1LDOOR) {
 			if (Objects[i]._oVar1 == 214)
-				ObjSetMicro({ x, y }, 408);
+				ObjSetMicro(doorPosition, 408);
 			else
-				ObjSetMicro({ x, y }, 393);
-			dSpecial[x][y] = 7;
-			objects_set_door_piece(x - 1, y);
-			y--;
+				ObjSetMicro(doorPosition, 393);
+			dSpecial[doorPosition.x][doorPosition.y] = 7;
+			objects_set_door_piece(doorPosition + Direction::DIR_NW);
+			doorPosition.y--;
 		} else {
-			ObjSetMicro({ x, y }, 395);
-			dSpecial[x][y] = 8;
-			objects_set_door_piece(x, y - 1);
-			x--;
+			ObjSetMicro(doorPosition, 395);
+			dSpecial[doorPosition.x][doorPosition.y] = 8;
+			objects_set_door_piece(doorPosition + Direction::DIR_NE);
+			doorPosition.x--;
 		}
 	} else {
 		if (Objects[i]._otype == OBJ_L1LDOOR) {
-			ObjSetMicro({ x, y }, 206);
-			dSpecial[x][y] = 1;
-			objects_set_door_piece(x - 1, y);
-			y--;
+			ObjSetMicro(doorPosition, 206);
+			dSpecial[doorPosition.x][doorPosition.y] = 1;
+			objects_set_door_piece(doorPosition + Direction::DIR_NW);
+			doorPosition.y--;
 		} else {
-			ObjSetMicro({ x, y }, 209);
-			dSpecial[x][y] = 2;
-			objects_set_door_piece(x, y - 1);
-			x--;
+			ObjSetMicro(doorPosition, 209);
+			dSpecial[doorPosition.x][doorPosition.y] = 2;
+			objects_set_door_piece(doorPosition + Direction::DIR_NE);
+			doorPosition.x--;
 		}
 	}
-	DoorSet(i, x, y);
+	DoorSet(i, doorPosition.x, doorPosition.y);
 }
 
 void SyncCrux(int i)
