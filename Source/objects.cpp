@@ -4078,7 +4078,13 @@ bool OperateShrineMendicant(int pnum)
 	return true;
 }
 
-bool OperateShrineSparkling(int pnum, int x, int y)
+/**
+ * @brief Grants experience to the player based on their current level while also triggering a magic trap
+ * @param pnum The player that activated the shrine
+ * @param spawnPosition The trap results in casting flash from this location targeting the player
+ * @return false if the current player didn't activate the shrine (to avoid doubling the effect), true otherwise
+ */
+bool OperateShrineSparkling(int pnum, Point spawnPosition)
 {
 	if (deltaload)
 		return false;
@@ -4088,7 +4094,7 @@ bool OperateShrineSparkling(int pnum, int x, int y)
 	AddPlrExperience(MyPlayerId, Players[MyPlayerId]._pLevel, 1000 * currlevel);
 
 	AddMissile(
-	    { x, y },
+	    spawnPosition,
 	    Players[MyPlayerId].position.tile,
 	    Players[MyPlayerId]._pdir,
 	    MIS_FLASH,
@@ -4336,7 +4342,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineSparkling:
-		if (!OperateShrineSparkling(pnum, Objects[i].position.x, Objects[i].position.y))
+		if (!OperateShrineSparkling(pnum, Objects[i].position))
 			return;
 		break;
 	case ShrineTown:
