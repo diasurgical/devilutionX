@@ -8804,7 +8804,7 @@ msgstr "Adria, die Hexe"
 
 #: Source/towners.cpp:162
 msgid "Gillian the Barmaid"
-msgstr "Gillian, die Kellnerin"
+msgstr "Gillian, die Barfrau"
 
 #: Source/towners.cpp:195
 msgid "Pepin the Healer"
@@ -8832,58 +8832,58 @@ msgstr "Getöteter Dorfbewohner"
 
 #: Source/trigs.cpp:328
 msgid "Down to dungeon"
-msgstr "Runter ins Labyrinth"
+msgstr "Hinab ins Labyrinth"
 
 #: Source/trigs.cpp:338
 msgid "Down to catacombs"
-msgstr "Runter in die Katakomben"
+msgstr "Hinab in die Katakomben"
 
 #: Source/trigs.cpp:349
 msgid "Down to caves"
-msgstr "Runter in die Höhlen"
+msgstr "Hinab in die Höhlen"
 
 #: Source/trigs.cpp:360
 msgid "Down to hell"
-msgstr "Runter in die Hölle"
+msgstr "Hinab in die Hölle"
 
 #: Source/trigs.cpp:371
 msgid "Down to Crypt"
-msgstr "Runter in die Krypta"
+msgstr "Hinab in die Krypta"
 
 #: Source/trigs.cpp:379
 msgid "Down to Hive"
-msgstr "Runter ins Nest"
+msgstr "Hinab ins Nest"
 
 #: Source/trigs.cpp:399 Source/trigs.cpp:486 Source/trigs.cpp:538
 #: Source/trigs.cpp:637
 msgid "Up to level {:d}"
-msgstr "Rauf zur Ebene {:d}"
+msgstr "Hinauf zur Ebene {:d}"
 
 #: Source/trigs.cpp:401 Source/trigs.cpp:460 Source/trigs.cpp:517
 #: Source/trigs.cpp:599 Source/trigs.cpp:617 Source/trigs.cpp:669
 msgid "Up to town"
-msgstr "Rauf in die Stadt"
+msgstr "Hinauf in die Stadt"
 
 #: Source/trigs.cpp:413 Source/trigs.cpp:498 Source/trigs.cpp:552
 #: Source/trigs.cpp:579 Source/trigs.cpp:650
 msgid "Down to level {:d}"
-msgstr "Runter zur Ebene {:d}"
+msgstr "Hinab zur Ebene {:d}"
 
 #: Source/trigs.cpp:426
 msgid "Up to Crypt level {:d}"
-msgstr "Rauf zur Krypta-Ebene {:d}"
+msgstr "Hinauf zur Krypta-Ebene {:d}"
 
 #: Source/trigs.cpp:442
 msgid "Down to Crypt level {:d}"
-msgstr "Runter zur Krypta-Ebene {:d}"
+msgstr "Hinab zur Krypta-Ebene {:d}"
 
 #: Source/trigs.cpp:565
 msgid "Up to Nest level {:d}"
-msgstr "Runter zur Nest-Ebene {:d}"
+msgstr "Hinab zur Nest-Ebene {:d}"
 
 #: Source/trigs.cpp:683
 msgid "Down to Diablo"
-msgstr "Runter zu Diablo"
+msgstr "Hinab zu Diablo"
 
 #: Source/trigs.cpp:720 Source/trigs.cpp:737 Source/trigs.cpp:754
 msgid "Back to Level {:d}"
