@@ -234,7 +234,7 @@ struct ItemStruct {
 	uint8_t _iMinMag;
 	int8_t _iMinDex;
 	bool _iStatFlag;
-	int IDidx;
+	_item_indexes IDidx;
 	uint32_t dwBuff;
 	uint32_t _iDamAcFlags;
 
