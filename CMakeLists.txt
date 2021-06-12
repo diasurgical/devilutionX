@@ -182,7 +182,7 @@ if(AMIGA)
   include(amiga_defs)
 endif()
 
-if(N3DS)
+if(NINTENDO_3DS)
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
   include(n3ds_defs)
 endif()
@@ -206,7 +206,7 @@ if(NOT NOSOUND)
   endif()
 endif()
 
-if(NOT N3DS)
+if(NOT NINTENDO_3DS)
   find_package(Threads REQUIRED)
 endif()
 
@@ -477,7 +477,7 @@ if(VITA)
     Source/platform/vita/keyboard.cpp)
 endif()
 
-if(N3DS)
+if(NINTENDO_3DS)
   list(APPEND libdevilutionx_SRCS
     Source/platform/ctr/system.cpp
     Source/platform/ctr/keyboard.cpp
@@ -578,7 +578,7 @@ target_include_directories(libdevilutionx PUBLIC
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
-if(NOT N3DS)
+if(NOT NINTENDO_3DS)
   target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads)
 endif()
@@ -741,7 +741,7 @@ if (VITA)
   target_compile_definitions(libdevilutionx PUBLIC VITA)
 endif()
 
-if(N3DS)
+if(NINTENDO_3DS)
   target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2 3ds::png)
   target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
 endif()
@@ -872,7 +872,7 @@ if(VITA)
   )
 endif()
 
-if(N3DS)
+if(NINTENDO_3DS)
   set(APP_TITLE       "DevilutionX")
   set(APP_DESCRIPTION "DevilutionX port for 3DS")
   set(APP_AUTHOR      "Diasurgical Team")
