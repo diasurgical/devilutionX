@@ -43,6 +43,10 @@ jobs:
   3ds:
     docker:
       - image: devkitpro/devkitarm:latest
+        environment:
+        LANG: en_US.UTF-8
+        LANGUAGE: en_US.UTF-8
+        LC_ALL: en_US.UTF-8
     working_directory: ~/repo
     steps:
       - checkout
