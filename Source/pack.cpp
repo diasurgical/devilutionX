@@ -17,7 +17,7 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 	if (is->isEmpty()) {
 		id->idx = 0xFFFF;
 	} else {
-		int idx = is->IDidx;
+		auto idx = is->IDidx;
 		if (!gbIsHellfire) {
 			idx = RemapItemIdxToDiablo(idx);
 		}
@@ -123,7 +123,7 @@ void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashie
  */
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 {
-	uint16_t idx = SDL_SwapLE16(is->idx);
+	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(is->idx));
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
 		return;

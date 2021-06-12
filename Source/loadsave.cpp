@@ -280,7 +280,7 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	pItem->_iMinDex = file->nextLE<int8_t>();
 	file->skip(1); // Alignment
 	pItem->_iStatFlag = file->nextBool32();
-	pItem->IDidx = file->nextLE<int32_t>();
+	pItem->IDidx = static_cast<_item_indexes>(file->nextLE<int32_t>());
 	if (gbIsSpawn) {
 		pItem->IDidx = RemapItemIdxFromSpawn(pItem->IDidx);
 	}
@@ -796,94 +796,110 @@ static void LoadPortal(LoadHelper *file, int i)
 	pPortal->setlvl = file->nextBool32();
 }
 
-int RemapItemIdxFromDiablo(int i)
+_item_indexes RemapItemIdxFromDiablo(_item_indexes i)
 {
-	if (i == IDI_SORCERER) {
-		return 166;
-	}
-	if (i >= 156) {
-		i += 5; // Hellfire exclusive items
-	}
-	if (i >= 88) {
-		i += 1; // Scroll of Search
-	}
-	if (i >= 83) {
-		i += 4; // Oils
-	}
+	constexpr auto getItemIdValue = [](int i) -> int {
+		if (i == IDI_SORCERER) {
+			return 166;
+		}
+		if (i >= 156) {
+			i += 5; // Hellfire exclusive items
+		}
+		if (i >= 88) {
+			i += 1; // Scroll of Search
+		}
+		if (i >= 83) {
+			i += 4; // Oils
+		}
 
-	return i;
+		return i;
+	};
+
+	return static_cast<_item_indexes>(getItemIdValue(i));
 }
 
-int RemapItemIdxToDiablo(int i)
+_item_indexes RemapItemIdxToDiablo(_item_indexes i)
 {
-	if (i == 166) {
-		return IDI_SORCERER;
-	}
-	if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
-		return -1; // Hellfire exclusive items
-	}
-	if (i >= 93) {
-		i -= 1; // Scroll of Search
-	}
-	if (i >= 87) {
-		i -= 4; // Oils
-	}
+	constexpr auto getItemIdValue = [](int i) -> int {
+		if (i == 166) {
+			return IDI_SORCERER;
+		}
+		if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
+			return -1; // Hellfire exclusive items
+		}
+		if (i >= 93) {
+			i -= 1; // Scroll of Search
+		}
+		if (i >= 87) {
+			i -= 4; // Oils
+		}
 
-	return i;
+		return i;
+	};
+
+	return static_cast<_item_indexes>(getItemIdValue(i));
 }
 
-int RemapItemIdxFromSpawn(int i)
+_item_indexes RemapItemIdxFromSpawn(_item_indexes i)
 {
-	if (i >= 62) {
-		i += 9; // Medium and heavy armors
-	}
-	if (i >= 96) {
-		i += 1; // Scroll of Stone Curse
-	}
-	if (i >= 98) {
-		i += 1; // Scroll of Guardian
-	}
-	if (i >= 99) {
-		i += 1; // Scroll of ...
-	}
-	if (i >= 101) {
-		i += 1; // Scroll of Golem
-	}
-	if (i >= 102) {
-		i += 1; // Scroll of None
-	}
-	if (i >= 104) {
-		i += 1; // Scroll of Apocalypse
-	}
+	constexpr auto getItemIdValue = [](int i) {
+		if (i >= 62) {
+			i += 9; // Medium and heavy armors
+		}
+		if (i >= 96) {
+			i += 1; // Scroll of Stone Curse
+		}
+		if (i >= 98) {
+			i += 1; // Scroll of Guardian
+		}
+		if (i >= 99) {
+			i += 1; // Scroll of ...
+		}
+		if (i >= 101) {
+			i += 1; // Scroll of Golem
+		}
+		if (i >= 102) {
+			i += 1; // Scroll of None
+		}
+		if (i >= 104) {
+			i += 1; // Scroll of Apocalypse
+		}
 
-	return i;
+		return i;
+	};
+
+	return static_cast<_item_indexes>(getItemIdValue(i));
 }
 
-int RemapItemIdxToSpawn(int i)
+_item_indexes RemapItemIdxToSpawn(_item_indexes i)
 {
-	if (i >= 104) {
-		i -= 1; // Scroll of Apocalypse
-	}
-	if (i >= 102) {
-		i -= 1; // Scroll of None
-	}
-	if (i >= 101) {
-		i -= 1; // Scroll of Golem
-	}
-	if (i >= 99) {
-		i -= 1; // Scroll of ...
-	}
-	if (i >= 98) {
-		i -= 1; // Scroll of Guardian
-	}
-	if (i >= 96) {
-		i -= 1; // Scroll of Stone Curse
-	}
-	if (i >= 71) {
-		i -= 9; // Medium and heavy armors
-	}
+	constexpr auto getItemIdValue = [](int i) {
+		if (i >= 104) {
+			i -= 1; // Scroll of Apocalypse
+		}
+		if (i >= 102) {
+			i -= 1; // Scroll of None
+		}
+		if (i >= 101) {
+			i -= 1; // Scroll of Golem
+		}
+		if (i >= 99) {
+			i -= 1; // Scroll of ...
+		}
+		if (i >= 98) {
+			i -= 1; // Scroll of Guardian
+		}
+		if (i >= 96) {
+			i -= 1; // Scroll of Stone Curse
+		}
+		if (i >= 71) {
+			i -= 9; // Medium and heavy armors
+		}
 
-	return i;
+		return i;
+	};
+
+	return static_cast<_item_indexes>(getItemIdValue(i));
 }
 
 bool IsHeaderValid(uint32_t magicNumber)
@@ -1242,14 +1258,14 @@ void LoadGame(bool firstflag)
 
 static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 {
-	int idx = pItem->IDidx;
+	auto idx = pItem->IDidx;
 	if (!gbIsHellfire)
 		idx = RemapItemIdxToDiablo(idx);
 	if (gbIsSpawn)
 		idx = RemapItemIdxToSpawn(idx);
 	int iType = pItem->_itype;
 	if (idx == -1) {
-		idx = 0;
+		idx = _item_indexes::IDI_GOLD;
 		iType = ITYPE_NONE;
 	}
 
