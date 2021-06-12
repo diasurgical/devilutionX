@@ -3291,12 +3291,10 @@ void OperatePedistal(int pnum, int i)
 		return;
 	}
 
-	int iv;
-	if (object[i]._oVar6 == 3 || !plr[pnum].HasItem(IDI_BLDSTONE, &iv)) {
+	if (object[i]._oVar6 == 3 || !plr[pnum].TryRemoveInvItemById(IDI_BLDSTONE)) {
 		return;
 	}
 
-	plr[pnum].RemoveInvItem(iv);
 	object[i]._oAnimFrame++;
 	object[i]._oVar6++;
 	if (object[i]._oVar6 == 1) {

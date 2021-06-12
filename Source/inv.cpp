@@ -1478,39 +1478,24 @@ static void CheckBookLevel(PlayerStruct &player)
 static void CheckNaKrulNotes(PlayerStruct &player)
 {
 	int idx = player.HoldItem.IDidx;
+	_item_indexes notes[] = { IDI_NOTE1, IDI_NOTE2, IDI_NOTE3 };
 
 	if (idx != IDI_NOTE1 && idx != IDI_NOTE2 && idx != IDI_NOTE3) {
 		return;
 	}
 
-	int n1;
-	if (idx != IDI_NOTE1 && !player.HasItem(IDI_NOTE1, &n1)) {
-		return;
-	}
-
-	int n2;
-	if (idx != IDI_NOTE2 && !player.HasItem(IDI_NOTE2, &n2)) {
-		return;
-	}
-
-	int n3;
-	if (idx != IDI_NOTE3 && !player.HasItem(IDI_NOTE3, &n3)) {
-		return;
+	for (auto note : notes) {
+		if (idx != note && !player.HasItem(note)) {
+			return; // the player doesn't have all notes
+		}
 	}
 
 	plr[myplr].Say(HeroSpeech::JustWhatIWasLookingFor, 10);
 
-	if (idx != IDI_NOTE1) {
-		player.HasItem(IDI_NOTE1, &n1);
-		player.RemoveInvItem(n1);
-	}
-	if (idx != IDI_NOTE2) {
-		player.HasItem(IDI_NOTE2, &n2);
-		player.RemoveInvItem(n2);
-	}
-	if (idx != IDI_NOTE3) {
-		player.HasItem(IDI_NOTE3, &n3);
-		player.RemoveInvItem(n3);
+	for (auto note : notes) {
+		if (idx != note) {
+			player.TryRemoveInvItemById(note);
+		}
 	}
 
 	int itemNum = itemactive[0];

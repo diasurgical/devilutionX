@@ -146,15 +146,15 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
-/*
+/**
  * @brief Contains Data (CelSprites) for a player graphic (player_graphic)
  */
 struct PlayerAnimationData {
-	/*
+	/**
 	 * @brief CelSprites for the different directions
 	 */
 	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
-	/*
+	/**
 	 * @brief Raw Data (binary) of the CL2 file.
 	 *        Is referenced from CelSprite in CelSpritesForDirections
 	 */
@@ -178,7 +178,7 @@ struct PlayerStruct {
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
-	/*
+	/**
 	 * @brief Contains Information for current Animation
 	 */
 	AnimationInfo AnimInfo;
@@ -249,7 +249,7 @@ struct PlayerStruct {
 	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
-	/*
+	/**
 	 * @brief Contains Data (Sprites) for the different Animations
 	 */
 	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
@@ -305,12 +305,17 @@ struct PlayerStruct {
 	bool HasItem(int item, int *idx = nullptr) const;
 
 	/**
-     * @brief Remove an item from player inventory
-     * @param pnum Player index
-     * @param iv invList index of item to be removed
-     * @param calcScrolls If true, CalcScrolls() gets called after removing item
-     */
+	 * @brief Remove an item from player inventory
+	 * @param iv invList index of item to be removed
+	 * @param calcScrolls If true, CalcScrolls() gets called after removing item
+	 */
 	void RemoveInvItem(int iv, bool calcScrolls = true);
+
+	/**
+	 * @brief Remove an item from player inventory and return true if the player has the item, return false otherwise
+	 * @param item IDidx of item to be removed
+	 */
+	bool TryRemoveInvItemById(int item);
 
 	void RemoveSpdBarItem(int iv);
 
@@ -387,12 +392,12 @@ struct PlayerStruct {
 
 	/**
 	 * @brief Is the player currently walking?
-	*/
+	 */
 	bool IsWalking() const;
 
 	/**
 	 * @brief Resets all Data of the current PlayerStruct
-	*/
+	 */
 	void Reset();
 };
 

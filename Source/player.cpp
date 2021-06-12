@@ -265,6 +265,16 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 		CalcScrolls();
 }
 
+bool PlayerStruct::TryRemoveInvItemById(int item)
+{
+	int idx;
+	if (HasItem(item, &idx)) {
+		RemoveInvItem(idx);
+		return true;
+	}
+	return false;
+}
+
 void PlayerStruct::RemoveSpdBarItem(int iv)
 {
 	SpdList[iv]._itype = ITYPE_NONE;

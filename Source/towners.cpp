@@ -354,11 +354,10 @@ void TalkToBarOwner(PlayerStruct &player, TownerStruct &barOwner)
 				InitQTextMsg(TEXT_BANNER2);
 				return;
 			}
-			int i;
-			if (quests[Q_LTBANNER]._qvar2 == 1 && player.HasItem(IDI_BANNER, &i)) {
+
+			if (quests[Q_LTBANNER]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_BANNER)) {
 				quests[Q_LTBANNER]._qactive = QUEST_DONE;
 				quests[Q_LTBANNER]._qvar1 = 3;
-				player.RemoveInvItem(i);
 				SpawnUnique(UITEM_HARCREST, barOwner.position + DIR_SW);
 				InitQTextMsg(TEXT_BANNER3);
 				return;
@@ -401,10 +400,9 @@ void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
 				InitQTextMsg(TEXT_INFRA5);
 				return;
 			}
-			int i;
-			if (quests[Q_ROCK]._qvar2 == 1 && player.HasItem(IDI_ROCK, &i)) {
+
+			if (quests[Q_ROCK]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ROCK)) {
 				quests[Q_ROCK]._qactive = QUEST_DONE;
-				player.RemoveInvItem(i);
 				SpawnUnique(UITEM_INFRARING, blackSmith.position + DIR_SW);
 				InitQTextMsg(TEXT_INFRA7);
 				return;
@@ -422,10 +420,9 @@ void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
 				InitQTextMsg(TEXT_ANVIL5);
 				return;
 			}
-			int i;
-			if (quests[Q_ANVIL]._qvar2 == 1 && player.HasItem(IDI_ANVIL, &i)) {
+
+			if (quests[Q_ANVIL]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ANVIL)) {
 				quests[Q_ANVIL]._qactive = QUEST_DONE;
-				player.RemoveInvItem(i);
 				SpawnUnique(UITEM_GRISWOLD, blackSmith.position + DIR_SW);
 				InitQTextMsg(TEXT_ANVIL7);
 				return;
@@ -440,9 +437,7 @@ void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
 void TalkToWitch(PlayerStruct &player, TownerStruct & /*witch*/)
 {
 	if (quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
-		int i;
-		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && player.HasItem(IDI_FUNGALTM, &i)) {
-			player.RemoveInvItem(i);
+		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_FUNGALTM)) {
 			quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
 			quests[Q_MUSHROOM]._qlog = true;
 			quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
@@ -451,9 +446,7 @@ void TalkToWitch(PlayerStruct &player, TownerStruct & /*witch*/)
 		}
 		if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 			if (quests[Q_MUSHROOM]._qvar1 >= QS_TOMEGIVEN && quests[Q_MUSHROOM]._qvar1 < QS_MUSHGIVEN) {
-				int i;
-				if (player.HasItem(IDI_MUSHROOM, &i)) {
-					player.RemoveInvItem(i);
+				if (player.TryRemoveInvItemById(IDI_MUSHROOM)) {
 					quests[Q_MUSHROOM]._qvar1 = QS_MUSHGIVEN;
 					Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
 					Qtalklist[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
@@ -524,10 +517,8 @@ void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
 			return;
 		}
 	}
-	int i;
 	if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
-		if (quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && player.HasItem(IDI_BRAIN, &i)) {
-			player.RemoveInvItem(i);
+		if (quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && player.TryRemoveInvItemById(IDI_BRAIN)) {
 			SpawnQuestItem(IDI_SPECELIX, healer.position + Point { 0, 1 }, 0, 0);
 			InitQTextMsg(TEXT_MUSH4);
 			quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
@@ -549,13 +540,11 @@ void TalkToBoy(PlayerStruct & /*player*/, TownerStruct & /*boy*/)
 void TalkToStoryteller(PlayerStruct &player, TownerStruct & /*storyteller*/)
 {
 	if (!gbIsMultiplayer) {
-		int i;
-		if (quests[Q_BETRAYER]._qactive == QUEST_INIT && player.HasItem(IDI_LAZSTAFF, &i)) {
+		if (quests[Q_BETRAYER]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_LAZSTAFF)) {
 			InitQTextMsg(TEXT_VILE1);
 			quests[Q_BETRAYER]._qlog = true;
 			quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
 			quests[Q_BETRAYER]._qvar1 = 2;
-			player.RemoveInvItem(i);
 			return;
 		}
 	} else {
@@ -663,15 +652,12 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 
 void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 {
-	int i;
-	if (player.HasItem(IDI_GREYSUIT, &i)) {
+	if (player.TryRemoveInvItemById(IDI_GREYSUIT)) {
 		InitQTextMsg(TEXT_JERSEY7);
-		player.RemoveInvItem(i);
 	}
 
-	if (player.HasItem(IDI_BROWNSUIT, &i)) {
+	if (player.TryRemoveInvItemById(IDI_BROWNSUIT)) {
 		SpawnUnique(UITEM_BOVINE, cowFarmer.position + DIR_SE);
-		player.RemoveInvItem(i);
 		InitQTextMsg(TEXT_JERSEY8);
 		quests[Q_JERSEY]._qactive = QUEST_DONE;
 		return;
@@ -747,10 +733,8 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 
 void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 {
-	int i;
-	if (player.HasItem(IDI_THEODORE, &i) && quests[Q_GIRL]._qactive != QUEST_DONE) {
+	if (quests[Q_GIRL]._qactive != QUEST_DONE && player.TryRemoveInvItemById(IDI_THEODORE)) {
 		InitQTextMsg(TEXT_GIRL4);
-		player.RemoveInvItem(i);
 		CreateAmulet(girl.position, 13, false, true);
 		quests[Q_GIRL]._qlog = false;
 		quests[Q_GIRL]._qactive = QUEST_DONE;
