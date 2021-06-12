@@ -2664,7 +2664,7 @@ void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool se
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
-void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
+void RecreateItem(int ii, _item_indexes idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
 {
 	bool _gbIsHellfire = gbIsHellfire;
 	gbIsHellfire = isHellfire;
@@ -2680,7 +2680,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 	}
 
 	if (icreateinfo == 0) {
-		SetPlrHandItem(&items[ii], static_cast<_item_indexes>(idx));
+		SetPlrHandItem(&items[ii], idx);
 		SetPlrHandSeed(&items[ii], iseed);
 		gbIsHellfire = _gbIsHellfire;
 		return;

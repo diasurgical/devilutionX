@@ -784,7 +784,7 @@ void DeltaLoadLevel()
 				} else {
 					RecreateItem(
 					    ii,
-					    sgLevels[currlevel].item[i].wIndx,
+					    static_cast<_item_indexes>(sgLevels[currlevel].item[i].wIndx),
 					    sgLevels[currlevel].item[i].wCI,
 					    sgLevels[currlevel].item[i].dwSeed,
 					    sgLevels[currlevel].item[i].wValue,

@@ -1178,7 +1178,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	memset(&items[MAXITEMS], 0, sizeof(*items));
-	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+	RecreateItem(MAXITEMS, static_cast<_item_indexes>(idx), wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	auto &player = plr[pnum];
 
@@ -1876,7 +1876,7 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	if (idx == IDI_EAR) {
 		RecreateEar(ii, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff);
 	} else {
-		RecreateItem(ii, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
+		RecreateItem(ii, static_cast<_item_indexes>(idx), icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (id != 0)
 			items[ii]._iIdentified = true;
 		items[ii]._iDurability = dur;
