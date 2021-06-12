@@ -1854,7 +1854,7 @@ void StripTopGold(int pnum)
 			if (player.InvList[i]._ivalue > MaxGold) {
 				val = player.InvList[i]._ivalue - MaxGold;
 				player.InvList[i]._ivalue = MaxGold;
-				SetPlrHandItem(&player.HoldItem, 0);
+				SetPlrHandItem(&player.HoldItem, IDI_GOLD);
 				GetGoldSeed(pnum, &player.HoldItem);
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(&player.HoldItem);

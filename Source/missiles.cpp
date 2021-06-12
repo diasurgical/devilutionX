@@ -1556,7 +1556,7 @@ void AddStealPotions(int mi, int sx, int sy, int dx, int dy, int midir, int8_t m
 							}
 						}
 						if (ii != -1) {
-							SetPlrHandItem(&plr[pnum].HoldItem, ii);
+							SetPlrHandItem(&plr[pnum].HoldItem, static_cast<_item_indexes>(ii));
 							GetPlrHandSeed(&plr[pnum].HoldItem);
 							plr[pnum].HoldItem._iStatFlag = true;
 							plr[pnum].SpdList[si] = plr[pnum].HoldItem;

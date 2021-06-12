@@ -1051,7 +1051,7 @@ void CalcPlrInv(int playerId, bool Loadgfx)
 	}
 }
 
-void SetPlrHandItem(ItemStruct *h, int idata)
+void SetPlrHandItem(ItemStruct *h, _item_indexes idata)
 {
 	ItemDataStruct *pAllItem;
 
@@ -1087,7 +1087,7 @@ void SetPlrHandItem(ItemStruct *h, int idata)
 	h->_iPrePower = IPL_INVALID;
 	h->_iSufPower = IPL_INVALID;
 	h->_iMagical = ITEM_QUALITY_NORMAL;
-	h->IDidx = static_cast<_item_indexes>(idata);
+	h->IDidx = idata;
 	if (gbIsHellfire)
 		h->dwBuff |= CF_HELLFIRE;
 }
@@ -1207,7 +1207,7 @@ void CreatePlrItems(int playerId)
 		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Sorcerer:
-		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : static_cast<_item_indexes>(166));
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
 		SetPlrHandItem(&player.SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
@@ -1239,7 +1239,7 @@ void CreatePlrItems(int playerId)
 		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Barbarian:
-		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], 139); // TODO: add more enums to items
+		SetPlrHandItem(&player.InvBody[INVLOC_HAND_LEFT], static_cast<_item_indexes>(139)); // TODO: add more enums to items
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
 		SetPlrHandItem(&player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
@@ -2680,7 +2680,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 	}
 
 	if (icreateinfo == 0) {
-		SetPlrHandItem(&items[ii], idx);
+		SetPlrHandItem(&items[ii], static_cast<_item_indexes>(idx));
 		SetPlrHandSeed(&items[ii], iseed);
 		gbIsHellfire = _gbIsHellfire;
 		return;
