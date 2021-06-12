@@ -1501,12 +1501,15 @@ static void CheckNaKrulNotes(PlayerStruct &player)
 	plr[myplr].Say(HeroSpeech::JustWhatIWasLookingFor, 10);
 
 	if (idx != IDI_NOTE1) {
+		player.HasItem(IDI_NOTE1, &n1);
 		player.RemoveInvItem(n1);
 	}
 	if (idx != IDI_NOTE2) {
+		player.HasItem(IDI_NOTE2, &n2);
 		player.RemoveInvItem(n2);
 	}
 	if (idx != IDI_NOTE3) {
+		player.HasItem(IDI_NOTE3, &n3);
 		player.RemoveInvItem(n3);
 	}
 
