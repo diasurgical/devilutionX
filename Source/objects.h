@@ -76,7 +76,7 @@ void MonstCheckDoors(int m);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 void TryDisarm(int pnum, int i);
-int ItemMiscIdIdx(item_misc_id imiscid);
+_item_indexes ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
 void BreakObject(int pnum, int oi);

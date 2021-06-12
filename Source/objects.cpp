@@ -3351,7 +3351,7 @@ void TryDisarm(int pnum, int i)
 	}
 }
 
-int ItemMiscIdIdx(item_misc_id imiscid)
+_item_indexes ItemMiscIdIdx(item_misc_id imiscid)
 {
 	int i;
 
@@ -3360,7 +3360,7 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 		i++;
 	}
 
-	return i;
+	return static_cast<_item_indexes>(i);
 }
 
 bool OperateShrineMysterious(int pnum)
@@ -3750,14 +3750,14 @@ bool OperateShrineEldritch(int pnum)
 		if (plr[pnum].InvList[j]._itype == ITYPE_MISC) {
 			if (plr[pnum].InvList[j]._iMiscId == IMISC_HEAL
 			    || plr[pnum].InvList[j]._iMiscId == IMISC_MANA) {
-				SetPlrHandItem(&plr[pnum].HoldItem, static_cast<_item_indexes>(ItemMiscIdIdx(IMISC_REJUV)));
+				SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_REJUV));
 				GetPlrHandSeed(&plr[pnum].HoldItem);
 				plr[pnum].HoldItem._iStatFlag = true;
 				plr[pnum].InvList[j] = plr[pnum].HoldItem;
 			}
 			if (plr[pnum].InvList[j]._iMiscId == IMISC_FULLHEAL
 			    || plr[pnum].InvList[j]._iMiscId == IMISC_FULLMANA) {
-				SetPlrHandItem(&plr[pnum].HoldItem, static_cast<_item_indexes>(ItemMiscIdIdx(IMISC_FULLREJUV)));
+				SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
 				GetPlrHandSeed(&plr[pnum].HoldItem);
 				plr[pnum].HoldItem._iStatFlag = true;
 				plr[pnum].InvList[j] = plr[pnum].HoldItem;
@@ -3768,14 +3768,14 @@ bool OperateShrineEldritch(int pnum)
 		if (item._itype == ITYPE_MISC) {
 			if (item._iMiscId == IMISC_HEAL
 			    || item._iMiscId == IMISC_MANA) {
-				SetPlrHandItem(&plr[pnum].HoldItem, static_cast<_item_indexes>(ItemMiscIdIdx(IMISC_REJUV)));
+				SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_REJUV));
 				GetPlrHandSeed(&plr[pnum].HoldItem);
 				plr[pnum].HoldItem._iStatFlag = true;
 				item = plr[pnum].HoldItem;
 			}
 			if (item._iMiscId == IMISC_FULLHEAL
 			    || item._iMiscId == IMISC_FULLMANA) {
-				SetPlrHandItem(&plr[pnum].HoldItem, static_cast<_item_indexes>(ItemMiscIdIdx(IMISC_FULLREJUV)));
+				SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
 				GetPlrHandSeed(&plr[pnum].HoldItem);
 				plr[pnum].HoldItem._iStatFlag = true;
 				item = plr[pnum].HoldItem;
