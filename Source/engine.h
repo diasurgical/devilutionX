@@ -210,12 +210,12 @@ struct Point {
 };
 
 struct Size {
-	int Width;
-	int Height;
+	int width;
+	int height;
 
 	bool operator==(const Size &other) const
 	{
-		return Width == other.Width && Height == other.Height;
+		return width == other.width && height == other.height;
 	}
 
 	bool operator!=(const Size &other) const
