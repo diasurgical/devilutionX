@@ -207,7 +207,7 @@ void DrawInv(const CelOutputBuffer &out)
 		if (!myPlayer.InvBody[slot].isEmpty()) {
 			int screenX = slotPos[slot].x;
 			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, RIGHT_PANEL_X + screenX, screenY, slotSize[slot].Width * INV_SLOT_SIZE_PX, slotSize[slot].Height * INV_SLOT_SIZE_PX);
+			InvDrawSlotBack(out, RIGHT_PANEL_X + screenX, screenY, slotSize[slot].width * INV_SLOT_SIZE_PX, slotSize[slot].height * INV_SLOT_SIZE_PX);
 
 			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
@@ -239,7 +239,7 @@ void DrawInv(const CelOutputBuffer &out)
 					if (myPlayer._pClass != HeroClass::Barbarian
 					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
 					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y, slotSize[INVLOC_HAND_RIGHT].Width * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].Height * INV_SLOT_SIZE_PX);
+						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y, slotSize[INVLOC_HAND_RIGHT].width * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].height * INV_SLOT_SIZE_PX);
 						light_table_index = 0;
 						cel_transparency_active = true;
 
@@ -625,7 +625,7 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 {
 	Size itemSize = GetInventorySize(item);
 
-	if (itemSize.Height == 1) {
+	if (itemSize.height == 1) {
 		for (int i = 30; i <= 39; i++) {
 			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
 				return true;
@@ -639,14 +639,14 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 		return false;
 	}
 
-	if (itemSize.Height == 2) {
-		for (int x = 10 - itemSize.Width; x >= 0; x -= itemSize.Width) {
+	if (itemSize.height == 2) {
+		for (int x = 10 - itemSize.width; x >= 0; x -= itemSize.width) {
 			for (int y = 0; y < 3; y++) {
 				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
 					return true;
 			}
 		}
-		if (itemSize.Width == 2) {
+		if (itemSize.width == 2) {
 			for (int x = 7; x >= 0; x -= 2) {
 				for (int y = 0; y < 3; y++) {
 					if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
@@ -678,7 +678,7 @@ bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool
 		return false;
 	}
 
-	app_fatal("Unknown item size: %ix%i", itemSize.Width, itemSize.Height);
+	app_fatal("Unknown item size: %ix%i", itemSize.width, itemSize.height);
 }
 
 /**
@@ -694,12 +694,12 @@ bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const Ite
 	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
 
 	Size itemSize = GetInventorySize(item);
-	for (int j = 0; j < itemSize.Height; j++) {
+	for (int j = 0; j < itemSize.height; j++) {
 		if (yy >= NUM_INV_GRID_ELEM) {
 			return false;
 		}
 		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
-		for (int i = 0; i < itemSize.Width; i++) {
+		for (int i = 0; i < itemSize.width; i++) {
 			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
 				return false;
 			}
@@ -712,7 +712,7 @@ bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const Ite
 		player.InvList[player._pNumInv] = player.HoldItem;
 		player._pNumInv++;
 
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize.Width, itemSize.Height);
+		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize.width, itemSize.height);
 		player.CalcScrolls();
 	}
 
