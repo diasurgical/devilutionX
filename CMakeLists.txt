@@ -188,11 +188,17 @@ if(N3DS)
 endif()
 
 if(ANDROID)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/android-project/CMake")
+
   set(NOSOUND ON)
   set(ASAN OFF)
   set(UBSAN OFF)
   set(NONET ON)
   set(TTF_FONT_DIR \"\")
+
+  file(
+    COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+    DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets")
 endif()
 
 if(PIE)
@@ -240,8 +246,8 @@ if(NOT fmt_FOUND)
 endif()
 
 if(ANDROID)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2_ttf)
 elseif(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
@@ -593,6 +599,12 @@ target_include_directories(libdevilutionx PUBLIC
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
+if(ANDROID)
+  target_include_directories(libdevilutionx PUBLIC
+    # SDL_internal.h is located in src required by SDL_android_main.c bridge
+    ${sdl2_SOURCE_DIR})
+endif()
+
 if(NOT N3DS)
   target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads)
@@ -721,19 +733,7 @@ else()
   target_link_libraries(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
 endif()
 
-if (ANDROID)
-  target_include_directories(libdevilutionx PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/include
-
-    # SDL_internal.h is located in src required by SDL_android_main.c bridge
-    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
-  target_link_libraries(libdevilutionx PRIVATE
-    SDL2
-    SDL2_ttf)
-elseif(USE_SDL1)
+if(USE_SDL1)
   target_link_libraries(libdevilutionx PUBLIC
     ${SDL_TTF_LIBRARY}
     ${SDL_LIBRARY})
