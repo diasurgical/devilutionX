@@ -4732,7 +4732,7 @@ void RecreateBoyItem(int ii, int lvl, int iseed)
 	items[ii]._iIdentified = true;
 }
 
-void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
+void RecreateWitchItem(int ii, _item_indexes idx, int lvl, int iseed)
 {
 	if (idx == IDI_MANA || idx == IDI_FULLMANA || idx == IDI_PORTAL) {
 		GetItemAttrs(ii, idx, lvl);
