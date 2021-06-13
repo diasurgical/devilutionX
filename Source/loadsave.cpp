@@ -217,6 +217,7 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	pItem->position.y = file->nextLE<int32_t>();
 	pItem->_iAnimFlag = file->nextBool32();
 	file->skip(4); // Skip pointer _iAnimData
+	pItem->AnimInfo = {};
 	pItem->AnimInfo.NumberOfFrames = file->nextLE<int32_t>();
 	pItem->AnimInfo.CurrentFrame = file->nextLE<int32_t>();
 	file->skip(8); // Skip _iAnimWidth and _iAnimWidth2
@@ -337,6 +338,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	file->skip(4); // Unused
 	player._pgfxnum = file->nextLE<int32_t>();
 	file->skip(4); // Skip pointer pData
+	player.AnimInfo = {};
 	player.AnimInfo.DelayLen = file->nextLE<int32_t>();
 	player.AnimInfo.DelayCounter = file->nextLE<int32_t>();
 	player.AnimInfo.NumberOfFrames = file->nextLE<int32_t>();
