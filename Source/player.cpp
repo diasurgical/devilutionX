@@ -515,7 +515,7 @@ void InitPlayerGFX(int pnum)
 		player._pgfxnum = 0;
 		LoadPlrGFX(player, player_graphic::Death);
 	} else {
-		for (int i = 0; i < enum_size<player_graphic>::value; i++) {
+		for (size_t i = 0; i < enum_size<player_graphic>::value; i++) {
 			auto graphic = static_cast<player_graphic>(i);
 			if (graphic == player_graphic::Death)
 				continue;
@@ -3657,7 +3657,7 @@ void CheckPlrSpell()
 
 void SyncPlrAnim(int pnum)
 {
-	int dir, sType;
+	int sType;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("SyncPlrAnim: illegal player %i", pnum);
