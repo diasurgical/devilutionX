@@ -720,7 +720,9 @@ bool NetInit(bool bSinglePlayer)
 		memset(sgbPlayerLeftGameTbl, 0, sizeof(sgbPlayerLeftGameTbl));
 		memset(sgdwPlayerLeftReasonTbl, 0, sizeof(sgdwPlayerLeftReasonTbl));
 		memset(sgbSendDeltaTbl, 0, sizeof(sgbSendDeltaTbl));
-		plr[0].Reset();
+		for (auto &player : plr) {
+			player.Reset();
+		}
 		memset(sgwPackPlrOffsetTbl, 0, sizeof(sgwPackPlrOffsetTbl));
 		SNetSetBasePlayer(0);
 		if (bSinglePlayer) {
