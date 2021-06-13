@@ -5,9 +5,17 @@
  */
 #pragma once
 
+#include "engine.h"
+
 namespace devilution {
 
-int ObjIndex(int x, int y);
+/**
+ * @brief Find the index of an object given a point in map coordinates
+ * 
+ * @param position The map coordinate to test
+ * @return The index of the object at the given position
+*/
+int ObjIndex(Point position);
 void LoadSetMap();
 
 /* rdata */

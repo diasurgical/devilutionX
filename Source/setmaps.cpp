@@ -82,37 +82,37 @@ const char *const QuestLevelNames[] = {
 	N_("Archbishop Lazarus' Lair"),
 };
 
-int ObjIndex(int x, int y)
+int ObjIndex(Point position)
 {
 	for (int i = 0; i < ActiveObjectCount; i++) {
 		int oi = ActiveObjects[i];
 		if (Objects[oi].position.x == x && Objects[oi].position.y == y)
 			return oi;
 	}
-	app_fatal("ObjIndex: Active object not found at (%i,%i)", x, y);
+	app_fatal("ObjIndex: Active object not found at (%i,%i)", position.x, position.y);
 }
 
 void AddSKingObjs()
 {
-	SetObjMapRange(ObjIndex(64, 34), 20, 7, 23, 10, 1);
-	SetObjMapRange(ObjIndex(64, 59), 20, 14, 21, 16, 2);
-	SetObjMapRange(ObjIndex(27, 37), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(46, 35), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(49, 53), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(27, 53), 8, 1, 15, 11, 3);
+	SetObjMapRange(ObjIndex({ 64, 34 }), 20, 7, 23, 10, 1);
+	SetObjMapRange(ObjIndex({ 64, 59 }), 20, 14, 21, 16, 2);
+	SetObjMapRange(ObjIndex({ 27, 37 }), 8, 1, 15, 11, 3);
+	SetObjMapRange(ObjIndex({ 46, 35 }), 8, 1, 15, 11, 3);
+	SetObjMapRange(ObjIndex({ 49, 53 }), 8, 1, 15, 11, 3);
+	SetObjMapRange(ObjIndex({ 27, 53 }), 8, 1, 15, 11, 3);
 }
 
 void AddSChamObjs()
 {
-	SetObjMapRange(ObjIndex(37, 30), 17, 0, 21, 5, 1);
-	SetObjMapRange(ObjIndex(37, 46), 13, 0, 16, 5, 2);
+	SetObjMapRange(ObjIndex({ 37, 30 }), 17, 0, 21, 5, 1);
+	SetObjMapRange(ObjIndex({ 37, 46 }), 13, 0, 16, 5, 2);
 }
 
 void AddVileObjs()
 {
-	SetObjMapRange(ObjIndex(26, 45), 1, 1, 9, 10, 1);
-	SetObjMapRange(ObjIndex(45, 46), 11, 1, 20, 10, 2);
-	SetObjMapRange(ObjIndex(35, 36), 7, 11, 13, 18, 3);
+	SetObjMapRange(ObjIndex({ 26, 45 }), 1, 1, 9, 10, 1);
+	SetObjMapRange(ObjIndex({ 45, 46 }), 11, 1, 20, 10, 2);
+	SetObjMapRange(ObjIndex({ 35, 36 }), 7, 11, 13, 18, 3);
 }
 
 void DRLG_SetMapTrans(const char *path)

@@ -745,9 +745,9 @@ void LoadMapObjects(const char *path, int startx, int starty, int x1, int y1, in
 		for (int i = 0; i < width; i++) {
 			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
 			if (objectId != 0) {
-				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
-				int oi = ObjIndex(startx + 16 + i, starty + 16 + j);
-				SetObjMapRange(oi, x1, y1, x1 + w, y1 + h, leveridx);
+				Point mapPos { startx + 16 + i, starty + 16 + j };
+				AddObject(ObjTypeConv[objectId], mapPos);
+				SetObjMapRange(ObjIndex(mapPos), x1, y1, x1 + w, y1 + h, leveridx);
 			}
 		}
 	}
