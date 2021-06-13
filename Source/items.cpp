@@ -2326,12 +2326,12 @@ int RndUItem(int m)
 	return ril[GenerateRnd(ri)];
 }
 
-int RndAllItems()
+_item_indexes RndAllItems()
 {
 	int ril[512];
 
 	if (GenerateRnd(100) > 25)
-		return 0;
+		return IDI_GOLD;
 
 	int curlv = items_get_currlevel();
 	int ri = 0;
@@ -2349,7 +2349,7 @@ int RndAllItems()
 			ri--;
 	}
 
-	return ril[GenerateRnd(ri)];
+	return static_cast<_item_indexes>(ril[GenerateRnd(ri)]);
 }
 
 int RndTypeItems(int itype, int imid, int lvl)
@@ -2585,7 +2585,7 @@ static void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool
 
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
 {
-	auto idx = static_cast<_item_indexes>(onlygood ? RndUItem(-1) : RndAllItems());
+	auto idx = onlygood ? static_cast<_item_indexes>(RndUItem(-1)) : RndAllItems();
 
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
