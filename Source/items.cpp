@@ -2466,13 +2466,13 @@ void ItemRndDur(int ii)
 		items[ii]._iDurability = GenerateRnd(items[ii]._iMaxDur / 2) + (items[ii]._iMaxDur / 4) + 1;
 }
 
-void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
+void SetupAllItems(int ii, _item_indexes idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
 	int iblvl;
 
 	items[ii]._iSeed = iseed;
 	SetRndSeed(iseed);
-	GetItemAttrs(ii, static_cast<_item_indexes>(idx), lvl / 2);
+	GetItemAttrs(ii, idx, lvl / 2);
 	items[ii]._iCreateInfo = lvl;
 
 	if (pregen)
@@ -2560,7 +2560,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
-	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
+	SetupAllItems(ii, static_cast<_item_indexes>(idx), AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -2575,7 +2575,7 @@ static void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, 
 	GetSuperItemSpace(position, ii);
 	int curlv = items_get_currlevel();
 
-	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
+	SetupAllItems(ii, static_cast<_item_indexes>(idx), AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -4831,7 +4831,7 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 		}
 	}
 
-	int idx = RndTypeItems(ITYPE_MISC, IMISC_BOOK, lvl);
+	auto idx = static_cast<_item_indexes>(RndTypeItems(ITYPE_MISC, IMISC_BOOK, lvl));
 	if (numitems >= MAXITEMS)
 		return;
 
@@ -4857,7 +4857,7 @@ static void CreateMagicItem(Point position, int lvl, int imisc, int imid, int ic
 		return;
 
 	int ii = AllocateItem();
-	int idx = RndTypeItems(imisc, imid, lvl);
+	auto idx = static_cast<_item_indexes>(RndTypeItems(imisc, imid, lvl));
 
 	while (true) {
 		memset(&items[ii], 0, sizeof(*items));
@@ -4865,7 +4865,7 @@ static void CreateMagicItem(Point position, int lvl, int imisc, int imid, int ic
 		if (items[ii]._iCurs == icurs)
 			break;
 
-		idx = RndTypeItems(imisc, imid, lvl);
+		idx = static_cast<_item_indexes>(RndTypeItems(imisc, imid, lvl));
 	}
 	GetSuperItemSpace(position, ii);
 
