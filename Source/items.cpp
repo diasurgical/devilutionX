@@ -488,7 +488,7 @@ void AddInitItems()
 
 static void items_42390F()
 {
-	int id;
+	_item_indexes id;
 
 	switch (currlevel) {
 	case 22:
@@ -2810,7 +2810,7 @@ void items_427ABA(Point position)
 	CornerStone.item = items[ii];
 }
 
-void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
+void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag)
 {
 	if (randarea) {
 		int tries = 0;
@@ -2843,7 +2843,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	dItem[position.x][position.y] = ii + 1;
 
 	int curlv = items_get_currlevel();
-	GetItemAttrs(ii, static_cast<_item_indexes>(itemid), curlv);
+	GetItemAttrs(ii, itemid, curlv);
 
 	SetupItem(ii);
 	items[ii]._iSeed = AdvanceRndSeed();
