@@ -2566,7 +2566,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-static void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool delta)
+static void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool sendmsg, bool delta)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -2575,7 +2575,7 @@ static void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, 
 	GetSuperItemSpace(position, ii);
 	int curlv = items_get_currlevel();
 
-	SetupAllItems(ii, static_cast<_item_indexes>(idx), AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
+	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -2585,7 +2585,7 @@ static void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, 
 
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
 {
-	int idx = onlygood ? RndUItem(-1) : RndAllItems();
+	auto idx = static_cast<_item_indexes>(onlygood ? RndUItem(-1) : RndAllItems());
 
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
@@ -2652,11 +2652,11 @@ void CreateRndUseful(Point position, bool sendmsg)
 
 void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
 {
-	int idx;
+	_item_indexes idx;
 
 	int curlv = items_get_currlevel();
 	if (itype != ITYPE_GOLD)
-		idx = RndTypeItems(itype, imisc, curlv);
+		idx = static_cast<_item_indexes>(RndTypeItems(itype, imisc, curlv));
 	else
 		idx = IDI_GOLD;
 
