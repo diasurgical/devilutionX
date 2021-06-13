@@ -1862,7 +1862,7 @@ int InvPutItem(PlayerStruct &player, Point position)
 	return ii;
 }
 
-int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
+int SyncPutItem(PlayerStruct &player, Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
 	if (!PutItem(player, position))
 		return -1;
@@ -1876,7 +1876,7 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	if (idx == IDI_EAR) {
 		RecreateEar(ii, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff);
 	} else {
-		RecreateItem(ii, static_cast<_item_indexes>(idx), icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
+		RecreateItem(ii, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (id != 0)
 			items[ii]._iIdentified = true;
 		items[ii]._iDurability = dur;
