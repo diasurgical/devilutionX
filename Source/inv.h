@@ -98,7 +98,7 @@ bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const Ite
 bool AutoPlaceItemInBelt(PlayerStruct &player, const ItemStruct &item, bool persistItem = false);
 bool GoldAutoPlace(PlayerStruct &player);
 bool GoldAutoPlaceInInventorySlot(PlayerStruct &player, int slotIndex);
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
+void CheckInvSwap(int pnum, BYTE bLoc, _item_indexes idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(int pnum, BYTE iv);
 void CheckInvItem(bool isShiftHeld = false);
 void CheckInvScrn(bool isShiftHeld);

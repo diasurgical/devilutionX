@@ -1175,10 +1175,10 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	}
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+void CheckInvSwap(int pnum, BYTE bLoc, _item_indexes idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	memset(&items[MAXITEMS], 0, sizeof(*items));
-	RecreateItem(MAXITEMS, static_cast<_item_indexes>(idx), wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	auto &player = plr[pnum];
 

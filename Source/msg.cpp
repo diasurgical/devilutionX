@@ -2155,7 +2155,7 @@ static DWORD On_CHANGEPLRITEMS(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId, p->dwBuff);
+		CheckInvSwap(pnum, p->bLoc, static_cast<_item_indexes>(p->wIndx), p->wCI, p->dwSeed, p->bId, p->dwBuff);
 
 	return sizeof(*p);
 }
