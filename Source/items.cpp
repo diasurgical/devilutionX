@@ -4773,7 +4773,7 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 	items[ii]._iIdentified = true;
 }
 
-void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed)
+void RecreateTownItem(int ii, _item_indexes idx, uint16_t icreateinfo, int iseed)
 {
 	if ((icreateinfo & CF_SMITH) != 0)
 		RecreateSmithItem(ii, icreateinfo & CF_LEVEL, iseed);

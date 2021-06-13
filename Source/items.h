@@ -460,7 +460,7 @@ void SpawnWitch(int lvl);
 void SpawnBoy(int lvl);
 void SpawnHealer(int lvl);
 void SpawnStoreGold();
-void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed);
+void RecreateTownItem(int ii, _item_indexes idx, uint16_t icreateinfo, int iseed);
 void RecalcStoreStats();
 int ItemNoFlippy();
 void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta);
