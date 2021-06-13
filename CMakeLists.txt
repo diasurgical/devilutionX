@@ -190,7 +190,6 @@ endif()
 if(ANDROID)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/android-project/CMake")
 
-  set(NOSOUND ON)
   set(ASAN OFF)
   set(UBSAN OFF)
   set(NONET ON)
@@ -211,14 +210,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-
-if(NOT NOSOUND)
-  if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
-    find_package(SDL_audiolib REQUIRED)
-  else()
-    add_subdirectory(3rdParty/SDL_audiolib)
-  endif()
-endif()
 
 if(NOT N3DS)
   find_package(Threads REQUIRED)
@@ -279,6 +270,14 @@ endif()
 
 if(NOT NONET AND NOT DISABLE_TCP)
   add_subdirectory(3rdParty/asio)
+endif()
+
+if(NOT NOSOUND)
+  if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
+    find_package(SDL_audiolib REQUIRED)
+  else()
+    add_subdirectory(3rdParty/SDL_audiolib)
+  endif()
 endif()
 
 add_library(smacker STATIC
