@@ -2882,7 +2882,7 @@ void SpawnRock()
 	items[ii].AnimInfo.CurrentFrame = 11;
 }
 
-void SpawnRewardItem(int itemid, Point position)
+void SpawnRewardItem(_item_indexes itemid, Point position)
 {
 	if (numitems >= MAXITEMS)
 		return;
@@ -2892,7 +2892,7 @@ void SpawnRewardItem(int itemid, Point position)
 	items[ii].position = position;
 	dItem[position.x][position.y] = ii + 1;
 	int curlv = items_get_currlevel();
-	GetItemAttrs(ii, static_cast<_item_indexes>(itemid), curlv);
+	GetItemAttrs(ii, itemid, curlv);
 	items[ii].SetNewAnimation(true);
 	items[ii]._iSelFlag = 2;
 	items[ii]._iPostDraw = true;

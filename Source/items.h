@@ -433,7 +433,7 @@ void items_427A72();
 void items_427ABA(Point position);
 void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag);
 void SpawnRock();
-void SpawnRewardItem(int itemid, Point position);
+void SpawnRewardItem(_item_indexes itemid, Point position);
 void SpawnMapOfDoom(Point position);
 void SpawnRuneBomb(Point position);
 void SpawnTheodore(Point position);
