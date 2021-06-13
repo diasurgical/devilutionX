@@ -25,7 +25,7 @@ int AnimationInfo::GetFrameToUseForRendering() const
 
 	assert(TicksSinceSequenceStarted >= 0);
 
-	// we don't use the processed game ticks alone but also the fragtion of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
+	// we don't use the processed game ticks alone but also the fraction of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
 	float totalTicksForCurrentAnimationSequence = gfProgressToNextGameTick + (float)TicksSinceSequenceStarted;
 
 	// 1 added for rounding reasons. float to int cast always truncate.
