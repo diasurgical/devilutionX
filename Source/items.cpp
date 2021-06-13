@@ -4758,7 +4758,7 @@ void RecreateWitchItem(int ii, _item_indexes idx, int lvl, int iseed)
 	items[ii]._iIdentified = true;
 }
 
-void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
+void RecreateHealerItem(int ii, _item_indexes idx, int lvl, int iseed)
 {
 	if (idx == IDI_HEAL || idx == IDI_FULLHEAL || idx == IDI_RESURRECT) {
 		GetItemAttrs(ii, idx, lvl);
