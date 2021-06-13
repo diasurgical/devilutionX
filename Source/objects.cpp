@@ -4773,7 +4773,7 @@ void OperateStoryBook(int pnum, int i)
 		PlaySfxLoc(IS_ISCROL, object[i].position.x, object[i].position.y);
 		auto msg = static_cast<_speech_id>(object[i]._oVar2);
 		if (object[i]._oVar8 != 0 && currlevel == 24) {
-			if (IsUberLeverActivated != 1 && quests[Q_NAKRUL]._qactive != QUEST_DONE && NaKrulSpellTomesActive(object[i]._oVar8)) {
+			if (!IsUberLeverActivated && quests[Q_NAKRUL]._qactive != QUEST_DONE && NaKrulSpellTomesActive(object[i]._oVar8)) {
 				NetSendCmd(false, CMD_NAKRUL);
 				return;
 			}
