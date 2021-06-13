@@ -1621,7 +1621,7 @@ void GetOilType(int i, int max_lvl)
 	items[i]._iIvalue = OilValues[t];
 }
 
-void GetItemAttrs(int i, int idata, int lvl)
+void GetItemAttrs(int i, _item_indexes idata, int lvl)
 {
 	items[i]._itype = AllItemsList[idata].itype;
 	items[i]._iCurs = AllItemsList[idata].iCurs;
@@ -1643,7 +1643,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 	items[i]._iMinStr = AllItemsList[idata].iMinStr;
 	items[i]._iMinMag = AllItemsList[idata].iMinMag;
 	items[i]._iMinDex = AllItemsList[idata].iMinDex;
-	items[i].IDidx = static_cast<_item_indexes>(idata);
+	items[i].IDidx = idata;
 	if (gbIsHellfire)
 		items[i].dwBuff |= CF_HELLFIRE;
 	items[i]._iPrePower = IPL_INVALID;
@@ -2453,7 +2453,7 @@ void SpawnUnique(_unique_items uid, Point position)
 	while (AllItemsList[idx].iItemId != UniqueItemList[uid].UIItemId)
 		idx++;
 
-	GetItemAttrs(ii, idx, curlv);
+	GetItemAttrs(ii, static_cast<_item_indexes>(idx), curlv);
 	GetUniqueItem(ii, uid);
 	SetupItem(ii);
 
@@ -2472,7 +2472,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 
 	items[ii]._iSeed = iseed;
 	SetRndSeed(iseed);
-	GetItemAttrs(ii, idx, lvl / 2);
+	GetItemAttrs(ii, static_cast<_item_indexes>(idx), lvl / 2);
 	items[ii]._iCreateInfo = lvl;
 
 	if (pregen)
@@ -2592,14 +2592,13 @@ void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
 
 void SetupAllUseful(int ii, int iseed, int lvl)
 {
-	int idx;
+	_item_indexes idx;
 
 	items[ii]._iSeed = iseed;
 	SetRndSeed(iseed);
 
 	if (gbIsHellfire) {
-		idx = GenerateRnd(7);
-		switch (idx) {
+		switch (GenerateRnd(7)) {
 		case 0:
 			idx = IDI_PORTAL;
 			if ((lvl <= 1))
@@ -2844,7 +2843,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	dItem[position.x][position.y] = ii + 1;
 
 	int curlv = items_get_currlevel();
-	GetItemAttrs(ii, itemid, curlv);
+	GetItemAttrs(ii, static_cast<_item_indexes>(itemid), curlv);
 
 	SetupItem(ii);
 	items[ii]._iSeed = AdvanceRndSeed();
@@ -2893,7 +2892,7 @@ void SpawnRewardItem(int itemid, Point position)
 	items[ii].position = position;
 	dItem[position.x][position.y] = ii + 1;
 	int curlv = items_get_currlevel();
-	GetItemAttrs(ii, itemid, curlv);
+	GetItemAttrs(ii, static_cast<_item_indexes>(itemid), curlv);
 	items[ii].SetNewAnimation(true);
 	items[ii]._iSelFlag = 2;
 	items[ii]._iPostDraw = true;
@@ -4196,7 +4195,7 @@ void SpawnSmith(int lvl)
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
-			int idata = RndSmithItem(lvl) - 1;
+			auto idata = static_cast<_item_indexes>(RndSmithItem(lvl) - 1);
 			GetItemAttrs(0, idata, lvl);
 		} while (items[0]._iIvalue > maxValue);
 		smithitem[i] = items[0];
@@ -4258,7 +4257,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		keepgoing = false;
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		int itype = RndPremiumItem(plvl / 4, plvl) - 1;
+		auto itype = static_cast<_item_indexes>(RndPremiumItem(plvl / 4, plvl) - 1);
 		GetItemAttrs(0, itype, plvl);
 		GetItemBonus(0, plvl / 2, plvl, true, !gbIsHellfire);
 
@@ -4413,7 +4412,7 @@ void SpawnWitch(int lvl)
 	constexpr int PinnedItemCount = 3;
 
 	int iCnt;
-	int idata, maxlvl, maxValue;
+	int maxlvl, maxValue;
 
 	int j = PinnedItemCount;
 
@@ -4439,6 +4438,7 @@ void SpawnWitch(int lvl)
 
 		int books = GenerateRnd(4);
 		for (int i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
+			auto itemIndex = static_cast<_item_indexes>(i);
 			if (!WitchItemOk(i))
 				continue;
 			if (lvl < AllItemsList[i].iMinMLvl)
@@ -4448,7 +4448,7 @@ void SpawnWitch(int lvl)
 			items[0]._iSeed = AdvanceRndSeed();
 			GenerateRnd(1);
 
-			GetItemAttrs(0, i, lvl);
+			GetItemAttrs(0, itemIndex, lvl);
 			witchitem[j] = items[0];
 			witchitem[j]._iCreateInfo = lvl | CF_WITCH;
 			witchitem[j]._iIdentified = true;
@@ -4466,7 +4466,7 @@ void SpawnWitch(int lvl)
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
-			idata = RndWitchItem(lvl) - 1;
+			auto idata = static_cast<_item_indexes>(RndWitchItem(lvl) - 1);
 			GetItemAttrs(0, idata, lvl);
 			maxlvl = -1;
 			if (GenerateRnd(100) <= 5)
@@ -4496,8 +4496,6 @@ int RndBoyItem(int lvl)
 
 void SpawnBoy(int lvl)
 {
-	int itype;
-
 	int ivalue = 0;
 	bool keepgoing = false;
 	int count = 0;
@@ -4516,7 +4514,7 @@ void SpawnBoy(int lvl)
 		keepgoing = false;
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		itype = RndBoyItem(lvl) - 1;
+		auto itype = static_cast<_item_indexes>(RndBoyItem(lvl) - 1);
 		GetItemAttrs(0, itype, lvl);
 		GetItemBonus(0, lvl, 2 * lvl, true, true);
 
@@ -4676,7 +4674,7 @@ void SpawnHealer(int lvl)
 	for (int i = srnd; i < nsi; i++) {
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		int itype = RndHealerItem(lvl) - 1;
+		auto itype = static_cast<_item_indexes>(RndHealerItem(lvl) - 1);
 		GetItemAttrs(0, itype, lvl);
 		healitem[i] = items[0];
 		healitem[i]._iCreateInfo = lvl | CF_HEALER;
@@ -4700,7 +4698,7 @@ void SpawnStoreGold()
 void RecreateSmithItem(int ii, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
-	int itype = RndSmithItem(lvl) - 1;
+	auto itype = static_cast<_item_indexes>(RndSmithItem(lvl) - 1);
 	GetItemAttrs(ii, itype, lvl);
 
 	items[ii]._iSeed = iseed;
@@ -4711,7 +4709,7 @@ void RecreateSmithItem(int ii, int lvl, int iseed)
 void RecreatePremiumItem(int ii, int plvl, int iseed)
 {
 	SetRndSeed(iseed);
-	int itype = RndPremiumItem(plvl / 4, plvl) - 1;
+	auto itype = static_cast<_item_indexes>(RndPremiumItem(plvl / 4, plvl) - 1);
 	GetItemAttrs(ii, itype, plvl);
 	GetItemBonus(ii, plvl / 2, plvl, true, !gbIsHellfire);
 
@@ -4723,7 +4721,7 @@ void RecreatePremiumItem(int ii, int plvl, int iseed)
 void RecreateBoyItem(int ii, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
-	int itype = RndBoyItem(lvl) - 1;
+	auto itype = static_cast<_item_indexes>(RndBoyItem(lvl) - 1);
 	GetItemAttrs(ii, itype, lvl);
 	GetItemBonus(ii, lvl, 2 * lvl, true, true);
 
@@ -4742,7 +4740,7 @@ void RecreateWitchItem(int ii, _item_indexes idx, int lvl, int iseed)
 		GetItemAttrs(ii, idx, lvl);
 	} else {
 		SetRndSeed(iseed);
-		int itype = RndWitchItem(lvl) - 1;
+		auto itype = static_cast<_item_indexes>(RndWitchItem(lvl) - 1);
 		GetItemAttrs(ii, itype, lvl);
 		int iblvl = -1;
 		if (GenerateRnd(100) <= 5)
@@ -4764,7 +4762,7 @@ void RecreateHealerItem(int ii, _item_indexes idx, int lvl, int iseed)
 		GetItemAttrs(ii, idx, lvl);
 	} else {
 		SetRndSeed(iseed);
-		int itype = RndHealerItem(lvl) - 1;
+		auto itype = static_cast<_item_indexes>(RndHealerItem(lvl) - 1);
 		GetItemAttrs(ii, itype, lvl);
 	}
 
