@@ -86,7 +86,7 @@ int ObjIndex(Point position)
 {
 	for (int i = 0; i < ActiveObjectCount; i++) {
 		int oi = ActiveObjects[i];
-		if (Objects[oi].position.x == x && Objects[oi].position.y == y)
+		if (Objects[oi].position.x == position.x && Objects[oi].position.y == position.y)
 			return oi;
 	}
 	app_fatal("ObjIndex: Active object not found at (%i,%i)", position.x, position.y);
