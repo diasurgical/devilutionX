@@ -371,7 +371,7 @@ void InitRndLocObj(int min, int max, _object_id objtype)
 			    && RndLocOk(xp - 1, yp + 1)
 			    && RndLocOk(xp, yp + 1)
 			    && RndLocOk(xp + 1, yp + 1)) {
-				AddObject(objtype, xp, yp);
+				AddObject(objtype, { xp, yp });
 				break;
 			}
 		}
@@ -397,7 +397,7 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 			    && RndLocOk(xp - 1, yp + 1)
 			    && RndLocOk(xp, yp + 1)
 			    && RndLocOk(xp + 1, yp + 1)) {
-				AddObject(objtype, xp, yp);
+				AddObject(objtype, { xp, yp });
 				break;
 			}
 		}
@@ -428,7 +428,7 @@ void InitRndLocObj5x5(int min, int max, _object_id objtype)
 					return;
 			}
 		}
-		AddObject(objtype, xp, yp);
+		AddObject(objtype, { xp, yp });
 	}
 }
 
@@ -450,18 +450,18 @@ void AddTortures()
 	for (int oy = 0; oy < MAXDUNY; oy++) {
 		for (int ox = 0; ox < MAXDUNX; ox++) {
 			if (dPiece[ox][oy] == 367) {
-				AddObject(OBJ_TORTURE1, ox, oy + 1);
-				AddObject(OBJ_TORTURE3, ox + 2, oy - 1);
-				AddObject(OBJ_TORTURE2, ox, oy + 3);
-				AddObject(OBJ_TORTURE4, ox + 4, oy - 1);
-				AddObject(OBJ_TORTURE5, ox, oy + 5);
-				AddObject(OBJ_TNUDEM1, ox + 1, oy + 3);
-				AddObject(OBJ_TNUDEM2, ox + 4, oy + 5);
-				AddObject(OBJ_TNUDEM3, ox + 2, oy);
-				AddObject(OBJ_TNUDEM4, ox + 3, oy + 2);
-				AddObject(OBJ_TNUDEW1, ox + 2, oy + 4);
-				AddObject(OBJ_TNUDEW2, ox + 2, oy + 1);
-				AddObject(OBJ_TNUDEW3, ox + 4, oy + 2);
+				AddObject(OBJ_TORTURE1, { ox, oy + 1 });
+				AddObject(OBJ_TORTURE3, { ox + 2, oy - 1 });
+				AddObject(OBJ_TORTURE2, { ox, oy + 3 });
+				AddObject(OBJ_TORTURE4, { ox + 4, oy - 1 });
+				AddObject(OBJ_TORTURE5, { ox, oy + 5 });
+				AddObject(OBJ_TNUDEM1, { ox + 1, oy + 3 });
+				AddObject(OBJ_TNUDEM2, { ox + 4, oy + 5 });
+				AddObject(OBJ_TNUDEM3, { ox + 2, oy });
+				AddObject(OBJ_TNUDEM4, { ox + 3, oy + 2 });
+				AddObject(OBJ_TNUDEW1, { ox + 2, oy + 4 });
+				AddObject(OBJ_TNUDEW2, { ox + 2, oy + 1 });
+				AddObject(OBJ_TNUDEW3, { ox + 4, oy + 2 });
 			}
 		}
 	}
@@ -470,10 +470,10 @@ void AddCandles()
 {
 	int tx = Quests[Q_PWATER].position.x;
 	int ty = Quests[Q_PWATER].position.y;
-	AddObject(OBJ_STORYCANDLE, tx - 2, ty + 1);
-	AddObject(OBJ_STORYCANDLE, tx + 3, ty + 1);
-	AddObject(OBJ_STORYCANDLE, tx - 1, ty + 2);
-	AddObject(OBJ_STORYCANDLE, tx + 2, ty + 2);
+	AddObject(OBJ_STORYCANDLE, { tx - 2, ty + 1 });
+	AddObject(OBJ_STORYCANDLE, { tx + 3, ty + 1 });
+	AddObject(OBJ_STORYCANDLE, { tx - 1, ty + 2 });
+	AddObject(OBJ_STORYCANDLE, { tx + 2, ty + 2 });
 }
 
 void AddBookLever(int x1, int y1, int x2, int y2, _speech_id msg)
@@ -500,13 +500,13 @@ void AddBookLever(int x1, int y1, int x2, int y2, _speech_id msg)
 	}
 
 	if (QuestStatus(Q_BLIND))
-		AddObject(OBJ_BLINDBOOK, xp, yp);
+		AddObject(OBJ_BLINDBOOK, { xp, yp });
 	if (QuestStatus(Q_WARLORD))
-		AddObject(OBJ_STEELTOME, xp, yp);
+		AddObject(OBJ_STEELTOME, { xp, yp });
 	if (QuestStatus(Q_BLOOD)) {
 		xp = 2 * setpc_x + 25;
 		yp = 2 * setpc_y + 40;
-		AddObject(OBJ_BLOODBOOK, xp, yp);
+		AddObject(OBJ_BLOODBOOK, { xp, yp });
 	}
 	int ob = dObject[xp][yp] - 1;
 	SetObjMapRange(ob, x1, y1, x2, y2, leverid);
@@ -527,7 +527,7 @@ void InitRndBarrels()
 			yp = GenerateRnd(80) + 16;
 		} while (!RndLocOk(xp, yp));
 		_object_id o = (GenerateRnd(4) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
-		AddObject(o, xp, yp);
+		AddObject(o, { xp, yp });
 		bool found = true;
 		/** regulates chance to stop placing barrels in current group */
 		int p = 0;
@@ -550,7 +550,7 @@ void InitRndBarrels()
 			}
 			if (found) {
 				o = (GenerateRnd(5) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
-				AddObject(o, xp, yp);
+				AddObject(o, { xp, yp });
 				c++;
 			}
 			p = c / 2;
@@ -564,11 +564,11 @@ void AddL1Objs(int x1, int y1, int x2, int y2)
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
 			if (pn == 270)
-				AddObject(OBJ_L1LIGHT, i, j);
+				AddObject(OBJ_L1LIGHT, { i, j });
 			if (pn == 44 || pn == 51 || pn == 214)
-				AddObject(OBJ_L1LDOOR, i, j);
+				AddObject(OBJ_L1LDOOR, { i, j });
 			if (pn == 46 || pn == 56)
-				AddObject(OBJ_L1RDOOR, i, j);
+				AddObject(OBJ_L1RDOOR, { i, j });
 		}
 	}
 }
@@ -579,9 +579,9 @@ void add_crypt_objs(int x1, int y1, int x2, int y2)
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
 			if (pn == 77)
-				AddObject(OBJ_L1LDOOR, i, j);
+				AddObject(OBJ_L1LDOOR, { i, j });
 			if (pn == 80)
-				AddObject(OBJ_L1RDOOR, i, j);
+				AddObject(OBJ_L1RDOOR, { i, j });
 		}
 	}
 }
@@ -592,9 +592,9 @@ void AddL2Objs(int x1, int y1, int x2, int y2)
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
 			if (pn == 13 || pn == 541)
-				AddObject(OBJ_L2LDOOR, i, j);
+				AddObject(OBJ_L2LDOOR, { i, j });
 			if (pn == 17 || pn == 542)
-				AddObject(OBJ_L2RDOOR, i, j);
+				AddObject(OBJ_L2RDOOR, { i, j });
 		}
 	}
 }
@@ -605,9 +605,9 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
 			if (pn == 531)
-				AddObject(OBJ_L3LDOOR, i, j);
+				AddObject(OBJ_L3LDOOR, { i, j });
 			if (pn == 534)
-				AddObject(OBJ_L3RDOOR, i, j);
+				AddObject(OBJ_L3RDOOR, { i, j });
 		}
 	}
 }
@@ -626,16 +626,16 @@ void AddL2Torches()
 
 			int pn = dPiece[i][j];
 			if (pn == 1 && GenerateRnd(3) == 0)
-				AddObject(OBJ_TORCHL2, i, j);
+				AddObject(OBJ_TORCHL2, { i, j });
 
 			if (pn == 5 && GenerateRnd(3) == 0)
-				AddObject(OBJ_TORCHR2, i, j);
+				AddObject(OBJ_TORCHR2, { i, j });
 
 			if (pn == 37 && GenerateRnd(10) == 0 && dObject[i - 1][j] == 0)
-				AddObject(OBJ_TORCHL, i - 1, j);
+				AddObject(OBJ_TORCHL, { i - 1, j });
 
 			if (pn == 41 && GenerateRnd(10) == 0 && dObject[i][j - 1] == 0)
-				AddObject(OBJ_TORCHR, i, j - 1);
+				AddObject(OBJ_TORCHR, { i, j - 1 });
 		}
 	}
 }
@@ -668,7 +668,7 @@ void AddObjTraps()
 				if (!WallTrapLocOkK(xp, j) || i - xp <= 1)
 					continue;
 
-				AddObject(OBJ_TRAPL, xp, j);
+				AddObject(OBJ_TRAPL, { xp, j });
 				int8_t oiTrap = dObject[xp][j] - 1;
 				Objects[oiTrap]._oVar1 = i;
 				Objects[oiTrap]._oVar2 = j;
@@ -681,7 +681,7 @@ void AddObjTraps()
 				if (!WallTrapLocOkK(i, yp) || j - yp <= 1)
 					continue;
 
-				AddObject(OBJ_TRAPR, i, yp);
+				AddObject(OBJ_TRAPR, { i, yp });
 				int8_t oiTrap = dObject[i][yp] - 1;
 				Objects[oiTrap]._oVar1 = i;
 				Objects[oiTrap]._oVar2 = j;
@@ -745,7 +745,7 @@ void LoadMapObjects(const char *path, int startx, int starty, int x1, int y1, in
 		for (int i = 0; i < width; i++) {
 			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
 			if (objectId != 0) {
-				AddObject(ObjTypeConv[objectId], startx + 16 + i, starty + 16 + j);
+				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
 				int oi = ObjIndex(startx + 16 + i, starty + 16 + j);
 				SetObjMapRange(oi, x1, y1, x1 + w, y1 + h, leveridx);
 			}
@@ -778,7 +778,7 @@ void LoadMapObjs(const char *path, int startx, int starty)
 		for (int i = 0; i < width; i++) {
 			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
 			if (objectId != 0) {
-				AddObject(ObjTypeConv[objectId], startx + 16 + i, starty + 16 + j);
+				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
 			}
 		}
 	}
@@ -817,12 +817,12 @@ void AddCryptStoryBook(int s)
 		}
 	}
 	AddCryptBook(OBJ_STORYBOOK, s, xp, yp);
-	AddObject(OBJ_STORYCANDLE, xp - 2, yp + 1);
-	AddObject(OBJ_STORYCANDLE, xp - 2, yp);
-	AddObject(OBJ_STORYCANDLE, xp - 1, yp - 1);
-	AddObject(OBJ_STORYCANDLE, xp + 1, yp - 1);
-	AddObject(OBJ_STORYCANDLE, xp + 2, yp);
-	AddObject(OBJ_STORYCANDLE, xp + 2, yp + 1);
+	AddObject(OBJ_STORYCANDLE, { xp - 2, yp + 1 });
+	AddObject(OBJ_STORYCANDLE, { xp - 2, yp });
+	AddObject(OBJ_STORYCANDLE, { xp - 1, yp - 1 });
+	AddObject(OBJ_STORYCANDLE, { xp + 1, yp - 1 });
+	AddObject(OBJ_STORYCANDLE, { xp + 2, yp });
+	AddObject(OBJ_STORYCANDLE, { xp + 2, yp + 1 });
 }
 
 void AddNakrulGate()
@@ -889,13 +889,13 @@ void AddStoryBooks()
 				return;
 		}
 	}
-	AddObject(OBJ_STORYBOOK, xp, yp);
-	AddObject(OBJ_STORYCANDLE, xp - 2, yp + 1);
-	AddObject(OBJ_STORYCANDLE, xp - 2, yp);
-	AddObject(OBJ_STORYCANDLE, xp - 1, yp - 1);
-	AddObject(OBJ_STORYCANDLE, xp + 1, yp - 1);
-	AddObject(OBJ_STORYCANDLE, xp + 2, yp);
-	AddObject(OBJ_STORYCANDLE, xp + 2, yp + 1);
+	AddObject(OBJ_STORYBOOK, { xp, yp });
+	AddObject(OBJ_STORYCANDLE, { xp - 2, yp + 1 });
+	AddObject(OBJ_STORYCANDLE, { xp - 2, yp });
+	AddObject(OBJ_STORYCANDLE, { xp - 1, yp - 1 });
+	AddObject(OBJ_STORYCANDLE, { xp + 1, yp - 1 });
+	AddObject(OBJ_STORYCANDLE, { xp + 2, yp });
+	AddObject(OBJ_STORYCANDLE, { xp + 2, yp + 1 });
 }
 
 void AddHookedBodies(int freq)
@@ -913,13 +913,13 @@ void AddHookedBodies(int freq)
 			if (dungeon[i][j] == 1 && dungeon[i + 1][j] == 6) {
 				switch (GenerateRnd(3)) {
 				case 0:
-					AddObject(OBJ_TORTURE1, ii + 1, jj);
+					AddObject(OBJ_TORTURE1, { ii + 1, jj });
 					break;
 				case 1:
-					AddObject(OBJ_TORTURE2, ii + 1, jj);
+					AddObject(OBJ_TORTURE2, { ii + 1, jj });
 					break;
 				case 2:
-					AddObject(OBJ_TORTURE5, ii + 1, jj);
+					AddObject(OBJ_TORTURE5, { ii + 1, jj });
 					break;
 				}
 				continue;
@@ -927,10 +927,10 @@ void AddHookedBodies(int freq)
 			if (dungeon[i][j] == 2 && dungeon[i][j + 1] == 6) {
 				switch (GenerateRnd(2)) {
 				case 0:
-					AddObject(OBJ_TORTURE3, ii, jj);
+					AddObject(OBJ_TORTURE3, { ii, jj });
 					break;
 				case 1:
-					AddObject(OBJ_TORTURE4, ii, jj);
+					AddObject(OBJ_TORTURE4, { ii, jj });
 					break;
 				}
 			}
@@ -976,16 +976,16 @@ void AddLazStand()
 			}
 		}
 	}
-	AddObject(OBJ_LAZSTAND, xp, yp);
-	AddObject(OBJ_TNUDEM2, xp, yp + 2);
-	AddObject(OBJ_STORYCANDLE, xp + 1, yp + 2);
-	AddObject(OBJ_TNUDEM3, xp + 2, yp + 2);
-	AddObject(OBJ_TNUDEW1, xp, yp - 2);
-	AddObject(OBJ_STORYCANDLE, xp + 1, yp - 2);
-	AddObject(OBJ_TNUDEW2, xp + 2, yp - 2);
-	AddObject(OBJ_STORYCANDLE, xp - 1, yp - 1);
-	AddObject(OBJ_TNUDEW3, xp - 1, yp);
-	AddObject(OBJ_STORYCANDLE, xp - 1, yp + 1);
+	AddObject(OBJ_LAZSTAND, { xp, yp });
+	AddObject(OBJ_TNUDEM2, { xp, yp + 2 });
+	AddObject(OBJ_STORYCANDLE, { xp + 1, yp + 2 });
+	AddObject(OBJ_TNUDEM3, { xp + 2, yp + 2 });
+	AddObject(OBJ_TNUDEW1, { xp, yp - 2 });
+	AddObject(OBJ_STORYCANDLE, { xp + 1, yp - 2 });
+	AddObject(OBJ_TNUDEW2, { xp + 2, yp - 2 });
+	AddObject(OBJ_STORYCANDLE, { xp - 1, yp - 1 });
+	AddObject(OBJ_TNUDEW3, { xp - 1, yp });
+	AddObject(OBJ_STORYCANDLE, { xp - 1, yp + 1 });
 }
 
 void InitObjects()
@@ -1022,7 +1022,7 @@ void InitObjects()
 			if (QuestStatus(Q_PWATER))
 				AddCandles();
 			if (QuestStatus(Q_LTBANNER))
-				AddObject(OBJ_SIGNCHEST, 2 * setpc_x + 26, 2 * setpc_y + 19);
+				AddObject(OBJ_SIGNCHEST, { 2 * setpc_x + 26, 2 * setpc_y + 19 });
 			InitRndLocBigObj(10, 15, OBJ_SARC);
 			if (currlevel >= 21)
 				add_crypt_objs(0, 0, MAXDUNX, MAXDUNY);
@@ -1087,7 +1087,7 @@ void InitObjects()
 				}
 				Quests[Q_BLOOD]._qmsg = spId;
 				AddBookLever(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, spId);
-				AddObject(OBJ_PEDISTAL, 2 * setpc_x + 25, 2 * setpc_y + 32);
+				AddObject(OBJ_PEDISTAL, { 2 * setpc_x + 25, 2 * setpc_y + 32 });
 			}
 			InitRndBarrels();
 		}
@@ -1187,7 +1187,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 		for (int i = 0; i < width; i++) {
 			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
 			if (objectId != 0) {
-				AddObject(ObjTypeConv[objectId], startx + 16 + i, starty + 16 + j);
+				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
 			}
 		}
 	}
@@ -1591,7 +1591,7 @@ void AddMushPatch()
 		dObject[x + 1][y + 1] = -(i + 1);
 		dObject[x + 2][y + 1] = -(i + 1);
 		dObject[x + 1][y + 2] = -(i + 1);
-		AddObject(OBJ_MUSHPATCH, x + 2, y + 2);
+		AddObject(OBJ_MUSHPATCH, { x + 2, y + 2 });
 	}
 }
 
@@ -1601,7 +1601,7 @@ void AddSlainHero()
 	int y;
 
 	GetRndObjLoc(5, &x, &y);
-	AddObject(OBJ_SLAINHERO, x + 2, y + 2);
+	AddObject(OBJ_SLAINHERO, { x + 2, y + 2 });
 }
 
 void AddCryptBook(_object_id ot, int v2, int ox, int oy)
@@ -1695,7 +1695,7 @@ void AddCryptObject(int i, int a2)
 	Objects[i]._oVar4 = Objects[i]._oAnimFrame + 1;
 }
 
-void AddObject(_object_id ot, int ox, int oy)
+void AddObject(_object_id ot, Point objPos)
 {
 	if (ActiveObjectCount >= MAXOBJECTS)
 		return;
@@ -1703,8 +1703,8 @@ void AddObject(_object_id ot, int ox, int oy)
 	int oi = AvailableObjects[0];
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
-	dObject[ox][oy] = oi + 1;
-	SetupObject(oi, { ox, oy }, ot);
+	dObject[objPos.x][objPos.y] = oi + 1;
+	SetupObject(oi, objPos, ot);
 	switch (ot) {
 	case OBJ_L1LIGHT:
 	case OBJ_SKFIRE:
@@ -1724,15 +1724,15 @@ void AddObject(_object_id ot, int ox, int oy)
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		AddL1Door(oi, { ox, oy }, ot);
+		AddL1Door(oi, objPos, ot);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		AddL2Door(oi, { ox, oy }, ot);
+		AddL2Door(oi, objPos, ot);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		AddL3Door(oi, { ox, oy }, ot);
+		AddL3Door(oi, objPos, ot);
 		break;
 	case OBJ_BOOK2R:
 		AddSCambBook(oi);
@@ -2361,7 +2361,7 @@ void RedoPlayerVision()
  *
  * @param doorPos Map tile where the door is in its closed position
  * @return true if the door is free to be closed, false if anything is blocking it
-*/
+ */
 static inline bool IsDoorClear(const Point &doorPosition)
 {
 	return dDead[doorPosition.x][doorPosition.y] == 0
@@ -5493,7 +5493,7 @@ void AddNakrulLeaver()
 			break;
 		}
 	}
-	AddObject(OBJ_LEVER, UberRow + 3, UberCol - 1);
+	AddObject(OBJ_LEVER, { UberRow + 3, UberCol - 1 });
 }
 
 bool OperateNakrulBook(int s)

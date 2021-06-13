@@ -197,7 +197,7 @@ void CheckQuests()
 		return;
 
 	if (QuestStatus(Q_BETRAYER) && gbIsMultiplayer && Quests[Q_BETRAYER]._qvar1 == 2) {
-		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
+		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
 		Quests[Q_BETRAYER]._qvar1 = 3;
 		NetSendCmdQuest(true, Q_BETRAYER);
 	}
@@ -604,7 +604,7 @@ void ResyncMPQuests()
 		NetSendCmdQuest(true, Q_BETRAYER);
 	}
 	if (QuestStatus(Q_BETRAYER))
-		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
+		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
 	if (Quests[Q_GRAVE]._qactive == QUEST_INIT && currlevel == Quests[Q_GRAVE]._qlevel - 1) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, Q_GRAVE);

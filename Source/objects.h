@@ -72,7 +72,12 @@ void AddSlainHero();
 void AddCryptBook(_object_id ot, int v2, int ox, int oy);
 void AddCryptObject(int i, int a2);
 void AddNakrulBook(int a1, int a2, int a3);
-void AddObject(_object_id ot, int ox, int oy);
+/**
+ * @brief Spawns an object of the given type at the map coordinates provided
+ * @param objType Type specifier
+ * @param objPos tile coordinates
+*/
+void AddObject(_object_id objType, Point objPos);
 void Obj_Trap(int i);
 void ProcessObjects();
 void ObjSetMicro(Point position, int pn);
