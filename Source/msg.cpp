@@ -2221,32 +2221,32 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
-		plr[pnum]._pLvlChanging = false;
-		if (plr[pnum]._pName[0] != 0 && !plr[pnum].plractive) {
-			ResetPlayerGFX(plr[pnum]);
-			plr[pnum].plractive = true;
+		player._pLvlChanging = false;
+		if (player._pName[0] != 0 && !player.plractive) {
+			ResetPlayerGFX(player);
+			player.plractive = true;
 			gbActivePlayers++;
-			EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), plr[pnum]._pName, plr[pnum]._pLevel).c_str());
+			EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), player._pName, player._pLevel).c_str());
 		}
 
-		if (plr[pnum].plractive && myplr != pnum) {
-			plr[pnum].position.tile = { p->x, p->y };
-			plr[pnum].plrlevel = p->wParam1;
-			ResetPlayerGFX(plr[pnum]);
-			if (currlevel == plr[pnum].plrlevel) {
+		if (player.plractive && myplr != pnum) {
+			player.position.tile = { p->x, p->y };
+			player.plrlevel = p->wParam1;
+			ResetPlayerGFX(player);
+			if (currlevel == player.plrlevel) {
 				SyncInitPlr(pnum);
-				if ((plr[pnum]._pHitPoints >> 6) > 0)
+				if ((player._pHitPoints >> 6) > 0)
 					StartStand(pnum, DIR_S);
 				else {
-					plr[pnum]._pgfxnum = 0;
-					plr[pnum]._pmode = PM_DEATH;
-					NewPlrAnim(plr[pnum], player_graphic::Death, DIR_S, plr[pnum]._pDFrames, 1);
-					plr[pnum].AnimInfo.CurrentFrame = plr[pnum].AnimInfo.NumberOfFrames - 1;
-					dFlags[plr[pnum].position.tile.x][plr[pnum].position.tile.y] |= BFLAG_DEAD_PLAYER;
+					player._pgfxnum = 0;
+					player._pmode = PM_DEATH;
+					NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
+					player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
+					dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
 				}
 
-				plr[pnum]._pvid = AddVision(plr[pnum].position.tile, plr[pnum]._pLightRad, pnum == myplr);
-				plr[pnum]._plid = NO_LIGHT;
+				player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == myplr);
+				player._plid = NO_LIGHT;
 			}
 		}
 	}
