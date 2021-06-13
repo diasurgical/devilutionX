@@ -79,7 +79,9 @@ ObjectStruct object[MAXOBJECTS];
 bool InitObjFlag;
 bool LoadMapObjsFlag;
 int numobjfiles;
-int dword_6DE0E0;
+
+/** Tracks progress through the tome sequence that spawns Na-Krul (see NaKrulSpellTomesActive()) */
+int NaKrulTomeSequence;
 
 /** Specifies the X-coordinate delta between barrels. */
 int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -1039,7 +1041,7 @@ void AddLazStand()
 void InitObjects()
 {
 	ClrAllObjects();
-	dword_6DE0E0 = 0;
+	NaKrulTomeSequence = 0;
 	if (currlevel == 16) {
 		AddDiabObjs();
 	} else {
@@ -4771,7 +4773,7 @@ void OperateStoryBook(int pnum, int i)
 		PlaySfxLoc(IS_ISCROL, object[i].position.x, object[i].position.y);
 		auto msg = static_cast<_speech_id>(object[i]._oVar2);
 		if (object[i]._oVar8 != 0 && currlevel == 24) {
-			if (IsUberLeverActivated != 1 && quests[Q_NAKRUL]._qactive != QUEST_DONE && objects_lv_24_454B04(object[i]._oVar8)) {
+			if (IsUberLeverActivated != 1 && quests[Q_NAKRUL]._qactive != QUEST_DONE && NaKrulSpellTomesActive(object[i]._oVar8)) {
 				NetSendCmd(false, CMD_NAKRUL);
 				return;
 			}
@@ -5630,23 +5632,23 @@ void objects_rnd_454BEA()
 	AddObject(OBJ_LEVER, UberRow + 3, UberCol - 1);
 }
 
-bool objects_lv_24_454B04(int s)
+bool NaKrulSpellTomesActive(int s)
 {
 	switch (s) {
 	case 6:
-		dword_6DE0E0 = 1;
+		NaKrulTomeSequence = 1;
 		break;
 	case 7:
-		if (dword_6DE0E0 == 1) {
-			dword_6DE0E0 = 2;
+		if (NaKrulTomeSequence == 1) {
+			NaKrulTomeSequence = 2;
 		} else {
-			dword_6DE0E0 = 0;
+			NaKrulTomeSequence = 0;
 		}
 		break;
 	case 8:
-		if (dword_6DE0E0 == 2)
+		if (NaKrulTomeSequence == 2)
 			return true;
-		dword_6DE0E0 = 0;
+		NaKrulTomeSequence = 0;
 		break;
 	}
 	return false;

@@ -86,7 +86,18 @@ void GetObjectStr(int i);
 void operate_lv24_lever();
 void objects_454BA8();
 void objects_rnd_454BEA();
-bool objects_lv_24_454B04(int s);
+/**
+ * @brief Checks whether the player is activating Na-Krul's spell tomes in the correct order
+ *
+ * Used as part of the final Diablo: Hellfire quest (from the hints provided to the player in the
+ * reconstructed note). This function both updates the state of the variable that tracks progress
+ * and also determines whether the spawn conditions are met (i.e. all tomes have been triggered
+ * in the correct order).
+ * 
+ * @param s the id of the spell tome
+ * @return true if the player has activated all three tomes in the correct order, false otherwise
+*/
+bool NaKrulSpellTomesActive(int s);
 bool objectIsDisabled(int i);
 
 } // namespace devilution
