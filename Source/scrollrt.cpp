@@ -25,7 +25,7 @@
 #include "plrmsg.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
-#include "qol/itemlabels.h"
+#include "qol/labels.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/log.hpp"

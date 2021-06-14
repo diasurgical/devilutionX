@@ -1,5 +1,5 @@
 /**
-* @file itemlabels.h
+* @file labels.h
 *
 * Adds labels QoL feature
 */

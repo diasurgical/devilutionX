@@ -16,7 +16,7 @@
 #include "track.h"
 #include "trigs.h"
 #include "utils/language.h"
-#include "qol/itemlabels.h"
+#include "qol/labels.h"
 
 namespace devilution {
 namespace {

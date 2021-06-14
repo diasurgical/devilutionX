@@ -7,7 +7,7 @@
 #include "cursor.h"
 #include "common.h"
 #include "control.h"
-#include "itemlabels.h"
+#include "labels.h"
 #include "utils/language.h"
 #include "engine/render/cel_render.hpp"
 

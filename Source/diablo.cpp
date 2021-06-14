@@ -43,7 +43,7 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/common.h"
-#include "qol/itemlabels.h"
+#include "qol/labels.h"
 #include "restrict.h"
 #include "setmaps.h"
 #include "stores.h"
