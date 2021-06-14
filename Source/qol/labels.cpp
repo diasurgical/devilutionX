@@ -63,6 +63,22 @@ bool IsHighlightingLabelsEnabled()
 	return altPressed != invertHighlightToggle;
 }
 
+void ModifyCoords(int& x, int& y)
+{
+	y -= TILE_HEIGHT;
+	if (!zoomflag) {
+		x *= 2;
+		y *= 2;
+	}
+}
+
+int GetLabelWidth(const char * text)
+{
+	int width = GetLineWidth(text);
+	width += marginX * 2;
+	return width;
+}
+
 void AddItemToLabelQueue(int id, int x, int y)
 {
 	if (!IsHighlightingLabelsEnabled())
@@ -77,8 +93,6 @@ void AddItemToLabelQueue(int id, int x, int y)
 		textOnGround = it->_iIdentified ? it->_iIName : it->_iName;
 	}
 
-	int nameWidth = GetLineWidth(textOnGround);
-	nameWidth += marginX * 2;
 	int index = ItemCAnimTbl[it->_iCurs];
 	if (!itemLabelCenterOffsets[index]) {
 		std::pair<int, int> itemBounds = MeasureSolidHorizontalBounds(*it->AnimInfo.pCelSprite, it->AnimInfo.CurrentFrame);
@@ -86,11 +100,8 @@ void AddItemToLabelQueue(int id, int x, int y)
 	}
 
 	x += *itemLabelCenterOffsets[index];
-	y -= TILE_HEIGHT;
-	if (!zoomflag) {
-		x *= 2;
-		y *= 2;
-	}
+	ModifyCoords(x, y);
+	int nameWidth = GetLabelWidth(textOnGround);
 	x -= nameWidth / 2;
 	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, LabelType::LABEL_ITEM });
 }
@@ -114,15 +125,9 @@ void AddObjectToLabelQueue(int id, int x, int y)
 	strcpy(infostr, bkp);
 	textOnGround = name;
 
-	int nameWidth = GetLineWidth(textOnGround);
-	nameWidth += marginX * 2;
-
 	x += it->_oAnimWidth / 2;
-	y -= TILE_HEIGHT;
-	if (!zoomflag) {
-		x *= 2;
-		y *= 2;
-	}
+	ModifyCoords(x, y);
+	int nameWidth = GetLabelWidth(textOnGround);
 	x -= nameWidth / 2;
 	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, LabelType::LABEL_OBJECT });
 }
