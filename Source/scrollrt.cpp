@@ -542,8 +542,9 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 	} else {
 		CelClippedDrawTo(out, objectPosition, cel, object[bv]._oAnimFrame);
 	}
-
-	AddObjectToLabelQueue(bv, sx, sy);
+	// only add labels for positive indexes as negative ones are just parts of one object, displaying labels for them would display multiple ones for a single object
+	if (dObject[x][y] > 0)
+		AddObjectToLabelQueue(bv, sx, sy);
 }
 
 static void scrollrt_draw_dungeon(const CelOutputBuffer &, int, int, int, int);
