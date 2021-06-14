@@ -3825,66 +3825,41 @@ void MI_Reflect(int i)
 	PutMissile(i);
 }
 
+static void MI_Ring(int i, int type)
+{
+	int b = CrawlNum[3];
+	missile[i]._miDelFlag = true;
+	int src = missile[i]._micaster;
+	int k = CrawlNum[3] + 1;
+	uint8_t lvl = src > 0 ? plr[src]._pLevel : currlevel;
+	int dmg = 16 * (GenerateRnd(10) + GenerateRnd(10) + lvl + 2) / 2;
+	for (int j = CrawlTable[b]; j > 0; j--, k += 2) {
+		int tx = missile[i]._miVar1 + CrawlTable[k - 1];
+		int ty = missile[i]._miVar2 + CrawlTable[k];
+		if (!InDungeonBounds({ tx, ty }))
+			continue;
+		int dp = dPiece[tx][ty];
+		if (nSolidTable[dp])
+			continue;
+		if (dObject[tx][ty] != 0)
+			continue;
+		if (!LineClearMissile(missile[i].position.tile, { tx, ty }))
+			continue;
+		if (nMissileTable[dp] || missile[i]._miVar8)
+			missile[i]._miVar8 = 1;
+		else
+			AddMissile({ tx, ty }, { tx, ty }, 0, type, TARGET_BOTH, src, dmg, missile[i]._mispllvl);
+	}
+}
+
 void MI_FireRing(int i)
 {
-	int src, tx, ty, dmg, k, j, dp, b;
-	BYTE lvl;
-
-	b = CrawlNum[3];
-	missile[i]._miDelFlag = true;
-	src = missile[i]._micaster;
-	k = CrawlNum[3] + 1;
-	if (src > 0)
-		lvl = plr[src]._pLevel;
-	else
-		lvl = currlevel;
-	dmg = 16 * (GenerateRnd(10) + GenerateRnd(10) + lvl + 2) / 2;
-	for (j = CrawlTable[b]; j > 0; j--, k += 2) {
-		tx = missile[i]._miVar1 + CrawlTable[k - 1];
-		ty = missile[i]._miVar2 + CrawlTable[k];
-		if (InDungeonBounds({ tx, ty })) {
-			dp = dPiece[tx][ty];
-			if (!nSolidTable[dp] && dObject[tx][ty] == 0) {
-				if (LineClearMissile(missile[i].position.tile, { tx, ty })) {
-					if (nMissileTable[dp] || missile[i]._miVar8)
-						missile[i]._miVar8 = 1;
-					else
-						AddMissile({ tx, ty }, { tx, ty }, 0, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile[i]._mispllvl);
-				}
-			}
-		}
-	}
+	MI_Ring(i, MIS_FIREWALL);
 }
 
 void MI_LightningRing(int i)
 {
-	int src, tx, ty, dmg, k, j, dp, b;
-	BYTE lvl;
-
-	b = CrawlNum[3];
-	missile[i]._miDelFlag = true;
-	src = missile[i]._micaster;
-	k = CrawlNum[3] + 1;
-	if (src > 0)
-		lvl = plr[src]._pLevel;
-	else
-		lvl = currlevel;
-	dmg = 16 * (GenerateRnd(10) + GenerateRnd(10) + lvl + 2) / 2;
-	for (j = CrawlTable[b]; j > 0; j--, k += 2) {
-		tx = missile[i]._miVar1 + CrawlTable[k - 1];
-		ty = missile[i]._miVar2 + CrawlTable[k];
-		if (InDungeonBounds({ tx, ty })) {
-			dp = dPiece[tx][ty];
-			if (!nSolidTable[dp] && dObject[tx][ty] == 0) {
-				if (LineClearMissile(missile[i].position.tile, { tx, ty })) {
-					if (nMissileTable[dp] || missile[i]._miVar8)
-						missile[i]._miVar8 = 1;
-					else
-						AddMissile({ tx, ty }, { tx, ty }, 0, MIS_LIGHTWALL, TARGET_BOTH, src, dmg, missile[i]._mispllvl);
-				}
-			}
-		}
-	}
+	MI_Ring(i, MIS_LIGHTWALL);
 }
 
 void MI_Search(int i)
