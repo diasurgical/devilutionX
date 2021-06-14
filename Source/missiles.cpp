@@ -1679,24 +1679,17 @@ void AddLightningWall(int mi, Point src, Point dst, int midir, int8_t mienemy, i
 
 void AddRuneExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	int i, dmg;
-
 	if (mienemy == TARGET_MONSTERS || mienemy == TARGET_BOTH) {
 		missile[mi]._midam = 2 * (plr[id]._pLevel + GenerateRnd(10) + GenerateRnd(10)) + 4;
-		for (i = missile[mi]._mispllvl; i > 0; i--) {
+		for (int i = missile[mi]._mispllvl; i > 0; i--) {
 			missile[mi]._midam += missile[mi]._midam / 8;
 		}
 
-		dmg = missile[mi]._midam;
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + Point { -1, -1 }, true);
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + Point { 0, -1 }, true);
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + Point { 1, -1 }, true);
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + Point { -1, 0 }, true);
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile, true);
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + Point { 1, 0 }, true);
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + Point { -1, 1 }, true);
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + Point { 0, 1 }, true);
-		CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + Point { 1, 1 }, true);
+		int dmg = missile[mi]._midam;
+
+		constexpr Point offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
+		for (Point offset : offsets)
+			CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + offset, true);
 	}
 	missile[mi]._mlid = AddLight(src, 8);
 	SetMissDir(mi, 0);
