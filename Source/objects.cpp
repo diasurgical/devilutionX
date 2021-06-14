@@ -2444,335 +2444,337 @@ void RedoPlayerVision()
  * @param doorPos Map tile where the door is in its closed position
  * @return true if the door is free to be closed, false if anything is blocking it
 */
-static inline bool isDoorClear(const Point &doorPos)
+static inline bool isDoorClear(const Point &doorPosition)
 {
-	return dDead[doorPos.x][doorPos.y] == 0 && dMonster[doorPos.x][doorPos.y] == 0 && dItem[doorPos.x][doorPos.y] == 0;
+	return dDead[doorPosition.x][doorPosition.y] == 0
+		&& dMonster[doorPosition.x][doorPosition.y] == 0
+		&& dItem[doorPosition.x][doorPosition.y] == 0;
 }
 
 void OperateL1RDoor(int pnum, int oi, bool sendflag)
 {
-	const Point &objPos = object[oi].position;
+	ObjectStruct &door = object[oi];
 
-	if (object[oi]._oVar4 == 2) {
+	if (door._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, objPos);
+			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (object[oi]._oVar4 == 0) {
+	if (door._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (currlevel < 21) {
 			if (!deltaload)
-				PlaySfxLoc(IS_DOOROPEN, objPos);
-			ObjSetMicro(objPos.x, objPos.y, 395);
+				PlaySfxLoc(IS_DOOROPEN, door.position);
+			ObjSetMicro(door.position.x, door.position.y, 395);
 		} else {
 			if (!deltaload)
-				PlaySfxLoc(IS_CROPEN, objPos);
-			ObjSetMicro(objPos.x, objPos.y, 209);
+				PlaySfxLoc(IS_CROPEN, door.position);
+			ObjSetMicro(door.position.x, door.position.y, 209);
 		}
 		if (currlevel < 17) {
-			dSpecial[objPos.x][objPos.y] = 8;
+			dSpecial[door.position.x][door.position.y] = 8;
 		} else {
-			dSpecial[objPos.x][objPos.y] = 2;
+			dSpecial[door.position.x][door.position.y] = 2;
 		}
-		objects_set_door_piece(objPos.x, objPos.y - 1);
-		object[oi]._oAnimFrame += 2;
-		object[oi]._oPreFlag = true;
-		DoorSet(oi, objPos.x - 1, objPos.y);
-		object[oi]._oVar4 = 1;
-		object[oi]._oSelFlag = 2;
+		objects_set_door_piece(door.position.x, door.position.y - 1);
+		door._oAnimFrame += 2;
+		door._oPreFlag = true;
+		DoorSet(oi, door.position.x - 1, door.position.y);
+		door._oVar4 = 1;
+		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
 	}
 
 	if (currlevel < 21) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, objPos);
+			PlaySfxLoc(IS_DOORCLOS, door.position);
 	} else {
 		if (!deltaload)
-			PlaySfxLoc(IS_CRCLOS, objPos);
+			PlaySfxLoc(IS_CRCLOS, door.position);
 	}
-	if (!deltaload && isDoorClear(objPos)) {
+	if (!deltaload && isDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
-		object[oi]._oVar4 = 0;
-		object[oi]._oSelFlag = 3;
-		ObjSetMicro(objPos.x, objPos.y, object[oi]._oVar1);
+		door._oVar4 = 0;
+		door._oSelFlag = 3;
+		ObjSetMicro(door.position.x, door.position.y, door._oVar1);
 		if (currlevel < 17) {
-			if (object[oi]._oVar2 != 50) {
-				ObjSetMicro(objPos.x - 1, objPos.y, object[oi]._oVar2);
+			if (door._oVar2 != 50) {
+				ObjSetMicro(door.position.x - 1, door.position.y, door._oVar2);
 			} else {
-				if (dPiece[objPos.x - 1][objPos.y] == 396)
-					ObjSetMicro(objPos.x - 1, objPos.y, 411);
+				if (dPiece[door.position.x - 1][door.position.y] == 396)
+					ObjSetMicro(door.position.x - 1, door.position.y, 411);
 				else
-					ObjSetMicro(objPos.x - 1, objPos.y, 50);
+					ObjSetMicro(door.position.x - 1, door.position.y, 50);
 			}
 		} else {
-			if (object[oi]._oVar2 != 86) {
-				ObjSetMicro(objPos.x - 1, objPos.y, object[oi]._oVar2);
+			if (door._oVar2 != 86) {
+				ObjSetMicro(door.position.x - 1, door.position.y, door._oVar2);
 			} else {
-				if (dPiece[objPos.x - 1][objPos.y] == 210)
-					ObjSetMicro(objPos.x - 1, objPos.y, 232);
+				if (dPiece[door.position.x - 1][door.position.y] == 210)
+					ObjSetMicro(door.position.x - 1, door.position.y, 232);
 				else
-					ObjSetMicro(objPos.x - 1, objPos.y, 86);
+					ObjSetMicro(door.position.x - 1, door.position.y, 86);
 			}
 		}
-		dSpecial[objPos.x][objPos.y] = 0;
-		object[oi]._oAnimFrame -= 2;
-		object[oi]._oPreFlag = false;
+		dSpecial[door.position.x][door.position.y] = 0;
+		door._oAnimFrame -= 2;
+		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		object[oi]._oVar4 = 2;
+		door._oVar4 = 2;
 	}
 }
 
 void OperateL1LDoor(int pnum, int oi, bool sendflag)
 {
-	const Point &objPos = object[oi].position;
+	ObjectStruct &door = object[oi];
 
-	if (object[oi]._oVar4 == 2) {
+	if (door._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, objPos);
+			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (object[oi]._oVar4 == 0) {
+	if (door._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (currlevel < 21) {
 			if (!deltaload)
-				PlaySfxLoc(IS_DOOROPEN, objPos);
-			if (object[oi]._oVar1 == 214)
-				ObjSetMicro(objPos.x, objPos.y, 408);
+				PlaySfxLoc(IS_DOOROPEN, door.position);
+			if (door._oVar1 == 214)
+				ObjSetMicro(door.position.x, door.position.y, 408);
 			else
-				ObjSetMicro(objPos.x, objPos.y, 393);
+				ObjSetMicro(door.position.x, door.position.y, 393);
 		} else {
 			if (!deltaload)
-				PlaySfxLoc(IS_CROPEN, objPos);
-			ObjSetMicro(objPos.x, objPos.y, 206);
+				PlaySfxLoc(IS_CROPEN, door.position);
+			ObjSetMicro(door.position.x, door.position.y, 206);
 		}
 		if (currlevel < 17) {
-			dSpecial[objPos.x][objPos.y] = 7;
+			dSpecial[door.position.x][door.position.y] = 7;
 		} else {
-			dSpecial[objPos.x][objPos.y] = 1;
+			dSpecial[door.position.x][door.position.y] = 1;
 		}
-		objects_set_door_piece(objPos.x - 1, objPos.y);
-		object[oi]._oAnimFrame += 2;
-		object[oi]._oPreFlag = true;
-		DoorSet(oi, objPos.x, objPos.y - 1);
-		object[oi]._oVar4 = 1;
-		object[oi]._oSelFlag = 2;
+		objects_set_door_piece(door.position.x - 1, door.position.y);
+		door._oAnimFrame += 2;
+		door._oPreFlag = true;
+		DoorSet(oi, door.position.x, door.position.y - 1);
+		door._oVar4 = 1;
+		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
 	}
 
 	if (currlevel < 21) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, objPos);
+			PlaySfxLoc(IS_DOORCLOS, door.position);
 	} else {
 		if (!deltaload)
-			PlaySfxLoc(IS_CRCLOS, objPos);
+			PlaySfxLoc(IS_CRCLOS, door.position);
 	}
-	if (isDoorClear(objPos)) {
+	if (isDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
-		object[oi]._oVar4 = 0;
-		object[oi]._oSelFlag = 3;
-		ObjSetMicro(objPos.x, objPos.y, object[oi]._oVar1);
+		door._oVar4 = 0;
+		door._oSelFlag = 3;
+		ObjSetMicro(door.position.x, door.position.y, door._oVar1);
 		if (currlevel < 17) {
-			if (object[oi]._oVar2 != 50) {
-				ObjSetMicro(objPos.x, objPos.y - 1, object[oi]._oVar2);
+			if (door._oVar2 != 50) {
+				ObjSetMicro(door.position.x, door.position.y - 1, door._oVar2);
 			} else {
-				if (dPiece[objPos.x][objPos.y - 1] == 396)
-					ObjSetMicro(objPos.x, objPos.y - 1, 412);
+				if (dPiece[door.position.x][door.position.y - 1] == 396)
+					ObjSetMicro(door.position.x, door.position.y - 1, 412);
 				else
-					ObjSetMicro(objPos.x, objPos.y - 1, 50);
+					ObjSetMicro(door.position.x, door.position.y - 1, 50);
 			}
 		} else {
-			if (object[oi]._oVar2 != 86) {
-				ObjSetMicro(objPos.x, objPos.y - 1, object[oi]._oVar2);
+			if (door._oVar2 != 86) {
+				ObjSetMicro(door.position.x, door.position.y - 1, door._oVar2);
 			} else {
-				if (dPiece[objPos.x][objPos.y - 1] == 210)
-					ObjSetMicro(objPos.x, objPos.y - 1, 234);
+				if (dPiece[door.position.x][door.position.y - 1] == 210)
+					ObjSetMicro(door.position.x, door.position.y - 1, 234);
 				else
-					ObjSetMicro(objPos.x, objPos.y - 1, 86);
+					ObjSetMicro(door.position.x, door.position.y - 1, 86);
 			}
 		}
-		dSpecial[objPos.x][objPos.y] = 0;
-		object[oi]._oAnimFrame -= 2;
-		object[oi]._oPreFlag = false;
+		dSpecial[door.position.x][door.position.y] = 0;
+		door._oAnimFrame -= 2;
+		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		object[oi]._oVar4 = 2;
+		door._oVar4 = 2;
 	}
 }
 
 void OperateL2RDoor(int pnum, int oi, bool sendflag)
 {
-	const Point &objPos = object[oi].position;
+	ObjectStruct &door = object[oi];
 
-	if (object[oi]._oVar4 == 2) {
+	if (door._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, objPos);
+			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (object[oi]._oVar4 == 0) {
+	if (door._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, objPos);
-		ObjSetMicro(objPos.x, objPos.y, 17);
-		dSpecial[objPos.x][objPos.y] = 6;
-		object[oi]._oAnimFrame += 2;
-		object[oi]._oPreFlag = true;
-		object[oi]._oVar4 = 1;
-		object[oi]._oSelFlag = 2;
+			PlaySfxLoc(IS_DOOROPEN, door.position);
+		ObjSetMicro(door.position.x, door.position.y, 17);
+		dSpecial[door.position.x][door.position.y] = 6;
+		door._oAnimFrame += 2;
+		door._oPreFlag = true;
+		door._oVar4 = 1;
+		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, objPos);
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	if (isDoorClear(objPos)) {
+	if (isDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
-		object[oi]._oVar4 = 0;
-		object[oi]._oSelFlag = 3;
-		ObjSetMicro(objPos.x, objPos.y, 540);
-		dSpecial[objPos.x][objPos.y] = 0;
-		object[oi]._oAnimFrame -= 2;
-		object[oi]._oPreFlag = false;
+		door._oVar4 = 0;
+		door._oSelFlag = 3;
+		ObjSetMicro(door.position.x, door.position.y, 540);
+		dSpecial[door.position.x][door.position.y] = 0;
+		door._oAnimFrame -= 2;
+		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		object[oi]._oVar4 = 2;
+		door._oVar4 = 2;
 	}
 }
 
 void OperateL2LDoor(int pnum, int oi, bool sendflag)
 {
-	const Point &objPos = object[oi].position;
+	ObjectStruct &door = object[oi];
 
-	if (object[oi]._oVar4 == 2) {
+	if (door._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, objPos);
+			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (object[oi]._oVar4 == 0) {
+	if (door._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, objPos);
-		ObjSetMicro(objPos.x, objPos.y, 13);
-		dSpecial[objPos.x][objPos.y] = 5;
-		object[oi]._oAnimFrame += 2;
-		object[oi]._oPreFlag = true;
-		object[oi]._oVar4 = 1;
-		object[oi]._oSelFlag = 2;
+			PlaySfxLoc(IS_DOOROPEN, door.position);
+		ObjSetMicro(door.position.x, door.position.y, 13);
+		dSpecial[door.position.x][door.position.y] = 5;
+		door._oAnimFrame += 2;
+		door._oPreFlag = true;
+		door._oVar4 = 1;
+		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, objPos);
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	if (isDoorClear(objPos)) {
+	if (isDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
-		object[oi]._oVar4 = 0;
-		object[oi]._oSelFlag = 3;
-		ObjSetMicro(objPos.x, objPos.y, 538);
-		dSpecial[objPos.x][objPos.y] = 0;
-		object[oi]._oAnimFrame -= 2;
-		object[oi]._oPreFlag = false;
+		door._oVar4 = 0;
+		door._oSelFlag = 3;
+		ObjSetMicro(door.position.x, door.position.y, 538);
+		dSpecial[door.position.x][door.position.y] = 0;
+		door._oAnimFrame -= 2;
+		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		object[oi]._oVar4 = 2;
+		door._oVar4 = 2;
 	}
 }
 
 void OperateL3RDoor(int pnum, int oi, bool sendflag)
 {
-	const Point &objPos = object[oi].position;
+	ObjectStruct &door = object[oi];
 
-	if (object[oi]._oVar4 == 2) {
+	if (door._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, objPos);
+			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (object[oi]._oVar4 == 0) {
+	if (door._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, objPos);
-		ObjSetMicro(objPos.x, objPos.y, 541);
-		object[oi]._oAnimFrame += 2;
-		object[oi]._oPreFlag = true;
-		object[oi]._oVar4 = 1;
-		object[oi]._oSelFlag = 2;
+			PlaySfxLoc(IS_DOOROPEN, door.position);
+		ObjSetMicro(door.position.x, door.position.y, 541);
+		door._oAnimFrame += 2;
+		door._oPreFlag = true;
+		door._oVar4 = 1;
+		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, objPos);
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	if (isDoorClear(objPos)) {
+	if (isDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
-		object[oi]._oVar4 = 0;
-		object[oi]._oSelFlag = 3;
-		ObjSetMicro(objPos.x, objPos.y, 534);
-		object[oi]._oAnimFrame -= 2;
-		object[oi]._oPreFlag = false;
+		door._oVar4 = 0;
+		door._oSelFlag = 3;
+		ObjSetMicro(door.position.x, door.position.y, 534);
+		door._oAnimFrame -= 2;
+		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		object[oi]._oVar4 = 2;
+		door._oVar4 = 2;
 	}
 }
 
 void OperateL3LDoor(int pnum, int oi, bool sendflag)
 {
-	const Point &objPos = object[oi].position;
+	ObjectStruct &door = object[oi];
 
-	if (object[oi]._oVar4 == 2) {
+	if (door._oVar4 == 2) {
 		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, objPos);
+			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (object[oi]._oVar4 == 0) {
+	if (door._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, objPos);
-		ObjSetMicro(objPos.x, objPos.y, 538);
-		object[oi]._oAnimFrame += 2;
-		object[oi]._oPreFlag = true;
-		object[oi]._oVar4 = 1;
-		object[oi]._oSelFlag = 2;
+			PlaySfxLoc(IS_DOOROPEN, door.position);
+		ObjSetMicro(door.position.x, door.position.y, 538);
+		door._oAnimFrame += 2;
+		door._oPreFlag = true;
+		door._oVar4 = 1;
+		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, objPos);
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	if (isDoorClear(objPos)) {
+	if (isDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
-		object[oi]._oVar4 = 0;
-		object[oi]._oSelFlag = 3;
-		ObjSetMicro(objPos.x, objPos.y, 531);
-		object[oi]._oAnimFrame -= 2;
-		object[oi]._oPreFlag = false;
+		door._oVar4 = 0;
+		door._oSelFlag = 3;
+		ObjSetMicro(door.position.x, door.position.y, 531);
+		door._oAnimFrame -= 2;
+		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		object[oi]._oVar4 = 2;
+		door._oVar4 = 2;
 	}
 }
 
