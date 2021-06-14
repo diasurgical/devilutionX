@@ -101,15 +101,11 @@ int GetDistance(int dx, int dy, int maxDistance)
 
 /**
  * @brief Get distance to coordinate
- * @param dx Tile coordinates
- * @param dy Tile coordinates
+ * @param destination Tile coordinates
  */
-int GetDistanceRanged(int dx, int dy)
+int GetDistanceRanged(Point destination)
 {
-	int a = plr[myplr].position.future.x - dx;
-	int b = plr[myplr].position.future.y - dy;
-
-	return sqrt(a * a + b * b);
+	return plr[myplr].position.future.ExactDistance(destination);
 }
 
 void FindItemOrObject()
@@ -212,17 +208,14 @@ void FindRangedTarget()
 
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
-		const MonsterStruct &monst = monster[mi];
-		const int mx = monst.position.future.x;
-		const int my = monst.position.future.y;
 		if (!CanTargetMonster(mi))
 			continue;
 
 		const bool newCanTalk = CanTalkToMonst(mi);
 		if (pcursmonst != -1 && !canTalk && newCanTalk)
 			continue;
-		const int newDdistance = GetDistanceRanged(mx, my);
-		const int newRotations = GetRotaryDistance({ mx, my });
+		const int newDdistance = GetDistanceRanged(monster[mi].position.future);
+		const int newRotations = GetRotaryDistance(monster[mi].position.future);
 		if (pcursmonst != -1 && canTalk == newCanTalk) {
 			if (distance < newDdistance)
 				continue;
@@ -343,7 +336,7 @@ void CheckPlayerNearby()
 			continue;
 
 		if (myPlayer._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER) {
-			newDdistance = GetDistanceRanged(mx, my);
+			newDdistance = GetDistanceRanged(player.position.future);
 		} else {
 			newDdistance = GetDistance(mx, my, distance);
 			if (newDdistance == 0)
@@ -352,7 +345,7 @@ void CheckPlayerNearby()
 
 		if (pcursplr != -1 && distance < newDdistance)
 			continue;
-		const int newRotations = GetRotaryDistance({ mx, my });
+		const int newRotations = GetRotaryDistance(player.position.future);
 		if (pcursplr != -1 && distance == newDdistance && rotations < newRotations)
 			continue;
 
