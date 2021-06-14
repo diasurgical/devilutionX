@@ -4821,12 +4821,21 @@ void MI_Flamec(int i)
 
 void MI_Cbolt(int i)
 {
-	int bpath[16] = { -1, 0, 1, -1, 0, 1, -1, -1, 0, 0, 1, 1, 0, 1, -1, 0 };
-
 	missile[i]._mirange--;
 	if (missile[i]._miAnimType != MFILE_LGHNING) {
 		if (missile[i]._miVar3 == 0) {
-			Direction md = (Direction)((missile[i]._miVar2 + bpath[missile[i]._mirnd]) & 7);
+			constexpr int bpath[16] = { -1, 0, 1, -1, 0, 1, -1, -1, 0, 0, 1, 1, 0, 1, -1, 0 };
+
+			Direction md = static_cast<Direction>(missile[i]._miVar2);
+			switch (bpath[missile[i]._mirnd]) {
+			case -1:
+				md = left[md];
+				break;
+			case 1:
+				md = right[md];
+				break;
+			}
+
 			missile[i]._mirnd = (missile[i]._mirnd + 1) & 0xF;
 			GetMissileVel(i, missile[i].position.tile, missile[i].position.tile + md, 8);
 			missile[i]._miVar3 = 16;
