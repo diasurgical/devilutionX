@@ -1261,10 +1261,11 @@ void InitMissiles()
 
 void AddHiveExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	AddMissile({ 80, 62 }, { 80, 62 }, midir, MIS_HIVEEXP, mienemy, id, dam, 0);
-	AddMissile({ 80, 63 }, { 80, 62 }, midir, MIS_HIVEEXP, mienemy, id, dam, 0);
-	AddMissile({ 81, 62 }, { 80, 62 }, midir, MIS_HIVEEXP, mienemy, id, dam, 0);
-	AddMissile({ 81, 63 }, { 80, 62 }, midir, MIS_HIVEEXP, mienemy, id, dam, 0);
+	for (int x : { 80, 81 }) {
+		for (int y : { 62, 63 }) {
+			AddMissile({ x, y }, { 80, 62 }, midir, MIS_HIVEEXP, mienemy, id, dam, 0);
+		}
+	}
 	missile[mi]._miDelFlag = true;
 }
 
