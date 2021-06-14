@@ -1,17 +1,18 @@
 /**
 * @file itemlabels.h
 *
-* Adds item labels QoL feature
+* Adds labels QoL feature
 */
 #pragma once
 
 namespace devilution {
 
-void ToggleItemLabelHighlight();
+void ToggleLabelHighlight();
 void AltPressed(bool pressed);
-bool IsItemLabelHighlighted();
+bool IsLabelHighlighted();
 bool IsHighlightingLabelsEnabled();
 void AddItemToLabelQueue(int id, int x, int y);
-void DrawItemNameLabels(const CelOutputBuffer &out);
+void AddObjectToLabelQueue(int id, int x, int y);
+void DrawLabels(const CelOutputBuffer &out);
 
 } // namespace devilution

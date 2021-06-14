@@ -1074,7 +1074,7 @@ static void ReleaseKey(int vkey)
 	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
 		AltPressed(false);
 	if (vkey == DVL_VK_CONTROL || vkey == DVL_VK_LCONTROL || vkey == DVL_VK_RCONTROL)
-		ToggleItemLabelHighlight();
+		ToggleLabelHighlight();
 }
 
 static void ClosePanels()

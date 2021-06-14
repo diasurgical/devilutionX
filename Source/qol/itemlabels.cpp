@@ -15,17 +15,24 @@ namespace devilution {
 
 namespace {
 
-struct itemLabel {
+enum class LabelType {
+	LABEL_ITEM = 0,
+	LABEL_OBJECT,
+};
+
+struct Label {
 	int id, width;
 	Point pos;
 	std::string text;
+	LabelType type;
+
 };
 
-std::vector<itemLabel> labelQueue;
+std::vector<Label> labelQueue;
 
 bool altPressed = false;
 bool isLabelHighlighted = false;
-std::array<std::optional<int>, ITEMTYPES> labelCenterOffsets;
+std::array<std::optional<int>, ITEMTYPES> itemLabelCenterOffsets;
 bool invertHighlightToggle = false;
 
 const int borderX = 4;   // minimal horizontal space between labels
@@ -36,7 +43,7 @@ const int height = 11 + marginY * 2; // going above 13 scatters labels of items 
 
 } // namespace
 
-void ToggleItemLabelHighlight()
+void ToggleLabelHighlight()
 {
 	invertHighlightToggle = !invertHighlightToggle;
 }
@@ -46,7 +53,7 @@ void AltPressed(bool pressed)
 	altPressed = pressed;
 }
 
-bool IsItemLabelHighlighted()
+bool IsLabelHighlighted()
 {
 	return isLabelHighlighted;
 }
@@ -73,19 +80,51 @@ void AddItemToLabelQueue(int id, int x, int y)
 	int nameWidth = GetLineWidth(textOnGround);
 	nameWidth += marginX * 2;
 	int index = ItemCAnimTbl[it->_iCurs];
-	if (!labelCenterOffsets[index]) {
+	if (!itemLabelCenterOffsets[index]) {
 		std::pair<int, int> itemBounds = MeasureSolidHorizontalBounds(*it->AnimInfo.pCelSprite, it->AnimInfo.CurrentFrame);
-		labelCenterOffsets[index].emplace((itemBounds.first + itemBounds.second) / 2);
+		itemLabelCenterOffsets[index].emplace((itemBounds.first + itemBounds.second) / 2);
 	}
 
-	x += *labelCenterOffsets[index];
+	x += *itemLabelCenterOffsets[index];
 	y -= TILE_HEIGHT;
 	if (!zoomflag) {
 		x *= 2;
 		y *= 2;
 	}
 	x -= nameWidth / 2;
-	labelQueue.push_back(itemLabel { id, nameWidth, { x, y }, textOnGround });
+	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, LabelType::LABEL_ITEM });
+}
+
+void AddObjectToLabelQueue(int id, int x, int y)
+{
+	if (!IsHighlightingLabelsEnabled())
+		return;
+	ObjectStruct *it = &object[id];
+
+	if (!it->_oSelFlag)
+		return;
+
+	const char *textOnGround;
+	// TODO: remove this dirty hack after a proper way to get object name has been added
+	char bkp[64];
+	strcpy(bkp, infostr);
+	GetObjectStr(id);
+	char name[64];
+	strcpy(name, infostr);
+	strcpy(infostr, bkp);
+	textOnGround = name;
+
+	int nameWidth = GetLineWidth(textOnGround);
+	nameWidth += marginX * 2;
+
+	x += it->_oAnimWidth / 2;
+	y -= TILE_HEIGHT;
+	if (!zoomflag) {
+		x *= 2;
+		y *= 2;
+	}
+	x -= nameWidth / 2;
+	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, LabelType::LABEL_OBJECT });
 }
 
 bool IsMouseOverGameArea()
@@ -107,7 +146,7 @@ void FillRect(const CelOutputBuffer &out, int x, int y, int width, int height, U
 	}
 }
 
-void DrawItemNameLabels(const CelOutputBuffer &out)
+void DrawLabels(const CelOutputBuffer &out)
 {
 	isLabelHighlighted = false;
 
@@ -118,7 +157,7 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 		do {
 			canShow = true;
 			for (unsigned int j = 0; j < i; ++j) {
-				itemLabel &a = labelQueue[i], &b = labelQueue[j];
+				Label &a = labelQueue[i], &b = labelQueue[j];
 				if (abs(b.pos.y - a.pos.y) < height + borderY) {
 					int widthA = a.width + borderX + marginX * 2;
 					int widthB = b.width + borderX + marginX * 2;
@@ -141,22 +180,29 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 		} while (!canShow);
 	}
 
-	for (const itemLabel &label : labelQueue) {
-		ItemStruct &itm = items[label.id];
+	for (const Label &label : labelQueue) {
+		Point pos = items[label.id].position;
+		int8_t* cursor = &pcursitem;
+
+		if (label.type == LabelType::LABEL_OBJECT) {
+			pos = object[label.id].position;
+			cursor = &pcursobj;
+		}
+
 
 		if (MouseX >= label.pos.x && MouseX < label.pos.x + label.width && MouseY >= label.pos.y - height + marginY && MouseY < label.pos.y + marginY) {
 			if (!gmenu_is_active() && PauseMode == 0 && !deathflag && IsMouseOverGameArea()) {
 				isLabelHighlighted = true;
-				cursmx = itm.position.x;
-				cursmy = itm.position.y;
-				pcursitem = label.id;
+				cursmx = pos.x;
+				cursmy = pos.y;
+				*cursor = label.id;
 			}
 		}
-		if (pcursitem == label.id)
+		if (*cursor == label.id)
 			FillRect(out, label.pos.x, label.pos.y - height + marginY, label.width, height, PAL8_BLUE + 6);
 		else
 			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y - height + marginY, label.width, height);
-		DrawString(out, label.text.c_str(), { label.pos.x + marginX, label.pos.y, label.width, height }, itm.getTextColor());
+		DrawString(out, label.text.c_str(), { label.pos.x + marginX, label.pos.y, label.width, height }, (label.type == LabelType::LABEL_ITEM ? items[label.id].getTextColor() : UIS_SILVER));
 	}
 	labelQueue.clear();
 }

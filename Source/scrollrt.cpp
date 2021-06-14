@@ -542,6 +542,8 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 	} else {
 		CelClippedDrawTo(out, objectPosition, cel, object[bv]._oAnimFrame);
 	}
+
+	AddObjectToLabelQueue(bv, sx, sy);
 }
 
 static void scrollrt_draw_dungeon(const CelOutputBuffer &, int, int, int, int);
@@ -1254,7 +1256,7 @@ void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
 	DrawMonsterHealthBar(out);
-	DrawItemNameLabels(out);
+	DrawLabels(out);
 
 	if (stextflag != STORE_NONE && !qtextflag)
 		DrawSText(out);

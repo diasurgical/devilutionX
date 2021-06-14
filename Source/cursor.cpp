@@ -250,7 +250,7 @@ void CheckCursMove()
 	int8_t bv;
 	bool flipflag, flipx, flipy;
 
-	if (IsItemLabelHighlighted())
+	if (IsLabelHighlighted())
 		return;
 
 	sx = MouseX;
