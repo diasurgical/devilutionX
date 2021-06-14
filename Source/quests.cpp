@@ -219,7 +219,7 @@ void CheckQuests()
 		quests[Q_BETRAYER].position.y = 2 * quests[Q_BETRAYER].position.y + 16;
 		rportx = quests[Q_BETRAYER].position.x;
 		rporty = quests[Q_BETRAYER].position.y;
-		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
+		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 1;
 		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
 			quests[Q_BETRAYER]._qvar1 = 3;
@@ -232,7 +232,7 @@ void CheckQuests()
 	    && quests[Q_BETRAYER]._qvar2 == 4) {
 		rportx = 35;
 		rporty = 32;
-		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
+		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 3;
 	}
 
@@ -357,7 +357,7 @@ void CheckQuestKill(int m, bool sendmsg)
 		quests[Q_BETRAYER]._qvar1 = 7;
 		quests[Q_BETRAYER]._qvar2 = 4;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
-		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
+		AddMissile({ 35, 32 }, { 35, 32 }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		plr[myplr].Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;

@@ -2337,7 +2337,7 @@ bool PlrHitMonst(int pnum, int m)
 #endif
 		if (player._pIFlags & ISPL_FIREDAM && player._pIFlags & ISPL_LIGHTDAM) {
 			int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
-			AddMissile(player.position.tile.x, player.position.tile.y, player.position.temp.x, player.position.temp.y, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+			AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		}
 		mind = player._pIMinDam;
 		maxd = player._pIMaxDam;
@@ -2638,9 +2638,9 @@ bool PM_DoAttack(int pnum)
 
 		if (!(player._pIFlags & ISPL_FIREDAM) || !(player._pIFlags & ISPL_LIGHTDAM)) {
 			if (player._pIFlags & ISPL_FIREDAM) {
-				AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile({ dx, dy }, { 1, 0 }, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			} else if ((player._pIFlags & ISPL_LIGHTDAM) != 0) {
-				AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile({ dx, dy }, { 2, 0 }, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			}
 		}
 
@@ -2750,10 +2750,8 @@ bool PM_DoRangeAttack(int pnum)
 		}
 
 		AddMissile(
-		    player.position.tile.x,
-		    player.position.tile.y,
-		    player.position.temp.x + xoff,
-		    player.position.temp.y + yoff,
+		    player.position.tile,
+		    player.position.temp + Point { xoff, yoff },
 		    player._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
