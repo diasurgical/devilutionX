@@ -4633,29 +4633,23 @@ void MI_Apoca(int i)
 
 void MI_Wave(int i)
 {
-	int j, id, pn;
-	bool f1, f2;
-	int v1, v2;
-
-	f1 = false;
-	f2 = false;
+	bool f1 = false;
+	bool f2 = false;
 	assert((DWORD)i < MAXMISSILES);
 
-	id = missile[i]._misource;
+	int id = missile[i]._misource;
 	Point src = missile[i].position.tile;
-	v1 = missile[i]._miVar1;
-	v2 = missile[i]._miVar2;
-	Direction sd = GetDirection(src, { v1, v2 });
+	Direction sd = GetDirection(src, { missile[i]._miVar1, missile[i]._miVar2 });
 	Direction dira = left[left[sd]];
 	Direction dirb = right[right[sd]];
 	Point na = src + sd;
-	pn = dPiece[na.x][na.y];
+	int pn = dPiece[na.x][na.y];
 	assert((DWORD)pn <= MAXTILES);
 	if (!nMissileTable[pn]) {
 		AddMissile(na, na + sd, plr[id]._pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, missile[i]._mispllvl);
 		na += dira;
 		Point nb = src + sd + dirb;
-		for (j = 0; j < (missile[i]._mispllvl / 2) + 2; j++) {
+		for (int j = 0; j < (missile[i]._mispllvl / 2) + 2; j++) {
 			pn = dPiece[na.x][na.y]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
 			assert((DWORD)pn <= MAXTILES);
 			if (nMissileTable[pn] || f1 || !InDungeonBounds(na)) {
