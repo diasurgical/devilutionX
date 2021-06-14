@@ -18,9 +18,11 @@ int8_t stonendx;
 namespace {
 void InitDeadAnimationFromMonster(DeadStruct &d, const CMonster &mon)
 {
-	d._deadData = mon.Anims[MA_DEATH].Data;
+	int i = 0;
+	for (auto &celSprite : mon.Anims[MA_DEATH].CelSpritesForDirections)
+		d._deadData[i++] = celSprite->Data();
 	d._deadFrame = mon.Anims[MA_DEATH].Frames;
-	d._deadWidth = mon.width;
+	d._deadWidth = mon.Anims[MA_DEATH].CelSpritesForDirections[0]->Width();
 }
 }
 

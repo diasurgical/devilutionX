@@ -329,7 +329,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 	}
 
 	int nCel = monster[m]._mAnimFrame;
-	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m]._mAnimData);
+	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m]._mAnimData->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
@@ -345,7 +345,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		return;
 	}
 
-	CelSprite cel { monster[m]._mAnimData, monster[m].MType->width };
+	CelSprite &cel = *monster[m]._mAnimData;
 
 	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
 		Cl2DrawLightTbl(out, mx, my, cel, monster[m]._mAnimFrame, 1);
@@ -704,10 +704,12 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 	}
 
-	px = sx + pMonster->position.offset.x - CalculateWidth2(pMonster->MType->width);
+	const CelSprite &cel = *pMonster->_mAnimData;
+
+	px = sx + pMonster->position.offset.x - CalculateWidth2(cel.Width());
 	py = sy + pMonster->position.offset.y;
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, px, py, CelSprite(pMonster->_mAnimData, pMonster->MType->width), pMonster->_mAnimFrame);
+		Cl2DrawOutline(out, 233, px, py, cel, pMonster->_mAnimFrame);
 	}
 	DrawMonster(out, x, y, px, py, mi);
 }
@@ -785,7 +787,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<Direction>((bDead >> 5) & 7);
 			int px = dx - CalculateWidth2(pDeadGuy->_deadWidth);
-			byte *pCelBuff = pDeadGuy->_deadData[dd];
+			const byte *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);
 			auto frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
 			int frames = SDL_SwapLE32(frameTable[0]);
