@@ -4503,13 +4503,11 @@ void MI_Rhino(int i)
 	miy = missile[i].position.tile.y;
 	dMonster[mix][miy] = 0;
 	if (monster[monst]._mAi == AI_SNAKE) {
-		missile[i].position.traveled.x += 2 * missile[i].position.velocity.x;
-		missile[i].position.traveled.y += 2 * missile[i].position.velocity.y;
+		missile[i].position.traveled += missile[i].position.velocity * 2;
 		GetMissilePos(i);
 		mix2 = missile[i].position.tile.x;
 		miy2 = missile[i].position.tile.y;
-		missile[i].position.traveled.x -= missile[i].position.velocity.x;
-		missile[i].position.traveled.y -= missile[i].position.velocity.y;
+		missile[i].position.traveled -= missile[i].position.velocity;
 	} else {
 		missile[i].position.traveled += missile[i].position.velocity;
 	}
@@ -4611,12 +4609,14 @@ void MI_Apoca(int i)
 	bool exit = false;
 	for (j = missile[i]._miVar2; j < missile[i]._miVar3 && !exit; j++) {
 		for (k = missile[i]._miVar4; k < missile[i]._miVar5 && !exit; k++) {
-			if (dMonster[k][j] > MAX_PLRS - 1 && !nSolidTable[dPiece[k][j]]) {
-				if (!gbIsHellfire || LineClearMissile(missile[i].position.tile, { k, j })) {
-					AddMissile({ k, j }, { k, j }, plr[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, missile[i]._midam, 0);
-					exit = true;
-				}
-			}
+			if (dMonster[k][j] < MAX_PLRS)
+				continue;
+			if (nSolidTable[dPiece[k][j]])
+				continue;
+			if (gbIsHellfire && !LineClearMissile(missile[i].position.tile, { k, j }))
+				continue;
+			AddMissile({ k, j }, { k, j }, plr[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, missile[i]._midam, 0);
+			exit = true;
 		}
 		if (!exit) {
 			missile[i]._miVar4 = missile[i]._miVar6;
