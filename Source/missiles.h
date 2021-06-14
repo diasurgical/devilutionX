@@ -35,6 +35,38 @@ struct MissilePosition {
 	Point traveled;
 };
 
+
+/*
+ *      W  sW  SW   Sw  S
+ *              ^
+ *     nW       |       Se
+ *              |
+ *     NW ------+-----> SE
+ *              |
+ *     Nw       |       sE
+ *              |
+ *      N  Ne  NE   nE  E
+ */
+enum Direction16
+{
+	DIR16_S,
+	DIR16_Sw,
+	DIR16_SW,
+	DIR16_sW,
+	DIR16_W,
+	DIR16_nW,
+	DIR16_NW,
+	DIR16_Nw,
+	DIR16_N,
+	DIR16_Ne,
+	DIR16_NE,
+	DIR16_nE,
+	DIR16_E,
+	DIR16_sE,
+	DIR16_SE,
+	DIR16_Se,
+};
+
 struct MissileStruct {
 	int _mitype; // Type of projectile (missile_id)
 	MissilePosition position;
@@ -82,7 +114,7 @@ extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
 int GetSpellLevel(int id, spell_id sn);
-int GetDirection16(Point p1, Point p2);
+Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int mi, int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);
 bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked);
