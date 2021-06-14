@@ -1625,39 +1625,32 @@ void AddSpecArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 
 void AddWarp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	int tx, ty, fx, fy, i, dist;
-	TriggerStruct *trg;
-
-	dist = INT_MAX;
+	int minDistanceSq = std::numeric_limits<int>::max();
 	if (id >= 0) {
 		src = plr[id].position.tile;
 	}
-	tx = src.x;
-	ty = src.y;
+	Point tile = src;
 
-	for (i = 0; i < numtrigs && i < MAXTRIGGERS; i++) {
-		trg = &trigs[i];
+	for (int i = 0; i < numtrigs && i < MAXTRIGGERS; i++) {
+		TriggerStruct *trg = &trigs[i];
 		if (trg->_tmsg == 1032 || trg->_tmsg == 1027 || trg->_tmsg == 1026 || trg->_tmsg == 1028) {
+			Point candidate = trg->position;
 			if ((leveltype == 1 || leveltype == 2) && (trg->_tmsg == 1026 || trg->_tmsg == 1027 || trg->_tmsg == 1028)) {
-				fx = trg->position.x;
-				fy = trg->position.y + 1;
+				candidate += Point { 0, 1 };
 			} else {
-				fx = trg->position.x + 1;
-				fy = trg->position.y;
+				candidate += Point { 1, 0 };
 			}
-			int dify = (src.y - fy);
-			int difx = (src.x - fx);
-			int dif = dify * dify + difx * difx;
-			if (dif < dist) {
-				dist = dif;
-				tx = fx;
-				ty = fy;
+			Point off = src - candidate;
+			int distanceSq = off.y * off.y + off.x * off.x;
+			if (distanceSq < minDistanceSq) {
+				minDistanceSq = distanceSq;
+				tile = candidate;
 			}
 		}
 	}
 	missile[mi]._mirange = 2;
 	missile[mi]._miVar1 = 0;
-	missile[mi].position.tile = { tx, ty };
+	missile[mi].position.tile = tile;
 	if (mienemy == TARGET_MONSTERS)
 		UseMana(id, SPL_WARP);
 }
