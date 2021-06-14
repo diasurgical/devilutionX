@@ -507,15 +507,13 @@ static void SaveOptions()
 	setIniInt("Audio", "Channels", sgOptions.Audio.nChannels);
 	setIniInt("Audio", "Buffer Size", sgOptions.Audio.nBufferSize);
 	setIniInt("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
-#ifndef __vita__
 	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
 	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
-#endif
-	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
 #ifndef __vita__
+	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
 	setIniInt("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
-#endif
 	setIniInt("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
+#endif
 	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	setIniInt("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
 	setIniInt("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
@@ -587,20 +585,22 @@ static void LoadOptions()
 	sgOptions.Audio.nBufferSize = getIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
 	sgOptions.Audio.nResamplingQuality = getIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
 
-#ifndef __vita__
 	sgOptions.Graphics.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
 	sgOptions.Graphics.nHeight = getIniInt("Graphics", "Height", DEFAULT_HEIGHT);
-#else
-	sgOptions.Graphics.nWidth = DEFAULT_WIDTH;
-	sgOptions.Graphics.nHeight = DEFAULT_HEIGHT;
-#endif
-	sgOptions.Graphics.bFullscreen = getIniBool("Graphics", "Fullscreen", true);
 #if !defined(USE_SDL1) && !defined(__vita__)
 	sgOptions.Graphics.bUpscale = getIniBool("Graphics", "Upscale", true);
+#elif defined(__vita__)
+	sgOptions.Graphics.bUpscale = true;
 #else
 	sgOptions.Graphics.bUpscale = false;
 #endif
+#ifndef __vita__
+	sgOptions.Graphics.bFullscreen = getIniBool("Graphics", "Fullscreen", true);
 	sgOptions.Graphics.bFitToScreen = getIniBool("Graphics", "Fit to Screen", true);
+#else
+	sgOptions.Graphics.bFitToScreen = true;
+	sgOptions.Graphics.bFullscreen = true;
+#endif
 	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
 	sgOptions.Graphics.bIntegerScaling = getIniBool("Graphics", "Integer Scaling", false);
 	sgOptions.Graphics.bVSync = getIniBool("Graphics", "Vertical Sync", true);
