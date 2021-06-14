@@ -187,6 +187,17 @@ if(NINTENDO_3DS)
   include(n3ds_defs)
 endif()
 
+if(ANDROID)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(NONET ON)
+  set(TTF_FONT_DIR \"\")
+
+  file(
+    COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+    DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets")
+endif()
+
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -426,13 +437,6 @@ set(libdevilutionx_SRCS
   Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp)
 
-set(devilutionxbin_SRCS
-  Source/main.cpp
-  Source/devilutionx.exe.manifest
-  Packaging/macOS/AppIcon.icns
-  Packaging/resources/CharisSILB.ttf
-  Packaging/windows/devilutionx.rc)
-
 if(USE_SDL1)
   list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
 endif()
@@ -515,7 +519,18 @@ if(RUN_TESTS)
 endif()
 
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
-add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionxbin_SRCS})
+if (ANDROID)
+  add_library(${BIN_TARGET} SHARED Source/main.cpp)
+else()
+  add_executable(${BIN_TARGET}
+    WIN32
+    MACOSX_BUNDLE
+    Source/main.cpp
+    Source/devilutionx.exe.manifest
+    Packaging/macOS/AppIcon.icns
+    Packaging/resources/CharisSILB.ttf
+    Packaging/windows/devilutionx.rc)
+endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory
