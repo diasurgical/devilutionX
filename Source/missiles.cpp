@@ -2497,11 +2497,12 @@ void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const Monste
 	const AnimStruct &anim = mon.MType->Anims[graphic];
 	mis._mimfnum = midir;
 	mis._miAnimFlags = 0;
-	mis._miAnimData = anim.Data[midir];
+	auto& celSprite = *anim.CelSpritesForDirections[midir];
+	mis._miAnimData = celSprite.Data();
 	mis._miAnimDelay = anim.Rate;
 	mis._miAnimLen = anim.Frames;
-	mis._miAnimWidth = mon.MType->width;
-	mis._miAnimWidth2 = CalculateWidth2(mon.MType->width);
+	mis._miAnimWidth = celSprite.Width();
+	mis._miAnimWidth2 = CalculateWidth2(celSprite.Width());
 	mis._miAnimAdd = 1;
 	mis._miVar1 = 0;
 	mis._miVar2 = 0;
@@ -4646,7 +4647,7 @@ void MI_Fireman(int i)
 	if (!PosOkMissile(0, b) || (j > 0 && !(missile[i]._miVar1 & 1))) {
 		missile[i].position.velocity *= -1;
 		missile[i]._mimfnum = opposite[missile[i]._mimfnum];
-		missile[i]._miAnimData = monster[src].MType->Anims[MA_WALK].Data[missile[i]._mimfnum];
+		missile[i]._miAnimData = monster[src].MType->Anims[MA_WALK].CelSpritesForDirections[missile[i]._mimfnum]->Data();
 		missile[i]._miVar2++;
 		if (j > 0)
 			missile[i]._miVar1 |= 1;
@@ -5192,7 +5193,7 @@ void missiles_process_charge()
 				else
 					anim = &mon->Anims[MA_WALK];
 			}
-			missile[mi]._miAnimData = anim->Data[mis->_mimfnum];
+			missile[mi]._miAnimData = anim->CelSpritesForDirections[mis->_mimfnum]->Data();
 		}
 	}
 }
