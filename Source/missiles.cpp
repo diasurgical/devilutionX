@@ -4834,25 +4834,22 @@ void MI_Cbolt(int i)
 
 void MI_Hbolt(int i)
 {
-	int dam;
-
 	missile[i]._mirange--;
 	if (missile[i]._miAnimType != MFILE_HOLYEXPL) {
 		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
-		dam = missile[i]._midam;
+		int dam = missile[i]._midam;
 		if (missile[i].position.tile != missile[i].position.start) {
 			CheckMissileCol(i, dam, dam, false, missile[i].position.tile, false);
 		}
 		if (missile[i]._mirange == 0) {
-			missile[i].position.traveled.x -= missile[i].position.velocity.x;
-			missile[i].position.traveled.y -= missile[i].position.velocity.y;
+			missile[i].position.traveled -= missile[i].position.velocity;
 			GetMissilePos(i);
 			missile[i]._mimfnum = 0;
 			SetMissAnim(i, MFILE_HOLYEXPL);
 			missile[i]._mirange = missile[i]._miAnimLen - 1;
 		} else {
-			if (missile[i].position.tile.x != missile[i]._miVar1 || missile[i].position.tile.y != missile[i]._miVar2) {
+			if (missile[i].position.tile != Point { missile[i]._miVar1, missile[i]._miVar2 }) {
 				missile[i]._miVar1 = missile[i].position.tile.x;
 				missile[i]._miVar2 = missile[i].position.tile.y;
 				ChangeLight(missile[i]._mlid, { missile[i]._miVar1, missile[i]._miVar2 }, 8);
