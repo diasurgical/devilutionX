@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "engine.h"
 #include "effects.h"
 #include "utils/stdcompat/cstddef.hpp"
 
@@ -90,7 +91,7 @@ typedef enum missile_graphic_id : uint8_t {
 } missile_graphic_id;
 
 typedef struct MissileData {
-	void (*mAddProc)(int, int, int, int, int, int, int8_t, int, int);
+	void (*mAddProc)(int, Point, Point, int, int8_t, int, int);
 	void (*mProc)(int);
 	uint8_t mName;
 	bool mDraw;
