@@ -9,6 +9,9 @@ else {
 
 android {
     compileSdkVersion 28
+    aaptOptions {
+        noCompress 'mpq'
+    }
     defaultConfig {
         if (buildAsApplication) {
             applicationId "org.diasurgical.devilutionx"
