@@ -3918,12 +3918,12 @@ void MI_SpecArrow(int i)
 
 void MI_Lightctrl(int i)
 {
-	int pn, dam, p, mx, my;
+	int dam;
 
 	assert((DWORD)i < MAXMISSILES);
 	missile[i]._mirange--;
 
-	p = missile[i]._misource;
+	int p = missile[i]._misource;
 	if (p != -1) {
 		if (missile[i]._micaster == TARGET_MONSTERS) {
 			dam = (GenerateRnd(2) + GenerateRnd(plr[p]._pLevel) + 2) << 6;
@@ -3937,46 +3937,36 @@ void MI_Lightctrl(int i)
 	missile[i].position.traveled += missile[i].position.velocity;
 	GetMissilePos(i);
 
-	mx = missile[i].position.tile.x;
-	my = missile[i].position.tile.y;
+	int mx = missile[i].position.tile.x;
+	int my = missile[i].position.tile.y;
 	assert((DWORD)mx < MAXDUNX);
 	assert((DWORD)my < MAXDUNY);
-	pn = dPiece[mx][my];
+	int pn = dPiece[mx][my];
 	assert((DWORD)pn <= MAXTILES);
 
 	if (missile[i]._misource == -1) {
-		if ((mx != missile[i].position.start.x || my != missile[i].position.start.y) && nMissileTable[pn]) {
+		if ((Point { mx, my } != missile[i].position.start) && nMissileTable[pn]) {
 			missile[i]._mirange = 0;
 		}
 	} else if (nMissileTable[pn]) {
 		missile[i]._mirange = 0;
 	}
-	if (!nMissileTable[pn]) {
-		if ((mx != missile[i]._miVar1 || my != missile[i]._miVar2) && mx > 0 && my > 0 && mx < MAXDUNX && my < MAXDUNY) {
-			if (missile[i]._misource != -1) {
-				if (missile[i]._micaster == TARGET_PLAYERS
-				    && monster[missile[i]._misource].MType->mtype >= MT_STORM
-				    && monster[missile[i]._misource].MType->mtype <= MT_MAEL) {
-					AddMissile(
-					    missile[i].position.tile,
-					    missile[i].position.start,
-					    i,
-					    MIS_LIGHTNING2,
-					    missile[i]._micaster,
-					    missile[i]._misource,
-					    dam,
-					    missile[i]._mispllvl);
-				} else {
-					AddMissile(
-					    missile[i].position.tile,
-					    missile[i].position.start,
-					    i,
-					    MIS_LIGHTNING,
-					    missile[i]._micaster,
-					    missile[i]._misource,
-					    dam,
-					    missile[i]._mispllvl);
-				}
+	if (!nMissileTable[pn]
+	    && Point { mx, my } != Point { missile[i]._miVar1, missile[i]._miVar2 }
+	    && InDungeonBounds({ mx, my })) {
+		if (missile[i]._misource != -1) {
+			if (missile[i]._micaster == TARGET_PLAYERS
+			    && monster[missile[i]._misource].MType->mtype >= MT_STORM
+			    && monster[missile[i]._misource].MType->mtype <= MT_MAEL) {
+				AddMissile(
+				    missile[i].position.tile,
+				    missile[i].position.start,
+				    i,
+				    MIS_LIGHTNING2,
+				    missile[i]._micaster,
+				    missile[i]._misource,
+				    dam,
+				    missile[i]._mispllvl);
 			} else {
 				AddMissile(
 				    missile[i].position.tile,
@@ -3988,11 +3978,21 @@ void MI_Lightctrl(int i)
 				    dam,
 				    missile[i]._mispllvl);
 			}
-			missile[i]._miVar1 = missile[i].position.tile.x;
-			missile[i]._miVar2 = missile[i].position.tile.y;
+		} else {
+			AddMissile(
+			    missile[i].position.tile,
+			    missile[i].position.start,
+			    i,
+			    MIS_LIGHTNING,
+			    missile[i]._micaster,
+			    missile[i]._misource,
+			    dam,
+			    missile[i]._mispllvl);
 		}
+		missile[i]._miVar1 = missile[i].position.tile.x;
+		missile[i]._miVar2 = missile[i].position.tile.y;
 	}
-	if (missile[i]._mirange == 0 || mx <= 0 || my <= 0 || mx >= MAXDUNX || my > MAXDUNY) {
+	if (missile[i]._mirange == 0 || mx == 0 || my == 0) {
 		missile[i]._miDelFlag = true;
 	}
 }
