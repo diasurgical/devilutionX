@@ -276,6 +276,13 @@ int GetSpellLevel(int id, spell_id sn)
 	return result;
 }
 
+constexpr Direction16 Direction16Flip(Direction16 x, Direction16 pivot)
+{
+	unsigned ret = (2 * pivot + 16 - x) % 16;
+
+	return (Direction16)ret;
+}
+
 /**
  * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
  *
@@ -295,60 +302,40 @@ int GetSpellLevel(int id, spell_id sn)
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
 */
-int GetDirection16(Point p1, Point p2)
+Direction16 GetDirection16(Point p1, Point p2)
 {
-	int md;
-
 	Point offset = p2 - p1;
-	int mx = offset.x;
-	int my = offset.y;
-	if (mx >= 0) {
-		if (my >= 0) {
-			if (3 * mx <= (my * 2)) { // mx/my <= 2/3, approximation of tan(33.75)
-				if (5 * mx < my)      // mx/my < 0.2, approximation of tan(11.25)
-					return 2;         // DIR_SW;
-				return 1;             // DIR_Sw;
-			}
-			md = 0; // DIR_S;
-		} else {
-			my = -my;
-			if (3 * mx <= (my * 2)) {
-				if (5 * mx < my)
-					return 10; // DIR_NE;
-				return 11;     // DIR_nE;
-			}
-			md = 12; // DIR_E;
-		}
-		if (3 * my <= (mx * 2)) {     // my/mx <= 2/3
-			if (5 * my < mx)          // my/mx < 0.2
-				return 14;            // DIR_SE;
-			return md == 0 ? 15 : 13; // DIR_S ? DIR_Se : DIR_sE;
-		}
-	} else {
-		mx = -mx;
-		if (my >= 0) {
-			if (3 * mx <= (my * 2)) {
-				if (5 * mx < my)
-					return 2; // DIR_SW;
-				return 3;     // DIR_sW;
-			}
-			md = 4; // DIR_W;
-		} else {
-			my = -my;
-			if (3 * mx <= (my * 2)) {
-				if (5 * mx < my)
-					return 10; // DIR_NE;
-				return 9;      // DIR_Ne;
-			}
-			md = 8; // DIR_N;
-		}
-		if (3 * my <= (mx * 2)) {
-			if (5 * my < mx)
-				return 6;           // DIR_NW;
-			return md == 4 ? 5 : 7; // DIR_W ? DIR_nW : DIR_Nw;
-		}
+	Point absolute = abs(offset);
+
+	bool flipY = offset.x != absolute.x;
+	bool flipX = offset.y != absolute.y;
+
+	bool flipMedian = false;
+	if (absolute.x > absolute.y) {
+		std::swap(absolute.x, absolute.y);
+		flipMedian = true;
 	}
-	return md;
+
+	Direction16 ret = DIR16_S;
+	if (3 * absolute.x <= (absolute.y * 2)) { // mx/my <= 2/3, approximation of tan(33.75)
+		if (5 * absolute.x < absolute.y)      // mx/my < 0.2, approximation of tan(11.25)
+			ret = DIR16_SW;
+		else
+			ret = DIR16_Sw;
+	}
+
+	Direction16 medianPivot = DIR16_S;
+	if (flipY) {
+		ret = Direction16Flip(ret, DIR16_SW);
+		medianPivot = Direction16Flip(medianPivot, DIR16_SW);
+	}
+	if (flipX) {
+		ret = Direction16Flip(ret, DIR16_SE);
+		medianPivot = Direction16Flip(medianPivot, DIR16_SW);
+	}
+	if (flipMedian)
+		ret = Direction16Flip(ret, medianPivot);
+	return ret;
 }
 
 void DeleteMissile(int mi, int i)
