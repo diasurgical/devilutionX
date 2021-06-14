@@ -5054,27 +5054,27 @@ void ProcessMissiles()
 
 void missiles_process_charge()
 {
-	CMonster *mon;
 	AnimStruct *anim;
-	MissileStruct *mis;
-	int i, mi;
 
-	for (i = 0; i < nummissiles; i++) {
-		mi = missileactive[i];
-		mis = &missile[mi];
+	for (int i = 0; i < nummissiles; i++) {
+		int mi = missileactive[i];
+		MissileStruct *mis = &missile[mi];
+
 		mis->_miAnimData = misfiledata[mis->_miAnimType].mAnimData[mis->_mimfnum];
-		if (mis->_mitype == MIS_RHINO) {
-			mon = monster[mis->_misource].MType;
-			if (mon->mtype >= MT_HORNED && mon->mtype <= MT_OBLORD) {
-				anim = &mon->Anims[MA_SPECIAL];
-			} else {
-				if (mon->mtype >= MT_NSNAKE && mon->mtype <= MT_GSNAKE)
-					anim = &mon->Anims[MA_ATTACK];
-				else
-					anim = &mon->Anims[MA_WALK];
-			}
-			missile[mi]._miAnimData = anim->CelSpritesForDirections[mis->_mimfnum]->Data();
+		if (mis->_mitype != MIS_RHINO)
+			continue;
+
+		CMonster *mon = monster[mis->_misource].MType;
+
+		if (mon->mtype >= MT_HORNED && mon->mtype <= MT_OBLORD) {
+			anim = &mon->Anims[MA_SPECIAL];
+		} else {
+			if (mon->mtype >= MT_NSNAKE && mon->mtype <= MT_GSNAKE)
+				anim = &mon->Anims[MA_ATTACK];
+			else
+				anim = &mon->Anims[MA_WALK];
 		}
+		missile[mi]._miAnimData = anim->CelSpritesForDirections[mis->_mimfnum]->Data();
 	}
 }
 
