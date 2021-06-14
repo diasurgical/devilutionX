@@ -130,7 +130,7 @@ struct CMonster {
 	bool has_special;
 	uint8_t mAFNum;
 	int8_t mdeadval;
-	const MonsterData *MData;
+	MonsterData *MData;
 };
 
 struct MonsterStruct { // note: missing field _mAFNum
@@ -192,7 +192,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	int8_t mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
 	const char *mName;
 	CMonster *MType;
-	const MonsterData *MData;
+	MonsterData *MData;
 };
 
 extern int monstkills[MAXMONSTERS];

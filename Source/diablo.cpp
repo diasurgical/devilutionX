@@ -2239,8 +2239,11 @@ void initKeymapActions()
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s}, version = {:s}, mode = {:s}"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]).c_str());
-		    NetSendCmdString(1 << myplr, pszStr);
+		    //strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s}, version = {:s}, mode = {:s}"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]).c_str());
+		    BYTE talkSave = sgbNextTalkSave - 1;
+		    talkSave &= 7;
+			sprintf(pszStr, "Current loot: %s", sgszTalkSave[talkSave]);
+			NetSendCmdString(1 << myplr, pszStr);
 	    },
 	    [&]() { return !isPlayerDead(); },
 	});

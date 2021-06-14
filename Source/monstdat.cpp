@@ -12,7 +12,7 @@
 namespace devilution {
 
 /** Contains the data related to each monster ID. */
-const MonsterData monsterdata[] = {
+MonsterData monsterdata[] = {
 	// clang-format off
 	// mName,                        GraphicType,                        sndfile,                             TransFile,                         width, mImage, has_special, snd_special, has_trans, Frames[6],                  Rate[6],               mMinDLvl, mMaxDLvl, mLevel, mMinHP, mMaxHP, mAi,          mFlags                                                             , mInt, mHit, mAFNum, mMinDamage, mMaxDamage, mHit2, mAFNum2, mMinDamage2, mMaxDamage2, mArmorClass, mMonstClass, mMagicRes                                                       , mMagicRes2                                                        , mSelFlag, mTreasure,   mExp
 	// TRANSLATORS: Monster Block start

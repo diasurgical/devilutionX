@@ -688,7 +688,7 @@ void UpdateManaFlask(const CelOutputBuffer &out)
 
 void InitControlPan()
 {
-	pBtmBuff = CelOutputBuffer::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
+	pBtmBuff = CelOutputBuffer::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer || 1 ? 2 : 1));
 	pManaBuff = CelOutputBuffer::Alloc(88, 88);
 	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
 
@@ -706,7 +706,7 @@ void InitControlPan()
 		CelDrawUnsafeTo(pManaBuff, bulbsPosition, statusPanel, 2);
 	}
 	talkflag = false;
-	if (gbIsMultiplayer) {
+	if (gbIsMultiplayer || 1) {
 		CelDrawUnsafeTo(pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
 		pMultiBtns = LoadCel("CtrlPan\\P8But2.CEL", 33);
 		pTalkBtns = LoadCel("CtrlPan\\TalkButt.CEL", 61);
@@ -1905,7 +1905,7 @@ void control_reset_talk_msg()
 
 void control_type_message()
 {
-	if (!gbIsMultiplayer)
+	if (!gbIsMultiplayer && 0)
 		return;
 
 	talkflag = true;
@@ -1954,7 +1954,7 @@ static void ControlPressEnter()
 
 bool control_talk_last_key(int vkey)
 {
-	if (!gbIsMultiplayer)
+	if (!gbIsMultiplayer && 0)
 		return false;
 
 	if (!talkflag)
@@ -1984,7 +1984,7 @@ static void ControlUpDown(int v)
 
 bool control_presskeys(int vkey)
 {
-	if (!gbIsMultiplayer)
+	if (!gbIsMultiplayer && 0)
 		return false;
 	if (!talkflag)
 		return false;
