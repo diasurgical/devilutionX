@@ -80,19 +80,18 @@ int GetMinDistance(Point position)
 
 /**
  * @brief Get walking steps to coordinate
- * @param dx Tile coordinates
- * @param dy Tile coordinates
+ * @param destination Tile coordinates
  * @param maxDistance the max number of steps to search
  * @return number of steps, or 0 if not reachable
  */
-int GetDistance(int dx, int dy, int maxDistance)
+int GetDistance(Point destination, int maxDistance)
 {
-	if (GetMinDistance({ dx, dy }) > maxDistance) {
+	if (GetMinDistance(destination) > maxDistance) {
 		return 0;
 	}
 
 	int8_t walkpath[MAX_PATH_LENGTH];
-	int steps = FindPath(PosOkPlayer, myplr, plr[myplr].position.future.x, plr[myplr].position.future.y, dx, dy, walkpath);
+	int steps = FindPath(PosOkPlayer, myplr, plr[myplr].position.future.x, plr[myplr].position.future.y, destination.x, destination.y, walkpath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -110,6 +109,9 @@ int GetDistanceRanged(Point destination)
 
 void FindItemOrObject()
 {
+	// The loops in this function are iterating through tiles offset from the player position. This
+	// could be accomplished by looping over the values in the Direction enum and making use of
+	// Point math instead of nested loops from [-1, 1].
 	int mx = plr[myplr].position.future.x;
 	int my = plr[myplr].position.future.y;
 	int rotations = 5;
@@ -126,7 +128,7 @@ void FindItemOrObject()
 			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
 			if (rotations < newRotations)
 				continue;
-			if (xx != 0 && yy != 0 && GetDistance(mx + xx, my + yy, 1) == 0)
+			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
 				continue;
 			rotations = newRotations;
 			pcursitem = i;
@@ -150,7 +152,7 @@ void FindItemOrObject()
 			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
 			if (rotations < newRotations)
 				continue;
-			if (xx != 0 && yy != 0 && GetDistance(mx + xx, my + yy, 1) == 0)
+			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
 				continue;
 			rotations = newRotations;
 			pcursobj = o;
@@ -163,7 +165,7 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		int distance = GetDistance(towners[i].position.x, towners[i].position.y, 2);
+		int distance = GetDistance(towners[i].position, 2);
 		if (distance == 0)
 			continue;
 		pcursmonst = i;
@@ -327,7 +329,7 @@ void CheckPlayerNearby()
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (i == myplr)
 			continue;
-		auto &player = plr[i];
+		const auto &player = plr[i];
 		const int mx = player.position.future.x;
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
@@ -338,7 +340,7 @@ void CheckPlayerNearby()
 		if (myPlayer._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER) {
 			newDdistance = GetDistanceRanged(player.position.future);
 		} else {
-			newDdistance = GetDistance(mx, my, distance);
+			newDdistance = GetDistance(player.position.future, distance);
 			if (newDdistance == 0)
 				continue;
 		}
@@ -381,18 +383,16 @@ void FindTrigger()
 	for (int i = 0; i < nummissiles; i++) {
 		int mi = missileactive[i];
 		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
-			int mix = missile[mi].position.tile.x;
-			int miy = missile[mi].position.tile.y;
-			const int newDdistance = GetDistance(mix, miy, 2);
+			const int newDdistance = GetDistance(missile[mi].position.tile, 2);
 			if (newDdistance == 0)
 				continue;
 			if (pcursmissile != -1 && distance < newDdistance)
 				continue;
-			const int newRotations = GetRotaryDistance({ mix, miy });
+			const int newRotations = GetRotaryDistance(missile[mi].position.tile);
 			if (pcursmissile != -1 && distance == newDdistance && rotations < newRotations)
 				continue;
-			cursmx = mix;
-			cursmy = miy;
+			cursmx = missile[mi].position.tile.x;
+			cursmy = missile[mi].position.tile.y;
 			pcursmissile = mi;
 			distance = newDdistance;
 			rotations = newRotations;
@@ -405,7 +405,7 @@ void FindTrigger()
 			int ty = trigs[i].position.y;
 			if (trigs[i]._tlvl == 13)
 				ty -= 1;
-			const int newDdistance = GetDistance(tx, ty, 2);
+			const int newDdistance = GetDistance({ tx, ty }, 2);
 			if (newDdistance == 0)
 				continue;
 			cursmx = tx;
@@ -417,7 +417,7 @@ void FindTrigger()
 			for (int i = 0; i < MAXQUESTS; i++) {
 				if (i == Q_BETRAYER || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
 					continue;
-				const int newDdistance = GetDistance(quests[i].position.x, quests[i].position.y, 2);
+				const int newDdistance = GetDistance(quests[i].position, 2);
 				if (newDdistance == 0)
 					continue;
 				cursmx = quests[i].position.x;
