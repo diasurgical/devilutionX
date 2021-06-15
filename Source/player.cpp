@@ -265,10 +265,10 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 		CalcScrolls();
 }
 
-bool PlayerStruct::TryRemoveInvItemById(int item)
+bool PlayerStruct::TryRemoveInvItemById(_item_indexes item)
 {
 	int idx;
-	if (HasItem(static_cast<_item_indexes>(item), &idx)) {
+	if (HasItem(item, &idx)) {
 		RemoveInvItem(idx);
 		return true;
 	}

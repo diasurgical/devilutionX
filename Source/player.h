@@ -315,7 +315,7 @@ struct PlayerStruct {
 	 * @brief Remove an item from player inventory and return true if the player has the item, return false otherwise
 	 * @param item IDidx of item to be removed
 	 */
-	bool TryRemoveInvItemById(int item);
+	bool TryRemoveInvItemById(_item_indexes item);
 
 	void RemoveSpdBarItem(int iv);
 
