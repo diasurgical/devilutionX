@@ -322,7 +322,7 @@ int premiumLvlAddHellfire[] = {
 	// clang-format on
 };
 
-bool IsItemAvailable(int i)
+bool IsItemAvailable(_item_indexes i)
 {
 	if (gbIsSpawn) {
 		if (i >= 62 && i <= 71)
@@ -2260,7 +2260,7 @@ int RndItem(int m)
 
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
+		if (!IsItemAvailable(static_cast<_item_indexes>(i)))
 			continue;
 
 		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monster[m].mLevel >= AllItemsList[i].iMinMLvl
@@ -2294,7 +2294,7 @@ _item_indexes RndUItem(int m)
 	int curlv = items_get_currlevel();
 	int ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
+		if (!IsItemAvailable(static_cast<_item_indexes>(i)))
 			continue;
 
 		okflag = true;
@@ -2336,7 +2336,7 @@ _item_indexes RndAllItems()
 	int curlv = items_get_currlevel();
 	int ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
+		if (!IsItemAvailable(static_cast<_item_indexes>(i)))
 			continue;
 
 		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * curlv >= AllItemsList[i].iMinMLvl && ri < 512) {
@@ -2358,7 +2358,7 @@ _item_indexes RndTypeItems(int itype, int imid, int lvl)
 
 	int ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
+		if (!IsItemAvailable(static_cast<_item_indexes>(i)))
 			continue;
 
 		bool okflag = true;
@@ -4132,7 +4132,7 @@ _item_indexes RndVendorItem(int minlvl, int maxlvl)
 
 	int ri = 0;
 	for (int i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-		if (!IsItemAvailable(i))
+		if (!IsItemAvailable(static_cast<_item_indexes>(i)))
 			continue;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			continue;

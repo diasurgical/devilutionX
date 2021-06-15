@@ -401,7 +401,7 @@ extern bool UniqueItemFlags[128];
 extern int numitems;
 
 BYTE GetOutlineColor(const ItemStruct &item, bool checkReq);
-bool IsItemAvailable(int i);
+bool IsItemAvailable(_item_indexes i);
 bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
