@@ -1664,7 +1664,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	player.HoldItem._itype = ITYPE_NONE;
 }
 
-int FindGetItem(int idx, uint16_t ci, int iseed)
+int FindGetItem(_item_indexes idx, uint16_t ci, int iseed)
 {
 	if (numitems <= 0)
 		return -1;
@@ -1694,19 +1694,19 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 		if (items[ii].IDidx == idx
 		    && items[ii]._iSeed == iseed
 		    && items[ii]._iCreateInfo == ci) {
-			FindGetItem(idx, ci, iseed);
+			FindGetItem(static_cast<_item_indexes>(idx), ci, iseed);
 		} else {
-			ii = FindGetItem(idx, ci, iseed);
+			ii = FindGetItem(static_cast<_item_indexes>(idx), ci, iseed);
 		}
 	} else {
-		ii = FindGetItem(idx, ci, iseed);
+		ii = FindGetItem(static_cast<_item_indexes>(idx), ci, iseed);
 	}
 
 	if (ii == -1)
 		return;
 
 	CleanupItems(&items[ii], ii);
-	assert(FindGetItem(idx, ci, iseed) == -1);
+	assert(FindGetItem(static_cast<_item_indexes>(idx), ci, iseed) == -1);
 }
 
 bool CanPut(Point position)

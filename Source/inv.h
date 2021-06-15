@@ -105,7 +105,7 @@ void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(PlayerStruct &player);
 void InvGetItem(int pnum, ItemStruct *item, int ii);
 void AutoGetItem(int pnum, ItemStruct *item, int ii);
-int FindGetItem(int idx, uint16_t ci, int iseed);
+int FindGetItem(_item_indexes idx, uint16_t ci, int iseed);
 void SyncGetItem(Point position, int idx, uint16_t ci, int iseed);
 bool CanPut(Point position);
 bool TryInvPut();
