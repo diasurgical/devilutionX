@@ -1685,7 +1685,7 @@ int FindGetItem(_item_indexes idx, uint16_t ci, int iseed)
 	return ii;
 }
 
-void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
+void SyncGetItem(Point position, _item_indexes idx, uint16_t ci, int iseed)
 {
 	int ii;
 
@@ -1694,19 +1694,19 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 		if (items[ii].IDidx == idx
 		    && items[ii]._iSeed == iseed
 		    && items[ii]._iCreateInfo == ci) {
-			FindGetItem(static_cast<_item_indexes>(idx), ci, iseed);
+			FindGetItem(idx, ci, iseed);
 		} else {
-			ii = FindGetItem(static_cast<_item_indexes>(idx), ci, iseed);
+			ii = FindGetItem(idx, ci, iseed);
 		}
 	} else {
-		ii = FindGetItem(static_cast<_item_indexes>(idx), ci, iseed);
+		ii = FindGetItem(idx, ci, iseed);
 	}
 
 	if (ii == -1)
 		return;
 
 	CleanupItems(&items[ii], ii);
-	assert(FindGetItem(static_cast<_item_indexes>(idx), ci, iseed) == -1);
+	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
 bool CanPut(Point position)
