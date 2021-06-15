@@ -62,7 +62,7 @@ sudo apt install devilutionx
 <details><summary>Android</summary>
 
 - Copy the APK file to device and tap on it on device's file explorer or install via `adb install` (if USB debugging is enabled on device).
-- Copy the MPQ files to `devilutionx` folder in root of phone's internal memory or SD card. Create the folder if it doesn't exist.
+- Create a folder called `devilutionx` in the root of the phone's internal memory or SD card, and place the MPQ-files there.
 
 </details>
 
