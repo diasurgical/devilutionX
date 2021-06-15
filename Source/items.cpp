@@ -4106,23 +4106,26 @@ bool StoreStatOk(ItemStruct *h)
 	return true;
 }
 
-bool SmithItemOk(int i)
+bool SmithItemOk(_item_indexes i)
 {
-	if (AllItemsList[i].itype == ITYPE_MISC)
-		return false;
-	if (AllItemsList[i].itype == ITYPE_GOLD)
-		return false;
-	if (AllItemsList[i].itype == ITYPE_STAFF && (!gbIsHellfire || AllItemsList[i].iSpell))
-		return false;
-	if (AllItemsList[i].itype == ITYPE_RING)
-		return false;
-	if (AllItemsList[i].itype == ITYPE_AMULET)
+	auto item = AllItemsList[static_cast<size_t>(i)];
+
+	switch (item.itype) {
+	case ITYPE_MISC:
+	case ITYPE_GOLD:
+	case ITYPE_RING:
+	case ITYPE_AMULET:
 		return false;
 
-	return true;
+	case ITYPE_STAFF:
+		return gbIsHellfire && item.iSpell == spell_id::SPL_NULL;
+
+	default:
+		return true;
+	}
 }
 
-template <bool (*Ok)(int), bool ConsiderDropRate = false>
+template <bool (*Ok)(_item_indexes), bool ConsiderDropRate = false>
 _item_indexes RndVendorItem(int minlvl, int maxlvl)
 {
 	int ril[512];
@@ -4133,7 +4136,7 @@ _item_indexes RndVendorItem(int minlvl, int maxlvl)
 			continue;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			continue;
-		if (!Ok(i))
+		if (!Ok(static_cast<_item_indexes>(i)))
 			continue;
 		if (AllItemsList[i].iMinMLvl < minlvl || AllItemsList[i].iMinMLvl > maxlvl)
 			continue;
@@ -4210,21 +4213,23 @@ void SpawnSmith(int lvl)
 	items[0] = holditem;
 }
 
-bool PremiumItemOk(int i)
+bool PremiumItemOk(_item_indexes i)
 {
-	if (AllItemsList[i].itype == ITYPE_MISC)
+	auto item = AllItemsList[static_cast<size_t>(i)];
+
+	if (item.itype == ITYPE_MISC)
 		return false;
-	if (AllItemsList[i].itype == ITYPE_GOLD)
+	if (item.itype == ITYPE_GOLD)
 		return false;
-	if (!gbIsHellfire && AllItemsList[i].itype == ITYPE_STAFF)
+	if (!gbIsHellfire && item.itype == ITYPE_STAFF)
 		return false;
 
 	if (gbIsMultiplayer) {
-		if (AllItemsList[i].iMiscId == IMISC_OILOF)
+		if (item.iMiscId == IMISC_OILOF)
 			return false;
-		if (AllItemsList[i].itype == ITYPE_RING)
+		if (item.itype == ITYPE_RING)
 			return false;
-		if (AllItemsList[i].itype == ITYPE_AMULET)
+		if (item.itype == ITYPE_AMULET)
 			return false;
 	}
 
@@ -4362,25 +4367,27 @@ void SpawnPremium(int pnum)
 	}
 }
 
-bool WitchItemOk(int i)
+bool WitchItemOk(_item_indexes i)
 {
-	if (AllItemsList[i].itype != ITYPE_MISC && AllItemsList[i].itype != ITYPE_STAFF)
+	auto item = AllItemsList[static_cast<size_t>(i)];
+
+	if (item.itype != ITYPE_MISC && item.itype != ITYPE_STAFF)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_MANA)
+	if (item.iMiscId == IMISC_MANA)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_FULLMANA)
+	if (item.iMiscId == IMISC_FULLMANA)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_TOWN)
+	if (item.iSpell == SPL_TOWN)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_FULLHEAL)
+	if (item.iMiscId == IMISC_FULLHEAL)
 		return false;
-	if (AllItemsList[i].iMiscId == IMISC_HEAL)
+	if (item.iMiscId == IMISC_HEAL)
 		return false;
-	if (AllItemsList[i].iMiscId > IMISC_OILFIRST && AllItemsList[i].iMiscId < IMISC_OILLAST)
+	if (item.iMiscId > IMISC_OILFIRST && item.iMiscId < IMISC_OILLAST)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
+	if (item.iSpell == SPL_RESURRECT && !gbIsMultiplayer)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
+	if (item.iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 		return false;
 
 	return true;
@@ -4439,7 +4446,7 @@ void SpawnWitch(int lvl)
 		int books = GenerateRnd(4);
 		for (int i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
 			auto itemIndex = static_cast<_item_indexes>(i);
-			if (!WitchItemOk(i))
+			if (!WitchItemOk(itemIndex))
 				continue;
 			if (lvl < AllItemsList[i].iMinMLvl)
 				continue;
@@ -4607,30 +4614,32 @@ void SpawnBoy(int lvl)
 	boylevel = lvl / 2;
 }
 
-bool HealerItemOk(int i)
+bool HealerItemOk(_item_indexes i)
 {
-	if (AllItemsList[i].itype != ITYPE_MISC)
+	auto item = AllItemsList[static_cast<size_t>(i)];
+
+	if (item.itype != ITYPE_MISC)
 		return false;
 
-	if (AllItemsList[i].iMiscId == IMISC_SCROLL)
-		return AllItemsList[i].iSpell == SPL_HEAL;
-	if (AllItemsList[i].iMiscId == IMISC_SCROLLT)
-		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
+	if (item.iMiscId == IMISC_SCROLL)
+		return item.iSpell == SPL_HEAL;
+	if (item.iMiscId == IMISC_SCROLLT)
+		return item.iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 
 	if (!gbIsMultiplayer) {
-		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
+		if (item.iMiscId == IMISC_ELIXSTR)
 			return !gbIsHellfire || plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXMAG)
+		if (item.iMiscId == IMISC_ELIXMAG)
 			return !gbIsHellfire || plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXDEX)
+		if (item.iMiscId == IMISC_ELIXDEX)
 			return !gbIsHellfire || plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity);
-		if (AllItemsList[i].iMiscId == IMISC_ELIXVIT)
+		if (item.iMiscId == IMISC_ELIXVIT)
 			return !gbIsHellfire || plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
-	if (AllItemsList[i].iMiscId == IMISC_REJUV)
+	if (item.iMiscId == IMISC_REJUV)
 		return true;
-	if (AllItemsList[i].iMiscId == IMISC_FULLREJUV)
+	if (item.iMiscId == IMISC_FULLREJUV)
 		return true;
 
 	return false;
