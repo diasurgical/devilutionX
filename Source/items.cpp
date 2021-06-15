@@ -4123,7 +4123,7 @@ bool SmithItemOk(int i)
 }
 
 template <bool (*Ok)(int), bool ConsiderDropRate = false>
-int RndVendorItem(int minlvl, int maxlvl)
+_item_indexes RndVendorItem(int minlvl, int maxlvl)
 {
 	int ril[512];
 
@@ -4152,7 +4152,7 @@ int RndVendorItem(int minlvl, int maxlvl)
 			break;
 	}
 
-	return ril[GenerateRnd(ri)] + 1;
+	return static_cast<_item_indexes>(ril[GenerateRnd(ri)] + 1);
 }
 
 _item_indexes RndSmithItem(int lvl)
