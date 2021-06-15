@@ -178,6 +178,20 @@ The nro-file will be generated in the build folder. Test with an emulator (RyuJi
 [Nintendo Switch manual](docs/manual/platforms/switch.md)
 </details>
 
+<details><summary>Android</summary>
+
+### Installing dependencies
+Install [Android Studio](https://developer.android.com/studio)
+After first launch configuration, go to "Configure -> SDK Manager -> SDK Tools".
+Select "NDK (Side by side)" and "CMake" checkboxes and click "OK".
+
+### Compiling
+Click "Open Existing Project" and choose "android-project" folder in DevilutionX root folder.
+Wait until Gradle sync is completed.
+In Android Studio, go to "Build -> Make Project" or use the shortcut Ctrl+F9
+You can find the compiled APK in `/android-project/app/build/outputs/apk/`
+</details>
+
 <details><summary>Nintendo 3DS</summary>
 
 ### Installing dependencies
