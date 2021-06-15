@@ -1477,7 +1477,7 @@ static void CheckBookLevel(PlayerStruct &player)
 
 static void CheckNaKrulNotes(PlayerStruct &player)
 {
-	int idx = player.HoldItem.IDidx;
+	auto idx = player.HoldItem.IDidx;
 	_item_indexes notes[] = { IDI_NOTE1, IDI_NOTE2, IDI_NOTE3 };
 
 	if (idx != IDI_NOTE1 && idx != IDI_NOTE2 && idx != IDI_NOTE3) {
