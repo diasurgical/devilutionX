@@ -512,7 +512,9 @@ static void SaveOptions()
 #ifndef __vita__
 	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
 #endif
+#if !defined(USE_SDL1)
 	setIniInt("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
+#endif
 	setIniInt("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
 	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	setIniInt("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
