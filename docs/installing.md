@@ -59,6 +59,13 @@ sudo apt install devilutionx
 
 </details>
 
+<details><summary>Android</summary>
+
+- Copy the APK file to device and tap on it on device's file explorer or install via `adb install` (if USB debugging is enabled on device).
+- Copy the MPQ files to `devilutionx` folder in root of phone's internal memory or SD card. Create the folder if it doesn't exist.
+
+</details>
+
 <details><summary>New Nintendo 3DS</summary>
 
 ### .3dsx installation
