@@ -2352,7 +2352,7 @@ _item_indexes RndAllItems()
 	return static_cast<_item_indexes>(ril[GenerateRnd(ri)]);
 }
 
-int RndTypeItems(int itype, int imid, int lvl)
+_item_indexes RndTypeItems(int itype, int imid, int lvl)
 {
 	int ril[512];
 
@@ -2376,7 +2376,7 @@ int RndTypeItems(int itype, int imid, int lvl)
 		}
 	}
 
-	return ril[GenerateRnd(ri)];
+	return static_cast<_item_indexes>(ril[GenerateRnd(ri)]);
 }
 
 _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
@@ -2656,7 +2656,7 @@ void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool se
 
 	int curlv = items_get_currlevel();
 	if (itype != ITYPE_GOLD)
-		idx = static_cast<_item_indexes>(RndTypeItems(itype, imisc, curlv));
+		idx = RndTypeItems(itype, imisc, curlv);
 	else
 		idx = IDI_GOLD;
 
@@ -4831,7 +4831,7 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 		}
 	}
 
-	auto idx = static_cast<_item_indexes>(RndTypeItems(ITYPE_MISC, IMISC_BOOK, lvl));
+	auto idx = RndTypeItems(ITYPE_MISC, IMISC_BOOK, lvl);
 	if (numitems >= MAXITEMS)
 		return;
 
@@ -4857,7 +4857,7 @@ static void CreateMagicItem(Point position, int lvl, int imisc, int imid, int ic
 		return;
 
 	int ii = AllocateItem();
-	auto idx = static_cast<_item_indexes>(RndTypeItems(imisc, imid, lvl));
+	auto idx = RndTypeItems(imisc, imid, lvl);
 
 	while (true) {
 		memset(&items[ii], 0, sizeof(*items));
@@ -4865,7 +4865,7 @@ static void CreateMagicItem(Point position, int lvl, int imisc, int imid, int ic
 		if (items[ii]._iCurs == icurs)
 			break;
 
-		idx = static_cast<_item_indexes>(RndTypeItems(imisc, imid, lvl));
+		idx = RndTypeItems(imisc, imid, lvl);
 	}
 	GetSuperItemSpace(position, ii);
 
