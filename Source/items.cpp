@@ -4231,9 +4231,9 @@ bool PremiumItemOk(int i)
 	return true;
 }
 
-int RndPremiumItem(int minlvl, int maxlvl)
+_item_indexes RndPremiumItem(int minlvl, int maxlvl)
 {
-	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
+	return static_cast<_item_indexes>(RndVendorItem<PremiumItemOk>(minlvl, maxlvl) - 1);
 }
 
 static void SpawnOnePremium(int i, int plvl, int myplr)
@@ -4257,7 +4257,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		keepgoing = false;
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		auto itype = static_cast<_item_indexes>(RndPremiumItem(plvl / 4, plvl) - 1);
+		auto itype = RndPremiumItem(plvl / 4, plvl);
 		GetItemAttrs(0, itype, plvl);
 		GetItemBonus(0, plvl / 2, plvl, true, !gbIsHellfire);
 
@@ -4709,7 +4709,7 @@ void RecreateSmithItem(int ii, int lvl, int iseed)
 void RecreatePremiumItem(int ii, int plvl, int iseed)
 {
 	SetRndSeed(iseed);
-	auto itype = static_cast<_item_indexes>(RndPremiumItem(plvl / 4, plvl) - 1);
+	auto itype = RndPremiumItem(plvl / 4, plvl);
 	GetItemAttrs(ii, itype, plvl);
 	GetItemBonus(ii, plvl / 2, plvl, true, !gbIsHellfire);
 
