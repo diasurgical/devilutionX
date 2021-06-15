@@ -4155,9 +4155,9 @@ int RndVendorItem(int minlvl, int maxlvl)
 	return ril[GenerateRnd(ri)] + 1;
 }
 
-int RndSmithItem(int lvl)
+_item_indexes RndSmithItem(int lvl)
 {
-	return RndVendorItem<SmithItemOk, true>(0, lvl);
+	return static_cast<_item_indexes>(RndVendorItem<SmithItemOk, true>(0, lvl) - 1);
 }
 
 void SortVendor(ItemStruct *items)
@@ -4195,7 +4195,7 @@ void SpawnSmith(int lvl)
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
-			auto idata = static_cast<_item_indexes>(RndSmithItem(lvl) - 1);
+			auto idata = RndSmithItem(lvl);
 			GetItemAttrs(0, idata, lvl);
 		} while (items[0]._iIvalue > maxValue);
 		smithitem[i] = items[0];
@@ -4698,7 +4698,7 @@ void SpawnStoreGold()
 void RecreateSmithItem(int ii, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
-	auto itype = static_cast<_item_indexes>(RndSmithItem(lvl) - 1);
+	auto itype = RndSmithItem(lvl);
 	GetItemAttrs(ii, itype, lvl);
 
 	items[ii]._iSeed = iseed;
