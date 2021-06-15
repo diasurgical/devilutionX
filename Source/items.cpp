@@ -2283,13 +2283,13 @@ int RndItem(int m)
 	return ril[r] + 1;
 }
 
-int RndUItem(int m)
+_item_indexes RndUItem(int m)
 {
 	int ril[512];
 	bool okflag;
 
 	if (m != -1 && (monster[m].MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
-		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
+		return static_cast<_item_indexes>(-((monster[m].MData->mTreasure & 0xFFF) + 1));
 
 	int curlv = items_get_currlevel();
 	int ri = 0;
@@ -2323,7 +2323,7 @@ int RndUItem(int m)
 		}
 	}
 
-	return ril[GenerateRnd(ri)];
+	return static_cast<_item_indexes>(ril[GenerateRnd(ri)]);
 }
 
 _item_indexes RndAllItems()
@@ -2585,7 +2585,7 @@ static void SetupBaseItem(Point position, _item_indexes idx, bool onlygood, bool
 
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
 {
-	auto idx = onlygood ? static_cast<_item_indexes>(RndUItem(-1)) : RndAllItems();
+	auto idx = onlygood ? RndUItem(-1) : RndAllItems();
 
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
