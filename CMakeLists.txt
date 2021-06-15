@@ -192,7 +192,8 @@ if(ANDROID)
 
   set(ASAN OFF)
   set(UBSAN OFF)
-  set(NONET ON)
+  set(DEVILUTIONX_SYSTEM_LIBSODIUM OFF)
+  set(DISABLE_ZERO_TIER ON)
   set(TTF_FONT_DIR \"\")
 
   file(
