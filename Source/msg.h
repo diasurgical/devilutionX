@@ -210,7 +210,7 @@ struct TCmdGItem {
 	uint8_t bLevel;
 	uint8_t x;
 	uint8_t y;
-	uint16_t wIndx;
+	_item_indexes wIndx;
 	uint16_t wCI;
 	int32_t dwSeed;
 	uint8_t bId;
