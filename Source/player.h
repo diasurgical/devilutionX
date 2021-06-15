@@ -302,7 +302,7 @@ struct PlayerStruct {
 
 	void CalcScrolls();
 
-	bool HasItem(int item, int *idx = nullptr) const;
+	bool HasItem(_item_indexes item, int *idx = nullptr) const;
 
 	/**
 	 * @brief Remove an item from player inventory

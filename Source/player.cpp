@@ -220,7 +220,7 @@ void PlayerStruct::CalcScrolls()
 	EnsureValidReadiedSpell(*this);
 }
 
-bool PlayerStruct::HasItem(int item, int *idx) const
+bool PlayerStruct::HasItem(_item_indexes item, int *idx) const
 {
 	for (int i = 0; i < _pNumInv; i++) {
 		if (InvList[i].IDidx == item) {
@@ -268,7 +268,7 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 bool PlayerStruct::TryRemoveInvItemById(int item)
 {
 	int idx;
-	if (HasItem(item, &idx)) {
+	if (HasItem(static_cast<_item_indexes>(item), &idx)) {
 		RemoveInvItem(idx);
 		return true;
 	}
