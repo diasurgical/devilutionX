@@ -4489,9 +4489,9 @@ void SpawnWitch(int lvl)
 	SortVendor(witchitem + PinnedItemCount);
 }
 
-int RndBoyItem(int lvl)
+_item_indexes RndBoyItem(int lvl)
 {
-	return RndVendorItem<PremiumItemOk>(0, lvl);
+	return static_cast<_item_indexes>(RndVendorItem<PremiumItemOk>(0, lvl) - 1);
 }
 
 void SpawnBoy(int lvl)
@@ -4514,7 +4514,7 @@ void SpawnBoy(int lvl)
 		keepgoing = false;
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		auto itype = static_cast<_item_indexes>(RndBoyItem(lvl) - 1);
+		auto itype = RndBoyItem(lvl);
 		GetItemAttrs(0, itype, lvl);
 		GetItemBonus(0, lvl, 2 * lvl, true, true);
 
@@ -4721,7 +4721,7 @@ void RecreatePremiumItem(int ii, int plvl, int iseed)
 void RecreateBoyItem(int ii, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
-	auto itype = static_cast<_item_indexes>(RndBoyItem(lvl) - 1);
+	auto itype = RndBoyItem(lvl);
 	GetItemAttrs(ii, itype, lvl);
 	GetItemBonus(ii, lvl, 2 * lvl, true, true);
 
