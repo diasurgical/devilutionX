@@ -565,10 +565,11 @@ static void LoadMonster(LoadHelper *file, int i)
 	file->skip(2); // Unused
 
 	file->skip(4); // Skip pointer _mAnimData
-	pMonster->_mAnimDelay = file->nextLE<int32_t>();
-	pMonster->_mAnimCnt = file->nextLE<int32_t>();
-	pMonster->_mAnimLen = file->nextLE<int32_t>();
-	pMonster->_mAnimFrame = file->nextLE<int32_t>();
+	pMonster->AnimInfo = {};
+	pMonster->AnimInfo.DelayLen = file->nextLE<int32_t>();
+	pMonster->AnimInfo.DelayCounter = file->nextLE<int32_t>();
+	pMonster->AnimInfo.NumberOfFrames = file->nextLE<int32_t>();
+	pMonster->AnimInfo.CurrentFrame = file->nextLE<int32_t>();
 	file->skip(4); // Skip _meflag
 	pMonster->_mDelFlag = file->nextBool32();
 	pMonster->_mVar1 = file->nextLE<int32_t>();
@@ -1619,10 +1620,10 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(2); // Unused
 
 	file->skip(4); // Skip pointer _mAnimData
-	file->writeLE<int32_t>(pMonster->_mAnimDelay);
-	file->writeLE<int32_t>(pMonster->_mAnimCnt);
-	file->writeLE<int32_t>(pMonster->_mAnimLen);
-	file->writeLE<int32_t>(pMonster->_mAnimFrame);
+	file->writeLE<int32_t>(pMonster->AnimInfo.DelayLen);
+	file->writeLE<int32_t>(pMonster->AnimInfo.DelayCounter);
+	file->writeLE<int32_t>(pMonster->AnimInfo.NumberOfFrames);
+	file->writeLE<int32_t>(pMonster->AnimInfo.CurrentFrame);
 	file->skip(4); // Skip _meflag
 	file->writeLE<uint32_t>(pMonster->_mDelFlag);
 	file->writeLE<int32_t>(pMonster->_mVar1);
