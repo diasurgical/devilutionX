@@ -10,6 +10,7 @@
 
 #include "diablo.h"
 #include "engine.h"
+#include "engine/actor_position.hpp"
 #include "engine/point.hpp"
 #include "gendung.h"
 #include "items.h"
