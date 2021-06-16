@@ -8,6 +8,7 @@
 #include "drlg_l1.h"
 #include "drlg_l2.h"
 #include "drlg_l3.h"
+#include "engine/load_file.hpp"
 #include "objdat.h"
 #include "objects.h"
 #include "palette.h"

@@ -5,6 +5,8 @@
  */
 
 #include "cursor.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "inv.h"
 #include "spells.h"

@@ -11,15 +11,16 @@
 #include "diablo.h"
 #include "engine.h"
 #include "engine/actor_position.hpp"
+#include "engine/animationinfo.h"
+#include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "gendung.h"
+#include "interfac.h"
 #include "items.h"
 #include "multi.h"
-#include "spelldat.h"
 #include "path.h"
-#include "interfac.h"
+#include "spelldat.h"
 #include "utils/enum_traits.h"
-#include "engine/animationinfo.h"
 
 namespace devilution {
 

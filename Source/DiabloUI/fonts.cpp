@@ -1,6 +1,7 @@
 #include "DiabloUI/fonts.h"
 
 #include "diablo.h"
+#include "engine/load_file.hpp"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 #include "utils/log.hpp"

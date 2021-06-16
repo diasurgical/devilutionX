@@ -8,6 +8,7 @@
 #include <fmt/format.h>
 
 #include "control.h"
+#include "engine/load_file.hpp"
 #include "engine/render/automap_render.hpp"
 #include "inv.h"
 #include "monster.h"

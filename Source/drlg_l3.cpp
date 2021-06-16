@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "drlg_l1.h"
+#include "engine/load_file.hpp"
 #include "lighting.h"
 #include "monster.h"
 #include "objdat.h"

@@ -9,6 +9,8 @@
 #include "controls/axis_direction.h"
 #include "controls/controller_motion.h"
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "stores.h"

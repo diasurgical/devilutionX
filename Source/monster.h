@@ -10,6 +10,7 @@
 
 #include "engine.h"
 #include "engine/actor_position.hpp"
+#include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/optional.hpp"

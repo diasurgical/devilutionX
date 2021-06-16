@@ -14,6 +14,8 @@
 #include "cursor.h"
 #include "doom.h"
 #include "dx.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "init.h"

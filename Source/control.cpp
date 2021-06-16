@@ -14,6 +14,8 @@
 #include "automap.h"
 #include "controls/keymapper.hpp"
 #include "cursor.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "error.h"
 #include "gamemenu.h"
