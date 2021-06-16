@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "engine.h"
+#include "engine/point.hpp"
 
 namespace devilution {
 

@@ -3,9 +3,12 @@
  *
  * Implementation of functionality tracking what the mouse cursor is pointing at.
  */
+#include "track.h"
+
 #include <SDL.h>
 
 #include "cursor.h"
+#include "engine/point.hpp"
 #include "player.h"
 
 namespace devilution {

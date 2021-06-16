@@ -5,6 +5,7 @@
  */
 #include "drlg_l1.h"
 
+#include "engine/point.hpp"
 #include "gendung.h"
 #include "lighting.h"
 #include "player.h"

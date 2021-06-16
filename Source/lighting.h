@@ -8,6 +8,7 @@
 #include <array>
 
 #include "engine.h"
+#include "engine/point.hpp"
 #include "miniwin/miniwin.h"
 
 namespace devilution {

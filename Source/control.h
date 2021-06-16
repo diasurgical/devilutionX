@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "engine.h"
+#include "engine/point.hpp"
 #include "engine/render/text_render.hpp"
 #include "spelldat.h"
 #include "spells.h"

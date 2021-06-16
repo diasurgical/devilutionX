@@ -3,9 +3,11 @@
  *
  * Implementation of functionality for casting player spells.
  */
+#include "spells.h"
 
 #include "control.h"
 #include "cursor.h"
+#include "engine/point.hpp"
 #include "gamemenu.h"
 #include "inv.h"
 #include "missiles.h"

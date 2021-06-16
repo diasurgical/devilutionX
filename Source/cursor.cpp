@@ -9,6 +9,7 @@
 
 #include "control.h"
 #include "doom.h"
+#include "engine/point.hpp"
 #include "engine.h"
 #include "engine/render/cel_render.hpp"
 #include "hwcursor.hpp"

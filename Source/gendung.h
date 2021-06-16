@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "engine.h"
+#include "engine/point.hpp"
 #include "scrollrt.h"
 #include "utils/stdcompat/optional.hpp"
 

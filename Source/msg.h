@@ -7,11 +7,12 @@
 
 #include <cstdint>
 
-#include "quests.h"
-#include "objects.h"
-#include "monster.h"
-#include "portal.h"
+#include "engine/point.hpp"
 #include "items.h"
+#include "monster.h"
+#include "objects.h"
+#include "portal.h"
+#include "quests.h"
 
 namespace devilution {
 

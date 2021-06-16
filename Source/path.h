@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-#include "engine.h"
+#include "engine/point.hpp"
 
 namespace devilution {
 

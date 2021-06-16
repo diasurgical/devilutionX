@@ -5,8 +5,6 @@
  */
 #include "automap.h"
 
-#include <algorithm>
-
 #include <fmt/format.h>
 
 #include "control.h"
@@ -17,6 +15,7 @@
 #include "player.h"
 #include "setmaps.h"
 #include "utils/language.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {

@@ -3,6 +3,7 @@
 *
 * Adds XP bar QoL feature
 */
+#include "xpbar.h"
 
 #include <array>
 
@@ -11,6 +12,7 @@
 #include "DiabloUI/art_draw.h"
 #include "common.h"
 #include "control.h"
+#include "engine/point.hpp"
 #include "options.h"
 #include "utils/language.h"
 
