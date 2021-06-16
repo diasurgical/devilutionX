@@ -3,7 +3,8 @@
  *
  * Implementation of item functionality.
  */
-#include <algorithm>
+#include "items.h"
+
 #include <climits>
 #include <cstdint>
 #include <bitset>
@@ -22,6 +23,7 @@
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/math.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 namespace {
