@@ -9,6 +9,7 @@
 
 #include "miniwin/miniwin.h"
 #include "engine.h"
+#include "engine/point.hpp"
 #include "misdat.h"
 #include "spelldat.h"
 

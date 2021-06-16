@@ -5,6 +5,7 @@
  */
 
 #include "cursor.h"
+#include "engine/point.hpp"
 #include "inv.h"
 #include "spells.h"
 #include "utils/language.h"

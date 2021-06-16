@@ -9,6 +9,7 @@
 #include <cstdint>
 
 #include "engine.h"
+#include "engine/point.hpp"
 
 namespace devilution {
 

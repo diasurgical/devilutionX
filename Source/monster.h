@@ -9,6 +9,7 @@
 #include <array>
 
 #include "engine.h"
+#include "engine/point.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/optional.hpp"
 #include "monstdat.h"

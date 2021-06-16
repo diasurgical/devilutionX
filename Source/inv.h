@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "engine/point.hpp"
 #include "items.h"
 #include "palette.h"
 #include "player.h"

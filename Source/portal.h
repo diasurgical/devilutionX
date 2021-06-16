@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "engine/point.hpp"
 #include "gendung.h"
 
 namespace devilution {

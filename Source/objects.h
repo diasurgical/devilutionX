@@ -7,9 +7,10 @@
 
 #include <cstdint>
 
+#include "engine/point.hpp"
+#include "itemdat.h"
 #include "objdat.h"
 #include "textdat.h"
-#include "itemdat.h"
 
 namespace devilution {
 
@@ -93,7 +94,7 @@ void objects_rnd_454BEA();
  * reconstructed note). This function both updates the state of the variable that tracks progress
  * and also determines whether the spawn conditions are met (i.e. all tomes have been triggered
  * in the correct order).
- * 
+ *
  * @param s the id of the spell tome
  * @return true if the player has activated all three tomes in the correct order, false otherwise
 */

@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "engine.h"
+#include "engine/point.hpp"
 #include "gendung.h"
 #include "textdat.h"
 #include "utils/stdcompat/optional.hpp"

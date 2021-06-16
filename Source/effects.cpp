@@ -3,9 +3,12 @@
  *
  * Implementation of functions for loading and playing sounds.
  */
+#include "effects.h"
+
 #include "init.h"
 #include "player.h"
 #include "sound.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 namespace {

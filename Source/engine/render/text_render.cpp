@@ -3,11 +3,12 @@
  *
  * Text rendering.
  */
-
 #include "text_render.hpp"
+
 #include "DiabloUI/ui_item.h"
 #include "cel_render.hpp"
 #include "engine.h"
+#include "engine/point.hpp"
 #include "palette.h"
 
 namespace devilution {
