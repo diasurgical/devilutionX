@@ -207,10 +207,10 @@ static void DrawCursor(const CelOutputBuffer &out)
 		return;
 
 	sgdwCursX = std::max(MouseX - 1, 0);
-	sgdwCursWdt = MouseX < 0 ? cursW + MouseX + 1 : std::min(MouseX + cursW + 1, out.w()) - MouseX;
+	sgdwCursWdt = MouseX < 0 ? cursW + MouseX + 2 : std::min(MouseX + cursW + 2, out.w()) - MouseX;
 
 	sgdwCursY = std::max(MouseY - 1, 0);
-	sgdwCursHgt = MouseY < 0 ? cursH + MouseY + 1 : std::min(MouseY + cursH + 1, out.h()) - MouseY;
+	sgdwCursHgt = MouseY < 0 ? cursH + MouseY + 2 : std::min(MouseY + cursH + 2, out.h()) - MouseY;
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
 
