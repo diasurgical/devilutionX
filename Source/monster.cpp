@@ -484,11 +484,12 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 	monster[i].mName = _(monst->MData->mName);
 	monster[i].MType = monst;
 	monster[i].MData = monst->MData;
-	monster[i]._mAnimData = monst->Anims[MA_STAND].CelSpritesForDirections[rd] ? &*monst->Anims[MA_STAND].CelSpritesForDirections[rd] : nullptr;
-	monster[i]._mAnimDelay = monst->Anims[MA_STAND].Rate;
-	monster[i]._mAnimCnt = GenerateRnd(monster[i]._mAnimDelay - 1);
-	monster[i]._mAnimLen = monst->Anims[MA_STAND].Frames;
-	monster[i]._mAnimFrame = GenerateRnd(monster[i]._mAnimLen - 1) + 1;
+	monster[i].AnimInfo = {};
+	monster[i].AnimInfo.pCelSprite = monst->Anims[MA_STAND].CelSpritesForDirections[rd] ? &*monst->Anims[MA_STAND].CelSpritesForDirections[rd] : nullptr;
+	monster[i].AnimInfo.DelayLen = monst->Anims[MA_STAND].Rate;
+	monster[i].AnimInfo.DelayCounter = GenerateRnd(monster[i].AnimInfo.DelayLen - 1);
+	monster[i].AnimInfo.NumberOfFrames = monst->Anims[MA_STAND].Frames;
+	monster[i].AnimInfo.CurrentFrame = GenerateRnd(monster[i].AnimInfo.NumberOfFrames - 1) + 1;
 
 	monster[i].mLevel = monst->MData->mLevel;
 	monster[i]._mmaxhp = (monst->mMinHP + GenerateRnd(monst->mMaxHP - monst->mMinHP + 1)) << 6;
@@ -534,8 +535,8 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 	monster[i].mtalkmsg = TEXT_NONE;
 
 	if (monster[i]._mAi == AI_GARG) {
-		monster[i]._mAnimData = &*monst->Anims[MA_SPECIAL].CelSpritesForDirections[rd];
-		monster[i]._mAnimFrame = 1;
+		monster[i].AnimInfo.pCelSprite = &*monst->Anims[MA_SPECIAL].CelSpritesForDirections[rd];
+		monster[i].AnimInfo.CurrentFrame = 1;
 		monster[i]._mFlags |= MFLAG_ALLOW_SPECIAL;
 		monster[i]._mmode = MM_SATTACK;
 	}
@@ -594,11 +595,7 @@ void ClrAllMonsters()
 		Monst->position.old = { 0, 0 };
 		Monst->_mdir = static_cast<Direction>(GenerateRnd(8));
 		Monst->position.velocity = { 0, 0 };
-		Monst->_mAnimData = nullptr;
-		Monst->_mAnimDelay = 0;
-		Monst->_mAnimCnt = 0;
-		Monst->_mAnimLen = 0;
-		Monst->_mAnimFrame = 0;
+		Monst->AnimInfo = {};
 		Monst->_mFlags = 0;
 		Monst->_mDelFlag = false;
 		Monst->_menemy = GenerateRnd(gbActivePlayers);
@@ -889,8 +886,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	if (Monst->_mAi != AI_GARG) {
-		Monst->_mAnimData = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[Monst->_mdir];
-		Monst->_mAnimFrame = GenerateRnd(Monst->_mAnimLen - 1) + 1;
+		Monst->AnimInfo.pCelSprite = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[Monst->_mdir];
+		Monst->AnimInfo.CurrentFrame = GenerateRnd(Monst->AnimInfo.NumberOfFrames - 1) + 1;
 		Monst->_mFlags &= ~MFLAG_ALLOW_SPECIAL;
 		Monst->_mmode = MM_STAND;
 	}
@@ -1061,8 +1058,8 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 				}
 
 				if (monster[nummonsters]._mAi != AI_GARG) {
-					monster[nummonsters]._mAnimData = &*monster[nummonsters].MType->Anims[MA_STAND].CelSpritesForDirections[monster[nummonsters]._mdir];
-					monster[nummonsters]._mAnimFrame = GenerateRnd(monster[nummonsters]._mAnimLen - 1) + 1;
+					monster[nummonsters].AnimInfo.pCelSprite = &*monster[nummonsters].MType->Anims[MA_STAND].CelSpritesForDirections[monster[nummonsters]._mdir];
+					monster[nummonsters].AnimInfo.CurrentFrame = GenerateRnd(monster[nummonsters].AnimInfo.NumberOfFrames - 1) + 1;
 					monster[nummonsters]._mFlags &= ~MFLAG_ALLOW_SPECIAL;
 					monster[nummonsters]._mmode = MM_STAND;
 				}
@@ -1271,11 +1268,11 @@ void monster_43C785(int i)
 void NewMonsterAnim(int i, AnimStruct *anim, Direction md)
 {
 	MonsterStruct *Monst = &monster[i];
-	Monst->_mAnimData = &*anim->CelSpritesForDirections[md];
-	Monst->_mAnimLen = anim->Frames;
-	Monst->_mAnimCnt = 0;
-	Monst->_mAnimFrame = 1;
-	Monst->_mAnimDelay = anim->Rate;
+	Monst->AnimInfo.pCelSprite = &*anim->CelSpritesForDirections[md];
+	Monst->AnimInfo.NumberOfFrames = anim->Frames;
+	Monst->AnimInfo.DelayCounter = 0;
+	Monst->AnimInfo.CurrentFrame = 1;
+	Monst->AnimInfo.DelayLen = anim->Rate;
 	Monst->_mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
 	Monst->_mdir = md;
 }
@@ -1877,7 +1874,7 @@ void M_StartFadein(int i, Direction md, bool backwards)
 	monster[i]._mFlags &= ~MFLAG_HIDDEN;
 	if (backwards) {
 		monster[i]._mFlags |= MFLAG_LOCK_ANIMATION;
-		monster[i]._mAnimFrame = monster[i]._mAnimLen;
+		monster[i].AnimInfo.CurrentFrame = monster[i].AnimInfo.NumberOfFrames;
 	}
 }
 
@@ -1895,7 +1892,7 @@ void M_StartFadeout(int i, Direction md, bool backwards)
 	monster[i]._mdir = md;
 	if (backwards) {
 		monster[i]._mFlags |= MFLAG_LOCK_ANIMATION;
-		monster[i]._mAnimFrame = monster[i]._mAnimLen;
+		monster[i].AnimInfo.CurrentFrame = monster[i].AnimInfo.NumberOfFrames;
 	}
 }
 
@@ -1907,8 +1904,8 @@ void M_StartHeal(int i)
 	assurance(monster[i].MType != nullptr, i);
 
 	Monst = &monster[i];
-	Monst->_mAnimData = &*Monst->MType->Anims[MA_SPECIAL].CelSpritesForDirections[Monst->_mdir];
-	Monst->_mAnimFrame = Monst->MType->Anims[MA_SPECIAL].Frames;
+	Monst->AnimInfo.pCelSprite = &*Monst->MType->Anims[MA_SPECIAL].CelSpritesForDirections[Monst->_mdir];
+	Monst->AnimInfo.CurrentFrame = Monst->MType->Anims[MA_SPECIAL].Frames;
 	Monst->_mFlags |= MFLAG_LOCK_ANIMATION;
 	Monst->_mmode = MM_HEAL;
 	Monst->_mVar1 = Monst->_mmaxhp / (16 * (GenerateRnd(5) + 4));
@@ -1952,11 +1949,11 @@ bool M_DoStand(int i)
 
 	Monst = &monster[i];
 	if (Monst->MType->mtype == MT_GOLEM)
-		Monst->_mAnimData = &*Monst->MType->Anims[MA_WALK].CelSpritesForDirections[Monst->_mdir];
+		Monst->AnimInfo.pCelSprite = &*Monst->MType->Anims[MA_WALK].CelSpritesForDirections[Monst->_mdir];
 	else
-		Monst->_mAnimData = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[Monst->_mdir];
+		Monst->AnimInfo.pCelSprite = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[Monst->_mdir];
 
-	if (Monst->_mAnimFrame == Monst->_mAnimLen)
+	if (Monst->AnimInfo.CurrentFrame == Monst->AnimInfo.NumberOfFrames)
 		M_Enemy(i);
 
 	Monst->_mVar2++;
@@ -1998,7 +1995,7 @@ bool M_DoWalk(int i, int variant)
 		M_StartStand(i, monster[i]._mdir);
 		returnValue = true;
 	} else { //We didn't reach new tile so update monster's "sub-tile" position
-		if (monster[i]._mAnimCnt == 0) {
+		if (monster[i].AnimInfo.DelayCounter == 0) {
 			if (monster[i].actionFrame == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
 			monster[i].actionFrame++;
@@ -2209,22 +2206,22 @@ bool M_DoAttack(int i)
 	commitment(Monst->MType != nullptr, i);
 	commitment(Monst->MData != nullptr, i); // BUGFIX: should check MData (fixed)
 
-	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].MData->mAFNum) {
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit, monster[i].mMinDamage, monster[i].mMaxDamage);
 		if (monster[i]._mAi != AI_SNAKE)
 			PlayEffect(i, 0);
 	}
-	if (monster[i].MType->mtype >= MT_NMAGMA && monster[i].MType->mtype <= MT_WMAGMA && monster[i]._mAnimFrame == 9) {
+	if (monster[i].MType->mtype >= MT_NMAGMA && monster[i].MType->mtype <= MT_WMAGMA && monster[i].AnimInfo.CurrentFrame == 9) {
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit + 10, monster[i].mMinDamage - 2, monster[i].mMaxDamage - 2);
 		PlayEffect(i, 0);
 	}
-	if (monster[i].MType->mtype >= MT_STORM && monster[i].MType->mtype <= MT_MAEL && monster[i]._mAnimFrame == 13) {
+	if (monster[i].MType->mtype >= MT_STORM && monster[i].MType->mtype <= MT_MAEL && monster[i].AnimInfo.CurrentFrame == 13) {
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit - 20, monster[i].mMinDamage + 4, monster[i].mMaxDamage + 4);
 		PlayEffect(i, 0);
 	}
-	if (monster[i]._mAi == AI_SNAKE && monster[i]._mAnimFrame == 1)
+	if (monster[i]._mAi == AI_SNAKE && monster[i].AnimInfo.CurrentFrame == 1)
 		PlayEffect(i, 0);
-	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].AnimInfo.NumberOfFrames) {
 		M_StartStand(i, monster[i]._mdir);
 		return true;
 	}
@@ -2240,7 +2237,7 @@ bool M_DoRAttack(int i)
 	commitment(monster[i].MType != nullptr, i);
 	commitment(monster[i].MData != nullptr, i);
 
-	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].MData->mAFNum) {
 		if (monster[i]._mVar1 != -1) {
 			if (monster[i]._mVar1 == MIS_CBOLT)
 				multimissiles = 3;
@@ -2266,7 +2263,7 @@ bool M_DoRAttack(int i)
 		PlayEffect(i, 0);
 	}
 
-	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].AnimInfo.NumberOfFrames) {
 		M_StartStand(i, monster[i]._mdir);
 		return true;
 	}
@@ -2280,7 +2277,7 @@ bool M_DoRSpAttack(int i)
 	commitment(monster[i].MType != nullptr, i);
 	commitment(monster[i].MData != nullptr, i); // BUGFIX: should check MData (fixed)
 
-	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2 && monster[i]._mAnimCnt == 0) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].MData->mAFNum2 && monster[i].AnimInfo.DelayCounter == 0) {
 		Point sourcePosition = monster[i].position.tile;
 		if (gbIsHellfire) {
 			sourcePosition += monster[i]._mdir;
@@ -2298,7 +2295,7 @@ bool M_DoRSpAttack(int i)
 		PlayEffect(i, 3);
 	}
 
-	if (monster[i]._mAi == AI_MEGA && monster[i]._mAnimFrame == 3) {
+	if (monster[i]._mAi == AI_MEGA && monster[i].AnimInfo.CurrentFrame == 3) {
 		if (monster[i]._mVar2++ == 0) {
 			monster[i]._mFlags |= MFLAG_ALLOW_SPECIAL;
 		} else if (monster[i]._mVar2 == 15) {
@@ -2306,7 +2303,7 @@ bool M_DoRSpAttack(int i)
 		}
 	}
 
-	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].AnimInfo.NumberOfFrames) {
 		M_StartStand(i, monster[i]._mdir);
 		return true;
 	}
@@ -2320,10 +2317,10 @@ bool M_DoSAttack(int i)
 	commitment(monster[i].MType != nullptr, i);
 	commitment(monster[i].MData != nullptr, i);
 
-	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2)
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].MData->mAFNum2)
 		M_TryH2HHit(i, monster[i]._menemy, monster[i].mHit2, monster[i].mMinDamage2, monster[i].mMaxDamage2);
 
-	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].AnimInfo.NumberOfFrames) {
 		M_StartStand(i, monster[i]._mdir);
 		return true;
 	}
@@ -2335,8 +2332,8 @@ bool M_DoFadein(int i)
 {
 	commitment((DWORD)i < MAXMONSTERS, i);
 
-	if ((!(monster[i]._mFlags & MFLAG_LOCK_ANIMATION) || monster[i]._mAnimFrame != 1)
-	    && (monster[i]._mFlags & MFLAG_LOCK_ANIMATION || monster[i]._mAnimFrame != monster[i]._mAnimLen)) {
+	if ((!(monster[i]._mFlags & MFLAG_LOCK_ANIMATION) || monster[i].AnimInfo.CurrentFrame != 1)
+	    && (monster[i]._mFlags & MFLAG_LOCK_ANIMATION || monster[i].AnimInfo.CurrentFrame != monster[i].AnimInfo.NumberOfFrames)) {
 		return false;
 	}
 
@@ -2352,8 +2349,8 @@ bool M_DoFadeout(int i)
 
 	commitment((DWORD)i < MAXMONSTERS, i);
 
-	if ((!(monster[i]._mFlags & MFLAG_LOCK_ANIMATION) || monster[i]._mAnimFrame != 1)
-	    && (monster[i]._mFlags & MFLAG_LOCK_ANIMATION || monster[i]._mAnimFrame != monster[i]._mAnimLen)) {
+	if ((!(monster[i]._mFlags & MFLAG_LOCK_ANIMATION) || monster[i].AnimInfo.CurrentFrame != 1)
+	    && (monster[i]._mFlags & MFLAG_LOCK_ANIMATION || monster[i].AnimInfo.CurrentFrame != monster[i].AnimInfo.NumberOfFrames)) {
 		return false;
 	}
 
@@ -2382,7 +2379,7 @@ bool M_DoHeal(int i)
 		return false;
 	}
 
-	if (Monst->_mAnimFrame == 1) {
+	if (Monst->AnimInfo.CurrentFrame == 1) {
 		Monst->_mFlags &= ~MFLAG_LOCK_ANIMATION;
 		Monst->_mFlags |= MFLAG_ALLOW_SPECIAL;
 		if (Monst->_mVar1 + Monst->_mhitpoints < Monst->_mmaxhp) {
@@ -2510,7 +2507,7 @@ bool M_DoGotHit(int i)
 	commitment((DWORD)i < MAXMONSTERS, i);
 	commitment(monster[i].MType != nullptr, i);
 
-	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].AnimInfo.NumberOfFrames) {
 		M_StartStand(i, monster[i]._mdir);
 
 		return true;
@@ -2628,7 +2625,7 @@ bool M_DoDeath(int i)
 
 		if (monster[i]._mVar1 == 140)
 			PrepDoEnding();
-	} else if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
+	} else if (monster[i].AnimInfo.CurrentFrame == monster[i].AnimInfo.NumberOfFrames) {
 		if (monster[i]._uniqtype == 0)
 			AddDead(monster[i].position.tile, monster[i].MType->mdeadval, monster[i]._mdir);
 		else
@@ -2647,10 +2644,10 @@ bool M_DoSpStand(int i)
 	commitment((DWORD)i < MAXMONSTERS, i);
 	commitment(monster[i].MType != nullptr, i);
 
-	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2)
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].MData->mAFNum2)
 		PlayEffect(i, 3);
 
-	if (monster[i]._mAnimFrame == monster[i]._mAnimLen) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].AnimInfo.NumberOfFrames) {
 		M_StartStand(i, monster[i]._mdir);
 		return true;
 	}
@@ -2665,16 +2662,16 @@ bool M_DoDelay(int i)
 	commitment((DWORD)i < MAXMONSTERS, i);
 	commitment(monster[i].MType != nullptr, i);
 
-	monster[i]._mAnimData = &*monster[i].MType->Anims[MA_STAND].CelSpritesForDirections[M_GetDir(i)];
+	monster[i].AnimInfo.pCelSprite = &*monster[i].MType->Anims[MA_STAND].CelSpritesForDirections[M_GetDir(i)];
 	if (monster[i]._mAi == AI_LAZURUS) {
 		if (monster[i]._mVar2 > 8 || monster[i]._mVar2 < 0)
 			monster[i]._mVar2 = 8;
 	}
 
 	if (monster[i]._mVar2-- == 0) {
-		oFrame = monster[i]._mAnimFrame;
+		oFrame = monster[i].AnimInfo.CurrentFrame;
 		M_StartStand(i, monster[i]._mdir);
-		monster[i]._mAnimFrame = oFrame;
+		monster[i].AnimInfo.CurrentFrame = oFrame;
 		return true;
 	}
 
@@ -3243,7 +3240,7 @@ void MAI_Sneak(int i)
 			}
 			if (Monst->_mmode == MM_STAND) {
 				if (abs(mx) >= 2 || abs(my) >= 2 || v >= 4 * Monst->_mint + 10)
-					Monst->_mAnimData = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[md];
+					Monst->AnimInfo.pCelSprite = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[md];
 				else
 					M_StartAttack(i);
 			}
@@ -3337,7 +3334,7 @@ void MAI_Fallen(int i)
 		}
 	}
 
-	if (Monst->_mAnimFrame == Monst->_mAnimLen) {
+	if (Monst->AnimInfo.CurrentFrame == Monst->AnimInfo.NumberOfFrames) {
 		if (GenerateRnd(4) != 0) {
 			return;
 		}
@@ -3503,7 +3500,7 @@ void MAI_Ranged(int i, int missile_type, bool special)
 				else
 					M_StartRAttack(i, missile_type, 4);
 			} else {
-				Monst->_mAnimData = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[md];
+				Monst->AnimInfo.pCelSprite = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[md];
 			}
 		}
 	} else if (Monst->_msquelch != 0) {
@@ -4627,18 +4624,18 @@ void ProcessMonsters()
 			}
 		} while (raflag);
 		if (Monst->_mmode != MM_STONE) {
-			Monst->_mAnimCnt++;
-			if (!(Monst->_mFlags & MFLAG_ALLOW_SPECIAL) && Monst->_mAnimCnt >= Monst->_mAnimDelay) {
-				Monst->_mAnimCnt = 0;
+			Monst->AnimInfo.DelayCounter++;
+			if (!(Monst->_mFlags & MFLAG_ALLOW_SPECIAL) && Monst->AnimInfo.DelayCounter >= Monst->AnimInfo.DelayLen) {
+				Monst->AnimInfo.DelayCounter = 0;
 				if (Monst->_mFlags & MFLAG_LOCK_ANIMATION) {
-					Monst->_mAnimFrame--;
-					if (Monst->_mAnimFrame == 0) {
-						Monst->_mAnimFrame = Monst->_mAnimLen;
+					Monst->AnimInfo.CurrentFrame--;
+					if (Monst->AnimInfo.CurrentFrame == 0) {
+						Monst->AnimInfo.CurrentFrame = Monst->AnimInfo.NumberOfFrames;
 					}
 				} else {
-					Monst->_mAnimFrame++;
-					if (Monst->_mAnimFrame > Monst->_mAnimLen) {
-						Monst->_mAnimFrame = 1;
+					Monst->AnimInfo.CurrentFrame++;
+					if (Monst->AnimInfo.CurrentFrame > Monst->AnimInfo.NumberOfFrames) {
+						Monst->AnimInfo.CurrentFrame = 1;
 					}
 				}
 			}
@@ -4845,19 +4842,19 @@ void SyncMonsterAnim(int i)
 		break;
 	case MM_CHARGE:
 		graphic = MA_ATTACK;
-		monster[i]._mAnimFrame = 1;
-		monster[i]._mAnimLen = monster[i].MType->Anims[MA_ATTACK].Frames;
+		monster[i].AnimInfo.CurrentFrame = 1;
+		monster[i].AnimInfo.NumberOfFrames = monster[i].MType->Anims[MA_ATTACK].Frames;
 		break;
 	default:
-		monster[i]._mAnimFrame = 1;
-		monster[i]._mAnimLen = monster[i].MType->Anims[MA_STAND].Frames;
+		monster[i].AnimInfo.CurrentFrame = 1;
+		monster[i].AnimInfo.NumberOfFrames = monster[i].MType->Anims[MA_STAND].Frames;
 		break;
 	}
 
 	if (monster[i].MType->Anims[graphic].CelSpritesForDirections[_mdir])
-		monster[i]._mAnimData = &*monster[i].MType->Anims[graphic].CelSpritesForDirections[_mdir];
+		monster[i].AnimInfo.pCelSprite = &*monster[i].MType->Anims[graphic].CelSpritesForDirections[_mdir];
 	else
-		monster[i]._mAnimData = nullptr;
+		monster[i].AnimInfo.pCelSprite = nullptr;
 }
 
 void M_FallenFear(Point position)
@@ -5433,7 +5430,7 @@ void decode_enemy(int m, int enemy)
 void MonsterStruct::CheckStandAnimationIsLoaded(int mdir)
 {
 	if (_mmode == MM_STAND || _mmode == MM_TALK)
-		_mAnimData = &*MType->Anims[MA_STAND].CelSpritesForDirections[mdir];
+		AnimInfo.pCelSprite = &*MType->Anims[MA_STAND].CelSpritesForDirections[mdir];
 }
 
 } // namespace devilution

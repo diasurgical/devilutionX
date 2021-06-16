@@ -315,13 +315,13 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		return;
 	}
 
-	if (monster[m]._mAnimData == nullptr) {
+	if (monster[m].AnimInfo.pCelSprite == nullptr) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster[m].mName);
 		return;
 	}
 
-	int nCel = monster[m]._mAnimFrame;
-	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m]._mAnimData->Data());
+	int nCel = monster[m].AnimInfo.CurrentFrame;
+	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m].AnimInfo.pCelSprite->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
@@ -337,10 +337,10 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		return;
 	}
 
-	CelSprite &cel = *monster[m]._mAnimData;
+	CelSprite &cel = *monster[m].AnimInfo.pCelSprite;
 
 	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
-		Cl2DrawLightTbl(out, mx, my, cel, monster[m]._mAnimFrame, 1);
+		Cl2DrawLightTbl(out, mx, my, cel, nCel, 1);
 		return;
 	}
 
@@ -352,9 +352,9 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 	if (plr[myplr]._pInfraFlag && light_table_index > 8)
 		trans = 1;
 	if (trans)
-		Cl2DrawLightTbl(out, mx, my, cel, monster[m]._mAnimFrame, trans);
+		Cl2DrawLightTbl(out, mx, my, cel, nCel, trans);
 	else
-		Cl2DrawLight(out, mx, my, cel, monster[m]._mAnimFrame);
+		Cl2DrawLight(out, mx, my, cel, nCel);
 }
 
 /**
@@ -696,12 +696,12 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 	}
 
-	const CelSprite &cel = *pMonster->_mAnimData;
+	const CelSprite &cel = *pMonster->AnimInfo.pCelSprite;
 
 	px = sx + pMonster->position.offset.x - CalculateWidth2(cel.Width());
 	py = sy + pMonster->position.offset.y;
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, px, py, cel, pMonster->_mAnimFrame);
+		Cl2DrawOutline(out, 233, px, py, cel, pMonster->AnimInfo.CurrentFrame);
 	}
 	DrawMonster(out, x, y, px, py, mi);
 }

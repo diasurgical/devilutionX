@@ -10,6 +10,7 @@
 
 #include "engine.h"
 #include "engine/actor_position.hpp"
+#include "engine/animationinfo.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "miniwin/miniwin.h"
@@ -151,15 +152,10 @@ struct MonsterStruct { // note: missing field _mAFNum
 	int _menemy;
 	/** Usually correspond's to the enemy's future position */
 	Point enemyPosition;
-	CelSprite *_mAnimData;
-	/** Tick length of each frame in the current animation */
-	int _mAnimDelay;
-	/** Increases by one each game tick, counting how close we are to _pAnimDelay */
-	int _mAnimCnt;
-	/** Number of frames in current animation */
-	int _mAnimLen;
-	/** Current frame of animation. */
-	int _mAnimFrame;
+	/**
+	 * @brief Contains Information for current Animation
+	 */
+	AnimationInfo AnimInfo;
 	bool _mDelFlag;
 	int _mVar1;
 	int _mVar2;
