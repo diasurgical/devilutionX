@@ -1,6 +1,7 @@
 #include "towners.h"
 
 #include "cursor.h"
+#include "engine/load_file.hpp"
 #include "inv.h"
 #include "minitext.h"
 #include "stores.h"

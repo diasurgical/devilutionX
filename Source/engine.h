@@ -276,64 +276,6 @@ struct CelOutputBuffer {
 };
 
 /**
- * Stores a CEL or CL2 sprite and its width(s).
- *
- * The data may be unowned.
- * Eventually we'd like to remove the unowned version.
- */
-class CelSprite {
-public:
-	CelSprite(std::unique_ptr<byte[]> data, int width)
-	    : data_(std::move(data))
-	    , data_ptr_(data_.get())
-	    , width_(width)
-	{
-	}
-
-	CelSprite(std::unique_ptr<byte[]> data, const int *widths)
-	    : data_(std::move(data))
-	    , data_ptr_(data_.get())
-	    , widths_(widths)
-	{
-	}
-
-	/**
-	 * Constructs an unowned sprite.
-	 * Ideally we'd like to remove all uses of this constructor.
-	 */
-	CelSprite(const byte *data, int width)
-	    : data_ptr_(data)
-	    , width_(width)
-	{
-	}
-
-	CelSprite(CelSprite &&) noexcept = default;
-	CelSprite &operator=(CelSprite &&) noexcept = default;
-
-	[[nodiscard]] const byte *Data() const
-	{
-		return data_ptr_;
-	}
-
-	[[nodiscard]] int Width(std::size_t frame = 1) const
-	{
-		return widths_ == nullptr ? width_ : widths_[frame];
-	}
-
-private:
-	std::unique_ptr<byte[]> data_;
-	const byte *data_ptr_;
-	int width_ = 0;
-	const int *widths_ = nullptr; // unowned
-};
-
-/**
- * @brief Loads a Cel sprite and sets its width
- */
-CelSprite LoadCel(const char *pszName, int width);
-CelSprite LoadCel(const char *pszName, const int *widths);
-
-/**
  * @brief Draw a horizontal line segment in the target buffer (left to right)
  * @param out Target buffer
  * @param from Start of the line segment
@@ -390,48 +332,6 @@ int32_t AdvanceRndSeed();
 int32_t GetRndSeed();
 uint32_t GetLCGEngineState();
 int32_t GenerateRnd(int32_t v);
-
-size_t GetFileSize(const char *pszName);
-void LoadFileData(const char *pszName, byte *buffer, size_t bufferSize);
-
-template <typename T>
-void LoadFileInMem(const char *path, T *data, std::size_t count = 0)
-{
-	if (count == 0)
-		count = GetFileSize(path);
-
-	LoadFileData(path, reinterpret_cast<byte *>(data), count * sizeof(T));
-}
-
-template <typename T, std::size_t N>
-void LoadFileInMem(const char *path, std::array<T, N> &data)
-{
-	LoadFileInMem(path, &data, N);
-}
-
-/**
- * @brief Load a file in to a buffer
- * @param path Path of file
- * @param elements Number of T elements read
- * @return Buffer with content of file
- */
-template <typename T = byte>
-std::unique_ptr<T[]> LoadFileInMem(const char *path, size_t *elements = nullptr)
-{
-	const size_t fileLen = GetFileSize(path);
-
-	if ((fileLen % sizeof(T)) != 0)
-		app_fatal("File size does not align with type\n%s", path);
-
-	if (elements != nullptr)
-		*elements = fileLen / sizeof(T);
-
-	std::unique_ptr<T[]> buf { new T[fileLen / sizeof(T)] };
-
-	LoadFileData(path, reinterpret_cast<byte *>(buf.get()), fileLen);
-
-	return buf;
-}
 
 void PlayInGameMovie(const char *pszMovie);
 

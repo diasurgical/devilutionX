@@ -3,7 +3,9 @@
  *
  * Implementation of general dungeon generation code.
  */
+#include "gendung.h"
 
+#include "engine/load_file.hpp"
 #include "init.h"
 #include "options.h"
 

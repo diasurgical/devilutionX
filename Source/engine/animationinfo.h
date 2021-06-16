@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <type_traits>
 
-#include "engine.h"
+#include "engine/cel_sprite.hpp"
 
 namespace devilution {
 

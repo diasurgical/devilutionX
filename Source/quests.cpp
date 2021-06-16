@@ -3,11 +3,13 @@
  *
  * Implementation of functionality for handling quests.
  */
+#include "quests.h"
 
 #include <fmt/format.h>
 
 #include "control.h"
 #include "cursor.h"
+#include "engine/load_file.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "gendung.h"

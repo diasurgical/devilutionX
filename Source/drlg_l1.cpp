@@ -6,6 +6,7 @@
 #include "drlg_l1.h"
 
 #include "engine/point.hpp"
+#include "engine/load_file.hpp"
 #include "gendung.h"
 #include "lighting.h"
 #include "player.h"

@@ -9,6 +9,8 @@
 #include <fmt/format.h>
 
 #include "cursor.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"

@@ -10,6 +10,7 @@
 #include "control.h"
 #include "cursor.h"
 #include "dead.h"
+#include "engine/load_file.hpp"
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"

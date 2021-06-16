@@ -17,7 +17,6 @@
 #include "lighting.h"
 #include "movie.h"
 #include "options.h"
-#include "storm/storm.h"
 
 namespace devilution {
 
@@ -78,16 +77,6 @@ void CelOutputBuffer::BlitFrom(const CelOutputBuffer &src, SDL_Rect srcRect, Poi
 void CelOutputBuffer::BlitFromSkipColorIndexZero(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const
 {
 	BufferBlit</*SkipColorIndexZero=*/true>(src, srcRect, *this, targetPosition);
-}
-
-CelSprite LoadCel(const char *pszName, int width)
-{
-	return CelSprite(LoadFileInMem(pszName), width);
-}
-
-CelSprite LoadCel(const char *pszName, const int *widths)
-{
-	return CelSprite(LoadFileInMem(pszName), widths);
 }
 
 void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
@@ -294,36 +283,6 @@ int32_t GenerateRnd(int32_t v)
 	if (v < 0xFFFF)
 		return (AdvanceRndSeed() >> 16) % v;
 	return AdvanceRndSeed() % v;
-}
-
-size_t GetFileSize(const char *pszName)
-{
-	HANDLE file;
-	if (!SFileOpenFile(pszName, &file)) {
-		if (!gbQuietMode)
-			app_fatal("GetFileSize - SFileOpenFile failed for file:\n%s", pszName);
-		return 0;
-	}
-	const size_t fileLen = SFileGetFileSize(file);
-	SFileCloseFileThreadSafe(file);
-
-	return fileLen;
-}
-
-void LoadFileData(const char *pszName, byte *buffer, size_t fileLen)
-{
-	HANDLE file;
-	if (!SFileOpenFile(pszName, &file)) {
-		if (!gbQuietMode)
-			app_fatal("LoadFileData - SFileOpenFile failed for file:\n%s", pszName);
-		return;
-	}
-
-	if (fileLen == 0)
-		app_fatal("Zero length SFILE:\n%s", pszName);
-
-	SFileReadFileThreadSafe(file, buffer, fileLen);
-	SFileCloseFileThreadSafe(file);
 }
 
 /**

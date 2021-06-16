@@ -7,6 +7,8 @@
 
 #include "control.h"
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "utils/stdcompat/optional.hpp"
 
