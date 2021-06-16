@@ -35,6 +35,7 @@
 
 #include "appfat.h"
 #include "engine/point.hpp"
+#include "engine/size.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/cstddef.hpp"
 
@@ -42,21 +43,6 @@
 #define TILE_HEIGHT 32
 
 namespace devilution {
-
-struct Size {
-	int width;
-	int height;
-
-	bool operator==(const Size &other) const
-	{
-		return width == other.width && height == other.height;
-	}
-
-	bool operator!=(const Size &other) const
-	{
-		return !(*this == other);
-	}
-};
 
 struct Rectangle {
 	Point position;

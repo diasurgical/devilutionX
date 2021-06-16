@@ -11,6 +11,7 @@
 #include "cursor.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/size.hpp"
 #include "hwcursor.hpp"
 #include "minitext.h"
 #include "options.h"
