@@ -432,6 +432,40 @@ struct CelOutputBuffer {
 		subregion.h = h;
 		return CelOutputBuffer(surface, subregion);
 	}
+
+	/**
+	 * @brief Clips srcRect and targetPosition to this output buffer.
+	 */
+	void Clip(SDL_Rect *srcRect, Point *targetPosition) const
+	{
+		if (targetPosition->x < 0) {
+			srcRect->x -= targetPosition->x;
+			srcRect->w += targetPosition->x;
+			targetPosition->x = 0;
+		}
+		if (targetPosition->y < 0) {
+			srcRect->y -= targetPosition->y;
+			srcRect->h += targetPosition->y;
+			targetPosition->y = 0;
+		}
+		if (targetPosition->x + srcRect->w > region.w) {
+			srcRect->w = region.w - targetPosition->x;
+		}
+		if (targetPosition->y + srcRect->h > region.h) {
+			srcRect->h = region.h - targetPosition->y;
+		}
+	}
+
+	/**
+	 * @brief Copies the `srcRect` portion of the given buffer to this buffer at `targetPosition`.
+	 */
+	void BlitFrom(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const;
+
+	/**
+	 * @brief Copies the `srcRect` portion of the given buffer to this buffer at `targetPosition`.
+	 * Source pixels with index 0 are not copied.
+	 */
+	void BlitFromSkipColorIndexZero(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const;
 };
 
 /**
