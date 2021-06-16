@@ -17,6 +17,7 @@
 #include "stores.h"
 #include "towners.h"
 #include "utils/language.h"
+#include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -161,11 +162,18 @@ void InitInv()
 
 static void InvDrawSlotBack(const CelOutputBuffer &out, int x, int y, int w, int h)
 {
-	BYTE *dst = out.at(x, y);
+	SDL_Rect srcRect = MakeSdlRect(0, 0, w, h);
+	Point targetPosition { x, y };
+	out.Clip(&srcRect, &targetPosition);
+	if (srcRect.w <= 0 || srcRect.h <= 0)
+		return;
 
-	for (int hgt = h; hgt != 0; hgt--, dst -= out.pitch() + w) {
-		for (int wdt = w; wdt != 0; wdt--) {
-			BYTE pix = *dst;
+	std::uint8_t *dst = &out[targetPosition];
+	const auto dstPitch = out.pitch();
+
+	for (int hgt = srcRect.h; hgt != 0; hgt--, dst -= dstPitch + w) {
+		for (int wdt = srcRect.w; wdt != 0; wdt--) {
+			std::uint8_t pix = *dst;
 			if (pix >= PAL16_BLUE) {
 				if (pix <= PAL16_BLUE + 15)
 					pix -= PAL16_BLUE - PAL16_BEIGE;
