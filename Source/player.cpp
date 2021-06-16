@@ -28,6 +28,187 @@
 
 namespace devilution {
 
+namespace {
+
+struct DirectionSettings {
+	Direction dir;
+	Point tileAdd;
+	Point offset;
+	Point map;
+	_scroll_direction scrollDir;
+	PLR_MODE walkMode;
+	void (*walkModeHandler)(int, Point, const DirectionSettings &);
+};
+
+void PM_ChangeLightOff(PlayerStruct &player)
+{
+	if (player._plid == NO_LIGHT)
+		return;
+
+	const LightListStruct *l = &LightList[player._plid];
+	int x = 2 * player.position.offset.y + player.position.offset.x;
+	int y = 2 * player.position.offset.y - player.position.offset.x;
+
+	x = (x / 8) * (x < 0 ? 1 : -1);
+	y = (y / 8) * (y < 0 ? 1 : -1);
+	int lx = x + (l->position.tile.x * 8);
+	int ly = y + (l->position.tile.y * 8);
+	int offx = l->position.offset.x + (l->position.tile.x * 8);
+	int offy = l->position.offset.y + (l->position.tile.y * 8);
+
+	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
+		return;
+
+	ChangeLightOff(player._plid, { x, y });
+}
+
+void WalkUpwards(int pnum, Point vel, const DirectionSettings &walkParams)
+{
+	auto &player = plr[pnum];
+	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
+	player.position.temp = walkParams.tileAdd;
+}
+
+void WalkDownwards(int pnum, Point vel, const DirectionSettings &walkParams)
+{
+	auto &player = plr[pnum];
+	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
+	player.position.temp = player.position.tile;
+	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
+	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
+	ChangeLightXY(player._plid, player.position.tile);
+	PM_ChangeLightOff(player);
+}
+
+void WalkSides(int pnum, Point vel, const DirectionSettings &walkParams)
+{
+	auto &player = plr[pnum];
+
+	Point const nextPosition = walkParams.map + player.position.tile;
+
+	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
+	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
+	player._pVar4 = nextPosition.x;
+	player._pVar5 = nextPosition.y;
+	dFlags[nextPosition.x][nextPosition.y] |= BFLAG_PLAYERLR;
+
+	if (leveltype != DTYPE_TOWN) {
+		ChangeLightXY(player._plid, nextPosition);
+		PM_ChangeLightOff(player);
+	}
+
+	player.position.temp = player.position.future;
+}
+
+static constexpr std::array<const DirectionSettings, 8> directionSettings { {
+	// clang-format off
+	{ DIR_S,  {  1,  1 }, {   0, -32 }, { 0, 0 }, SDIR_S,  PM_WALK2, WalkDownwards },
+	{ DIR_SW, {  0,  1 }, {  32, -16 }, { 0, 0 }, SDIR_SW, PM_WALK2, WalkDownwards },
+	{ DIR_W,  { -1,  1 }, {  32, -16 }, { 0, 1 }, SDIR_W,  PM_WALK3, WalkSides     },
+	{ DIR_NW, { -1,  0 }, {   0,   0 }, { 0, 0 }, SDIR_NW, PM_WALK,  WalkUpwards   },
+	{ DIR_N,  { -1, -1 }, {   0,   0 }, { 0, 0 }, SDIR_N,  PM_WALK,  WalkUpwards   },
+	{ DIR_NE, {  0, -1 }, {   0,   0 }, { 0, 0 }, SDIR_NE, PM_WALK,  WalkUpwards   },
+	{ DIR_E,  {  1, -1 }, { -32, -16 }, { 1, 0 }, SDIR_E,  PM_WALK3, WalkSides     },
+	{ DIR_SE, {  1,  0 }, { -32, -16 }, { 0, 0 }, SDIR_SE, PM_WALK2, WalkDownwards }
+	// clang-format on
+} };
+
+void ScrollViewPort(const PlayerStruct &player, _scroll_direction dir)
+{
+	ScrollInfo.tile.x = player.position.tile.x - ViewX;
+	ScrollInfo.tile.y = player.position.tile.y - ViewY;
+
+	if (zoomflag) {
+		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
+			ScrollInfo._sdir = SDIR_NONE;
+		} else {
+			ScrollInfo._sdir = dir;
+		}
+	} else if (abs(ScrollInfo.tile.x) >= 2 || abs(ScrollInfo.tile.y) >= 2) {
+		ScrollInfo._sdir = SDIR_NONE;
+	} else {
+		ScrollInfo._sdir = dir;
+	}
+}
+
+bool PlrDirOK(int pnum, Direction dir)
+{
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("PlrDirOK: illegal player %i", pnum);
+	}
+	auto &player = plr[pnum];
+
+	Point position = player.position.tile;
+	Point futurePosition = position + dir;
+	if (futurePosition.x < 0 || !dPiece[futurePosition.x][futurePosition.y] || !PosOkPlayer(pnum, futurePosition)) {
+		return false;
+	}
+
+	if (dir == DIR_E) {
+		return !SolidLoc(position + DIR_SE) && !(dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR);
+	}
+
+	if (dir == DIR_W) {
+		return !SolidLoc(position + DIR_SW) && !(dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR);
+	}
+
+	return true;
+}
+
+void HandleWalkMode(int pnum, Point vel, Direction dir)
+{
+	auto &player = plr[pnum];
+	const auto &dirModeParams = directionSettings[dir];
+	SetPlayerOld(player);
+	if (!PlrDirOK(pnum, dir)) {
+		return;
+	}
+
+	player.position.offset = dirModeParams.offset; // Offset player sprite to align with their previous tile position
+	//The player's tile position after finishing this movement action
+	player.position.future = dirModeParams.tileAdd + player.position.tile;
+
+	dirModeParams.walkModeHandler(pnum, vel, dirModeParams);
+
+	player.position.velocity = vel;
+	player.tempDirection = dirModeParams.dir;
+	player._pmode = dirModeParams.walkMode;
+	player.position.offset2 = dirModeParams.offset * 256;
+
+	player._pdir = dir;
+}
+
+void StartWalkAnimation(PlayerStruct &player, Direction dir, bool pmWillBeCalled)
+{
+	int skippedFrames = -2;
+	if (currlevel == 0 && sgGameInitInfo.bRunInTown)
+		skippedFrames = 2;
+	if (pmWillBeCalled)
+		skippedFrames += 1;
+	NewPlrAnim(player, player_graphic::Walk, dir, player._pWFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
+}
+
+/**
+ * @brief Start moving a player to a new tile
+ */
+void StartWalk(int pnum, Point vel, Direction dir, bool pmWillBeCalled)
+{
+	auto &player = plr[pnum];
+
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == myplr) {
+		SyncPlrKill(pnum, -1);
+		return;
+	}
+
+	HandleWalkMode(pnum, vel, dir);
+	StartWalkAnimation(player, dir, pmWillBeCalled);
+
+	if (pnum == myplr) {
+		ScrollViewPort(player, directionSettings[dir].scrollDir);
+	}
+}
+} // namespace
+
 int myplr;
 PlayerStruct plr[MAX_PLRS];
 bool deathflag;
@@ -1129,33 +1310,6 @@ bool SolidLoc(Point position)
 	return nSolidTable[dPiece[position.x][position.y]];
 }
 
-bool PlrDirOK(int pnum, Direction dir)
-{
-	bool isOk;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrDirOK: illegal player %i", pnum);
-	}
-	auto &player = plr[pnum];
-
-	Point position = player.position.tile;
-	Point futurePosition = position + dir;
-	if (futurePosition.x < 0 || !dPiece[futurePosition.x][futurePosition.y] || !PosOkPlayer(pnum, futurePosition)) {
-		return false;
-	}
-
-	isOk = true;
-	if (dir == DIR_E) {
-		isOk = !SolidLoc(position + DIR_SE) && !(dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR);
-	}
-
-	if (isOk && dir == DIR_W) {
-		isOk = !SolidLoc(position + DIR_SW) && !(dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR);
-	}
-
-	return isOk;
-}
-
 void PlrClrTrans(Point position)
 {
 	int i, j;
@@ -1247,28 +1401,6 @@ void StartWalkStand(int pnum)
 	}
 }
 
-static void PM_ChangeLightOff(PlayerStruct &player)
-{
-	if (player._plid == NO_LIGHT)
-		return;
-
-	const LightListStruct *l = &LightList[player._plid];
-	int x = 2 * player.position.offset.y + player.position.offset.x;
-	int y = 2 * player.position.offset.y - player.position.offset.x;
-
-	x = (x / 8) * (x < 0 ? 1 : -1);
-	y = (y / 8) * (y < 0 ? 1 : -1);
-	int lx = x + (l->position.tile.x * 8);
-	int ly = y + (l->position.tile.y * 8);
-	int offx = l->position.offset.x + (l->position.tile.x * 8);
-	int offy = l->position.offset.y + (l->position.tile.y * 8);
-
-	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
-		return;
-
-	ChangeLightOff(player._plid, { x, y });
-}
-
 void PM_ChangeOffset(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -1296,112 +1428,6 @@ void PM_ChangeOffset(int pnum)
 	}
 
 	PM_ChangeLightOff(player);
-}
-
-/**
- * @brief Start moving a player to a new tile
- */
-void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction EndDir, _scroll_direction sdir, int variant, bool pmWillBeCalled)
-{
-	auto &player = plr[pnum];
-
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == myplr) {
-		SyncPlrKill(pnum, -1);
-		return;
-	}
-
-	SetPlayerOld(player);
-
-	if (!PlrDirOK(pnum, EndDir)) {
-		return;
-	}
-
-	//The player's tile position after finishing this movement action
-	int px = xadd + player.position.tile.x;
-	int py = yadd + player.position.tile.y;
-	player.position.future = { px, py };
-
-	//If this is the local player then update the camera offset position
-	if (pnum == myplr) {
-		ScrollInfo.tile.x = player.position.tile.x - ViewX;
-		ScrollInfo.tile.y = player.position.tile.y - ViewY;
-	}
-
-	switch (variant) {
-	case PM_WALK:
-		dPlayer[px][py] = -(pnum + 1);
-		player._pmode = PM_WALK;
-		player.position.velocity = { xvel, yvel };
-		player.position.offset = { 0, 0 };
-		player.position.temp = { xadd, yadd };
-		player.tempDirection = EndDir;
-
-		player.position.offset2 = { 0, 0 };
-		break;
-	case PM_WALK2:
-		dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
-		player.position.temp = player.position.tile;
-		player.position.tile = { px, py }; // Move player to the next tile to maintain correct render order
-		dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
-		player.position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
-
-		ChangeLightXY(player._plid, player.position.tile);
-		PM_ChangeLightOff(player);
-
-		player._pmode = PM_WALK2;
-		player.position.velocity = { xvel, yvel };
-		player.position.offset2 = { xoff * 256, yoff * 256 };
-		player.tempDirection = EndDir;
-		break;
-	case PM_WALK3:
-		int x = mapx + player.position.tile.x;
-		int y = mapy + player.position.tile.y;
-
-		dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
-		dPlayer[px][py] = -(pnum + 1);
-		player._pVar4 = x;
-		player._pVar5 = y;
-		dFlags[x][y] |= BFLAG_PLAYERLR;
-		player.position.offset = { xoff, yoff }; // Offset player sprite to align with their previous tile position
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(player._plid, { x, y });
-			PM_ChangeLightOff(player);
-		}
-
-		player._pmode = PM_WALK3;
-		player.position.velocity = { xvel, yvel };
-		player.position.temp = { px, py };
-		player.position.offset2 = { xoff * 256, yoff * 256 };
-		player.tempDirection = EndDir;
-		break;
-	}
-
-	//Start walk animation
-	int skippedFrames = -2;
-	if (currlevel == 0 && sgGameInitInfo.bRunInTown)
-		skippedFrames = 2;
-	if (pmWillBeCalled)
-		skippedFrames += 1;
-	NewPlrAnim(player, player_graphic::Walk, EndDir, player._pWFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
-
-	player._pdir = EndDir;
-
-	if (pnum != myplr) {
-		return;
-	}
-
-	if (zoomflag) {
-		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
-			ScrollInfo._sdir = SDIR_NONE;
-		} else {
-			ScrollInfo._sdir = sdir;
-		}
-	} else if (abs(ScrollInfo.tile.x) >= 2 || abs(ScrollInfo.tile.y) >= 2) {
-		ScrollInfo._sdir = SDIR_NONE;
-	} else {
-		ScrollInfo._sdir = sdir;
-	}
 }
 
 void StartAttack(int pnum, Direction d)
@@ -3027,28 +3053,28 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 
 			switch (player.walkpath[0]) {
 			case WALK_N:
-				StartWalk(pnum, 0, -xvel, 0, 0, -1, -1, 0, 0, DIR_N, SDIR_N, PM_WALK, pmWillBeCalled);
+				StartWalk(pnum, { 0, -xvel }, DIR_N, pmWillBeCalled);
 				break;
 			case WALK_NE:
-				StartWalk(pnum, xvel, -yvel, 0, 0, 0, -1, 0, 0, DIR_NE, SDIR_NE, PM_WALK, pmWillBeCalled);
+				StartWalk(pnum, { xvel, -yvel }, DIR_NE, pmWillBeCalled);
 				break;
 			case WALK_E:
-				StartWalk(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E, PM_WALK3, pmWillBeCalled);
+				StartWalk(pnum, { xvel3, 0 }, DIR_E, pmWillBeCalled);
 				break;
 			case WALK_SE:
-				StartWalk(pnum, xvel, yvel, -32, -16, 1, 0, 0, 0, DIR_SE, SDIR_SE, PM_WALK2, pmWillBeCalled);
+				StartWalk(pnum, { xvel, yvel }, DIR_SE, pmWillBeCalled);
 				break;
 			case WALK_S:
-				StartWalk(pnum, 0, xvel, 0, -32, 1, 1, 0, 0, DIR_S, SDIR_S, PM_WALK2, pmWillBeCalled);
+				StartWalk(pnum, { 0, xvel }, DIR_S, pmWillBeCalled);
 				break;
 			case WALK_SW:
-				StartWalk(pnum, -xvel, yvel, 32, -16, 0, 1, 0, 0, DIR_SW, SDIR_SW, PM_WALK2, pmWillBeCalled);
+				StartWalk(pnum, { -xvel, yvel }, DIR_SW, pmWillBeCalled);
 				break;
 			case WALK_W:
-				StartWalk(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W, PM_WALK3, pmWillBeCalled);
+				StartWalk(pnum, { -xvel3, 0 }, DIR_W, pmWillBeCalled);
 				break;
 			case WALK_NW:
-				StartWalk(pnum, -xvel, -yvel, 0, 0, -1, 0, 0, 0, DIR_NW, SDIR_NW, PM_WALK, pmWillBeCalled);
+				StartWalk(pnum, { -xvel, -yvel }, DIR_NW, pmWillBeCalled);
 				break;
 			}
 
