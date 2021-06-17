@@ -8,7 +8,7 @@ else {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     aaptOptions {
         noCompress 'mpq'
     }
@@ -17,7 +17,7 @@ android {
             applicationId "org.diasurgical.devilutionx"
         }
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 18
         versionName "1.2.1"
         externalNativeBuild {
@@ -43,9 +43,9 @@ android {
                 version "3.13.0+"
             }
         }
-       
+
     }
-    
+
     if (buildAsLibrary) {
         libraryVariants.all { variant ->
             variant.outputs.each { output ->
