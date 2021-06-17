@@ -39,12 +39,13 @@
     <application android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
-        android:hardwareAccelerated="true" >
+        android:hardwareAccelerated="true"
+        android:requestLegacyExternalStorage="true">
 
         <!-- Example of setting SDL hints from AndroidManifest.xml:
         <meta-data android:name="SDL_ENV.SDL_ACCELEROMETER_AS_JOYSTICK" android:value="0"/>
          -->
-     
+
         <activity android:name="org.diasurgical.devilutionx.DevilutionXSDLActivity"
             android:label="@string/app_name"
             android:alwaysRetainTaskState="true"
