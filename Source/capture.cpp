@@ -44,7 +44,7 @@ static bool CaptureHdr(short width, short height, std::ofstream *out)
 }
 
 /**
- * @brief Write the current ingame palette to the PCX file
+ * @brief Write the current in-game palette to the PCX file
  * @param palette Current palette
  * @param out File stream for the PCX file.
  * @return True if successful, else false
