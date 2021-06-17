@@ -205,7 +205,8 @@ https://devkitpro.org/wiki/Getting_Started
 ```
 sudo (dkp-)pacman -S \
 		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype
+		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype 3ds-cmake \
+		3ds-pkg-config picasso 3dslink
 ```
 - Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
   - Copy binaries to: `/opt/devkitpro/tools/bin/`
@@ -216,7 +217,7 @@ Otherwise, MSYS will sanitize file paths in compiler flags which will likely lea
 
 ```
 cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 The output files will be generated in the build folder.
