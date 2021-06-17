@@ -189,16 +189,7 @@ endif()
 
 if(ANDROID)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/android-project/CMake")
-
-  set(ASAN OFF)
-  set(UBSAN OFF)
-  set(DEVILUTIONX_SYSTEM_LIBSODIUM OFF)
-  set(DISABLE_ZERO_TIER ON)
-  set(TTF_FONT_DIR \"\")
-
-  file(
-    COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-    DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets")
+  include(android_defs)
 endif()
 
 if(PIE)
