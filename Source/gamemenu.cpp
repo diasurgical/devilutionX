@@ -104,7 +104,7 @@ void gamemenu_new_game(bool bActivate)
 
 	deathflag = false;
 	force_redraw = 255;
-	scrollrt_draw_game_screen(true);
+	scrollrt_draw_game_screen();
 	CornerStone.activated = false;
 	gbRunGame = false;
 	gamemenu_off();

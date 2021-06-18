@@ -437,7 +437,7 @@ static void run_game_loop(interface_mode uMsg)
 	NewCursor(CURSOR_NONE);
 	ClearScreenBuffer();
 	force_redraw = 255;
-	scrollrt_draw_game_screen(true);
+	scrollrt_draw_game_screen();
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == GM_Game);
 	free_game();
@@ -522,6 +522,9 @@ static void SaveOptions()
 	setIniInt("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 	setIniInt("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
+#ifndef USE_SDL1
+	setIniInt("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
+#endif
 	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 	setIniInt("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
@@ -606,6 +609,11 @@ static void LoadOptions()
 	sgOptions.Graphics.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
+#ifndef USE_SDL1
+	sgOptions.Graphics.bHardwareCursor = getIniBool("Graphics", "Hardware Cursor", false);
+#else
+	sgOptions.Graphics.bHardwareCursor = false;
+#endif
 	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
 	sgOptions.Graphics.bShowFPS = getIniInt("Graphics", "Show FPS", false);
 
@@ -1940,7 +1948,7 @@ static void timeout_cursor(bool bTimeout)
 			NewCursor(CURSOR_HOURGLASS);
 			force_redraw = 255;
 		}
-		scrollrt_draw_game_screen(true);
+		scrollrt_draw_game_screen();
 	} else if (sgnTimeoutCurs != CURSOR_NONE) {
 		NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;

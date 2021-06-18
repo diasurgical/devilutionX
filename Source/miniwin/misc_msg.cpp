@@ -10,6 +10,7 @@
 #include "controls/remap_keyboard.h"
 #include "controls/touch.h"
 #include "cursor.h"
+#include "hwcursor.hpp"
 #include "inv.h"
 #include "movie.h"
 #include "utils/display.h"
@@ -539,9 +540,11 @@ bool FetchMessage(tagMSG *lpMsg)
 		case SDL_WINDOWEVENT_LEAVE:
 			lpMsg->message = DVL_WM_CAPTURECHANGED;
 			break;
+		case SDL_WINDOWEVENT_SIZE_CHANGED:
+			ReinitializeHardwareCursor();
+			break;
 		case SDL_WINDOWEVENT_MOVED:
 		case SDL_WINDOWEVENT_RESIZED:
-		case SDL_WINDOWEVENT_SIZE_CHANGED:
 		case SDL_WINDOWEVENT_MINIMIZED:
 		case SDL_WINDOWEVENT_MAXIMIZED:
 		case SDL_WINDOWEVENT_RESTORED:

@@ -10,6 +10,7 @@
 #include "DiabloUI/support_lines.h"
 #include "control.h"
 #include "controls/menu_controls.h"
+#include "hwcursor.hpp"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
@@ -198,6 +199,9 @@ bool TextDialog()
 {
 	CreditsRenderer creditsRenderer;
 	bool endMenu = false;
+
+	if (IsHardwareCursorEnabled())
+		SetHardwareCursorVisible(false);
 
 	SDL_Event event;
 	do {

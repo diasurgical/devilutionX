@@ -61,6 +61,8 @@ struct GraphicsOptions {
 	int nGammaCorrection;
 	/** @brief Enable color cycling animations. */
 	bool bColorCycling;
+	/** @brief Use a hardware cursor (SDL2 only). */
+	bool bHardwareCursor;
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
 	/** @brief Show FPS, even without the -f command line flag. */

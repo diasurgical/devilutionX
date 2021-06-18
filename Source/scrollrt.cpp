@@ -16,6 +16,7 @@
 #include "error.h"
 #include "gmenu.h"
 #include "help.h"
+#include "hwcursor.hpp"
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"
@@ -189,22 +190,22 @@ static void UndrawCursor(const CelOutputBuffer &out)
 	sgdwCursWdt = 0;
 }
 
+static bool ShouldShowCursor()
+{
+	return !(sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0));
+}
+
 /**
  * @brief Save the content behind the cursor to a temporary buffer, then draw the cursor.
  */
 static void DrawCursor(const CelOutputBuffer &out)
 {
-	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
-		return;
-	}
-
-	if (sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0)) {
+	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0 || !ShouldShowCursor()) {
 		return;
 	}
 
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
-	const bool isItem = pcurs >= CURSOR_FIRSTITEM;
-	const int outlineWidth = isItem ? 1 : 0;
+	const int outlineWidth = IsItemSprite(pcurs) ? 1 : 0;
 
 	if (MouseX < -cursW - outlineWidth || MouseX - outlineWidth >= out.w() || MouseY < -cursH - outlineWidth || MouseY - outlineWidth >= out.h())
 		return;
@@ -227,17 +228,7 @@ static void DrawCursor(const CelOutputBuffer &out)
 	Clip(sgdwCursY, sgdwCursHgt, out.h());
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
-
-	const auto &sprite = GetInvItemSprite(pcurs);
-	const int frame = GetInvItemFrame(pcurs);
-	const Point mousePosition { MouseX, MouseY + cursH - 1 };
-	if (isItem) {
-		const auto &heldItem = plr[myplr].HoldItem;
-		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), mousePosition, sprite, frame, false);
-		CelDrawItem(heldItem._iStatFlag, out, mousePosition, sprite, frame);
-	} else {
-		CelClippedDrawTo(out, mousePosition, sprite, frame);
-	}
+	CelDrawCursor(out, Point { MouseX, MouseY + cursH - 1 }, pcurs);
 }
 
 /**
@@ -1527,9 +1518,8 @@ static void DrawMain(int dwHgt, bool draw_desc, bool draw_hp, bool draw_mana, bo
 
 /**
  * @brief Redraw screen
- * @param draw_cursor
  */
-void scrollrt_draw_game_screen(bool draw_cursor)
+void scrollrt_draw_game_screen()
 {
 	int hgt = 0;
 
@@ -1538,7 +1528,9 @@ void scrollrt_draw_game_screen(bool draw_cursor)
 		hgt = gnScreenHeight;
 	}
 
-	if (draw_cursor) {
+	if (IsHardwareCursorEnabled()) {
+		SetHardwareCursorVisible(ShouldShowCursor());
+	} else {
 		lock_buf(0);
 		DrawCursor(GlobalBackBuffer());
 		unlock_buf(0);
@@ -1548,7 +1540,7 @@ void scrollrt_draw_game_screen(bool draw_cursor)
 
 	RenderPresent();
 
-	if (draw_cursor) {
+	if (!IsHardwareCursorEnabled()) {
 		lock_buf(0);
 		UndrawCursor(GlobalBackBuffer());
 		unlock_buf(0);
@@ -1611,7 +1603,12 @@ void DrawAndBlit()
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar(out);
-	DrawCursor(out);
+
+	if (IsHardwareCursorEnabled()) {
+		SetHardwareCursorVisible(ShouldShowCursor());
+	} else {
+		DrawCursor(out);
+	}
 
 	DrawFPS(out);
 

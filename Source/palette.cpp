@@ -5,6 +5,7 @@
  */
 
 #include "dx.h"
+#include "hwcursor.hpp"
 #include "options.h"
 #include "storm/storm.h"
 #include "utils/display.h"
@@ -227,6 +228,9 @@ void SetFadeLevel(int fadeval)
 		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;
 	}
 	palette_update();
+	if (IsHardwareCursorEnabled()) {
+		ReinitializeHardwareCursor();
+	}
 }
 
 void BlackPalette()
