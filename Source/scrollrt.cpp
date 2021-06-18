@@ -164,9 +164,9 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 	sgdwCursWdtOld = 0;
 }
 
-static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
+static void BlitCursor(BYTE *dst, std::uint32_t dstPitch, BYTE *src, std::uint32_t srcPitch)
 {
-	for (uint32_t i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
+	for (std::uint32_t i = 0; i < sgdwCursHgt; ++i, src += srcPitch, dst += dstPitch) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 }
@@ -203,27 +203,41 @@ static void DrawCursor(const CelOutputBuffer &out)
 	}
 
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
-	if (MouseX < -cursW - 1 || MouseX > out.w() || MouseY < -cursH - 1 || MouseY > out.h())
+	const bool isItem = pcurs >= CURSOR_FIRSTITEM;
+	const int outlineWidth = isItem ? 1 : 0;
+
+	if (MouseX < -cursW - outlineWidth || MouseX - outlineWidth >= out.w() || MouseY < -cursH - outlineWidth || MouseY - outlineWidth >= out.h())
 		return;
 
-	sgdwCursX = std::max(MouseX - 1, 0);
-	sgdwCursWdt = MouseX < 0 ? cursW + MouseX + 2 : std::min(MouseX + cursW + 2, out.w()) - MouseX;
+	constexpr auto Clip = [](int &pos, std::uint32_t &length, std::uint32_t posEnd) {
+		if (pos < 0) {
+			length += pos;
+			pos = 0;
+		} else if (pos + length > posEnd) {
+			length = posEnd - pos;
+		}
+	};
 
-	sgdwCursY = std::max(MouseY - 1, 0);
-	sgdwCursHgt = MouseY < 0 ? cursH + MouseY + 2 : std::min(MouseY + cursH + 2, out.h()) - MouseY;
+	sgdwCursX = MouseX - outlineWidth;
+	sgdwCursWdt = cursW + 2 * outlineWidth;
+	Clip(sgdwCursX, sgdwCursWdt, out.w());
+
+	sgdwCursY = MouseY - outlineWidth;
+	sgdwCursHgt = cursH + 2 * outlineWidth;
+	Clip(sgdwCursY, sgdwCursHgt, out.h());
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
 
 	const auto &sprite = GetInvItemSprite(pcurs);
 	const int frame = GetInvItemFrame(pcurs);
-	bool usable = true;
 	const Point mousePosition { MouseX, MouseY + cursH - 1 };
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (isItem) {
 		const auto &heldItem = plr[myplr].HoldItem;
 		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), mousePosition, sprite, frame, false);
-		usable = heldItem._iStatFlag;
+		CelDrawItem(heldItem._iStatFlag, out, mousePosition, sprite, frame);
+	} else {
+		CelClippedDrawTo(out, mousePosition, sprite, frame);
 	}
-	CelDrawItem(usable, out, mousePosition, sprite, frame);
 }
 
 /**
