@@ -5,6 +5,7 @@
  */
 
 #include "diablo.h"
+#include "hwcursor.hpp"
 #include "effects.h"
 #include "storm/storm_svid.h"
 #include "utils/display.h"
@@ -65,6 +66,7 @@ void play_movie(const char *pszMovie, bool user_can_close)
 #endif
 
 	movie_playing = false;
+
 	SDL_GetMouseState(&MouseX, &MouseY);
 	OutputToLogical(&MouseX, &MouseY);
 }

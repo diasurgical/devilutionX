@@ -11,6 +11,7 @@
 #include "dx.h"
 #include "engine.h"
 #include "engine/render/cel_render.hpp"
+#include "hwcursor.hpp"
 #include "init.h"
 #include "loadsave.h"
 #include "palette.h"
@@ -179,8 +180,9 @@ static void DrawCutscene()
 	SDL_FillRect(out.surface, &rect, BarColor[progress_id]);
 
 	unlock_buf(1);
-	force_redraw = 255;
-	scrollrt_draw_game_screen(false);
+
+	BltFast(&rect, &rect);
+	RenderPresent();
 }
 
 void interface_msg_pump()
@@ -218,10 +220,14 @@ void ShowProgress(interface_mode uMsg)
 
 	interface_msg_pump();
 	ClearScreenBuffer();
-	scrollrt_draw_game_screen(true);
+	scrollrt_draw_game_screen();
 	InitCutscene(uMsg);
 	BlackPalette();
 	DrawCutscene();
+
+	if (IsHardwareCursorEnabled())
+		SetHardwareCursorVisible(false);
+
 	PaletteFadeIn(8);
 	IncProgress();
 	sound_init();

@@ -336,6 +336,7 @@ set(libdevilutionx_SRCS
   Source/gendung.cpp
   Source/gmenu.cpp
   Source/help.cpp
+  Source/hwcursor.cpp
   Source/init.cpp
   Source/interfac.cpp
   Source/inv.cpp

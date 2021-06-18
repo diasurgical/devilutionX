@@ -54,6 +54,13 @@ void CheckRportal();
 void CheckTown();
 void CheckCursMove();
 
+inline bool IsItemSprite(int pcurs)
+{
+	return pcurs >= CURSOR_FIRSTITEM;
+}
+
+void CelDrawCursor(const CelOutputBuffer &out, Point position, int pcurs);
+
 /** Returns the sprite for the given inventory index. */
 const CelSprite &GetInvItemSprite(int i);
 

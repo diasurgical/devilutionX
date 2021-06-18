@@ -10,13 +10,15 @@
 #include "control.h"
 #include "doom.h"
 #include "engine.h"
+#include "engine/render/cel_render.hpp"
+#include "hwcursor.hpp"
 #include "inv.h"
 #include "missiles.h"
+#include "qol/itemlabels.h"
 #include "towners.h"
 #include "track.h"
 #include "trigs.h"
 #include "utils/language.h"
-#include "qol/itemlabels.h"
 
 namespace devilution {
 namespace {
@@ -174,6 +176,22 @@ void NewCursor(int i)
 	pcurs = i;
 	std::tie(cursW, cursH) = GetInvItemSize(i);
 	SetICursor(i);
+	if (IsHardwareCursorEnabled() && GetCurrentCursorInfo() != CursorInfo::GameCursor(pcurs) && pcurs != CURSOR_NONE) {
+		SetHardwareCursor(CursorInfo::GameCursor(pcurs));
+	}
+}
+
+void CelDrawCursor(const CelOutputBuffer &out, Point position, int pcurs)
+{
+	const auto &sprite = GetInvItemSprite(pcurs);
+	const int frame = GetInvItemFrame(pcurs);
+	if (IsItemSprite(pcurs)) {
+		const auto &heldItem = plr[myplr].HoldItem;
+		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), position, sprite, frame, false);
+		CelDrawItem(heldItem._iStatFlag, out, position, sprite, frame);
+	} else {
+		CelClippedDrawTo(out, position, sprite, frame);
+	}
 }
 
 void InitLevelCursor()

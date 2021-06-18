@@ -9,6 +9,7 @@
 #include "control.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
+#include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
@@ -263,8 +264,10 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 	static bool inDialog = false;
 
 	if (!gbActive || inDialog) {
-		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-			Log("{}", SDL_GetError());
+		if (!IsHardwareCursorEnabled()) {
+			if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
+				Log("{}", SDL_GetError());
+			}
 		}
 		if (!gbQuietMode) {
 			if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
