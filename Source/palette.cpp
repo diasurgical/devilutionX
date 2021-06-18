@@ -245,8 +245,12 @@ void PaletteFadeIn(int fr)
 	const uint32_t tc = SDL_GetTicks();
 	fr *= 3;
 
+	uint32_t prevFadeValue = 255;
 	for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
-		SetFadeLevel(i);
+		if (i != prevFadeValue) {
+			SetFadeLevel(i);
+			prevFadeValue = i;
+		}
 		BltFast(nullptr, nullptr);
 		RenderPresent();
 	}
@@ -265,8 +269,12 @@ void PaletteFadeOut(int fr)
 	const uint32_t tc = SDL_GetTicks();
 	fr *= 3;
 
+	uint32_t prevFadeValue = 0;
 	for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
-		SetFadeLevel(256 - i);
+		if (i != prevFadeValue) {
+			SetFadeLevel(256 - i);
+			prevFadeValue = i;
+		}
 		BltFast(nullptr, nullptr);
 		RenderPresent();
 	}
