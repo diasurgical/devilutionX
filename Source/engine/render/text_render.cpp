@@ -195,15 +195,6 @@ void InitText()
 	}
 }
 
-void FreeText()
-{
-	fonts[GameFontSmall] = std::nullopt;
-	fonts[GameFontMed] = std::nullopt;
-	fonts[GameFontBig] = std::nullopt;
-
-	pSPentSpn2Cels = std::nullopt;
-}
-
 int GetLineWidth(const char *text, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
