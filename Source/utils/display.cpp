@@ -137,6 +137,8 @@ bool SpawnWindow(const char *lpWindowName)
 	SDL_setenv("SDL_AUDIODRIVER", "winmm", /*overwrite=*/false);
 #endif
 
+	SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+
 	int initFlags = SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
 #ifndef NOSOUND
 	initFlags |= SDL_INIT_AUDIO;
