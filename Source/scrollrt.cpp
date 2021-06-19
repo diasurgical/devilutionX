@@ -1528,7 +1528,7 @@ void scrollrt_draw_game_screen()
 		hgt = gnScreenHeight;
 	}
 
-	if (IsHardwareCursorEnabled()) {
+	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());
 	} else {
 		lock_buf(0);
@@ -1540,7 +1540,7 @@ void scrollrt_draw_game_screen()
 
 	RenderPresent();
 
-	if (!IsHardwareCursorEnabled()) {
+	if (!IsHardwareCursor()) {
 		lock_buf(0);
 		UndrawCursor(GlobalBackBuffer());
 		unlock_buf(0);
@@ -1604,7 +1604,7 @@ void DrawAndBlit()
 	}
 	DrawXPBar(out);
 
-	if (IsHardwareCursorEnabled()) {
+	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());
 	} else {
 		DrawCursor(out);

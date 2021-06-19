@@ -228,7 +228,7 @@ void SetFadeLevel(int fadeval)
 		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;
 	}
 	palette_update();
-	if (IsHardwareCursorEnabled()) {
+	if (IsHardwareCursor()) {
 		ReinitializeHardwareCursor();
 	}
 }
