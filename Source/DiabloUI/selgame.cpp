@@ -81,7 +81,10 @@ void selgame_GameSelection_Init()
 	UiAddLogo(&vecSelGameDialog);
 
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
-	vecSelGameDialog.push_back(new UiArtText(_("Client-Server (TCP)"), rect1, UIS_CENTER | UIS_BIG));
+	if (provider == SELCONN_ZT)
+		vecSelGameDialog.push_back(new UiArtText(_("ZeroTier"), rect1, UIS_CENTER | UIS_BIG));
+	else
+		vecSelGameDialog.push_back(new UiArtText(_("Client-Server (TCP)"), rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 211), 205, 192 };
 	vecSelGameDialog.push_back(new UiArtText(_("Description:"), rect2, UIS_MED));
@@ -176,8 +179,10 @@ void selgame_GameSelection_Select(int value)
 		break;
 	}
 	case 1: {
-		strncpy(title, _("Join TCP Games"), sizeof(title) - 1);
-
+		if (provider == SELCONN_ZT)
+			strncpy(title, _("Join ZeroTier Games"), sizeof(title) - 1);
+		else
+			strncpy(title, _("Join TCP Games"), sizeof(title) - 1);
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 211), 285, 33 };
 		vecSelGameDialog.push_back(new UiArtText(_("Enter address"), rect4, UIS_CENTER | UIS_BIG));
 
@@ -376,7 +381,10 @@ void selgame_Password_Init(int value)
 	UiAddLogo(&vecSelGameDialog);
 
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
-	vecSelGameDialog.push_back(new UiArtText(_("Client-Server (TCP)"), rect1, UIS_CENTER | UIS_BIG));
+	if (provider == SELCONN_ZT)
+		vecSelGameDialog.push_back(new UiArtText(_("ZeroTier"), rect1, UIS_CENTER | UIS_BIG));
+	else
+		vecSelGameDialog.push_back(new UiArtText(_("Client-Server (TCP)"), rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 211), 205, 192 };
 	vecSelGameDialog.push_back(new UiArtText(_("Description:"), rect2, UIS_MED));
