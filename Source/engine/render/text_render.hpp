@@ -24,7 +24,6 @@ enum GameFontTables : uint8_t {
 extern std::optional<CelSprite> pSPentSpn2Cels;
 
 void InitText();
-void FreeText();
 
 /**
  * @brief Calculate pixel width of first line of text, respecting kerning
