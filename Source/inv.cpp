@@ -809,8 +809,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	auto &player = plr[pnum];
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	int i = cursorPosition.x + (IsHardwareCursorEnabled() ? 0 : (icursW / 2));
-	int j = cursorPosition.y + (IsHardwareCursorEnabled() ? 0 : (icursH / 2));
+	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursW / 2));
+	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursH / 2));
 	int sx = icursW28;
 	int sy = icursH28;
 	bool done = false;
@@ -1178,7 +1178,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	}
 	CalcPlrInv(pnum, true);
 	if (pnum == myplr) {
-		if (cn == CURSOR_HAND && !IsHardwareCursorEnabled())
+		if (cn == CURSOR_HAND && !IsHardwareCursor())
 			SetCursorPos(MouseX + (cursW / 2), MouseY + (cursH / 2));
 		NewCursor(cn);
 	}
@@ -1417,7 +1417,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 				holdItem._itype = ITYPE_NONE;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-				if (!IsHardwareCursorEnabled()) {
+				if (!IsHardwareCursor()) {
 					// For a hardware cursor, we set the "hot point" to the center of the item instead.
 					SetCursorPos(cursorPosition.x - (cursW / 2), cursorPosition.y - (cursH / 2));
 				}

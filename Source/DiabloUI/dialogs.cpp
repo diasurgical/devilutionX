@@ -264,7 +264,7 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 	static bool inDialog = false;
 
 	if (!gbActive || inDialog) {
-		if (!IsHardwareCursorEnabled()) {
+		if (!IsHardwareCursor()) {
 			if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
 				Log("{}", SDL_GetError());
 			}

@@ -40,7 +40,7 @@ Point GetHotpointPosition(const SDL_Surface &surface, HotpointPosition position)
 	app_fatal("Unhandled enum value");
 }
 
-void SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
+bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 {
 	float scaleX;
 	float scaleY;
@@ -63,11 +63,14 @@ void SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
 		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(scaledSurface.get(), hotpoint.x, hotpoint.y) };
 	}
+	if (newCursor == nullptr)
+		return false;
 	SDL_SetCursor(newCursor.get());
 	CurrentCursor = std::move(newCursor);
+	return true;
 }
 
-void SetHardwareCursorFromSprite(int pcurs)
+bool SetHardwareCursorFromSprite(int pcurs)
 {
 	const bool isItem = IsItemSprite(pcurs);
 	const int outlineWidth = isItem ? 1 : 0;
@@ -88,8 +91,9 @@ void SetHardwareCursorFromSprite(int pcurs)
 	SDL_SetColorKey(out.surface, 1, TransparentColor);
 	CelDrawCursor(out, { outlineWidth, height - outlineWidth }, pcurs);
 
-	SetHardwareCursor(out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
+	const bool result = SetHardwareCursor(out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
 	out.Free();
+	return result;
 }
 #endif
 
@@ -106,15 +110,16 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 	CurrentCursorInfo = cursorInfo;
 	switch (cursorInfo.type()) {
 	case CursorType::Game:
-		SetHardwareCursorFromSprite(cursorInfo.id());
+		CurrentCursorInfo.SetEnabled(SetHardwareCursorFromSprite(cursorInfo.id()));
 		break;
 	case CursorType::UserInterface:
 		// ArtCursor is null while loading the game on the progress screen,
 		// called via palette fade from ShowProgress.
 		if (ArtCursor.surface != nullptr)
-			SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft);
+			CurrentCursorInfo.SetEnabled(SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft));
 		break;
 	case CursorType::Unknown:
+		CurrentCursorInfo.SetEnabled(false);
 		break;
 	}
 #endif

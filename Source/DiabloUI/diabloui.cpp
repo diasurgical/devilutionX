@@ -690,7 +690,7 @@ void UiPollAndRender()
 	UiFadeIn();
 
 	// Must happen after the very first UiFadeIn, which sets the cursor.
-	if (IsHardwareCursorEnabled())
+	if (IsHardwareCursor())
 		SetHardwareCursorVisible(!sgbControllerActive);
 }
 
@@ -953,7 +953,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 
 void DrawMouse()
 {
-	if (IsHardwareCursorEnabled() || sgbControllerActive)
+	if (IsHardwareCursor() || sgbControllerActive)
 		return;
 
 	DrawArt(MouseX, MouseY, &ArtCursor);

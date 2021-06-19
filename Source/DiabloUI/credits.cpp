@@ -200,7 +200,7 @@ bool TextDialog()
 	CreditsRenderer creditsRenderer;
 	bool endMenu = false;
 
-	if (IsHardwareCursorEnabled())
+	if (IsHardwareCursor())
 		SetHardwareCursorVisible(false);
 
 	SDL_Event event;

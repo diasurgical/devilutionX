@@ -9,6 +9,7 @@
 
 namespace devilution {
 
+// Whether the hardware cursor is enabled in settings.
 inline bool IsHardwareCursorEnabled()
 {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
@@ -60,6 +61,16 @@ public:
 		return id_;
 	}
 
+	[[nodiscard]] bool Enabled() const
+	{
+		return enabled_;
+	}
+
+	void SetEnabled(bool value)
+	{
+		enabled_ = value;
+	}
+
 	bool operator==(const CursorInfo &other) const
 	{
 		return type_ == other.type_ && (type_ != CursorType::Game || id_ == other.id_);
@@ -73,6 +84,7 @@ private:
 	explicit CursorInfo(CursorType type, int id = 0)
 	    : type_(type)
 	    , id_(id)
+	    , enabled_(false)
 	{
 	}
 
@@ -80,9 +92,17 @@ private:
 
 	// ID for CursorType::Game
 	int id_;
+
+	bool enabled_ = false;
 };
 
 CursorInfo GetCurrentCursorInfo();
+
+// Whether the current cursor is a hardware cursor.
+inline bool IsHardwareCursor()
+{
+	return GetCurrentCursorInfo().Enabled();
+}
 
 void SetHardwareCursor(CursorInfo cursorInfo);
 

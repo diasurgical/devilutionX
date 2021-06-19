@@ -225,7 +225,7 @@ void ShowProgress(interface_mode uMsg)
 	BlackPalette();
 	DrawCutscene();
 
-	if (IsHardwareCursorEnabled())
+	if (IsHardwareCursor())
 		SetHardwareCursorVisible(false);
 
 	PaletteFadeIn(8);
