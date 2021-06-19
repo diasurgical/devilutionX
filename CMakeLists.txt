@@ -132,6 +132,7 @@ if(GPERF)
 endif()
 
 if(NINTENDO_SWITCH)
+  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
   include(switch_defs)
 endif()
 
@@ -268,6 +269,8 @@ if(NOT NONET AND NOT DISABLE_TCP)
         ASIO_HAS_UNISTD_H=ON)
 
       target_include_directories(asio BEFORE INTERFACE CMake/ctr/asio/include)
+  elseif(NINTENDO_SWITCH)
+    include(asio_defs)
   endif()
 endif()
 
