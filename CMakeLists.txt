@@ -484,7 +484,9 @@ if(NINTENDO_SWITCH)
   list(APPEND libdevilutionx_SRCS
     Source/platform/switch/network.cpp
     Source/platform/switch/keyboard.cpp
-    Source/platform/switch/docking.cpp)
+    Source/platform/switch/docking.cpp
+    Source/platform/switch/asio/net/if.c
+    Source/platform/switch/asio/sys/signal.c)
 endif()
 
 if(VITA)
