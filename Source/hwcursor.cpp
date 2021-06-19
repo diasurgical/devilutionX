@@ -11,6 +11,7 @@
 
 #include "DiabloUI/diabloui.h"
 
+#include "appfat.h"
 #include "cursor.h"
 #include "engine.h"
 #include "utils/display.h"
@@ -23,7 +24,23 @@ CursorInfo CurrentCursorInfo;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 SDLCursorUniquePtr CurrentCursor;
 
-void SetHardwareCursor(SDL_Surface *surface)
+enum class HotpointPosition {
+	TopLeft,
+	Center,
+};
+
+Point GetHotpointPosition(const SDL_Surface &surface, HotpointPosition position)
+{
+	switch (position) {
+	case HotpointPosition::TopLeft:
+		return { 0, 0 };
+	case HotpointPosition::Center:
+		return { surface.w / 2, surface.h / 2 };
+	}
+	app_fatal("Unhandled enum value");
+}
+
+void SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 {
 	float scaleX;
 	float scaleY;
@@ -33,7 +50,8 @@ void SetHardwareCursor(SDL_Surface *surface)
 
 	SDLCursorUniquePtr newCursor;
 	if (renderer == nullptr || (scaleX == 1.0F && scaleY == 1.0F)) {
-		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(surface, 0, 0) };
+		const Point hotpoint = GetHotpointPosition(*surface, hotpointPosition);
+		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(surface, hotpoint.x, hotpoint.y) };
 	} else {
 		// SDL does not support BlitScaled from 8-bit to RGBA.
 		SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ARGB8888, 0) };
@@ -42,7 +60,8 @@ void SetHardwareCursor(SDL_Surface *surface)
 		const int scaledH = surface->h * scaleY; // NOLINT(bugprone-narrowing-conversions)
 		SDLSurfaceUniquePtr scaledSurface { SDL_CreateRGBSurfaceWithFormat(0, scaledW, scaledH, 32, SDL_PIXELFORMAT_ARGB8888) };
 		SDL_BlitScaled(converted.get(), nullptr, scaledSurface.get(), nullptr);
-		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(scaledSurface.get(), 0, 0) };
+		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
+		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(scaledSurface.get(), hotpoint.x, hotpoint.y) };
 	}
 	SDL_SetCursor(newCursor.get());
 	CurrentCursor = std::move(newCursor);
@@ -50,7 +69,8 @@ void SetHardwareCursor(SDL_Surface *surface)
 
 void SetHardwareCursorFromSprite(int pcurs)
 {
-	const int outlineWidth = IsItemSprite(pcurs) ? 1 : 0;
+	const bool isItem = IsItemSprite(pcurs);
+	const int outlineWidth = isItem ? 1 : 0;
 
 	int width;
 	int height;
@@ -68,7 +88,7 @@ void SetHardwareCursorFromSprite(int pcurs)
 	SDL_SetColorKey(out.surface, 1, TransparentColor);
 	CelDrawCursor(out, { outlineWidth, height - outlineWidth }, pcurs);
 
-	SetHardwareCursor(out.surface);
+	SetHardwareCursor(out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
 	out.Free();
 }
 #endif
@@ -92,7 +112,7 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 		// ArtCursor is null while loading the game on the progress screen,
 		// called via palette fade from ShowProgress.
 		if (ArtCursor.surface != nullptr)
-			SetHardwareCursor(ArtCursor.surface.get());
+			SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft);
 		break;
 	case CursorType::Unknown:
 		break;
