@@ -11,6 +11,7 @@
 #include "cursor.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "hwcursor.hpp"
 #include "minitext.h"
 #include "options.h"
 #include "plrmsg.h"
@@ -808,8 +809,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	auto &player = plr[pnum];
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	int i = cursorPosition.x + (icursW / 2);
-	int j = cursorPosition.y + (icursH / 2);
+	int i = cursorPosition.x + (IsHardwareCursorEnabled() ? 0 : (icursW / 2));
+	int j = cursorPosition.y + (IsHardwareCursorEnabled() ? 0 : (icursH / 2));
 	int sx = icursW28;
 	int sy = icursH28;
 	bool done = false;
@@ -1177,7 +1178,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	}
 	CalcPlrInv(pnum, true);
 	if (pnum == myplr) {
-		if (cn == CURSOR_HAND)
+		if (cn == CURSOR_HAND && !IsHardwareCursorEnabled())
 			SetCursorPos(MouseX + (cursW / 2), MouseY + (cursH / 2));
 		NewCursor(cn);
 	}
@@ -1416,7 +1417,10 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 				holdItem._itype = ITYPE_NONE;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-				SetCursorPos(cursorPosition.x - (cursW / 2), MouseY - (cursH / 2));
+				if (!IsHardwareCursorEnabled()) {
+					// For a hardware cursor, we set the "hot point" to the center of the item instead.
+					SetCursorPos(cursorPosition.x - (cursW / 2), cursorPosition.y - (cursH / 2));
+				}
 			}
 		}
 	}
