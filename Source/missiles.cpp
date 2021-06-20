@@ -474,7 +474,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 		if (monster[m]._mhitpoints >> 6 <= 0) {
 			if (monster[m]._mmode == MM_STONE) {
 				M_StartKill(m, -1);
-				monster[m]._mmode = MM_STONE;
+				monster[m].Petrify();
 			} else {
 				M_StartKill(m, -1);
 			}
@@ -484,7 +484,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 			} else if (monster[m]._mmode == MM_STONE) {
 				if (m > MAX_PLRS - 1)
 					M_StartHit(m, -1, dam);
-				monster[m]._mmode = MM_STONE;
+				monster[m].Petrify();
 			} else {
 				if (m > MAX_PLRS - 1)
 					M_StartHit(m, -1, dam);
@@ -601,7 +601,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	if (monster[m]._mhitpoints >> 6 <= 0) {
 		if (monster[m]._mmode == MM_STONE) {
 			M_StartKill(m, pnum);
-			monster[m]._mmode = MM_STONE;
+			monster[m].Petrify();
 		} else {
 			M_StartKill(m, pnum);
 		}
@@ -611,7 +611,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 		} else if (monster[m]._mmode == MM_STONE) {
 			if (m > MAX_PLRS - 1)
 				M_StartHit(m, pnum, dam);
-			monster[m]._mmode = MM_STONE;
+			monster[m].Petrify();
 		} else {
 			if (missiledata[t].mType == 0 && plr[pnum]._pIFlags & ISPL_KNOCKBACK) {
 				M_GetKnockback(m);
@@ -2501,7 +2501,7 @@ void AddStone(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 						i = 6;
 						missile[mi]._miVar1 = monster[mid]._mmode;
 						missile[mi]._miVar2 = mid;
-						monster[mid]._mmode = MM_STONE;
+						monster[mid].Petrify();
 						break;
 					}
 				}
