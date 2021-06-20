@@ -373,7 +373,7 @@ msgstr "클라이언트-서버 (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:42
 msgid "Loopback"
-msgstr ""
+msgstr "루프백"
 
 #: Source/DiabloUI/selconn.cpp:48 Source/DiabloUI/selgame.cpp:441
 #: Source/DiabloUI/selgame.cpp:459
@@ -386,11 +386,11 @@ msgstr "요구사항:"
 
 #: Source/DiabloUI/selconn.cpp:60
 msgid "no gateway needed"
-msgstr ""
+msgstr "게이트웨이 필요 없음"
 
 #: Source/DiabloUI/selconn.cpp:66
 msgid "Select Connection"
-msgstr ""
+msgstr "연결 선택"
 
 #: Source/DiabloUI/selconn.cpp:69
 msgid "Change Gateway"
@@ -398,19 +398,19 @@ msgstr "게이트웨이 변경"
 
 #: Source/DiabloUI/selconn.cpp:108
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr ""
+msgstr "모든 컴퓨터는 TCP 호환 네트워크에 연결되어 있어야 합니다."
 
 #: Source/DiabloUI/selconn.cpp:112
 msgid "All computers must be connected to the internet."
-msgstr ""
+msgstr "모든 컴퓨터는 인터넷에 연결되어 있어야 합니다."
 
 #: Source/DiabloUI/selconn.cpp:116
 msgid "Play by yourself with no network exposure."
-msgstr ""
+msgstr "네트워크 공개 없이 혼자서 즐깁니다."
 
 #: Source/DiabloUI/selconn.cpp:121
 msgid "Players Supported: {:d}"
-msgstr ""
+msgstr "지원되는 플레이어: {:d}"
 
 #: Source/DiabloUI/selgame.cpp:87 Source/DiabloUI/selgame.cpp:382
 msgid "Description:"
@@ -418,7 +418,7 @@ msgstr "설명:"
 
 #: Source/DiabloUI/selgame.cpp:93
 msgid "Select Action"
-msgstr ""
+msgstr "행동 선택"
 
 #: Source/DiabloUI/selgame.cpp:95 Source/DiabloUI/selgame.cpp:158
 #: Source/DiabloUI/selgame.cpp:302
@@ -437,13 +437,13 @@ msgstr "취소"
 
 #: Source/DiabloUI/selgame.cpp:113
 msgid "Create a new game with a difficulty setting of your choice."
-msgstr ""
+msgstr "선택한 난이도 설정으로 새 게임을 생성합니다."
 
 #: Source/DiabloUI/selgame.cpp:116
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
-msgstr ""
+msgstr "IP나 호스트명을 입력하여 해당 주소에서 진행 중인 게임에 참가합니다."
 
 #: Source/DiabloUI/selgame.cpp:161
 msgid "Select Difficulty"
@@ -478,6 +478,8 @@ msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
+"보통 난이도\n"
+"초보자는 이 난이도에서 디아블로를 쓰러트리기 위한 퀘스트를 시작해야 합니다."
 
 #: Source/DiabloUI/selgame.cpp:215
 msgid ""
@@ -485,6 +487,9 @@ msgid ""
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
+"악몽 난이도\n"
+"미궁의 괴물들이 강회되었으므로 더 큰 도전이 될 것입니다. 숙련자에게 권장합니"
+"다."
 
 #: Source/DiabloUI/selgame.cpp:219
 msgid ""
@@ -492,18 +497,21 @@ msgid ""
 "The most powerful of the underworld's creatures lurk at the gateway into "
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
+"지옥 난이도\n"
+"황천에서 가장 강한 괴물들이 지옥으로 가는 문에 도사리고 있습니다. 경험이 풍부"
+"한 사람만이 이러한 곳으로 모험을 떠날 수 있습니다."
 
 #: Source/DiabloUI/selgame.cpp:234
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
-msgstr ""
+msgstr "악몽 난이도 멀티 플레이어 게임에 참여하려면 레벨 20에 도달해야 합니다."
 
 #: Source/DiabloUI/selgame.cpp:236
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
-msgstr ""
+msgstr "지옥 난이도 멀티 플레이어 게임에 참여하려면 레벨 30에 도달해야 합니다."
 
 #: Source/DiabloUI/selgame.cpp:311
 msgid "Select Game Speed"
@@ -526,6 +534,8 @@ msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
+"보통 속도\n"
+"초보자는 이 속도에서 디아블로를 쓰러트리기 위한 퀘스트를 시작해야 합니다."
 
 #: Source/DiabloUI/selgame.cpp:338
 msgid ""
@@ -533,6 +543,9 @@ msgid ""
 "The denizens of the Labyrinth have been hastened and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
+"빠른 속도\n"
+"미궁의 괴물들이 강회되었으므로 더 큰 도전이 될 것입니다. 숙련자에게 권장합니"
+"다."
 
 #: Source/DiabloUI/selgame.cpp:342
 msgid ""
@@ -540,6 +553,9 @@ msgid ""
 "Most monsters of the dungeon will seek you out quicker than ever before. "
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
+"매우 빠른 속도\n"
+"던전에 있는 대부분의 괴물들이 그 어느 때보다 재빨리 당신을 찾아낼 것입니다. "
+"숙련된 챔피언만이 이 속도에서 행운을 시험할 수 있습니다."
 
 #: Source/DiabloUI/selgame.cpp:346
 msgid ""
@@ -547,6 +563,9 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
+"가장 빠른 속도\n"
+"황천의 하수인들이 가차없이 공격을 가해 옵니다. 진정한 속도광만이 이 속도를 감"
+"당할 수 있을 것입니다."
 
 #: Source/DiabloUI/selgame.cpp:388
 msgid "Enter Password"
@@ -554,12 +573,12 @@ msgstr "패스워드 입력"
 
 #: Source/DiabloUI/selgame.cpp:414
 msgid "The host is running a different game than you."
-msgstr ""
+msgstr "읽기 전용 디렉토리 에러."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:417
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
-msgstr ""
+msgstr "현재 버전 {:s}이 호스트 {:d}.{:d}.{:d}와 맞지 않습니다."
 
 #: Source/DiabloUI/selhero.cpp:125
 msgid "New Hero"
@@ -704,63 +723,68 @@ msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr "링크를 따라 디아블로 관련 토론 게시판을 방문해 보세요."
+msgstr "링크를 따라 디아블로와 헬파이어 확장팩 관련"
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid "and the Hellfire expansion."
-msgstr ""
+msgstr "토론 게시판을 방문해 보세요."
 
 #: Source/DiabloUI/support_lines.cpp:12
 msgid ""
 "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
-msgstr ""
+msgstr "DevilutionX는 Diasurgical이 관리하며 문제 및 버그를 보고 받습니다"
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr ""
+msgstr "주소는 다음과 같습니다: https://github.com/diasurgical/devilutionX"
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
 "To help us better serve you, please be sure to include the version number,"
-msgstr ""
+msgstr "더 나은 서비스를 제공을 위해 버전 정보, 운영체제,"
 
 #: Source/DiabloUI/support_lines.cpp:15
 msgid "operating system, and the nature of the problem."
-msgstr ""
+msgstr "문제 유형을, 포함해 주시기 바랍니다."
 
+# 실제 출력 확인 필요
 #: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
-msgstr ""
+msgstr "책임 부인:"
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
 msgstr ""
+"  DevilutionX는 Blizzard Entertainment에서 지원받거나 운영되지 않습니다,"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
 msgstr ""
+"  GOG.com 또한 마찬가지입니다. Blizzard Entertainment와 GOG.com은 DevilutionX"
+"의 품질"
 
 #: Source/DiabloUI/support_lines.cpp:21
 msgid ""
 "  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr ""
+msgstr "  또는 호환성을 테스트하거나 인증하지 않았습니다"
 
 #: Source/DiabloUI/support_lines.cpp:22
 msgid ""
 "  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
 msgstr ""
+"  DevilutionX에 관한 문의 일체는 Blizzard Entertainment나 GOG.com이 아닌"
 
 #: Source/DiabloUI/support_lines.cpp:23
 msgid "  Entertainment or GOG.com."
-msgstr ""
+msgstr "  Diasurgical에 해야 합니다."
 
 #: Source/DiabloUI/title.cpp:47
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
-msgstr ""
+msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:36
 msgid "Error"
-msgstr ""
+msgstr "오류"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
 #: Source/appfat.cpp:119
@@ -768,7 +792,7 @@ msgid ""
 "{:s}\n"
 "\n"
 "The error occurred at: {:s} line {:d}"
-msgstr ""
+msgstr "오류 발생: {:s} 줄 {:d}"
 
 #. TRANSLATORS: Error Message when diabdat.mpq is broken. Keep values unchanged.
 #: Source/appfat.cpp:139
@@ -783,10 +807,19 @@ msgid ""
 "The problem occurred when loading:\n"
 "%s"
 msgstr ""
+"필수 파일을 열 수 없습니다.\n"
+"\n"
+"diabdat.mpq의 MD5가 다음 값 중 하나와 일치하지 확인하십시오.\n"
+"011bc6518e6166206231080a4440b373\n"
+"68f049866b44688a7af65ba766bef75a\n"
+"\n"
+"불러오던 중 문제가 발생했습니다.\n"
+"\n"
+"%s"
 
 #: Source/appfat.cpp:148 Source/appfat.cpp:167
 msgid "Data File Error"
-msgstr ""
+msgstr "데이터 파일 오류"
 
 #: Source/appfat.cpp:163
 msgid ""
@@ -794,6 +827,9 @@ msgid ""
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
+"메인 데이터 아카이브(diabdat.mpq 또는 spawn.mpq)\n"
+"\n"
+"게임 폴더 안에 있는지 확인해 주십시오."
 
 #. TRANSLATORS: Error when Program is not allowed to write data
 #: Source/appfat.cpp:178
@@ -801,10 +837,12 @@ msgid ""
 "Unable to write to location:\n"
 "{:s}"
 msgstr ""
+"다음 위치에 기록할 수 없습니다:\n"
+"{:s}"
 
 #: Source/appfat.cpp:180
 msgid "Read-Only Directory Error"
-msgstr ""
+msgstr "읽기 전용 디렉토리 오류"
 
 #: Source/automap.cpp:390
 msgid "game: "
@@ -828,15 +866,15 @@ msgstr "{:d} 층"
 
 #: Source/control.cpp:192
 msgid "Tab"
-msgstr ""
+msgstr "탭"
 
 #: Source/control.cpp:192
 msgid "Esc"
-msgstr ""
+msgstr "ESC"
 
 #: Source/control.cpp:192
 msgid "Enter"
-msgstr ""
+msgstr "엔터"
 
 #: Source/control.cpp:195
 msgid "Character Information"
@@ -866,93 +904,96 @@ msgstr "주문서"
 msgid "Send Message"
 msgstr "메시지 보내기"
 
+# 실제 게임 출력 확인 필요
 #: Source/control.cpp:401 Source/control.cpp:966
 msgid "{:s} Skill"
-msgstr ""
+msgstr "{:s} 기술"
 
+# 실제 게임 출력 확인 필요
 #: Source/control.cpp:404 Source/control.cpp:970
 msgid "{:s} Spell"
-msgstr ""
+msgstr "{:s} 주문"
 
 #: Source/control.cpp:406
 msgid "Damages undead only"
-msgstr ""
+msgstr "언데드에게만 피해"
 
 #: Source/control.cpp:410 Source/control.cpp:976 Source/control.cpp:1676
 msgid "Spell Level 0 - Unusable"
-msgstr ""
+msgstr "주문 레벨 0 - 사용 불가"
 
 #: Source/control.cpp:412 Source/control.cpp:978 Source/control.cpp:1678
 msgid "Spell Level {:d}"
-msgstr ""
+msgstr "주문 레벨 {:d}"
 
 #: Source/control.cpp:416 Source/control.cpp:982
 msgid "Scroll of {:s}"
-msgstr ""
+msgstr "{:s} 두루마리"
 
 #: Source/control.cpp:432 Source/control.cpp:999
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
-msgstr[0] ""
+msgstr[0] "{:d} 두루마리"
 
 #: Source/control.cpp:436 Source/control.cpp:1003 Source/items.cpp:1569
 msgid "Staff of {:s}"
-msgstr ""
+msgstr "{:s} 지팡이"
 
 #: Source/control.cpp:438 Source/control.cpp:1005
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
-msgstr[0] ""
+msgstr[0] "{:d}회 충전"
 
 #: Source/control.cpp:448
 msgid "Spell Hotkey {:s}"
-msgstr ""
+msgstr "주문 단축키 {:s}"
 
 #: Source/control.cpp:941
 msgid "Player friendly"
-msgstr ""
+msgstr "우호"
 
 #: Source/control.cpp:943
 msgid "Player attack"
-msgstr ""
+msgstr "적대"
 
 #: Source/control.cpp:946
 msgid "Hotkey: {:s}"
-msgstr ""
+msgstr "단축키: {:s}"
 
 #: Source/control.cpp:955
 msgid "Select current spell button"
-msgstr ""
+msgstr "현재 주문 버튼 선택"
 
 #: Source/control.cpp:959
 msgid "Hotkey: 's'"
-msgstr ""
+msgstr "단축키: 's'"
 
 #: Source/control.cpp:1152 Source/inv.cpp:1995 Source/items.cpp:3033
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
-msgstr[0] ""
+msgstr[0] "금화 {:d}개"
 
 #: Source/control.cpp:1155
 msgid "Requirements not met"
-msgstr ""
+msgstr "요구 사항 미충족"
 
 #: Source/control.cpp:1191
 msgid "{:s}, Level: {:d}"
-msgstr ""
+msgstr "{:s}, 레벨: {:d}"
 
+# {:d} 순서 확인 필요
 #: Source/control.cpp:1193
 msgid "Hit Points {:d} of {:d}"
-msgstr ""
+msgstr "히트 포인트 {:d} / {:d}"
 
 #: Source/control.cpp:1220
 msgid "None"
-msgstr ""
+msgstr "없음"
 
 #. TRANSLATORS: UI Constrains. Keep translation short please!
 #: Source/control.cpp:1287 Source/control.cpp:1298 Source/control.cpp:1309
 msgid "MAX"
-msgstr ""
+msgstr "최대치"
 
 #: Source/control.cpp:1425
 msgid "Level Up"
@@ -960,33 +1001,33 @@ msgstr "레벨업"
 
 #: Source/control.cpp:1651
 msgid "Skill"
-msgstr ""
+msgstr "기술"
 
 #: Source/control.cpp:1655
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
-msgstr[0] ""
+msgstr[0] "지팡이 ({:d}회 충전)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1663
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
-msgstr ""
+msgstr "마나: {:d}  피해: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1665
 msgid "Mana: {:d}   Dam: n/a"
-msgstr ""
+msgstr "마나: {:d}   피해: 사용불가"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1668
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
-msgstr ""
+msgstr "마나: {:d}  피해: 대상 HP 1/3"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1721
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] ""
+msgstr[0] "금화 {:d}개를 갖고 있습니다. 몇 개를 버리겠습니까?"
 
 #: Source/controls/modifier_hints.cpp:117
 msgid "Menu"
@@ -1018,35 +1059,37 @@ msgstr "마을 차원문"
 
 #: Source/cursor.cpp:209
 msgid "from {:s}"
-msgstr ""
+msgstr "생성자: {:s}"
 
+# 단어 조합 확인 필요
 #: Source/cursor.cpp:234
 msgid "Portal to"
-msgstr ""
+msgstr "차원문 목적지:"
 
 #: Source/cursor.cpp:236
 msgid "The Unholy Altar"
 msgstr "불경한 제단"
 
+# 레벨을 말하는 건지 층수를 말하는 건지 확인 필요
 #: Source/cursor.cpp:238
 msgid "level 15"
-msgstr ""
+msgstr "지하 15층"
 
 #: Source/diablo.cpp:159
 msgid "I need help! Come Here!"
-msgstr ""
+msgstr "도와 줘! 여기야!"
 
 #: Source/diablo.cpp:160
 msgid "Follow me."
-msgstr ""
+msgstr "날 따라와."
 
 #: Source/diablo.cpp:161
 msgid "Here's something for you."
-msgstr ""
+msgstr "자, 여기."
 
 #: Source/diablo.cpp:162
 msgid "Now you DIE!"
-msgstr ""
+msgstr "그럼 이제 죽어!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:183
@@ -1138,48 +1181,48 @@ msgid ""
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
 msgstr ""
 "\n"
-"https://github.com/diasurgical/devilutionX/ 에 버그 리포트\n"
+"https://github.com/diasurgical/devilutionX/ 에 버그 리포트하기\n"
 
 #: Source/diablo.cpp:287
 msgid "unrecognized option '{:s}'\n"
-msgstr ""
+msgstr "인식할 수 없는 설정 '{:s}'\n"
 
 #: Source/diablo.cpp:675
 msgid "version {:s}"
-msgstr ""
+msgstr "버전 {:s}"
 
 #: Source/diablo.cpp:1939
 msgid "-- Network timeout --"
-msgstr ""
+msgstr "-- 네트워크 시간 초과 --"
 
 #: Source/diablo.cpp:1940
 msgid "-- Waiting for players --"
-msgstr ""
+msgstr "-- 플레이어 대기 중 --"
 
 #: Source/diablo.cpp:1999
 msgid "No help available"
-msgstr ""
+msgstr "상점에서는 도움을"
 
 #: Source/diablo.cpp:2000
 msgid "while in stores"
-msgstr ""
+msgstr "받을 수 없습니다"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:2242
 msgid "{:s}, version = {:s}, mode = {:s}"
-msgstr ""
+msgstr "{:s}, 버전 = {:s}, 모드 = {:s}"
 
 #: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
-msgstr ""
+msgstr "루프백"
 
 #: Source/dvlnet/tcp_client.cpp:68
 msgid "Unable to connect"
-msgstr ""
+msgstr "접속 불가"
 
 #: Source/dvlnet/tcp_client.cpp:89
 msgid "error: read 0 bytes from server"
-msgstr ""
+msgstr "오류: 서버로부터 0 바이트 수신"
 
 #: Source/error.cpp:24
 msgid "No automap available in town"
@@ -1228,17 +1271,17 @@ msgstr "저장하는 중..."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:35
 msgid "Some are weakened as one grows strong"
-msgstr ""
+msgstr "강해지는 것이 있으면 약해지는 것도 있는 법이다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:36
 msgid "New strength is forged through destruction"
-msgstr ""
+msgstr "새로운 힘은 파괴를 거쳐 단련된다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:37
 msgid "Those who defend seldom attack"
-msgstr ""
+msgstr "때로는 방어가 공격이다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:38
@@ -1258,7 +1301,7 @@ msgstr "마나의 힘이 새로이 다시 모인다"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:41
 msgid "Time cannot diminish the power of steel"
-msgstr ""
+msgstr "강철의 힘은 시간으로도 막을 수 없다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:42
@@ -1273,17 +1316,17 @@ msgstr "열렸던 것이 지금 다시 닫힌다"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:44
 msgid "Intensity comes at the cost of wisdom"
-msgstr ""
+msgstr "빛의 강렬함은 지혜의 희생으로 얻어진다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:45
 msgid "Arcane power brings destruction"
-msgstr "신비한 힘이 파괴를 부른다"
+msgstr "신비한 힘이 파멸을 부른다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:46
 msgid "That which cannot be held cannot be harmed"
-msgstr ""
+msgstr "잡을 수 없는 것은 해를 끼칠 수 없다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:47
@@ -1303,17 +1346,17 @@ msgstr "마시고 기운 내라"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:50
 msgid "Wherever you go, there you are"
-msgstr ""
+msgstr "어디를 가더라도 그대는 그대이다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:51
 msgid "Energy comes at the cost of wisdom"
-msgstr ""
+msgstr "원기는 지혜의 희생으로 얻어진다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:52
 msgid "Riches abound when least expected"
-msgstr ""
+msgstr "부는 기대하지 않았을 때 찾아온다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:53
@@ -1323,27 +1366,27 @@ msgstr "탐욕은 실패하고 인내는 보답받는다"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:54
 msgid "Blessed by a benevolent companion!"
-msgstr ""
+msgstr "자비로운 동반자에게 축복받았다!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:55
 msgid "The hands of men may be guided by fate"
-msgstr ""
+msgstr "사람의 손은 때때로 운명에 이끌린다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:56
 msgid "Strength is bolstered by heavenly faith"
-msgstr ""
+msgstr "힘은 신에 대한 신앙으로 북돋아진다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:57
 msgid "The essence of life flows from within"
-msgstr ""
+msgstr "생명의 본질은 그 내면에서 샘솟는다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:58
 msgid "The way is made clear when viewed from above"
-msgstr ""
+msgstr "위에서 내려다볼 때 길은 명확해진다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:59
@@ -1353,12 +1396,12 @@ msgstr "구원은 지식의 희생으로 이루어진다"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:60
 msgid "Mysteries are revealed in the light of reason"
-msgstr ""
+msgstr "신비는 이치의 광명 아래 드러난다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:61
 msgid "Those who are last may yet be first"
-msgstr ""
+msgstr "마지막 사람이 첫 번째일 수도 있다"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:62
@@ -1388,7 +1431,7 @@ msgstr "신비한 지식을 습득했다!"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:67
 msgid "That which does not kill you..."
-msgstr ""
+msgstr "그대를 죽이려는 것이 아니다..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:68
@@ -1398,47 +1441,47 @@ msgstr "아는 것이 힘이다."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:69
 msgid "Give and you shall receive."
-msgstr ""
+msgstr "가는 정이 있으면 오는 정이 있다."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:70
 msgid "Some experience is gained by touch."
-msgstr ""
+msgstr "촉감으로 얻는 경험도 있는 법이다."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:71
 msgid "There's no place like home."
-msgstr ""
+msgstr "집만한 곳은 없다."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:72
 msgid "Spiritual energy is restored."
-msgstr ""
+msgstr "영적 기운이 회복된다."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:73
 msgid "You feel more agile."
-msgstr ""
+msgstr "더 민첩해진 기분이다."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:74
 msgid "You feel stronger."
-msgstr ""
+msgstr "더 강해진 기분이다."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:75
 msgid "You feel wiser."
-msgstr ""
+msgstr "더 현명해진 기분이다."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:76
 msgid "You feel refreshed."
-msgstr ""
+msgstr "상쾌한 기분이다."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:77
 msgid "That which can break will."
-msgstr ""
+msgstr "의지를 꺽을 수 있는 바로 그것."
 
 #: Source/gamemenu.cpp:38
 msgid "Save Game"
@@ -1506,85 +1549,87 @@ msgstr "$키보드 단축키:"
 
 #: Source/help.cpp:24
 msgid "F1:    Open Help Screen"
-msgstr ""
+msgstr "F1:    도움말 화면 열기"
 
 #: Source/help.cpp:25
 msgid "Esc:   Display Main Menu"
-msgstr ""
+msgstr "Esc:   게임 메뉴 표시"
 
 #: Source/help.cpp:26
 msgid "Tab:   Display Auto-map"
-msgstr ""
+msgstr "탭:   지도 표시"
 
 #: Source/help.cpp:27
 msgid "Space: Hide all info screens"
-msgstr ""
+msgstr "스페이스: 모든 정보 화면 숨기기"
 
 #: Source/help.cpp:28
 msgid "S: Open Speedbook"
-msgstr ""
+msgstr "S: 속도서 열기"
 
 #: Source/help.cpp:29
 msgid "B: Open Spellbook"
-msgstr ""
+msgstr "B: 주문서 열기"
 
 #: Source/help.cpp:30
 msgid "I: Open Inventory screen"
-msgstr ""
+msgstr "I: 소지품 화면 열기"
 
 #: Source/help.cpp:31
 msgid "C: Open Character screen"
-msgstr ""
+msgstr "C: 캐릭터 화면 열기"
 
 #: Source/help.cpp:32
 msgid "Q: Open Quest log"
-msgstr ""
+msgstr "Q: 퀘스트 기록 열기"
 
 #: Source/help.cpp:33
 msgid "F: Reduce screen brightness"
-msgstr ""
+msgstr "F: 화면 밝기 감소"
 
 #: Source/help.cpp:34
 msgid "G: Increase screen brightness"
-msgstr ""
+msgstr "G: 화면 밝기 증가"
 
 #: Source/help.cpp:35
 msgid "Z: Zoom Game Screen"
-msgstr ""
+msgstr "Z: 게임 화면 확대/축소"
 
 #: Source/help.cpp:36
 msgid "+ / -: Zoom Automap"
-msgstr ""
+msgstr "+ / -: 지도 확대/축소"
 
 #: Source/help.cpp:37
 msgid "1 - 8: Use Belt item"
-msgstr ""
+msgstr "1 - 8: 벨트 물품 사용"
 
 #: Source/help.cpp:38
 msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
-msgstr ""
+msgstr "F5, F6, F7, F8:     기술이나 주문용 단축키 설정"
 
 #: Source/help.cpp:39
 msgid "Shift + Left Mouse Button: Attack without moving"
-msgstr ""
+msgstr "시프트 + 마우스 왼쪽 버튼: 제자리에서 공격"
 
 #: Source/help.cpp:40
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
-msgstr ""
+msgstr "시프트 + 마우스 왼쪽 버튼 (캐릭터 화면): 모든 능력치 할당"
 
 #: Source/help.cpp:41
 msgid ""
 "Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip "
 "item"
 msgstr ""
+"시프트 + 마우스 왼쪽 버튼 (소지품 화면): 물품을 벨트로 옮기거나 장비/해제"
 
 #: Source/help.cpp:42
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
-msgstr ""
+msgstr "시프트 + 마우스 왼쪽 버튼 (벨트 화면): 소지품으로 물품 이동"
 
+# 확인 필요
 #: Source/help.cpp:44
 msgid "$Movement:"
-msgstr ""
+msgstr "$이동:"
 
 #: Source/help.cpp:45
 msgid ""
@@ -1689,19 +1734,19 @@ msgstr ""
 
 #: Source/help.cpp:125
 msgid "Shareware Hellfire Help"
-msgstr ""
+msgstr "체험판 헬파이어 도움말"
 
 #: Source/help.cpp:125
 msgid "Hellfire Help"
-msgstr ""
+msgstr "헬파이어 도움말"
 
 #: Source/help.cpp:127
 msgid "Shareware Diablo Help"
-msgstr ""
+msgstr "체혐판 디아블로 도움말"
 
 #: Source/help.cpp:127
 msgid "Diablo Help"
-msgstr ""
+msgstr "디아블로 도움말"
 
 #: Source/help.cpp:151
 msgid "Press ESC to end or the arrow keys to scroll."
@@ -1755,7 +1800,7 @@ msgstr "언데드 왕관"
 
 #: Source/itemdat.cpp:24 Source/itemdat.cpp:398
 msgid "Empyrean Band"
-msgstr ""
+msgstr "최고천 반지"
 
 #: Source/itemdat.cpp:25
 msgid "Magic Rock"
@@ -1763,7 +1808,7 @@ msgstr "마석"
 
 #: Source/itemdat.cpp:26 Source/itemdat.cpp:399
 msgid "Optic Amulet"
-msgstr ""
+msgstr "눈동자 목걸이"
 
 #: Source/itemdat.cpp:27 Source/itemdat.cpp:400
 msgid "Ring of Truth"
@@ -1775,11 +1820,11 @@ msgstr "여관 간판"
 
 #: Source/itemdat.cpp:29 Source/itemdat.cpp:401
 msgid "Harlequin Crest"
-msgstr ""
+msgstr "할리퀸 관모"
 
 #: Source/itemdat.cpp:30 Source/itemdat.cpp:402
 msgid "Veil of Steel"
-msgstr ""
+msgstr "강철의 베일"
 
 #: Source/itemdat.cpp:31
 msgid "Golden Elixir"
@@ -1855,7 +1900,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
-msgstr ""
+msgstr "라자루스의 지팡이"
 
 #: Source/itemdat.cpp:50 Source/itemdat.cpp:111
 msgid "Scroll of Resurrect"
@@ -4126,7 +4171,7 @@ msgstr ""
 
 #: Source/items.cpp:3890 Source/items.cpp:3899 Source/items.cpp:3906
 msgid "Not Identified"
-msgstr ""
+msgstr "미식별"
 
 #: Source/loadsave.cpp:995 Source/loadsave.cpp:2027
 msgid "Unable to open save file archive"
@@ -4151,15 +4196,15 @@ msgstr ""
 #. TRANSLATORS: Monster Block start
 #: Source/monstdat.cpp:19
 msgid "Zombie"
-msgstr ""
+msgstr "좀비"
 
 #: Source/monstdat.cpp:20
 msgid "Ghoul"
-msgstr ""
+msgstr "고울"
 
 #: Source/monstdat.cpp:21
 msgid "Rotting Carcass"
-msgstr ""
+msgstr "썩은 시체"
 
 #: Source/monstdat.cpp:22
 msgid "Black Death"
@@ -4167,7 +4212,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:23 Source/monstdat.cpp:31
 msgid "Fallen One"
-msgstr ""
+msgstr "타락한 자"
 
 #: Source/monstdat.cpp:24 Source/monstdat.cpp:32
 msgid "Carver"
@@ -4179,19 +4224,19 @@ msgstr ""
 
 #: Source/monstdat.cpp:26 Source/monstdat.cpp:34
 msgid "Dark One"
-msgstr ""
+msgstr "어둠의 존재"
 
 #: Source/monstdat.cpp:27 Source/monstdat.cpp:39
 msgid "Skeleton"
-msgstr ""
+msgstr "해골"
 
 #: Source/monstdat.cpp:28
 msgid "Corpse Axe"
-msgstr ""
+msgstr "시체 도끼"
 
 #: Source/monstdat.cpp:29 Source/monstdat.cpp:41
 msgid "Burning Dead"
-msgstr ""
+msgstr "불타는 죽음"
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
 msgid "Horror"
@@ -4199,7 +4244,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:35
 msgid "Scavenger"
-msgstr ""
+msgstr "포식자"
 
 #: Source/monstdat.cpp:36
 msgid "Plague Eater"
@@ -4219,15 +4264,15 @@ msgstr ""
 
 #: Source/monstdat.cpp:43
 msgid "Skeleton Captain"
-msgstr ""
+msgstr "해골 대장"
 
 #: Source/monstdat.cpp:44
 msgid "Corpse Captain"
-msgstr ""
+msgstr "시체 대장"
 
 #: Source/monstdat.cpp:45
 msgid "Burning Dead Captain"
-msgstr ""
+msgstr "불타는 죽음 대장"
 
 #: Source/monstdat.cpp:46
 msgid "Horror Captain"
@@ -4307,11 +4352,11 @@ msgstr ""
 
 #: Source/monstdat.cpp:69 Source/monstdat.cpp:473
 msgid "Skeleton King"
-msgstr ""
+msgstr "해골 왕"
 
 #: Source/monstdat.cpp:70 Source/monstdat.cpp:481 Source/quests.cpp:49
 msgid "The Butcher"
-msgstr ""
+msgstr "도살자"
 
 #: Source/monstdat.cpp:71
 msgid "Overlord"
@@ -4319,7 +4364,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:72
 msgid "Mud Man"
-msgstr ""
+msgstr "진흙 인간"
 
 #: Source/monstdat.cpp:73
 msgid "Toad Demon"
@@ -4652,7 +4697,7 @@ msgstr ""
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:472
 msgid "Gharbad the Weak"
-msgstr ""
+msgstr "약골 가바드"
 
 #: Source/monstdat.cpp:474 Source/quests.cpp:46
 msgid "Zhar the Mad"
@@ -4836,11 +4881,11 @@ msgstr ""
 
 #: Source/monstdat.cpp:525
 msgid "Baron Sludge"
-msgstr ""
+msgstr "오물 남작"
 
 #: Source/monstdat.cpp:526
 msgid "Blighthorn Steelmace"
-msgstr ""
+msgstr "밝은뿔 강철철퇴"
 
 #: Source/monstdat.cpp:527
 msgid "Chaoshowler"
@@ -4860,15 +4905,15 @@ msgstr ""
 
 #: Source/monstdat.cpp:531
 msgid "Breakspine"
-msgstr ""
+msgstr "척추파괴자"
 
 #: Source/monstdat.cpp:532
 msgid "Devilskull Sharpbone"
-msgstr ""
+msgstr "악마해골"
 
 #: Source/monstdat.cpp:533
 msgid "Brokenstorm"
-msgstr ""
+msgstr "부서진폭풍"
 
 #: Source/monstdat.cpp:534
 msgid "Stormbane"
@@ -4936,7 +4981,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:550
 msgid "Blackskull"
-msgstr ""
+msgstr "검은해골"
 
 #: Source/monstdat.cpp:551
 msgid "Soulslash"
@@ -4968,7 +5013,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:558
 msgid "Witchmoon"
-msgstr ""
+msgstr "마녀달"
 
 #: Source/monstdat.cpp:559
 msgid "Gorefeast"
@@ -4976,7 +5021,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:560
 msgid "Graywar the Slayer"
-msgstr ""
+msgstr "학살자 회색전쟁"
 
 #: Source/monstdat.cpp:561
 msgid "Dreadjudge"
@@ -4984,19 +5029,19 @@ msgstr ""
 
 #: Source/monstdat.cpp:562
 msgid "Stareye the Witch"
-msgstr ""
+msgstr "마녀 별눈"
 
 #: Source/monstdat.cpp:563
 msgid "Steelskull the Hunter"
-msgstr ""
+msgstr "사냥꾼 강철해골"
 
 #: Source/monstdat.cpp:564
 msgid "Sir Gorash"
-msgstr ""
+msgstr "고라시 경"
 
 #: Source/monstdat.cpp:565
 msgid "The Vizier"
-msgstr ""
+msgstr "고관"
 
 #: Source/monstdat.cpp:567
 msgid "Bloodlust"
@@ -5290,7 +5335,7 @@ msgstr ""
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:263
 msgid "The Black King"
-msgstr ""
+msgstr "암흑의 왕"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:264
@@ -5402,7 +5447,7 @@ msgstr ""
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
 #: Source/objects.cpp:5504
 msgid "{:s} Shrine"
-msgstr "{:s} 사당"
+msgstr "{:s} 신단"
 
 #: Source/objects.cpp:5508
 msgid "Skeleton Tome"
@@ -5546,7 +5591,7 @@ msgstr "마석"
 
 #: Source/quests.cpp:45
 msgid "Gharbad The Weak"
-msgstr ""
+msgstr "약골 가바드"
 
 #: Source/quests.cpp:50
 msgid "Ogden's Sign"
@@ -5562,11 +5607,11 @@ msgstr "용맹"
 
 #: Source/quests.cpp:55
 msgid "The Curse of King Leoric"
-msgstr ""
+msgstr "레오릭 왕의 저주"
 
 #: Source/quests.cpp:56 Source/setmaps.cpp:80
 msgid "Poisoned Water Supply"
-msgstr ""
+msgstr "오염된 수원"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:57 Source/quests.cpp:81
@@ -5583,7 +5628,7 @@ msgstr ""
 
 #: Source/quests.cpp:60
 msgid "Farmer's Orchard"
-msgstr ""
+msgstr "농부의 과수원"
 
 #: Source/quests.cpp:61
 msgid "Little Girl"
@@ -5625,7 +5670,7 @@ msgstr "부정한 제단"
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
 #: Source/quests.cpp:284
 msgid "To {:s}"
-msgstr ""
+msgstr "{:s}로"
 
 #: Source/quests.cpp:731
 msgid "Quest Log"
@@ -5637,7 +5682,7 @@ msgstr "퀘스트 기록 닫기"
 
 #: Source/setmaps.cpp:77
 msgid "Skeleton King's Lair"
-msgstr ""
+msgstr "해골왕의 본거지"
 
 #: Source/setmaps.cpp:78
 msgid "Chamber of Bone"
@@ -5645,7 +5690,7 @@ msgstr "뼈의 방"
 
 #: Source/setmaps.cpp:81
 msgid "Archbishop Lazarus' Lair"
-msgstr ""
+msgstr "대주교 라자루스의 본거지"
 
 #: Source/spelldat.cpp:16
 msgid "Firebolt"
@@ -6051,7 +6096,7 @@ msgstr "물품 감정"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1137
 msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "You have nothing to identify.             Your gold: {:d}"
+msgstr "감정할 것이 없습니다.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1152
@@ -8916,7 +8961,7 @@ msgid ""
 "sky. Neither side ever gains sway for long as the forces of Light and "
 "Darkness constantly vie for control over all creation."
 msgstr ""
-"유념하라. 그리고 여기 놓인 진실을 증언하라. 그들은 호라드림 최후의 유산이기 "
+"유념하라. 그리고 여기 놓인 진실을 증언하라. 그것은 호라드림 최후의 유산이기 "
 "때문이다. 이상향 천국과 무저갱 업화 지옥 간의 전쟁은 지금도 이 땅에 퍼져 가"
 "고 있다. 저 하늘의 별보다도 오래도록 지속되어 온 이 전쟁은 위대한 투쟁이라 알"
 "려져 있다. 어느 한쪽도 승부를 내지 못한 채, 빛과 어둠의 군세는 숨쉬는 모든 것"
@@ -8933,7 +8978,7 @@ msgid ""
 "have even allied themselves with either side, and helped to dictate the "
 "course of the Sin War."
 msgstr ""
-"유념하라. 그리고 여기 놓인 진실을 증언하라. 그들은 호라드림 최후의 유산이기 "
+"유념하라. 그리고 여기 놓인 진실을 증언하라. 그것은 호라드림 최후의 유산이기 "
 "때문이다. 죄악의 전쟁이라 불리는 천국과 불타는 지옥 간의 영원한 분쟁이 일어났"
 "을 때, 천사와 악마가 인간의 모습으로 이 땅에 나타나 인간의 눈을 피해 비밀리"
 "에 싸웠다. 용기 있고 강인한 인간들도 양측과 각각 연합해 죄악의 전쟁의 향방을 "
@@ -8961,7 +9006,7 @@ msgid ""
 "faith. If Diablo were to be released, he would seek a body that is easily "
 "controlled as he would be very weak - perhaps that of an old man or a child."
 msgstr ""
-"유념하라. 그리고 여기 놓인 진실을 증언하라. 그들은 호라드림 최후의 유산이기 "
+"유념하라. 그리고 여기 놓인 진실을 증언하라. 그것은 호라드림 최후의 유산이기 "
 "때문이다. 지금으로부터 약 300 년 전, 지옥의 대악마 셋이 느닷없이 이 땅에 강림"
 "했다. 삼 형제는 수십 년에 걸쳐 동방을 황폐화시켰고 인류는 그들 앞에서 그저 숨"
 "을 죽일 수밖에 없었다. 악마 삼 형제를 저지하기 위해 마법사들은 호라드림이라"
@@ -9132,9 +9177,9 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"지옥의 무기고는 피의 전쟁군주의 장군의 거처이다.  그의 각성으로 기천의 시체"
-"가 줄을 잇는다.  천사와 인간도 피만을 갈구하는 어둠의 존재의 제물로서 잇달아 "
-"찢기어 갔다."
+"지옥의 무기고는 피의 전쟁군주의 거처이다.  그의 각성으로 기천의 시체가 줄을 "
+"잇는다.  천사와 인간도 피만을 갈구하는 어둠의 존재의 제물로서 잇달아 찢기어 "
+"갔다."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
