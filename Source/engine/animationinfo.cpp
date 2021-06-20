@@ -170,16 +170,26 @@ void AnimationInfo::ChangeAnimationData(CelSprite *pCelSprite, int numberOfFrame
 	DelayLen = delayLen;
 }
 
-void AnimationInfo::ProcessAnimation()
+void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool dontProgressAnimation /*= false*/)
 {
 	DelayCounter++;
+	if (dontProgressAnimation)
+		return;
 	TicksSinceSequenceStarted++;
 	if (DelayCounter > DelayLen) {
 		DelayCounter = 0;
-		CurrentFrame++;
-		if (CurrentFrame > NumberOfFrames) {
-			CurrentFrame = 1;
-			TicksSinceSequenceStarted = 0;
+		if (reverseAnimation) {
+			CurrentFrame--;
+			if (CurrentFrame == 0) {
+				CurrentFrame = NumberOfFrames;
+				TicksSinceSequenceStarted = 0;
+			}
+		} else {
+			CurrentFrame++;
+			if (CurrentFrame > NumberOfFrames) {
+				CurrentFrame = 1;
+				TicksSinceSequenceStarted = 0;
+			}
 		}
 	}
 }

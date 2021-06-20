@@ -320,7 +320,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		return;
 	}
 
-	int nCel = monster[m].AnimInfo.CurrentFrame;
+	int nCel = monster[m].AnimInfo.GetFrameToUseForRendering();
 	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m].AnimInfo.pCelSprite->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
@@ -701,7 +701,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 	px = sx + pMonster->position.offset.x - CalculateWidth2(cel.Width());
 	py = sy + pMonster->position.offset.y;
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, px, py, cel, pMonster->AnimInfo.CurrentFrame);
+		Cl2DrawOutline(out, 233, px, py, cel, pMonster->AnimInfo.GetFrameToUseForRendering());
 	}
 	DrawMonster(out, x, y, px, py, mi);
 }

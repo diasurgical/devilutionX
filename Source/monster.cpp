@@ -1268,11 +1268,8 @@ void monster_43C785(int i)
 void NewMonsterAnim(int i, AnimStruct *anim, Direction md)
 {
 	MonsterStruct *Monst = &monster[i];
-	Monst->AnimInfo.pCelSprite = &*anim->CelSpritesForDirections[md];
-	Monst->AnimInfo.NumberOfFrames = anim->Frames;
-	Monst->AnimInfo.DelayCounter = 0;
-	Monst->AnimInfo.CurrentFrame = 1;
-	Monst->AnimInfo.DelayLen = anim->Rate;
+	auto *pCelSprite = &*anim->CelSpritesForDirections[md];
+	Monst->AnimInfo.SetNewAnimation(pCelSprite, anim->Frames, anim->Rate);
 	Monst->_mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
 	Monst->_mdir = md;
 }
@@ -4624,21 +4621,7 @@ void ProcessMonsters()
 			}
 		} while (raflag);
 		if (Monst->_mmode != MM_STONE) {
-			Monst->AnimInfo.DelayCounter++;
-			if (!(Monst->_mFlags & MFLAG_ALLOW_SPECIAL) && Monst->AnimInfo.DelayCounter >= Monst->AnimInfo.DelayLen) {
-				Monst->AnimInfo.DelayCounter = 0;
-				if (Monst->_mFlags & MFLAG_LOCK_ANIMATION) {
-					Monst->AnimInfo.CurrentFrame--;
-					if (Monst->AnimInfo.CurrentFrame == 0) {
-						Monst->AnimInfo.CurrentFrame = Monst->AnimInfo.NumberOfFrames;
-					}
-				} else {
-					Monst->AnimInfo.CurrentFrame++;
-					if (Monst->AnimInfo.CurrentFrame > Monst->AnimInfo.NumberOfFrames) {
-						Monst->AnimInfo.CurrentFrame = 1;
-					}
-				}
-			}
+			Monst->AnimInfo.ProcessAnimation(Monst->_mFlags & MFLAG_LOCK_ANIMATION, Monst->_mFlags & MFLAG_ALLOW_SPECIAL);
 		}
 	}
 
