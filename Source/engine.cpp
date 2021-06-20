@@ -21,8 +21,6 @@
 
 namespace devilution {
 
-/** Seed value before the most recent call to SetRndSeed() */
-int32_t orgseed;
 /** Current game seed */
 int32_t sglGameSeed;
 
@@ -258,7 +256,6 @@ int CalculateWidth2(int width)
 void SetRndSeed(int32_t s)
 {
 	sglGameSeed = s;
-	orgseed = s;
 }
 
 /**
