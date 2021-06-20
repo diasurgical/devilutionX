@@ -138,22 +138,12 @@ void init_cleanup()
 void init_archives()
 {
 	std::vector<std::string> paths;
-	paths.reserve(5);
-#ifdef __ANDROID__
-	paths.push_back(std::string(getenv("EXTERNAL_STORAGE")) + "/devilutionx/");
-#else
 	paths.push_back(paths::BasePath());
-#endif
 	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
 		paths.pop_back();
 
-#ifdef __ANDROID__
-	if (getenv("SECONDARY_STORAGE") != nullptr)
-		paths.emplace_back(std::string(getenv("SECONDARY_STORAGE")) + "/devilutionx/");
-	if (getenv("EXTERNAL_SDCARD_STORAGE") != nullptr)
-		paths.emplace_back(std::string(getenv("EXTERNAL_SDCARD_STORAGE")) + "/devilutionx/");
-#elif defined(__linux__)
+#if defined(__linux__) && !defined(__ANDROID__)
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #elif defined(__3DS__)

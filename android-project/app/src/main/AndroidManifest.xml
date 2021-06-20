@@ -27,7 +27,7 @@
         android:name="android.hardware.type.pc"
         android:required="false" />
 
-    <!-- Allow read from external storage -->
+    <!-- TODO: Remove this after November 2021 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- Allow access to Bluetooth devices -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
