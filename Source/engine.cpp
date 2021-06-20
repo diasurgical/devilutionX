@@ -277,6 +277,11 @@ int32_t GetRndSeed()
 	return abs(sglGameSeed);
 }
 
+uint32_t GetLCGEngineState()
+{
+	return sglGameSeed;
+}
+
 /**
  * @brief Main RNG function
  * @param v The upper limit for the return value
