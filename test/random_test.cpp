@@ -28,7 +28,7 @@ TEST(RandomTest, RandomEngineParams)
 	for (auto i = 2; i < 10000; i++)
 		AdvanceRndSeed();
 
-	uint32_t expectedState = 3495122800;
+	uint32_t expectedState = 3495122800U;
 	ASSERT_EQ(GetLCGEngineState(), expectedState)
 		<< "Wrong engine state after 10000 invocations";
 }
@@ -40,17 +40,17 @@ TEST(RandomTest, DefaultDistribution)
 	// current behaviour is this returns limit<int32_t>::min().
 	SetRndSeed(1457187811); // yields -2147483648
 	ASSERT_EQ(AdvanceRndSeed(), -2147483648) << "Invalid distribution";
-	SetRndSeed(3604671459); // yields 0
+	SetRndSeed(3604671459U); // yields 0
 	ASSERT_EQ(AdvanceRndSeed(), 0) << "Invalid distribution";
 
 	SetRndSeed(0); // yields +1
 	ASSERT_EQ(AdvanceRndSeed(), 1) << "Invalid distribution";
-	SetRndSeed(2914375622); // yields -1
+	SetRndSeed(2914375622U); // yields -1
 	ASSERT_EQ(AdvanceRndSeed(), 1) << "Invalid distribution";
 
-	SetRndSeed(3604671460); // yields +22695477
+	SetRndSeed(3604671460U); // yields +22695477
 	ASSERT_EQ(AdvanceRndSeed(), 22695477) << "Invalid distribution";
-	SetRndSeed(3604671458); // yields -22695477
+	SetRndSeed(3604671458U); // yields -22695477
 	ASSERT_EQ(AdvanceRndSeed(), 22695477) << "Invalid distribution";
 
 	SetRndSeed(1902003768); // yields +429496729
@@ -60,16 +60,16 @@ TEST(RandomTest, DefaultDistribution)
 
 	SetRndSeed(189776845); // yields +1212022642
 	ASSERT_EQ(AdvanceRndSeed(), 1212022642) << "Invalid distribution";
-	SetRndSeed(2724598777); // yields -1212022642
+	SetRndSeed(2724598777U); // yields -1212022642
 	ASSERT_EQ(AdvanceRndSeed(), 1212022642) << "Invalid distribution";
 
 	SetRndSeed(76596137); // yields +2147483646
 	ASSERT_EQ(AdvanceRndSeed(), 2147483646) << "Invalid distribution";
-	SetRndSeed(2837779485); // yields -2147483646
+	SetRndSeed(2837779485U); // yields -2147483646
 	ASSERT_EQ(AdvanceRndSeed(), 2147483646) << "Invalid distribution";
 
 	SetRndSeed(766891974); // yields +2147483647
 	ASSERT_EQ(AdvanceRndSeed(), 2147483647) << "Invalid distribution";
-	SetRndSeed(2147483648); // yields -2147483647
+	SetRndSeed(2147483648U); // yields -2147483647
 	ASSERT_EQ(AdvanceRndSeed(), 2147483647) << "Invalid distribution";
 }
