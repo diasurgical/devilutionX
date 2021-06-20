@@ -198,6 +198,11 @@ struct MonsterStruct { // note: missing field _mAFNum
 	 * @param mdir direction of the monster
 	 */
 	void CheckStandAnimationIsLoaded(int mdir);
+
+	/**
+	 * @brief Sets _mmode to MM_STONE
+	 */
+	void Petrify();
 };
 
 extern int monstkills[MAXMONSTERS];

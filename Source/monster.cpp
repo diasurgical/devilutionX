@@ -1854,7 +1854,7 @@ void M_SyncStartKill(int i, Point position, int pnum)
 
 	if (monster[i]._mmode == MM_STONE) {
 		MonstStartKill(i, pnum, false);
-		monster[i]._mmode = MM_STONE;
+		monster[i].Petrify();
 	} else {
 		MonstStartKill(i, pnum, false);
 	}
@@ -2028,14 +2028,14 @@ void M_TryM2MHit(int i, int mid, int hper, int mind, int maxd)
 			if (monster[mid]._mhitpoints >> 6 <= 0) {
 				if (monster[mid]._mmode == MM_STONE) {
 					M2MStartKill(i, mid);
-					monster[mid]._mmode = MM_STONE;
+					monster[mid].Petrify();
 				} else {
 					M2MStartKill(i, mid);
 				}
 			} else {
 				if (monster[mid]._mmode == MM_STONE) {
 					M2MStartHit(mid, i, dam);
-					monster[mid]._mmode = MM_STONE;
+					monster[mid].Petrify();
 				} else {
 					M2MStartHit(mid, i, dam);
 				}
@@ -5431,6 +5431,11 @@ void MonsterStruct::CheckStandAnimationIsLoaded(int mdir)
 {
 	if (_mmode == MM_STAND || _mmode == MM_TALK)
 		AnimInfo.pCelSprite = &*MType->Anims[MA_STAND].CelSpritesForDirections[mdir];
+}
+
+void MonsterStruct::Petrify()
+{
+	_mmode = MM_STONE;
 }
 
 } // namespace devilution
