@@ -581,6 +581,7 @@ int CalculateWidth2(int width);
 void SetRndSeed(int32_t s);
 int32_t AdvanceRndSeed();
 int32_t GetRndSeed();
+uint32_t GetLCGEngineState();
 int32_t GenerateRnd(int32_t v);
 
 size_t GetFileSize(const char *pszName);
