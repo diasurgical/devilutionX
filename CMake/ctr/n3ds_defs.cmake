@@ -1,4 +1,6 @@
 #General compilation options
+set(ASAN OFF)
+set(UBSAN OFF)
 set(DEVILUTIONX_SYSTEM_LIBSODIUM OFF)
 set(DISABLE_ZERO_TIER ON)
 set(USE_SDL1 ON)
