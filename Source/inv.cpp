@@ -2131,13 +2131,14 @@ bool UseInvItem(int pnum, int cii)
 		speedlist = true;
 	}
 
-	switch (item->IDidx) {
-	case IDI_MUSHROOM:
-		player.Say(HeroSpeech::NowThatsOneBigMushroom, 10);
+	constexpr int SpeechDelay = 10;
+	if (item->IDidx == IDI_MUSHROOM) {
+		player.Say(HeroSpeech::NowThatsOneBigMushroom, SpeechDelay);
 		return true;
-	case IDI_FUNGALTM:
+	}
+	if (item->IDidx == IDI_FUNGALTM) {
 		PlaySFX(IS_IBOOK);
-		player.Say(HeroSpeech::ThatDidntDoAnything, 10);
+		player.Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
 	}
 
