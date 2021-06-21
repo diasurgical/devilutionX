@@ -8,6 +8,7 @@
 #include "init.h"
 #include "loadsave.h"
 #include "stores.h"
+#include "utils/endian.hpp"
 
 namespace devilution {
 

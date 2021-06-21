@@ -17,6 +17,7 @@
 #include "appfat.h"
 #include "encrypt.h"
 #include "engine.h"
+#include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 

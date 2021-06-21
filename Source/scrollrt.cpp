@@ -24,11 +24,12 @@
 #include "missiles.h"
 #include "nthread.h"
 #include "plrmsg.h"
+#include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
-#include "qol/itemlabels.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/endian.hpp"
 #include "utils/log.hpp"
 
 #ifdef _DEBUG
