@@ -24,6 +24,7 @@ struct Label {
 	int id, width;
 	Point pos;
 	std::string text;
+	uint16_t color;
 	LabelType type;
 
 };
@@ -103,7 +104,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 	ModifyCoords(x, y);
 	int nameWidth = GetLabelWidth(textOnGround);
 	x -= nameWidth / 2;
-	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, LabelType::LABEL_ITEM });
+	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, it->getTextColor(), LabelType::LABEL_ITEM });
 }
 
 void AddObjectToLabelQueue(int id, int x, int y)
@@ -119,7 +120,10 @@ void AddObjectToLabelQueue(int id, int x, int y)
 	// TODO: remove this dirty hack after a proper way to get object name has been added
 	char bkp[64];
 	strcpy(bkp, infostr);
+	uint16_t infoclr_bkp = infoclr, objcolor;
 	GetObjectStr(id);
+	objcolor = infoclr;
+	infoclr = infoclr_bkp;
 	char name[64];
 	strcpy(name, infostr);
 	strcpy(infostr, bkp);
@@ -129,7 +133,7 @@ void AddObjectToLabelQueue(int id, int x, int y)
 	ModifyCoords(x, y);
 	int nameWidth = GetLabelWidth(textOnGround);
 	x -= nameWidth / 2;
-	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, LabelType::LABEL_OBJECT });
+	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, objcolor, LabelType::LABEL_OBJECT });
 }
 
 bool IsMouseOverGameArea()
@@ -207,7 +211,7 @@ void DrawLabels(const CelOutputBuffer &out)
 			FillRect(out, label.pos.x, label.pos.y - height + marginY, label.width, height, PAL8_BLUE + 6);
 		else
 			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y - height + marginY, label.width, height);
-		DrawString(out, label.text.c_str(), { label.pos.x + marginX, label.pos.y, label.width, height }, (label.type == LabelType::LABEL_ITEM ? items[label.id].getTextColor() : UIS_SILVER));
+		DrawString(out, label.text.c_str(), { label.pos.x + marginX, label.pos.y, label.width, height }, label.color);
 	}
 	labelQueue.clear();
 }
