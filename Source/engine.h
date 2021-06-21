@@ -37,7 +37,6 @@
 #include "engine/point.hpp"
 #include "engine/size.hpp"
 #include "miniwin/miniwin.h"
-#include "utils/endian.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 
 #define TILE_WIDTH 64
@@ -45,47 +44,6 @@
 
 namespace devilution {
 
-inline byte *CelGetFrameStart(byte *pCelBuff, int nCel)
-{
-	const uint32_t *pFrameTable = reinterpret_cast<const std::uint32_t *>(pCelBuff);
-
-	return &pCelBuff[SDL_SwapLE32(pFrameTable[nCel])];
-}
-
-inline byte *CelGetFrame(byte *pCelBuff, int nCel, int *nDataSize)
-{
-	const uint32_t nCellStart = LoadLE32(&pCelBuff[nCel * sizeof(std::uint32_t)]);
-	*nDataSize = LoadLE32(&pCelBuff[(nCel + 1) * sizeof(std::uint32_t)]) - nCellStart;
-	return &pCelBuff[nCellStart];
-}
-
-inline const byte *CelGetFrame(const byte *pCelBuff, int nCel, int *nDataSize)
-{
-	const uint32_t nCellStart = LoadLE32(&pCelBuff[nCel * sizeof(std::uint32_t)]);
-	*nDataSize = LoadLE32(&pCelBuff[(nCel + 1) * sizeof(std::uint32_t)]) - nCellStart;
-	return &pCelBuff[nCellStart];
-}
-
-struct FrameHeader {
-	uint16_t row0;
-	uint16_t row32;
-	uint16_t row64;
-	uint16_t row96;
-	uint16_t row128;
-};
-
-inline const byte *CelGetFrameClipped(const byte *pCelBuff, int nCel, int *nDataSize)
-{
-	const byte *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
-
-	FrameHeader frameHeader;
-	memcpy(&frameHeader, pRLEBytes, sizeof(FrameHeader));
-
-	uint16_t nDataStart = SDL_SwapLE16(frameHeader.row0);
-	*nDataSize -= nDataStart;
-
-	return &pRLEBytes[nDataStart];
-}
 
 struct CelOutputBuffer {
 	// 8-bit palletized surface.

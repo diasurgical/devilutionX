@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <cstring>
 
+#include "engine/cel_header.hpp"
 #include "engine/render/common_impl.h"
 #include "options.h"
 #include "palette.h"
