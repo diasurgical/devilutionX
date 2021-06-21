@@ -1179,7 +1179,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	}
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+void CheckInvSwap(int pnum, BYTE bLoc, _item_indexes idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	memset(&items[MAXITEMS], 0, sizeof(*items));
 	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
@@ -1484,7 +1484,7 @@ static void CheckBookLevel(PlayerStruct &player)
 
 static void CheckNaKrulNotes(PlayerStruct &player)
 {
-	int idx = player.HoldItem.IDidx;
+	auto idx = player.HoldItem.IDidx;
 	_item_indexes notes[] = { IDI_NOTE1, IDI_NOTE2, IDI_NOTE3 };
 
 	if (idx != IDI_NOTE1 && idx != IDI_NOTE2 && idx != IDI_NOTE3) {
@@ -1671,7 +1671,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	player.HoldItem._itype = ITYPE_NONE;
 }
 
-int FindGetItem(int idx, uint16_t ci, int iseed)
+int FindGetItem(_item_indexes idx, uint16_t ci, int iseed)
 {
 	if (numitems <= 0)
 		return -1;
@@ -1692,7 +1692,7 @@ int FindGetItem(int idx, uint16_t ci, int iseed)
 	return ii;
 }
 
-void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
+void SyncGetItem(Point position, _item_indexes idx, uint16_t ci, int iseed)
 {
 	int ii;
 
@@ -1869,7 +1869,7 @@ int InvPutItem(PlayerStruct &player, Point position)
 	return ii;
 }
 
-int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
+int SyncPutItem(PlayerStruct &player, Point position, _item_indexes idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
 	if (!PutItem(player, position))
 		return -1;

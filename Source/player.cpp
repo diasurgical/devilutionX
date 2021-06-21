@@ -222,7 +222,7 @@ void PlayerStruct::CalcScrolls()
 	EnsureValidReadiedSpell(*this);
 }
 
-bool PlayerStruct::HasItem(int item, int *idx) const
+bool PlayerStruct::HasItem(_item_indexes item, int *idx) const
 {
 	for (int i = 0; i < _pNumInv; i++) {
 		if (InvList[i].IDidx == item) {
@@ -267,7 +267,7 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 		CalcScrolls();
 }
 
-bool PlayerStruct::TryRemoveInvItemById(int item)
+bool PlayerStruct::TryRemoveInvItemById(_item_indexes item)
 {
 	int idx;
 	if (HasItem(item, &idx)) {
@@ -1856,7 +1856,7 @@ void StripTopGold(int pnum)
 			if (player.InvList[i]._ivalue > MaxGold) {
 				val = player.InvList[i]._ivalue - MaxGold;
 				player.InvList[i]._ivalue = MaxGold;
-				SetPlrHandItem(&player.HoldItem, 0);
+				SetPlrHandItem(&player.HoldItem, IDI_GOLD);
 				GetGoldSeed(pnum, &player.HoldItem);
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(&player.HoldItem);

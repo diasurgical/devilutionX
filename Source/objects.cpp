@@ -3352,7 +3352,7 @@ void TryDisarm(int pnum, int i)
 	}
 }
 
-int ItemMiscIdIdx(item_misc_id imiscid)
+_item_indexes ItemMiscIdIdx(item_misc_id imiscid)
 {
 	int i;
 
@@ -3361,7 +3361,7 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 		i++;
 	}
 
-	return i;
+	return static_cast<_item_indexes>(i);
 }
 
 bool OperateShrineMysterious(int pnum)
