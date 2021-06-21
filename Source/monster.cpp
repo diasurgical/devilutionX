@@ -1265,11 +1265,11 @@ void monster_43C785(int i)
 	}
 }
 
-void NewMonsterAnim(int i, AnimStruct *anim, Direction md)
+void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None)
 {
 	MonsterStruct *Monst = &monster[i];
 	auto *pCelSprite = &*anim->CelSpritesForDirections[md];
-	Monst->AnimInfo.SetNewAnimation(pCelSprite, anim->Frames, anim->Rate);
+	Monst->AnimInfo.SetNewAnimation(pCelSprite, anim->Frames, anim->Rate, flags);
 	Monst->_mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
 	Monst->_mdir = md;
 }
@@ -1487,7 +1487,7 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 void M_StartAttack(int i)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_ATTACK], md);
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_ATTACK], md, AnimationDistributionFlags::ProcessAnimationPending);
 	monster[i]._mmode = MM_ATTACK;
 	monster[i].position.offset = { 0, 0 };
 	monster[i].position.future = monster[i].position.tile;
@@ -1498,7 +1498,7 @@ void M_StartAttack(int i)
 void M_StartRAttack(int i, int missile_type, int dam)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_ATTACK], md);
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_ATTACK], md, AnimationDistributionFlags::ProcessAnimationPending);
 	monster[i]._mmode = MM_RATTACK;
 	monster[i]._mVar1 = missile_type;
 	monster[i]._mVar2 = dam;
