@@ -2,7 +2,7 @@
 
 #include "engine.h"
 
-using namespace devilution;
+namespace devilution {
 
 // These tests use ASSERT_EQ as the PRNG is expected to depend on state from the last call, so one failing assertion
 // means the rest of the results can't be trusted.
@@ -73,3 +73,5 @@ TEST(RandomTest, DefaultDistribution)
 	SetRndSeed(2147483648U); // yields -2147483647
 	ASSERT_EQ(AdvanceRndSeed(), 2147483647) << "Invalid distribution";
 }
+
+} // namespace devilution
