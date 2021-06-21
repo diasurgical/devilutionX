@@ -7,6 +7,7 @@
 
 #include <algorithm>
 
+#include "engine/cel_header.hpp"
 #include "engine/render/common_impl.h"
 #include "scrollrt.h"
 #include "utils/attributes.h"
