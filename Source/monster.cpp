@@ -1265,11 +1265,11 @@ void monster_43C785(int i)
 	}
 }
 
-void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None)
+void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 {
 	MonsterStruct *Monst = &monster[i];
 	auto *pCelSprite = &*anim->CelSpritesForDirections[md];
-	Monst->AnimInfo.SetNewAnimation(pCelSprite, anim->Frames, anim->Rate, flags);
+	Monst->AnimInfo.SetNewAnimation(pCelSprite, anim->Frames, anim->Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
 	Monst->_mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
 	Monst->_mdir = md;
 }
@@ -1511,7 +1511,10 @@ void M_StartRAttack(int i, int missile_type, int dam)
 void M_StartRSpAttack(int i, int missile_type, int dam)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_SPECIAL], md);
+	int distributeFramesBeforeFrame = 0;
+	if (monster[i]._mAi == AI_MEGA)
+		distributeFramesBeforeFrame = monster[i].MData->mAFNum2;
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_SPECIAL], md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
 	monster[i]._mmode = MM_RSPATTACK;
 	monster[i]._mVar1 = missile_type;
 	monster[i]._mVar2 = 0;
@@ -2292,7 +2295,7 @@ bool M_DoRSpAttack(int i)
 		PlayEffect(i, 3);
 	}
 
-	if (monster[i]._mAi == AI_MEGA && monster[i].AnimInfo.CurrentFrame == 3) {
+	if (monster[i]._mAi == AI_MEGA && monster[i].AnimInfo.CurrentFrame == monster[i].MData->mAFNum2) {
 		if (monster[i]._mVar2++ == 0) {
 			monster[i]._mFlags |= MFLAG_ALLOW_SPECIAL;
 		} else if (monster[i]._mVar2 == 15) {
