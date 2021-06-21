@@ -15,6 +15,7 @@
 #include "mpqapi.h"
 #include "pack.h"
 #include "storm/storm.h"
+#include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/paths.h"

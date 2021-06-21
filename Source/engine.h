@@ -37,6 +37,7 @@
 #include "engine/point.hpp"
 #include "engine/size.hpp"
 #include "miniwin/miniwin.h"
+#include "utils/endian.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 
 #define TILE_WIDTH 64
@@ -49,22 +50,6 @@ inline byte *CelGetFrameStart(byte *pCelBuff, int nCel)
 	const uint32_t *pFrameTable = reinterpret_cast<const std::uint32_t *>(pCelBuff);
 
 	return &pCelBuff[SDL_SwapLE32(pFrameTable[nCel])];
-}
-
-template <typename T>
-constexpr uint32_t LoadLE32(const T *b)
-{
-	static_assert(sizeof(T) == 1, "invalid argument");
-
-	return ((uint32_t)(b)[3] << 24) | ((uint32_t)(b)[2] << 16) | ((uint32_t)(b)[1] << 8) | (uint32_t)(b)[0];
-}
-
-template <typename T>
-constexpr uint32_t LoadBE32(const T *b)
-{
-	static_assert(sizeof(T) == 1, "invalid argument");
-
-	return ((uint32_t)(b)[0] << 24) | ((uint32_t)(b)[1] << 16) | ((uint32_t)(b)[2] << 8) | (uint32_t)(b)[3];
 }
 
 inline byte *CelGetFrame(byte *pCelBuff, int nCel, int *nDataSize)

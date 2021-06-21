@@ -21,6 +21,7 @@
 #include "storm/storm.h"
 #include "sync.h"
 #include "tmsg.h"
+#include "utils/endian.hpp"
 #include "utils/language.h"
 
 namespace devilution {

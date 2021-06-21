@@ -23,6 +23,7 @@
 #include "mpqapi.h"
 #include "pfile.h"
 #include "stores.h"
+#include "utils/endian.hpp"
 #include "utils/language.h"
 
 namespace devilution {
