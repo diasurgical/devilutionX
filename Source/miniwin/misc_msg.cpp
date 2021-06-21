@@ -3,21 +3,22 @@
 #include <deque>
 
 #include "control.h"
-#include "controls/controller.h"
 #include "controls/controller_motion.h"
+#include "controls/controller.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "controls/touch.h"
 #include "cursor.h"
+#include "engine/rectangle.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
+#include "miniwin/miniwin.h"
 #include "movie.h"
 #include "utils/display.h"
+#include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
-#include "utils/log.hpp"
-#include "miniwin/miniwin.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"

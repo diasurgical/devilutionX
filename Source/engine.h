@@ -44,11 +44,6 @@
 
 namespace devilution {
 
-struct Rectangle {
-	Point position;
-	Size size;
-};
-
 inline byte *CelGetFrameStart(byte *pCelBuff, int nCel)
 {
 	const uint32_t *pFrameTable = reinterpret_cast<const std::uint32_t *>(pCelBuff);
