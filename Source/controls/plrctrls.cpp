@@ -470,10 +470,10 @@ void AttrIncBtnSnap(AxisDirection dir)
 	// first, find our cursor location
 	int slot = 0;
 	for (int i = 0; i < 4; i++) {
-		if (MouseX >= ChrBtnsRect[i].x
-		    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
-		    && MouseY >= ChrBtnsRect[i].y
-		    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
+		if (MouseX >= ChrBtnsRect[i].position.x
+		    && MouseX <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
+		    && MouseY >= ChrBtnsRect[i].position.y
+		    && MouseY <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
 			slot = i;
 			break;
 		}
@@ -488,15 +488,15 @@ void AttrIncBtnSnap(AxisDirection dir)
 	}
 
 	// move cursor to our new location
-	int x = ChrBtnsRect[slot].x + (ChrBtnsRect[slot].w / 2);
-	int y = ChrBtnsRect[slot].y + (ChrBtnsRect[slot].h / 2);
+	int x = ChrBtnsRect[slot].position.x + (ChrBtnsRect[slot].size.width / 2);
+	int y = ChrBtnsRect[slot].position.y + (ChrBtnsRect[slot].size.height / 2);
 	SetCursorPos(x, y);
 }
 
 Point InvGetEquipSlotCoord(const inv_body_loc inv_slot)
 {
 	Point result { RIGHT_PANEL, 0 };
-	result.x -= (icursW28 - 1) * (INV_SLOT_SIZE_PX / 2);
+	result.x -= (icursW28 - 1) * (InventorySlotSizeInPixels.width / 2);
 	switch (inv_slot) {
 	case INVLOC_HEAD:
 		result.x += ((InvRect[SLOTXY_HEAD_FIRST].x + InvRect[SLOTXY_HEAD_LAST].x) / 2);
@@ -580,7 +580,7 @@ Point BeltGetSlotCoord(int slot)
 /**
  * Get item size (grid size) on the slot specified. Returns 1x1 if none exists.
  */
-std::pair<int, int> GetItemSizeOnSlot(int slot, char &itemInvId)
+Size GetItemSizeOnSlot(int slot, char &itemInvId)
 {
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 		int ig = slot - SLOTXY_INV_FIRST;
@@ -594,9 +594,9 @@ std::pair<int, int> GetItemSizeOnSlot(int slot, char &itemInvId)
 
 			ItemStruct &item = myPlayer.InvList[iv - 1];
 			if (!item.isEmpty()) {
-				std::pair<int, int> size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
-				size.first /= INV_SLOT_SIZE_PX;
-				size.second /= INV_SLOT_SIZE_PX;
+				auto size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
+				size.width /= InventorySlotSizeInPixels.width;
+				size.height /= InventorySlotSizeInPixels.height;
 
 				itemInvId = ii;
 				return size;
@@ -616,10 +616,8 @@ void ResetInvCursorPosition()
 	if (slot < SLOTXY_INV_FIRST) {
 		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)slot);
 	} else if (slot < SLOTXY_BELT_FIRST) {
-		int itemSizeX;
-		int itemSizeY;
 		char itemInvId;
-		std::tie(itemSizeX, itemSizeY) = GetItemSizeOnSlot(slot, itemInvId);
+		auto itemSize = GetItemSizeOnSlot(slot, itemInvId);
 
 		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
 		if (itemInvId < 0) {
@@ -632,16 +630,16 @@ void ResetInvCursorPosition()
 		}
 
 		// offset the slot to always move to the top-left most slot of that item
-		slot -= ((itemSizeY - 1) * INV_ROW_SLOT_SIZE);
+		slot -= ((itemSize.height - 1) * INV_ROW_SLOT_SIZE);
 		mousePos = InvGetSlotCoord(slot);
-		mousePos.x += ((itemSizeX - 1) * INV_SLOT_SIZE_PX) / 2;
-		mousePos.y += ((itemSizeY - 1) * INV_SLOT_SIZE_PX) / 2;
+		mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
+		mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
 	} else {
 		mousePos = BeltGetSlotCoord(slot);
 	}
 
-	mousePos.x += (INV_SLOT_SIZE_PX / 2);
-	mousePos.y -= (INV_SLOT_SIZE_PX / 2);
+	mousePos.x += (InventorySlotSizeInPixels.width / 2);
+	mousePos.y -= (InventorySlotSizeInPixels.height / 2);
 
 	SetCursorPos(mousePos.x, mousePos.y);
 }
@@ -658,10 +656,8 @@ void InvMove(AxisDirection dir)
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 		return;
 
-	int itemSizeX;
-	int itemSizeY;
 	char itemInvId;
-	std::tie(itemSizeX, itemSizeY) = GetItemSizeOnSlot(slot, itemInvId);
+	auto itemSize = GetItemSizeOnSlot(slot, itemInvId);
 
 	Point mousePos { MouseX, MouseY };
 
@@ -774,10 +770,10 @@ void InvMove(AxisDirection dir)
 				mousePos = InvGetEquipSlotCoord(INVLOC_AMULET);
 			} else if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 				if (
-				    slot == SLOTXY_INV_ROW1_LAST + 1 - itemSizeX || slot == SLOTXY_INV_ROW2_LAST + 1 - itemSizeX || slot == SLOTXY_INV_ROW3_LAST + 1 - itemSizeX || slot == SLOTXY_INV_ROW4_LAST + 1 - itemSizeX) {
-					slot -= INV_ROW_SLOT_SIZE - itemSizeX;
+				    slot == SLOTXY_INV_ROW1_LAST + 1 - itemSize.width || slot == SLOTXY_INV_ROW2_LAST + 1 - itemSize.width || slot == SLOTXY_INV_ROW3_LAST + 1 - itemSize.width || slot == SLOTXY_INV_ROW4_LAST + 1 - itemSize.width) {
+					slot -= INV_ROW_SLOT_SIZE - itemSize.width;
 				} else {
-					slot += itemSizeX;
+					slot += itemSize.width;
 				}
 				mousePos = InvGetSlotCoord(slot);
 			} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {
@@ -886,11 +882,11 @@ void InvMove(AxisDirection dir)
 			} else if (slot == SLOTXY_HAND_RIGHT_FIRST) {
 				slot = SLOTXY_RING_RIGHT;
 				mousePos = InvGetEquipSlotCoord(INVLOC_RING_RIGHT);
-			} else if (slot <= (SLOTXY_INV_ROW4_LAST - (itemSizeY * INV_ROW_SLOT_SIZE))) {
-				slot += itemSizeY * INV_ROW_SLOT_SIZE;
+			} else if (slot <= (SLOTXY_INV_ROW4_LAST - (itemSize.height * INV_ROW_SLOT_SIZE))) {
+				slot += itemSize.height * INV_ROW_SLOT_SIZE;
 				mousePos = InvGetSlotCoord(slot);
 			} else if (slot <= SLOTXY_INV_LAST) {
-				slot += itemSizeY * INV_ROW_SLOT_SIZE;
+				slot += itemSize.height * INV_ROW_SLOT_SIZE;
 				if (slot > SLOTXY_BELT_LAST)
 					slot = SLOTXY_BELT_LAST;
 				mousePos = BeltGetSlotCoord(slot);
@@ -904,7 +900,7 @@ void InvMove(AxisDirection dir)
 
 	// get item under new slot if navigating on the inventory
 	if (!isHoldingItem && slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
-		std::tie(itemSizeX, itemSizeY) = GetItemSizeOnSlot(slot, itemInvId);
+		itemSize = GetItemSizeOnSlot(slot, itemInvId);
 
 		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
 		if (itemInvId < 0) {
@@ -917,21 +913,21 @@ void InvMove(AxisDirection dir)
 		}
 
 		// offset the slot to always move to the top-left most slot of that item
-		slot -= ((itemSizeY - 1) * INV_ROW_SLOT_SIZE);
+		slot -= ((itemSize.height - 1) * INV_ROW_SLOT_SIZE);
 		mousePos = InvGetSlotCoord(slot);
-		mousePos.x += ((itemSizeX - 1) * INV_SLOT_SIZE_PX) / 2;
-		mousePos.y += ((itemSizeY - 1) * INV_SLOT_SIZE_PX) / 2;
+		mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
+		mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
 	}
 
 	// move cursor to the center of the slot if not holding anything or top left is holding an object
 	if (isHoldingItem) {
 		if (slot >= SLOTXY_INV_FIRST)
-			mousePos.y -= INV_SLOT_SIZE_PX;
+			mousePos.y -= InventorySlotSizeInPixels.height;
 		else
-			mousePos.y -= (int)((icursH28 / 2.f) * INV_SLOT_SIZE_PX) + (INV_SLOT_SIZE_PX / 2);
+			mousePos.y -= (int)((icursH28 / 2.f) * InventorySlotSizeInPixels.height) + (InventorySlotSizeInPixels.height / 2);
 	} else {
-		mousePos.x += (INV_SLOT_SIZE_PX / 2);
-		mousePos.y -= (INV_SLOT_SIZE_PX / 2);
+		mousePos.x += (InventorySlotSizeInPixels.width / 2);
+		mousePos.y -= (InventorySlotSizeInPixels.height / 2);
 	}
 
 	if (mousePos.x == MouseX && mousePos.y == MouseY) {
@@ -1404,10 +1400,10 @@ void PerformPrimaryAction()
 	if (chrflag && !chrbtnactive && plr[myplr]._pStatPts > 0) {
 		CheckChrBtns();
 		for (int i = 0; i < 4; i++) {
-			if (MouseX >= ChrBtnsRect[i].x
-			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
-			    && MouseY >= ChrBtnsRect[i].y
-			    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
+			if (MouseX >= ChrBtnsRect[i].position.x
+			    && MouseX <= ChrBtnsRect[i].position.x + ChrBtnsRect[i].size.width
+			    && MouseY >= ChrBtnsRect[i].position.y
+			    && MouseY <= ChrBtnsRect[i].size.height + ChrBtnsRect[i].position.y) {
 				chrbtn[i] = true;
 				chrbtnactive = true;
 				ReleaseChrBtns(false);

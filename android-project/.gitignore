@@ -1,0 +1,14 @@
+# Intellij
+.idea/
+
+# Gradle files
+/.gradle/
+build/
+
+# Android
+/app/.cxx/
+
+# Local configuration file (sdk path, etc)
+/local.properties
+
+/app/src/main/assets/CharisSILB.ttf

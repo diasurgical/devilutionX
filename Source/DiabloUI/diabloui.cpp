@@ -12,6 +12,7 @@
 #include "controls/controller.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
+#include "hwcursor.hpp"
 #include "palette.h"
 #include "storm/storm.h"
 #include "utils/display.h"
@@ -28,6 +29,10 @@
 #ifdef __vita__
 // for virtual keyboard on Vita
 #include "platform/vita/keyboard.h"
+#endif
+#ifdef __3DS__
+// for virtual keyboard on 3DS
+#include "platform/ctr/keyboard.h"
 #endif
 
 namespace devilution {
@@ -100,9 +105,11 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
 #ifdef __SWITCH__
-			switch_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
+			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
 #elif defined(__vita__)
-			vita_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length);
+			vita_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
+#elif defined(__3DS__)
+			ctr_vkbdInput(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #else
 			SDL_StartTextInput();
 #endif
@@ -391,6 +398,8 @@ void UiHandleEvents(SDL_Event *event)
 			gbActive = true;
 		else if (event->window.event == SDL_WINDOWEVENT_HIDDEN)
 			gbActive = false;
+		else if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+			ReinitializeHardwareCursor();
 	}
 #endif
 }
@@ -598,7 +607,17 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 	fadeTc = 0;
 	fadeValue = 0;
+
+	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		SDL_SetSurfacePalette(ArtCursor.surface.get(), palette);
+		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
+#endif
+		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
+	}
+
 	BlackPalette();
+
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	if (DiabloUiSurface() == pal_surface)
 		BltFast(nullptr, nullptr);
@@ -627,13 +646,16 @@ void UiFadeIn()
 	if (fadeValue < 256) {
 		if (fadeValue == 0 && fadeTc == 0)
 			fadeTc = SDL_GetTicks();
+		const int prevFadeValue = fadeValue;
 		fadeValue = (SDL_GetTicks() - fadeTc) / 2.083; // 32 frames @ 60hz
 		if (fadeValue > 256) {
 			fadeValue = 256;
 			fadeTc = 0;
 		}
-		SetFadeLevel(fadeValue);
+		if (fadeValue != prevFadeValue)
+			SetFadeLevel(fadeValue);
 	}
+
 	if (DiabloUiSurface() == pal_surface)
 		BltFast(nullptr, nullptr);
 	RenderPresent();
@@ -672,6 +694,16 @@ void UiPollAndRender()
 	UiRenderItems(gUiItems);
 	DrawMouse();
 	UiFadeIn();
+
+	// Must happen after the very first UiFadeIn, which sets the cursor.
+	if (IsHardwareCursor())
+		SetHardwareCursorVisible(!sgbControllerActive);
+
+#ifdef __3DS__
+	// Keyboard blocks until input is finished
+	// so defer until after render and fade-in
+	ctr_vkbdFlush();
+#endif
 }
 
 namespace {
@@ -933,7 +965,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 
 void DrawMouse()
 {
-	if (sgbControllerActive)
+	if (IsHardwareCursor() || sgbControllerActive)
 		return;
 
 	DrawArt(MouseX, MouseY, &ArtCursor);

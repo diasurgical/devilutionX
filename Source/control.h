@@ -28,13 +28,6 @@ namespace devilution {
 #define RIGHT_PANEL (gnScreenWidth - SPANEL_WIDTH)
 #define RIGHT_PANEL_X RIGHT_PANEL
 
-struct RECT32 {
-	int x;
-	int y;
-	int w;
-	int h;
-};
-
 extern bool drawhpflag;
 extern bool dropGoldFlag;
 extern bool chrbtn[4];
@@ -141,6 +134,6 @@ void control_reset_talk();
 bool control_talk_last_key(int vkey);
 bool control_presskeys(int vkey);
 
-extern RECT32 ChrBtnsRect[4];
+extern Rectangle ChrBtnsRect[4];
 
 } // namespace devilution

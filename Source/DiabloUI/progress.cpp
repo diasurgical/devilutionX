@@ -5,6 +5,7 @@
 #include "control.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
+#include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
 #include "utils/language.h"

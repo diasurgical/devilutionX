@@ -178,6 +178,20 @@ The nro-file will be generated in the build folder. Test with an emulator (RyuJi
 [Nintendo Switch manual](docs/manual/platforms/switch.md)
 </details>
 
+<details><summary>Android</summary>
+
+### Installing dependencies
+Install [Android Studio](https://developer.android.com/studio)
+After first launch configuration, go to "Configure -> SDK Manager -> SDK Tools".
+Select "NDK (Side by side)" and "CMake" checkboxes and click "OK".
+
+### Compiling
+Click "Open Existing Project" and choose "android-project" folder in DevilutionX root folder.
+Wait until Gradle sync is completed.
+In Android Studio, go to "Build -> Make Project" or use the shortcut Ctrl+F9
+You can find the compiled APK in `/android-project/app/build/outputs/apk/`
+</details>
+
 <details><summary>Nintendo 3DS</summary>
 
 ### Installing dependencies
@@ -191,7 +205,8 @@ https://devkitpro.org/wiki/Getting_Started
 ```
 sudo (dkp-)pacman -S \
 		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype
+		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype 3ds-cmake \
+		3ds-pkg-config picasso 3dslink
 ```
 - Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
   - Copy binaries to: `/opt/devkitpro/tools/bin/`
@@ -202,7 +217,7 @@ Otherwise, MSYS will sanitize file paths in compiler flags which will likely lea
 
 ```
 cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 ```
 The output files will be generated in the build folder.

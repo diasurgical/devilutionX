@@ -10,6 +10,8 @@
 #include "control.h"
 #include "doom.h"
 #include "engine.h"
+#include "engine/render/cel_render.hpp"
+#include "hwcursor.hpp"
 #include "inv.h"
 #include "missiles.h"
 #include "towners.h"
@@ -155,7 +157,7 @@ int GetInvItemFrame(int i)
 	return i < InvItems1Size ? i : i - (InvItems1Size - 1);
 }
 
-std::pair<int, int> GetInvItemSize(int i)
+Size GetInvItemSize(int i)
 {
 	if (i >= InvItems1Size)
 		return { InvItemWidth2[i - (InvItems1Size - 1)], InvItemHeight2[i - (InvItems1Size - 1)] };
@@ -164,7 +166,9 @@ std::pair<int, int> GetInvItemSize(int i)
 
 void SetICursor(int i)
 {
-	std::tie(icursW, icursH) = GetInvItemSize(i);
+	auto size = GetInvItemSize(i);
+	icursW = size.width;
+	icursH = size.height;
 	icursW28 = icursW / 28;
 	icursH28 = icursH / 28;
 }
@@ -172,8 +176,26 @@ void SetICursor(int i)
 void NewCursor(int i)
 {
 	pcurs = i;
-	std::tie(cursW, cursH) = GetInvItemSize(i);
+	auto size = GetInvItemSize(i);
+	cursW = size.width;
+	cursH = size.height;
 	SetICursor(i);
+	if (IsHardwareCursorEnabled() && GetCurrentCursorInfo() != CursorInfo::GameCursor(pcurs) && pcurs != CURSOR_NONE) {
+		SetHardwareCursor(CursorInfo::GameCursor(pcurs));
+	}
+}
+
+void CelDrawCursor(const CelOutputBuffer &out, Point position, int pcurs)
+{
+	const auto &sprite = GetInvItemSprite(pcurs);
+	const int frame = GetInvItemFrame(pcurs);
+	if (IsItemSprite(pcurs)) {
+		const auto &heldItem = plr[myplr].HoldItem;
+		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), position, sprite, frame, false);
+		CelDrawItem(heldItem._iStatFlag, out, position, sprite, frame);
+	} else {
+		CelClippedDrawTo(out, position, sprite, frame);
+	}
 }
 
 void InitLevelCursor()

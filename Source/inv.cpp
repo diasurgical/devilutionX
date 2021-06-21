@@ -11,12 +11,14 @@
 #include "cursor.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "hwcursor.hpp"
 #include "minitext.h"
 #include "options.h"
 #include "plrmsg.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/language.h"
+#include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -159,13 +161,19 @@ void InitInv()
 	drawsbarflag = false;
 }
 
-static void InvDrawSlotBack(const CelOutputBuffer &out, int x, int y, int w, int h)
+static void InvDrawSlotBack(const CelOutputBuffer &out, Point targetPosition, Size size)
 {
-	BYTE *dst = out.at(x, y);
+	SDL_Rect srcRect = MakeSdlRect(0, 0, size.width, size.height);
+	out.Clip(&srcRect, &targetPosition);
+	if (size.width <= 0 || size.height <= 0)
+		return;
 
-	for (int hgt = h; hgt != 0; hgt--, dst -= out.pitch() + w) {
-		for (int wdt = w; wdt != 0; wdt--) {
-			BYTE pix = *dst;
+	std::uint8_t *dst = &out[targetPosition];
+	const auto dstPitch = out.pitch();
+
+	for (int hgt = size.height; hgt != 0; hgt--, dst -= dstPitch + size.width) {
+		for (int wdt = size.width; wdt != 0; wdt--) {
+			std::uint8_t pix = *dst;
 			if (pix >= PAL16_BLUE) {
 				if (pix <= PAL16_BLUE + 15)
 					pix -= PAL16_BLUE - PAL16_BEIGE;
@@ -207,21 +215,19 @@ void DrawInv(const CelOutputBuffer &out)
 		if (!myPlayer.InvBody[slot].isEmpty()) {
 			int screenX = slotPos[slot].x;
 			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, RIGHT_PANEL_X + screenX, screenY, slotSize[slot].width * INV_SLOT_SIZE_PX, slotSize[slot].height * INV_SLOT_SIZE_PX);
+			InvDrawSlotBack(out, { RIGHT_PANEL_X + screenX, screenY }, { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height });
 
 			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
-			int frameW;
-			int frameH;
-			std::tie(frameW, frameH) = GetInvItemSize(frame);
+			auto frameSize = GetInvItemSize(frame);
 
 			// calc item offsets for weapons smaller than 2x3 slots
 			if (slot == INVLOC_HAND_LEFT) {
-				screenX += frameW == INV_SLOT_SIZE_PX ? 14 : 0;
-				screenY += frameH == (3 * INV_SLOT_SIZE_PX) ? 0 : -14;
+				screenX += frameSize.width == InventorySlotSizeInPixels.width ? 14 : 0;
+				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -14;
 			} else if (slot == INVLOC_HAND_RIGHT) {
-				screenX += frameW == INV_SLOT_SIZE_PX ? 13 : 1;
-				screenY += frameH == 3 * INV_SLOT_SIZE_PX ? 0 : -14;
+				screenX += frameSize.width == InventorySlotSizeInPixels.width ? 13 : 1;
+				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -14;
 			}
 
 			const auto &cel = GetInvItemSprite(frame);
@@ -239,11 +245,11 @@ void DrawInv(const CelOutputBuffer &out)
 					if (myPlayer._pClass != HeroClass::Barbarian
 					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
 					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y, slotSize[INVLOC_HAND_RIGHT].width * INV_SLOT_SIZE_PX, slotSize[INVLOC_HAND_RIGHT].height * INV_SLOT_SIZE_PX);
+						InvDrawSlotBack(out, { RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y }, { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
 						light_table_index = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameW == INV_SLOT_SIZE_PX ? 13 : -1);
+						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? 13 : -1);
 						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
@@ -258,10 +264,8 @@ void DrawInv(const CelOutputBuffer &out)
 		if (myPlayer.InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
-			    InvRect[i + SLOTXY_INV_FIRST].x + RIGHT_PANEL_X,
-			    InvRect[i + SLOTXY_INV_FIRST].y - 1,
-			    INV_SLOT_SIZE_PX,
-			    INV_SLOT_SIZE_PX);
+			    InvRect[i + SLOTXY_INV_FIRST] + Point { RIGHT_PANEL_X, -1 },
+			    InventorySlotSizeInPixels);
 		}
 	}
 
@@ -306,7 +310,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		}
 
 		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1 };
-		InvDrawSlotBack(out, position.x, position.y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
 		int frame = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
 		const auto &cel = GetInvItemSprite(frame);
@@ -325,7 +329,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
 			sprintf(tempstr, "%i", i + 1);
 			SDL_Rect rect {
-				InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X + INV_SLOT_SIZE_PX - GetLineWidth(tempstr),
+				InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X + InventorySlotSizeInPixels.width - GetLineWidth(tempstr),
 				InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1,
 				0,
 				0
@@ -339,15 +343,14 @@ void DrawInvBelt(const CelOutputBuffer &out)
  * @brief Adds an item to a player's InvGrid array
  * @param invGridIndex Item's position in InvGrid (this should be the item's topleft grid tile)
  * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
- * @param sizeX Horizontal size of item
- * @param sizeY Vertical size of item
+ * @param itemSize Size of item
  */
-static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invListIndex, int sizeX, int sizeY)
+static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invListIndex, Size itemSize)
 {
 	const int pitch = 10;
-	for (int y = 0; y < sizeY; y++) {
-		for (int x = 0; x < sizeX; x++) {
-			if (x == 0 && y == sizeY - 1)
+	for (int y = 0; y < itemSize.height; y++) {
+		for (int x = 0; x < itemSize.width; x++) {
+			if (x == 0 && y == itemSize.height - 1)
 				player.InvGrid[invGridIndex + x] = invListIndex;
 			else
 				player.InvGrid[invGridIndex + x] = -invListIndex;
@@ -364,10 +367,9 @@ static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invList
 Size GetInventorySize(const ItemStruct &item)
 {
 	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
-	int w;
-	int h;
-	std::tie(w, h) = GetInvItemSize(itemSizeIndex);
-	return { w / INV_SLOT_SIZE_PX, h / INV_SLOT_SIZE_PX };
+	auto size = GetInvItemSize(itemSizeIndex);
+
+	return { size.width / InventorySlotSizeInPixels.width, size.height / InventorySlotSizeInPixels.height };
 }
 
 /**
@@ -712,7 +714,7 @@ bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const Ite
 		player.InvList[player._pNumInv] = player.HoldItem;
 		player._pNumInv++;
 
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize.width, itemSize.height);
+		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize);
 		player.CalcScrolls();
 	}
 
@@ -800,10 +802,9 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	auto &player = plr[pnum];
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	int i = cursorPosition.x + (icursW / 2);
-	int j = cursorPosition.y + (icursH / 2);
-	int sx = icursW28;
-	int sy = icursH28;
+	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursW / 2));
+	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursH / 2));
+	Size itemSize { icursW28, icursW28 };
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
@@ -814,19 +815,19 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			yo = PANEL_TOP;
 		}
 
-		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + INV_SLOT_SIZE_PX) {
-			if (j >= InvRect[r].y + yo - INV_SLOT_SIZE_PX - 1 && j < InvRect[r].y + yo) {
+		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + InventorySlotSizeInPixels.width) {
+			if (j >= InvRect[r].y + yo - InventorySlotSizeInPixels.height - 1 && j < InvRect[r].y + yo) {
 				done = true;
 				r--;
 			}
 		}
 		if (r == SLOTXY_CHEST_LAST) {
-			if ((sx & 1) == 0)
+			if ((itemSize.width & 1) == 0)
 				i -= 14;
-			if ((sy & 1) == 0)
+			if ((itemSize.height & 1) == 0)
 				j -= 14;
 		}
-		if (r == SLOTXY_INV_LAST && (sy & 1) == 0)
+		if (r == SLOTXY_INV_LAST && (itemSize.height & 1) == 0)
 			j += 14;
 	}
 	if (!done)
@@ -857,7 +858,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		done = true;
 	}
 	if (player.HoldItem._iLoc == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
-		if (sx == 1 && sy == 1) {
+		if (itemSize == Size { 1, 1 }) {
 			done = true;
 			if (!AllItemsList[player.HoldItem.IDidx].iUsable)
 				done = false;
@@ -886,16 +887,16 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				}
 			}
 		} else {
-			int yy = 10 * ((ii / 10) - ((sy - 1) / 2));
+			int yy = 10 * ((ii / 10) - ((itemSize.height - 1) / 2));
 			if (yy < 0)
 				yy = 0;
-			for (j = 0; j < sy && done; j++) {
+			for (j = 0; j < itemSize.height && done; j++) {
 				if (yy >= NUM_INV_GRID_ELEM)
 					done = false;
-				int xx = (ii % 10) - ((sx - 1) / 2);
+				int xx = (ii % 10) - ((itemSize.width - 1) / 2);
 				if (xx < 0)
 					xx = 0;
-				for (i = 0; i < sx && done; i++) {
+				for (i = 0; i < itemSize.width && done; i++) {
 					if (xx >= 10) {
 						done = false;
 					} else {
@@ -1120,9 +1121,9 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 
 			// Calculate top-left position of item for InvGrid and then add item to InvGrid
 
-			int xx = std::max(ii % 10 - ((sx - 1) / 2), 0);
-			int yy = std::max(10 * (ii / 10 - ((sy - 1) / 2)), 0);
-			AddItemToInvGrid(player, xx + yy, it, sx, sy);
+			int xx = std::max(ii % 10 - ((itemSize.width - 1) / 2), 0);
+			int yy = std::max(10 * (ii / 10 - ((itemSize.height - 1) / 2)), 0);
+			AddItemToInvGrid(player, xx + yy, it, itemSize);
 		}
 		break;
 	case ILOC_BELT: {
@@ -1169,7 +1170,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	}
 	CalcPlrInv(pnum, true);
 	if (pnum == myplr) {
-		if (cn == CURSOR_HAND)
+		if (cn == CURSOR_HAND && !IsHardwareCursor())
 			SetCursorPos(MouseX + (cursW / 2), MouseY + (cursH / 2));
 		NewCursor(cn);
 	}
@@ -1227,8 +1228,8 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		// check which inventory rectangle the mouse is in, if any
 		if (cursorPosition.x >= InvRect[r].x + xo
-		    && cursorPosition.x < InvRect[r].x + xo + (INV_SLOT_SIZE_PX + 1)
-		    && cursorPosition.y >= InvRect[r].y + yo - (INV_SLOT_SIZE_PX + 1)
+		    && cursorPosition.x < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
+		    && cursorPosition.y >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
 		    && cursorPosition.y < InvRect[r].y + yo) {
 			done = true;
 			r--;
@@ -1408,7 +1409,10 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 				holdItem._itype = ITYPE_NONE;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-				SetCursorPos(cursorPosition.x - (cursW / 2), MouseY - (cursH / 2));
+				if (!IsHardwareCursor()) {
+					// For a hardware cursor, we set the "hot point" to the center of the item instead.
+					SetCursorPos(cursorPosition.x - (cursW / 2), cursorPosition.y - (cursH / 2));
+				}
 			}
 		}
 	}
@@ -1916,8 +1920,8 @@ char CheckInvHLight()
 		}
 
 		if (MouseX >= InvRect[r].x + xo
-		    && MouseX < InvRect[r].x + xo + (INV_SLOT_SIZE_PX + 1)
-		    && MouseY >= InvRect[r].y + yo - (INV_SLOT_SIZE_PX + 1)
+		    && MouseX < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
+		    && MouseY >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
 		    && MouseY < InvRect[r].y + yo) {
 			break;
 		}

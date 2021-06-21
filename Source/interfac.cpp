@@ -11,11 +11,13 @@
 #include "dx.h"
 #include "engine.h"
 #include "engine/render/cel_render.hpp"
+#include "hwcursor.hpp"
 #include "init.h"
 #include "loadsave.h"
 #include "palette.h"
 #include "pfile.h"
 #include "plrmsg.h"
+#include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -162,14 +164,6 @@ static void InitCutscene(interface_mode uMsg)
 	sgdwProgress = 0;
 }
 
-static void DrawProgress(const CelOutputBuffer &out, int x, int y, int progress_id)
-{
-	BYTE *dst = out.at(x, y);
-	for (int i = 0; i < 22; ++i, dst += out.pitch()) {
-		*dst = BarColor[progress_id];
-	}
-}
-
 static void DrawCutscene()
 {
 	lock_buf(1);
@@ -177,17 +171,18 @@ static void DrawCutscene()
 	DrawArt(out, PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y, &ArtCutsceneWidescreen);
 	CelDrawTo(out, { PANEL_X, 480 - 1 + UI_OFFSET_Y }, *sgpBackCel, 1);
 
-	for (unsigned i = 0; i < sgdwProgress; i++) {
-		DrawProgress(
-		    out,
-		    BarPos[progress_id][0] + i + PANEL_X,
-		    BarPos[progress_id][1] + UI_OFFSET_Y,
-		    progress_id);
-	}
+	constexpr int ProgressHeight = 22;
+	SDL_Rect rect = MakeSdlRect(
+	    out.region.x + BarPos[progress_id][0] + PANEL_X,
+	    out.region.y + BarPos[progress_id][1] + UI_OFFSET_Y,
+	    sgdwProgress,
+	    ProgressHeight);
+	SDL_FillRect(out.surface, &rect, BarColor[progress_id]);
 
 	unlock_buf(1);
-	force_redraw = 255;
-	scrollrt_draw_game_screen(false);
+
+	BltFast(&rect, &rect);
+	RenderPresent();
 }
 
 void interface_msg_pump()
@@ -225,10 +220,14 @@ void ShowProgress(interface_mode uMsg)
 
 	interface_msg_pump();
 	ClearScreenBuffer();
-	scrollrt_draw_game_screen(true);
+	scrollrt_draw_game_screen();
 	InitCutscene(uMsg);
 	BlackPalette();
 	DrawCutscene();
+
+	if (IsHardwareCursor())
+		SetHardwareCursorVisible(false);
+
 	PaletteFadeIn(8);
 	IncProgress();
 	sound_init();

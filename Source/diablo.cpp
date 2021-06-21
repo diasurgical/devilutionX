@@ -437,7 +437,7 @@ static void run_game_loop(interface_mode uMsg)
 	NewCursor(CURSOR_NONE);
 	ClearScreenBuffer();
 	force_redraw = 255;
-	scrollrt_draw_game_screen(true);
+	scrollrt_draw_game_screen();
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == GM_Game);
 	free_game();
@@ -507,12 +507,12 @@ static void SaveOptions()
 	setIniInt("Audio", "Channels", sgOptions.Audio.nChannels);
 	setIniInt("Audio", "Buffer Size", sgOptions.Audio.nBufferSize);
 	setIniInt("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
-#ifndef __vita__
 	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
 	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
-#endif
-	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
 #ifndef __vita__
+	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
+#endif
+#if !defined(USE_SDL1)
 	setIniInt("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
 #endif
 	setIniInt("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
@@ -522,6 +522,9 @@ static void SaveOptions()
 	setIniInt("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 	setIniInt("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
+#ifndef USE_SDL1
+	setIniInt("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
+#endif
 	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 	setIniInt("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
@@ -587,15 +590,14 @@ static void LoadOptions()
 	sgOptions.Audio.nBufferSize = getIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
 	sgOptions.Audio.nResamplingQuality = getIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
 
-#ifndef __vita__
 	sgOptions.Graphics.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
 	sgOptions.Graphics.nHeight = getIniInt("Graphics", "Height", DEFAULT_HEIGHT);
-#else
-	sgOptions.Graphics.nWidth = DEFAULT_WIDTH;
-	sgOptions.Graphics.nHeight = DEFAULT_HEIGHT;
-#endif
+#ifndef __vita__
 	sgOptions.Graphics.bFullscreen = getIniBool("Graphics", "Fullscreen", true);
-#if !defined(USE_SDL1) && !defined(__vita__)
+#else
+	sgOptions.Graphics.bFullscreen = true;
+#endif
+#if !defined(USE_SDL1)
 	sgOptions.Graphics.bUpscale = getIniBool("Graphics", "Upscale", true);
 #else
 	sgOptions.Graphics.bUpscale = false;
@@ -607,6 +609,11 @@ static void LoadOptions()
 	sgOptions.Graphics.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
+#ifndef USE_SDL1
+	sgOptions.Graphics.bHardwareCursor = getIniBool("Graphics", "Hardware Cursor", false);
+#else
+	sgOptions.Graphics.bHardwareCursor = false;
+#endif
 	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
 	sgOptions.Graphics.bShowFPS = getIniInt("Graphics", "Show FPS", false);
 
@@ -1941,7 +1948,7 @@ static void timeout_cursor(bool bTimeout)
 			NewCursor(CURSOR_HOURGLASS);
 			force_redraw = 255;
 		}
-		scrollrt_draw_game_screen(true);
+		scrollrt_draw_game_screen();
 	} else if (sgnTimeoutCurs != CURSOR_NONE) {
 		NewCursor(sgnTimeoutCurs);
 		sgnTimeoutCurs = CURSOR_NONE;

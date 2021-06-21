@@ -185,15 +185,17 @@ public:
 
 class UiEdit : public UiItemBase {
 public:
-	UiEdit(char *value, std::size_t max_length, SDL_Rect rect, int flags = 0)
+	UiEdit(const char *hint, char *value, std::size_t max_length, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_EDIT;
+		m_hint = hint;
 		m_value = value;
 		m_max_length = max_length;
 	}
 
 	//private:
+	const char *m_hint;
 	char *m_value;
 	std::size_t m_max_length;
 };

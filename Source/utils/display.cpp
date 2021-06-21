@@ -127,7 +127,7 @@ bool SpawnWindow(const char *lpWindowName)
 	scePowerSetArmClockFrequency(444);
 #endif
 
-#if SDL_VERSION_ATLEAST(2, 0, 6)
+#if SDL_VERSION_ATLEAST(2, 0, 6) && defined(__vita__)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
 
@@ -143,6 +143,8 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #ifndef USE_SDL1
 	initFlags |= SDL_INIT_GAMECONTROLLER;
+
+	SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
 #endif
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();

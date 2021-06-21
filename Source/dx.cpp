@@ -319,9 +319,6 @@ void RenderPresent()
 		}
 
 		// Clear buffer to avoid artifacts in case the window was resized
-#ifndef __vita__
-		// There's no window resizing on vita, so texture always properly overwrites display area.
-		// Thus, there's no need to clear the screen and unnecessarily modify sdl render context state.
 		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) <= -1) { // TODO only do this if window was resized
 			ErrSdl();
 		}
@@ -329,7 +326,6 @@ void RenderPresent()
 		if (SDL_RenderClear(renderer) <= -1) {
 			ErrSdl();
 		}
-#endif
 		if (SDL_RenderCopy(renderer, texture, nullptr, nullptr) <= -1) {
 			ErrSdl();
 		}

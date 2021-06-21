@@ -224,6 +224,11 @@ struct Size {
 	}
 };
 
+struct Rectangle {
+	Point position;
+	Size size;
+};
+
 struct ActorPosition {
 	Point tile;
 	/** Future tile position. Set at start of walking animation. */
@@ -432,6 +437,40 @@ struct CelOutputBuffer {
 		subregion.h = h;
 		return CelOutputBuffer(surface, subregion);
 	}
+
+	/**
+	 * @brief Clips srcRect and targetPosition to this output buffer.
+	 */
+	void Clip(SDL_Rect *srcRect, Point *targetPosition) const
+	{
+		if (targetPosition->x < 0) {
+			srcRect->x -= targetPosition->x;
+			srcRect->w += targetPosition->x;
+			targetPosition->x = 0;
+		}
+		if (targetPosition->y < 0) {
+			srcRect->y -= targetPosition->y;
+			srcRect->h += targetPosition->y;
+			targetPosition->y = 0;
+		}
+		if (targetPosition->x + srcRect->w > region.w) {
+			srcRect->w = region.w - targetPosition->x;
+		}
+		if (targetPosition->y + srcRect->h > region.h) {
+			srcRect->h = region.h - targetPosition->y;
+		}
+	}
+
+	/**
+	 * @brief Copies the `srcRect` portion of the given buffer to this buffer at `targetPosition`.
+	 */
+	void BlitFrom(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const;
+
+	/**
+	 * @brief Copies the `srcRect` portion of the given buffer to this buffer at `targetPosition`.
+	 * Source pixels with index 0 are not copied.
+	 */
+	void BlitFromSkipColorIndexZero(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const;
 };
 
 /**
@@ -547,6 +586,7 @@ int CalculateWidth2(int width);
 void SetRndSeed(int32_t s);
 int32_t AdvanceRndSeed();
 int32_t GetRndSeed();
+uint32_t GetLCGEngineState();
 int32_t GenerateRnd(int32_t v);
 
 size_t GetFileSize(const char *pszName);

@@ -187,6 +187,11 @@ if(NINTENDO_3DS)
   include(n3ds_defs)
 endif()
 
+if(ANDROID)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/android-project/CMake")
+  include(android_defs)
+endif()
+
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -197,14 +202,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-
-if(NOT NOSOUND)
-  if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
-    find_package(SDL_audiolib REQUIRED)
-  else()
-    add_subdirectory(3rdParty/SDL_audiolib)
-  endif()
-endif()
 
 if(NOT NINTENDO_3DS)
   find_package(Threads REQUIRED)
@@ -231,7 +228,10 @@ if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
 endif()
 
-if(USE_SDL1)
+if(ANDROID)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2_ttf)
+elseif(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
@@ -262,6 +262,21 @@ endif()
 
 if(NOT NONET AND NOT DISABLE_TCP)
   add_subdirectory(3rdParty/asio)
+  if(NINTENDO_3DS)
+      target_compile_definitions(asio INTERFACE
+        ASIO_DISABLE_THREADS=ON
+        ASIO_HAS_UNISTD_H=ON)
+
+      target_include_directories(asio BEFORE INTERFACE CMake/ctr/asio/include)
+  endif()
+endif()
+
+if(NOT NOSOUND)
+  if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
+    find_package(SDL_audiolib REQUIRED)
+  else()
+    add_subdirectory(3rdParty/SDL_audiolib)
+  endif()
 endif()
 
 add_library(smacker STATIC
@@ -319,6 +334,7 @@ set(libdevilutionx_SRCS
   Source/gendung.cpp
   Source/gmenu.cpp
   Source/help.cpp
+  Source/hwcursor.cpp
   Source/init.cpp
   Source/interfac.cpp
   Source/inv.cpp
@@ -426,13 +442,6 @@ set(libdevilutionx_SRCS
   Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp)
 
-set(devilutionxbin_SRCS
-  Source/main.cpp
-  Source/devilutionx.exe.manifest
-  Packaging/macOS/AppIcon.icns
-  Packaging/resources/CharisSILB.ttf
-  Packaging/windows/devilutionx.rc)
-
 if(USE_SDL1)
   list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
 endif()
@@ -482,7 +491,12 @@ if(NINTENDO_3DS)
     Source/platform/ctr/system.cpp
     Source/platform/ctr/keyboard.cpp
     Source/platform/ctr/display.cpp
-    Source/platform/ctr/messagebox.cpp)
+    Source/platform/ctr/messagebox.cpp
+    Source/platform/ctr/random.cpp
+    Source/platform/ctr/sockets.cpp
+    Source/platform/ctr/asio/net/if.c
+    Source/platform/ctr/asio/sys/socket.c
+    Source/platform/ctr/asio/sys/uio.c)
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
@@ -508,6 +522,7 @@ if(RUN_TESTS)
     test/missiles_test.cpp
     test/pack_test.cpp
     test/player_test.cpp
+    test/random_test.cpp
     test/scrollrt_test.cpp
     test/stores_test.cpp
     test/writehero_test.cpp
@@ -515,7 +530,18 @@ if(RUN_TESTS)
 endif()
 
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
-add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionxbin_SRCS})
+if (ANDROID)
+  add_library(${BIN_TARGET} SHARED Source/main.cpp)
+else()
+  add_executable(${BIN_TARGET}
+    WIN32
+    MACOSX_BUNDLE
+    Source/main.cpp
+    Source/devilutionx.exe.manifest
+    Packaging/macOS/AppIcon.icns
+    Packaging/resources/CharisSILB.ttf
+    Packaging/windows/devilutionx.rc)
+endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory

@@ -15,7 +15,7 @@ namespace devilution {
 static constexpr unsigned MaxDead = 31;
 
 struct DeadStruct {
-	std::array<byte *, 8> _deadData;
+	std::array<const byte *, 8> _deadData;
 	int _deadFrame;
 	int _deadWidth;
 	uint8_t _deadtrans;

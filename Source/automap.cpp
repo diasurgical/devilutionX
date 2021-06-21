@@ -616,7 +616,7 @@ void DrawAutomap(const CelOutputBuffer &out)
 		screen.y += AmLine32;
 	}
 
-	for (unsigned playerId = 0; playerId < MAX_PLRS; playerId++) {
+	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
 		auto &player = plr[playerId];
 		if (player.plrlevel == plr[myplr].plrlevel && player.plractive && !player._pLvlChanging) {
 			DrawAutomapPlr(out, playerId);

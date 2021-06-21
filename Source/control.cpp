@@ -27,6 +27,7 @@
 #include "towners.h"
 #include "trigs.h"
 #include "utils/language.h"
+#include "utils/sdl_geometry.h"
 
 namespace devilution {
 namespace {
@@ -202,7 +203,7 @@ const char *const PanBtnStr[8] = {
 	"" // Player attack
 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
-RECT32 ChrBtnsRect[4] = {
+Rectangle ChrBtnsRect[4] = {
 	{ 137, 138, 41, 22 },
 	{ 137, 166, 41, 22 },
 	{ 137, 195, 41, 22 },
@@ -545,12 +546,7 @@ void ClearPanel()
 
 void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosition)
 {
-	const BYTE *src = pBtmBuff.at(srcRect.x, srcRect.y);
-	BYTE *dst = &out[targetPosition];
-
-	for (int hgt = srcRect.h; hgt != 0; hgt--, src += pBtmBuff.pitch(), dst += out.pitch()) {
-		memcpy(dst, src, srcRect.w);
-	}
+	out.BlitFrom(pBtmBuff, srcRect, targetPosition);
 }
 
 /**
@@ -565,11 +561,7 @@ void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosi
  */
 static void DrawFlaskTop(const CelOutputBuffer &out, Point position, const CelOutputBuffer &celBuf, int y0, int y1)
 {
-	const BYTE *src = celBuf.at(0, y0);
-	BYTE *dst = &out[position];
-
-	for (int h = y1 - y0; h != 0; --h, src += celBuf.pitch(), dst += out.pitch())
-		memcpy(dst, src, celBuf.w());
+	out.BlitFrom(celBuf, SDL_Rect { 0, static_cast<decltype(SDL_Rect {}.y)>(y0), celBuf.w(), y1 - y0 }, position);
 }
 
 /**
@@ -584,17 +576,8 @@ static void DrawFlaskTop(const CelOutputBuffer &out, Point position, const CelOu
  */
 static void DrawFlask(const CelOutputBuffer &out, const CelOutputBuffer &celBuf, Point sourcePosition, Point targetPosition, int h)
 {
-	const BYTE *src = &celBuf[sourcePosition];
-	BYTE *dst = &out[targetPosition];
-
-	for (int hgt = h; hgt != 0; hgt--, src += celBuf.pitch() - 59, dst += out.pitch() - 59) {
-		for (int wdt = 59; wdt != 0; wdt--) {
-			if (*src != 0)
-				*dst = *src;
-			src++;
-			dst++;
-		}
-	}
+	constexpr int FlaskWidth = 59;
+	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
 }
 
 void DrawLifeFlask(const CelOutputBuffer &out)
@@ -1457,11 +1440,11 @@ void CheckChrBtns()
 			continue;
 		}
 		auto buttonId = static_cast<size_t>(attribute);
-		int x = ChrBtnsRect[buttonId].x + ChrBtnsRect[buttonId].w;
-		int y = ChrBtnsRect[buttonId].y + ChrBtnsRect[buttonId].h;
-		if (MouseX >= ChrBtnsRect[buttonId].x
+		int x = ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].size.width;
+		int y = ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].size.height;
+		if (MouseX >= ChrBtnsRect[buttonId].position.x
 		    && MouseX <= x
-		    && MouseY >= ChrBtnsRect[buttonId].y
+		    && MouseY >= ChrBtnsRect[buttonId].position.y
 		    && MouseY <= y) {
 			chrbtn[buttonId] = true;
 			chrbtnactive = true;
@@ -1485,10 +1468,10 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			continue;
 
 		chrbtn[buttonId] = false;
-		if (MouseX >= ChrBtnsRect[buttonId].x
-		    && MouseX <= ChrBtnsRect[buttonId].x + ChrBtnsRect[buttonId].w
-		    && MouseY >= ChrBtnsRect[buttonId].y
-		    && MouseY <= ChrBtnsRect[buttonId].y + ChrBtnsRect[buttonId].h) {
+		if (MouseX >= ChrBtnsRect[buttonId].position.x
+		    && MouseX <= ChrBtnsRect[buttonId].position.x + ChrBtnsRect[buttonId].size.width
+		    && MouseY >= ChrBtnsRect[buttonId].position.y
+		    && MouseY <= ChrBtnsRect[buttonId].position.y + ChrBtnsRect[buttonId].size.height) {
 			auto &myPlayer = plr[myplr];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)

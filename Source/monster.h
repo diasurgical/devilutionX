@@ -10,6 +10,7 @@
 
 #include "engine.h"
 #include "miniwin/miniwin.h"
+#include "utils/stdcompat/optional.hpp"
 #include "monstdat.h"
 #include "textdat.h"
 
@@ -111,7 +112,7 @@ enum placeflag : uint8_t {
 
 struct AnimStruct {
 	std::unique_ptr<byte[]> CMem;
-	std::array<byte *, 8> Data;
+	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
 	int Frames;
 	int Rate;
 };
@@ -124,7 +125,6 @@ struct CMonster {
 #ifndef NOSOUND
 	std::unique_ptr<TSnd> Snds[4][2];
 #endif
-	int width;
 	uint16_t mMinHP;
 	uint16_t mMaxHP;
 	bool has_special;
@@ -148,7 +148,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	int _menemy;
 	/** Usually correspond's to the enemy's future position */
 	Point enemyPosition;
-	byte *_mAnimData;
+	CelSprite *_mAnimData;
 	/** Tick length of each frame in the current animation */
 	int _mAnimDelay;
 	/** Increases by one each game tick, counting how close we are to _pAnimDelay */
@@ -193,6 +193,12 @@ struct MonsterStruct { // note: missing field _mAFNum
 	const char *mName;
 	CMonster *MType;
 	const MonsterData *MData;
+
+	/**
+	 * @brief Check thats the correct stand Animation is loaded. This is needed if direction is changed (monster stands and looks to player).
+	 * @param mdir direction of the monster
+	 */
+	void CheckStandAnimationIsLoaded(int mdir);
 };
 
 extern int monstkills[MAXMONSTERS];

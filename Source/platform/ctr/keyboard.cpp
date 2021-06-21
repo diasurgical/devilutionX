@@ -3,24 +3,53 @@
 
 #include "platform/ctr/keyboard.h"
 
-const char *ctr_vkbdInput(const char *hintText, const char *inText, char *outText)
+constexpr size_t MAX_TEXT_LENGTH = 255;
+
+struct vkbdEvent {
+	const char *hintText;
+	const char *inText;
+	char *outText;
+	int maxLength;
+};
+
+static vkbdEvent events[16];
+static int eventCount = 0;
+
+void ctr_vkbdInput(const char *hintText, const char *inText, char *outText, int maxLength)
 {
-	SwkbdState swkbd;
+	if (eventCount >= sizeof(events))
+		return;
 
-	char mybuf[16];
+	vkbdEvent &event = events[eventCount];
+	event.hintText = hintText;
+	event.inText = inText;
+	event.outText = outText;
+	event.maxLength = maxLength;
+	eventCount++;
+}
 
-	swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 2, 15);
-	swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, 0, 0);
-	swkbdSetInitialText(&swkbd, inText);
-	swkbdSetHintText(&swkbd, hintText);
+void ctr_vkbdFlush()
+{
+	for (int i = 0; i < eventCount; i++) {
+		vkbdEvent &event = events[i];
+		SwkbdState swkbd;
 
-	SwkbdButton button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
+		char mybuf[MAX_TEXT_LENGTH + 1];
 
-	if (button == SWKBD_BUTTON_CONFIRM) {
-		strcpy(outText, mybuf);
-		return 0;
+		swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 2, MAX_TEXT_LENGTH);
+		swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, 0, 0);
+		swkbdSetInitialText(&swkbd, event.inText);
+		swkbdSetHintText(&swkbd, event.hintText);
+
+		SwkbdButton button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
+
+		if (button == SWKBD_BUTTON_CONFIRM) {
+			strncpy(event.outText, mybuf, event.maxLength);
+			continue;
+		}
+
+		strncpy(event.outText, event.inText, event.maxLength);
 	}
 
-	strcpy(outText, inText);
-	return 0;
+	eventCount = 0;
 }

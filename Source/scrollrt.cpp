@@ -16,6 +16,7 @@
 #include "error.h"
 #include "gmenu.h"
 #include "help.h"
+#include "hwcursor.hpp"
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"
@@ -164,9 +165,9 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 	sgdwCursWdtOld = 0;
 }
 
-static void BlitCursor(BYTE *dst, int dst_pitch, BYTE *src, int src_pitch)
+static void BlitCursor(BYTE *dst, std::uint32_t dstPitch, BYTE *src, std::uint32_t srcPitch)
 {
-	for (uint32_t i = 0; i < sgdwCursHgt; ++i, src += src_pitch, dst += dst_pitch) {
+	for (std::uint32_t i = 0; i < sgdwCursHgt; ++i, src += srcPitch, dst += dstPitch) {
 		memcpy(dst, src, sgdwCursWdt);
 	}
 }
@@ -189,41 +190,45 @@ static void UndrawCursor(const CelOutputBuffer &out)
 	sgdwCursWdt = 0;
 }
 
+static bool ShouldShowCursor()
+{
+	return !(sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0));
+}
+
 /**
  * @brief Save the content behind the cursor to a temporary buffer, then draw the cursor.
  */
 static void DrawCursor(const CelOutputBuffer &out)
 {
-	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
-		return;
-	}
-
-	if (sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0)) {
+	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0 || !ShouldShowCursor()) {
 		return;
 	}
 
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
-	if (MouseX < -cursW - 1 || MouseX > out.w() || MouseY < -cursH - 1 || MouseY > out.h())
+	const int outlineWidth = IsItemSprite(pcurs) ? 1 : 0;
+
+	if (MouseX < -cursW - outlineWidth || MouseX - outlineWidth >= out.w() || MouseY < -cursH - outlineWidth || MouseY - outlineWidth >= out.h())
 		return;
 
-	sgdwCursX = std::max(MouseX - 1, 0);
-	sgdwCursWdt = MouseX < 0 ? cursW + MouseX + 1 : std::min(MouseX + cursW + 1, out.w()) - MouseX;
+	constexpr auto Clip = [](int &pos, std::uint32_t &length, std::uint32_t posEnd) {
+		if (pos < 0) {
+			length += pos;
+			pos = 0;
+		} else if (pos + length > posEnd) {
+			length = posEnd - pos;
+		}
+	};
 
-	sgdwCursY = std::max(MouseY - 1, 0);
-	sgdwCursHgt = MouseY < 0 ? cursH + MouseY + 1 : std::min(MouseY + cursH + 1, out.h()) - MouseY;
+	sgdwCursX = MouseX - outlineWidth;
+	sgdwCursWdt = cursW + 2 * outlineWidth;
+	Clip(sgdwCursX, sgdwCursWdt, out.w());
+
+	sgdwCursY = MouseY - outlineWidth;
+	sgdwCursHgt = cursH + 2 * outlineWidth;
+	Clip(sgdwCursY, sgdwCursHgt, out.h());
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
-
-	const auto &sprite = GetInvItemSprite(pcurs);
-	const int frame = GetInvItemFrame(pcurs);
-	bool usable = true;
-	const Point mousePosition { MouseX, MouseY + cursH - 1 };
-	if (pcurs >= CURSOR_FIRSTITEM) {
-		const auto &heldItem = plr[myplr].HoldItem;
-		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), mousePosition, sprite, frame, false);
-		usable = heldItem._iStatFlag;
-	}
-	CelDrawItem(usable, out, mousePosition, sprite, frame);
+	CelDrawCursor(out, Point { MouseX, MouseY + cursH - 1 }, pcurs);
 }
 
 /**
@@ -315,7 +320,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 	}
 
 	int nCel = monster[m]._mAnimFrame;
-	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m]._mAnimData);
+	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m]._mAnimData->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
@@ -331,7 +336,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 		return;
 	}
 
-	CelSprite cel { monster[m]._mAnimData, monster[m].MType->width };
+	CelSprite &cel = *monster[m]._mAnimData;
 
 	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
 		Cl2DrawLightTbl(out, mx, my, cel, monster[m]._mAnimFrame, 1);
@@ -693,10 +698,12 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 	}
 
-	px = sx + pMonster->position.offset.x - CalculateWidth2(pMonster->MType->width);
+	const CelSprite &cel = *pMonster->_mAnimData;
+
+	px = sx + pMonster->position.offset.x - CalculateWidth2(cel.Width());
 	py = sy + pMonster->position.offset.y;
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, px, py, CelSprite(pMonster->_mAnimData, pMonster->MType->width), pMonster->_mAnimFrame);
+		Cl2DrawOutline(out, 233, px, py, cel, pMonster->_mAnimFrame);
 	}
 	DrawMonster(out, x, y, px, py, mi);
 }
@@ -774,7 +781,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<Direction>((bDead >> 5) & 7);
 			int px = dx - CalculateWidth2(pDeadGuy->_deadWidth);
-			byte *pCelBuff = pDeadGuy->_deadData[dd];
+			const byte *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);
 			auto frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
 			int frames = SDL_SwapLE32(frameTable[0]);
@@ -1514,9 +1521,8 @@ static void DrawMain(int dwHgt, bool draw_desc, bool draw_hp, bool draw_mana, bo
 
 /**
  * @brief Redraw screen
- * @param draw_cursor
  */
-void scrollrt_draw_game_screen(bool draw_cursor)
+void scrollrt_draw_game_screen()
 {
 	int hgt = 0;
 
@@ -1525,7 +1531,9 @@ void scrollrt_draw_game_screen(bool draw_cursor)
 		hgt = gnScreenHeight;
 	}
 
-	if (draw_cursor) {
+	if (IsHardwareCursor()) {
+		SetHardwareCursorVisible(ShouldShowCursor());
+	} else {
 		lock_buf(0);
 		DrawCursor(GlobalBackBuffer());
 		unlock_buf(0);
@@ -1535,7 +1543,7 @@ void scrollrt_draw_game_screen(bool draw_cursor)
 
 	RenderPresent();
 
-	if (draw_cursor) {
+	if (!IsHardwareCursor()) {
 		lock_buf(0);
 		UndrawCursor(GlobalBackBuffer());
 		unlock_buf(0);
@@ -1598,7 +1606,12 @@ void DrawAndBlit()
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar(out);
-	DrawCursor(out);
+
+	if (IsHardwareCursor()) {
+		SetHardwareCursorVisible(ShouldShowCursor());
+	} else {
+		DrawCursor(out);
+	}
 
 	DrawFPS(out);
 

@@ -92,10 +92,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 		last_tick += gnTickDelay;
 		return true;
 	}
-#ifdef __3DS__
-	return false;
-#else
-	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, &player_state[0])) {
+	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, (unsigned int *)gdwMsgLenTbl, &player_state[0])) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 			nthread_terminate_game("SNetReceiveTurns");
 		sgbTicsOutOfSync = false;
@@ -112,8 +109,6 @@ bool nthread_recv_turns(bool *pfSendAsync)
 	*pfSendAsync = true;
 	last_tick += gnTickDelay;
 	return true;
-
-#endif
 }
 
 static unsigned int nthread_handler(void *data)

@@ -2491,64 +2491,55 @@ void AddMetlHit(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienem
 	missile[mi]._mirange = missile[mi]._miAnimLen;
 }
 
+namespace {
+void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const MonsterStruct &mon, int graphic)
+{
+	const AnimStruct &anim = mon.MType->Anims[graphic];
+	mis._mimfnum = midir;
+	mis._miAnimFlags = 0;
+	auto& celSprite = *anim.CelSpritesForDirections[midir];
+	mis._miAnimData = celSprite.Data();
+	mis._miAnimDelay = anim.Rate;
+	mis._miAnimLen = anim.Frames;
+	mis._miAnimWidth = celSprite.Width();
+	mis._miAnimWidth2 = CalculateWidth2(celSprite.Width());
+	mis._miAnimAdd = 1;
+	mis._miVar1 = 0;
+	mis._miVar2 = 0;
+	mis._miLightFlag = true;
+	mis._mirange = 256;
+}
+}
+
 void AddRhino(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam)
 {
-	AnimStruct *anim;
-
+	int graphic = MA_SPECIAL;
 	if (monster[id].MType->mtype < MT_HORNED || monster[id].MType->mtype > MT_OBLORD) {
 		if (monster[id].MType->mtype < MT_NSNAKE || monster[id].MType->mtype > MT_GSNAKE) {
-			anim = &monster[id].MType->Anims[MA_WALK];
+			graphic = MA_WALK;
 		} else {
-			anim = &monster[id].MType->Anims[MA_ATTACK];
+			graphic = MA_ATTACK;
 		}
-	} else {
-		anim = &monster[id].MType->Anims[MA_SPECIAL];
 	}
 	GetMissileVel(mi, sx, sy, dx, dy, 18);
-	missile[mi]._mimfnum = midir;
-	missile[mi]._miAnimFlags = 0;
-	missile[mi]._miAnimData = anim->Data[midir];
-	missile[mi]._miAnimDelay = anim->Rate;
-	missile[mi]._miAnimLen = anim->Frames;
-	missile[mi]._miAnimWidth = monster[id].MType->width;
-	missile[mi]._miAnimWidth2 = CalculateWidth2(monster[id].MType->width);
-	missile[mi]._miAnimAdd = 1;
+	InitMissileAnimationFromMonster(missile[mi], midir, monster[id], graphic);
 	if (monster[id].MType->mtype >= MT_NSNAKE && monster[id].MType->mtype <= MT_GSNAKE)
 		missile[mi]._miAnimFrame = 7;
-	missile[mi]._miVar1 = 0;
-	missile[mi]._miVar2 = 0;
-	missile[mi]._miLightFlag = true;
 	if (monster[id]._uniqtype != 0) {
 		missile[mi]._miUniqTrans = monster[id]._uniqtrans + 1;
 		missile[mi]._mlid = monster[id].mlid;
 	}
-	missile[mi]._mirange = 256;
 	PutMissile(mi);
 }
 
 void AddFireman(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam)
 {
-	AnimStruct *anim;
-	MonsterStruct *mon;
-
-	anim = &monster[id].MType->Anims[MA_WALK];
 	GetMissileVel(mi, sx, sy, dx, dy, 16);
-	missile[mi]._mimfnum = midir;
-	missile[mi]._miAnimFlags = 0;
-	missile[mi]._miAnimData = anim->Data[midir];
-	missile[mi]._miAnimDelay = anim->Rate;
-	missile[mi]._miAnimLen = anim->Frames;
-	missile[mi]._miAnimWidth = monster[id].MType->width;
-	missile[mi]._miAnimWidth2 = CalculateWidth2(monster[id].MType->width);
-	missile[mi]._miAnimAdd = 1;
-	missile[mi]._miVar1 = 0;
-	missile[mi]._miVar2 = 0;
-	missile[mi]._miLightFlag = true;
-	if (monster[id]._uniqtype != 0)
-		missile[mi]._miUniqTrans = monster[id]._uniqtrans + 1;
-	mon = &monster[id];
-	dMonster[mon->position.tile.x][mon->position.tile.y] = 0;
-	missile[mi]._mirange = 256;
+	auto &mon = monster[id];
+	InitMissileAnimationFromMonster(missile[mi], midir, mon, MA_WALK);
+	if (mon._uniqtype != 0)
+		missile[mi]._miUniqTrans = mon._uniqtrans + 1;
+	dMonster[mon.position.tile.x][mon.position.tile.y] = 0;
 	PutMissile(mi);
 }
 
@@ -4656,7 +4647,7 @@ void MI_Fireman(int i)
 	if (!PosOkMissile(0, b) || (j > 0 && !(missile[i]._miVar1 & 1))) {
 		missile[i].position.velocity *= -1;
 		missile[i]._mimfnum = opposite[missile[i]._mimfnum];
-		missile[i]._miAnimData = monster[src].MType->Anims[MA_WALK].Data[missile[i]._mimfnum];
+		missile[i]._miAnimData = monster[src].MType->Anims[MA_WALK].CelSpritesForDirections[missile[i]._mimfnum]->Data();
 		missile[i]._miVar2++;
 		if (j > 0)
 			missile[i]._miVar1 |= 1;
@@ -5202,7 +5193,7 @@ void missiles_process_charge()
 				else
 					anim = &mon->Anims[MA_WALK];
 			}
-			missile[mi]._miAnimData = anim->Data[mis->_mimfnum];
+			missile[mi]._miAnimData = anim->CelSpritesForDirections[mis->_mimfnum]->Data();
 		}
 	}
 }

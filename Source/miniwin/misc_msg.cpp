@@ -10,6 +10,7 @@
 #include "controls/remap_keyboard.h"
 #include "controls/touch.h"
 #include "cursor.h"
+#include "hwcursor.hpp"
 #include "inv.h"
 #include "movie.h"
 #include "utils/display.h"
@@ -77,8 +78,8 @@ void FocusOnCharInfo()
 	}
 	if (stat == -1)
 		return;
-	const RECT32 &rect = ChrBtnsRect[stat];
-	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
+	const Rectangle &rect = ChrBtnsRect[stat];
+	SetCursorPos(rect.position.x + (rect.size.width / 2), rect.position.y + (rect.size.height / 2));
 }
 
 static int TranslateSdlKey(SDL_Keysym key)
@@ -539,9 +540,11 @@ bool FetchMessage(tagMSG *lpMsg)
 		case SDL_WINDOWEVENT_LEAVE:
 			lpMsg->message = DVL_WM_CAPTURECHANGED;
 			break;
+		case SDL_WINDOWEVENT_SIZE_CHANGED:
+			ReinitializeHardwareCursor();
+			break;
 		case SDL_WINDOWEVENT_MOVED:
 		case SDL_WINDOWEVENT_RESIZED:
-		case SDL_WINDOWEVENT_SIZE_CHANGED:
 		case SDL_WINDOWEVENT_MINIMIZED:
 		case SDL_WINDOWEVENT_MAXIMIZED:
 		case SDL_WINDOWEVENT_RESTORED:
