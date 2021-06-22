@@ -1,6 +1,7 @@
 #include <SDL.h>
 #ifdef __SWITCH__
 #include "platform/switch/network.h"
+#include "platform/switch/random.hpp"
 #endif
 #ifdef __3DS__
 #include "platform/ctr/system.h"
@@ -26,6 +27,7 @@ int main(int argc, char **argv)
 {
 #ifdef __SWITCH__
 	switch_enable_network();
+	randombytes_switchrandom_init();
 #endif
 #ifdef __3DS__
 	ctr_sys_init();
