@@ -4349,10 +4349,12 @@ void MI_Stone(int i)
 
 	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = true;
-		if (monster[m]._mhitpoints > 0)
+		if (monster[m]._mhitpoints > 0) {
 			monster[m]._mmode = (MON_MODE)missile[i]._miVar1;
-		else
+			monster[m].AnimInfo.IsPetrified = false;
+		} else {
 			AddDead(monster[m].position.tile, stonendx, monster[m]._mdir);
+		}
 	}
 	if (missile[i]._miAnimType == MFILE_SHATTER1)
 		PutMissile(i);
