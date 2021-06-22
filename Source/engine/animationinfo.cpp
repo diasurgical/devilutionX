@@ -26,7 +26,7 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	assert(TicksSinceSequenceStarted >= 0);
 
 	// we don't use the processed game ticks alone but also the fraction of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	float totalTicksForCurrentAnimationSequence = gfProgressToNextGameTick + (float)TicksSinceSequenceStarted;
+	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)TicksSinceSequenceStarted;
 
 	// 1 added for rounding reasons. float to int cast always truncate.
 	int absoluteAnimationFrame = 1 + (int)(totalTicksForCurrentAnimationSequence * TickModifier);
@@ -58,12 +58,12 @@ float AnimationInfo::GetAnimationProgress() const
 		// This logic is used if animation distrubtion is not active (see GetFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given informations.
 		float ticksPerFrame = (DelayLen + 1);
-		float totalTicksForCurrentAnimationSequence = gfProgressToNextGameTick + (float)CurrentFrame + (DelayCounter / ticksPerFrame);
+		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)CurrentFrame + (DelayCounter / ticksPerFrame);
 		float fAnimationFraction = totalTicksForCurrentAnimationSequence / ((float)NumberOfFrames * ticksPerFrame);
 		return fAnimationFraction;
 	}
 
-	float totalTicksForCurrentAnimationSequence = gfProgressToNextGameTick + (float)TicksSinceSequenceStarted;
+	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)TicksSinceSequenceStarted;
 	float fProgressInAnimationFrames = totalTicksForCurrentAnimationSequence * TickModifier;
 	float fAnimationFraction = fProgressInAnimationFrames / (float)NumberOfFrames;
 	return fAnimationFraction;
@@ -87,6 +87,7 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 	TicksSinceSequenceStarted = 0;
 	RelevantFramesForDistributing = 0;
 	TickModifier = 0.0F;
+	IsPetrified = false;
 
 	if (numSkippedFrames != 0 || flags != AnimationDistributionFlags::None) {
 		// Animation Frames that will be adjusted for the skipped Frames/game ticks
@@ -192,6 +193,13 @@ void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool don
 			}
 		}
 	}
+}
+
+float AnimationInfo::GetProgressToNextGameTick() const
+{
+	if (IsPetrified)
+		return 0.0f;
+	return gfProgressToNextGameTick;
 }
 
 } // namespace devilution

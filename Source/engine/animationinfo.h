@@ -56,6 +56,10 @@ public:
 	 * @brief Current frame of animation
 	 */
 	int CurrentFrame;
+	/**
+	 * @brief Is the animation currently petrified and shouldn't advance with gfProgressToNextGameTick
+	 */
+	bool IsPetrified;
 
 	/**
 	 * @brief Calculates the Frame to use for the Animation rendering
@@ -95,6 +99,11 @@ public:
 	void ProcessAnimation(bool reverseAnimation = false, bool dontProgressAnimation = false);
 
 private:
+	/**
+	 * @brief returns the progress as a fraction (0.0f to 1.0f) in time to the next game tick or 0.0f if the animation is frozen
+	*/
+	float GetProgressToNextGameTick() const;
+
 	/**
 	 * @brief Specifies how many animations-fractions are displayed between two game ticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
 	 */

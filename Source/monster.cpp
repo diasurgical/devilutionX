@@ -5422,6 +5422,7 @@ void MonsterStruct::CheckStandAnimationIsLoaded(int mdir)
 void MonsterStruct::Petrify()
 {
 	_mmode = MM_STONE;
+	AnimInfo.IsPetrified = true;
 }
 
 } // namespace devilution
