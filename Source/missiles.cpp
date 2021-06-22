@@ -3923,12 +3923,12 @@ void MI_Lightctrl(int i)
 	assert((DWORD)i < MAXMISSILES);
 	missile[i]._mirange--;
 
-	int p = missile[i]._misource;
-	if (p != -1) {
+	int id = missile[i]._misource;
+	if (id != -1) {
 		if (missile[i]._micaster == TARGET_MONSTERS) {
-			dam = (GenerateRnd(2) + GenerateRnd(plr[p]._pLevel) + 2) << 6;
+			dam = (GenerateRnd(2) + GenerateRnd(plr[id]._pLevel) + 2) << 6;
 		} else {
-			dam = 2 * (monster[p].mMinDamage + GenerateRnd(monster[p].mMaxDamage - monster[p].mMinDamage + 1));
+			dam = 2 * (monster[id].mMinDamage + GenerateRnd(monster[id].mMaxDamage - monster[id].mMinDamage + 1));
 		}
 	} else {
 		dam = GenerateRnd(currlevel) + 2 * currlevel;
@@ -3944,27 +3944,25 @@ void MI_Lightctrl(int i)
 	int pn = dPiece[mx][my];
 	assert((DWORD)pn <= MAXTILES);
 
-	if (missile[i]._misource == -1) {
-		if ((Point { mx, my } != missile[i].position.start) && nMissileTable[pn]) {
+	if (id != -1 || Point { mx, my } != missile[i].position.start) {
+		if (nMissileTable[pn]) {
 			missile[i]._mirange = 0;
 		}
-	} else if (nMissileTable[pn]) {
-		missile[i]._mirange = 0;
 	}
 	if (!nMissileTable[pn]
 	    && Point { mx, my } != Point { missile[i]._miVar1, missile[i]._miVar2 }
 	    && InDungeonBounds({ mx, my })) {
-		if (missile[i]._misource != -1) {
+		if (id != -1) {
 			if (missile[i]._micaster == TARGET_PLAYERS
-			    && monster[missile[i]._misource].MType->mtype >= MT_STORM
-			    && monster[missile[i]._misource].MType->mtype <= MT_MAEL) {
+			    && monster[id].MType->mtype >= MT_STORM
+			    && monster[id].MType->mtype <= MT_MAEL) {
 				AddMissile(
 				    missile[i].position.tile,
 				    missile[i].position.start,
 				    i,
 				    MIS_LIGHTNING2,
 				    missile[i]._micaster,
-				    missile[i]._misource,
+				    id,
 				    dam,
 				    missile[i]._mispllvl);
 			} else {
@@ -3974,7 +3972,7 @@ void MI_Lightctrl(int i)
 				    i,
 				    MIS_LIGHTNING,
 				    missile[i]._micaster,
-				    missile[i]._misource,
+				    id,
 				    dam,
 				    missile[i]._mispllvl);
 			}
@@ -3985,14 +3983,15 @@ void MI_Lightctrl(int i)
 			    i,
 			    MIS_LIGHTNING,
 			    missile[i]._micaster,
-			    missile[i]._misource,
+			    id,
 			    dam,
 			    missile[i]._mispllvl);
 		}
 		missile[i]._miVar1 = missile[i].position.tile.x;
 		missile[i]._miVar2 = missile[i].position.tile.y;
 	}
-	if (missile[i]._mirange == 0 || mx == 0 || my == 0) {
+	assert(mx != 0 && my != 0);
+	if (missile[i]._mirange == 0) {
 		missile[i]._miDelFlag = true;
 	}
 }
