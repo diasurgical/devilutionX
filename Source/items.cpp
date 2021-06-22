@@ -5,6 +5,7 @@
  */
 #include "items.h"
 
+#include <algorithm>
 #include <climits>
 #include <cstdint>
 #include <bitset>
@@ -4341,25 +4342,16 @@ void SpawnPremium(int pnum)
 	while (premiumlevel < lvl) {
 		premiumlevel++;
 		if (gbIsHellfire) {
-			premiumitems[0] = premiumitems[3];
-			premiumitems[1] = premiumitems[4];
-			premiumitems[2] = premiumitems[5];
-			premiumitems[3] = premiumitems[6];
-			premiumitems[4] = premiumitems[7];
-			premiumitems[5] = premiumitems[8];
-			premiumitems[6] = premiumitems[9];
-			premiumitems[7] = premiumitems[10];
-			premiumitems[8] = premiumitems[11];
-			premiumitems[9] = premiumitems[12];
+			// Discard first 3 items and shift next 10
+			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
 			SpawnOnePremium(10, premiumlevel + premiumLvlAddHellfire[10], pnum);
 			premiumitems[11] = premiumitems[13];
 			SpawnOnePremium(12, premiumlevel + premiumLvlAddHellfire[12], pnum);
 			premiumitems[13] = premiumitems[14];
 			SpawnOnePremium(14, premiumlevel + premiumLvlAddHellfire[14], pnum);
 		} else {
-			premiumitems[0] = premiumitems[2];
-			premiumitems[1] = premiumitems[3];
-			premiumitems[2] = premiumitems[4];
+			// Discard first 2 items and shift next 3
+			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
 			SpawnOnePremium(3, premiumlevel + premiumlvladd[3], pnum);
 			premiumitems[4] = premiumitems[5];
 			SpawnOnePremium(5, premiumlevel + premiumlvladd[5], pnum);
