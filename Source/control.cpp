@@ -315,11 +315,9 @@ static void DrawSpell(const CelOutputBuffer &out)
 	if (currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
+	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 27;
 	const Point position { PANEL_X + 565, PANEL_Y + 119 };
-	if (spl != SPL_INVALID)
-		DrawSpellCel(out, position, *pSpellCels, SpellITbl[spl]);
-	else
-		DrawSpellCel(out, position, *pSpellCels, 27);
+	DrawSpellCel(out, position, *pSpellCels, nCel);
 }
 
 static void PrintSBookHotkey(const CelOutputBuffer &out, Point position, const std::string &text)

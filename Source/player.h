@@ -80,7 +80,7 @@ enum inv_body_loc : uint8_t {
 	NUM_INVLOC,
 };
 
-enum class player_graphic : uint16_t {
+enum class player_graphic : uint8_t {
 	Stand,
 	Walk,
 	Attack,
