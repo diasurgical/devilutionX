@@ -331,7 +331,6 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		    && myPlayer.SpdList[i]._iStatFlag
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
 			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
-			// FIXME: Replace this with Rectangle(Point, Size) once https://github.com/diasurgical/devilutionX/pull/2131 is merged
 			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UIS_SILVER | UIS_RIGHT);
 		}
 	}
