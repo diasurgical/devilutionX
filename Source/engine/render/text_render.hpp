@@ -63,7 +63,8 @@ int DrawString(const CelOutputBuffer &out, const char *text, const Rectangle &re
 /**
  * @brief Draws a line of text at the given position relative to the origin of the output buffer.
  *
- * This method is provided as a convenience to pass through to DrawString(..., SDL_Rect, ...) when no explicit
+ * This method is provided as a convenience to pass through to DrawString(..., Rectangle, ...) when no explicit
+
  * clipping/wrapping is requested. Note that this will still wrap the rendered string if it would end up being drawn
  * beyond the right edge of the output buffer and clip it if it would extend beyond the bottom edge of the buffer.
  *
