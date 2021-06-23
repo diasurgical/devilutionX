@@ -159,7 +159,7 @@ void InitMonsterTRN(CMonster &monst)
 
 		for (int j = 0; j < 8; j++) {
 			Cl2ApplyTrans(
-			    CelGetFrameStart(monst.Anims[i].CMem.get(), j),
+			    CelGetFrame(monst.Anims[i].CMem.get(), j),
 			    colorTranslations,
 			    monst.Anims[i].Frames);
 		}
@@ -359,7 +359,7 @@ void InitMonsterGFX(int monst)
 			if (Monsters[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
 
 				for (i = 0; i < 8; i++) {
-					byte *pCelStart = CelGetFrameStart(celBuf, i);
+					byte *pCelStart = CelGetFrame(celBuf, i);
 					Monsters[monst].Anims[anim].CelSpritesForDirections[i].emplace(pCelStart, width);
 				}
 			} else {
