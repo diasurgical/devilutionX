@@ -98,16 +98,20 @@ uint16_t CircleMenuHintTextColor(bool active)
 	return active ? UIS_BLUE : UIS_GOLD;
 }
 
-void DrawCircleMenuHint(const CelOutputBuffer &out, const CircleMenuHint &hint, int x, int y)
+/**
+ * @brief Draws hint text for a four button layout with the top/left edge of the bounding box at the position given by origin.
+ * @param out The output buffer to draw on.
+ * @param hint Struct describing the text to draw and the dimensions of the layout.
+ * @param origin Top left corner of the layout (relative to the output buffer).
+*/
+void DrawCircleMenuHint(const CelOutputBuffer &out, const CircleMenuHint &hint, const Point &origin)
 {
-	DrawString(out, hint.top, { x + hint.xMid - hint.topW / 2, y, 0, 0 }, CircleMenuHintTextColor(IsTopActive(hint)));
-	y += LineHeight;
+	DrawString(out, hint.top, origin + Point { hint.xMid - hint.topW / 2, 0 }, CircleMenuHintTextColor(IsTopActive(hint)));
 
-	DrawString(out, hint.left, { x, y, 0, 0 }, CircleMenuHintTextColor(IsLeftActive(hint)));
-	DrawString(out, hint.right, { x + hint.leftW + MidSpaces * SpaceWidth(), y, 0, 0 }, CircleMenuHintTextColor(IsRightActive(hint)));
-	y += LineHeight;
+	DrawString(out, hint.left, origin + Point { 0, LineHeight }, CircleMenuHintTextColor(IsLeftActive(hint)));
+	DrawString(out, hint.right, origin + Point { hint.leftW + MidSpaces * SpaceWidth(), LineHeight }, CircleMenuHintTextColor(IsRightActive(hint)));
 
-	DrawString(out, hint.bottom, { x + hint.xMid - hint.bottomW / 2, y, 0, 0 }, CircleMenuHintTextColor(IsBottomActive(hint)));
+	DrawString(out, hint.bottom, origin + Point { hint.xMid - hint.bottomW / 2, LineHeight * 2 }, CircleMenuHintTextColor(IsBottomActive(hint)));
 }
 
 void DrawStartModifierMenu(const CelOutputBuffer &out)
@@ -116,8 +120,8 @@ void DrawStartModifierMenu(const CelOutputBuffer &out)
 		return;
 	static const CircleMenuHint DPad(/*isDpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
 	static const CircleMenuHint Buttons(/*isDpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
-	DrawCircleMenuHint(out, DPad, PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop);
-	DrawCircleMenuHint(out, Buttons, PANEL_LEFT + PANEL_WIDTH - Buttons.Width() - CircleMarginX, PANEL_TOP - CircleTop);
+	DrawCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
+	DrawCircleMenuHint(out, Buttons, { PANEL_LEFT + PANEL_WIDTH - Buttons.Width() - CircleMarginX, PANEL_TOP - CircleTop });
 }
 
 void DrawSelectModifierMenu(const CelOutputBuffer &out)
@@ -126,10 +130,10 @@ void DrawSelectModifierMenu(const CelOutputBuffer &out)
 		return;
 	if (sgOptions.Controller.bDpadHotkeys) {
 		static const CircleMenuHint DPad(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
-		DrawCircleMenuHint(out, DPad, PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop);
+		DrawCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 	}
 	static const CircleMenuHint Spells(/*isDpad=*/false, "F6", "F8", "F7", "F5");
-	DrawCircleMenuHint(out, Spells, PANEL_LEFT + PANEL_WIDTH - Spells.Width() - CircleMarginX, PANEL_TOP - CircleTop);
+	DrawCircleMenuHint(out, Spells, { PANEL_LEFT + PANEL_WIDTH - Spells.Width() - CircleMarginX, PANEL_TOP - CircleTop });
 }
 
 } // namespace

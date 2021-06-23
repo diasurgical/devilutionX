@@ -3689,37 +3689,37 @@ void DrawUniqueInfo(const CelOutputBuffer &out)
 
 	DrawUTextBack(GlobalBackBuffer());
 
-	SDL_Rect rect { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12, 257, 0 };
+	Rectangle rect { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12, 257, 0 };
 	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UIS_CENTER);
 
 	DrawULine(out, 5);
 
-	rect.y += (12 - uitem.UINumPL) * 12;
+	rect.position.y += (12 - uitem.UINumPL) * 12;
 	PrintItemPower(uitem.UIPower1, &curruitem);
 	DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	if (uitem.UINumPL > 1) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower2, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 2) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower3, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 3) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower4, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 4) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower5, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 5) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower6, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}

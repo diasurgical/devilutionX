@@ -2219,21 +2219,21 @@ void FreeStoreMem()
 	pSTextSlidCels = std::nullopt;
 }
 
-static void DrawSelector(const CelOutputBuffer &out, const SDL_Rect &rect, const char *text, uint16_t flags)
+static void DrawSelector(const CelOutputBuffer &out, const Rectangle &rect, const char *text, uint16_t flags)
 {
 	int lineWidth = GetLineWidth(text);
 
-	int x1 = rect.x - 20;
+	int x1 = rect.position.x - 20;
 	if ((flags & UIS_CENTER) != 0)
-		x1 += (rect.w - lineWidth) / 2;
+		x1 += (rect.size.width - lineWidth) / 2;
 
-	CelDrawTo(out, { x1, rect.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+	CelDrawTo(out, { x1, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 
-	int x2 = rect.x + rect.w + 5;
+	int x2 = rect.position.x + rect.size.width + 5;
 	if ((flags & UIS_CENTER) != 0)
-		x2 = rect.x + (rect.w - lineWidth) / 2 + lineWidth + 5;
+		x2 = rect.position.x + (rect.size.width - lineWidth) / 2 + lineWidth + 5;
 
-	CelDrawTo(out, { x2, rect.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+	CelDrawTo(out, { x2, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 }
 
 void PrintSString(const CelOutputBuffer &out, int margin, int line, const char *text, uint16_t flags, int price)
@@ -2251,7 +2251,7 @@ void PrintSString(const CelOutputBuffer &out, int margin, int line, const char *
 	}
 	width -= margin * 2;
 
-	const SDL_Rect rect { sx, sy, width, 0 };
+	const Rectangle rect { sx, sy, width, 0 };
 	DrawString(out, text, rect, flags);
 	if (price > 0) {
 		char valstr[32];

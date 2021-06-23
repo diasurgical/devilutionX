@@ -324,15 +324,13 @@ static void DrawSpell(const CelOutputBuffer &out)
 
 static void PrintSBookHotkey(const CelOutputBuffer &out, Point position, const std::string &text)
 {
-	int &x = position.x;
-	int &y = position.y;
-	x -= GetLineWidth(text.c_str()) + 5;
-	x += SPLICONLENGTH;
-	y += 17;
-	y -= SPLICONLENGTH;
+	// Align the hot key text with the top-right corner of the spell icon
+	position += { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 17 - SPLICONLENGTH };
 
-	DrawString(out, text.c_str(), { x - 1, y + 1, 0, 0 }, UIS_BLACK);
-	DrawString(out, text.c_str(), { x + 0, y + 0, 0, 0 }, UIS_SILVER);
+	// Draw a drop shadow below and to the left of the text
+	DrawString(out, text.c_str(), position + Point { -1, 1 }, UIS_BLACK);
+	// Then draw the text over the top
+	DrawString(out, text.c_str(), position, UIS_SILVER);
 }
 
 void DrawSpellList(const CelOutputBuffer &out)
@@ -1104,7 +1102,7 @@ static void PrintInfo(const CelOutputBuffer &out)
 	if (talkflag)
 		return;
 
-	SDL_Rect line { PANEL_X + 177, PANEL_Y + LineOffsets[pnumlines][0], 288, 0 };
+	Rectangle line { PANEL_X + 177, PANEL_Y + LineOffsets[pnumlines][0], 288, 0 };
 
 	int yo = 0;
 	int lo = 1;
@@ -1115,7 +1113,7 @@ static void PrintInfo(const CelOutputBuffer &out)
 	}
 
 	for (int i = 0; i < pnumlines; i++) {
-		line.y = PANEL_Y + LineOffsets[pnumlines - lo][i + yo];
+		line.position.y = PANEL_Y + LineOffsets[pnumlines - lo][i + yo];
 		DrawString(out, panelstr[i], line, infoclr | UIS_CENTER | UIS_FIT_SPACING, 2);
 	}
 }
@@ -1700,22 +1698,40 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 
 	CelDrawTo(out, { dialogX, 178 }, *pGBoxBuff, 1);
 
-	strcpy(
+	constexpr auto bufferSize = sizeof(tempstr) / sizeof(*tempstr);
+
+	// strncpy copies up to the maximum number of characters specified, it does not ensure that a null character is
+	// written to the end of the c-string. To be safe we specify a limit one character shorter than the buffer size and
+	// ensure that the buffer ends in a null character manually.
+	strncpy(
 	    tempstr,
 	    fmt::format(ngettext(
 	                    /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/ "You have {:d} gold piece. How many do you want to remove?",
 	                    "You have {:d} gold pieces. How many do you want to remove?",
 	                    initialDropGoldValue),
 	        initialDropGoldValue)
-	        .c_str());
+	        .c_str(),
+	    bufferSize - 1);
+	// Ensure the prompt shown to the player is terminated properly (in case the formatted/translated string ends up
+	// being longer than 255 characters)
+	tempstr[bufferSize - 1] = '\0';
+
+	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	WordWrapGameString(tempstr, 200);
+
+	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
+	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
+	//  for the text entered by the player.
 	DrawString(out, tempstr, { dialogX + 31, 87, 200, 50 }, UIS_GOLD | UIS_CENTER, 1, 17);
 
 	tempstr[0] = '\0';
 	if (amount > 0) {
-		sprintf(tempstr, "%u", amount);
+		// snprintf ensures that the destination buffer ends in a null character.
+		snprintf(tempstr, bufferSize, "%u", amount);
 	}
-	DrawString(out, tempstr, { dialogX + 37, 140, 0, 0 }, UIS_SILVER, 1, -1, true);
+	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
+	// use the Point form of DrawString.
+	DrawString(out, tempstr, Point { dialogX + 37, 140 }, UIS_SILVER, 1, -1, true);
 }
 
 void control_drop_gold(char vkey)
