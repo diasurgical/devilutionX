@@ -400,7 +400,7 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 	data = LoadFileInMem(path);
 
 	for (int i = 0; i < 8; i++) {
-		byte *pCelStart = CelGetFrameStart(data.get(), i);
+		byte *pCelStart = CelGetFrame(data.get(), i);
 		anim[i].emplace(pCelStart, width);
 	}
 }

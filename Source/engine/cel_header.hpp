@@ -10,46 +10,48 @@
 
 namespace devilution {
 
-inline byte *CelGetFrameStart(byte *pCelBuff, int nCel)
+/**
+ * Returns the pointer to the start of the frame data (often a header).
+ */
+inline byte *CelGetFrame(byte *data, int frame)
 {
-	const auto *pFrameTable = reinterpret_cast<const std::uint32_t *>(pCelBuff);
-
-	return &pCelBuff[SDL_SwapLE32(pFrameTable[nCel])];
+	const std::uint32_t begin = LoadLE32(&data[frame * sizeof(std::uint32_t)]);
+	return &data[begin];
 }
 
-inline byte *CelGetFrame(byte *pCelBuff, int nCel, int *nDataSize)
+/**
+ * Returns the pointer to the start of the frame data (often a header) and sets `frameSize` to the size of the data in bytes.
+ */
+inline byte *CelGetFrame(byte *data, int frame, int *frameSize)
 {
-	const std::uint32_t nCellStart = LoadLE32(&pCelBuff[nCel * sizeof(std::uint32_t)]);
-	*nDataSize = static_cast<int>(LoadLE32(&pCelBuff[(nCel + 1) * sizeof(std::uint32_t)]) - nCellStart);
-	return &pCelBuff[nCellStart];
+	const std::uint32_t begin = LoadLE32(&data[frame * sizeof(std::uint32_t)]);
+	*frameSize = static_cast<int>(LoadLE32(&data[(frame + 1) * sizeof(std::uint32_t)]) - begin);
+	return &data[begin];
 }
 
-inline const byte *CelGetFrame(const byte *pCelBuff, int nCel, int *nDataSize)
+/**
+ * Returns the pointer to the start of the frame data (often a header) and sets `frameSize` to the size of the data in bytes.
+ */
+inline const byte *CelGetFrame(const byte *data, int frame, int *frameSize)
 {
-	const std::uint32_t nCellStart = LoadLE32(&pCelBuff[nCel * sizeof(std::uint32_t)]);
-	*nDataSize = static_cast<int>(LoadLE32(&pCelBuff[(nCel + 1) * sizeof(std::uint32_t)]) - nCellStart);
-	return &pCelBuff[nCellStart];
+	const std::uint32_t begin = LoadLE32(&data[frame * sizeof(std::uint32_t)]);
+	*frameSize = static_cast<int>(LoadLE32(&data[(frame + 1) * sizeof(std::uint32_t)]) - begin);
+	return &data[begin];
 }
 
-struct FrameHeader {
-	uint16_t row0;
-	uint16_t row32;
-	uint16_t row64;
-	uint16_t row96;
-	uint16_t row128;
-};
-
-inline const byte *CelGetFrameClipped(const byte *pCelBuff, int nCel, int *nDataSize)
+/**
+ * Returns the pointer to the start of the frame's pixel data and sets `frameSize` to the size of the data in bytes.
+ */
+inline const byte *CelGetFrameClipped(const byte *data, int frame, int *frameSize)
 {
-	const byte *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
+	const byte *frameData = CelGetFrame(data, frame, frameSize);
 
-	FrameHeader frameHeader;
-	std::memcpy(&frameHeader, pRLEBytes, sizeof(FrameHeader));
+	// The frame begins with a header that consists of 5 little-endian 16-bit integers
+	// pointing to the start of the pixel data for rows 0, 32, 64, 96, and 128.
+	const std::uint16_t begin = LoadLE16(frameData);
 
-	std::uint16_t nDataStart = SDL_SwapLE16(frameHeader.row0);
-	*nDataSize -= nDataStart;
-
-	return &pRLEBytes[nDataStart];
+	*frameSize -= begin;
+	return &frameData[begin];
 }
 
 } // namespace devilution

@@ -238,7 +238,7 @@ void InitCows(TownerStruct &towner, const TownerInit &initData)
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
 	for (int i = 0; i < 8; i++) {
-		towner._tNAnim[i] = CelGetFrameStart(CowCels.get(), i);
+		towner._tNAnim[i] = CelGetFrame(CowCels.get(), i);
 	}
 	NewTownerAnim(towner, towner._tNAnim[initData.dir], 12, 3);
 	towner._tAnimFrame = GenerateRnd(11) + 1;

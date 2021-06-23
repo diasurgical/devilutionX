@@ -1127,7 +1127,7 @@ void LoadMissileGFX(BYTE mi)
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
 		byte *file = LoadFileInMem(pszName).release();
 		for (unsigned i = 0; i < mfd->mAnimFAmt; i++)
-			mfd->mAnimData[i] = CelGetFrameStart(file, i);
+			mfd->mAnimData[i] = CelGetFrame(file, i);
 	} else if (mfd->mAnimFAmt == 1) {
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
 		mfd->mAnimData[0] = LoadFileInMem(pszName).release();
