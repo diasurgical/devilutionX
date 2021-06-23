@@ -69,7 +69,6 @@ struct RenderingData : TestData {
 */
 void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 {
-	const int pnum = 0;
 	AnimationInfo animInfo = {};
 
 	int currentGameTick = 0;
@@ -220,7 +219,7 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 }
 
 /*
-* @brief The Warrior make two attacks. The second queued attack cancels the first after the Hit Frame. 
+* @brief The Warrior make two attacks. The second queued attack cancels the first after the Hit Frame.
 */
 TEST(AnimationInfo, AttackSwordWarriorRepeated)
 {

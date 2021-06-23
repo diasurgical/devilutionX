@@ -152,29 +152,26 @@ void EnsureValidReadiedSpell(PlayerStruct &player)
 
 bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 {
-	bool result;
-
 #ifdef _DEBUG
 	if (debug_mode_key_inverted_v)
 		return true;
 #endif
 
-	result = true;
 	if (!manaonly && pcurs != CURSOR_HAND) {
-		result = false;
-	} else {
-		if (st != RSPLTYPE_SKILL) {
-			if (GetSpellLevel(id, sn) <= 0) {
-				result = false;
-			} else {
-				auto &player = plr[id];
-
-				return player._pMana >= GetManaAmount(player, sn);
-			}
-		}
+		return false;
 	}
 
-	return result;
+	if (st == RSPLTYPE_SKILL) {
+		return true;
+	}
+
+	if (GetSpellLevel(id, sn) <= 0) {
+		return false;
+	}
+
+	auto &player = plr[id];
+
+	return player._pMana >= GetManaAmount(player, sn);
 }
 
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
@@ -294,8 +291,6 @@ void DoResurrect(int pnum, int rid)
 
 void DoHealOther(int pnum, int rid)
 {
-	int i, j, hp;
-
 	if (pnum == myplr) {
 		NewCursor(CURSOR_HAND);
 	}
@@ -303,37 +298,30 @@ void DoHealOther(int pnum, int rid)
 	auto &player = plr[pnum];
 	auto &target = plr[rid];
 
-	if ((char)rid != -1 && (target._pHitPoints >> 6) > 0) {
-		hp = (GenerateRnd(10) + 1) << 6;
+	if (rid == -1 || (target._pHitPoints >> 6) <= 0) {
+		return;
+	}
 
-		for (i = 0; i < player._pLevel; i++) {
-			hp += (GenerateRnd(4) + 1) << 6;
-		}
+	int hp = (GenerateRnd(10) + 1) << 6;
+	for (int i = 0; i < player._pLevel; i++) {
+		hp += (GenerateRnd(4) + 1) << 6;
+	}
+	for (int i = 0; i < GetSpellLevel(pnum, SPL_HEALOTHER); i++) {
+		hp += (GenerateRnd(6) + 1) << 6;
+	}
 
-		for (j = 0; j < GetSpellLevel(pnum, SPL_HEALOTHER); ++j) {
-			hp += (GenerateRnd(6) + 1) << 6;
-		}
+	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
+		hp *= 2;
+	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard) {
+		hp += hp / 2;
+	} else if (player._pClass == HeroClass::Monk) {
+		hp *= 3;
+	}
 
-		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
-			hp *= 2;
-		} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard) {
-			hp += hp / 2;
-		} else if (player._pClass == HeroClass::Monk) {
-			hp *= 3;
-		}
+	target._pHitPoints = std::min(target._pHitPoints + hp, target._pMaxHP);
+	target._pHPBase = std::min(target._pHPBase + hp, target._pMaxHPBase);
 
-		target._pHitPoints += hp;
-
-		if (target._pHitPoints > target._pMaxHP) {
-			target._pHitPoints = target._pMaxHP;
-		}
-
-		target._pHPBase += hp;
-
-		if (target._pHPBase > target._pMaxHPBase) {
-			target._pHPBase = target._pMaxHPBase;
-		}
-
+	if (rid == myplr) {
 		drawhpflag = true;
 	}
 }

@@ -499,25 +499,14 @@ void InitPlayerGFX(PlayerStruct &player)
 	if (player._pHitPoints >> 6 == 0) {
 		player._pgfxnum = 0;
 		LoadPlrGFX(player, player_graphic::Death);
-	} else {
-		for (int i = 0; i < enum_size<player_graphic>::value; i++) {
-			auto graphic = static_cast<player_graphic>(i);
-			if (graphic == player_graphic::Death)
-				continue;
-			LoadPlrGFX(player, graphic);
-		}
+		return;
 	}
-}
 
-static HeroClass GetPlrGFXClass(HeroClass c)
-{
-	switch (c) {
-	case HeroClass::Bard:
-		return hfbard_mpq == nullptr ? HeroClass::Rogue : c;
-	case HeroClass::Barbarian:
-		return hfbarb_mpq == nullptr ? HeroClass::Warrior : c;
-	default:
-		return c;
+	for (unsigned i = 0; i < enum_size<player_graphic>::value; i++) {
+		auto graphic = static_cast<player_graphic>(i);
+		if (graphic == player_graphic::Death)
+			continue;
+		LoadPlrGFX(player, graphic);
 	}
 }
 
@@ -3664,8 +3653,6 @@ void CheckPlrSpell()
 
 void SyncPlrAnim(int pnum)
 {
-	int dir, sType;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("SyncPlrAnim: illegal player %i", pnum);
 	}
@@ -3690,18 +3677,17 @@ void SyncPlrAnim(int pnum)
 	case PM_BLOCK:
 		graphic = player_graphic::Block;
 		break;
-	case PM_SPELL:
+	case PM_SPELL: {
+		magic_type sType = STYPE_FIRE;
 		if (pnum == myplr)
 			sType = spelldata[player._pSpell].sType;
-		else
-			sType = STYPE_FIRE;
 		if (sType == STYPE_FIRE)
 			graphic = player_graphic::Fire;
-		if (sType == STYPE_LIGHTNING)
+		else if (sType == STYPE_LIGHTNING)
 			graphic = player_graphic::Lightning;
-		if (sType == STYPE_MAGIC)
+		else if (sType == STYPE_MAGIC)
 			graphic = player_graphic::Magic;
-		break;
+	} break;
 	case PM_GOTHIT:
 		graphic = player_graphic::Hit;
 		break;
