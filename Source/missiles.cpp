@@ -280,7 +280,7 @@ constexpr Direction16 Direction16Flip(Direction16 x, Direction16 pivot)
 {
 	unsigned ret = (2 * pivot + 16 - x) % 16;
 
-	return (Direction16)ret;
+	return static_cast<Direction16>(ret);
 }
 
 /**
@@ -331,7 +331,7 @@ Direction16 GetDirection16(Point p1, Point p2)
 	}
 	if (flipX) {
 		ret = Direction16Flip(ret, DIR16_SE);
-		medianPivot = Direction16Flip(medianPivot, DIR16_SW);
+		medianPivot = Direction16Flip(medianPivot, DIR16_SE);
 	}
 	if (flipMedian)
 		ret = Direction16Flip(ret, medianPivot);
