@@ -123,9 +123,98 @@ TEST(RandomTest, ShiftModDistributionSignCarry)
 	ASSERT_EQ(GenerateRnd(65535 - 1), -32768) << "Distribution must map negative numbers using sign carry shifts";
 	SetRndSeed(1457187811); // Test mod when a division occurs
 	ASSERT_EQ(GenerateRnd(32768 - 1), -1) << "Distribution must map negative numbers using sign carry shifts";
+}
+
+// The Diablo LCG implementation attempts to improve the quality of generated numbers that would only use the low
+// bits of the LCG output but due to applying this after taking the absolute value this introduces bias. This may
+// be an inconsistency with the implementation in devilutionx, see the comment for RandomTest_ShiftModDistributionHighBits
+TEST(RandomTest, ShiftModDistributionLowBits) {
+	// All the following seeds generate values less than 2^16, so after shifting they give a 0 value
+	constexpr auto maxBound = 65534;
 
 	SetRndSeed(3604671459U); // yields 0
-	ASSERT_EQ(GenerateRnd(65534), 0) << "Invalid distribution";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(0); // yields 1
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(2914375622U); // yields -1
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(538964771); // yields 64
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(2375410851U); // yields -64
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(1229260608); // yields 65
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(1685115014); // yields -65
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(1768225379); // yields 128
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(1146150243); // yields -128
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(1480523688); // yields 7625
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(1433851934); // yields -7625
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(2382565573U); // yields 32458
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(531810049); // yields -32458
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(1625910243); // yields 32768
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(1288465379); // yields -32768
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+
+	// -1 from the max bound for the next two to ensure it's not due to a mod with no remainder
+	SetRndSeed(2561524649U); // yields 65534
+	ASSERT_EQ(GenerateRnd(maxBound - 1), 0) << "Invalid distribution";
+	SetRndSeed(352850973U); // yields -65534
+	ASSERT_EQ(GenerateRnd(maxBound - 1), 0) << "Invalid distribution";
+
+	SetRndSeed(3251820486U); // yields 65535
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+	SetRndSeed(3957522432U); // yields -65535
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution";
+}
+
+// The highest value GenerateRnd can return is 32767 (0x7FFF). I suspect this is the Borland rand() implementation
+// This may mean that devilutionx is using an incorrect version as that function was implemented as the following:
+// uint seed = mult * seed + inc
+// return (seed >> 16) & 0x7FFF
+// i.e., no cast from unsigned to signed, no modulo when building the return value.
+TEST(RandomTest, ShiftModDistributionHighBits)
+{
+	constexpr auto maxBound = 65534;
+	SetRndSeed(3267226595U); // yields 65536
+	ASSERT_EQ(GenerateRnd(maxBound), 1) << "Invalid distribution";
+	SetRndSeed(3942116323U); // yields -65536
+	ASSERT_EQ(GenerateRnd(maxBound), 1) << "Invalid distribution";
+	SetRndSeed(4279561187U); // yields 131072
+	ASSERT_EQ(GenerateRnd(maxBound), 2) << "Invalid distribution";
+	SetRndSeed(2929781731U); // yields -131072
+	ASSERT_EQ(GenerateRnd(maxBound), 2) << "Invalid distribution";
+	SetRndSeed(659483619); // yields 262144
+	ASSERT_EQ(GenerateRnd(maxBound), 4) << "Invalid distribution";
+	SetRndSeed(2254892003U); // yields -262144
+	ASSERT_EQ(GenerateRnd(maxBound), 4) << "Invalid distribution";
+	SetRndSeed(3604671458U); // yields 22695477
+	ASSERT_EQ(GenerateRnd(maxBound), 346) << "Invalid distribution";
+	SetRndSeed(3604671460U); // yields -22695477
+	ASSERT_EQ(GenerateRnd(maxBound), 346) << "Invalid distribution";
+	SetRndSeed(1012371854); // yields 429496729
+	ASSERT_EQ(GenerateRnd(maxBound), 6553) << "Invalid distribution";
+	SetRndSeed(1902003768); // yields -429496729
+	ASSERT_EQ(GenerateRnd(maxBound), 6553) << "Invalid distribution";
+	SetRndSeed(189776845); // yields 1212022642
+	ASSERT_EQ(GenerateRnd(maxBound), 18493) << "Invalid distribution";
+	SetRndSeed(2724598777); // yields -1212022642
+	ASSERT_EQ(GenerateRnd(maxBound), 18493) << "Invalid distribution";
+	SetRndSeed(76596137); // yields 2147483646
+	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution";
+	SetRndSeed(2837779485); // yields -2147483646
+	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution";
+	SetRndSeed(766891974); // yields 2147483647
+	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution";
+	SetRndSeed(2147483648); // yields -2147483647
+	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution";
 }
 
 TEST(RandomTest, ModDistributionSignPreserving)
