@@ -692,13 +692,14 @@ void InitPlayerGFX(PlayerStruct &player)
 	if (player._pHitPoints >> 6 == 0) {
 		player._pgfxnum = 0;
 		LoadPlrGFX(player, player_graphic::Death);
-	} else {
-		for (size_t i = 0; i < enum_size<player_graphic>::value; i++) {
-			auto graphic = static_cast<player_graphic>(i);
-			if (graphic == player_graphic::Death)
-				continue;
-			LoadPlrGFX(player, graphic);
-		}
+		return;
+	}
+
+	for (size_t i = 0; i < enum_size<player_graphic>::value; i++) {
+		auto graphic = static_cast<player_graphic>(i);
+		if (graphic == player_graphic::Death)
+			continue;
+		LoadPlrGFX(player, graphic);
 	}
 }
 
