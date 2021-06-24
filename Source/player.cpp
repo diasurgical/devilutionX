@@ -3688,8 +3688,6 @@ void CheckPlrSpell()
 
 void SyncPlrAnim(int pnum)
 {
-	int sType;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("SyncPlrAnim: illegal player %i", pnum);
 	}
@@ -3714,18 +3712,17 @@ void SyncPlrAnim(int pnum)
 	case PM_BLOCK:
 		graphic = player_graphic::Block;
 		break;
-	case PM_SPELL:
+	case PM_SPELL: {
+		magic_type sType = STYPE_FIRE;
 		if (pnum == myplr)
 			sType = spelldata[player._pSpell].sType;
-		else
-			sType = STYPE_FIRE;
 		if (sType == STYPE_FIRE)
 			graphic = player_graphic::Fire;
-		if (sType == STYPE_LIGHTNING)
+		else if (sType == STYPE_LIGHTNING)
 			graphic = player_graphic::Lightning;
-		if (sType == STYPE_MAGIC)
+		else if (sType == STYPE_MAGIC)
 			graphic = player_graphic::Magic;
-		break;
+	} break;
 	case PM_GOTHIT:
 		graphic = player_graphic::Hit;
 		break;
