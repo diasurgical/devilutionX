@@ -130,7 +130,10 @@ void AddObjectToLabelQueue(int id, int x, int y)
 	strcpy(name, infostr);
 	strcpy(infostr, bkp);
 
-	x += it->_oAnimWidth / 2;
+	// center offset for objects seem to be somehow dynamic so it can't be stored and reused like the one for items
+	CelSprite tmp(it->_oAnimData, it->_oAnimWidth);
+	std::pair<int, int> itemBounds = MeasureSolidHorizontalBounds(tmp, it->_oAnimFrame);
+	x += (itemBounds.first + itemBounds.second) / 2;
 	ModifyCoords(x, y);
 	int nameWidth = GetLabelWidth(name);
 	x -= nameWidth / 2;
