@@ -832,7 +832,6 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 		return;
 	}
 	assert((DWORD)pnum < MAX_PLRS);
-
 	auto &player = plr[pnum];
 
 	if (sgwPackPlrOffsetTbl[pnum] != p->wOffset) {
@@ -872,17 +871,20 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 
 	SyncInitPlr(pnum);
 
-	if (player.plrlevel == currlevel) {
-		if (player._pHitPoints >> 6 > 0) {
-			StartStand(pnum, DIR_S);
-		} else {
-			player._pgfxnum = 0;
-			player._pmode = PM_DEATH;
-			NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
-			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
-			dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
-		}
+	if (player.plrlevel != currlevel) {
+		return;
 	}
+
+	if (player._pHitPoints >> 6 > 0) {
+		StartStand(pnum, DIR_S);
+		return;
+	}
+
+	player._pgfxnum = 0;
+	player._pmode = PM_DEATH;
+	NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
+	player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
+	dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
 }
 
 } // namespace devilution
